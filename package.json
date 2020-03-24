@@ -1,0 +1,42 @@
+{
+  "name": "simulator",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "author": "KISS Institute for Practical Robotics",
+  "license": "GPL",
+  "scripts": {
+    "build": "yarn run clean-dist && webpack -p --config=configs/webpack/prod.js",
+    "watch": "yarn run clean-dist && webpack -p --watch --watch-poll --config=configs/webpack/prod.js",
+    "clean-dist": "rm -f -r -d dist",
+    "lint": "tslint './src/**/*.ts*' --format stylish --force",
+    "start": "yarn run start-dev",
+    "start-dev": "webpack-dev-server --host 0.0.0.0 --config=configs/webpack/dev.js",
+    "start-prod": "yarn run build && node express.js"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@types/react-dom": "^16.9.5",
+    "awesome-typescript-loader": "^5.2.1",
+    "babel-loader": "^8.1.0",
+    "file-loader": "^6.0.0",
+    "html-webpack-plugin": "^4.0.1",
+    "react-hot-loader": "^4.12.20",
+    "ts-loader": "^6.2.2",
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3",
+    "webpack-merge": "^4.2.2"
+  },
+  "dependencies": {
+    "@types/react": "^16.9.25",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "redux": "^4.0.5",
+    "styletron": "^3.0.4",
+    "styletron-react": "^5.2.7"
+  }
+}

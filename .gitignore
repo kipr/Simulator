@@ -1,3 +1,8 @@
+# JS
+node_modules
+yarn-error.log
+dist
+
 # Prerequisites
 *.d
 
