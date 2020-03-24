@@ -23,15 +23,25 @@ Navigate to the root directory, then run:
 yarn install
 ```
 
+### Build libwallaby for javascript
+
+Make sure you are on the `emscripten` branch!
+```
+cd libwallaby/build
+emcmake cmake -Dwith_vision_support=OFF -Dwith_graphics_support=OFF -Dno_wallaby=ON -Dbuild_python=OFF .. -DJS_ONLY=ON
+emmake make -j8
+```
+
 ## Running
 
 In one terminal, run:
 ```
 source $PATH_TO_EMSDK/emsdk_env.sh
-node express.js
+LIBWALLABY_ROOT=/path/to/libwallaby node express.js
 ```
 
 In another terminal, run:
 ```
 yarn watch
 ```
+

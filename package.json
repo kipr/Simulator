@@ -21,12 +21,14 @@
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.0.1",
     "react-hot-loader": "^4.12.20",
+    "source-map-loader": "^0.2.4",
     "ts-loader": "^6.2.2",
     "typescript": "^3.8.3",
     "webpack": "^4.42.0",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3",
-    "webpack-merge": "^4.2.2"
+    "webpack-merge": "^4.2.2",
+    "worker-loader": "^2.0.0"
   },
   "dependencies": {
     "@types/react": "^16.9.25",

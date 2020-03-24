@@ -7,6 +7,7 @@ const { exec } = require('child_process');
 const app = express();
 const portNumber = 3000;
 const sourceDir = 'dist';
+const config = require('./config');
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -43,7 +44,7 @@ app.post('/compile', (req, res) => {
       })
     }
 
-    exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -o ${path}.js ${path}`, (err, stdout, stderr) => {
+    exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -I${config.libwallaby.root}/include -L${config.libwallaby.root}/lib -lkipr -o ${path}.js ${path}`, (err, stdout, stderr) => {
       if (err) {
         return res.status(400).json({
           stdout,
