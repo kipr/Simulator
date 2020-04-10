@@ -43,10 +43,10 @@ export class App extends React.Component<Props, State> {
     const { code } = state;
     return (
 
-      <>
-      <textarea onChange={this.onCodeChange_} value={code} />
-      <button onClick={this.onButtonClick_}>Compile</button>
-      </>
+      <p>
+        <p><button onClick={this.onButtonClick_}>Compile</button></p>
+        <textarea rows={10} cols={100} onChange={this.onCodeChange_} value={code} />
+      </p>
     )
   }
 }
