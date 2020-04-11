@@ -33,6 +33,8 @@
   "dependencies": {
     "@types/react": "^16.9.25",
     "body-parser": "^1.19.0",
+    "image-loader": "^0.0.1",
+    "image-webpack-loader": "^6.0.0",
     "morgan": "^1.10.0",
     "node": "13.12.0",
     "react": "^16.13.1",

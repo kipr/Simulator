@@ -27,9 +27,13 @@ export class App extends React.Component<Props, State> {
   }
 
   private onButtonClick_ = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    const compiled = await compile(this.state.code);
+    try {
+      const compiled = await compile(this.state.code);
 
-    WorkerInstance.start(compiled);
+      WorkerInstance.start(compiled);  
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   private onCodeChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
@@ -41,12 +45,17 @@ export class App extends React.Component<Props, State> {
   render() {
     const { props, state } = this;
     const { code } = state;
+    //console.log(this.props.children);
     return (
 
-      <p>
+      <>
+        <header>
+          <h1>KISS IDE Simulator</h1>
+          <p>KISS Institute for Practical Robotics</p>
+        </header>
         <p><button onClick={this.onButtonClick_}>Compile</button></p>
-        <textarea rows={10} cols={100} onChange={this.onCodeChange_} value={code} />
-      </p>
+        <textarea rows={10} cols={50} onChange={this.onCodeChange_} value={code} />
+      </>
     )
   }
 }
