@@ -30,15 +30,43 @@
       grid-column: 1;
       width: 100%;
       object-fit: contain;
-    }
-
-    #app.app-area.header {
-      font-size: xx-large;
+      border-width: 5px;
+      border-style: solid;
+      border-color: black;
     }
 
     #simulator {
       grid-column: 2;
       object-fit: contain;
+      border-width: 5px 5px 5px 0px;
+      border-style: solid;
+      border-color: black;
+    }
+
+    .ide-title {
+      font-size: xx-large;
+      text-align: center;
+      margin: 0 0 0 0;
+    }
+
+    .kipr {
+      text-align: center;
+      vertical-align: text-top;
+    }
+
+    .movers textarea {
+      resize: none;
+      text-align: center;
+      font-size: large;
+    }
+
+    .movers {
+      display: grid;
+      grid-template: auto / auto auto auto auto;
+    }
+
+    .movers > section {
+      text-align: center;
     }
   </style>
 </head>
