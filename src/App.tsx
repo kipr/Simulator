@@ -48,14 +48,14 @@ export class App extends React.Component<Props, State> {
     //console.log(this.props.children);
     return (
 
-      <>
+      <section id="app-area">
         <header>
           <h1>KISS IDE Simulator</h1>
           <p>KISS Institute for Practical Robotics</p>
         </header>
         <p><button onClick={this.onButtonClick_}>Compile</button></p>
         <textarea rows={10} cols={50} onChange={this.onCodeChange_} value={code} />
-      </>
+      </section>
     )
   }
 }
