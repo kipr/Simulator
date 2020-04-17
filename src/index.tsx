@@ -1,18 +1,21 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { App } from './App';
-import { Visualizer } from './Visualizer'
+import { Visualizer } from './Visualizer';
+import { Static } from './Static';
 
 const root = document.getElementById('root');
 
-//ReactDom.render(<svg width={500} height={300}><img src={'static/Demobot.png'} width={500} height={300}/></svg>,root);
 ReactDom.render(
-<html>
-    <div id="app">
+<section id="container">
+    <section id="app">
         <App/>
-    </div>
-    <div id="visualizer">
-        <Visualizer {... this.children}/>
-    </div>
-</html>,
+    </section>
+    <section id="simulator">
+        <svg width={1440} height={960} id="simulator-area">
+            <Static/>
+            <Visualizer {... this.children}/>
+        </svg>
+    </section>
+</section>,
 root);
