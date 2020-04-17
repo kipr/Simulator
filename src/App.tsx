@@ -12,6 +12,10 @@ export interface AppProps extends StyleProps {
 
 interface AppState {
   code: string;
+  motor0_speed: string;
+  motor3_speed: string;
+  servo0_position: string;
+  servo3_position: string;
 }
 
 type Props = AppProps;
@@ -22,7 +26,11 @@ export class App extends React.Component<Props, State> {
     super(props, context);
 
     this.state = {
-      code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main() {\n  printf("Hello, World! %lf\\n", seconds());\n  return 0;\n}\n'
+      code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main() {\n  printf("Hello, World! %lf\\n", seconds());\n  return 0;\n}\n',
+      motor0_speed: '0',
+      motor3_speed: '3',
+      servo0_position: '1024',
+      servo3_position: '1024'
     };
   }
 
@@ -42,6 +50,12 @@ export class App extends React.Component<Props, State> {
     });
   };
 
+  private onChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
+    this.setState({
+      code: event.currentTarget.value
+    });
+  };
+
   render() {
     const { props, state } = this;
     const { code } = state;
@@ -55,6 +69,7 @@ export class App extends React.Component<Props, State> {
         </header>
         <p><button onClick={this.onButtonClick_}>Compile</button></p>
         <textarea rows={10} cols={50} onChange={this.onCodeChange_} value={code} />
+
       </section>
     )
   }
