@@ -22,7 +22,7 @@ export class App extends React.Component<Props, State> {
     super(props, context);
 
     this.state = {
-      code: '#include <stdio.h>\n#include<kipr/wombat.h>\n\nint main() {\n  printf("Hello, World! %lf\\n", seconds());\n  return 0;\n}\n'
+      code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main() {\n  printf("Hello, World! %lf\\n", seconds());\n  return 0;\n}\n'
     };
   }
 
