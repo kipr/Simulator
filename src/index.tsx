@@ -12,7 +12,7 @@ ReactDom.render(
         <App/>
     </section>
     <section id="simulator">
-        <svg width={1440} height={960} id="simulator-area">
+        <svg width={1300} height={900} viewBox="0 0 1440 960" id="simulator-area">
             <Static/>
             <Visualizer {... this.children}/>
         </svg>

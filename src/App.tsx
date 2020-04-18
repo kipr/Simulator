@@ -128,7 +128,24 @@ export class App extends React.Component<Props, State> {
           <h4 className="kipr">KISS Institute for Practical Robotics</h4>
         </header>
         <p><button onClick={this.onButtonClick_}>Compile</button></p>
-        <textarea rows={10} cols={50} onChange={this.onCodeChange_} value={code} />
+        <textarea rows={10} cols={80} onChange={this.onCodeChange_} value={code} className="code"/>
+        <section className="robotState">
+          <h3>Robot State</h3>
+          <section className="robotStateValues">
+            <section className="x">
+              <h3>X: </h3>
+              <textarea rows={1} cols={4} draggable="false" readOnly/>
+            </section>
+            <section className="y">
+              <h3>Y: </h3>
+              <textarea rows={1} cols={4} draggable="false" readOnly/>
+            </section>
+            <section className="theta">
+              <h3>Theta: </h3>
+              <textarea rows={1} cols={4} draggable="false" readOnly/>
+            </section>
+          </section>
+        </section>
         <section className="movers">
           <section className="motor0">
             <h3>Motor 0</h3>

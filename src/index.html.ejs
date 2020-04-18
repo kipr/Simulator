@@ -54,7 +54,11 @@
       vertical-align: text-top;
     }
 
-    .movers textarea {
+    .code {
+      width: 530px;
+    }
+
+    .movers textarea, .robotStateValues textarea {
       resize: none;
       text-align: center;
       font-size: large;
@@ -66,6 +70,15 @@
     }
 
     .movers > section {
+      text-align: center;
+    }
+
+    .robotStateValues {
+      display: grid;
+      grid-template: auto / auto auto auto;
+    }
+
+    .robotStateValues > section {
       text-align: center;
     }
   </style>
