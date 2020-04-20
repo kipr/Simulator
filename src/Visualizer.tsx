@@ -20,10 +20,9 @@ export class Visualizer extends React.Component<Props> {
       //register
     } = props;
     return (
-        <svg width="225" height="135" x="255" y="530" id="demobot">
+        <svg width="225" height="135" x={robot.x} y={robot.y} id="demobot">
             <image height="100%" href="static/Demobot-Claw-Up-Closed.png"/>
         </svg>
-
     )
   }
 }

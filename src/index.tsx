@@ -14,7 +14,7 @@ ReactDom.render(
     <section id="simulator">
         <svg width={1300} height={900} viewBox="0 0 1440 960" id="simulator-area">
             <Static/>
-            <Visualizer {... this.children}/>
+            <Visualizer robot={{x: 255, y: 310, theta: 6 }}/>
         </svg>
     </section>
 </section>,
