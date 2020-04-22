@@ -7,9 +7,10 @@ export namespace Protocol {
 
     export interface StopRequest {
       type: 'stop';
+      hello: string;
     }
 
-    export type Request = StartRequest | StopRequest;
+    export type Request = StartRequest | StopRequest | SetRegisterRequest;
 
     export interface StartResponse {
       type: 'start';
@@ -19,7 +20,30 @@ export namespace Protocol {
       type: 'stop';
     }
 
-    export type Response = StartResponse | StopResponse;
+    export type Response = StartResponse | StopResponse | SetRegisterResponse;
+
+
+    export interface SetRegisterRequest {
+      type: 'setregister';
+      address: number;
+      value: number;
+    }
+
+    export interface SetRegisterResponse {
+      type: 'setregister';
+    }
+
+
+
+    /*export interface GetRegister {
+      type: 'getregister';
+      address: string;
+      value: number;
+    }*/
+
+    
+
+    
 
   }
 

@@ -4,15 +4,20 @@ import Registers from './RegisterState';
 
 const ctx: Worker = self as any;
 ctx.onmessage = (e) => {
-  const message = e.data;
-
+  const message:Protocol.Worker.Request = e.data;
+  const registers = new Array<number>(Registers.REG_ALL_COUNT);
   switch (message.type) {
     case 'start': {
       const mod = dynRequire(message.code, {
-        onRegistersChange: () => {
-
+        onRegistersChange: (address, value) => {
+          ctx.postMessage({
+            type: 'setregister',
+            address: address,
+            value: value
+          });
+          console.log("ASDASD");
         },
-        registers: new Array<number>(Registers.REG_ALL_COUNT)
+        registers
       });
 
       
@@ -25,6 +30,14 @@ ctx.onmessage = (e) => {
         type: 'start'
       });
 
+      break;
+    }
+    case 'setregister':{
+      registers[message.address] = message.value;
+
+      ctx.postMessage({
+        type: 'setregister'
+      });
       break;
     }
   } 
