@@ -58,18 +58,23 @@
       width: 530px;
     }
 
-    .movers textarea, .robotStateValues textarea {
+    .motors textarea, .robotStateValues textarea, .servos textarea {
       resize: none;
       text-align: center;
       font-size: large;
     }
 
-    .movers {
+    .motors {
+      display: grid;
+      grid-template: auto / auto auto auto auto auto;
+    }
+
+    .servos {
       display: grid;
       grid-template: auto / auto auto auto auto;
     }
 
-    .movers > section {
+    .motors > section, .servos > section {
       text-align: center;
     }
 

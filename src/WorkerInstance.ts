@@ -6,7 +6,23 @@ import { RobotState } from './RobotState';
 
 
 class WorkerInstance {
-  private state:RobotState = {x:0, y:0, theta:0}
+  private state:RobotState = {
+    x:0,
+    y:0,
+    theta:0,
+    motor0_speed: 0,
+    motor1_speed: 0,
+    motor2_speed: 0,
+    motor3_speed: 0,
+    motor0_position: 0,
+    motor1_position: 0,
+    motor2_position: 0,
+    motor3_position: 0,
+    servo0_position: 1024,
+    servo1_position: 1024,
+    servo2_position: 1024,
+    servo3_position: 1024
+  }
   private registers = new Array<number>(Registers.REG_ALL_COUNT);
   
   private tick = ()=> {
@@ -40,10 +56,24 @@ class WorkerInstance {
       type: 'stop'
     });
   }
+
   constructor(){
     this.worker_.onmessage = this.onMessage
     this.tick()
   }
+
+  getRegister() {
+    return this.registers;
+  }
+
+  getWorker_() {
+    return this.worker_;
+  }
+
+  getRobotState() {
+    return this.state;
+  }
+
   private worker_ = new Worker('/js/worker.min.js');
 }
 
