@@ -9,10 +9,10 @@ import Protocol from './WorkerProtocol';
 import { RobotState } from './RobotState';
 
 export interface AppProps extends StyleProps {
-
+  state: RobotState
 }
 
-interface AppState extends RobotState{
+interface AppState {
   code: string;
 }
 
@@ -25,21 +25,6 @@ export class App extends React.Component<Props, State> {
 
     this.state = {
       code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main() {\n  printf("Hello, World! %lf\\n", seconds());\n  return 0;\n}\n',
-      x:WorkerInstance.getRobotState().x,
-      y:WorkerInstance.getRobotState().y,
-      theta:WorkerInstance.getRobotState().theta,
-      motor0_speed: WorkerInstance.getRobotState().motor0_speed,
-      motor1_speed: WorkerInstance.getRobotState().motor1_speed,
-      motor2_speed: WorkerInstance.getRobotState().motor2_speed,
-      motor3_speed: WorkerInstance.getRobotState().motor3_speed,
-      motor0_position: WorkerInstance.getRobotState().motor0_position,
-      motor1_position: WorkerInstance.getRobotState().motor1_position,
-      motor2_position: WorkerInstance.getRobotState().motor2_position,
-      motor3_position: WorkerInstance.getRobotState().motor3_position,
-      servo0_position: WorkerInstance.getRobotState().servo0_position,
-      servo1_position: WorkerInstance.getRobotState().servo1_position,
-      servo2_position: WorkerInstance.getRobotState().servo2_position,
-      servo3_position: WorkerInstance.getRobotState().servo3_position
     };
   }
 
@@ -151,7 +136,7 @@ export class App extends React.Component<Props, State> {
           </section>
           <section className="motor0">
             <h3>Motor 0</h3>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={WorkerInstance.getRobotState().motor0_speed} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly onChange={WorkerInstance.getRegister} value={WorkerInstance.getRobotState().motor0_speed} /></div>
             <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={WorkerInstance.getRobotState().motor0_position} /></div>
           </section>
           <section className="motor1">

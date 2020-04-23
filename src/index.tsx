@@ -3,19 +3,10 @@ import * as ReactDom from 'react-dom';
 import { App } from './App';
 import { Visualizer } from './Visualizer';
 import { Static } from './Static';
+import { Container } from './Container';
 
 const root = document.getElementById('root');
 
 ReactDom.render(
-<section id="container">
-    <section id="app">
-        <App/>
-    </section>
-    <section id="simulator">
-        <svg width={1300} height={900} viewBox="0 0 1440 960" id="simulator-area">
-            <Static/>
-            <Visualizer robot={{x: 255, y: 310, theta: 6 }}/>
-        </svg>
-    </section>
-</section>,
+    <Container></Container>, 
 root);

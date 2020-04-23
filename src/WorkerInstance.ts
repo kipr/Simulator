@@ -6,6 +6,9 @@ import { RobotState } from './RobotState';
 
 
 class WorkerInstance {
+  
+  onStateChange:(state:RobotState) => void 
+
   private state:RobotState = {
     x:0,
     y:0,
@@ -26,7 +29,8 @@ class WorkerInstance {
   private registers = new Array<number>(Registers.REG_ALL_COUNT);
   
   private tick = ()=> {
-    
+    //Reading the registers nad computing the new robot state
+    if (this.onStateChange) this.onStateChange(this.state)
     requestAnimationFrame(this.tick);
   }
   
