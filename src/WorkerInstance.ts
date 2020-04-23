@@ -9,7 +9,7 @@ class WorkerInstance {
   
   onStateChange:(state:RobotState) => void 
 
-  private state:RobotState = {
+  private state_:RobotState = {
     x:0,
     y:0,
     theta:0,
@@ -24,7 +24,7 @@ class WorkerInstance {
     servo0_position: 1024,
     servo1_position: 1024,
     servo2_position: 1024,
-    servo3_position: 1024
+    servo3_position: 1024,
   }
   private registers = new Array<number>(Registers.REG_ALL_COUNT);
   
@@ -69,6 +69,11 @@ class WorkerInstance {
   getRegister() {
     return this.registers;
   }
+
+  get state(){
+    return this.state_;
+  }
+
 
   getWorker_() {
     return this.worker_;

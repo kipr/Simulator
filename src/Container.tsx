@@ -16,7 +16,7 @@ export class Container extends React.Component<Props, State> {
    constructor(props: Props, context?){
     super (props, context)
     this.state = {
-        state: undefined
+        state: WorkerInstance.state
     }
    } 
    private onStateChange = (state:RobotState) => {

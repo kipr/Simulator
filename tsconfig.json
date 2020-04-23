@@ -4,5 +4,6 @@
     "allowJs": true,
     "outDir": "dist",
     "jsx": "react",
+    "target": "es6"
   }
 }

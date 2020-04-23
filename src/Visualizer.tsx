@@ -5,7 +5,6 @@ import { StyleProps } from './style';
 
 export interface VisualizerProps extends StyleProps {
   robot: RobotState;
-  //register: RegisterState;
 }
 
 type Props = VisualizerProps;
