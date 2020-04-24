@@ -22,20 +22,19 @@ type State = AppState;
 export class App extends React.Component<Props, State> {
   constructor(props: Props, context?: any) {
     super(props, context);
-
     this.state = {
-      code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main() {\n  printf("Hello, World! %lf\\n", seconds());\n  return 0;\n}\n',
+      code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main() {\n  printf("Hello, World! %lf\\n", seconds());\n  return 0;\n}\n'
     };
   }
 
   private onButtonClick_ = async (event: React.MouseEvent<HTMLButtonElement>) => {
     try {
       const compiled = await compile(this.state.code);
-
-      WorkerInstance.start(compiled);  
+      WorkerInstance.start(compiled);
     } catch (e) {
       console.log(e);
     }
+    
   };
 
   private onCodeChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
@@ -43,11 +42,6 @@ export class App extends React.Component<Props, State> {
       code: event.currentTarget.value
     });
   };
-
-  private onRegisterChange_ = (event) => {
-
-  }
-
 /*  private onMotor0Change_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
     this.setState({
       motor0_speed: parseInt(event.currentTarget.value)
@@ -101,9 +95,8 @@ export class App extends React.Component<Props, State> {
     const { 
       code
     } = state;
-    //console.log(this.props.children);
+    console.log("Rendering app");
     return (
-
       <section className="app-area">
         <header>
           <h1 className="ide-title">KISS IDE Simulator</h1>
@@ -116,15 +109,15 @@ export class App extends React.Component<Props, State> {
           <section className="robotStateValues">
             <section className="x">
               <h3>X: </h3>
-              <textarea rows={1} cols={4} draggable="false" readOnly value={WorkerInstance.getRobotState().x}/>
+              <textarea rows={1} cols={4} draggable="false" readOnly value={this.props.state.x}/>
             </section>
             <section className="y">
               <h3>Y: </h3>
-              <textarea rows={1} cols={4} draggable="false" readOnly value={WorkerInstance.getRobotState().y}/>
+              <textarea rows={1} cols={4} draggable="false" readOnly value={this.props.state.y}/>
             </section>
             <section className="theta">
               <h3>Theta: </h3>
-              <textarea rows={1} cols={4} draggable="false" readOnly  value={WorkerInstance.getRobotState().theta}/>
+              <textarea rows={1} cols={4} draggable="false" readOnly  value={this.props.state.theta}/>
             </section>
           </section>
         </section>
@@ -136,41 +129,41 @@ export class App extends React.Component<Props, State> {
           </section>
           <section className="motor0">
             <h3>Motor 0</h3>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly onChange={WorkerInstance.getRegister} value={WorkerInstance.getRobotState().motor0_speed} /></div>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={WorkerInstance.getRobotState().motor0_position} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly value={this.props.state.motor0_speed} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={this.props.state.motor0_position} /></div>
           </section>
           <section className="motor1">
             <h3>Motor 1</h3>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={WorkerInstance.getRobotState().motor1_speed} /></div>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={WorkerInstance.getRobotState().motor1_position} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={this.props.state.motor1_speed} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={this.props.state.motor1_position} /></div>
           </section>
           <section className="motor2">
             <h3>Motor 2</h3>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={WorkerInstance.getRobotState().motor2_speed} /></div>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={WorkerInstance.getRobotState().motor2_position} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={this.props.state.motor2_speed} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={this.props.state.motor2_position} /></div>
           </section>
           <section className="motor3">
             <h3>Motor 3</h3>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={WorkerInstance.getRobotState().motor3_speed} /></div>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={WorkerInstance.getRobotState().motor3_position} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={this.props.state.motor3_speed} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={this.props.state.motor3_position} /></div>
           </section>
         </section>
         <section className="servos">
           <section className="servo0">
             <h3>Servo 0</h3>
-            <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo0Change_}*/ value={WorkerInstance.getRobotState().servo0_position} />
+            <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo0Change_}*/ value={this.props.state.servo0_position} />
           </section>
           <section className="servo1">
             <h3>Servo 1</h3>
-            <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo1Change_}*/ value={WorkerInstance.getRobotState().servo1_position} />
+            <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo1Change_}*/ value={this.props.state.servo1_position} />
           </section>
           <section className="servo2">
             <h3>Servo 2</h3>
-            <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo2Change_}*/ value={WorkerInstance.getRobotState().servo2_position} />
+            <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo2Change_}*/ value={this.props.state.servo2_position} />
           </section>
           <section className="servo3">
             <h3>Servo 3</h3>
-            <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo3Change_}*/ value={WorkerInstance.getRobotState().servo3_position} />
+            <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo3Change_}*/ value={this.props.state.servo3_position} />
           </section>
         </section>
       </section>

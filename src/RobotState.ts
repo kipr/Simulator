@@ -1,7 +1,14 @@
 export interface RobotState {
+  //Units: Pixels
   x: number;
   y: number;
+  wheel_radius: number;
+  wheel_sep: number;
+
+  //Units: Radians
   theta: number;
+
+  //Units: Ticks
   motor0_speed: number;
   motor1_speed: number;
   motor2_speed: number;
@@ -14,4 +21,8 @@ export interface RobotState {
   servo1_position: number;
   servo2_position: number;
   servo3_position: number;
+
+  //Units: Seconds
+  time: number;
+  
 }
