@@ -10,7 +10,7 @@ export namespace Protocol {
       hello: string;
     }
 
-    export type Request = StartRequest | StopRequest | SetRegisterRequest;
+    export type Request = StartRequest | StopRequest | SetRegisterRequest | ProgramEndedRequest;
 
     export interface StartResponse {
       type: 'start';
@@ -20,7 +20,15 @@ export namespace Protocol {
       type: 'stop';
     }
 
-    export type Response = StartResponse | StopResponse | SetRegisterResponse;
+    export interface ProgramEndedRequest {
+      type: 'program-ended'
+    }
+
+    export interface ProgramEndedResponse {
+      type: 'program-ended'
+    }
+
+    export type Response = StartResponse | StopResponse | SetRegisterResponse | ProgramEndedResponse;
 
 
     export interface SetRegisterRequest {

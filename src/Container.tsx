@@ -7,7 +7,7 @@ import { RobotState } from './RobotState'
 
 export interface ContainerProps{}
 interface ContainerState{
-    state:RobotState
+    robot: RobotState
 }
 type Props = ContainerProps;
 type State = ContainerState;
@@ -16,17 +16,18 @@ export class Container extends React.Component<Props, State> {
    constructor(props: Props, context?){
     super (props, context)
     this.state = {
-        state: WorkerInstance.state
+        robot: WorkerInstance.state
     }
    } 
    private onStateChange = (state:RobotState) => {
+    console.log('state change'); 
     this.setState({
-        state: {
-            ...state
-        }
-    })
+        robot: state
+    });
+
    }
-   onComponentWillMount(){
+   
+   componentWillMount() {
     WorkerInstance.onStateChange = this.onStateChange
    }
    render(){
@@ -34,15 +35,17 @@ export class Container extends React.Component<Props, State> {
            props, state 
        }= this
 
+       console.log('qwe')
+
        return (
         <section id="container">
             <section id="app">
-                <App state= {state.state}/>
+                <App robot= {state.robot} />
             </section>
             <section id="simulator">
                 <svg width={1300} height={900} viewBox="0 0 1440 960" id="simulator-area">
                     <Static/>
-                    <Visualizer robot= {state.state}/>
+                    <Visualizer robot= {state.robot}/>
                 </svg>
             </section>
         </section>

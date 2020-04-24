@@ -22,7 +22,27 @@ export interface RobotState {
   servo2_position: number;
   servo3_position: number;
 
-  //Units: Seconds
-  time: number;
   
+}
+
+export namespace RobotState {
+  export const empty: RobotState = {
+    x: 250,
+    y: 310,
+    wheel_radius: 173,
+    wheel_sep: 135,
+    theta:0,
+    motor0_speed: 0,
+    motor1_speed: 0,
+    motor2_speed: 0,
+    motor3_speed: 0,
+    motor0_position: 0,
+    motor1_position: 0,
+    motor2_position: 0,
+    motor3_position: 0,
+    servo0_position: 1024,
+    servo1_position: 1024,
+    servo2_position: 1024,
+    servo3_position: 1024
+  };
 }

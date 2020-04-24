@@ -24,6 +24,9 @@ ctx.onmessage = (e) => {
       
       mod.onRuntimeInitialized = () => {
         mod._main();
+        ctx.postMessage({
+          type: 'program-ended'
+        })
       };
 
       ctx.postMessage({
