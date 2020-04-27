@@ -63,15 +63,15 @@ export class App extends React.Component<Props, State> {
           <section className="robotStateValues">
             <section className="x">
               <h3>X: </h3>
-              <textarea rows={1} cols={4} draggable="false" readOnly value={robot.x}/>
+              <textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.x)}/>
             </section>
             <section className="y">
               <h3>Y: </h3>
-              <textarea rows={1} cols={4} draggable="false" readOnly value={robot.y}/>
+              <textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.y)}/>
             </section>
             <section className="theta">
               <h3>Theta: </h3>
-              <textarea rows={1} cols={4} draggable="false" readOnly  value={robot.theta/Math.PI*180}/>
+              <textarea rows={1} cols={4} draggable="false" readOnly  value={Math.round(robot.theta/Math.PI*180)}/>
             </section>
           </section>
         </section>
@@ -83,41 +83,41 @@ export class App extends React.Component<Props, State> {
           </section>
           <section className="motor0">
             <h3>Motor 0</h3>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly value={robot.motor0_speed} /></div>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly value={robot.motor0_position} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.motor0_speed)} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.motor0_position)} /></div>
           </section>
           <section className="motor1">
             <h3>Motor 1</h3>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly value={robot.motor1_speed} /></div>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly value={robot.motor1_position} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.motor1_speed)} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.motor1_position)} /></div>
           </section>
           <section className="motor2">
             <h3>Motor 2</h3>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly value={robot.motor2_speed} /></div>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly value={robot.motor2_position} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.motor2_speed)} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.motor2_position)} /></div>
           </section>
           <section className="motor3">
             <h3>Motor 3</h3>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly value={robot.motor3_speed} /></div>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly value={robot.motor3_position} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.motor3_speed)} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.motor3_position)} /></div>
           </section>
         </section>
         <section className="servos">
           <section className="servo0">
             <h3>Servo 0</h3>
-            <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo0Change_}*/ value={robot.servo0_position} />
+            <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo0Change_}*/ value={Math.round(robot.servo0_position)} />
           </section>
           <section className="servo1">
             <h3>Servo 1</h3>
-            <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo1Change_}*/ value={robot.servo1_position} />
+            <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo1Change_}*/ value={Math.round(robot.servo1_position)} />
           </section>
           <section className="servo2">
             <h3>Servo 2</h3>
-            <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo2Change_}*/ value={robot.servo2_position} />
+            <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo2Change_}*/ value={Math.round(robot.servo2_position)} />
           </section>
           <section className="servo3">
             <h3>Servo 3</h3>
-            <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo3Change_}*/ value={robot.servo3_position} />
+            <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo3Change_}*/ value={Math.round(robot.servo3_position)} />
           </section>
         </section>
       </section>
