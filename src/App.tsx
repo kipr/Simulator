@@ -42,53 +42,6 @@ export class App extends React.Component<Props, State> {
       code: event.currentTarget.value
     });
   };
-/*  private onMotor0Change_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-    this.setState({
-      motor0_speed: parseInt(event.currentTarget.value)
-    });
-  };
-
-  private onMotor1Change_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-    this.setState({
-      motor1_speed: parseInt(event.currentTarget.value)
-    });
-  };
-
-  private onMotor2Change_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-    this.setState({
-      motor2_speed: parseInt(event.currentTarget.value)
-    });
-  };
-
-  private onMotor3Change_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-    this.setState({
-      motor3_speed: parseInt(event.currentTarget.value)
-    });
-  };
-
-  private onServo0Change_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-    this.setState({
-      servo0_position: event.currentTarget.value
-    });
-  };
-
-  private onServo1Change_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-    this.setState({
-      servo1_position: event.currentTarget.value
-    });
-  };
-
-  private onServo2Change_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-    this.setState({
-      servo2_position: event.currentTarget.value
-    });
-  };
-
-  private onServo3Change_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-    this.setState({
-      servo3_position: event.currentTarget.value
-    });
-  };*/
 
   render() {
     const { props, state } = this;
@@ -118,7 +71,7 @@ export class App extends React.Component<Props, State> {
             </section>
             <section className="theta">
               <h3>Theta: </h3>
-              <textarea rows={1} cols={4} draggable="false" readOnly  value={robot.theta}/>
+              <textarea rows={1} cols={4} draggable="false" readOnly  value={robot.theta/Math.PI*180}/>
             </section>
           </section>
         </section>
@@ -131,22 +84,22 @@ export class App extends React.Component<Props, State> {
           <section className="motor0">
             <h3>Motor 0</h3>
             <div><textarea rows={1} cols={4} draggable="false" readOnly value={robot.motor0_speed} /></div>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={robot.motor0_position} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly value={robot.motor0_position} /></div>
           </section>
           <section className="motor1">
             <h3>Motor 1</h3>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={robot.motor1_speed} /></div>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={robot.motor1_position} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly value={robot.motor1_speed} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly value={robot.motor1_position} /></div>
           </section>
           <section className="motor2">
             <h3>Motor 2</h3>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={robot.motor2_speed} /></div>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={robot.motor2_position} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly value={robot.motor2_speed} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly value={robot.motor2_position} /></div>
           </section>
           <section className="motor3">
             <h3>Motor 3</h3>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={robot.motor3_speed} /></div>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onMotor0Change_}*/ value={robot.motor3_position} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly value={robot.motor3_speed} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" readOnly value={robot.motor3_position} /></div>
           </section>
         </section>
         <section className="servos">

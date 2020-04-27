@@ -17,6 +17,8 @@ class WorkerInstance {
   private registers_ = new Array<number>(Registers.REG_ALL_COUNT).fill(0);
   
   private time_ = Date.now() / 1000;
+  private wheel_radius_ = 173;
+  private wheelSep_ = 135;
   private tick = ()=> {
     const nextState = { ...this.state_ };
 
@@ -24,13 +26,13 @@ class WorkerInstance {
     nextState.motor1_speed = this.registers_[64]*256+this.registers_[65];
     nextState.motor2_speed = this.registers_[66]*256+this.registers_[67];
     nextState.motor3_speed = this.registers_[68]*256+this.registers_[69];
-    const total_speed = (nextState.motor0_speed + nextState.motor3_speed)/1500;
+    const total_speed = (this.wheel_radius_/2)*(nextState.motor3_speed + nextState.motor0_speed)/1500;
     const new_time = Date.now()/1000
     const time_change = new_time - this.time_;
     this.time_ = new_time;
-    nextState.x = nextState.x + (nextState.wheel_radius/2)*(total_speed)*Math.cos(nextState.theta)*time_change;
-    nextState.y = nextState.y - (nextState.wheel_radius/2)*(total_speed)*Math.sin(nextState.theta)*time_change;
-    nextState.theta = nextState.theta + (nextState.wheel_radius/2)*(nextState.motor0_speed - nextState.motor3_speed)/1500/nextState.wheel_sep*time_change;
+    nextState.x = nextState.x + (total_speed)*Math.cos(nextState.theta)*time_change;
+    nextState.y = nextState.y - (total_speed)*Math.sin(nextState.theta)*time_change;
+    nextState.theta = nextState.theta + (this.wheel_radius_/2)*(nextState.motor0_speed - nextState.motor3_speed)/1500/this.wheelSep_*time_change;
 
     if (deepNeq(nextState, this.state_)) {
       if (this.onStateChange) {
@@ -52,7 +54,13 @@ class WorkerInstance {
           break;
         }
         case 'program-ended': {
+          const x_end = this.state_.x;
+          const y_end = this.state_.y;
+          const theta_end = this.state_.theta;
           this.state_ = RobotState.empty;
+          this.state_.x = x_end;
+          this.state_.y = y_end;
+          this.state_.theta = theta_end;
           this.registers_ = new Array<number>(Registers.REG_ALL_COUNT).fill(0);
           this.onStateChange(this.state_);
         }
