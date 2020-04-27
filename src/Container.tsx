@@ -20,7 +20,7 @@ export class Container extends React.Component<Props, State> {
     }
    } 
    private onStateChange = (state:RobotState) => {
-    console.log('state change'); 
+    //console.log('state change'); 
     this.setState({
         robot: state
     });
@@ -35,7 +35,7 @@ export class Container extends React.Component<Props, State> {
            props, state 
        }= this
 
-       console.log('qwe')
+       //console.log('qwe')
 
        return (
         <section id="container">

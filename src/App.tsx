@@ -49,7 +49,7 @@ export class App extends React.Component<Props, State> {
     const { 
       code
     } = state;
-    console.log("Rendering app");
+    //console.log("Rendering app");
     return (
       <section className="app-area">
         <header>
