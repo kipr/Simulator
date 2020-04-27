@@ -21,18 +21,28 @@ class WorkerInstance {
   private wheelSep_ = 135;
   private tick = ()=> {
     const nextState = { ...this.state_ };
-
-    nextState.motor0_speed = this.registers_[62]*256+this.registers_[63];
-    nextState.motor1_speed = this.registers_[64]*256+this.registers_[65];
-    nextState.motor2_speed = this.registers_[66]*256+this.registers_[67];
-    nextState.motor3_speed = this.registers_[68]*256+this.registers_[69];
     const total_speed = (this.wheel_radius_/2)*(nextState.motor3_speed + nextState.motor0_speed)/1500;
     const new_time = Date.now()/1000
     const time_change = new_time - this.time_;
     this.time_ = new_time;
+    nextState.motor0_speed = this.registers_[62]*256+this.registers_[63];
+    nextState.motor1_speed = this.registers_[64]*256+this.registers_[65];
+    nextState.motor2_speed = this.registers_[66]*256+this.registers_[67];
+    nextState.motor3_speed = this.registers_[68]*256+this.registers_[69];
+
     nextState.x = nextState.x + (total_speed)*Math.cos(nextState.theta)*time_change;
     nextState.y = nextState.y - (total_speed)*Math.sin(nextState.theta)*time_change;
     nextState.theta = nextState.theta + (this.wheel_radius_/2)*(nextState.motor0_speed - nextState.motor3_speed)/1500/this.wheelSep_*time_change;
+    
+    nextState.motor0_position = this.registers_[137]*16777216+this.registers_[138]*65536+this.registers_[139]*256+this.registers_[140];
+    nextState.motor1_position = this.registers_[141]*16777216+this.registers_[142]*65536+this.registers_[143]*256+this.registers_[144];
+    nextState.motor2_position = this.registers_[145]*16777216+this.registers_[146]*65536+this.registers_[147]*256+this.registers_[148];
+    nextState.motor3_position = this.registers_[149]*16777216+this.registers_[150]*65536+this.registers_[151]*256+this.registers_[152];
+    
+    nextState.servo0_position = this.registers_[78]*256+this.registers_[79];
+    nextState.servo1_position = this.registers_[80]*256+this.registers_[81];
+    nextState.servo2_position = this.registers_[82]*256+this.registers_[83];
+    nextState.servo3_position = this.registers_[84]*256+this.registers_[85];
 
     if (deepNeq(nextState, this.state_)) {
       if (this.onStateChange) {
