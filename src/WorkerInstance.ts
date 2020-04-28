@@ -22,13 +22,25 @@ class WorkerInstance {
 
   private tick = ()=> {
     const nextState = { ...this.state_ };
+    /*function returnInvert(answer:number){
+      return ~answer
+    }*/
     const new_time = Date.now()/1000
     const time_change = new_time - this.time_;
     this.time_ = new_time;
-    nextState.motor0_speed = this.registers_[62]*256+this.registers_[63];
-    nextState.motor1_speed = this.registers_[64]*256+this.registers_[65];
-    nextState.motor2_speed = this.registers_[66]*256+this.registers_[67];
-    nextState.motor3_speed = this.registers_[68]*256+this.registers_[69];
+    function DirectionalValues(int1:number, int2:number){
+      if(int1 > int2){
+        return -((0xFF ^ int1)*256 + (0xFF ^ int2)) - 1;
+      }
+      else{
+        return int1*256 + int2;
+      }
+    }
+
+    nextState.motor0_speed = DirectionalValues(this.registers_[62], this.registers_[63]);
+    nextState.motor1_speed = DirectionalValues(this.registers_[64], this.registers_[65]);
+    nextState.motor2_speed = DirectionalValues(this.registers_[66], this.registers_[67]);
+    nextState.motor3_speed = DirectionalValues(this.registers_[68], this.registers_[69]);
 
     const total_dist = (this.wheel_diameter_/2)*(nextState.motor3_speed + nextState.motor0_speed)/1500*time_change;
 
