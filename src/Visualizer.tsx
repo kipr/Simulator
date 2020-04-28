@@ -18,9 +18,9 @@ export class Visualizer extends React.Component<Props> {
       robot
       //register
     } = props;
-    const rotateUpdate = 'rotate(' + ((robot.theta)*180/Math.PI).toString() + ',140,72)';
+    const rotateUpdate = 'rotate(' + ((robot.theta)*180/Math.PI).toString() + ',' + (robot.x+142.88).toString() + ',' + (robot.y-67.5).toString() + ')';
     return (
-        <svg width="225" height="135" x={robot.x} y={robot.y} id="demobot" transform={rotateUpdate}>
+        <svg width="230.19" height="135" x={robot.x} y={robot.y} id="demobot" transform={rotateUpdate}>
             <image height="100%" href="static/Demobot-Claw-Up-Closed.png"/>
         </svg>
     )

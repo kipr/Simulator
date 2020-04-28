@@ -71,7 +71,7 @@ export class App extends React.Component<Props, State> {
             </section>
             <section className="theta">
               <h3>Theta: </h3>
-              <textarea rows={1} cols={4} draggable="false" readOnly  value={Math.round(robot.theta/Math.PI*180)}/>
+              <textarea rows={1} cols={4} draggable="false" readOnly  value={Math.round(-1*robot.theta/Math.PI*180)}/>
             </section>
           </section>
         </section>
