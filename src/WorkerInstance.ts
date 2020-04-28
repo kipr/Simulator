@@ -17,7 +17,7 @@ class WorkerInstance {
   private registers_ = new Array<number>(Registers.REG_ALL_COUNT).fill(0).fill(5,78,85).fill(220,79,80).fill(220,81,82).fill(220,83,84).fill(220,85,86);
   
   private time_ = Date.now() / 1000;
-  private wheel_radius_ = 53.75;
+  private wheel_diameter_ = 53.75;
   private wheelSep_ = 128.1;
 
   private tick = ()=> {
@@ -30,11 +30,11 @@ class WorkerInstance {
     nextState.motor2_speed = this.registers_[66]*256+this.registers_[67];
     nextState.motor3_speed = this.registers_[68]*256+this.registers_[69];
 
-    const total_dist = (this.wheel_radius_/2)*(nextState.motor3_speed + nextState.motor0_speed)/1500*time_change;
+    const total_dist = (this.wheel_diameter_/2)*(nextState.motor3_speed + nextState.motor0_speed)/1500*time_change;
 
     nextState.x = nextState.x + (total_dist)*Math.cos(nextState.theta);
     nextState.y = nextState.y + (total_dist)*Math.sin(nextState.theta);
-    nextState.theta = nextState.theta + (this.wheel_radius_/2)*(nextState.motor3_speed - nextState.motor0_speed)/1500/this.wheelSep_*time_change;
+    nextState.theta = nextState.theta + (this.wheel_diameter_/2)*(nextState.motor3_speed - nextState.motor0_speed)/1500/this.wheelSep_*time_change;
     
     nextState.motor0_position = nextState.motor0_position + nextState.motor0_speed*time_change;
     nextState.motor1_position = nextState.motor1_position + nextState.motor1_speed*time_change;
