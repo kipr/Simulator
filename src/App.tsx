@@ -5,7 +5,6 @@ import { StyleProps } from "./style";
 import compile from './compile';
 
 import WorkerInstance from './WorkerInstance';
-import Protocol from './WorkerProtocol';
 import { RobotState } from './RobotState';
 
 export interface AppProps extends StyleProps {
@@ -64,10 +63,12 @@ export class App extends React.Component<Props, State> {
     //console.log("Rendering app");
     return (
       <section className="app-area">
-        <header>
-          <h1 className="ide-title">KISS IDE Simulator</h1>
-          <h4 className="kipr">KISS Institute for Practical Robotics</h4>
-        </header>
+        <section className="app-header">
+          <svg width="197" height="164" className="logo">
+            <image height="100%" href="static/KIPR-Logo-bk.jpg"/>
+          </svg>
+          <h1 className="ide-title">KISS IDE<br/>Simulator</h1>
+        </section>
         <p><button onClick={this.onButtonClick_}>Compile</button></p>
         <textarea rows={10} cols={80} onChange={this.onCodeChange_} value={code} className="code"/>
         <section className="robotState">
