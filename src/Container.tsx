@@ -30,6 +30,11 @@ export class Container extends React.Component<Props, State> {
    componentWillMount() {
     WorkerInstance.onStateChange = this.onStateChange
    }
+
+    private onRobotChange_ = (robot: RobotState) => {
+        WorkerInstance.state = robot;
+    };
+
    render(){
        const {
            props, state 
@@ -40,7 +45,7 @@ export class Container extends React.Component<Props, State> {
        return (
         <section id="container">
             <section id="app">
-                <App robot= {state.robot} />
+                <App robot= {state.robot} onRobotChange={this.onRobotChange_} />
             </section>
             <section id="simulator">
                 <svg width={1300} height={900} viewBox="0 0 1440 960" id="simulator-area">

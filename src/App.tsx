@@ -8,7 +8,9 @@ import WorkerInstance from './WorkerInstance';
 import { RobotState } from './RobotState';
 
 export interface AppProps extends StyleProps {
-  robot: RobotState
+  robot: RobotState;
+
+  onRobotChange: (robot: RobotState) => void;
 }
 
 interface AppState {
@@ -51,7 +53,10 @@ export class App extends React.Component<Props, State> {
   };
 
   private onThetaChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-    this.props.robot.theta = -1*parseInt(event.currentTarget.value)*Math.PI/180;
+    this.props.onRobotChange({
+      ...this.props.robot,
+      theta: -1*parseInt(event.currentTarget.value)*Math.PI/180
+    });
   };
 
   render() {

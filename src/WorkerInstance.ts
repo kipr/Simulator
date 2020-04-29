@@ -141,6 +141,11 @@ class WorkerInstance {
     return this.registers_;
   }
 
+  set state(state: RobotState) {
+    this.state_ = state;
+    this.onStateChange(this.state_);
+  }
+
   get state(){
     return this.state_;
   }
