@@ -1,9 +1,6 @@
-// import Worker from "worker-loader!./worker";
 import Protocol from './WorkerProtocol';
 import Registers from './RegisterState'
 import { RobotState } from './RobotState';
-import { App } from './App';
-import { callbackify } from 'util';
 
 import deepNeq from './deepNeq';
 
@@ -22,9 +19,6 @@ class WorkerInstance {
 
   private tick = ()=> {
     const nextState = { ...this.state_ };
-    /*function returnInvert(answer:number){
-      return ~answer
-    }*/
     const new_time = Date.now()/1000
     const time_change = new_time - this.time_;
     this.time_ = new_time;
@@ -48,11 +42,6 @@ class WorkerInstance {
     nextState.theta = nextState.theta + (this.wheel_diameter_/2)*diff_dist/this.wheelSep_*time_change;
     nextState.x = nextState.x + (this.wheel_diameter_/2)*(total_dist)*Math.cos(nextState.theta)*time_change;
     nextState.y = nextState.y + (this.wheel_diameter_/2)*(total_dist)*Math.sin(nextState.theta)*time_change;
-
-    /*Test Kinematic Equations
-    nextState.x = nextState.x + (this.wheel_diameter_/2)*total_dist/diff_dist*this.wheelSep_*Math.sin(diff_dist/this.wheelSep_*time_change) +250;
-    nextState.y = nextState.y + (this.wheel_diameter_/2)*total_dist/diff_dist*this.wheelSep_*Math.cos(diff_dist/this.wheelSep_*time_change) + total_dist/diff_dist*this.wheelSep_/2 +310;
-    nextState.theta = nextState.theta + (this.wheel_diameter_/2)*diff_dist/this.wheelSep_*time_change;*/
     
     nextState.motor0_position = nextState.motor0_position + nextState.motor0_speed*time_change;
     nextState.motor1_position = nextState.motor1_position + nextState.motor1_speed*time_change;
@@ -64,13 +53,13 @@ class WorkerInstance {
       let dval = (degrees + 90.0)  * 2047.0 / 180.0;
       if (dval < 0.0) dval = 0.0;
       if (dval > 2047.0) dval = 2047.01;
-      dval+=0.4;
       return dval;
     }
     nextState.servo0_position = readServoRegister(this.registers_[78], this.registers_[79]);
     nextState.servo1_position = readServoRegister(this.registers_[80], this.registers_[81]);
     nextState.servo2_position = readServoRegister(this.registers_[82], this.registers_[83]);
     nextState.servo3_position = readServoRegister(this.registers_[84], this.registers_[85]);
+    console.log("setting servo");
 
     if (deepNeq(nextState, this.state_)) {
       if (this.onStateChange) {
@@ -92,26 +81,21 @@ class WorkerInstance {
           break;
         }
         case 'program-ended': {
-          /*const x_end = this.state_.x;
-          const y_end = this.state_.y;
-          const theta_end = this.state_.theta;
-          const motor0_position_end = this.state_.motor0_position;
-          const motor1_position_end = this.state_.motor1_position;
-          const motor2_position_end = this.state_.motor2_position;
-          const motor3_position_end = this.state_.motor3_position;
-          this.state_ = RobotState.empty;
-          this.state_.x = x_end;
-          this.state_.y = y_end;
-          this.state_.theta = theta_end;
-          this.state_.motor0_position = motor0_position_end;
-          this.state_.motor1_position = motor1_position_end;
-          this.state_.motor2_position = motor2_position_end;
-          this.state_.motor3_position = motor3_position_end;*/
           this.state_.motor0_speed = 0;
           this.state_.motor1_speed = 0;
           this.state_.motor2_speed = 0;
           this.state_.motor3_speed = 0;
-          this.registers_ = new Array<number>(Registers.REG_ALL_COUNT).fill(0);
+          const servoPositions = this.registers_.slice(78,86);
+          this.registers_ = new Array<number>(Registers.REG_ALL_COUNT)
+                                                                      .fill(0)
+                                                                      .fill(servoPositions[0],78,79)
+                                                                      .fill(servoPositions[1],79,80)
+                                                                      .fill(servoPositions[2],80,81)
+                                                                      .fill(servoPositions[3],81,82)
+                                                                      .fill(servoPositions[4],82,83)
+                                                                      .fill(servoPositions[5],83,84)
+                                                                      .fill(servoPositions[6],84,85)
+                                                                      .fill(servoPositions[7],85,86);
           this.onStateChange(this.state_);
         }
     }

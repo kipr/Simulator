@@ -40,19 +40,6 @@ export namespace Protocol {
     export interface SetRegisterResponse {
       type: 'setregister';
     }
-
-
-
-    /*export interface GetRegister {
-      type: 'getregister';
-      address: string;
-      value: number;
-    }*/
-
-    
-
-    
-
   }
 
   export namespace Host {

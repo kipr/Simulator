@@ -19,8 +19,6 @@ export interface RobotState {
   servo1_position: number;
   servo2_position: number;
   servo3_position: number;
-
-  
 }
 
 export namespace RobotState {

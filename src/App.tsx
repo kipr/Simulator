@@ -45,11 +45,17 @@ export class App extends React.Component<Props, State> {
   };
 
   private onXChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-    this.props.robot.x = parseInt(event.currentTarget.value);
+    this.props.onRobotChange({
+      ...this.props.robot,
+      x: parseInt(event.currentTarget.value)
+    })
   };
 
   private onYChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-    this.props.robot.y = parseInt(event.currentTarget.value);
+    this.props.onRobotChange({
+      ...this.props.robot,
+      y: parseInt(event.currentTarget.value)
+    })
   };
 
   private onThetaChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
