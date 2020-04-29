@@ -43,6 +43,18 @@ export class App extends React.Component<Props, State> {
     });
   };
 
+  private onXChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
+    this.props.robot.x = parseInt(event.currentTarget.value);
+  };
+
+  private onYChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
+    this.props.robot.y = parseInt(event.currentTarget.value);
+  };
+
+  private onThetaChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
+    this.props.robot.theta = -1*parseInt(event.currentTarget.value)*Math.PI/180;
+  };
+
   render() {
     const { props, state } = this;
     const { robot } = props;
@@ -63,15 +75,15 @@ export class App extends React.Component<Props, State> {
           <section className="robotStateValues">
             <section className="x">
               <h3>X: </h3>
-              <textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.x)}/>
+              <textarea rows={1} cols={5} draggable="false" onChange={this.onXChange_} value={Math.round(robot.x)}/>
             </section>
             <section className="y">
               <h3>Y: </h3>
-              <textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.y)}/>
+              <textarea rows={1} cols={5} draggable="false" onChange={this.onYChange_} value={Math.round(robot.y)}/>
             </section>
             <section className="theta">
               <h3>Theta: </h3>
-              <textarea rows={1} cols={4} draggable="false" readOnly  value={Math.round(-1*robot.theta/Math.PI*180)}/>
+              <textarea rows={1} cols={5} draggable="false" onChange={this.onThetaChange_} value={Math.round(-1*robot.theta/Math.PI*180)}/>
             </section>
           </section>
         </section>
