@@ -4,6 +4,13 @@ import { StyleProps } from "./style";
 
 import compile from './compile';
 
+//CodeMirror imports
+import * as CodeMirror from 'codemirror';
+import 'codemirror/lib/codemirror.css';
+
+
+//import { CodeMirrorManager } from './CodeMirror';
+
 import WorkerInstance from './WorkerInstance';
 import { RobotState } from './RobotState';
 
@@ -19,6 +26,8 @@ interface AppState {
 
 type Props = AppProps;
 type State = AppState;
+
+
 
 export class App extends React.Component<Props, State> {
   constructor(props: Props, context?: any) {
@@ -66,6 +75,7 @@ export class App extends React.Component<Props, State> {
   };
 
   render() {
+    //let codemirror = new CodeMirrorManager();
     const { props, state } = this;
     const { robot } = props;
     const { 
@@ -81,7 +91,12 @@ export class App extends React.Component<Props, State> {
           <h1 className="ide-title">KISS IDE<br/>Simulator</h1>
         </section>
         <p><button onClick={this.onButtonClick_}>Compile</button></p>
-        <textarea rows={10} cols={80} onChange={this.onCodeChange_} value={code} className="code"/>
+        <textarea rows={10} cols={80} onChange={this.onCodeChange_} value={code} id="code" name="code" className="code"/>
+        <script>
+          let editor= CodeMirror.fromTextArea(document.getElementById('code') as HTMLTextAreaElement, {
+            "lineNumbers: true"
+          });
+        </script>
         <section className="robotState">
           <h3>Robot State</h3>
           <section className="robotStateValues">
