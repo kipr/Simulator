@@ -48,9 +48,9 @@ export class App extends React.Component<Props, State> {
     
   };
 
-  private onCodeChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
+  private onCodeChange_ = (newCode) => {
     this.setState({
-      code: event.currentTarget.value
+      code: newCode
     });
   };
 
