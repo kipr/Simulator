@@ -5,8 +5,9 @@ import { StyleProps } from "./style";
 import compile from './compile';
 
 //CodeMirror imports
-//import * as CodeMirror from 'codemirror';
-//import 'codemirror/lib/codemirror.css';
+const CodeMirror = require('react-codemirror');
+require('codemirror/lib/codemirror.css');
+require('codemirror/mode/clike/clike');
 
 
 //import { CodeMirrorManager } from './CodeMirror';
@@ -81,6 +82,10 @@ export class App extends React.Component<Props, State> {
     const { 
       code
     } = state;
+    let options = {
+      lineNumbers: true,
+      mode: 'clike',
+    }
     //console.log("Rendering app");
     return (
       <section className="app-area">
@@ -91,8 +96,7 @@ export class App extends React.Component<Props, State> {
           <h1 className="ide-title">KISS IDE<br/>Simulator</h1>
         </section>
         <p><button onClick={this.onButtonClick_}>Compile</button></p>
-        <textarea rows={10} cols={80} onChange={this.onCodeChange_} value={code} id="code" name="code" className="code"/>
-        
+        <CodeMirror value={code} onChange={this.onCodeChange_} options={options} id="code" name="code" className="code" />
         <section className="robotState">
           <h3>Robot State</h3>
           <section className="robotStateValues">
