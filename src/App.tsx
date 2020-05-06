@@ -38,7 +38,7 @@ export class App extends React.Component<Props, State> {
     };
   }
 
-  private onButtonClick_ = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  private onCompileClick_ = async (event: React.MouseEvent<HTMLButtonElement>) => {
     try {
       const compiled = await compile(this.state.code);
       WorkerInstance.start(compiled);
@@ -46,6 +46,15 @@ export class App extends React.Component<Props, State> {
       console.log(e);
     }
     
+  };
+
+  private onResetClick_ = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    this.props.robot.x = 250;
+    this.props.robot.y = 310;
+    this.props.robot.theta = 0;
+    this.props.onRobotChange({
+      ...this.props.robot
+    })
   };
 
   private onCodeChange_ = (newCode) => {
@@ -95,10 +104,11 @@ export class App extends React.Component<Props, State> {
           </svg>
           <h1 className="ide-title">KISS IDE<br/>Simulator</h1>
         </section>
-        <p><button onClick={this.onButtonClick_}>Compile</button></p>
+        <p><button onClick={this.onCompileClick_}>Compile</button></p>
         <CodeMirror value={code} onChange={this.onCodeChange_} options={options} id="code" name="code" className="code" />
         <section className="robotState">
           <h3>Robot State</h3>
+          <button onClick={this.onResetClick_}>Reset</button>
           <section className="robotStateValues">
             <section className="x">
               <h3>X: </h3>

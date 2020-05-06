@@ -15,7 +15,7 @@ ctx.onmessage = (e) => {
             address: address,
             value: value
           });
-          console.log("ASDASD");
+          //console.log("ASDASD");
         },
         registers
       });
