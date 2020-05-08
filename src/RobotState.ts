@@ -37,6 +37,6 @@ export namespace RobotState {
     servo0_position: 1024,
     servo1_position: 1024,
     servo2_position: 1024,
-    servo3_position: 1024
+    servo3_position: 0
   };
 }
