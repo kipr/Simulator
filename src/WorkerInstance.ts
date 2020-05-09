@@ -11,7 +11,15 @@ class WorkerInstance {
   onStateChange:(state:RobotState) => void 
 
   private state_ = RobotState.empty
-  private registers_ = new Array<number>(Registers.REG_ALL_COUNT).fill(0).fill(5,78,84).fill(220,79,80).fill(220,81,82).fill(220,83,84).fill(2,84,85).fill(88,85,86);
+  private registers_ = new Array<number>(Registers.REG_ALL_COUNT)
+                                                                .fill(0)
+                                                                .fill(240,61,62)
+                                                                .fill(5,78,84)
+                                                                .fill(220,79,80)
+                                                                .fill(220,81,82)
+                                                                .fill(220,83,84)
+                                                                .fill(2,84,85)
+                                                                .fill(88,85,86);
   
   private time_ = Date.now() / 1000;
   private wheel_diameter_ = 55;
@@ -55,10 +63,13 @@ class WorkerInstance {
       if (dval > 2047.0) dval = 2047.01;
       return dval;
     }
-    nextState.servo0_position = readServoRegister(this.registers_[78], this.registers_[79]);
-    nextState.servo1_position = readServoRegister(this.registers_[80], this.registers_[81]);
-    nextState.servo2_position = readServoRegister(this.registers_[82], this.registers_[83]);
-    nextState.servo3_position = readServoRegister(this.registers_[84], this.registers_[85]);
+    console.log(this.registers_[61])
+    if(this.registers_[61] == 0){
+      nextState.servo0_position = readServoRegister(this.registers_[78], this.registers_[79]);
+      nextState.servo1_position = readServoRegister(this.registers_[80], this.registers_[81]);
+      nextState.servo2_position = readServoRegister(this.registers_[82], this.registers_[83]);
+      nextState.servo3_position = readServoRegister(this.registers_[84], this.registers_[85]);
+    }
     //console.log("setting servo");
 
     if (deepNeq(nextState, this.state_)) {
@@ -88,6 +99,7 @@ class WorkerInstance {
           const servoPositions = this.registers_.slice(78,86);
           this.registers_ = new Array<number>(Registers.REG_ALL_COUNT)
                                                                       .fill(0)
+                                                                      .fill(240,61,62)
                                                                       .fill(servoPositions[0],78,79)
                                                                       .fill(servoPositions[1],79,80)
                                                                       .fill(servoPositions[2],80,81)
