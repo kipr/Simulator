@@ -48,7 +48,28 @@ export class App extends React.Component<Props, State> {
     
   };
 
-  private onResetClick_ = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  private onDownloadClick_ = (event: React.MouseEvent<HTMLButtonElement>) => {
+    var date = new Date();
+    var dateString = date.getUTCFullYear().toString() + "-" + date.getMonth().toString() + "-" + date.getDay().toString();
+    var file= dateString+"-simulatorCode.c";
+    console.log(file);
+    function download(filename, text) {
+      var element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+      element.setAttribute('download', filename);
+    
+      element.style.display = 'none';
+      document.body.appendChild(element);
+    
+      element.click();
+    
+      document.body.removeChild(element);
+    }
+    download(file,this.state.code);
+    
+  };
+
+  private onResetClick_ = (event: React.MouseEvent<HTMLButtonElement>) => {
     this.props.robot.x = 250;
     this.props.robot.y = 310;
     this.props.robot.theta = 0;
@@ -104,11 +125,14 @@ export class App extends React.Component<Props, State> {
           </svg>
           <h1 className="ide-title">KISS IDE<br/>Simulator</h1>
         </section>
-        <p><button onClick={this.onCompileClick_}>Compile</button></p>
+        <p>
+          <button onClick={this.onCompileClick_}>Compile</button>
+          <button onClick={this.onDownloadClick_}>Download</button>
+        </p>
         <CodeMirror value={code} onChange={this.onCodeChange_} options={options} id="code" name="code" className="code" />
         <section className="robotState">
-          <h3>Robot State</h3>
-          <button onClick={this.onResetClick_}>Reset</button>
+          <h3 className="robotStateHead">Robot State</h3>
+          <button onClick={this.onResetClick_} className="resetButton">Reset</button>
           <section className="robotStateValues">
             <section className="x">
               <h3>X: </h3>
