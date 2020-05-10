@@ -1,6 +1,8 @@
-export default (code: string, context: any): any => {
+export default (code: string, context: any, print: (s:string)=> void): any => {
   const mod = {
-    context
+    context,
+    print,
+    err: print
   };
   new Function("Module", `"use strict"; ${code}`)(mod);
   return mod;

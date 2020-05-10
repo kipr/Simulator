@@ -3,7 +3,14 @@ import dynRequire from './require';
 import Registers from './RegisterState';
 
 const ctx: Worker = self as any;
+const print = (s: string)=>{
+  ctx.postMessage({
+    type: 'programoutput',
+    stdoutput: s
+  })
+}
 ctx.onmessage = (e) => {
+  
   const message:Protocol.Worker.Request = e.data;
   const registers = new Array<number>(Registers.REG_ALL_COUNT);
   switch (message.type) {
@@ -18,7 +25,10 @@ ctx.onmessage = (e) => {
           //console.log("ASDASD");
         },
         registers
-      });
+      },
+      print
+      );
+
 
       
       

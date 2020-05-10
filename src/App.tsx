@@ -10,8 +10,6 @@ require('codemirror/lib/codemirror.css');
 require('codemirror/mode/clike/clike');
 
 
-//import { CodeMirrorManager } from './CodeMirror';
-
 import WorkerInstance from './WorkerInstance';
 import { RobotState } from './RobotState';
 
@@ -23,6 +21,7 @@ export interface AppProps extends StyleProps {
 
 interface AppState {
   code: string;
+  console: string;
 }
 
 type Props = AppProps;
@@ -34,13 +33,19 @@ export class App extends React.Component<Props, State> {
   constructor(props: Props, context?: any) {
     super(props, context);
     this.state = {
-      code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main() {\n  printf("Hello, World! %lf\\n", seconds());\n  return 0;\n}\n'
+      code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main() {\n  printf("Hello, World! %lf\\n", seconds());\n  return 0;\n}\n',
+      console: ''
     };
   }
-
+  private onStdOutput_ = (s: string) => {
+    this.setState({
+      console: `${this.state.console}${s}`
+    })
+  }
   private onCompileClick_ = async (event: React.MouseEvent<HTMLButtonElement>) => {
     try {
       const compiled = await compile(this.state.code);
+      WorkerInstance.onStdOutput = this.onStdOutput_;
       WorkerInstance.start(compiled);
     } catch (e) {
       console.log(e);
@@ -110,7 +115,8 @@ export class App extends React.Component<Props, State> {
     const { props, state } = this;
     const { robot } = props;
     const { 
-      code
+      code,
+      console
     } = state;
     let options = {
       lineNumbers: true,
@@ -130,6 +136,7 @@ export class App extends React.Component<Props, State> {
           <button onClick={this.onDownloadClick_}>Download</button>
         </p>
         <CodeMirror value={code} onChange={this.onCodeChange_} options={options} id="code" name="code" className="code" />
+        <textarea value={console} contentEditable={false} />
         <section className="robotState">
           <h3 className="robotStateHead">Robot State</h3>
           <button onClick={this.onResetClick_} className="resetButton">Reset</button>

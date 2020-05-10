@@ -9,6 +9,7 @@ import deepNeq from './deepNeq';
 class WorkerInstance {
   
   onStateChange:(state:RobotState) => void 
+  onStdOutput:(s: string) => void
 
   private state_ = RobotState.empty
   private registers_ = new Array<number>(Registers.REG_ALL_COUNT)
@@ -109,6 +110,13 @@ class WorkerInstance {
                                                                       .fill(servoPositions[6],84,85)
                                                                       .fill(servoPositions[7],85,86);
           this.onStateChange(this.state_);
+          break;
+        }
+        case 'programoutput': {
+          message.stdoutput
+          if(this.onStdOutput){
+            this.onStdOutput(message.stdoutput)
+          }
         }
     }
   }
