@@ -9,6 +9,12 @@ const print = (s: string)=>{
     stdoutput: s
   })
 }
+const err = (stdoutput: string, stderror: string) => {
+  ctx.postMessage({
+    type: 'programerror',
+    stderror: stderror
+  })
+}
 ctx.onmessage = (e) => {
   
   const message:Protocol.Worker.Request = e.data;
@@ -26,7 +32,8 @@ ctx.onmessage = (e) => {
         },
         registers
       },
-      print
+      print,
+      err
       );
 
 

@@ -39,16 +39,26 @@ export class App extends React.Component<Props, State> {
   }
   private onStdOutput_ = (s: string) => {
     this.setState({
-      console: `${this.state.console}${s}`
-    })
+      console: `${this.state.console}\n${s}`
+    });
+  }
+  private onStdError_ = (stderror: string) => {
+    this.setState({
+      console: `${this.state.console}\n${stderror}`
+    });
   }
   private onCompileClick_ = async (event: React.MouseEvent<HTMLButtonElement>) => {
     try {
       const compiled = await compile(this.state.code);
       WorkerInstance.onStdOutput = this.onStdOutput_;
+      WorkerInstance.onStdError = this.onStdError_;
       WorkerInstance.start(compiled);
     } catch (e) {
       console.log(e);
+      console.log(e.stderr);
+      this.setState({
+        console: `${this.state.console}\n**********************************\n${e.stderr}`
+      });
     }
     
   };
@@ -135,8 +145,8 @@ export class App extends React.Component<Props, State> {
           <button onClick={this.onCompileClick_}>Compile</button>
           <button onClick={this.onDownloadClick_}>Download</button>
         </p>
-        <CodeMirror value={code} onChange={this.onCodeChange_} options={options} id="code" name="code" className="code" />
-        <textarea value={console} contentEditable={false} />
+        <CodeMirror rows={20} cols={65} value={code} onChange={this.onCodeChange_} options={options} id="code" name="code" className="code" />
+        <textarea rows={10} cols={70} value={console} contentEditable={false} />
         <section className="robotState">
           <h3 className="robotStateHead">Robot State</h3>
           <button onClick={this.onResetClick_} className="resetButton">Reset</button>

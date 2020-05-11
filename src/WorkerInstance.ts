@@ -10,6 +10,7 @@ class WorkerInstance {
   
   onStateChange:(state:RobotState) => void 
   onStdOutput:(s: string) => void
+  onStdError:(stderror: string) => void
 
   private state_ = RobotState.empty
   private registers_ = new Array<number>(Registers.REG_ALL_COUNT)
@@ -117,6 +118,14 @@ class WorkerInstance {
           if(this.onStdOutput){
             this.onStdOutput(message.stdoutput)
           }
+          break;
+        }
+        case 'programerror': {
+          message.stderror
+          if(this.onStdError){
+            this.onStdError(message.stderror)
+          }
+          break;
         }
     }
   }
