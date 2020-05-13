@@ -91,6 +91,9 @@ export class App extends React.Component<Props, State> {
     this.props.onRobotChange({
       ...this.props.robot
     })
+    this.setState({
+      console: ''
+    })
   };
 
   private onCodeChange_ = (newCode) => {
