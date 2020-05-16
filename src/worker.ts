@@ -36,9 +36,6 @@ ctx.onmessage = (e) => {
       err
       );
 
-
-      
-      
       mod.onRuntimeInitialized = () => {
         mod._main();
         ctx.postMessage({
@@ -48,6 +45,26 @@ ctx.onmessage = (e) => {
 
       ctx.postMessage({
         type: 'start'
+      });
+
+      break;
+    }
+
+    case 'compile': {
+      const mod = dynRequire(message.code,{},
+        print,
+        err
+      );
+
+      mod.onRuntimeInitialized = () => {
+        mod._main();
+        ctx.postMessage({
+          type: 'program-ended'
+        })
+      };
+
+      ctx.postMessage({
+        type: 'compile'
       });
 
       break;

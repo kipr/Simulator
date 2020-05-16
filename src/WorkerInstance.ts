@@ -9,6 +9,7 @@ import deepNeq from './deepNeq';
 class WorkerInstance {
   
   onStateChange:(state:RobotState) => void 
+  
   onStdOutput:(s: string) => void
   onStdError:(stderror: string) => void
 
@@ -65,7 +66,7 @@ class WorkerInstance {
       if (dval > 2047.0) dval = 2047.01;
       return dval;
     }
-    console.log(this.registers_[61])
+    //console.log(this.registers_[61])
     if(this.registers_[61] == 0){
       nextState.servo0_position = readServoRegister(this.registers_[78], this.registers_[79]);
       nextState.servo1_position = readServoRegister(this.registers_[80], this.registers_[81]);
@@ -135,6 +136,16 @@ class WorkerInstance {
     });
     this.worker_.postMessage({
       type: 'start',
+      code
+    });
+  }
+
+  compile(code: string) {
+    this.worker_.postMessage({
+      type: 'stop'
+    });
+    this.worker_.postMessage({
+      type: 'compile',
       code
     });
   }

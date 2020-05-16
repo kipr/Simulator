@@ -37,17 +37,41 @@ export class App extends React.Component<Props, State> {
       console: ''
     };
   }
+
   private onStdOutput_ = (s: string) => {
     this.setState({
       console: `${this.state.console}\n${s}`
     });
   }
+
+  private onStdCompOutput_ = (s: string) => {
+    this.setState({
+      console: `Compile Succeeded\n`
+    });
+  }
+
   private onStdError_ = (stderror: string) => {
     this.setState({
-      console: `${this.state.console}\n${stderror}`
+      console: `${stderror}\n Compiled`
     });
   }
   private onCompileClick_ = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    try {
+      const compiled = await compile(this.state.code);
+      WorkerInstance.onStdOutput = this.onStdCompOutput_;
+      WorkerInstance.onStdError = this.onStdError_;
+      WorkerInstance.compile(compiled);
+    } catch (e) {
+      console.log(e);
+      console.log(e.stderr);
+      this.setState({
+        console: `Compile Failed \n\n**********************************\n${e.stderr}\n`
+      });
+    }
+    
+  };
+
+  private onRunClick_ = async (event: React.MouseEvent<HTMLButtonElement>) => {
     try {
       const compiled = await compile(this.state.code);
       WorkerInstance.onStdOutput = this.onStdOutput_;
@@ -57,7 +81,7 @@ export class App extends React.Component<Props, State> {
       console.log(e);
       console.log(e.stderr);
       this.setState({
-        console: `${this.state.console}\n**********************************\n${e.stderr}`
+        console: `Run Failed: Please Recompile\n\n**********************************\n${e.stderr}\n`
       });
     }
     
@@ -146,6 +170,7 @@ export class App extends React.Component<Props, State> {
         </section>
         <p>
           <button onClick={this.onCompileClick_}>Compile</button>
+          <button onClick={this.onRunClick_}>Run</button>
           <button onClick={this.onDownloadClick_}>Download</button>
         </p>
         <CodeMirror rows={20} cols={65} value={code} onChange={this.onCodeChange_} options={options} id="code" name="code" className="code" />
