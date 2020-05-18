@@ -1,6 +1,7 @@
 import Protocol from './WorkerProtocol';
 import dynRequire from './require';
 import Registers from './RegisterState';
+import WorkerInstance from './WorkerInstance';
 
 const ctx: Worker = self as any;
 const print = (s: string)=>{
@@ -30,7 +31,19 @@ ctx.onmessage = (e) => {
           });
           //console.log("ASDASD");
         },
-        registers
+        registers,
+        onMotorPositionClear: (motor) => {
+          ctx.postMessage({
+            type: 'setmotorposition',
+            motor: motor
+          });
+        },
+        getMotorPosition: (motor) => {
+          ctx.postMessage({
+            type: 'setmotorposition',
+            motor: motor
+          });
+        },
       },
       print,
       err
@@ -74,6 +87,13 @@ ctx.onmessage = (e) => {
 
       ctx.postMessage({
         type: 'setregister'
+      });
+      break;
+    }
+    case 'setmotorposition': {
+
+      ctx.postMessage({
+        type: 'setmotorposition'
       });
       break;
     }

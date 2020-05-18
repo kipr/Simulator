@@ -15,7 +15,7 @@ export namespace Protocol {
       code: string;
     }
 
-    export type Request = StartRequest | StopRequest | CompileRequest | SetRegisterRequest | ProgramEndedRequest | ProgramOutputRequest | ProgramErrorRequest;
+    export type Request = StartRequest | StopRequest | CompileRequest | SetRegisterRequest | ProgramEndedRequest | ProgramOutputRequest | ProgramErrorRequest | SetMotorPositionRequest;
 
     export interface StartResponse {
       type: 'start';
@@ -37,7 +37,7 @@ export namespace Protocol {
       type: 'program-ended'
     }
 
-    export type Response = StartResponse | StopResponse | CompileResponse | SetRegisterResponse | ProgramEndedResponse;
+    export type Response = StartResponse | StopResponse | CompileResponse | SetRegisterResponse | ProgramEndedResponse | SetMotorPositionResponse;
 
 
     export interface SetRegisterRequest {
@@ -59,6 +59,16 @@ export namespace Protocol {
       type: 'programerror';
       stdoutput: string;
       stderror: string;
+    }
+
+    export interface SetMotorPositionRequest {
+      type: 'setmotorposition';
+      motor: number;
+    }
+
+    export interface SetMotorPositionResponse {
+      type: 'setmotorposition';
+      motor: number;
     }
   }
 

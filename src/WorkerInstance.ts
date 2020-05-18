@@ -94,6 +94,22 @@ class WorkerInstance {
           this.registers_[message.address] = message.value;
           break;
         }
+        case 'setmotorposition': {
+          console.log(`motor number is: ${message.motor}`);
+          if(message.motor == 0){
+            this.state.motor0_position = 0;
+          }
+          else if(message.motor == 1){
+            this.state.motor1_position = 0;
+          }
+          else if(message.motor == 2){
+            this.state.motor2_position = 0;
+          }
+          else if(message.motor == 3){
+            this.state.motor3_position = 0;
+          }
+          break;
+        }
         case 'program-ended': {
           this.state_.motor0_speed = 0;
           this.state_.motor1_speed = 0;
