@@ -27,25 +27,34 @@ class WorkerInstance {
   private time_ = Date.now() / 1000;
   private wheel_diameter_ = 55;
   private wheelSep_ = 64.05;
+  private DirectionalValues = (int1:number, int2:number) => {
+    if(int1 > int2){
+      return -((0xFF ^ int1)*256 + (0xFF ^ int2)) - 1;
+    }
+    else{
+      return int1*256 + int2;
+    }
+  }
+  private readServoRegister = (reg1: number, reg2: number) => {
+    let val = reg1 << 8 | reg2;
+    let degrees = (val - 1500.0) / 10.0;
+    let dval = (degrees + 90.0)  * 2047.0 / 180.0;
+    if (dval < 0.0) dval = 0.0;
+    if (dval > 2047.0) dval = 2047.01;
+    return dval;
+  }
 
   private tick = ()=> {
     const nextState = { ...this.state_ };
     const new_time = Date.now()/1000
     const time_change = new_time - this.time_;
     this.time_ = new_time;
-    function DirectionalValues(int1:number, int2:number){
-      if(int1 > int2){
-        return -((0xFF ^ int1)*256 + (0xFF ^ int2)) - 1;
-      }
-      else{
-        return int1*256 + int2;
-      }
-    }
+    
 
-    nextState.motor0_speed = DirectionalValues(this.registers_[62], this.registers_[63]);
-    nextState.motor1_speed = DirectionalValues(this.registers_[64], this.registers_[65]);
-    nextState.motor2_speed = DirectionalValues(this.registers_[66], this.registers_[67]);
-    nextState.motor3_speed = DirectionalValues(this.registers_[68], this.registers_[69]);
+    nextState.motor0_speed = this.DirectionalValues(this.registers_[62], this.registers_[63]);
+    nextState.motor1_speed = this.DirectionalValues(this.registers_[64], this.registers_[65]);
+    nextState.motor2_speed = this.DirectionalValues(this.registers_[66], this.registers_[67]);
+    nextState.motor3_speed = this.DirectionalValues(this.registers_[68], this.registers_[69]);
 
     const total_dist = (nextState.motor3_speed + nextState.motor0_speed)/1500;
     const diff_dist = (nextState.motor3_speed - nextState.motor0_speed)/1500;
@@ -54,24 +63,18 @@ class WorkerInstance {
     nextState.x = nextState.x + (this.wheel_diameter_/2)*(total_dist)*Math.cos(nextState.theta)*time_change;
     nextState.y = nextState.y + (this.wheel_diameter_/2)*(total_dist)*Math.sin(nextState.theta)*time_change;
     
+    //Write the values to the registers and send those back to worker when updated.(Send the entire array to worker)
     nextState.motor0_position = nextState.motor0_position + nextState.motor0_speed*time_change;
     nextState.motor1_position = nextState.motor1_position + nextState.motor1_speed*time_change;
     nextState.motor2_position = nextState.motor2_position + nextState.motor2_speed*time_change;
     nextState.motor3_position = nextState.motor3_position + nextState.motor3_speed*time_change;
-    function readServoRegister (reg1: number, reg2: number) {
-      let val = reg1 << 8 | reg2;
-      let degrees = (val - 1500.0) / 10.0;
-      let dval = (degrees + 90.0)  * 2047.0 / 180.0;
-      if (dval < 0.0) dval = 0.0;
-      if (dval > 2047.0) dval = 2047.01;
-      return dval;
-    }
+    
     //console.log(this.registers_[61])
     if(this.registers_[61] == 0){
-      nextState.servo0_position = readServoRegister(this.registers_[78], this.registers_[79]);
-      nextState.servo1_position = readServoRegister(this.registers_[80], this.registers_[81]);
-      nextState.servo2_position = readServoRegister(this.registers_[82], this.registers_[83]);
-      nextState.servo3_position = readServoRegister(this.registers_[84], this.registers_[85]);
+      nextState.servo0_position = this.readServoRegister(this.registers_[78], this.registers_[79]);
+      nextState.servo1_position = this.readServoRegister(this.registers_[80], this.registers_[81]);
+      nextState.servo2_position = this.readServoRegister(this.registers_[82], this.registers_[83]);
+      nextState.servo3_position = this.readServoRegister(this.registers_[84], this.registers_[85]);
     }
     //console.log("setting servo");
 

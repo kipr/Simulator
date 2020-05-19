@@ -17,17 +17,19 @@ export class Visualizer extends React.Component<Props> {
       style,
       robot
     } = props;
-    let rotateRobot = 'rotate(' + ((robot.theta)*180/Math.PI).toString() + ' ' + (robot.x+142.88).toString() + ' ' + (robot.y+67.5).toString() + ')';
-    let rotateClaw= 'rotate(' + (robot.servo3_position/11.37).toString() + ' ' + (robot.x+262.5+5).toString() + ' ' + (robot.y+48.5+30).toString() + ')';
+    const thetaDeg = Math.floor(robot.theta * 180 / Math.PI);
+    const x = Math.floor(robot.x);
+    const y = Math.floor(robot.y);
+
+    let rotateRobot = `rotate(${thetaDeg} ${(x+142.88)} ${y+67.5})`;
+    let rotateClaw = `rotate(${robot.servo3_position/11.37} ${(robot.x+262.5+5)} ${(robot.y+48.5+30)})`;
+
+    let arm: JSX.Element;
+    let claw: JSX.Element;
     if(robot.servo0_position<341)
     {
-      return (
-        <svg>
-            <image height="135" x={robot.x} y={robot.y} transform={rotateRobot} href="static/Sensor-Demobot-No-Claw.png"/>
-            <image height="71.2" x={robot.x+194} y={robot.y+24} transform={rotateRobot} href="static/Arm-Only-Horizontal.PNG"/>
-            <image height="35.22" x={robot.x+262.5} y={robot.y+48.5} transform={rotateRobot+' '+rotateClaw} href="static/Claw-Only-Horizontal.PNG"/>
-        </svg>
-      )
+      arm = <image height="71.2" x={robot.x+194} y={robot.y+24} transform={rotateRobot} href="static/Arm-Only-Horizontal.PNG"/>;
+      claw = <image height="35.22" x={robot.x+262.5} y={robot.y+48.5} transform={rotateRobot+' '+rotateClaw} href="static/Claw-Only-Horizontal.PNG"/>;
     }
     else if(robot.servo0_position>=341 && robot.servo0_position<=683)
     {
@@ -89,5 +91,12 @@ export class Visualizer extends React.Component<Props> {
         )
       }
     }
+    return (
+      <svg>
+        <image height="135" x={robot.x} y={robot.y} transform={rotateRobot} href="static/Sensor-Demobot-No-Claw.png"/>
+        {arm}
+        {claw}
+      </svg>
+    );
   }
 }
