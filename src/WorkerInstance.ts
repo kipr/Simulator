@@ -68,6 +68,11 @@ class WorkerInstance {
     nextState.motor1_position = nextState.motor1_position + nextState.motor1_speed*time_change;
     nextState.motor2_position = nextState.motor2_position + nextState.motor2_speed*time_change;
     nextState.motor3_position = nextState.motor3_position + nextState.motor3_speed*time_change;
+
+    this.registers_[42] = nextState.motor0_position;
+    this.registers_[46] = nextState.motor1_position;
+    this.registers_[50] = nextState.motor2_position;
+    this.registers_[54] = nextState.motor3_position;
     
     //console.log(this.registers_[61])
     if(this.registers_[61] == 0){
