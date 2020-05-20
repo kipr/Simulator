@@ -37,7 +37,7 @@ export namespace Protocol {
       type: 'program-ended'
     }
 
-    export type Response = StartResponse | StopResponse | CompileResponse | SetRegisterResponse | ProgramEndedResponse | SetMotorPositionResponse;
+    export type Response = StartResponse | StopResponse | CompileResponse | SetRegisterResponse | ProgramEndedResponse;
 
 
     export interface SetRegisterRequest {
@@ -62,11 +62,6 @@ export namespace Protocol {
     }
 
     export interface SetMotorPositionRequest {
-      type: 'setmotorposition';
-      motor: number;
-    }
-
-    export interface SetMotorPositionResponse {
       type: 'setmotorposition';
       motor: number;
     }
