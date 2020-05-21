@@ -109,8 +109,8 @@ export class App extends React.Component<Props, State> {
   };
 
   private onResetClick_ = (event: React.MouseEvent<HTMLButtonElement>) => {
-    this.props.robot.x = 250;
-    this.props.robot.y = 310;
+    this.props.robot.x = 220;
+    this.props.robot.y = 400;
     this.props.robot.theta = 0;
     this.props.onRobotChange({
       ...this.props.robot
