@@ -23,8 +23,8 @@ export interface RobotState {
 
 export namespace RobotState {
   export const empty: RobotState = {
-    x: 250,
-    y: 310,
+    x: 220,
+    y: 400,
     theta:0,
     motor0_speed: 0,
     motor1_speed: 0,
