@@ -51,6 +51,7 @@ export class Container extends React.Component<Props, State> {
                 <svg width={1300} height={900} viewBox="0 0 1440 960" id="simulator-area">
                     <Static/>
                     <Visualizer robot= {state.robot}/>
+                    <canvas id="c"></canvas>
                 </svg>
             </section>
         </section>

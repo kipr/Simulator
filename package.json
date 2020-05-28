@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@types/react": "^16.9.25",
+    "ammo-node": "^1.0.0",
     "body-parser": "^1.19.0",
     "codemirror": "^5.53.2",
     "css-loader": "^3.5.3",
@@ -46,6 +47,7 @@
     "style-loader": "^1.2.1",
     "styletron": "^3.0.4",
     "styletron-react": "^5.2.7",
-    "three": "^0.116.1"
+    "three": "^0.116.1",
+    "three-gltf2-loader": "^1.2.0"
   }
 }
