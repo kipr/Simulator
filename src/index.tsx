@@ -8,5 +8,5 @@ import { Container } from './Container';
 const root = document.getElementById('root');
 
 ReactDom.render(
-    <Container></Container>, 
+    <Container/>, 
 root);

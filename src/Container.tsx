@@ -1,9 +1,10 @@
-import * as React from 'react'
-import { App } from './App'
-import { Visualizer } from './Visualizer'
-import { Static } from './Static'
-import WorkerInstance from './WorkerInstance'
-import { RobotState } from './RobotState'
+import * as React from 'react';
+import { App } from './App';
+import { Visualizer } from './Visualizer';
+import { Static } from './Static';
+import { Sim } from './Sim';
+import WorkerInstance from './WorkerInstance';
+import { RobotState } from './RobotState';
 
 export interface ContainerProps{}
 interface ContainerState{
@@ -11,6 +12,9 @@ interface ContainerState{
 }
 type Props = ContainerProps;
 type State = ContainerState;
+
+const sim = new Sim;
+sim.main();
 
 export class Container extends React.Component<Props, State> {
    constructor(props: Props, context?){
@@ -43,19 +47,10 @@ export class Container extends React.Component<Props, State> {
        //console.log('qwe')
 
        return (
-        <section id="container">
             <section id="app">
                 <App robot= {state.robot} onRobotChange={this.onRobotChange_} />
             </section>
-            <section id="simulator">
-                <svg width={1300} height={900} viewBox="0 0 1440 960" id="simulator-area">
-                    <Static/>
-                    <Visualizer robot= {state.robot}/>
-                    <canvas id="c"></canvas>
-                </svg>
-            </section>
-        </section>
-    )
+        )
    }
 }
 
