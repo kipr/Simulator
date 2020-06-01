@@ -12,18 +12,18 @@ export class Sim {
     const near = 0.1;
     const far = 100;
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(0, 10, 20);
+    camera.position.set(-10, 10, 10);
   
     const controls = new OrbitControls(camera, canvas);
-    controls.target.set(0, 5, 0);
+    controls.target.set(-10, 10, 10);
     controls.update();
   
     const scene = new THREE.Scene();
     scene.background = new THREE.Color('LightGrey');
   
     {
-      const planeLength = 40;
-      const planeWidth = 20;
+      const planeLength = 120;
+      const planeWidth = 60;
   
       const loader = new THREE.TextureLoader();
       const texture = loader.load('static/Surface-A.png');
@@ -61,14 +61,14 @@ export class Sim {
     }
   
     function frameArea(sizeToFitOnScreen, boxSize, boxCenter, camera) {
-      const halfSizeToFitOnScreen = sizeToFitOnScreen * 0.5;
+      // const halfSizeToFitOnScreen = sizeToFitOnScreen * 0.5;
       const halfFovY = THREE.MathUtils.degToRad(camera.fov * .5);
-      const distance = halfSizeToFitOnScreen / Math.tan(halfFovY);
+      const distance = sizeToFitOnScreen / Math.tan(halfFovY);
       // compute a unit vector that points in the direction the camera is now
       // in the xz plane from the center of the box
       const direction = (new THREE.Vector3())
           .subVectors(camera.position, boxCenter)
-          .multiply(new THREE.Vector3(1, 0, 1))
+          .multiply(new THREE.Vector3(1, 1, 1))
           .normalize();
   
       // move the camera to a position distance units way from the center
@@ -79,7 +79,7 @@ export class Sim {
       // will contain the box.
       camera.near = boxSize / 100;
       camera.far = boxSize * 100;
-  
+      
       camera.updateProjectionMatrix();
   
       // point the camera to look at the center of the box
