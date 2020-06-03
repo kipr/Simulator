@@ -85,12 +85,31 @@ export class Sim {
       // point the camera to look at the center of the box
       camera.lookAt(boxCenter.x, boxCenter.y, boxCenter.z);
     }
-  
+
+    function dumpObject(obj, lines = [], isLast = true, prefix = '') {
+      const localPrefix = isLast ? '└─' : '├─';
+      lines.push(`${prefix}${prefix ? localPrefix : ''}${obj.name || '*no-name*'} [${obj.type}]`);
+      const newPrefix = prefix + (isLast ? '  ' : '│ ');
+      const lastNdx = obj.children.length - 1;
+      obj.children.forEach((child, ndx) => {
+        const isLast = ndx === lastNdx;
+        dumpObject(child, lines, isLast, newPrefix);
+      });
+      return lines;
+    }
+
+    let wheels;
     {
       const gltfLoader = new GLTFLoader();
       gltfLoader.load('static/Simulator_Demobot_Cleared.glb', (gltf) => {
         const root = gltf.scene;
         scene.add(root);
+
+        wheels = root.getObjectByName('Servo_Wheel-1');
+        console.log(wheels);
+        console.log(dumpObject(root).join('\n'))
+        //console.log(root.children[0].children[0].children[0].children[0].children);
+
   
         // compute the box that contains all the stuff
         // from root and below
@@ -120,11 +139,18 @@ export class Sim {
       return needResize;
     }
   
-    function render() {
+    function render(time) {
+        time *= 0.001;
       if (resizeRendererToDisplaySize(renderer)) {
         const canvas = renderer.domElement;
         camera.aspect = canvas.clientWidth / canvas.clientHeight;
         camera.updateProjectionMatrix();
+      }
+
+      if (wheels) {
+        for (const wheel of wheels.children) {
+          wheel.rotation.y = time;
+        }
       }
   
       renderer.render(scene, camera);
