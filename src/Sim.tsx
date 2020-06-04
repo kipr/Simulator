@@ -12,10 +12,10 @@ export class Sim {
     const near = 0.1;
     const far = 100;
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(-10, 10, 10);
+    camera.position.set(-33, 100, 5);
   
     const controls = new OrbitControls(camera, canvas);
-    controls.target.set(-10, 10, 10);
+    controls.target.set(-37, 0, -2);
     controls.update();
   
     const scene = new THREE.Scene();
@@ -68,7 +68,7 @@ export class Sim {
       // in the xz plane from the center of the box
       const direction = (new THREE.Vector3())
           .subVectors(camera.position, boxCenter)
-          .multiply(new THREE.Vector3(1, 1, 1))
+          .multiply(new THREE.Vector3(0, 0.3, 0.9))
           .normalize();
   
       // move the camera to a position distance units way from the center
@@ -101,7 +101,9 @@ export class Sim {
   
         // set the camera to frame the box
         frameArea(boxSize * 0.5, boxSize, boxCenter, camera);
-        gltf.scene.scale.set(1,1,1) // scale here
+        gltf.scene.scale.set(1,1,1); // scale here
+        gltf.scene.position.set(-37,0,-2);
+        gltf.scene.rotateY(Math.PI/2);
         // update the Trackball controls to handle the new size
         controls.maxDistance = boxSize * 10;
         controls.target.copy(boxCenter);
