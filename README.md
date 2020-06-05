@@ -1,5 +1,5 @@
-# 2D-Simulator
-2D simulator for the Wombats.
+# Simulator
+Simulator for the Wombats.
 
 # Development
 
