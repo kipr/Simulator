@@ -1,14 +1,14 @@
 import * as THREE from 'three';
-import * as Ammo from 'ammo-node';
+import * as Ammo from 'ammo.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import {OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 export class Sim {
   public canvas = document.getElementById('sim') as HTMLCanvasElement;
-  public renderer = new THREE.WebGLRenderer({canvas});
+  public renderer = new THREE.WebGLRenderer({canvas: this.canvas});
   public main () {
     
-  
+    
     const fov = 45;
     const aspect = 2;  // the canvas default
     const near = 0.1;
@@ -16,12 +16,21 @@ export class Sim {
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
     camera.position.set(-33, 100, 5);
   
-    const controls = new OrbitControls(camera, canvas);
+    const controls = new OrbitControls(camera, this.canvas);
     controls.target.set(-37, 0, -2);
     controls.update();
   
     const scene = new THREE.Scene();
     scene.background = new THREE.Color('LightGrey');
+
+    //-----------------AMMO Code
+    let collisionConfiguration  = new Ammo.btDefaultCollisionConfiguration(),
+        dispatcher              = new Ammo.btCollisionDispatcher(collisionConfiguration),
+        overlappingPairCache    = new Ammo.btDbvtBroadphase(),
+        solver                  = new Ammo.btSequentialImpulseConstraintSolver();
+
+    let physicsWorld           = new Ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
+    physicsWorld.setGravity(new Ammo.btVector3(0, -10, 0));
   
     {
       const planeLength = 120;
@@ -62,7 +71,7 @@ export class Sim {
       scene.add(light.target);
     }
   
-    function frameArea(sizeToFitOnScreen, boxSize, boxCenter, camera) {
+    const frameArea = (sizeToFitOnScreen, boxSize, boxCenter, camera) => {
       // const halfSizeToFitOnScreen = sizeToFitOnScreen * 0.5;
       const halfFovY = THREE.MathUtils.degToRad(camera.fov * .5);
       const distance = sizeToFitOnScreen / Math.tan(halfFovY);
@@ -88,18 +97,6 @@ export class Sim {
       camera.lookAt(boxCenter.x, boxCenter.y, boxCenter.z);
     }
 
-    function dumpObject(obj, lines = [], isLast = true, prefix = '') {
-      const localPrefix = isLast ? '└─' : '├─';
-      lines.push(`${prefix}${prefix ? localPrefix : ''}${obj.name || '*no-name*'} [${obj.type}]`);
-      const newPrefix = prefix + (isLast ? '  ' : '│ ');
-      const lastNdx = obj.children.length - 1;
-      obj.children.forEach((child, ndx) => {
-        const isLast = ndx === lastNdx;
-        dumpObject(child, lines, isLast, newPrefix);
-      });
-      return lines;
-    }
-
     let wheels;
     {
       const gltfLoader = new GLTFLoader();
@@ -109,7 +106,6 @@ export class Sim {
 
         wheels = root.getObjectByName('Servo_Wheel-1');
         console.log(wheels);
-        console.log(dumpObject(root).join('\n'))
         //console.log(root.children[0].children[0].children[0].children[0].children);
 
   
@@ -132,7 +128,7 @@ export class Sim {
       });
     }
   
-    function resizeRendererToDisplaySize(renderer) {
+    const resizeRendererToDisplaySize = (renderer) =>  {
       const canvas = renderer.domElement;
       const width = canvas.clientWidth;
       const height = canvas.clientHeight;
@@ -143,10 +139,10 @@ export class Sim {
       return needResize;
     }
   
-    function render(time) {
+    const render = (time) => {
         time *= 0.001;
-      if (resizeRendererToDisplaySize(renderer)) {
-        const canvas = renderer.domElement;
+      if (resizeRendererToDisplaySize(this.renderer)) {
+        const canvas = this.renderer.domElement;
         camera.aspect = canvas.clientWidth / canvas.clientHeight;
         camera.updateProjectionMatrix();
       }
@@ -157,7 +153,7 @@ export class Sim {
         }
       }
   
-      renderer.render(scene, camera);
+      this.renderer.render(scene, camera);
   
       requestAnimationFrame(render);
     }
@@ -168,87 +164,87 @@ export class Sim {
 }
 
 
-export class Engine {
-	private sim: Sim;
+// export class Engine {
+// 	private sim: Sim;
 
-    private physicsWorld: Ammo.btDiscreteDynamicsWorld;
-    private rigidBodies = new Array<THREE.Object3D>();
-    private clock = new THREE.Clock();
+//     private physicsWorld: Ammo.btDiscreteDynamicsWorld;
+//     private rigidBodies = new Array<THREE.Object3D>();
+//     private clock = new THREE.Clock();
     
-    public constructor(sim: Sim){
-		this.sim = sim;
-		const collisionConfiguration = new Ammo.btDefaultCollisionConfiguration();
-		const dispatcher = new Ammo.btCollisionDispatcher(collisionConfiguration);
-		const overlappingPairCache = new Ammo.btAxisSweep3(new Ammo.btVector3(-1000,-1000,-1000), new Ammo.btVector3(1000,1000,1000));
-		const solver = new Ammo.btSequentialImpulseConstraintSolver();
+//     public constructor(sim: Sim){
+// 		this.sim = sim;
+// 		const collisionConfiguration = new Ammo.btDefaultCollisionConfiguration();
+// 		const dispatcher = new Ammo.btCollisionDispatcher(collisionConfiguration);
+// 		const overlappingPairCache = new Ammo.btAxisSweep3(new Ammo.btVector3(-1000,-1000,-1000), new Ammo.btVector3(1000,1000,1000));
+// 		const solver = new Ammo.btSequentialImpulseConstraintSolver();
 
-		this.physicsWorld = new Ammo.btDiscreteDynamicsWorld( dispatcher, overlappingPairCache, solver, collisionConfiguration);
-		this.physicsWorld.setGravity( new Ammo.btVector3(0, -9.8, 0));
+// 		this.physicsWorld = new Ammo.btDiscreteDynamicsWorld( dispatcher, overlappingPairCache, solver, collisionConfiguration);
+// 		this.physicsWorld.setGravity( new Ammo.btVector3(0, -9.8, 0));
 
-    }
+//     }
 
-    public addPhysicsObject(object: THREE.Object3D, body: Ammo.btRigidBody, mass: number): void {
-		object.userData.physicsBody = body;
-		if (mass > 0) {
-			this.rigidBodies.push(object);
-			body.setActivationState(4); // Disable deactivation
-		}
-		this.sim.constructor().scene.add(object);
-		this.physicsWorld.addRigidBody(body);
-    }
+//     public addPhysicsObject(object: THREE.Object3D, body: Ammo.btRigidBody, mass: number): void {
+// 		object.userData.physicsBody = body;
+// 		if (mass > 0) {
+// 			this.rigidBodies.push(object);
+// 			body.setActivationState(4); // Disable deactivation
+// 		}
+// 		this.sim.constructor().scene.add(object);
+// 		this.physicsWorld.addRigidBody(body);
+//     }
     
-    private tempTransform = new Ammo.btTransform();
+//     private tempTransform = new Ammo.btTransform();
 
-	private updatePhysics(delta: number) {
-		// Step world
-		this.physicsWorld.stepSimulation(delta, 10);
+// 	private updatePhysics(delta: number) {
+// 		// Step world
+// 		this.physicsWorld.stepSimulation(delta, 10);
 
-		// Update rigid bodies
-		const len = this.rigidBodies.length;
-		for (let i = 0; i < len; i++) {
-			var objThree = this.rigidBodies[i];
-			var ms = objThree.userData.physicsBody.getMotionState();
-			if (ms) {
-				ms.getWorldTransform(this.tempTransform);
+// 		// Update rigid bodies
+// 		const len = this.rigidBodies.length;
+// 		for (let i = 0; i < len; i++) {
+// 			var objThree = this.rigidBodies[i];
+// 			var ms = objThree.userData.physicsBody.getMotionState();
+// 			if (ms) {
+// 				ms.getWorldTransform(this.tempTransform);
 
-				let p = this.tempTransform.getOrigin();
-				objThree.position.set(p.x(), p.y(), p.z());
+// 				let p = this.tempTransform.getOrigin();
+// 				objThree.position.set(p.x(), p.y(), p.z());
 
-				let q = this.tempTransform.getRotation();
-				objThree.quaternion.set(q.x(), q.y(), q.z(), q.w());
-			}
-		}
-	}
+// 				let q = this.tempTransform.getRotation();
+// 				objThree.quaternion.set(q.x(), q.y(), q.z(), q.w());
+// 			}
+// 		}
+// 	}
 
-	public update(isPhysicsEnabled: boolean): number {
-		const deltaTime = this.clock.getDelta();
-		isPhysicsEnabled && this.updatePhysics(deltaTime);
-		Sim.main().renderer.render(this.sim.scene, this.sim.camera);
-		return deltaTime;
-	}
-}
+// 	public update(isPhysicsEnabled: boolean): number {
+// 		const deltaTime = this.clock.getDelta();
+// 		isPhysicsEnabled && this.updatePhysics(deltaTime);
+// 		Sim.main().renderer.render(this.sim.scene, this.sim.camera);
+// 		return deltaTime;
+// 	}
+// }
 
-export class ShapeFactory {
+// export class ShapeFactory {
 
-	private engine: Engine;
+// 	private engine: Engine;
 
-	constructor(engine: Engine) {
-		this.engine = engine;
-	}
+// 	constructor(engine: Engine) {
+// 		this.engine = engine;
+// 	}
 
-	private createRigidBody(threeObject: THREE.Object3D, physicsShape: Ammo.btConvexShape, mass: number, pos: THREE.Vector3, quat: THREE.Quaternion): void {
-		var transform = new Ammo.btTransform();
-		transform.setIdentity();
-		transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
-		transform.setRotation(new Ammo.btQuaternion(quat.x, quat.y, quat.z, quat.w));
-		const motionState = new Ammo.btDefaultMotionState(transform);
+// 	private createRigidBody(threeObject: THREE.Object3D, physicsShape: Ammo.btConvexShape, mass: number, pos: THREE.Vector3, quat: THREE.Quaternion): void {
+// 		var transform = new Ammo.btTransform();
+// 		transform.setIdentity();
+// 		transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
+// 		transform.setRotation(new Ammo.btQuaternion(quat.x, quat.y, quat.z, quat.w));
+// 		const motionState = new Ammo.btDefaultMotionState(transform);
 
-		const localInertia = new Ammo.btVector3(0, 0, 0);
-		physicsShape.calculateLocalInertia(mass, localInertia);
+// 		const localInertia = new Ammo.btVector3(0, 0, 0);
+// 		physicsShape.calculateLocalInertia(mass, localInertia);
 
-		var rbInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, physicsShape, localInertia);
-		var body = new Ammo.btRigidBody(rbInfo);
+// 		var rbInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, physicsShape, localInertia);
+// 		var body = new Ammo.btRigidBody(rbInfo);
 
-		this.engine.addPhysicsObject(threeObject, body, mass);
-	}
-}
+// 		this.engine.addPhysicsObject(threeObject, body, mass);
+// 	}
+// }

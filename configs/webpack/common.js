@@ -50,7 +50,7 @@ module.exports = {
     new HtmlWebpackPlugin({template: 'index.html.ejs',}),
     new webpack.IgnorePlugin({
       resourceRegExp: /^fs$/,
-      contextRegExp: /ammo-node$/
+      contextRegExp: /ammo.js$/
     })
   ],
   externals: {
