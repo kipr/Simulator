@@ -2,6 +2,7 @@
 const {resolve} = require('path');
 const {CheckerPlugin} = require('awesome-typescript-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = {
   resolve: {
@@ -47,8 +48,13 @@ module.exports = {
   plugins: [
     new CheckerPlugin(),
     new HtmlWebpackPlugin({template: 'index.html.ejs',}),
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^fs$/,
+      contextRegExp: /ammo-node$/
+    })
   ],
   externals: {
+    
   },
   performance: {
     hints: false,
