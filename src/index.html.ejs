@@ -106,5 +106,25 @@
 <body>
   <div id="root"></div>
   <canvas id="sim"></canvas> 
+  <div id="message" hidden>
+    Mouse and W, A, S, D = move<br/>
+    CLICK = shoot balls<br/>
+    Press ESC to pause
+  </div>
+  <div id="errorMessage" hidden>
+    <b>Mouse move is disabled: your browser doesn't support the Pointer Lock API.</b><br/>
+    Use W, A, S, D keys to move<br/>
+    CLICK = shoot balls
+  </div>
+  <div id="blocker">
+    <span style="font-size:250%">Click to play</span>
+    <br/><br/>
+    Mouse and W, A, S, D = move<br/>
+    CLICK = shoot balls<br/>
+    Press ESC to pause
+    <br/><br/><br/><br/>
+    <div class="info"></div>
+  </div>
+  <div id="container">Loading...</div>
 </body>
 </html>
