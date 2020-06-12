@@ -68,18 +68,22 @@ window.onload = () => {
 			const ground = factory.createParalellepiped(100, 1, 100, 0, pos, quat, new THREE.MeshPhongMaterial({ color: 0xFFFFFF }));
 			ground.castShadow = true;
 			ground.receiveShadow = true;
-			textureLoader.load("img/cement.jpg", (texture) => {
+			textureLoader.load("static/Surface-A.png", (texture) => {
 				texture.wrapS = THREE.RepeatWrapping;
 				texture.wrapT = THREE.RepeatWrapping;
-				texture.repeat.set(5, 5);
+				//texture.repeat.set(5, 5);
 				ground.material[0].map = texture;
 				ground.material[0].needsUpdate = true;
 			});
 			engine.addObject(ground);
+			
 		}
 
+		//Robot
+
+
 		// WALLS
-		{
+		/*{
 			let material = [
 				new THREE.MeshPhongMaterial({ color: 0xB7B7B7 }),
 				new THREE.MeshPhongMaterial({ color: 0xAAAAAA }),
@@ -102,17 +106,17 @@ window.onload = () => {
 					material[i].needsUpdate = true;
 				}
 			});
-		}
+		}*/
 
 		// CONTROLS
-		const controls = new Sim.WASDControls(engine.getCamera());
+		/*const controls = new Sim.WASDControls(engine.getCamera());
 		controls.getObject().position.set(40, 25, 40);
 		controls.getObject().rotation.y = 0.75;
 		controls.setPitchRotationX(-0.25);
 		engine.addObject(controls.getObject());
 
 		// MOUSE SHOOTER
-		const mouseShooter = new Sim.MouseShooter(1.2, 10, factory, engine.getCamera());
+		//const mouseShooter = new Sim.MouseShooter(1.2, 10, factory, engine.getCamera());
 
 		// HANDLE MOUSE CLICK
 		window.addEventListener('mousedown', (event) => {
@@ -125,13 +129,13 @@ window.onload = () => {
 			} else {
 				mouseShooter.shoot();
 			}
-		}, false);
+		}, false);*/
 
 		// START THE ENGINE
 		function animate() {
 			requestAnimationFrame(animate);
-			const deltaTime = engine.update(controls.enabled);
-			controls.update(deltaTime);
+			//const deltaTime = engine.update(controls.enabled);
+			this.controls.update();
 		}
 		animate();
 	}

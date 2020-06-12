@@ -8,14 +8,10 @@ export class Engine {
 	private renderer: THREE.WebGLRenderer;
 	private scene: THREE.Scene;
 	private camera: THREE.PerspectiveCamera;
-  private light: THREE.Light;
-  
-  private canvas = document.getElementById('sim') as HTMLCanvasElement;
-
-	private clock = new THREE.Clock();
-	private physicsWorld: Ammo.btDiscreteDynamicsWorld;
-	private rigidBodies = new Array<THREE.Object3D>();
-
+	private light: THREE.Light;
+	private element: HTMLElement;
+	
+	// private canvas = document.getElementById('sim') as HTMLCanvasElement;
 	public constructor(element: HTMLElement, clearColor: number) {
 		this.renderer = new THREE.WebGLRenderer(/*{canvas: this.canvas}*/);
 		this.renderer.setClearColor(clearColor);
@@ -33,7 +29,13 @@ export class Engine {
 
 		this.physicsWorld = new Ammo.btDiscreteDynamicsWorld( dispatcher, overlappingPairCache, solver, collisionConfiguration);
 		this.physicsWorld.setGravity( new Ammo.btVector3(0, -9.8, 0));
+		this.element = element;
 	}
+
+	private clock = new THREE.Clock();
+	private physicsWorld: Ammo.btDiscreteDynamicsWorld;
+	private rigidBodies = new Array<THREE.Object3D>();
+	private controls = new OrbitControls(this.camera, this.element);
 
 	public enableShadows(): void {
 		this.renderer.shadowMap.enabled = true;
@@ -151,7 +153,7 @@ export class ShapeFactory {
 		return threeObject;
 	}
 
-	public createWall_X_axis(mass: number, startX: number, endX: number, yCount: number, z: number, shift: boolean, material: Array<THREE.Material>) {
+	/*public createWall_X_axis(mass: number, startX: number, endX: number, yCount: number, z: number, shift: boolean, material: Array<THREE.Material>) {
 		const quat = new THREE.Quaternion(0, 0, 0, 1);
 		for (let y = 0; y <= yCount; y += 1.5) {
 			let offsetX = shift? 1.5 : 0;
@@ -180,12 +182,12 @@ export class ShapeFactory {
 				obstacle.receiveShadow = true;
 			}
 		}
-	}
+	}*/
 }
 
 //-------------------------------------------------------------------
 
-export class WASDControls {
+/*export class WASDControls {
 
 	private pitchObject: THREE.Object3D;
 	private yawObject: THREE.Object3D;
@@ -194,6 +196,8 @@ export class WASDControls {
 	private moveBackward = false;
 	private moveLeft = false;
 	private moveRight = false;
+	private rotateCCW = false;
+	private rotateCW = false;
 
 	enabled: boolean = false;
 	private velocity = new THREE.Vector3(1,1,1);
@@ -253,6 +257,12 @@ export class WASDControls {
 			case 68: // d
 				this.moveRight = value;
 				break;
+			case 81:
+				this.rotateCCW = value;
+				break;
+			case 69:
+				this.rotateCW = value;
+				break;
 		}
 	}
 
@@ -269,6 +279,7 @@ export class WASDControls {
 		if (this.moveBackward) this.velocity.z += step;
 		if (this.moveLeft) this.velocity.x -= step;
 		if (this.moveRight) this.velocity.x += step;
+		if (this.rotateCCW) this.
 
 		this.yawObject.translateX(this.velocity.x * delta);
 		this.yawObject.translateZ(this.velocity.z * delta);
@@ -375,7 +386,7 @@ export class MouseShooter {
 		this.pos.multiplyScalar(80);
 		body.setLinearVelocity(new Ammo.btVector3(this.pos.x, this.pos.y, this.pos.z));
 	}
-}
+}*/
 
 //-------------------------------------------------------------------
 
