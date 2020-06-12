@@ -7,19 +7,27 @@ import {OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 export class Engine {
 	private renderer: THREE.WebGLRenderer;
 	private scene: THREE.Scene;
-	private camera: THREE.PerspectiveCamera;
 	private light: THREE.Light;
 	private element: HTMLElement;
+	private controls: OrbitControls;
+
+	private camera = new THREE.PerspectiveCamera(45, 2, 0.1, 1000);
+	private clock = new THREE.Clock();
+	private physicsWorld: Ammo.btDiscreteDynamicsWorld;
+	private rigidBodies = new Array<THREE.Object3D>();
 	
-	// private canvas = document.getElementById('sim') as HTMLCanvasElement;
+	///private canvas = document.getElementById('sim') as HTMLCanvasElement;
 	public constructor(element: HTMLElement, clearColor: number) {
 		this.renderer = new THREE.WebGLRenderer(/*{canvas: this.canvas}*/);
-		this.renderer.setClearColor(clearColor);
-		this.renderer.setPixelRatio(window.devicePixelRatio);
-		this.renderer.setSize(window.innerWidth, window.innerHeight);
+		// this.renderer.setClearColor(clearColor);
+		// this.renderer.setPixelRatio(window.devicePixelRatio);
+		// this.renderer.setSize(window.innerWidth, window.innerHeight);
 		element.appendChild(this.renderer.domElement);
 
 		this.scene = new THREE.Scene();
+		this.element = element;
+		this.controls = new OrbitControls(this.camera, this.element);
+		
 
 		// Physics configuration
 		const collisionConfiguration = new Ammo.btDefaultCollisionConfiguration();
@@ -29,29 +37,32 @@ export class Engine {
 
 		this.physicsWorld = new Ammo.btDiscreteDynamicsWorld( dispatcher, overlappingPairCache, solver, collisionConfiguration);
 		this.physicsWorld.setGravity( new Ammo.btVector3(0, -9.8, 0));
-		this.element = element;
 	}
-
-	private clock = new THREE.Clock();
-	private physicsWorld: Ammo.btDiscreteDynamicsWorld;
-	private rigidBodies = new Array<THREE.Object3D>();
-	private controls = new OrbitControls(this.camera, this.element);
+	
 
 	public enableShadows(): void {
 		this.renderer.shadowMap.enabled = true;
 	}
 
-	public setCamera(camera: THREE.PerspectiveCamera): void {
-		this.camera = camera;
-		window.addEventListener('resize', () => {
-			this.camera.aspect = window.innerWidth / window.innerHeight;
-			this.camera.updateProjectionMatrix();
-			this.renderer.setSize(window.innerWidth, window.innerHeight);
-		}, false);
-	}
+	// public setCamera(camera: THREE.PerspectiveCamera): void {
+	// 	this.camera = camera;
+	// 	window.addEventListener('resize', () => {
+	// 		this.camera.aspect = window.innerWidth / window.innerHeight;
+	// 		this.camera.updateProjectionMatrix();
+	// 		this.renderer.setSize(window.innerWidth, window.innerHeight);
+	// 	}, false);
+	// }
 
 	public getCamera(): THREE.PerspectiveCamera {
 		return this.camera;
+	}
+
+	public getRenderer(): THREE.WebGLRenderer {
+		return this.renderer;
+	}
+
+	public getControls(): OrbitControls {
+		return this.controls;
 	}
 
 	public addLight(light: THREE.Light): void {
@@ -101,6 +112,7 @@ export class Engine {
 		const deltaTime = this.clock.getDelta();
 		isPhysicsEnabled && this.updatePhysics(deltaTime);
 		this.renderer.render(this.scene, this.camera);
+		this.controls.update();
 		return deltaTime;
 	}
 }

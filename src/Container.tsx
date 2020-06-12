@@ -1,39 +1,29 @@
 import * as React from 'react';
 import * as THREE from 'three';
 import { App } from './App';
-import { Visualizer } from './Visualizer';
-import { Static } from './Static';
 import * as Sim from './Sim';
 import WorkerInstance from './WorkerInstance';
 import { RobotState } from './RobotState';
 import * as Detector from './detector';
-import * as Stats from './stats.min';
 
-export interface ContainerProps{}
-interface ContainerState{
-    robot: RobotState
+export interface ContainerProps { }
+interface ContainerState {
+	robot: RobotState
 }
 type Props = ContainerProps;
 type State = ContainerState;
 
 //const sim = new Sim;
 //sim.main();
-window.onload = () => {
-	const elem = document.getElementById('container');
-	elem.innerHTML = "";
+document.body.onload = () => {
+	// elem.innerHTML = "";
+	let elem = document.getElementById('container');
 
 	if (!Detector.webgl) {
 		Detector.addGetWebGLMessage();
 	} else {
 		const engine = new Sim.Engine(elem, 0xBFD1E5);
 		engine.enableShadows();
-
-		// CAMERA
-		{
-			let camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.2, 1000);
-			engine.setCamera(camera);
-		}
-
 		// DIRECTIONAL LIGHT
 		{
 			let light = new THREE.DirectionalLight(0xffffff, 1);
@@ -72,11 +62,11 @@ window.onload = () => {
 				texture.wrapS = THREE.RepeatWrapping;
 				texture.wrapT = THREE.RepeatWrapping;
 				//texture.repeat.set(5, 5);
-				ground.material[0].map = texture;
-				ground.material[0].needsUpdate = true;
+				(ground.material as any).map = texture;
+				(ground.material as any).needsUpdate = true;
 			});
 			engine.addObject(ground);
-			
+
 		}
 
 		//Robot
@@ -135,7 +125,7 @@ window.onload = () => {
 		function animate() {
 			requestAnimationFrame(animate);
 			//const deltaTime = engine.update(controls.enabled);
-			this.controls.update();
+			engine.update(true);
 		}
 		animate();
 	}
@@ -143,41 +133,41 @@ window.onload = () => {
 
 
 export class Container extends React.Component<Props, State> {
-   constructor(props: Props, context?){
-    super (props, context)
-    this.state = {
-        robot: WorkerInstance.state
-    }
-   } 
-   private onStateChange = (state:RobotState) => {
-    //console.log('state change'); 
-    this.setState({
-        robot: state
-    });
+	constructor(props: Props, context?) {
+		super(props, context)
+		this.state = {
+			robot: WorkerInstance.state
+		}
+	}
+	private onStateChange = (state: RobotState) => {
+		//console.log('state change'); 
+		this.setState({
+			robot: state
+		});
 
-   }
-   
-   componentWillMount() {
-    WorkerInstance.onStateChange = this.onStateChange
-   }
+	}
 
-    private onRobotChange_ = (robot: RobotState) => {
-        WorkerInstance.state = robot;
-    };
+	componentWillMount() {
+		WorkerInstance.onStateChange = this.onStateChange
+	}
 
-   render(){
-       const {
-           props, state 
-       }= this
+	private onRobotChange_ = (robot: RobotState) => {
+		WorkerInstance.state = robot;
+	};
 
-       //console.log('qwe')
+	render() {
+		const {
+			props, state
+		} = this
 
-       return (
-            <section id="app">
-                <App robot= {state.robot} onRobotChange={this.onRobotChange_} />
-            </section>
-        )
-   }
+		//console.log('qwe')
+
+		return (
+			<section id="app">
+				<App robot={state.robot} onRobotChange={this.onRobotChange_} />
+			</section>
+		)
+	}
 }
 
 //All logic inside of index.tsx
