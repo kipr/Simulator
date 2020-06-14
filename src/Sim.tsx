@@ -6,11 +6,10 @@ import {OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 export class Engine {
 	private renderer: THREE.WebGLRenderer;
-	private scene: THREE.Scene;
 	private light: THREE.Light;
-	private element: HTMLElement;
 	private controls: OrbitControls;
 
+	private scene = new THREE.Scene();
 	private camera = new THREE.PerspectiveCamera(45, 2, 0.1, 1000);
 	private clock = new THREE.Clock();
 	private physicsWorld: Ammo.btDiscreteDynamicsWorld;
@@ -19,17 +18,12 @@ export class Engine {
 	///private canvas = document.getElementById('sim') as HTMLCanvasElement;
 	public constructor(element: HTMLElement, clearColor: number) {
 		this.renderer = new THREE.WebGLRenderer();
-		// this.renderer.setClearColor(clearColor);
+		this.renderer.setClearColor(clearColor);
 		// this.renderer.setPixelRatio(window.devicePixelRatio);
 		// this.renderer.setSize(window.innerWidth, window.innerHeight);
 		this.renderer.domElement.id = 'simview';
-		element.appendChild(this.renderer.domElement);
-		
-
-		this.scene = new THREE.Scene();
-		this.element = element;
-		this.controls = new OrbitControls(this.camera, this.element.firstChild as HTMLCanvasElement);
-		
+		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+		element.appendChild(this.renderer.domElement);		
 
 		// Physics configuration
 		const collisionConfiguration = new Ammo.btDefaultCollisionConfiguration();

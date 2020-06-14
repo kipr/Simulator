@@ -17,7 +17,7 @@ type State = ContainerState;
 //sim.main();
 document.body.onload = () => {
 	// elem.innerHTML = "";
-	let elem = document.getElementById('container');
+	let elem = document.body;
 
 	if (!Detector.webgl) {
 		Detector.addGetWebGLMessage();
