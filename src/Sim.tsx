@@ -18,15 +18,17 @@ export class Engine {
 	
 	///private canvas = document.getElementById('sim') as HTMLCanvasElement;
 	public constructor(element: HTMLElement, clearColor: number) {
-		this.renderer = new THREE.WebGLRenderer(/*{canvas: this.canvas}*/);
+		this.renderer = new THREE.WebGLRenderer();
 		// this.renderer.setClearColor(clearColor);
 		// this.renderer.setPixelRatio(window.devicePixelRatio);
 		// this.renderer.setSize(window.innerWidth, window.innerHeight);
+		this.renderer.domElement.id = 'simview';
 		element.appendChild(this.renderer.domElement);
+		
 
 		this.scene = new THREE.Scene();
 		this.element = element;
-		this.controls = new OrbitControls(this.camera, this.element);
+		this.controls = new OrbitControls(this.camera, this.element.firstChild as HTMLCanvasElement);
 		
 
 		// Physics configuration
