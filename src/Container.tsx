@@ -5,6 +5,7 @@ import * as Sim from './Sim';
 import WorkerInstance from './WorkerInstance';
 import { RobotState } from './RobotState';
 import * as Detector from './detector';
+import { ENGINE_METHOD_RAND } from 'constants';
 
 export interface ContainerProps { }
 interface ContainerState {
@@ -16,14 +17,12 @@ type State = ContainerState;
 //const sim = new Sim;
 //sim.main();
 document.body.onload = () => {
-	// elem.innerHTML = "";
-	let elem = document.body;
-
 	if (!Detector.webgl) {
 		Detector.addGetWebGLMessage();
 	} else {
-		const engine = new Sim.Engine(elem, 0xBFD1E5);
+		const engine = new Sim.Engine();
 		engine.enableShadows();
+		engine.setCamera();
 		// DIRECTIONAL LIGHT
 		{
 			let light = new THREE.DirectionalLight(0xffffff, 1);
@@ -53,19 +52,20 @@ document.body.onload = () => {
 
 		// GROUND
 		{
-			const pos = new THREE.Vector3(0, -0.5, 0);
-			const quat = new THREE.Quaternion(0, 0, 0, 1);
-			const ground = factory.createParalellepiped(100, 1, 100, 0, pos, quat, new THREE.MeshPhongMaterial({ color: 0xFFFFFF }));
-			ground.castShadow = true;
-			ground.receiveShadow = true;
-			textureLoader.load("static/Surface-A.png", (texture) => {
-				texture.wrapS = THREE.RepeatWrapping;
-				texture.wrapT = THREE.RepeatWrapping;
-				//texture.repeat.set(5, 5);
-				(ground.material as any).map = texture;
-				(ground.material as any).needsUpdate = true;
-			});
-			engine.addObject(ground);
+			// const pos = new THREE.Vector3(0, -0.5, 0);
+			// const quat = new THREE.Quaternion(0, 0, 0, 1);
+			// const ground = factory.createParalellepiped(100, 1, 100, 0, pos, quat, new THREE.MeshPhongMaterial({ color: 0xFFFFFF }));
+			// ground.castShadow = true;
+			// ground.receiveShadow = true;
+			// textureLoader.load("static/Surface-A.png", (texture) => {
+			// 	texture.wrapS = THREE.RepeatWrapping;
+			// 	texture.wrapT = THREE.RepeatWrapping;
+			// 	//texture.repeat.set(5, 5);
+			// 	(ground.material as any).map = texture;
+			// 	(ground.material as any).needsUpdate = true;
+			// });
+			// engine.addObject(ground);
+			factory.createGround();
 
 		}
 
@@ -123,9 +123,10 @@ document.body.onload = () => {
 
 		// START THE ENGINE
 		function animate() {
+			engine.update();
 			requestAnimationFrame(animate);
 			//const deltaTime = engine.update(controls.enabled);
-			engine.update(true);
+			//engine.update(true);
 		}
 		animate();
 	}

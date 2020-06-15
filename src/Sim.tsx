@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import * as Ammo from 'ammo.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import {OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { AnimationBlendMode } from 'three';
 
 
 export class Engine {
@@ -10,20 +11,25 @@ export class Engine {
 	private controls: OrbitControls;
 
 	private scene = new THREE.Scene();
-	private camera = new THREE.PerspectiveCamera(45, 2, 0.1, 1000);
 	private clock = new THREE.Clock();
 	private physicsWorld: Ammo.btDiscreteDynamicsWorld;
 	private rigidBodies = new Array<THREE.Object3D>();
+
+	private parentElement = document.getElementById('right') as HTMLDivElement;
+	private canvas = document.getElementById('simview') as HTMLCanvasElement;
+
+	private camera = new THREE.PerspectiveCamera(60, this.parentElement.clientWidth / this.parentElement.clientHeight, 0.2, 5000);
 	
-	///private canvas = document.getElementById('sim') as HTMLCanvasElement;
-	public constructor(element: HTMLElement, clearColor: number) {
-		this.renderer = new THREE.WebGLRenderer();
-		this.renderer.setClearColor(clearColor);
-		// this.renderer.setPixelRatio(window.devicePixelRatio);
-		// this.renderer.setSize(window.innerWidth, window.innerHeight);
-		this.renderer.domElement.id = 'simview';
+	public constructor() {
+		this.renderer = new THREE.WebGLRenderer({canvas: this.canvas});
+		this.renderer.setClearColor(0xBFD1E5);//clearcolor
+		//this.renderer.setPixelRatio(this.canvas.
+		this.renderer.setSize(this.parentElement.clientWidth, this.parentElement.clientHeight);
+		this.camera.position.set( 0, 30, 70 );
+		this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+		// this.renderer.domElement.id = 'simview';
 		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-		element.appendChild(this.renderer.domElement);		
+		// element.appendChild(this.renderer.domElement);		
 
 		// Physics configuration
 		const collisionConfiguration = new Ammo.btDefaultCollisionConfiguration();
@@ -40,14 +46,13 @@ export class Engine {
 		this.renderer.shadowMap.enabled = true;
 	}
 
-	// public setCamera(camera: THREE.PerspectiveCamera): void {
-	// 	this.camera = camera;
-	// 	window.addEventListener('resize', () => {
-	// 		this.camera.aspect = window.innerWidth / window.innerHeight;
-	// 		this.camera.updateProjectionMatrix();
-	// 		this.renderer.setSize(window.innerWidth, window.innerHeight);
-	// 	}, false);
-	// }
+	public setCamera(): void {
+		window.addEventListener('resize', () => {
+			this.camera.aspect = this.parentElement.clientWidth / this.parentElement.clientHeight;
+			this.camera.updateProjectionMatrix();
+			this.renderer.setSize(this.parentElement.clientWidth, this.parentElement.clientHeight);
+		}, false);
+	}
 
 	public getCamera(): THREE.PerspectiveCamera {
 		return this.camera;
@@ -59,6 +64,14 @@ export class Engine {
 
 	public getControls(): OrbitControls {
 		return this.controls;
+	}
+
+	public getScene(): THREE.Scene {
+		return this.scene;
+	}
+
+	public getPhysicsWorld(): Ammo.btDiscreteDynamicsWorld {
+		return this.physicsWorld;
 	}
 
 	public addLight(light: THREE.Light): void {
@@ -104,12 +117,11 @@ export class Engine {
 		}
 	}
 
-	public update(isPhysicsEnabled: boolean): number {
-		const deltaTime = this.clock.getDelta();
-		isPhysicsEnabled && this.updatePhysics(deltaTime);
+	public update(/*isPhysicsEnabled: boolean*/){
+		let deltaTime = this.clock.getDelta();
 		this.renderer.render(this.scene, this.camera);
+		this.physicsWorld.isPhysicsEnabled && this.updatePhysics(deltaTime);
 		this.controls.update();
-		return deltaTime;
 	}
 }
 
@@ -139,7 +151,7 @@ export class ShapeFactory {
 		this.engine.addPhysicsObject(threeObject, body, mass);
 	}
 
-	public createParalellepiped(sx: number, sy: number, sz: number, mass: number, pos: THREE.Vector3, quat: THREE.Quaternion, material: THREE.Material): THREE.Mesh {
+	/*public createParalellepiped(sx: number, sy: number, sz: number, mass: number, pos: THREE.Vector3, quat: THREE.Quaternion, material: THREE.Material): THREE.Mesh {
 		let threeObject = new THREE.Mesh(new THREE.BoxGeometry(sx, sy, sz, 1, 1, 1), material);
 		threeObject.position.copy(pos);
 		threeObject.quaternion.copy(quat);
@@ -159,6 +171,61 @@ export class ShapeFactory {
 
 		this.createRigidBody(threeObject, shape, mass, pos, quat);
 		return threeObject;
+	}*/
+
+	public createGround(){
+    
+		let pos = {x: 0, y: 0, z: 0};
+		let scale = {x: 50, y: 2, z: 50};
+		let quat = {x: 0, y: 0, z: 0, w: 1};
+		let mass = 0;
+		const planeLength = 120;
+      	const planeWidth = 60;
+
+		const loader = new THREE.TextureLoader();
+		const texture = loader.load('static/Surface-A.png');
+		texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		texture.magFilter = THREE.NearestFilter;
+
+		const planeGeo = new THREE.PlaneBufferGeometry(planeLength, planeWidth);
+
+		const planeMat = new THREE.MeshPhongMaterial({
+			map: texture,
+			side: THREE.DoubleSide,
+			color: 0xa0afa4,
+		});
+	
+		//threeJS Section
+		let blockPlane = new THREE.Mesh(new THREE.BoxBufferGeometry(), planeMat);
+	
+		blockPlane.position.set(pos.x, pos.y, pos.z);
+		blockPlane.scale.set(scale.x, scale.y, scale.z);
+	
+		blockPlane.castShadow = true;
+		blockPlane.receiveShadow = true;
+	
+		this.engine.getScene().add(blockPlane);
+	
+	
+		//Ammojs Section
+		let transform = new Ammo.btTransform();
+		transform.setIdentity();
+		transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
+		transform.setRotation( new Ammo.btQuaternion( quat.x, quat.y, quat.z, quat.w ) );
+		let motionState = new Ammo.btDefaultMotionState( transform );
+	
+		let colShape = new Ammo.btBoxShape( new Ammo.btVector3( scale.x * 0.5, scale.y * 0.5, scale.z * 0.5 ) );
+		colShape.setMargin( 0.05 );
+	
+		let localInertia = new Ammo.btVector3( 0, 0, 0 );
+		colShape.calculateLocalInertia( mass, localInertia );
+	
+		let rbInfo = new Ammo.btRigidBodyConstructionInfo( mass, motionState, colShape, localInertia );
+		let body = new Ammo.btRigidBody( rbInfo );
+	
+	
+		this.engine.getPhysicsWorld().addRigidBody( body );
 	}
 
 	/*public createWall_X_axis(mass: number, startX: number, endX: number, yCount: number, z: number, shift: boolean, material: Array<THREE.Material>) {
