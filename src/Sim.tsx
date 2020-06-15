@@ -216,7 +216,7 @@ export class ShapeFactory {
 		let motionState = new Ammo.btDefaultMotionState( transform );
 	
 		let colShape = new Ammo.btBoxShape( new Ammo.btVector3( scale.x * 0.5, scale.y * 0.5, scale.z * 0.5 ) );
-		colShape.setMargin( 0.05 );
+		colShape.setMargin( 0.01 );
 	
 		let localInertia = new Ammo.btVector3( 0, 0, 0 );
 		colShape.calculateLocalInertia( mass, localInertia );
@@ -226,6 +226,30 @@ export class ShapeFactory {
 	
 	
 		this.engine.getPhysicsWorld().addRigidBody( body );
+	}
+
+	//
+	public getRobot(): void {
+		const gltfLoader = new GLTFLoader();
+		gltfLoader.load('static/Simulator_Demobot.glb', (gltf) => {
+			const root = gltf.scene;
+			this.engine.addObject(root);
+
+			//wheels1 = root.getObjectByName('Servo_Wheel-1');
+			//wheels2 = root.getObjectByName('Servo_Wheel-2');
+			//console.log(wheels1);
+			//console.log(root.children[0].children[0].children[0].children[0].children);
+
+			// set the camera to frame the box
+			//frameArea(boxSize * 0.5, boxSize, boxCenter, camera);
+			gltf.scene.scale.set(0.5,0.5,0.5); // scale here
+			gltf.scene.position.set(0,0,0);
+			gltf.scene.rotateY(Math.PI/2);
+			// update the Trackball controls to handle the new size
+			//controls.maxDistance = boxSize * 10;
+			//controls.target.copy(boxCenter);
+			//controls.update();
+		});
 	}
 
 	/*public createWall_X_axis(mass: number, startX: number, endX: number, yCount: number, z: number, shift: boolean, material: Array<THREE.Material>) {

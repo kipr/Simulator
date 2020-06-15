@@ -70,6 +70,7 @@ document.body.onload = () => {
 		}
 
 		//Robot
+		factory.getRobot();
 
 
 		// WALLS
