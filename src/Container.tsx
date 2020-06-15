@@ -126,6 +126,16 @@ document.body.onload = () => {
 		function animate() {
 			engine.update();
 			requestAnimationFrame(animate);
+			if (factory.wheels1) {
+				for (const wheel of factory.wheels1.children) {
+					wheel.rotation.y -= 1;
+				}
+			}
+			if (factory.wheels2) {
+				for (const wheel of factory.wheels2.children) {
+					wheel.rotation.y += 1;
+				}
+			}
 			//const deltaTime = engine.update(controls.enabled);
 			//engine.update(true);
 		}
