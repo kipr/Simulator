@@ -8,7 +8,6 @@
     "moduleResolution": "node"
   },
   "files": [
-    "./definitions/three.d.ts",
     "./definitions/ammo.d.ts"
   ]
 }
