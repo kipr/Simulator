@@ -2,7 +2,8 @@ import * as THREE from 'three';
 import * as Ammo from 'ammo.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import {OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { AnimationBlendMode } from 'three';
+//import { AnimationBlendMode } from 'three';
+import { type } from 'os';
 
 
 export class Engine {
@@ -135,7 +136,7 @@ export class ShapeFactory {
 		this.engine = engine;
 	}
 
-	private createRigidBody(threeObject: THREE.Object3D, physicsShape: Ammo.btConvexShape, mass: number, pos: THREE.Vector3, quat: THREE.Quaternion): void {
+	private createRigidBody(threeObject: THREE.Object3D, physicsShape: Ammo.btCylinderShape, mass: number, pos: THREE.Vector3, quat: THREE.Quaternion): void {
 		var transform = new Ammo.btTransform();
 		transform.setIdentity();
 		transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z));
@@ -176,7 +177,7 @@ export class ShapeFactory {
 	public createGround(){
     
 		let pos = {x: 0, y: 0, z: 0};
-		let scale = {x: 50, y: 2, z: 50};
+		let scale = {x: 100, y: 0.5, z: 50};
 		let quat = {x: 0, y: 0, z: 0, w: 1};
 		let mass = 0;
 		const planeLength = 120;
@@ -229,7 +230,7 @@ export class ShapeFactory {
 	}
 
 	public geomMeshConvert(geom: any) {
-		console.log(geom);
+		//console.log(geom);
 
 	}
 
@@ -245,7 +246,7 @@ export class ShapeFactory {
 			root = gltf.scene;
 			
 			glTFGeometry = root.children[0].children[0].children[0].children[0];
-			console.log(glTFGeometry);
+			//console.log(glTFGeometry);
 
 			//let btShapes = new Ammo.btBvhTriangleMeshShape(mesh.children, true, true);
 			//console.log(mesh);
@@ -258,6 +259,17 @@ export class ShapeFactory {
 
 			this.wheels1 = root.getObjectByName('Servo_Wheel-1');
 			this.wheels2 = root.getObjectByName('Servo_Wheel-2');
+			console.log(this.wheels1);
+			this.createRigidBody(this.wheels1, new Ammo.btCylinderShape(new Ammo.btVector3(10,10,2)), 10, this.wheels1.position, this.wheels1.quaternion);
+			
+			// if (this.wheels1) {
+			// 	for (const wheel of this.wheels1.children) {
+			// 		console.log(wheel);
+			// 		this.createRigidBody(this.wheels1, new Ammo.btCylinderShape(new Ammo.btVector3(wheel.geometry.boundingSphere.radius, wheel.geometry.boundingSphere.radius, (wheel.geometry.boundingBox.max.y-wheel.geometry.boundingBox.min.y)/2)), 10, wheel.position, wheel.quaternion);
+			// 	}
+			// }
+			
+			//this.createRigidBody(this.wheels1, new Ammo.btBvhTriangleMeshShape(this.wheels1.children), 10, this.wheels1.children.position, this.wheels1.children.quaternion);
 
 			gltf.scene.scale.set(0.75,0.75,0.75); // scale here
 			gltf.scene.position.set(-30,1,0);
