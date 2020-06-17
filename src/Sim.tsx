@@ -228,8 +228,9 @@ export class ShapeFactory {
 		this.engine.getPhysicsWorld().addRigidBody( body );
 	}
 
-	public geomMeshConvert(geom: THREE.Geometry) {
-		//console.log(geom);
+	public geomMeshConvert(geom: any) {
+		console.log(geom);
+
 	}
 
 	public wheels1;
@@ -243,11 +244,12 @@ export class ShapeFactory {
 		gltfLoader.load('static/Simulator_Demobot.glb', (gltf) => {
 			root = gltf.scene;
 			
-			let mesh = root.children[0].children[0].children[0].children[0].children[0];
+			glTFGeometry = root.children[0].children[0].children[0].children[0];
+			console.log(glTFGeometry);
 
-			let btShapes = new Ammo.btBvhTriangleMeshShape(mesh.children, true, true);
+			//let btShapes = new Ammo.btBvhTriangleMeshShape(mesh.children, true, true);
 			//console.log(mesh);
-			console.log(btShapes);
+			//console.log(btShapes);
 			//this.createRigidBody(mesh, btShapes, 3, new THREE.Vector3( -30, 1, 0 ), new THREE.Quaternion(0,0,0,1));
 			//console.log(root.children[0].children[0].children[0].children[0].children[0]);
 			this.engine.getScene().add(root);
@@ -256,40 +258,11 @@ export class ShapeFactory {
 
 			this.wheels1 = root.getObjectByName('Servo_Wheel-1');
 			this.wheels2 = root.getObjectByName('Servo_Wheel-2');
-			//console.log(wheels1);
-			//console.log(root.children[0].children[0].children[0].children[0].children);
 
-			// set the camera to frame the box
-			//frameArea(boxSize * 0.5, boxSize, boxCenter, camera);
 			gltf.scene.scale.set(0.75,0.75,0.75); // scale here
 			gltf.scene.position.set(-30,1,0);
 			gltf.scene.rotateY(Math.PI/2);
-			// update the Trackball controls to handle the new size
-			//controls.maxDistance = boxSize * 10;
-			//controls.target.copy(boxCenter);
-			//controls.update();
-			// let pos = {x: 0, y: 0, z: 0};
-			// let scale = {x: 50, y: 2, z: 50};
-			// let quat = {x: 0, y: 0, z: 0, w: 1};
-			// let mass = 0;
-			// let transform = new Ammo.btTransform();
-			// transform.setIdentity();
-			// transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
-			// transform.setRotation( new Ammo.btQuaternion( quat.x, quat.y, quat.z, quat.w ) );
-			// let motionState = new Ammo.btDefaultMotionState( transform );
-		
-			
-			// let colShape = new Ammo.btBoxShape( new Ammo.btVector3( scale.x * 0.5, scale.y * 0.5, scale.z * 0.5 ) );
-			// colShape.setMargin( 0.01 );
-		
-			// let localInertia = new Ammo.btVector3( 0, 0, 0 );
-			// colShape.calculateLocalInertia( mass, localInertia );
-		
-			// let rbInfo = new Ammo.btRigidBodyConstructionInfo( mass, motionState, colShape, localInertia );
-			// let body = new Ammo.btRigidBody( rbInfo );
-		
-		
-			// this.engine.getPhysicsWorld().addRigidBody( body );
+
 		});
 		this.geomMeshConvert(glTFGeometry);
 	}
