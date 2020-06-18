@@ -3,7 +3,6 @@ import { App } from './App';
 import * as Sim from './Sim';
 import WorkerInstance from './WorkerInstance';
 import { RobotState } from './RobotState';
-import * as Detector from './detector';
 import * as Babylon from 'babylonjs';
 
 export interface ContainerProps { }
@@ -14,9 +13,6 @@ type Props = ContainerProps;
 type State = ContainerState;
 
 document.body.onload = () => {
-	if (!Detector.webgl) {
-		Detector.addGetWebGLMessage();
-	} else {
 		const canvas = document.getElementById('simview') as HTMLCanvasElement;
 		const holder = document.getElementById('right') as HTMLDivElement;
 		const engine = new Babylon.Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true});
@@ -26,35 +22,10 @@ document.body.onload = () => {
 			scene.render();
 		});
 		
-		window.addEventListener('resize', function(){
+		canvas.addEventListener('resize', function(){
 			engine.resize();
 			console.log('Yay!');
-		})
-		/*const engine = new Sim.Engine();
-		engine.enableShadows();
-		engine.setCamera();
-		// DIRECTIONAL LIGHT
-		{
-			let light = new THREE.DirectionalLight(0xffffff, 1);
-			light.castShadow = true;
-			light.position.set(50, 100, 50);
-			const d = 100;
-			light.shadow.camera.left = -d;
-			light.shadow.camera.right = d;
-			light.shadow.camera.top = d;
-			light.shadow.camera.bottom = -d;
-			light.shadow.camera.near = 2;
-			light.shadow.camera.far = 500;
-			light.shadow.mapSize.x = 4096;
-			light.shadow.mapSize.y = 4096;
-			engine.addLight(light);
-		}
-
-		// AMBIENT LIGHT
-		{
-			let ambientLight = new THREE.AmbientLight(0x606060);
-			engine.addLight(ambientLight);
-		}
+		})/*
 
 		const factory = new Sim.ShapeFactory(engine);
 
@@ -100,7 +71,6 @@ document.body.onload = () => {
 			//engine.update(true);
 		}
 		animate();*/
-	}
 };
 
 

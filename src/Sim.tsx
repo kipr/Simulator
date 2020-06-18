@@ -1,7 +1,3 @@
-import * as THREE from 'three';
-import * as Ammo from 'ammo.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import {OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as Babylon from 'babylonjs';
 
 export class Space {

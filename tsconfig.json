@@ -7,9 +7,6 @@
     "target": "es6",
     "moduleResolution": "node"
   },
-  "files": [
-    "./definitions/ammo.d.ts"
-  ],
   "types": [
     "babylonjs",
   ],
