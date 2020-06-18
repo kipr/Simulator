@@ -1,21 +1,26 @@
 import * as Babylon from 'babylonjs';
+import 'babylonjs-loaders';
 
 export class Space {
 	public createScene(engine: Babylon.Engine, canvas: HTMLCanvasElement): Babylon.Scene {
 		const scene = new Babylon.Scene(engine);
 
-		const camera = new Babylon.UniversalCamera("botcam", new Babylon.Vector3(0,5,-10), scene);
+		const camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(0,-5,10), scene);
 		camera.setTarget(Babylon.Vector3.Zero());
 		camera.attachControl(canvas, true);
 
 		const light = new Babylon.HemisphericLight("botlight", new Babylon.Vector3(0,1,0), scene);
 		light.intensity = 0.7;
 
-		var sphere = Babylon.Mesh.CreateSphere("sphere1", 16, 2, scene);
+		const sphere = Babylon.Mesh.CreateSphere("sphere1", 16, 2, scene);
 		sphere.position.y = 3;
 
-		var ground = Babylon.Mesh.CreateGround("mat", 6, 6, 2, scene);
+		const ground = Babylon.Mesh.CreateGround("mat", 20, 10, 1, scene);
+		//ground.material.hasTexture(new Babylon.Texture('static/Surface-A.png',scene));
 
+		const loader = Babylon.SceneLoader.Append('static/', 'Simulator_Demobot.glb', scene, function () {
+			console.log('Robot loaded');
+		});
 		return scene;
 	}
 }

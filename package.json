@@ -34,6 +34,7 @@
     "@types/react": "^16.9.25",
     "ammo.js": "^0.0.10",
     "babylonjs": "^4.1.0",
+    "babylonjs-loaders": "^4.1.0",
     "body-parser": "^1.19.0",
     "codemirror": "^5.53.2",
     "css-loader": "^3.5.3",

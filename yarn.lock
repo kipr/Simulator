@@ -609,7 +609,20 @@ babel-loader@^8.1.0:
     pify "^4.0.1"
     schema-utils "^2.6.5"
 
-babylonjs@^4.1.0:
+babylonjs-gltf2interface@4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/babylonjs-gltf2interface/-/babylonjs-gltf2interface-4.1.0.tgz#95ec994e352ac5cb74869e238218a1b4df18e2f4"
+  integrity sha512-H2obg+4t8bcmLyzGiOQqmUaTQqTu+6mJUlsMWZvmRBf0k2fQVeTdAkH7aDy6HVIz/THvpIx4ntG1Lsyquvmc5Q==
+
+babylonjs-loaders@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/babylonjs-loaders/-/babylonjs-loaders-4.1.0.tgz#b056423b98c1e3a3962491ec72dce5e0b8852295"
+  integrity sha512-gNC+XEVI5cLJLVRTlkFHVfSY4EZS0VzWzEmNb8M49ZMFNuqOuHsVnQZg4Vms9e4LgvNtws4Z0SWrRanZnkIX5g==
+  dependencies:
+    babylonjs "4.1.0"
+    babylonjs-gltf2interface "4.1.0"
+
+babylonjs@4.1.0, babylonjs@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/babylonjs/-/babylonjs-4.1.0.tgz#a2d1d6765795e9d44f002831554d63d6275394bd"
   integrity sha512-MnaH1BQIL+PYgqGaAvGVdP8yd7nM1j6sbQi/K/6+RlkHPxIETW2NbjqxiW7Sywgy7r3PwqWT/gxG4Bz95Z6/yA==
