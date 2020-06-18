@@ -32,7 +32,6 @@
   },
   "dependencies": {
     "@types/react": "^16.9.25",
-    "ammo.js": "^0.0.10",
     "babylonjs": "^4.1.0",
     "babylonjs-loaders": "^4.1.0",
     "body-parser": "^1.19.0",
@@ -48,8 +47,6 @@
     "redux": "^4.0.5",
     "style-loader": "^1.2.1",
     "styletron": "^3.0.4",
-    "styletron-react": "^5.2.7",
-    "three": "^0.116.1",
-    "three-gltf2-loader": "^1.2.0"
+    "styletron-react": "^5.2.7"
   }
 }

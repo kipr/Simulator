@@ -5,7 +5,7 @@ export class Space {
 	public createScene(engine: Babylon.Engine, canvas: HTMLCanvasElement): Babylon.Scene {
 		const scene = new Babylon.Scene(engine);
 
-		const camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(0,-5,10), scene);
+		const camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(0,0,0), scene);
 		camera.setTarget(Babylon.Vector3.Zero());
 		camera.attachControl(canvas, true);
 
@@ -15,12 +15,16 @@ export class Space {
 		const sphere = Babylon.Mesh.CreateSphere("sphere1", 16, 2, scene);
 		sphere.position.y = 3;
 
-		const ground = Babylon.Mesh.CreateGround("mat", 20, 10, 1, scene);
-		//ground.material.hasTexture(new Babylon.Texture('static/Surface-A.png',scene));
+		const ground = Babylon.MeshBuilder.CreateGround("mat", {width:118, height:59, subdivisions:1}, scene);
+		ground.rotate(new Babylon.Vector3(0,1,0),Math.PI/2);
+		const material = new Babylon.StandardMaterial("mat-material", scene);
+		material.ambientTexture = new Babylon.Texture('static/Surface-A.png',scene);
+		ground.material = material;
 
 		const loader = Babylon.SceneLoader.Append('static/', 'Simulator_Demobot.glb', scene, function () {
-			console.log('Robot loaded');
+			
 		});
+		console.log(scene.transformNodes);
 		return scene;
 	}
 }
