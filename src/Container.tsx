@@ -1,11 +1,10 @@
 import * as React from 'react';
-import * as THREE from 'three';
 import { App } from './App';
 import * as Sim from './Sim';
 import WorkerInstance from './WorkerInstance';
 import { RobotState } from './RobotState';
 import * as Detector from './detector';
-import { ENGINE_METHOD_RAND } from 'constants';
+import * as Babylon from 'babylonjs';
 
 export interface ContainerProps { }
 interface ContainerState {
@@ -14,13 +13,24 @@ interface ContainerState {
 type Props = ContainerProps;
 type State = ContainerState;
 
-//const sim = new Sim;
-//sim.main();
 document.body.onload = () => {
 	if (!Detector.webgl) {
 		Detector.addGetWebGLMessage();
 	} else {
-		const engine = new Sim.Engine();
+		const canvas = document.getElementById('simview') as HTMLCanvasElement;
+		const holder = document.getElementById('right') as HTMLDivElement;
+		const engine = new Babylon.Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true});
+		const space = new Sim.Space();
+		const scene = space.createScene(engine, canvas);
+		engine.runRenderLoop(function(){
+			scene.render();
+		});
+		
+		window.addEventListener('resize', function(){
+			engine.resize();
+			console.log('Yay!');
+		})
+		/*const engine = new Sim.Engine();
 		engine.enableShadows();
 		engine.setCamera();
 		// DIRECTIONAL LIGHT
@@ -72,56 +82,6 @@ document.body.onload = () => {
 		//Robot
 		factory.getRobot();
 
-
-		// WALLS
-		/*{
-			let material = [
-				new THREE.MeshPhongMaterial({ color: 0xB7B7B7 }),
-				new THREE.MeshPhongMaterial({ color: 0xAAAAAA }),
-				new THREE.MeshPhongMaterial({ color: 0xA4A4A4 }),
-				new THREE.MeshPhongMaterial({ color: 0x979797 }),
-				new THREE.MeshPhongMaterial({ color: 0x949494 }),
-				new THREE.MeshPhongMaterial({ color: 0x909090 })
-			];
-			const brickMass = 20;
-			factory.createWall_X_axis(brickMass, -9, 9, 15, -9, false, material);
-			factory.createWall_X_axis(brickMass, -9, 9, 15, 9, true, material);
-			factory.createWall_Z_axis(brickMass, -8.25, 8.25, 15, -9.75, true, material);
-			factory.createWall_Z_axis(brickMass, -8.25, 8.25, 15, 11.25, false, material);
-
-			textureLoader.load("img/brick.jpg", (texture) => {
-				texture.wrapS = THREE.RepeatWrapping;
-				texture.wrapT = THREE.RepeatWrapping;
-				for (let i = 0; i < material.length; i++) {
-					material[i].map = texture;
-					material[i].needsUpdate = true;
-				}
-			});
-		}*/
-
-		// CONTROLS
-		/*const controls = new Sim.WASDControls(engine.getCamera());
-		controls.getObject().position.set(40, 25, 40);
-		controls.getObject().rotation.y = 0.75;
-		controls.setPitchRotationX(-0.25);
-		engine.addObject(controls.getObject());
-
-		// MOUSE SHOOTER
-		//const mouseShooter = new Sim.MouseShooter(1.2, 10, factory, engine.getCamera());
-
-		// HANDLE MOUSE CLICK
-		window.addEventListener('mousedown', (event) => {
-			let element = event.target as Element;
-			//console.log(event.target);
-			if (element.nodeName == 'A')
-				return;
-			else if (!controls.enabled) {
-				Sim.lockPointer(controls);
-			} else {
-				mouseShooter.shoot();
-			}
-		}, false);*/
-
 		// START THE ENGINE
 		function animate() {
 			engine.update();
@@ -139,7 +99,7 @@ document.body.onload = () => {
 			//const deltaTime = engine.update(controls.enabled);
 			//engine.update(true);
 		}
-		animate();
+		animate();*/
 	}
 };
 

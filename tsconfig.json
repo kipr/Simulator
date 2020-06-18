@@ -9,5 +9,8 @@
   },
   "files": [
     "./definitions/ammo.d.ts"
-  ]
+  ],
+  "types": [
+    "babylonjs",
+  ],
 }
