@@ -25,52 +25,7 @@ document.body.onload = () => {
 		canvas.addEventListener('resize', function(){
 			engine.resize();
 			console.log('Yay!');
-		})/*
-
-		const factory = new Sim.ShapeFactory(engine);
-
-		const textureLoader = new THREE.TextureLoader();
-
-		// GROUND
-		{
-			// const pos = new THREE.Vector3(0, -0.5, 0);
-			// const quat = new THREE.Quaternion(0, 0, 0, 1);
-			// const ground = factory.createParalellepiped(100, 1, 100, 0, pos, quat, new THREE.MeshPhongMaterial({ color: 0xFFFFFF }));
-			// ground.castShadow = true;
-			// ground.receiveShadow = true;
-			// textureLoader.load("static/Surface-A.png", (texture) => {
-			// 	texture.wrapS = THREE.RepeatWrapping;
-			// 	texture.wrapT = THREE.RepeatWrapping;
-			// 	//texture.repeat.set(5, 5);
-			// 	(ground.material as any).map = texture;
-			// 	(ground.material as any).needsUpdate = true;
-			// });
-			// engine.addObject(ground);
-			factory.createGround();
-
-		}
-
-		//Robot
-		factory.getRobot();
-
-		// START THE ENGINE
-		function animate() {
-			engine.update();
-			requestAnimationFrame(animate);
-			if (factory.wheels1) {
-				for (const wheel of factory.wheels1.children) {
-					wheel.rotation.y -= 1;
-				}
-			}
-			if (factory.wheels2) {
-				for (const wheel of factory.wheels2.children) {
-					wheel.rotation.y += 1;
-				}
-			}
-			//const deltaTime = engine.update(controls.enabled);
-			//engine.update(true);
-		}
-		animate();*/
+		})
 };
 
 
