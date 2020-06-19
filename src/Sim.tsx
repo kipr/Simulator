@@ -24,7 +24,11 @@ export class Space {
 		const loader = Babylon.SceneLoader.Append('static/', 'Simulator_Demobot.glb', scene, function () {
 			
 		});
-		console.log(scene.transformNodes);
+		scene.executeWhenReady(function () {
+			console.log(scene.getNodeByID("Simulator Demobot").uniqueId);
+		});
+		// scene.getNodeByID("Simulator Demobot").uniqueId
+		// scene.getTransformNodeByUniqueID(2365)
 		return scene;
 	}
 }
