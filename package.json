@@ -6,7 +6,7 @@
   "license": "GPL",
   "scripts": {
     "build": "yarn run clean-dist && webpack -p --config=configs/webpack/prod.js",
-    "watch": "yarn run clean-dist && webpack -p --watch --watch-poll --config=configs/webpack/prod.js",
+    "watch": "webpack --watch --watch-poll --config=configs/webpack/dev.js",
     "clean-dist": "rm -f -r -d dist",
     "lint": "tslint './src/**/*.ts*' --format stylish --force",
     "start": "yarn run start-dev",
