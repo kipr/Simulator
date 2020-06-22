@@ -1,6 +1,7 @@
 import * as Babylon from 'babylonjs';
 import 'babylonjs-loaders';
 import Oimo = require('babylonjs/Oimo');
+import Ammo = require('./ammo');
 
 export class Space {
 	public createScene(engine: Babylon.Engine, canvas: HTMLCanvasElement): Babylon.Scene {
@@ -13,7 +14,9 @@ export class Space {
 		const light = new Babylon.HemisphericLight("botlight", new Babylon.Vector3(0,1,0), scene);
 		light.intensity = 0.7;
 
-		scene.enablePhysics(new Babylon.Vector3(0,-10,0), new Babylon.OimoJSPlugin(5, Oimo));
+		// scene.enablePhysics(new Babylon.Vector3(0,-10,0), new Babylon.OimoJSPlugin(5, Oimo));
+		scene.enablePhysics(new Babylon.Vector3(0,-10,0), new Babylon.AmmoJSPlugin(true, Ammo));
+
 
 		const ground = Babylon.MeshBuilder.CreateGround("mat", {width:118, height:59, subdivisions:1}, scene);
 		ground.rotate(new Babylon.Vector3(0,1,0),Math.PI/2);

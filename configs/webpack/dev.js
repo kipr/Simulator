@@ -17,4 +17,7 @@ module.exports = merge(commonConfig, {
   },
   devtool: 'cheap-module-eval-source-map',
   plugins: [],
+  node: {
+    fs: 'empty',
+  },
 });
