@@ -53,32 +53,22 @@ export class Space {
 		wheel2.rotation.z = -Math.PI/2;
 		wheel2.isVisible = collidersVisible;
 
-		let physicsRoot = new Babylon.Mesh("",scene);
-		
-		
 		const loader = Babylon.SceneLoader.ImportMesh("",'static/', 'Simulator_Demobot.glb', scene, function (meshes, particlesystems, skeletons) {
 			const demobot = meshes[0];
 			
 			//Adding meshes to physics root
 			scene.executeWhenReady(function (){
-				caster.physicsImpostor = new Babylon.PhysicsImpostor(caster, Babylon.PhysicsImpostor.SphereImpostor, {mass: 2, friction: 0.5, restitution:1}, scene);
-				wheel1.physicsImpostor = new Babylon.PhysicsImpostor(wheel1, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 2, friction: 0.5, restitution:1}, scene);
-				wheel2.physicsImpostor = new Babylon.PhysicsImpostor(wheel2, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 2, friction: 0.5, restitution:1}, scene);
-				botbody.physicsImpostor = new Babylon.PhysicsImpostor(botbody, Babylon.PhysicsImpostor.BoxImpostor, {mass: 2, friction: 0.5, restitution:1}, scene);
-				// physicsRoot.physicsImpostor = new Babylon.PhysicsImpostor(physicsRoot, Babylon.PhysicsImpostor.NoImpostor, {mass: 10, friction: 0.5, restitution:4}, scene);
-				
 				botbody.addChild(caster);
 				botbody.addChild(wheel1);
 				botbody.addChild(wheel2);
 				meshes.forEach(element => {
 					botbody.addChild(element);
 				});
-				//botbody				
-				
-				// physicsRoot.addChild(botbody);
-				// physicsRoot.position.y = 10;
 
-				// console.log(physicsRoot);
+				caster.physicsImpostor = new Babylon.PhysicsImpostor(caster, Babylon.PhysicsImpostor.SphereImpostor, {mass: 2, friction: 0.5, restitution:1}, scene);
+				wheel1.physicsImpostor = new Babylon.PhysicsImpostor(wheel1, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 2, friction: 0.5, restitution:1}, scene);
+				wheel2.physicsImpostor = new Babylon.PhysicsImpostor(wheel2, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 2, friction: 0.5, restitution:1}, scene);
+				botbody.physicsImpostor = new Babylon.PhysicsImpostor(botbody, Babylon.PhysicsImpostor.BoxImpostor, {mass: 2, friction: 0.5, restitution:1}, scene);
 				
 			});
 
