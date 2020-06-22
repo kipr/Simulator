@@ -18,12 +18,12 @@ export class Space {
 		scene.enablePhysics(new Babylon.Vector3(0,-10,0), new Babylon.AmmoJSPlugin(true, Ammo));
 
 
-		const ground = Babylon.MeshBuilder.CreateGround("mat", {width:118, height:59, subdivisions:1}, scene);
+		const ground = Babylon.MeshBuilder.CreateGround("mat", {width:118, height:59, subdivisions:2}, scene);
 		ground.rotate(new Babylon.Vector3(0,1,0),Math.PI/2);
 		const material = new Babylon.StandardMaterial("mat-material", scene);
 		material.ambientTexture = new Babylon.Texture('static/Surface-A.png',scene);
 		ground.material = material;
-		ground.physicsImpostor = new Babylon.PhysicsImpostor(ground, Babylon.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.5, restitution: 0.7}, scene);
+		ground.physicsImpostor = new Babylon.PhysicsImpostor(ground, Babylon.PhysicsImpostor.BoxImpostor,{mass:0}, scene);
 		// ground._freeze();
 
 		//Colliders
@@ -61,22 +61,24 @@ export class Space {
 			
 			//Adding meshes to physics root
 			scene.executeWhenReady(function (){
-				caster.physicsImpostor = new Babylon.PhysicsImpostor(caster, Babylon.PhysicsImpostor.SphereImpostor, {mass: 1, friction: 0.5}, scene);
-				wheel1.physicsImpostor = new Babylon.PhysicsImpostor(wheel1, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 1, friction: 0.5}, scene);
-				wheel2.physicsImpostor = new Babylon.PhysicsImpostor(wheel2, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 1, friction: 0.5}, scene);
-				botbody.physicsImpostor = new Babylon.PhysicsImpostor(botbody, Babylon.PhysicsImpostor.BoxImpostor, {mass: 1, friction: 0.5}, scene);
-				physicsRoot.physicsImpostor = new Babylon.PhysicsImpostor(physicsRoot, Babylon.PhysicsImpostor.NoImpostor, {mass: 5, friction: 0.5}, scene);
-				meshes.forEach(element => {
-					botbody.addChild(element);
-				});
+				caster.physicsImpostor = new Babylon.PhysicsImpostor(caster, Babylon.PhysicsImpostor.SphereImpostor, {mass: 2, friction: 0.5, restitution:1}, scene);
+				wheel1.physicsImpostor = new Babylon.PhysicsImpostor(wheel1, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 2, friction: 0.5, restitution:1}, scene);
+				wheel2.physicsImpostor = new Babylon.PhysicsImpostor(wheel2, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 2, friction: 0.5, restitution:1}, scene);
+				botbody.physicsImpostor = new Babylon.PhysicsImpostor(botbody, Babylon.PhysicsImpostor.BoxImpostor, {mass: 2, friction: 0.5, restitution:1}, scene);
+				// physicsRoot.physicsImpostor = new Babylon.PhysicsImpostor(physicsRoot, Babylon.PhysicsImpostor.NoImpostor, {mass: 10, friction: 0.5, restitution:4}, scene);
+				
 				botbody.addChild(caster);
 				botbody.addChild(wheel1);
 				botbody.addChild(wheel2);
+				meshes.forEach(element => {
+					botbody.addChild(element);
+				});
+				//botbody				
 				
-				physicsRoot.addChild(botbody);
-				physicsRoot.position.y = 10;
+				// physicsRoot.addChild(botbody);
+				// physicsRoot.position.y = 10;
 
-				console.log(physicsRoot);
+				// console.log(physicsRoot);
 				
 			});
 
