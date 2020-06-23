@@ -1,13 +1,13 @@
 import * as Babylon from 'babylonjs';
 import 'babylonjs-loaders';
-import Oimo = require('babylonjs/Oimo');
+// import Oimo = require('babylonjs/Oimo');
 import Ammo = require('./ammo');
 
 export class Space {
 	public createScene(engine: Babylon.Engine, canvas: HTMLCanvasElement): Babylon.Scene {
 		const scene = new Babylon.Scene(engine);
 
-		const camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(0,0,0), scene);
+		const camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(50,50,50), scene);
 		camera.setTarget(Babylon.Vector3.Zero());
 		camera.attachControl(canvas, true);
 
@@ -23,67 +23,68 @@ export class Space {
 		const material = new Babylon.StandardMaterial("mat-material", scene);
 		material.ambientTexture = new Babylon.Texture('static/Surface-A.png',scene);
 		ground.material = material;
-		ground.physicsImpostor = new Babylon.PhysicsImpostor(ground, Babylon.PhysicsImpostor.BoxImpostor,{mass:0}, scene);
-		// ground._freeze();
+		ground.physicsImpostor = new Babylon.PhysicsImpostor(ground, Babylon.PhysicsImpostor.BoxImpostor,{mass:0, friction: 0.5}, scene);
 
 		//Colliders
-		const collidersVisible = true;
+		const collidersVisible = false;
 
 		const botbody = Babylon.MeshBuilder.CreateBox("botbody", {width:12.3, depth:24.6, height:3}, scene);
 		botbody.position.y = 4.2;
 		botbody.position.z = -12.3;
 		botbody.isVisible = collidersVisible;
 
+		const loader = Babylon.SceneLoader.ImportMesh("",'static/', 'Simulator_Demobot.glb', scene, function (meshes, particlesystems, skeletons) {
+			const demobot = meshes[0];
+			
+			//Adding meshes to physics root
+			meshes.forEach(element => {
+				botbody.addChild(element);
+			});
+		});
+
 		const caster = Babylon.MeshBuilder.CreateSphere("caster", {segments:16, diameter:2.2}, scene);
-		caster.position.z = -21.3;
-		caster.position.y = 1.8;
+		caster.parent = botbody;
+		caster.position.y = -2.4;
+		caster.position.z = -9;
 		caster.isVisible = collidersVisible;
 
 		const wheel1 = Babylon.MeshBuilder.CreateCylinder("wheel1",{height:0.7, diameter:6.8}, scene);
-		wheel1.position.y = 4;
 		wheel1.position.x = 7.9;
+		wheel1.position.y = 4;
 		wheel1.position.z = -7.2;
 		wheel1.rotation.z = Math.PI/2;
 		wheel1.isVisible = collidersVisible;
 
 		const wheel2 = Babylon.MeshBuilder.CreateCylinder("wheel1",{height:0.7, diameter:6.8}, scene);
-		wheel2.position.y = 4;
 		wheel2.position.x = -7.9;
+		wheel2.position.y = 4;
 		wheel2.position.z = -7.2;
 		wheel2.rotation.z = -Math.PI/2;
 		wheel2.isVisible = collidersVisible;
 
-		const loader = Babylon.SceneLoader.ImportMesh("",'static/', 'Simulator_Demobot.glb', scene, function (meshes, particlesystems, skeletons) {
-			const demobot = meshes[0];
-			
-			//Adding meshes to physics root
-			scene.executeWhenReady(function (){
-				botbody.addChild(caster);
-				botbody.addChild(wheel1);
-				botbody.addChild(wheel2);
-				meshes.forEach(element => {
-					botbody.addChild(element);
-				});
+		caster.physicsImpostor = new Babylon.PhysicsImpostor(caster, Babylon.PhysicsImpostor.SphereImpostor, {mass: 2, friction: 0.5, restitution:1}, scene);
+		wheel1.physicsImpostor = new Babylon.PhysicsImpostor(wheel1, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 2, friction: 1, restitution:1}, scene);
+		wheel2.physicsImpostor = new Babylon.PhysicsImpostor(wheel2, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 2, friction: 1, restitution:1}, scene);
+		botbody.physicsImpostor = new Babylon.PhysicsImpostor(botbody, Babylon.PhysicsImpostor.BoxImpostor, {mass: 10, friction: 0.5, restitution:1}, scene);
 
-				caster.physicsImpostor = new Babylon.PhysicsImpostor(caster, Babylon.PhysicsImpostor.SphereImpostor, {mass: 2, friction: 0.5, restitution:1}, scene);
-				wheel1.physicsImpostor = new Babylon.PhysicsImpostor(wheel1, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 2, friction: 0.5, restitution:1}, scene);
-				wheel2.physicsImpostor = new Babylon.PhysicsImpostor(wheel2, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 2, friction: 0.5, restitution:1}, scene);
-				botbody.physicsImpostor = new Babylon.PhysicsImpostor(botbody, Babylon.PhysicsImpostor.BoxImpostor, {mass: 2, friction: 0.5, restitution:1}, scene);
-				
-			});
-
-			
-
-
+		const wheel1_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
+			mainPivot: new Babylon.Vector3(7.9,-0.2,5.1),//Point relative to the center of the base object
+			connectedPivot: new Babylon.Vector3(0,0,0),//Point relative to the center of the rotating object
+			mainAxis: new Babylon.Vector3(1,0,0),//Base object axis of rotation
+			connectedAxis: new Babylon.Vector3(0,-1,0)//Rotating object axis of rotation (don't forget about any rotations you may have made)
 		});
-		scene.executeWhenReady(function () {
+		botbody.physicsImpostor.addJoint(wheel1.physicsImpostor,wheel1_joint);
 
-			//console.log(scene.getNodeByID("Simulator Demobot").uniqueId);
-			//console.log(scene.getNodeByID("Simulator Demobot"));
+		const wheel2_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
+			mainPivot: new Babylon.Vector3(-7.9,-0.2,5.1),
+			connectedPivot: new Babylon.Vector3(0,0,0),
+			mainAxis: new Babylon.Vector3(1,0,0),
+			connectedAxis: new Babylon.Vector3(0,1,0)
 		});
-		// scene.getNodeByID("Simulator Demobot").
-		// scene.getNodeByID("Simulator Demobot").uniqueId
-		// scene.getTransformNodeByUniqueID(2365)
+		botbody.physicsImpostor.addJoint(wheel2.physicsImpostor,wheel2_joint);
+
+		wheel1_joint.setMotor(0.2,10);
+		wheel2_joint.setMotor(0.4,10);
 		return scene;
 	}
 }
