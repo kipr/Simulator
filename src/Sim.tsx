@@ -4,6 +4,19 @@ import 'babylonjs-loaders';
 import Ammo = require('./ammo');
 
 export class Space {
+	public wheel1_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
+		mainPivot: new Babylon.Vector3(7.9,-0.2,5.1),//Point relative to the center of the base object
+		connectedPivot: new Babylon.Vector3(0,0,0),//Point relative to the center of the rotating object
+		mainAxis: new Babylon.Vector3(1,0,0),//Base object axis of rotation
+		connectedAxis: new Babylon.Vector3(0,-1,0)//Rotating object axis of rotation (don't forget about any rotations you may have made)
+	});
+
+	public wheel2_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
+		mainPivot: new Babylon.Vector3(-7.9,-0.2,5.1),
+		connectedPivot: new Babylon.Vector3(0,0,0),
+		mainAxis: new Babylon.Vector3(1,0,0),
+		connectedAxis: new Babylon.Vector3(0,1,0)
+	});
 	public createScene(engine: Babylon.Engine, canvas: HTMLCanvasElement): Babylon.Scene {
 		const scene = new Babylon.Scene(engine);
 
@@ -15,7 +28,7 @@ export class Space {
 		light.intensity = 0.7;
 
 		// scene.enablePhysics(new Babylon.Vector3(0,-10,0), new Babylon.OimoJSPlugin(5, Oimo));
-		scene.enablePhysics(new Babylon.Vector3(0,-10,0), new Babylon.AmmoJSPlugin(true, Ammo));
+		scene.enablePhysics(new Babylon.Vector3(0,-9.8,0), new Babylon.AmmoJSPlugin(true, Ammo));
 
 
 		const ground = Babylon.MeshBuilder.CreateGround("mat", {width:118, height:59, subdivisions:2}, scene);
@@ -23,7 +36,7 @@ export class Space {
 		const material = new Babylon.StandardMaterial("mat-material", scene);
 		material.ambientTexture = new Babylon.Texture('static/Surface-A.png',scene);
 		ground.material = material;
-		ground.physicsImpostor = new Babylon.PhysicsImpostor(ground, Babylon.PhysicsImpostor.BoxImpostor,{mass:0, friction: 0.5}, scene);
+		ground.physicsImpostor = new Babylon.PhysicsImpostor(ground, Babylon.PhysicsImpostor.BoxImpostor,{mass:0, friction: 2}, scene);
 
 		//Colliders
 		const collidersVisible = false;
@@ -62,29 +75,17 @@ export class Space {
 		wheel2.rotation.z = -Math.PI/2;
 		wheel2.isVisible = collidersVisible;
 
-		caster.physicsImpostor = new Babylon.PhysicsImpostor(caster, Babylon.PhysicsImpostor.SphereImpostor, {mass: 2, friction: 0.5, restitution:1}, scene);
-		wheel1.physicsImpostor = new Babylon.PhysicsImpostor(wheel1, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 2, friction: 1, restitution:1}, scene);
-		wheel2.physicsImpostor = new Babylon.PhysicsImpostor(wheel2, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 2, friction: 1, restitution:1}, scene);
-		botbody.physicsImpostor = new Babylon.PhysicsImpostor(botbody, Babylon.PhysicsImpostor.BoxImpostor, {mass: 10, friction: 0.5, restitution:1}, scene);
+		caster.physicsImpostor = new Babylon.PhysicsImpostor(caster, Babylon.PhysicsImpostor.SphereImpostor, {mass: 2, friction: 0.1, restitution:1}, scene);
+		wheel1.physicsImpostor = new Babylon.PhysicsImpostor(wheel1, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 2, friction: 4, restitution:1}, scene);
+		wheel2.physicsImpostor = new Babylon.PhysicsImpostor(wheel2, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 2, friction: 4, restitution:1}, scene);
+		botbody.physicsImpostor = new Babylon.PhysicsImpostor(botbody, Babylon.PhysicsImpostor.BoxImpostor, {mass: 50, friction: 0, restitution:1}, scene);
 
-		const wheel1_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
-			mainPivot: new Babylon.Vector3(7.9,-0.2,5.1),//Point relative to the center of the base object
-			connectedPivot: new Babylon.Vector3(0,0,0),//Point relative to the center of the rotating object
-			mainAxis: new Babylon.Vector3(1,0,0),//Base object axis of rotation
-			connectedAxis: new Babylon.Vector3(0,-1,0)//Rotating object axis of rotation (don't forget about any rotations you may have made)
-		});
-		botbody.physicsImpostor.addJoint(wheel1.physicsImpostor,wheel1_joint);
+		botbody.physicsImpostor.addJoint(wheel1.physicsImpostor,this.wheel1_joint);
 
-		const wheel2_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
-			mainPivot: new Babylon.Vector3(-7.9,-0.2,5.1),
-			connectedPivot: new Babylon.Vector3(0,0,0),
-			mainAxis: new Babylon.Vector3(1,0,0),
-			connectedAxis: new Babylon.Vector3(0,1,0)
-		});
-		botbody.physicsImpostor.addJoint(wheel2.physicsImpostor,wheel2_joint);
+		botbody.physicsImpostor.addJoint(wheel2.physicsImpostor,this.wheel2_joint);
 
-		wheel1_joint.setMotor(0.2,10);
-		wheel2_joint.setMotor(0.4,10);
+		this.wheel1_joint.setMotor(1,-1.75);
+		this.wheel2_joint.setMotor(1,-1.75);
 		return scene;
 	}
 }
