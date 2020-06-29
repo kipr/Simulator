@@ -25,8 +25,8 @@ class WorkerInstance {
                                                                 .fill(88,85,86);
   
   private time_ = Date.now() / 1000;
-  private wheel_diameter_ = 55;
-  private wheelSep_ = 64.05;
+  // private wheel_diameter_ = 55;
+  // private wheelSep_ = 64.05;
   private DirectionalValues = (int1:number, int2:number) => {
     if(int1 > int2){
       return -((0xFF ^ int1)*256 + (0xFF ^ int2)) - 1;
@@ -56,12 +56,12 @@ class WorkerInstance {
     nextState.motor2_speed = this.DirectionalValues(this.registers_[66], this.registers_[67]);
     nextState.motor3_speed = this.DirectionalValues(this.registers_[68], this.registers_[69]);
 
-    const total_dist = (nextState.motor3_speed + nextState.motor0_speed)/1500;
-    const diff_dist = (nextState.motor3_speed - nextState.motor0_speed)/1500;
+    //const total_dist = (nextState.motor3_speed + nextState.motor0_speed)/1500;
+    //const diff_dist = (nextState.motor3_speed - nextState.motor0_speed)/1500;
 
-    nextState.theta = nextState.theta + (this.wheel_diameter_/2)*diff_dist/this.wheelSep_*time_change;
-    nextState.x = nextState.x + (this.wheel_diameter_/2)*(total_dist)*Math.cos(nextState.theta)*time_change;
-    nextState.y = nextState.y + (this.wheel_diameter_/2)*(total_dist)*Math.sin(nextState.theta)*time_change;
+    nextState.theta = nextState.theta;// + (this.wheel_diameter_/2)*diff_dist/this.wheelSep_*time_change;
+    nextState.x = nextState.x;// + (this.wheel_diameter_/2)*(total_dist)*Math.cos(nextState.theta)*time_change;
+    nextState.y = nextState.y;// + (this.wheel_diameter_/2)*(total_dist)*Math.sin(nextState.theta)*time_change;
     
     //Write the values to the registers and send those back to worker when updated.(Send the entire array to worker)
     nextState.motor0_position = nextState.motor0_position + nextState.motor0_speed*time_change;

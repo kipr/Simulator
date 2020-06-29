@@ -4,6 +4,12 @@
     "allowJs": true,
     "outDir": "dist",
     "jsx": "react",
-    "target": "es6"
-  }
+    "target": "es6",
+    "moduleResolution": "node"
+  },
+  "types": [
+    "babylonjs",
+    "babylonjs-loaders",
+    "babylonjs-gltf2interface"
+  ],
 }

@@ -6,7 +6,7 @@
   "license": "GPL",
   "scripts": {
     "build": "yarn run clean-dist && webpack -p --config=configs/webpack/prod.js",
-    "watch": "yarn run clean-dist && webpack -p --watch --watch-poll --config=configs/webpack/prod.js",
+    "watch": "webpack --watch --watch-poll --config=configs/webpack/dev.js",
     "clean-dist": "rm -f -r -d dist",
     "lint": "tslint './src/**/*.ts*' --format stylish --force",
     "start": "yarn run start-dev",
@@ -32,6 +32,8 @@
   },
   "dependencies": {
     "@types/react": "^16.9.25",
+    "babylonjs": "^4.2.0-alpha.20",
+    "babylonjs-loaders": "^4.2.0-alpha.20",
     "body-parser": "^1.19.0",
     "codemirror": "^5.53.2",
     "css-loader": "^3.5.3",

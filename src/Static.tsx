@@ -20,7 +20,7 @@ export class Static extends React.Component<Props> {
               <svg width="960" height="480" x="240" y="240" className="mat-surface">
                   <image width="100%" href="static/Surface-A.png"/>
               </svg>
-            </svg>
+            </svg>           
         )
     }
 }
