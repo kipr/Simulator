@@ -1,7 +1,8 @@
 import Protocol from './WorkerProtocol';
 import Registers from './RegisterState'
 import { RobotState } from './RobotState';
-
+import * as Babylon from 'babylonjs';
+import * as Sim from './Sim';
 import deepNeq from './deepNeq';
 
 
@@ -44,14 +45,95 @@ class WorkerInstance {
     return dval;
   }
 
-  private tick = ()=> {
-    const nextState = { ...this.state_ };
-    const new_time = Date.now()/1000
-    const time_change = new_time - this.time_;
-    this.time_ = new_time;
+  private linkStart = ()=> {
+     
     
+		// console.log(motorSpeed1+","+motorSpeed2);
+    const canvas = document.getElementById('simview') as HTMLCanvasElement;
+    console.log(canvas);
+		// const holder = document.getElementById('right') as HTMLDivElement;
+		const engine = new Babylon.Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true});
+		const space = new Sim.Space(engine, canvas);
+    space.createScene();
+    let nextState = { ...this.state_ };
+		// space.scene.executeWhenReady(function () {
+			engine.runRenderLoop(function(){
+        nextState = {...this.state_};
+        const new_time = Date.now()/1000
+        const time_change = new_time - this.time_;
+        this.time_ = new_time;
 
-    nextState.motor0_speed = this.DirectionalValues(this.registers_[62], this.registers_[63]);
+        
+        // console.log('Get'+ space.wheel1_joint.+","+motorSpeed2);
+				// space.scene.getMeshByID('pw-mt11040').rotationQuaternion = undefined;
+				space.scene.getMeshByID('pw-mt11040').rotationQuaternion = space.wheel1.rotationQuaternion;
+				space.scene.getMeshByID('black high gloss plastic').rotationQuaternion = space.wheel1.rotationQuaternion;
+				space.scene.getMeshByID('matte rubber').rotationQuaternion = space.wheel1.rotationQuaternion;
+
+				space.scene.getMeshByID('pw-mt11040.2').rotationQuaternion = space.wheel2.rotationQuaternion;
+				space.scene.getMeshByID('black high gloss plastic.2').rotationQuaternion = space.wheel2.rotationQuaternion;
+				space.scene.getMeshByID('matte rubber.2').rotationQuaternion = space.wheel2.rotationQuaternion;
+				
+        
+        
+        nextState.motor0_speed = this.DirectionalValues(this.registers_[62], this.registers_[63]);
+        nextState.motor1_speed = this.DirectionalValues(this.registers_[64], this.registers_[65]);
+        nextState.motor2_speed = this.DirectionalValues(this.registers_[66], this.registers_[67]);
+        nextState.motor3_speed = this.DirectionalValues(this.registers_[68], this.registers_[69]);
+
+        //const total_dist = (nextState.motor3_speed + nextState.motor0_speed)/1500;
+        //const diff_dist = (nextState.motor3_speed - nextState.motor0_speed)/1500;
+
+        nextState.theta = nextState.theta;// + (this.wheel_diameter_/2)*diff_dist/this.wheelSep_*time_change;
+        nextState.x = nextState.x;// + (this.wheel_diameter_/2)*(total_dist)*Math.cos(nextState.theta)*time_change;
+        nextState.y = nextState.y;// + (this.wheel_diameter_/2)*(total_dist)*Math.sin(nextState.theta)*time_change;
+        
+        //Write the values to the registers and send those back to worker when updated.(Send the entire array to worker)
+        nextState.motor0_position = nextState.motor0_position + nextState.motor0_speed*time_change;
+        nextState.motor1_position = nextState.motor1_position + nextState.motor1_speed*time_change;
+        nextState.motor2_position = nextState.motor2_position + nextState.motor2_speed*time_change;
+        nextState.motor3_position = nextState.motor3_position + nextState.motor3_speed*time_change;
+
+        this.registers_[42] = nextState.motor0_position;
+        this.registers_[46] = nextState.motor1_position;
+        this.registers_[50] = nextState.motor2_position;
+        this.registers_[54] = nextState.motor3_position;
+        
+        //console.log(this.registers_[61])
+        if(this.registers_[61] == 0){
+          nextState.servo0_position = this.readServoRegister(this.registers_[78], this.registers_[79]);
+          nextState.servo1_position = this.readServoRegister(this.registers_[80], this.registers_[81]);
+          nextState.servo2_position = this.readServoRegister(this.registers_[82], this.registers_[83]);
+          nextState.servo3_position = this.readServoRegister(this.registers_[84], this.registers_[85]);
+        }
+        //console.log("setting servo");
+
+        if (deepNeq(nextState, this.state_)) {
+          if (this.onStateChange) {
+            this.onStateChange(nextState);
+          }
+          this.state_ = nextState;
+        }
+
+        const motorSpeed1 = nextState.motor0_speed/500;
+		    const motorSpeed2 = nextState.motor3_speed/500;
+
+				console.log('Set'+ motorSpeed1+","+motorSpeed2);
+				space.wheel1_joint.setMotor(motorSpeed1);
+        space.wheel2_joint.setMotor(motorSpeed2);
+
+
+				space.scene.render();
+				
+			});
+		//});
+		
+		canvas.addEventListener('resize', function(){
+			engine.resize();
+			console.log('Yay!');
+		});
+
+    /*nextState.motor0_speed = this.DirectionalValues(this.registers_[62], this.registers_[63]);
     nextState.motor1_speed = this.DirectionalValues(this.registers_[64], this.registers_[65]);
     nextState.motor2_speed = this.DirectionalValues(this.registers_[66], this.registers_[67]);
     nextState.motor3_speed = this.DirectionalValues(this.registers_[68], this.registers_[69]);
@@ -91,7 +173,7 @@ class WorkerInstance {
     }
 
     
-    requestAnimationFrame(this.tick);
+    requestAnimationFrame(this.linkStart);*/
   }
   
   private onMessage = (e)=> {
@@ -182,7 +264,7 @@ class WorkerInstance {
 
   constructor(){
     this.worker_.onmessage = this.onMessage
-    this.tick()
+    this.linkStart()
   }
 
   get registers() {
