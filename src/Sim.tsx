@@ -39,7 +39,7 @@ export class Space {
 		light.intensity = 0.7;
 
 		// scene.enablePhysics(new Babylon.Vector3(0,-10,0), new Babylon.OimoJSPlugin(5, Oimo));
-		this.scene.enablePhysics(new Babylon.Vector3(0,-9.8,0), new Babylon.AmmoJSPlugin(true, Ammo));
+		this.scene.enablePhysics(new Babylon.Vector3(0,-19.6,0), new Babylon.AmmoJSPlugin(true, Ammo));
 
 
 		const ground = Babylon.MeshBuilder.CreateGround("mat", {width:118, height:59, subdivisions:2}, this.scene);
@@ -59,9 +59,12 @@ export class Space {
 
 		const loader = Babylon.SceneLoader.ImportMesh("",'static/', 'Simulator_Demobot.glb', this.scene, function (meshes, particlesystems, skeletons) {
 			const demobot = meshes[0];
-			
+			//console.log(meshes[0]);
 			//Adding meshes to physics root
 			meshes.forEach(element => {
+				// if(element.id == 'Servo Wheel-1'){
+				// 	console.log('Found wheel 1');
+				// }
 				botbody.addChild(element);
 			});
 		});
@@ -77,14 +80,14 @@ export class Space {
 		this.wheel1.position.y = 4;
 		this.wheel1.position.z = -7.2;
 		this.wheel1.rotation.z = Math.PI/2;
-		this.wheel1.isVisible = collidersVisible;
+		this.wheel1.isVisible = true;//collidersVisible;
 
 		this.wheel2 = Babylon.MeshBuilder.CreateCylinder("wheel1",{height:0.7, diameter:6.8}, this.scene);
 		this.wheel2.position.x = -7.9;
 		this.wheel2.position.y = 4;
 		this.wheel2.position.z = -7.2;
 		this.wheel2.rotation.z = -Math.PI/2;
-		this.wheel2.isVisible = collidersVisible;
+		this.wheel2.isVisible = true;//collidersVisible;
 
 		caster.physicsImpostor = new Babylon.PhysicsImpostor(caster, Babylon.PhysicsImpostor.SphereImpostor, {mass: 2, friction: 0.1}, this.scene);
 		this.wheel1.physicsImpostor = new Babylon.PhysicsImpostor(this.wheel1, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 2, friction: 4}, this.scene);
@@ -95,8 +98,8 @@ export class Space {
 
 		botbody.physicsImpostor.addJoint(this.wheel2.physicsImpostor,this.wheel2_joint);
 
-		this.wheel1_joint.setMotor(1,-1.75);
-		this.wheel2_joint.setMotor(1,-1.75);
+		this.wheel1_joint.setMotor(1);
+		this.wheel2_joint.setMotor(1);
 	}
 }
 	

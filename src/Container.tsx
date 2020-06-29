@@ -11,9 +11,42 @@ interface ContainerState {
 }
 type Props = ContainerProps;
 type State = ContainerState;
+/*
+// body.onload = () => {
+	const motorSpeed1 = WorkerInstance.state.motor0_speed/500;
+	const motorSpeed2 = WorkerInstance.state.motor3_speed/500;
+	// console.log(motorSpeed1+","+motorSpeed2);
+	const canvas = document.getElementById('simview') as HTMLCanvasElement;
+	const holder = document.getElementById('right') as HTMLDivElement;
+	const engine = new Babylon.Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true});
+	const space = new Sim.Space(engine, canvas);
+	space.createScene();
+	space.scene.executeWhenReady(function () {
+		engine.runRenderLoop(function(){
+			console.log(motorSpeed1+","+motorSpeed2);
+			space.wheel1_joint.setMotor(motorSpeed1,motorSpeed1);
+			space.wheel2_joint.setMotor(motorSpeed2,motorSpeed2);
+			// space.scene.getMeshByID('pw-mt11040').rotationQuaternion = undefined;
+			space.scene.getMeshByID('pw-mt11040').rotationQuaternion = space.wheel1.rotationQuaternion;
+			space.scene.getMeshByID('black high gloss plastic').rotationQuaternion = space.wheel1.rotationQuaternion;
+			space.scene.getMeshByID('matte rubber').rotationQuaternion = space.wheel1.rotationQuaternion;
 
-
-
+			space.scene.getMeshByID('pw-mt11040.2').rotationQuaternion = space.wheel2.rotationQuaternion;
+			space.scene.getMeshByID('black high gloss plastic.2').rotationQuaternion = space.wheel2.rotationQuaternion;
+			space.scene.getMeshByID('matte rubber.2').rotationQuaternion = space.wheel2.rotationQuaternion;
+			
+			
+			space.scene.render();
+			
+		});
+	});
+	
+	canvas.addEventListener('resize', function(){
+		engine.resize();
+		console.log('Yay!');
+	});
+	// }
+*/
 
 export class Container extends React.Component<Props, State> {
 	constructor(props: Props, context?) {
@@ -42,36 +75,43 @@ export class Container extends React.Component<Props, State> {
 		const {
 			props, state
 		} = this
-
-		document.body.onload = () => {
-			const canvas = document.getElementById('simview') as HTMLCanvasElement;
-			const holder = document.getElementById('right') as HTMLDivElement;
-			const engine = new Babylon.Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true});
-			const space = new Sim.Space(engine, canvas);
-			space.createScene();
+		/*
+		// body.onload = () => {
+		const motorSpeed1 = state.robot.motor0_speed/500;
+		const motorSpeed2 = state.robot.motor3_speed/500;
+		// console.log(motorSpeed1+","+motorSpeed2);
+		const canvas = document.getElementById('simview') as HTMLCanvasElement;
+		const holder = document.getElementById('right') as HTMLDivElement;
+		const engine = new Babylon.Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true});
+		const space = new Sim.Space(engine, canvas);
+		space.createScene();
+		space.scene.executeWhenReady(function () {
 			engine.runRenderLoop(function(){
-				space.scene.executeWhenReady(function () {
-					// space.scene.getMeshByID('pw-mt11040').rotationQuaternion = undefined;
-					space.scene.getMeshByID('pw-mt11040').rotationQuaternion = space.wheel1.rotationQuaternion;
-					space.scene.getMeshByID('black high gloss plastic').rotationQuaternion = space.wheel1.rotationQuaternion;
-					space.scene.getMeshByID('matte rubber').rotationQuaternion = space.wheel1.rotationQuaternion;
+				console.log(motorSpeed1+","+motorSpeed2);
+				space.wheel1_joint.setMotor(motorSpeed1,motorSpeed1);
+				space.wheel2_joint.setMotor(motorSpeed2,motorSpeed2);
+				// space.scene.getMeshByID('pw-mt11040').rotationQuaternion = undefined;
+				space.scene.getMeshByID('pw-mt11040').rotationQuaternion = space.wheel1.rotationQuaternion;
+				space.scene.getMeshByID('black high gloss plastic').rotationQuaternion = space.wheel1.rotationQuaternion;
+				space.scene.getMeshByID('matte rubber').rotationQuaternion = space.wheel1.rotationQuaternion;
 
-					space.scene.getMeshByID('pw-mt11040.2').rotationQuaternion = space.wheel2.rotationQuaternion;
-					space.scene.getMeshByID('black high gloss plastic.2').rotationQuaternion = space.wheel2.rotationQuaternion;
-					space.scene.getMeshByID('matte rubber.2').rotationQuaternion = space.wheel2.rotationQuaternion;
-				});
+				space.scene.getMeshByID('pw-mt11040.2').rotationQuaternion = space.wheel2.rotationQuaternion;
+				space.scene.getMeshByID('black high gloss plastic.2').rotationQuaternion = space.wheel2.rotationQuaternion;
+				space.scene.getMeshByID('matte rubber.2').rotationQuaternion = space.wheel2.rotationQuaternion;
+				
+				
 				space.scene.render();
-				//space.wheel1_joint.setMotor(state.robot.motor0_speed/500,state.robot.motor0_speed/500);
-				//space.wheel2_joint.setMotor(state.robot.motor3_speed/500,state.robot.motor3_speed/500);
+				
 			});
-			
-			canvas.addEventListener('resize', function(){
-				engine.resize();
-				console.log('Yay!');
-			})
-		};
+		});
+		
+		canvas.addEventListener('resize', function(){
+			engine.resize();
+			console.log('Yay!');
+		});
+		// }
 		//console.log('qwe')
-
+		*/
 		return (
 			<section id="app">
 				<App robot={state.robot} onRobotChange={this.onRobotChange_} />
