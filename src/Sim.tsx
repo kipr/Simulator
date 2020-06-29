@@ -95,8 +95,8 @@ export class Space {
 
 		botbody.physicsImpostor.addJoint(this.wheel2.physicsImpostor,this.wheel2_joint);
 
-		this.wheel1_joint.setMotor(1,-1.75);
-		this.wheel2_joint.setMotor(1,-1.75);
+		this.wheel1_joint.setMotor(1);
+		this.wheel2_joint.setMotor(1);
 	}
 }
 	
