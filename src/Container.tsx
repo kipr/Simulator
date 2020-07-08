@@ -49,16 +49,36 @@ export class Container extends React.Component<Props, State> {
 			const engine = new Babylon.Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true});
 			const space = new Sim.Space(engine, canvas);
 			space.createScene();
+			
 			engine.runRenderLoop(function(){
+				const motor1speed = -0.01
+				const motor2speed = 0.01
+				
+				space.wheel1.rotate(Babylon.Axis.Y,motor1speed, Babylon.Space.LOCAL);
+				space.wheel2.rotate(Babylon.Axis.Y, motor2speed, Babylon.Space.LOCAL);
 				space.scene.executeWhenReady(function () {
+					
+					space.scene.getMeshByID('pw-mt11040').setParent(space.wheel1);
+					space.scene.getMeshByID('black high gloss plastic').setParent(space.wheel1);
+					space.scene.getMeshByID('matte rubber').setParent(space.wheel1);
+					space.scene.getMeshByID('pw-mt11040').position.setAll(0);
+					space.scene.getMeshByID('black high gloss plastic').position.setAll(0);
+					space.scene.getMeshByID('matte rubber').position.setAll(0);
+					
+					space.scene.getMeshByID('pw-mt11040.2').setParent(space.wheel2);
+					space.scene.getMeshByID('black high gloss plastic.2').setParent(space.wheel2);
+					space.scene.getMeshByID('matte rubber.2').setParent(space.wheel2);
+					space.scene.getMeshByID('pw-mt11040.2').position.setAll(0);
+					space.scene.getMeshByID('black high gloss plastic.2').position.setAll(0);
+					space.scene.getMeshByID('matte rubber.2').position.setAll(0);
 					// space.scene.getMeshByID('pw-mt11040').rotationQuaternion = undefined;
-					space.scene.getMeshByID('pw-mt11040').rotationQuaternion = space.wheel1.rotationQuaternion;
-					space.scene.getMeshByID('black high gloss plastic').rotationQuaternion = space.wheel1.rotationQuaternion;
-					space.scene.getMeshByID('matte rubber').rotationQuaternion = space.wheel1.rotationQuaternion;
+					// space.scene.getMeshByID('pw-mt11040').rotate(Babylon.Axis.Y, motor1speed, Babylon.Space.LOCAL);//.rotationQuaternion = space.wheel1.rotationQuaternion;
+					// space.scene.getMeshByID('black high gloss plastic').rotate(Babylon.Axis.Y, motor1speed, Babylon.Space.LOCAL);//.rotationQuaternion = space.wheel1.rotationQuaternion;
+					// space.scene.getMeshByID('matte rubber').rotate(Babylon.Axis.Y, motor1speed, Babylon.Space.LOCAL);//.rotationQuaternion = space.wheel1.rotationQuaternion;
 
-					space.scene.getMeshByID('pw-mt11040.2').rotationQuaternion = space.wheel2.rotationQuaternion;
-					space.scene.getMeshByID('black high gloss plastic.2').rotationQuaternion = space.wheel2.rotationQuaternion;
-					space.scene.getMeshByID('matte rubber.2').rotationQuaternion = space.wheel2.rotationQuaternion;
+					// space.scene.getMeshByID('pw-mt11040.2').rotate(Babylon.Axis.Y, motor2speed, Babylon.Space.LOCAL);//.rotationQuaternion = space.wheel2.rotationQuaternion;
+					// space.scene.getMeshByID('black high gloss plastic.2').rotate(Babylon.Axis.Y, motor2speed, Babylon.Space.LOCAL);//.rotationQuaternion = space.wheel2.rotationQuaternion;
+					// space.scene.getMeshByID('matte rubber.2').rotate(Babylon.Axis.Y, motor2speed, Babylon.Space.LOCAL);//.rotationQuaternion = space.wheel2.rotationQuaternion;
 				});
 				space.scene.render();
 				//space.wheel1_joint.setMotor(state.robot.motor0_speed/500,state.robot.motor0_speed/500);

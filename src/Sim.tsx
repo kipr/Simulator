@@ -16,20 +16,33 @@ export class Space {
 		this.scene = new Babylon.Scene(engine);
 	}
 
-	public wheel1_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
+	// public wheel1_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
+	// 	mainPivot: new Babylon.Vector3(7.9,-0.2,5.1),//Point relative to the center of the base object
+	// 	connectedPivot: new Babylon.Vector3(0,0,0),//Point relative to the center of the rotating object
+	// 	mainAxis: new Babylon.Vector3(1,0,0),//Base object axis of rotation
+	// 	connectedAxis: new Babylon.Vector3(0,-1,0)//Rotating object axis of rotation (don't forget about any rotations you may have made)
+	// });
+	public wheel1_joint = new Babylon.PhysicsJoint(Babylon.PhysicsJoint.HingeJoint,{
 		mainPivot: new Babylon.Vector3(7.9,-0.2,5.1),//Point relative to the center of the base object
 		connectedPivot: new Babylon.Vector3(0,0,0),//Point relative to the center of the rotating object
 		mainAxis: new Babylon.Vector3(1,0,0),//Base object axis of rotation
 		connectedAxis: new Babylon.Vector3(0,-1,0)//Rotating object axis of rotation (don't forget about any rotations you may have made)
 	});
 
-	public wheel2_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
+	// public wheel2_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
+	// 	mainPivot: new Babylon.Vector3(-7.9,-0.2,5.1),
+	// 	connectedPivot: new Babylon.Vector3(0,0,0),
+	// 	mainAxis: new Babylon.Vector3(1,0,0),
+	// 	connectedAxis: new Babylon.Vector3(0,1,0)
+	// });
+	public wheel2_joint = new Babylon.PhysicsJoint(Babylon.PhysicsJoint.HingeJoint,{
 		mainPivot: new Babylon.Vector3(-7.9,-0.2,5.1),
 		connectedPivot: new Babylon.Vector3(0,0,0),
 		mainAxis: new Babylon.Vector3(1,0,0),
 		connectedAxis: new Babylon.Vector3(0,1,0)
 	});
-	
+
+
 	public createScene() {
 		const camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(50,50,50), this.scene);
 		camera.setTarget(Babylon.Vector3.Zero());
@@ -95,8 +108,8 @@ export class Space {
 
 		botbody.physicsImpostor.addJoint(this.wheel2.physicsImpostor,this.wheel2_joint);
 
-		this.wheel1_joint.setMotor(1);
-		this.wheel2_joint.setMotor(1);
+		//this.wheel1_joint.setMotor(2);
+		//this.wheel2_joint.setMotor(1);
 	}
 }
 	
