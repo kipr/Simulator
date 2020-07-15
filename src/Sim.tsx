@@ -7,16 +7,21 @@ export class Space {
 	public engine: Babylon.Engine;
 	public canvas: HTMLCanvasElement;
 	public scene: Babylon.Scene;
+
 	private ground: Babylon.Mesh;
+
+	public botbody: Babylon.Mesh;
+	public wombat: Babylon.Mesh;
+	public battery: Babylon.Mesh;
+	public caster: Babylon.Mesh;
 	public wheel1: Babylon.Mesh;
 	public wheel2: Babylon.Mesh;
-	public botbody: Babylon.Mesh;
-	public caster: Babylon.Mesh;
+	
 	public motor1: number;
 	public motor2: number;
 	// public can: Babylon.Mesh;
 
-	private collidersVisible = false;
+	private collidersVisible = true;
 	private counter = 0;
 
 	constructor(engine: Babylon.Engine, canvas: HTMLCanvasElement) {
@@ -28,14 +33,14 @@ export class Space {
 	}
 
 	public wheel1_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
-		mainPivot: new Babylon.Vector3(7.9,-0.2,5.1),//Point relative to the center of the base object
+		mainPivot: new Babylon.Vector3(7.9,-0.34,5.1),//Point relative to the center of the base object
 		connectedPivot: new Babylon.Vector3(0,0,0),//Point relative to the center of the rotating object
 		mainAxis: new Babylon.Vector3(1,0,0),//Base object axis of rotation
 		connectedAxis: new Babylon.Vector3(0,-1,0)//Rotating object axis of rotation (don't forget about any rotations you may have made)
 	});
 
 	public wheel2_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
-		mainPivot: new Babylon.Vector3(-7.9,-0.2,5.1),
+		mainPivot: new Babylon.Vector3(-7.9,-0.34,5.1),
 		connectedPivot: new Babylon.Vector3(0,0,0),
 		mainAxis: new Babylon.Vector3(1,0,0),
 		connectedAxis: new Babylon.Vector3(0,1,0)
@@ -54,12 +59,12 @@ export class Space {
 
 		this.buildGround();
 
-		//Colliders
+		//Robot Colliders
 
 		this.buildBotBody();
-
+		this.buildWombat();
+		this.buildBattery();
 		this.buildCaster();
-
 		this.buildWheels();
 
 		// this.can = Babylon.MeshBuilder.CreateCylinder("can",{height:10, diameter:6.8}, this.scene);
@@ -80,9 +85,26 @@ export class Space {
 
 	private buildBotBody () {
 		this.botbody = Babylon.MeshBuilder.CreateBox("botbody", {width:12.3, depth:24.6, height:3}, this.scene);
-		this.botbody.position.y = 4.2;
+		this.botbody.position.y = 4.4;
 		this.botbody.position.z = -12.3;
 		this.botbody.isVisible = this.collidersVisible;
+	}
+
+	private buildWombat () {
+		this.wombat = Babylon.MeshBuilder.CreateBox("wombat", {width:13, depth:13.8, height:3.3}, this.scene);
+		this.wombat.parent = this.botbody;
+		this.wombat.position.y = 3.15;
+		this.wombat.position.z = -3.75;
+		this.wombat.isVisible = this.collidersVisible;
+	}
+
+	private buildBattery () {
+		this.battery = Babylon.MeshBuilder.CreateBox("battery", {width:9.4, depth:1.9, height:5}, this.scene);
+		this.battery.parent = this.botbody;
+		this.battery.position.x = 1.5;
+		this.battery.position.y = 4.05;
+		this.battery.position.z = -9.4;
+		this.battery.isVisible = this.collidersVisible;
 	}
 
 	private buildCaster () {
@@ -98,7 +120,7 @@ export class Space {
 		this.wheel1 = Babylon.MeshBuilder.CreateCylinder("wheel1",{height:0.7, diameter:6.8}, this.scene);
 		this.wheel1.material = wheelMaterial;
 		this.wheel1.position.x = 7.9;
-		this.wheel1.position.y = 4;
+		this.wheel1.position.y = 4.2;
 		this.wheel1.position.z = -7.2;
 		this.wheel1.rotation.z = Math.PI/2;
 		this.wheel1.isVisible = this.collidersVisible;
@@ -106,17 +128,19 @@ export class Space {
 		this.wheel2 = Babylon.MeshBuilder.CreateCylinder("wheel1",{height:0.7, diameter:6.8}, this.scene);
 		this.wheel2.material = wheelMaterial;
 		this.wheel2.position.x = -7.9;
-		this.wheel2.position.y = 4;
+		this.wheel2.position.y = 4.2;
 		this.wheel2.position.z = -7.2;
 		this.wheel2.rotation.z = -Math.PI/2;
 		this.wheel2.isVisible = this.collidersVisible;
 	}
 
 	private assignPhysicsImpostors () {
-		this.caster.physicsImpostor = new Babylon.PhysicsImpostor(this.caster, Babylon.PhysicsImpostor.SphereImpostor, {mass: 10}, this.scene);
+		this.caster.physicsImpostor = new Babylon.PhysicsImpostor(this.caster, Babylon.PhysicsImpostor.SphereImpostor, {mass: 20}, this.scene);
+		this.wombat.physicsImpostor = new Babylon.PhysicsImpostor(this.wombat, Babylon.PhysicsImpostor.BoxImpostor, {mass: 200}, this.scene);
+		this.battery.physicsImpostor = new Babylon.PhysicsImpostor(this.battery, Babylon.PhysicsImpostor.BoxImpostor, {mass: 100}, this.scene);
 		this.wheel1.physicsImpostor = new Babylon.PhysicsImpostor(this.wheel1, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 5, friction: 10}, this.scene);
 		this.wheel2.physicsImpostor = new Babylon.PhysicsImpostor(this.wheel2, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 5, friction: 10}, this.scene);
-		this.botbody.physicsImpostor = new Babylon.PhysicsImpostor(this.botbody, Babylon.PhysicsImpostor.BoxImpostor, {mass: 50}, this.scene);
+		this.botbody.physicsImpostor = new Babylon.PhysicsImpostor(this.botbody, Babylon.PhysicsImpostor.BoxImpostor, {mass: 100}, this.scene);
 		// this.can.physicsImpostor = new Babylon.PhysicsImpostor(this.can, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 5}, this.scene);
 
 		this.botbody.physicsImpostor.addJoint(this.wheel1.physicsImpostor,this.wheel1_joint);

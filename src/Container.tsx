@@ -53,9 +53,12 @@ export class Container extends React.Component<Props, State> {
 
 			space.scene.executeOnceBeforeRender(function () {
 				const loader = Babylon.SceneLoader.ImportMesh("",'static/', 'Simulator_Demobot.glb', space.scene, function (meshes) {
-					space.botbody.addChild(meshes[0]);
+					//space.botbody.addChild(meshes[0]);
+					meshes[0].setParent(space.botbody);
+					console.log(meshes[0].id);
 					space.assignVisWheels();
 				});
+				//space.scene.getMeshByID('__root__') == null;
 			});
 
 			space.scene.registerBeforeRender(function () {
