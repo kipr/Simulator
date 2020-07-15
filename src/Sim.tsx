@@ -17,6 +17,7 @@ export class Space {
 	// public can: Babylon.Mesh;
 
 	private collidersVisible = false;
+	private counter = 0;
 
 	constructor(engine: Babylon.Engine, canvas: HTMLCanvasElement) {
 		this.engine = engine;
@@ -26,12 +27,6 @@ export class Space {
 		this.motor2 = -2;
 	}
 
-	// public wheel1_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
-	// 	mainPivot: new Babylon.Vector3(7.9,-0.2,5.1),//Point relative to the center of the base object
-	// 	connectedPivot: new Babylon.Vector3(0,0,0),//Point relative to the center of the rotating object
-	// 	mainAxis: new Babylon.Vector3(1,0,0),//Base object axis of rotation
-	// 	connectedAxis: new Babylon.Vector3(0,-1,0)//Rotating object axis of rotation (don't forget about any rotations you may have made)
-	// });
 	public wheel1_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
 		mainPivot: new Babylon.Vector3(7.9,-0.2,5.1),//Point relative to the center of the base object
 		connectedPivot: new Babylon.Vector3(0,0,0),//Point relative to the center of the rotating object
@@ -39,12 +34,6 @@ export class Space {
 		connectedAxis: new Babylon.Vector3(0,-1,0)//Rotating object axis of rotation (don't forget about any rotations you may have made)
 	});
 
-	// public wheel2_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
-	// 	mainPivot: new Babylon.Vector3(-7.9,-0.2,5.1),
-	// 	connectedPivot: new Babylon.Vector3(0,0,0),
-	// 	mainAxis: new Babylon.Vector3(1,0,0),
-	// 	connectedAxis: new Babylon.Vector3(0,1,0)
-	// });
 	public wheel2_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
 		mainPivot: new Babylon.Vector3(-7.9,-0.2,5.1),
 		connectedPivot: new Babylon.Vector3(0,0,0),
@@ -77,14 +66,6 @@ export class Space {
 		// this.can.position.y = 30;
 
 		this.assignPhysicsImpostors();
-	}
-	//Assigns set of meshes to new parent
-	private meshChildrenTransfer (target: Babylon.Mesh, source: Babylon.AbstractMesh[]) {
-		source.forEach(element => {
-			console.log(element);
-			target.addChild(element as Babylon.AbstractMesh);
-		});
-		console.log(target);
 	}
 
 	private buildGround () {
@@ -141,23 +122,32 @@ export class Space {
 		this.botbody.physicsImpostor.addJoint(this.wheel1.physicsImpostor,this.wheel1_joint);
 
 		this.botbody.physicsImpostor.addJoint(this.wheel2.physicsImpostor,this.wheel2_joint);
-		//console.log(this.scene.isPhysicsEnabled());
 	}
 
 	public assignVisWheels () {
 		this.scene.getMeshByID('pw-mt11040').setParent(this.wheel1);
 		this.scene.getMeshByID('black high gloss plastic').setParent(this.wheel1);
 		this.scene.getMeshByID('matte rubber').setParent(this.wheel1);
-		// this.scene.getMeshByID('pw-mt11040').position.setAll(0);
-		// this.scene.getMeshByID('black high gloss plastic').position.setAll(0);
-		// this.scene.getMeshByID('matte rubber').position.setAll(0);
 		
 		this.scene.getMeshByID('pw-mt11040.2').setParent(this.wheel2);
 		this.scene.getMeshByID('black high gloss plastic.2').setParent(this.wheel2);
 		this.scene.getMeshByID('matte rubber.2').setParent(this.wheel2);
-		// this.scene.getMeshByID('pw-mt11040.2').position.setAll(0);
-		// this.scene.getMeshByID('black high gloss plastic.2').position.setAll(0);
-		// this.scene.getMeshByID('matte rubber.2').position.setAll(0);
+	}
+
+	public setMotors(m1:number, m2:number){
+		this.motor1 = m1;
+		this.motor2 = m2;
+		
+		this.wheel1_joint.setMotor(this.motor1);
+		this.wheel2_joint.setMotor(this.motor2);
+		
+		// if (this.counter == 10){
+		// 	console.log('Turning motors, here are values ' + m1 + ' ,' + m2);
+		// 	console.log('Setting physics motor to ' + this.motor1 + ' ,' + this.motor2);
+		// 	this.counter = 0;
+		// }
+		// this.counter++;
+		
 	}
 }
 	
