@@ -180,6 +180,18 @@ class WorkerInstance {
     });
   }
 
+  setRegister(address: number, value: number) {
+    // Send 'setregister' message to worker
+    this.worker_.postMessage({
+      type: 'setregister',
+      address: address,
+      value: value,
+    });
+
+    // Update own registers
+    this.registers_[address] = value;
+  }
+
   constructor(){
     this.worker_.onmessage = this.onMessage
     this.tick()
