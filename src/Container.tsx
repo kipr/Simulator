@@ -50,18 +50,13 @@ export class Container extends React.Component<Props, State> {
 			let counter = 0;
 			let m1, m2;
 			space.createScene();
-
-			space.scene.executeOnceBeforeRender(function () {
-				const loader = Babylon.SceneLoader.ImportMesh("",'static/', 'Simulator_Demobot.glb', space.scene, function (meshes) {
-					//space.botbody.addChild(meshes[0]);
-					meshes[0].setParent(space.botbody);
-					console.log(meshes[0].id);
-					space.assignVisWheels();
-				});
-				//space.scene.getMeshByID('__root__') == null;
-			});
-
-			space.scene.registerBeforeRender(function () {
+			space.loadMeshes(space);
+			// space.scene.executeWhenReady(function () {
+			// 	space.assignVisServoArm();
+			// 	space.assignVisWheels();
+			// });
+			
+			space.scene.registerAfterRender(function () {
 				m1 = WorkerInstance.DirectionalValues(WorkerInstance.registers[62], WorkerInstance.registers[63])/1500*-2;
 				m2 = WorkerInstance.DirectionalValues(WorkerInstance.registers[68], WorkerInstance.registers[69])/1500*-2;
 				space.setMotors(m1,m2);
