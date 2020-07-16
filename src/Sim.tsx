@@ -27,7 +27,7 @@ export class Space {
 	public motor2: number;
 	public can: Babylon.Mesh;
 
-	private collidersVisible = true;
+	private collidersVisible = false;
 	private counter = 0;
 
 	constructor(engine: Babylon.Engine, canvas: HTMLCanvasElement) {
