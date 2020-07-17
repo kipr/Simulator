@@ -4,7 +4,6 @@ import * as Sim from './Sim';
 import WorkerInstance from './WorkerInstance';
 import { RobotState } from './RobotState';
 import * as Babylon from 'babylonjs';
-import { ETSensorBabylon } from './sensors/etSensorBabylon';
 
 export interface ContainerProps { }
 interface ContainerState {
