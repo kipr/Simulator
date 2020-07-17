@@ -46,42 +46,24 @@ export class Container extends React.Component<Props, State> {
 
 		document.body.onload = () => {
 			const canvas = document.getElementById('simview') as HTMLCanvasElement;
-			// const holder = document.getElementById('right') as HTMLDivElement;
 			const engine = new Babylon.Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true});
 			const space = new Sim.Space(engine, canvas);
+			let counter = 0;
+			let m1, m2;
 			space.createScene();
-
-			space.scene.executeOnceBeforeRender(function () {
-				const loader = Babylon.SceneLoader.ImportMesh("",'static/', 'Simulator_Demobot.glb', space.scene, meshes => {
-					meshes.forEach(element => {
-						space.botbody.addChild(element);
-					});
-
-					const etSensorMesh = space.scene.getMeshByID('black satin finish plastic');
-					space.etSensorArm = new ETSensorBabylon(space.scene, etSensorMesh, new Babylon.Vector3(0.0, 0.02, 0.0), new Babylon.Vector3(0.02, 0.02, -0.015), { isVisible: true });
-
-					space.assignVisWheels();
-				});
+			space.loadMeshes(space);
+			// space.scene.executeWhenReady(function () {
+			// 	space.assignVisServoArm();
+			// 	space.assignVisWheels();
+			// });
+			
+			space.scene.registerAfterRender(function () {
+				m1 = WorkerInstance.DirectionalValues(WorkerInstance.registers[62], WorkerInstance.registers[63])/1500*-2;
+				m2 = WorkerInstance.DirectionalValues(WorkerInstance.registers[68], WorkerInstance.registers[69])/1500*-2;
+				space.setMotors(m1,m2);
 			});
-
 			engine.runRenderLoop(function(){
-				space.wheel1_joint.setMotor(state.robot.motor0_speed/100*space.motor1);
-				space.wheel2_joint.setMotor(state.robot.motor3_speed/100*space.motor2);
-				// const motorConv = Math.PI/4800;
-				// const motor1speed = -motorConv*10;
-				// const motor2speed = motorConv*10;
-				
-				// space.wheel1.rotate(Babylon.Axis.Y, motor1speed, Babylon.Space.LOCAL);
-				// space.wheel2.rotate(Babylon.Axis.Y, motor2speed, Babylon.Space.LOCAL);
-				// const fwdForceDir = new Babylon.Vector3(0,0,1);
-				// const fwdForceApp = new Babylon.Vector3(0,0,5.1);
-				//space.botbody.physicsImpostor.applyForce(fwdForceDir.scale(10), fwdForceApp)
-				// space.wheel1.physicsImpostor.applyForce(fwdForceDir.scale(6), fwdForceApp);
-				// space.wheel2.physicsImpostor.applyForce(fwdForceDir.scale(6), fwdForceApp);
-
 				space.scene.render();
-				//space.wheel1_joint.setMotor(state.robot.motor0_speed/500,state.robot.motor0_speed/500);
-				//space.wheel2_joint.setMotor(state.robot.motor3_speed/500,state.robot.motor3_speed/500);
 			});
 			
 			canvas.addEventListener('resize', function(){
@@ -89,7 +71,6 @@ export class Container extends React.Component<Props, State> {
 				console.log('Yay!');
 			})
 		};
-		//console.log('qwe')
 
 		return (
 			<section id="app">
