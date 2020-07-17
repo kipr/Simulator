@@ -36,7 +36,7 @@ export class Space {
 
 	// TODO: Associate each sensor with an update frequency, since we may update different sensors at different speeds
 	private etSensorFake: VisibleSensor;
-	public etSensorArm: VisibleSensor;
+	private etSensorArm: VisibleSensor;
 	private ticksSinceETSensorUpdate: number;
 
 	private readonly TICKS_BETWEEN_ET_SENSOR_UPDATES = 15;
