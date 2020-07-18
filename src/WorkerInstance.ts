@@ -35,7 +35,7 @@ class WorkerInstance {
       return int1*256 + int2;
     }
   }
-  private readServoRegister = (reg1: number, reg2: number) => {
+  public readServoRegister = (reg1: number, reg2: number) => {
     let val = reg1 << 8 | reg2;
     let degrees = (val - 1500.0) / 10.0;
     let dval = (degrees + 90.0)  * 2047.0 / 180.0;

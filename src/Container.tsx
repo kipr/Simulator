@@ -48,7 +48,7 @@ export class Container extends React.Component<Props, State> {
 			const engine = new Babylon.Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true});
 			const space = new Sim.Space(engine, canvas);
 			let counter = 0;
-			let m1, m2;
+			let m1, m2, s1, s3;
 			space.createScene();
 			space.loadMeshes(space);
 			// space.scene.executeWhenReady(function () {
@@ -60,6 +60,11 @@ export class Container extends React.Component<Props, State> {
 				m1 = WorkerInstance.DirectionalValues(WorkerInstance.registers[62], WorkerInstance.registers[63])/1500*-2;
 				m2 = WorkerInstance.DirectionalValues(WorkerInstance.registers[68], WorkerInstance.registers[69])/1500*-2;
 				space.setMotors(m1,m2);
+
+				// if(this.registers_[61] == 0){
+				// 	s1 = WorkerInstance.readServoRegister(WorkerInstance.registers[78], WorkerInstance.registers[79]);
+				// 	s3 = WorkerInstance.readServoRegister(WorkerInstance.registers[80], WorkerInstance.registers[81]);
+				// }
 			});
 			engine.runRenderLoop(function(){
 				space.scene.render();
