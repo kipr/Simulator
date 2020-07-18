@@ -103,12 +103,6 @@ export class Space {
 		this.buildWheels();
 		
 
-		// A cylinder positioned in front of the robot, for testing ET sensor
-		// const canMesh = Babylon.MeshBuilder.CreateCylinder("can", { height: 8, diameter: 4 }, this.scene);
-		// canMesh.position.z = 40;
-		// canMesh.position.y = 4.5;
-		// canMesh.physicsImpostor = new Babylon.PhysicsImpostor(canMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 5, friction: 0.5 }, this.scene);
-
 		this.can = Babylon.MeshBuilder.CreateCylinder("can",{height:10, diameter:6.8}, this.scene);
 		this.can.position.z = 30;
 
