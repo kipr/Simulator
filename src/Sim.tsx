@@ -2,6 +2,10 @@ import * as Babylon from 'babylonjs';
 import 'babylonjs-loaders';
 // import Oimo = require('babylonjs/Oimo');
 import Ammo = require('./ammo');
+import { VisibleSensor } from './sensors/sensor';
+import { ETSensorBabylon } from './sensors/etSensorBabylon';
+import WorkerInstance from './WorkerInstance';
+import RegisterState from './RegisterState';
 
 export class Space {
 	public engine: Babylon.Engine;
@@ -30,10 +34,19 @@ export class Space {
 	private collidersVisible = true;
 	private counter = 0;
 
+	// TODO: Associate each sensor with an update frequency, since we may update different sensors at different speeds
+	private etSensorFake: VisibleSensor;
+	private etSensorArm: VisibleSensor;
+	private ticksSinceETSensorUpdate: number;
+
+	private readonly TICKS_BETWEEN_ET_SENSOR_UPDATES = 15;
+
 	constructor(engine: Babylon.Engine, canvas: HTMLCanvasElement) {
 		this.engine = engine;
 		this.canvas = canvas;
 		this.scene = new Babylon.Scene(engine);
+
+		this.ticksSinceETSensorUpdate = 0;
 		this.motor1 = -2;
 		this.motor2 = -2;
 	}
@@ -94,7 +107,49 @@ export class Space {
 		this.can.position.z = 30;
 
 		this.assignPhysicsImpostors();
-		
+
+		this.etSensorFake = new ETSensorBabylon(this.scene, this.botbody, new Babylon.Vector3(0, 0, 15), new Babylon.Vector3(0, 0, 15), { isVisible: true });
+
+		// Logic that happens before every frame
+		this.scene.registerBeforeRender(() => {
+			let didUpdateFakeETSensor = false;
+			let didUpdateArmETSensor = false;
+
+			// If visualization is on, update ET sensor visual
+			if (this.etSensorFake.isVisible) {
+				this.etSensorFake.update();
+				this.etSensorFake.updateVisual();
+				didUpdateFakeETSensor = true;
+			}
+
+			if (this.etSensorArm?.isVisible) {
+				this.etSensorArm.update();
+				this.etSensorArm.updateVisual();
+				didUpdateArmETSensor = true;
+			}
+
+			// If 30 frames have passed since last sensor update, update ET sensor value
+			if (this.ticksSinceETSensorUpdate >= this.TICKS_BETWEEN_ET_SENSOR_UPDATES) {
+				// Update ET sensor if we didn't already update it earlier
+				if (!didUpdateFakeETSensor) {
+					this.etSensorFake.update();
+					didUpdateFakeETSensor = true;
+				}
+
+				if (this.etSensorArm && !didUpdateArmETSensor) {
+					this.etSensorArm.update();
+					didUpdateArmETSensor = true;
+				}
+
+				// Update registers with new ET sensor value
+				WorkerInstance.setRegister(RegisterState.REG_RW_ADC_0_L, this.etSensorFake.getValue());
+				if (this.etSensorArm) WorkerInstance.setRegister(RegisterState.REG_RW_ADC_1_L, this.etSensorArm.getValue());
+
+				this.ticksSinceETSensorUpdate = 0;
+			} else {
+				this.ticksSinceETSensorUpdate++;
+			}
+		});
 	}
 
 	public loadMeshes(space: Space) {
@@ -104,6 +159,9 @@ export class Space {
 				space.assignVisServoArm(space);
 				space.assignVisWheels(space);
 			});
+
+			const etSensorMesh = space.scene.getMeshByID('black satin finish plastic');
+			space.etSensorArm = new ETSensorBabylon(space.scene, etSensorMesh, new Babylon.Vector3(0.0, 0.02, 0.0), new Babylon.Vector3(0.02, 0.02, -0.015), { isVisible: true });
 			
 		});
 		
