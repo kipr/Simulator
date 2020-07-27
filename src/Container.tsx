@@ -32,7 +32,7 @@ class Collapsible extends React.Component {
 	render() {
 		return (<div>
 			<div onClick={(e) => this.togglePanel(e)} className='header'>
-				{this.props.title}</div>
+				{this.state.title}</div>
 			{this.state.open ? (
 				<div className='content'>
 					{this.props.children}
@@ -68,7 +68,13 @@ export class Container extends React.Component<Props, State> {
 	};
 
 	private onCheckBoxActivity = (checkboxItem, canItem: Babylon.InstancedMesh) => {
-		canItem.setEnabled(document.getElementById(checkboxItem).checked);	
+		if(document.getElementById(checkboxItem).checked){
+			this.space.generateCans(canItem)
+		}
+		else(){
+			canItem.dispose();
+		}
+		//canItem.setEnabled();	
 	}
 
 	render() {
@@ -106,7 +112,7 @@ export class Container extends React.Component<Props, State> {
 
 			canvas.addEventListener('resize', function () {
 				engine.resize();
-				console.log('Yay!');
+				//console.log('Yay!');
 			})
 		};
 

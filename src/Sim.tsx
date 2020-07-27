@@ -42,8 +42,16 @@ export class Space {
 	public can_10: Babylon.InstancedMesh;
 	public can_11: Babylon.InstancedMesh;
 	public can_12: Babylon.InstancedMesh;
+	public can_positions: Array<number>
 
-	public generateCans(noOfCans)
+	public generateCans(Can_position) {
+		this.can_positions = [];
+		this.can_positions = [0,0,0,22,0,14.5];
+		let new_can = Babylon.MeshBuilder.CreateCylinder("can"+Can_position,{height:10, diameter:6}, this.scene);
+		//this.can.position = new Babylon.Vector3(0,0,30);//.z = 30;
+		new_can.physicsImpostor = new Babylon.PhysicsImpostor(new_can, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
+		new_can.position = new Babylon.Vector3(this.can_positions[Can_position*3], this.can_positions[(Can_position*3)+1],this.can_positions[(Can_position*3)+2])
+	}
 
 	private collidersVisible = true;
 	private counter = 0;
@@ -63,10 +71,6 @@ export class Space {
 		this.ticksSinceETSensorUpdate = 0;
 		this.motor1 = -2;
 		this.motor2 = -2;
-	}
-
-	public tempFun() {
-		return "Hello";
 	}
 
 	public wheel1_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
@@ -187,6 +191,7 @@ export class Space {
 	}
 
 	private buildcans() {
+
 		this.can = Babylon.MeshBuilder.CreateCylinder("can",{height:10, diameter:6}, this.scene);
 		//this.can.position = new Babylon.Vector3(0,0,30);//.z = 30;
 		this.can.physicsImpostor = new Babylon.PhysicsImpostor(this.can, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
