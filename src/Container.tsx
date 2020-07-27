@@ -13,16 +13,19 @@ type Props = ContainerProps;
 type State = ContainerState;
 
 class Collapsible extends React.Component {
+	private open;
+	private title;
 	constructor(props) {
 		super(props);
 		this.state = {
-			open: false
+			open: this.open
 		}
 		this.togglePanel = this.togglePanel.bind(this);
 	}
 
 	togglePanel(e) {
-		this.setState({ open: !this.state.open })
+		this.setState({open: !this.open});
+		this.open = !this.open;
 	}
 
 	componentDidUpdate() {
@@ -31,9 +34,8 @@ class Collapsible extends React.Component {
 
 	render() {
 		return (<div>
-			<div onClick={(e) => this.togglePanel(e)} className='header'>
-				{this.state.title}</div>
-			{this.state.open ? (
+			<div onClick={(e) => this.togglePanel(e)} className='header'>Cans</div>
+			{this.open ? (
 				<div className='content'>
 					{this.props.children}
 				</div>
@@ -67,14 +69,15 @@ export class Container extends React.Component<Props, State> {
 		WorkerInstance.state = robot;
 	};
 
-	private onCheckBoxActivity = (checkboxItem, canItem: Babylon.InstancedMesh) => {
-		if(document.getElementById(checkboxItem).checked){
+	private onCheckBoxActivity = (checkboxItem: string, canItem: Babylon.InstancedMesh) => {
+		const checkbox = document.getElementById(checkboxItem) as HTMLInputElement;
+		//canItem.setEnabled(checkbox.checked);
+		if(checkbox.checked){
 			this.space.generateCans(canItem)
 		}
-		else(){
+		else{
 			canItem.dispose();
 		}
-		//canItem.setEnabled();	
 	}
 
 	render() {
@@ -120,7 +123,7 @@ export class Container extends React.Component<Props, State> {
 			<section id="app">
 				<App robot={state.robot} onRobotChange={this.onRobotChange_} />
 				<div>
-					<Collapsible title="Cans">
+					<Collapsible>
 						<div>
 							<ul>
 								<li>
