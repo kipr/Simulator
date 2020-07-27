@@ -43,7 +43,7 @@ export class Space {
 	public can_11: Babylon.InstancedMesh;
 	public can_12: Babylon.InstancedMesh;
 
-	public generateCans(noOfCans)
+	// public generateCans(noOfCans)
 
 	private collidersVisible = true;
 	private counter = 0;
