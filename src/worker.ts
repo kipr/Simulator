@@ -16,10 +16,12 @@ const err = (stdoutput: string, stderror: string) => {
     stderror: stderror
   })
 }
+
+const registers = new Array<number>(Registers.REG_ALL_COUNT);
+
 ctx.onmessage = (e) => {
   
   const message:Protocol.Worker.Request = e.data;
-  const registers = new Array<number>(Registers.REG_ALL_COUNT);
   switch (message.type) {
     case 'start': {
       const mod = dynRequire(message.code, {
@@ -51,9 +53,11 @@ ctx.onmessage = (e) => {
 
       mod.onRuntimeInitialized = () => {
         mod._main();
-        ctx.postMessage({
-          type: 'program-ended'
-        })
+        // TODO: Had to remove this because _main() is no longer synchronous
+        //       Need to implement some way of knowing when _main() actually ends
+        // ctx.postMessage({
+        //   type: 'program-ended'
+        // })
       };
 
       ctx.postMessage({
@@ -85,9 +89,9 @@ ctx.onmessage = (e) => {
     case 'setregister':{
       registers[message.address] = message.value;
 
-      ctx.postMessage({
-        type: 'setregister'
-      });
+      // ctx.postMessage({
+      //   type: 'setregister'
+      // });
       break;
     }
     case 'setmotorposition': {
