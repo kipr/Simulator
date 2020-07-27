@@ -44,10 +44,10 @@ export class Space {
 	public can_12: Babylon.InstancedMesh;
 	public can_positions: Array<number>
 
-	public generateCans(Can_position) {
+	public generateCans(canName, Can_position) {
 		this.can_positions = [];
-		this.can_positions = [0,0,0,22,0,14.5];
-		let new_can = Babylon.MeshBuilder.CreateCylinder("can"+Can_position,{height:10, diameter:6}, this.scene);
+		this.can_positions = [0,0,0, 22,0,14.5, 0,0,20.6, -15.5,0,24, 0,0,7, 14,0,-7, 0,0,-7, -13.7,0,-7, -25,0,-14.5, 0,0,-34, 19,0,-45, 0,0,-55, -18.5,0,-45];
+		let new_can = Babylon.MeshBuilder.CreateCylinder(canName,{height:10, diameter:6}, this.scene);
 		//this.can.position = new Babylon.Vector3(0,0,30);//.z = 30;
 		new_can.physicsImpostor = new Babylon.PhysicsImpostor(new_can, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
 		new_can.position = new Babylon.Vector3(this.can_positions[Can_position*3], this.can_positions[(Can_position*3)+1],this.can_positions[(Can_position*3)+2])
@@ -122,9 +122,7 @@ export class Space {
 		this.buildStaticClawP3();
 		this.buildStaticClawP4();
 		this.buildStaticClawP5();
-		this.buildWheels();
-		this.buildcans();
-		
+		this.buildWheels();		
 
 		this.can = Babylon.MeshBuilder.CreateCylinder("can",{height:10, diameter:6.8}, this.scene);
 		this.can.position.z = 30;
@@ -188,76 +186,6 @@ export class Space {
 			
 		});
 		
-	}
-
-	private buildcans() {
-
-		this.can = Babylon.MeshBuilder.CreateCylinder("can",{height:10, diameter:6}, this.scene);
-		//this.can.position = new Babylon.Vector3(0,0,30);//.z = 30;
-		this.can.physicsImpostor = new Babylon.PhysicsImpostor(this.can, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
-		this.can.setEnabled(false);
-
-		//Creating new Instances
-		this.can_1 = this.can.createInstance("can_1");
-		this.can_1.position = new Babylon.Vector3(22,0,14.5);
-		this.can_1.setEnabled(false);
-		this.can_1.physicsImpostor = new Babylon.PhysicsImpostor(this.can_1, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
-
-		this.can_2 = this.can.createInstance("can_2");
-		this.can_2.position = new Babylon.Vector3(0,0,20.6);
-		this.can_2.setEnabled(false);
-		this.can_2.physicsImpostor = new Babylon.PhysicsImpostor(this.can_2, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
-
-		this.can_3 = this.can.createInstance("can_3");
-		this.can_3.position = new Babylon.Vector3(-15.5,0,24);
-		this.can_3.setEnabled(false);
-		this.can_3.physicsImpostor = new Babylon.PhysicsImpostor(this.can_3, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
-
-		this.can_4 = this.can.createInstance("can_4");
-		this.can_4.position = new Babylon.Vector3(0,0,7);
-		this.can_4.setEnabled(false);
-		this.can_4.physicsImpostor = new Babylon.PhysicsImpostor(this.can_4, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
-
-		this.can_5 = this.can.createInstance("can_5");
-		this.can_5.position = new Babylon.Vector3(14,0,-7);
-		this.can_5.setEnabled(false);
-		this.can_5.physicsImpostor = new Babylon.PhysicsImpostor(this.can_5, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
-
-		// this.can_6 = this.can.createInstance("can_6");
-		// this.can_6.position = new Babylon.Vector3(0,0,-7);
-		// this.can_6.setEnabled(false);
-		// this.can_6.physicsImpostor = new Babylon.PhysicsImpostor(this.can_6, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
-
-		this.can_7 = this.can.createInstance("can_7");
-		this.can_7.position = new Babylon.Vector3(-13.7,0,-7);
-		this.can_7.setEnabled(false);
-		this.can_7.physicsImpostor = new Babylon.PhysicsImpostor(this.can_7, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
-
-		this.can_8 = this.can.createInstance("can_8");
-		this.can_8.position = new Babylon.Vector3(-25,0,-14.5);
-		this.can_8.setEnabled(false);
-		this.can_8.physicsImpostor = new Babylon.PhysicsImpostor(this.can_8, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
-		
-		this.can_9 = this.can.createInstance("can_9");
-		this.can_9.position = new Babylon.Vector3(0,0,-34);
-		this.can_9.setEnabled(false);
-		this.can_9.physicsImpostor = new Babylon.PhysicsImpostor(this.can_9, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
-
-		this.can_10 = this.can.createInstance("can_10");
-		this.can_10.position = new Babylon.Vector3(19,0,-45);
-		this.can_10.setEnabled(false);
-		this.can_10.physicsImpostor = new Babylon.PhysicsImpostor(this.can_10, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
-
-		this.can_11 = this.can.createInstance("can_11");
-		this.can_11.position = new Babylon.Vector3(0,0,-55);
-		this.can_11.setEnabled(false);
-		this.can_11.physicsImpostor = new Babylon.PhysicsImpostor(this.can_11, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
-
-		this.can_12 = this.can.createInstance("can_12");
-		this.can_12.position = new Babylon.Vector3(-18.5,0,-45);
-		this.can_12.setEnabled(false);
-		this.can_12.physicsImpostor = new Babylon.PhysicsImpostor(this.can_12, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
-				
 	}
 
 	private buildGround () {
