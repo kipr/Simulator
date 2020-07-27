@@ -13,6 +13,7 @@ require('codemirror/mode/clike/clike');
 import WorkerInstance from './WorkerInstance';
 import { RobotState } from './RobotState';
 
+
 export interface AppProps extends StyleProps {
   robot: RobotState;
 
@@ -27,14 +28,27 @@ interface AppState {
 type Props = AppProps;
 type State = AppState;
 
-
+const cans = [
+  'can_1',
+  'can_2',
+  'can_3',
+  'can_4',
+  'can_5',
+  'can_6',
+  'can_7',
+  'can_8',
+  'can_9',
+  'can_10',
+  'can_11',
+  'can_12',
+]
 
 export class App extends React.Component<Props, State> {
   constructor(props: Props, context?: any) {
     super(props, context);
     this.state = {
       code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
-      console: ''
+      console: '',
     };
   }
 
