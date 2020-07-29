@@ -174,7 +174,7 @@ export class App extends React.Component<Props, State> {
           <button onClick={this.onDownloadClick_}>Download</button>
         </p>
         <CodeMirror rows={20} cols={65} value={code} onChange={this.onCodeChange_} options={options} id="code" name="code" className="code" />
-        <textarea rows={10} cols={70} value={console} contentEditable={false} />
+        <textarea rows={10} cols={71} value={console} contentEditable={false} />
         <section className="robotState">
           <h3 className="robotStateHead">Robot State</h3>
           <button onClick={this.onResetClick_} className="resetButton">Reset</button>
@@ -224,18 +224,22 @@ export class App extends React.Component<Props, State> {
           <section className="servo0">
             <h3>Servo 0</h3>
             <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo0Change_}*/ value={Math.round(robot.servo0_position)} />
+            <p className="spacer"></p>
           </section>
           <section className="servo1">
             <h3>Servo 1</h3>
             <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo1Change_}*/ value={Math.round(robot.servo1_position)} />
+            <div className="spacer"></div>
           </section>
           <section className="servo2">
             <h3>Servo 2</h3>
             <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo2Change_}*/ value={Math.round(robot.servo2_position)} />
+            <div className="spacer"></div>
           </section>
           <section className="servo3">
             <h3>Servo 3</h3>
             <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo3Change_}*/ value={Math.round(robot.servo3_position)} />
+            <div className="spacer"> </div>
           </section>
         </section>
       </section>
