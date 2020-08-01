@@ -33,14 +33,17 @@ app.post('/compile', (req, res) => {
     });
   }
 
+  // Wrap user's main() in our own "main()" that exits properly
+  // Required because Asyncify keeps emscripten runtime alive, which would prevent cleanup code from running
   const augmentedCode = req.body.code + `
-  #include <emscripten.h>
- 
-  void simMainWrapper()
-  {
-    main();
-    emscripten_force_exit(0);
-  }`;
+    #include <emscripten.h>
+  
+    void simMainWrapper()
+    {
+      main();
+      emscripten_force_exit(0);
+    }
+  `;
 
   
   const id = uuid();
