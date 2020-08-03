@@ -206,13 +206,13 @@ export class App extends React.Component<Props, State> {
           </section>
           <section className="motor1">
             <h3>Motor 1</h3>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.motor1_speed)} /></div>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.motor1_position)} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" disabled={true} readOnly value={Math.round(robot.motor1_speed)} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" disabled={true} readOnly value={Math.round(robot.motor1_position)} /></div>
           </section>
           <section className="motor2">
             <h3>Motor 2</h3>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.motor2_speed)} /></div>
-            <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.motor2_position)} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" disabled={true} readOnly value={Math.round(robot.motor2_speed)} /></div>
+            <div><textarea rows={1} cols={4} draggable="false" disabled={true} readOnly value={Math.round(robot.motor2_position)} /></div>
           </section>
           <section className="motor3">
             <h3>Motor 3</h3>
@@ -228,12 +228,12 @@ export class App extends React.Component<Props, State> {
           </section>
           <section className="servo1">
             <h3>Servo 1</h3>
-            <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo1Change_}*/ value={Math.round(robot.servo1_position)} />
+            <textarea rows={1} cols={4} draggable="false" disabled={true} readOnly /*onChange={this.onServo1Change_}*/ value={Math.round(robot.servo1_position)} />
             <div className="spacer"></div>
           </section>
           <section className="servo2">
             <h3>Servo 2</h3>
-            <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo2Change_}*/ value={Math.round(robot.servo2_position)} />
+            <textarea rows={1} cols={4} draggable="false" disabled={true} readOnly /*onChange={this.onServo2Change_}*/ value={Math.round(robot.servo2_position)} />
             <div className="spacer"></div>
           </section>
           <section className="servo3">
