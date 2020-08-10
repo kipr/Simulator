@@ -4,14 +4,16 @@ import * as Babylon from 'babylonjs';
 import * as Sim from './Sim';
 import WorkerInstance from "./WorkerInstance";
 
-interface SimulatorAreaProps { }
+interface SimulatorAreaProps {
+    canEnabled: boolean[];
+}
 
 interface SimulatorAreaState { }
 
 export class SimulatorArea extends React.Component<SimulatorAreaProps, SimulatorAreaState> {
     canvas: HTMLCanvasElement;
     engine: Babylon.Engine;
-    scene: Babylon.Scene;
+    // scene: Babylon.Scene;
     space: Sim.Space;
     
     constructor(props: SimulatorAreaProps) {
@@ -21,7 +23,7 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
 
     componentDidMount() {
         this.engine = new Babylon.Engine(this.canvas, true, { preserveDrawingBuffer: true, stencil: true });
-        this.scene = new Babylon.Scene(this.engine);
+        // this.scene = new Babylon.Scene(this.engine);
 
         this.space = new Sim.Space(this.engine, this.canvas);
 
@@ -55,8 +57,15 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
         });
     }
 
-    componentDidUpdate(prevProps: SimulatorAreaProps, prevState: SimulatorAreaState, snapshot) {
-        
+    componentDidUpdate(prevProps: SimulatorAreaProps) {
+        // Check if any cans were toggled
+        this.props.canEnabled.forEach((enabled, i) => {
+            if (enabled !== prevProps.canEnabled[i]) {
+                enabled
+                    ? this.createCan(`Can${i+1}`, i+1)
+                    : this.destroyCan(`Can${i+1}`);
+            }
+        });
     }
 
     setCanvasRef = (c: HTMLCanvasElement) => {
@@ -70,7 +79,7 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
     }
 
     destroyCan(canName) {
-        this.scene.getMeshByName(canName).dispose();
+        this.space.scene.getMeshByName(canName).dispose();
     }
 
     render() {

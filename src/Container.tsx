@@ -8,7 +8,8 @@ import { SimulatorArea } from './SimulatorArea';
 
 export interface ContainerProps { }
 interface ContainerState {
-	robot: RobotState
+	robot: RobotState,
+	isCanChecked: boolean[],
 }
 type Props = ContainerProps;
 type State = ContainerState;
@@ -50,7 +51,8 @@ export class Container extends React.Component<Props, State> {
 	constructor(props: Props, context?) {
 		super(props, context)
 		this.state = {
-			robot: WorkerInstance.state
+			robot: WorkerInstance.state,
+			isCanChecked: Array<boolean>(12).fill(false),
 		}
 	}
 	private onStateChange = (state: RobotState) => {
@@ -73,14 +75,10 @@ export class Container extends React.Component<Props, State> {
 	private onCheckBoxActivity = (canName: string, canItem: number) => {
 		const checkbox = document.getElementById(canName) as HTMLInputElement;
 		//canItem.setEnabled(checkbox.checked);
-		if(checkbox.checked){
-			this.space.generateCans(canName, canItem)
-		}
-		else{
-			//canItem.dispose();
-			console.log(this.space.scene.getMeshByName(canName));
-			this.space.scene.getMeshByName(canName).dispose();
-		}
+
+		let isCanChecked = [...this.state.isCanChecked];
+		isCanChecked[canItem-1] = checkbox.checked;
+		this.setState({ isCanChecked });
 	}
 
 	render() {
@@ -187,7 +185,7 @@ export class Container extends React.Component<Props, State> {
 					</section>
 				</div>
 				<div id="right">
-					<SimulatorArea />
+					<SimulatorArea canEnabled={this.state.isCanChecked} />
 				</div>
 			</div>
 		)
