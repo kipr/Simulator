@@ -87,39 +87,40 @@ export class Container extends React.Component<Props, State> {
 			props, state
 		} = this
 
-		document.body.onload = () => {
-			const canvas = document.getElementById('simview') as HTMLCanvasElement;
-			const engine = new Babylon.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
-			this.space = new Sim.Space(engine, canvas);
-			let counter = 0;
-			let m1, m2, s1, s3;
-			this.space.createScene();
-			this.space.loadMeshes(this.space);
-			// space.scene.executeWhenReady(function () {
-			// 	space.assignVisServoArm();
-			// 	space.assignVisWheels();
-			// });
+		// TODO: replacing this with SimulatorArea.tsx
+		// document.body.onload = () => {
+		// 	const canvas = document.getElementById('simview') as HTMLCanvasElement;
+		// 	const engine = new Babylon.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
+		// 	this.space = new Sim.Space(engine, canvas);
+		// 	let counter = 0;
+		// 	let m1, m2, s1, s3;
+		// 	this.space.createScene();
+		// 	this.space.loadMeshes(this.space);
+		// 	// space.scene.executeWhenReady(function () {
+		// 	// 	space.assignVisServoArm();
+		// 	// 	space.assignVisWheels();
+		// 	// });
 
-			this.space.scene.registerAfterRender(() => {
-				m1 = WorkerInstance.DirectionalValues(WorkerInstance.registers[62], WorkerInstance.registers[63]) / 1500 * -2;
-				m2 = WorkerInstance.DirectionalValues(WorkerInstance.registers[68], WorkerInstance.registers[69]) / 1500 * -2;
-				this.space.setMotors(m1, m2);
-				// space.setMotors(m1,m2);
+		// 	this.space.scene.registerAfterRender(() => {
+		// 		m1 = WorkerInstance.DirectionalValues(WorkerInstance.registers[62], WorkerInstance.registers[63]) / 1500 * -2;
+		// 		m2 = WorkerInstance.DirectionalValues(WorkerInstance.registers[68], WorkerInstance.registers[69]) / 1500 * -2;
+		// 		this.space.setMotors(m1, m2);
+		// 		// space.setMotors(m1,m2);
 
-				// if(this.registers_[61] == 0){
-				// 	s1 = WorkerInstance.readServoRegister(WorkerInstance.registers[78], WorkerInstance.registers[79]);
-				// 	s3 = WorkerInstance.readServoRegister(WorkerInstance.registers[80], WorkerInstance.registers[81]);
-				// }
-			});
-			engine.runRenderLoop(() => {
-				this.space.scene.render();
-			})
+		// 		// if(this.registers_[61] == 0){
+		// 		// 	s1 = WorkerInstance.readServoRegister(WorkerInstance.registers[78], WorkerInstance.registers[79]);
+		// 		// 	s3 = WorkerInstance.readServoRegister(WorkerInstance.registers[80], WorkerInstance.registers[81]);
+		// 		// }
+		// 	});
+		// 	engine.runRenderLoop(() => {
+		// 		this.space.scene.render();
+		// 	})
 
-			canvas.addEventListener('resize', function () {
-				engine.resize();
-				//console.log('Yay!');
-			})
-		};
+		// 	canvas.addEventListener('resize', function () {
+		// 		engine.resize();
+		// 		//console.log('Yay!');
+		// 	})
+		// };
 
 		return (
 			<section id="app">
