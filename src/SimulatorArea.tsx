@@ -13,7 +13,6 @@ interface SimulatorAreaState { }
 export class SimulatorArea extends React.Component<SimulatorAreaProps, SimulatorAreaState> {
     canvas: HTMLCanvasElement;
     engine: Babylon.Engine;
-    // scene: Babylon.Scene;
     space: Sim.Space;
     
     constructor(props: SimulatorAreaProps) {
@@ -23,8 +22,6 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
 
     componentDidMount() {
         this.engine = new Babylon.Engine(this.canvas, true, { preserveDrawingBuffer: true, stencil: true });
-        // this.scene = new Babylon.Scene(this.engine);
-
         this.space = new Sim.Space(this.engine, this.canvas);
 
         let m1: number;
