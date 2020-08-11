@@ -79,7 +79,7 @@ export class Container extends React.Component<Props, State> {
 
 		this.setState(prevState => {
 			let isCanChecked = [...prevState.isCanChecked];
-			isCanChecked[canNumber-1] = isTargetChecked;
+			isCanChecked[canNumber] = isTargetChecked;
 			return { isCanChecked };
 		});
 	}
@@ -133,7 +133,7 @@ export class Container extends React.Component<Props, State> {
 							<ul>
 								{[...Array(12)].map((_, i) =>
 									<li key={i + 1}>
-										<input type="checkbox" name="can" value={i + 1} checked={this.state.isCanChecked[i]} onChange={this.onCheckBoxActivity} />
+										<input type="checkbox" name="can" value={i} checked={state.isCanChecked[i]} onChange={this.onCheckBoxActivity} />
 										<label>{`Can ${i + 1}`}</label>
 									</li>
 								)}
@@ -142,7 +142,7 @@ export class Container extends React.Component<Props, State> {
 					</section>
 				</div>
 				<div id="right">
-					<SimulatorArea canEnabled={this.state.isCanChecked} />
+					<SimulatorArea canEnabled={state.isCanChecked} />
 				</div>
 			</div>
 		)
