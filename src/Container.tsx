@@ -129,20 +129,16 @@ export class Container extends React.Component<Props, State> {
 				<div id="root">
 					<section id="app">
 						<App robot={state.robot} onRobotChange={this.onRobotChange_} />
-						<div>
-							<Collapsible>
-								<div>
-									<ul>
-										{[...Array(12)].map((_, i) =>
-											<li key={i + 1}>
-												<input type="checkbox" name="can" value={i + 1} checked={this.state.isCanChecked[i]} onChange={this.onCheckBoxActivity} />
-												<label>{`Can ${i + 1}`}</label>
-											</li>
-										)}
-									</ul>
-								</div>
-							</Collapsible>
-						</div>
+						<Collapsible>
+							<ul>
+								{[...Array(12)].map((_, i) =>
+									<li key={i + 1}>
+										<input type="checkbox" name="can" value={i + 1} checked={this.state.isCanChecked[i]} onChange={this.onCheckBoxActivity} />
+										<label>{`Can ${i + 1}`}</label>
+									</li>
+								)}
+							</ul>
+						</Collapsible>
 					</section>
 				</div>
 				<div id="right">
