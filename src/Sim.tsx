@@ -44,13 +44,19 @@ export class Space {
 	public can_12: Babylon.InstancedMesh;
 	public can_positions: Array<number>
 
-	public generateCans(canName, Can_position) {
+	public generateCans(canPosition: number) {
+		const canName = `Can${canPosition}`;
 		this.can_positions = [];
 		this.can_positions = [0,0,0, 22,0,14.5, 0,0,20.6, -15.5,0,24, 0,0,7, 14,0,-7, 0,0,-7, -13.7,0,-7, -25,0,-14.5, 0,0,-34, 19,0,-45, 0,0,-55, -18.5,0,-45];
 		let new_can = Babylon.MeshBuilder.CreateCylinder(canName,{height:10, diameter:6}, this.scene);
 		//this.can.position = new Babylon.Vector3(0,0,30);//.z = 30;
 		new_can.physicsImpostor = new Babylon.PhysicsImpostor(new_can, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
-		new_can.position = new Babylon.Vector3(this.can_positions[Can_position*3], this.can_positions[(Can_position*3)+1],this.can_positions[(Can_position*3)+2])
+		new_can.position = new Babylon.Vector3(this.can_positions[canPosition*3], this.can_positions[(canPosition*3)+1],this.can_positions[(canPosition*3)+2])
+	}
+
+	public destroyCan(canPosition: number) {
+		const canName = `Can${canPosition}`;
+		this.scene.getMeshByName(canName).dispose();
 	}
 
 	private collidersVisible = true;

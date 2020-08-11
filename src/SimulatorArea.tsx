@@ -61,9 +61,7 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
         // Check if any cans were toggled
         this.props.canEnabled.forEach((enabled, i) => {
             if (enabled !== prevProps.canEnabled[i]) {
-                enabled
-                    ? this.createCan(`Can${i+1}`, i+1)
-                    : this.destroyCan(`Can${i+1}`);
+                this.setCanEnabled(i, enabled);
             }
         });
     }
@@ -74,12 +72,10 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
         }
     }
 
-    createCan(canName, canItem) {
-        this.space.generateCans(canName, canItem);
-    }
-
-    destroyCan(canName) {
-        this.space.scene.getMeshByName(canName).dispose();
+    setCanEnabled(canNumber: number, isEnabled: boolean) {
+        isEnabled
+            ? this.space.generateCans(canNumber + 1)
+            : this.space.destroyCan(canNumber + 1);
     }
 
     render() {
