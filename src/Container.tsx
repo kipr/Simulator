@@ -62,7 +62,7 @@ export class Container extends React.Component<Props, State> {
 				<div id="root">
 					<section id="app">
 						<App robot={state.robot} onRobotChange={this.onRobotChange_} />
-						<Collapsible>
+						<Collapsible title="Cans">
 							<ul>
 								{[...Array(12)].map((_, i) =>
 									<li key={i + 1}>

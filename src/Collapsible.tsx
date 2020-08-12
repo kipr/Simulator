@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 interface CollapsibleProps {
-
+    title: string;
 }
 
 interface CollapsibleState {
@@ -9,7 +9,6 @@ interface CollapsibleState {
 }
 
 export default class Collapsible extends React.Component<CollapsibleProps, CollapsibleState> {
-	private title;
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -31,7 +30,7 @@ export default class Collapsible extends React.Component<CollapsibleProps, Colla
 	render() {
 		return (
             <div>
-                <div onClick={this.togglePanel} className='header'>Cans</div>
+                <div onClick={this.togglePanel} className='header'>{this.props.title}</div>
                 {this.state.open ? (
                     <div className='content'>
                         {this.props.children}
