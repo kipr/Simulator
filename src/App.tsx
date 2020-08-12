@@ -14,7 +14,7 @@ import WorkerInstance from './WorkerInstance';
 import { RobotState } from './RobotState';
 
 export interface AppProps extends StyleProps {
-  robot: RobotState;
+  robot : RobotState;
 
   onRobotChange: (robot: RobotState) => void;
 }
@@ -112,6 +112,17 @@ export class App extends React.Component<Props, State> {
     this.props.robot.x = 220;
     this.props.robot.y = 400;
     this.props.robot.theta = 0;
+
+    this.props.robot.motor0_position = 0;
+    this.props.robot.motor1_position = 0;
+    this.props.robot.motor2_position = 0;
+    this.props.robot.motor3_position = 0;
+
+    this.props.robot.servo0_position = 1024;
+    this.props.robot.servo1_position = 1024;
+    this.props.robot.servo2_position = 1024;
+    this.props.robot.servo3_position = 0;
+
     this.props.onRobotChange({
       ...this.props.robot
     })
