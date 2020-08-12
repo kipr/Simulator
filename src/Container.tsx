@@ -3,7 +3,6 @@ import { App } from './App';
 import * as Sim from './Sim';
 import WorkerInstance from './WorkerInstance';
 import { RobotState } from './RobotState';
-import * as Babylon from 'babylonjs';
 import { SimulatorArea } from './SimulatorArea';
 import Collapsible from './Collapsible';
 
