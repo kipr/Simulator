@@ -137,42 +137,41 @@ export class App extends React.Component<Props, State> {
     });
   };
 
-  private onXChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-    if(event.currentTarget.value == ''){
-      console.log('Missing X value');
-    }
-    else{
-      this.props.onRobotChange({
-        ...this.props.robot,
-        x: parseInt(event.currentTarget.value)
-      })
-    }
-  };
+  // private onXChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
+  //   if(event.currentTarget.value == '') {
+  //     console.log('Missing X value');
+  //   }
+  //   else {
+  //     this.props.onRobotChange({
+  //       ...this.props.robot,
+  //       x: parseInt(event.currentTarget.value)
+  //     })
+  //   }
+  // };
 
-  private onYChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-    if(event.currentTarget.value == ''){
-      console.log('Missing Y value');
-    }
-    else{
-      this.props.onRobotChange({
-        ...this.props.robot,
-        y: parseInt(event.currentTarget.value)
-      })
-    }
-  };
+  // private onYChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
+  //   if(event.currentTarget.value == '') {
+  //     console.log('Missing Y value');
+  //   }
+  //   else{
+  //     this.props.onRobotChange({
+  //       ...this.props.robot,
+  //       y: parseInt(event.currentTarget.value)
+  //     })
+  //   }
+  // };
 
-  private onThetaChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-    if(event.currentTarget.value == ''){
-      console.log('Missing Theta value');
-    }
-    else{
-      this.props.onRobotChange({
-        ...this.props.robot,
-        theta: -1*parseInt(event.currentTarget.value)*Math.PI/180
-      });
-    }
-    
-  };
+  // private onThetaChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
+  //   if(event.currentTarget.value == ''){
+  //     console.log('Missing Theta value');
+  //   }
+  //   else{
+  //     this.props.onRobotChange({
+  //       ...this.props.robot,
+  //       theta: -1*parseInt(event.currentTarget.value)*Math.PI/180
+  //     });
+  //   }
+  // };
 
   render() {
     //let codemirror = new CodeMirrorManager();
@@ -208,15 +207,30 @@ export class App extends React.Component<Props, State> {
           <section className="robotStateValues">
             <section className="x">
               <h3>X: </h3>
-              <textarea rows={1} cols={5} draggable="false" onChange={this.onXChange_} defaultValue={Math.round(robot.x)}/>
+              <textarea rows={1} cols={5} draggable="false" onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                this.props.onRobotChange({
+                  ...this.props.robot, 
+                  x: e.target.value != "" ? parseInt(e.target.value) : 0
+                })
+              }} value={Math.round(robot.x)} />
             </section>
             <section className="y">
               <h3>Y: </h3>
-              <textarea rows={1} cols={5} draggable="false" onChange={this.onYChange_} defaultValue={Math.round(robot.y)}/>
+              <textarea rows={1} cols={5} draggable="false" onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                this.props.onRobotChange({
+                  ...this.props.robot, 
+                  y: e.target.value != "" ? parseInt(e.target.value) : 0
+                })
+              }} value={Math.round(robot.y)} />
             </section>
             <section className="theta">
               <h3>Theta: </h3>
-              <textarea rows={1} cols={5} draggable="false" onChange={this.onThetaChange_} defaultValue={Math.round(-1*robot.theta/Math.PI*180)}/>
+              <textarea rows={1} cols={5} draggable="false" onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                this.props.onRobotChange({
+                  ...this.props.robot, 
+                  theta: e.target.value != "" ? parseInt(e.target.value) : 0
+                })
+              }} value={Math.round(-1*robot.theta/Math.PI*180)} />
             </section>
           </section>
         </section>
