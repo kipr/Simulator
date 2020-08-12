@@ -179,16 +179,16 @@ export class Space {
 		});
 	}
 
-	public loadMeshes(space: Space) {
-		const loader = Babylon.SceneLoader.ImportMesh("",'static/', 'Simulator_Demobot.glb', space.scene, function (meshes) {
-			meshes[0].setParent(space.botbody);
-			space.scene.executeWhenReady(function () {
-				space.assignVisServoArm(space);
-				space.assignVisWheels(space);
+	public loadMeshes() {
+		const loader = Babylon.SceneLoader.ImportMesh("",'static/', 'Simulator_Demobot.glb', this.scene, (meshes) => {
+			meshes[0].setParent(this.botbody);
+			this.scene.executeWhenReady(() => {
+				this.assignVisServoArm();
+				this.assignVisWheels();
 			});
 
-			const etSensorMesh = space.scene.getMeshByID('black satin finish plastic');
-			space.etSensorArm = new ETSensorBabylon(space.scene, etSensorMesh, new Babylon.Vector3(0.0, 0.02, 0.0), new Babylon.Vector3(0.02, 0.02, -0.015), { isVisible: true });
+			const etSensorMesh = this.scene.getMeshByID('black satin finish plastic');
+			this.etSensorArm = new ETSensorBabylon(this.scene, etSensorMesh, new Babylon.Vector3(0.0, 0.02, 0.0), new Babylon.Vector3(0.02, 0.02, -0.015), { isVisible: true });
 			
 		});
 		
@@ -367,21 +367,21 @@ export class Space {
 		this.botbody.physicsImpostor.addJoint(this.wheel2.physicsImpostor,this.wheel2_joint);
 	}
 
-	public assignVisWheels (space: Space) {
-		space.scene.getMeshByID('pw-mt11040').setParent(space.wheel1);
-		space.scene.getMeshByID('black high gloss plastic').setParent(space.wheel1);
-		space.scene.getMeshByID('matte rubber').setParent(space.wheel1);
+	public assignVisWheels () {
+		this.scene.getMeshByID('pw-mt11040').setParent(this.wheel1);
+		this.scene.getMeshByID('black high gloss plastic').setParent(this.wheel1);
+		this.scene.getMeshByID('matte rubber').setParent(this.wheel1);
 		
-		space.scene.getMeshByID('pw-mt11040.2').setParent(space.wheel2);
-		space.scene.getMeshByID('black high gloss plastic.2').setParent(space.wheel2);
-		space.scene.getMeshByID('matte rubber.2').setParent(space.wheel2);
+		this.scene.getMeshByID('pw-mt11040.2').setParent(this.wheel2);
+		this.scene.getMeshByID('black high gloss plastic.2').setParent(this.wheel2);
+		this.scene.getMeshByID('matte rubber.2').setParent(this.wheel2);
 	}
 
-	public assignVisServoArm (space: Space) {
+	public assignVisServoArm () {
 		// this.scene.getTransformNodeByID('1 x 5 Servo Horn-1').getChildMeshes().forEach(element => {
 		// 	element.setParent(this.servoArmMotor);
 		// });
-		space.scene.getTransformNodeByID('1 x 5 Servo Horn-1').setParent(space.servoArmMotor);
+		this.scene.getTransformNodeByID('1 x 5 Servo Horn-1').setParent(this.servoArmMotor);
 	}
 
 	public setMotors(m1:number, m2:number){

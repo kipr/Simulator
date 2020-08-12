@@ -28,7 +28,7 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
         let m2: number;
         
         this.space.createScene();
-        this.space.loadMeshes(this.space);
+        this.space.loadMeshes();
 
         this.space.scene.registerAfterRender(() => {
             m1 = WorkerInstance.DirectionalValues(WorkerInstance.registers[62], WorkerInstance.registers[63]) / 1500 * -2;
