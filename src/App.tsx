@@ -184,6 +184,7 @@ export class App extends React.Component<Props, State> {
     let options = {
       lineNumbers: true,
       mode: 'clike',
+      theme: 'kiss',
     }
     //console.log("Rendering app");
     return (
@@ -228,7 +229,7 @@ export class App extends React.Component<Props, State> {
               <textarea rows={1} cols={5} draggable="false" onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                 this.props.onRobotChange({
                   ...this.props.robot, 
-                  theta: e.target.value != "" ? parseInt(e.target.value) : 0
+                  theta: e.target.value != "" ? -1*parseInt(e.target.value)*Math.PI/180 : 0
                 })
               }} value={Math.round(-1*robot.theta/Math.PI*180)} />
             </section>
