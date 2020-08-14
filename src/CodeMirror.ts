@@ -7,6 +7,7 @@ export class CodeMirrorManager {
 
     config: CodeMirror.EditorConfiguration = {
         lineNumbers: true,
+        theme: 'kiss',
     };
 
     definition: HTMLTextAreaElement = 
