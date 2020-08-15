@@ -137,42 +137,6 @@ export class App extends React.Component<Props, State> {
     });
   };
 
-  // private onXChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-  //   if(event.currentTarget.value == '') {
-  //     console.log('Missing X value');
-  //   }
-  //   else {
-  //     this.props.onRobotChange({
-  //       ...this.props.robot,
-  //       x: parseInt(event.currentTarget.value)
-  //     })
-  //   }
-  // };
-
-  // private onYChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-  //   if(event.currentTarget.value == '') {
-  //     console.log('Missing Y value');
-  //   }
-  //   else{
-  //     this.props.onRobotChange({
-  //       ...this.props.robot,
-  //       y: parseInt(event.currentTarget.value)
-  //     })
-  //   }
-  // };
-
-  // private onThetaChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-  //   if(event.currentTarget.value == ''){
-  //     console.log('Missing Theta value');
-  //   }
-  //   else{
-  //     this.props.onRobotChange({
-  //       ...this.props.robot,
-  //       theta: -1*parseInt(event.currentTarget.value)*Math.PI/180
-  //     });
-  //   }
-  // };
-
   render() {
     //let codemirror = new CodeMirrorManager();
     const { props, state } = this;
@@ -183,7 +147,7 @@ export class App extends React.Component<Props, State> {
     } = state;
     let options = {
       lineNumbers: true,
-      mode: 'clike',
+      mode: "text/x-csrc",
       theme: 'kiss',
     }
     //console.log("Rendering app");
