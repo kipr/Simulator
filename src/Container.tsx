@@ -14,8 +14,8 @@ type Props = ContainerProps;
 type State = ContainerState;
 
 export class Container extends React.Component<Props, State> {
-	constructor(props: Props, context?) {
-		super(props, context)
+	constructor(props: Props) {
+		super(props)
 		this.state = {
 			robot: WorkerInstance.state,
 			isCanEnabled: Array<boolean>(12).fill(false),

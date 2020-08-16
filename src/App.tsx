@@ -47,8 +47,8 @@ const cans = [
 ]
 
 export class App extends React.Component<Props, State> {
-  constructor(props: Props, context?: any) {
-    super(props, context);
+  constructor(props: Props) {
+    super(props);
     this.state = {
       code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
       console: '',
