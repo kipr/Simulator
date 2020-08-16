@@ -4,12 +4,11 @@ import * as Sim from './Sim';
 import WorkerInstance from './WorkerInstance';
 import { RobotState } from './RobotState';
 import { SimulatorArea } from './SimulatorArea';
-import Collapsible from './Collapsible';
 
 export interface ContainerProps { }
 interface ContainerState {
 	robot: RobotState,
-	isCanChecked: boolean[],
+	isCanEnabled: boolean[],
 }
 type Props = ContainerProps;
 type State = ContainerState;
@@ -19,7 +18,7 @@ export class Container extends React.Component<Props, State> {
 		super(props, context)
 		this.state = {
 			robot: WorkerInstance.state,
-			isCanChecked: Array<boolean>(12).fill(false),
+			isCanEnabled: Array<boolean>(12).fill(false),
 		}
 	}
 	private onStateChange = (state: RobotState) => {
@@ -39,15 +38,11 @@ export class Container extends React.Component<Props, State> {
 		WorkerInstance.state = robot;
 	};
 
-	private onCheckBoxActivity = (event: React.ChangeEvent<HTMLInputElement>) => {
-		//canItem.setEnabled(checkbox.checked);
-		const canNumber = Number.parseInt(event.target.value);
-		const isTargetChecked = event.target.checked;
-
+	private onCanChange_ = (canNumber: number, enabled: boolean) => {
 		this.setState(prevState => {
-			let isCanChecked = [...prevState.isCanChecked];
-			isCanChecked[canNumber] = isTargetChecked;
-			return { isCanChecked };
+			let isCanEnabled = [...prevState.isCanEnabled];
+			isCanEnabled[canNumber] = enabled;
+			return { isCanEnabled: isCanEnabled };
 		});
 	}
 
@@ -60,21 +55,11 @@ export class Container extends React.Component<Props, State> {
 			<div id="main">
 				<div id="root">
 					<section id="app">
-						<App robot={state.robot} onRobotChange={this.onRobotChange_} />
-						<Collapsible title="Cans">
-							<ul>
-								{[...Array(12)].map((_, i) =>
-									<li key={i + 1}>
-										<input type="checkbox" name="can" value={i} checked={state.isCanChecked[i]} onChange={this.onCheckBoxActivity} />
-										<label>{`Can ${i + 1}`}</label>
-									</li>
-								)}
-							</ul>
-						</Collapsible>
+						<App robot={state.robot} isCanChecked={state.isCanEnabled} onRobotChange={this.onRobotChange_} onCanChange={this.onCanChange_} />
 					</section>
 				</div>
 				<div id="right">
-					<SimulatorArea canEnabled={state.isCanChecked} />
+					<SimulatorArea canEnabled={state.isCanEnabled} />
 				</div>
 			</div>
 		)
