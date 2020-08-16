@@ -56,9 +56,9 @@ export class App extends React.Component<Props, State> {
   }
 
   private onStdOutput_ = (s: string) => {
-    this.setState({
-      console: `${this.state.console}\n${s}`
-    });
+    this.setState(prevState => ({
+      console: `${prevState.console}\n${s}`,
+    }));
   }
 
   private onStdCompOutput_ = (s: string) => {
