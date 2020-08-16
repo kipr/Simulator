@@ -30,8 +30,8 @@ export class Container extends React.Component<Props, State> {
 	}
 	private space: Sim.Space = null;
 
-	componentWillMount() {
-		WorkerInstance.onStateChange = this.onStateChange
+	componentDidMount() {
+		WorkerInstance.onStateChange = this.onStateChange;
 	}
 
 	private onRobotChange_ = (robot: RobotState) => {
