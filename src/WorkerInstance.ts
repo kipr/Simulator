@@ -25,7 +25,7 @@ class WorkerInstance {
                                                                 .fill(88,85,86);
   
   private time_ = Date.now() / 1000;
-  private wheel_diameter_ = 55;
+  private wheel_diameter_ = 55*2.64;
   private wheelSep_ = 64.05;
   private DirectionalValues = (int1:number, int2:number) => {
     if(int1 > int2){
