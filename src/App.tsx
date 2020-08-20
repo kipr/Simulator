@@ -198,7 +198,7 @@ export class App extends React.Component<Props, State> {
             <button onClick={this.onDownloadClick_}>Download</button>
           </p>
           <CodeMirror rows={20} cols={65} value={code} onChange={this.onCodeChange_} options={options} id="code" name="code" className="code" />
-          <textarea rows={10} cols={70} value={console} contentEditable={false} />
+          <textarea rows={10} cols={70} value={console} readOnly />
           <section className="robotState">
             <h3 className="robotStateHead">Robot State</h3>
             <button onClick={this.onResetClick_} className="resetButton">Reset</button>
