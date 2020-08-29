@@ -16,10 +16,10 @@ import Collapsible from './Collapsible';
 
 
 export interface AppProps extends StyleProps {
-  robot: RobotState;
+  robotState: RobotState;
   isCanChecked: boolean[];
 
-  onRobotChange: (robot: RobotState) => void;
+  onRobotStateChange: (robotState: RobotState) => void;
   onCanChange: (canNumber: number, checked: boolean) => void;
 }
 
@@ -126,12 +126,13 @@ export class App extends React.Component<Props, State> {
   };
 
   private onResetClick_ = (event: React.MouseEvent<HTMLButtonElement>) => {
-    this.props.robot.x = 220;
-    this.props.robot.y = 400;
-    this.props.robot.theta = 0;
-    this.props.onRobotChange({
-      ...this.props.robot
-    })
+    this.props.onRobotStateChange({
+      ...this.props.robotState,
+      x: RobotState.empty.x,
+      y: RobotState.empty.y,
+      theta: RobotState.empty.theta,
+    });
+
     this.setState({
       console: ''
     })
@@ -144,22 +145,22 @@ export class App extends React.Component<Props, State> {
   };
 
   private onXChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-    this.props.onRobotChange({
-      ...this.props.robot,
+    this.props.onRobotStateChange({
+      ...this.props.robotState,
       x: parseInt(event.currentTarget.value)
     })
   };
 
   private onYChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-    this.props.onRobotChange({
-      ...this.props.robot,
+    this.props.onRobotStateChange({
+      ...this.props.robotState,
       y: parseInt(event.currentTarget.value)
     })
   };
 
   private onThetaChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-    this.props.onRobotChange({
-      ...this.props.robot,
+    this.props.onRobotStateChange({
+      ...this.props.robotState,
       theta: -1*parseInt(event.currentTarget.value)*Math.PI/180
     });
   };
@@ -173,7 +174,7 @@ export class App extends React.Component<Props, State> {
   render() {
     //let codemirror = new CodeMirrorManager();
     const { props, state } = this;
-    const { robot } = props;
+    const { robotState } = props;
     const { 
       code,
       console
@@ -205,15 +206,15 @@ export class App extends React.Component<Props, State> {
             <section className="robotStateValues">
               <section className="x">
                 <h3>X: </h3>
-                <textarea rows={1} cols={5} draggable="false" onChange={this.onXChange_} value={Math.round(robot.x)}/>
+                <textarea rows={1} cols={5} draggable="false" onChange={this.onXChange_} value={Math.round(robotState.x)}/>
               </section>
               <section className="y">
                 <h3>Y: </h3>
-                <textarea rows={1} cols={5} draggable="false" onChange={this.onYChange_} value={Math.round(robot.y)}/>
+                <textarea rows={1} cols={5} draggable="false" onChange={this.onYChange_} value={Math.round(robotState.y)}/>
               </section>
               <section className="theta">
                 <h3>Theta: </h3>
-                <textarea rows={1} cols={5} draggable="false" onChange={this.onThetaChange_} value={Math.round(-1*robot.theta/Math.PI*180)}/>
+                <textarea rows={1} cols={5} draggable="false" onChange={this.onThetaChange_} value={Math.round(-1*robotState.theta/Math.PI*180)}/>
               </section>
             </section>
           </section>
@@ -225,41 +226,41 @@ export class App extends React.Component<Props, State> {
             </section>
             <section className="motor0">
               <h3>Motor 0</h3>
-              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.motor0_speed)} /></div>
-              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.motor0_position)} /></div>
+              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robotState.motor0_speed)} /></div>
+              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robotState.motor0_position)} /></div>
             </section>
             <section className="motor1">
               <h3>Motor 1</h3>
-              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.motor1_speed)} /></div>
-              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.motor1_position)} /></div>
+              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robotState.motor1_speed)} /></div>
+              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robotState.motor1_position)} /></div>
             </section>
             <section className="motor2">
               <h3>Motor 2</h3>
-              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.motor2_speed)} /></div>
-              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.motor2_position)} /></div>
+              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robotState.motor2_speed)} /></div>
+              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robotState.motor2_position)} /></div>
             </section>
             <section className="motor3">
               <h3>Motor 3</h3>
-              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.motor3_speed)} /></div>
-              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robot.motor3_position)} /></div>
+              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robotState.motor3_speed)} /></div>
+              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robotState.motor3_position)} /></div>
             </section>
           </section>
           <section className="servos">
             <section className="servo0">
               <h3>Servo 0</h3>
-              <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo0Change_}*/ value={Math.round(robot.servo0_position)} />
+              <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo0Change_}*/ value={Math.round(robotState.servo0_position)} />
             </section>
             <section className="servo1">
               <h3>Servo 1</h3>
-              <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo1Change_}*/ value={Math.round(robot.servo1_position)} />
+              <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo1Change_}*/ value={Math.round(robotState.servo1_position)} />
             </section>
             <section className="servo2">
               <h3>Servo 2</h3>
-              <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo2Change_}*/ value={Math.round(robot.servo2_position)} />
+              <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo2Change_}*/ value={Math.round(robotState.servo2_position)} />
             </section>
             <section className="servo3">
               <h3>Servo 3</h3>
-              <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo3Change_}*/ value={Math.round(robot.servo3_position)} />
+              <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo3Change_}*/ value={Math.round(robotState.servo3_position)} />
             </section>
           </section>
         </section>

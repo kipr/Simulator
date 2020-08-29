@@ -6,11 +6,15 @@ import { VisibleSensor } from './sensors/sensor';
 import { ETSensorBabylon } from './sensors/etSensorBabylon';
 import WorkerInstance from './WorkerInstance';
 import RegisterState from './RegisterState';
+import { RobotState } from './RobotState';
 
 export class Space {
 	public engine: Babylon.Engine;
 	public canvas: HTMLCanvasElement;
 	public scene: Babylon.Scene;
+
+	private getRobotState: () => RobotState;
+	private setRobotState: (robotState: RobotState) => void;
 
 	private ground: Babylon.Mesh;
 
@@ -69,10 +73,14 @@ export class Space {
 
 	private readonly TICKS_BETWEEN_ET_SENSOR_UPDATES = 15;
 
-	constructor(engine: Babylon.Engine, canvas: HTMLCanvasElement) {
+	// TODO: Find a better way to communicate robot state instead of these callbacks
+	constructor(engine: Babylon.Engine, canvas: HTMLCanvasElement, getRobotState: () => RobotState, setRobotState: (robotState: RobotState) => void) {
 		this.engine = engine;
 		this.canvas = canvas;
 		this.scene = new Babylon.Scene(engine);
+
+		this.getRobotState = getRobotState;
+		this.setRobotState = setRobotState;
 
 		this.ticksSinceETSensorUpdate = 0;
 		this.motor1 = -2;
@@ -168,9 +176,13 @@ export class Space {
 					didUpdateArmETSensor = true;
 				}
 
-				// Update registers with new ET sensor value
-				WorkerInstance.setRegister(RegisterState.REG_RW_ADC_0_L, this.etSensorFake.getValue());
-				if (this.etSensorArm) WorkerInstance.setRegister(RegisterState.REG_RW_ADC_1_L, this.etSensorArm.getValue());
+				// Update robot state with new ET sensor value
+				const robotState = this.getRobotState();
+				this.setRobotState({
+					...robotState,
+					analog0_value: this.etSensorFake.getValue(),
+					analog1_value: this.etSensorArm ? this.etSensorArm.getValue() : robotState.analog1_value,
+				});
 
 				this.ticksSinceETSensorUpdate = 0;
 			} else {

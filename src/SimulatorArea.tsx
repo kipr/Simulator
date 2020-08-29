@@ -2,10 +2,13 @@ import React = require("react");
 import * as Babylon from 'babylonjs';
 
 import * as Sim from './Sim';
-import WorkerInstance from "./WorkerInstance";
+import { RobotState } from "./RobotState";
 
 interface SimulatorAreaProps {
+    robotState: RobotState;
     canEnabled: boolean[];
+
+    onRobotStateChange: (robotState: RobotState) => void;
 }
 
 interface SimulatorAreaState { }
@@ -22,17 +25,16 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
 
     componentDidMount() {
         this.engine = new Babylon.Engine(this.canvas, true, { preserveDrawingBuffer: true, stencil: true });
-        this.space = new Sim.Space(this.engine, this.canvas);
-
-        let m1: number;
-        let m2: number;
+        this.space = new Sim.Space(this.engine, this.canvas, () => this.props.robotState, (robotState) => {
+            this.props.onRobotStateChange(robotState);
+        });
         
         this.space.createScene();
         this.space.loadMeshes();
 
         this.space.scene.registerAfterRender(() => {
-            m1 = WorkerInstance.DirectionalValues(WorkerInstance.registers[62], WorkerInstance.registers[63]) / 1500 * -2;
-            m2 = WorkerInstance.DirectionalValues(WorkerInstance.registers[68], WorkerInstance.registers[69]) / 1500 * -2;
+            let m1 = this.props.robotState.motor0_speed  / 1500 * -2;
+            let m2 = this.props.robotState.motor3_speed  / 1500 * -2;
             this.space.setMotors(m1, m2);
             // space.setMotors(m1,m2);
 

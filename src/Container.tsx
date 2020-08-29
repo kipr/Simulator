@@ -7,7 +7,7 @@ import { SimulatorArea } from './SimulatorArea';
 
 export interface ContainerProps { }
 interface ContainerState {
-	robot: RobotState,
+	robotState: RobotState,
 	isCanEnabled: boolean[],
 }
 type Props = ContainerProps;
@@ -17,24 +17,20 @@ export class Container extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props)
 		this.state = {
-			robot: WorkerInstance.state,
+			robotState: WorkerInstance.state,
 			isCanEnabled: Array<boolean>(12).fill(false),
 		}
 	}
-	private onStateChange = (state: RobotState) => {
-		//console.log('state change'); 
-		this.setState({
-			robot: state
-		});
-
-	}
-	private space: Sim.Space = null;
 
 	componentDidMount() {
-		WorkerInstance.onStateChange = this.onStateChange;
+		WorkerInstance.onStateChange = (robotState: RobotState) => {
+			this.setState({
+				robotState,
+			});
+		};
 	}
 
-	private onRobotChange_ = (robot: RobotState) => {
+	private onRobotStateChange_ = (robot: RobotState) => {
 		WorkerInstance.state = robot;
 	};
 
@@ -55,11 +51,11 @@ export class Container extends React.Component<Props, State> {
 			<div id="main">
 				<div id="root">
 					<section id="app">
-						<App robot={state.robot} isCanChecked={state.isCanEnabled} onRobotChange={this.onRobotChange_} onCanChange={this.onCanChange_} />
+						<App robotState={state.robotState} isCanChecked={state.isCanEnabled} onRobotStateChange={this.onRobotStateChange_} onCanChange={this.onCanChange_} />
 					</section>
 				</div>
 				<div id="right">
-					<SimulatorArea canEnabled={state.isCanEnabled} />
+					<SimulatorArea robotState={state.robotState} canEnabled={state.isCanEnabled} onRobotStateChange={this.onRobotStateChange_} />
 				</div>
 			</div>
 		)
