@@ -99,6 +99,7 @@ export class Container extends React.Component<Props, State> {
 			// 	space.assignVisServoArm();
 			// 	space.assignVisWheels();
 			// });
+			console.log(WorkerInstance.registers[61]);
 
 			this.space.scene.registerAfterRender(() => {
 				m1 = WorkerInstance.DirectionalValues(WorkerInstance.registers[62], WorkerInstance.registers[63]) / 1500 * -2;
@@ -106,10 +107,10 @@ export class Container extends React.Component<Props, State> {
 				this.space.setMotors(m1, m2);
 				// space.setMotors(m1,m2);
 
-				// if(this.registers_[61] == 0){
-				// 	s1 = WorkerInstance.readServoRegister(WorkerInstance.registers[78], WorkerInstance.registers[79]);
-				// 	s3 = WorkerInstance.readServoRegister(WorkerInstance.registers[80], WorkerInstance.registers[81]);
-				// }
+				if(WorkerInstance.registers[61] == 0){
+					s1 = WorkerInstance.readServoRegister(WorkerInstance.registers[78], WorkerInstance.registers[79]);
+					s3 = WorkerInstance.readServoRegister(WorkerInstance.registers[80], WorkerInstance.registers[81]);
+				}
 			});
 			engine.runRenderLoop(() => {
 				this.space.scene.render();

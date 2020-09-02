@@ -5,7 +5,8 @@ import { StyleProps } from "./style";
 import compile from './compile';
 
 //CodeMirror imports
-const CodeMirror = require('react-codemirror');
+import {UnControlled as CodeMirror} from 'react-codemirror2'
+//const CodeMirror = require('react-codemirror2');
 require('codemirror/lib/codemirror.css');
 require('codemirror/mode/clike/clike');
 
@@ -171,7 +172,8 @@ export class App extends React.Component<Props, State> {
     } = state;
     let options = {
       lineNumbers: true,
-      mode: 'clike',
+      mode: 'text/x-csrc',
+      theme: 'kiss',
     }
     //console.log("Rendering app");
     return (

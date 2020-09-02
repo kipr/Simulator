@@ -30,18 +30,6 @@ export class Space {
 	public motor1: number;
 	public motor2: number;
 	public can: Babylon.Mesh;
-	public can_1: Babylon.InstancedMesh;
-	public can_2: Babylon.InstancedMesh;
-	public can_3: Babylon.InstancedMesh;
-	public can_4: Babylon.InstancedMesh;
-	public can_5: Babylon.InstancedMesh;
-	public can_6: Babylon.InstancedMesh;
-	public can_7: Babylon.InstancedMesh;
-	public can_8: Babylon.InstancedMesh;
-	public can_9: Babylon.InstancedMesh;
-	public can_10: Babylon.InstancedMesh;
-	public can_11: Babylon.InstancedMesh;
-	public can_12: Babylon.InstancedMesh;
 	public can_positions: Array<number>
 
 	public generateCans(canName, Can_position) {
@@ -190,7 +178,8 @@ export class Space {
 
 	private buildGround () {
 		this.ground = Babylon.MeshBuilder.CreateGround("mat", {width:118, height:59, subdivisions:2}, this.scene);
-		this.ground.position.y = -1;
+		this.ground.position.y = -0.8;
+		this.ground.position.z = -14;
 		this.ground.rotate(new Babylon.Vector3(0,1,0),Math.PI/2);
 		const groundMaterial = new Babylon.StandardMaterial("ground", this.scene);
 		groundMaterial.ambientTexture = new Babylon.Texture('static/Surface-A.png',this.scene);
@@ -200,11 +189,11 @@ export class Space {
 
 	private buildBotBody () {
 		this.botbody = Babylon.MeshBuilder.CreateBox("botbody", {width:12.3, depth:24.6, height:3}, this.scene);
-		this.botbody.position.y = 4.4;
-		this.botbody.position.z = -12.3;
+		this.botbody.position.y = 4.3;
+		this.botbody.position.z = -13;
 		this.botbody.isVisible = this.collidersVisible;
 	}
-	//Babylon.Vector3(-1.1,3.2,11.97);
+
 	private buildWombat () {
 		this.wombat = Babylon.MeshBuilder.CreateBox("wombat", {width:13, depth:13.8, height:3.3}, this.scene);
 		this.wombat.parent = this.botbody;
