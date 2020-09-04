@@ -4,8 +4,6 @@ import 'babylonjs-loaders';
 import Ammo = require('./ammo');
 import { VisibleSensor } from './sensors/sensor';
 import { ETSensorBabylon } from './sensors/etSensorBabylon';
-import WorkerInstance from './WorkerInstance';
-import RegisterState from './RegisterState';
 import { RobotState } from './RobotState';
 
 export class Space {

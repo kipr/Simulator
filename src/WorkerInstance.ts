@@ -3,9 +3,6 @@ import Registers from './RegisterState'
 import { RobotState } from './RobotState';
 
 import deepNeq from './deepNeq';
-import RegisterState from './RegisterState';
-
-
 
 class WorkerInstance {
   
@@ -88,8 +85,8 @@ class WorkerInstance {
     //console.log("setting servo");
 
     // Set analog registers based on next state
-    this.setRegister(RegisterState.REG_RW_ADC_0_L, nextState.analog0_value);
-    this.setRegister(RegisterState.REG_RW_ADC_1_L, nextState.analog1_value);
+    this.setRegister(Registers.REG_RW_ADC_0_L, nextState.analog0_value);
+    this.setRegister(Registers.REG_RW_ADC_1_L, nextState.analog1_value);
 
     if (deepNeq(nextState, this.state_)) {
       if (this.onStateChange) {
