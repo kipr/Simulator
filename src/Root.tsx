@@ -5,15 +5,15 @@ import WorkerInstance from './WorkerInstance';
 import { RobotState } from './RobotState';
 import { SimulatorArea } from './SimulatorArea';
 
-export interface ContainerProps { }
-interface ContainerState {
+export interface RootProps { }
+interface RootState {
 	robotState: RobotState,
 	isCanEnabled: boolean[],
 }
-type Props = ContainerProps;
-type State = ContainerState;
+type Props = RootProps;
+type State = RootState;
 
-export class Container extends React.Component<Props, State> {
+export class Root extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props)
 		this.state = {

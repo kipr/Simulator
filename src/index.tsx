@@ -1,10 +1,10 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import { Container } from './Container';
+import { Root } from './Root';
 
 const reactRoot = document.getElementById('reactRoot');
 
 ReactDom.render(
-    <Container />,
+    <Root />,
     reactRoot
 );
