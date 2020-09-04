@@ -8,7 +8,10 @@ interface CollapsibleState {
 	open: boolean;
 }
 
-export default class Collapsible extends React.Component<CollapsibleProps, CollapsibleState> {
+type Props = CollapsibleProps;
+type State = CollapsibleState;
+
+export default class Collapsible extends React.Component<Props, State> {
 	constructor(props) {
 		super(props);
 		this.state = {
