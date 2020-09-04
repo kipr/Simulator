@@ -13,6 +13,8 @@ require('codemirror/mode/clike/clike');
 import WorkerInstance from './WorkerInstance';
 import { RobotState } from './RobotState';
 import Collapsible from './Collapsible';
+import { MotorsDisplay } from './components/MotorsDisplay';
+import { ServosDisplay } from './components/ServosDisplay';
 
 
 export interface AppProps extends StyleProps {
@@ -218,51 +220,13 @@ export class App extends React.Component<Props, State> {
               </section>
             </section>
           </section>
-          <section className="motors">
-            <section className="motorValues">
-              <h3>Motor:</h3>
-              <h3>Speed:</h3>
-              <h3>Position:</h3>
-            </section>
-            <section className="motor0">
-              <h3>Motor 0</h3>
-              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robotState.motor0_speed)} /></div>
-              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robotState.motor0_position)} /></div>
-            </section>
-            <section className="motor1">
-              <h3>Motor 1</h3>
-              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robotState.motor1_speed)} /></div>
-              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robotState.motor1_position)} /></div>
-            </section>
-            <section className="motor2">
-              <h3>Motor 2</h3>
-              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robotState.motor2_speed)} /></div>
-              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robotState.motor2_position)} /></div>
-            </section>
-            <section className="motor3">
-              <h3>Motor 3</h3>
-              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robotState.motor3_speed)} /></div>
-              <div><textarea rows={1} cols={4} draggable="false" readOnly value={Math.round(robotState.motor3_position)} /></div>
-            </section>
-          </section>
-          <section className="servos">
-            <section className="servo0">
-              <h3>Servo 0</h3>
-              <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo0Change_}*/ value={Math.round(robotState.servo0_position)} />
-            </section>
-            <section className="servo1">
-              <h3>Servo 1</h3>
-              <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo1Change_}*/ value={Math.round(robotState.servo1_position)} />
-            </section>
-            <section className="servo2">
-              <h3>Servo 2</h3>
-              <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo2Change_}*/ value={Math.round(robotState.servo2_position)} />
-            </section>
-            <section className="servo3">
-              <h3>Servo 3</h3>
-              <textarea rows={1} cols={4} draggable="false" readOnly /*onChange={this.onServo3Change_}*/ value={Math.round(robotState.servo3_position)} />
-            </section>
-          </section>
+          <MotorsDisplay
+            motorSpeeds={[robotState.motor0_speed, robotState.motor1_speed, robotState.motor2_speed, robotState.motor3_speed]}
+            motorPositions={[robotState.motor0_position, robotState.motor1_position, robotState.motor2_position, robotState.motor3_position]}>
+          </MotorsDisplay>
+          <ServosDisplay
+            servoPositions={[robotState.servo0_position, robotState.servo1_position, robotState.servo2_position, robotState.servo3_position]} >
+          </ServosDisplay>
         </section>
         <Collapsible title="Cans">
           <ul>
