@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import { Root } from './Root';
+import { Root } from './components/Root';
 
 const reactRoot = document.getElementById('reactRoot');
 

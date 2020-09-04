@@ -1,8 +1,8 @@
 
 import * as React from 'react';
-import { StyleProps } from "./style";
+import { StyleProps } from "../style";
 
-import compile from './compile';
+import compile from '../compile';
 
 //CodeMirror imports
 import { UnControlled as CodeMirror } from 'react-codemirror2';
@@ -10,12 +10,12 @@ require('codemirror/lib/codemirror.css');
 require('codemirror/mode/clike/clike');
 
 
-import WorkerInstance from './WorkerInstance';
-import { RobotState } from './RobotState';
+import WorkerInstance from '../WorkerInstance';
+import { RobotState } from '../RobotState';
 import Collapsible from './Collapsible';
-import { MotorsDisplay } from './components/MotorsDisplay';
-import { ServosDisplay } from './components/ServosDisplay';
-import { RobotPositionDisplay } from './components/RobotPositionDisplay';
+import { MotorsDisplay } from './MotorsDisplay';
+import { ServosDisplay } from './ServosDisplay';
+import { RobotPositionDisplay } from './RobotPositionDisplay';
 
 
 export interface SimulatorSidebarProps extends StyleProps {

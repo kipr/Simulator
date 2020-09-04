@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { SimulatorSidebar } from './SimulatorSidebar';
-import * as Sim from './Sim';
-import WorkerInstance from './WorkerInstance';
-import { RobotState } from './RobotState';
+import WorkerInstance from '../WorkerInstance';
+import { RobotState } from '../RobotState';
 import { SimulatorArea } from './SimulatorArea';
 
 export interface RootProps { }

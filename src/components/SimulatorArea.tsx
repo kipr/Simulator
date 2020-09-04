@@ -1,8 +1,8 @@
 import React = require("react");
 import * as Babylon from 'babylonjs';
 
-import * as Sim from './Sim';
-import { RobotState } from "./RobotState";
+import * as Sim from '../Sim';
+import { RobotState } from "../RobotState";
 
 interface SimulatorAreaProps {
     robotState: RobotState;
