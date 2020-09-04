@@ -3,6 +3,8 @@ import React = require("react");
 interface NumberDisplayProps {
   value: number,
   width: number,
+  readOnly?: boolean,
+  onChange?: (value: number) => void,
 }
 
 interface NumberDisplayState { }
@@ -14,6 +16,10 @@ export class NumberDisplay extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
   }
+
+  onValueChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    this.props.onChange(Number.parseInt(event.target.value));
+  };
 
   render() {
     const textAreaStyle: React.CSSProperties = {
@@ -29,7 +35,8 @@ export class NumberDisplay extends React.Component<Props, State> {
         rows={1}
         cols={this.props.width}
         draggable="false"
-        readOnly />
+        readOnly={this.props.readOnly}
+        onChange={!this.props.readOnly ? this.onValueChange : undefined} />
     );
   }
 }

@@ -20,7 +20,7 @@ export class ServoDisplay extends React.Component<Props, State> {
     return (
       <section style={{ textAlign: 'center' }}>
         <h3>Servo {this.props.servoNumber}</h3>
-        <div><NumberDisplay value={Math.round(this.props.servoPosition)} width={4} /></div>
+        <div><NumberDisplay value={Math.round(this.props.servoPosition)} readOnly width={4} /></div>
       </section>
     );
   }

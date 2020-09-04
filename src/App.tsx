@@ -15,6 +15,7 @@ import { RobotState } from './RobotState';
 import Collapsible from './Collapsible';
 import { MotorsDisplay } from './components/MotorsDisplay';
 import { ServosDisplay } from './components/ServosDisplay';
+import { RobotPositionDisplay } from './components/RobotPositionDisplay';
 
 
 export interface AppProps extends StyleProps {
@@ -146,24 +147,24 @@ export class App extends React.Component<Props, State> {
     });
   };
 
-  private onXChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
+  private onXChange_ = (x: number) => {
     this.props.onRobotStateChange({
       ...this.props.robotState,
-      x: parseInt(event.currentTarget.value)
+      x,
     })
   };
 
-  private onYChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
+  private onYChange_ = (y: number) => {
     this.props.onRobotStateChange({
       ...this.props.robotState,
-      y: parseInt(event.currentTarget.value)
+      y,
     })
   };
 
-  private onThetaChange_ = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
+  private onThetaChange_ = (theta: number) => {
     this.props.onRobotStateChange({
       ...this.props.robotState,
-      theta: -1*parseInt(event.currentTarget.value)*Math.PI/180
+      theta: -1*theta*Math.PI/180,
     });
   };
 
@@ -205,20 +206,14 @@ export class App extends React.Component<Props, State> {
           <section className="robotState">
             <h3 className="robotStateHead">Robot State</h3>
             <button onClick={this.onResetClick_} className="resetButton">Reset</button>
-            <section className="robotStateValues">
-              <section className="x">
-                <h3>X: </h3>
-                <textarea rows={1} cols={5} draggable="false" onChange={this.onXChange_} value={Math.round(robotState.x)}/>
-              </section>
-              <section className="y">
-                <h3>Y: </h3>
-                <textarea rows={1} cols={5} draggable="false" onChange={this.onYChange_} value={Math.round(robotState.y)}/>
-              </section>
-              <section className="theta">
-                <h3>Theta: </h3>
-                <textarea rows={1} cols={5} draggable="false" onChange={this.onThetaChange_} value={Math.round(-1*robotState.theta/Math.PI*180)}/>
-              </section>
-            </section>
+            <RobotPositionDisplay
+              x={robotState.x}
+              y={robotState.y}
+              theta={robotState.theta}
+              xChanged={this.onXChange_}
+              yChanged={this.onYChange_}
+              thetaChanged={this.onThetaChange_}>
+            </RobotPositionDisplay>
           </section>
           <MotorsDisplay
             motorSpeeds={[robotState.motor0_speed, robotState.motor1_speed, robotState.motor2_speed, robotState.motor3_speed]}
