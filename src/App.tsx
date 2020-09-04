@@ -187,7 +187,7 @@ export class App extends React.Component<Props, State> {
     }
     //console.log("Rendering app");
     return (
-      <React.Fragment>
+      <>
         <section className="app-area">
           <section className="app-header">
             <svg width="197" height="164" className="logo">
@@ -238,7 +238,7 @@ export class App extends React.Component<Props, State> {
             )}
           </ul>
         </Collapsible>
-      </React.Fragment>
+      </>
     )
   }
 }
