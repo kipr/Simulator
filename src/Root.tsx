@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { App } from './App';
+import { SimulatorSidebar } from './SimulatorSidebar';
 import * as Sim from './Sim';
 import WorkerInstance from './WorkerInstance';
 import { RobotState } from './RobotState';
@@ -51,7 +51,7 @@ export class Root extends React.Component<Props, State> {
 			<div id="main">
 				<div id="root">
 					<section id="app">
-						<App robotState={state.robotState} isCanChecked={state.isCanEnabled} onRobotStateChange={this.onRobotStateChange_} onCanChange={this.onCanChange_} />
+						<SimulatorSidebar robotState={state.robotState} isCanChecked={state.isCanEnabled} onRobotStateChange={this.onRobotStateChange_} onCanChange={this.onCanChange_} />
 					</section>
 				</div>
 				<div id="right">

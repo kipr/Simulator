@@ -18,7 +18,7 @@ import { ServosDisplay } from './components/ServosDisplay';
 import { RobotPositionDisplay } from './components/RobotPositionDisplay';
 
 
-export interface AppProps extends StyleProps {
+export interface SimulatorSidebarProps extends StyleProps {
   robotState: RobotState;
   isCanChecked: boolean[];
 
@@ -26,13 +26,13 @@ export interface AppProps extends StyleProps {
   onCanChange: (canNumber: number, checked: boolean) => void;
 }
 
-interface AppState {
+interface SimulatorSidebarState {
   code: string;
   console: string;
 }
 
-type Props = AppProps;
-type State = AppState;
+type Props = SimulatorSidebarProps;
+type State = SimulatorSidebarState;
 
 const cans = [
   'can_1',
@@ -49,7 +49,7 @@ const cans = [
   'can_12',
 ]
 
-export class App extends React.Component<Props, State> {
+export class SimulatorSidebar extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
