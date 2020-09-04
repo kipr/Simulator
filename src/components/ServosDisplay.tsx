@@ -24,7 +24,7 @@ export class ServosDisplay extends React.Component<Props, State> {
     return (
       <section style={sectionStyle}>
         {[...Array(4)].map((_, i) =>
-          <ServoDisplay servoNumber={i} servoPosition={this.props.servoPositions[i]}></ServoDisplay>
+          <ServoDisplay key={i} servoNumber={i} servoPosition={this.props.servoPositions[i]}></ServoDisplay>
         )}
       </section>
     );

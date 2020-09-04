@@ -30,7 +30,7 @@ export class MotorsDisplay extends React.Component<Props, State> {
           <h3>Position:</h3>
         </section>
         {[...Array(4)].map((_, i) =>
-          <MotorDisplay motorNumber={i} motorPosition={this.props.motorPositions[i]} motorSpeed={this.props.motorSpeeds[i]}></MotorDisplay>
+          <MotorDisplay key={i} motorNumber={i} motorPosition={this.props.motorPositions[i]} motorSpeed={this.props.motorSpeeds[i]}></MotorDisplay>
         )}
       </section>
     );
