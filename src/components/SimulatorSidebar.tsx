@@ -202,7 +202,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
             <button onClick={this.onRunClick_}>Run</button>
             <button onClick={this.onDownloadClick_}>Download</button>
           </p>
-          <CodeMirror rows={35} cols={65} value={code} onChange={this.onCodeChange_} options={options} id="code" name="code" className="code" />
+          <CodeMirror value={code} onChange={this.onCodeChange_} options={options} className="code" />
           <textarea rows={10} cols={70} value={console} readOnly />
           <section className="robotState">
             <h3 className="robotStateHead">Robot State</h3>
