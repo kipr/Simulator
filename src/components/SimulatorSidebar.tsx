@@ -5,7 +5,7 @@ import { StyleProps } from "../style";
 import compile from '../compile';
 
 //CodeMirror imports
-import { UnControlled as CodeMirror } from 'react-codemirror2';
+import { Controlled as CodeMirror } from 'react-codemirror2';
 require('codemirror/lib/codemirror.css');
 require('codemirror/mode/clike/clike');
 
@@ -141,10 +141,8 @@ export class SimulatorSidebar extends React.Component<Props, State> {
     })
   };
 
-  private onCodeChange_ = (newCode) => {
-    this.setState({
-      code: newCode
-    });
+  private onCodeChange_ = (_editor, _data, code: string) => {
+    this.setState({ code });
   };
 
   private onXChange_ = (x: number) => {
@@ -202,7 +200,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
             <button onClick={this.onRunClick_}>Run</button>
             <button onClick={this.onDownloadClick_}>Download</button>
           </p>
-          <CodeMirror value={code} onChange={this.onCodeChange_} options={options} className="code" />
+          <CodeMirror value={code} onBeforeChange={this.onCodeChange_} options={options} className="code" />
           <textarea rows={10} cols={70} value={console} readOnly />
           <section className="robotState">
             <h3 className="robotStateHead">Robot State</h3>
