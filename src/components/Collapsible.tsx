@@ -28,14 +28,14 @@ export default class Collapsible extends React.Component<Props, State> {
 
 	render() {
 		return (
-			<div>
+			<>
 				<div onClick={this.togglePanel} className='header'>{this.props.title}</div>
 				{this.state.open ? (
 					<div className='content'>
 						{this.props.children}
 					</div>
 				) : null}
-			</div>
+			</>
 		);
 	}
 }
