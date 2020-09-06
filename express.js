@@ -44,7 +44,7 @@ app.post('/compile', (req, res) => {
       })
     }
 
-    exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -I${config.libwallaby.root}/include -L${config.libwallaby.root}/lib -lkipr -o ${path}.js ${path}`, (err, stdout, stderr) => {
+    exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -s ASYNCIFY -I${config.libwallaby.root}/include -L${config.libwallaby.root}/lib -lkipr -o ${path}.js ${path}`, (err, stdout, stderr) => {
       if (err) {
         return res.status(400).json({
           stdout,
