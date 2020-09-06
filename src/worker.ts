@@ -50,7 +50,7 @@ ctx.onmessage = (e) => {
       );
 
       mod.onRuntimeInitialized = () => {
-        mod._main();
+        mod._simMainWrapper();
         ctx.postMessage({
           type: 'program-ended'
         })
@@ -70,7 +70,7 @@ ctx.onmessage = (e) => {
       );
 
       mod.onRuntimeInitialized = () => {
-        mod._main();
+        mod._simMainWrapper();
         ctx.postMessage({
           type: 'program-ended'
         })
