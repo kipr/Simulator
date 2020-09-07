@@ -19,6 +19,13 @@ export interface RobotState {
   servo1_position: number;
   servo2_position: number;
   servo3_position: number;
+
+  analog0_value: number;
+  analog1_value: number;
+  analog2_value: number;
+  analog3_value: number;
+  analog4_value: number;
+  analog5_value: number;
 }
 
 export namespace RobotState {
@@ -37,6 +44,12 @@ export namespace RobotState {
     servo0_position: 1024,
     servo1_position: 1024,
     servo2_position: 1024,
-    servo3_position: 0
+    servo3_position: 0,
+    analog0_value: 0,
+    analog1_value: 0,
+    analog2_value: 0,
+    analog3_value: 0,
+    analog4_value: 0,
+    analog5_value: 0,
   };
 }

@@ -1,7 +1,6 @@
 import Protocol from './WorkerProtocol';
 import dynRequire from './require';
 import Registers from './RegisterState';
-import WorkerInstance from './WorkerInstance';
 
 const ctx: Worker = self as any;
 const print = (s: string)=>{

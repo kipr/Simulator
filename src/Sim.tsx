@@ -4,13 +4,15 @@ import 'babylonjs-loaders';
 import Ammo = require('./ammo');
 import { VisibleSensor } from './sensors/sensor';
 import { ETSensorBabylon } from './sensors/etSensorBabylon';
-import WorkerInstance from './WorkerInstance';
-import RegisterState from './RegisterState';
+import { RobotState } from './RobotState';
 
 export class Space {
 	public engine: Babylon.Engine;
 	public canvas: HTMLCanvasElement;
 	public scene: Babylon.Scene;
+
+	private getRobotState: () => RobotState;
+	private setRobotState: (robotState: RobotState) => void;
 
 	private ground: Babylon.Mesh;
 
@@ -32,13 +34,19 @@ export class Space {
 	public can: Babylon.Mesh;
 	public can_positions: Array<number>
 
-	public generateCans(canName, Can_position) {
+	public generateCans(canPosition: number) {
+		const canName = `Can${canPosition}`;
 		this.can_positions = [];
 		this.can_positions = [0,0,0, 22,0,14.5, 0,0,20.6, -15.5,0,24, 0,0,7, 14,0,-7, 0,0,-7, -13.7,0,-7, -25,0,-14.5, 0,0,-34, 19,0,-45, 0,0,-55, -18.5,0,-45];
 		let new_can = Babylon.MeshBuilder.CreateCylinder(canName,{height:10, diameter:6}, this.scene);
 		//this.can.position = new Babylon.Vector3(0,0,30);//.z = 30;
 		new_can.physicsImpostor = new Babylon.PhysicsImpostor(new_can, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
-		new_can.position = new Babylon.Vector3(this.can_positions[Can_position*3], this.can_positions[(Can_position*3)+1],this.can_positions[(Can_position*3)+2])
+		new_can.position = new Babylon.Vector3(this.can_positions[canPosition*3], this.can_positions[(canPosition*3)+1],this.can_positions[(canPosition*3)+2])
+	}
+
+	public destroyCan(canPosition: number) {
+		const canName = `Can${canPosition}`;
+		this.scene.getMeshByName(canName).dispose();
 	}
 
 	private collidersVisible = true;
@@ -51,10 +59,14 @@ export class Space {
 
 	private readonly TICKS_BETWEEN_ET_SENSOR_UPDATES = 15;
 
-	constructor(engine: Babylon.Engine, canvas: HTMLCanvasElement) {
+	// TODO: Find a better way to communicate robot state instead of these callbacks
+	constructor(engine: Babylon.Engine, canvas: HTMLCanvasElement, getRobotState: () => RobotState, setRobotState: (robotState: RobotState) => void) {
 		this.engine = engine;
 		this.canvas = canvas;
 		this.scene = new Babylon.Scene(engine);
+
+		this.getRobotState = getRobotState;
+		this.setRobotState = setRobotState;
 
 		this.ticksSinceETSensorUpdate = 0;
 		this.motor1 = -2;
@@ -150,9 +162,13 @@ export class Space {
 					didUpdateArmETSensor = true;
 				}
 
-				// Update registers with new ET sensor value
-				WorkerInstance.setRegister(RegisterState.REG_RW_ADC_0_L, this.etSensorFake.getValue());
-				if (this.etSensorArm) WorkerInstance.setRegister(RegisterState.REG_RW_ADC_1_L, this.etSensorArm.getValue());
+				// Update robot state with new ET sensor value
+				const robotState = this.getRobotState();
+				this.setRobotState({
+					...robotState,
+					analog0_value: this.etSensorFake.getValue(),
+					analog1_value: this.etSensorArm ? this.etSensorArm.getValue() : robotState.analog1_value,
+				});
 
 				this.ticksSinceETSensorUpdate = 0;
 			} else {
@@ -161,16 +177,16 @@ export class Space {
 		});
 	}
 
-	public loadMeshes(space: Space) {
-		const loader = Babylon.SceneLoader.ImportMesh("",'static/', 'Simulator_Demobot.glb', space.scene, function (meshes) {
-			meshes[0].setParent(space.botbody);
-			space.scene.executeWhenReady(function () {
-				space.assignVisServoArm(space);
-				space.assignVisWheels(space);
+	public loadMeshes() {
+		const loader = Babylon.SceneLoader.ImportMesh("",'static/', 'Simulator_Demobot.glb', this.scene, (meshes) => {
+			meshes[0].setParent(this.botbody);
+			this.scene.executeWhenReady(() => {
+				this.assignVisServoArm();
+				this.assignVisWheels();
 			});
 
-			const etSensorMesh = space.scene.getMeshByID('black satin finish plastic');
-			space.etSensorArm = new ETSensorBabylon(space.scene, etSensorMesh, new Babylon.Vector3(0.0, 0.02, 0.0), new Babylon.Vector3(0.02, 0.02, -0.015), { isVisible: true });
+			const etSensorMesh = this.scene.getMeshByID('black satin finish plastic');
+			this.etSensorArm = new ETSensorBabylon(this.scene, etSensorMesh, new Babylon.Vector3(0.0, 0.02, 0.0), new Babylon.Vector3(0.02, 0.02, -0.015), { isVisible: true });
 			
 		});
 		
@@ -350,21 +366,21 @@ export class Space {
 		this.botbody.physicsImpostor.addJoint(this.wheel2.physicsImpostor,this.wheel2_joint);
 	}
 
-	public assignVisWheels (space: Space) {
-		space.scene.getMeshByID('pw-mt11040').setParent(space.wheel1);
-		space.scene.getMeshByID('black high gloss plastic').setParent(space.wheel1);
-		space.scene.getMeshByID('matte rubber').setParent(space.wheel1);
+	public assignVisWheels () {
+		this.scene.getMeshByID('pw-mt11040').setParent(this.wheel1);
+		this.scene.getMeshByID('black high gloss plastic').setParent(this.wheel1);
+		this.scene.getMeshByID('matte rubber').setParent(this.wheel1);
 		
-		space.scene.getMeshByID('pw-mt11040.2').setParent(space.wheel2);
-		space.scene.getMeshByID('black high gloss plastic.2').setParent(space.wheel2);
-		space.scene.getMeshByID('matte rubber.2').setParent(space.wheel2);
+		this.scene.getMeshByID('pw-mt11040.2').setParent(this.wheel2);
+		this.scene.getMeshByID('black high gloss plastic.2').setParent(this.wheel2);
+		this.scene.getMeshByID('matte rubber.2').setParent(this.wheel2);
 	}
 
-	public assignVisServoArm (space: Space) {
+	public assignVisServoArm () {
 		// this.scene.getTransformNodeByID('1 x 5 Servo Horn-1').getChildMeshes().forEach(element => {
 		// 	element.setParent(this.servoArmMotor);
 		// });
-		space.scene.getTransformNodeByID('1 x 5 Servo Horn-1').setParent(space.servoArmMotor);
+		this.scene.getTransformNodeByID('1 x 5 Servo Horn-1').setParent(this.servoArmMotor);
 	}
 
 	public setMotors(m1:number, m2:number){

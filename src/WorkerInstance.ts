@@ -4,8 +4,6 @@ import { RobotState } from './RobotState';
 
 import deepNeq from './deepNeq';
 
-
-
 class WorkerInstance {
   
   onStateChange:(state:RobotState) => void 
@@ -51,7 +49,7 @@ class WorkerInstance {
 
     const nextState = { ...this.state_ };
     
-
+    // Set next state motor speeds based on register values
     nextState.motor0_speed = this.DirectionalValues(this.registers_[62], this.registers_[63]);
     nextState.motor1_speed = this.DirectionalValues(this.registers_[64], this.registers_[65]);
     nextState.motor2_speed = this.DirectionalValues(this.registers_[66], this.registers_[67]);
@@ -65,17 +63,20 @@ class WorkerInstance {
     nextState.y = nextState.y;// + (this.wheel_diameter_/2)*(total_dist)*Math.sin(nextState.theta)*time_change;
     
     //Write the values to the registers and send those back to worker when updated.(Send the entire array to worker)
+
     nextState.motor0_position += nextState.motor0_speed*timeElapsedSecs;
     nextState.motor1_position += nextState.motor1_speed*timeElapsedSecs;
     nextState.motor2_position += nextState.motor2_speed*timeElapsedSecs;
     nextState.motor3_position += nextState.motor3_speed*timeElapsedSecs;
 
+    // Set motor position registers based on next state
     this.registers_[42] = nextState.motor0_position;
     this.registers_[46] = nextState.motor1_position;
     this.registers_[50] = nextState.motor2_position;
     this.registers_[54] = nextState.motor3_position;
     
     //console.log(this.registers_[61])
+    // Set next state servo positions based on register values
     if(this.registers_[61] == 0){
       nextState.servo0_position = this.readServoRegister(this.registers_[78], this.registers_[79]);
       nextState.servo1_position = this.readServoRegister(this.registers_[80], this.registers_[81]);
@@ -83,6 +84,10 @@ class WorkerInstance {
       nextState.servo3_position = this.readServoRegister(this.registers_[84], this.registers_[85]);
     }
     //console.log("setting servo");
+
+    // Set analog registers based on next state
+    this.setRegister(Registers.REG_RW_ADC_0_L, nextState.analog0_value);
+    this.setRegister(Registers.REG_RW_ADC_1_L, nextState.analog1_value);
 
     if (deepNeq(nextState, this.state_)) {
       if (this.onStateChange) {

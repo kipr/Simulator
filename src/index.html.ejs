@@ -21,7 +21,7 @@
     }
 
     /* Pattern styles */
-    body {
+    #main {
       display: grid;
       object-fit: fill;
       height: 1100px;
@@ -71,39 +71,10 @@
       width: 530px;
     }
 
-    .motors textarea, .robotStateValues textarea, .servos textarea {
-      resize: none;
-      text-align: center;
-      font-size: large;
-    }
-
-    .motors {
-      display: grid;
-      grid-template: auto / auto auto auto auto auto;
-    }
-
-    .servos {
-      display: grid;
-      grid-template: auto / auto auto auto auto;
-    }
-
-    .motors > section, .servos > section {
-      text-align: center;
-    }
-
     .robotStateHead, .resetButton {
       display: inline-block;
       margin-left: 10px;
       margin-right: 10px;
-    }
-
-    .robotStateValues {
-      display: grid;
-      grid-template: auto / auto auto auto;
-    }
-
-    .robotStateValues > section {
-      text-align: center;
     }
 
     .header{
@@ -158,9 +129,6 @@
   </style>
 </head>
 <body>
-  <div id="root"></div>
-    <div id="right">
-    <canvas id="simview"></canvas>
-  </div>
+  <div id="reactRoot" ></div>
 </body>
 </html>
