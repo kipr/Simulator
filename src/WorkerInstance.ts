@@ -22,7 +22,7 @@ class WorkerInstance {
                                                                 .fill(2,84,85)
                                                                 .fill(88,85,86);
   
-  private time_ = Date.now() / 1000;
+  private lastTickTime: number;
   // private wheel_diameter_ = 55;
   // private wheelSep_ = 64.05;
   public DirectionalValues = (int1:number, int2:number) => {
@@ -42,11 +42,12 @@ class WorkerInstance {
     return dval;
   }
 
-  private tick = ()=> {
+  private tick: FrameRequestCallback = (time: number) => {
+    const timeElapsedMs = this.lastTickTime !== undefined ? time - this.lastTickTime : 0;
+    const timeElapsedSecs = timeElapsedMs / 1000;
+    this.lastTickTime = time;
+
     const nextState = { ...this.state_ };
-    const new_time = Date.now()/1000
-    const time_change = new_time - this.time_;
-    this.time_ = new_time;
     
     // Set next state motor speeds based on register values
     nextState.motor0_speed = this.DirectionalValues(this.registers_[62], this.registers_[63]);
@@ -62,11 +63,11 @@ class WorkerInstance {
     nextState.y = nextState.y;// + (this.wheel_diameter_/2)*(total_dist)*Math.sin(nextState.theta)*time_change;
     
     //Write the values to the registers and send those back to worker when updated.(Send the entire array to worker)
-    // Set next state motor positions based on motor speed and time
-    nextState.motor0_position = nextState.motor0_position + nextState.motor0_speed*time_change;
-    nextState.motor1_position = nextState.motor1_position + nextState.motor1_speed*time_change;
-    nextState.motor2_position = nextState.motor2_position + nextState.motor2_speed*time_change;
-    nextState.motor3_position = nextState.motor3_position + nextState.motor3_speed*time_change;
+
+    nextState.motor0_position += nextState.motor0_speed*timeElapsedSecs;
+    nextState.motor1_position += nextState.motor1_speed*timeElapsedSecs;
+    nextState.motor2_position += nextState.motor2_speed*timeElapsedSecs;
+    nextState.motor3_position += nextState.motor3_speed*timeElapsedSecs;
 
     // Set motor position registers based on next state
     this.registers_[42] = nextState.motor0_position;
@@ -199,7 +200,7 @@ class WorkerInstance {
 
   constructor(){
     this.worker_.onmessage = this.onMessage
-    this.tick()
+    requestAnimationFrame(this.tick);
   }
 
   get registers() {

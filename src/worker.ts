@@ -51,12 +51,7 @@ ctx.onmessage = (e) => {
       );
 
       mod.onRuntimeInitialized = () => {
-        mod._main();
-        // TODO: Had to remove this because _main() is no longer synchronous
-        //       Need to implement some way of knowing when _main() actually ends
-        // ctx.postMessage({
-        //   type: 'program-ended'
-        // })
+        mod._simMainWrapper();
       };
 
       ctx.postMessage({
@@ -73,7 +68,7 @@ ctx.onmessage = (e) => {
       );
 
       mod.onRuntimeInitialized = () => {
-        mod._main();
+        mod._simMainWrapper();
         ctx.postMessage({
           type: 'program-ended'
         })
