@@ -33,18 +33,29 @@ app.post('/compile', (req, res) => {
     });
   }
 
+  // Wrap user's main() in our own "main()" that exits properly
+  // Required because Asyncify keeps emscripten runtime alive, which would prevent cleanup code from running
+  const augmentedCode = req.body.code + `
+    #include <emscripten.h>
+  
+    void simMainWrapper()
+    {
+      main();
+      emscripten_force_exit(0);
+    }
+  `;
 
-
+  
   const id = uuid();
   const path = `/tmp/${id}.c`;
-  fs.writeFile(path, req.body.code, err => {
+  fs.writeFile(path, augmentedCode, err => {
     if (err) {
       return res.status(500).json({
         error: "Failed to write ${}"
       })
     }
 
-    exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -s ASYNCIFY -I${config.libwallaby.root}/include -L${config.libwallaby.root}/lib -lkipr -o ${path}.js ${path}`, (err, stdout, stderr) => {
+    exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -s ASYNCIFY -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']" -I${config.libwallaby.root}/include -L${config.libwallaby.root}/lib -lkipr -o ${path}.js ${path}`, (err, stdout, stderr) => {
       if (err) {
         return res.status(400).json({
           stdout,
