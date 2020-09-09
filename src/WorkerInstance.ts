@@ -44,6 +44,17 @@ class WorkerInstance {
     return dval;
   }
 
+  private createBinaryString (nMask) {
+    // nMask must be between -2147483648 and 2147483647
+    for (var nFlag = 0, nShifted = nMask, sMask = ""; nFlag < 32;
+         nFlag++, sMask += String(nShifted >>> 31), nShifted <<= 1);
+    return sMask;
+  }
+
+  private dec2bin = (input: number, base: number) => {
+    return (input >>> 0).toString(base); 
+  }
+
   private tick = ()=> {
     const nextState = { ...this.state_ };
     const new_time = Date.now()/1000
@@ -68,11 +79,32 @@ class WorkerInstance {
     nextState.motor1_position = nextState.motor1_position + nextState.motor1_speed*time_change;
     nextState.motor2_position = nextState.motor2_position + nextState.motor2_speed*time_change;
     nextState.motor3_position = nextState.motor3_position + nextState.motor3_speed*time_change;
+    
+    this.worker_.postMessage({
+      type:'setregister',
+      address: Registers.REG_RW_MOT_0_B3,
+      value: this.createBinaryString(nextState.motor0_position).substr(0,8)
+    });
 
-    this.registers_[42] = nextState.motor0_position;
-    this.registers_[46] = nextState.motor1_position;
-    this.registers_[50] = nextState.motor2_position;
-    this.registers_[54] = nextState.motor3_position;
+    this.worker_.postMessage({
+      type:'setregister',
+      address: Registers.REG_RW_MOT_0_B2,
+      value: this.createBinaryString(nextState.motor0_position).substr(8,8)
+    });
+
+    this.worker_.postMessage({
+      type:'setregister',
+      address: Registers.REG_RW_MOT_0_B1,
+      value: this.createBinaryString(nextState.motor0_position).substr(16,8)
+    });
+
+    this.worker_.postMessage({
+      type:'setregister',
+      address: Registers.REG_RW_MOT_0_B0,
+      value: this.createBinaryString(nextState.motor0_position).substr(24,8)
+    });
+
+
     
     //console.log(this.registers_[61])
     if(this.registers_[61] == 0){
