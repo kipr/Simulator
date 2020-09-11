@@ -55,6 +55,12 @@ class WorkerInstance {
     return (input >>> 0).toString(base); 
   }
 
+  private conv = (num: number) => {
+    let b = new ArrayBuffer(4);
+    new DataView(b).setUint32(0, num);
+    return Array.from(new Uint8Array(b));
+  }
+
   private tick = ()=> {
     const nextState = { ...this.state_ };
     const new_time = Date.now()/1000
@@ -79,29 +85,31 @@ class WorkerInstance {
     nextState.motor1_position = nextState.motor1_position + nextState.motor1_speed*time_change;
     nextState.motor2_position = nextState.motor2_position + nextState.motor2_speed*time_change;
     nextState.motor3_position = nextState.motor3_position + nextState.motor3_speed*time_change;
+
+    console.log(this.createBinaryString(nextState.motor0_position).substr(24,8));
     
     this.worker_.postMessage({
       type:'setregister',
       address: Registers.REG_RW_MOT_0_B3,
-      value: this.createBinaryString(nextState.motor0_position).substr(0,8)
+      value: this.conv(nextState.motor0_position)[0]
     });
 
     this.worker_.postMessage({
       type:'setregister',
       address: Registers.REG_RW_MOT_0_B2,
-      value: this.createBinaryString(nextState.motor0_position).substr(8,8)
+      value: this.conv(nextState.motor0_position)[1]
     });
 
     this.worker_.postMessage({
       type:'setregister',
       address: Registers.REG_RW_MOT_0_B1,
-      value: this.createBinaryString(nextState.motor0_position).substr(16,8)
+      value: this.conv(nextState.motor0_position)[2]
     });
 
     this.worker_.postMessage({
       type:'setregister',
       address: Registers.REG_RW_MOT_0_B0,
-      value: this.createBinaryString(nextState.motor0_position).substr(24,8)
+      value: this.conv(nextState.motor0_position)[3]
     });
 
 
