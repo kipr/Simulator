@@ -86,30 +86,30 @@ class WorkerInstance {
     nextState.motor2_position = nextState.motor2_position + nextState.motor2_speed*time_change;
     nextState.motor3_position = nextState.motor3_position + nextState.motor3_speed*time_change;
 
-    console.log(this.createBinaryString(nextState.motor0_position).substr(24,8));
+    let motor1_array = this.conv(Math.round(nextState.motor0_position));
     
     this.worker_.postMessage({
       type:'setregister',
       address: Registers.REG_RW_MOT_0_B3,
-      value: this.conv(nextState.motor0_position)[0]
+      value: motor1_array[0]
     });
 
     this.worker_.postMessage({
       type:'setregister',
       address: Registers.REG_RW_MOT_0_B2,
-      value: this.conv(nextState.motor0_position)[1]
+      value: motor1_array[1]
     });
 
     this.worker_.postMessage({
       type:'setregister',
       address: Registers.REG_RW_MOT_0_B1,
-      value: this.conv(nextState.motor0_position)[2]
+      value: motor1_array[2]
     });
 
     this.worker_.postMessage({
       type:'setregister',
       address: Registers.REG_RW_MOT_0_B0,
-      value: this.conv(nextState.motor0_position)[3]
+      value: motor1_array[3]
     });
 
 
