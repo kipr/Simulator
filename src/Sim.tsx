@@ -60,10 +60,10 @@ export class Space {
 	private readonly TICKS_BETWEEN_ET_SENSOR_UPDATES = 15;
 
 	// TODO: Find a better way to communicate robot state instead of these callbacks
-	constructor(engine: Babylon.Engine, canvas: HTMLCanvasElement, getRobotState: () => RobotState, setRobotState: (robotState: RobotState) => void) {
-		this.engine = engine;
+	constructor(canvas: HTMLCanvasElement, getRobotState: () => RobotState, setRobotState: (robotState: RobotState) => void) {
 		this.canvas = canvas;
-		this.scene = new Babylon.Scene(engine);
+		this.engine = new Babylon.Engine(this.canvas, true, { preserveDrawingBuffer: true, stencil: true });
+		this.scene = new Babylon.Scene(this.engine);
 
 		this.getRobotState = getRobotState;
 		this.setRobotState = setRobotState;
@@ -127,8 +127,6 @@ export class Space {
 		this.can = Babylon.MeshBuilder.CreateCylinder("can",{height:10, diameter:6.8}, this.scene);
 		this.can.position.z = 30;
 
-		this.assignPhysicsImpostors();
-
 		this.etSensorFake = new ETSensorBabylon(this.scene, this.botbody, new Babylon.Vector3(0, 0, 15), new Babylon.Vector3(0, 0, 15), { isVisible: true });
 
 		// Logic that happens before every frame
@@ -177,19 +175,39 @@ export class Space {
 		});
 	}
 
-	public loadMeshes() {
-		const loader = Babylon.SceneLoader.ImportMesh("",'static/', 'Simulator_Demobot.glb', this.scene, (meshes) => {
-			meshes[0].setParent(this.botbody);
-			this.scene.executeWhenReady(() => {
-				this.assignVisServoArm();
-				this.assignVisWheels();
-			});
+	public async loadMeshes() {
+		const importMeshResult = await Babylon.SceneLoader.ImportMeshAsync("",'static/', 'Simulator_Demobot.glb', this.scene);
+		importMeshResult.meshes[0].setParent(this.botbody);
 
-			const etSensorMesh = this.scene.getMeshByID('black satin finish plastic');
-			this.etSensorArm = new ETSensorBabylon(this.scene, etSensorMesh, new Babylon.Vector3(0.0, 0.02, 0.0), new Babylon.Vector3(0.02, 0.02, -0.015), { isVisible: true });
-			
-		});
+		await this.scene.whenReadyAsync();
+
+		this.assignVisServoArm();
+		this.assignVisWheels();
+		const etSensorMesh = this.scene.getMeshByID('black satin finish plastic');
+		this.etSensorArm = new ETSensorBabylon(this.scene, etSensorMesh, new Babylon.Vector3(0.0, 0.02, 0.0), new Babylon.Vector3(0.02, 0.02, -0.015), { isVisible: true });
 		
+		this.assignPhysicsImpostors();
+
+		this.scene.registerAfterRender(() => {
+			let m1 = this.getRobotState().motor0_speed  / 1500 * -2;
+			let m2 = this.getRobotState().motor3_speed  / 1500 * -2;
+			this.setMotors(m1, m2);
+
+			// if(this.registers_[61] == 0){
+			// 	s1 = WorkerInstance.readServoRegister(WorkerInstance.registers[78], WorkerInstance.registers[79]);
+			// 	s3 = WorkerInstance.readServoRegister(WorkerInstance.registers[80], WorkerInstance.registers[81]);
+			// }
+		});
+	}
+
+	public startRenderLoop() {
+		this.engine.runRenderLoop(() => {
+            this.scene.render();
+        });
+	}
+
+	public handleResize() {
+		this.engine.resize();
 	}
 
 	private buildGround () {
