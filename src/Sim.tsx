@@ -26,9 +26,9 @@ export class Space {
 	private wheel1: Babylon.Mesh;
 	private wheel2: Babylon.Mesh;
 
-	private wheel1_joint: Babylon.IMotorEnabledJoint;
-	private wheel2_joint: Babylon.IMotorEnabledJoint;
-	private liftArm_joint: Babylon.IMotorEnabledJoint;
+	private wheel1_joint: Babylon.MotorEnabledJoint;
+	private wheel2_joint: Babylon.MotorEnabledJoint;
+	private liftArm_joint: Babylon.MotorEnabledJoint;
 
 	// TODO: Associate each sensor with an update frequency, since we may update different sensors at different speeds
 	private etSensorFake: VisibleSensor;
