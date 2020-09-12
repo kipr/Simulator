@@ -11,9 +11,6 @@ export class Space {
 	private canvas: HTMLCanvasElement;
 	private scene: Babylon.Scene;
 
-	private getRobotState: () => RobotState;
-	private setRobotState: (robotState: RobotState) => void;
-
 	private ground: Babylon.Mesh;
 
 	private botbody: Babylon.Mesh;
@@ -28,36 +25,25 @@ export class Space {
 
 	private wheel1: Babylon.Mesh;
 	private wheel2: Babylon.Mesh;
-	
-	private motor1: number;
-	private motor2: number;
-	private can: Babylon.Mesh;
-	private can_positions: Array<number>
 
-	public generateCans(canPosition: number) {
-		const canName = `Can${canPosition}`;
-		this.can_positions = [];
-		this.can_positions = [0,0,0, 22,0,14.5, 0,0,20.6, -15.5,0,24, 0,0,7, 14,0,-7, 0,0,-7, -13.7,0,-7, -25,0,-14.5, 0,0,-34, 19,0,-45, 0,0,-55, -18.5,0,-45];
-		let new_can = Babylon.MeshBuilder.CreateCylinder(canName,{height:10, diameter:6}, this.scene);
-		//this.can.position = new Babylon.Vector3(0,0,30);//.z = 30;
-		new_can.physicsImpostor = new Babylon.PhysicsImpostor(new_can, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
-		new_can.position = new Babylon.Vector3(this.can_positions[canPosition*3], this.can_positions[(canPosition*3)+1],this.can_positions[(canPosition*3)+2])
-	}
-
-	public destroyCan(canPosition: number) {
-		const canName = `Can${canPosition}`;
-		this.scene.getMeshByName(canName).dispose();
-	}
-
-	private collidersVisible = true;
-	private counter = 0;
+	private wheel1_joint: Babylon.IMotorEnabledJoint;
+	private wheel2_joint: Babylon.IMotorEnabledJoint;
+	private liftArm_joint: Babylon.IMotorEnabledJoint;
 
 	// TODO: Associate each sensor with an update frequency, since we may update different sensors at different speeds
 	private etSensorFake: VisibleSensor;
 	private etSensorArm: VisibleSensor;
 	private ticksSinceETSensorUpdate: number;
 
+	private can: Babylon.Mesh;
+	private can_positions: Array<number>;
+
+	private collidersVisible = true;
+
 	private readonly TICKS_BETWEEN_ET_SENSOR_UPDATES = 15;
+
+	private getRobotState: () => RobotState;
+	private setRobotState: (robotState: RobotState) => void;
 
 	// TODO: Find a better way to communicate robot state instead of these callbacks
 	constructor(canvas: HTMLCanvasElement, getRobotState: () => RobotState, setRobotState: (robotState: RobotState) => void) {
@@ -69,30 +55,7 @@ export class Space {
 		this.setRobotState = setRobotState;
 
 		this.ticksSinceETSensorUpdate = 0;
-		this.motor1 = -2;
-		this.motor2 = -2;
 	}
-
-	private wheel1_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
-		mainPivot: new Babylon.Vector3(7.9,-0.34,5.1),//Point relative to the center of the base object
-		connectedPivot: new Babylon.Vector3(0,0,0),//Point relative to the center of the rotating object
-		mainAxis: new Babylon.Vector3(1,0,0),//Base object axis of rotation
-		connectedAxis: new Babylon.Vector3(0,-1,0)//Rotating object axis of rotation (don't forget about any rotations you may have made)
-	});
-
-	private wheel2_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
-		mainPivot: new Babylon.Vector3(-7.9,-0.34,5.1),
-		connectedPivot: new Babylon.Vector3(0,0,0),
-		mainAxis: new Babylon.Vector3(1,0,0),
-		connectedAxis: new Babylon.Vector3(0,1,0)
-	});
-
-	private liftArm_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
-		mainPivot: this.servoArmAxis,
-		connectedPivot: new Babylon.Vector3(0,0,0),
-		mainAxis: new Babylon.Vector3(1,0,0),
-		connectedAxis: new Babylon.Vector3(0,1,0)
-	});
 
 	public createScene() {
 		const camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(50,50,50), this.scene);
@@ -210,6 +173,21 @@ export class Space {
 		this.engine.resize();
 	}
 
+	public createCan(canPosition: number) {
+		const canName = `Can${canPosition}`;
+		this.can_positions = [];
+		this.can_positions = [0,0,0, 22,0,14.5, 0,0,20.6, -15.5,0,24, 0,0,7, 14,0,-7, 0,0,-7, -13.7,0,-7, -25,0,-14.5, 0,0,-34, 19,0,-45, 0,0,-55, -18.5,0,-45];
+		let new_can = Babylon.MeshBuilder.CreateCylinder(canName,{height:10, diameter:6}, this.scene);
+		//this.can.position = new Babylon.Vector3(0,0,30);//.z = 30;
+		new_can.physicsImpostor = new Babylon.PhysicsImpostor(new_can, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
+		new_can.position = new Babylon.Vector3(this.can_positions[canPosition*3], this.can_positions[(canPosition*3)+1],this.can_positions[(canPosition*3)+2])
+	}
+
+	public destroyCan(canPosition: number) {
+		const canName = `Can${canPosition}`;
+		this.scene.getMeshByName(canName).dispose();
+	}
+
 	private buildGround () {
 		this.ground = Babylon.MeshBuilder.CreateGround("mat", {width:118, height:59, subdivisions:2}, this.scene);
 		this.ground.position.y = -0.8;
@@ -301,7 +279,7 @@ export class Space {
 		this.liftArm.isVisible = this.collidersVisible;
 	}
 
-	private async buildStaticClawP2 () {
+	private buildStaticClawP2 () {
 		this.liftArm = Babylon.MeshBuilder.CreateBox("staticClawP2", {width:0.85, depth:5.5, height:0.7}, this.scene);
 		this.liftArm.parent = this.servoArmMotor;
 		this.liftArm.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(1,0,0), Math.PI*0.295);
@@ -312,7 +290,7 @@ export class Space {
 		this.liftArm.isVisible = this.collidersVisible;
 	}
 
-	private async buildStaticClawP3 () {
+	private buildStaticClawP3 () {
 		this.liftArm = Babylon.MeshBuilder.CreateBox("staticClawP2", {width:0.85, depth:2.19, height:0.7}, this.scene);
 		this.liftArm.parent = this.servoArmMotor;
 		this.liftArm.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(1,0,0), Math.PI*0.295);
@@ -323,7 +301,7 @@ export class Space {
 		this.liftArm.isVisible = this.collidersVisible;
 	}
 
-	private async buildStaticClawP4 () {
+	private buildStaticClawP4 () {
 		this.liftArm = Babylon.MeshBuilder.CreateBox("staticClawP2", {width:0.85, depth:2.69, height:0.7}, this.scene);
 		this.liftArm.parent = this.servoArmMotor;
 		this.liftArm.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(1,0,0), Math.PI*0.05);
@@ -334,7 +312,7 @@ export class Space {
 		this.liftArm.isVisible = this.collidersVisible;
 	}
 
-	private async buildStaticClawP5 () {
+	private buildStaticClawP5 () {
 		this.liftArm = Babylon.MeshBuilder.CreateBox("staticClawP2", {width:0.85, depth:2.09, height:0.7}, this.scene);
 		this.liftArm.parent = this.servoArmMotor;
 		this.liftArm.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(1,0,0), -Math.PI*0.2);
@@ -378,8 +356,28 @@ export class Space {
 		this.botbody.physicsImpostor = new Babylon.PhysicsImpostor(this.botbody, Babylon.PhysicsImpostor.BoxImpostor, {mass: 150}, this.scene);
 		this.can.physicsImpostor = new Babylon.PhysicsImpostor(this.can, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
 
-		this.botbody.physicsImpostor.addJoint(this.servoArmMotor.physicsImpostor, this.liftArm_joint);
+		// Create joints
+		this.wheel1_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
+			mainPivot: new Babylon.Vector3(7.9,-0.34,5.1),//Point relative to the center of the base object
+			connectedPivot: new Babylon.Vector3(0,0,0),//Point relative to the center of the rotating object
+			mainAxis: new Babylon.Vector3(1,0,0),//Base object axis of rotation
+			connectedAxis: new Babylon.Vector3(0,-1,0)//Rotating object axis of rotation (don't forget about any rotations you may have made)
+		});
+		this.wheel2_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
+			mainPivot: new Babylon.Vector3(-7.9,-0.34,5.1),
+			connectedPivot: new Babylon.Vector3(0,0,0),
+			mainAxis: new Babylon.Vector3(1,0,0),
+			connectedAxis: new Babylon.Vector3(0,1,0)
+		});
+		this.liftArm_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
+			mainPivot: this.servoArmAxis,
+			connectedPivot: new Babylon.Vector3(0,0,0),
+			mainAxis: new Babylon.Vector3(1,0,0),
+			connectedAxis: new Babylon.Vector3(0,1,0)
+		});
 
+		// Add joints to imposters
+		this.botbody.physicsImpostor.addJoint(this.servoArmMotor.physicsImpostor, this.liftArm_joint);
 		this.botbody.physicsImpostor.addJoint(this.wheel1.physicsImpostor,this.wheel1_joint);
 		this.botbody.physicsImpostor.addJoint(this.wheel2.physicsImpostor,this.wheel2_joint);
 	}
@@ -401,12 +399,9 @@ export class Space {
 		this.scene.getTransformNodeByID('1 x 5 Servo Horn-1').setParent(this.servoArmMotor);
 	}
 
-	private setMotors(m1:number, m2:number){
-		this.motor1 = m1;
-		this.motor2 = m2;
-		
-		this.wheel1_joint.setMotor(this.motor1);
-		this.wheel2_joint.setMotor(this.motor2);
+	private setMotors(m1: number, m2: number) {
+		this.wheel1_joint.setMotor(m1);
+		this.wheel2_joint.setMotor(m2);
 		this.liftArm_joint.setMotor(0);
 		//console.log(this.liftArm.rotation)
 		
@@ -416,9 +411,7 @@ export class Space {
 		// 	// console.log('Setting physics motor to ' + this.motor1 + ' ,' + this.motor2);
 		// 	console.log(this.liftArm.rotationQuaternion)
 		// 	this.counter = 0;
-		// }
-		this.counter++;
-		
+		// }		
 	}
 }
 	

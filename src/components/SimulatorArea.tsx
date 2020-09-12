@@ -53,7 +53,7 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
 
     setCanEnabled(canNumber: number, isEnabled: boolean) {
         isEnabled
-            ? this.space.generateCans(canNumber + 1)
+            ? this.space.createCan(canNumber + 1)
             : this.space.destroyCan(canNumber + 1);
     }
 
