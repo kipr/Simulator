@@ -1,5 +1,4 @@
 import React = require("react");
-import * as Babylon from 'babylonjs';
 
 import * as Sim from '../Sim';
 import { RobotState } from "../RobotState";
