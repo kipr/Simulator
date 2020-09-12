@@ -7,32 +7,32 @@ import { ETSensorBabylon } from './sensors/etSensorBabylon';
 import { RobotState } from './RobotState';
 
 export class Space {
-	public engine: Babylon.Engine;
-	public canvas: HTMLCanvasElement;
-	public scene: Babylon.Scene;
+	private engine: Babylon.Engine;
+	private canvas: HTMLCanvasElement;
+	private scene: Babylon.Scene;
 
 	private getRobotState: () => RobotState;
 	private setRobotState: (robotState: RobotState) => void;
 
 	private ground: Babylon.Mesh;
 
-	public botbody: Babylon.Mesh;
-	public wombat: Babylon.Mesh;
-	public battery: Babylon.Mesh;
-	public caster: Babylon.Mesh;
+	private botbody: Babylon.Mesh;
+	private wombat: Babylon.Mesh;
+	private battery: Babylon.Mesh;
+	private caster: Babylon.Mesh;
 
-	public armServo: Babylon.Mesh;
-	public liftArm: Babylon.Mesh;
-	public servoArmMotor: Babylon.Mesh;
+	private armServo: Babylon.Mesh;
+	private liftArm: Babylon.Mesh;
+	private servoArmMotor: Babylon.Mesh;
 	private servoArmAxis = new Babylon.Vector3(-1.1,3.2,11.97);
 
-	public wheel1: Babylon.Mesh;
-	public wheel2: Babylon.Mesh;
+	private wheel1: Babylon.Mesh;
+	private wheel2: Babylon.Mesh;
 	
-	public motor1: number;
-	public motor2: number;
-	public can: Babylon.Mesh;
-	public can_positions: Array<number>
+	private motor1: number;
+	private motor2: number;
+	private can: Babylon.Mesh;
+	private can_positions: Array<number>
 
 	public generateCans(canPosition: number) {
 		const canName = `Can${canPosition}`;
@@ -73,21 +73,21 @@ export class Space {
 		this.motor2 = -2;
 	}
 
-	public wheel1_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
+	private wheel1_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
 		mainPivot: new Babylon.Vector3(7.9,-0.34,5.1),//Point relative to the center of the base object
 		connectedPivot: new Babylon.Vector3(0,0,0),//Point relative to the center of the rotating object
 		mainAxis: new Babylon.Vector3(1,0,0),//Base object axis of rotation
 		connectedAxis: new Babylon.Vector3(0,-1,0)//Rotating object axis of rotation (don't forget about any rotations you may have made)
 	});
 
-	public wheel2_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
+	private wheel2_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
 		mainPivot: new Babylon.Vector3(-7.9,-0.34,5.1),
 		connectedPivot: new Babylon.Vector3(0,0,0),
 		mainAxis: new Babylon.Vector3(1,0,0),
 		connectedAxis: new Babylon.Vector3(0,1,0)
 	});
 
-	public liftArm_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
+	private liftArm_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
 		mainPivot: this.servoArmAxis,
 		connectedPivot: new Babylon.Vector3(0,0,0),
 		mainAxis: new Babylon.Vector3(1,0,0),
@@ -364,7 +364,7 @@ export class Space {
 		this.wheel2.isVisible = this.collidersVisible;
 	}
 
-	public assignPhysicsImpostors () {
+	private assignPhysicsImpostors () {
 		this.liftArm.physicsImpostor = new Babylon.PhysicsImpostor(this.liftArm, Babylon.PhysicsImpostor.BoxImpostor, {mass: 2}, this.scene);
 		this.servoArmMotor.physicsImpostor = new Babylon.PhysicsImpostor(this.servoArmMotor, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 0.1}, this.scene);
 		
@@ -384,7 +384,7 @@ export class Space {
 		this.botbody.physicsImpostor.addJoint(this.wheel2.physicsImpostor,this.wheel2_joint);
 	}
 
-	public assignVisWheels () {
+	private assignVisWheels () {
 		this.scene.getMeshByID('pw-mt11040').setParent(this.wheel1);
 		this.scene.getMeshByID('black high gloss plastic').setParent(this.wheel1);
 		this.scene.getMeshByID('matte rubber').setParent(this.wheel1);
@@ -394,14 +394,14 @@ export class Space {
 		this.scene.getMeshByID('matte rubber.2').setParent(this.wheel2);
 	}
 
-	public assignVisServoArm () {
+	private assignVisServoArm () {
 		// this.scene.getTransformNodeByID('1 x 5 Servo Horn-1').getChildMeshes().forEach(element => {
 		// 	element.setParent(this.servoArmMotor);
 		// });
 		this.scene.getTransformNodeByID('1 x 5 Servo Horn-1').setParent(this.servoArmMotor);
 	}
 
-	public setMotors(m1:number, m2:number){
+	private setMotors(m1:number, m2:number){
 		this.motor1 = m1;
 		this.motor2 = m2;
 		
