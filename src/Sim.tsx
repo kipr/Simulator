@@ -5,6 +5,8 @@ import Ammo = require('./ammo');
 import { VisibleSensor } from './sensors/sensor';
 import { ETSensorBabylon } from './sensors/etSensorBabylon';
 import { RobotState } from './RobotState';
+import WorkerInstance from './WorkerInstance';
+import RegisterState from './RegisterState';
 
 export class Space {
 	private engine: Babylon.Engine;
@@ -154,7 +156,17 @@ export class Space {
 		this.scene.registerAfterRender(() => {
 			let m1 = this.getRobotState().motor0_speed  / 1500 * -2;
 			let m2 = this.getRobotState().motor3_speed  / 1500 * -2;
-			this.setMotors(m1, m2);
+			let s0_position = WorkerInstance.state.servo0_position/12.12
+			if ( s0_position > Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)){
+				this.setMotors(m1,m2,0.3, s0_position);
+			}
+			else if(s0_position < Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)){
+				this.setMotors(m1,m2,-0.3, s0_position);
+			}
+			else {
+				this.setMotors(m1, m2, 0, s0_position);
+			}
+			
 
 			// if(this.registers_[61] == 0){
 			// 	s1 = WorkerInstance.readServoRegister(WorkerInstance.registers[78], WorkerInstance.registers[79]);
@@ -399,14 +411,27 @@ export class Space {
 		this.scene.getTransformNodeByID('1 x 5 Servo Horn-1').setParent(this.servoArmMotor);
 	}
 
-	private setMotors(m1: number, m2: number) {
+	private setMotors(m1: number, m2: number, s0_speed: number, s0_position: number) {
 		this.wheel1_joint.setMotor(m1);
 		this.wheel2_joint.setMotor(m2);
-		this.liftArm_joint.setMotor(-0.3);
-		
-		if(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) < -80 || Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) > 85) {
-			this.liftArm_joint.setMotor(0);
+
+		if(s0_speed > 0){
+			this.liftArm_joint.setMotor(s0_speed);
+			if(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) > s0_position) {
+				this.liftArm_joint.setMotor(0);
+			}
 		}
+		else if(s0_speed < 0){
+			this.liftArm_joint.setMotor(s0_speed);
+			if(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) < s0_position) {
+				this.liftArm_joint.setMotor(0);
+			}
+		}
+		else{
+			this.liftArm_joint.setMotor(s0_speed);
+		}
+		
+		
 		
 		
 		// if (this.counter == 10){
