@@ -402,8 +402,11 @@ export class Space {
 	private setMotors(m1: number, m2: number) {
 		this.wheel1_joint.setMotor(m1);
 		this.wheel2_joint.setMotor(m2);
-		this.liftArm_joint.setMotor(0);
-		//console.log(this.liftArm.rotation)
+		this.liftArm_joint.setMotor(-0.3);
+		
+		if(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) < -80 || Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) > 85) {
+			this.liftArm_joint.setMotor(0);
+		}
 		
 		
 		// if (this.counter == 10){
