@@ -156,7 +156,7 @@ export class Space {
 		this.scene.registerAfterRender(() => {
 			let m1 = this.getRobotState().motor0_speed  / 1500 * -2;
 			let m2 = this.getRobotState().motor3_speed  / 1500 * -2;
-			let s0_position = WorkerInstance.state.servo0_position/12.12
+			let s0_position = this.getRobotState().servo0_position/12.121212
 			if ( s0_position > Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)){
 				this.setMotors(m1,m2,0.3, s0_position);
 			}
@@ -415,21 +415,27 @@ export class Space {
 		this.wheel1_joint.setMotor(m1);
 		this.wheel2_joint.setMotor(m2);
 
-		if(s0_speed > 0){
-			this.liftArm_joint.setMotor(s0_speed);
-			if(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) > s0_position) {
-				this.liftArm_joint.setMotor(0);
-			}
-		}
-		else if(s0_speed < 0){
-			this.liftArm_joint.setMotor(s0_speed);
-			if(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) < s0_position) {
-				this.liftArm_joint.setMotor(0);
-			}
-		}
-		else{
-			this.liftArm_joint.setMotor(s0_speed);
-		}
+		// while(true){
+		// 	if(s0_speed > 0){
+		// 		this.liftArm_joint.setMotor(s0_speed);
+		// 		if(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) > s0_position) {
+		// 			this.liftArm_joint.setMotor(0);
+		// 			break;
+		// 		}
+		// 	}
+		// 	else if(s0_speed < 0){
+		// 		this.liftArm_joint.setMotor(s0_speed);
+		// 		if(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) < s0_position) {
+		// 			this.liftArm_joint.setMotor(0);
+		// 			break;
+		// 		}
+		// 	}
+		// 	else{
+		// 		this.liftArm_joint.setMotor(s0_speed);
+		// 		break;
+		// 	}
+		// }
+		
 		
 		
 		
