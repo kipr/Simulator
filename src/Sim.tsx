@@ -164,10 +164,10 @@ export class Space {
 			//console.log(Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)));
 
 			if( s0_position > angle_servoArm){
-				this.setpositiveServo(s0_position);
+				this.setnegativeServo(s0_position);
 			}
 			else if(s0_position < angle_servoArm){
-				this.setnegativeServo(s0_position);
+				this.setpositiveServo(s0_position);
 			}
 			else if(s0_position == angle_servoArm) {
 				this.liftArm_joint.setMotor(0);
@@ -433,19 +433,19 @@ export class Space {
 	}
 
 	private setpositiveServo(s0_position:number) {
-		this.liftArm_joint.setMotor(0.3);
-		if(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) > s0_position || 
-		Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) > 85 ||
-		Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) < -85 ) {
+		this.liftArm_joint.setMotor(0.3); //Rotates arm backwards
+
+		let angle_Positive = Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)
+		if( s0_position  > angle_Positive|| angle_Positive > 85 || angle_Positive < -85 ) {
 			this.liftArm_joint.setMotor(0);
 		}
 	}
 
 	private setnegativeServo(s0_position:number) {
-		this.liftArm_joint.setMotor(-0.3);
-		if(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) < s0_position || 
-		Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) < -85 ||
-		Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) > 85) {
+		this.liftArm_joint.setMotor(-0.3); //Rotates arm forward
+
+		let angle_Negative = Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)
+		if( s0_position < angle_Negative || angle_Negative < -85 || angle_Negative > 85) {
 			this.liftArm_joint.setMotor(0);
 		}
 	}
