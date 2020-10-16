@@ -156,15 +156,24 @@ export class Space {
 		this.scene.registerAfterRender(() => {
 			let m1 = this.getRobotState().motor0_speed  / 1500 * -2;
 			let m2 = this.getRobotState().motor3_speed  / 1500 * -2;
-			let s0_position = this.getRobotState().servo0_position/12.121212
-			if ( s0_position > Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)){
-				this.setMotors(m1,m2,0.3, s0_position);
+
+
+			let s0_position = Math.round((this.getRobotState().servo0_position / 11.702) - 87.5);
+			let angle_servoArm = Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x))
+			console.log('position:' + this.getRobotState().servo0_position + ' Calculated position:' + s0_position + ' Servo Angle:' + angle_servoArm);
+			//console.log(Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)));
+
+			if( s0_position > angle_servoArm){
+				this.setpositiveServo(s0_position);
 			}
-			else if(s0_position < Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)){
-				this.setMotors(m1,m2,-0.3, s0_position);
+			else if(s0_position < angle_servoArm){
+				this.setnegativeServo(s0_position);
 			}
-			else {
-				this.setMotors(m1, m2, 0, s0_position);
+			else if(s0_position == angle_servoArm) {
+				this.liftArm_joint.setMotor(0);
+			}
+			else{
+				//do something
 			}
 			
 
@@ -411,34 +420,9 @@ export class Space {
 		this.scene.getTransformNodeByID('1 x 5 Servo Horn-1').setParent(this.servoArmMotor);
 	}
 
-	private setMotors(m1: number, m2: number, s0_speed: number, s0_position: number) {
+	private setMotors(m1: number, m2: number) {
 		this.wheel1_joint.setMotor(m1);
 		this.wheel2_joint.setMotor(m2);
-
-		// while(true){
-		// 	if(s0_speed > 0){
-		// 		this.liftArm_joint.setMotor(s0_speed);
-		// 		if(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) > s0_position) {
-		// 			this.liftArm_joint.setMotor(0);
-		// 			break;
-		// 		}
-		// 	}
-		// 	else if(s0_speed < 0){
-		// 		this.liftArm_joint.setMotor(s0_speed);
-		// 		if(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) < s0_position) {
-		// 			this.liftArm_joint.setMotor(0);
-		// 			break;
-		// 		}
-		// 	}
-		// 	else{
-		// 		this.liftArm_joint.setMotor(s0_speed);
-		// 		break;
-		// 	}
-		// }
-		
-		
-		
-		
 		
 		// if (this.counter == 10){
 		// 	// console.log('Turning motors, here are values ' + m1 + ' ,' + m2);
@@ -446,6 +430,24 @@ export class Space {
 		// 	console.log(this.liftArm.rotationQuaternion)
 		// 	this.counter = 0;
 		// }		
+	}
+
+	private setpositiveServo(s0_position:number) {
+		this.liftArm_joint.setMotor(0.3);
+		if(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) > s0_position || 
+		Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) > 85 ||
+		Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) < -85 ) {
+			this.liftArm_joint.setMotor(0);
+		}
+	}
+
+	private setnegativeServo(s0_position:number) {
+		this.liftArm_joint.setMotor(-0.3);
+		if(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) < s0_position || 
+		Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) < -85 ||
+		Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x) > 85) {
+			this.liftArm_joint.setMotor(0);
+		}
 	}
 }
 	
