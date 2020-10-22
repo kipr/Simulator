@@ -2,16 +2,15 @@
 import * as React from 'react';
 import { StyleProps } from "./style";
 
+import WorkerInstance from './WorkerInstance';
+import { RobotState } from './RobotState';
+
 import compile from './compile';
 
 //CodeMirror imports
 const CodeMirror = require('react-codemirror');
 require('codemirror/lib/codemirror.css');
 require('codemirror/mode/clike/clike');
-
-
-import WorkerInstance from './WorkerInstance';
-import { RobotState } from './RobotState';
 
 export interface AppProps extends StyleProps {
   robot : RobotState;
@@ -27,13 +26,11 @@ interface AppState {
 type Props = AppProps;
 type State = AppState;
 
-
-
 export class App extends React.Component<Props, State> {
   constructor(props: Props, context?: any) {
     super(props, context);
     this.state = {
-      code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main() \n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
+      code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main() \n{\n  printf("Hello, World!\\n");\n  ao();\n  return 0;\n}\n',
       console: ''
     };
   }
@@ -108,6 +105,10 @@ export class App extends React.Component<Props, State> {
     
   };
 
+  private onSignOutClick_ = (event: React.MouseEvent<HTMLButtonElement>) => {
+    window.location.href = "https://botballacademy.auth.us-east-1.amazoncognito.com/logout?response_type=code&client_id=7hhkjd1qfbfrphnp81auucq1qh&redirect_uri=https://www.botballacademy.org&state=STATE&scope=openid+aws.cognito.signin.user.admin+profile";
+  };
+
   private onResetClick_ = (event: React.MouseEvent<HTMLButtonElement>) => {
     this.props.robot.x = 220;
     this.props.robot.y = 400;
@@ -157,7 +158,10 @@ export class App extends React.Component<Props, State> {
           <svg width="197" height="164" className="logo">
             <image height="100%" href="static/KIPR-Logo-bk.jpg"/>
           </svg>
-          <h1 className="ide-title">KISS IDE<br/>Simulator</h1>
+          <section className="app-header-right">
+            <h1 className="ide-title">KISS IDE<br/>Simulator</h1>
+            <button className="signout" onClick={this.onSignOutClick_}>Sign Out</button>
+          </section>
         </section>
         <p>
           <button onClick={this.onCompileClick_}>Compile</button>

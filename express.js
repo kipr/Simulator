@@ -40,6 +40,7 @@ app.post('/compile', (req, res) => {
   
     void simMainWrapper()
     {
+      msleep(1000);
       main();
       emscripten_force_exit(0);
     }
