@@ -22,8 +22,12 @@ export class Space {
 
 	private armServo: Babylon.Mesh;
 	private liftArm: Babylon.Mesh;
+	private staticClawMeshBuilder: Babylon.Mesh;
+	private movingClawMeshBuilder: Babylon.Mesh;
 	private servoArmMotor: Babylon.Mesh;
+	private servoClawMotor: Babylon.Mesh;
 	private servoArmAxis = new Babylon.Vector3(-1.1,3.2,11.97);
+	private servoClawAxis = new Babylon.Vector3(-0.3,1.8,9.3);
 
 	private wheel1: Babylon.Mesh;
 	private wheel2: Babylon.Mesh;
@@ -31,6 +35,7 @@ export class Space {
 	private wheel1_joint: Babylon.MotorEnabledJoint;
 	private wheel2_joint: Babylon.MotorEnabledJoint;
 	private liftArm_joint: Babylon.MotorEnabledJoint;
+	private liftClaw_joint: Babylon.MotorEnabledJoint;
 
 	// TODO: Associate each sensor with an update frequency, since we may update different sensors at different speeds
 	private etSensorFake: VisibleSensor;
@@ -87,6 +92,7 @@ export class Space {
 		this.buildStaticClawP3();
 		this.buildStaticClawP4();
 		this.buildStaticClawP5();
+		this.buildServoClawMotor();
 		this.buildMovingClawP1();
 		this.buildMovingClawP2();
 		this.buildMovingClawP3();
@@ -179,6 +185,7 @@ export class Space {
 			else{
 				//do something
 			}
+			this.liftClaw_joint.setMotor(0.3);
 			
 
 			// if(this.registers_[61] == 0){
@@ -295,100 +302,110 @@ export class Space {
 	}
 
 	private buildStaticClawP1 () {
-		this.liftArm = Babylon.MeshBuilder.CreateBox("staticClawP1", {width:0.9, depth:5, height:0.7}, this.scene);
-		this.liftArm.parent = this.servoArmMotor;
-		this.liftArm.position.x = -2.4
-		this.liftArm.position.y = 0.3;
-		this.liftArm.position.z = 11;
-		this.liftArm.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(0,1,0), -Math.PI*0.39);
-		this.liftArm.isVisible = this.collidersVisible;
+		this.staticClawMeshBuilder = Babylon.MeshBuilder.CreateBox("staticClawP1", {width:0.9, depth:5, height:0.7}, this.scene);
+		this.staticClawMeshBuilder.parent = this.servoArmMotor;
+		this.staticClawMeshBuilder.position.x = -2.4
+		this.staticClawMeshBuilder.position.y = 0.3;
+		this.staticClawMeshBuilder.position.z = 11;
+		this.staticClawMeshBuilder.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(0,1,0), -Math.PI*0.39);
+		this.staticClawMeshBuilder.isVisible = this.collidersVisible;
 	}
 
 	private buildStaticClawP2 () {
-		this.liftArm = Babylon.MeshBuilder.CreateBox("staticClawP2", {width:0.85, depth:5.5, height:0.7}, this.scene);
-		this.liftArm.parent = this.servoArmMotor;
-		this.liftArm.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(1,0,0), Math.PI*0.295);
-		this.liftArm.position.x = -3.25;
-		this.liftArm.position.y = -1.6;
-		this.liftArm.position.z = 15;
-		this.liftArm.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(0,1,0), -Math.PI*0.39);
-		this.liftArm.isVisible = this.collidersVisible;
+		this.staticClawMeshBuilder = Babylon.MeshBuilder.CreateBox("staticClawP2", {width:0.85, depth:5.5, height:0.7}, this.scene);
+		this.staticClawMeshBuilder.parent = this.servoArmMotor;
+		this.staticClawMeshBuilder.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(1,0,0), Math.PI*0.295);
+		this.staticClawMeshBuilder.position.x = -3.25;
+		this.staticClawMeshBuilder.position.y = -1.6;
+		this.staticClawMeshBuilder.position.z = 15;
+		this.staticClawMeshBuilder.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(0,1,0), -Math.PI*0.39);
+		this.staticClawMeshBuilder.isVisible = this.collidersVisible;
 	}
 
 	private buildStaticClawP3 () {
-		this.liftArm = Babylon.MeshBuilder.CreateBox("staticClawP2", {width:0.85, depth:2.19, height:0.7}, this.scene);
-		this.liftArm.parent = this.servoArmMotor;
-		this.liftArm.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(1,0,0), Math.PI*0.295);
-		this.liftArm.position.x = -2.4;
-		this.liftArm.position.y = -0.4;
-		this.liftArm.position.z = 14.075;
-		this.liftArm.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(0,1,0), -Math.PI*0.39);
-		this.liftArm.isVisible = this.collidersVisible;
+		this.staticClawMeshBuilder = Babylon.MeshBuilder.CreateBox("staticClawP3", {width:0.85, depth:2.19, height:0.7}, this.scene);
+		this.staticClawMeshBuilder.parent = this.servoArmMotor;
+		this.staticClawMeshBuilder.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(1,0,0), Math.PI*0.295);
+		this.staticClawMeshBuilder.position.x = -2.4;
+		this.staticClawMeshBuilder.position.y = -0.4;
+		this.staticClawMeshBuilder.position.z = 14.075;
+		this.staticClawMeshBuilder.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(0,1,0), -Math.PI*0.39);
+		this.staticClawMeshBuilder.isVisible = this.collidersVisible;
 	}
 
 	private buildStaticClawP4 () {
-		this.liftArm = Babylon.MeshBuilder.CreateBox("staticClawP2", {width:0.85, depth:2.69, height:0.7}, this.scene);
-		this.liftArm.parent = this.servoArmMotor;
-		this.liftArm.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(1,0,0), Math.PI*0.05);
-		this.liftArm.position.x = -3.25;
-		this.liftArm.position.y = -3.7;
-		this.liftArm.position.z = 17.6;
-		this.liftArm.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(0,1,0), -Math.PI*0.39);
-		this.liftArm.isVisible = this.collidersVisible;
+		this.staticClawMeshBuilder = Babylon.MeshBuilder.CreateBox("staticClawP4", {width:0.85, depth:2.69, height:0.7}, this.scene);
+		this.staticClawMeshBuilder.parent = this.servoArmMotor;
+		this.staticClawMeshBuilder.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(1,0,0), Math.PI*0.05);
+		this.staticClawMeshBuilder.position.x = -3.25;
+		this.staticClawMeshBuilder.position.y = -3.7;
+		this.staticClawMeshBuilder.position.z = 17.6;
+		this.staticClawMeshBuilder.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(0,1,0), -Math.PI*0.39);
+		this.staticClawMeshBuilder.isVisible = this.collidersVisible;
 	}
 
 	private buildStaticClawP5 () {
-		this.liftArm = Babylon.MeshBuilder.CreateBox("staticClawP2", {width:0.85, depth:2.09, height:0.7}, this.scene);
-		this.liftArm.parent = this.servoArmMotor;
-		this.liftArm.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(1,0,0), -Math.PI*0.2);
-		this.liftArm.position.x = -3.25;
-		this.liftArm.position.y = -3.37;
-		this.liftArm.position.z = 19.41;
-		this.liftArm.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(0,1,0), -Math.PI*0.39);
-		this.liftArm.isVisible = this.collidersVisible;
+		this.staticClawMeshBuilder = Babylon.MeshBuilder.CreateBox("staticClawP5", {width:0.85, depth:2.09, height:0.7}, this.scene);
+		this.staticClawMeshBuilder.parent = this.servoArmMotor;
+		this.staticClawMeshBuilder.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(1,0,0), -Math.PI*0.2);
+		this.staticClawMeshBuilder.position.x = -3.25;
+		this.staticClawMeshBuilder.position.y = -3.37;
+		this.staticClawMeshBuilder.position.z = 19.41;
+		this.staticClawMeshBuilder.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(0,1,0), -Math.PI*0.39);
+		this.staticClawMeshBuilder.isVisible = this.collidersVisible;
+	}
+
+	private buildServoClawMotor () {
+		this.servoClawMotor = Babylon.MeshBuilder.CreateCylinder("servoArmMotor",{height:1, diameter:1.1}, this.scene);
+		this.servoClawMotor.parent = this.servoArmMotor;
+		this.servoClawMotor.rotate(Babylon.Axis.Z, -Math.PI/2);
+		this.servoClawMotor.position.x = -1.3;
+		this.servoClawMotor.position.y = 2.45;
+		this.servoClawMotor.position.z = 9.71;
+		this.servoClawMotor.rotateAround(Babylon.Vector3.Zero(),Babylon.Axis.Y,-Math.PI*0.39);
+		this.servoClawMotor.isVisible = this.collidersVisible;
 	}
 
 	private buildMovingClawP1 () {
-		this.liftArm = Babylon.MeshBuilder.CreateBox("MovingClawP1", {width:0.9, depth:7, height:1.5}, this.scene);
-		this.liftArm.parent = this.servoArmMotor;
-		this.liftArm.position.x = -2.8;
-		this.liftArm.position.y = 2.3;
-		this.liftArm.position.z = 13;
-		this.liftArm.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(0,1,0), -Math.PI*0.39);
-		this.liftArm.isVisible = this.collidersVisible;
+		this.movingClawMeshBuilder = Babylon.MeshBuilder.CreateBox("MovingClawP1", {width:0.45, depth:7, height:1.5}, this.scene);
+		this.movingClawMeshBuilder.parent = this.servoClawMotor;
+		this.movingClawMeshBuilder.rotateAround(Babylon.Vector3.Zero(), Babylon.Axis.Z, -Math.PI*0.5);
+		this.movingClawMeshBuilder.position.x = 0;
+		this.movingClawMeshBuilder.position.y = -1.5;
+		this.movingClawMeshBuilder.position.z = 3.29;
+		this.movingClawMeshBuilder.isVisible = this.collidersVisible;
 	}
 
 	private buildMovingClawP2 () {
-		this.liftArm = Babylon.MeshBuilder.CreateBox("movingClawP2", {width:0.85, depth:5.5, height:0.7}, this.scene);
-		this.liftArm.parent = this.servoArmMotor;
-		this.liftArm.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(1,0,0), Math.PI);
-		this.liftArm.position.x = -3.5;
-		this.liftArm.position.y = 2.5;
-		this.liftArm.position.z = 16;
-		this.liftArm.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(0,1,0), -Math.PI*0.39);
-		this.liftArm.isVisible = this.collidersVisible;
+		this.movingClawMeshBuilder = Babylon.MeshBuilder.CreateBox("movingClawP2", {width:0.85, depth:5.5, height:0.7}, this.scene);
+		this.movingClawMeshBuilder.parent = this.servoClawMotor;
+		this.movingClawMeshBuilder.rotateAround(Babylon.Vector3.Zero(), Babylon.Axis.Z, -Math.PI*0.5);
+		this.movingClawMeshBuilder.position.x = 0;
+		this.movingClawMeshBuilder.position.y = -2.2;
+		this.movingClawMeshBuilder.position.z = 6.29;
+		this.movingClawMeshBuilder.isVisible = this.collidersVisible;
 	}
 
 	private buildMovingClawP3 () {
-		this.liftArm = Babylon.MeshBuilder.CreateBox("movingClawP2", {width:0.85, depth:2.19, height:0.7}, this.scene);
-		this.liftArm.parent = this.servoArmMotor;
-		this.liftArm.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(1,0,0), Math.PI*0.25);
-		this.liftArm.position.x = -3.55;
-		this.liftArm.position.y = 1.60;
-		this.liftArm.position.z = 19.25;
-		this.liftArm.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(0,1,0), -Math.PI*0.39);
-		this.liftArm.isVisible = this.collidersVisible;
+		this.movingClawMeshBuilder = Babylon.MeshBuilder.CreateBox("movingClawP2", {width:0.85, depth:2.55, height:0.7}, this.scene);
+		this.movingClawMeshBuilder.parent = this.servoClawMotor;
+		this.movingClawMeshBuilder.rotateAround(Babylon.Vector3.Zero(), Babylon.Axis.Z, -Math.PI*0.5);
+		this.movingClawMeshBuilder.rotateAround(Babylon.Vector3.Zero(), Babylon.Axis.Y, Math.PI*0.25);
+		this.movingClawMeshBuilder.position.x = 0.8;
+		this.movingClawMeshBuilder.position.y = -2.25;
+		this.movingClawMeshBuilder.position.z = 9.6;
+		this.movingClawMeshBuilder.isVisible = this.collidersVisible;
 	}
 
 	private buildMovingClawP4 () {
-		this.liftArm = Babylon.MeshBuilder.CreateBox("movingClawP2", {width:0.85, depth:2.69, height:0.7}, this.scene);
-		this.liftArm.parent = this.servoArmMotor;
-		this.liftArm.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(1,0,0), Math.PI*0.50);
-		this.liftArm.position.x = -3.55;
-		this.liftArm.position.y = 0.25;
-		this.liftArm.position.z = 20;
-		this.liftArm.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(0,1,0), -Math.PI*0.39);
-		this.liftArm.isVisible = this.collidersVisible;
+		this.movingClawMeshBuilder = Babylon.MeshBuilder.CreateBox("movingClawP2", {width:0.85, depth:2.19, height:0.7}, this.scene);
+		this.movingClawMeshBuilder.parent = this.servoClawMotor;
+		this.movingClawMeshBuilder.rotateAround(Babylon.Vector3.Zero(), Babylon.Axis.Z, -Math.PI*0.5);
+		this.movingClawMeshBuilder.rotateAround(Babylon.Vector3.Zero(), Babylon.Axis.Y, Math.PI*0.5);
+		this.movingClawMeshBuilder.position.x = 2.5;
+		this.movingClawMeshBuilder.position.y = -2.25;
+		this.movingClawMeshBuilder.position.z = 10.4;
+		this.movingClawMeshBuilder.isVisible = this.collidersVisible;
 	}
 
 	private buildWheels () {
@@ -412,6 +429,7 @@ export class Space {
 
 	private assignPhysicsImpostors () {
 		this.liftArm.physicsImpostor = new Babylon.PhysicsImpostor(this.liftArm, Babylon.PhysicsImpostor.BoxImpostor, {mass: 2}, this.scene);
+		this.servoClawMotor.physicsImpostor = new Babylon.PhysicsImpostor(this.servoClawMotor, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 0.1}, this.scene);
 		this.servoArmMotor.physicsImpostor = new Babylon.PhysicsImpostor(this.servoArmMotor, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 0.1}, this.scene);
 		
 		this.caster.physicsImpostor = new Babylon.PhysicsImpostor(this.caster, Babylon.PhysicsImpostor.SphereImpostor, {mass: 20}, this.scene);
@@ -443,9 +461,16 @@ export class Space {
 			mainAxis: new Babylon.Vector3(1,0,0),
 			connectedAxis: new Babylon.Vector3(0,1,0)
 		});
+		this.liftClaw_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
+			mainPivot: this.servoClawAxis,
+			connectedPivot: new Babylon.Vector3(0,0,0),
+			mainAxis: new Babylon.Vector3(1,0,0),
+			connectedAxis: new Babylon.Vector3(0,1,0)
+		});
 
 		// Add joints to imposters
 		this.botbody.physicsImpostor.addJoint(this.servoArmMotor.physicsImpostor, this.liftArm_joint);
+		this.servoArmMotor.physicsImpostor.addJoint(this.servoClawMotor.physicsImpostor, this.liftClaw_joint);
 		this.botbody.physicsImpostor.addJoint(this.wheel1.physicsImpostor,this.wheel1_joint);
 		this.botbody.physicsImpostor.addJoint(this.wheel2.physicsImpostor,this.wheel2_joint);
 	}
