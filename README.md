@@ -8,6 +8,23 @@ Simulator for the Wombats.
 ### Requirements
 - [Node.js](https://nodejs.org/)
 - [yarn](https://classic.yarnpkg.com/)
+- Doxygen (libwallaby requirement)
+
+```bash
+sudo apt-get install nodejs
+sudo apt-get install doxygen
+sudo npm install --global npm
+sudo npm install --global yarn
+yarn --version
+
+#(if yarn does not work, reboot or use "sudo yarn" on the rest of the instructions)
+```
+
+If you do not have cmake and make:
+```bash
+sudo apt-get install cmake
+sudo apt-get install build-essential
+```
 
 ### Install Emscripten
 
