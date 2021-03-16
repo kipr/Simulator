@@ -7,6 +7,7 @@ Simulates a botball/JBC style demobot with a built in IDE.
 ## Automated Setup
 Navigate to the root of this repository (cd /path/to/simulator/)
 ```bash
+sudo chmod 777 install.sh
 sudo ./install.sh
 ```
 
