@@ -8,5 +8,5 @@ pwd
 cd emsdk
 source emsdk_env.sh
 cd ../simulator
-LIBWALLABY_ROOT=../libwallaby/build node express.js
+LIBWALLABY_ROOT=../libwallaby node express.js
 
