@@ -1,9 +1,16 @@
 # Simulator
-Simulator for the Wombats.
+A Robotics Simulator built in typescript.
+Simulates a botball/JBC style demobot with a built in IDE.
 
 # Development
 
-## Initial Setup
+## Automated Setup
+Navigate to the root of this repository (cd /path/to/simulator/)
+```bash
+sudo ./install.sh
+```
+
+## Manual Setup
 
 ### Requirements
 - [Node.js](https://nodejs.org/)
