@@ -1,13 +1,38 @@
 # Simulator
-Simulator for the Wombats.
+A Robotics Simulator built in typescript.
+Simulates a botball/JBC style demobot with a built in IDE.
 
 # Development
 
-## Initial Setup
+## Automated Setup
+Navigate to the root of this repository (cd /path/to/simulator/)
+```bash
+sudo chmod 777 install.sh
+sudo ./install.sh
+```
+
+## Manual Setup
 
 ### Requirements
 - [Node.js](https://nodejs.org/)
 - [yarn](https://classic.yarnpkg.com/)
+- Doxygen (libwallaby requirement)
+
+```bash
+sudo apt-get install nodejs
+sudo apt-get install doxygen
+sudo npm install --global npm
+sudo npm install --global yarn
+yarn --version
+
+#(if yarn does not work, reboot or use "sudo yarn" on the rest of the instructions)
+```
+
+If you do not have cmake and make:
+```bash
+sudo apt-get install cmake
+sudo apt-get install build-essential
+```
 
 ### Install Emscripten
 
