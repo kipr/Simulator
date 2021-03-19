@@ -30,6 +30,7 @@ module.exports = {
         'no-else-return': 'error',
         'spaced-comment': 'error',
         'space-infix-ops': 'error',
+        'newline-per-chained-call': 'error',
     },
     overrides: [
         {
