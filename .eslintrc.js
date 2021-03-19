@@ -33,6 +33,7 @@ module.exports = {
         'newline-per-chained-call': 'error',
         'no-whitespace-before-property': 'error',
         'space-in-parens': 'error',
+        'array-bracket-spacing': 'error',
     },
     overrides: [
         {

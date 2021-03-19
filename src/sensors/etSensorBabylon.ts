@@ -24,7 +24,7 @@ export class ETSensorBabylon implements VisibleSensor {
 		this.visualMesh = Babylon.MeshBuilder.CreateLines(
 			this.VISUAL_MESH_NAME,
 			{
-				points: [ Babylon.Vector3.Zero(), Babylon.Vector3.Zero() ],
+				points: [Babylon.Vector3.Zero(), Babylon.Vector3.Zero()],
 				updatable: true,
 			},
 			this.scene);
@@ -63,7 +63,7 @@ export class ETSensorBabylon implements VisibleSensor {
 			return;
 		}
 
-		const newLinePoints = [ this.ray.origin, this.ray.origin.add(this.ray.direction.scale(this.ray.length)) ];
+		const newLinePoints = [this.ray.origin, this.ray.origin.add(this.ray.direction.scale(this.ray.length))];
 		this.visualMesh = Babylon.MeshBuilder.CreateLines(this.VISUAL_MESH_NAME, { points: newLinePoints, instance: this.visualMesh }, this.scene);
 	}
 
