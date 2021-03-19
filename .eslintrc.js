@@ -31,6 +31,7 @@ module.exports = {
         'spaced-comment': 'error',
         'space-infix-ops': 'error',
         'newline-per-chained-call': 'error',
+        'no-whitespace-before-property': 'error',
     },
     overrides: [
         {
