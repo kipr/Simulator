@@ -14,6 +14,7 @@ module.exports = {
         'space-before-function-paren': ['error', {
             'named': 'never',
         }],
+        'keyword-spacing': 'error',
     },
     overrides: [
         {
