@@ -27,7 +27,7 @@ export class Visualizer extends React.Component<Props> {
     if(robot.servo0_position<341)
     {
       arm.updatePart("71.2","static/Arm-Only-Horizontal.PNG",rotateRobot,194,24);
-      claw.updatePart("35.22","static/Claw-Only-Horizontal.PNG",rotateRobot+' '+rotateClaw,262.5,48.5);
+      claw.updatePart("35.22","static/Claw-Only-Horizontal.PNG",`${rotateRobot} ${rotateClaw}`,262.5,48.5);
     }
     else if(robot.servo0_position>=341 && robot.servo0_position<=683)
     {

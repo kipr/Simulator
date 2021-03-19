@@ -8,6 +8,9 @@ module.exports = {
     env: {
         es6: true,
     },
+    rules: {
+        'prefer-template': 'error'
+    },
     overrides: [
         {
             files: ['**/*.ts', '**/*.tsx'],

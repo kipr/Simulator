@@ -96,12 +96,12 @@ export class SimulatorSidebar extends React.Component<Props, State> {
 
   private onDownloadClick_: React.MouseEventHandler<HTMLButtonElement> = () => {
     const date = new Date();
-    const dateString = date.getUTCFullYear().toString() + "-" + date.getMonth().toString() + "-" + date.getDay().toString();
-    const file= dateString+"-simulatorCode.c";
+    const dateString = `${date.getUTCFullYear().toString()}-${date.getMonth().toString()}-${date.getDay().toString()}`;
+    const file= `${dateString}-simulatorCode.c`;
     console.log(file);
     function download(filename, text) {
       const element = document.createElement('a');
-      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+      element.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(text)}`);
       element.setAttribute('download', filename);
     
       element.style.display = 'none';
