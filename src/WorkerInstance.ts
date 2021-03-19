@@ -28,9 +28,9 @@ class WorkerInstance {
   public DirectionalValues = (int1:number, int2:number) => {
     if (int1 > int2) {
       return -((0xFF ^ int1)*256 + (0xFF ^ int2)) - 1;
-    } else {
-      return int1*256 + int2;
     }
+    
+    return int1*256 + int2;
   }
   public readServoRegister = (reg1: number, reg2: number) => {
     const val = reg1 << 8 | reg2;

@@ -27,6 +27,7 @@ module.exports = {
         'eqeqeq': 'error',
         'nonblock-statement-body-position': 'error',
         'brace-style': 'error',
+        'no-else-return': 'error',
     },
     overrides: [
         {
