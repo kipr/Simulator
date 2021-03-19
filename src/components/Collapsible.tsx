@@ -12,21 +12,20 @@ type Props = CollapsibleProps;
 type State = CollapsibleState;
 
 export default class Collapsible extends React.Component<Props, State> {
-	constructor(props) {
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			open: false,
 		};
-		this.togglePanel = this.togglePanel.bind(this);
 	}
 
-	togglePanel() {
+	private togglePanel = () => {
 		this.setState(prevState => ({
 			open: !prevState.open,
 		}));
 	}
 
-	render() {
+	render(): React.ReactNode {
 		return (
 			<>
 				<div onClick={this.togglePanel} className='header'>{this.props.title}</div>

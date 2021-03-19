@@ -10,9 +10,7 @@ interface SimulatorAreaProps {
     onRobotStateChange: (robotState: RobotState) => void;
 }
 
-interface SimulatorAreaState { }
-
-export class SimulatorArea extends React.Component<SimulatorAreaProps, SimulatorAreaState> {
+export class SimulatorArea extends React.Component<SimulatorAreaProps> {
     canvas: HTMLCanvasElement;
     space: Sim.Space;
     
@@ -21,7 +19,7 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
         this.state = {};
     }
 
-    componentDidMount() {
+    componentDidMount(): void {
         this.space = new Sim.Space(this.canvas, () => this.props.robotState, (robotState) => {
             this.props.onRobotStateChange(robotState);
         });
@@ -32,11 +30,16 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
         });
         
         this.space.createScene();
-        this.space.loadMeshes();
-        this.space.startRenderLoop();
+        this.space.loadMeshes()
+            .then(() => {
+                this.space.startRenderLoop();
+            })
+            .catch((e) => {
+                console.error('The simulator meshes failed to load', e);
+            });
     }
 
-    componentDidUpdate(prevProps: SimulatorAreaProps) {
+    componentDidUpdate(prevProps: SimulatorAreaProps): void {
         // Check if any cans were toggled
         this.props.canEnabled.forEach((enabled, i) => {
             if (enabled !== prevProps.canEnabled[i]) {
@@ -45,19 +48,19 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
         });
     }
 
-    setCanvasRef = (c: HTMLCanvasElement) => {
+    private setCanvasRef = (c: HTMLCanvasElement) => {
         if (c !== null) {
             this.canvas = c;
         }
     }
 
-    setCanEnabled(canNumber: number, isEnabled: boolean) {
+    private setCanEnabled(canNumber: number, isEnabled: boolean) {
         isEnabled
             ? this.space.createCan(canNumber + 1)
             : this.space.destroyCan(canNumber + 1);
     }
 
-    render() {
+    render(): React.ReactNode {
         return (
             <canvas ref={this.setCanvasRef} id="simview" />
         );

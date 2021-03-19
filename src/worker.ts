@@ -2,7 +2,10 @@ import Protocol from './WorkerProtocol';
 import dynRequire from './require';
 import Registers from './RegisterState';
 
-const ctx: Worker = self as any;
+// Proper typing of Worker is tricky due to conflicting DOM and WebWorker types
+// See GitHub issue: https://github.com/microsoft/TypeScript/issues/20595
+const ctx: Worker = self as unknown as Worker;
+
 const print = (s: string)=>{
   ctx.postMessage({
     type: 'programoutput',
@@ -18,9 +21,9 @@ const err = (stdoutput: string, stderror: string) => {
 
 const registers = new Array<number>(Registers.REG_ALL_COUNT);
 
-ctx.onmessage = (e) => {
+ctx.onmessage = (e: MessageEvent) => {
   
-  const message:Protocol.Worker.Request = e.data;
+  const message = e.data as Protocol.Worker.Request;
   switch (message.type) {
     case 'start': {
       const mod = dynRequire(message.code, {

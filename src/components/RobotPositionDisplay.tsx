@@ -11,17 +11,14 @@ interface RobotPositionDisplayProps {
   thetaChanged: (theta: number) => void,
 }
 
-interface RobotPositionDisplayState { }
-
 type Props = RobotPositionDisplayProps;
-type State = RobotPositionDisplayState;
 
-export class RobotPositionDisplay extends React.Component<Props, State> {
+export class RobotPositionDisplay extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
   }
 
-  render() {
+  render(): React.ReactNode {
     const sectionStyle: React.CSSProperties = {
       display: 'grid',
       gridTemplate: 'auto / auto auto auto',

@@ -6,17 +6,14 @@ interface MotorsDisplayProps {
   motorPositions: number[],
 }
 
-interface MotorsDisplayState { }
-
 type Props = MotorsDisplayProps;
-type State = MotorsDisplayState;
 
-export class MotorsDisplay extends React.Component<Props, State> {
+export class MotorsDisplay extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
   }
 
-  render() {
+  render(): React.ReactNode {
     const sectionStyle: React.CSSProperties = {
       display: 'grid',
       gridTemplate: 'auto / auto auto auto auto auto',
@@ -29,7 +26,7 @@ export class MotorsDisplay extends React.Component<Props, State> {
           <h3>Speed:</h3>
           <h3>Position:</h3>
         </section>
-        {[...Array(4)].map((_, i) =>
+        {[...Array<unknown>(4)].map((_, i) =>
           <MotorDisplay key={i} motorNumber={i} motorPosition={this.props.motorPositions[i]} motorSpeed={this.props.motorSpeeds[i]}></MotorDisplay>
         )}
       </section>

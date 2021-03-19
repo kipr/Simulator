@@ -5,7 +5,7 @@ export class RobotPart {
     xOff: number;
     yOff: number;
     
-    public updatePart(heightIn: string, hrefIn: string, transformIn: string, xOffIn: number, yOffIn: number) {
+    public updatePart(heightIn: string, hrefIn: string, transformIn: string, xOffIn: number, yOffIn: number): void {
         this.height = heightIn;
         this.href = hrefIn;
         this.transform = transformIn;

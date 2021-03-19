@@ -2,7 +2,6 @@ import * as React from 'react';
 import { RobotState } from './RobotState';
 import { RobotPart } from './RobotPart';
 import { StyleProps } from './style';
-import { createExpressionWithTypeArguments } from 'typescript';
 //import { RegisterState } from './RegisterState';
 
 export interface VisualizerProps extends StyleProps {
@@ -12,22 +11,18 @@ export interface VisualizerProps extends StyleProps {
 type Props = VisualizerProps;
 
 export class Visualizer extends React.Component<Props> {
-  render() {
+  render(): React.ReactNode {
     const { props } = this;
-    const {
-      className,
-      style,
-      robot,
-    } = props;
+    const { robot } = props;
     const thetaDeg = round2dec(robot.theta * 180 / Math.PI);
     const x = round2dec(robot.x);
     const y = round2dec(robot.y);
 
-    let rotateRobot = `rotate(${thetaDeg} ${(x+142.88)} ${y+67.5})`;
-    let rotateClaw = `rotate(${robot.servo3_position/11.37} ${(robot.x+262.5+5)} ${(robot.y+48.5+30)})`;
+    const rotateRobot = `rotate(${thetaDeg} ${(x+142.88)} ${y+67.5})`;
+    const rotateClaw = `rotate(${robot.servo3_position/11.37} ${(robot.x+262.5+5)} ${(robot.y+48.5+30)})`;
 
-    let arm = new RobotPart;
-    let claw = new RobotPart;
+    const arm = new RobotPart;
+    const claw = new RobotPart;
 
     if(robot.servo0_position<341)
     {

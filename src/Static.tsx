@@ -1,18 +1,12 @@
 import * as React from 'react';
 import { StyleProps } from './style';
 
-export interface StaticProps extends StyleProps {}
+export type StaticProps = StyleProps;
 
 type Props = StaticProps;
 
 export class Static extends React.Component<Props> {
-    render() {
-        const { props } = this;
-        const {
-            className,
-            style
-        } = props;
-
+    render(): React.ReactNode {
         return (
             <svg width={1440} height={960}>
               <rect width="100%" height="100%" fill="LightBlue" className="foam-border"/>

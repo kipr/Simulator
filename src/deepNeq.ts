@@ -1,4 +1,7 @@
-const valueNeq = (value0: any, value1: any) => {
+// Disable eslint rule - this file deals heavily with "object" type
+/* eslint-disable @typescript-eslint/ban-types */
+
+const valueNeq = (value0: unknown, value1: unknown) => {
   if(Array.isArray(value0)) {
     if(!Array.isArray(value1)) return true;
     if(deepArrayNeq(value0, value1)) return true;
@@ -23,7 +26,7 @@ const valueNeq = (value0: any, value1: any) => {
       if(value0 === null) return false;
       return true;
     }
-    if(deepObjectNeq(value0, value1)) return true;
+    if(deepObjectNeq(value0 as object, value1 as object)) return true;
     return false;
   }
   
@@ -32,7 +35,7 @@ const valueNeq = (value0: any, value1: any) => {
   return false;
 };
 
-const deepArrayNeq = (_0: any[], _1: any[]) => {
+const deepArrayNeq = (_0: unknown[], _1: unknown[]) => {
   if(_0.length !== _1.length) return true;
   const length = _0.length;
 
@@ -43,7 +46,7 @@ const deepArrayNeq = (_0: any[], _1: any[]) => {
   return false;
 };
 
-const deepObjectNeq = (_0: any, _1: any) => {
+const deepObjectNeq = (_0: object, _1: object) => {
   const keys0 = Object.keys(_0);
   const keys1 = Object.keys(_1);
   if(keys0.length !== keys1.length) return true;
@@ -67,4 +70,4 @@ const deepObjectNeq = (_0: any, _1: any) => {
   return false;
 };
 
-export default (_0: any, _1: any) => valueNeq(_0, _1);
+export default (_0: unknown, _1: unknown): boolean => valueNeq(_0, _1);

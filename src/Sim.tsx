@@ -63,7 +63,7 @@ export class Space {
 		this.ticksSinceETSensorUpdate = 0;
 	}
 
-	public createScene() {
+	public createScene(): void {
 		const camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(50,50,50), this.scene);
 		camera.setTarget(Babylon.Vector3.Zero());
 		camera.attachControl(this.canvas, true);
@@ -150,7 +150,7 @@ export class Space {
 		});
 	}
 
-	public async loadMeshes() {
+	public async loadMeshes(): Promise<void> {
 		const importMeshResult = await Babylon.SceneLoader.ImportMeshAsync("",'static/', 'Simulator_Demobot.glb', this.scene);
 		importMeshResult.meshes[0].setParent(this.botbody);
 
@@ -165,13 +165,14 @@ export class Space {
 		
 
 		this.scene.registerAfterRender(() => {
-			let m1 = this.getRobotState().motor0_speed  / 1500 * -2;
-			let m2 = this.getRobotState().motor3_speed  / 1500 * -2;
+			const m1 = this.getRobotState().motor0_speed  / 1500 * -2;
+			const m2 = this.getRobotState().motor3_speed  / 1500 * -2;
 
+			this.setMotors(m1, m2);
 
-			let s0_position = Math.round((this.getRobotState().servo0_position / 11.702) - 87.5);
-			let angle_servoArm = Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x))
-			console.log('position:' + this.getRobotState().servo0_position + ' Calculated position:' + s0_position + ' Servo Angle:' + angle_servoArm);
+			const s0_position = Math.round((this.getRobotState().servo0_position / 11.702) - 87.5);
+			const angle_servoArm = Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x))
+			console.log(`position: ${this.getRobotState().servo0_position} Calculated position: ${s0_position} Servo Angle: ${angle_servoArm}`);
 			//console.log(Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)));
 
 			if( s0_position > angle_servoArm){
@@ -196,27 +197,27 @@ export class Space {
 		});
 	}
 
-	public startRenderLoop() {
+	public startRenderLoop(): void {
 		this.engine.runRenderLoop(() => {
             this.scene.render();
         });
 	}
 
-	public handleResize() {
+	public handleResize(): void {
 		this.engine.resize();
 	}
 
-	public createCan(canPosition: number) {
+	public createCan(canPosition: number): void {
 		const canName = `Can${canPosition}`;
 		this.can_positions = [];
 		this.can_positions = [0,0,0, 22,0,14.5, 0,0,20.6, -15.5,0,24, 0,0,7, 14,0,-7, 0,0,-7, -13.7,0,-7, -25,0,-14.5, 0,0,-34, 19,0,-45, 0,0,-55, -18.5,0,-45];
-		let new_can = Babylon.MeshBuilder.CreateCylinder(canName,{height:10, diameter:6}, this.scene);
+		const new_can = Babylon.MeshBuilder.CreateCylinder(canName,{height:10, diameter:6}, this.scene);
 		//this.can.position = new Babylon.Vector3(0,0,30);//.z = 30;
 		new_can.physicsImpostor = new Babylon.PhysicsImpostor(new_can, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
 		new_can.position = new Babylon.Vector3(this.can_positions[canPosition*3], this.can_positions[(canPosition*3)+1],this.can_positions[(canPosition*3)+2])
 	}
 
-	public destroyCan(canPosition: number) {
+	public destroyCan(canPosition: number): void {
 		const canName = `Can${canPosition}`;
 		this.scene.getMeshByName(canName).dispose();
 	}
@@ -510,7 +511,7 @@ export class Space {
 	private setpositiveServo(s0_position:number) {
 		this.liftArm_joint.setMotor(0.3); //Rotates arm backwards
 
-		let angle_Positive = Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)
+		const angle_Positive = Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)
 		if( s0_position  > angle_Positive|| angle_Positive > 85 || angle_Positive < -85 ) {
 			this.liftArm_joint.setMotor(0);
 		}
@@ -519,7 +520,7 @@ export class Space {
 	private setnegativeServo(s0_position:number) {
 		this.liftArm_joint.setMotor(-0.3); //Rotates arm forward
 
-		let angle_Negative = Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)
+		const angle_Negative = Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)
 		if( s0_position < angle_Negative || angle_Negative < -85 || angle_Negative > 85) {
 			this.liftArm_joint.setMotor(0);
 		}

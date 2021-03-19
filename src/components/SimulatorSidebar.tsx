@@ -34,21 +34,6 @@ interface SimulatorSidebarState {
 type Props = SimulatorSidebarProps;
 type State = SimulatorSidebarState;
 
-const cans = [
-  'can_1',
-  'can_2',
-  'can_3',
-  'can_4',
-  'can_5',
-  'can_6',
-  'can_7',
-  'can_8',
-  'can_9',
-  'can_10',
-  'can_11',
-  'can_12',
-]
-
 export class SimulatorSidebar extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -64,7 +49,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
     }));
   }
 
-  private onStdCompOutput_ = (s: string) => {
+  private onStdCompOutput_ = () => {
     this.setState({
       console: `Compile Succeeded\n`
     });
@@ -75,45 +60,47 @@ export class SimulatorSidebar extends React.Component<Props, State> {
       console: `${stderror}\n Compiled`
     });
   }
-  private onCompileClick_ = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  private onCompileClick_: React.MouseEventHandler<HTMLButtonElement> = async () => {    
     try {
       const compiled = await compile(this.state.code);
       WorkerInstance.onStdOutput = this.onStdCompOutput_;
       WorkerInstance.onStdError = this.onStdError_;
       WorkerInstance.compile(compiled);
     } catch (e) {
-      console.log(e);
-      console.log(e.stderr);
+      const compileError = e as { stdout: string, stderr: string };
+      console.log(compileError);
+      console.log(compileError.stderr);
       this.setState({
-        console: `Compile Failed \n\n**********************************\n${e.stderr}\n`
+        console: `Compile Failed \n\n**********************************\n${compileError.stderr}\n`
       });
     }
     
   };
 
-  private onRunClick_ = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  private onRunClick_: React.MouseEventHandler<HTMLButtonElement> = async () => {
     try {
       const compiled = await compile(this.state.code);
       WorkerInstance.onStdOutput = this.onStdOutput_;
       WorkerInstance.onStdError = this.onStdError_;
       WorkerInstance.start(compiled);
     } catch (e) {
-      console.log(e);
-      console.log(e.stderr);
+      const compileError = e as { stdout: string, stderr: string };
+      console.log(compileError);
+      console.log(compileError.stderr);
       this.setState({
-        console: `Run Failed: Please Recompile\n\n**********************************\n${e.stderr}\n`
+        console: `Run Failed: Please Recompile\n\n**********************************\n${compileError.stderr}\n`
       });
     }
     
   };
 
-  private onDownloadClick_ = (event: React.MouseEvent<HTMLButtonElement>) => {
-    var date = new Date();
-    var dateString = date.getUTCFullYear().toString() + "-" + date.getMonth().toString() + "-" + date.getDay().toString();
-    var file= dateString+"-simulatorCode.c";
+  private onDownloadClick_: React.MouseEventHandler<HTMLButtonElement> = () => {
+    const date = new Date();
+    const dateString = date.getUTCFullYear().toString() + "-" + date.getMonth().toString() + "-" + date.getDay().toString();
+    const file= dateString+"-simulatorCode.c";
     console.log(file);
     function download(filename, text) {
-      var element = document.createElement('a');
+      const element = document.createElement('a');
       element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
       element.setAttribute('download', filename);
     
@@ -128,7 +115,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
     
   };
 
-  private onResetClick_ = (event: React.MouseEvent<HTMLButtonElement>) => {
+  private onResetClick_: React.MouseEventHandler<HTMLButtonElement> = () => {
     this.props.onRobotStateChange({
       ...this.props.robotState,
       x: RobotState.empty.x,
@@ -172,7 +159,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
     this.props.onCanChange(canNumber, isTargetChecked);
 	}
 
-  render() {
+  render(): React.ReactNode {
     //let codemirror = new CodeMirrorManager();
     const { props, state } = this;
     const { robotState } = props;
@@ -180,7 +167,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
       code,
       console
     } = state;
-    let options = {
+    const options = {
       lineNumbers: true,
       mode: 'text/x-csrc',
       theme: 'kiss',
@@ -224,7 +211,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
         </section>
         <Collapsible title="Cans">
           <ul>
-            {[...Array(12)].map((_, i) =>
+            {[...Array<unknown>(12)].map((_, i) =>
               <li key={i + 1}>
                 <input type="checkbox" name="can" value={i} checked={this.props.isCanChecked[i]} onChange={this.onCheckBoxActivity} />
                 <label>{`Can ${i + 1}`}</label>

@@ -34,8 +34,8 @@ class WorkerInstance {
     }
   }
   public readServoRegister = (reg1: number, reg2: number) => {
-    let val = reg1 << 8 | reg2;
-    let degrees = (val - 1500.0) / 10.0;
+    const val = reg1 << 8 | reg2;
+    const degrees = (val - 1500.0) / 10.0;
     let dval = (degrees + 90.0)  * 2047.0 / 180.0;
     if (dval < 0.0) dval = 0.0;
     if (dval > 2047.0) dval = 2047.01;
@@ -58,9 +58,9 @@ class WorkerInstance {
     //const total_dist = (nextState.motor3_speed + nextState.motor0_speed)/1500;
     //const diff_dist = (nextState.motor3_speed - nextState.motor0_speed)/1500;
 
-    nextState.theta = nextState.theta;// + (this.wheel_diameter_/2)*diff_dist/this.wheelSep_*time_change;
-    nextState.x = nextState.x;// + (this.wheel_diameter_/2)*(total_dist)*Math.cos(nextState.theta)*time_change;
-    nextState.y = nextState.y;// + (this.wheel_diameter_/2)*(total_dist)*Math.sin(nextState.theta)*time_change;
+    //nextState.theta = nextState.theta;// + (this.wheel_diameter_/2)*diff_dist/this.wheelSep_*time_change;
+    //nextState.x = nextState.x;// + (this.wheel_diameter_/2)*(total_dist)*Math.cos(nextState.theta)*time_change;
+    //nextState.y = nextState.y;// + (this.wheel_diameter_/2)*(total_dist)*Math.sin(nextState.theta)*time_change;
     
     //Write the values to the registers and send those back to worker when updated.(Send the entire array to worker)
 
@@ -100,8 +100,8 @@ class WorkerInstance {
     requestAnimationFrame(this.tick);
   }
   
-  private onMessage = (e)=> {
-    const message:Protocol.Worker.Request = e.data;
+  private onMessage = (e: MessageEvent)=> {
+    const message = e.data as Protocol.Worker.Request;
     switch(message.type){
         case 'setregister':{
           console.log(`setregister ${message.address} ${message.value}`);

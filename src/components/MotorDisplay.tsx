@@ -7,17 +7,14 @@ interface MotorDisplayProps {
   motorPosition: number;
 }
 
-interface MotorDisplayState { }
-
 type Props = MotorDisplayProps;
-type State = MotorDisplayState;
 
-export class MotorDisplay extends React.Component<Props, State> {
+export class MotorDisplay extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
   }
 
-  render() {
+  render(): React.ReactNode {
     return (
       <section style={{ textAlign: 'center' }}>
         <h3>Motor {this.props.motorNumber}</h3>

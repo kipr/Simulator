@@ -4,12 +4,11 @@ import WorkerInstance from '../WorkerInstance';
 import { RobotState } from '../RobotState';
 import { SimulatorArea } from './SimulatorArea';
 
-export interface RootProps { }
 interface RootState {
 	robotState: RobotState,
 	isCanEnabled: boolean[],
 }
-type Props = RootProps;
+type Props = Record<string, never>;
 type State = RootState;
 
 export class Root extends React.Component<Props, State> {
@@ -21,7 +20,7 @@ export class Root extends React.Component<Props, State> {
 		}
 	}
 
-	componentDidMount() {
+	componentDidMount(): void {
 		WorkerInstance.onStateChange = (robotState: RobotState) => {
 			this.setState({
 				robotState,
@@ -35,16 +34,14 @@ export class Root extends React.Component<Props, State> {
 
 	private onCanChange_ = (canNumber: number, enabled: boolean) => {
 		this.setState(prevState => {
-			let isCanEnabled = [...prevState.isCanEnabled];
+			const isCanEnabled = [...prevState.isCanEnabled];
 			isCanEnabled[canNumber] = enabled;
 			return { isCanEnabled: isCanEnabled };
 		});
 	}
 
-	render() {
-		const {
-			props, state
-		} = this
+	render(): React.ReactNode {
+		const { state } = this
 
 		return (
 			<div id="main">
