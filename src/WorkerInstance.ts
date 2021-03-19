@@ -77,7 +77,7 @@ class WorkerInstance {
     
     //console.log(this.registers_[61])
     // Set next state servo positions based on register values
-    if (this.registers_[61] == 0) {
+    if (this.registers_[61] === 0) {
       nextState.servo0_position = this.readServoRegister(this.registers_[78], this.registers_[79]);
       nextState.servo1_position = this.readServoRegister(this.registers_[80], this.registers_[81]);
       nextState.servo2_position = this.readServoRegister(this.registers_[82], this.registers_[83]);
@@ -110,16 +110,16 @@ class WorkerInstance {
         }
         case 'setmotorposition': {
           console.log(`motor number is: ${message.motor}`);
-          if (message.motor == 0) {
+          if (message.motor === 0) {
             this.state.motor0_position = 0;
           }
-          else if (message.motor == 1) {
+          else if (message.motor === 1) {
             this.state.motor1_position = 0;
           }
-          else if (message.motor == 2) {
+          else if (message.motor === 2) {
             this.state.motor2_position = 0;
           }
-          else if (message.motor == 3) {
+          else if (message.motor === 3) {
             this.state.motor3_position = 0;
           }
           break;

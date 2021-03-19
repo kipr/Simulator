@@ -181,7 +181,7 @@ export class Space {
 			else if (s0_position < angle_servoArm) {
 				this.setpositiveServo(s0_position);
 			}
-			else if (s0_position == angle_servoArm) {
+			else if (s0_position === angle_servoArm) {
 				this.liftArm_joint.setMotor(0);
 			}
 			else {

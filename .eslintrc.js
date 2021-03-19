@@ -24,6 +24,7 @@ module.exports = {
         'no-duplicate-imports': 'error',
         'prefer-const': 'error',
         'operator-linebreak': 'error',
+        'eqeqeq': 'error',
     },
     overrides: [
         {
