@@ -25,6 +25,7 @@ module.exports = {
         'prefer-const': 'error',
         'operator-linebreak': 'error',
         'eqeqeq': 'error',
+        'nonblock-statement-body-position': 'error',
     },
     overrides: [
         {
