@@ -83,7 +83,7 @@ ctx.onmessage = (e: MessageEvent) => {
 
       break;
     }
-    case 'setregister':{
+    case 'setregister': {
       registers[message.address] = message.value;
 
       // ctx.postMessage({

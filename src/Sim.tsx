@@ -175,10 +175,10 @@ export class Space {
 			console.log(`position: ${this.getRobotState().servo0_position} Calculated position: ${s0_position} Servo Angle: ${angle_servoArm}`);
 			//console.log(Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)));
 
-			if ( s0_position > angle_servoArm){
+			if ( s0_position > angle_servoArm) {
 				this.setnegativeServo(s0_position);
 			}
-			else if (s0_position < angle_servoArm){
+			else if (s0_position < angle_servoArm) {
 				this.setpositiveServo(s0_position);
 			}
 			else if (s0_position == angle_servoArm) {

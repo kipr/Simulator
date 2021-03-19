@@ -26,7 +26,7 @@ class WorkerInstance {
   // private wheel_diameter_ = 55;
   // private wheelSep_ = 64.05;
   public DirectionalValues = (int1:number, int2:number) => {
-    if (int1 > int2){
+    if (int1 > int2) {
       return -((0xFF ^ int1)*256 + (0xFF ^ int2)) - 1;
     }
     else {
@@ -77,7 +77,7 @@ class WorkerInstance {
     
     //console.log(this.registers_[61])
     // Set next state servo positions based on register values
-    if (this.registers_[61] == 0){
+    if (this.registers_[61] == 0) {
       nextState.servo0_position = this.readServoRegister(this.registers_[78], this.registers_[79]);
       nextState.servo1_position = this.readServoRegister(this.registers_[80], this.registers_[81]);
       nextState.servo2_position = this.readServoRegister(this.registers_[82], this.registers_[83]);
@@ -102,24 +102,24 @@ class WorkerInstance {
   
   private onMessage = (e: MessageEvent)=> {
     const message = e.data as Protocol.Worker.Request;
-    switch (message.type){
-        case 'setregister':{
+    switch (message.type) {
+        case 'setregister': {
           console.log(`setregister ${message.address} ${message.value}`);
           this.registers_[message.address] = message.value;
           break;
         }
         case 'setmotorposition': {
           console.log(`motor number is: ${message.motor}`);
-          if (message.motor == 0){
+          if (message.motor == 0) {
             this.state.motor0_position = 0;
           }
-          else if (message.motor == 1){
+          else if (message.motor == 1) {
             this.state.motor1_position = 0;
           }
-          else if (message.motor == 2){
+          else if (message.motor == 2) {
             this.state.motor2_position = 0;
           }
-          else if (message.motor == 3){
+          else if (message.motor == 3) {
             this.state.motor3_position = 0;
           }
           break;
@@ -146,14 +146,14 @@ class WorkerInstance {
         }
         case 'programoutput': {
           message.stdoutput
-          if (this.onStdOutput){
+          if (this.onStdOutput) {
             this.onStdOutput(message.stdoutput)
           }
           break;
         }
         case 'programerror': {
           message.stderror
-          if (this.onStdError){
+          if (this.onStdError) {
             this.onStdError(message.stderror)
           }
           break;
@@ -198,7 +198,7 @@ class WorkerInstance {
     this.registers_[address] = value;
   }
 
-  constructor(){
+  constructor() {
     this.worker_.onmessage = this.onMessage
     requestAnimationFrame(this.tick);
   }
@@ -212,7 +212,7 @@ class WorkerInstance {
     this.onStateChange(this.state_);
   }
 
-  get state(){
+  get state() {
     return this.state_;
   }
 

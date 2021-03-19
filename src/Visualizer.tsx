@@ -31,11 +31,11 @@ export class Visualizer extends React.Component<Props> {
     }
     else if (robot.servo0_position>=341 && robot.servo0_position<=683)
     {
-      if (robot.servo3_position<341){
+      if (robot.servo3_position<341) {
         arm.updatePart("71.2","static/Arm-Only-45.PNG",rotateRobot,194,24.3);
         claw.updatePart("35.22","static/Claw-Only-45-Closed.PNG",rotateRobot,233,48);
       }
-      else if (robot.servo3_position>=341 && robot.servo3_position<=683){
+      else if (robot.servo3_position>=341 && robot.servo3_position<=683) {
         arm.updatePart("71.2","static/Arm-Only-45.PNG",rotateRobot,194,24.3);
         claw.updatePart("50","static/Claw-Only-45-Half-Open.PNG",rotateRobot,233,72.5);
       }
@@ -46,11 +46,11 @@ export class Visualizer extends React.Component<Props> {
     }
     else
     {
-      if (robot.servo3_position<341){
+      if (robot.servo3_position<341) {
         arm.updatePart("71.2","static/Arm-Only-Vertical.PNG",rotateRobot,166.5,24.5);
         claw.updatePart("34","static/Claw-Only-Vertical-Closed.PNG",rotateRobot,165,50.5);
       }
-      else if (robot.servo3_position>=341 && robot.servo3_position<=683){
+      else if (robot.servo3_position>=341 && robot.servo3_position<=683) {
         arm.updatePart("71.2","static/Arm-Only-Vertical.PNG",rotateRobot,166.5,24.5);
         claw.updatePart("57","static/Claw-Only-Vertical-Half-Open.PNG",rotateRobot,164,72.5);
       }
