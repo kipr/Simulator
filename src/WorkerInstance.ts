@@ -28,8 +28,7 @@ class WorkerInstance {
   public DirectionalValues = (int1:number, int2:number) => {
     if (int1 > int2) {
       return -((0xFF ^ int1)*256 + (0xFF ^ int2)) - 1;
-    }
-    else {
+    } else {
       return int1*256 + int2;
     }
   }
@@ -112,14 +111,11 @@ class WorkerInstance {
           console.log(`motor number is: ${message.motor}`);
           if (message.motor === 0) {
             this.state.motor0_position = 0;
-          }
-          else if (message.motor === 1) {
+          } else if (message.motor === 1) {
             this.state.motor1_position = 0;
-          }
-          else if (message.motor === 2) {
+          } else if (message.motor === 2) {
             this.state.motor2_position = 0;
-          }
-          else if (message.motor === 3) {
+          } else if (message.motor === 3) {
             this.state.motor3_position = 0;
           }
           break;

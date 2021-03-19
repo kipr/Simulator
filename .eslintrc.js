@@ -26,6 +26,7 @@ module.exports = {
         'operator-linebreak': 'error',
         'eqeqeq': 'error',
         'nonblock-statement-body-position': 'error',
+        'brace-style': 'error',
     },
     overrides: [
         {
