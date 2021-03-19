@@ -11,6 +11,9 @@ module.exports = {
     rules: {
         'prefer-template': 'error',
         'template-curly-spacing': 'error',
+        'space-before-function-paren': ['error', {
+            'named': 'never',
+        }],
     },
     overrides: [
         {

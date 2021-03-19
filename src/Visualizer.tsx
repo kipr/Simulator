@@ -69,6 +69,6 @@ export class Visualizer extends React.Component<Props> {
   }
 }
 
-function round2dec (num: number) {
+function round2dec(num: number) {
   return Math.round((num+0.00001)*100)/100;
 }

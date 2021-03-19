@@ -11,7 +11,7 @@ const portNumber = 3000;
 const sourceDir = 'dist';
 const config = require('./config');
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
