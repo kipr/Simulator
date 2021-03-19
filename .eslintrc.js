@@ -22,6 +22,7 @@ module.exports = {
         'no-confusing-arrow': 'error',
         'no-useless-constructor': 'error',
         'no-duplicate-imports': 'error',
+        'prefer-const': 'error',
     },
     overrides: [
         {
