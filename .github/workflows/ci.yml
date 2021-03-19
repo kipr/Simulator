@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+    branches: [ add-linter ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install modules
+      run: yarn install
+    - name: Run linter
+      run: yarn lint
