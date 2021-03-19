@@ -9,7 +9,8 @@ module.exports = {
         es6: true,
     },
     rules: {
-        'prefer-template': 'error'
+        'prefer-template': 'error',
+        'template-curly-spacing': 'error',
     },
     overrides: [
         {
