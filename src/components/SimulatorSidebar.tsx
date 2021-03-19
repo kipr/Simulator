@@ -4,7 +4,7 @@ import { StyleProps } from "../style";
 
 import compile from '../compile';
 
-//CodeMirror imports
+// CodeMirror imports
 import { Controlled as CodeMirror } from 'react-codemirror2';
 require('codemirror/lib/codemirror.css');
 require('codemirror/mode/clike/clike');
@@ -160,7 +160,6 @@ export class SimulatorSidebar extends React.Component<Props, State> {
 	}
 
   render(): React.ReactNode {
-    //let codemirror = new CodeMirrorManager();
     const { props, state } = this;
     const { robotState } = props;
     const { 
@@ -172,7 +171,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
       mode: 'text/x-csrc',
       theme: 'kiss',
     }
-    //console.log("Rendering app");
+    
     return (
       <>
         <section className="app-area">

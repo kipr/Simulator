@@ -33,7 +33,6 @@ ctx.onmessage = (e: MessageEvent) => {
             address: address,
             value: value
           });
-          //console.log("ASDASD");
         },
         registers,
         onMotorPositionClear: (motor) => {

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { RobotState } from './RobotState';
 import { RobotPart } from './RobotPart';
 import { StyleProps } from './style';
-//import { RegisterState } from './RegisterState';
 
 export interface VisualizerProps extends StyleProps {
   robot: RobotState;

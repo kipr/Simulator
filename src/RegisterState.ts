@@ -1,7 +1,7 @@
 export default {
     WALLABY_SPI_VERSION: 4,
   
-    /* READ Only Registers -----------------------*/
+    /* READ Only Registers ----------------------- */
     REG_R_START:  0,
   
     REG_R_VERSION_H:      1,
@@ -9,7 +9,7 @@ export default {
   
   
   
-    /*READ/Write Registers -----------------------*/
+    /* READ/Write Registers ----------------------- */
     REG_RW_DIG_IN_H:    3,
     REG_RW_DIG_IN_L:    4,
     REG_RW_DIG_OUT_H:   5,

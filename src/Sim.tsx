@@ -26,7 +26,7 @@ export class Space {
 	private servoClawMotor: Babylon.Mesh;
 	private servoArmVector = new Babylon.Vector3(-1.1,3.2,11.97);
 	private servoClawAxis = new Babylon.Vector3(0.9/2.45,0,1);
-	private servoClawVector = new Babylon.Vector3(-9.71,2.45,1.5);//(-0.3,1.8,9.3);
+	private servoClawVector = new Babylon.Vector3(-9.71,2.45,1.5);// (-0.3,1.8,9.3);
 
 	private wheel1: Babylon.Mesh;
 	private wheel2: Babylon.Mesh;
@@ -75,7 +75,7 @@ export class Space {
 
 		this.buildGround();
 
-		//Robot Colliders
+		// Robot Colliders
 
 		this.buildBotBody();
 		
@@ -173,7 +173,7 @@ export class Space {
 			const s0_position = Math.round((this.getRobotState().servo0_position / 11.702) - 87.5);
 			const angle_servoArm = Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x))
 			console.log(`position: ${this.getRobotState().servo0_position} Calculated position: ${s0_position} Servo Angle: ${angle_servoArm}`);
-			//console.log(Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)));
+			// console.log(Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)));
 
 			if ( s0_position > angle_servoArm) {
 				this.setnegativeServo(s0_position);
@@ -182,7 +182,7 @@ export class Space {
 			} else if (s0_position === angle_servoArm) {
 				this.liftArm_joint.setMotor(0);
 			} else {
-				//do something
+				// do something
 			}
 			// this.liftClaw_joint.setMotor(0.3);
 			
@@ -209,7 +209,7 @@ export class Space {
 		this.can_positions = [];
 		this.can_positions = [0,0,0, 22,0,14.5, 0,0,20.6, -15.5,0,24, 0,0,7, 14,0,-7, 0,0,-7, -13.7,0,-7, -25,0,-14.5, 0,0,-34, 19,0,-45, 0,0,-55, -18.5,0,-45];
 		const new_can = Babylon.MeshBuilder.CreateCylinder(canName,{height:10, diameter:6}, this.scene);
-		//this.can.position = new Babylon.Vector3(0,0,30);//.z = 30;
+		// this.can.position = new Babylon.Vector3(0,0,30);//.z = 30;
 		new_can.physicsImpostor = new Babylon.PhysicsImpostor(new_can, Babylon.PhysicsImpostor.CylinderImpostor, {mass: 10, friction: 5}, this.scene);
 		new_can.position = new Babylon.Vector3(this.can_positions[canPosition*3], this.can_positions[(canPosition*3)+1],this.can_positions[(canPosition*3)+2])
 	}
@@ -443,10 +443,10 @@ export class Space {
 
 		// Create joints
 		this.wheel1_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
-			mainPivot: new Babylon.Vector3(7.9,-0.34,5.1),//Point relative to the center of the base object
-			connectedPivot: new Babylon.Vector3(0,0,0),//Point relative to the center of the rotating object
-			mainAxis: new Babylon.Vector3(1,0,0),//Base object axis of rotation
-			connectedAxis: new Babylon.Vector3(0,-1,0)//Rotating object axis of rotation (don't forget about any rotations you may have made)
+			mainPivot: new Babylon.Vector3(7.9,-0.34,5.1), // Point relative to the center of the base object
+			connectedPivot: new Babylon.Vector3(0,0,0), // Point relative to the center of the rotating object
+			mainAxis: new Babylon.Vector3(1,0,0), // Base object axis of rotation
+			connectedAxis: new Babylon.Vector3(0,-1,0) // Rotating object axis of rotation (don't forget about any rotations you may have made)
 		});
 		this.wheel2_joint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint,{
 			mainPivot: new Babylon.Vector3(-7.9,-0.34,5.1),
@@ -506,7 +506,7 @@ export class Space {
 	}
 
 	private setpositiveServo(s0_position:number) {
-		this.liftArm_joint.setMotor(0.3); //Rotates arm backwards
+		this.liftArm_joint.setMotor(0.3); // Rotates arm backwards
 
 		const angle_Positive = Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)
 		if ( s0_position  > angle_Positive|| angle_Positive > 85 || angle_Positive < -85 ) {
@@ -515,7 +515,7 @@ export class Space {
 	}
 
 	private setnegativeServo(s0_position:number) {
-		this.liftArm_joint.setMotor(-0.3); //Rotates arm forward
+		this.liftArm_joint.setMotor(-0.3); // Rotates arm forward
 
 		const angle_Negative = Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)
 		if ( s0_position < angle_Negative || angle_Negative < -85 || angle_Negative > 85) {

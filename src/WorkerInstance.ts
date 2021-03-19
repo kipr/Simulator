@@ -54,14 +54,14 @@ class WorkerInstance {
     nextState.motor2_speed = this.DirectionalValues(this.registers_[66], this.registers_[67]);
     nextState.motor3_speed = this.DirectionalValues(this.registers_[68], this.registers_[69]);
 
-    //const total_dist = (nextState.motor3_speed + nextState.motor0_speed)/1500;
-    //const diff_dist = (nextState.motor3_speed - nextState.motor0_speed)/1500;
+    // const total_dist = (nextState.motor3_speed + nextState.motor0_speed)/1500;
+    // const diff_dist = (nextState.motor3_speed - nextState.motor0_speed)/1500;
 
-    //nextState.theta = nextState.theta;// + (this.wheel_diameter_/2)*diff_dist/this.wheelSep_*time_change;
-    //nextState.x = nextState.x;// + (this.wheel_diameter_/2)*(total_dist)*Math.cos(nextState.theta)*time_change;
-    //nextState.y = nextState.y;// + (this.wheel_diameter_/2)*(total_dist)*Math.sin(nextState.theta)*time_change;
+    // nextState.theta = nextState.theta;// + (this.wheel_diameter_/2)*diff_dist/this.wheelSep_*time_change;
+    // nextState.x = nextState.x;// + (this.wheel_diameter_/2)*(total_dist)*Math.cos(nextState.theta)*time_change;
+    // nextState.y = nextState.y;// + (this.wheel_diameter_/2)*(total_dist)*Math.sin(nextState.theta)*time_change;
     
-    //Write the values to the registers and send those back to worker when updated.(Send the entire array to worker)
+    // Write the values to the registers and send those back to worker when updated.(Send the entire array to worker)
 
     nextState.motor0_position += nextState.motor0_speed*timeElapsedSecs;
     nextState.motor1_position += nextState.motor1_speed*timeElapsedSecs;
@@ -74,7 +74,6 @@ class WorkerInstance {
     this.registers_[50] = nextState.motor2_position;
     this.registers_[54] = nextState.motor3_position;
     
-    //console.log(this.registers_[61])
     // Set next state servo positions based on register values
     if (this.registers_[61] === 0) {
       nextState.servo0_position = this.readServoRegister(this.registers_[78], this.registers_[79]);
@@ -82,7 +81,6 @@ class WorkerInstance {
       nextState.servo2_position = this.readServoRegister(this.registers_[82], this.registers_[83]);
       nextState.servo3_position = this.readServoRegister(this.registers_[84], this.registers_[85]);
     }
-    //console.log("setting servo");
 
     // Set analog registers based on next state
     this.setRegister(Registers.REG_RW_ADC_0_L, nextState.analog0_value);

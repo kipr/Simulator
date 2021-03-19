@@ -58,4 +58,4 @@ export class Root extends React.Component<Props, State> {
 	}
 }
 
-//All logic inside of index.tsx
+// All logic inside of index.tsx

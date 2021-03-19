@@ -1,12 +1,12 @@
 export interface RobotState {
-  //Units: Pixels
+  // Units: Pixels
   x: number;
   y: number;
 
-  //Units: Radians
+  // Units: Radians
   theta: number;
 
-  //Units: Ticks
+  // Units: Ticks
   motor0_speed: number;
   motor1_speed: number;
   motor2_speed: number;
