@@ -1,8 +1,6 @@
 name: CI
 
 on:
-  push:
-    branches: [ add-linter ]
   pull_request:
     branches: [ master ]
 
