@@ -9,6 +9,7 @@ module.exports = {
         es6: true,
     },
     rules: {
+        // Project-specific ESLint rules
         'array-bracket-spacing': 'error',
         'arrow-spacing': 'error',
         'brace-style': 'error',
@@ -39,6 +40,7 @@ module.exports = {
     },
     overrides: [
         {
+            // Specific override for TypeScript files
             files: ['**/*.ts', '**/*.tsx'],
             parser: '@typescript-eslint/parser',
             parserOptions: {
@@ -72,6 +74,7 @@ module.exports = {
                 'space-infix-ops': 'off',
                 '@typescript-eslint/space-infix-ops': 'error',
 
+                // Project-specific ESLint rules for TypeScript
                 // Allow namespaces for now, since the project relies on several namespaces
                 '@typescript-eslint/no-namespace': 'off',
                 '@typescript-eslint/type-annotation-spacing': 'error',
