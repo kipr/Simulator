@@ -23,6 +23,7 @@ module.exports = {
         'no-useless-constructor': 'error',
         'no-duplicate-imports': 'error',
         'prefer-const': 'error',
+        'operator-linebreak': 'error',
     },
     overrides: [
         {
