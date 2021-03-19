@@ -10,10 +10,6 @@ interface MotorDisplayProps {
 type Props = MotorDisplayProps;
 
 export class MotorDisplay extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-  }
-
   render(): React.ReactNode {
     return (
       <section style={{ textAlign: 'center' }}>

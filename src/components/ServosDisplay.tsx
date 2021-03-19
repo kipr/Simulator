@@ -8,10 +8,6 @@ interface ServosDisplayProps {
 type Props = ServosDisplayProps;
 
 export class ServosDisplay extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-  }
-
   render(): React.ReactNode {
     const sectionStyle: React.CSSProperties = {
       display: 'grid',

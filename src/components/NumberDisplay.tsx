@@ -10,10 +10,6 @@ interface NumberDisplayProps {
 type Props = NumberDisplayProps;
 
 export class NumberDisplay extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-  }
-
   private onValueChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     this.props.onChange(Number.parseInt(event.target.value));
   };

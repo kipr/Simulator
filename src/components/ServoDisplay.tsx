@@ -9,10 +9,6 @@ interface ServoDisplayProps {
 type Props = ServoDisplayProps;
 
 export class ServoDisplay extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-  }
-
   render(): React.ReactNode {
     return (
       <section style={{ textAlign: 'center' }}>

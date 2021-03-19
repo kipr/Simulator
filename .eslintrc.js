@@ -20,6 +20,7 @@ module.exports = {
         'prefer-arrow-callback': 'error',
         'arrow-spacing': 'error',
         'no-confusing-arrow': 'error',
+        'no-useless-constructor': 'error',
     },
     overrides: [
         {

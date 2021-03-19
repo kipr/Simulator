@@ -9,10 +9,6 @@ interface MotorsDisplayProps {
 type Props = MotorsDisplayProps;
 
 export class MotorsDisplay extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-  }
-
   render(): React.ReactNode {
     const sectionStyle: React.CSSProperties = {
       display: 'grid',

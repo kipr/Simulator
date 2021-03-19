@@ -14,10 +14,6 @@ interface RobotPositionDisplayProps {
 type Props = RobotPositionDisplayProps;
 
 export class RobotPositionDisplay extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-  }
-
   render(): React.ReactNode {
     const sectionStyle: React.CSSProperties = {
       display: 'grid',
