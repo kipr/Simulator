@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { StyleProps } from "../style";
 
@@ -154,10 +153,10 @@ export class SimulatorSidebar extends React.Component<Props, State> {
   };
 
   private onCheckBoxActivity = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const canNumber = Number.parseInt(event.target.value);
+    const canNumber = Number.parseInt(event.target.value);
     const isTargetChecked = event.target.checked;
     this.props.onCanChange(canNumber, isTargetChecked);
-	};
+  };
 
   render(): React.ReactNode {
     const { props, state } = this;

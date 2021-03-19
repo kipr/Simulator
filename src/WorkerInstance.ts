@@ -13,14 +13,14 @@ class WorkerInstance {
 
   private state_ = RobotState.empty;
   private registers_ = new Array<number>(Registers.REG_ALL_COUNT)
-                                                                .fill(0)
-                                                                .fill(240,61,62)
-                                                                .fill(5,78,84)
-                                                                .fill(220,79,80)
-                                                                .fill(220,81,82)
-                                                                .fill(220,83,84)
-                                                                .fill(2,84,85)
-                                                                .fill(88,85,86);
+    .fill(0)
+    .fill(240,61,62)
+    .fill(5,78,84)
+    .fill(220,79,80)
+    .fill(220,81,82)
+    .fill(220,83,84)
+    .fill(2,84,85)
+    .fill(88,85,86);
   
   private lastTickTime: number;
   // private wheel_diameter_ = 55;
@@ -100,56 +100,56 @@ class WorkerInstance {
   private onMessage = (e: MessageEvent) => {
     const message = e.data as Protocol.Worker.Request;
     switch (message.type) {
-        case 'setregister': {
-          console.log(`setregister ${message.address} ${message.value}`);
-          this.registers_[message.address] = message.value;
-          break;
+      case 'setregister': {
+        console.log(`setregister ${message.address} ${message.value}`);
+        this.registers_[message.address] = message.value;
+        break;
+      }
+      case 'setmotorposition': {
+        console.log(`motor number is: ${message.motor}`);
+        if (message.motor === 0) {
+          this.state.motor0_position = 0;
+        } else if (message.motor === 1) {
+          this.state.motor1_position = 0;
+        } else if (message.motor === 2) {
+          this.state.motor2_position = 0;
+        } else if (message.motor === 3) {
+          this.state.motor3_position = 0;
         }
-        case 'setmotorposition': {
-          console.log(`motor number is: ${message.motor}`);
-          if (message.motor === 0) {
-            this.state.motor0_position = 0;
-          } else if (message.motor === 1) {
-            this.state.motor1_position = 0;
-          } else if (message.motor === 2) {
-            this.state.motor2_position = 0;
-          } else if (message.motor === 3) {
-            this.state.motor3_position = 0;
-          }
-          break;
+        break;
+      }
+      case 'program-ended': {
+        this.state_.motor0_speed = 0;
+        this.state_.motor1_speed = 0;
+        this.state_.motor2_speed = 0;
+        this.state_.motor3_speed = 0;
+        const servoPositions = this.registers_.slice(78,86);
+        this.registers_ = new Array<number>(Registers.REG_ALL_COUNT)
+          .fill(0)
+          .fill(240,61,62)
+          .fill(servoPositions[0],78,79)
+          .fill(servoPositions[1],79,80)
+          .fill(servoPositions[2],80,81)
+          .fill(servoPositions[3],81,82)
+          .fill(servoPositions[4],82,83)
+          .fill(servoPositions[5],83,84)
+          .fill(servoPositions[6],84,85)
+          .fill(servoPositions[7],85,86);
+        this.onStateChange(this.state_);
+        break;
+      }
+      case 'programoutput': {
+        if (this.onStdOutput) {
+          this.onStdOutput(message.stdoutput);
         }
-        case 'program-ended': {
-          this.state_.motor0_speed = 0;
-          this.state_.motor1_speed = 0;
-          this.state_.motor2_speed = 0;
-          this.state_.motor3_speed = 0;
-          const servoPositions = this.registers_.slice(78,86);
-          this.registers_ = new Array<number>(Registers.REG_ALL_COUNT)
-                                                                      .fill(0)
-                                                                      .fill(240,61,62)
-                                                                      .fill(servoPositions[0],78,79)
-                                                                      .fill(servoPositions[1],79,80)
-                                                                      .fill(servoPositions[2],80,81)
-                                                                      .fill(servoPositions[3],81,82)
-                                                                      .fill(servoPositions[4],82,83)
-                                                                      .fill(servoPositions[5],83,84)
-                                                                      .fill(servoPositions[6],84,85)
-                                                                      .fill(servoPositions[7],85,86);
-          this.onStateChange(this.state_);
-          break;
+        break;
+      }
+      case 'programerror': {
+        if (this.onStdError) {
+          this.onStdError(message.stderror);
         }
-        case 'programoutput': {
-          if (this.onStdOutput) {
-            this.onStdOutput(message.stdoutput);
-          }
-          break;
-        }
-        case 'programerror': {
-          if (this.onStdError) {
-            this.onStdError(message.stderror);
-          }
-          break;
-        }
+        break;
+      }
     }
   };
   start(code: string) {
