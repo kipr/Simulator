@@ -21,6 +21,7 @@ module.exports = {
         'arrow-spacing': 'error',
         'no-confusing-arrow': 'error',
         'no-useless-constructor': 'error',
+        'no-duplicate-imports': 'error',
     },
     overrides: [
         {
