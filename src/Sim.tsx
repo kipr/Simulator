@@ -175,7 +175,7 @@ export class Space {
 			console.log(`position: ${this.getRobotState().servo0_position} Calculated position: ${s0_position} Servo Angle: ${angle_servoArm}`);
 			// console.log(Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)));
 
-			if ( s0_position > angle_servoArm) {
+			if (s0_position > angle_servoArm) {
 				this.setnegativeServo(s0_position);
 			} else if (s0_position < angle_servoArm) {
 				this.setpositiveServo(s0_position);
@@ -509,7 +509,7 @@ export class Space {
 		this.liftArm_joint.setMotor(0.3); // Rotates arm backwards
 
 		const angle_Positive = Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)
-		if ( s0_position  > angle_Positive || angle_Positive > 85 || angle_Positive < -85 ) {
+		if (s0_position  > angle_Positive || angle_Positive > 85 || angle_Positive < -85) {
 			this.liftArm_joint.setMotor(0);
 		}
 	}
@@ -518,7 +518,7 @@ export class Space {
 		this.liftArm_joint.setMotor(-0.3); // Rotates arm forward
 
 		const angle_Negative = Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)
-		if ( s0_position < angle_Negative || angle_Negative < -85 || angle_Negative > 85) {
+		if (s0_position < angle_Negative || angle_Negative < -85 || angle_Negative > 85) {
 			this.liftArm_joint.setMotor(0);
 		}
 	}

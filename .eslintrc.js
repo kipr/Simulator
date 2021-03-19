@@ -32,6 +32,7 @@ module.exports = {
         'space-infix-ops': 'error',
         'newline-per-chained-call': 'error',
         'no-whitespace-before-property': 'error',
+        'space-in-parens': 'error',
     },
     overrides: [
         {
