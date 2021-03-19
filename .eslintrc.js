@@ -58,6 +58,7 @@ module.exports = {
             rules: {
                 // Allow namespaces for now, since the project relies on several namespaces
                 '@typescript-eslint/no-namespace': 'off',
+                '@typescript-eslint/type-annotation-spacing': 'error',
             },
         },
     ],

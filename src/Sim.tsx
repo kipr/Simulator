@@ -505,7 +505,7 @@ export class Space {
 		// }		
 	}
 
-	private setpositiveServo(s0_position:number) {
+	private setpositiveServo(s0_position: number) {
 		this.liftArm_joint.setMotor(0.3); // Rotates arm backwards
 
 		const angle_Positive = Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x);
@@ -514,7 +514,7 @@ export class Space {
 		}
 	}
 
-	private setnegativeServo(s0_position:number) {
+	private setnegativeServo(s0_position: number) {
 		this.liftArm_joint.setMotor(-0.3); // Rotates arm forward
 
 		const angle_Negative = Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x);

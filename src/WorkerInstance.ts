@@ -6,10 +6,10 @@ import deepNeq from './deepNeq';
 
 class WorkerInstance {
   
-  onStateChange:(state:RobotState) => void 
+  onStateChange: (state: RobotState) => void 
   
-  onStdOutput:(s: string) => void
-  onStdError:(stderror: string) => void
+  onStdOutput: (s: string) => void
+  onStdError: (stderror: string) => void
 
   private state_ = RobotState.empty
   private registers_ = new Array<number>(Registers.REG_ALL_COUNT)
@@ -25,7 +25,7 @@ class WorkerInstance {
   private lastTickTime: number;
   // private wheel_diameter_ = 55;
   // private wheelSep_ = 64.05;
-  public DirectionalValues = (int1:number, int2:number) => {
+  public DirectionalValues = (int1: number, int2: number) => {
     if (int1 > int2) {
       return -((0xFF ^ int1) * 256 + (0xFF ^ int2)) - 1;
     }

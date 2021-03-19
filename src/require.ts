@@ -13,7 +13,7 @@ export interface ModuleContext {
   getMotorPosition?: (port: number) => void,
 }
 
-export default (code: string, context: ModuleContext, print: (s:string)=> void, err: (stdout: string, stderror: string) => void): EmscriptenModule => {
+export default (code: string, context: ModuleContext, print: (s: string) => void, err: (stdout: string, stderror: string) => void): EmscriptenModule => {
   const mod: EmscriptenModule = {
     context,
     print,
