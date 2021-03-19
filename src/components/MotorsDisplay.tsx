@@ -17,7 +17,7 @@ export class MotorsDisplay extends React.Component<Props> {
 
     return (
       <section style={sectionStyle}>
-        <section style={{textAlign: 'center'}}>
+        <section style={{ textAlign: 'center' }}>
           <h3>Motor:</h3>
           <h3>Speed:</h3>
           <h3>Position:</h3>

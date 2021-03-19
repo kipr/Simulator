@@ -34,6 +34,7 @@ module.exports = {
         'no-whitespace-before-property': 'error',
         'space-in-parens': 'error',
         'array-bracket-spacing': 'error',
+        'object-curly-spacing': ['error', 'always'],
     },
     overrides: [
         {
