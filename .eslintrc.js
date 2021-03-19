@@ -35,6 +35,7 @@ module.exports = {
         'space-in-parens': 'error',
         'array-bracket-spacing': 'error',
         'object-curly-spacing': ['error', 'always'],
+        'comma-style': 'error',
     },
     overrides: [
         {
