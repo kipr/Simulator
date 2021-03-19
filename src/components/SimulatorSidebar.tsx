@@ -125,7 +125,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
 
     this.setState({
       console: ''
-    })
+    });
   };
 
   private onCodeChange_ = (_editor, _data, code: string) => {
@@ -136,14 +136,14 @@ export class SimulatorSidebar extends React.Component<Props, State> {
     this.props.onRobotStateChange({
       ...this.props.robotState,
       x,
-    })
+    });
   };
 
   private onYChange_ = (y: number) => {
     this.props.onRobotStateChange({
       ...this.props.robotState,
       y,
-    })
+    });
   };
 
   private onThetaChange_ = (theta: number) => {
@@ -170,7 +170,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
       lineNumbers: true,
       mode: 'text/x-csrc',
       theme: 'kiss',
-    }
+    };
     
     return (
       <>
@@ -219,6 +219,6 @@ export class SimulatorSidebar extends React.Component<Props, State> {
           </ul>
         </Collapsible>
       </>
-    )
+    );
   }
 }

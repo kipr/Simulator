@@ -54,7 +54,7 @@ app.post('/compile', (req, res) => {
     if (err) {
       return res.status(500).json({
         error: "Failed to write ${}"
-      })
+      });
     }
 
     exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -s ASYNCIFY -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']" -I${config.libwallaby.root}/include -L${config.libwallaby.root}/lib -lkipr -o ${path}.js ${path}`, (err, stdout, stderr) => {
@@ -87,13 +87,13 @@ app.post('/compile', (req, res) => {
             res.set('Content-Type', 'application/javascript');
             res.status(200).send(data);
           });
-        })
+        });
       });
     });
-  })
+  });
   
   
-})
+});
 
 app.use('/static', express.static(`${__dirname}/static`));
 

@@ -171,7 +171,7 @@ export class Space {
 			this.setMotors(m1, m2);
 
 			const s0_position = Math.round((this.getRobotState().servo0_position / 11.702) - 87.5);
-			const angle_servoArm = Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x))
+			const angle_servoArm = Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x));
 			console.log(`position: ${this.getRobotState().servo0_position} Calculated position: ${s0_position} Servo Angle: ${angle_servoArm}`);
 			// console.log(Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)));
 
@@ -211,7 +211,7 @@ export class Space {
 		const new_can = Babylon.MeshBuilder.CreateCylinder(canName,{ height:10, diameter:6 }, this.scene);
 		// this.can.position = new Babylon.Vector3(0,0,30);//.z = 30;
 		new_can.physicsImpostor = new Babylon.PhysicsImpostor(new_can, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 5 }, this.scene);
-		new_can.position = new Babylon.Vector3(this.can_positions[canPosition * 3], this.can_positions[(canPosition * 3) + 1],this.can_positions[(canPosition * 3) + 2])
+		new_can.position = new Babylon.Vector3(this.can_positions[canPosition * 3], this.can_positions[(canPosition * 3) + 1],this.can_positions[(canPosition * 3) + 2]);
 	}
 
 	public destroyCan(canPosition: number): void {
@@ -303,7 +303,7 @@ export class Space {
 	private buildStaticClawP1() {
 		this.staticClawMeshBuilder = Babylon.MeshBuilder.CreateBox("staticClawP1", { width:0.9, depth:5, height:0.7 }, this.scene);
 		this.staticClawMeshBuilder.parent = this.servoArmMotor;
-		this.staticClawMeshBuilder.position.x = -2.4
+		this.staticClawMeshBuilder.position.x = -2.4;
 		this.staticClawMeshBuilder.position.y = 0.3;
 		this.staticClawMeshBuilder.position.z = 11;
 		this.staticClawMeshBuilder.rotateAround(new Babylon.Vector3(0,0,0), new Babylon.Vector3(0,1,0), -Math.PI * 0.39);
@@ -508,7 +508,7 @@ export class Space {
 	private setpositiveServo(s0_position:number) {
 		this.liftArm_joint.setMotor(0.3); // Rotates arm backwards
 
-		const angle_Positive = Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)
+		const angle_Positive = Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x);
 		if (s0_position  > angle_Positive || angle_Positive > 85 || angle_Positive < -85) {
 			this.liftArm_joint.setMotor(0);
 		}
@@ -517,7 +517,7 @@ export class Space {
 	private setnegativeServo(s0_position:number) {
 		this.liftArm_joint.setMotor(-0.3); // Rotates arm forward
 
-		const angle_Negative = Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)
+		const angle_Negative = Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x);
 		if (s0_position < angle_Negative || angle_Negative < -85 || angle_Negative > 85) {
 			this.liftArm_joint.setMotor(0);
 		}

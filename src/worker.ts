@@ -10,14 +10,14 @@ const print = (s: string) => {
   ctx.postMessage({
     type: 'programoutput',
     stdoutput: s
-  })
-}
+  });
+};
 const err = (stdoutput: string, stderror: string) => {
   ctx.postMessage({
     type: 'programerror',
     stderror: stderror
-  })
-}
+  });
+};
 
 const registers = new Array<number>(Registers.REG_ALL_COUNT);
 
@@ -73,7 +73,7 @@ ctx.onmessage = (e: MessageEvent) => {
         mod._simMainWrapper();
         ctx.postMessage({
           type: 'program-ended'
-        })
+        });
       };
 
       ctx.postMessage({
@@ -98,4 +98,4 @@ ctx.onmessage = (e: MessageEvent) => {
       break;
     }
   } 
-}
+};

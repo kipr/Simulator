@@ -15,6 +15,6 @@ export class Static extends React.Component<Props> {
                   <image width="100%" href="static/Surface-A.png"/>
               </svg>
             </svg>           
-        )
+        );
     }
 }

@@ -203,6 +203,6 @@ export default {
     REG_W_MOT_3_GOAL_B0:    152,
   
     REG_ALL_COUNT:      153
-  }
+  };
   
 

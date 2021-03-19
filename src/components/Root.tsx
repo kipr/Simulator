@@ -13,11 +13,11 @@ type State = RootState;
 
 export class Root extends React.Component<Props, State> {
 	constructor(props: Props) {
-		super(props)
+		super(props);
 		this.state = {
 			robotState: WorkerInstance.state,
 			isCanEnabled: Array<boolean>(12).fill(false),
-		}
+		};
 	}
 
 	componentDidMount(): void {
@@ -41,7 +41,7 @@ export class Root extends React.Component<Props, State> {
 	}
 
 	render(): React.ReactNode {
-		const { state } = this
+		const { state } = this;
 
 		return (
 			<div id="main">
@@ -54,7 +54,7 @@ export class Root extends React.Component<Props, State> {
 					<SimulatorArea robotState={state.robotState} canEnabled={state.isCanEnabled} onRobotStateChange={this.onRobotStateChange_} />
 				</div>
 			</div>
-		)
+		);
 	}
 }
 

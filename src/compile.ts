@@ -11,7 +11,7 @@ export default (code: string): Promise<string> => {
 
     req.onerror = (err) => {
       reject(err);
-    }
+    };
 
     req.open('POST', '/compile');
 

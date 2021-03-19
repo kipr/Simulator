@@ -1,5 +1,5 @@
 import Protocol from './WorkerProtocol';
-import Registers from './RegisterState'
+import Registers from './RegisterState';
 import { RobotState } from './RobotState';
 
 import deepNeq from './deepNeq';
@@ -139,16 +139,14 @@ class WorkerInstance {
           break;
         }
         case 'programoutput': {
-          message.stdoutput
           if (this.onStdOutput) {
-            this.onStdOutput(message.stdoutput)
+            this.onStdOutput(message.stdoutput);
           }
           break;
         }
         case 'programerror': {
-          message.stderror
           if (this.onStdError) {
-            this.onStdError(message.stderror)
+            this.onStdError(message.stderror);
           }
           break;
         }
@@ -193,7 +191,7 @@ class WorkerInstance {
   }
 
   constructor() {
-    this.worker_.onmessage = this.onMessage
+    this.worker_.onmessage = this.onMessage;
     requestAnimationFrame(this.tick);
   }
 
