@@ -19,6 +19,7 @@ module.exports = {
         'no-param-reassign': 'error',
         'prefer-arrow-callback': 'error',
         'arrow-spacing': 'error',
+        'no-confusing-arrow': 'error',
     },
     overrides: [
         {
