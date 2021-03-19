@@ -100,7 +100,7 @@ class WorkerInstance {
     requestAnimationFrame(this.tick);
   }
   
-  private onMessage = (e: MessageEvent)=> {
+  private onMessage = (e: MessageEvent) => {
     const message = e.data as Protocol.Worker.Request;
     switch (message.type) {
         case 'setregister': {

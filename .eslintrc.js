@@ -18,6 +18,7 @@ module.exports = {
         'keyword-spacing': 'error',
         'no-param-reassign': 'error',
         'prefer-arrow-callback': 'error',
+        'arrow-spacing': 'error',
     },
     overrides: [
         {

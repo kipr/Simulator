@@ -99,7 +99,7 @@ app.use('/static', express.static(`${__dirname}/static`));
 
 app.use(express.static(sourceDir));
 
-app.use('*', (req,res) =>{
+app.use('*', (req,res) => {
   res.sendFile(`${__dirname}/${sourceDir}/index.html`);
 });
 

@@ -6,7 +6,7 @@ import Registers from './RegisterState';
 // See GitHub issue: https://github.com/microsoft/TypeScript/issues/20595
 const ctx: Worker = self as unknown as Worker;
 
-const print = (s: string)=>{
+const print = (s: string) => {
   ctx.postMessage({
     type: 'programoutput',
     stdoutput: s
