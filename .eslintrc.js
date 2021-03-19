@@ -60,6 +60,8 @@ module.exports = {
         // TypeScript extension rules that conflict with normal ESLint rules
         'brace-style': 'off',
         '@typescript-eslint/brace-style': 'error',
+        'indent': 'off',
+        '@typescript-eslint/indent': ['error', 2, { 'SwitchCase': 1 }],
         'keyword-spacing': 'off',
         '@typescript-eslint/keyword-spacing': 'error',
         'no-duplicate-imports': 'off',

@@ -97,7 +97,7 @@ export class Space {
     this.buildMovingClawP2();
     this.buildMovingClawP3();
     this.buildMovingClawP4();
-    this.buildWheels();		
+    this.buildWheels();
 
     this.can = Babylon.MeshBuilder.CreateCylinder("can",{ height:10, diameter:6.8 }, this.scene);
     this.can.position.z = 30;
@@ -188,8 +188,8 @@ export class Space {
       
 
       // if(this.registers_[61] == 0){
-      // 	s1 = WorkerInstance.readServoRegister(WorkerInstance.registers[78], WorkerInstance.registers[79]);
-      // 	s3 = WorkerInstance.readServoRegister(WorkerInstance.registers[80], WorkerInstance.registers[81]);
+      //   s1 = WorkerInstance.readServoRegister(WorkerInstance.registers[78], WorkerInstance.registers[79]);
+      //   s3 = WorkerInstance.readServoRegister(WorkerInstance.registers[80], WorkerInstance.registers[81]);
       // }
     });
   }
@@ -486,7 +486,7 @@ export class Space {
 
   private assignVisServoArm() {
     // this.scene.getTransformNodeByID('1 x 5 Servo Horn-1').getChildMeshes().forEach(element => {
-    // 	element.setParent(this.servoArmMotor);
+    //   element.setParent(this.servoArmMotor);
     // });
     
     this.scene.getTransformNodeByID('1 x 5 Servo Horn-1').setParent(this.servoArmMotor);
@@ -498,11 +498,11 @@ export class Space {
     this.wheel2_joint.setMotor(m2);
     
     // if (this.counter == 10){
-    // 	// console.log('Turning motors, here are values ' + m1 + ' ,' + m2);
-    // 	// console.log('Setting physics motor to ' + this.motor1 + ' ,' + this.motor2);
-    // 	console.log(this.liftArm.rotationQuaternion)
-    // 	this.counter = 0;
-    // }		
+    // // console.log('Turning motors, here are values ' + m1 + ' ,' + m2);
+    // // console.log('Setting physics motor to ' + this.motor1 + ' ,' + this.motor2);
+    // console.log(this.liftArm.rotationQuaternion)
+    // this.counter = 0;
+    // }
   }
 
   private setpositiveServo(s0_position: number) {
