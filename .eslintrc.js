@@ -16,6 +16,7 @@ module.exports = {
         }],
         'space-before-blocks': 'error',
         'keyword-spacing': 'error',
+        'no-param-reassign': 'error',
     },
     overrides: [
         {
