@@ -54,6 +54,24 @@ module.exports = {
                 'plugin:@typescript-eslint/recommended-requiring-type-checking',
             ],
             rules: {
+                // TypeScript extension rules that conflict with normal ESLint rules
+                'brace-style': 'off',
+                '@typescript-eslint/brace-style': 'error',
+                'keyword-spacing': 'off',
+                '@typescript-eslint/keyword-spacing': 'error',
+                'no-duplicate-imports': 'off',
+                '@typescript-eslint/no-duplicate-imports': 'error',
+                'no-useless-constructor': 'off',
+                '@typescript-eslint/no-useless-constructor': 'error',
+                'object-curly-spacing': 'off',
+                '@typescript-eslint/object-curly-spacing': ['error', 'always'],
+                'semi': 'off',
+                '@typescript-eslint/semi': 'error',
+                'space-before-function-paren': 'off',
+                '@typescript-eslint/space-before-function-paren': ['error', { 'named': 'never' }],
+                'space-infix-ops': 'off',
+                '@typescript-eslint/space-infix-ops': 'error',
+
                 // Allow namespaces for now, since the project relies on several namespaces
                 '@typescript-eslint/no-namespace': 'off',
                 '@typescript-eslint/type-annotation-spacing': 'error',

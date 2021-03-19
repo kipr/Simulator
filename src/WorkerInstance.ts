@@ -6,12 +6,12 @@ import deepNeq from './deepNeq';
 
 class WorkerInstance {
   
-  onStateChange: (state: RobotState) => void 
+  onStateChange: (state: RobotState) => void;
   
-  onStdOutput: (s: string) => void
-  onStdError: (stderror: string) => void
+  onStdOutput: (s: string) => void;
+  onStdError: (stderror: string) => void;
 
-  private state_ = RobotState.empty
+  private state_ = RobotState.empty;
   private registers_ = new Array<number>(Registers.REG_ALL_COUNT)
                                                                 .fill(0)
                                                                 .fill(240,61,62)
@@ -31,7 +31,7 @@ class WorkerInstance {
     }
     
     return int1 * 256 + int2;
-  }
+  };
   public readServoRegister = (reg1: number, reg2: number) => {
     const val = reg1 << 8 | reg2;
     const degrees = (val - 1500.0) / 10.0;
@@ -39,7 +39,7 @@ class WorkerInstance {
     if (dval < 0.0) dval = 0.0;
     if (dval > 2047.0) dval = 2047.01;
     return dval;
-  }
+  };
 
   private tick: FrameRequestCallback = (time: number) => {
     const timeElapsedMs = this.lastTickTime !== undefined ? time - this.lastTickTime : 0;
@@ -95,7 +95,7 @@ class WorkerInstance {
 
     
     requestAnimationFrame(this.tick);
-  }
+  };
   
   private onMessage = (e: MessageEvent) => {
     const message = e.data as Protocol.Worker.Request;
@@ -151,7 +151,7 @@ class WorkerInstance {
           break;
         }
     }
-  }
+  };
   start(code: string) {
     this.worker_.postMessage({
       type: 'stop'

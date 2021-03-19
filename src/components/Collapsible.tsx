@@ -23,7 +23,7 @@ export default class Collapsible extends React.Component<Props, State> {
 		this.setState(prevState => ({
 			open: !prevState.open,
 		}));
-	}
+	};
 
 	render(): React.ReactNode {
 		return (

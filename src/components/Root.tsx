@@ -38,7 +38,7 @@ export class Root extends React.Component<Props, State> {
 			isCanEnabled[canNumber] = enabled;
 			return { isCanEnabled: isCanEnabled };
 		});
-	}
+	};
 
 	render(): React.ReactNode {
 		const { state } = this;

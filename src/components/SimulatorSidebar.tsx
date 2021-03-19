@@ -47,19 +47,19 @@ export class SimulatorSidebar extends React.Component<Props, State> {
     this.setState(prevState => ({
       console: `${prevState.console}\n${s}`,
     }));
-  }
+  };
 
   private onStdCompOutput_ = () => {
     this.setState({
       console: `Compile Succeeded\n`
     });
-  }
+  };
 
   private onStdError_ = (stderror: string) => {
     this.setState({
       console: `${stderror}\n Compiled`
     });
-  }
+  };
   private onCompileClick_: React.MouseEventHandler<HTMLButtonElement> = async () => {    
     try {
       const compiled = await compile(this.state.code);
@@ -157,7 +157,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
 		const canNumber = Number.parseInt(event.target.value);
     const isTargetChecked = event.target.checked;
     this.props.onCanChange(canNumber, isTargetChecked);
-	}
+	};
 
   render(): React.ReactNode {
     const { props, state } = this;

@@ -52,7 +52,7 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
         if (c !== null) {
             this.canvas = c;
         }
-    }
+    };
 
     private setCanEnabled(canNumber: number, isEnabled: boolean) {
         isEnabled
