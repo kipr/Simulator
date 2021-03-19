@@ -52,18 +52,17 @@ const deepObjectNeq = (_0: object, _1: object) => {
   if (keys0.length !== keys1.length) return true;
 
   const hit = new Set<string>();
-  for (let i = 0; i < keys0.length; ++i) {
-    hit.add(keys0[i]);
+  for (const key of keys0) {
+    hit.add(key);
   }
-  for (let i = 0; i < keys1.length; ++i) {
-    if (!hit.has(keys1[i])) return true;
+  for (const key of keys1) {
+    if (!hit.has(key)) return true;
   }
 
   // We've now determined that all keys are the same
 
   const keys = keys0;
-  for (let i = 0; i < keys.length; ++i) {
-    const key = keys[i];
+  for (const key of keys) {
     if (valueNeq(_0[key], _1[key])) return true;
   }
 
