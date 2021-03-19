@@ -29,6 +29,7 @@ module.exports = {
         'brace-style': 'error',
         'no-else-return': 'error',
         'spaced-comment': 'error',
+        'space-infix-ops': 'error',
     },
     overrides: [
         {

@@ -97,7 +97,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
   private onDownloadClick_: React.MouseEventHandler<HTMLButtonElement> = () => {
     const date = new Date();
     const dateString = `${date.getUTCFullYear().toString()}-${date.getMonth().toString()}-${date.getDay().toString()}`;
-    const file= `${dateString}-simulatorCode.c`;
+    const file = `${dateString}-simulatorCode.c`;
     console.log(file);
     function download(filename, text) {
       const element = document.createElement('a');
@@ -149,7 +149,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
   private onThetaChange_ = (theta: number) => {
     this.props.onRobotStateChange({
       ...this.props.robotState,
-      theta: -1*theta*Math.PI/180,
+      theta: -1 * theta * Math.PI / 180,
     });
   };
 

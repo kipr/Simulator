@@ -27,10 +27,10 @@ class WorkerInstance {
   // private wheelSep_ = 64.05;
   public DirectionalValues = (int1:number, int2:number) => {
     if (int1 > int2) {
-      return -((0xFF ^ int1)*256 + (0xFF ^ int2)) - 1;
+      return -((0xFF ^ int1) * 256 + (0xFF ^ int2)) - 1;
     }
     
-    return int1*256 + int2;
+    return int1 * 256 + int2;
   }
   public readServoRegister = (reg1: number, reg2: number) => {
     const val = reg1 << 8 | reg2;
@@ -63,10 +63,10 @@ class WorkerInstance {
     
     // Write the values to the registers and send those back to worker when updated.(Send the entire array to worker)
 
-    nextState.motor0_position += nextState.motor0_speed*timeElapsedSecs;
-    nextState.motor1_position += nextState.motor1_speed*timeElapsedSecs;
-    nextState.motor2_position += nextState.motor2_speed*timeElapsedSecs;
-    nextState.motor3_position += nextState.motor3_speed*timeElapsedSecs;
+    nextState.motor0_position += nextState.motor0_speed * timeElapsedSecs;
+    nextState.motor1_position += nextState.motor1_speed * timeElapsedSecs;
+    nextState.motor2_position += nextState.motor2_speed * timeElapsedSecs;
+    nextState.motor3_position += nextState.motor3_speed * timeElapsedSecs;
 
     // Set motor position registers based on next state
     this.registers_[42] = nextState.motor0_position;
