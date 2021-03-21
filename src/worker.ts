@@ -63,25 +63,6 @@ ctx.onmessage = (e: MessageEvent) => {
       break;
     }
 
-    case 'compile': {
-      const mod = dynRequire(message.code,{},
-        print,
-        err
-      );
-
-      mod.onRuntimeInitialized = () => {
-        mod._simMainWrapper();
-        ctx.postMessage({
-          type: 'program-ended'
-        });
-      };
-
-      ctx.postMessage({
-        type: 'compile'
-      });
-
-      break;
-    }
     case 'setregister': {
       registers[message.address] = message.value;
 

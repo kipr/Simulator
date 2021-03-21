@@ -48,49 +48,41 @@ export class SimulatorSidebar extends React.Component<Props, State> {
     }));
   };
 
-  private onStdCompOutput_ = () => {
-    this.setState({
-      console: `Compile Succeeded\n`
-    });
-  };
-
   private onStdError_ = (stderror: string) => {
     this.setState({
       console: `${stderror}\n Compiled`
     });
   };
-  private onCompileClick_: React.MouseEventHandler<HTMLButtonElement> = async () => {    
+
+  private compileCurrentCode: () => Promise<string> = async () => {
     try {
       const compiled = await compile(this.state.code);
-      WorkerInstance.onStdOutput = this.onStdCompOutput_;
-      WorkerInstance.onStdError = this.onStdError_;
-      WorkerInstance.compile(compiled);
+      this.setState({
+        console: `Compile Succeeded\n`,
+      });
+
+      return compiled;
     } catch (e) {
       const compileError = e as { stdout: string, stderr: string };
-      console.log(compileError);
-      console.log(compileError.stderr);
       this.setState({
         console: `Compile Failed \n\n**********************************\n${compileError.stderr}\n`
       });
+
+      return null;
     }
-    
+  };
+
+  private onCompileClick_: React.MouseEventHandler<HTMLButtonElement> = async () => {
+    await this.compileCurrentCode();
   };
 
   private onRunClick_: React.MouseEventHandler<HTMLButtonElement> = async () => {
-    try {
-      const compiled = await compile(this.state.code);
-      WorkerInstance.onStdOutput = this.onStdOutput_;
-      WorkerInstance.onStdError = this.onStdError_;
-      WorkerInstance.start(compiled);
-    } catch (e) {
-      const compileError = e as { stdout: string, stderr: string };
-      console.log(compileError);
-      console.log(compileError.stderr);
-      this.setState({
-        console: `Run Failed: Please Recompile\n\n**********************************\n${compileError.stderr}\n`
-      });
-    }
-    
+    const compiledCode = await this.compileCurrentCode();
+    if (compiledCode === null) return;
+
+    WorkerInstance.onStdOutput = this.onStdOutput_;
+    WorkerInstance.onStdError = this.onStdError_;
+    WorkerInstance.start(compiledCode);
   };
 
   private onDownloadClick_: React.MouseEventHandler<HTMLButtonElement> = () => {

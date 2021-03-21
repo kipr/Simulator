@@ -162,16 +162,6 @@ class WorkerInstance {
     });
   }
 
-  compile(code: string) {
-    this.worker_.postMessage({
-      type: 'stop'
-    });
-    this.worker_.postMessage({
-      type: 'compile',
-      code
-    });
-  }
-
   stop() {
     this.worker_.postMessage({
       type: 'stop'
