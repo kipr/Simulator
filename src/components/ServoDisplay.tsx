@@ -6,17 +6,10 @@ interface ServoDisplayProps {
   servoPosition: number;
 }
 
-interface ServoDisplayState { }
-
 type Props = ServoDisplayProps;
-type State = ServoDisplayState;
 
-export class ServoDisplay extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-  }
-
-  render() {
+export class ServoDisplay extends React.Component<Props> {
+  render(): React.ReactNode {
     return (
       <section style={{ textAlign: 'center' }}>
         <h3>Servo {this.props.servoNumber}</h3>

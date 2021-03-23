@@ -80,3 +80,9 @@ In another terminal, run the server:
 source $PATH_TO_EMSDK/emsdk_env.sh
 LIBWALLABY_ROOT=/path/to/libwallaby node express.js
 ```
+
+## Linting
+
+The project is set up with [ESLint](https://eslint.org/) for JavaScript/TypeScript linting. You can run ESLint manually by running `yarn lint` at the root.
+
+To ease development, we highly recommend enabling ESLint within your editor so you can see issues in real time. If you're using Visual Studio Code, you can use the [VS Code ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint). For other editors, see [available ESLint integrations](https://eslint.org/docs/user-guide/integrations).

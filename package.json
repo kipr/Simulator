@@ -8,7 +8,7 @@
     "build": "yarn run clean-dist && webpack -p --config=configs/webpack/prod.js",
     "watch": "webpack --watch --watch-poll --config=configs/webpack/dev.js",
     "clean-dist": "rm -f -r -d dist",
-    "lint": "tslint './src/**/*.ts*' --format stylish --force",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "start": "yarn run start-dev",
     "start-dev": "webpack-dev-server --host 0.0.0.0 --config=configs/webpack/dev.js",
     "start-prod": "yarn run build && node express.js"
@@ -16,8 +16,11 @@
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@types/react-dom": "^16.9.5",
+    "@typescript-eslint/eslint-plugin": "^4.18.0",
+    "@typescript-eslint/parser": "^4.18.0",
     "awesome-typescript-loader": "^5.2.1",
     "babel-loader": "^8.1.0",
+    "eslint": "^7.22.0",
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.0.1",
     "react-hot-loader": "^4.12.20",

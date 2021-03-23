@@ -5,6 +5,6 @@ import { Root } from './components/Root';
 const reactRoot = document.getElementById('reactRoot');
 
 ReactDom.render(
-    <Root />,
-    reactRoot
+  <Root />,
+  reactRoot
 );

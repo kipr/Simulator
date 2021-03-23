@@ -1,41 +1,40 @@
 import * as React from 'react';
 
 interface CollapsibleProps {
-	title: string;
+  title: string;
 }
 
 interface CollapsibleState {
-	open: boolean;
+  open: boolean;
 }
 
 type Props = CollapsibleProps;
 type State = CollapsibleState;
 
 export default class Collapsible extends React.Component<Props, State> {
-	constructor(props) {
-		super(props);
-		this.state = {
-			open: false,
-		};
-		this.togglePanel = this.togglePanel.bind(this);
-	}
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      open: false,
+    };
+  }
 
-	togglePanel() {
-		this.setState(prevState => ({
-			open: !prevState.open,
-		}));
-	}
+  private togglePanel = () => {
+    this.setState(prevState => ({
+      open: !prevState.open,
+    }));
+  };
 
-	render() {
-		return (
-			<>
-				<div onClick={this.togglePanel} className='header'>{this.props.title}</div>
-				{this.state.open ? (
-					<div className='content'>
-						{this.props.children}
-					</div>
-				) : null}
-			</>
-		);
-	}
+  render(): React.ReactNode {
+    return (
+      <>
+        <div onClick={this.togglePanel} className='header'>{this.props.title}</div>
+        {this.state.open ? (
+          <div className='content'>
+            {this.props.children}
+          </div>
+        ) : null}
+      </>
+    );
+  }
 }

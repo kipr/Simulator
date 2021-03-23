@@ -1,9 +1,9 @@
 export interface Sensor {
-	update(): void;
-	getValue(): number;
+  update(): void;
+  getValue(): number;
 }
 
 export interface VisibleSensor extends Sensor {
-	isVisible: boolean;
-	updateVisual(): void;
+  isVisible: boolean;
+  updateVisual(): void;
 }

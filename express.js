@@ -1,3 +1,5 @@
+/* eslint-env node */
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
@@ -9,7 +11,7 @@ const portNumber = 3000;
 const sourceDir = 'dist';
 const config = require('./config');
 
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
@@ -35,7 +37,7 @@ app.post('/compile', (req, res) => {
 
   // Wrap user's main() in our own "main()" that exits properly
   // Required because Asyncify keeps emscripten runtime alive, which would prevent cleanup code from running
-  const augmentedCode = req.body.code + `
+  const augmentedCode = `${req.body.code}
     #include <emscripten.h>
   
     void simMainWrapper()
@@ -52,7 +54,7 @@ app.post('/compile', (req, res) => {
     if (err) {
       return res.status(500).json({
         error: "Failed to write ${}"
-      })
+      });
     }
 
     exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -s ASYNCIFY -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']" -I${config.libwallaby.root}/include -L${config.libwallaby.root}/lib -lkipr -o ${path}.js ${path}`, (err, stdout, stderr) => {
@@ -85,19 +87,19 @@ app.post('/compile', (req, res) => {
             res.set('Content-Type', 'application/javascript');
             res.status(200).send(data);
           });
-        })
+        });
       });
     });
-  })
+  });
   
   
-})
+});
 
 app.use('/static', express.static(`${__dirname}/static`));
 
 app.use(express.static(sourceDir));
 
-app.use('*', (req,res) =>{
+app.use('*', (req,res) => {
   res.sendFile(`${__dirname}/${sourceDir}/index.html`);
 });
 

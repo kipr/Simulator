@@ -7,21 +7,14 @@ interface NumberDisplayProps {
   onChange?: (value: number) => void,
 }
 
-interface NumberDisplayState { }
-
 type Props = NumberDisplayProps;
-type State = NumberDisplayState;
 
-export class NumberDisplay extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-  }
-
-  onValueChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+export class NumberDisplay extends React.Component<Props> {
+  private onValueChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     this.props.onChange(Number.parseInt(event.target.value));
   };
 
-  render() {
+  render(): React.ReactNode {
     const textAreaStyle: React.CSSProperties = {
       resize: 'none',
       textAlign: 'center',

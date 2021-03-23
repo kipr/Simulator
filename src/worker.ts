@@ -2,25 +2,28 @@ import Protocol from './WorkerProtocol';
 import dynRequire from './require';
 import Registers from './RegisterState';
 
-const ctx: Worker = self as any;
-const print = (s: string)=>{
+// Proper typing of Worker is tricky due to conflicting DOM and WebWorker types
+// See GitHub issue: https://github.com/microsoft/TypeScript/issues/20595
+const ctx: Worker = self as unknown as Worker;
+
+const print = (s: string) => {
   ctx.postMessage({
     type: 'programoutput',
     stdoutput: s
-  })
-}
+  });
+};
 const err = (stdoutput: string, stderror: string) => {
   ctx.postMessage({
     type: 'programerror',
     stderror: stderror
-  })
-}
+  });
+};
 
 const registers = new Array<number>(Registers.REG_ALL_COUNT);
 
-ctx.onmessage = (e) => {
+ctx.onmessage = (e: MessageEvent) => {
   
-  const message:Protocol.Worker.Request = e.data;
+  const message = e.data as Protocol.Worker.Request;
   switch (message.type) {
     case 'start': {
       const mod = dynRequire(message.code, {
@@ -30,7 +33,6 @@ ctx.onmessage = (e) => {
             address: address,
             value: value
           });
-          //console.log("ASDASD");
         },
         registers,
         onMotorPositionClear: (motor) => {
@@ -71,7 +73,7 @@ ctx.onmessage = (e) => {
         mod._simMainWrapper();
         ctx.postMessage({
           type: 'program-ended'
-        })
+        });
       };
 
       ctx.postMessage({
@@ -80,7 +82,7 @@ ctx.onmessage = (e) => {
 
       break;
     }
-    case 'setregister':{
+    case 'setregister': {
       registers[message.address] = message.value;
 
       // ctx.postMessage({
@@ -96,4 +98,4 @@ ctx.onmessage = (e) => {
       break;
     }
   } 
-}
+};
