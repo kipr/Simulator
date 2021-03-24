@@ -40,6 +40,10 @@ export class SimulatorSidebar extends React.Component<Props, State> {
       code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
       console: '',
     };
+
+    // Set handlers for program output
+    WorkerInstance.onStdOutput = this.onStdOutput_;
+    WorkerInstance.onStdError = this.onStdError_;
   }
 
   private onStdOutput_ = (s: string) => {
@@ -80,8 +84,6 @@ export class SimulatorSidebar extends React.Component<Props, State> {
     const compiledCode = await this.compileCurrentCode();
     if (compiledCode === null) return;
 
-    WorkerInstance.onStdOutput = this.onStdOutput_;
-    WorkerInstance.onStdError = this.onStdError_;
     WorkerInstance.start(compiledCode);
   };
 
