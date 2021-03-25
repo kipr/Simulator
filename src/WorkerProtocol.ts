@@ -10,12 +10,7 @@ export namespace Protocol {
       hello: string;
     }
 
-    export interface CompileRequest {
-      type: 'compile';
-      code: string;
-    }
-
-    export type Request = StartRequest | StopRequest | CompileRequest | SetRegisterRequest | ProgramEndedRequest | ProgramOutputRequest | ProgramErrorRequest | SetMotorPositionRequest;
+    export type Request = StartRequest | StopRequest | SetRegisterRequest | ProgramEndedRequest | ProgramOutputRequest | ProgramErrorRequest | SetMotorPositionRequest;
 
     export interface StartResponse {
       type: 'start';
@@ -23,10 +18,6 @@ export namespace Protocol {
 
     export interface StopResponse {
       type: 'stop';
-    }
-
-    export interface CompileResponse {
-      type: 'compile';
     }
 
     export interface ProgramEndedRequest {
@@ -37,7 +28,7 @@ export namespace Protocol {
       type: 'program-ended'
     }
 
-    export type Response = StartResponse | StopResponse | CompileResponse | SetRegisterResponse | ProgramEndedResponse;
+    export type Response = StartResponse | StopResponse | SetRegisterResponse | ProgramEndedResponse;
 
 
     export interface SetRegisterRequest {
