@@ -12,7 +12,7 @@ const print = (s: string) => {
     stdoutput: s
   });
 };
-const err = (stdoutput: string, stderror: string) => {
+const printErr = (stderror: string) => {
   ctx.postMessage({
     type: 'programerror',
     stderror: stderror
@@ -49,7 +49,7 @@ ctx.onmessage = (e: MessageEvent) => {
         },
       },
       print,
-      err
+      printErr
       );
 
       mod.onRuntimeInitialized = () => {
@@ -66,7 +66,7 @@ ctx.onmessage = (e: MessageEvent) => {
     case 'compile': {
       const mod = dynRequire(message.code,{},
         print,
-        err
+        printErr
       );
 
       mod.onRuntimeInitialized = () => {

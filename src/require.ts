@@ -1,7 +1,7 @@
 export interface EmscriptenModule {
   context: ModuleContext,
   print: (s: string) => void,
-  err: (stdout: string, stderror: string) => void,
+  printErr: (stderror: string) => void,
   onRuntimeInitialized?: () => void,
   _simMainWrapper?: () => void,
 }
@@ -13,11 +13,11 @@ export interface ModuleContext {
   getMotorPosition?: (port: number) => void,
 }
 
-export default (code: string, context: ModuleContext, print: (s: string) => void, err: (stdout: string, stderror: string) => void): EmscriptenModule => {
+export default (code: string, context: ModuleContext, print: (s: string) => void, printErr: (stderror: string) => void): EmscriptenModule => {
   const mod: EmscriptenModule = {
     context,
     print,
-    err 
+    printErr,
   };
 
   // Disable eslint rule - dynamic evaluation of user code is needed here

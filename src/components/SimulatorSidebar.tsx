@@ -55,10 +55,11 @@ export class SimulatorSidebar extends React.Component<Props, State> {
   };
 
   private onStdError_ = (stderror: string) => {
-    this.setState({
-      console: `${stderror}\n Compiled`
-    });
+    this.setState(prevState => ({
+      console: `${prevState.console}\n${stderror}`,
+    }));
   };
+
   private onCompileClick_: React.MouseEventHandler<HTMLButtonElement> = async () => {    
     try {
       const compiled = await compile(this.state.code);
