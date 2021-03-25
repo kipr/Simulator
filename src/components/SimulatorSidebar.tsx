@@ -53,9 +53,9 @@ export class SimulatorSidebar extends React.Component<Props, State> {
   };
 
   private onStdError_ = (stderror: string) => {
-    this.setState({
-      console: `${stderror}\n Compiled`
-    });
+    this.setState(prevState => ({
+      console: `${prevState.console}\n${stderror}`,
+    }));
   };
 
   private compileCurrentCode: () => Promise<string> = async () => {
