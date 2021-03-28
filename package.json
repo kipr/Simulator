@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "author": "KISS Institute for Practical Robotics",
-  "license": "GPL",
+  "license": "GPL-3.0-only",
   "scripts": {
     "build": "yarn run clean-dist && webpack -p --config=configs/webpack/prod.js",
     "watch": "webpack --watch --watch-poll --config=configs/webpack/dev.js",
