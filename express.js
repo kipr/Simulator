@@ -18,7 +18,7 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.json());
-app.use(morgan());
+app.use(morgan('combined'));
 
 app.post('/compile', (req, res) => {
   // const body = JSON.parse();
