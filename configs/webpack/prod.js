@@ -17,4 +17,7 @@ module.exports = merge(commonConfig, {
   },
   devtool: 'source-map',
   plugins: [],
+  node: {
+    fs: 'empty',
+  },
 });
