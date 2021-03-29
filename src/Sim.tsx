@@ -222,7 +222,6 @@ export class Space {
   private buildGround() {
     this.ground = Babylon.MeshBuilder.CreateGround("mat", { width:118, height:59, subdivisions:2 }, this.scene);
     this.ground.position.y = -0.8;
-    this.ground.position.z = -14;
     this.ground.rotate(new Babylon.Vector3(0,1,0),Math.PI / 2);
     const groundMaterial = new Babylon.StandardMaterial("ground", this.scene);
     groundMaterial.ambientTexture = new Babylon.Texture('static/Surface-A.png',this.scene);
@@ -233,7 +232,7 @@ export class Space {
   private buildBotBody() {
     this.botbody = Babylon.MeshBuilder.CreateBox("botbody", { width:12.3, depth:24.6, height:3 }, this.scene);
     this.botbody.position.y = 4.3;
-    this.botbody.position.z = -13;
+    this.botbody.position.z = -12.3;
     this.botbody.isVisible = this.collidersVisible;
   }
 
