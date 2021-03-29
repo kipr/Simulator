@@ -48,16 +48,18 @@ export class SimulatorSidebar extends React.Component<Props, State> {
     WorkerInstance.onStdError = this.onStdError_;
   }
 
-  private onStdOutput_ = (s: string) => {
+  private appendToConsole = (s: string) => {
     this.setState(prevState => ({
       console: `${prevState.console}\n${s}`,
     }));
   };
 
+  private onStdOutput_ = (s: string) => {
+    this.appendToConsole(s);
+  };
+
   private onStdError_ = (stderror: string) => {
-    this.setState(prevState => ({
-      console: `${prevState.console}\n${stderror}`,
-    }));
+    this.appendToConsole(stderror);
   };
 
   private compileCurrentCode: () => Promise<string> = async () => {
@@ -68,16 +70,12 @@ export class SimulatorSidebar extends React.Component<Props, State> {
 
     try {
       const compiled = await compile(this.state.code);
-      this.setState(prevState => ({
-        console: `${prevState.console}\nCompile succeeded\n`,
-      }));
+      this.appendToConsole('Compile succeeded\n');
 
       return compiled;
     } catch (e) {
       const compileError = e as { stdout: string, stderr: string };
-      this.setState(prevState => ({
-        console: `${prevState.console}\nCompile Failed \n\n**********************************\n${compileError.stderr}\n`
-      }));
+      this.appendToConsole(`Compile Failed \n\n**********************************\n${compileError.stderr}`);
 
       return null;
     } finally {
