@@ -42,7 +42,7 @@ export class Space {
   private ticksSinceETSensorUpdate: number;
 
   private can: Babylon.Mesh;
-  private can_positions: Array<number>;
+  private canCoordinates: Array<[number, number]>;
 
   private collidersVisible = true;
 
@@ -98,6 +98,9 @@ export class Space {
     this.buildMovingClawP3();
     this.buildMovingClawP4();
     this.buildWheels();
+
+    // (x, z) coordinates of cans around the board
+    this.canCoordinates = [[22, 14.3], [0, 20.6], [-15.5, 23.7], [0, 6.9], [13.7, -6.8], [0, -6.8], [-13.5, -6.8], [-25.1, -14.8], [0, -34], [18.8, -45.4], [0, -54.9], [-18.7, -45.4]];
 
     this.can = Babylon.MeshBuilder.CreateCylinder("can",{ height:10, diameter:6.8 }, this.scene);
     this.can.position.z = 30;
@@ -204,18 +207,15 @@ export class Space {
     this.engine.resize();
   }
 
-  public createCan(canPosition: number): void {
-    const canName = `Can${canPosition}`;
-    this.can_positions = [];
-    this.can_positions = [0,0,0, 22,0,14.5, 0,0,20.6, -15.5,0,24, 0,0,7, 14,0,-7, 0,0,-7, -13.7,0,-7, -25,0,-14.5, 0,0,-34, 19,0,-45, 0,0,-55, -18.5,0,-45];
+  public createCan(canNumber: number): void {
+    const canName = `Can${canNumber}`;
     const new_can = Babylon.MeshBuilder.CreateCylinder(canName,{ height:10, diameter:6 }, this.scene);
-    // this.can.position = new Babylon.Vector3(0,0,30);//.z = 30;
     new_can.physicsImpostor = new Babylon.PhysicsImpostor(new_can, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 5 }, this.scene);
-    new_can.position = new Babylon.Vector3(this.can_positions[canPosition * 3], this.can_positions[(canPosition * 3) + 1],this.can_positions[(canPosition * 3) + 2]);
+    new_can.position = new Babylon.Vector3(this.canCoordinates[canNumber - 1][0], 5, this.canCoordinates[canNumber - 1][1]);
   }
 
-  public destroyCan(canPosition: number): void {
-    const canName = `Can${canPosition}`;
+  public destroyCan(canNumber: number): void {
+    const canName = `Can${canNumber}`;
     this.scene.getMeshByName(canName).dispose();
   }
 
