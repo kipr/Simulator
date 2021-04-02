@@ -762,23 +762,23 @@ babel-loader@^8.1.0:
     pify "^4.0.1"
     schema-utils "^2.6.5"
 
-babylonjs-gltf2interface@4.2.0-alpha.20:
-  version "4.2.0-alpha.20"
-  resolved "https://registry.yarnpkg.com/babylonjs-gltf2interface/-/babylonjs-gltf2interface-4.2.0-alpha.20.tgz#02d7269e1e63cd41e0542021a5e247bf947a4f95"
-  integrity sha512-1pxce2vA3JS16m8eTP2jR/5ZMyN9AyzEUNsC8uTFI314oOIXl8dVwYKKZ0Hf6P7P+MIHWI8/R8BVcWuo1pGuRg==
+babylonjs-gltf2interface@4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/babylonjs-gltf2interface/-/babylonjs-gltf2interface-4.2.0.tgz#b0ef1e11e3574cf2c6f573d0c5c34857a2a7b322"
+  integrity sha512-Fn/ThxwZWP9kEAqk+9FX9CAeF4ah/I0/8wzAZR8MQuYqlYpEfM+E/IztJ+4LoOOxQYMWNs5lgj8OXSkX0tqc4g==
 
-babylonjs-loaders@^4.2.0-alpha.20:
-  version "4.2.0-alpha.20"
-  resolved "https://registry.yarnpkg.com/babylonjs-loaders/-/babylonjs-loaders-4.2.0-alpha.20.tgz#8f83a99c5a59d6133cdfd2cf2ac5768b6fd5af31"
-  integrity sha512-A3y2kHcXoNaaCx2j/kBj6lOebZ89U5i8QfqXOAOt7SDwDmJbe8Y1MrPbl2pGC876hSvVByjOSEENPzoWjGTydQ==
+babylonjs-loaders@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/babylonjs-loaders/-/babylonjs-loaders-4.2.0.tgz#3d536cb72bf8650fe7f1cee12380bea3227d79c0"
+  integrity sha512-GGLvo4ibbSHMY0Kj/DBu4827NBWeDT0NOBi/UuifXltzqPJtJRi3PCEcELj4Ga8cRxkfYi/7PMKcce2zVnpLZA==
   dependencies:
-    babylonjs "4.2.0-alpha.20"
-    babylonjs-gltf2interface "4.2.0-alpha.20"
+    babylonjs "4.2.0"
+    babylonjs-gltf2interface "4.2.0"
 
-babylonjs@4.2.0-alpha.20, babylonjs@^4.2.0-alpha.20:
-  version "4.2.0-alpha.20"
-  resolved "https://registry.yarnpkg.com/babylonjs/-/babylonjs-4.2.0-alpha.20.tgz#4f058c63dfea4ba0f9caea147d54819fcfd656f8"
-  integrity sha512-p5kaThWTcM+/lQ/x9lJ+JlC0vhRLjTWPk+OCuFjYvrYKid7WcK6ccY3+/oP4TK5lRU+TPD07Q6mHstAjiN9kuA==
+babylonjs@4.2.0, babylonjs@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/babylonjs/-/babylonjs-4.2.0.tgz#8f0d957a726de4c065904b14c2f413f455145d38"
+  integrity sha512-4hniJzWRkV0tDTTYGEHPk1lnfWn0HIw7HOvNWPK0rpUIbJooyeD9E5uVyHnslDedt0mtrA7QZu4i2Cz1DEmSsA==
 
 balanced-match@^1.0.0:
   version "1.0.0"
