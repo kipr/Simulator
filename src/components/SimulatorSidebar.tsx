@@ -28,6 +28,7 @@ export interface SimulatorSidebarProps extends StyleProps {
 interface SimulatorSidebarState {
   code: string;
   console: string;
+  isCompiling: boolean;
 }
 
 type Props = SimulatorSidebarProps;
@@ -39,6 +40,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
     this.state = {
       code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
       console: '',
+      isCompiling: false,
     };
 
     // Set handlers for program output
@@ -46,33 +48,38 @@ export class SimulatorSidebar extends React.Component<Props, State> {
     WorkerInstance.onStdError = this.onStdError_;
   }
 
-  private onStdOutput_ = (s: string) => {
+  private appendToConsole = (s: string) => {
     this.setState(prevState => ({
       console: `${prevState.console}\n${s}`,
     }));
   };
 
+  private onStdOutput_ = (s: string) => {
+    this.appendToConsole(s);
+  };
+
   private onStdError_ = (stderror: string) => {
-    this.setState(prevState => ({
-      console: `${prevState.console}\n${stderror}`,
-    }));
+    this.appendToConsole(stderror);
   };
 
   private compileCurrentCode: () => Promise<string> = async () => {
+    this.setState({
+      isCompiling: true,
+      console: `Compiling...`,
+    });
+
     try {
       const compiled = await compile(this.state.code);
-      this.setState({
-        console: `Compile Succeeded\n`,
-      });
+      this.appendToConsole('Compile succeeded\n');
 
       return compiled;
     } catch (e) {
       const compileError = e as { stdout: string, stderr: string };
-      this.setState({
-        console: `Compile Failed \n\n**********************************\n${compileError.stderr}\n`
-      });
+      this.appendToConsole(`Compile Failed \n\n**********************************\n${compileError.stderr}`);
 
       return null;
+    } finally {
+      this.setState({ isCompiling: false });
     }
   };
 
@@ -157,7 +164,8 @@ export class SimulatorSidebar extends React.Component<Props, State> {
     const { robotState } = props;
     const { 
       code,
-      console
+      console,
+      isCompiling,
     } = state;
     const options = {
       lineNumbers: true,
@@ -175,8 +183,8 @@ export class SimulatorSidebar extends React.Component<Props, State> {
             <h1 className="ide-title">KISS IDE<br/>Simulator</h1>
           </section>
           <p>
-            <button onClick={this.onCompileClick_}>Compile</button>
-            <button onClick={this.onRunClick_}>Run</button>
+            <button onClick={this.onCompileClick_} disabled={isCompiling}>Compile</button>
+            <button onClick={this.onRunClick_} disabled={isCompiling}>Run</button>
             <button onClick={this.onDownloadClick_}>Download</button>
           </p>
           <CodeMirror value={code} onBeforeChange={this.onCodeChange_} options={options} className="code" />
