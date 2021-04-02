@@ -5,6 +5,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = {
+  entry: {
+    app: './index.tsx',
+    worker: './worker.ts'
+  },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
@@ -58,5 +62,8 @@ module.exports = {
   },
   performance: {
     hints: false,
+  },
+  node: {
+    fs: 'empty',
   },
 };
