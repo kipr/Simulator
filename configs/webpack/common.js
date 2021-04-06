@@ -1,6 +1,5 @@
 // shared config (dev and prod)
 const {resolve} = require('path');
-const {CheckerPlugin} = require('awesome-typescript-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
@@ -22,7 +21,7 @@ module.exports = {
       },
       {
         test: /\.tsx?$/,
-        use: ['babel-loader', 'awesome-typescript-loader' ],
+        use: ['babel-loader', 'ts-loader' ],
       },
       {
         test: /\.css$/,
@@ -50,7 +49,6 @@ module.exports = {
     ],
   },
   plugins: [
-    new CheckerPlugin(),
     new HtmlWebpackPlugin({template: 'index.html.ejs',}),
     new webpack.IgnorePlugin({
       resourceRegExp: /^fs$/,
