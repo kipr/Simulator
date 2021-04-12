@@ -64,8 +64,7 @@ export class Space {
 
     this.can = Babylon.MeshBuilder.CreateCylinder("can",{ height:10, diameter:6.8 }, this.scene);
     this.can.position.z = 30;
-
-    // this.etSensorFake = new ETSensorBabylon(this.scene, this.bodyCompoundRootMesh, new Babylon.Vector3(0, 0, 15), new Babylon.Vector3(0, 0, 15), { isVisible: true });
+    this.can.physicsImpostor = new Babylon.PhysicsImpostor(this.can, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 0.7 }, this.scene);
 
     // Logic that happens before every frame
     this.scene.registerBeforeRender(() => {
@@ -133,88 +132,67 @@ export class Space {
       }
     });
 
-    // Find collider meshes in scene
-    const colliderBodyMesh: Babylon.AbstractMesh = this.scene.getMeshByName('collider_body');
-    const colliderBodyBackPanelMesh: Babylon.AbstractMesh = this.scene.getMeshByName('collider_body_back_panel');
-    const colliderBodyFrontPanelMesh: Babylon.AbstractMesh = this.scene.getMeshByName('collider_body_front_panel');
-    const colliderBodyFrontLegosMesh: Babylon.AbstractMesh = this.scene.getMeshByName('collider_body_front_legos');
-    const colliderCasterMesh: Babylon.AbstractMesh = this.scene.getMeshByName('collider_caster');
-    const colliderTouchBackLeftMesh: Babylon.AbstractMesh = this.scene.getMeshByName('collider_touch_back_left');
-    const colliderTouchBackRightMesh: Babylon.AbstractMesh = this.scene.getMeshByName('collider_touch_back_right');
-    const colliderTouchFrontMesh: Babylon.AbstractMesh = this.scene.getMeshByName('collider_touch_front');
-    const colliderWallabyMesh: Babylon.AbstractMesh = this.scene.getMeshByName('collider_wallaby');
-    const colliderBatteryMesh: Babylon.AbstractMesh = this.scene.getMeshByName('collider_battery');
-    const colliderArmServo: Babylon.AbstractMesh = this.scene.getMeshByName('collider_arm_servo');
+    // Create the root mesh for the body compound
+    // We need this so that we can set a specific center of mass for the whole body
+    // For now, use the wallaby collider location as the center of mass
+    const wallabyColliderMesh = this.scene.getMeshByName('collider_wallaby');
+    wallabyColliderMesh.computeWorldMatrix(true);
+    this.bodyCompoundRootMesh = new Babylon.Mesh("bodyCompoundMesh", this.scene);
+    this.bodyCompoundRootMesh.position = wallabyColliderMesh.getAbsolutePosition().clone();
 
+    type ColliderShape = 'box' | 'sphere';
+    const bodyColliderMeshInfos: [string, ColliderShape][] = [
+      ['collider_body', 'box'],
+      ['collider_body_back_panel', 'box'],
+      ['collider_body_front_panel', 'box'],
+      ['collider_body_front_legos', 'box'],
+      ['collider_caster', 'sphere'],
+      ['collider_touch_back_left', 'box'],
+      ['collider_touch_back_right', 'box'],
+      ['collider_touch_front', 'box'],
+      ['collider_wallaby', 'box'],
+      ['collider_battery', 'box'],
+      ['collider_arm_servo', 'box'],
+    ];
+
+    // Parent body collider meshes to body root and add physics impostors
+    for (const [bodyColliderMeshName, bodyColliderShape] of bodyColliderMeshInfos) {
+      const colliderMesh: Babylon.AbstractMesh = this.scene.getMeshByName(bodyColliderMeshName);
+      if (!colliderMesh) {
+        throw new Error(`failed to find collider mesh in model: ${bodyColliderMeshName}`);
+      }
+      
+      // Unparent collider mesh before adding physics impostors to them
+      colliderMesh.setParent(null);
+
+      const impostorType = bodyColliderShape === 'box'
+        ? Babylon.PhysicsImpostor.BoxImpostor
+        : Babylon.PhysicsImpostor.SphereImpostor;
+      colliderMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderMesh, impostorType, { mass: 0 }, this.scene);
+
+      colliderMesh.setParent(this.bodyCompoundRootMesh);
+    }
+
+    // Find wheel collider meshes in scene
     const colliderLeftWheelMesh: Babylon.AbstractMesh = this.scene.getMeshByName('collider_left_wheel');
     const colliderRightWheelMesh: Babylon.AbstractMesh = this.scene.getMeshByName('collider_right_wheel');
 
-    // Unparent collider meshes before adding physics impostors to them
-    colliderBodyMesh.setParent(null);
-    colliderBodyBackPanelMesh.setParent(null);
-    colliderBodyFrontPanelMesh.setParent(null);
-    colliderBodyFrontLegosMesh.setParent(null);
-    colliderCasterMesh.setParent(null);
-    colliderTouchBackLeftMesh.setParent(null);
-    colliderTouchBackRightMesh.setParent(null);
-    colliderTouchFrontMesh.setParent(null);
-    colliderWallabyMesh.setParent(null);
-    colliderBatteryMesh.setParent(null);
-    colliderArmServo.setParent(null);
+    // Unparent wheel collider meshes before adding physics impostors to them
     colliderLeftWheelMesh.setParent(null);
     colliderRightWheelMesh.setParent(null);
 
-    // Set physics impostors for body collider meshes
-    colliderBodyMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderBodyMesh, Babylon.PhysicsImpostor.BoxImpostor, { mass: 25 }, this.scene);
-    colliderBodyBackPanelMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderBodyBackPanelMesh, Babylon.PhysicsImpostor.BoxImpostor, { mass: 1, friction: 0.5 }, this.scene);
-    colliderBodyFrontPanelMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderBodyFrontPanelMesh, Babylon.PhysicsImpostor.BoxImpostor, { mass: 1, friction: 0.5 }, this.scene);
-    colliderBodyFrontLegosMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderBodyFrontLegosMesh, Babylon.PhysicsImpostor.BoxImpostor, { mass: 1, friction: 0.5 }, this.scene);
-    colliderCasterMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderCasterMesh, Babylon.PhysicsImpostor.SphereImpostor, { mass: 1, friction: 0.5 }, this.scene);
-    colliderTouchBackLeftMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderTouchBackLeftMesh, Babylon.PhysicsImpostor.BoxImpostor, { mass: 1, friction: 0.5 }, this.scene);
-    colliderTouchBackRightMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderTouchBackRightMesh, Babylon.PhysicsImpostor.BoxImpostor, { mass: 1, friction: 0.5 }, this.scene);
-    colliderTouchFrontMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderTouchFrontMesh, Babylon.PhysicsImpostor.BoxImpostor, { mass: 1, friction: 0.5 }, this.scene);
-    colliderWallabyMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderWallabyMesh, Babylon.PhysicsImpostor.BoxImpostor, { mass: 40, friction: 0.5 }, this.scene);
-    colliderBatteryMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderBatteryMesh, Babylon.PhysicsImpostor.BoxImpostor, { mass: 10, friction: 0.5 }, this.scene);
-    colliderArmServo.physicsImpostor = new Babylon.PhysicsImpostor(colliderArmServo, Babylon.PhysicsImpostor.BoxImpostor, { mass: 1, friction: 0.5 }, this.scene);
-
-    // Create the root mesh for the body compound
-    // We need this so that we can set a specific center of mass for the whole body
-    this.bodyCompoundRootMesh = new Babylon.Mesh("bodyCompoundMesh", this.scene);
-    this.bodyCompoundRootMesh.position = colliderWallabyMesh.position.clone();
-
-    // Parent the body collider meshes to the root of the body compound
-    colliderBodyMesh.setParent(this.bodyCompoundRootMesh);
-    colliderBodyBackPanelMesh.setParent(this.bodyCompoundRootMesh);
-    colliderBodyFrontPanelMesh.setParent(this.bodyCompoundRootMesh);
-    colliderBodyFrontLegosMesh.setParent(this.bodyCompoundRootMesh);
-    colliderCasterMesh.setParent(this.bodyCompoundRootMesh);
-    colliderTouchBackLeftMesh.setParent(this.bodyCompoundRootMesh);
-    colliderTouchBackRightMesh.setParent(this.bodyCompoundRootMesh);
-    colliderTouchFrontMesh.setParent(this.bodyCompoundRootMesh);
-    colliderWallabyMesh.setParent(this.bodyCompoundRootMesh);
-    colliderBatteryMesh.setParent(this.bodyCompoundRootMesh);
-    colliderArmServo.setParent(this.bodyCompoundRootMesh);
-
-    // Find transform nodes (visual meshes) in scene
-    const transformNodeChassis = this.scene.getTransformNodeByName('ChassisWombat-1');
-    const transformNodeWallaby = this.scene.getTransformNodeByName('KIPR_Lower_final_062119-1');
-    const transformNodeArm = this.scene.getTransformNodeByName('1 x 5 Servo Horn-1');
-    const transformNodeClaw = this.scene.getTransformNodeByName('1 x 5 Servo Horn-2');
-    const transformNodeRightWheel = this.scene.getTransformNodeByName('Servo Wheel-1');
-    const transformNodeLeftWheel = this.scene.getTransformNodeByName('Servo Wheel-2');
-
-    // Parent transform nodes (visual meshes) to the proper node
-    transformNodeChassis.setParent(this.bodyCompoundRootMesh);
-    transformNodeWallaby.setParent(this.bodyCompoundRootMesh);
-    transformNodeArm.setParent(this.bodyCompoundRootMesh);
-    transformNodeClaw.setParent(this.bodyCompoundRootMesh);
-    transformNodeRightWheel.setParent(colliderRightWheelMesh);
-    transformNodeLeftWheel.setParent(colliderLeftWheelMesh);
+    // Find transform nodes (visual meshes) in scene and parent them to the proper node
+    this.scene.getTransformNodeByName('ChassisWombat-1').setParent(this.bodyCompoundRootMesh);
+    this.scene.getTransformNodeByName('KIPR_Lower_final_062119-1').setParent(this.bodyCompoundRootMesh);
+    this.scene.getTransformNodeByName('1 x 5 Servo Horn-1').setParent(this.bodyCompoundRootMesh);
+    this.scene.getTransformNodeByName('1 x 5 Servo Horn-2').setParent(this.bodyCompoundRootMesh);
+    this.scene.getTransformNodeByName('Servo Wheel-1').setParent(colliderRightWheelMesh);
+    this.scene.getTransformNodeByName('Servo Wheel-2').setParent(colliderLeftWheelMesh);
 
     // Set physics impostors for root nodes
     this.bodyCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.bodyCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 100, friction: 0.1 }, this.scene);
-    colliderLeftWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderLeftWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 100, friction: 1 }, this.scene);
-    colliderRightWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderRightWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 100, friction: 1 }, this.scene);
+    colliderLeftWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderLeftWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 1 }, this.scene);
+    colliderRightWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderRightWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 1 }, this.scene);
 
     // Create joint for right wheel
     const rightWheelMainPivot = colliderRightWheelMesh.position.subtract(this.bodyCompoundRootMesh.position);
@@ -236,15 +214,11 @@ export class Space {
     });
     this.bodyCompoundRootMesh.physicsImpostor.addJoint(colliderLeftWheelMesh.physicsImpostor, this.leftWheelJoint);
 
-    await this.scene.whenReadyAsync();
-
     const etSensorMesh = this.scene.getMeshByID('black satin finish plastic');
     this.etSensorArm = new ETSensorBabylon(this.scene, etSensorMesh, new Babylon.Vector3(0.0, 0.02, 0.0), new Babylon.Vector3(0.02, 0.02, -0.015), { isVisible: true });
-    
-    this.assignPhysicsImpostors();
-
-    // TODO: find a better place for this (needs to be created after bodyCompoundRootMesh)
     this.etSensorFake = new ETSensorBabylon(this.scene, this.bodyCompoundRootMesh, new Babylon.Vector3(0, 0, 18), new Babylon.Vector3(0, 0, 18), { isVisible: true });
+
+    await this.scene.whenReadyAsync();
 
     this.scene.registerAfterRender(() => {
       const m1 = this.getRobotState().motor0_speed  / 1500 * 2;
@@ -306,10 +280,6 @@ export class Space {
     groundMaterial.ambientTexture = new Babylon.Texture('static/Surface-A.png',this.scene);
     this.ground.material = groundMaterial;
     this.ground.physicsImpostor = new Babylon.PhysicsImpostor(this.ground, Babylon.PhysicsImpostor.BoxImpostor,{ mass:0, friction: 1 }, this.scene);
-  }
-
-  private assignPhysicsImpostors() {
-    this.can.physicsImpostor = new Babylon.PhysicsImpostor(this.can, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 0.7 }, this.scene);
   }
 
   private setMotors(m1: number, m2: number) {
