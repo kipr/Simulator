@@ -117,10 +117,11 @@ export class Space {
     const importMeshResult = await Babylon.SceneLoader.ImportMeshAsync("",'static/', 'Simulator_Demobot_colliders.glb', this.scene);
 
     // TEMP FIX: Scale everything up by 100 to avoid Ammo issues at small scale
-    // Also have to apply transformations to 'Root' node b/c when visual transform nodes are unparented, they lose their transformations
-    // (seems to be fixed in Babylon 5 alpha versions)
     const rootMesh = importMeshResult.meshes.find(mesh => mesh.name === '__root__');
     rootMesh.scaling.scaleInPlace(100);
+
+    // Also have to apply transformations to 'Root' node b/c when visual transform nodes are unparented, they lose their transformations
+    // (seems to be fixed in Babylon 5 alpha versions)
     this.scene.getTransformNodeByName('Root').setAbsolutePosition(new Babylon.Vector3(0, 5.7, 0));
     this.scene.getTransformNodeByName('Root').scaling.scaleInPlace(100);
     
@@ -214,6 +215,7 @@ export class Space {
     });
     this.bodyCompoundRootMesh.physicsImpostor.addJoint(colliderLeftWheelMesh.physicsImpostor, this.leftWheelJoint);
 
+    // Create ET sensors, positioned relative to other meshes
     const etSensorMesh = this.scene.getMeshByID('black satin finish plastic');
     this.etSensorArm = new ETSensorBabylon(this.scene, etSensorMesh, new Babylon.Vector3(0.0, 0.02, 0.0), new Babylon.Vector3(0.02, 0.02, -0.015), { isVisible: true });
     this.etSensorFake = new ETSensorBabylon(this.scene, this.bodyCompoundRootMesh, new Babylon.Vector3(0, 0, 18), new Babylon.Vector3(0, 0, 18), { isVisible: true });
