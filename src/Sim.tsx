@@ -26,7 +26,7 @@ export class Space {
   private can: Babylon.Mesh;
   private canCoordinates: Array<[number, number]>;
 
-  private collidersVisible = true;
+  private collidersVisible = false;
 
   private readonly TICKS_BETWEEN_ET_SENSOR_UPDATES = 15;
 
@@ -124,11 +124,11 @@ export class Space {
     this.scene.getTransformNodeByName('Root').setAbsolutePosition(new Babylon.Vector3(0, 5.7, 0));
     this.scene.getTransformNodeByName('Root').scaling.scaleInPlace(100);
     
-    // Hide collider meshes
+    // Hide collider meshes (unless enabled for debugging)
     importMeshResult.meshes.forEach(mesh => {
       if (mesh.name.startsWith('collider')) {
-        mesh.isVisible = false;
-        // mesh.visibility = 0.6; // Partial visibility is useful for debugging
+        mesh.visibility = 0.6;
+        mesh.isVisible = this.collidersVisible;
       }
     });
 
