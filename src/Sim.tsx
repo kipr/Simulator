@@ -143,6 +143,13 @@ export class Space {
 
     type ColliderShape = 'box' | 'sphere';
     const bodyColliderMeshInfos: [string, ColliderShape][] = [
+      ['collider_arm_claw_1', 'box'],
+      ['collider_arm_claw_2', 'box'],
+      ['collider_arm_claw_3', 'box'],
+      ['collider_claw_1', 'box'],
+      ['collider_claw_2', 'box'],
+      ['collider_claw_3', 'box'],
+      ['collider_claw_servo', 'box'],
       ['collider_body', 'box'],
       ['collider_body_back_panel', 'box'],
       ['collider_body_front_panel', 'box'],
