@@ -54,9 +54,9 @@ yarn install
 
 ### Build libwallaby for JavaScript
 
-Clone `libwallaby` on the `emscripten` branch:
+Clone `libwallaby`:
 ```bash
-git clone --branch emscripten https://github.com/kipr/libwallaby.git
+git clone https://github.com/kipr/libwallaby.git
 mkdir libwallaby/build
 cd libwallaby/build
 ```
@@ -64,7 +64,7 @@ cd libwallaby/build
 Then build:
 ```bash
 source $PATH_TO_EMSDK/emsdk_env.sh
-emcmake cmake -Dwith_vision_support=OFF -Dwith_graphics_support=OFF -Dno_wallaby=ON -Dbuild_python=OFF .. -DJS_ONLY=ON
+emcmake cmake -Demscripten=ON -Dno_wallaby=ON -Dwith_vision_support=OFF -Dbuild_python=OFF -DBUILD_DOCUMENTATION=OFF ..
 emmake make -j8
 ```
 
