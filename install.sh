@@ -53,12 +53,12 @@ yarn install
 cd ..
 
 
-#Install libwallaby (emscripten version)
+#Install libwallaby
 echo
-echo "Install libwallaby (emscripten version)"
+echo "Install libwallaby"
 echo
 
-git clone --branch emscripten https://github.com/kipr/libwallaby.git
+git clone https://github.com/kipr/libwallaby.git
 mkdir libwallaby/build
 
 #Fix directory and add emsdk_env.sh to $PATH temporarily
@@ -71,13 +71,13 @@ source emsdk_env.sh
 cd ..
 
 
-#Build Libwallaby (with emscripten)
+#Build Libwallaby (for emscripten)
 echo
-echo "Build Libwallaby (with emscripten)"
+echo "Build Libwallaby (for emscripten)"
 echo
 
 cd libwallaby/build
-emcmake cmake -Dwith_vision_support=OFF -Dwith_graphics_support=OFF -Dno_wallaby=ON -Dbuild_python=OFF .. -DJS_ONLY=ON
+emcmake cmake -Demscripten=ON -Dno_wallaby=ON -Dwith_vision_support=OFF -Dbuild_python=OFF -DBUILD_DOCUMENTATION=OFF ..
 emmake make -j8
 cd ../..
 
