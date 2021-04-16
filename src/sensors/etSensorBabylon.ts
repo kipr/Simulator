@@ -1,30 +1,38 @@
-import * as Babylon from 'babylonjs';
+// import * as Babylon from 'babylonjs';
+import {
+  Scene,
+  LinesMesh, 
+  AbstractMesh,
+  Vector3,
+  MeshBuilder,
+  Ray
+} from 'babylonjs';
 import { VisibleSensor } from './sensor';
 
 export class ETSensorBabylon implements VisibleSensor {
-  private scene: Babylon.Scene;
-  private mesh: Babylon.AbstractMesh;
-  private originOffsetFromMesh: Babylon.Vector3;
-  private forwardFromMesh: Babylon.Vector3;
+  private scene: Scene;
+  private mesh: AbstractMesh;
+  private originOffsetFromMesh: Vector3;
+  private forwardFromMesh: Vector3;
   private options: Required<ETSensorBabylonOptions>;
 
-  private ray: Babylon.Ray;
-  private visualMesh: Babylon.LinesMesh;
+  private ray: Ray;
+  private visualMesh: LinesMesh;
 
   private readonly VISUAL_MESH_NAME = "etlinemesh";
 
-  constructor(scene: Babylon.Scene, mesh: Babylon.AbstractMesh, forwardFromMesh: Babylon.Vector3, originFromMesh: Babylon.Vector3, options?: ETSensorBabylonOptions) {
+  constructor(scene: Scene, mesh: AbstractMesh, forwardFromMesh: Vector3, originFromMesh: Vector3, options?: ETSensorBabylonOptions) {
     this.scene = scene;
     this.mesh = mesh;
     this.originOffsetFromMesh = originFromMesh;
     this.forwardFromMesh = forwardFromMesh;
     this.options = { ...defaultOptions, ...options };
 
-    this.ray = new Babylon.Ray(Babylon.Vector3.Zero(), Babylon.Vector3.Zero(), this.options.maxRange);
-    this.visualMesh = Babylon.MeshBuilder.CreateLines(
+    this.ray = new Ray(Vector3.Zero(), Vector3.Zero(), this.options.maxRange);
+    this.visualMesh = MeshBuilder.CreateLines(
       this.VISUAL_MESH_NAME,
       {
-        points: [Babylon.Vector3.Zero(), Babylon.Vector3.Zero()],
+        points: [Vector3.Zero(), Vector3.Zero()],
         updatable: true,
       },
       this.scene);
@@ -39,7 +47,7 @@ export class ETSensorBabylon implements VisibleSensor {
     const originPoint = this.vecToLocal(this.originOffsetFromMesh, this.mesh);
 
     let forwardDirection = forwardPoint.subtract(this.mesh.absolutePosition);
-    forwardDirection = Babylon.Vector3.Normalize(forwardDirection);
+    forwardDirection = Vector3.Normalize(forwardDirection);
     
     this.ray.origin = originPoint;
     this.ray.direction = forwardDirection;
@@ -64,7 +72,7 @@ export class ETSensorBabylon implements VisibleSensor {
     }
 
     const newLinePoints = [this.ray.origin, this.ray.origin.add(this.ray.direction.scale(this.ray.length))];
-    this.visualMesh = Babylon.MeshBuilder.CreateLines(this.VISUAL_MESH_NAME, { points: newLinePoints, instance: this.visualMesh }, this.scene);
+    this.visualMesh = MeshBuilder.CreateLines(this.VISUAL_MESH_NAME, { points: newLinePoints, instance: this.visualMesh }, this.scene);
   }
 
   public get isVisible(): boolean {
@@ -80,9 +88,9 @@ export class ETSensorBabylon implements VisibleSensor {
     return 255 - Math.floor((distance / this.options.maxRange) * 255);
   }
 
-  private vecToLocal(vector: Babylon.Vector3, mesh: Babylon.AbstractMesh): Babylon.Vector3 {
+  private vecToLocal(vector: Vector3, mesh: AbstractMesh): Vector3 {
     const matrix = mesh.getWorldMatrix();
-    return Babylon.Vector3.TransformCoordinates(vector, matrix);
+    return Vector3.TransformCoordinates(vector, matrix);
   }
 }
 

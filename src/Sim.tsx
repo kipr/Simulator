@@ -1,4 +1,22 @@
-import * as Babylon from 'babylonjs';
+// import * as Babylon from 'babylonjs';
+import {
+  Scene, 
+  Engine, 
+  Mesh, 
+  AbstractMesh, 
+  MotorEnabledJoint, 
+  ArcRotateCamera, 
+  Vector3, 
+  HemisphericLight, 
+  AmmoJSPlugin,
+  MeshBuilder,
+  PhysicsImpostor,
+  SceneLoader,
+  PhysicsJoint,
+  StandardMaterial,
+  Texture
+} from 'babylonjs';
+
 import 'babylonjs-loaders';
 // import Oimo = require('babylonjs/Oimo');
 import Ammo = require('./ammo');
@@ -7,26 +25,26 @@ import { ETSensorBabylon } from './sensors/etSensorBabylon';
 import { RobotState } from './RobotState';
 
 export class Space {
-  private engine: Babylon.Engine;
+  private engine: Engine;
   private canvas: HTMLCanvasElement;
-  private scene: Babylon.Scene;
+  private scene: Scene;
 
-  private ground: Babylon.Mesh;
+  private ground: Mesh;
 
-  private bodyCompoundRootMesh: Babylon.AbstractMesh;
+  private bodyCompoundRootMesh: AbstractMesh;
 
-  private leftWheelJoint: Babylon.MotorEnabledJoint;
-  private rightWheelJoint: Babylon.MotorEnabledJoint;
+  private leftWheelJoint: MotorEnabledJoint;
+  private rightWheelJoint: MotorEnabledJoint;
 
   // TODO: Associate each sensor with an update frequency, since we may update different sensors at different speeds
   private etSensorFake: VisibleSensor;
   private etSensorArm: VisibleSensor;
   private ticksSinceETSensorUpdate: number;
 
-  private can: Babylon.Mesh;
+  private can: Mesh;
   private canCoordinates: Array<[number, number]>;
 
-  private collidersVisible = false;
+  private collidersVisible = true;
 
   private readonly TICKS_BETWEEN_ET_SENSOR_UPDATES = 15;
 
@@ -36,8 +54,8 @@ export class Space {
   // TODO: Find a better way to communicate robot state instead of these callbacks
   constructor(canvas: HTMLCanvasElement, getRobotState: () => RobotState, setRobotState: (robotState: RobotState) => void) {
     this.canvas = canvas;
-    this.engine = new Babylon.Engine(this.canvas, true, { preserveDrawingBuffer: true, stencil: true });
-    this.scene = new Babylon.Scene(this.engine);
+    this.engine = new Engine(this.canvas, true, { preserveDrawingBuffer: true, stencil: true });
+    this.scene = new Scene(this.engine);
 
     this.getRobotState = getRobotState;
     this.setRobotState = setRobotState;
@@ -46,25 +64,25 @@ export class Space {
   }
 
   public createScene(): void {
-    const camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(50,50,50), this.scene);
-    camera.setTarget(Babylon.Vector3.Zero());
+    const camera = new ArcRotateCamera("botcam",10,10,10, new Vector3(50,50,50), this.scene);
+    camera.setTarget(Vector3.Zero());
     camera.attachControl(this.canvas, true);
 
-    const light = new Babylon.HemisphericLight("botlight", new Babylon.Vector3(0,1,0), this.scene);
+    const light = new HemisphericLight("botlight", new Vector3(0,1,0), this.scene);
     light.intensity = 0.7;
 
     // At 100x scale, gravity should be -9.8 * 100, but this causes weird jitter behavior,
     // so leaving as -9.8 * 10 for now
-    this.scene.enablePhysics(new Babylon.Vector3(0,-9.8 * 10,0), new Babylon.AmmoJSPlugin(true, Ammo));
+    this.scene.enablePhysics(new Vector3(0,-9.8 * 10,0), new AmmoJSPlugin(true, Ammo));
 
     this.buildGround();
 
     // (x, z) coordinates of cans around the board
     this.canCoordinates = [[22, 14.3], [0, 20.6], [-15.5, 23.7], [0, 6.9], [13.7, -6.8], [0, -6.8], [-13.5, -6.8], [-25.1, -14.8], [0, -34], [18.8, -45.4], [0, -54.9], [-18.7, -45.4]];
 
-    this.can = Babylon.MeshBuilder.CreateCylinder("can",{ height:10, diameter:6.8 }, this.scene);
+    this.can = MeshBuilder.CreateCylinder("can",{ height:10, diameter:6.8 }, this.scene);
     this.can.position.z = 30;
-    this.can.physicsImpostor = new Babylon.PhysicsImpostor(this.can, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 0.7 }, this.scene);
+    this.can.physicsImpostor = new PhysicsImpostor(this.can, PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 0.7 }, this.scene);
 
     // Logic that happens before every frame
     this.scene.registerBeforeRender(() => {
@@ -114,7 +132,7 @@ export class Space {
 
   public async loadMeshes(): Promise<void> {
     // Load model into scene
-    const importMeshResult = await Babylon.SceneLoader.ImportMeshAsync("",'static/', 'Simulator_Demobot_colliders.glb', this.scene);
+    const importMeshResult = await SceneLoader.ImportMeshAsync("",'static/', 'Simulator_Demobot_colliders.glb', this.scene);
 
     // TEMP FIX: Scale everything up by 100 to avoid Ammo issues at small scale
     const rootMesh = importMeshResult.meshes.find(mesh => mesh.name === '__root__');
@@ -122,7 +140,7 @@ export class Space {
 
     // Also have to apply transformations to 'Root' node b/c when visual transform nodes are unparented, they lose their transformations
     // (seems to be fixed in Babylon 5 alpha versions)
-    this.scene.getTransformNodeByName('Root').setAbsolutePosition(new Babylon.Vector3(0, 5.7, 0));
+    this.scene.getTransformNodeByName('Root').setAbsolutePosition(new Vector3(0, 5.7, 0));
     this.scene.getTransformNodeByName('Root').scaling.scaleInPlace(100);
     
     // Hide collider meshes (unless enabled for debugging)
@@ -138,7 +156,7 @@ export class Space {
     // For now, use the wallaby collider location as the center of mass
     const wallabyColliderMesh = this.scene.getMeshByName('collider_wallaby');
     wallabyColliderMesh.computeWorldMatrix(true);
-    this.bodyCompoundRootMesh = new Babylon.Mesh("bodyCompoundMesh", this.scene);
+    this.bodyCompoundRootMesh = new Mesh("bodyCompoundMesh", this.scene);
     this.bodyCompoundRootMesh.position = wallabyColliderMesh.getAbsolutePosition().clone();
 
     type ColliderShape = 'box' | 'sphere';
@@ -165,7 +183,7 @@ export class Space {
 
     // Parent body collider meshes to body root and add physics impostors
     for (const [bodyColliderMeshName, bodyColliderShape] of bodyColliderMeshInfos) {
-      const colliderMesh: Babylon.AbstractMesh = this.scene.getMeshByName(bodyColliderMeshName);
+      const colliderMesh: AbstractMesh = this.scene.getMeshByName(bodyColliderMeshName);
       if (!colliderMesh) {
         throw new Error(`failed to find collider mesh in model: ${bodyColliderMeshName}`);
       }
@@ -174,16 +192,16 @@ export class Space {
       colliderMesh.setParent(null);
 
       const impostorType = bodyColliderShape === 'box'
-        ? Babylon.PhysicsImpostor.BoxImpostor
-        : Babylon.PhysicsImpostor.SphereImpostor;
-      colliderMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderMesh, impostorType, { mass: 0 }, this.scene);
+        ? PhysicsImpostor.BoxImpostor
+        : PhysicsImpostor.SphereImpostor;
+      colliderMesh.physicsImpostor = new PhysicsImpostor(colliderMesh, impostorType, { mass: 0 }, this.scene);
 
       colliderMesh.setParent(this.bodyCompoundRootMesh);
     }
 
     // Find wheel collider meshes in scene
-    const colliderLeftWheelMesh: Babylon.AbstractMesh = this.scene.getMeshByName('collider_left_wheel');
-    const colliderRightWheelMesh: Babylon.AbstractMesh = this.scene.getMeshByName('collider_right_wheel');
+    const colliderLeftWheelMesh: AbstractMesh = this.scene.getMeshByName('collider_left_wheel');
+    const colliderRightWheelMesh: AbstractMesh = this.scene.getMeshByName('collider_right_wheel');
 
     // Unparent wheel collider meshes before adding physics impostors to them
     colliderLeftWheelMesh.setParent(null);
@@ -198,34 +216,34 @@ export class Space {
     this.scene.getTransformNodeByName('Servo Wheel-2').setParent(colliderLeftWheelMesh);
 
     // Set physics impostors for root nodes
-    this.bodyCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.bodyCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 100, friction: 0.1 }, this.scene);
-    colliderLeftWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderLeftWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 1 }, this.scene);
-    colliderRightWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderRightWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 1 }, this.scene);
+    this.bodyCompoundRootMesh.physicsImpostor = new PhysicsImpostor(this.bodyCompoundRootMesh, PhysicsImpostor.NoImpostor, { mass: 100, friction: 0.1 }, this.scene);
+    colliderLeftWheelMesh.physicsImpostor = new PhysicsImpostor(colliderLeftWheelMesh, PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 1 }, this.scene);
+    colliderRightWheelMesh.physicsImpostor = new PhysicsImpostor(colliderRightWheelMesh, PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 1 }, this.scene);
 
     // Create joint for right wheel
     const rightWheelMainPivot = colliderRightWheelMesh.position.subtract(this.bodyCompoundRootMesh.position);
-    this.rightWheelJoint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint, {
+    this.rightWheelJoint = new MotorEnabledJoint(PhysicsJoint.HingeJoint, {
       mainPivot: rightWheelMainPivot,
-      connectedPivot: new Babylon.Vector3(0, 0, 0),
-      mainAxis: new Babylon.Vector3(1, 0, 0),
-      connectedAxis: new Babylon.Vector3(0, -1, 0),
+      connectedPivot: new Vector3(0, 0, 0),
+      mainAxis: new Vector3(1, 0, 0),
+      connectedAxis: new Vector3(0, -1, 0),
     });
     this.bodyCompoundRootMesh.physicsImpostor.addJoint(colliderRightWheelMesh.physicsImpostor, this.rightWheelJoint);
 
     // Create joint for left wheel
     const leftWheelMainPivot = colliderLeftWheelMesh.position.subtract(this.bodyCompoundRootMesh.position);
-    this.leftWheelJoint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint, {
+    this.leftWheelJoint = new MotorEnabledJoint(PhysicsJoint.HingeJoint, {
       mainPivot: leftWheelMainPivot,
-      connectedPivot: new Babylon.Vector3(0, 0, 0),
-      mainAxis: new Babylon.Vector3(-1, 0, 0),
-      connectedAxis: new Babylon.Vector3(0, 1, 0),
+      connectedPivot: new Vector3(0, 0, 0),
+      mainAxis: new Vector3(-1, 0, 0),
+      connectedAxis: new Vector3(0, 1, 0),
     });
     this.bodyCompoundRootMesh.physicsImpostor.addJoint(colliderLeftWheelMesh.physicsImpostor, this.leftWheelJoint);
 
     // Create ET sensors, positioned relative to other meshes
     const etSensorMesh = this.scene.getMeshByID('black satin finish plastic');
-    this.etSensorArm = new ETSensorBabylon(this.scene, etSensorMesh, new Babylon.Vector3(0.0, 0.02, 0.0), new Babylon.Vector3(0.02, 0.02, -0.015), { isVisible: true });
-    this.etSensorFake = new ETSensorBabylon(this.scene, this.bodyCompoundRootMesh, new Babylon.Vector3(0, 0, 18), new Babylon.Vector3(0, 0, 18), { isVisible: true });
+    this.etSensorArm = new ETSensorBabylon(this.scene, etSensorMesh, new Vector3(0.0, 0.02, 0.0), new Vector3(0.02, 0.02, -0.015), { isVisible: true });
+    this.etSensorFake = new ETSensorBabylon(this.scene, this.bodyCompoundRootMesh, new Vector3(0, 0, 18), new Vector3(0, 0, 18), { isVisible: true });
 
     await this.scene.whenReadyAsync();
 
@@ -271,9 +289,9 @@ export class Space {
 
   public createCan(canNumber: number): void {
     const canName = `Can${canNumber}`;
-    const new_can = Babylon.MeshBuilder.CreateCylinder(canName,{ height:10, diameter:6 }, this.scene);
-    new_can.physicsImpostor = new Babylon.PhysicsImpostor(new_can, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 5 }, this.scene);
-    new_can.position = new Babylon.Vector3(this.canCoordinates[canNumber - 1][0], 5, this.canCoordinates[canNumber - 1][1]);
+    const new_can = MeshBuilder.CreateCylinder(canName,{ height:10, diameter:6 }, this.scene);
+    new_can.physicsImpostor = new PhysicsImpostor(new_can, PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 5 }, this.scene);
+    new_can.position = new Vector3(this.canCoordinates[canNumber - 1][0], 5, this.canCoordinates[canNumber - 1][1]);
   }
 
   public destroyCan(canNumber: number): void {
@@ -282,13 +300,13 @@ export class Space {
   }
 
   private buildGround() {
-    this.ground = Babylon.MeshBuilder.CreateGround("mat", { width:118, height:59, subdivisions:2 }, this.scene);
+    this.ground = MeshBuilder.CreateGround("mat", { width:118, height:59, subdivisions:2 }, this.scene);
     this.ground.position.y = -0.8;
-    this.ground.rotate(new Babylon.Vector3(0,1,0),Math.PI / 2);
-    const groundMaterial = new Babylon.StandardMaterial("ground", this.scene);
-    groundMaterial.ambientTexture = new Babylon.Texture('static/Surface-A.png',this.scene);
+    this.ground.rotate(new Vector3(0,1,0),Math.PI / 2);
+    const groundMaterial = new StandardMaterial("ground", this.scene);
+    groundMaterial.ambientTexture = new Texture('static/Surface-A.png',this.scene);
     this.ground.material = groundMaterial;
-    this.ground.physicsImpostor = new Babylon.PhysicsImpostor(this.ground, Babylon.PhysicsImpostor.BoxImpostor,{ mass:0, friction: 1 }, this.scene);
+    this.ground.physicsImpostor = new PhysicsImpostor(this.ground, PhysicsImpostor.BoxImpostor,{ mass:0, friction: 1 }, this.scene);
   }
 
   private setMotors(m1: number, m2: number) {
