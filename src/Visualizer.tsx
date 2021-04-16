@@ -18,19 +18,19 @@ export class Visualizer extends React.Component<Props> {
     const y = round2dec(robot.y);
 
     const rotateRobot = `rotate(${thetaDeg} ${(x + 142.88)} ${y + 67.5})`;
-    const rotateClaw = `rotate(${robot.servo3_position / 11.37} ${(robot.x + 262.5 + 5)} ${(robot.y + 48.5 + 30)})`;
+    const rotateClaw = `rotate(${robot.servoPositions[3] / 11.37} ${(robot.x + 262.5 + 5)} ${(robot.y + 48.5 + 30)})`;
 
     const arm = new RobotPart;
     const claw = new RobotPart;
 
-    if (robot.servo0_position < 341) {
+    if (robot.servoPositions[0] < 341) {
       arm.updatePart("71.2","static/Arm-Only-Horizontal.PNG",rotateRobot,194,24);
       claw.updatePart("35.22","static/Claw-Only-Horizontal.PNG",`${rotateRobot} ${rotateClaw}`,262.5,48.5);
-    } else if (robot.servo0_position >= 341 && robot.servo0_position <= 683) {
-      if (robot.servo3_position < 341) {
+    } else if (robot.servoPositions[0] >= 341 && robot.servoPositions[0] <= 683) {
+      if (robot.servoPositions[3] < 341) {
         arm.updatePart("71.2","static/Arm-Only-45.PNG",rotateRobot,194,24.3);
         claw.updatePart("35.22","static/Claw-Only-45-Closed.PNG",rotateRobot,233,48);
-      } else if (robot.servo3_position >= 341 && robot.servo3_position <= 683) {
+      } else if (robot.servoPositions[3] >= 341 && robot.servoPositions[3] <= 683) {
         arm.updatePart("71.2","static/Arm-Only-45.PNG",rotateRobot,194,24.3);
         claw.updatePart("50","static/Claw-Only-45-Half-Open.PNG",rotateRobot,233,72.5);
       } else {
@@ -38,10 +38,10 @@ export class Visualizer extends React.Component<Props> {
         claw.updatePart("89","static/Claw-Only-45-Open.PNG",rotateRobot,228,73);
       }
     } else {
-      if (robot.servo3_position < 341) {
+      if (robot.servoPositions[3] < 341) {
         arm.updatePart("71.2","static/Arm-Only-Vertical.PNG",rotateRobot,166.5,24.5);
         claw.updatePart("34","static/Claw-Only-Vertical-Closed.PNG",rotateRobot,165,50.5);
-      } else if (robot.servo3_position >= 341 && robot.servo3_position <= 683) {
+      } else if (robot.servoPositions[3] >= 341 && robot.servoPositions[3] <= 683) {
         arm.updatePart("71.2","static/Arm-Only-Vertical.PNG",rotateRobot,166.5,24.5);
         claw.updatePart("57","static/Claw-Only-Vertical-Half-Open.PNG",rotateRobot,164,72.5);
       } else {

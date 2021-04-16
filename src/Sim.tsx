@@ -98,12 +98,10 @@ export class Space {
         }
 
         // Update robot state with new ET sensor value
-        const robotState = this.getRobotState();
-        this.setRobotState({
-          ...robotState,
-          analog0_value: this.etSensorFake.getValue(),
-          analog1_value: this.etSensorArm ? this.etSensorArm.getValue() : robotState.analog1_value,
-        });
+        const currRobotState = this.getRobotState();
+        const a0 = this.etSensorFake.getValue();
+        const a1 = this.etSensorArm ? this.etSensorArm.getValue() : currRobotState.analogValues[1];
+        this.updateRobotState({ analogValues: [a0, a1, 0, 0, 0, 0] });
 
         this.ticksSinceETSensorUpdate = 0;
       } else {
@@ -230,9 +228,11 @@ export class Space {
     await this.scene.whenReadyAsync();
 
     this.scene.registerAfterRender(() => {
-      const m1 = this.getRobotState().motor0_speed  / 1500 * 2;
-      const m2 = this.getRobotState().motor3_speed  / 1500 * 2;
+      const currRobotState = this.getRobotState();
 
+      // Set simulator motor speeds based on robot state
+      const m1 = currRobotState.motorSpeeds[0]  / 1500 * 2;
+      const m2 = currRobotState.motorSpeeds[3]  / 1500 * 2;
       this.setMotors(m1, m2);
 
       // const s0_position = Math.round((this.getRobotState().servo0_position / 11.702) - 87.5);

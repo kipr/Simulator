@@ -46,8 +46,14 @@ class WorkerInstance {
     const timeElapsedSecs = timeElapsedMs / 1000;
     this.lastTickTime = time;
 
-    const nextState = { ...this.state_ };
-    
+    const nextState: RobotState = {
+      ...this.state_,
+      motorSpeeds: [...this.state_.motorSpeeds],
+      motorPositions: [...this.state_.motorPositions],
+      servoPositions: [...this.state_.servoPositions],
+      analogValues: [...this.state_.analogValues],
+    };
+
     // Set next state motor speeds based on register values
     nextState.motor0_speed = this.DirectionalValues(this.registers_[62], this.registers_[63]);
     nextState.motor1_speed = this.DirectionalValues(this.registers_[64], this.registers_[65]);
@@ -76,10 +82,12 @@ class WorkerInstance {
     
     // Set next state servo positions based on register values
     if (this.registers_[61] === 0) {
-      nextState.servo0_position = this.readServoRegister(this.registers_[78], this.registers_[79]);
-      nextState.servo1_position = this.readServoRegister(this.registers_[80], this.registers_[81]);
-      nextState.servo2_position = this.readServoRegister(this.registers_[82], this.registers_[83]);
-      nextState.servo3_position = this.readServoRegister(this.registers_[84], this.registers_[85]);
+      nextState.servoPositions = [
+        this.readServoRegister(this.registers_[78], this.registers_[79]),
+        this.readServoRegister(this.registers_[80], this.registers_[81]),
+        this.readServoRegister(this.registers_[82], this.registers_[83]),
+        this.readServoRegister(this.registers_[84], this.registers_[85]),
+      ];
     }
 
     // Set analog registers based on next state
@@ -119,10 +127,7 @@ class WorkerInstance {
         break;
       }
       case 'program-ended': {
-        this.state_.motor0_speed = 0;
-        this.state_.motor1_speed = 0;
-        this.state_.motor2_speed = 0;
-        this.state_.motor3_speed = 0;
+        this.state_.motorSpeeds = [0, 0, 0, 0];
         const servoPositions = this.registers_.slice(78,86);
         this.registers_ = new Array<number>(Registers.REG_ALL_COUNT)
           .fill(0)

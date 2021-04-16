@@ -202,11 +202,11 @@ export class SimulatorSidebar extends React.Component<Props, State> {
             </RobotPositionDisplay>
           </section>
           <MotorsDisplay
-            motorSpeeds={[robotState.motor0_speed, robotState.motor1_speed, robotState.motor2_speed, robotState.motor3_speed]}
-            motorPositions={[robotState.motor0_position, robotState.motor1_position, robotState.motor2_position, robotState.motor3_position]}>
+            motorSpeeds={robotState.motorSpeeds}
+            motorPositions={robotState.motorPositions}>
           </MotorsDisplay>
           <ServosDisplay
-            servoPositions={[robotState.servo0_position, robotState.servo1_position, robotState.servo2_position, robotState.servo3_position]} >
+            servoPositions={robotState.servoPositions} >
           </ServosDisplay>
         </section>
         <Collapsible title="Cans">
