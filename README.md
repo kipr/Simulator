@@ -1,4 +1,6 @@
 # Simulator
+[![CI Bot](https://github.com/kipr/simulator/actions/workflows/ci.yml/badge.svg)](https://github.com/kipr/simulator/actions/workflows/ci.yml)
+
 A Robotics Simulator built in typescript.
 Simulates a botball/JBC style demobot with a built in IDE.
 
