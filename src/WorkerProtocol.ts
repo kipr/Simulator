@@ -10,7 +10,7 @@ export namespace Protocol {
       hello: string;
     }
 
-    export type Request = StartRequest | StopRequest | SetRegisterRequest | ProgramEndedRequest | ProgramOutputRequest | ProgramErrorRequest | SetMotorPositionRequest;
+    export type Request = StartRequest | StopRequest | SetRegisterRequest | ProgramEndedRequest | ProgramOutputRequest | ProgramErrorRequest;
 
     export interface StartResponse {
       type: 'start';
@@ -50,11 +50,6 @@ export namespace Protocol {
       type: 'programerror';
       stdoutput: string;
       stderror: string;
-    }
-
-    export interface SetMotorPositionRequest {
-      type: 'setmotorposition';
-      motor: number;
     }
   }
 

@@ -9,8 +9,6 @@ export interface EmscriptenModule {
 export interface ModuleContext {
   registers?: Array<number>,
   onRegistersChange?: (address: number, value: number) => void,
-  onMotorPositionClear?: (port: number) => void,
-  getMotorPosition?: (port: number) => void,
 }
 
 export default (code: string, context: ModuleContext, print: (s: string) => void, printErr: (stderror: string) => void): EmscriptenModule => {
