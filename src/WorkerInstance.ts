@@ -56,7 +56,6 @@ class WorkerInstance {
         this.getRegisterValue32b(Registers.REG_RW_MOT_3_B3) / 250,
       ];
       this.didMotorPositionRegistersChange = false;
-      // console.log(`[WorkerInstance.ts] motor registers were dirty, state is now `, nextState.motorPosition);
     } else {
       this.setRegister32b(Registers.REG_RW_MOT_0_B3, nextState.motorPositions[0] * 250);
       this.setRegister32b(Registers.REG_RW_MOT_1_B3, nextState.motorPositions[1] * 250);
