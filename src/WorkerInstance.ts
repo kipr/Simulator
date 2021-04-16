@@ -223,10 +223,6 @@ class WorkerInstance {
     requestAnimationFrame(this.tick);
   }
 
-  get registers() {
-    return this.registers_;
-  }
-
   set state(state: RobotState) {
     this.state_ = state;
     this.onStateChange(this.state_);
@@ -234,11 +230,6 @@ class WorkerInstance {
 
   get state() {
     return this.state_;
-  }
-
-
-  get worker() {
-    return this.worker_;
   }
 
   private worker_ = new Worker('/js/worker.min.js');
