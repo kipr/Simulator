@@ -1,5 +1,5 @@
 import Protocol from './WorkerProtocol';
-import Registers from './RegisterState';
+import Registers, { MotorControlMode } from './RegisterState';
 import { RobotState } from './RobotState';
 
 import deepNeq from './deepNeq';
@@ -68,11 +68,11 @@ class WorkerInstance {
     for (let motorNum = 0; motorNum < 4; motorNum++) {
       // Get the 2 bits corresponding to this motor
       const motorMode = (motorModes >> (2 * motorNum)) & 0b11;
-      if (motorMode === 0) { // inactive
+      if (motorMode === MotorControlMode.Inactive) {
         nextState.motorSpeeds[motorNum] = 0;
-      } else if (motorMode === 1) { // speed
+      } else if (motorMode === MotorControlMode.Speed) {
         nextState.motorSpeeds[motorNum] = this.getRegisterValue16b(Registers.REG_RW_MOT_0_SP_H + (2 * motorNum));
-      } else if (motorMode === 3) { // speed-position
+      } else if (motorMode === MotorControlMode.SpeedPosition) {
         const motorGoalPosition = this.getRegisterValue32b(Registers.REG_W_MOT_0_GOAL_B3 + (4 * motorNum)) / 250;
         const motorVelocity = this.getRegisterValue16b(Registers.REG_RW_MOT_0_SP_H + (2 * motorNum));
         if (motorGoalPosition !== nextState.motorPositions[motorNum] && motorGoalPosition > nextState.motorPositions[motorNum] === motorVelocity > 0) {

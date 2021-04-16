@@ -204,3 +204,10 @@ export default {
 
   REG_ALL_COUNT:      153
 };
+
+export const MotorControlMode = {
+  Inactive: 0,
+  Speed: 1,
+  Position: 2,
+  SpeedPosition: 3,
+} as const;
