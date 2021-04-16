@@ -28,8 +28,18 @@ export class Root extends React.Component<Props, State> {
     };
   }
 
-  private onRobotStateChange_ = (robot: RobotState) => {
-    WorkerInstance.state = robot;
+  private onRobotStateUpdate_ = (robot: Partial<RobotState>) => {
+    // Create new robot state object by applying the partial changes
+    const newRobotState: RobotState = {
+      ...this.state.robotState,
+      motorSpeeds: [...this.state.robotState.motorSpeeds],
+      motorPositions: [...this.state.robotState.motorPositions],
+      servoPositions: [...this.state.robotState.servoPositions],
+      analogValues: [...this.state.robotState.analogValues],
+      ...robot,
+    };
+
+    WorkerInstance.state = newRobotState;
   };
 
   private onCanChange_ = (canNumber: number, enabled: boolean) => {
@@ -47,11 +57,11 @@ export class Root extends React.Component<Props, State> {
       <div id="main">
         <div id="root">
           <section id="app">
-            <SimulatorSidebar robotState={state.robotState} isCanChecked={state.isCanEnabled} onRobotStateChange={this.onRobotStateChange_} onCanChange={this.onCanChange_} />
+            <SimulatorSidebar robotState={state.robotState} isCanChecked={state.isCanEnabled} onRobotStateChange={this.onRobotStateUpdate_} onCanChange={this.onCanChange_} />
           </section>
         </div>
         <div id="right">
-          <SimulatorArea robotState={state.robotState} canEnabled={state.isCanEnabled} onRobotStateChange={this.onRobotStateChange_} />
+          <SimulatorArea robotState={state.robotState} canEnabled={state.isCanEnabled} onRobotStateUpdate={this.onRobotStateUpdate_} />
         </div>
       </div>
     );

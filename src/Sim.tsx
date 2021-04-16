@@ -31,16 +31,16 @@ export class Space {
   private readonly TICKS_BETWEEN_ET_SENSOR_UPDATES = 15;
 
   private getRobotState: () => RobotState;
-  private setRobotState: (robotState: RobotState) => void;
+  private updateRobotState: (robotState: Partial<RobotState>) => void;
 
   // TODO: Find a better way to communicate robot state instead of these callbacks
-  constructor(canvas: HTMLCanvasElement, getRobotState: () => RobotState, setRobotState: (robotState: RobotState) => void) {
+  constructor(canvas: HTMLCanvasElement, getRobotState: () => RobotState, updateRobotState: (robotState: Partial<RobotState>) => void) {
     this.canvas = canvas;
     this.engine = new Babylon.Engine(this.canvas, true, { preserveDrawingBuffer: true, stencil: true });
     this.scene = new Babylon.Scene(this.engine);
 
     this.getRobotState = getRobotState;
-    this.setRobotState = setRobotState;
+    this.updateRobotState = updateRobotState;
 
     this.ticksSinceETSensorUpdate = 0;
   }
@@ -234,6 +234,16 @@ export class Space {
       const m1 = currRobotState.motorSpeeds[0]  / 1500 * 2;
       const m2 = currRobotState.motorSpeeds[3]  / 1500 * 2;
       this.setMotors(m1, m2);
+
+      // Calculate new motor positions based on motor speed
+      // TODO: Get actual wheel rotation instead of calculating position from speed
+      const engineDeltaSeconds = this.scene.getEngine().getDeltaTime() / 1000;
+      const m0Position = currRobotState.motorPositions[0] + currRobotState.motorSpeeds[0] * engineDeltaSeconds;
+      const m3Position = currRobotState.motorPositions[3] + currRobotState.motorSpeeds[3] * engineDeltaSeconds;
+
+      this.updateRobotState({
+        motorPositions: [m0Position, 0, 0, m3Position],
+      });
 
       // const s0_position = Math.round((this.getRobotState().servo0_position / 11.702) - 87.5);
       // const angle_servoArm = Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x));
