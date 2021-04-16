@@ -76,6 +76,7 @@ class WorkerInstance {
         const motorGoalPosition = this.getRegisterValue32b(Registers.REG_W_MOT_0_GOAL_B3 + (4 * motorNum)) / 250;
         const motorVelocity = this.getRegisterValue16b(Registers.REG_RW_MOT_0_SP_H + (2 * motorNum));
         if (motorGoalPosition !== nextState.motorPositions[motorNum] && motorGoalPosition > nextState.motorPositions[motorNum] === motorVelocity > 0) {
+          // Motor hasn't reached its goal position yet, so keep moving towards it
           nextState.motorSpeeds[motorNum] = motorVelocity;
         } else {
           nextState.motorSpeeds[motorNum] = 0;
