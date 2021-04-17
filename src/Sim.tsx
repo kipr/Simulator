@@ -231,9 +231,7 @@ export class Space {
       const currRobotState = this.getRobotState();
 
       // Set simulator motor speeds based on robot state
-      const m1 = currRobotState.motorSpeeds[0]  / 1500 * 2;
-      const m2 = currRobotState.motorSpeeds[3]  / 1500 * 2;
-      this.setMotors(m1, m2);
+      this.setDriveMotors(currRobotState.motorSpeeds[0], currRobotState.motorSpeeds[3]);
 
       // Calculate new motor positions based on motor speed
       // TODO: Get actual wheel rotation instead of calculating position from speed
@@ -301,11 +299,11 @@ export class Space {
     this.ground.physicsImpostor = new Babylon.PhysicsImpostor(this.ground, Babylon.PhysicsImpostor.BoxImpostor,{ mass:0, friction: 1 }, this.scene);
   }
 
-  private setMotors(m1: number, m2: number) {
+  private setDriveMotors(leftSpeed: number, rightSpeed: number) {
     // One motor is negative because the wheel joints are created on opposite axes,
     // so one needs to turn "backwards" for them to turn in the same direction
-    this.leftWheelJoint.setMotor(m1);
-    this.rightWheelJoint.setMotor(-m2);
+    this.leftWheelJoint.setMotor(leftSpeed / 1500 * 7);
+    this.rightWheelJoint.setMotor(-rightSpeed / 1500 * 7);
   }
 
   // private setpositiveServo(s0_position: number) {
