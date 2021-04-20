@@ -14,6 +14,7 @@ export class Space {
   private ground: Babylon.Mesh;
 
   private bodyCompoundRootMesh: Babylon.AbstractMesh;
+  private botMover: Babylon.Vector3;
 
   private leftWheelJoint: Babylon.MotorEnabledJoint;
   private rightWheelJoint: Babylon.MotorEnabledJoint;
@@ -26,7 +27,7 @@ export class Space {
   private can: Babylon.Mesh;
   private canCoordinates: Array<[number, number]>;
 
-  private collidersVisible = false;
+  private collidersVisible = true;
 
   private readonly TICKS_BETWEEN_ET_SENSOR_UPDATES = 15;
 
@@ -41,7 +42,8 @@ export class Space {
 
     this.getRobotState = getRobotState;
     this.setRobotState = setRobotState;
-
+    // this.botMover = new Babylon.Vector3(getRobotState().x, getRobotState().y, getRobotState().z).subtractFromFloats(RobotState.empty.x, RobotState.empty.y, RobotState.empty.z);
+    this.botMover = new Babylon.Vector3(0,0,30);
     this.ticksSinceETSensorUpdate = 0;
   }
 
@@ -62,9 +64,9 @@ export class Space {
     // (x, z) coordinates of cans around the board
     this.canCoordinates = [[22, 14.3], [0, 20.6], [-15.5, 23.7], [0, 6.9], [13.7, -6.8], [0, -6.8], [-13.5, -6.8], [-25.1, -14.8], [0, -34], [18.8, -45.4], [0, -54.9], [-18.7, -45.4]];
 
-    this.can = Babylon.MeshBuilder.CreateCylinder("can",{ height:10, diameter:6.8 }, this.scene);
-    this.can.position.z = 30;
-    this.can.physicsImpostor = new Babylon.PhysicsImpostor(this.can, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 0.7 }, this.scene);
+    // this.can = Babylon.MeshBuilder.CreateCylinder("can",{ height:10, diameter:6.8 }, this.scene);
+    // this.can.position.z = 30;
+    // this.can.physicsImpostor = new Babylon.PhysicsImpostor(this.can, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 0.7 }, this.scene);
 
     // Logic that happens before every frame
     this.scene.registerBeforeRender(() => {
@@ -111,6 +113,7 @@ export class Space {
       }
     });
   }
+  
 
   public async loadMeshes(): Promise<void> {
     // Load model into scene
@@ -122,7 +125,7 @@ export class Space {
 
     // Also have to apply transformations to 'Root' node b/c when visual transform nodes are unparented, they lose their transformations
     // (seems to be fixed in Babylon 5 alpha versions)
-    this.scene.getTransformNodeByName('Root').setAbsolutePosition(new Babylon.Vector3(0, 5.7, 0));
+    this.scene.getTransformNodeByName('Root').setAbsolutePosition(new Babylon.Vector3(RobotState.empty.x, RobotState.empty.y, RobotState.empty.z).add(this.botMover));
     this.scene.getTransformNodeByName('Root').scaling.scaleInPlace(100);
     
     // Hide collider meshes (unless enabled for debugging)
@@ -139,7 +142,7 @@ export class Space {
     const wallabyColliderMesh = this.scene.getMeshByName('collider_wallaby');
     wallabyColliderMesh.computeWorldMatrix(true);
     this.bodyCompoundRootMesh = new Babylon.Mesh("bodyCompoundMesh", this.scene);
-    this.bodyCompoundRootMesh.position = wallabyColliderMesh.getAbsolutePosition().clone();
+    this.bodyCompoundRootMesh.position = wallabyColliderMesh.getAbsolutePosition().add(this.botMover);
 
     type ColliderShape = 'box' | 'sphere';
     const bodyColliderMeshInfos: [string, ColliderShape][] = [
@@ -172,15 +175,16 @@ export class Space {
       
       // Unparent collider mesh before adding physics impostors to them
       colliderMesh.setParent(null);
-
+      
       const impostorType = bodyColliderShape === 'box'
         ? Babylon.PhysicsImpostor.BoxImpostor
         : Babylon.PhysicsImpostor.SphereImpostor;
       colliderMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderMesh, impostorType, { mass: 0 }, this.scene);
-
+      
       colliderMesh.setParent(this.bodyCompoundRootMesh);
+      colliderMesh.setAbsolutePosition(colliderMesh.absolutePosition.add(this.botMover));
     }
-
+    
     // Find wheel collider meshes in scene
     const colliderLeftWheelMesh: Babylon.AbstractMesh = this.scene.getMeshByName('collider_left_wheel');
     const colliderRightWheelMesh: Babylon.AbstractMesh = this.scene.getMeshByName('collider_right_wheel');
@@ -188,6 +192,9 @@ export class Space {
     // Unparent wheel collider meshes before adding physics impostors to them
     colliderLeftWheelMesh.setParent(null);
     colliderRightWheelMesh.setParent(null);
+
+    colliderLeftWheelMesh.setAbsolutePosition(colliderLeftWheelMesh.absolutePosition.add(this.botMover));
+    colliderRightWheelMesh.setAbsolutePosition(colliderRightWheelMesh.absolutePosition.add(this.botMover));
 
     // Find transform nodes (visual meshes) in scene and parent them to the proper node
     this.scene.getTransformNodeByName('ChassisWombat-1').setParent(this.bodyCompoundRootMesh);
@@ -201,7 +208,6 @@ export class Space {
     this.bodyCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.bodyCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 100, friction: 0.1 }, this.scene);
     colliderLeftWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderLeftWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 1 }, this.scene);
     colliderRightWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderRightWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 1 }, this.scene);
-
     // Create joint for right wheel
     const rightWheelMainPivot = colliderRightWheelMesh.position.subtract(this.bodyCompoundRootMesh.position);
     this.rightWheelJoint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint, {
@@ -228,6 +234,9 @@ export class Space {
     this.etSensorFake = new ETSensorBabylon(this.scene, this.bodyCompoundRootMesh, new Babylon.Vector3(0, 0, 18), new Babylon.Vector3(0, 0, 18), { isVisible: true });
 
     await this.scene.whenReadyAsync();
+
+    // this.bodyCompoundRootMesh.rotate(Babylon.Axis.Y, Math.PI);
+    // this.bodyCompoundRootMesh.setAbsolutePosition(new Babylon.Vector3(0,6.7,20));
 
     this.scene.registerAfterRender(() => {
       const m1 = this.getRobotState().motor0_speed  / 1500 * 2;
@@ -258,6 +267,7 @@ export class Space {
       // }
     });
   }
+  
 
   public startRenderLoop(): void {
     this.engine.runRenderLoop(() => {

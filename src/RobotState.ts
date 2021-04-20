@@ -2,6 +2,7 @@ export interface RobotState {
   // Units: Pixels
   x: number;
   y: number;
+  z: number;
 
   // Units: Radians
   theta: number;
@@ -30,8 +31,9 @@ export interface RobotState {
 
 export namespace RobotState {
   export const empty: RobotState = {
-    x: 220,
-    y: 400,
+    x: 0,
+    y: 5.7,
+    z: 0,
     theta:0,
     motor0_speed: 0,
     motor1_speed: 0,
