@@ -44,7 +44,7 @@ export class Space {
     this.getRobotState = getRobotState;
     this.setRobotState = setRobotState;
     // this.botMover = new Babylon.Vector3(getRobotState().x, getRobotState().y, getRobotState().z).subtractFromFloats(RobotState.empty.x, RobotState.empty.y, RobotState.empty.z);
-    this.botMover = new Babylon.Vector3(0,0,-37);
+    this.botMover = new Babylon.Vector3(0,1,-37);
     this.ticksSinceETSensorUpdate = 0;
   }
 
@@ -54,7 +54,7 @@ export class Space {
     camera.attachControl(this.canvas, true);
 
     const light = new Babylon.HemisphericLight("botlight", new Babylon.Vector3(0,1,0), this.scene);
-    light.intensity = 0.7;
+    light.intensity = 0.75;
 
     // At 100x scale, gravity should be -9.8 * 100, but this causes weird jitter behavior,
     // so leaving as -9.8 * 10 for now
@@ -298,7 +298,7 @@ export class Space {
     this.mat.physicsImpostor = new Babylon.PhysicsImpostor(this.mat, Babylon.PhysicsImpostor.BoxImpostor,{ mass:0, friction: 1 }, this.scene);
 
     this.ground = Babylon.MeshBuilder.CreateGround("ground", { width:354, height:354, subdivisions:2 }, this.scene);
-    this.ground.position.y = -0.805;
+    this.ground.position.y = -0.81;
     const groundMaterial = new Babylon.StandardMaterial("ground", this.scene);
     groundMaterial.emissiveColor = new Babylon.Color3(0.1,0.1,0.1);
     this.ground.material = groundMaterial;
