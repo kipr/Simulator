@@ -12,6 +12,7 @@ export class Space {
   private scene: Babylon.Scene;
 
   private ground: Babylon.Mesh;
+  private mat: Babylon.Mesh;
 
   private bodyCompoundRootMesh: Babylon.AbstractMesh;
   private botMover: Babylon.Vector3;
@@ -27,7 +28,7 @@ export class Space {
   private can: Babylon.Mesh;
   private canCoordinates: Array<[number, number]>;
 
-  private collidersVisible = true;
+  private collidersVisible = false;
 
   private readonly TICKS_BETWEEN_ET_SENSOR_UPDATES = 15;
 
@@ -43,7 +44,7 @@ export class Space {
     this.getRobotState = getRobotState;
     this.setRobotState = setRobotState;
     // this.botMover = new Babylon.Vector3(getRobotState().x, getRobotState().y, getRobotState().z).subtractFromFloats(RobotState.empty.x, RobotState.empty.y, RobotState.empty.z);
-    this.botMover = new Babylon.Vector3(0,0,30);
+    this.botMover = new Babylon.Vector3(0,0,-37);
     this.ticksSinceETSensorUpdate = 0;
   }
 
@@ -59,7 +60,7 @@ export class Space {
     // so leaving as -9.8 * 10 for now
     this.scene.enablePhysics(new Babylon.Vector3(0,-9.8 * 10,0), new Babylon.AmmoJSPlugin(true, Ammo));
 
-    this.buildGround();
+    this.buildFloor();
 
     // (x, z) coordinates of cans around the board
     this.canCoordinates = [[22, 14.3], [0, 20.6], [-15.5, 23.7], [0, 6.9], [13.7, -6.8], [0, -6.8], [-13.5, -6.8], [-25.1, -14.8], [0, -34], [18.8, -45.4], [0, -54.9], [-18.7, -45.4]];
@@ -291,12 +292,19 @@ export class Space {
     this.scene.getMeshByName(canName).dispose();
   }
 
-  private buildGround() {
-    this.ground = Babylon.MeshBuilder.CreateGround("mat", { width:118, height:59, subdivisions:2 }, this.scene);
-    this.ground.position.y = -0.8;
-    this.ground.rotate(new Babylon.Vector3(0,1,0),Math.PI / 2);
+  private buildFloor() {
+    this.mat = Babylon.MeshBuilder.CreateGround("mat", { width:118, height:59, subdivisions:2 }, this.scene);
+    this.mat.position.y = -0.8;
+    this.mat.rotate(new Babylon.Vector3(0,1,0),-Math.PI / 2);
+    const matMaterial = new Babylon.StandardMaterial("ground", this.scene);
+    matMaterial.ambientTexture = new Babylon.Texture('static/Surface-A.png',this.scene);
+    this.mat.material = matMaterial;
+    this.mat.physicsImpostor = new Babylon.PhysicsImpostor(this.mat, Babylon.PhysicsImpostor.BoxImpostor,{ mass:0, friction: 1 }, this.scene);
+
+    this.ground = Babylon.MeshBuilder.CreateGround("ground", { width:354, height:354, subdivisions:2 }, this.scene);
+    this.ground.position.y = -0.805;
     const groundMaterial = new Babylon.StandardMaterial("ground", this.scene);
-    groundMaterial.ambientTexture = new Babylon.Texture('static/Surface-A.png',this.scene);
+    groundMaterial.emissiveColor = new Babylon.Color3(0.1,0.1,0.1);
     this.ground.material = groundMaterial;
     this.ground.physicsImpostor = new Babylon.PhysicsImpostor(this.ground, Babylon.PhysicsImpostor.BoxImpostor,{ mass:0, friction: 1 }, this.scene);
   }
