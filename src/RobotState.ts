@@ -6,6 +6,9 @@ export interface RobotState {
 
   // Units: Radians
   theta: number;
+  
+  // Mesh created
+  mesh: boolean;
 
   // Units: Ticks
   motor0_speed: number;
@@ -32,9 +35,10 @@ export interface RobotState {
 export namespace RobotState {
   export const empty: RobotState = {
     x: 0,
-    y: 5.7,
+    y: 0,
     z: 0,
     theta:0,
+    mesh: true,
     motor0_speed: 0,
     motor1_speed: 0,
     motor2_speed: 0,

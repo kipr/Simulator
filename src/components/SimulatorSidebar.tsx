@@ -118,9 +118,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
   private onSetClick_: React.MouseEventHandler<HTMLButtonElement> = () => {
     this.props.onRobotStateChange({
       ...this.props.robotState,
-      x: RobotState.empty.x,
-      y: RobotState.empty.y,
-      theta: RobotState.empty.theta,
+      mesh: false,
     });
   };
 
@@ -130,6 +128,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
       x: RobotState.empty.x,
       y: RobotState.empty.y,
       theta: RobotState.empty.theta,
+      mesh: false,
     });
 
     this.setState({
@@ -154,6 +153,14 @@ export class SimulatorSidebar extends React.Component<Props, State> {
       y,
     });
   };
+
+  private onZChange_ = (z: number) => {
+    this.props.onRobotStateChange({
+      ...this.props.robotState,
+      z,
+    });
+  };
+
 
   private onThetaChange_ = (theta: number) => {
     this.props.onRobotStateChange({
@@ -205,9 +212,11 @@ export class SimulatorSidebar extends React.Component<Props, State> {
             <RobotPositionDisplay
               x={robotState.x}
               y={robotState.y}
+              z={robotState.z}
               theta={robotState.theta}
               xChanged={this.onXChange_}
               yChanged={this.onYChange_}
+              zChanged={this.onZChange_}
               thetaChanged={this.onThetaChange_}>
             </RobotPositionDisplay>
           </section>

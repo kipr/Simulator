@@ -15,6 +15,8 @@ export class Space {
   private mat: Babylon.Mesh;
 
   private bodyCompoundRootMesh: Babylon.AbstractMesh;
+
+  // Use for changing robot position 
   private botMover: Babylon.Vector3;
 
   private leftWheelJoint: Babylon.MotorEnabledJoint;
@@ -43,8 +45,7 @@ export class Space {
 
     this.getRobotState = getRobotState;
     this.setRobotState = setRobotState;
-    // this.botMover = new Babylon.Vector3(getRobotState().x, getRobotState().y, getRobotState().z).subtractFromFloats(RobotState.empty.x, RobotState.empty.y, RobotState.empty.z);
-    this.botMover = new Babylon.Vector3(0,1,-37);
+    // this.botMover = new Babylon.Vector3(0,1,-37);
     this.ticksSinceETSensorUpdate = 0;
   }
 
@@ -113,6 +114,9 @@ export class Space {
   
 
   public async loadMeshes(): Promise<void> {
+    // Set robot to specified position
+    this.botMover = new Babylon.Vector3(0 + this.getRobotState().x, 0.5 + this.getRobotState().y, -37 + this.getRobotState().z); // start robot slightly above to keep from shifting in mat material
+
     // Load model into scene
     const importMeshResult = await Babylon.SceneLoader.ImportMeshAsync("",'static/', 'Simulator_Demobot_colliders.glb', this.scene);
 
@@ -122,7 +126,7 @@ export class Space {
 
     // Also have to apply transformations to 'Root' node b/c when visual transform nodes are unparented, they lose their transformations
     // (seems to be fixed in Babylon 5 alpha versions)
-    this.scene.getTransformNodeByName('Root').setAbsolutePosition(new Babylon.Vector3(RobotState.empty.x, RobotState.empty.y, RobotState.empty.z).add(this.botMover));
+    this.scene.getTransformNodeByName('Root').setAbsolutePosition(new Babylon.Vector3(0,5.7,0).add(this.botMover));
     this.scene.getTransformNodeByName('Root').scaling.scaleInPlace(100);
     
     // Hide collider meshes (unless enabled for debugging)
@@ -232,9 +236,6 @@ export class Space {
 
     await this.scene.whenReadyAsync();
 
-    // this.bodyCompoundRootMesh.rotate(Babylon.Axis.Y, Math.PI);
-    // this.bodyCompoundRootMesh.setAbsolutePosition(new Babylon.Vector3(0,6.7,20));
-
     this.scene.registerAfterRender(() => {
       const m1 = this.getRobotState().motor0_speed  / 1500 * 2;
       const m2 = this.getRobotState().motor3_speed  / 1500 * 2;
@@ -269,6 +270,23 @@ export class Space {
   public startRenderLoop(): void {
     this.engine.runRenderLoop(() => {
       this.scene.render();
+    });
+  }
+
+  public destroyBot(): void {
+    this.scene.getMeshByName('collider_left_wheel').dispose();
+    this.scene.getMeshByName('collider_right_wheel').dispose();
+    this.etSensorArm.isVisible = false;
+    this.etSensorFake.isVisible = false;
+    this.etSensorArm.dispose();
+    this.etSensorFake.dispose();
+    this.scene.getMeshByName('bodyCompoundMesh').dispose();
+    this.scene.getTransformNodeByName('Root').dispose();
+    
+    const robotState = this.getRobotState();
+    this.setRobotState({
+      ...robotState,
+      mesh:true,
     });
   }
 

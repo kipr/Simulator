@@ -28,7 +28,6 @@ export class ETSensorBabylon implements VisibleSensor {
         updatable: true,
       },
       this.scene);
-    
     this.isVisible = this.options.isVisible;
   }
 
@@ -65,6 +64,10 @@ export class ETSensorBabylon implements VisibleSensor {
 
     const newLinePoints = [this.ray.origin, this.ray.origin.add(this.ray.direction.scale(this.ray.length))];
     this.visualMesh = Babylon.MeshBuilder.CreateLines(this.VISUAL_MESH_NAME, { points: newLinePoints, instance: this.visualMesh }, this.scene);
+  }
+
+  public dispose(): void {
+    this.visualMesh.dispose();
   }
 
   public get isVisible(): boolean {
