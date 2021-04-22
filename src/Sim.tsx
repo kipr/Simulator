@@ -6,10 +6,15 @@ import { VisibleSensor } from './sensors/sensor';
 import { ETSensorBabylon } from './sensors/etSensorBabylon';
 import { RobotState } from './RobotState';
 
+const noGravity = new Babylon.Vector3(0,0,0);
+const fullGravity = new Babylon.Vector3(0,-9.8 * 10,0);
+
 export class Space {
   private engine: Babylon.Engine;
   private canvas: HTMLCanvasElement;
   private scene: Babylon.Scene;
+
+  private gravitySet = (g) => this.scene.getPhysicsEngine().setGravity(g);
 
   private ground: Babylon.Mesh;
   private mat: Babylon.Mesh;
@@ -61,7 +66,7 @@ export class Space {
     // At 100x scale, gravity should be -9.8 * 100, but this causes weird jitter behavior
     // Full gravity will be -9.8 * 10
     // Start gravity lower (1/10) so that any initial changes to robot don't move it as much
-    this.scene.enablePhysics(new Babylon.Vector3(0,-9.8,0), new Babylon.AmmoJSPlugin(true, Ammo));
+    this.scene.enablePhysics(noGravity, new Babylon.AmmoJSPlugin(true, Ammo));
 
     this.buildFloor();
 
@@ -116,7 +121,7 @@ export class Space {
   
 
   public async loadMeshes(): Promise<void> {
-    this.scene.getPhysicsEngine().setGravity(new Babylon.Vector3(0,0,0));
+    this.gravitySet(noGravity);
 
     // Set robot to specified position
     this.botMover = new Babylon.Vector3(0 + this.getRobotState().x, 0.5 + this.getRobotState().y, -37 + this.getRobotState().z); // start robot slightly above to keep from shifting in mat material
@@ -286,8 +291,8 @@ export class Space {
   
 
   public startRenderLoop(): void {
+    this.scene.executeOnceBeforeRender(() => this.gravitySet(fullGravity),500);
     this.engine.runRenderLoop(() => {
-      this.scene.executeOnceBeforeRender(() => this.scene.getPhysicsEngine().setGravity(new Babylon.Vector3(0,-9.8 * 10,0)),500);
       this.scene.render();
     });
   }
@@ -340,7 +345,7 @@ export class Space {
     this.mat.physicsImpostor = new Babylon.PhysicsImpostor(this.mat, Babylon.PhysicsImpostor.BoxImpostor,{ mass:0, friction: 1 }, this.scene);
 
     this.ground = Babylon.MeshBuilder.CreateGround("ground", { width:354, height:354, subdivisions:2 }, this.scene);
-    this.ground.position.y = -0.81;
+    this.ground.position.y = -0.83;
     const groundMaterial = new Babylon.StandardMaterial("ground", this.scene);
     groundMaterial.emissiveColor = new Babylon.Color3(0.1,0.1,0.1);
     this.ground.material = groundMaterial;

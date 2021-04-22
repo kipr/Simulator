@@ -127,6 +127,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
       ...this.props.robotState,
       x: RobotState.empty.x,
       y: RobotState.empty.y,
+      z: RobotState.empty.z,
       theta: RobotState.empty.theta,
       mesh: false,
     });
