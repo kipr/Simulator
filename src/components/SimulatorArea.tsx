@@ -71,7 +71,11 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
   }
 
   private reloadMeshes() {
+    this.space.stopRenderLoop();
     this.space.loadMeshes()
+      .then(() => {
+        this.space.startRenderLoop();
+      })
       .catch((e) => {
         console.error('The simulator meshes failed to load', e);
       });

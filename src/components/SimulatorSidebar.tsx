@@ -165,7 +165,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
   private onThetaChange_ = (theta: number) => {
     this.props.onRobotStateChange({
       ...this.props.robotState,
-      theta: -1 * theta * Math.PI / 180,
+      theta,
     });
   };
 
