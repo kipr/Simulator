@@ -124,7 +124,6 @@ export class Space {
       // Calculate new motor positions based on motor speed
       // TODO: Get actual wheel rotation instead of calculating position from speed
       const engineDeltaSeconds = this.scene.getEngine().getDeltaTime() / 1000;
-      console.log(engineDeltaSeconds);
       const m0Position = currRobotState.motorPositions[0] + currRobotState.motorSpeeds[0] * engineDeltaSeconds;
       const m3Position = currRobotState.motorPositions[3] + currRobotState.motorSpeeds[3] * engineDeltaSeconds;
 

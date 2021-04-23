@@ -114,7 +114,7 @@ class WorkerInstance {
     const message = e.data as Protocol.Worker.Request;
     switch (message.type) {
       case 'setregister': {
-        console.log(`setregister ${message.address} ${message.value}`);
+        // console.log(`setregister ${message.address} ${message.value}`);
         this.registers_[message.address] = message.value;
 
         // Set "dirty" flag for motor position registers
