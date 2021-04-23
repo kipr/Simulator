@@ -1,5 +1,6 @@
 export interface Sensor {
   update(): void;
+  dispose(): void;
   getValue(): number;
 }
 
