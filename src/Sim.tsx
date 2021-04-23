@@ -256,7 +256,11 @@ export class Space {
     
     
     await this.scene.whenReadyAsync();
-    
+
+    let leftWheelRotationPrev = colliderLeftWheelMesh.rotationQuaternion.clone();
+    let framesSinceRotLog = 0;
+    let totalRotation = 0;
+
     this.scene.registerAfterRender(() => {
       const currRobotState = this.getRobotState();
 
@@ -268,6 +272,37 @@ export class Space {
       const engineDeltaSeconds = this.scene.getEngine().getDeltaTime() / 1000;
       const m0Position = currRobotState.motorPositions[0] + currRobotState.motorSpeeds[0] * engineDeltaSeconds;
       const m3Position = currRobotState.motorPositions[3] + currRobotState.motorSpeeds[3] * engineDeltaSeconds;
+
+
+
+
+      // TEMP: Trying to get actual wheel rotation
+      framesSinceRotLog++;
+      if (framesSinceRotLog >= 10) {
+        const leftWheelRotationCurr = colliderLeftWheelMesh.rotationQuaternion;
+
+        // const rotation = this.getRotation(leftWheelRotationPrev, leftWheelRotationCurr);
+        // console.log('rotation calc: ', rotation);
+        // // console.log('euler angles: ', leftWheelRotationCurr.toEulerAngles().x - leftWheelRotationPrev.toEulerAngles().x);
+
+        // const rotationRads = this.getTwistAngleForQuat(leftWheelRotationCurr);
+        // console.log('twist: ', Babylon.Tools.ToDegrees(rotationRads));
+
+        let rotation = this.getRotation2(leftWheelRotationPrev, leftWheelRotationCurr);
+        if (rotation > Math.PI) {
+          rotation = rotation - Math.PI * 2;
+        }
+        totalRotation += rotation;
+        // console.log('rotation delta: ', Babylon.Tools.ToDegrees(rotation), ' | total: ', Babylon.Tools.ToDegrees(totalRotation));
+        console.log(this.bodyCompoundRootMesh.rotationQuaternion);
+        // console.log('relative rot: ', colliderLeftWheelMesh.rotationQuaternion.clone());
+        // console.log('absolute rot: ', colliderLeftWheelMesh.absoluteRotationQuaternion.clone());
+
+        leftWheelRotationPrev = leftWheelRotationCurr.clone();
+        framesSinceRotLog = 0;
+      }
+      
+
 
       this.updateRobotState({
         motorPositions: [m0Position, 0, 0, m3Position],
@@ -297,6 +332,79 @@ export class Space {
     });
   }
   
+
+  // s and e are the start and end rotationQuaternions of the wheel mesh
+  private getRotation = (s: Babylon.Quaternion, e: Babylon.Quaternion) => {
+    // Get the delta rotation quaternion from start to end
+    // Comes from decomposing the ending rotation as: q_end = q_start * q_rotation
+    const r = e.multiply(Babylon.Quaternion.Inverse(s));
+
+    // Rotate the axis of interest by start/end quaternions
+    const axis0: Babylon.Quaternion = new Babylon.Quaternion(0,1,0,0);
+    const axisS = s.multiply(axis0).multiply(Babylon.Quaternion.Inverse(s));
+    const axisE = e.multiply(axis0).multiply(Babylon.Quaternion.Inverse(e));
+
+    // Convert axisS/axisE quaternions to vectors
+    const vectorS = new Babylon.Vector3(axisS.x, axisS.y, axisS.z);
+    const vectorE = new Babylon.Vector3(axisE.x, axisE.y, axisE.z);
+    vectorS.normalize();
+    vectorE.normalize();
+
+    // q1 will represent the rotation between startS and startE
+    const q1_xyz = vectorS.cross(vectorE);
+    const q1_w = 1 + Babylon.Vector3.Dot(vectorS, vectorE);
+    const q1 = new Babylon.Quaternion(q1_xyz.x, q1_xyz.y, q1_xyz.z, q1_w);
+    q1.normalize();
+
+    // q2 = r_inv * q1
+    // r * q2 = r * r_inv * q1
+    // q1 = r * q2
+    // So: q2 is the rotation needed to go from r to q1
+    // Note: q2 only has the axis-of-interest as non-zero value
+    // For example, if we're interested in the y axis, then q2 = (q2_w, 0, q2_y, 0);
+    const q2 = Babylon.Quaternion.Inverse(r).multiply(q1);
+    console.log('q2: ', q2);
+    const d = 2 * Math.acos(q2.w);
+    
+    return d;
+  };
+
+  private getRotation2 = (s: Babylon.Quaternion, e: Babylon.Quaternion) => {
+    const xAxisQuat = new Babylon.Quaternion(0, -1, 0, 0); // WRONG AXIS!
+    const xAxisLocalQuat = s.multiply(xAxisQuat).multiply(Babylon.Quaternion.Inverse(s));
+    const xAxisLocalVect = new Babylon.Vector3(xAxisLocalQuat.x, xAxisLocalQuat.y, xAxisLocalQuat.z);
+    // console.log('xAxisLocal: ', xAxisLocalVect);
+
+    const r = e.multiply(Babylon.Quaternion.Inverse(s));
+    const twistAngle = this.getTwistAngleForQuat(r, xAxisLocalVect);
+
+    return twistAngle;
+  };
+
+  private getTwistAngleForQuat = (q: Babylon.Quaternion, direction: Babylon.Vector3) => {
+    // const direction = new Babylon.Vector3(1, 0, 0);
+    const rotationAxis = new Babylon.Vector3(q.x, q.y, q.z);
+
+    // Shortcut calc of "projection' requires "direction" was normalized
+    const dotProd: number = Babylon.Vector3.Dot(direction, rotationAxis);
+    const projection = direction.scale(dotProd);
+
+    const twist = new Babylon.Quaternion(projection.x, projection.y, projection.z, q.w).normalize();
+
+    // If the result is in the opposite-facing axis, convert it to the correct-facing axis
+    if (dotProd < 0) {
+      twist.scaleInPlace(-1);
+    }
+
+    console.log('twist: ', twist, ' | dot: ', dotProd);
+
+    const twistAngle = 2 * Math.acos(twist.w);
+    // if (dotProd < 0) {
+    //   twistAngle = 2 * Math.PI - twistAngle;
+    // }
+
+    return twistAngle;
+  };
 
   public startRenderLoop(): void {
     this.scene.executeOnceBeforeRender(() => this.gravitySet(fullGravity),500);
