@@ -7,7 +7,7 @@ interface SimulatorAreaProps {
   robotState: RobotState;
   canEnabled: boolean[];
 
-  onRobotStateChange: (robotState: RobotState) => void;
+  onRobotStateUpdate: (robotState: Partial<RobotState>) => void;
 }
 
 export class SimulatorArea extends React.Component<SimulatorAreaProps> {
@@ -21,7 +21,7 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
 
   componentDidMount(): void {
     this.space = new Sim.Space(this.canvas, () => this.props.robotState, (robotState) => {
-      this.props.onRobotStateChange(robotState);
+      this.props.onRobotStateUpdate(robotState);
     });
 
     // Resize Babylon engine when canvas is resized

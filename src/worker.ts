@@ -35,18 +35,6 @@ ctx.onmessage = (e: MessageEvent) => {
           });
         },
         registers,
-        onMotorPositionClear: (motor) => {
-          ctx.postMessage({
-            type: 'setmotorposition',
-            motor: motor
-          });
-        },
-        getMotorPosition: (motor) => {
-          ctx.postMessage({
-            type: 'setmotorposition',
-            motor: motor
-          });
-        },
       },
       print,
       printErr
@@ -69,13 +57,6 @@ ctx.onmessage = (e: MessageEvent) => {
       // ctx.postMessage({
       //   type: 'setregister'
       // });
-      break;
-    }
-    case 'setmotorposition': {
-
-      ctx.postMessage({
-        type: 'setmotorposition'
-      });
       break;
     }
   } 

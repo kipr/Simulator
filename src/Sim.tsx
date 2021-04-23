@@ -41,16 +41,16 @@ export class Space {
   private readonly TICKS_BETWEEN_ET_SENSOR_UPDATES = 15;
 
   private getRobotState: () => RobotState;
-  private setRobotState: (robotState: RobotState) => void;
+  private updateRobotState: (robotState: Partial<RobotState>) => void;
 
   // TODO: Find a better way to communicate robot state instead of these callbacks
-  constructor(canvas: HTMLCanvasElement, getRobotState: () => RobotState, setRobotState: (robotState: RobotState) => void) {
+  constructor(canvas: HTMLCanvasElement, getRobotState: () => RobotState, updateRobotState: (robotState: Partial<RobotState>) => void) {
     this.canvas = canvas;
     this.engine = new Babylon.Engine(this.canvas, true, { preserveDrawingBuffer: true, stencil: true });
     this.scene = new Babylon.Scene(this.engine);
 
     this.getRobotState = getRobotState;
-    this.setRobotState = setRobotState;
+    this.updateRobotState = updateRobotState;
 
     this.ticksSinceETSensorUpdate = 0;
   }
@@ -105,12 +105,10 @@ export class Space {
         }
 
         // Update robot state with new ET sensor value
-        const robotState = this.getRobotState();
-        this.setRobotState({
-          ...robotState,
-          analog0_value: this.etSensorFake.getValue(),
-          analog1_value: this.etSensorArm ? this.etSensorArm.getValue() : robotState.analog1_value,
-        });
+        const currRobotState = this.getRobotState();
+        const a0 = this.etSensorFake.getValue();
+        const a1 = this.etSensorArm ? this.etSensorArm.getValue() : currRobotState.analogValues[1];
+        this.updateRobotState({ analogValues: [a0, a1, 0, 0, 0, 0] });
 
         this.ticksSinceETSensorUpdate = 0;
       } else {
@@ -260,10 +258,20 @@ export class Space {
     await this.scene.whenReadyAsync();
     
     this.scene.registerAfterRender(() => {
-      const m1 = this.getRobotState().motor0_speed  / 1500 * 2;
-      const m2 = this.getRobotState().motor3_speed  / 1500 * 2;
+      const currRobotState = this.getRobotState();
 
-      this.setMotors(m1, m2);
+      // Set simulator motor speeds based on robot state
+      this.setDriveMotors(currRobotState.motorSpeeds[0], currRobotState.motorSpeeds[3]);
+
+      // Calculate new motor positions based on motor speed
+      // TODO: Get actual wheel rotation instead of calculating position from speed
+      const engineDeltaSeconds = this.scene.getEngine().getDeltaTime() / 1000;
+      const m0Position = currRobotState.motorPositions[0] + currRobotState.motorSpeeds[0] * engineDeltaSeconds;
+      const m3Position = currRobotState.motorPositions[3] + currRobotState.motorSpeeds[3] * engineDeltaSeconds;
+
+      this.updateRobotState({
+        motorPositions: [m0Position, 0, 0, m3Position],
+      });
 
       // const s0_position = Math.round((this.getRobotState().servo0_position / 11.702) - 87.5);
       // const angle_servoArm = Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x));
@@ -312,9 +320,7 @@ export class Space {
     this.scene.getTransformNodeByName('Root').dispose();
     this.robotWorldRotation = 0;
     
-    const robotState = this.getRobotState();
-    this.setRobotState({
-      ...robotState,
+    this.updateRobotState({
       mesh:true,
     });
   }
@@ -352,11 +358,11 @@ export class Space {
     this.ground.physicsImpostor = new Babylon.PhysicsImpostor(this.ground, Babylon.PhysicsImpostor.BoxImpostor,{ mass:0, friction: 1 }, this.scene);
   }
 
-  private setMotors(m1: number, m2: number) {
+  private setDriveMotors(leftSpeed: number, rightSpeed: number) {
     // One motor is negative because the wheel joints are created on opposite axes,
     // so one needs to turn "backwards" for them to turn in the same direction
-    this.leftWheelJoint.setMotor(m1);
-    this.rightWheelJoint.setMotor(-m2);
+    this.leftWheelJoint.setMotor(leftSpeed / 1500 * 5);
+    this.rightWheelJoint.setMotor(-rightSpeed / 1500 * 5);
   }
 
   // private setpositiveServo(s0_position: number) {
