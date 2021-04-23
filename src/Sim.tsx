@@ -320,9 +320,7 @@ export class Space {
     this.scene.getTransformNodeByName('Root').dispose();
     this.robotWorldRotation = 0;
     
-    const robotState = this.getRobotState();
-    this.setRobotState({
-      ...robotState,
+    this.updateRobotState({
       mesh:true,
     });
   }
