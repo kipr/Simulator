@@ -361,8 +361,8 @@ export class Space {
   private setDriveMotors(leftSpeed: number, rightSpeed: number) {
     // One motor is negative because the wheel joints are created on opposite axes,
     // so one needs to turn "backwards" for them to turn in the same direction
-    this.leftWheelJoint.setMotor(leftSpeed / 1500 * 7);
-    this.rightWheelJoint.setMotor(-rightSpeed / 1500 * 7);
+    this.leftWheelJoint.setMotor(leftSpeed / 1500 * 5);
+    this.rightWheelJoint.setMotor(-rightSpeed / 1500 * 5);
   }
 
   // private setpositiveServo(s0_position: number) {
