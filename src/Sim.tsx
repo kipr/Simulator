@@ -115,6 +115,45 @@ export class Space {
         this.ticksSinceETSensorUpdate++;
       }
     });
+    this.scene.registerAfterRender(() => {
+      const currRobotState = this.getRobotState();
+
+      // Set simulator motor speeds based on robot state
+      this.setDriveMotors(currRobotState.motorSpeeds[0], currRobotState.motorSpeeds[3]);
+
+      // Calculate new motor positions based on motor speed
+      // TODO: Get actual wheel rotation instead of calculating position from speed
+      const engineDeltaSeconds = this.scene.getEngine().getDeltaTime() / 1000;
+      console.log(engineDeltaSeconds);
+      const m0Position = currRobotState.motorPositions[0] + currRobotState.motorSpeeds[0] * engineDeltaSeconds;
+      const m3Position = currRobotState.motorPositions[3] + currRobotState.motorSpeeds[3] * engineDeltaSeconds;
+
+      this.updateRobotState({
+        motorPositions: [m0Position, 0, 0, m3Position],
+      });
+
+      // const s0_position = Math.round((this.getRobotState().servo0_position / 11.702) - 87.5);
+      // const angle_servoArm = Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x));
+      // console.log(`position: ${this.getRobotState().servo0_position} Calculated position: ${s0_position} Servo Angle: ${angle_servoArm}`);
+      // // console.log(Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)));
+
+      // if (s0_position > angle_servoArm) {
+      //   this.setnegativeServo(s0_position);
+      // } else if (s0_position < angle_servoArm) {
+      //   this.setpositiveServo(s0_position);
+      // } else if (s0_position === angle_servoArm) {
+      //   this.liftArm_joint.setMotor(0);
+      // } else {
+      //   // do something
+      // }
+      // this.liftClaw_joint.setMotor(0.3);
+      
+
+      // if(this.registers_[61] == 0){
+      //   s1 = WorkerInstance.readServoRegister(WorkerInstance.registers[78], WorkerInstance.registers[79]);
+      //   s3 = WorkerInstance.readServoRegister(WorkerInstance.registers[80], WorkerInstance.registers[81]);
+      // }
+    });
   }
   
 
@@ -256,45 +295,6 @@ export class Space {
     
     
     await this.scene.whenReadyAsync();
-    
-    this.scene.registerAfterRender(() => {
-      const currRobotState = this.getRobotState();
-
-      // Set simulator motor speeds based on robot state
-      this.setDriveMotors(currRobotState.motorSpeeds[0], currRobotState.motorSpeeds[3]);
-
-      // Calculate new motor positions based on motor speed
-      // TODO: Get actual wheel rotation instead of calculating position from speed
-      const engineDeltaSeconds = this.scene.getEngine().getDeltaTime() / 1000;
-      const m0Position = currRobotState.motorPositions[0] + currRobotState.motorSpeeds[0] * engineDeltaSeconds;
-      const m3Position = currRobotState.motorPositions[3] + currRobotState.motorSpeeds[3] * engineDeltaSeconds;
-
-      this.updateRobotState({
-        motorPositions: [m0Position, 0, 0, m3Position],
-      });
-
-      // const s0_position = Math.round((this.getRobotState().servo0_position / 11.702) - 87.5);
-      // const angle_servoArm = Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x));
-      // console.log(`position: ${this.getRobotState().servo0_position} Calculated position: ${s0_position} Servo Angle: ${angle_servoArm}`);
-      // // console.log(Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)));
-
-      // if (s0_position > angle_servoArm) {
-      //   this.setnegativeServo(s0_position);
-      // } else if (s0_position < angle_servoArm) {
-      //   this.setpositiveServo(s0_position);
-      // } else if (s0_position === angle_servoArm) {
-      //   this.liftArm_joint.setMotor(0);
-      // } else {
-      //   // do something
-      // }
-      // this.liftClaw_joint.setMotor(0.3);
-      
-
-      // if(this.registers_[61] == 0){
-      //   s1 = WorkerInstance.readServoRegister(WorkerInstance.registers[78], WorkerInstance.registers[79]);
-      //   s3 = WorkerInstance.readServoRegister(WorkerInstance.registers[80], WorkerInstance.registers[81]);
-      // }
-    });
   }
   
 
@@ -361,8 +361,10 @@ export class Space {
   private setDriveMotors(leftSpeed: number, rightSpeed: number) {
     // One motor is negative because the wheel joints are created on opposite axes,
     // so one needs to turn "backwards" for them to turn in the same direction
-    this.leftWheelJoint.setMotor(leftSpeed / 1500 * 5);
-    this.rightWheelJoint.setMotor(-rightSpeed / 1500 * 5);
+    if (this.leftWheelJoint && this.rightWheelJoint) {
+      this.leftWheelJoint.setMotor(leftSpeed / 1500 * 5);
+      this.rightWheelJoint.setMotor(-rightSpeed / 1500 * 5);
+    }
   }
 
   // private setpositiveServo(s0_position: number) {
