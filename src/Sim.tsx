@@ -25,6 +25,9 @@ export class Space {
   private botMover: Babylon.Vector3;
   private robotWorldRotation: number;
 
+  private colliderLeftWheelMesh: Babylon.AbstractMesh;
+  private colliderRightWheelMesh: Babylon.AbstractMesh;
+
   private leftWheelJoint: Babylon.MotorEnabledJoint;
   private rightWheelJoint: Babylon.MotorEnabledJoint;
 
@@ -115,6 +118,82 @@ export class Space {
         this.ticksSinceETSensorUpdate++;
       }
     });
+
+    let leftWheelRotationPrev: Babylon.Quaternion;
+    let framesSinceRotLog = 0;
+    let totalRotation = 0;
+
+    this.scene.registerAfterRender(() => {
+      const currRobotState = this.getRobotState();
+
+      // Set simulator motor speeds based on robot state
+      this.setDriveMotors(currRobotState.motorSpeeds[0], currRobotState.motorSpeeds[3]);
+
+      // Calculate new motor positions based on motor speed
+      // TODO: Get actual wheel rotation instead of calculating position from speed
+      const engineDeltaSeconds = this.scene.getEngine().getDeltaTime() / 1000;
+      const m0Position = currRobotState.motorPositions[0] + currRobotState.motorSpeeds[0] * engineDeltaSeconds;
+      const m3Position = currRobotState.motorPositions[3] + currRobotState.motorSpeeds[3] * engineDeltaSeconds;
+
+
+
+
+      // TEMP: Trying to get actual wheel rotation
+      if (this.colliderLeftWheelMesh) {
+        framesSinceRotLog++;
+        if (framesSinceRotLog >= 10) {
+          const leftWheelRotationCurr = this.colliderLeftWheelMesh.rotationQuaternion;
+
+          // const rotation = this.getRotation(leftWheelRotationPrev, leftWheelRotationCurr);
+          // console.log('rotation calc: ', rotation);
+          // // console.log('euler angles: ', leftWheelRotationCurr.toEulerAngles().x - leftWheelRotationPrev.toEulerAngles().x);
+
+          // const rotationRads = this.getTwistAngleForQuat(leftWheelRotationCurr);
+          // console.log('twist: ', Babylon.Tools.ToDegrees(rotationRads));
+
+          if (!leftWheelRotationPrev) leftWheelRotationPrev = leftWheelRotationCurr.clone();
+
+          let rotation = this.getRotation2(leftWheelRotationPrev, leftWheelRotationCurr);
+          if (rotation > Math.PI) {
+            rotation = rotation - Math.PI * 2;
+          }
+          totalRotation += rotation;
+          // console.log('rotation delta: ', Babylon.Tools.ToDegrees(rotation), ' | total: ', Babylon.Tools.ToDegrees(totalRotation));
+          console.log(this.bodyCompoundRootMesh.rotationQuaternion);
+          // console.log('relative rot: ', colliderLeftWheelMesh.rotationQuaternion.clone());
+          // console.log('absolute rot: ', colliderLeftWheelMesh.absoluteRotationQuaternion.clone());
+
+          leftWheelRotationPrev = leftWheelRotationCurr.clone();
+          framesSinceRotLog = 0;
+        }
+      }
+
+      this.updateRobotState({
+        motorPositions: [m0Position, 0, 0, m3Position],
+      });
+
+      // const s0_position = Math.round((this.getRobotState().servo0_position / 11.702) - 87.5);
+      // const angle_servoArm = Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x));
+      // console.log(`position: ${this.getRobotState().servo0_position} Calculated position: ${s0_position} Servo Angle: ${angle_servoArm}`);
+      // // console.log(Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)));
+
+      // if (s0_position > angle_servoArm) {
+      //   this.setnegativeServo(s0_position);
+      // } else if (s0_position < angle_servoArm) {
+      //   this.setpositiveServo(s0_position);
+      // } else if (s0_position === angle_servoArm) {
+      //   this.liftArm_joint.setMotor(0);
+      // } else {
+      //   // do something
+      // }
+      // this.liftClaw_joint.setMotor(0.3);
+      
+
+      // if(this.registers_[61] == 0){
+      //   s1 = WorkerInstance.readServoRegister(WorkerInstance.registers[78], WorkerInstance.registers[79]);
+      //   s3 = WorkerInstance.readServoRegister(WorkerInstance.registers[80], WorkerInstance.registers[81]);
+      // }
+    });
   }
   
 
@@ -196,55 +275,55 @@ export class Space {
     }
 
     // Find wheel collider meshes in scene
-    const colliderLeftWheelMesh: Babylon.AbstractMesh = this.scene.getMeshByName('collider_left_wheel');
-    const colliderRightWheelMesh: Babylon.AbstractMesh = this.scene.getMeshByName('collider_right_wheel');
+    this.colliderLeftWheelMesh = this.scene.getMeshByName('collider_left_wheel');
+    this.colliderRightWheelMesh = this.scene.getMeshByName('collider_right_wheel');
 
     // Unparent wheel collider meshes before adding physics impostors to them
-    colliderLeftWheelMesh.setParent(null);
-    colliderRightWheelMesh.setParent(null);
+    this.colliderLeftWheelMesh.setParent(null);
+    this.colliderRightWheelMesh.setParent(null);
 
-    colliderLeftWheelMesh.setAbsolutePosition(colliderLeftWheelMesh.absolutePosition.add(this.botMover));
-    colliderRightWheelMesh.setAbsolutePosition(colliderRightWheelMesh.absolutePosition.add(this.botMover));
+    this.colliderLeftWheelMesh.setAbsolutePosition(this.colliderLeftWheelMesh.absolutePosition.add(this.botMover));
+    this.colliderRightWheelMesh.setAbsolutePosition(this.colliderRightWheelMesh.absolutePosition.add(this.botMover));
 
     // Find transform nodes (visual meshes) in scene and parent them to the proper node
     this.scene.getTransformNodeByName('ChassisWombat-1').setParent(this.bodyCompoundRootMesh);
     this.scene.getTransformNodeByName('KIPR_Lower_final_062119-1').setParent(this.bodyCompoundRootMesh);
     this.scene.getTransformNodeByName('1 x 5 Servo Horn-1').setParent(this.bodyCompoundRootMesh);
     this.scene.getTransformNodeByName('1 x 5 Servo Horn-2').setParent(this.bodyCompoundRootMesh);
-    this.scene.getTransformNodeByName('Servo Wheel-1').setParent(colliderRightWheelMesh);
-    this.scene.getTransformNodeByName('Servo Wheel-2').setParent(colliderLeftWheelMesh);
+    this.scene.getTransformNodeByName('Servo Wheel-1').setParent(this.colliderRightWheelMesh);
+    this.scene.getTransformNodeByName('Servo Wheel-2').setParent(this.colliderLeftWheelMesh);
 
     // Rotate meshes for any user input
     this.bodyCompoundRootMesh.rotate(Babylon.Axis.Y,this.robotWorldRotation);
-    colliderRightWheelMesh.rotate(Babylon.Axis.Z,this.robotWorldRotation);
-    colliderLeftWheelMesh.rotate(Babylon.Axis.Z,-this.robotWorldRotation);
+    this.colliderRightWheelMesh.rotate(Babylon.Axis.Z,this.robotWorldRotation);
+    this.colliderLeftWheelMesh.rotate(Babylon.Axis.Z,-this.robotWorldRotation);
     
     // Set physics impostors for root nodes
     this.bodyCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.bodyCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 100, friction: 0.1 }, this.scene);
-    colliderLeftWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderLeftWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 1 }, this.scene);
-    colliderRightWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderRightWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 1 }, this.scene);
+    this.colliderLeftWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderLeftWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 1 }, this.scene);
+    this.colliderRightWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderRightWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 1 }, this.scene);
     
     
 
     // Create joint for right wheel
-    const rightWheelMainPivot = colliderRightWheelMesh.position.subtract(this.bodyCompoundRootMesh.position);
+    const rightWheelMainPivot = this.colliderRightWheelMesh.position.subtract(this.bodyCompoundRootMesh.position);
     this.rightWheelJoint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint, {
       mainPivot: rightWheelMainPivot,
       connectedPivot: new Babylon.Vector3(0, 0, 0),
       mainAxis: new Babylon.Vector3(1, 0, 0),
       connectedAxis: new Babylon.Vector3(0, -1, 0),
     });
-    this.bodyCompoundRootMesh.physicsImpostor.addJoint(colliderRightWheelMesh.physicsImpostor, this.rightWheelJoint);
+    this.bodyCompoundRootMesh.physicsImpostor.addJoint(this.colliderRightWheelMesh.physicsImpostor, this.rightWheelJoint);
 
     // Create joint for left wheel
-    const leftWheelMainPivot = colliderLeftWheelMesh.position.subtract(this.bodyCompoundRootMesh.position);
+    const leftWheelMainPivot = this.colliderLeftWheelMesh.position.subtract(this.bodyCompoundRootMesh.position);
     this.leftWheelJoint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint, {
       mainPivot: leftWheelMainPivot,
       connectedPivot: new Babylon.Vector3(0, 0, 0),
       mainAxis: new Babylon.Vector3(-1, 0, 0),
       connectedAxis: new Babylon.Vector3(0, 1, 0),
     });
-    this.bodyCompoundRootMesh.physicsImpostor.addJoint(colliderLeftWheelMesh.physicsImpostor, this.leftWheelJoint);
+    this.bodyCompoundRootMesh.physicsImpostor.addJoint(this.colliderLeftWheelMesh.physicsImpostor, this.leftWheelJoint);
 
     // Create ET sensors, positioned relative to other meshes
     const etSensorMesh = this.scene.getMeshByID('black satin finish plastic');
@@ -256,80 +335,6 @@ export class Space {
     
     
     await this.scene.whenReadyAsync();
-
-    let leftWheelRotationPrev = colliderLeftWheelMesh.rotationQuaternion.clone();
-    let framesSinceRotLog = 0;
-    let totalRotation = 0;
-
-    this.scene.registerAfterRender(() => {
-      const currRobotState = this.getRobotState();
-
-      // Set simulator motor speeds based on robot state
-      this.setDriveMotors(currRobotState.motorSpeeds[0], currRobotState.motorSpeeds[3]);
-
-      // Calculate new motor positions based on motor speed
-      // TODO: Get actual wheel rotation instead of calculating position from speed
-      const engineDeltaSeconds = this.scene.getEngine().getDeltaTime() / 1000;
-      const m0Position = currRobotState.motorPositions[0] + currRobotState.motorSpeeds[0] * engineDeltaSeconds;
-      const m3Position = currRobotState.motorPositions[3] + currRobotState.motorSpeeds[3] * engineDeltaSeconds;
-
-
-
-
-      // TEMP: Trying to get actual wheel rotation
-      framesSinceRotLog++;
-      if (framesSinceRotLog >= 10) {
-        const leftWheelRotationCurr = colliderLeftWheelMesh.rotationQuaternion;
-
-        // const rotation = this.getRotation(leftWheelRotationPrev, leftWheelRotationCurr);
-        // console.log('rotation calc: ', rotation);
-        // // console.log('euler angles: ', leftWheelRotationCurr.toEulerAngles().x - leftWheelRotationPrev.toEulerAngles().x);
-
-        // const rotationRads = this.getTwistAngleForQuat(leftWheelRotationCurr);
-        // console.log('twist: ', Babylon.Tools.ToDegrees(rotationRads));
-
-        let rotation = this.getRotation2(leftWheelRotationPrev, leftWheelRotationCurr);
-        if (rotation > Math.PI) {
-          rotation = rotation - Math.PI * 2;
-        }
-        totalRotation += rotation;
-        // console.log('rotation delta: ', Babylon.Tools.ToDegrees(rotation), ' | total: ', Babylon.Tools.ToDegrees(totalRotation));
-        console.log(this.bodyCompoundRootMesh.rotationQuaternion);
-        // console.log('relative rot: ', colliderLeftWheelMesh.rotationQuaternion.clone());
-        // console.log('absolute rot: ', colliderLeftWheelMesh.absoluteRotationQuaternion.clone());
-
-        leftWheelRotationPrev = leftWheelRotationCurr.clone();
-        framesSinceRotLog = 0;
-      }
-      
-
-
-      this.updateRobotState({
-        motorPositions: [m0Position, 0, 0, m3Position],
-      });
-
-      // const s0_position = Math.round((this.getRobotState().servo0_position / 11.702) - 87.5);
-      // const angle_servoArm = Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x));
-      // console.log(`position: ${this.getRobotState().servo0_position} Calculated position: ${s0_position} Servo Angle: ${angle_servoArm}`);
-      // // console.log(Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)));
-
-      // if (s0_position > angle_servoArm) {
-      //   this.setnegativeServo(s0_position);
-      // } else if (s0_position < angle_servoArm) {
-      //   this.setpositiveServo(s0_position);
-      // } else if (s0_position === angle_servoArm) {
-      //   this.liftArm_joint.setMotor(0);
-      // } else {
-      //   // do something
-      // }
-      // this.liftClaw_joint.setMotor(0.3);
-      
-
-      // if(this.registers_[61] == 0){
-      //   s1 = WorkerInstance.readServoRegister(WorkerInstance.registers[78], WorkerInstance.registers[79]);
-      //   s3 = WorkerInstance.readServoRegister(WorkerInstance.registers[80], WorkerInstance.registers[81]);
-      // }
-    });
   }
   
 
@@ -469,8 +474,10 @@ export class Space {
   private setDriveMotors(leftSpeed: number, rightSpeed: number) {
     // One motor is negative because the wheel joints are created on opposite axes,
     // so one needs to turn "backwards" for them to turn in the same direction
-    this.leftWheelJoint.setMotor(leftSpeed / 1500 * 5);
-    this.rightWheelJoint.setMotor(-rightSpeed / 1500 * 5);
+    if (this.leftWheelJoint && this.rightWheelJoint) {
+      this.leftWheelJoint.setMotor(leftSpeed / 1500 * 5);
+      this.rightWheelJoint.setMotor(-rightSpeed / 1500 * 5);
+    }
   }
 
   // private setpositiveServo(s0_position: number) {
