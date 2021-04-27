@@ -427,8 +427,8 @@ export class Space {
     // One motor is negative because the wheel joints are created on opposite axes,
     // so one needs to turn "backwards" for them to turn in the same direction
     if (this.leftWheelJoint && this.rightWheelJoint) {
-      this.leftWheelJoint.setMotor(leftSpeed / 1500 * 5);
-      this.rightWheelJoint.setMotor(-rightSpeed / 1500 * 5);
+      this.leftWheelJoint.setMotor(leftSpeed / 315);
+      this.rightWheelJoint.setMotor(-rightSpeed / 315);
     }
   }
 
