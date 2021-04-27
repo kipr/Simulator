@@ -137,8 +137,8 @@ export class Space {
       // Get current wheel rotations
       const leftWheelRotationCurr = Babylon.Quaternion.Inverse(this.bodyCompoundRootMesh.rotationQuaternion).multiply(this.colliderLeftWheelMesh.rotationQuaternion);
       const rightWheelRotationCurr = Babylon.Quaternion.Inverse(this.bodyCompoundRootMesh.rotationQuaternion).multiply(this.colliderRightWheelMesh.rotationQuaternion);
-      let leftRotation = this.getRotation(this.leftWheelRotationPrev, leftWheelRotationCurr, Space.wheelRotationVector);
-      let rightRotation = this.getRotation(this.rightWheelRotationPrev, rightWheelRotationCurr, Space.wheelRotationVector);
+      let leftRotation = this.getDeltaRotationOnAxis(this.leftWheelRotationPrev, leftWheelRotationCurr, Space.wheelRotationVector);
+      let rightRotation = this.getDeltaRotationOnAxis(this.rightWheelRotationPrev, rightWheelRotationCurr, Space.wheelRotationVector);
 
       // If rotation is in (pi, 2pi) range, convert to the equivalent negative rotation in (-pi, 0) range
       if (leftRotation > Math.PI) {
@@ -327,42 +327,6 @@ export class Space {
     await this.scene.whenReadyAsync();
   }
   
-  private getRotation = (start: Babylon.Quaternion, end: Babylon.Quaternion, axis: Babylon.Vector3) => {
-    // Get axis vector local to starting point, by rotating axis vector by the start quaternion
-    const axisQuaternion = new Babylon.Quaternion(axis.x, axis.y, axis.z, 0);
-    const axisLocalQuaternion = start.multiply(axisQuaternion).multiply(Babylon.Quaternion.Inverse(start));
-    const axisLocalVector = new Babylon.Vector3(axisLocalQuaternion.x, axisLocalQuaternion.y, axisLocalQuaternion.z);
-
-    // Get delta quaternion between start and end quaternions, such that end = start * delta
-    const delta = end.multiply(Babylon.Quaternion.Inverse(start));
-
-    // Perform swing-twist decomposition of delta to get twist on local axis vector
-    const twist = this.getTwistForQuaternion(delta, axisLocalVector);
-
-    // Quaternion is defined with [w = cos(theta / 2)], so [theta = 2 * acos(w)]
-    return 2 * Math.acos(twist.w);
-  };
-
-  // Does a "swing-twist" decomposition of the given quaternion q
-  // "direction" vector must be normalized
-  private getTwistForQuaternion = (q: Babylon.Quaternion, direction: Babylon.Vector3) => {
-    const rotationAxis = new Babylon.Vector3(q.x, q.y, q.z);
-
-    // Calculate vector projection of vector onto direction
-    // Shortcut projection calculation since "direction" is assumed to be normalized (i.e. magnitude of 1)
-    const dotProd: number = Babylon.Vector3.Dot(direction, rotationAxis);
-    const projection = direction.scale(dotProd);
-
-    const twist = new Babylon.Quaternion(projection.x, projection.y, projection.z, q.w).normalize();
-
-    // If the result is in the opposite-facing axis, convert it to the correct-facing axis
-    if (dotProd < 0) {
-      twist.scaleInPlace(-1);
-    }
-
-    return twist;
-  };
-
   public startRenderLoop(): void {
     this.scene.executeOnceBeforeRender(() => this.gravitySet(fullGravity),500);
     this.engine.runRenderLoop(() => {
@@ -431,6 +395,43 @@ export class Space {
       this.rightWheelJoint.setMotor(-rightSpeed / 315);
     }
   }
+
+  // Gets the delta rotation (in radians) between start and end along the given axis
+  private getDeltaRotationOnAxis = (start: Babylon.Quaternion, end: Babylon.Quaternion, axis: Babylon.Vector3) => {
+    // Get axis vector local to starting point, by rotating axis vector by the start quaternion
+    const axisQuaternion = new Babylon.Quaternion(axis.x, axis.y, axis.z, 0);
+    const axisLocalQuaternion = start.multiply(axisQuaternion).multiply(Babylon.Quaternion.Inverse(start));
+    const axisLocalVector = new Babylon.Vector3(axisLocalQuaternion.x, axisLocalQuaternion.y, axisLocalQuaternion.z);
+
+    // Get delta quaternion between start and end quaternions, such that end = start * delta
+    const delta = end.multiply(Babylon.Quaternion.Inverse(start));
+
+    // Perform swing-twist decomposition of delta to get twist on local axis vector
+    const twist = this.getTwistForQuaternion(delta, axisLocalVector);
+
+    // Quaternion is defined with [w = cos(theta / 2)], so [theta = 2 * acos(w)]
+    return 2 * Math.acos(twist.w);
+  };
+
+  // Does a "swing-twist" decomposition of the given quaternion q
+  // "direction" vector must be normalized
+  private getTwistForQuaternion = (q: Babylon.Quaternion, direction: Babylon.Vector3) => {
+    const rotationAxis = new Babylon.Vector3(q.x, q.y, q.z);
+
+    // Calculate vector projection of vector onto direction
+    // Shortcut projection calculation since "direction" is assumed to be normalized (i.e. magnitude of 1)
+    const dotProd: number = Babylon.Vector3.Dot(direction, rotationAxis);
+    const projection = direction.scale(dotProd);
+
+    const twist = new Babylon.Quaternion(projection.x, projection.y, projection.z, q.w).normalize();
+
+    // If the result is in the opposite-facing axis, convert it to the correct-facing axis
+    if (dotProd < 0) {
+      twist.scaleInPlace(-1);
+    }
+
+    return twist;
+  };
 
   // private setpositiveServo(s0_position: number) {
   //   this.liftArm_joint.setMotor(0.3); // Rotates arm backwards
