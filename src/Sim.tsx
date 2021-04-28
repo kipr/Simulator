@@ -47,6 +47,7 @@ export class Space {
 
   private readonly TICKS_BETWEEN_ET_SENSOR_UPDATES = 15;
   private readonly WHEEL_TICKS_PER_RADIAN = 2048 / (2 * Math.PI);
+  private readonly MAX_MOTOR_VELOCITY = 1500;
 
   // The axis along which to calculate wheel rotations
   // This is the y axis instead of the x axis because the wheels in the loaded model are rotated
@@ -391,8 +392,10 @@ export class Space {
     // One motor is negative because the wheel joints are created on opposite axes,
     // so one needs to turn "backwards" for them to turn in the same direction
     if (this.leftWheelJoint && this.rightWheelJoint) {
-      this.leftWheelJoint.setMotor(leftSpeed / 315);
-      this.rightWheelJoint.setMotor(-rightSpeed / 315);
+      const leftSpeedClamped = Math.max(-this.MAX_MOTOR_VELOCITY, Math.min(leftSpeed, this.MAX_MOTOR_VELOCITY));
+      const rightSpeedClamped = Math.max(-this.MAX_MOTOR_VELOCITY, Math.min(rightSpeed, this.MAX_MOTOR_VELOCITY));
+      this.leftWheelJoint.setMotor(leftSpeedClamped / 315);
+      this.rightWheelJoint.setMotor(-rightSpeedClamped / 315);
     }
   }
 
