@@ -43,8 +43,8 @@ See more info here: https://emscripten.org/docs/getting_started/downloads.html
 ```bash
 git clone https://github.com/emscripten-core/emsdk.git
 cd emsdk
-./emsdk install latest
-./emsdk activate latest
+./emsdk install 2.0.2
+./emsdk activate 2.0.2
 ```
 
 ### Install Dependencies
