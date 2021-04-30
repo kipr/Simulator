@@ -11,7 +11,10 @@ type Props = NumberDisplayProps;
 
 export class NumberDisplay extends React.Component<Props> {
   private onValueChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    this.props.onChange(Number.parseInt(event.target.value));
+    const parsedNumber = event.target.value !== '' ? Number.parseInt(event.target.value) : 0;
+    if (!Number.isNaN(parsedNumber)) {
+      this.props.onChange(parsedNumber);
+    }
   };
 
   render(): React.ReactNode {
