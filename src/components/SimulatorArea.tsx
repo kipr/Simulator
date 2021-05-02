@@ -6,8 +6,10 @@ import { RobotState } from "../RobotState";
 interface SimulatorAreaProps {
   robotState: RobotState;
   canEnabled: boolean[];
+  shouldSetRobotPosition: boolean;
 
   onRobotStateUpdate: (robotState: Partial<RobotState>) => void;
+  onRobotPositionSetCompleted: () => void;
 }
 
 export class SimulatorArea extends React.Component<SimulatorAreaProps> {
@@ -46,9 +48,11 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
         this.setCanEnabled(i, enabled);
       }
     });
-    // Checks to see if robot position has been set
-    if (this.props.robotState.mesh !== prevProps.robotState.mesh) {
-      this.setMeshEnabled(this.props.robotState.mesh);
+
+    // Checks if robot position needs to be set
+    if (this.props.shouldSetRobotPosition && !prevProps.shouldSetRobotPosition) {
+      this.space.resetPosition();
+      this.props.onRobotPositionSetCompleted();
     }
   }
 
@@ -62,23 +66,6 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
     isEnabled
       ? this.space.createCan(canNumber + 1)
       : this.space.destroyCan(canNumber + 1);
-  }
-
-  private setMeshEnabled(isEnabled: boolean) {
-    isEnabled
-      ? this.reloadMeshes()
-      : this.space.destroyBot();
-  }
-
-  private reloadMeshes() {
-    this.space.stopRenderLoop();
-    this.space.loadMeshes()
-      .then(() => {
-        this.space.startRenderLoop();
-      })
-      .catch((e) => {
-        console.error('The simulator meshes failed to load', e);
-      });
   }
 
   render(): React.ReactNode {
