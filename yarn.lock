@@ -312,6 +312,54 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
+"@types/source-list-map@*":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@types/source-list-map/-/source-list-map-0.1.2.tgz#0078836063ffaf17412349bba364087e0ac02ec9"
+
+"@types/styletron-react@^5.0.2":
+  version "5.0.2"
+  resolved "http://localhost:4873/@types%2fstyletron-react/-/styletron-react-5.0.2.tgz#541cebb147ef68e9a8ee75dcff160cf723fed710"
+  integrity sha512-jONPyzz9MRuCB71QYpkRQx4nsjGxLS/GNmudHXs8aeTj8yRHgO9wsXhUAL5uZ8LOENWUN2Gcqh/vNvlbRpfcUA==
+  dependencies:
+    "@types/react" "*"
+    "@types/styletron-standard" "*"
+
+"@types/styletron-standard@*":
+  version "2.0.1"
+  resolved "http://localhost:4873/@types%2fstyletron-standard/-/styletron-standard-2.0.1.tgz#1a6c071b4320d68945215f85ea65520c2b708866"
+  integrity sha512-yXMFS1um8UeMhVCCmstszWOpQ6xga+xNQGB2mEdl/w8psvti2IvlLkNYj63JNPk3FbdKOdrvl6WeUpbDA3y+uA==
+  dependencies:
+    csstype "^3.0.2"
+
+"@types/tapable@*", "@types/tapable@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.5.tgz#9adbc12950582aa65ead76bffdf39fe0c27a3c02"
+
+"@types/uglify-js@*":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@types/uglify-js/-/uglify-js-3.0.4.tgz#96beae23df6f561862a830b4288a49e86baac082"
+  dependencies:
+    source-map "^0.6.1"
+
+"@types/webpack-sources@*":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@types/webpack-sources/-/webpack-sources-0.1.7.tgz#0a330a9456113410c74a5d64180af0cbca007141"
+  dependencies:
+    "@types/node" "*"
+    "@types/source-list-map" "*"
+    source-map "^0.6.1"
+
+"@types/webpack@^4.41.8":
+  version "4.41.9"
+  resolved "https://registry.yarnpkg.com/@types/webpack/-/webpack-4.41.9.tgz#f0ed8d46d69efe11573441f8eb112d934fc4efe9"
+  dependencies:
+    "@types/anymatch" "*"
+    "@types/node" "*"
+    "@types/tapable" "*"
+    "@types/uglify-js" "*"
+    "@types/webpack-sources" "*"
+    source-map "^0.6.0"
+
 "@typescript-eslint/eslint-plugin@^4.18.0":
   version "4.18.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-4.18.0.tgz#50fbce93211b5b690895d20ebec6fe8db48af1f6"
@@ -1451,6 +1499,11 @@ csso@^4.0.2:
 csstype@^2.2.0:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.9.tgz#05141d0cd557a56b8891394c1911c40c8a98d098"
+
+csstype@^3.0.2:
+  version "3.0.8"
+  resolved "http://localhost:4873/csstype/-/csstype-3.0.8.tgz#d2266a792729fb227cd216fb572f43728e1ad340"
+  integrity sha512-jXKhWqXPmlUeoQnF/EhTtTl4C9SnrxSH/jZUih3jmO6lBKr99rP3/+FmrMj4EFpOXzMtXHAZkd3x0E6h6Fgflw==
 
 currently-unhandled@^0.4.1:
   version "0.4.1"
@@ -4837,6 +4890,11 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
+react-reverse-portal@^2.0.1:
+  version "2.0.1"
+  resolved "http://localhost:4873/react-reverse-portal/-/react-reverse-portal-2.0.1.tgz#23b18292c531fb7b343d85a614c15a995838ba31"
+  integrity sha512-sj/D9nSHspqV8i8hWkTSZ5Ohnrqk2A5fkDKw4Xe/zV4OfF1UYwmbzrxLdmNRdKkWgQwnXIxaa2E3FC7QYdZAeA==
+
 react@^16.13.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react/-/react-16.13.1.tgz#2e818822f1a9743122c063d6410d85c1e3afe48e"
@@ -5699,12 +5757,21 @@ styletron-core@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/styletron-core/-/styletron-core-3.0.4.tgz#648081572a8de30acbe3008cd283c421565444bb"
 
-styletron-react@^5.2.7:
-  version "5.2.7"
-  resolved "https://registry.yarnpkg.com/styletron-react/-/styletron-react-5.2.7.tgz#7aa283a0b06787024f96289480c60bafed5048cf"
+styletron-engine-atomic@^1.4.7:
+  version "1.4.7"
+  resolved "http://localhost:4873/styletron-engine-atomic/-/styletron-engine-atomic-1.4.7.tgz#0c6572491685308f3a5b4565016c7c5637bcb4fb"
+  integrity sha512-RDWbNjMNi4mCH+OhTSU76cnBxs4sPF1PAYwn5pwI8z6U8L9BVv1Q8lpci/zXqrwt6oqQZ05yj7gDoYxsXB6xZg==
+  dependencies:
+    inline-style-prefixer "^5.1.0"
+    styletron-standard "^3.0.5"
+
+styletron-react@^6.0.1:
+  version "6.0.1"
+  resolved "http://localhost:4873/styletron-react/-/styletron-react-6.0.1.tgz#bf4f51ce872e925bcf8ebdcc8ee69027578b93d0"
+  integrity sha512-GHgWrzR1fUyMr2JnHZOUP/XAKZ/dtDb3qxqq779xQkVC3Tjl1zWWrNLe+qnRwunygcEMiVVtinNdhvwHTIsiIQ==
   dependencies:
     prop-types "^15.6.0"
-    styletron-standard "^3.0.4"
+    styletron-standard "^3.0.5"
 
 styletron-server@^3.0.4:
   version "3.0.4"
@@ -5712,9 +5779,10 @@ styletron-server@^3.0.4:
   dependencies:
     styletron-core "^3.0.4"
 
-styletron-standard@^3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/styletron-standard/-/styletron-standard-3.0.4.tgz#2b286752f464e4c9824faaee466013aa8f13cf6b"
+styletron-standard@^3.0.5:
+  version "3.0.5"
+  resolved "http://localhost:4873/styletron-standard/-/styletron-standard-3.0.5.tgz#35dd4a584d668ef73b145988cdbece69a1e39085"
+  integrity sha512-0paxpsQg2QnlapGLnM49yEPZ015VEi/ovys9Hu0wBduimKshYUZLLl1Emfs5jx1LHVXrDn4j+DYVclJGWJC7Jw==
   dependencies:
     "@rtsao/csstype" "2.6.5-forked.0"
     inline-style-prefixer "^5.1.0"

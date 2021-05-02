@@ -2,28 +2,54 @@ import * as React from 'react';
 import { SimulatorSidebar } from './SimulatorSidebar';
 import WorkerInstance from '../WorkerInstance';
 import { RobotState } from '../RobotState';
-import { SimulatorArea } from './SimulatorArea';
+
 import { SurfaceState, SurfaceStatePresets } from '../SurfaceState';
+import Menu from './Menu';
+
+import { styled } from 'styletron-react';
+import { DARK, ThemeProps } from './theme';
+import Console from './Console';
+import Widget from './Widget';
+import OverlayLayout from './OverlayLayout';
+import { Layout } from './Layout';
+import BottomLayout from './BottomLayout';
+import SideLayout from './SideLayout';
+
+import * as portals from 'react-reverse-portal';
+import { SimulatorArea, SimulatorAreaProps } from './SimulatorArea';
 
 interface RootState {
-  robotState: RobotState,
-  isCanEnabled: boolean[],
   shouldSetRobotPosition: boolean,
   isSensorNoiseEnabled: boolean,
   surfaceState: SurfaceState,
+  robotState: RobotState;
+  cans: boolean[];
+  layout: Layout;
+  code: string;
 }
+
 type Props = Record<string, never>;
 type State = RootState;
+
+const Container = styled('div', {
+  width: '100vw',
+  height: '100vh',
+  display: 'flex',
+  flexDirection: 'column',
+  overflow: 'hidden'
+});
 
 export class Root extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
       robotState: WorkerInstance.state,
-      isCanEnabled: Array<boolean>(12).fill(false),
       shouldSetRobotPosition: false,
       isSensorNoiseEnabled: false,
       surfaceState: SurfaceStatePresets.jbcA,
+      cans: Array<boolean>(12).fill(false),
+      layout: Layout.Overlay,
+      code: ''
     };
   }
 
@@ -51,9 +77,9 @@ export class Root extends React.Component<Props, State> {
 
   private onCanChange_ = (canNumber: number, enabled: boolean) => {
     this.setState(prevState => {
-      const isCanEnabled = [...prevState.isCanEnabled];
-      isCanEnabled[canNumber] = enabled;
-      return { isCanEnabled: isCanEnabled };
+      const cans = [...prevState.cans];
+      cans[canNumber] = enabled;
+      return { cans };
     });
   };
 
@@ -73,22 +99,68 @@ export class Root extends React.Component<Props, State> {
     this.setState({ surfaceState: newSurfaceState });
   };
 
-  render(): React.ReactNode {
-    const { state } = this;
+
+  private onCodeChange_ = (code: string) => {
+    this.setState({ code });
+  }
+
+  private overlayLayout_: OverlayLayout;
+  private bindOverlayLayout_ = (overlayLayout: OverlayLayout) => {
+    this.overlayLayout_ = overlayLayout;
+  };
+
+  private onShowAll_ = () => {
+    this.overlayLayout_.showAll();
+  }
+
+  private onHideAll_ = () => {
+    this.overlayLayout_.hideAll();
+  }
+  
+  private onLayoutChange_ = (layout: Layout) => {
+    this.setState({
+      layout
+    })
+  };
+
+  render() {
+    const { props, state } = this;
+    const { cans, robotState, layout, code } = state;
+
+    const theme = DARK;
+
+    let impl: JSX.Element;
+    switch (layout) {
+      case Layout.Overlay: {
+        impl = (
+          <OverlayLayout ref={this.bindOverlayLayout_} code={code} onCodeChange={this.onCodeChange_} cans={cans} onStateChange={this.onRobotStateUpdate_} theme={theme} state={robotState} />
+        );
+        break;
+      }
+      case Layout.Bottom: {
+        impl = (
+          <BottomLayout code={code} onCodeChange={this.onCodeChange_} cans={cans} onStateChange={this.onRobotStateUpdate_} theme={theme} state={robotState} />
+        );
+        break;
+      }
+      case Layout.Side: {
+        impl = (
+          <SideLayout code={code} onCodeChange={this.onCodeChange_} cans={cans} onStateChange={this.onRobotStateUpdate_} theme={theme} state={robotState} />
+        );
+        break;
+      }
+      default: {
+        return null;
+      }
+      
+    }
 
     return (
-      <div id="main">
-        <div id="root">
-          <section id="app">
-            <SimulatorSidebar robotState={state.robotState} isCanChecked={state.isCanEnabled} isSensorNoiseEnabled={state.isSensorNoiseEnabled} surfaceState={state.surfaceState}
-              onRobotStateChange={this.onRobotStateUpdate_} onCanChange={this.onCanChange_} onRobotPositionSetRequested={this.onRobotPositionSetRequested_} onToggleSensorNoise={this.onToggleSensorNoise_}
-              onUpdateSurfaceState={this.onUpdateSurfaceState_}/>
-          </section>
-        </div>
-        <div id="right">
-          <SimulatorArea robotState={state.robotState} canEnabled={state.isCanEnabled} surfaceState={state.surfaceState} isSensorNoiseEnabled={state.isSensorNoiseEnabled} onRobotStateUpdate={this.onRobotStateUpdate_} onRobotPositionSetCompleted={this.onRobotPositionSetCompleted_} shouldSetRobotPosition={state.shouldSetRobotPosition} />
-        </div>
-      </div>
+      <Container>
+        <Menu layout={layout} onLayoutChange={this.onLayoutChange_} theme={theme} onShowAll={this.onShowAll_} onHideAll={this.onHideAll_} />
+        {impl}
+      </Container>
+
     );
   }
 }
