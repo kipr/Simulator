@@ -6,9 +6,6 @@ export interface RobotState {
 
   // Units: Radians
   theta: number;
-  
-  // Mesh created
-  mesh: boolean;
 
   // Units: Ticks
   motorSpeeds: [number, number, number, number];
@@ -23,7 +20,6 @@ export namespace RobotState {
     y: 0,
     z: 0,
     theta:0,
-    mesh: true,
     motorSpeeds: [0, 0, 0, 0],
     motorPositions: [0, 0, 0, 0],
     servoPositions: [1024, 1024, 1024, 0],
