@@ -7,6 +7,7 @@ import { SimulatorArea } from './SimulatorArea';
 interface RootState {
   robotState: RobotState,
   isCanEnabled: boolean[],
+  shouldSetRobotPosition: boolean,
 }
 type Props = Record<string, never>;
 type State = RootState;
@@ -17,6 +18,7 @@ export class Root extends React.Component<Props, State> {
     this.state = {
       robotState: WorkerInstance.state,
       isCanEnabled: Array<boolean>(12).fill(false),
+      shouldSetRobotPosition: false,
     };
   }
 
@@ -50,6 +52,14 @@ export class Root extends React.Component<Props, State> {
     });
   };
 
+  private onRobotPositionSetRequested_ = () => {
+    this.setState({ shouldSetRobotPosition: true });
+  };
+
+  private onRobotPositionSetCompleted_ = () => {
+    this.setState({ shouldSetRobotPosition: false });
+  };
+
   render(): React.ReactNode {
     const { state } = this;
 
@@ -57,11 +67,11 @@ export class Root extends React.Component<Props, State> {
       <div id="main">
         <div id="root">
           <section id="app">
-            <SimulatorSidebar robotState={state.robotState} isCanChecked={state.isCanEnabled} onRobotStateChange={this.onRobotStateUpdate_} onCanChange={this.onCanChange_} />
+            <SimulatorSidebar robotState={state.robotState} isCanChecked={state.isCanEnabled} onRobotStateChange={this.onRobotStateUpdate_} onCanChange={this.onCanChange_} onRobotPositionSetRequested={this.onRobotPositionSetRequested_} />
           </section>
         </div>
         <div id="right">
-          <SimulatorArea robotState={state.robotState} canEnabled={state.isCanEnabled} onRobotStateUpdate={this.onRobotStateUpdate_} />
+          <SimulatorArea robotState={state.robotState} canEnabled={state.isCanEnabled} onRobotStateUpdate={this.onRobotStateUpdate_} onRobotPositionSetCompleted={this.onRobotPositionSetCompleted_} shouldSetRobotPosition={state.shouldSetRobotPosition} />
         </div>
       </div>
     );

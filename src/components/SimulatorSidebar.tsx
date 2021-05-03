@@ -23,6 +23,7 @@ export interface SimulatorSidebarProps extends StyleProps {
 
   onRobotStateChange: (robotState: RobotState) => void;
   onCanChange: (canNumber: number, checked: boolean) => void;
+  onRobotPositionSetRequested: () => void;
 }
 
 interface SimulatorSidebarState {
@@ -116,10 +117,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
   };
 
   private onSetClick_: React.MouseEventHandler<HTMLButtonElement> = () => {
-    this.props.onRobotStateChange({
-      ...this.props.robotState,
-      mesh: false,
-    });
+    this.props.onRobotPositionSetRequested();
   };
 
   private onResetClick_: React.MouseEventHandler<HTMLButtonElement> = () => {
@@ -129,8 +127,9 @@ export class SimulatorSidebar extends React.Component<Props, State> {
       y: RobotState.empty.y,
       z: RobotState.empty.z,
       theta: RobotState.empty.theta,
-      mesh: false,
     });
+
+    this.props.onRobotPositionSetRequested();
 
     this.setState({
       console: ''

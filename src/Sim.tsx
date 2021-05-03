@@ -11,24 +11,18 @@ import {
 import { RobotState } from './RobotState';
 import Dict from './Dict';
 
-const noGravity = new Babylon.Vector3(0,0,0);
-const fullGravity = new Babylon.Vector3(0,-9.8 * 10,0);
-
 export class Space {
   private engine: Babylon.Engine;
   private canvas: HTMLCanvasElement;
   private scene: Babylon.Scene;
 
-  private gravitySet = (g) => this.scene.getPhysicsEngine().setGravity(g);
-
   private ground: Babylon.Mesh;
   private mat: Babylon.Mesh;
 
+  // The position offset of the robot, applied to the user-specified position
+  private robotOffset: Babylon.Vector3 = new Babylon.Vector3(0, 7, -52);
+
   private bodyCompoundRootMesh: Babylon.AbstractMesh;
-  
-  // Use for changing robot position 
-  private botMover: Babylon.Vector3;
-  private robotWorldRotation: number;
 
   private colliderLeftWheelMesh: Babylon.AbstractMesh;
   private colliderRightWheelMesh: Babylon.AbstractMesh;
@@ -44,7 +38,6 @@ export class Space {
 
   private ticksSinceETSensorUpdate: number;
 
-  private can: Babylon.Mesh;
   private canCoordinates: Array<[number, number]>;
 
   private collidersVisible = false;
@@ -82,8 +75,8 @@ export class Space {
 
     // At 100x scale, gravity should be -9.8 * 100, but this causes weird jitter behavior
     // Full gravity will be -9.8 * 10
-    // Start gravity lower (1/10) so that any initial changes to robot don't move it as much
-    this.scene.enablePhysics(noGravity, new Babylon.AmmoJSPlugin(true, Ammo));
+    const gravityVector = new Babylon.Vector3(0, -9.8 * 10, 0);
+    this.scene.enablePhysics(gravityVector, new Babylon.AmmoJSPlugin(true, Ammo));
 
     this.buildFloor();
 
@@ -176,12 +169,6 @@ export class Space {
   
 
   public async loadMeshes(): Promise<void> {
-    this.gravitySet(noGravity);
-
-    // Set robot to specified position
-    this.botMover = new Babylon.Vector3(0 + this.getRobotState().x, 0.5 + this.getRobotState().y, -37 + this.getRobotState().z); // start robot slightly above to keep from shifting in mat material
-    this.robotWorldRotation = this.getRobotState().theta * Math.PI / 180;
-
     // Load model into scene
     const importMeshResult = await Babylon.SceneLoader.ImportMeshAsync("",'static/', 'Simulator_Demobot_colliders.glb', this.scene);
 
@@ -192,7 +179,7 @@ export class Space {
     // Also have to apply transformations to 'Root' node b/c when visual transform nodes are unparented, they lose their transformations
     // (seems to be fixed in Babylon 5 alpha versions)
 
-    this.scene.getTransformNodeByName('Root').setAbsolutePosition(new Babylon.Vector3(0,5.7,0).add(this.botMover));
+    this.scene.getTransformNodeByName('Root').setAbsolutePosition(new Babylon.Vector3(0, 5.7, 0));
     this.scene.getTransformNodeByName('Root').scaling.scaleInPlace(100);
     
     // Hide collider meshes (unless enabled for debugging)
@@ -209,7 +196,8 @@ export class Space {
     const wallabyColliderMesh = this.scene.getMeshByName('collider_wallaby');
     wallabyColliderMesh.computeWorldMatrix(true);
     this.bodyCompoundRootMesh = new Babylon.Mesh("bodyCompoundMesh", this.scene);
-    this.bodyCompoundRootMesh.position = wallabyColliderMesh.getAbsolutePosition().add(this.botMover);
+    this.bodyCompoundRootMesh.position = wallabyColliderMesh.getAbsolutePosition().clone();
+    this.bodyCompoundRootMesh.rotationQuaternion = new Babylon.Quaternion();
 
     type ColliderShape = 'box' | 'sphere';
     const bodyColliderMeshInfos: [string, ColliderShape][] = [
@@ -249,7 +237,6 @@ export class Space {
       colliderMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderMesh, impostorType, { mass: 0 }, this.scene);
       
       colliderMesh.setParent(this.bodyCompoundRootMesh);
-      colliderMesh.setAbsolutePosition(colliderMesh.absolutePosition.add(this.botMover));
     }
 
     // Find wheel collider meshes in scene
@@ -260,9 +247,6 @@ export class Space {
     this.colliderLeftWheelMesh.setParent(null);
     this.colliderRightWheelMesh.setParent(null);
 
-    this.colliderLeftWheelMesh.setAbsolutePosition(this.colliderLeftWheelMesh.absolutePosition.add(this.botMover));
-    this.colliderRightWheelMesh.setAbsolutePosition(this.colliderRightWheelMesh.absolutePosition.add(this.botMover));
-
     // Find transform nodes (visual meshes) in scene and parent them to the proper node
     this.scene.getTransformNodeByName('ChassisWombat-1').setParent(this.bodyCompoundRootMesh);
     this.scene.getTransformNodeByName('KIPR_Lower_final_062119-1').setParent(this.bodyCompoundRootMesh);
@@ -270,11 +254,6 @@ export class Space {
     this.scene.getTransformNodeByName('1 x 5 Servo Horn-2').setParent(this.bodyCompoundRootMesh);
     this.scene.getTransformNodeByName('Servo Wheel-1').setParent(this.colliderRightWheelMesh);
     this.scene.getTransformNodeByName('Servo Wheel-2').setParent(this.colliderLeftWheelMesh);
-
-    // Rotate meshes for any user input
-    this.bodyCompoundRootMesh.rotate(Babylon.Axis.Y,this.robotWorldRotation);
-    this.colliderRightWheelMesh.rotate(Babylon.Axis.Z,this.robotWorldRotation);
-    this.colliderLeftWheelMesh.rotate(Babylon.Axis.Z,-this.robotWorldRotation);
 
     // Update "previous" wheel rotations to avoid sudden jump in motor position
     this.leftWheelRotationPrev = Babylon.Quaternion.Inverse(this.bodyCompoundRootMesh.rotationQuaternion).multiply(this.colliderLeftWheelMesh.rotationQuaternion);
@@ -284,9 +263,6 @@ export class Space {
     this.bodyCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.bodyCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 100, friction: 0.1 }, this.scene);
     this.colliderLeftWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderLeftWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 1 }, this.scene);
     this.colliderRightWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderRightWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 1 }, this.scene);
-    
-    
-
     // Create joint for right wheel
     const rightWheelMainPivot = this.colliderRightWheelMesh.position.subtract(this.bodyCompoundRootMesh.position);
     this.rightWheelJoint = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint, {
@@ -313,40 +289,44 @@ export class Space {
     const instantiate = ([id, sensor]: [string, Sensor]) => instantiateSensor(this.scene, id, sensor);
     this.sensorObjects_ = Dict.toList(SENSOR_MAPPINGS).map(instantiate);
     
-    // this.bodyCompoundRootMesh.setAbsolutePosition(this.bodyCompoundRootMesh.absolutePosition.addInPlaceFromFloats(0,5,0));
-    
+    this.resetPosition();
+
     await this.scene.whenReadyAsync();
   }
   
   public startRenderLoop(): void {
-    this.scene.executeOnceBeforeRender(() => this.gravitySet(fullGravity),500);
     this.engine.runRenderLoop(() => {
       this.scene.render();
     });
   }
 
-  public stopRenderLoop(): void {
-    this.engine.stopRenderLoop();
-  }
+  // Resets the position/rotation of the robot to the current robot state
+  public resetPosition(): void {
+    const rootMeshes = [this.bodyCompoundRootMesh, this.colliderLeftWheelMesh, this.colliderRightWheelMesh];
 
-  public destroyBot(): void {
-    this.scene.getMeshByName('collider_left_wheel').dispose();
-    this.scene.getMeshByName('collider_right_wheel').dispose();
-    
-    for (let i = 0; i < this.sensorObjects_.length; ++i) {
-      const sensorObject = this.sensorObjects_[i];
-      sensorObject.isVisible = false;
-      sensorObject.dispose();
+    // Create a transform node, positioned and rotated to match the body root
+    const resetTransformNode: Babylon.TransformNode = new Babylon.TransformNode("resetTransformNode", this.scene);
+    resetTransformNode.setAbsolutePosition(this.bodyCompoundRootMesh.absolutePosition);
+    resetTransformNode.rotationQuaternion = this.bodyCompoundRootMesh.absoluteRotationQuaternion;
+
+    for (const rootMesh of rootMeshes) {
+      // Stop the robot's motion in case it was falling or otherwise moving
+      rootMesh.physicsImpostor.setLinearVelocity(Babylon.Vector3.Zero());
+      rootMesh.physicsImpostor.setAngularVelocity(Babylon.Vector3.Zero());
+
+      rootMesh.setParent(resetTransformNode);
     }
-    this.sensorObjects_ = [];
 
-    this.scene.getMeshByName('bodyCompoundMesh').dispose();
-    this.scene.getTransformNodeByName('Root').dispose();
-    this.robotWorldRotation = 0;
-    
-    this.updateRobotState({
-      mesh: true,
-    });
+    // Set the position and rotation
+    const { x, y, z, theta } = this.getRobotState();
+    resetTransformNode.setAbsolutePosition(new Babylon.Vector3(x, y, z).addInPlace(this.robotOffset));
+    resetTransformNode.rotationQuaternion = Babylon.Quaternion.RotationAxis(Babylon.Vector3.Up(), Babylon.Tools.ToRadians(theta));
+
+    // Destroy the transform node
+    for (const rootMesh of rootMeshes) {
+      rootMesh.setParent(null);
+    }
+    resetTransformNode.dispose();
   }
 
   public handleResize(): void {

@@ -11,7 +11,6 @@ echo Install all the prerequisit software...
 echo
 
 sudo apt-get update
-sudo apt-get upgrade
 sudo apt-get install nodejs -y
 sudo apt-get install doxygen -y
 sudo apt-get install npm -y
