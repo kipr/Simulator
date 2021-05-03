@@ -32,7 +32,7 @@ export class TouchSensor implements SensorObject {
     return false;
   }
 
-  public getValue(): SensorObject.Value.Bool {
+  public getValue(): SensorObject.Value {
     return SensorObject.Value.FALSE;
   }
 

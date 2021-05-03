@@ -20,7 +20,8 @@ export class EtSensor implements SensorObject {
   }
 
   constructor(config: SensorObject.Config<Sensor.Et>) {
-    this.config_ = config;
+    const sensor = Sensor.Et.fill(config.sensor);
+    this.config_ = { ...config, sensor };
 
     this.ray = new Babylon.Ray(Babylon.Vector3.Zero(), Babylon.Vector3.Zero(), this.config_.sensor.maxRange);
     this.visualMesh = Babylon.MeshBuilder.CreateLines(
@@ -56,7 +57,7 @@ export class EtSensor implements SensorObject {
     return true;
   }
 
-  public getValue(): SensorObject.Value.U8 {
+  public getValue(): SensorObject.Value {
     const hit = this.config_.scene.pickWithRay(this.ray);
     if (!hit.pickedMesh) return SensorObject.Value.u8(255);
     
