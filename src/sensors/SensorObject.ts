@@ -26,17 +26,17 @@ namespace SensorObject {
   export namespace Value {
     export enum Type {
       U8,
-      Boolean
+      Bool
     }
 
     export namespace Type {
-      export const toString = (type: Type) => {
+      export const toString = (type: Type): string => {
         switch (type) {
           case Type.U8: return 'U8';
-          case Type.Boolean: return 'Boolean';
+          case Type.Bool: return 'Boolean';
+          default: return `Unknown (${JSON.stringify(type)})`;
         }
-        return `Unknown (${type})`;
-      }
+      };
     }
   
     export interface U8 {
@@ -48,9 +48,9 @@ namespace SensorObject {
       export const from = (value: Value): U8 => {
         switch (value.type) {
           case Type.U8: return value;
-          case Type.Boolean: return u8(value.value ? 255 : 0);
+          case Type.Bool: return u8(value.value ? 255 : 0);
         }
-      }
+      };
     }
 
     export const u8 = (value: number): U8 => ({
@@ -58,32 +58,32 @@ namespace SensorObject {
       value
     });
   
-    export interface Boolean {
-      type: Type.Boolean;
+    export interface Bool {
+      type: Type.Bool;
       value: boolean;
     }
 
-    export namespace Boolean {
-      export const from = (value: Value): Boolean => {
+    export namespace Bool {
+      export const from = (value: Value): Bool => {
         switch (value.type) {
-          case Type.Boolean: return value;
+          case Type.Bool: return value;
           case Type.U8: return bool(value.value > 0);
         }
-      }
+      };
     }
 
-    export const bool = (value: boolean): Boolean => ({
-      type: Type.Boolean,
+    export const bool = (value: boolean): Bool => ({
+      type: Type.Bool,
       value
     });
 
-    export const TRUE: Boolean = bool(true);
-    export const FALSE: Boolean = bool(false);
+    export const TRUE: Bool = bool(true);
+    export const FALSE: Bool = bool(false);
   }
   
-  export type Value = Value.U8 | Value.Boolean;
+  export type Value = Value.U8 | Value.Bool;
 
-  export const apply = (self: SensorObject, state: Partial<RobotState>) => {
+  export const apply = (self: SensorObject, state: Partial<RobotState>): Partial<RobotState> => {
     const { output } = self.sensor;
     const value = self.getValue();
 
@@ -91,7 +91,7 @@ namespace SensorObject {
 
     switch (output.type) {
       case Sensor.Output.Type.Digital: {
-        const booleanValue = Value.Boolean.from(value);
+        const booleanValue = Value.Bool.from(value);
 
         ret.digitalValues = [
           ...ret.digitalValues.slice(0, output.port),
@@ -116,13 +116,13 @@ namespace SensorObject {
     return ret;
   };
 
-  export const applyMut = (self: SensorObject, state: Partial<RobotState>) => {
+  export const applyMut = (self: SensorObject, state: Partial<RobotState>): void => {
     const { output } = self.sensor;
     const value = self.getValue();
 
     switch (output.type) {
       case Sensor.Output.Type.Digital: {
-        const booleanValue = Value.Boolean.from(value);
+        const booleanValue = Value.Bool.from(value);
         state.digitalValues[output.port] = booleanValue.value;
         break;
       }

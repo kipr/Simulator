@@ -2,11 +2,6 @@ import * as Babylon from 'babylonjs';
 import Sensor from './Sensor';
 import SensorObject from './SensorObject';
 
-const vecToLocal = (vector: Babylon.Vector3, mesh: Babylon.AbstractMesh): Babylon.Vector3 => {
-  const matrix = mesh.getWorldMatrix();
-  return Babylon.Vector3.TransformCoordinates(vector, matrix);
-};
-
 export class TouchSensor implements SensorObject {
   private config_: SensorObject.Config<Sensor.Touch>;
 
@@ -14,7 +9,9 @@ export class TouchSensor implements SensorObject {
 
   private readonly VISUAL_MESH_NAME = "etlinemesh";
 
-  get sensor() { return this.config_.sensor; }
+  get sensor(): Sensor.Touch {
+    return this.config_.sensor;
+  }
 
   constructor(config: SensorObject.Config<Sensor.Touch>) {
     this.config_ = config;
@@ -31,25 +28,25 @@ export class TouchSensor implements SensorObject {
     this.isVisible = true;
   }
 
-  public update() {
+  public update(): boolean {
     return false;
   }
 
-  public getValue() {
+  public getValue(): SensorObject.Value.Bool {
     return SensorObject.Value.FALSE;
   }
 
-  public updateVisual() {
+  public updateVisual(): boolean {
     if (!this.isVisible) return false;
     
     return true;
   }
 
-  public dispose() {
+  public dispose(): void {
     this.visualMesh.dispose();
   }
 
-  public get isVisible() {
+  public get isVisible(): boolean {
     return this.visualMesh.isEnabled();
   }
   

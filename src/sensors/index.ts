@@ -18,7 +18,7 @@ const SENSOR_OBJECT_CONSTRUCTORS: Dict<SensorObject.Constructor<Sensor>> = {
   [Sensor.Type.Touch]: TouchSensor
 };
 
-export const instantiate = <T extends Sensor>(scene: Babylon.Scene, id: string, sensor: T) => {
+export const instantiate = <T extends Sensor>(scene: Babylon.Scene, id: string, sensor: T): SensorObject => {
   const mesh = scene.getMeshByID(id) || scene.getMeshByName(id);
   if (!mesh) throw new Error(`Failed to lookup mesh by ID or name (${id})`);
   

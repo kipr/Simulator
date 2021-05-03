@@ -87,7 +87,7 @@ export class Space {
     this.scene.registerBeforeRender(() => {
       let anyUpdated = false;
       
-      const updated = new Array(this.sensorObjects_.length);
+      const updated = new Array<boolean>(this.sensorObjects_.length);
       for (let i = 0; i < this.sensorObjects_.length; ++i) {
         const sensorObject = this.sensorObjects_[i];
         updated[i] = sensorObject.update();
@@ -99,8 +99,8 @@ export class Space {
       const robotState = this.getRobotState();
 
       const nextRobotState: Partial<RobotState> = {
-        analogValues: [ ...robotState.analogValues ],
-        digitalValues: [ ...robotState.digitalValues ]
+        analogValues: [...robotState.analogValues],
+        digitalValues: [...robotState.digitalValues]
       };
     
       for (let i = 0; i < this.sensorObjects_.length; ++i) {

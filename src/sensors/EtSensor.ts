@@ -15,7 +15,9 @@ export class EtSensor implements SensorObject {
 
   private readonly VISUAL_MESH_NAME = "etlinemesh";
 
-  get sensor() { return this.config_.sensor; }
+  get sensor(): Sensor.Et {
+    return this.config_.sensor;
+  }
 
   constructor(config: SensorObject.Config<Sensor.Et>) {
     this.config_ = config;
@@ -39,7 +41,7 @@ export class EtSensor implements SensorObject {
 
   // Updates the state of the sensor
   // Should call before getValue() or updateVisual()
-  public update() {
+  public update(): boolean {
     const forwardPoint = vecToLocal(this.config_.sensor.forward, this.config_.mesh);
     const originPoint = vecToLocal(this.config_.sensor.origin, this.config_.mesh);
 
@@ -54,14 +56,14 @@ export class EtSensor implements SensorObject {
     return true;
   }
 
-  public getValue() {
+  public getValue(): SensorObject.Value.U8 {
     const hit = this.config_.scene.pickWithRay(this.ray);
     if (!hit.pickedMesh) return SensorObject.Value.u8(255);
     
     return SensorObject.Value.u8(this.distanceToSensorValue(hit.distance)); 
   }
 
-  public updateVisual() {
+  public updateVisual(): boolean {
     if (!this.isVisible) return false;
 
     const newLinePoints = [this.ray.origin, this.ray.origin.add(this.ray.direction.scale(this.ray.length))];
@@ -70,11 +72,11 @@ export class EtSensor implements SensorObject {
     return true;
   }
 
-  public dispose() {
+  public dispose(): void {
     this.visualMesh.dispose();
   }
 
-  public get isVisible() {
+  public get isVisible(): boolean {
     return this.visualMesh.isEnabled();
   }
   

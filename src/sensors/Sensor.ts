@@ -9,14 +9,14 @@ namespace Sensor {
     }
 
     export namespace Type {
-      export const toString = (type: Type) => {
+      export const toString = (type: Type): string => {
         switch (type) {
           case Type.None: return 'None';
           case Type.Analog: return 'Analog';
           case Type.Digital: return 'Digital';
+          default: return `Unknown (${JSON.stringify(type)})`;
         }
-        return `Unknown (${type})`;
-      }
+      };
     }
 
     export interface None {
@@ -54,13 +54,13 @@ namespace Sensor {
   }
 
   export namespace Type {
-    export const toString = (type: Type) => {
+    export const toString = (type: Type): string => {
       switch (type) {
         case Type.Et: return 'Et';
         case Type.Touch: return 'Touch';
+        default: return `Unknown (${JSON.stringify(type)})`;
       }
-      return `Unknown (${type})`;
-    }
+    };
   }
 
   interface Common {
