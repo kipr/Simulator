@@ -22,7 +22,7 @@ export default {
     visible: true
   },
   // Front touch sensor
-  'brushed steel': {
+  'collider_touch_front': {
     type: Sensor.Type.Touch,
     output: Sensor.Output.digital(0)
   },
