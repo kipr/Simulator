@@ -98,6 +98,15 @@ class WorkerInstance {
     this.setRegister16b(Registers.REG_RW_ADC_0_H, nextState.analogValues[0]);
     this.setRegister16b(Registers.REG_RW_ADC_1_H, nextState.analogValues[1]);
 
+    // Update digital registers based on state
+    let digitalRegisterValue = 0;
+    for (let digitalPort = 0; digitalPort < nextState.digitalValues.length; ++digitalPort) {
+      if (nextState.digitalValues[digitalPort]) {
+        digitalRegisterValue = digitalRegisterValue | (1 << digitalPort);
+      }
+    }
+    this.setRegister16b(Registers.REG_RW_DIG_IN_H, digitalRegisterValue);
+
     // Only call onStateChange() if any state values have actually changed
     if (deepNeq(nextState, this.state_)) {
       if (this.onStateChange) {
