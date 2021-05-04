@@ -26,4 +26,14 @@ export default {
     type: Sensor.Type.Touch,
     output: Sensor.Output.digital(0)
   },
+  // Back left touch sensor
+  'collider_touch_back_left': {
+    type: Sensor.Type.Touch,
+    output: Sensor.Output.digital(1)
+  },
+  // Back right touch sensor
+  'collider_touch_back_right': {
+    type: Sensor.Type.Touch,
+    output: Sensor.Output.digital(2)
+  },
 } as Dict<Sensor>;
