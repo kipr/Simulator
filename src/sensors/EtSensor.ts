@@ -34,10 +34,6 @@ export class EtSensor implements SensorObject {
     );
 
     this.isVisible = this.config_.sensor.visible;
-    console.log(config);
-
-    console.log(this.config_.scene);
-
   }
 
   // Updates the state of the sensor
