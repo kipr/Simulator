@@ -19,6 +19,7 @@ export class Space {
 
   private bodyCompoundRootMesh: Babylon.AbstractMesh;
   private armCompoundRootMesh: Babylon.AbstractMesh;
+  private clawCompoundRootMesh: Babylon.AbstractMesh;
 
   private colliderLeftWheelMesh: Babylon.AbstractMesh;
   private colliderRightWheelMesh: Babylon.AbstractMesh;
@@ -26,12 +27,12 @@ export class Space {
   private leftWheelJoint: Babylon.MotorEnabledJoint;
   private rightWheelJoint: Babylon.MotorEnabledJoint;
   private armJoint: Babylon.MotorEnabledJoint;
+  private clawJoint: Babylon.MotorEnabledJoint;
   
 
   // Last recorded rotations of left and right wheels
   private leftWheelRotationPrev: Babylon.Quaternion;
   private rightWheelRotationPrev: Babylon.Quaternion;
-  // private armGoalRotation: Babylon.Quaternion;
 
   // TODO: Associate each sensor with an update frequency, since we may update different sensors at different speeds
   private etSensorFake: VisibleSensor;
@@ -54,7 +55,6 @@ export class Space {
   // The axis along which to calculate wheel rotations
   // This is the y axis instead of the x axis because the wheels in the loaded model are rotated
   private static readonly wheelRotationVector: Babylon.Vector3 = new Babylon.Vector3(0, -1, 0);
-  private static readonly armRotationVector: Babylon.Vector3 = new Babylon.Vector3(1, 0, 0);
 
   private getRobotState: () => RobotState;
   private updateRobotState: (robotState: Partial<RobotState>) => void;
@@ -134,12 +134,13 @@ export class Space {
 
     this.scene.registerAfterRender(() => {
       const currRobotState = this.getRobotState();
-      // this.armJoint.setMotor(0);
-      // this.armCompoundRootMesh.physicsImpostor.setAngularVelocity(Babylon.Vector3.Zero());
-      // console.log(Babylon.Tools.ToDegrees(this.armCompoundRootMesh.rotationQuaternion.toEulerAngles().x) + 87.5);
+
       // Set simulator motor speeds based on robot state
       this.setDriveMotors(currRobotState.motorSpeeds[0], currRobotState.motorSpeeds[3]);
+
+      // Set simulator servo positions based on robot state
       this.setServoPositions(currRobotState.servoPositions);
+      this.clawJoint.setMotor(1);
 
       // Get current wheel rotations
       const leftWheelRotationCurr = Babylon.Quaternion.Inverse(this.bodyCompoundRootMesh.rotationQuaternion).multiply(this.colliderLeftWheelMesh.rotationQuaternion);
@@ -252,10 +253,19 @@ export class Space {
       ['collider_arm_claw_1'],
       ['collider_arm_claw_2'],
       ['collider_arm_claw_3'],
+      ['collider_claw_servo'],
+    ];
+
+    const clawColliderMesh = this.scene.getMeshByName('collider_claw_1');
+    clawColliderMesh.computeWorldMatrix(true);
+    this.clawCompoundRootMesh = new Babylon.Mesh("clawCompoundMesh", this.scene);
+    this.clawCompoundRootMesh.position = clawColliderMesh.getAbsolutePosition().clone();
+    this.clawCompoundRootMesh.rotationQuaternion = new Babylon.Quaternion();
+
+    const clawColliderMeshInfos: [string][] = [
       ['collider_claw_1'],
       ['collider_claw_2'],
       ['collider_claw_3'],
-      ['collider_claw_servo'],
     ];
 
     // Parent body collider meshes to body root and add physics impostors
@@ -289,6 +299,19 @@ export class Space {
       colliderMesh.setParent(this.armCompoundRootMesh);
     }
 
+    for (const [clawColliderMeshName] of clawColliderMeshInfos) {
+      const colliderMesh: Babylon.AbstractMesh = this.scene.getMeshByName(clawColliderMeshName);
+      if (!colliderMesh) {
+        throw new Error(`failed to find collider mesh in model: ${clawColliderMeshName}`);
+      }
+      
+      // Unparent collider mesh before adding physics impostors to them
+      colliderMesh.setParent(null);
+      colliderMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderMesh, Babylon.PhysicsImpostor.BoxImpostor, { mass: 0 }, this.scene);
+      
+      colliderMesh.setParent(this.clawCompoundRootMesh);
+    }
+
     // Find wheel collider meshes in scene
     this.colliderLeftWheelMesh = this.scene.getMeshByName('collider_left_wheel');
     this.colliderRightWheelMesh = this.scene.getMeshByName('collider_right_wheel');
@@ -301,7 +324,7 @@ export class Space {
     this.scene.getTransformNodeByName('ChassisWombat-1').setParent(this.bodyCompoundRootMesh);
     this.scene.getTransformNodeByName('KIPR_Lower_final_062119-1').setParent(this.bodyCompoundRootMesh);
     this.scene.getTransformNodeByName('1 x 5 Servo Horn-1').setParent(this.armCompoundRootMesh);
-    this.scene.getTransformNodeByName('1 x 5 Servo Horn-2').setParent(this.armCompoundRootMesh);
+    this.scene.getTransformNodeByName('1 x 5 Servo Horn-2').setParent(this.clawCompoundRootMesh);
     this.scene.getTransformNodeByName('Servo Wheel-1').setParent(this.colliderRightWheelMesh);
     this.scene.getTransformNodeByName('Servo Wheel-2').setParent(this.colliderLeftWheelMesh);
 
@@ -315,18 +338,31 @@ export class Space {
     this.colliderLeftWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderLeftWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 5 }, this.scene);
     this.colliderRightWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderRightWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 5 }, this.scene);
     this.armCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.armCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 6, friction: 0.1 }, this.scene);
+    this.clawCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.clawCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 0.5, friction: 0.1 }, this.scene);
     
     // eslint-disable-next-line newline-per-chained-call
     const armMainPivot = this.scene.getTransformNodeByID('Servo Washer-2').getAbsolutePosition().subtract(this.bodyCompoundRootMesh.position);
     // eslint-disable-next-line newline-per-chained-call
-    const connectedPivot = this.scene.getTransformNodeByID('Servo Washer-2').getAbsolutePivotPoint().subtract(this.armCompoundRootMesh.position);
+    const armConnectedPivot = this.scene.getTransformNodeByID('Servo Washer-2').getAbsolutePivotPoint().subtract(this.armCompoundRootMesh.position);
     this.armJoint =  new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint, {
       mainPivot: armMainPivot,
-      connectedPivot: connectedPivot,
+      connectedPivot: armConnectedPivot,
       mainAxis: new Babylon.Vector3(1, 0, 0),
       connectedAxis: new Babylon.Vector3(1, 0, 0),
     });
     this.bodyCompoundRootMesh.physicsImpostor.addJoint(this.armCompoundRootMesh.physicsImpostor, this.armJoint);
+
+    // eslint-disable-next-line newline-per-chained-call
+    const clawMainPivot = this.scene.getTransformNodeByID('Servo Washer-1').getAbsolutePosition().subtract(this.armCompoundRootMesh.position);
+    // eslint-disable-next-line newline-per-chained-call
+    const clawConnectedPivot = this.scene.getTransformNodeByID('Servo Washer-1').getAbsolutePivotPoint().subtract(this.clawCompoundRootMesh.position);
+    this.clawJoint =  new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint, {
+      mainPivot: clawMainPivot,
+      connectedPivot: clawConnectedPivot,
+      mainAxis: new Babylon.Vector3(1, 0, 0),
+      connectedAxis: new Babylon.Vector3(1, 0, 0), // this.scene.getTransformNodeByID('Servo Washer-1').getAbsolutePosition(),
+    });
+    this.armCompoundRootMesh.physicsImpostor.addJoint(this.clawCompoundRootMesh.physicsImpostor, this.clawJoint);
 
     // Create joint for right wheel
     const rightWheelMainPivot = this.colliderRightWheelMesh.position.subtract(this.bodyCompoundRootMesh.position);
