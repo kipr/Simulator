@@ -13,6 +13,8 @@ export class EtSensor implements SensorObject {
   private ray: Babylon.Ray;
   private visualMesh: Babylon.LinesMesh;
 
+  private sinceLastUpdate = 0;
+
   private readonly VISUAL_MESH_NAME = "etlinemesh";
 
   get sensor(): Sensor.Et {
@@ -39,6 +41,13 @@ export class EtSensor implements SensorObject {
   // Updates the state of the sensor
   // Should call before getValue() or updateVisual()
   public update(): boolean {
+    this.sinceLastUpdate++;
+    if (this.sinceLastUpdate < this.config_.sensor.updateFrequency) {
+      return false;
+    }
+
+    this.sinceLastUpdate = 0;
+    
     const forwardPoint = vecToLocal(this.config_.sensor.forward, this.config_.mesh);
     const originPoint = vecToLocal(this.config_.sensor.origin, this.config_.mesh);
 
@@ -48,7 +57,6 @@ export class EtSensor implements SensorObject {
     this.ray.origin = originPoint;
     this.ray.direction = forwardDirection;
     // this.ray.length = this.maxRange;
-
 
     return true;
   }

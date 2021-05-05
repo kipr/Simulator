@@ -11,6 +11,8 @@ export class TouchSensor implements SensorObject {
   private isIntersecting_ = false;
   private prevIntersectingMesh_: Babylon.AbstractMesh = null;
 
+  private sinceLastUpdate = 0;
+
   private meshAddedObserver_: Babylon.Observer<Babylon.AbstractMesh>;
   private meshRemovedObserver_: Babylon.Observer<Babylon.AbstractMesh>;
 
@@ -49,6 +51,13 @@ export class TouchSensor implements SensorObject {
   }
 
   public update(): boolean {
+    this.sinceLastUpdate++;
+    if (this.sinceLastUpdate < this.config_.sensor.updateFrequency) {
+      return false;
+    }
+
+    this.sinceLastUpdate = 0;
+
     // After an intersection, it's likely that the sensor will continue intersecting with the same mesh for a while
     // So check the previous intersecting mesh upfront
     if (this.prevIntersectingMesh_ && this.config_.mesh.intersectsMesh(this.prevIntersectingMesh_)) {
