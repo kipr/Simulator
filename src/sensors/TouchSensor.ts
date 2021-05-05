@@ -16,12 +16,6 @@ export class TouchSensor implements SensorObject {
   private meshAddedObserver_: Babylon.Observer<Babylon.AbstractMesh>;
   private meshRemovedObserver_: Babylon.Observer<Babylon.AbstractMesh>;
 
-  // Determines whether the given mesh is eligible for intersection checking
-  // Currently only cans are eligible, but this should be made more flexible
-  private static isMeshEligible = (mesh: Babylon.AbstractMesh) => {
-    return mesh.name.startsWith('Can');
-  };
-
   get sensor(): Sensor.Touch {
     return this.config_.sensor;
   }
@@ -104,5 +98,11 @@ export class TouchSensor implements SensorObject {
   public set isVisible(v: boolean) {
     // Touch sensor visibility not yet supported
   }
+
+  // Determines whether the given mesh is eligible for intersection checking
+  // Currently only cans are eligible, but this should be made more flexible
+  private static isMeshEligible = (mesh: Babylon.AbstractMesh) => {
+    return mesh.name.startsWith('Can');
+  };
 }
 

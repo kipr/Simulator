@@ -288,6 +288,9 @@ export class Space {
     // `instantiateSensor` takes this description and creates the appropriate sensor object
     const instantiate = ([id, sensor]: [string, Sensor]) => instantiateSensor(this.scene, id, sensor);
     this.sensorObjects_ = Dict.toList(SENSOR_MAPPINGS).map(instantiate);
+
+    // Make all sensors visible for now. Eventually the user will be able to control this from the UI
+    for (const sensorObject of this.sensorObjects_) sensorObject.isVisible = true;
     
     this.resetPosition();
 

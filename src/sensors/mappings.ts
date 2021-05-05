@@ -11,7 +11,6 @@ export default {
     forward: new Babylon.Vector3(0, 0, 18),
     origin: new Babylon.Vector3(0, 0, 18),
     output: Sensor.Output.analog(0),
-    visible: true,
     maxUpdateFrequency: 15,
   },
   // Arm ET sensor
@@ -20,7 +19,6 @@ export default {
     forward: new Babylon.Vector3(0.0, 0.02, 0.0),
     origin: new Babylon.Vector3(0.02, 0.02, -0.015),
     output: Sensor.Output.analog(1),
-    visible: true,
     maxUpdateFrequency: 15,
   },
   // Front touch sensor
