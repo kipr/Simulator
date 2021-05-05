@@ -44,6 +44,11 @@ export class Space {
 
   private readonly TICKS_BETWEEN_ET_SENSOR_UPDATES = 15;
   private readonly WHEEL_TICKS_PER_RADIAN = 2048 / (2 * Math.PI);
+
+  // Servos on robot normally only have 175 degrees of range
+  private readonly SERVO_DEFUALT_RADIANS = 87.5 * Math.PI / 180;
+  private readonly SERVO_TICKS_PER_RADIAN = 2048 / (2 * this.SERVO_DEFUALT_RADIANS);
+  
   private readonly MAX_MOTOR_VELOCITY = 1500;
 
   // The axis along which to calculate wheel rotations
@@ -129,9 +134,12 @@ export class Space {
 
     this.scene.registerAfterRender(() => {
       const currRobotState = this.getRobotState();
-      
+      // this.armJoint.setMotor(0);
+      // this.armCompoundRootMesh.physicsImpostor.setAngularVelocity(Babylon.Vector3.Zero());
+      // console.log(Babylon.Tools.ToDegrees(this.armCompoundRootMesh.rotationQuaternion.toEulerAngles().x) + 87.5);
       // Set simulator motor speeds based on robot state
       this.setDriveMotors(currRobotState.motorSpeeds[0], currRobotState.motorSpeeds[3]);
+      this.setServoPositions(currRobotState.servoPositions);
 
       // Get current wheel rotations
       const leftWheelRotationCurr = Babylon.Quaternion.Inverse(this.bodyCompoundRootMesh.rotationQuaternion).multiply(this.colliderLeftWheelMesh.rotationQuaternion);
@@ -150,11 +158,8 @@ export class Space {
         rightRotation = rightRotation - 2 * Math.PI;
       }
 
-      const s0_position = Math.round((this.getRobotState().servoPositions[0] / 11.702) - 87.5);
-      const angle_servoArm = Math.round(Babylon.Tools.ToDegrees(this.armCompoundRootMesh.rotationQuaternion.toEulerAngles()._x));
-
-
-      this.setServoDirections(s0_position, angle_servoArm);
+      // const s0_position = Math.round((this.getRobotState().servoPositions[0] / 11.702) - 87.5);
+      // const angle_servoArm = Math.round(Babylon.Tools.ToDegrees(this.armCompoundRootMesh.rotationQuaternion.toEulerAngles()._x));
 
       // Update motor positions based on wheel rotation
       const m0Position = currRobotState.motorPositions[0] + leftRotation * this.WHEEL_TICKS_PER_RADIAN;
@@ -307,9 +312,9 @@ export class Space {
 
     // Set physics impostors for root nodes
     this.bodyCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.bodyCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 100, friction: 0.1 }, this.scene);
-    this.colliderLeftWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderLeftWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 1 }, this.scene);
-    this.colliderRightWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderRightWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 1 }, this.scene);
-    this.armCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.armCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 13, friction: 0.1 }, this.scene);
+    this.colliderLeftWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderLeftWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 5 }, this.scene);
+    this.colliderRightWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderRightWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 5 }, this.scene);
+    this.armCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.armCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 6, friction: 0.1 }, this.scene);
     
     // eslint-disable-next-line newline-per-chained-call
     const armMainPivot = this.scene.getTransformNodeByID('Servo Washer-2').getAbsolutePosition().subtract(this.bodyCompoundRootMesh.position);
@@ -432,15 +437,11 @@ export class Space {
       this.leftWheelJoint.setMotor(leftSpeedClamped / 315);
       this.rightWheelJoint.setMotor(-rightSpeedClamped / 315);
     }
-  }
-
-  private setServoDirections(goal: number, curr: number) {
-    if (goal > curr) {
-      this.setNegativeServo(goal);
-    } else if (goal < curr) {
-      this.setPositiveServo(goal);
-    } else {
-      this.armJoint.setMotor(0);
+    if (leftSpeed === 0) {
+      this.colliderLeftWheelMesh.physicsImpostor.setAngularVelocity(Babylon.Vector3.Zero());
+    }
+    if (rightSpeed === 0) {
+      this.colliderRightWheelMesh.physicsImpostor.setAngularVelocity(Babylon.Vector3.Zero());
     }
   }
 
@@ -486,8 +487,33 @@ export class Space {
     return Babylon.Vector3.TransformCoordinates(vector, matrix);
   }
 
+
+  private setServoPositions(goals: number[]) {
+    const armCurr = this.armCompoundRootMesh.rotationQuaternion.toEulerAngles().x;
+    const armGoal = goals[0] / this.SERVO_TICKS_PER_RADIAN - this.SERVO_DEFUALT_RADIANS;
+    const delta = armCurr - armGoal;
+    const sign = delta >= 0 ? 1 : -1;
+    const deltaNorm = Math.abs(delta / (this.SERVO_DEFUALT_RADIANS * 2));
+    switch (delta !== null) {
+      case deltaNorm < 0.02:
+        this.armJoint.setMotor(0);
+        this.armCompoundRootMesh.physicsImpostor.setAngularVelocity(Babylon.Vector3.Zero());
+        break;
+      case deltaNorm >= 0.02 && deltaNorm <= 0.04:
+        this.armJoint.setMotor(sign * 0.3);
+        break;
+      case deltaNorm > 0.04:
+        this.armJoint.setMotor(sign * 2.38);
+        break;
+      default:
+        this.armJoint.setMotor(0);
+        this.armCompoundRootMesh.physicsImpostor.setAngularVelocity(Babylon.Vector3.Zero());
+    }
+    
+  }
+
   private setPositiveServo(s0_position: number) {
-    this.armJoint.setMotor(4.76); // Rotates arm backwards
+    this.armJoint.setMotor(2.38); // Rotates arm backwards
 
     const angle_Positive = Babylon.Tools.ToDegrees(this.armCompoundRootMesh.rotationQuaternion.toEulerAngles()._x);
     if (s0_position  > angle_Positive || angle_Positive > 85 || angle_Positive < -85) {
@@ -496,7 +522,7 @@ export class Space {
   }
 
   private setNegativeServo(s0_position: number) {
-    this.armJoint.setMotor(-4.76); // Rotates arm forward
+    this.armJoint.setMotor(-2.38); // Rotates arm forward
 
     const angle_Negative = Babylon.Tools.ToDegrees(this.armCompoundRootMesh.rotationQuaternion.toEulerAngles()._x);
     if (s0_position < angle_Negative || angle_Negative < -85 || angle_Negative > 85) {
