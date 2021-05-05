@@ -65,7 +65,7 @@ namespace Sensor {
 
   interface Common {
     output: Output;
-    updateFrequency: number;
+    maxUpdateFrequency: number;
   }
 
   export interface Et extends Common {

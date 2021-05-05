@@ -52,7 +52,7 @@ export class TouchSensor implements SensorObject {
 
   public update(): boolean {
     this.sinceLastUpdate++;
-    if (this.sinceLastUpdate < this.config_.sensor.updateFrequency) {
+    if (this.sinceLastUpdate < this.config_.sensor.maxUpdateFrequency) {
       return false;
     }
 
