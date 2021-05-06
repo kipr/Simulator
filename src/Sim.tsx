@@ -338,8 +338,25 @@ export class Space {
     this.colliderLeftWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderLeftWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 5 }, this.scene);
     this.colliderRightWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderRightWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 5 }, this.scene);
     this.armCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.armCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 6, friction: 0.1 }, this.scene);
-    this.clawCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.clawCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 0.5, friction: 0.1 }, this.scene);
-    
+    this.clawCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.clawCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 0.1, friction: 0.1 }, this.scene);
+
+    const clawPivotTransformNode: Babylon.TransformNode =  new Babylon.TransformNode("clawPivotTrN", this.scene);
+    clawPivotTransformNode.setAbsolutePosition(this.scene.getTransformNodeByID('Servo Washer-1').getAbsolutePosition());
+    clawPivotTransformNode.rotationQuaternion = this.scene.getTransformNodeByID('Servo Washer-1').rotationQuaternion;
+    this.clawCompoundRootMesh.setParent(clawPivotTransformNode);
+    const clawMainPivot = this.clawCompoundRootMesh.position.add(clawPivotTransformNode.position).subtract(this.bodyCompoundRootMesh.position);
+    // eslint-disable-next-line newline-per-chained-call
+    const clawConnectedPivot = clawPivotTransformNode.getAbsolutePivotPoint().subtract(this.clawCompoundRootMesh.position);
+    const negativeZ = new Babylon.Vector3(0, 0, -1);
+    this.clawJoint =  new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint, {
+      mainPivot: clawMainPivot,
+      connectedPivot: Babylon.Vector3.Zero(),
+      mainAxis: Babylon.Axis.Z,
+      connectedAxis: negativeZ,
+    });
+    this.armCompoundRootMesh.physicsImpostor.addJoint(this.clawCompoundRootMesh.physicsImpostor, this.clawJoint);
+    console.log(this.scene.getTransformNodeByID('1 x 5 Servo Horn-2'));
+
     // eslint-disable-next-line newline-per-chained-call
     const armMainPivot = this.scene.getTransformNodeByID('Servo Washer-2').getAbsolutePosition().subtract(this.bodyCompoundRootMesh.position);
     // eslint-disable-next-line newline-per-chained-call
@@ -351,18 +368,6 @@ export class Space {
       connectedAxis: new Babylon.Vector3(1, 0, 0),
     });
     this.bodyCompoundRootMesh.physicsImpostor.addJoint(this.armCompoundRootMesh.physicsImpostor, this.armJoint);
-
-    // eslint-disable-next-line newline-per-chained-call
-    const clawMainPivot = this.scene.getTransformNodeByID('Servo Washer-1').getAbsolutePosition().subtract(this.armCompoundRootMesh.position);
-    // eslint-disable-next-line newline-per-chained-call
-    const clawConnectedPivot = this.scene.getTransformNodeByID('Servo Washer-1').getAbsolutePivotPoint().subtract(this.clawCompoundRootMesh.position);
-    this.clawJoint =  new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint, {
-      mainPivot: clawMainPivot,
-      connectedPivot: clawConnectedPivot,
-      mainAxis: new Babylon.Vector3(1, 0, 0),
-      connectedAxis: new Babylon.Vector3(1, 0, 0), // this.scene.getTransformNodeByID('Servo Washer-1').getAbsolutePosition(),
-    });
-    this.armCompoundRootMesh.physicsImpostor.addJoint(this.clawCompoundRootMesh.physicsImpostor, this.clawJoint);
 
     // Create joint for right wheel
     const rightWheelMainPivot = this.colliderRightWheelMesh.position.subtract(this.bodyCompoundRootMesh.position);
