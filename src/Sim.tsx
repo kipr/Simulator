@@ -100,6 +100,7 @@ export class Space {
 
       const nextRobotState: Partial<RobotState> = {
         analogValues: [...robotState.analogValues],
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         digitalValues: [...robotState.digitalValues]
       };
     
@@ -338,8 +339,18 @@ export class Space {
 
   public createCan(canNumber: number): void {
     const canName = `Can${canNumber}`;
-    const new_can = Babylon.MeshBuilder.CreateCylinder(canName,{ height:10, diameter:6 }, this.scene);
-    new_can.physicsImpostor = new Babylon.PhysicsImpostor(new_can, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 5 }, this.scene);
+    const canMaterial = new Babylon.StandardMaterial("can", this.scene);
+    canMaterial.diffuseTexture = new Babylon.Texture('static/Can Texture.png',this.scene);
+    canMaterial.emissiveTexture = canMaterial.diffuseTexture.clone();
+    canMaterial.emissiveColor = new Babylon.Color3(0.1,0.1,0.1);
+    const faceUV: Babylon.Vector4[] = [];
+    faceUV[0] = Babylon.Vector4.Zero();
+    faceUV[1] = new Babylon.Vector4(1, 0, 0, 1);
+    faceUV[2] = Babylon.Vector4.Zero();
+
+    const new_can = Babylon.MeshBuilder.CreateCylinder(canName,{ height:10, diameter:6, faceUV: faceUV }, this.scene);
+    new_can.material = canMaterial;
+    new_can.physicsImpostor = new Babylon.PhysicsImpostor(new_can, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 5 }, this.scene);
     new_can.position = new Babylon.Vector3(this.canCoordinates[canNumber - 1][0], 5, this.canCoordinates[canNumber - 1][1]);
   }
 
