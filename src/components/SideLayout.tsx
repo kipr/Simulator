@@ -5,7 +5,7 @@ import { RobotState } from '../RobotState';
 import { StyleProps } from '../style';
 import { Spacer } from './common';
 import Console from './Console';
-import Editor from './Editor';
+import { Editor } from './Editor';
 import { Fa } from './Fa';
 import { LayoutProps } from './Layout';
 import { SimulatorArea } from './SimulatorArea';

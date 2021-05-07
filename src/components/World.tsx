@@ -5,24 +5,29 @@ import { StyleProps } from '../style';
 import { ThemeProps } from './theme';
 
 
-export interface InfoProps extends StyleProps, ThemeProps {
+export interface WorldProps extends StyleProps, ThemeProps {
 
 }
 
-interface InfoState {
+interface WorldState {
   
 }
 
-type Props = InfoProps;
-type State = InfoState;
+type Props = WorldProps;
+type State = WorldState;
 
-const Container = styled('div', (props: ThemeProps) => ({
+const Container = styled('textarea', (props: ThemeProps) => ({
   flex: '1 1',
   backgroundColor: props.theme.backgroundColor,
-  color: props.theme.color
+  color: props.theme.color,
+  resize: 'none',
+  border: 'none',
+  ':focus': {
+    outline: 'none'
+  }
 }));
 
-class Info extends React.PureComponent<Props, State> {
+class World extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
   }
@@ -37,4 +42,4 @@ class Info extends React.PureComponent<Props, State> {
   }
 }
 
-export default State;
+export default World;

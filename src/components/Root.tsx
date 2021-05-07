@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { SimulatorSidebar } from './SimulatorSidebar';
 import WorkerInstance from '../WorkerInstance';
 import { RobotState } from '../RobotState';
 

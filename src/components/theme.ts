@@ -6,6 +6,7 @@ export interface Theme {
   widget: {
     padding: number;
   };
+  itemPadding: number;
 }
 
 export const COMMON: Theme = {
@@ -15,7 +16,8 @@ export const COMMON: Theme = {
   borderRadius: 10,
   widget: {
     padding: 10
-  }
+  },
+  itemPadding: 5
 };
 
 export const LIGHT: Theme = {

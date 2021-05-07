@@ -1,12 +1,10 @@
 import * as React from 'react';
 
 import { styled } from 'styletron-react';
-import { StyleProps } from '../style';
-import { ThemeProps } from './theme';
+import { StyleProps } from '../../style';
+import { ThemeProps } from '../theme';
 
-import { Controlled as CodeMirror } from 'react-codemirror2';
-require('codemirror/lib/codemirror.css');
-require('codemirror/mode/clike/clike');
+import { Ivygate } from 'ivygate';
 
 export enum EditorActionState {
   None,
@@ -26,7 +24,7 @@ interface EditorState {
 type Props = EditorProps;
 type State = EditorState;
 
-const Container = styled('textarea', (props: ThemeProps) => ({
+const Container = styled('div', (props: ThemeProps) => ({
   flex: '1 1',
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
@@ -37,12 +35,6 @@ const Container = styled('textarea', (props: ThemeProps) => ({
   }
 }));
 
-const CODE_MIRROR_OPTIONS = {
-  lineNumbers: true,
-  mode: 'text/x-csrc',
-  theme: 'kiss',
-};
-
 class Editor extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -52,7 +44,7 @@ class Editor extends React.PureComponent<Props, State> {
     const { style, className, theme, code, onCodeChange } = this.props;
     return (
       <Container theme={theme} style={style} className={className}>
-        <CodeMirror value={'Hello'} onBeforeChange={onCodeChange} options={CODE_MIRROR_OPTIONS} />
+        <Ivygate code={code} language="c" />
       </Container>
     );
   }

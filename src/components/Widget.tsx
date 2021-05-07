@@ -67,6 +67,18 @@ export interface ModeProps {
   mode: Mode
 }
 
+export interface BarComponent<P> {
+  component: React.ComponentType<P>;
+  props: P;
+}
+
+export namespace BarComponent {
+  export const create = <P extends {}>(component: React.ComponentType<P>, props: P) => ({
+    component,
+    props
+  });
+}
+
 export interface WidgetProps extends StyleProps, ThemeProps, ModeProps {
   name: string;
 
@@ -75,6 +87,8 @@ export interface WidgetProps extends StyleProps, ThemeProps, ModeProps {
   sizes: Size[];
 
   children?: any;
+
+  barComponents?: BarComponent<any>[];
 }
 
 interface WidgetState {
@@ -102,7 +116,8 @@ const Container = styled('div', (props: ThemeProps & ModeProps) => ({
   border: `1px solid ${props.theme.borderColor}`,
   overflow: 'hidden',
   flexBasis: '0',
-  pointerEvents: 'auto'
+  pointerEvents: 'auto',
+  backgroundColor: props.theme.backgroundColor
 }));
 
 const Chrome = styled('div', (props: ThemeProps & ModeProps) => ({
@@ -118,6 +133,7 @@ const Chrome = styled('div', (props: ThemeProps & ModeProps) => ({
 
 const Title = styled('span', {
   fontWeight: 400,
+  marginRight: '10px'
 });
 
 const sizeIcon = (size: Size) => {
@@ -154,13 +170,28 @@ class Widget extends React.PureComponent<Props, State> {
 
   render() {
     const { props } = this;
-    const { style, className, theme, name, children, onSizeChange, size, sizes, mode } = props;
+    const {
+      style,
+      className,
+      theme,
+      name,
+      children,
+      onSizeChange,
+      size,
+      sizes,
+      mode,
+      barComponents
+    } = props;
     
     
     return (
       <Container style={style} className={className} theme={theme} mode={mode}>
         <Chrome theme={theme} mode={mode}>
           <Title>{name}</Title>
+          {barComponents ? barComponents.map((barComponent, i) => {
+            const Component = barComponent.component;
+            return <Component key={i} {...barComponent.props} />;
+          }) : undefined}
           <Spacer />
           {sizes.map((self, i) => <Icon icon={sizeIcon(self)} disabled={size === i} onClick={this.onSizeChange_(i)} />)}
         </Chrome>
