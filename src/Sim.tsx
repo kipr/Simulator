@@ -2,9 +2,14 @@ import * as Babylon from 'babylonjs';
 import 'babylonjs-loaders';
 // import Oimo = require('babylonjs/Oimo');
 import Ammo = require('./ammo');
-import { VisibleSensor } from './sensors/sensor';
-import { ETSensorBabylon } from './sensors/etSensorBabylon';
+import {
+  SensorObject,
+  Sensor,
+  instantiate as instantiateSensor,
+  MAPPINGS as SENSOR_MAPPINGS
+} from './sensors';
 import { RobotState } from './RobotState';
+import Dict from './Dict';
 
 export class Space {
   private engine: Babylon.Engine;
@@ -29,9 +34,8 @@ export class Space {
   private leftWheelRotationPrev: Babylon.Quaternion;
   private rightWheelRotationPrev: Babylon.Quaternion;
 
-  // TODO: Associate each sensor with an update frequency, since we may update different sensors at different speeds
-  private etSensorFake: VisibleSensor;
-  private etSensorArm: VisibleSensor;
+  private sensorObjects_: SensorObject[];
+
   private ticksSinceETSensorUpdate: number;
 
   private canCoordinates: Array<[number, number]>;
@@ -81,45 +85,32 @@ export class Space {
 
     // Logic that happens before every frame
     this.scene.registerBeforeRender(() => {
-      let didUpdateFakeETSensor = false;
-      let didUpdateArmETSensor = false;
-
-      // If visualization is on, update ET sensor visual
-      if (this.etSensorFake.isVisible) {
-        this.etSensorFake.update();
-        this.etSensorFake.updateVisual();
-        didUpdateFakeETSensor = true;
+      let anyUpdated = false;
+      
+      const updated = new Array<boolean>(this.sensorObjects_.length);
+      for (let i = 0; i < this.sensorObjects_.length; ++i) {
+        const sensorObject = this.sensorObjects_[i];
+        updated[i] = sensorObject.update();
+        anyUpdated = anyUpdated || updated[i];
       }
 
-      if (this.etSensorArm?.isVisible) {
-        this.etSensorArm.update();
-        this.etSensorArm.updateVisual();
-        didUpdateArmETSensor = true;
+      if (!anyUpdated) return;
+
+      const robotState = this.getRobotState();
+
+      const nextRobotState: Partial<RobotState> = {
+        analogValues: [...robotState.analogValues],
+        digitalValues: [...robotState.digitalValues]
+      };
+    
+      for (let i = 0; i < this.sensorObjects_.length; ++i) {
+        if (!updated[i]) continue;
+        const sensorObject = this.sensorObjects_[i];
+        sensorObject.updateVisual();
+        SensorObject.applyMut(sensorObject, nextRobotState);
       }
 
-      // If 30 frames have passed since last sensor update, update ET sensor value
-      if (this.ticksSinceETSensorUpdate >= this.TICKS_BETWEEN_ET_SENSOR_UPDATES) {
-        // Update ET sensor if we didn't already update it earlier
-        if (!didUpdateFakeETSensor) {
-          this.etSensorFake.update();
-          didUpdateFakeETSensor = true;
-        }
-
-        if (this.etSensorArm && !didUpdateArmETSensor) {
-          this.etSensorArm.update();
-          didUpdateArmETSensor = true;
-        }
-
-        // Update robot state with new ET sensor value
-        const currRobotState = this.getRobotState();
-        const a0 = this.etSensorFake.getValue();
-        const a1 = this.etSensorArm ? this.etSensorArm.getValue() : currRobotState.analogValues[1];
-        this.updateRobotState({ analogValues: [a0, a1, 0, 0, 0, 0] });
-
-        this.ticksSinceETSensorUpdate = 0;
-      } else {
-        this.ticksSinceETSensorUpdate++;
-      }
+      this.updateRobotState(nextRobotState);
     });
 
     this.scene.registerAfterRender(() => {
@@ -292,11 +283,15 @@ export class Space {
     });
     this.bodyCompoundRootMesh.physicsImpostor.addJoint(this.colliderLeftWheelMesh.physicsImpostor, this.leftWheelJoint);
 
-    // Create ET sensors, positioned relative to other meshes
-    const etSensorMesh = this.scene.getMeshByID('black satin finish plastic');
-    this.etSensorArm = new ETSensorBabylon(this.scene, etSensorMesh, new Babylon.Vector3(0.0, 0.02, 0.0), new Babylon.Vector3(0.02, 0.02, -0.015), { isVisible: true });
-    this.etSensorFake = new ETSensorBabylon(this.scene, this.bodyCompoundRootMesh, new Babylon.Vector3(0, 0, 18), new Babylon.Vector3(0, 0, 18), { isVisible: true });
+    // Create sensors
+    // `SENSOR_MAPPINGS` is a dictionary of mesh IDs/names to sensor descriptions
+    // `instantiateSensor` takes this description and creates the appropriate sensor object
+    const instantiate = ([id, sensor]: [string, Sensor]) => instantiateSensor(this.scene, id, sensor);
+    this.sensorObjects_ = Dict.toList(SENSOR_MAPPINGS).map(instantiate);
 
+    // Make all sensors visible for now. Eventually the user will be able to control this from the UI
+    for (const sensorObject of this.sensorObjects_) sensorObject.isVisible = true;
+    
     this.resetPosition();
 
     await this.scene.whenReadyAsync();
