@@ -95,6 +95,11 @@ export class SimulatorSidebar extends React.Component<Props, State> {
     WorkerInstance.start(compiledCode);
   };
 
+  private onStopClick_: React.MouseEventHandler<HTMLButtonElement> = () => {
+    WorkerInstance.stop();
+    this.appendToConsole('Program stopped\n');
+  };
+
   private onDownloadClick_: React.MouseEventHandler<HTMLButtonElement> = () => {
     const date = new Date();
     const dateString = `${date.getUTCFullYear().toString()}-${date.getMonth().toString()}-${date.getDay().toString()}`;
@@ -201,6 +206,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
           <p>
             <button onClick={this.onCompileClick_} disabled={isCompiling}>Compile</button>
             <button onClick={this.onRunClick_} disabled={isCompiling}>Run</button>
+            <button onClick={this.onStopClick_}>Stop</button>
             <button onClick={this.onDownloadClick_}>Download</button>
           </p>
           <CodeMirror value={code} onBeforeChange={this.onCodeChange_} options={options} className="code" />
