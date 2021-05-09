@@ -5,19 +5,10 @@ export namespace Protocol {
       code: string;
     }
 
-    export interface StopRequest {
-      type: 'stop';
-      hello: string;
-    }
-
-    export type Request = StartRequest | StopRequest | SetRegisterRequest | ProgramEndedRequest | ProgramOutputRequest | ProgramErrorRequest;
+    export type Request = StartRequest | SetRegisterRequest | ProgramEndedRequest | ProgramOutputRequest | ProgramErrorRequest;
 
     export interface StartResponse {
       type: 'start';
-    }
-
-    export interface StopResponse {
-      type: 'stop';
     }
 
     export interface ProgramEndedRequest {
@@ -28,7 +19,7 @@ export namespace Protocol {
       type: 'program-ended'
     }
 
-    export type Response = StartResponse | StopResponse | SetRegisterResponse | ProgramEndedResponse;
+    export type Response = StartResponse | SetRegisterResponse | ProgramEndedResponse;
 
 
     export interface SetRegisterRequest {

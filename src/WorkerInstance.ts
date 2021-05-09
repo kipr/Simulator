@@ -166,9 +166,6 @@ class WorkerInstance {
   
   start(code: string) {
     this.worker_.postMessage({
-      type: 'stop'
-    });
-    this.worker_.postMessage({
       type: 'start',
       code
     });
@@ -182,10 +179,6 @@ class WorkerInstance {
     this.registers_[Registers.REG_RW_MOT_SRV_ALLSTOP] = 0xF0;
 
     this.startWorker();
-
-    this.worker_.postMessage({
-      type: 'stop'
-    });
   }
 
   // TODO: consider only calling postMessage() if register value is different
