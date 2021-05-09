@@ -92,6 +92,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
     const compiledCode = await this.compileCurrentCode();
     if (compiledCode === null) return;
 
+    WorkerInstance.stop();
     WorkerInstance.start(compiledCode);
   };
 
