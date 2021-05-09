@@ -163,6 +163,7 @@ class WorkerInstance {
       }
     }
   };
+  
   start(code: string) {
     this.worker_.postMessage({
       type: 'stop'
@@ -174,6 +175,14 @@ class WorkerInstance {
   }
 
   stop() {
+    this.worker_.terminate();
+
+    // Reset specific registers to stop motors and disable servos
+    this.registers_[Registers.REG_RW_MOT_MODES] = 0x00;
+    this.registers_[Registers.REG_RW_MOT_SRV_ALLSTOP] = 0xF0;
+
+    this.startWorker();
+
     this.worker_.postMessage({
       type: 'stop'
     });
@@ -228,7 +237,7 @@ class WorkerInstance {
   }
 
   constructor() {
-    this.worker_.onmessage = this.onMessage;
+    this.startWorker();
     requestAnimationFrame(this.tick);
   }
 
@@ -241,7 +250,12 @@ class WorkerInstance {
     return this.state_;
   }
 
-  private worker_ = new Worker('/js/worker.min.js');
+  private startWorker() {
+    this.worker_ = new Worker('/js/worker.min.js');
+    this.worker_.onmessage = this.onMessage;
+  }
+
+  private worker_: Worker;
 }
 
 export default new WorkerInstance();
