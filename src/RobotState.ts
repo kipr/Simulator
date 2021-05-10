@@ -26,7 +26,7 @@ export namespace RobotState {
     theta: 0,
     motorSpeeds: [0, 0, 0, 0],
     motorPositions: [0, 0, 0, 0],
-    servoPositions: [1024, 1024, 1024, 0],
+    servoPositions: [1024, 1024, 1024, 2047],
     analogValues: [0, 0, 0, 0, 0, 0],
     digitalValues: [false, false, false, false, false, false]
   };
