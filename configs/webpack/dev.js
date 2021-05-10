@@ -8,7 +8,7 @@ const { cwd } = require('process');
 module.exports = merge(commonConfig, {
   mode: 'development',
   output: {
-    filename: 'js/[name].min.js',
+    filename: 'js/[name].[contenthash].min.js',
     path: join(cwd(), 'dist'),
   },
   devtool: 'cheap-module-eval-source-map',

@@ -6,7 +6,7 @@ const webpack = require('webpack');
 module.exports = {
   entry: {
     app: './index.tsx',
-    worker: './worker.ts'
+    // worker: './worker.ts'
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
@@ -14,6 +14,10 @@ module.exports = {
   context: resolve(__dirname, '../../src'),
   module: {
     rules: [
+      {
+        test: /worker\..s$/,
+        use: { loader: 'worker-loader' }
+      },
       {
         test: /\.js$/,
         use: ['babel-loader', 'source-map-loader'],
