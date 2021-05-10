@@ -4,6 +4,8 @@ import { RobotState } from './RobotState';
 
 import deepNeq from './deepNeq';
 
+import Worker from 'worker.ts';
+
 class WorkerInstance {
   
   onStateChange: (state: RobotState) => void;
@@ -241,7 +243,7 @@ class WorkerInstance {
     return this.state_;
   }
 
-  private worker_ = new Worker('/js/worker.min.js');
+  private worker_ = new Worker();
 }
 
 export default new WorkerInstance();
