@@ -241,19 +241,19 @@ export class Space {
       ['collider_claw_servo'],
     ];
 
-    // const clawCenterMesh = this.scene.getTransformNodeByID('Servo Washer-1');
-    // clawCenterMesh.computeWorldMatrix(true);
-    // this.clawCompoundRootMesh = new Babylon.Mesh("clawCenterMesh", this.scene);
-    // this.clawCompoundRootMesh.position = clawCenterMesh.getAbsolutePosition().clone();
-    // this.clawCompoundRootMesh.rotationQuaternion = new Babylon.Quaternion(0, 0, 0, 1);
+    const clawCenterMesh = this.scene.getTransformNodeByID('Servo Washer-1');
+    clawCenterMesh.computeWorldMatrix(true);
+    this.clawCompoundRootMesh = new Babylon.Mesh("clawCenterMesh", this.scene);
+    this.clawCompoundRootMesh.position = clawCenterMesh.getAbsolutePosition().clone();
+    this.clawCompoundRootMesh.rotationQuaternion = new Babylon.Quaternion(0, 0, 0, 1);
 
-    const clawNodeCenter = this.scene.getTransformNodeByID('Servo Washer-1');
-    clawNodeCenter.computeWorldMatrix(true);
-    this.clawJointNode = new Babylon.TransformNode("clawJointNode", this.scene);
-    this.clawJointNode.position = clawNodeCenter.getAbsolutePosition().clone();
-    this.clawJointNode.rotationQuaternion = clawNodeCenter.rotationQuaternion.clone();
-    this.clawJointNode.setPivotPoint(clawNodeCenter.getAbsolutePosition().clone());
-    this.scene.getTransformNodeByID('Servo Washer-1').setParent(this.armCompoundRootMesh);
+    // const clawNodeCenter = this.scene.getTransformNodeByID('Servo Washer-1');
+    // clawNodeCenter.computeWorldMatrix(true);
+    // this.clawJointNode = new Babylon.TransformNode("clawJointNode", this.scene);
+    // this.clawJointNode.position = clawNodeCenter.getAbsolutePosition().clone();
+    // this.clawJointNode.rotationQuaternion = clawNodeCenter.rotationQuaternion.clone();
+    // this.clawJointNode.setPivotPoint(clawNodeCenter.getAbsolutePosition().clone());
+    // this.scene.getTransformNodeByID('Servo Washer-1').setParent(this.armCompoundRootMesh);
 
     const clawColliderMeshInfos: [string][] = [
       ['collider_claw_1'],
@@ -301,7 +301,7 @@ export class Space {
       
       // Unparent collider mesh before adding physics impostors to them, Babylon.PhysicsImpostor.BoxImpostor, { mass: 0 }, this.scene);
       
-      colliderMesh.setParent(this.clawJointNode);
+      colliderMesh.setParent(this.clawCompoundRootMesh);
     }
 
     // Find wheel collider meshes in scene
@@ -316,11 +316,11 @@ export class Space {
     this.scene.getTransformNodeByName('ChassisWombat-1').setParent(this.bodyCompoundRootMesh);
     this.scene.getTransformNodeByName('KIPR_Lower_final_062119-1').setParent(this.bodyCompoundRootMesh);
     this.scene.getTransformNodeByName('1 x 5 Servo Horn-1').setParent(this.armCompoundRootMesh);
-    this.scene.getTransformNodeByName('1 x 5 Servo Horn-2').setParent(this.clawJointNode);
+    this.scene.getTransformNodeByName('1 x 5 Servo Horn-2').setParent(this.clawCompoundRootMesh);
     this.scene.getTransformNodeByName('Servo Wheel-1').setParent(this.colliderRightWheelMesh);
     this.scene.getTransformNodeByName('Servo Wheel-2').setParent(this.colliderLeftWheelMesh);
 
-    this.clawJointNode.setParent(this.armCompoundRootMesh);
+    // this.clawJointNode.setParent(this.armCompoundRootMesh);
     // console.log(`Position after parent set: ${this.clawJointNode.position}`);
 
     // this.clawJointNode.setPivotPoint(this.clawJointNode.getAbsolutePivotPoint().add(this.clawJointNode.absolutePosition.clone().subtract(this.armCompoundRootMesh.absolutePosition.clone())), 1);
@@ -328,37 +328,37 @@ export class Space {
     this.leftWheelRotationPrev = Babylon.Quaternion.Inverse(this.bodyCompoundRootMesh.rotationQuaternion).multiply(this.colliderLeftWheelMesh.rotationQuaternion);
     this.rightWheelRotationPrev = Babylon.Quaternion.Inverse(this.bodyCompoundRootMesh.rotationQuaternion).multiply(this.colliderRightWheelMesh.rotationQuaternion);
     this.armRotationDefault = Babylon.Quaternion.Inverse(this.bodyCompoundRootMesh.rotationQuaternion).multiply(this.armDefaultMesh.rotationQuaternion);
-    this.clawRotationDefault = this.clawJointNode.rotationQuaternion;
+    // this.clawRotationDefault = this.clawJointNode.rotationQuaternion;
 
     // Set physics impostors for root nodes
     this.bodyCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.bodyCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 100, friction: 0.1 }, this.scene);
     this.colliderLeftWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderLeftWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 5 }, this.scene);
     this.colliderRightWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderRightWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 5 }, this.scene);
     this.armCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.armCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 1, friction: 0.1 }, this.scene);
-    // this.clawCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.clawCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 0.1, friction: 0.1 }, this.scene);
+    this.clawCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.clawCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 0.1, friction: 0.1 }, this.scene);
 
-    // const servoHornTransform = this.scene.getTransformNodeByID('1 x 5 Servo Horn-2');
-    // servoHornTransform.computeWorldMatrix();
-    // const zAxisQuaternion = new Babylon.Quaternion(0, 0, -1, 0);
-    // const zAxisRotatedQuaternion = servoHornTransform.absoluteRotationQuaternion.multiply(zAxisQuaternion).multiply(Babylon.Quaternion.Inverse(servoHornTransform.absoluteRotationQuaternion));
-    // const zAxisRotatedVector = new Babylon.Vector3(zAxisRotatedQuaternion.x, zAxisRotatedQuaternion.y, zAxisRotatedQuaternion.z);
+    const servoHornTransform = this.scene.getTransformNodeByID('1 x 5 Servo Horn-2');
+    servoHornTransform.computeWorldMatrix();
+    const zAxisQuaternion = new Babylon.Quaternion(0, 0, -1, 0);
+    const zAxisRotatedQuaternion = servoHornTransform.absoluteRotationQuaternion.multiply(zAxisQuaternion).multiply(Babylon.Quaternion.Inverse(servoHornTransform.absoluteRotationQuaternion));
+    const zAxisRotatedVector = new Babylon.Vector3(zAxisRotatedQuaternion.x, zAxisRotatedQuaternion.y, zAxisRotatedQuaternion.z);
 
-    // const servoWasher = this.scene.getTransformNodeByID('Servo Washer-1');
-    // servoWasher.computeWorldMatrix();
-    // const clawMainPivot = servoWasher.absolutePosition.clone().subtract(this.armCompoundRootMesh.absolutePosition.clone());
-    // const clawConnectedPivot = servoWasher.absolutePosition.clone().subtract(this.clawCompoundRootMesh.absolutePosition.clone());
+    const servoWasher = this.scene.getTransformNodeByID('Servo Washer-1');
+    servoWasher.computeWorldMatrix();
+    const clawMainPivot = servoWasher.absolutePosition.clone().subtract(this.armCompoundRootMesh.absolutePosition.clone());
+    const clawConnectedPivot = servoWasher.absolutePosition.clone().subtract(this.clawCompoundRootMesh.absolutePosition.clone());
 
-    // const clawJointData: Babylon.PhysicsJointData = {
-    //   mainPivot: clawMainPivot.clone(),
-    //   // mainPivot: new Babylon.Vector3(0, 20, 40),
-    //   connectedPivot: clawConnectedPivot.clone(),
-    //   // connectedPivot: new Babylon.Vector3(0, -3, 0),
-    //   mainAxis: zAxisRotatedVector.clone(),
-    //   // connectedAxis: negativeZ,
-    //   connectedAxis: zAxisRotatedVector.clone(),
-    // };
-    // this.clawJoint =  new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint, clawJointData);
-    // this.armCompoundRootMesh.physicsImpostor.addJoint(this.clawCompoundRootMesh.physicsImpostor, this.clawJoint);
+    const clawJointData: Babylon.PhysicsJointData = {
+      mainPivot: clawMainPivot.clone(),
+      // mainPivot: new Babylon.Vector3(0, 20, 40),
+      connectedPivot: clawConnectedPivot.clone(),
+      // connectedPivot: new Babylon.Vector3(0, -3, 0),
+      mainAxis: zAxisRotatedVector.clone(),
+      // connectedAxis: negativeZ,
+      connectedAxis: zAxisRotatedVector.clone(),
+    };
+    this.clawJoint =  new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint, clawJointData);
+    this.armCompoundRootMesh.physicsImpostor.addJoint(this.clawCompoundRootMesh.physicsImpostor, this.clawJoint);
 
     // eslint-disable-next-line newline-per-chained-call
     const armMainPivot = this.scene.getTransformNodeByID('Servo Washer-2').getAbsolutePosition().subtract(this.bodyCompoundRootMesh.position);
@@ -531,7 +531,7 @@ export class Space {
   private setServoPositions(goals: number[]) {
     const bodyCurrQuat = this.bodyCompoundRootMesh.rotationQuaternion.clone();
     const armCurrQuat = this.armCompoundRootMesh.rotationQuaternion.clone();
-    const clawCurrQuat = this.clawJointNode.rotationQuaternion.clone();
+    // const clawCurrQuat = this.clawJointNode.rotationQuaternion.clone();
 
     this.armRotationDefault = Babylon.Quaternion.Inverse(this.bodyCompoundRootMesh.rotationQuaternion).multiply(this.armDefaultMesh.rotationQuaternion);
     const armStartQuat = this.armRotationDefault.clone();
@@ -559,33 +559,34 @@ export class Space {
         this.armJoint.setMotor(0);
     }
 
+    this.clawJoint.setMotor(0);
     // this.clawJoint.setMotor(0);
     // const servoHornTransform = this.scene.getTransformNodeByID('1 x 5 Servo Horn-2');
     // servoHornTransform.computeWorldMatrix();
     // const zAxisQuaternion = new Babylon.Quaternion(0, 0, -1, 0);
     // const zAxisRotatedQuaternion = servoHornTransform.absoluteRotationQuaternion.multiply(zAxisQuaternion).multiply(Babylon.Quaternion.Inverse(servoHornTransform.absoluteRotationQuaternion));
     // const zAxisRotatedVector = new Babylon.Vector3(zAxisRotatedQuaternion.x, zAxisRotatedQuaternion.y, zAxisRotatedQuaternion.z);
-    const washer = this.scene.getTransformNodeByID('Servo Washer-1');
-    const clawAxis = washer.up;
-    this.clawRotationDefault = this.clawJointNode.rotationQuaternion;
-    const clawStartQuat = this.clawRotationDefault.clone();
-    // console.log(clawCurrQuat);
+    // const washer = this.scene.getTransformNodeByID('Servo Washer-1');
+    // const clawAxis = washer.up;
+    // this.clawRotationDefault = this.clawJointNode.rotationQuaternion;
+    // const clawStartQuat = this.clawRotationDefault.clone();
+    // // console.log(clawCurrQuat);
     
-    const clawCurr = Babylon.Quaternion.Inverse(armCurrQuat).multiply(clawCurrQuat);
-    let clawRotation = this.getDeltaRotationOnAxis(clawStartQuat, clawCurr, clawAxis);
-    if (clawRotation > Math.PI) {
-      clawRotation = clawRotation - 2 * Math.PI;
-    }
+    // const clawCurr = Babylon.Quaternion.Inverse(armCurrQuat).multiply(clawCurrQuat);
+    // let clawRotation = this.getDeltaRotationOnAxis(clawStartQuat, clawCurr, clawAxis);
+    // if (clawRotation > Math.PI) {
+    //   clawRotation = clawRotation - 2 * Math.PI;
+    // }
 
-    const clawDelta = clawRotation + this.CLAW_DEFAULT_ROTATION - goals[3] / this.SERVO_TICKS_PER_RADIAN;
-    const clawSign = clawDelta >= 0 ? 1 : -1;
-    const clawDeltaNorm = Math.abs(clawDelta / (this.SERVO_DEFUALT_RADIANS * 2));
+    // const clawDelta = clawRotation + this.CLAW_DEFAULT_ROTATION - goals[3] / this.SERVO_TICKS_PER_RADIAN;
+    // const clawSign = clawDelta >= 0 ? 1 : -1;
+    // const clawDeltaNorm = Math.abs(clawDelta / (this.SERVO_DEFUALT_RADIANS * 2));
 
-    if (clawDeltaNorm > 0.01) {
-      // this.clawJointNode.setPivotPoint(washer.absolutePosition, 1);
-      // console.log(`Washer position ${washer.position}`);
-      this.clawJointNode.rotateAround(washer.absolutePosition, washer.right, clawSign * 10 / this.SERVO_TICKS_PER_RADIAN);
-    }
+    // if (clawDeltaNorm > 0.01) {
+    //   // this.clawJointNode.setPivotPoint(washer.absolutePosition, 1);
+    //   // console.log(`Washer position ${washer.position}`);
+    //   this.clawJointNode.rotateAround(washer.absolutePosition, washer.right, clawSign * 10 / this.SERVO_TICKS_PER_RADIAN);
+    // }
     // switch (clawDelta !== null) {
     //   case clawDeltaNorm < 0.01:
     //     this.clawJointNode.rotate(yAxis, clawSign * 10 / this.SERVO_TICKS_PER_RADIAN);
