@@ -1,11 +1,14 @@
 // shared config (dev and prod)
-const {resolve} = require('path');
+const { resolve } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const webpack = require('webpack');
 
 module.exports = {
   entry: {
     app: './index.tsx',
+  },
+  output: {
+    filename: 'js/[name].min.js',
+    path: resolve(__dirname, '../../dist'),
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
@@ -36,13 +39,26 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', { loader: 'css-loader', options: { importLoaders: 1 } }],
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1
+            }
+          }
+        ],
       },
       {
         test: /\.scss$/,
         use: [
           'style-loader',
-          { loader: 'css-loader', options: { importLoaders: 1 } },
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1
+            }
+          },
           'sass-loader',
         ],
       },
@@ -63,11 +79,8 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({template: 'index.html.ejs',}),
+    new HtmlWebpackPlugin({ template: 'index.html.ejs', }),
   ],
-  externals: {
-    
-  },
   performance: {
     hints: false,
   },
