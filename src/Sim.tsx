@@ -1,6 +1,5 @@
 import * as Babylon from 'babylonjs';
 import 'babylonjs-loaders';
-// import Oimo = require('babylonjs/Oimo');
 import Ammo = require('./ammo');
 import {
   SensorObject,
@@ -247,6 +246,8 @@ export class Space {
     this.clawCompoundRootMesh.position = clawCenterMesh.getAbsolutePosition().clone();
     this.clawCompoundRootMesh.rotationQuaternion = new Babylon.Quaternion(0, 0, 0, 1);
 
+
+
     // const clawNodeCenter = this.scene.getTransformNodeByID('Servo Washer-1');
     // clawNodeCenter.computeWorldMatrix(true);
     // this.clawJointNode = new Babylon.TransformNode("clawJointNode", this.scene);
@@ -300,7 +301,9 @@ export class Space {
       }
       
       // Unparent collider mesh before adding physics impostors to them, Babylon.PhysicsImpostor.BoxImpostor, { mass: 0 }, this.scene);
-      
+      colliderMesh.setParent(null);
+      colliderMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderMesh, Babylon.PhysicsImpostor.BoxImpostor, { mass: 0 }, this.scene);
+
       colliderMesh.setParent(this.clawCompoundRootMesh);
     }
 
@@ -414,7 +417,7 @@ export class Space {
 
   // Resets the position/rotation of the robot to the current robot state
   public resetPosition(): void {
-    const rootMeshes = [this.bodyCompoundRootMesh, this.colliderLeftWheelMesh, this.colliderRightWheelMesh, this.armCompoundRootMesh]; // , this.clawCompoundRootMesh];
+    const rootMeshes = [this.bodyCompoundRootMesh, this.colliderLeftWheelMesh, this.colliderRightWheelMesh, this.armCompoundRootMesh, this.clawCompoundRootMesh];
 
     // Create a transform node, positioned and rotated to match the body root
     const resetTransformNode: Babylon.TransformNode = new Babylon.TransformNode("resetTransformNode", this.scene);
@@ -545,22 +548,15 @@ export class Space {
     const armSign = armDelta >= 0 ? 1 : -1;
     const armDeltaNorm = Math.abs(armDelta / (this.SERVO_DEFUALT_RADIANS * 2));
 
-    switch (armDelta !== null) {
-      case armDeltaNorm < 0.01:
-        this.armJoint.setMotor(0);
-        break;
-      case armDeltaNorm >= 0.01 && armDeltaNorm <= 0.04:
-        this.armJoint.setMotor(armSign * 0.3 * this.TIMESTEP_FACTOR);
-        break;
-      case armDeltaNorm > 0.04:
-        this.armJoint.setMotor(armSign * 2.38 * this.TIMESTEP_FACTOR);
-        break;
-      default:
-        this.armJoint.setMotor(0);
+    if (armDeltaNorm < 0.01) {
+      this.armJoint.setMotor(0);
+    } else if (armDeltaNorm >= 0.001 && armDeltaNorm <= 0.04) {
+      this.armJoint.setMotor(armSign * 0.3 * this.TIMESTEP_FACTOR);
+    } else {
+      this.armJoint.setMotor(armSign * 2.38 * this.TIMESTEP_FACTOR);
     }
 
-    this.clawJoint.setMotor(0);
-    // this.clawJoint.setMotor(0);
+    this.clawJoint.setMotor(0 * this.TIMESTEP_FACTOR);
     // const servoHornTransform = this.scene.getTransformNodeByID('1 x 5 Servo Horn-2');
     // servoHornTransform.computeWorldMatrix();
     // const zAxisQuaternion = new Babylon.Quaternion(0, 0, -1, 0);
