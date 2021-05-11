@@ -1,5 +1,5 @@
 // development config
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const { join } = require('path');
 
 const commonConfig = require('./common');
@@ -11,5 +11,8 @@ module.exports = merge(commonConfig, {
     filename: 'js/[name].min.js',
     path: join(cwd(), 'dist'),
   },
-  devtool: 'cheap-module-eval-source-map',
+  devtool: 'eval-cheap-module-source-map',
+  stats: {
+    builtAt: true
+  }
 });
