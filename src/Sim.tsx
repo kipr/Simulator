@@ -27,10 +27,6 @@ export class Space {
   private armCompoundRootMesh: Babylon.AbstractMesh;
   private clawCompoundRootMesh: Babylon.AbstractMesh;
 
-  // Default meshes to hold rotation quaternions for starting positions of servos
-  private armDefaultMesh: Babylon.AbstractMesh;
-  private clawDefaultMesh: Babylon.AbstractMesh;
-
   private colliderLeftWheelMesh: Babylon.AbstractMesh;
   private colliderRightWheelMesh: Babylon.AbstractMesh;
 
@@ -229,11 +225,6 @@ export class Space {
     this.armCompoundRootMesh.position = clawServoColliderMesh.getAbsolutePosition().clone();
     this.armCompoundRootMesh.rotationQuaternion = new Babylon.Quaternion();
 
-    // Create arm default mesh
-    this.armDefaultMesh = new Babylon.Mesh("armDefaultMesh", this.scene);
-    this.armDefaultMesh.position = clawServoColliderMesh.getAbsolutePosition().clone();
-    this.armDefaultMesh.rotationQuaternion = new Babylon.Quaternion();
-
     const armColliderMeshInfos: [string][] = [
       ['collider_arm_claw_1'],
       ['collider_arm_claw_2'],
@@ -246,11 +237,6 @@ export class Space {
     this.clawCompoundRootMesh = new Babylon.Mesh("clawCenterMesh", this.scene);
     this.clawCompoundRootMesh.position = clawCenterMesh.getAbsolutePosition().clone();
     this.clawCompoundRootMesh.rotationQuaternion = new Babylon.Quaternion(0, 0, 0, 1);
-
-    // Create default mesh
-    this.clawDefaultMesh = new Babylon.Mesh("clawDefaultMesh", this.scene);
-    this.clawDefaultMesh.position = clawCenterMesh.getAbsolutePosition().clone();
-    this.clawDefaultMesh.rotationQuaternion = new Babylon.Quaternion(0, 0, 0, 1);
 
     const clawColliderMeshInfos: [string][] = [
       ['collider_claw_1'],
@@ -276,9 +262,6 @@ export class Space {
       colliderMesh.setParent(this.bodyCompoundRootMesh);
     }
 
-    // Add arm default mesh to body
-    this.armDefaultMesh.setParent(this.bodyCompoundRootMesh);
-
     for (const [armColliderMeshName] of armColliderMeshInfos) {
       const colliderMesh: Babylon.AbstractMesh = this.scene.getMeshByName(armColliderMeshName);
       if (!colliderMesh) {
@@ -291,9 +274,6 @@ export class Space {
       
       colliderMesh.setParent(this.armCompoundRootMesh);
     }
-
-    // Add claw default mesh to arm
-    this.clawDefaultMesh.setParent(this.armCompoundRootMesh);
 
     for (const [clawColliderMeshName] of clawColliderMeshInfos) {
       const colliderMesh: Babylon.AbstractMesh = this.scene.getMeshByName(clawColliderMeshName);
@@ -327,15 +307,15 @@ export class Space {
     // Update "previous" wheel rotations to avoid sudden jump in motor position
     this.leftWheelRotationPrev = Babylon.Quaternion.Inverse(this.bodyCompoundRootMesh.rotationQuaternion).multiply(this.colliderLeftWheelMesh.rotationQuaternion);
     this.rightWheelRotationPrev = Babylon.Quaternion.Inverse(this.bodyCompoundRootMesh.rotationQuaternion).multiply(this.colliderRightWheelMesh.rotationQuaternion);
-    this.armRotationDefault = Babylon.Quaternion.Inverse(this.bodyCompoundRootMesh.rotationQuaternion).multiply(this.armDefaultMesh.rotationQuaternion);
-    this.clawRotationDefault = Babylon.Quaternion.Inverse(this.armCompoundRootMesh.rotationQuaternion).multiply(this.clawDefaultMesh.rotationQuaternion);
+    this.armRotationDefault = Babylon.Quaternion.Inverse(this.bodyCompoundRootMesh.rotationQuaternion).multiply(this.armCompoundRootMesh.rotationQuaternion);
+    this.clawRotationDefault = Babylon.Quaternion.Inverse(this.armCompoundRootMesh.rotationQuaternion).multiply(this.clawCompoundRootMesh.rotationQuaternion);
 
     // Set physics impostors for root nodes
     this.bodyCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.bodyCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 100, friction: 0.1 }, this.scene);
     this.colliderLeftWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderLeftWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 5 }, this.scene);
     this.colliderRightWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderRightWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 5 }, this.scene);
-    this.armCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.armCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 1, friction: 0.1 }, this.scene);
-    this.clawCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.clawCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 0.1, friction: 0.1 }, this.scene);
+    this.armCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.armCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 1, friction: 5 }, this.scene);
+    this.clawCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.clawCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 0.1, friction: 5 }, this.scene);
 
     const servoHornTransform = this.scene.getTransformNodeByID('1 x 5 Servo Horn-2');
     servoHornTransform.computeWorldMatrix();
@@ -534,18 +514,14 @@ export class Space {
     const armCurrQuat = this.armCompoundRootMesh.rotationQuaternion.clone();
     const clawCurrQuat = this.clawCompoundRootMesh.rotationQuaternion.clone();
 
-    // Get updated default mesh rotation for arm
-    this.armRotationDefault = Babylon.Quaternion.Inverse(this.bodyCompoundRootMesh.rotationQuaternion).multiply(this.armDefaultMesh.rotationQuaternion);
-    const armStartQuat = this.armRotationDefault.clone();
-
     // Get updated real mesh rotation for arm
     const armCurr = Babylon.Quaternion.Inverse(bodyCurrQuat).multiply(armCurrQuat);
-    let armRotation = this.getDeltaRotationOnAxis(armStartQuat, armCurr, Space.armRotationVector);
-    if (armRotation > Math.PI) {
+    let armRotation = this.getDeltaRotationOnAxis(this.armRotationDefault, armCurr, Space.armRotationVector);
+    if (armRotation >= Math.PI) {
       armRotation = armRotation - 2 * Math.PI;
     }
 
-    // Get difference between default and real mesh for arm and normalize
+    // Get difference between goal and current rotation
     const armDelta = armRotation + this.ARM_DEFAULT_ROTATION - goals[0] / this.SERVO_TICKS_PER_RADIAN;
     const armSign = armDelta >= 0 ? 1 : -1;
     const armDeltaNorm = Math.abs(armDelta / (this.SERVO_DEFUALT_RADIANS * 2));
@@ -559,22 +535,18 @@ export class Space {
       this.armJoint.setMotor(armSign * 2.38 * this.TIMESTEP_FACTOR);
     }
 
-    // Get updated default mesh rotation for claw
-    this.clawRotationDefault = Babylon.Quaternion.Inverse(armCurrQuat).multiply(this.clawDefaultMesh.rotationQuaternion);
-    const clawStartQuat = this.clawRotationDefault.clone();
-
     // Get updated real mesh rotation for claw
     const clawCurr = Babylon.Quaternion.Inverse(armCurrQuat).multiply(clawCurrQuat);
-    let clawRotation = this.getDeltaRotationOnAxis(clawStartQuat, clawCurr, Space.clawRotationVector);
-    if (clawRotation > Math.PI) {
+    let clawRotation = this.getDeltaRotationOnAxis(this.clawRotationDefault, clawCurr, Space.clawRotationVector);
+    if (clawRotation >= Math.PI) {
       clawRotation = clawRotation - 2 * Math.PI;
     }
 
-    // Get difference between default and real mesh for claw and normalize
+    // Get difference between goal and current rotation
     const clawDelta = clawRotation - this.CLAW_DEFAULT_ROTATION + goals[3] / this.SERVO_TICKS_PER_RADIAN;
     const clawSign = clawDelta >= 0 ? -1 : 1;
     const clawDeltaNorm = Math.abs(clawDelta / (this.SERVO_DEFUALT_RADIANS * 2));
-
+    
     // Set motor for claw based on how close to goal mesh is
     if (clawDeltaNorm < 0.01) {
       this.clawJoint.setMotor(0);
