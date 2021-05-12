@@ -19,8 +19,8 @@ class WorkerInstance {
     .fill(220,79,80)
     .fill(220,81,82)
     .fill(220,83,84)
-    .fill(2,84,85)
-    .fill(88,85,86);
+    .fill(9,84,85)
+    .fill(96,85,86);
   
   private didMotorPositionRegistersChange = false;
   
