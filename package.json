@@ -37,7 +37,7 @@
     "babylonjs": "^4.2.0",
     "babylonjs-loaders": "^4.2.0",
     "body-parser": "^1.19.0",
-    "codemirror": "^5.53.2",
+    "codemirror": "^5.58.2",
     "css-loader": "^3.5.3",
     "image-loader": "^0.0.1",
     "image-webpack-loader": "^6.0.0",
