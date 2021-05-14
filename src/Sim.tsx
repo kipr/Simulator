@@ -548,9 +548,9 @@ export class Space {
     if (armDeltaNorm < 0.01) {
       this.armJoint.setMotor(0);
     } else if (armDeltaNorm >= 0.001 && armDeltaNorm <= 0.04) {
-      this.armJoint.setMotor(armSign * 0.3 * this.TIMESTEP_FACTOR);
+      this.armJoint.setMotor(armSign * 0.3 * this.TIMESTEP_FACTOR, 8000);
     } else {
-      this.armJoint.setMotor(armSign * 2.38 * this.TIMESTEP_FACTOR);
+      this.armJoint.setMotor(armSign * 1.5 * this.TIMESTEP_FACTOR, 8000);
     }
 
     // Get updated real mesh rotation for claw
@@ -569,9 +569,9 @@ export class Space {
     if (clawDeltaNorm < 0.01) {
       this.clawJoint.setMotor(0);
     } else if (clawDeltaNorm >= 0.001 && clawDeltaNorm <= 0.04) {
-      this.clawJoint.setMotor(clawSign * 0.3 * this.TIMESTEP_FACTOR);
+      this.clawJoint.setMotor(clawSign * 0.3 * this.TIMESTEP_FACTOR, 2000);
     } else {
-      this.clawJoint.setMotor(clawSign * 2.38 * this.TIMESTEP_FACTOR);
+      this.clawJoint.setMotor(clawSign * 1.5 * this.TIMESTEP_FACTOR, 2000);
     }
   }
 
