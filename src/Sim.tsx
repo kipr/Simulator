@@ -96,7 +96,7 @@ export class Space {
 
     // At 100x scale, gravity should be -9.8 * 100, but this causes weird jitter behavior
     // Full gravity will be -9.8 * 10
-    const gravityVector = new Babylon.Vector3(0, -9.8 * 10, 0);
+    const gravityVector = new Babylon.Vector3(0, -9.8 * 50, 0);
     this.ammo_ = new Babylon.AmmoJSPlugin(true, Ammo);
     this.ammo_.setFixedTimeStep(this.DEFAULT_TIMESTEP / this.TIMESTEP_FACTOR);
     this.scene.enablePhysics(gravityVector, this.ammo_);
@@ -319,11 +319,11 @@ export class Space {
     this.clawRotationDefault = Babylon.Quaternion.Inverse(this.armCompoundRootMesh.rotationQuaternion).multiply(this.clawCompoundRootMesh.rotationQuaternion);
 
     // Set physics impostors for root nodes
-    this.bodyCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.bodyCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 100, friction: 0.1 }, this.scene);
-    this.colliderLeftWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderLeftWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 5 }, this.scene);
-    this.colliderRightWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderRightWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 5 }, this.scene);
-    this.armCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.armCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 1, friction: 5 }, this.scene);
-    this.clawCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.clawCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 0.1, friction: 5 }, this.scene);
+    this.bodyCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.bodyCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 1126, friction: 0.1 }, this.scene);
+    this.colliderLeftWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderLeftWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 14, friction: 5 }, this.scene);
+    this.colliderRightWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderRightWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 14, friction: 5 }, this.scene);
+    this.armCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.armCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 132, friction: 5 }, this.scene);
+    this.clawCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.clawCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 17, friction: 5 }, this.scene);
 
     const servoHornTransform = this.scene.getTransformNodeByID('1 x 5 Servo Horn-2');
     servoHornTransform.computeWorldMatrix();
@@ -446,7 +446,7 @@ export class Space {
 
     const new_can = Babylon.MeshBuilder.CreateCylinder(canName,{ height:10, diameter:6, faceUV: faceUV }, this.scene);
     new_can.material = canMaterial;
-    new_can.physicsImpostor = new Babylon.PhysicsImpostor(new_can, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 5 }, this.scene);
+    new_can.physicsImpostor = new Babylon.PhysicsImpostor(new_can, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 5, friction: 5 }, this.scene);
     new_can.position = new Babylon.Vector3(this.canCoordinates[canNumber - 1][0], 5, this.canCoordinates[canNumber - 1][1]);
   }
 
