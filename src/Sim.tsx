@@ -48,7 +48,7 @@ export class Space {
 
   private canCoordinates: Array<[number, number]>;
 
-  private collidersVisible = true;
+  private collidersVisible = false;
 
   private readonly DEFAULT_TIMESTEP = 1 / 60;
   private readonly TIMESTEP_FACTOR = 4;
