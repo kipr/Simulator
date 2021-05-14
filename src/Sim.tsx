@@ -48,7 +48,7 @@ export class Space {
 
   private canCoordinates: Array<[number, number]>;
 
-  private collidersVisible = true;
+  private collidersVisible = false;
 
   private readonly DEFAULT_TIMESTEP = 1 / 60;
   private readonly TIMESTEP_FACTOR = 4;
@@ -96,7 +96,7 @@ export class Space {
 
     // At 100x scale, gravity should be -9.8 * 100, but this causes weird jitter behavior
     // Full gravity will be -9.8 * 10
-    const gravityVector = new Babylon.Vector3(0, -9.8 * 10, 0);
+    const gravityVector = new Babylon.Vector3(0, -9.8 * 50, 0);
     this.ammo_ = new Babylon.AmmoJSPlugin(true, Ammo);
     this.ammo_.setFixedTimeStep(this.DEFAULT_TIMESTEP / this.TIMESTEP_FACTOR);
     this.scene.enablePhysics(gravityVector, this.ammo_);
@@ -254,6 +254,7 @@ export class Space {
       
       // Unparent collider mesh before adding physics impostors to them
       colliderMesh.setParent(null);
+      this.fixNegativeScaling(colliderMesh as Babylon.Mesh);
       
       const impostorType = bodyColliderShape === 'box'
         ? Babylon.PhysicsImpostor.BoxImpostor
@@ -271,6 +272,8 @@ export class Space {
       
       // Unparent collider mesh before adding physics impostors to them
       colliderMesh.setParent(null);
+      this.fixNegativeScaling(colliderMesh as Babylon.Mesh);
+
       colliderMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderMesh, Babylon.PhysicsImpostor.BoxImpostor, { mass: 0 }, this.scene);
       
       colliderMesh.setParent(this.armCompoundRootMesh);
@@ -284,6 +287,8 @@ export class Space {
       
       // Unparent collider mesh before adding physics impostors to them
       colliderMesh.setParent(null);
+      this.fixNegativeScaling(colliderMesh as Babylon.Mesh);
+
       colliderMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderMesh, Babylon.PhysicsImpostor.BoxImpostor, { mass: 0 }, this.scene);
 
       colliderMesh.setParent(this.clawCompoundRootMesh);
@@ -296,6 +301,8 @@ export class Space {
     // Unparent wheel collider meshes before adding physics impostors to them
     this.colliderLeftWheelMesh.setParent(null);
     this.colliderRightWheelMesh.setParent(null);
+    this.fixNegativeScaling(this.colliderLeftWheelMesh as Babylon.Mesh);
+    this.fixNegativeScaling(this.colliderRightWheelMesh as Babylon.Mesh);
 
     // Find transform nodes (visual meshes) in scene and parent them to the proper node
     this.scene.getTransformNodeByName('ChassisWombat-1').setParent(this.bodyCompoundRootMesh);
@@ -312,11 +319,11 @@ export class Space {
     this.clawRotationDefault = Babylon.Quaternion.Inverse(this.armCompoundRootMesh.rotationQuaternion).multiply(this.clawCompoundRootMesh.rotationQuaternion);
 
     // Set physics impostors for root nodes
-    this.bodyCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.bodyCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 100, friction: 0.1 }, this.scene);
-    this.colliderLeftWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderLeftWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 5 }, this.scene);
-    this.colliderRightWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderRightWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 5 }, this.scene);
-    this.armCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.armCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 1, friction: 5 }, this.scene);
-    this.clawCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.clawCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 0.1, friction: 5 }, this.scene);
+    this.bodyCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.bodyCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 1126, friction: 0.1 }, this.scene);
+    this.colliderLeftWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderLeftWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 14, friction: 5 }, this.scene);
+    this.colliderRightWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderRightWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 14, friction: 5 }, this.scene);
+    this.armCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.armCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 132, friction: 5 }, this.scene);
+    this.clawCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.clawCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 17, friction: 5 }, this.scene);
 
     const servoHornTransform = this.scene.getTransformNodeByID('1 x 5 Servo Horn-2');
     servoHornTransform.computeWorldMatrix();
@@ -439,7 +446,7 @@ export class Space {
 
     const new_can = Babylon.MeshBuilder.CreateCylinder(canName,{ height:10, diameter:6, faceUV: faceUV }, this.scene);
     new_can.material = canMaterial;
-    new_can.physicsImpostor = new Babylon.PhysicsImpostor(new_can, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 5 }, this.scene);
+    new_can.physicsImpostor = new Babylon.PhysicsImpostor(new_can, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 5, friction: 5 }, this.scene);
     new_can.position = new Babylon.Vector3(this.canCoordinates[canNumber - 1][0], 5, this.canCoordinates[canNumber - 1][1]);
   }
 
@@ -541,9 +548,9 @@ export class Space {
     if (armDeltaNorm < 0.01) {
       this.armJoint.setMotor(0);
     } else if (armDeltaNorm >= 0.001 && armDeltaNorm <= 0.04) {
-      this.armJoint.setMotor(armSign * 0.3 * this.TIMESTEP_FACTOR);
+      this.armJoint.setMotor(armSign * 0.3 * this.TIMESTEP_FACTOR, 8000);
     } else {
-      this.armJoint.setMotor(armSign * 2.38 * this.TIMESTEP_FACTOR);
+      this.armJoint.setMotor(armSign * 1.5 * this.TIMESTEP_FACTOR, 8000);
     }
 
     // Get updated real mesh rotation for claw
@@ -562,9 +569,22 @@ export class Space {
     if (clawDeltaNorm < 0.01) {
       this.clawJoint.setMotor(0);
     } else if (clawDeltaNorm >= 0.001 && clawDeltaNorm <= 0.04) {
-      this.clawJoint.setMotor(clawSign * 0.3 * this.TIMESTEP_FACTOR);
+      this.clawJoint.setMotor(clawSign * 0.3 * this.TIMESTEP_FACTOR, 2000);
     } else {
-      this.clawJoint.setMotor(clawSign * 2.38 * this.TIMESTEP_FACTOR);
+      this.clawJoint.setMotor(clawSign * 1.5 * this.TIMESTEP_FACTOR, 2000);
     }
+  }
+
+  // Takes a mesh with negative scaling values and "bakes" the negative scaling into the mesh itself,
+  // resulting in effectively the same mesh but with all positive scale values.
+  // This is used specifically on collider meshes imported from the GLTF model, to work around an issue
+  // with physics impostors and negative scaling.
+  // See GitHub issue: https://github.com/BabylonJS/Babylon.js/issues/10283
+  private fixNegativeScaling(mesh: Babylon.Mesh) {
+    const initialScaling = mesh.scaling.clone();
+    const scaleMatrix = Babylon.Matrix.Scaling(Math.sign(initialScaling.x), Math.sign(initialScaling.y), Math.sign(initialScaling.z));
+    mesh.bakeTransformIntoVertices(scaleMatrix);
+    initialScaling.set(Math.abs(initialScaling.x), Math.abs(initialScaling.y), Math.abs(initialScaling.z));
+    mesh.scaling = initialScaling;
   }
 }
