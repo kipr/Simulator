@@ -254,6 +254,7 @@ export class Space {
       
       // Unparent collider mesh before adding physics impostors to them
       colliderMesh.setParent(null);
+      this.fixNegativeScaling(colliderMesh as Babylon.Mesh);
       
       const impostorType = bodyColliderShape === 'box'
         ? Babylon.PhysicsImpostor.BoxImpostor
@@ -271,6 +272,8 @@ export class Space {
       
       // Unparent collider mesh before adding physics impostors to them
       colliderMesh.setParent(null);
+      this.fixNegativeScaling(colliderMesh as Babylon.Mesh);
+
       colliderMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderMesh, Babylon.PhysicsImpostor.BoxImpostor, { mass: 0 }, this.scene);
       
       colliderMesh.setParent(this.armCompoundRootMesh);
@@ -284,6 +287,8 @@ export class Space {
       
       // Unparent collider mesh before adding physics impostors to them
       colliderMesh.setParent(null);
+      this.fixNegativeScaling(colliderMesh as Babylon.Mesh);
+
       colliderMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderMesh, Babylon.PhysicsImpostor.BoxImpostor, { mass: 0 }, this.scene);
 
       colliderMesh.setParent(this.clawCompoundRootMesh);
@@ -296,6 +301,8 @@ export class Space {
     // Unparent wheel collider meshes before adding physics impostors to them
     this.colliderLeftWheelMesh.setParent(null);
     this.colliderRightWheelMesh.setParent(null);
+    this.fixNegativeScaling(this.colliderLeftWheelMesh as Babylon.Mesh);
+    this.fixNegativeScaling(this.colliderRightWheelMesh as Babylon.Mesh);
 
     // Find transform nodes (visual meshes) in scene and parent them to the proper node
     this.scene.getTransformNodeByName('ChassisWombat-1').setParent(this.bodyCompoundRootMesh);
@@ -566,5 +573,18 @@ export class Space {
     } else {
       this.clawJoint.setMotor(clawSign * 2.38 * this.TIMESTEP_FACTOR);
     }
+  }
+
+  // Takes a mesh with negative scaling values and "bakes" the negative scaling into the mesh itself,
+  // resulting in effectively the same mesh but with all positive scale values.
+  // This is used specifically on collider meshes imported from the GLTF model, to work around an issue
+  // with physics impostors and negative scaling.
+  // See GitHub issue: https://github.com/BabylonJS/Babylon.js/issues/10283
+  private fixNegativeScaling(mesh: Babylon.Mesh) {
+    const initialScaling = mesh.scaling.clone();
+    const scaleMatrix = Babylon.Matrix.Scaling(Math.sign(initialScaling.x), Math.sign(initialScaling.y), Math.sign(initialScaling.z));
+    mesh.bakeTransformIntoVertices(scaleMatrix);
+    initialScaling.set(Math.abs(initialScaling.x), Math.abs(initialScaling.y), Math.abs(initialScaling.z));
+    mesh.scaling = initialScaling;
   }
 }
