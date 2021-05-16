@@ -244,7 +244,7 @@ class WorkerInstance {
   }
 
   private startWorker() {
-    this.worker_ = new Worker('/js/worker.min.js');
+    this.worker_ = new Worker(new URL('./worker.ts', import.meta.url));
     this.worker_.onmessage = this.onMessage;
   }
 

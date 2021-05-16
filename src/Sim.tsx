@@ -1,6 +1,7 @@
 import * as Babylon from 'babylonjs';
 import 'babylonjs-loaders';
-import Ammo = require('./ammo');
+// import Oimo = require('babylonjs/Oimo');
+import * as Ammo from './ammo';
 import {
   SensorObject,
   Sensor,
