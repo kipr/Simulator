@@ -5,7 +5,7 @@ module.exports = {
     root: getEnvVarOrDefault('LIBWALLABY_ROOT', null),
   },
   caching: {
-    staticMaxAge: getEnvVarOrDefault('CACHING_STATIC_MAX_AGE', 5 * 60 * 1000),
+    staticMaxAge: getEnvVarOrDefault('CACHING_STATIC_MAX_AGE', 60 * 60 * 1000),
   }
 };
 
