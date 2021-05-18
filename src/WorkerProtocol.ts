@@ -1,5 +1,10 @@
 export namespace Protocol {
   export namespace Worker {
+    export interface Register {
+      address: number;
+      value: number;
+    }
+    
     export interface StartRequest {
       type: 'start';
       code: string;
@@ -19,17 +24,12 @@ export namespace Protocol {
       type: 'program-ended'
     }
 
-    export type Response = StartResponse | SetRegisterResponse | ProgramEndedResponse;
+    export type Response = StartResponse | ProgramEndedResponse;
 
 
     export interface SetRegisterRequest {
       type: 'setregister';
-      address: number;
-      value: number;
-    }
-
-    export interface SetRegisterResponse {
-      type: 'setregister';
+      registers: Register[];
     }
 
     export interface ProgramOutputRequest {

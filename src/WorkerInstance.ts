@@ -43,6 +43,8 @@ class WorkerInstance {
       analogValues: [...this.state_.analogValues],
     };
 
+    const registerUpdates: Protocol.Worker.Register[] = [];
+
     // Motor positions can be changed from simulator or from worker, so changes may conflict
     // We give precedence to changes coming from the worker (i.e. register changes), so...
     //   If motor position registers changed (from worker), update state based on registers
@@ -57,10 +59,10 @@ class WorkerInstance {
       ];
       this.didMotorPositionRegistersChange = false;
     } else {
-      this.setRegister32b(Registers.REG_RW_MOT_0_B3, nextState.motorPositions[0] * 250);
-      this.setRegister32b(Registers.REG_RW_MOT_1_B3, nextState.motorPositions[1] * 250);
-      this.setRegister32b(Registers.REG_RW_MOT_2_B3, nextState.motorPositions[2] * 250);
-      this.setRegister32b(Registers.REG_RW_MOT_3_B3, nextState.motorPositions[3] * 250);
+      this.append32bRegisterUpdates(Registers.REG_RW_MOT_0_B3, Math.trunc(nextState.motorPositions[0]) * 250, registerUpdates);
+      this.append32bRegisterUpdates(Registers.REG_RW_MOT_1_B3, Math.trunc(nextState.motorPositions[1]) * 250, registerUpdates);
+      this.append32bRegisterUpdates(Registers.REG_RW_MOT_2_B3, Math.trunc(nextState.motorPositions[2]) * 250, registerUpdates);
+      this.append32bRegisterUpdates(Registers.REG_RW_MOT_3_B3, Math.trunc(nextState.motorPositions[3]) * 250, registerUpdates);
     }    
 
     // Update motor speed state based on registers, taking current motor modes into account
@@ -95,8 +97,8 @@ class WorkerInstance {
     }
 
     // Update analog registers based on state
-    this.setRegister16b(Registers.REG_RW_ADC_0_H, nextState.analogValues[0]);
-    this.setRegister16b(Registers.REG_RW_ADC_1_H, nextState.analogValues[1]);
+    this.append16bRegisterUpdates(Registers.REG_RW_ADC_0_H, nextState.analogValues[0], registerUpdates);
+    this.append16bRegisterUpdates(Registers.REG_RW_ADC_1_H, nextState.analogValues[1], registerUpdates);
 
     // Update digital registers based on state
     let digitalRegisterValue = 0;
@@ -105,7 +107,9 @@ class WorkerInstance {
         digitalRegisterValue = digitalRegisterValue | (1 << digitalPort);
       }
     }
-    this.setRegister16b(Registers.REG_RW_DIG_IN_H, digitalRegisterValue);
+    this.append16bRegisterUpdates(Registers.REG_RW_DIG_IN_H, digitalRegisterValue, registerUpdates);
+
+    this.setRegisters(registerUpdates);
 
     // Only call onStateChange() if any state values have actually changed
     if (deepNeq(nextState, this.state_)) {
@@ -123,12 +127,13 @@ class WorkerInstance {
     const message = e.data as Protocol.Worker.Request;
     switch (message.type) {
       case 'setregister': {
-        // console.log(`setregister ${message.address} ${message.value}`);
-        this.registers_[message.address] = message.value;
+        for (const register of message.registers) {
+          this.registers_[register.address] = register.value;
 
-        // Set "dirty" flag for motor position registers
-        if (Registers.REG_RW_MOT_0_B3 <= message.address && message.address <= Registers.REG_RW_MOT_3_B3) {
-          this.didMotorPositionRegistersChange = true;
+          // Set "dirty" flag for motor position registers
+          if (Registers.REG_RW_MOT_0_B3 <= register.address && register.address <= Registers.REG_RW_MOT_3_B3) {
+            this.didMotorPositionRegistersChange = true;
+          }
         }
         break;
       }
@@ -181,31 +186,35 @@ class WorkerInstance {
     this.startWorker();
   }
 
-  // TODO: consider only calling postMessage() if register value is different
-  // TODO: consider batching multiple related setRegister() calls into one postMessage()
-  private setRegister(address: number, value: number) {
+  // Batch update registers
+  private setRegisters(registerUpdates: Protocol.Worker.Register[]) {
+    // Find which register updates are actually changes
+    const registerChanges = registerUpdates.filter(regChange => this.registers_[regChange.address] !== regChange.value);
+    if (registerChanges.length === 0) return;
+
     // Send 'setregister' message to worker
     this.worker_.postMessage({
       type: 'setregister',
-      address: address,
-      value: value,
+      registers: registerChanges,
     });
 
     // Update own registers
-    this.registers_[address] = value;
-  }
-
-  private setRegister16b(startAddress: number, value: number) {
-    const bytes = this.valueTo4Bytes(value);
-    for (let offset = 0; offset < 2; offset++) {
-      this.setRegister(startAddress + offset, bytes[offset + 2]);
+    for (const register of registerChanges) {
+      this.registers_[register.address] = register.value;
     }
   }
 
-  private setRegister32b(startAddress: number, value: number) {
+  private append16bRegisterUpdates(startAddress: number, value: number, registerUpdates: Protocol.Worker.Register[]) {
+    const bytes = this.valueTo4Bytes(value);
+    for (let offset = 0; offset < 2; offset++) {
+      registerUpdates.push({ address: startAddress + offset, value: bytes[offset + 2] });
+    }
+  }
+
+  private append32bRegisterUpdates(startAddress: number, value: number, registerUpdates: Protocol.Worker.Register[]) {
     const bytes = this.valueTo4Bytes(value);
     for (let offset = 0; offset < 4; offset++) {
-      this.setRegister(startAddress + offset, bytes[offset]);
+      registerUpdates.push({ address: startAddress + offset, value: bytes[offset] });
     }
   }
 
