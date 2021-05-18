@@ -5,7 +5,4 @@ const commonConfig = require('./common');
 
 module.exports = merge(commonConfig, {
   mode: 'production',
-  output: {
-    filename: 'js/[name].[contenthash].min.js',
-  },
 });
