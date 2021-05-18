@@ -4,8 +4,6 @@ import { RobotState } from './RobotState';
 
 import deepNeq from './deepNeq';
 
-import Worker from 'worker.ts';
-
 class WorkerInstance {
   
   onStateChange: (state: RobotState) => void;
@@ -21,8 +19,8 @@ class WorkerInstance {
     .fill(220,79,80)
     .fill(220,81,82)
     .fill(220,83,84)
-    .fill(2,84,85)
-    .fill(88,85,86);
+    .fill(9,84,85)
+    .fill(96,85,86);
   
   private didMotorPositionRegistersChange = false;
   
@@ -165,10 +163,8 @@ class WorkerInstance {
       }
     }
   };
+  
   start(code: string) {
-    this.worker_.postMessage({
-      type: 'stop'
-    });
     this.worker_.postMessage({
       type: 'start',
       code
@@ -176,9 +172,13 @@ class WorkerInstance {
   }
 
   stop() {
-    this.worker_.postMessage({
-      type: 'stop'
-    });
+    this.worker_.terminate();
+
+    // Reset specific registers to stop motors and disable servos
+    this.registers_[Registers.REG_RW_MOT_MODES] = 0x00;
+    this.registers_[Registers.REG_RW_MOT_SRV_ALLSTOP] = 0xF0;
+
+    this.startWorker();
   }
 
   // TODO: consider only calling postMessage() if register value is different
@@ -230,7 +230,7 @@ class WorkerInstance {
   }
 
   constructor() {
-    this.worker_.onmessage = this.onMessage;
+    this.startWorker();
     requestAnimationFrame(this.tick);
   }
 
@@ -243,7 +243,12 @@ class WorkerInstance {
     return this.state_;
   }
 
-  private worker_ = new Worker();
+  private startWorker() {
+    this.worker_ = new Worker(new URL('./worker.ts', import.meta.url));
+    this.worker_.onmessage = this.onMessage;
+  }
+
+  private worker_: Worker;
 }
 
 export default new WorkerInstance();

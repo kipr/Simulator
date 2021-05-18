@@ -1,4 +1,4 @@
-import React = require("react");
+import * as React from 'react';
 
 import * as Sim from '../Sim';
 import { RobotState } from "../RobotState";
