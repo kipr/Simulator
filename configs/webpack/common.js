@@ -9,6 +9,7 @@ module.exports = {
   output: {
     filename: 'js/[name].[contenthash].min.js',
     path: resolve(__dirname, '../../dist'),
+    clean: true,
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
