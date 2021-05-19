@@ -8,5 +8,5 @@ module.exports = merge(commonConfig, {
   devtool: 'eval-cheap-module-source-map',
   stats: {
     builtAt: true
-  }
+  },
 });

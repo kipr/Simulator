@@ -95,9 +95,13 @@ app.post('/compile', (req, res) => {
   
 });
 
-app.use('/static', express.static(`${__dirname}/static`));
+app.use('/static', express.static(`${__dirname}/static`, {
+  maxAge: config.caching.staticMaxAge,
+}));
 
-app.use(express.static(sourceDir));
+app.use(express.static(sourceDir, {
+  maxAge: config.caching.staticMaxAge,
+}));
 
 app.use('*', (req,res) => {
   res.sendFile(`${__dirname}/${sourceDir}/index.html`);
