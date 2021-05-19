@@ -27,12 +27,13 @@ ctx.onmessage = (e: MessageEvent) => {
   switch (message.type) {
     case 'start': {
       const mod = dynRequire(message.code, {
-        onRegistersChange: (address, value) => {
-          ctx.postMessage({
-            type: 'setregister',
-            address: address,
-            value: value
-          });
+        onRegistersChange: (registers) => {
+          if (registers.length > 0) {
+            ctx.postMessage({
+              type: 'setregister',
+              registers,
+            } as Protocol.Worker.SetRegisterRequest);
+          }
         },
         registers,
       },
@@ -52,11 +53,9 @@ ctx.onmessage = (e: MessageEvent) => {
     }
 
     case 'setregister': {
-      registers[message.address] = message.value;
-
-      // ctx.postMessage({
-      //   type: 'setregister'
-      // });
+      for (const register of message.registers) {
+        registers[register.address] = register.value;
+      }
       break;
     }
   } 
