@@ -10,7 +10,7 @@ export default {
     type: Sensor.Type.Et,
     forward: new Babylon.Vector3(0.0, 0.02, 0.0),
     origin: new Babylon.Vector3(0.02, 0.02, -0.015),
-    output: Sensor.Output.analog(1),
+    output: Sensor.Output.analog(0),
     maxUpdateFrequency: 15,
   },
   // Front touch sensor
