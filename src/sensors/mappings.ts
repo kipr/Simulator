@@ -5,20 +5,12 @@ import * as Babylon from 'babylonjs';
 
 // Maps object names to Sensors
 export default {
-  // Fake ET sensor
-  'bodyCompoundMesh': {
-    type: Sensor.Type.Et,
-    forward: new Babylon.Vector3(0, 0, 18),
-    origin: new Babylon.Vector3(0, 0, 18),
-    output: Sensor.Output.analog(0),
-    maxUpdateFrequency: 15,
-  },
   // Arm ET sensor
   'black satin finish plastic': {
     type: Sensor.Type.Et,
     forward: new Babylon.Vector3(0.0, 0.02, 0.0),
     origin: new Babylon.Vector3(0.02, 0.02, -0.015),
-    output: Sensor.Output.analog(1),
+    output: Sensor.Output.analog(0),
     maxUpdateFrequency: 15,
   },
   // Front touch sensor

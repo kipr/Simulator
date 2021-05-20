@@ -45,8 +45,6 @@ export class Space {
 
   private sensorObjects_: SensorObject[];
 
-  private ticksSinceETSensorUpdate: number;
-
   private canCoordinates: Array<[number, number]>;
 
   private collidersVisible = false;
@@ -83,8 +81,6 @@ export class Space {
 
     this.getRobotState = getRobotState;
     this.updateRobotState = updateRobotState;
-
-    this.ticksSinceETSensorUpdate = 0;
   }
 
   public createScene(): void {
