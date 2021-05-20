@@ -98,6 +98,14 @@ export class TouchSensor implements SensorObject {
   public set isVisible(v: boolean) {
     // Touch sensor visibility not yet supported
   }
+  
+  public get isNoiseEnabled(): boolean {
+    return false;
+  }
+  
+  public set isNoiseEnabled(v: boolean){
+    // Digital sensors aren't noisy
+  }
 
   // Determines whether the given mesh is eligible for intersection checking
   // Currently only cans are eligible, but this should be made more flexible

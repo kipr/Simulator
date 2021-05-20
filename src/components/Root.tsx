@@ -8,6 +8,7 @@ interface RootState {
   robotState: RobotState,
   isCanEnabled: boolean[],
   shouldSetRobotPosition: boolean,
+  isSensorNoiseEnabled: boolean,
 }
 type Props = Record<string, never>;
 type State = RootState;
@@ -19,6 +20,7 @@ export class Root extends React.Component<Props, State> {
       robotState: WorkerInstance.state,
       isCanEnabled: Array<boolean>(12).fill(false),
       shouldSetRobotPosition: false,
+      isSensorNoiseEnabled: false,
     };
   }
 
@@ -59,6 +61,10 @@ export class Root extends React.Component<Props, State> {
   private onRobotPositionSetCompleted_ = () => {
     this.setState({ shouldSetRobotPosition: false });
   };
+  
+  private onToggleSensorNoise_ = (enabled: boolean) => {
+    this.setState({ isSensorNoiseEnabled: enabled });
+  };
 
   render(): React.ReactNode {
     const { state } = this;
@@ -67,11 +73,12 @@ export class Root extends React.Component<Props, State> {
       <div id="main">
         <div id="root">
           <section id="app">
-            <SimulatorSidebar robotState={state.robotState} isCanChecked={state.isCanEnabled} onRobotStateChange={this.onRobotStateUpdate_} onCanChange={this.onCanChange_} onRobotPositionSetRequested={this.onRobotPositionSetRequested_} />
+            <SimulatorSidebar robotState={state.robotState} isCanChecked={state.isCanEnabled} isSensorNoiseEnabled={state.isSensorNoiseEnabled} 
+            onRobotStateChange={this.onRobotStateUpdate_} onCanChange={this.onCanChange_} onRobotPositionSetRequested={this.onRobotPositionSetRequested_} onToggleSensorNoise={this.onToggleSensorNoise_}/>
           </section>
         </div>
         <div id="right">
-          <SimulatorArea robotState={state.robotState} canEnabled={state.isCanEnabled} onRobotStateUpdate={this.onRobotStateUpdate_} onRobotPositionSetCompleted={this.onRobotPositionSetCompleted_} shouldSetRobotPosition={state.shouldSetRobotPosition} />
+          <SimulatorArea robotState={state.robotState} canEnabled={state.isCanEnabled} isSensorNoiseEnabled={state.isSensorNoiseEnabled} onRobotStateUpdate={this.onRobotStateUpdate_} onRobotPositionSetCompleted={this.onRobotPositionSetCompleted_} shouldSetRobotPosition={state.shouldSetRobotPosition} />
         </div>
       </div>
     );

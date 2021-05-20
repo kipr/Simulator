@@ -455,6 +455,10 @@ export class Space {
     const canName = `Can${canNumber}`;
     this.scene.getMeshByName(canName).dispose();
   }
+  
+  public updateSensorOptions(isNoiseEnabled: boolean): void{
+    for(const sensorObject of this.sensorObjects_) sensorObject.isNoiseEnabled = isNoiseEnabled;
+  }
 
   private buildFloor() {
     this.mat = Babylon.MeshBuilder.CreateGround("mat", { width:118, height:59, subdivisions:2 }, this.scene);

@@ -10,6 +10,7 @@ interface SensorObject {
   getValue(): SensorObject.Value;
   isVisible: boolean;
   updateVisual(): boolean;
+  isNoiseEnabled: boolean;
 }
 
 namespace SensorObject {

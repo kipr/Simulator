@@ -7,6 +7,7 @@ interface SimulatorAreaProps {
   robotState: RobotState;
   canEnabled: boolean[];
   shouldSetRobotPosition: boolean;
+  isSensorNoiseEnabled: boolean;
 
   onRobotStateUpdate: (robotState: Partial<RobotState>) => void;
   onRobotPositionSetCompleted: () => void;
@@ -15,6 +16,7 @@ interface SimulatorAreaProps {
 export class SimulatorArea extends React.Component<SimulatorAreaProps> {
   canvas: HTMLCanvasElement;
   space: Sim.Space;
+  private oldIsSensorNoiseEnabled: boolean;
   
   constructor(props: SimulatorAreaProps) {
     super(props);
@@ -48,6 +50,12 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
         this.setCanEnabled(i, enabled);
       }
     });
+    
+    // Check if simulation settings were changed
+    if(this.props.isSensorNoiseEnabled != this.oldIsSensorNoiseEnabled){
+      this.oldIsSensorNoiseEnabled=this.props.isSensorNoiseEnabled;
+      this.space.updateSensorOptions(this.props.isSensorNoiseEnabled);
+    }
 
     // Checks if robot position needs to be set
     if (this.props.shouldSetRobotPosition && !prevProps.shouldSetRobotPosition) {
