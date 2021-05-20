@@ -173,7 +173,7 @@ export class Space {
 
   public async loadMeshes(): Promise<void> {
     // Load model into scene
-    const importMeshResult = await Babylon.SceneLoader.ImportMeshAsync("",'static/', 'demobot_v5.glb', this.scene);
+    const importMeshResult = await Babylon.SceneLoader.ImportMeshAsync("",'static/', 'Simulator_Demobot_colliders.glb', this.scene);
 
     // TEMP FIX: Scale everything up by 100 to avoid Ammo issues at small scale
     const rootMesh = importMeshResult.meshes.find(mesh => mesh.name === '__root__');
@@ -207,10 +207,7 @@ export class Space {
       ['collider_body', 'box'],
       ['collider_body_back_panel', 'box'],
       ['collider_body_front_panel', 'box'],
-      ['collider_body_front_legos_1', 'box'],
-      ['collider_body_front_legos_2', 'box'],
-      ['collider_body_front_legos_3', 'box'],
-      ['collider_body_lego', 'box'],
+      ['collider_body_front_legos', 'box'],
       ['collider_caster', 'sphere'],
       ['collider_touch_back_left', 'box'],
       ['collider_touch_back_right', 'box'],
@@ -231,10 +228,6 @@ export class Space {
       ['collider_arm_claw_2'],
       ['collider_arm_claw_3'],
       ['collider_claw_servo'],
-      ['collider_claw_servo_rod_1'],
-      ['collider_claw_servo_rod_2'],
-      ['collider_claw_et'],
-      ['collider_arm_base'],
     ];
 
     const clawCenterMesh = this.scene.getMeshByName('collider_claw_3');
@@ -247,7 +240,6 @@ export class Space {
       ['collider_claw_1'],
       ['collider_claw_2'],
       ['collider_claw_3'],
-      ['collider_claw_3_metal'],
     ];
 
     // Parent body collider meshes to body root and add physics impostors
