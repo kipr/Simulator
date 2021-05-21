@@ -74,7 +74,7 @@ export class Root extends React.Component<Props, State> {
         <div id="root">
           <section id="app">
             <SimulatorSidebar robotState={state.robotState} isCanChecked={state.isCanEnabled} isSensorNoiseEnabled={state.isSensorNoiseEnabled} 
-            onRobotStateChange={this.onRobotStateUpdate_} onCanChange={this.onCanChange_} onRobotPositionSetRequested={this.onRobotPositionSetRequested_} onToggleSensorNoise={this.onToggleSensorNoise_}/>
+              onRobotStateChange={this.onRobotStateUpdate_} onCanChange={this.onCanChange_} onRobotPositionSetRequested={this.onRobotPositionSetRequested_} onToggleSensorNoise={this.onToggleSensorNoise_}/>
           </section>
         </div>
         <div id="right">

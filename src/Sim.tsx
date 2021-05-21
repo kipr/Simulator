@@ -460,8 +460,8 @@ export class Space {
     this.scene.getMeshByName(canName).dispose();
   }
   
-  public updateSensorOptions(isNoiseEnabled: boolean): void{
-    for(const sensorObject of this.sensorObjects_) sensorObject.isNoiseEnabled = isNoiseEnabled;
+  public updateSensorOptions(isNoiseEnabled: boolean): void {
+    for (const sensorObject of this.sensorObjects_) sensorObject.isNoiseEnabled = isNoiseEnabled;
   }
 
   private buildFloor() {

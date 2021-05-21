@@ -184,7 +184,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
   };
   
   private onToggleSensorNoise = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const isChecked=event.target.checked;
+    const isChecked = event.target.checked;
     this.props.onToggleSensorNoise(isChecked);
   };
 

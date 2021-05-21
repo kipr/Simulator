@@ -52,8 +52,8 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
     });
     
     // Check if simulation settings were changed
-    if(this.props.isSensorNoiseEnabled != this.oldIsSensorNoiseEnabled){
-      this.oldIsSensorNoiseEnabled=this.props.isSensorNoiseEnabled;
+    if (this.props.isSensorNoiseEnabled !== this.oldIsSensorNoiseEnabled) {
+      this.oldIsSensorNoiseEnabled = this.props.isSensorNoiseEnabled;
       this.space.updateSensorOptions(this.props.isSensorNoiseEnabled);
     }
 

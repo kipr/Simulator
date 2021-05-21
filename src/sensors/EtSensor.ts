@@ -67,8 +67,8 @@ export class EtSensor implements SensorObject {
     const hit = this.config_.scene.pickWithRay(this.ray);
     let value: number;
     if (!hit.pickedMesh) value = 255;
-    else value=this.distanceToSensorValue(hit.distance);
-    if (this.__isNoiseEnabled) value=this.applyNoise(value);
+    else value = this.distanceToSensorValue(hit.distance);
+    if (this.__isNoiseEnabled) value = this.applyNoise(value);
     return SensorObject.Value.u8(value); 
     
   }
@@ -107,13 +107,13 @@ export class EtSensor implements SensorObject {
     return 255 - Math.floor((distance / this.config_.sensor.maxRange) * 255);
   }
   
-  private applyNoise(value: number):number{
+  private applyNoise(value: number): number {
     const noise = this.config_.sensor.noiseRadius || 0;
-    const offset=Math.floor(noise * Math.random() * 2) - noise;
-    value -= offset;
-    if(value<0) value=0;
-    else if(value>255) value=255;
-    return value;
+    const offset = Math.floor(noise * Math.random() * 2) - noise;
+    let noisyValue = value - offset;
+    if (noisyValue < 0) noisyValue = 0;
+    else if (noisyValue > 255) noisyValue = 255;
+    return noisyValue;
   }
 }
 

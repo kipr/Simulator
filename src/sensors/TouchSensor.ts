@@ -103,7 +103,7 @@ export class TouchSensor implements SensorObject {
     return false;
   }
   
-  public set isNoiseEnabled(v: boolean){
+  public set isNoiseEnabled(v: boolean) {
     // Digital sensors aren't noisy
   }
 
