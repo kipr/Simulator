@@ -7,7 +7,6 @@ const fs = require('fs');
 const uuid = require('uuid');
 const { exec } = require('child_process');
 const app = express();
-const portNumber = 3000;
 const sourceDir = 'dist';
 const { get: getConfig } = require('./config');
 
@@ -65,7 +64,7 @@ app.post('/compile', (req, res) => {
       });
     }
 
-    exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -s ASYNCIFY -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']" -I${config.libwallaby.root}/include -L${config.libwallaby.root}/lib -lkipr -o ${path}.js ${path}`, (err, stdout, stderr) => {
+    exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -s ASYNCIFY -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']" -I${config.server.libwallabyRoot}/include -L${config.server.libwallabyRoot}/lib -lkipr -o ${path}.js ${path}`, (err, stdout, stderr) => {
       if (err) {
         return res.status(400).json({
           stdout,
@@ -117,7 +116,7 @@ app.use('*', (req,res) => {
 
 
 
-app.listen(portNumber, () => {
-  console.log(`Express web server started: http://localhost:${portNumber}`);
+app.listen(config.server.port, () => {
+  console.log(`Express web server started: http://localhost:${config.server.port}`);
   console.log(`Serving content from /${sourceDir}/`);
 });
