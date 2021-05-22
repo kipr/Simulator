@@ -14,6 +14,8 @@ export class EtSensor implements SensorObject {
   private visualMesh: Babylon.LinesMesh;
 
   private sinceLastUpdate = 0;
+  
+  private __isNoiseEnabled: boolean;
 
   private readonly VISUAL_MESH_NAME = "etlinemesh";
 
@@ -63,9 +65,12 @@ export class EtSensor implements SensorObject {
 
   public getValue(): SensorObject.Value {
     const hit = this.config_.scene.pickWithRay(this.ray);
-    if (!hit.pickedMesh) return SensorObject.Value.u8(255);
+    let value: number;
+    if (!hit.pickedMesh) value = 255;
+    else value = this.distanceToSensorValue(hit.distance);
+    if (this.__isNoiseEnabled) value = this.applyNoise(value);
+    return SensorObject.Value.u8(value); 
     
-    return SensorObject.Value.u8(this.distanceToSensorValue(hit.distance)); 
   }
 
   public updateVisual(): boolean {
@@ -88,10 +93,27 @@ export class EtSensor implements SensorObject {
   public set isVisible(v: boolean) {
     this.visualMesh.setEnabled(v);
   }
+  
+  public get isNoiseEnabled(): boolean {
+    return this.__isNoiseEnabled;
+  }
+  
+  public set isNoiseEnabled(v: boolean) {
+    this.__isNoiseEnabled = v;
+  }
 
   // Converts from 3D world distance to sensor output value
   private distanceToSensorValue(distance: number): number {
     return 255 - Math.floor((distance / this.config_.sensor.maxRange) * 255);
+  }
+  
+  private applyNoise(value: number): number {
+    const noise = this.config_.sensor.noiseRadius || 0;
+    const offset = Math.floor(noise * Math.random() * 2) - noise;
+    let noisyValue = value - offset;
+    if (noisyValue < 0) noisyValue = 0;
+    else if (noisyValue > 255) noisyValue = 255;
+    return noisyValue;
   }
 }
 

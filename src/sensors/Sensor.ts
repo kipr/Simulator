@@ -73,11 +73,13 @@ namespace Sensor {
     forward: Babylon.Vector3;
     origin: Babylon.Vector3;
     maxRange?: number;
+    noiseRadius?: number;
   }
 
   export namespace Et {
     export const fill = (et: Et): Et => ({
       maxRange: 30,
+      noiseRadius: 10,
       ...et
     });
   }

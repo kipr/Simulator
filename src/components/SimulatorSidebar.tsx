@@ -20,10 +20,12 @@ import { RobotPositionDisplay } from './RobotPositionDisplay';
 export interface SimulatorSidebarProps extends StyleProps {
   robotState: RobotState;
   isCanChecked: boolean[];
+  isSensorNoiseEnabled: boolean;
 
   onRobotStateChange: (robotState: RobotState) => void;
   onCanChange: (canNumber: number, checked: boolean) => void;
   onRobotPositionSetRequested: () => void;
+  onToggleSensorNoise: (enabled: boolean) => void;
 }
 
 interface SimulatorSidebarState {
@@ -180,6 +182,11 @@ export class SimulatorSidebar extends React.Component<Props, State> {
     const isTargetChecked = event.target.checked;
     this.props.onCanChange(canNumber, isTargetChecked);
   };
+  
+  private onToggleSensorNoise = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const isChecked = event.target.checked;
+    this.props.onToggleSensorNoise(isChecked);
+  };
 
   render(): React.ReactNode {
     const { props, state } = this;
@@ -244,6 +251,14 @@ export class SimulatorSidebar extends React.Component<Props, State> {
               </li>
             )}
           </ul>
+        </Collapsible>
+        <Collapsible title="Options">
+          <div>
+            <span>
+              <input type="checkbox" name="sensorNoise" checked={this.props.isSensorNoiseEnabled} onChange={this.onToggleSensorNoise}/>
+              <label>Sensor noise</label>
+            </span>
+          </div>
         </Collapsible>
       </>
     );
