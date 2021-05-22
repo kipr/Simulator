@@ -9,7 +9,15 @@ const { exec } = require('child_process');
 const app = express();
 const portNumber = 3000;
 const sourceDir = 'dist';
-const config = require('./config');
+const { get: getConfig } = require('./config');
+
+let config;
+try {
+  config = getConfig();
+} catch (e) {
+  process.exitCode = 1;
+  throw e;
+}
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
