@@ -49,9 +49,6 @@ export class Space {
 
   private collidersVisible = false;
 
-  private readonly DEFAULT_TIMESTEP = 1 / 60;
-  private readonly TIMESTEP_FACTOR = 4;
-
   private readonly TICKS_BETWEEN_ET_SENSOR_UPDATES = 15;
   private readonly WHEEL_TICKS_PER_RADIAN = 2048 / (2 * Math.PI);
 
@@ -95,8 +92,8 @@ export class Space {
     // Full gravity will be -9.8 * 10
     const gravityVector = new Babylon.Vector3(0, -9.8 * 50, 0);
     this.ammo_ = new Babylon.AmmoJSPlugin(true, Ammo);
-    this.ammo_.setFixedTimeStep(this.DEFAULT_TIMESTEP / this.TIMESTEP_FACTOR);
     this.scene.enablePhysics(gravityVector, this.ammo_);
+    this.scene.getPhysicsEngine().setSubTimeStep(5);
 
     this.buildFloor();
 
@@ -557,9 +554,9 @@ export class Space {
     if (armDeltaNorm < 0.01) {
       this.armJoint.setMotor(0);
     } else if (armDeltaNorm >= 0.001 && armDeltaNorm <= 0.04) {
-      this.armJoint.setMotor(armSign * 0.3 * this.TIMESTEP_FACTOR, 8000);
+      this.armJoint.setMotor(armSign * 1.2, 8000);
     } else {
-      this.armJoint.setMotor(armSign * 1.5 * this.TIMESTEP_FACTOR, 8000);
+      this.armJoint.setMotor(armSign * 6, 8000);
     }
 
     // Get updated real mesh rotation for claw
@@ -578,9 +575,9 @@ export class Space {
     if (clawDeltaNorm < 0.01) {
       this.clawJoint.setMotor(0);
     } else if (clawDeltaNorm >= 0.001 && clawDeltaNorm <= 0.04) {
-      this.clawJoint.setMotor(clawSign * 0.3 * this.TIMESTEP_FACTOR, 2000);
+      this.clawJoint.setMotor(clawSign * 1.2, 2000);
     } else {
-      this.clawJoint.setMotor(clawSign * 1.5 * this.TIMESTEP_FACTOR, 2000);
+      this.clawJoint.setMotor(clawSign * 6, 2000);
     }
   }
 
