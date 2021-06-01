@@ -483,8 +483,8 @@ export class Space {
     if (this.leftWheelJoint && this.rightWheelJoint) {
       const leftSpeedClamped = Math.max(-this.MAX_MOTOR_VELOCITY, Math.min(leftSpeed, this.MAX_MOTOR_VELOCITY));
       const rightSpeedClamped = Math.max(-this.MAX_MOTOR_VELOCITY, Math.min(rightSpeed, this.MAX_MOTOR_VELOCITY));
-      this.leftWheelJoint.setMotor(leftSpeedClamped / 139); // Motor speeds are about 2.3x to slow at normal 315
-      this.rightWheelJoint.setMotor(-rightSpeedClamped / 139);
+      this.leftWheelJoint.setMotor(leftSpeedClamped / 315);
+      this.rightWheelJoint.setMotor(-rightSpeedClamped / 315);
     }
     if (leftSpeed === 0) {
       this.colliderLeftWheelMesh.physicsImpostor.setAngularVelocity(Babylon.Vector3.Zero());
