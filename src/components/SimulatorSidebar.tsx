@@ -15,17 +15,21 @@ import Collapsible from './Collapsible';
 import { MotorsDisplay } from './MotorsDisplay';
 import { ServosDisplay } from './ServosDisplay';
 import { RobotPositionDisplay } from './RobotPositionDisplay';
+import { SurfaceConfig } from './SurfaceConfig';
+import { SurfaceState } from '../SurfaceState';
 
 
 export interface SimulatorSidebarProps extends StyleProps {
   robotState: RobotState;
   isCanChecked: boolean[];
   isSensorNoiseEnabled: boolean;
+  surfaceState: SurfaceState;
 
   onRobotStateChange: (robotState: RobotState) => void;
   onCanChange: (canNumber: number, checked: boolean) => void;
   onRobotPositionSetRequested: () => void;
   onToggleSensorNoise: (enabled: boolean) => void;
+  onUpdateSurfaceState: (surfaceState: SurfaceState) => void;
 }
 
 interface SimulatorSidebarState {
@@ -188,6 +192,10 @@ export class SimulatorSidebar extends React.Component<Props, State> {
     this.props.onToggleSensorNoise(isChecked);
   };
 
+  private onUpdateSurfaceState = (surfaceState: SurfaceState) => {
+    this.props.onUpdateSurfaceState(surfaceState);
+  };
+
   render(): React.ReactNode {
     const { props, state } = this;
     const { robotState } = props;
@@ -253,12 +261,12 @@ export class SimulatorSidebar extends React.Component<Props, State> {
           </ul>
         </Collapsible>
         <Collapsible title="Options">
-          <div>
-            <span>
-              <input type="checkbox" name="sensorNoise" checked={this.props.isSensorNoiseEnabled} onChange={this.onToggleSensorNoise}/>
-              <label>Sensor noise</label>
-            </span>
-          </div>
+          <section>
+            <h3>Robot Configuration</h3>
+            <input type="checkbox" name="sensorNoise" checked={this.props.isSensorNoiseEnabled} onChange={this.onToggleSensorNoise}/>
+            <label>Sensor noise</label>
+          </section>
+          <SurfaceConfig surfaceState={this.props.surfaceState} updateSurfaceAndReset={this.onUpdateSurfaceState} />
         </Collapsible>
       </>
     );

@@ -10,6 +10,7 @@ import {
 } from './sensors';
 import { RobotState } from './RobotState';
 import Dict from './Dict';
+import { SurfaceState } from './SurfaceState';
 
 export class Space {
   private engine: Babylon.Engine;
@@ -476,6 +477,17 @@ export class Space {
     groundMaterial.emissiveColor = new Babylon.Color3(0.1,0.1,0.1);
     this.ground.material = groundMaterial;
     this.ground.physicsImpostor = new Babylon.PhysicsImpostor(this.ground, Babylon.PhysicsImpostor.BoxImpostor,{ mass:0, friction: 1 }, this.scene);
+  }
+
+  public rebuildFloor(surfaceState: SurfaceState): void { 
+    this.mat.dispose();
+    this.mat = Babylon.MeshBuilder.CreateGround("mat", { width: surfaceState.surfaceWidth, height: surfaceState.surfaceHeight, subdivisions:2 }, this.scene);
+    this.mat.position.y = -0.8;
+    this.mat.rotate(new Babylon.Vector3(0,1,0),-Math.PI / 2);
+    const matMaterial = new Babylon.StandardMaterial("ground", this.scene);
+    matMaterial.ambientTexture = new Babylon.Texture(surfaceState.surfaceImage,this.scene);
+    this.mat.material = matMaterial;
+    this.mat.physicsImpostor = new Babylon.PhysicsImpostor(this.mat, Babylon.PhysicsImpostor.BoxImpostor,{ mass:0, friction: 1 }, this.scene);
   }
 
   private setDriveMotors(leftSpeed: number, rightSpeed: number) {

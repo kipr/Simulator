@@ -2,12 +2,14 @@ import * as React from 'react';
 
 import * as Sim from '../Sim';
 import { RobotState } from "../RobotState";
+import { SurfaceState } from '../SurfaceState';
 
 interface SimulatorAreaProps {
   robotState: RobotState;
   canEnabled: boolean[];
   shouldSetRobotPosition: boolean;
   isSensorNoiseEnabled: boolean;
+  surfaceState: SurfaceState;
 
   onRobotStateUpdate: (robotState: Partial<RobotState>) => void;
   onRobotPositionSetCompleted: () => void;
@@ -55,6 +57,12 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
     if (this.props.isSensorNoiseEnabled !== this.oldIsSensorNoiseEnabled) {
       this.oldIsSensorNoiseEnabled = this.props.isSensorNoiseEnabled;
       this.space.updateSensorOptions(this.props.isSensorNoiseEnabled);
+    }
+
+    // Check if board was reset
+    if (this.props.surfaceState !== prevProps.surfaceState) {
+      this.space.rebuildFloor(this.props.surfaceState);
+      this.space.resetPosition();
     }
 
     // Checks if robot position needs to be set
