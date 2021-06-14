@@ -64,7 +64,7 @@ export class EtSensor implements SensorObject {
   }
 
   public getValue(): SensorObject.Value {
-    const hit = this.config_.scene.pickWithRay(this.ray);
+    const hit = this.config_.scene.pickWithRay(this.ray, null);
     let value: number;
     if (!hit.pickedMesh) value = 255;
     else value = this.distanceToSensorValue(hit.distance);
