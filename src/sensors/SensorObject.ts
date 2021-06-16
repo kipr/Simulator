@@ -49,7 +49,7 @@ namespace SensorObject {
       export const from = (value: Value): U8 => {
         switch (value.type) {
           case Type.U8: return value;
-          case Type.Bool: return u8(value.value ? 255 : 0);
+          case Type.Bool: return u8(value.value ? 4095 : 0);
         }
       };
     }
