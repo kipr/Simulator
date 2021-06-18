@@ -69,7 +69,7 @@ export class EtSensor implements SensorObject {
     if (!hit.pickedMesh) value = 4095;
     else value = this.distanceToSensorValue(hit.distance);
     if (this.__isNoiseEnabled) value = this.applyNoise(value);
-    return SensorObject.Value.u8(value); 
+    return SensorObject.Value.u12(value); 
     
   }
 
