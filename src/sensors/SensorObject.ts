@@ -26,36 +26,36 @@ namespace SensorObject {
 
   export namespace Value {
     export enum Type {
-      U8,
+      U12,
       Bool
     }
 
     export namespace Type {
       export const toString = (type: Type): string => {
         switch (type) {
-          case Type.U8: return 'U8';
+          case Type.U12: return 'U12';
           case Type.Bool: return 'Boolean';
           default: return `Unknown (${JSON.stringify(type)})`;
         }
       };
     }
   
-    export interface U8 {
-      type: Type.U8;
+    export interface U12 {
+      type: Type.U12;
       value: number;
     }
 
-    export namespace U8 {
-      export const from = (value: Value): U8 => {
+    export namespace U12 {
+      export const from = (value: Value): U12 => {
         switch (value.type) {
-          case Type.U8: return value;
-          case Type.Bool: return u8(value.value ? 255 : 0);
+          case Type.U12: return value;
+          case Type.Bool: return u12(value.value ? 4095 : 0);
         }
       };
     }
 
-    export const u8 = (value: number): U8 => ({
-      type: Type.U8,
+    export const u12 = (value: number): U12 => ({
+      type: Type.U12,
       value
     });
   
@@ -68,7 +68,7 @@ namespace SensorObject {
       export const from = (value: Value): Bool => {
         switch (value.type) {
           case Type.Bool: return value;
-          case Type.U8: return bool(value.value > 0);
+          case Type.U12: return bool(value.value > 0);
         }
       };
     }
@@ -82,7 +82,7 @@ namespace SensorObject {
     export const FALSE: Bool = bool(false);
   }
   
-  export type Value = Value.U8 | Value.Bool;
+  export type Value = Value.U12 | Value.Bool;
 
   export const apply = (self: SensorObject, state: Partial<RobotState>): Partial<RobotState> => {
     const { output } = self.sensor;
@@ -103,11 +103,11 @@ namespace SensorObject {
       }
 
       case Sensor.Output.Type.Analog: {
-        const u8Value = Value.U8.from(value);
+        const u12Value = Value.U12.from(value);
 
         ret.analogValues = [
           ...ret.analogValues.slice(0, output.port),
-          u8Value.value,
+          u12Value.value,
           ...ret.analogValues.slice(output.port + 1)  
         ] as RobotState.AnalogValues;
         break;
@@ -128,8 +128,8 @@ namespace SensorObject {
         break;
       }
       case Sensor.Output.Type.Analog: {
-        const u8Value = Value.U8.from(value);
-        state.analogValues[output.port] = u8Value.value;
+        const u12Value = Value.U12.from(value);
+        state.analogValues[output.port] = u12Value.value;
         break;
       }
     }

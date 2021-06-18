@@ -66,10 +66,10 @@ export class EtSensor implements SensorObject {
   public getValue(): SensorObject.Value {
     const hit = this.config_.scene.pickWithRay(this.ray);
     let value: number;
-    if (!hit.pickedMesh) value = 255;
+    if (!hit.pickedMesh) value = 4095;
     else value = this.distanceToSensorValue(hit.distance);
     if (this.__isNoiseEnabled) value = this.applyNoise(value);
-    return SensorObject.Value.u8(value); 
+    return SensorObject.Value.u12(value); 
     
   }
 
@@ -104,7 +104,7 @@ export class EtSensor implements SensorObject {
 
   // Converts from 3D world distance to sensor output value
   private distanceToSensorValue(distance: number): number {
-    return 255 - Math.floor((distance / this.config_.sensor.maxRange) * 255);
+    return 4095 - Math.floor((distance / this.config_.sensor.maxRange) * 4095);
   }
   
   private applyNoise(value: number): number {
@@ -112,7 +112,7 @@ export class EtSensor implements SensorObject {
     const offset = Math.floor(noise * Math.random() * 2) - noise;
     let noisyValue = value - offset;
     if (noisyValue < 0) noisyValue = 0;
-    else if (noisyValue > 255) noisyValue = 255;
+    else if (noisyValue > 4095) noisyValue = 4095;
     return noisyValue;
   }
 }
