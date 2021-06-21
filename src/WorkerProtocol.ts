@@ -10,7 +10,7 @@ export namespace Protocol {
       code: string;
     }
 
-    export type Request = StartRequest | SetRegisterRequest | ProgramEndedRequest | ProgramOutputRequest | ProgramErrorRequest;
+    export type Request = StartRequest | SetRegisterRequest | ProgramEndedRequest | ProgramOutputRequest | ProgramErrorRequest | WorkerReadyRequest;
 
     export interface StartResponse {
       type: 'start';
@@ -41,6 +41,10 @@ export namespace Protocol {
       type: 'programerror';
       stdoutput: string;
       stderror: string;
+    }
+    
+    export interface WorkerReadyRequest {
+      type: 'workerready';
     }
   }
 
