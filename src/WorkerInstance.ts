@@ -166,6 +166,15 @@ class WorkerInstance {
         }
         break;
       }
+      case 'workerready': {
+        // Once worker is ready for messages, send initial register values so that registers start in sync
+        const initialRegisters: Protocol.Worker.Register[] = this.registers_.map((value, address) => ({ address, value }));
+        this.worker_.postMessage({
+          type: 'setregister',
+          registers: initialRegisters,
+        } as Protocol.Worker.SetRegisterRequest);
+        break;
+      }
     }
   };
   
