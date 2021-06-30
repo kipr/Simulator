@@ -171,7 +171,7 @@ export class Space {
 
   public async loadMeshes(): Promise<void> {
     // Load model into scene
-    const importMeshResult = await Babylon.SceneLoader.ImportMeshAsync("",'static/', 'demobot_v5.glb', this.scene);
+    const importMeshResult = await Babylon.SceneLoader.ImportMeshAsync("",'static/', 'demobot_v6.glb', this.scene);
 
     // TEMP FIX: Scale everything up by 100 to avoid Ammo issues at small scale
     const rootMesh = importMeshResult.meshes.find(mesh => mesh.name === '__root__');
