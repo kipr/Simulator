@@ -180,7 +180,7 @@ export class Space {
 
   public async loadMeshes(): Promise<void> {
     // Load model into scene
-    const importMeshResult = await Babylon.SceneLoader.ImportMeshAsync("",'static/', 'demobot_v5.glb', this.scene);
+    const importMeshResult = await Babylon.SceneLoader.ImportMeshAsync("",'static/', 'demobot_v6.glb', this.scene);
 
     // TEMP FIX: Scale everything up by 100 to avoid Ammo issues at small scale
     const rootMesh = importMeshResult.meshes.find(mesh => mesh.name === '__root__');
@@ -197,6 +197,7 @@ export class Space {
       if (mesh.name.startsWith('collider')) {
         mesh.visibility = 0.6;
         mesh.isVisible = this.collidersVisible;
+        mesh.isPickable = false;
       }
     });
 
@@ -208,6 +209,7 @@ export class Space {
     this.bodyCompoundRootMesh = new Babylon.Mesh("bodyCompoundMesh", this.scene);
     this.bodyCompoundRootMesh.position = wallabyColliderMesh.getAbsolutePosition().clone();
     this.bodyCompoundRootMesh.rotationQuaternion = new Babylon.Quaternion();
+    this.bodyCompoundRootMesh.isPickable = false;
 
     type ColliderShape = 'box' | 'sphere';
     const bodyColliderMeshInfos: [string, ColliderShape][] = [
@@ -232,6 +234,7 @@ export class Space {
     this.armCompoundRootMesh = new Babylon.Mesh("armCompoundMesh", this.scene);
     this.armCompoundRootMesh.position = clawServoColliderMesh.getAbsolutePosition().clone();
     this.armCompoundRootMesh.rotationQuaternion = new Babylon.Quaternion();
+    this.armCompoundRootMesh.isPickable = false;
 
     const armColliderMeshInfos: [string][] = [
       ['collider_arm_claw_1'],
@@ -249,6 +252,7 @@ export class Space {
     this.clawCompoundRootMesh = new Babylon.Mesh("clawCenterMesh", this.scene);
     this.clawCompoundRootMesh.position = clawCenterMesh.getAbsolutePosition().clone();
     this.clawCompoundRootMesh.rotationQuaternion = new Babylon.Quaternion(0, 0, 0, 1);
+    this.clawCompoundRootMesh.isPickable = false;
 
     const clawColliderMeshInfos: [string][] = [
       ['collider_claw_1'],
@@ -315,6 +319,8 @@ export class Space {
     this.colliderRightWheelMesh.setParent(null);
     this.fixNegativeScaling(this.colliderLeftWheelMesh as Babylon.Mesh);
     this.fixNegativeScaling(this.colliderRightWheelMesh as Babylon.Mesh);
+    this.colliderLeftWheelMesh.isPickable = false;
+    this.colliderRightWheelMesh.isPickable = false;
 
     // Find transform nodes (visual meshes) in scene and parent them to the proper node
     this.scene.getTransformNodeByName('ChassisWombat-1').setParent(this.bodyCompoundRootMesh);

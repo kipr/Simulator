@@ -60,3 +60,8 @@ ctx.onmessage = (e: MessageEvent) => {
     }
   } 
 };
+
+// Notify main thread that worker is ready for messages
+ctx.postMessage({
+  type: 'workerready',
+} as Protocol.Worker.WorkerReadyRequest);
