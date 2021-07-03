@@ -46,9 +46,10 @@ export class Can implements ItemObject {
 
     this.mesh.position = this.config_.item.startPosition;
     this.mesh.rotate(this.config_.item.rotationAxis, this.config_.item.startRotation);
-    // this.config_.list.push(this.config_.item.id);
   }
 
+  // Used to create physics impostor of mesh in scene and make opaque
+  // Can be used after mesh is created so that transparent item can be maniplated around scene before interacting with it
   public place(): void {
     this.mesh.visibility = 1;
     this.mesh.physicsImpostor = new Babylon.PhysicsImpostor(

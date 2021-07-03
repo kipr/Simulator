@@ -27,6 +27,8 @@ export class Space {
 
   private ground: Babylon.Mesh;
   private mat: Babylon.Mesh;
+
+  // List for keeping track of current item meshes in scene
   private itemList: string[] = [];
 
   // The position offset of the robot, applied to the user-specified position
@@ -104,7 +106,6 @@ export class Space {
     this.scene.getPhysicsEngine().setSubTimeStep(5);
 
     this.buildFloor();
-    this.createPaperReam();
 
     // (x, z) coordinates of cans around the board
     this.canCoordinates = [[-22, -14.3], [0, -20.6], [15.5, -23.7], [0, -6.9], [-13.7, 6.8], [0, 6.8], [13.5, 6.8], [25.1, 14.8], [0, 34], [-18.8, 45.4], [0, 54.9], [18.7, 45.4]];
@@ -447,6 +448,7 @@ export class Space {
   public createItem(item: { custom?: Item, default?: string }): void {
     const defaultItemList = Dict.toList(Items);
     let newItem: Item;
+    // Detect if importing default item or custom item
     if (item.default !== undefined) {
       const key = Object.keys(Items).indexOf(item.default);
       if (key !== undefined) {
@@ -482,41 +484,6 @@ export class Space {
     const index = this.itemList.indexOf(id);
     this.itemList = this.itemList.splice(index, 1);
     this.scene.getMeshByName(id).dispose();
-  }
-
-  public createCan(canNumber: number): void {
-    const canName = `Can${canNumber}`;
-    const canMaterial = new Babylon.StandardMaterial("can", this.scene);
-    canMaterial.diffuseTexture = new Babylon.Texture('static/Can Texture.png',this.scene);
-    canMaterial.emissiveTexture = canMaterial.diffuseTexture.clone();
-    canMaterial.emissiveColor = new Babylon.Color3(0.1,0.1,0.1);
-    const faceUV: Babylon.Vector4[] = [];
-    faceUV[0] = Babylon.Vector4.Zero();
-    faceUV[1] = new Babylon.Vector4(1, 0, 0, 1);
-    faceUV[2] = Babylon.Vector4.Zero();
-
-    const new_can = Babylon.MeshBuilder.CreateCylinder(canName,{ height:11.15, diameter:6, faceUV: faceUV }, this.scene);
-    new_can.material = canMaterial;
-    new_can.physicsImpostor = new Babylon.PhysicsImpostor(new_can, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 5, friction: 5 }, this.scene);
-    new_can.position = new Babylon.Vector3(this.canCoordinates[canNumber - 1][0], 5, this.canCoordinates[canNumber - 1][1]);
-  }
-
-  public destroyCan(canNumber: number): void {
-    const canName = `Can${canNumber}`;
-    this.scene.getMeshByName(canName).dispose();
-  }
-
-  public createPaperReam(): void {
-    const randID = Math.floor(Math.random() * 16777215).toString(16);
-    const reamName = `Ream${randID}`;
-    const reamMaterial = new Babylon.StandardMaterial("ream", this.scene);
-    reamMaterial.emissiveColor = new Babylon.Color3(0.25,0.25,0.25);
-
-    const new_ream = Babylon.MeshBuilder.CreateBox(reamName,{ height:5.18, width:17.6, depth:22.77 }, this.scene);
-    new_ream.material = reamMaterial;
-    new_ream.physicsImpostor = new Babylon.PhysicsImpostor(new_ream, Babylon.PhysicsImpostor.BoxImpostor, { mass: 50, friction: 5 }, this.scene);
-    new_ream.position = new Babylon.Vector3(14, 1, 43.5);
-    new_ream.rotate(Babylon.Axis.Y, Math.PI / 4);
   }
   
   public updateSensorOptions(isNoiseEnabled: boolean): void {
