@@ -16,6 +16,7 @@ namespace Item {
     };
   }
 
+  // Info needed to add any mesh to the scene
   interface Common {
     startPosition: Babylon.Vector3;
     startRotation?: number;
@@ -28,6 +29,7 @@ namespace Item {
     type: Type.Can;
   }
 
+  // IDs are randomized hex if not specified
   export namespace Can {
     export const fill = (can: Can): Can => ({
       startRotation: 0,
