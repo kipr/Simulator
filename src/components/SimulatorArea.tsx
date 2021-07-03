@@ -82,7 +82,7 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
     const canName = `Can${canNumber + 1}`;
     isEnabled
       ? this.space.createItem({ default: canName })
-      : this.space.destroyCan(canNumber + 1);
+      : this.space.destroyItem(canName);
   }
 
   render(): React.ReactNode {

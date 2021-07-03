@@ -27,7 +27,7 @@ export class Space {
 
   private ground: Babylon.Mesh;
   private mat: Babylon.Mesh;
-  private itemList: string[];
+  private itemList: string[] = [];
 
   // The position offset of the robot, applied to the user-specified position
   private robotOffset: Babylon.Vector3 = new Babylon.Vector3(0, 7, -52);
@@ -463,11 +463,13 @@ export class Space {
       case Item.Type.Can: {
         const can = new Can(this.scene, { item: newItem });
         this.itemList.push(can.id);
+        can.place();
         break;
       }
       case Item.Type.PaperReam: {
         const ream = new PaperReam(this.scene, { item: newItem });
         this.itemList.push(ream.id);
+        ream.place();
         break;
       }
       default: {
