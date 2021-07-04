@@ -6,8 +6,14 @@ import {
   SensorObject,
   Sensor,
   instantiate as instantiateSensor,
-  MAPPINGS as SENSOR_MAPPINGS
+  MAPPINGS as SENSOR_MAPPINGS,
 } from './sensors';
+import {
+  Item,
+  Items,
+  Can,
+  PaperReam,
+} from './items';
 import { RobotState } from './RobotState';
 import Dict from './Dict';
 import { SurfaceState } from './SurfaceState';
@@ -21,6 +27,9 @@ export class Space {
 
   private ground: Babylon.Mesh;
   private mat: Babylon.Mesh;
+
+  // List for keeping track of current item meshes in scene
+  private itemList: string[] = [];
 
   // The position offset of the robot, applied to the user-specified position
   private robotOffset: Babylon.Vector3 = new Babylon.Vector3(0, 7, -52);
@@ -442,27 +451,45 @@ export class Space {
     this.engine.resize();
   }
 
-  public createCan(canNumber: number): void {
-    const canName = `Can${canNumber}`;
-    const canMaterial = new Babylon.StandardMaterial("can", this.scene);
-    canMaterial.diffuseTexture = new Babylon.Texture('static/Can Texture.png',this.scene);
-    canMaterial.emissiveTexture = canMaterial.diffuseTexture.clone();
-    canMaterial.emissiveColor = new Babylon.Color3(0.1,0.1,0.1);
-    const faceUV: Babylon.Vector4[] = [];
-    faceUV[0] = Babylon.Vector4.Zero();
-    faceUV[1] = new Babylon.Vector4(1, 0, 0, 1);
-    faceUV[2] = Babylon.Vector4.Zero();
-
-    const new_can = Babylon.MeshBuilder.CreateCylinder(canName,{ height:10, diameter:6, faceUV: faceUV }, this.scene);
-    new_can.material = canMaterial;
-    new_can.physicsImpostor = new Babylon.PhysicsImpostor(new_can, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 5, friction: 5 }, this.scene);
-    new_can.isPickable = true;
-    new_can.position = new Babylon.Vector3(this.canCoordinates[canNumber - 1][0], 5, this.canCoordinates[canNumber - 1][1]);
+  public createItem(item: { custom?: Item, default?: string }): void {
+    const defaultItemList = Dict.toList(Items);
+    let newItem: Item;
+    // Detect if importing default item or custom item
+    if (item.default !== undefined) {
+      const key = Object.keys(Items).indexOf(item.default);
+      if (key !== undefined) {
+        newItem = defaultItemList[key][1];
+      } else {
+        throw new Error('Could not find by id');
+      }
+    } else if (item.custom !== undefined) {
+      newItem = item.custom;
+    } else {
+      throw new Error('No Item or id was used');
+    }
+    switch (newItem.type) {
+      case Item.Type.Can: {
+        const can = new Can(this.scene, { item: newItem });
+        this.itemList.push(can.id);
+        can.place();
+        break;
+      }
+      case Item.Type.PaperReam: {
+        const ream = new PaperReam(this.scene, { item: newItem });
+        this.itemList.push(ream.id);
+        ream.place();
+        break;
+      }
+      default: {
+        throw new Error('Type not supported or undefined');
+      }
+    }
   }
 
-  public destroyCan(canNumber: number): void {
-    const canName = `Can${canNumber}`;
-    this.scene.getMeshByName(canName).dispose();
+  public destroyItem(id: string): void {
+    const index = this.itemList.indexOf(id);
+    this.itemList = this.itemList.splice(index, 1);
+    this.scene.getMeshByName(id).dispose();
   }
   
   public updateSensorOptions(isNoiseEnabled: boolean): void {
