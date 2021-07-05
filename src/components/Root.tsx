@@ -6,7 +6,7 @@ import { SurfaceState, SurfaceStatePresets } from '../SurfaceState';
 import Menu from './Menu';
 
 import { styled } from 'styletron-react';
-import { DARK, LIGHT, ThemeProps } from './theme';
+import { DARK, ThemeProps } from './theme';
 import Console from './Console';
 import Widget from './Widget';
 import OverlayLayout from './OverlayLayout';
@@ -162,7 +162,7 @@ export class Root extends React.Component<Props, State> {
     const { props, state } = this;
     const { cans, robotState, layout, code, simulatorSink, modal } = state;
 
-    const theme = LIGHT;
+    const theme = DARK;
 
     let impl: JSX.Element;
     switch (layout) {
