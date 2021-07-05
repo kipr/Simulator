@@ -5,21 +5,33 @@ import { Modal } from './Modal';
 import { StyleProps } from '../style';
 
 import { styled } from 'styletron-react';
+import Widget, { Mode, Size } from './Widget';
+import { ThemeProps } from './theme';
 
-export interface DialogProps extends StyleProps {
+export interface DialogProps extends ThemeProps, StyleProps {
+  name: string;
   children: any;
+
+  onClose: () => void;
 }
 
 type Props = DialogProps;
 
 class Dialog_ extends React.PureComponent<Props> {
+
+  private onSizeChange_ = (index: number) => {
+    this.props.onClose();
+  };
+
   render() {
     const { props } = this;
-    const { className, style, children } = props;
+    const { className, style, children, theme, name } = props;
     return (
       <Modal>
-        <div className={className} style={style}>
-          {children}
+        <div style={{ width: '300px', height: '300px' }}>
+          <Widget theme={theme} size={0} sizes={[ Size.MAXIMIZED, Size.MINIMIZED ]} onSizeChange={this.onSizeChange_} mode={Mode.Floating} name={name}>
+            {children}
+          </Widget>
         </div>
       </Modal>
     )

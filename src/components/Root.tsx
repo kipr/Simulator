@@ -6,7 +6,7 @@ import { SurfaceState, SurfaceStatePresets } from '../SurfaceState';
 import Menu from './Menu';
 
 import { styled } from 'styletron-react';
-import { DARK, ThemeProps } from './theme';
+import { DARK, LIGHT, ThemeProps } from './theme';
 import Console from './Console';
 import Widget from './Widget';
 import OverlayLayout from './OverlayLayout';
@@ -16,6 +16,11 @@ import SideLayout from './SideLayout';
 
 import * as portals from 'react-reverse-portal';
 import { SimulatorArea, SimulatorAreaProps } from './SimulatorArea';
+import { Portal } from './Portal';
+import { SettingsDialog } from './SettingsDialog';
+import { AboutDialog } from './AboutDialog';
+
+type ModalType = 'settings' | 'about' | 'none';
 
 interface RootState {
   shouldSetRobotPosition: boolean,
@@ -25,6 +30,9 @@ interface RootState {
   cans: boolean[];
   layout: Layout;
   code: string;
+  simulatorSink: Portal.Sink;
+
+  modal: ModalType;
 }
 
 type Props = Record<string, never>;
@@ -48,7 +56,9 @@ export class Root extends React.Component<Props, State> {
       surfaceState: SurfaceStatePresets.jbcA,
       cans: Array<boolean>(12).fill(false),
       layout: Layout.Overlay,
-      code: ''
+      code: '',
+      simulatorSink: undefined,
+      modal: 'none'
     };
   }
 
@@ -64,10 +74,10 @@ export class Root extends React.Component<Props, State> {
     // Create new robot state object by applying the partial changes
     const newRobotState: RobotState = {
       ...this.state.robotState,
-      motorSpeeds: [...this.state.robotState.motorSpeeds],
-      motorPositions: [...this.state.robotState.motorPositions],
-      servoPositions: [...this.state.robotState.servoPositions],
-      analogValues: [...this.state.robotState.analogValues],
+      motorSpeeds: [ ...this.state.robotState.motorSpeeds ],
+      motorPositions: [ ...this.state.robotState.motorPositions ],
+      servoPositions: [ ...this.state.robotState.servoPositions ],
+      analogValues: [ ...this.state.robotState.analogValues ],
       ...robot,
     };
 
@@ -76,7 +86,7 @@ export class Root extends React.Component<Props, State> {
 
   private onCanChange_ = (canNumber: number, enabled: boolean) => {
     this.setState(prevState => {
-      const cans = [...prevState.cans];
+      const cans = [ ...prevState.cans ];
       cans[canNumber] = enabled;
       return { cans };
     });
@@ -122,29 +132,83 @@ export class Root extends React.Component<Props, State> {
     })
   };
 
+  private onModalClick_ = (modal: ModalType) => () => this.setState({
+    modal
+  });
+
+  private onModalClose_ = () => this.setState({
+    modal: 'none'
+  });
+
+  private bindSimulatorSink_ = (simulatorSink: Portal.Sink) => {
+    this.setState({
+      simulatorSink
+    });
+  };
+
+  private onRunClick_ = () => {
+
+  };
+
+  private onStopClick_ = () => {
+
+  };
+
+  private onDownloadClick_ = () => {
+
+  };
+
   render() {
     const { props, state } = this;
-    const { cans, robotState, layout, code } = state;
+    const { cans, robotState, layout, code, simulatorSink, modal } = state;
 
-    const theme = DARK;
+    const theme = LIGHT;
 
     let impl: JSX.Element;
     switch (layout) {
       case Layout.Overlay: {
         impl = (
-          <OverlayLayout ref={this.bindOverlayLayout_} code={code} onCodeChange={this.onCodeChange_} cans={cans} onStateChange={this.onRobotStateUpdate_} theme={theme} state={robotState} />
+          <OverlayLayout
+            ref={this.bindOverlayLayout_}
+            code={code}
+            onCodeChange={this.onCodeChange_}
+            cans={cans}
+            onStateChange={this.onRobotStateUpdate_}
+            theme={theme}
+            state={robotState}
+            simulator={this.bindSimulatorSink_}
+            onCanChange={this.onCanChange_}
+          />
         );
         break;
       }
       case Layout.Bottom: {
         impl = (
-          <BottomLayout code={code} onCodeChange={this.onCodeChange_} cans={cans} onStateChange={this.onRobotStateUpdate_} theme={theme} state={robotState} />
+          <BottomLayout
+            code={code}
+            onCodeChange={this.onCodeChange_}
+            cans={cans}
+            onStateChange={this.onRobotStateUpdate_}
+            theme={theme}
+            state={robotState}
+            simulator={this.bindSimulatorSink_}
+            onCanChange={this.onCanChange_}
+          />
         );
         break;
       }
       case Layout.Side: {
         impl = (
-          <SideLayout code={code} onCodeChange={this.onCodeChange_} cans={cans} onStateChange={this.onRobotStateUpdate_} theme={theme} state={robotState} />
+          <SideLayout
+            code={code}
+            onCodeChange={this.onCodeChange_}
+            cans={cans}
+            onStateChange={this.onRobotStateUpdate_}
+            theme={theme}
+            state={robotState}
+            simulator={this.bindSimulatorSink_}
+            onCanChange={this.onCanChange_}
+          />
         );
         break;
       }
@@ -155,10 +219,29 @@ export class Root extends React.Component<Props, State> {
     }
 
     return (
-      <Container>
-        <Menu layout={layout} onLayoutChange={this.onLayoutChange_} theme={theme} onShowAll={this.onShowAll_} onHideAll={this.onHideAll_} />
-        {impl}
-      </Container>
+
+      <>
+        <Container>
+          <Menu
+            layout={layout}
+            onLayoutChange={this.onLayoutChange_}
+            theme={theme}
+            onShowAll={this.onShowAll_}
+            onHideAll={this.onHideAll_}
+            onSettingsClick={this.onModalClick_('settings')}
+            onAboutClick={this.onModalClick_('about')}
+            onDownloadClick={this.onDownloadClick_}
+            onRunClick={this.onRunClick_}
+            onStopClick={this.onStopClick_}
+          />
+          {impl}
+          <Portal.Source sink={simulatorSink}>
+            <SimulatorArea key='simulator' robotState={robotState} canEnabled={cans} onRobotStateUpdate={this.onRobotStateUpdate_} />
+          </Portal.Source>
+        </Container>
+        {modal === 'settings' ? <SettingsDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
+        {modal === 'about' ? <AboutDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
+      </>
 
     );
   }

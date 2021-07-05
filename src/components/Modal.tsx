@@ -7,34 +7,30 @@ export interface ModalProps {
 
 type Props = ModalProps;
 
-const modalRoot = document.getElementById('modal-root');
+const MODAL_ROOT = document.getElementById('modal-root');
 
 export class Modal extends React.PureComponent<Props> {
-  static get active() { return modalRoot.children.length !== 0; }
-
-  private element_: HTMLDivElement;
+  static get active() { return MODAL_ROOT.children.length !== 0; }
 
   constructor(props?: Props) {
     super(props);
-
-    this.element_ = document.createElement('div');
   }
 
   componentDidMount() {
-    modalRoot.style.display = 'block';
-    modalRoot.appendChild(this.element_);
+    MODAL_ROOT.style.display = 'flex';
+    MODAL_ROOT.style.backgroundColor = `rgba(0, 0, 0, 0.5)`;
   }
 
   componentWillUnmount() {
-    modalRoot.style.display = 'none';
-    modalRoot.removeChild(this.element_);
+    MODAL_ROOT.style.display = 'none';
+    MODAL_ROOT.style.backgroundColor = `transparent`;
   }
 
   static isVisible = () => {
-    return modalRoot.childElementCount > 0;
+    return MODAL_ROOT.childElementCount > 0;
   };
 
   render() {
-    return ReactDom.createPortal(this.props.children, this.element_);
+    return ReactDom.createPortal(this.props.children, MODAL_ROOT);
   }
 }

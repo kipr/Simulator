@@ -5,8 +5,11 @@ import { RobotState } from '../../RobotState';
 import { StyleProps } from '../../style';
 import ScrollArea from '../ScrollArea';
 import SensorPlot from '../SensorPlot';
+import Section from '../Section';
 import { ThemeProps } from '../theme';
 import SensorWidget from './SensorWidget';
+import { Angle, Distance, StyledText } from '../../util';
+import { Simulation } from './Simulation';
 
 
 export interface InfoProps extends StyleProps, ThemeProps {
@@ -16,7 +19,7 @@ export interface InfoProps extends StyleProps, ThemeProps {
 }
 
 interface InfoState {
-  
+  collapsed: { [section: string]: boolean }
 }
 
 type Props = InfoProps;
@@ -28,7 +31,7 @@ const Row = styled('div', (props: ThemeProps) => ({
   flexBasis: 0,
   alignItems: 'center',
   marginBottom: `${props.theme.itemPadding}px`,
-  ':bottom-child': {
+  ':last-child': {
     marginBottom: 0
   }
 }));
@@ -41,12 +44,11 @@ const Container = styled('div', (props: ThemeProps) => ({
   overflow: 'hidden'
 }));
 
-const Section = styled(Row, {
-  fontWeight: 400,
+const StyledSection = styled(Section, {
   marginTop: '10px',
   ':first-child': {
     marginTop: 0
-  }
+  },
 });
 
 const ItemName = styled('label', (props: ThemeProps) => ({
@@ -66,13 +68,74 @@ const Input = styled('input', (props: ThemeProps) => ({
   }
 }));
 
+const NAME_STYLE: React.CSSProperties = {
+  fontSize: '1.2em'
+};
+
+const SIMULATION_NAME = StyledText.text({
+  text: 'Simulation',
+  style: NAME_STYLE
+});
+
+const MOTORS_NAME = StyledText.text({
+  text: 'Motors',
+  style: NAME_STYLE
+});
+
+const ANALOG_NAME = StyledText.text({
+  text: 'Analog Sensors',
+  style: NAME_STYLE
+});
+
+const DIGITAL_NAME = StyledText.text({
+  text: 'Digital Sensors',
+  style: NAME_STYLE
+});
+
 class Info extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
+
+    this.state = {
+      collapsed: {}
+    };
+  }
+
+  private onXChange_ = (x: Distance) => {
+    const { props } = this;
+    const { robotState } = props;
+    const nextRobotState = { ...robotState };
+    nextRobotState.x = x.value;
+    this.props.onRobotStateChange(nextRobotState);
+  };
+
+  private onYChange_ = (y: Distance) => {
+    const { props } = this;
+    const { robotState } = props;
+    const nextRobotState = { ...robotState };
+    nextRobotState.y = y.value;
+    this.props.onRobotStateChange(nextRobotState);
+  };
+
+  private onThetaChange_ = (theta: Angle) => {
+    const { props } = this;
+    const { robotState } = props;
+    const nextRobotState = { ...robotState };
+    nextRobotState.theta = theta.value;
+    this.props.onRobotStateChange(nextRobotState);
+  };
+
+  private onCollapsedChange_ = (section: string) => (collapsed: boolean) => {
+    this.setState({
+      collapsed: {
+        ...this.state.collapsed,
+        [section]: collapsed
+      }
+    });
   }
 
   render() {
-    const { props } = this;
+    const { props, state } = this;
     const {
       style,
       className,
@@ -80,6 +143,7 @@ class Info extends React.PureComponent<Props, State> {
       robotState,
       onRobotStateChange
     } = props;
+    const { collapsed } = state;
 
     const motorPositions = robotState.motorPositions.map((value, i) => (
       <Row key={`motor-pos-${i}`} theme={theme}>
@@ -93,16 +157,47 @@ class Info extends React.PureComponent<Props, State> {
       </Row>
     ));
 
+    /*const digitalSensors = robotState.digitalValues.map((value, i) => (
+      <Row key={`digital-${i}`} theme={theme}>
+        <SensorWidget value={value} name={`digital(${i})`} theme={theme} />
+      </Row>
+    ));*/
+    
     return (
-      <ScrollArea theme={theme}>
+      <ScrollArea theme={theme} style={{ flex: '1 1' }}>
         <Container theme={theme} style={style} className={className}>
-          <Section theme={theme}>Position</Section>
-
-          <Section theme={theme}>Motors</Section>
-          {motorPositions}
-
-          <Section theme={theme}>Analog Sensors</Section>
-          {analogSensors}
+          <StyledSection
+            name={SIMULATION_NAME}
+            theme={theme}
+            onCollapsedChange={this.onCollapsedChange_('simulation')}
+            collapsed={collapsed['simulation']}
+          >
+            <Simulation
+              x={Distance.meters(robotState.x)}
+              y={Distance.meters(robotState.y)}
+              theta={Angle.degrees(robotState.theta)}
+              onXChange={this.onXChange_}
+              onYChange={this.onYChange_}
+              onThetaChange={this.onThetaChange_}
+              theme={theme}
+            />
+          </StyledSection>
+          <StyledSection
+            name={MOTORS_NAME}
+            theme={theme}
+            onCollapsedChange={this.onCollapsedChange_('motor')}
+            collapsed={collapsed['motor']}
+          >
+            {motorPositions}
+          </StyledSection>
+          <StyledSection
+            name={ANALOG_NAME}
+            theme={theme}
+            onCollapsedChange={this.onCollapsedChange_('analog')}
+            collapsed={collapsed['analog']}
+          >
+            {analogSensors}
+          </StyledSection>
         </Container>
       </ScrollArea>
     );

@@ -9,6 +9,7 @@ import { Editor, PerfectCharm, WarningCharm, ErrorCharm } from './Editor';
 import { Fa } from './Fa';
 import { Info } from './Info';
 import { LayoutProps } from './Layout';
+import { Portal } from './Portal';
 import { SimulatorArea } from './SimulatorArea';
 import { ThemeProps } from './theme';
 import Widget, { BarComponent, Mode, Size, WidgetProps } from './Widget';
@@ -267,7 +268,9 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       onStateChange,
       cans,
       code,
-      onCodeChange
+      onCodeChange,
+      simulator,
+      onCanChange
     } = props;
 
     const {
@@ -284,7 +287,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
 
     const editorBar: BarComponent<any>[] = [];
 
-    editorBar.push(BarComponent.create(ErrorCharm, {
+    /*editorBar.push(BarComponent.create(ErrorCharm, {
       theme,
       count: 1,
       onClick: this.onErrorClick_
@@ -294,12 +297,13 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       theme,
       count: 2,
       onClick: this.onErrorClick_
-    }));
+    }));*/
 
     // editorBar.push(BarComponent.create(PerfectCharm, { theme }));
 
     return (
       <Container style={style} className={className}>
+        <Portal.Sink ref={simulator} />
         <SimulatorArea
           key='simulator'
           robotState={state}
@@ -346,7 +350,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
             size={WORLD_SIZE[worldSize]}
             onSizeChange={this.onWorldSizeChange_}
           >
-            <World theme={theme} />
+            <World theme={theme} cans={cans} onCanChange={onCanChange} />
           </WorldWidget>
         </Overlay>
       </Container>

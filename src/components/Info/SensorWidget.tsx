@@ -3,12 +3,13 @@ import * as React from 'react';
 import { ThemeProps } from '../theme';
 import { StyleProps } from '../../style';
 import SensorPlot from '../SensorPlot';
+import BooleanPlot from '../BooleanPlot';
 import { Spacer } from '../common';
 import { MeshScreenGuide, ScreenGuide } from '../ScreenGuide';
 
 export interface SensorWidgetProps extends ThemeProps, StyleProps {
   name: string;
-  value: number;
+  value: number | boolean;
   unit?: string;
 }
 
@@ -27,8 +28,7 @@ const Container = styled('div', ({ theme }: ThemeProps) => ({
 }));
 
 const Name = styled('span', {
-  
-  
+  userSelect: 'none'
 });
 
 const Header = styled('div', (props: ThemeProps) => ({
@@ -73,15 +73,28 @@ class SensorWidget extends React.PureComponent<Props, State> {
     const { props, state } = this;
     const { style, className, theme, name, unit, value } = props;
     const { showGuide } = state;
+
+    let plot: JSX.Element;
+
+    switch (typeof value) {
+      case 'boolean': {
+        plot = <BooleanPlot value={value} theme={theme} />;
+        break;
+      }
+      case 'number': {
+        plot = <SensorPlot value={value} theme={theme} />;
+        break;
+      }
+    }
     return (
       <>
         <Container ref={this.bindRef_} style={style} className={className} theme={theme} onMouseEnter={this.onMouseEnter_} onMouseLeave={this.onMouseLeave_}>
           <Header theme={theme}>
             <Name>{name}</Name>
             <Spacer />
-            {Math.round(value)}{unit}
+            <span style={{ userSelect: 'none' }}>{typeof value === 'number' ? Math.round(value) : value}{unit}</span>
           </Header>
-          <SensorPlot value={value} theme={theme} />
+          {plot}
         </Container>
         {/*showGuide && this.ref_ ? <MeshScreenGuide theme={theme} from={this.ref_} to={'black satin finish plastic'} /> : undefined*/}
       </>

@@ -2,26 +2,60 @@ import { styled } from 'styletron-react';
 import * as React from 'react';
 import { StyleProps } from '../style';
 import { ThemeProps } from './theme';
+import { Vector2 } from '../math';
+import { Box2 } from '../geometry';
 
-export interface Vector2 {
-  x: number;
-  y: number;
-}
-
-export interface SensorPlotProps extends ThemeProps, StyleProps {
-  value: number;
+export interface BooleanPlotProps extends ThemeProps, StyleProps {
+  value: boolean;
   duration?: number;
   refreshRate?: number;
 }
 
-export namespace SensorPlotProps {
+export namespace BooleanPlotProps {
   export const DEFAULT_DURATION = 5.0;
   export const DEFAULT_REFRESH_RATE = 10.0;
-  export const duration = (props: SensorPlotProps): number => props.duration || DEFAULT_DURATION;
-  export const refreshRate = (props: SensorPlotProps): number => props.refreshRate || DEFAULT_REFRESH_RATE;
+  export const duration = (props: BooleanPlotProps): number => props.duration || DEFAULT_DURATION;
+  export const refreshRate = (props: BooleanPlotProps): number => props.refreshRate || DEFAULT_REFRESH_RATE;
 }
 
-interface SensorPlotState {
+interface Range<T> {
+  start: number,
+  end: number,
+  value: T
+}
+
+namespace Range {
+  export const instant = <T extends {}>(time: number, value: T): Range<T> => ({
+    start: time,
+    end: time,
+    value
+  });
+
+  export const extend = <T extends {}>(ranges: Range<T>[], time: number, value: T) => {
+    const nextRanges = [ ...ranges ];
+    
+    if (nextRanges.length === 0) {
+      nextRanges.push(instant(time, value));
+
+      return nextRanges;
+    }
+
+    const lastIndex = nextRanges.length - 1;
+    const last = nextRanges[lastIndex];
+
+    if (last.value === value) {
+      nextRanges[lastIndex].end = time;
+      return nextRanges;
+    }
+
+    nextRanges[lastIndex].end = time;
+    nextRanges.push(instant(time, value));
+
+    return nextRanges;
+  };
+}
+
+interface BooleanPlotState {
   svgWidth: number;
   svgHeight: number;
 
@@ -29,17 +63,13 @@ interface SensorPlotState {
   viewportHeight: number;
 
   x: number;
-  y: number;
 
-  points: Vector2[];
+  ranges: Range<boolean>[];
   ticks: number[];
-
-  maxValue: number;
-  minValue: number;
 }
 
-type Props = SensorPlotProps;
-type State = SensorPlotState;
+type Props = BooleanPlotProps;
+type State = BooleanPlotState;
 
 const Container = styled('div', {
   position: 'relative',
@@ -72,9 +102,14 @@ const Text = styled('div', {
   userSelect: 'none'
 });
 
+const Rectangle = styled('rect', {
+  
+});
+
+const PLOT_HEIGHT = 50;
 const PLOT_MARGIN = 25;
 
-class SensorPlot extends React.PureComponent<Props, State> {
+class BooleanPlot extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -88,11 +123,8 @@ class SensorPlot extends React.PureComponent<Props, State> {
       viewportHeight: 0,
 
       x: 0,
-      y: 5,
-      points: [],
-      ticks: [],
-      maxValue: 0,
-      minValue: 0
+      ranges: [],
+      ticks: []
     };
   }
 
@@ -143,28 +175,24 @@ class SensorPlot extends React.PureComponent<Props, State> {
 
     const { props, state } = this;
     const { value } = props;
-    const { points, ticks } = state;
+    const { ranges, ticks } = state;
 
     const { width } = this.ref_.getBoundingClientRect();
-    const duration = SensorPlotProps.duration(props);
+    const duration = BooleanPlotProps.duration(props);
 
-    const pixelsPerSecond = width / duration;
-
-
-    const nextPoints = [ ...points ];
     const nextTicks = [ ...ticks ];
 
     const absoluteOffset = (nowMs - this.firstTick_) / 1000;
 
-    nextPoints.push({ x: absoluteOffset + duration, y: -value });
+    let nextRanges = Range.extend(ranges, absoluteOffset + duration, value);
 
     {
       let i = 0;
-      for (; i < nextPoints.length; ++i) {
-        const point = nextPoints[i];
-        if (point.x >= absoluteOffset) break;
+      for (; i < nextRanges.length; ++i) {
+        const range = nextRanges[i];
+        if (range.end >= absoluteOffset) break;
       }
-      if (i > 0) nextPoints.splice(0, i - 1);
+      if (i > 0) nextRanges.splice(0, i - 1);
     }
 
     const secs = Math.floor(now) - Math.floor(this.lastTick_ / 1000);
@@ -182,83 +210,66 @@ class SensorPlot extends React.PureComponent<Props, State> {
       }
       if (i > 0) nextTicks.splice(0, i - 1);
     }
-    
-
-
-    let maxValue = nextPoints.length > 0 ? nextPoints[0].y : 0;
-    let minValue = nextPoints.length > 0 ? nextPoints[0].y : 0;
-    for (let i = 1; i < nextPoints.length; ++i) {
-      const point = nextPoints[i];
-      minValue = Math.min(minValue, point.y);
-      maxValue = Math.max(maxValue, point.y);
-    }
-
-    const height = maxValue - minValue;
-
-    const y = (maxValue + minValue) / 2 - (height + PLOT_MARGIN) / 2;
 
     this.setState({
       x: absoluteOffset,
-      y,
-      points: nextPoints,
+      ranges: nextRanges,
       ticks: nextTicks,
-      svgHeight: height + PLOT_MARGIN,
-      minValue,
-      maxValue
+      svgHeight: PLOT_HEIGHT + PLOT_MARGIN,
     }, this.scheduleTick_);
 
     this.lastTick_ = nowMs;
 
   };
 
-  private transformPoint_ = (point: Vector2): Vector2 => {
+  private transformRange_ = (range: Range<boolean>): Box2 => {
     const { state, props } = this;
-    const { svgHeight, viewportHeight, viewportWidth, y } = state;
+    const { svgHeight, viewportHeight, viewportWidth } = state;
 
-    const duration = SensorPlotProps.duration(props);
+    const duration = BooleanPlotProps.duration(props);
     const pixelsPerSecond = viewportWidth / duration;
 
-    if (svgHeight === 0) return { x: 0, y: 0 };
+    if (svgHeight === 0) return Box2.ZERO;
 
-    return {
-      x: point.x * pixelsPerSecond,
-      y: (point.y - y) / svgHeight * viewportHeight
-    };
+    const box = Box2.create(
+      Vector2.create(range.start * pixelsPerSecond, 0),
+      Vector2.create(range.end * pixelsPerSecond, PLOT_HEIGHT / 2)
+    );
+
+    return range.value ? box : Box2.translate(Vector2.fromY(PLOT_HEIGHT / 2), box);
   };
 
   private slow_ = 0;
   render() {
     const { props, state } = this;
     const { style, className, theme } = props;
-    const { svgHeight, viewportHeight, svgWidth, viewportWidth, x, y, points, ticks, minValue, maxValue } = state;
+    const { svgHeight, viewportHeight, svgWidth, viewportWidth, x, ranges, ticks } = state;
 
-    const duration = SensorPlotProps.duration(props);
+    const duration = BooleanPlotProps.duration(props);
     const pixelsPerSecond = viewportWidth / duration;
 
     const lineScale = (svgHeight / viewportHeight);
 
-    let pointPath = '';
-    if (points.length > 0)
-    {
-      const point = this.transformPoint_(points[0]);
-      pointPath += `M ${point.x} ${point.y}`;
+    let rangeElements: JSX.Element[] = [];
+    for (let i = 0; i < ranges.length; ++i) {
+      const range = ranges[i];
+      const box = this.transformRange_(range);
+      rangeElements.push(
+        <Rectangle
+          key={i}
+          x={box.topLeft.x}
+          y={box.topLeft.y}
+          width={Box2.width(box)}
+          height={Box2.height(box)}
+        />
+      );
     }
-    for (let i = 1; i < points.length; ++i) {
-      const point = this.transformPoint_(points[i]);
-      pointPath += ` L ${point.x} ${point.y}`;
-    }
+
 
     let beginRealY = viewportHeight / 2;
     let endRealY = viewportHeight / 2;
 
-    if (points.length > 0)
-    {
-      const begin = this.transformPoint_(points[0]);
-      const end = this.transformPoint_(points[points.length - 1]);
-
-      beginRealY = begin.y;
-      endRealY = end.y;
-    }
+    
 
     const secondTicks: JSX.Element[] = [];
     for (let i = 0; i < ticks.length; ++i) {
@@ -288,13 +299,13 @@ class SensorPlot extends React.PureComponent<Props, State> {
           preserveAspectRatio='none'
         >
           {secondTicks}
-          <Path strokeWidth={`2px`} d={pointPath} />
+          {rangeElements}
         </Svg>
-        {points.length > 0 ? <Text style={{ top: `${beginRealY}px`, left: '5px' }}>{-Math.round(points[0].y)}</Text> : undefined}
-        {points.length > 0 ? <Text style={{ top: `${endRealY}px`, right: '5px' }}>{-Math.round(points[points.length - 1].y)}</Text> : undefined}
+        {ranges.length > 0 ? <Text style={{ top: `${beginRealY}px`, left: '5px' }}>{ranges[0].value}</Text> : undefined}
+        {ranges.length > 0 ? <Text style={{ top: `${endRealY}px`, right: '5px' }}>{ranges[ranges.length - 1].value}</Text> : undefined}
       </Container>
     );
   }
 }
 
-export default SensorPlot;
+export default BooleanPlot;

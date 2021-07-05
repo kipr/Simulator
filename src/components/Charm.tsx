@@ -29,7 +29,8 @@ const Container = styled('div', (props: ThemeProps) => ({
   border: `1px solid ${props.theme.borderColor}`,
   ':last-child': {
     marginRight: 0
-  }
+  },
+  userSelect: 'none'
 }));
 
 class Charm extends React.PureComponent<Props, State> {

@@ -1,14 +1,18 @@
 import * as React from 'react';
 
-import { styled } from 'styletron-react';
+import { styled, withStyleDeep } from 'styletron-react';
 import { RobotState } from '../RobotState';
 import { StyleProps } from '../style';
 import { Spacer } from './common';
 import Console from './Console';
 import { Editor } from './Editor';
 import { Fa } from './Fa';
+import { Info } from './Info';
 import { LayoutProps } from './Layout';
+import { Portal } from './Portal';
+import ScrollArea from './ScrollArea';
 import { SimulatorArea } from './SimulatorArea';
+import { TabBar } from './TabBar';
 import { ThemeProps } from './theme';
 import Widget, { Mode, Size, WidgetProps } from './Widget';
 
@@ -26,6 +30,8 @@ interface SideLayoutState {
   consoleSize: number;
   infoSize: number;
   editorSize: number;
+
+  index: number;
 }
 
 type Props = SideLayoutProps;
@@ -34,13 +40,13 @@ type State = SideLayoutState;
 const Container = styled('div', {
   display: 'flex',
   flex: '1 1',
-  flexDirection: 'row'
+  flexDirection: 'row',
 });
 
 const SideBar = styled('div', {
   display: 'flex',
+  flex: '1 1',
   flexDirection: 'column',
-  width: '400px',
 });
 
 interface WidgetLayoutProps {
@@ -48,59 +54,41 @@ interface WidgetLayoutProps {
 }
 
 const ConsoleWidget = styled(Widget, (props: WidgetProps) => {
-  let size = props.sizes[props.size];
-  switch(size.type) {
-    case Size.Type.Minimized: return {
-      display: 'none'
-    };
-    case Size.Type.Maximized: return {
-      gridColumn: '1 / span 2',
-      gridRow: '1 / span 2'
-    };
-    default:
-    case Size.Type.Partial: return {
-      gridColumn: 1,
-      gridRow: 2
-    };
-  } 
+  return {
+    height: '300px'
+  };
 });
 
 const EditorWidget = styled(Widget, (props: WidgetProps) => {
-  let size = props.sizes[props.size];
-  switch(size.type) {
-    case Size.Type.Minimized: return {
-      display: 'none'
-    };
-    case Size.Type.Maximized: return {
-      gridColumn: '1 / span 2',
-      gridRow: '1 / span 2'
-    };
-    default:
-    case Size.Type.Partial: return {
-      gridColumn: 1,
-      gridRow: 1,
-    };
-  }
+  return {
+    height: '500px'
+  };
 });
 
 const InfoWidget = styled(Widget, (props: WidgetProps) => {
-  let size = props.sizes[props.size];
-  switch(size.type) {
-    case Size.Type.Minimized: return {
-      display: 'none'
-    };
-    default:
-    case Size.Type.Partial: return {
-      gridColumn: 2,
-      gridRow: '1 / span 2',
-    };
-  }
-  
+  return {
+    height: '400px'
+  };
 });
 
 const EDITOR_SIZES: Size[] = [ Size.PARTIAL_LEFT, Size.MAXIMIZED, Size.MINIMIZED ];
 const INFO_SIZES: Size[] = [ Size.PARTIAL_RIGHT, Size.MINIMIZED ];
 const CONSOLE_SIZES: Size[] = [ Size.PARTIAL_DOWN, Size.MAXIMIZED, Size.MINIMIZED ];
+
+const TABS = [ {
+  name: 'Editor',
+  icon: 'code'
+}, {
+  name: 'Robot',
+  icon: 'robot'
+}, {
+  name: 'World',
+  icon: 'globe-americas'
+}];
+
+const StyledTabBar = styled(TabBar, (props: ThemeProps) => ({
+  borderTop: `1px solid ${props.theme.borderColor}`
+}));
 
 class SideLayout extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -109,7 +97,8 @@ class SideLayout extends React.PureComponent<Props, State> {
     this.state = {
       editorSize: 0,
       infoSize: 0,
-      consoleSize: 0
+      consoleSize: 0,
+      index: 0
     };
   }
 
@@ -172,25 +161,65 @@ class SideLayout extends React.PureComponent<Props, State> {
     });
   };
 
+  private onTabBarIndexChange_ = (index: number) => {
+
+  };
+
   render() {
     const { props } = this;
-    const { style, className, theme, state, onStateChange, cans, onCodeChange, code } = props;
-    const { editorSize, consoleSize, infoSize } = this.state;
+    const { style, className, theme, state, onStateChange, cans, onCodeChange, code, simulator } = props;
+    const { editorSize, consoleSize, infoSize, index } = this.state;
+
+    let content: JSX.Element;
+    switch (index) {
+      case 0: {
+        content = (
+          <ConsoleWidget
+            theme={theme}
+            name='Console'
+            sizes={CONSOLE_SIZES}
+            style={{ flex: '1 1' }}
+            size={consoleSize}
+            onSizeChange={this.onConsoleSizeChange_}
+            mode={Mode.Inline}
+          >
+            <Console theme={theme} />
+          </ConsoleWidget>
+        );
+        break;
+      }
+      case 1: {
+        content = (
+          <InfoWidget
+            theme={theme}
+            name='Robot'
+            sizes={INFO_SIZES}
+            size={infoSize}
+            onSizeChange={this.onInfoSizeChange_}
+            mode={Mode.Inline}
+          >
+            <Info
+              robotState={state}
+              onRobotStateChange={onStateChange}
+              theme={theme}
+            />
+          </InfoWidget>
+        );
+        break;
+      }
+      case 2: {
+        break;
+      }
+    }
+
+
     return (
       <Container>
         <SideBar>
-          <ConsoleWidget theme={theme} name='Console' sizes={CONSOLE_SIZES} size={consoleSize} onSizeChange={this.onConsoleSizeChange_} mode={Mode.Inline}>
-            <Console theme={theme} />
-          </ConsoleWidget>
-          <InfoWidget theme={theme} name='Robot' sizes={INFO_SIZES} size={infoSize} onSizeChange={this.onInfoSizeChange_} mode={Mode.Inline}>
-            <Console theme={theme} />
-          </InfoWidget>
-          <EditorWidget theme={theme} name='Editor' sizes={EDITOR_SIZES} size={editorSize} onSizeChange={this.onEditorSizeChange_} mode={Mode.Inline}>
-            <Editor code={code} onCodeChange={onCodeChange} theme={theme} />
-          </EditorWidget>
+          {content}
+          <StyledTabBar tabs={TABS} index={0} onIndexChange={this.onTabBarIndexChange_} theme={theme} />
         </SideBar>
-        <SimulatorArea key='simulator' robotState={state} canEnabled={cans} onRobotStateUpdate={onStateChange} />
-        
+        <Portal.Sink style={{ flex: '3 3', display: 'flex' }} ref={simulator} />
       </Container>
     );
   }

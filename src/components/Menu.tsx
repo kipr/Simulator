@@ -6,7 +6,6 @@ import { Spacer } from './common';
 import { Fa } from './Fa';
 import { Layout } from './Layout';
 import LayoutPicker from './LayoutPicker';
-import { StdDialog } from './StdDialog';
 import { ThemeProps } from './theme';
 
 export interface MenuProps extends StyleProps, ThemeProps {
@@ -15,6 +14,13 @@ export interface MenuProps extends StyleProps, ThemeProps {
 
   onShowAll: () => void;
   onHideAll: () => void;
+
+  onRunClick: () => void;
+  onStopClick: () => void;
+  onDownloadClick: () => void;
+
+  onSettingsClick: () => void;
+  onAboutClick: () => void;
 }
 
 interface MenuState {
@@ -58,8 +64,8 @@ const Item = styled('div', (props: ThemeProps & ClickProps) => ({
   ':hover': props.onClick ? {
     cursor: 'pointer',
     backgroundColor: `rgba(255, 255, 255, 0.1)`
-  } : {}
-
+  } : {},
+  userSelect: 'none'
 }));
 
 
@@ -84,7 +90,15 @@ class Menu extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { theme, layout, onHideAll, onShowAll, onLayoutChange } = props;
+    const {
+      theme,
+      layout,
+      onHideAll,
+      onShowAll,
+      onLayoutChange,
+      onSettingsClick,
+      onAboutClick
+    } = props;
 
     const { layoutPicker } = state;
 
@@ -109,7 +123,8 @@ class Menu extends React.PureComponent<Props, State> {
           </Item>
           
           
-          <Item theme={theme}><ItemIcon icon='question'/> About</Item>
+          <Item theme={theme} onClick={onSettingsClick}><ItemIcon icon='cogs'/> Settings</Item>
+          <Item theme={theme} onClick={onAboutClick}><ItemIcon icon='question'/> About</Item>
         </Container>
         
       </>

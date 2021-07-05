@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styletron-react';
 import { StyleProps } from '../style';
+import { EMPTY_ARRAY } from '../util';
 import { Spacer } from './common';
 import { Fa } from './Fa';
 import { ThemeProps } from './theme';
@@ -82,9 +83,11 @@ export namespace BarComponent {
 export interface WidgetProps extends StyleProps, ThemeProps, ModeProps {
   name: string;
 
-  onSizeChange: (index: number) => void;
-  size: number;
-  sizes: Size[];
+  onSizeChange?: (index: number) => void;
+  size?: number;
+  sizes?: Size[];
+
+  hideActiveSize?: boolean;
 
   children?: any;
 
@@ -117,7 +120,8 @@ const Container = styled('div', (props: ThemeProps & ModeProps) => ({
   overflow: 'hidden',
   flexBasis: '0',
   pointerEvents: 'auto',
-  backgroundColor: props.theme.backgroundColor
+  backgroundColor: props.theme.backgroundColor,
+  borderBottom: props.mode === Mode.Inline ? 'none' : undefined
 }));
 
 const Chrome = styled('div', (props: ThemeProps & ModeProps) => ({
@@ -133,7 +137,8 @@ const Chrome = styled('div', (props: ThemeProps & ModeProps) => ({
 
 const Title = styled('span', {
   fontWeight: 400,
-  marginRight: '10px'
+  marginRight: '10px',
+  userSelect: 'none'
 });
 
 const sizeIcon = (size: Size) => {
@@ -165,7 +170,10 @@ class Widget extends React.PureComponent<Props, State> {
   }
 
   private onSizeChange_ = (index: number) => (event: React.MouseEvent<HTMLElement>) => {
-    this.props.onSizeChange(index);
+    const { onSizeChange } = this.props;
+    
+    if (!onSizeChange) return;
+    onSizeChange(index);
   };
 
   render() {
@@ -180,7 +188,8 @@ class Widget extends React.PureComponent<Props, State> {
       size,
       sizes,
       mode,
-      barComponents
+      barComponents,
+      hideActiveSize
     } = props;
     
     
@@ -193,7 +202,10 @@ class Widget extends React.PureComponent<Props, State> {
             return <Component key={i} {...barComponent.props} />;
           }) : undefined}
           <Spacer />
-          {sizes.map((self, i) => <Icon icon={sizeIcon(self)} disabled={size === i} onClick={this.onSizeChange_(i)} />)}
+          {(sizes || EMPTY_ARRAY)
+            .map((self, i) => <Icon key={`size-${i}`} icon={sizeIcon(self)} disabled={size === i} onClick={this.onSizeChange_(i)} />)
+            .filter((self, i) => !hideActiveSize || i !== size)
+          }
         </Chrome>
         {children}
       </Container>

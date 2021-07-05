@@ -43,7 +43,10 @@
       left: 0;
       pointer-events: none;
       background-color: transparent;
-      transition: 'background-color 0.2s'
+      transition: background-color 0.2s;
+      display: none;
+      align-items: center;
+      justify-content: center;
     }
 
     #app {
@@ -141,11 +144,16 @@
     .cm-s-kiss .CodeMirror-activeline-background { background: #e8f2ff; }
     .cm-s-kiss .CodeMirror-matchingbracket { outline:1px solid grey; color:black !important; }
 
+    #swap {
+      visibility: hidden;
+    }
   </style>
 </head>
 <body>
+  <div id="swap"></div>
   <div id="reactRoot" ></div>
   <div id="modal-root"></div>
+  <div id="tooltip-root"></div>
   <div id="screen-guide"></div>
 </body>
 </html>
