@@ -63,7 +63,6 @@ export class TabBar extends React.PureComponent<Props> {
   render() {
     const { props } = this;
     const { tabs, index, theme } = props;
-    console.log('tabs', tabs);
     return (
       <TabBarContainer theme={theme}>
         {tabs.map((tab, i) => (

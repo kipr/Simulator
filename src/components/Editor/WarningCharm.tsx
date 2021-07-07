@@ -4,7 +4,7 @@ import { StyleProps } from '../../style';
 import Charm from '../Charm';
 import { Fa } from '../Fa';
 import { ThemeProps } from '../theme';
-import { charmColor } from './charm';
+import { charmColor } from '../charm';
 
 export interface WarningCharmProps extends StyleProps, ThemeProps {
   count: number;

@@ -112,7 +112,6 @@ class ScrollArea extends React.PureComponent<Props, State> {
     switch (element) {
       case this.outerRef_: {
         if (Vector2.eq(this.state.outerSize, size)) break;
-        console.log('update');
         this.setState({
           outerSize: size
         });

@@ -42,6 +42,7 @@ const Container = styled('div', (props: ThemeProps) => ({
 
 interface ClickProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  disabled?: boolean;
 }
 
 const Item = styled('div', (props: ThemeProps & ClickProps) => ({
@@ -53,12 +54,14 @@ const Item = styled('div', (props: ThemeProps & ClickProps) => ({
   ':last-child': {
     borderBottom: 'none'
   },
+  opacity: props.disabled ? '0.5' : '1.0',
   fontWeight: 400,
-  ':hover': props.onClick ? {
+  ':hover': !props.disabled && props.onClick ? {
     cursor: 'pointer',
     backgroundColor: `rgba(255, 255, 255, 0.1)`
   } : {},
-  userSelect: 'none'
+  userSelect: 'none',
+  transition: 'background-color 0.2s, opacity 0.2s'
 }));
 
 
@@ -104,8 +107,8 @@ class LayoutPicker extends React.PureComponent<Props, State> {
       <Container theme={theme}>
         <Item theme={theme} style={{ fontWeight: 500, backgroundColor: theme.borderColor }}>Layouts</Item>
         <Item theme={theme} onClick={layout !== Layout.Overlay ? this.onOverlayClick_ : undefined}><ItemIcon icon='clone' /> Overlay</Item>
-        <Item theme={theme} onClick={layout !== Layout.Side ? this.onSideClick_ : undefined}><ItemIcon icon='caret-square-left' /> Side</Item>
-        <Item theme={theme}  onClick={layout !== Layout.Bottom ? this.onBottomClick_ : undefined}><ItemIcon icon='caret-square-down' /> Bottom</Item>
+        <Item theme={theme} disabled onClick={undefined}><ItemIcon icon='caret-square-left' /> Side</Item>
+        <Item theme={theme} disabled onClick={undefined}><ItemIcon icon='caret-square-down' /> Bottom</Item>
         
         {layout === Layout.Overlay ? (
           <>

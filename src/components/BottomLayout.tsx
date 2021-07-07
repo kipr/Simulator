@@ -174,7 +174,7 @@ class BottomLayout extends React.PureComponent<Props, State> {
 
   render() {
     const { props } = this;
-    const { style, className, theme, state, onStateChange, cans, onCodeChange, code } = props;
+    const { style, className, theme, state, onStateChange, cans, onCodeChange, code, console } = props;
     const { editorSize, consoleSize, infoSize } = this.state;
     return (
       <Container>
@@ -182,10 +182,10 @@ class BottomLayout extends React.PureComponent<Props, State> {
         <SimulatorArea key='simulator' robotState={state} canEnabled={cans} onRobotStateUpdate={onStateChange} />
         <BottomBar>
           <ConsoleWidget theme={theme} name='Console' sizes={CONSOLE_SIZES} size={consoleSize} onSizeChange={this.onConsoleSizeChange_} mode={Mode.Inline}>
-            <Console theme={theme} />
+            <Console theme={theme} text={console} />
           </ConsoleWidget>
           <InfoWidget theme={theme} name='Robot' sizes={INFO_SIZES} size={infoSize} onSizeChange={this.onInfoSizeChange_} mode={Mode.Inline}>
-            <Console theme={theme} />
+            <Console theme={theme} text={console} />
           </InfoWidget>
           <EditorWidget theme={theme} name='Editor' sizes={EDITOR_SIZES} size={editorSize} onSizeChange={this.onEditorSizeChange_} mode={Mode.Inline}>
             <Editor code={code} onCodeChange={onCodeChange} theme={theme} />

@@ -167,7 +167,7 @@ class SideLayout extends React.PureComponent<Props, State> {
 
   render() {
     const { props } = this;
-    const { style, className, theme, state, onStateChange, cans, onCodeChange, code, simulator } = props;
+    const { style, className, theme, state, onStateChange, cans, onCodeChange, code, simulator, console } = props;
     const { editorSize, consoleSize, infoSize, index } = this.state;
 
     let content: JSX.Element;
@@ -183,7 +183,7 @@ class SideLayout extends React.PureComponent<Props, State> {
             onSizeChange={this.onConsoleSizeChange_}
             mode={Mode.Inline}
           >
-            <Console theme={theme} />
+            <Console theme={theme} text={console} />
           </ConsoleWidget>
         );
         break;

@@ -58,13 +58,13 @@ class World extends React.PureComponent<Props, State> {
 
   render() {
     const { style, className, theme, cans } = this.props;
+    
     return (
-      
       <ScrollArea theme={theme} style={{ flex: '1 1' }}>
         <Container theme={theme} style={style} className={className}>
           <Section theme={theme} name={CANS_NAME}>
             {cans.map((can, i) => (
-              <StyledField theme={theme} name={`Can ${i}`}>
+              <StyledField key={i} theme={theme} name={`Can ${i}`}>
                 <Spacer />
                 <Switch value={can} onValueChange={this.onCanChange_(i)} theme={theme} />
               </StyledField>

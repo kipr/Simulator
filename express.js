@@ -55,7 +55,7 @@ app.post('/compile', (req, res) => {
   `;
 
   
-  const id = uuid();
+  const id = uuid.v4();
   const path = `/tmp/${id}.c`;
   fs.writeFile(path, augmentedCode, err => {
     if (err) {
@@ -102,15 +102,20 @@ app.post('/compile', (req, res) => {
   
 });
 
+
 app.use('/static', express.static(`${__dirname}/static`, {
   maxAge: config.caching.staticMaxAge,
 }));
+
+app.use('/dist', express.static(`${__dirname}/dist`));
+
 
 app.use(express.static(sourceDir, {
   maxAge: config.caching.staticMaxAge,
 }));
 
-app.use('*', (req,res) => {
+
+app.use('*', (req, res) => {
   res.sendFile(`${__dirname}/${sourceDir}/index.html`);
 });
 

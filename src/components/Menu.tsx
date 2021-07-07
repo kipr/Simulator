@@ -6,6 +6,7 @@ import { Spacer } from './common';
 import { Fa } from './Fa';
 import { Layout } from './Layout';
 import LayoutPicker from './LayoutPicker';
+import { SimulatorState } from './SimulatorState';
 import { ThemeProps } from './theme';
 
 export interface MenuProps extends StyleProps, ThemeProps {
@@ -21,6 +22,8 @@ export interface MenuProps extends StyleProps, ThemeProps {
 
   onSettingsClick: () => void;
   onAboutClick: () => void;
+
+  simulatorState: SimulatorState;
 }
 
 interface MenuState {
@@ -48,6 +51,7 @@ const Logo = styled('image', {
 
 interface ClickProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  disabled?: boolean;
 }
 
 const Item = styled('div', (props: ThemeProps & ClickProps) => ({
@@ -57,15 +61,18 @@ const Item = styled('div', (props: ThemeProps & ClickProps) => ({
   borderRight: `1px solid ${props.theme.borderColor}`,
   paddingLeft: '20px',
   paddingRight: '20px',
+  opacity: props.disabled ? '0.5' : '1.0',
+
   ':last-child': {
     borderRight: 'none'
   },
   fontWeight: 400,
-  ':hover': props.onClick ? {
+  ':hover': props.onClick && !props.disabled ? {
     cursor: 'pointer',
     backgroundColor: `rgba(255, 255, 255, 0.1)`
   } : {},
-  userSelect: 'none'
+  userSelect: 'none',
+  transition: 'background-color 0.2s, opacity 0.2s'
 }));
 
 
@@ -97,7 +104,11 @@ class Menu extends React.PureComponent<Props, State> {
       onShowAll,
       onLayoutChange,
       onSettingsClick,
-      onAboutClick
+      onAboutClick,
+      onRunClick,
+      onStopClick,
+      onDownloadClick,
+      simulatorState
     } = props;
 
     const { layoutPicker } = state;
@@ -108,9 +119,9 @@ class Menu extends React.PureComponent<Props, State> {
           {/*<Logo href="/static/KIPR-Logo-bk.jpg"/>*/}
           <Item theme={theme}>KIPR Simulator</Item>
 
-          <Item theme={theme}><ItemIcon icon='play' /> Run</Item>
-          <Item theme={theme}><ItemIcon icon='stop' /> Stop</Item>
-          <Item theme={theme}><ItemIcon icon='file-download' /> Download</Item>
+          <Item theme={theme} onClick={onRunClick} disabled={!SimulatorState.isStopped(simulatorState)}><ItemIcon icon='play' /> Run</Item>
+          <Item theme={theme} onClick={onStopClick} disabled={!SimulatorState.isRunning(simulatorState)}><ItemIcon icon='stop' /> Stop</Item>
+          <Item theme={theme} onClick={onDownloadClick}><ItemIcon icon='file-download' /> Download</Item>
 
           <Spacer style={{ borderRight: `1px solid ${theme.borderColor}` }} />
 
@@ -123,7 +134,7 @@ class Menu extends React.PureComponent<Props, State> {
           </Item>
           
           
-          <Item theme={theme} onClick={onSettingsClick}><ItemIcon icon='cogs'/> Settings</Item>
+          {/*<Item theme={theme} onClick={onSettingsClick}><ItemIcon icon='cogs'/> Settings</Item>*/}
           <Item theme={theme} onClick={onAboutClick}><ItemIcon icon='question'/> About</Item>
         </Container>
         

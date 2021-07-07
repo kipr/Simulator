@@ -13,11 +13,16 @@ type Props = TextProps;
  * in the simulator to have sophisticated layouts and styling applied easily.
  */
 export class Text extends React.PureComponent<Props> {
-  private renderStyledText_ = (styledText: StyledText, key: string = undefined) => {
+  private renderStyledText_ = (styledText: StyledText, key: string = '') => {
     let elements: JSX.Element[] = [];
     switch (styledText.type) {
       case StyledText.Type.Text: {
-        elements.push(<span style={styledText.style || EMPTY_OBJECT} key={key}>{styledText.text}</span>);
+        elements.push(<span {...(styledText.props || EMPTY_OBJECT)} style={styledText.style || EMPTY_OBJECT} key={key}>{styledText.text}</span>);
+        break;
+      }
+
+      case StyledText.Type.NewLine: {
+        elements.push(<br key={key} />);
         break;
       }
       case StyledText.Type.Component: {
@@ -25,9 +30,11 @@ export class Text extends React.PureComponent<Props> {
         elements.push(<Component key={key} {...(styledText.props || EMPTY_OBJECT)} />);
         break;
       }
+
+      
       case StyledText.Type.Composition: {
         elements.push(...styledText.items
-          .map((item, i) => this.renderStyledText_(item, `${key || ''}-${i}`))
+          .map((item, i) => this.renderStyledText_(item, `child-${key || ''}-${i}`))
           .reduce((a, b) => [ ...a, ...b ], [])
         );
         break;
@@ -41,6 +48,7 @@ export class Text extends React.PureComponent<Props> {
     const { text, style, className } = props;
     
     if (typeof text === 'string') return <span style={style} className={className}>{text}</span>;
+
 
     return (
       <span style={style} className={className}>

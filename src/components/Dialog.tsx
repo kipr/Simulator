@@ -28,7 +28,7 @@ class Dialog_ extends React.PureComponent<Props> {
     const { className, style, children, theme, name } = props;
     return (
       <Modal>
-        <div style={{ width: '300px', height: '300px' }}>
+        <div style={{ width: '640px', height: '480px' }}>
           <Widget theme={theme} size={0} sizes={[ Size.MAXIMIZED, Size.MINIMIZED ]} onSizeChange={this.onSizeChange_} mode={Mode.Floating} name={name}>
             {children}
           </Widget>

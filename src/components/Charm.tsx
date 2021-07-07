@@ -18,18 +18,20 @@ type Props = CharmProps;
 type State = CharmState;
 
 const Container = styled('div', (props: ThemeProps) => ({
-  borderRadius: '4px',
-  paddingLeft: '5px',
-  paddingRight: '5px',
-  paddingTop: '1px',
-  paddingBottom: '1px',
+  borderRadius: `${props.theme.itemPadding}px`,
+  paddingTop: `${props.theme.itemPadding / 2}px`,
+  paddingBottom: `${props.theme.itemPadding / 2}px`,
+  paddingLeft: `${props.theme.itemPadding}px`,
+  paddingRight: `${props.theme.itemPadding}px`,
+  ':first-child': {
+    paddingLeft: 0
+  },
+  ':last-child': {
+    paddingRight: 0
+  },
   fontSize: '9pt',
   fontWeight: 400,
-  marginRight: '10px',
   border: `1px solid ${props.theme.borderColor}`,
-  ':last-child': {
-    marginRight: 0
-  },
   userSelect: 'none'
 }));
 

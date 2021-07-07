@@ -18,6 +18,8 @@ export interface Theme {
       secondary: string;
     }
   };
+  lighten: (frac: number) => string;
+  darken: (frac: number) => string;
 }
 
 export const COMMON: Theme = {
@@ -39,7 +41,9 @@ export const COMMON: Theme = {
       primary: 'rgb(127, 127, 127)',
       secondary: 'rgba(255, 255, 255, 0.1)'
     }
-  }
+  },
+  lighten: undefined,
+  darken: undefined
 };
 
 export const LIGHT: Theme = {
@@ -56,7 +60,9 @@ export const LIGHT: Theme = {
       primary: 'rgb(127, 127, 127)',
       secondary: 'rgba(0, 0, 0, 0.1)'
     }
-  }
+  },
+  lighten: (frac: number) => `rgba(0, 0, 0, ${frac})`,
+  darken: (frac: number) => `rgba(255, 255, 255, ${frac})`,
 };
 
 export const DARK: Theme = {
@@ -74,7 +80,9 @@ export const DARK: Theme = {
       primary: 'rgb(127, 127, 127)',
       secondary: 'rgba(255, 255, 255, 0.1)'
     }
-  }
+  },
+  lighten: (frac: number) => `rgba(255, 255, 255, ${frac})`,
+  darken: (frac: number) => `rgba(0, 0, 0, ${frac})`,
 };
 
 export interface ThemeProps {

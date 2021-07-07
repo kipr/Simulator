@@ -29,8 +29,7 @@ const SubContainer = styled('div', (props: ThemeProps) => ({
 }));
 
 const Input = styled('input', (props: ThemeProps) => ({
-  flex: '1 1',
-  flexBasis: 0,
+  flex: '1 1 0',
   minWidth: 0,
   font: 'inherit',
   display: 'block',

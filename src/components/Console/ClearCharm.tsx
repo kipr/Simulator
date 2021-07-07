@@ -6,19 +6,17 @@ import { Fa } from '../Fa';
 import { ThemeProps } from '../theme';
 import { charmColor } from '../charm';
 
-export interface ErrorCharmProps extends StyleProps, ThemeProps {
-  count: number;
-
+export interface ClearCharmProps extends StyleProps, ThemeProps {
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-type Props = ErrorCharmProps;
+type Props = ClearCharmProps;
 
 const Container = styled(Charm, {
   backgroundColor: charmColor(0)
 });
 
-class ErrorCharm extends React.PureComponent<Props> {
+class ClearCharm extends React.PureComponent<Props> {
   constructor(props: Props) {
     super(props);
   }
@@ -27,16 +25,15 @@ class ErrorCharm extends React.PureComponent<Props> {
     const { props } = this;
     const {
       theme,
-      count,
       onClick
     } = props;
     
     return (
       <Container theme={theme} onClick={onClick}>
-        <Fa icon='times-circle' /> {count} Error{count === 1 ? '' : 's'}
+        <Fa icon='times' /> Clear
       </Container>
     );
   }
 }
 
-export default ErrorCharm;
+export default ClearCharm;

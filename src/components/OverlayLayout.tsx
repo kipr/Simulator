@@ -3,6 +3,8 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import { RobotState } from '../RobotState';
 import { StyleProps } from '../style';
+import WorkerInstance from '../WorkerInstance';
+import Button from './Button';
 import { Spacer } from './common';
 import Console from './Console';
 import { Editor, PerfectCharm, WarningCharm, ErrorCharm } from './Editor';
@@ -150,6 +152,10 @@ const sizeDict = (sizes: Size[]) => {
   return forward;
 };
 
+const FlexConsole = styled(Console, {
+  flex: '1 1'
+});
+
 const EDITOR_SIZE = sizeDict(EDITOR_SIZES);
 const INFO_SIZE = sizeDict(INFO_SIZES);
 const WORLD_SIZE = sizeDict(WORLD_SIZES);
@@ -166,6 +172,8 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       worldSize: Size.Type.Partial,
     };
   }
+
+  
 
   private onEditorSizeChange_ = (index: number) => {
     const size = EDITOR_SIZES[index];
@@ -257,6 +265,15 @@ class OverlayLayout extends React.PureComponent<Props, State> {
 
   };
 
+  private editor_: Editor;
+  private bindEditor_ = (editor: Editor) => {
+    this.editor_ = editor;
+  };
+
+  get editor() {
+    return this.editor_;
+  }
+
   render() {
     const { props } = this;
     
@@ -270,7 +287,10 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       code,
       onCodeChange,
       simulator,
-      onCanChange
+      onCanChange,
+      console,
+      messages,
+      onClearConsole
     } = props;
 
     const {
@@ -286,20 +306,43 @@ class OverlayLayout extends React.PureComponent<Props, State> {
     };
 
     const editorBar: BarComponent<any>[] = [];
+    let errors = 0;
+    let warnings = 0;
 
-    /*editorBar.push(BarComponent.create(ErrorCharm, {
+    for (let i = 0; i < messages.length; ++i) {
+      switch (messages[i].severity) {
+        case 'error': {
+          ++errors;
+          break;
+        }
+        case 'warning': {
+          ++warnings;
+          break;
+        }
+      }
+    }
+
+    if (errors > 0) editorBar.push(BarComponent.create(ErrorCharm, {
       theme,
-      count: 1,
+      count: errors,
       onClick: this.onErrorClick_
     }));
 
-    editorBar.push(BarComponent.create(WarningCharm, {
+    if (warnings > 0) editorBar.push(BarComponent.create(WarningCharm, {
       theme,
-      count: 2,
+      count: warnings,
       onClick: this.onErrorClick_
-    }));*/
+    }));
 
     // editorBar.push(BarComponent.create(PerfectCharm, { theme }));
+
+    const consoleBar: BarComponent<any>[] = [];
+
+    consoleBar.push(BarComponent.create(Button, {
+      theme,
+      onClick: onClearConsole,
+      children: [ <Fa icon='file' />, ' Clear' ]
+    }));
 
     return (
       <Container style={style} className={className}>
@@ -319,7 +362,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
             onSizeChange={this.onEditorSizeChange_}
             barComponents={editorBar}
           >
-            <Editor code={code} onCodeChange={onCodeChange} theme={theme} />
+            <Editor ref={this.bindEditor_} code={code} onCodeChange={onCodeChange} theme={theme} messages={messages} />
           </EditorWidget>
           <ConsoleWidget
             {...commonProps}
@@ -327,8 +370,9 @@ class OverlayLayout extends React.PureComponent<Props, State> {
             sizes={CONSOLE_SIZES}
             size={CONSOLE_SIZE[consoleSize]}
             onSizeChange={this.onConsoleSizeChange_}
+            barComponents={consoleBar}
           >
-            <Console theme={theme} />
+            <FlexConsole theme={theme} text={console} />
           </ConsoleWidget>
           <InfoWidget
             {...commonProps}

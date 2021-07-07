@@ -4,7 +4,7 @@ import { styled } from 'styletron-react';
 import { StyleProps } from '../../style';
 import { ThemeProps } from '../theme';
 
-import { Ivygate } from 'ivygate';
+import { Ivygate, Message } from 'ivygate';
 
 export enum EditorActionState {
   None,
@@ -15,6 +15,7 @@ export enum EditorActionState {
 export interface EditorProps extends StyleProps, ThemeProps {
   code: string;
   onCodeChange: (code: string) => void;
+  messages?: Message[];
 }
 
 interface EditorState {
@@ -40,11 +41,21 @@ class Editor extends React.PureComponent<Props, State> {
     super(props);
   }
 
+  private ivygate_: Ivygate;
+  private bindIvygate_ = (ivygate: Ivygate) => {
+    this.ivygate_ = ivygate;
+  };
+
+  get ivygate() {
+    return this.ivygate_;
+  }
+
   render() {
-    const { style, className, theme, code, onCodeChange } = this.props;
+    const { style, className, theme, code, onCodeChange, messages } = this.props;
+    console.log('messages', messages);
     return (
       <Container theme={theme} style={style} className={className}>
-        <Ivygate code={code} language="c" />
+        <Ivygate ref={this.bindIvygate_} code={code} language="c" messages={messages} onCodeChange={onCodeChange} />
       </Container>
     );
   }
