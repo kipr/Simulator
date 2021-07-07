@@ -1,23 +1,35 @@
 import * as Babylon from 'babylonjs';
 import 'babylonjs-loaders';
 // import Oimo = require('babylonjs/Oimo');
-import Ammo = require('./ammo');
+import * as Ammo from './ammo';
 import {
   SensorObject,
   Sensor,
   instantiate as instantiateSensor,
-  MAPPINGS as SENSOR_MAPPINGS
+  MAPPINGS as SENSOR_MAPPINGS,
 } from './sensors';
+import {
+  Item,
+  Items,
+  Can,
+  PaperReam,
+} from './items';
 import { RobotState } from './RobotState';
 import Dict from './Dict';
+import { SurfaceState } from './SurfaceState';
 
 export class Space {
   private engine: Babylon.Engine;
   private canvas: HTMLCanvasElement;
   private scene: Babylon.Scene;
 
+  private ammo_: Babylon.AmmoJSPlugin;
+
   private ground: Babylon.Mesh;
   private mat: Babylon.Mesh;
+
+  // List for keeping track of current item meshes in scene
+  private itemList: string[] = [];
 
   // The position offset of the robot, applied to the user-specified position
   private robotOffset: Babylon.Vector3 = new Babylon.Vector3(0, 7, -52);
@@ -35,17 +47,17 @@ export class Space {
   private clawJoint: Babylon.MotorEnabledJoint;
   
 
-  // Last recorded rotations of left and right wheels
+  // Last recorded rotations of wheels and servos
   private leftWheelRotationPrev: Babylon.Quaternion;
   private rightWheelRotationPrev: Babylon.Quaternion;
+  private armRotationDefault: Babylon.Quaternion;
+  private clawRotationDefault: Babylon.Quaternion;
 
   private sensorObjects_: SensorObject[];
 
-  private ticksSinceETSensorUpdate: number;
-
   private canCoordinates: Array<[number, number]>;
 
-  private collidersVisible = true;
+  private collidersVisible = false;
 
   private readonly TICKS_BETWEEN_ET_SENSOR_UPDATES = 15;
   private readonly WHEEL_TICKS_PER_RADIAN = 2048 / (2 * Math.PI);
@@ -53,12 +65,17 @@ export class Space {
   // Servos on robot normally only have 175 degrees of range
   private readonly SERVO_DEFUALT_RADIANS = 87.5 * Math.PI / 180;
   private readonly SERVO_TICKS_PER_RADIAN = 2048 / (2 * this.SERVO_DEFUALT_RADIANS);
+
+  private readonly ARM_DEFAULT_ROTATION = this.SERVO_DEFUALT_RADIANS;
+  private readonly CLAW_DEFAULT_ROTATION = 175 * Math.PI / 180;
   
   private readonly MAX_MOTOR_VELOCITY = 1500;
 
-  // The axis along which to calculate wheel rotations
+  // The axes along which to calculate joint rotations
   // This is the y axis instead of the x axis because the wheels in the loaded model are rotated
   private static readonly wheelRotationVector: Babylon.Vector3 = new Babylon.Vector3(0, -1, 0);
+  private static readonly armRotationVector: Babylon.Vector3 = new Babylon.Vector3(1, 0, 0);
+  private static readonly clawRotationVector: Babylon.Vector3 = new Babylon.Vector3(0, 0, -1);
 
   private getRobotState: () => RobotState;
   private updateRobotState: (robotState: Partial<RobotState>) => void;
@@ -71,8 +88,6 @@ export class Space {
 
     this.getRobotState = getRobotState;
     this.updateRobotState = updateRobotState;
-
-    this.ticksSinceETSensorUpdate = 0;
   }
 
   public createScene(): void {
@@ -85,8 +100,10 @@ export class Space {
 
     // At 100x scale, gravity should be -9.8 * 100, but this causes weird jitter behavior
     // Full gravity will be -9.8 * 10
-    const gravityVector = new Babylon.Vector3(0, -9.8 * 10, 0);
-    this.scene.enablePhysics(gravityVector, new Babylon.AmmoJSPlugin(true, Ammo));
+    const gravityVector = new Babylon.Vector3(0, -9.8 * 50, 0);
+    this.ammo_ = new Babylon.AmmoJSPlugin(true, Ammo);
+    this.scene.enablePhysics(gravityVector, this.ammo_);
+    this.scene.getPhysicsEngine().setSubTimeStep(5);
 
     this.buildFloor();
 
@@ -132,18 +149,13 @@ export class Space {
 
       // Set simulator servo positions based on robot state
       this.setServoPositions(currRobotState.servoPositions);
-      this.clawJoint.setMotor(0.1);
-      // this.clawCompoundRootMesh.physicsImpostor.setAngularVelocity(Babylon.Vector3.Zero());
-      // this.clawCompoundRootMesh.physicsImpostor.setLinearVelocity(Babylon.Vector3.Zero());
 
       // Get current wheel rotations
       const leftWheelRotationCurr = Babylon.Quaternion.Inverse(this.bodyCompoundRootMesh.rotationQuaternion).multiply(this.colliderLeftWheelMesh.rotationQuaternion);
       const rightWheelRotationCurr = Babylon.Quaternion.Inverse(this.bodyCompoundRootMesh.rotationQuaternion).multiply(this.colliderRightWheelMesh.rotationQuaternion);
-      // const armRotationCurr = Babylon.Quaternion.Inverse(this.bodyCompoundRootMesh.rotationQuaternion).multiply(this.armCompoundRootMesh.rotationQuaternion);
-      
+
       let leftRotation = this.getDeltaRotationOnAxis(this.leftWheelRotationPrev, leftWheelRotationCurr, Space.wheelRotationVector);
       let rightRotation = this.getDeltaRotationOnAxis(this.rightWheelRotationPrev, rightWheelRotationCurr, Space.wheelRotationVector);
-      // let armRotation = this.getDeltaRotationOnAxis(this.armGoalRotation, armRotationCurr, Space.armRotationVector);
 
       // If rotation is in (pi, 2pi) range, convert to the equivalent negative rotation in (-pi, 0) range
       if (leftRotation > Math.PI) {
@@ -152,9 +164,6 @@ export class Space {
       if (rightRotation > Math.PI) {
         rightRotation = rightRotation - 2 * Math.PI;
       }
-
-      // const s0_position = Math.round((this.getRobotState().servoPositions[0] / 11.702) - 87.5);
-      // const angle_servoArm = Math.round(Babylon.Tools.ToDegrees(this.armCompoundRootMesh.rotationQuaternion.toEulerAngles()._x));
 
       // Update motor positions based on wheel rotation
       const m0Position = currRobotState.motorPositions[0] + leftRotation * this.WHEEL_TICKS_PER_RADIAN;
@@ -165,35 +174,13 @@ export class Space {
 
       this.leftWheelRotationPrev = leftWheelRotationCurr;
       this.rightWheelRotationPrev = rightWheelRotationCurr;
-
-      // const s0_position = Math.round((this.getRobotState().servoPositions[0] / 11.702) - 87.5);
-      // const angle_servoArm = Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x));
-      // console.log(`position: ${this.getRobotState().servo0_position} Calculated position: ${s0_position} Servo Angle: ${angle_servoArm}`);
-      // // console.log(Math.round(Babylon.Tools.ToDegrees(this.servoArmMotor.rotationQuaternion.toEulerAngles()._x)));
-
-      // if (s0_position > angle_servoArm) {
-      //   this.setnegativeServo(s0_position);
-      // } else if (s0_position < angle_servoArm) {
-      //   this.setpositiveServo(s0_position);
-      // } else if (s0_position === angle_servoArm) {
-      //   this.liftArm_joint.setMotor(0);
-      // } else {
-      //   // do something
-      // }
-      // this.liftClaw_joint.setMotor(0.3);
-      
-
-      // if(this.registers_[61] == 0){
-      //   s1 = WorkerInstance.readServoRegister(WorkerInstance.registers[78], WorkerInstance.registers[79]);
-      //   s3 = WorkerInstance.readServoRegister(WorkerInstance.registers[80], WorkerInstance.registers[81]);
-      // }
     });
   }
   
 
   public async loadMeshes(): Promise<void> {
     // Load model into scene
-    const importMeshResult = await Babylon.SceneLoader.ImportMeshAsync("",'static/', 'Simulator_Demobot_colliders.glb', this.scene);
+    const importMeshResult = await Babylon.SceneLoader.ImportMeshAsync("",'static/', 'demobot_v6.glb', this.scene);
 
     // TEMP FIX: Scale everything up by 100 to avoid Ammo issues at small scale
     const rootMesh = importMeshResult.meshes.find(mesh => mesh.name === '__root__');
@@ -210,6 +197,7 @@ export class Space {
       if (mesh.name.startsWith('collider')) {
         mesh.visibility = 0.6;
         mesh.isVisible = this.collidersVisible;
+        mesh.isPickable = false;
       }
     });
 
@@ -221,13 +209,17 @@ export class Space {
     this.bodyCompoundRootMesh = new Babylon.Mesh("bodyCompoundMesh", this.scene);
     this.bodyCompoundRootMesh.position = wallabyColliderMesh.getAbsolutePosition().clone();
     this.bodyCompoundRootMesh.rotationQuaternion = new Babylon.Quaternion();
+    this.bodyCompoundRootMesh.isPickable = false;
 
     type ColliderShape = 'box' | 'sphere';
     const bodyColliderMeshInfos: [string, ColliderShape][] = [
       ['collider_body', 'box'],
       ['collider_body_back_panel', 'box'],
       ['collider_body_front_panel', 'box'],
-      ['collider_body_front_legos', 'box'],
+      ['collider_body_front_legos_1', 'box'],
+      ['collider_body_front_legos_2', 'box'],
+      ['collider_body_front_legos_3', 'box'],
+      ['collider_body_lego', 'box'],
       ['collider_caster', 'sphere'],
       ['collider_touch_back_left', 'box'],
       ['collider_touch_back_right', 'box'],
@@ -242,25 +234,31 @@ export class Space {
     this.armCompoundRootMesh = new Babylon.Mesh("armCompoundMesh", this.scene);
     this.armCompoundRootMesh.position = clawServoColliderMesh.getAbsolutePosition().clone();
     this.armCompoundRootMesh.rotationQuaternion = new Babylon.Quaternion();
+    this.armCompoundRootMesh.isPickable = false;
 
     const armColliderMeshInfos: [string][] = [
       ['collider_arm_claw_1'],
       ['collider_arm_claw_2'],
       ['collider_arm_claw_3'],
       ['collider_claw_servo'],
+      ['collider_claw_servo_rod_1'],
+      ['collider_claw_servo_rod_2'],
+      ['collider_claw_et'],
+      ['collider_arm_base'],
     ];
 
-    const clawColliderMesh = this.scene.getMeshByName('collider_claw_3');
-    // clawColliderNode.computeWorldMatrix(true);
-    this.clawCompoundRootMesh = new Babylon.Mesh("clawCompoundMesh", this.scene);
-    this.clawCompoundRootMesh.position = clawColliderMesh.getAbsolutePosition().clone();
+    const clawCenterMesh = this.scene.getMeshByName('collider_claw_3');
+    clawCenterMesh.computeWorldMatrix(true);
+    this.clawCompoundRootMesh = new Babylon.Mesh("clawCenterMesh", this.scene);
+    this.clawCompoundRootMesh.position = clawCenterMesh.getAbsolutePosition().clone();
     this.clawCompoundRootMesh.rotationQuaternion = new Babylon.Quaternion(0, 0, 0, 1);
-    // console.log(`Claw compound Position: ${this.clawCompoundRootMesh.position} Quat: ${this.clawCompoundRootMesh.rotationQuaternion}`)
+    this.clawCompoundRootMesh.isPickable = false;
 
     const clawColliderMeshInfos: [string][] = [
       ['collider_claw_1'],
       ['collider_claw_2'],
       ['collider_claw_3'],
+      ['collider_claw_3_metal'],
     ];
 
     // Parent body collider meshes to body root and add physics impostors
@@ -272,6 +270,7 @@ export class Space {
       
       // Unparent collider mesh before adding physics impostors to them
       colliderMesh.setParent(null);
+      this.fixNegativeScaling(colliderMesh as Babylon.Mesh);
       
       const impostorType = bodyColliderShape === 'box'
         ? Babylon.PhysicsImpostor.BoxImpostor
@@ -289,6 +288,8 @@ export class Space {
       
       // Unparent collider mesh before adding physics impostors to them
       colliderMesh.setParent(null);
+      this.fixNegativeScaling(colliderMesh as Babylon.Mesh);
+
       colliderMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderMesh, Babylon.PhysicsImpostor.BoxImpostor, { mass: 0 }, this.scene);
       
       colliderMesh.setParent(this.armCompoundRootMesh);
@@ -302,8 +303,10 @@ export class Space {
       
       // Unparent collider mesh before adding physics impostors to them
       colliderMesh.setParent(null);
+      this.fixNegativeScaling(colliderMesh as Babylon.Mesh);
+
       colliderMesh.physicsImpostor = new Babylon.PhysicsImpostor(colliderMesh, Babylon.PhysicsImpostor.BoxImpostor, { mass: 0 }, this.scene);
-      
+
       colliderMesh.setParent(this.clawCompoundRootMesh);
     }
 
@@ -314,6 +317,10 @@ export class Space {
     // Unparent wheel collider meshes before adding physics impostors to them
     this.colliderLeftWheelMesh.setParent(null);
     this.colliderRightWheelMesh.setParent(null);
+    this.fixNegativeScaling(this.colliderLeftWheelMesh as Babylon.Mesh);
+    this.fixNegativeScaling(this.colliderRightWheelMesh as Babylon.Mesh);
+    this.colliderLeftWheelMesh.isPickable = false;
+    this.colliderRightWheelMesh.isPickable = false;
 
     // Find transform nodes (visual meshes) in scene and parent them to the proper node
     this.scene.getTransformNodeByName('ChassisWombat-1').setParent(this.bodyCompoundRootMesh);
@@ -326,28 +333,15 @@ export class Space {
     // Update "previous" wheel rotations to avoid sudden jump in motor position
     this.leftWheelRotationPrev = Babylon.Quaternion.Inverse(this.bodyCompoundRootMesh.rotationQuaternion).multiply(this.colliderLeftWheelMesh.rotationQuaternion);
     this.rightWheelRotationPrev = Babylon.Quaternion.Inverse(this.bodyCompoundRootMesh.rotationQuaternion).multiply(this.colliderRightWheelMesh.rotationQuaternion);
-    // this.armGoalRotation = Babylon.Quaternion.Inverse(this.bodyCompoundRootMesh.rotationQuaternion).multiply(this.armCompoundRootMesh.rotationQuaternion);
+    this.armRotationDefault = Babylon.Quaternion.Inverse(this.bodyCompoundRootMesh.rotationQuaternion).multiply(this.armCompoundRootMesh.rotationQuaternion);
+    this.clawRotationDefault = Babylon.Quaternion.Inverse(this.armCompoundRootMesh.rotationQuaternion).multiply(this.clawCompoundRootMesh.rotationQuaternion);
 
     // Set physics impostors for root nodes
-    this.bodyCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.bodyCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 100, friction: 0.1 }, this.scene);
-    this.colliderLeftWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderLeftWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 5 }, this.scene);
-    this.colliderRightWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderRightWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 10, friction: 5 }, this.scene);
-    this.armCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.armCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 6, friction: 0.1 }, this.scene);
-    this.clawCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.clawCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 0.1, friction: 0.1 }, this.scene);
-
-    
-    // const servoWasher1Node = this.scene.getTransformNodeByID('Servo Washer-1');
-    // const clawMainPivot = this.clawCompoundRootMesh.getAbsolutePosition(); // servoWasher1Node.absolutePosition; // .subtract(this.armCompoundRootMesh.position);// .multiplyByFloats(2,2,2)).subtract(new Babylon.Vector3(0.255,0.375,-2));
-    // this.clawCompoundRootMesh.getPivotPoint()
-    // const clawConnectedPivot = this.clawCompoundRootMesh.setPivotPoint(this.clawCompoundRootMesh.getAbsolutePivotPoint().subtract(this.armCompoundRootMesh.position), Babylon.Space.WORLD);
-
-    // console.log(this.clawCompoundRootMesh.getAbsolutePosition());
-    // const clawJointData = {
-    //   mainPivot: Babylon.Vector3.Zero(),
-    //   connectedPivot: Babylon.Vector3.Zero(),
-    //   mainAxis: servoWasher1Node.right,
-    //   connectedAxis: Babylon.Vector3.Cross(servoWasher1Node.right, Babylon.Axis.Z.negate()),
-    // };
+    this.bodyCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.bodyCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 1126, friction: 0.1 }, this.scene);
+    this.colliderLeftWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderLeftWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 14, friction: 25 }, this.scene);
+    this.colliderRightWheelMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.colliderRightWheelMesh, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 14, friction: 25 }, this.scene);
+    this.armCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.armCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 132, friction: 5 }, this.scene);
+    this.clawCompoundRootMesh.physicsImpostor = new Babylon.PhysicsImpostor(this.clawCompoundRootMesh, Babylon.PhysicsImpostor.NoImpostor, { mass: 17, friction: 5 }, this.scene);
 
     const servoHornTransform = this.scene.getTransformNodeByID('1 x 5 Servo Horn-2');
     servoHornTransform.computeWorldMatrix();
@@ -371,15 +365,6 @@ export class Space {
     };
     this.clawJoint =  new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint, clawJointData);
     this.armCompoundRootMesh.physicsImpostor.addJoint(this.clawCompoundRootMesh.physicsImpostor, this.clawJoint);
-
-    // const clawPivot = Babylon.MeshBuilder.CreateLines(
-    //   'clawPivot',
-    //   {
-    //     points: [clawMainPivot, Babylon.Vector3.Zero()],
-    //     updatable: true,
-    //   },
-    //   this.scene);
-    // clawPivot.setParent(this.bodyCompoundRootMesh);
 
     // eslint-disable-next-line newline-per-chained-call
     const armMainPivot = this.scene.getTransformNodeByID('Servo Washer-2').getAbsolutePosition().subtract(this.bodyCompoundRootMesh.position);
@@ -466,26 +451,49 @@ export class Space {
     this.engine.resize();
   }
 
-  public createCan(canNumber: number): void {
-    const canName = `Can${canNumber}`;
-    const canMaterial = new Babylon.StandardMaterial("can", this.scene);
-    canMaterial.diffuseTexture = new Babylon.Texture('static/Can Texture.png',this.scene);
-    canMaterial.emissiveTexture = canMaterial.diffuseTexture.clone();
-    canMaterial.emissiveColor = new Babylon.Color3(0.1,0.1,0.1);
-    const faceUV: Babylon.Vector4[] = [];
-    faceUV[0] = Babylon.Vector4.Zero();
-    faceUV[1] = new Babylon.Vector4(1, 0, 0, 1);
-    faceUV[2] = Babylon.Vector4.Zero();
-
-    const new_can = Babylon.MeshBuilder.CreateCylinder(canName,{ height:10, diameter:6, faceUV: faceUV }, this.scene);
-    new_can.material = canMaterial;
-    new_can.physicsImpostor = new Babylon.PhysicsImpostor(new_can, Babylon.PhysicsImpostor.CylinderImpostor, { mass: 1, friction: 5 }, this.scene);
-    new_can.position = new Babylon.Vector3(this.canCoordinates[canNumber - 1][0], 5, this.canCoordinates[canNumber - 1][1]);
+  public createItem(item: { custom?: Item, default?: string }): void {
+    const defaultItemList = Dict.toList(Items);
+    let newItem: Item;
+    // Detect if importing default item or custom item
+    if (item.default !== undefined) {
+      const key = Object.keys(Items).indexOf(item.default);
+      if (key !== undefined) {
+        newItem = defaultItemList[key][1];
+      } else {
+        throw new Error('Could not find by id');
+      }
+    } else if (item.custom !== undefined) {
+      newItem = item.custom;
+    } else {
+      throw new Error('No Item or id was used');
+    }
+    switch (newItem.type) {
+      case Item.Type.Can: {
+        const can = new Can(this.scene, { item: newItem });
+        this.itemList.push(can.id);
+        can.place();
+        break;
+      }
+      case Item.Type.PaperReam: {
+        const ream = new PaperReam(this.scene, { item: newItem });
+        this.itemList.push(ream.id);
+        ream.place();
+        break;
+      }
+      default: {
+        throw new Error('Type not supported or undefined');
+      }
+    }
   }
 
-  public destroyCan(canNumber: number): void {
-    const canName = `Can${canNumber}`;
-    this.scene.getMeshByName(canName).dispose();
+  public destroyItem(id: string): void {
+    const index = this.itemList.indexOf(id);
+    this.itemList = this.itemList.splice(index, 1);
+    this.scene.getMeshByName(id).dispose();
+  }
+  
+  public updateSensorOptions(isNoiseEnabled: boolean): void {
+    for (const sensorObject of this.sensorObjects_) sensorObject.isNoiseEnabled = isNoiseEnabled;
   }
 
   private buildFloor() {
@@ -503,6 +511,17 @@ export class Space {
     groundMaterial.emissiveColor = new Babylon.Color3(0.1,0.1,0.1);
     this.ground.material = groundMaterial;
     this.ground.physicsImpostor = new Babylon.PhysicsImpostor(this.ground, Babylon.PhysicsImpostor.BoxImpostor,{ mass:0, friction: 1 }, this.scene);
+  }
+
+  public rebuildFloor(surfaceState: SurfaceState): void { 
+    this.mat.dispose();
+    this.mat = Babylon.MeshBuilder.CreateGround("mat", { width: surfaceState.surfaceWidth, height: surfaceState.surfaceHeight, subdivisions:2 }, this.scene);
+    this.mat.position.y = -0.8;
+    this.mat.rotate(new Babylon.Vector3(0,1,0),-Math.PI / 2);
+    const matMaterial = new Babylon.StandardMaterial("ground", this.scene);
+    matMaterial.ambientTexture = new Babylon.Texture(surfaceState.surfaceImage,this.scene);
+    this.mat.material = matMaterial;
+    this.mat.physicsImpostor = new Babylon.PhysicsImpostor(this.mat, Babylon.PhysicsImpostor.BoxImpostor,{ mass:0, friction: 1 }, this.scene);
   }
 
   private setDriveMotors(leftSpeed: number, rightSpeed: number) {
@@ -559,51 +578,65 @@ export class Space {
     return twist;
   };
 
-  private vecToLocal(vector: Babylon.Vector3, mesh: Babylon.AbstractMesh): Babylon.Vector3 {
-    const matrix = mesh.getWorldMatrix();
-    return Babylon.Vector3.TransformCoordinates(vector, matrix);
-  }
-
-
   private setServoPositions(goals: number[]) {
-    const armCurr = this.armCompoundRootMesh.rotationQuaternion.toEulerAngles().x;
-    const armGoal = goals[0] / this.SERVO_TICKS_PER_RADIAN - this.SERVO_DEFUALT_RADIANS;
-    const delta = armCurr - armGoal;
-    const sign = delta >= 0 ? 1 : -1;
-    const deltaNorm = Math.abs(delta / (this.SERVO_DEFUALT_RADIANS * 2));
-    switch (delta !== null) {
-      case deltaNorm < 0.02:
-        this.armJoint.setMotor(0);
-        this.armCompoundRootMesh.physicsImpostor.setAngularVelocity(Babylon.Vector3.Zero());
-        break;
-      case deltaNorm >= 0.02 && deltaNorm <= 0.04:
-        this.armJoint.setMotor(sign * 0.3);
-        break;
-      case deltaNorm > 0.04:
-        this.armJoint.setMotor(sign * 2.38);
-        break;
-      default:
-        this.armJoint.setMotor(0);
-        this.armCompoundRootMesh.physicsImpostor.setAngularVelocity(Babylon.Vector3.Zero());
+    // Get all necessary meshes
+    const bodyCurrQuat = this.bodyCompoundRootMesh.rotationQuaternion.clone();
+    const armCurrQuat = this.armCompoundRootMesh.rotationQuaternion.clone();
+    const clawCurrQuat = this.clawCompoundRootMesh.rotationQuaternion.clone();
+
+    // Get updated real mesh rotation for arm
+    const armCurr = Babylon.Quaternion.Inverse(bodyCurrQuat).multiply(armCurrQuat);
+    let armRotation = this.getDeltaRotationOnAxis(this.armRotationDefault, armCurr, Space.armRotationVector);
+    if (armRotation >= Math.PI) {
+      armRotation = armRotation - 2 * Math.PI;
     }
+
+    // Get difference between goal and current rotation
+    const armDelta = armRotation + this.ARM_DEFAULT_ROTATION - goals[0] / this.SERVO_TICKS_PER_RADIAN;
+    const armSign = armDelta >= 0 ? 1 : -1;
+    const armDeltaNorm = Math.abs(armDelta / (this.SERVO_DEFUALT_RADIANS * 2));
+
+    // Set motor for arm based on how close to goal mesh is
+    if (armDeltaNorm < 0.01) {
+      this.armJoint.setMotor(0);
+    } else if (armDeltaNorm >= 0.001 && armDeltaNorm <= 0.04) {
+      this.armJoint.setMotor(armSign * 1.2, 8000);
+    } else {
+      this.armJoint.setMotor(armSign * 6, 8000);
+    }
+
+    // Get updated real mesh rotation for claw
+    const clawCurr = Babylon.Quaternion.Inverse(armCurrQuat).multiply(clawCurrQuat);
+    let clawRotation = this.getDeltaRotationOnAxis(this.clawRotationDefault, clawCurr, Space.clawRotationVector);
+    if (clawRotation >= Math.PI) {
+      clawRotation = clawRotation - 2 * Math.PI;
+    }
+
+    // Get difference between goal and current rotation
+    const clawDelta = clawRotation - this.CLAW_DEFAULT_ROTATION + goals[3] / this.SERVO_TICKS_PER_RADIAN;
+    const clawSign = clawDelta >= 0 ? -1 : 1;
+    const clawDeltaNorm = Math.abs(clawDelta / (this.SERVO_DEFUALT_RADIANS * 2));
     
-  }
-
-  private setPositiveServo(s0_position: number) {
-    this.armJoint.setMotor(2.38); // Rotates arm backwards
-
-    const angle_Positive = Babylon.Tools.ToDegrees(this.armCompoundRootMesh.rotationQuaternion.toEulerAngles()._x);
-    if (s0_position  > angle_Positive || angle_Positive > 85 || angle_Positive < -85) {
-      this.armJoint.setMotor(0);
+    // Set motor for claw based on how close to goal mesh is
+    if (clawDeltaNorm < 0.01) {
+      this.clawJoint.setMotor(0);
+    } else if (clawDeltaNorm >= 0.001 && clawDeltaNorm <= 0.04) {
+      this.clawJoint.setMotor(clawSign * 1.2, 2000);
+    } else {
+      this.clawJoint.setMotor(clawSign * 6, 2000);
     }
   }
 
-  private setNegativeServo(s0_position: number) {
-    this.armJoint.setMotor(-2.38); // Rotates arm forward
-
-    const angle_Negative = Babylon.Tools.ToDegrees(this.armCompoundRootMesh.rotationQuaternion.toEulerAngles()._x);
-    if (s0_position < angle_Negative || angle_Negative < -85 || angle_Negative > 85) {
-      this.armJoint.setMotor(0);
-    }
+  // Takes a mesh with negative scaling values and "bakes" the negative scaling into the mesh itself,
+  // resulting in effectively the same mesh but with all positive scale values.
+  // This is used specifically on collider meshes imported from the GLTF model, to work around an issue
+  // with physics impostors and negative scaling.
+  // See GitHub issue: https://github.com/BabylonJS/Babylon.js/issues/10283
+  private fixNegativeScaling(mesh: Babylon.Mesh) {
+    const initialScaling = mesh.scaling.clone();
+    const scaleMatrix = Babylon.Matrix.Scaling(Math.sign(initialScaling.x), Math.sign(initialScaling.y), Math.sign(initialScaling.z));
+    mesh.bakeTransformIntoVertices(scaleMatrix);
+    initialScaling.set(Math.abs(initialScaling.x), Math.abs(initialScaling.y), Math.abs(initialScaling.z));
+    mesh.scaling = initialScaling;
   }
 }

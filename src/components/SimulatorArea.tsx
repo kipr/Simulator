@@ -1,12 +1,15 @@
-import React = require("react");
+import * as React from 'react';
 
 import * as Sim from '../Sim';
 import { RobotState } from "../RobotState";
+import { SurfaceState } from '../SurfaceState';
 
 interface SimulatorAreaProps {
   robotState: RobotState;
   canEnabled: boolean[];
   shouldSetRobotPosition: boolean;
+  isSensorNoiseEnabled: boolean;
+  surfaceState: SurfaceState;
 
   onRobotStateUpdate: (robotState: Partial<RobotState>) => void;
   onRobotPositionSetCompleted: () => void;
@@ -15,6 +18,7 @@ interface SimulatorAreaProps {
 export class SimulatorArea extends React.Component<SimulatorAreaProps> {
   canvas: HTMLCanvasElement;
   space: Sim.Space;
+  private oldIsSensorNoiseEnabled: boolean;
   
   constructor(props: SimulatorAreaProps) {
     super(props);
@@ -48,6 +52,18 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
         this.setCanEnabled(i, enabled);
       }
     });
+    
+    // Check if simulation settings were changed
+    if (this.props.isSensorNoiseEnabled !== this.oldIsSensorNoiseEnabled) {
+      this.oldIsSensorNoiseEnabled = this.props.isSensorNoiseEnabled;
+      this.space.updateSensorOptions(this.props.isSensorNoiseEnabled);
+    }
+
+    // Check if board was reset
+    if (this.props.surfaceState !== prevProps.surfaceState) {
+      this.space.rebuildFloor(this.props.surfaceState);
+      this.space.resetPosition();
+    }
 
     // Checks if robot position needs to be set
     if (this.props.shouldSetRobotPosition && !prevProps.shouldSetRobotPosition) {
@@ -63,9 +79,10 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
   };
 
   private setCanEnabled(canNumber: number, isEnabled: boolean) {
+    const canName = `Can${canNumber + 1}`;
     isEnabled
-      ? this.space.createCan(canNumber + 1)
-      : this.space.destroyCan(canNumber + 1);
+      ? this.space.createItem({ default: canName })
+      : this.space.destroyItem(canName);
   }
 
   render(): React.ReactNode {

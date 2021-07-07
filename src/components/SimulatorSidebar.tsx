@@ -15,15 +15,21 @@ import Collapsible from './Collapsible';
 import { MotorsDisplay } from './MotorsDisplay';
 import { ServosDisplay } from './ServosDisplay';
 import { RobotPositionDisplay } from './RobotPositionDisplay';
+import { SurfaceConfig } from './SurfaceConfig';
+import { SurfaceState } from '../SurfaceState';
 
 
 export interface SimulatorSidebarProps extends StyleProps {
   robotState: RobotState;
   isCanChecked: boolean[];
+  isSensorNoiseEnabled: boolean;
+  surfaceState: SurfaceState;
 
   onRobotStateChange: (robotState: RobotState) => void;
   onCanChange: (canNumber: number, checked: boolean) => void;
   onRobotPositionSetRequested: () => void;
+  onToggleSensorNoise: (enabled: boolean) => void;
+  onUpdateSurfaceState: (surfaceState: SurfaceState) => void;
 }
 
 interface SimulatorSidebarState {
@@ -92,7 +98,13 @@ export class SimulatorSidebar extends React.Component<Props, State> {
     const compiledCode = await this.compileCurrentCode();
     if (compiledCode === null) return;
 
+    WorkerInstance.stop();
     WorkerInstance.start(compiledCode);
+  };
+
+  private onStopClick_: React.MouseEventHandler<HTMLButtonElement> = () => {
+    WorkerInstance.stop();
+    this.appendToConsole('Program stopped\n');
   };
 
   private onDownloadClick_: React.MouseEventHandler<HTMLButtonElement> = () => {
@@ -174,6 +186,15 @@ export class SimulatorSidebar extends React.Component<Props, State> {
     const isTargetChecked = event.target.checked;
     this.props.onCanChange(canNumber, isTargetChecked);
   };
+  
+  private onToggleSensorNoise = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const isChecked = event.target.checked;
+    this.props.onToggleSensorNoise(isChecked);
+  };
+
+  private onUpdateSurfaceState = (surfaceState: SurfaceState) => {
+    this.props.onUpdateSurfaceState(surfaceState);
+  };
 
   render(): React.ReactNode {
     const { props, state } = this;
@@ -201,6 +222,7 @@ export class SimulatorSidebar extends React.Component<Props, State> {
           <p>
             <button onClick={this.onCompileClick_} disabled={isCompiling}>Compile</button>
             <button onClick={this.onRunClick_} disabled={isCompiling}>Run</button>
+            <button onClick={this.onStopClick_}>Stop</button>
             <button onClick={this.onDownloadClick_}>Download</button>
           </p>
           <CodeMirror value={code} onBeforeChange={this.onCodeChange_} options={options} className="code" />
@@ -237,6 +259,14 @@ export class SimulatorSidebar extends React.Component<Props, State> {
               </li>
             )}
           </ul>
+        </Collapsible>
+        <Collapsible title="Options">
+          <section>
+            <h3>Robot Configuration</h3>
+            <input type="checkbox" name="sensorNoise" checked={this.props.isSensorNoiseEnabled} onChange={this.onToggleSensorNoise}/>
+            <label>Sensor noise</label>
+          </section>
+          <SurfaceConfig surfaceState={this.props.surfaceState} updateSurfaceAndReset={this.onUpdateSurfaceState} />
         </Collapsible>
       </>
     );
