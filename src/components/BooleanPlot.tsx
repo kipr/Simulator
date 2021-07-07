@@ -236,7 +236,7 @@ class BooleanPlot extends React.PureComponent<Props, State> {
       Vector2.create(range.end * pixelsPerSecond, PLOT_HEIGHT / 2)
     );
 
-    return range.value ? box : Box2.translate(Vector2.fromY(PLOT_HEIGHT / 2), box);
+    return Box2.translate(Vector2.fromY(PLOT_HEIGHT / 2), range.value ? box : Box2.translate(Vector2.fromY(PLOT_HEIGHT / 2), box));
   };
 
   private slow_ = 0;
@@ -261,6 +261,7 @@ class BooleanPlot extends React.PureComponent<Props, State> {
           y={box.topLeft.y}
           width={Box2.width(box)}
           height={Box2.height(box)}
+          style={{ fill: range.value ? 'green' : 'red' }}
         />
       );
     }

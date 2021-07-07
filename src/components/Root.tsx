@@ -298,7 +298,7 @@ export class Root extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { cans, robotState, layout, code, simulatorSink, modal, simulatorState, console, messages } = state;
+    const { cans, robotState, layout, code, simulatorSink, modal, simulatorState, console, messages, shouldSetRobotPosition } = state;
 
     const theme = DARK;
 
@@ -361,7 +361,14 @@ export class Root extends React.Component<Props, State> {
           />
           {impl}
           <Portal.Source sink={simulatorSink}>
-            <SimulatorArea key='simulator' robotState={robotState} canEnabled={cans} onRobotStateUpdate={this.onRobotStateUpdate_} />
+            <SimulatorArea
+              key='simulator'
+              robotState={robotState}
+              canEnabled={cans}
+              onRobotStateUpdate={this.onRobotStateUpdate_}
+              onRobotPositionSetCompleted={this.onRobotPositionSetCompleted_}
+              shouldSetRobotPosition={shouldSetRobotPosition}
+            />
           </Portal.Source>
         </Container>
         {modal === 'settings' ? <SettingsDialog theme={theme} onClose={this.onModalClose_} /> : undefined}

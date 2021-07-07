@@ -37,7 +37,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   cursor: 'pointer'
 }));
 
-class Button extends React.PureComponent<Props, State> {
+export class Button extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
   }

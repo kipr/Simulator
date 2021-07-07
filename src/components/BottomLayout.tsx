@@ -179,7 +179,7 @@ class BottomLayout extends React.PureComponent<Props, State> {
     return (
       <Container>
         
-        <SimulatorArea key='simulator' robotState={state} canEnabled={cans} onRobotStateUpdate={onStateChange} />
+        
         <BottomBar>
           <ConsoleWidget theme={theme} name='Console' sizes={CONSOLE_SIZES} size={consoleSize} onSizeChange={this.onConsoleSizeChange_} mode={Mode.Inline}>
             <Console theme={theme} text={console} />

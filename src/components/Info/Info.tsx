@@ -157,11 +157,11 @@ class Info extends React.PureComponent<Props, State> {
       </Row>
     ));
 
-    /*const digitalSensors = robotState.digitalValues.map((value, i) => (
+    const digitalSensors = robotState.digitalValues.map((value, i) => (
       <Row key={`digital-${i}`} theme={theme}>
         <SensorWidget value={value} name={`digital(${i})`} theme={theme} />
       </Row>
-    ));*/
+    ));
     
     return (
       <ScrollArea theme={theme} style={{ flex: '1 1' }}>
@@ -197,6 +197,14 @@ class Info extends React.PureComponent<Props, State> {
             collapsed={collapsed['analog']}
           >
             {analogSensors}
+          </StyledSection>
+          <StyledSection
+            name={DIGITAL_NAME}
+            theme={theme}
+            onCollapsedChange={this.onCollapsedChange_('digital')}
+            collapsed={collapsed['digital']}
+          >
+            {digitalSensors}
           </StyledSection>
         </Container>
       </ScrollArea>

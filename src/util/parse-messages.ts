@@ -46,6 +46,7 @@ export default (stderr: string) => {
     }
 
     switch (type) {
+      case 'fatal error':
       case 'error': {
         ret.push({
           severity: 'error', 

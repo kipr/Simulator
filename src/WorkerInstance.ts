@@ -4,6 +4,8 @@ import { RobotState } from './RobotState';
 
 import deepNeq from './deepNeq';
 
+const Worker = require('./worker.ts');
+
 class WorkerInstance {
   
   onStateChange: (state: RobotState) => void;

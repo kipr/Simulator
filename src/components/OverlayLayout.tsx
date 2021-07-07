@@ -346,13 +346,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
 
     return (
       <Container style={style} className={className}>
-        <Portal.Sink ref={simulator} />
-        <SimulatorArea
-          key='simulator'
-          robotState={state}
-          canEnabled={cans}
-          onRobotStateUpdate={onStateChange}
-        />
+        <Portal.Sink style={{ display: 'flex', width: '100%', height: '100%' }} ref={simulator} />
         <Overlay theme={theme}>
           <EditorWidget
             {...commonProps}
