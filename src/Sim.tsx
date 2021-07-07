@@ -125,7 +125,7 @@ export class Space {
     this.getRobotState = getRobotState;
     this.updateRobotState = updateRobotState;
 
-    this.ticksSinceETSensorUpdate = 0;
+    // this.ticksSinceETSensorUpdate = 0;
 
     ACTIVE_SPACE = this;
   }

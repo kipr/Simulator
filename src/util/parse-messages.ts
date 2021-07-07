@@ -1,7 +1,6 @@
 // Parses clang error messages
 
 import { Message } from 'ivygate';
-import React = require('react');
 import { StyledText } from './StyledText';
 
 export const hasErrors = (messages: Message[]) => {

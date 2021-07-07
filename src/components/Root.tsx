@@ -298,7 +298,20 @@ export class Root extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { cans, robotState, layout, code, simulatorSink, modal, simulatorState, console, messages, shouldSetRobotPosition } = state;
+    const {
+      cans,
+      robotState,
+      layout,
+      code,
+      simulatorSink,
+      modal,
+      simulatorState,
+      console,
+      messages,
+      shouldSetRobotPosition,
+      isSensorNoiseEnabled,
+      surfaceState
+    } = state;
 
     const theme = DARK;
 
@@ -368,6 +381,8 @@ export class Root extends React.Component<Props, State> {
               onRobotStateUpdate={this.onRobotStateUpdate_}
               onRobotPositionSetCompleted={this.onRobotPositionSetCompleted_}
               shouldSetRobotPosition={shouldSetRobotPosition}
+              isSensorNoiseEnabled={isSensorNoiseEnabled}
+              surfaceState={surfaceState}
             />
           </Portal.Source>
         </Container>
