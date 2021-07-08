@@ -8,10 +8,12 @@ import ValueEdit from '../ValueEdit';
 export interface SimulationProps extends ThemeProps, StyleProps {
   x: Distance;
   y: Distance;
+  z: Distance;
   theta: Angle;
 
   onXChange: (x: Distance) => void;
   onYChange: (y: Distance) => void;
+  onZChange: (z: Distance) => void;
   onThetaChange: (theta: Angle) => void;
 }
 
@@ -37,17 +39,22 @@ export class Simulation extends React.PureComponent<Props> {
     this.props.onYChange(Value.toDistance(y));
   };
 
+  private onZChange_ = (z: Value) => {
+    this.props.onZChange(Value.toDistance(z));
+  };
+
   private onThetaChange_ = (theta: Value) => {
     this.props.onThetaChange(Value.toAngle(theta));
   };
 
   render() {
     const { props } = this;
-    const { theme, style, className, x, y, theta } = props;
+    const { theme, style, className, x, y, z, theta } = props;
     return (
       <Container style={style} className={className}>
         <StyledValueEdit value={Value.distance(x)} onValueChange={this.onXChange_} theme={theme} name='X' />
         <StyledValueEdit value={Value.distance(y)} onValueChange={this.onYChange_} theme={theme} name='Y' />
+        <StyledValueEdit value={Value.distance(z)} onValueChange={this.onZChange_} theme={theme} name='Z' />
         <StyledValueEdit value={Value.angle(theta)} onValueChange={this.onThetaChange_} theme={theme} name='Rotation' />
       </Container>
     );

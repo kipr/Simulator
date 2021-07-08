@@ -10,14 +10,17 @@ import Section from './Section';
 import { Spacer } from './common';
 import { StyledText } from '../util';
 
+import {
+  Items,
+} from '../items';
 
 export interface WorldProps extends StyleProps, ThemeProps {
-  cans: boolean[];
-  onCanChange: (index: number, enabled: boolean) => void;
+  items: boolean[];
+  onItemChange: (id: string, enabled: boolean) => void;
 }
 
 interface WorldState {
-  
+  collapsed: { [section: string]: boolean }
 }
 
 type Props = WorldProps;
@@ -27,8 +30,8 @@ const NAME_STYLE: React.CSSProperties = {
   fontSize: '1.2em'
 };
 
-const CANS_NAME = StyledText.text({
-  text: 'Cans',
+const ITEMS_NAME = StyledText.text({
+  text: 'Items',
   style: NAME_STYLE
 });
 
@@ -40,6 +43,13 @@ const Container = styled('div', (props: ThemeProps) => ({
   padding: '10px'
 }));
 
+const StyledSection = styled(Section, {
+  marginTop: '10px',
+  ':first-child': {
+    marginTop: 0
+  },
+});
+
 const StyledField = styled(Field, (props: ThemeProps) => ({
   marginTop: `${props.theme.itemPadding}px`,
   ':first-child': {
@@ -48,29 +58,53 @@ const StyledField = styled(Field, (props: ThemeProps) => ({
 }));
 
 class World extends React.PureComponent<Props, State> {
-  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
   constructor(props: Props) {
     super(props);
+
+    this.state = {
+      collapsed: {}
+    };
   }
 
-  private onCanChange_ = (index: number) => (value: boolean) => {
-    this.props.onCanChange(index, value);
+  private onItemChange_ = (id: string) => (value: boolean) => {
+    this.props.onItemChange(id, value);
+  };
+
+  private onCollapsedChange_ = (section: string) => (collapsed: boolean) => {
+    this.setState({
+      collapsed: {
+        ...this.state.collapsed,
+        [section]: !collapsed
+      }
+    });
   };
 
   render() {
-    const { style, className, theme, cans } = this.props;
-    
+    const { props, state } = this;
+    const { style, className, theme } = props;
+    let items = props.items;
+    const { collapsed } = state;
+    const defaultItemList = Object.keys(Items);
+    if (items === undefined) {
+      items = [];
+    }
+    console.log(items.length);
     return (
       <ScrollArea theme={theme} style={{ flex: '1 1' }}>
         <Container theme={theme} style={style} className={className}>
-          <Section theme={theme} name={CANS_NAME}>
-            {cans.map((can, i) => (
-              <StyledField key={i} theme={theme} name={`Can ${i}`}>
+          <StyledSection 
+            name={ITEMS_NAME}
+            theme={theme}
+            onCollapsedChange={this.onCollapsedChange_('items')}
+            collapsed={!collapsed['items']}
+          >
+            { items.map((item, i) => (
+              <StyledField key={i} theme={theme} name={defaultItemList[i]}>
                 <Spacer />
-                <Switch value={can} onValueChange={this.onCanChange_(i)} theme={theme} />
+                <Switch value={item} onValueChange={this.onItemChange_(defaultItemList[i])} theme={theme} />
               </StyledField>
             ))}
-          </Section>
+          </StyledSection>
         </Container>
       </ScrollArea>
     );

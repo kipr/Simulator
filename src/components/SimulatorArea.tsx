@@ -6,9 +6,13 @@ import { SurfaceState } from '../SurfaceState';
 
 import { styled } from 'styletron-react';
 
+import {
+  Items,
+} from '../items';
+
 export interface SimulatorAreaProps {
   robotState: RobotState;
-  canEnabled: boolean[];
+  itemEnabled: boolean[];
   shouldSetRobotPosition: boolean;
   isSensorNoiseEnabled: boolean;
   surfaceState: SurfaceState;
@@ -65,6 +69,8 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
   private lastWidth_ = 0;
   private lastHeight_ = 0;
 
+  private defaultItemList = Object.keys(Items);
+
   private tick_ = () => {
     if (!this.run_) return;
     
@@ -93,9 +99,9 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
 
   componentDidUpdate(prevProps: SimulatorAreaProps) {
     // Check if any cans were toggled
-    this.props.canEnabled.forEach((enabled, i) => {
-      if (enabled === prevProps.canEnabled[i]) return;
-      this.setCanEnabled(i, enabled);
+    this.props.itemEnabled.forEach((enabled, i) => {
+      if (enabled === prevProps.itemEnabled[i]) return;
+      this.setItemEnabled(this.defaultItemList[i], enabled);
     });
     
     // Check if simulation settings were changed
@@ -125,11 +131,10 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
     this.canvasRef_ = ref;
   };
 
-  private setCanEnabled(canNumber: number, isEnabled: boolean) {
-    const canName = `Can${canNumber + 1}`;
+  private setItemEnabled(itemName: string, isEnabled: boolean) {
     isEnabled
-      ? this.space.createItem({ default: canName })
-      : this.space.destroyItem(canName);
+      ? this.space.createItem({ default: itemName })
+      : this.space.destroyItem(itemName);
   }
 
   render() {

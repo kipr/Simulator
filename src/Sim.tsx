@@ -104,11 +104,11 @@ export class Space {
       BABYLON.Matrix.Identity(),
       this.scene.getTransformMatrix() as any,
       this.camera.viewport.toGlobal(
-      this.engine.getRenderWidth(),
-      this.engine.getRenderHeight(),
-    ));
+        this.engine.getRenderWidth(),
+        this.engine.getRenderHeight(),
+      ));
 
-    const { top, left } = this.canvas.getBoundingClientRect()
+    const { top, left } = this.canvas.getBoundingClientRect();
 
     return {
       x: coordinates.x + left,

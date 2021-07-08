@@ -116,6 +116,14 @@ class Info extends React.PureComponent<Props, State> {
     this.props.onRobotStateChange(nextRobotState);
   };
 
+  private onZChange_ = (z: Distance) => {
+    const { props } = this;
+    const { robotState } = props;
+    const nextRobotState = { ...robotState };
+    nextRobotState.z = z.value;
+    this.props.onRobotStateChange(nextRobotState);
+  };
+
   private onThetaChange_ = (theta: Angle) => {
     const { props } = this;
     const { robotState } = props;
@@ -174,9 +182,11 @@ class Info extends React.PureComponent<Props, State> {
             <Simulation
               x={Distance.meters(robotState.x)}
               y={Distance.meters(robotState.y)}
+              z={Distance.meters(robotState.z)}
               theta={Angle.degrees(robotState.theta)}
               onXChange={this.onXChange_}
               onYChange={this.onYChange_}
+              onZChange={this.onZChange_}
               onThetaChange={this.onThetaChange_}
               theme={theme}
             />

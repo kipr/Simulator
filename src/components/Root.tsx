@@ -6,16 +6,13 @@ import { SurfaceState, SurfaceStatePresets } from '../SurfaceState';
 import Menu from './Menu';
 
 import { styled } from 'styletron-react';
-import { DARK, Theme, ThemeProps } from './theme';
-import Console from './Console';
-import Widget from './Widget';
+import { DARK, Theme } from './theme';
 import OverlayLayout from './OverlayLayout';
 import { Layout, LayoutProps } from './Layout';
 import BottomLayout from './BottomLayout';
 import SideLayout from './SideLayout';
 
-import * as portals from 'react-reverse-portal';
-import { SimulatorArea, SimulatorAreaProps } from './SimulatorArea';
+import { SimulatorArea } from './SimulatorArea';
 import { Portal } from './Portal';
 import { SettingsDialog } from './SettingsDialog';
 import { AboutDialog } from './AboutDialog';
@@ -25,6 +22,10 @@ import { StyledText } from '../util';
 import { Message } from 'ivygate';
 import parseMessages, { hasErrors, sort, toStyledText } from '../util/parse-messages';
 
+import {
+  Items,
+} from '../items';
+
 type ModalType = 'settings' | 'about' | 'none';
 
 interface RootState {
@@ -32,7 +33,7 @@ interface RootState {
   isSensorNoiseEnabled: boolean,
   surfaceState: SurfaceState,
   robotState: RobotState;
-  cans: boolean[];
+  items: boolean[];
   layout: Layout;
   code: string;
   simulatorSink: Portal.Sink;
@@ -66,6 +67,8 @@ const STDERR_STYLE = (theme: Theme) => ({
   color: 'red'
 });
 
+const ITEM_KEYS = Object.keys(Items);
+
 export class Root extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -77,7 +80,7 @@ export class Root extends React.Component<Props, State> {
       shouldSetRobotPosition: false,
       isSensorNoiseEnabled: false,
       surfaceState: SurfaceStatePresets.jbcA,
-      cans: Array<boolean>(12).fill(false),
+      items: Array<boolean>(ITEM_KEYS.length).fill(false),
       layout: Layout.Overlay,
       code: '',
       simulatorSink: undefined,
@@ -87,6 +90,7 @@ export class Root extends React.Component<Props, State> {
       theme: DARK,
       messages: []
     };
+    console.log(this.state.items.length);
   }
 
   componentDidMount() {
@@ -109,11 +113,11 @@ export class Root extends React.Component<Props, State> {
     WorkerInstance.state = newRobotState;
   };
 
-  private onCanChange_ = (canNumber: number, enabled: boolean) => {
+  private onItemChange_ = (itemName: string, enabled: boolean) => {
     this.setState(prevState => {
-      const cans = [...prevState.cans];
-      cans[canNumber] = enabled;
-      return { cans };
+      const items = [...prevState.items];
+      items[ITEM_KEYS.indexOf(itemName)] = enabled;
+      return { items };
     });
   };
 
@@ -299,7 +303,7 @@ export class Root extends React.Component<Props, State> {
   render() {
     const { props, state } = this;
     const {
-      cans,
+      items,
       robotState,
       layout,
       code,
@@ -317,12 +321,12 @@ export class Root extends React.Component<Props, State> {
 
     const commonLayoutProps: LayoutProps = {
       code,
-      cans,
+      items,
       onStateChange: this.onRobotStateUpdate_,
       theme,
       state: robotState,
       simulator: this.bindSimulatorSink_,
-      onCanChange: this.onCanChange_,
+      onItemChange: this.onItemChange_,
       console,
       onCodeChange: this.onCodeChange_,
       messages,
@@ -377,7 +381,7 @@ export class Root extends React.Component<Props, State> {
             <SimulatorArea
               key='simulator'
               robotState={robotState}
-              canEnabled={cans}
+              itemEnabled={items}
               onRobotStateUpdate={this.onRobotStateUpdate_}
               onRobotPositionSetCompleted={this.onRobotPositionSetCompleted_}
               shouldSetRobotPosition={shouldSetRobotPosition}

@@ -8,8 +8,8 @@ import { ThemeProps } from "./theme";
 export interface LayoutProps extends StyleProps, ThemeProps {
   code: string;
   onCodeChange: (code: string) => void;
-  cans: boolean[];
-  onCanChange: (index: number, enabled: boolean) => void;
+  items: boolean[];
+  onItemChange: (index: string, enabled: boolean) => void;
   state: RobotState;
   onStateChange: (state: RobotState) => void;
   simulator: (simulatorSink: Portal.Sink) => void;
