@@ -52,9 +52,10 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
     this.space.createScene();
     this.space.loadMeshes().then(() => {
       this.space.startRenderLoop();
-    }).catch((e) => {
-      console.error('The simulator meshes failed to load', e);
-    });
+    })
+      .catch((e) => {
+        console.error('The simulator meshes failed to load', e);
+      });
 
     // Start resize checker
     this.run_ = true;

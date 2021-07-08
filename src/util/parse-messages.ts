@@ -34,7 +34,7 @@ export default (stderr: string) => {
     const message = parts[4].trim();
 
     
-    let end: Message.Index = {
+    const end: Message.Index = {
       line: lineNumber,
       col: column
     };

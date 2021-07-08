@@ -1,15 +1,9 @@
 import * as React from 'react';
 
 import { styled } from 'styletron-react';
-import { RobotState } from '../RobotState';
-import { StyleProps } from '../style';
-import { Spacer } from './common';
 import Console from './Console';
 import { Editor } from './Editor';
-import { Fa } from './Fa';
 import { LayoutProps } from './Layout';
-import { SimulatorArea } from './SimulatorArea';
-import { ThemeProps } from './theme';
 import Widget, { Mode, Size, WidgetProps } from './Widget';
 
 
@@ -48,8 +42,8 @@ interface WidgetLayoutProps {
 }
 
 const ConsoleWidget = styled(Widget, (props: WidgetProps) => {
-  let size = props.sizes[props.size];
-  switch(size.type) {
+  const size = props.sizes[props.size];
+  switch (size.type) {
     case Size.Type.Minimized: return {
       display: 'none'
     };
@@ -66,8 +60,8 @@ const ConsoleWidget = styled(Widget, (props: WidgetProps) => {
 });
 
 const EditorWidget = styled(Widget, (props: WidgetProps) => {
-  let size = props.sizes[props.size];
-  switch(size.type) {
+  const size = props.sizes[props.size];
+  switch (size.type) {
     case Size.Type.Minimized: return {
       display: 'none'
     };
@@ -84,8 +78,8 @@ const EditorWidget = styled(Widget, (props: WidgetProps) => {
 });
 
 const InfoWidget = styled(Widget, (props: WidgetProps) => {
-  let size = props.sizes[props.size];
-  switch(size.type) {
+  const size = props.sizes[props.size];
+  switch (size.type) {
     case Size.Type.Minimized: return {
       display: 'none'
     };
@@ -98,9 +92,9 @@ const InfoWidget = styled(Widget, (props: WidgetProps) => {
   
 });
 
-const EDITOR_SIZES: Size[] = [ Size.PARTIAL_LEFT, Size.MAXIMIZED, Size.MINIMIZED ];
-const INFO_SIZES: Size[] = [ Size.PARTIAL_RIGHT, Size.MINIMIZED ];
-const CONSOLE_SIZES: Size[] = [ Size.PARTIAL_DOWN, Size.MAXIMIZED, Size.MINIMIZED ];
+const EDITOR_SIZES: Size[] = [Size.PARTIAL_LEFT, Size.MAXIMIZED, Size.MINIMIZED];
+const INFO_SIZES: Size[] = [Size.PARTIAL_RIGHT, Size.MINIMIZED];
+const CONSOLE_SIZES: Size[] = [Size.PARTIAL_DOWN, Size.MAXIMIZED, Size.MINIMIZED];
 
 class BottomLayout extends React.PureComponent<Props, State> {
   constructor(props: Props) {

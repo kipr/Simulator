@@ -4,7 +4,6 @@ import { styled } from 'styletron-react';
 import { RobotState } from '../../RobotState';
 import { StyleProps } from '../../style';
 import ScrollArea from '../ScrollArea';
-import SensorPlot from '../SensorPlot';
 import Section from '../Section';
 import { ThemeProps } from '../theme';
 import SensorWidget from './SensorWidget';
@@ -132,7 +131,7 @@ class Info extends React.PureComponent<Props, State> {
         [section]: collapsed
       }
     });
-  }
+  };
 
   render() {
     const { props, state } = this;

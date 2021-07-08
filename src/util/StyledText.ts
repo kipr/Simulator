@@ -78,8 +78,8 @@ export namespace StyledText {
   });
 
   export const extend = (existing: StyledText, extension: StyledText) => {
-    if (existing.type === Type.Composition) return compose({ items: [ ...existing.items, extension] });
-    return compose({ items: [ existing, extension ] });
+    if (existing.type === Type.Composition) return compose({ items: [...existing.items, extension] });
+    return compose({ items: [existing, extension] });
   };
 }
 

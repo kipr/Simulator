@@ -1,18 +1,13 @@
 import * as React from 'react';
 
 import { styled } from 'styletron-react';
-import { RobotState } from '../RobotState';
-import { StyleProps } from '../style';
-import WorkerInstance from '../WorkerInstance';
-import Button from './Button';
-import { Spacer } from './common';
+import { Button } from './Button';
 import Console from './Console';
-import { Editor, PerfectCharm, WarningCharm, ErrorCharm } from './Editor';
+import { Editor, WarningCharm, ErrorCharm } from './Editor';
 import { Fa } from './Fa';
 import { Info } from './Info';
 import { LayoutProps } from './Layout';
 import { Portal } from './Portal';
-import { SimulatorArea } from './SimulatorArea';
 import { ThemeProps } from './theme';
 import Widget, { BarComponent, Mode, Size, WidgetProps } from './Widget';
 import World from './World';
@@ -65,8 +60,8 @@ interface WidgetLayoutProps {
 }
 
 const ConsoleWidget = styled(Widget, (props: WidgetProps) => {
-  let size = props.sizes[props.size];
-  switch(size.type) {
+  const size = props.sizes[props.size];
+  switch (size.type) {
     case Size.Type.Minimized: return {
       display: 'none'
     };
@@ -87,8 +82,8 @@ const ConsoleWidget = styled(Widget, (props: WidgetProps) => {
 });
 
 const EditorWidget = styled(Widget, (props: WidgetProps) => {
-  let size = props.sizes[props.size];
-  switch(size.type) {
+  const size = props.sizes[props.size];
+  switch (size.type) {
     case Size.Type.Minimized: return {
       display: 'none'
     };
@@ -109,8 +104,8 @@ const EditorWidget = styled(Widget, (props: WidgetProps) => {
 });
 
 const InfoWidget = styled(Widget, (props: WidgetProps) => {
-  let size = props.sizes[props.size];
-  switch(size.type) {
+  const size = props.sizes[props.size];
+  switch (size.type) {
     case Size.Type.Minimized: return {
       display: 'none'
     };
@@ -123,8 +118,8 @@ const InfoWidget = styled(Widget, (props: WidgetProps) => {
 });
 
 const WorldWidget = styled(Widget, (props: WidgetProps) => {
-  let size = props.sizes[props.size];
-  switch(size.type) {
+  const size = props.sizes[props.size];
+  switch (size.type) {
     case Size.Type.Minimized: return {
       display: 'none'
     };
@@ -136,10 +131,10 @@ const WorldWidget = styled(Widget, (props: WidgetProps) => {
   }
 });
 
-const EDITOR_SIZES: Size[] = [ Size.MINIATURE_LEFT, Size.PARTIAL_LEFT, Size.MAXIMIZED, Size.MINIMIZED ];
-const INFO_SIZES: Size[] = [ Size.PARTIAL_RIGHT, Size.MINIMIZED ];
-const WORLD_SIZES: Size[] = [ Size.PARTIAL_RIGHT, Size.MINIMIZED ];
-const CONSOLE_SIZES: Size[] = [ Size.MINIATURE_LEFT, Size.PARTIAL_DOWN, Size.MAXIMIZED, Size.MINIMIZED ];
+const EDITOR_SIZES: Size[] = [Size.MINIATURE_LEFT, Size.PARTIAL_LEFT, Size.MAXIMIZED, Size.MINIMIZED];
+const INFO_SIZES: Size[] = [Size.PARTIAL_RIGHT, Size.MINIMIZED];
+const WORLD_SIZES: Size[] = [Size.PARTIAL_RIGHT, Size.MINIMIZED];
+const CONSOLE_SIZES: Size[] = [Size.MINIATURE_LEFT, Size.PARTIAL_DOWN, Size.MAXIMIZED, Size.MINIMIZED];
 
 const sizeDict = (sizes: Size[]) => {
   const forward: { [type: number]: number } = {};
@@ -249,7 +244,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       infoSize: Size.Type.Partial,
       consoleSize: Size.Type.Miniature,
       worldSize: Size.Type.Partial,
-    })
+    });
   }
 
   public hideAll() {
@@ -258,7 +253,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       infoSize: Size.Type.Minimized,
       consoleSize: Size.Type.Minimized,
       worldSize: Size.Type.Minimized
-    })
+    });
   }
 
   private onErrorClick_ = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -309,8 +304,8 @@ class OverlayLayout extends React.PureComponent<Props, State> {
     let errors = 0;
     let warnings = 0;
 
-    for (let i = 0; i < messages.length; ++i) {
-      switch (messages[i].severity) {
+    messages.forEach(message => {
+      switch (message.severity) {
         case 'error': {
           ++errors;
           break;
@@ -320,7 +315,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
           break;
         }
       }
-    }
+    });
 
     if (errors > 0) editorBar.push(BarComponent.create(ErrorCharm, {
       theme,
@@ -341,7 +336,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
     consoleBar.push(BarComponent.create(Button, {
       theme,
       onClick: onClearConsole,
-      children: [ <Fa icon='file' />, ' Clear' ]
+      children: [<Fa icon='file' />, ' Clear']
     }));
 
     return (

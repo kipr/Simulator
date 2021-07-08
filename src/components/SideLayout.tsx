@@ -71,11 +71,11 @@ const InfoWidget = styled(Widget, (props: WidgetProps) => {
   };
 });
 
-const EDITOR_SIZES: Size[] = [ Size.PARTIAL_LEFT, Size.MAXIMIZED, Size.MINIMIZED ];
-const INFO_SIZES: Size[] = [ Size.PARTIAL_RIGHT, Size.MINIMIZED ];
-const CONSOLE_SIZES: Size[] = [ Size.PARTIAL_DOWN, Size.MAXIMIZED, Size.MINIMIZED ];
+const EDITOR_SIZES: Size[] = [Size.PARTIAL_LEFT, Size.MAXIMIZED, Size.MINIMIZED];
+const INFO_SIZES: Size[] = [Size.PARTIAL_RIGHT, Size.MINIMIZED];
+const CONSOLE_SIZES: Size[] = [Size.PARTIAL_DOWN, Size.MAXIMIZED, Size.MINIMIZED];
 
-const TABS = [ {
+const TABS = [{
   name: 'Editor',
   icon: 'code'
 }, {

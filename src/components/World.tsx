@@ -48,13 +48,14 @@ const StyledField = styled(Field, (props: ThemeProps) => ({
 }));
 
 class World extends React.PureComponent<Props, State> {
+  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
   constructor(props: Props) {
     super(props);
   }
 
   private onCanChange_ = (index: number) => (value: boolean) => {
     this.props.onCanChange(index, value);
-  }
+  };
 
   render() {
     const { style, className, theme, cans } = this.props;

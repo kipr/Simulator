@@ -151,8 +151,8 @@ class SensorPlot extends React.PureComponent<Props, State> {
     const pixelsPerSecond = width / duration;
 
 
-    const nextPoints = [ ...points ];
-    const nextTicks = [ ...ticks ];
+    const nextPoints = [...points];
+    const nextTicks = [...ticks];
 
     const absoluteOffset = (nowMs - this.firstTick_) / 1000;
 
@@ -169,8 +169,7 @@ class SensorPlot extends React.PureComponent<Props, State> {
 
     const secs = Math.floor(now) - Math.floor(this.lastTick_ / 1000);
 
-    for (let i = 0; i < secs; ++i)
-    {
+    for (let i = 0; i < secs; ++i) {
       nextTicks.push(Math.floor(absoluteOffset) + duration + 1.0);
     }
 
@@ -238,8 +237,7 @@ class SensorPlot extends React.PureComponent<Props, State> {
     const lineScale = (svgHeight / viewportHeight);
 
     let pointPath = '';
-    if (points.length > 0)
-    {
+    if (points.length > 0) {
       const point = this.transformPoint_(points[0]);
       pointPath += `M ${point.x} ${point.y}`;
     }
@@ -251,8 +249,7 @@ class SensorPlot extends React.PureComponent<Props, State> {
     let beginRealY = viewportHeight / 2;
     let endRealY = viewportHeight / 2;
 
-    if (points.length > 0)
-    {
+    if (points.length > 0) {
       const begin = this.transformPoint_(points[0]);
       const end = this.transformPoint_(points[points.length - 1]);
 

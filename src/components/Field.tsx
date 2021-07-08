@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { StyleProps } from '../style';
-import { Value } from '../util';
 import { ThemeProps } from './theme';
 
 export interface FieldProps extends ThemeProps, StyleProps {

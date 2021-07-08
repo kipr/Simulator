@@ -44,8 +44,7 @@ class MeshScreenGuide extends React.PureComponent<Props, State> {
     const { props } = this;
     const { to } = props;
     
-    if (!ACTIVE_SPACE)
-    {
+    if (!ACTIVE_SPACE) {
       setTimeout(this.tick_, 100);
       return;
     }
@@ -57,7 +56,7 @@ class MeshScreenGuide extends React.PureComponent<Props, State> {
     });
 
     requestAnimationFrame(this.tick_);
-  }
+  };
 
   render() {
     const { props, state } = this;

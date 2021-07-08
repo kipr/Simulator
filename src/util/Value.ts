@@ -33,7 +33,7 @@ export namespace Angle {
         value: angle.value / 360 * TAU
       };
     }
-  }
+  };
 
   export const toDegrees = (angle: Angle): Degrees => {
     switch (angle.type) {
@@ -43,7 +43,7 @@ export namespace Angle {
         value: angle.value / TAU * 360
       };
     }
-  }
+  };
 
   export const toDegreesValue = (angle: Angle) => toDegrees(angle).value;
   export const toRadiansValue = (angle: Angle) => toRadians(angle).value;
@@ -53,7 +53,7 @@ export namespace Angle {
       case Type.Degrees: return 'degrees';
       case Type.Radians: return 'radians';
     }
-  }
+  };
 }
 
 export type Angle = Angle.Radians | Angle.Degrees;

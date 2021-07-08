@@ -18,7 +18,9 @@ export namespace Portal {
       this.ref_ = ref;
     };
 
-    get ref() { return this.ref_; }
+    get ref() {
+      return this.ref_; 
+    }
     
     render() {
       const { props } = this;

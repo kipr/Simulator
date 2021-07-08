@@ -99,10 +99,10 @@ export class Root extends React.Component<Props, State> {
     // Create new robot state object by applying the partial changes
     const newRobotState: RobotState = {
       ...this.state.robotState,
-      motorSpeeds: [ ...this.state.robotState.motorSpeeds ],
-      motorPositions: [ ...this.state.robotState.motorPositions ],
-      servoPositions: [ ...this.state.robotState.servoPositions ],
-      analogValues: [ ...this.state.robotState.analogValues ],
+      motorSpeeds: [...this.state.robotState.motorSpeeds],
+      motorPositions: [...this.state.robotState.motorPositions],
+      servoPositions: [...this.state.robotState.servoPositions],
+      analogValues: [...this.state.robotState.analogValues],
       ...robot,
     };
 
@@ -111,7 +111,7 @@ export class Root extends React.Component<Props, State> {
 
   private onCanChange_ = (canNumber: number, enabled: boolean) => {
     this.setState(prevState => {
-      const cans = [ ...prevState.cans ];
+      const cans = [...prevState.cans];
       cans[canNumber] = enabled;
       return { cans };
     });
@@ -136,7 +136,7 @@ export class Root extends React.Component<Props, State> {
 
   private onCodeChange_ = (code: string) => {
     this.setState({ code });
-  }
+  };
 
   private overlayLayout_: OverlayLayout;
   private bindOverlayLayout_ = (overlayLayout: OverlayLayout) => {
@@ -145,16 +145,16 @@ export class Root extends React.Component<Props, State> {
 
   private onShowAll_ = () => {
     this.overlayLayout_.showAll();
-  }
+  };
 
   private onHideAll_ = () => {
     this.overlayLayout_.hideAll();
-  }
+  };
   
   private onLayoutChange_ = (layout: Layout) => {
     this.setState({
       layout
-    })
+    });
   };
 
   private onModalClick_ = (modal: ModalType) => () => this.setState({
@@ -221,7 +221,7 @@ export class Root extends React.Component<Props, State> {
           simulatorState: SimulatorState.RUNNING
         });
       } catch (e) {
-        /*let nextConsole = console;
+        /* let nextConsole = console;
         if (typeof e.stderr === 'string' && e.stderr.length > 0) {
           nextConsole = StyledText.extend(console, StyledText.text({
             text: e.stderr,
@@ -237,7 +237,7 @@ export class Root extends React.Component<Props, State> {
 
         window.console.log(e.stderr);
 
-        window.console.log('parse', );
+        window.console.log('parse',);
         
         const messages = sort(parseMessages(e.stderr));
 
@@ -259,7 +259,7 @@ export class Root extends React.Component<Props, State> {
             onClick: message.ranges.length > 0
               ? this.onErrorMessageClick_(message.ranges[0].start.line)
               : undefined
-          }))
+          }));
 
         }
 
@@ -277,12 +277,12 @@ export class Root extends React.Component<Props, State> {
     WorkerInstance.stop();
     this.setState({
       simulatorState: SimulatorState.STOPPED
-    })
+    });
   };
 
   private onDownloadClick_ = () => {
     const element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.state.code));
+    element.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(this.state.code)}`);
     element.setAttribute('download', 'program.c');
     element.style.display = 'none';
     document.body.appendChild(element);
@@ -293,8 +293,8 @@ export class Root extends React.Component<Props, State> {
   private onClearConsole_ = () => {
     this.setState({
       console: StyledText.compose({ items: [] })
-    })
-  }
+    });
+  };
 
   render() {
     const { props, state } = this;

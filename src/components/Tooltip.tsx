@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { ThemeProps } from "./theme";
 
-import { createPortal } from 'react-dom';
 import { Vector2 } from '../math';
 import { styled } from 'styletron-react';
 import { StyleProps } from '../style';
@@ -35,6 +34,6 @@ class Tooltip extends React.PureComponent<Props, State> {
       <Container {...props} >
         {description}
       </Container>
-    )
+    );
   }
 }

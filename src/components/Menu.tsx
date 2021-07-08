@@ -93,7 +93,7 @@ class Menu extends React.PureComponent<Props, State> {
     this.setState({
       layoutPicker: !this.state.layoutPicker
     });
-  }
+  };
 
   render() {
     const { props, state } = this;
@@ -116,7 +116,7 @@ class Menu extends React.PureComponent<Props, State> {
     return (
       <>
         <Container theme={theme}>
-          {/*<Logo href="/static/KIPR-Logo-bk.jpg"/>*/}
+          {/* <Logo href="/static/KIPR-Logo-bk.jpg"/>*/}
           <Item theme={theme}>KIPR Simulator</Item>
 
           <Item theme={theme} onClick={onRunClick} disabled={!SimulatorState.isStopped(simulatorState)}><ItemIcon icon='play' /> Run</Item>
@@ -134,7 +134,7 @@ class Menu extends React.PureComponent<Props, State> {
           </Item>
           
           
-          {/*<Item theme={theme} onClick={onSettingsClick}><ItemIcon icon='cogs'/> Settings</Item>*/}
+          {/* <Item theme={theme} onClick={onSettingsClick}><ItemIcon icon='cogs'/> Settings</Item>*/}
           <Item theme={theme} onClick={onAboutClick}><ItemIcon icon='question'/> About</Item>
         </Container>
         

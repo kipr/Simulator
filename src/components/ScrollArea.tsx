@@ -1,10 +1,9 @@
 import * as React from 'react';
 
-import { Vector2 } from '../math';
+import { Vector2, clamp } from '../math';
 
 import { StyleProps } from '../style';
 import { styled } from 'styletron-react';
-import { clamp } from '../math';
 import { Theme, ThemeProps } from './theme';
 import resizeListener, { ResizeListener } from './ResizeListener';
 import { GlobalEvents, GLOBAL_EVENTS, Slow } from '../util';

@@ -25,12 +25,12 @@ export class GlobalEvents {
   add<T>(type: keyof GlobalEvents.EventTypes, callback: GlobalEvents.EventCallback<T>): GlobalEvents.Handle {
     const id = this.types_[type].add(callback as GlobalEvents.EventCallback);
     const ret = this.iter_;
-    this.handles_.set(this.iter_++, [ type, id ]);
+    this.handles_.set(this.iter_++, [type, id]);
     return ret;
   }
 
   remove(id: number) {
-    const [ type, innerId ] = this.handles_.get(id);
+    const [type, innerId] = this.handles_.get(id);
     this.types_[type].remove(innerId);
     this.handles_.delete(id);
   }
@@ -59,7 +59,7 @@ export namespace GlobalEvents {
       }
 
       return false;
-    }
+    };
   }
 
   export interface EventTypes {

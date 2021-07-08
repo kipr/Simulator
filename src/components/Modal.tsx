@@ -10,7 +10,9 @@ type Props = ModalProps;
 const MODAL_ROOT = document.getElementById('modal-root');
 
 export class Modal extends React.PureComponent<Props> {
-  static get active() { return MODAL_ROOT.children.length !== 0; }
+  static get active() {
+    return MODAL_ROOT.children.length !== 0; 
+  }
 
   constructor(props?: Props) {
     super(props);

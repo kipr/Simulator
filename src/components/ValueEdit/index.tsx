@@ -60,7 +60,7 @@ export class ValueEdit extends React.PureComponent<Props, State> {
 
     this.state = {
       input: `${Value.value(props.value)}`
-    }
+    };
   }
 
   static getDerivedStateFromProps(props: Props, state: State) {

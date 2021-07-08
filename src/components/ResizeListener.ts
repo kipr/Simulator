@@ -16,11 +16,11 @@ class Polled implements ResizeListener {
   private tick_ = () => {
     if (!this.running_) return;
 
-    for (let key of this.elements_.keys()) {
+    for (const key of this.elements_.keys()) {
       const next = key.getBoundingClientRect();
       const last = this.elements_.get(key);
 
-      if (last.x == next.width && last.y == next.height) continue;
+      if (last.x === next.width && last.y === next.height) continue;
 
       last.x = next.width;
       last.y = next.height;
@@ -65,7 +65,7 @@ class Evented implements ResizeListener {
   private observer_: ResizeObserver;
 
   private onResize_ = (entries: ResizeObserverEntry[]) => {
-    for (let entry of entries) {
+    for (const entry of entries) {
       const borderBox = entry.borderBoxSize[0];
       this.callback_({ x: borderBox.inlineSize, y: borderBox.blockSize }, entry.target);
     }
@@ -89,4 +89,4 @@ class Evented implements ResizeListener {
   }
 }
 
-export default (callback: ResizeCallback): ResizeListener => 'ResizeObserver' in window ? new Evented(callback) : new Polled(callback);
+export default (callback: ResizeCallback): ResizeListener => ('ResizeObserver' in window ? new Evented(callback) : new Polled(callback));

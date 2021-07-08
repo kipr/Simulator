@@ -19,7 +19,7 @@ interface ScreenGuideState {
 type Props = ScreenGuideProps;
 type State = ScreenGuideState;
 
-let SCREEN_GUIDE = document.getElementById('screen-guide');
+const SCREEN_GUIDE = document.getElementById('screen-guide');
 
 const Container = styled('svg', {
   width: '100%',
@@ -65,7 +65,7 @@ class ScreenGuide extends React.PureComponent<Props, State> {
     const p2x = (p0x + p3x) / 2;
     const p2y = p3y;
 
-    const path = `M ${p0x} ${p0y} C ${p1x} ${p1y}, ${p2x} ${p2y}, ${p3x} ${p3y}`
+    const path = `M ${p0x} ${p0y} C ${p1x} ${p1y}, ${p2x} ${p2y}, ${p3x} ${p3y}`;
 
     return ReactDom.createPortal(
       <Container viewBox={`0 0 ${guideBounding.width} ${guideBounding.height}`}>

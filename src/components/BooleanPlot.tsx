@@ -32,7 +32,7 @@ namespace Range {
   });
 
   export const extend = <T extends {}>(ranges: Range<T>[], time: number, value: T) => {
-    const nextRanges = [ ...ranges ];
+    const nextRanges = [...ranges];
     
     if (nextRanges.length === 0) {
       nextRanges.push(instant(time, value));
@@ -180,11 +180,11 @@ class BooleanPlot extends React.PureComponent<Props, State> {
     const { width } = this.ref_.getBoundingClientRect();
     const duration = BooleanPlotProps.duration(props);
 
-    const nextTicks = [ ...ticks ];
+    const nextTicks = [...ticks];
 
     const absoluteOffset = (nowMs - this.firstTick_) / 1000;
 
-    let nextRanges = Range.extend(ranges, absoluteOffset + duration, value);
+    const nextRanges = Range.extend(ranges, absoluteOffset + duration, value);
 
     {
       let i = 0;
@@ -197,8 +197,7 @@ class BooleanPlot extends React.PureComponent<Props, State> {
 
     const secs = Math.floor(now) - Math.floor(this.lastTick_ / 1000);
 
-    for (let i = 0; i < secs; ++i)
-    {
+    for (let i = 0; i < secs; ++i) {
       nextTicks.push(Math.floor(absoluteOffset) + duration + 1.0);
     }
 
@@ -250,7 +249,7 @@ class BooleanPlot extends React.PureComponent<Props, State> {
 
     const lineScale = (svgHeight / viewportHeight);
 
-    let rangeElements: JSX.Element[] = [];
+    const rangeElements: JSX.Element[] = [];
     for (let i = 0; i < ranges.length; ++i) {
       const range = ranges[i];
       const box = this.transformRange_(range);

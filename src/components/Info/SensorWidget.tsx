@@ -5,7 +5,6 @@ import { StyleProps } from '../../style';
 import SensorPlot from '../SensorPlot';
 import BooleanPlot from '../BooleanPlot';
 import { Spacer } from '../common';
-import { MeshScreenGuide, ScreenGuide } from '../ScreenGuide';
 
 export interface SensorWidgetProps extends ThemeProps, StyleProps {
   name: string;
@@ -67,7 +66,7 @@ class SensorWidget extends React.PureComponent<Props, State> {
   private ref_: HTMLDivElement;
   private bindRef_ = (ref: HTMLDivElement) => {
     this.ref_ = ref;
-  }
+  };
 
   render() {
     const { props, state } = this;
@@ -96,7 +95,7 @@ class SensorWidget extends React.PureComponent<Props, State> {
           </Header>
           {plot}
         </Container>
-        {/*showGuide && this.ref_ ? <MeshScreenGuide theme={theme} from={this.ref_} to={'black satin finish plastic'} /> : undefined*/}
+        {/* showGuide && this.ref_ ? <MeshScreenGuide theme={theme} from={this.ref_} to={'black satin finish plastic'} /> : undefined*/}
       </>
     );
   }

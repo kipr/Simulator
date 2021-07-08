@@ -10,8 +10,8 @@ export namespace Vector2 {
 
   export const create = (x: number, y: number): Vector2 => ({ x, y });
 
-  export const x = (vec: Vector2) => vec ? vec.x : 0;
-  export const y = (vec: Vector2) => vec ? vec.y : 0;
+  export const x = (vec: Vector2) => (vec ? vec.x : 0);
+  export const y = (vec: Vector2) => (vec ? vec.y : 0);
 
   export const eq = (lhs: Vector2, rhs: Vector2) => lhs.x === rhs.x && lhs.y === rhs.y;
   export const neq = (lhs: Vector2, rhs: Vector2) => lhs.x !== rhs.x || lhs.y !== rhs.y;
