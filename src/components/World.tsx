@@ -50,6 +50,13 @@ const Container = styled('div', (props: ThemeProps) => ({
   padding: '10px'
 }));
 
+const StyledSection = styled(Section, {
+  marginTop: '10px',
+  ':first-child': {
+    marginTop: 0
+  },
+});
+
 const StyledField = styled(Field, (props: ThemeProps) => ({
   marginTop: `${props.theme.itemPadding}px`,
   ':first-child': {
@@ -82,19 +89,19 @@ class World extends React.PureComponent<Props, State> {
     return (
       <ScrollArea theme={theme} style={{ flex: '1 1' }}>
         <Container theme={theme} style={style} className={className}>
-          <Section theme={theme} name={CANS_NAME}>
+          <StyledSection theme={theme} name={CANS_NAME}>
             {cans.map((can, i) => (
               <StyledField key={i} theme={theme} name={`Can ${i}`}>
                 <Spacer />
                 <Switch value={can} onValueChange={this.onCanChange_(i)} theme={theme} />
               </StyledField>
             ))}
-          </Section>
-          <Section theme={theme} name={SURFACE_NAME}>
+          </StyledSection>
+          <StyledSection theme={theme} name={SURFACE_NAME}>
             <StyledField theme={theme} name={'Surface:'}>
               <DropdownList theme={theme} value={surfaceName} options={SURFACE_OPTIONS} onValueChange={this.onSurfaceChange_} />
             </StyledField>
-          </Section>
+          </StyledSection>
         </Container>
       </ScrollArea>
     );
