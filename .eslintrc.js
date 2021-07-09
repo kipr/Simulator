@@ -84,6 +84,7 @@ module.exports = {
         '@typescript-eslint/prefer-for-of': 'error',
         '@typescript-eslint/no-empty-interface': 'off',
         '@typescript-eslint/explicit-module-boundary-types' : 'off',
+        '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }],
       },
     },
   ],
