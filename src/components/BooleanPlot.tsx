@@ -25,13 +25,13 @@ interface Range<T> {
 }
 
 namespace Range {
-  export const instant = <T extends {}>(time: number, value: T): Range<T> => ({
+  export const instant = <T,>(time: number, value: T): Range<T> => ({
     start: time,
     end: time,
     value
   });
 
-  export const extend = <T extends {}>(ranges: Range<T>[], time: number, value: T) => {
+  export const extend = <T,>(ranges: Range<T>[], time: number, value: T) => {
     const nextRanges = [...ranges];
     
     if (nextRanges.length === 0) {

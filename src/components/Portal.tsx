@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import * as uuid from 'uuid';
 import { StyleProps } from '../style';
 
 export namespace Portal {
@@ -31,7 +30,7 @@ export namespace Portal {
 
   export interface SourceProps {
     sink: Portal.Sink;
-    children: any;
+    children: React.ReactNode;
   }
   
   export class Source extends React.PureComponent<SourceProps> {

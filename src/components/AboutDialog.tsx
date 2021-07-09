@@ -5,8 +5,8 @@ import { Dialog } from './Dialog';
 import { ThemeProps } from './theme';
 import { Fa } from './Fa';
 
-const KIPR_LOGO_BLACK = require('file-loader!../assets/KIPR-Logo-Black-Text-Clear-Large.png');
-const KIPR_LOGO_WHITE = require('file-loader!../assets/KIPR-Logo-White-Text-Clear-Large.png');
+import KIPR_LOGO_BLACK from '../assets/KIPR-Logo-Black-Text-Clear-Large.png';
+import KIPR_LOGO_WHITE from '../assets/KIPR-Logo-White-Text-Clear-Large.png';
 
 export interface AboutDialogProps extends ThemeProps, StyleProps {
   onClose: () => void;
@@ -39,15 +39,15 @@ export class AboutDialog extends React.PureComponent<Props> {
     
     let logo: JSX.Element;
 
-    console.log(KIPR_LOGO_BLACK.default);
+    console.log(KIPR_LOGO_BLACK);
 
     switch (theme.foreground) {
       case 'black': {
-        logo = <Logo src={`${KIPR_LOGO_BLACK.default}`} />;
+        logo = <Logo src={KIPR_LOGO_BLACK as string} />;
         break;
       }
       case 'white': {
-        logo = <Logo src={`${KIPR_LOGO_WHITE.default}`} />;
+        logo = <Logo src={KIPR_LOGO_WHITE as string} />;
         break;
       }
     }

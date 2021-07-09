@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDom from 'react-dom';
 
 export interface ModalProps {
-  children: any;
+  children: React.ReactNode;
 }
 
 type Props = ModalProps;

@@ -74,7 +74,7 @@ export interface BarComponent<P> {
 }
 
 export namespace BarComponent {
-  export const create = <P extends {}>(component: React.ComponentType<P>, props: P) => ({
+  export const create = <P,>(component: React.ComponentType<P>, props: P) => ({
     component,
     props
   });
@@ -89,9 +89,9 @@ export interface WidgetProps extends StyleProps, ThemeProps, ModeProps {
 
   hideActiveSize?: boolean;
 
-  children?: any;
+  children: React.ReactNode;
 
-  barComponents?: BarComponent<any>[];
+  barComponents?: BarComponent<unknown>[];
 }
 
 interface WidgetState {
@@ -153,6 +153,7 @@ const sizeIcon = (size: Size) => {
         case Size.Direction.Down: return 'angle-down';
         case Size.Direction.Left: return 'angle-left';
         case Size.Direction.Right: return 'angle-right';
+        default: return null;
       }
     }
     case Size.Type.Miniature: {
@@ -161,6 +162,7 @@ const sizeIcon = (size: Size) => {
         case Size.Direction.Down: return 'angle-double-down';
         case Size.Direction.Left: return 'angle-double-left';
         case Size.Direction.Right: return 'angle-double-right';
+        default: return null;
       }
     }
     case Size.Type.Minimized: return 'times';
