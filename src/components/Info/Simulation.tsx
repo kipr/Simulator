@@ -33,6 +33,7 @@ const Container = styled('div', {
 export class Simulation extends React.PureComponent<Props> {
   private onXChange_ = (x: Value) => {
     this.props.onXChange(Value.toDistance(x));
+    console.log(`Input changed to ${Value.value(x)}`);
   };
 
   private onYChange_ = (y: Value) => {

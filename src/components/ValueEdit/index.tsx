@@ -9,10 +9,12 @@ export interface ValueEditProps extends ThemeProps, StyleProps {
   name: string;
   value: Value;
   onValueChange: (value: Value) => void;
+  onRobotPositionSetRequested: () => void;
 }
 
 interface ValueEditState {
   input: string;
+  hasFocus: boolean;
 }
 
 type Props = ValueEditProps;
@@ -59,18 +61,43 @@ export class ValueEdit extends React.PureComponent<Props, State> {
     super(props);
 
     this.state = {
-      input: `${Value.value(props.value)}`
+      input: `${Value.value(props.value)}`,
+      hasFocus: false,
     };
   }
 
   static getDerivedStateFromProps(props: Props, state: State) {
-    return { input: `${Value.value(props.value)}` };
+    if (state.hasFocus) {
+      return { input: `${Value.value(props.value)}` }; 
+    }
   }
 
   private onInputChange_ = (event: React.SyntheticEvent<HTMLInputElement>) => {
+    const value = Number(event.currentTarget.value);
+    if (!Number.isNaN(value)) {
+      this.setState({
+        input: event.currentTarget.value,
+        hasFocus: true,
+      });
+    }
+  };
+
+  private update(): void {
+    this.props.onValueChange(Value.copyValue(this.props.value, Number(this.state.input)));
+    this.props.onRobotPositionSetRequested();
+  }
+
+  private onBlur_ = (event: React.SyntheticEvent<HTMLInputElement>) => {
+    this.update();
     this.setState({
-      input: event.currentTarget.value
+      hasFocus: false,
     });
+  };
+
+  private onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      this.update();
+    }
   };
   
   render() {
@@ -81,7 +108,7 @@ export class ValueEdit extends React.PureComponent<Props, State> {
     return (
       <Field name={name} theme={theme} className={className} style={style}>
         <SubContainer theme={theme}>
-          <Input type='text' onChange={this.onInputChange_} value={input} theme={theme} />
+          <Input type='text' onBlur={this.onBlur_} onChange={this.onInputChange_} value={input} theme={theme} onKeyDown={this.onKeyDown}/>
           <UnitLabel theme={theme}>{Value.unitName(value)}</UnitLabel>
         </SubContainer>
       </Field>
