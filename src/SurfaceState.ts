@@ -24,4 +24,6 @@ export namespace SurfaceStatePresets{
     surfaceHeight: 59,
     surfaceName: "JBC Mat B"
   };
+
+  export const presets: SurfaceState[] = [jbcA, jbcB];
 }

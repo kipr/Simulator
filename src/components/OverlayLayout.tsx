@@ -274,7 +274,9 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       onItemChange,
       console,
       messages,
-      onClearConsole
+      onClearConsole,
+      surfaceName,
+      onSurfaceChange
     } = props;
 
     const {
@@ -372,7 +374,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
             size={WORLD_SIZE[worldSize]}
             onSizeChange={this.onWorldSizeChange_}
           >
-            <World theme={theme} items={items} onItemChange={onItemChange} />
+            <World theme={theme} items={items} onItemChange={onItemChange} surfaceName={surfaceName} onSurfaceChange={onSurfaceChange} />
           </WorldWidget>
         </Overlay>
       </Container>
