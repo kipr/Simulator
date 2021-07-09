@@ -4,7 +4,7 @@ import { StyleProps } from '../style';
 import { ThemeProps } from './theme';
 
 import { Spacer } from './common';
-import { AnyText, StyledText } from '../util';
+import { AnyText } from '../util';
 import { Text } from './Text';
 import { Fa } from './Fa';
 
@@ -40,7 +40,7 @@ const Body = styled('div', (props: ThemeProps) => ({
 
 export interface SectionProps extends ThemeProps, StyleProps {
   name: AnyText;
-  children?: any;
+  children: React.ReactNode;
 
   collapsed?: boolean;
 

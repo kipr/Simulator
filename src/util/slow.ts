@@ -7,7 +7,7 @@ export class Slow {
     this.frequency_ = frequency;
   }
 
-  log(...message: any) {
+  log(...message: unknown[]) {
     if (this.ticks_++ % this.frequency_ !== 0) return;
     console.log(...message);
   }

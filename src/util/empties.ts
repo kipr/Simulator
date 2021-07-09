@@ -1,2 +1,2 @@
-export const EMPTY_OBJECT: any = {};
-export const EMPTY_ARRAY: any[] = [];
+export const EMPTY_OBJECT = {};
+export const EMPTY_ARRAY = [];
