@@ -9,12 +9,13 @@ export interface ValueEditProps extends ThemeProps, StyleProps {
   name: string;
   value: Value;
   onValueChange: (value: Value) => void;
-  onRobotPositionSetRequested: () => void;
+  // onRobotPositionSetRequested: () => void;
 }
 
 interface ValueEditState {
   input: string;
   hasFocus: boolean;
+  valid: boolean;
 }
 
 type Props = ValueEditProps;
@@ -63,28 +64,39 @@ export class ValueEdit extends React.PureComponent<Props, State> {
     this.state = {
       input: `${Value.value(props.value)}`,
       hasFocus: false,
+      valid: true,
     };
   }
 
   static getDerivedStateFromProps(props: Props, state: State) {
-    if (state.hasFocus) {
-      return { input: `${Value.value(props.value)}` }; 
+    if (state.hasFocus && state.valid) {
+      console.log(`Old State is ${state.input}, old Props is ${Value.value(props.value)}`);
+      return { input: `${Value.value(props.value)}` };
     }
   }
 
   private onInputChange_ = (event: React.SyntheticEvent<HTMLInputElement>) => {
     const value = Number(event.currentTarget.value);
-    if (!Number.isNaN(value)) {
+    if (!Number.isNaN(value) && value !== undefined) {
       this.setState({
         input: event.currentTarget.value,
         hasFocus: true,
+        valid: true,
       });
+      console.log(`Valid and input is ${this.state.input}`);
+    } else {
+      this.setState({
+        valid: false,
+      });
+      console.log("Not Valid");
     }
   };
 
   private update(): void {
-    this.props.onValueChange(Value.copyValue(this.props.value, Number(this.state.input)));
-    this.props.onRobotPositionSetRequested();
+    const value = Value.copyValue(this.props.value, Number(this.state.input));
+    console.log(`Value is ${value.type}`);
+    this.props.onValueChange(value);
+    // this.props.onRobotPositionSetRequested();
   }
 
   private onBlur_ = (event: React.SyntheticEvent<HTMLInputElement>) => {
@@ -94,7 +106,7 @@ export class ValueEdit extends React.PureComponent<Props, State> {
     });
   };
 
-  private onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  private onKeyDown_ = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       this.update();
     }
@@ -104,11 +116,14 @@ export class ValueEdit extends React.PureComponent<Props, State> {
     const { props, state } = this;
     const { theme, style, className, name, value } = props;
     const { input } = state;
-  
+    const errorStyle: React.CSSProperties = {
+      border: `${state.valid ? '1px' : '5px'} solid ${state.valid ? props.theme.borderColor : 'red'}`,
+    };
+    
     return (
       <Field name={name} theme={theme} className={className} style={style}>
         <SubContainer theme={theme}>
-          <Input type='text' onBlur={this.onBlur_} onChange={this.onInputChange_} value={input} theme={theme} onKeyDown={this.onKeyDown}/>
+          <Input type='text' style={errorStyle} onBlur={this.onBlur_} onChange={this.onInputChange_} value={input} theme={theme} onKeyDown={this.onKeyDown_} />
           <UnitLabel theme={theme}>{Value.unitName(value)}</UnitLabel>
         </SubContainer>
       </Field>

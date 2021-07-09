@@ -107,7 +107,6 @@ class World extends React.PureComponent<Props, State> {
     if (items === undefined) {
       items = [];
     }
-    console.log(items.length);
     return (
       <ScrollArea theme={theme} style={{ flex: '1 1' }}>
         <Container theme={theme} style={style} className={className}>
