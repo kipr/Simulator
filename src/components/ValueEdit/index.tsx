@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../style';
-import { Value } from '../../util';
+import { EMPTY_OBJECT, Slow, Value } from '../../util';
 import { ThemeProps } from '../theme';
 import Field from '../Field';
 
@@ -9,7 +9,6 @@ export interface ValueEditProps extends ThemeProps, StyleProps {
   name: string;
   value: Value;
   onValueChange: (value: Value) => void;
-  // onRobotPositionSetRequested: () => void;
 }
 
 interface ValueEditState {
@@ -45,7 +44,8 @@ const Input = styled('input', (props: ThemeProps) => ({
   borderRight: `1px solid ${props.theme.borderColor}`,
   borderLeft: 'none',
   borderTop: 'none',
-  borderBottom: 'none'
+  borderBottom: 'none',
+  transition: 'background-color 0.2s'
 }));
 
 const UnitLabel = styled('span', (props: ThemeProps) => ({
@@ -56,6 +56,8 @@ const UnitLabel = styled('span', (props: ThemeProps) => ({
   
   padding: `${props.theme.itemPadding}px`,
 }));
+
+const NUMBER_REGEX = /^[+-]?([0-9]*[.])?[0-9]+$/;
 
 export class ValueEdit extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -69,47 +71,40 @@ export class ValueEdit extends React.PureComponent<Props, State> {
   }
 
   static getDerivedStateFromProps(props: Props, state: State) {
-    if (state.hasFocus && state.valid) {
-      console.log(`Old State is ${state.input}, old Props is ${Value.value(props.value)}`);
-      return { input: `${Value.value(props.value)}` };
-    }
+    if (state.hasFocus || !state.valid) return { input: state.input };
+    return { input: `${Value.value(props.value)}` };
   }
 
   private onInputChange_ = (event: React.SyntheticEvent<HTMLInputElement>) => {
-    const value = Number(event.currentTarget.value);
-    if (!Number.isNaN(value) && value !== undefined) {
-      this.setState({
-        input: event.currentTarget.value,
-        hasFocus: true,
-        valid: true,
-      });
-      console.log(`Valid and input is ${this.state.input}`);
-    } else {
-      this.setState({
-        valid: false,
-      });
-      console.log("Not Valid");
-    }
-  };
-
-  private update(): void {
-    const value = Value.copyValue(this.props.value, Number(this.state.input));
-    console.log(`Value is ${value.type}`);
-    this.props.onValueChange(value);
-    // this.props.onRobotPositionSetRequested();
-  }
-
-  private onBlur_ = (event: React.SyntheticEvent<HTMLInputElement>) => {
-    this.update();
+    const { value } = event.currentTarget;
+    
     this.setState({
-      hasFocus: false,
+      input: value,
+      valid: NUMBER_REGEX.test(value)
     });
   };
 
+  private update_ = () => {
+    const { input } = this.state;
+    if (!NUMBER_REGEX.test(input)) return;
+    this.props.onValueChange(Value.copyValue(this.props.value, Number.parseFloat(input)));
+  }
+
+  private onFocus_ = (event: React.SyntheticEvent<HTMLInputElement>) => this.setState({
+    hasFocus: true,
+  });
+
+  private onBlur_ = (event: React.SyntheticEvent<HTMLInputElement>) => {
+    this.update_();
+    this.setState({
+      hasFocus: false,
+    });
+  }
+  
+
   private onKeyDown_ = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      this.update();
-    }
+    if (event.key !== "Enter") return false;
+    this.update_();
   };
   
   render() {
@@ -117,13 +112,23 @@ export class ValueEdit extends React.PureComponent<Props, State> {
     const { theme, style, className, name, value } = props;
     const { input } = state;
     const errorStyle: React.CSSProperties = {
-      border: `${state.valid ? '1px' : '5px'} solid ${state.valid ? props.theme.borderColor : 'red'}`,
+      backgroundColor: !state.valid ? `rgba(255, 0, 0, 0.2)` : undefined,
     };
+
     
     return (
       <Field name={name} theme={theme} className={className} style={style}>
         <SubContainer theme={theme}>
-          <Input type='text' style={errorStyle} onBlur={this.onBlur_} onChange={this.onInputChange_} value={input} theme={theme} onKeyDown={this.onKeyDown_} />
+          <Input
+            type='text'
+            style={errorStyle}
+            onFocus={this.onFocus_}
+            onBlur={this.onBlur_}
+            onChange={this.onInputChange_}
+            value={input}
+            theme={theme}
+            onKeyDown={this.onKeyDown_}
+          />
           <UnitLabel theme={theme}>{Value.unitName(value)}</UnitLabel>
         </SubContainer>
       </Field>

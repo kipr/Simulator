@@ -142,27 +142,25 @@ export namespace Value {
     }
   };
 
-  export const toAngle = (value: Value): AngleValue => value as unknown as AngleValue;
-  export const toDistance = (value: Value): DistanceValue => value as unknown as DistanceValue;
+  export const toAngle = (value: Value): AngleValue => (value as unknown as Angle).angle;
+  export const toDistance = (value: Value): DistanceValue => (value as unknown as Distance).distance;
 
-  export const copyValue = (value: Value, num: number) => {
+  export const copyValue = (value: Value, num: number): Value => {
     switch (value.type) {
-      case Type.Angle: {
-        switch (value.angle.type) {
-          case Angle.Type.Degrees: return Value.angle(Angle.degrees(num));
-          case Angle.Type.Radians: return Value.angle(Angle.radians(num));
+      case Type.Angle: return {
+        ...value,
+        angle: {
+          ...value.angle,
+          value: num
         }
-        break;
-      }
-      case Type.Distance: {
-        switch (value.distance.type) {
-          case Distance.Type.Meters: return Value.distance(Distance.meters(num));
-          case Distance.Type.Centimeters: return Value.distance(Distance.centimeters(num));
-          case Distance.Type.Feet: return Value.distance(Distance.feet(num));
-          case Distance.Type.Inches: return Value.distance(Distance.inches(num));
+      };
+      case Type.Distance: return {
+        ...value,
+        distance: {
+          ...value.distance,
+          value: num
         }
-        break;
-      }
+      };
     }
   };
 }

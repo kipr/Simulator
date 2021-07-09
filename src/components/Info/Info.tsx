@@ -105,6 +105,7 @@ class Info extends React.PureComponent<Props, State> {
     const { robotState } = props;
     const nextRobotState = { ...robotState };
     nextRobotState.x = x.value;
+    console.log(nextRobotState, x);
     this.props.onRobotStateChange(nextRobotState);
   };
 
