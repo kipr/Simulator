@@ -10,7 +10,7 @@ import { ThemeProps } from './theme';
 
 export interface DialogProps extends ThemeProps, StyleProps {
   name: string;
-  children: any;
+  children: React.ReactNode;
 
   onClose: () => void;
 }

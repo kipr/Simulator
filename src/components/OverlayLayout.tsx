@@ -12,13 +12,6 @@ import { ThemeProps } from './theme';
 import Widget, { BarComponent, Mode, Size, WidgetProps } from './Widget';
 import World from './World';
 
-
-interface LayoutState {
-  editor: Size,
-  info: Size,
-  console: Size
-}
-
 export interface OverlayLayoutProps extends LayoutProps {
   
 }
@@ -54,10 +47,6 @@ const Overlay = styled('div', (props: ThemeProps) => ({
   pointerEvents: 'none',
   padding: `${props.theme.widget.padding}px`
 }));
-
-interface WidgetLayoutProps {
-  size: Size
-}
 
 const ConsoleWidget = styled(Widget, (props: WidgetProps) => {
   const size = props.sizes[props.size];
@@ -257,7 +246,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
   }
 
   private onErrorClick_ = (event: React.MouseEvent<HTMLDivElement>) => {
-
+    // not implemented
   };
 
   private editor_: Editor;
@@ -300,7 +289,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       mode: Mode.Floating
     };
 
-    const editorBar: BarComponent<any>[] = [];
+    const editorBar: BarComponent<unknown>[] = [];
     let errors = 0;
     let warnings = 0;
 
@@ -331,7 +320,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
 
     // editorBar.push(BarComponent.create(PerfectCharm, { theme }));
 
-    const consoleBar: BarComponent<any>[] = [];
+    const consoleBar: BarComponent<unknown>[] = [];
 
     consoleBar.push(BarComponent.create(Button, {
       theme,

@@ -155,7 +155,7 @@ class SideLayout extends React.PureComponent<Props, State> {
   };
 
   private onTabBarIndexChange_ = (index: number) => {
-
+    // not implemented
   };
 
   render() {

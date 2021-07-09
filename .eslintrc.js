@@ -94,5 +94,7 @@ module.exports = {
     "/configs",
     // Ignore included ammo.js library
     "/src/ammo.js",
+    // Ignore static files
+    "/static",
   ],
 };

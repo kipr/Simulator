@@ -5,7 +5,7 @@ import { styled } from 'styletron-react';
 import { StyleProps } from '../style';
 
 export interface ButtonProps extends StyleProps, ThemeProps {
-  children: any;
+  children: React.ReactNode;
 
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }

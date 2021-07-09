@@ -11,11 +11,9 @@ const engine = new Styletron({ prefix: 'style' });
 
 const debug = process.env.NODE_ENV === "production" ? void 0 : new DebugEngine();
 
-const StyletronPr = StyletronProvider as any;
-
 ReactDom.render(
-  <StyletronPr value={engine} debug={debug} debugAfterHydration>
+  <StyletronProvider value={engine} debug={debug} debugAfterHydration>
     <Root />
-  </StyletronPr>,
+  </StyletronProvider>,
   reactRoot
 );
