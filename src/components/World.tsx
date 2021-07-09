@@ -9,11 +9,16 @@ import ScrollArea from './ScrollArea';
 import Section from './Section';
 import { Spacer } from './common';
 import { StyledText } from '../util';
+import { DropdownList, OptionDefinition } from './DropdownList';
+import { SurfaceStatePresets } from '../SurfaceState';
 
 
 export interface WorldProps extends StyleProps, ThemeProps {
   cans: boolean[];
+  surfaceName: string;
+
   onCanChange: (index: number, enabled: boolean) => void;
+  onSurfaceChange: (surfaceName: string) => void;
 }
 
 interface WorldState {
@@ -32,6 +37,11 @@ const CANS_NAME = StyledText.text({
   style: NAME_STYLE
 });
 
+const SURFACE_NAME = StyledText.text({
+  text: 'Surface',
+  style: NAME_STYLE
+});
+
 const Container = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -47,6 +57,11 @@ const StyledField = styled(Field, (props: ThemeProps) => ({
   }
 }));
 
+const SURFACE_OPTIONS: OptionDefinition[] = [
+  { displayName: SurfaceStatePresets.jbcA.surfaceName, value: SurfaceStatePresets.jbcA.surfaceName },
+  { displayName: SurfaceStatePresets.jbcB.surfaceName, value: SurfaceStatePresets.jbcB.surfaceName }
+];
+
 class World extends React.PureComponent<Props, State> {
   // eslint-disable-next-line @typescript-eslint/no-useless-constructor
   constructor(props: Props) {
@@ -57,8 +72,12 @@ class World extends React.PureComponent<Props, State> {
     this.props.onCanChange(index, value);
   };
 
+  private onSurfaceChange_ = (newSurfaceName: string) => {
+    this.props.onSurfaceChange(newSurfaceName);
+  };
+
   render() {
-    const { style, className, theme, cans } = this.props;
+    const { style, className, theme, cans, surfaceName } = this.props;
     
     return (
       <ScrollArea theme={theme} style={{ flex: '1 1' }}>
@@ -70,6 +89,11 @@ class World extends React.PureComponent<Props, State> {
                 <Switch value={can} onValueChange={this.onCanChange_(i)} theme={theme} />
               </StyledField>
             ))}
+          </Section>
+          <Section theme={theme} name={SURFACE_NAME}>
+            <StyledField theme={theme} name={'Surface:'}>
+              <DropdownList theme={theme} value={surfaceName} options={SURFACE_OPTIONS} onValueChange={this.onSurfaceChange_} />
+            </StyledField>
           </Section>
         </Container>
       </ScrollArea>

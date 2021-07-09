@@ -16,6 +16,8 @@ export interface LayoutProps extends StyleProps, ThemeProps {
   console: StyledText;
   messages: Message[];
   onClearConsole: () => void;
+  surfaceName: string;
+  onSurfaceChange: (surfaceName: string) => void;
 }
 
 export enum Layout {

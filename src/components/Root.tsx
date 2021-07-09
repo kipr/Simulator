@@ -129,8 +129,9 @@ export class Root extends React.Component<Props, State> {
     this.setState({ isSensorNoiseEnabled: enabled });
   };
 
-  private onUpdateSurfaceState_ = (newSurfaceState: SurfaceState) => {
-    this.setState({ surfaceState: newSurfaceState });
+  private onUpdateSurfaceState_ = (newSurfaceName: string) => {
+    const newState = SurfaceStatePresets.presets.find(preset => (preset.surfaceName === newSurfaceName));
+    this.setState({ surfaceState: newState });
   };
 
 
@@ -326,7 +327,9 @@ export class Root extends React.Component<Props, State> {
       console,
       onCodeChange: this.onCodeChange_,
       messages,
-      onClearConsole: this.onClearConsole_
+      onClearConsole: this.onClearConsole_,
+      surfaceName: surfaceState.surfaceName,
+      onSurfaceChange: this.onUpdateSurfaceState_
     };
 
     let impl: JSX.Element;
