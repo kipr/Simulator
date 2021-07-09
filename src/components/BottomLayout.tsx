@@ -7,12 +7,6 @@ import { LayoutProps } from './Layout';
 import Widget, { Mode, Size, WidgetProps } from './Widget';
 
 
-interface LayoutState {
-  editor: Size,
-  info: Size,
-  console: Size
-}
-
 export interface BottomLayoutProps extends LayoutProps {
 }
 
@@ -36,10 +30,6 @@ const BottomBar = styled('div', {
   flexDirection: 'row',
   width: '400px',
 });
-
-interface WidgetLayoutProps {
-  size: Size
-}
 
 const ConsoleWidget = styled(Widget, (props: WidgetProps) => {
   const size = props.sizes[props.size];

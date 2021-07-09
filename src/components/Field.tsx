@@ -5,7 +5,7 @@ import { ThemeProps } from './theme';
 
 export interface FieldProps extends ThemeProps, StyleProps {
   name: string;
-  children: any;
+  children: React.ReactNode;
 }
 
 type Props = FieldProps;

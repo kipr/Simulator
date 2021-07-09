@@ -55,8 +55,8 @@ export namespace StyledText {
   export interface Component {
     type: Type.Component;
 
-    component: React.ComponentType<any>,
-    props?: any;
+    component: React.ComponentType<unknown>,
+    props?: unknown;
   }
 
   export type ComponentParams = Omit<Component, 'type'>;

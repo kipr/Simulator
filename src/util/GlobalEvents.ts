@@ -37,7 +37,7 @@ export class GlobalEvents {
 }
 
 export namespace GlobalEvents {
-  export type EventCallback<T = any> = (event: T) => boolean;
+  export type EventCallback<T = unknown> = (event: T) => boolean;
 
   export class EventType<T> {
     private callbacks_ = new Map<number, EventCallback<T>>();

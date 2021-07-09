@@ -1,17 +1,10 @@
 import * as React from 'react';
 
-import { styled, withStyleDeep } from 'styletron-react';
-import { RobotState } from '../RobotState';
-import { StyleProps } from '../style';
-import { Spacer } from './common';
+import { styled } from 'styletron-react';
 import Console from './Console';
-import { Editor } from './Editor';
-import { Fa } from './Fa';
 import { Info } from './Info';
 import { LayoutProps } from './Layout';
 import { Portal } from './Portal';
-import ScrollArea from './ScrollArea';
-import { SimulatorArea } from './SimulatorArea';
 import { TabBar } from './TabBar';
 import { ThemeProps } from './theme';
 import Widget, { Mode, Size, WidgetProps } from './Widget';
@@ -162,12 +155,12 @@ class SideLayout extends React.PureComponent<Props, State> {
   };
 
   private onTabBarIndexChange_ = (index: number) => {
-
+    // not implemented
   };
 
   render() {
     const { props } = this;
-    const { style, className, theme, state, onStateChange, cans, onCodeChange, code, simulator, console } = props;
+    const { style, className, theme, state, onStateChange, items, onCodeChange, code, simulator, console } = props;
     const { editorSize, consoleSize, infoSize, index } = this.state;
 
     let content: JSX.Element;

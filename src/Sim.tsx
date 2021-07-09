@@ -21,10 +21,6 @@ import { SurfaceState } from './SurfaceState';
 
 import { Vector2 } from './math';
 
-const noGravity = new Babylon.Vector3(0,0,0);
-const fullGravity = new Babylon.Vector3(0,-9.8 * 10,0);
-
-
 export let ACTIVE_SPACE: Space;
 
 export class Space {
@@ -34,9 +30,6 @@ export class Space {
 
   private ammo_: Babylon.AmmoJSPlugin;
   private camera: Babylon.ArcRotateCamera;
-  
-  private gravitySet = (g) => this.scene.getPhysicsEngine().setGravity(g);
-
 
   private ground: Babylon.Mesh;
   private mat: Babylon.Mesh;
@@ -99,16 +92,16 @@ export class Space {
 
     const position = mesh.getBoundingInfo().boundingBox.centerWorld;
 
-    const coordinates = BABYLON.Vector3.Project(
-      position as any,
-      BABYLON.Matrix.Identity(),
-      this.scene.getTransformMatrix() as any,
+    const coordinates = Babylon.Vector3.Project(
+      position,
+      Babylon.Matrix.Identity(),
+      this.scene.getTransformMatrix(),
       this.camera.viewport.toGlobal(
-      this.engine.getRenderWidth(),
-      this.engine.getRenderHeight(),
-    ));
+        this.engine.getRenderWidth(),
+        this.engine.getRenderHeight(),
+      ));
 
-    const { top, left } = this.canvas.getBoundingClientRect()
+    const { top, left } = this.canvas.getBoundingClientRect();
 
     return {
       x: coordinates.x + left,

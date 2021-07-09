@@ -9,7 +9,7 @@ import resizeListener, { ResizeListener } from './ResizeListener';
 import { GlobalEvents, GLOBAL_EVENTS, Slow } from '../util';
 
 export interface ScrollAreaProps extends StyleProps, ThemeProps {
-  children: any;
+  children: React.ReactNode;
 }
 
 export namespace Action {
@@ -127,9 +127,6 @@ class ScrollArea extends React.PureComponent<Props, State> {
     }
   };
 
-  componentDidMount() {
-  }
-
   componentWillUnmount() {
     this.listener_.disconnect();
   }
@@ -144,10 +141,6 @@ class ScrollArea extends React.PureComponent<Props, State> {
     this.setState({
       hover: false
     });
-  };
-
-  private onVClick_ = (event: React.MouseEvent<HTMLDivElement>) => {
-    
   };
 
   private onMouseMoveHandle_: GlobalEvents.Handle;
