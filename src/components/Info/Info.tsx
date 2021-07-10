@@ -13,8 +13,10 @@ import { Simulation } from './Simulation';
 
 export interface InfoProps extends StyleProps, ThemeProps {
   robotState: RobotState;
+  sensorNoise: boolean;
 
   onRobotStateChange: (robotState: RobotState) => void;
+  onSensorNoiseChange: (enabled: boolean) => void;
 }
 
 interface InfoState {
@@ -133,6 +135,10 @@ class Info extends React.PureComponent<Props, State> {
     this.props.onRobotStateChange(nextRobotState);
   };
 
+  private onSensorNoiseChange_ = (enabled: boolean) => {
+    this.props.onSensorNoiseChange(enabled);
+  };
+
   private onCollapsedChange_ = (section: string) => (collapsed: boolean) => {
     this.setState({
       collapsed: {
@@ -149,6 +155,7 @@ class Info extends React.PureComponent<Props, State> {
       className,
       theme,
       robotState,
+      sensorNoise,
       onRobotStateChange
     } = props;
     const { collapsed } = state;
@@ -185,10 +192,12 @@ class Info extends React.PureComponent<Props, State> {
               y={Distance.meters(robotState.y)}
               z={Distance.meters(robotState.z)}
               theta={Angle.degrees(robotState.theta)}
+              sensorNoise={sensorNoise}
               onXChange={this.onXChange_}
               onYChange={this.onYChange_}
               onZChange={this.onZChange_}
               onThetaChange={this.onThetaChange_}
+              onSensorNoiseChange={this.onSensorNoiseChange_}
               theme={theme}
             />
           </StyledSection>
