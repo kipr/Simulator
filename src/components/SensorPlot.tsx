@@ -169,8 +169,8 @@ class SensorPlot extends React.PureComponent<Props, State> {
 
     const secs = Math.floor(now) - Math.floor(this.lastTick_ / 1000);
 
-    for (let i = 0; i < secs; ++i) {
-      nextTicks.push(Math.floor(absoluteOffset) + duration + 1.0);
+    for (let i = secs - 1; i >= 0; --i) {
+      nextTicks.push(Math.floor(absoluteOffset) + duration + 1.0 - i);
     }
 
     {
