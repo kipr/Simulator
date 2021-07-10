@@ -137,12 +137,12 @@ const Chrome = styled('div', (props: ThemeProps & ModeProps) => ({
   borderBottom: `1px solid ${props.theme.borderColor}`
 }));
 
-const Title = styled('span', (props: ThemeProps & { hasComponents: boolean }) => ({
+const Title = styled('span', (props: ThemeProps & { $hasComponents: boolean }) => ({
   fontWeight: 400,
   userSelect: 'none',
-  paddingRight: props.hasComponents ? `${props.theme.itemPadding}px` : undefined,
-  marginRight: props.hasComponents ? `${props.theme.itemPadding}px` : undefined,
-  borderRight: props.hasComponents ? `1px solid ${props.theme.borderColor}` : undefined
+  paddingRight: props.$hasComponents ? `${props.theme.itemPadding}px` : undefined,
+  marginRight: props.$hasComponents ? `${props.theme.itemPadding}px` : undefined,
+  borderRight: props.$hasComponents ? `1px solid ${props.theme.borderColor}` : undefined
 }));
 
 const sizeIcon = (size: Size) => {
@@ -202,7 +202,7 @@ class Widget extends React.PureComponent<Props, State> {
     return (
       <Container style={style} className={className} theme={theme} mode={mode}>
         <Chrome theme={theme} mode={mode}>
-          <Title theme={theme} hasComponents={barComponents && barComponents.length > 0}>{name}</Title>
+          <Title theme={theme} $hasComponents={barComponents && barComponents.length > 0}>{name}</Title>
           {barComponents ? barComponents.map((barComponent, i) => {
             const Component = barComponent.component;
             return <Component key={i} {...barComponent.props} />;

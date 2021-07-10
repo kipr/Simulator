@@ -35,7 +35,7 @@ export class DropdownList extends React.PureComponent<DropdownListProps> {
       <Container style={style} className={className}>
         <select value={value} onChange={this.onValueChange_}>
           {options.map((option) => (
-            <option value={option.value}>{option.displayName}</option>
+            <option value={option.value} key={option.value}>{option.displayName}</option>
           ))}
         </select>
       </Container>
