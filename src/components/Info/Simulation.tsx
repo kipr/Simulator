@@ -7,6 +7,7 @@ import ValueEdit from '../ValueEdit';
 import Field from '../Field';
 import { Spacer } from '../common';
 import { Switch } from '../Switch';
+import Button from '../Button';
 
 export interface SimulationProps extends ThemeProps, StyleProps {
   x: Distance;
@@ -20,6 +21,7 @@ export interface SimulationProps extends ThemeProps, StyleProps {
   onZChange: (z: Distance) => void;
   onThetaChange: (theta: Angle) => void;
   onSensorNoiseChange: (enabled: boolean) => void;
+  onRobotPositionResetRequested: () => void;
 }
 
 type Props = SimulationProps;
@@ -36,6 +38,18 @@ const StyledField = styled(Field, (props: ThemeProps) => ({
   ':first-child': {
     marginTop: 0
   }
+}));
+
+const StyledButton = styled(Button, (props: ThemeProps) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  flex: '1 1',
+  borderRadius: `0px`,
+  border: `1px solid ${props.theme.borderColor}`,
+  padding: `${props.theme.itemPadding}`,
+  overflow: 'hidden',
+  alignItems: 'center',
+  alignContent: 'center',
 }));
 
 
@@ -74,11 +88,16 @@ export class Simulation extends React.PureComponent<Props> {
     this.props.onSensorNoiseChange(enabled);
   };
 
+  private onRobotPositionResetRequested_ = () => {
+    this.props.onRobotPositionResetRequested();
+  };
+
   render() {
     const { props } = this;
     const { theme, style, className, x, y, z, theta, sensorNoise } = props;
     return (
       <Container style={style} className={className}>
+        <StyledButton theme={theme} children={['Reset']} onClick={this.onRobotPositionResetRequested_}></StyledButton>
         <StyledValueEdit value={Value.distance(x)} onValueChange={this.onXChange_} theme={theme} name='X' />
         <StyledValueEdit value={Value.distance(y)} onValueChange={this.onYChange_} theme={theme} name='Y' />
         <StyledValueEdit value={Value.distance(z)} onValueChange={this.onZChange_} theme={theme} name='Z' />

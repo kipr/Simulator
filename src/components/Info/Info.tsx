@@ -17,6 +17,7 @@ export interface InfoProps extends StyleProps, ThemeProps {
 
   onRobotStateChange: (robotState: RobotState) => void;
   onSensorNoiseChange: (enabled: boolean) => void;
+  onRobotPositionSetRequested: () => void;
 }
 
 interface InfoState {
@@ -109,6 +110,7 @@ class Info extends React.PureComponent<Props, State> {
     nextRobotState.x = x.value;
     console.log(nextRobotState, x);
     this.props.onRobotStateChange(nextRobotState);
+    this.props.onRobotPositionSetRequested();
   };
 
   private onYChange_ = (y: Distance) => {
@@ -117,6 +119,7 @@ class Info extends React.PureComponent<Props, State> {
     const nextRobotState = { ...robotState };
     nextRobotState.y = y.value;
     this.props.onRobotStateChange(nextRobotState);
+    this.props.onRobotPositionSetRequested();
   };
 
   private onZChange_ = (z: Distance) => {
@@ -125,6 +128,7 @@ class Info extends React.PureComponent<Props, State> {
     const nextRobotState = { ...robotState };
     nextRobotState.z = z.value;
     this.props.onRobotStateChange(nextRobotState);
+    this.props.onRobotPositionSetRequested();
   };
 
   private onThetaChange_ = (theta: Angle) => {
@@ -133,10 +137,23 @@ class Info extends React.PureComponent<Props, State> {
     const nextRobotState = { ...robotState };
     nextRobotState.theta = theta.value;
     this.props.onRobotStateChange(nextRobotState);
+    this.props.onRobotPositionSetRequested();
   };
 
   private onSensorNoiseChange_ = (enabled: boolean) => {
     this.props.onSensorNoiseChange(enabled);
+  };
+
+  private onRobotPositionReSetRequested_ = () => {
+    this.props.onRobotStateChange({
+      ...this.props.robotState,
+      x: RobotState.empty.x,
+      y: RobotState.empty.y,
+      z: RobotState.empty.z,
+      theta: RobotState.empty.theta,
+    });
+
+    this.props.onRobotPositionSetRequested();
   };
 
   private onCollapsedChange_ = (section: string) => (collapsed: boolean) => {
@@ -198,6 +215,7 @@ class Info extends React.PureComponent<Props, State> {
               onZChange={this.onZChange_}
               onThetaChange={this.onThetaChange_}
               onSensorNoiseChange={this.onSensorNoiseChange_}
+              onRobotPositionResetRequested={this.onRobotPositionReSetRequested_}
               theme={theme}
             />
           </StyledSection>

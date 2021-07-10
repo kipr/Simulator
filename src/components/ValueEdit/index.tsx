@@ -88,7 +88,7 @@ export class ValueEdit extends React.PureComponent<Props, State> {
     const { input } = this.state;
     if (!NUMBER_REGEX.test(input)) return;
     this.props.onValueChange(Value.copyValue(this.props.value, Number.parseFloat(input)));
-  }
+  };
 
   private onFocus_ = (event: React.SyntheticEvent<HTMLInputElement>) => this.setState({
     hasFocus: true,
@@ -99,7 +99,7 @@ export class ValueEdit extends React.PureComponent<Props, State> {
     this.setState({
       hasFocus: false,
     });
-  }
+  };
   
 
   private onKeyDown_ = (event: React.KeyboardEvent<HTMLInputElement>) => {
