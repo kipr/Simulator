@@ -23,3 +23,8 @@ export default (code: string): Promise<string> => {
   });
   
 };
+
+export interface CompileError {
+  stdout: string;
+  stderr: string;
+}
