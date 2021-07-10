@@ -276,7 +276,9 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       messages,
       onClearConsole,
       surfaceName,
-      onSurfaceChange
+      onSurfaceChange,
+      sensorNoise,
+      onSensorNoiseChange
     } = props;
 
     const {
@@ -364,6 +366,8 @@ class OverlayLayout extends React.PureComponent<Props, State> {
             <Info
               robotState={state}
               onRobotStateChange={onStateChange}
+              sensorNoise={sensorNoise}
+              onSensorNoiseChange={onSensorNoiseChange}
               theme={theme}
             />
           </InfoWidget>

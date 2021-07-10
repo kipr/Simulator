@@ -336,7 +336,9 @@ export class Root extends React.Component<Props, State> {
       messages,
       onClearConsole: this.onClearConsole_,
       surfaceName: surfaceState.surfaceName,
-      onSurfaceChange: this.onUpdateSurfaceState_
+      onSurfaceChange: this.onUpdateSurfaceState_,
+      sensorNoise: isSensorNoiseEnabled,
+      onSensorNoiseChange: this.onToggleSensorNoise_
     };
 
     let impl: JSX.Element;

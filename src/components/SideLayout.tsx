@@ -160,7 +160,7 @@ class SideLayout extends React.PureComponent<Props, State> {
 
   render() {
     const { props } = this;
-    const { style, className, theme, state, onStateChange, items, onCodeChange, code, simulator, console } = props;
+    const { style, className, theme, state, onStateChange, items, onCodeChange, code, simulator, console, sensorNoise, onSensorNoiseChange } = props;
     const { editorSize, consoleSize, infoSize, index } = this.state;
 
     let content: JSX.Element;
@@ -194,6 +194,8 @@ class SideLayout extends React.PureComponent<Props, State> {
             <Info
               robotState={state}
               onRobotStateChange={onStateChange}
+              sensorNoise={sensorNoise}
+              onSensorNoiseChange={onSensorNoiseChange}
               theme={theme}
             />
           </InfoWidget>
