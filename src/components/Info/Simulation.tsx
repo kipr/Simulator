@@ -69,7 +69,6 @@ const SENSOR_NOISE = StyledText.text({
 export class Simulation extends React.PureComponent<Props> {
   private onXChange_ = (x: Value) => {
     this.props.onXChange(Value.toDistance(x));
-    console.log(`Input changed to ${JSON.stringify(x)}`);
   };
 
   private onYChange_ = (y: Value) => {

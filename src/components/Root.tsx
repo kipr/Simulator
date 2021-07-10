@@ -90,7 +90,6 @@ export class Root extends React.Component<Props, State> {
       theme: DARK,
       messages: []
     };
-    console.log(this.state.items.length);
   }
 
   componentDidMount() {
