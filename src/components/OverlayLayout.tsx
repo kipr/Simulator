@@ -329,7 +329,11 @@ class OverlayLayout extends React.PureComponent<Props, State> {
     consoleBar.push(BarComponent.create(Button, {
       theme,
       onClick: onClearConsole,
-      children: [<Fa icon='file' />, ' Clear']
+      children:
+        <>
+          <Fa icon='file' />
+          {' Clear'}
+        </>,
     }));
 
     return (
