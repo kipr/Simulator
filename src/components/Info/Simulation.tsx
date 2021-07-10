@@ -1,20 +1,25 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../style';
-import { Angle, Distance, Value } from '../../util';
+import { Angle, Distance, Value, StyledText } from '../../util';
 import { ThemeProps } from '../theme';
 import ValueEdit from '../ValueEdit';
+import Field from '../Field';
+import { Spacer } from '../common';
+import { Switch } from '../Switch';
 
 export interface SimulationProps extends ThemeProps, StyleProps {
   x: Distance;
   y: Distance;
   z: Distance;
   theta: Angle;
+  sensorNoise: boolean;
 
   onXChange: (x: Distance) => void;
   onYChange: (y: Distance) => void;
   onZChange: (z: Distance) => void;
   onThetaChange: (theta: Angle) => void;
+  onSensorNoiseChange: (enabled: boolean) => void;
 }
 
 type Props = SimulationProps;
@@ -26,8 +31,25 @@ const StyledValueEdit = styled(ValueEdit, (props: ThemeProps) => ({
   }
 }));
 
+const StyledField = styled(Field, (props: ThemeProps) => ({
+  marginTop: `${props.theme.itemPadding}px`,
+  ':first-child': {
+    marginTop: 0
+  }
+}));
+
+
 const Container = styled('div', {
 
+});
+
+const NAME_STYLE: React.CSSProperties = {
+  fontSize: '1.2em'
+};
+
+const SENSOR_NOISE = StyledText.text({
+  text: 'Sensor Noise',
+  style: NAME_STYLE
 });
 
 export class Simulation extends React.PureComponent<Props> {
@@ -47,15 +69,23 @@ export class Simulation extends React.PureComponent<Props> {
     this.props.onThetaChange(Value.toAngle(theta));
   };
 
+  private onSensorNoiseChanged_ = (enabled: boolean) => {
+    this.props.onSensorNoiseChange(enabled);
+  };
+
   render() {
     const { props } = this;
-    const { theme, style, className, x, y, z, theta } = props;
+    const { theme, style, className, x, y, z, theta, sensorNoise } = props;
     return (
       <Container style={style} className={className}>
         <StyledValueEdit value={Value.distance(x)} onValueChange={this.onXChange_} theme={theme} name='X' />
         <StyledValueEdit value={Value.distance(y)} onValueChange={this.onYChange_} theme={theme} name='Y' />
         <StyledValueEdit value={Value.distance(z)} onValueChange={this.onZChange_} theme={theme} name='Z' />
         <StyledValueEdit value={Value.angle(theta)} onValueChange={this.onThetaChange_} theme={theme} name='Rotation' />
+        <StyledField theme={theme} name='Sensor Noise' nameWidth={160}>
+          <Spacer />
+          <Switch value={sensorNoise} onValueChange={this.onSensorNoiseChanged_} theme={theme} />
+        </StyledField>
       </Container>
     );
   }
