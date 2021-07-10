@@ -373,7 +373,6 @@ class OverlayLayout extends React.PureComponent<Props, State> {
               onRobotStateChange={onStateChange}
               sensorNoise={sensorNoise}
               onSensorNoiseChange={onSensorNoiseChange}
-              onRobotPositionSetRequested={onRobotPositionSetRequested}
               theme={theme}
             />
           </InfoWidget>
