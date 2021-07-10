@@ -142,8 +142,27 @@ export namespace Value {
     }
   };
 
-  export const toAngle = (value: Value): AngleValue => value as unknown as AngleValue;
-  export const toDistance = (value: Value): DistanceValue => value as unknown as DistanceValue;
+  export const toAngle = (value: Value): AngleValue => (value as unknown as Angle).angle;
+  export const toDistance = (value: Value): DistanceValue => (value as unknown as Distance).distance;
+
+  export const copyValue = (value: Value, num: number): Value => {
+    switch (value.type) {
+      case Type.Angle: return {
+        ...value,
+        angle: {
+          ...value.angle,
+          value: num
+        }
+      };
+      case Type.Distance: return {
+        ...value,
+        distance: {
+          ...value.distance,
+          value: num
+        }
+      };
+    }
+  };
 }
 
 export type Value = Value.Angle | Value.Distance;

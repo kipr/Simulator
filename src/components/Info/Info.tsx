@@ -138,6 +138,16 @@ class Info extends React.PureComponent<Props, State> {
     this.props.onSensorNoiseChange(enabled);
   };
 
+  private onRobotPositionReSetRequested_ = () => {
+    this.props.onRobotStateChange({
+      ...this.props.robotState,
+      x: RobotState.empty.x,
+      y: RobotState.empty.y,
+      z: RobotState.empty.z,
+      theta: RobotState.empty.theta,
+    });
+  };
+
   private onCollapsedChange_ = (section: string) => (collapsed: boolean) => {
     this.setState({
       collapsed: {
@@ -197,6 +207,7 @@ class Info extends React.PureComponent<Props, State> {
               onZChange={this.onZChange_}
               onThetaChange={this.onThetaChange_}
               onSensorNoiseChange={this.onSensorNoiseChange_}
+              onRobotPositionResetRequested={this.onRobotPositionReSetRequested_}
               theme={theme}
             />
           </StyledSection>

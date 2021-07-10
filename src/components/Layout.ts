@@ -20,6 +20,7 @@ export interface LayoutProps extends StyleProps, ThemeProps {
   onSurfaceChange: (surfaceName: string) => void;
   sensorNoise: boolean;
   onSensorNoiseChange: (enabled: boolean) => void;
+  onRobotPositionSetRequested: () => void;
 }
 
 export enum Layout {
