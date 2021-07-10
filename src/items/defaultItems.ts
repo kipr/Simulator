@@ -81,5 +81,6 @@ export default {
     startPosition: new Babylon.Vector3(14, 1, 43.5),
     startRotation: Math.PI / 4,
     rotationAxis: Babylon.Axis.Y,
+    id: 'PaperReam1',
   }
 } as Dict<Item>;
