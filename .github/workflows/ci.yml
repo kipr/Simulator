@@ -10,10 +10,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Install modules
+    - name: Checkout Simulator
+        uses: actions/checkout@v2
+        with:
+          path: simulator
+    - name: Checkout Ivygate
+        uses: actions/checkout@v2
+        with:
+          path: ivygate
+          repository: kipr/ivygate
+    - name: Install Ivygate modules
       run: yarn install
+      working-directory: ivygate
+    - name: Build Ivygate
+      run: node_modules/.bin/tsc
+      working-directory: ivygate
+    - name: Add Ivygate to Simulator
+      run: yarn add ../ivygate
+      working-directory: simulator
+    - name: Install Simulator modules
+      run: yarn install
+      working-directory: simulator
     - name: Build production bundle
       run: yarn build
+      working-directory: simulator
     - name: Run linter
       run: yarn lint
+      working-directory: simulator

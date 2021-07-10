@@ -5,13 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="icon" type="image/x-icon" href="/static/favicon.png">
   <title>KISS IDE Simulator</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&display=swap" rel="stylesheet">
+  <link href="/static/fontawesome-free-5.15.3-web/css/all.min.css" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
     }
 
     html, body {
+      position: relative;
       margin: 0;
       padding: 0;
       background-color: #dcdde1;
@@ -29,6 +33,20 @@
 
     #root {
       overflow: scroll;
+    }
+
+    #modal-root, #screen-guide {
+      position: absolute;
+      width: 100vw;
+      height: 100vh;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      background-color: transparent;
+      transition: background-color 0.2s;
+      display: none;
+      align-items: center;
+      justify-content: center;
     }
 
     #app {
@@ -126,9 +144,16 @@
     .cm-s-kiss .CodeMirror-activeline-background { background: #e8f2ff; }
     .cm-s-kiss .CodeMirror-matchingbracket { outline:1px solid grey; color:black !important; }
 
+    #swap {
+      visibility: hidden;
+    }
   </style>
 </head>
 <body>
+  <div id="swap"></div>
   <div id="reactRoot" ></div>
+  <div id="modal-root"></div>
+  <div id="tooltip-root"></div>
+  <div id="screen-guide"></div>
 </body>
 </html>

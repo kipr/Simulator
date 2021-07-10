@@ -15,8 +15,14 @@ import {
   PaperReam,
 } from './items';
 import { RobotState } from './RobotState';
+
 import Dict from './Dict';
 import { SurfaceState } from './SurfaceState';
+
+import { Vector2 } from './math';
+import { EMPTY_ARRAY } from './util';
+
+export let ACTIVE_SPACE: Space;
 
 export class Space {
   private engine: Babylon.Engine;
@@ -24,6 +30,7 @@ export class Space {
   private scene: Babylon.Scene;
 
   private ammo_: Babylon.AmmoJSPlugin;
+  private camera: Babylon.ArcRotateCamera;
 
   private ground: Babylon.Mesh;
   private mat: Babylon.Mesh;
@@ -53,7 +60,7 @@ export class Space {
   private armRotationDefault: Babylon.Quaternion;
   private clawRotationDefault: Babylon.Quaternion;
 
-  private sensorObjects_: SensorObject[];
+  private sensorObjects_: SensorObject[] = EMPTY_ARRAY;
 
   private canCoordinates: Array<[number, number]>;
 
@@ -80,6 +87,29 @@ export class Space {
   private getRobotState: () => RobotState;
   private updateRobotState: (robotState: Partial<RobotState>) => void;
 
+  objectScreenPosition(id: string): Vector2 {
+    const mesh = this.scene.getMeshByID(id) || this.scene.getMeshByName(id);
+    if (!mesh) return undefined;
+
+    const position = mesh.getBoundingInfo().boundingBox.centerWorld;
+
+    const coordinates = Babylon.Vector3.Project(
+      position,
+      Babylon.Matrix.Identity(),
+      this.scene.getTransformMatrix(),
+      this.camera.viewport.toGlobal(
+        this.engine.getRenderWidth(),
+        this.engine.getRenderHeight(),
+      ));
+
+    const { top, left } = this.canvas.getBoundingClientRect();
+
+    return {
+      x: coordinates.x + left,
+      y: coordinates.y + top
+    };
+  }
+
   // TODO: Find a better way to communicate robot state instead of these callbacks
   constructor(canvas: HTMLCanvasElement, getRobotState: () => RobotState, updateRobotState: (robotState: Partial<RobotState>) => void) {
     this.canvas = canvas;
@@ -88,12 +118,16 @@ export class Space {
 
     this.getRobotState = getRobotState;
     this.updateRobotState = updateRobotState;
+
+    // this.ticksSinceETSensorUpdate = 0;
+
+    ACTIVE_SPACE = this;
   }
 
   public createScene(): void {
-    const camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(50,50,50), this.scene);
-    camera.setTarget(Babylon.Vector3.Zero());
-    camera.attachControl(this.canvas, true);
+    this.camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(50,50,50), this.scene);
+    this.camera.setTarget(Babylon.Vector3.Zero());
+    this.camera.attachControl(this.canvas, true);
 
     const light = new Babylon.HemisphericLight("botlight", new Babylon.Vector3(0,1,0), this.scene);
     light.intensity = 0.75;

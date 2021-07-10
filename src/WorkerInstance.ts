@@ -4,6 +4,7 @@ import { RobotState } from './RobotState';
 
 import deepNeq from './deepNeq';
 
+
 class WorkerInstance {
   
   onStateChange: (state: RobotState) => void;

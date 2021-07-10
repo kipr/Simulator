@@ -32,6 +32,18 @@ export namespace Protocol {
       registers: Register[];
     }
 
+    export interface SetRegistersRequest {
+      type: 'setregisters';
+      // Layout: Address is in second byte, value in low byte ((address & 0x0F) << 8 | (value & 0xFF))
+      values: number[];
+    }
+
+    export interface SetRegistersResponse {
+      type: 'setregisters';
+    }
+
+    
+
     export interface ProgramOutputRequest {
       type: 'programoutput';
       stdoutput: string;
@@ -49,7 +61,14 @@ export namespace Protocol {
   }
 
   export namespace Host {
-    
+    export interface GetRegistersRequest {
+      type: 'get-registers'
+    }
+
+    export interface GetRegistersResponse {
+      type: 'get-registers';
+      values: number[];
+    }
   }
 }
 
