@@ -18,7 +18,7 @@ export interface SimulatorAreaProps {
   surfaceState: SurfaceState;
 
   onRobotStateUpdate: (robotState: Partial<RobotState>) => void;
-  onRobotPositionSetCompleted: () => void;
+  // onRobotPositionSetCompleted: () => void;
 }
 
 const Container = styled('div', {
@@ -116,11 +116,15 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
       this.space.resetPosition();
     }
 
+    const shouldSetRobotPosition = (
+      prevProps.robotState.x !== this.props.robotState.x ||
+      prevProps.robotState.y !== this.props.robotState.y ||
+      prevProps.robotState.z !== this.props.robotState.z ||
+      prevProps.robotState.theta !== this.props.robotState.theta
+    );
+
     // Checks if robot position needs to be set
-    if (this.props.shouldSetRobotPosition && !prevProps.shouldSetRobotPosition) {
-      this.space.resetPosition();
-      this.props.onRobotPositionSetCompleted();
-    }
+    if (shouldSetRobotPosition) this.space.resetPosition();
   }
 
   private bindContainerRef_ = (ref: HTMLDivElement) => {

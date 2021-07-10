@@ -391,7 +391,6 @@ export class Root extends React.Component<Props, State> {
               robotState={robotState}
               itemEnabled={items}
               onRobotStateUpdate={this.onRobotStateUpdate_}
-              onRobotPositionSetCompleted={this.onRobotPositionSetCompleted_}
               shouldSetRobotPosition={shouldSetRobotPosition}
               isSensorNoiseEnabled={isSensorNoiseEnabled}
               surfaceState={surfaceState}
