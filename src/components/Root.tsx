@@ -16,7 +16,7 @@ import { SimulatorArea } from './SimulatorArea';
 import { Portal } from './Portal';
 import { SettingsDialog } from './SettingsDialog';
 import { AboutDialog } from './AboutDialog';
-import compile from '../compile';
+import compile, { CompileError } from '../compile';
 import { SimulatorState } from './SimulatorState';
 import { StyledText } from '../util';
 import { Message } from 'ivygate';
@@ -205,7 +205,7 @@ export class Root extends React.Component<Props, State> {
     this.overlayLayout_.editor.ivygate.revealLineInCenter(line);
   };
 
-  private onRunClick_ = async () => {
+  private onRunClick_ = () => {
     const { state } = this;
     const { code, console, theme } = state;
 
@@ -217,64 +217,67 @@ export class Root extends React.Component<Props, State> {
     this.setState({
       simulatorState: SimulatorState.COMPILING,
       console: nextConsole
-    }, async () => {
-      
-      try {
-        const js = await compile(code);
-        WorkerInstance.start(js);
-        this.setState({
-          simulatorState: SimulatorState.RUNNING
+    }, () => {
+      compile(code)
+        .then(js => {
+          WorkerInstance.start(js);
+          this.setState({
+            simulatorState: SimulatorState.RUNNING
+          });
+        })
+        .catch((e: unknown) => {
+          /* let nextConsole = console;
+          if (typeof e.stderr === 'string' && e.stderr.length > 0) {
+            nextConsole = StyledText.extend(console, StyledText.text({
+              text: e.stderr,
+              style: STDERR_STYLE(theme)
+            }));
+          }
+          if (typeof e.stdout === 'string' && e.stdout.length > 0) {
+            nextConsole = StyledText.extend(console, StyledText.text({
+              text: e.stdout,
+              style: STDOUT_STYLE(theme)
+            }));
+          }*/
+
+          // TODO: handle cases where e is not a CompileError
+          const compileError = e as CompileError;
+  
+          window.console.log(compileError.stderr);
+  
+          window.console.log('parse',);
+          
+          const messages = sort(parseMessages(compileError.stderr));
+  
+  
+          if (hasErrors(messages)) {
+            nextConsole = StyledText.extend(nextConsole, StyledText.text({
+              text: `Compilation failed.\n`,
+              style: STDERR_STYLE(this.state.theme)
+            }));
+          } else {
+            nextConsole = StyledText.extend(nextConsole, StyledText.text({
+              text: `Compilation succeeded!\n`,
+              style: STDOUT_STYLE(this.state.theme)
+            }));
+          }
+  
+          for (const message of messages) {
+            nextConsole = StyledText.extend(nextConsole, toStyledText(message, {
+              onClick: message.ranges.length > 0
+                ? this.onErrorMessageClick_(message.ranges[0].start.line)
+                : undefined
+            }));
+  
+          }
+  
+  
+          this.setState({
+            simulatorState: SimulatorState.STOPPED,
+            messages,
+            console: nextConsole
+          });
         });
-      } catch (e) {
-        /* let nextConsole = console;
-        if (typeof e.stderr === 'string' && e.stderr.length > 0) {
-          nextConsole = StyledText.extend(console, StyledText.text({
-            text: e.stderr,
-            style: STDERR_STYLE(theme)
-          }));
-        }
-        if (typeof e.stdout === 'string' && e.stdout.length > 0) {
-          nextConsole = StyledText.extend(console, StyledText.text({
-            text: e.stdout,
-            style: STDOUT_STYLE(theme)
-          }));
-        }*/
-
-        window.console.log(e.stderr);
-
-        window.console.log('parse',);
-        
-        const messages = sort(parseMessages(e.stderr));
-
-
-        if (hasErrors(messages)) {
-          nextConsole = StyledText.extend(nextConsole, StyledText.text({
-            text: `Compilation failed.\n`,
-            style: STDERR_STYLE(this.state.theme)
-          }));
-        } else {
-          nextConsole = StyledText.extend(nextConsole, StyledText.text({
-            text: `Compilation succeeded!\n`,
-            style: STDOUT_STYLE(this.state.theme)
-          }));
-        }
-
-        for (const message of messages) {
-          nextConsole = StyledText.extend(nextConsole, toStyledText(message, {
-            onClick: message.ranges.length > 0
-              ? this.onErrorMessageClick_(message.ranges[0].start.line)
-              : undefined
-          }));
-
-        }
-
-
-        this.setState({
-          simulatorState: SimulatorState.STOPPED,
-          messages,
-          console: nextConsole
-        });
-      }
     });
   };
 
