@@ -303,6 +303,10 @@ export class Root extends React.Component<Props, State> {
     });
   };
 
+  onDocumentationClick = () => {
+    window.open("https://www.kipr.org/doc/index.html");
+  };
+
   render() {
     const { props, state } = this;
     const {
@@ -382,6 +386,7 @@ export class Root extends React.Component<Props, State> {
             onDownloadClick={this.onDownloadClick_}
             onRunClick={this.onRunClick_}
             onStopClick={this.onStopClick_}
+            onDocumentationClick={this.onDocumentationClick}
             simulatorState={simulatorState}
           />
           {impl}
