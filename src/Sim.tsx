@@ -20,7 +20,6 @@ import Dict from './Dict';
 import { SurfaceState } from './SurfaceState';
 
 import { Vector2 } from './math';
-import { EMPTY_ARRAY } from './util';
 
 export let ACTIVE_SPACE: Space;
 
@@ -60,7 +59,7 @@ export class Space {
   private armRotationDefault: Babylon.Quaternion;
   private clawRotationDefault: Babylon.Quaternion;
 
-  private sensorObjects_: SensorObject[] = EMPTY_ARRAY;
+  private sensorObjects_: SensorObject[] = [];
 
   private canCoordinates: Array<[number, number]>;
 

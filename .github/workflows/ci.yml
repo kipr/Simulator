@@ -11,14 +11,14 @@ jobs:
 
     steps:
     - name: Checkout Simulator
-        uses: actions/checkout@v2
-        with:
-          path: simulator
+      uses: actions/checkout@v2
+      with:
+        path: simulator
     - name: Checkout Ivygate
-        uses: actions/checkout@v2
-        with:
-          path: ivygate
-          repository: kipr/ivygate
+      uses: actions/checkout@v2
+      with:
+        path: ivygate
+        repository: kipr/ivygate
     - name: Install Ivygate modules
       run: yarn install
       working-directory: ivygate
