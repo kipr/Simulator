@@ -22,6 +22,7 @@ export interface MenuProps extends StyleProps, ThemeProps {
 
   onSettingsClick: () => void;
   onAboutClick: () => void;
+  onDocumentationClick: () => void;
 
   simulatorState: SimulatorState;
 }
@@ -108,6 +109,7 @@ class Menu extends React.PureComponent<Props, State> {
       onRunClick,
       onStopClick,
       onDownloadClick,
+      onDocumentationClick,
       simulatorState
     } = props;
 
@@ -125,14 +127,14 @@ class Menu extends React.PureComponent<Props, State> {
 
           <Spacer style={{ borderRight: `1px solid ${theme.borderColor}` }} />
 
-
           <Item theme={theme} onClick={this.onLayoutClick_} style={{ position: 'relative' }}>
             <ItemIcon icon='clone' /> Layout
             {layoutPicker ? (
               <LayoutPicker style={{ zIndex: 9 }} onLayoutChange={onLayoutChange} onShowAll={onShowAll} onHideAll={onHideAll} layout={layout} theme={theme} />
             ) : undefined}
           </Item>
-          
+
+          <Item theme={theme} onClick={onDocumentationClick}><ItemIcon icon='book' /> Documentation</Item>
           
           {/* <Item theme={theme} onClick={onSettingsClick}><ItemIcon icon='cogs'/> Settings</Item>*/}
           <Item theme={theme} onClick={onAboutClick}><ItemIcon icon='question'/> About</Item>
