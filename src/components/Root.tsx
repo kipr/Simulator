@@ -82,7 +82,7 @@ export class Root extends React.Component<Props, State> {
       surfaceState: SurfaceStatePresets.jbcA,
       items: Array<boolean>(ITEM_KEYS.length).fill(false),
       layout: Layout.Overlay,
-      code: '',
+      code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
       simulatorSink: undefined,
       modal: 'none',
       simulatorState: SimulatorState.STOPPED,
