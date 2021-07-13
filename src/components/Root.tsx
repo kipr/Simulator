@@ -96,7 +96,14 @@ export class Root extends React.Component<Props, State> {
     WorkerInstance.onStateChange = this.onWorkerStateChange_;
     WorkerInstance.onStdOutput = this.onStdOutput_;
     WorkerInstance.onStdError = this.onStdError_;
+    WorkerInstance.onStopped = this.onStopped_;
   }
+
+  private onStopped_ = () => {
+    this.setState({
+      simulatorState: SimulatorState.STOPPED
+    });
+  };
 
   private onRobotStateUpdate_ = (robot: Partial<RobotState>) => {
     // Create new robot state object by applying the partial changes
