@@ -66,7 +66,7 @@ class Evented implements ResizeListener {
 
   private onResize_ = (entries: ResizeObserverEntry[]) => {
     for (const entry of entries) {
-      const borderBox = entry.borderBoxSize[0];
+      const borderBox = Array.isArray(entry.borderBoxSize) ? entry.borderBoxSize[0] : entry.borderBoxSize;
       this.callback_({ x: borderBox.inlineSize, y: borderBox.blockSize }, entry.target);
     }
   };
