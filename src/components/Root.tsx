@@ -186,7 +186,7 @@ export class Root extends React.Component<Props, State> {
       console: StyledText.extend(this.state.console, StyledText.text({
         text,
         style: STDOUT_STYLE(this.state.theme)
-      }))
+      }, true))
     });
   };
 
@@ -195,7 +195,7 @@ export class Root extends React.Component<Props, State> {
       console: StyledText.extend(this.state.console, StyledText.text({
         text,
         style: STDOUT_STYLE(this.state.theme)
-      }))
+      }, true))
     });
   };
 

@@ -17,27 +17,47 @@ export namespace StyledText {
   }
 
   export type TextParams = Omit<Text, 'type'>;
-  export const text = (params: TextParams): StyledText => {
+  export const text = (params: TextParams, addNewline = false): StyledText => {
     
-    const parts = params.text.split('\n');
-    if (parts.length === 1) {
-      return {
-        type: Type.Text,
-        ...params
-      };
-    }
+    console.log(`Text: "${params.text}"`);
+
+    const { text } = params;
 
     const items: StyledText[] = [];
-    for (const part of parts) {
-      if (part.length === 0) continue;
+
+    let buffer = '';
+    for (let i = 0; i < text.length; ++i) {
+      const c = text.charAt(i);
+      if (c !== '\n') {
+        buffer += c;
+        continue;
+      }
+      
+      if (buffer.length > 0) {
+        items.push({
+          type: Type.Text,
+          text: buffer,
+          style: params.style,
+          props: params.props
+        });
+        buffer = '';
+      }
+      items.push(newLine());
+    }
+
+    if (buffer.length > 0) {
       items.push({
         type: Type.Text,
-        text: part,
+        text: buffer,
         style: params.style,
         props: params.props
       });
-      items.push(newLine());
     }
+
+    if (addNewline) items.push(newLine());
+
+    if (items.length === 1) return items[0];
+
     return compose({ items });
   };
 
