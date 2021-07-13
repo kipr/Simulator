@@ -19,8 +19,6 @@ export namespace StyledText {
   export type TextParams = Omit<Text, 'type'>;
   export const text = (params: TextParams, addNewline = false): StyledText => {
     
-    console.log(`Text: "${params.text}"`);
-
     const { text } = params;
 
     const items: StyledText[] = [];
