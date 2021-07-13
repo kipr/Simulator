@@ -1,13 +1,13 @@
 import * as React from 'react';
 
-import { styled } from 'styletron-react';
+import { styled, withStyleDeep } from 'styletron-react';
 import { StyleProps } from '../style';
 import { Spacer } from './common';
 import { Fa } from './Fa';
 import { Layout } from './Layout';
 import LayoutPicker from './LayoutPicker';
 import { SimulatorState } from './SimulatorState';
-import { ThemeProps } from './theme';
+import { GREEN, RED, ThemeProps } from './theme';
 
 export interface MenuProps extends StyleProps, ThemeProps {
   layout: Layout;
@@ -76,6 +76,20 @@ const Item = styled('div', (props: ThemeProps & ClickProps) => ({
   transition: 'background-color 0.2s, opacity 0.2s'
 }));
 
+const RunItem = withStyleDeep(Item, (props: ClickProps & { running: boolean }) => ({
+  backgroundColor: props.disabled ? GREEN.disabled : GREEN.standard,
+  ':hover': props.onClick && !props.disabled ? {
+    backgroundColor: GREEN.hover
+  } : {},
+}));
+
+const StopItem = withStyleDeep(Item, (props: ClickProps & { running: boolean }) => ({
+  backgroundColor: props.disabled ? RED.disabled : RED.standard,
+  ':hover': props.onClick && !props.disabled ? {
+    backgroundColor: RED.hover
+  } : {},
+}));
+
 
 const ItemIcon = styled(Fa, {
   paddingRight: '10px'
@@ -115,14 +129,30 @@ class Menu extends React.PureComponent<Props, State> {
 
     const { layoutPicker } = state;
 
+    const running = SimulatorState.isRunning(simulatorState);
+
     return (
       <>
         <Container theme={theme}>
           {/* <Logo href="/static/KIPR-Logo-bk.jpg"/>*/}
           <Item theme={theme}>KIPR Simulator</Item>
 
-          <Item theme={theme} onClick={onRunClick} disabled={!SimulatorState.isStopped(simulatorState)}><ItemIcon icon='play' /> Run</Item>
-          <Item theme={theme} onClick={onStopClick} disabled={!SimulatorState.isRunning(simulatorState)}><ItemIcon icon='stop' /> Stop</Item>
+          <RunItem
+            theme={theme}
+            onClick={SimulatorState.isStopped(simulatorState) ? onRunClick : undefined}
+            running={running}
+            disabled={!SimulatorState.isStopped(simulatorState)}
+          >
+            <ItemIcon icon='play' /> Run
+          </RunItem>
+          <StopItem
+            theme={theme}
+            onClick={running ? onStopClick : undefined}
+            disabled={!running}
+            running={running}
+          >
+            <ItemIcon icon='stop' /> Stop
+          </StopItem>
           <Item theme={theme} onClick={onDownloadClick}><ItemIcon icon='file-download' /> Download</Item>
 
           <Spacer style={{ borderRight: `1px solid ${theme.borderColor}` }} />
