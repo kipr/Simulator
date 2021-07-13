@@ -4,7 +4,7 @@ import { styled } from 'styletron-react';
 import Console from './Console';
 import { Info } from './Info';
 import { LayoutProps } from './Layout';
-import { Portal } from './Portal';
+import { SimulatorArea } from './SimulatorArea';
 import { TabBar } from './TabBar';
 import { ThemeProps } from './theme';
 import Widget, { Mode, Size, WidgetProps } from './Widget';
@@ -34,6 +34,11 @@ const Container = styled('div', {
   display: 'flex',
   flex: '1 1',
   flexDirection: 'row',
+});
+
+const SimulatorAreaContainer = styled('div', {
+  flex: '3 3',
+  display: 'flex',
 });
 
 const SideBar = styled('div', {
@@ -160,7 +165,7 @@ class SideLayout extends React.PureComponent<Props, State> {
 
   render() {
     const { props } = this;
-    const { style, className, theme, state, onStateChange, items, onCodeChange, code, simulator, console, sensorNoise, onSensorNoiseChange, onRobotPositionSetRequested } = props;
+    const { style, className, theme, state, onStateChange, items, onCodeChange, code, console, sensorNoise, onSensorNoiseChange, onRobotPositionSetRequested, surfaceState } = props;
     const { editorSize, consoleSize, infoSize, index } = this.state;
 
     let content: JSX.Element;
@@ -214,7 +219,16 @@ class SideLayout extends React.PureComponent<Props, State> {
           {content}
           <StyledTabBar tabs={TABS} index={0} onIndexChange={this.onTabBarIndexChange_} theme={theme} />
         </SideBar>
-        <Portal.Sink style={{ flex: '3 3', display: 'flex' }} ref={simulator} />
+        <SimulatorAreaContainer>
+          <SimulatorArea
+            key='simulator'
+            robotState={state}
+            itemEnabled={items}
+            onRobotStateUpdate={onStateChange}
+            isSensorNoiseEnabled={sensorNoise}
+            surfaceState={surfaceState}
+          />
+        </SimulatorAreaContainer>
       </Container>
     );
   }

@@ -24,9 +24,13 @@ import { Vector2 } from './math';
 export let ACTIVE_SPACE: Space;
 
 export class Space {
+  private static instance: Space;
+
   private engine: Babylon.Engine;
-  private canvas: HTMLCanvasElement;
+  private workingCanvas: HTMLCanvasElement;
   private scene: Babylon.Scene;
+
+  private currentEngineView: Babylon.EngineView;
 
   private ammo_: Babylon.AmmoJSPlugin;
   private camera: Babylon.ArcRotateCamera;
@@ -101,7 +105,7 @@ export class Space {
         this.engine.getRenderHeight(),
       ));
 
-    const { top, left } = this.canvas.getBoundingClientRect();
+    const { top, left } = this.workingCanvas.getBoundingClientRect();
 
     return {
       x: coordinates.x + left,
@@ -109,24 +113,53 @@ export class Space {
     };
   }
 
+  public static getInstance(): Space {
+    if (!Space.instance) {
+      Space.instance = new Space();
+
+      // TODO: start this scene/mesh initialization elsewhere
+      Space.instance.createScene();
+      Space.instance.loadMeshes()
+        .then(() => {
+          Space.instance.startRenderLoop();
+        })
+        .catch((e) => {
+          console.error('The simulator meshes failed to load', e);
+        });
+    }
+
+    return Space.instance;
+  }
+
   // TODO: Find a better way to communicate robot state instead of these callbacks
-  constructor(canvas: HTMLCanvasElement, getRobotState: () => RobotState, updateRobotState: (robotState: Partial<RobotState>) => void) {
-    this.canvas = canvas;
-    this.engine = new Babylon.Engine(this.canvas, true, { preserveDrawingBuffer: true, stencil: true });
+  private constructor() {
+    this.workingCanvas = document.createElement('canvas');
+    this.engine = new Babylon.Engine(this.workingCanvas, true, { preserveDrawingBuffer: true, stencil: true });
     this.scene = new Babylon.Scene(this.engine);
 
-    this.getRobotState = getRobotState;
-    this.updateRobotState = updateRobotState;
-
-    // this.ticksSinceETSensorUpdate = 0;
+    this.currentEngineView = null;
 
     ACTIVE_SPACE = this;
+  }
+
+  public switchContext(canvas: HTMLCanvasElement, getRobotState: () => RobotState, updateRobotState: (robotState: Partial<RobotState>) => void): void {
+    this.getRobotState = getRobotState;
+    this.updateRobotState = updateRobotState;
+    
+    if (this.currentEngineView) {
+      this.engine.unRegisterView(this.currentEngineView.target);
+    }
+
+    this.currentEngineView = this.engine.registerView(canvas, this.camera);
+    this.scene.detachControl();
+    this.engine.inputElement = canvas;
+    this.scene.attachControl();
   }
 
   public createScene(): void {
     this.camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(50,50,50), this.scene);
     this.camera.setTarget(Babylon.Vector3.Zero());
-    this.camera.attachControl(this.canvas, true);
+    this.camera.attachControl(this.workingCanvas, true);
 
     const light = new Babylon.HemisphericLight("botlight", new Babylon.Vector3(0,1,0), this.scene);
     light.intensity = 0.75;
