@@ -55,7 +55,6 @@ export class AboutDialog extends React.PureComponent<Props> {
     return (
       <Dialog theme={theme} name='About' onClose={onClose}>
         <Container theme={theme}>
-          {logo}
           <Bold>Copyright <Fa icon='copyright' /> 2021 <Link theme={theme} href="https://kipr.org/" target="_blank">KISS Institute for Practical Robotics</Link> and External Contributors</Bold>
           <br /> <br />
           This software is licensed under the terms of the <Link theme={theme} href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">GNU General Public License v3</Link>.
