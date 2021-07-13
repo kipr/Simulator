@@ -46,10 +46,15 @@ app.post('/compile', (req, res) => {
   // Required because Asyncify keeps emscripten runtime alive, which would prevent cleanup code from running
   const augmentedCode = `${req.body.code}
     #include <emscripten.h>
+
+    EM_JS(void, on_stop, (), {
+      if (Module.context.onStop) Module.context.onStop();
+    })
   
     void simMainWrapper()
     {
       main();
+      on_stop();
       emscripten_force_exit(0);
     }
   `;
