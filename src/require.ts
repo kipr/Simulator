@@ -11,6 +11,7 @@ export interface EmscriptenModule {
 export interface ModuleContext {
   registers?: Array<number>,
   onRegistersChange?: (registers: Protocol.Worker.Register[]) => void,
+  onStop?: () => void;
 }
 
 export default (code: string, context: ModuleContext, print: (s: string) => void, printErr: (stderror: string) => void): EmscriptenModule => {

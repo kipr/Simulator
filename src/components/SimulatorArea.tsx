@@ -9,6 +9,8 @@ import { styled } from 'styletron-react';
 import {
   Items,
 } from '../items';
+import resizeListener, { ResizeListener } from './ResizeListener';
+import { Vector2 } from '../math';
 
 export interface SimulatorAreaProps {
   robotState: RobotState;
@@ -44,12 +46,8 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
     this.state = {};
   }
 
-  private run_ = false;
-
   componentDidMount() {
-    // Start resize checker
-    this.run_ = true;
-    this.tick_();
+    
   }
 
   private lastWidth_ = 0;
@@ -57,30 +55,22 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
 
   private defaultItemList = Object.keys(Items);
 
-  private tick_ = () => {
-    if (!this.run_) return;
-    
-    if (!this.containerRef_ || !this.canvasRef_) {
-      requestAnimationFrame(this.tick_);
-      return;
-    }
-
-    const { width, height } = this.containerRef_.getBoundingClientRect();
-
-    if (this.lastHeight_ !== height || this.lastWidth_ !== width) {
-      this.canvasRef_.style.width = `${width}px`;
-      this.canvasRef_.style.height = `${height}px`;
+  private onSizeChange_ = (size: Vector2) => {
+    if (this.lastHeight_ !== size.y || this.lastWidth_ !== size.x) {
+      this.canvasRef_.style.width = `${size.x}px`;
+      this.canvasRef_.style.height = `${size.y}px`;
       Sim.Space.getInstance().handleResize();
     }
-
-    this.lastWidth_ = width;
-    this.lastHeight_ = height;
-
-    requestAnimationFrame(this.tick_);
+    
+    this.lastWidth_ = size.x;
+    this.lastHeight_ = size.y;
   };
 
+  private resizeListener_ = resizeListener(this.onSizeChange_);
+
+
   componentWillUnmount() {
-    this.run_ = false;
+    this.resizeListener_.disconnect();
   }
 
   componentDidUpdate(prevProps: SimulatorAreaProps) {
@@ -114,7 +104,9 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
   }
 
   private bindContainerRef_ = (ref: HTMLDivElement) => {
+    if (this.containerRef_) this.resizeListener_.unobserve(this.containerRef_);
     this.containerRef_ = ref;
+    if (this.containerRef_) this.resizeListener_.observe(this.containerRef_);
   };
 
   private bindCanvasRef_ = (ref: HTMLCanvasElement) => {
