@@ -54,8 +54,6 @@ export class AboutDialog extends React.PureComponent<Props> {
     
     let logo: JSX.Element;
 
-    console.log(KIPR_LOGO_BLACK);
-
     switch (theme.foreground) {
       case 'black': {
         logo = <Logo src={KIPR_LOGO_WHITE as string} />;

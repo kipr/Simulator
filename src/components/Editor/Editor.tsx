@@ -52,7 +52,6 @@ class Editor extends React.PureComponent<Props, State> {
 
   render() {
     const { style, className, theme, code, onCodeChange, messages } = this.props;
-    console.log('messages', messages);
     return (
       <Container theme={theme} style={style} className={className}>
         <Ivygate ref={this.bindIvygate_} code={code} language="c" messages={messages} onCodeChange={onCodeChange} />
