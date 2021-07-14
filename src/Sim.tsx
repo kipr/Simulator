@@ -26,6 +26,8 @@ export let ACTIVE_SPACE: Space;
 export class Space {
   private static instance: Space;
 
+  private initializationPromise: Promise<void>;
+
   private engine: Babylon.Engine;
   private workingCanvas: HTMLCanvasElement;
   private scene: Babylon.Scene;
@@ -116,16 +118,6 @@ export class Space {
   public static getInstance(): Space {
     if (!Space.instance) {
       Space.instance = new Space();
-
-      // TODO: start this scene/mesh initialization elsewhere
-      Space.instance.createScene();
-      Space.instance.loadMeshes()
-        .then(() => {
-          Space.instance.startRenderLoop();
-        })
-        .catch((e) => {
-          console.error('The simulator meshes failed to load', e);
-        });
     }
 
     return Space.instance;
@@ -136,10 +128,31 @@ export class Space {
     this.workingCanvas = document.createElement('canvas');
     this.engine = new Babylon.Engine(this.workingCanvas, true, { preserveDrawingBuffer: true, stencil: true });
     this.scene = new Babylon.Scene(this.engine);
+    this.camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(50,50,50), this.scene);
 
     this.currentEngineView = null;
 
     ACTIVE_SPACE = this;
+  }
+
+  // Returns a promise that will resolve after the scene is fully initialized and the render loop is running
+  public ensureInitialized(): Promise<void> {
+    if (this.initializationPromise === undefined) {
+      this.initializationPromise = new Promise((resolve, reject) => {
+        this.createScene();
+        this.loadMeshes()
+          .then(() => {
+            this.startRenderLoop();
+            resolve();
+          })
+          .catch((e) => {
+            console.error('The simulator meshes failed to load', e);
+            reject(e);
+          });
+      });
+    }
+
+    return this.initializationPromise;
   }
 
   public switchContext(canvas: HTMLCanvasElement, getRobotState: () => RobotState, updateRobotState: (robotState: Partial<RobotState>) => void): void {
@@ -156,8 +169,7 @@ export class Space {
     this.scene.attachControl();
   }
 
-  public createScene(): void {
-    this.camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(50,50,50), this.scene);
+  private createScene(): void {
     this.camera.setTarget(Babylon.Vector3.Zero());
     this.camera.attachControl(this.workingCanvas, true);
 
@@ -244,7 +256,7 @@ export class Space {
   }
   
 
-  public async loadMeshes(): Promise<void> {
+  private async loadMeshes(): Promise<void> {
     // Load model into scene
     const importMeshResult = await Babylon.SceneLoader.ImportMeshAsync("",'static/', 'demobot_v6.glb', this.scene);
 
@@ -478,7 +490,7 @@ export class Space {
     await this.scene.whenReadyAsync();
   }
   
-  public startRenderLoop(): void {
+  private startRenderLoop(): void {
     this.engine.runRenderLoop(() => {
       this.scene.render();
     });

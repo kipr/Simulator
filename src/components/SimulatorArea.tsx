@@ -47,7 +47,9 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
   }
 
   componentDidMount() {
-    
+    // TODO: If simulator initialization fails, we should show the user an error
+    Sim.Space.getInstance().ensureInitialized()
+      .catch(e => console.error('Simulator initialization failed', e));
   }
 
   private lastWidth_ = 0;
@@ -116,8 +118,6 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
       Sim.Space.getInstance().switchContext(this.canvasRef_, () => this.props.robotState, (robotState) => {
         this.props.onRobotStateUpdate(robotState);
       });
-    } else {
-      // TODO: ref is being cleaned up
     }
   };
 
