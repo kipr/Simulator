@@ -366,8 +366,6 @@ export class Root extends React.Component<Props, State> {
       
     }
 
-    // TODO: need to see how Sim should handle when there's no context (i.e. there's no getRobotState()/setRobotState())
-    // TODO: need to see how to make Sim a better singleton
     return (
 
       <>
