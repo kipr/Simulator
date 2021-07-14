@@ -15,8 +15,12 @@ export interface AboutDialogProps extends ThemeProps, StyleProps {
 type Props = AboutDialogProps;
 
 const Logo = styled('img', {
-  width: '200px',
-  height: 'auto'
+  width: '150px',
+  height: 'auto',
+});
+
+const LogoContainer = styled('div', {
+  flex: '1 1'
 });
 
 const Container = styled('div', (props: ThemeProps) => ({
@@ -32,6 +36,17 @@ const Link = styled('a', (props: ThemeProps) => ({
   color: props.theme.color,
 }));
 
+const LogoRow = styled('div', {
+  display: 'flex',
+  flexDirection: 'row',
+  marginBottom: '10px',
+  alignItems: 'center',
+});
+
+const CopyrightContainer = styled('div', {
+  flex: '1 1'
+});
+
 export class AboutDialog extends React.PureComponent<Props> {
   render() {
     const { props } = this;
@@ -43,11 +58,11 @@ export class AboutDialog extends React.PureComponent<Props> {
 
     switch (theme.foreground) {
       case 'black': {
-        logo = <Logo src={KIPR_LOGO_BLACK as string} />;
+        logo = <Logo src={KIPR_LOGO_WHITE as string} />;
         break;
       }
       case 'white': {
-        logo = <Logo src={KIPR_LOGO_WHITE as string} />;
+        logo = <Logo src={KIPR_LOGO_BLACK as string} />;
         break;
       }
     }
@@ -55,10 +70,13 @@ export class AboutDialog extends React.PureComponent<Props> {
     return (
       <Dialog theme={theme} name='About' onClose={onClose}>
         <Container theme={theme}>
+          <LogoRow>
+            {logo}
+            
+          </LogoRow>
           <Bold>Copyright <Fa icon='copyright' /> 2021 <Link theme={theme} href="https://kipr.org/" target="_blank">KISS Institute for Practical Robotics</Link> and External Contributors</Bold>
           <br /> <br />
           This software is licensed under the terms of the <Link theme={theme} href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">GNU General Public License v3</Link>.
-
           <br /> <br />
           Thank you to the following contributors and testers:
           <ul>
