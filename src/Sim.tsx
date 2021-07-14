@@ -24,9 +24,15 @@ import { Vector2 } from './math';
 export let ACTIVE_SPACE: Space;
 
 export class Space {
+  private static instance: Space;
+
+  private initializationPromise: Promise<void>;
+
   private engine: Babylon.Engine;
-  private canvas: HTMLCanvasElement;
+  private workingCanvas: HTMLCanvasElement;
   private scene: Babylon.Scene;
+
+  private currentEngineView: Babylon.EngineView;
 
   private ammo_: Babylon.AmmoJSPlugin;
   private camera: Babylon.ArcRotateCamera;
@@ -90,6 +96,8 @@ export class Space {
     const mesh = this.scene.getMeshByID(id) || this.scene.getMeshByName(id);
     if (!mesh) return undefined;
 
+    if (this.engine.views.length <= 0) return undefined;
+
     const position = mesh.getBoundingInfo().boundingBox.centerWorld;
 
     const coordinates = Babylon.Vector3.Project(
@@ -100,8 +108,10 @@ export class Space {
         this.engine.getRenderWidth(),
         this.engine.getRenderHeight(),
       ));
-
-    const { top, left } = this.canvas.getBoundingClientRect();
+    
+    // Assuming the first view is the view of interest
+    // If we ever use multiple views, this may break
+    const { top, left } = this.engine.views[0].target.getBoundingClientRect();
 
     return {
       x: coordinates.x + left,
@@ -109,24 +119,63 @@ export class Space {
     };
   }
 
+  public static getInstance(): Space {
+    if (!Space.instance) {
+      Space.instance = new Space();
+    }
+
+    return Space.instance;
+  }
+
   // TODO: Find a better way to communicate robot state instead of these callbacks
-  constructor(canvas: HTMLCanvasElement, getRobotState: () => RobotState, updateRobotState: (robotState: Partial<RobotState>) => void) {
-    this.canvas = canvas;
-    this.engine = new Babylon.Engine(this.canvas, true, { preserveDrawingBuffer: true, stencil: true });
+  private constructor() {
+    this.workingCanvas = document.createElement('canvas');
+    this.engine = new Babylon.Engine(this.workingCanvas, true, { preserveDrawingBuffer: true, stencil: true });
     this.scene = new Babylon.Scene(this.engine);
+    this.camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(50,50,50), this.scene);
 
-    this.getRobotState = getRobotState;
-    this.updateRobotState = updateRobotState;
-
-    // this.ticksSinceETSensorUpdate = 0;
+    this.currentEngineView = null;
 
     ACTIVE_SPACE = this;
   }
 
-  public createScene(): void {
-    this.camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(50,50,50), this.scene);
+  // Returns a promise that will resolve after the scene is fully initialized and the render loop is running
+  public ensureInitialized(): Promise<void> {
+    if (this.initializationPromise === undefined) {
+      this.initializationPromise = new Promise((resolve, reject) => {
+        this.createScene();
+        this.loadMeshes()
+          .then(() => {
+            this.startRenderLoop();
+            resolve();
+          })
+          .catch((e) => {
+            console.error('The simulator meshes failed to load', e);
+            reject(e);
+          });
+      });
+    }
+
+    return this.initializationPromise;
+  }
+
+  public switchContext(canvas: HTMLCanvasElement, getRobotState: () => RobotState, updateRobotState: (robotState: Partial<RobotState>) => void): void {
+    this.getRobotState = getRobotState;
+    this.updateRobotState = updateRobotState;
+    
+    if (this.currentEngineView) {
+      this.engine.unRegisterView(this.currentEngineView.target);
+    }
+
+    this.currentEngineView = this.engine.registerView(canvas, this.camera);
+    this.scene.detachControl();
+    this.engine.inputElement = canvas;
+    this.scene.attachControl();
+  }
+
+  private createScene(): void {
     this.camera.setTarget(Babylon.Vector3.Zero());
-    this.camera.attachControl(this.canvas, true);
+    this.camera.attachControl(this.workingCanvas, true);
 
     const light = new Babylon.HemisphericLight("botlight", new Babylon.Vector3(0,1,0), this.scene);
     light.intensity = 0.75;
@@ -211,7 +260,7 @@ export class Space {
   }
   
 
-  public async loadMeshes(): Promise<void> {
+  private async loadMeshes(): Promise<void> {
     // Load model into scene
     const importMeshResult = await Babylon.SceneLoader.ImportMeshAsync("",'static/', 'demobot_v6.glb', this.scene);
 
@@ -445,7 +494,7 @@ export class Space {
     await this.scene.whenReadyAsync();
   }
   
-  public startRenderLoop(): void {
+  private startRenderLoop(): void {
     this.engine.runRenderLoop(() => {
       this.scene.render();
     });

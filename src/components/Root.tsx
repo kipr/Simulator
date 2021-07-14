@@ -12,8 +12,6 @@ import { Layout, LayoutProps } from './Layout';
 import BottomLayout from './BottomLayout';
 import SideLayout from './SideLayout';
 
-import { SimulatorArea } from './SimulatorArea';
-import { Portal } from './Portal';
 import { SettingsDialog } from './SettingsDialog';
 import { AboutDialog } from './AboutDialog';
 import compile, { CompileError } from '../compile';
@@ -36,7 +34,6 @@ interface RootState {
   items: boolean[];
   layout: Layout;
   code: string;
-  simulatorSink: Portal.Sink;
 
   simulatorState: SimulatorState;
 
@@ -83,7 +80,6 @@ export class Root extends React.Component<Props, State> {
       items: Array<boolean>(ITEM_KEYS.length).fill(false),
       layout: Layout.Overlay,
       code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
-      simulatorSink: undefined,
       modal: 'none',
       simulatorState: SimulatorState.STOPPED,
       console: StyledText.text({ text: 'Welcome to the KIPR Simulator!\n', style: STDOUT_STYLE(DARK) }),
@@ -175,12 +171,6 @@ export class Root extends React.Component<Props, State> {
   private onModalClose_ = () => this.setState({
     modal: 'none'
   });
-
-  private bindSimulatorSink_ = (simulatorSink: Portal.Sink) => {
-    this.setState({
-      simulatorSink
-    });
-  };
 
   private onWorkerStateChange_ = (robotState: RobotState) => {
     this.setState({
@@ -321,7 +311,6 @@ export class Root extends React.Component<Props, State> {
       robotState,
       layout,
       code,
-      simulatorSink,
       modal,
       simulatorState,
       console,
@@ -339,13 +328,12 @@ export class Root extends React.Component<Props, State> {
       onStateChange: this.onRobotStateUpdate_,
       theme,
       state: robotState,
-      simulator: this.bindSimulatorSink_,
       onItemChange: this.onItemChange_,
       console,
       onCodeChange: this.onCodeChange_,
       messages,
       onClearConsole: this.onClearConsole_,
-      surfaceName: surfaceState.surfaceName,
+      surfaceState,
       onSurfaceChange: this.onUpdateSurfaceState_,
       sensorNoise: isSensorNoiseEnabled,
       onSensorNoiseChange: this.onToggleSensorNoise_,
@@ -397,17 +385,6 @@ export class Root extends React.Component<Props, State> {
             simulatorState={simulatorState}
           />
           {impl}
-          <Portal.Source sink={simulatorSink}>
-            <SimulatorArea
-              key='simulator'
-              robotState={robotState}
-              itemEnabled={items}
-              onRobotStateUpdate={this.onRobotStateUpdate_}
-              shouldSetRobotPosition={shouldSetRobotPosition}
-              isSensorNoiseEnabled={isSensorNoiseEnabled}
-              surfaceState={surfaceState}
-            />
-          </Portal.Source>
         </Container>
         {modal === 'settings' ? <SettingsDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
         {modal === 'about' ? <AboutDialog theme={theme} onClose={this.onModalClose_} /> : undefined}

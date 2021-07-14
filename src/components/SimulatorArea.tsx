@@ -15,7 +15,6 @@ import { Vector2 } from '../math';
 export interface SimulatorAreaProps {
   robotState: RobotState;
   itemEnabled: boolean[];
-  shouldSetRobotPosition: boolean;
   isSensorNoiseEnabled: boolean;
   surfaceState: SurfaceState;
 
@@ -40,7 +39,6 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
   private containerRef_: HTMLDivElement;
   private canvasRef_: HTMLCanvasElement;
 
-  space: Sim.Space;
   private oldIsSensorNoiseEnabled: boolean;
   
   constructor(props: SimulatorAreaProps) {
@@ -49,17 +47,9 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
   }
 
   componentDidMount() {
-    this.space = new Sim.Space(this.canvasRef_, () => this.props.robotState, (robotState) => {
-      this.props.onRobotStateUpdate(robotState);
-    });
-    
-    this.space.createScene();
-    this.space.loadMeshes().then(() => {
-      this.space.startRenderLoop();
-    })
-      .catch((e) => {
-        console.error('The simulator meshes failed to load', e);
-      });
+    // TODO: If simulator initialization fails, we should show the user an error
+    Sim.Space.getInstance().ensureInitialized()
+      .catch(e => console.error('Simulator initialization failed', e));
   }
 
   private lastWidth_ = 0;
@@ -71,7 +61,7 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
     if (this.lastHeight_ !== size.y || this.lastWidth_ !== size.x) {
       this.canvasRef_.style.width = `${size.x}px`;
       this.canvasRef_.style.height = `${size.y}px`;
-      this.space.handleResize();
+      Sim.Space.getInstance().handleResize();
     }
     
     this.lastWidth_ = size.x;
@@ -95,13 +85,13 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
     // Check if simulation settings were changed
     if (this.props.isSensorNoiseEnabled !== this.oldIsSensorNoiseEnabled) {
       this.oldIsSensorNoiseEnabled = this.props.isSensorNoiseEnabled;
-      this.space.updateSensorOptions(this.props.isSensorNoiseEnabled);
+      Sim.Space.getInstance().updateSensorOptions(this.props.isSensorNoiseEnabled);
     }
 
     // Check if board was reset
     if (this.props.surfaceState !== prevProps.surfaceState) {
-      this.space.rebuildFloor(this.props.surfaceState);
-      this.space.resetPosition();
+      Sim.Space.getInstance().rebuildFloor(this.props.surfaceState);
+      Sim.Space.getInstance().resetPosition();
     }
 
     const shouldSetRobotPosition = (
@@ -112,7 +102,7 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
     );
 
     // Checks if robot position needs to be set
-    if (shouldSetRobotPosition) this.space.resetPosition();
+    if (shouldSetRobotPosition) Sim.Space.getInstance().resetPosition();
   }
 
   private bindContainerRef_ = (ref: HTMLDivElement) => {
@@ -123,12 +113,18 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
 
   private bindCanvasRef_ = (ref: HTMLCanvasElement) => {
     this.canvasRef_ = ref;
+
+    if (this.canvasRef_) {
+      Sim.Space.getInstance().switchContext(this.canvasRef_, () => this.props.robotState, (robotState) => {
+        this.props.onRobotStateUpdate(robotState);
+      });
+    }
   };
 
   private setItemEnabled(itemName: string, isEnabled: boolean) {
     isEnabled
-      ? this.space.createItem({ default: itemName })
-      : this.space.destroyItem(itemName);
+      ? Sim.Space.getInstance().createItem({ default: itemName })
+      : Sim.Space.getInstance().destroyItem(itemName);
   }
 
   render() {

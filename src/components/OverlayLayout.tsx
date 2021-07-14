@@ -7,7 +7,7 @@ import { Editor, WarningCharm, ErrorCharm } from './Editor';
 import { Fa } from './Fa';
 import { Info } from './Info';
 import { LayoutProps } from './Layout';
-import { Portal } from './Portal';
+import { SimulatorArea } from './SimulatorArea';
 import { ThemeProps } from './theme';
 import Widget, { BarComponent, Mode, Size, WidgetProps } from './Widget';
 import World from './World';
@@ -30,6 +30,12 @@ const Container = styled('div', {
   display: 'flex',
   flex: '1 1',
   position: 'relative'
+});
+
+const SimulatorAreaContainer = styled('div', {
+  display: 'flex',
+  width: '100%',
+  height: '100%',
 });
 
 const Overlay = styled('div', (props: ThemeProps) => ({
@@ -272,12 +278,11 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       items,
       code,
       onCodeChange,
-      simulator,
       onItemChange,
       console,
       messages,
       onClearConsole,
-      surfaceName,
+      surfaceState,
       onSurfaceChange,
       sensorNoise,
       onSensorNoiseChange,
@@ -341,7 +346,16 @@ class OverlayLayout extends React.PureComponent<Props, State> {
 
     return (
       <Container style={style} className={className}>
-        <Portal.Sink style={{ display: 'flex', width: '100%', height: '100%' }} ref={simulator} />
+        <SimulatorAreaContainer>
+          <SimulatorArea
+            key='simulator'
+            robotState={state}
+            itemEnabled={items}
+            onRobotStateUpdate={onStateChange}
+            isSensorNoiseEnabled={sensorNoise}
+            surfaceState={surfaceState}
+          />
+        </SimulatorAreaContainer>
         <Overlay theme={theme}>
           <EditorWidget
             {...commonProps}
@@ -385,7 +399,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
             size={WORLD_SIZE[worldSize]}
             onSizeChange={this.onWorldSizeChange_}
           >
-            <World theme={theme} items={items} onItemChange={onItemChange} surfaceName={surfaceName} onSurfaceChange={onSurfaceChange} />
+            <World theme={theme} items={items} onItemChange={onItemChange} surfaceName={surfaceState.surfaceName} onSurfaceChange={onSurfaceChange} />
           </WorldWidget>
         </Overlay>
       </Container>
