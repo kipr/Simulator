@@ -144,7 +144,22 @@ class Menu extends React.PureComponent<Props, State> {
 
           <Item theme={theme} onClick={onRunClick} disabled={!SimulatorState.isStopped(simulatorState)} style={{ borderLeft: `1px solid ${theme.borderColor}` }}><ItemIcon icon='play' /> Run</Item>
           <Item theme={theme} onClick={onStopClick} disabled={!SimulatorState.isRunning(simulatorState)}><ItemIcon icon='stop' /> Stop</Item>
-
+          <RunItem
+            theme={theme}
+            onClick={SimulatorState.isStopped(simulatorState) ? onRunClick : undefined}
+            running={running}
+            disabled={!SimulatorState.isStopped(simulatorState)}
+          >
+            <ItemIcon icon='play' /> Run
+          </RunItem>
+          <StopItem
+            theme={theme}
+            onClick={running ? onStopClick : undefined}
+            disabled={!running}
+            running={running}
+          >
+            <ItemIcon icon='stop' /> Stop
+          </StopItem>
           <Item theme={theme} onClick={onDownloadClick}><ItemIcon icon='file-download' /> Download</Item>
 
           <Spacer style={{ borderRight: `1px solid ${theme.borderColor}` }} />
