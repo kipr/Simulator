@@ -142,13 +142,12 @@ class Menu extends React.PureComponent<Props, State> {
         <Container theme={theme}>
           <Logo theme={theme} src={theme.foreground === 'white' ? KIPR_LOGO_BLACK as string : KIPR_LOGO_WHITE as string} />
 
-          <Item theme={theme} onClick={onRunClick} disabled={!SimulatorState.isStopped(simulatorState)} style={{ borderLeft: `1px solid ${theme.borderColor}` }}><ItemIcon icon='play' /> Run</Item>
-          <Item theme={theme} onClick={onStopClick} disabled={!SimulatorState.isRunning(simulatorState)}><ItemIcon icon='stop' /> Stop</Item>
           <RunItem
             theme={theme}
             onClick={SimulatorState.isStopped(simulatorState) ? onRunClick : undefined}
             running={running}
             disabled={!SimulatorState.isStopped(simulatorState)}
+            style={{ borderLeft: `1px solid ${theme.borderColor}` }}
           >
             <ItemIcon icon='play' /> Run
           </RunItem>
