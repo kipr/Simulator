@@ -96,6 +96,8 @@ export class Space {
     const mesh = this.scene.getMeshByID(id) || this.scene.getMeshByName(id);
     if (!mesh) return undefined;
 
+    if (this.engine.views.length <= 0) return undefined;
+
     const position = mesh.getBoundingInfo().boundingBox.centerWorld;
 
     const coordinates = Babylon.Vector3.Project(
@@ -106,8 +108,10 @@ export class Space {
         this.engine.getRenderWidth(),
         this.engine.getRenderHeight(),
       ));
-
-    const { top, left } = this.workingCanvas.getBoundingClientRect();
+    
+    // Assuming the first view is the view of interest
+    // If we ever use multiple views, this may break
+    const { top, left } = this.engine.views[0].target.getBoundingClientRect();
 
     return {
       x: coordinates.x + left,
