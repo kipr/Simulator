@@ -197,9 +197,9 @@ class Info extends React.PureComponent<Props, State> {
             collapsed={collapsed['simulation']}
           >
             <Simulation
-              x={Distance.meters(robotState.x)}
-              y={Distance.meters(robotState.y)}
-              z={Distance.meters(robotState.z)}
+              x={Distance.centimeters(robotState.x)}
+              y={Distance.centimeters(robotState.y)}
+              z={Distance.centimeters(robotState.z)}
               theta={Angle.degrees(robotState.theta)}
               sensorNoise={sensorNoise}
               onXChange={this.onXChange_}
