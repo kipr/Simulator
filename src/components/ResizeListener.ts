@@ -10,7 +10,7 @@ export interface ResizeListener {
 
 class Polled implements ResizeListener {
   private callback_: ResizeCallback;
-  private elements_: Map<Element, Vector2> = new Map();
+  private elements_ = new Map<Element, Vector2>();
   private running_ = false;
 
   private tick_ = () => {
@@ -66,7 +66,10 @@ class Evented implements ResizeListener {
 
   private onResize_ = (entries: ResizeObserverEntry[]) => {
     for (const entry of entries) {
-      const borderBox = entry.borderBoxSize[0];
+      const borderBoxSize = entry.borderBoxSize as unknown;
+      const borderBox: ResizeObserverSize = Array.isArray(borderBoxSize)
+        ? borderBoxSize[0] as ResizeObserverSize
+        : borderBoxSize as ResizeObserverSize;
       this.callback_({ x: borderBox.inlineSize, y: borderBox.blockSize }, entry.target);
     }
   };

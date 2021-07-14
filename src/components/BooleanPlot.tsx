@@ -4,6 +4,7 @@ import { StyleProps } from '../style';
 import { ThemeProps } from './theme';
 import { Vector2 } from '../math';
 import { Box2 } from '../geometry';
+import resizeListener, { ResizeListener } from './ResizeListener';
 
 export interface BooleanPlotProps extends ThemeProps, StyleProps {
   value: boolean;
@@ -113,7 +114,7 @@ class BooleanPlot extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    this.observer_ = new ResizeObserver(this.onResize_);
+    this.observer_ = resizeListener(this.onResize_);
 
     this.state = {
       svgWidth: 0,
@@ -128,18 +129,17 @@ class BooleanPlot extends React.PureComponent<Props, State> {
     };
   }
 
-  private onResize_: ResizeObserverCallback = (entries) => {
-    const { inlineSize, blockSize } = entries[0].borderBoxSize[0];
+  private onResize_ = (size: Vector2, element: HTMLElement) => {
 
     this.setState({
       svgHeight: 0,
-      svgWidth: inlineSize,
-      viewportHeight: blockSize,
-      viewportWidth: inlineSize
+      svgWidth: size.x,
+      viewportHeight: size.y,
+      viewportWidth: size.x
     });
   };
 
-  private observer_: ResizeObserver;
+  private observer_: ResizeListener;
   private ref_: HTMLDivElement;
   private bindRef_ = (ref: HTMLDivElement) => {
     if (this.observer_ && this.ref_) this.observer_.unobserve(this.ref_);

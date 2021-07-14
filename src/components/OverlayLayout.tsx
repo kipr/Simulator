@@ -183,7 +183,8 @@ class OverlayLayout extends React.PureComponent<Props, State> {
     this.setState({
       editorSize: EDITOR_SIZES[index].type,
       infoSize,
-      consoleSize
+      consoleSize,
+      worldSize
     });
   };
 
@@ -223,7 +224,8 @@ class OverlayLayout extends React.PureComponent<Props, State> {
     this.setState({
       consoleSize: size.type,
       infoSize,
-      editorSize
+      editorSize,
+      worldSize
     });
   };
 

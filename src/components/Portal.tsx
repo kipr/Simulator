@@ -37,7 +37,8 @@ export namespace Portal {
     render() {
       const { props } = this;
       const { sink, children } = props;
-      return ReactDom.createPortal(children, sink ? sink.ref : document.getElementById('swap'));
+      if (!sink) return null;
+      return ReactDom.createPortal(children, sink.ref);
     }
   }
 }

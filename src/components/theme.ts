@@ -1,3 +1,21 @@
+export interface ButtonColor {
+  disabled: string;
+  standard: string;
+  hover: string;
+}
+
+export const GREEN: ButtonColor = Object.freeze({
+  disabled: '#507255',
+  standard: '#488b49',
+  hover: '#4aad52'
+});
+
+export const RED: ButtonColor = Object.freeze({
+  disabled: '#735350',
+  standard: '#8C494C',
+  hover: '#AD4C4B'
+});
+
 export interface Theme {
   foreground: 'white' | 'black';
   backgroundColor: string;
