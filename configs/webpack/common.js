@@ -1,6 +1,7 @@
 // shared config (dev and prod)
 const { resolve } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { DefinePlugin } = require('webpack');
 
 module.exports = {
   entry: {
@@ -81,6 +82,9 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({ template: 'index.html.ejs', }),
+    new DefinePlugin({
+      SIMULATOR_VERSION: JSON.stringify(require('../../package.json').version),
+    }),
   ],
   performance: {
     hints: false,
