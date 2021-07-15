@@ -218,7 +218,8 @@ export class Root extends React.Component<Props, State> {
         .then(js => {
           WorkerInstance.start(js);
           this.setState({
-            simulatorState: SimulatorState.RUNNING
+            simulatorState: SimulatorState.RUNNING,
+            messages: [],
           });
         })
         .catch((e: unknown) => {
