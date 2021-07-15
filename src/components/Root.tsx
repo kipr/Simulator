@@ -238,13 +238,7 @@ export class Root extends React.Component<Props, State> {
 
           // TODO: handle cases where e is not a CompileError
           const compileError = e as CompileError;
-  
-          window.console.log(compileError.stderr);
-  
-          window.console.log('parse',);
-          
           const messages = sort(parseMessages(compileError.stderr));
-  
   
           if (hasErrors(messages)) {
             nextConsole = StyledText.extend(nextConsole, StyledText.text({
