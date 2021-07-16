@@ -16,6 +16,7 @@ export interface SimulatorAreaProps {
   robotState: RobotState;
   itemEnabled: boolean[];
   isSensorNoiseEnabled: boolean;
+  isRealisticSensorsEnabled: boolean;
   surfaceState: SurfaceState;
 
   onRobotStateUpdate: (robotState: Partial<RobotState>) => void;
@@ -85,7 +86,11 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
     // Check if simulation settings were changed
     if (this.props.isSensorNoiseEnabled !== this.oldIsSensorNoiseEnabled) {
       this.oldIsSensorNoiseEnabled = this.props.isSensorNoiseEnabled;
-      Sim.Space.getInstance().updateSensorOptions(this.props.isSensorNoiseEnabled);
+      Sim.Space.getInstance().updateSensorOptions(this.props.isSensorNoiseEnabled, this.props.isRealisticSensorsEnabled);
+    }
+    
+    if (prevProps.isRealisticSensorsEnabled !== this.props.isRealisticSensorsEnabled) {
+      Sim.Space.getInstance().updateSensorOptions(this.props.isSensorNoiseEnabled, this.props.isRealisticSensorsEnabled);
     }
 
     // Check if board was reset

@@ -14,9 +14,11 @@ import { Simulation } from './Simulation';
 export interface InfoProps extends StyleProps, ThemeProps {
   robotState: RobotState;
   sensorNoise: boolean;
+  realisticSensors: boolean;
 
   onRobotStateChange: (robotState: RobotState) => void;
   onSensorNoiseChange: (enabled: boolean) => void;
+  onRealisticSensorsChange: (enabled: boolean) => void;
 }
 
 interface InfoState {
@@ -138,6 +140,10 @@ class Info extends React.PureComponent<Props, State> {
     this.props.onSensorNoiseChange(enabled);
   };
 
+  private onRealisticSensorsChange_ = (enabled: boolean) => {
+    this.props.onRealisticSensorsChange(enabled);
+  };
+
   private onRobotPositionReSetRequested_ = () => {
     this.props.onRobotStateChange({
       ...this.props.robotState,
@@ -165,6 +171,7 @@ class Info extends React.PureComponent<Props, State> {
       theme,
       robotState,
       sensorNoise,
+      realisticSensors,
       onRobotStateChange
     } = props;
     const { collapsed } = state;
@@ -202,11 +209,13 @@ class Info extends React.PureComponent<Props, State> {
               z={Distance.centimeters(robotState.z)}
               theta={Angle.degrees(robotState.theta)}
               sensorNoise={sensorNoise}
+              realisticSensors={realisticSensors}
               onXChange={this.onXChange_}
               onYChange={this.onYChange_}
               onZChange={this.onZChange_}
               onThetaChange={this.onThetaChange_}
               onSensorNoiseChange={this.onSensorNoiseChange_}
+              onRealisticSensorsChange={this.onRealisticSensorsChange_}
               onRobotPositionResetRequested={this.onRobotPositionReSetRequested_}
               theme={theme}
             />
