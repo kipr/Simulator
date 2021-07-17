@@ -40,8 +40,6 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
   private containerRef_: HTMLDivElement;
   private canvasRef_: HTMLCanvasElement;
 
-  private oldIsSensorNoiseEnabled: boolean;
-  
   constructor(props: SimulatorAreaProps) {
     super(props);
     this.state = {};
@@ -84,12 +82,7 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
     });
     
     // Check if simulation settings were changed
-    if (this.props.isSensorNoiseEnabled !== this.oldIsSensorNoiseEnabled) {
-      this.oldIsSensorNoiseEnabled = this.props.isSensorNoiseEnabled;
-      Sim.Space.getInstance().updateSensorOptions(this.props.isSensorNoiseEnabled, this.props.isRealisticSensorsEnabled);
-    }
-    
-    if (prevProps.isRealisticSensorsEnabled !== this.props.isRealisticSensorsEnabled) {
+    if (prevProps.isSensorNoiseEnabled !== this.props.isSensorNoiseEnabled || prevProps.isRealisticSensorsEnabled !== this.props.isRealisticSensorsEnabled) {
       Sim.Space.getInstance().updateSensorOptions(this.props.isSensorNoiseEnabled, this.props.isRealisticSensorsEnabled);
     }
 
