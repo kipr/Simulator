@@ -20,6 +20,8 @@ import Dict from './Dict';
 import { SurfaceState } from './SurfaceState';
 
 import { Vector2 } from './math';
+import { RobotPosition } from './RobotPosition';
+import { Angle, Distance } from './util';
 
 export let ACTIVE_SPACE: Space;
 
@@ -489,7 +491,7 @@ export class Space {
     // Make all sensors visible for now. Eventually the user will be able to control this from the UI
     for (const sensorObject of this.sensorObjects_) sensorObject.isVisible = true;
     
-    this.resetPosition();
+    this.resetPosition({ x: Distance.centimeters(0), y: Distance.centimeters(0), z: Distance.centimeters(0), theta: Angle.degrees(0) });
 
     await this.scene.whenReadyAsync();
   }
@@ -500,8 +502,8 @@ export class Space {
     });
   }
 
-  // Resets the position/rotation of the robot to the current robot state
-  public resetPosition(): void {
+  // Resets the position/rotation of the robot to the given values (cm and radians)
+  public resetPosition(position: RobotPosition): void {
     const rootMeshes = [this.bodyCompoundRootMesh, this.colliderLeftWheelMesh, this.colliderRightWheelMesh, this.armCompoundRootMesh, this.clawCompoundRootMesh];
 
     // Create a transform node, positioned and rotated to match the body root
@@ -518,9 +520,10 @@ export class Space {
     }
 
     // Set the position and rotation
-    const { x, y, z, theta } = this.getRobotState();
-    resetTransformNode.setAbsolutePosition(new Babylon.Vector3(x, y, z).addInPlace(this.robotOffset));
-    resetTransformNode.rotationQuaternion = Babylon.Quaternion.RotationAxis(Babylon.Vector3.Up(), Babylon.Tools.ToRadians(theta));
+    // Assuming that position is already in cm/radians. Eventually we'll need to convert depending on the incoming units
+    const { x, y, z, theta } = position;
+    resetTransformNode.setAbsolutePosition(new Babylon.Vector3(x.value, y.value, z.value).addInPlace(this.robotOffset));
+    resetTransformNode.rotationQuaternion = Babylon.Quaternion.RotationAxis(Babylon.Vector3.Up(), Babylon.Tools.ToRadians(theta.value));
 
     // Destroy the transform node
     for (const rootMesh of rootMeshes) {

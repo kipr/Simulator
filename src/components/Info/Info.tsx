@@ -7,15 +7,17 @@ import ScrollArea from '../ScrollArea';
 import Section from '../Section';
 import { ThemeProps } from '../theme';
 import SensorWidget from './SensorWidget';
-import { Angle, Distance, StyledText } from '../../util';
+import { StyledText } from '../../util';
 import { Simulation } from './Simulation';
+import { RobotPosition } from '../../RobotPosition';
 
 
 export interface InfoProps extends StyleProps, ThemeProps {
   robotState: RobotState;
+  robotPosition: RobotPosition;
   sensorNoise: boolean;
 
-  onRobotStateChange: (robotState: RobotState) => void;
+  onSetRobotPosition: (robotPosition: RobotPosition) => void;
   onSensorNoiseChange: (enabled: boolean) => void;
 }
 
@@ -102,50 +104,8 @@ class Info extends React.PureComponent<Props, State> {
     };
   }
 
-  private onXChange_ = (x: Distance) => {
-    const { props } = this;
-    const { robotState } = props;
-    const nextRobotState = { ...robotState };
-    nextRobotState.x = x.value;
-    this.props.onRobotStateChange(nextRobotState);
-  };
-
-  private onYChange_ = (y: Distance) => {
-    const { props } = this;
-    const { robotState } = props;
-    const nextRobotState = { ...robotState };
-    nextRobotState.y = y.value;
-    this.props.onRobotStateChange(nextRobotState);
-  };
-
-  private onZChange_ = (z: Distance) => {
-    const { props } = this;
-    const { robotState } = props;
-    const nextRobotState = { ...robotState };
-    nextRobotState.z = z.value;
-    this.props.onRobotStateChange(nextRobotState);
-  };
-
-  private onThetaChange_ = (theta: Angle) => {
-    const { props } = this;
-    const { robotState } = props;
-    const nextRobotState = { ...robotState };
-    nextRobotState.theta = theta.value;
-    this.props.onRobotStateChange(nextRobotState);
-  };
-
   private onSensorNoiseChange_ = (enabled: boolean) => {
     this.props.onSensorNoiseChange(enabled);
-  };
-
-  private onRobotPositionReSetRequested_ = () => {
-    this.props.onRobotStateChange({
-      ...this.props.robotState,
-      x: RobotState.empty.x,
-      y: RobotState.empty.y,
-      z: RobotState.empty.z,
-      theta: RobotState.empty.theta,
-    });
   };
 
   private onCollapsedChange_ = (section: string) => (collapsed: boolean) => {
@@ -165,7 +125,7 @@ class Info extends React.PureComponent<Props, State> {
       theme,
       robotState,
       sensorNoise,
-      onRobotStateChange
+      robotPosition,
     } = props;
     const { collapsed } = state;
 
@@ -197,17 +157,10 @@ class Info extends React.PureComponent<Props, State> {
             collapsed={collapsed['simulation']}
           >
             <Simulation
-              x={Distance.centimeters(robotState.x)}
-              y={Distance.centimeters(robotState.y)}
-              z={Distance.centimeters(robotState.z)}
-              theta={Angle.degrees(robotState.theta)}
+              robotPosition={robotPosition}
+              onSetRobotPosition={this.props.onSetRobotPosition}
               sensorNoise={sensorNoise}
-              onXChange={this.onXChange_}
-              onYChange={this.onYChange_}
-              onZChange={this.onZChange_}
-              onThetaChange={this.onThetaChange_}
               onSensorNoiseChange={this.onSensorNoiseChange_}
-              onRobotPositionResetRequested={this.onRobotPositionReSetRequested_}
               theme={theme}
             />
           </StyledSection>
