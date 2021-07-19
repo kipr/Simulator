@@ -15,12 +15,14 @@ export interface SimulationProps extends ThemeProps, StyleProps {
   z: Distance;
   theta: Angle;
   sensorNoise: boolean;
+  realisticSensors: boolean;
 
   onXChange: (x: Distance) => void;
   onYChange: (y: Distance) => void;
   onZChange: (z: Distance) => void;
   onThetaChange: (theta: Angle) => void;
   onSensorNoiseChange: (enabled: boolean) => void;
+  onRealisticSensorsChange: (enabled: boolean) => void;
   onRobotPositionResetRequested: () => void;
 }
 
@@ -87,13 +89,17 @@ export class Simulation extends React.PureComponent<Props> {
     this.props.onSensorNoiseChange(enabled);
   };
 
+  private onRealisticSensorsChanged_ = (enabled: boolean) => {
+    this.props.onRealisticSensorsChange(enabled);
+  };
+
   private onRobotPositionResetRequested_ = () => {
     this.props.onRobotPositionResetRequested();
   };
 
   render() {
     const { props } = this;
-    const { theme, style, className, x, y, z, theta, sensorNoise } = props;
+    const { theme, style, className, x, y, z, theta, sensorNoise, realisticSensors } = props;
     return (
       <Container style={style} className={className}>
         <StyledButton theme={theme} children={['Reset']} onClick={this.onRobotPositionResetRequested_}></StyledButton>
@@ -104,6 +110,10 @@ export class Simulation extends React.PureComponent<Props> {
         <StyledField theme={theme} name='Sensor Noise' nameWidth={160}>
           <Spacer />
           <Switch value={sensorNoise} onValueChange={this.onSensorNoiseChanged_} theme={theme} />
+        </StyledField>
+        <StyledField theme={theme} name='Realistic Sensors' nameWidth={160}>
+          <Spacer />
+          <Switch value={realisticSensors} onValueChange={this.onRealisticSensorsChanged_} theme={theme} />
         </StyledField>
       </Container>
     );
