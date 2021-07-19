@@ -32,7 +32,7 @@ interface RootState {
   isSensorNoiseEnabled: boolean,
   surfaceState: SurfaceState,
   robotState: RobotState;
-  robotPosition: RobotPosition;
+  robotStartPosition: RobotPosition;
   items: boolean[];
   layout: Layout;
   code: string;
@@ -76,7 +76,7 @@ export class Root extends React.Component<Props, State> {
 
     this.state = {
       robotState: WorkerInstance.state,
-      robotPosition: {
+      robotStartPosition: {
         x: Distance.centimeters(0),
         y: Distance.centimeters(0),
         z: Distance.centimeters(0),
@@ -130,17 +130,17 @@ export class Root extends React.Component<Props, State> {
     });
   };
 
-  private onSetRobotPosition_ = (robotPosition: RobotPosition) => {
+  private onSetRobotStartPosition_ = (position: RobotPosition) => {
     this.setState({
-      robotPosition: {
-        x: { ...robotPosition.x },
-        y: { ...robotPosition.y },
-        z: { ...robotPosition.z },
-        theta: { ...robotPosition.theta },
+      robotStartPosition: {
+        x: { ...position.x },
+        y: { ...position.y },
+        z: { ...position.z },
+        theta: { ...position.theta },
       }
     });
 
-    Space.getInstance().resetPosition(robotPosition);
+    Space.getInstance().setRobotPosition(position);
   };
 
   private onToggleSensorNoise_ = (enabled: boolean) => {
@@ -316,7 +316,7 @@ export class Root extends React.Component<Props, State> {
     const {
       items,
       robotState,
-      robotPosition,
+      robotStartPosition,
       layout,
       code,
       modal,
@@ -333,8 +333,8 @@ export class Root extends React.Component<Props, State> {
       code,
       items,
       onStateChange: this.onRobotStateUpdate_,
-      robotPosition,
-      onSetRobotPosition: this.onSetRobotPosition_,
+      robotStartPosition,
+      onSetRobotStartPosition: this.onSetRobotStartPosition_,
       theme,
       state: robotState,
       onItemChange: this.onItemChange_,

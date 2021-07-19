@@ -275,8 +275,8 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       theme,
       state,
       onStateChange,
-      robotPosition,
-      onSetRobotPosition,
+      robotStartPosition,
+      onSetRobotStartPosition,
       items,
       code,
       onCodeChange,
@@ -387,8 +387,8 @@ class OverlayLayout extends React.PureComponent<Props, State> {
           >
             <Info
               robotState={state}
-              robotPosition={robotPosition}
-              onSetRobotPosition={onSetRobotPosition}
+              robotStartPosition={robotStartPosition}
+              onSetRobotStartPosition={onSetRobotStartPosition}
               sensorNoise={sensorNoise}
               onSensorNoiseChange={onSensorNoiseChange}
               theme={theme}

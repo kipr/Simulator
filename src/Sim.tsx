@@ -491,7 +491,7 @@ export class Space {
     // Make all sensors visible for now. Eventually the user will be able to control this from the UI
     for (const sensorObject of this.sensorObjects_) sensorObject.isVisible = true;
     
-    this.resetPosition({ x: Distance.centimeters(0), y: Distance.centimeters(0), z: Distance.centimeters(0), theta: Angle.degrees(0) });
+    this.setRobotPosition({ x: Distance.centimeters(0), y: Distance.centimeters(0), z: Distance.centimeters(0), theta: Angle.degrees(0) });
 
     await this.scene.whenReadyAsync();
   }
@@ -503,7 +503,7 @@ export class Space {
   }
 
   // Resets the position/rotation of the robot to the given values (cm and radians)
-  public resetPosition(position: RobotPosition): void {
+  public setRobotPosition(position: RobotPosition): void {
     const rootMeshes = [this.bodyCompoundRootMesh, this.colliderLeftWheelMesh, this.colliderRightWheelMesh, this.armCompoundRootMesh, this.clawCompoundRootMesh];
 
     // Create a transform node, positioned and rotated to match the body root

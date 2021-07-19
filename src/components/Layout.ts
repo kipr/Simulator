@@ -13,8 +13,8 @@ export interface LayoutProps extends StyleProps, ThemeProps {
   onItemChange: (index: string, enabled: boolean) => void;
   state: RobotState;
   onStateChange: (state: RobotState) => void;
-  robotPosition: RobotPosition;
-  onSetRobotPosition: (robotPosition: RobotPosition) => void;
+  robotStartPosition: RobotPosition;
+  onSetRobotStartPosition: (position: RobotPosition) => void;
   console: StyledText;
   messages: Message[];
   onClearConsole: () => void;

@@ -14,10 +14,10 @@ import { RobotPosition } from '../../RobotPosition';
 
 export interface InfoProps extends StyleProps, ThemeProps {
   robotState: RobotState;
-  robotPosition: RobotPosition;
+  robotStartPosition: RobotPosition;
   sensorNoise: boolean;
 
-  onSetRobotPosition: (robotPosition: RobotPosition) => void;
+  onSetRobotStartPosition: (position: RobotPosition) => void;
   onSensorNoiseChange: (enabled: boolean) => void;
 }
 
@@ -125,7 +125,7 @@ class Info extends React.PureComponent<Props, State> {
       theme,
       robotState,
       sensorNoise,
-      robotPosition,
+      robotStartPosition,
     } = props;
     const { collapsed } = state;
 
@@ -157,8 +157,8 @@ class Info extends React.PureComponent<Props, State> {
             collapsed={collapsed['simulation']}
           >
             <Simulation
-              robotPosition={robotPosition}
-              onSetRobotPosition={this.props.onSetRobotPosition}
+              robotStartPosition={robotStartPosition}
+              onSetRobotStartPosition={this.props.onSetRobotStartPosition}
               sensorNoise={sensorNoise}
               onSensorNoiseChange={this.onSensorNoiseChange_}
               theme={theme}
