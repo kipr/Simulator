@@ -275,6 +275,8 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       theme,
       state,
       onStateChange,
+      robotStartPosition,
+      onSetRobotStartPosition,
       items,
       code,
       onCodeChange,
@@ -288,7 +290,6 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       onSensorNoiseChange,
       realisticSensors,
       onRealisticSensorsChange,
-      onRobotPositionSetRequested,
     } = props;
 
     const {
@@ -389,7 +390,8 @@ class OverlayLayout extends React.PureComponent<Props, State> {
           >
             <Info
               robotState={state}
-              onRobotStateChange={onStateChange}
+              robotStartPosition={robotStartPosition}
+              onSetRobotStartPosition={onSetRobotStartPosition}
               sensorNoise={sensorNoise}
               onSensorNoiseChange={onSensorNoiseChange}
               realisticSensors={realisticSensors}

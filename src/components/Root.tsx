@@ -16,22 +16,24 @@ import { SettingsDialog } from './SettingsDialog';
 import { AboutDialog } from './AboutDialog';
 import compile, { CompileError } from '../compile';
 import { SimulatorState } from './SimulatorState';
-import { StyledText } from '../util';
+import { Angle, Distance, StyledText } from '../util';
 import { Message } from 'ivygate';
 import parseMessages, { hasErrors, sort, toStyledText } from '../util/parse-messages';
 
 import {
   Items,
 } from '../items';
+import { Space } from '../Sim';
+import { RobotPosition } from '../RobotPosition';
 
 type ModalType = 'settings' | 'about' | 'none';
 
 interface RootState {
-  shouldSetRobotPosition: boolean,
   isSensorNoiseEnabled: boolean,
   isRealisticSensorsEnabled: boolean,
   surfaceState: SurfaceState,
   robotState: RobotState;
+  robotStartPosition: RobotPosition;
   items: boolean[];
   layout: Layout;
   code: string;
@@ -75,7 +77,12 @@ export class Root extends React.Component<Props, State> {
 
     this.state = {
       robotState: WorkerInstance.state,
-      shouldSetRobotPosition: false,
+      robotStartPosition: {
+        x: Distance.centimeters(0),
+        y: Distance.centimeters(0),
+        z: Distance.centimeters(0),
+        theta: Angle.degrees(0),
+      },
       isSensorNoiseEnabled: false,
       isRealisticSensorsEnabled: false,
       surfaceState: SurfaceStatePresets.jbcA,
@@ -125,14 +132,19 @@ export class Root extends React.Component<Props, State> {
     });
   };
 
-  private onRobotPositionSetRequested_ = () => {
-    this.setState({ shouldSetRobotPosition: true });
+  private onSetRobotStartPosition_ = (position: RobotPosition) => {
+    this.setState({
+      robotStartPosition: {
+        x: { ...position.x },
+        y: { ...position.y },
+        z: { ...position.z },
+        theta: { ...position.theta },
+      }
+    });
+
+    Space.getInstance().setRobotPosition(position);
   };
 
-  private onRobotPositionSetCompleted_ = () => {
-    this.setState({ shouldSetRobotPosition: false });
-  };
-  
   private onToggleSensorNoise_ = (enabled: boolean) => {
     this.setState({ isSensorNoiseEnabled: enabled });
   };
@@ -310,13 +322,13 @@ export class Root extends React.Component<Props, State> {
     const {
       items,
       robotState,
+      robotStartPosition,
       layout,
       code,
       modal,
       simulatorState,
       console,
       messages,
-      shouldSetRobotPosition,
       isSensorNoiseEnabled,
       isRealisticSensorsEnabled,
       surfaceState
@@ -328,6 +340,8 @@ export class Root extends React.Component<Props, State> {
       code,
       items,
       onStateChange: this.onRobotStateUpdate_,
+      robotStartPosition,
+      onSetRobotStartPosition: this.onSetRobotStartPosition_,
       theme,
       state: robotState,
       onItemChange: this.onItemChange_,
@@ -341,7 +355,6 @@ export class Root extends React.Component<Props, State> {
       onSensorNoiseChange: this.onToggleSensorNoise_,
       realisticSensors: isRealisticSensorsEnabled,
       onRealisticSensorsChange: this.onToggleRealisticSensors_,
-      onRobotPositionSetRequested: this.onRobotPositionSetRequested_
     };
 
     let impl: JSX.Element;

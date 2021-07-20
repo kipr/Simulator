@@ -1,29 +1,23 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../style';
-import { Angle, Distance, Value, StyledText } from '../../util';
+import { Value, StyledText } from '../../util';
 import { ThemeProps } from '../theme';
 import ValueEdit from '../ValueEdit';
 import Field from '../Field';
 import { Spacer } from '../common';
 import { Switch } from '../Switch';
 import Button from '../Button';
+import { RobotPosition } from '../../RobotPosition';
 
 export interface SimulationProps extends ThemeProps, StyleProps {
-  x: Distance;
-  y: Distance;
-  z: Distance;
-  theta: Angle;
+  robotStartPosition: RobotPosition;
   sensorNoise: boolean;
   realisticSensors: boolean;
 
-  onXChange: (x: Distance) => void;
-  onYChange: (y: Distance) => void;
-  onZChange: (z: Distance) => void;
-  onThetaChange: (theta: Angle) => void;
+  onSetRobotStartPosition: (position: RobotPosition) => void;
   onSensorNoiseChange: (enabled: boolean) => void;
   onRealisticSensorsChange: (enabled: boolean) => void;
-  onRobotPositionResetRequested: () => void;
 }
 
 type Props = SimulationProps;
@@ -70,19 +64,31 @@ const SENSOR_NOISE = StyledText.text({
 
 export class Simulation extends React.PureComponent<Props> {
   private onXChange_ = (x: Value) => {
-    this.props.onXChange(Value.toDistance(x));
+    const xDistance = Value.toDistance(x);
+    if (xDistance.value === this.props.robotStartPosition.x.value) return;
+
+    this.props.onSetRobotStartPosition({ ...this.props.robotStartPosition, x: xDistance });
   };
 
   private onYChange_ = (y: Value) => {
-    this.props.onYChange(Value.toDistance(y));
+    const yDistance = Value.toDistance(y);
+    if (yDistance.value === this.props.robotStartPosition.y.value) return;
+
+    this.props.onSetRobotStartPosition({ ...this.props.robotStartPosition, y: yDistance });
   };
 
   private onZChange_ = (z: Value) => {
-    this.props.onZChange(Value.toDistance(z));
+    const zDistance = Value.toDistance(z);
+    if (zDistance.value === this.props.robotStartPosition.z.value) return;
+
+    this.props.onSetRobotStartPosition({ ...this.props.robotStartPosition, z: zDistance });
   };
 
   private onThetaChange_ = (theta: Value) => {
-    this.props.onThetaChange(Value.toAngle(theta));
+    const angle = Value.toAngle(theta);
+    if (angle.value === this.props.robotStartPosition.theta.value) return;
+
+    this.props.onSetRobotStartPosition({ ...this.props.robotStartPosition, theta: angle });
   };
 
   private onSensorNoiseChanged_ = (enabled: boolean) => {
@@ -93,16 +99,16 @@ export class Simulation extends React.PureComponent<Props> {
     this.props.onRealisticSensorsChange(enabled);
   };
 
-  private onRobotPositionResetRequested_ = () => {
-    this.props.onRobotPositionResetRequested();
+  private onRobotPositionResetClicked_ = () => {
+    this.props.onSetRobotStartPosition({ ...this.props.robotStartPosition });
   };
 
   render() {
     const { props } = this;
-    const { theme, style, className, x, y, z, theta, sensorNoise, realisticSensors } = props;
+    const { theme, style, className, sensorNoise, realisticSensors, robotStartPosition: { x, y, z, theta } } = props;
     return (
       <Container style={style} className={className}>
-        <StyledButton theme={theme} children={['Reset']} onClick={this.onRobotPositionResetRequested_}></StyledButton>
+        <StyledButton theme={theme} children={['Reset']} onClick={this.onRobotPositionResetClicked_}></StyledButton>
         <StyledValueEdit value={Value.distance(x)} onValueChange={this.onXChange_} theme={theme} name='X' />
         <StyledValueEdit value={Value.distance(y)} onValueChange={this.onYChange_} theme={theme} name='Y' />
         <StyledValueEdit value={Value.distance(z)} onValueChange={this.onZChange_} theme={theme} name='Z' />

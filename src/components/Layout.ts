@@ -1,4 +1,5 @@
 import { Message } from "ivygate";
+import { RobotPosition } from "../RobotPosition";
 import { RobotState } from "../RobotState";
 import { StyleProps } from "../style";
 import { SurfaceState } from "../SurfaceState";
@@ -12,6 +13,8 @@ export interface LayoutProps extends StyleProps, ThemeProps {
   onItemChange: (index: string, enabled: boolean) => void;
   state: RobotState;
   onStateChange: (state: RobotState) => void;
+  robotStartPosition: RobotPosition;
+  onSetRobotStartPosition: (position: RobotPosition) => void;
   console: StyledText;
   messages: Message[];
   onClearConsole: () => void;
@@ -21,7 +24,6 @@ export interface LayoutProps extends StyleProps, ThemeProps {
   onSensorNoiseChange: (enabled: boolean) => void;
   realisticSensors: boolean;
   onRealisticSensorsChange: (enabled: boolean) => void;
-  onRobotPositionSetRequested: () => void;
 }
 
 export enum Layout {

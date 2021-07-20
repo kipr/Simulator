@@ -89,18 +89,7 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
     // Check if board was reset
     if (this.props.surfaceState !== prevProps.surfaceState) {
       Sim.Space.getInstance().rebuildFloor(this.props.surfaceState);
-      Sim.Space.getInstance().resetPosition();
     }
-
-    const shouldSetRobotPosition = (
-      prevProps.robotState.x !== this.props.robotState.x ||
-      prevProps.robotState.y !== this.props.robotState.y ||
-      prevProps.robotState.z !== this.props.robotState.z ||
-      prevProps.robotState.theta !== this.props.robotState.theta
-    );
-
-    // Checks if robot position needs to be set
-    if (shouldSetRobotPosition) Sim.Space.getInstance().resetPosition();
   }
 
   private bindContainerRef_ = (ref: HTMLDivElement) => {
