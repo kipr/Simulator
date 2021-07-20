@@ -53,7 +53,7 @@ Clone `ivygate` and compile
 git clone https://github.com/kipr/ivygate.git
 cd ivygate
 yarn install
-tsc
+./node_modules/.bin/tsc
 ```
 If you run into this error:
 ```bash
