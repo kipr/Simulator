@@ -30,6 +30,7 @@ type ModalType = 'settings' | 'about' | 'none';
 
 interface RootState {
   isSensorNoiseEnabled: boolean,
+  isRealisticSensorsEnabled: boolean,
   surfaceState: SurfaceState,
   robotState: RobotState;
   robotStartPosition: RobotPosition;
@@ -83,6 +84,7 @@ export class Root extends React.Component<Props, State> {
         theta: Angle.degrees(0),
       },
       isSensorNoiseEnabled: false,
+      isRealisticSensorsEnabled: false,
       surfaceState: SurfaceStatePresets.jbcA,
       items: Array<boolean>(ITEM_KEYS.length).fill(false),
       layout: Layout.Overlay,
@@ -145,6 +147,10 @@ export class Root extends React.Component<Props, State> {
 
   private onToggleSensorNoise_ = (enabled: boolean) => {
     this.setState({ isSensorNoiseEnabled: enabled });
+  };
+
+  private onToggleRealisticSensors_ = (enabled: boolean) => {
+    this.setState({ isRealisticSensorsEnabled: enabled });
   };
 
   private onUpdateSurfaceState_ = (newSurfaceName: string) => {
@@ -324,6 +330,7 @@ export class Root extends React.Component<Props, State> {
       console,
       messages,
       isSensorNoiseEnabled,
+      isRealisticSensorsEnabled,
       surfaceState
     } = state;
 
@@ -346,6 +353,8 @@ export class Root extends React.Component<Props, State> {
       onSurfaceChange: this.onUpdateSurfaceState_,
       sensorNoise: isSensorNoiseEnabled,
       onSensorNoiseChange: this.onToggleSensorNoise_,
+      realisticSensors: isRealisticSensorsEnabled,
+      onRealisticSensorsChange: this.onToggleRealisticSensors_,
     };
 
     let impl: JSX.Element;

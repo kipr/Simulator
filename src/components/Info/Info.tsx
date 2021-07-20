@@ -16,9 +16,11 @@ export interface InfoProps extends StyleProps, ThemeProps {
   robotState: RobotState;
   robotStartPosition: RobotPosition;
   sensorNoise: boolean;
+  realisticSensors: boolean;
 
   onSetRobotStartPosition: (position: RobotPosition) => void;
   onSensorNoiseChange: (enabled: boolean) => void;
+  onRealisticSensorsChange: (enabled: boolean) => void;
 }
 
 interface InfoState {
@@ -108,6 +110,10 @@ class Info extends React.PureComponent<Props, State> {
     this.props.onSensorNoiseChange(enabled);
   };
 
+  private onRealisticSensorsChange_ = (enabled: boolean) => {
+    this.props.onRealisticSensorsChange(enabled);
+  };
+
   private onCollapsedChange_ = (section: string) => (collapsed: boolean) => {
     this.setState({
       collapsed: {
@@ -126,6 +132,7 @@ class Info extends React.PureComponent<Props, State> {
       robotState,
       sensorNoise,
       robotStartPosition,
+      realisticSensors,
     } = props;
     const { collapsed } = state;
 
@@ -160,7 +167,9 @@ class Info extends React.PureComponent<Props, State> {
               robotStartPosition={robotStartPosition}
               onSetRobotStartPosition={this.props.onSetRobotStartPosition}
               sensorNoise={sensorNoise}
+              realisticSensors={realisticSensors}
               onSensorNoiseChange={this.onSensorNoiseChange_}
+              onRealisticSensorsChange={this.onRealisticSensorsChange_}
               theme={theme}
             />
           </StyledSection>

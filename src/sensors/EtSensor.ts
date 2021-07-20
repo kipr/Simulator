@@ -16,6 +16,7 @@ export class EtSensor implements SensorObject {
   private sinceLastUpdate = 0;
   
   private __isNoiseEnabled: boolean;
+  private __isRealisticEnabled: boolean;
 
   private readonly VISUAL_MESH_NAME = "etlinemesh";
 
@@ -65,9 +66,7 @@ export class EtSensor implements SensorObject {
 
   public getValue(): SensorObject.Value {
     const hit = this.config_.scene.pickWithRay(this.ray, null);
-    let value: number;
-    if (!hit.pickedMesh) value = 0;
-    else value = this.distanceToSensorValue(hit.distance);
+    let value = this.distanceToSensorValue(hit.pickedMesh ? hit.distance : Number.POSITIVE_INFINITY);
     if (this.__isNoiseEnabled) value = this.applyNoise(value);
     return SensorObject.Value.u12(value); 
   }
@@ -101,9 +100,47 @@ export class EtSensor implements SensorObject {
     this.__isNoiseEnabled = v;
   }
 
+  public get isRealisticEnabled(): boolean {
+    return this.__isRealisticEnabled;
+  }
+
+  public set isRealisticEnabled(r: boolean) {
+    this.__isRealisticEnabled = r;
+  }
+
   // Converts from 3D world distance to sensor output value
+  // Distance is in cm
   private distanceToSensorValue(distance: number): number {
+    return this.isRealisticEnabled
+      ? this.distanceToSensorValueRealistic(distance)
+      : this.distanceToSensorValueIdeal(distance);
+  }
+
+  // Produces ideal sensor output value
+  // Linear from min to max for the entire sensor range
+  private distanceToSensorValueIdeal(distance: number): number {
+    if (distance >= this.config_.sensor.maxRange) return 0;
     return 4095 - Math.floor((distance / this.config_.sensor.maxRange) * 4095);
+  }
+
+  // Produces realistic sensor output value
+  // Derived by measuring real-world values from a couple ET sensors
+  private distanceToSensorValueRealistic(distance: number): number {
+    // Not in sensor range
+    if (distance >= this.config_.sensor.maxRange) return 1100;
+
+    // Farther than 80 cm
+    else if (distance >= 80) return 345;
+
+    // Closer than 3 cm (linear from 2910 to 0)
+    else if (distance <= 3) return Math.floor(distance * (2910 / 3));
+
+    // 3 - 11.2 cm
+    else if (distance <= 11.2) return 2910;
+
+    // 11.2 - 80 cm (the useful range)
+    // Derived by fitting the real-world data to a power model
+    return Math.floor(3240.7 * Math.pow(distance - 10, -0.776));
   }
   
   private applyNoise(value: number): number {

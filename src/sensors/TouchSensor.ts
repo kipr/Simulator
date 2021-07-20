@@ -107,6 +107,14 @@ export class TouchSensor implements SensorObject {
     // Digital sensors aren't noisy
   }
 
+  public get isRealisticEnabled(): boolean {
+    return false;
+  }
+
+  public set isRealisticEnabled(r: boolean) {
+    // Digital sensors don't have realism
+  }
+
   // Determines whether the given mesh is eligible for intersection checking
   // Currently only cans are eligible, but this should be made more flexible
   private static isMeshEligible = (mesh: Babylon.AbstractMesh) => {

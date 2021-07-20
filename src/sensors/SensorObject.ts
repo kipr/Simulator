@@ -11,6 +11,7 @@ interface SensorObject {
   isVisible: boolean;
   updateVisual(): boolean;
   isNoiseEnabled: boolean;
+  isRealisticEnabled: boolean;
 }
 
 namespace SensorObject {

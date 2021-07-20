@@ -13,9 +13,11 @@ import { RobotPosition } from '../../RobotPosition';
 export interface SimulationProps extends ThemeProps, StyleProps {
   robotStartPosition: RobotPosition;
   sensorNoise: boolean;
+  realisticSensors: boolean;
 
   onSetRobotStartPosition: (position: RobotPosition) => void;
   onSensorNoiseChange: (enabled: boolean) => void;
+  onRealisticSensorsChange: (enabled: boolean) => void;
 }
 
 type Props = SimulationProps;
@@ -93,13 +95,17 @@ export class Simulation extends React.PureComponent<Props> {
     this.props.onSensorNoiseChange(enabled);
   };
 
+  private onRealisticSensorsChanged_ = (enabled: boolean) => {
+    this.props.onRealisticSensorsChange(enabled);
+  };
+
   private onRobotPositionResetClicked_ = () => {
     this.props.onSetRobotStartPosition({ ...this.props.robotStartPosition });
   };
 
   render() {
     const { props } = this;
-    const { theme, style, className, sensorNoise, robotStartPosition: { x, y, z, theta } } = props;
+    const { theme, style, className, sensorNoise, realisticSensors, robotStartPosition: { x, y, z, theta } } = props;
     return (
       <Container style={style} className={className}>
         <StyledButton theme={theme} children={['Reset']} onClick={this.onRobotPositionResetClicked_}></StyledButton>
@@ -110,6 +116,10 @@ export class Simulation extends React.PureComponent<Props> {
         <StyledField theme={theme} name='Sensor Noise' nameWidth={160}>
           <Spacer />
           <Switch value={sensorNoise} onValueChange={this.onSensorNoiseChanged_} theme={theme} />
+        </StyledField>
+        <StyledField theme={theme} name='Realistic Sensors' nameWidth={160}>
+          <Spacer />
+          <Switch value={realisticSensors} onValueChange={this.onRealisticSensorsChanged_} theme={theme} />
         </StyledField>
       </Container>
     );
