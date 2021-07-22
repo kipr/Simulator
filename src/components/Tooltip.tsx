@@ -70,6 +70,8 @@ class Tooltip extends React.PureComponent<Props, State> {
         const selfRect = Rectangle.fromBoundingRect(this.ref_.getBoundingClientRect());
         const selfGrown = Rectangle.grow(selfRect, 10);
         hit ||= Rectangle.contains(selfGrown, mouse);
+
+        hit ||= Vector2.distance(mouse, target.position) < 50;
         break;
       }
       case Tooltip.Target.Type.Element: {
