@@ -12,7 +12,7 @@ export interface TooltipProps extends ThemeProps, StyleProps {
   target: Tooltip.Target;
   contentHint: Tooltip.ContentHint;
 
-  children: any;
+  children: unknown;
 }
 
 interface TooltipState {
@@ -183,7 +183,7 @@ namespace Tooltip {
       });
       
       export const position = (element: Element) => {
-        const { left, right, top } = element.element.getBoundingClientRect()
+        const { left, right, top } = element.element.getBoundingClientRect();
         return Vector2.create((left + right) / 2, top);
       };
     }
@@ -207,7 +207,7 @@ namespace Tooltip {
         case Type.Element: return Element.position(target);
         case Type.Position: return Position.position(target);
       }
-    }
+    };
   }
 
   export type Target = Target.Element | Target.Position;
