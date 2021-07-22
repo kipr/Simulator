@@ -82,8 +82,18 @@ const SIMULATION_NAME = StyledText.text({
   style: NAME_STYLE
 });
 
-const MOTORS_NAME = StyledText.text({
-  text: 'Motors',
+const SERVOS_NAME = StyledText.text({
+  text: 'Servos',
+  style: NAME_STYLE
+});
+
+const MOTOR_VELOCITIES_NAME = StyledText.text({
+  text: 'Motor Velocities',
+  style: NAME_STYLE
+});
+
+const MOTOR_POSITIONS_NAME = StyledText.text({
+  text: 'Motor Positions',
   style: NAME_STYLE
 });
 
@@ -136,6 +146,18 @@ class Info extends React.PureComponent<Props, State> {
     } = props;
     const { collapsed } = state;
 
+    const servos = robotState.servoPositions.map((value, i) => (
+      <Row key={`servo-pos-${i}`} theme={theme}>
+        <SensorWidget value={value} name={`get_servo_position(${i})`} theme={theme} />
+      </Row>
+    ));
+
+    const motorVelocities = robotState.motorSpeeds.map((value, i) => (
+      <Row key={`motor-velocity-${i}`} theme={theme}>
+        <SensorWidget value={value} name={`motor ${i}`} theme={theme} />
+      </Row>
+    ));
+
     const motorPositions = robotState.motorPositions.map((value, i) => (
       <Row key={`motor-pos-${i}`} theme={theme}>
         <SensorWidget value={value} name={`get_motor_position_counter(${i})`} theme={theme} />
@@ -174,10 +196,26 @@ class Info extends React.PureComponent<Props, State> {
             />
           </StyledSection>
           <StyledSection
-            name={MOTORS_NAME}
+            name={SERVOS_NAME}
             theme={theme}
-            onCollapsedChange={this.onCollapsedChange_('motor')}
-            collapsed={collapsed['motor']}
+            onCollapsedChange={this.onCollapsedChange_('servo_pos')}
+            collapsed={collapsed['servo_pos']}
+          >
+            {servos}
+          </StyledSection>
+          <StyledSection
+            name={MOTOR_VELOCITIES_NAME}
+            theme={theme}
+            onCollapsedChange={this.onCollapsedChange_('motor_vel')}
+            collapsed={collapsed['motor_vel']}
+          >
+            {motorVelocities}
+          </StyledSection>
+          <StyledSection
+            name={MOTOR_POSITIONS_NAME}
+            theme={theme}
+            onCollapsedChange={this.onCollapsedChange_('motor_pos')}
+            collapsed={collapsed['motor_pos']}
           >
             {motorPositions}
           </StyledSection>
