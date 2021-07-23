@@ -19,34 +19,24 @@ const Container = styled('div', {
   width: '100%'
 });
 
-const NameLabel = styled('span', {
-  width: '80px',
-  userSelect: 'none'
-});
+const NameLabel = styled('span', (props: { width?: number }) => ({
+  width: `${props.width || 80}px`,
+  userSelect: 'none',
+  fontWeight: 400,
+}));
 
 export class Field extends React.PureComponent<Props> {
   constructor(props: Props) {
     super(props);
-    const { nameWidth } = props;
-    if ((nameWidth !== undefined) && (nameWidth > 0)) {
-      this.NameLabel = styled('span', {
-        width: '${nameWidth}px',
-        userSelect: 'none'
-      });
-    } else {
-      this.NameLabel = NameLabel;
-    }
   }
-  
-  private NameLabel = NameLabel;
 
   render() {
     const { props } = this;
-    const { theme, style, className, name, children } = props;
+    const { theme, style, className, name, children, nameWidth } = props;
   
     return (
       <Container style={style} className={className}>
-        <this.NameLabel>{name}</this.NameLabel>
+        <NameLabel width={nameWidth}>{name}</NameLabel>
         {children}
       </Container>
     );
