@@ -26,8 +26,45 @@ import {
 import { Space } from '../Sim';
 import { RobotPosition } from '../RobotPosition';
 import { DEFAULT_SETTINGS, Settings } from '../Settings';
+import ExceptionDialog from './ExceptionDialog';
 
-type ModalType = 'settings' | 'about' | 'none';
+namespace Modal {
+  export enum Type {
+    Settings,
+    About,
+    Exception,
+    None,
+  }
+
+  export interface Settings {
+    type: Type.Settings;
+  }
+
+  export const SETTINGS: Settings = { type: Type.Settings };
+
+  export interface About {
+    type: Type.About;
+  }
+
+  export const ABOUT: About = { type: Type.About };
+
+  export interface Exception {
+    type: Type.Exception;
+    error: Error;
+    info?: React.ErrorInfo;
+  }
+
+  export const exception = (error: Error, info?: React.ErrorInfo): Exception => ({ type: Type.Exception, error, info });
+
+  export interface None {
+    type: Type.None;
+  }
+
+  export const NONE: None = { type: Type.None };
+}
+
+export type Modal = Modal.Settings | Modal.About | Modal.Exception | Modal.None;
+
 
 interface RootState {
   surfaceState: SurfaceState,
@@ -39,7 +76,7 @@ interface RootState {
 
   simulatorState: SimulatorState;
 
-  modal: ModalType;
+  modal: Modal;
 
   console: StyledText;
   messages: Message[];
@@ -88,7 +125,7 @@ export class Root extends React.Component<Props, State> {
       items: Array<boolean>(ITEM_KEYS.length).fill(false),
       layout: Layout.Overlay,
       code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
-      modal: 'none',
+      modal: Modal.NONE,
       simulatorState: SimulatorState.STOPPED,
       console: StyledText.text({ text: 'Welcome to the KIPR Simulator!\n', style: STDOUT_STYLE(DARK) }),
       theme: DARK,
@@ -174,12 +211,12 @@ export class Root extends React.Component<Props, State> {
     });
   };
 
-  private onModalClick_ = (modal: ModalType) => () => this.setState({
+  private onModalClick_ = (modal: Modal) => () => this.setState({
     modal
   });
 
   private onModalClose_ = () => this.setState({
-    modal: 'none'
+    modal: Modal.NONE
   });
 
   private onWorkerStateChange_ = (robotState: RobotState) => {
@@ -312,6 +349,12 @@ export class Root extends React.Component<Props, State> {
   private onSettingsChange_ = (changedSettings: Partial<Settings>) => {
     this.setState({ settings: { ...this.state.settings, ...changedSettings } });
   };
+  
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    this.setState({
+      modal: Modal.exception(error, info)
+    });
+  }
 
   render() {
     const { props, state } = this;
@@ -385,8 +428,8 @@ export class Root extends React.Component<Props, State> {
             theme={theme}
             onShowAll={this.onShowAll_}
             onHideAll={this.onHideAll_}
-            onSettingsClick={this.onModalClick_('settings')}
-            onAboutClick={this.onModalClick_('about')}
+            onSettingsClick={this.onModalClick_(Modal.SETTINGS)}
+            onAboutClick={this.onModalClick_(Modal.ABOUT)}
             onDownloadClick={this.onDownloadClick_}
             onRunClick={this.onRunClick_}
             onStopClick={this.onStopClick_}
@@ -395,8 +438,9 @@ export class Root extends React.Component<Props, State> {
           />
           {impl}
         </Container>
-        {modal === 'settings' ? <SettingsDialog theme={theme} onClose={this.onModalClose_} settings={settings} onSettingsChange={this.onSettingsChange_} /> : undefined}
-        {modal === 'about' ? <AboutDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
+        {modal.type === Modal.Type.Settings ? <SettingsDialog theme={theme} settings={settings} onSettingsChange={this.onSettingsChange_} onClose={this.onModalClose_} /> : undefined}
+        {modal.type === Modal.Type.About ? <AboutDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
+        {modal.type === Modal.Type.Exception ? <ExceptionDialog error={modal.error} theme={theme} onClose={this.onModalClose_} /> : undefined}
       </>
 
     );

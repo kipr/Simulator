@@ -1,6 +1,6 @@
-import * as Babylon from 'babylonjs';
+import { ReferenceFrame } from "../math";
 
-namespace Item {
+export namespace Item {
   export enum Type {
     Can,
     PaperReam
@@ -18,11 +18,9 @@ namespace Item {
 
   // Info needed to add any mesh to the scene
   interface Common {
-    startPosition: Babylon.Vector3;
-    startRotation?: number;
-    rotationAxis?: Babylon.Vector3;
-    transparent?: boolean;
-    id?: string;
+    origin?: ReferenceFrame;
+    visible?: boolean;
+    name?: string;
   }
 
   export interface Can extends Common {
@@ -32,10 +30,9 @@ namespace Item {
   // IDs are randomized hex if not specified
   export namespace Can {
     export const fill = (can: Can): Can => ({
-      startRotation: 0,
-      rotationAxis: Babylon.Axis.Y,
-      transparent: true,
-      id: `Can ${Math.floor(Math.random() * 16777215).toString(16)}`,
+      origin: ReferenceFrame.IDENTITY,
+      visible: true,
+      name: `Can ${Math.floor(Math.random() * 16777215).toString(16)}`,
       ...can
     });
   }
@@ -46,15 +43,23 @@ namespace Item {
 
   export namespace PaperReam {
     export const fill = (ream: PaperReam): PaperReam => ({
-      startRotation: 0,
-      rotationAxis: Babylon.Axis.Y,
-      transparent: true,
-      id: `Ream ${Math.floor(Math.random() * 16777215).toString(16)}`,
+      origin: ReferenceFrame.IDENTITY,
+      visible: true,
+      name: `Ream ${Math.floor(Math.random() * 16777215).toString(16)}`,
       ...ream
     });
   }
 }
 
-type Item = Item.Can | Item.PaperReam;
+export type Item = Item.Can | Item.PaperReam;
 
-export default Item;
+export interface Scene {
+  itemOrdering: string[];
+  items: {
+    [name: string]: Item;
+  };
+}
+
+export interface State {
+  scene: Scene;
+}

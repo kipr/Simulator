@@ -222,7 +222,6 @@ class SideLayout extends React.PureComponent<Props, State> {
           <SimulatorArea
             key='simulator'
             robotState={state}
-            itemEnabled={items}
             onRobotStateUpdate={onStateChange}
             isSensorNoiseEnabled={settings.simulationSensorNoise}
             isRealisticSensorsEnabled={settings.simulationRealisticSensors}

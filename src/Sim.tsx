@@ -9,7 +9,6 @@ import {
   MAPPINGS as SENSOR_MAPPINGS,
 } from './sensors';
 import {
-  Item,
   Items,
   Can,
   PaperReam,
@@ -19,9 +18,14 @@ import { RobotState } from './RobotState';
 import Dict from './Dict';
 import { SurfaceState } from './SurfaceState';
 
-import { Vector2 } from './math';
+import { Quaternion, ReferenceFrame, Vector2, Vector3 } from './math';
 import { RobotPosition } from './RobotPosition';
 import { Angle, Distance } from './util';
+
+import store, { State, Item } from './state';
+import { Unsubscribe } from 'redux';
+import deepNeq from './deepNeq';
+import { SceneAction } from './state/reducer';
 
 export let ACTIVE_SPACE: Space;
 
@@ -42,8 +46,10 @@ export class Space {
   private ground: Babylon.Mesh;
   private mat: Babylon.Mesh;
 
+  private storeSubscription_: Unsubscribe;
+
   // List for keeping track of current item meshes in scene
-  private itemList: string[] = [];
+  private itemMap_: Map<string, string> = new Map();
 
   // The position offset of the robot, applied to the user-specified position
   private robotOffset: Babylon.Vector3 = new Babylon.Vector3(0, 7, -52);
@@ -93,6 +99,73 @@ export class Space {
 
   private getRobotState: () => RobotState;
   private updateRobotState: (robotState: Partial<RobotState>) => void;
+
+  private initStoreSubscription_ = () => {
+    if (this.storeSubscription_) return;
+    this.storeSubscription_ = store.subscribe(() => {
+      this.onStoreChange_(store.getState());
+    });
+  };
+
+  
+  private lastState_: State = undefined;
+  private debounceUpdate_ = false;
+  private onStoreChange_ = (state: State) => {
+    if (this.debounceUpdate_) return;
+    
+    const visibleItems = Dict.filter(state.scene.items, item => item.visible);
+
+    console.log('on store change');
+    const lastItems = this.lastState_ ? this.lastState_.scene.items : {};
+
+    for (const id of state.scene.itemOrdering) {
+      const item = visibleItems[id];
+      const meshName = this.itemMap_.get(id);
+
+
+      if (!item) {
+        // This item has just become invisible
+        if (meshName) {
+          const mesh = this.scene.getMeshByID(meshName);
+          this.scene.removeMesh(mesh);
+          mesh.dispose();
+          this.itemMap_.delete(id);
+        }
+
+        continue;
+      }
+
+      console.log(id);
+
+      // We don't want to update a item if it's the same as the last time,
+      // as physics may have changed it.
+      if (this.lastState_ && id in lastItems && !deepNeq(lastItems[id], item)) continue;
+
+
+      if (meshName === undefined) {
+        this.itemMap_.set(id, this.createItem(item));
+      } else {
+        const mesh = this.scene.getMeshByID(meshName);
+        const origin = ReferenceFrame.fill(item.origin);
+        mesh.position = Vector3.toBabylon(origin.position);
+        mesh.rotationQuaternion = Quaternion.toBabylon(origin.orientation);
+      }
+    }
+
+    for (const id of Object.keys(lastItems)) {
+      if (!(id in state.scene.items)) {
+        const meshName = this.itemMap_.get(id);
+        if (meshName !== undefined) {
+          const mesh = this.scene.getMeshByID(meshName);
+          this.scene.removeMesh(mesh);
+          mesh.dispose();
+          this.itemMap_.delete(id);
+        }
+      }
+    }
+
+    this.lastState_ = state;
+  };
 
   objectScreenPosition(id: string): Vector2 {
     const mesh = this.scene.getMeshByID(id) || this.scene.getMeshByName(id);
@@ -495,9 +568,42 @@ export class Space {
 
     await this.scene.whenReadyAsync();
   }
+
+  private updateStore_ = () => {
+    const { items, itemOrdering } = store.getState().scene;
+    
+    const nextItems = {};
+    // Sync items
+    for (const id in this.itemMap_) {
+      const meshName = this.itemMap_.get(id);
+      const mesh = this.scene.getMeshByID(meshName);
+      
+      const item = items[id];
+      
+
+      nextItems[id] = {
+        ...item,
+        origin: {
+          position: Vector3.fromBabylon(mesh.position),
+          orientation: Quaternion.fromBabylon(mesh.rotationQuaternion),
+        },
+      };
+    }
+
+    this.debounceUpdate_ = true;
+    store.dispatch(SceneAction.setItemBatch({ items: nextItems }));
+    this.debounceUpdate_ = false;
+  };
   
   private startRenderLoop(): void {
+    this.initStoreSubscription_();
     this.engine.runRenderLoop(() => {
+
+
+      // Post updates to the store
+      this.updateStore_();
+      
+      
       this.scene.render();
     });
   }
@@ -536,45 +642,22 @@ export class Space {
     this.engine.resize();
   }
 
-  public createItem(item: { custom?: Item, default?: string }): void {
-    const defaultItemList = Dict.toList(Items);
-    let newItem: Item;
-    // Detect if importing default item or custom item
-    if (item.default !== undefined) {
-      const key = Object.keys(Items).indexOf(item.default);
-      if (key !== undefined) {
-        newItem = defaultItemList[key][1];
-      } else {
-        throw new Error('Could not find by id');
-      }
-    } else if (item.custom !== undefined) {
-      newItem = item.custom;
-    } else {
-      throw new Error('No Item or id was used');
-    }
-    switch (newItem.type) {
+  public createItem(item: Item): string {
+    switch (item.type) {
       case Item.Type.Can: {
-        const can = new Can(this.scene, { item: newItem });
-        this.itemList.push(can.id);
+        const can = new Can(this.scene, { item });
         can.place();
-        break;
+        return can.id;
       }
       case Item.Type.PaperReam: {
-        const ream = new PaperReam(this.scene, { item: newItem });
-        this.itemList.push(ream.id);
+        const ream = new PaperReam(this.scene, { item });
         ream.place();
-        break;
+        return ream.id;
       }
       default: {
         throw new Error('Type not supported or undefined');
       }
     }
-  }
-
-  public destroyItem(id: string): void {
-    const index = this.itemList.indexOf(id);
-    this.itemList = this.itemList.splice(index, 1);
-    this.scene.getMeshByName(id).dispose();
   }
   
   public updateSensorOptions(isNoiseEnabled: boolean, isRealisticEnabled: boolean): void {

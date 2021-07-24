@@ -20,13 +20,13 @@ const Name = styled(Text, {
   userSelect: 'none'
 });
 
-const Header = styled('div', (props: ThemeProps & { noPadding?: boolean; }) => ({
+const Header = styled('div', (props: ThemeProps & { $noPadding?: boolean; }) => ({
   display: 'flex',
   flexDirection: 'row',
   width: '100%',
   alignItems: 'center',
   fontSize: '9pt',
-  padding: props.noPadding ? undefined : `${props.theme.itemPadding}px`,
+  padding: props.$noPadding ? undefined : `${props.theme.itemPadding}px`,
   borderBottom: `1px solid ${props.theme.borderColor}`,
   backgroundColor: `rgba(0, 0, 0, 0.1)`,
   ':last-child': {
@@ -34,8 +34,8 @@ const Header = styled('div', (props: ThemeProps & { noPadding?: boolean; }) => (
   }
 }));
 
-const Body = styled('div', (props: ThemeProps & { noPadding?: boolean; }) => ({
-  padding: props.noPadding ? undefined : `${props.theme.itemPadding}px`
+const Body = styled('div', (props: ThemeProps & { $noPadding?: boolean; }) => ({
+  padding: props.$noPadding ? undefined : `${props.theme.itemPadding}px`
 }));
 
 export interface SectionProps extends ThemeProps, StyleProps {
@@ -62,12 +62,12 @@ class Section extends React.PureComponent<Props> {
     const { name, theme, children, collapsed, onCollapsedChange, style, className, noBodyPadding, noHeaderPadding } = props;
     return (
       <Container theme={theme} style={style} className={className}>
-        <Header theme={theme} noPadding={noHeaderPadding}>
+        <Header theme={theme} $noPadding={noHeaderPadding}>
           <Name text={name} />
           <Spacer />
           {onCollapsedChange ? <Fa icon={!collapsed ? 'caret-up' : 'caret-down'} onClick={this.onCollapseClick_} /> : undefined}
         </Header>
-        {!collapsed ? <Body noPadding={noBodyPadding} theme={theme}>{children}</Body> : undefined}
+        {!collapsed ? <Body $noPadding={noBodyPadding} theme={theme}>{children}</Body> : undefined}
       </Container>
     );
   }

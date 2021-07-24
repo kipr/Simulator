@@ -99,6 +99,20 @@ export namespace StyledText {
     if (existing.type === Type.Composition) return compose({ items: [...existing.items, extension] });
     return compose({ items: [existing, extension] });
   };
+
+  // Extracts the text components of a styled text
+  export const toString = (text: StyledText): string => {
+    switch (text.type) {
+      case Type.Text:
+        return text.text;
+      case Type.Component:
+        return '';
+      case Type.Composition:
+        return text.items.map(toString).join('');
+      case Type.NewLine:
+        return '\n';
+    }
+  };
 }
 
 export type StyledText = StyledText.Text | StyledText.Component | StyledText.Composition | StyledText.NewLine;

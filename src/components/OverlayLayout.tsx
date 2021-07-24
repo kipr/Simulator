@@ -350,7 +350,6 @@ class OverlayLayout extends React.PureComponent<Props, State> {
           <SimulatorArea
             key='simulator'
             robotState={state}
-            itemEnabled={items}
             onRobotStateUpdate={onStateChange}
             isSensorNoiseEnabled={settings.simulationSensorNoise}
             isRealisticSensorsEnabled={settings.simulationRealisticSensors}
@@ -399,7 +398,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
             size={WORLD_SIZE[worldSize]}
             onSizeChange={this.onWorldSizeChange_}
           >
-            <World theme={theme} items={items} onItemChange={onItemChange} surfaceName={surfaceState.surfaceName} onSurfaceChange={onSurfaceChange} />
+            <World theme={theme} surfaceName={surfaceState.surfaceName} onSurfaceChange={onSurfaceChange} />
           </WorldWidget>
         </Overlay>
       </Container>

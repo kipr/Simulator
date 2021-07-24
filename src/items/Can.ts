@@ -1,5 +1,6 @@
 import * as Babylon from 'babylonjs';
-import Item from './Item';
+import { Quaternion, ReferenceFrame, Vector3 } from '../math';
+import { Item } from '../state';
 import ItemObject from './ItemObject';
 
 export class Can implements ItemObject {
@@ -13,7 +14,7 @@ export class Can implements ItemObject {
     return this.config_.item;
   }
   get id(): string {
-    return this.config_.item.id;
+    return this.config_.item.name;
   }
 
   constructor(scene: Babylon.Scene, config: ItemObject.Config<Item.Can>) {
@@ -32,7 +33,7 @@ export class Can implements ItemObject {
     faceUV[2] = Babylon.Vector4.Zero();
 
     this.mesh = Babylon.MeshBuilder.CreateCylinder(
-      this.config_.item.id,
+      this.config_.item.name,
       {
         height:11.15, 
         diameter:6, 
@@ -44,8 +45,9 @@ export class Can implements ItemObject {
     this.mesh.material = canMaterial;
     this.mesh.visibility = 0.5;
 
-    this.mesh.position = this.config_.item.startPosition;
-    this.mesh.rotate(this.config_.item.rotationAxis, this.config_.item.startRotation);
+    const origin = ReferenceFrame.fill(item.origin);
+    this.mesh.position = Vector3.toBabylon(origin.position);
+    this.mesh.rotationQuaternion = Quaternion.toBabylon(origin.orientation);
   }
 
   // Used to create physics impostor of mesh in scene and make opaque

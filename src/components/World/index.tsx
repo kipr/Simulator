@@ -19,14 +19,29 @@ import EditableList from '../EditableList';
 import Item from './Item';
 import AddItemDialog, { AddItemAcceptance } from './AddItemDialog';
 import { Fa } from '../Fa';
-import ItemSettingsDialog from './ItemSettingsDialog';
+import ItemSettingsDialog, { ItemSettingsAcceptance } from './ItemSettingsDialog';
+import { connect } from 'react-redux';
+
+import { State as ReduxState, Item as ReduxItem } from '../../state';
+import { SceneAction } from '../../state/reducer';
+
+import * as uuid from 'uuid';
+import { ReferenceFrame } from '../../math';
 
 export interface WorldProps extends StyleProps, ThemeProps {
-  items: boolean[];
-  onItemChange: (id: string, enabled: boolean) => void;
   
+
   surfaceName: string;
   onSurfaceChange: (surfaceName: string) => void;
+}
+
+interface ReduxWorldProps {
+  itemOrdering: string[];
+  items: { [key: string]: ReduxItem };
+
+  onItemAdd: (id: string, item: ReduxItem) => void;
+  onItemChange: (id: string, item: ReduxItem) => void;
+  onItemRemove: (id: string) => void;
 }
 
 namespace UiState {
@@ -50,10 +65,10 @@ namespace UiState {
 
   export interface ItemSettings {
     type: Type.ItemSettings;
-    index: number;
+    id: string;
   }
 
-  export const itemSettings = (index: number): ItemSettings => ({ type: Type.ItemSettings, index });
+  export const itemSettings = (id: string): ItemSettings => ({ type: Type.ItemSettings, id });
 }
 
 type UiState = UiState.None | UiState.AddItem | UiState.ItemSettings;
@@ -120,8 +135,8 @@ const SectionIcon = styled(Fa, (props: ThemeProps) => ({
   transition: 'opacity 0.2s'
 }));
 
-class World extends React.PureComponent<Props, State> {
-  constructor(props: Props) {
+class World extends React.PureComponent<Props & ReduxWorldProps, State> {
+  constructor(props: Props & ReduxWorldProps) {
     super(props);
 
     this.state = {
@@ -130,8 +145,8 @@ class World extends React.PureComponent<Props, State> {
     };
   }
 
-  private onItemChange_ = (id: string) => (value: boolean) => {
-    this.props.onItemChange(id, value);
+  private onItemChange_ = (id: string) => (item: ReduxItem) => {
+    this.props.onItemChange(id, item);
   };
 
   private onCollapsedChange_ = (section: string) => (collapsed: boolean) => {
@@ -148,36 +163,55 @@ class World extends React.PureComponent<Props, State> {
   };
 
   private onAddItemAccept_ = (acceptance: AddItemAcceptance) => {
+    
+
+    this.setState({ modal: UiState.NONE }, () => {
+      this.props.onItemAdd(uuid.v4(), {
+        type: ReduxItem.Type.Can,
+        name: acceptance.name,
+        origin: ReferenceFrame.IDENTITY
+      });
+    });
+  };
+
+  private onItemSettingsAccept_ = (id: string) => (acceptance: ItemSettingsAcceptance) => {
+    this.setState({ modal: UiState.NONE }, () => {
+      this.props.onItemChange(id, acceptance);
+    });
   };
 
   private onAddItemClick_ = () => this.setState({ modal: UiState.ADD_ITEM });
-  private onItemSettingsClick_ = (index: number) => () => this.setState({ modal: UiState.itemSettings(index) });
+  private onItemSettingsClick_ = (id: string) => () => this.setState({ modal: UiState.itemSettings(id) });
   private onModalClose_ = () => this.setState({ modal: UiState.NONE });
 
   private onItemRemove_ = (index: number) => {
+    const { itemOrdering } = this.props;
+    this.props.onItemRemove(itemOrdering[index]);
   };
 
-  private onItemVisibilityChange_ = (index: number) => (visibility: boolean) => {
+  private onItemVisibilityChange_ = (id: string) => (visibility: boolean) => {
+    this.props.onItemChange(id, {
+      ...this.props.items[id],
+      visible: visibility
+    });
   };
 
   render() {
     const { props, state } = this;
-    const { style, className, theme, surfaceName } = props;
-    let items = props.items;
+    const { style, className, theme, surfaceName, items, itemOrdering } = props;
     const { collapsed, modal } = state;
-    const defaultItemList = Object.keys(Items);
-    if (items === undefined) {
-      items = [];
-    }
 
-    let mockList: EditableList.Item[] = [];
+
+    let itemList: EditableList.Item[] = [];
     // Mock list
-    for (let i = 0; i < 4; ++i) {
-      mockList.push(EditableList.Item.standard({
+    for (const id of itemOrdering) {
+      const item = items[id];
+      itemList.push(EditableList.Item.standard({
         component: Item,
-        props: { name: 'asd', theme },
-        onSettings: this.onItemSettingsClick_(i),
-        onVisibilityChange: this.onItemVisibilityChange_(i),
+        props: { name: item.name, theme },
+        onSettings: this.onItemSettingsClick_(id),
+        onVisibilityChange: this.onItemVisibilityChange_(id),
+        visible: item.visible
       }, {
         removable: true
       }));
@@ -186,7 +220,7 @@ class World extends React.PureComponent<Props, State> {
     const itemsName = StyledText.compose({
       items: [
         StyledText.text({
-          text: `${mockList.length} Items`,
+          text: `${itemList.length} Items`,
           style: NAME_STYLE
         }),
         StyledText.component({
@@ -213,7 +247,7 @@ class World extends React.PureComponent<Props, State> {
               collapsed={!collapsed['items']}
               noBodyPadding
             >
-              <EditableList onItemRemove={this.onItemRemove_} items={mockList} theme={theme} />
+              <EditableList onItemRemove={this.onItemRemove_} items={itemList} theme={theme} />
             </StyledListSection>
             <StyledSection theme={theme} name={SURFACE_NAME}>
               <StyledField theme={theme} name={'Surface:'}>
@@ -223,10 +257,27 @@ class World extends React.PureComponent<Props, State> {
           </Container>
         </ScrollArea>
         {modal.type === UiState.Type.AddItem && <AddItemDialog theme={theme} onClose={this.onModalClose_} onAccept={this.onAddItemAccept_} />}
-        {modal.type === UiState.Type.ItemSettings && <ItemSettingsDialog theme={theme} onClose={this.onModalClose_} onAccept={this.onAddItemAccept_} />}
+        {modal.type === UiState.Type.ItemSettings && <ItemSettingsDialog item={items[modal.id]} theme={theme} onClose={this.onModalClose_} onAccept={this.onItemSettingsAccept_(modal.id)} />}
       </>
     );
   }
 }
 
-export default World;
+export default connect<{}, {}, Props, ReduxState>(state => {
+  const { itemOrdering, items } = state.scene;
+
+  return {
+    itemOrdering,
+    items,
+  };
+}, (dispatch) => ({
+  onItemChange: (id: string, item: ReduxItem) => {
+    dispatch(SceneAction.setItem({ id, item }));
+  },
+  onItemAdd: (id: string, item: ReduxItem) => {
+    dispatch(SceneAction.addItem({ id, item }));
+  },
+  onItemRemove: (id: string) => {
+    dispatch(SceneAction.removeItem({ id }));
+  }
+}))(World) as React.ComponentType<Props>;

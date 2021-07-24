@@ -82,14 +82,14 @@ const Item = styled('div', (props: ThemeProps & ClickProps) => ({
   transition: 'background-color 0.2s, opacity 0.2s'
 }));
 
-const RunItem = withStyleDeep(Item, (props: ClickProps & { running: boolean }) => ({
+const RunItem = withStyleDeep(Item, (props: ClickProps & { $running: boolean }) => ({
   backgroundColor: props.disabled ? GREEN.disabled : GREEN.standard,
   ':hover': props.onClick && !props.disabled ? {
     backgroundColor: GREEN.hover
   } : {},
 }));
 
-const StopItem = withStyleDeep(Item, (props: ClickProps & { running: boolean }) => ({
+const StopItem = withStyleDeep(Item, (props: ClickProps & { $running: boolean }) => ({
   backgroundColor: props.disabled ? RED.disabled : RED.standard,
   ':hover': props.onClick && !props.disabled ? {
     backgroundColor: RED.hover
@@ -145,7 +145,7 @@ class Menu extends React.PureComponent<Props, State> {
           <RunItem
             theme={theme}
             onClick={SimulatorState.isStopped(simulatorState) ? onRunClick : undefined}
-            running={running}
+            $running={running}
             disabled={!SimulatorState.isStopped(simulatorState)}
             style={{ borderLeft: `1px solid ${theme.borderColor}` }}
           >
@@ -155,7 +155,7 @@ class Menu extends React.PureComponent<Props, State> {
             theme={theme}
             onClick={running ? onStopClick : undefined}
             disabled={!running}
-            running={running}
+            $running={running}
           >
             <ItemIcon icon='stop' /> Stop
           </StopItem>
