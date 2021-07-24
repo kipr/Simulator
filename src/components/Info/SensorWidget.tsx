@@ -145,6 +145,9 @@ class SensorWidget extends React.PureComponent<Props, State> {
       }),
     ];
 
+    const headerValue: number = typeof value === 'number'
+      ? Math.round(value)
+      : (value ? 1 : 0);
 
     switch (typeof value) {
       case 'boolean': {
@@ -169,7 +172,7 @@ class SensorWidget extends React.PureComponent<Props, State> {
           <Header theme={theme}>
             <Name>{name}</Name>
             <Spacer />
-            <span style={{ userSelect: 'none' }}>{typeof value === 'number' ? Math.round(value) : value}{unit}</span>
+            <span style={{ userSelect: 'none' }}>{headerValue}{unit}</span>
           </Header>
           {showPlot ? plot : undefined}
         </Container>
