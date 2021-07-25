@@ -25,6 +25,7 @@ import {
 } from '../items';
 import { Space } from '../Sim';
 import { RobotPosition } from '../RobotPosition';
+import { DEFAULT_SETTINGS, Settings } from '../Settings';
 
 type ModalType = 'settings' | 'about' | 'none';
 
@@ -46,6 +47,8 @@ interface RootState {
   messages: Message[];
 
   theme: Theme;
+
+  settings: Settings;
 }
 
 type Props = Record<string, never>;
@@ -93,7 +96,8 @@ export class Root extends React.Component<Props, State> {
       simulatorState: SimulatorState.STOPPED,
       console: StyledText.text({ text: 'Welcome to the KIPR Simulator!\n', style: STDOUT_STYLE(DARK) }),
       theme: DARK,
-      messages: []
+      messages: [],
+      settings: DEFAULT_SETTINGS,
     };
   }
 
@@ -317,6 +321,10 @@ export class Root extends React.Component<Props, State> {
     window.open("https://www.kipr.org/doc/index.html");
   };
 
+  private onSettingsChange_ = (changedSettings: Partial<Settings>) => {
+    this.setState({ settings: { ...this.state.settings, ...changedSettings } });
+  };
+
   render() {
     const { props, state } = this;
     const {
@@ -331,7 +339,8 @@ export class Root extends React.Component<Props, State> {
       messages,
       isSensorNoiseEnabled,
       isRealisticSensorsEnabled,
-      surfaceState
+      surfaceState,
+      settings,
     } = state;
 
     const theme = DARK;
@@ -348,6 +357,7 @@ export class Root extends React.Component<Props, State> {
       console,
       onCodeChange: this.onCodeChange_,
       messages,
+      settings,
       onClearConsole: this.onClearConsole_,
       surfaceState,
       onSurfaceChange: this.onUpdateSurfaceState_,
@@ -403,7 +413,7 @@ export class Root extends React.Component<Props, State> {
           />
           {impl}
         </Container>
-        {modal === 'settings' ? <SettingsDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
+        {modal === 'settings' ? <SettingsDialog theme={theme} onClose={this.onModalClose_} settings={settings} onSettingsChange={this.onSettingsChange_} /> : undefined}
         {modal === 'about' ? <AboutDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
       </>
 

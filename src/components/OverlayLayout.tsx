@@ -283,6 +283,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       onItemChange,
       console,
       messages,
+      settings,
       onClearConsole,
       surfaceState,
       onSurfaceChange,
@@ -369,7 +370,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
             onSizeChange={this.onEditorSizeChange_}
             barComponents={editorBar}
           >
-            <Editor ref={this.bindEditor_} code={code} onCodeChange={onCodeChange} theme={theme} messages={messages} />
+            <Editor ref={this.bindEditor_} code={code} onCodeChange={onCodeChange} theme={theme} messages={messages} autocomplete={settings.editorAutoComplete} />
           </EditorWidget>
           <ConsoleWidget
             {...commonProps}

@@ -1,7 +1,7 @@
 export interface Settings {
-  showSensorPlots: boolean;
+  editorAutoComplete: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
-  showSensorPlots: true
+  editorAutoComplete: false,
 };

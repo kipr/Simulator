@@ -172,7 +172,7 @@ class Menu extends React.PureComponent<Props, State> {
 
           <Item theme={theme} onClick={onDocumentationClick}><ItemIcon icon='book' /> Documentation</Item>
           
-          {/* <Item theme={theme} onClick={onSettingsClick}><ItemIcon icon='cogs'/> Settings</Item>*/}
+          <Item theme={theme} onClick={onSettingsClick}><ItemIcon icon='cogs'/> Settings</Item>
           <Item theme={theme} onClick={onAboutClick}><ItemIcon icon='question'/> About</Item>
         </Container>
         
