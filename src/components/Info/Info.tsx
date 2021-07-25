@@ -8,8 +8,9 @@ import Section from '../Section';
 import { ThemeProps } from '../theme';
 import SensorWidget from './SensorWidget';
 import { StyledText } from '../../util';
-import { Simulation } from './Simulation';
+import { Location } from './Location';
 import { RobotPosition } from '../../RobotPosition';
+import { Fa } from '../Fa';
 
 
 export interface InfoProps extends StyleProps, ThemeProps {
@@ -31,7 +32,7 @@ const Row = styled('div', (props: ThemeProps) => ({
   flexDirection: 'row',
   flexBasis: 0,
   alignItems: 'center',
-  marginBottom: `${props.theme.itemPadding}px`,
+  marginBottom: `${props.theme.itemPadding * 2}px`,
   ':last-child': {
     marginBottom: 0
   }
@@ -39,17 +40,11 @@ const Row = styled('div', (props: ThemeProps) => ({
 
 const Container = styled('div', (props: ThemeProps) => ({
   flex: '1 1',
-  backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
-  padding: `${props.theme.widget.padding}px`,
   overflow: 'hidden'
 }));
 
 const StyledSection = styled(Section, {
-  marginTop: '10px',
-  ':first-child': {
-    marginTop: 0
-  },
 });
 
 const ItemName = styled('label', (props: ThemeProps) => ({
@@ -69,38 +64,41 @@ const Input = styled('input', (props: ThemeProps) => ({
   }
 }));
 
-const NAME_STYLE: React.CSSProperties = {
-  fontSize: '1.2em'
+
+const ICON_STYLE: React.CSSProperties = {
+  marginRight: '5px'
 };
+
+const LOCATION_NAME = StyledText.text({
+  text: 'Location',
+});
 
 const SIMULATION_NAME = StyledText.text({
   text: 'Simulation',
-  style: NAME_STYLE
 });
 
 const SERVOS_NAME = StyledText.text({
   text: 'Servos',
-  style: NAME_STYLE
 });
 
 const MOTOR_VELOCITIES_NAME = StyledText.text({
   text: 'Motor Velocities',
-  style: NAME_STYLE
 });
 
-const MOTOR_POSITIONS_NAME = StyledText.text({
-  text: 'Motor Positions',
-  style: NAME_STYLE
+const MOTOR_POSITIONS_NAME = StyledText.compose({
+  items: [
+    StyledText.text({
+      text: 'Motor Positions',
+    }),
+  ]
 });
 
 const ANALOG_NAME = StyledText.text({
   text: 'Analog Sensors',
-  style: NAME_STYLE
 });
 
 const DIGITAL_NAME = StyledText.text({
   text: 'Digital Sensors',
-  style: NAME_STYLE
 });
 
 class Info extends React.PureComponent<Props, State> {
@@ -166,12 +164,12 @@ class Info extends React.PureComponent<Props, State> {
       <ScrollArea theme={theme} style={{ flex: '1 1' }}>
         <Container theme={theme} style={style} className={className}>
           <StyledSection
-            name={SIMULATION_NAME}
+            name={LOCATION_NAME}
             theme={theme}
-            onCollapsedChange={this.onCollapsedChange_('simulation')}
-            collapsed={collapsed['simulation']}
+            onCollapsedChange={this.onCollapsedChange_('location')}
+            collapsed={collapsed['location']}
           >
-            <Simulation
+            <Location
               robotStartPosition={robotStartPosition}
               onSetRobotStartPosition={this.props.onSetRobotStartPosition}
               theme={theme}

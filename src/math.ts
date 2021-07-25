@@ -112,10 +112,21 @@ export interface Euler {
 export namespace Euler {
   export type Order = 'xyz' | 'xzy' | 'yxz' | 'yzx' | 'zxy' | 'zyx';
 
+  export const IDENTITY: Euler = { x: 0, y: 0, z: 0, order: 'xyz' };
+
+  export const create = (x: number, y: number, z: number, order?: Euler.Order): Euler => ({ x, y, z, order });
+
+  export const fromQuaternion = (q: Quaternion): Euler => {
+    const x = Math.atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
+    const y = Math.asin(2 * (q.w * q.y - q.z * q.x));
+    const z = Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
+    return { x, y, z, order: 'xyz' };
+  };
+
   export const toQuaternion = (euler: Euler): Quaternion => {
-    const x = euler.x;
-    const y = euler.y;
-    const z = euler.z;
+    const x = euler.x * 0.5;
+    const y = euler.y * 0.5;
+    const z = euler.z * 0.5;
     const order = euler.order || 'xyz';
 
     const cos = Math.cos;

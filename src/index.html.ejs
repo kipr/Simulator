@@ -43,10 +43,13 @@
       left: 0;
       pointer-events: none;
       background-color: transparent;
-      transition: background-color 0.2s;
+      transition: background-color 0.2s, backdrop-filter 0.2s, opacity 0.2s;
       display: none;
       align-items: center;
       justify-content: center;
+      z-index: 2;
+      opacity: 0;
+      overflow: hidden;
     }
 
     #app {

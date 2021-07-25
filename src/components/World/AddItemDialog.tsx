@@ -1,13 +1,19 @@
 import * as React from "react";
 import { styled } from "styletron-react";
-import { ReferenceFrame } from "../../math";
+import { ReferenceFrame, Rotation } from "../../unit-math";
 import { Item } from "../../state";
+import { Angle, Distance, Mass, Value } from "../../util";
 import ComboBox from "../ComboBox";
 import { Dialog } from "../Dialog";
 import DialogBar from "../DialogBar";
 import Field from "../Field";
 import Input from "../Input";
+import ScrollArea from "../ScrollArea";
+import Section from "../Section";
 import { ThemeProps } from "../theme";
+import ValueEdit from "../ValueEdit";
+import { AngleAxis, Euler } from "../../math";
+import ItemSettings from "./ItemSettings";
 
 export type AddItemAcceptance = Item;
 
@@ -23,25 +29,10 @@ interface AddItemDialogState {
 type Props = AddItemDialogProps;
 type State = AddItemDialogState;
 
-const StyledField = styled(Field, (props: ThemeProps) => ({
-  width: '100%',
-  marginBottom: `${props.theme.itemPadding * 2}px`,
-  ':last-child': {
-    marginBottom: 0,
-  },
-}));
-
-const Container = styled('div', (props: ThemeProps) => ({
-  display: 'flex',
-  flexDirection: 'column',
+const StyledScrollArea = styled(ScrollArea, (props: ThemeProps) => ({
+  minHeight: '300px',
   flex: '1 1',
-  padding: `${props.theme.itemPadding * 2}px`
 }));
-
-const TYPE_OPTIONS: ComboBox.Option[] = [
-  ComboBox.option('Can', Item.Type.Can),
-  ComboBox.option('Paper Ream', Item.Type.PaperReam),
-];
 
 class AddItemDialog extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -52,7 +43,7 @@ class AddItemDialog extends React.PureComponent<Props, State> {
         name: 'Untitled Can',
         origin: ReferenceFrame.IDENTITY,
         visible: true
-      }
+      },
     };
   }
 
@@ -60,39 +51,19 @@ class AddItemDialog extends React.PureComponent<Props, State> {
     this.props.onAccept(this.state.item);
   };
 
-  private onNameChange_ = (event: React.SyntheticEvent<HTMLInputElement>) => {
-    this.setState({
-      item: {
-        ...this.state.item,
-        name: event.currentTarget.value
-      }
-    });
-  };
 
-  private onTypeSelect_ = (index: number) => {
-    this.setState({
-      item: {
-        ...this.state.item,
-        type: index
-      }
-    });
-  };
+  private onItemChange_ = (item: Item) => this.setState({ item });
 
   render() {
     const { props, state } = this;
-    const { theme, onAccept, onClose } = props;
+    const { theme, onClose } = props;
     const { item } = state;
 
     return (
       <Dialog theme={theme} name='Add Item' onClose={onClose}>
-        <Container theme={theme}>
-          <StyledField name='Type' theme={theme}>
-            <ComboBox options={TYPE_OPTIONS} theme={theme} index={item.type} onSelect={this.onTypeSelect_} />
-          </StyledField>
-          <StyledField name='Name' theme={theme}>
-            <Input theme={theme} type='text' value={item.name} onChange={this.onNameChange_} />
-          </StyledField>
-        </Container>
+        <StyledScrollArea theme={theme}>
+          <ItemSettings theme={theme} item={item} onItemChange={this.onItemChange_} />
+        </StyledScrollArea>
         <DialogBar theme={theme} onAccept={this.onAccept_} />
         
       </Dialog>

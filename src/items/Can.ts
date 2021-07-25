@@ -1,7 +1,9 @@
 import * as Babylon from 'babylonjs';
-import { Quaternion, ReferenceFrame, Vector3 } from '../math';
+import { Quaternion, ReferenceFrame as RawReferenceFrame, Vector3 as RawVector3 } from '../math';
+import { ReferenceFrame } from '../unit-math';
 import { Item } from '../state';
 import ItemObject from './ItemObject';
+import { Mass } from '../util';
 
 export class Can implements ItemObject {
   private config_: ItemObject.Config<Item.Can>;
@@ -35,8 +37,8 @@ export class Can implements ItemObject {
     this.mesh = Babylon.MeshBuilder.CreateCylinder(
       this.config_.item.name,
       {
-        height:11.15, 
-        diameter:6, 
+        height: 11.15, 
+        diameter: 6, 
         faceUV: faceUV,
       }, 
       this.scene
@@ -45,8 +47,8 @@ export class Can implements ItemObject {
     this.mesh.material = canMaterial;
     this.mesh.visibility = 0.5;
 
-    const origin = ReferenceFrame.fill(item.origin);
-    this.mesh.position = Vector3.toBabylon(origin.position);
+    const origin = RawReferenceFrame.fill(ReferenceFrame.toRaw(item.origin));
+    this.mesh.position = RawVector3.toBabylon(origin.position);
     this.mesh.rotationQuaternion = Quaternion.toBabylon(origin.orientation);
   }
 
@@ -58,8 +60,8 @@ export class Can implements ItemObject {
       this.mesh, 
       Babylon.PhysicsImpostor.CylinderImpostor, 
       { 
-        mass: 5, 
-        friction: 5 
+        mass: this.config_.item.mass ? Mass.toGramsValue(this.config_.item.mass) : 5, 
+        friction: this.config_.item.friction ? this.config_.item.friction.value : 5,
       }, 
       this.scene
     );

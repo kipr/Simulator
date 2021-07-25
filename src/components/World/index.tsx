@@ -26,7 +26,8 @@ import { State as ReduxState, Item as ReduxItem } from '../../state';
 import { SceneAction } from '../../state/reducer';
 
 import * as uuid from 'uuid';
-import { ReferenceFrame } from '../../math';
+import { ReferenceFrame } from '../../unit-math';
+import ComboBox from '../ComboBox';
 
 export interface WorldProps extends StyleProps, ThemeProps {
   
@@ -81,15 +82,11 @@ interface WorldState {
 type Props = WorldProps;
 type State = WorldState;
 
-const NAME_STYLE: React.CSSProperties = {
-  fontSize: '1.2em'
-};
 
 
 
 const SURFACE_NAME = StyledText.text({
-  text: 'Surface',
-  style: NAME_STYLE
+  text: 'Scene',
 });
 
 const Container = styled('div', (props: ThemeProps) => ({
@@ -97,14 +94,9 @@ const Container = styled('div', (props: ThemeProps) => ({
   flexDirection: 'column',
   flex: '1 1',
   color: props.theme.color,
-  padding: '10px'
 }));
 
 const StyledSection = styled(Section, {
-  marginTop: '10px',
-  ':first-child': {
-    marginTop: 0
-  },
 });
 
 const StyledListSection = withStyleDeep(StyledSection, {
@@ -113,15 +105,12 @@ const StyledListSection = withStyleDeep(StyledSection, {
 });
 
 const StyledField = styled(Field, (props: ThemeProps) => ({
-  marginTop: `${props.theme.itemPadding}px`,
-  ':first-child': {
-    marginTop: 0
-  }
+
 }));
 
-const SURFACE_OPTIONS: OptionDefinition[] = [
-  { displayName: SurfaceStatePresets.jbcA.surfaceName, value: SurfaceStatePresets.jbcA.surfaceName },
-  { displayName: SurfaceStatePresets.jbcB.surfaceName, value: SurfaceStatePresets.jbcB.surfaceName }
+const SURFACE_OPTIONS: ComboBox.Option[] = [
+  ComboBox.option(SurfaceStatePresets.jbcA.surfaceName, SurfaceStatePresets.jbcA.surfaceName),
+  ComboBox.option(SurfaceStatePresets.jbcB.surfaceName, SurfaceStatePresets.jbcB.surfaceName),
 ];
 
 const SectionIcon = styled(Fa, (props: ThemeProps) => ({
@@ -158,8 +147,8 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
     });
   };
 
-  private onSurfaceChange_ = (newSurfaceName: string) => {
-    this.props.onSurfaceChange(newSurfaceName);
+  private onSurfaceChange_ = (index: number, option: ComboBox.Option) => {
+    this.props.onSurfaceChange(option.data as string);
   };
 
   private onAddItemAccept_ = (acceptance: AddItemAcceptance) => {
@@ -211,17 +200,16 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
         props: { name: item.name, theme },
         onSettings: this.onItemSettingsClick_(id),
         onVisibilityChange: this.onItemVisibilityChange_(id),
-        visible: item.visible
+        visible: item.visible,
       }, {
-        removable: true
+        removable: item.removable === undefined ? true : item.removable,
       }));
     }
 
     const itemsName = StyledText.compose({
       items: [
         StyledText.text({
-          text: `${itemList.length} Items`,
-          style: NAME_STYLE
+          text: `${itemList.length} Item${itemList.length === 1 ? '' : 's'}`,
         }),
         StyledText.component({
           component: SectionIcon,
@@ -240,20 +228,25 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
       <>
         <ScrollArea theme={theme} style={{ flex: '1 1' }}>
           <Container theme={theme} style={style} className={className}>
+            <StyledSection theme={theme} name={SURFACE_NAME}>
+              <StyledField theme={theme} name='Surface'>
+                <ComboBox
+                  theme={theme}
+                  index={SURFACE_OPTIONS.findIndex(s => s.text === surfaceName)}
+                  onSelect={this.onSurfaceChange_}
+                  options={SURFACE_OPTIONS}
+                />
+              </StyledField>
+            </StyledSection>
             <StyledListSection 
               name={itemsName}
               theme={theme}
               onCollapsedChange={this.onCollapsedChange_('items')}
-              collapsed={!collapsed['items']}
+              collapsed={collapsed['items']}
               noBodyPadding
             >
               <EditableList onItemRemove={this.onItemRemove_} items={itemList} theme={theme} />
             </StyledListSection>
-            <StyledSection theme={theme} name={SURFACE_NAME}>
-              <StyledField theme={theme} name={'Surface:'}>
-                <DropdownList theme={theme} value={surfaceName} options={SURFACE_OPTIONS} onValueChange={this.onSurfaceChange_} />
-              </StyledField>
-            </StyledSection>
           </Container>
         </ScrollArea>
         {modal.type === UiState.Type.AddItem && <AddItemDialog theme={theme} onClose={this.onModalClose_} onAccept={this.onAddItemAccept_} />}

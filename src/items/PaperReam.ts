@@ -1,6 +1,8 @@
 import * as Babylon from 'babylonjs';
-import { Quaternion, ReferenceFrame, Vector3 } from '../math';
+import { Quaternion, ReferenceFrame as RawReferenceFrame, Vector3 as RawVector3 } from '../math';
+import { ReferenceFrame } from '../unit-math';
 import { Item } from '../state';
+import { Mass } from '../util';
 import ItemObject from './ItemObject';
 
 export class PaperReam implements ItemObject {
@@ -38,9 +40,9 @@ export class PaperReam implements ItemObject {
     this.mesh.material = reamMaterial;
     this.mesh.visibility = 0.5;
 
-    const origin = ReferenceFrame.fill(item.origin);
+    const origin = RawReferenceFrame.fill(ReferenceFrame.toRaw(item.origin));
 
-    this.mesh.position = Vector3.toBabylon(origin.position);
+    this.mesh.position = RawVector3.toBabylon(origin.position);
     this.mesh.rotationQuaternion = Quaternion.toBabylon(origin.orientation);
   }
 
@@ -52,8 +54,8 @@ export class PaperReam implements ItemObject {
       this.mesh, 
       Babylon.PhysicsImpostor.BoxImpostor, 
       { 
-        mass: 50, 
-        friction: 5 
+        mass: this.config_.item.mass ? Mass.toGramsValue(this.config_.item.mass) : 50, 
+        friction: this.config_.item.friction ? this.config_.item.friction.value : 5,
       }, 
       this.scene
     );

@@ -19,29 +19,10 @@ export interface SimulationProps extends ThemeProps, StyleProps {
 type Props = SimulationProps;
 
 const StyledValueEdit = styled(ValueEdit, (props: ThemeProps) => ({
-  marginTop: `${props.theme.itemPadding}px`,
+  marginTop: `${props.theme.itemPadding * 2}px`,
   ':first-child': {
     marginTop: 0
   }
-}));
-
-const StyledField = styled(Field, (props: ThemeProps) => ({
-  marginTop: `${props.theme.itemPadding}px`,
-  ':first-child': {
-    marginTop: 0
-  }
-}));
-
-const StyledButton = styled(Button, (props: ThemeProps) => ({
-  display: 'flex',
-  flexDirection: 'row',
-  flex: '1 1',
-  borderRadius: `0px`,
-  border: `1px solid ${props.theme.borderColor}`,
-  padding: `${props.theme.itemPadding}`,
-  overflow: 'hidden',
-  alignItems: 'center',
-  alignContent: 'center',
 }));
 
 
@@ -49,11 +30,11 @@ const Container = styled('div', {
 
 });
 
-const NAME_STYLE: React.CSSProperties = {
-  fontSize: '1.2em'
-};
+const SENSOR_NOISE = StyledText.text({
+  text: 'Sensor Noise',
+});
 
-export class Simulation extends React.PureComponent<Props> {
+export class Location extends React.PureComponent<Props> {
   private onXChange_ = (x: Value) => {
     const xDistance = Value.toDistance(x);
     if (xDistance.value === this.props.robotStartPosition.x.value) return;
@@ -81,17 +62,12 @@ export class Simulation extends React.PureComponent<Props> {
 
     this.props.onSetRobotStartPosition({ ...this.props.robotStartPosition, theta: angle });
   };
-
-  private onRobotPositionResetClicked_ = () => {
-    this.props.onSetRobotStartPosition({ ...this.props.robotStartPosition });
-  };
-
+  
   render() {
     const { props } = this;
     const { theme, style, className, robotStartPosition: { x, y, z, theta } } = props;
     return (
       <Container style={style} className={className}>
-        <StyledButton theme={theme} children={['Reset']} onClick={this.onRobotPositionResetClicked_}></StyledButton>
         <StyledValueEdit value={Value.distance(x)} onValueChange={this.onXChange_} theme={theme} name='X' />
         <StyledValueEdit value={Value.distance(y)} onValueChange={this.onYChange_} theme={theme} name='Y' />
         <StyledValueEdit value={Value.distance(z)} onValueChange={this.onZChange_} theme={theme} name='Z' />

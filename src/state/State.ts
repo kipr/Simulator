@@ -1,4 +1,5 @@
-import { ReferenceFrame } from "../math";
+import { ReferenceFrame } from "../unit-math";
+import { Mass, UnitlessValue } from "../util";
 
 export namespace Item {
   export enum Type {
@@ -21,6 +22,9 @@ export namespace Item {
     origin?: ReferenceFrame;
     visible?: boolean;
     name?: string;
+    mass?: Mass;
+    friction?: UnitlessValue;
+    removable?: boolean;
   }
 
   export interface Can extends Common {
@@ -33,6 +37,9 @@ export namespace Item {
       origin: ReferenceFrame.IDENTITY,
       visible: true,
       name: `Can ${Math.floor(Math.random() * 16777215).toString(16)}`,
+      mass: Mass.grams(5),
+      friction: UnitlessValue.create(5),
+      removable: true,
       ...can
     });
   }
@@ -46,6 +53,9 @@ export namespace Item {
       origin: ReferenceFrame.IDENTITY,
       visible: true,
       name: `Ream ${Math.floor(Math.random() * 16777215).toString(16)}`,
+      mass: Mass.grams(50),
+      friction: UnitlessValue.create(5),
+      removable: true,
       ...ream
     });
   }
@@ -58,6 +68,7 @@ export interface Scene {
   items: {
     [name: string]: Item;
   };
+  selectedItem: string;
 }
 
 export interface State {

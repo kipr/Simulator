@@ -19,6 +19,7 @@ import Dict from './Dict';
 import { SurfaceState } from './SurfaceState';
 
 import { Quaternion, ReferenceFrame, Vector2, Vector3 } from './math';
+import { ReferenceFrame as UnitReferenceFrame, Vector3 as UnitVector3 } from './unit-math';
 import { RobotPosition } from './RobotPosition';
 import { Angle, Distance } from './util';
 
@@ -26,8 +27,28 @@ import store, { State, Item } from './state';
 import { Unsubscribe } from 'redux';
 import deepNeq from './deepNeq';
 import { SceneAction } from './state/reducer';
+import { Gizmo } from 'babylonjs/Gizmos/gizmo';
 
 export let ACTIVE_SPACE: Space;
+
+// We use Babylon's GizmoManager for item position and rotation.
+// Unfortunately, it doesn't support detaching from all meshes.
+// We need to monkey patch it.
+
+(Babylon.GizmoManager as any).detachFromMesh = function() {
+  if (this._attachedMesh) this._attachedMesh.removeBehavior(this.boundingBoxDragBehavior);
+  if (this._attachedNode) this._attachedNode.removeBehavior(this.boundingBoxDragBehavior);
+  
+  this._attachedMesh = null;
+  this._attachedNode = null;
+
+  for (let key in this.gizmos) {
+    const gizmo = this.gizmos[key];
+    if (gizmo && this._gizmosEnabled[key]) {
+      gizmo.attachedMesh = null;
+    }
+  }
+};
 
 export class Space {
   private static instance: Space;
@@ -100,6 +121,8 @@ export class Space {
   private getRobotState: () => RobotState;
   private updateRobotState: (robotState: Partial<RobotState>) => void;
 
+  private gizmoManager_: Babylon.GizmoManager;
+
   private initStoreSubscription_ = () => {
     if (this.storeSubscription_) return;
     this.storeSubscription_ = store.subscribe(() => {
@@ -146,7 +169,7 @@ export class Space {
         this.itemMap_.set(id, this.createItem(item));
       } else {
         const mesh = this.scene.getMeshByID(meshName);
-        const origin = ReferenceFrame.fill(item.origin);
+        const origin = ReferenceFrame.fill(UnitReferenceFrame.toRaw(item.origin));
         mesh.position = Vector3.toBabylon(origin.position);
         mesh.rotationQuaternion = Quaternion.toBabylon(origin.orientation);
       }
@@ -160,6 +183,29 @@ export class Space {
           this.scene.removeMesh(mesh);
           mesh.dispose();
           this.itemMap_.delete(id);
+        }
+      }
+    }
+
+    if ((this.lastState_ ? this.lastState_.scene.selectedItem : undefined) !== state.scene.selectedItem) {
+      console.log(this.lastState_, state);
+      if (this.lastState_.scene.selectedItem !== undefined) {
+        const meshName = this.itemMap_.get(this.lastState_.scene.selectedItem);
+        if (meshName !== undefined) {
+          const mesh = this.scene.getMeshByID(meshName);
+          mesh.physicsImpostor.setMass(5);
+        }
+      }
+
+      if (state.scene.selectedItem === undefined) {
+        // Item is no longer selected
+        this.gizmoManager_.attachToMesh(null);
+      } else {
+        const meshName = this.itemMap_.get(state.scene.selectedItem);
+        if (meshName !== undefined) {
+          const mesh = this.scene.getMeshByID(meshName);
+          this.gizmoManager_.attachToMesh(mesh);
+          mesh.physicsImpostor.setMass(0);
         }
       }
     }
@@ -214,11 +260,23 @@ export class Space {
     ACTIVE_SPACE = this;
   }
 
+  private initGizmoManager_ = () => {
+    if (this.gizmoManager_) return;
+
+    this.gizmoManager_ = new Babylon.GizmoManager(this.scene);
+
+    this.gizmoManager_.positionGizmoEnabled = true;
+    this.gizmoManager_.rotationGizmoEnabled = true;
+    this.gizmoManager_.scaleGizmoEnabled = false;
+    this.gizmoManager_.usePointerToAttachGizmos = false;
+  };
+
   // Returns a promise that will resolve after the scene is fully initialized and the render loop is running
   public ensureInitialized(): Promise<void> {
     if (this.initializationPromise === undefined) {
       this.initializationPromise = new Promise((resolve, reject) => {
         this.createScene();
+        this.initGizmoManager_();
         this.loadMeshes()
           .then(() => {
             this.startRenderLoop();
@@ -248,7 +306,30 @@ export class Space {
     this.scene.attachControl();
   }
 
+  private onPointerDown_ = (event: PointerEvent, pickResult: Babylon.PickingInfo, type: Babylon.PointerEventTypes) => {
+    if (!pickResult.hit) {
+      store.dispatch(SceneAction.UNSELECT_ALL);
+      return;
+    }
+
+
+    const mesh = pickResult.pickedMesh;
+    const meshName = mesh.id || mesh.name;
+
+    for (const [ itemId, itemMeshName ] of this.itemMap_) {
+      if (meshName !== itemMeshName) continue;
+      store.dispatch(SceneAction.selectItem({ id: itemId }));
+      return;
+    }
+
+    // We fell through, we means we got a hit, but it wasn't an item.
+    store.dispatch(SceneAction.UNSELECT_ALL);
+
+  };
+
   private createScene(): void {
+    this.scene.onPointerDown = this.onPointerDown_;
+    
     this.camera.setTarget(Babylon.Vector3.Zero());
     this.camera.attachControl(this.workingCanvas, true);
 

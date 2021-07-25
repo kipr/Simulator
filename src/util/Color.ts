@@ -124,12 +124,12 @@ export namespace Color {
       return { type: Type.Hsl, h, s, l };
     };
 
-    export const darken = (color: Rgb, percent: number): Color => {
-      const hsla = toHsl(color);
-      const { h, s, l } = hsla;
-      const lNew = Math.max(0, l - (l * percent));
-      return Hsla.create(h, s, lNew, 1);
-    };
+    export const darken = (color: Rgb, percent: number): Rgb => ({
+      type: Type.Rgb,
+      r: Math.max(0, color.r - (color.r * percent)),
+      g: Math.max(0, color.g - (color.g * percent)),
+      b: Math.max(0, color.b - (color.b * percent))
+    });
 
     export const lighten = (color: Rgb, percent: number): Color => {
       const hsla = toHsl(color);

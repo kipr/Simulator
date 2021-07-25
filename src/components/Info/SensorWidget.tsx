@@ -29,7 +29,7 @@ type State = SensorWidgetState;
 
 const Container = styled('div', ({ theme }: ThemeProps) => ({
   width: '100%',
-  borderRadius: `${theme.itemPadding}px`,
+  borderRadius: `${theme.itemPadding * 2}px`,
   overflow: 'none',
   border: `1px solid ${theme.borderColor}`
 }));
@@ -45,7 +45,7 @@ const Header = styled('div', (props: ThemeProps) => ({
   width: '100%',
   alignItems: 'center',
   fontSize: '9pt',
-  padding: `${props.theme.itemPadding}px`,
+  padding: `${props.theme.itemPadding * 2}px`,
   borderBottom: `1px solid ${props.theme.borderColor}`,
   backgroundColor: `rgba(0, 0, 0, 0.1)`,
   ':last-child': {

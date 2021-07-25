@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../style';
-import { EMPTY_OBJECT, Slow, Value } from '../../util';
+import { Angle, Distance, EMPTY_OBJECT, Mass, Slow, Value } from '../../util';
 import { ThemeProps } from '../theme';
 import Field from '../Field';
+import ComboBox from '../ComboBox';
 
 export interface ValueEditProps extends ThemeProps, StyleProps {
   name: string;
@@ -24,9 +25,10 @@ const SubContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'row',
   flex: '1 1',
-  borderRadius: `${props.theme.itemPadding}px`,
+  borderRadius: `${props.theme.itemPadding * 2}px`,
   border: `1px solid ${props.theme.borderColor}`,
-  overflow: 'hidden',
+  overflowX: 'hidden',
+  overflowY: 'visible',
   alignItems: 'center',
 }));
 
@@ -35,29 +37,63 @@ const Input = styled('input', (props: ThemeProps) => ({
   minWidth: 0,
   font: 'inherit',
   display: 'block',
-  backgroundColor: 'transparent',
+  backgroundColor: 'rgba(0, 0, 0, 0.1)',
   color: props.theme.color,
   ':focus': {
     outline: 'none'
   },
-  padding: `${props.theme.itemPadding}px`,
+  padding: `${props.theme.itemPadding * 2}px`,
   borderRight: `1px solid ${props.theme.borderColor}`,
+  ':last-child': {
+    borderRight: 'none'
+  },
   borderLeft: 'none',
   borderTop: 'none',
   borderBottom: 'none',
-  transition: 'background-color 0.2s'
+  transition: 'background-color 0.2s',
+  
 }));
 
 const UnitLabel = styled('span', (props: ThemeProps) => ({
-  fontSize: '0.9em',
   userSelect: 'none',
   minWidth: '80px',
   textAlign: 'center',
   
-  padding: `${props.theme.itemPadding}px`,
+  padding: `${props.theme.itemPadding * 2}px`,
+}));
+
+const StyledComboBox = styled(ComboBox, (props: ThemeProps) => ({
+  width: '120px'
 }));
 
 const NUMBER_REGEX = /^[+-]?([0-9]*[.])?[0-9]+$/;
+
+const MASS_OPTIONS: ComboBox.Option[] = [
+  ComboBox.option('grams', Mass.Type.Grams),
+  ComboBox.option('kilograms', Mass.Type.Kilograms),
+  ComboBox.option('pounds', Mass.Type.Pounds),
+  ComboBox.option('ounces', Mass.Type.Ounces),
+];
+
+const DISTANCE_OPTIONS: ComboBox.Option[] = [
+  ComboBox.option('meters', Distance.Type.Meters),
+  ComboBox.option('centimeters', Distance.Type.Centimeters),
+  ComboBox.option('feet', Distance.Type.Feet),
+  ComboBox.option('inches', Distance.Type.Inches),
+];
+
+const ANGLE_OPTIONS: ComboBox.Option[] = [
+  ComboBox.option('radians', Angle.Type.Radians),
+  ComboBox.option('degrees', Angle.Type.Degrees),
+];
+
+const VALUE_OPTIONS: { [key: number]: ComboBox.Option[] } = {
+  [Value.Type.Angle]: ANGLE_OPTIONS,
+  [Value.Type.Distance]: DISTANCE_OPTIONS,
+  [Value.Type.Mass]: MASS_OPTIONS,
+};
+
+
 
 export class ValueEdit extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -106,6 +142,20 @@ export class ValueEdit extends React.PureComponent<Props, State> {
     if (event.key !== "Enter") return false;
     this.update_();
   };
+
+  private onUnitSelect_ = (index: number, option: ComboBox.Option) => {
+    const { value } = this.props;
+
+    let nextValue = value;
+    switch (value.type) {
+      case Value.Type.Angle: nextValue = Value.angle(Angle.toType(value.angle, option.data as Angle.Type)); break;
+      case Value.Type.Distance: nextValue = Value.distance(Distance.toType(value.distance, option.data as Distance.Type)); break;
+      case Value.Type.Mass: nextValue = Value.mass(Mass.toType(value.mass, option.data as Mass.Type)); break;
+      default: break;
+    }
+
+    this.props.onValueChange(nextValue);
+  };
   
   render() {
     const { props, state } = this;
@@ -115,7 +165,9 @@ export class ValueEdit extends React.PureComponent<Props, State> {
       backgroundColor: !state.valid ? `rgba(255, 0, 0, 0.2)` : undefined,
     };
 
-    
+    const unitOptions = VALUE_OPTIONS[value.type];
+    console.log(unitOptions);
+
     return (
       <Field name={name} theme={theme} className={className} style={style}>
         <SubContainer theme={theme}>
@@ -129,7 +181,10 @@ export class ValueEdit extends React.PureComponent<Props, State> {
             theme={theme}
             onKeyDown={this.onKeyDown_}
           />
-          <UnitLabel theme={theme}>{Value.unitName(value)}</UnitLabel>
+          {value.type !== Value.Type.Unitless
+            ? <StyledComboBox theme={theme} options={unitOptions} onSelect={this.onUnitSelect_} index={Value.subType(value)} minimal />
+            : undefined
+          }
         </SubContainer>
       </Field>
     );

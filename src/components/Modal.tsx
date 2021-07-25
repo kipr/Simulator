@@ -20,12 +20,19 @@ export class Modal extends React.PureComponent<Props> {
 
   componentDidMount() {
     MODAL_ROOT.style.display = 'flex';
-    MODAL_ROOT.style.backgroundColor = `rgba(0, 0, 0, 0.5)`;
+    MODAL_ROOT.style.backgroundColor = `rgba(0, 0, 0, 0.1)`;
+    MODAL_ROOT.style.pointerEvents = 'auto';
+    MODAL_ROOT.style.opacity = '1';
+
+    (MODAL_ROOT.style as any).backdropFilter = `blur(8px)`;
   }
 
   componentWillUnmount() {
-    MODAL_ROOT.style.display = 'none';
     MODAL_ROOT.style.backgroundColor = `transparent`;
+    MODAL_ROOT.style.pointerEvents = 'none';
+    MODAL_ROOT.style.opacity = '0';
+    (MODAL_ROOT.style as any).backdropFilter = `none`;
+
   }
 
   static isVisible = () => {

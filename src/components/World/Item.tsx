@@ -11,7 +11,7 @@ export interface ItemProps extends EditableList.StandardItem.ComponentProps, The
 type Props = ItemProps;
 
 const Container = styled('div', (props: ThemeProps) => ({
-  padding: `${props.theme.itemPadding}px`,
+  padding: `${props.theme.itemPadding * 2}px`,
   
   userSelect: 'none'
 }));

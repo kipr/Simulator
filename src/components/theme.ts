@@ -25,6 +25,7 @@ export const BLUE: ButtonColor = Object.freeze({
 export interface Theme {
   foreground: 'white' | 'black';
   backgroundColor: string;
+  transparentBackgroundColor: (a: number) => string;
   color: string;
   borderColor: string;
   borderRadius: number;
@@ -49,6 +50,7 @@ export interface Theme {
 export const COMMON: Theme = {
   foreground: undefined,
   backgroundColor: undefined,
+  transparentBackgroundColor: undefined,
   color: undefined,
   borderColor: undefined,
   borderRadius: 10,
@@ -75,6 +77,7 @@ export const LIGHT: Theme = {
   foreground: 'white',
   color: '#000',
   backgroundColor: '#fff',
+  transparentBackgroundColor: a => `rgba(255, 255, 255, ${a})`,
   switch: {
     on: {
       primary: 'rgb(0, 0, 0)',
@@ -94,6 +97,7 @@ export const DARK: Theme = {
   foreground: 'black',
   color: '#fff',
   backgroundColor: '#212121',
+  transparentBackgroundColor: a => `rgba(${0x21}, ${0x21}, ${0x21}, ${a})`,
   borderColor: '#323232',
   switch: {
     on: {

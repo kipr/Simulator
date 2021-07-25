@@ -6,8 +6,6 @@ import { ThemeProps } from './theme';
 export interface FieldProps extends ThemeProps, StyleProps {
   name: string;
   children: React.ReactNode;
-
-  nameWidth?: number | undefined;
 }
 
 type Props = FieldProps;
@@ -16,11 +14,13 @@ const Container = styled('div', {
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
-  width: '100%'
+  width: '100%',
+  fontSize: '14px'
 });
 
-const NameLabel = styled('span', (props: { width?: number }) => ({
-  width: `${props.width || 80}px`,
+const NameLabel = styled('span', (props: { $long?: boolean; }) => ({
+  width: props.$long ? '140px' : `70px`,
+  minWidth: '70px',
   userSelect: 'none',
   fontWeight: 400,
 }));
@@ -32,11 +32,11 @@ export class Field extends React.PureComponent<Props> {
 
   render() {
     const { props } = this;
-    const { theme, style, className, name, children, nameWidth } = props;
+    const { theme, style, className, name, children } = props;
   
     return (
       <Container style={style} className={className}>
-        <NameLabel width={nameWidth}>{name}</NameLabel>
+        <NameLabel $long={name.length > 10}>{name}</NameLabel>
         {children}
       </Container>
     );

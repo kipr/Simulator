@@ -1,3 +1,4 @@
+import defaultItems from "../../items/defaultItems";
 import { Item, Scene } from "../State";
 
 export namespace SceneAction {
@@ -52,13 +53,41 @@ export namespace SceneAction {
     type: 'set-item-batch',
     ...params
   });
+
+  export interface SelectItem {
+    type: 'select-item';
+    id?: string;
+  }
+
+  export type SelectItemParams = Omit<SelectItem, 'type'>;
+
+  export const selectItem = (params: SelectItemParams): SelectItem => ({
+    type: 'select-item',
+    ...params
+  });
+
+  export interface UnselectAll {
+    type: 'unselect-all';
+  }
+
+  export const UNSELECT_ALL: UnselectAll = { type: 'unselect-all' };
 }
 
-export type SceneAction = SceneAction.AddItem | SceneAction.RemoveItem | SceneAction.SetItem | SceneAction.SetItemBatch;
+export type SceneAction = (
+  SceneAction.AddItem |
+  SceneAction.RemoveItem |
+  SceneAction.SetItem |
+  SceneAction.SetItemBatch |
+  SceneAction.SelectItem |
+  SceneAction.UnselectAll
+);
 
 export const DEFAULT_SCENE: Scene = {
-  itemOrdering: [],
-  items: {},
+  itemOrdering: Object.keys(defaultItems),
+  items: {
+    ...defaultItems
+  },
+  selectedItem: undefined
 };
 
 export const reduceScene = (state: Scene = DEFAULT_SCENE, action: SceneAction) => {
@@ -99,7 +128,17 @@ export const reduceScene = (state: Scene = DEFAULT_SCENE, action: SceneAction) =
           ...state.items,
           ...action.items,
         },
-      };        
+      };
+    case 'select-item':
+      return {
+        ...state,
+        selectedItem: action.id,
+      };
+    case 'unselect-all':
+      return {
+        ...state,
+        selectedItem: undefined,
+      };
     default:
       return state;
   }
