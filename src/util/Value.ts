@@ -182,7 +182,7 @@ export namespace Distance {
   export const toInchesValue = (distance: Distance): number => toInches(distance).value;
 
   export const toType = (distance: Distance, newType: Type): Distance => {
-    switch (distance.type) {
+    switch (newType) {
       case Type.Meters: return toMeters(distance);
       case Type.Centimeters: return toCentimeters(distance);
       case Type.Feet: return toFeet(distance);
@@ -314,7 +314,7 @@ export namespace Mass {
   export const toOuncesValue = (mass: Mass): number => toOunces(mass).value;
 
   export const toType = (mass: Mass, newType: Type): Mass => {
-    switch (mass.type) {
+    switch (newType) {
       case Type.Grams: return toGrams(mass);
       case Type.Kilograms: return toKilograms(mass);
       case Type.Pounds: return toPounds(mass);

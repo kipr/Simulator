@@ -58,6 +58,7 @@ type Props = SectionProps;
 
 class Section extends React.PureComponent<Props> {
   private onCollapseClick_ = (event: React.MouseEvent<HTMLSpanElement>) => {
+    if (!this.props.onCollapsedChange) return;
     this.props.onCollapsedChange(!this.props.collapsed);
   };
 

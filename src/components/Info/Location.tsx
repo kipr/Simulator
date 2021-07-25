@@ -9,6 +9,7 @@ import { Spacer } from '../common';
 import { Switch } from '../Switch';
 import Button from '../Button';
 import { RobotPosition } from '../../RobotPosition';
+import deepNeq from '../../deepNeq';
 
 export interface SimulationProps extends ThemeProps, StyleProps {
   robotStartPosition: RobotPosition;
@@ -37,28 +38,32 @@ const SENSOR_NOISE = StyledText.text({
 export class Location extends React.PureComponent<Props> {
   private onXChange_ = (x: Value) => {
     const xDistance = Value.toDistance(x);
-    if (xDistance.value === this.props.robotStartPosition.x.value) return;
+    if (!deepNeq(xDistance, this.props.robotStartPosition.x)) return;
+
 
     this.props.onSetRobotStartPosition({ ...this.props.robotStartPosition, x: xDistance });
   };
 
   private onYChange_ = (y: Value) => {
     const yDistance = Value.toDistance(y);
-    if (yDistance.value === this.props.robotStartPosition.y.value) return;
+    if (!deepNeq(yDistance, this.props.robotStartPosition.y)) return;
 
     this.props.onSetRobotStartPosition({ ...this.props.robotStartPosition, y: yDistance });
   };
 
   private onZChange_ = (z: Value) => {
     const zDistance = Value.toDistance(z);
-    if (zDistance.value === this.props.robotStartPosition.z.value) return;
+    if (!deepNeq(zDistance, this.props.robotStartPosition.z)) return;
+
+
 
     this.props.onSetRobotStartPosition({ ...this.props.robotStartPosition, z: zDistance });
   };
 
   private onThetaChange_ = (theta: Value) => {
     const angle = Value.toAngle(theta);
-    if (angle.value === this.props.robotStartPosition.theta.value) return;
+    if (!deepNeq(angle, this.props.robotStartPosition.theta)) return;
+
 
     this.props.onSetRobotStartPosition({ ...this.props.robotStartPosition, theta: angle });
   };

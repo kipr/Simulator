@@ -16,6 +16,7 @@ interface ValueEditState {
   input: string;
   hasFocus: boolean;
   valid: boolean;
+  unitFocus: boolean;
 }
 
 type Props = ValueEditProps;
@@ -51,19 +52,18 @@ const Input = styled('input', (props: ThemeProps) => ({
   borderTop: 'none',
   borderBottom: 'none',
   transition: 'background-color 0.2s',
+  userSelect: 'auto'
   
 }));
 
-const UnitLabel = styled('span', (props: ThemeProps) => ({
-  userSelect: 'none',
-  minWidth: '80px',
-  textAlign: 'center',
-  
-  padding: `${props.theme.itemPadding * 2}px`,
+const UnitContainer = styled('div', (props: ThemeProps) => ({
+  display: 'relative',
+  width: '120px',
+  overflow: 'visible'
 }));
 
 const StyledComboBox = styled(ComboBox, (props: ThemeProps) => ({
-  width: '120px'
+  width: '120px',
 }));
 
 const NUMBER_REGEX = /^[+-]?([0-9]*[.])?[0-9]+$/;
@@ -103,12 +103,13 @@ export class ValueEdit extends React.PureComponent<Props, State> {
       input: `${Value.value(props.value)}`,
       hasFocus: false,
       valid: true,
+      unitFocus: false
     };
   }
 
   static getDerivedStateFromProps(props: Props, state: State) {
     if (state.hasFocus || !state.valid) return { input: state.input };
-    return { input: `${Value.value(props.value)}` };
+    return { input: `${Math.round(Value.value(props.value) * 1000) / 1000}` };
   }
 
   private onInputChange_ = (event: React.SyntheticEvent<HTMLInputElement>) => {
@@ -148,29 +149,51 @@ export class ValueEdit extends React.PureComponent<Props, State> {
 
     let nextValue = value;
     switch (value.type) {
-      case Value.Type.Angle: nextValue = Value.angle(Angle.toType(value.angle, option.data as Angle.Type)); break;
-      case Value.Type.Distance: nextValue = Value.distance(Distance.toType(value.distance, option.data as Distance.Type)); break;
-      case Value.Type.Mass: nextValue = Value.mass(Mass.toType(value.mass, option.data as Mass.Type)); break;
+      case Value.Type.Angle: {
+        nextValue = Value.angle(Angle.toType(value.angle, option.data as Angle.Type));
+        break;
+      }
+      case Value.Type.Distance: {
+        nextValue = Value.distance(Distance.toType(value.distance, option.data as Distance.Type));
+        break;
+      }
+      case Value.Type.Mass: {
+        nextValue = Value.mass(Mass.toType(value.mass, option.data as Mass.Type));
+        break;
+      }
       default: break;
     }
 
+
     this.props.onValueChange(nextValue);
+  };
+
+  private onUnitFocusChange_ = (focus: boolean) => {
+    this.setState({
+      unitFocus: focus,
+    });
+  };
+
+  private unitRef_: ComboBox;
+  private bindUnitRef_ = (ref: ComboBox) => {
+    if (this.unitRef_) this.unitRef_.onFocusChange = undefined;
+    this.unitRef_ = ref;
+    if (this.unitRef_) this.unitRef_.onFocusChange = this.onUnitFocusChange_;
   };
   
   render() {
     const { props, state } = this;
     const { theme, style, className, name, value } = props;
-    const { input } = state;
+    const { input, unitFocus } = state;
     const errorStyle: React.CSSProperties = {
       backgroundColor: !state.valid ? `rgba(255, 0, 0, 0.2)` : undefined,
     };
 
     const unitOptions = VALUE_OPTIONS[value.type];
-    console.log(unitOptions);
 
     return (
       <Field name={name} theme={theme} className={className} style={style}>
-        <SubContainer theme={theme}>
+        <SubContainer theme={theme} style={{ borderBottomRightRadius: unitFocus ? 0 : undefined }}>
           <Input
             type='text'
             style={errorStyle}
@@ -182,7 +205,15 @@ export class ValueEdit extends React.PureComponent<Props, State> {
             onKeyDown={this.onKeyDown_}
           />
           {value.type !== Value.Type.Unitless
-            ? <StyledComboBox theme={theme} options={unitOptions} onSelect={this.onUnitSelect_} index={Value.subType(value)} minimal />
+            ? <StyledComboBox
+                innerRef={this.bindUnitRef_}
+                theme={theme}
+                options={unitOptions}
+                onSelect={this.onUnitSelect_}
+                index={Value.subType(value)}
+                minimal
+                widthTweak={2}
+              />
             : undefined
           }
         </SubContainer>

@@ -69,10 +69,6 @@ const ICON_STYLE: React.CSSProperties = {
   marginRight: '5px'
 };
 
-const LOCATION_NAME = StyledText.text({
-  text: 'Location',
-});
-
 const SIMULATION_NAME = StyledText.text({
   text: 'Simulation',
 });
@@ -101,6 +97,15 @@ const DIGITAL_NAME = StyledText.text({
   text: 'Digital Sensors',
 });
 
+const ResetIcon = styled(Fa, ({ theme }: ThemeProps) => ({
+  marginLeft: `${theme.itemPadding * 2}px`,
+  opacity: 0.5,
+  ':hover': {
+    opacity: 1.0
+  },
+  transition: 'opacity 0.2s'
+}));
+
 class Info extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -119,6 +124,12 @@ class Info extends React.PureComponent<Props, State> {
     });
   };
 
+  private onResetLocationClick_ = (event: React.MouseEvent<HTMLSpanElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    this.props.onSetRobotStartPosition(this.props.robotStartPosition);
+  };
+
   render() {
     const { props, state } = this;
     const {
@@ -129,6 +140,22 @@ class Info extends React.PureComponent<Props, State> {
       robotStartPosition,
     } = props;
     const { collapsed } = state;
+
+    const locationName = StyledText.compose({
+      items: [
+        StyledText.text({
+          text: 'Location',
+        }),
+        StyledText.component({
+          component: ResetIcon,
+          props: {
+            icon: 'sync',
+            onClick: this.onResetLocationClick_,
+            theme
+          }
+        })
+      ]
+    });
 
     const servos = robotState.servoPositions.map((value, i) => (
       <Row key={`servo-pos-${i}`} theme={theme}>
@@ -164,7 +191,7 @@ class Info extends React.PureComponent<Props, State> {
       <ScrollArea theme={theme} style={{ flex: '1 1' }}>
         <Container theme={theme} style={style} className={className}>
           <StyledSection
-            name={LOCATION_NAME}
+            name={locationName}
             theme={theme}
             onCollapsedChange={this.onCollapsedChange_('location')}
             collapsed={collapsed['location']}

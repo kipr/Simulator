@@ -1,72 +1,56 @@
 import * as React from "react";
 import { styled } from "styletron-react";
+import { ReferenceFrame, Rotation } from "../../unit-math";
 import { Item } from "../../state";
+import { Angle, Distance, Mass, Value } from "../../util";
+import ComboBox from "../ComboBox";
 import { Dialog } from "../Dialog";
 import DialogBar from "../DialogBar";
 import Field from "../Field";
 import Input from "../Input";
+import ScrollArea from "../ScrollArea";
+import Section from "../Section";
 import { ThemeProps } from "../theme";
+import ValueEdit from "../ValueEdit";
+import { AngleAxis, Euler } from "../../math";
+import ItemSettings from "./ItemSettings";
 
 export type ItemSettingsAcceptance = Item;
 
 export interface ItemSettingsDialogProps extends ThemeProps {
   item: Item;
-  onAccept: (acceptance: ItemSettingsAcceptance) => void;
+
+  onChange: (item: Item) => void;
   onClose: () => void;
 }
 
 interface ItemSettingsDialogState {
-  item: Item;
 }
 
 type Props = ItemSettingsDialogProps;
 type State = ItemSettingsDialogState;
 
-const StyledField = styled(Field, {
-  width: '100%'
-});
-
-const Container = styled('div', (props: ThemeProps) => ({
-  display: 'flex',
-  flexDirection: 'column',
+const StyledScrollArea = styled(ScrollArea, (props: ThemeProps) => ({
+  minHeight: '300px',
   flex: '1 1',
-  padding: `${props.theme.itemPadding * 2}px`
 }));
-
 
 class ItemSettingsDialog extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      item: props.item
     };
   }
-  private onAccept_ = () => {
-    this.props.onAccept(this.state.item);
-  };
 
-  private onNameChange_ = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      item: {
-        ...this.state.item,
-        name: e.currentTarget.value
-      }
-    });
-  };
-  
   render() {
     const { props, state } = this;
-    const { theme, onAccept, onClose } = props;
-    const { item } = state;
+    const { theme, onClose, onChange, item } = props;
 
     return (
-      <Dialog theme={theme} name='Item Settings' onClose={onClose}>
-        <Container theme={theme}>
-          <StyledField name='Name' theme={theme}>
-            <Input theme={theme} type='text' value={item.name} onChange={this.onNameChange_} />
-          </StyledField>
-        </Container>
-        <DialogBar theme={theme} onAccept={this.onAccept_} />
+      <Dialog theme={theme} name={`${item.name || ''} Settings`} onClose={onClose}>
+        <StyledScrollArea theme={theme}>
+          <ItemSettings theme={theme} item={item} onItemChange={onChange} />
+        </StyledScrollArea>
       </Dialog>
     );
   }

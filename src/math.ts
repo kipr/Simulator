@@ -112,80 +112,19 @@ export interface Euler {
 export namespace Euler {
   export type Order = 'xyz' | 'xzy' | 'yxz' | 'yzx' | 'zxy' | 'zyx';
 
-  export const IDENTITY: Euler = { x: 0, y: 0, z: 0, order: 'xyz' };
+  export const IDENTITY: Euler = { x: 0, y: 0, z: 0, order: 'yzx' };
 
   export const create = (x: number, y: number, z: number, order?: Euler.Order): Euler => ({ x, y, z, order });
 
   export const fromQuaternion = (q: Quaternion): Euler => {
-    const x = Math.atan2(2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
-    const y = Math.asin(2 * (q.w * q.y - q.z * q.x));
-    const z = Math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
-    return { x, y, z, order: 'xyz' };
+    // I'm cheating here... FIXME.
+    const q1 = new Babylon.Quaternion(q.x, q.y, q.z, q.w);
+    const e = q1.toEulerAngles();
+    return { x: e.x, y: e.y, z: e.z, order: 'yzx' };
   };
 
   export const toQuaternion = (euler: Euler): Quaternion => {
-    const x = euler.x * 0.5;
-    const y = euler.y * 0.5;
-    const z = euler.z * 0.5;
-    const order = euler.order || 'xyz';
-
-    const cos = Math.cos;
-    const sin = Math.sin;
-
-    const q = {
-      x: 0,
-      y: 0,
-      z: 0,
-      w: 1
-    };
-
-    switch (order) {
-      case 'xyz':
-        q.x = cos(x) * cos(y) * cos(z) - sin(x) * sin(y) * sin(z);
-        q.y = sin(x) * cos(y) * cos(z) + cos(x) * sin(y) * sin(z);
-        q.z = cos(x) * sin(y) * cos(z) - cos(y) * sin(x) * sin(z);
-        q.w = cos(x) * cos(y) * sin(z) + cos(z) * sin(x) * sin(y);
-        break;
-      case 'xzy':
-        q.x = cos(x) * cos(y) * cos(z) - sin(x) * sin(z) * sin(y);
-        q.y = sin(x) * cos(y) * cos(z) + cos(x) * sin(z) * sin(y);
-        q.z = cos(x) * sin(y) * cos(z) - cos(y) * sin(x) * sin(z);
-        q.w = cos(x) * cos(y) * sin(z) + cos(z) * sin(x) * sin(y);
-        break;
-      case 'yxz':
-        q.x = cos(y) * cos(x) * cos(z) - sin(y) * sin(z) * sin(x);
-        q.y = sin(y) * cos(x) * cos(z) + cos(y) * sin(z) * sin(x);
-        q.z = cos(y) * sin(x) * cos(z) - cos(x) * sin(y) * sin(z);
-        q.w = cos(y) * cos(x) * sin(z) + cos(z) * sin(x) * sin(y);
-        break;
-      case 'yzx':
-        q.x = cos(y) * cos(z) * cos(x) - sin(y) * sin(x) * sin(z);
-        q.y = sin(y) * cos(z) * cos(x) + cos(y) * sin(x) * sin(z);
-        q.z = cos(y) * sin(z) * cos(x) - cos(z) * sin(x) * sin(y);
-        q.w = cos(y) * cos(z) * sin(x) + cos(x) * sin(y) * sin(z);
-        break;
-      case 'zxy':
-        q.x = cos(z) * cos(x) * cos(y) - sin(z) * sin(y) * sin(x);
-        q.y = sin(z) * cos(x) * cos(y) + cos(z) * sin(y) * sin(x);
-        q.z = cos(z) * sin(x) * cos(y) - cos(x) * sin(z) * sin(y);
-        q.w = cos(z) * cos(x) * sin(y) + cos(y) * sin(x) * sin(z);
-        break;
-      case 'zyx':
-        q.x = cos(z) * cos(y) * cos(x) - sin(z) * sin(x) * sin(y);
-        q.y = sin(z) * cos(y) * cos(x) + cos(z) * sin(x) * sin(y);
-        q.z = cos(z) * sin(y) * cos(x) - cos(y) * sin(x) * sin(z);
-        q.w = cos(z) * cos(y) * sin(x) + cos(x) * sin(y) * sin(z);
-        break;
-      case 'zxy':
-        q.x = cos(z) * cos(y) * cos(x) - sin(z) * sin(x) * sin(y);
-        q.y = sin(z) * cos(y) * cos(x) + cos(z) * sin(x) * sin(y);
-        q.z = cos(z) * sin(y) * cos(x) - cos(y) * sin(x) * sin(z);
-        q.w = cos(z) * cos(y) * sin(x) + cos(x) * sin(y) * sin(z);
-        break;
-      default:
-        throw new Error('Invalid order: ' + order);
-    }
-    return q;
+    return Quaternion.fromBabylon(Babylon.Quaternion.FromEulerAngles(euler.x, euler.y, euler.z));
   };
 }
 
@@ -196,14 +135,15 @@ export interface AngleAxis {
 
 export namespace AngleAxis {
   export const fromQuaternion = (q: Quaternion): AngleAxis => {
-    const angle = 2 * Math.acos(q.w);
-    const s = Math.sqrt(1 - q.w * q.w);
+    let s = Math.sqrt(1 - q.w * q.w);
+    const angle = 2 * Math.atan2(s, Math.abs(q.w));
     if (s < 0.0001) {
       return {
-        angle,
+        angle: 0,
         axis: Vector3.create(1, 0, 0)
       };
     }
+    if (q.w < 0) s = -s;
     return {
       angle,
       axis: Vector3.create(q.x / s, q.y / s, q.z / s)
@@ -220,6 +160,10 @@ export namespace AngleAxis {
     const s = Math.sin(angle / 2);
     const c = Math.cos(angle / 2);
     return Quaternion.create(axis.x * s, axis.y * s, axis.z * s, c);
+  };
+
+  export const multiply = (a: AngleAxis, b: AngleAxis): AngleAxis => {
+    return fromQuaternion(Quaternion.multiply(toQuaternion(a), toQuaternion(b)));
   };
 
   export const create = (angle: number, axis: Vector3): AngleAxis => ({

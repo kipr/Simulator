@@ -155,18 +155,12 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
     
 
     this.setState({ modal: UiState.NONE }, () => {
-      this.props.onItemAdd(uuid.v4(), {
-        type: ReduxItem.Type.Can,
-        name: acceptance.name,
-        origin: ReferenceFrame.IDENTITY
-      });
+      this.props.onItemAdd(uuid.v4(), acceptance);
     });
   };
 
   private onItemSettingsAccept_ = (id: string) => (acceptance: ItemSettingsAcceptance) => {
-    this.setState({ modal: UiState.NONE }, () => {
-      this.props.onItemChange(id, acceptance);
-    });
+    this.props.onItemChange(id, acceptance);
   };
 
   private onAddItemClick_ = () => this.setState({ modal: UiState.ADD_ITEM });
@@ -250,7 +244,7 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
           </Container>
         </ScrollArea>
         {modal.type === UiState.Type.AddItem && <AddItemDialog theme={theme} onClose={this.onModalClose_} onAccept={this.onAddItemAccept_} />}
-        {modal.type === UiState.Type.ItemSettings && <ItemSettingsDialog item={items[modal.id]} theme={theme} onClose={this.onModalClose_} onAccept={this.onItemSettingsAccept_(modal.id)} />}
+        {modal.type === UiState.Type.ItemSettings && <ItemSettingsDialog item={items[modal.id]} theme={theme} onClose={this.onModalClose_} onChange={this.onItemSettingsAccept_(modal.id)} />}
       </>
     );
   }

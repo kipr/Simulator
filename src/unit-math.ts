@@ -37,6 +37,14 @@ export namespace Vector3 {
     y: { type, value: raw.y },
     z: { type, value: raw.z },
   });
+
+  export const toTypeGranular = (v: Vector3, x: Distance.Type, y: Distance.Type, z: Distance.Type): Vector3 => {
+    return {
+      x: Distance.toType(v.x, x),
+      y: Distance.toType(v.y, y),
+      z: Distance.toType(v.z, z),
+    };
+  };
 }
 
 
@@ -61,14 +69,14 @@ export namespace Rotation {
       x: Angle.toType(Angle.radians(0), type),
       y: Angle.toType(Angle.radians(0), type),
       z: Angle.toType(Angle.radians(0), type),
-      order: 'xyz',
+      order: 'yzx',
     });
 
     export const toRaw = (e: Euler) => RawEuler.create(
       Angle.toType(e.x, Angle.Type.Radians).value,
       Angle.toType(e.y, Angle.Type.Radians).value,
       Angle.toType(e.z, Angle.Type.Radians).value,
-      e.order || 'xyz'
+      e.order || 'yzx'
     );
 
     export const fromRaw = (raw: RawEuler): Euler => ({
@@ -76,7 +84,7 @@ export namespace Rotation {
       x: { type: Angle.Type.Radians, value: raw.x },
       y: { type: Angle.Type.Radians, value: raw.y },
       z: { type: Angle.Type.Radians, value: raw.z },
-      order: raw.order || 'xyz',
+      order: raw.order || 'yzx',
     });
   }
   
@@ -134,6 +142,21 @@ export namespace Rotation {
       case Type.AngleAxis: return RawAngleAxis.toQuaternion(AngleAxis.toRaw(rotation));
     }
   };
+
+  export const toType = (rotation: Rotation, type: Type): Rotation => {
+    switch (type) {
+      case Type.Euler: return Euler.fromRaw(RawEuler.fromQuaternion(toRawQuaternion(rotation)));
+      case Type.AngleAxis: return AngleAxis.fromRaw(RawAngleAxis.fromQuaternion(toRawQuaternion(rotation)));
+    }
+  };
+
+  export const fromRawQuaternion = (q: Quaternion, type: Type): Rotation => {
+    switch (type) {
+      case Type.Euler: return Euler.fromRaw(RawEuler.fromQuaternion(q));
+      case Type.AngleAxis: return AngleAxis.fromRaw(RawAngleAxis.fromQuaternion(q));
+    }
+  };
+
 
 }
 

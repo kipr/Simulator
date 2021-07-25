@@ -1,9 +1,9 @@
 import * as Babylon from 'babylonjs';
 import { Quaternion, ReferenceFrame as RawReferenceFrame, Vector3 as RawVector3 } from '../math';
-import { ReferenceFrame } from '../unit-math';
+import { ReferenceFrame, Rotation, Vector3 } from '../unit-math';
 import { Item } from '../state';
 import ItemObject from './ItemObject';
-import { Mass } from '../util';
+import { Distance, Mass } from '../util';
 
 export class Can implements ItemObject {
   private config_: ItemObject.Config<Item.Can>;
@@ -47,9 +47,10 @@ export class Can implements ItemObject {
     this.mesh.material = canMaterial;
     this.mesh.visibility = 0.5;
 
-    const origin = RawReferenceFrame.fill(ReferenceFrame.toRaw(item.origin));
-    this.mesh.position = RawVector3.toBabylon(origin.position);
-    this.mesh.rotationQuaternion = Quaternion.toBabylon(origin.orientation);
+    const position = item.origin.position ? Vector3.toRaw(item.origin.position, Distance.Type.Centimeters) : RawVector3.ZERO;
+    const orientation = item.origin.orientation ? Rotation.toRawQuaternion(item.origin.orientation) : Quaternion.IDENTITY;
+    this.mesh.position = RawVector3.toBabylon(position);
+    this.mesh.rotationQuaternion = Quaternion.toBabylon(orientation);
   }
 
   // Used to create physics impostor of mesh in scene and make opaque

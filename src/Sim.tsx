@@ -19,9 +19,9 @@ import Dict from './Dict';
 import { SurfaceState } from './SurfaceState';
 
 import { Quaternion, ReferenceFrame, Vector2, Vector3 } from './math';
-import { ReferenceFrame as UnitReferenceFrame, Vector3 as UnitVector3 } from './unit-math';
+import { ReferenceFrame as UnitReferenceFrame, Rotation, Vector3 as UnitVector3 } from './unit-math';
 import { RobotPosition } from './RobotPosition';
-import { Angle, Distance } from './util';
+import { Angle, Distance, Mass } from './util';
 
 import store, { State, Item } from './state';
 import { Unsubscribe } from 'redux';
@@ -30,25 +30,6 @@ import { SceneAction } from './state/reducer';
 import { Gizmo } from 'babylonjs/Gizmos/gizmo';
 
 export let ACTIVE_SPACE: Space;
-
-// We use Babylon's GizmoManager for item position and rotation.
-// Unfortunately, it doesn't support detaching from all meshes.
-// We need to monkey patch it.
-
-(Babylon.GizmoManager as any).detachFromMesh = function() {
-  if (this._attachedMesh) this._attachedMesh.removeBehavior(this.boundingBoxDragBehavior);
-  if (this._attachedNode) this._attachedNode.removeBehavior(this.boundingBoxDragBehavior);
-  
-  this._attachedMesh = null;
-  this._attachedNode = null;
-
-  for (let key in this.gizmos) {
-    const gizmo = this.gizmos[key];
-    if (gizmo && this._gizmosEnabled[key]) {
-      gizmo.attachedMesh = null;
-    }
-  }
-};
 
 export class Space {
   private static instance: Space;
@@ -137,8 +118,6 @@ export class Space {
     if (this.debounceUpdate_) return;
     
     const visibleItems = Dict.filter(state.scene.items, item => item.visible);
-
-    console.log('on store change');
     const lastItems = this.lastState_ ? this.lastState_.scene.items : {};
 
     for (const id of state.scene.itemOrdering) {
@@ -158,20 +137,32 @@ export class Space {
         continue;
       }
 
-      console.log(id);
-
       // We don't want to update a item if it's the same as the last time,
       // as physics may have changed it.
       if (this.lastState_ && id in lastItems && !deepNeq(lastItems[id], item)) continue;
-
 
       if (meshName === undefined) {
         this.itemMap_.set(id, this.createItem(item));
       } else {
         const mesh = this.scene.getMeshByID(meshName);
-        const origin = ReferenceFrame.fill(UnitReferenceFrame.toRaw(item.origin));
-        mesh.position = Vector3.toBabylon(origin.position);
-        mesh.rotationQuaternion = Quaternion.toBabylon(origin.orientation);
+        const { position, orientation } = item.origin;
+        if (position) {
+          const rawPosition = UnitVector3.toRaw(position, Distance.Type.Centimeters);
+          mesh.position = Vector3.toBabylon(rawPosition);
+        }
+
+        if (orientation) {
+          const rawOrientation = Rotation.toRawQuaternion(orientation);
+          mesh.rotationQuaternion = Quaternion.toBabylon(rawOrientation);
+        }
+
+        if (item.friction && mesh.physicsImpostor) {
+          mesh.physicsImpostor.friction = item.friction.value;
+        }
+
+        if (item.mass && mesh.physicsImpostor) {
+          mesh.physicsImpostor.setMass(Mass.toGramsValue(item.mass));
+        }
       }
     }
 
@@ -188,7 +179,6 @@ export class Space {
     }
 
     if ((this.lastState_ ? this.lastState_.scene.selectedItem : undefined) !== state.scene.selectedItem) {
-      console.log(this.lastState_, state);
       if (this.lastState_.scene.selectedItem !== undefined) {
         const meshName = this.itemMap_.get(this.lastState_.scene.selectedItem);
         if (meshName !== undefined) {
@@ -655,18 +645,22 @@ export class Space {
     
     const nextItems = {};
     // Sync items
-    for (const id in this.itemMap_) {
-      const meshName = this.itemMap_.get(id);
+    for (const [ id, meshName ] of this.itemMap_) {
       const mesh = this.scene.getMeshByID(meshName);
       
       const item = items[id];
-      
+
+      const { position, orientation } = item.origin;
 
       nextItems[id] = {
         ...item,
         origin: {
-          position: Vector3.fromBabylon(mesh.position),
-          orientation: Quaternion.fromBabylon(mesh.rotationQuaternion),
+          position: position
+            ? UnitVector3.toTypeGranular(UnitVector3.fromRaw(Vector3.fromBabylon(mesh.position), Distance.Type.Centimeters), position.x.type, position.y.type, position.z.type)
+            : UnitVector3.fromRaw(Vector3.fromBabylon(mesh.position), Distance.Type.Centimeters),
+          orientation: orientation
+            ? Rotation.fromRawQuaternion(Quaternion.fromBabylon(mesh.rotationQuaternion), orientation.type)
+            : Rotation.fromRawQuaternion(Quaternion.fromBabylon(mesh.rotationQuaternion), Rotation.Type.Euler),
         },
       };
     }
@@ -709,8 +703,8 @@ export class Space {
     // Set the position and rotation
     // Assuming that position is already in cm/radians. Eventually we'll need to convert depending on the incoming units
     const { x, y, z, theta } = position;
-    resetTransformNode.setAbsolutePosition(new Babylon.Vector3(x.value, y.value, z.value).addInPlace(this.robotOffset));
-    resetTransformNode.rotationQuaternion = Babylon.Quaternion.RotationAxis(Babylon.Vector3.Up(), Babylon.Tools.ToRadians(theta.value));
+    resetTransformNode.setAbsolutePosition(new Babylon.Vector3(Distance.toCentimetersValue(x), Distance.toCentimetersValue(y), Distance.toCentimetersValue(z)).addInPlace(this.robotOffset));
+    resetTransformNode.rotationQuaternion = Babylon.Quaternion.RotationAxis(Babylon.Vector3.Up(), Angle.toRadiansValue(theta));
 
     // Destroy the transform node
     for (const rootMesh of rootMeshes) {

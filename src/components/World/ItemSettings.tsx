@@ -1,8 +1,8 @@
 import * as React from "react";
 import { styled } from "styletron-react";
-import { ReferenceFrame, Rotation } from "../../unit-math";
+import { ReferenceFrame, Rotation, Vector3 } from "../../unit-math";
 import { Item } from "../../state";
-import { Angle, Distance, Mass, Value } from "../../util";
+import { Angle, Distance, Mass, UnitlessValue, Value } from "../../util";
 import ComboBox from "../ComboBox";
 import { Dialog } from "../Dialog";
 import DialogBar from "../DialogBar";
@@ -135,10 +135,10 @@ class ItemSettings extends React.PureComponent<Props, State> {
     });
   };
 
-  private onTypeSelect_ = (index: number) => {
+  private onTypeSelect_ = (index: number, option: ComboBox.Option) => {
     this.props.onItemChange({
       ...this.props.item,
-      type: index
+      type: option.data as Item.Type
     });
   };
 
@@ -200,7 +200,7 @@ class ItemSettings extends React.PureComponent<Props, State> {
       origin: {
         ...item.origin,
         orientation: {
-          ...item.origin.orientation as Rotation.Euler,
+          ...(item.origin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
           x: Value.toAngle(value)
         }
       }
@@ -214,7 +214,7 @@ class ItemSettings extends React.PureComponent<Props, State> {
       origin: {
         ...item.origin,
         orientation: {
-          ...item.origin.orientation as Rotation.Euler,
+          ...(item.origin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
           y: Value.toAngle(value)
         }
       }
@@ -228,7 +228,7 @@ class ItemSettings extends React.PureComponent<Props, State> {
       origin: {
         ...item.origin,
         orientation: {
-          ...item.origin.orientation as Rotation.Euler,
+          ...(item.origin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
           z: Value.toAngle(value)
         }
       }
@@ -300,12 +300,33 @@ class ItemSettings extends React.PureComponent<Props, State> {
     });
   };
 
+  private onMassChange_ = (value: Value) => {
+    const { item } = this.props;
+    this.props.onItemChange({
+      ...item,
+      mass: Value.toMass(value)
+    });
+  };
+
+  private onFrictionChange_ = (value: Value) => {
+    const { item } = this.props;
+    this.props.onItemChange({
+      ...item,
+      friction: Value.toUnitless(value)
+    });
+  };
+
   render() {
     const { props, state } = this;
     const { theme, item } = props;
     const { collapsed } = state;
 
-    const { friction, mass, origin } = item;
+    const { origin } = item;
+
+    const position = origin.position || Vector3.zero(Distance.Type.Centimeters);
+    const orientation = origin.orientation || Rotation.Euler.identity(Angle.Type.Degrees);
+    const friction = item.friction ? item.friction : UnitlessValue.create(5);
+    const mass = item.mass ? item.mass : Mass.grams(5);
 
     return (
       <Container theme={theme}>
@@ -325,19 +346,19 @@ class ItemSettings extends React.PureComponent<Props, State> {
         >
           <StyledValueEdit
             name='X'
-            value={Value.distance(item.origin.position.x)}
+            value={Value.distance(position.x)}
             onValueChange={this.onPositionXChange_}
             theme={theme}
           />
           <StyledValueEdit
             name='Y'
-            value={Value.distance(item.origin.position.y)}
+            value={Value.distance(position.y)}
             onValueChange={this.onPositionYChange_}
             theme={theme}
           />
           <StyledValueEdit
             name='Z'
-            value={Value.distance(item.origin.position.z)}
+            value={Value.distance(position.z)}
             onValueChange={this.onPositionZChange_}
             theme={theme}
           />
@@ -349,25 +370,25 @@ class ItemSettings extends React.PureComponent<Props, State> {
           onCollapsedChange={this.onCollapsedChange_('orientation')}
         >
           <StyledField name='Type' theme={theme}>
-            <ComboBox options={ROTATION_TYPES} theme={theme} index={item.origin.orientation.type} onSelect={this.onRotationTypeChange_} />
+            <ComboBox options={ROTATION_TYPES} theme={theme} index={orientation.type} onSelect={this.onRotationTypeChange_} />
           </StyledField>
-          {item.origin.orientation.type === Rotation.Type.Euler ? (
+          {orientation.type === Rotation.Type.Euler ? (
             <>
               <StyledValueEdit
                 name='X'
-                value={Value.angle(item.origin.orientation.x)}
+                value={Value.angle(orientation.x)}
                 onValueChange={this.onOrientationEulerXChange_}
                 theme={theme}
               />
               <StyledValueEdit
                 name='Y'
-                value={Value.angle(item.origin.orientation.y)}
+                value={Value.angle(orientation.y)}
                 onValueChange={this.onOrientationEulerYChange_}
                 theme={theme}
               />
               <StyledValueEdit
                 name='Z'
-                value={Value.angle(item.origin.orientation.z)}
+                value={Value.angle(orientation.z)}
                 onValueChange={this.onOrientationEulerZChange_}
                 theme={theme}
               />
@@ -375,7 +396,7 @@ class ItemSettings extends React.PureComponent<Props, State> {
                 <ComboBox
                   options={EULER_ORDER_OPTIONS}
                   theme={theme}
-                  index={EULER_ORDER_OPTIONS.findIndex(o => (o.data as Euler.Order) === (item.origin.orientation as Rotation.Euler).order)}
+                  index={EULER_ORDER_OPTIONS.findIndex(o => (o.data as Euler.Order) === orientation.order)}
                   onSelect={this.onEulerOrderChange_}
                 />
               </StyledField>
@@ -384,25 +405,25 @@ class ItemSettings extends React.PureComponent<Props, State> {
             <>
               <StyledValueEdit
                 name='X'
-                value={Value.distance(item.origin.orientation.axis.x)}
+                value={Value.distance(orientation.axis.x)}
                 onValueChange={this.onOrientationAngleAxisXChange_}
                 theme={theme}
               />
               <StyledValueEdit
                 name='Y'
-                value={Value.distance(item.origin.orientation.axis.y)}
+                value={Value.distance(orientation.axis.y)}
                 onValueChange={this.onOrientationAngleAxisYChange_}
                 theme={theme}
               />
               <StyledValueEdit
                 name='Z'
-                value={Value.distance(item.origin.orientation.axis.z)}
+                value={Value.distance(orientation.axis.z)}
                 onValueChange={this.onOrientationAngleAxisZChange_}
                 theme={theme}
               />
               <StyledValueEdit
                 name='Angle'
-                value={Value.angle(item.origin.orientation.angle)}
+                value={Value.angle(orientation.angle)}
                 onValueChange={this.onOrientationAngleAxisAngleChange_}
                 theme={theme}
               />
@@ -417,8 +438,8 @@ class ItemSettings extends React.PureComponent<Props, State> {
           onCollapsedChange={this.onCollapsedChange_('physics')}
           noBorder
         >
-          <StyledValueEdit name='Mass' value={Value.mass(mass)} onValueChange={undefined} theme={theme} />
-          <StyledValueEdit name='Friction' value={Value.unitless(friction)} onValueChange={undefined} theme={theme} />
+          <StyledValueEdit name='Mass' value={Value.mass(mass)} onValueChange={this.onMassChange_} theme={theme} />
+          <StyledValueEdit name='Friction' value={Value.unitless(friction)} onValueChange={this.onFrictionChange_} theme={theme} />
         </Section>
         
       </Container>
