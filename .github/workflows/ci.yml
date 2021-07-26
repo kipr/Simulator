@@ -14,20 +14,6 @@ jobs:
       uses: actions/checkout@v2
       with:
         path: simulator
-    - name: Checkout Ivygate
-      uses: actions/checkout@v2
-      with:
-        path: ivygate
-        repository: kipr/ivygate
-    - name: Install Ivygate modules
-      run: yarn install
-      working-directory: ivygate
-    - name: Build Ivygate
-      run: node_modules/.bin/tsc
-      working-directory: ivygate
-    - name: Add Ivygate to Simulator
-      run: yarn add ../ivygate
-      working-directory: simulator
     - name: Install Simulator modules
       run: yarn install
       working-directory: simulator
