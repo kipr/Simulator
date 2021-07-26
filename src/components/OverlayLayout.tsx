@@ -287,10 +287,6 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       onClearConsole,
       surfaceState,
       onSurfaceChange,
-      sensorNoise,
-      onSensorNoiseChange,
-      realisticSensors,
-      onRealisticSensorsChange,
     } = props;
 
     const {
@@ -356,8 +352,8 @@ class OverlayLayout extends React.PureComponent<Props, State> {
             robotState={state}
             itemEnabled={items}
             onRobotStateUpdate={onStateChange}
-            isSensorNoiseEnabled={sensorNoise}
-            isRealisticSensorsEnabled={realisticSensors}
+            isSensorNoiseEnabled={settings.simulationSensorNoise}
+            isRealisticSensorsEnabled={settings.simulationRealisticSensors}
             surfaceState={surfaceState}
           />
         </SimulatorAreaContainer>
@@ -393,10 +389,6 @@ class OverlayLayout extends React.PureComponent<Props, State> {
               robotState={state}
               robotStartPosition={robotStartPosition}
               onSetRobotStartPosition={onSetRobotStartPosition}
-              sensorNoise={sensorNoise}
-              onSensorNoiseChange={onSensorNoiseChange}
-              realisticSensors={realisticSensors}
-              onRealisticSensorsChange={onRealisticSensorsChange}
               theme={theme}
             />
           </InfoWidget>

@@ -22,10 +22,6 @@ export interface LayoutProps extends StyleProps, ThemeProps {
   onClearConsole: () => void;
   surfaceState: SurfaceState;
   onSurfaceChange: (surfaceName: string) => void;
-  sensorNoise: boolean;
-  onSensorNoiseChange: (enabled: boolean) => void;
-  realisticSensors: boolean;
-  onRealisticSensorsChange: (enabled: boolean) => void;
 }
 
 export enum Layout {

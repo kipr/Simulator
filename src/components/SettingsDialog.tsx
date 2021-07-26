@@ -7,7 +7,7 @@ import ScrollArea from './ScrollArea';
 import { Switch } from './Switch';
 import { ThemeProps } from './theme';
 
-type SettingsSection = 'general' | 'editor';
+type SettingsSection = 'simulation' | 'editor';
 
 export interface SettingsDialogProp extends ThemeProps, StyleProps {
   onClose: () => void;
@@ -80,7 +80,7 @@ export class SettingsDialog extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      selectedSection: 'general',
+      selectedSection: 'simulation',
     };
   }
 
@@ -113,14 +113,25 @@ export class SettingsDialog extends React.PureComponent<Props, State> {
       <Dialog theme={theme} name='Settings' onClose={onClose}>
         <Container theme={theme}>
           <SectionsColumn theme={theme}>
-            <SectionName theme={theme} selected={selectedSection === 'general'} onClick={() => this.setSelectedSection('general')}>General</SectionName>
+            <SectionName theme={theme} selected={selectedSection === 'simulation'} onClick={() => this.setSelectedSection('simulation')}>Simulation</SectionName>
             <SectionName theme={theme} selected={selectedSection === 'editor'} onClick={() => this.setSelectedSection('editor')}>Editor</SectionName>
           </SectionsColumn>
           <SettingsColumn theme={theme}>
-            {selectedSection === 'general' && (
-              <SettingContainer theme={theme}>
-                <SettingInfoText>No general settings available.</SettingInfoText>
-              </SettingContainer>
+            {selectedSection === 'simulation' && (
+              <>
+                {this.createBooleanSetting(
+                  'Sensor noise',
+                  'Controls whether sensor outputs are affected by random noise',
+                  (settings: Settings) => settings.simulationSensorNoise,
+                  (newValue: boolean) => ({ simulationSensorNoise: newValue })
+                )}
+                {this.createBooleanSetting(
+                  'Realistic sensors',
+                  'Controls whether sensors behave like real-world sensors instead of like ideal sensors. For example, real-world ET sensors are nonlinear',
+                  (settings: Settings) => settings.simulationRealisticSensors,
+                  (newValue: boolean) => ({ simulationRealisticSensors: newValue })
+                )}
+              </>
             )}
             {selectedSection === 'editor' && (
               <>
