@@ -16,6 +16,7 @@ export interface EditorProps extends StyleProps, ThemeProps {
   code: string;
   onCodeChange: (code: string) => void;
   messages?: Message[];
+  autocomplete: boolean;
 }
 
 interface EditorState {
@@ -51,10 +52,10 @@ class Editor extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { style, className, theme, code, onCodeChange, messages } = this.props;
+    const { style, className, theme, code, onCodeChange, messages, autocomplete } = this.props;
     return (
       <Container theme={theme} style={style} className={className}>
-        <Ivygate ref={this.bindIvygate_} code={code} language="c" messages={messages} onCodeChange={onCodeChange} />
+        <Ivygate ref={this.bindIvygate_} code={code} language="c" messages={messages} onCodeChange={onCodeChange} autocomplete={autocomplete} />
       </Container>
     );
   }

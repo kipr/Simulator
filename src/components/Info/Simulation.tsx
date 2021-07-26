@@ -12,12 +12,8 @@ import { RobotPosition } from '../../RobotPosition';
 
 export interface SimulationProps extends ThemeProps, StyleProps {
   robotStartPosition: RobotPosition;
-  sensorNoise: boolean;
-  realisticSensors: boolean;
 
   onSetRobotStartPosition: (position: RobotPosition) => void;
-  onSensorNoiseChange: (enabled: boolean) => void;
-  onRealisticSensorsChange: (enabled: boolean) => void;
 }
 
 type Props = SimulationProps;
@@ -57,11 +53,6 @@ const NAME_STYLE: React.CSSProperties = {
   fontSize: '1.2em'
 };
 
-const SENSOR_NOISE = StyledText.text({
-  text: 'Sensor Noise',
-  style: NAME_STYLE
-});
-
 export class Simulation extends React.PureComponent<Props> {
   private onXChange_ = (x: Value) => {
     const xDistance = Value.toDistance(x);
@@ -91,21 +82,13 @@ export class Simulation extends React.PureComponent<Props> {
     this.props.onSetRobotStartPosition({ ...this.props.robotStartPosition, theta: angle });
   };
 
-  private onSensorNoiseChanged_ = (enabled: boolean) => {
-    this.props.onSensorNoiseChange(enabled);
-  };
-
-  private onRealisticSensorsChanged_ = (enabled: boolean) => {
-    this.props.onRealisticSensorsChange(enabled);
-  };
-
   private onRobotPositionResetClicked_ = () => {
     this.props.onSetRobotStartPosition({ ...this.props.robotStartPosition });
   };
 
   render() {
     const { props } = this;
-    const { theme, style, className, sensorNoise, realisticSensors, robotStartPosition: { x, y, z, theta } } = props;
+    const { theme, style, className, robotStartPosition: { x, y, z, theta } } = props;
     return (
       <Container style={style} className={className}>
         <StyledButton theme={theme} children={['Reset']} onClick={this.onRobotPositionResetClicked_}></StyledButton>
@@ -113,14 +96,6 @@ export class Simulation extends React.PureComponent<Props> {
         <StyledValueEdit value={Value.distance(y)} onValueChange={this.onYChange_} theme={theme} name='Y' />
         <StyledValueEdit value={Value.distance(z)} onValueChange={this.onZChange_} theme={theme} name='Z' />
         <StyledValueEdit value={Value.angle(theta)} onValueChange={this.onThetaChange_} theme={theme} name='Rotation' />
-        <StyledField theme={theme} name='Sensor Noise' nameWidth={160}>
-          <Spacer />
-          <Switch value={sensorNoise} onValueChange={this.onSensorNoiseChanged_} theme={theme} />
-        </StyledField>
-        <StyledField theme={theme} name='Realistic Sensors' nameWidth={160}>
-          <Spacer />
-          <Switch value={realisticSensors} onValueChange={this.onRealisticSensorsChanged_} theme={theme} />
-        </StyledField>
       </Container>
     );
   }

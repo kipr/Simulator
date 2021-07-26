@@ -283,13 +283,10 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       onItemChange,
       console,
       messages,
+      settings,
       onClearConsole,
       surfaceState,
       onSurfaceChange,
-      sensorNoise,
-      onSensorNoiseChange,
-      realisticSensors,
-      onRealisticSensorsChange,
     } = props;
 
     const {
@@ -355,8 +352,8 @@ class OverlayLayout extends React.PureComponent<Props, State> {
             robotState={state}
             itemEnabled={items}
             onRobotStateUpdate={onStateChange}
-            isSensorNoiseEnabled={sensorNoise}
-            isRealisticSensorsEnabled={realisticSensors}
+            isSensorNoiseEnabled={settings.simulationSensorNoise}
+            isRealisticSensorsEnabled={settings.simulationRealisticSensors}
             surfaceState={surfaceState}
           />
         </SimulatorAreaContainer>
@@ -369,7 +366,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
             onSizeChange={this.onEditorSizeChange_}
             barComponents={editorBar}
           >
-            <Editor ref={this.bindEditor_} code={code} onCodeChange={onCodeChange} theme={theme} messages={messages} />
+            <Editor ref={this.bindEditor_} code={code} onCodeChange={onCodeChange} theme={theme} messages={messages} autocomplete={settings.editorAutoComplete} />
           </EditorWidget>
           <ConsoleWidget
             {...commonProps}
@@ -392,10 +389,6 @@ class OverlayLayout extends React.PureComponent<Props, State> {
               robotState={state}
               robotStartPosition={robotStartPosition}
               onSetRobotStartPosition={onSetRobotStartPosition}
-              sensorNoise={sensorNoise}
-              onSensorNoiseChange={onSensorNoiseChange}
-              realisticSensors={realisticSensors}
-              onRealisticSensorsChange={onRealisticSensorsChange}
               theme={theme}
             />
           </InfoWidget>

@@ -25,12 +25,11 @@ import {
 } from '../items';
 import { Space } from '../Sim';
 import { RobotPosition } from '../RobotPosition';
+import { DEFAULT_SETTINGS, Settings } from '../Settings';
 
 type ModalType = 'settings' | 'about' | 'none';
 
 interface RootState {
-  isSensorNoiseEnabled: boolean,
-  isRealisticSensorsEnabled: boolean,
   surfaceState: SurfaceState,
   robotState: RobotState;
   robotStartPosition: RobotPosition;
@@ -46,6 +45,8 @@ interface RootState {
   messages: Message[];
 
   theme: Theme;
+
+  settings: Settings;
 }
 
 type Props = Record<string, never>;
@@ -83,8 +84,6 @@ export class Root extends React.Component<Props, State> {
         z: Distance.centimeters(0),
         theta: Angle.degrees(0),
       },
-      isSensorNoiseEnabled: false,
-      isRealisticSensorsEnabled: false,
       surfaceState: SurfaceStatePresets.jbcA,
       items: Array<boolean>(ITEM_KEYS.length).fill(false),
       layout: Layout.Overlay,
@@ -93,7 +92,8 @@ export class Root extends React.Component<Props, State> {
       simulatorState: SimulatorState.STOPPED,
       console: StyledText.text({ text: 'Welcome to the KIPR Simulator!\n', style: STDOUT_STYLE(DARK) }),
       theme: DARK,
-      messages: []
+      messages: [],
+      settings: DEFAULT_SETTINGS,
     };
   }
 
@@ -143,14 +143,6 @@ export class Root extends React.Component<Props, State> {
     });
 
     Space.getInstance().setRobotPosition(position);
-  };
-
-  private onToggleSensorNoise_ = (enabled: boolean) => {
-    this.setState({ isSensorNoiseEnabled: enabled });
-  };
-
-  private onToggleRealisticSensors_ = (enabled: boolean) => {
-    this.setState({ isRealisticSensorsEnabled: enabled });
   };
 
   private onUpdateSurfaceState_ = (newSurfaceName: string) => {
@@ -317,6 +309,10 @@ export class Root extends React.Component<Props, State> {
     window.open("https://www.kipr.org/doc/index.html");
   };
 
+  private onSettingsChange_ = (changedSettings: Partial<Settings>) => {
+    this.setState({ settings: { ...this.state.settings, ...changedSettings } });
+  };
+
   render() {
     const { props, state } = this;
     const {
@@ -329,9 +325,8 @@ export class Root extends React.Component<Props, State> {
       simulatorState,
       console,
       messages,
-      isSensorNoiseEnabled,
-      isRealisticSensorsEnabled,
-      surfaceState
+      surfaceState,
+      settings,
     } = state;
 
     const theme = DARK;
@@ -348,13 +343,10 @@ export class Root extends React.Component<Props, State> {
       console,
       onCodeChange: this.onCodeChange_,
       messages,
+      settings,
       onClearConsole: this.onClearConsole_,
       surfaceState,
       onSurfaceChange: this.onUpdateSurfaceState_,
-      sensorNoise: isSensorNoiseEnabled,
-      onSensorNoiseChange: this.onToggleSensorNoise_,
-      realisticSensors: isRealisticSensorsEnabled,
-      onRealisticSensorsChange: this.onToggleRealisticSensors_,
     };
 
     let impl: JSX.Element;
@@ -403,7 +395,7 @@ export class Root extends React.Component<Props, State> {
           />
           {impl}
         </Container>
-        {modal === 'settings' ? <SettingsDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
+        {modal === 'settings' ? <SettingsDialog theme={theme} onClose={this.onModalClose_} settings={settings} onSettingsChange={this.onSettingsChange_} /> : undefined}
         {modal === 'about' ? <AboutDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
       </>
 

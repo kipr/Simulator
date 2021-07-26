@@ -1,7 +1,11 @@
 export interface Settings {
-  showSensorPlots: boolean;
+  simulationSensorNoise: boolean;
+  simulationRealisticSensors: boolean;
+  editorAutoComplete: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
-  showSensorPlots: true
+  simulationSensorNoise: false,
+  simulationRealisticSensors: false,
+  editorAutoComplete: false,
 };
