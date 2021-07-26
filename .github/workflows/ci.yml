@@ -15,7 +15,7 @@ jobs:
       with:
         path: simulator
     - name: Install Simulator modules
-      run: yarn install
+      run: yarn install --cache-folder ./.yarncache
       working-directory: simulator
     - name: Build production bundle
       run: yarn build
