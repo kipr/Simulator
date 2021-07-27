@@ -103,6 +103,7 @@ export class Space {
   private updateRobotState: (robotState: Partial<RobotState>) => void;
 
   private gizmoManager_: Babylon.GizmoManager;
+  private gizmoImpostor_: Babylon.PhysicsImpostor;
 
   private initStoreSubscription_ = () => {
     if (this.storeSubscription_) return;
@@ -183,19 +184,29 @@ export class Space {
         const meshName = this.itemMap_.get(this.lastState_.scene.selectedItem);
         if (meshName !== undefined) {
           const mesh = this.scene.getMeshByID(meshName);
-          mesh.physicsImpostor.setMass(5);
+          if (mesh.physicsImpostor.isDisposed) {
+            mesh.physicsImpostor = new Babylon.PhysicsImpostor(
+              mesh, this.gizmoImpostor_.type,
+              { 
+                mass: this.gizmoImpostor_.mass, 
+                friction: this.gizmoImpostor_.friction 
+              }
+            );
+          }
         }
       }
 
       if (state.scene.selectedItem === undefined) {
         // Item is no longer selected
         this.gizmoManager_.attachToMesh(null);
+        delete this.gizmoImpostor_;
       } else {
         const meshName = this.itemMap_.get(state.scene.selectedItem);
         if (meshName !== undefined) {
           const mesh = this.scene.getMeshByID(meshName);
           this.gizmoManager_.attachToMesh(mesh);
-          mesh.physicsImpostor.setMass(0);
+          this.gizmoImpostor_ = mesh.physicsImpostor;
+          mesh.physicsImpostor.dispose();
         }
       }
     }
