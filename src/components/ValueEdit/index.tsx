@@ -206,14 +206,14 @@ export class ValueEdit extends React.PureComponent<Props, State> {
           />
           {value.type !== Value.Type.Unitless
             ? <StyledComboBox
-                innerRef={this.bindUnitRef_}
-                theme={theme}
-                options={unitOptions}
-                onSelect={this.onUnitSelect_}
-                index={Value.subType(value)}
-                minimal
-                widthTweak={2}
-              />
+              innerRef={this.bindUnitRef_}
+              theme={theme}
+              options={unitOptions}
+              onSelect={this.onUnitSelect_}
+              index={Value.subType(value)}
+              minimal
+              widthTweak={2}
+            />
             : undefined
           }
         </SubContainer>

@@ -82,10 +82,10 @@ class ComboBox extends React.PureComponent<ComboBox.Props, ComboBox.State> {
   private onFocusChange_: (focus: boolean) => void;
   public set onFocusChange(f: (focus: boolean) => void) {
     this.onFocusChange_ = f;
-  };
+  }
   public get onFocusChange() {
     return this.onFocusChange_;
-  };
+  }
 
 
   private onClick_ = () => {
@@ -95,7 +95,7 @@ class ComboBox extends React.PureComponent<ComboBox.Props, ComboBox.State> {
         this.onFocusChange_(nextFocus);
       }
     });
-  }
+  };
 
   private onOptionClick_ = (index: number) => (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -177,7 +177,7 @@ class ComboBox extends React.PureComponent<ComboBox.Props, ComboBox.State> {
               </OptionContainer>
             ))}
           </DropDown>
-        , COMBO_BOX_ROOT)}
+          , COMBO_BOX_ROOT)}
       </Container>
     );
   }

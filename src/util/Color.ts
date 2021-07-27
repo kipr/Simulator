@@ -18,7 +18,7 @@ export namespace Color {
     export const create = (r: number, g: number, b: number, a: number): Rgba => ({ type: Type.Rgba, r, g, b, a });
 
     export const fromCss = (css: string): Rgba => {
-      const match = css.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*(\d+)\s*)?\)/);
+      const match = /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*(\d+)\s*)?\)/.exec(css);
       if (!match) {
         throw new Error('Invalid rgba color');
       }
@@ -89,7 +89,7 @@ export namespace Color {
     export const toRgba = (rgb: Rgb): Rgba => ({ type: Type.Rgba, r: rgb.r, g: rgb.g, b: rgb.b, a: 1 });
 
     export const fromHex = (hex: string): Rgb => {
-      const match = hex.match(/^#?(\w{2})(\w{2})(\w{2})$/);
+      const match = /^#?(\w{2})(\w{2})(\w{2})$/.exec(hex);
       if (!match) {
         throw new Error('Invalid hex color');
       }
@@ -100,7 +100,7 @@ export namespace Color {
     };
 
     export const fromCss = (css: string): Rgb => {
-      const match = css.match(/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/);
+      const match = /rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/.exec(css);
       if (!match) {
         throw new Error('Invalid rgb color');
       }
@@ -136,7 +136,7 @@ export namespace Color {
       const { h, s, l } = hsla;
       const lNew = Math.min(1, l + (l * percent));
       return Hsla.create(h, s, lNew, 1);
-    }
+    };
   }
 
   export interface Hsl {
@@ -150,7 +150,7 @@ export namespace Color {
     export const create = (h: number, s: number, l: number): Hsl => ({ type: Type.Hsl, h, s, l });
   
     export const fromCss = (css: string): Hsl => {
-      const match = css.match(/hsl\(\s*(\d+)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)/);
+      const match = /hsl\(\s*(\d+)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)/.exec(css);
       if (!match) {
         throw new Error('Invalid hsl color');
       }
@@ -158,7 +158,7 @@ export namespace Color {
       const s = parseInt(match[2], 10) / 100;
       const l = parseInt(match[3], 10) / 100;
       return create(h, s, l);
-    }
+    };
 
     export const toCss = (hsl: Hsl): string => `hsl(${hsl.h * 360}, ${hsl.s * 100}%, ${hsl.l * 100}%)`;
   }

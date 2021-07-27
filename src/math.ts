@@ -205,7 +205,7 @@ export namespace Quaternion {
       z: quat.z / l,
       w: quat.w / l
     };
-  }
+  };
 
   export const toBabylon = (quat: Quaternion): Babylon.Quaternion => new Babylon.Quaternion(quat.x, quat.y, quat.z, quat.w);
   export const fromBabylon = (quat: Babylon.Quaternion): Quaternion => ({

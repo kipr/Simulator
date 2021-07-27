@@ -118,7 +118,7 @@ export namespace Rotation {
         angle,
         axis,
       };
-    }
+    };
   }
 
   export const angleAxis = (angle: Angle, axis: Vector3): AngleAxis => ({
@@ -180,6 +180,6 @@ export namespace ReferenceFrame {
       Vector3.toRaw(frame.position, Distance.Type.Meters),
       Rotation.toRawQuaternion(frame.orientation)
     );
-  }
+  };
 
 }

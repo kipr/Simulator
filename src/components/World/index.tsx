@@ -185,7 +185,7 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
     const { collapsed, modal } = state;
 
 
-    let itemList: EditableList.Item[] = [];
+    const itemList: EditableList.Item[] = [];
     // Mock list
     for (const id of itemOrdering) {
       const item = items[id];
@@ -250,7 +250,7 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
   }
 }
 
-export default connect<{}, {}, Props, ReduxState>(state => {
+export default connect<unknown, unknown, Props, ReduxState>(state => {
   const { itemOrdering, items } = state.scene;
 
   return {

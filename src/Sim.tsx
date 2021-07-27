@@ -306,7 +306,7 @@ export class Space {
     const mesh = pickResult.pickedMesh;
     const meshName = mesh.id || mesh.name;
 
-    for (const [ itemId, itemMeshName ] of this.itemMap_) {
+    for (const [itemId, itemMeshName] of this.itemMap_) {
       if (meshName !== itemMeshName) continue;
       store.dispatch(SceneAction.selectItem({ id: itemId }));
       return;
@@ -645,7 +645,7 @@ export class Space {
     
     const nextItems = {};
     // Sync items
-    for (const [ id, meshName ] of this.itemMap_) {
+    for (const [id, meshName] of this.itemMap_) {
       const mesh = this.scene.getMeshByID(meshName);
       
       const item = items[id];
