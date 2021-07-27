@@ -47,6 +47,13 @@ cd emsdk
 ./emsdk activate 2.0.2
 ```
 
+### Install Dependencies
+
+Navigate to the root directory of this repository, then run:
+```bash
+yarn install
+```
+
 ### Build libwallaby for JavaScript
 
 Clone `libwallaby`:
