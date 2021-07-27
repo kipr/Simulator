@@ -256,6 +256,7 @@ export class Space {
     this.gizmoManager_ = new Babylon.GizmoManager(this.scene);
 
     this.gizmoManager_.positionGizmoEnabled = true;
+    this.gizmoManager_.gizmos.positionGizmo.scaleRatio = 1.25;
     this.gizmoManager_.rotationGizmoEnabled = true;
     this.gizmoManager_.scaleGizmoEnabled = false;
     this.gizmoManager_.usePointerToAttachGizmos = false;
