@@ -144,7 +144,7 @@ class Info extends React.PureComponent<Props, State> {
     const locationName = StyledText.compose({
       items: [
         StyledText.text({
-          text: 'Location',
+          text: 'Start Location',
         }),
         StyledText.component({
           component: ResetIcon,

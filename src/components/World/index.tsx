@@ -142,7 +142,7 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
     this.setState({
       collapsed: {
         ...this.state.collapsed,
-        [section]: !collapsed
+        [section]: collapsed
       }
     });
   };
@@ -203,7 +203,7 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
     const itemsName = StyledText.compose({
       items: [
         StyledText.text({
-          text: `${itemList.length} Item${itemList.length === 1 ? '' : 's'}`,
+          text: `Item${itemList.length === 1 ? '' : 's'} (${itemList.length})`,
         }),
         StyledText.component({
           component: SectionIcon,
