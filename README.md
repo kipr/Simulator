@@ -16,11 +16,13 @@ sudo ./install.sh
 ## Manual Setup
 
 ### Requirements
-- [Node.js](https://nodejs.org/)
+- [Node.js v14 or higher](https://nodejs.org/)
 - [yarn](https://classic.yarnpkg.com/)
 - Doxygen (libwallaby requirement)
 
 ```bash
+# to get newer versions of Node.js through apt-get, you likely need to add the correct NodeSource repositories
+# for details, see https://github.com/nodesource/distributions
 sudo apt-get install nodejs
 sudo apt-get install doxygen
 sudo npm install --global npm
