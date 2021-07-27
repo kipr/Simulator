@@ -15,6 +15,7 @@ export interface SensorWidgetProps extends ThemeProps, StyleProps {
   name: string;
   value: number | boolean;
   unit?: string;
+  plotTitle?: string;
 }
 
 interface SensorWidgetState {
@@ -67,6 +68,10 @@ class SensorWidget extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    if (!props.plotTitle) {
+      props.plotTitle = `Plot`;
+    }
+
     this.state = {
       showGuide: false,
       showActionTooltip: false,
@@ -108,16 +113,24 @@ class SensorWidget extends React.PureComponent<Props, State> {
     });
   };
 
+  private onTogglePlotClick_ = (event: React.MouseEvent<HTMLSpanElement>) => {
+    if (this.state.showPlot) {
+      this.onHidePlotClick_(event);
+    } else {
+      this.onShowPlotClick_(event);
+    }
+  };
+
   render() {
     const { props, state } = this;
-    const { style, className, theme, name, unit, value } = props;
+    const { style, className, theme, name, unit, value, plotTitle } = props;
     const { showGuide, showActionTooltip, showPlot } = state;
 
     let plot: JSX.Element;
 
     const actionItems = [
       StyledText.text({
-        text: `Sensor Plot`,
+        text: plotTitle,
         style: {
           paddingRight: `${theme.itemPadding}px`
         }
@@ -169,7 +182,7 @@ class SensorWidget extends React.PureComponent<Props, State> {
           onMouseEnter={this.onMouseEnter_}
           onMouseLeave={this.onMouseLeave_}
         >
-          <Header theme={theme}>
+          <Header theme={theme} onClick={this.onTogglePlotClick_}>
             <Name>{name}</Name>
             <Spacer />
             <span style={{ userSelect: 'none' }}>{headerValue}{unit}</span>

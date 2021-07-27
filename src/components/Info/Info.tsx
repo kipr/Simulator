@@ -134,31 +134,31 @@ class Info extends React.PureComponent<Props, State> {
 
     const servos = robotState.servoPositions.map((value, i) => (
       <Row key={`servo-pos-${i}`} theme={theme}>
-        <SensorWidget value={value} name={`get_servo_position(${i})`} theme={theme} />
+        <SensorWidget value={value} name={`get_servo_position(${i})`} plotTitle='Servo Position Plot' theme={theme} />
       </Row>
     ));
 
     const motorVelocities = robotState.motorSpeeds.map((value, i) => (
       <Row key={`motor-velocity-${i}`} theme={theme}>
-        <SensorWidget value={value} name={`motor ${i}`} theme={theme} />
+        <SensorWidget value={value} name={`motor ${i}`} plotTitle='Motor Velocity Plot' theme={theme} />
       </Row>
     ));
 
     const motorPositions = robotState.motorPositions.map((value, i) => (
       <Row key={`motor-pos-${i}`} theme={theme}>
-        <SensorWidget value={value} name={`get_motor_position_counter(${i})`} theme={theme} />
+        <SensorWidget value={value} name={`get_motor_position_counter(${i})`} plotTitle='Motor Position Plot' theme={theme} />
       </Row>
     ));
 
     const analogSensors = robotState.analogValues.map((value, i) => (
       <Row key={`analog-${i}`} theme={theme}>
-        <SensorWidget value={value} name={`analog(${i})`} theme={theme} />
+        <SensorWidget value={value} name={`analog(${i})`} plotTitle='Analog Sensor Plot' theme={theme} />
       </Row>
     ));
 
     const digitalSensors = robotState.digitalValues.map((value, i) => (
       <Row key={`digital-${i}`} theme={theme}>
-        <SensorWidget value={value} name={`digital(${i})`} theme={theme} />
+        <SensorWidget value={value} name={`digital(${i})`} plotTitle='Digital Sensor Plot' theme={theme} />
       </Row>
     ));
     
