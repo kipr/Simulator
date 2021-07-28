@@ -24,6 +24,7 @@ export class Modal extends React.PureComponent<Props> {
     MODAL_ROOT.style.pointerEvents = 'auto';
     MODAL_ROOT.style.opacity = '1';
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
     (MODAL_ROOT.style as any).backdropFilter = `blur(8px)`;
   }
 
@@ -31,6 +32,8 @@ export class Modal extends React.PureComponent<Props> {
     MODAL_ROOT.style.backgroundColor = `transparent`;
     MODAL_ROOT.style.pointerEvents = 'none';
     MODAL_ROOT.style.opacity = '0';
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
     (MODAL_ROOT.style as any).backdropFilter = `none`;
 
   }
