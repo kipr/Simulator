@@ -14,7 +14,6 @@ import { Vector2 } from '../math';
 
 export interface SimulatorAreaProps {
   robotState: RobotState;
-  itemEnabled: boolean[];
   isSensorNoiseEnabled: boolean;
   isRealisticSensorsEnabled: boolean;
   surfaceState: SurfaceState;
@@ -75,12 +74,6 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
   }
 
   componentDidUpdate(prevProps: SimulatorAreaProps) {
-    // Check if any cans were toggled
-    this.props.itemEnabled.forEach((enabled, i) => {
-      if (enabled === prevProps.itemEnabled[i]) return;
-      this.setItemEnabled(this.defaultItemList[i], enabled);
-    });
-    
     // Check if simulation settings were changed
     if (prevProps.isSensorNoiseEnabled !== this.props.isSensorNoiseEnabled || prevProps.isRealisticSensorsEnabled !== this.props.isRealisticSensorsEnabled) {
       Sim.Space.getInstance().updateSensorOptions(this.props.isSensorNoiseEnabled, this.props.isRealisticSensorsEnabled);
@@ -107,12 +100,6 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
       });
     }
   };
-
-  private setItemEnabled(itemName: string, isEnabled: boolean) {
-    isEnabled
-      ? Sim.Space.getInstance().createItem({ default: itemName })
-      : Sim.Space.getInstance().destroyItem(itemName);
-  }
 
   render() {
     return (

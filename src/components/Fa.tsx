@@ -19,7 +19,7 @@ export class Fa extends React.PureComponent<Props> {
     const style: React.CSSProperties = {
       ...props.style,
       cursor: onClick && !disabled ? 'pointer' : undefined,
-      opacity: disabled ? 0.5 : 1.0
+      opacity: disabled ? 0.5 : undefined
     };
     return (
       <span

@@ -128,17 +128,16 @@ const Chrome = styled('div', (props: ThemeProps & ModeProps) => ({
   width: '100%',
   display: 'flex',
   flexDirection: 'row',
-  paddingLeft: `${props.theme.itemPadding * 2}px`,
-  paddingRight: `${props.theme.itemPadding * 2}px`,
-  height: '35px',
+  padding: `${props.theme.itemPadding * 2}px`,
   alignItems: 'center',
-  backgroundColor: props.theme.backgroundColor,
+  backgroundColor: `rgba(0, 0, 0, 0.1)`,
   color: props.theme.color,
   borderBottom: `1px solid ${props.theme.borderColor}`
 }));
 
 const Title = styled('span', (props: ThemeProps & { $hasComponents: boolean }) => ({
   fontWeight: 400,
+  fontSize: '18px',
   userSelect: 'none',
   paddingRight: props.$hasComponents ? `${props.theme.itemPadding}px` : undefined,
   marginRight: props.$hasComponents ? `${props.theme.itemPadding}px` : undefined,

@@ -1,5 +1,8 @@
 import * as Babylon from 'babylonjs';
-import Item from './Item';
+import { Quaternion, ReferenceFrame as RawReferenceFrame, Vector3 as RawVector3 } from '../math';
+import { ReferenceFrame, Rotation, Vector3 } from '../unit-math';
+import { Item } from '../state';
+import { Distance, Mass } from '../util';
 import ItemObject from './ItemObject';
 
 export class PaperReam implements ItemObject {
@@ -14,7 +17,7 @@ export class PaperReam implements ItemObject {
   }
 
   get id(): string {
-    return this.config_.item.id;
+    return this.config_.item.name;
   }
 
   constructor(scene: Babylon.Scene, config: ItemObject.Config<Item.PaperReam>) {
@@ -26,7 +29,7 @@ export class PaperReam implements ItemObject {
     reamMaterial.emissiveColor = new Babylon.Color3(0.25,0.25,0.25);
 
     this.mesh = Babylon.MeshBuilder.CreateBox(
-      this.config_.item.id,
+      this.config_.item.name,
       {
         height:5.18,
         width:17.6,
@@ -37,8 +40,12 @@ export class PaperReam implements ItemObject {
     this.mesh.material = reamMaterial;
     this.mesh.visibility = 0.5;
 
-    this.mesh.position = this.config_.item.startPosition;
-    this.mesh.rotate(this.config_.item.rotationAxis, this.config_.item.startRotation);
+    const position = item.origin.position ? Vector3.toRaw(item.origin.position, Distance.Type.Centimeters) : RawVector3.ZERO;
+    const orientation = item.origin.orientation ? Rotation.toRawQuaternion(item.origin.orientation) : Quaternion.IDENTITY;
+
+
+    this.mesh.position = RawVector3.toBabylon(position);
+    this.mesh.rotationQuaternion = Quaternion.toBabylon(orientation);
   }
 
   // Used to create physics impostor of mesh in scene and make opaque
@@ -49,8 +56,8 @@ export class PaperReam implements ItemObject {
       this.mesh, 
       Babylon.PhysicsImpostor.BoxImpostor, 
       { 
-        mass: 50, 
-        friction: 5 
+        mass: this.config_.item.mass ? Mass.toGramsValue(this.config_.item.mass) : 50, 
+        friction: this.config_.item.friction ? this.config_.item.friction.value : 5,
       }, 
       this.scene
     );

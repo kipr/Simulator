@@ -29,8 +29,8 @@ export class ActionTooltip extends React.Component<Props> {
     return (
       <Tooltip contentHint={Tooltip.ContentHint.interactive(onClose)} theme={theme} target={target}>
         <Container>
-          {items.map(item => (
-            <Text text={item} />
+          {items.map((item, i) => (
+            <Text key={i} text={item} />
           ))}
         </Container>
       </Tooltip>

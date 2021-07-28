@@ -17,6 +17,12 @@ export interface DialogProps extends ThemeProps, StyleProps {
 
 type Props = DialogProps;
 
+const Container = styled('div', (props: ThemeProps) => ({
+  width: '640px',
+  maxHeight: '480px',
+  color: props.theme.color,
+}));
+
 class Dialog_ extends React.PureComponent<Props> {
 
   private onSizeChange_ = (index: number) => {
@@ -28,11 +34,11 @@ class Dialog_ extends React.PureComponent<Props> {
     const { className, style, children, theme, name } = props;
     return (
       <Modal>
-        <div style={{ width: '640px', height: '480px' }}>
+        <Container theme={theme}>
           <Widget theme={theme} size={0} sizes={[Size.MAXIMIZED, Size.MINIMIZED]} onSizeChange={this.onSizeChange_} mode={Mode.Floating} name={name}>
             {children}
           </Widget>
-        </div>
+        </Container>
       </Modal>
     );
   }

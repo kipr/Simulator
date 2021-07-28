@@ -59,7 +59,6 @@ const OuterContainer = styled('div', (props: ThemeProps) => ({
   flexDirection: 'row',
   width: '100%',
   overflow: 'hidden',
-  backgroundColor: props.theme.backgroundColor
 }));
 
 const InnerContainer = styled('div', {

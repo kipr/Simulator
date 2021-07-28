@@ -12,9 +12,9 @@ export interface SwitchProps extends ThemeProps, StyleProps {
 type Props = SwitchProps;
 
 const Container = styled('div', {
-  height: '20px',
-  paddingTop: '10px',
-  paddingBottom: '10px',
+  height: '40px',
+  paddingTop: '20px',
+  paddingBottom: '20px',
   paddingLeft: '10px',
   paddingRight: '10px',
   cursor: 'pointer'

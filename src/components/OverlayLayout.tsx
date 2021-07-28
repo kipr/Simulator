@@ -8,7 +8,7 @@ import { Fa } from './Fa';
 import { Info } from './Info';
 import { LayoutProps } from './Layout';
 import { SimulatorArea } from './SimulatorArea';
-import { ThemeProps } from './theme';
+import { Theme, ThemeProps } from './theme';
 import Widget, { BarComponent, Mode, Size, WidgetProps } from './Widget';
 import World from './World';
 
@@ -40,9 +40,8 @@ const SimulatorAreaContainer = styled('div', {
 
 const Overlay = styled('div', (props: ThemeProps) => ({
   display: 'grid',
-  gridTemplateColumns: '1fr 2fr 300px',
-  gridTemplateRows: '1fr 250px',
-  opacity: 0.98,
+  gridTemplateColumns: '3fr 5fr 350px',
+  gridTemplateRows: '1fr 300px',
   gap: `${props.theme.widget.padding}px`,
   position: 'absolute',
   width: '100%',
@@ -54,6 +53,11 @@ const Overlay = styled('div', (props: ThemeProps) => ({
   padding: `${props.theme.widget.padding}px`
 }));
 
+const transparentStyling = (theme: Theme): React.CSSProperties => ({
+  backgroundColor: theme.transparentBackgroundColor(0.95),
+  backdropFilter: 'blur(16px)'
+});
+
 const ConsoleWidget = styled(Widget, (props: WidgetProps) => {
   const size = props.sizes[props.size];
   switch (size.type) {
@@ -62,16 +66,19 @@ const ConsoleWidget = styled(Widget, (props: WidgetProps) => {
     };
     case Size.Type.Maximized: return {
       gridColumn: '1 / span 3',
-      gridRow: '1 / span 2'
+      gridRow: '1 / span 2',
+      ...transparentStyling(props.theme)
     };
     case Size.Type.Miniature: return {
       gridColumn: 1,
-      gridRow: 2
+      gridRow: 2,
+      ...transparentStyling(props.theme)
     };
     default:
     case Size.Type.Partial: return {
       gridColumn: '1 / span 2',
-      gridRow: 2
+      gridRow: 2,
+      ...transparentStyling(props.theme)
     };
   } 
 });
@@ -84,16 +91,19 @@ const EditorWidget = styled(Widget, (props: WidgetProps) => {
     };
     case Size.Type.Maximized: return {
       gridColumn: '1 / span 3',
-      gridRow: '1 / span 2'
+      gridRow: '1 / span 2',
+      ...transparentStyling(props.theme)
     };
     case Size.Type.Miniature: return {
       gridColumn: 1,
-      gridRow: 1
+      gridRow: 1,
+      ...transparentStyling(props.theme)
     };
     default:
     case Size.Type.Partial: return {
       gridColumn: '1 / span 2',
       gridRow: 1,
+      ...transparentStyling(props.theme)
     };
   }
 });
@@ -108,6 +118,7 @@ const InfoWidget = styled(Widget, (props: WidgetProps) => {
     case Size.Type.Partial: return {
       gridColumn: 3,
       gridRow: 1,
+      ...transparentStyling(props.theme)
     };
   }
 });
@@ -122,6 +133,8 @@ const WorldWidget = styled(Widget, (props: WidgetProps) => {
     case Size.Type.Partial: return {
       gridColumn: 3,
       gridRow: 2,
+      ...transparentStyling(props.theme)
+      
     };
   }
 });
@@ -350,7 +363,6 @@ class OverlayLayout extends React.PureComponent<Props, State> {
           <SimulatorArea
             key='simulator'
             robotState={state}
-            itemEnabled={items}
             onRobotStateUpdate={onStateChange}
             isSensorNoiseEnabled={settings.simulationSensorNoise}
             isRealisticSensorsEnabled={settings.simulationRealisticSensors}
@@ -399,7 +411,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
             size={WORLD_SIZE[worldSize]}
             onSizeChange={this.onWorldSizeChange_}
           >
-            <World theme={theme} items={items} onItemChange={onItemChange} surfaceName={surfaceState.surfaceName} onSurfaceChange={onSurfaceChange} />
+            <World theme={theme} surfaceName={surfaceState.surfaceName} onSurfaceChange={onSurfaceChange} />
           </WorldWidget>
         </Overlay>
       </Container>

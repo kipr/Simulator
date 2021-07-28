@@ -1,4 +1,4 @@
-import Item from './Item';
+import { Item } from '../state';
 
 interface ItemObject {
   readonly item: Item;
