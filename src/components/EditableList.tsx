@@ -4,7 +4,7 @@ import { StyleProps } from "../style";
 import { Fa } from "./Fa";
 import { BLUE, GREEN, RED, ThemeProps } from "./theme";
 
-export interface EditableListProps<P = any> extends StyleProps, ThemeProps {
+export interface EditableListProps<P> extends StyleProps, ThemeProps {
   items: EditableList.Item<P>[];
 
   onItemRemove?: (index: number) => void;
@@ -14,7 +14,7 @@ export interface EditableListProps<P = any> extends StyleProps, ThemeProps {
 interface EditableListState {
 }
 
-type Props = EditableListProps;
+type Props = EditableListProps<EditableList.ItemProps>;
 type State = EditableListState;
 
 const Container = styled('div', {
