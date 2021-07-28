@@ -40,13 +40,6 @@ cd emsdk
 ./emsdk activate 2.0.2
 cd ..
 
-#Install ivygate
-git clone https://github.com/kipr/ivygate.git
-cd ivygate
-yarn install
-./node_modules/.bin/tsc
-cd ..
-
 #Download and install simulator
 echo
 echo Download and install simulator
@@ -55,7 +48,6 @@ echo
 git clone https://github.com/kipr/simulator.git
 cd simulator
 yarn install
-yarn add ../ivygate
 cd ..
 
 

@@ -47,33 +47,12 @@ cd emsdk
 ./emsdk activate 2.0.2
 ```
 
-### Install and compile Ivygate
-Clone `ivygate` and compile
-```bash
-git clone https://github.com/kipr/ivygate.git
-cd ivygate
-yarn install
-./node_modules/.bin/tsc
-```
-If you run into this error:
-```bash
-error An unexpected error occurred: "http://localhost:4873..."
-```
-Remove the yarn.lock file and retry yarn install and compile
-
 ### Install Dependencies
 
 Navigate to the root directory of this repository, then run:
 ```bash
 yarn install
-yarn add ../ivygate
 ```
-If you run into this error:
-```bash
-error An unexpected error occurred: "http://localhost:4873..."
-```
-Remove the yarn.lock file and retry yarn install
-
 
 ### Build libwallaby for JavaScript
 
