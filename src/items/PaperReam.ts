@@ -4,6 +4,7 @@ import { ReferenceFrame, Rotation, Vector3 } from '../unit-math';
 import { Item } from '../state';
 import { Distance, Mass } from '../util';
 import ItemObject from './ItemObject';
+import * as uuid from 'uuid';
 
 export class PaperReam implements ItemObject {
   private config_: ItemObject.Config<Item.PaperReam>;
@@ -17,7 +18,7 @@ export class PaperReam implements ItemObject {
   }
 
   get id(): string {
-    return this.config_.item.name;
+    return this.mesh.name;
   }
 
   constructor(scene: Babylon.Scene, config: ItemObject.Config<Item.PaperReam>) {
@@ -28,8 +29,11 @@ export class PaperReam implements ItemObject {
     const reamMaterial = new Babylon.StandardMaterial("ream", this.scene);
     reamMaterial.emissiveColor = new Babylon.Color3(0.25,0.25,0.25);
 
+    // Generate random mesh name to avoid name collisions
+    // TODO: Must be prefixed with "item_" to be detected by sensors. Make this more flexible
+    const meshName = `item_${item.name}_${uuid.v4()}`;
     this.mesh = Babylon.MeshBuilder.CreateBox(
-      this.config_.item.name,
+      meshName,
       {
         height:5.18,
         width:17.6,
