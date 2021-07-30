@@ -164,8 +164,8 @@ class ComboBox extends React.PureComponent<ComboBox.Props, ComboBox.State> {
       <Container ref={this.bindRef_} style={style} className={className} theme={theme} onClick={this.onClick_} $focus={focus} $minimal={minimal}>
         <CurrentOptionContainer theme={theme}><Text text={options[index].text} /></CurrentOptionContainer>
         <DropIcon icon={focus ? 'caret-up' : 'caret-down'} />
-        {focus && this.ref_ && ReactDom.createPortal(
-          <DropDown theme={theme} style={dropDownStyle}>
+        {ReactDom.createPortal((focus && this.ref_)
+          ? <DropDown theme={theme} style={dropDownStyle}>
             {options.map((option, i) => (
               <OptionContainer
                 $selected={i === index}
@@ -177,7 +177,8 @@ class ComboBox extends React.PureComponent<ComboBox.Props, ComboBox.State> {
               </OptionContainer>
             ))}
           </DropDown>
-          , COMBO_BOX_ROOT)}
+          : null
+        , COMBO_BOX_ROOT)}
       </Container>
     );
   }
