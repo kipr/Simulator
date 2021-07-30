@@ -116,9 +116,9 @@ export class TouchSensor implements SensorObject {
   }
 
   // Determines whether the given mesh is eligible for intersection checking
-  // Currently only cans are eligible, but this should be made more flexible
+  // Currently based on mesh name, but this should be made more flexible
   private static isMeshEligible = (mesh: Babylon.AbstractMesh) => {
-    return mesh.name.startsWith('Can');
+    return mesh.name.startsWith('item');
   };
 }
 

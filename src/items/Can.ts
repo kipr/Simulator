@@ -4,6 +4,7 @@ import { ReferenceFrame, Rotation, Vector3 } from '../unit-math';
 import { Item } from '../state';
 import ItemObject from './ItemObject';
 import { Distance, Mass } from '../util';
+import * as uuid from 'uuid';
 
 export class Can implements ItemObject {
   private config_: ItemObject.Config<Item.Can>;
@@ -16,7 +17,7 @@ export class Can implements ItemObject {
     return this.config_.item;
   }
   get id(): string {
-    return this.config_.item.name;
+    return this.mesh.name;
   }
 
   constructor(scene: Babylon.Scene, config: ItemObject.Config<Item.Can>) {
@@ -34,8 +35,11 @@ export class Can implements ItemObject {
     faceUV[1] = new Babylon.Vector4(1, 0, 0, 1);
     faceUV[2] = Babylon.Vector4.Zero();
 
+    // Generate random mesh name to avoid name collisions
+    // TODO: Must be prefixed with "item_" to be detected by sensors. Make this more flexible
+    const meshName = `item_${item.name}_${uuid.v4()}`;
     this.mesh = Babylon.MeshBuilder.CreateCylinder(
-      this.config_.item.name,
+      meshName,
       {
         height: 11.15, 
         diameter: 6, 
