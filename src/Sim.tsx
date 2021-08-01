@@ -51,7 +51,7 @@ export class Space {
   private storeSubscription_: Unsubscribe;
 
   // List for keeping track of current item meshes in scene
-  private itemMap_: Map<string, string> = new Map();
+  private itemMap_ = new Map<string, string>();
 
   // The position offset of the robot, applied to the user-specified position
   private robotOffset: Babylon.Vector3 = new Babylon.Vector3(0, 7, -52);
