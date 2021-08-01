@@ -264,9 +264,16 @@ export class Root extends React.Component<Props, State> {
       compile(code)
         .then(js => {
           WorkerInstance.start(js);
+          
+          nextConsole = StyledText.extend(nextConsole, StyledText.text({
+            text: `Compilation succeeded!\n`,
+            style: STDOUT_STYLE(this.state.theme)
+          }));
+
           this.setState({
             simulatorState: SimulatorState.RUNNING,
             messages: [],
+            console: nextConsole
           });
         })
         .catch((e: unknown) => {
@@ -288,15 +295,19 @@ export class Root extends React.Component<Props, State> {
           const compileError = e as CompileError;
           const messages = sort(parseMessages(compileError.stderr));
   
-          if (hasErrors(messages)) {
+          if (hasErrors(messages) || messages.length === 0) {
             nextConsole = StyledText.extend(nextConsole, StyledText.text({
               text: `Compilation failed.\n`,
               style: STDERR_STYLE(this.state.theme)
             }));
-          } else {
+          }
+
+          // If there are no messages some weird underlying error occurred
+          // We print the entire stderr to the console
+          if (messages.length === 0) {
             nextConsole = StyledText.extend(nextConsole, StyledText.text({
-              text: `Compilation succeeded!\n`,
-              style: STDOUT_STYLE(this.state.theme)
+              text: compileError.stderr,
+              style: STDERR_STYLE(this.state.theme)
             }));
           }
   
@@ -306,7 +317,6 @@ export class Root extends React.Component<Props, State> {
                 ? this.onErrorMessageClick_(message.ranges[0].start.line)
                 : undefined
             }));
-  
           }
   
   
