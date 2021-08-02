@@ -115,7 +115,10 @@ export class Space {
   private lastState_: State = undefined;
   private debounceUpdate_ = false;
   private onStoreChange_ = (state: State) => {
-    if (this.debounceUpdate_) return;
+    if (this.debounceUpdate_) {
+      this.lastState_ = state;
+      return;
+    }
     
     const visibleItems = Dict.filter(state.scene.items, item => item.visible);
     const lastItems = this.lastState_ ? this.lastState_.scene.items : {};
