@@ -6,9 +6,6 @@ import { SurfaceState } from '../SurfaceState';
 
 import { styled } from 'styletron-react';
 
-import {
-  Items,
-} from '../items';
 import resizeListener, { ResizeListener } from './ResizeListener';
 import { Vector2 } from '../math';
 
@@ -52,8 +49,6 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
 
   private lastWidth_ = 0;
   private lastHeight_ = 0;
-
-  private defaultItemList = Object.keys(Items);
 
   private onSizeChange_ = (size: Vector2) => {
     if (this.lastHeight_ !== size.y || this.lastWidth_ !== size.x) {

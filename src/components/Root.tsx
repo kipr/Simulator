@@ -20,9 +20,6 @@ import { Angle, Distance, StyledText } from '../util';
 import { Message } from 'ivygate';
 import parseMessages, { hasErrors, sort, toStyledText } from '../util/parse-messages';
 
-import {
-  Items,
-} from '../items';
 import { Space } from '../Sim';
 import { RobotPosition } from '../RobotPosition';
 import { DEFAULT_SETTINGS, Settings } from '../Settings';
@@ -70,7 +67,6 @@ interface RootState {
   surfaceState: SurfaceState,
   robotState: RobotState;
   robotStartPosition: RobotPosition;
-  items: boolean[];
   layout: Layout;
   code: string;
 
@@ -105,8 +101,6 @@ const STDERR_STYLE = (theme: Theme) => ({
   color: 'red'
 });
 
-const ITEM_KEYS = Object.keys(Items);
-
 export class Root extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -122,7 +116,6 @@ export class Root extends React.Component<Props, State> {
         theta: Angle.degrees(0),
       },
       surfaceState: SurfaceStatePresets.jbcA,
-      items: Array<boolean>(ITEM_KEYS.length).fill(false),
       layout: Layout.Overlay,
       code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
       modal: Modal.NONE,
@@ -159,14 +152,6 @@ export class Root extends React.Component<Props, State> {
     };
 
     WorkerInstance.state = newRobotState;
-  };
-
-  private onItemChange_ = (itemName: string, enabled: boolean) => {
-    this.setState(prevState => {
-      const items = [...prevState.items];
-      items[ITEM_KEYS.indexOf(itemName)] = enabled;
-      return { items };
-    });
   };
 
   private onSetRobotStartPosition_ = (position: RobotPosition) => {
@@ -359,7 +344,6 @@ export class Root extends React.Component<Props, State> {
   render() {
     const { props, state } = this;
     const {
-      items,
       robotState,
       robotStartPosition,
       layout,
@@ -376,13 +360,11 @@ export class Root extends React.Component<Props, State> {
 
     const commonLayoutProps: LayoutProps = {
       code,
-      items,
       onStateChange: this.onRobotStateUpdate_,
       robotStartPosition,
       onSetRobotStartPosition: this.onSetRobotStartPosition_,
       theme,
       state: robotState,
-      onItemChange: this.onItemChange_,
       console,
       onCodeChange: this.onCodeChange_,
       messages,

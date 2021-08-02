@@ -12,9 +12,6 @@ import { StyledText } from '../../util';
 import { DropdownList, OptionDefinition } from '../DropdownList';
 import { SurfaceStatePresets } from '../../SurfaceState';
 
-import {
-  Items,
-} from '../../items';
 import EditableList from '../EditableList';
 import Item from './Item';
 import AddItemDialog, { AddItemAcceptance } from './AddItemDialog';
