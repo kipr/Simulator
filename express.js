@@ -46,16 +46,21 @@ app.post('/compile', (req, res) => {
   // Required because Asyncify keeps emscripten runtime alive, which would prevent cleanup code from running
   const augmentedCode = `${req.body.code}
     #include <emscripten.h>
+
+    EM_JS(void, on_stop, (), {
+      if (Module.context.onStop) Module.context.onStop();
+    })
   
     void simMainWrapper()
     {
       main();
+      on_stop();
       emscripten_force_exit(0);
     }
   `;
 
   
-  const id = uuid();
+  const id = uuid.v4();
   const path = `/tmp/${id}.c`;
   fs.writeFile(path, augmentedCode, err => {
     if (err) {
@@ -102,15 +107,20 @@ app.post('/compile', (req, res) => {
   
 });
 
+
 app.use('/static', express.static(`${__dirname}/static`, {
   maxAge: config.caching.staticMaxAge,
 }));
+
+app.use('/dist', express.static(`${__dirname}/dist`));
+
 
 app.use(express.static(sourceDir, {
   maxAge: config.caching.staticMaxAge,
 }));
 
-app.use('*', (req,res) => {
+
+app.use('*', (req, res) => {
   res.sendFile(`${__dirname}/${sourceDir}/index.html`);
 });
 

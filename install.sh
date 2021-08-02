@@ -7,14 +7,14 @@ cd simulator_server
 
 #Install all the prerequisit software
 echo
-echo Install all the prerequisit software...
+echo Install all the prerequisite software...
 echo
 
 sudo apt-get update
+curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash - #For node v14
 sudo apt-get install nodejs -y
 sudo apt-get install doxygen -y
 sudo apt-get install npm -y
-sudo apt-get install node -y
 sudo npm install --global npm
 sudo npm install --global yarn
 yarn --version
@@ -39,7 +39,6 @@ cd emsdk
 ./emsdk install 2.0.2
 ./emsdk activate 2.0.2
 cd ..
-
 
 #Download and install simulator
 echo

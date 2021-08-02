@@ -67,7 +67,7 @@ module.exports = {
         'no-duplicate-imports': 'off',
         '@typescript-eslint/no-duplicate-imports': 'error',
         'no-useless-constructor': 'off',
-        '@typescript-eslint/no-useless-constructor': 'error',
+        '@typescript-eslint/no-useless-constructor': 'off',
         'object-curly-spacing': 'off',
         '@typescript-eslint/object-curly-spacing': ['error', 'always'],
         'semi': 'off',
@@ -82,6 +82,10 @@ module.exports = {
         '@typescript-eslint/no-namespace': 'off',
         '@typescript-eslint/type-annotation-spacing': 'error',
         '@typescript-eslint/prefer-for-of': 'error',
+        '@typescript-eslint/no-empty-interface': 'off',
+        '@typescript-eslint/explicit-module-boundary-types' : 'off',
+        '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }],
+        '@typescript-eslint/no-unused-vars': ['off'],
       },
     },
   ],
@@ -92,5 +96,7 @@ module.exports = {
     "/configs",
     // Ignore included ammo.js library
     "/src/ammo.js",
+    // Ignore static files
+    "/static",
   ],
 };

@@ -1,0 +1,1 @@
+export const charmColor = (hue: number) => `hsl(${hue}, 100%, 30%)`;

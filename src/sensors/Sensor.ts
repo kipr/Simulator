@@ -80,8 +80,8 @@ namespace Sensor {
 
   export namespace Et {
     export const fill = (et: Et): Et => ({
-      maxRange: 30,
-      noiseRadius: 10,
+      maxRange: 100,
+      noiseRadius: 160,
       ...et
     });
   }

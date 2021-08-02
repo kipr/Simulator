@@ -9,27 +9,49 @@ import {
   MAPPINGS as SENSOR_MAPPINGS,
 } from './sensors';
 import {
-  Item,
   Items,
   Can,
   PaperReam,
 } from './items';
 import { RobotState } from './RobotState';
+
 import Dict from './Dict';
 import { SurfaceState } from './SurfaceState';
 
+import { Quaternion, ReferenceFrame, Vector2, Vector3 } from './math';
+import { ReferenceFrame as UnitReferenceFrame, Rotation, Vector3 as UnitVector3 } from './unit-math';
+import { RobotPosition } from './RobotPosition';
+import { Angle, Distance, Mass } from './util';
+
+import store, { State, Item } from './state';
+import { Unsubscribe } from 'redux';
+import deepNeq from './deepNeq';
+import { SceneAction } from './state/reducer';
+import { Gizmo } from 'babylonjs/Gizmos/gizmo';
+
+export let ACTIVE_SPACE: Space;
+
 export class Space {
+  private static instance: Space;
+
+  private initializationPromise: Promise<void>;
+
   private engine: Babylon.Engine;
-  private canvas: HTMLCanvasElement;
+  private workingCanvas: HTMLCanvasElement;
   private scene: Babylon.Scene;
 
+  private currentEngineView: Babylon.EngineView;
+
   private ammo_: Babylon.AmmoJSPlugin;
+  private camera: Babylon.ArcRotateCamera;
 
   private ground: Babylon.Mesh;
   private mat: Babylon.Mesh;
 
+  private storeSubscription_: Unsubscribe;
+
   // List for keeping track of current item meshes in scene
-  private itemList: string[] = [];
+  private itemMap_: Map<string, string> = new Map();
 
   // The position offset of the robot, applied to the user-specified position
   private robotOffset: Babylon.Vector3 = new Babylon.Vector3(0, 7, -52);
@@ -53,7 +75,7 @@ export class Space {
   private armRotationDefault: Babylon.Quaternion;
   private clawRotationDefault: Babylon.Quaternion;
 
-  private sensorObjects_: SensorObject[];
+  private sensorObjects_: SensorObject[] = [];
 
   private canCoordinates: Array<[number, number]>;
 
@@ -80,20 +102,238 @@ export class Space {
   private getRobotState: () => RobotState;
   private updateRobotState: (robotState: Partial<RobotState>) => void;
 
-  // TODO: Find a better way to communicate robot state instead of these callbacks
-  constructor(canvas: HTMLCanvasElement, getRobotState: () => RobotState, updateRobotState: (robotState: Partial<RobotState>) => void) {
-    this.canvas = canvas;
-    this.engine = new Babylon.Engine(this.canvas, true, { preserveDrawingBuffer: true, stencil: true });
-    this.scene = new Babylon.Scene(this.engine);
+  private gizmoManager_: Babylon.GizmoManager;
+  private gizmoImpostor_: Babylon.PhysicsImpostor;
 
-    this.getRobotState = getRobotState;
-    this.updateRobotState = updateRobotState;
+  private initStoreSubscription_ = () => {
+    if (this.storeSubscription_) return;
+    this.storeSubscription_ = store.subscribe(() => {
+      this.onStoreChange_(store.getState());
+    });
+  };
+
+  
+  private lastState_: State = undefined;
+  private debounceUpdate_ = false;
+  private onStoreChange_ = (state: State) => {
+    if (this.debounceUpdate_) return;
+    
+    const visibleItems = Dict.filter(state.scene.items, item => item.visible);
+    const lastItems = this.lastState_ ? this.lastState_.scene.items : {};
+
+    for (const id of state.scene.itemOrdering) {
+      const item = visibleItems[id];
+      const meshName = this.itemMap_.get(id);
+
+
+      if (!item) {
+        // This item has just become invisible
+        if (meshName) {
+          const mesh = this.scene.getMeshByID(meshName);
+          this.scene.removeMesh(mesh);
+          mesh.dispose();
+          this.itemMap_.delete(id);
+        }
+
+        continue;
+      }
+
+      // We don't want to update a item if it's the same as the last time,
+      // as physics may have changed it.
+      if (this.lastState_ && id in lastItems && !deepNeq(lastItems[id], item)) continue;
+
+      if (meshName === undefined) {
+        this.itemMap_.set(id, this.createItem(item));
+      } else {
+        const mesh = this.scene.getMeshByID(meshName);
+        const { position, orientation } = item.origin;
+        if (position) {
+          const rawPosition = UnitVector3.toRaw(position, Distance.Type.Centimeters);
+          mesh.position = Vector3.toBabylon(rawPosition);
+        }
+
+        if (orientation) {
+          const rawOrientation = Rotation.toRawQuaternion(orientation);
+          mesh.rotationQuaternion = Quaternion.toBabylon(rawOrientation);
+        }
+
+        if (item.friction && mesh.physicsImpostor) {
+          mesh.physicsImpostor.friction = item.friction.value;
+        }
+
+        if (item.mass && mesh.physicsImpostor) {
+          mesh.physicsImpostor.setMass(Mass.toGramsValue(item.mass));
+        }
+      }
+    }
+
+    for (const id of Object.keys(lastItems)) {
+      if (!(id in state.scene.items)) {
+        const meshName = this.itemMap_.get(id);
+        if (meshName !== undefined) {
+          const mesh = this.scene.getMeshByID(meshName);
+          this.scene.removeMesh(mesh);
+          mesh.dispose();
+          this.itemMap_.delete(id);
+        }
+      }
+    }
+
+    if ((this.lastState_ ? this.lastState_.scene.selectedItem : undefined) !== state.scene.selectedItem) {
+      if (this.lastState_.scene.selectedItem !== undefined) {
+        const meshName = this.itemMap_.get(this.lastState_.scene.selectedItem);
+        if (meshName !== undefined) {
+          const mesh = this.scene.getMeshByID(meshName);
+          if (mesh.physicsImpostor.isDisposed) {
+            mesh.physicsImpostor = new Babylon.PhysicsImpostor(
+              mesh, this.gizmoImpostor_.type,
+              { 
+                mass: this.gizmoImpostor_.mass, 
+                friction: this.gizmoImpostor_.friction 
+              }
+            );
+          }
+        }
+      }
+
+      if (state.scene.selectedItem === undefined) {
+        // Item is no longer selected
+        this.gizmoManager_.attachToMesh(null);
+        delete this.gizmoImpostor_;
+      } else {
+        const meshName = this.itemMap_.get(state.scene.selectedItem);
+        if (meshName !== undefined) {
+          const mesh = this.scene.getMeshByID(meshName);
+          this.gizmoManager_.attachToMesh(mesh);
+          this.gizmoImpostor_ = mesh.physicsImpostor;
+          mesh.physicsImpostor.dispose();
+        }
+      }
+    }
+
+    this.lastState_ = state;
+  };
+
+  objectScreenPosition(id: string): Vector2 {
+    const mesh = this.scene.getMeshByID(id) || this.scene.getMeshByName(id);
+    if (!mesh) return undefined;
+
+    if (this.engine.views.length <= 0) return undefined;
+
+    const position = mesh.getBoundingInfo().boundingBox.centerWorld;
+
+    const coordinates = Babylon.Vector3.Project(
+      position,
+      Babylon.Matrix.Identity(),
+      this.scene.getTransformMatrix(),
+      this.camera.viewport.toGlobal(
+        this.engine.getRenderWidth(),
+        this.engine.getRenderHeight(),
+      ));
+    
+    // Assuming the first view is the view of interest
+    // If we ever use multiple views, this may break
+    const { top, left } = this.engine.views[0].target.getBoundingClientRect();
+
+    return {
+      x: coordinates.x + left,
+      y: coordinates.y + top
+    };
   }
 
-  public createScene(): void {
-    const camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(50,50,50), this.scene);
-    camera.setTarget(Babylon.Vector3.Zero());
-    camera.attachControl(this.canvas, true);
+  public static getInstance(): Space {
+    if (!Space.instance) {
+      Space.instance = new Space();
+    }
+
+    return Space.instance;
+  }
+
+  // TODO: Find a better way to communicate robot state instead of these callbacks
+  private constructor() {
+    this.workingCanvas = document.createElement('canvas');
+    this.engine = new Babylon.Engine(this.workingCanvas, true, { preserveDrawingBuffer: true, stencil: true });
+    this.scene = new Babylon.Scene(this.engine);
+    this.camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(50,50,50), this.scene);
+
+    this.currentEngineView = null;
+
+    ACTIVE_SPACE = this;
+  }
+
+  private initGizmoManager_ = () => {
+    if (this.gizmoManager_) return;
+
+    this.gizmoManager_ = new Babylon.GizmoManager(this.scene);
+
+    this.gizmoManager_.positionGizmoEnabled = true;
+    this.gizmoManager_.gizmos.positionGizmo.scaleRatio = 1.25;
+    this.gizmoManager_.rotationGizmoEnabled = true;
+    this.gizmoManager_.scaleGizmoEnabled = false;
+    this.gizmoManager_.usePointerToAttachGizmos = false;
+  };
+
+  // Returns a promise that will resolve after the scene is fully initialized and the render loop is running
+  public ensureInitialized(): Promise<void> {
+    if (this.initializationPromise === undefined) {
+      this.initializationPromise = new Promise((resolve, reject) => {
+        this.createScene();
+        this.initGizmoManager_();
+        this.loadMeshes()
+          .then(() => {
+            this.startRenderLoop();
+            resolve();
+          })
+          .catch((e) => {
+            console.error('The simulator meshes failed to load', e);
+            reject(e);
+          });
+      });
+    }
+
+    return this.initializationPromise;
+  }
+
+  public switchContext(canvas: HTMLCanvasElement, getRobotState: () => RobotState, updateRobotState: (robotState: Partial<RobotState>) => void): void {
+    this.getRobotState = getRobotState;
+    this.updateRobotState = updateRobotState;
+    
+    if (this.currentEngineView) {
+      this.engine.unRegisterView(this.currentEngineView.target);
+    }
+
+    this.currentEngineView = this.engine.registerView(canvas, this.camera);
+    this.scene.detachControl();
+    this.engine.inputElement = canvas;
+    this.scene.attachControl();
+  }
+
+  private onPointerDown_ = (event: PointerEvent, pickResult: Babylon.PickingInfo, type: Babylon.PointerEventTypes) => {
+    if (!pickResult.hit) {
+      store.dispatch(SceneAction.UNSELECT_ALL);
+      return;
+    }
+
+
+    const mesh = pickResult.pickedMesh;
+    const meshName = mesh.id || mesh.name;
+
+    for (const [itemId, itemMeshName] of this.itemMap_) {
+      if (meshName !== itemMeshName) continue;
+      store.dispatch(SceneAction.selectItem({ id: itemId }));
+      return;
+    }
+
+    // We fell through, we means we got a hit, but it wasn't an item.
+    store.dispatch(SceneAction.UNSELECT_ALL);
+
+  };
+
+  private createScene(): void {
+    this.scene.onPointerDown = this.onPointerDown_;
+    
+    this.camera.setTarget(Babylon.Vector3.Zero());
+    this.camera.attachControl(this.workingCanvas, true);
 
     const light = new Babylon.HemisphericLight("botlight", new Babylon.Vector3(0,1,0), this.scene);
     light.intensity = 0.75;
@@ -178,7 +418,7 @@ export class Space {
   }
   
 
-  public async loadMeshes(): Promise<void> {
+  private async loadMeshes(): Promise<void> {
     // Load model into scene
     const importMeshResult = await Babylon.SceneLoader.ImportMeshAsync("",'static/', 'demobot_v6.glb', this.scene);
 
@@ -407,19 +647,56 @@ export class Space {
     // Make all sensors visible for now. Eventually the user will be able to control this from the UI
     for (const sensorObject of this.sensorObjects_) sensorObject.isVisible = true;
     
-    this.resetPosition();
+    this.setRobotPosition({ x: Distance.centimeters(0), y: Distance.centimeters(0), z: Distance.centimeters(0), theta: Angle.degrees(0) });
 
     await this.scene.whenReadyAsync();
   }
+
+  private updateStore_ = () => {
+    const { items, itemOrdering } = store.getState().scene;
+    
+    const nextItems = {};
+    // Sync items
+    for (const [id, meshName] of this.itemMap_) {
+      const mesh = this.scene.getMeshByID(meshName);
+      
+      const item = items[id];
+
+      const { position, orientation } = item.origin;
+
+      nextItems[id] = {
+        ...item,
+        origin: {
+          position: position
+            ? UnitVector3.toTypeGranular(UnitVector3.fromRaw(Vector3.fromBabylon(mesh.position), Distance.Type.Centimeters), position.x.type, position.y.type, position.z.type)
+            : UnitVector3.fromRaw(Vector3.fromBabylon(mesh.position), Distance.Type.Centimeters),
+          orientation: orientation
+            ? Rotation.fromRawQuaternion(Quaternion.fromBabylon(mesh.rotationQuaternion), orientation.type)
+            : Rotation.fromRawQuaternion(Quaternion.fromBabylon(mesh.rotationQuaternion), Rotation.Type.Euler),
+        },
+      };
+    }
+
+    this.debounceUpdate_ = true;
+    store.dispatch(SceneAction.setItemBatch({ items: nextItems }));
+    this.debounceUpdate_ = false;
+  };
   
-  public startRenderLoop(): void {
+  private startRenderLoop(): void {
+    this.initStoreSubscription_();
     this.engine.runRenderLoop(() => {
+
+
+      // Post updates to the store
+      this.updateStore_();
+      
+      
       this.scene.render();
     });
   }
 
-  // Resets the position/rotation of the robot to the current robot state
-  public resetPosition(): void {
+  // Resets the position/rotation of the robot to the given values (cm and radians)
+  public setRobotPosition(position: RobotPosition): void {
     const rootMeshes = [this.bodyCompoundRootMesh, this.colliderLeftWheelMesh, this.colliderRightWheelMesh, this.armCompoundRootMesh, this.clawCompoundRootMesh];
 
     // Create a transform node, positioned and rotated to match the body root
@@ -436,9 +713,10 @@ export class Space {
     }
 
     // Set the position and rotation
-    const { x, y, z, theta } = this.getRobotState();
-    resetTransformNode.setAbsolutePosition(new Babylon.Vector3(x, y, z).addInPlace(this.robotOffset));
-    resetTransformNode.rotationQuaternion = Babylon.Quaternion.RotationAxis(Babylon.Vector3.Up(), Babylon.Tools.ToRadians(theta));
+    // Assuming that position is already in cm/radians. Eventually we'll need to convert depending on the incoming units
+    const { x, y, z, theta } = position;
+    resetTransformNode.setAbsolutePosition(new Babylon.Vector3(Distance.toCentimetersValue(x), Distance.toCentimetersValue(y), Distance.toCentimetersValue(z)).addInPlace(this.robotOffset));
+    resetTransformNode.rotationQuaternion = Babylon.Quaternion.RotationAxis(Babylon.Vector3.Up(), Angle.toRadiansValue(theta));
 
     // Destroy the transform node
     for (const rootMesh of rootMeshes) {
@@ -451,49 +729,29 @@ export class Space {
     this.engine.resize();
   }
 
-  public createItem(item: { custom?: Item, default?: string }): void {
-    const defaultItemList = Dict.toList(Items);
-    let newItem: Item;
-    // Detect if importing default item or custom item
-    if (item.default !== undefined) {
-      const key = Object.keys(Items).indexOf(item.default);
-      if (key !== undefined) {
-        newItem = defaultItemList[key][1];
-      } else {
-        throw new Error('Could not find by id');
-      }
-    } else if (item.custom !== undefined) {
-      newItem = item.custom;
-    } else {
-      throw new Error('No Item or id was used');
-    }
-    switch (newItem.type) {
+  public createItem(item: Item): string {
+    switch (item.type) {
       case Item.Type.Can: {
-        const can = new Can(this.scene, { item: newItem });
-        this.itemList.push(can.id);
+        const can = new Can(this.scene, { item });
         can.place();
-        break;
+        return can.id;
       }
       case Item.Type.PaperReam: {
-        const ream = new PaperReam(this.scene, { item: newItem });
-        this.itemList.push(ream.id);
+        const ream = new PaperReam(this.scene, { item });
         ream.place();
-        break;
+        return ream.id;
       }
       default: {
         throw new Error('Type not supported or undefined');
       }
     }
   }
-
-  public destroyItem(id: string): void {
-    const index = this.itemList.indexOf(id);
-    this.itemList = this.itemList.splice(index, 1);
-    this.scene.getMeshByName(id).dispose();
-  }
   
-  public updateSensorOptions(isNoiseEnabled: boolean): void {
-    for (const sensorObject of this.sensorObjects_) sensorObject.isNoiseEnabled = isNoiseEnabled;
+  public updateSensorOptions(isNoiseEnabled: boolean, isRealisticEnabled: boolean): void {
+    for (const sensorObject of this.sensorObjects_) {
+      sensorObject.isNoiseEnabled = isNoiseEnabled;
+      sensorObject.isRealisticEnabled = isRealisticEnabled;
+    }
   }
 
   private buildFloor() {

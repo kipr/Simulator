@@ -10,10 +10,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Install modules
-      run: yarn install
+    - name: Checkout Simulator
+      uses: actions/checkout@v2
+      with:
+        path: simulator
+    - name: Install Simulator modules
+      # Specifying an alternative cache folder to work around a race condition issue in yarn,
+      # which seems to occur b/c of how ivygate is referenced from GitHub.
+      # See https://github.com/yarnpkg/yarn/issues/7212
+      run: yarn install --cache-folder ./.yarncache
+      working-directory: simulator
     - name: Build production bundle
       run: yarn build
+      working-directory: simulator
     - name: Run linter
       run: yarn lint
+      working-directory: simulator

@@ -36,6 +36,11 @@ ctx.onmessage = (e: MessageEvent) => {
           }
         },
         registers,
+        onStop: () => {
+          ctx.postMessage({
+            type: 'stopped',
+          } as Protocol.Worker.StoppedRequest);
+        },
       },
       print,
       printErr

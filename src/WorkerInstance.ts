@@ -4,12 +4,15 @@ import { RobotState } from './RobotState';
 
 import deepNeq from './deepNeq';
 
+
 class WorkerInstance {
   
   onStateChange: (state: RobotState) => void;
   
   onStdOutput: (s: string) => void;
   onStdError: (stderror: string) => void;
+  
+  onStopped: () => void;
 
   private state_ = RobotState.empty;
   private registers_ = new Array<number>(Registers.REG_ALL_COUNT)
@@ -173,6 +176,10 @@ class WorkerInstance {
           type: 'setregister',
           registers: initialRegisters,
         } as Protocol.Worker.SetRegisterRequest);
+        break;
+      }
+      case 'stopped': {
+        if (this.onStopped) this.onStopped();
         break;
       }
     }
