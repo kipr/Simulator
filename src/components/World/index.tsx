@@ -23,7 +23,7 @@ import { State as ReduxState, Item as ReduxItem } from '../../state';
 import { SceneAction } from '../../state/reducer';
 
 import * as uuid from 'uuid';
-import { ReferenceFrame } from '../../unit-math';
+import { Rotation, Vector3 } from '../../unit-math';
 import ComboBox from '../ComboBox';
 
 export interface WorldProps extends StyleProps, ThemeProps {
@@ -161,6 +161,18 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
   };
 
   private onAddItemClick_ = () => this.setState({ modal: UiState.ADD_ITEM });
+  private onItemResetClick_ = (id: string) => () => {
+    const item = this.props.items[id];
+    if (!item?.startingOrigin) return;
+    
+    this.props.onItemChange(id, {
+      ...item,
+      origin: {
+        position: item.startingOrigin.position ?? Vector3.zero(),
+        orientation: item.startingOrigin.orientation ?? Rotation.Euler.identity(),
+      },
+    });
+  };
   private onItemSettingsClick_ = (id: string) => () => this.setState({ modal: UiState.itemSettings(id) });
   private onModalClose_ = () => this.setState({ modal: UiState.NONE });
 
@@ -189,6 +201,7 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
       itemList.push(EditableList.Item.standard({
         component: Item,
         props: { name: item.name, theme },
+        onReset: this.onItemResetClick_(id),
         onSettings: this.onItemSettingsClick_(id),
         onVisibilityChange: this.onItemVisibilityChange_(id),
         visible: item.visible,

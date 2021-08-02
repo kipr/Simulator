@@ -93,18 +93,18 @@ class ItemSettings extends React.PureComponent<Props, State> {
       case Rotation.Type.Euler:
         this.props.onItemChange({
           ...item,
-          origin: {
-            ...item.origin,
-            orientation: Rotation.Euler.fromRaw(Euler.fromQuaternion(Rotation.toRawQuaternion(item.origin.orientation)))
+          startingOrigin: {
+            ...item.startingOrigin,
+            orientation: Rotation.Euler.fromRaw(Euler.fromQuaternion(Rotation.toRawQuaternion(item.startingOrigin.orientation)))
           }
         });
         break;
       case Rotation.Type.AngleAxis:
         this.props.onItemChange({
           ...item,
-          origin: {
-            ...item.origin,
-            orientation: Rotation.AngleAxis.fromRaw(AngleAxis.fromQuaternion(Rotation.toRawQuaternion(item.origin.orientation)))
+          startingOrigin: {
+            ...item.startingOrigin,
+            orientation: Rotation.AngleAxis.fromRaw(AngleAxis.fromQuaternion(Rotation.toRawQuaternion(item.startingOrigin.orientation)))
           }
         });
         break;
@@ -117,10 +117,10 @@ class ItemSettings extends React.PureComponent<Props, State> {
 
     this.props.onItemChange({
       ...item,
-      origin: {
-        ...item.origin,
+      startingOrigin: {
+        ...item.startingOrigin,
         orientation: {
-          ...item.origin.orientation as Rotation.Euler,
+          ...item.startingOrigin.orientation as Rotation.Euler,
           order
         }
       }
@@ -155,10 +155,10 @@ class ItemSettings extends React.PureComponent<Props, State> {
     const { item } = this.props;
     this.props.onItemChange({
       ...item,
-      origin: {
-        ...item.origin,
+      startingOrigin: {
+        ...item.startingOrigin,
         position: {
-          ...item.origin.position,
+          ...item.startingOrigin.position,
           x: Value.toDistance(value)
         }
       }
@@ -169,10 +169,10 @@ class ItemSettings extends React.PureComponent<Props, State> {
     const { item } = this.props;
     this.props.onItemChange({
       ...item,
-      origin: {
-        ...item.origin,
+      startingOrigin: {
+        ...item.startingOrigin,
         position: {
-          ...item.origin.position,
+          ...item.startingOrigin.position,
           y: Value.toDistance(value)
         }
       }
@@ -183,10 +183,10 @@ class ItemSettings extends React.PureComponent<Props, State> {
     const { item } = this.props;
     this.props.onItemChange({
       ...item,
-      origin: {
-        ...item.origin,
+      startingOrigin: {
+        ...item.startingOrigin,
         position: {
-          ...item.origin.position,
+          ...item.startingOrigin.position,
           z: Value.toDistance(value)
         }
       }
@@ -197,10 +197,10 @@ class ItemSettings extends React.PureComponent<Props, State> {
     const { item } = this.props;
     this.props.onItemChange({
       ...item,
-      origin: {
-        ...item.origin,
+      startingOrigin: {
+        ...item.startingOrigin,
         orientation: {
-          ...(item.origin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
+          ...(item.startingOrigin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
           x: Value.toAngle(value)
         }
       }
@@ -211,10 +211,10 @@ class ItemSettings extends React.PureComponent<Props, State> {
     const { item } = this.props;
     this.props.onItemChange({
       ...item,
-      origin: {
-        ...item.origin,
+      startingOrigin: {
+        ...item.startingOrigin,
         orientation: {
-          ...(item.origin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
+          ...(item.startingOrigin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
           y: Value.toAngle(value)
         }
       }
@@ -225,10 +225,10 @@ class ItemSettings extends React.PureComponent<Props, State> {
     const { item } = this.props;
     this.props.onItemChange({
       ...item,
-      origin: {
-        ...item.origin,
+      startingOrigin: {
+        ...item.startingOrigin,
         orientation: {
-          ...(item.origin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
+          ...(item.startingOrigin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
           z: Value.toAngle(value)
         }
       }
@@ -239,12 +239,12 @@ class ItemSettings extends React.PureComponent<Props, State> {
     const { item } = this.props;
     this.props.onItemChange({
       ...item,
-      origin: {
-        ...item.origin,
+      startingOrigin: {
+        ...item.startingOrigin,
         orientation: {
-          ...item.origin.orientation as Rotation.AngleAxis,
+          ...item.startingOrigin.orientation as Rotation.AngleAxis,
           axis: {
-            ...(item.origin.orientation as Rotation.AngleAxis).axis,
+            ...(item.startingOrigin.orientation as Rotation.AngleAxis).axis,
             x: Value.toDistance(value)
           }
         }
@@ -256,12 +256,12 @@ class ItemSettings extends React.PureComponent<Props, State> {
     const { item } = this.props;
     this.props.onItemChange({
       ...item,
-      origin: {
-        ...item.origin,
+      startingOrigin: {
+        ...item.startingOrigin,
         orientation: {
-          ...item.origin.orientation as Rotation.AngleAxis,
+          ...item.startingOrigin.orientation as Rotation.AngleAxis,
           axis: {
-            ...(item.origin.orientation as Rotation.AngleAxis).axis,
+            ...(item.startingOrigin.orientation as Rotation.AngleAxis).axis,
             y: Value.toDistance(value)
           }
         }
@@ -273,12 +273,12 @@ class ItemSettings extends React.PureComponent<Props, State> {
     const { item } = this.props;
     this.props.onItemChange({
       ...item,
-      origin: {
-        ...item.origin,
+      startingOrigin: {
+        ...item.startingOrigin,
         orientation: {
-          ...item.origin.orientation as Rotation.AngleAxis,
+          ...item.startingOrigin.orientation as Rotation.AngleAxis,
           axis: {
-            ...(item.origin.orientation as Rotation.AngleAxis).axis,
+            ...(item.startingOrigin.orientation as Rotation.AngleAxis).axis,
             z: Value.toDistance(value)
           }
         }
@@ -290,10 +290,10 @@ class ItemSettings extends React.PureComponent<Props, State> {
     const { item } = this.props;
     this.props.onItemChange({
       ...item,
-      origin: {
-        ...item.origin,
+      startingOrigin: {
+        ...item.startingOrigin,
         orientation: {
-          ...item.origin.orientation as Rotation.AngleAxis,
+          ...item.startingOrigin.orientation as Rotation.AngleAxis,
           angle: Value.toAngle(value)
         }
       }
@@ -321,10 +321,10 @@ class ItemSettings extends React.PureComponent<Props, State> {
     const { theme, item } = props;
     const { collapsed } = state;
 
-    const { origin } = item;
+    const { startingOrigin } = item;
 
-    const position = origin.position || Vector3.zero(Distance.Type.Centimeters);
-    const orientation = origin.orientation || Rotation.Euler.identity(Angle.Type.Degrees);
+    const position = startingOrigin.position || Vector3.zero(Distance.Type.Centimeters);
+    const orientation = startingOrigin.orientation || Rotation.Euler.identity(Angle.Type.Degrees);
     const friction = item.friction ? item.friction : UnitlessValue.create(5);
     const mass = item.mass ? item.mass : Mass.grams(5);
 
@@ -339,7 +339,7 @@ class ItemSettings extends React.PureComponent<Props, State> {
           </StyledField>
         </Section>
         <Section
-          name='Position'
+          name='Starting position'
           theme={theme}
           collapsed={collapsed['position']}
           onCollapsedChange={this.onCollapsedChange_('position')}
