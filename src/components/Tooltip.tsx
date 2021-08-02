@@ -93,9 +93,9 @@ class Tooltip extends React.PureComponent<Props, State> {
   };
 
   private onMouseMoveHandle_: number;
+  private animationFrameRequestId_: number | null = null;
 
   componentDidMount() {
-    this.ticking_ = true;
     this.scheduleTick_();
   
     this.onMouseMoveHandle_ = GLOBAL_EVENTS.add('onMouseMove', this.onMouseMove_);
@@ -108,7 +108,9 @@ class Tooltip extends React.PureComponent<Props, State> {
   }
 
   componentWillUnmount() {
-    this.ticking_ = false;
+    if (this.animationFrameRequestId_ !== null) {
+      cancelAnimationFrame(this.animationFrameRequestId_);
+    }
 
     GLOBAL_EVENTS.remove(this.onMouseMoveHandle_);
     this.onMouseMoveHandle_ = undefined;
@@ -116,12 +118,12 @@ class Tooltip extends React.PureComponent<Props, State> {
   }
 
   private scheduleTick_ = () => {
-    if (!this.ticking_) return;
-    requestAnimationFrame(this.tick_);
+    this.animationFrameRequestId_ = requestAnimationFrame(this.tick_);
   };
 
-  private ticking_ = false;
   private tick_ = () => {
+    this.animationFrameRequestId_ = null;
+
     const { props, state } = this;
     const { target, contentHint } = props;
     const { position } = state;
