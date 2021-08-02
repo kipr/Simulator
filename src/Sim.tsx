@@ -9,7 +9,6 @@ import {
   MAPPINGS as SENSOR_MAPPINGS,
 } from './sensors';
 import {
-  Items,
   Can,
   PaperReam,
 } from './items';
@@ -116,7 +115,10 @@ export class Space {
   private lastState_: State = undefined;
   private debounceUpdate_ = false;
   private onStoreChange_ = (state: State) => {
-    if (this.debounceUpdate_) return;
+    if (this.debounceUpdate_) {
+      this.lastState_ = state;
+      return;
+    }
     
     const visibleItems = Dict.filter(state.scene.items, item => item.visible);
     const lastItems = this.lastState_ ? this.lastState_.scene.items : {};
@@ -146,7 +148,7 @@ export class Space {
         this.itemMap_.set(id, this.createItem(item));
       } else {
         const mesh = this.scene.getMeshByID(meshName);
-        const { position, orientation } = item.origin;
+        const { position, orientation } = item.origin ?? {};
         if (position) {
           const rawPosition = UnitVector3.toRaw(position, Distance.Type.Centimeters);
           mesh.position = Vector3.toBabylon(rawPosition);
@@ -155,6 +157,12 @@ export class Space {
         if (orientation) {
           const rawOrientation = Rotation.toRawQuaternion(orientation);
           mesh.rotationQuaternion = Quaternion.toBabylon(rawOrientation);
+        }
+
+        // Reset velocity of items when changing position/orientation
+        if ((position || orientation) && mesh.physicsImpostor) {
+          mesh.physicsImpostor.setLinearVelocity(Babylon.Vector3.Zero());
+          mesh.physicsImpostor.setAngularVelocity(Babylon.Vector3.Zero());
         }
 
         if (item.friction && mesh.physicsImpostor) {
@@ -662,7 +670,7 @@ export class Space {
       
       const item = items[id];
 
-      const { position, orientation } = item.origin;
+      const { position, orientation } = item.origin ?? {};
 
       nextItems[id] = {
         ...item,

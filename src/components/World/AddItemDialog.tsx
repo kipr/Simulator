@@ -41,7 +41,7 @@ class AddItemDialog extends React.PureComponent<Props, State> {
       item: {
         type: Item.Type.Can,
         name: 'Untitled Can',
-        origin: ReferenceFrame.IDENTITY,
+        startingOrigin: ReferenceFrame.IDENTITY,
         visible: true
       },
     };

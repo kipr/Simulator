@@ -9,7 +9,7 @@ import { Distance } from '../util';
 export default {
   'Can1': {
     type: Item.Type.Can,
-    origin: {
+    startingOrigin: {
       position: Vector3.fromRaw(RawVector3.create(-22, 5, -14.3), Distance.Type.Centimeters),
     },
     removable: false,
@@ -17,7 +17,7 @@ export default {
   },
   'Can2': {
     type: Item.Type.Can,
-    origin: {
+    startingOrigin: {
       position: Vector3.fromRaw(RawVector3.create(0, 5, -20.6), Distance.Type.Centimeters),
     },
     removable: false,
@@ -26,7 +26,7 @@ export default {
 
   'Can3': {
     type: Item.Type.Can,
-    origin: {
+    startingOrigin: {
       position: Vector3.fromRaw(RawVector3.create(15.5, 5, -23.7), Distance.Type.Centimeters),
     },
     removable: false,
@@ -35,7 +35,7 @@ export default {
 
   'Can4': {
     type: Item.Type.Can,
-    origin: {
+    startingOrigin: {
       position: Vector3.fromRaw(RawVector3.create(0, 5, -6.9), Distance.Type.Centimeters),
     },
     removable: false,
@@ -44,7 +44,7 @@ export default {
 
   'Can5': {
     type: Item.Type.Can,
-    origin: {
+    startingOrigin: {
       position: Vector3.fromRaw(RawVector3.create(-13.7, 5, 6.8), Distance.Type.Centimeters),
     },
     removable: false,
@@ -53,7 +53,7 @@ export default {
 
   'Can6': {
     type: Item.Type.Can,
-    origin: {
+    startingOrigin: {
       position: Vector3.fromRaw(RawVector3.create(0, 5, 6.8), Distance.Type.Centimeters),
     },
     removable: false,
@@ -61,7 +61,7 @@ export default {
   },
   'Can7': {
     type: Item.Type.Can,
-    origin: {
+    startingOrigin: {
       position: Vector3.fromRaw(RawVector3.create(13.5, 5, 6.8),  Distance.Type.Centimeters),
     },
     removable: false,
@@ -70,7 +70,7 @@ export default {
 
   'Can8': {
     type: Item.Type.Can,
-    origin: {
+    startingOrigin: {
       position: Vector3.fromRaw(RawVector3.create(25.1, 5, 14.8), Distance.Type.Centimeters),
     },
     removable: false,
@@ -79,7 +79,7 @@ export default {
 
   'Can9': {
     type: Item.Type.Can,
-    origin: {
+    startingOrigin: {
       position: Vector3.fromRaw(RawVector3.create(0, 5, 34), Distance.Type.Centimeters),
     },
     removable: false,
@@ -88,7 +88,7 @@ export default {
 
   'Can10': {
     type: Item.Type.Can,
-    origin: {
+    startingOrigin: {
       position: Vector3.fromRaw(RawVector3.create(-18.8, 5, 45.4), Distance.Type.Centimeters),
     },
     removable: false,
@@ -97,7 +97,7 @@ export default {
 
   'Can11': {
     type: Item.Type.Can,
-    origin: {
+    startingOrigin: {
       position: Vector3.fromRaw(RawVector3.create(0, 5, 54.9), Distance.Type.Centimeters),
     },
     removable: false,
@@ -106,7 +106,7 @@ export default {
 
   'Can12': {
     type: Item.Type.Can,
-    origin: {
+    startingOrigin: {
       position: Vector3.fromRaw(RawVector3.create(18.7, 5, 45.4), Distance.Type.Centimeters),
     },
     removable: false,
@@ -115,7 +115,7 @@ export default {
 
   'PaperReam1': {
     type: Item.Type.PaperReam,
-    origin: {
+    startingOrigin: {
       position: Vector3.fromRaw(RawVector3.create(14, 1, 43.5), Distance.Type.Centimeters),
       orientation: Rotation.AngleAxis.fromRaw(RawAngleAxis.create(Math.PI / 4, RawVector3.Y)),
     },
