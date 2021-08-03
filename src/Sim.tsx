@@ -316,14 +316,14 @@ export class Space {
     this.scene.attachControl();
   }
 
-  private onPointerDown_ = (event: PointerEvent, pickResult: Babylon.PickingInfo, type: Babylon.PointerEventTypes) => {
-    if (!pickResult.hit) {
+  private onPointerTap_ = (eventData: Babylon.PointerInfo, eventState: Babylon.EventState) => {
+    if (!eventData.pickInfo.hit) {
       store.dispatch(SceneAction.UNSELECT_ALL);
       return;
     }
 
 
-    const mesh = pickResult.pickedMesh;
+    const mesh = eventData.pickInfo.pickedMesh;
     const meshName = mesh.id || mesh.name;
 
     for (const [itemId, itemMeshName] of this.itemMap_) {
@@ -338,7 +338,7 @@ export class Space {
   };
 
   private createScene(): void {
-    this.scene.onPointerDown = this.onPointerDown_;
+    this.scene.onPointerObservable.add(this.onPointerTap_, Babylon.PointerEventTypes.POINTERTAP);
     
     this.camera.setTarget(Babylon.Vector3.Zero());
     this.camera.attachControl(this.workingCanvas, true);
