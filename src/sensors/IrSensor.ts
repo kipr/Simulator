@@ -16,6 +16,7 @@ export class IrSensor implements SensorObject {
   private sinceLastUpdate = 0;
   
   private __isNoiseEnabled: boolean;
+  private __isRealisticEnabled: boolean;
 
   private readonly VISUAL_MESH_NAME = "irlinemesh";
 
@@ -116,6 +117,14 @@ export class IrSensor implements SensorObject {
   
   public set isNoiseEnabled(v: boolean) {
     this.__isNoiseEnabled = v;
+  }
+
+  public get isRealisticEnabled(): boolean {
+    return this.__isRealisticEnabled;
+  }
+
+  public set isRealisticEnabled(r: boolean) {
+    this.__isRealisticEnabled = r;
   }
   
   private applyNoise(value: number): number {
