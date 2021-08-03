@@ -20,6 +20,9 @@ export class IrSensor implements SensorObject {
 
   private readonly VISUAL_MESH_NAME = "irlinemesh";
 
+  private lastHitTextureId: string | null = null;
+  private lastHitPixels: ArrayBufferView | null = null;
+
   get sensor(): Sensor.Ir {
     return this.config_.sensor;
   }
@@ -70,19 +73,33 @@ export class IrSensor implements SensorObject {
 
     if (hit.pickedMesh && hit.pickedMesh.material && hit.pickedMesh.material.getActiveTextures().length > 0) {
       const hitTexture = hit.pickedMesh.material.getActiveTextures()[0];
-      const hitTexturePixels = hitTexture.readPixels();
-      const hitTextureCoordinates = hit.getTextureCoordinates();
-      const arrayIndex = Math.floor(hitTextureCoordinates.x * (hitTexture.getSize().width - 1)) * 4 + Math.floor(hitTextureCoordinates.y * (hitTexture.getSize().height - 1)) * hitTexture.getSize().width * 4;
 
-      const r = hitTexturePixels[arrayIndex] as number;
-      const g = hitTexturePixels[arrayIndex + 1] as number;
-      const b = hitTexturePixels[arrayIndex + 2] as number;
+      // Only reprocess the texture if we hit a different texture than before
+      if (this.lastHitTextureId === null || this.lastHitTextureId !== hitTexture.uid) {
+        if (hitTexture.isReady()) {
+          this.lastHitTextureId = hitTexture.uid;
+          this.lastHitPixels = hitTexture.readPixels();
+        } else {
+          // Texture isn't ready yet, so nothing we can do
+          this.lastHitTextureId = null;
+          this.lastHitPixels = null;
+        }
+      }
 
-      // Crude conversion from RGB to grayscale
-      const colorAverage = (r + g + b) / 3;
+      if (this.lastHitPixels !== null) {
+        const hitTextureCoordinates = hit.getTextureCoordinates();
+        const arrayIndex = Math.floor(hitTextureCoordinates.x * (hitTexture.getSize().width - 1)) * 4 + Math.floor(hitTextureCoordinates.y * (hitTexture.getSize().height - 1)) * hitTexture.getSize().width * 4;
 
-      // Value is a grayscale percentage of 4095
-      sensorValue = Math.floor(4095 * (1 - (colorAverage / 255)));
+        const r = this.lastHitPixels[arrayIndex] as number;
+        const g = this.lastHitPixels[arrayIndex + 1] as number;
+        const b = this.lastHitPixels[arrayIndex + 2] as number;
+
+        // Crude conversion from RGB to grayscale
+        const colorAverage = (r + g + b) / 3;
+
+        // Value is a grayscale percentage of 4095
+        sensorValue = Math.floor(4095 * (1 - (colorAverage / 255)));
+      }
     }
 
     if (this.__isNoiseEnabled) sensorValue = this.applyNoise(sensorValue);
