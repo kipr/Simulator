@@ -10,7 +10,7 @@
 #
 # For more support on how to run the workflow, please visit https://github.com/google-github-actions/setup-gcloud/tree/master/example-workflows/gke
 
-name: Build and Deploy to GKE
+name: Build and deploy to staging
 
 on:
   # release:
@@ -43,14 +43,16 @@ jobs:
         path: libwallaby
 
     # Setup gcloud CLI
-    - uses: google-github-actions/setup-gcloud@v0.2.1
+    - name: Set up gcloud CLI
+      uses: google-github-actions/setup-gcloud@v0.2.1
       with:
         service_account_key: ${{ secrets.GCR_SA_KEY }}
         project_id: ${{ secrets.GKE_PROJECT }}
 
     # Configure Docker to use the gcloud command-line tool as a credential
     # helper for authentication
-    - run: |-
+    - name: Configure Docker with gcloud
+      run: |-
         gcloud --quiet auth configure-docker
 
     # # Get the GKE credentials so we can deploy to the cluster
@@ -60,8 +62,17 @@ jobs:
     #     location: ${{ env.GKE_ZONE }}
     #     credentials: ${{ secrets.GKE_SA_KEY }}
 
+    - name: Get existing images
+      id: get_existing_images
+      run: |-
+        echo "::set-output name=NUM_EXISTING_IMAGES::$((gcloud container images list-tags gcr.io/kipr-321905/kipr/simulator --filter="tags:1.0.1" --format=json) | jq '. | length')"
+    
+    - name: Ensure image does not exist
+      if: steps.get_existing_images.NUM_EXISTING_IMAGES != 0
+      run: exit 1
+
     # Build the Docker image
-    - name: Build
+    - name: Build Docker image
       run: |-
         docker build \
           --tag "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
@@ -70,7 +81,7 @@ jobs:
           .
 
     # Push the Docker image to Google Container Registry
-    - name: Publish
+    - name: Publish Docker image to GCR
       run: |-
         docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
 
