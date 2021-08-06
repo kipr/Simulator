@@ -21,82 +21,87 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
-  # GKE_CLUSTER: cluster-1    # TODO: update to cluster name
-  # GKE_ZONE: us-central1-c   # TODO: update to cluster zone
+  GKE_CLUSTER: kipr    # TODO: update to cluster name
+  GKE_ZONE: us-central1-a   # TODO: update to cluster zone
   # DEPLOYMENT_NAME: gke-test # TODO: update to deployment name
   IMAGE: kipr/simulator
 
 jobs:
-  setup-build-publish-deploy:
-    name: Setup, Build, Publish, and Deploy
+  # setup-build-publish-deploy:
+  #   name: Setup, Build, Publish, and Deploy
+  #   runs-on: ubuntu-latest
+  #   environment: production
+
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v2
+    
+  #   - name: Checkout libwallaby
+  #     uses: actions/checkout@v2
+  #     with:
+  #       repository: 'kipr/libwallaby'
+  #       path: libwallaby
+    
+  #   # Get version from package.json
+  #   - name: Get package version
+  #     id: package_version
+  #     run: |-
+  #       echo "::set-output name=PACKAGE_VERSION::$(jq -r .version package.json)"
+
+  #   # Setup gcloud CLI
+  #   - name: Set up gcloud CLI
+  #     uses: google-github-actions/setup-gcloud@v0.2.1
+  #     with:
+  #       service_account_key: ${{ secrets.GCR_SA_KEY }}
+  #       project_id: ${{ secrets.GKE_PROJECT }}
+    
+  #   # Ensure there isn't already a Docker image for this version
+  #   - name: Ensure Docker image does not exist
+  #     id: get_existing_images
+  #     run: |-
+  #       NUM_IMAGES=$(gcloud container images list-tags gcr.io/kipr-321905/kipr/simulator --filter="tags:${{ steps.package_version.outputs.PACKAGE_VERSION }}" --format=json | jq '. | length')
+  #       if (( NUM_IMAGES > 0 )); then exit 1; fi
+
+  #   # Configure Docker to use the gcloud command-line tool as a credential
+  #   # helper for authentication
+  #   - name: Configure Docker with gcloud
+  #     run: |-
+  #       gcloud --quiet auth configure-docker
+
+  #   # Build the Docker image
+  #   - name: Build Docker image
+  #     run: |-
+  #       docker build \
+  #         --tag "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
+  #         --build-arg GITHUB_SHA="$GITHUB_SHA" \
+  #         --build-arg GITHUB_REF="$GITHUB_REF" \
+  #         .
+
+  #   # Push the Docker image to Google Container Registry
+  #   - name: Publish Docker image to GCR
+  #     run: |-
+  #       docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
+  
+  deploy-to-staging:
+    name: Deploy to staging
     runs-on: ubuntu-latest
     environment: production
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    
-    - name: Checkout libwallaby
-      uses: actions/checkout@v2
-      with:
-        repository: 'kipr/libwallaby'
-        path: libwallaby
-    
-    - name: Get package version
-      id: package_version
-      run: |-
-        echo "::set-output name=PACKAGE_VERSION::$(jq -r .version package.json)"
-
-    # Setup gcloud CLI
-    - name: Set up gcloud CLI
-      uses: google-github-actions/setup-gcloud@v0.2.1
-      with:
-        service_account_key: ${{ secrets.GCR_SA_KEY }}
-        project_id: ${{ secrets.GKE_PROJECT }}
-    
-    - name: Ensure Docker image does not exist
-      id: get_existing_images
-      run: |-
-        NUM_IMAGES=$(gcloud container images list-tags gcr.io/kipr-321905/kipr/simulator --filter="tags:${{ steps.package_version.outputs.PACKAGE_VERSION }}" --format=json | jq '. | length')
-        if (( NUM_IMAGES > 0 )); then exit 1; fi
-
-    # Configure Docker to use the gcloud command-line tool as a credential
-    # helper for authentication
-    - name: Configure Docker with gcloud
-      run: |-
-        gcloud --quiet auth configure-docker
-
-    # # Get the GKE credentials so we can deploy to the cluster
-    # - uses: google-github-actions/get-gke-credentials@v0.2.1
+    # steps: 
+    # - name: Checkout deployment repo
+    #   uses: actions/checkout@v2
     #   with:
-    #     cluster_name: ${{ env.GKE_CLUSTER }}
-    #     location: ${{ env.GKE_ZONE }}
-    #     credentials: ${{ secrets.GKE_SA_KEY }}
+    #     repository: 'kipr/libwallaby'
+    #     path: libwallaby
 
-    # Build the Docker image
-    - name: Build Docker image
+    # Get the GKE credentials so we can deploy to the cluster
+    - name: Get GKE credentials
+      uses: google-github-actions/get-gke-credentials@v0.2.1
+      with:
+        cluster_name: ${{ env.GKE_CLUSTER }}
+        location: ${{ env.GKE_ZONE }}
+        credentials: ${{ secrets.GCR_SA_KEY }}
+    
+    - name: Test kubectl
       run: |-
-        docker build \
-          --tag "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
-          --build-arg GITHUB_SHA="$GITHUB_SHA" \
-          --build-arg GITHUB_REF="$GITHUB_REF" \
-          .
-
-    # Push the Docker image to Google Container Registry
-    - name: Publish Docker image to GCR
-      run: |-
-        docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
-
-    # # Set up kustomize
-    # - name: Set up Kustomize
-    #   run: |-
-    #     curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
-    #     chmod u+x ./kustomize
-
-    # # Deploy the Docker image to the GKE cluster
-    # - name: Deploy
-    #   run: |-
-    #     ./kustomize edit set image gcr.io/PROJECT_ID/IMAGE:TAG=gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
-    #     ./kustomize build . | kubectl apply -f -
-    #     kubectl rollout status deployment/$DEPLOYMENT_NAME
-    #     kubectl get services -o wide
+        kubectl get pod
