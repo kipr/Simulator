@@ -4,7 +4,7 @@ import { styled } from "styletron-react";
 import { Rectangle } from "../math";
 import { StyleProps } from "../style";
 import { AnyText } from "../util";
-import { Color } from "../util/Color";
+import { Color } from "../state/State/Scene/Color";
 import { Fa } from "./Fa";
 import { Text } from "./Text";
 import { DARK, ThemeProps } from "./theme";

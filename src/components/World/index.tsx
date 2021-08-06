@@ -19,7 +19,9 @@ import { Fa } from '../Fa';
 import ItemSettingsDialog, { ItemSettingsAcceptance } from './ItemSettingsDialog';
 import { connect } from 'react-redux';
 
-import { State as ReduxState, Item as ReduxItem } from '../../state';
+import { State as ReduxState } from '../../state';
+import ReduxItem from '../../state/State/Item';
+
 import { SceneAction } from '../../state/reducer';
 
 import * as uuid from 'uuid';

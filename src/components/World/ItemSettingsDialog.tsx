@@ -1,7 +1,7 @@
 import * as React from "react";
 import { styled } from "styletron-react";
 import { ReferenceFrame, Rotation } from "../../unit-math";
-import { Item } from "../../state";
+import Item from "../../state/State/Item";
 import { Angle, Distance, Mass, Value } from "../../util";
 import ComboBox from "../ComboBox";
 import { Dialog } from "../Dialog";

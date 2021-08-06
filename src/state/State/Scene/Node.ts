@@ -2,10 +2,18 @@ import { ReferenceFrame } from '../../../unit-math';
 import { Angle, Mass } from '../../../util';
 
 namespace Node {
+  
   export interface Physics {
     colliderId?: string;
-    mass: Mass;
-    friction: number;
+    fixed?: boolean;
+    type: Physics.Type;
+    mass?: Mass;
+    friction?: number;
+    restitution?: number;
+  }
+
+  export namespace Physics {
+    export type Type = 'box' | 'sphere' | 'mesh' | 'none';
   }
 
   interface Base {
@@ -45,6 +53,6 @@ namespace Node {
   }
 }
 
-type Node = Node.Object | Node.PointLight | Node.SpotLight | Node.DirectionalLight;
+type Node = Node.Empty | Node.Object | Node.PointLight | Node.SpotLight | Node.DirectionalLight;
 
 export default Node;

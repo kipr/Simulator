@@ -18,7 +18,7 @@ export interface Vector2 {
 }
 
 export namespace Vector2 {
-  export const zero = (type: Distance.Type = Distance.Type.Meters): Vector2 => ({
+  export const zero = (type: Distance.Type = 'meters'): Vector2 => ({
     x: Distance.toType(Distance.meters(0), type),
     y: Distance.toType(Distance.meters(0), type),
   });
@@ -50,10 +50,16 @@ export interface Vector3 {
 }
 
 export namespace Vector3 {
-  export const zero = (type: Distance.Type = Distance.Type.Meters): Vector3 => ({
+  export const zero = (type: Distance.Type = 'meters'): Vector3 => ({
     x: Distance.toType(Distance.meters(0), type),
     y: Distance.toType(Distance.meters(0), type),
     z: Distance.toType(Distance.meters(0), type),
+  });
+
+  export const one = (type: Distance.Type = 'meters'): Vector3 => ({
+    x: Distance.toType(Distance.meters(1), type),
+    y: Distance.toType(Distance.meters(1), type),
+    z: Distance.toType(Distance.meters(1), type),
   });
 
   export const create = (x: Distance, y: Distance, z: Distance): Vector3 => ({ x, y, z });
@@ -82,13 +88,10 @@ export namespace Vector3 {
 
 
 export namespace Rotation {
-  export enum Type {
-    Euler,
-    AngleAxis
-  }
+  export type Type = 'euler' | 'angle-axis';
 
   export interface Euler {
-    type: Type.Euler;
+    type: 'euler';
     x: Angle;
     y: Angle;
     z: Angle;
@@ -97,7 +100,7 @@ export namespace Rotation {
 
   export namespace Euler {
     export const identity = (type: Angle.Type = Angle.Type.Radians): Euler => ({
-      type: Type.Euler,
+      type: 'euler',
       x: Angle.toType(Angle.radians(0), type),
       y: Angle.toType(Angle.radians(0), type),
       z: Angle.toType(Angle.radians(0), type),
@@ -112,7 +115,7 @@ export namespace Rotation {
     );
 
     export const fromRaw = (raw: RawEuler): Euler => ({
-      type: Type.Euler,
+      type: 'euler',
       x: { type: Angle.Type.Radians, value: raw.x },
       y: { type: Angle.Type.Radians, value: raw.y },
       z: { type: Angle.Type.Radians, value: raw.z },
@@ -121,17 +124,17 @@ export namespace Rotation {
   }
   
   export interface AngleAxis {
-    type: Type.AngleAxis;
+    type: 'angle-axis';
     angle: Angle;
     axis: Vector3;
   }
 
   export namespace AngleAxis {
-    export const identity = (angleType: Angle.Type = Angle.Type.Degrees, axisType: Distance.Type = Distance.Type.Meters) => {
+    export const identity = (angleType: Angle.Type = Angle.Type.Degrees, axisType: Distance.Type = 'meters') => {
       const angle = Angle.toType(Angle.radians(0), angleType);
       const axis = Vector3.zero(axisType);
       return {
-        type: Type.AngleAxis,
+        type: 'angle-axis',
         angle,
         axis,
       };
@@ -139,14 +142,14 @@ export namespace Rotation {
 
     export const toRaw = (a: AngleAxis) => RawAngleAxis.create(
       Angle.toType(a.angle, Angle.Type.Radians).value,
-      Vector3.toRaw(a.axis, Distance.Type.Meters)
+      Vector3.toRaw(a.axis, 'meters')
     );
 
     export const fromRaw = (raw: RawAngleAxis): AngleAxis => {
       const angle = Angle.radians(raw.angle);
-      const axis = Vector3.fromRaw(raw.axis, Distance.Type.Meters);
+      const axis = Vector3.fromRaw(raw.axis, 'meters');
       return {
-        type: Type.AngleAxis,
+        type: 'angle-axis',
         angle,
         axis,
       };
@@ -154,13 +157,13 @@ export namespace Rotation {
   }
 
   export const angleAxis = (angle: Angle, axis: Vector3): AngleAxis => ({
-    type: Type.AngleAxis,
+    type: 'angle-axis',
     angle,
     axis
   });
 
   export const euler = (x: Angle, y: Angle, z: Angle, order?: RawEuler.Order): Euler => ({
-    type: Type.Euler,
+    type: 'euler',
     x,
     y,
     z,
@@ -170,22 +173,22 @@ export namespace Rotation {
   export const toRawQuaternion = (rotation: Rotation) => {
     if (!rotation) return Quaternion.IDENTITY;
     switch (rotation.type) {
-      case Type.Euler: return RawEuler.toQuaternion(Euler.toRaw(rotation));
-      case Type.AngleAxis: return RawAngleAxis.toQuaternion(AngleAxis.toRaw(rotation));
+      case 'euler': return RawEuler.toQuaternion(Euler.toRaw(rotation));
+      case 'angle-axis': return RawAngleAxis.toQuaternion(AngleAxis.toRaw(rotation));
     }
   };
 
   export const toType = (rotation: Rotation, type: Type): Rotation => {
     switch (type) {
-      case Type.Euler: return Euler.fromRaw(RawEuler.fromQuaternion(toRawQuaternion(rotation)));
-      case Type.AngleAxis: return AngleAxis.fromRaw(RawAngleAxis.fromQuaternion(toRawQuaternion(rotation)));
+      case 'euler': return Euler.fromRaw(RawEuler.fromQuaternion(toRawQuaternion(rotation)));
+      case 'angle-axis': return AngleAxis.fromRaw(RawAngleAxis.fromQuaternion(toRawQuaternion(rotation)));
     }
   };
 
   export const fromRawQuaternion = (q: Quaternion, type: Type): Rotation => {
     switch (type) {
-      case Type.Euler: return Euler.fromRaw(RawEuler.fromQuaternion(q));
-      case Type.AngleAxis: return AngleAxis.fromRaw(RawAngleAxis.fromQuaternion(q));
+      case 'euler': return Euler.fromRaw(RawEuler.fromQuaternion(q));
+      case 'angle-axis': return AngleAxis.fromRaw(RawAngleAxis.fromQuaternion(q));
     }
   };
 
@@ -197,10 +200,15 @@ export type Rotation = Rotation.Euler | Rotation.AngleAxis;
 export interface ReferenceFrame {
   position?: Vector3;
   orientation?: Rotation;
+  scale?: RawVector3;
 }
 
 export namespace ReferenceFrame {
-  export const IDENTITY: ReferenceFrame = { position: Vector3.zero(), orientation: Rotation.Euler.identity() };
+  export const IDENTITY: ReferenceFrame = {
+    position: Vector3.zero(),
+    orientation: Rotation.Euler.identity(),
+    scale: RawVector3.ONE,
+  };
 
   export const create = (position?: Vector3, orientation?: Rotation): ReferenceFrame => ({
     position,
@@ -209,7 +217,7 @@ export namespace ReferenceFrame {
 
   export const toRaw = (frame: ReferenceFrame): RawReferenceFrame => {
     return RawReferenceFrame.create(
-      Vector3.toRaw(frame.position, Distance.Type.Meters),
+      Vector3.toRaw(frame.position, 'meters'),
       Rotation.toRawQuaternion(frame.orientation)
     );
   };

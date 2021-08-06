@@ -68,55 +68,50 @@ export namespace Angle {
 export type Angle = Angle.Radians | Angle.Degrees;
 
 export namespace Distance {
-  export enum Type {
-    Meters,
-    Centimeters,
-    Feet,
-    Inches,
-  }
+  export type Type = 'meters' | 'centimeters' | 'feet' | 'inches';
 
   export interface Meters extends UnitlessValue {
-    type: Type.Meters;
+    type: 'meters';
   }
-  export const meters = (value: number): Meters => ({ type: Type.Meters, value });
+  export const meters = (value: number): Meters => ({ type: 'meters', value });
 
   export interface Centimeters extends UnitlessValue {
-    type: Type.Centimeters;
+    type: 'centimeters';
   }
-  export const centimeters = (value: number): Centimeters => ({ type: Type.Centimeters, value });
+  export const centimeters = (value: number): Centimeters => ({ type: 'centimeters', value });
 
   export interface Feet extends UnitlessValue {
-    type: Type.Feet;
+    type: 'feet';
   }
-  export const feet = (value: number): Feet => ({ type: Type.Feet, value });
+  export const feet = (value: number): Feet => ({ type: 'feet', value });
 
   export interface Inches extends UnitlessValue {
-    type: Type.Inches;
+    type: 'inches';
   }
-  export const inches = (value: number): Inches => ({ type: Type.Inches, value });
+  export const inches = (value: number): Inches => ({ type: 'inches', value });
 
   export const unitName = (distance: Distance) => {
     switch (distance.type) {
-      case Type.Meters: return 'meters';
-      case Type.Centimeters: return 'centimeters';
-      case Type.Feet: return 'feet';
-      case Type.Inches: return 'inches';
+      case 'meters': return 'meters';
+      case 'centimeters': return 'centimeters';
+      case 'feet': return 'feet';
+      case 'inches': return 'inches';
     }
   };
 
   export const toMeters = (distance: Distance): Meters => {
     switch (distance.type) {
-      case Type.Meters: return distance;
-      case Type.Centimeters: return {
-        type: Type.Meters,
+      case 'meters': return distance;
+      case 'centimeters': return {
+        type: 'meters',
         value: distance.value / 100
       };
-      case Type.Feet: return {
-        type: Type.Meters,
+      case 'feet': return {
+        type: 'meters',
         value: distance.value / 3.28084
       };
-      case Type.Inches: return {
-        type: Type.Meters,
+      case 'inches': return {
+        type: 'meters',
         value: distance.value / 39.3701
       };
     }
@@ -124,17 +119,17 @@ export namespace Distance {
 
   export const toCentimeters = (distance: Distance): Centimeters => {
     switch (distance.type) {
-      case Type.Centimeters: return distance;
-      case Type.Meters: return {
-        type: Type.Centimeters,
+      case 'centimeters': return distance;
+      case 'meters': return {
+        type: 'centimeters',
         value: distance.value * 100
       };
-      case Type.Feet: return {
-        type: Type.Centimeters,
+      case 'feet': return {
+        type: 'centimeters',
         value: distance.value * 30.48
       };
-      case Type.Inches: return {
-        type: Type.Centimeters,
+      case 'inches': return {
+        type: 'centimeters',
         value: distance.value * 2.54
       };
     }
@@ -142,17 +137,17 @@ export namespace Distance {
 
   export const toFeet = (distance: Distance): Feet => {
     switch (distance.type) {
-      case Type.Feet: return distance;
-      case Type.Meters: return {
-        type: Type.Feet,
+      case 'feet': return distance;
+      case 'centimeters': return {
+        type: 'feet',
         value: distance.value * 3.28084
       };
-      case Type.Centimeters: return {
-        type: Type.Feet,
+      case 'meters': return {
+        type: 'feet',
         value: distance.value * 3.28084 / 100
       };
-      case Type.Inches: return {
-        type: Type.Feet,
+      case 'inches': return {
+        type: 'feet',
         value: distance.value * 3.28084 / 39.3701
       };
     }
@@ -160,17 +155,17 @@ export namespace Distance {
 
   export const toInches = (distance: Distance): Inches => {
     switch (distance.type) {
-      case Type.Inches: return distance;
-      case Type.Meters: return {
-        type: Type.Inches,
+      case 'inches': return distance;
+      case 'centimeters': return {
+        type: 'inches',
         value: distance.value * 39.3701
       };
-      case Type.Centimeters: return {
-        type: Type.Inches,
+      case 'meters': return {
+        type: 'inches',
         value: distance.value * 39.3701 / 100
       };
-      case Type.Feet: return {
-        type: Type.Inches,
+      case 'feet': return {
+        type: 'inches',
         value: distance.value * 39.3701 / 3.28084
       };
     }
@@ -183,10 +178,10 @@ export namespace Distance {
 
   export const toType = (distance: Distance, newType: Type): Distance => {
     switch (newType) {
-      case Type.Meters: return toMeters(distance);
-      case Type.Centimeters: return toCentimeters(distance);
-      case Type.Feet: return toFeet(distance);
-      case Type.Inches: return toInches(distance);
+      case 'meters': return toMeters(distance);
+      case 'centimeters': return toCentimeters(distance);
+      case 'feet': return toFeet(distance);
+      case 'inches': return toInches(distance);
     }
   };
 }

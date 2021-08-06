@@ -73,11 +73,6 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
     if (prevProps.isSensorNoiseEnabled !== this.props.isSensorNoiseEnabled || prevProps.isRealisticSensorsEnabled !== this.props.isRealisticSensorsEnabled) {
       Sim.Space.getInstance().updateSensorOptions(this.props.isSensorNoiseEnabled, this.props.isRealisticSensorsEnabled);
     }
-
-    // Check if board was reset
-    if (this.props.surfaceState !== prevProps.surfaceState) {
-      Sim.Space.getInstance().rebuildFloor(this.props.surfaceState);
-    }
   }
 
   private bindContainerRef_ = (ref: HTMLDivElement) => {

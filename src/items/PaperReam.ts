@@ -1,7 +1,7 @@
 import * as Babylon from 'babylonjs';
 import { Quaternion, ReferenceFrame as RawReferenceFrame, Vector3 as RawVector3 } from '../math';
 import { ReferenceFrame, Rotation, Vector3 } from '../unit-math';
-import { Item } from '../state';
+import Item from '../state/State/Item';
 import { Distance, Mass } from '../util';
 import ItemObject from './ItemObject';
 import * as uuid from 'uuid';
@@ -44,7 +44,7 @@ export class PaperReam implements ItemObject {
     this.mesh.material = reamMaterial;
     this.mesh.visibility = 0.5;
 
-    const position = item.origin.position ? Vector3.toRaw(item.origin.position, Distance.Type.Centimeters) : RawVector3.ZERO;
+    const position = item.origin.position ? Vector3.toRaw(item.origin.position, 'centimeters') : RawVector3.ZERO;
     const orientation = item.origin.orientation ? Rotation.toRawQuaternion(item.origin.orientation) : Quaternion.IDENTITY;
 
 

@@ -76,10 +76,10 @@ const MASS_OPTIONS: ComboBox.Option[] = [
 ];
 
 const DISTANCE_OPTIONS: ComboBox.Option[] = [
-  ComboBox.option('meters', Distance.Type.Meters),
-  ComboBox.option('centimeters', Distance.Type.Centimeters),
-  ComboBox.option('feet', Distance.Type.Feet),
-  ComboBox.option('inches', Distance.Type.Inches),
+  ComboBox.option('meters', 'meters'),
+  ComboBox.option('centimeters', 'centimeters'),
+  ComboBox.option('feet', 'feet'),
+  ComboBox.option('inches', 'inches'),
 ];
 
 const ANGLE_OPTIONS: ComboBox.Option[] = [
@@ -210,7 +210,7 @@ export class ValueEdit extends React.PureComponent<Props, State> {
               theme={theme}
               options={unitOptions}
               onSelect={this.onUnitSelect_}
-              index={Value.subType(value)}
+              index={0}
               minimal
               widthTweak={2}
             />

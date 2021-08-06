@@ -57,6 +57,7 @@ export interface Vector3 {
 
 export namespace Vector3 {
   export const ZERO: Vector3 = { x: 0, y: 0, z: 0 };
+  export const ONE: Vector3 = { x: 1, y: 1, z: 1 };
 
   export const X: Vector3 = { x: 1, y: 0, z: 0 };
   export const Y: Vector3 = { x: 0, y: 1, z: 0 };
@@ -219,21 +220,25 @@ export namespace Quaternion {
 export interface ReferenceFrame {
   position?: Vector3;
   orientation?: Quaternion;
+  scale?: Vector3;
 }
 
 export namespace ReferenceFrame {
   export const IDENTITY: ReferenceFrame = {
     position: Vector3.ZERO,
-    orientation: Quaternion.IDENTITY
+    orientation: Quaternion.IDENTITY,
+    scale: Vector3.ONE
   };
 
   export const create = (position: Vector3, orientation: Quaternion): ReferenceFrame => ({ position, orientation });
   export const position = (frame: ReferenceFrame) => (frame ? (frame.position ? frame.position : Vector3.ZERO) : Vector3.ZERO);
   export const orientation = (frame: ReferenceFrame) => (frame ? (frame.orientation ? frame.orientation : Quaternion.IDENTITY) : Quaternion.IDENTITY);
+  export const scale = (frame: ReferenceFrame) => (frame ?? {}).scale ?? Vector3.ONE;
 
   export const fill = (frame: ReferenceFrame): ReferenceFrame => ({
-    position: frame.position || Vector3.ZERO,
-    orientation: frame.orientation || Quaternion.IDENTITY
+    position: frame.position ?? Vector3.ZERO,
+    orientation: frame.orientation ?? Quaternion.IDENTITY,
+    scale: frame.scale ?? Vector3.ONE
   });
 }
 

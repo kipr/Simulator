@@ -22,13 +22,83 @@ import { ReferenceFrame as UnitReferenceFrame, Rotation, Vector3 as UnitVector3 
 import { RobotPosition } from './RobotPosition';
 import { Angle, Distance, Mass } from './util';
 
-import store, { State, Item } from './state';
+import store, { State } from './state';
+import Item from './state/State/Item';
 import { Unsubscribe } from 'redux';
 import deepNeq from './deepNeq';
 import { SceneAction } from './state/reducer';
 import { Gizmo } from 'babylonjs/Gizmos/gizmo';
+import SceneManager from './SceneManager';
+import Scene from './state/State/Scene';
 
 export let ACTIVE_SPACE: Space;
+
+const TEST_SCENE: Scene = {
+  name: 'test',
+  description: 'A Test',
+  authorId: 'Braden',
+  geometry: {
+    'box': {
+      type: 'box',
+      size: {
+        x: Distance.centimeters(5),
+        y: Distance.centimeters(5),
+        z: Distance.centimeters(5),
+      }
+    },
+    'table': {
+      type: 'file',
+      uri: 'static/table.glb'
+    },
+    'suzanne': {
+      type: 'file',
+      uri: 'static/suzanne.glb'
+    },
+  },
+  nodes: {
+    'table': {
+      type: 'object',
+      geometryId: 'table',
+      name: 'A Table',
+      origin: {
+        scale: {
+          x: 10,
+          y: 10,
+          z: 10,
+        }
+      },
+      physics: {
+        type: 'mesh',
+        restitution: 0,
+        friction: 1
+      },
+    },
+    'suzanne_1': {
+      type: 'object',
+      geometryId: 'suzanne',
+      name: 'A Suzanne',
+      origin: {
+        position: {
+          x: Distance.meters(0),
+          y: Distance.meters(0.4),
+          z: Distance.meters(0),
+        },
+        scale: {
+          x: 2,
+          y: 2,
+          z: 2,
+        }
+      },
+      physics: {
+        type: 'mesh',
+        mass: Mass.grams(10),
+        friction: 0.5,
+        restitution: 1
+      }
+    },
+    // 3 more suzannes (clipped)
+  }
+};
 
 export class Space {
   private static instance: Space;
@@ -77,6 +147,7 @@ export class Space {
   private sensorObjects_: SensorObject[] = [];
 
   private canCoordinates: Array<[number, number]>;
+  private sceneManager_: SceneManager;
 
   private collidersVisible = false;
 
@@ -150,7 +221,7 @@ export class Space {
         const mesh = this.scene.getMeshByID(meshName);
         const { position, orientation } = item.origin ?? {};
         if (position) {
-          const rawPosition = UnitVector3.toRaw(position, Distance.Type.Centimeters);
+          const rawPosition = UnitVector3.toRaw(position, 'centimeters');
           mesh.position = Vector3.toBabylon(rawPosition);
         }
 
@@ -263,6 +334,7 @@ export class Space {
     this.engine = new Babylon.Engine(this.workingCanvas, true, { preserveDrawingBuffer: true, stencil: true });
     this.scene = new Babylon.Scene(this.engine);
     this.camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(50,50,50), this.scene);
+    var postProcess = new Babylon.FxaaPostProcess("fxaa", 1.0, this.camera);
 
     this.currentEngineView = null;
 
@@ -353,7 +425,11 @@ export class Space {
     this.scene.enablePhysics(gravityVector, this.ammo_);
     this.scene.getPhysicsEngine().setSubTimeStep(5);
 
-    this.buildFloor();
+    this.sceneManager_ = new SceneManager(this.scene);
+    this.sceneManager_.setScene(TEST_SCENE).then(() => {
+      console.log('loaded scene!');
+    });
+
 
     // (x, z) coordinates of cans around the board
     this.canCoordinates = [[-22, -14.3], [0, -20.6], [15.5, -23.7], [0, -6.9], [-13.7, 6.8], [0, 6.8], [13.5, 6.8], [25.1, 14.8], [0, 34], [-18.8, 45.4], [0, 54.9], [18.7, 45.4]];
@@ -676,11 +752,11 @@ export class Space {
         ...item,
         origin: {
           position: position
-            ? UnitVector3.toTypeGranular(UnitVector3.fromRaw(Vector3.fromBabylon(mesh.position), Distance.Type.Centimeters), position.x.type, position.y.type, position.z.type)
-            : UnitVector3.fromRaw(Vector3.fromBabylon(mesh.position), Distance.Type.Centimeters),
+            ? UnitVector3.toTypeGranular(UnitVector3.fromRaw(Vector3.fromBabylon(mesh.position), 'centimeters'), position.x.type, position.y.type, position.z.type)
+            : UnitVector3.fromRaw(Vector3.fromBabylon(mesh.position), 'centimeters'),
           orientation: orientation
             ? Rotation.fromRawQuaternion(Quaternion.fromBabylon(mesh.rotationQuaternion), orientation.type)
-            : Rotation.fromRawQuaternion(Quaternion.fromBabylon(mesh.rotationQuaternion), Rotation.Type.Euler),
+            : Rotation.fromRawQuaternion(Quaternion.fromBabylon(mesh.rotationQuaternion), 'euler'),
         },
       };
     }
@@ -760,34 +836,6 @@ export class Space {
       sensorObject.isNoiseEnabled = isNoiseEnabled;
       sensorObject.isRealisticEnabled = isRealisticEnabled;
     }
-  }
-
-  private buildFloor() {
-    this.mat = Babylon.MeshBuilder.CreateGround("mat", { width:118, height:59, subdivisions:2 }, this.scene);
-    this.mat.position.y = -0.8;
-    this.mat.rotate(new Babylon.Vector3(0,1,0),-Math.PI / 2);
-    const matMaterial = new Babylon.StandardMaterial("ground", this.scene);
-    matMaterial.ambientTexture = new Babylon.Texture('static/Surface-A.png',this.scene);
-    this.mat.material = matMaterial;
-    this.mat.physicsImpostor = new Babylon.PhysicsImpostor(this.mat, Babylon.PhysicsImpostor.BoxImpostor,{ mass:0, friction: 1 }, this.scene);
-
-    this.ground = Babylon.MeshBuilder.CreateGround("ground", { width:354, height:354, subdivisions:2 }, this.scene);
-    this.ground.position.y = -0.83;
-    const groundMaterial = new Babylon.StandardMaterial("ground", this.scene);
-    groundMaterial.emissiveColor = new Babylon.Color3(0.1,0.1,0.1);
-    this.ground.material = groundMaterial;
-    this.ground.physicsImpostor = new Babylon.PhysicsImpostor(this.ground, Babylon.PhysicsImpostor.BoxImpostor,{ mass:0, friction: 1 }, this.scene);
-  }
-
-  public rebuildFloor(surfaceState: SurfaceState): void { 
-    this.mat.dispose();
-    this.mat = Babylon.MeshBuilder.CreateGround("mat", { width: surfaceState.surfaceWidth, height: surfaceState.surfaceHeight, subdivisions:2 }, this.scene);
-    this.mat.position.y = -0.8;
-    this.mat.rotate(new Babylon.Vector3(0,1,0),-Math.PI / 2);
-    const matMaterial = new Babylon.StandardMaterial("ground", this.scene);
-    matMaterial.ambientTexture = new Babylon.Texture(surfaceState.surfaceImage,this.scene);
-    this.mat.material = matMaterial;
-    this.mat.physicsImpostor = new Babylon.PhysicsImpostor(this.mat, Babylon.PhysicsImpostor.BoxImpostor,{ mass:0, friction: 1 }, this.scene);
   }
 
   private setDriveMotors(leftSpeed: number, rightSpeed: number) {

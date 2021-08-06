@@ -1,7 +1,8 @@
 import * as React from "react";
 import { styled } from "styletron-react";
 import { ReferenceFrame, Rotation, Vector3 } from "../../unit-math";
-import { Item } from "../../state";
+import Item from '../../state/State/Item';
+
 import { Angle, Distance, Mass, UnitlessValue, Value } from "../../util";
 import ComboBox from "../ComboBox";
 import { Dialog } from "../Dialog";
@@ -59,8 +60,8 @@ const TYPE_OPTIONS: ComboBox.Option[] = [
 ];
 
 const ROTATION_TYPES: ComboBox.Option[] = [
-  ComboBox.option('Euler', Rotation.Type.Euler),
-  ComboBox.option('Axis Angle', Rotation.Type.AngleAxis),
+  ComboBox.option('Euler', 'euler'),
+  ComboBox.option('Axis Angle', 'angle-axis'),
 ];
 
 const EULER_ORDER_OPTIONS: ComboBox.Option[] = [
@@ -90,7 +91,7 @@ class ItemSettings extends React.PureComponent<Props, State> {
     const type = option.data as Rotation.Type;
 
     switch (type) {
-      case Rotation.Type.Euler:
+      case 'euler':
         this.props.onItemChange({
           ...item,
           startingOrigin: {
@@ -99,7 +100,7 @@ class ItemSettings extends React.PureComponent<Props, State> {
           }
         });
         break;
-      case Rotation.Type.AngleAxis:
+      case 'angle-axis':
         this.props.onItemChange({
           ...item,
           startingOrigin: {
@@ -323,7 +324,7 @@ class ItemSettings extends React.PureComponent<Props, State> {
 
     const { startingOrigin } = item;
 
-    const position = startingOrigin.position || Vector3.zero(Distance.Type.Centimeters);
+    const position = startingOrigin.position || Vector3.zero('centimeters');
     const orientation = startingOrigin.orientation || Rotation.Euler.identity(Angle.Type.Degrees);
     const friction = item.friction ? item.friction : UnitlessValue.create(5);
     const mass = item.mass ? item.mass : Mass.grams(5);
@@ -370,9 +371,9 @@ class ItemSettings extends React.PureComponent<Props, State> {
           onCollapsedChange={this.onCollapsedChange_('orientation')}
         >
           <StyledField name='Type' theme={theme}>
-            <ComboBox options={ROTATION_TYPES} theme={theme} index={orientation.type} onSelect={this.onRotationTypeChange_} />
+            <ComboBox options={ROTATION_TYPES} theme={theme} index={ROTATION_TYPES.findIndex(r => r.data === orientation.type)} onSelect={this.onRotationTypeChange_} />
           </StyledField>
-          {orientation.type === Rotation.Type.Euler ? (
+          {orientation.type === 'euler' ? (
             <>
               <StyledValueEdit
                 name='X'

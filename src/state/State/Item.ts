@@ -1,7 +1,7 @@
 import { ReferenceFrame } from "../../unit-math";
 import { Mass, UnitlessValue } from "../../util";
 
-export namespace Item {
+namespace Item {
   export enum Type {
     Can,
     PaperReam

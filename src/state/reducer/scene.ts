@@ -1,5 +1,7 @@
 import defaultItems from "../../items/defaultItems";
-import { Item, Scene } from "../State";
+import { Scene } from "../State";
+import Item from '../State/Item';
+
 
 export namespace SceneAction {
 

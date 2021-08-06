@@ -8,6 +8,8 @@ interface Scene {
   authorId: string;
   description: string;
 
+  hdriUri?: string;
+
   geometry: Dict<Geometry>;
   nodes: Dict<Node>;
   scripts?: Dict<Script>;
