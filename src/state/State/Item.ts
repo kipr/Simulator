@@ -1,5 +1,5 @@
-import { ReferenceFrame } from "../unit-math";
-import { Mass, UnitlessValue } from "../util";
+import { ReferenceFrame } from "../../unit-math";
+import { Mass, UnitlessValue } from "../../util";
 
 export namespace Item {
   export enum Type {
@@ -64,16 +64,6 @@ export namespace Item {
   }
 }
 
-export type Item = Item.Can | Item.PaperReam;
+type Item = Item.Can | Item.PaperReam;
 
-export interface Scene {
-  itemOrdering: string[];
-  items: {
-    [name: string]: Item;
-  };
-  selectedItem: string;
-}
-
-export interface State {
-  scene: Scene;
-}
+export default Item;

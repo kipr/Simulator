@@ -4,12 +4,44 @@ import { Angle, Distance, Value } from './util/Value';
 
 import {
   Euler as RawEuler,
+  Vector2 as RawVector2,
   Vector3 as RawVector3,
   Quaternion as RawQuaternion,
   AngleAxis as RawAngleAxis,
   ReferenceFrame as RawReferenceFrame,
   Quaternion,
 } from './math';
+
+export interface Vector2 {
+  x: Distance;
+  y: Distance;
+}
+
+export namespace Vector2 {
+  export const zero = (type: Distance.Type = Distance.Type.Meters): Vector2 => ({
+    x: Distance.toType(Distance.meters(0), type),
+    y: Distance.toType(Distance.meters(0), type),
+  });
+
+  export const create = (x: Distance, y: Distance, z: Distance): Vector2 => ({ x, y });
+
+  export const toRaw = (v: Vector2, type: Distance.Type) => RawVector2.create(
+    Distance.toType(v.x, type).value,
+    Distance.toType(v.y, type).value,
+  );
+
+  export const fromRaw = (raw: RawVector2, type: Distance.Type) => ({
+    x: { type, value: raw.x },
+    y: { type, value: raw.y },
+  });
+
+  export const toTypeGranular = (v: Vector2, x: Distance.Type, y: Distance.Type): Vector2 => {
+    return {
+      x: Distance.toType(v.x, x),
+      y: Distance.toType(v.y, y),
+    };
+  };
+}
 
 export interface Vector3 {
   x: Distance;
