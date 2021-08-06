@@ -65,10 +65,12 @@ jobs:
     - name: Get existing images
       id: get_existing_images
       run: |-
-        echo "::set-output name=NUM_EXISTING_IMAGES::$((gcloud container images list-tags gcr.io/kipr-321905/kipr/simulator --filter="tags:1.0.1" --format=json) | jq '. | length')"
+        NUM_IMAGES = (gcloud container images list-tags gcr.io/kipr-321905/kipr/simulator --filter="tags:1.0.1" --format=json) | jq '. | length'
+        if NUM_IMAGES > 0; then exit 1; fi
+
     
     - name: Ensure image does not exist
-      if: steps.get_existing_images.NUM_EXISTING_IMAGES != 0
+      if: steps.get_existing_images.outputs.NUM_EXISTING_IMAGES != 0
       run: exit 1
 
     # Build the Docker image
