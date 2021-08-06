@@ -88,11 +88,11 @@ jobs:
     environment: production
 
     steps: 
-    # - name: Checkout deployment repo
-    #   uses: actions/checkout@v2
-    #   with:
-    #     repository: 'kipr/libwallaby'
-    #     path: libwallaby
+    - name: Checkout deployment repo
+      uses: actions/checkout@v2
+      with:
+        repository: 'kipr/kipr-yamls'
+        ssh-key: ${{ secrets.KIPR_YAMLS_REPO_KEY }}
 
     # Get the GKE credentials so we can deploy to the cluster
     - name: Get GKE credentials
