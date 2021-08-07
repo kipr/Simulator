@@ -27,65 +27,68 @@ env:
   IMAGE: kipr/simulator
 
 jobs:
-  # setup-build-publish-deploy:
-  #   name: Setup, Build, Publish, and Deploy
-  #   runs-on: ubuntu-latest
-  #   environment: production
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
+    runs-on: ubuntu-latest
+    environment: production
+    outputs:
+      image_version: ${{ steps.package_version.outputs.PACKAGE_VERSION }}
 
-  #   steps:
-  #   - name: Checkout
-  #     uses: actions/checkout@v2
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
     
-  #   - name: Checkout libwallaby
-  #     uses: actions/checkout@v2
-  #     with:
-  #       repository: 'kipr/libwallaby'
-  #       path: libwallaby
+    - name: Checkout libwallaby
+      uses: actions/checkout@v2
+      with:
+        repository: 'kipr/libwallaby'
+        path: libwallaby
     
-  #   # Get version from package.json
-  #   - name: Get package version
-  #     id: package_version
-  #     run: |-
-  #       echo "::set-output name=PACKAGE_VERSION::$(jq -r .version package.json)"
+    # Get version from package.json
+    - name: Get package version
+      id: package_version
+      run: |-
+        echo "::set-output name=PACKAGE_VERSION::$(jq -r .version package.json)"
 
-  #   # Setup gcloud CLI
-  #   - name: Set up gcloud CLI
-  #     uses: google-github-actions/setup-gcloud@v0.2.1
-  #     with:
-  #       service_account_key: ${{ secrets.GCR_SA_KEY }}
-  #       project_id: ${{ secrets.GKE_PROJECT }}
+    # Setup gcloud CLI
+    - name: Set up gcloud CLI
+      uses: google-github-actions/setup-gcloud@v0.2.1
+      with:
+        service_account_key: ${{ secrets.GCR_SA_KEY }}
+        project_id: ${{ secrets.GKE_PROJECT }}
     
-  #   # Ensure there isn't already a Docker image for this version
-  #   - name: Ensure Docker image does not exist
-  #     id: get_existing_images
-  #     run: |-
-  #       NUM_IMAGES=$(gcloud container images list-tags gcr.io/kipr-321905/kipr/simulator --filter="tags:${{ steps.package_version.outputs.PACKAGE_VERSION }}" --format=json | jq '. | length')
-  #       if (( NUM_IMAGES > 0 )); then exit 1; fi
+    # Ensure there isn't already a Docker image for this version
+    - name: Ensure Docker image does not exist
+      id: get_existing_images
+      run: |-
+        NUM_IMAGES=$(gcloud container images list-tags gcr.io/kipr-321905/kipr/simulator --filter="tags:${{ steps.package_version.outputs.PACKAGE_VERSION }}" --format=json | jq '. | length')
+        if (( NUM_IMAGES > 0 )); then exit 1; fi
 
-  #   # Configure Docker to use the gcloud command-line tool as a credential
-  #   # helper for authentication
-  #   - name: Configure Docker with gcloud
-  #     run: |-
-  #       gcloud --quiet auth configure-docker
+    # Configure Docker to use the gcloud command-line tool as a credential
+    # helper for authentication
+    - name: Configure Docker with gcloud
+      run: |-
+        gcloud --quiet auth configure-docker
 
-  #   # Build the Docker image
-  #   - name: Build Docker image
-  #     run: |-
-  #       docker build \
-  #         --tag "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
-  #         --build-arg GITHUB_SHA="$GITHUB_SHA" \
-  #         --build-arg GITHUB_REF="$GITHUB_REF" \
-  #         .
+    # Build the Docker image
+    - name: Build Docker image
+      run: |-
+        docker build \
+          --tag "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
+          --build-arg GITHUB_SHA="$GITHUB_SHA" \
+          --build-arg GITHUB_REF="$GITHUB_REF" \
+          .
 
-  #   # Push the Docker image to Google Container Registry
-  #   - name: Publish Docker image to GCR
-  #     run: |-
-  #       docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
+    # Push the Docker image to Google Container Registry
+    - name: Publish Docker image to GCR
+      run: |-
+        docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
   
   deploy-to-staging:
     name: Deploy to staging
     runs-on: ubuntu-latest
     environment: production
+    needs: setup-build-publish-deploy
 
     steps: 
     - name: Checkout deployment repo
@@ -105,4 +108,9 @@ jobs:
     
     - name: Deploy to GKE
       run: |-
-        helm upgrade simulator-nafis-staging ./simulator -f ./simulator/values.staging.yaml  --set imageVersion=1.0.0 --namespace nafis-staging
+        helm upgrade \
+          --install \
+          --namespace prerelease \
+          --values ./simulator/values.prerelease.yaml \
+          --set imageVersion=${{ needs.setup-build-publish-deploy.outputs.image_version }} \
+          simulator-prerelease ./simulator
