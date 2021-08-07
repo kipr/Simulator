@@ -27,7 +27,7 @@ env:
   IMAGE: kipr/simulator
 
 jobs:
-  setup-build-publish-deploy:
+  build-publish:
     name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
     environment: production
@@ -88,7 +88,7 @@ jobs:
     name: Deploy to staging
     runs-on: ubuntu-latest
     environment: production
-    needs: setup-build-publish-deploy
+    needs: build-publish
 
     steps: 
     - name: Checkout deployment repo
@@ -112,5 +112,5 @@ jobs:
           --install \
           --namespace prerelease \
           --values ./simulator/values.prerelease.yaml \
-          --set imageVersion=${{ needs.setup-build-publish-deploy.outputs.image_version }} \
+          --set imageVersion=${{ needs.build-publish.outputs.image_version }} \
           simulator-prerelease ./simulator
