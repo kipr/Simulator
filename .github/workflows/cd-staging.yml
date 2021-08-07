@@ -74,15 +74,13 @@ jobs:
     - name: Build Docker image
       run: |-
         docker build \
-          --tag "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA" \
-          --build-arg GITHUB_SHA="$GITHUB_SHA" \
-          --build-arg GITHUB_REF="$GITHUB_REF" \
+          --tag "gcr.io/$PROJECT_ID/$IMAGE:${{ steps.package_version.outputs.PACKAGE_VERSION }}" \
           .
 
     # Push the Docker image to Google Container Registry
     - name: Publish Docker image to GCR
       run: |-
-        docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
+        docker push "gcr.io/$PROJECT_ID/$IMAGE:${{ steps.package_version.outputs.PACKAGE_VERSION }}"
   
   deploy-to-staging:
     name: Deploy to staging
