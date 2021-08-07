@@ -92,6 +92,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: 'kipr/kipr-yamls'
+        ref: 'prepare-for-cd'
         ssh-key: ${{ secrets.KIPR_YAMLS_REPO_KEY }}
 
     # Get the GKE credentials so we can deploy to the cluster
@@ -102,6 +103,6 @@ jobs:
         location: ${{ env.GKE_ZONE }}
         credentials: ${{ secrets.GCR_SA_KEY }}
     
-    - name: Test kubectl
+    - name: Deploy to GKE
       run: |-
-        kubectl get pod
+        helm upgrade simulator-nafis-staging ./simulator -f ./simulator/values.staging.yaml  --set imageVersion=1.0.0 --namespace nafis-staging
