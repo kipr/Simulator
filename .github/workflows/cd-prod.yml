@@ -19,8 +19,8 @@ jobs:
 
     steps: 
       - name: Output tag
-      run: |-
-        echo ${GITHUB_REF##*/}
+        run: |-
+          echo ${GITHUB_REF##*/}
     # - name: Checkout deployment repo
     #   uses: actions/checkout@v2
     #   with:
