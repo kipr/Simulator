@@ -30,7 +30,7 @@ jobs:
     # Ensure that the Docker image already exists for this version
     - name: Ensure Docker image exists
       run: |-
-        NUM_IMAGES=$(gcloud container images list-tags gcr.io/kipr-321905/kipr/simulator --filter="tags:${GITHUB_REF#refs/tags/}" --format=json | jq '. | length')
+        NUM_IMAGES=$(gcloud container images list-tags gcr.io/kipr-321905/kipr/simulator --filter="tags:${GITHUB_REF#refs/tags/v}" --format=json | jq '. | length')
         if (( NUM_IMAGES <= 0 )); then exit 1; fi
 
     - name: Checkout deployment repo
@@ -53,5 +53,5 @@ jobs:
         helm upgrade \
           --install \
           --namespace prod \
-          --set imageVersion=${GITHUB_REF#refs/tags/} \
+          --set imageVersion=${GITHUB_REF#refs/tags/v} \
           simulator ./simulator
