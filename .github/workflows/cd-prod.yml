@@ -1,0 +1,51 @@
+name: Deploy to prod
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+env:
+  GKE_CLUSTER: kipr
+  GKE_ZONE: us-central1-a
+
+jobs:
+  deploy-to-prod:
+    name: Deploy to prod
+    runs-on: ubuntu-latest
+
+    steps:
+    # Setup gcloud CLI
+    - name: Set up gcloud CLI
+      uses: google-github-actions/setup-gcloud@v0.2.1
+      with:
+        service_account_key: ${{ secrets.GCR_SA_KEY }}
+        project_id: ${{ secrets.GKE_PROJECT }}
+        
+    # Ensure that the Docker image already exists for this version
+    - name: Ensure Docker image exists
+      run: |-
+        NUM_IMAGES=$(gcloud container images list-tags gcr.io/kipr-321905/kipr/simulator --filter="tags:${GITHUB_REF#refs/tags/v}" --format=json | jq '. | length')
+        if (( NUM_IMAGES <= 0 )); then exit 1; fi
+
+    - name: Checkout deployment repo
+      uses: actions/checkout@v2
+      with:
+        repository: 'kipr/kipr-yamls'
+        ssh-key: ${{ secrets.KIPR_YAMLS_REPO_KEY }}
+
+    # Get the GKE credentials so we can deploy to the cluster
+    - name: Get GKE credentials
+      uses: google-github-actions/get-gke-credentials@v0.2.1
+      with:
+        cluster_name: ${{ env.GKE_CLUSTER }}
+        location: ${{ env.GKE_ZONE }}
+        credentials: ${{ secrets.GCR_SA_KEY }}
+
+    - name: Deploy to GKE
+      run: |-
+        helm upgrade \
+          --install \
+          --namespace prod \
+          --set imageVersion=${GITHUB_REF#refs/tags/v} \
+          simulator ./simulator
