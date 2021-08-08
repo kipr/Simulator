@@ -27,7 +27,6 @@ jobs:
   build-publish:
     name: Build and publish
     runs-on: ubuntu-latest
-    environment: production
     outputs:
       image_version: ${{ steps.package_version.outputs.PACKAGE_VERSION }}
 
@@ -61,8 +60,7 @@ jobs:
         NUM_IMAGES=$(gcloud container images list-tags gcr.io/kipr-321905/kipr/simulator --filter="tags:${{ steps.package_version.outputs.PACKAGE_VERSION }}" --format=json | jq '. | length')
         if (( NUM_IMAGES > 0 )); then exit 1; fi
 
-    # Configure Docker to use the gcloud command-line tool as a credential
-    # helper for authentication
+    # Configure Docker to use the gcloud command-line tool as a credential helper for authentication
     - name: Configure Docker with gcloud
       run: |-
         gcloud --quiet auth configure-docker
@@ -82,7 +80,6 @@ jobs:
   deploy-to-staging:
     name: Deploy to staging
     runs-on: ubuntu-latest
-    environment: production
     needs: build-publish
 
     steps: 
@@ -90,7 +87,6 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: 'kipr/kipr-yamls'
-        ref: 'prepare-for-cd'
         ssh-key: ${{ secrets.KIPR_YAMLS_REPO_KEY }}
 
     # Get the GKE credentials so we can deploy to the cluster

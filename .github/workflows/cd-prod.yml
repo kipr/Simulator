@@ -13,13 +13,8 @@ jobs:
   deploy-to-prod:
     name: Deploy to prod
     runs-on: ubuntu-latest
-    environment: production
 
-    steps: 
-    - name: Output tag
-      run: |-
-        echo ${GITHUB_REF#refs/tags/}
-    
+    steps:
     # Setup gcloud CLI
     - name: Set up gcloud CLI
       uses: google-github-actions/setup-gcloud@v0.2.1
@@ -37,7 +32,6 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: 'kipr/kipr-yamls'
-        ref: 'prepare-for-cd'
         ssh-key: ${{ secrets.KIPR_YAMLS_REPO_KEY }}
 
     # Get the GKE credentials so we can deploy to the cluster
