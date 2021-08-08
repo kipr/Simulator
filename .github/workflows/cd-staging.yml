@@ -13,22 +13,19 @@
 name: Build and deploy to staging
 
 on:
-  # release:
-  #   types: [created]
   push:
     branches:
-      - add-cd
+      - master
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
-  GKE_CLUSTER: kipr    # TODO: update to cluster name
-  GKE_ZONE: us-central1-a   # TODO: update to cluster zone
-  # DEPLOYMENT_NAME: gke-test # TODO: update to deployment name
+  GKE_CLUSTER: kipr
+  GKE_ZONE: us-central1-a
   IMAGE: kipr/simulator
 
 jobs:
   build-publish:
-    name: Setup, Build, Publish, and Deploy
+    name: Build and publish
     runs-on: ubuntu-latest
     environment: production
     outputs:
