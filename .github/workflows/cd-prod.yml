@@ -1,0 +1,46 @@
+name: Deploy to prod
+
+on:
+  push:
+    tags:
+      - "*"
+
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: kipr
+  GKE_ZONE: us-central1-a
+  IMAGE: kipr/simulator
+
+jobs:
+  deploy-to-prod:
+    name: Deploy to prod
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps: 
+      - name: Output tag
+      run: |-
+        echo ${GITHUB_REF##*/}
+    # - name: Checkout deployment repo
+    #   uses: actions/checkout@v2
+    #   with:
+    #     repository: 'kipr/kipr-yamls'
+    #     ref: 'prepare-for-cd'
+    #     ssh-key: ${{ secrets.KIPR_YAMLS_REPO_KEY }}
+
+    # # Get the GKE credentials so we can deploy to the cluster
+    # - name: Get GKE credentials
+    #   uses: google-github-actions/get-gke-credentials@v0.2.1
+    #   with:
+    #     cluster_name: ${{ env.GKE_CLUSTER }}
+    #     location: ${{ env.GKE_ZONE }}
+    #     credentials: ${{ secrets.GCR_SA_KEY }}
+    
+    # - name: Deploy to GKE
+    #   run: |-
+    #     helm upgrade \
+    #       --install \
+    #       --namespace prerelease \
+    #       --values ./simulator/values.prerelease.yaml \
+    #       --set imageVersion=${{ needs.build-publish.outputs.image_version }} \
+    #       simulator-prerelease ./simulator
