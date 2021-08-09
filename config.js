@@ -5,7 +5,7 @@ module.exports = {
     return {
       server: {
         port: getEnvVarOrDefault('SERVER_PORT', 3000),
-        libwallabyRoot: getEnvVarOrThrow('LIBWALLABY_ROOT'),
+        libwallabyRoot: getEnvVarOrDefault('LIBWALLABY_ROOT', './libwallaby'),
       },
       caching: {
         staticMaxAge: getEnvVarOrDefault('CACHING_STATIC_MAX_AGE', 60 * 60 * 1000),

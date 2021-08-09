@@ -92,7 +92,7 @@ yarn watch
 In another terminal, run the server:
 ```bash
 source $PATH_TO_EMSDK/emsdk_env.sh
-LIBWALLABY_ROOT=/path/to/libwallaby node express.js
+node express.js
 ```
 
 ## Configuration
@@ -101,7 +101,7 @@ The server can be configured using environment variables. Variables without defa
 
 | Variable | Description | Default value |
 | -------- | ----------- | ------------- |
-| `LIBWALLABY_ROOT` | Path to the root directory of libwallaby | |
+| `LIBWALLABY_ROOT` | Path to the root directory of libwallaby | `./libwallaby` |
 | `SERVER_PORT` | The port on which to listen for requests | `3000` |
 | `CACHING_STATIC_MAX_AGE` | The max duration (in ms) to allow static assets to be cached | `3600000` (1 hr) |
 
