@@ -38,6 +38,20 @@ sudo apt-get install cmake
 sudo apt-get install build-essential
 ```
 
+### Clone repository and submodules
+
+Clone this repository and its submodules:
+
+```bash
+git clone --recurse-submodules https://github.com/kipr/Simulator
+```
+
+Or, if you've already cloned the repository without `--recurse-submodules`, you can initialize the submodules separately:
+
+```bash
+git submodule update --init
+```
+
 ### Install Emscripten
 
 See more info here: https://emscripten.org/docs/getting_started/downloads.html
@@ -58,15 +72,11 @@ yarn install
 
 ### Build libwallaby for JavaScript
 
-Clone `libwallaby`:
+Build `libwallaby`:
 ```bash
-git clone https://github.com/kipr/libwallaby.git
 mkdir libwallaby/build
 cd libwallaby/build
-```
 
-Then build:
-```bash
 source $PATH_TO_EMSDK/emsdk_env.sh
 emcmake cmake -Demscripten=ON -Dno_wallaby=ON -Dwith_vision_support=OFF -Dbuild_python=OFF -DBUILD_DOCUMENTATION=OFF ..
 emmake make -j8
