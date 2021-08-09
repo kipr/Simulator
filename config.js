@@ -20,10 +20,10 @@ function getEnvVarOrDefault(variableName, defaultValue) {
     : defaultValue;
 }
 
-function getEnvVarOrThrow(variableName) {
-  if (process.env[variableName] === undefined) {
-    throw new Error(`Required environment variable is not set: ${variableName}`);
-  }
+// function getEnvVarOrThrow(variableName) {
+//   if (process.env[variableName] === undefined) {
+//     throw new Error(`Required environment variable is not set: ${variableName}`);
+//   }
 
-  return process.env[variableName];
-}
+//   return process.env[variableName];
+// }
