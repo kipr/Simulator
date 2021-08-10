@@ -15,7 +15,7 @@ name: Build and deploy to staging
 on:
   push:
     branches:
-      - hash-for-staging-images
+      - master
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
