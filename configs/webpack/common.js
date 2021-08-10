@@ -3,6 +3,8 @@ const { resolve } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { DefinePlugin } = require('webpack');
 
+const commitHash = require('child_process').execSync('git rev-parse --short=8 HEAD').toString().trim();
+
 module.exports = {
   entry: {
     app: './index.tsx',
@@ -84,6 +86,7 @@ module.exports = {
     new HtmlWebpackPlugin({ template: 'index.html.ejs', }),
     new DefinePlugin({
       SIMULATOR_VERSION: JSON.stringify(require('../../package.json').version),
+      SIMULATOR_GIT_HASH: JSON.stringify(commitHash),
     }),
   ],
   performance: {

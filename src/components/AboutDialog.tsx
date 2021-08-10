@@ -71,7 +71,7 @@ export class AboutDialog extends React.PureComponent<Props> {
           <LogoRow>
             {logo}
           </LogoRow>
-          Version {SIMULATOR_VERSION}
+          Version {SIMULATOR_VERSION} ({SIMULATOR_GIT_HASH})
           <br /> <br />
           <Bold>Copyright <Fa icon='copyright' /> 2021 <Link theme={theme} href="https://kipr.org/" target="_blank">KISS Institute for Practical Robotics</Link> and External Contributors</Bold>
           <br /> <br />
