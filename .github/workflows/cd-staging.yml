@@ -27,12 +27,13 @@ jobs:
   build-publish:
     name: Build and publish
     runs-on: ubuntu-latest
-    # outputs:
-    #   image_version: ${{ steps.package_version.outputs.PACKAGE_VERSION }}
+    outputs:
+      image_version: ${{ steps.image_tag.outputs.IMAGE_TAG }}
 
     steps:
-    - name: Set image tag env var
-      run: echo IMAGE_TAG=${GITHUB_SHA::8} >> $GITHUB_ENV
+    - name: Set image tag output
+      id: image_tag
+      run: echo "::set-output name=IMAGE_TAG::${GITHUB_SHA::8}"
 
     - name: Checkout
       uses: actions/checkout@v2
@@ -55,7 +56,7 @@ jobs:
     # Ensure there isn't already a Docker image for this version
     - name: Ensure Docker image does not exist
       run: |-
-        NUM_IMAGES=$(gcloud container images list-tags gcr.io/kipr-321905/kipr/simulator --filter="tags:${IMAGE_TAG}" --format=json | jq '. | length')
+        NUM_IMAGES=$(gcloud container images list-tags gcr.io/kipr-321905/kipr/simulator --filter="tags:${{ steps.image_tag.outputs.IMAGE_TAG }}" --format=json | jq '. | length')
         if (( NUM_IMAGES > 0 )); then exit 1; fi
 
     # Configure Docker to use the gcloud command-line tool as a credential helper for authentication
@@ -67,13 +68,13 @@ jobs:
     - name: Build Docker image
       run: |-
         docker build \
-          --tag "gcr.io/$PROJECT_ID/$IMAGE:${IMAGE_TAG}" \
+          --tag "gcr.io/$PROJECT_ID/$IMAGE:${{ steps.image_tag.outputs.IMAGE_TAG }}" \
           .
 
     # Push the Docker image to Google Container Registry
     - name: Publish Docker image to GCR
       run: |-
-        docker push "gcr.io/$PROJECT_ID/$IMAGE:${IMAGE_TAG}"
+        docker push "gcr.io/$PROJECT_ID/$IMAGE:${{ steps.image_tag.outputs.IMAGE_TAG }}"
   
   deploy-to-staging:
     name: Deploy to staging
@@ -101,5 +102,5 @@ jobs:
           --install \
           --namespace prerelease \
           --values ./simulator/values.prerelease.yaml \
-          --set imageVersion=${IMAGE_TAG} \
+          --set imageVersion=${{ needs.build-publish.outputs.image_version }} \
           simulator-prerelease ./simulator
