@@ -31,20 +31,16 @@ jobs:
       image_version: ${{ steps.image_tag.outputs.IMAGE_TAG }}
 
     steps:
-    - name: Set image tag output
-      id: image_tag
-      run: echo "::set-output name=IMAGE_TAG::${GITHUB_SHA::8}"
-
     - name: Checkout
       uses: actions/checkout@v2
       with:
         submodules: true
     
-    # # Get version from package.json
-    # - name: Get package version
-    #   id: package_version
-    #   run: |-
-    #     echo "::set-output name=PACKAGE_VERSION::$(jq -r .version package.json)"
+    # Calculate image tag name from commit hash
+    - name: Set image tag output
+      id: image_tag
+      run: |-
+        echo "::set-output name=IMAGE_TAG::${GITHUB_SHA::8}"
 
     # Setup gcloud CLI
     - name: Set up gcloud CLI
