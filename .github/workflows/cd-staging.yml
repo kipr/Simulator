@@ -28,7 +28,7 @@ jobs:
     name: Build and publish
     runs-on: ubuntu-latest
     outputs:
-      image_version: ${{ steps.package_version.outputs.PACKAGE_VERSION }}
+      image_version: ${{ steps.image_tag.outputs.IMAGE_TAG }}
 
     steps:
     - name: Checkout
@@ -36,11 +36,11 @@ jobs:
       with:
         submodules: true
     
-    # Get version from package.json
-    - name: Get package version
-      id: package_version
+    # Calculate image tag name from commit hash
+    - name: Set image tag output
+      id: image_tag
       run: |-
-        echo "::set-output name=PACKAGE_VERSION::$(jq -r .version package.json)"
+        echo "::set-output name=IMAGE_TAG::${GITHUB_SHA::8}"
 
     # Setup gcloud CLI
     - name: Set up gcloud CLI
@@ -51,9 +51,8 @@ jobs:
     
     # Ensure there isn't already a Docker image for this version
     - name: Ensure Docker image does not exist
-      id: get_existing_images
       run: |-
-        NUM_IMAGES=$(gcloud container images list-tags gcr.io/kipr-321905/kipr/simulator --filter="tags:${{ steps.package_version.outputs.PACKAGE_VERSION }}" --format=json | jq '. | length')
+        NUM_IMAGES=$(gcloud container images list-tags gcr.io/kipr-321905/kipr/simulator --filter="tags:${{ steps.image_tag.outputs.IMAGE_TAG }}" --format=json | jq '. | length')
         if (( NUM_IMAGES > 0 )); then exit 1; fi
 
     # Configure Docker to use the gcloud command-line tool as a credential helper for authentication
@@ -65,13 +64,13 @@ jobs:
     - name: Build Docker image
       run: |-
         docker build \
-          --tag "gcr.io/$PROJECT_ID/$IMAGE:${{ steps.package_version.outputs.PACKAGE_VERSION }}" \
+          --tag "gcr.io/$PROJECT_ID/$IMAGE:${{ steps.image_tag.outputs.IMAGE_TAG }}" \
           .
 
     # Push the Docker image to Google Container Registry
     - name: Publish Docker image to GCR
       run: |-
-        docker push "gcr.io/$PROJECT_ID/$IMAGE:${{ steps.package_version.outputs.PACKAGE_VERSION }}"
+        docker push "gcr.io/$PROJECT_ID/$IMAGE:${{ steps.image_tag.outputs.IMAGE_TAG }}"
   
   deploy-to-staging:
     name: Deploy to staging
