@@ -158,7 +158,7 @@ class BottomLayout extends React.PureComponent<Props, State> {
 
   render() {
     const { props } = this;
-    const { style, className, theme, state, onStateChange, items, onCodeChange, code, console, settings } = props;
+    const { style, className, theme, state, onStateChange, onCodeChange, code, console, settings } = props;
     const { editorSize, consoleSize, infoSize } = this.state;
     return (
       <Container>

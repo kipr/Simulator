@@ -22,6 +22,12 @@ export const BLUE: ButtonColor = Object.freeze({
   hover: '#4b64ad'
 });
 
+export const BROWN: ButtonColor = Object.freeze({
+  disabled: '#72674f',
+  standard: '#8a7547',
+  hover: '#ab8c49',
+});
+
 export interface Theme {
   foreground: 'white' | 'black';
   backgroundColor: string;

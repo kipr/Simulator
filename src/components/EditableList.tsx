@@ -2,7 +2,7 @@ import * as React from "react";
 import { styled, withStyleDeep } from "styletron-react";
 import { StyleProps } from "../style";
 import { Fa } from "./Fa";
-import { BLUE, GREEN, RED, ThemeProps } from "./theme";
+import { BLUE, BROWN, GREEN, RED, ThemeProps } from "./theme";
 
 export interface EditableListProps<P> extends StyleProps, ThemeProps {
   items: EditableList.Item<P>[];
@@ -112,7 +112,7 @@ namespace EditableList {
 
     render() {
       const { props, state } = this;
-      const { component, onRemove, onSettings, onVisibilityChange, visible } = props;
+      const { component, onRemove, onSettings, onReset, onVisibilityChange, visible } = props;
       const componentProps = props.props;
       const { hover } = state;
       const Component = component;
@@ -125,6 +125,11 @@ namespace EditableList {
                 <StandardItem.VisibilityIconContainer onClick={this.onVisibilityChange_}>
                   <StandardItem.OptionIcon icon={visible ? 'eye' : 'eye-slash'} />
                 </StandardItem.VisibilityIconContainer>
+              )}
+              {onReset && (
+                <StandardItem.ResetIconContainer onClick={visible ? onReset : undefined} $disabled={!visible}>
+                  <StandardItem.OptionIcon icon='sync' />
+                </StandardItem.ResetIconContainer>
               )}
               {onSettings && (
                 <StandardItem.SettingsIconContainer onClick={onSettings}>
@@ -152,6 +157,7 @@ namespace EditableList {
       component: React.ComponentType<P>;
       props: ComponentRawProps<P>;
       visible?: boolean;
+      onReset?: () => void;
       onSettings?: () => void;
       onVisibilityChange?: (visiblity: boolean) => void;
     }
@@ -180,12 +186,12 @@ namespace EditableList {
       userSelect: 'none'
     });
 
-    export const OptionIconContainer = styled('div', {
+    export const OptionIconContainer = styled('div', (props: { $disabled?: boolean }) => ({
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-      cursor: 'pointer'
-    });
+      cursor: props.$disabled ? 'auto' : 'pointer'
+    }));
 
     export const OptionIcon = styled(Fa, {
       minWidth: '35px',
@@ -193,6 +199,13 @@ namespace EditableList {
       verticalAlign: 'middle',
       textAlign: 'center'
     });
+
+    export const ResetIconContainer = withStyleDeep(OptionIconContainer, (props: { $disabled?: boolean }) => ({
+      backgroundColor: props.$disabled ? BROWN.disabled : BROWN.standard,
+      ':hover': !props.$disabled ? {
+        backgroundColor: BROWN.hover
+      } : {},
+    }));
 
     export const VisibilityIconContainer = withStyleDeep(OptionIconContainer, {
       backgroundColor: BLUE.standard,
