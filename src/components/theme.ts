@@ -87,7 +87,7 @@ export const LIGHT: Theme = {
   switch: {
     on: {
       primary: 'rgb(0, 0, 0)',
-      secondary: 'rgba(0, 0, 0, 0.2)'
+      secondary: 'rgb(72, 139, 73)'
     },
     off: {
       primary: 'rgb(127, 127, 127)',
@@ -108,7 +108,7 @@ export const DARK: Theme = {
   switch: {
     on: {
       primary: 'rgb(255, 255, 255)',
-      secondary: 'rgba(255, 255, 255, 0.2)'
+      secondary: 'rgb(72, 139, 73)'
     },
     off: {
       primary: 'rgb(127, 127, 127)',

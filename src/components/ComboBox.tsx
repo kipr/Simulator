@@ -7,7 +7,7 @@ import { AnyText } from "../util";
 import { Color } from "../util/Color";
 import { Fa } from "./Fa";
 import { Text } from "./Text";
-import { DARK, ThemeProps } from "./theme";
+import { ThemeProps } from "./theme";
 
 const Container = styled('div', (props: ThemeProps & { $focus?: boolean; $minimal?: boolean; }) => ({
   width: !props.$minimal ? '100%' : undefined,
