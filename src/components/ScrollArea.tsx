@@ -22,10 +22,9 @@ export namespace Action {
   export interface None {
     type: Type.None;
     top: number;
-    autoscroll: boolean;
   }
 
-  export const none = (top: number, autoscroll: boolean): None => ({ type: Type.None, top, autoscroll });
+  export const none = (top: number): None => ({ type: Type.None, top });
 
   export interface VerticalScroll {
     type: Type.VerticalScroll;
@@ -104,7 +103,7 @@ class ScrollArea extends React.PureComponent<Props, State> {
       outerSize: Vector2.ZERO,
       innerSize: Vector2.ZERO,
       hover: false,
-      action: Action.none(0, this.props.autoscroll === true),
+      action: Action.none(0),
     };
   }
 
@@ -112,36 +111,38 @@ class ScrollArea extends React.PureComponent<Props, State> {
     switch (element) {
       case this.outerRef_: {
         if (Vector2.eq(this.state.outerSize, size)) break;
+
+        this.updateActionOnResize(this.state.innerSize, size);
         this.setState({
           outerSize: size
         });
-        this.updateActionOnResize(this.state.innerSize, size);
         break;
       }
       case this.innerRef_: {
         if (Vector2.eq(this.state.innerSize, size)) break;
-        
+
+        this.updateActionOnResize(size, this.state.outerSize);
         this.setState({
           innerSize: size
         });
-        this.updateActionOnResize(size, this.state.outerSize);
         break;
       }
     }
   };
 
-  private updateActionOnResize = (innerSize: Vector2, outerSize: Vector2) => {
+  private updateActionOnResize = (newInnerSize: Vector2, newOuterSize: Vector2) => {
     const { action } = this.state;
 
-    // If autoscroll is enabled, or the current top is outside the new range, set top to the bottom
-    if ((this.props.autoscroll && action.type === Action.Type.None && action.autoscroll) || Action.top(action) > innerSize.y - outerSize.y) {
-      const updatedAction = {
-        ...action,
-        top: this.maxTop,
-      };
-
-      if (updatedAction.type === Action.Type.None) updatedAction.autoscroll = true;
-      this.setState({ action: updatedAction });
+    // Reset top to the bottom if...
+    //   a) autoscroll is enabled and currently at the bottom, or
+    //   b) top is no longer within the new scroll range
+    if ((this.props.autoscroll && action.type === Action.Type.None && action.top >= this.maxTop) || Action.top(action) > newInnerSize.y - newOuterSize.y) {
+      this.setState({
+        action: {
+          ...action,
+          top: Math.max(newInnerSize.y - newOuterSize.y, 0),
+        }
+      });
     }
   }
 
@@ -215,11 +216,9 @@ class ScrollArea extends React.PureComponent<Props, State> {
 
     this.onMouseMoveHandle_ = undefined;
     this.onMouseUpHandle_ = undefined;
-
-    const isAtBottom = action.top >= this.maxTop;
     
     this.setState({
-      action: Action.none(this.state.action.top, isAtBottom),
+      action: Action.none(this.state.action.top),
     });
 
     return true;
@@ -227,18 +226,16 @@ class ScrollArea extends React.PureComponent<Props, State> {
 
   private onWheel_ = (event: React.WheelEvent<HTMLDivElement>) => {
     const { state } = this;
-    const { outerSize, innerSize, action } = state;
+    const { action } = state;
     if (action.type !== Action.Type.None) return;
 
     const maxTop = this.maxTop;
     const top = clamp(0, action.top + event.deltaY, maxTop);
-    const isAtBottom = top >= maxTop;
 
     this.setState({
       action: {
         ...action,
         top,
-        autoscroll: isAtBottom,
       }
     });
 
