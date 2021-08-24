@@ -167,8 +167,12 @@ class ScrollArea extends React.PureComponent<Props, State> {
 
     const current = Vector2.fromClient(event);
     
-    const diff = Vector2.subtract(action.startOffset, current);
-    const top = clamp(0, action.startTop - diff.y, outerSize.y - this.vScrollHeight);
+    let top = 0;
+    if (innerSize.y > outerSize.y) {
+      const diff = Vector2.subtract(action.startOffset, current);
+      const topDiff = diff.y * (outerSize.y > 0 ? (innerSize.y / outerSize.y) : 1);
+      top = clamp(0, action.startTop - topDiff, innerSize.y - outerSize.y);
+    }
 
     this.setState({
       action: Action.verticalScroll({
@@ -195,13 +199,11 @@ class ScrollArea extends React.PureComponent<Props, State> {
   };
 
   private onWheel_ = (event: React.WheelEvent<HTMLDivElement>) => {
-    
-    
     const { state } = this;
-    const { outerSize, action } = state;
+    const { outerSize, innerSize, action } = state;
     if (action.type !== Action.Type.None) return;
 
-    const top = clamp(0, action.top + event.deltaY, outerSize.y - this.vScrollHeight);
+    const top = innerSize.y > outerSize.y ? clamp(0, action.top + event.deltaY, innerSize.y - outerSize.y) : 0;
 
     this.setState({
       action: {
@@ -244,16 +246,17 @@ class ScrollArea extends React.PureComponent<Props, State> {
     const { outerSize, innerSize, hover, action } = state;
 
     const top = Action.top(action);
+    const topScrollBar = top * (innerSize.y > 0 ? (outerSize.y / innerSize.y) : 1);
 
     const vStyle: React.CSSProperties = {
-      top: `${top}px`,
+      top: `${topScrollBar}px`,
       height: `${this.vScrollHeight}px`,
       opacity: hover || action.type === Action.Type.VerticalScroll ? 1.0 : 0.0,
       cursor: action.type === Action.Type.VerticalScroll ? 'grabbing' : undefined
     };
 
     const innerStyle: React.CSSProperties = {
-      top: `-${top * (innerSize.y / outerSize.y)}px`
+      top: `-${top}px`
     };
 
     return (
@@ -280,7 +283,6 @@ class ScrollArea extends React.PureComponent<Props, State> {
       </OuterContainer>
     );
   }
-
 }
 
 export default ScrollArea;
