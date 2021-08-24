@@ -103,7 +103,7 @@ class ScrollArea extends React.PureComponent<Props, State> {
       outerSize: Vector2.ZERO,
       innerSize: Vector2.ZERO,
       hover: false,
-      action: Action.none(0),
+      action: Action.none(0)
     };
   }
 
@@ -112,7 +112,7 @@ class ScrollArea extends React.PureComponent<Props, State> {
       case this.outerRef_: {
         if (Vector2.eq(this.state.outerSize, size)) break;
 
-        this.updateActionOnResize(this.state.innerSize, size);
+        this.updateTopOnResize(this.state.innerSize, size);
         this.setState({
           outerSize: size
         });
@@ -121,7 +121,7 @@ class ScrollArea extends React.PureComponent<Props, State> {
       case this.innerRef_: {
         if (Vector2.eq(this.state.innerSize, size)) break;
 
-        this.updateActionOnResize(size, this.state.outerSize);
+        this.updateTopOnResize(size, this.state.outerSize);
         this.setState({
           innerSize: size
         });
@@ -130,7 +130,7 @@ class ScrollArea extends React.PureComponent<Props, State> {
     }
   };
 
-  private updateActionOnResize = (newInnerSize: Vector2, newOuterSize: Vector2) => {
+  private updateTopOnResize = (newInnerSize: Vector2, newOuterSize: Vector2) => {
     const { action } = this.state;
 
     // Reset top to the bottom if...
@@ -208,9 +208,6 @@ class ScrollArea extends React.PureComponent<Props, State> {
   };
 
   private onMouseUp_ = (event: MouseEvent) => {
-    const { action } = this.state;
-    if (action.type !== Action.Type.VerticalScroll) return;
-
     GLOBAL_EVENTS.remove(this.onMouseMoveHandle_);
     GLOBAL_EVENTS.remove(this.onMouseUpHandle_);
 
@@ -218,7 +215,7 @@ class ScrollArea extends React.PureComponent<Props, State> {
     this.onMouseUpHandle_ = undefined;
     
     this.setState({
-      action: Action.none(this.state.action.top),
+      action: Action.none(this.state.action.top)
     });
 
     return true;
@@ -235,7 +232,7 @@ class ScrollArea extends React.PureComponent<Props, State> {
     this.setState({
       action: {
         ...action,
-        top,
+        top
       }
     });
 
