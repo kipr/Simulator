@@ -10,6 +10,7 @@ import { GlobalEvents, GLOBAL_EVENTS, Slow } from '../util';
 
 export interface ScrollAreaProps extends StyleProps, ThemeProps {
   children: React.ReactNode;
+  autoscroll?: boolean;
 }
 
 export namespace Action {
@@ -21,9 +22,10 @@ export namespace Action {
   export interface None {
     type: Type.None;
     top: number;
+    autoscroll: boolean;
   }
 
-  export const none = (top: number): None => ({ type: Type.None, top });
+  export const none = (top: number, autoscroll: boolean): None => ({ type: Type.None, top, autoscroll });
 
   export interface VerticalScroll {
     type: Type.VerticalScroll;
@@ -102,7 +104,7 @@ class ScrollArea extends React.PureComponent<Props, State> {
       outerSize: Vector2.ZERO,
       innerSize: Vector2.ZERO,
       hover: false,
-      action: Action.none(0)
+      action: Action.none(0, this.props.autoscroll === true),
     };
   }
 
@@ -113,6 +115,7 @@ class ScrollArea extends React.PureComponent<Props, State> {
         this.setState({
           outerSize: size
         });
+        this.updateActionOnResize(this.state.innerSize, size);
         break;
       }
       case this.innerRef_: {
@@ -121,10 +124,26 @@ class ScrollArea extends React.PureComponent<Props, State> {
         this.setState({
           innerSize: size
         });
+        this.updateActionOnResize(size, this.state.outerSize);
         break;
       }
     }
   };
+
+  private updateActionOnResize = (innerSize: Vector2, outerSize: Vector2) => {
+    const { action } = this.state;
+
+    // If autoscroll is enabled, or the current top is outside the new range, set top to the bottom
+    if ((this.props.autoscroll && action.type === Action.Type.None && action.autoscroll) || Action.top(action) > innerSize.y - outerSize.y) {
+      const updatedAction = {
+        ...action,
+        top: this.maxTop,
+      };
+
+      if (updatedAction.type === Action.Type.None) updatedAction.autoscroll = true;
+      this.setState({ action: updatedAction });
+    }
+  }
 
   componentWillUnmount() {
     this.listener_.disconnect();
@@ -170,10 +189,11 @@ class ScrollArea extends React.PureComponent<Props, State> {
     const current = Vector2.fromClient(event);
     
     let top = 0;
-    if (innerSize.y > outerSize.y) {
+    const maxTop = this.maxTop;
+    if (maxTop > 0) {
       const diff = Vector2.subtract(action.startOffset, current);
       const topDiff = diff.y * (outerSize.y > 0 ? (innerSize.y / outerSize.y) : 1);
-      top = clamp(0, action.startTop - topDiff, innerSize.y - outerSize.y);
+      top = clamp(0, action.startTop - topDiff, maxTop);
     }
 
     this.setState({
@@ -187,14 +207,19 @@ class ScrollArea extends React.PureComponent<Props, State> {
   };
 
   private onMouseUp_ = (event: MouseEvent) => {
+    const { action } = this.state;
+    if (action.type !== Action.Type.VerticalScroll) return;
+
     GLOBAL_EVENTS.remove(this.onMouseMoveHandle_);
     GLOBAL_EVENTS.remove(this.onMouseUpHandle_);
 
     this.onMouseMoveHandle_ = undefined;
     this.onMouseUpHandle_ = undefined;
+
+    const isAtBottom = action.top >= this.maxTop;
     
     this.setState({
-      action: Action.none(this.state.action.top)
+      action: Action.none(this.state.action.top, isAtBottom),
     });
 
     return true;
@@ -205,12 +230,15 @@ class ScrollArea extends React.PureComponent<Props, State> {
     const { outerSize, innerSize, action } = state;
     if (action.type !== Action.Type.None) return;
 
-    const top = innerSize.y > outerSize.y ? clamp(0, action.top + event.deltaY, innerSize.y - outerSize.y) : 0;
+    const maxTop = this.maxTop;
+    const top = clamp(0, action.top + event.deltaY, maxTop);
+    const isAtBottom = top >= maxTop;
 
     this.setState({
       action: {
         ...action,
-        top
+        top,
+        autoscroll: isAtBottom,
       }
     });
 
@@ -238,6 +266,10 @@ class ScrollArea extends React.PureComponent<Props, State> {
     const { state } = this;
     const { outerSize, innerSize } = state;
     return (innerSize.y > 0 ? outerSize.y / innerSize.y : 1) * outerSize.y;
+  }
+
+  private get maxTop() {
+    return Math.max(this.state.innerSize.y - this.state.outerSize.y, 0);
   }
 
   private slow_ = new Slow();
