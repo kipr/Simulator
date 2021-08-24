@@ -159,6 +159,8 @@ class ScrollArea extends React.PureComponent<Props, State> {
         startOffset: Vector2.fromClient(event)
       })
     });
+
+    event.preventDefault();
   };
 
   private onMouseMove_ = (event: MouseEvent) => {
