@@ -144,7 +144,7 @@ class ScrollArea extends React.PureComponent<Props, State> {
         }
       });
     }
-  }
+  };
 
   componentWillUnmount() {
     this.listener_.disconnect();
