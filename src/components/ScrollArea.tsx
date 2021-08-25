@@ -10,6 +10,7 @@ import { GlobalEvents, GLOBAL_EVENTS, Slow } from '../util';
 
 export interface ScrollAreaProps extends StyleProps, ThemeProps {
   children: React.ReactNode;
+  autoscroll?: boolean;
 }
 
 export namespace Action {
@@ -110,6 +111,8 @@ class ScrollArea extends React.PureComponent<Props, State> {
     switch (element) {
       case this.outerRef_: {
         if (Vector2.eq(this.state.outerSize, size)) break;
+
+        this.updateTopOnResize(this.state.innerSize, size);
         this.setState({
           outerSize: size
         });
@@ -117,12 +120,29 @@ class ScrollArea extends React.PureComponent<Props, State> {
       }
       case this.innerRef_: {
         if (Vector2.eq(this.state.innerSize, size)) break;
-        
+
+        this.updateTopOnResize(size, this.state.outerSize);
         this.setState({
           innerSize: size
         });
         break;
       }
+    }
+  };
+
+  private updateTopOnResize = (newInnerSize: Vector2, newOuterSize: Vector2) => {
+    const { action } = this.state;
+
+    // Reset top to the bottom if...
+    //   a) autoscroll is enabled and currently at the bottom, or
+    //   b) top is no longer within the new scroll range
+    if ((this.props.autoscroll && action.type === Action.Type.None && action.top >= this.maxTop) || Action.top(action) > newInnerSize.y - newOuterSize.y) {
+      this.setState({
+        action: {
+          ...action,
+          top: Math.max(newInnerSize.y - newOuterSize.y, 0),
+        }
+      });
     }
   };
 
@@ -170,10 +190,11 @@ class ScrollArea extends React.PureComponent<Props, State> {
     const current = Vector2.fromClient(event);
     
     let top = 0;
-    if (innerSize.y > outerSize.y) {
+    const maxTop = this.maxTop;
+    if (maxTop > 0) {
       const diff = Vector2.subtract(action.startOffset, current);
       const topDiff = diff.y * (outerSize.y > 0 ? (innerSize.y / outerSize.y) : 1);
-      top = clamp(0, action.startTop - topDiff, innerSize.y - outerSize.y);
+      top = clamp(0, action.startTop - topDiff, maxTop);
     }
 
     this.setState({
@@ -202,10 +223,11 @@ class ScrollArea extends React.PureComponent<Props, State> {
 
   private onWheel_ = (event: React.WheelEvent<HTMLDivElement>) => {
     const { state } = this;
-    const { outerSize, innerSize, action } = state;
+    const { action } = state;
     if (action.type !== Action.Type.None) return;
 
-    const top = innerSize.y > outerSize.y ? clamp(0, action.top + event.deltaY, innerSize.y - outerSize.y) : 0;
+    const maxTop = this.maxTop;
+    const top = clamp(0, action.top + event.deltaY, maxTop);
 
     this.setState({
       action: {
@@ -238,6 +260,10 @@ class ScrollArea extends React.PureComponent<Props, State> {
     const { state } = this;
     const { outerSize, innerSize } = state;
     return (innerSize.y > 0 ? outerSize.y / innerSize.y : 1) * outerSize.y;
+  }
+
+  private get maxTop() {
+    return Math.max(this.state.innerSize.y - this.state.outerSize.y, 0);
   }
 
   private slow_ = new Slow();
