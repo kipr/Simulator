@@ -263,6 +263,7 @@ export class Space {
     this.engine = new Babylon.Engine(this.workingCanvas, true, { preserveDrawingBuffer: true, stencil: true });
     this.scene = new Babylon.Scene(this.engine);
     this.camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(50,50,50), this.scene);
+    this.camera.panningSensibility = 100;
 
     this.currentEngineView = null;
 
