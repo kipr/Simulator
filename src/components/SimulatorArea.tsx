@@ -29,7 +29,8 @@ const Canvas = styled('canvas', {
   position: 'absolute',
   ':focus': {
     outline: 'none'
-  }
+  },
+  touchAction: 'none',
 });
 
 export class SimulatorArea extends React.Component<SimulatorAreaProps> {
