@@ -1,17 +1,23 @@
-import * as Babylon from 'babylonjs';
+import { Vector3 as BabylonVector3 } from '@babylonjs/core/Maths/math.vector';
+import { AbstractMesh as BabylonAbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
+import { Ray as BabylonRay } from '@babylonjs/core/Culling/ray';
+import { LinesMesh as BabylonLinesMesh } from '@babylonjs/core/Meshes/linesMesh';
+import '@babylonjs/core/Meshes/Builders/linesBuilder';
+import { LinesBuilder as BabylonLinesBuilder } from '@babylonjs/core/Meshes/Builders/linesBuilder';
+
 import Sensor from './Sensor';
 import SensorObject from './SensorObject';
 
-const vecToLocal = (vector: Babylon.Vector3, mesh: Babylon.AbstractMesh): Babylon.Vector3 => {
+const vecToLocal = (vector: BabylonVector3, mesh: BabylonAbstractMesh): BabylonVector3 => {
   const matrix = mesh.getWorldMatrix();
-  return Babylon.Vector3.TransformCoordinates(vector, matrix);
+  return BabylonVector3.TransformCoordinates(vector, matrix);
 };
 
 export class IrSensor implements SensorObject {
   private config_: SensorObject.Config<Sensor.Ir>;
 
-  private ray: Babylon.Ray;
-  private visualMesh: Babylon.LinesMesh;
+  private ray: BabylonRay;
+  private visualMesh: BabylonLinesMesh;
 
   private sinceLastUpdate = 0;
   
@@ -31,11 +37,11 @@ export class IrSensor implements SensorObject {
     const sensor = Sensor.Ir.fill(config.sensor);
     this.config_ = { ...config, sensor };
 
-    this.ray = new Babylon.Ray(Babylon.Vector3.Zero(), Babylon.Vector3.Zero(), this.config_.sensor.maxRange);
-    this.visualMesh = Babylon.MeshBuilder.CreateLines(
+    this.ray = new BabylonRay(BabylonVector3.Zero(), BabylonVector3.Zero(), this.config_.sensor.maxRange);
+    this.visualMesh = BabylonLinesBuilder.CreateLines(
       this.VISUAL_MESH_NAME,
       {
-        points: [Babylon.Vector3.Zero(), Babylon.Vector3.Zero()],
+        points: [BabylonVector3.Zero(), BabylonVector3.Zero()],
         updatable: true,
       },
       this.config_.scene
@@ -58,7 +64,7 @@ export class IrSensor implements SensorObject {
     const originPoint = vecToLocal(this.config_.sensor.origin, this.config_.mesh);
 
     let forwardDirection = forwardPoint.subtract(this.config_.mesh.absolutePosition);
-    forwardDirection = Babylon.Vector3.Normalize(forwardDirection);
+    forwardDirection = BabylonVector3.Normalize(forwardDirection);
     
     this.ray.origin = originPoint;
     this.ray.direction = forwardDirection;
@@ -111,7 +117,7 @@ export class IrSensor implements SensorObject {
     if (!this.isVisible) return false;
 
     const newLinePoints = [this.ray.origin, this.ray.origin.add(this.ray.direction.scale(this.ray.length))];
-    this.visualMesh = Babylon.MeshBuilder.CreateLines(this.VISUAL_MESH_NAME, { points: newLinePoints, instance: this.visualMesh }, this.config_.scene);
+    this.visualMesh = BabylonLinesBuilder.CreateLines(this.VISUAL_MESH_NAME, { points: newLinePoints, instance: this.visualMesh }, this.config_.scene);
     
     return true;
   }

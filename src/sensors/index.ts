@@ -1,4 +1,5 @@
-import * as Babylon from 'babylonjs';
+import { Scene as BabylonScene } from '@babylonjs/core/scene';
+
 import { EtSensor } from './EtSensor';
 import { IrSensor } from './IrSensor';
 
@@ -12,7 +13,7 @@ export * from './EtSensor';
 export * from './TouchSensor';
 export { default as MAPPINGS } from './mappings';
 
-export const instantiate = (scene: Babylon.Scene, id: string, sensor: Sensor): SensorObject => {
+export const instantiate = (scene: BabylonScene, id: string, sensor: Sensor): SensorObject => {
   const mesh = scene.getMeshByID(id) || scene.getMeshByName(id);
   if (!mesh) throw new Error(`Failed to lookup mesh by ID or name (${id})`);
 

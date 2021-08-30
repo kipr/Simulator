@@ -1,4 +1,6 @@
-import * as Babylon from 'babylonjs';
+import { AbstractMesh as BabylonAbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
+import { Observer as BabylonObserver } from '@babylonjs/core/Misc/observable';
+
 import Sensor from './Sensor';
 import SensorObject from './SensorObject';
 
@@ -6,15 +8,15 @@ export class TouchSensor implements SensorObject {
   private config_: SensorObject.Config<Sensor.Touch>;
 
   // Keeps track of the meshes in the scene that are eligible for intersection checking
-  private eligibleMeshes_: Babylon.AbstractMesh[];
+  private eligibleMeshes_: BabylonAbstractMesh[];
 
   private isIntersecting_ = false;
-  private prevIntersectingMesh_: Babylon.AbstractMesh = null;
+  private prevIntersectingMesh_: BabylonAbstractMesh = null;
 
   private sinceLastUpdate = 0;
 
-  private meshAddedObserver_: Babylon.Observer<Babylon.AbstractMesh>;
-  private meshRemovedObserver_: Babylon.Observer<Babylon.AbstractMesh>;
+  private meshAddedObserver_: BabylonObserver<BabylonAbstractMesh>;
+  private meshRemovedObserver_: BabylonObserver<BabylonAbstractMesh>;
 
   get sensor(): Sensor.Touch {
     return this.config_.sensor;
@@ -117,7 +119,7 @@ export class TouchSensor implements SensorObject {
 
   // Determines whether the given mesh is eligible for intersection checking
   // Currently based on mesh name, but this should be made more flexible
-  private static isMeshEligible = (mesh: Babylon.AbstractMesh) => {
+  private static isMeshEligible = (mesh: BabylonAbstractMesh) => {
     return mesh.name.startsWith('item');
   };
 }

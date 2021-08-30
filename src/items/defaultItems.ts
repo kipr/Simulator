@@ -1,7 +1,6 @@
 import { Item } from '../state/State';
 import Dict from '../Dict';
 
-import * as Babylon from 'babylonjs';
 import { Rotation, Vector3 } from '../unit-math';
 import { AngleAxis as RawAngleAxis, Vector3 as RawVector3 } from '../math';
 import { Distance } from '../util';

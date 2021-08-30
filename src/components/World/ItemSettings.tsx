@@ -1,11 +1,9 @@
 import * as React from "react";
 import { styled } from "styletron-react";
-import { ReferenceFrame, Rotation, Vector3 } from "../../unit-math";
+import { Rotation, Vector3 } from "../../unit-math";
 import { Item } from "../../state";
 import { Angle, Distance, Mass, UnitlessValue, Value } from "../../util";
 import ComboBox from "../ComboBox";
-import { Dialog } from "../Dialog";
-import DialogBar from "../DialogBar";
 import Field from "../Field";
 import Input from "../Input";
 import ScrollArea from "../ScrollArea";

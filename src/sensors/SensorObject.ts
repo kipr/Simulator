@@ -1,5 +1,7 @@
+import { Scene as BabylonScene } from '@babylonjs/core/scene';
+import { AbstractMesh as BabylonAbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
+
 import Sensor from './Sensor';
-import * as Babylon from 'babylonjs';
 import { RobotState } from '../RobotState';
 
 interface SensorObject {
@@ -16,8 +18,8 @@ interface SensorObject {
 
 namespace SensorObject {
   export interface Config<T extends Sensor> {
-    scene: Babylon.Scene;
-    mesh: Babylon.AbstractMesh;
+    scene: BabylonScene;
+    mesh: BabylonAbstractMesh;
     sensor: T
   }
 
