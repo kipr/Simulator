@@ -60,6 +60,7 @@ const OuterContainer = styled('div', (props: ThemeProps) => ({
   flexDirection: 'row',
   width: '100%',
   overflow: 'hidden',
+  touchAction: 'pinch-zoom',
 }));
 
 const InnerContainer = styled('div', {
@@ -166,57 +167,30 @@ class ScrollArea extends React.PureComponent<Props, State> {
   private onMouseUpHandle_: GlobalEvents.Handle;
 
   private onVMouseDown_ = (event: React.MouseEvent<HTMLDivElement>) => {
-    const { action } = this.state;
-    if (action.type !== Action.Type.None) return;
+    const startOffset = Vector2.fromClient(event);
+    this.startScrolling(startOffset);
 
-    this.onMouseMoveHandle_ = GLOBAL_EVENTS.add('onMouseMove', this.onMouseMove_);
-    this.onMouseUpHandle_ = GLOBAL_EVENTS.add('onMouseUp', this.onMouseUp_);
-    
-    this.setState({
-      action: Action.verticalScroll({
-        top: action.top,
-        startTop: action.top,
-        startOffset: Vector2.fromClient(event)
-      })
-    });
+    if (this.onMouseMoveHandle_ === undefined) this.onMouseMoveHandle_ = GLOBAL_EVENTS.add('onMouseMove', this.onMouseMove_);
+    if (!this.onMouseUpHandle_ === undefined) this.onMouseUpHandle_ = GLOBAL_EVENTS.add('onMouseUp', this.onMouseUp_);
 
     event.preventDefault();
   };
 
   private onMouseMove_ = (event: MouseEvent) => {
-    const { action, innerSize, outerSize } = this.state;
-    if (action.type !== Action.Type.VerticalScroll) return;
-
     const current = Vector2.fromClient(event);
-    
-    let top = 0;
-    const maxTop = this.maxTop;
-    if (maxTop > 0) {
-      const diff = Vector2.subtract(action.startOffset, current);
-      const topDiff = diff.y * (outerSize.y > 0 ? (innerSize.y / outerSize.y) : 1);
-      top = clamp(0, action.startTop - topDiff, maxTop);
-    }
-
-    this.setState({
-      action: Action.verticalScroll({
-        ...action,
-        top,
-      })
-    });
+    this.applyScrolling(current, true, false);
 
     return true;
   };
 
   private onMouseUp_ = (event: MouseEvent) => {
-    GLOBAL_EVENTS.remove(this.onMouseMoveHandle_);
-    GLOBAL_EVENTS.remove(this.onMouseUpHandle_);
-
+    if (this.onMouseMoveHandle_ !== undefined) GLOBAL_EVENTS.remove(this.onMouseMoveHandle_);
+    if (this.onMouseUpHandle_ !== undefined) GLOBAL_EVENTS.remove(this.onMouseUpHandle_);
+    
     this.onMouseMoveHandle_ = undefined;
     this.onMouseUpHandle_ = undefined;
-    
-    this.setState({
-      action: Action.none(this.state.action.top)
-    });
+
+    this.stopScrolling();
 
     return true;
   };
@@ -236,10 +210,107 @@ class ScrollArea extends React.PureComponent<Props, State> {
       }
     });
 
-
     if (top !== action.top) {
       event.stopPropagation();
     }
+  };
+
+  private onTouchStart_ = (event: React.TouchEvent<HTMLDivElement>) => {
+    const { action } = this.state;
+
+    // If already scrolling, cancel scrolling
+    if (action.type === Action.Type.VerticalScroll) {
+      this.stopScrolling();
+      return;
+    }
+
+    // Only start scrolling if there's exactly one touch
+    if (event.touches.length !== 1) return;
+
+    const newTouch = event.changedTouches[0];
+    const newTouchOffset = Vector2.fromClient(newTouch);
+
+    this.startScrolling(newTouchOffset);
+  };
+
+  private onTouchMove_ = (event: React.TouchEvent<HTMLDivElement>) => {
+    const movedTouch = event.changedTouches[0];
+    const current = Vector2.fromClient(movedTouch);
+
+    this.applyScrolling(current, false, true);
+  };
+
+  private onTouchEnd_ = (event: React.TouchEvent<HTMLDivElement>) => {
+    const { action } = this.state;
+
+    // If the user actually scrolled, prevent any default mouse actions
+    if (action.type === Action.Type.VerticalScroll && action.top !== action.startTop) {
+      event.preventDefault();
+    }
+
+    this.stopScrolling();
+  };
+
+  private onTouchCancel_ = (event: React.TouchEvent<HTMLDivElement>) => {
+    this.stopScrolling();
+
+    event.preventDefault();
+  };
+
+  private startScrolling = (startOffset: Vector2) => {
+    const { action } = this.state;
+    if (action.type !== Action.Type.None) return;
+
+    this.setState({
+      action: Action.verticalScroll({
+        top: action.top,
+        startTop: action.top,
+        startOffset,
+      })
+    });
+  };
+
+  private stopScrolling = () => {
+    const { action } = this.state;
+    if (action.type !== Action.Type.VerticalScroll) return;
+
+    this.setState({
+      action: Action.none(action.top)
+    });
+  };
+
+  /**
+   * Applies a scroll amount to the current scroll action (if there is one).
+   * @param newOffset - The new scroll offset, relative to the startOffset specified in startScrolling()
+   * @param isUsingBar - Whether the scroll offset refers to the scrollbar or the actual scroll area
+   * @param invert - Whether the scroll direction should be inverted (for example, when using touch)
+   */
+  private applyScrolling = (newOffset: Vector2, isUsingBar: boolean, invert: boolean) => {
+    const { action, outerSize, innerSize } = this.state;
+    if (action.type !== Action.Type.VerticalScroll) return;
+
+    let top = 0;
+    const maxTop = this.maxTop;
+    if (maxTop > 0) {
+      const diff = Vector2.subtract(action.startOffset, newOffset);
+
+      let topDiff = diff.y;
+      if (isUsingBar) {
+        topDiff *= (outerSize.y > 0 ? (innerSize.y / outerSize.y) : 1);
+      }
+      if (invert) {
+        topDiff *= -1;
+      }
+
+      top = clamp(0, action.startTop - topDiff, maxTop);
+    }
+
+    this.setState({
+      action: Action.verticalScroll({
+        ...action,
+        top,
+      })
+    });
   };
 
   private outerRef_: HTMLDivElement;
@@ -292,6 +363,10 @@ class ScrollArea extends React.PureComponent<Props, State> {
         style={style}
         className={className}
         onMouseEnter={this.onMouseEnter_}
+        onTouchStart={this.onTouchStart_}
+        onTouchMove={this.onTouchMove_}
+        onTouchEnd={this.onTouchEnd_}
+        onTouchCancel={this.onTouchCancel_}
         onMouseLeave={this.onMouseLeave_}
         ref={this.bindOuterRef_}
         theme={theme}
