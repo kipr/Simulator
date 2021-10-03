@@ -23,6 +23,7 @@ export interface MenuProps extends StyleProps, ThemeProps {
   onSettingsClick: () => void;
   onAboutClick: () => void;
   onDocumentationClick: () => void;
+  onLogoutClick: () => void;
 
   simulatorState: SimulatorState;
 }
@@ -130,6 +131,7 @@ class Menu extends React.PureComponent<Props, State> {
       onStopClick,
       onDownloadClick,
       onDocumentationClick,
+      onLogoutClick,
       simulatorState
     } = props;
 
@@ -174,6 +176,7 @@ class Menu extends React.PureComponent<Props, State> {
           
           <Item theme={theme} onClick={onSettingsClick}><ItemIcon icon='cogs'/> Settings</Item>
           <Item theme={theme} onClick={onAboutClick}><ItemIcon icon='question'/> About</Item>
+          <Item theme={theme} onClick={onLogoutClick}><ItemIcon icon='sign-out-alt'/> Logout</Item>
         </Container>
         
       </>

@@ -7,6 +7,7 @@ const routes: IRoute[] = [
   {
     path: '/',
     exact: true,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     component: HomePage,
     name: 'Home Page',
     protected: false

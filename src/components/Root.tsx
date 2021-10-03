@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { withRouter } from 'react-router-dom';
+import { SignOut } from '../firebase/modules/auth';
 import WorkerInstance from '../WorkerInstance';
 import { RobotState } from '../RobotState';
 
@@ -341,6 +343,11 @@ export class Root extends React.Component<Props, State> {
     window.open("https://www.kipr.org/doc/index.html");
   };
 
+  onLogoutClick = () => {
+    SignOut();
+  };
+
+
   private onSettingsChange_ = (changedSettings: Partial<Settings>) => {
     this.setState({ settings: { ...this.state.settings, ...changedSettings } });
   };
@@ -426,6 +433,7 @@ export class Root extends React.Component<Props, State> {
             onRunClick={this.onRunClick_}
             onStopClick={this.onStopClick_}
             onDocumentationClick={this.onDocumentationClick}
+            onLogoutClick={this.onLogoutClick}
             simulatorState={simulatorState}
           />
           {impl}
@@ -440,3 +448,5 @@ export class Root extends React.Component<Props, State> {
 }
 
 // All logic inside of index.tsx
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+export default withRouter(Root);

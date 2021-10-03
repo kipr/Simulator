@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
@@ -33,7 +34,7 @@ const PageRouter: React.FunctionComponent<PageRouterProps> = props => {
             key={index}
             path={route.path}
             exact={route.exact}
-            render={(routeProps: RouteComponentProps<unknown>) => {
+            render={(routeProps: RouteComponentProps) => {
               if (route.protected) return <AuthRoute ><route.component {...routeProps} /></AuthRoute>;
 
               return <route.component  {...routeProps} />;
