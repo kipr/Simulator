@@ -28,7 +28,7 @@ import { Unsubscribe } from 'redux';
 import deepNeq from './deepNeq';
 import { SceneAction } from './state/reducer';
 import { Gizmo } from 'babylonjs/Gizmos/gizmo';
-import SceneManager from './SceneManager';
+import SceneBinding from './SceneBinding';
 import Scene from './state/State/Scene';
 
 export let ACTIVE_SPACE: Space;
@@ -48,11 +48,11 @@ const TEST_SCENE: Scene = {
     },
     'table': {
       type: 'file',
-      uri: 'static/table.glb'
+      uri: 'static/arena.glb'
     },
-    'suzanne': {
+    'jbc_mat': {
       type: 'file',
-      uri: 'static/suzanne.glb'
+      uri: 'static/jbcMatA.glb'
     },
   },
   nodes: {
@@ -62,9 +62,9 @@ const TEST_SCENE: Scene = {
       name: 'A Table',
       origin: {
         scale: {
-          x: 10,
-          y: 10,
-          z: 10,
+          x: 30,
+          y: 30,
+          z: 30,
         }
       },
       physics: {
@@ -73,30 +73,40 @@ const TEST_SCENE: Scene = {
         friction: 1
       },
     },
-    'suzanne_1': {
+    'jbc_mat': {
       type: 'object',
-      geometryId: 'suzanne',
-      name: 'A Suzanne',
+      geometryId: 'jbc_mat',
+      name: 'JBC Material',
       origin: {
         position: {
           x: Distance.meters(0),
-          y: Distance.meters(0.4),
+          y: Distance.meters(1.02),
           z: Distance.meters(0),
         },
         scale: {
-          x: 2,
-          y: 2,
-          z: 2,
+          x: 70,
+          y: 70,
+          z: 70,
         }
       },
       physics: {
         type: 'mesh',
-        mass: Mass.grams(10),
-        friction: 0.5,
-        restitution: 1
-      }
+        restitution: 0,
+        friction: 1
+      },
     },
-    // 3 more suzannes (clipped)
+    'light0': {
+      type: 'point-light',
+      intensity: 1000,
+      name: 'light0',
+      origin: {
+        position: {
+          x: Distance.meters(0),
+          y: Distance.meters(2.00),
+          z: Distance.meters(0),
+        },
+      },
+    },
   }
 };
 
@@ -147,7 +157,7 @@ export class Space {
   private sensorObjects_: SensorObject[] = [];
 
   private canCoordinates: Array<[number, number]>;
-  private sceneManager_: SceneManager;
+  private sceneBinding_: SceneBinding;
 
   private collidersVisible = false;
 
@@ -181,6 +191,8 @@ export class Space {
       this.onStoreChange_(store.getState());
     });
   };
+
+  private lens_: Babylon.LensRenderingPipeline;
 
   
   private lastState_: State = undefined;
@@ -333,7 +345,7 @@ export class Space {
     this.workingCanvas = document.createElement('canvas');
     this.engine = new Babylon.Engine(this.workingCanvas, true, { preserveDrawingBuffer: true, stencil: true });
     this.scene = new Babylon.Scene(this.engine);
-    this.camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(50,50,50), this.scene);
+    this.camera = new Babylon.ArcRotateCamera("botcam", 10, 10, 10, new Babylon.Vector3(50, 50, 50), this.scene);
     var postProcess = new Babylon.FxaaPostProcess("fxaa", 1.0, this.camera);
 
     this.currentEngineView = null;
@@ -359,6 +371,18 @@ export class Space {
       this.initializationPromise = new Promise((resolve, reject) => {
         this.createScene();
         this.initGizmoManager_();
+        new Babylon.TonemapPostProcess("tonemap", Babylon.TonemappingOperator.HejiDawson, 0.8, this.camera);
+
+        // const motionBlur = new Babylon.MotionBlurPostProcess('mb', this.scene, 1.0, this.camera);
+        // motionBlur.adaptScaleToCurrentViewport = true;
+        // motionBlur.samples = 4;
+        // motionBlur.motionStrength = 0.2;
+        // new Babylon.HighlightsPostProcess("highlights", 1.0, this.camera);
+        /*this.lens_ = new Babylon.LensRenderingPipeline('lensEffects', {
+          edge_blur: 1.0,
+          distortion: 1.0,
+        }, this.scene, 1.0, [ this.camera ]);
+*/
         this.loadMeshes()
           .then(() => {
             this.startRenderLoop();
@@ -411,12 +435,16 @@ export class Space {
 
   private createScene(): void {
     this.scene.onPointerObservable.add(this.onPointerTap_, Babylon.PointerEventTypes.POINTERTAP);
-    
+
+    const light = new Babylon.HemisphericLight("light1", new Babylon.Vector3(0, 1, 0), this.scene);
+    light.intensity = 0.5;
+    light.diffuse = new Babylon.Color3(1.0, 1.0, 1.0);
+
     this.camera.setTarget(Babylon.Vector3.Zero());
     this.camera.attachControl(this.workingCanvas, true);
 
-    const light = new Babylon.HemisphericLight("botlight", new Babylon.Vector3(0,1,0), this.scene);
-    light.intensity = 0.75;
+    // const light = new Babylon.HemisphericLight("botlight", new Babylon.Vector3(0,1,0), this.scene);
+    // light.intensity = 0.75;
 
     // At 100x scale, gravity should be -9.8 * 100, but this causes weird jitter behavior
     // Full gravity will be -9.8 * 10
@@ -425,17 +453,19 @@ export class Space {
     this.scene.enablePhysics(gravityVector, this.ammo_);
     this.scene.getPhysicsEngine().setSubTimeStep(5);
 
-    this.sceneManager_ = new SceneManager(this.scene);
-    this.sceneManager_.setScene(TEST_SCENE).then(() => {
-      console.log('loaded scene!');
+    SceneBinding.create(TEST_SCENE, this.scene).then(sceneBinding => {
+      this.sceneBinding_ = sceneBinding;
+      console.log('Scene binding created', sceneBinding);
     });
-
+    
 
     // (x, z) coordinates of cans around the board
     this.canCoordinates = [[-22, -14.3], [0, -20.6], [15.5, -23.7], [0, -6.9], [-13.7, 6.8], [0, 6.8], [13.5, 6.8], [25.1, 14.8], [0, 34], [-18.8, 45.4], [0, 54.9], [18.7, 45.4]];
 
     // Logic that happens before every frame
     this.scene.registerBeforeRender(() => {
+      if (this.lens_) this.lens_.setFocusDistance(this.camera.position.length());
+
       let anyUpdated = false;
       
       const updated = new Array<boolean>(this.sensorObjects_.length);

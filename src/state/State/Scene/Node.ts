@@ -1,3 +1,4 @@
+import { Vector3 } from '../../../math';
 import { ReferenceFrame } from '../../../unit-math';
 import { Angle, Mass } from '../../../util';
 
@@ -37,19 +38,25 @@ namespace Node {
 
   export interface PointLight extends Base {
     type: 'point-light';
-    luminosity: number;
+    intensity: number;
+    radius?: number;
+    range?: number;
   }
 
   export interface SpotLight extends Base {
     type: 'spot-light';
-    coneAngle: Angle;
-    penumbraAngle: Angle;
-    luminosity: number;
+    direction: Vector3;
+    angle: Angle;
+    exponent: number;
+    intensity: number;
   }
 
   export interface DirectionalLight extends Base {
     type: 'directional-light';
-    luminosity: number;
+    radius?: number;
+    range?: number;
+    direction: Vector3;
+    intensity: number;
   }
 }
 

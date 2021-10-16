@@ -111,7 +111,7 @@ export class Root extends React.Component<Props, State> {
       robotState: WorkerInstance.state,
       robotStartPosition: {
         x: Distance.centimeters(0),
-        y: Distance.centimeters(0),
+        y: Distance.centimeters(200),
         z: Distance.centimeters(0),
         theta: Angle.degrees(0),
       },
