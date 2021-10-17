@@ -6,7 +6,7 @@ import { withRouter, Redirect } from 'react-router-dom';
 import * as PropTypes from 'prop-types';
 import { DARK, ThemeProps } from '../components/theme';
 import { StyleProps } from '../style';
-import { styled } from 'styletron-react';
+import { styled, withStyleDeep } from 'styletron-react';
 import Register from './auth/Register';
 import Login from './auth/Login';
 import { auth } from '../firebase/firebase';
@@ -14,6 +14,13 @@ import { SignInWithEmail, SignInWithSocialMedia, CreateUserWithEmail, ForgotPass
 import { AuthProvider } from 'firebase/auth';
 import { CSSProperties } from 'hoist-non-react-statics/node_modules/@types/react';
 import ForgotPass from './auth/ForgotPass';
+import Form from '../components/Form';
+import FancyBackground from '../components/FancyBackground';
+import { TabBar } from '../components/TabBar';
+
+import KIPR_LOGO_BLACK from '../assets/KIPR-Logo-Black-Text-Clear-Large.png';
+import KIPR_LOGO_WHITE from '../assets/KIPR-Logo-White-Text-Clear-Large.png';
+import { Fa } from '../components/Fa';
 
 export interface HomePageProps extends ThemeProps,StyleProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -21,43 +28,46 @@ export interface HomePageProps extends ThemeProps,StyleProps {
 }
 
 interface HomePageState {
-  isLoginOpen: boolean;
-  isRegisterOpen: boolean;
-  isForgotPassOpen: boolean;
   authenticating: boolean,
-  error: string,
-  loggedIn: boolean,
+  loggedIn: boolean;
+  index: number;
+  forgotPassword: boolean;
 }
-
-const VertContainer = styled('div', (props: ThemeProps) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  height: '100vh',
-  backgroundImage: `url(../../static/gray-hex-background.png)`,
-  backgroundSize: 'cover',
-}));
 
 const Container = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'row',
+  alignItems: 'center',
   justifyContent: 'center',
+  width: '100%',
+  height: '100vh',
+  backgroundImage: 'linear-gradient(#9e2a2b, #540b0e)',
+  
 }));
 
-const AuthContainer = styled('div', (props: ThemeProps) => ({
+const Card = styled('div', (props: ThemeProps) => ({
+  width: '400px',
   display: 'flex',
   flexDirection: 'column',
-  width: '300px',
-  border: `${props.theme.borderRadius} solid ${props.theme.borderColor}`,
-  borderRadius: '10px',
+  alignItems: 'center',
+  opacity: 0.98,
+  backdropFilter: 'blur(16px)',
+  paddingTop: `${props.theme.itemPadding * 2}px`,
   backgroundColor: props.theme.backgroundColor,
-  padding: props.theme.widget.padding,
-  margin: '10px',
-  color: props.theme.color,
-  foregroudColor: props.theme.foreground,
-  textAlign: 'center',
-  justifyContent: 'center',
+  borderRadius: `${props.theme.itemPadding * 2}px`,
+  overflow: 'hidden',
+  border: `1px solid ${props.theme.borderColor}`,
+}));
+
+const StyledTabBar = styled(TabBar, (props: ThemeProps) => ({
+  width: '100%',
+  borderTop: `1px solid ${props.theme.borderColor}`,
+  marginTop: `${props.theme.itemPadding * 2}px`,
+}));
+
+const StyledForm = styled(Form, (props: ThemeProps) => ({
+  paddingLeft: `${props.theme.itemPadding * 2}px`,
+  paddingRight: `${props.theme.itemPadding * 2}px`,
 }));
 
 interface ClickProps {
@@ -65,39 +75,41 @@ interface ClickProps {
   disabled?: boolean;
 }
 
-const ItemContainer = styled('div', (props: ThemeProps) => ({
-  backgroundColor: props.theme.backgroundColor,
+
+
+const TABS: TabBar.TabDescription[] = [{
+  name: 'Sign In',
+  icon: 'sign-in-alt',
+}, {
+  name: 'Sign Up',
+  icon: 'user-plus',
+}];
+
+const Logo = styled('img', {
+  width: '150px',
+  height: 'auto',
+  marginTop: '16px',
+  marginBottom: '16px'
+});
+
+const Header = styled('div', (props: ThemeProps) => ({
+  fontSize: '1.3em',
   color: props.theme.color,
-  height: '48px',
-  lineHeight: '28px',
-  margin: '10px',
-  display: 'flex',
-  alignItems: 'center',
-  flexDirection: 'row',
-  zIndex: 1
+  fontWeight: 400,
+  alignSelf: 'flex-start',
+  marginLeft: `${props.theme.itemPadding * 2}px`,
+  marginBottom: `${props.theme.itemPadding * 2}px`,
 }));
 
-const Item = styled('div', (props: ThemeProps & ClickProps) => ({
+const SocialContainer = styled('div', (props: ThemeProps) => ({
+  marginTop: `${props.theme.itemPadding * 2}px`,
+  marginBottom: `${props.theme.itemPadding * 2}px`,
+  width: '100%',
   display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
   flexDirection: 'row',
-  borderRight: `1px solid ${props.theme.borderColor}`,
-  paddingLeft: '20px',
-  paddingRight: '20px',
-  width: '33%',
-  height: '100%',
-  opacity: props.disabled ? '0.5' : '1.0',
-  ':last-child': {
-    borderRight: 'none'
-  },
-  fontWeight: 400,
-  ':hover': props.onClick && !props.disabled ? {
-    cursor: 'pointer',
-    backgroundColor: `rgba(255, 255, 255, 0.1)`
-  } : {},
-  userSelect: 'none',
-  transition: 'background-color 0.2s, opacity 0.2s'
+  justifyContent: 'space-around',
+  color: props.theme.color,
+  fontSize: '1.4em'
 }));
 
 type Props = HomePageProps;
@@ -108,12 +120,10 @@ class HomePage extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      isLoginOpen: true,
-      isRegisterOpen: false,
-      isForgotPassOpen: false,
       authenticating: false,
-      error: '',
       loggedIn: null,
+      index: 0,
+      forgotPassword: false,
     };
   }
 
@@ -136,19 +146,45 @@ class HomePage extends React.Component<Props, State> {
     });
   }
 
-  showLoginBox() {
-    this.setState({ isLoginOpen: true, isRegisterOpen: false, isForgotPassOpen: false });
-  }
+  private onFinalize_ = (values: { [id: string]: string }) => {
+    if (this.state.forgotPassword) {
+      ForgotPassword(values.email);
 
-  showRegisterBox() {
-    this.setState({ isLoginOpen: false, isRegisterOpen: true, isForgotPassOpen: false });
-  }
+      this.setState({
+        forgotPassword: false,
+      });
 
-  showForgotPassBox() {
-    this.setState({ isLoginOpen: false, isRegisterOpen: false, isForgotPassOpen: true });
-  }
+      return;
+    }
 
-  private signInWithSocialMedia_ = (provider: AuthProvider) => {
+    switch (this.state.index) {
+      case 0: {
+        this.setState({ authenticating: true });
+
+        try { 
+          SignInWithEmail(values['email'], values['password']);
+        } finally {
+          console.log('Logged in with email');
+          this.setState({ authenticating: false });
+        }
+
+        break;
+      }
+      case 1: {
+        this.setState({ authenticating: true });
+
+        try { 
+          CreateUserWithEmail(values['email'], values['password']);
+        } finally {
+          console.log('Logged in with email');
+          this.setState({ authenticating: false });
+        }
+        break;
+      }
+    }
+  };
+
+  /*private signInWithSocialMedia_ = (provider: AuthProvider) => {
     if (this.state.error !== '') this.setState({ error: '' });
     
     this.setState({ authenticating: true });
@@ -161,123 +197,94 @@ class HomePage extends React.Component<Props, State> {
         this.setState({ authenticating: false });
         this.setState({ error: err.message });
       });
+  };*/
+
+  private onTabIndexChange_ = (index: number) => {
+    this.setState({
+      index
+    });
   };
 
-  private signInWithEmail_ = (email, password) => {
-    if (this.state.error !== '') this.setState({ error: '' });
-    
-    this.setState({ authenticating: true });
-
-    try { 
-      SignInWithEmail(email, password);
-    } finally {
-      console.log('Logged in with email');
-      this.setState({ authenticating: false });
-    }
-  };
-
-  private signUpWithEmail_ = (email, password) => {
-    if (this.state.error !== '') this.setState({ error: '' });
-
-    this.setState({ authenticating: true });
-
-    try {
-      CreateUserWithEmail(email, password);
-    } finally {
-      this.setState({ authenticating: false });
-      console.log('Created user with email');
-    }
-  };
-
-  private forgotPassword_ = (email) => {
-    if (this.state.error !== '') this.setState({ error: '' });
-
-    ForgotPassword(email);
-    this.showLoginBox();
-    alert('Check your email for a password reset link.');
+  private onForgotPasswordClick_ = () => {
+    this.setState({
+      forgotPassword: true,
+    });
   };
 
   render() {
     const { props, state } = this;
     const { className, style, history } = props;
+    const { index, authenticating, loggedIn, forgotPassword } = state;
     const theme = DARK;
 
-    const imgStyle: CSSProperties = {
-      maxWidth: '150px',
-      margin: '20px 20px 10px 20px',
-    };
+    if (loggedIn) return <Redirect push to = '/sim' />;
 
-    const divOptionStyle: CSSProperties = {
-      margin: '15px 0px 5px 0px',
-      padding: '10px',
-      fontWeight: 900,
-      border: `3px solid ${theme.borderColor}`,
-      borderLeft: 'none',
-      borderRight: 'none',
-    };
-
-    if (this.state.loggedIn === true) {
-      return <Redirect push to = '/sim' />;
+    let kiprLogo: JSX.Element;
+    switch (theme.foreground) {
+      case 'white': {
+        kiprLogo = <Logo src={KIPR_LOGO_BLACK as string} />;
+        break;
+      }
+      case 'black': {
+        kiprLogo = <Logo src={KIPR_LOGO_WHITE as string} />;
+        break;
+      }
     }
 
-    return (
-      <VertContainer className={'Home Page'} style={style} theme={theme}>
-        <Container className={'main'} style={style} theme={theme}>
-         
-          <AuthContainer className={'AuthContainer'} theme={theme}>
-            <div>
-              <img style={imgStyle} src='../../static/KIPR-Logo-bk.jpg' alt='KIPR Logo' />
-            </div>
-            <ItemContainer theme={theme}>
-              <Item
-                theme={theme}
-                className={`controller ${this.state.isLoginOpen ? "selected-controller" : ""}`}
-                onClick={this.showLoginBox.bind(this)}>
-              Login
-              </Item>
-              <Item
-                theme={theme}
-                className={`controller ${this.state.isRegisterOpen ? "selected-controller" : ""}`}
-                onClick={this.showRegisterBox.bind(this)}>
-              Register
-              </Item>
-              <Item
-                theme={theme}
-                className={`controller ${this.state.isForgotPassOpen ? "selected-controller" : ""}`}
-                onClick={this.showForgotPassBox.bind(this)}>
-                    Reset Password
-              </Item>
-            </ItemContainer>
-            <div className={'auth-box'}>
-              {
-                this.state.isLoginOpen && 
-                <Login 
-                  theme={theme}
-                  isLoginOpen={this.state.isLoginOpen}
-                  signInWithEmail={this.signInWithEmail_}
-                  signInWithSocialMedia={this.signInWithSocialMedia_}
-                  authenticating={this.state.authenticating}/>
-              }
-              {
-                this.state.isRegisterOpen && 
-                <Register 
-                  theme={theme} 
-                  isRegisterOpen={this.state.isRegisterOpen}
-                  signUpWithEmail={this.signUpWithEmail_}
-                  signInWithSocialMedia={this.signInWithSocialMedia_}
-                  authenticating={this.state.authenticating}/>
-              }
-              {
-                this.state.isForgotPassOpen &&
-                <ForgotPass
-                  theme={theme}
-                  isForgotPassOpen={this.state.isForgotPassOpen}
-                  forgotPass={this.forgotPassword_}/>
-              }
-            </div>
-          </AuthContainer>
+    if (forgotPassword) {
+      const FORGOT_PASSWORD_FORM_ITEMS: Form.Item[] = [
+        Form.email('email', 'Email'),
+      ];
+
+      return (
+        <Container theme={theme} className={className} style={style}>
+          <Card theme={theme}>
+            {kiprLogo}
+            <Header theme={theme}>Forgot Password</Header>
+            <StyledForm
+              finalizeIcon='unlock'
+              finalizeText='Send Recovery Email'
+              theme={theme}
+              items={FORGOT_PASSWORD_FORM_ITEMS}
+              onFinalize={this.onFinalize_}
+              finalizeDisabled={authenticating}
+            />
+          </Card>
         </Container>
-      </VertContainer>
+      );
+    }
+
+    const LOGIN_FORM_ITEMS: Form.Item[] = [
+      Form.email('email', 'Email'),
+      Form.password('password', 'Password', undefined, this.onForgotPasswordClick_, 'Forgot?'),
+    ];
+    
+    const SIGNUP_FORM_ITEMS: Form.Item[] = [
+      Form.email('email', 'Email'),
+      Form.password('password', 'Password'),
+    ];
+    
+    const FORMS = [LOGIN_FORM_ITEMS, SIGNUP_FORM_ITEMS];
+
+    return (
+      <Container theme={theme} className={className} style={style}>
+        <Card theme={theme}>
+          {kiprLogo}
+
+          <Header theme={theme}>{index === 0 ? 'Sign In' : 'Sign Up'}</Header>
+          
+          <StyledForm
+            finalizeIcon={index === 0 ? 'sign-in-alt' : 'user-plus'}
+            finalizeText={index === 0 ? 'Sign In' : 'Sign Up'}
+            theme={theme}
+            items={FORMS[index]}
+            onFinalize={this.onFinalize_}
+            finalizeDisabled={authenticating}
+          />
+          
+          <StyledTabBar theme={theme} tabs={TABS} index={index} onIndexChange={this.onTabIndexChange_} />
+        </Card>
+      </Container>
     );
   }
 }

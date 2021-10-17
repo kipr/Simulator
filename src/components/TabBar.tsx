@@ -13,13 +13,16 @@ export interface TabProps extends ThemeProps, StyleProps {
 const TabContainer = styled('div', (props: ThemeProps & { selected: boolean }) => ({
   flex: '1 1',
   borderRight: `1px solid ${props.theme.borderColor}`,
-  backgroundColor: props.selected ? `rgba(255, 255, 255, 0.1)` : undefined,
-  transition: 'background-color 0.2s',
-  padding: `${props.theme.itemPadding}px`,
+  backgroundColor: props.selected ? `rgba(255, 255, 255, 0.1)` : `rgba(0, 0, 0, 0.1)`,
+  opacity: props.selected ? 1 : 0.2,
+  transition: 'background-color 0.2s, opacity 0.2s',
+  padding: `${props.theme.itemPadding * 2}px`,
   ':last-child': {
     borderRight: 'none'
   },
   textAlign: 'center',
+  userSelect: 'none',
+  cursor: props.selected ? 'auto' : 'pointer',
 }));
 
 const TabIcon = styled(Fa, {
@@ -62,9 +65,9 @@ export class TabBar extends React.PureComponent<Props> {
 
   render() {
     const { props } = this;
-    const { tabs, index, theme } = props;
+    const { tabs, index, theme, style, className } = props;
     return (
-      <TabBarContainer theme={theme}>
+      <TabBarContainer theme={theme} style={style} className={className}>
         {tabs.map((tab, i) => (
           <Tab key={i} selected={i === index} theme={theme} description={tab} onClick={this.onClick_(i)} />
         ))}
