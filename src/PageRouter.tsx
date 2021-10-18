@@ -36,7 +36,7 @@ const PageRouter: React.FunctionComponent<PageRouterProps> = props => {
             exact={route.exact}
             render={(routeProps: RouteComponentProps) => {
               if (route.protected) return <AuthRoute ><route.component {...routeProps} /></AuthRoute>;
-
+              if (route.index !== undefined) return <route.component {...routeProps} externalIndex={route.index} />;
               return <route.component  {...routeProps} />;
             }}
           />)}

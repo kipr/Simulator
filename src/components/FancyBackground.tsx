@@ -144,7 +144,7 @@ class FancyBackground extends React.PureComponent<Props, State> {
       <Container style={style} className={className} ref={this.bindContainerRef_}>
         <Canvas ref={this.bindCanvasRef_} />
       </Container>
-    )
+    );
   }
 }
 

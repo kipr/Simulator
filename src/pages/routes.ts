@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import IRoute from "./interfaces/route.interface";
 import Dashboard from "./Dashboard";
 import { Root } from '../components/Root';
@@ -7,8 +8,15 @@ const routes: IRoute[] = [
   {
     path: '/',
     exact: true,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     component: HomePage,
+    name: 'Home Page',
+    protected: false
+  },
+  {
+    path: '/signup',
+    exact: false,
+    component: HomePage,
+    index: 1,
     name: 'Home Page',
     protected: false
   },

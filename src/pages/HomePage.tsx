@@ -7,22 +7,22 @@ import * as PropTypes from 'prop-types';
 import { DARK, ThemeProps } from '../components/theme';
 import { StyleProps } from '../style';
 import { styled, withStyleDeep } from 'styletron-react';
-import Register from './auth/Register';
-import Login from './auth/Login';
-import { auth } from '../firebase/firebase';
+import { auth, Providers } from '../firebase/firebase';
 import { SignInWithEmail, SignInWithSocialMedia, CreateUserWithEmail, ForgotPassword } from '../firebase/modules/auth';
 import { AuthProvider } from 'firebase/auth';
-import { CSSProperties } from 'hoist-non-react-statics/node_modules/@types/react';
-import ForgotPass from './auth/ForgotPass';
 import Form from '../components/Form';
-import FancyBackground from '../components/FancyBackground';
 import { TabBar } from '../components/TabBar';
 
 import KIPR_LOGO_BLACK from '../assets/KIPR-Logo-Black-Text-Clear-Large.png';
 import KIPR_LOGO_WHITE from '../assets/KIPR-Logo-White-Text-Clear-Large.png';
 import { Fa } from '../components/Fa';
+import { Text } from '../components/Text';
+import { StyledText } from '../util';
+import Button from '../components/Button';
+import PageProps from './interfaces/page.interface';
+import { Validators } from '../util/Validator';
 
-export interface HomePageProps extends ThemeProps,StyleProps {
+export interface HomePageProps extends ThemeProps,StyleProps,PageProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   history: any;
 }
@@ -41,8 +41,8 @@ const Container = styled('div', (props: ThemeProps) => ({
   justifyContent: 'center',
   width: '100%',
   height: '100vh',
-  backgroundImage: 'linear-gradient(#9e2a2b, #540b0e)',
-  
+  backgroundImage: 'url(../../static/Triangular_Background_Compressed.png)',
+  backgroundSize: 'cover',
 }));
 
 const Card = styled('div', (props: ThemeProps) => ({
@@ -70,12 +70,24 @@ const StyledForm = styled(Form, (props: ThemeProps) => ({
   paddingRight: `${props.theme.itemPadding * 2}px`,
 }));
 
+const StyledToolIcon = styled(Fa, (props: ThemeProps & { withBorder?: boolean }) => ({
+  userSelect: 'none',
+  paddingLeft: !props.withBorder ? `${props.theme.itemPadding}px` : undefined,
+  paddingRight: props.withBorder ? `${props.theme.itemPadding}px` : undefined,
+  borderRight: props.withBorder ? `1px solid ${props.theme.borderColor}` : undefined,
+}));
+
+const ButtonContainer = styled('div', (theme: ThemeProps) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  marginTop: `${theme.theme.itemPadding * 4}px`,
+  marginBottom: `${theme.theme.itemPadding * 2}px`,
+}));
+
 interface ClickProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   disabled?: boolean;
 }
-
-
 
 const TABS: TabBar.TabDescription[] = [{
   name: 'Sign In',
@@ -122,7 +134,7 @@ class HomePage extends React.Component<Props, State> {
     this.state = {
       authenticating: false,
       loggedIn: null,
-      index: 0,
+      index: this.props.externalIndex !== undefined ? this.props.externalIndex : 0,
       forgotPassword: false,
     };
   }
@@ -176,7 +188,7 @@ class HomePage extends React.Component<Props, State> {
         try { 
           CreateUserWithEmail(values['email'], values['password']);
         } finally {
-          console.log('Logged in with email');
+          console.log('Created user with email');
           this.setState({ authenticating: false });
         }
         break;
@@ -184,9 +196,7 @@ class HomePage extends React.Component<Props, State> {
     }
   };
 
-  /*private signInWithSocialMedia_ = (provider: AuthProvider) => {
-    if (this.state.error !== '') this.setState({ error: '' });
-    
+  private signInWithSocialMedia_ = (provider: AuthProvider) => {
     this.setState({ authenticating: true });
     
     SignInWithSocialMedia(provider)
@@ -195,9 +205,8 @@ class HomePage extends React.Component<Props, State> {
       })
       .catch(err => {
         this.setState({ authenticating: false });
-        this.setState({ error: err.message });
       });
-  };*/
+  };
 
   private onTabIndexChange_ = (index: number) => {
     this.setState({
@@ -211,12 +220,39 @@ class HomePage extends React.Component<Props, State> {
     });
   };
 
+  private onBackClick_ = () => {
+    this.setState({
+      forgotPassword: false,
+    });
+  };
+
   render() {
     const { props, state } = this;
     const { className, style, history } = props;
     const { index, authenticating, loggedIn, forgotPassword } = state;
     const theme = DARK;
 
+    const googleButtonItems = [
+      StyledText.component ({
+        component: StyledToolIcon,
+        props: {
+          icon: 'google',
+          brand: true,
+          theme,
+        }
+      }),
+      StyledText.text ({
+        text: 'Continue with Google',
+        style: {
+          fontWeight: 400,
+          fontSize: '0.9em',
+          textAlign: 'center',
+          color: theme.color,
+          marginLeft: '8px',
+          marginRight: '8px',
+        }
+      })
+    ];
     if (loggedIn) return <Redirect push to = '/sim' />;
 
     let kiprLogo: JSX.Element;
@@ -233,7 +269,7 @@ class HomePage extends React.Component<Props, State> {
 
     if (forgotPassword) {
       const FORGOT_PASSWORD_FORM_ITEMS: Form.Item[] = [
-        Form.email('email', 'Email'),
+        Form.email('email', 'Email', undefined, this.onBackClick_, 'Back'),
       ];
 
       return (
@@ -258,10 +294,18 @@ class HomePage extends React.Component<Props, State> {
       Form.email('email', 'Email'),
       Form.password('password', 'Password', undefined, this.onForgotPasswordClick_, 'Forgot?'),
     ];
-    
+
     const SIGNUP_FORM_ITEMS: Form.Item[] = [
       Form.email('email', 'Email'),
       Form.password('password', 'Password'),
+    ];
+
+    const SIGNUP_FORM_VERIFIERS: Form.Item[] = [
+      Form.verifier('email', 'A valid email is required', Validators.Types.Email),
+      Form.verifier('password', 'At least one lowercase letter', Validators.Types.Lowercase),
+      Form.verifier('password', 'At least one uppercase letter', Validators.Types.Uppercase),
+      Form.verifier('password', 'At least one number', Validators.Types.Numeric),
+      Form.verifier('password', 'At least 8 characters', Validators.Types.Length),
     ];
     
     const FORMS = [LOGIN_FORM_ITEMS, SIGNUP_FORM_ITEMS];
@@ -278,10 +322,18 @@ class HomePage extends React.Component<Props, State> {
             finalizeText={index === 0 ? 'Sign In' : 'Sign Up'}
             theme={theme}
             items={FORMS[index]}
+            verifiers={index === 0 ? undefined : SIGNUP_FORM_VERIFIERS}
             onFinalize={this.onFinalize_}
             finalizeDisabled={authenticating}
           />
-          
+          <SocialContainer theme={theme}>
+            <Button 
+              theme={theme} 
+              onClick={() => this.signInWithSocialMedia_(Providers.google)} 
+              children={googleButtonItems.map((item, i) => (
+                <Text key={i} text={item} />
+              ))}/>
+          </SocialContainer>
           <StyledTabBar theme={theme} tabs={TABS} index={index} onIndexChange={this.onTabIndexChange_} />
         </Card>
       </Container>

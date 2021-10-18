@@ -1,10 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import Dict from '../Dict';
 import { StyleProps } from '../style';
+import { StyledText } from '../util';
+import { Validators } from '../util/Validator';
 import { Spacer } from './common';
 import { Fa } from './Fa';
 import Input from './Input';
+import { Text } from './Text';
 import { GREEN, RED, ThemeProps } from './theme';
 
 const Container = styled('div', (props: ThemeProps) => ({
@@ -22,6 +27,13 @@ const Label = styled('label', (theme: ThemeProps) => ({
   userSelect: 'none'
 }));
 
+const ErrorIcon = styled(Fa, (theme: ThemeProps) => ({
+  userSelect: 'none',
+  paddingLeft: `${theme.theme.itemPadding}px`,
+  paddingRight: `${theme.theme.itemPadding}px`,
+  borderRight: `1px solid ${theme.theme.borderColor}`,
+}));
+
 const ButtonContainer = styled('div', (theme: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'row',
@@ -33,6 +45,7 @@ const Assist = styled('span', (theme: ThemeProps) => ({
   opacity: 0.35,
   fontSize: '0.8em',
   cursor: 'pointer',
+  marginLeft: `${theme.theme.itemPadding / 2}px`,
 }));
 
 const Finalize = styled('div', (props: ThemeProps & { disabled?: boolean }) => ({
@@ -86,7 +99,7 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
 
   render() {
     const { props, state } = this;
-    const { items, theme, className, style, finalizeDisabled } = props;
+    const { items, verifiers, theme, className, style, finalizeDisabled } = props;
     const { values } = state;
     
     const itemElements: React.ReactNode[] = items.map((item, index) => {
@@ -100,18 +113,54 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
           onChange={this.onValueChange_(item)}
         />
       ];
-    }).reduce((acc, item) => [ ...acc, ...item ], []);
+    }).reduce((acc, item) => [...acc, ...item], []);
+
+    const verifyElements: React.ReactNode[] = verifiers !== undefined ? verifiers.map((verifier, index) => {
+      const text = this.state.values[verifier.id] !== undefined ? this.state.values[verifier.id].text : ''; 
+      const valid = Validators.validate(text, verifier.validType);
+      return [
+        <div key={`verifier-${index}`}>
+          <Text text={
+            StyledText.component ({
+              component: Fa,
+              props: {
+                icon: valid ? 'check' : 'times',
+                style: {
+                  color: valid ? GREEN.standard : RED.standard,
+                },
+                theme,
+              }
+            })
+          }/>
+          <Text text={
+            StyledText.text ({
+              text: verifier.text,
+              style: {
+                color: valid ? GREEN.standard : RED.standard,
+                fontWeight: 400,
+                fontSize: '0.9em',
+                textAlign: 'left',
+                marginLeft: '8px',
+                marginRight: '8px',
+              }
+            })
+          }/>
+        </div>
+        
+      ];
+    }).reduce((acc, item) => [...acc, ...item], []) : undefined;
 
     return (
       <Container style={style} className={className} theme={theme}>
         {itemElements}
+        {verifyElements}
         <ButtonContainer theme={theme}>
           <Finalize
             theme={theme}
             onClick={this.onFinalizeClick_}
             disabled={!items.every(item => item.id in values && values[item.id].valid) || finalizeDisabled}
           >
-              {props.finalizeIcon ? <Fa icon={props.finalizeIcon} /> : undefined} {props.finalizeText || 'Accept'}
+            {props.finalizeIcon ? <Fa icon={props.finalizeIcon} /> : undefined} {props.finalizeText || 'Accept'}
           </Finalize>
         </ButtonContainer>
       </Container>
@@ -129,6 +178,7 @@ namespace Form {
     finalizeDisabled?: boolean;
 
     items: Item[];
+    verifiers?: Item[];
   }
 
   export interface State {
@@ -151,19 +201,23 @@ namespace Form {
     assistText?: string;
     assist?: () => void;
     validator?: (value: string) => boolean;
-    finalizer: (value: string) => F;
+    validType?: Validators.Types;
+    finalizer?: (value: string) => F;
   }
 
   export const IDENTITY_FINALIZER = (value: string) => value;
-  export const EMAIL_VALIDATOR = (value: string) => /^[^@]+@[^@]+\.[^@]+$/.test(value);
+  export const EMAIL_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.Email); 
+  export const PASSWORD_VALIDATOR = (value: string) => Validators.validatePassword(value);
 
 
-  export const email = (id: string, text: string, tooltip?: string): Item<string> => ({
+  export const email = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
     id,
     text,
     tooltip,
     validator: EMAIL_VALIDATOR,
     finalizer: IDENTITY_FINALIZER,
+    assist,
+    assistText,
   });
 
   export const password = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
@@ -171,9 +225,17 @@ namespace Form {
     text,
     tooltip,
     valueHidden: true,
+    validator: PASSWORD_VALIDATOR,
     finalizer: IDENTITY_FINALIZER,
     assist,
     assistText,
+  });
+
+  export const verifier = (id: string, text: string, validType: Validators.Types, tooltip?: string): Item<string> => ({
+    id,
+    text,
+    validType,
+    tooltip,
   });
 }
 
