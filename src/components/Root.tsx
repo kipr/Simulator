@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
-import { SignOut } from '../firebase/modules/auth';
+import { signOutOfApp } from '../firebase/modules/auth';
 import WorkerInstance from '../WorkerInstance';
 import { RobotState } from '../RobotState';
 
@@ -344,7 +344,7 @@ export class Root extends React.Component<Props, State> {
   };
 
   onLogoutClick = () => {
-    SignOut();
+    signOutOfApp();
   };
 
 

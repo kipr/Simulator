@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { 
   signInWithPopup, 
+  signInWithRedirect,
+  getRedirectResult,
   AuthProvider, 
   UserCredential, 
   createUserWithEmailAndPassword, 
@@ -10,14 +12,23 @@ import {
 } from 'firebase/auth';
 import { auth } from '../../firebase';
 
-export const SignInWithSocialMedia = (provider: AuthProvider) =>
+export const signInWithSocialMedia = (provider: AuthProvider) =>
   new Promise<UserCredential>((resolve, reject) => {
     signInWithPopup(auth, provider)
       .then(result => resolve(result))
       .catch(error => reject(error));
   });
 
-export const CreateUserWithEmail = (email: string, password: string) => {
+export const signInWithSocialMediaRedirect = (provider: AuthProvider) => {
+  return new Promise<UserCredential>((resolve, reject) => {
+    getRedirectResult(auth)
+      .then(result => resolve(result))
+      .catch(error => reject(error));
+  });
+};
+
+
+export const createUserWithEmail = (email: string, password: string) => {
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;
@@ -27,7 +38,7 @@ export const CreateUserWithEmail = (email: string, password: string) => {
     });
 };
 
-export const SignInWithEmail = (email: string, password: string) => {
+export const signInWithEmail = (email: string, password: string) => {
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;
@@ -36,20 +47,17 @@ export const SignInWithEmail = (email: string, password: string) => {
       console.log(error);
       if (error.code === 'auth/invalid-email') {
         console.log('Invalid email');
-        alert('Invalid email');
         window.location.reload();
       } else if (error.code === 'auth/wrong-password') {
         console.log('Wrong password');
-        alert('Wrong password');
         window.location.reload();
       } else {
-        alert('Unknown Error');
         window.location.reload();
       }
     });
 };
 
-export const SignOut = () => {
+export const signOutOfApp = () => {
   signOut(auth)
     .then(() => {
       console.log("Logged out");
@@ -60,7 +68,7 @@ export const SignOut = () => {
     });
 };
 
-export const ForgotPassword = (email: string) => {
+export const forgotPassword = (email: string) => {
   sendPasswordResetEmail(auth, email)
     .then(() => {
       console.log("Password reset email sent");

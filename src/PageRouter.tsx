@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Switch, Route, RouteComponentProps } from 'rea
 import { auth } from './firebase/firebase';
 import routes from './pages/routes';
 import AuthRoute from './firebase/modules/auth/AuthRoute';
+import { getRedirectResult } from '@firebase/auth';
 
 export interface PageRouterProps { }
 
@@ -24,7 +25,10 @@ const PageRouter: React.FunctionComponent<PageRouterProps> = props => {
       setLoading(false);
     });
   }, []);
-  if (loading) return <div>Loading...</div>;
+  if (loading) {
+    const result = getRedirectResult(auth);
+    return <div>Loading...</div>;
+  }
 
   return (
     <Router>

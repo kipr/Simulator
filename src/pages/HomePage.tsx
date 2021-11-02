@@ -8,8 +8,13 @@ import { DARK, ThemeProps } from '../components/theme';
 import { StyleProps } from '../style';
 import { styled, withStyleDeep } from 'styletron-react';
 import { auth, Providers } from '../firebase/firebase';
-import { SignInWithEmail, SignInWithSocialMedia, CreateUserWithEmail, ForgotPassword } from '../firebase/modules/auth';
-import { AuthProvider } from 'firebase/auth';
+import { 
+  signInWithEmail, 
+  signInWithSocialMediaRedirect, 
+  createUserWithEmail, 
+  forgotPassword
+} from '../firebase/modules/auth';
+import { AuthProvider, getRedirectResult, signInWithRedirect } from 'firebase/auth';
 import Form from '../components/Form';
 import { TabBar } from '../components/TabBar';
 
@@ -133,7 +138,7 @@ class HomePage extends React.Component<Props, State> {
 
     this.state = {
       authenticating: false,
-      loggedIn: null,
+      loggedIn: auth.currentUser !== null,
       index: this.props.externalIndex !== undefined ? this.props.externalIndex : 0,
       forgotPassword: false,
     };
@@ -144,23 +149,26 @@ class HomePage extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    this.authListener();
+    const a = this.authListener();
   }
 
-  authListener() {
+  private authListener = async () => {
+    const redirect = await getRedirectResult(auth);
+    if (redirect !== null) {
+      this.setState({ loggedIn: true });
+    }
     auth.onAuthStateChanged((user) => {
       if (user) {
-        console.log('User is logged in');
         this.setState({ loggedIn: true });
       } else {
         this.setState({ loggedIn: false });
       }
     });
-  }
+  };
 
   private onFinalize_ = (values: { [id: string]: string }) => {
     if (this.state.forgotPassword) {
-      ForgotPassword(values.email);
+      forgotPassword(values.email);
 
       this.setState({
         forgotPassword: false,
@@ -174,7 +182,7 @@ class HomePage extends React.Component<Props, State> {
         this.setState({ authenticating: true });
 
         try { 
-          SignInWithEmail(values['email'], values['password']);
+          signInWithEmail(values['email'], values['password']);
         } finally {
           console.log('Logged in with email');
           this.setState({ authenticating: false });
@@ -186,7 +194,7 @@ class HomePage extends React.Component<Props, State> {
         this.setState({ authenticating: true });
 
         try { 
-          CreateUserWithEmail(values['email'], values['password']);
+          createUserWithEmail(values['email'], values['password']);
         } finally {
           console.log('Created user with email');
           this.setState({ authenticating: false });
@@ -196,16 +204,9 @@ class HomePage extends React.Component<Props, State> {
     }
   };
 
-  private signInWithSocialMedia_ = (provider: AuthProvider) => {
+  private signInWithSocialMedia_ = async (provider: AuthProvider) => {
     this.setState({ authenticating: true });
-    
-    SignInWithSocialMedia(provider)
-      .then(result => {
-        console.log('Logged in with Google');
-      })
-      .catch(err => {
-        this.setState({ authenticating: false });
-      });
+    await signInWithRedirect(auth, provider);
   };
 
   private onTabIndexChange_ = (index: number) => {
