@@ -254,7 +254,7 @@ class HomePage extends React.Component<Props, State> {
         }
       })
     ];
-    if (loggedIn) return <Redirect push to = '/sim' />;
+    if (loggedIn) return <Redirect push to = '/dashboard' />;
 
     let kiprLogo: JSX.Element;
     switch (theme.foreground) {

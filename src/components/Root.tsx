@@ -5,7 +5,7 @@ import WorkerInstance from '../WorkerInstance';
 import { RobotState } from '../RobotState';
 
 import { SurfaceState, SurfaceStatePresets } from '../SurfaceState';
-import Menu from './Menu';
+import SimMenu from './SimMenu';
 
 import { styled } from 'styletron-react';
 import { DARK, Theme } from './theme';
@@ -421,7 +421,7 @@ export class Root extends React.Component<Props, State> {
 
       <>
         <Container>
-          <Menu
+          <SimMenu
             layout={layout}
             onLayoutChange={this.onLayoutChange_}
             theme={theme}

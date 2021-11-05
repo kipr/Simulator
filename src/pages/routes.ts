@@ -3,6 +3,7 @@ import IRoute from "./interfaces/route.interface";
 import Dashboard from "./Dashboard";
 import { Root } from '../components/Root';
 import HomePage from "./HomePage";
+import Tutorials from "./Tutorials";
 
 const routes: IRoute[] = [
   {
@@ -33,7 +34,14 @@ const routes: IRoute[] = [
     component: Root,
     name: 'Simulator',
     protected: true
-  }
+  },
+  {
+    path: '/tutorials',
+    exact: true,
+    component: Tutorials,
+    name: 'Tutorials',
+    protected: true
+  },
 
 ];
 export default routes;

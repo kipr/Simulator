@@ -102,7 +102,7 @@ const ItemIcon = styled(Fa, {
   paddingRight: '10px'
 });
 
-class Menu extends React.PureComponent<Props, State> {
+class SimMenu extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -184,4 +184,4 @@ class Menu extends React.PureComponent<Props, State> {
   }
 }
 
-export default Menu;
+export default SimMenu;
