@@ -7,11 +7,15 @@ export interface CardProps extends StyleProps, ThemeProps {
   title?: string;
   description?: string;
   link?: string;
+  src?: string;
   backgroundImage?: string;
   backgroundColor?: string;
   backgroundPosition?: string;
   backgroundSize?: string;
   hoverBackgroundSize?: string;
+  onSelect?: (index: number) => void;
+  selected?: boolean;
+  index?: number;
 }
 
 interface CardState { }
@@ -96,6 +100,8 @@ export class Card extends React.Component<Props, State> {
   private onClick_ = () => {
     if (this.props.link) {
       window.location.href = this.props.link;
+    } else if (this.props.src) {
+      this.props.onSelect(this.props.index);
     }
   };
 

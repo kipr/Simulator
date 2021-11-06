@@ -7,6 +7,7 @@ import MainMenu from '../components/MainMenu';
 import { Vector2 } from '../math';
 import resizeListener, { ResizeListener } from '../components/ResizeListener';
 import IFrame from '../components/IFrame';
+import { tutorialList } from './tutorialList';
 
 
 export interface TutorialsProps extends StyleProps, ThemeProps {}
@@ -76,6 +77,13 @@ class Tutorials extends React.Component<Props, State> {
     };
   }
 
+  private onSelect_ = (index: number) => {
+    this.setState({
+      selected: tutorialList[index].src,
+    });
+    console.log(this.state.selected);
+  };
+
   render() {
     const { props, state } = this;
     const { style } = props;
@@ -84,23 +92,35 @@ class Tutorials extends React.Component<Props, State> {
     return (
       <Container style={style} theme={theme}>
         <MainMenu theme={theme}/>
-        <VideoContainer theme={theme}>
-          <IFrame theme={theme} src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"/>
-        </VideoContainer>
+        {
+          (this.state.selected !== '') 
+            ? (
+              <VideoContainer theme={theme}>
+                <IFrame theme={theme} src={this.state.selected}/>
+              </VideoContainer>
+            ) : <></>
+        }
         <CardContainer style={style} theme={theme}>
-          <Card
-            theme={theme}
-            title={'Getting Started'}
-            description={'Learn how to get started with the simulator'}
-            backgroundImage={'url(../../static/Simulator-Robot-Closeup.png)'}
-          />
-          <Card 
-            theme={theme}
-            title={'Botball Academy'}
-            description={'How to use the Botball Academy.'}
-            backgroundColor={'#6c6ca1'}
-            backgroundImage={'url(../../static/Laptop_Icon_Sunscreen.png)'}
-          />
+          {
+            tutorialList.map((tutorial, index) => {
+              return (
+                <Card
+                  theme={theme}
+                  title={tutorial.title}
+                  description={tutorial.description}
+                  src={tutorial.src}
+                  backgroundImage={tutorial.backgroundImage}
+                  backgroundColor={tutorial.backgroundColor}
+                  backgroundPosition={tutorial.backgroundPosition}
+                  backgroundSize={tutorial.backgroundSize}
+                  hoverBackgroundSize={tutorial.hoverBackgroundSize}
+                  onSelect={this.onSelect_}
+                  index={index}
+                  key={index}
+                />
+              );
+            })
+          }
         </CardContainer>
       </Container>
     );
