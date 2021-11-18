@@ -75,6 +75,10 @@ export class MainMenu extends React.Component<Props, State> {
   private onLogoutClick_ = (event: React.MouseEvent<HTMLDivElement>) => {
     signOutOfApp();
   };
+
+  private onDashboardClick_ = (event: React.MouseEvent<HTMLDivElement>) => {
+    window.location.href = '/';
+  };
     
   render() {
     const { className, style } = this.props;
@@ -83,6 +87,7 @@ export class MainMenu extends React.Component<Props, State> {
       <Container className={className} style={style} theme={theme}>
         <Logo theme={theme} src={theme.foreground === 'white' ? KIPR_LOGO_BLACK as string : KIPR_LOGO_WHITE as string} />
         <Spacer style={{ borderRight: `1px solid ${theme.borderColor}` }} />
+        <Item theme={theme} onClick={this.onDashboardClick_}><ItemIcon icon='compass'/> Dashboard</Item>
         <Item theme={theme} onClick={this.onLogoutClick_}><ItemIcon icon='sign-out-alt'/> Logout</Item>
       </Container>
     );
