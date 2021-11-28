@@ -5,7 +5,7 @@ import WorkerInstance from '../WorkerInstance';
 import { RobotState } from '../RobotState';
 
 import { SurfaceState, SurfaceStatePresets } from '../SurfaceState';
-import Menu from './Menu';
+import SimMenu from './SimMenu';
 
 import { styled } from 'styletron-react';
 import { DARK, Theme } from './theme';
@@ -347,6 +347,10 @@ export class Root extends React.Component<Props, State> {
     signOutOfApp();
   };
 
+  onDashboardClick = () => {
+    window.location.href = '/';
+  };
+
 
   private onSettingsChange_ = (changedSettings: Partial<Settings>) => {
     this.setState({ settings: { ...this.state.settings, ...changedSettings } });
@@ -421,7 +425,7 @@ export class Root extends React.Component<Props, State> {
 
       <>
         <Container>
-          <Menu
+          <SimMenu
             layout={layout}
             onLayoutChange={this.onLayoutChange_}
             theme={theme}
@@ -433,6 +437,7 @@ export class Root extends React.Component<Props, State> {
             onRunClick={this.onRunClick_}
             onStopClick={this.onStopClick_}
             onDocumentationClick={this.onDocumentationClick}
+            onDashboardClick={this.onDashboardClick}
             onLogoutClick={this.onLogoutClick}
             simulatorState={simulatorState}
           />

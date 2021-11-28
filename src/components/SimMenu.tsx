@@ -23,6 +23,7 @@ export interface MenuProps extends StyleProps, ThemeProps {
   onSettingsClick: () => void;
   onAboutClick: () => void;
   onDocumentationClick: () => void;
+  onDashboardClick: () => void;
   onLogoutClick: () => void;
 
   simulatorState: SimulatorState;
@@ -102,7 +103,7 @@ const ItemIcon = styled(Fa, {
   paddingRight: '10px'
 });
 
-class Menu extends React.PureComponent<Props, State> {
+class SimMenu extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -131,6 +132,7 @@ class Menu extends React.PureComponent<Props, State> {
       onStopClick,
       onDownloadClick,
       onDocumentationClick,
+      onDashboardClick,
       onLogoutClick,
       simulatorState
     } = props;
@@ -176,6 +178,7 @@ class Menu extends React.PureComponent<Props, State> {
           
           <Item theme={theme} onClick={onSettingsClick}><ItemIcon icon='cogs'/> Settings</Item>
           <Item theme={theme} onClick={onAboutClick}><ItemIcon icon='question'/> About</Item>
+          <Item theme={theme} onClick={onDashboardClick}><ItemIcon icon='compass'/> Dashboard</Item>
           <Item theme={theme} onClick={onLogoutClick}><ItemIcon icon='sign-out-alt'/> Logout</Item>
         </Container>
         
@@ -184,4 +187,4 @@ class Menu extends React.PureComponent<Props, State> {
   }
 }
 
-export default Menu;
+export default SimMenu;
