@@ -63,13 +63,11 @@ class Dashboard extends React.PureComponent<Props, State> {
         <CardContainer style={style} theme={theme}>
           <Card
             theme={theme}
-            title={'About'}
-            description={'KIPR is a 501(c) 3 organization started to make the long-term educational benefits of robotics accessible to students.'}
-            link={'https://www.kipr.org/kipr/about-kipr'}
-            backgroundImage={'linear-gradient(#3b3c3c, transparent), url(../../static/Botguy-Picture-Small.png)'}
-            backgroundColor={'#3b3c3c'}
-            backgroundSize={'80%'}
-            hoverBackgroundSize={'95%'}
+            title={'Tutorials'}
+            description={'Learn how to get started with the simulator'}
+            link={'/tutorials'}
+            backgroundColor={'#6c6ca1'}
+            backgroundImage={'url(../../static/Laptop_Icon_Sunscreen.png)'}
           />
           <Card 
             theme={theme}
@@ -81,11 +79,13 @@ class Dashboard extends React.PureComponent<Props, State> {
           />
           <Card
             theme={theme}
-            title={'Tutorials'}
-            description={'Learn how to get started with the simulator'}
-            link={'/tutorials'}
-            backgroundColor={'#6c6ca1'}
-            backgroundImage={'url(../../static/Laptop_Icon_Sunscreen.png)'}
+            title={'About'}
+            description={'KIPR is a 501(c) 3 organization started to make the long-term educational benefits of robotics accessible to students.'}
+            link={'https://www.kipr.org/kipr/about-kipr'}
+            backgroundImage={'linear-gradient(#3b3c3c, transparent), url(../../static/Botguy-Picture-Small.png)'}
+            backgroundColor={'#3b3c3c'}
+            backgroundSize={'80%'}
+            hoverBackgroundSize={'95%'}
           />
         </CardContainer>
       </Container>

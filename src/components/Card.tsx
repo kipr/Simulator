@@ -54,6 +54,7 @@ const Container = styled('div', (props: ThemeProps & {
   transition: 'all 0.5s ease',
   ':hover': {
     backgroundSize: props.hoverbackgroundsize ? props.hoverbackgroundsize : '115%',
+    cursor: 'pointer',
   }
 }));
 
