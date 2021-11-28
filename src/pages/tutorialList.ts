@@ -13,7 +13,7 @@ export const tutorialList: Tutorial [] = [
     title: 'Navigating in 3D',
     description: 'Learn the controls for navigating in 3D in the simulator',
     backgroundImage: 'linear-gradient(#3b3c3c, transparent), url(../../static/Simulator_Full_View.png)',
-    src: 'https://www.youtube.com/embed/7Szf-iQjNCw',
+    src: 'https://www.youtube.com/embed/RBpWIpBlYK8',
   },
   {
     title: 'Robot Section',
