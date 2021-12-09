@@ -134,7 +134,7 @@ class WorkerInstance {
           this.registers_[register.address] = register.value;
 
           // Set "dirty" flag for motor position registers
-          if (Registers.REG_RW_MOT_0_B3 <= register.address && register.address <= Registers.REG_RW_MOT_3_B3) {
+          if (Registers.REG_RW_MOT_0_B3 <= register.address && register.address <= Registers.REG_RW_MOT_3_B0) {
             this.didMotorPositionRegistersChange = true;
           }
         }
