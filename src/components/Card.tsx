@@ -55,7 +55,8 @@ const Container = styled('div', (props: ThemeProps & {
   ':hover': {
     backgroundSize: props.hoverbackgroundsize ? props.hoverbackgroundsize : '115%',
     cursor: 'pointer',
-  }
+  },
+  position: 'relative'
 }));
 
 const Gradient = styled('div', (props: ThemeProps) => ({
