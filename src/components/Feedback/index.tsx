@@ -21,6 +21,7 @@ type State = FeedbackDialogState;
 const Container = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'row',
+  justifyContent: 'center',
   color: props.theme.color,
   minHeight: '300px',
 }));
@@ -28,6 +29,7 @@ const Container = styled('div', (props: ThemeProps) => ({
 const FeedbackContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'row',
+  alignItems: 'flex-start',
   padding: `${props.theme.itemPadding * 2}px`,
 }));
 
@@ -63,7 +65,7 @@ export class FeedbackDialog extends React.PureComponent<Props, State> {
     // const { selectedSection } = state;
 
     return (
-      <Dialog theme={theme} name='Settings' onClose={onClose}>
+      <Dialog theme={theme} name='Feedback' onClose={onClose}>
         <Container theme={theme}>
           <>
             {this.createSentimentInput(

@@ -8,18 +8,24 @@ import { charmColor } from '../charm-util';
 
 export interface SentimentCharmProps extends StyleProps, ThemeProps {
   icon: string;
-  // TODO: highlight on selected
   selected: boolean;
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
-  // TODO: highlight on hover
-  // onHover: (event: React.MouseEvent<HTMLDivElement>) => void;
+}
+
+interface SentimentProps {
+  selected?: boolean;
 }
 
 type Props = SentimentCharmProps;
 
-const Container = styled(Charm, {
-  backgroundColor: charmColor(0)
-});
+const Container = styled(Charm, (props: SentimentProps) => ({
+  border: 'none',
+  fontSize: '3em',
+  opacity: `${props.selected ? 1.0 : 0.5}`,
+  ':hover': !props.selected ? {
+    opacity: 1
+  } : {},
+}));
 
 class SentimentCharm extends React.PureComponent<Props> {
   constructor(props: Props) {
@@ -34,7 +40,7 @@ class SentimentCharm extends React.PureComponent<Props> {
     } = props;
     
     return (
-      <Container theme={theme} onClick={onClick}>
+      <Container theme={theme} onClick={onClick} selected={props.selected}>
         <Fa icon={props.icon} />
       </Container>
     );
