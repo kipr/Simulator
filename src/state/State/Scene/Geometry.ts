@@ -1,6 +1,8 @@
 import { Vector2, Vector3 } from '../../../unit-math';
 import { Vector3 as RawVector3, Vector2 as RawVector2 } from '../../../math';
 import { Distance } from '../../../util';
+import Patch from './Patch';
+import deepNeq from '../../../deepNeq';
 
 namespace Geometry {
   export interface Box {
@@ -8,9 +10,31 @@ namespace Geometry {
     size: Vector3;
   }
 
+  export namespace Box {
+    export const diff = (prev: Box, next: Box): Patch<Box> => {
+      if (!deepNeq(prev, next)) return Patch.none(prev);
+
+      return Patch.innerChange(prev, next, {
+        type: Patch.none(prev.type),
+        size: Patch.diff(prev.size, next.size)
+      });
+    };
+  }
+
   export interface Sphere {
     type: 'sphere';
     radius: Distance;
+  }
+
+  export namespace Sphere {
+    export const diff = (prev: Sphere, next: Sphere): Patch<Sphere> => {
+      if (!deepNeq(prev, next)) return Patch.none(prev);
+
+      return Patch.innerChange(prev, next, {
+        type: Patch.none(prev.type),
+        radius: Patch.diff(prev.radius, next.radius)
+      });
+    };
   }
 
   export interface Cylinder {
@@ -19,15 +43,50 @@ namespace Geometry {
     height: Distance;
   }
 
+  export namespace Cylinder {
+    export const diff = (prev: Cylinder, next: Cylinder): Patch<Cylinder> => {
+      if (!deepNeq(prev, next)) return Patch.none(prev);
+
+      return Patch.innerChange(prev, next, {
+        type: Patch.none(prev.type),
+        radius: Patch.diff(prev.radius, next.radius),
+        height: Patch.diff(prev.height, next.height)
+      });
+    };
+  }
+
   export interface Cone {
     type: 'cone';
     radius: Distance;
     height: Distance;
   }
 
+  export namespace Cone {
+    export const diff = (prev: Cone, next: Cone): Patch<Cone> => {
+      if (!deepNeq(prev, next)) return Patch.none(prev);
+
+      return Patch.innerChange(prev, next, {
+        type: Patch.none(prev.type),
+        radius: Patch.diff(prev.radius, next.radius),
+        height: Patch.diff(prev.height, next.height)
+      });
+    };
+  }
+
   export interface Plane {
     type: 'plane';
     size: Vector2;
+  }
+
+  export namespace Plane {
+    export const diff = (prev: Plane, next: Plane): Patch<Plane> => {
+      if (!deepNeq(prev, next)) return Patch.none(prev);
+
+      return Patch.innerChange(prev, next, {
+        type: Patch.none(prev.type),
+        size: Patch.diff(prev.size, next.size)
+      });
+    };
   }
 
   export interface Mesh {
@@ -39,6 +98,20 @@ namespace Geometry {
     indices?: number[];
   }
 
+  export namespace Mesh {
+    export const diff = (prev: Mesh, next: Mesh): Patch<Mesh> => {
+      if (!deepNeq(prev, next)) return Patch.none(prev);
+
+      return Patch.innerChange(prev, next, {
+        type: Patch.none(prev.type),
+        distanceType: Patch.diff(prev.distanceType, next.distanceType),
+        vertices: Patch.diff(prev.vertices, next.vertices),
+        uvs: Patch.diff(prev.uvs, next.uvs),
+        indices: Patch.diff(prev.indices, next.indices)
+      });
+    };
+  }
+
   export interface File {
     type: 'file';
     uri: string;
@@ -47,8 +120,45 @@ namespace Geometry {
     include?: string[];
     exclude?: string[];
   }
+
+  export namespace File {
+    export const diff = (prev: File, next: File): Patch<File> => {
+      if (!deepNeq(prev, next)) return Patch.none(prev);
+
+      return Patch.innerChange(prev, next, {
+        type: Patch.none(prev.type),
+        uri: Patch.diff(prev.uri, next.uri),
+        include: Patch.diff(prev.include, next.include),
+        exclude: Patch.diff(prev.exclude, next.exclude)
+      });
+    };
+  }
+
+  export const isBox = (geometry: Geometry): geometry is Box => geometry.type === 'box';
+  export const isSphere = (geometry: Geometry): geometry is Sphere => geometry.type === 'sphere';
+  export const isCylinder = (geometry: Geometry): geometry is Cylinder => geometry.type === 'cylinder';
+  export const isCone = (geometry: Geometry): geometry is Cone => geometry.type === 'cone';
+  export const isPlane = (geometry: Geometry): geometry is Plane => geometry.type === 'plane';
+  export const isMesh = (geometry: Geometry): geometry is Mesh => geometry.type === 'mesh';
+  export const isFile = (geometry: Geometry): geometry is File => geometry.type === 'file';
+
+  export const diff = (prev: Geometry, next: Geometry): Patch<Geometry> => {
+    if (prev.type !== next.type) {
+      return Patch.outerChange(prev, next);
+    }
+
+    switch (prev.type) {
+      case 'box': return Box.diff(prev, next as Box);
+      case 'sphere': return Sphere.diff(prev, next as Sphere);
+      case 'cylinder': return Cylinder.diff(prev, next as Cylinder);
+      case 'cone': return Cone.diff(prev, next as Cone);
+      case 'plane': return Plane.diff(prev, next as Plane);
+      case 'mesh': return Mesh.diff(prev, next as Mesh);
+      case 'file': return File.diff(prev, next as File);
+    }
+  };
 }
 
-type Geometry = Geometry.Box | Geometry.Sphere | Geometry.Cylinder | Geometry.Cone | Geometry.Plane | Geometry.File;
+type Geometry = Geometry.Box | Geometry.Sphere | Geometry.Cylinder | Geometry.Cone | Geometry.Plane | Geometry.Mesh | Geometry.File;
 
 export default Geometry;
