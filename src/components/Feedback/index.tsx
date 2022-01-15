@@ -79,7 +79,7 @@ export class FeedbackDialog extends React.PureComponent<Props, State> {
     const { theme, feedback: currentFeedback, onFeedbackChange } = this.props;
 
     return (
-      <FeedbackTextArea theme={theme} 
+      <FeedbackTextArea theme={theme} placeholder="Give a helpful description of a problem you're facing, or a feature you'd like to request"
         value={getValue(currentFeedback)} 
         onChange={(event) => {
           onFeedbackChange(getUpdatedFeedback(event.target.value));

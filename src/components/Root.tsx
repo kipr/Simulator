@@ -26,7 +26,7 @@ import parseMessages, { hasErrors, sort, toStyledText } from '../util/parse-mess
 import { Space } from '../Sim';
 import { RobotPosition } from '../RobotPosition';
 import { DEFAULT_SETTINGS, Settings } from '../Settings';
-import { DEFAULT_FEEDBACK, Feedback } from '../Feedback';
+import { DEFAULT_FEEDBACK, Feedback, Sentiment } from '../Feedback';
 import ExceptionDialog from './ExceptionDialog';
 
 namespace Modal {
@@ -391,6 +391,35 @@ export class Root extends React.Component<Props, State> {
       sentiment: this.state.feedback.sentiment,
       email:     this.state.feedback.email,
     });
+
+    let content = "";
+    content += this.state.feedback.feedback;
+    content += '\nSentiment: ';
+    switch (this.state.feedback.sentiment) { 
+      case Sentiment.Happy : content += 'Happy'; break;
+      case Sentiment.Okay : content += 'Okay'; break;
+      case Sentiment.Sad : content += 'Sad'; break;
+      case Sentiment.None : content += 'None'; break;
+    }
+    content += '\nUser Code: \n';
+    content += this.state.code;
+    content += '\n';
+    content += this.state.feedback.email;
+
+    // send to a discord webhook
+    const request = new XMLHttpRequest();
+    request.open(
+      "POST", 
+      "https://discord.com/api/webhooks/931769619025379388/mZo-3RGXUYfN2DG9zV7u2ljnNUfyIJXFtNfh88T7QURew3_ISbAnntZ0Tml8TpEFBSTE"
+    );
+    request.setRequestHeader('Content-type', 'application/json');
+    const params = {
+      username: "KIPR Hook",
+      avatar_url: "",
+      content: content,
+    };
+    request.send(JSON.stringify(params));
+    
   };
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {

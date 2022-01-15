@@ -14,7 +14,7 @@ export interface Feedback {
 }
   
 export const DEFAULT_FEEDBACK: Feedback = {
-  feedback: "Give a helpful description of a problem you're facing, or a feature you'd like to request",
+  feedback: "",
   sentiment: Sentiment.None,
   email: "",
   includeAnonData: true,
