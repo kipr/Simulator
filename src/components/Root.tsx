@@ -24,12 +24,14 @@ import { Space } from '../Sim';
 import { RobotPosition } from '../RobotPosition';
 import { DEFAULT_SETTINGS, Settings } from '../Settings';
 import ExceptionDialog from './ExceptionDialog';
+import SelectSceneDialog from './SelectSceneDialog';
 
 namespace Modal {
   export enum Type {
     Settings,
     About,
     Exception,
+    SelectScene,
     None,
   }
 
@@ -53,6 +55,12 @@ namespace Modal {
 
   export const exception = (error: Error, info?: React.ErrorInfo): Exception => ({ type: Type.Exception, error, info });
 
+  export interface SelectScene {
+    type: Type.SelectScene;
+  }
+
+  export const SELECT_SCENE: SelectScene = { type: Type.SelectScene };
+
   export interface None {
     type: Type.None;
   }
@@ -60,7 +68,7 @@ namespace Modal {
   export const NONE: None = { type: Type.None };
 }
 
-export type Modal = Modal.Settings | Modal.About | Modal.Exception | Modal.None;
+export type Modal = Modal.Settings | Modal.About | Modal.Exception | Modal.SelectScene | Modal.None;
 
 
 interface RootState {
@@ -351,6 +359,12 @@ export class Root extends React.Component<Props, State> {
     });
   }
 
+  private onSelectSceneClick_ = () => {
+    this.setState({
+      modal: Modal.SELECT_SCENE
+    });
+  }
+
   render() {
     const { props, state } = this;
     const {
@@ -382,6 +396,7 @@ export class Root extends React.Component<Props, State> {
       onClearConsole: this.onClearConsole_,
       surfaceState,
       onSurfaceChange: this.onUpdateSurfaceState_,
+      onSelectScene: this.onSelectSceneClick_,
     };
 
     let impl: JSX.Element;
@@ -433,6 +448,7 @@ export class Root extends React.Component<Props, State> {
         {modal.type === Modal.Type.Settings ? <SettingsDialog theme={theme} settings={settings} onSettingsChange={this.onSettingsChange_} onClose={this.onModalClose_} /> : undefined}
         {modal.type === Modal.Type.About ? <AboutDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
         {modal.type === Modal.Type.Exception ? <ExceptionDialog error={modal.error} theme={theme} onClose={this.onModalClose_} /> : undefined}
+        {modal.type === Modal.Type.SelectScene ? <SelectSceneDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
       </>
 
     );

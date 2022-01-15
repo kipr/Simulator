@@ -12,22 +12,7 @@ import { Angle, Distance, Mass, SetOps } from "./util";
 
 export type FrameLike = Babylon.TransformNode | Babylon.AbstractMesh;
 
-interface NodeBinding {
-  logical: Node;
-  physical: Babylon.Node;
-}
-
-interface SceneBinding {
-  scene: Scene;
-  root: Babylon.TransformNode;
-  // TODO: Eventually use this and have instancing
-  // geometry: Dict<[ Geometry, FrameLike ]>;
-  nodes: Dict<NodeBinding>;
-  shadowGenerators: Dict<Babylon.ShadowGenerator>;
-  physicsViewer: Babylon.PhysicsViewer;
-}
-
-class SceneBinding2 {
+class SceneBinding {
   private bScene_: Babylon.Scene;
   get bScene() { return this.bScene_; }
 
@@ -124,15 +109,15 @@ class SceneBinding2 {
     return this.nodes_[id];
   };
 
-  private createObject_ = async (node: Node.Obj): Promise<Babylon.Node> => {
+  private createObject_ = async (node: Node.Obj, nextScene: Scene): Promise<Babylon.Node> => {
     const parent = this.findBNode_(node.parentId, true);
 
-    const ret = await this.buildGeometry_(node.name, this.scene_.geometry[node.geometryId]);
+    const ret = await this.buildGeometry_(node.name, nextScene.geometry[node.geometryId]);
     ret.setParent(parent);
 
     if (node.physics) {
       const type = IMPOSTER_TYPE_MAPPINGS[node.physics.type];
-      SceneBinding2.apply_(ret, m => {
+      SceneBinding.apply_(ret, m => {
         // m.setParent(null);
         m.physicsImpostor = new Babylon.PhysicsImpostor(m, type, {
           mass: node.physics.mass ? Mass.toGramsValue(node.physics.mass) : 0,
@@ -160,7 +145,7 @@ class SceneBinding2 {
     if (node.radius !== undefined) ret.radius = node.radius;
     if (node.range !== undefined) ret.range = node.range;
 
-    this.shadowGenerators_[id] = SceneBinding2.createShadowGenerator_(ret);
+    this.shadowGenerators_[id] = SceneBinding.createShadowGenerator_(ret);
 
     return ret;
   };
@@ -178,7 +163,7 @@ class SceneBinding2 {
       this.bScene_
     );
 
-    this.shadowGenerators_[id] = SceneBinding2.createShadowGenerator_(ret);
+    this.shadowGenerators_[id] = SceneBinding.createShadowGenerator_(ret);
 
     return ret;
   };
@@ -195,7 +180,7 @@ class SceneBinding2 {
 
     ret.intensity = node.intensity;
 
-    this.shadowGenerators_[id] = SceneBinding2.createShadowGenerator_(ret);
+    this.shadowGenerators_[id] = SceneBinding.createShadowGenerator_(ret);
 
     return ret;
   };
@@ -208,10 +193,10 @@ class SceneBinding2 {
     return ret;
   };
 
-  private createNode_ = async (id: string, node: Node): Promise<Babylon.Node> => {
+  private createNode_ = async (id: string, node: Node, nextScene: Scene): Promise<Babylon.Node> => {
     let ret: Babylon.Node;
     switch (node.type) {
-      case 'object': ret = await this.createObject_(node); break;
+      case 'object': ret = await this.createObject_(node, nextScene); break;
       case 'empty': ret = this.createEmpty_(node); break;
       case 'directional-light': ret = this.createDirectionalLight_(id, node); break;
       case 'spot-light': ret = this.createSpotLight_(id, node); break;
@@ -292,7 +277,7 @@ class SceneBinding2 {
     return bNode;
   };
 
-  private updateNode_ = async (id: string, node: Patch<Node>): Promise<Babylon.Node> => {
+  private updateNode_ = async (id: string, node: Patch<Node>, nextScene: Scene): Promise<Babylon.Node> => {
     switch (node.type) {
       // The node hasn't changed type, but some fields have been changed
       case Patch.Type.InnerChange: {
@@ -312,11 +297,11 @@ class SceneBinding2 {
         const shadowGenerator = this.shadowGenerators_[id];
         if (shadowGenerator) shadowGenerator.dispose();
 
-        return this.createNode_(id, node.next);
+        return this.createNode_(id, node.next, nextScene);
       }
       // The node was newly added to the scene
       case Patch.Type.Add: {
-        return this.createNode_(id, node.next);
+        return this.createNode_(id, node.next, nextScene);
       }
       // The node was removed from the scene
       case Patch.Type.Remove: {
@@ -334,13 +319,15 @@ class SceneBinding2 {
   readonly setScene = async (scene: Scene) => {
     const patch = Scene.diff(this.scene_, scene);
 
+    console.log({ patch });
+
     const nodeIds = Dict.keySet(patch.nodes);
 
     // We need to handle removals first
     for (const nodeId of nodeIds) {
       const node = patch.nodes[nodeId];
       if (node.type !== Patch.Type.Remove) continue;
-      await this.updateNode_(nodeId, node);
+      await this.updateNode_(nodeId, node, scene);
       
       delete this.nodes_[nodeId];
       delete this.shadowGenerators_[nodeId];
@@ -351,8 +338,10 @@ class SceneBinding2 {
   
     for (const nodeId of sortedNodeIds) {
       const node = patch.nodes[nodeId];
-      this.nodes_[nodeId] = await this.updateNode_(nodeId, node);
+      this.nodes_[nodeId] = await this.updateNode_(nodeId, node, scene);
     }
+
+    this.scene_ = scene;
   };
 }
 
@@ -363,4 +352,4 @@ const IMPOSTER_TYPE_MAPPINGS: { [key: string]: number } = {
 };
   
 
-export default SceneBinding2;
+export default SceneBinding;

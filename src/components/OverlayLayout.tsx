@@ -298,6 +298,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       onClearConsole,
       surfaceState,
       onSurfaceChange,
+      onSelectScene
     } = props;
 
     const {
@@ -355,6 +356,18 @@ class OverlayLayout extends React.PureComponent<Props, State> {
         </>,
     }));
 
+    const worldBar: BarComponent<unknown>[] = [];
+
+    worldBar.push(BarComponent.create(Button, {
+      theme,
+      onClick: onSelectScene,
+      children:
+        <>
+          <Fa icon='globe-americas' />
+          {' Select Scene'}
+        </>,
+    }));
+
     return (
       <Container style={style} className={className}>
         <SimulatorAreaContainer>
@@ -408,6 +421,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
             sizes={WORLD_SIZES}
             size={WORLD_SIZE[worldSize]}
             onSizeChange={this.onWorldSizeChange_}
+            barComponents={worldBar}
           >
             <World theme={theme} surfaceName={surfaceState.surfaceName} onSurfaceChange={onSurfaceChange} />
           </WorldWidget>

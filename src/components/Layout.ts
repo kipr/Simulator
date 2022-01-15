@@ -20,6 +20,7 @@ export interface LayoutProps extends StyleProps, ThemeProps {
   onClearConsole: () => void;
   surfaceState: SurfaceState;
   onSurfaceChange: (surfaceName: string) => void;
+  onSelectScene: () => void;
 }
 
 export enum Layout {

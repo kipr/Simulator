@@ -453,11 +453,8 @@ export class Space {
     this.scene.enablePhysics(gravityVector, this.ammo_);
     this.scene.getPhysicsEngine().setSubTimeStep(5);
 
-    SceneBinding.create(TEST_SCENE, this.scene).then(sceneBinding => {
-      this.sceneBinding_ = sceneBinding;
-      console.log('Scene binding created', sceneBinding);
-    });
-    
+    this.sceneBinding_ = new SceneBinding(this.scene);
+    this.sceneBinding_.setScene(TEST_SCENE);
 
     // (x, z) coordinates of cans around the board
     this.canCoordinates = [[-22, -14.3], [0, -20.6], [15.5, -23.7], [0, -6.9], [-13.7, 6.8], [0, 6.8], [13.5, 6.8], [25.1, 14.8], [0, 34], [-18.8, 45.4], [0, 54.9], [18.7, 45.4]];

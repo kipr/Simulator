@@ -101,8 +101,8 @@ namespace Patch {
   };
 
   export const diffDict = <T>(prev: Dict<T>, next: Dict<T>, differ: (prev: T, next: T) => Patch<T>): Dict<Patch<T>> => {
-    const prevKeys = Dict.keySet(prev);
-    const nextKeys = Dict.keySet(next);
+    const prevKeys = Dict.keySet(prev || {});
+    const nextKeys = Dict.keySet(next || {});
 
     const ret: Dict<Patch<T>> = {};
     for (const prevKey of prevKeys) {
