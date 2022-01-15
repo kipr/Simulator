@@ -374,12 +374,14 @@ export class Root extends React.Component<Props, State> {
   };
   
   private onFeedbackSubmit_ = () => {
-    sendFeedback(this.state, (message: string, success: boolean) => {
-      this.onFeedbackChange_(({ message: message }));
-      if (success) {
+    sendFeedback(this.state)
+      .then((message: string) => {
+        this.onFeedbackChange_(({ message: message }));
         this.onModalClose_();
-      }
-    });
+      })
+      .catch((error: string) => {
+        this.onFeedbackChange_(({ message: error }));
+      });
   };
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
