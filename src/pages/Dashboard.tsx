@@ -16,7 +16,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   alignItems: 'center',
   justifyContent: 'center',
   width: '100%',
-  height: '100%',
+  height: '100vh',
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
 }));
@@ -31,6 +31,7 @@ const cardContainerMargin = () => {
 };
 
 const CardContainer = styled('div', (props: ThemeProps) => ({
+  position: 'relative',
   display: 'flex',
   flexWrap: 'wrap',
   flexDirection: 'row',
@@ -39,7 +40,7 @@ const CardContainer = styled('div', (props: ThemeProps) => ({
   paddingRight: cardContainerMargin(),
   backgroundColor: props.theme.backgroundColor,
   width: '100%',
-  height: '100vh',
+  height: 'calc(100vh - 48px)',
 }));
 
 type Props = DashboardProps;
