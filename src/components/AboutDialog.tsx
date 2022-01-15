@@ -83,6 +83,7 @@ export class AboutDialog extends React.PureComponent<Props> {
             <li>Will Hawkins</li>
             <li>Braden McDorman</li>
             <li>Zachary Sasser</li>
+            <li>Jack Williams</li>
             <li>Nafis Zaman</li>
           </ul>
 
