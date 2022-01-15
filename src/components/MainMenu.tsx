@@ -30,7 +30,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   zIndex: 1
 }));
   
-const Logo = styled('img', (props: ThemeProps) => ({
+const Logo = styled('img', (props: ThemeProps & ClickProps) => ({
   width: '36px',
   height: '36px',
   marginLeft: '20px',
