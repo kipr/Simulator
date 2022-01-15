@@ -44,4 +44,4 @@ const FeedbackSubmitContainer = styled('div', (props: ThemeProps) => ({
   paddingTop: '2px',
 }));
 
-export { FeedbackTextArea, FeedbackText, FeedbackLabel, FeedbackEmailInput, FeedbackSubmitContainer };
+export { FeedbackTextArea, FeedbackText, FeedbackLabel, FeedbackEmailInput };

@@ -10,12 +10,14 @@ const sendFeedback = (rootState: RootState): Promise<string> => {
     // minor form checking
     if (feedback.feedback === '') {
       reject('Please supply some feedback!');
+      return;
     }
     if (feedback.sentiment === Sentiment.None) {
       reject('Please select how you feel about the simulator!');
+      return;
     }
 
-    // build a string to send to discord. File sending currently not working
+    // build a string to send to discord
     let sentiment: string;
     switch (feedback.sentiment) {
       case Sentiment.Happy : sentiment = 'Happy'; break;
@@ -38,7 +40,7 @@ const sendFeedback = (rootState: RootState): Promise<string> => {
       
       formData.append("file", new File(
         [ 
-          new Blob([JSON.stringify(rootState)], { type: 'application/json', })
+          new Blob([JSON.stringify(rootState, undefined, 2)], { type: 'application/json', })
         ],
         'userdata.json'
       ));
@@ -49,8 +51,8 @@ const sendFeedback = (rootState: RootState): Promise<string> => {
     formData.append('content', content);
 
     const request = new Request(
-      'https://discord.com/api/webhooks/932033545344520302/INtF5qz2M4EllekYvYLKip-Hbyw-TTHkr6JQRoJQ0FafZ0_6dBrgvpw4O8YB5zN2vSAK',
-      // 'https://discord.com/api/webhooks/931769619025379388/mZo-3RGXUYfN2DG9zV7u2ljnNUfyIJXFtNfh88T7QURew3_ISbAnntZ0Tml8TpEFBSTE',
+      // 'https://discord.com/api/webhooks/932033545344520302/INtF5qz2M4EllekYvYLKip-Hbyw-TTHkr6JQRoJQ0FafZ0_6dBrgvpw4O8YB5zN2vSAK',
+      'https://discord.com/api/webhooks/931769619025379388/mZo-3RGXUYfN2DG9zV7u2ljnNUfyIJXFtNfh88T7QURew3_ISbAnntZ0Tml8TpEFBSTE',
       {
         method: 'POST', 
         body: formData
@@ -59,15 +61,16 @@ const sendFeedback = (rootState: RootState): Promise<string> => {
 
     fetch(request)
       .then(response => {
-        console.log(response);
-        if (response.status === 200) {
+        if (response.ok) {
           resolve('Feedback sent, thank you!');
         } else {
+          console.log(request, response);
           reject('Error sending feedback, please try again');
         }
       })
-      .catch(() => {
-        reject('Error sending feedback, please try again');
+      .catch((e) => {
+        console.log(request, e);
+        reject('Could not send feedback, please try again');
       });
   });
 };
