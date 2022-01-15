@@ -9,12 +9,12 @@ const sendFeedback = (rootState: RootState, callback: (result: string, success: 
   const feedback = rootState.feedback;
 
   // minor form checking
-  if (feedback.feedback === "") {
-    callback("Please supply some feedback!", false);
+  if (feedback.feedback === '') {
+    callback('Please supply some feedback!', false);
     return;
   }
   if (feedback.sentiment === Sentiment.None) {
-    callback("Please select how you feel about the simulator!", false);
+    callback('Please select how you feel about the simulator!', false);
     return;
   }
 
@@ -43,13 +43,15 @@ const sendFeedback = (rootState: RootState, callback: (result: string, success: 
     
     formData.append("file", new File(
       [ 
-        new Blob([JSON.stringify(rootState)], { type: "application/json", })
+        new Blob([JSON.stringify(rootState)], { type: 'application/json', })
       ],
       'userdata.json'
     ));
   }
 
-  formData.append("content", content);
+  formData.append('username', 'KIPR Simulator Feedback');
+  formData.append('avatar_url', 'https://www.kipr.org/wp-content/uploads/2018/08/botguy-copy.jpg');
+  formData.append('content', content);
 
   const request = new Request(
     'https://discord.com/api/webhooks/931769619025379388/mZo-3RGXUYfN2DG9zV7u2ljnNUfyIJXFtNfh88T7QURew3_ISbAnntZ0Tml8TpEFBSTE',
@@ -63,13 +65,13 @@ const sendFeedback = (rootState: RootState, callback: (result: string, success: 
     .then(response => {
       console.log(response);
       if (response.status === 200) {
-        callback("Feedback sent, thank you!", true);
+        callback('Feedback sent, thank you!', true);
       } else {
-        callback("Error sending feedback, please try again", false);
+        callback('Error sending feedback, please try again', false);
       }
     })
     .catch(() => {
-      callback("Error sending feedback, please try again", false);
+      callback('Error sending feedback, please try again', false);
     });
 };
 
