@@ -1,19 +1,20 @@
 export enum Sentiment {
-  Sad = 1,
+  None = 0,
+  Sad,
   Okay,
   Happy,
 }
 
 export interface Feedback {
-  name: string;
-  email: string;
   feedback: string;
   sentiment: Sentiment;
+  includeAnonData: boolean;
+  includeUserData: boolean;
 }
   
 export const DEFAULT_FEEDBACK: Feedback = {
-  name: "",
-  email: "",
   feedback: "Give a helpful description of a problem you're facing, or a feature you'd like to request",
-  sentiment: Sentiment.Okay,
+  sentiment: Sentiment.None,
+  includeAnonData: true,
+  includeUserData: false
 };

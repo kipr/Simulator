@@ -372,6 +372,12 @@ export class Root extends React.Component<Props, State> {
     this.setState({ feedback: { ...this.state.feedback, ...changedFeedback } });
   };
   
+  private onFeedbackSubmit_ = () => {
+    console.log('feedback submitted');
+    console.log(this.state);
+    console.log(this.state.feedback);
+  };
+
   componentDidCatch(error: Error, info: React.ErrorInfo) {
     this.setState({
       modal: Modal.exception(error, info)
@@ -464,7 +470,7 @@ export class Root extends React.Component<Props, State> {
         </Container>
         {modal.type === Modal.Type.Settings ? <SettingsDialog theme={theme} settings={settings} onSettingsChange={this.onSettingsChange_} onClose={this.onModalClose_} /> : undefined}
         {modal.type === Modal.Type.About ? <AboutDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
-        {modal.type === Modal.Type.Feedback ? <FeedbackDialog theme={theme} feedback={feedback} onFeedbackChange={this.onFeedbackChange_} onClose={this.onModalClose_} /> : undefined}
+        {modal.type === Modal.Type.Feedback ? <FeedbackDialog theme={theme} feedback={feedback} onFeedbackChange={this.onFeedbackChange_} onClose={this.onModalClose_} onSubmit={this.onFeedbackSubmit_} /> : undefined}
         {modal.type === Modal.Type.Exception ? <ExceptionDialog error={modal.error} theme={theme} onClose={this.onModalClose_} /> : undefined}
       </>
 

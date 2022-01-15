@@ -23,7 +23,7 @@ const Container = styled(Charm, (props: SentimentProps) => ({
   fontSize: '3em',
   opacity: `${props.selected ? 1.0 : 0.5}`,
   ':hover': !props.selected ? {
-    opacity: 1
+    opacity: 0.8
   } : {},
 }));
 
