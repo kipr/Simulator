@@ -29,7 +29,7 @@ const sendFeedback = (rootState: RootState): Promise<string> => {
     let content = `User Feedback Recieved:\n\`\`\`${feedback.feedback} \`\`\`\n`;
     content += `Sentiment: ${sentiment}\n`;
     if (feedback.email !== '') {
-      content += `User Email: ${feedback.email}`;
+      content += `User Email: ${feedback.email}\n`;
     }
 
     if (feedback.includeAnonData) {
@@ -49,7 +49,8 @@ const sendFeedback = (rootState: RootState): Promise<string> => {
     formData.append('content', content);
 
     const request = new Request(
-      'https://discord.com/api/webhooks/931769619025379388/mZo-3RGXUYfN2DG9zV7u2ljnNUfyIJXFtNfh88T7QURew3_ISbAnntZ0Tml8TpEFBSTE',
+      'https://discord.com/api/webhooks/932033545344520302/INtF5qz2M4EllekYvYLKip-Hbyw-TTHkr6JQRoJQ0FafZ0_6dBrgvpw4O8YB5zN2vSAK',
+      // 'https://discord.com/api/webhooks/931769619025379388/mZo-3RGXUYfN2DG9zV7u2ljnNUfyIJXFtNfh88T7QURew3_ISbAnntZ0Tml8TpEFBSTE',
       {
         method: 'POST', 
         body: formData

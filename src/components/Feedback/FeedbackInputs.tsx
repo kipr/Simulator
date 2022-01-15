@@ -12,6 +12,7 @@ const FeedbackTextArea = styled('textarea', (props: ThemeProps) => ({
   backgroundColor: 'rgba(0, 0, 0, 0.1)',
   margin: '5px 0 5px 0',
   minHeight: '200px',
+  resize: 'none',
 }));
 
 const FeedbackText = styled('span', {
