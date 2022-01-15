@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import { Sentiment, Feedback } from '../../Feedback';
 import SentimentCharm from './SentimentCharm';
-import { FeedbackTextArea, FeedbackEmailInput, FeedbackText, FeedbackLabel } from './FeedbackInputs';
+import { FeedbackTextArea, FeedbackEmailInput, FeedbackText, FeedbackLabel, FeedbackSubmitContainer } from './FeedbackInputs';
 import { StyleProps } from '../../style';
 import { Dialog } from '../Dialog';
 import Button from '../Button';
@@ -156,9 +156,9 @@ export class FeedbackDialog extends React.PureComponent<Props, State> {
               onSubmit();
               onClose();
             }}>
-              <FeedbackContainer theme={theme}>
+              <FeedbackSubmitContainer theme={theme}>
                 Submit
-              </FeedbackContainer>
+              </FeedbackSubmitContainer>
             </Button>
           </CenterContainer>
         </FeedbackContainer>

@@ -383,7 +383,9 @@ export class Root extends React.Component<Props, State> {
     console.log({
       root:      rootStateData,
       // get the browser version, using the user-agent
-      // in theory, a user could spoof this (it's trivial to do)
+      // we should probably use something like platform.js
+      // to do this, since user-agent is trivially spoofed
+      // and all modern browsers lie about what they are
       userAgent: window.navigator.userAgent,
       feedback:  this.state.feedback.feedback,
       sentiment: this.state.feedback.sentiment,

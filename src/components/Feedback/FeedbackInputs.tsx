@@ -19,7 +19,7 @@ const FeedbackText = styled('span', {
 });
 
 const FeedbackLabel = styled('span', {
-  padding: '0 10px 0 0',
+  paddingRight: '10px',
 });
 
 const FeedbackEmailInput = styled('input', (props: ThemeProps) => ({
@@ -33,4 +33,14 @@ const FeedbackEmailInput = styled('input', (props: ThemeProps) => ({
   backgroundColor: 'rgba(0, 0, 0, 0.1)',
 }));
 
-export { FeedbackTextArea, FeedbackText, FeedbackLabel, FeedbackEmailInput };
+const FeedbackSubmitContainer = styled('div', (props: ThemeProps) => ({
+  width: '100px',
+  height: '30px',
+  borderStyle: 'solid',
+  borderColor: props.theme.color,
+  borderRadius: `${props.theme.itemPadding}px`,
+  textAlign: 'center',
+  paddingTop: '2px',
+}));
+
+export { FeedbackTextArea, FeedbackText, FeedbackLabel, FeedbackEmailInput, FeedbackSubmitContainer };
