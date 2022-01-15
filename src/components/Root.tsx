@@ -373,9 +373,22 @@ export class Root extends React.Component<Props, State> {
   };
   
   private onFeedbackSubmit_ = () => {
-    console.log('feedback submitted');
-    console.log(this.state);
-    console.log(this.state.feedback);
+    // anonymous user data = root state + browswer information
+    let rootStateData: RootState | null = null;
+    if (this.state.feedback.includeAnonData) {
+      rootStateData = this.state;
+    }
+
+    // TODO: figure out where this data should go
+    console.log({
+      root:      rootStateData,
+      // get the browser version, using the user-agent
+      // in theory, a user could spoof this (it's trivial to do)
+      userAgent: window.navigator.userAgent,
+      feedback:  this.state.feedback.feedback,
+      sentiment: this.state.feedback.sentiment,
+      email:     this.state.feedback.email,
+    });
   };
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {

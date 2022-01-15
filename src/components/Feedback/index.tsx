@@ -2,11 +2,12 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import { Sentiment, Feedback } from '../../Feedback';
 import SentimentCharm from './SentimentCharm';
-import FeedbackTextArea from './FeedbackTextArea';
+import { FeedbackTextArea, FeedbackEmailInput, FeedbackText, FeedbackLabel } from './FeedbackInputs';
 import { StyleProps } from '../../style';
 import { Dialog } from '../Dialog';
 import Button from '../Button';
 import { ThemeProps } from '../theme';
+import Input from '../Input';
 
 export interface FeedbackDialogProp extends ThemeProps, StyleProps {
   onClose: () => void;
@@ -87,27 +88,40 @@ export class FeedbackDialog extends React.PureComponent<Props, State> {
     );
   };
 
+  private createFeedbackEmailInput = (getValue: (feedback: Feedback) => string, getUpdatedFeedback: (newValue: string) => Partial<Feedback>) => {
+    const { theme, feedback: currentFeedback, onFeedbackChange } = this.props;
+
+    return (
+      <FeedbackEmailInput theme={theme} 
+        value={getValue(currentFeedback)} 
+        onChange={(event) => {
+          onFeedbackChange(getUpdatedFeedback(event.target.value));
+        }}
+      />
+    );
+  };
+
   render() {
     const { props, state } = this;
     const { style, className, theme, onClose, onSubmit } = props;
-    // const { selectedSection } = state;
 
+    // TODO: Better submit button themeing
     return (
       <Dialog theme={theme} name='Feedback' onClose={onClose}>
         <FeedbackContainer theme={theme}>
-          Thanks for using the KIPR Simulator! Find a bug? Have a feature request? Let us know!
+          <FeedbackText>
+            Thanks for using the KIPR Simulator! Find a bug? Have a feature request? Let us know!
+          </FeedbackText>
           <br /> <br />
-          Feedback
+          <FeedbackText>Feedback</FeedbackText>
           <br />
-          {/* <CenterContainer theme={theme}> */}
-          {/* <ScrollArea theme={theme} autoscroll={false}> */}
           {this.createFeedbackTextArea(
             (feedback: Feedback) => feedback.feedback,
             (newValue: string) => ({ feedback: newValue })
           )}
-          {/* </ScrollArea> */}
-          {/* </CenterContainer> */}
-          How has your experience been? 
+          <FeedbackText>
+            How has your experience using the KIPR Simulator been?
+          </FeedbackText>
           <br />
           <CenterContainer theme={theme}>
             {this.createSentimentInput(
@@ -115,30 +129,36 @@ export class FeedbackDialog extends React.PureComponent<Props, State> {
               (newValue: Sentiment) => ({ sentiment: newValue })
             )}
           </CenterContainer>
-          <CenterContainer theme={theme}>
-            <>
-              Include anonymous information about my code and browser to help KIPR developers
-              {this.createCheckbox(
-                (feedback: Feedback) => feedback.includeAnonData,
-                (newValue: boolean) => ({ includeAnonData: newValue })
-              )}
-            </>
-          </CenterContainer>
-          <CenterContainer theme={theme}>
-            <>
-              Include my user information
-              {this.createCheckbox(
-                (feedback: Feedback) => feedback.includeUserData,
-                (newValue: boolean) => ({ includeUserData: newValue })
-              )}
-            </>
-          </CenterContainer>
+          <FeedbackContainer theme={theme}>
+            <FeedbackLabel>
+              <FeedbackText>
+                Email (optional): 
+              </FeedbackText>
+            </FeedbackLabel>
+            {this.createFeedbackEmailInput(
+              (feedback: Feedback) => feedback.email,
+              (newValue: string) => ({ email: newValue })
+            )}
+          </FeedbackContainer>
+          <FeedbackContainer theme={theme}>
+            <FeedbackLabel>
+              <FeedbackText>
+                Include anonymous usage data to help KIPR developers 
+              </FeedbackText>
+            </FeedbackLabel>
+            {this.createCheckbox(
+              (feedback: Feedback) => feedback.includeAnonData,
+              (newValue: boolean) => ({ includeAnonData: newValue })
+            )}
+          </FeedbackContainer>
           <CenterContainer theme={theme}>
             <Button theme={theme} onClick={(e) => {
               onSubmit();
               onClose();
             }}>
-              Submit
+              <FeedbackContainer theme={theme}>
+                Submit
+              </FeedbackContainer>
             </Button>
           </CenterContainer>
         </FeedbackContainer>
