@@ -10,7 +10,6 @@ export interface Feedback {
   sentiment: Sentiment;
   email: string;
   includeAnonData: boolean;
-  includeUserData: boolean;
   message: string;
 }
   
@@ -19,6 +18,5 @@ export const DEFAULT_FEEDBACK: Feedback = {
   sentiment: Sentiment.None,
   email: "",
   includeAnonData: true,
-  includeUserData: false,
   message: "",
 };
