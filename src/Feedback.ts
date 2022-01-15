@@ -11,6 +11,7 @@ export interface Feedback {
   email: string;
   includeAnonData: boolean;
   includeUserData: boolean;
+  message: string;
 }
   
 export const DEFAULT_FEEDBACK: Feedback = {
@@ -19,4 +20,5 @@ export const DEFAULT_FEEDBACK: Feedback = {
   email: "",
   includeAnonData: true,
   includeUserData: false,
+  message: "",
 };

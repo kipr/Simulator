@@ -154,12 +154,16 @@ export class FeedbackDialog extends React.PureComponent<Props, State> {
           <CenterContainer theme={theme}>
             <Button theme={theme} onClick={(e) => {
               onSubmit();
-              onClose();
             }}>
               <FeedbackSubmitContainer theme={theme}>
                 Submit
               </FeedbackSubmitContainer>
             </Button>
+          </CenterContainer>
+          <CenterContainer theme={theme}>
+            <FeedbackText>
+              {this.props.feedback.message}
+            </FeedbackText>
           </CenterContainer>
         </FeedbackContainer>
       </Dialog>

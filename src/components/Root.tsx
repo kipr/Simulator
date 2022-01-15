@@ -16,7 +16,8 @@ import SideLayout from './SideLayout';
 
 import { SettingsDialog } from './SettingsDialog';
 import { AboutDialog } from './AboutDialog';
-import { FeedbackDialog } from './Feedback/index';
+import { FeedbackDialog } from './Feedback';
+import sendFeedback from './Feedback/SendFeedback';
 import compile, { CompileError } from '../compile';
 import { SimulatorState } from './SimulatorState';
 import { Angle, Distance, StyledText } from '../util';
@@ -373,53 +374,12 @@ export class Root extends React.Component<Props, State> {
   };
   
   private onFeedbackSubmit_ = () => {
-    // anonymous user data = root state + browswer information
-    let rootStateData: RootState | null = null;
-    if (this.state.feedback.includeAnonData) {
-      rootStateData = this.state;
-    }
-
-    // TODO: figure out where this data should go
-    console.log({
-      root:      rootStateData,
-      // get the browser version, using the user-agent
-      // we should probably use something like platform.js
-      // to do this, since user-agent is trivially spoofed
-      // and all modern browsers lie about what they are
-      userAgent: window.navigator.userAgent,
-      feedback:  this.state.feedback.feedback,
-      sentiment: this.state.feedback.sentiment,
-      email:     this.state.feedback.email,
+    sendFeedback(this.state, (message: string, success: boolean) => {
+      this.onFeedbackChange_(({ message: message }));
+      if (success) {
+        this.onModalClose_();
+      }
     });
-
-    let content = "";
-    content += this.state.feedback.feedback;
-    content += '\nSentiment: ';
-    switch (this.state.feedback.sentiment) { 
-      case Sentiment.Happy : content += 'Happy'; break;
-      case Sentiment.Okay : content += 'Okay'; break;
-      case Sentiment.Sad : content += 'Sad'; break;
-      case Sentiment.None : content += 'None'; break;
-    }
-    content += '\nUser Code: \n';
-    content += this.state.code;
-    content += '\n';
-    content += this.state.feedback.email;
-
-    // send to a discord webhook
-    const request = new XMLHttpRequest();
-    request.open(
-      "POST", 
-      "https://discord.com/api/webhooks/931769619025379388/mZo-3RGXUYfN2DG9zV7u2ljnNUfyIJXFtNfh88T7QURew3_ISbAnntZ0Tml8TpEFBSTE"
-    );
-    request.setRequestHeader('Content-type', 'application/json');
-    const params = {
-      username: "KIPR Hook",
-      avatar_url: "",
-      content: content,
-    };
-    request.send(JSON.stringify(params));
-    
   };
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
@@ -525,3 +485,4 @@ export class Root extends React.Component<Props, State> {
 // All logic inside of index.tsx
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 export default withRouter(Root);
+export { RootState };
