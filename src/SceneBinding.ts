@@ -584,7 +584,7 @@ class SceneBinding {
     }
 
     if (patch.gravity.type === Patch.Type.OuterChange) {
-      this.bScene_.gravity = Vector3.toBabylon(patch.gravity.next, 'centimeters');
+      this.bScene_.getPhysicsEngine().setGravity(Vector3.toBabylon(patch.gravity.next, 'centimeters'));
     }
 
     if (patch.robot.type === Patch.Type.InnerChange) {
