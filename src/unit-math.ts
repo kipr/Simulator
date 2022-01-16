@@ -83,6 +83,12 @@ export namespace Vector3 {
       z: Distance.toType(v.z, z),
     };
   };
+
+  export const distance = (lhs: Vector3, rhs: Vector3, newType: Distance.Type = 'meters'): Distance => {
+    const raw = Distance.meters(RawVector3.distance(Vector3.toRaw(lhs, 'meters'), Vector3.toRaw(rhs, 'meters')));
+    return Distance.toType(raw, newType);
+  };
+
 }
 
 
@@ -192,7 +198,8 @@ export namespace Rotation {
     }
   };
 
-
+  export const angle = (lhs: Rotation, rhs: Rotation): Angle => Angle.radians(Quaternion.angle(toRawQuaternion(lhs), toRawQuaternion(rhs)));
+  export const slerp = (lhs: Rotation, rhs: Rotation, t: number, newType: Type = 'euler'): Rotation => fromRawQuaternion(Quaternion.slerp(toRawQuaternion(lhs), toRawQuaternion(rhs), t), newType);
 }
 
 export type Rotation = Rotation.Euler | Rotation.AngleAxis;

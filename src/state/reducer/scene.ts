@@ -1,70 +1,125 @@
-import defaultItems from "../../items/defaultItems";
-import { Scene } from "../State";
-import Item from '../State/Item';
+import Scene from "../State/Scene";
+import Node from "../State/Scene/Node";
+import Geometry from "../State/Scene/Geometry";
 
 
 export namespace SceneAction {
-
-
-  export interface AddItem {
-    type: 'add-item';
+  export interface AddNode {
+    type: 'add-node';
     id: string;
-    item: Item;
+    node: Node;
   }
 
-  export type AddItemParams = Omit<AddItem, 'type'>;
+  export type AddNodeParams = Omit<AddNode, 'type'>;
 
-  export const addItem = (params: AddItemParams): AddItem => ({
-    type: 'add-item',
+  export const addNode = (params: AddNodeParams): AddNode => ({
+    type: 'add-node',
     ...params
   });
 
-  export interface RemoveItem {
-    type: 'remove-item';
+
+  export interface RemoveNode {
+    type: 'remove-node';
     id: string;
   }
 
-  export type RemoveItemParams = Omit<RemoveItem, 'type'>;
+  export type RemoveNodeParams = Omit<RemoveNode, 'type'>;
 
-  export const removeItem = (params: RemoveItemParams): RemoveItem => ({
-    type: 'remove-item',
+  export const removeNode = (params: RemoveNodeParams): RemoveNode => ({
+    type: 'remove-node',
     ...params
   });
 
-  export interface SetItem {
-    type: 'set-item';
+  export interface SetNode {
+    type: 'set-node';
     id: string;
-    item: Item;
+    node: Node;
   }
 
-  export type SetItemParams = Omit<SetItem, 'type'>;
+  export type SetNodeParams = Omit<SetNode, 'type'>;
 
-  export const setItem = (params: SetItemParams): SetItem => ({
-    type: 'set-item',
+  export const setNode = (params: SetNodeParams): SetNode => ({
+    type: 'set-node',
     ...params
   });
 
-  export interface SetItemBatch {
-    type: 'set-item-batch';
-    items: { [id: string]: Item };
+  export interface SetNodeBatch {
+    type: 'set-node-batch';
+    nodeIds: {
+      id: string;
+      node: Node;
+    }[];
   }
 
-  export type SetItemBatchParams = Omit<SetItemBatch, 'type'>;
+  export type SetNodeBatchParams = Omit<SetNodeBatch, 'type'>;
 
-  export const setItemBatch = (params: SetItemBatchParams): SetItemBatch => ({
-    type: 'set-item-batch',
+  export const setNodeBatch = (params: SetNodeBatchParams): SetNodeBatch => ({
+    type: 'set-node-batch',
     ...params
   });
 
-  export interface SelectItem {
-    type: 'select-item';
+  export interface AddGeometry {
+    type: 'add-geometry';
+    id: string;
+    geometry: Geometry;
+  }
+
+  export type AddGeometryParams = Omit<AddGeometry, 'type'>;
+
+  export const addGeometry = (params: AddGeometryParams): AddGeometry => ({
+    type: 'add-geometry',
+    ...params
+  });
+
+  export interface RemoveGeometry {
+    type: 'remove-geometry';
+    id: string;
+  }
+
+  export type RemoveGeometryParams = Omit<RemoveGeometry, 'type'>;
+
+  export const removeGeometry = (params: RemoveGeometryParams): RemoveGeometry => ({
+    type: 'remove-geometry',
+    ...params
+  });
+
+  export interface SetGeometry {
+    type: 'set-geometry';
+    id: string;
+    geometry: Geometry;
+  }
+
+  export type SetGeometryParams = Omit<SetGeometry, 'type'>;
+  
+  export const setGeometry = (params: SetGeometryParams): SetGeometry => ({
+    type: 'set-geometry',
+    ...params
+  });
+
+  export interface SetGeometryBatch {
+    type: 'set-geometry-batch';
+    geometryIds: {
+      id: string;
+      geometry: Geometry;
+    }[];
+  }
+
+  export type SetGeometryBatchParams = Omit<SetGeometryBatch, 'type'>;
+
+  export const setGeometryBatch = (params: SetGeometryBatchParams): SetGeometryBatch => ({
+    type: 'set-geometry-batch',
+    ...params
+  });
+
+  export interface SelectNode {
+    type: 'select-node';
     id?: string;
   }
 
-  export type SelectItemParams = Omit<SelectItem, 'type'>;
+  export type SelectNodeParams = Omit<SelectNode, 'type'>;
 
-  export const selectItem = (params: SelectItemParams): SelectItem => ({
-    type: 'select-item',
+  export const selectNode = (params: SelectNodeParams): SelectNode => ({
+    type: 'select-node',
     ...params
   });
 
@@ -76,70 +131,112 @@ export namespace SceneAction {
 }
 
 export type SceneAction = (
-  SceneAction.AddItem |
-  SceneAction.RemoveItem |
-  SceneAction.SetItem |
-  SceneAction.SetItemBatch |
-  SceneAction.SelectItem |
+  SceneAction.AddNode |
+  SceneAction.RemoveNode |
+  SceneAction.SetNode |
+  SceneAction.SetNodeBatch |
+  SceneAction.AddGeometry |
+  SceneAction.RemoveGeometry |
+  SceneAction.SetGeometry |
+  SceneAction.SetGeometryBatch |
+  SceneAction.SelectNode |
   SceneAction.UnselectAll
 );
 
-export const DEFAULT_SCENE: Scene = {
-  itemOrdering: Object.keys(defaultItems),
-  items: {
-    ...defaultItems
-  },
-  selectedItem: undefined
-};
-
-export const reduceScene = (state: Scene = DEFAULT_SCENE, action: SceneAction) => {
+export const reduceScene = (state: Scene = Scene.EMPTY, action: SceneAction) => {
   switch (action.type) {
-    case 'add-item':
+    case 'add-node':
       return {
         ...state,
-        items: {
-          ...state.items,
-          [action.id]: action.item,
-        },
-        itemOrdering: [...state.itemOrdering, action.id],
+        nodes: {
+          ...state.nodes,
+          [action.id]: action.node
+        }
       };
-    case 'remove-item': {
-      const nextState = {
+    case 'remove-node': {
+      const nextState: Scene = {
         ...state,
-        items: {
-          ...state.items,
+        nodes: {
+          ...state.nodes,
         },
-        itemOrdering: state.itemOrdering.filter(id => id !== action.id),
       };
 
-      delete nextState.items[action.id];
+      delete nextState.nodes[action.id];
       return nextState;
     }
-    case 'set-item':
+    case 'set-node':
       return {
         ...state,
-        items: {
-          ...state.items,
-          [action.id]: action.item,
+        nodes: {
+          ...state.nodes,
+          [action.id]: action.node,
         },
       };
-    case 'set-item-batch':
-      return {
+    case 'set-node-batch': {
+      const nextState: Scene = {
         ...state,
-        items: {
-          ...state.items,
-          ...action.items,
+        nodes: {
+          ...state.nodes,
         },
       };
-    case 'select-item':
+
+      for (const { id, node } of action.nodeIds) {
+        nextState.nodes[id] = node;
+      }
+
+      return nextState;
+    }
+    case 'add-geometry':
       return {
         ...state,
-        selectedItem: action.id,
+        geometry: {
+          ...state.geometry,
+          [action.id]: action.geometry
+        }
+      };
+    case 'remove-geometry': {
+      const nextState: Scene = {
+        ...state,
+        geometry: {
+          ...state.geometry,
+        },
+      };
+
+      delete nextState.geometry[action.id];
+
+      return nextState;
+    }
+    case 'set-geometry':
+      return {
+        ...state,
+        geometry: {
+          ...state.geometry,
+          [action.id]: action.geometry,
+        },
+      };
+    case 'set-geometry-batch': {
+      const nextState: Scene = {
+        ...state,
+        geometry: {
+          ...state.geometry,
+        },
+      };
+
+      for (const { id, geometry } of action.geometryIds) {
+        nextState.geometry[id] = geometry;
+      }
+
+      return nextState;
+    }
+    case 'select-node':
+      return {
+        ...state,
+        selectedNodeId: action.id,
       };
     case 'unselect-all':
       return {
         ...state,
-        selectedItem: undefined,
+        selectedNodeId: undefined,
       };
     default:
       return state;

@@ -1,15 +1,14 @@
-import Item from './Item';
+import Dict from "../../Dict";
+import Async from "./Async";
+import Scene from "./Scene";
 
-
-
-export interface Scene {
-  itemOrdering: string[];
-  items: {
-    [name: string]: Item;
-  };
-  selectedItem: string;
+export interface Scenes {
+  scenes: Dict<Async<Scene>>;
+  activeId?: string;
 }
 
-export interface State {
-  scene: Scene;
+export namespace Scenes {
+  export const EMPTY: Scenes = {
+    scenes: {},
+  };
 }

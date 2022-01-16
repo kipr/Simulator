@@ -40,9 +40,32 @@ namespace Node {
     scriptIds?: string[];
     documentIds?: string[];
     editable?: boolean;
+    visible?: boolean;
   }
 
   namespace Base {
+    export const NIL: Base = {
+      name: '',
+      parentId: undefined,
+      origin: undefined,
+      physics: undefined,
+      scriptIds: undefined,
+      documentIds: undefined,
+      editable: undefined,
+      visible: undefined
+    };
+
+    export const upcast = <T extends Base>(t: T): Base => ({
+      name: t.name,
+      parentId: t.parentId,
+      origin: t.origin,
+      physics: t.physics,
+      scriptIds: t.scriptIds,
+      documentIds: t.documentIds,
+      editable: t.editable,
+      visible: t.visible
+    });
+
     export const partialDiff = (prev: Base, next: Base): Patch.InnerPatch<Base> => ({
       name: Patch.diff(prev.name, next.name),
       parentId: Patch.diff(prev.parentId, next.parentId),
@@ -50,7 +73,8 @@ namespace Node {
       physics: Patch.diff(prev.physics, next.physics),
       scriptIds: Patch.diff(prev.scriptIds, next.scriptIds),
       documentIds: Patch.diff(prev.documentIds, next.documentIds),
-      editable: Patch.diff(prev.editable, next.editable)
+      editable: Patch.diff(prev.editable, next.editable),
+      visible: Patch.diff(prev.visible, next.visible)
     });
   }
 
@@ -59,6 +83,16 @@ namespace Node {
   }
 
   export namespace Empty {
+    export const NIL: Empty = {
+      type: 'empty',
+      ...Base.NIL
+    };
+
+    export const from = <T extends Base>(t: T): Empty => ({
+      ...NIL,
+      ...Base.upcast(t)
+    });
+
     export const diff = (prev: Empty, next: Empty): Patch<Empty> => {
       if (!deepNeq(prev, next)) return Patch.none(prev);
 
@@ -75,6 +109,17 @@ namespace Node {
   }
 
   export namespace Obj {
+    export const NIL: Obj = {
+      type: 'object',
+      ...Base.NIL,
+      geometryId: undefined,
+    };
+
+    export const from = <T extends Base>(t: T): Obj => ({
+      ...NIL,
+      ...Base.upcast(t)
+    });
+
     export const diff = (prev: Obj, next: Obj): Patch<Obj> => {
       if (!deepNeq(prev, next)) return Patch.none(prev);
 
@@ -94,6 +139,17 @@ namespace Node {
   }
 
   export namespace PointLight {
+    export const NIL: PointLight = {
+      type: 'point-light',
+      ...Base.NIL,
+      intensity: 1
+    };
+
+    export const from = <T extends Base>(t: T): PointLight => ({
+      ...NIL,
+      ...Base.upcast(t)
+    });
+
     export const diff = (prev: PointLight, next: PointLight): Patch<PointLight> => {
       if (!deepNeq(prev, next)) return Patch.none(prev);
 
@@ -116,6 +172,20 @@ namespace Node {
   }
 
   export namespace SpotLight {
+    export const NIL: SpotLight = {
+      type: 'spot-light',
+      ...Base.NIL,
+      angle: Angle.degrees(90),
+      exponent: 1,
+      intensity: 1,
+      direction: { x: 0, y: -1, z: 0 },
+    };
+
+    export const from = <T extends Base>(t: T): SpotLight => ({
+      ...NIL,
+      ...Base.upcast(t)
+    });
+
     export const diff = (prev: SpotLight, next: SpotLight): Patch<SpotLight> => {
       if (!deepNeq(prev, next)) return Patch.none(prev);
 
@@ -139,6 +209,18 @@ namespace Node {
   }
 
   export namespace DirectionalLight {
+    export const NIL: DirectionalLight = {
+      type: 'directional-light',
+      ...Base.NIL,
+      intensity: 1,
+      direction: { x: 0, y: -1, z: 0 },
+    };
+
+    export const from = <T extends Base>(t: T): DirectionalLight => ({
+      ...NIL,
+      ...Base.upcast(t)
+    });
+
     export const diff = (prev: DirectionalLight, next: DirectionalLight): Patch<DirectionalLight> => {
       if (!deepNeq(prev, next)) return Patch.none(prev);
 
@@ -162,6 +244,18 @@ namespace Node {
       case 'point-light': return PointLight.diff(prev, next as PointLight);
       case 'spot-light': return SpotLight.diff(prev, next as SpotLight);
       case 'directional-light': return DirectionalLight.diff(prev, next as DirectionalLight);
+    }
+  };
+
+  export type Type = 'empty' | 'object' | 'point-light' | 'spot-light' | 'directional-light';
+
+  export const transmute = (node: Node, type: Type): Node => {
+    switch (type) {
+      case 'empty': return Empty.from(node);
+      case 'object': return Obj.from(node);
+      case 'point-light': return PointLight.from(node);
+      case 'spot-light': return SpotLight.from(node);
+      case 'directional-light': return DirectionalLight.from(node);
     }
   };
 }

@@ -101,6 +101,8 @@ export namespace Vector3 {
 
   export const toBabylon = (vec: Vector3): Babylon.Vector3 => new Babylon.Vector3(vec.x, vec.y, vec.z);
   export const fromBabylon = (vec: Babylon.Vector3): Vector3 => ({ x: vec.x, y: vec.y, z: vec.z });
+
+  export const distance = (lhs: Vector3, rhs: Vector3): number => Math.sqrt(Math.pow(rhs.x - lhs.x, 2) + Math.pow(rhs.y - lhs.y, 2) + Math.pow(rhs.z - lhs.z, 2));
 }
 
 export interface Euler {
@@ -215,6 +217,23 @@ export namespace Quaternion {
     z: quat.z,
     w: quat.w
   });
+
+  export const dot = (lhs: Quaternion, rhs: Quaternion): number => lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
+
+  export const angle = (lhs: Quaternion, rhs: Quaternion): number => {
+    let cos = dot(lhs, rhs);
+    if (cos < -1) cos = -1;
+    if (cos > 1) cos = 1;
+    return Math.acos(cos);
+  }
+
+  export const slerp = (lhs: Quaternion, rhs: Quaternion, t: number): Quaternion => {
+    // We're going to cheat
+    const q = Babylon.Quaternion.Slerp(toBabylon(lhs), toBabylon(rhs), t);
+    return fromBabylon(q);
+  }
+
+  
 }
 
 export interface ReferenceFrame {

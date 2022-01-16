@@ -423,7 +423,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
             onSizeChange={this.onWorldSizeChange_}
             barComponents={worldBar}
           >
-            <World theme={theme} surfaceName={surfaceState.surfaceName} onSurfaceChange={onSurfaceChange} />
+            <World theme={theme} />
           </WorldWidget>
         </Overlay>
       </Container>

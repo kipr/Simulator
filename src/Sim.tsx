@@ -8,10 +8,7 @@ import {
   instantiate as instantiateSensor,
   MAPPINGS as SENSOR_MAPPINGS,
 } from './sensors';
-import {
-  Can,
-  PaperReam,
-} from './items';
+
 import { RobotState } from './RobotState';
 
 import Dict from './Dict';
@@ -23,13 +20,13 @@ import { RobotPosition } from './RobotPosition';
 import { Angle, Distance, Mass } from './util';
 
 import store, { State } from './state';
-import Item from './state/State/Item';
 import { Unsubscribe } from 'redux';
 import deepNeq from './deepNeq';
 import { SceneAction } from './state/reducer';
 import { Gizmo } from 'babylonjs/Gizmos/gizmo';
 import SceneBinding from './SceneBinding';
 import Scene from './state/State/Scene';
+import Node from './state/State/Scene/Node';
 
 export let ACTIVE_SPACE: Space;
 
@@ -202,77 +199,12 @@ export class Space {
       this.lastState_ = state;
       return;
     }
-    
-    const visibleItems = Dict.filter(state.scene.items, item => item.visible);
-    const lastItems = this.lastState_ ? this.lastState_.scene.items : {};
 
-    for (const id of state.scene.itemOrdering) {
-      const item = visibleItems[id];
-      const meshName = this.itemMap_.get(id);
+    this.sceneBinding_.setScene(state.scene);
 
-
-      if (!item) {
-        // This item has just become invisible
-        if (meshName) {
-          const mesh = this.scene.getMeshByID(meshName);
-          this.scene.removeMesh(mesh);
-          mesh.dispose();
-          this.itemMap_.delete(id);
-        }
-
-        continue;
-      }
-
-      // We don't want to update a item if it's the same as the last time,
-      // as physics may have changed it.
-      if (this.lastState_ && id in lastItems && !deepNeq(lastItems[id], item)) continue;
-
-      if (meshName === undefined) {
-        this.itemMap_.set(id, this.createItem(item));
-      } else {
-        const mesh = this.scene.getMeshByID(meshName);
-        const { position, orientation } = item.origin ?? {};
-        if (position) {
-          const rawPosition = UnitVector3.toRaw(position, 'centimeters');
-          mesh.position = Vector3.toBabylon(rawPosition);
-        }
-
-        if (orientation) {
-          const rawOrientation = Rotation.toRawQuaternion(orientation);
-          mesh.rotationQuaternion = Quaternion.toBabylon(rawOrientation);
-        }
-
-        // Reset velocity of items when changing position/orientation
-        if ((position || orientation) && mesh.physicsImpostor) {
-          mesh.physicsImpostor.setLinearVelocity(Babylon.Vector3.Zero());
-          mesh.physicsImpostor.setAngularVelocity(Babylon.Vector3.Zero());
-        }
-
-        if (item.friction && mesh.physicsImpostor) {
-          mesh.physicsImpostor.friction = item.friction.value;
-        }
-
-        if (item.mass && mesh.physicsImpostor) {
-          mesh.physicsImpostor.setMass(Mass.toGramsValue(item.mass));
-        }
-      }
-    }
-
-    for (const id of Object.keys(lastItems)) {
-      if (!(id in state.scene.items)) {
-        const meshName = this.itemMap_.get(id);
-        if (meshName !== undefined) {
-          const mesh = this.scene.getMeshByID(meshName);
-          this.scene.removeMesh(mesh);
-          mesh.dispose();
-          this.itemMap_.delete(id);
-        }
-      }
-    }
-
-    if ((this.lastState_ ? this.lastState_.scene.selectedItem : undefined) !== state.scene.selectedItem) {
-      if (this.lastState_.scene.selectedItem !== undefined) {
-        const meshName = this.itemMap_.get(this.lastState_.scene.selectedItem);
+    if ((this.lastState_ ? this.lastState_.scene.selectedNodeId : undefined) !== state.scene.selectedNodeId) {
+      if (this.lastState_.scene.selectedNodeId !== undefined) {
+        const meshName = this.itemMap_.get(this.lastState_.scene.selectedNodeId);
         if (meshName !== undefined) {
           const mesh = this.scene.getMeshByID(meshName);
           if (mesh.physicsImpostor.isDisposed) {
@@ -287,12 +219,12 @@ export class Space {
         }
       }
 
-      if (state.scene.selectedItem === undefined) {
+      if (state.scene.selectedNodeId === undefined) {
         // Item is no longer selected
         this.gizmoManager_.attachToMesh(null);
         delete this.gizmoImpostor_;
       } else {
-        const meshName = this.itemMap_.get(state.scene.selectedItem);
+        const meshName = this.itemMap_.get(state.scene.selectedNodeId);
         if (meshName !== undefined) {
           const mesh = this.scene.getMeshByID(meshName);
           this.gizmoManager_.attachToMesh(mesh);
@@ -424,7 +356,7 @@ export class Space {
 
     for (const [itemId, itemMeshName] of this.itemMap_) {
       if (meshName !== itemMeshName) continue;
-      store.dispatch(SceneAction.selectItem({ id: itemId }));
+      store.dispatch(SceneAction.selectNode({ id: itemId }));
       return;
     }
 
@@ -764,32 +696,80 @@ export class Space {
   }
 
   private updateStore_ = () => {
-    const { items, itemOrdering } = store.getState().scene;
+    const { nodes } = store.getState().scene;
     
-    const nextItems = {};
+    const setNodeBatch: SceneAction.SetNodeBatchParams = {
+      nodeIds: []
+    };
+
     // Sync items
-    for (const [id, meshName] of this.itemMap_) {
-      const mesh = this.scene.getMeshByID(meshName);
+    for (const nodeId of Dict.keySet(nodes)) {
+      const node = nodes[nodeId];
+      const bNode = this.scene.getNodeByID(nodeId) || this.scene.getNodeByName(node.name);
       
-      const item = items[id];
+      const origin = node.origin ?? {};
+      const position = origin.position ?? UnitVector3.zero('meters');
+      const rotation = origin.orientation ?? Rotation.fromRawQuaternion(Quaternion.IDENTITY, 'euler');
 
-      const { position, orientation } = item.origin ?? {};
+      let bPosition: Babylon.Vector3;
+      let bOrientation: Babylon.Quaternion;
+      if (bNode instanceof Babylon.TransformNode || bNode instanceof Babylon.AbstractMesh) {
+        bPosition = bNode.position;
+        bOrientation = bNode.rotationQuaternion;
+      } else if (bNode instanceof Babylon.ShadowLight) {
+        bPosition = bNode.position;
+        bOrientation = Babylon.Quaternion.Identity();
+      } else {
+        throw new Error(`Unknown node type: ${bNode.constructor.name}`);
+      }
 
-      nextItems[id] = {
-        ...item,
-        origin: {
-          position: position
-            ? UnitVector3.toTypeGranular(UnitVector3.fromRaw(Vector3.fromBabylon(mesh.position), 'centimeters'), position.x.type, position.y.type, position.z.type)
-            : UnitVector3.fromRaw(Vector3.fromBabylon(mesh.position), 'centimeters'),
-          orientation: orientation
-            ? Rotation.fromRawQuaternion(Quaternion.fromBabylon(mesh.rotationQuaternion), orientation.type)
-            : Rotation.fromRawQuaternion(Quaternion.fromBabylon(mesh.rotationQuaternion), 'euler'),
-        },
-      };
+      // Compare babylon position with state position. If they differ by more than 0.5cm, update state
+
+      let nextNode: Node;
+      let hit = false;
+
+      if (position) {
+        const bPositionConv = UnitVector3.fromRaw(Vector3.fromBabylon(bPosition), 'meters');
+        
+        // Distance between the two positions in meters
+        const distance = UnitVector3.distance(position, bPositionConv);
+
+        // If varies by more than 0.5cm, update state
+        if (distance.value > 0.005) {
+          nextNode.origin = {
+            ...node.origin,
+            position: UnitVector3.toTypeGranular(bPositionConv, position.x.type, position.y.type, position.z.type),
+          };
+          hit = true;
+        };
+      }
+
+      if (rotation) {
+        const bOrientationConv = Rotation.fromRawQuaternion(Quaternion.fromBabylon(bOrientation), 'euler');
+        const angle = Rotation.angle(rotation, bOrientationConv);
+
+        const radians = Angle.toRadians(angle);
+        
+        // If varies by more than 0.5deg, update state
+        if (radians.value > 0.00872665) {
+          nextNode.origin = {
+            ...node.origin,
+            orientation: Rotation.toType(bOrientationConv, rotation.type),
+          };
+          hit = true;
+        };
+      }
+
+      if (hit) {
+        setNodeBatch.nodeIds.push({
+          id: nodeId,
+          node: nextNode,
+        });
+      }
     }
 
     this.debounceUpdate_ = true;
-    store.dispatch(SceneAction.setItemBatch({ items: nextItems }));
+    store.dispatch(SceneAction.setNodeBatch(setNodeBatch));
     this.debounceUpdate_ = false;
   };
   
@@ -838,24 +818,6 @@ export class Space {
 
   public handleResize(): void {
     this.engine.resize();
-  }
-
-  public createItem(item: Item): string {
-    switch (item.type) {
-      case Item.Type.Can: {
-        const can = new Can(this.scene, { item });
-        can.place();
-        return can.id;
-      }
-      case Item.Type.PaperReam: {
-        const ream = new PaperReam(this.scene, { item });
-        ream.place();
-        return ream.id;
-      }
-      default: {
-        throw new Error('Type not supported or undefined');
-      }
-    }
   }
   
   public updateSensorOptions(isNoiseEnabled: boolean, isRealisticEnabled: boolean): void {

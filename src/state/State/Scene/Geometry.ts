@@ -11,6 +11,15 @@ namespace Geometry {
   }
 
   export namespace Box {
+    export const DEFAULT: Box = {
+      type: 'box',
+      size: {
+        x: Distance.centimeters(10),
+        y: Distance.centimeters(10),
+        z: Distance.centimeters(10),
+      }
+    };
+
     export const diff = (prev: Box, next: Box): Patch<Box> => {
       if (!deepNeq(prev, next)) return Patch.none(prev);
 
@@ -27,6 +36,11 @@ namespace Geometry {
   }
 
   export namespace Sphere {
+    export const DEFAULT: Sphere = {
+      type: 'sphere',
+      radius: Distance.centimeters(5),
+    };
+    
     export const diff = (prev: Sphere, next: Sphere): Patch<Sphere> => {
       if (!deepNeq(prev, next)) return Patch.none(prev);
 
@@ -44,6 +58,12 @@ namespace Geometry {
   }
 
   export namespace Cylinder {
+    export const DEFAULT: Cylinder = {
+      type: 'cylinder',
+      radius: Distance.centimeters(5),
+      height: Distance.centimeters(10)
+    };
+
     export const diff = (prev: Cylinder, next: Cylinder): Patch<Cylinder> => {
       if (!deepNeq(prev, next)) return Patch.none(prev);
 
@@ -62,6 +82,12 @@ namespace Geometry {
   }
 
   export namespace Cone {
+    export const DEFAULT: Cone = {
+      type: 'cone',
+      radius: Distance.centimeters(5),
+      height: Distance.centimeters(10)
+    };
+    
     export const diff = (prev: Cone, next: Cone): Patch<Cone> => {
       if (!deepNeq(prev, next)) return Patch.none(prev);
 
@@ -79,6 +105,14 @@ namespace Geometry {
   }
 
   export namespace Plane {
+    export const DEFAULT: Plane = {
+      type: 'plane',
+      size: {
+        x: Distance.centimeters(10),
+        y: Distance.centimeters(10)
+      }
+    };
+    
     export const diff = (prev: Plane, next: Plane): Patch<Plane> => {
       if (!deepNeq(prev, next)) return Patch.none(prev);
 
@@ -99,6 +133,11 @@ namespace Geometry {
   }
 
   export namespace Mesh {
+    export const DEFAULT: Mesh = {
+      type: 'mesh',
+      vertices: []
+    };
+
     export const diff = (prev: Mesh, next: Mesh): Patch<Mesh> => {
       if (!deepNeq(prev, next)) return Patch.none(prev);
 
@@ -122,6 +161,11 @@ namespace Geometry {
   }
 
   export namespace File {
+    export const DEFAULT: File = {
+      type: 'file',
+      uri: '',
+    };
+
     export const diff = (prev: File, next: File): Patch<File> => {
       if (!deepNeq(prev, next)) return Patch.none(prev);
 
@@ -155,6 +199,20 @@ namespace Geometry {
       case 'plane': return Plane.diff(prev, next as Plane);
       case 'mesh': return Mesh.diff(prev, next as Mesh);
       case 'file': return File.diff(prev, next as File);
+    }
+  };
+
+  export type Type = 'box' | 'sphere' | 'cylinder' | 'cone' | 'plane' | 'mesh' | 'file';
+
+  export const defaultFor = (type: Type): Geometry => {
+    switch (type) {
+      case 'box': return Box.DEFAULT;
+      case 'sphere': return Sphere.DEFAULT;
+      case 'cylinder': return Cylinder.DEFAULT;
+      case 'cone': return Cone.DEFAULT;
+      case 'plane': return Plane.DEFAULT;
+      case 'mesh': return Mesh.DEFAULT;
+      case 'file': return File.DEFAULT;
     }
   };
 }

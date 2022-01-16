@@ -41,7 +41,7 @@ const DropDown = styled('div', (props: ThemeProps) => ({
   borderRight: `1px solid ${props.theme.borderColor}`,
   borderBottom: `1px solid ${props.theme.borderColor}`,
   backgroundColor: Color.toCss(Color.Rgb.darken(Color.Rgb.fromHex(props.theme.backgroundColor), 0.1)),
-  zIndex: 3
+  zIndex: -111
 }));
 
 const DropIcon = styled(Fa, {

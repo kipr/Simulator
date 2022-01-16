@@ -353,11 +353,11 @@ export class Root extends React.Component<Props, State> {
     this.setState({ settings: { ...this.state.settings, ...changedSettings } });
   };
   
-  componentDidCatch(error: Error, info: React.ErrorInfo) {
+  /*componentDidCatch(error: Error, info: React.ErrorInfo) {
     this.setState({
       modal: Modal.exception(error, info)
     });
-  }
+  }*/
 
   private onSelectSceneClick_ = () => {
     this.setState({

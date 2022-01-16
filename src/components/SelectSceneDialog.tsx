@@ -1,5 +1,7 @@
 import * as React from "react";
+import { connect } from "react-redux";
 import { styled } from "styletron-react";
+import { State } from "../state";
 import { Dialog } from "./Dialog";
 import { ThemeProps } from "./theme";
 
@@ -7,11 +9,10 @@ export interface SelectSceneDialogProps extends ThemeProps {
   onClose: () => void;
 }
 
-interface ReduxSelectSceneDialog {
-
+interface ReduxSelectSceneDialogProps {
 }
 
-type Props = SelectSceneDialog;
+type Props = SelectSceneDialogProps;
 
 const Container = styled('div', (props: ThemeProps) => ({
   display: 'flex',
@@ -29,7 +30,7 @@ const InfoContainer = styled('div', (props: ThemeProps) => ({
   padding: `${props.theme.itemPadding * 2}px`
 }));
 
-class SelectSceneDialog extends React.PureComponent<Props> {
+class SelectSceneDialog extends React.PureComponent<Props & ReduxSelectSceneDialogProps> {
   render() {
     const { theme, onClose } = this.props;
     return (
@@ -47,4 +48,6 @@ class SelectSceneDialog extends React.PureComponent<Props> {
   }
 }
 
-export default SelectSceneDialog;
+export default connect<ReduxSelectSceneDialogProps, {}, Props>((state, ownProps) => ({
+
+}))(SelectSceneDialog);

@@ -8,6 +8,8 @@ interface Scene {
   name: string;
   authorId: string;
   description: string;
+  selectedNodeId?: string;
+
 
   hdriUri?: string;
 
@@ -20,6 +22,7 @@ interface PatchScene {
   name: Patch<string>;
   authorId: Patch<string>;
   description: Patch<string>;
+  selectedNodeId: Patch<string>;
 
   hdriUri?: Patch<string>;
 
@@ -63,6 +66,7 @@ namespace Scene {
     authorId: Patch.diff(a.authorId, b.authorId),
     description: Patch.diff(a.description, b.description),
     hdriUri: Patch.diff(a.hdriUri, b.hdriUri),
+    selectedNodeId: Patch.diff(a.selectedNodeId, b.selectedNodeId),
     geometry: Patch.diffDict(a.geometry, b.geometry, Geometry.diff),
     nodes: Patch.diffDict(a.nodes, b.nodes, Node.diff),
     scripts: Patch.diffDict(a.scripts, b.scripts, Patch.diff)

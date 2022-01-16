@@ -7,7 +7,7 @@ import { BLUE, BROWN, GREEN, RED, ThemeProps } from "./theme";
 export interface EditableListProps<P> extends StyleProps, ThemeProps {
   items: EditableList.Item<P>[];
 
-  onItemRemove?: (index: number) => void;
+  onItemRemove?: (index: number, userdata?: unknown) => void;
   onItemReorder?: (fromIndex: number, toIndex: number) => void;
 }
 
@@ -35,8 +35,8 @@ class EditableList extends React.PureComponent<Props, State> {
     this.state = {};
   }
 
-  private onRemove_ = (index: number) => () => {
-    this.props.onItemRemove(index);
+  private onRemove_ = (index: number, userdata?: unknown) => () => {
+    this.props.onItemRemove(index, userdata);
   };
 
   render() {
@@ -49,7 +49,7 @@ class EditableList extends React.PureComponent<Props, State> {
       <Container style={style} className={className}>
         {items.map((item, index) => {
           const Component = item.component;
-          return <Component {...item.props} onRemove={item.removable ? this.onRemove_(index) : undefined} key={index} />;
+          return <Component {...item.props} onRemove={item.removable ? this.onRemove_(index, item.userdata) : undefined} key={index} />;
         })}
       </Container >
     );
@@ -70,6 +70,7 @@ namespace EditableList {
     props: ItemRawProps<P>;
     removable?: boolean;
     reorderable?: boolean;
+    userdata?: unknown;
   }
 
   export namespace Item {
@@ -79,6 +80,7 @@ namespace EditableList {
         props,
         removable: options ? options.removable : false,
         reorderable: options ? options.reorderable : false,
+        userdata: options ? options.userdata : undefined,
       };
     };
   }

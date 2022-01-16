@@ -184,6 +184,25 @@ export namespace Distance {
       case 'inches': return toInches(distance);
     }
   };
+
+  export const subtract = (a: Distance, b: Distance, newType: Type): Distance => {
+    const aMeters = toMeters(a);
+    const bMeters = toMeters(b);
+    const newMeters = aMeters.value - bMeters.value;
+    return toType(meters(newMeters), newType);
+  };
+
+  export const add = (a: Distance, b: Distance, newType: Type): Distance => {
+    const aMeters = toMeters(a);
+    const bMeters = toMeters(b);
+    const newMeters = aMeters.value + bMeters.value;
+    return toType(meters(newMeters), newType);
+  };
+
+  export const abs = (a: Distance): Distance => ({
+      type: a.type,
+      value: Math.abs(a.value)
+  });
 }
 
 export type Distance = (
