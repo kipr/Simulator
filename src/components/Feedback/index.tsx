@@ -181,26 +181,15 @@ export class FeedbackDialog extends React.PureComponent<Props, State> {
               (newValue: boolean) => ({ includeAnonData: newValue })
             )}
           </FeedbackContainer>
-          {/* <CenterContainer theme={theme}>
-            <Item theme={theme} onClick={(e) => {
-              onSubmit();
-            }}>
-              <ItemIcon icon='paper-plane '/>
-              Submit
-            </Item>
-          </CenterContainer> */}
-          
           <CenterContainer theme={theme}>
             <FeedbackText>
               {this.props.feedback.message}
             </FeedbackText>
           </CenterContainer>
-
-          <DialogBar theme={theme} onAccept={onSubmit}>
-            <Fa icon='paper-plane'/> Submit
-          </DialogBar>
-
         </FeedbackContainer>
+        <DialogBar theme={theme} onAccept={onSubmit}>
+          <Fa icon='paper-plane'/> Submit
+        </DialogBar>
       </Dialog>
     );
   }
