@@ -5,6 +5,7 @@ import SentimentCharm from './SentimentCharm';
 import { FeedbackTextArea, FeedbackEmailInput, FeedbackText, FeedbackLabel } from './FeedbackInputs';
 import { StyleProps } from '../../style';
 import { Dialog } from '../Dialog';
+import DialogBar from "../DialogBar";
 import { ThemeProps } from '../theme';
 import { Fa } from '../Fa';
 
@@ -37,36 +38,6 @@ const FeedbackRowContainer = styled('div', (props: ThemeProps) => ({
   alignItems: 'flex-start',
   padding: `${props.theme.itemPadding * 2}px`,
 }));
-
-interface ClickProps {
-  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  disabled?: boolean;
-}
-
-const Item = styled('div', (props: ThemeProps & ClickProps) => ({
-  display: 'flex',
-  alignItems: 'center',
-  flexDirection: 'row',
-  borderRight: `1px solid ${props.theme.borderColor}`,
-  paddingLeft: '20px',
-  paddingRight: '20px',
-  height: '50px',
-  opacity: props.disabled ? '0.5' : '1.0',
-  ':last-child': {
-    borderRight: 'none'
-  },
-  fontWeight: 400,
-  ':hover': props.onClick && !props.disabled ? {
-    cursor: 'pointer',
-    backgroundColor: `rgba(255, 255, 255, 0.1)`
-  } : {},
-  userSelect: 'none',
-  transition: 'background-color 0.2s, opacity 0.2s'
-}));
-
-const ItemIcon = styled(Fa, {
-  paddingRight: '10px'
-});
 
 export class FeedbackDialog extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -181,19 +152,15 @@ export class FeedbackDialog extends React.PureComponent<Props, State> {
             )}
           </FeedbackContainer>
           <CenterContainer theme={theme}>
-            <Item theme={theme} onClick={(e) => {
-              onSubmit();
-            }}>
-              <ItemIcon icon='paper-plane '/>
-              Submit
-            </Item>
-          </CenterContainer>
-          <CenterContainer theme={theme}>
             <FeedbackText>
               {this.props.feedback.message}
             </FeedbackText>
           </CenterContainer>
+          
         </FeedbackContainer>
+        <DialogBar theme={theme} onAccept={onSubmit}>
+          <Fa icon='paper-plane'/> Submit
+        </DialogBar>
       </Dialog>
     );
   }

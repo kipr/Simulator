@@ -14,6 +14,8 @@ import { ThemeProps } from "../theme";
 import ValueEdit from "../ValueEdit";
 import { AngleAxis, Euler } from "../../math";
 import ItemSettings from "./ItemSettings";
+import { Fa } from "../Fa";
+
 
 export type AddItemAcceptance = Item;
 
@@ -64,7 +66,9 @@ class AddItemDialog extends React.PureComponent<Props, State> {
         <StyledScrollArea theme={theme}>
           <ItemSettings theme={theme} item={item} onItemChange={this.onItemChange_} />
         </StyledScrollArea>
-        <DialogBar theme={theme} onAccept={this.onAccept_} />
+        <DialogBar theme={theme} onAccept={this.onAccept_}>
+          <Fa icon='check' /> Accept
+        </DialogBar>
         
       </Dialog>
     );
