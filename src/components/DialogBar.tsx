@@ -1,7 +1,6 @@
 import * as React from "react";
 import { styled } from "styletron-react";
 import { Spacer } from "./common";
-import { Fa } from "./Fa";
 import { ThemeProps } from "./theme";
 
 export interface DialogBarProps extends ThemeProps {
@@ -36,11 +35,14 @@ const Button = styled('div', (props: ThemeProps & { disabled?: boolean }) => ({
 class DialogBar extends React.PureComponent<Props> {
   render() {
     const { props } = this;
-    const { theme } = props;
+    const { theme, children } = props;
     return (
       <Container theme={theme}>
         <Spacer />
-        <Button theme={theme} onClick={this.props.onAccept}><Fa icon='check' /> Accept</Button>
+        <Button theme={theme} onClick={this.props.onAccept}>
+          {children}
+          {/* <Fa icon='check' /> Accept */}
+        </Button>
       </Container>
     );
   }
