@@ -16,6 +16,8 @@ import SideLayout from './SideLayout';
 
 import { SettingsDialog } from './SettingsDialog';
 import { AboutDialog } from './AboutDialog';
+import { FeedbackDialog } from './Feedback';
+import sendFeedback from './Feedback/SendFeedback';
 import compile, { CompileError } from '../compile';
 import { SimulatorState } from './SimulatorState';
 import { Angle, Distance, StyledText } from '../util';
@@ -25,6 +27,7 @@ import parseMessages, { hasErrors, sort, toStyledText } from '../util/parse-mess
 import { Space } from '../Sim';
 import { RobotPosition } from '../RobotPosition';
 import { DEFAULT_SETTINGS, Settings } from '../Settings';
+import { DEFAULT_FEEDBACK, Feedback, Sentiment } from '../Feedback';
 import ExceptionDialog from './ExceptionDialog';
 
 namespace Modal {
@@ -32,6 +35,7 @@ namespace Modal {
     Settings,
     About,
     Exception,
+    Feedback,
     None,
   }
 
@@ -46,6 +50,12 @@ namespace Modal {
   }
 
   export const ABOUT: About = { type: Type.About };
+
+  export interface Feedback {
+    type: Type.Feedback;
+  }
+
+  export const FEEDBACK: Feedback = { type: Type.Feedback };
 
   export interface Exception {
     type: Type.Exception;
@@ -62,7 +72,7 @@ namespace Modal {
   export const NONE: None = { type: Type.None };
 }
 
-export type Modal = Modal.Settings | Modal.About | Modal.Exception | Modal.None;
+export type Modal = Modal.Settings | Modal.About | Modal.Exception | Modal.Feedback | Modal.None;
 
 
 interface RootState {
@@ -82,6 +92,8 @@ interface RootState {
   theme: Theme;
 
   settings: Settings;
+
+  feedback: Feedback;
 }
 
 type Props = Record<string, never>;
@@ -126,6 +138,7 @@ export class Root extends React.Component<Props, State> {
       theme: DARK,
       messages: [],
       settings: DEFAULT_SETTINGS,
+      feedback: DEFAULT_FEEDBACK,
     };
   }
 
@@ -355,7 +368,22 @@ export class Root extends React.Component<Props, State> {
   private onSettingsChange_ = (changedSettings: Partial<Settings>) => {
     this.setState({ settings: { ...this.state.settings, ...changedSettings } });
   };
+
+  private onFeedbackChange_ = (changedFeedback: Partial<Feedback>) => {
+    this.setState({ feedback: { ...this.state.feedback, ...changedFeedback } });
+  };
   
+  private onFeedbackSubmit_ = () => {
+    sendFeedback(this.state)
+      .then((message: string) => {
+        this.onFeedbackChange_(({ message: message }));
+        this.onModalClose_();
+      })
+      .catch((error: string) => {
+        this.onFeedbackChange_(({ message: error }));
+      });
+  };
+
   componentDidCatch(error: Error, info: React.ErrorInfo) {
     this.setState({
       modal: Modal.exception(error, info)
@@ -375,6 +403,7 @@ export class Root extends React.Component<Props, State> {
       messages,
       surfaceState,
       settings,
+      feedback,
     } = state;
 
     const theme = DARK;
@@ -393,6 +422,7 @@ export class Root extends React.Component<Props, State> {
       onClearConsole: this.onClearConsole_,
       surfaceState,
       onSurfaceChange: this.onUpdateSurfaceState_,
+      feedback,
     };
 
     let impl: JSX.Element;
@@ -439,12 +469,14 @@ export class Root extends React.Component<Props, State> {
             onDocumentationClick={this.onDocumentationClick}
             onDashboardClick={this.onDashboardClick}
             onLogoutClick={this.onLogoutClick}
+            onFeedbackClick={this.onModalClick_(Modal.FEEDBACK)}
             simulatorState={simulatorState}
           />
           {impl}
         </Container>
         {modal.type === Modal.Type.Settings ? <SettingsDialog theme={theme} settings={settings} onSettingsChange={this.onSettingsChange_} onClose={this.onModalClose_} /> : undefined}
         {modal.type === Modal.Type.About ? <AboutDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
+        {modal.type === Modal.Type.Feedback ? <FeedbackDialog theme={theme} feedback={feedback} onFeedbackChange={this.onFeedbackChange_} onClose={this.onModalClose_} onSubmit={this.onFeedbackSubmit_} /> : undefined}
         {modal.type === Modal.Type.Exception ? <ExceptionDialog error={modal.error} theme={theme} onClose={this.onModalClose_} /> : undefined}
       </>
 
@@ -455,3 +487,4 @@ export class Root extends React.Component<Props, State> {
 // All logic inside of index.tsx
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 export default withRouter(Root);
+export { RootState };

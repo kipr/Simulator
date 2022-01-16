@@ -30,11 +30,22 @@ const Container = styled('div', (props: ThemeProps) => ({
   zIndex: 1
 }));
   
-const Logo = styled('img', (props: ThemeProps) => ({
+const Logo = styled('img', (props: ThemeProps & ClickProps) => ({
   width: '36px',
   height: '36px',
   marginLeft: '20px',
   marginRight: '20px',
+  opacity: props.disabled ? '0.5' : '1.0',
+  ':last-child': {
+    borderRight: 'none'
+  },
+  fontWeight: 400,
+  ':hover': props.onClick && !props.disabled ? {
+    cursor: 'pointer',
+    backgroundColor: `rgba(255, 255, 255, 0.1)`
+  } : {},
+  userSelect: 'none',
+  transition: 'background-color 0.2s, opacity 0.2s'
 }));
   
 interface ClickProps {
@@ -85,9 +96,9 @@ export class MainMenu extends React.Component<Props, State> {
     const theme = DARK;
     return (
       <Container className={className} style={style} theme={theme}>
-        <Logo theme={theme} src={theme.foreground === 'white' ? KIPR_LOGO_BLACK as string : KIPR_LOGO_WHITE as string} />
+        <Logo theme={theme} src={theme.foreground === 'white' ? KIPR_LOGO_BLACK as string : KIPR_LOGO_WHITE as string} onClick={this.onDashboardClick_}/>
         <Spacer style={{ borderRight: `1px solid ${theme.borderColor}` }} />
-        <Item theme={theme} onClick={this.onDashboardClick_}><ItemIcon icon='compass'/> Dashboard</Item>
+        {/* <Item theme={theme} onClick={this.onDashboardClick_}><ItemIcon icon='compass'/> Dashboard</Item> */}
         <Item theme={theme} onClick={this.onLogoutClick_}><ItemIcon icon='sign-out-alt'/> Logout</Item>
       </Container>
     );

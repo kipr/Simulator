@@ -26,6 +26,8 @@ export interface MenuProps extends StyleProps, ThemeProps {
   onDashboardClick: () => void;
   onLogoutClick: () => void;
 
+  onFeedbackClick: () => void;
+
   simulatorState: SimulatorState;
 }
 
@@ -51,17 +53,28 @@ const Container = styled('div', (props: ThemeProps) => ({
   zIndex: 1
 }));
 
-const Logo = styled('img', (props: ThemeProps) => ({
-  width: '36px',
-  height: '36px',
-  marginLeft: '20px',
-  marginRight: '20px',
-}));
-
 interface ClickProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   disabled?: boolean;
 }
+
+const Logo = styled('img', (props: ThemeProps & ClickProps) => ({
+  width: '36px',
+  height: '36px',
+  marginLeft: '20px',
+  marginRight: '20px',
+  opacity: props.disabled ? '0.5' : '1.0',
+  ':last-child': {
+    borderRight: 'none'
+  },
+  fontWeight: 400,
+  ':hover': props.onClick && !props.disabled ? {
+    cursor: 'pointer',
+    backgroundColor: `rgba(255, 255, 255, 0.1)`
+  } : {},
+  userSelect: 'none',
+  transition: 'background-color 0.2s, opacity 0.2s'
+}));
 
 const Item = styled('div', (props: ThemeProps & ClickProps) => ({
   display: 'flex',
@@ -134,6 +147,7 @@ class SimMenu extends React.PureComponent<Props, State> {
       onDocumentationClick,
       onDashboardClick,
       onLogoutClick,
+      onFeedbackClick,
       simulatorState
     } = props;
 
@@ -144,7 +158,7 @@ class SimMenu extends React.PureComponent<Props, State> {
     return (
       <>
         <Container theme={theme}>
-          <Logo theme={theme} src={theme.foreground === 'white' ? KIPR_LOGO_BLACK as string : KIPR_LOGO_WHITE as string} />
+          <Logo theme={theme} onClick={onDashboardClick} src={theme.foreground === 'white' ? KIPR_LOGO_BLACK as string : KIPR_LOGO_WHITE as string}/>
 
           <RunItem
             theme={theme}
@@ -178,7 +192,8 @@ class SimMenu extends React.PureComponent<Props, State> {
           
           <Item theme={theme} onClick={onSettingsClick}><ItemIcon icon='cogs'/> Settings</Item>
           <Item theme={theme} onClick={onAboutClick}><ItemIcon icon='question'/> About</Item>
-          <Item theme={theme} onClick={onDashboardClick}><ItemIcon icon='compass'/> Dashboard</Item>
+          <Item theme={theme} onClick={onFeedbackClick}><ItemIcon icon='comment-dots'/> Feedback</Item>
+          {/* <Item theme={theme} onClick={onDashboardClick}><ItemIcon icon='compass'/> Dashboard</Item> */}
           <Item theme={theme} onClick={onLogoutClick}><ItemIcon icon='sign-out-alt'/> Logout</Item>
         </Container>
         
