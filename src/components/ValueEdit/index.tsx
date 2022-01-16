@@ -210,7 +210,7 @@ export class ValueEdit extends React.PureComponent<Props, State> {
               theme={theme}
               options={unitOptions}
               onSelect={this.onUnitSelect_}
-              index={0}
+              index={unitOptions.findIndex(o => o.data === Value.subType(value))}
               minimal
               widthTweak={2}
             />

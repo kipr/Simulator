@@ -8,7 +8,7 @@ import Field from '../Field';
 import ScrollArea from '../ScrollArea';
 import Section from '../Section';
 import { Spacer } from '../common';
-import { StyledText } from '../../util';
+import { Angle, StyledText } from '../../util';
 import { DropdownList, OptionDefinition } from '../DropdownList';
 import { SurfaceStatePresets } from '../../SurfaceState';
 
@@ -41,9 +41,11 @@ interface ReduxWorldProps {
   scene: Scene;
   scenes: Scenes;
 
-  onNodeAdd: (id: string, node: AddNodeAcceptance) => void;
+  onNodeAdd: (id: string, node: Node) => void;
   onNodeRemove: (id: string) => void;
   onNodeChange: (id: string, node: Node) => void;
+
+  onObjectAdd: (id: string, object: Node.Obj, geometry: Geometry) => void;
 
   onGeometryAdd: (id: string, geometry: Geometry) => void;
   onGeometryRemove: (id: string) => void;
@@ -153,18 +155,28 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
   };
 
   private onAddNodeAccept_ = (acceptance: AddNodeAcceptance) => {
-    
-
-    this.setState({ modal: UiState.NONE }, () => {
-      this.props.onNodeAdd(uuid.v4(), acceptance);
-    });
+    if (acceptance.node.type === 'object' && acceptance.geometry) {
+      const object: Node.Obj = acceptance.node;
+      this.setState({ modal: UiState.NONE }, () => {
+        this.props.onObjectAdd(uuid.v4(), object, acceptance.geometry);
+      });
+    } else {
+      this.setState({ modal: UiState.NONE }, () => {
+        this.props.onNodeAdd(uuid.v4(), acceptance.node);
+      });
+    }
   };
 
   private onNodeSettingsAccept_ = (id: string) => (acceptance: NodeSettingsAcceptance) => {
     this.props.onNodeChange(id, acceptance);
   };
 
-  private onAddNodeClick_ = () => this.setState({ modal: UiState.ADD_NODE });
+  private onAddNodeClick_ = (event: React.SyntheticEvent<MouseEvent>) => {
+    this.setState({ modal: UiState.ADD_NODE });
+    event.stopPropagation();
+    event.preventDefault();
+  }
+
   private onNodeResetClick_ = (id: string) => () => {
     const { props } = this;
     const { scenes } = props;
@@ -175,13 +187,12 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
     const originalNode = originalScene.value.nodes[id];
 
 
-    if (!originalNode?.origin) return;
     
     this.props.onNodeChange(id, {
       ...originalNode,
       origin: {
-        position: originalNode.origin.position ?? Vector3.zero(),
-        orientation: originalNode.origin.orientation ?? Rotation.Euler.identity(),
+        position: originalNode.origin?.position || Vector3.zero('centimeters'),
+        orientation: originalNode.origin?.orientation || Rotation.Euler.identity(Angle.Type.Degrees),
       },
     });
   };
@@ -189,35 +200,62 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
   private onModalClose_ = () => this.setState({ modal: UiState.NONE });
 
   private onNodeRemove_ = (index: number, id?: unknown) => {
-    this.props.onNodeRemove(id as string);
+    const { props } = this;
+    const { scene } = props;
+    const idStr = id as string;
+    const node = scene.nodes[idStr];
+    if (node.type === 'object') {
+      if (node.geometryId !== undefined)
+      {
+        let unique = true;
+        for (const nodeId in scene.nodes) {
+          const otherNode = scene.nodes[nodeId];
+          if (nodeId !== idStr && otherNode.type === 'object' && node.geometryId === otherNode.geometryId) {
+            unique = false;
+            break;
+          }
+        }
+        if (unique) {
+          this.props.onGeometryRemove(node.geometryId);
+        }
+      }
+    }
+
+    this.props.onNodeRemove(idStr);
   };
 
   private onItemVisibilityChange_ = (id: string) => (visibility: boolean) => {
     this.props.onNodeChange(id, {
       ...this.props.scene.nodes[id],
+      visible: visibility
       
     });
   };
 
   render() {
     const { props, state } = this;
-    const { style, className, theme, scene, onGeometryAdd, onGeometryRemove, onGeometryChange } = props;
+    const { style, className, theme, scene, scenes, onGeometryAdd, onGeometryRemove, onGeometryChange } = props;
     const { collapsed, modal } = state;
+
+    console.log('collapsed', collapsed);
 
 
     const itemList: EditableList.Item[] = [];
     // Mock list
     for (const nodeId of Dict.keySet(scene.nodes)) {
       const node = scene.nodes[nodeId];
+      const activeScene = scenes.scenes[scenes.activeId];
+      const hasReset = activeScene !== undefined && activeScene.type === Async.Type.Loaded && activeScene.value.nodes[nodeId] !== undefined;
       itemList.push(EditableList.Item.standard({
         component: Item,
         props: { name: node.name, theme },
-        onReset: this.onNodeResetClick_(nodeId),
-        onSettings: this.onItemSettingsClick_(nodeId),
+        onReset: hasReset && node.editable ? this.onNodeResetClick_(nodeId) : undefined,
+        onSettings: node.editable ? this.onItemSettingsClick_(nodeId) : undefined,
         onVisibilityChange: this.onItemVisibilityChange_(nodeId),
         visible: node.visible,
       }, {
         removable: node.editable,
+        userdata: nodeId,
       }));
     }
 
@@ -291,10 +329,15 @@ export default connect<unknown, unknown, Props, ReduxState>(state => {
     dispatch(SceneAction.addGeometry({ id, geometry }));
   },
   onGeometryChange: (id: string, geometry: Geometry) => {
+    console.log('change', id, geometry);
     dispatch(SceneAction.setGeometry({ id, geometry }));
   },
   onGeometryRemove: (id: string) => {
     dispatch(SceneAction.removeGeometry({ id }));
-  }
+  },
+  onObjectAdd: (id: string, object: Node.Obj, geometry: Geometry) => {
+    dispatch(SceneAction.addObject({ id, object, geometry }));
+  },
+
 
 }))(World) as React.ComponentType<Props>;

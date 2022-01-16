@@ -19,7 +19,10 @@ import * as uuid from 'uuid';
 import Scene from "../../state/State/Scene";
 import Geometry from "../../state/State/Scene/Geometry";
 
-export type AddNodeAcceptance = Node;
+export interface AddNodeAcceptance {
+  node: Node;
+  geometry?: Geometry;
+}
 
 export interface AddNodeDialogProps extends ThemeProps {
   scene: Scene;
@@ -39,7 +42,7 @@ type Props = AddNodeDialogProps;
 type State = AddNodeDialogState;
 
 const StyledScrollArea = styled(ScrollArea, (props: ThemeProps) => ({
-  minHeight: '300px',
+  minHeight: '400px',
   flex: '1 1',
 }));
 
@@ -53,21 +56,38 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
         type: 'object',
         geometryId,
         name: 'Unnamed Object',
+        origin: {
+          position: {
+            x: Distance.centimeters(0),
+            y: Distance.centimeters(0),
+            z: Distance.centimeters(0),
+          },
+          orientation: {
+            type: 'euler',
+            x: Angle.degrees(0),
+            y: Angle.degrees(0),
+            z: Angle.degrees(0),
+            order: 'yzx',
+          }
+        },
+        editable: true,
+        visible: true,
+        physics: {
+          mass: Mass.kilograms(1),
+          friction: 5,
+          type: 'mesh',
+        }
       },
       geometryId,
-      geometry: {
-        type: 'box',
-        size: {
-          x: Distance.meters(1),
-          y: Distance.meters(1),
-          z: Distance.meters(1),
-        }
-      }
+      geometry: Geometry.Box.DEFAULT
     };
   }
 
   private onAccept_ = () => {
-    this.props.onAccept(this.state.node);
+    this.props.onAccept({
+      node: this.state.node,
+      geometry: this.state.geometry
+    });
   };
 
 
@@ -103,6 +123,14 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
     const { theme, onClose, scene } = props;
     const { node, id } = state;
 
+    const modifiedScene: Scene = {
+      ...scene,
+      geometry: {
+        ...scene.geometry,
+        [state.geometryId]: state.geometry
+      }
+    };
+
     return (
       <Dialog theme={theme} name='Add Item' onClose={onClose}>
         <StyledScrollArea theme={theme}>
@@ -110,7 +138,7 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
             theme={theme}
             node={node}
             id={id}
-            scene={scene}
+            scene={modifiedScene}
             onNodeChange={this.onNodeChange_}
             onGeometryAdd={this.onGeometryAdd_}
             onGeometryChange={this.onGeometryChange_}

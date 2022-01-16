@@ -198,8 +198,6 @@ class SideLayout extends React.PureComponent<Props, State> {
           >
             <Info
               robotState={state}
-              robotStartPosition={robotStartPosition}
-              onSetRobotStartPosition={onSetRobotStartPosition}
               theme={theme}
             />
           </InfoWidget>

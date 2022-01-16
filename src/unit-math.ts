@@ -70,6 +70,8 @@ export namespace Vector3 {
     Distance.toType(v.z, type).value
   );
 
+  export const toBabylon = (v: Vector3, type: Distance.Type) => RawVector3.toBabylon(toRaw(v, type));
+
   export const fromRaw = (raw: RawVector3, type: Distance.Type) => ({
     x: { type, value: raw.x },
     y: { type, value: raw.y },
@@ -136,7 +138,7 @@ export namespace Rotation {
   }
 
   export namespace AngleAxis {
-    export const identity = (angleType: Angle.Type = Angle.Type.Degrees, axisType: Distance.Type = 'meters') => {
+    export const identity = (angleType: Angle.Type = Angle.Type.Degrees, axisType: Distance.Type = 'meters'): AngleAxis => {
       const angle = Angle.toType(Angle.radians(0), angleType);
       const axis = Vector3.zero(axisType);
       return {

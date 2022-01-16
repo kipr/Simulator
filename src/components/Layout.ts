@@ -2,6 +2,7 @@ import { Message } from "ivygate";
 import { RobotPosition } from "../RobotPosition";
 import { RobotState } from "../RobotState";
 import { Settings } from "../Settings";
+import Scene from "../state/State/Scene";
 import { StyleProps } from "../style";
 import { SurfaceState } from "../SurfaceState";
 import { StyledText } from "../util";

@@ -52,7 +52,7 @@ namespace Node {
       scriptIds: undefined,
       documentIds: undefined,
       editable: undefined,
-      visible: undefined
+      visible: true
     };
 
     export const upcast = <T extends Base>(t: T): Base => ({

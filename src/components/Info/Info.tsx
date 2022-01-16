@@ -8,16 +8,23 @@ import Section from '../Section';
 import { ThemeProps } from '../theme';
 import SensorWidget from './SensorWidget';
 import { StyledText } from '../../util';
-import { Location } from './Location';
+import Location from './Location';
 import { RobotPosition } from '../../RobotPosition';
 import { Fa } from '../Fa';
+import { ReferenceFrame } from '../../unit-math';
+import { connect } from 'react-redux';
+import { State as ReduxState } from '../../state';
+import Async from '../../state/State/Async';
+import { SceneAction } from '../../state/reducer';
 
 
 export interface InfoProps extends StyleProps, ThemeProps {
   robotState: RobotState;
-  robotStartPosition: RobotPosition;
+}
 
-  onSetRobotStartPosition: (position: RobotPosition) => void;
+interface ReduxInfoProps {
+  startingOrigin: ReferenceFrame;
+  onOriginChange: (origin: ReferenceFrame) => void;
 }
 
 interface InfoState {
@@ -106,8 +113,8 @@ const ResetIcon = styled(Fa, ({ theme }: ThemeProps) => ({
   transition: 'opacity 0.2s'
 }));
 
-class Info extends React.PureComponent<Props, State> {
-  constructor(props: Props) {
+class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
+  constructor(props: Props & ReduxInfoProps) {
     super(props);
 
     this.state = {
@@ -127,7 +134,7 @@ class Info extends React.PureComponent<Props, State> {
   private onResetLocationClick_ = (event: React.MouseEvent<HTMLSpanElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    this.props.onSetRobotStartPosition(this.props.robotStartPosition);
+    this.props.onOriginChange(this.props.startingOrigin);
   };
 
   render() {
@@ -137,7 +144,6 @@ class Info extends React.PureComponent<Props, State> {
       className,
       theme,
       robotState,
-      robotStartPosition,
     } = props;
     const { collapsed } = state;
 
@@ -197,8 +203,6 @@ class Info extends React.PureComponent<Props, State> {
             collapsed={collapsed['location']}
           >
             <Location
-              robotStartPosition={robotStartPosition}
-              onSetRobotStartPosition={this.props.onSetRobotStartPosition}
               theme={theme}
             />
           </StyledSection>
@@ -248,4 +252,17 @@ class Info extends React.PureComponent<Props, State> {
   }
 }
 
-export default Info;
+export default connect<any, unknown, InfoProps, ReduxState>((state: ReduxState) => {
+  const startingScene = state.scenes.scenes[state.scenes.activeId];
+  let startingOrigin = ReferenceFrame.IDENTITY;
+  if (startingScene.type === Async.Type.Loaded) {
+    startingOrigin = startingScene.value.robot?.origin || ReferenceFrame.IDENTITY;
+  }
+  return {
+    startingOrigin: startingOrigin,
+  };
+}, dispatch => ({
+  onOriginChange: (origin: ReferenceFrame) => {
+    dispatch(SceneAction.setRobotOrigin({ origin }));
+  }
+}))(Info) as React.ComponentType<InfoProps>;

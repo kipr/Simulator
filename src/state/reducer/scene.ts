@@ -1,6 +1,9 @@
 import Scene from "../State/Scene";
 import Node from "../State/Scene/Node";
 import Geometry from "../State/Scene/Geometry";
+import { Distance } from "../../util";
+import { ReferenceFrame, Vector3 } from "../../unit-math";
+import Camera from "../State/Scene/Camera";
 
 
 export namespace SceneAction {
@@ -128,6 +131,44 @@ export namespace SceneAction {
   }
 
   export const UNSELECT_ALL: UnselectAll = { type: 'unselect-all' };
+
+  export interface AddObject {
+    type: 'add-object';
+    id: string;
+    object: Node.Obj;
+    geometry: Geometry;
+  }
+
+  export type AddObjectParams = Omit<AddObject, 'type'>;
+
+  export const addObject = (params: AddObjectParams): AddObject => ({
+    type: 'add-object',
+    ...params
+  });
+
+  export interface SetRobotOrigin {
+    type: 'set-robot-origin';
+    origin: ReferenceFrame;
+  }
+
+  export type SetRobotOriginParams = Omit<SetRobotOrigin, 'type'>;
+
+  export const setRobotOrigin = (params: SetRobotOriginParams): SetRobotOrigin => ({
+    type: 'set-robot-origin',
+    ...params
+  });
+
+  export interface SetCamera {
+    type: 'set-camera';
+    camera: Camera;
+  }
+
+  export type SetCameraParams = Omit<SetCamera, 'type'>;
+
+  export const setCamera = (params: SetCameraParams): SetCamera => ({
+    type: 'set-camera',
+    ...params
+  });
 }
 
 export type SceneAction = (
@@ -140,10 +181,121 @@ export type SceneAction = (
   SceneAction.SetGeometry |
   SceneAction.SetGeometryBatch |
   SceneAction.SelectNode |
-  SceneAction.UnselectAll
+  SceneAction.UnselectAll |
+  SceneAction.AddObject |
+  SceneAction.SetRobotOrigin |
+  SceneAction.SetCamera
 );
 
-export const reduceScene = (state: Scene = Scene.EMPTY, action: SceneAction) => {
+export const TEST_SCENE: Scene = {
+  name: 'test',
+  description: 'A Test',
+  authorId: 'Braden',
+  geometry: {
+    'box': {
+      type: 'box',
+      size: {
+        x: Distance.centimeters(5),
+        y: Distance.centimeters(5),
+        z: Distance.centimeters(5),
+      }
+    },
+    'table': {
+      type: 'file',
+      uri: 'static/arena.glb'
+    },
+    'jbc_mat': {
+      type: 'file',
+      uri: 'static/jbcMatA.glb'
+    },
+  },
+  nodes: {
+    'table': {
+      type: 'object',
+      geometryId: 'table',
+      name: 'A Table',
+      origin: {
+        scale: {
+          x: 30,
+          y: 30,
+          z: 30,
+        }
+      },
+      physics: {
+        type: 'mesh',
+        restitution: 0,
+        friction: 1
+      },
+      visible: true,
+    },
+    'jbc_mat': {
+      type: 'object',
+      geometryId: 'jbc_mat',
+      name: 'JBC Material',
+      origin: {
+        position: {
+          x: Distance.meters(0),
+          y: Distance.meters(1.02),
+          z: Distance.meters(0),
+        },
+        scale: {
+          x: 70,
+          y: 70,
+          z: 70,
+        }
+      },
+      visible: true,
+      physics: {
+        type: 'mesh',
+        restitution: 0,
+        friction: 1
+      },
+    },
+    'light0': {
+      type: 'point-light',
+      intensity: 10000,
+      name: 'light0',
+      origin: {
+        position: {
+          x: Distance.meters(0),
+          y: Distance.meters(2.00),
+          z: Distance.meters(0),
+        },
+      },
+      visible: true
+    },
+  },
+  robot: {
+    origin: {
+      position: {
+        x: Distance.meters(0),
+        y: Distance.meters(1.2),
+        z: Distance.meters(0),
+      },
+    }
+  },
+  camera: Camera.arcRotate({
+    radius: Distance.meters(5),
+    target: {
+      x: Distance.meters(0),
+      y: Distance.meters(1.1),
+      z: Distance.meters(0),
+    },
+    position: {
+      x: Distance.meters(2),
+      y: Distance.meters(2),
+      z: Distance.meters(2),
+    }
+  }),
+  gravity: {
+    x: Distance.meters(0),
+    y: Distance.meters(-9.8 * 50),
+    z: Distance.meters(0),
+  }
+};
+
+export const reduceScene = (state: Scene = TEST_SCENE, action: SceneAction) => {
+  console.log({ action });
   switch (action.type) {
     case 'add-node':
       return {
@@ -238,6 +390,29 @@ export const reduceScene = (state: Scene = Scene.EMPTY, action: SceneAction) => 
         ...state,
         selectedNodeId: undefined,
       };
+    case 'add-object':
+      return {
+        ...state,
+        nodes: {
+          ...state.nodes,
+          [action.id]: action.object,
+        },
+        geometry: {
+          ...state.geometry,
+          [action.object.geometryId]: action.geometry,
+        },
+      };
+    case 'set-robot-origin': return {
+      ...state,
+      robot: {
+        ...state.robot,
+        origin: action.origin,
+      }
+    };
+    case 'set-camera': return {
+      ...state,
+      camera: action.camera,
+    };
     default:
       return state;
   }

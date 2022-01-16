@@ -3,6 +3,7 @@ import Node from "../State/Scene/Node";
 import Geometry from "../State/Scene/Geometry";
 import { Scenes } from "../State";
 import Async from "../State/Async";
+import { TEST_SCENE } from './scene';
 
 
 export namespace ScenesAction {
@@ -81,7 +82,14 @@ export type ScenesAction = (
   ScenesAction.LoadScene
 );
 
-export const reduceScenes = (state: Scenes = Scenes.EMPTY, action: ScenesAction): Scenes => {
+const DEFAULT_SCENES: Scenes = {
+  scenes: {
+    test: Async.loaded({ value: TEST_SCENE })
+  },
+  activeId: 'test',
+}
+
+export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesAction): Scenes => {
   switch (action.type) {
     case 'add-scene':
       return {

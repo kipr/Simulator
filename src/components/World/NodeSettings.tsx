@@ -1,5 +1,6 @@
 import * as React from "react";
 import { styled } from "styletron-react";
+import { Vector3 as RawVector3 } from "../../math";
 import { ReferenceFrame, Rotation, Vector3 } from "../../unit-math";
 
 import { Angle, Distance, Mass, UnitlessValue, Value } from "../../util";
@@ -73,6 +74,11 @@ const GEOMETRY_OPTIONS: ComboBox.Option[] = [
   ComboBox.option('File', 'file'),
 ];
 
+const GEOMETRY_REVERSE_OPTIONS: Dict<number> = GEOMETRY_OPTIONS.reduce((dict, option, i) => {
+  dict[option.data as string] = i;
+  return dict;
+}, {});
+
 const ROTATION_TYPES: ComboBox.Option[] = [
   ComboBox.option('Euler', 'euler'),
   ComboBox.option('Axis Angle', 'angle-axis'),
@@ -93,6 +99,14 @@ const NODE_TYPES = [
   'directional-light',
   'point-light',
   'spot-light',
+];
+
+const NODE_TYPE_OPTIONS: ComboBox.Option[] = [
+  ComboBox.option('Empty', 'empty'),
+  ComboBox.option('Object', 'object'),
+  ComboBox.option('Directional Light', 'directional-light'),
+  ComboBox.option('Point Light', 'point-light'),
+  ComboBox.option('Spot Light', 'spot-light'),
 ];
 
 const NODE_TYPES_REV = (() => {
@@ -184,10 +198,14 @@ class NodeSettings extends React.PureComponent<Props, State> {
   };
 
   private onGeometrySelect_ = (index: number, option: ComboBox.Option) => {
-    this.props.onNodeChange({
-      ...this.props.node,
-      geometryId: option.data as string
-    } as Node.Obj) ;
+    const { props } = this;
+    const { node } = props;
+    
+    const object = node as Node.Obj;
+
+    const type = option.data as Geometry.Type;
+
+    this.props.onGeometryChange(object.geometryId, Geometry.defaultFor(type));
   };
 
   private onCollapsedChange_ = (key: string) => (collapsed: boolean) => {
@@ -201,12 +219,13 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onPositionXChange_ = (value: Value) => {
     const { node } = this.props;
+    const origin = node.origin || {};
     this.props.onNodeChange({
       ...node,
       origin: {
-        ...node.origin,
+        ...origin,
         position: {
-          ...node.origin.position,
+          ...origin.position,
           x: Value.toDistance(value)
         }
       }
@@ -215,12 +234,14 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onPositionYChange_ = (value: Value) => {
     const { node } = this.props;
+    const origin = node.origin || {};
+
     this.props.onNodeChange({
       ...node,
       origin: {
-        ...node.origin,
+        ...(origin || {}),
         position: {
-          ...node.origin.position,
+          ...origin.position,
           y: Value.toDistance(value)
         }
       }
@@ -229,12 +250,14 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onPositionZChange_ = (value: Value) => {
     const { node } = this.props;
+    const origin = node.origin || {};
+
     this.props.onNodeChange({
       ...node,
       origin: {
-        ...node.origin,
+        ...origin,
         position: {
-          ...node.origin.position,
+          ...origin.position,
           z: Value.toDistance(value)
         }
       }
@@ -243,12 +266,13 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onOrientationEulerXChange_ = (value: Value) => {
     const { node } = this.props;
+    const origin = node.origin || {};
     this.props.onNodeChange({
       ...node,
       origin: {
-        ...node.origin,
+        ...origin,
         orientation: {
-          ...(node.origin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
+          ...(origin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
           x: Value.toAngle(value)
         }
       }
@@ -257,12 +281,13 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onOrientationEulerYChange_ = (value: Value) => {
     const { node } = this.props;
+    const origin = node.origin || {};
     this.props.onNodeChange({
       ...node,
       origin: {
-        ...node.origin,
+        ...origin,
         orientation: {
-          ...(node.origin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
+          ...(origin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
           y: Value.toAngle(value)
         }
       }
@@ -271,12 +296,14 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onOrientationEulerZChange_ = (value: Value) => {
     const { node } = this.props;
+    const origin = node.origin || {};
+
     this.props.onNodeChange({
       ...node,
       origin: {
-        ...node.origin,
+        ...origin,
         orientation: {
-          ...(node.origin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
+          ...(origin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
           z: Value.toAngle(value)
         }
       }
@@ -285,14 +312,17 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onOrientationAngleAxisXChange_ = (value: Value) => {
     const { node } = this.props;
+    const origin = node.origin || {};
+    const orientation: Rotation.AngleAxis = origin.orientation as Rotation.AngleAxis || Rotation.AngleAxis.identity(Angle.Type.Degrees);
+
     this.props.onNodeChange({
       ...node,
       origin: {
-        ...node.origin,
+        ...origin,
         orientation: {
-          ...node.origin.orientation as Rotation.AngleAxis,
+          ...orientation,
           axis: {
-            ...(node.origin.orientation as Rotation.AngleAxis).axis,
+            ...orientation.axis,
             x: Value.toDistance(value)
           }
         }
@@ -302,14 +332,17 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onOrientationAngleAxisYChange_ = (value: Value) => {
     const { node } = this.props;
+    const origin = node.origin || {};
+    const orientation: Rotation.AngleAxis = origin.orientation as Rotation.AngleAxis || Rotation.AngleAxis.identity(Angle.Type.Degrees);
+
     this.props.onNodeChange({
       ...node,
       origin: {
-        ...node.origin,
+        ...origin,
         orientation: {
-          ...node.origin.orientation as Rotation.AngleAxis,
+          ...orientation,
           axis: {
-            ...(node.origin.orientation as Rotation.AngleAxis).axis,
+            ...orientation.axis,
             y: Value.toDistance(value)
           }
         }
@@ -319,14 +352,16 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onOrientationAngleAxisZChange_ = (value: Value) => {
     const { node } = this.props;
+    const origin = node.origin || {};
+    const orientation: Rotation.AngleAxis = origin.orientation as Rotation.AngleAxis || Rotation.AngleAxis.identity(Angle.Type.Degrees);
     this.props.onNodeChange({
       ...node,
       origin: {
-        ...node.origin,
+        ...origin,
         orientation: {
-          ...node.origin.orientation as Rotation.AngleAxis,
+          ...orientation as Rotation.AngleAxis,
           axis: {
-            ...(node.origin.orientation as Rotation.AngleAxis).axis,
+            ...orientation.axis,
             z: Value.toDistance(value)
           }
         }
@@ -336,17 +371,69 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onOrientationAngleAxisAngleChange_ = (value: Value) => {
     const { node } = this.props;
+    const origin = node.origin || {};
+    const orientation: Rotation.AngleAxis = origin.orientation as Rotation.AngleAxis || Rotation.AngleAxis.identity(Angle.Type.Degrees);
     this.props.onNodeChange({
       ...node,
       origin: {
-        ...node.origin,
+        ...origin,
         orientation: {
-          ...node.origin.orientation as Rotation.AngleAxis,
+          ...orientation,
           angle: Value.toAngle(value)
         }
       }
     });
   };
+
+  private onScaleXChange_ = (value: Value) => {
+    const { node } = this.props;
+    const origin = node.origin || {};
+    const scale = origin.scale || RawVector3.ONE;
+    this.props.onNodeChange({
+      ...node,
+      origin: {
+        ...origin,
+        scale: {
+          ...scale,
+          x: Value.toUnitless(value).value
+        }
+      }
+    });
+  };
+
+  private onScaleYChange_ = (value: Value) => {
+    const { node } = this.props;
+    const origin = node.origin || {};
+    const scale = origin.scale || RawVector3.ONE;
+    this.props.onNodeChange({
+      ...node,
+      origin: {
+        ...origin,
+        scale: {
+          ...scale,
+          y: Value.toUnitless(value).value
+        }
+      }
+    });
+  };
+
+  private onScaleZChange_ = (value: Value) => {
+    const { node } = this.props;
+    const origin = node.origin || {};
+    const scale = origin.scale || RawVector3.ONE;
+    this.props.onNodeChange({
+      ...node,
+      origin: {
+        ...origin,
+        scale: {
+          ...scale,
+          z: Value.toUnitless(value).value
+        }
+      }
+    });
+  };
+
+  
 
   private onMassChange_ = (value: Value) => {
     const { node } = this.props;
@@ -470,12 +557,13 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const origin = node.origin || {};
     const orientation = origin.orientation || Rotation.Euler.identity(Angle.Type.Degrees);
 
-    let position = Vector3.zero('centimeters');
+    const position = origin.position || Vector3.zero('centimeters');
+    const scale = origin.scale || RawVector3.ONE;
+    
     let friction = UnitlessValue.create(5);
     let mass: Mass = Mass.grams(5);
 
     if (node.physics) {
-      position = origin.position || Vector3.zero('centimeters');
       if (node.physics.friction !== undefined) friction = UnitlessValue.create(node.physics.friction);
       if (node.physics.mass !== undefined) mass = node.physics.mass;
     }
@@ -494,7 +582,10 @@ class NodeSettings extends React.PureComponent<Props, State> {
       if (parentId === nodeId) parentIndex = i;
     }
 
-    const geometry = node.type === 'object' && scene.geometry[node.geometryId];
+    const geometry = node.type === 'object' ? scene.geometry[node.geometryId] : undefined;
+
+    console.log({ node, geometry });
+
 
     return (
       <Container theme={theme}>
@@ -506,16 +597,16 @@ class NodeSettings extends React.PureComponent<Props, State> {
             <ComboBox options={parentOptions} theme={theme} index={parentIndex} onSelect={this.onParentSelect_} />
           </StyledField>
           <StyledField name='Type' theme={theme}>
-            <ComboBox options={GEOMETRY_OPTIONS} theme={theme} index={NODE_TYPES_REV[node.type]} onSelect={this.onTypeSelect_} />
+            <ComboBox options={NODE_TYPE_OPTIONS} theme={theme} index={NODE_TYPES_REV[node.type]} onSelect={this.onTypeSelect_} />
           </StyledField>
           
-          {/*node.type === 'object' && (
+          {node.type === 'object' && (
             <StyledField name='Geometry' theme={theme}>
-              <ComboBox options={GEOMETRY_OPTIONS} theme={theme} index={node.geometryId} onSelect={this.onGeometrySelect_} />
+              <ComboBox options={GEOMETRY_OPTIONS} theme={theme} index={GEOMETRY_REVERSE_OPTIONS[geometry.type]} onSelect={this.onGeometrySelect_} />
             </StyledField>
-          )*/}
+          )}
         </Section>
-        {(node.type === 'object' && geometry.type === 'box') ? (
+        {(node.type === 'object' && geometry && geometry.type === 'box') ? (
           <Section
             name='Box Options'
             theme={theme}
@@ -592,6 +683,13 @@ class NodeSettings extends React.PureComponent<Props, State> {
               onValueChange={this.onPlaneSizeYChange_(node.geometryId)}
               theme={theme}
             />
+          </Section>
+        ) : undefined}
+        {(node.type === 'object' && geometry.type === 'file') ? (
+          <Section name='File Options' theme={theme} collapsed={collapsed['geometry']} onCollapsedChange={this.onCollapsedChange_('geometry')}>
+            <StyledField name='URI' theme={theme}>
+              <Input theme={theme} type='text' value={geometry.uri} onChange={this.onFileUriChange_(node.geometryId)} />
+            </StyledField>
           </Section>
         ) : undefined}
         <Section
@@ -685,7 +783,31 @@ class NodeSettings extends React.PureComponent<Props, State> {
               />
             </>
           )}
-
+        </Section>
+        <Section
+          name='Scale'
+          theme={theme}
+          collapsed={collapsed['scale']}
+          onCollapsedChange={this.onCollapsedChange_('scale')}
+        >
+          <StyledValueEdit
+            name='X'
+            value={Value.unitless(UnitlessValue.create(scale.x))}
+            onValueChange={this.onScaleXChange_}
+            theme={theme}
+          />
+          <StyledValueEdit
+            name='Y'
+            value={Value.unitless(UnitlessValue.create(scale.y))}
+            onValueChange={this.onScaleYChange_}
+            theme={theme}
+          />
+          <StyledValueEdit
+            name='Z'
+            value={Value.unitless(UnitlessValue.create(scale.z))}
+            onValueChange={this.onScaleZChange_}
+            theme={theme}
+          />
         </Section>
         <Section
           name='Physics'

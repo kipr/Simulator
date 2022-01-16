@@ -3,10 +3,14 @@ import * as Babylon from "babylonjs";
 import deepNeq from "./deepNeq";
 import Dict from "./Dict";
 import { Quaternion, Vector3 as RawVector3 } from "./math";
+import Robotable from "./Robotable";
 import Scene from "./state/State/Scene";
+import Camera from "./state/State/Scene/Camera";
 import Geometry from "./state/State/Scene/Geometry";
 import Node from "./state/State/Scene/Node";
 import Patch from "./state/State/Scene/Patch";
+import * as Ammo from './ammo';
+
 import { ReferenceFrame, Rotation, Vector3 } from "./unit-math";
 import { Angle, Distance, Mass, SetOps } from "./util";
 
@@ -27,12 +31,45 @@ class SceneBinding {
   private shadowGenerators_: Dict<Babylon.ShadowGenerator> = {};
   private physicsViewer_: Babylon.PhysicsViewer;
 
-  constructor(bScene: Babylon.Scene) {
+  private robot_: Robotable;
+
+  private camera_: Babylon.Camera;
+
+  private engineView_: Babylon.EngineView;
+  private ammo_: Babylon.AmmoJSPlugin;
+
+  get camera() { return this.camera_; }
+
+  private canvas_: HTMLCanvasElement;
+
+  get canvas() { return this.canvas_; }
+
+  set canvas(canvas: HTMLCanvasElement) {
+    this.canvas_ = canvas;
+    const engine = this.bScene_.getEngine();
+    if (this.engineView_) engine.unRegisterView(this.engineView_.target);
+    this.engineView_ = engine.registerView(this.canvas_);
+    engine.inputElement = this.canvas_;
+  }
+
+  constructor(bScene: Babylon.Scene, robot: Robotable) {
     this.bScene_ = bScene;
+    this.robot_ = robot;
     this.scene_ = Scene.EMPTY;
+    this.ammo_ = new Babylon.AmmoJSPlugin(true, Ammo);
+    this.bScene_.enablePhysics(new Babylon.Vector3(0, -9.8 * 50, 0), this.ammo_);
 
     this.root_ = new Babylon.TransformNode('__scene_root__', this.bScene_);
     this.physicsViewer_ = new Babylon.PhysicsViewer(this.bScene_);
+    this.gizmoManager_ = new Babylon.GizmoManager(this.bScene_);
+
+    this.camera_ = this.createNoneCamera_(Camera.NONE);
+
+    this.gizmoManager_.positionGizmoEnabled = true;
+    this.gizmoManager_.gizmos.positionGizmo.scaleRatio = 1.25;
+    this.gizmoManager_.rotationGizmoEnabled = true;
+    this.gizmoManager_.scaleGizmoEnabled = false;
+    this.gizmoManager_.usePointerToAttachGizmos = false;
   }
 
   private static apply_ = (g: FrameLike, f: (m: Babylon.AbstractMesh) => void) => {
@@ -69,6 +106,14 @@ class SceneBinding {
         }, this.bScene_);
         break;
       }
+      case 'cone': {
+        ret = Babylon.CylinderBuilder.CreateCylinder(name, {
+          diameterTop: 0,
+          height: Distance.toCentimetersValue(geometry.height),
+          diameterBottom: Distance.toCentimetersValue(geometry.radius) * 2,
+        }, this.bScene_);
+        break;
+      }
       case 'plane': {
         ret = Babylon.PlaneBuilder.CreatePlane(name, {
           width: Distance.toCentimetersValue(geometry.size.x),
@@ -88,6 +133,9 @@ class SceneBinding {
           mesh.setParent(ret);
         }
         break; 
+      }
+      default: {
+        throw new Error(`Unsupported geometry type: ${geometry.type}`);
       }
     }
 
@@ -114,6 +162,10 @@ class SceneBinding {
 
     const ret = await this.buildGeometry_(node.name, nextScene.geometry[node.geometryId]);
     ret.setParent(parent);
+
+    if (!node.visible) {
+      SceneBinding.apply_(ret, m => m.isVisible = false);
+    }
 
     if (node.physics) {
       const type = IMPOSTER_TYPE_MAPPINGS[node.physics.type];
@@ -182,6 +234,8 @@ class SceneBinding {
 
     this.shadowGenerators_[id] = SceneBinding.createShadowGenerator_(ret);
 
+    ret.setEnabled(node.visible);
+
     return ret;
   };
 
@@ -204,21 +258,30 @@ class SceneBinding {
     }
 
     this.updateNodePosition_(node, ret);
+    ret.id = id;
+    
+    ret.metadata = id;
+
+    if (ret instanceof Babylon.AbstractMesh || ret instanceof Babylon.TransformNode) {
+      SceneBinding.apply_(ret, m => {
+        m.metadata = id;
+      });
+    }
 
     return ret;
   };
 
   private updateNodePosition_ = (node: Node, bNode: Babylon.Node) => {
     if (node.origin && bNode instanceof Babylon.TransformNode || bNode instanceof Babylon.AbstractMesh) {
-      const origin = node.origin;
+      const origin = node.origin || {};
       const position: Vector3 = origin.position ?? Vector3.zero();
       const orientation: Rotation = origin.orientation ?? Rotation.Euler.identity();
       const scale = origin.scale ?? RawVector3.ONE;
 
       bNode.position.set(
-        Distance.toCentimetersValue(position.x),
-        Distance.toCentimetersValue(position.y),
-        Distance.toCentimetersValue(position.z)
+        Distance.toCentimetersValue(position.x || Distance.centimeters(0)),
+        Distance.toCentimetersValue(position.y || Distance.centimeters(0)),
+        Distance.toCentimetersValue(position.z || Distance.centimeters(0))
       );
 
       bNode.rotationQuaternion = Quaternion.toBabylon(Rotation.toRawQuaternion(orientation));
@@ -246,9 +309,43 @@ class SceneBinding {
   };
 
   private updateObject_ = async (id: string, node: Patch.InnerChange<Node.Obj>): Promise<FrameLike> => {
+    console.log('UPDATE OBJECT', id, node);
+    
     const bNode = this.findBNode_(id) as FrameLike;
+    if (bNode === undefined) debugger;
 
-    // NYI
+    console.log(bNode, id);
+
+    if (node.inner.name.type === Patch.Type.OuterChange) {
+      bNode.name = node.inner.name.next;
+    }
+
+    if (node.inner.parentId.type === Patch.Type.OuterChange) {
+      const parent = this.findBNode_(node.inner.parentId.next, true);
+      bNode.setParent(parent);
+    }
+
+    if (node.inner.origin.type === Patch.Type.OuterChange) {
+      this.updateNodePosition_(node.next, bNode);
+    }
+
+    if (node.inner.physics.type === Patch.Type.OuterChange) {
+      const nextPhysics = node.inner.physics.next;
+      const type = IMPOSTER_TYPE_MAPPINGS[node.inner.physics.next.type];
+      SceneBinding.apply_(bNode, m => {
+        // m.setParent(null);
+        m.physicsImpostor = new Babylon.PhysicsImpostor(m, type, {
+          mass: nextPhysics.mass ? Mass.toGramsValue(nextPhysics.mass) : 0,
+          restitution: nextPhysics.restitution ?? 1,
+          friction: nextPhysics.friction ?? 5,
+        });
+      });
+    }
+
+    if (node.inner.visible.type === Patch.Type.OuterChange) {
+      const nextVisible = node.inner.visible.next;
+      SceneBinding.apply_(bNode, m => m.isVisible = nextVisible);
+    }
 
     return bNode;
   };
@@ -272,7 +369,9 @@ class SceneBinding {
   private updatePointLight_ = (id: string, node: Patch.InnerChange<Node.PointLight>): Babylon.PointLight => {
     const bNode = this.findBNode_(id) as Babylon.PointLight;
 
-    // NYI
+    if (node.inner.visible.type === Patch.Type.OuterChange) {
+      bNode.setEnabled(node.inner.visible.next);
+    }
 
     return bNode;
   };
@@ -281,6 +380,7 @@ class SceneBinding {
     switch (node.type) {
       // The node hasn't changed type, but some fields have been changed
       case Patch.Type.InnerChange: {
+        console.log('inner change', node.next.type);
         switch (node.next.type) {
           case 'empty': return this.updateEmpty_(id, node as Patch.InnerChange<Node.Empty>);
           case 'object': return await this.updateObject_(id, node as Patch.InnerChange<Node.Obj>);
@@ -313,32 +413,184 @@ class SceneBinding {
 
         return undefined;
       }
+      case Patch.Type.None: {
+        try {
+          return this.findBNode_(id);
+        } catch (e) {
+          throw e;
+        }
+      }
     }
   };
 
+  private gizmoImpostors_: Dict<Babylon.PhysicsImpostor> = {};
+  private gizmoManager_: Babylon.GizmoManager;
+
+  private createArcRotateCamera_ = (camera: Camera.ArcRotate): Babylon.ArcRotateCamera => {
+    const ret = new Babylon.ArcRotateCamera('botcam', 10, 10, 10, Vector3.toBabylon(camera.target, 'centimeters'), this.bScene_);
+    ret.attachControl(this.bScene_.getEngine().getRenderingCanvas(), true);
+    ret.position = Vector3.toBabylon(camera.position, 'centimeters');
+    new Babylon.FxaaPostProcess("fxaa", 1.0, ret);
+    // new Babylon.TonemapPostProcess("tonemap", Babylon.TonemappingOperator.HejiDawson, 0.8, ret);
+
+    return ret;
+  };
+
+  private createNoneCamera_ = (camera: Camera.None): Babylon.ArcRotateCamera => {
+    const ret = new Babylon.ArcRotateCamera('botcam', 10, 10, 10, Vector3.toBabylon(Vector3.zero(), 'centimeters'), this.bScene_);
+    ret.attachControl(this.bScene_.getEngine().getRenderingCanvas(), true);
+
+    return ret;
+  };
+
+  private createCamera_ = (camera: Camera): Babylon.Camera => {
+    switch (camera.type) {
+      case 'arc-rotate': return this.createArcRotateCamera_(camera);
+      case 'none': return this.createNoneCamera_(camera);
+    }
+  };
+
+  private updateArcRotateCamera_ = (node: Patch.InnerChange<Camera.ArcRotate>): Babylon.ArcRotateCamera => {
+    if (!(this.camera_ instanceof Babylon.ArcRotateCamera)) throw new Error('Expected ArcRotateCamera');
+
+    const bCamera = this.camera_ as Babylon.ArcRotateCamera;
+
+    if (node.inner.target.type === Patch.Type.OuterChange) {
+      bCamera.setTarget(Vector3.toBabylon(node.inner.target.next, 'centimeters'));
+    }
+
+    if (node.inner.position.type === Patch.Type.OuterChange) {
+      bCamera.setPosition(Vector3.toBabylon(node.inner.position.next, 'centimeters'));
+    }
+
+    return bCamera;
+  };
+
+  private updateCamera_ = (node: Patch.InnerChange<Camera>): Babylon.Camera => {
+    let ret: Babylon.Camera;
+    switch (node.next.type) {
+      case 'arc-rotate': ret = this.updateArcRotateCamera_(node as Patch.InnerChange<Camera.ArcRotate>); break;
+      case 'none': ret = this.camera_; break;
+    }
+
+    return ret;
+  };
+
   readonly setScene = async (scene: Scene) => {
+    console.log('set scene', scene);
     const patch = Scene.diff(this.scene_, scene);
 
     console.log({ patch });
 
     const nodeIds = Dict.keySet(patch.nodes);
 
+    const removedKeys: Set<string> = new Set();
+
     // We need to handle removals first
     for (const nodeId of nodeIds) {
       const node = patch.nodes[nodeId];
       if (node.type !== Patch.Type.Remove) continue;
+
       await this.updateNode_(nodeId, node, scene);
       
       delete this.nodes_[nodeId];
       delete this.shadowGenerators_[nodeId];
+
+      removedKeys.add(nodeId);
     }
 
     // Now get a breadth-first sort of the remaining nodes (we need to make sure we add parents first)
     const sortedNodeIds = Scene.nodeOrdering(scene);
   
     for (const nodeId of sortedNodeIds) {
+      if (removedKeys.has(nodeId)) continue;
       const node = patch.nodes[nodeId];
+
       this.nodes_[nodeId] = await this.updateNode_(nodeId, node, scene);
+    }
+
+    if (patch.selectedNodeId.type === Patch.Type.OuterChange) {
+      const { prev, next } = patch.selectedNodeId;
+
+      // Disable physics
+      if (prev !== undefined) {
+        const prevNode = this.bScene_.getNodeByID(prev) || this.bScene_.getNodeByName(scene.nodes[prev].name);
+        console.log('prevNode', prevNode);
+        if (prevNode instanceof Babylon.AbstractMesh || prevNode instanceof Babylon.TransformNode) {
+          SceneBinding.apply_(prevNode, m => {
+            const gizmoImposter = this.gizmoImpostors_[m.id];
+            delete this.gizmoImpostors_[m.id];
+
+            if (!gizmoImposter) return;
+
+            m.physicsImpostor = new Babylon.PhysicsImpostor(
+              m, gizmoImposter.type,
+              { 
+                mass: gizmoImposter.mass, 
+                friction: gizmoImposter.friction 
+              }
+            );
+          });
+        }
+        this.gizmoManager_.attachToNode(null);
+      }
+
+      if (next !== undefined) {
+        const node = this.bScene_.getNodeByID(next) || this.bScene_.getNodeByName(scene.nodes[next].name);
+        if (node instanceof Babylon.AbstractMesh || node instanceof Babylon.TransformNode) {
+          SceneBinding.apply_(node, m => {
+            this.gizmoImpostors_[m.id] = m.physicsImpostor;
+            if (m.physicsImpostor) m.physicsImpostor.dispose();
+          });
+          this.gizmoManager_.attachToNode(node);
+        }
+      }
+    }
+
+    switch (patch.robot.type) {
+      case Patch.Type.OuterChange: {
+        this.robot_.setOrigin(patch.robot.next.origin);
+        break;
+      };
+      case Patch.Type.InnerChange: {
+        this.robot_.setOrigin(patch.robot.next.origin);
+        break;
+      }
+    }
+
+    const oldCamera = this.camera_;
+    switch (patch.camera.type) {
+      case Patch.Type.OuterChange: {
+        this.camera_ = this.createCamera_(patch.camera.next);
+        break;
+      };
+      case Patch.Type.InnerChange: {
+        if (this.camera_) this.camera_ = this.updateCamera_(patch.camera as Patch.InnerChange<Camera>);
+        else this.camera_ = this.createCamera_(patch.camera.next);
+        break;
+      }
+    }
+
+    if (oldCamera !== this.camera_) {
+      console.log('camera change!', patch.camera);
+      oldCamera.detachControl(this.bScene_.getEngine().getRenderingCanvas());
+      this.bScene_.detachControl();
+      this.bScene_.removeCamera(oldCamera);
+      this.bScene_.addCamera(this.camera_);
+      this.bScene_.activeCamera = this.camera_;
+      this.camera_.attachControl(this.engineView_.target, true);
+      this.bScene_.attachControl();
+      oldCamera.dispose();
+    }
+
+    if (patch.gravity.type === Patch.Type.OuterChange) {
+      this.bScene_.gravity = Vector3.toBabylon(patch.gravity.next, 'centimeters');
+    }
+
+    if (patch.robot.type === Patch.Type.InnerChange) {
+      if (patch.robot.inner.origin.type === Patch.Type.OuterChange) {
+        this.robot_.setOrigin(patch.robot.inner.origin.next);
+      }
     }
 
     this.scene_ = scene;
