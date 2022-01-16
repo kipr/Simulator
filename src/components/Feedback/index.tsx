@@ -5,6 +5,7 @@ import SentimentCharm from './SentimentCharm';
 import { FeedbackTextArea, FeedbackEmailInput, FeedbackText, FeedbackLabel } from './FeedbackInputs';
 import { StyleProps } from '../../style';
 import { Dialog } from '../Dialog';
+import DialogBar from "../DialogBar";
 import { ThemeProps } from '../theme';
 import { Fa } from '../Fa';
 
@@ -180,19 +181,25 @@ export class FeedbackDialog extends React.PureComponent<Props, State> {
               (newValue: boolean) => ({ includeAnonData: newValue })
             )}
           </FeedbackContainer>
-          <CenterContainer theme={theme}>
+          {/* <CenterContainer theme={theme}>
             <Item theme={theme} onClick={(e) => {
               onSubmit();
             }}>
               <ItemIcon icon='paper-plane '/>
               Submit
             </Item>
-          </CenterContainer>
+          </CenterContainer> */}
+          
           <CenterContainer theme={theme}>
             <FeedbackText>
               {this.props.feedback.message}
             </FeedbackText>
           </CenterContainer>
+
+          <DialogBar theme={theme} onAccept={onSubmit}>
+            <Fa icon='paper-plane'/> Submit
+          </DialogBar>
+
         </FeedbackContainer>
       </Dialog>
     );
