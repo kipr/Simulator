@@ -289,7 +289,7 @@ export const TEST_SCENE: Scene = {
   }),
   gravity: {
     x: Distance.meters(0),
-    y: Distance.meters(-9.8 * 50),
+    y: Distance.meters(-9.8 / 2),
     z: Distance.meters(0),
   }
 };

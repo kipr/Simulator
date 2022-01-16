@@ -161,7 +161,6 @@ class SceneBinding {
     const parent = this.findBNode_(node.parentId, true);
 
     const ret = await this.buildGeometry_(node.name, nextScene.geometry[node.geometryId]);
-    ret.setParent(parent);
 
     if (!node.visible) {
       SceneBinding.apply_(ret, m => m.isVisible = false);
@@ -170,14 +169,15 @@ class SceneBinding {
     if (node.physics) {
       const type = IMPOSTER_TYPE_MAPPINGS[node.physics.type];
       SceneBinding.apply_(ret, m => {
-        // m.setParent(null);
         m.physicsImpostor = new Babylon.PhysicsImpostor(m, type, {
           mass: node.physics.mass ? Mass.toGramsValue(node.physics.mass) : 0,
-          restitution: node.physics.restitution ?? 1,
+          restitution: node.physics.restitution ?? 0.5,
           friction: node.physics.friction ?? 5,
         });
       });
     }
+
+    ret.setParent(parent);
 
     return ret;
   };
@@ -333,12 +333,14 @@ class SceneBinding {
       const nextPhysics = node.inner.physics.next;
       const type = IMPOSTER_TYPE_MAPPINGS[node.inner.physics.next.type];
       SceneBinding.apply_(bNode, m => {
-        // m.setParent(null);
+        const mParent = m.parent;
+        m.parent = null;
         m.physicsImpostor = new Babylon.PhysicsImpostor(m, type, {
           mass: nextPhysics.mass ? Mass.toGramsValue(nextPhysics.mass) : 0,
-          restitution: nextPhysics.restitution ?? 1,
+          restitution: nextPhysics.restitution ?? 0.5,
           friction: nextPhysics.friction ?? 5,
         });
+        m.parent = mParent;
       });
     }
 
@@ -523,13 +525,17 @@ class SceneBinding {
 
             if (!gizmoImposter) return;
 
+            const mParent = m.parent;
+            m.parent = null;
             m.physicsImpostor = new Babylon.PhysicsImpostor(
               m, gizmoImposter.type,
               { 
                 mass: gizmoImposter.mass, 
+                restitution: gizmoImposter.restitution,
                 friction: gizmoImposter.friction 
               }
             );
+            m.parent = mParent;
           });
         }
         this.gizmoManager_.attachToNode(null);
@@ -584,7 +590,7 @@ class SceneBinding {
     }
 
     if (patch.gravity.type === Patch.Type.OuterChange) {
-      this.bScene_.gravity = Vector3.toBabylon(patch.gravity.next, 'centimeters');
+      this.bScene_.getPhysicsEngine().setGravity(Vector3.toBabylon(patch.gravity.next, 'centimeters'));
     }
 
     if (patch.robot.type === Patch.Type.InnerChange) {
