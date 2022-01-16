@@ -171,7 +171,7 @@ class SceneBinding {
       SceneBinding.apply_(ret, m => {
         m.physicsImpostor = new Babylon.PhysicsImpostor(m, type, {
           mass: node.physics.mass ? Mass.toGramsValue(node.physics.mass) : 0,
-          restitution: node.physics.restitution ?? 1,
+          restitution: node.physics.restitution ?? 0.5,
           friction: node.physics.friction ?? 5,
         });
       });
@@ -337,7 +337,7 @@ class SceneBinding {
         m.parent = null;
         m.physicsImpostor = new Babylon.PhysicsImpostor(m, type, {
           mass: nextPhysics.mass ? Mass.toGramsValue(nextPhysics.mass) : 0,
-          restitution: nextPhysics.restitution ?? 1,
+          restitution: nextPhysics.restitution ?? 0.5,
           friction: nextPhysics.friction ?? 5,
         });
         m.parent = mParent;
@@ -531,6 +531,7 @@ class SceneBinding {
               m, gizmoImposter.type,
               { 
                 mass: gizmoImposter.mass, 
+                restitution: gizmoImposter.restitution,
                 friction: gizmoImposter.friction 
               }
             );
