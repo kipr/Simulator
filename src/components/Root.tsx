@@ -289,7 +289,7 @@ export class Root extends React.Component<Props, State> {
               // Compile failed and there are no error messages; some weird underlying error occurred
               // We print the entire stderr to the console
               nextConsole = StyledText.extend(nextConsole, StyledText.text({
-                text: compileResult.stderr + '\n',
+                text: `${compileResult.stderr}\n`,
                 style: STDERR_STYLE(this.state.theme)
               }));
             }
