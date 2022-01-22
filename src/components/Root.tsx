@@ -18,11 +18,11 @@ import { SettingsDialog } from './SettingsDialog';
 import { AboutDialog } from './AboutDialog';
 import { FeedbackDialog } from './Feedback';
 import sendFeedback from './Feedback/SendFeedback';
-import compile, { CompileError } from '../compile';
+import compile from '../compile';
 import { SimulatorState } from './SimulatorState';
 import { Angle, Distance, StyledText } from '../util';
 import { Message } from 'ivygate';
-import parseMessages, { hasErrors, sort, toStyledText } from '../util/parse-messages';
+import parseMessages, { hasErrors, hasWarnings, sort, toStyledText } from '../util/parse-messages';
 
 import { Space } from '../Sim';
 import { RobotPosition } from '../RobotPosition';
@@ -262,55 +262,11 @@ export class Root extends React.Component<Props, State> {
       console: nextConsole
     }, () => {
       compile(code)
-        .then(js => {
-          WorkerInstance.start(js);
-          
-          nextConsole = StyledText.extend(nextConsole, StyledText.text({
-            text: `Compilation succeeded!\n`,
-            style: STDOUT_STYLE(this.state.theme)
-          }));
+        .then(compileResult => {
+          const messages = sort(parseMessages(compileResult.stderr));
+          const compileSucceeded = compileResult.result && compileResult.result.length > 0;
 
-          this.setState({
-            simulatorState: SimulatorState.RUNNING,
-            messages: [],
-            console: nextConsole
-          });
-        })
-        .catch((e: unknown) => {
-          /* let nextConsole = console;
-          if (typeof e.stderr === 'string' && e.stderr.length > 0) {
-            nextConsole = StyledText.extend(console, StyledText.text({
-              text: e.stderr,
-              style: STDERR_STYLE(theme)
-            }));
-          }
-          if (typeof e.stdout === 'string' && e.stdout.length > 0) {
-            nextConsole = StyledText.extend(console, StyledText.text({
-              text: e.stdout,
-              style: STDOUT_STYLE(theme)
-            }));
-          }*/
-
-          // TODO: handle cases where e is not a CompileError
-          const compileError = e as CompileError;
-          const messages = sort(parseMessages(compileError.stderr));
-  
-          if (hasErrors(messages) || messages.length === 0) {
-            nextConsole = StyledText.extend(nextConsole, StyledText.text({
-              text: `Compilation failed.\n`,
-              style: STDERR_STYLE(this.state.theme)
-            }));
-          }
-
-          // If there are no messages some weird underlying error occurred
-          // We print the entire stderr to the console
-          if (messages.length === 0) {
-            nextConsole = StyledText.extend(nextConsole, StyledText.text({
-              text: compileError.stderr,
-              style: STDERR_STYLE(this.state.theme)
-            }));
-          }
-  
+          // Show all errors/warnings in console
           for (const message of messages) {
             nextConsole = StyledText.extend(nextConsole, toStyledText(message, {
               onClick: message.ranges.length > 0
@@ -318,11 +274,49 @@ export class Root extends React.Component<Props, State> {
                 : undefined
             }));
           }
-  
-  
+
+          if (compileSucceeded) {
+            // Show success in console and start running the program
+            const haveWarnings = hasWarnings(messages);
+            nextConsole = StyledText.extend(nextConsole, StyledText.text({
+              text: `Compilation succeeded${haveWarnings ? ' with warnings' : ''}!\n`,
+              style: STDOUT_STYLE(this.state.theme)
+            }));
+
+            WorkerInstance.start(compileResult.result);
+          } else {
+            if (!hasErrors(messages)) {
+              // Compile failed and there are no error messages; some weird underlying error occurred
+              // We print the entire stderr to the console
+              nextConsole = StyledText.extend(nextConsole, StyledText.text({
+                text: `${compileResult.stderr}\n`,
+                style: STDERR_STYLE(this.state.theme)
+              }));
+            }
+
+            nextConsole = StyledText.extend(nextConsole, StyledText.text({
+              text: `Compilation failed.\n`,
+              style: STDERR_STYLE(this.state.theme)
+            }));
+          }
+
+          this.setState({
+            simulatorState: compileSucceeded ? SimulatorState.RUNNING : SimulatorState.STOPPED,
+            messages,
+            console: nextConsole
+          });
+        })
+        .catch((e: unknown) => {
+          window.console.error(e);
+
+          nextConsole = StyledText.extend(nextConsole, StyledText.text({
+            text: 'Something went wrong during compilation.\n',
+            style: STDERR_STYLE(this.state.theme)
+          }));
+
           this.setState({
             simulatorState: SimulatorState.STOPPED,
-            messages,
+            messages: [],
             console: nextConsole
           });
         });
