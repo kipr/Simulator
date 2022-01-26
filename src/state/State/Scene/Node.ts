@@ -16,7 +16,7 @@ namespace Node {
   }
 
   export namespace Physics {
-    export type Type = 'box' | 'sphere' | 'mesh' | 'none';
+    export type Type = 'box' | 'sphere' | 'cylinder' | 'mesh' | 'none';
   
     export const diff = (prev: Physics, next: Physics): Patch<Physics> => {
       if (!deepNeq(prev, next)) return Patch.none(prev);

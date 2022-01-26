@@ -75,7 +75,7 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
         physics: {
           mass: Mass.kilograms(1),
           friction: 5,
-          type: 'mesh',
+          type: 'box',
         }
       },
       geometryId,

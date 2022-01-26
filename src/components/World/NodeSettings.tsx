@@ -206,6 +206,17 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const type = option.data as Geometry.Type;
 
     this.props.onGeometryChange(object.geometryId, Geometry.defaultFor(type));
+
+    const newPhysicsType = PHSYICS_TYPE_MAPPINGS[type];
+    if (node.physics && node.physics.type !== newPhysicsType) {
+      this.props.onNodeChange({
+        ...node,
+        physics: {
+          ...node.physics,
+          type: newPhysicsType,
+        }
+      });
+    }
   };
 
   private onCollapsedChange_ = (key: string) => (collapsed: boolean) => {
@@ -824,5 +835,15 @@ class NodeSettings extends React.PureComponent<Props, State> {
     );
   }
 }
+
+const PHSYICS_TYPE_MAPPINGS: { [key in Geometry.Type]: Node.Physics.Type } = {
+  'box': 'box',
+  'cone': 'mesh',
+  'cylinder': 'cylinder',
+  'file': 'mesh',
+  'mesh': 'mesh',
+  'plane': 'box',
+  'sphere': 'sphere',
+};
 
 export default NodeSettings;

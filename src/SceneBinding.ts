@@ -622,10 +622,12 @@ class SceneBinding {
   };
 }
 
-const IMPOSTER_TYPE_MAPPINGS: { [key: string]: number } = {
+const IMPOSTER_TYPE_MAPPINGS: { [key in Node.Physics.Type]: number } = {
   'box': Babylon.PhysicsImpostor.BoxImpostor,
   'sphere': Babylon.PhysicsImpostor.SphereImpostor,
+  'cylinder': Babylon.PhysicsImpostor.CylinderImpostor,
   'mesh': Babylon.PhysicsImpostor.MeshImpostor,
+  'none': Babylon.PhysicsImpostor.NoImpostor,
 };
   
 
