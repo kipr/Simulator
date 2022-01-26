@@ -246,7 +246,7 @@ export const TEST_SCENE: Scene = {
       },
       visible: true,
       physics: {
-        type: 'mesh',
+        type: 'box',
         restitution: 0,
         friction: 1
       },
