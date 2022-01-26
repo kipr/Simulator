@@ -352,13 +352,14 @@ class SceneBinding {
       const type = IMPOSTER_TYPE_MAPPINGS[node.inner.physics.next.type];
       SceneBinding.apply_(bNode, m => {
         const mParent = m.parent;
-        m.parent = null;
+        m.setParent(null);
+        if (m.physicsImpostor) m.physicsImpostor.dispose();
         m.physicsImpostor = new Babylon.PhysicsImpostor(m, type, {
           mass: nextPhysics.mass ? Mass.toGramsValue(nextPhysics.mass) : 0,
           restitution: nextPhysics.restitution ?? 0.5,
           friction: nextPhysics.friction ?? 5,
         });
-        m.parent = mParent;
+        m.setParent(mParent);
       });
     }
 
