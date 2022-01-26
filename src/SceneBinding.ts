@@ -172,11 +172,14 @@ class SceneBinding {
     if (node.physics) {
       const type = IMPOSTER_TYPE_MAPPINGS[node.physics.type];
       SceneBinding.apply_(ret, m => {
+        const currParent = m.parent;
+        m.setParent(null);
         m.physicsImpostor = new Babylon.PhysicsImpostor(m, type, {
           mass: node.physics.mass ? Mass.toGramsValue(node.physics.mass) : 0,
           restitution: node.physics.restitution ?? 0.5,
           friction: node.physics.friction ?? 5,
         });
+        m.setParent(currParent);
       });
     }
 
@@ -289,8 +292,20 @@ class SceneBinding {
 
       bNode.rotationQuaternion = Quaternion.toBabylon(Rotation.toRawQuaternion(orientation));
       bNode.scaling.set(scale.x, scale.y, scale.z);
+
+      // Physics impostor needs to be updated after scale changes
+      // TODO: Only do this if the scale actually changed in this update
+      // TODO: Need to consider the impact of this, since it may destroy joints
+      SceneBinding.apply_(bNode, m => {
+        if (m.physicsImpostor) {
+          const mParent = m.parent;
+          m.setParent(null);
+          m.physicsImpostor.setScalingUpdated();
+          m.setParent(mParent);
+        }
+      });
     }
-  }
+  };
 
   private updateEmpty_ = (id: string, node: Patch.InnerChange<Node.Empty>): Babylon.TransformNode => {
     const bNode = this.findBNode_(id) as Babylon.TransformNode;
