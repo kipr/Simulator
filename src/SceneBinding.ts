@@ -130,6 +130,9 @@ class SceneBinding {
         if (res.meshes.length === 1) return res.meshes[0];
         ret = new Babylon.TransformNode(geometry.uri, this.bScene_);
         for (const mesh of res.meshes) {
+          // GLTF importer adds a __root__ mesh (always the first one) that we can ignore 
+          if (mesh === res.meshes[0]) continue;
+
           mesh.setParent(ret);
         }
         break; 
