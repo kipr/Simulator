@@ -1,7 +1,7 @@
 import Scene from "../State/Scene";
 import Node from "../State/Scene/Node";
 import Geometry from "../State/Scene/Geometry";
-import { Distance } from "../../util";
+import { Distance, Mass } from "../../util";
 import { ReferenceFrame, Vector3 } from "../../unit-math";
 import Camera from "../State/Scene/Camera";
 
@@ -250,6 +250,26 @@ export const TEST_SCENE: Scene = {
         restitution: 0,
         friction: 1
       },
+    },
+    'box0': {
+      type: 'object',
+      geometryId: 'box',
+      name: 'box0',
+      origin: {
+        position: {
+          x: Distance.meters(0.5),
+          y: Distance.meters(1.5),
+          z: Distance.meters(0),
+        },
+      },
+      editable: true,
+      visible: true,
+      physics: {
+        type: 'box',
+        mass: Mass.grams(100),
+        friction: 0.7,
+        restitution: 0.3,
+      }
     },
     'light0': {
       type: 'point-light',

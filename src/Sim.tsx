@@ -283,7 +283,7 @@ export class Space implements Robotable {
     const mesh = eventData.pickInfo.pickedMesh;
     const id = mesh.metadata as string;
     const prevId = store.getState().scene.selectedNodeId;
-    if (id !== prevId && store.getState().scene.nodes[id].editable) {
+    if (id !== prevId && store.getState().scene.nodes[id]?.editable) {
       store.dispatch(SceneAction.selectNode({ id }));
     } else {
       store.dispatch(SceneAction.UNSELECT_ALL);
