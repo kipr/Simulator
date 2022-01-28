@@ -1,10 +1,18 @@
 import { Sentiment } from '../../Feedback';
 import { RootState } from '../Root';
 
+interface FeedbackData {
+  feedback: string;
+  sentiment: Sentiment;
+  includeAnonData: boolean;
+  email?: string;
+  state?: RootState;
+  userAgent?: string;
+}
+
 const sendFeedback = (rootState: RootState): Promise<string> => {
   
   return new Promise<string>((resolve, reject) => {
-    // TODO: figure out where this data should go on a permanent basis
     const feedback = rootState.feedback;
 
     // minor form checking
@@ -17,61 +25,49 @@ const sendFeedback = (rootState: RootState): Promise<string> => {
       return;
     }
 
-    // build a string to send to discord
-    let sentiment: string;
-    switch (feedback.sentiment) {
-      case Sentiment.Happy : sentiment = 'Happy'; break;
-      case Sentiment.Okay : sentiment = 'Okay'; break;
-      case Sentiment.Sad : sentiment = 'Sad'; break;
-    }
-
-    // send to a discord webhook
-    const formData = new FormData();
-
-    let content = `User Feedback Recieved:\n\`\`\`${feedback.feedback} \`\`\`\n`;
-    content += `Sentiment: ${sentiment}\n`;
-    if (feedback.email !== '') {
-      content += `User Email: ${feedback.email}\n`;
-    }
+    // construct some json and send it to the backend
+    const body: FeedbackData = {
+      feedback: feedback.feedback,
+      sentiment: feedback.sentiment,
+      includeAnonData: feedback.includeAnonData,
+      email: null,
+      state: null,
+      userAgent: null,
+    };
 
     if (feedback.includeAnonData) {
-      content += `User Code:\n\`\`\`${rootState.code}\`\`\`\n`;
-      content += `Browser User-Agent: ${window.navigator.userAgent}\n`;
-      
-      formData.append("file", new File(
-        [ 
-          new Blob([JSON.stringify(rootState, undefined, 2)], { type: 'application/json', })
-        ],
-        'userdata.json'
-      ));
+      body.state = rootState;
+      body.userAgent = window.navigator.userAgent;
     }
 
-    formData.append('username', 'KIPR Simulator Feedback');
-    formData.append('avatar_url', 'https://www.kipr.org/wp-content/uploads/2018/08/botguy-copy.jpg');
-    formData.append('content', content);
-
-    const request = new Request(
-      'https://discord.com/api/webhooks/932033545344520302/INtF5qz2M4EllekYvYLKip-Hbyw-TTHkr6JQRoJQ0FafZ0_6dBrgvpw4O8YB5zN2vSAK',
-      {
-        method: 'POST', 
-        body: formData
-      }
-    );
-
-    fetch(request)
-      .then(response => {
-        if (response.ok) {
-          resolve('Feedback sent, thank you!');
-        } else {
-          console.log(request, response);
-          reject('Error sending feedback, please try again');
+    const req = new XMLHttpRequest();
+    req.onload = () => {
+      if (req.status !== 200) {
+        if ('error' in JSON.parse(req.responseText)) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          reject(JSON.parse(req.responseText).error);
         }
-      })
-      .catch((e) => {
-        console.log(request, e);
-        reject('Could not send feedback, please try again');
-      });
-  });
+        reject('Error sending feedback: server response invalid. Please try again.');
+      } else {
+        if ('message' in JSON.parse(req.responseText)) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          resolve(JSON.parse(req.responseText).message);
+        } else {
+          resolve(req.responseText);
+        }
+      }
+    };
+
+    req.onerror = (err) => {
+      console.log(err);
+      reject('epic fail');
+    };
+
+    req.open('POST', '/feedback');
+    req.setRequestHeader('Content-Type', 'application/json');
+
+    req.send(JSON.stringify(body));
+  });    
 };
 
 export default sendFeedback;

@@ -119,7 +119,7 @@ export class Root extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    
+
 
     this.state = {
       robotState: WorkerInstance.state,
@@ -204,7 +204,7 @@ export class Root extends React.Component<Props, State> {
   private onHideAll_ = () => {
     this.overlayLayout_.hideAll();
   };
-  
+
   private onLayoutChange_ = (layout: Layout) => {
     this.setState({
       layout
@@ -256,7 +256,7 @@ export class Root extends React.Component<Props, State> {
       text: `Compiling...\n`,
       style: STDOUT_STYLE(this.state.theme)
     }));
-    
+
     this.setState({
       simulatorState: SimulatorState.COMPILING,
       console: nextConsole
@@ -264,7 +264,7 @@ export class Root extends React.Component<Props, State> {
       compile(code)
         .then(js => {
           WorkerInstance.start(js);
-          
+
           nextConsole = StyledText.extend(nextConsole, StyledText.text({
             text: `Compilation succeeded!\n`,
             style: STDOUT_STYLE(this.state.theme)
@@ -294,7 +294,7 @@ export class Root extends React.Component<Props, State> {
           // TODO: handle cases where e is not a CompileError
           const compileError = e as CompileError;
           const messages = sort(parseMessages(compileError.stderr));
-  
+
           if (hasErrors(messages) || messages.length === 0) {
             nextConsole = StyledText.extend(nextConsole, StyledText.text({
               text: `Compilation failed.\n`,
@@ -310,7 +310,7 @@ export class Root extends React.Component<Props, State> {
               style: STDERR_STYLE(this.state.theme)
             }));
           }
-  
+
           for (const message of messages) {
             nextConsole = StyledText.extend(nextConsole, toStyledText(message, {
               onClick: message.ranges.length > 0
@@ -318,8 +318,8 @@ export class Root extends React.Component<Props, State> {
                 : undefined
             }));
           }
-  
-  
+
+
           this.setState({
             simulatorState: SimulatorState.STOPPED,
             messages,
@@ -372,15 +372,19 @@ export class Root extends React.Component<Props, State> {
   private onFeedbackChange_ = (changedFeedback: Partial<Feedback>) => {
     this.setState({ feedback: { ...this.state.feedback, ...changedFeedback } });
   };
-  
+
   private onFeedbackSubmit_ = () => {
     sendFeedback(this.state)
       .then((message: string) => {
+        console.log('message onFeedbackSubmit:', message);
         this.onFeedbackChange_(({ message: message }));
+        this.onFeedbackChange_(({ error: false }));
         this.onModalClose_();
       })
       .catch((error: string) => {
+        console.log('error onFeedbackSubmit:', error);
         this.onFeedbackChange_(({ message: error }));
+        this.onFeedbackChange_(({ error: true }));
       });
   };
 
@@ -448,7 +452,7 @@ export class Root extends React.Component<Props, State> {
       default: {
         return null;
       }
-      
+
     }
 
     return (

@@ -29,6 +29,7 @@ const CenterContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
+  textAlign: 'center',
   color: props.theme.color,
 }));
 
@@ -37,6 +38,10 @@ const FeedbackRowContainer = styled('div', (props: ThemeProps) => ({
   flexDirection: 'row',
   alignItems: 'flex-start',
   padding: `${props.theme.itemPadding * 2}px`,
+}));
+
+const FeedbackLink = styled('a', () => ({
+  color: 'lightblue',
 }));
 
 export class FeedbackDialog extends React.PureComponent<Props, State> {
@@ -156,7 +161,20 @@ export class FeedbackDialog extends React.PureComponent<Props, State> {
               {this.props.feedback.message}
             </FeedbackText>
           </CenterContainer>
-          
+          {this.props.feedback.error &&
+            <CenterContainer theme={theme}>
+              <p>
+                <>Please try again, </>
+                <FeedbackLink href="https://github.com/kipr/Simulator/issues/new">
+                  open an issue on our github page,   
+                </FeedbackLink>
+                <> or </>
+                <FeedbackLink href="mailto:info@kipr.org">
+                  email KIPR.
+                </FeedbackLink>
+              </p>
+            </CenterContainer>
+          }
         </FeedbackContainer>
         <DialogBar theme={theme} onAccept={onSubmit}>
           <Fa icon='paper-plane'/> Submit

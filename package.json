@@ -46,6 +46,7 @@
     "dotenv": "^10.0.0",
     "dotenv-expand": "^5.1.0",
     "firebase": "^9.0.1",
+    "form-data": "^4.0.0",
     "image-loader": "^0.0.1",
     "image-webpack-loader": "^6.0.0",
     "ivygate": "https://github.com/kipr/ivygate#v0.1.0",
