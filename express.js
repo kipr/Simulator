@@ -162,7 +162,7 @@ app.post('/feedback', (req, res) => {
     fs.writeFile(path, 
       JSON.stringify(req.body.state, undefined, 2),
       err => {
-        if (!err) {
+        if (err) {
           reject(`Failed to write user data - please try again`);
         }
 

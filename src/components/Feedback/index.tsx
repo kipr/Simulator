@@ -166,9 +166,9 @@ export class FeedbackDialog extends React.PureComponent<Props, State> {
               <p>
                 <>Please try again, </>
                 <FeedbackLink href="https://github.com/kipr/Simulator/issues" target="_blank">
-                  open an issue on our github page,   
+                  open an issue on our github page
                 </FeedbackLink>
-                <> or </>
+                <>, or </>
                 <FeedbackLink href="mailto:info@kipr.org">
                   email KIPR.
                 </FeedbackLink>
