@@ -122,7 +122,7 @@ app.post('/feedback', (req, res) => {
 
   let content = `User Feedback Recieved:\n\`\`\`${body.feedback} \`\`\``;
   
-  content += `Sentiment:`;
+  content += `Sentiment: `;
   switch (body.sentiment) {
     case 0: content += 'No sentiment! This is probably a bug'; break;
     case 1: content += ':frowning2:'; break;
