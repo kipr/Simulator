@@ -112,7 +112,7 @@ app.post('/compile', (req, res) => {
 });
 
 app.post('/feedback', (req, res) => {
-  const hook = 'https://discord.com/api/webhooks/931769619025379388/mZo-3RGXUYfN2DG9zV7u2ljnNUfyIJXFtNfh88T7QURew3_ISbAnntZ0Tml8TpEFBSTE';
+  const hook = config.server.feedbackWebhookURL;
   const body = req.body;
 
   const feedbackForm = new FormData();
