@@ -72,7 +72,7 @@ app.post('/compile', (req, res) => {
 
     exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -s ASYNCIFY -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']" -I${config.server.libwallabyRoot}/include -L${config.server.libwallabyRoot}/lib -lkipr -o ${path}.js ${path}`, (err, stdout, stderr) => {
       if (err) {
-        return res.status(400).json({
+        return res.status(200).json({
           stdout,
           stderr
         });
@@ -97,8 +97,11 @@ app.post('/compile', (req, res) => {
                 error: `Failed to delete ${path}`
               });
             }
-            res.set('Content-Type', 'application/javascript');
-            res.status(200).send(data);
+            res.status(200).json({
+              result: data.toString(),
+              stdout,
+              stderr,
+            });
           });
         });
       });

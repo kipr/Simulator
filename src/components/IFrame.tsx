@@ -82,6 +82,7 @@ export class IFrame extends React.Component<Props, State> {
           onLoad={() => this.setState({ loaded: true })}
           width={width}
           height={height}
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen"
         />
       </Container>
     );

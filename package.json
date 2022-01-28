@@ -1,6 +1,6 @@
 {
   "name": "simulator",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "main": "dist/index.js",
   "author": "KISS Institute for Practical Robotics",
   "license": "GPL-3.0-only",

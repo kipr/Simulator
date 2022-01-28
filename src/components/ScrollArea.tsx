@@ -171,7 +171,7 @@ class ScrollArea extends React.PureComponent<Props, State> {
     this.startScrolling(startOffset);
 
     if (this.onMouseMoveHandle_ === undefined) this.onMouseMoveHandle_ = GLOBAL_EVENTS.add('onMouseMove', this.onMouseMove_);
-    if (!this.onMouseUpHandle_ === undefined) this.onMouseUpHandle_ = GLOBAL_EVENTS.add('onMouseUp', this.onMouseUp_);
+    if (this.onMouseUpHandle_ === undefined) this.onMouseUpHandle_ = GLOBAL_EVENTS.add('onMouseUp', this.onMouseUp_);
 
     event.preventDefault();
   };
