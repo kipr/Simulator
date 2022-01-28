@@ -165,7 +165,7 @@ export class FeedbackDialog extends React.PureComponent<Props, State> {
             <CenterContainer theme={theme}>
               <p>
                 <>Please try again, </>
-                <FeedbackLink href="https://github.com/kipr/Simulator/issues/new">
+                <FeedbackLink href="https://github.com/kipr/Simulator/issues" target="_blank">
                   open an issue on our github page,   
                 </FeedbackLink>
                 <> or </>
