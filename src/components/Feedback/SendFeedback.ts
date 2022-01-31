@@ -1,77 +1,89 @@
 import { Sentiment } from '../../Feedback';
 import { RootState } from '../Root';
 
-const sendFeedback = (rootState: RootState): Promise<string> => {
+interface FeedbackData {
+  feedback: string;
+  sentiment: Sentiment;
+  includeAnonData: boolean;
+  email?: string;
+  state?: RootState;
+  userAgent?: string;
+}
+
+export interface FeedbackResponse {
+  message: string,
+  networkError: boolean,
+}
+
+export const sendFeedback = (rootState: RootState): Promise<FeedbackResponse> => {
   
-  return new Promise<string>((resolve, reject) => {
-    // TODO: figure out where this data should go on a permanent basis
+  return new Promise<FeedbackResponse>((resolve, reject) => {
     const feedback = rootState.feedback;
 
     // minor form checking
     if (feedback.feedback === '') {
-      reject('Please supply some feedback!');
+      reject({ message: 'Please supply some feedback!', networkError: false });
       return;
     }
     if (feedback.sentiment === Sentiment.None) {
-      reject('Please select how you feel about the simulator!');
+      reject({ message: 'Please select how you feel about the simulator!', networkError: false });
       return;
     }
 
-    // build a string to send to discord
-    let sentiment: string;
-    switch (feedback.sentiment) {
-      case Sentiment.Happy : sentiment = 'Happy'; break;
-      case Sentiment.Okay : sentiment = 'Okay'; break;
-      case Sentiment.Sad : sentiment = 'Sad'; break;
-    }
-
-    // send to a discord webhook
-    const formData = new FormData();
-
-    let content = `User Feedback Recieved:\n\`\`\`${feedback.feedback} \`\`\`\n`;
-    content += `Sentiment: ${sentiment}\n`;
-    if (feedback.email !== '') {
-      content += `User Email: ${feedback.email}\n`;
-    }
+    // construct some json and send it to the backend
+    const body: FeedbackData = {
+      feedback: feedback.feedback,
+      sentiment: feedback.sentiment,
+      includeAnonData: feedback.includeAnonData,
+      email: feedback.email,
+      state: null,
+      userAgent: null,
+    };
 
     if (feedback.includeAnonData) {
-      content += `User Code:\n\`\`\`${rootState.code}\`\`\`\n`;
-      content += `Browser User-Agent: ${window.navigator.userAgent}\n`;
-      
-      formData.append("file", new File(
-        [ 
-          new Blob([JSON.stringify(rootState, undefined, 2)], { type: 'application/json', })
-        ],
-        'userdata.json'
-      ));
+      body.state = rootState;
+      body.userAgent = window.navigator.userAgent;
     }
 
-    formData.append('username', 'KIPR Simulator Feedback');
-    formData.append('avatar_url', 'https://www.kipr.org/wp-content/uploads/2018/08/botguy-copy.jpg');
-    formData.append('content', content);
+    const req: XMLHttpRequest = new XMLHttpRequest();
+    req.onload = () => {
+      console.log('got response:', req.responseText);
 
-    const request = new Request(
-      'https://discord.com/api/webhooks/932033545344520302/INtF5qz2M4EllekYvYLKip-Hbyw-TTHkr6JQRoJQ0FafZ0_6dBrgvpw4O8YB5zN2vSAK',
-      {
-        method: 'POST', 
-        body: formData
-      }
-    );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const responseJSON = JSON.parse(req.responseText);
 
-    fetch(request)
-      .then(response => {
-        if (response.ok) {
-          resolve('Feedback sent, thank you!');
-        } else {
-          console.log(request, response);
-          reject('Error sending feedback, please try again');
+      if (req.status !== 200) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if ('error' in responseJSON && typeof responseJSON.error !== 'string') {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          const err: string = responseJSON.error as string;
+          reject({ message: err, networkError: true });
         }
-      })
-      .catch((e) => {
-        console.log(request, e);
-        reject('Could not send feedback, please try again');
-      });
-  });
-};
+        reject('Error sending feedback: server response invalid.');
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if ('message' in responseJSON && typeof responseJSON.message !== 'string') {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          const msg: string = responseJSON.message as string;
+          resolve({ message: msg, networkError: false });
+        } else {
+          resolve({ message: req.responseText, networkError: false });
+        }
+      }
+    };
 
-export default sendFeedback;
+    req.onerror = (err) => {
+      console.log(err);
+      reject({ message: 'An unknown error occured while sending feedback!', networkError: true });
+    };
+
+    req.open('POST', '/feedback');
+    req.setRequestHeader('Content-Type', 'application/json');
+
+    try {
+      req.send(JSON.stringify(body));
+    } catch {
+      reject({ error: 'An unknown server error occurred!', networkError: true });
+    }
+  });    
+};

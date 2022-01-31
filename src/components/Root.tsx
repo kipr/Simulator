@@ -16,8 +16,11 @@ import SideLayout from './SideLayout';
 
 import { SettingsDialog } from './SettingsDialog';
 import { AboutDialog } from './AboutDialog';
+
 import { FeedbackDialog } from './Feedback';
-import sendFeedback from './Feedback/SendFeedback';
+import { sendFeedback, FeedbackResponse } from './Feedback/SendFeedback';
+import { FeedbackSuccessDialog } from './Feedback/SuccessModal';
+
 import compile from '../compile';
 import { SimulatorState } from './SimulatorState';
 import { Angle, Distance, StyledText } from '../util';
@@ -27,7 +30,7 @@ import parseMessages, { hasErrors, hasWarnings, sort, toStyledText } from '../ut
 import { Space } from '../Sim';
 import { RobotPosition } from '../RobotPosition';
 import { DEFAULT_SETTINGS, Settings } from '../Settings';
-import { DEFAULT_FEEDBACK, Feedback, Sentiment } from '../Feedback';
+import { DEFAULT_FEEDBACK, Feedback } from '../Feedback';
 import ExceptionDialog from './ExceptionDialog';
 
 namespace Modal {
@@ -36,6 +39,7 @@ namespace Modal {
     About,
     Exception,
     Feedback,
+    FeedbackSuccess,
     None,
   }
 
@@ -57,6 +61,12 @@ namespace Modal {
 
   export const FEEDBACK: Feedback = { type: Type.Feedback };
 
+  export interface FeedbackSuccess {
+    type: Type.FeedbackSuccess;
+  }
+
+  export const FEEDBACKSUCCESS: FeedbackSuccess = { type: Type.FeedbackSuccess };
+  
   export interface Exception {
     type: Type.Exception;
     error: Error;
@@ -72,7 +82,7 @@ namespace Modal {
   export const NONE: None = { type: Type.None };
 }
 
-export type Modal = Modal.Settings | Modal.About | Modal.Exception | Modal.Feedback | Modal.None;
+export type Modal = Modal.Settings | Modal.About | Modal.Exception | Modal.Feedback | Modal.FeedbackSuccess | Modal.None;
 
 
 interface RootState {
@@ -119,7 +129,7 @@ export class Root extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    
+
 
     this.state = {
       robotState: WorkerInstance.state,
@@ -204,20 +214,16 @@ export class Root extends React.Component<Props, State> {
   private onHideAll_ = () => {
     this.overlayLayout_.hideAll();
   };
-  
+
   private onLayoutChange_ = (layout: Layout) => {
     this.setState({
       layout
     });
   };
 
-  private onModalClick_ = (modal: Modal) => () => this.setState({
-    modal
-  });
+  private onModalClick_ = (modal: Modal) => () => this.setState({ modal });
 
-  private onModalClose_ = () => this.setState({
-    modal: Modal.NONE
-  });
+  private onModalClose_ = () => this.setState({ modal: Modal.NONE });
 
   private onWorkerStateChange_ = (robotState: RobotState) => {
     this.setState({
@@ -256,7 +262,7 @@ export class Root extends React.Component<Props, State> {
       text: `Compiling...\n`,
       style: STDOUT_STYLE(this.state.theme)
     }));
-    
+
     this.setState({
       simulatorState: SimulatorState.COMPILING,
       console: nextConsole
@@ -366,15 +372,20 @@ export class Root extends React.Component<Props, State> {
   private onFeedbackChange_ = (changedFeedback: Partial<Feedback>) => {
     this.setState({ feedback: { ...this.state.feedback, ...changedFeedback } });
   };
-  
+
   private onFeedbackSubmit_ = () => {
     sendFeedback(this.state)
-      .then((message: string) => {
-        this.onFeedbackChange_(({ message: message }));
-        this.onModalClose_();
+      .then((resp: FeedbackResponse) => {
+        this.onFeedbackChange_(({ message: resp.message }));
+        this.onFeedbackChange_(({ error: resp.networkError }));
+
+        this.onFeedbackChange_(DEFAULT_FEEDBACK);
+
+        this.onModalClick_(Modal.FEEDBACKSUCCESS)();
       })
-      .catch((error: string) => {
-        this.onFeedbackChange_(({ message: error }));
+      .catch((resp: FeedbackResponse) => {
+        this.onFeedbackChange_(({ message: resp.message }));
+        this.onFeedbackChange_(({ error: resp.networkError }));
       });
   };
 
@@ -442,7 +453,7 @@ export class Root extends React.Component<Props, State> {
       default: {
         return null;
       }
-      
+
     }
 
     return (
@@ -471,6 +482,7 @@ export class Root extends React.Component<Props, State> {
         {modal.type === Modal.Type.Settings ? <SettingsDialog theme={theme} settings={settings} onSettingsChange={this.onSettingsChange_} onClose={this.onModalClose_} /> : undefined}
         {modal.type === Modal.Type.About ? <AboutDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
         {modal.type === Modal.Type.Feedback ? <FeedbackDialog theme={theme} feedback={feedback} onFeedbackChange={this.onFeedbackChange_} onClose={this.onModalClose_} onSubmit={this.onFeedbackSubmit_} /> : undefined}
+        {modal.type === Modal.Type.FeedbackSuccess ? <FeedbackSuccessDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
         {modal.type === Modal.Type.Exception ? <ExceptionDialog error={modal.error} theme={theme} onClose={this.onModalClose_} /> : undefined}
       </>
 

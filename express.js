@@ -9,6 +9,8 @@ const { exec } = require('child_process');
 const app = express();
 const sourceDir = 'dist';
 const { get: getConfig } = require('./config');
+const { WebhookClient } = require('discord.js');
+
 
 let config;
 try {
@@ -110,13 +112,62 @@ app.post('/compile', (req, res) => {
   
 });
 
+app.post('/feedback', (req, res) => {
+  const hookURL = config.server.feedbackWebhookURL;
+  const body = req.body;
+
+  let content = `User Feedback Recieved:\n\`\`\`${body.feedback} \`\`\``;
+  
+  content += `Sentiment: `;
+  switch (body.sentiment) {
+    case 0: content += 'No sentiment! This is probably a bug'; break;
+    case 1: content += ':frowning2:'; break;
+    case 2: content += ':expressionless:'; break;
+    case 3: content += ':smile:'; break;
+  }
+  content += '\n';
+
+  if (body.email !== null && body.email !== '') {
+    content += `User Email: ${body.email}\n`;
+  }
+
+  let files = null;
+
+  if (body.includeAnonData) {
+    content += `User Code:\n\`\`\`${body.state.code} \`\`\``;
+    content += `Browser User-Agent: ${body.userAgent}\n`;
+    files = [{
+      attachment: Buffer.from(JSON.stringify(body.state, undefined, 2)),
+      name: 'userdata.json'
+    }];
+  }
+
+  const webhook = new WebhookClient({ url: hookURL });
+
+  webhook.send({
+    content: content,
+    username: 'KIPR Simulator Feedback',
+    avatarURL: 'https://www.kipr.org/wp-content/uploads/2018/08/botguy-copy.jpg',
+    files: files
+  })
+    .then(() => {
+      res.status(200).json({
+        message: 'Feedback submitted! Thank you!'
+      });
+    })
+    .catch(() => {
+      res.status(500).json({
+        message: 'An error occured on the server'
+      });
+      // TODO: write the feedback to a file if an error occurs?
+    });
+});
 
 app.use('/static', express.static(`${__dirname}/static`, {
   maxAge: config.caching.staticMaxAge,
 }));
 
 app.use('/dist', express.static(`${__dirname}/dist`));
-
 
 app.use(express.static(sourceDir, {
   maxAge: config.caching.staticMaxAge,
