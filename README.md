@@ -19,7 +19,7 @@ sudo ./install.sh
 ## Manual Setup
 
 ### Requirements
-- [Node.js v14 or higher](https://nodejs.org/)
+- [Node.js v16 or higher](https://nodejs.org/)
 - [yarn](https://classic.yarnpkg.com/)
 - Doxygen (libwallaby requirement)
 
@@ -57,7 +57,13 @@ git submodule update --init
 
 ### Install Emscripten
 
-See more info here: https://emscripten.org/docs/getting_started/downloads.html
+Emscripten requires Node v14, while we require Node v16. This isn't a big deal - just export the location of Node to a variable, which we'll then use later.
+```bash
+# run to get the location of Node v16
+NODE=$(which node)
+```
+
+See more info on Emscripten and installing it here: https://emscripten.org/docs/getting_started/downloads.html
 
 ```bash
 git clone https://github.com/emscripten-core/emsdk.git
@@ -94,9 +100,11 @@ yarn watch
 
 In another terminal, run the server:
 ```bash
+NODE=$(which node)
 source $PATH_TO_EMSDK/emsdk_env.sh
-node express.js
+$NODE express.js
 ```
+Note that you MUST run the server using Node v16. It is recommended to run the above three commands in a new terminal, as running `source $PATH_TO_EMSDK/emsdk_env.sh` will add it's own Node v14 binary to the PATH.
 
 ## Configuration
 
@@ -107,6 +115,7 @@ The server can be configured using environment variables. Variables without defa
 | `LIBWALLABY_ROOT` | Path to the root directory of libwallaby | `./libwallaby` |
 | `SERVER_PORT` | The port on which to listen for requests | `3000` |
 | `CACHING_STATIC_MAX_AGE` | The max duration (in ms) to allow static assets to be cached | `3600000` (1 hr) |
+| `FEEDBACK_WEBHOOK_URL` | The url for the discord webhook to send feedback to | | 
 
 ## Linting
 
