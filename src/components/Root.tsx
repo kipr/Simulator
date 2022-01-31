@@ -16,8 +16,11 @@ import SideLayout from './SideLayout';
 
 import { SettingsDialog } from './SettingsDialog';
 import { AboutDialog } from './AboutDialog';
+
 import { FeedbackDialog } from './Feedback';
-import sendFeedback from './Feedback/SendFeedback';
+import { sendFeedback, FeedbackResponse } from './Feedback/SendFeedback';
+import { FeedbackSuccessDialog } from './Feedback/SuccessModal';
+
 import compile from '../compile';
 import { SimulatorState } from './SimulatorState';
 import { Angle, Distance, StyledText } from '../util';
@@ -27,7 +30,7 @@ import parseMessages, { hasErrors, hasWarnings, sort, toStyledText } from '../ut
 import { Space } from '../Sim';
 import { RobotPosition } from '../RobotPosition';
 import { DEFAULT_SETTINGS, Settings } from '../Settings';
-import { DEFAULT_FEEDBACK, Feedback, Sentiment } from '../Feedback';
+import { DEFAULT_FEEDBACK, Feedback } from '../Feedback';
 import ExceptionDialog from './ExceptionDialog';
 
 namespace Modal {
@@ -36,6 +39,7 @@ namespace Modal {
     About,
     Exception,
     Feedback,
+    FeedbackSuccess,
     None,
   }
 
@@ -57,6 +61,12 @@ namespace Modal {
 
   export const FEEDBACK: Feedback = { type: Type.Feedback };
 
+  export interface FeedbackSuccess {
+    type: Type.FeedbackSuccess;
+  }
+
+  export const FEEDBACKSUCCESS: FeedbackSuccess = { type: Type.FeedbackSuccess };
+  
   export interface Exception {
     type: Type.Exception;
     error: Error;
@@ -72,7 +82,7 @@ namespace Modal {
   export const NONE: None = { type: Type.None };
 }
 
-export type Modal = Modal.Settings | Modal.About | Modal.Exception | Modal.Feedback | Modal.None;
+export type Modal = Modal.Settings | Modal.About | Modal.Exception | Modal.Feedback | Modal.FeedbackSuccess | Modal.None;
 
 
 interface RootState {
@@ -211,13 +221,9 @@ export class Root extends React.Component<Props, State> {
     });
   };
 
-  private onModalClick_ = (modal: Modal) => () => this.setState({
-    modal
-  });
+  private onModalClick_ = (modal: Modal) => () => this.setState({ modal });
 
-  private onModalClose_ = () => this.setState({
-    modal: Modal.NONE
-  });
+  private onModalClose_ = () => this.setState({ modal: Modal.NONE });
 
   private onWorkerStateChange_ = (robotState: RobotState) => {
     this.setState({
@@ -369,16 +375,17 @@ export class Root extends React.Component<Props, State> {
 
   private onFeedbackSubmit_ = () => {
     sendFeedback(this.state)
-      .then((message: string) => {
-        console.log('message onFeedbackSubmit:', message);
-        this.onFeedbackChange_(({ message: message }));
-        this.onFeedbackChange_(({ error: false }));
-        this.onModalClose_();
+      .then((resp: FeedbackResponse) => {
+        this.onFeedbackChange_(({ message: resp.message }));
+        this.onFeedbackChange_(({ error: resp.networkError }));
+
+        this.onFeedbackChange_(DEFAULT_FEEDBACK);
+
+        this.onModalClick_(Modal.FEEDBACKSUCCESS)();
       })
-      .catch((error: string) => {
-        console.log('error onFeedbackSubmit:', error);
-        this.onFeedbackChange_(({ message: error }));
-        this.onFeedbackChange_(({ error: true }));
+      .catch((resp: FeedbackResponse) => {
+        this.onFeedbackChange_(({ message: resp.message }));
+        this.onFeedbackChange_(({ error: resp.networkError }));
       });
   };
 
@@ -475,6 +482,7 @@ export class Root extends React.Component<Props, State> {
         {modal.type === Modal.Type.Settings ? <SettingsDialog theme={theme} settings={settings} onSettingsChange={this.onSettingsChange_} onClose={this.onModalClose_} /> : undefined}
         {modal.type === Modal.Type.About ? <AboutDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
         {modal.type === Modal.Type.Feedback ? <FeedbackDialog theme={theme} feedback={feedback} onFeedbackChange={this.onFeedbackChange_} onClose={this.onModalClose_} onSubmit={this.onFeedbackSubmit_} /> : undefined}
+        {modal.type === Modal.Type.FeedbackSuccess ? <FeedbackSuccessDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
         {modal.type === Modal.Type.Exception ? <ExceptionDialog error={modal.error} theme={theme} onClose={this.onModalClose_} /> : undefined}
       </>
 

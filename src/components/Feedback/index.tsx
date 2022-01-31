@@ -21,11 +21,11 @@ interface FeedbackDialogState {}
 type Props = FeedbackDialogProp;
 type State = FeedbackDialogState;
 
-const FeedbackContainer = styled('div', (props: ThemeProps) => ({
+export const FeedbackContainer = styled('div', (props: ThemeProps) => ({
   padding: `${props.theme.itemPadding * 2}px`,
 }));
 
-const CenterContainer = styled('div', (props: ThemeProps) => ({
+export const CenterContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
@@ -33,14 +33,14 @@ const CenterContainer = styled('div', (props: ThemeProps) => ({
   color: props.theme.color,
 }));
 
-const FeedbackRowContainer = styled('div', (props: ThemeProps) => ({
+export const FeedbackRowContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'flex-start',
   padding: `${props.theme.itemPadding * 2}px`,
 }));
 
-const FeedbackLink = styled('a', () => ({
+export const FeedbackLink = styled('a', () => ({
   color: 'lightblue',
 }));
 
@@ -110,7 +110,6 @@ export class FeedbackDialog extends React.PureComponent<Props, State> {
     const { props, state } = this;
     const { style, className, theme, onClose, onSubmit } = props;
 
-    // TODO: Better submit button themeing
     return (
       <Dialog theme={theme} name='Feedback' onClose={onClose}>
         <FeedbackContainer theme={theme}>

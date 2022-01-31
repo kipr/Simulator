@@ -10,18 +10,23 @@ interface FeedbackData {
   userAgent?: string;
 }
 
-const sendFeedback = (rootState: RootState): Promise<string> => {
+export interface FeedbackResponse {
+  message: string,
+  networkError: boolean,
+}
+
+export const sendFeedback = (rootState: RootState): Promise<FeedbackResponse> => {
   
-  return new Promise<string>((resolve, reject) => {
+  return new Promise<FeedbackResponse>((resolve, reject) => {
     const feedback = rootState.feedback;
 
     // minor form checking
     if (feedback.feedback === '') {
-      reject('Please supply some feedback!');
+      reject({ message: 'Please supply some feedback!', networkError: false });
       return;
     }
     if (feedback.sentiment === Sentiment.None) {
-      reject('Please select how you feel about the simulator!');
+      reject({ message: 'Please select how you feel about the simulator!', networkError: false });
       return;
     }
 
@@ -30,7 +35,7 @@ const sendFeedback = (rootState: RootState): Promise<string> => {
       feedback: feedback.feedback,
       sentiment: feedback.sentiment,
       includeAnonData: feedback.includeAnonData,
-      email: null,
+      email: feedback.email,
       state: null,
       userAgent: null,
     };
@@ -40,34 +45,45 @@ const sendFeedback = (rootState: RootState): Promise<string> => {
       body.userAgent = window.navigator.userAgent;
     }
 
-    const req = new XMLHttpRequest();
+    const req: XMLHttpRequest = new XMLHttpRequest();
     req.onload = () => {
+      console.log('got response:', req.responseText);
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const responseJSON = JSON.parse(req.responseText);
+
       if (req.status !== 200) {
-        if ('error' in JSON.parse(req.responseText)) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if ('error' in responseJSON && typeof responseJSON.error !== 'string') {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          reject(JSON.parse(req.responseText).error);
+          const err: string = responseJSON.error as string;
+          reject({ message: err, networkError: true });
         }
-        reject('Error sending feedback: server response invalid. Please try again.');
+        reject('Error sending feedback: server response invalid.');
       } else {
-        if ('message' in JSON.parse(req.responseText)) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if ('message' in responseJSON && typeof responseJSON.message !== 'string') {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          resolve(JSON.parse(req.responseText).message);
+          const msg: string = responseJSON.message as string;
+          resolve({ message: msg, networkError: false });
         } else {
-          resolve(req.responseText);
+          resolve({ message: req.responseText, networkError: false });
         }
       }
     };
 
     req.onerror = (err) => {
       console.log(err);
-      reject('epic fail');
+      reject({ message: 'An unknown error occured while sending feedback!', networkError: true });
     };
 
     req.open('POST', '/feedback');
     req.setRequestHeader('Content-Type', 'application/json');
 
-    req.send(JSON.stringify(body));
+    try {
+      req.send(JSON.stringify(body));
+    } catch {
+      reject({ error: 'An unknown server error occurred!', networkError: true });
+    }
   });    
 };
-
-export default sendFeedback;
