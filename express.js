@@ -9,7 +9,8 @@ const { exec } = require('child_process');
 const app = express();
 const sourceDir = 'dist';
 const { get: getConfig } = require('./config');
-var FormData = require('form-data');
+const { WebhookClient } = require('discord.js');
+
 
 let config;
 try {
@@ -112,13 +113,8 @@ app.post('/compile', (req, res) => {
 });
 
 app.post('/feedback', (req, res) => {
-  const hook = config.server.feedbackWebhookURL;
+  const hookURL = config.server.feedbackWebhookURL;
   const body = req.body;
-
-  const feedbackForm = new FormData();
-
-  feedbackForm.append('username', 'KIPR Simulator Feedback');
-  feedbackForm.append('avatar_url', 'https://www.kipr.org/wp-content/uploads/2018/08/botguy-copy.jpg');
 
   let content = `User Feedback Recieved:\n\`\`\`${body.feedback} \`\`\``;
   
@@ -134,85 +130,36 @@ app.post('/feedback', (req, res) => {
   if (body.email !== null && body.email !== '') {
     content += `User Email: ${body.email}\n`;
   }
-  
-  // function for including anonymous data. This needs to be a promise,
-  // because the file write/read is async, but we don't always do it
-  // after the promise is resolved, we'll then actually do the request
-  //
-  // resolve contains the path to the userdata file, or null if none.
-  // reject on write error
-  // 
-  // after this function is resolved, the file at path (if non-null)
-  // must be deleted, although this should only happen after webhook
-  // post request is sent
-  const includeAnonData = (body) => new Promise((resolve, reject) => { 
-    if (!body.includeAnonData) {
-      resolve(null);
-      return;
-    }
 
+  let files = null;
+
+  if (body.includeAnonData) {
     content += `User Code:\n\`\`\`${body.state.code} \`\`\``;
     content += `Browser User-Agent: ${body.userAgent}\n`;
+    files = [{
+      attachment: Buffer.from(JSON.stringify(body.state, undefined, 2)),
+      name: 'userdata.json'
+    }];
+  }
 
-    // TODO: it would be nice if we could avoid write/read operations and instead
-    // just do this virtually w/o a real file object getting written
-    const id = uuid.v4();
-    const path = `/tmp/${id}.json`;
+  const webhook = new WebhookClient({ url: hookURL });
 
-    fs.writeFile(path, 
-      JSON.stringify(req.body.state, undefined, 2),
-      err => {
-        if (err) {
-          reject(`Failed to write user data - please try again`);
-        }
-
-        feedbackForm.append("file", 
-          fs.createReadStream(path),
-          { filename: 'userdata.json' }
-        );
-        resolve(path);
-      }
-    );
-  });
-
-  includeAnonData(body)
-    .then(path => {
-      feedbackForm.append('content', content);
-      
-      // can't just handle this directly because then we might
-      // be modifying the result multiple times, which isn't allowed
-      let deleteError = false;
-
-      feedbackForm.submit(hook,
-        (error) => {
-          if (path !== null) {
-            fs.unlink(path, err => {
-              if (err) {
-                console.log(`Failed to delete ${path}`);
-                deleteError = true;
-              }
-            });
-          }
-          if (deleteError) {
-            res.status(500).json({
-              error: 'Failed to delete user data after submit! Your feedback has been recieved, but please submit another feedback form with this error message!'
-            });
-          } else if (error) {
-            res.status(500).json({
-              error: 'Failed to send feedback!'
-            });
-          } else {
-            res.status(200).json({
-              message: 'Feedback submitted! Thank you!'
-            });
-          }
-        }
-      );
+  webhook.send({
+    content: content,
+    username: 'KIPR Simulator Feedback',
+    avatarURL: 'https://www.kipr.org/wp-content/uploads/2018/08/botguy-copy.jpg',
+    files: files
+  })
+    .then(() => {
+      res.status(200).json({
+        message: 'Feedback submitted! Thank you!'
+      });
     })
     .catch(() => {
       res.status(500).json({
-        error: 'Could not send feedback!'
+        message: 'An error occured on the server'
       });
+      // TODO: write the feedback to a file if an error occurs?
     });
 });
 
