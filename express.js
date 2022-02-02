@@ -114,6 +114,13 @@ app.post('/compile', (req, res) => {
 
 app.post('/feedback', (req, res) => {
   const hookURL = config.server.feedbackWebhookURL;
+  if (!hookURL) {
+    res.status(500).json({
+      message: 'The feedback URL is not set on the server. If this is a developoment environment, make sure the feedback URL environment variable is set.'
+    });
+    return;
+  }
+
   const body = req.body;
 
   let content = `User Feedback Recieved:\n\`\`\`${body.feedback} \`\`\``;
