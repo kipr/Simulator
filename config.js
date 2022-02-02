@@ -6,7 +6,7 @@ module.exports = {
       server: {
         port: getEnvVarOrDefault('SERVER_PORT', 3000),
         libwallabyRoot: getEnvVarOrDefault('LIBWALLABY_ROOT', './libwallaby'),
-        feedbackWebhookURL: getEnvVarOrDefault('FEEDBACK_WEBHOOK_URL', 'https://discord.com/api/webhooks/937955089870643260/1eClHG01mrZHhIN24mUPgt7UDi-hpagEk-QSZB58aaYrRZpgvwb-GaEDF3bBSDWHv6Aq'),
+        feedbackWebhookURL: getEnvVarOrDefault('FEEDBACK_WEBHOOK_URL', ''),
       },
       caching: {
         staticMaxAge: getEnvVarOrDefault('CACHING_STATIC_MAX_AGE', 60 * 60 * 1000),
