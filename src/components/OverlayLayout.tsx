@@ -12,6 +12,8 @@ import { Theme, ThemeProps } from './theme';
 import Widget, { BarComponent, Mode, Size, WidgetProps } from './Widget';
 import World from './World';
 
+import Loading from '../Loading';
+
 export interface OverlayLayoutProps extends LayoutProps {
   
 }
@@ -21,6 +23,7 @@ interface OverlayLayoutState {
   infoSize: Size.Type;
   editorSize: Size.Type;
   worldSize: Size.Type;
+  loading: boolean;
 }
 
 type Props = OverlayLayoutProps;
@@ -173,10 +176,13 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       infoSize: Size.Type.Partial,
       consoleSize: Size.Type.Miniature,
       worldSize: Size.Type.Partial,
+      loading: true,
     };
   }
 
-  
+  componentDidMount() {
+    this.setState({ loading: false });
+  }
 
   private onEditorSizeChange_ = (index: number) => {
     const size = EDITOR_SIZES[index];
@@ -280,6 +286,9 @@ class OverlayLayout extends React.PureComponent<Props, State> {
   }
 
   render() {
+    if (this.state.loading) {
+      return <Loading />;
+    }
     const { props } = this;
     
     const {

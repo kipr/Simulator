@@ -9,6 +9,8 @@ import { styled } from 'styletron-react';
 import resizeListener, { ResizeListener } from './ResizeListener';
 import { Vector2 } from '../math';
 
+import Loading from '../Loading';
+
 export interface SimulatorAreaProps {
   robotState: RobotState;
   isSensorNoiseEnabled: boolean;
@@ -17,6 +19,9 @@ export interface SimulatorAreaProps {
 
   onRobotStateUpdate: (robotState: Partial<RobotState>) => void;
   // onRobotPositionSetCompleted: () => void;
+}
+interface SimulatorAreaState {
+  loading: boolean
 }
 
 const Container = styled('div', {
@@ -33,18 +38,21 @@ const Canvas = styled('canvas', {
   touchAction: 'none',
 });
 
-export class SimulatorArea extends React.Component<SimulatorAreaProps> {
+export class SimulatorArea extends React.Component<SimulatorAreaProps, SimulatorAreaState> {
   private containerRef_: HTMLDivElement;
   private canvasRef_: HTMLCanvasElement;
 
   constructor(props: SimulatorAreaProps) {
     super(props);
-    this.state = {};
+    this.state = { loading: true };
   }
 
   componentDidMount() {
     // TODO: If simulator initialization fails, we should show the user an error
     Sim.Space.getInstance().ensureInitialized()
+      .then(() => {
+        this.setState({ loading: false });
+      })
       .catch(e => console.error('Simulator initialization failed', e));
   }
 
@@ -98,6 +106,13 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps> {
   };
 
   render() {
+    if (this.state.loading) {
+      return (
+        <Container >
+          <Loading message='Initializing Robot...'/>;
+        </Container>
+      );
+    } 
     return (
       <Container ref={this.bindContainerRef_}>
         <Canvas ref={this.bindCanvasRef_} />
