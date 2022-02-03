@@ -1,10 +1,12 @@
 import * as React from 'react';
-import ReactLoading from 'react-loading';
+import ReactLoading, { LoadingType } from 'react-loading';
 import { styled } from 'styletron-react';
 
 export interface LoadingProps {
   message?: string
   color?: string
+  width?: number
+  type?: LoadingType
 }
 
 const LoadingPage = styled('div', {
@@ -26,7 +28,11 @@ const Loading: React.FunctionComponent<LoadingProps> = (props) => {
       <LoadingText>
         {props.message ? props.message : 'Loading...'}
       </LoadingText>
-      <ReactLoading width={150} color={props.color ? props.color : '#4b64ad'}/>
+      <ReactLoading 
+        type={props.type ? props.type : 'balls'}
+        width={props.width ? props.width : 150}
+        color={props.color ? props.color : '#4b64ad'}
+      />
     </LoadingPage>
   );
 };
