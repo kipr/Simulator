@@ -402,7 +402,7 @@ export class Space {
     this.scene.registerAfterRender(() => {
       const currRobotState = this.getRobotState();
 
-      // Set lator motor speeds based on robot state
+      // Set simlator motor speeds based on robot state
       this.setDriveMotors(currRobotState.motorSpeeds[0], currRobotState.motorSpeeds[3]);
 
       // Set simulator servo positions based on robot state
@@ -434,7 +434,6 @@ export class Space {
       this.rightWheelRotationPrev = rightWheelRotationCurr;
     });
   }
-  
 
   private async loadMeshes(): Promise<void> {
     // Load model into scene
