@@ -1,7 +1,6 @@
 import * as React from 'react';
 import ReactLoading from 'react-loading';
 import { styled } from 'styletron-react';
-import { ThemeProps } from './components/theme';
 
 export interface LoadingProps {
   message?: string
