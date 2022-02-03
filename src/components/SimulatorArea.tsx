@@ -9,7 +9,7 @@ import { styled } from 'styletron-react';
 import resizeListener, { ResizeListener } from './ResizeListener';
 import { Vector2 } from '../math';
 
-import Loading from '../Loading';
+import Loading from './Loading';
 
 export interface SimulatorAreaProps {
   robotState: RobotState;

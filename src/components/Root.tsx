@@ -33,7 +33,7 @@ import { DEFAULT_SETTINGS, Settings } from '../Settings';
 import { DEFAULT_FEEDBACK, Feedback } from '../Feedback';
 import ExceptionDialog from './ExceptionDialog';
 
-import Loading from '../Loading';
+import Loading from './Loading';
 
 namespace Modal {
   export enum Type {

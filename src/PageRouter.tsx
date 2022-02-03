@@ -9,7 +9,7 @@ import routes from './pages/routes';
 import AuthRoute from './firebase/modules/auth/AuthRoute';
 import { getRedirectResult } from '@firebase/auth';
 
-import Loading from './Loading';
+import Loading from './components/Loading';
 
 export interface PageRouterProps { }
 
