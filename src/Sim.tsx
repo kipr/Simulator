@@ -268,6 +268,15 @@ export class Space {
     this.currentEngineView = null;
 
     ACTIVE_SPACE = this;
+
+    // tell Babylon to load a local Draco decoder
+    Babylon.DracoCompression.Configuration = {
+      decoder: {
+        wasmUrl:        '/static/draco_wasm_wrapper_gltf.js',
+        wasmBinaryUrl:  '/static/draco_decoder_gltf.wasm',
+        fallbackUrl:    '/static/draco_decoder_gltf.js'
+      }
+    };
   }
 
   private initGizmoManager_ = () => {
@@ -393,7 +402,7 @@ export class Space {
     this.scene.registerAfterRender(() => {
       const currRobotState = this.getRobotState();
 
-      // Set simulator motor speeds based on robot state
+      // Set lator motor speeds based on robot state
       this.setDriveMotors(currRobotState.motorSpeeds[0], currRobotState.motorSpeeds[3]);
 
       // Set simulator servo positions based on robot state
@@ -430,7 +439,6 @@ export class Space {
   private async loadMeshes(): Promise<void> {
     // Load model into scene
     const importMeshResult = await Babylon.SceneLoader.ImportMeshAsync("",'static/', 'demobot_v6.glb', this.scene);
-
     // TEMP FIX: Scale everything up by 100 to avoid Ammo issues at small scale
     const rootMesh = importMeshResult.meshes.find(mesh => mesh.name === '__root__');
     rootMesh.scaling.scaleInPlace(100);
