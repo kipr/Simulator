@@ -54,18 +54,18 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
   componentDidMount() {
     // after a few seconds of loading, show some messages to the user
 
-    // 10 second message: still going, might have fail
+    // 30 second message: still going, might have fail
     setTimeout(() => {
       if (this.state.loading) {
-        this.setState({ loadingMessage: 'This process is taking longer than expected...' });
+        this.setState({ loadingMessage: 'This process is taking longer than expected...\nIf you have a poor internet connection, this can take some time' });
       }
-    }, 10000);
-    // 20 second message: likely failed
+    }, 30 * 1000);
+    // 120 second message: likely failed
     setTimeout(() => {
       if (this.state.loading) {
         this.setState({ loadingMessage: 'The simulator may have failed to load.\nPlease submit a feedback form to let us know!' });
       }
-    }, 20000);
+    }, 120 * 1000);
 
     // TODO: If simulator initialization fails, we should show the user an error
     Sim.Space.getInstance().ensureInitialized()
