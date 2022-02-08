@@ -21,7 +21,8 @@ export interface SimulatorAreaProps {
   // onRobotPositionSetCompleted: () => void;
 }
 interface SimulatorAreaState {
-  loading: boolean
+  loading: boolean,
+  loadingMessage: string
 }
 
 const Container = styled('div', {
@@ -44,14 +45,35 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
 
   constructor(props: SimulatorAreaProps) {
     super(props);
-    this.state = { loading: true };
+    this.state = { 
+      loading: true,
+      loadingMessage: '',
+    };
   }
 
   componentDidMount() {
+    // after a few seconds of loading, show some messages to the user
+
+    // 10 second message: still going, might have fail
+    setTimeout(() => {
+      if (this.state.loading) {
+        this.setState({ loadingMessage: 'This process is taking longer than expected...' });
+      }
+    }, 10000);
+    // 20 second message: likely failed
+    setTimeout(() => {
+      if (this.state.loading) {
+        this.setState({ loadingMessage: 'The simulator may have failed to load.\nPlease submit a feedback form to let us know!' });
+      }
+    }, 20000);
+
     // TODO: If simulator initialization fails, we should show the user an error
     Sim.Space.getInstance().ensureInitialized()
       .then(() => {
-        this.setState({ loading: false });
+        this.setState({ 
+          loading: false,
+          loadingMessage: ''
+        });
       })
       .catch(e => console.error('Simulator initialization failed', e));
   }
@@ -109,7 +131,10 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
     if (this.state.loading) {
       return (
         <Container >
-          <Loading message='Initializing Robot...'/>;
+          <Loading 
+            message='Initializing Simulator...'
+            errorMessage={this.state.loadingMessage}
+          />;
         </Container>
       );
     } 
