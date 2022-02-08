@@ -33,8 +33,6 @@ import { DEFAULT_SETTINGS, Settings } from '../Settings';
 import { DEFAULT_FEEDBACK, Feedback } from '../Feedback';
 import ExceptionDialog from './ExceptionDialog';
 
-import Loading from './Loading';
-
 namespace Modal {
   export enum Type {
     Settings,
@@ -106,8 +104,6 @@ interface RootState {
   settings: Settings;
 
   feedback: Feedback;
-  
-  loading: boolean;
 }
 
 type Props = Record<string, never>;
@@ -153,7 +149,6 @@ export class Root extends React.Component<Props, State> {
       messages: [],
       settings: DEFAULT_SETTINGS,
       feedback: DEFAULT_FEEDBACK,
-      loading: true,
     };
   }
 
@@ -162,7 +157,6 @@ export class Root extends React.Component<Props, State> {
     WorkerInstance.onStdOutput = this.onStdOutput_;
     WorkerInstance.onStdError = this.onStdError_;
     WorkerInstance.onStopped = this.onStopped_;
-    this.setState({ loading: false });
   }
 
   private onStopped_ = () => {
@@ -402,9 +396,6 @@ export class Root extends React.Component<Props, State> {
   }
 
   render() {
-    if (this.state.loading) {
-      return <Loading /> ;
-    }
     const { props, state } = this;
     const {
       robotState,
