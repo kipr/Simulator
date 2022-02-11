@@ -11,7 +11,6 @@ import {
 import { RobotState } from './RobotState';
 
 import Dict from './Dict';
-import { SurfaceState } from './SurfaceState';
 
 import { Quaternion, ReferenceFrame, Vector2, Vector3 } from './math';
 import { ReferenceFrame as UnitReferenceFrame, Rotation, Vector3 as UnitVector3 } from './unit-math';

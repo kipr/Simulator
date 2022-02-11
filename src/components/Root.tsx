@@ -2,7 +2,6 @@ import * as React from 'react';
 import WorkerInstance from '../WorkerInstance';
 import { RobotState } from '../RobotState';
 
-import { SurfaceState, SurfaceStatePresets } from '../SurfaceState';
 import Menu from './Menu';
 
 import { styled } from 'styletron-react';
@@ -72,7 +71,6 @@ export type Modal = Modal.Settings | Modal.About | Modal.Exception | Modal.Selec
 
 
 interface RootState {
-  surfaceState: SurfaceState,
   robotState: RobotState;
   robotStartPosition: RobotPosition;
   layout: Layout;
@@ -123,7 +121,6 @@ export class Root extends React.Component<Props, State> {
         z: Distance.centimeters(0),
         theta: Angle.degrees(0),
       },
-      surfaceState: SurfaceStatePresets.jbcA,
       layout: Layout.Overlay,
       code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
       modal: Modal.NONE,
@@ -174,12 +171,6 @@ export class Root extends React.Component<Props, State> {
 
     Space.getInstance().setRobotPosition(position);
   };
-
-  private onUpdateSurfaceState_ = (newSurfaceName: string) => {
-    const newState = SurfaceStatePresets.presets.find(preset => (preset.surfaceName === newSurfaceName));
-    this.setState({ surfaceState: newState });
-  };
-
 
   private onCodeChange_ = (code: string) => {
     this.setState({ code });
@@ -376,7 +367,6 @@ export class Root extends React.Component<Props, State> {
       simulatorState,
       console,
       messages,
-      surfaceState,
       settings,
     } = state;
 
@@ -394,8 +384,6 @@ export class Root extends React.Component<Props, State> {
       messages,
       settings,
       onClearConsole: this.onClearConsole_,
-      surfaceState,
-      onSurfaceChange: this.onUpdateSurfaceState_,
       onSelectScene: this.onSelectSceneClick_,
     };
 

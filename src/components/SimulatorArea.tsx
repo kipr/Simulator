@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import * as Sim from '../Sim';
 import { RobotState } from "../RobotState";
-import { SurfaceState } from '../SurfaceState';
 
 import { styled } from 'styletron-react';
 
@@ -13,7 +12,6 @@ export interface SimulatorAreaProps {
   robotState: RobotState;
   isSensorNoiseEnabled: boolean;
   isRealisticSensorsEnabled: boolean;
-  surfaceState: SurfaceState;
 
   onRobotStateUpdate: (robotState: Partial<RobotState>) => void;
   // onRobotPositionSetCompleted: () => void;
