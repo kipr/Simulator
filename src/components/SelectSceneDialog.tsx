@@ -84,11 +84,9 @@ class SelectSceneDialog extends React.PureComponent<Props & ReduxSelectSceneDial
     // Check if selectedSceneId is not longer one of the scenes
     if (this.props.scenes !== prevProps.scenes) {
       if (!Object.prototype.hasOwnProperty.call(this.props.scenes.scenes, this.state.selectedSceneId)) {
-        console.log('UNSETTING SELECTED SCENE ID');
         this.setState({ selectedSceneId: null });
       }
     }
-    console.log('SELECT SCENE DIALOG DID UPDATE');
   }
   
   render() {
