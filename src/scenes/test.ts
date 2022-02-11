@@ -46,7 +46,7 @@ export const TEST_SCENE: Scene = {
     'jbc_mat': {
       type: 'object',
       geometryId: 'jbc_mat',
-      name: 'Surface A',
+      name: 'JBC Surface A',
       origin: {
         position: {
           x: Distance.meters(0),

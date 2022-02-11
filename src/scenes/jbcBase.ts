@@ -31,7 +31,7 @@ export function createBaseSceneSurfaceA(): Scene {
       'jbc_mat_a': {
         type: 'object',
         geometryId: 'jbc_mat_a',
-        name: 'Surface A',
+        name: 'JBC Surface A',
         origin: {
           position: {
             x: Distance.meters(0),
