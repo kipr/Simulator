@@ -1,9 +1,7 @@
 import Scene from "../State/Scene";
-import Node from "../State/Scene/Node";
-import Geometry from "../State/Scene/Geometry";
 import { Scenes } from "../State";
 import Async from "../State/Async";
-import { TEST_SCENE } from './scene';
+import * as JBC_SCENES from '../../scenes';
 
 
 export namespace ScenesAction {
@@ -84,10 +82,41 @@ export type ScenesAction = (
 
 const DEFAULT_SCENES: Scenes = {
   scenes: {
-    test: Async.loaded({ value: TEST_SCENE })
+    jbc1: Async.loaded({ value: JBC_SCENES.JBC_1 }),
+    jbc2: Async.loaded({ value: JBC_SCENES.JBC_2 }),
+    jbc2b: Async.loaded({ value: JBC_SCENES.JBC_2B }),
+    jbc2c: Async.loaded({ value: JBC_SCENES.JBC_2C }),
+    jbc2d: Async.loaded({ value: JBC_SCENES.JBC_2D }),
+    jbc3: Async.loaded({ value: JBC_SCENES.JBC_3 }),
+    jbc3b: Async.loaded({ value: JBC_SCENES.JBC_3B }),
+    jbc3c: Async.loaded({ value: JBC_SCENES.JBC_3C }),
+    jbc4: Async.loaded({ value: JBC_SCENES.JBC_4 }),
+    jbc4b: Async.loaded({ value: JBC_SCENES.JBC_4B }),
+    jbc5: Async.loaded({ value: JBC_SCENES.JBC_5 }),
+    jbc5b: Async.loaded({ value: JBC_SCENES.JBC_5B }),
+    jbc5c: Async.loaded({ value: JBC_SCENES.JBC_5C }),
+    jbc6: Async.loaded({ value: JBC_SCENES.JBC_6 }),
+    jbc6b: Async.loaded({ value: JBC_SCENES.JBC_6B }),
+    jbc6c: Async.loaded({ value: JBC_SCENES.JBC_6C }),
+    jbc7: Async.loaded({ value: JBC_SCENES.JBC_7 }),
+    jbc7b: Async.loaded({ value: JBC_SCENES.JBC_7B }),
+    jbc8: Async.loaded({ value: JBC_SCENES.JBC_8 }),
+    jbc8b: Async.loaded({ value: JBC_SCENES.JBC_8B }),
+    jbc9: Async.loaded({ value: JBC_SCENES.JBC_9 }),
+    jbc9b: Async.loaded({ value: JBC_SCENES.JBC_9B }),
+    jbc10: Async.loaded({ value: JBC_SCENES.JBC_10 }),
+    jbc10b: Async.loaded({ value: JBC_SCENES.JBC_10B }),
+    jbc12: Async.loaded({ value: JBC_SCENES.JBC_12 }),
+    jbc13: Async.loaded({ value: JBC_SCENES.JBC_13 }),
+    jbc17: Async.loaded({ value: JBC_SCENES.JBC_17 }),
+    jbc17b: Async.loaded({ value: JBC_SCENES.JBC_17B }),
+    jbc18: Async.loaded({ value: JBC_SCENES.JBC_18 }),
+    jbc21: Async.loaded({ value: JBC_SCENES.JBC_21 }),
+    jbc22: Async.loaded({ value: JBC_SCENES.JBC_22 }),
+    test: Async.loaded({ value: JBC_SCENES.TEST_SCENE }),
   },
   activeId: 'test',
-}
+};
 
 export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesAction): Scenes => {
   switch (action.type) {
