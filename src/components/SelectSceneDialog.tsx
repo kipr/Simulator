@@ -137,7 +137,7 @@ class SelectSceneDialog extends React.PureComponent<Props & ReduxSelectSceneDial
     const { selectedSceneId } = this.state;
     
     return (
-      <SceneName theme={theme} selected={sceneId === selectedSceneId} onClick={() => this.onSceneClick(sceneId)}>
+      <SceneName key={sceneId} theme={theme} selected={sceneId === selectedSceneId} onClick={() => this.onSceneClick(sceneId)}>
         {scene.name}
       </SceneName>
     );
