@@ -10,7 +10,6 @@ import Section from '../Section';
 import { Spacer } from '../common';
 import { Angle, StyledText } from '../../util';
 import { DropdownList, OptionDefinition } from '../DropdownList';
-import { SurfaceStatePresets } from '../../SurfaceState';
 
 import EditableList from '../EditableList';
 import Item from './Item';
@@ -89,13 +88,6 @@ interface WorldState {
 type Props = WorldProps;
 type State = WorldState;
 
-
-
-
-const SURFACE_NAME = StyledText.text({
-  text: 'Scene',
-});
-
 const Container = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -114,11 +106,6 @@ const StyledListSection = withStyleDeep(StyledSection, {
 const StyledField = styled(Field, (props: ThemeProps) => ({
 
 }));
-
-const SURFACE_OPTIONS: ComboBox.Option[] = [
-  ComboBox.option(SurfaceStatePresets.jbcA.surfaceName, SurfaceStatePresets.jbcA.surfaceName),
-  ComboBox.option(SurfaceStatePresets.jbcB.surfaceName, SurfaceStatePresets.jbcB.surfaceName),
-];
 
 const SectionIcon = styled(Fa, (props: ThemeProps) => ({
   marginLeft: `${props.theme.itemPadding}px`,

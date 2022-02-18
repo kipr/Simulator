@@ -296,8 +296,6 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       messages,
       settings,
       onClearConsole,
-      surfaceState,
-      onSurfaceChange,
       onSelectScene
     } = props;
 
@@ -377,7 +375,6 @@ class OverlayLayout extends React.PureComponent<Props, State> {
             onRobotStateUpdate={onStateChange}
             isSensorNoiseEnabled={settings.simulationSensorNoise}
             isRealisticSensorsEnabled={settings.simulationRealisticSensors}
-            surfaceState={surfaceState}
           />
         </SimulatorAreaContainer>
         <Overlay theme={theme}>

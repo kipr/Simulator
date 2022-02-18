@@ -4,7 +4,6 @@ import { RobotState } from "../RobotState";
 import { Settings } from "../Settings";
 import Scene from "../state/State/Scene";
 import { StyleProps } from "../style";
-import { SurfaceState } from "../SurfaceState";
 import { StyledText } from "../util";
 import { ThemeProps } from "./theme";
 
@@ -19,8 +18,6 @@ export interface LayoutProps extends StyleProps, ThemeProps {
   messages: Message[];
   settings: Settings;
   onClearConsole: () => void;
-  surfaceState: SurfaceState;
-  onSurfaceChange: (surfaceName: string) => void;
   onSelectScene: () => void;
 }
 

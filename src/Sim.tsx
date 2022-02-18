@@ -11,7 +11,6 @@ import {
 import { RobotState } from './RobotState';
 
 import Dict from './Dict';
-import { SurfaceState } from './SurfaceState';
 
 import { Quaternion, ReferenceFrame, Vector2, Vector3 } from './math';
 import { ReferenceFrame as UnitReferenceFrame, Rotation, Vector3 as UnitVector3 } from './unit-math';
@@ -128,10 +127,13 @@ export class Space implements Robotable {
       this.sceneSetting_ = true;
       this.latestUnfulfilledScene_ = state.scene;
       (async () => {
+        // Disable physics during scene changes to avoid objects moving before the scene is fully loaded
+        this.scene.physicsEnabled = false;
         await this.sceneBinding_.setScene(state.scene);
         if (this.latestUnfulfilledScene_ !== state.scene) {
           await this.sceneBinding_.setScene(this.latestUnfulfilledScene_);
         }
+        this.scene.physicsEnabled = true;
       })().finally(() => {
         this.sceneSetting_ = false;
       });
