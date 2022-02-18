@@ -24,6 +24,7 @@ export * from './jbc10';
 export * from './jbc10b';
 export * from './jbc12';
 export * from './jbc13';
+export * from './jbc15b';
 export * from './jbc17';
 export * from './jbc17b';
 export * from './jbc19';
