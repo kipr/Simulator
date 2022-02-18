@@ -15,6 +15,14 @@ export function createBaseSceneSurfaceA(): Scene {
         height: Distance.centimeters(11.15),
         radius: Distance.centimeters(3),
       },
+      'ream': {
+        type: 'box',
+        size: {
+          x: Distance.centimeters(27.94),
+          y: Distance.centimeters(5.08),
+          z: Distance.centimeters(21.59),
+        },
+      },
       'jbc_mat_a': {
         type: 'file',
         uri: 'static/jbcMatA.glb'
@@ -121,14 +129,22 @@ export function createBaseSceneSurfaceA(): Scene {
 
 export function createBaseSceneSurfaceB(): Scene {
   return {
-    name: 'JBC 5C',
-    description: 'Junior Botball Challenge 5C: Synchronized Dancing',
+    name: 'Base Scene - Surface B',
+    description: 'A base scene using Surface B. Intended to be augmented to create full JBC scenes',
     authorId: 'KIPR',
     geometry: {
       'can': {
         type: 'cylinder',
         height: Distance.centimeters(11.15),
         radius: Distance.centimeters(3),
+      },
+      'ream': {
+        type: 'box',
+        size: {
+          x: Distance.centimeters(27.94),
+          y: Distance.centimeters(5.08),
+          z: Distance.centimeters(21.59),
+        },
       },
       'jbc_mat_b': {
         type: 'file',

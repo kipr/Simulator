@@ -10,17 +10,6 @@ export const JBC_19: Scene = {
   ...baseScene,
   name: 'JBC 19',
   description: `Junior Botball Challenge 19: Mountain Rescue`,
-  geometry: {
-    ...baseScene.geometry,
-    'ream': {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(27.94),
-        y: Distance.centimeters(5.08),
-        z: Distance.centimeters(21.59),
-      },
-    },
-  },
   nodes: {
     ...baseScene.nodes,
     'can1': createCanNode(1, { x: Distance.centimeters(3), y: Distance.centimeters(115), z: Distance.centimeters(34.6) }),

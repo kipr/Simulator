@@ -9,17 +9,6 @@ export const JBC_20: Scene = {
   ...baseScene,
   name: 'JBC 20',
   description: `Junior Botball Challenge 20: Rescue the Cans`,
-  geometry: {
-    ...baseScene.geometry,
-    'ream': {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(27.94),
-        y: Distance.centimeters(5.08),
-        z: Distance.centimeters(21.59),
-      },
-    },
-  },
   nodes: {
     ...baseScene.nodes,
     'can2': createCanNode(2),
