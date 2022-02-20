@@ -314,6 +314,13 @@ class OverlayLayout extends React.PureComponent<Props, State> {
     let errors = 0;
     let warnings = 0;
 
+    editorBar.push(BarComponent.create(Button, {
+      theme,
+      onClick: onClearConsole,
+      children:
+        <Fa icon='indent' onClick={() => this.editor_.ivygate.formatCode()}/>
+    }));
+
     messages.forEach(message => {
       switch (message.severity) {
         case 'error': {

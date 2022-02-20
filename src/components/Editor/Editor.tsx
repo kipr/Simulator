@@ -6,6 +6,8 @@ import { ThemeProps } from '../theme';
 
 import { Ivygate, Message } from 'ivygate';
 
+
+
 export enum EditorActionState {
   None,
   Compiling,
@@ -57,6 +59,7 @@ class Editor extends React.PureComponent<Props, State> {
       <Container theme={theme} style={style} className={className}>
         <Ivygate ref={this.bindIvygate_} code={code} language="c" messages={messages} onCodeChange={onCodeChange} autocomplete={autocomplete} />
       </Container>
+      
     );
   }
 }
