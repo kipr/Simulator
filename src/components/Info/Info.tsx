@@ -252,7 +252,7 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
   }
 }
 
-export default connect<any, unknown, InfoProps, ReduxState>((state: ReduxState) => {
+export default connect<unknown, unknown, InfoProps, ReduxState>((state: ReduxState) => {
   const startingScene = state.scenes.scenes[state.scenes.activeId];
   let startingOrigin = ReferenceFrame.IDENTITY;
   if (startingScene.type === Async.Type.Loaded) {

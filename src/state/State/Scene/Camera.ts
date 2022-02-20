@@ -21,7 +21,7 @@ namespace Camera {
         position: Patch.diff(prev.position, next.position),
         radius: Patch.diff(prev.radius, next.radius),
       });
-    }
+    };
   }
 
   export type ArcRotateParams = Omit<ArcRotate, 'type'>;
@@ -42,7 +42,7 @@ namespace Camera {
       case 'arc-rotate': return ArcRotate.diff(prev as ArcRotate, next);
       case 'none': return Patch.none(prev);
     }
-  }
+  };
 
   export interface None {
     type: "none";

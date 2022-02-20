@@ -12,7 +12,7 @@ module.exports = {
     // Project-specific ESLint rules
     'array-bracket-spacing': 'error',
     'arrow-spacing': 'error',
-    'brace-style': 'error',
+    'brace-style': ['error', '1tbs', { 'allowSingleLine': true }],
     'comma-style': 'error',
     'eqeqeq': 'error',
     'indent': ['error', 2, { 'SwitchCase': 1 }],
@@ -59,7 +59,7 @@ module.exports = {
       rules: {
         // TypeScript extension rules that conflict with normal ESLint rules
         'brace-style': 'off',
-        '@typescript-eslint/brace-style': 'error',
+        '@typescript-eslint/brace-style': ['error', '1tbs', { 'allowSingleLine': true }],
         'indent': 'off',
         '@typescript-eslint/indent': ['error', 2, { 'SwitchCase': 1 }],
         'keyword-spacing': 'off',

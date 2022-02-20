@@ -173,7 +173,7 @@ class SelectSceneDialog extends React.PureComponent<Props & ReduxSelectSceneDial
   };
 }
 
-export default connect<any, unknown, Props>((state: ReduxState, ownProps) => ({
+export default connect<unknown, unknown, Props>((state: ReduxState, ownProps) => ({
   scenes: state.scenes,
 }), (dispatch, b) => ({
   onSceneChange: (scene: Scene) => {

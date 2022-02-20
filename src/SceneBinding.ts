@@ -1,4 +1,3 @@
-
 import * as Babylon from "babylonjs";
 import deepNeq from "./deepNeq";
 import Dict from "./Dict";
@@ -330,11 +329,10 @@ class SceneBinding {
     return bNode;
   };
 
-  private updateObject_ = async (id: string, node: Patch.InnerChange<Node.Obj>): Promise<FrameLike> => {
+  private updateObject_ = (id: string, node: Patch.InnerChange<Node.Obj>): FrameLike => {
     console.log('UPDATE OBJECT', id, node);
     
     const bNode = this.findBNode_(id) as FrameLike;
-    if (bNode === undefined) debugger;
 
     console.log(bNode, id);
 
@@ -408,10 +406,14 @@ class SceneBinding {
         console.log('inner change', node.next.type);
         switch (node.next.type) {
           case 'empty': return this.updateEmpty_(id, node as Patch.InnerChange<Node.Empty>);
-          case 'object': return await this.updateObject_(id, node as Patch.InnerChange<Node.Obj>);
+          case 'object': return this.updateObject_(id, node as Patch.InnerChange<Node.Obj>);
           case 'directional-light': return this.updateDirectionalLight_(id, node as Patch.InnerChange<Node.DirectionalLight>);
           case 'spot-light': return this.updateSpotLight_(id, node as Patch.InnerChange<Node.SpotLight>);
           case 'point-light': return this.updatePointLight_(id, node as Patch.InnerChange<Node.PointLight>);
+          default: {
+            console.error('invalid node type for inner change:', (node.next as Node).type);
+            return this.findBNode_(id);
+          }
         }
       }
       // The node has been wholesale replaced by another type of node
@@ -439,11 +441,7 @@ class SceneBinding {
         return undefined;
       }
       case Patch.Type.None: {
-        try {
-          return this.findBNode_(id);
-        } catch (e) {
-          throw e;
-        }
+        return this.findBNode_(id);
       }
     }
   };
@@ -479,7 +477,7 @@ class SceneBinding {
   private updateArcRotateCamera_ = (node: Patch.InnerChange<Camera.ArcRotate>): Babylon.ArcRotateCamera => {
     if (!(this.camera_ instanceof Babylon.ArcRotateCamera)) throw new Error('Expected ArcRotateCamera');
 
-    const bCamera = this.camera_ as Babylon.ArcRotateCamera;
+    const bCamera = this.camera_;
 
     if (node.inner.target.type === Patch.Type.OuterChange) {
       bCamera.setTarget(Vector3.toBabylon(node.inner.target.next, 'centimeters'));
@@ -581,7 +579,7 @@ class SceneBinding {
       case Patch.Type.OuterChange: {
         this.robot_.setOrigin(patch.robot.next.origin);
         break;
-      };
+      }
       case Patch.Type.InnerChange: {
         this.robot_.setOrigin(patch.robot.next.origin);
         break;
@@ -593,9 +591,9 @@ class SceneBinding {
       case Patch.Type.OuterChange: {
         this.camera_ = this.createCamera_(patch.camera.next);
         break;
-      };
+      }
       case Patch.Type.InnerChange: {
-        if (this.camera_) this.camera_ = this.updateCamera_(patch.camera as Patch.InnerChange<Camera>);
+        if (this.camera_) this.camera_ = this.updateCamera_(patch.camera);
         else this.camera_ = this.createCamera_(patch.camera.next);
         break;
       }

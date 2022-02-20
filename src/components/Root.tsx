@@ -388,17 +388,11 @@ export class Root extends React.Component<Props, State> {
       });
   };
 
-  /*componentDidCatch(error: Error, info: React.ErrorInfo) {
-    this.setState({
-      modal: Modal.exception(error, info)
-    });
-  }*/
-
   private onSelectSceneClick_ = () => {
     this.setState({
       modal: Modal.SELECT_SCENE
     });
-  }
+  };
 
   render() {
     const { props, state } = this;

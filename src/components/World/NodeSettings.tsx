@@ -1,6 +1,6 @@
 import * as React from "react";
 import { styled } from "styletron-react";
-import { Vector3 as RawVector3 } from "../../math";
+import { Vector3 as RawVector3, AngleAxis, Euler } from "../../math";
 import { ReferenceFrame, Rotation, Vector3 } from "../../unit-math";
 
 import { Angle, Distance, Mass, UnitlessValue, Value } from "../../util";
@@ -13,7 +13,6 @@ import ScrollArea from "../ScrollArea";
 import Section from "../Section";
 import { ThemeProps } from "../theme";
 import ValueEdit from "../ValueEdit";
-import { AngleAxis, Euler } from "../../math";
 import Geometry from '../../state/State/Scene/Geometry';
 import Node from "../../state/State/Scene/Node";
 import Scene from "../../state/State/Scene";
@@ -110,7 +109,7 @@ const NODE_TYPE_OPTIONS: ComboBox.Option[] = [
 ];
 
 const NODE_TYPES_REV = (() => {
-  const map = {};
+  const map: Record<string, number> = {};
   NODE_TYPES.forEach((type, i) => {
     map[type] = i;
   });
@@ -370,7 +369,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
       origin: {
         ...origin,
         orientation: {
-          ...orientation as Rotation.AngleAxis,
+          ...orientation,
           axis: {
             ...orientation.axis,
             z: Value.toDistance(value)

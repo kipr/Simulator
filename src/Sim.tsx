@@ -250,19 +250,8 @@ export class Space implements Robotable {
   public ensureInitialized(): Promise<void> {
     if (this.initializationPromise === undefined) {
       this.initializationPromise = new Promise((resolve, reject) => {
-        this.createScene();
-
-        // const motionBlur = new Babylon.MotionBlurPostProcess('mb', this.scene, 1.0, this.camera);
-        // motionBlur.adaptScaleToCurrentViewport = true;
-        // motionBlur.samples = 4;
-        // motionBlur.motionStrength = 0.2;
-        // new Babylon.HighlightsPostProcess("highlights", 1.0, this.camera);
-        /*this.lens_ = new Babylon.LensRenderingPipeline('lensEffects', {
-          edge_blur: 1.0,
-          distortion: 1.0,
-        }, this.scene, 1.0, [ this.camera ]);
-*/
-        this.loadMeshes()
+        this.createScene()
+          .then(() => this.loadMeshes())
           .then(() => {
             this.startRenderLoop();
             resolve();
@@ -271,6 +260,17 @@ export class Space implements Robotable {
             console.error('The simulator meshes failed to load', e);
             reject(e);
           });
+
+        // const motionBlur = new Babylon.MotionBlurPostProcess('mb', this.scene, 1.0, this.camera);
+        // motionBlur.adaptScaleToCurrentViewport = true;
+        // motionBlur.samples = 4;
+        // motionBlur.motionStrength = 0.2;
+        // new Babylon.HighlightsPostProcess("highlights", 1.0, this.camera);
+
+        // this.lens_ = new Babylon.LensRenderingPipeline('lensEffects', {
+        //   edge_blur: 1.0,
+        //   distortion: 1.0,
+        // }, this.scene, 1.0, [ this.camera ]);          
       });
     }
 
@@ -301,7 +301,7 @@ export class Space implements Robotable {
     }
   };
 
-  private createScene(): void {
+  private async createScene(): Promise<void> {
     this.scene.onPointerObservable.add(this.onPointerTap_, Babylon.PointerEventTypes.POINTERTAP);
 
     const light = new Babylon.HemisphericLight("light1", new Babylon.Vector3(0, 1, 0), this.scene);
@@ -320,7 +320,7 @@ export class Space implements Robotable {
     this.scene.getPhysicsEngine().setSubTimeStep(5);
 
     console.log('starting scene', store.getState().scene);
-    this.sceneBinding_.setScene(store.getState().scene);
+    await this.sceneBinding_.setScene(store.getState().scene);
 
     // (x, z) coordinates of cans around the board
     this.canCoordinates = [[-22, -14.3], [0, -20.6], [15.5, -23.7], [0, -6.9], [-13.7, 6.8], [0, 6.8], [13.5, 6.8], [25.1, 14.8], [0, 34], [-18.8, 45.4], [0, 54.9], [18.7, 45.4]];
@@ -655,12 +655,12 @@ export class Space implements Robotable {
         bPosition = bNode.position;
         bOrientation = Babylon.Quaternion.Identity();
       } else {
-        throw new Error(`Unknown node type: ${bNode}`);
+        throw new Error(`Unknown node type: ${bNode.constructor.name}`);
       }
 
       // Compare babylon position with state position. If they differ by more than 0.5cm, update state
 
-      let nextNode: Node = { ...node };
+      const nextNode: Node = { ...node };
       let hit = false;
 
       if (position) {
@@ -676,7 +676,7 @@ export class Space implements Robotable {
             position: UnitVector3.toTypeGranular(bPositionConv, position.x.type, position.y.type, position.z.type),
           };
           hit = true;
-        };
+        }
       }
 
       if (rotation) {
@@ -692,7 +692,7 @@ export class Space implements Robotable {
             orientation: Rotation.toType(bOrientationConv, rotation.type),
           };
           hit = true;
-        };
+        }
       }
 
       if (hit) {

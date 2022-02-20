@@ -30,7 +30,7 @@ type Props = LocationProps;
 const IDENTITY_ORIGIN: ReferenceFrame = {
   position: Vector3.zero('centimeters'),
   orientation: Rotation.Euler.identity(Angle.Type.Degrees),
-}
+};
 
 const StyledValueEdit = styled(ValueEdit, (props: ThemeProps) => ({
   marginTop: `${props.theme.itemPadding * 2}px`,
@@ -140,7 +140,7 @@ class Location extends React.PureComponent<Props & ReduxLocationProps> {
   }
 }
 
-export default connect<any, unknown, LocationProps, State>((state: State) => {
+export default connect<unknown, unknown, LocationProps, State>((state: State) => {
   const startingScene = state.scenes.scenes[state.scenes.activeId];
   let startingOrigin = IDENTITY_ORIGIN;
   if (startingScene.type === Async.Type.Loaded) {
