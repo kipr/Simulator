@@ -54,7 +54,7 @@ export const sendFeedback = (rootState: RootState): Promise<FeedbackResponse> =>
 
       let message: string = ''; 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      if ('message' in responseJSON && typeof responseJSON.message !== 'string') {
+      if ('message' in responseJSON && typeof responseJSON.message === 'string') {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         message = responseJSON.message as string;
       }
