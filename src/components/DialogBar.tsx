@@ -1,8 +1,7 @@
 import * as React from "react";
 import { styled } from "styletron-react";
 import { Spacer } from "./common";
-import { Fa } from "./Fa";
-import { ThemeProps } from "./theme";
+import { ThemeProps, GREEN } from "./theme";
 
 export interface DialogBarProps extends ThemeProps {
   onAccept: () => void;
@@ -21,8 +20,9 @@ const Container = styled('div', (props: ThemeProps) => ({
 const Button = styled('div', (props: ThemeProps & { disabled?: boolean }) => ({
   padding: `${props.theme.itemPadding * 2}px`,
   ':hover': !props.disabled && {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)'
+    backgroundColor: GREEN.hover
   },
+  backgroundColor: props.disabled ? GREEN.disabled : GREEN.standard,
   cursor: props.disabled ? 'not-allowed' : 'pointer',
   opacity: props.disabled ? 0.5 : 1,
   transition: 'background-color 0.2s, opacity 0.2s',
@@ -30,17 +30,18 @@ const Button = styled('div', (props: ThemeProps & { disabled?: boolean }) => ({
   ':first-child': {
     borderLeft: 'none'
   }
-
 }));
 
 class DialogBar extends React.PureComponent<Props> {
   render() {
     const { props } = this;
-    const { theme } = props;
+    const { theme, children } = props;
     return (
       <Container theme={theme}>
         <Spacer />
-        <Button theme={theme} onClick={this.props.onAccept}><Fa icon='check' /> Accept</Button>
+        <Button theme={theme} onClick={this.props.onAccept}>
+          {children}
+        </Button>
       </Container>
     );
   }

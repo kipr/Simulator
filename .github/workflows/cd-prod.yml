@@ -1,0 +1,77 @@
+name: Deploy to prod
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+env:
+  GKE_CLUSTER: kipr
+  GKE_ZONE: us-central1-a
+
+jobs:
+  deploy-to-prod:
+    name: Deploy to prod
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout simulator repo
+      uses: actions/checkout@v2
+      with:
+        path: simulator-repo
+    
+    # Ensure tag matches package.json version
+    - name: Check tag and package version
+      id: check_version
+      run: |-
+        PACKAGE_VERSION=$(jq -r .version package.json)
+        TAG_VERSION=${GITHUB_REF#refs/tags/v}
+        if [[ "$PACKAGE_VERSION" != "$TAG_VERSION" ]]; then exit 1; fi
+        echo "::set-output name=VERSION::${TAG_VERSION}"
+      working-directory: simulator-repo
+
+    # Setup gcloud CLI
+    - name: Set up gcloud CLI
+      uses: google-github-actions/setup-gcloud@v0.2.1
+      with:
+        service_account_key: ${{ secrets.GCR_SA_KEY }}
+        project_id: ${{ secrets.GKE_PROJECT }}
+        
+    # Ensure that the Docker image already exists for this commit
+    - name: Ensure Docker image exists for commit
+      run: |-
+        NUM_IMAGES=$(gcloud container images list-tags gcr.io/kipr-321905/kipr/simulator --filter="tags:${GITHUB_SHA::8}" --format=json | jq '. | length')
+        if (( NUM_IMAGES <= 0 )); then exit 1; fi
+    
+    # Ensure there isn't already a Docker image for this version tag
+    - name: Ensure Docker image does not exist for tag
+      run: |-
+        NUM_IMAGES=$(gcloud container images list-tags gcr.io/kipr-321905/kipr/simulator --filter="tags:${{ steps.check_version.outputs.VERSION }}" --format=json | jq '. | length')
+        if (( NUM_IMAGES > 0 )); then exit 1; fi
+    
+    # Add version tag to Docker image
+    - name: Add version tag to Docker image
+      run: |-
+        gcloud container images add-tag gcr.io/kipr-321905/kipr/simulator:${GITHUB_SHA::8} gcr.io/kipr-321905/kipr/simulator:${{ steps.check_version.outputs.VERSION }}
+
+    - name: Checkout deployment repo
+      uses: actions/checkout@v2
+      with:
+        repository: 'kipr/kipr-yamls'
+        ssh-key: ${{ secrets.KIPR_YAMLS_REPO_KEY }}
+
+    # Get the GKE credentials so we can deploy to the cluster
+    - name: Get GKE credentials
+      uses: google-github-actions/get-gke-credentials@v0.2.1
+      with:
+        cluster_name: ${{ env.GKE_CLUSTER }}
+        location: ${{ env.GKE_ZONE }}
+        credentials: ${{ secrets.GCR_SA_KEY }}
+
+    - name: Deploy to GKE
+      run: |-
+        helm upgrade \
+          --install \
+          --namespace prod \
+          --set imageVersion=${{ steps.check_version.outputs.VERSION }} \
+          simulator ./simulator

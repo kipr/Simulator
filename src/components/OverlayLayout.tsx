@@ -176,8 +176,6 @@ class OverlayLayout extends React.PureComponent<Props, State> {
     };
   }
 
-  
-
   private onEditorSizeChange_ = (index: number) => {
     const size = EDITOR_SIZES[index];
 

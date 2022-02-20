@@ -235,6 +235,15 @@ export class Space implements Robotable {
     this.currentEngineView = null;
 
     ACTIVE_SPACE = this;
+
+    // tell Babylon to load a local Draco decoder
+    Babylon.DracoCompression.Configuration = {
+      decoder: {
+        wasmUrl:        '/static/draco_wasm_wrapper_gltf.js',
+        wasmBinaryUrl:  '/static/draco_decoder_gltf.wasm',
+        fallbackUrl:    '/static/draco_decoder_gltf.js'
+      }
+    };
   }
 
   // Returns a promise that will resolve after the scene is fully initialized and the render loop is running
@@ -384,12 +393,10 @@ export class Space implements Robotable {
       this.rightWheelRotationPrev = rightWheelRotationCurr;
     });
   }
-  
 
   private async loadMeshes(): Promise<void> {
     // Load model into scene
     const importMeshResult = await Babylon.SceneLoader.ImportMeshAsync("",'static/', 'demobot_v6.glb', this.scene);
-
     // TEMP FIX: Scale everything up by 100 to avoid Ammo issues at small scale
     const rootMesh = importMeshResult.meshes.find(mesh => mesh.name === '__root__');
     rootMesh.scaling.scaleInPlace(100);

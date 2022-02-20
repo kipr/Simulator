@@ -50,7 +50,8 @@ namespace Sensor {
 
   export enum Type {
     Et,
-    Touch
+    Touch,
+    Ir,
   }
 
   export namespace Type {
@@ -58,6 +59,7 @@ namespace Sensor {
       switch (type) {
         case Type.Et: return 'Et';
         case Type.Touch: return 'Touch';
+        case Type.Ir: return 'Ir';
         default: return `Unknown (${JSON.stringify(type)})`;
       }
     };
@@ -84,6 +86,22 @@ namespace Sensor {
     });
   }
 
+  export interface Ir extends Common {
+    type: Type.Ir;
+    forward: Babylon.Vector3;
+    origin: Babylon.Vector3;
+    maxRange?: number;
+    noiseRadius?: number;
+  }
+
+  export namespace Ir {
+    export const fill = (ir: Ir): Ir => ({
+      maxRange: 1.5,
+      noiseRadius: 10,
+      ...ir
+    });
+  }
+
   export interface Touch extends Common {
     type: Type.Touch;
   }
@@ -92,6 +110,6 @@ namespace Sensor {
   }
 }
 
-type Sensor = Sensor.Et | Sensor.Touch;
+type Sensor = Sensor.Et | Sensor.Ir | Sensor.Touch;
 
 export default Sensor;

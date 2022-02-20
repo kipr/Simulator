@@ -18,6 +18,7 @@ import Node from "../../state/State/Scene/Node";
 import * as uuid from 'uuid';
 import Scene from "../../state/State/Scene";
 import Geometry from "../../state/State/Scene/Geometry";
+import { Fa } from "../Fa";
 
 export interface AddNodeAcceptance {
   node: Node;
@@ -145,8 +146,9 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
             onGeometryRemove={this.onGeometryRemove_}
           />
         </StyledScrollArea>
-        <DialogBar theme={theme} onAccept={this.onAccept_} />
-        
+        <DialogBar theme={theme} onAccept={this.onAccept_}>
+          <Fa icon='check' /> Accept
+        </DialogBar>
       </Dialog>
     );
   }

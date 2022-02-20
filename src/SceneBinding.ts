@@ -49,7 +49,11 @@ class SceneBinding {
     const engine = this.bScene_.getEngine();
     if (this.engineView_) engine.unRegisterView(this.engineView_.target);
     this.engineView_ = engine.registerView(this.canvas_);
+
+    this.bScene_.detachControl();
     engine.inputElement = this.canvas_;
+    this.camera_.attachControl(this.engineView_.target, true);
+    this.bScene_.attachControl();
   }
 
   constructor(bScene: Babylon.Scene, robot: Robotable) {
@@ -451,6 +455,7 @@ class SceneBinding {
     const ret = new Babylon.ArcRotateCamera('botcam', 10, 10, 10, Vector3.toBabylon(camera.target, 'centimeters'), this.bScene_);
     ret.attachControl(this.bScene_.getEngine().getRenderingCanvas(), true);
     ret.position = Vector3.toBabylon(camera.position, 'centimeters');
+    ret.panningSensibility = 100;
     new Babylon.FxaaPostProcess("fxaa", 1.0, ret);
     // new Babylon.TonemapPostProcess("tonemap", Babylon.TonemappingOperator.HejiDawson, 0.8, ret);
 
@@ -603,7 +608,7 @@ class SceneBinding {
       this.bScene_.removeCamera(oldCamera);
       this.bScene_.addCamera(this.camera_);
       this.bScene_.activeCamera = this.camera_;
-      this.camera_.attachControl(this.engineView_.target, true);
+      if (this.engineView_) this.camera_.attachControl(this.engineView_.target, true);
       this.bScene_.attachControl();
       oldCamera.dispose();
     }

@@ -1,12 +1,13 @@
-export default (code: string): Promise<string> => {
+export default (code: string): Promise<CompileResult> => {
 
-  return new Promise<string>((resolve, reject) => {
+  return new Promise<CompileResult>((resolve, reject) => {
     const req = new XMLHttpRequest();
     req.onload = () => {
       if (req.status !== 200) {
         reject(JSON.parse(req.responseText));
+        return;
       }
-      resolve(req.responseText);
+      resolve(JSON.parse(req.responseText) as CompileResult);
     };
 
     req.onerror = (err) => {
@@ -24,7 +25,8 @@ export default (code: string): Promise<string> => {
   
 };
 
-export interface CompileError {
+export interface CompileResult {
+  result?: string;
   stdout: string;
   stderr: string;
 }

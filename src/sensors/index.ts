@@ -1,5 +1,6 @@
 import * as Babylon from 'babylonjs';
 import { EtSensor } from './EtSensor';
+import { IrSensor } from './IrSensor';
 
 import Sensor from './Sensor';
 import SensorObject from './SensorObject';
@@ -18,6 +19,8 @@ export const instantiate = (scene: Babylon.Scene, id: string, sensor: Sensor): S
   switch (sensor.type) {
     case Sensor.Type.Et:
       return new EtSensor({ scene, mesh, sensor });
+    case Sensor.Type.Ir:
+      return new IrSensor({ scene, mesh, sensor });
     case Sensor.Type.Touch:
       return new TouchSensor({ scene, mesh, sensor });
   }
