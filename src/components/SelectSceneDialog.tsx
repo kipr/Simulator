@@ -11,6 +11,7 @@ import { ThemeProps } from "./theme";
 import { SceneAction } from "../state/reducer";
 import DialogBar from "./DialogBar";
 import ScrollArea from "./ScrollArea";
+import { Fa } from "./Fa";
 
 export interface SelectSceneDialogProps extends ThemeProps {
   onClose: () => void;
@@ -114,7 +115,9 @@ class SelectSceneDialog extends React.PureComponent<Props & ReduxSelectSceneDial
             </InfoContainer>
           </InfoColumn>
         </Container>
-        <DialogBar theme={theme} onAccept={this.onAccept} />
+        <DialogBar theme={theme} onAccept={this.onAccept}>
+          <Fa icon='check' /> Accept
+        </DialogBar>
       </Dialog>
     );
   }
@@ -170,7 +173,7 @@ class SelectSceneDialog extends React.PureComponent<Props & ReduxSelectSceneDial
   };
 }
 
-export default connect<any, unknown, Props>((state: ReduxState, ownProps) => ({
+export default connect<unknown, unknown, Props>((state: ReduxState, ownProps) => ({
   scenes: state.scenes,
 }), (dispatch, b) => ({
   onSceneChange: (scene: Scene) => {

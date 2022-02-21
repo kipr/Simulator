@@ -225,13 +225,13 @@ export namespace Quaternion {
     if (cos < -1) cos = -1;
     if (cos > 1) cos = 1;
     return Math.acos(cos);
-  }
+  };
 
   export const slerp = (lhs: Quaternion, rhs: Quaternion, t: number): Quaternion => {
     // We're going to cheat
     const q = Babylon.Quaternion.Slerp(toBabylon(lhs), toBabylon(rhs), t);
     return fromBabylon(q);
-  }
+  };
 
   
 }

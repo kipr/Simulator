@@ -200,8 +200,8 @@ export namespace Distance {
   };
 
   export const abs = (a: Distance): Distance => ({
-      type: a.type,
-      value: Math.abs(a.value)
+    type: a.type,
+    value: Math.abs(a.value)
   });
 }
 

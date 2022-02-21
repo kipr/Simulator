@@ -71,9 +71,9 @@ export class AboutDialog extends React.PureComponent<Props> {
           <LogoRow>
             {logo}
           </LogoRow>
-          Version {SIMULATOR_VERSION}
+          Version {SIMULATOR_VERSION} ({SIMULATOR_GIT_HASH})
           <br /> <br />
-          <Bold>Copyright <Fa icon='copyright' /> 2021 <Link theme={theme} href="https://kipr.org/" target="_blank">KISS Institute for Practical Robotics</Link> and External Contributors</Bold>
+          <Bold>Copyright <Fa icon='copyright' /> 2022 <Link theme={theme} href="https://kipr.org/" target="_blank">KISS Institute for Practical Robotics</Link> and External Contributors</Bold>
           <br /> <br />
           This software is licensed under the terms of the <Link theme={theme} href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">GNU General Public License v3</Link>.
           <br /> <br />
@@ -83,6 +83,7 @@ export class AboutDialog extends React.PureComponent<Props> {
             <li>Will Hawkins</li>
             <li>Braden McDorman</li>
             <li>Zachary Sasser</li>
+            <li>Jack Williams</li>
             <li>Nafis Zaman</li>
           </ul>
 

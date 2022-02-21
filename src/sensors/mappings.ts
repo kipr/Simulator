@@ -13,6 +13,15 @@ export default {
     output: Sensor.Output.analog(0),
     maxUpdateFrequency: 3,
   },
+  // IR sensor
+  'color-54': {
+    type: Sensor.Type.Ir,
+    forward: new Babylon.Vector3(0.0, 0.0, -0.02),
+    // origin is offset because the mesh's center point in the model isn't actual at the center
+    origin: new Babylon.Vector3(0.012, 0, -0.025),
+    output: Sensor.Output.analog(1),
+    maxUpdateFrequency: 1,
+  },
   // Front touch sensor
   'collider_touch_front': {
     type: Sensor.Type.Touch,

@@ -13,7 +13,7 @@ import { DropdownList, OptionDefinition } from '../DropdownList';
 
 import EditableList from '../EditableList';
 import Item from './Item';
-import AddItemDialog, { AddNodeAcceptance } from './AddNodeDialog';
+import AddNodeDialog, { AddNodeAcceptance } from './AddNodeDialog';
 import { Fa } from '../Fa';
 import NodeSettingsDialog, { NodeSettingsAcceptance } from './NodeSettingsDialog';
 import { connect } from 'react-redux';
@@ -27,7 +27,6 @@ import { Rotation, Vector3 } from '../../unit-math';
 import ComboBox from '../ComboBox';
 import Scene from '../../state/State/Scene';
 import Node from '../../state/State/Scene/Node';
-import AddNodeDialog from './AddNodeDialog';
 import { Scenes } from '../../state/State';
 import Async from '../../state/State/Async';
 import Dict from '../../Dict';
@@ -162,7 +161,7 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
     this.setState({ modal: UiState.ADD_NODE });
     event.stopPropagation();
     event.preventDefault();
-  }
+  };
 
   private onNodeResetClick_ = (id: string) => () => {
     const { props } = this;
@@ -192,8 +191,7 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
     const idStr = id as string;
     const node = scene.nodes[idStr];
     if (node.type === 'object') {
-      if (node.geometryId !== undefined)
-      {
+      if (node.geometryId !== undefined) {
         let unique = true;
         for (const nodeId in scene.nodes) {
           const otherNode = scene.nodes[nodeId];

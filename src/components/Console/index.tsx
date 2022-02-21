@@ -35,7 +35,7 @@ class Console extends React.PureComponent<Props, State> {
   render() {
     const { style, className, theme, text } = this.props;
     return (
-      <ScrollArea style={style} className={className} theme={theme}>
+      <ScrollArea style={style} className={className} theme={theme} autoscroll>
         <ConsoleText theme={theme} text={text} />
       </ScrollArea>
     );

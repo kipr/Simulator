@@ -66,13 +66,26 @@ class Evented implements ResizeListener {
 
   private onResize_ = (entries: ResizeObserverEntry[]) => {
     for (const entry of entries) {
+      this.callback_(Evented.getResizeObserverEntrySize(entry), entry.target);
+    }
+  };
+
+  private static getResizeObserverEntrySize(entry: ResizeObserverEntry): Vector2 {
+    if (entry.borderBoxSize) {
+      // Firefox implements borderBoxSize as an object instead of an array, so check for either
       const borderBoxSize = entry.borderBoxSize as unknown;
       const borderBox: ResizeObserverSize = Array.isArray(borderBoxSize)
         ? borderBoxSize[0] as ResizeObserverSize
         : borderBoxSize as ResizeObserverSize;
-      this.callback_({ x: borderBox.inlineSize, y: borderBox.blockSize }, entry.target);
+      return { x: borderBox.inlineSize, y: borderBox.blockSize };
+    } else if (entry.contentRect) {
+      // Safari doesn't return borderBoxSize, so fall back to contentRect
+      return { x: entry.contentRect.width, y: entry.contentRect.height };
     }
-  };
+    
+    console.error('failed to get size of ResizeObserverEntry');
+    return { x: 0, y: 0 };
+  }
   
   constructor(callback: ResizeCallback) {
     this.callback_ = callback;
