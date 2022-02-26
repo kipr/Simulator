@@ -321,7 +321,10 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       theme,
       onClick: onIndentCode,
       children:
-        <Fa icon='indent'>Indent</Fa>
+        <>
+          <Fa icon='indent'/>
+          {' Indent'}
+        </>
     }));
 
     messages.forEach(message => {
