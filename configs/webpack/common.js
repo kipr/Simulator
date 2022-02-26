@@ -19,7 +19,8 @@ module.exports = {
     fallback: {
       fs: false,
       path: false,
-    }
+    },
+    symlinks: false,
   },
   context: resolve(__dirname, '../../src'),
   module: {

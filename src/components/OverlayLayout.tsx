@@ -296,6 +296,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       messages,
       settings,
       onClearConsole,
+      onIndentCode,
       surfaceState,
       onSurfaceChange,
     } = props;
@@ -318,9 +319,9 @@ class OverlayLayout extends React.PureComponent<Props, State> {
 
     editorBar.push(BarComponent.create(Button, {
       theme,
-      onClick: onClearConsole,
+      onClick: onIndentCode,
       children:
-        <Fa icon='indent' onClick={() => this.editor_.ivygate.formatCode()}/>
+        <Fa icon='indent'>Indent</Fa>
     }));
 
     messages.forEach(message => {

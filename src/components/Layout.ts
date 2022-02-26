@@ -19,6 +19,7 @@ export interface LayoutProps extends StyleProps, ThemeProps {
   messages: Message[];
   settings: Settings;
   onClearConsole: () => void;
+  onIndentCode: () => void;
   surfaceState: SurfaceState;
   onSurfaceChange: (surfaceName: string) => void;
   feedback: Feedback;
