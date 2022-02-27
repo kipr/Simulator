@@ -294,6 +294,7 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       messages,
       settings,
       onClearConsole,
+      onIndentCode,
       surfaceState,
       onSurfaceChange,
     } = props;
@@ -313,6 +314,16 @@ class OverlayLayout extends React.PureComponent<Props, State> {
     const editorBar: BarComponent<unknown>[] = [];
     let errors = 0;
     let warnings = 0;
+
+    editorBar.push(BarComponent.create(Button, {
+      theme,
+      onClick: onIndentCode,
+      children:
+        <>
+          <Fa icon='indent'/>
+          {' Indent'}
+        </>
+    }));
 
     messages.forEach(message => {
       switch (message.severity) {

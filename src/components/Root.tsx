@@ -352,6 +352,10 @@ export class Root extends React.Component<Props, State> {
     });
   };
 
+  private onIndentCode_ = () => {
+    this.overlayLayout_.editor.ivygate.formatCode();
+  };
+  
   onDocumentationClick = () => {
     window.open("https://www.kipr.org/doc/index.html");
   };
@@ -425,6 +429,7 @@ export class Root extends React.Component<Props, State> {
       messages,
       settings,
       onClearConsole: this.onClearConsole_,
+      onIndentCode: this.onIndentCode_,
       surfaceState,
       onSurfaceChange: this.onUpdateSurfaceState_,
       feedback,
