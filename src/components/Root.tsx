@@ -353,8 +353,9 @@ export class Root extends React.Component<Props, State> {
   };
 
   private onIndentCode_ = () => {
-    this.overlayLayout_.editor.ivygate.formatCode()
-  }
+    this.overlayLayout_.editor.ivygate.formatCode();
+  };
+  
   onDocumentationClick = () => {
     window.open("https://www.kipr.org/doc/index.html");
   };
