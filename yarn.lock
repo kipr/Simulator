@@ -4291,8 +4291,9 @@ isurl@^1.0.0-alpha5:
     has-to-string-tag-x "^1.2.0"
     is-object "^1.0.1"
 
-ivygate@../ivygate:
+"ivygate@https://github.com/kipr/ivygate#v0.1.1":
   version "0.1.1"
+  resolved "https://github.com/kipr/ivygate#ae1723b23257971cec04ed9f8d55857039db321d"
   dependencies:
     monaco "^1.201704190613.0"
     monaco-editor "^0.23.0"
