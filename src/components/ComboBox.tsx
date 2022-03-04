@@ -155,7 +155,7 @@ class ComboBox extends React.PureComponent<ComboBox.Props, ComboBox.State> {
       };
       COMBO_BOX_ROOT.style.pointerEvents = 'auto';
       COMBO_BOX_ROOT.onclick = this.onComboBoxRootClick_;
-    } else {
+    } else if (COMBO_BOX_ROOT.onclick === this.onComboBoxRootClick_) {
       COMBO_BOX_ROOT.style.pointerEvents = 'none';
       COMBO_BOX_ROOT.onclick = undefined;
     }
