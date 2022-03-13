@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 
 import { styled } from 'styletron-react';
 import { Button } from './Button';
@@ -11,9 +12,15 @@ import { SimulatorArea } from './SimulatorArea';
 import { Theme, ThemeProps } from './theme';
 import Widget, { BarComponent, Mode, Size, WidgetProps } from './Widget';
 import World from './World';
+import { State as ReduxState } from '../state';
+import { SceneAction } from '../state/reducer';
 
 export interface OverlayLayoutProps extends LayoutProps {
   
+}
+
+interface ReduxOverlayLayoutProps {
+  onResetScene: () => void;
 }
 
 interface OverlayLayoutState {
@@ -164,8 +171,8 @@ const INFO_SIZE = sizeDict(INFO_SIZES);
 const WORLD_SIZE = sizeDict(WORLD_SIZES);
 const CONSOLE_SIZE = sizeDict(CONSOLE_SIZES);
 
-class OverlayLayout extends React.PureComponent<Props, State> {
-  constructor(props: Props) {
+export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayoutProps, State> {
+  constructor(props: Props & ReduxOverlayLayoutProps) {
     super(props);
 
     this.state = {
@@ -294,7 +301,8 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       messages,
       settings,
       onClearConsole,
-      onSelectScene
+      onSelectScene,
+      onResetScene,
     } = props;
 
     const {
@@ -364,6 +372,16 @@ class OverlayLayout extends React.PureComponent<Props, State> {
         </>,
     }));
 
+    worldBar.push(BarComponent.create(Button, {
+      theme,
+      onClick: onResetScene,
+      children:
+        <>
+          <Fa icon='sync' />
+          { ' Reset' }
+        </>
+    }));
+
     return (
       <Container style={style} className={className}>
         <SimulatorAreaContainer>
@@ -424,4 +442,10 @@ class OverlayLayout extends React.PureComponent<Props, State> {
   }
 }
 
-export default OverlayLayout;
+export const OverlayLayoutRedux = connect<unknown, ReduxOverlayLayoutProps, OverlayLayoutProps, ReduxState>((state: ReduxState) => {
+  return {};
+}, dispatch => ({
+  onResetScene: () => {
+    dispatch(SceneAction.RESET_SCENE);
+  }
+}), null, { forwardRef: true })(OverlayLayout);

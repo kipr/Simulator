@@ -8,7 +8,7 @@ import SimMenu from './SimMenu';
 
 import { styled } from 'styletron-react';
 import { DARK, Theme } from './theme';
-import OverlayLayout from './OverlayLayout';
+import { OverlayLayout, OverlayLayoutRedux } from './OverlayLayout';
 import { Layout, LayoutProps } from './Layout';
 import BottomLayout from './BottomLayout';
 import SideLayout from './SideLayout';
@@ -431,7 +431,7 @@ export class Root extends React.Component<Props, State> {
     switch (layout) {
       case Layout.Overlay: {
         impl = (
-          <OverlayLayout ref={this.bindOverlayLayout_} {...commonLayoutProps} />
+          <OverlayLayoutRedux ref={this.bindOverlayLayout_} {...commonLayoutProps} />
         );
         break;
       }

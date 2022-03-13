@@ -18,12 +18,13 @@ import { Fa } from '../Fa';
 import NodeSettingsDialog, { NodeSettingsAcceptance } from './NodeSettingsDialog';
 import { connect } from 'react-redux';
 
-import { State as ReduxState } from '../../state';
+import { ReferencedScenePair, State as ReduxState } from '../../state';
 
 import { SceneAction } from '../../state/reducer';
 
 import * as uuid from 'uuid';
 import { Rotation, Vector3 } from '../../unit-math';
+import { Vector3 as RawVector3 } from '../../math';
 import ComboBox from '../ComboBox';
 import Scene from '../../state/State/Scene';
 import Node from '../../state/State/Scene/Node';
@@ -36,12 +37,12 @@ export interface WorldProps extends StyleProps, ThemeProps {
 }
 
 interface ReduxWorldProps {
-  scene: Scene;
+  scene: ReferencedScenePair;
   scenes: Scenes;
 
   onNodeAdd: (id: string, node: Node) => void;
   onNodeRemove: (id: string) => void;
-  onNodeChange: (id: string, node: Node) => void;
+  onNodeChange: (id: string, node: Node, modifyReferenceScene: boolean) => void;
 
   onObjectAdd: (id: string, object: Node.Obj, geometry: Geometry) => void;
 
@@ -127,10 +128,6 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
     };
   }
 
-  private onNodeChange_ = (id: string) => (node: Node) => {
-    this.props.onNodeChange(id, node);
-  };
-
   private onCollapsedChange_ = (section: string) => (collapsed: boolean) => {
     this.setState({
       collapsed: {
@@ -154,7 +151,7 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
   };
 
   private onNodeSettingsAccept_ = (id: string) => (acceptance: NodeSettingsAcceptance) => {
-    this.props.onNodeChange(id, acceptance);
+    this.props.onNodeChange(id, acceptance, true);
   };
 
   private onAddNodeClick_ = (event: React.SyntheticEvent<MouseEvent>) => {
@@ -165,22 +162,18 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
 
   private onNodeResetClick_ = (id: string) => () => {
     const { props } = this;
-    const { scenes } = props;
-    const originalScene = scenes.scenes[scenes.activeId];
-    
-    if (!originalScene || originalScene.type !== Async.Type.Loaded) return;
+    const { scene } = props;
 
-    const originalNode = originalScene.value.nodes[id];
-
-
+    const originalNode = scene.referenceScene.nodes[id];
     
     this.props.onNodeChange(id, {
       ...originalNode,
       origin: {
         position: originalNode.origin?.position || Vector3.zero('centimeters'),
         orientation: originalNode.origin?.orientation || Rotation.Euler.identity(Angle.Type.Degrees),
+        scale: originalNode.origin?.scale || RawVector3.ONE,
       },
-    });
+    }, false);
   };
   private onItemSettingsClick_ = (id: string) => () => this.setState({ modal: UiState.itemSettings(id) });
   private onModalClose_ = () => this.setState({ modal: UiState.NONE });
@@ -189,12 +182,12 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
     const { props } = this;
     const { scene } = props;
     const idStr = id as string;
-    const node = scene.nodes[idStr];
+    const node = scene.referenceScene.nodes[idStr];
     if (node.type === 'object') {
       if (node.geometryId !== undefined) {
         let unique = true;
-        for (const nodeId in scene.nodes) {
-          const otherNode = scene.nodes[nodeId];
+        for (const nodeId in scene.referenceScene.nodes) {
+          const otherNode = scene.referenceScene.nodes[nodeId];
           if (nodeId !== idStr && otherNode.type === 'object' && node.geometryId === otherNode.geometryId) {
             unique = false;
             break;
@@ -211,10 +204,9 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
 
   private onItemVisibilityChange_ = (id: string) => (visibility: boolean) => {
     this.props.onNodeChange(id, {
-      ...this.props.scene.nodes[id],
-      visible: visibility
-      
-    });
+      ...this.props.scene.workingScene.nodes[id],
+      visible: visibility,
+    }, false);
   };
 
   render() {
@@ -227,14 +219,14 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
 
     const itemList: EditableList.Item[] = [];
     // Mock list
-    for (const nodeId of Dict.keySet(scene.nodes)) {
-      const node = scene.nodes[nodeId];
-      const activeScene = scenes.scenes[scenes.activeId];
-      const hasReset = activeScene !== undefined && activeScene.type === Async.Type.Loaded && activeScene.value.nodes[nodeId] !== undefined;
+    for (const nodeId of Dict.keySet(scene.workingScene.nodes)) {
+      const node = scene.workingScene.nodes[nodeId];
+      const referenceScene = scene.referenceScene;
+      const hasReset = referenceScene.nodes[nodeId] !== undefined;
       itemList.push(EditableList.Item.standard({
         component: Item,
         props: { name: node.name, theme },
-        onReset: hasReset && node.editable ? this.onNodeResetClick_(nodeId) : undefined,
+        onReset: hasReset ? this.onNodeResetClick_(nodeId) : undefined,
         onSettings: node.editable ? this.onItemSettingsClick_(nodeId) : undefined,
         onVisibilityChange: this.onItemVisibilityChange_(nodeId),
         visible: node.visible,
@@ -278,14 +270,14 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
             </StyledListSection>
           </Container>
         </ScrollArea>
-        {modal.type === UiState.Type.AddNode && <AddNodeDialog scene={scene} theme={theme} onClose={this.onModalClose_} onAccept={this.onAddNodeAccept_} />}
+        {modal.type === UiState.Type.AddNode && <AddNodeDialog scene={scene.referenceScene} theme={theme} onClose={this.onModalClose_} onAccept={this.onAddNodeAccept_} />}
         {modal.type === UiState.Type.NodeSettings && <NodeSettingsDialog
           onGeometryAdd={onGeometryAdd}
           onGeometryRemove={onGeometryRemove}
           onGeometryChange={onGeometryChange}
-          scene={scene}
+          scene={scene.referenceScene}
           id={modal.id}
-          node={scene.nodes[modal.id]}
+          node={scene.referenceScene.nodes[modal.id]}
           theme={theme}
           onClose={this.onModalClose_}
           onChange={this.onNodeSettingsAccept_(modal.id)}
@@ -304,8 +296,8 @@ export default connect<unknown, unknown, Props, ReduxState>(state => {
   onNodeAdd: (id: string, node: Node) => {
     dispatch(SceneAction.addNode({ id, node }));
   },
-  onNodeChange: (id: string, node: Node) => {
-    dispatch(SceneAction.setNode({ id, node }));
+  onNodeChange: (id: string, node: Node, modifyReferenceScene: boolean) => {
+    dispatch(SceneAction.setNode({ id, node, modifyReferenceScene }));
   },
   onNodeRemove: (id: string) => {
     dispatch(SceneAction.removeNode({ id }));
