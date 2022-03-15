@@ -36,6 +36,13 @@ const routes: IRoute[] = [
     protected: true
   },
   {
+    path: '/ide',
+    exact: true,
+    component: Root,
+    name: 'Wombat IDE',
+    protected: true
+  },
+  {
     path: '/tutorials',
     exact: true,
     component: Tutorials,

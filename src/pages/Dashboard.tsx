@@ -70,6 +70,14 @@ class Dashboard extends React.PureComponent<Props, State> {
             backgroundColor={'#6c6ca1'}
             backgroundImage={'url(../../static/Laptop_Icon_Sunscreen.png)'}
           />
+          <Card
+            theme={theme}
+            title={'Wombat IDE'}
+            description={'Write programs for your Wombat controller.'}
+            link={'/ide'}
+            backgroundColor={'#6c6ca1'}
+            backgroundImage={'url(../../static/Laptop_Icon_Sunscreen.png)'}
+          />
           <Card 
             theme={theme}
             title={'3D Simulator'}
