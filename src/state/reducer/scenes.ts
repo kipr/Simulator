@@ -2,6 +2,7 @@ import Scene from "../State/Scene";
 import { Scenes } from "../State";
 import Async from "../State/Async";
 import * as JBC_SCENES from '../../scenes';
+import { BOTBALL_2022 } from "../../scenes";
 
 export namespace ScenesAction {
   export interface AddScene {
@@ -81,6 +82,7 @@ export type ScenesAction = (
 
 const DEFAULT_SCENES: Scenes = {
   scenes: {
+    botball2022: Async.loaded({ value: JBC_SCENES.BOTBALL_2022 }),
     jbc1: Async.loaded({ value: JBC_SCENES.JBC_1 }),
     jbc2: Async.loaded({ value: JBC_SCENES.JBC_2 }),
     jbc2b: Async.loaded({ value: JBC_SCENES.JBC_2B }),

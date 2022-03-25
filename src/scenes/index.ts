@@ -1,3 +1,5 @@
+export * from './botball2022';
+
 export * from './jbc1';
 export * from './jbc2';
 export * from './jbc2b';
