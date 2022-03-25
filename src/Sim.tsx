@@ -110,8 +110,6 @@ export class Space implements Robotable {
 
   private lens_: Babylon.LensRenderingPipeline;
 
-  
-  private lastState_: State = undefined;
   private debounceUpdate_ = false;
 
   private sceneSetting_: boolean;
@@ -119,18 +117,18 @@ export class Space implements Robotable {
 
   private onStoreChange_ = (state: State) => {
     if (this.debounceUpdate_) {
-      this.lastState_ = state;
+      this.sceneBinding_.scene = state.scene.workingScene;
       return;
     }
 
     if (!this.sceneSetting_) {
       this.sceneSetting_ = true;
-      this.latestUnfulfilledScene_ = state.scene;
+      this.latestUnfulfilledScene_ = state.scene.workingScene;
       (async () => {
         // Disable physics during scene changes to avoid objects moving before the scene is fully loaded
         this.scene.physicsEnabled = false;
-        await this.sceneBinding_.setScene(state.scene);
-        if (this.latestUnfulfilledScene_ !== state.scene) {
+        await this.sceneBinding_.setScene(state.scene.workingScene);
+        if (this.latestUnfulfilledScene_ !== state.scene.workingScene) {
           await this.sceneBinding_.setScene(this.latestUnfulfilledScene_);
         }
         this.scene.physicsEnabled = true;
@@ -139,11 +137,8 @@ export class Space implements Robotable {
       });
         
     } else {
-      this.latestUnfulfilledScene_ = state.scene;
+      this.latestUnfulfilledScene_ = state.scene.workingScene;
     }
-    
-
-    this.lastState_ = state;
   };
 
   setOrigin(origin: UnitReferenceFrame): void {
@@ -293,8 +288,8 @@ export class Space implements Robotable {
 
     const mesh = eventData.pickInfo.pickedMesh;
     const id = mesh.metadata as string;
-    const prevId = store.getState().scene.selectedNodeId;
-    if (id !== prevId && store.getState().scene.nodes[id]?.editable) {
+    const prevId = store.getState().scene.workingScene.selectedNodeId;
+    if (id !== prevId && store.getState().scene.workingScene.nodes[id]?.editable) {
       store.dispatch(SceneAction.selectNode({ id }));
     } else {
       store.dispatch(SceneAction.UNSELECT_ALL);
@@ -320,7 +315,7 @@ export class Space implements Robotable {
     this.scene.getPhysicsEngine().setSubTimeStep(5);
 
     console.log('starting scene', store.getState().scene);
-    await this.sceneBinding_.setScene(store.getState().scene);
+    await this.sceneBinding_.setScene(store.getState().scene.workingScene);
 
     // (x, z) coordinates of cans around the board
     this.canCoordinates = [[-22, -14.3], [0, -20.6], [15.5, -23.7], [0, -6.9], [-13.7, 6.8], [0, 6.8], [13.5, 6.8], [25.1, 14.8], [0, 34], [-18.8, 45.4], [0, 54.9], [18.7, 45.4]];
@@ -627,14 +622,16 @@ export class Space implements Robotable {
     await this.scene.whenReadyAsync();
   }
 
+  // Compare Babylon positions with state positions. If they differ significantly, update state
   private updateStore_ = () => {
-    const { nodes } = store.getState().scene;
+    const { nodes, robot } = store.getState().scene.workingScene;
     
     const setNodeBatch: SceneAction.SetNodeBatchParams = {
-      nodeIds: []
+      nodeIds: [],
+      modifyReferenceScene: false,
     };
 
-    // Sync items
+    // Check if nodes have moved significant amounts
     for (const nodeId of Dict.keySet(nodes)) {
       const node = nodes[nodeId];
       const bNode = this.scene.getNodeByID(nodeId) || this.scene.getNodeByName(node.name);
@@ -643,70 +640,87 @@ export class Space implements Robotable {
       if (!bNode) continue;
 
       const origin = node.origin ?? {};
-      const position = origin.position ?? UnitVector3.zero('meters');
-      const rotation = origin.orientation ?? Rotation.fromRawQuaternion(Quaternion.IDENTITY, 'euler');
-
-      let bPosition: Babylon.Vector3;
-      let bOrientation: Babylon.Quaternion;
-      if (bNode instanceof Babylon.TransformNode || bNode instanceof Babylon.AbstractMesh) {
-        bPosition = bNode.position;
-        bOrientation = bNode.rotationQuaternion;
-      } else if (bNode instanceof Babylon.ShadowLight) {
-        bPosition = bNode.position;
-        bOrientation = Babylon.Quaternion.Identity();
-      } else {
-        throw new Error(`Unknown node type: ${bNode.constructor.name}`);
-      }
-
-      // Compare babylon position with state position. If they differ by more than 0.5cm, update state
-
-      const nextNode: Node = { ...node };
-      let hit = false;
-
-      if (position) {
-        const bPositionConv = UnitVector3.fromRaw(Vector3.fromBabylon(bPosition), 'centimeters');
-        
-        // Distance between the two positions in meters
-        const distance = UnitVector3.distance(position, bPositionConv);
-
-        // If varies by more than 0.5cm, update state
-        if (distance.value > 0.005) {
-          nextNode.origin = {
-            ...node.origin,
-            position: UnitVector3.toTypeGranular(bPositionConv, position.x.type, position.y.type, position.z.type),
-          };
-          hit = true;
-        }
-      }
-
-      if (rotation) {
-        const bOrientationConv = Rotation.fromRawQuaternion(Quaternion.fromBabylon(bOrientation), 'euler');
-        const angle = Rotation.angle(rotation, bOrientationConv);
-
-        const radians = Angle.toRadians(angle);
-        
-        // If varies by more than 0.5deg, update state
-        if (radians.value > 0.00872665) {
-          nextNode.origin = {
-            ...node.origin,
-            orientation: Rotation.toType(bOrientationConv, rotation.type),
-          };
-          hit = true;
-        }
-      }
-
-      if (hit) {
+      const nodeOriginChange = this.getSignificantOriginChange(origin, bNode);
+      if (nodeOriginChange.position || nodeOriginChange.orientation || nodeOriginChange.scale) {
         setNodeBatch.nodeIds.push({
           id: nodeId,
-          node: nextNode,
+          node: {
+            ...node,
+            origin: {
+              ...node.origin,
+              ...nodeOriginChange,
+            }
+          },
         });
       }
     }
 
+    // Check if robot has moved a significant amount
+    let setRobotOrigin: SceneAction.SetRobotOriginParams;
+    const robotOrigin = robot?.origin ?? {};
+    const robotOriginChange = this.getSignificantOriginChange(robotOrigin, this.bodyCompoundRootMesh);
+    if (robotOriginChange.position || robotOriginChange.orientation || robotOriginChange.scale) {
+      setRobotOrigin = {
+        origin: {
+          ...robotOrigin,
+          ...robotOriginChange,
+        },
+        modifyReferenceScene: false,
+      };
+    }
+
+    // Update state with significant changes, if needed
     this.debounceUpdate_ = true;
     if (setNodeBatch.nodeIds.length > 0) store.dispatch(SceneAction.setNodeBatch(setNodeBatch));
+    if (setRobotOrigin) store.dispatch(SceneAction.setRobotOrigin(setRobotOrigin));
     this.debounceUpdate_ = false;
   };
+
+  private getSignificantOriginChange(currentOrigin: UnitReferenceFrame, bNode: Babylon.Node): UnitReferenceFrame {
+    const change: UnitReferenceFrame = {};
+
+    const position = currentOrigin?.position ?? UnitVector3.zero('meters');
+    const rotation = currentOrigin?.orientation ?? Rotation.fromRawQuaternion(Quaternion.IDENTITY, 'euler');
+
+    let bPosition: Babylon.Vector3;
+    let bRotation: Babylon.Quaternion;
+    if (bNode instanceof Babylon.TransformNode || bNode instanceof Babylon.AbstractMesh) {
+      bPosition = bNode.position;
+      bRotation = bNode.rotationQuaternion;
+    } else if (bNode instanceof Babylon.ShadowLight) {
+      bPosition = bNode.position;
+      bRotation = Babylon.Quaternion.Identity();
+    } else {
+      throw new Error(`Unknown node type: ${bNode.constructor.name}`);
+    }
+
+    if (bPosition) {
+      const bPositionConv = UnitVector3.fromRaw(Vector3.fromBabylon(bPosition), 'centimeters');
+      
+      // Distance between the two positions in meters
+      const distance = UnitVector3.distance(position, bPositionConv);
+
+      // If varies by more than 0.5cm, consider it a change
+      if (distance.value > 0.005) {
+        change.position = UnitVector3.toTypeGranular(bPositionConv, position.x.type, position.y.type, position.z.type);
+      }
+    }
+
+    if (bRotation) {
+      const bOrientationConv = Rotation.fromRawQuaternion(Quaternion.fromBabylon(bRotation), 'euler');
+
+      // Angle between the two rotations in radians
+      const angle = Rotation.angle(rotation, bOrientationConv);
+      const radians = Angle.toRadians(angle);
+      
+      // If varies by more than 0.5deg, consider it a change
+      if (radians.value > 0.00872665) {
+        change.orientation = Rotation.toType(bOrientationConv, rotation.type);
+      }
+    }
+
+    return change;
+  }
   
   private startRenderLoop(): void {
     this.initStoreSubscription_();

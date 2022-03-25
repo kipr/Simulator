@@ -20,9 +20,8 @@ export interface LocationProps extends ThemeProps, StyleProps {
 }
 
 export interface ReduxLocationProps {
-  startingOrigin: ReferenceFrame;
   origin: ReferenceFrame;
-  onOriginChange: (origin: ReferenceFrame) => void;
+  onOriginChange: (origin: ReferenceFrame, modifyReferenceScene: boolean) => void;
 }
 
 type Props = LocationProps;
@@ -61,7 +60,7 @@ class Location extends React.PureComponent<Props & ReduxLocationProps> {
         ...origin.position || Vector3.zero('centimeters'),
         x: xDistance
       }
-    });
+    }, true);
   };
 
   private onYChange_ = (y: Value) => {
@@ -76,7 +75,7 @@ class Location extends React.PureComponent<Props & ReduxLocationProps> {
         ...(origin.position || Vector3.zero('centimeters')),
         y: yDistance
       }
-    });
+    }, true);
   };
 
   private onZChange_ = (z: Value) => {
@@ -91,7 +90,7 @@ class Location extends React.PureComponent<Props & ReduxLocationProps> {
         ...(origin.position || Vector3.zero('centimeters')),
         z: zDistance
       }
-    });
+    }, true);
   };
 
   private onThetaChange_ = (theta: Value) => {
@@ -113,7 +112,7 @@ class Location extends React.PureComponent<Props & ReduxLocationProps> {
     this.props.onOriginChange({
       ...origin,
       orientation: nextOrientation
-    });
+    }, true);
   };
   
   render() {
@@ -141,17 +140,12 @@ class Location extends React.PureComponent<Props & ReduxLocationProps> {
 }
 
 export default connect<unknown, unknown, LocationProps, State>((state: State) => {
-  const startingScene = state.scenes.scenes[state.scenes.activeId];
-  let startingOrigin = IDENTITY_ORIGIN;
-  if (startingScene.type === Async.Type.Loaded) {
-    startingOrigin = startingScene.value.robot?.origin || IDENTITY_ORIGIN;
-  }
+  const origin = state.scene.referenceScene.robot?.origin || IDENTITY_ORIGIN;
   return {
-    startingOrigin: startingOrigin,
-    origin: state.scene.robot?.origin || IDENTITY_ORIGIN,
+    origin,
   };
 }, dispatch => ({
-  onOriginChange: (origin: ReferenceFrame) => {
-    dispatch(SceneAction.setRobotOrigin({ origin }));
+  onOriginChange: (origin: ReferenceFrame, modifyReferenceScene: boolean) => {
+    dispatch(SceneAction.setRobotOrigin({ origin, modifyReferenceScene }));
   }
 }))(Location) as React.ComponentType<LocationProps>;

@@ -24,7 +24,7 @@ export interface InfoProps extends StyleProps, ThemeProps {
 
 interface ReduxInfoProps {
   startingOrigin: ReferenceFrame;
-  onOriginChange: (origin: ReferenceFrame) => void;
+  onOriginChange: (origin: ReferenceFrame, modifyReferenceScene: boolean) => void;
 }
 
 interface InfoState {
@@ -134,7 +134,7 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
   private onResetLocationClick_ = (event: React.MouseEvent<HTMLSpanElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    this.props.onOriginChange(this.props.startingOrigin);
+    this.props.onOriginChange(this.props.startingOrigin, false);
   };
 
   render() {
@@ -253,16 +253,12 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
 }
 
 export default connect<unknown, unknown, InfoProps, ReduxState>((state: ReduxState) => {
-  const startingScene = state.scenes.scenes[state.scenes.activeId];
-  let startingOrigin = ReferenceFrame.IDENTITY;
-  if (startingScene.type === Async.Type.Loaded) {
-    startingOrigin = startingScene.value.robot?.origin || ReferenceFrame.IDENTITY;
-  }
+  const startingOrigin = state.scene.referenceScene.robot?.origin || ReferenceFrame.IDENTITY;
   return {
-    startingOrigin: startingOrigin,
+    startingOrigin,
   };
 }, dispatch => ({
-  onOriginChange: (origin: ReferenceFrame) => {
-    dispatch(SceneAction.setRobotOrigin({ origin }));
+  onOriginChange: (origin: ReferenceFrame, modifyReferenceScene: boolean) => {
+    dispatch(SceneAction.setRobotOrigin({ origin, modifyReferenceScene }));
   }
 }))(Info) as React.ComponentType<InfoProps>;

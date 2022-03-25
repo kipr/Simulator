@@ -24,6 +24,7 @@ class SceneBinding {
 
   private scene_: Scene;
   get scene() { return this.scene_; }
+  set scene(s: Scene) { this.scene_ = s; }
 
   private nodes_: Dict<Babylon.Node> = {};
 
