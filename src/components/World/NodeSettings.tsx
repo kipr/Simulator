@@ -123,6 +123,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
       collapsed: {
         position: true,
         orientation: true,
+        scale: true,
         physics: true,
       }
     };
