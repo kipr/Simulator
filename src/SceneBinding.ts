@@ -330,12 +330,18 @@ class SceneBinding {
     return bNode;
   };
 
-  private updateObject_ = (id: string, node: Patch.InnerChange<Node.Obj>): FrameLike => {
+  private updateObject_ = (id: string, node: Patch.InnerChange<Node.Obj>, nextScene: Scene): Promise<Babylon.Node> => {
     console.log('UPDATE OBJECT', id, node);
     
     const bNode = this.findBNode_(id) as FrameLike;
 
     console.log(bNode, id);
+
+    // If the object's geometry ID changes, recreate the object entirely
+    if (node.inner.geometryId.type === Patch.Type.OuterChange) {
+      this.destroyNode_(id);
+      return this.createNode_(id, node.next, nextScene);
+    }
 
     if (node.inner.name.type === Patch.Type.OuterChange) {
       bNode.name = node.inner.name.next;
@@ -371,7 +377,7 @@ class SceneBinding {
       SceneBinding.apply_(bNode, m => m.isVisible = nextVisible);
     }
 
-    return bNode;
+    return Promise.resolve(bNode);
   };
 
   private updateDirectionalLight_ = (id: string, node: Patch.InnerChange<Node.DirectionalLight>): Babylon.DirectionalLight => {
@@ -400,14 +406,23 @@ class SceneBinding {
     return bNode;
   };
 
-  private updateNode_ = async (id: string, node: Patch<Node>, nextScene: Scene): Promise<Babylon.Node> => {
+  private updateNode_ = async (id: string, node: Patch<Node>, geometryPatches: Dict<Patch<Geometry>>, nextScene: Scene): Promise<Babylon.Node> => {
     switch (node.type) {
       // The node hasn't changed type, but some fields have been changed
       case Patch.Type.InnerChange: {
         console.log('inner change', node.next.type);
         switch (node.next.type) {
           case 'empty': return this.updateEmpty_(id, node as Patch.InnerChange<Node.Empty>);
-          case 'object': return this.updateObject_(id, node as Patch.InnerChange<Node.Obj>);
+          case 'object': {
+            // If the object's underlying geometry changed, recreate the object entirely
+            const geometryPatch = geometryPatches[node.next.geometryId];
+            if (geometryPatch.type === Patch.Type.InnerChange || geometryPatch.type === Patch.Type.OuterChange) {
+              this.destroyNode_(id);
+              return this.createNode_(id, node.prev, nextScene);
+            }
+            
+            return this.updateObject_(id, node as Patch.InnerChange<Node.Obj>, nextScene);
+          }
           case 'directional-light': return this.updateDirectionalLight_(id, node as Patch.InnerChange<Node.DirectionalLight>);
           case 'spot-light': return this.updateSpotLight_(id, node as Patch.InnerChange<Node.SpotLight>);
           case 'point-light': return this.updatePointLight_(id, node as Patch.InnerChange<Node.PointLight>);
@@ -419,11 +434,7 @@ class SceneBinding {
       }
       // The node has been wholesale replaced by another type of node
       case Patch.Type.OuterChange: {
-        const prev = this.findBNode_(id);
-        prev.dispose();
-
-        const shadowGenerator = this.shadowGenerators_[id];
-        if (shadowGenerator) shadowGenerator.dispose();
+        this.destroyNode_(id);
 
         return this.createNode_(id, node.next, nextScene);
       }
@@ -433,18 +444,31 @@ class SceneBinding {
       }
       // The node was removed from the scene
       case Patch.Type.Remove: {
-        const prev = this.findBNode_(id);
-        prev.dispose();
-
-        const shadowGenerator = this.shadowGenerators_[id];
-        if (shadowGenerator) shadowGenerator.dispose();
+        this.destroyNode_(id);
 
         return undefined;
       }
       case Patch.Type.None: {
+        if (node.prev.type === 'object') {
+          // Even though the node is unchanged, if the underlying geometry changed, recreate the object entirely
+          const geometryPatch = geometryPatches[node.prev.geometryId];
+          if (geometryPatch.type === Patch.Type.InnerChange || geometryPatch.type === Patch.Type.OuterChange) {
+            this.destroyNode_(id);
+            return this.createNode_(id, node.prev, nextScene);
+          }
+        }
+
         return this.findBNode_(id);
       }
     }
+  };
+
+  private destroyNode_ = (id: string) => {
+    const bNode = this.findBNode_(id);
+    bNode.dispose();
+
+    const shadowGenerator = this.shadowGenerators_[id];
+    if (shadowGenerator) shadowGenerator.dispose();
   };
 
   private gizmoImpostors_: Dict<Babylon.PhysicsImpostor> = {};
@@ -516,7 +540,7 @@ class SceneBinding {
       const node = patch.nodes[nodeId];
       if (node.type !== Patch.Type.Remove) continue;
 
-      await this.updateNode_(nodeId, node, scene);
+      await this.updateNode_(nodeId, node, patch.geometry, scene);
       
       delete this.nodes_[nodeId];
       delete this.shadowGenerators_[nodeId];
@@ -531,7 +555,7 @@ class SceneBinding {
       if (removedKeys.has(nodeId)) continue;
       const node = patch.nodes[nodeId];
 
-      this.nodes_[nodeId] = await this.updateNode_(nodeId, node, scene);
+      this.nodes_[nodeId] = await this.updateNode_(nodeId, node, patch.geometry, scene);
     }
 
     if (patch.selectedNodeId.type === Patch.Type.OuterChange) {
