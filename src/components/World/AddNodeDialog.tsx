@@ -111,8 +111,6 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
   };
 
   private onGeometryAdd_ = (id: string, geometry: Geometry) => {
-    if (id !== this.state.geometryId) return;
-
     this.setState({
       geometryId: id,
       geometry
@@ -124,7 +122,8 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
     const { theme, onClose, scene } = props;
     const { node, id } = state;
 
-    const modifiedScene: Scene = {
+    // If there's a geometry in progress, create a temporary scene containing the geometry
+    const modifiedScene: Scene = !state.geometryId ? scene : {
       ...scene,
       geometry: {
         ...scene.geometry,
