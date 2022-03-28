@@ -34,7 +34,6 @@ export const JBC_15B: Scene = {
         friction: 1,
         mass: Mass.pounds(5),
       },
-      editable: true,
     },
     'ream2': {
       type: 'object',
@@ -58,7 +57,6 @@ export const JBC_15B: Scene = {
         friction: 1,
         mass: Mass.pounds(5),
       },
-      editable: true,
     },
   },
   // The normal starting position of the robot doesn't leave room for the paper ream in the starting box
