@@ -189,14 +189,6 @@ class SensorWidget extends React.PureComponent<Props, State> {
           </Header>
           {showPlot ? plot : undefined}
         </Container>
-        {showActionTooltip && this.ref_ ? (
-          <ActionTooltip
-            theme={theme}
-            target={Tooltip.Target.Element.create(this.ref_)}
-            onClose={this.onActionTooltipClose_} 
-            items={actionItems}
-          />
-        ) : null}
         {/* showGuide && this.ref_ ? <MeshScreenGuide theme={theme} from={this.ref_} to={'black satin finish plastic'} /> : undefined*/}
       </>
     );

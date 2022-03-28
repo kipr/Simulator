@@ -12,6 +12,8 @@ import * as Ammo from './ammo';
 
 import { ReferenceFrame, Rotation, Vector3 } from "./unit-math";
 import { Angle, Distance, Mass, SetOps } from "./util";
+import { Color } from './state/State/Scene/Color';
+import Material from './state/State/Scene/Material';
 
 export type FrameLike = Babylon.TransformNode | Babylon.AbstractMesh;
 
@@ -55,6 +57,8 @@ class SceneBinding {
     this.camera_.attachControl(this.engineView_.target, true);
     this.bScene_.attachControl();
   }
+  
+  private materialIdIter_ = 0;
 
   constructor(bScene: Babylon.Scene, robot: Robotable) {
     this.bScene_ = bScene;
@@ -164,6 +168,150 @@ class SceneBinding {
     return this.nodes_[id];
   };
 
+  private createMaterial_ = (id: string, material: Material) => {
+    const bMaterial = new Babylon.PBRMaterial(id, this.bScene_);
+
+    const { albedo, ambient, emissive, metalness, reflection } = material;
+    
+    if (albedo) {
+      switch (albedo.type) {
+        case 'color3': {
+          bMaterial.albedoColor = Color.toBabylon(albedo.color);
+          break;
+        }
+        case 'texture': {
+          bMaterial.albedoTexture = new Babylon.Texture(albedo.uri, this.bScene_);
+          break;
+        }
+      }
+    }
+
+    if (ambient) {
+      switch (ambient.type) {
+        case 'color3': {
+          bMaterial.ambientColor = Color.toBabylon(ambient.color);
+          break;
+        }
+        case 'texture': {
+          bMaterial.ambientTexture = new Babylon.Texture(ambient.uri, this.bScene_);
+          break;
+        }
+      }
+    }
+
+    if (emissive) {
+      switch (emissive.type) {
+        case 'color3': {
+          bMaterial.emissiveColor = Color.toBabylon(emissive.color);
+          break;
+        }
+        case 'texture': {
+          bMaterial.emissiveTexture = new Babylon.Texture(emissive.uri, this.bScene_);
+          break;
+        }
+      }
+    }
+    
+    if (metalness) {
+      switch (metalness.type) {
+        case 'color1': {
+          bMaterial.metallic = metalness.color;
+          break;
+        }
+        case 'texture': {
+          bMaterial.metallicTexture = new Babylon.Texture(metalness.uri, this.bScene_);
+          break;
+        }
+      }
+    }
+    
+    if (reflection) {
+      switch (reflection.type) {
+        case 'color3': {
+          bMaterial.reflectivityColor = Color.toBabylon(reflection.color);
+          break;
+        }
+        case 'texture': {
+          bMaterial.reflectivityTexture = new Babylon.Texture(reflection.uri, this.bScene_);
+          break;
+        }
+      }
+    }
+
+    return bMaterial;
+  };
+
+  private updateMaterial_ = (bMaterial: Babylon.PBRMaterial, material: Patch.InnerPatch<Material>) => {
+    const { albedo, ambient, emissive, metalness, reflection } = material;
+
+    if (albedo.type === Patch.Type.OuterChange) {
+      switch (albedo.next.type) {
+        case 'color3': {
+          bMaterial.albedoColor = Color.toBabylon(albedo.next.color);
+          break;
+        }
+        case 'texture': {
+          bMaterial.albedoTexture = new Babylon.Texture(albedo.next.uri, this.bScene_);
+          break;
+        }
+      }
+    }
+
+    if (ambient.type === Patch.Type.OuterChange) {
+      switch (ambient.next.type) {
+        case 'color3': {
+          bMaterial.ambientColor = Color.toBabylon(ambient.next.color);
+          break;
+        }
+        case 'texture': {
+          bMaterial.ambientTexture = new Babylon.Texture(ambient.next.uri, this.bScene_);
+          break;
+        }
+      }
+    }
+
+    if (emissive.type === Patch.Type.OuterChange) {
+      switch (emissive.next.type) {
+        case 'color3': {
+          bMaterial.emissiveColor = Color.toBabylon(emissive.next.color);
+          break;
+        }
+        case 'texture': {
+          bMaterial.emissiveTexture = new Babylon.Texture(emissive.next.uri, this.bScene_);
+          break;
+        }
+      }
+    }
+
+    if (metalness.type === Patch.Type.OuterChange) {
+      switch (metalness.next.type) {
+        case 'color1': {
+          bMaterial.metallic = metalness.next.color;
+          break;
+        }
+        case 'texture': {
+          bMaterial.metallicTexture = new Babylon.Texture(metalness.next.uri, this.bScene_);
+          break;
+        }
+      }
+    }
+
+    if (reflection.type === Patch.Type.OuterChange) {
+      switch (reflection.next.type) {
+        case 'color3': {
+          bMaterial.reflectivityColor = Color.toBabylon(reflection.next.color);
+          break;
+        }
+        case 'texture': {
+          bMaterial.reflectivityTexture = new Babylon.Texture(reflection.next.uri, this.bScene_);
+          break;
+        }
+      }
+    }
+
+    return bMaterial;
+  };
+
   private createObject_ = async (node: Node.Obj, nextScene: Scene): Promise<Babylon.Node> => {
     const parent = this.findBNode_(node.parentId, true);
 
@@ -171,6 +319,11 @@ class SceneBinding {
 
     if (!node.visible) {
       SceneBinding.apply_(ret, m => m.isVisible = false);
+    }
+
+    if (node.material) {
+      const material = this.createMaterial_(node.name, node.material);
+      SceneBinding.apply_(ret, m => m.material = material);
     }
 
     if (node.physics) {
@@ -330,7 +483,20 @@ class SceneBinding {
     return bNode;
   };
 
-  private updateObject_ = (id: string, node: Patch.InnerChange<Node.Obj>, nextScene: Scene): Promise<Babylon.Node> => {
+  private findMaterial_ = (frameLike: FrameLike) => {
+    if (frameLike instanceof Babylon.AbstractMesh) {
+      return frameLike.material;
+    } else {
+      const children = frameLike.getChildren(o => o instanceof Babylon.AbstractMesh);
+      if (children && children.length > 0) {
+        return (children[0] as Babylon.AbstractMesh).material;
+      } else {
+        return null;
+      }
+    }
+  };
+
+  private updateObject_ = (id: string, node: Patch.InnerChange<Node.Obj>): FrameLike => {
     console.log('UPDATE OBJECT', id, node);
     
     const bNode = this.findBNode_(id) as FrameLike;
@@ -351,6 +517,22 @@ class SceneBinding {
       const parent = this.findBNode_(node.inner.parentId.next, true);
       bNode.setParent(parent);
     }
+
+
+    switch (node.inner.material.type) {
+      case Patch.Type.OuterChange: {
+        let bMaterial = this.findMaterial_(bNode);
+        if (bMaterial) bMaterial.dispose();
+        bMaterial = this.createMaterial_(`Scene Material ${this.materialIdIter_++}`, node.inner.material.next);
+        break;
+      }
+      case Patch.Type.InnerChange: {
+        let bMaterial = this.findMaterial_(bNode);
+        bMaterial = this.updateMaterial_(bMaterial as Babylon.PBRMaterial, node.inner.material.inner)
+        break;
+      };
+    }
+
 
     if (node.inner.origin.type === Patch.Type.OuterChange) {
       this.updateNodePosition_(node.next, bNode);

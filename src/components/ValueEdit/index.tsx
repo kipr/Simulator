@@ -8,6 +8,7 @@ import ComboBox from '../ComboBox';
 
 export interface ValueEditProps extends ThemeProps, StyleProps {
   name: string;
+  long?: boolean;
   value: Value;
   onValueChange: (value: Value) => void;
 }
@@ -183,7 +184,7 @@ export class ValueEdit extends React.PureComponent<Props, State> {
   
   render() {
     const { props, state } = this;
-    const { theme, style, className, name, value } = props;
+    const { theme, style, className, name, value, long } = props;
     const { input, unitFocus } = state;
     const errorStyle: React.CSSProperties = {
       backgroundColor: !state.valid ? `rgba(255, 0, 0, 0.2)` : undefined,
@@ -192,7 +193,7 @@ export class ValueEdit extends React.PureComponent<Props, State> {
     const unitOptions = VALUE_OPTIONS[value.type];
 
     return (
-      <Field name={name} theme={theme} className={className} style={style}>
+      <Field name={name} theme={theme} long={long} className={className} style={style}>
         <SubContainer theme={theme} style={{ borderBottomRightRadius: unitFocus ? 0 : undefined }}>
           <Input
             type='text'
