@@ -169,70 +169,122 @@ class SceneBinding {
   };
 
   private createMaterial_ = (id: string, material: Material) => {
-    const bMaterial = new Babylon.PBRMaterial(id, this.bScene_);
 
-    const { albedo, ambient, emissive, metalness, reflection } = material;
+    let bMaterial: Babylon.Material;
+    switch (material.type) {
+      case 'basic': {
+        const basic = new Babylon.StandardMaterial(id, this.bScene_);
+        const { color } = material;
+
+        if (color) {
+          switch (color.type) {
+            case 'color3': {
+              basic.diffuseColor = Color.toBabylon(color.color);
+              break;
+            }
+            case 'texture': {
+              basic.diffuseTexture = new Babylon.Texture(color.uri, this.bScene_);
+              break;
+            }
+          }
+        }
+
+        bMaterial = basic;
+
+        break;
+      }
+      case 'pbr': {
+        const pbr = new Babylon.PBRMaterial(id, this.bScene_);
+        const { albedo, ambient, emissive, metalness, reflection } = material;
     
-    if (albedo) {
-      switch (albedo.type) {
-        case 'color3': {
-          bMaterial.albedoColor = Color.toBabylon(albedo.color);
-          break;
+        if (albedo) {
+          switch (albedo.type) {
+            case 'color3': {
+              pbr.albedoColor = Color.toBabylon(albedo.color);
+              break;
+            }
+            case 'texture': {
+              pbr.albedoTexture = new Babylon.Texture(albedo.uri, this.bScene_);
+              break;
+            }
+          }
         }
-        case 'texture': {
-          bMaterial.albedoTexture = new Babylon.Texture(albedo.uri, this.bScene_);
-          break;
+
+        if (ambient) {
+          switch (ambient.type) {
+            case 'color3': {
+              pbr.ambientColor = Color.toBabylon(ambient.color);
+              break;
+            }
+            case 'texture': {
+              pbr.ambientTexture = new Babylon.Texture(ambient.uri, this.bScene_);
+              break;
+            }
+          }
         }
+
+        if (emissive) {
+          switch (emissive.type) {
+            case 'color3': {
+              pbr.emissiveColor = Color.toBabylon(emissive.color);
+              break;
+            }
+            case 'texture': {
+              pbr.emissiveTexture = new Babylon.Texture(emissive.uri, this.bScene_);
+              break;
+            }
+          }
+        }
+        
+        if (metalness) {
+          switch (metalness.type) {
+            case 'color1': {
+              pbr.metallic = metalness.color;
+              break;
+            }
+            case 'texture': {
+              pbr.metallicTexture = new Babylon.Texture(metalness.uri, this.bScene_);
+              break;
+            }
+          }
+        }
+        
+        if (reflection) {
+          switch (reflection.type) {
+            case 'color3': {
+              pbr.reflectivityColor = Color.toBabylon(reflection.color);
+              break;
+            }
+            case 'texture': {
+              pbr.reflectivityTexture = new Babylon.Texture(reflection.uri, this.bScene_);
+              break;
+            }
+          }
+        }
+
+        bMaterial = pbr;
+
+        break;
       }
     }
 
-    if (ambient) {
-      switch (ambient.type) {
-        case 'color3': {
-          bMaterial.ambientColor = Color.toBabylon(ambient.color);
-          break;
-        }
-        case 'texture': {
-          bMaterial.ambientTexture = new Babylon.Texture(ambient.uri, this.bScene_);
-          break;
-        }
-      }
-    }
+    
 
-    if (emissive) {
-      switch (emissive.type) {
+    return bMaterial;
+  };
+
+  private updateMaterialBasic_ = (bMaterial: Babylon.StandardMaterial, material: Patch.InnerPatch<Material.Basic>) => {
+    const { color } = material;
+
+    if (color.type === Patch.Type.OuterChange) {
+      console.log('updateMaterialBasic_ color', color);
+      switch (color.next.type) {
         case 'color3': {
-          bMaterial.emissiveColor = Color.toBabylon(emissive.color);
+          bMaterial.diffuseColor = Color.toBabylon(color.next.color);
           break;
         }
         case 'texture': {
-          bMaterial.emissiveTexture = new Babylon.Texture(emissive.uri, this.bScene_);
-          break;
-        }
-      }
-    }
-    
-    if (metalness) {
-      switch (metalness.type) {
-        case 'color1': {
-          bMaterial.metallic = metalness.color;
-          break;
-        }
-        case 'texture': {
-          bMaterial.metallicTexture = new Babylon.Texture(metalness.uri, this.bScene_);
-          break;
-        }
-      }
-    }
-    
-    if (reflection) {
-      switch (reflection.type) {
-        case 'color3': {
-          bMaterial.reflectivityColor = Color.toBabylon(reflection.color);
-          break;
-        }
-        case 'texture': {
-          bMaterial.reflectivityTexture = new Babylon.Texture(reflection.uri, this.bScene_);
+          bMaterial.diffuseTexture = new Babylon.Texture(color.next.uri, this.bScene_);
           break;
         }
       }
@@ -241,7 +293,7 @@ class SceneBinding {
     return bMaterial;
   };
 
-  private updateMaterial_ = (bMaterial: Babylon.PBRMaterial, material: Patch.InnerPatch<Material>) => {
+  private updateMaterialPbr_ = (bMaterial: Babylon.PBRMaterial, material: Patch.InnerPatch<Material.Pbr>) => {
     const { albedo, ambient, emissive, metalness, reflection } = material;
 
     if (albedo.type === Patch.Type.OuterChange) {
@@ -306,6 +358,43 @@ class SceneBinding {
           bMaterial.reflectivityTexture = new Babylon.Texture(reflection.next.uri, this.bScene_);
           break;
         }
+      }
+    }
+    
+
+    return bMaterial;
+  };
+
+  private updateMaterial_ = (bMaterial: Babylon.Material, material: Patch<Material>) => {
+    console.log('updateMaterial_:', material);
+    switch (material.type) {
+      case Patch.Type.OuterChange: {
+        console.log('updateMaterial_: outer change');
+        const { next } = material;
+        let id = bMaterial ? `${bMaterial.id}` : `Scene Material ${this.materialIdIter_++}`;
+        if (bMaterial) bMaterial.dispose();
+        if (next) {
+          bMaterial = this.createMaterial_(id, next);
+        } else {
+          bMaterial = null;
+        }
+        break;
+      }
+      case Patch.Type.InnerChange: {
+        console.log('updateMaterial_: inner change');
+
+        const { inner, next } = material;
+        switch (next.type) {
+          case 'basic': {
+            bMaterial = this.updateMaterialBasic_(bMaterial as Babylon.StandardMaterial, inner as Patch.InnerPatch<Material.Basic>);
+            break;
+          }
+          case 'pbr': {
+            bMaterial = this.updateMaterialPbr_(bMaterial as Babylon.PBRMaterial, inner as Patch.InnerPatch<Material.Pbr>);
+            break;
+          }
+        }
+        break;
       }
     }
 
@@ -518,21 +607,11 @@ class SceneBinding {
       bNode.setParent(parent);
     }
 
-
-    switch (node.inner.material.type) {
-      case Patch.Type.OuterChange: {
-        let bMaterial = this.findMaterial_(bNode);
-        if (bMaterial) bMaterial.dispose();
-        bMaterial = this.createMaterial_(`Scene Material ${this.materialIdIter_++}`, node.inner.material.next);
-        break;
-      }
-      case Patch.Type.InnerChange: {
-        let bMaterial = this.findMaterial_(bNode);
-        bMaterial = this.updateMaterial_(bMaterial as Babylon.PBRMaterial, node.inner.material.inner)
-        break;
-      };
-    }
-
+    let bMaterial = this.findMaterial_(bNode);
+    bMaterial = this.updateMaterial_(bMaterial, node.inner.material);
+    SceneBinding.apply_(bNode, m => {
+      m.material = bMaterial;
+    });
 
     if (node.inner.origin.type === Patch.Type.OuterChange) {
       this.updateNodePosition_(node.next, bNode);
