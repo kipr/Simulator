@@ -18,6 +18,7 @@ import Node from "../../state/State/Scene/Node";
 import Scene from "../../state/State/Scene";
 import Dict from "../../Dict";
 
+import * as uuid from 'uuid';
 
 export interface NodeSettingsProps extends ThemeProps {
   onNodeChange: (node: Node) => void;
@@ -123,6 +124,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
       collapsed: {
         position: true,
         orientation: true,
+        scale: true,
         physics: true,
       }
     };
@@ -182,9 +184,35 @@ class NodeSettings extends React.PureComponent<Props, State> {
   private onTypeSelect_ = (index: number, option: ComboBox.Option) => {
     const { node } = this.props;
     
-    this.props.onNodeChange({
-      ...Node.transmute(node, option.data as Node.Type)
-    });
+    // If the type didn't change, do nothing
+    const selectedType = option.data as Node.Type;
+    if (node.type === selectedType) {
+      return;
+    }
+
+    let transmutedNode = Node.transmute(node, selectedType);
+
+    // If the new type is an object, add a new geometry and reset the physics type
+    if (transmutedNode.type === 'object') {
+      const defaultGeometryType: Geometry.Type = 'box';
+
+      transmutedNode = {
+        ...transmutedNode,
+        geometryId: uuid.v4(),
+        physics: {
+          ...transmutedNode.physics,
+          type: PHSYICS_TYPE_MAPPINGS[defaultGeometryType],
+        },
+      };
+      this.props.onGeometryAdd(transmutedNode.geometryId, Geometry.defaultFor(defaultGeometryType));
+    }
+
+    this.props.onNodeChange({ ...transmutedNode });
+
+    // If the old type was an object, remove the old geometry
+    if (node.type === 'object') {
+      this.props.onGeometryRemove(node.geometryId);
+    }
   };
 
   private onParentSelect_ = (index: number, option: ComboBox.Option) => {
