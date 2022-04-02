@@ -8,9 +8,12 @@ const commitHash = require('child_process').execSync('git rev-parse --short=8 HE
 module.exports = {
   entry: {
     app: './index.tsx',
+    'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js'
   },
   output: {
-    filename: 'js/[name].[contenthash].min.js',
+    filename: (pathData) => {
+      return pathData.chunk.name === 'editor.worker' ? 'editor.worker.bundle.js' : 'js/[name].[contenthash].min.js';
+    },
     path: resolve(__dirname, '../../dist'),
     clean: true,
   },
