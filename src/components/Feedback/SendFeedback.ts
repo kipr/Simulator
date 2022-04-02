@@ -52,7 +52,7 @@ export const sendFeedback = (rootState: RootState): Promise<FeedbackResponse> =>
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const responseJSON = JSON.parse(req.responseText);
 
-      let message: string = ''; 
+      let message = ''; 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if ('message' in responseJSON && typeof responseJSON.message === 'string') {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
