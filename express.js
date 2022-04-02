@@ -158,6 +158,7 @@ app.post('/feedback', (req, res) => {
       message: 'An error occured on the server. If you are a developer, your webhook url is likely wrong.'
     });
     // TODO: write the feedback to a file if an error occurs?
+    return;
   }
 
   webhook.send({
