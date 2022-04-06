@@ -36,7 +36,6 @@ namespace Node {
     name: string;
     parentId?: string;
     origin?: ReferenceFrame;
-    physics?: Physics;
     scriptIds?: string[];
     documentIds?: string[];
     editable?: boolean;
@@ -48,7 +47,6 @@ namespace Node {
       name: '',
       parentId: undefined,
       origin: undefined,
-      physics: undefined,
       scriptIds: undefined,
       documentIds: undefined,
       editable: undefined,
@@ -59,7 +57,6 @@ namespace Node {
       name: t.name,
       parentId: t.parentId,
       origin: t.origin,
-      physics: t.physics,
       scriptIds: t.scriptIds,
       documentIds: t.documentIds,
       editable: t.editable,
@@ -70,7 +67,6 @@ namespace Node {
       name: Patch.diff(prev.name, next.name),
       parentId: Patch.diff(prev.parentId, next.parentId),
       origin: Patch.diff(prev.origin, next.origin),
-      physics: Patch.diff(prev.physics, next.physics),
       scriptIds: Patch.diff(prev.scriptIds, next.scriptIds),
       documentIds: Patch.diff(prev.documentIds, next.documentIds),
       editable: Patch.diff(prev.editable, next.editable),
@@ -106,6 +102,7 @@ namespace Node {
   export interface Obj extends Base {
     type: 'object';
     geometryId: string;
+    physics?: Physics;
   }
 
   export namespace Obj {
@@ -126,6 +123,7 @@ namespace Node {
       return Patch.innerChange(prev, next, {
         type: Patch.none(prev.type),
         geometryId: Patch.diff(prev.geometryId, next.geometryId),
+        physics: Patch.diff(prev.physics, next.physics),
         ...Base.partialDiff(prev, next)
       });
     };
