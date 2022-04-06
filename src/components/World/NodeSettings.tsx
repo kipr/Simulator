@@ -228,11 +228,11 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const { props } = this;
     const { node } = props;
     
-    const object = node as Node.Obj;
+    if (node.type !== 'object') return;
 
     const type = option.data as Geometry.Type;
 
-    this.props.onGeometryChange(object.geometryId, Geometry.defaultFor(type));
+    this.props.onGeometryChange(node.geometryId, Geometry.defaultFor(type));
 
     const newPhysicsType = PHSYICS_TYPE_MAPPINGS[type];
     if (node.physics && node.physics.type !== newPhysicsType) {
@@ -475,6 +475,8 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onMassChange_ = (value: Value) => {
     const { node } = this.props;
+    if (node.type !== 'object') return;
+
     this.props.onNodeChange({
       ...node,
       physics: {
@@ -486,6 +488,8 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onFrictionChange_ = (value: Value) => {
     const { node } = this.props;
+    if (node.type !== 'object') return;
+    
     this.props.onNodeChange({
       ...node,
       physics: {
@@ -601,7 +605,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
     let friction = UnitlessValue.create(5);
     let mass: Mass = Mass.grams(5);
 
-    if (node.physics) {
+    if (node.type === 'object' && node.physics) {
       if (node.physics.friction !== undefined) friction = UnitlessValue.create(node.physics.friction);
       if (node.physics.mass !== undefined) mass = node.physics.mass;
     }
@@ -847,16 +851,17 @@ class NodeSettings extends React.PureComponent<Props, State> {
             theme={theme}
           />
         </Section>
-        <Section
-          name='Physics'
-          theme={theme}
-          collapsed={collapsed['physics']}
-          onCollapsedChange={this.onCollapsedChange_('physics')}
-          noBorder
-        >
-          <StyledValueEdit name='Mass' value={Value.mass(mass)} onValueChange={this.onMassChange_} theme={theme} />
-          <StyledValueEdit name='Friction' value={Value.unitless(friction)} onValueChange={this.onFrictionChange_} theme={theme} />
-        </Section>
+        {node.type === 'object' && (
+          <Section
+            name='Physics'
+            theme={theme}
+            collapsed={collapsed['physics']}
+            onCollapsedChange={this.onCollapsedChange_('physics')}
+            noBorder
+          >
+            <StyledValueEdit name='Mass' value={Value.mass(mass)} onValueChange={this.onMassChange_} theme={theme} />
+            <StyledValueEdit name='Friction' value={Value.unitless(friction)} onValueChange={this.onFrictionChange_} theme={theme} />
+          </Section>)}
         
       </Container>
     );
