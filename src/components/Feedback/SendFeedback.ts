@@ -52,23 +52,23 @@ export const sendFeedback = (rootState: RootState): Promise<FeedbackResponse> =>
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const responseJSON = JSON.parse(req.responseText);
 
-      if (req.status !== 200) {
+      let message = ''; 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if ('message' in responseJSON && typeof responseJSON.message === 'string') {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        if ('error' in responseJSON && typeof responseJSON.error !== 'string') {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          const err: string = responseJSON.error as string;
-          reject({ message: err, networkError: true });
+        message = responseJSON.message as string;
+      }
+
+      if (req.status === 200) {
+        if (message === '') {
+          message = req.responseText;
         }
-        reject('Error sending feedback: server response invalid.');
+        resolve({ message: message, networkError: false });
       } else {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        if ('message' in responseJSON && typeof responseJSON.message !== 'string') {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          const msg: string = responseJSON.message as string;
-          resolve({ message: msg, networkError: false });
-        } else {
-          resolve({ message: req.responseText, networkError: false });
+        if (message === '') {
+          message = 'Error sending feedback: server response invalid.';
         }
+        reject({ message: message, networkError: true });
       }
     };
 
