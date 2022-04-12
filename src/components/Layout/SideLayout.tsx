@@ -46,7 +46,7 @@ const sizeDict = (sizes: Size[]) => {
 
   return forward;
 };
-const SIDEBAR_SIZES: Size[] = [Size.MINIMIZED, Size.PARTIAL_RIGHT, Size.MINIATURE_LEFT, Size.MAXIMIZED];
+const SIDEBAR_SIZES: Size[] = [Size.PARTIAL_RIGHT, Size.MINIATURE_LEFT, Size.MAXIMIZED, Size.MINIMIZED];
 const CONSOLE_SIZES: Size[] = [Size.MINIMIZED, Size.MINIATURE_DOWN, Size.PARTIAL_UP];
 const CONSOLE_SIZE = sizeDict(CONSOLE_SIZES);
 const SIDEBAR_SIZE = sizeDict(SIDEBAR_SIZES);
@@ -69,7 +69,6 @@ const StyledTabBar = styled(TabBar, (props: ThemeProps) => ({
 
 interface SideBarProps {
   size: number;
-  sizes: Size[];
 }
 
 const SidePanelContainer = styled('div', {
@@ -79,7 +78,8 @@ const SidePanelContainer = styled('div', {
 });
 
 const SideBar = styled('div', (props: SideBarProps) => {
-  const sizeType = props.sizes[props.size].type;
+  const sizeType = props.size;
+  
   return {
     display: 'flex',
     flexDirection: 'column',
@@ -139,7 +139,7 @@ class SideLayout extends React.PureComponent<Props, State> {
   }
   private onSideBarSizeChange_ = (index: number) => {
     if (SIDEBAR_SIZES[index].type === Size.Type.Minimized) {
-      // unset active tab
+      // unset active tab if minimizing
       this.setState({activePanel: SideBarMinimizedTab});
     }
     this.setState({
@@ -327,7 +327,7 @@ class SideLayout extends React.PureComponent<Props, State> {
     }
 
     const tabBar = <TabBar isVertical={true} tabs={TABS} index={activePanel} onIndexChange={this.onTabBarIndexChange_} theme={theme} />
-    const sideBar = <SideBar sizes={SIDEBAR_SIZES} size={sidePanelSize} >
+    const sideBar = <SideBar size={sidePanelSize} >
       {content}
     </SideBar>
 
@@ -340,7 +340,9 @@ class SideLayout extends React.PureComponent<Props, State> {
       case Size.Type.Maximized:
         return <SidePanelContainer>
             {tabBar}
-            {sideBar}
+            <SidePanelContainer>
+              {sideBar}
+            </SidePanelContainer>
           </SidePanelContainer>
       default:
         return <SidePanelContainer>
