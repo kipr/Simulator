@@ -107,7 +107,7 @@ class LayoutPicker extends React.PureComponent<Props, State> {
         <Item theme={theme} style={{ fontWeight: 500, backgroundColor: theme.borderColor }}>Layouts</Item>
         <Item theme={theme} disabled={layout === Layout.Overlay} onClick={layout !== Layout.Overlay ? this.onOverlayClick_ : undefined}><ItemIcon icon='clone' /> Overlay</Item>
         <Item theme={theme} disabled={layout === Layout.Side} onClick={layout !== Layout.Side ? this.onSideClick_ : undefined}><ItemIcon icon='caret-square-left' /> Side</Item>
-        <Item theme={theme} disabled={layout === Layout.Bottom} onClick={layout !== Layout.Bottom ? this.onSideClick_ : undefined}><ItemIcon icon='caret-square-down' /> Bottom</Item>
+        {/* <Item theme={theme} disabled={layout === Layout.Bottom} onClick={layout !== Layout.Bottom ? this.onBottomClick_ : undefined}><ItemIcon icon='caret-square-down' /> Bottom</Item> */}
         
         {layout === Layout.Overlay ? (
           <>
