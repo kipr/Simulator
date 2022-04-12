@@ -29,14 +29,23 @@ const TabIcon = styled(Fa, {
   paddingRight: '5px'
 });
 
+const TabText = styled('div', {
+  // transform: (props.isVertical) ? 'rotate(-90deg)' : null,
+	// transformOrigin: (props.isVertical) ? 'center' : null,
+  textAlign: 'center',
+  display: 'flex'
+});
+
 export class Tab extends React.PureComponent<TabProps> {
   render() {
     const { props } = this;
     const { description, theme, onClick, selected } = props;
     return (
       <TabContainer theme={theme} onClick={onClick} selected={selected}>
-        {description.icon ? <TabIcon icon={description.icon} /> : undefined}
-        {description.name}
+        <TabText>
+          {description.icon ? <TabIcon icon={description.icon} /> : undefined}
+          {description.name}
+        </TabText>
       </TabContainer>
     );
   }
@@ -45,15 +54,16 @@ export class Tab extends React.PureComponent<TabProps> {
 export interface TabBarProps extends ThemeProps, StyleProps {
   tabs: TabBar.TabDescription[];
   index: number;
-
+  isVertical?: boolean;
   onIndexChange: (index: number, event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
+
 type Props = TabBarProps;
 
-const TabBarContainer = styled('div', (props: ThemeProps) => ({
+const TabBarContainer = styled('div', (props: ThemeProps & { $vertical: boolean }) => ({
   display: 'flex',
-  flexDirection: 'row',
+  flexDirection: (props.$vertical) ? 'column' : 'row' ,
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color
 }));
@@ -65,9 +75,10 @@ export class TabBar extends React.PureComponent<Props> {
 
   render() {
     const { props } = this;
-    const { tabs, index, theme, style, className } = props;
+    const { tabs, index, theme, style, className, isVertical } = props;
+
     return (
-      <TabBarContainer theme={theme} style={style} className={className}>
+      <TabBarContainer theme={theme} style={style} className={className} $vertical={isVertical}>
         {tabs.map((tab, i) => (
           <Tab key={i} selected={i === index} theme={theme} description={tab} onClick={this.onClick_(i)} />
         ))}

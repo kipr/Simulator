@@ -9,10 +9,7 @@ import SimMenu from './SimMenu';
 
 import { styled } from 'styletron-react';
 import { DARK, Theme } from './theme';
-import OverlayLayout from './OverlayLayout';
-import { Layout, LayoutProps } from './Layout';
-import BottomLayout from './BottomLayout';
-import SideLayout from './SideLayout';
+import { Layout, LayoutProps, BottomLayout, OverlayLayout, SideLayout  } from './Layout';
 
 import { SettingsDialog } from './SettingsDialog';
 import { AboutDialog } from './AboutDialog';
@@ -140,7 +137,9 @@ export class Root extends React.Component<Props, State> {
         theta: Angle.degrees(0),
       },
       surfaceState: SurfaceStatePresets.jbcA,
-      layout: Layout.Overlay,
+      // TODO: set to side by default if on mobile
+      // TODO: set back to overlay default after testing
+      layout: Layout.Side,
       code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
       modal: Modal.NONE,
       simulatorState: SimulatorState.STOPPED,
@@ -432,7 +431,6 @@ export class Root extends React.Component<Props, State> {
       onIndentCode: this.onIndentCode_,
       surfaceState,
       onSurfaceChange: this.onUpdateSurfaceState_,
-      feedback,
     };
 
     let impl: JSX.Element;

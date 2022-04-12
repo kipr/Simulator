@@ -1,16 +1,16 @@
 import * as React from 'react';
 
 import { styled } from 'styletron-react';
-import { Button } from './Button';
-import Console from './Console';
-import { Editor, WarningCharm, ErrorCharm } from './Editor';
-import { Fa } from './Fa';
-import { Info } from './Info';
+import { Button } from '../Button';
+import Console from '../Console';
+import { Editor, WarningCharm, ErrorCharm } from '../Editor';
+import { Fa } from '../Fa';
+import { Info } from '../Info';
 import { LayoutProps } from './Layout';
-import { SimulatorArea } from './SimulatorArea';
-import { Theme, ThemeProps } from './theme';
-import Widget, { BarComponent, Mode, Size, WidgetProps } from './Widget';
-import World from './World';
+import { SimulatorArea } from '../SimulatorArea';
+import { Theme, ThemeProps } from '../theme';
+import Widget, { BarComponent, Mode, Size, WidgetProps } from '../Widget';
+import World from '../World';
 
 export interface OverlayLayoutProps extends LayoutProps {
   
