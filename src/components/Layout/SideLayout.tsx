@@ -23,16 +23,13 @@ import World from '../World';
 const TABS_COLLAPSED = -1;
 
 const TABS = [{
-  // name: 'Editor',
-  name: '',
+  name: 'Editor',
   icon: 'code'
 }, {
-  // name: 'Robot',
-  name: '',
+  name: 'Robot',
   icon: 'robot'
 }, {
-  // name: 'World',
-  name: '',
+  name: 'World',
   icon: 'globe-americas'
 }];
 
@@ -46,7 +43,7 @@ const sizeDict = (sizes: Size[]) => {
 
   return forward;
 };
-const SIDEBAR_SIZES: Size[] = [Size.PARTIAL_RIGHT, Size.MINIATURE_LEFT, Size.MAXIMIZED, Size.MINIMIZED];
+const SIDEBAR_SIZES: Size[] = [Size.MINIMIZED, Size.PARTIAL_RIGHT, Size.MINIATURE_LEFT, Size.MAXIMIZED];
 const CONSOLE_SIZES: Size[] = [Size.MINIMIZED, Size.MINIATURE_DOWN, Size.PARTIAL_UP];
 const CONSOLE_SIZE = sizeDict(CONSOLE_SIZES);
 const SIDEBAR_SIZE = sizeDict(SIDEBAR_SIZES);
@@ -62,10 +59,6 @@ interface SideLayoutState {
 
 type Props = SideLayoutProps;
 type State = SideLayoutState;
-
-const StyledTabBar = styled(TabBar, (props: ThemeProps) => ({
-  borderTop: `1px solid ${props.theme.borderColor}`
-}));
 
 interface SideBarProps {
   size: number;

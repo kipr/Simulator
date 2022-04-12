@@ -7,42 +7,50 @@ import { ThemeProps } from './theme';
 export interface TabProps extends ThemeProps, StyleProps {
   description: TabBar.TabDescription;
   selected?: boolean;
+  vertical?: boolean;
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-const TabContainer = styled('div', (props: ThemeProps & { selected: boolean }) => ({
+const TabContainer = styled('div', (props: ThemeProps & { selected: boolean, $vertical: boolean }) => ({
   flex: '1 1',
   borderRight: `1px solid ${props.theme.borderColor}`,
+  borderBottom: (props.$vertical) ? `1px solid ${props.theme.borderColor}` : null,
   backgroundColor: props.selected ? `rgba(255, 255, 255, 0.1)` : `rgba(0, 0, 0, 0.1)`,
   opacity: props.selected ? 1 : 0.2,
   transition: 'background-color 0.2s, opacity 0.2s',
   padding: `${props.theme.itemPadding * 2}px`,
   ':last-child': {
-    borderRight: 'none'
+    borderRight: 'none',
+    borderBottom: 'none'
   },
   textAlign: 'center',
   userSelect: 'none',
   cursor: props.selected ? 'auto' : 'pointer',
+  position: 'relative',
+  minWidth: '45px',
 }));
 
 const TabIcon = styled(Fa, {
   paddingRight: '5px'
 });
 
-const TabText = styled('div', {
-  // transform: (props.isVertical) ? 'rotate(-90deg)' : null,
-	// transformOrigin: (props.isVertical) ? 'center' : null,
+const TabText = styled('div',  (props: {$vertical: boolean}) => ({
+  position: 'absolute', 
+  left: '50%', 
+  top: '50%',
+  transform: (props.$vertical) ? 'translate(-50%, -50%) rotate(-90deg)' : null,
+	transformOrigin: (props.$vertical) ? 'center' : null,
   textAlign: 'center',
   display: 'flex'
-});
+}));
 
 export class Tab extends React.PureComponent<TabProps> {
   render() {
     const { props } = this;
-    const { description, theme, onClick, selected } = props;
+    const { description, theme, onClick, selected, vertical } = props;
     return (
-      <TabContainer theme={theme} onClick={onClick} selected={selected}>
-        <TabText>
+      <TabContainer theme={theme} onClick={onClick} selected={selected} $vertical={vertical}>
+        <TabText $vertical={vertical}>
           {description.icon ? <TabIcon icon={description.icon} /> : undefined}
           {description.name}
         </TabText>
@@ -65,7 +73,7 @@ const TabBarContainer = styled('div', (props: ThemeProps & { $vertical: boolean 
   display: 'flex',
   flexDirection: (props.$vertical) ? 'column' : 'row' ,
   backgroundColor: props.theme.backgroundColor,
-  color: props.theme.color
+  color: props.theme.color,
 }));
 
 export class TabBar extends React.PureComponent<Props> {
@@ -80,7 +88,7 @@ export class TabBar extends React.PureComponent<Props> {
     return (
       <TabBarContainer theme={theme} style={style} className={className} $vertical={isVertical}>
         {tabs.map((tab, i) => (
-          <Tab key={i} selected={i === index} theme={theme} description={tab} onClick={this.onClick_(i)} />
+          <Tab key={i} selected={i === index} theme={theme} description={tab} onClick={this.onClick_(i)} vertical={isVertical} />
         ))}
       </TabBarContainer>
     );
