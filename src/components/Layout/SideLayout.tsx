@@ -14,6 +14,7 @@ import { TabBar } from '../TabBar';
 import { ThemeProps } from '../theme';
 import Widget, { BarComponent, Mode, Size, WidgetProps } from '../Widget';
 import World from '../World';
+import { Side, Slider } from './Slider';
 
 // 3 panes:
 // Editor / console
@@ -77,8 +78,10 @@ const SideBar = styled('div', (props: SideBarProps) => {
     display: 'flex',
     flexDirection: 'column',
     alignItems: "stretch",
-    flex: (sizeType === Size.Type.Maximized) ? '1 1 100%' : '0 1 auto',
-    width: (sizeType === Size.Type.Maximized) ? '100%' : (sizeType === Size.Type.Miniature) ? '30vw' : '60vw',
+    flex: '1 1 auto',
+    width: '100%',
+    // flex: (sizeType === Size.Type.Maximized) ? '1 1 100%' : '0 1 auto',
+    // width: (sizeType === Size.Type.Maximized) ? '100%' : (sizeType === Size.Type.Miniature) ? '30vw' : '60vw',
   }
 });
 
@@ -90,23 +93,28 @@ const EditorWidget = styled(Widget, {
   flex: '2 3'
 });
 const ConsoleWidget = styled(Widget, (props: WidgetProps) => {
-  const sizeType = props.sizes[props.size].type;
+  return {
+    flex: '1 1 auto',
+    height: '100%'
+  };
 
-  switch (sizeType) {
-    case Size.Type.Minimized: return {
-      flex: '0 0 auto',
-      height: '45px'
-    };
-    case Size.Type.Miniature: return {
-      flex: '0 0 auto',
-      height: '30vh'
-    };
-    default:
-    case Size.Type.Partial: return {
-      flex: '0 0 auto',
-      height: '70vh'
-    };
-  }
+  // const sizeType = props.sizes[props.size].type;
+
+  // switch (sizeType) {
+  //   case Size.Type.Minimized: return {
+  //     flex: '1 1 auto',
+  //     // height: '45px'
+  //   };
+  //   case Size.Type.Miniature: return {
+  //     flex: '1 1 auto',
+  //     // height: '30vh'
+  //   };
+  //   default:
+  //   case Size.Type.Partial: return {
+  //     flex: '1 1 auto',
+  //     // height: '70vh'd
+  //   };
+  // }
 });
 const InfoWidget = styled(Widget, {
   flex: 'auto'
@@ -257,8 +265,6 @@ class SideLayout extends React.PureComponent<Props, State> {
               name='Editor'
               barComponents={editorBar}
               mode={Mode.Inline}
-              sizes={SIDEBAR_SIZES} size={SIDEBAR_SIZE[sidePanelSize]} 
-              onSizeChange={this.onSideBarSizeChange_} hideActiveSize={true}
             >
             <Editor
               theme={theme}
@@ -268,18 +274,17 @@ class SideLayout extends React.PureComponent<Props, State> {
               autocomplete={settings.editorAutoComplete}
             />
           </EditorWidget>
-          <ConsoleWidget
-            theme={theme}
-            name='Console'
-            sizes={CONSOLE_SIZES}
-            size={CONSOLE_SIZE[consoleSize]}
-            onSizeChange={this.onConsoleSizeChange_}
-            barComponents={consoleBar}
-            mode={Mode.Inline}
-            hideActiveSize={true}
-          >
-            <FlexConsole theme={theme} text={console}/>
-          </ConsoleWidget>
+          <Slider side={Side.Top} initialHeight={200} theme={theme}>
+            <ConsoleWidget
+              theme={theme}
+              name='Console'
+              barComponents={consoleBar}
+              mode={Mode.Inline}
+              hideActiveSize={true}
+            >
+              <FlexConsole theme={theme} text={console}/>
+            </ConsoleWidget>
+          </Slider>
         </>
         );
         break;
@@ -290,8 +295,6 @@ class SideLayout extends React.PureComponent<Props, State> {
             theme={theme}
             name='Robot'
             mode={Mode.Inline}
-            sizes={SIDEBAR_SIZES} size={SIDEBAR_SIZE[sidePanelSize]} 
-            onSizeChange={this.onSideBarSizeChange_} hideActiveSize={true}
           >
             <Info
               robotState={state}
@@ -309,8 +312,6 @@ class SideLayout extends React.PureComponent<Props, State> {
             theme={theme}
             name='World'
             mode={Mode.Inline}
-            sizes={SIDEBAR_SIZES} size={SIDEBAR_SIZE[sidePanelSize]} 
-            onSizeChange={this.onSideBarSizeChange_} hideActiveSize={true}
           >
             <World theme={theme} surfaceName={surfaceState.surfaceName} onSurfaceChange={onSurfaceChange} />
           </WorldWidget>
@@ -320,9 +321,11 @@ class SideLayout extends React.PureComponent<Props, State> {
     }
 
     const tabBar = <TabBar isVertical={true} tabs={TABS} index={activePanel} onIndexChange={this.onTabBarIndexChange_} theme={theme} />
-    const sideBar = <SideBar size={sidePanelSize} >
+    const sideBar = <Slider side={Side.Right} initialWidth={400} theme={theme}>
+      <SideBar size={sidePanelSize} >
       {content}
-    </SideBar>
+      </SideBar>
+    </Slider>
 
     switch (sidePanelSize) {
       case Size.Type.Minimized:
