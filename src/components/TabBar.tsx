@@ -39,7 +39,7 @@ const TabText = styled('div',  (props: {$vertical: boolean}) => ({
   left: '50%', 
   top: '50%',
   transform: (props.$vertical) ? 'translate(-50%, -50%) rotate(-90deg)' : 'translate(-50%, -50%)',
-	transformOrigin: (props.$vertical) ? 'center' : null,
+	transformOrigin: 'center',
   textAlign: 'center',
   display: 'flex'
 }));
