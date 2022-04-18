@@ -23,7 +23,8 @@ interface CanBeVertical {
 }
 
 interface SliderBarProps extends CanBeVertical, ThemeProps{
-  onMouseDownCallback: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
+  onMouseDownCallback: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
+  onTouchStartCallback: (e: React.TouchEvent<HTMLDivElement>) => void,
 }
 
 interface ContainerProps extends CanBeVertical{
@@ -51,8 +52,8 @@ const SliderBubble = styled('div', (props: CanBeVertical & ThemeProps) => ({
   zIndex: 1,
   borderRadius: '50%',
   background: 'white',
-  border: '1px',
-  borderColor: 'darkgray'
+  // border: '1px',
+  // borderColor: 'darkgray'
 }));
 const SliderBubbleCharm = styled('div', {
   position: 'relative',
@@ -63,12 +64,12 @@ const SliderBubbleCharm = styled('div', {
 })
 
 const SliderBar = React.memo(function(props: SliderBarProps) {
-  const {$vertical, onMouseDownCallback, theme} = props
-  // onTouchStart={(e) => dispatch({action: Actions.MouseDown, x: e.touches[0].pageX, y: e.touches[0].pageY})}
-  // onTouchMove={(e) => dispatch({action: Actions.MouseMove, x: e.touches[0].pageX, y: e.touches[0].pageY})}
-  // onTouchEnd={(e) => dispatch({action: Actions.MouseUp, x: e.touches[0].pageX, y: e.touches[0].pageY})}
+  const {$vertical, onMouseDownCallback, onTouchStartCallback, theme} = props
 
-  return <SliderBubbleBar $vertical={$vertical} onMouseDown={onMouseDownCallback}>
+  return <SliderBubbleBar $vertical={$vertical} 
+    onMouseDown={onMouseDownCallback}
+    onTouchStart={onTouchStartCallback}
+  >
     <SliderBubbleSeperator/>
     <SliderBubble $vertical={$vertical} theme={theme}>
       <SliderBubbleCharm>
@@ -97,7 +98,7 @@ interface ResizeAction {
   x: number,
   y: number,
 }
-function resizeOnMouseMove(state: ResizeState, action: ResizeAction): ResizeState {
+function resizeOnPointerMove(state: ResizeState, action: ResizeAction): ResizeState {
   const {side, height, width, prevX, prevY, resizing} = state;
   const {actionType, x, y} = action;
 
@@ -155,7 +156,7 @@ export const Slider = function(props: SliderProps) {
   if (isVertical && initialWidth === null) throw Error ("Must set initialWidth when side is left or right!");
   if (!isVertical && initialHeight === null) throw Error ("Must set initialHeight when side is top or bottom!");
 
-  const [state, dispatch] = React.useReducer(resizeOnMouseMove, {
+  const [state, dispatch] = React.useReducer(resizeOnPointerMove, {
     side: side,
     width: initialWidth,
     height: initialHeight, 
@@ -163,26 +164,52 @@ export const Slider = function(props: SliderProps) {
   });
 
   const onMouseMove = (e: MouseEvent) => dispatch({actionType: Actions.MouseMove, x: e.pageX, y: e.pageY});
-  const onMouseUp = (e: MouseEvent) => dispatch({actionType: Actions.MouseUp, x: e.pageX, y: e.pageY});
+  const onMouseUp = (e: MouseEvent) => {
+    dispatch({actionType: Actions.MouseUp, x: e.pageX, y: e.pageY});
+    window.removeEventListener('mousemove', onMouseMove);
+    window.removeEventListener('mouseup', onMouseUp);
+  }
 
   const onSliderBarMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     dispatch({actionType: Actions.MouseDown, x: e.pageX, y: e.pageY});
     window.addEventListener('mousemove', onMouseMove );
     window.addEventListener('mouseup', onMouseUp );
   }
-  
+
+  // TODO: make sure we support only 1 touch more explicitly
+  const onTouchMove = (e: TouchEvent) => dispatch({actionType: Actions.MouseMove, x: e.touches[0].pageX, y: e.touches[0].pageY});
+  const onTouchEnd = (e: TouchEvent) => {
+    dispatch({actionType: Actions.MouseUp, x: null, y: null});
+    window.removeEventListener('touchmove', onTouchMove);
+    window.removeEventListener('touchend', onTouchEnd);
+    window.removeEventListener('touchcancel', onTouchEnd);
+  }
+
+  const onSliderBarTourchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    dispatch({actionType: Actions.MouseDown, x: e.touches[0].pageX, y: e.touches[0].pageY});
+    window.addEventListener('touchmove', onTouchMove );
+    window.addEventListener('touchend', onTouchEnd );
+    window.addEventListener('touchcancel', onTouchEnd );
+  }
+
   switch (side) {
     case Side.Top:
     case Side.Left:
       return <Container $width={state.width} $height={state.height} $vertical={isVertical}>
-        <SliderBar $vertical={isVertical} onMouseDownCallback={onSliderBarMouseDown} theme={theme} />
+        <SliderBar $vertical={isVertical} theme={theme} 
+          onMouseDownCallback={onSliderBarMouseDown}
+          onTouchStartCallback={onSliderBarTourchStart}
+        />
         {children}
       </Container>
     case Side.Right:
     case Side.Bottom:
       return <Container $width={state.width} $height={state.height} $vertical={isVertical}>
         {children}
-        <SliderBar $vertical={isVertical} onMouseDownCallback={onSliderBarMouseDown} theme={theme} />
+        <SliderBar $vertical={isVertical} theme={theme} 
+          onMouseDownCallback={onSliderBarMouseDown}
+          onTouchStartCallback={onSliderBarTourchStart}
+        />
     </Container>
   }
 }
