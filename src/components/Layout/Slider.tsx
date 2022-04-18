@@ -168,29 +168,38 @@ export const Slider = function(props: SliderProps) {
     dispatch({actionType: Actions.MouseUp, x: e.pageX, y: e.pageY});
     window.removeEventListener('mousemove', onMouseMove);
     window.removeEventListener('mouseup', onMouseUp);
-  }
+  };
 
   const onSliderBarMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     dispatch({actionType: Actions.MouseDown, x: e.pageX, y: e.pageY});
     window.addEventListener('mousemove', onMouseMove );
     window.addEventListener('mouseup', onMouseUp );
-  }
+  };
 
   // TODO: make sure we support only 1 touch more explicitly
-  const onTouchMove = (e: TouchEvent) => dispatch({actionType: Actions.MouseMove, x: e.touches[0].pageX, y: e.touches[0].pageY});
+  const onTouchMove = (e: TouchEvent) => {
+    // only support single touch events
+    if (e.touches.length > 1) return;
+    
+    dispatch({actionType: Actions.MouseMove, x: e.touches[0].pageX, y: e.touches[0].pageY});
+  };
+
   const onTouchEnd = (e: TouchEvent) => {
     dispatch({actionType: Actions.MouseUp, x: null, y: null});
     window.removeEventListener('touchmove', onTouchMove);
     window.removeEventListener('touchend', onTouchEnd);
     window.removeEventListener('touchcancel', onTouchEnd);
-  }
+  };
 
   const onSliderBarTourchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    // only support single touch events
+    if (e.touches.length > 1) return;
+
     dispatch({actionType: Actions.MouseDown, x: e.touches[0].pageX, y: e.touches[0].pageY});
     window.addEventListener('touchmove', onTouchMove );
     window.addEventListener('touchend', onTouchEnd );
     window.addEventListener('touchcancel', onTouchEnd );
-  }
+  };
 
   switch (side) {
     case Side.Top:
