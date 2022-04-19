@@ -21,13 +21,16 @@ export interface SliderProps extends ThemeProps {
 interface CanBeVertical {
   $vertical?: boolean
 }
+interface CanBeSelected {
+  selected: boolean
+}
 
-interface SliderBarProps extends CanBeVertical, ThemeProps{
+interface SliderBarProps extends CanBeVertical, CanBeSelected, ThemeProps {
   onMouseDownCallback: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
   onTouchStartCallback: (e: React.TouchEvent<HTMLDivElement>) => void,
 }
 
-interface ContainerProps extends CanBeVertical{
+interface ContainerProps extends CanBeVertical {
   $width?: number,
   $height?: number,
 }
@@ -39,41 +42,42 @@ const Container = styled('div', (props: ContainerProps) => ({
 }));
 const SliderBubbleBar = styled('div', (props: CanBeVertical) => ({
   display: 'flex',
-  flexDirection: (props.$vertical) ? 'column' : 'row' ,
+  flexDirection: (props.$vertical) ? 'column' : 'row',
 }));
 const SliderBubbleSeperator = styled('div', {
   flex: '1 0'
 });
-const SliderBubble = styled('div', (props: CanBeVertical & ThemeProps) => ({
-  margin: (props.$vertical) ? '0px -10px' : '-10px 0px',
-  padding: (props.$vertical) ? '0px 10px' : '10px 0px',
-  height: '20px',
-  width: '20px',
+const SliderBubble = styled('div', (props: CanBeVertical & CanBeSelected & ThemeProps) => ({
+  margin: (props.$vertical) ? '0px -13px' : '-13px 0px',
+  height: '26px',
+  width: '26px',
   zIndex: 1,
   borderRadius: '50%',
-  background: 'white',
-  // border: '1px',
-  // borderColor: 'darkgray'
+  border: `1px solid ${props.theme.borderColor}`,
+  color: props.theme.color,
+  backgroundColor: props.selected ? props.theme.switch.off.primary : props.theme.backgroundColor,
+  opacity: 1,
+  cursor: props.$vertical ? 'col-resize' : 'row-resize',
 }));
-const SliderBubbleCharm = styled('div', {
+const SliderBubbleCharm = styled('div', (props: CanBeVertical) => ({
   position: 'relative',
   float: 'left',
   top: '50%',
   left: '50%',
-  transform: 'translate(-50%, -50%)',
-})
+  transform: (props.$vertical) ? 'translate(-50%, -50%) rotate(-90deg)' : 'translate(-50%, -50%)',
+}));
 
 const SliderBar = React.memo(function(props: SliderBarProps) {
-  const {$vertical, onMouseDownCallback, onTouchStartCallback, theme} = props
+  const {$vertical, selected, onMouseDownCallback, onTouchStartCallback, theme} = props
 
-  return <SliderBubbleBar $vertical={$vertical} 
+  return <SliderBubbleBar $vertical={$vertical}
     onMouseDown={onMouseDownCallback}
     onTouchStart={onTouchStartCallback}
   >
     <SliderBubbleSeperator/>
-    <SliderBubble $vertical={$vertical} theme={theme}>
-      <SliderBubbleCharm>
-        <Fa key={'size-1'} icon={($vertical) ? 'bars' : 'arrows-up-down'}/>
+    <SliderBubble $vertical={$vertical} theme={theme} selected={selected}>
+      <SliderBubbleCharm $vertical={$vertical}>
+        <Fa key={'size-1'} icon='equals'/>
       </SliderBubbleCharm>
     </SliderBubble>
     <SliderBubbleSeperator/>
@@ -180,7 +184,7 @@ export const Slider = function(props: SliderProps) {
   const onTouchMove = (e: TouchEvent) => {
     // only support single touch events
     if (e.touches.length > 1) return;
-    
+
     dispatch({actionType: Actions.MouseMove, x: e.touches[0].pageX, y: e.touches[0].pageY});
   };
 
@@ -205,7 +209,7 @@ export const Slider = function(props: SliderProps) {
     case Side.Top:
     case Side.Left:
       return <Container $width={state.width} $height={state.height} $vertical={isVertical}>
-        <SliderBar $vertical={isVertical} theme={theme} 
+        <SliderBar $vertical={isVertical} theme={theme} selected={state.resizing}
           onMouseDownCallback={onSliderBarMouseDown}
           onTouchStartCallback={onSliderBarTourchStart}
         />
@@ -215,7 +219,7 @@ export const Slider = function(props: SliderProps) {
     case Side.Bottom:
       return <Container $width={state.width} $height={state.height} $vertical={isVertical}>
         {children}
-        <SliderBar $vertical={isVertical} theme={theme} 
+        <SliderBar $vertical={isVertical} theme={theme} selected={state.resizing}
           onMouseDownCallback={onSliderBarMouseDown}
           onTouchStartCallback={onSliderBarTourchStart}
         />
