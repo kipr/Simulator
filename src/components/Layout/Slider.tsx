@@ -48,9 +48,9 @@ const SliderBubbleSeperator = styled('div', {
   flex: '1 0'
 });
 const SliderBubble = styled('div', (props: CanBeVertical & CanBeSelected & ThemeProps) => ({
-  margin: (props.$vertical) ? '0px -13px' : '-13px 0px',
-  height: '26px',
-  width: '26px',
+  margin: (props.$vertical) ? '0px -17px' : '-17px 0px',
+  height: '34px',
+  width: '34px',
   zIndex: 1,
   borderRadius: '50%',
   border: `1px solid ${props.theme.borderColor}`,
@@ -122,7 +122,6 @@ function resizeOnPointerMove(state: ResizeState, action: ResizeAction): ResizeSt
 
   // stop the resize on mouseup
   if (actionType === Actions.MouseUp) {
-    console.log('dispatch: done resize ' + state.width + ' , ' + state.height);
     return {...state, resizing: false}
   }
 

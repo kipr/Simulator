@@ -108,6 +108,16 @@ class SideLayout extends React.PureComponent<Props, State> {
       sidePanelSize: Size.Type.Miniature,
       activePanel: 0
     };
+
+    // TODO: this isn't working yet. Needs more tinkering
+    // on an orientation change, trigger a rerender
+    // this is deprecated, but supported in safari iOS
+    // screen.orientation.onchange = () => {
+    //   console.log('orientation change')
+    //   this.render();
+    // };
+    // // this is not deprecated, but not supported in safari iOS
+    // window.addEventListener('orientationchange', () => { console.log('deprecated orientation change'); this.render(); });
   }
   private onSideBarSizeChange_ = (index: number) => {
     if (SIDEBAR_SIZES[index].type === Size.Type.Minimized) {
@@ -226,31 +236,32 @@ class SideLayout extends React.PureComponent<Props, State> {
       case 0: {
         content = (
         <>
-          <SimulatorWidget
-              theme={theme}
-              name='Editor'
-              barComponents={editorBar}
-              mode={Mode.Inline}
-            >
-            <Editor
-              theme={theme}
-              ref={this.bindEditor_}
-              code={code} onCodeChange={onCodeChange}
-              messages={messages}
-              autocomplete={settings.editorAutoComplete}
-            />
-          </SimulatorWidget>
-          <Slider side={Side.Top} initialHeight={200} theme={theme}>
+          <Slider side={Side.Bottom} initialHeight={window.innerHeight * 2 / 3} theme={theme}>
             <SimulatorWidget
-              theme={theme}
-              name='Console'
-              barComponents={consoleBar}
-              mode={Mode.Inline}
-              hideActiveSize={true}
-            >
-              <FlexConsole theme={theme} text={console}/>
+                theme={theme}
+                name='Editor'
+                barComponents={editorBar}
+                mode={Mode.Inline}
+              >
+              <Editor
+                theme={theme}
+                ref={this.bindEditor_}
+                code={code} onCodeChange={onCodeChange}
+                messages={messages}
+                autocomplete={settings.editorAutoComplete}
+              />
             </SimulatorWidget>
           </Slider>
+          <SimulatorWidget
+            theme={theme}
+            name='Console'
+            barComponents={consoleBar}
+            mode={Mode.Inline}
+            hideActiveSize={true}
+          >
+            <div></div>
+            {/* <FlexConsole theme={theme} text={console}/> */}
+          </SimulatorWidget>
         </>
         );
         break;
