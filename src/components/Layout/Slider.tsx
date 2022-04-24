@@ -35,7 +35,7 @@ interface ContainerProps extends CanBeVertical {
   $height?: number,
 }
 
-const Container = styled('div', (props: ContainerProps) => ({
+const SliderContainer = styled('div', (props: ContainerProps) => ({
   width: (props.$width) ? props.$width + 'px' : null,
   height: (props.$height) ? props.$height + 'px' : null,
   display: (props.$vertical) ? 'flex' : null,
@@ -90,7 +90,7 @@ interface ResizeState {
   height?: number,
   prevX?: number,
   prevY?: number,
-  resizing: boolean
+  resizing: boolean,
 }
 enum Actions {
   MouseDown,
@@ -118,8 +118,11 @@ function resizeOnPointerMove(state: ResizeState, action: ResizeAction): ResizeSt
     return state;
   }
 
+  // resizing!
+
   // stop the resize on mouseup
   if (actionType === Actions.MouseUp) {
+    console.log('dispatch: done resize ' + state.width + ' , ' + state.height);
     return {...state, resizing: false}
   }
 
@@ -127,26 +130,26 @@ function resizeOnPointerMove(state: ResizeState, action: ResizeAction): ResizeSt
   switch (side) {
     case Side.Left:
       return {
-        side: side, resizing: true, 
-        height: height, width: width - (x - prevX),
+        side: side, resizing: true,
+        height: height, width: Math.max(width - (x - prevX), 0),
         prevX: x, prevY: y,
       };
     case Side.Right:
       return {
-        side: side, resizing: true, 
-        height: height, width: width + (x - prevX),
+        side: side, resizing: true,
+        height: height, width: Math.max(width + (x - prevX), 0),
         prevX: x, prevY: y,
       };
     case Side.Top:
       return {
-        side: side, resizing: true, 
-        height: height - (y - prevY), width: width,
+        side: side, resizing: true,
+        height: Math.max(height - (y - prevY), 0), width: width,
         prevX: x, prevY: y,
       };
     case Side.Bottom:
       return {
-        side: side, resizing: true, 
-        height: height + (y - prevY), width: width,
+        side: side, resizing: true,
+        height: Math.max(height + (y - prevY), 0), width: width,
         prevX: x, prevY: y,
       };
   }
@@ -167,15 +170,19 @@ export const Slider = function(props: SliderProps) {
     resizing: false,
   });
 
-  const onMouseMove = (e: MouseEvent) => dispatch({actionType: Actions.MouseMove, x: e.pageX, y: e.pageY});
+  const onMouseMove = (e: MouseEvent) => {
+    dispatch({actionType: Actions.MouseMove, x: e.pageX, y: e.pageY});
+  }
   const onMouseUp = (e: MouseEvent) => {
     dispatch({actionType: Actions.MouseUp, x: e.pageX, y: e.pageY});
+    
     window.removeEventListener('mousemove', onMouseMove);
     window.removeEventListener('mouseup', onMouseUp);
   };
 
   const onSliderBarMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     dispatch({actionType: Actions.MouseDown, x: e.pageX, y: e.pageY});
+
     window.addEventListener('mousemove', onMouseMove );
     window.addEventListener('mouseup', onMouseUp );
   };
@@ -184,12 +191,13 @@ export const Slider = function(props: SliderProps) {
   const onTouchMove = (e: TouchEvent) => {
     // only support single touch events
     if (e.touches.length > 1) return;
-
+    
     dispatch({actionType: Actions.MouseMove, x: e.touches[0].pageX, y: e.touches[0].pageY});
   };
 
   const onTouchEnd = (e: TouchEvent) => {
     dispatch({actionType: Actions.MouseUp, x: null, y: null});
+
     window.removeEventListener('touchmove', onTouchMove);
     window.removeEventListener('touchend', onTouchEnd);
     window.removeEventListener('touchcancel', onTouchEnd);
@@ -200,6 +208,7 @@ export const Slider = function(props: SliderProps) {
     if (e.touches.length > 1) return;
 
     dispatch({actionType: Actions.MouseDown, x: e.touches[0].pageX, y: e.touches[0].pageY});
+
     window.addEventListener('touchmove', onTouchMove );
     window.addEventListener('touchend', onTouchEnd );
     window.addEventListener('touchcancel', onTouchEnd );
@@ -208,21 +217,21 @@ export const Slider = function(props: SliderProps) {
   switch (side) {
     case Side.Top:
     case Side.Left:
-      return <Container $width={state.width} $height={state.height} $vertical={isVertical}>
+      return <SliderContainer $width={state.width} $height={state.height} $vertical={isVertical}>
         <SliderBar $vertical={isVertical} theme={theme} selected={state.resizing}
           onMouseDownCallback={onSliderBarMouseDown}
           onTouchStartCallback={onSliderBarTourchStart}
         />
         {children}
-      </Container>
+      </SliderContainer>
     case Side.Right:
     case Side.Bottom:
-      return <Container $width={state.width} $height={state.height} $vertical={isVertical}>
+      return <SliderContainer $width={state.width} $height={state.height} $vertical={isVertical}>
         {children}
         <SliderBar $vertical={isVertical} theme={theme} selected={state.resizing}
           onMouseDownCallback={onSliderBarMouseDown}
           onTouchStartCallback={onSliderBarTourchStart}
         />
-    </Container>
+    </SliderContainer>
   }
 }
