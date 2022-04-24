@@ -108,10 +108,11 @@ type State = RootState;
 
 const Container = styled('div', {
   width: '100vw',
-  height: '100vh',
+  height: window.innerHeight + 'px', // fix for mobile, see https://chanind.github.io/javascript/2019/09/28/avoid-100vh-on-mobile-web.html
   display: 'flex',
   flexDirection: 'column',
-  overflow: 'hidden'
+  overflow: 'hidden',
+  position: 'fixed'
 });
 
 const STDOUT_STYLE = (theme: Theme) => ({
