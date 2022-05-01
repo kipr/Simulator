@@ -17,6 +17,8 @@ import Geometry from '../../state/State/Scene/Geometry';
 import Node from "../../state/State/Scene/Node";
 import Scene from "../../state/State/Scene";
 import Dict from "../../Dict";
+import Material from '../../state/State/Scene/Material';
+import { Color } from '../../state/State/Scene/Color';
 
 import * as uuid from 'uuid';
 
@@ -109,10 +111,52 @@ const NODE_TYPE_OPTIONS: ComboBox.Option[] = [
   ComboBox.option('Spot Light', 'spot-light'),
 ];
 
-const NODE_TYPES_REV = (() => {
+const NODE_TYPE_OPTIONS_REV = (() => {
   const map: Record<string, number> = {};
   NODE_TYPES.forEach((type, i) => {
     map[type] = i;
+  });
+  return map;
+})();
+
+const MATERIAL_TYPE_OPTIONS: ComboBox.Option[] = [
+  ComboBox.option('Unset', 'unset'),
+  ComboBox.option('Basic', 'basic'),
+  ComboBox.option('PBR', 'pbr'),
+];
+
+const MATERIAL_TYPE_OPTIONS_REV = (() => {
+  const map: Record<string, number> = {};
+  MATERIAL_TYPE_OPTIONS.forEach((option, i) => {
+    map[option.data as string] = i;
+  });
+  return map;
+})();
+
+const MATERIAL_SOURCE3_TYPE_OPTIONS: ComboBox.Option[] = [
+  ComboBox.option('Unset', 'unset'),
+  ComboBox.option('RGB', 'color3'),
+  ComboBox.option('Texture', 'texture'),
+];
+
+const MATERIAL_SOURCE3_TYPE_OPTIONS_REV = (() => {
+  const map: Record<string, number> = {};
+  MATERIAL_SOURCE3_TYPE_OPTIONS.forEach((option, i) => {
+    map[option.data as string] = i;
+  });
+  return map;
+})();
+
+const MATERIAL_SOURCE1_TYPE_OPTIONS: ComboBox.Option[] = [
+  ComboBox.option('Unset', 'unset'),
+  ComboBox.option('Value', 'color1'),
+  ComboBox.option('Texture', 'texture'),
+];
+
+const MATERIAL_SOURCE1_TYPE_OPTIONS_REV = (() => {
+  const map: Record<string, number> = {};
+  MATERIAL_SOURCE3_TYPE_OPTIONS.forEach((option, i) => {
+    map[option.data as string] = i;
   });
   return map;
 })();
@@ -214,6 +258,306 @@ class NodeSettings extends React.PureComponent<Props, State> {
       this.props.onGeometryRemove(node.geometryId);
     }
   };
+
+  private onMaterialTypeSelect_ = (index: number, option: ComboBox.Option) => {
+    const { props } = this;
+    const { node, onNodeChange } = props;
+    if (node.type !== 'object') return;
+
+    let nextMaterial = undefined;
+    switch (option.data as string) {
+      case 'unset': {
+        nextMaterial = undefined;
+        break;
+      }
+      case 'pbr': {
+        nextMaterial = Material.Pbr.NIL;
+        break;
+      }
+      case 'basic': {
+        nextMaterial = Material.Basic.NIL;
+      }
+    }
+
+    onNodeChange({
+      ...node,
+      material: nextMaterial
+    });
+  };
+
+  private onMaterialBasicFieldTypeChange_ = (field: keyof Omit<Material.Basic, 'type'>) => (index: number, option: ComboBox.Option) => {
+    const { node, onNodeChange } = this.props;
+    if (node.type !== 'object') throw new Error('Node is not an object');
+    const material = node.material as Material.Basic;
+
+    const nextMaterial = { ...material };
+    
+    // Some fields are Source3 (3 channel) and others are Source1 (1 channel).
+    // TypeScript isn't happy assigning the union of these, so a little any is used.
+    switch (option.data as string) {
+      case 'unset': {
+        nextMaterial[field] = undefined;
+        break;
+      }
+      case 'color1': {
+        nextMaterial[field] = {
+          type: 'color1',
+          color: 0,
+        } as any;
+        break;
+      }
+      case 'color3': {
+        nextMaterial[field] = {
+          type: 'color3',
+          color: Color.BLACK,
+        } as any;
+        break;
+      }
+      case 'texture': {
+        nextMaterial[field] = {
+          type: 'texture',
+          uri: ''
+        };
+        break;
+      }
+    }
+
+    onNodeChange({
+      ...node,
+      material: nextMaterial
+    });
+  };
+
+
+  private onMaterialPbrFieldTypeChange_ = (field: keyof Omit<Material.Pbr, 'type'>) => (index: number, option: ComboBox.Option) => {
+    const { node, onNodeChange } = this.props;
+    if (node.type !== 'object') throw new Error('Node is not an object');
+    const material = node.material as Material.Pbr;
+
+    const nextMaterial = { ...material };
+    
+    // Some fields are Source3 (3 channel) and others are Source1 (1 channel).
+    // TypeScript isn't happy assigning the union of these, so a little any is used.
+    switch (option.data as string) {
+      case 'unset': {
+        nextMaterial[field] = undefined;
+        break;
+      }
+      case 'color1': {
+        nextMaterial[field] = {
+          type: 'color1',
+          color: 0,
+        } as any;
+        break;
+      }
+      case 'color3': {
+        nextMaterial[field] = {
+          type: 'color3',
+          color: Color.BLACK,
+        } as any;
+        break;
+      }
+      case 'texture': {
+        nextMaterial[field] = {
+          type: 'texture',
+          uri: ''
+        };
+        break;
+      }
+    }
+
+    onNodeChange({
+      ...node,
+      material: nextMaterial
+    });
+  };
+
+  private onMaterialPbrAlbedoTypeChange_ = this.onMaterialPbrFieldTypeChange_('albedo');
+  private onMaterialPbrEmissiveTypeChange_ = this.onMaterialPbrFieldTypeChange_('emissive');
+  private onMaterialPbrReflectionTypeChange_ = this.onMaterialPbrFieldTypeChange_('reflection');
+  private onMaterialPbrAmbientTypeChange_ = this.onMaterialPbrFieldTypeChange_('ambient');
+  private onMaterialPbrMetalnessTypeChange_ = this.onMaterialPbrFieldTypeChange_('metalness');
+
+  private onMaterialBasicColorTypeChange_ = this.onMaterialBasicFieldTypeChange_('color');
+
+  private onMaterialPbrSource1Change_ = (field: keyof Omit<Material.Pbr, 'type'>) => (value: Value) => {
+    if (value.type !== Value.Type.Unitless) throw new Error('Value must be unitless');
+
+    const { node, onNodeChange } = this.props;
+    if (node.type !== 'object') throw new Error('Node is not an object');
+
+    const material = node.material as Material.Pbr;
+
+    const nextMaterial = { ...material };
+
+    const member = material[field];
+
+    if (member.type !== 'color1') throw new Error('Field is not a color1');
+
+    nextMaterial[field] = {
+      ...member,
+      color: value.value
+    } as any;
+
+    onNodeChange({
+      ...node,
+      material: nextMaterial
+    });
+  };
+
+  private onMaterialPbrSource3ChannelChange_ = (field: keyof Omit<Material.Pbr, 'type'>, channel: keyof Color.Rgb) => (value: Value) => {
+    if (value.type !== Value.Type.Unitless) throw new Error('Value must be unitless');
+
+    const { node, onNodeChange } = this.props;
+    if (node.type !== 'object') throw new Error('Node is not an object');
+
+    const material = node.material as Material.Pbr;
+
+    const nextMaterial = { ...material };
+
+    const member = material[field];
+
+    if (member.type !== 'color3') throw new Error('Field is not a color3');
+
+    const nextColor = Color.toRgb(member.color);
+    nextColor[channel] = value.value.value;
+
+    nextMaterial[field] = {
+      ...member,
+      color: nextColor
+    } as any;
+
+    onNodeChange({
+      ...node,
+      material: nextMaterial
+    });
+  };
+
+  private onMaterialBasicSource3ChannelChange_ = (field: keyof Omit<Material.Basic, 'type'>, channel: keyof Color.Rgb) => (value: Value) => {
+    if (value.type !== Value.Type.Unitless) throw new Error('Value must be unitless');
+
+    const { node, onNodeChange } = this.props;
+    if (node.type !== 'object') throw new Error('Node is not an object');
+
+    const material = node.material as Material.Basic;
+
+    const nextMaterial = { ...material };
+
+    const member = material[field];
+
+    if (member.type !== 'color3') throw new Error('Field is not a color3');
+
+    const nextColor = Color.toRgb(member.color);
+    nextColor[channel] = value.value.value;
+
+    nextMaterial[field] = {
+      ...member,
+      color: nextColor
+    } as any;
+
+    onNodeChange({
+      ...node,
+      material: nextMaterial
+    });
+  };
+
+  private onMaterialPbrAlbedoRChange_ = this.onMaterialPbrSource3ChannelChange_('albedo', 'r');
+  private onMaterialPbrAlbedoGChange_ = this.onMaterialPbrSource3ChannelChange_('albedo', 'g');
+  private onMaterialPbrAlbedoBChange_ = this.onMaterialPbrSource3ChannelChange_('albedo', 'b');
+
+  private onMaterialPbrEmissiveRChange_ = this.onMaterialPbrSource3ChannelChange_('emissive', 'r');
+  private onMaterialPbrEmissiveGChange_ = this.onMaterialPbrSource3ChannelChange_('emissive', 'g');
+  private onMaterialPbrEmissiveBChange_ = this.onMaterialPbrSource3ChannelChange_('emissive', 'b');
+
+  private onMaterialPbrReflectionRChange_ = this.onMaterialPbrSource3ChannelChange_('reflection', 'r');
+  private onMaterialPbrReflectionGChange_ = this.onMaterialPbrSource3ChannelChange_('reflection', 'g');
+  private onMaterialPbrReflectionBChange_ = this.onMaterialPbrSource3ChannelChange_('reflection', 'b');
+
+  private onMaterialPbrAmbientRChange_ = this.onMaterialPbrSource3ChannelChange_('ambient', 'r');
+  private onMaterialPbrAmbientGChange_ = this.onMaterialPbrSource3ChannelChange_('ambient', 'g');
+  private onMaterialPbrAmbientBChange_ = this.onMaterialPbrSource3ChannelChange_('ambient', 'b');
+
+  private onMaterialPbrMetalnessChange_ = this.onMaterialPbrSource1Change_('metalness');
+
+  private onMaterialBasicColorRChange_ = this.onMaterialBasicSource3ChannelChange_('color', 'r');
+  private onMaterialBasicColorGChange_ = this.onMaterialBasicSource3ChannelChange_('color', 'g');
+  private onMaterialBasicColorBChange_ = this.onMaterialBasicSource3ChannelChange_('color', 'b');
+
+  private onMaterialPbrFieldTextureUriChange_ = (field: keyof Omit<Material.Pbr, 'type'>) => (event: React.SyntheticEvent<HTMLInputElement>) => {
+    const { node, onNodeChange } = this.props;
+
+    if (node.type !== 'object') throw new Error('Node is not an object');
+
+    const material = node.material as Material.Pbr;
+    const nextMaterial = { ...material };
+    const member = material[field];
+
+    if (member.type !== 'texture') throw new Error('Field is not a texture');
+
+    nextMaterial[field] = {
+      ...member,
+      uri: event.currentTarget.value
+    } as any;
+
+    onNodeChange({
+      ...node,
+      material: nextMaterial
+    });
+  };
+
+  private onMaterialBasicFieldTextureUriChange_ = (field: keyof Omit<Material.Basic, 'type'>) => (event: React.SyntheticEvent<HTMLInputElement>) => {
+    const { node, onNodeChange } = this.props;
+
+    if (node.type !== 'object') throw new Error('Node is not an object');
+
+    const material = node.material as Material.Basic;
+    const nextMaterial = { ...material };
+    const member = material[field];
+
+    if (member.type !== 'texture') throw new Error('Field is not a texture');
+
+    nextMaterial[field] = {
+      ...member,
+      uri: event.currentTarget.value
+    } as any;
+
+    onNodeChange({
+      ...node,
+      material: nextMaterial
+    });
+  };
+
+  private onMaterialPbrAlbedoTextureUriChange_ = this.onMaterialPbrFieldTextureUriChange_('albedo');
+  private onMaterialPbrEmissiveTextureUriChange_ = this.onMaterialPbrFieldTextureUriChange_('emissive');
+  private onMaterialPbrReflectionTextureUriChange_ = this.onMaterialPbrFieldTextureUriChange_('reflection');
+  private onMaterialPbrAmbientTextureUriChange_ = this.onMaterialPbrFieldTextureUriChange_('ambient');
+  private onMaterialPbrMetalnessTextureUriChange_ = this.onMaterialPbrFieldTextureUriChange_('metalness');
+  
+  private onMaterialBasicColorTextureUriChange_ = this.onMaterialBasicFieldTextureUriChange_('color');
+  
+  private static materialType = (material: Material) => {
+    if (!material) return 'unset';
+    if (material.type === 'basic') return 'basic';
+    if (material.type === 'pbr') return 'pbr';
+    throw new Error('Unknown material type');
+  }
+
+  // Convert a Material.Source3 into a ComboBox option.
+  private static source1Type = (source1: Material.Source1) => {
+    if (!source1) return 'unset';
+    if (source1.type === 'color1') return 'color1';
+    if (source1.type === 'texture') return 'texture';
+    throw new Error('Unknown source1 type');
+  }
+
+  // Convert a Material.Source3 into a ComboBox option.
+  private static source3Type = (source3: Material.Source3) => {
+    if (!source3) return 'unset';
+    if (source3.type === 'color3') return 'color3';
+    if (source3.type === 'texture') return 'texture';
+    throw new Error('Unknown source3 type');
+  }
+
 
   private onParentSelect_ = (index: number, option: ComboBox.Option) => {
     const { node } = this.props;
@@ -610,6 +954,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
       if (node.physics.mass !== undefined) mass = node.physics.mass;
     }
 
+
     let parentIndex = 0;
     const parentOptions: ComboBox.Option[] = [
       ComboBox.option('Scene Root', undefined)
@@ -626,24 +971,21 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
     const geometry = node.type === 'object' ? scene.geometry[node.geometryId] : undefined;
 
-    console.log({ node, geometry });
-
-
     return (
       <Container theme={theme}>
         <Section name='General' theme={theme}>
-          <StyledField name='Name' theme={theme}>
+          <StyledField name='Name' theme={theme} long>
             <Input theme={theme} type='text' value={node.name} onChange={this.onNameChange_} />
           </StyledField>
-          <StyledField name='Parent' theme={theme}>
+          <StyledField name='Parent' theme={theme} long>
             <ComboBox options={parentOptions} theme={theme} index={parentIndex} onSelect={this.onParentSelect_} />
           </StyledField>
-          <StyledField name='Type' theme={theme}>
-            <ComboBox options={NODE_TYPE_OPTIONS} theme={theme} index={NODE_TYPES_REV[node.type]} onSelect={this.onTypeSelect_} />
+          <StyledField name='Type' theme={theme} long>
+            <ComboBox options={NODE_TYPE_OPTIONS} theme={theme} index={NODE_TYPE_OPTIONS_REV[node.type]} onSelect={this.onTypeSelect_} />
           </StyledField>
           
           {node.type === 'object' && (
-            <StyledField name='Geometry' theme={theme}>
+            <StyledField name='Geometry' theme={theme} long>
               <ComboBox options={GEOMETRY_OPTIONS} theme={theme} index={GEOMETRY_REVERSE_OPTIONS[geometry.type]} onSelect={this.onGeometrySelect_} />
             </StyledField>
           )}
@@ -657,18 +999,21 @@ class NodeSettings extends React.PureComponent<Props, State> {
           >
             <StyledValueEdit
               name='Size X'
+              long
               value={Value.distance(geometry.size.x)}
               onValueChange={this.onBoxSizeXChange_(node.geometryId)}
               theme={theme}
             />
             <StyledValueEdit
               name='Size Y'
+              long
               value={Value.distance(geometry.size.y)}
               onValueChange={this.onBoxSizeYChange_(node.geometryId)}
               theme={theme}
             />
             <StyledValueEdit
               name='Size Z'
+              long
               value={Value.distance(geometry.size.z)}
               onValueChange={this.onBoxSizeZChange_(node.geometryId)}
               theme={theme}
@@ -684,6 +1029,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
           >
             <StyledValueEdit
               name='Radius'
+              long
               value={Value.distance(geometry.radius)}
               onValueChange={this.onSphereRadiusChange_(node.geometryId)}
               theme={theme}
@@ -699,12 +1045,14 @@ class NodeSettings extends React.PureComponent<Props, State> {
           >
             <StyledValueEdit
               name='Radius'
+              long
               value={Value.distance(geometry.radius)}
               onValueChange={this.onCylinderRadiusChange_(node.geometryId)}
               theme={theme}
             />
             <StyledValueEdit
               name='Height'
+              long
               value={Value.distance(geometry.height)}
               onValueChange={this.onCylinderHeightChange_(node.geometryId)}
               theme={theme}
@@ -715,23 +1063,273 @@ class NodeSettings extends React.PureComponent<Props, State> {
           <Section name='Plane Options' theme={theme} collapsed={collapsed['geometry']} onCollapsedChange={this.onCollapsedChange_('geometry')}>
             <StyledValueEdit
               name='Size X'
+              long
               value={Value.distance(geometry.size.x)}
               onValueChange={this.onPlaneSizeXChange_(node.geometryId)}
               theme={theme}
             />
             <StyledValueEdit
               name='Size Y'
+              long
               value={Value.distance(geometry.size.y)}
               onValueChange={this.onPlaneSizeYChange_(node.geometryId)}
               theme={theme}
             />
           </Section>
         ) : undefined}
+        
         {(node.type === 'object' && geometry.type === 'file') ? (
           <Section name='File Options' theme={theme} collapsed={collapsed['geometry']} onCollapsedChange={this.onCollapsedChange_('geometry')}>
-            <StyledField name='URI' theme={theme}>
+            <StyledField name='URI' long theme={theme}>
               <Input theme={theme} type='text' value={geometry.uri} onChange={this.onFileUriChange_(node.geometryId)} />
             </StyledField>
+          </Section>
+        ) : undefined}
+        {node.type === 'object' ? (
+          <Section name='Material' theme={theme} collapsed={collapsed['material']} onCollapsedChange={this.onCollapsedChange_('material')}>
+            <StyledField name='Type' long theme={theme}>
+              <ComboBox options={MATERIAL_TYPE_OPTIONS} theme={theme} index={MATERIAL_TYPE_OPTIONS_REV[NodeSettings.materialType(node.material)]} onSelect={this.onMaterialTypeSelect_} />
+            </StyledField>
+
+            {/* Basic Color */}
+            {node.material && node.material.type === 'basic' && (
+              <StyledField name='Color Type' long theme={theme}>
+                <ComboBox
+                  options={MATERIAL_SOURCE3_TYPE_OPTIONS}
+                  theme={theme}
+                  index={MATERIAL_SOURCE3_TYPE_OPTIONS_REV[NodeSettings.source3Type(node.material.color)]}
+                  onSelect={this.onMaterialBasicColorTypeChange_}
+                />
+              </StyledField>
+            )}
+            {node.material && node.material.type === 'basic' && node.material.color && node.material.color.type === 'color3' && (
+              <>
+                <StyledValueEdit
+                  name='Color Red'
+                  long
+                  theme={theme}
+                  value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.color.color).r))}
+                  onValueChange={this.onMaterialBasicColorRChange_}
+                />
+                <StyledValueEdit
+                  name='Color Green'
+                  long
+                  theme={theme}
+                  value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.color.color).g))}
+                  onValueChange={this.onMaterialBasicColorGChange_}
+                />
+                <StyledValueEdit
+                  name='Color Blue'
+                  long
+                  theme={theme}
+                  value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.color.color).b))}
+                  onValueChange={this.onMaterialBasicColorBChange_}
+                />
+              </>
+            )}
+            {node.material && node.material.type === 'basic' && node.material.color && node.material.color.type === 'texture' && (
+              <StyledField name='Color Texture URI' long theme={theme}>
+                <Input theme={theme} type='text' value={node.material.color.uri} onChange={this.onMaterialBasicColorTextureUriChange_} />
+              </StyledField>
+            )}
+
+            {/* Albedo */}
+            {node.material && node.material.type === 'pbr' && (
+              <StyledField name='Albedo Type' long theme={theme}>
+                <ComboBox
+                  options={MATERIAL_SOURCE3_TYPE_OPTIONS}
+                  theme={theme}
+                  index={MATERIAL_SOURCE3_TYPE_OPTIONS_REV[NodeSettings.source3Type(node.material.albedo)]}
+                  onSelect={this.onMaterialPbrAlbedoTypeChange_}
+                />
+              </StyledField>
+            )}
+            {node.material && node.material.type === 'pbr' && node.material.albedo && node.material.albedo.type === 'color3' && (
+              <>
+                <StyledValueEdit
+                  name='Albedo Red'
+                  long
+                  theme={theme}
+                  value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.albedo.color).r))}
+                  onValueChange={this.onMaterialPbrAlbedoRChange_}
+                />
+                <StyledValueEdit
+                  name='Albedo Green'
+                  long
+                  theme={theme}
+                  value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.albedo.color).g))}
+                  onValueChange={this.onMaterialPbrAlbedoGChange_}
+                />
+                <StyledValueEdit
+                  name='Albedo Blue'
+                  long
+                  theme={theme}
+                  value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.albedo.color).b))}
+                  onValueChange={this.onMaterialPbrAlbedoBChange_}
+                />
+              </>
+            )}
+            {node.material && node.material.type === 'pbr' && node.material.albedo && node.material.albedo.type === 'texture' && (
+              <StyledField name='Albedo Texture URI' long theme={theme}>
+                <Input theme={theme} type='text' value={node.material.albedo.uri} onChange={this.onMaterialPbrAlbedoTextureUriChange_} />
+              </StyledField>
+            )}
+
+            {/* Reflection */}
+            {node.material && node.material.type === 'pbr' && (
+              <StyledField name='Reflection Type' long theme={theme}>
+                <ComboBox
+                  options={MATERIAL_SOURCE3_TYPE_OPTIONS}
+                  theme={theme}
+                  index={MATERIAL_SOURCE3_TYPE_OPTIONS_REV[NodeSettings.source3Type(node.material.reflection)]}
+                  onSelect={this.onMaterialPbrReflectionTypeChange_}
+                />
+              </StyledField>
+            )}
+
+            {node.material && node.material.type === 'pbr' && node.material.reflection && node.material.reflection.type === 'color3' && (
+              <>
+                <StyledValueEdit
+                  name='Reflection Red'
+                  long
+                  theme={theme}
+                  value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.reflection.color).r))}
+                  onValueChange={this.onMaterialPbrReflectionRChange_}
+                />
+                <StyledValueEdit
+                  name='Reflection Green'
+                  long
+                  theme={theme}
+                  value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.reflection.color).g))}
+                  onValueChange={this.onMaterialPbrReflectionGChange_}
+                />
+                <StyledValueEdit
+                  name='Reflection Blue'
+                  long
+                  theme={theme}
+                  value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.reflection.color).b))}
+                  onValueChange={this.onMaterialPbrReflectionBChange_}
+                />
+              </>
+            )}
+            {node.material && node.material.type === 'pbr' && node.material.reflection && node.material.reflection.type === 'texture' && (
+              <StyledField name='Reflection Texture URI' long theme={theme}>
+                <Input theme={theme} type='text' value={node.material.reflection.uri} onChange={this.onMaterialPbrReflectionTextureUriChange_} />
+              </StyledField>
+            )}
+
+            {/* Emissive */}
+            {node.material && node.material.type === 'pbr' && (
+              <StyledField name='Emissive Type' long theme={theme}>
+                <ComboBox
+                  options={MATERIAL_SOURCE3_TYPE_OPTIONS}
+                  theme={theme}
+                  index={MATERIAL_SOURCE3_TYPE_OPTIONS_REV[NodeSettings.source3Type(node.material.emissive)]}
+                  onSelect={this.onMaterialPbrEmissiveTypeChange_}
+                />
+              </StyledField>
+            )}
+            {node.material && node.material.type === 'pbr' && node.material.emissive && node.material.emissive.type === 'color3' && (
+              <>
+                <StyledValueEdit
+                  name='Emissive Red'
+                  long
+                  theme={theme}
+                  value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.emissive.color).r))}
+                  onValueChange={this.onMaterialPbrEmissiveRChange_}
+                />
+                <StyledValueEdit
+                  name='Emissive Green'
+                  long
+                  theme={theme}
+                  value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.emissive.color).g))}
+                  onValueChange={this.onMaterialPbrEmissiveGChange_}
+                />
+                <StyledValueEdit
+                  name='Emissive Blue'
+                  long
+                  theme={theme}
+                  value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.emissive.color).b))}
+                  onValueChange={this.onMaterialPbrEmissiveBChange_}
+                />
+              </>
+            )}
+            {node.material && node.material.type === 'pbr' && node.material.emissive && node.material.emissive.type === 'texture' && (
+              <StyledField name='Emissive Texture URI' long theme={theme}>
+                <Input theme={theme} type='text' value={node.material.emissive.uri} onChange={this.onMaterialPbrEmissiveTextureUriChange_} />
+              </StyledField>
+            )}
+
+            {/* Ambient */}
+            {node.material && node.material.type === 'pbr' && (
+              <StyledField name='Ambient Type' long theme={theme}>
+                <ComboBox
+                  options={MATERIAL_SOURCE3_TYPE_OPTIONS}
+                  theme={theme}
+                  index={MATERIAL_SOURCE3_TYPE_OPTIONS_REV[NodeSettings.source3Type(node.material.ambient)]}
+                  onSelect={this.onMaterialPbrAmbientTypeChange_}
+                />
+              </StyledField>
+            )}
+            {node.material && node.material.type === 'pbr' && node.material.ambient && node.material.ambient.type === 'color3' && (
+              <>
+                <StyledValueEdit
+                  name='Ambient Red'
+                  long
+                  theme={theme}
+                  value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.ambient.color).r))}
+                  onValueChange={this.onMaterialPbrAmbientRChange_}
+                />
+                <StyledValueEdit
+                  name='Ambient Green'
+                  long
+                  theme={theme}
+                  value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.ambient.color).g))}
+                  onValueChange={this.onMaterialPbrAmbientGChange_}
+                />
+                <StyledValueEdit
+                  name='Ambient Blue'
+                  long
+                  theme={theme}
+                  value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.ambient.color).b))} 
+                  onValueChange={this.onMaterialPbrAmbientBChange_}
+                />
+              </>
+            )}
+            {node.material && node.material.type === 'pbr' && node.material.ambient && node.material.ambient.type === 'texture' && (
+              <StyledField name='Ambient Texture URI' long theme={theme}>
+                <Input theme={theme} type='text' value={node.material.ambient.uri} onChange={this.onMaterialPbrAmbientTextureUriChange_} />
+              </StyledField>
+            )}
+
+            {/* Metalness */}
+
+            {node.material && node.material.type === 'pbr' && (
+              <StyledField name='Metalness Type' long theme={theme}>
+                <ComboBox
+                  options={MATERIAL_SOURCE1_TYPE_OPTIONS}
+                  theme={theme}
+                  index={MATERIAL_SOURCE1_TYPE_OPTIONS_REV[NodeSettings.source1Type(node.material.metalness)]}
+                  onSelect={this.onMaterialPbrMetalnessTypeChange_}
+                />
+              </StyledField>
+            )}
+            {node.material && node.material.type === 'pbr' && node.material.metalness && node.material.metalness.type === 'color1' && (
+              <>
+                <StyledValueEdit
+                  name='Metalness'
+                  long
+                  theme={theme}
+                  value={Value.unitless(UnitlessValue.create(node.material.metalness.color))}
+                  onValueChange={this.onMaterialPbrMetalnessChange_}
+                />
+              </>
+            )}
+            {node.material && node.material.type === 'pbr' && node.material.metalness && node.material.metalness.type === 'texture' && (
+              <StyledField name='Metalness Texture URI' long theme={theme}>
+                <Input theme={theme} type='text' value={node.material.metalness.uri} onChange={this.onMaterialPbrMetalnessTextureUriChange_} />
+              </StyledField>
+            )}
           </Section>
         ) : undefined}
         <Section
@@ -742,18 +1340,21 @@ class NodeSettings extends React.PureComponent<Props, State> {
         >
           <StyledValueEdit
             name='X'
+            long
             value={Value.distance(position.x)}
             onValueChange={this.onPositionXChange_}
             theme={theme}
           />
           <StyledValueEdit
             name='Y'
+            long
             value={Value.distance(position.y)}
             onValueChange={this.onPositionYChange_}
             theme={theme}
           />
           <StyledValueEdit
             name='Z'
+            long
             value={Value.distance(position.z)}
             onValueChange={this.onPositionZChange_}
             theme={theme}
@@ -765,30 +1366,33 @@ class NodeSettings extends React.PureComponent<Props, State> {
           collapsed={collapsed['orientation']}
           onCollapsedChange={this.onCollapsedChange_('orientation')}
         >
-          <StyledField name='Type' theme={theme}>
+          <StyledField name='Type' long theme={theme}>
             <ComboBox options={ROTATION_TYPES} theme={theme} index={ROTATION_TYPES.findIndex(r => r.data === orientation.type)} onSelect={this.onRotationTypeChange_} />
           </StyledField>
           {orientation.type === 'euler' ? (
             <>
               <StyledValueEdit
                 name='X'
+                long
                 value={Value.angle(orientation.x)}
                 onValueChange={this.onOrientationEulerXChange_}
                 theme={theme}
               />
               <StyledValueEdit
                 name='Y'
+                long
                 value={Value.angle(orientation.y)}
                 onValueChange={this.onOrientationEulerYChange_}
                 theme={theme}
               />
               <StyledValueEdit
                 name='Z'
+                long
                 value={Value.angle(orientation.z)}
                 onValueChange={this.onOrientationEulerZChange_}
                 theme={theme}
               />
-              <StyledField name='Order' theme={theme}>
+              <StyledField name='Order' long theme={theme}>
                 <ComboBox
                   options={EULER_ORDER_OPTIONS}
                   theme={theme}
@@ -801,24 +1405,28 @@ class NodeSettings extends React.PureComponent<Props, State> {
             <>
               <StyledValueEdit
                 name='X'
+                long
                 value={Value.distance(orientation.axis.x)}
                 onValueChange={this.onOrientationAngleAxisXChange_}
                 theme={theme}
               />
               <StyledValueEdit
                 name='Y'
+                long
                 value={Value.distance(orientation.axis.y)}
                 onValueChange={this.onOrientationAngleAxisYChange_}
                 theme={theme}
               />
               <StyledValueEdit
                 name='Z'
+                long
                 value={Value.distance(orientation.axis.z)}
                 onValueChange={this.onOrientationAngleAxisZChange_}
                 theme={theme}
               />
               <StyledValueEdit
                 name='Angle'
+                long
                 value={Value.angle(orientation.angle)}
                 onValueChange={this.onOrientationAngleAxisAngleChange_}
                 theme={theme}
@@ -834,18 +1442,21 @@ class NodeSettings extends React.PureComponent<Props, State> {
         >
           <StyledValueEdit
             name='X'
+            long
             value={Value.unitless(UnitlessValue.create(scale.x))}
             onValueChange={this.onScaleXChange_}
             theme={theme}
           />
           <StyledValueEdit
             name='Y'
+            long
             value={Value.unitless(UnitlessValue.create(scale.y))}
             onValueChange={this.onScaleYChange_}
             theme={theme}
           />
           <StyledValueEdit
             name='Z'
+            long
             value={Value.unitless(UnitlessValue.create(scale.z))}
             onValueChange={this.onScaleZChange_}
             theme={theme}

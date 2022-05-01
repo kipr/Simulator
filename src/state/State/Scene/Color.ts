@@ -1,3 +1,5 @@
+import * as Babylon from 'babylonjs';
+
 export namespace Color {
   export enum Type {
     Rgba,
@@ -31,6 +33,7 @@ export namespace Color {
 
     export const toCss = (rgba: Rgba): string => `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`;
 
+    export const toRgb = ({ r, g, b, a }: Rgba): Rgb => rgb(r, g, b);
 
     export const toHsla = (rgba: Rgba): Hsla => {
       const r = rgba.r / 255;
@@ -74,6 +77,18 @@ export namespace Color {
     export const create = (h: number, s: number, l: number, a: number): Hsla => ({ type: Type.Hsla, h, s, l, a });
   
     export const toCss = (hsla: Hsla): string => `hsla(${hsla.h}, ${hsla.s}%, ${hsla.l}%, ${hsla.a})`;
+
+    export const toHsl = ({ h, s, l, a }: Hsla): Hsl => ({ type: Type.Hsl, h, s, l});
+
+    export const toRgba = (hsla: Hsla): Rgba => {
+      const { r, g, b } = Hsl.toRgb(toHsl(hsla));
+      return Rgba.create(r, g, b, hsla.a);
+    };
+
+    export const toRgb = (hsla: Hsla): Rgb => {
+      const { r, g, b } = toRgba(hsla);
+      return rgb(r, g, b);
+    };
   }
 
   export interface Rgb {
@@ -161,7 +176,29 @@ export namespace Color {
     };
 
     export const toCss = (hsl: Hsl): string => `hsl(${hsl.h * 360}, ${hsl.s * 100}%, ${hsl.l * 100}%)`;
+  
+    export const toRgb = (hsl: Hsl): Rgb => {
+      const { h, s, l } = hsl;
+      const r = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      const g = 2 * l - r;
+      const b = l < 0.5 ? l * (1 - s) : l - l * s;
+      return Rgb.create(Math.round(r), Math.round(g * 255), Math.round(b * 255));
+    };
   }
+
+  export const rgb = (r: number, g: number, b: number): Rgb => Rgb.create(r, g, b);
+  export const hsl = (h: number, s: number, l: number): Hsl => Hsl.create(h, s, l);
+  export const rgba = (r: number, g: number, b: number, a: number): Rgba => Rgba.create(r, g, b, a);
+  export const hsla = (h: number, s: number, l: number, a: number): Hsla => Hsla.create(h, s, l, a);
+
+  export const toRgb = (color: Color): Rgb => {
+    switch (color.type) {
+      case Type.Rgb: return color;
+      case Type.Rgba: return Rgba.toRgb(color);
+      case Type.Hsl: return Hsl.toRgb(color);
+      case Type.Hsla: return Hsla.toRgb(color);
+    }
+  };
 
   export const toCss = (color: Color): string => {
     switch (color.type) {
@@ -177,6 +214,14 @@ export namespace Color {
         throw new Error('Unknown color type');
     }
   };
+
+  export const toBabylon = (color: Color): Babylon.Color3 => {
+    const { r, g, b } = toRgb(color);
+    return new Babylon.Color3(r / 255, g / 255, b / 255);
+  };
+
+  export const WHITE = rgb(255, 255, 255);
+  export const BLACK = rgb(0, 0, 0);
 }
 
 export type Color = Color.Rgba | Color.Hsla | Color.Rgb | Color.Hsl;

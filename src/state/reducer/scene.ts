@@ -212,7 +212,6 @@ export type SceneAction = (
 );
 
 export const reduceScene = (state: ReferencedScenePair = { referenceScene: JBC_1, workingScene: JBC_1 }, action: SceneAction): ReferencedScenePair => {
-  console.log({ action });
   switch (action.type) {
     case 'replace-scene':
       return {

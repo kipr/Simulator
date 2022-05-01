@@ -214,9 +214,6 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
     const { style, className, theme, scene, scenes, onGeometryAdd, onGeometryRemove, onGeometryChange } = props;
     const { collapsed, modal } = state;
 
-    console.log('collapsed', collapsed);
-
-
     const itemList: EditableList.Item[] = [];
     // Mock list
     for (const nodeId of Dict.keySet(scene.workingScene.nodes)) {
