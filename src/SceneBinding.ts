@@ -585,7 +585,7 @@ class SceneBinding {
     }
   };
 
-  private updateObject_ = (id: string, node: Patch.InnerChange<Node.Obj>): FrameLike => {
+  private updateObject_ = async (id: string, node: Patch.InnerChange<Node.Obj>, nextScene: Scene): Promise<FrameLike> => {
     console.log('UPDATE OBJECT', id, node);
     
     const bNode = this.findBNode_(id) as FrameLike;
@@ -595,7 +595,7 @@ class SceneBinding {
     // If the object's geometry ID changes, recreate the object entirely
     if (node.inner.geometryId.type === Patch.Type.OuterChange) {
       this.destroyNode_(id);
-      return this.createNode_(id, node.next, nextScene);
+      return (await this.createNode_(id, node.next, nextScene)) as FrameLike;
     }
 
     if (node.inner.name.type === Patch.Type.OuterChange) {
