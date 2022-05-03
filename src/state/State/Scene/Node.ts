@@ -120,13 +120,17 @@ namespace Node {
     });
 
     export const diff = (prev: Obj, next: Obj): Patch<Obj> => {
+      console.log('!!! Obj diff', prev, next);
+
+      
       if (!deepNeq(prev, next)) return Patch.none(prev);
+
 
       return Patch.innerChange(prev, next, {
         type: Patch.none(prev.type),
         geometryId: Patch.diff(prev.geometryId, next.geometryId),
         physics: Patch.diff(prev.physics, next.physics),
-        material: Patch.diff(prev.material, next.material),
+        material: Material.diff(prev.material, next.material),
         ...Base.partialDiff(prev, next)
       });
     };

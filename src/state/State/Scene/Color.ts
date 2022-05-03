@@ -193,7 +193,7 @@ export namespace Color {
 
   export const toRgb = (color: Color): Rgb => {
     switch (color.type) {
-      case Type.Rgb: return color;
+      case Type.Rgb: return { ...color };
       case Type.Rgba: return Rgba.toRgb(color);
       case Type.Hsl: return Hsl.toRgb(color);
       case Type.Hsla: return Hsla.toRgb(color);

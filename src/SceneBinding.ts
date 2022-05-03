@@ -276,8 +276,7 @@ class SceneBinding {
   private updateMaterialBasic_ = (bMaterial: Babylon.StandardMaterial, material: Patch.InnerPatch<Material.Basic>) => {
     const { color } = material;
 
-    if (color.type === Patch.Type.OuterChange) {
-      console.log('updateMaterialBasic_ color', color);
+    if (color.type === Patch.Type.InnerChange || color.type === Patch.Type.OuterChange) {
       switch (color.next.type) {
         case 'color3': {
           bMaterial.diffuseColor = Color.toBabylon(color.next.color);
@@ -366,10 +365,8 @@ class SceneBinding {
   };
 
   private updateMaterial_ = (bMaterial: Babylon.Material, material: Patch<Material>) => {
-    console.log('updateMaterial_:', material);
     switch (material.type) {
       case Patch.Type.OuterChange: {
-        console.log('updateMaterial_: outer change');
         const { next } = material;
         let id = bMaterial ? `${bMaterial.id}` : `Scene Material ${this.materialIdIter_++}`;
         if (bMaterial) bMaterial.dispose();
@@ -381,8 +378,6 @@ class SceneBinding {
         break;
       }
       case Patch.Type.InnerChange: {
-        console.log('updateMaterial_: inner change');
-
         const { inner, next } = material;
         switch (next.type) {
           case 'basic': {
@@ -586,11 +581,7 @@ class SceneBinding {
   };
 
   private updateObject_ = async (id: string, node: Patch.InnerChange<Node.Obj>, nextScene: Scene): Promise<FrameLike> => {
-    console.log('UPDATE OBJECT', id, node);
-    
     const bNode = this.findBNode_(id) as FrameLike;
-
-    console.log(bNode, id);
 
     // If the object's geometry ID changes, recreate the object entirely
     if (node.inner.geometryId.type === Patch.Type.OuterChange) {
@@ -671,7 +662,6 @@ class SceneBinding {
     switch (node.type) {
       // The node hasn't changed type, but some fields have been changed
       case Patch.Type.InnerChange: {
-        console.log('inner change', node.next.type);
         switch (node.next.type) {
           case 'empty': return this.updateEmpty_(id, node as Patch.InnerChange<Node.Empty>);
           case 'object': {
@@ -787,10 +777,7 @@ class SceneBinding {
   };
 
   readonly setScene = async (scene: Scene) => {
-    console.log('set scene', scene);
     const patch = Scene.diff(this.scene_, scene);
-
-    console.log({ patch });
 
     const nodeIds = Dict.keySet(patch.nodes);
 
@@ -825,7 +812,6 @@ class SceneBinding {
       // Disable physics
       if (prev !== undefined) {
         const prevNode = this.bScene_.getNodeByID(prev) || this.bScene_.getNodeByName(scene.nodes[prev].name);
-        console.log('prevNode', prevNode);
         if (prevNode instanceof Babylon.AbstractMesh || prevNode instanceof Babylon.TransformNode) {
           SceneBinding.apply_(prevNode, m => {
             const gizmoImposter = this.gizmoImpostors_[m.id];
@@ -886,7 +872,6 @@ class SceneBinding {
     }
 
     if (oldCamera !== this.camera_) {
-      console.log('camera change!', patch.camera);
       oldCamera.detachControl(this.bScene_.getEngine().getRenderingCanvas());
       this.bScene_.detachControl();
       this.bScene_.removeCamera(oldCamera);
