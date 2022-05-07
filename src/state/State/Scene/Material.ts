@@ -12,6 +12,9 @@ namespace Material {
 
     export namespace Color {
       export const diff = (prev: Color, next: Color): Patch<Color> => {
+        if (!prev && !next) return Patch.none(prev);
+        if (!prev && next) return Patch.outerChange(prev, next);
+        if (prev && !next) return Patch.outerChange(prev, next);
         if (prev.color === next.color) return Patch.none(prev);
   
         return Patch.innerChange(prev, next, {
@@ -38,6 +41,10 @@ namespace Material {
     }
 
     export const diff = (prev: Source1, next: Source1): Patch<Source1> => {
+      if (!prev && !next) return Patch.none(prev);
+      if (!prev && next) return Patch.outerChange(prev, next);
+      if (prev && !next) return Patch.outerChange(prev, next);
+
       if (prev.type !== next.type) return Patch.outerChange(prev, next);
       switch (prev.type) {
         case 'color1': return Color.diff(prev, next as Source1.Color);
@@ -54,6 +61,10 @@ namespace Material {
 
     export namespace Color {
       export const diff = (prev: Color, next: Color): Patch<Color> => {
+        if (!prev && !next) return Patch.none(prev);
+        if (!prev && next) return Patch.outerChange(prev, next);
+        if (prev && !next) return Patch.outerChange(prev, next);
+
         if (!deepNeq(prev.color, next.color)) return Patch.none(prev);
   
         return Patch.innerChange(prev, next, {
@@ -80,6 +91,7 @@ namespace Material {
     }
 
     export const diff = (prev: Source3, next: Source3): Patch<Source3> => {
+      if (!prev && !next) return Patch.none(prev);
       if (!prev && next) return Patch.outerChange(prev, next);
       if (prev && !next) return Patch.outerChange(prev, next);
       if (prev.type !== next.type) return Patch.outerChange(prev, next);

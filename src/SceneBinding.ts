@@ -313,10 +313,16 @@ class SceneBinding {
       switch (albedo.next.type) {
         case 'color3': {
           bMaterial.albedoColor = Color.toBabylon(albedo.next.color);
+          bMaterial.albedoTexture = null;
           break;
         }
         case 'texture': {
-          bMaterial.albedoTexture = new Babylon.Texture(albedo.next.uri, this.bScene_);
+          if (!albedo.next.uri) {
+            bMaterial.albedoColor = new Babylon.Color3(0.5, 0, 0.5);
+          } else {
+            bMaterial.albedoColor = Color.toBabylon(Color.WHITE);
+            bMaterial.albedoTexture = new Babylon.Texture(albedo.next.uri, this.bScene_);
+          }
           break;
         }
       }
@@ -326,10 +332,17 @@ class SceneBinding {
       switch (ambient.next.type) {
         case 'color3': {
           bMaterial.ambientColor = Color.toBabylon(ambient.next.color);
+          bMaterial.ambientTexture = null;
           break;
         }
         case 'texture': {
-          bMaterial.ambientTexture = new Babylon.Texture(ambient.next.uri, this.bScene_);
+          if (!ambient.next.uri) {
+            bMaterial.ambientColor = new Babylon.Color3(0.5, 0, 0.5);
+            bMaterial.ambientTexture = null;
+          } else {
+            bMaterial.ambientColor = Color.toBabylon(Color.WHITE);
+            bMaterial.ambientTexture = new Babylon.Texture(ambient.next.uri, this.bScene_);
+          }
           break;
         }
       }
@@ -339,10 +352,17 @@ class SceneBinding {
       switch (emissive.next.type) {
         case 'color3': {
           bMaterial.emissiveColor = Color.toBabylon(emissive.next.color);
+          bMaterial.emissiveTexture = null;
           break;
         }
         case 'texture': {
-          bMaterial.emissiveTexture = new Babylon.Texture(emissive.next.uri, this.bScene_);
+          if (!emissive.next.uri) {
+            bMaterial.emissiveColor = new Babylon.Color3(0.5, 0, 0.5);
+            bMaterial.emissiveTexture = null;
+          } else {
+            bMaterial.emissiveColor = Color.toBabylon(Color.BLACK);
+            bMaterial.emissiveTexture = new Babylon.Texture(emissive.next.uri, this.bScene_);
+          }
           break;
         }
       }
@@ -352,10 +372,15 @@ class SceneBinding {
       switch (metalness.next.type) {
         case 'color1': {
           bMaterial.metallic = metalness.next.color;
+          bMaterial.metallicTexture = null;
           break;
         }
         case 'texture': {
-          bMaterial.metallicTexture = new Babylon.Texture(metalness.next.uri, this.bScene_);
+          if (!metalness.next.uri) {
+            bMaterial.metallic = 0;
+          } else {
+            bMaterial.metallicTexture = new Babylon.Texture(metalness.next.uri, this.bScene_);
+          }
           break;
         }
       }
@@ -365,16 +390,22 @@ class SceneBinding {
       switch (reflection.next.type) {
         case 'color3': {
           bMaterial.reflectivityColor = Color.toBabylon(reflection.next.color);
+          bMaterial.reflectivityTexture = null;
           break;
         }
         case 'texture': {
-          bMaterial.reflectivityTexture = new Babylon.Texture(reflection.next.uri, this.bScene_);
+          if (!reflection.next.uri) {
+            bMaterial.reflectivityColor = new Babylon.Color3(0.5, 0, 0.5);
+            bMaterial.reflectivityTexture = null;
+          } else {
+            bMaterial.reflectivityColor = Color.toBabylon(Color.WHITE);
+            bMaterial.reflectivityTexture = new Babylon.Texture(reflection.next.uri, this.bScene_);
+          }
           break;
         }
       }
     }
     
-
     return bMaterial;
   };
 
