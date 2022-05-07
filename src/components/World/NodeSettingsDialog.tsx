@@ -25,6 +25,7 @@ export interface NodeSettingsDialogProps extends ThemeProps {
   scene: Scene;
 
   onChange: (node: Node) => void;
+  onOriginChange: (origin: ReferenceFrame) => void;
 
   onGeometryAdd: (id: string, geometry: Geometry) => void;
   onGeometryChange: (id: string, geometry: Geometry) => void;
@@ -53,7 +54,7 @@ class NodeSettingsDialog extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { theme, onClose, onChange, node, id, scene, onGeometryAdd, onGeometryChange, onGeometryRemove } = props;
+    const { theme, onClose, onChange, onOriginChange, node, id, scene, onGeometryAdd, onGeometryChange, onGeometryRemove } = props;
 
     return (
       <Dialog theme={theme} name={`${node.name || ''} Settings`} onClose={onClose}>
@@ -64,6 +65,7 @@ class NodeSettingsDialog extends React.PureComponent<Props, State> {
             id={id}
             scene={scene}
             onNodeChange={onChange}
+            onNodeOriginChange={onOriginChange}
             onGeometryAdd={onGeometryAdd}
             onGeometryChange={onGeometryChange}
             onGeometryRemove={onGeometryRemove}

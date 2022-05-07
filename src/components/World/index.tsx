@@ -23,7 +23,7 @@ import { ReferencedScenePair, State as ReduxState } from '../../state';
 import { SceneAction } from '../../state/reducer';
 
 import * as uuid from 'uuid';
-import { Rotation, Vector3 } from '../../unit-math';
+import { ReferenceFrame, Rotation, Vector3 } from '../../unit-math';
 import { Vector3 as RawVector3 } from '../../math';
 import ComboBox from '../ComboBox';
 import Scene from '../../state/State/Scene';
@@ -42,7 +42,7 @@ interface ReduxWorldProps {
 
   onNodeAdd: (id: string, node: Node) => void;
   onNodeRemove: (id: string) => void;
-  onNodeChange: (id: string, node: Node, modifyReferenceScene: boolean) => void;
+  onNodeChange: (id: string, node: Node, modifyReferenceScene: boolean, modifyOrigin: boolean) => void;
 
   onObjectAdd: (id: string, object: Node.Obj, geometry: Geometry) => void;
 
@@ -151,7 +151,18 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
   };
 
   private onNodeSettingsAccept_ = (id: string) => (acceptance: NodeSettingsAcceptance) => {
-    this.props.onNodeChange(id, acceptance, true);
+    this.props.onNodeChange(id, acceptance, true, false);
+  };
+
+  private onNodeOriginAccept_ = (id: string) => (origin: ReferenceFrame) => {
+    const originalNode = this.props.scene.referenceScene.nodes[id];
+    this.props.onNodeChange(id, {
+      ...originalNode,
+      origin: {
+        ...originalNode.origin,
+        ...origin,
+      },
+    }, true, true);
   };
 
   private onAddNodeClick_ = (event: React.SyntheticEvent<MouseEvent>) => {
@@ -173,7 +184,7 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
         orientation: originalNode.origin?.orientation || Rotation.Euler.identity(Angle.Type.Degrees),
         scale: originalNode.origin?.scale || RawVector3.ONE,
       },
-    }, false);
+    }, false, true);
   };
   private onItemSettingsClick_ = (id: string) => () => this.setState({ modal: UiState.itemSettings(id) });
   private onModalClose_ = () => this.setState({ modal: UiState.NONE });
@@ -206,7 +217,7 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
     this.props.onNodeChange(id, {
       ...this.props.scene.workingScene.nodes[id],
       visible: visibility,
-    }, false);
+    }, false, false);
   };
 
   render() {
@@ -278,6 +289,7 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
           theme={theme}
           onClose={this.onModalClose_}
           onChange={this.onNodeSettingsAccept_(modal.id)}
+          onOriginChange={this.onNodeOriginAccept_(modal.id)}
         />}
       </>
     );
@@ -293,8 +305,8 @@ export default connect<unknown, unknown, Props, ReduxState>(state => {
   onNodeAdd: (id: string, node: Node) => {
     dispatch(SceneAction.addNode({ id, node }));
   },
-  onNodeChange: (id: string, node: Node, modifyReferenceScene: boolean) => {
-    dispatch(SceneAction.setNode({ id, node, modifyReferenceScene }));
+  onNodeChange: (id: string, node: Node, modifyReferenceScene: boolean, modifyOrigin: boolean) => {
+    dispatch(SceneAction.setNode({ id, node, modifyReferenceScene, modifyOrigin }));
   },
   onNodeRemove: (id: string) => {
     dispatch(SceneAction.removeNode({ id }));

@@ -94,6 +94,18 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
 
   private onNodeChange_ = (node: Node) => this.setState({ node });
 
+  private onNodeOriginChange_ = (origin: ReferenceFrame) => {
+    this.setState(prevState => ({
+      node: {
+        ...prevState.node,
+        origin: {
+          ...prevState.node.origin,
+          ...origin,
+        },
+      },
+    }));
+  };
+
   private onGeometryRemove_ = (id: string) => {
     if (id !== this.state.geometryId) return;
     this.setState({
@@ -140,6 +152,7 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
             id={id}
             scene={modifiedScene}
             onNodeChange={this.onNodeChange_}
+            onNodeOriginChange={this.onNodeOriginChange_}
             onGeometryAdd={this.onGeometryAdd_}
             onGeometryChange={this.onGeometryChange_}
             onGeometryRemove={this.onGeometryRemove_}
