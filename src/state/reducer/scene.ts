@@ -25,7 +25,7 @@ export namespace SceneAction {
   }
 
   export const RESET_SCENE: ResetScene = { type: 'reset-scene' };
-  
+
   export interface AddNode {
     type: 'add-node';
     id: string;
@@ -57,6 +57,7 @@ export namespace SceneAction {
     id: string;
     node: Node;
     modifyReferenceScene: boolean;
+    modifyOrigin: boolean;
   }
 
   export type SetNodeParams = Omit<SetNode, 'type'>;
@@ -268,7 +269,7 @@ export const reduceScene = (state: ReferencedScenePair = { referenceScene: JBC_1
           ...state.workingScene,
           nodes: {
             ...state.workingScene.nodes,
-            [action.id]: action.node,
+            [action.id]: action.modifyOrigin ? action.node : { ...action.node, origin: state.workingScene.nodes[action.id].origin },
           },
         },
       };
@@ -278,7 +279,7 @@ export const reduceScene = (state: ReferencedScenePair = { referenceScene: JBC_1
           ...state.referenceScene,
           nodes: {
             ...state.referenceScene.nodes,
-            [action.id]: action.node,
+            [action.id]: action.modifyOrigin ? action.node : { ...action.node, origin: state.referenceScene.nodes[action.id].origin },
           },
         };
       }

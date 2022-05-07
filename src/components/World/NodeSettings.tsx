@@ -24,6 +24,7 @@ import * as uuid from 'uuid';
 
 export interface NodeSettingsProps extends ThemeProps {
   onNodeChange: (node: Node) => void;
+  onNodeOriginChange: (origin: ReferenceFrame) => void;
   node: Node;
   id: string;
 
@@ -181,21 +182,13 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
     switch (type) {
       case 'euler':
-        this.props.onNodeChange({
-          ...node,
-          origin: {
-            ...node.origin,
-            orientation: Rotation.Euler.fromRaw(Euler.fromQuaternion(Rotation.toRawQuaternion(node.origin.orientation)))
-          }
+        this.props.onNodeOriginChange({
+          orientation: Rotation.Euler.fromRaw(Euler.fromQuaternion(Rotation.toRawQuaternion(node.origin.orientation))),
         });
         break;
       case 'angle-axis':
-        this.props.onNodeChange({
-          ...node,
-          origin: {
-            ...node.origin,
-            orientation: Rotation.AngleAxis.fromRaw(AngleAxis.fromQuaternion(Rotation.toRawQuaternion(node.origin.orientation)))
-          }
+        this.props.onNodeOriginChange({
+          orientation: Rotation.AngleAxis.fromRaw(AngleAxis.fromQuaternion(Rotation.toRawQuaternion(node.origin.orientation))),
         });
         break;
     }
@@ -205,15 +198,11 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const { node } = this.props;
     const order = option.data as Euler.Order;
 
-    this.props.onNodeChange({
-      ...node,
-      origin: {
-        ...node.origin,
-        orientation: {
-          ...node.origin.orientation as Rotation.Euler,
-          order
-        }
-      }
+    this.props.onNodeOriginChange({
+      orientation: {
+        ...node.origin.orientation as Rotation.Euler,
+        order,
+      },
     });
   };
     
@@ -602,15 +591,12 @@ class NodeSettings extends React.PureComponent<Props, State> {
   private onPositionXChange_ = (value: Value) => {
     const { node } = this.props;
     const origin = node.origin || {};
-    this.props.onNodeChange({
-      ...node,
-      origin: {
-        ...origin,
-        position: {
-          ...origin.position,
-          x: Value.toDistance(value)
-        }
-      }
+
+    this.props.onNodeOriginChange({
+      position: {
+        ...origin.position,
+        x: Value.toDistance(value),
+      },
     });
   };
 
@@ -618,15 +604,11 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const { node } = this.props;
     const origin = node.origin || {};
 
-    this.props.onNodeChange({
-      ...node,
-      origin: {
-        ...(origin || {}),
-        position: {
-          ...origin.position,
-          y: Value.toDistance(value)
-        }
-      }
+    this.props.onNodeOriginChange({
+      position: {
+        ...origin.position,
+        y: Value.toDistance(value),
+      },
     });
   };
 
@@ -634,45 +616,35 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const { node } = this.props;
     const origin = node.origin || {};
 
-    this.props.onNodeChange({
-      ...node,
-      origin: {
-        ...origin,
-        position: {
-          ...origin.position,
-          z: Value.toDistance(value)
-        }
-      }
+    this.props.onNodeOriginChange({
+      position: {
+        ...origin.position,
+        z: Value.toDistance(value),
+      },
     });
   };
 
   private onOrientationEulerXChange_ = (value: Value) => {
     const { node } = this.props;
     const origin = node.origin || {};
-    this.props.onNodeChange({
-      ...node,
-      origin: {
-        ...origin,
-        orientation: {
-          ...(origin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
-          x: Value.toAngle(value)
-        }
-      }
+
+    this.props.onNodeOriginChange({
+      orientation: {
+        ...(origin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
+        x: Value.toAngle(value),
+      },
     });
   };
 
   private onOrientationEulerYChange_ = (value: Value) => {
     const { node } = this.props;
     const origin = node.origin || {};
-    this.props.onNodeChange({
-      ...node,
-      origin: {
-        ...origin,
-        orientation: {
-          ...(origin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
-          y: Value.toAngle(value)
-        }
-      }
+
+    this.props.onNodeOriginChange({
+      orientation: {
+        ...(origin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
+        y: Value.toAngle(value),
+      },
     });
   };
 
@@ -680,15 +652,11 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const { node } = this.props;
     const origin = node.origin || {};
 
-    this.props.onNodeChange({
-      ...node,
-      origin: {
-        ...origin,
-        orientation: {
-          ...(origin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
-          z: Value.toAngle(value)
-        }
-      }
+    this.props.onNodeOriginChange({
+      orientation: {
+        ...(origin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
+        z: Value.toAngle(value),
+      },
     });
   };
 
@@ -697,18 +665,14 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const origin = node.origin || {};
     const orientation: Rotation.AngleAxis = origin.orientation as Rotation.AngleAxis || Rotation.AngleAxis.identity(Angle.Type.Degrees);
 
-    this.props.onNodeChange({
-      ...node,
-      origin: {
-        ...origin,
-        orientation: {
-          ...orientation,
-          axis: {
-            ...orientation.axis,
-            x: Value.toDistance(value)
-          }
-        }
-      }
+    this.props.onNodeOriginChange({
+      orientation: {
+        ...orientation,
+        axis: {
+          ...orientation.axis,
+          x: Value.toDistance(value),
+        },
+      },
     });
   };
 
@@ -717,18 +681,14 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const origin = node.origin || {};
     const orientation: Rotation.AngleAxis = origin.orientation as Rotation.AngleAxis || Rotation.AngleAxis.identity(Angle.Type.Degrees);
 
-    this.props.onNodeChange({
-      ...node,
-      origin: {
-        ...origin,
-        orientation: {
-          ...orientation,
-          axis: {
-            ...orientation.axis,
-            y: Value.toDistance(value)
-          }
-        }
-      }
+    this.props.onNodeOriginChange({
+      orientation: {
+        ...orientation,
+        axis: {
+          ...orientation.axis,
+          y: Value.toDistance(value),
+        },
+      },
     });
   };
 
@@ -736,18 +696,15 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const { node } = this.props;
     const origin = node.origin || {};
     const orientation: Rotation.AngleAxis = origin.orientation as Rotation.AngleAxis || Rotation.AngleAxis.identity(Angle.Type.Degrees);
-    this.props.onNodeChange({
-      ...node,
-      origin: {
-        ...origin,
-        orientation: {
-          ...orientation,
-          axis: {
-            ...orientation.axis,
-            z: Value.toDistance(value)
-          }
-        }
-      }
+
+    this.props.onNodeOriginChange({
+      orientation: {
+        ...orientation,
+        axis: {
+          ...orientation.axis,
+          z: Value.toDistance(value),
+        },
+      },
     });
   };
 
@@ -755,15 +712,12 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const { node } = this.props;
     const origin = node.origin || {};
     const orientation: Rotation.AngleAxis = origin.orientation as Rotation.AngleAxis || Rotation.AngleAxis.identity(Angle.Type.Degrees);
-    this.props.onNodeChange({
-      ...node,
-      origin: {
-        ...origin,
-        orientation: {
-          ...orientation,
-          angle: Value.toAngle(value)
-        }
-      }
+
+    this.props.onNodeOriginChange({
+      orientation: {
+        ...orientation,
+        angle: Value.toAngle(value),
+      },
     });
   };
 
@@ -771,15 +725,12 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const { node } = this.props;
     const origin = node.origin || {};
     const scale = origin.scale || RawVector3.ONE;
-    this.props.onNodeChange({
-      ...node,
-      origin: {
-        ...origin,
-        scale: {
-          ...scale,
-          x: Value.toUnitless(value).value
-        }
-      }
+
+    this.props.onNodeOriginChange({
+      scale: {
+        ...scale,
+        x: Value.toUnitless(value).value,
+      },
     });
   };
 
@@ -787,15 +738,12 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const { node } = this.props;
     const origin = node.origin || {};
     const scale = origin.scale || RawVector3.ONE;
-    this.props.onNodeChange({
-      ...node,
-      origin: {
-        ...origin,
-        scale: {
-          ...scale,
-          y: Value.toUnitless(value).value
-        }
-      }
+
+    this.props.onNodeOriginChange({
+      scale: {
+        ...scale,
+        y: Value.toUnitless(value).value,
+      },
     });
   };
 
@@ -803,15 +751,12 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const { node } = this.props;
     const origin = node.origin || {};
     const scale = origin.scale || RawVector3.ONE;
-    this.props.onNodeChange({
-      ...node,
-      origin: {
-        ...origin,
-        scale: {
-          ...scale,
-          z: Value.toUnitless(value).value
-        }
-      }
+
+    this.props.onNodeOriginChange({
+      scale: {
+        ...scale,
+        z: Value.toUnitless(value).value,
+      },
     });
   };
 
