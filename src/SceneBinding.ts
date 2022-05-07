@@ -368,25 +368,22 @@ class SceneBinding {
     switch (material.type) {
       case Patch.Type.OuterChange: {
         const { next } = material;
-        let id = bMaterial ? `${bMaterial.id}` : `Scene Material ${this.materialIdIter_++}`;
+        const id = bMaterial ? `${bMaterial.id}` : `Scene Material ${this.materialIdIter_++}`;
         if (bMaterial) bMaterial.dispose();
         if (next) {
-          bMaterial = this.createMaterial_(id, next);
-        } else {
-          bMaterial = null;
+          return this.createMaterial_(id, next);
         }
-        break;
+
+        return null;
       }
       case Patch.Type.InnerChange: {
         const { inner, next } = material;
         switch (next.type) {
           case 'basic': {
-            bMaterial = this.updateMaterialBasic_(bMaterial as Babylon.StandardMaterial, inner as Patch.InnerPatch<Material.Basic>);
-            break;
+            return this.updateMaterialBasic_(bMaterial as Babylon.StandardMaterial, inner as Patch.InnerPatch<Material.Basic>);
           }
           case 'pbr': {
-            bMaterial = this.updateMaterialPbr_(bMaterial as Babylon.PBRMaterial, inner as Patch.InnerPatch<Material.Pbr>);
-            break;
+            return this.updateMaterialPbr_(bMaterial as Babylon.PBRMaterial, inner as Patch.InnerPatch<Material.Pbr>);
           }
         }
         break;
@@ -570,14 +567,14 @@ class SceneBinding {
   private findMaterial_ = (frameLike: FrameLike) => {
     if (frameLike instanceof Babylon.AbstractMesh) {
       return frameLike.material;
-    } else {
-      const children = frameLike.getChildren(o => o instanceof Babylon.AbstractMesh);
-      if (children && children.length > 0) {
-        return (children[0] as Babylon.AbstractMesh).material;
-      } else {
-        return null;
-      }
     }
+
+    const children = frameLike.getChildren(o => o instanceof Babylon.AbstractMesh);
+    if (children && children.length > 0) {
+      return (children[0] as Babylon.AbstractMesh).material;
+    }
+    
+    return null;
   };
 
   private updateObject_ = async (id: string, node: Patch.InnerChange<Node.Obj>, nextScene: Scene): Promise<FrameLike> => {

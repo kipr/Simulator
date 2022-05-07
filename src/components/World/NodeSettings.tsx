@@ -253,7 +253,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const { node, onNodeChange } = props;
     if (node.type !== 'object') return;
 
-    let nextMaterial = undefined;
+    let nextMaterial: Material = undefined;
     switch (option.data as string) {
       case 'unset': {
         nextMaterial = undefined;
@@ -282,24 +282,24 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const nextMaterial = { ...material };
     
     // Some fields are Source3 (3 channel) and others are Source1 (1 channel).
-    // TypeScript isn't happy assigning the union of these, so a little any is used.
+    // TypeScript isn't happy assigning the union of these, so some type assertion is used.
     switch (option.data as string) {
       case 'unset': {
         nextMaterial[field] = undefined;
         break;
       }
       case 'color1': {
-        nextMaterial[field] = {
+        (nextMaterial[field] as Material.Source1) = {
           type: 'color1',
           color: 0,
-        } as any;
+        };
         break;
       }
       case 'color3': {
         nextMaterial[field] = {
           type: 'color3',
           color: Color.BLACK,
-        } as any;
+        };
         break;
       }
       case 'texture': {
@@ -326,24 +326,24 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const nextMaterial = { ...material };
     
     // Some fields are Source3 (3 channel) and others are Source1 (1 channel).
-    // TypeScript isn't happy assigning the union of these, so a little any is used.
+    // TypeScript isn't happy assigning the union of these, so some type assertion is used.
     switch (option.data as string) {
       case 'unset': {
         nextMaterial[field] = undefined;
         break;
       }
       case 'color1': {
-        nextMaterial[field] = {
+        (nextMaterial[field] as Material.Source1) = {
           type: 'color1',
           color: 0,
-        } as any;
+        };
         break;
       }
       case 'color3': {
-        nextMaterial[field] = {
+        (nextMaterial[field] as Material.Source3) = {
           type: 'color3',
           color: Color.BLACK,
-        } as any;
+        };
         break;
       }
       case 'texture': {
@@ -383,10 +383,10 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
     if (member.type !== 'color1') throw new Error('Field is not a color1');
 
-    nextMaterial[field] = {
+    (nextMaterial[field] as Material.Source1) = {
       ...member,
-      color: value.value
-    } as any;
+      color: value.value.value
+    };
 
     onNodeChange({
       ...node,
@@ -411,10 +411,10 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const nextColor = Color.toRgb(member.color);
     nextColor[channel] = value.value.value;
 
-    nextMaterial[field] = {
+    (nextMaterial[field] as Material.Source3) = {
       ...member,
       color: nextColor
-    } as any;
+    };
 
     onNodeChange({
       ...node,
@@ -442,7 +442,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
     nextMaterial[field] = {
       ...member,
       color: nextColor
-    } as any;
+    };
 
     onNodeChange({
       ...node,
@@ -486,7 +486,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
     nextMaterial[field] = {
       ...member,
       uri: event.currentTarget.value
-    } as any;
+    };
 
     onNodeChange({
       ...node,
@@ -508,7 +508,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
     nextMaterial[field] = {
       ...member,
       uri: event.currentTarget.value
-    } as any;
+    };
 
     onNodeChange({
       ...node,
@@ -529,7 +529,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
     if (material.type === 'basic') return 'basic';
     if (material.type === 'pbr') return 'pbr';
     throw new Error('Unknown material type');
-  }
+  };
 
   // Convert a Material.Source3 into a ComboBox option.
   private static source1Type = (source1: Material.Source1) => {
@@ -537,7 +537,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
     if (source1.type === 'color1') return 'color1';
     if (source1.type === 'texture') return 'texture';
     throw new Error('Unknown source1 type');
-  }
+  };
 
   // Convert a Material.Source3 into a ComboBox option.
   private static source3Type = (source3: Material.Source3) => {
@@ -545,7 +545,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
     if (source3.type === 'color3') return 'color3';
     if (source3.type === 'texture') return 'texture';
     throw new Error('Unknown source3 type');
-  }
+  };
 
 
   private onParentSelect_ = (index: number, option: ComboBox.Option) => {
