@@ -123,7 +123,7 @@ const NODE_TYPE_OPTIONS_REV = (() => {
 const MATERIAL_TYPE_OPTIONS: ComboBox.Option[] = [
   ComboBox.option('Unset', 'unset'),
   ComboBox.option('Basic', 'basic'),
-  ComboBox.option('PBR', 'pbr'),
+  // ComboBox.option('PBR', 'pbr'),
 ];
 
 const MATERIAL_TYPE_OPTIONS_REV = (() => {
