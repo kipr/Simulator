@@ -180,10 +180,16 @@ class SceneBinding {
           switch (color.type) {
             case 'color3': {
               basic.diffuseColor = Color.toBabylon(color.color);
+              basic.diffuseTexture = null;
               break;
             }
             case 'texture': {
-              basic.diffuseTexture = new Babylon.Texture(color.uri, this.bScene_);
+              if (!color.uri) {
+                basic.diffuseColor = new Babylon.Color3(0.5, 0, 0.5);
+              } else {
+                basic.diffuseTexture = new Babylon.Texture(color.uri, this.bScene_);
+              }
+              
               break;
             }
           }
@@ -279,11 +285,19 @@ class SceneBinding {
     if (color.type === Patch.Type.InnerChange || color.type === Patch.Type.OuterChange) {
       switch (color.next.type) {
         case 'color3': {
+
           bMaterial.diffuseColor = Color.toBabylon(color.next.color);
+          bMaterial.diffuseTexture = null;
           break;
         }
         case 'texture': {
-          bMaterial.diffuseTexture = new Babylon.Texture(color.next.uri, this.bScene_);
+          if (!color.next.uri) {
+            bMaterial.diffuseColor = new Babylon.Color3(0.5, 0, 0.5);
+            bMaterial.diffuseTexture = null;
+          } else {
+            bMaterial.diffuseColor = Color.toBabylon(Color.WHITE);
+            bMaterial.diffuseTexture = new Babylon.Texture(color.next.uri, this.bScene_);
+          }
           break;
         }
       }
