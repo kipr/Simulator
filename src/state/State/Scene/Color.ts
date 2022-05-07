@@ -78,7 +78,7 @@ export namespace Color {
   
     export const toCss = (hsla: Hsla): string => `hsla(${hsla.h}, ${hsla.s}%, ${hsla.l}%, ${hsla.a})`;
 
-    export const toHsl = ({ h, s, l, a }: Hsla): Hsl => ({ type: Type.Hsl, h, s, l});
+    export const toHsl = ({ h, s, l, a }: Hsla): Hsl => ({ type: Type.Hsl, h, s, l });
 
     export const toRgba = (hsla: Hsla): Rgba => {
       const { r, g, b } = Hsl.toRgb(toHsl(hsla));

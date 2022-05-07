@@ -151,7 +151,7 @@ namespace Material {
       case 'pbr': return Pbr.diff(prev, next as Pbr);
       case 'basic': return Basic.diff(prev, next as Basic);
     }
-  }
+  };
 }
 
 type Material = Material.Pbr | Material.Basic;
