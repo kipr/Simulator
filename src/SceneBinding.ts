@@ -758,6 +758,8 @@ class SceneBinding {
       const nextVisible = node.inner.visible.next;
       SceneBinding.apply_(bNode, m => m.isVisible = nextVisible);
     }
+
+    return Promise.resolve(bNode);
   };
 
   private updateNode_ = async (id: string, node: Patch<Node>, geometryPatches: Dict<Patch<Geometry>>, nextScene: Scene): Promise<Babylon.Node> => {
