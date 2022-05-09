@@ -174,6 +174,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
         position: true,
         orientation: true,
         scale: true,
+        material: true,
         physics: true,
       }
     };
