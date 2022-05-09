@@ -16,8 +16,8 @@ export const JBC_19: Scene = {
     'can2': createCanNode(2, { x: Distance.centimeters(10), y: Distance.centimeters(115), z: Distance.centimeters(41.6) }),
     'can3': createCanNode(3, { x: Distance.centimeters(17), y: Distance.centimeters(115), z: Distance.centimeters(48.6) }),
     'ream': {
-      type: 'object',
-      geometryId: 'ream',
+      type: 'from-template',
+      templateId: 'ream',
       name: 'Paper Ream',
       origin: {
         position: {
@@ -31,12 +31,6 @@ export const JBC_19: Scene = {
         }),
       },
       visible: true,
-      physics: {
-        type: 'box',
-        restitution: 0,
-        friction: 1,
-        mass: Mass.pounds(5),
-      },
     },
   }
 };

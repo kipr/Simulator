@@ -1,7 +1,7 @@
 import deepNeq from '../../../deepNeq';
 import { Vector3 } from '../../../math';
 import { ReferenceFrame } from '../../../unit-math';
-import { Angle, Mass } from '../../../util';
+import { Angle, DistributiveOmit, Mass } from '../../../util';
 import Material from './Material';
 import Patch from './Patch';
 
@@ -240,6 +240,23 @@ namespace Node {
     };
   }
 
+  export interface FromTemplate extends Base {
+    type: 'from-template';
+    templateId: string;
+  }
+
+  export namespace FromTemplate {
+    export const diff = (prev: FromTemplate, next: FromTemplate): Patch<FromTemplate> => {
+      if (!deepNeq(prev, next)) return Patch.none(prev);
+
+      return Patch.innerChange(prev, next, {
+        type: Patch.none(prev.type),
+        templateId: Patch.diff(prev.templateId, next.templateId),
+        ...Base.partialDiff(prev, next),
+      });
+    };
+  }
+
   export const diff = (prev: Node, next: Node): Patch<Node> => {
     if (prev.type !== next.type) return Patch.outerChange(prev, next);
 
@@ -249,6 +266,7 @@ namespace Node {
       case 'point-light': return PointLight.diff(prev, next as PointLight);
       case 'spot-light': return SpotLight.diff(prev, next as SpotLight);
       case 'directional-light': return DirectionalLight.diff(prev, next as DirectionalLight);
+      case 'from-template': return FromTemplate.diff(prev, next as FromTemplate);
     }
   };
 
@@ -263,8 +281,10 @@ namespace Node {
       case 'directional-light': return DirectionalLight.from(node);
     }
   };
+
+  export type TemplatedNode<T extends Base> = DistributiveOmit<T, keyof Base>;
 }
 
-type Node = Node.Empty | Node.Obj | Node.PointLight | Node.SpotLight | Node.DirectionalLight;
+type Node = Node.Empty | Node.Obj | Node.PointLight | Node.SpotLight | Node.DirectionalLight | Node.FromTemplate;
 
 export default Node;
