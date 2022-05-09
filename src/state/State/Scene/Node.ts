@@ -246,6 +246,17 @@ namespace Node {
   }
 
   export namespace FromTemplate {
+    export const NIL: FromTemplate = {
+      type: 'from-template',
+      ...Base.NIL,
+      templateId: '',
+    };
+
+    export const from = <T extends Base>(t: T): FromTemplate => ({
+      ...NIL,
+      ...Base.upcast(t)
+    });
+
     export const diff = (prev: FromTemplate, next: FromTemplate): Patch<FromTemplate> => {
       if (!deepNeq(prev, next)) return Patch.none(prev);
 
@@ -270,7 +281,7 @@ namespace Node {
     }
   };
 
-  export type Type = 'empty' | 'object' | 'point-light' | 'spot-light' | 'directional-light';
+  export type Type = 'empty' | 'object' | 'point-light' | 'spot-light' | 'directional-light' | 'from-template';
 
   export const transmute = (node: Node, type: Type): Node => {
     switch (type) {
@@ -279,6 +290,7 @@ namespace Node {
       case 'point-light': return PointLight.from(node);
       case 'spot-light': return SpotLight.from(node);
       case 'directional-light': return DirectionalLight.from(node);
+      case 'from-template': return FromTemplate.from(node);
     }
   };
 

@@ -82,6 +82,17 @@ const GEOMETRY_REVERSE_OPTIONS: Dict<number> = GEOMETRY_OPTIONS.reduce((dict, op
   return dict;
 }, {});
 
+
+const TEMPLATE_OPTIONS: ComboBox.Option[] = [
+  ComboBox.option('Can', 'can'),
+  ComboBox.option('Paper Ream', 'ream'),
+];
+
+const TEMPLATE_REVERSE_OPTIONS: Dict<number> = TEMPLATE_OPTIONS.reduce((dict, option, i) => {
+  dict[option.data as string] = i;
+  return dict;
+}, {});
+
 const ROTATION_TYPES: ComboBox.Option[] = [
   ComboBox.option('Euler', 'euler'),
   ComboBox.option('Axis Angle', 'angle-axis'),
@@ -96,16 +107,9 @@ const EULER_ORDER_OPTIONS: ComboBox.Option[] = [
   ComboBox.option('ZYX', 'zyx'),
 ];
 
-const NODE_TYPES = [
-  'empty',
-  'object',
-  'directional-light',
-  'point-light',
-  'spot-light',
-];
-
 const NODE_TYPE_OPTIONS: ComboBox.Option[] = [
   ComboBox.option('Empty', 'empty'),
+  ComboBox.option('Item', 'from-template'),
   ComboBox.option('Object', 'object'),
   ComboBox.option('Directional Light', 'directional-light'),
   ComboBox.option('Point Light', 'point-light'),
@@ -114,8 +118,8 @@ const NODE_TYPE_OPTIONS: ComboBox.Option[] = [
 
 const NODE_TYPE_OPTIONS_REV = (() => {
   const map: Record<string, number> = {};
-  NODE_TYPES.forEach((type, i) => {
-    map[type] = i;
+  NODE_TYPE_OPTIONS.forEach((option, i) => {
+    map[option.data as string] = i;
   });
   return map;
 })();
@@ -225,6 +229,16 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
     let transmutedNode = Node.transmute(node, selectedType);
 
+    // If the new type is from a template, set the template ID to a default value
+    if (transmutedNode.type === 'from-template') {
+      const defaultTemplateId = TEMPLATE_OPTIONS[0].data as string;
+      
+      transmutedNode = {
+        ...transmutedNode,
+        templateId: defaultTemplateId,
+      };
+    }
+
     // If the new type is an object, add a new geometry and reset the physics type
     if (transmutedNode.type === 'object') {
       const defaultGeometryType: Geometry.Type = 'box';
@@ -233,6 +247,8 @@ class NodeSettings extends React.PureComponent<Props, State> {
         ...transmutedNode,
         geometryId: uuid.v4(),
         physics: {
+          mass: Mass.kilograms(1),
+          friction: 5,
           ...transmutedNode.physics,
           type: PHSYICS_TYPE_MAPPINGS[defaultGeometryType],
         },
@@ -577,6 +593,20 @@ class NodeSettings extends React.PureComponent<Props, State> {
         }
       });
     }
+  };
+
+  private onTemplateSelect_ = (index: number, option: ComboBox.Option) => {
+    const { props } = this;
+    const { node } = props;
+
+    if (node.type !== 'from-template') return;
+
+    const templateId = option.data as string;
+
+    this.props.onNodeChange({
+      ...node,
+      templateId
+    });
   };
 
   private onCollapsedChange_ = (key: string) => (collapsed: boolean) => {
@@ -932,6 +962,12 @@ class NodeSettings extends React.PureComponent<Props, State> {
           {node.type === 'object' && (
             <StyledField name='Geometry' theme={theme} long>
               <ComboBox options={GEOMETRY_OPTIONS} theme={theme} index={GEOMETRY_REVERSE_OPTIONS[geometry.type]} onSelect={this.onGeometrySelect_} />
+            </StyledField>
+          )}
+
+          {node.type === 'from-template' && (
+            <StyledField name='Item' theme={theme} long>
+              <ComboBox options={TEMPLATE_OPTIONS} theme={theme} index={TEMPLATE_REVERSE_OPTIONS[node.templateId]} onSelect={this.onTemplateSelect_} />
             </StyledField>
           )}
         </Section>
