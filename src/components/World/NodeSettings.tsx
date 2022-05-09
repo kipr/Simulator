@@ -109,8 +109,8 @@ const EULER_ORDER_OPTIONS: ComboBox.Option[] = [
 
 const NODE_TYPE_OPTIONS: ComboBox.Option[] = [
   ComboBox.option('Empty', 'empty'),
-  ComboBox.option('Standard object', 'from-template'),
-  ComboBox.option('Custom object', 'object'),
+  ComboBox.option('Standard Object', 'from-template'),
+  ComboBox.option('Custom Object', 'object'),
   ComboBox.option('Directional Light', 'directional-light'),
   ComboBox.option('Point Light', 'point-light'),
   ComboBox.option('Spot Light', 'spot-light'),
