@@ -111,9 +111,9 @@ const NODE_TYPE_OPTIONS: ComboBox.Option[] = [
   ComboBox.option('Empty', 'empty'),
   ComboBox.option('Standard Object', 'from-template'),
   ComboBox.option('Custom Object', 'object'),
-  ComboBox.option('Directional Light', 'directional-light'),
+  // ComboBox.option('Directional Light', 'directional-light'),
   ComboBox.option('Point Light', 'point-light'),
-  ComboBox.option('Spot Light', 'spot-light'),
+  // ComboBox.option('Spot Light', 'spot-light'),
 ];
 
 const NODE_TYPE_OPTIONS_REV = (() => {
