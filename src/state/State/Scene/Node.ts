@@ -1,5 +1,5 @@
 import deepNeq from '../../../deepNeq';
-import { Vector3 } from '../../../math';
+import { Vector2, Vector3 } from '../../../math';
 import { ReferenceFrame } from '../../../unit-math';
 import { Angle, DistributiveOmit, Mass } from '../../../util';
 import Material from './Material';
@@ -105,6 +105,7 @@ namespace Node {
     geometryId: string;
     physics?: Physics;
     material?: Material;
+    faceUvs?: Vector2[];
   }
 
   export namespace Obj {
@@ -131,6 +132,7 @@ namespace Node {
         geometryId: Patch.diff(prev.geometryId, next.geometryId),
         physics: Patch.diff(prev.physics, next.physics),
         material: Material.diff(prev.material, next.material),
+        faceUvs: Patch.diff(prev.faceUvs, next.faceUvs),
         ...Base.partialDiff(prev, next)
       });
     };

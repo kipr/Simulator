@@ -1,7 +1,7 @@
 import * as Babylon from "babylonjs";
 import deepNeq from "./deepNeq";
 import Dict from "./Dict";
-import { Quaternion, Vector3 as RawVector3 } from "./math";
+import { Quaternion, Vector2 as RawVector2, Vector3 as RawVector3 } from "./math";
 import Robotable from "./Robotable";
 import Scene from "./state/State/Scene";
 import Camera from "./state/State/Scene/Camera";
@@ -89,21 +89,25 @@ class SceneBinding {
     }
   };
 
-  private buildGeometry_ = async (name: string, geometry: Geometry): Promise<FrameLike> => {
+  private buildGeometry_ = async (name: string, geometry: Geometry, faceUvs?: RawVector2[]): Promise<FrameLike> => {
     let ret: FrameLike;
     switch (geometry.type) {
       case 'box': {
         ret = Babylon.BoxBuilder.CreateBox(name, {
           width: Distance.toCentimetersValue(geometry.size.x),
           height: Distance.toCentimetersValue(geometry.size.y),
-          depth: Distance.toCentimetersValue(geometry.size.z)
+          depth: Distance.toCentimetersValue(geometry.size.z),
+          faceUV: this.buildGeometryFaceUvs_(faceUvs, 12),
         }, this.bScene_);
         break;
       }
       case 'sphere': {
+        const bFaceUvs = this.buildGeometryFaceUvs_(faceUvs, 2)?.[0];
         ret = Babylon.SphereBuilder.CreateSphere(name, {
           // Why?? Why is a sphere defined by its diameter?
           diameter: Distance.toCentimetersValue(geometry.radius) * 2,
+          frontUVs: bFaceUvs,
+          sideOrientation: bFaceUvs ? Babylon.Mesh.DOUBLESIDE : undefined,
         }, this.bScene_);
         break;
       }
@@ -112,6 +116,7 @@ class SceneBinding {
           height: Distance.toCentimetersValue(geometry.height),
           diameterTop: Distance.toCentimetersValue(geometry.radius) * 2,
           diameterBottom: Distance.toCentimetersValue(geometry.radius) * 2,
+          faceUV: this.buildGeometryFaceUvs_(faceUvs, 6),
         }, this.bScene_);
         break;
       }
@@ -120,6 +125,7 @@ class SceneBinding {
           diameterTop: 0,
           height: Distance.toCentimetersValue(geometry.height),
           diameterBottom: Distance.toCentimetersValue(geometry.radius) * 2,
+          faceUV: this.buildGeometryFaceUvs_(faceUvs, 6),
         }, this.bScene_);
         break;
       }
@@ -127,6 +133,7 @@ class SceneBinding {
         ret = Babylon.PlaneBuilder.CreatePlane(name, {
           width: Distance.toCentimetersValue(geometry.size.x),
           height: Distance.toCentimetersValue(geometry.size.y),
+          frontUVs: this.buildGeometryFaceUvs_(faceUvs, 2)?.[0],
         }, this.bScene_);
         break;
       }
@@ -158,6 +165,19 @@ class SceneBinding {
       for (const child of children) {
         child.visibility = 1;
       }
+    }
+
+    return ret;
+  };
+
+  private buildGeometryFaceUvs_ = (faceUvs: RawVector2[] | undefined, expectedUvs: number): Babylon.Vector4[] => {
+    if (faceUvs?.length !== expectedUvs) {
+      return undefined;
+    }
+
+    const ret: Babylon.Vector4[] = [];
+    for (let i = 0; i + 1 < faceUvs.length; i += 2) {
+      ret.push(new Babylon.Vector4(faceUvs[i].x, faceUvs[i].y, faceUvs[i + 1].x, faceUvs[i + 1].y));
     }
 
     return ret;
@@ -448,7 +468,7 @@ class SceneBinding {
       return null;
     }
 
-    const ret = await this.buildGeometry_(node.name, geometry);
+    const ret = await this.buildGeometry_(node.name, geometry, node.faceUvs);
 
     if (!node.visible) {
       SceneBinding.apply_(ret, m => m.isVisible = false);
@@ -677,6 +697,8 @@ class SceneBinding {
     SceneBinding.apply_(bNode, m => {
       m.material = bMaterial;
     });
+
+    // TODO: Handle changes to faceUvs when we fully support it
 
     if (node.inner.origin.type === Patch.Type.OuterChange) {
       this.updateNodePosition_(node.next, bNode);
