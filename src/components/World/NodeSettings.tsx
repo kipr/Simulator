@@ -565,14 +565,14 @@ class NodeSettings extends React.PureComponent<Props, State> {
   };
 
 
-  private onParentSelect_ = (index: number, option: ComboBox.Option) => {
-    const { node } = this.props;
+  // private onParentSelect_ = (index: number, option: ComboBox.Option) => {
+  //   const { node } = this.props;
     
-    this.props.onNodeChange({
-      ...node,
-      parentId: option.data as string
-    });
-  };
+  //   this.props.onNodeChange({
+  //     ...node,
+  //     parentId: option.data as string
+  //   });
+  // };
 
   private onGeometrySelect_ = (index: number, option: ComboBox.Option) => {
     const { props } = this;
@@ -914,7 +914,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const { theme, node, scene, id } = props;
     const { collapsed } = state;
 
-    const { parentId } = node;
+    // const { parentId } = node;
 
     const origin = node.origin || {};
     const orientation = origin.orientation || Rotation.Euler.identity(Angle.Type.Degrees);
@@ -930,20 +930,19 @@ class NodeSettings extends React.PureComponent<Props, State> {
       if (node.physics.mass !== undefined) mass = node.physics.mass;
     }
 
+    // let parentIndex = 0;
+    // const parentOptions: ComboBox.Option[] = [
+    //   ComboBox.option('Scene Root', undefined)
+    // ];
 
-    let parentIndex = 0;
-    const parentOptions: ComboBox.Option[] = [
-      ComboBox.option('Scene Root', undefined)
-    ];
-
-    let i = 0;
-    for (const nodeId of Dict.keySet(scene.nodes)) {
-      ++i;
-      if (nodeId === id) continue;
-      const node = scene.nodes[nodeId];
-      parentOptions.push(ComboBox.option(node.name, nodeId));
-      if (parentId === nodeId) parentIndex = i;
-    }
+    // let i = 0;
+    // for (const nodeId of Dict.keySet(scene.nodes)) {
+    //   ++i;
+    //   if (nodeId === id) continue;
+    //   const node = scene.nodes[nodeId];
+    //   parentOptions.push(ComboBox.option(node.name, nodeId));
+    //   if (parentId === nodeId) parentIndex = i;
+    // }
 
     const geometry = node.type === 'object' ? scene.geometry[node.geometryId] : undefined;
 
@@ -953,9 +952,9 @@ class NodeSettings extends React.PureComponent<Props, State> {
           <StyledField name='Name' theme={theme} long>
             <Input theme={theme} type='text' value={node.name} onChange={this.onNameChange_} />
           </StyledField>
-          <StyledField name='Parent' theme={theme} long>
+          {/* <StyledField name='Parent' theme={theme} long>
             <ComboBox options={parentOptions} theme={theme} index={parentIndex} onSelect={this.onParentSelect_} />
-          </StyledField>
+          </StyledField> */}
           <StyledField name='Type' theme={theme} long>
             <ComboBox options={NODE_TYPE_OPTIONS} theme={theme} index={NODE_TYPE_OPTIONS_REV[node.type]} onSelect={this.onTypeSelect_} />
           </StyledField>
