@@ -13,8 +13,8 @@ export const JBC_15B: Scene = {
   nodes: {
     ...baseScene.nodes,
     'ream1': {
-      type: 'object',
-      geometryId: 'ream',
+      type: 'from-template',
+      templateId: 'ream',
       name: 'Paper Ream 1',
       origin: {
         position: {
@@ -28,16 +28,10 @@ export const JBC_15B: Scene = {
         }),
       },
       visible: true,
-      physics: {
-        type: 'box',
-        restitution: 0,
-        friction: 1,
-        mass: Mass.pounds(5),
-      },
     },
     'ream2': {
-      type: 'object',
-      geometryId: 'ream',
+      type: 'from-template',
+      templateId: 'ream',
       name: 'Paper Ream 2',
       origin: {
         position: {
@@ -51,12 +45,6 @@ export const JBC_15B: Scene = {
         }),
       },
       visible: true,
-      physics: {
-        type: 'box',
-        restitution: 0,
-        friction: 1,
-        mass: Mass.pounds(5),
-      },
     },
   },
   // The normal starting position of the robot doesn't leave room for the paper ream in the starting box

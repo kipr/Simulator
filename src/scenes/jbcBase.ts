@@ -10,23 +10,6 @@ export function createBaseSceneSurfaceA(): Scene {
     description: 'A base scene using Surface A. Intended to be augmented to create full JBC scenes',
     authorId: 'KIPR',
     geometry: {
-      'can': {
-        type: 'cylinder',
-        height: Distance.centimeters(11.15),
-        radius: Distance.centimeters(3),
-      },
-      'ream': {
-        type: 'box',
-        size: {
-          x: Distance.centimeters(27.94),
-          y: Distance.centimeters(5.08),
-          z: Distance.centimeters(21.59),
-        },
-      },
-      'jbc_mat_a': {
-        type: 'file',
-        uri: 'static/jbcMatA.glb'
-      },
       'ground': {
         type: 'plane',
         size: {
@@ -37,8 +20,8 @@ export function createBaseSceneSurfaceA(): Scene {
     },
     nodes: {
       'jbc_mat_a': {
-        type: 'object',
-        geometryId: 'jbc_mat_a',
+        type: 'from-template',
+        templateId: 'jbc_mat_a',
         name: 'JBC Surface A',
         origin: {
           position: {
@@ -53,11 +36,6 @@ export function createBaseSceneSurfaceA(): Scene {
           }
         },
         visible: true,
-        physics: {
-          type: 'box',
-          restitution: 0,
-          friction: 1
-        },
       },
       'ground': {
         type: 'object',
@@ -133,23 +111,6 @@ export function createBaseSceneSurfaceB(): Scene {
     description: 'A base scene using Surface B. Intended to be augmented to create full JBC scenes',
     authorId: 'KIPR',
     geometry: {
-      'can': {
-        type: 'cylinder',
-        height: Distance.centimeters(11.15),
-        radius: Distance.centimeters(3),
-      },
-      'ream': {
-        type: 'box',
-        size: {
-          x: Distance.centimeters(27.94),
-          y: Distance.centimeters(5.08),
-          z: Distance.centimeters(21.59),
-        },
-      },
-      'jbc_mat_b': {
-        type: 'file',
-        uri: 'static/jbcMatB.glb'
-      },
       'ground': {
         type: 'plane',
         size: {
@@ -160,8 +121,8 @@ export function createBaseSceneSurfaceB(): Scene {
     },
     nodes: {
       'jbc_mat_b': {
-        type: 'object',
-        geometryId: 'jbc_mat_b',
+        type: 'from-template',
+        templateId: 'jbc_mat_b',
         name: 'JBC Surface B',
         origin: {
           position: {
@@ -176,11 +137,6 @@ export function createBaseSceneSurfaceB(): Scene {
           }
         },
         visible: true,
-        physics: {
-          type: 'box',
-          restitution: 0,
-          friction: 1
-        },
       },
       'ground': {
         type: 'object',
@@ -258,20 +214,14 @@ export function createBaseSceneSurfaceB(): Scene {
  */
 export function createCanNode(canNumber: number, canPosition?: Vector3): Node {
   return {
-    type: 'object',
-    geometryId: 'can',
+    type: 'from-template',
+    templateId: 'can',
     name: `Can ${canNumber}`,
     origin: {
       position: canPosition ?? canPositions[canNumber - 1],
     },
     editable: false,
     visible: true,
-    physics: {
-      type: 'cylinder',
-      mass: Mass.grams(5),
-      friction: 0.7,
-      restitution: 0.3,
-    },
   };
 }
 

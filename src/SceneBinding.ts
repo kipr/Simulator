@@ -14,6 +14,7 @@ import { ReferenceFrame, Rotation, Vector3 } from "./unit-math";
 import { Angle, Distance, Mass, SetOps } from "./util";
 import { Color } from './state/State/Scene/Color';
 import Material from './state/State/Scene/Material';
+import { preBuiltGeometries, preBuiltTemplates } from "./node-templates";
 
 export type FrameLike = Babylon.TransformNode | Babylon.AbstractMesh;
 
@@ -80,7 +81,7 @@ class SceneBinding {
     this.gizmoManager_.usePointerToAttachGizmos = false;
   }
 
-  private static apply_ = (g: FrameLike, f: (m: Babylon.AbstractMesh) => void) => {
+  private static apply_ = (g: Babylon.Node, f: (m: Babylon.AbstractMesh) => void) => {
     if (g instanceof Babylon.AbstractMesh) {
       f(g);
     } else {
@@ -441,7 +442,13 @@ class SceneBinding {
   private createObject_ = async (node: Node.Obj, nextScene: Scene): Promise<Babylon.Node> => {
     const parent = this.findBNode_(node.parentId, true);
 
-    const ret = await this.buildGeometry_(node.name, nextScene.geometry[node.geometryId]);
+    const geometry = nextScene.geometry[node.geometryId] ?? preBuiltGeometries[node.geometryId];
+    if (!geometry) {
+      console.error(`node ${node.name} has invalid geometry ID: ${node.geometryId}`);
+      return null;
+    }
+
+    const ret = await this.buildGeometry_(node.name, geometry);
 
     if (!node.visible) {
       SceneBinding.apply_(ret, m => m.isVisible = false);
@@ -537,16 +544,41 @@ class SceneBinding {
   };
 
   private createNode_ = async (id: string, node: Node, nextScene: Scene): Promise<Babylon.Node> => {
-    let ret: Babylon.Node;
-    switch (node.type) {
-      case 'object': ret = await this.createObject_(node, nextScene); break;
-      case 'empty': ret = this.createEmpty_(node); break;
-      case 'directional-light': ret = this.createDirectionalLight_(id, node); break;
-      case 'spot-light': ret = this.createSpotLight_(id, node); break;
-      case 'point-light': ret = this.createPointLight_(id, node); break;
+    let nodeToCreate: Node = node;
+
+    // Resolve template nodes into non-template nodes by looking up the template by ID
+    if (node.type === 'from-template') {
+      const nodeTemplate = preBuiltTemplates[node.templateId];
+      if (!nodeTemplate) {
+        console.warn('template node has invalid template ID:', node.templateId);
+        return null;
+      }
+
+      nodeToCreate = {
+        ...node,
+        ...nodeTemplate,
+      };
     }
 
-    this.updateNodePosition_(node, ret);
+    let ret: Babylon.Node;
+    switch (nodeToCreate.type) {
+      case 'object': ret = await this.createObject_(nodeToCreate, nextScene); break;
+      case 'empty': ret = this.createEmpty_(nodeToCreate); break;
+      case 'directional-light': ret = this.createDirectionalLight_(id, nodeToCreate); break;
+      case 'spot-light': ret = this.createSpotLight_(id, nodeToCreate); break;
+      case 'point-light': ret = this.createPointLight_(id, nodeToCreate); break;
+      default: {
+        console.warn('invalid node type for create node:', nodeToCreate.type);
+        return null;
+      }
+    }
+
+    if (!ret) {
+      console.warn('failed to create node:', nodeToCreate.name);
+      return null;
+    }
+
+    this.updateNodePosition_(nodeToCreate, ret);
     ret.id = id;
     
     ret.metadata = id;
@@ -700,6 +732,36 @@ class SceneBinding {
     return bNode;
   };
 
+  private updateFromTemplate_ = (id: string, node: Patch.InnerChange<Node.FromTemplate>, nextScene: Scene): Promise<Babylon.Node> => {
+    // If the template ID changes, recreate the object entirely
+    if (node.inner.templateId.type === Patch.Type.OuterChange) {
+      this.destroyNode_(id);
+      return this.createNode_(id, node.next, nextScene);
+    }
+
+    const bNode = this.findBNode_(id);
+
+    if (node.inner.name.type === Patch.Type.OuterChange) {
+      bNode.name = node.inner.name.next;
+    }
+
+    if (node.inner.parentId.type === Patch.Type.OuterChange) {
+      const parent = this.findBNode_(node.inner.parentId.next, true);
+      bNode.parent = parent;
+    }
+
+    if (node.inner.origin.type === Patch.Type.OuterChange) {
+      this.updateNodePosition_(node.next, bNode);
+    }
+
+    if (node.inner.visible.type === Patch.Type.OuterChange) {
+      const nextVisible = node.inner.visible.next;
+      SceneBinding.apply_(bNode, m => m.isVisible = nextVisible);
+    }
+
+    return Promise.resolve(bNode);
+  };
+
   private updateNode_ = async (id: string, node: Patch<Node>, geometryPatches: Dict<Patch<Geometry>>, nextScene: Scene): Promise<Babylon.Node> => {
     switch (node.type) {
       // The node hasn't changed type, but some fields have been changed
@@ -719,6 +781,7 @@ class SceneBinding {
           case 'directional-light': return this.updateDirectionalLight_(id, node as Patch.InnerChange<Node.DirectionalLight>);
           case 'spot-light': return this.updateSpotLight_(id, node as Patch.InnerChange<Node.SpotLight>);
           case 'point-light': return this.updatePointLight_(id, node as Patch.InnerChange<Node.PointLight>);
+          case 'from-template': return this.updateFromTemplate_(id, node as Patch.InnerChange<Node.FromTemplate>, nextScene);
           default: {
             console.error('invalid node type for inner change:', (node.next as Node).type);
             return this.findBNode_(id);
@@ -845,7 +908,10 @@ class SceneBinding {
       if (removedKeys.has(nodeId)) continue;
       const node = patch.nodes[nodeId];
 
-      this.nodes_[nodeId] = await this.updateNode_(nodeId, node, patch.geometry, scene);
+      const updatedNode = await this.updateNode_(nodeId, node, patch.geometry, scene);
+      if (updatedNode) {
+        this.nodes_[nodeId] = updatedNode;
+      }
     }
 
     if (patch.selectedNodeId.type === Patch.Type.OuterChange) {

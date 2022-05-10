@@ -50,12 +50,11 @@ const StyledScrollArea = styled(ScrollArea, (props: ThemeProps) => ({
 class AddNodeDialog extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
-    const geometryId = uuid.v4();
     this.state = {
       id: uuid.v4(),
       node: {
-        type: 'object',
-        geometryId,
+        type: 'from-template',
+        templateId: 'can',
         name: 'Unnamed Object',
         origin: {
           position: {
@@ -73,14 +72,9 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
         },
         editable: true,
         visible: true,
-        physics: {
-          mass: Mass.kilograms(1),
-          friction: 5,
-          type: 'box',
-        }
       },
-      geometryId,
-      geometry: Geometry.Box.DEFAULT
+      geometryId: undefined,
+      geometry: undefined,
     };
   }
 

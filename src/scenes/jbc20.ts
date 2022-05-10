@@ -16,8 +16,8 @@ export const JBC_20: Scene = {
     'can10': createCanNode(10),
     'can12': createCanNode(12),
     'ream': {
-      type: 'object',
-      geometryId: 'ream',
+      type: 'from-template',
+      templateId: 'ream',
       name: 'Paper Ream',
       origin: {
         position: {
@@ -27,12 +27,6 @@ export const JBC_20: Scene = {
         },
       },
       visible: true,
-      physics: {
-        type: 'box',
-        restitution: 0,
-        friction: 1,
-        mass: Mass.pounds(5),
-      },
     },
   },
   // The normal starting position of the robot doesn't leave room for the paper ream in the starting box
