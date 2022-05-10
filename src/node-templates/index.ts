@@ -1,4 +1,6 @@
 import Dict from "../Dict";
+import { Vector2 } from "../math";
+import { Color } from "../state/State/Scene/Color";
 import Geometry from "../state/State/Scene/Geometry";
 import Node from "../state/State/Scene/Node";
 import { Distance, Mass } from "../util";
@@ -14,6 +16,14 @@ const canTemplate: Node.TemplatedNode<Node.Obj> = {
     friction: 0.7,
     restitution: 0.3,
   },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'texture',
+      uri: '/static/Can Texture.png'
+    },
+  },
+  faceUvs: [Vector2.ZERO, Vector2.ZERO, Vector2.create(1, 0), Vector2.create(0, 1), Vector2.ZERO, Vector2.ZERO],
 };
 
 const reamTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -24,6 +34,13 @@ const reamTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: 0,
     friction: 1,
     mass: Mass.pounds(5),
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'color3',
+      color: Color.Rgb.create(250, 249, 246),
+    },
   },
 };
 
