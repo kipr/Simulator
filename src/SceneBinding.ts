@@ -857,8 +857,6 @@ class SceneBinding {
     ret.attachControl(this.bScene_.getEngine().getRenderingCanvas(), true);
     ret.position = Vector3.toBabylon(camera.position, 'centimeters');
     ret.panningSensibility = 100;
-    new Babylon.FxaaPostProcess("fxaa", 1.0, ret);
-    // new Babylon.TonemapPostProcess("tonemap", Babylon.TonemappingOperator.HejiDawson, 0.8, ret);
 
     return ret;
   };
