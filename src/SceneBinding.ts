@@ -1003,7 +1003,8 @@ class SceneBinding {
       oldCamera.detachControl(this.bScene_.getEngine().getRenderingCanvas());
       this.bScene_.detachControl();
       this.bScene_.removeCamera(oldCamera);
-      this.bScene_.addCamera(this.camera_);
+      
+      // Creating the camera already added it to the Babylon scene, so no need to call bScene_.addCamera()
       this.bScene_.activeCamera = this.camera_;
       if (this.engineView_) this.camera_.attachControl(this.engineView_.target, true);
       this.bScene_.attachControl();
