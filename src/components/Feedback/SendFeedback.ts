@@ -47,8 +47,6 @@ export const sendFeedback = (rootState: RootState): Promise<FeedbackResponse> =>
 
     const req: XMLHttpRequest = new XMLHttpRequest();
     req.onload = () => {
-      console.log('got response:', req.responseText);
-
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const responseJSON = JSON.parse(req.responseText);
 

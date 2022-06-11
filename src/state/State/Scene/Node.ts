@@ -121,11 +121,7 @@ namespace Node {
     });
 
     export const diff = (prev: Obj, next: Obj): Patch<Obj> => {
-      console.log('!!! Obj diff', prev, next);
-
-      
       if (!deepNeq(prev, next)) return Patch.none(prev);
-
 
       return Patch.innerChange(prev, next, {
         type: Patch.none(prev.type),

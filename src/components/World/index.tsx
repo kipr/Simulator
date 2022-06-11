@@ -313,7 +313,6 @@ export default connect<unknown, unknown, Props, ReduxState>(state => {
     dispatch(SceneAction.addGeometry({ id, geometry }));
   },
   onGeometryChange: (id: string, geometry: Geometry) => {
-    console.log('change', id, geometry);
     dispatch(SceneAction.setGeometry({ id, geometry }));
   },
   onGeometryRemove: (id: string) => {
