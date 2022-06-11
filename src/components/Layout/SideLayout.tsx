@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { styled } from 'styletron-react';
-import { EMPTY_ARRAY } from '../../util'; 
+import { EMPTY_ARRAY } from '../../util';
 
 import { Button } from '../Button';
 import Console from '../Console';
@@ -73,7 +73,7 @@ const SidePanelContainer = styled('div', {
 
 const SideBar = styled('div', (props: SideBarProps) => {
   const sizeType = props.size;
-  
+
   return {
     display: 'flex',
     flexDirection: 'column',
@@ -82,7 +82,7 @@ const SideBar = styled('div', (props: SideBarProps) => {
     width: '100%',
     // flex: (sizeType === Size.Type.Maximized) ? '1 1 100%' : '0 1 auto',
     // width: (sizeType === Size.Type.Maximized) ? '100%' : (sizeType === Size.Type.Miniature) ? '30vw' : '60vw',
-  }
+  };
 });
 
 const SimulatorAreaContainer = styled('div', {
@@ -122,7 +122,7 @@ class SideLayout extends React.PureComponent<Props, State> {
   private onSideBarSizeChange_ = (index: number) => {
     if (SIDEBAR_SIZES[index].type === Size.Type.Minimized) {
       // unset active tab if minimizing
-      this.setState({activePanel: SideBarMinimizedTab});
+      this.setState({ activePanel: SideBarMinimizedTab });
     }
     this.setState({
       sidePanelSize: SIDEBAR_SIZES[index].type,
@@ -133,13 +133,13 @@ class SideLayout extends React.PureComponent<Props, State> {
       // collapse instead
       this.onSideBarSizeChange_(SIDEBAR_SIZE[Size.Type.Minimized]);
     } else {
-      this.setState({activePanel: index});        
+      this.setState({ activePanel: index });
     }
   };
   private onTabBarExpand_ = (index: number) => {
     this.onSideBarSizeChange_(Size.Type.Miniature);
-    this.setState({activePanel: index});
-  }
+    this.setState({ activePanel: index });
+  };
 
   private editor_: Editor;
   private bindEditor_ = (editor: Editor) => {
@@ -229,40 +229,40 @@ class SideLayout extends React.PureComponent<Props, State> {
         isRealisticSensorsEnabled={settings.simulationRealisticSensors}
         surfaceState={surfaceState}
       />
-    </SimulatorAreaContainer>
+    </SimulatorAreaContainer>;
 
     let content: JSX.Element;
     switch (activePanel) {
       case 0: {
         content = (
-        <>
-          <Slider side={Side.Bottom} initialHeight={window.innerHeight * 2 / 3} theme={theme}>
-            <SimulatorWidget
+          <>
+            <Slider side={Side.Bottom} initialHeight={window.innerHeight * 2 / 3} theme={theme}>
+              <SimulatorWidget
                 theme={theme}
                 name='Editor'
                 barComponents={editorBar}
                 mode={Mode.Inline}
               >
-              <Editor
-                theme={theme}
-                ref={this.bindEditor_}
-                code={code} onCodeChange={onCodeChange}
-                messages={messages}
-                autocomplete={settings.editorAutoComplete}
-              />
+                <Editor
+                  theme={theme}
+                  ref={this.bindEditor_}
+                  code={code} onCodeChange={onCodeChange}
+                  messages={messages}
+                  autocomplete={settings.editorAutoComplete}
+                />
+              </SimulatorWidget>
+            </Slider>
+            <SimulatorWidget
+              theme={theme}
+              name='Console'
+              barComponents={consoleBar}
+              mode={Mode.Inline}
+              hideActiveSize={true}
+            >
+              <div></div>
+              {/* <FlexConsole theme={theme} text={console}/> */}
             </SimulatorWidget>
-          </Slider>
-          <SimulatorWidget
-            theme={theme}
-            name='Console'
-            barComponents={consoleBar}
-            mode={Mode.Inline}
-            hideActiveSize={true}
-          >
-            <div></div>
-            {/* <FlexConsole theme={theme} text={console}/> */}
-          </SimulatorWidget>
-        </>
+          </>
         );
         break;
       }
@@ -297,26 +297,26 @@ class SideLayout extends React.PureComponent<Props, State> {
       }
     }
 
-    const tabBar = <TabBar isVertical={true} tabs={TABS} index={activePanel} onIndexChange={this.onTabBarIndexChange_} theme={theme} />
+    const tabBar = <TabBar isVertical={true} tabs={TABS} index={activePanel} onIndexChange={this.onTabBarIndexChange_} theme={theme} />;
     const sideBar = <Slider side={Side.Right} initialWidth={400} theme={theme}>
       <SideBar size={sidePanelSize} >
-      {content}
+        {content}
       </SideBar>
-    </Slider>
+    </Slider>;
 
     switch (sidePanelSize) {
       case Size.Type.Minimized:
         return <SidePanelContainer>
-            <TabBar isVertical={true} tabs={TABS} index={activePanel} onIndexChange={this.onTabBarExpand_} theme={theme} />
-            {simulator}
-          </SidePanelContainer>
+          <TabBar isVertical={true} tabs={TABS} index={activePanel} onIndexChange={this.onTabBarExpand_} theme={theme} />
+          {simulator}
+        </SidePanelContainer>;
       case Size.Type.Maximized:
         return <SidePanelContainer>
-            {tabBar}
-            <SidePanelContainer>
-              {sideBar}
-            </SidePanelContainer>
+          {tabBar}
+          <SidePanelContainer>
+            {sideBar}
           </SidePanelContainer>
+        </SidePanelContainer>;
       default:
         return <SidePanelContainer>
           {tabBar}
@@ -324,7 +324,7 @@ class SideLayout extends React.PureComponent<Props, State> {
             {sideBar}
             {simulator}
           </SidePanelContainer>
-        </SidePanelContainer>
+        </SidePanelContainer>;
     }
   }
 }

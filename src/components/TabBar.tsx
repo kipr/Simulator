@@ -34,12 +34,12 @@ const TabIcon = styled(Fa, {
   paddingRight: '5px'
 });
 
-const TabText = styled('div',  (props: {$vertical: boolean}) => ({
+const TabText = styled('div',  (props: { $vertical: boolean }) => ({
   position: 'absolute', 
   left: '50%', 
   top: '50%',
   transform: (props.$vertical) ? 'translate(-50%, -50%) rotate(-90deg)' : 'translate(-50%, -50%)',
-	transformOrigin: 'center',
+  transformOrigin: 'center',
   textAlign: 'center',
   display: 'flex'
 }));
