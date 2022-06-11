@@ -291,8 +291,6 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       style,
       className,
       theme,
-      state,
-      onStateChange,
       robotStartPosition,
       onSetRobotStartPosition,
       code,
@@ -387,8 +385,6 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
         <SimulatorAreaContainer>
           <SimulatorArea
             key='simulator'
-            robotState={state}
-            onRobotStateUpdate={onStateChange}
             isSensorNoiseEnabled={settings.simulationSensorNoise}
             isRealisticSensorsEnabled={settings.simulationRealisticSensors}
           />
@@ -422,7 +418,6 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
             onSizeChange={this.onInfoSizeChange_}
           >
             <Info
-              robotState={state}
               theme={theme}
             />
           </InfoWidget>

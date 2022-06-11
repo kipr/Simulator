@@ -11,8 +11,6 @@ import { ThemeProps } from "./theme";
 export interface LayoutProps extends StyleProps, ThemeProps {
   code: string;
   onCodeChange: (code: string) => void;
-  state: RobotState;
-  onStateChange: (state: RobotState) => void;
   robotStartPosition: RobotPosition;
   onSetRobotStartPosition: (position: RobotPosition) => void;
   console: StyledText;

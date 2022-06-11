@@ -8,13 +8,13 @@ import deepNeq from './deepNeq';
 class WorkerInstance {
   
   onStateChange: (state: RobotState) => void;
+  getRobotState: () => RobotState;
   
   onStdOutput: (s: string) => void;
   onStdError: (stderror: string) => void;
   
   onStopped: () => void;
 
-  private state_ = RobotState.empty;
   private registers_ = new Array<number>(Registers.REG_ALL_COUNT)
     .fill(0)
     .fill(240,61,62)
@@ -37,13 +37,20 @@ class WorkerInstance {
   };
 
   private tick: FrameRequestCallback = () => {
+    if (!this.getRobotState) {
+      requestAnimationFrame(this.tick);
+      return;
+    }
+
+    const currentState = this.getRobotState();
 
     const nextState: RobotState = {
-      ...this.state_,
-      motorSpeeds: [...this.state_.motorSpeeds],
-      motorPositions: [...this.state_.motorPositions],
-      servoPositions: [...this.state_.servoPositions],
-      analogValues: [...this.state_.analogValues],
+      ...currentState,
+      motorSpeeds: [...currentState.motorSpeeds],
+      motorPositions: [...currentState.motorPositions],
+      servoPositions: [...currentState.servoPositions],
+      analogValues: [...currentState.analogValues],
+      digitalValues: [...currentState.digitalValues],
     };
 
     const registerUpdates: Protocol.Worker.Register[] = [];
@@ -115,14 +122,12 @@ class WorkerInstance {
     this.setRegisters(registerUpdates);
 
     // Only call onStateChange() if any state values have actually changed
-    if (deepNeq(nextState, this.state_)) {
+    if (deepNeq(nextState, currentState)) {
       if (this.onStateChange) {
         this.onStateChange(nextState);
       }
-      this.state_ = nextState;
     }
 
-    
     requestAnimationFrame(this.tick);
   };
   
@@ -141,7 +146,6 @@ class WorkerInstance {
         break;
       }
       case 'program-ended': {
-        this.state_.motorSpeeds = [0, 0, 0, 0];
         const servoPositions = this.registers_.slice(78,86);
         this.registers_ = new Array<number>(Registers.REG_ALL_COUNT)
           .fill(0)
@@ -154,7 +158,10 @@ class WorkerInstance {
           .fill(servoPositions[5],83,84)
           .fill(servoPositions[6],84,85)
           .fill(servoPositions[7],85,86);
-        this.onStateChange(this.state_);
+        this.onStateChange({
+          ...this.getRobotState(),
+          motorSpeeds: [0, 0, 0, 0],
+        });
         break;
       }
       case 'programoutput': {
@@ -257,15 +264,6 @@ class WorkerInstance {
   constructor() {
     this.startWorker();
     requestAnimationFrame(this.tick);
-  }
-
-  set state(state: RobotState) {
-    this.state_ = state;
-    this.onStateChange(this.state_);
-  }
-
-  get state() {
-    return this.state_;
   }
 
   private startWorker() {

@@ -20,7 +20,7 @@ import { Angle, Distance, Mass } from './util';
 import store, { State } from './state';
 import { Unsubscribe } from 'redux';
 import deepNeq from './deepNeq';
-import { SceneAction } from './state/reducer';
+import { RobotStateAction, SceneAction } from './state/reducer';
 import { Gizmo } from 'babylonjs/Gizmos/gizmo';
 import SceneBinding from './SceneBinding';
 import Scene from './state/State/Scene';
@@ -96,10 +96,6 @@ export class Space implements Robotable {
   private static readonly wheelRotationVector: Babylon.Vector3 = new Babylon.Vector3(0, -1, 0);
   private static readonly armRotationVector: Babylon.Vector3 = new Babylon.Vector3(1, 0, 0);
   private static readonly clawRotationVector: Babylon.Vector3 = new Babylon.Vector3(0, 0, -1);
-
-  private getRobotState: () => RobotState;
-  private updateRobotState: (robotState: Partial<RobotState>) => void;
-
 
   private initStoreSubscription_ = () => {
     if (this.storeSubscription_) return;
@@ -272,10 +268,7 @@ export class Space implements Robotable {
     return this.initializationPromise;
   }
 
-  public switchContext(canvas: HTMLCanvasElement, getRobotState: () => RobotState, updateRobotState: (robotState: Partial<RobotState>) => void): void {
-    this.getRobotState = getRobotState;
-    this.updateRobotState = updateRobotState;
-
+  public switchContext(canvas: HTMLCanvasElement): void {
     this.sceneBinding_.canvas = canvas;
   }
 
@@ -314,7 +307,6 @@ export class Space implements Robotable {
     this.scene.enablePhysics(gravityVector, this.ammo_);
     this.scene.getPhysicsEngine().setSubTimeStep(5);
 
-    console.log('starting scene', store.getState().scene);
     await this.sceneBinding_.setScene(store.getState().scene.workingScene);
 
     // (x, z) coordinates of cans around the board
@@ -335,7 +327,7 @@ export class Space implements Robotable {
 
       if (!anyUpdated) return;
 
-      const robotState = this.getRobotState();
+      const robotState = store.getState().robotState;
 
       const nextRobotState: Partial<RobotState> = {
         analogValues: [...robotState.analogValues],
@@ -350,11 +342,16 @@ export class Space implements Robotable {
         SensorObject.applyMut(sensorObject, nextRobotState);
       }
 
-      this.updateRobotState(nextRobotState);
+      store.dispatch(RobotStateAction.setRobotState({
+        robotState: {
+          ...robotState,
+          ...nextRobotState,
+        },
+      }));
     });
 
     this.scene.registerAfterRender(() => {
-      const currRobotState = this.getRobotState();
+      const currRobotState = store.getState().robotState;
 
       // Set simulator motor speeds based on robot state
       this.setDriveMotors(currRobotState.motorSpeeds[0], currRobotState.motorSpeeds[3]);
@@ -380,9 +377,12 @@ export class Space implements Robotable {
       // Update motor positions based on wheel rotation
       const m0Position = currRobotState.motorPositions[0] + leftRotation * this.WHEEL_TICKS_PER_RADIAN;
       const m3Position = currRobotState.motorPositions[3] + rightRotation * this.WHEEL_TICKS_PER_RADIAN;
-      this.updateRobotState({
-        motorPositions: [m0Position, 0, 0, m3Position],
-      });
+      store.dispatch(RobotStateAction.setRobotState({
+        robotState: {
+          ...currRobotState,
+          motorPositions: [m0Position, 0, 0, m3Position],
+        },
+      }));
 
       this.leftWheelRotationPrev = leftWheelRotationCurr;
       this.rightWheelRotationPrev = rightWheelRotationCurr;
