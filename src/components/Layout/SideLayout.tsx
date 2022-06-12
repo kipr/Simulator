@@ -61,9 +61,6 @@ interface SideLayoutState {
 type Props = SideLayoutProps;
 type State = SideLayoutState;
 
-interface SideBarProps {
-  size: number;
-}
 
 const SidePanelContainer = styled('div', {
   display: 'flex',
@@ -71,18 +68,12 @@ const SidePanelContainer = styled('div', {
   flexDirection: 'row',
 });
 
-const SideBar = styled('div', (props: SideBarProps) => {
-  const sizeType = props.size;
-
-  return {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: "stretch",
-    flex: '1 1 auto',
-    width: '100%',
-    // flex: (sizeType === Size.Type.Maximized) ? '1 1 100%' : '0 1 auto',
-    // width: (sizeType === Size.Type.Maximized) ? '100%' : (sizeType === Size.Type.Miniature) ? '30vw' : '60vw',
-  };
+const SideBar = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'stretch',
+  flex: '1 1 auto',
+  width: '100%',
 });
 
 const SimulatorAreaContainer = styled('div', {
@@ -90,11 +81,13 @@ const SimulatorAreaContainer = styled('div', {
   flex: '3 1',
 });
 const SimulatorWidget = styled(Widget, {
+  // display: 'flex',
   flex: '1 1 auto',
-  height: '100%'
+  height: '100%',
 });
 const FlexConsole = styled(Console, {
-  flex: '1 1'
+  flex: '1 1',
+  // height: '100%'
 });
 
 const SideBarMinimizedTab = -1;
@@ -236,12 +229,18 @@ class SideLayout extends React.PureComponent<Props, State> {
       case 0: {
         content = (
           <>
-            <Slider side={Side.Bottom} initialHeight={window.innerHeight * 2 / 3} theme={theme}>
+            <Slider 
+              side={Side.Bottom} 
+              theme={theme}
+              initialSize={Math.floor(window.innerHeight * 2 / 3)} 
+              maxSize={window.innerHeight - 100}
+              minSize={50}
+            >
               <SimulatorWidget
                 theme={theme}
                 name='Editor'
                 barComponents={editorBar}
-                mode={Mode.Inline}
+                mode={Mode.Sidebar}
               >
                 <Editor
                   theme={theme}
@@ -256,11 +255,10 @@ class SideLayout extends React.PureComponent<Props, State> {
               theme={theme}
               name='Console'
               barComponents={consoleBar}
-              mode={Mode.Inline}
+              mode={Mode.Sidebar}
               hideActiveSize={true}
             >
-              <div></div>
-              {/* <FlexConsole theme={theme} text={console}/> */}
+              <FlexConsole theme={theme} text={console}/>
             </SimulatorWidget>
           </>
         );
@@ -271,7 +269,7 @@ class SideLayout extends React.PureComponent<Props, State> {
           <SimulatorWidget
             theme={theme}
             name='Robot'
-            mode={Mode.Inline}
+            mode={Mode.Sidebar}
           >
             <Info
               robotState={state}
@@ -288,7 +286,7 @@ class SideLayout extends React.PureComponent<Props, State> {
           <SimulatorWidget
             theme={theme}
             name='World'
-            mode={Mode.Inline}
+            mode={Mode.Sidebar}
           >
             <World theme={theme} surfaceName={surfaceState.surfaceName} onSurfaceChange={onSurfaceChange} />
           </SimulatorWidget>
@@ -298,8 +296,14 @@ class SideLayout extends React.PureComponent<Props, State> {
     }
 
     const tabBar = <TabBar isVertical={true} tabs={TABS} index={activePanel} onIndexChange={this.onTabBarIndexChange_} theme={theme} />;
-    const sideBar = <Slider side={Side.Right} initialWidth={400} theme={theme}>
-      <SideBar size={sidePanelSize} >
+    const sideBar = <Slider 
+        side={Side.Right} 
+        theme={theme}
+        initialSize={400} 
+        maxSize={window.innerWidth * 9 / 10}
+        minSize={50}
+      >
+      <SideBar>
         {content}
       </SideBar>
     </Slider>;

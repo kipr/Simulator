@@ -14,7 +14,7 @@ export interface TabProps extends ThemeProps, StyleProps {
 const TabContainer = styled('div', (props: ThemeProps & { selected: boolean, $vertical: boolean }) => ({
   flex: '1 1',
   borderRight: `1px solid ${props.theme.borderColor}`,
-  borderBottom: (props.$vertical) ? `1px solid ${props.theme.borderColor}` : null,
+  borderBottom: props.$vertical ? `1px solid ${props.theme.borderColor}` : null,
   backgroundColor: props.selected ? `rgba(255, 255, 255, 0.1)` : `rgba(0, 0, 0, 0.1)`,
   opacity: props.selected ? 1 : 0.2,
   transition: 'background-color 0.2s, opacity 0.2s',

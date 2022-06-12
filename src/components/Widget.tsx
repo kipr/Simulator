@@ -61,7 +61,8 @@ export type Size = Size.Maximized | Size.Partial | Size.Miniature | Size.Minimiz
 
 export enum Mode {
   Inline,
-  Floating
+  Floating,
+  Sidebar,
 }
 
 export interface ModeProps {
@@ -121,6 +122,7 @@ const Container = styled('div', (props: ThemeProps & ModeProps) => ({
   flexBasis: '0',
   pointerEvents: 'auto',
   backgroundColor: props.theme.backgroundColor,
+  borderTop: props.mode === Mode.Sidebar ? 'none' : undefined,
   borderBottom: props.mode === Mode.Inline ? 'none' : undefined
 }));
 

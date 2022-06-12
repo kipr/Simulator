@@ -13,8 +13,9 @@ export enum Side {
 
 export interface SliderProps extends ThemeProps {
   side: Side,
-  initialWidth?: number,
-  initialHeight?: number,
+  initialSize?: number,
+  minSize?: number,
+  maxSize?: number,
   children: JSX.Element,
 }
 
@@ -86,10 +87,12 @@ const SliderBar = React.memo((props: SliderBarProps) => {
 
 interface ResizeState {
   side: Side,
-  width?: number,
-  height?: number,
-  prevX?: number,
-  prevY?: number,
+  size?: number,
+  minSize?: number,
+  maxSize?: number,
+  startSize?: number,
+  startX?: number,
+  startY?: number,
   resizing: boolean,
 }
 enum Actions {
@@ -103,14 +106,14 @@ interface ResizeAction {
   y: number,
 }
 function resizeOnPointerMove(state: ResizeState, action: ResizeAction): ResizeState {
-  const { side, height, width, prevX, prevY, resizing } = state;
+  const { side, size, minSize, maxSize, startSize, startX, startY, resizing } = state;
   const { actionType, x, y } = action;
 
   if (!resizing) {
     if (actionType === Actions.MouseDown) {
       return {
         ...state,
-        prevX: action.x, prevY: action.y,
+        startSize: size, startX: x, startY: y,
         resizing: true
       };
     }
@@ -125,62 +128,60 @@ function resizeOnPointerMove(state: ResizeState, action: ResizeAction): ResizeSt
     return { ...state, resizing: false };
   }
 
+
   // resize the panel
   switch (side) {
     case Side.Left:
+      console.log(size, startSize, x - startX, minSize, maxSize)
       return {
-        side: side, resizing: true,
-        height: height, width: Math.max(width - (x - prevX), 0),
-        prevX: x, prevY: y,
+        ...state,
+        size: Math.min(Math.max(startSize - (x - startX), minSize), maxSize),
       };
     case Side.Right:
+      console.log(size, Math.min(Math.max(startSize - (x - startX), minSize), maxSize))
       return {
-        side: side, resizing: true,
-        height: height, width: Math.max(width + (x - prevX), 0),
-        prevX: x, prevY: y,
+        ...state,
+        size: Math.min(Math.max(startSize + (x - startX), minSize), maxSize),
       };
     case Side.Top:
+      console.log(size, startSize, y - startY, minSize, maxSize)
       return {
-        side: side, resizing: true,
-        height: Math.max(height - (y - prevY), 0), width: width,
-        prevX: x, prevY: y,
+        ...state,
+        size: Math.min(Math.max(startSize - (y - startY), minSize), maxSize),
       };
     case Side.Bottom:
+      console.log(size, Math.min(Math.max(startSize + (y - startY), minSize), maxSize), startSize, y - startY, minSize, maxSize)
       return {
-        side: side, resizing: true,
-        height: Math.max(height + (y - prevY), 0), width: width,
-        prevX: x, prevY: y,
+        ...state,
+        size: Math.min(Math.max(startSize + (y - startY), minSize), maxSize),
       };
   }
 }
 
 export const Slider = function (props: SliderProps) {
-  const { side, initialWidth, initialHeight, theme, children } = props;
+  const { side, initialSize, minSize, maxSize, theme, children } = props;
 
   const isVertical = (side === Side.Left || side === Side.Right);
-
-  if (isVertical && initialWidth === null) throw Error("Must set initialWidth when side is left or right!");
-  if (!isVertical && initialHeight === null) throw Error("Must set initialHeight when side is top or bottom!");
-
+  
   const [state, dispatch] = React.useReducer(resizeOnPointerMove, {
     side: side,
-    width: initialWidth,
-    height: initialHeight,
+    size: initialSize,
+    minSize: minSize,
+    maxSize: maxSize,
     resizing: false,
   });
 
   const onMouseMove = (e: MouseEvent) => {
-    dispatch({ actionType: Actions.MouseMove, x: e.pageX, y: e.pageY });
+    dispatch({ actionType: Actions.MouseMove, x: e.screenX, y: e.screenY });
   };
   const onMouseUp = (e: MouseEvent) => {
-    dispatch({ actionType: Actions.MouseUp, x: e.pageX, y: e.pageY });
+    dispatch({ actionType: Actions.MouseUp, x: e.screenX, y: e.screenY });
 
     window.removeEventListener('mousemove', onMouseMove);
     window.removeEventListener('mouseup', onMouseUp);
   };
-
   const onSliderBarMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    dispatch({ actionType: Actions.MouseDown, x: e.pageX, y: e.pageY });
+    dispatch({ actionType: Actions.MouseDown, x: e.screenX, y: e.screenY });
 
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
@@ -193,7 +194,6 @@ export const Slider = function (props: SliderProps) {
 
     dispatch({ actionType: Actions.MouseMove, x: e.touches[0].pageX, y: e.touches[0].pageY });
   };
-
   const onTouchEnd = (e: TouchEvent) => {
     dispatch({ actionType: Actions.MouseUp, x: null, y: null });
 
@@ -201,7 +201,6 @@ export const Slider = function (props: SliderProps) {
     window.removeEventListener('touchend', onTouchEnd);
     window.removeEventListener('touchcancel', onTouchEnd);
   };
-
   const onSliderBarTourchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     // only support single touch events
     if (e.touches.length > 1) return;
@@ -216,7 +215,11 @@ export const Slider = function (props: SliderProps) {
   switch (side) {
     case Side.Top:
     case Side.Left:
-      return <SliderContainer $width={state.width} $height={state.height} $vertical={isVertical}>
+      return <SliderContainer 
+          $width ={isVertical ? state.size : null} 
+          $height={isVertical ? null : state.size} 
+          $vertical={isVertical}
+        >
         <SliderBar $vertical={isVertical} theme={theme} selected={state.resizing}
           onMouseDownCallback={onSliderBarMouseDown}
           onTouchStartCallback={onSliderBarTourchStart}
@@ -225,7 +228,11 @@ export const Slider = function (props: SliderProps) {
       </SliderContainer>;
     case Side.Right:
     case Side.Bottom:
-      return <SliderContainer $width={state.width} $height={state.height} $vertical={isVertical}>
+      return <SliderContainer 
+          $width ={isVertical ? state.size : null} 
+          $height={isVertical ? null : state.size} 
+          $vertical={isVertical}
+        >
         {children}
         <SliderBar $vertical={isVertical} theme={theme} selected={state.resizing}
           onMouseDownCallback={onSliderBarMouseDown}
