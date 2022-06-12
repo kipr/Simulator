@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import * as Sim from '../Sim';
-import { RobotState } from "../RobotState";
 
 import { styled } from 'styletron-react';
 
@@ -11,12 +10,8 @@ import { Vector2 } from '../math';
 import Loading from './Loading';
 
 export interface SimulatorAreaProps {
-  robotState: RobotState;
   isSensorNoiseEnabled: boolean;
   isRealisticSensorsEnabled: boolean;
-
-  onRobotStateUpdate: (robotState: Partial<RobotState>) => void;
-  // onRobotPositionSetCompleted: () => void;
 }
 interface SimulatorAreaState {
   loading: boolean,
@@ -114,9 +109,7 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
     this.canvasRef_ = ref;
 
     if (this.canvasRef_) {
-      Sim.Space.getInstance().switchContext(this.canvasRef_, () => this.props.robotState, (robotState) => {
-        this.props.onRobotStateUpdate(robotState);
-      });
+      Sim.Space.getInstance().switchContext(this.canvasRef_);
     }
   };
 

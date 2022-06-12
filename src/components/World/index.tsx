@@ -38,7 +38,6 @@ export interface WorldProps extends StyleProps, ThemeProps {
 
 interface ReduxWorldProps {
   scene: ReferencedScenePair;
-  scenes: Scenes;
 
   onNodeAdd: (id: string, node: Node) => void;
   onNodeRemove: (id: string) => void;
@@ -222,7 +221,7 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
 
   render() {
     const { props, state } = this;
-    const { style, className, theme, scene, scenes, onGeometryAdd, onGeometryRemove, onGeometryChange } = props;
+    const { style, className, theme, scene, onGeometryAdd, onGeometryRemove, onGeometryChange } = props;
     const { collapsed, modal } = state;
 
     const itemList: EditableList.Item[] = [];
@@ -299,7 +298,6 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
 export default connect<unknown, unknown, Props, ReduxState>(state => {
   return {
     scene: state.scene,
-    scenes: state.scenes
   };
 }, (dispatch) => ({
   onNodeAdd: (id: string, node: Node) => {
@@ -315,7 +313,6 @@ export default connect<unknown, unknown, Props, ReduxState>(state => {
     dispatch(SceneAction.addGeometry({ id, geometry }));
   },
   onGeometryChange: (id: string, geometry: Geometry) => {
-    console.log('change', id, geometry);
     dispatch(SceneAction.setGeometry({ id, geometry }));
   },
   onGeometryRemove: (id: string) => {

@@ -165,7 +165,7 @@ class SideLayout extends React.PureComponent<Props, State> {
 
   render() {
     const { props } = this;
-    const { style, className, theme, state, onStateChange, robotStartPosition, onSetRobotStartPosition, onCodeChange, code, console, settings } = props;
+    const { style, className, theme, robotStartPosition, onSetRobotStartPosition, onCodeChange, code, console, settings } = props;
     const { editorSize, consoleSize, infoSize, index } = this.state;
 
     let content: JSX.Element;
@@ -197,7 +197,6 @@ class SideLayout extends React.PureComponent<Props, State> {
             mode={Mode.Inline}
           >
             <Info
-              robotState={state}
               theme={theme}
             />
           </InfoWidget>
@@ -219,8 +218,6 @@ class SideLayout extends React.PureComponent<Props, State> {
         <SimulatorAreaContainer>
           <SimulatorArea
             key='simulator'
-            robotState={state}
-            onRobotStateUpdate={onStateChange}
             isSensorNoiseEnabled={settings.simulationSensorNoise}
             isRealisticSensorsEnabled={settings.simulationRealisticSensors}
           />

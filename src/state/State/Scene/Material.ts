@@ -151,8 +151,6 @@ namespace Material {
 
 
   export const diff = (prev: Material, next: Material): Patch<Material> => {
-    console.log('!!! Material diff', JSON.stringify(prev), JSON.stringify(next));
-
     if (!deepNeq(prev, next)) return Patch.none(prev);
     
     if (prev && !next) return Patch.outerChange(prev, next);

@@ -33,6 +33,9 @@ import { DEFAULT_FEEDBACK, Feedback } from '../Feedback';
 import ExceptionDialog from './ExceptionDialog';
 import SelectSceneDialog from './SelectSceneDialog';
 
+import store from '../state';
+import { RobotStateAction } from '../state/reducer';
+
 namespace Modal {
   export enum Type {
     Settings,
@@ -93,7 +96,6 @@ export type Modal = Modal.Settings | Modal.About | Modal.Exception | Modal.Selec
 
 
 interface RootState {
-  robotState: RobotState;
   robotStartPosition: RobotPosition;
   layout: Layout;
   code: string;
@@ -135,10 +137,7 @@ export class Root extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-
-
     this.state = {
-      robotState: WorkerInstance.state,
       robotStartPosition: {
         x: Distance.centimeters(0),
         y: Distance.centimeters(200),
@@ -159,6 +158,7 @@ export class Root extends React.Component<Props, State> {
 
   componentDidMount() {
     WorkerInstance.onStateChange = this.onWorkerStateChange_;
+    WorkerInstance.getRobotState = () => store.getState().robotState;
     WorkerInstance.onStdOutput = this.onStdOutput_;
     WorkerInstance.onStdError = this.onStdError_;
     WorkerInstance.onStopped = this.onStopped_;
@@ -168,20 +168,6 @@ export class Root extends React.Component<Props, State> {
     this.setState({
       simulatorState: SimulatorState.STOPPED
     });
-  };
-
-  private onRobotStateUpdate_ = (robot: Partial<RobotState>) => {
-    // Create new robot state object by applying the partial changes
-    const newRobotState: RobotState = {
-      ...this.state.robotState,
-      motorSpeeds: [...this.state.robotState.motorSpeeds],
-      motorPositions: [...this.state.robotState.motorPositions],
-      servoPositions: [...this.state.robotState.servoPositions],
-      analogValues: [...this.state.robotState.analogValues],
-      ...robot,
-    };
-
-    WorkerInstance.state = newRobotState;
   };
 
   private onSetRobotStartPosition_ = (position: RobotPosition) => {
@@ -225,9 +211,9 @@ export class Root extends React.Component<Props, State> {
   private onModalClose_ = () => this.setState({ modal: Modal.NONE });
 
   private onWorkerStateChange_ = (robotState: RobotState) => {
-    this.setState({
+    store.dispatch(RobotStateAction.setRobotState({
       robotState,
-    });
+    }));
   };
 
   private onStdOutput_ = (text: string) => {
@@ -397,7 +383,6 @@ export class Root extends React.Component<Props, State> {
   render() {
     const { props, state } = this;
     const {
-      robotState,
       robotStartPosition,
       layout,
       code,
@@ -413,11 +398,9 @@ export class Root extends React.Component<Props, State> {
 
     const commonLayoutProps: LayoutProps = {
       code,
-      onStateChange: this.onRobotStateUpdate_,
       robotStartPosition,
       onSetRobotStartPosition: this.onSetRobotStartPosition_,
       theme,
-      state: robotState,
       console,
       onCodeChange: this.onCodeChange_,
       messages,
