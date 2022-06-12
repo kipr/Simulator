@@ -21,7 +21,7 @@ import { Side, Slider } from './Slider';
 // Robot Info
 // World
 
-const console_log = console.log
+const console_log = console.log;
 
 const TABS_COLLAPSED = -1;
 
@@ -214,44 +214,33 @@ class SideLayout extends React.PureComponent<Props, State> {
         </>,
     }));
 
-    const simulator = <SimulatorAreaContainer>
-      <SimulatorArea
-        key='simulator'
-        robotState={state}
-        onRobotStateUpdate={onStateChange}
-        isSensorNoiseEnabled={settings.simulationSensorNoise}
-        isRealisticSensorsEnabled={settings.simulationRealisticSensors}
-        surfaceState={surfaceState}
-      />
-    </SimulatorAreaContainer>;
-
     let content: JSX.Element;
     switch (activePanel) {
       case 0: {
         content = (
-          <>
-            <Slider 
-              side={Side.Bottom} 
+          <Slider 
+            side={Side.Bottom} 
+            theme={theme}
+            minSizes={[100,100]}
+            split={2 / 3}
+            // initialSize={Math.floor(window.innerHeight * 2 / 3)} 
+            // maxSize={window.innerHeight - 100}
+            // minSize={50}
+          >
+            <SimulatorWidget
               theme={theme}
-              initialSize={Math.floor(window.innerHeight * 2 / 3)} 
-              maxSize={window.innerHeight - 100}
-              minSize={50}
+              name='Editor'
+              barComponents={editorBar}
+              mode={Mode.Sidebar}
             >
-              <SimulatorWidget
+              <Editor
                 theme={theme}
-                name='Editor'
-                barComponents={editorBar}
-                mode={Mode.Sidebar}
-              >
-                <Editor
-                  theme={theme}
-                  ref={this.bindEditor_}
-                  code={code} onCodeChange={onCodeChange}
-                  messages={messages}
-                  autocomplete={settings.editorAutoComplete}
-                />
-              </SimulatorWidget>
-            </Slider>
+                ref={this.bindEditor_}
+                code={code} onCodeChange={onCodeChange}
+                messages={messages}
+                autocomplete={settings.editorAutoComplete}
+              />
+            </SimulatorWidget>
             <SimulatorWidgetConsole
               theme={theme}
               name='Console'
@@ -261,7 +250,7 @@ class SideLayout extends React.PureComponent<Props, State> {
             >
               <FlexConsole theme={theme} text={console}/>
             </SimulatorWidgetConsole>
-          </>
+          </Slider>
         );
         break;
       }
@@ -297,17 +286,17 @@ class SideLayout extends React.PureComponent<Props, State> {
     }
 
     const tabBar = <TabBar isVertical={true} tabs={TABS} index={activePanel} onIndexChange={this.onTabBarIndexChange_} theme={theme} />;
-    const sideBar = <Slider 
-          side={Side.Right} 
-          theme={theme}
-          initialSize={400} 
-          maxSize={window.innerWidth * 9 / 10}
-          minSize={50}
-        >
-        <SideBar>
-          {content}
-        </SideBar>
-      </Slider>;
+
+    const simulator = <SimulatorAreaContainer>
+      <SimulatorArea
+        key='simulator'
+        robotState={state}
+        onRobotStateUpdate={onStateChange}
+        isSensorNoiseEnabled={settings.simulationSensorNoise}
+        isRealisticSensorsEnabled={settings.simulationRealisticSensors}
+        surfaceState={surfaceState}
+      />
+    </SimulatorAreaContainer>;
 
     switch (sidePanelSize) {
       case Size.Type.Minimized:
@@ -316,20 +305,31 @@ class SideLayout extends React.PureComponent<Props, State> {
           {simulator}
         </SidePanelContainer>;
       // not yet implemented, but could be on a device with a small enough screen that a slider doesn't make sense
-      case Size.Type.Maximized:
-        return <SidePanelContainer>
-          {tabBar}
-          <SidePanelContainer>
-            {sideBar}
-          </SidePanelContainer>
-        </SidePanelContainer>;
+      // case Size.Type.Maximized:
+      //   return <SidePanelContainer>
+      //     {tabBar}
+      //     <SidePanelContainer>
+      //       <SideBar>
+      //         {content}
+      //       </SideBar>
+      //     </SidePanelContainer>
+      //   </SidePanelContainer>;
       default:
         return <>
           <SidePanelContainer>
             {tabBar}
             <SidePanelContainer>
-              {sideBar}
-              {simulator}
+              <Slider 
+                side={Side.Right} 
+                theme={theme}
+                minSizes={[100,100]}
+                split={1 / 3}
+              >
+                <SideBar>
+                  {content}
+                </SideBar>
+                {simulator}
+              </Slider>
             </SidePanelContainer>
           </SidePanelContainer>
         </>;

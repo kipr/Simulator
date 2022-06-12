@@ -13,10 +13,12 @@ export enum Side {
 
 export interface SliderProps extends ThemeProps {
   side: Side,
-  initialSize?: number,
-  minSize?: number,
-  maxSize?: number,
-  children: JSX.Element,
+  // takes two children
+  children: [JSX.Element, JSX.Element],
+  // the minimum number of pixels each component can be
+  minSizes: [number, number],
+  // the initial proportional split of the elements
+  split: number,
 }
 
 interface CanBeVertical {
@@ -37,9 +39,15 @@ interface ContainerProps extends CanBeVertical {
 }
 
 const SliderContainer = styled('div', (props: ContainerProps) => ({
+  display: 'flex',
+  flexDirection: (props.$vertical) ? 'row' : 'column',
+
+}));
+const FlexContainer = styled('div', (props: ContainerProps) => ({
+  // display: 'flex',
+  flex: '1 1 0',
   width: (props.$width) ? `${props.$width}px` : null,
   height: (props.$height) ? `${props.$height}px` : null,
-  display: (props.$vertical) ? 'flex' : null ,
 }));
 const SliderBubbleBar = styled('div', (props: CanBeVertical) => ({
   display: 'flex',
@@ -87,23 +95,27 @@ const SliderBar = React.memo((props: SliderBarProps) => {
 
 interface ResizeState {
   side: Side,
-  size?: number,
-  minSize?: number,
-  maxSize?: number,
+  resizing: boolean,
+  size: number,
+  minSize: number,
+  maxSize: number,
   startSize?: number,
   startX?: number,
   startY?: number,
-  resizing: boolean,
 }
 enum Actions {
   MouseDown,
   MouseUp,
-  MouseMove
+  MouseMove,
+  Resize
 }
 interface ResizeAction {
   actionType: Actions,
-  x: number,
-  y: number,
+  x?: number,
+  y?: number,
+  size?: number,
+  minSize?: number,
+  maxSize?: number,
 }
 function resizeOnPointerMove(state: ResizeState, action: ResizeAction): ResizeState {
   const { side, size, minSize, maxSize, startSize, startX, startY, resizing } = state;
@@ -154,18 +166,64 @@ function resizeOnPointerMove(state: ResizeState, action: ResizeAction): ResizeSt
   }
 }
 
+interface Dimensions {
+  width: number, 
+  height: number,
+}
+function useContainerDimensions(ref: React.MutableRefObject<HTMLDivElement>): Dimensions {
+  const getDimensions = () => ({
+    width: ref.current.offsetWidth,
+    height: ref.current.offsetHeight
+  });
+
+  const [dimensions, setDimensions] = React.useState<Dimensions>({ width: 100, height: 100 });
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setDimensions(getDimensions());
+    };
+
+    if (ref.current) {
+      setDimensions(getDimensions());
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [ref]);
+
+  return dimensions;
+}
+
 export const Slider = function (props: SliderProps) {
-  const { side, initialSize, minSize, maxSize, theme, children } = props;
+  const { side, theme, children, minSizes, split } = props;
 
   const isVertical = (side === Side.Left || side === Side.Right);
   
+  const componentRef = React.useRef<HTMLDivElement>(null);
+  const { width, height } = useContainerDimensions(componentRef);
+  
   const [state, dispatch] = React.useReducer(resizeOnPointerMove, {
     side: side,
-    size: initialSize,
-    minSize: minSize,
-    maxSize: maxSize,
+    size: isVertical ? width * split : height * split,
+    minSize: minSizes[0],
+    maxSize: isVertical ? width - minSizes[1] : height - minSizes[1],
     resizing: false,
   });
+
+  // when the component finishing rendering, or the window re-renders, update our
+  // dispatcher with the proper size
+  React.useEffect(() => {
+    console.log('dispatching size update', width, height);
+    dispatch({
+      actionType: Actions.Resize, 
+      size: isVertical ? width * split : height * split,
+      minSize: minSizes[0],
+      maxSize: isVertical ? width - minSizes[1] : height - minSizes[1],
+    });
+  }, [width, height]);
 
   const onMouseMove = (e: MouseEvent) => {
     dispatch({ actionType: Actions.MouseMove, x: e.screenX, y: e.screenY });
@@ -208,32 +266,29 @@ export const Slider = function (props: SliderProps) {
     window.addEventListener('touchcancel', onTouchEnd);
   };
 
-  switch (side) {
-    case Side.Top:
-    case Side.Left:
-      return <SliderContainer 
-          $width ={isVertical ? state.size : null} 
-          $height={isVertical ? null : state.size} 
-          $vertical={isVertical}
-        >
-        <SliderBar $vertical={isVertical} theme={theme} selected={state.resizing}
-          onMouseDownCallback={onSliderBarMouseDown}
-          onTouchStartCallback={onSliderBarTourchStart}
-        />
-        {children}
-      </SliderContainer>;
-    case Side.Right:
-    case Side.Bottom:
-      return <SliderContainer 
-          $width ={isVertical ? state.size : null} 
-          $height={isVertical ? null : state.size} 
-          $vertical={isVertical}
-        >
-        {children}
-        <SliderBar $vertical={isVertical} theme={theme} selected={state.resizing}
-          onMouseDownCallback={onSliderBarMouseDown}
-          onTouchStartCallback={onSliderBarTourchStart}
-        />
-      </SliderContainer>;
-  }
+  // console.log('size: ', width, height, state.size);
+
+  return <SliderContainer 
+    ref={componentRef}
+    $vertical={isVertical}
+  >
+    <FlexContainer 
+      $width ={isVertical ? state.size : null} 
+      $height={isVertical ? null : state.size} 
+    >
+      {children[0]}
+    </FlexContainer>
+
+    <SliderBar $vertical={isVertical} theme={theme} selected={state.resizing}
+      onMouseDownCallback={onSliderBarMouseDown}
+      onTouchStartCallback={onSliderBarTourchStart}
+    />
+
+    <FlexContainer
+      $width ={isVertical ? width - state.size - 1 : null} 
+      $height={isVertical ? null : height - state.size - 1} 
+    >
+      {children[1]}
+    </FlexContainer>
+  </SliderContainer>;
 };
