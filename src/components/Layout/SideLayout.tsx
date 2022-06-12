@@ -21,6 +21,8 @@ import { Side, Slider } from './Slider';
 // Robot Info
 // World
 
+const console_log = console.log
+
 const TABS_COLLAPSED = -1;
 
 const TABS = [{
@@ -44,9 +46,7 @@ const sizeDict = (sizes: Size[]) => {
 
   return forward;
 };
-const SIDEBAR_SIZES: Size[] = [Size.MINIMIZED, Size.PARTIAL_RIGHT, Size.MINIATURE_LEFT, Size.MAXIMIZED];
-const CONSOLE_SIZES: Size[] = [Size.MINIMIZED, Size.MINIATURE_DOWN, Size.PARTIAL_UP];
-const CONSOLE_SIZE = sizeDict(CONSOLE_SIZES);
+const SIDEBAR_SIZES: Size[] = [Size.MINIMIZED, Size.PARTIAL_RIGHT, Size.MAXIMIZED];
 const SIDEBAR_SIZE = sizeDict(SIDEBAR_SIZES);
 
 export interface SideLayoutProps extends LayoutProps {
@@ -55,7 +55,6 @@ export interface SideLayoutProps extends LayoutProps {
 interface SideLayoutState {
   activePanel: number;
   sidePanelSize: Size.Type;
-  consoleSize: Size.Type;
 }
 
 type Props = SideLayoutProps;
@@ -72,22 +71,26 @@ const SideBar = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'stretch',
-  flex: '1 1 auto',
+  flex: '1 1',
   width: '100%',
 });
 
 const SimulatorAreaContainer = styled('div', {
   display: 'flex',
-  flex: '3 1',
+  flex: '3 1 0',
 });
 const SimulatorWidget = styled(Widget, {
-  // display: 'flex',
-  flex: '1 1 auto',
+  display: 'flex',
+  flex: '1 1',
+  height: '100%',
+});
+const SimulatorWidgetConsole = styled(Widget, {
+  display: 'flex',
+  flex: '1 1 0',
   height: '100%',
 });
 const FlexConsole = styled(Console, {
   flex: '1 1',
-  // height: '100%'
 });
 
 const SideBarMinimizedTab = -1;
@@ -97,9 +100,8 @@ class SideLayout extends React.PureComponent<Props, State> {
     super(props);
 
     this.state = {
-      consoleSize: Size.Type.Miniature,
       sidePanelSize: Size.Type.Miniature,
-      activePanel: 0
+      activePanel: 0,
     };
 
     // TODO: this isn't working yet. Needs more tinkering
@@ -169,7 +171,6 @@ class SideLayout extends React.PureComponent<Props, State> {
     const {
       activePanel,
       sidePanelSize,
-      consoleSize,
     } = this.state;
 
     const editorBar: BarComponent<unknown>[] = [];
@@ -251,7 +252,7 @@ class SideLayout extends React.PureComponent<Props, State> {
                 />
               </SimulatorWidget>
             </Slider>
-            <SimulatorWidget
+            <SimulatorWidgetConsole
               theme={theme}
               name='Console'
               barComponents={consoleBar}
@@ -259,7 +260,7 @@ class SideLayout extends React.PureComponent<Props, State> {
               hideActiveSize={true}
             >
               <FlexConsole theme={theme} text={console}/>
-            </SimulatorWidget>
+            </SimulatorWidgetConsole>
           </>
         );
         break;
@@ -297,16 +298,16 @@ class SideLayout extends React.PureComponent<Props, State> {
 
     const tabBar = <TabBar isVertical={true} tabs={TABS} index={activePanel} onIndexChange={this.onTabBarIndexChange_} theme={theme} />;
     const sideBar = <Slider 
-        side={Side.Right} 
-        theme={theme}
-        initialSize={400} 
-        maxSize={window.innerWidth * 9 / 10}
-        minSize={50}
-      >
-      <SideBar>
-        {content}
-      </SideBar>
-    </Slider>;
+          side={Side.Right} 
+          theme={theme}
+          initialSize={400} 
+          maxSize={window.innerWidth * 9 / 10}
+          minSize={50}
+        >
+        <SideBar>
+          {content}
+        </SideBar>
+      </Slider>;
 
     switch (sidePanelSize) {
       case Size.Type.Minimized:
@@ -314,6 +315,7 @@ class SideLayout extends React.PureComponent<Props, State> {
           <TabBar isVertical={true} tabs={TABS} index={activePanel} onIndexChange={this.onTabBarExpand_} theme={theme} />
           {simulator}
         </SidePanelContainer>;
+      // not yet implemented, but could be on a device with a small enough screen that a slider doesn't make sense
       case Size.Type.Maximized:
         return <SidePanelContainer>
           {tabBar}
@@ -322,13 +324,15 @@ class SideLayout extends React.PureComponent<Props, State> {
           </SidePanelContainer>
         </SidePanelContainer>;
       default:
-        return <SidePanelContainer>
-          {tabBar}
+        return <>
           <SidePanelContainer>
-            {sideBar}
-            {simulator}
+            {tabBar}
+            <SidePanelContainer>
+              {sideBar}
+              {simulator}
+            </SidePanelContainer>
           </SidePanelContainer>
-        </SidePanelContainer>;
+        </>;
     }
   }
 }

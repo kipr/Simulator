@@ -39,7 +39,7 @@ interface ContainerProps extends CanBeVertical {
 const SliderContainer = styled('div', (props: ContainerProps) => ({
   width: (props.$width) ? `${props.$width}px` : null,
   height: (props.$height) ? `${props.$height}px` : null,
-  display: (props.$vertical) ? 'flex' : null,
+  display: (props.$vertical) ? 'flex' : null ,
 }));
 const SliderBubbleBar = styled('div', (props: CanBeVertical) => ({
   display: 'flex',
@@ -132,25 +132,21 @@ function resizeOnPointerMove(state: ResizeState, action: ResizeAction): ResizeSt
   // resize the panel
   switch (side) {
     case Side.Left:
-      console.log(size, startSize, x - startX, minSize, maxSize)
       return {
         ...state,
         size: Math.min(Math.max(startSize - (x - startX), minSize), maxSize),
       };
     case Side.Right:
-      console.log(size, Math.min(Math.max(startSize - (x - startX), minSize), maxSize))
       return {
         ...state,
         size: Math.min(Math.max(startSize + (x - startX), minSize), maxSize),
       };
     case Side.Top:
-      console.log(size, startSize, y - startY, minSize, maxSize)
       return {
         ...state,
         size: Math.min(Math.max(startSize - (y - startY), minSize), maxSize),
       };
     case Side.Bottom:
-      console.log(size, Math.min(Math.max(startSize + (y - startY), minSize), maxSize), startSize, y - startY, minSize, maxSize)
       return {
         ...state,
         size: Math.min(Math.max(startSize + (y - startY), minSize), maxSize),
