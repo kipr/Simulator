@@ -139,7 +139,7 @@ export class Root extends React.Component<Props, State> {
       },
       surfaceState: SurfaceStatePresets.jbcA,
       // TODO: set to side by default if on mobile
-      layout: Layout.Overlay,
+      layout: Layout.Side,
       code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
       modal: Modal.NONE,
       simulatorState: SimulatorState.STOPPED,

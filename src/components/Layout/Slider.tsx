@@ -40,17 +40,26 @@ interface ContainerProps extends CanBeVertical {
 
 const SliderContainer = styled('div', (props: ContainerProps) => ({
   display: 'flex',
+  flex: '1 1',
+  alignItems: 'stretch',
+  width: '100%',
+  height: '100%',
   flexDirection: (props.$vertical) ? 'row' : 'column',
 
 }));
 const FlexContainer = styled('div', (props: ContainerProps) => ({
   // display: 'flex',
-  flex: '1 1 0',
+  // flex: '1 1',
   width: (props.$width) ? `${props.$width}px` : null,
   height: (props.$height) ? `${props.$height}px` : null,
 }));
+const FlexContainerBottom = styled('div', (props: ContainerProps) => ({
+  // display: 'flex',
+  flex: '1 1 0',
+}));
 const SliderBubbleBar = styled('div', (props: CanBeVertical) => ({
   display: 'flex',
+  flex: '0 0 0',
   flexDirection: (props.$vertical) ? 'column' : 'row',
 }));
 const SliderBubbleSeperator = styled('div', {
@@ -121,6 +130,13 @@ function resizeOnPointerMove(state: ResizeState, action: ResizeAction): ResizeSt
   const { side, size, minSize, maxSize, startSize, startX, startY, resizing } = state;
   const { actionType, x, y } = action;
 
+  if (actionType === Actions.Resize) {
+    return {
+      ...state,
+      size: size, minSize: minSize, maxSize: maxSize
+    };
+  }
+
   if (!resizing) {
     if (actionType === Actions.MouseDown) {
       return {
@@ -144,21 +160,25 @@ function resizeOnPointerMove(state: ResizeState, action: ResizeAction): ResizeSt
   // resize the panel
   switch (side) {
     case Side.Left:
+      console.log(startSize, minSize, maxSize, Math.min(Math.max(startSize - (x - startX), minSize), maxSize));
       return {
         ...state,
         size: Math.min(Math.max(startSize - (x - startX), minSize), maxSize),
       };
     case Side.Right:
+      console.log(startSize, minSize, maxSize, Math.min(Math.max(startSize + (x - startX), minSize), maxSize));
       return {
         ...state,
         size: Math.min(Math.max(startSize + (x - startX), minSize), maxSize),
       };
     case Side.Top:
+      console.log(startSize, minSize, maxSize, Math.min(Math.max(startSize - (y - startY), minSize), maxSize));
       return {
         ...state,
         size: Math.min(Math.max(startSize - (y - startY), minSize), maxSize),
       };
     case Side.Bottom:
+      console.log(startSize, minSize, maxSize, Math.min(Math.max(startSize + (y - startY), minSize), maxSize));
       return {
         ...state,
         size: Math.min(Math.max(startSize + (y - startY), minSize), maxSize),
@@ -272,23 +292,20 @@ export const Slider = function (props: SliderProps) {
     ref={componentRef}
     $vertical={isVertical}
   >
-    <FlexContainer 
-      $width ={isVertical ? state.size : null} 
+    {/* <FlexContainer 
+      $width={isVertical ? state.size : null} 
       $height={isVertical ? null : state.size} 
-    >
+    > */}
       {children[0]}
-    </FlexContainer>
+    {/* </FlexContainer> */}
 
     <SliderBar $vertical={isVertical} theme={theme} selected={state.resizing}
       onMouseDownCallback={onSliderBarMouseDown}
       onTouchStartCallback={onSliderBarTourchStart}
     />
 
-    <FlexContainer
-      $width ={isVertical ? width - state.size - 1 : null} 
-      $height={isVertical ? null : height - state.size - 1} 
-    >
+    {/* <FlexContainer> */}
       {children[1]}
-    </FlexContainer>
+    {/* </FlexContainer> */}
   </SliderContainer>;
 };

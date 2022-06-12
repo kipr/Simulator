@@ -21,7 +21,7 @@ import { Side, Slider } from './Slider';
 // Robot Info
 // World
 
-const console_log = console.log;
+const console_log = console.log
 
 const TABS_COLLAPSED = -1;
 
@@ -71,7 +71,7 @@ const SideBar = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'stretch',
-  flex: '1 1',
+  flex: '1 1 auto',
   width: '100%',
 });
 
@@ -221,11 +221,8 @@ class SideLayout extends React.PureComponent<Props, State> {
           <Slider 
             side={Side.Bottom} 
             theme={theme}
-            minSizes={[100,100]}
-            split={2 / 3}
-            // initialSize={Math.floor(window.innerHeight * 2 / 3)} 
-            // maxSize={window.innerHeight - 100}
-            // minSize={50}
+            minSizes={[50, 50]}
+            split={ 2 / 3}
           >
             <SimulatorWidget
               theme={theme}
@@ -241,6 +238,7 @@ class SideLayout extends React.PureComponent<Props, State> {
                 autocomplete={settings.editorAutoComplete}
               />
             </SimulatorWidget>
+
             <SimulatorWidgetConsole
               theme={theme}
               name='Console'
@@ -251,6 +249,7 @@ class SideLayout extends React.PureComponent<Props, State> {
               <FlexConsole theme={theme} text={console}/>
             </SimulatorWidgetConsole>
           </Slider>
+
         );
         break;
       }
@@ -285,8 +284,6 @@ class SideLayout extends React.PureComponent<Props, State> {
       }
     }
 
-    const tabBar = <TabBar isVertical={true} tabs={TABS} index={activePanel} onIndexChange={this.onTabBarIndexChange_} theme={theme} />;
-
     const simulator = <SimulatorAreaContainer>
       <SimulatorArea
         key='simulator'
@@ -298,6 +295,19 @@ class SideLayout extends React.PureComponent<Props, State> {
       />
     </SimulatorAreaContainer>;
 
+    const tabBar = <TabBar isVertical={true} tabs={TABS} index={activePanel} onIndexChange={this.onTabBarIndexChange_} theme={theme} />;
+    const sideBar = <Slider 
+      side={Side.Right} 
+      theme={theme}
+      minSizes={[50, 50]}
+      split={ 1 / 3}
+    >
+      <SideBar>
+        {content}
+      </SideBar>
+      {simulator}
+    </Slider>;
+
     switch (sidePanelSize) {
       case Size.Type.Minimized:
         return <SidePanelContainer>
@@ -305,31 +315,20 @@ class SideLayout extends React.PureComponent<Props, State> {
           {simulator}
         </SidePanelContainer>;
       // not yet implemented, but could be on a device with a small enough screen that a slider doesn't make sense
-      // case Size.Type.Maximized:
-      //   return <SidePanelContainer>
-      //     {tabBar}
-      //     <SidePanelContainer>
-      //       <SideBar>
-      //         {content}
-      //       </SideBar>
-      //     </SidePanelContainer>
-      //   </SidePanelContainer>;
+      case Size.Type.Maximized:
+        return <SidePanelContainer>
+          {tabBar}
+          <SidePanelContainer>
+            {sideBar}
+          </SidePanelContainer>
+        </SidePanelContainer>;
       default:
         return <>
           <SidePanelContainer>
             {tabBar}
             <SidePanelContainer>
-              <Slider 
-                side={Side.Right} 
-                theme={theme}
-                minSizes={[100,100]}
-                split={1 / 3}
-              >
-                <SideBar>
-                  {content}
-                </SideBar>
-                {simulator}
-              </Slider>
+              {sideBar}
+              {simulator}
             </SidePanelContainer>
           </SidePanelContainer>
         </>;
