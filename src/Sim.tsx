@@ -104,8 +104,6 @@ export class Space implements Robotable {
     });
   };
 
-  private lens_: Babylon.LensRenderingPipeline;
-
   private debounceUpdate_ = false;
 
   private sceneSetting_: boolean;
@@ -249,18 +247,7 @@ export class Space implements Robotable {
           .catch((e) => {
             console.error('The simulator meshes failed to load', e);
             reject(e);
-          });
-
-        // const motionBlur = new Babylon.MotionBlurPostProcess('mb', this.scene, 1.0, this.camera);
-        // motionBlur.adaptScaleToCurrentViewport = true;
-        // motionBlur.samples = 4;
-        // motionBlur.motionStrength = 0.2;
-        // new Babylon.HighlightsPostProcess("highlights", 1.0, this.camera);
-
-        // this.lens_ = new Babylon.LensRenderingPipeline('lensEffects', {
-        //   edge_blur: 1.0,
-        //   distortion: 1.0,
-        // }, this.scene, 1.0, [ this.camera ]);          
+          });       
       });
     }
 
@@ -295,10 +282,6 @@ export class Space implements Robotable {
     light.intensity = 0.5;
     light.diffuse = new Babylon.Color3(1.0, 1.0, 1.0);
 
-
-    // const light = new Babylon.HemisphericLight("botlight", new Babylon.Vector3(0,1,0), this.scene);
-    // light.intensity = 0.75;
-
     // At 100x scale, gravity should be -9.8 * 100, but this causes weird jitter behavior
     // Full gravity will be -9.8 * 10
     const gravityVector = new Babylon.Vector3(0, -9.8 * 50, 0);
@@ -313,8 +296,6 @@ export class Space implements Robotable {
 
     // Logic that happens before every frame
     this.scene.registerBeforeRender(() => {
-      if (this.lens_) this.lens_.setFocusDistance(this.sceneBinding_.camera.position.length());
-
       let anyUpdated = false;
       
       const updated = new Array<boolean>(this.sensorObjects_.length);

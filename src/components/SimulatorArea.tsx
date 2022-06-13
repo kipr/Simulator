@@ -13,10 +13,7 @@ export interface SimulatorAreaProps {
   isSensorNoiseEnabled: boolean;
   isRealisticSensorsEnabled: boolean;
 }
-interface SimulatorAreaState {
-  loading: boolean,
-  loadingMessage: string
-}
+
 interface SimulatorAreaState {
   loading: boolean,
   loadingMessage: string
