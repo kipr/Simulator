@@ -114,9 +114,8 @@ const DEFAULT_SCENES: Scenes = {
     jbc20: Async.loaded({ value: JBC_SCENES.JBC_20 }),
     jbc21: Async.loaded({ value: JBC_SCENES.JBC_21 }),
     jbc22: Async.loaded({ value: JBC_SCENES.JBC_22 }),
-    test: Async.loaded({ value: JBC_SCENES.TEST_SCENE }),
   },
-  activeId: 'test',
+  activeId: 'jbc1',
 };
 
 export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesAction): Scenes => {

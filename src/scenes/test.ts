@@ -1,3 +1,5 @@
+// This scene is for testing purposes and not currently exposed in the UI
+
 import Scene from "../state/State/Scene";
 import Camera from "../state/State/Scene/Camera";
 import { Distance, Mass } from "../util";
