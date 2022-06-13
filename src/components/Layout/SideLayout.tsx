@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 
 import { styled } from 'styletron-react';
 import { EMPTY_ARRAY } from '../../util';
@@ -15,6 +16,9 @@ import { ThemeProps } from '../theme';
 import Widget, { BarComponent, Mode, Size, WidgetProps } from '../Widget';
 import World from '../World';
 import { Slider } from '../Slider';
+
+import { State as ReduxState } from '../../state';
+import { SceneAction } from '../../state/reducer';
 
 // 3 panes:
 // Editor / console
@@ -48,6 +52,10 @@ const SIDEBAR_SIZES: Size[] = [Size.MINIMIZED, Size.PARTIAL_RIGHT, Size.MAXIMIZE
 const SIDEBAR_SIZE = sizeDict(SIDEBAR_SIZES);
 
 export interface SideLayoutProps extends LayoutProps {
+}
+
+interface ReduxSideLayoutProps {
+  onResetScene: () => void;
 }
 
 interface SideLayoutState {
@@ -105,8 +113,8 @@ const FlexConsole = styled(Console, {
 
 const SideBarMinimizedTab = -1;
 
-class SideLayout extends React.PureComponent<Props, State> {
-  constructor(props: Props) {
+export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps, State> {
+  constructor(props: Props & ReduxSideLayoutProps) {
     super(props);
 
     this.state = {
@@ -172,6 +180,8 @@ class SideLayout extends React.PureComponent<Props, State> {
       messages,
       settings,
       onClearConsole,
+      onSelectScene,
+      onResetScene,
     } = props;
 
     const {
@@ -218,6 +228,28 @@ class SideLayout extends React.PureComponent<Props, State> {
           <Fa icon='file' />
           {' Clear'}
         </>,
+    }));
+
+    const worldBar: BarComponent<unknown>[] = [];
+
+    worldBar.push(BarComponent.create(Button, {
+      theme,
+      onClick: onSelectScene,
+      children:
+        <>
+          <Fa icon='globe-americas' />
+          {' Select Scene'}
+        </>,
+    }));
+
+    worldBar.push(BarComponent.create(Button, {
+      theme,
+      onClick: onResetScene,
+      children:
+        <>
+          <Fa icon='sync' />
+          { ' Reset' }
+        </>
     }));
 
     let content: JSX.Element;
@@ -285,6 +317,7 @@ class SideLayout extends React.PureComponent<Props, State> {
           <SimulatorWidget
             theme={theme}
             name='World'
+            barComponents={worldBar}
             mode={Mode.Sidebar}
           >
             <World theme={theme} />
@@ -342,4 +375,10 @@ class SideLayout extends React.PureComponent<Props, State> {
   }
 }
 
-export default SideLayout;
+export const SideLayoutRedux = connect<unknown, ReduxSideLayoutProps, SideLayoutProps, ReduxState>((state: ReduxState) => {
+  return {};
+}, dispatch => ({
+  onResetScene: () => {
+    dispatch(SceneAction.RESET_SCENE);
+  }
+}), null, { forwardRef: true })(SideLayout);

@@ -10,4 +10,4 @@ export * from './OverlayLayout';
 export { OverlayLayout, OverlayLayoutRedux } from './OverlayLayout';
 
 export * from './SideLayout';
-export { default as SideLayout } from './SideLayout';
+export { SideLayout, SideLayoutRedux } from './SideLayout';

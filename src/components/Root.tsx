@@ -8,7 +8,7 @@ import SimMenu from './SimMenu';
 
 import { styled } from 'styletron-react';
 import { DARK, Theme } from './theme';
-import { Layout, LayoutProps, BottomLayout, OverlayLayout, OverlayLayoutRedux, SideLayout  } from './Layout';
+import { Layout, LayoutProps, BottomLayout, OverlayLayout, OverlayLayoutRedux, SideLayoutRedux  } from './Layout';
 
 import { SettingsDialog } from './SettingsDialog';
 import { AboutDialog } from './AboutDialog';
@@ -440,7 +440,7 @@ export class Root extends React.Component<Props, State> {
       }
       case Layout.Side: {
         impl = (
-          <SideLayout {...commonLayoutProps} />
+          <SideLayoutRedux {...commonLayoutProps} />
         );
         break;
       }
