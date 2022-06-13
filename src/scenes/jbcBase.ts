@@ -25,9 +25,9 @@ export function createBaseSceneSurfaceA(): Scene {
         name: 'JBC Surface A',
         origin: {
           position: {
-            x: Distance.meters(0),
-            y: Distance.meters(1.02),
-            z: Distance.meters(0),
+            x: Distance.centimeters(0),
+            y: Distance.centimeters(-7),
+            z: Distance.centimeters(0),
           },
           scale: {
             x: 100,
@@ -43,9 +43,9 @@ export function createBaseSceneSurfaceA(): Scene {
         name: 'Ground',
         origin: {
           position: {
-            x: Distance.meters(0),
-            y: Distance.meters(1.018),
-            z: Distance.meters(0),
+            x: Distance.centimeters(0),
+            y: Distance.centimeters(-7.2),
+            z: Distance.centimeters(0),
           },
           orientation: {
             type: 'euler',
@@ -68,7 +68,7 @@ export function createBaseSceneSurfaceA(): Scene {
         origin: {
           position: {
             x: Distance.meters(0),
-            y: Distance.meters(2.00),
+            y: Distance.meters(0.91),
             z: Distance.meters(0),
           },
         },
@@ -79,7 +79,7 @@ export function createBaseSceneSurfaceA(): Scene {
       origin: {
         position: {
           x: Distance.centimeters(0),
-          y: Distance.centimeters(111),
+          y: Distance.centimeters(2),
           z: Distance.centimeters(-50),
         },
       }
@@ -88,12 +88,12 @@ export function createBaseSceneSurfaceA(): Scene {
       radius: Distance.meters(5),
       target: {
         x: Distance.meters(0),
-        y: Distance.meters(1.1),
+        y: Distance.meters(0),
         z: Distance.meters(0),
       },
       position: {
         x: Distance.meters(1),
-        y: Distance.meters(2),
+        y: Distance.meters(0.91),
         z: Distance.meters(1),
       }
     }),
@@ -126,9 +126,9 @@ export function createBaseSceneSurfaceB(): Scene {
         name: 'JBC Surface B',
         origin: {
           position: {
-            x: Distance.meters(0),
-            y: Distance.meters(1.02),
-            z: Distance.meters(0),
+            x: Distance.centimeters(0),
+            y: Distance.centimeters(-7),
+            z: Distance.centimeters(0),
           },
           scale: {
             x: 100,
@@ -144,9 +144,9 @@ export function createBaseSceneSurfaceB(): Scene {
         name: 'Ground',
         origin: {
           position: {
-            x: Distance.meters(0),
-            y: Distance.meters(1.018),
-            z: Distance.meters(0),
+            x: Distance.centimeters(0),
+            y: Distance.centimeters(-7.2),
+            z: Distance.centimeters(0),
           },
           orientation: {
             type: 'euler',
@@ -169,7 +169,7 @@ export function createBaseSceneSurfaceB(): Scene {
         origin: {
           position: {
             x: Distance.meters(0),
-            y: Distance.meters(2.00),
+            y: Distance.meters(0.91),
             z: Distance.meters(0),
           },
         },
@@ -180,7 +180,7 @@ export function createBaseSceneSurfaceB(): Scene {
       origin: {
         position: {
           x: Distance.centimeters(0),
-          y: Distance.centimeters(111),
+          y: Distance.centimeters(2),
           z: Distance.centimeters(-50),
         },
       }
@@ -189,12 +189,12 @@ export function createBaseSceneSurfaceB(): Scene {
       radius: Distance.meters(5),
       target: {
         x: Distance.meters(0),
-        y: Distance.meters(1.1),
+        y: Distance.meters(0),
         z: Distance.meters(0),
       },
       position: {
         x: Distance.meters(1),
-        y: Distance.meters(2),
+        y: Distance.meters(0.91),
         z: Distance.meters(1),
       }
     }),
@@ -231,62 +231,62 @@ export function createCanNode(canNumber: number, canPosition?: Vector3): Node {
 const canPositions: Vector3[] = [
   {
     x: Distance.centimeters(-22.7),
-    y: Distance.centimeters(109),
+    y: Distance.centimeters(0),
     z: Distance.centimeters(-14.8),
   },
   {
     x: Distance.centimeters(0),
-    y: Distance.centimeters(109),
+    y: Distance.centimeters(0),
     z: Distance.centimeters(-21.2),
   },
   {
     x: Distance.centimeters(16.2),
-    y: Distance.centimeters(109),
+    y: Distance.centimeters(0),
     z: Distance.centimeters(-24.3),
   },
   {
     x: Distance.centimeters(0),
-    y: Distance.centimeters(109),
+    y: Distance.centimeters(0),
     z: Distance.centimeters(-7.3),
   },
   {
     x: Distance.centimeters(-14.3),
-    y: Distance.centimeters(109),
+    y: Distance.centimeters(0),
     z: Distance.centimeters(6.9),
   },
   {
     x: Distance.centimeters(0),
-    y: Distance.centimeters(109),
+    y: Distance.centimeters(0),
     z: Distance.centimeters(7.2),
   },
   {
     x: Distance.centimeters(13.8),
-    y: Distance.centimeters(109),
+    y: Distance.centimeters(0),
     z: Distance.centimeters(6.9),
   },
   {
     x: Distance.centimeters(26),
-    y: Distance.centimeters(109),
+    y: Distance.centimeters(0),
     z: Distance.centimeters(15.5),
   },
   {
     x: Distance.centimeters(0),
-    y: Distance.centimeters(109),
+    y: Distance.centimeters(0),
     z: Distance.centimeters(35.4),
   },
   {
     x: Distance.centimeters(-19.3),
-    y: Distance.centimeters(109),
+    y: Distance.centimeters(0),
     z: Distance.centimeters(46.9),
   },
   {
     x: Distance.centimeters(0),
-    y: Distance.centimeters(109),
+    y: Distance.centimeters(0),
     z: Distance.centimeters(56.6),
   },
   {
     x: Distance.centimeters(19.2),
-    y: Distance.centimeters(109),
+    y: Distance.centimeters(0),
     z: Distance.centimeters(46.9),
   },
 ];
