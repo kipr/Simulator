@@ -4,8 +4,7 @@ import { styled, withStyleDeep } from 'styletron-react';
 import { StyleProps } from '../style';
 import { Spacer } from './common';
 import { Fa } from './Fa';
-import { Layout } from './Layout';
-import LayoutPicker from './LayoutPicker';
+import { Layout, LayoutPicker } from './Layout';
 import { SimulatorState } from './SimulatorState';
 import { GREEN, RED, ThemeProps } from './theme';
 

@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 import { styled } from 'styletron-react';
-import Console from './Console';
-import { Editor } from './Editor';
+import Console from '../Console';
+import { Editor } from '../Editor';
 import { LayoutProps } from './Layout';
-import Widget, { Mode, Size, WidgetProps } from './Widget';
+import Widget, { Mode, Size, WidgetProps } from '../Widget';
 
 
 export interface BottomLayoutProps extends LayoutProps {

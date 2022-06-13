@@ -149,7 +149,17 @@ app.post('/feedback', (req, res) => {
     }];
   }
 
-  const webhook = new WebhookClient({ url: hookURL });
+  let webhook;
+  try {
+    webhook = new WebhookClient({ url: hookURL });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: 'An error occured on the server. If you are a developer, your webhook url is likely wrong.'
+    });
+    // TODO: write the feedback to a file if an error occurs?
+    return;
+  }
 
   webhook.send({
     content: content,
@@ -164,7 +174,7 @@ app.post('/feedback', (req, res) => {
     })
     .catch(() => {
       res.status(500).json({
-        message: 'An error occured on the server'
+        message: 'An error occured on the server while sending feedback.'
       });
       // TODO: write the feedback to a file if an error occurs?
     });

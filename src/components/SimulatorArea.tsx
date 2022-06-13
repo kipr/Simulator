@@ -17,6 +17,10 @@ interface SimulatorAreaState {
   loading: boolean,
   loadingMessage: string
 }
+interface SimulatorAreaState {
+  loading: boolean,
+  loadingMessage: string
+}
 
 const Container = styled('div', {
   flex: '1 1',
@@ -120,7 +124,7 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
           <Loading 
             message='Initializing Simulator...'
             errorMessage={this.state.loadingMessage}
-          />;
+          />
         </Container>
       );
     } 

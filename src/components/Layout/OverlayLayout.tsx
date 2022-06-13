@@ -2,18 +2,18 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { styled } from 'styletron-react';
-import { Button } from './Button';
-import Console from './Console';
-import { Editor, WarningCharm, ErrorCharm } from './Editor';
-import { Fa } from './Fa';
-import { Info } from './Info';
+import { Button } from '../Button';
+import Console from '../Console';
+import { Editor, WarningCharm, ErrorCharm } from '../Editor';
+import { Fa } from '../Fa';
+import { Info } from '../Info';
 import { LayoutProps } from './Layout';
-import { SimulatorArea } from './SimulatorArea';
-import { Theme, ThemeProps } from './theme';
-import Widget, { BarComponent, Mode, Size, WidgetProps } from './Widget';
-import World from './World';
-import { State as ReduxState } from '../state';
-import { SceneAction } from '../state/reducer';
+import { SimulatorArea } from '../SimulatorArea';
+import { Theme, ThemeProps } from '../theme';
+import Widget, { BarComponent, Mode, Size, WidgetProps } from '../Widget';
+import World from '../World';
+import { State as ReduxState } from '../../state';
+import { SceneAction } from '../../state/reducer';
 
 export interface OverlayLayoutProps extends LayoutProps {
   
@@ -299,6 +299,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       messages,
       settings,
       onClearConsole,
+      onIndentCode,
       onSelectScene,
       onResetScene,
     } = props;
@@ -318,6 +319,16 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
     const editorBar: BarComponent<unknown>[] = [];
     let errors = 0;
     let warnings = 0;
+
+    editorBar.push(BarComponent.create(Button, {
+      theme,
+      onClick: onIndentCode,
+      children:
+        <>
+          <Fa icon='indent'/>
+          {' Indent'}
+        </>
+    }));
 
     messages.forEach(message => {
       switch (message.severity) {

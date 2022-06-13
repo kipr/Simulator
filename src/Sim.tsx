@@ -222,7 +222,6 @@ export class Space implements Robotable {
     this.scene = new Babylon.Scene(this.engine);
     this.sceneBinding_ = new SceneBinding(this.scene, this);
 
-
     this.currentEngineView = null;
 
     ACTIVE_SPACE = this;

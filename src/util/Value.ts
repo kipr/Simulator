@@ -148,7 +148,7 @@ export namespace Distance {
       };
       case 'inches': return {
         type: 'feet',
-        value: distance.value * 3.28084 / 39.3701
+        value: distance.value / 12
       };
     }
   };
@@ -166,7 +166,7 @@ export namespace Distance {
       };
       case 'feet': return {
         type: 'inches',
-        value: distance.value * 39.3701 / 3.28084
+        value: distance.value * 12
       };
     }
   };
@@ -277,11 +277,11 @@ export namespace Mass {
       };
       case Type.Pounds: return {
         type: Type.Kilograms,
-        value: mass.value / 453.592
+        value: mass.value / 2.20462
       };
       case Type.Ounces: return {
         type: Type.Kilograms,
-        value: mass.value / 28.3495
+        value: mass.value / 35.2740
       };
     }
   };
@@ -295,11 +295,11 @@ export namespace Mass {
       };
       case Type.Kilograms: return {
         type: Type.Pounds,
-        value: mass.value / 453.592 / 1000
+        value: mass.value * 2.20462
       };
       case Type.Ounces: return {
         type: Type.Pounds,
-        value: mass.value / 28.3495 / 16
+        value: mass.value / 16
       };
     }
   };
@@ -313,11 +313,11 @@ export namespace Mass {
       };
       case Type.Kilograms: return {
         type: Type.Ounces,
-        value: mass.value / 28.3495 / 16
+        value: mass.value * 35.2740
       };
       case Type.Pounds: return {
         type: Type.Ounces,
-        value: mass.value / 28.3495 / 16 / 16
+        value: mass.value * 16
       };
     }
   };
