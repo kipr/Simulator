@@ -16,7 +16,7 @@ export const JBC_17: Scene = {
       ...baseScene.robot.origin,
       position: {
         x: Distance.centimeters(16.5),
-        y: Distance.centimeters(111),
+        y: Distance.centimeters(2),
         z: Distance.centimeters(-50),
       },
     }

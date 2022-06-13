@@ -19,7 +19,7 @@ export const JBC_15B: Scene = {
       origin: {
         position: {
           x: Distance.centimeters(0),
-          y: Distance.centimeters(114),
+          y: Distance.centimeters(5),
           z: Distance.centimeters(-2),
         },
         orientation: Rotation.AngleAxis.fromRaw({
@@ -36,7 +36,7 @@ export const JBC_15B: Scene = {
       origin: {
         position: {
           x: Distance.centimeters(0),
-          y: Distance.centimeters(114),
+          y: Distance.centimeters(5),
           z: Distance.centimeters(-56.3),
         },
         orientation: Rotation.AngleAxis.fromRaw({
@@ -55,7 +55,7 @@ export const JBC_15B: Scene = {
       ...baseScene.robot.origin,
       position: {
         x: Distance.centimeters(0),
-        y: Distance.centimeters(111),
+        y: Distance.centimeters(2),
         z: Distance.centimeters(-43),
       },
     }

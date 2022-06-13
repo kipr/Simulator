@@ -22,7 +22,7 @@ export const JBC_20: Scene = {
       origin: {
         position: {
           x: Distance.centimeters(12),
-          y: Distance.centimeters(106),
+          y: Distance.centimeters(-3),
           z: Distance.centimeters(-47),
         },
       },
@@ -37,7 +37,7 @@ export const JBC_20: Scene = {
       ...baseScene.robot.origin,
       position: {
         x: Distance.centimeters(-18),
-        y: Distance.centimeters(111),
+        y: Distance.centimeters(2),
         z: Distance.centimeters(-50),
       },
     }
