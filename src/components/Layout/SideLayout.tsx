@@ -83,11 +83,21 @@ const SimulatorAreaContainer = styled('div', {
   display: 'flex',
   flex: '1 1',
 });
+const SimultorWidgetContainer = styled('div', {
+  display: 'flex',
+  flex: '1 0 0',
+  height: '100%',
+  width: '100%',
+  overflow: 'hidden'
+  
+});
 const SimulatorWidget = styled(Widget, {
   display: 'flex',
-  flex: '1 1',
+  flex: '1 1 0',
   height: '100%',
+  width: '100%',
 });
+
 
 const FlexConsole = styled(Console, {
   flex: '1 1',
@@ -222,33 +232,38 @@ class SideLayout extends React.PureComponent<Props, State> {
             isVertical={false} 
             theme={theme}
             minSizes={[100, 100]}
-            sizes={[2, 3]}
+            sizes={[3, 1]}
           >
-            <div>Editor</div>
-            {/* <SimulatorWidget
-              theme={theme}
-              name='Editor'
-              barComponents={editorBar}
-              mode={Mode.Sidebar}
-            >
-              <Editor
+            {/* <div>Editor</div> */}
+            <SimultorWidgetContainer>
+              <SimulatorWidget
                 theme={theme}
-                ref={this.bindEditor_}
-                code={code} onCodeChange={onCodeChange}
-                messages={messages}
-                autocomplete={settings.editorAutoComplete}
-              />
-            </SimulatorWidget> */}
+                name='Editor'
+                barComponents={editorBar}
+                mode={Mode.Sidebar}
+              >
+                
+                <Editor
+                  theme={theme}
+                  ref={this.bindEditor_}
+                  code={code} onCodeChange={onCodeChange}
+                  messages={messages}
+                  autocomplete={settings.editorAutoComplete}
+                />
+              </SimulatorWidget>
+            </SimultorWidgetContainer>
 
-            <SimulatorWidget
-              theme={theme}
-              name='Console'
-              barComponents={consoleBar}
-              mode={Mode.Sidebar}
-              hideActiveSize={true}
-            >
-              <FlexConsole theme={theme} text={console}/>
-            </SimulatorWidget>
+            <SimultorWidgetContainer>
+              <SimulatorWidget
+                theme={theme}
+                name='Console'
+                barComponents={consoleBar}
+                mode={Mode.Sidebar}
+                hideActiveSize={true}
+              >
+                <FlexConsole theme={theme} text={console}/>
+              </SimulatorWidget>
+            </SimultorWidgetContainer>
           </Slider>
 
         );
@@ -316,19 +331,19 @@ class SideLayout extends React.PureComponent<Props, State> {
         return <Container style={style} className={className}>
           <SidePanelContainer>
             {tabBar}
-            <SidePanelContainer>
-              <Slider 
-                isVertical={true}
-                theme={theme}
-                minSizes={[50, 50]}
-                sizes={[2, 3]}
-              >
-                <SideBar>
-                  {content}
-                </SideBar>
-                {simulator}
-              </Slider>
-            </SidePanelContainer>
+            {/* <SidePanelContainer> */}
+            <Slider 
+              isVertical={true}
+              theme={theme}
+              minSizes={[50, 50]}
+              sizes={[1, 3]}
+            >
+              {/* <SideBar> */}
+              {content}
+              {/* </SideBar> */}
+              {simulator}
+            </Slider>
+            {/* </SidePanelContainer> */}
           </SidePanelContainer>
         </Container>;
     }

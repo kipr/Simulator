@@ -29,13 +29,12 @@ const SliderContainer = styled('div', (props: CanBeVertical & CanBeSelected) => 
   height: '100%',
   flexDirection: (props.$vertical) ? 'row' : 'column',
   cursor: props.selected ? (props.$vertical ? 'col-resize' : 'row-resize') : null,
-  // border: '3px solid red',
 }));
 const SliderItem = styled('div', (props: SliderItemProps) => ({
   display: 'flex',
   overflow: 'auto',
   flexGrow: props.$flexGrow,
-  // border: '5px solid blue',
+  flexBasis: '0',
 }));
 
 export const Slider = function (props: SliderProps) {
