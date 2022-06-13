@@ -76,14 +76,12 @@ export const Slider = function (props: SliderProps) {
 
   // TODO: make sure we support only 1 touch more explicitly
   const onTouchMove = (e: TouchEvent) => {
-    console.log('touch move', e.touches);
     // only support single touch events
     if (e.touches.length > 1) return;
 
     dispatch({ actionType: Actions.MouseMove, x: e.touches[0].pageX, y: e.touches[0].pageY });
   };
   const onTouchEnd = (e: TouchEvent) => {
-    console.log('touch end', e.touches);
     dispatch({ actionType: Actions.MouseUp });
 
     window.removeEventListener('touchmove', onTouchMove);
@@ -91,7 +89,6 @@ export const Slider = function (props: SliderProps) {
     window.removeEventListener('touchcancel', onTouchEnd);
   };
   const onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    console.log('touch start', e.touches);
     // only support single touch events
     if (e.touches.length > 1) return;
 
@@ -105,7 +102,7 @@ export const Slider = function (props: SliderProps) {
   // elements may not be visible (eg, in the sidebar, they can be hidden)
   // we could just display them seperately from the slider, but then the
   // slider is unloaded and we lose the positioning of it, so instead hide them here
-  
+
   return <SliderContainer $vertical={isVertical} selected={selected}>
     {visible[0]
       ? <SliderItem 

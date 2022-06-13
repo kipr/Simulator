@@ -45,8 +45,6 @@ export function resizeOnPointerMove(state: ResizeState, action: ResizeAction): R
   if (actionType === Actions.MouseDown) {
     // scale the min sizes
     const scaledMinSizes = minSizes.map(x => sumGrow * x / sumSize);
-    console.log('scaled min sizes:', scaledMinSizes);
-    console.log('grows', grows);
     return {
       ...state,
       startGrows: grows,
@@ -66,7 +64,6 @@ export function resizeOnPointerMove(state: ResizeState, action: ResizeAction): R
   let currGrows = [sumGrow * (diff / sumSize),  sumGrow * (-diff / sumSize)];
   // add to grows
   currGrows = [startGrows[0] + currGrows[0], startGrows[1] + currGrows[1]];
-  console.log(currGrows);
   // respect minimum sizes
   if (currGrows[0] < scaledMinSizes[0]) {
     currGrows[1] += currGrows[0] - scaledMinSizes[0];
@@ -75,10 +72,7 @@ export function resizeOnPointerMove(state: ResizeState, action: ResizeAction): R
   if (currGrows[1] < scaledMinSizes[1]) {
     currGrows[0] += currGrows[1] - scaledMinSizes[1];
     currGrows[1] = scaledMinSizes[1];
-  }
-
-  console.log(pos, startPos, diff, startGrows, currGrows, currSizes,);
-    
+  }    
 
   return {
     ...state,
