@@ -7,6 +7,7 @@ export class TouchSensor implements SensorObject {
 
   // Keeps track of the meshes in the scene that are eligible for intersection checking
   private eligibleMeshes_: Babylon.AbstractMesh[];
+  private unprocessedMeshes_: Babylon.AbstractMesh[];
 
   private isIntersecting_ = false;
   private prevIntersectingMesh_: Babylon.AbstractMesh = null;
@@ -26,12 +27,12 @@ export class TouchSensor implements SensorObject {
     // Initialize eligible meshes by looking through all meshes in the scene
     // For performance, might want to find a better way to initialize this
     this.eligibleMeshes_ = this.config_.scene.meshes.filter(TouchSensor.isMeshEligible);
+    this.unprocessedMeshes_ = [];
 
     // Create observers to update eligible meshes when meshes are added/removed from the scene
     this.meshAddedObserver_ = this.config_.scene.onNewMeshAddedObservable.add(addedMesh => {
-      if (TouchSensor.isMeshEligible(addedMesh)) {
-        this.eligibleMeshes_.push(addedMesh);
-      }
+      // Metadata is not yet available when the observable is triggered, so we temporarily buffer newly-added meshes
+      this.unprocessedMeshes_.push(addedMesh);
     });
     this.meshRemovedObserver_ = this.config_.scene.onMeshRemovedObservable.add(removedMesh => {
       const index = this.eligibleMeshes_.findIndex(mesh => mesh.name === removedMesh.name);
@@ -51,6 +52,15 @@ export class TouchSensor implements SensorObject {
     }
 
     this.sinceLastUpdate = 0;
+
+    // Process eligibility of newly-added meshes
+    for (const unprocessedMesh of this.unprocessedMeshes_) {
+      if (TouchSensor.isMeshEligible(unprocessedMesh)) {
+        this.eligibleMeshes_.push(unprocessedMesh);
+      }
+    }
+
+    this.unprocessedMeshes_ = [];
 
     // After an intersection, it's likely that the sensor will continue intersecting with the same mesh for a while
     // So check the previous intersecting mesh upfront
@@ -116,9 +126,9 @@ export class TouchSensor implements SensorObject {
   }
 
   // Determines whether the given mesh is eligible for intersection checking
-  // Currently based on mesh name, but this should be made more flexible
+  // Based on the metadata property, which will only exist for meshes created through SceneBinding
   private static isMeshEligible = (mesh: Babylon.AbstractMesh) => {
-    return mesh.name.startsWith('item');
+    return typeof mesh.metadata === 'string' && mesh.metadata.length > 0;
   };
 }
 

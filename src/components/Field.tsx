@@ -6,6 +6,7 @@ import { ThemeProps } from './theme';
 export interface FieldProps extends ThemeProps, StyleProps {
   name: string;
   children: React.ReactNode;
+  long?: boolean;
 }
 
 type Props = FieldProps;
@@ -20,7 +21,7 @@ const Container = styled('div', {
 
 const NameLabel = styled('span', (props: { $long?: boolean; }) => ({
   width: props.$long ? '140px' : `70px`,
-  minWidth: '70px',
+  minWidth: props.$long ? '140px' : `70px`,
   userSelect: 'none',
   fontWeight: 400,
 }));
@@ -32,11 +33,11 @@ export class Field extends React.PureComponent<Props> {
 
   render() {
     const { props } = this;
-    const { theme, style, className, name, children } = props;
+    const { theme, style, className, name, children, long } = props;
   
     return (
       <Container style={style} className={className}>
-        <NameLabel $long={name.length > 10}>{name}</NameLabel>
+        <NameLabel $long={long}>{name}</NameLabel>
         {children}
       </Container>
     );

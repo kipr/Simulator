@@ -1,23 +1,26 @@
 import * as React from 'react';
 
 import { styled } from 'styletron-react';
-import { RobotState } from '../../RobotState';
 import { StyleProps } from '../../style';
 import ScrollArea from '../ScrollArea';
 import Section from '../Section';
 import { ThemeProps } from '../theme';
 import SensorWidget from './SensorWidget';
 import { StyledText } from '../../util';
-import { Location } from './Location';
-import { RobotPosition } from '../../RobotPosition';
+import Location from './Location';
 import { Fa } from '../Fa';
+import { ReferenceFrame } from '../../unit-math';
+import { connect } from 'react-redux';
+import { State as ReduxState } from '../../state';
+import { SceneAction } from '../../state/reducer';
 
 
 export interface InfoProps extends StyleProps, ThemeProps {
-  robotState: RobotState;
-  robotStartPosition: RobotPosition;
+}
 
-  onSetRobotStartPosition: (position: RobotPosition) => void;
+interface ReduxInfoProps {
+  startingOrigin: ReferenceFrame;
+  onOriginChange: (origin: ReferenceFrame, modifyReferenceScene: boolean) => void;
 }
 
 interface InfoState {
@@ -106,8 +109,8 @@ const ResetIcon = styled(Fa, ({ theme }: ThemeProps) => ({
   transition: 'opacity 0.2s'
 }));
 
-class Info extends React.PureComponent<Props, State> {
-  constructor(props: Props) {
+class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
+  constructor(props: Props & ReduxInfoProps) {
     super(props);
 
     this.state = {
@@ -127,7 +130,7 @@ class Info extends React.PureComponent<Props, State> {
   private onResetLocationClick_ = (event: React.MouseEvent<HTMLSpanElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    this.props.onSetRobotStartPosition(this.props.robotStartPosition);
+    this.props.onOriginChange(this.props.startingOrigin, false);
   };
 
   render() {
@@ -136,8 +139,6 @@ class Info extends React.PureComponent<Props, State> {
       style,
       className,
       theme,
-      robotState,
-      robotStartPosition,
     } = props;
     const { collapsed } = state;
 
@@ -157,35 +158,50 @@ class Info extends React.PureComponent<Props, State> {
       ]
     });
 
-    const servos = robotState.servoPositions.map((value, i) => (
-      <Row key={`servo-pos-${i}`} theme={theme}>
-        <SensorWidget value={value} name={`get_servo_position(${i})`} plotTitle='Servo Position Plot' theme={theme} />
-      </Row>
-    ));
+    const servos: JSX.Element[] = [];
+    for (let i = 0; i < 4; ++i) {
+      servos.push(
+        <Row key={`servo-pos-${i}`} theme={theme}>
+          <SensorWidget valueSelector={robotState => robotState.servoPositions[i]} name={`get_servo_position(${i})`} plotTitle='Servo Position Plot' theme={theme} />
+        </Row>
+      );
+    }
 
-    const motorVelocities = robotState.motorSpeeds.map((value, i) => (
-      <Row key={`motor-velocity-${i}`} theme={theme}>
-        <SensorWidget value={value} name={`motor ${i}`} plotTitle='Motor Velocity Plot' theme={theme} />
-      </Row>
-    ));
+    const motorVelocities: JSX.Element[] = [];
+    for (let i = 0; i < 4; ++i) {
+      motorVelocities.push(
+        <Row key={`motor-velocity-${i}`} theme={theme}>
+          <SensorWidget valueSelector={robotState => robotState.motorSpeeds[i]} name={`motor ${i}`} plotTitle='Motor Velocity Plot' theme={theme} />
+        </Row>
+      );
+    }
 
-    const motorPositions = robotState.motorPositions.map((value, i) => (
-      <Row key={`motor-pos-${i}`} theme={theme}>
-        <SensorWidget value={value} name={`get_motor_position_counter(${i})`} plotTitle='Motor Position Plot' theme={theme} />
-      </Row>
-    ));
+    const motorPositions: JSX.Element[] = [];
+    for (let i = 0; i < 4; ++i) {
+      motorPositions.push(
+        <Row key={`motor-pos-${i}`} theme={theme}>
+          <SensorWidget valueSelector={robotState => robotState.motorPositions[i]} name={`get_motor_position_counter(${i})`} plotTitle='Motor Position Plot' theme={theme} />
+        </Row>
+      );
+    }
 
-    const analogSensors = robotState.analogValues.map((value, i) => (
-      <Row key={`analog-${i}`} theme={theme}>
-        <SensorWidget value={value} name={`analog(${i})`} plotTitle='Analog Sensor Plot' theme={theme} />
-      </Row>
-    ));
+    const analogSensors: JSX.Element[] = [];
+    for (let i = 0; i < 6; ++i) {
+      analogSensors.push(
+        <Row key={`analog-${i}`} theme={theme}>
+          <SensorWidget valueSelector={robotState => robotState.analogValues[i]} name={`analog(${i})`} plotTitle='Analog Sensor Plot' theme={theme} />
+        </Row>
+      );
+    }
 
-    const digitalSensors = robotState.digitalValues.map((value, i) => (
-      <Row key={`digital-${i}`} theme={theme}>
-        <SensorWidget value={value} name={`digital(${i})`} plotTitle='Digital Sensor Plot' theme={theme} />
-      </Row>
-    ));
+    const digitalSensors: JSX.Element[] = [];
+    for (let i = 0; i < 6; ++i) {
+      digitalSensors.push(
+        <Row key={`digital-${i}`} theme={theme}>
+          <SensorWidget valueSelector={robotState => robotState.digitalValues[i]} name={`digital(${i})`} plotTitle='Digital Sensor Plot' theme={theme} />
+        </Row>
+      );
+    }
     
     return (
       <ScrollArea theme={theme} style={{ flex: '1 1' }}>
@@ -197,8 +213,6 @@ class Info extends React.PureComponent<Props, State> {
             collapsed={collapsed['location']}
           >
             <Location
-              robotStartPosition={robotStartPosition}
-              onSetRobotStartPosition={this.props.onSetRobotStartPosition}
               theme={theme}
             />
           </StyledSection>
@@ -248,4 +262,13 @@ class Info extends React.PureComponent<Props, State> {
   }
 }
 
-export default Info;
+export default connect<unknown, unknown, InfoProps, ReduxState>((state: ReduxState) => {
+  const startingOrigin = state.scene.referenceScene.robot?.origin || ReferenceFrame.IDENTITY;
+  return {
+    startingOrigin,
+  };
+}, dispatch => ({
+  onOriginChange: (origin: ReferenceFrame, modifyReferenceScene: boolean) => {
+    dispatch(SceneAction.setRobotOrigin({ origin, modifyReferenceScene }));
+  }
+}))(Info) as React.ComponentType<InfoProps>;

@@ -8,45 +8,53 @@ import Field from '../Field';
 import ScrollArea from '../ScrollArea';
 import Section from '../Section';
 import { Spacer } from '../common';
-import { StyledText } from '../../util';
+import { Angle, StyledText } from '../../util';
 import { DropdownList, OptionDefinition } from '../DropdownList';
-import { SurfaceStatePresets } from '../../SurfaceState';
 
 import EditableList from '../EditableList';
 import Item from './Item';
-import AddItemDialog, { AddItemAcceptance } from './AddItemDialog';
+import AddNodeDialog, { AddNodeAcceptance } from './AddNodeDialog';
 import { Fa } from '../Fa';
-import ItemSettingsDialog, { ItemSettingsAcceptance } from './ItemSettingsDialog';
+import NodeSettingsDialog, { NodeSettingsAcceptance } from './NodeSettingsDialog';
 import { connect } from 'react-redux';
 
-import { State as ReduxState, Item as ReduxItem } from '../../state';
+import { ReferencedScenePair, State as ReduxState } from '../../state';
+
 import { SceneAction } from '../../state/reducer';
 
 import * as uuid from 'uuid';
-import { Rotation, Vector3 } from '../../unit-math';
+import { ReferenceFrame, Rotation, Vector3 } from '../../unit-math';
+import { Vector3 as RawVector3 } from '../../math';
 import ComboBox from '../ComboBox';
+import Scene from '../../state/State/Scene';
+import Node from '../../state/State/Scene/Node';
+import { Scenes } from '../../state/State';
+import Async from '../../state/State/Async';
+import Dict from '../../Dict';
+import Geometry from '../../state/State/Scene/Geometry';
 
 export interface WorldProps extends StyleProps, ThemeProps {
-  
-
-  surfaceName: string;
-  onSurfaceChange: (surfaceName: string) => void;
 }
 
 interface ReduxWorldProps {
-  itemOrdering: string[];
-  items: { [key: string]: ReduxItem };
+  scene: ReferencedScenePair;
 
-  onItemAdd: (id: string, item: ReduxItem) => void;
-  onItemChange: (id: string, item: ReduxItem) => void;
-  onItemRemove: (id: string) => void;
+  onNodeAdd: (id: string, node: Node) => void;
+  onNodeRemove: (id: string) => void;
+  onNodeChange: (id: string, node: Node, modifyReferenceScene: boolean, modifyOrigin: boolean) => void;
+
+  onObjectAdd: (id: string, object: Node.Obj, geometry: Geometry) => void;
+
+  onGeometryAdd: (id: string, geometry: Geometry) => void;
+  onGeometryRemove: (id: string) => void;
+  onGeometryChange: (id: string, geometry: Geometry) => void;
 }
 
 namespace UiState {
   export enum Type {
     None,
-    AddItem,
-    ItemSettings,
+    AddNode,
+    NodeSettings,
   }
 
   export interface None {
@@ -55,21 +63,21 @@ namespace UiState {
 
   export const NONE: None = { type: Type.None };
 
-  export interface AddItem {
-    type: Type.AddItem;
+  export interface AddNode {
+    type: Type.AddNode;
   }
 
-  export const ADD_ITEM: AddItem = { type: Type.AddItem };
+  export const ADD_NODE: AddNode = { type: Type.AddNode };
 
-  export interface ItemSettings {
-    type: Type.ItemSettings;
+  export interface NodeSettings {
+    type: Type.NodeSettings;
     id: string;
   }
 
-  export const itemSettings = (id: string): ItemSettings => ({ type: Type.ItemSettings, id });
+  export const itemSettings = (id: string): NodeSettings => ({ type: Type.NodeSettings, id });
 }
 
-type UiState = UiState.None | UiState.AddItem | UiState.ItemSettings;
+type UiState = UiState.None | UiState.AddNode | UiState.NodeSettings;
 
 interface WorldState {
   collapsed: { [section: string]: boolean };
@@ -78,13 +86,6 @@ interface WorldState {
 
 type Props = WorldProps;
 type State = WorldState;
-
-
-
-
-const SURFACE_NAME = StyledText.text({
-  text: 'Scene',
-});
 
 const Container = styled('div', (props: ThemeProps) => ({
   display: 'flex',
@@ -104,11 +105,6 @@ const StyledListSection = withStyleDeep(StyledSection, {
 const StyledField = styled(Field, (props: ThemeProps) => ({
 
 }));
-
-const SURFACE_OPTIONS: ComboBox.Option[] = [
-  ComboBox.option(SurfaceStatePresets.jbcA.surfaceName, SurfaceStatePresets.jbcA.surfaceName),
-  ComboBox.option(SurfaceStatePresets.jbcB.surfaceName, SurfaceStatePresets.jbcB.surfaceName),
-];
 
 const SectionIcon = styled(Fa, (props: ThemeProps) => ({
   marginLeft: `${props.theme.itemPadding}px`,
@@ -131,10 +127,6 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
     };
   }
 
-  private onItemChange_ = (id: string) => (item: ReduxItem) => {
-    this.props.onItemChange(id, item);
-  };
-
   private onCollapsedChange_ = (section: string) => (collapsed: boolean) => {
     this.setState({
       collapsed: {
@@ -144,69 +136,110 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
     });
   };
 
-  private onSurfaceChange_ = (index: number, option: ComboBox.Option) => {
-    this.props.onSurfaceChange(option.data as string);
+  private onAddNodeAccept_ = (acceptance: AddNodeAcceptance) => {
+    if (acceptance.node.type === 'object' && acceptance.geometry) {
+      const object: Node.Obj = acceptance.node;
+      this.setState({ modal: UiState.NONE }, () => {
+        this.props.onObjectAdd(uuid.v4(), object, acceptance.geometry);
+      });
+    } else {
+      this.setState({ modal: UiState.NONE }, () => {
+        this.props.onNodeAdd(uuid.v4(), acceptance.node);
+      });
+    }
   };
 
-  private onAddItemAccept_ = (acceptance: AddItemAcceptance) => {
-    
-
-    this.setState({ modal: UiState.NONE }, () => {
-      this.props.onItemAdd(uuid.v4(), acceptance);
-    });
+  private onNodeSettingsAccept_ = (id: string) => (acceptance: NodeSettingsAcceptance) => {
+    this.props.onNodeChange(id, acceptance, true, false);
   };
 
-  private onItemSettingsAccept_ = (id: string) => (acceptance: ItemSettingsAcceptance) => {
-    this.props.onItemChange(id, acceptance);
-  };
-
-  private onAddItemClick_ = () => this.setState({ modal: UiState.ADD_ITEM });
-  private onItemResetClick_ = (id: string) => () => {
-    const item = this.props.items[id];
-    if (!item?.startingOrigin) return;
-    
-    this.props.onItemChange(id, {
-      ...item,
+  private onNodeOriginAccept_ = (id: string) => (origin: ReferenceFrame) => {
+    const originalNode = this.props.scene.referenceScene.nodes[id];
+    this.props.onNodeChange(id, {
+      ...originalNode,
       origin: {
-        position: item.startingOrigin.position ?? Vector3.zero(),
-        orientation: item.startingOrigin.orientation ?? Rotation.Euler.identity(),
+        ...originalNode.origin,
+        ...origin,
       },
-    });
+    }, true, true);
+  };
+
+  private onAddNodeClick_ = (event: React.SyntheticEvent<MouseEvent>) => {
+    this.setState({ modal: UiState.ADD_NODE });
+    event.stopPropagation();
+    event.preventDefault();
+  };
+
+  private onNodeResetClick_ = (id: string) => () => {
+    const { props } = this;
+    const { scene } = props;
+
+    const originalNode = scene.referenceScene.nodes[id];
+    
+    this.props.onNodeChange(id, {
+      ...originalNode,
+      origin: {
+        position: originalNode.origin?.position || Vector3.zero('centimeters'),
+        orientation: originalNode.origin?.orientation || Rotation.Euler.identity(Angle.Type.Degrees),
+        scale: originalNode.origin?.scale || RawVector3.ONE,
+      },
+    }, false, true);
   };
   private onItemSettingsClick_ = (id: string) => () => this.setState({ modal: UiState.itemSettings(id) });
   private onModalClose_ = () => this.setState({ modal: UiState.NONE });
 
-  private onItemRemove_ = (index: number) => {
-    const { itemOrdering } = this.props;
-    this.props.onItemRemove(itemOrdering[index]);
+  private onNodeRemove_ = (index: number, id?: unknown) => {
+    const { props } = this;
+    const { scene } = props;
+    const idStr = id as string;
+    const node = scene.referenceScene.nodes[idStr];
+    if (node.type === 'object') {
+      if (node.geometryId !== undefined) {
+        let unique = true;
+        for (const nodeId in scene.referenceScene.nodes) {
+          const otherNode = scene.referenceScene.nodes[nodeId];
+          if (nodeId !== idStr && otherNode.type === 'object' && node.geometryId === otherNode.geometryId) {
+            unique = false;
+            break;
+          }
+        }
+        if (unique) {
+          this.props.onGeometryRemove(node.geometryId);
+        }
+      }
+    }
+
+    this.props.onNodeRemove(idStr);
   };
 
   private onItemVisibilityChange_ = (id: string) => (visibility: boolean) => {
-    this.props.onItemChange(id, {
-      ...this.props.items[id],
-      visible: visibility
-    });
+    this.props.onNodeChange(id, {
+      ...this.props.scene.workingScene.nodes[id],
+      visible: visibility,
+    }, false, false);
   };
 
   render() {
     const { props, state } = this;
-    const { style, className, theme, surfaceName, items, itemOrdering } = props;
+    const { style, className, theme, scene, onGeometryAdd, onGeometryRemove, onGeometryChange } = props;
     const { collapsed, modal } = state;
-
 
     const itemList: EditableList.Item[] = [];
     // Mock list
-    for (const id of itemOrdering) {
-      const item = items[id];
+    for (const nodeId of Dict.keySet(scene.workingScene.nodes)) {
+      const node = scene.workingScene.nodes[nodeId];
+      const referenceScene = scene.referenceScene;
+      const hasReset = referenceScene.nodes[nodeId] !== undefined;
       itemList.push(EditableList.Item.standard({
         component: Item,
-        props: { name: item.name, theme },
-        onReset: this.onItemResetClick_(id),
-        onSettings: this.onItemSettingsClick_(id),
-        onVisibilityChange: this.onItemVisibilityChange_(id),
-        visible: item.visible,
+        props: { name: node.name, theme },
+        onReset: hasReset ? this.onNodeResetClick_(nodeId) : undefined,
+        onSettings: node.editable ? this.onItemSettingsClick_(nodeId) : undefined,
+        onVisibilityChange: this.onItemVisibilityChange_(nodeId),
+        visible: node.visible,
       }, {
-        removable: item.removable === undefined ? true : item.removable,
+        removable: node.editable,
+        userdata: nodeId,
       }));
     }
 
@@ -220,7 +253,7 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
           props: {
             icon: 'plus',
             theme,
-            onClick: this.onAddItemClick_
+            onClick: this.onAddNodeClick_
           }
         })
       ]
@@ -232,16 +265,7 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
       <>
         <ScrollArea theme={theme} style={{ flex: '1 1' }}>
           <Container theme={theme} style={style} className={className}>
-            <StyledSection theme={theme} name={SURFACE_NAME}>
-              <StyledField theme={theme} name='Surface'>
-                <ComboBox
-                  theme={theme}
-                  index={SURFACE_OPTIONS.findIndex(s => s.text === surfaceName)}
-                  onSelect={this.onSurfaceChange_}
-                  options={SURFACE_OPTIONS}
-                />
-              </StyledField>
-            </StyledSection>
+            
             <StyledListSection 
               name={itemsName}
               theme={theme}
@@ -249,32 +273,54 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
               collapsed={collapsed['items']}
               noBodyPadding
             >
-              <EditableList onItemRemove={this.onItemRemove_} items={itemList} theme={theme} />
+              <EditableList onItemRemove={this.onNodeRemove_} items={itemList} theme={theme} />
             </StyledListSection>
           </Container>
         </ScrollArea>
-        {modal.type === UiState.Type.AddItem && <AddItemDialog theme={theme} onClose={this.onModalClose_} onAccept={this.onAddItemAccept_} />}
-        {modal.type === UiState.Type.ItemSettings && <ItemSettingsDialog item={items[modal.id]} theme={theme} onClose={this.onModalClose_} onChange={this.onItemSettingsAccept_(modal.id)} />}
+        {modal.type === UiState.Type.AddNode && <AddNodeDialog scene={scene.referenceScene} theme={theme} onClose={this.onModalClose_} onAccept={this.onAddNodeAccept_} />}
+        {modal.type === UiState.Type.NodeSettings && <NodeSettingsDialog
+          onGeometryAdd={onGeometryAdd}
+          onGeometryRemove={onGeometryRemove}
+          onGeometryChange={onGeometryChange}
+          scene={scene.referenceScene}
+          id={modal.id}
+          node={scene.referenceScene.nodes[modal.id]}
+          theme={theme}
+          onClose={this.onModalClose_}
+          onChange={this.onNodeSettingsAccept_(modal.id)}
+          onOriginChange={this.onNodeOriginAccept_(modal.id)}
+        />}
       </>
     );
   }
 }
 
 export default connect<unknown, unknown, Props, ReduxState>(state => {
-  const { itemOrdering, items } = state.scene;
-
   return {
-    itemOrdering,
-    items,
+    scene: state.scene,
   };
 }, (dispatch) => ({
-  onItemChange: (id: string, item: ReduxItem) => {
-    dispatch(SceneAction.setItem({ id, item }));
+  onNodeAdd: (id: string, node: Node) => {
+    dispatch(SceneAction.addNode({ id, node }));
   },
-  onItemAdd: (id: string, item: ReduxItem) => {
-    dispatch(SceneAction.addItem({ id, item }));
+  onNodeChange: (id: string, node: Node, modifyReferenceScene: boolean, modifyOrigin: boolean) => {
+    dispatch(SceneAction.setNode({ id, node, modifyReferenceScene, modifyOrigin }));
   },
-  onItemRemove: (id: string) => {
-    dispatch(SceneAction.removeItem({ id }));
-  }
+  onNodeRemove: (id: string) => {
+    dispatch(SceneAction.removeNode({ id }));
+  },
+  onGeometryAdd: (id: string, geometry: Geometry) => {
+    dispatch(SceneAction.addGeometry({ id, geometry }));
+  },
+  onGeometryChange: (id: string, geometry: Geometry) => {
+    dispatch(SceneAction.setGeometry({ id, geometry }));
+  },
+  onGeometryRemove: (id: string) => {
+    dispatch(SceneAction.removeGeometry({ id }));
+  },
+  onObjectAdd: (id: string, object: Node.Obj, geometry: Geometry) => {
+    dispatch(SceneAction.addObject({ id, object, geometry }));
+  },
+
+
 }))(World) as React.ComponentType<Props>;

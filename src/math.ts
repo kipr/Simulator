@@ -57,6 +57,7 @@ export interface Vector3 {
 
 export namespace Vector3 {
   export const ZERO: Vector3 = { x: 0, y: 0, z: 0 };
+  export const ONE: Vector3 = { x: 1, y: 1, z: 1 };
 
   export const X: Vector3 = { x: 1, y: 0, z: 0 };
   export const Y: Vector3 = { x: 0, y: 1, z: 0 };
@@ -100,6 +101,8 @@ export namespace Vector3 {
 
   export const toBabylon = (vec: Vector3): Babylon.Vector3 => new Babylon.Vector3(vec.x, vec.y, vec.z);
   export const fromBabylon = (vec: Babylon.Vector3): Vector3 => ({ x: vec.x, y: vec.y, z: vec.z });
+
+  export const distance = (lhs: Vector3, rhs: Vector3): number => Math.sqrt(Math.pow(rhs.x - lhs.x, 2) + Math.pow(rhs.y - lhs.y, 2) + Math.pow(rhs.z - lhs.z, 2));
 }
 
 export interface Euler {
@@ -214,26 +217,47 @@ export namespace Quaternion {
     z: quat.z,
     w: quat.w
   });
+
+  export const dot = (lhs: Quaternion, rhs: Quaternion): number => lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
+
+  export const angle = (lhs: Quaternion, rhs: Quaternion): number => {
+    let cos = dot(lhs, rhs);
+    if (cos < -1) cos = -1;
+    if (cos > 1) cos = 1;
+    return Math.acos(cos);
+  };
+
+  export const slerp = (lhs: Quaternion, rhs: Quaternion, t: number): Quaternion => {
+    // We're going to cheat
+    const q = Babylon.Quaternion.Slerp(toBabylon(lhs), toBabylon(rhs), t);
+    return fromBabylon(q);
+  };
+
+  
 }
 
 export interface ReferenceFrame {
   position?: Vector3;
   orientation?: Quaternion;
+  scale?: Vector3;
 }
 
 export namespace ReferenceFrame {
   export const IDENTITY: ReferenceFrame = {
     position: Vector3.ZERO,
-    orientation: Quaternion.IDENTITY
+    orientation: Quaternion.IDENTITY,
+    scale: Vector3.ONE
   };
 
   export const create = (position: Vector3, orientation: Quaternion): ReferenceFrame => ({ position, orientation });
   export const position = (frame: ReferenceFrame) => (frame ? (frame.position ? frame.position : Vector3.ZERO) : Vector3.ZERO);
   export const orientation = (frame: ReferenceFrame) => (frame ? (frame.orientation ? frame.orientation : Quaternion.IDENTITY) : Quaternion.IDENTITY);
+  export const scale = (frame: ReferenceFrame) => (frame ?? {}).scale ?? Vector3.ONE;
 
   export const fill = (frame: ReferenceFrame): ReferenceFrame => ({
-    position: frame.position || Vector3.ZERO,
-    orientation: frame.orientation || Quaternion.IDENTITY
+    position: frame.position ?? Vector3.ZERO,
+    orientation: frame.orientation ?? Quaternion.IDENTITY,
+    scale: frame.scale ?? Vector3.ONE
   });
 }
 

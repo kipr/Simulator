@@ -4,12 +4,11 @@ import { signOutOfApp } from '../firebase/modules/auth';
 import WorkerInstance from '../WorkerInstance';
 import { RobotState } from '../RobotState';
 
-import { SurfaceState, SurfaceStatePresets } from '../SurfaceState';
 import SimMenu from './SimMenu';
 
 import { styled } from 'styletron-react';
 import { DARK, Theme } from './theme';
-import { Layout, LayoutProps, BottomLayout, OverlayLayout, SideLayout  } from './Layout';
+import { Layout, LayoutProps, BottomLayout, OverlayLayout, OverlayLayoutRedux, SideLayoutRedux  } from './Layout';
 
 import { SettingsDialog } from './SettingsDialog';
 import { AboutDialog } from './AboutDialog';
@@ -29,12 +28,17 @@ import { RobotPosition } from '../RobotPosition';
 import { DEFAULT_SETTINGS, Settings } from '../Settings';
 import { DEFAULT_FEEDBACK, Feedback } from '../Feedback';
 import ExceptionDialog from './ExceptionDialog';
+import SelectSceneDialog from './SelectSceneDialog';
+
+import store from '../state';
+import { RobotStateAction } from '../state/reducer';
 
 namespace Modal {
   export enum Type {
     Settings,
     About,
     Exception,
+    SelectScene,
     Feedback,
     FeedbackSuccess,
     None,
@@ -72,6 +76,12 @@ namespace Modal {
 
   export const exception = (error: Error, info?: React.ErrorInfo): Exception => ({ type: Type.Exception, error, info });
 
+  export interface SelectScene {
+    type: Type.SelectScene;
+  }
+
+  export const SELECT_SCENE: SelectScene = { type: Type.SelectScene };
+
   export interface None {
     type: Type.None;
   }
@@ -79,12 +89,10 @@ namespace Modal {
   export const NONE: None = { type: Type.None };
 }
 
-export type Modal = Modal.Settings | Modal.About | Modal.Exception | Modal.Feedback | Modal.FeedbackSuccess | Modal.None;
+export type Modal = Modal.Settings | Modal.About | Modal.Exception | Modal.SelectScene | Modal.Feedback | Modal.FeedbackSuccess | Modal.None;
 
 
 interface RootState {
-  surfaceState: SurfaceState,
-  robotState: RobotState;
   robotStartPosition: RobotPosition;
   layout: Layout;
   code: string;
@@ -132,17 +140,13 @@ export class Root extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-
-
     this.state = {
-      robotState: WorkerInstance.state,
       robotStartPosition: {
         x: Distance.centimeters(0),
-        y: Distance.centimeters(0),
+        y: Distance.centimeters(200),
         z: Distance.centimeters(0),
         theta: Angle.degrees(0),
       },
-      surfaceState: SurfaceStatePresets.jbcA,
       // TODO: set to side by default if on mobile
       layout: Layout.Overlay,
       code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
@@ -158,6 +162,7 @@ export class Root extends React.Component<Props, State> {
 
   componentDidMount() {
     WorkerInstance.onStateChange = this.onWorkerStateChange_;
+    WorkerInstance.getRobotState = () => store.getState().robotState;
     WorkerInstance.onStdOutput = this.onStdOutput_;
     WorkerInstance.onStdError = this.onStdError_;
     WorkerInstance.onStopped = this.onStopped_;
@@ -167,20 +172,6 @@ export class Root extends React.Component<Props, State> {
     this.setState({
       simulatorState: SimulatorState.STOPPED
     });
-  };
-
-  private onRobotStateUpdate_ = (robot: Partial<RobotState>) => {
-    // Create new robot state object by applying the partial changes
-    const newRobotState: RobotState = {
-      ...this.state.robotState,
-      motorSpeeds: [...this.state.robotState.motorSpeeds],
-      motorPositions: [...this.state.robotState.motorPositions],
-      servoPositions: [...this.state.robotState.servoPositions],
-      analogValues: [...this.state.robotState.analogValues],
-      ...robot,
-    };
-
-    WorkerInstance.state = newRobotState;
   };
 
   private onSetRobotStartPosition_ = (position: RobotPosition) => {
@@ -195,12 +186,6 @@ export class Root extends React.Component<Props, State> {
 
     Space.getInstance().setRobotPosition(position);
   };
-
-  private onUpdateSurfaceState_ = (newSurfaceName: string) => {
-    const newState = SurfaceStatePresets.presets.find(preset => (preset.surfaceName === newSurfaceName));
-    this.setState({ surfaceState: newState });
-  };
-
 
   private onCodeChange_ = (code: string) => {
     this.setState({ code });
@@ -230,9 +215,9 @@ export class Root extends React.Component<Props, State> {
   private onModalClose_ = () => this.setState({ modal: Modal.NONE });
 
   private onWorkerStateChange_ = (robotState: RobotState) => {
-    this.setState({
+    store.dispatch(RobotStateAction.setRobotState({
       robotState,
-    });
+    }));
   };
 
   private onStdOutput_ = (text: string) => {
@@ -397,6 +382,12 @@ export class Root extends React.Component<Props, State> {
       });
   };
 
+  private onSelectSceneClick_ = () => {
+    this.setState({
+      modal: Modal.SELECT_SCENE
+    });
+  };
+
   componentDidCatch(error: Error, info: React.ErrorInfo) {
     this.setState({
       modal: Modal.exception(error, info)
@@ -406,7 +397,6 @@ export class Root extends React.Component<Props, State> {
   render() {
     const { props, state } = this;
     const {
-      robotState,
       robotStartPosition,
       layout,
       code,
@@ -414,7 +404,6 @@ export class Root extends React.Component<Props, State> {
       simulatorState,
       console,
       messages,
-      surfaceState,
       settings,
       feedback,
     } = state;
@@ -423,26 +412,23 @@ export class Root extends React.Component<Props, State> {
 
     const commonLayoutProps: LayoutProps = {
       code,
-      onStateChange: this.onRobotStateUpdate_,
       robotStartPosition,
       onSetRobotStartPosition: this.onSetRobotStartPosition_,
       theme,
-      state: robotState,
       console,
       onCodeChange: this.onCodeChange_,
       messages,
       settings,
       onClearConsole: this.onClearConsole_,
       onIndentCode: this.onIndentCode_,
-      surfaceState,
-      onSurfaceChange: this.onUpdateSurfaceState_,
+      onSelectScene: this.onSelectSceneClick_,
     };
 
     let impl: JSX.Element;
     switch (layout) {
       case Layout.Overlay: {
         impl = (
-          <OverlayLayout ref={this.bindOverlayLayout_} {...commonLayoutProps} />
+          <OverlayLayoutRedux ref={this.bindOverlayLayout_} {...commonLayoutProps} />
         );
         break;
       }
@@ -454,7 +440,7 @@ export class Root extends React.Component<Props, State> {
       }
       case Layout.Side: {
         impl = (
-          <SideLayout {...commonLayoutProps} />
+          <SideLayoutRedux {...commonLayoutProps} />
         );
         break;
       }
@@ -492,6 +478,7 @@ export class Root extends React.Component<Props, State> {
         {modal.type === Modal.Type.Feedback ? <FeedbackDialog theme={theme} feedback={feedback} onFeedbackChange={this.onFeedbackChange_} onClose={this.onModalClose_} onSubmit={this.onFeedbackSubmit_} /> : undefined}
         {modal.type === Modal.Type.FeedbackSuccess ? <FeedbackSuccessDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
         {modal.type === Modal.Type.Exception ? <ExceptionDialog error={modal.error} theme={theme} onClose={this.onModalClose_} /> : undefined}
+        {modal.type === Modal.Type.SelectScene ? <SelectSceneDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
       </>
 
     );

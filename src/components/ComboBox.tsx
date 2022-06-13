@@ -4,7 +4,7 @@ import { styled } from "styletron-react";
 import { Rectangle } from "../math";
 import { StyleProps } from "../style";
 import { AnyText } from "../util";
-import { Color } from "../util/Color";
+import { Color } from "../state/State/Scene/Color";
 import { Fa } from "./Fa";
 import { Text } from "./Text";
 import { ThemeProps } from "./theme";
@@ -41,7 +41,7 @@ const DropDown = styled('div', (props: ThemeProps) => ({
   borderRight: `1px solid ${props.theme.borderColor}`,
   borderBottom: `1px solid ${props.theme.borderColor}`,
   backgroundColor: Color.toCss(Color.Rgb.darken(Color.Rgb.fromHex(props.theme.backgroundColor), 0.1)),
-  zIndex: 3
+  zIndex: -111
 }));
 
 const DropIcon = styled(Fa, {
@@ -155,7 +155,7 @@ class ComboBox extends React.PureComponent<ComboBox.Props, ComboBox.State> {
       };
       COMBO_BOX_ROOT.style.pointerEvents = 'auto';
       COMBO_BOX_ROOT.onclick = this.onComboBoxRootClick_;
-    } else {
+    } else if (COMBO_BOX_ROOT.onclick === this.onComboBoxRootClick_) {
       COMBO_BOX_ROOT.style.pointerEvents = 'none';
       COMBO_BOX_ROOT.onclick = undefined;
     }

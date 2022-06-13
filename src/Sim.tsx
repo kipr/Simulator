@@ -1,36 +1,37 @@
 import * as Babylon from 'babylonjs';
 import 'babylonjs-loaders';
 // import Oimo = require('babylonjs/Oimo');
-import * as Ammo from './ammo';
 import {
   SensorObject,
   Sensor,
   instantiate as instantiateSensor,
   MAPPINGS as SENSOR_MAPPINGS,
 } from './sensors';
-import {
-  Can,
-  PaperReam,
-} from './items';
+
 import { RobotState } from './RobotState';
 
 import Dict from './Dict';
-import { SurfaceState } from './SurfaceState';
 
 import { Quaternion, ReferenceFrame, Vector2, Vector3 } from './math';
 import { ReferenceFrame as UnitReferenceFrame, Rotation, Vector3 as UnitVector3 } from './unit-math';
 import { RobotPosition } from './RobotPosition';
 import { Angle, Distance, Mass } from './util';
 
-import store, { State, Item } from './state';
+import store, { State } from './state';
 import { Unsubscribe } from 'redux';
 import deepNeq from './deepNeq';
-import { SceneAction } from './state/reducer';
+import { RobotStateAction, SceneAction } from './state/reducer';
 import { Gizmo } from 'babylonjs/Gizmos/gizmo';
+import SceneBinding from './SceneBinding';
+import Scene from './state/State/Scene';
+import Node from './state/State/Scene/Node';
+import Robotable from './Robotable';
 
 export let ACTIVE_SPACE: Space;
 
-export class Space {
+
+
+export class Space implements Robotable {
   private static instance: Space;
 
   private initializationPromise: Promise<void>;
@@ -42,7 +43,6 @@ export class Space {
   private currentEngineView: Babylon.EngineView;
 
   private ammo_: Babylon.AmmoJSPlugin;
-  private camera: Babylon.ArcRotateCamera;
 
   private ground: Babylon.Mesh;
   private mat: Babylon.Mesh;
@@ -52,8 +52,6 @@ export class Space {
   // List for keeping track of current item meshes in scene
   private itemMap_ = new Map<string, string>();
 
-  // The position offset of the robot, applied to the user-specified position
-  private robotOffset: Babylon.Vector3 = new Babylon.Vector3(0, 7, -52);
 
   private bodyCompoundRootMesh: Babylon.AbstractMesh;
   private armCompoundRootMesh: Babylon.AbstractMesh;
@@ -77,6 +75,7 @@ export class Space {
   private sensorObjects_: SensorObject[] = [];
 
   private canCoordinates: Array<[number, number]>;
+  private sceneBinding_: SceneBinding;
 
   private collidersVisible = false;
 
@@ -98,12 +97,6 @@ export class Space {
   private static readonly armRotationVector: Babylon.Vector3 = new Babylon.Vector3(1, 0, 0);
   private static readonly clawRotationVector: Babylon.Vector3 = new Babylon.Vector3(0, 0, -1);
 
-  private getRobotState: () => RobotState;
-  private updateRobotState: (robotState: Partial<RobotState>) => void;
-
-  private gizmoManager_: Babylon.GizmoManager;
-  private gizmoImpostor_: Babylon.PhysicsImpostor;
-
   private initStoreSubscription_ = () => {
     if (this.storeSubscription_) return;
     this.storeSubscription_ = store.subscribe(() => {
@@ -111,116 +104,78 @@ export class Space {
     });
   };
 
-  
-  private lastState_: State = undefined;
   private debounceUpdate_ = false;
+
+  private sceneSetting_: boolean;
+  private latestUnfulfilledScene_: Scene;
+
   private onStoreChange_ = (state: State) => {
     if (this.debounceUpdate_) {
-      this.lastState_ = state;
+      this.sceneBinding_.scene = state.scene.workingScene;
       return;
     }
-    
-    const visibleItems = Dict.filter(state.scene.items, item => item.visible);
-    const lastItems = this.lastState_ ? this.lastState_.scene.items : {};
 
-    for (const id of state.scene.itemOrdering) {
-      const item = visibleItems[id];
-      const meshName = this.itemMap_.get(id);
-
-
-      if (!item) {
-        // This item has just become invisible
-        if (meshName) {
-          const mesh = this.scene.getMeshByID(meshName);
-          this.scene.removeMesh(mesh);
-          mesh.dispose();
-          this.itemMap_.delete(id);
+    if (!this.sceneSetting_) {
+      this.sceneSetting_ = true;
+      this.latestUnfulfilledScene_ = state.scene.workingScene;
+      (async () => {
+        // Disable physics during scene changes to avoid objects moving before the scene is fully loaded
+        this.scene.physicsEnabled = false;
+        await this.sceneBinding_.setScene(state.scene.workingScene);
+        if (this.latestUnfulfilledScene_ !== state.scene.workingScene) {
+          await this.sceneBinding_.setScene(this.latestUnfulfilledScene_);
         }
-
-        continue;
-      }
-
-      // We don't want to update a item if it's the same as the last time,
-      // as physics may have changed it.
-      if (this.lastState_ && id in lastItems && !deepNeq(lastItems[id], item)) continue;
-
-      if (meshName === undefined) {
-        this.itemMap_.set(id, this.createItem(item));
-      } else {
-        const mesh = this.scene.getMeshByID(meshName);
-        const { position, orientation } = item.origin ?? {};
-        if (position) {
-          const rawPosition = UnitVector3.toRaw(position, Distance.Type.Centimeters);
-          mesh.position = Vector3.toBabylon(rawPosition);
-        }
-
-        if (orientation) {
-          const rawOrientation = Rotation.toRawQuaternion(orientation);
-          mesh.rotationQuaternion = Quaternion.toBabylon(rawOrientation);
-        }
-
-        // Reset velocity of items when changing position/orientation
-        if ((position || orientation) && mesh.physicsImpostor) {
-          mesh.physicsImpostor.setLinearVelocity(Babylon.Vector3.Zero());
-          mesh.physicsImpostor.setAngularVelocity(Babylon.Vector3.Zero());
-        }
-
-        if (item.friction && mesh.physicsImpostor) {
-          mesh.physicsImpostor.friction = item.friction.value;
-        }
-
-        if (item.mass && mesh.physicsImpostor) {
-          mesh.physicsImpostor.setMass(Mass.toGramsValue(item.mass));
-        }
-      }
+        this.scene.physicsEnabled = true;
+      })().finally(() => {
+        this.sceneSetting_ = false;
+      });
+        
+    } else {
+      this.latestUnfulfilledScene_ = state.scene.workingScene;
     }
-
-    for (const id of Object.keys(lastItems)) {
-      if (!(id in state.scene.items)) {
-        const meshName = this.itemMap_.get(id);
-        if (meshName !== undefined) {
-          const mesh = this.scene.getMeshByID(meshName);
-          this.scene.removeMesh(mesh);
-          mesh.dispose();
-          this.itemMap_.delete(id);
-        }
-      }
-    }
-
-    if ((this.lastState_ ? this.lastState_.scene.selectedItem : undefined) !== state.scene.selectedItem) {
-      if (this.lastState_.scene.selectedItem !== undefined) {
-        const meshName = this.itemMap_.get(this.lastState_.scene.selectedItem);
-        if (meshName !== undefined) {
-          const mesh = this.scene.getMeshByID(meshName);
-          if (mesh.physicsImpostor.isDisposed) {
-            mesh.physicsImpostor = new Babylon.PhysicsImpostor(
-              mesh, this.gizmoImpostor_.type,
-              { 
-                mass: this.gizmoImpostor_.mass, 
-                friction: this.gizmoImpostor_.friction 
-              }
-            );
-          }
-        }
-      }
-
-      if (state.scene.selectedItem === undefined) {
-        // Item is no longer selected
-        this.gizmoManager_.attachToMesh(null);
-        delete this.gizmoImpostor_;
-      } else {
-        const meshName = this.itemMap_.get(state.scene.selectedItem);
-        if (meshName !== undefined) {
-          const mesh = this.scene.getMeshByID(meshName);
-          this.gizmoManager_.attachToMesh(mesh);
-          this.gizmoImpostor_ = mesh.physicsImpostor;
-          mesh.physicsImpostor.dispose();
-        }
-      }
-    }
-
-    this.lastState_ = state;
   };
+
+  setOrigin(origin: UnitReferenceFrame): void {
+
+    const rootMeshes = [
+      this.bodyCompoundRootMesh,
+      this.colliderLeftWheelMesh,
+      this.colliderRightWheelMesh,
+      this.armCompoundRootMesh,
+      this.clawCompoundRootMesh
+    ];
+
+    if (rootMeshes.reduce((acc, mesh) => acc || !mesh, false)) {
+      setTimeout(() => this.setOrigin(origin), 100);
+      return;
+    }
+
+    // Create a transform node, positioned and rotated to match the body root
+    const resetTransformNode: Babylon.TransformNode = new Babylon.TransformNode("resetTransformNode", this.scene);
+    resetTransformNode.setAbsolutePosition(this.bodyCompoundRootMesh.absolutePosition);
+    resetTransformNode.rotationQuaternion = this.bodyCompoundRootMesh.absoluteRotationQuaternion;
+
+    for (const rootMesh of rootMeshes) {
+      // Stop the robot's motion in case it was falling or otherwise moving
+      rootMesh.physicsImpostor.setLinearVelocity(Babylon.Vector3.Zero());
+      rootMesh.physicsImpostor.setAngularVelocity(Babylon.Vector3.Zero());
+
+      rootMesh.setParent(resetTransformNode);
+    }
+
+    // Set the position and rotation
+    // Assuming that position is already in cm/radians. Eventually we'll need to convert depending on the incoming units
+    resetTransformNode.setAbsolutePosition(Vector3.toBabylon(UnitVector3.toRaw(origin.position || UnitVector3.zero('centimeters'), 'centimeters')));
+    
+    const quat = Rotation.toRawQuaternion(origin.orientation || Rotation.Euler.identity());
+    resetTransformNode.rotationQuaternion = Quaternion.toBabylon(quat);
+
+    // Destroy the transform node
+    for (const rootMesh of rootMeshes) {
+      rootMesh.setParent(null);
+    }
+    resetTransformNode.dispose();
+  }
 
   objectScreenPosition(id: string): Vector2 {
     const mesh = this.scene.getMeshByID(id) || this.scene.getMeshByName(id);
@@ -234,7 +189,7 @@ export class Space {
       position,
       Babylon.Matrix.Identity(),
       this.scene.getTransformMatrix(),
-      this.camera.viewport.toGlobal(
+      this.sceneBinding_.camera.viewport.toGlobal(
         this.engine.getRenderWidth(),
         this.engine.getRenderHeight(),
       ));
@@ -260,10 +215,10 @@ export class Space {
   // TODO: Find a better way to communicate robot state instead of these callbacks
   private constructor() {
     this.workingCanvas = document.createElement('canvas');
+
     this.engine = new Babylon.Engine(this.workingCanvas, true, { preserveDrawingBuffer: true, stencil: true });
     this.scene = new Babylon.Scene(this.engine);
-    this.camera = new Babylon.ArcRotateCamera("botcam",10,10,10, new Babylon.Vector3(50,50,50), this.scene);
-    this.camera.panningSensibility = 100;
+    this.sceneBinding_ = new SceneBinding(this.scene, this);
 
     this.currentEngineView = null;
 
@@ -279,25 +234,12 @@ export class Space {
     };
   }
 
-  private initGizmoManager_ = () => {
-    if (this.gizmoManager_) return;
-
-    this.gizmoManager_ = new Babylon.GizmoManager(this.scene);
-
-    this.gizmoManager_.positionGizmoEnabled = true;
-    this.gizmoManager_.gizmos.positionGizmo.scaleRatio = 1.25;
-    this.gizmoManager_.rotationGizmoEnabled = true;
-    this.gizmoManager_.scaleGizmoEnabled = false;
-    this.gizmoManager_.usePointerToAttachGizmos = false;
-  };
-
   // Returns a promise that will resolve after the scene is fully initialized and the render loop is running
   public ensureInitialized(): Promise<void> {
     if (this.initializationPromise === undefined) {
       this.initializationPromise = new Promise((resolve, reject) => {
-        this.createScene();
-        this.initGizmoManager_();
-        this.loadMeshes()
+        this.createScene()
+          .then(() => this.loadMeshes())
           .then(() => {
             this.startRenderLoop();
             resolve();
@@ -305,25 +247,15 @@ export class Space {
           .catch((e) => {
             console.error('The simulator meshes failed to load', e);
             reject(e);
-          });
+          });       
       });
     }
 
     return this.initializationPromise;
   }
 
-  public switchContext(canvas: HTMLCanvasElement, getRobotState: () => RobotState, updateRobotState: (robotState: Partial<RobotState>) => void): void {
-    this.getRobotState = getRobotState;
-    this.updateRobotState = updateRobotState;
-    
-    if (this.currentEngineView) {
-      this.engine.unRegisterView(this.currentEngineView.target);
-    }
-
-    this.currentEngineView = this.engine.registerView(canvas, this.camera);
-    this.scene.detachControl();
-    this.engine.inputElement = canvas;
-    this.scene.attachControl();
+  public switchContext(canvas: HTMLCanvasElement): void {
+    this.sceneBinding_.canvas = canvas;
   }
 
   private onPointerTap_ = (eventData: Babylon.PointerInfo, eventState: Babylon.EventState) => {
@@ -334,36 +266,30 @@ export class Space {
 
 
     const mesh = eventData.pickInfo.pickedMesh;
-    const meshName = mesh.id || mesh.name;
-
-    for (const [itemId, itemMeshName] of this.itemMap_) {
-      if (meshName !== itemMeshName) continue;
-      store.dispatch(SceneAction.selectItem({ id: itemId }));
-      return;
+    const id = mesh.metadata as string;
+    const prevId = store.getState().scene.workingScene.selectedNodeId;
+    if (id !== prevId && store.getState().scene.workingScene.nodes[id]?.editable) {
+      store.dispatch(SceneAction.selectNode({ id }));
+    } else {
+      store.dispatch(SceneAction.UNSELECT_ALL);
     }
-
-    // We fell through, we means we got a hit, but it wasn't an item.
-    store.dispatch(SceneAction.UNSELECT_ALL);
-
   };
 
-  private createScene(): void {
+  private async createScene(): Promise<void> {
     this.scene.onPointerObservable.add(this.onPointerTap_, Babylon.PointerEventTypes.POINTERTAP);
-    
-    this.camera.setTarget(Babylon.Vector3.Zero());
-    this.camera.attachControl(this.workingCanvas, true);
 
-    const light = new Babylon.HemisphericLight("botlight", new Babylon.Vector3(0,1,0), this.scene);
-    light.intensity = 0.75;
+    const light = new Babylon.HemisphericLight("light1", new Babylon.Vector3(0, 1, 0), this.scene);
+    light.intensity = 0.5;
+    light.diffuse = new Babylon.Color3(1.0, 1.0, 1.0);
 
     // At 100x scale, gravity should be -9.8 * 100, but this causes weird jitter behavior
     // Full gravity will be -9.8 * 10
     const gravityVector = new Babylon.Vector3(0, -9.8 * 50, 0);
-    this.ammo_ = new Babylon.AmmoJSPlugin(true, Ammo);
+    
     this.scene.enablePhysics(gravityVector, this.ammo_);
     this.scene.getPhysicsEngine().setSubTimeStep(5);
 
-    this.buildFloor();
+    await this.sceneBinding_.setScene(store.getState().scene.workingScene);
 
     // (x, z) coordinates of cans around the board
     this.canCoordinates = [[-22, -14.3], [0, -20.6], [15.5, -23.7], [0, -6.9], [-13.7, 6.8], [0, 6.8], [13.5, 6.8], [25.1, 14.8], [0, 34], [-18.8, 45.4], [0, 54.9], [18.7, 45.4]];
@@ -381,7 +307,7 @@ export class Space {
 
       if (!anyUpdated) return;
 
-      const robotState = this.getRobotState();
+      const robotState = store.getState().robotState;
 
       const nextRobotState: Partial<RobotState> = {
         analogValues: [...robotState.analogValues],
@@ -396,11 +322,16 @@ export class Space {
         SensorObject.applyMut(sensorObject, nextRobotState);
       }
 
-      this.updateRobotState(nextRobotState);
+      store.dispatch(RobotStateAction.setRobotState({
+        robotState: {
+          ...robotState,
+          ...nextRobotState,
+        },
+      }));
     });
 
     this.scene.registerAfterRender(() => {
-      const currRobotState = this.getRobotState();
+      const currRobotState = store.getState().robotState;
 
       // Set simulator motor speeds based on robot state
       this.setDriveMotors(currRobotState.motorSpeeds[0], currRobotState.motorSpeeds[3]);
@@ -426,9 +357,12 @@ export class Space {
       // Update motor positions based on wheel rotation
       const m0Position = currRobotState.motorPositions[0] + leftRotation * this.WHEEL_TICKS_PER_RADIAN;
       const m3Position = currRobotState.motorPositions[3] + rightRotation * this.WHEEL_TICKS_PER_RADIAN;
-      this.updateRobotState({
-        motorPositions: [m0Position, 0, 0, m3Position],
-      });
+      store.dispatch(RobotStateAction.setRobotState({
+        robotState: {
+          ...currRobotState,
+          motorPositions: [m0Position, 0, 0, m3Position],
+        },
+      }));
 
       this.leftWheelRotationPrev = leftWheelRotationCurr;
       this.rightWheelRotationPrev = rightWheelRotationCurr;
@@ -668,52 +602,126 @@ export class Space {
     await this.scene.whenReadyAsync();
   }
 
+  // Compare Babylon positions with state positions. If they differ significantly, update state
   private updateStore_ = () => {
-    const { items, itemOrdering } = store.getState().scene;
+    const { nodes, robot } = store.getState().scene.workingScene;
     
-    const nextItems = {};
-    // Sync items
-    for (const [id, meshName] of this.itemMap_) {
-      const mesh = this.scene.getMeshByID(meshName);
-      
-      const item = items[id];
+    const setNodeBatch: SceneAction.SetNodeBatchParams = {
+      nodeIds: [],
+      modifyReferenceScene: false,
+    };
 
-      const { position, orientation } = item.origin ?? {};
+    // Check if nodes have moved significant amounts
+    for (const nodeId of Dict.keySet(nodes)) {
+      const node = nodes[nodeId];
+      const bNode = this.scene.getNodeByID(nodeId) || this.scene.getNodeByName(node.name);
 
-      nextItems[id] = {
-        ...item,
+      // The node may still be loading
+      if (!bNode) continue;
+
+      const origin = node.origin ?? {};
+      const nodeOriginChange = this.getSignificantOriginChange(origin, bNode);
+      if (nodeOriginChange.position || nodeOriginChange.orientation || nodeOriginChange.scale) {
+        setNodeBatch.nodeIds.push({
+          id: nodeId,
+          node: {
+            ...node,
+            origin: {
+              ...node.origin,
+              ...nodeOriginChange,
+            }
+          },
+        });
+      }
+    }
+
+    // Check if robot has moved a significant amount
+    let setRobotOrigin: SceneAction.SetRobotOriginParams;
+    const robotOrigin = robot?.origin ?? {};
+    const robotOriginChange = this.getSignificantOriginChange(robotOrigin, this.bodyCompoundRootMesh);
+    if (robotOriginChange.position || robotOriginChange.orientation || robotOriginChange.scale) {
+      setRobotOrigin = {
         origin: {
-          position: position
-            ? UnitVector3.toTypeGranular(UnitVector3.fromRaw(Vector3.fromBabylon(mesh.position), Distance.Type.Centimeters), position.x.type, position.y.type, position.z.type)
-            : UnitVector3.fromRaw(Vector3.fromBabylon(mesh.position), Distance.Type.Centimeters),
-          orientation: orientation
-            ? Rotation.fromRawQuaternion(Quaternion.fromBabylon(mesh.rotationQuaternion), orientation.type)
-            : Rotation.fromRawQuaternion(Quaternion.fromBabylon(mesh.rotationQuaternion), Rotation.Type.Euler),
+          ...robotOrigin,
+          ...robotOriginChange,
         },
+        modifyReferenceScene: false,
       };
     }
 
+    // Update state with significant changes, if needed
     this.debounceUpdate_ = true;
-    store.dispatch(SceneAction.setItemBatch({ items: nextItems }));
+    if (setNodeBatch.nodeIds.length > 0) store.dispatch(SceneAction.setNodeBatch(setNodeBatch));
+    if (setRobotOrigin) store.dispatch(SceneAction.setRobotOrigin(setRobotOrigin));
     this.debounceUpdate_ = false;
   };
+
+  private getSignificantOriginChange(currentOrigin: UnitReferenceFrame, bNode: Babylon.Node): UnitReferenceFrame {
+    const change: UnitReferenceFrame = {};
+
+    const position = currentOrigin?.position ?? UnitVector3.zero('meters');
+    const rotation = currentOrigin?.orientation ?? Rotation.fromRawQuaternion(Quaternion.IDENTITY, 'euler');
+
+    let bPosition: Babylon.Vector3;
+    let bRotation: Babylon.Quaternion;
+    if (bNode instanceof Babylon.TransformNode || bNode instanceof Babylon.AbstractMesh) {
+      bPosition = bNode.position;
+      bRotation = bNode.rotationQuaternion;
+    } else if (bNode instanceof Babylon.ShadowLight) {
+      bPosition = bNode.position;
+      bRotation = Babylon.Quaternion.Identity();
+    } else {
+      throw new Error(`Unknown node type: ${bNode.constructor.name}`);
+    }
+
+    if (bPosition) {
+      const bPositionConv = UnitVector3.fromRaw(Vector3.fromBabylon(bPosition), 'centimeters');
+      
+      // Distance between the two positions in meters
+      const distance = UnitVector3.distance(position, bPositionConv);
+
+      // If varies by more than 0.5cm, consider it a change
+      if (distance.value > 0.005) {
+        change.position = UnitVector3.toTypeGranular(bPositionConv, position.x.type, position.y.type, position.z.type);
+      }
+    }
+
+    if (bRotation) {
+      const bOrientationConv = Rotation.fromRawQuaternion(Quaternion.fromBabylon(bRotation), 'euler');
+
+      // Angle between the two rotations in radians
+      const angle = Rotation.angle(rotation, bOrientationConv);
+      const radians = Angle.toRadians(angle);
+      
+      // If varies by more than 0.5deg, consider it a change
+      if (radians.value > 0.00872665) {
+        change.orientation = Rotation.toType(bOrientationConv, rotation.type);
+      }
+    }
+
+    return change;
+  }
   
   private startRenderLoop(): void {
     this.initStoreSubscription_();
     this.engine.runRenderLoop(() => {
-
-
       // Post updates to the store
       this.updateStore_();
-      
-      
+
       this.scene.render();
     });
+
   }
 
   // Resets the position/rotation of the robot to the given values (cm and radians)
   public setRobotPosition(position: RobotPosition): void {
-    const rootMeshes = [this.bodyCompoundRootMesh, this.colliderLeftWheelMesh, this.colliderRightWheelMesh, this.armCompoundRootMesh, this.clawCompoundRootMesh];
+    const rootMeshes = [
+      this.bodyCompoundRootMesh,
+      this.colliderLeftWheelMesh,
+      this.colliderRightWheelMesh,
+      this.armCompoundRootMesh,
+      this.clawCompoundRootMesh
+    ];
 
     // Create a transform node, positioned and rotated to match the body root
     const resetTransformNode: Babylon.TransformNode = new Babylon.TransformNode("resetTransformNode", this.scene);
@@ -731,7 +739,7 @@ export class Space {
     // Set the position and rotation
     // Assuming that position is already in cm/radians. Eventually we'll need to convert depending on the incoming units
     const { x, y, z, theta } = position;
-    resetTransformNode.setAbsolutePosition(new Babylon.Vector3(Distance.toCentimetersValue(x), Distance.toCentimetersValue(y), Distance.toCentimetersValue(z)).addInPlace(this.robotOffset));
+    resetTransformNode.setAbsolutePosition(new Babylon.Vector3(Distance.toCentimetersValue(x), Distance.toCentimetersValue(y), Distance.toCentimetersValue(z)));
     resetTransformNode.rotationQuaternion = Babylon.Quaternion.RotationAxis(Babylon.Vector3.Up(), Angle.toRadiansValue(theta));
 
     // Destroy the transform node
@@ -744,58 +752,12 @@ export class Space {
   public handleResize(): void {
     this.engine.resize();
   }
-
-  public createItem(item: Item): string {
-    switch (item.type) {
-      case Item.Type.Can: {
-        const can = new Can(this.scene, { item });
-        can.place();
-        return can.id;
-      }
-      case Item.Type.PaperReam: {
-        const ream = new PaperReam(this.scene, { item });
-        ream.place();
-        return ream.id;
-      }
-      default: {
-        throw new Error('Type not supported or undefined');
-      }
-    }
-  }
   
   public updateSensorOptions(isNoiseEnabled: boolean, isRealisticEnabled: boolean): void {
     for (const sensorObject of this.sensorObjects_) {
       sensorObject.isNoiseEnabled = isNoiseEnabled;
       sensorObject.isRealisticEnabled = isRealisticEnabled;
     }
-  }
-
-  private buildFloor() {
-    this.mat = Babylon.MeshBuilder.CreateGround("mat", { width:118, height:59, subdivisions:2 }, this.scene);
-    this.mat.position.y = -0.8;
-    this.mat.rotate(new Babylon.Vector3(0,1,0),-Math.PI / 2);
-    const matMaterial = new Babylon.StandardMaterial("ground", this.scene);
-    matMaterial.ambientTexture = new Babylon.Texture('static/Surface-A.png',this.scene);
-    this.mat.material = matMaterial;
-    this.mat.physicsImpostor = new Babylon.PhysicsImpostor(this.mat, Babylon.PhysicsImpostor.BoxImpostor,{ mass:0, friction: 1 }, this.scene);
-
-    this.ground = Babylon.MeshBuilder.CreateGround("ground", { width:354, height:354, subdivisions:2 }, this.scene);
-    this.ground.position.y = -0.83;
-    const groundMaterial = new Babylon.StandardMaterial("ground", this.scene);
-    groundMaterial.emissiveColor = new Babylon.Color3(0.1,0.1,0.1);
-    this.ground.material = groundMaterial;
-    this.ground.physicsImpostor = new Babylon.PhysicsImpostor(this.ground, Babylon.PhysicsImpostor.BoxImpostor,{ mass:0, friction: 1 }, this.scene);
-  }
-
-  public rebuildFloor(surfaceState: SurfaceState): void { 
-    this.mat.dispose();
-    this.mat = Babylon.MeshBuilder.CreateGround("mat", { width: surfaceState.surfaceWidth, height: surfaceState.surfaceHeight, subdivisions:2 }, this.scene);
-    this.mat.position.y = -0.8;
-    this.mat.rotate(new Babylon.Vector3(0,1,0),-Math.PI / 2);
-    const matMaterial = new Babylon.StandardMaterial("ground", this.scene);
-    matMaterial.ambientTexture = new Babylon.Texture(surfaceState.surfaceImage,this.scene);
-    this.mat.material = matMaterial;
-    this.mat.physicsImpostor = new Babylon.PhysicsImpostor(this.mat, Babylon.PhysicsImpostor.BoxImpostor,{ mass:0, friction: 1 }, this.scene);
   }
 
   private setDriveMotors(leftSpeed: number, rightSpeed: number) {

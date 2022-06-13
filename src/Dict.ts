@@ -58,6 +58,8 @@ namespace Dict {
     }
     return ret;
   };
+
+  export const keySet = <T>(dict: Dict<T>): Set<string> => new Set(Object.keys(dict));
 }
 
 export default Dict;

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 
 import { styled } from 'styletron-react';
 import { Button } from '../Button';
@@ -11,9 +12,15 @@ import { SimulatorArea } from '../SimulatorArea';
 import { Theme, ThemeProps } from '../theme';
 import Widget, { BarComponent, Mode, Size, WidgetProps } from '../Widget';
 import World from '../World';
+import { State as ReduxState } from '../../state';
+import { SceneAction } from '../../state/reducer';
 
 export interface OverlayLayoutProps extends LayoutProps {
   
+}
+
+interface ReduxOverlayLayoutProps {
+  onResetScene: () => void;
 }
 
 interface OverlayLayoutState {
@@ -164,8 +171,8 @@ const INFO_SIZE = sizeDict(INFO_SIZES);
 const WORLD_SIZE = sizeDict(WORLD_SIZES);
 const CONSOLE_SIZE = sizeDict(CONSOLE_SIZES);
 
-class OverlayLayout extends React.PureComponent<Props, State> {
-  constructor(props: Props) {
+export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayoutProps, State> {
+  constructor(props: Props & ReduxOverlayLayoutProps) {
     super(props);
 
     this.state = {
@@ -284,8 +291,6 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       style,
       className,
       theme,
-      state,
-      onStateChange,
       robotStartPosition,
       onSetRobotStartPosition,
       code,
@@ -295,8 +300,8 @@ class OverlayLayout extends React.PureComponent<Props, State> {
       settings,
       onClearConsole,
       onIndentCode,
-      surfaceState,
-      onSurfaceChange,
+      onSelectScene,
+      onResetScene,
     } = props;
 
     const {
@@ -364,16 +369,35 @@ class OverlayLayout extends React.PureComponent<Props, State> {
         </>,
     }));
 
+    const worldBar: BarComponent<unknown>[] = [];
+
+    worldBar.push(BarComponent.create(Button, {
+      theme,
+      onClick: onSelectScene,
+      children:
+        <>
+          <Fa icon='globe-americas' />
+          {' Select Scene'}
+        </>,
+    }));
+
+    worldBar.push(BarComponent.create(Button, {
+      theme,
+      onClick: onResetScene,
+      children:
+        <>
+          <Fa icon='sync' />
+          { ' Reset' }
+        </>
+    }));
+
     return (
       <Container style={style} className={className}>
         <SimulatorAreaContainer>
           <SimulatorArea
             key='simulator'
-            robotState={state}
-            onRobotStateUpdate={onStateChange}
             isSensorNoiseEnabled={settings.simulationSensorNoise}
             isRealisticSensorsEnabled={settings.simulationRealisticSensors}
-            surfaceState={surfaceState}
           />
         </SimulatorAreaContainer>
         <Overlay theme={theme}>
@@ -405,9 +429,6 @@ class OverlayLayout extends React.PureComponent<Props, State> {
             onSizeChange={this.onInfoSizeChange_}
           >
             <Info
-              robotState={state}
-              robotStartPosition={robotStartPosition}
-              onSetRobotStartPosition={onSetRobotStartPosition}
               theme={theme}
             />
           </InfoWidget>
@@ -417,8 +438,9 @@ class OverlayLayout extends React.PureComponent<Props, State> {
             sizes={WORLD_SIZES}
             size={WORLD_SIZE[worldSize]}
             onSizeChange={this.onWorldSizeChange_}
+            barComponents={worldBar}
           >
-            <World theme={theme} surfaceName={surfaceState.surfaceName} onSurfaceChange={onSurfaceChange} />
+            <World theme={theme} />
           </WorldWidget>
         </Overlay>
       </Container>
@@ -426,4 +448,10 @@ class OverlayLayout extends React.PureComponent<Props, State> {
   }
 }
 
-export default OverlayLayout;
+export const OverlayLayoutRedux = connect<unknown, ReduxOverlayLayoutProps, OverlayLayoutProps, ReduxState>((state: ReduxState) => {
+  return {};
+}, dispatch => ({
+  onResetScene: () => {
+    dispatch(SceneAction.RESET_SCENE);
+  }
+}), null, { forwardRef: true })(OverlayLayout);

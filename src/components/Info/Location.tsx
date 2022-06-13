@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../style';
-import { Value, StyledText } from '../../util';
+import { Value, StyledText, Angle, Distance } from '../../util';
 import { ThemeProps } from '../theme';
 import ValueEdit from '../ValueEdit';
 import Field from '../Field';
@@ -10,14 +10,26 @@ import { Switch } from '../Switch';
 import Button from '../Button';
 import { RobotPosition } from '../../RobotPosition';
 import deepNeq from '../../deepNeq';
+import { ReferenceFrame, Rotation, Vector3 } from '../../unit-math';
+import { connect } from 'react-redux';
+import { State } from '../../state';
+import { SceneAction } from '../../state/reducer';
+import Async from '../../state/State/Async';
 
-export interface SimulationProps extends ThemeProps, StyleProps {
-  robotStartPosition: RobotPosition;
-
-  onSetRobotStartPosition: (position: RobotPosition) => void;
+export interface LocationProps extends ThemeProps, StyleProps {
 }
 
-type Props = SimulationProps;
+export interface ReduxLocationProps {
+  origin: ReferenceFrame;
+  onOriginChange: (origin: ReferenceFrame, modifyReferenceScene: boolean) => void;
+}
+
+type Props = LocationProps;
+
+const IDENTITY_ORIGIN: ReferenceFrame = {
+  position: Vector3.zero('centimeters'),
+  orientation: Rotation.Euler.identity(Angle.Type.Degrees),
+};
 
 const StyledValueEdit = styled(ValueEdit, (props: ThemeProps) => ({
   marginTop: `${props.theme.itemPadding * 2}px`,
@@ -35,49 +47,105 @@ const SENSOR_NOISE = StyledText.text({
   text: 'Sensor Noise',
 });
 
-export class Location extends React.PureComponent<Props> {
+class Location extends React.PureComponent<Props & ReduxLocationProps> {
   private onXChange_ = (x: Value) => {
+    const origin = this.props.origin;
     const xDistance = Value.toDistance(x);
-    if (!deepNeq(xDistance, this.props.robotStartPosition.x)) return;
+    if (origin.position && !deepNeq(xDistance, origin.position.x)) return;
 
 
-    this.props.onSetRobotStartPosition({ ...this.props.robotStartPosition, x: xDistance });
+    this.props.onOriginChange({
+      ...origin,
+      position: {
+        ...origin.position || Vector3.zero('centimeters'),
+        x: xDistance
+      }
+    }, true);
   };
 
   private onYChange_ = (y: Value) => {
-    const yDistance = Value.toDistance(y);
-    if (!deepNeq(yDistance, this.props.robotStartPosition.y)) return;
+    const origin = this.props.origin;
 
-    this.props.onSetRobotStartPosition({ ...this.props.robotStartPosition, y: yDistance });
+    const yDistance = Value.toDistance(y);
+    if (origin.position && !deepNeq(yDistance, origin.position.y)) return;
+
+    this.props.onOriginChange({
+      ...origin,
+      position: {
+        ...(origin.position || Vector3.zero('centimeters')),
+        y: yDistance
+      }
+    }, true);
   };
 
   private onZChange_ = (z: Value) => {
+    const origin = this.props.origin;
+
     const zDistance = Value.toDistance(z);
-    if (!deepNeq(zDistance, this.props.robotStartPosition.z)) return;
+    if (origin.position && !deepNeq(zDistance, origin.position.z)) return;
 
-
-
-    this.props.onSetRobotStartPosition({ ...this.props.robotStartPosition, z: zDistance });
+    this.props.onOriginChange({
+      ...origin,
+      position: {
+        ...(origin.position || Vector3.zero('centimeters')),
+        z: zDistance
+      }
+    }, true);
   };
 
   private onThetaChange_ = (theta: Value) => {
-    const angle = Value.toAngle(theta);
-    if (!deepNeq(angle, this.props.robotStartPosition.theta)) return;
+    const origin = this.props.origin;
+
+    const thetaAngle = Value.toAngle(theta);
+
+    const nextOrientation: Rotation.Euler = {
+      type: 'euler',
+      x: Angle.degrees(0),
+      z: Angle.degrees(0),
+      y: thetaAngle,
+      order: 'yzx'
+    };
+    
+    if (origin.orientation && Rotation.angle(origin.orientation, nextOrientation).value === 0) return;
 
 
-    this.props.onSetRobotStartPosition({ ...this.props.robotStartPosition, theta: angle });
+    this.props.onOriginChange({
+      ...origin,
+      orientation: nextOrientation
+    }, true);
   };
   
   render() {
     const { props } = this;
-    const { theme, style, className, robotStartPosition: { x, y, z, theta } } = props;
+    const { theme, style, className, origin } = props;
+
+    let euler = Rotation.Euler.identity(Angle.Type.Degrees);
+    if (origin.orientation) {
+      if (origin.orientation.type === 'euler') {
+        euler = origin.orientation;
+      } else {
+        euler = Rotation.toType(origin.orientation, 'euler') as Rotation.Euler;
+      }
+    }
+
     return (
       <Container style={style} className={className}>
-        <StyledValueEdit value={Value.distance(x)} onValueChange={this.onXChange_} theme={theme} name='X' />
-        <StyledValueEdit value={Value.distance(y)} onValueChange={this.onYChange_} theme={theme} name='Y' />
-        <StyledValueEdit value={Value.distance(z)} onValueChange={this.onZChange_} theme={theme} name='Z' />
-        <StyledValueEdit value={Value.angle(theta)} onValueChange={this.onThetaChange_} theme={theme} name='Rotation' />
+        <StyledValueEdit value={Value.distance(origin.position?.x || Distance.centimeters(0))} onValueChange={this.onXChange_} theme={theme} name='X' />
+        <StyledValueEdit value={Value.distance(origin.position?.y || Distance.centimeters(0))} onValueChange={this.onYChange_} theme={theme} name='Y' />
+        <StyledValueEdit value={Value.distance(origin.position?.z || Distance.centimeters(0))} onValueChange={this.onZChange_} theme={theme} name='Z' />
+        <StyledValueEdit value={Value.angle(euler.y)} onValueChange={this.onThetaChange_} theme={theme} name='Rotation' />
       </Container>
     );
   }
 }
+
+export default connect<unknown, unknown, LocationProps, State>((state: State) => {
+  const origin = state.scene.referenceScene.robot?.origin || IDENTITY_ORIGIN;
+  return {
+    origin,
+  };
+}, dispatch => ({
+  onOriginChange: (origin: ReferenceFrame, modifyReferenceScene: boolean) => {
+    dispatch(SceneAction.setRobotOrigin({ origin, modifyReferenceScene }));
+  }
+}))(Location) as React.ComponentType<LocationProps>;

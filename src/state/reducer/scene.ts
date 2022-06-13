@@ -1,68 +1,150 @@
-import defaultItems from "../../items/defaultItems";
-import { Item, Scene } from "../State";
+import Scene from "../State/Scene";
+import Node from "../State/Scene/Node";
+import Geometry from "../State/Scene/Geometry";
+import { ReferenceFrame } from "../../unit-math";
+import Camera from "../State/Scene/Camera";
+
+import { JBC_1 } from '../../scenes';
+import { ReferencedScenePair } from "..";
 
 export namespace SceneAction {
+  export interface ReplaceScene {
+    type: 'replace-scene';
+    scene: Scene;
+  }
 
+  export type ReplaceSceneParams = Omit<ReplaceScene, 'type'>;
 
-  export interface AddItem {
-    type: 'add-item';
+  export const replaceScene = (params: ReplaceSceneParams): ReplaceScene => ({
+    type: 'replace-scene',
+    ...params
+  });
+
+  export interface ResetScene {
+    type: 'reset-scene';
+  }
+
+  export const RESET_SCENE: ResetScene = { type: 'reset-scene' };
+
+  export interface AddNode {
+    type: 'add-node';
     id: string;
-    item: Item;
+    node: Node;
   }
 
-  export type AddItemParams = Omit<AddItem, 'type'>;
+  export type AddNodeParams = Omit<AddNode, 'type'>;
 
-  export const addItem = (params: AddItemParams): AddItem => ({
-    type: 'add-item',
+  export const addNode = (params: AddNodeParams): AddNode => ({
+    type: 'add-node',
     ...params
   });
 
-  export interface RemoveItem {
-    type: 'remove-item';
+
+  export interface RemoveNode {
+    type: 'remove-node';
     id: string;
   }
 
-  export type RemoveItemParams = Omit<RemoveItem, 'type'>;
+  export type RemoveNodeParams = Omit<RemoveNode, 'type'>;
 
-  export const removeItem = (params: RemoveItemParams): RemoveItem => ({
-    type: 'remove-item',
+  export const removeNode = (params: RemoveNodeParams): RemoveNode => ({
+    type: 'remove-node',
     ...params
   });
 
-  export interface SetItem {
-    type: 'set-item';
+  export interface SetNode {
+    type: 'set-node';
     id: string;
-    item: Item;
+    node: Node;
+    modifyReferenceScene: boolean;
+    modifyOrigin: boolean;
   }
 
-  export type SetItemParams = Omit<SetItem, 'type'>;
+  export type SetNodeParams = Omit<SetNode, 'type'>;
 
-  export const setItem = (params: SetItemParams): SetItem => ({
-    type: 'set-item',
+  export const setNode = (params: SetNodeParams): SetNode => ({
+    type: 'set-node',
     ...params
   });
 
-  export interface SetItemBatch {
-    type: 'set-item-batch';
-    items: { [id: string]: Item };
+  export interface SetNodeBatch {
+    type: 'set-node-batch';
+    nodeIds: {
+      id: string;
+      node: Node;
+    }[];
+    modifyReferenceScene: boolean;
   }
 
-  export type SetItemBatchParams = Omit<SetItemBatch, 'type'>;
+  export type SetNodeBatchParams = Omit<SetNodeBatch, 'type'>;
 
-  export const setItemBatch = (params: SetItemBatchParams): SetItemBatch => ({
-    type: 'set-item-batch',
+  export const setNodeBatch = (params: SetNodeBatchParams): SetNodeBatch => ({
+    type: 'set-node-batch',
     ...params
   });
 
-  export interface SelectItem {
-    type: 'select-item';
+  export interface AddGeometry {
+    type: 'add-geometry';
+    id: string;
+    geometry: Geometry;
+  }
+
+  export type AddGeometryParams = Omit<AddGeometry, 'type'>;
+
+  export const addGeometry = (params: AddGeometryParams): AddGeometry => ({
+    type: 'add-geometry',
+    ...params
+  });
+
+  export interface RemoveGeometry {
+    type: 'remove-geometry';
+    id: string;
+  }
+
+  export type RemoveGeometryParams = Omit<RemoveGeometry, 'type'>;
+
+  export const removeGeometry = (params: RemoveGeometryParams): RemoveGeometry => ({
+    type: 'remove-geometry',
+    ...params
+  });
+
+  export interface SetGeometry {
+    type: 'set-geometry';
+    id: string;
+    geometry: Geometry;
+  }
+
+  export type SetGeometryParams = Omit<SetGeometry, 'type'>;
+  
+  export const setGeometry = (params: SetGeometryParams): SetGeometry => ({
+    type: 'set-geometry',
+    ...params
+  });
+
+  export interface SetGeometryBatch {
+    type: 'set-geometry-batch';
+    geometryIds: {
+      id: string;
+      geometry: Geometry;
+    }[];
+  }
+
+  export type SetGeometryBatchParams = Omit<SetGeometryBatch, 'type'>;
+
+  export const setGeometryBatch = (params: SetGeometryBatchParams): SetGeometryBatch => ({
+    type: 'set-geometry-batch',
+    ...params
+  });
+
+  export interface SelectNode {
+    type: 'select-node';
     id?: string;
   }
 
-  export type SelectItemParams = Omit<SelectItem, 'type'>;
+  export type SelectNodeParams = Omit<SelectNode, 'type'>;
 
-  export const selectItem = (params: SelectItemParams): SelectItem => ({
-    type: 'select-item',
+  export const selectNode = (params: SelectNodeParams): SelectNode => ({
+    type: 'select-node',
     ...params
   });
 
@@ -71,73 +153,322 @@ export namespace SceneAction {
   }
 
   export const UNSELECT_ALL: UnselectAll = { type: 'unselect-all' };
+
+  export interface AddObject {
+    type: 'add-object';
+    id: string;
+    object: Node.Obj;
+    geometry: Geometry;
+  }
+
+  export type AddObjectParams = Omit<AddObject, 'type'>;
+
+  export const addObject = (params: AddObjectParams): AddObject => ({
+    type: 'add-object',
+    ...params
+  });
+
+  export interface SetRobotOrigin {
+    type: 'set-robot-origin';
+    origin: ReferenceFrame;
+    modifyReferenceScene: boolean;
+  }
+
+  export type SetRobotOriginParams = Omit<SetRobotOrigin, 'type'>;
+
+  export const setRobotOrigin = (params: SetRobotOriginParams): SetRobotOrigin => ({
+    type: 'set-robot-origin',
+    ...params
+  });
+
+  export interface SetCamera {
+    type: 'set-camera';
+    camera: Camera;
+  }
+
+  export type SetCameraParams = Omit<SetCamera, 'type'>;
+
+  export const setCamera = (params: SetCameraParams): SetCamera => ({
+    type: 'set-camera',
+    ...params
+  });
 }
 
 export type SceneAction = (
-  SceneAction.AddItem |
-  SceneAction.RemoveItem |
-  SceneAction.SetItem |
-  SceneAction.SetItemBatch |
-  SceneAction.SelectItem |
-  SceneAction.UnselectAll
+  SceneAction.ReplaceScene |
+  SceneAction.ResetScene |
+  SceneAction.AddNode |
+  SceneAction.RemoveNode |
+  SceneAction.SetNode |
+  SceneAction.SetNodeBatch |
+  SceneAction.AddGeometry |
+  SceneAction.RemoveGeometry |
+  SceneAction.SetGeometry |
+  SceneAction.SetGeometryBatch |
+  SceneAction.SelectNode |
+  SceneAction.UnselectAll |
+  SceneAction.AddObject |
+  SceneAction.SetRobotOrigin |
+  SceneAction.SetCamera
 );
 
-export const DEFAULT_SCENE: Scene = {
-  itemOrdering: Object.keys(defaultItems),
-  items: {
-    ...defaultItems
-  },
-  selectedItem: undefined
-};
-
-export const reduceScene = (state: Scene = DEFAULT_SCENE, action: SceneAction) => {
+export const reduceScene = (state: ReferencedScenePair = { referenceScene: JBC_1, workingScene: JBC_1 }, action: SceneAction): ReferencedScenePair => {
   switch (action.type) {
-    case 'add-item':
+    case 'replace-scene':
+      return {
+        referenceScene: { ...action.scene },
+        workingScene: { ...action.scene },
+      };
+    case 'reset-scene':
       return {
         ...state,
-        items: {
-          ...state.items,
-          [action.id]: action.item,
-        },
-        itemOrdering: [...state.itemOrdering, action.id],
+        workingScene: state.referenceScene,
       };
-    case 'remove-item': {
-      const nextState = {
-        ...state,
-        items: {
-          ...state.items,
+    case 'add-node':
+      return {
+        referenceScene: {
+          ...state.referenceScene,
+          nodes: {
+            ...state.referenceScene.nodes,
+            [action.id]: action.node,
+          },
         },
-        itemOrdering: state.itemOrdering.filter(id => id !== action.id),
+        workingScene: {
+          ...state.workingScene,
+          nodes: {
+            ...state.workingScene.nodes,
+            [action.id]: action.node,
+          },
+        },
+      };
+    case 'remove-node': {
+      const nextState: ReferencedScenePair = {
+        referenceScene: {
+          ...state.referenceScene,
+          nodes: {
+            ...state.referenceScene.nodes,
+          },
+        },
+        workingScene: {
+          ...state.workingScene,
+          nodes: {
+            ...state.workingScene.nodes,
+          },
+        },
       };
 
-      delete nextState.items[action.id];
+      delete nextState.referenceScene.nodes[action.id];
+      delete nextState.workingScene.nodes[action.id];
+
       return nextState;
     }
-    case 'set-item':
-      return {
+    case 'set-node': {
+      const nextState: ReferencedScenePair = {
         ...state,
-        items: {
-          ...state.items,
-          [action.id]: action.item,
+        workingScene: {
+          ...state.workingScene,
+          nodes: {
+            ...state.workingScene.nodes,
+            [action.id]: action.modifyOrigin ? action.node : { ...action.node, origin: state.workingScene.nodes[action.id].origin },
+          },
         },
       };
-    case 'set-item-batch':
-      return {
+
+      if (action.modifyReferenceScene) {
+        nextState.referenceScene = {
+          ...state.referenceScene,
+          nodes: {
+            ...state.referenceScene.nodes,
+            [action.id]: action.modifyOrigin ? action.node : { ...action.node, origin: state.referenceScene.nodes[action.id].origin },
+          },
+        };
+      }
+
+      return nextState;
+    }
+    case 'set-node-batch': {
+      const nextState: ReferencedScenePair = {
         ...state,
-        items: {
-          ...state.items,
-          ...action.items,
+        workingScene: {
+          ...state.workingScene,
+          nodes: {
+            ...state.workingScene.nodes,
+          },
         },
       };
-    case 'select-item':
+
+      for (const { id, node } of action.nodeIds) {
+        nextState.workingScene.nodes[id] = node;
+      }
+
+      if (action.modifyReferenceScene) {
+        nextState.referenceScene = {
+          ...state.referenceScene,
+          nodes: {
+            ...state.referenceScene.nodes,
+          },
+        };
+
+        for (const { id, node } of action.nodeIds) {
+          nextState.referenceScene.nodes[id] = node;
+        }
+      }
+
+      return nextState;
+    }
+    case 'add-geometry':
+      return {
+        referenceScene: {
+          ...state.referenceScene,
+          geometry: {
+            ...state.referenceScene.geometry,
+            [action.id]: action.geometry,
+          },
+        },
+        workingScene: {
+          ...state.workingScene,
+          geometry: {
+            ...state.workingScene.geometry,
+            [action.id]: action.geometry,
+          },
+        },
+      };
+    case 'remove-geometry': {
+      const nextState: ReferencedScenePair = {
+        referenceScene: {
+          ...state.referenceScene,
+          geometry: {
+            ...state.referenceScene.geometry,
+          },
+        },
+        workingScene: {
+          ...state.workingScene,
+          geometry: {
+            ...state.workingScene.geometry,
+          },
+        },
+      };
+
+      delete nextState.referenceScene.geometry[action.id];
+      delete nextState.workingScene.geometry[action.id];
+
+      return nextState;
+    }
+    case 'set-geometry':
+      return {
+        referenceScene: {
+          ...state.referenceScene,
+          geometry: {
+            ...state.referenceScene.geometry,
+            [action.id]: action.geometry,
+          },
+        },
+        workingScene: {
+          ...state.workingScene,
+          geometry: {
+            ...state.workingScene.geometry,
+            [action.id]: action.geometry,
+          },
+        },
+      };
+    case 'set-geometry-batch': {
+      const nextState: ReferencedScenePair = {
+        referenceScene: {
+          ...state.referenceScene,
+          geometry: {
+            ...state.referenceScene.geometry,
+          },
+        },
+        workingScene: {
+          ...state.workingScene,
+          geometry: {
+            ...state.workingScene.geometry,
+          },
+        },
+      };
+
+      for (const { id, geometry } of action.geometryIds) {
+        nextState.referenceScene.geometry[id] = geometry;
+        nextState.workingScene.geometry[id] = geometry;
+      }
+
+      return nextState;
+    }
+    case 'select-node':
       return {
         ...state,
-        selectedItem: action.id,
+        workingScene: {
+          ...state.workingScene,
+          selectedNodeId: action.id,
+        },
       };
     case 'unselect-all':
       return {
         ...state,
-        selectedItem: undefined,
+        workingScene: {
+          ...state.workingScene,
+          selectedNodeId: undefined,
+        },
+      };
+    case 'add-object':
+      return {
+        referenceScene: {
+          ...state.referenceScene,
+          nodes: {
+            ...state.referenceScene.nodes,
+            [action.id]: action.object,
+          },
+          geometry: {
+            ...state.referenceScene.geometry,
+            [action.object.geometryId]: action.geometry,
+          },
+        },
+        workingScene: {
+          ...state.workingScene,
+          nodes: {
+            ...state.workingScene.nodes,
+            [action.id]: action.object,
+          },
+          geometry: {
+            ...state.workingScene.geometry,
+            [action.object.geometryId]: action.geometry,
+          },
+        },
+      };
+    case 'set-robot-origin': {
+      const nextState: ReferencedScenePair = {
+        ...state,
+        workingScene: {
+          ...state.workingScene,
+          robot: {
+            ...state.workingScene.robot,
+            origin: action.origin,
+          },
+        },
+      };
+
+      if (action.modifyReferenceScene) {
+        nextState.referenceScene = {
+          ...state.referenceScene,
+          robot: {
+            ...state.referenceScene.robot,
+            origin: action.origin,
+          },
+        };
+      }
+
+      return nextState;
+    }
+    case 'set-camera': 
+      return {
+        referenceScene: {
+          ...state.referenceScene,
+          camera: action.camera,
+        },
+        workingScene: {
+          ...state.workingScene,
+          camera: action.camera,
+        },
       };
     default:
       return state;

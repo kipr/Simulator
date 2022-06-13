@@ -7,7 +7,7 @@ export * from './BottomLayout';
 export { default as BottomLayout } from './BottomLayout';
 
 export * from './OverlayLayout';
-export { default as OverlayLayout } from './OverlayLayout';
+export { OverlayLayout, OverlayLayoutRedux } from './OverlayLayout';
 
 export * from './SideLayout';
-export { default as SideLayout } from './SideLayout';
+export { SideLayout, SideLayoutRedux } from './SideLayout';

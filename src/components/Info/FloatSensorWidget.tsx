@@ -2,14 +2,9 @@ import * as React from 'react';
 import * as ReactDom from 'react-dom';
 
 import { Vector2 } from '../../math';
-import { StyleProps } from '../../style';
-import { ThemeProps } from '../theme';
-import SensorWidget from './SensorWidget';
+import SensorWidget, { SensorWidgetProps } from './SensorWidget';
 
-export interface FloatSensorWidgetProps extends ThemeProps, StyleProps {
-  name: string;
-  sensor: string;
-  value: number;
+export interface FloatSensorWidgetProps extends SensorWidgetProps {
 }
 
 interface FloatSensorWidgetState {
@@ -33,7 +28,7 @@ class FloatSensorWidget extends React.PureComponent<Props, State> {
   render() {
     const { props, state } = this;
 
-    const { name, sensor, value, theme, style, className } = props;
+    const { style } = props;
     const { topLeft } = state;
 
     const finalStyle: React.CSSProperties = {
@@ -43,9 +38,8 @@ class FloatSensorWidget extends React.PureComponent<Props, State> {
       left: `${topLeft.x}px`,
     };
 
-
     const ret = (
-      <SensorWidget style={finalStyle} className={className} name={name} value={value} theme={theme} />
+      <SensorWidget {...props} style={finalStyle}  />
     );
 
     return ReactDom.createPortal(ret, FLOATING);
