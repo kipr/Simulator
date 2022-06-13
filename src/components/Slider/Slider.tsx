@@ -16,6 +16,9 @@ export interface SliderProps extends ThemeProps {
   minSizes: [number, number],
   // the initial proportional split of the elements
   sizes: [number, number],
+  // should both components be rendered? 
+  // If one is false, the resize bar will also not be rendered
+  visible: [boolean, boolean],
 }
 
 interface SliderItemProps extends CanBeVertical {
@@ -38,7 +41,7 @@ const SliderItem = styled('div', (props: SliderItemProps) => ({
 }));
 
 export const Slider = function (props: SliderProps) {
-  const { isVertical, theme, children, minSizes, sizes } = props;
+  const { isVertical, theme, children, minSizes, sizes, visible } = props;
 
   const itemRef0 = React.useRef<HTMLDivElement>(null);
   const itemRef1 = React.useRef<HTMLDivElement>(null);
@@ -73,19 +76,22 @@ export const Slider = function (props: SliderProps) {
 
   // TODO: make sure we support only 1 touch more explicitly
   const onTouchMove = (e: TouchEvent) => {
+    console.log('touch move', e.touches);
     // only support single touch events
     if (e.touches.length > 1) return;
 
     dispatch({ actionType: Actions.MouseMove, x: e.touches[0].pageX, y: e.touches[0].pageY });
   };
   const onTouchEnd = (e: TouchEvent) => {
-    dispatch({ actionType: Actions.MouseUp, x: null, y: null });
+    console.log('touch end', e.touches);
+    dispatch({ actionType: Actions.MouseUp });
 
     window.removeEventListener('touchmove', onTouchMove);
     window.removeEventListener('touchend', onTouchEnd);
     window.removeEventListener('touchcancel', onTouchEnd);
   };
   const onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    console.log('touch start', e.touches);
     // only support single touch events
     if (e.touches.length > 1) return;
 
@@ -96,20 +102,35 @@ export const Slider = function (props: SliderProps) {
     window.addEventListener('touchcancel', onTouchEnd);
   };
 
-  // console.log('size: ', width, height, state.size);
-
+  // elements may not be visible (eg, in the sidebar, they can be hidden)
+  // we could just display them seperately from the slider, but then the
+  // slider is unloaded and we lose the positioning of it, so instead hide them here
+  
   return <SliderContainer $vertical={isVertical} selected={selected}>
-    <SliderItem ref={itemRef0} $flexGrow={state.grows[0]}>
-      {children[0]}
-    </SliderItem>
-
-    <SliderBar $vertical={isVertical} theme={theme} selected={state.resizing}
-      onMouseDownCallback={onMouseDown}
-      onTouchStartCallback={onTouchStart}
-    />
-
-    <SliderItem ref={itemRef1} $flexGrow={state.grows[1]}>
-      {children[1]}
-    </SliderItem>
+    {visible[0]
+      ? <SliderItem 
+        ref={itemRef0} 
+        $flexGrow={visible[1] ? state.grows[0] : 1}
+      >
+        {children[0]}
+      </SliderItem>
+      : null
+    }
+    {visible[0] && visible[1] 
+      ? <SliderBar $vertical={isVertical} theme={theme} selected={state.resizing}
+        onMouseDownCallback={onMouseDown}
+        onTouchStartCallback={onTouchStart}
+      />
+      : null
+    }
+    {visible[1] 
+      ? <SliderItem 
+        ref={itemRef1} 
+        $flexGrow={visible[0] ? state.grows[1] : 1}
+      >
+        {children[1]}
+      </SliderItem>
+      : null
+    }
   </SliderContainer>;
 };

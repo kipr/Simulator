@@ -233,6 +233,7 @@ class SideLayout extends React.PureComponent<Props, State> {
             theme={theme}
             minSizes={[100, 100]}
             sizes={[3, 1]}
+            visible={[true, true]}
           >
             {/* <div>Editor</div> */}
             <SimultorWidgetContainer>
@@ -311,42 +312,43 @@ class SideLayout extends React.PureComponent<Props, State> {
       />
     </SimulatorAreaContainer>;
 
-    const tabBar = <TabBar isVertical={true} tabs={TABS} index={activePanel} onIndexChange={this.onTabBarIndexChange_} theme={theme} />;
+    // const tabBar = <TabBar isVertical={true} tabs={TABS} index={activePanel} onIndexChange={this.onTabBarIndexChange_} theme={theme} />;
 
-    switch (sidePanelSize) {
-      case Size.Type.Minimized:
-        return <SidePanelContainer>
-          <TabBar isVertical={true} tabs={TABS} index={activePanel} onIndexChange={this.onTabBarExpand_} theme={theme} />
+    // switch (sidePanelSize) {
+    //   case Size.Type.MinimizedS:
+    //     return <SidePanelContainer>
+    //       {simulator}
+    //     </SidePanelContainer>;
+    //   // not yet implemented, but could be on a device with a small enough screen that a slider doesn't make sense
+    //   // case Size.Type.Maximized:
+    //   //   return <SidePanelContainer>
+    //   //     {tabBar}
+    //   //     <SidePanelContainer>
+    //   //       {sideBar}
+    //   //     </SidePanelContainer>
+    //   //   </SidePanelContainer>;
+    //   default:
+    return <Container style={style} className={className}>
+      <SidePanelContainer>
+        <TabBar 
+          theme={theme} isVertical={true} tabs={TABS} index={activePanel} 
+          onIndexChange={sidePanelSize === Size.Type.Minimized 
+            ? this.onTabBarExpand_
+            : this.onTabBarIndexChange_ 
+          }  
+        />
+        <Slider 
+          isVertical={true}
+          theme={theme}
+          minSizes={[50, 50]}
+          sizes={[1, 3]}
+          visible={[sidePanelSize !== Size.Type.Minimized, true]}
+        >
+          {content}
           {simulator}
-        </SidePanelContainer>;
-      // not yet implemented, but could be on a device with a small enough screen that a slider doesn't make sense
-      // case Size.Type.Maximized:
-      //   return <SidePanelContainer>
-      //     {tabBar}
-      //     <SidePanelContainer>
-      //       {sideBar}
-      //     </SidePanelContainer>
-      //   </SidePanelContainer>;
-      default:
-        return <Container style={style} className={className}>
-          <SidePanelContainer>
-            {tabBar}
-            {/* <SidePanelContainer> */}
-            <Slider 
-              isVertical={true}
-              theme={theme}
-              minSizes={[50, 50]}
-              sizes={[1, 3]}
-            >
-              {/* <SideBar> */}
-              {content}
-              {/* </SideBar> */}
-              {simulator}
-            </Slider>
-            {/* </SidePanelContainer> */}
-          </SidePanelContainer>
-        </Container>;
-    }
+        </Slider>
+      </SidePanelContainer>
+    </Container>;
   }
 }
 

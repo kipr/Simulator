@@ -24,6 +24,15 @@ export function resizeOnPointerMove(state: ResizeState, action: ResizeAction): R
   const { actionType, x, y } = action;
   const pos = (isVertical) ? x : y;
 
+  // stop the resize on mouseup
+  // if it's a touch event, we won't have an actual position here, so quit before we do that
+  if (actionType === Actions.MouseUp) {
+    return { 
+      ...state, 
+      resizing: false
+    };
+  }
+
   // check that our refs are loaded
   if (refs[0].current === null || refs[1].current === null) return state;
 
@@ -36,7 +45,8 @@ export function resizeOnPointerMove(state: ResizeState, action: ResizeAction): R
   if (actionType === Actions.MouseDown) {
     // scale the min sizes
     const scaledMinSizes = minSizes.map(x => sumGrow * x / sumSize);
-
+    console.log('scaled min sizes:', scaledMinSizes);
+    console.log('grows', grows);
     return {
       ...state,
       startGrows: grows,
@@ -56,28 +66,20 @@ export function resizeOnPointerMove(state: ResizeState, action: ResizeAction): R
   let currGrows = [sumGrow * (diff / sumSize),  sumGrow * (-diff / sumSize)];
   // add to grows
   currGrows = [startGrows[0] + currGrows[0], startGrows[1] + currGrows[1]];
-
+  console.log(currGrows);
   // respect minimum sizes
   if (currGrows[0] < scaledMinSizes[0]) {
     currGrows[1] += currGrows[0] - scaledMinSizes[0];
-    // pos -= currSizes[0] - minSizes[0];
     currGrows[0] = scaledMinSizes[0];
   }
   if (currGrows[1] < scaledMinSizes[1]) {
     currGrows[0] += currGrows[1] - scaledMinSizes[1];
-    // pos += currSizes[1] - minSizes[1];
     currGrows[1] = scaledMinSizes[1];
   }
+
+  console.log(pos, startPos, diff, startGrows, currGrows, currSizes,);
     
-  // stop the resize on mouseup
-  // update the state to triger a re-render
-  if (actionType === Actions.MouseUp) {
-    return { 
-      ...state, 
-      grows: currGrows,
-      resizing: false
-    };
-  }
+
   return {
     ...state,
     grows: currGrows,
