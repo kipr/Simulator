@@ -1,12 +1,12 @@
 import { Message } from "ivygate";
-import { RobotPosition } from "../RobotPosition";
-import { RobotState } from "../RobotState";
-import { Settings } from "../Settings";
-import { Feedback } from "../Feedback";
-import { StyleProps } from "../style";
-import { SurfaceState } from "../SurfaceState";
-import { StyledText } from "../util";
-import { ThemeProps } from "./theme";
+import { RobotPosition } from "../../RobotPosition";
+import { RobotState } from "../../RobotState";
+import { Settings } from "../../Settings";
+import { StyleProps } from "../../style";
+import { SurfaceState } from "../../SurfaceState";
+import { StyledText } from "../../util";
+import { ThemeProps } from "../theme";
+import { styled } from 'styletron-react';
 
 export interface LayoutProps extends StyleProps, ThemeProps {
   code: string;
@@ -22,7 +22,6 @@ export interface LayoutProps extends StyleProps, ThemeProps {
   onIndentCode: () => void;
   surfaceState: SurfaceState;
   onSurfaceChange: (surfaceName: string) => void;
-  feedback: Feedback;
 }
 
 export enum Layout {

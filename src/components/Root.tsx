@@ -9,10 +9,7 @@ import SimMenu from './SimMenu';
 
 import { styled } from 'styletron-react';
 import { DARK, Theme } from './theme';
-import OverlayLayout from './OverlayLayout';
-import { Layout, LayoutProps } from './Layout';
-import BottomLayout from './BottomLayout';
-import SideLayout from './SideLayout';
+import { Layout, LayoutProps, BottomLayout, OverlayLayout, SideLayout  } from './Layout';
 
 import { SettingsDialog } from './SettingsDialog';
 import { AboutDialog } from './AboutDialog';
@@ -109,13 +106,19 @@ interface RootState {
 type Props = Record<string, never>;
 type State = RootState;
 
-const Container = styled('div', {
+// We can't set innerheight statically, becasue the window can change
+// but we also must use innerheight to fix mobile issues
+interface ContainerProps {
+  windowInnerHeight: number
+}
+const Container = styled('div', (props: ContainerProps) => ({
   width: '100vw',
-  height: '100vh',
+  height: `${props.windowInnerHeight}px`, // fix for mobile, see https://chanind.github.io/javascript/2019/09/28/avoid-100vh-on-mobile-web.html
   display: 'flex',
   flexDirection: 'column',
-  overflow: 'hidden'
-});
+  overflow: 'hidden',
+  position: 'fixed'
+}));
 
 const STDOUT_STYLE = (theme: Theme) => ({
   color: theme.color
@@ -140,6 +143,7 @@ export class Root extends React.Component<Props, State> {
         theta: Angle.degrees(0),
       },
       surfaceState: SurfaceStatePresets.jbcA,
+      // TODO: set to side by default if on mobile
       layout: Layout.Overlay,
       code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
       modal: Modal.NONE,
@@ -432,7 +436,6 @@ export class Root extends React.Component<Props, State> {
       onIndentCode: this.onIndentCode_,
       surfaceState,
       onSurfaceChange: this.onUpdateSurfaceState_,
-      feedback,
     };
 
     let impl: JSX.Element;
@@ -464,7 +467,7 @@ export class Root extends React.Component<Props, State> {
     return (
 
       <>
-        <Container>
+        <Container windowInnerHeight={window.innerHeight}>
           <SimMenu
             layout={layout}
             onLayoutChange={this.onLayoutChange_}

@@ -36,7 +36,8 @@ const Container = styled('div', (props: ThemeProps) => ({
   border: 'none',
   ':focus': {
     outline: 'none'
-  }
+  },
+  height: '100%'
 }));
 
 class Editor extends React.PureComponent<Props, State> {
