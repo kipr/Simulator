@@ -81,7 +81,7 @@ export type ScenesAction = (
 
 const DEFAULT_SCENES: Scenes = {
   scenes: {
-    jbcSandboxA: Async.loaded({value: JBC_SCENES.JBC_Sandbox_A}),
+    jbcSandboxA: Async.loaded({ value: JBC_SCENES.JBC_Sandbox_A }),
     jbc1: Async.loaded({ value: JBC_SCENES.JBC_1 }),
     jbc2: Async.loaded({ value: JBC_SCENES.JBC_2 }),
     jbc2b: Async.loaded({ value: JBC_SCENES.JBC_2B }),
@@ -116,7 +116,7 @@ const DEFAULT_SCENES: Scenes = {
     jbc21: Async.loaded({ value: JBC_SCENES.JBC_21 }),
     jbc22: Async.loaded({ value: JBC_SCENES.JBC_22 }),
   },
-  activeId: 'jbc1',
+  activeId: 'jbcSandboxA',
 };
 
 export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesAction): Scenes => {
