@@ -3,7 +3,7 @@ import * as React from 'react';
 import { styled, withStyleDeep } from 'styletron-react';
 import { StyleProps } from '../../style';
 import { Switch } from '../Switch';
-import { ThemeProps } from '../theme';
+import { Theme, ThemeProps } from '../theme';
 import Field from '../Field';
 import ScrollArea from '../ScrollArea';
 import Section from '../Section';
@@ -32,6 +32,38 @@ import { Scenes } from '../../state/State';
 import Async from '../../state/State/Async';
 import Dict from '../../Dict';
 import Geometry from '../../state/State/Scene/Geometry';
+
+import { Button } from '../Button';
+import { BarComponent } from '../Widget';
+
+export const createWorldBarComponents = (
+  theme: Theme, 
+  onSelectScene: () => void,
+  onResetScene: () => void
+) => {
+  const worldBar: BarComponent<unknown>[] = [];
+
+  worldBar.push(BarComponent.create(Button, {
+    theme,
+    onClick: onSelectScene,
+    children:
+      <>
+        <Fa icon='globe-americas' />
+        {' Select Scene'}
+      </>,
+  }));
+
+  worldBar.push(BarComponent.create(Button, {
+    theme,
+    onClick: onResetScene,
+    children:
+      <>
+        <Fa icon='sync' />
+        { ' Reset' }
+      </>
+  }));
+  return worldBar;
+};
 
 export interface WorldProps extends StyleProps, ThemeProps {
 }
@@ -117,7 +149,7 @@ const SectionIcon = styled(Fa, (props: ThemeProps) => ({
   transition: 'opacity 0.2s'
 }));
 
-class World extends React.PureComponent<Props & ReduxWorldProps, State> {
+class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
   constructor(props: Props & ReduxWorldProps) {
     super(props);
 
@@ -323,4 +355,4 @@ export default connect<unknown, unknown, Props, ReduxState>(state => {
   },
 
 
-}))(World) as React.ComponentType<Props>;
+}))(World_) as React.ComponentType<Props>;

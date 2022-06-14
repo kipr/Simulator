@@ -32,6 +32,7 @@ import SelectSceneDialog from './SelectSceneDialog';
 
 import store from '../state';
 import { RobotStateAction } from '../state/reducer';
+import { Editor } from './Editor';
 
 namespace Modal {
   export enum Type {
@@ -117,11 +118,11 @@ type State = RootState;
 // We can't set innerheight statically, becasue the window can change
 // but we also must use innerheight to fix mobile issues
 interface ContainerProps {
-  windowInnerHeight: number
+  $windowInnerHeight: number
 }
 const Container = styled('div', (props: ContainerProps) => ({
   width: '100vw',
-  height: `${props.windowInnerHeight}px`, // fix for mobile, see https://chanind.github.io/javascript/2019/09/28/avoid-100vh-on-mobile-web.html
+  height: `${props.$windowInnerHeight}px`, // fix for mobile, see https://chanind.github.io/javascript/2019/09/28/avoid-100vh-on-mobile-web.html
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
@@ -137,6 +138,9 @@ const STDERR_STYLE = (theme: Theme) => ({
 });
 
 export class Root extends React.Component<Props, State> {
+  private editorRef: React.MutableRefObject<Editor>;
+  private overlayLayoutRef:  React.MutableRefObject<OverlayLayout>;
+
   constructor(props: Props) {
     super(props);
 
@@ -158,6 +162,9 @@ export class Root extends React.Component<Props, State> {
       settings: DEFAULT_SETTINGS,
       feedback: DEFAULT_FEEDBACK,
     };
+
+    this.editorRef = React.createRef();
+    this.overlayLayoutRef = React.createRef();
   }
 
   componentDidMount() {
@@ -191,17 +198,12 @@ export class Root extends React.Component<Props, State> {
     this.setState({ code });
   };
 
-  private overlayLayout_: OverlayLayout;
-  private bindOverlayLayout_ = (overlayLayout: OverlayLayout) => {
-    this.overlayLayout_ = overlayLayout;
-  };
-
   private onShowAll_ = () => {
-    this.overlayLayout_.showAll();
+    if (this.overlayLayoutRef.current) this.overlayLayoutRef.current.showAll();
   };
 
   private onHideAll_ = () => {
-    this.overlayLayout_.hideAll();
+    if (this.overlayLayoutRef.current) this.overlayLayoutRef.current.hideAll();
   };
 
   private onLayoutChange_ = (layout: Layout) => {
@@ -239,8 +241,7 @@ export class Root extends React.Component<Props, State> {
   };
 
   private onErrorMessageClick_ = (line: number) => () => {
-    if (!this.overlayLayout_) return;
-    this.overlayLayout_.editor.ivygate.revealLineInCenter(line);
+    if (this.editorRef.current) this.editorRef.current.ivygate.revealLineInCenter(line);
   };
 
   private onRunClick_ = () => {
@@ -342,7 +343,7 @@ export class Root extends React.Component<Props, State> {
   };
 
   private onIndentCode_ = () => {
-    this.overlayLayout_.editor.ivygate.formatCode();
+    if (this.editorRef.current) this.editorRef.current.ivygate.formatCode();
   };
   
   onDocumentationClick = () => {
@@ -422,13 +423,14 @@ export class Root extends React.Component<Props, State> {
       onClearConsole: this.onClearConsole_,
       onIndentCode: this.onIndentCode_,
       onSelectScene: this.onSelectSceneClick_,
+      editorRef: this.editorRef,
     };
 
     let impl: JSX.Element;
     switch (layout) {
       case Layout.Overlay: {
         impl = (
-          <OverlayLayoutRedux ref={this.bindOverlayLayout_} {...commonLayoutProps} />
+          <OverlayLayoutRedux ref={this.overlayLayoutRef} {...commonLayoutProps} />
         );
         break;
       }
@@ -453,7 +455,7 @@ export class Root extends React.Component<Props, State> {
     return (
 
       <>
-        <Container windowInnerHeight={window.innerHeight}>
+        <Container $windowInnerHeight={window.innerHeight}>
           <SimMenu
             layout={layout}
             onLayoutChange={this.onLayoutChange_}

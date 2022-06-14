@@ -5,8 +5,30 @@ import { StyleProps } from '../../style';
 import { StyledText } from '../../util';
 import ScrollArea from '../ScrollArea';
 import { Text } from '../Text';
-import { ThemeProps } from '../theme';
+import { Theme, ThemeProps } from '../theme';
 
+import { Fa } from '../Fa';
+import { Button } from '../Button';
+import { BarComponent } from '../Widget';
+
+export const createConsoleBarComponents = (
+  theme: Theme, 
+  onClearConsole: () => void,
+) => {
+  const consoleBar: BarComponent<unknown>[] = [];
+
+  consoleBar.push(BarComponent.create(Button, {
+    theme,
+    onClick: onClearConsole,
+    children:
+      <>
+        <Fa icon='file' />
+        {' Clear'}
+      </>,
+  }));
+
+  return consoleBar;
+};
 
 export interface ConsoleProps extends StyleProps, ThemeProps {
   text: StyledText;
@@ -27,7 +49,7 @@ const ConsoleText = styled(Text, (props: ThemeProps) => ({
   display: 'block'
 }));
 
-class Console extends React.PureComponent<Props, State> {
+export class Console extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
   }

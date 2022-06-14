@@ -3,15 +3,17 @@ import { connect } from 'react-redux';
 
 import { styled } from 'styletron-react';
 import { Button } from '../Button';
-import Console from '../Console';
-import { Editor, WarningCharm, ErrorCharm } from '../Editor';
+
+import { Console, createConsoleBarComponents } from '../Console';
+import { Editor, createEditorBarComponents } from '../Editor';
+import World, { createWorldBarComponents } from '../World';
+
 import { Fa } from '../Fa';
 import { Info } from '../Info';
 import { LayoutProps } from './Layout';
 import { SimulatorArea } from '../SimulatorArea';
 import { Theme, ThemeProps } from '../theme';
 import Widget, { BarComponent, Mode, Size, WidgetProps } from '../Widget';
-import World from '../World';
 import { State as ReduxState } from '../../state';
 import { SceneAction } from '../../state/reducer';
 
@@ -275,15 +277,6 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
     // not implemented
   };
 
-  private editor_: Editor;
-  private bindEditor_ = (editor: Editor) => {
-    this.editor_ = editor;
-  };
-
-  get editor() {
-    return this.editor_;
-  }
-
   render() {
     const { props } = this;
     
@@ -302,6 +295,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       onIndentCode,
       onSelectScene,
       onResetScene,
+      editorRef
     } = props;
 
     const {
@@ -316,80 +310,9 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       mode: Mode.Floating
     };
 
-    const editorBar: BarComponent<unknown>[] = [];
-    let errors = 0;
-    let warnings = 0;
-
-    editorBar.push(BarComponent.create(Button, {
-      theme,
-      onClick: onIndentCode,
-      children:
-        <>
-          <Fa icon='indent'/>
-          {' Indent'}
-        </>
-    }));
-
-    messages.forEach(message => {
-      switch (message.severity) {
-        case 'error': {
-          ++errors;
-          break;
-        }
-        case 'warning': {
-          ++warnings;
-          break;
-        }
-      }
-    });
-
-    if (errors > 0) editorBar.push(BarComponent.create(ErrorCharm, {
-      theme,
-      count: errors,
-      onClick: this.onErrorClick_
-    }));
-
-    if (warnings > 0) editorBar.push(BarComponent.create(WarningCharm, {
-      theme,
-      count: warnings,
-      onClick: this.onErrorClick_
-    }));
-
-    // editorBar.push(BarComponent.create(PerfectCharm, { theme }));
-
-    const consoleBar: BarComponent<unknown>[] = [];
-
-    consoleBar.push(BarComponent.create(Button, {
-      theme,
-      onClick: onClearConsole,
-      children:
-        <>
-          <Fa icon='file' />
-          {' Clear'}
-        </>,
-    }));
-
-    const worldBar: BarComponent<unknown>[] = [];
-
-    worldBar.push(BarComponent.create(Button, {
-      theme,
-      onClick: onSelectScene,
-      children:
-        <>
-          <Fa icon='globe-americas' />
-          {' Select Scene'}
-        </>,
-    }));
-
-    worldBar.push(BarComponent.create(Button, {
-      theme,
-      onClick: onResetScene,
-      children:
-        <>
-          <Fa icon='sync' />
-          { ' Reset' }
-        </>
-    }));
+    const editorBar = createEditorBarComponents(theme, messages, onIndentCode, this.onErrorClick_);
+    const consoleBar = createConsoleBarComponents(theme, onClearConsole);
+    const worldBar = createWorldBarComponents(theme, onSelectScene, onResetScene);
 
     return (
       <Container style={style} className={className}>
@@ -409,7 +332,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
             onSizeChange={this.onEditorSizeChange_}
             barComponents={editorBar}
           >
-            <Editor ref={this.bindEditor_} code={code} onCodeChange={onCodeChange} theme={theme} messages={messages} autocomplete={settings.editorAutoComplete} />
+            <Editor ref={editorRef} code={code} onCodeChange={onCodeChange} theme={theme} messages={messages} autocomplete={settings.editorAutoComplete} />
           </EditorWidget>
           <ConsoleWidget
             {...commonProps}

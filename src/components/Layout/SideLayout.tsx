@@ -2,19 +2,19 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { styled } from 'styletron-react';
-import { EMPTY_ARRAY } from '../../util';
 
 import { Button } from '../Button';
-import Console from '../Console';
-import { Editor, WarningCharm, ErrorCharm } from '../Editor';
+
+import { Console, createConsoleBarComponents } from '../Console';
+import { Editor, createEditorBarComponents } from '../Editor';
+import World, { createWorldBarComponents } from '../World';
+
 import { Fa } from '../Fa';
 import { Info } from '../Info';
 import { LayoutProps } from './Layout';
 import { SimulatorArea } from '../SimulatorArea';
 import { TabBar } from '../TabBar';
-import { ThemeProps } from '../theme';
-import Widget, { BarComponent, Mode, Size, WidgetProps } from '../Widget';
-import World from '../World';
+import Widget, { BarComponent, Mode, Size } from '../Widget';
 import { Slider } from '../Slider';
 
 import { State as ReduxState } from '../../state';
@@ -24,8 +24,6 @@ import { SceneAction } from '../../state/reducer';
 // Editor / console
 // Robot Info
 // World
-
-const TABS_COLLAPSED = -1;
 
 const TABS = [{
   name: 'Editor',
@@ -154,14 +152,6 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     this.setState({ activePanel: index });
   };
 
-  private editor_: Editor;
-  private bindEditor_ = (editor: Editor) => {
-    this.editor_ = editor;
-  };
-  get editor() {
-    return this.editor_;
-  }
-
   private onErrorClick_ = (event: React.MouseEvent<HTMLDivElement>) => {
     // not implemented
   };
@@ -180,8 +170,10 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       messages,
       settings,
       onClearConsole,
+      onIndentCode,
       onSelectScene,
       onResetScene,
+      editorRef,
     } = props;
 
     const {
@@ -189,68 +181,9 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       sidePanelSize,
     } = this.state;
 
-    const editorBar: BarComponent<unknown>[] = [];
-    let errors = 0;
-    let warnings = 0;
-
-    messages.forEach(message => {
-      switch (message.severity) {
-        case 'error': {
-          ++errors;
-          break;
-        }
-        case 'warning': {
-          ++warnings;
-          break;
-        }
-      }
-    });
-
-    if (errors > 0) editorBar.push(BarComponent.create(ErrorCharm, {
-      theme,
-      count: errors,
-      onClick: this.onErrorClick_
-    }));
-
-    if (warnings > 0) editorBar.push(BarComponent.create(WarningCharm, {
-      theme,
-      count: warnings,
-      onClick: this.onErrorClick_
-    }));
-
-    const consoleBar: BarComponent<unknown>[] = [];
-
-    consoleBar.push(BarComponent.create(Button, {
-      theme,
-      onClick: onClearConsole,
-      children:
-        <>
-          <Fa icon='file' />
-          {' Clear'}
-        </>,
-    }));
-
-    const worldBar: BarComponent<unknown>[] = [];
-
-    worldBar.push(BarComponent.create(Button, {
-      theme,
-      onClick: onSelectScene,
-      children:
-        <>
-          <Fa icon='globe-americas' />
-          {' Select Scene'}
-        </>,
-    }));
-
-    worldBar.push(BarComponent.create(Button, {
-      theme,
-      onClick: onResetScene,
-      children:
-        <>
-          <Fa icon='sync' />
-          { ' Reset' }
-        </>
-    }));
+    const editorBar = createEditorBarComponents(theme, messages, onIndentCode, this.onErrorClick_);
+    const consoleBar = createConsoleBarComponents(theme, onClearConsole);
+    const worldBar = createWorldBarComponents(theme, onSelectScene, onResetScene);
 
     let content: JSX.Element;
     switch (activePanel) {
@@ -263,19 +196,19 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
             sizes={[3, 1]}
             visible={[true, true]}
           >
-            {/* <div>Editor</div> */}
             <SimultorWidgetContainer>
               <SimulatorWidget
                 theme={theme}
                 name='Editor'
-                barComponents={editorBar}
                 mode={Mode.Sidebar}
+                barComponents={editorBar}
               >
                 
                 <Editor
                   theme={theme}
-                  ref={this.bindEditor_}
-                  code={code} onCodeChange={onCodeChange}
+                  ref={editorRef}
+                  code={code} 
+                  onCodeChange={onCodeChange}
                   messages={messages}
                   autocomplete={settings.editorAutoComplete}
                 />
