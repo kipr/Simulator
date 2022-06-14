@@ -210,9 +210,11 @@ export function createBaseSceneSurfaceB(): Scene {
  * Helper function to create a Node for a can
  * @param canNumber The 1-index can number
  * @param canPosition The position of the can. If not provided, the position is determined using canNumber
+ * @param editable Whether the can is editable
+ * @param visible Whether the can is visible
  * @returns A can Node that can be inserted into a Scene
  */
-export function createCanNode(canNumber: number, canPosition?: Vector3): Node {
+export function createCanNode(canNumber: number, canPosition?: Vector3, editable?: boolean, visible?: boolean): Node {
   return {
     type: 'from-template',
     templateId: 'can',
@@ -220,8 +222,8 @@ export function createCanNode(canNumber: number, canPosition?: Vector3): Node {
     origin: {
       position: canPosition ?? canPositions[canNumber - 1],
     },
-    editable: false,
-    visible: true,
+    editable: editable ?? false,
+    visible: visible ?? true,
   };
 }
 
