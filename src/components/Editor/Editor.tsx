@@ -2,11 +2,14 @@ import * as React from 'react';
 
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../style';
-import { ThemeProps } from '../theme';
+import { Theme, ThemeProps } from '../theme';
+
+import { Fa } from '../Fa';
+import { Button } from '../Button';
+import { BarComponent } from '../Widget';
+import { WarningCharm, ErrorCharm } from './';
 
 import { Ivygate, Message } from 'ivygate';
-
-
 
 export enum EditorActionState {
   None,
@@ -39,6 +42,57 @@ const Container = styled('div', (props: ThemeProps) => ({
   },
   height: '100%'
 }));
+
+export const createEditorBarComponents = (
+  theme: Theme, 
+  messages: Message[],
+  onIndentCode: () => void,
+  onErrorClick: (event: React.MouseEvent<HTMLDivElement>) => void
+) => {
+  
+  const editorBar: BarComponent<unknown>[] = [];
+  let errors = 0;
+  let warnings = 0;
+
+  editorBar.push(BarComponent.create(Button, {
+    theme,
+    onClick: onIndentCode,
+    children:
+      <>
+        <Fa icon='indent'/>
+        {' Indent'}
+      </>
+  }));
+
+  messages.forEach(message => {
+    switch (message.severity) {
+      case 'error': {
+        ++errors;
+        break;
+      }
+      case 'warning': {
+        ++warnings;
+        break;
+      }
+    }
+  });
+
+  if (errors > 0) editorBar.push(BarComponent.create(ErrorCharm, {
+    theme,
+    count: errors,
+    onClick: onErrorClick
+  }));
+
+  if (warnings > 0) editorBar.push(BarComponent.create(WarningCharm, {
+    theme,
+    count: warnings,
+    onClick: onErrorClick
+  }));
+
+  // editorBar.push(BarComponent.create(PerfectCharm, { theme }));
+  
+  return editorBar;
+};
 
 class Editor extends React.PureComponent<Props, State> {
   constructor(props: Props) {

@@ -3,6 +3,7 @@ import { RobotPosition } from "../../RobotPosition";
 import { Settings } from "../../Settings";
 import { StyleProps } from "../../style";
 import { StyledText } from "../../util";
+import { Editor } from "../Editor";
 import { ThemeProps } from "../theme";
 
 export interface LayoutProps extends StyleProps, ThemeProps {
@@ -16,6 +17,7 @@ export interface LayoutProps extends StyleProps, ThemeProps {
   onClearConsole: () => void;
   onIndentCode: () => void;
   onSelectScene: () => void;
+  editorRef: React.MutableRefObject<Editor>;
 }
 
 export enum Layout {
