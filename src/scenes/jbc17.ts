@@ -17,7 +17,7 @@ export const JBC_17: Scene = {
       position: {
         x: Distance.centimeters(16.5),
         y: Distance.centimeters(2),
-        z: Distance.centimeters(-50),
+        z: Distance.centimeters(0),
       },
     }
   },

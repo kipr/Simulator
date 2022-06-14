@@ -32,7 +32,7 @@ export const JBC_Sandbox_A: Scene = {
         position: {
           x: Distance.centimeters(0),
           y: Distance.centimeters(5),
-          z: Distance.centimeters(17.5),
+          z: Distance.centimeters(67.5),
         },
         orientation: Rotation.AngleAxis.fromRaw({
           axis: { x: 1, y: 0, z: 0 },
@@ -50,7 +50,7 @@ export const JBC_Sandbox_A: Scene = {
         position: {
           x: Distance.centimeters(0),
           y: Distance.centimeters(5),
-          z: Distance.centimeters(-56.3),
+          z: Distance.centimeters(-6.3),
         },
         orientation: Rotation.AngleAxis.fromRaw({
           axis: { x: 1, y: 0, z: 0 },
