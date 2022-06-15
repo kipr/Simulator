@@ -479,7 +479,8 @@ class SceneBinding {
       SceneBinding.apply_(ret, m => m.material = material);
     }
 
-    if (node.physics) {
+    // Only create physics impostors for visible nodes
+    if (node.visible && node.physics) {
       const type = IMPOSTER_TYPE_MAPPINGS[node.physics.type];
       SceneBinding.apply_(ret, m => {
         const currParent = m.parent;
@@ -722,7 +723,31 @@ class SceneBinding {
 
     if (node.inner.visible.type === Patch.Type.OuterChange) {
       const nextVisible = node.inner.visible.next;
-      SceneBinding.apply_(bNode, m => m.isVisible = nextVisible);
+      SceneBinding.apply_(bNode, m => {
+        m.isVisible = nextVisible;
+
+        // Remove physics impostor for object becoming invisible
+        if (!nextVisible && m.physicsImpostor) {
+          const mParent = m.parent;
+          m.setParent(null);
+          m.physicsImpostor.dispose();
+          m.physicsImpostor = null;
+          m.setParent(mParent);
+        }
+        
+        // Create physics impostor for object becoming visible
+        if (nextVisible && node.next.physics) {
+          const type = IMPOSTER_TYPE_MAPPINGS[node.next.physics.type];
+          const mParent = m.parent;
+          m.setParent(null);
+          m.physicsImpostor = new Babylon.PhysicsImpostor(m, type, {
+            mass: node.next.physics.mass ? Mass.toGramsValue(node.next.physics.mass) : 0,
+            restitution: node.next.physics.restitution ?? 0.5,
+            friction: node.next.physics.friction ?? 5,
+          });
+          m.setParent(mParent);
+        }
+      });
     }
 
     return Promise.resolve(bNode);
@@ -755,7 +780,7 @@ class SceneBinding {
   };
 
   private updateFromTemplate_ = (id: string, node: Patch.InnerChange<Node.FromTemplate>, nextScene: Scene): Promise<Babylon.Node> => {
-    // If the template ID changes, recreate the object entirely
+    // If the template ID changes, recreate the node entirely
     if (node.inner.templateId.type === Patch.Type.OuterChange) {
       this.destroyNode_(id);
       return this.createNode_(id, node.next, nextScene);
@@ -763,25 +788,94 @@ class SceneBinding {
 
     const bNode = this.findBNode_(id);
 
-    if (node.inner.name.type === Patch.Type.OuterChange) {
-      bNode.name = node.inner.name.next;
+    const nodeTemplate = preBuiltTemplates[node.next.templateId];
+    if (!nodeTemplate) {
+      console.warn('template node has invalid template ID:', node.next.templateId);
+      return Promise.resolve(bNode);
     }
 
-    if (node.inner.parentId.type === Patch.Type.OuterChange) {
-      const parent = this.findBNode_(node.inner.parentId.next, true);
-      bNode.parent = parent;
-    }
+    const prevBaseProps = Node.Base.upcast(node.prev);
+    const nextBaseProps = Node.Base.upcast(node.next);
 
-    if (node.inner.origin.type === Patch.Type.OuterChange) {
-      this.updateNodePosition_(node.next, bNode);
+    // Create a Patch for the underlying node type and call its update function
+    switch (nodeTemplate.type) {
+      case 'empty': {
+        const emptyChange: Patch.InnerChange<Node.Empty> = {
+          type: Patch.Type.InnerChange,
+          prev: { ...nodeTemplate, ...prevBaseProps },
+          next: { ...nodeTemplate, ...nextBaseProps },
+          inner: {
+            ...node.inner,
+            type: Patch.none<'empty'>('empty'),
+          },
+        };
+        return Promise.resolve(this.updateEmpty_(id, emptyChange));
+      }
+      case 'object': {
+        const objectChange: Patch.InnerChange<Node.Obj> = {
+          type: Patch.Type.InnerChange,
+          prev: { ...nodeTemplate, ...prevBaseProps },
+          next: { ...nodeTemplate, ...nextBaseProps },
+          inner: {
+            ...node.inner,
+            type: Patch.none<'object'>('object'),
+            geometryId: Patch.none(nodeTemplate.geometryId),
+            physics: Patch.none(nodeTemplate.physics),
+            material: Patch.none(nodeTemplate.material),
+            faceUvs: Patch.none(nodeTemplate.faceUvs),
+          },
+        };
+        return this.updateObject_(id, objectChange, nextScene);
+      }
+      case 'directional-light': {
+        const directionalLightChange: Patch.InnerChange<Node.DirectionalLight> = {
+          type: Patch.Type.InnerChange,
+          prev: { ...nodeTemplate, ...prevBaseProps },
+          next: { ...nodeTemplate, ...nextBaseProps },
+          inner: {
+            ...node.inner,
+            type: Patch.none<'directional-light'>('directional-light'),
+            radius: Patch.none(nodeTemplate.radius),
+            range: Patch.none(nodeTemplate.range),
+            direction: Patch.none(nodeTemplate.direction),
+            intensity: Patch.none(nodeTemplate.intensity),
+          },
+        };
+        return Promise.resolve(this.updateDirectionalLight_(id, directionalLightChange));
+      }
+      case 'spot-light': {
+        const spotLightChange: Patch.InnerChange<Node.SpotLight> = {
+          type: Patch.Type.InnerChange,
+          prev: { ...nodeTemplate, ...prevBaseProps },
+          next: { ...nodeTemplate, ...nextBaseProps },
+          inner: {
+            ...node.inner,
+            type: Patch.none<'spot-light'>('spot-light'),
+            direction: Patch.none(nodeTemplate.direction),
+            angle: Patch.none(nodeTemplate.angle),
+            exponent: Patch.none(nodeTemplate.exponent),
+            intensity: Patch.none(nodeTemplate.intensity),
+          },
+        };
+        return Promise.resolve(this.updateSpotLight_(id, spotLightChange));
+      }
+      case 'point-light': {
+        const pointLightChange: Patch.InnerChange<Node.PointLight> = {
+          type: Patch.Type.InnerChange,
+          prev: { ...nodeTemplate, ...prevBaseProps },
+          next: { ...nodeTemplate, ...nextBaseProps },
+          inner: {
+            ...node.inner,
+            type: Patch.none<'point-light'>('point-light'),
+            intensity: Patch.none(nodeTemplate.intensity),
+            radius: Patch.none(nodeTemplate.radius),
+            range: Patch.none(nodeTemplate.range),
+          },
+        };
+        return Promise.resolve(this.updatePointLight_(id, pointLightChange));
+      }
+      default: return Promise.resolve(bNode);
     }
-
-    if (node.inner.visible.type === Patch.Type.OuterChange) {
-      const nextVisible = node.inner.visible.next;
-      SceneBinding.apply_(bNode, m => m.isVisible = nextVisible);
-    }
-
-    return Promise.resolve(bNode);
   };
 
   private updateNode_ = async (id: string, node: Patch<Node>, geometryPatches: Dict<Patch<Geometry>>, nextScene: Scene): Promise<Babylon.Node> => {

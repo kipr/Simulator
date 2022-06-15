@@ -4,7 +4,7 @@ import Geometry from "../State/Scene/Geometry";
 import { ReferenceFrame } from "../../unit-math";
 import Camera from "../State/Scene/Camera";
 
-import { JBC_1 } from '../../scenes';
+import { JBC_Sandbox_A } from '../../scenes';
 import { ReferencedScenePair } from "..";
 
 export namespace SceneAction {
@@ -212,7 +212,7 @@ export type SceneAction = (
   SceneAction.SetCamera
 );
 
-export const reduceScene = (state: ReferencedScenePair = { referenceScene: JBC_1, workingScene: JBC_1 }, action: SceneAction): ReferencedScenePair => {
+export const reduceScene = (state: ReferencedScenePair = { referenceScene: JBC_Sandbox_A, workingScene: JBC_Sandbox_A }, action: SceneAction): ReferencedScenePair => {
   switch (action.type) {
     case 'replace-scene':
       return {

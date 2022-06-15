@@ -245,10 +245,12 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
   };
 
   private onItemVisibilityChange_ = (id: string) => (visibility: boolean) => {
+    const originalNode = this.props.scene.referenceScene.nodes[id];
+
     this.props.onNodeChange(id, {
-      ...this.props.scene.workingScene.nodes[id],
+      ...originalNode,
       visible: visibility,
-    }, false, false);
+    }, true, false);
   };
 
   render() {
