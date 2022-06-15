@@ -43,7 +43,7 @@ namespace Node {
     visible?: boolean;
   }
 
-  namespace Base {
+  export namespace Base {
     export const NIL: Base = {
       name: '',
       parentId: undefined,
