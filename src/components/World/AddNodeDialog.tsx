@@ -60,7 +60,7 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
           position: {
             x: Distance.centimeters(0),
             y: Distance.centimeters(0),
-            z: Distance.centimeters(0),
+            z: Distance.centimeters(50),
           },
           orientation: {
             type: 'euler',

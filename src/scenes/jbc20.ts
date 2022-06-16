@@ -23,7 +23,7 @@ export const JBC_20: Scene = {
         position: {
           x: Distance.centimeters(12),
           y: Distance.centimeters(-3),
-          z: Distance.centimeters(-47),
+          z: Distance.centimeters(3),
         },
       },
       visible: true,
@@ -38,7 +38,7 @@ export const JBC_20: Scene = {
       position: {
         x: Distance.centimeters(-18),
         y: Distance.centimeters(2),
-        z: Distance.centimeters(-50),
+        z: Distance.centimeters(0),
       },
     }
   },

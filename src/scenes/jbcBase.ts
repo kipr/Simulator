@@ -27,7 +27,7 @@ export function createBaseSceneSurfaceA(): Scene {
           position: {
             x: Distance.centimeters(0),
             y: Distance.centimeters(-7),
-            z: Distance.centimeters(0),
+            z: Distance.centimeters(50),
           },
           scale: {
             x: 100,
@@ -45,7 +45,7 @@ export function createBaseSceneSurfaceA(): Scene {
           position: {
             x: Distance.centimeters(0),
             y: Distance.centimeters(-7.2),
-            z: Distance.centimeters(0),
+            z: Distance.centimeters(50),
           },
           orientation: {
             type: 'euler',
@@ -69,7 +69,7 @@ export function createBaseSceneSurfaceA(): Scene {
           position: {
             x: Distance.meters(0),
             y: Distance.meters(0.91),
-            z: Distance.meters(0),
+            z: Distance.meters(0.5),
           },
         },
         visible: true
@@ -80,7 +80,7 @@ export function createBaseSceneSurfaceA(): Scene {
         position: {
           x: Distance.centimeters(0),
           y: Distance.centimeters(2),
-          z: Distance.centimeters(-50),
+          z: Distance.centimeters(0),
         },
       }
     },
@@ -89,12 +89,12 @@ export function createBaseSceneSurfaceA(): Scene {
       target: {
         x: Distance.meters(0),
         y: Distance.meters(0),
-        z: Distance.meters(0),
+        z: Distance.meters(0.5),
       },
       position: {
         x: Distance.meters(1),
         y: Distance.meters(0.91),
-        z: Distance.meters(1),
+        z: Distance.meters(1.5),
       }
     }),
     gravity: {
@@ -128,7 +128,7 @@ export function createBaseSceneSurfaceB(): Scene {
           position: {
             x: Distance.centimeters(0),
             y: Distance.centimeters(-7),
-            z: Distance.centimeters(0),
+            z: Distance.centimeters(50),
           },
           scale: {
             x: 100,
@@ -146,7 +146,7 @@ export function createBaseSceneSurfaceB(): Scene {
           position: {
             x: Distance.centimeters(0),
             y: Distance.centimeters(-7.2),
-            z: Distance.centimeters(0),
+            z: Distance.centimeters(50),
           },
           orientation: {
             type: 'euler',
@@ -170,7 +170,7 @@ export function createBaseSceneSurfaceB(): Scene {
           position: {
             x: Distance.meters(0),
             y: Distance.meters(0.91),
-            z: Distance.meters(0),
+            z: Distance.meters(0.5),
           },
         },
         visible: true
@@ -181,7 +181,7 @@ export function createBaseSceneSurfaceB(): Scene {
         position: {
           x: Distance.centimeters(0),
           y: Distance.centimeters(2),
-          z: Distance.centimeters(-50),
+          z: Distance.centimeters(0),
         },
       }
     },
@@ -190,12 +190,12 @@ export function createBaseSceneSurfaceB(): Scene {
       target: {
         x: Distance.meters(0),
         y: Distance.meters(0),
-        z: Distance.meters(0),
+        z: Distance.meters(0.5),
       },
       position: {
         x: Distance.meters(1),
         y: Distance.meters(0.91),
-        z: Distance.meters(1),
+        z: Distance.meters(1.5),
       }
     }),
     gravity: {
@@ -234,61 +234,61 @@ const canPositions: Vector3[] = [
   {
     x: Distance.centimeters(-22.7),
     y: Distance.centimeters(0),
-    z: Distance.centimeters(-14.8),
+    z: Distance.centimeters(35.2),
   },
   {
     x: Distance.centimeters(0),
     y: Distance.centimeters(0),
-    z: Distance.centimeters(-21.2),
+    z: Distance.centimeters(28.8),
   },
   {
     x: Distance.centimeters(16.2),
     y: Distance.centimeters(0),
-    z: Distance.centimeters(-24.3),
+    z: Distance.centimeters(25.7),
   },
   {
     x: Distance.centimeters(0),
     y: Distance.centimeters(0),
-    z: Distance.centimeters(-7.3),
+    z: Distance.centimeters(42.7),
   },
   {
     x: Distance.centimeters(-14.3),
     y: Distance.centimeters(0),
-    z: Distance.centimeters(6.9),
+    z: Distance.centimeters(56.9),
   },
   {
     x: Distance.centimeters(0),
     y: Distance.centimeters(0),
-    z: Distance.centimeters(7.2),
+    z: Distance.centimeters(57.2),
   },
   {
     x: Distance.centimeters(13.8),
     y: Distance.centimeters(0),
-    z: Distance.centimeters(6.9),
+    z: Distance.centimeters(56.9),
   },
   {
     x: Distance.centimeters(26),
     y: Distance.centimeters(0),
-    z: Distance.centimeters(15.5),
+    z: Distance.centimeters(65.5),
   },
   {
     x: Distance.centimeters(0),
     y: Distance.centimeters(0),
-    z: Distance.centimeters(35.4),
+    z: Distance.centimeters(85.4),
   },
   {
     x: Distance.centimeters(-19.3),
     y: Distance.centimeters(0),
-    z: Distance.centimeters(46.9),
+    z: Distance.centimeters(96.9),
   },
   {
     x: Distance.centimeters(0),
     y: Distance.centimeters(0),
-    z: Distance.centimeters(56.6),
+    z: Distance.centimeters(106.6),
   },
   {
     x: Distance.centimeters(19.2),
     y: Distance.centimeters(0),
-    z: Distance.centimeters(46.9),
+    z: Distance.centimeters(96.9),
   },
 ];

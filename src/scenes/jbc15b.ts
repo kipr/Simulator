@@ -20,7 +20,7 @@ export const JBC_15B: Scene = {
         position: {
           x: Distance.centimeters(0),
           y: Distance.centimeters(5),
-          z: Distance.centimeters(-2),
+          z: Distance.centimeters(48),
         },
         orientation: Rotation.AngleAxis.fromRaw({
           axis: { x: 1, y: 0, z: 0 },
@@ -37,7 +37,7 @@ export const JBC_15B: Scene = {
         position: {
           x: Distance.centimeters(0),
           y: Distance.centimeters(5),
-          z: Distance.centimeters(-56.3),
+          z: Distance.centimeters(-6.3),
         },
         orientation: Rotation.AngleAxis.fromRaw({
           axis: { x: 1, y: 0, z: 0 },
@@ -56,7 +56,7 @@ export const JBC_15B: Scene = {
       position: {
         x: Distance.centimeters(0),
         y: Distance.centimeters(2),
-        z: Distance.centimeters(-43),
+        z: Distance.centimeters(7),
       },
     }
   },
