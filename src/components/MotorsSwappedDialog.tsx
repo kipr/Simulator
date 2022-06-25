@@ -22,6 +22,7 @@ export default ({ style, className, theme, onClose }: MotorsSwappedDialogProps):
     <Container style={style} className={className} $theme={theme}>
       Motor 0 is now the Demobot's right wheel. <br /> <br />
       Motor 3 is now the Demobot's left wheel. <br /> <br />
+      If you have an existing program using motors, you should swap motor ports 0 and 3. <br /> <br />
       This notice will not appear again.
     </Container>
   </Dialog>
