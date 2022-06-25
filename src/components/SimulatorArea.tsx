@@ -28,7 +28,7 @@ namespace ModalDialog {
   }
 
   export namespace MotorsSwapped {
-    /// Show until August 30th, 2022
+    // Show until August 30th, 2022
     export const SHOW_UNTIL: Date = new Date(2022, 7, 30);
 
     export const markShown = (shown: boolean) => {
@@ -41,7 +41,7 @@ namespace ModalDialog {
 
     export const hasShown = (): boolean => {
       try {
-        const shown = JSON.parse(window.localStorage.getItem('motors-swapped-dialog-shown'));
+        const shown: boolean = JSON.parse(window.localStorage.getItem('motors-swapped-dialog-shown')) as boolean;
         return shown;
       } catch (e) {
         return true;
