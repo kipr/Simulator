@@ -262,6 +262,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
 
     const simulator = <SimulatorAreaContainer>
       <SimulatorArea
+        theme={theme}
         key='simulator'
         isSensorNoiseEnabled={settings.simulationSensorNoise}
         isRealisticSensorsEnabled={settings.simulationRealisticSensors}

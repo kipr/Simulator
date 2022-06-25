@@ -334,7 +334,7 @@ export class Space implements Robotable {
       const currRobotState = store.getState().robotState;
 
       // Set simulator motor speeds based on robot state
-      this.setDriveMotors(currRobotState.motorSpeeds[0], currRobotState.motorSpeeds[3]);
+      this.setDriveMotors(currRobotState.motorSpeeds[3], currRobotState.motorSpeeds[0]);
 
       // Set simulator servo positions based on robot state
       this.setServoPositions(currRobotState.servoPositions);
