@@ -1377,23 +1377,23 @@ babel-loader@^8.1.0:
     make-dir "^3.1.0"
     schema-utils "^2.6.5"
 
-babylonjs-gltf2interface@4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/babylonjs-gltf2interface/-/babylonjs-gltf2interface-4.2.0.tgz#b0ef1e11e3574cf2c6f573d0c5c34857a2a7b322"
-  integrity sha512-Fn/ThxwZWP9kEAqk+9FX9CAeF4ah/I0/8wzAZR8MQuYqlYpEfM+E/IztJ+4LoOOxQYMWNs5lgj8OXSkX0tqc4g==
+babylonjs-gltf2interface@4.2.2:
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/babylonjs-gltf2interface/-/babylonjs-gltf2interface-4.2.2.tgz#365daf43110ec98b52379e6a9081e06b6835588b"
+  integrity sha512-LCQgW1lM+EpKK4yWMiPEgi6ONwJ7W4JrSu3t9JixNRgvnic72OnN2f0bt91rE30EJr1ZaokvkXD/aEiBp/Juyg==
 
-babylonjs-loaders@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/babylonjs-loaders/-/babylonjs-loaders-4.2.0.tgz#3d536cb72bf8650fe7f1cee12380bea3227d79c0"
-  integrity sha512-GGLvo4ibbSHMY0Kj/DBu4827NBWeDT0NOBi/UuifXltzqPJtJRi3PCEcELj4Ga8cRxkfYi/7PMKcce2zVnpLZA==
+babylonjs-loaders@^4.2.1:
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/babylonjs-loaders/-/babylonjs-loaders-4.2.2.tgz#42af364f651f08f61d8d9d5c955c6f9cd01c1002"
+  integrity sha512-IuShR5N4zkDMzKEGsCZ0uZDCn07BLLj8LlKwyiSwFR1V9KxAALkt2INTMCdXjuWELTcZEALZlyO85mKJ2pDPHw==
   dependencies:
-    babylonjs "4.2.0"
-    babylonjs-gltf2interface "4.2.0"
+    babylonjs "4.2.2"
+    babylonjs-gltf2interface "4.2.2"
 
-babylonjs@4.2.0, babylonjs@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/babylonjs/-/babylonjs-4.2.0.tgz#8f0d957a726de4c065904b14c2f413f455145d38"
-  integrity sha512-4hniJzWRkV0tDTTYGEHPk1lnfWn0HIw7HOvNWPK0rpUIbJooyeD9E5uVyHnslDedt0mtrA7QZu4i2Cz1DEmSsA==
+babylonjs@4.2.2, babylonjs@^4.2.1:
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/babylonjs/-/babylonjs-4.2.2.tgz#ee6d22799b423d476208731fcd7d3212b44d1345"
+  integrity sha512-p7mTi6+nLuWJTLbwxEJxLOh/QMHMV2KA0bviEoQSK5VtsAq1F0JghoOZYRs4aEqAZF/deFPWvMQk1vbXJ+4eEA==
 
 balanced-match@^1.0.0:
   version "1.0.2"
