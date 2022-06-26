@@ -8,15 +8,67 @@ import resizeListener, { ResizeListener } from './ResizeListener';
 import { Vector2 } from '../math';
 
 import Loading from './Loading';
+import MotorsSwappedDialog from './MotorsSwappedDialog';
+import { Theme } from './theme';
+
+namespace ModalDialog {
+  export enum Type {
+    None,
+    MotorsSwapped
+  }
+
+  export interface None {
+    type: Type.None;
+  }
+
+  export const NONE: None = { type: Type.None };
+
+  export interface MotorsSwapped {
+    type: Type.MotorsSwapped;
+  }
+
+  export namespace MotorsSwapped {
+    // Show until August 30th, 2022
+    export const SHOW_UNTIL: Date = new Date(2022, 7, 30);
+
+    export const markShown = (shown: boolean) => {
+      try {
+        window.localStorage.setItem('motors-swapped-dialog-shown', JSON.stringify(shown));
+      } catch (e) {
+        // ignore
+      }
+    };
+
+    export const hasShown = (): boolean => {
+      try {
+        const shown: boolean = JSON.parse(window.localStorage.getItem('motors-swapped-dialog-shown')) as boolean;
+        return shown;
+      } catch (e) {
+        return true;
+      }
+    };
+
+    export const shouldShow = (): boolean => {
+      const now = new Date();
+      return now < SHOW_UNTIL && !hasShown();
+    };
+  }
+
+  export const MOTORS_SWAPPED: MotorsSwapped = { type: Type.MotorsSwapped };
+}
+
+type ModalDialog = ModalDialog.None | ModalDialog.MotorsSwapped;
 
 export interface SimulatorAreaProps {
+  theme: Theme;
   isSensorNoiseEnabled: boolean;
   isRealisticSensorsEnabled: boolean;
 }
 
 interface SimulatorAreaState {
-  loading: boolean,
-  loadingMessage: string
+  loading: boolean;
+  loadingMessage: string;
+  modalDialog: ModalDialog;
 }
 
 const Container = styled('div', {
@@ -42,6 +94,7 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
     this.state = { 
       loading: true,
       loadingMessage: '',
+      modalDialog: ModalDialog.NONE
     };
   }
 
@@ -66,7 +119,10 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
       .then(() => {
         this.setState({ 
           loading: false,
-          loadingMessage: ''
+          loadingMessage: '',
+          modalDialog: ModalDialog.MotorsSwapped.shouldShow()
+            ? ModalDialog.MOTORS_SWAPPED
+            : ModalDialog.NONE
         });
       })
       .catch(e => console.error('Simulator initialization failed', e));
@@ -114,13 +170,21 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
     }
   };
 
+  private onMotorsSwappedClose_ = (): void => {
+    ModalDialog.MotorsSwapped.markShown(true);
+    this.setState({ modalDialog: ModalDialog.NONE });
+  };
+
   render() {
-    if (this.state.loading) {
+    const { props, state } = this;
+    const { theme } = props;
+    const { modalDialog, loading, loadingMessage } = state;
+    if (loading) {
       return (
         <Container >
           <Loading 
             message='Initializing Simulator...'
-            errorMessage={this.state.loadingMessage}
+            errorMessage={loadingMessage}
           />
         </Container>
       );
@@ -128,6 +192,9 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
     return (
       <Container ref={this.bindContainerRef_}>
         <Canvas ref={this.bindCanvasRef_} />
+        {modalDialog.type === ModalDialog.Type.MotorsSwapped && (
+          <MotorsSwappedDialog theme={theme} onClose={this.onMotorsSwappedClose_} />
+        )}
       </Container>
     );
   }

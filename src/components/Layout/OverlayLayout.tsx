@@ -318,6 +318,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       <Container style={style} className={className}>
         <SimulatorAreaContainer>
           <SimulatorArea
+            theme={theme}
             key='simulator'
             isSensorNoiseEnabled={settings.simulationSensorNoise}
             isRealisticSensorsEnabled={settings.simulationRealisticSensors}
