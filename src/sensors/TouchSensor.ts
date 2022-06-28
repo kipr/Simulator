@@ -64,7 +64,7 @@ export class TouchSensor implements SensorObject {
 
     // After an intersection, it's likely that the sensor will continue intersecting with the same mesh for a while
     // So check the previous intersecting mesh upfront
-    if (this.prevIntersectingMesh_ && this.config_.mesh.intersectsMesh(this.prevIntersectingMesh_)) {
+    if (this.prevIntersectingMesh_ && this.isTouchingMesh(this.prevIntersectingMesh_)) {
       this.isIntersecting_ = true;
       return true;
     }
@@ -73,7 +73,7 @@ export class TouchSensor implements SensorObject {
       // Skip the previous intersecting mesh since we already checked it
       if (this.prevIntersectingMesh_ && eligibleMesh.id === this.prevIntersectingMesh_.id) continue;
 
-      if (this.config_.mesh.intersectsMesh(eligibleMesh)) {
+      if (this.isTouchingMesh(eligibleMesh)) {
         this.isIntersecting_ = true;
         this.prevIntersectingMesh_ = eligibleMesh;
         return true;
@@ -124,6 +124,10 @@ export class TouchSensor implements SensorObject {
   public set isRealisticEnabled(r: boolean) {
     // Digital sensors don't have realism
   }
+
+  private isTouchingMesh = (mesh: Babylon.AbstractMesh) => {
+    return mesh.isVisible && this.config_.mesh.intersectsMesh(mesh);
+  };
 
   // Determines whether the given mesh is eligible for intersection checking
   // Based on the metadata property, which will only exist for meshes created through SceneBinding
