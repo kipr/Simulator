@@ -260,6 +260,11 @@ export const reduceScene = (state: ReferencedScenePair = { referenceScene: JBC_S
       delete nextState.referenceScene.nodes[action.id];
       delete nextState.workingScene.nodes[action.id];
 
+      // Unselect node if it's being removed
+      if (action.id === nextState.workingScene.selectedNodeId) {
+        nextState.workingScene.selectedNodeId = undefined;
+      }
+
       return nextState;
     }
     case 'set-node': {
@@ -273,6 +278,11 @@ export const reduceScene = (state: ReferencedScenePair = { referenceScene: JBC_S
           },
         },
       };
+
+      // Unselect node if it's invisible
+      if (action.id === nextState.workingScene.selectedNodeId && !action.node.visible) {
+        nextState.workingScene.selectedNodeId = undefined;
+      }
 
       if (action.modifyReferenceScene) {
         nextState.referenceScene = {
@@ -299,6 +309,11 @@ export const reduceScene = (state: ReferencedScenePair = { referenceScene: JBC_S
 
       for (const { id, node } of action.nodeIds) {
         nextState.workingScene.nodes[id] = node;
+
+        // Unselect node if it's invisible
+        if (id === nextState.workingScene.selectedNodeId && !node.visible) {
+          nextState.workingScene.selectedNodeId = undefined;
+        }
       }
 
       if (action.modifyReferenceScene) {
@@ -394,7 +409,11 @@ export const reduceScene = (state: ReferencedScenePair = { referenceScene: JBC_S
 
       return nextState;
     }
-    case 'select-node':
+    case 'select-node': {
+      // Only existent, visible nodes can be selected
+      const nodeToSelect = state.workingScene.nodes[action.id];
+      if (!nodeToSelect || !nodeToSelect.visible) return state;
+
       return {
         ...state,
         workingScene: {
@@ -402,6 +421,7 @@ export const reduceScene = (state: ReferencedScenePair = { referenceScene: JBC_S
           selectedNodeId: action.id,
         },
       };
+    }
     case 'unselect-all':
       return {
         ...state,
