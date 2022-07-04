@@ -5,7 +5,7 @@ const commonConfig = require('./common');
 
 module.exports = merge(commonConfig, {
   mode: 'development',
-  devtool: 'source-map',
+  devtool: 'cheap-module-source-map',
   stats: {
     builtAt: true
   },
