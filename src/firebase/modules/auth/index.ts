@@ -29,31 +29,18 @@ export const signInWithSocialMediaRedirect = (provider: AuthProvider) => {
 
 
 export const createUserWithEmail = (email: string, password: string) => {
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-    })
+  return createUserWithEmailAndPassword(auth, email, password)
     .catch((error) => {
       console.log(error);
+      throw error.code;
     });
 };
 
 export const signInWithEmail = (email: string, password: string) => {
-  signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-    })
+  return signInWithEmailAndPassword(auth, email, password)
     .catch((error) => {
       console.log(error);
-      if (error.code === 'auth/invalid-email') {
-        console.log('Invalid email');
-        window.location.reload();
-      } else if (error.code === 'auth/wrong-password') {
-        console.log('Wrong password');
-        window.location.reload();
-      } else {
-        window.location.reload();
-      }
+      throw error.code;
     });
 };
 
