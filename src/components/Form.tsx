@@ -59,7 +59,7 @@ const Finalize = styled('div', (props: ThemeProps & { disabled?: boolean }) => (
   fontWeight: 400,
   fontSize: '1.1em',
   textAlign: 'center',
-  cursor: 'pointer',
+  cursor: props.disabled ? 'auto' : 'pointer',
 }));
 
 class Form extends React.PureComponent<Form.Props, Form.State> {
@@ -97,6 +97,14 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
     this.props.onFinalize(ret);
   };
 
+  private isFinalizeAllowed_ = () => {
+    const { props, state } = this;
+    const { items, finalizeDisabled } = props;
+    const { values } = state;
+
+    return !finalizeDisabled && items.every(item => item.id in values && values[item.id].valid);
+  };
+
   render() {
     const { props, state } = this;
     const { items, verifiers, theme, className, style, finalizeDisabled } = props;
@@ -110,7 +118,13 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
           theme={theme}
           type={item.valueHidden ? 'password' : 'text'}
           value={item.id in values ? values[item.id].text : (item.defaultValue || '')}
+          autoFocus={index === 0}
           onChange={this.onValueChange_(item)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' && this.isFinalizeAllowed_()) {
+              this.onFinalizeClick_();
+            }
+          }}
         />
       ];
     }).reduce((acc, item) => [...acc, ...item], []);
@@ -150,6 +164,7 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
       ];
     }).reduce((acc, item) => [...acc, ...item], []) : undefined;
 
+    const isFinalizeAllowed = this.isFinalizeAllowed_();
     return (
       <Container style={style} className={className} theme={theme}>
         {itemElements}
@@ -157,8 +172,8 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
         <ButtonContainer theme={theme}>
           <Finalize
             theme={theme}
-            onClick={this.onFinalizeClick_}
-            disabled={!items.every(item => item.id in values && values[item.id].valid) || finalizeDisabled}
+            onClick={isFinalizeAllowed ? this.onFinalizeClick_ : undefined}
+            disabled={!isFinalizeAllowed}
           >
             {props.finalizeIcon ? <Fa icon={props.finalizeIcon} /> : undefined} {props.finalizeText || 'Accept'}
           </Finalize>

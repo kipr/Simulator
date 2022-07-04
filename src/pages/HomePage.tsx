@@ -4,7 +4,7 @@
 import * as React from 'react';
 import { withRouter, Redirect } from 'react-router-dom';
 import * as PropTypes from 'prop-types';
-import { DARK, ThemeProps } from '../components/theme';
+import { DARK, RED, ThemeProps } from '../components/theme';
 import { StyleProps } from '../style';
 import { styled, withStyleDeep } from 'styletron-react';
 import { auth, Providers } from '../firebase/firebase';
@@ -37,6 +37,7 @@ interface HomePageState {
   loggedIn: boolean;
   index: number;
   forgotPassword: boolean;
+  logInFailedMessage: string;
 }
 
 const Container = styled('div', (props: ThemeProps) => ({
@@ -141,6 +142,7 @@ class HomePage extends React.Component<Props, State> {
       loggedIn: auth.currentUser !== null,
       index: this.props.externalIndex !== undefined ? this.props.externalIndex : 0,
       forgotPassword: false,
+      logInFailedMessage: null,
     };
   }
 
@@ -179,28 +181,52 @@ class HomePage extends React.Component<Props, State> {
 
     switch (this.state.index) {
       case 0: {
-        this.setState({ authenticating: true });
+        this.setState({
+          authenticating: true,
+          logInFailedMessage: null,
+        });
 
-        try { 
-          signInWithEmail(values['email'], values['password']);
-        } finally {
-          console.log('Logged in with email');
-          this.setState({ authenticating: false });
-        }
+        signInWithEmail(values['email'], values['password'])
+          .catch(error => {
+            this.setState({
+              authenticating: false,
+              logInFailedMessage: this.getMessageForFailedLogin_(error),
+            });
+          });
 
         break;
       }
       case 1: {
-        this.setState({ authenticating: true });
+        this.setState({
+          authenticating: true,
+          logInFailedMessage: null,
+        });
 
-        try { 
-          createUserWithEmail(values['email'], values['password']);
-        } finally {
-          console.log('Created user with email');
-          this.setState({ authenticating: false });
-        }
+        createUserWithEmail(values['email'], values['password'])
+          .catch(error => {
+            this.setState({
+              authenticating: false,
+              logInFailedMessage: this.getMessageForFailedLogin_(error),
+            });
+          });
+
         break;
       }
+    }
+  };
+
+  private getMessageForFailedLogin_ = (error: string): string => {
+    switch (error) {
+      case 'auth/wrong-password':
+      case 'auth/invalid-email':
+      case 'auth/user-not-found':
+        return 'Invalid email or password.';
+      case 'auth/email-already-in-use':
+        return 'An account with this email already exists.';
+      case 'auth/too-many-requests':
+        return 'Too many failed attempts. Please try again later.';
+      default:
+        return 'Something went wrong. Please contact KIPR for support.';
     }
   };
 
@@ -211,7 +237,8 @@ class HomePage extends React.Component<Props, State> {
 
   private onTabIndexChange_ = (index: number) => {
     this.setState({
-      index
+      index,
+      logInFailedMessage: null,
     });
   };
 
@@ -230,7 +257,7 @@ class HomePage extends React.Component<Props, State> {
   render() {
     const { props, state } = this;
     const { className, style, history } = props;
-    const { index, authenticating, loggedIn, forgotPassword } = state;
+    const { index, authenticating, loggedIn, forgotPassword, logInFailedMessage } = state;
     const theme = DARK;
 
     const googleButtonItems = [
@@ -327,6 +354,19 @@ class HomePage extends React.Component<Props, State> {
             onFinalize={this.onFinalize_}
             finalizeDisabled={authenticating}
           />
+          {logInFailedMessage && <Text text={
+            StyledText.text ({
+              text: logInFailedMessage,
+              style: {
+                color: RED.standard,
+                fontWeight: 400,
+                fontSize: '0.9em',
+                textAlign: 'left',
+                marginLeft: '8px',
+                marginRight: '8px',
+              }
+            })
+          }/>}
           <SocialContainer theme={theme}>
             <Button 
               theme={theme} 
