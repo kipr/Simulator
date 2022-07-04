@@ -110,6 +110,8 @@ interface RootState {
   settings: Settings;
 
   feedback: Feedback;
+
+  windowInnerHeight: number;
 }
 
 type Props = Record<string, never>;
@@ -161,6 +163,7 @@ export class Root extends React.Component<Props, State> {
       messages: [],
       settings: DEFAULT_SETTINGS,
       feedback: DEFAULT_FEEDBACK,
+      windowInnerHeight: window.innerHeight,
     };
 
     this.editorRef = React.createRef();
@@ -173,7 +176,17 @@ export class Root extends React.Component<Props, State> {
     WorkerInstance.onStdOutput = this.onStdOutput_;
     WorkerInstance.onStdError = this.onStdError_;
     WorkerInstance.onStopped = this.onStopped_;
+
+    window.addEventListener('resize', this.onWindowResize_);
   }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onWindowResize_);
+  }
+
+  private onWindowResize_ = () => {
+    this.setState({ windowInnerHeight: window.innerHeight });
+  };
 
   private onStopped_ = () => {
     this.setState({
@@ -407,6 +420,7 @@ export class Root extends React.Component<Props, State> {
       messages,
       settings,
       feedback,
+      windowInnerHeight,
     } = state;
 
     const theme = DARK;
@@ -455,7 +469,7 @@ export class Root extends React.Component<Props, State> {
     return (
 
       <>
-        <Container $windowInnerHeight={window.innerHeight}>
+        <Container $windowInnerHeight={windowInnerHeight}>
           <SimMenu
             layout={layout}
             onLayoutChange={this.onLayoutChange_}
