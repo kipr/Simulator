@@ -18,7 +18,7 @@ const TabContainer = styled('div', (props: ThemeProps & { selected: boolean, $ve
   backgroundColor: props.selected ? `rgba(255, 255, 255, 0.1)` : `rgba(0, 0, 0, 0.1)`,
   opacity: props.selected ? 1 : 0.2,
   transition: 'background-color 0.2s, opacity 0.2s',
-  padding: `${props.theme.itemPadding * 2}px`,
+  padding: `calc(${props.theme.itemPadding * 2}px + 0.5em)`,
   ':last-child': {
     borderRight: 'none',
     borderBottom: 'none'
