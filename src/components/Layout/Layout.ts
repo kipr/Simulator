@@ -16,6 +16,7 @@ export interface LayoutProps extends StyleProps, ThemeProps {
   settings: Settings;
   onClearConsole: () => void;
   onIndentCode: () => void;
+  onDownloadCode: () => void;
   onSelectScene: () => void;
   editorRef: React.MutableRefObject<Editor>;
 }

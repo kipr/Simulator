@@ -170,6 +170,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       settings,
       onClearConsole,
       onIndentCode,
+      onDownloadCode,
       onSelectScene,
       editorRef,
     } = props;
@@ -179,7 +180,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       sidePanelSize,
     } = this.state;
 
-    const editorBar = createEditorBarComponents(theme, messages, onIndentCode, this.onErrorClick_);
+    const editorBar = createEditorBarComponents(theme, messages, onIndentCode, onDownloadCode, this.onErrorClick_);
     const consoleBar = createConsoleBarComponents(theme, onClearConsole);
     const worldBar = createWorldBarComponents(theme, onSelectScene);
 
