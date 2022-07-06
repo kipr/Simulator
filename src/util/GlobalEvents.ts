@@ -58,7 +58,7 @@ export namespace GlobalEvents {
         if (callback(event)) return true;
       }
 
-      return false;
+      return true;
     };
   }
 
