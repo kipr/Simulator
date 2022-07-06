@@ -58,7 +58,9 @@ const Item = styled('div', (props: ThemeProps & ClickProps) => ({
   ':hover': !props.disabled && props.onClick ? {
     cursor: 'pointer',
     backgroundColor: `rgba(255, 255, 255, 0.1)`
-  } : {},
+  } : {
+    cursor: 'auto',
+  },
   userSelect: 'none',
   transition: 'background-color 0.2s, opacity 0.2s'
 }));
