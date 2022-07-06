@@ -18,6 +18,7 @@ export interface MenuProps extends StyleProps, ThemeProps {
   onRunClick: () => void;
   onStopClick: () => void;
   onDownloadClick: () => void;
+  onResetWorldClick: () => void;
 
   onSettingsClick: () => void;
   onAboutClick: () => void;
@@ -143,6 +144,7 @@ class SimMenu extends React.PureComponent<Props, State> {
       onRunClick,
       onStopClick,
       onDownloadClick,
+      onResetWorldClick,
       onDocumentationClick,
       onDashboardClick,
       onLogoutClick,
@@ -177,6 +179,7 @@ class SimMenu extends React.PureComponent<Props, State> {
             <ItemIcon icon='stop' /> Stop
           </StopItem>
           <Item theme={theme} onClick={onDownloadClick}><ItemIcon icon='file-download' /> Download</Item>
+          <Item theme={theme} onClick={onResetWorldClick}><ItemIcon icon='sync' />Reset World</Item>
 
           <Spacer style={{ borderRight: `1px solid ${theme.borderColor}` }} />
 

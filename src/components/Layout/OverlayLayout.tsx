@@ -22,7 +22,6 @@ export interface OverlayLayoutProps extends LayoutProps {
 }
 
 interface ReduxOverlayLayoutProps {
-  onResetScene: () => void;
 }
 
 interface OverlayLayoutState {
@@ -294,7 +293,6 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       onClearConsole,
       onIndentCode,
       onSelectScene,
-      onResetScene,
       editorRef
     } = props;
 
@@ -312,7 +310,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
 
     const editorBar = createEditorBarComponents(theme, messages, onIndentCode, this.onErrorClick_);
     const consoleBar = createConsoleBarComponents(theme, onClearConsole);
-    const worldBar = createWorldBarComponents(theme, onSelectScene, onResetScene);
+    const worldBar = createWorldBarComponents(theme, onSelectScene);
 
     return (
       <Container style={style} className={className}>
@@ -375,7 +373,4 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
 export const OverlayLayoutRedux = connect<unknown, ReduxOverlayLayoutProps, OverlayLayoutProps, ReduxState>((state: ReduxState) => {
   return {};
 }, dispatch => ({
-  onResetScene: () => {
-    dispatch(SceneAction.RESET_SCENE);
-  }
 }), null, { forwardRef: true })(OverlayLayout);

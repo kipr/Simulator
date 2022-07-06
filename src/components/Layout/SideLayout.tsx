@@ -53,7 +53,6 @@ export interface SideLayoutProps extends LayoutProps {
 }
 
 interface ReduxSideLayoutProps {
-  onResetScene: () => void;
 }
 
 interface SideLayoutState {
@@ -172,7 +171,6 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       onClearConsole,
       onIndentCode,
       onSelectScene,
-      onResetScene,
       editorRef,
     } = props;
 
@@ -183,7 +181,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
 
     const editorBar = createEditorBarComponents(theme, messages, onIndentCode, this.onErrorClick_);
     const consoleBar = createConsoleBarComponents(theme, onClearConsole);
-    const worldBar = createWorldBarComponents(theme, onSelectScene, onResetScene);
+    const worldBar = createWorldBarComponents(theme, onSelectScene);
 
     let content: JSX.Element;
     switch (activePanel) {
@@ -312,7 +310,4 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
 export const SideLayoutRedux = connect<unknown, ReduxSideLayoutProps, SideLayoutProps, ReduxState>((state: ReduxState) => {
   return {};
 }, dispatch => ({
-  onResetScene: () => {
-    dispatch(SceneAction.RESET_SCENE);
-  }
 }), null, { forwardRef: true })(SideLayout);
