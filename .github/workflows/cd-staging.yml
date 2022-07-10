@@ -23,6 +23,8 @@ env:
   GKE_ZONE: us-central1-a
   IMAGE: kipr/simulator
 
+concurrency: ${{ github.workflow }}
+
 jobs:
   build-publish:
     name: Build and publish
