@@ -17,7 +17,7 @@ export interface MenuProps extends StyleProps, ThemeProps {
 
   onRunClick: () => void;
   onStopClick: () => void;
-  onDownloadClick: () => void;
+  onResetWorldClick: () => void;
 
   onSettingsClick: () => void;
   onAboutClick: () => void;
@@ -96,14 +96,14 @@ const Item = styled('div', (props: ThemeProps & ClickProps) => ({
   transition: 'background-color 0.2s, opacity 0.2s'
 }));
 
-const RunItem = withStyleDeep(Item, (props: ClickProps & { $running: boolean }) => ({
+const RunItem = withStyleDeep(Item, (props: ClickProps) => ({
   backgroundColor: props.disabled ? GREEN.disabled : GREEN.standard,
   ':hover': props.onClick && !props.disabled ? {
     backgroundColor: GREEN.hover
   } : {},
 }));
 
-const StopItem = withStyleDeep(Item, (props: ClickProps & { $running: boolean }) => ({
+const StopItem = withStyleDeep(Item, (props: ClickProps) => ({
   backgroundColor: props.disabled ? RED.disabled : RED.standard,
   ':hover': props.onClick && !props.disabled ? {
     backgroundColor: RED.hover
@@ -142,7 +142,7 @@ class SimMenu extends React.PureComponent<Props, State> {
       onAboutClick,
       onRunClick,
       onStopClick,
-      onDownloadClick,
+      onResetWorldClick,
       onDocumentationClick,
       onDashboardClick,
       onLogoutClick,
@@ -152,31 +152,35 @@ class SimMenu extends React.PureComponent<Props, State> {
 
     const { layoutPicker } = state;
 
-    const running = SimulatorState.isRunning(simulatorState);
+    const runOrStopItem: JSX.Element = SimulatorState.isRunning(simulatorState)
+      ? (
+        <StopItem
+          theme={theme}
+          onClick={onStopClick}
+          disabled={false}
+        >
+          <ItemIcon icon='stop' />
+          Stop
+        </StopItem>
+      ) : (
+        <RunItem
+          theme={theme}
+          onClick={SimulatorState.isStopped(simulatorState) ? onRunClick : undefined}
+          disabled={!SimulatorState.isStopped(simulatorState)}
+          style={{ borderLeft: `1px solid ${theme.borderColor}` }}
+        >
+          <ItemIcon icon='play' />
+          Run
+        </RunItem>
+      );
 
     return (
       <>
         <Container theme={theme}>
           <Logo theme={theme} onClick={onDashboardClick} src={theme.foreground === 'white' ? KIPR_LOGO_BLACK as string : KIPR_LOGO_WHITE as string}/>
 
-          <RunItem
-            theme={theme}
-            onClick={SimulatorState.isStopped(simulatorState) ? onRunClick : undefined}
-            $running={running}
-            disabled={!SimulatorState.isStopped(simulatorState)}
-            style={{ borderLeft: `1px solid ${theme.borderColor}` }}
-          >
-            <ItemIcon icon='play' /> Run
-          </RunItem>
-          <StopItem
-            theme={theme}
-            onClick={running ? onStopClick : undefined}
-            disabled={!running}
-            $running={running}
-          >
-            <ItemIcon icon='stop' /> Stop
-          </StopItem>
-          <Item theme={theme} onClick={onDownloadClick}><ItemIcon icon='file-download' /> Download</Item>
+          {runOrStopItem}
+          <Item theme={theme} onClick={onResetWorldClick}><ItemIcon icon='sync' />Reset World</Item>
 
           <Spacer style={{ borderRight: `1px solid ${theme.borderColor}` }} />
 

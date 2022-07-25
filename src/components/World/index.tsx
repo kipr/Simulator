@@ -26,10 +26,7 @@ import * as uuid from 'uuid';
 import { ReferenceFrame, Rotation, Vector3 } from '../../unit-math';
 import { Vector3 as RawVector3 } from '../../math';
 import ComboBox from '../ComboBox';
-import Scene from '../../state/State/Scene';
 import Node from '../../state/State/Scene/Node';
-import { Scenes } from '../../state/State';
-import Async from '../../state/State/Async';
 import Dict from '../../Dict';
 import Geometry from '../../state/State/Scene/Geometry';
 
@@ -38,8 +35,7 @@ import { BarComponent } from '../Widget';
 
 export const createWorldBarComponents = (
   theme: Theme, 
-  onSelectScene: () => void,
-  onResetScene: () => void
+  onSelectScene: () => void
 ) => {
   const worldBar: BarComponent<unknown>[] = [];
 
@@ -53,15 +49,6 @@ export const createWorldBarComponents = (
       </>,
   }));
 
-  worldBar.push(BarComponent.create(Button, {
-    theme,
-    onClick: onResetScene,
-    children:
-      <>
-        <Fa icon='sync' />
-        { ' Reset' }
-      </>
-  }));
   return worldBar;
 };
 

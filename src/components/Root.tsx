@@ -31,7 +31,7 @@ import ExceptionDialog from './ExceptionDialog';
 import SelectSceneDialog from './SelectSceneDialog';
 
 import store from '../state';
-import { RobotStateAction } from '../state/reducer';
+import { RobotStateAction, SceneAction } from '../state/reducer';
 import { Editor } from './Editor';
 
 namespace Modal {
@@ -349,6 +349,10 @@ export class Root extends React.Component<Props, State> {
     document.body.removeChild(element);
   };
 
+  private onResetWorldClick_ = () => {
+    store.dispatch(SceneAction.RESET_SCENE);
+  };
+
   private onClearConsole_ = () => {
     this.setState({
       console: StyledText.compose({ items: [] })
@@ -436,6 +440,7 @@ export class Root extends React.Component<Props, State> {
       settings,
       onClearConsole: this.onClearConsole_,
       onIndentCode: this.onIndentCode_,
+      onDownloadCode: this.onDownloadClick_,
       onSelectScene: this.onSelectSceneClick_,
       editorRef: this.editorRef,
     };
@@ -478,7 +483,7 @@ export class Root extends React.Component<Props, State> {
             onHideAll={this.onHideAll_}
             onSettingsClick={this.onModalClick_(Modal.SETTINGS)}
             onAboutClick={this.onModalClick_(Modal.ABOUT)}
-            onDownloadClick={this.onDownloadClick_}
+            onResetWorldClick={this.onResetWorldClick_}
             onRunClick={this.onRunClick_}
             onStopClick={this.onStopClick_}
             onDocumentationClick={this.onDocumentationClick}

@@ -47,6 +47,7 @@ export const createEditorBarComponents = (
   theme: Theme, 
   messages: Message[],
   onIndentCode: () => void,
+  onDownloadCode: () => void,
   onErrorClick: (event: React.MouseEvent<HTMLDivElement>) => void
 ) => {
   
@@ -61,6 +62,16 @@ export const createEditorBarComponents = (
       <>
         <Fa icon='indent'/>
         {' Indent'}
+      </>
+  }));
+
+  editorBar.push(BarComponent.create(Button, {
+    theme,
+    onClick: onDownloadCode,
+    children:
+      <>
+        <Fa icon='file-download'/>
+        {' Download'}
       </>
   }));
 
