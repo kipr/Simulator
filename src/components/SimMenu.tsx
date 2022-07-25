@@ -124,10 +124,24 @@ class SimMenu extends React.PureComponent<Props, State> {
     };
   }
 
-  private onLayoutClick_ = () => {
+  private onLayoutClick_ = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const layoutPickerNext = !this.state.layoutPicker;
     this.setState({
-      layoutPicker: !this.state.layoutPicker
+      layoutPicker: layoutPickerNext
     });
+
+    if (layoutPickerNext) {
+      window.addEventListener('click', this.onLayoutClickOutside_);
+    } else {
+      window.removeEventListener('click', this.onLayoutClickOutside_);
+    }
+
+    event.stopPropagation();
+  };
+
+  private onLayoutClickOutside_ = (event: MouseEvent) => {
+    this.setState({ layoutPicker: false });
+    window.removeEventListener('click', this.onLayoutClickOutside_);
   };
 
   render() {
