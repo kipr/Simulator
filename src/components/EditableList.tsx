@@ -90,7 +90,8 @@ namespace EditableList {
       super(props);
 
       this.state = {
-        hover: false
+        hover: false,
+        initialTouch: false,
       };
     }
   
@@ -103,7 +104,26 @@ namespace EditableList {
     private onMouseLeave_ = (e: React.MouseEvent<HTMLDivElement>) => {
       this.setState({
         hover: false,
+        initialTouch: false,
       });
+    };
+
+    private onTouchEnd_ = (e: React.TouchEvent<HTMLDivElement>) => {
+      if (!this.state.hover) {
+        // This may be an initial touch; set "touched" to prevent buttons from rendering
+        this.setState({
+          initialTouch: true,
+        });
+      }
+    };
+
+    private onClick_ = (e: React.MouseEvent<HTMLDivElement>) => {
+      if (this.state.initialTouch) {
+        // This was a touch click; now that the click event has happened, we can reset "touched" and allow the buttons to render
+        this.setState({
+          initialTouch: false,
+        });
+      }
     };
 
     private onVisibilityChange_ = () => {
@@ -116,12 +136,12 @@ namespace EditableList {
       const { props, state } = this;
       const { component, onRemove, onSettings, onReset, onVisibilityChange, visible } = props;
       const componentProps = props.props;
-      const { hover } = state;
+      const { hover, initialTouch: touched } = state;
       const Component = component;
       return (
-        <StandardItem.Container onMouseEnter={this.onMouseEnter_} onMouseLeave={this.onMouseLeave_}>
+        <StandardItem.Container onMouseEnter={this.onMouseEnter_} onMouseLeave={this.onMouseLeave_} onTouchEnd={this.onTouchEnd_} onClick={this.onClick_}>
           <Component style={{ flex: '1 1' }} {...componentProps} />
-          {hover ? (
+          {(hover && !touched) ? (
             <StandardItem.OptionsContainer>
               {onVisibilityChange && (
                 <StandardItem.VisibilityIconContainer onClick={this.onVisibilityChange_}>
@@ -168,6 +188,7 @@ namespace EditableList {
 
     export interface State {
       hover: boolean;
+      initialTouch: boolean;
     }
 
     export const Container = styled('div', {
