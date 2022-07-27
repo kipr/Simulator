@@ -259,9 +259,9 @@ export class Root extends React.Component<Props, State> {
 
   private onRunClick_ = () => {
     const { state } = this;
-    const { code, console, theme } = state;
+    const { code, console } = state;
 
-    let nextConsole = StyledText.extend(console, StyledText.text({
+    let nextConsole: StyledText = StyledText.extend(console, StyledText.text({
       text: `Compiling...\n`,
       style: STDOUT_STYLE(this.state.theme)
     }));
@@ -272,6 +272,7 @@ export class Root extends React.Component<Props, State> {
     }, () => {
       compile(code)
         .then(compileResult => {
+          nextConsole = this.state.console;
           const messages = sort(parseMessages(compileResult.stderr));
           const compileSucceeded = compileResult.result && compileResult.result.length > 0;
 
