@@ -110,7 +110,7 @@ namespace EditableList {
 
     private onTouchEnd_ = (e: React.TouchEvent<HTMLDivElement>) => {
       if (!this.state.hover) {
-        // This may be an initial touch; set "touched" to prevent buttons from rendering
+        // Touch happened while buttons aren't visible, so set "initialTouch" to prevent buttons from rendering yet
         this.setState({
           initialTouch: true,
         });
@@ -119,7 +119,7 @@ namespace EditableList {
 
     private onClick_ = (e: React.MouseEvent<HTMLDivElement>) => {
       if (this.state.initialTouch) {
-        // This was a touch click; now that the click event has happened, we can reset "touched" and allow the buttons to render
+        // Now that the click event has happened, reset "initialTouch" to allow buttons to render
         this.setState({
           initialTouch: false,
         });
@@ -136,12 +136,12 @@ namespace EditableList {
       const { props, state } = this;
       const { component, onRemove, onSettings, onReset, onVisibilityChange, visible } = props;
       const componentProps = props.props;
-      const { hover, initialTouch: touched } = state;
+      const { hover, initialTouch } = state;
       const Component = component;
       return (
         <StandardItem.Container onMouseEnter={this.onMouseEnter_} onMouseLeave={this.onMouseLeave_} onTouchEnd={this.onTouchEnd_} onClick={this.onClick_}>
           <Component style={{ flex: '1 1' }} {...componentProps} />
-          {(hover && !touched) ? (
+          {(hover && !initialTouch) ? (
             <StandardItem.OptionsContainer>
               {onVisibilityChange && (
                 <StandardItem.VisibilityIconContainer onClick={this.onVisibilityChange_}>
