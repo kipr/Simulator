@@ -68,7 +68,7 @@ See more info on Emscripten and installing it here: https://emscripten.org/docs/
 ```bash
 git clone https://github.com/emscripten-core/emsdk.git
 cd emsdk
-./emsdk install 2.0.2
+./emsdk install 2.0.2a
 ./emsdk activate 2.0.2
 ```
 

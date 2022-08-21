@@ -158,7 +158,7 @@ class BottomLayout extends React.PureComponent<Props, State> {
 
   render() {
     const { props } = this;
-    const { style, className, theme, onCodeChange, code, console, settings } = props;
+    const { style, className, theme, language, onCodeChange, code, console, settings } = props;
     const { editorSize, consoleSize, infoSize } = this.state;
     return (
       <Container>
@@ -172,7 +172,13 @@ class BottomLayout extends React.PureComponent<Props, State> {
             <Console theme={theme} text={console} />
           </InfoWidget>
           <EditorWidget theme={theme} name='Editor' sizes={EDITOR_SIZES} size={editorSize} onSizeChange={this.onEditorSizeChange_} mode={Mode.Inline}>
-            <Editor code={code} onCodeChange={onCodeChange} theme={theme} autocomplete={settings.editorAutoComplete} />
+            <Editor
+              language={language}
+              code={code}
+              onCodeChange={onCodeChange}
+              theme={theme}
+              autocomplete={settings.editorAutoComplete}
+            />
           </EditorWidget>
         </BottomBar>
       </Container>

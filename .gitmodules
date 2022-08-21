@@ -1,3 +1,9 @@
 [submodule "libwallaby"]
-	path = libwallaby
+	path = dependencies/libwallaby
 	url = https://github.com/kipr/libwallaby
+[submodule "cpython"]
+	path = dependencies/cpython
+	url = https://github.com/python/cpython
+[submodule "dependencies/emsdk"]
+	path = dependencies/emsdk
+	url = https://github.com/emscripten-core/emsdk

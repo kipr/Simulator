@@ -117,22 +117,22 @@ class WorkerInstance {
   private onMessage = (e: MessageEvent) => {
     const message = e.data as Protocol.Worker.Request;
     switch (message.type) {
-      case 'programoutput': {
+      case 'program-output': {
         if (this.onStdOutput) {
           this.onStdOutput(message.stdoutput);
         }
         break;
       }
-      case 'programerror': {
+      case 'program-error': {
         if (this.onStdError) {
           this.onStdError(message.stderror);
         }
         break;
       }
-      case 'workerready': {
+      case 'worker-ready': {
         // Once worker is ready for messages, send the shared register array buffer
         this.worker_.postMessage({
-          type: 'setsharedregisters',
+          type: 'set-shared-registers',
           sharedArrayBuffer: this.sharedRegister_.getSharedArrayBuffer(),
         } as Protocol.Worker.SetSharedRegistersRequest);
         break;
@@ -144,10 +144,10 @@ class WorkerInstance {
     }
   };
   
-  start(code: string) {
+  start(req: Omit<Protocol.Worker.StartRequest, 'type'>) {
     this.worker_.postMessage({
       type: 'start',
-      code
+      ...req
     });
   }
 

@@ -33,6 +33,8 @@ import SelectSceneDialog from './SelectSceneDialog';
 import store from '../state';
 import { RobotStateAction, SceneAction } from '../state/reducer';
 import { Editor } from './Editor';
+import Dict from '../Dict';
+import ProgrammingLanguage from '../ProgrammingLanguage';
 
 namespace Modal {
   export enum Type {
@@ -96,7 +98,11 @@ export type Modal = Modal.Settings | Modal.About | Modal.Exception | Modal.Selec
 interface RootState {
   robotStartPosition: RobotPosition;
   layout: Layout;
-  code: string;
+
+  activeLanguage: ProgrammingLanguage;
+
+  // A map of language to code.
+  code: Dict<string>;
 
   simulatorState: SimulatorState;
 
@@ -155,7 +161,11 @@ export class Root extends React.Component<Props, State> {
       },
       // TODO: set to side by default if on mobile
       layout: Layout.Overlay,
-      code: '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
+      activeLanguage: 'c',
+      code: {
+        'c': '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
+        'python': 'import kipr\n\nprint(\'Hello, World!\')',
+      },
       modal: Modal.NONE,
       simulatorState: SimulatorState.STOPPED,
       console: StyledText.text({ text: 'Welcome to the KIPR Simulator!\n', style: STDOUT_STYLE(DARK) }),
@@ -207,8 +217,20 @@ export class Root extends React.Component<Props, State> {
     Space.getInstance().setRobotPosition(position);
   };
 
+  private onActiveLanguageChange_ = (language: ProgrammingLanguage) => {
+    this.setState({
+      activeLanguage: language
+    });
+  };
+
   private onCodeChange_ = (code: string) => {
-    this.setState({ code });
+    const { activeLanguage } = this.state;
+    this.setState({
+      code: {
+        ...this.state.code,
+        [activeLanguage]: code,
+      }
+    });
   };
 
   private onShowAll_ = () => {
@@ -259,77 +281,100 @@ export class Root extends React.Component<Props, State> {
 
   private onRunClick_ = () => {
     const { state } = this;
-    const { code, console, theme } = state;
+    const { activeLanguage, code, console, theme } = state;
 
-    let nextConsole = StyledText.extend(console, StyledText.text({
-      text: `Compiling...\n`,
-      style: STDOUT_STYLE(this.state.theme)
-    }));
+    const activeCode = code[activeLanguage];
 
-    this.setState({
-      simulatorState: SimulatorState.COMPILING,
-      console: nextConsole
-    }, () => {
-      compile(code)
-        .then(compileResult => {
-          const messages = sort(parseMessages(compileResult.stderr));
-          const compileSucceeded = compileResult.result && compileResult.result.length > 0;
-
-          // Show all errors/warnings in console
-          for (const message of messages) {
-            nextConsole = StyledText.extend(nextConsole, toStyledText(message, {
-              onClick: message.ranges.length > 0
-                ? this.onErrorMessageClick_(message.ranges[0].start.line)
-                : undefined
-            }));
-          }
-
-          if (compileSucceeded) {
-            // Show success in console and start running the program
-            const haveWarnings = hasWarnings(messages);
-            nextConsole = StyledText.extend(nextConsole, StyledText.text({
-              text: `Compilation succeeded${haveWarnings ? ' with warnings' : ''}!\n`,
-              style: STDOUT_STYLE(this.state.theme)
-            }));
-
-            WorkerInstance.start(compileResult.result);
-          } else {
-            if (!hasErrors(messages)) {
-              // Compile failed and there are no error messages; some weird underlying error occurred
-              // We print the entire stderr to the console
+    switch (activeLanguage) {
+      case 'c': {
+        let nextConsole = StyledText.extend(console, StyledText.text({
+          text: `Compiling...\n`,
+          style: STDOUT_STYLE(this.state.theme)
+        }));
+    
+        this.setState({
+          simulatorState: SimulatorState.COMPILING,
+          console: nextConsole
+        }, () => {
+          compile(activeCode)
+            .then(compileResult => {
+              const messages = sort(parseMessages(compileResult.stderr));
+              const compileSucceeded = compileResult.result && compileResult.result.length > 0;
+    
+              // Show all errors/warnings in console
+              for (const message of messages) {
+                nextConsole = StyledText.extend(nextConsole, toStyledText(message, {
+                  onClick: message.ranges.length > 0
+                    ? this.onErrorMessageClick_(message.ranges[0].start.line)
+                    : undefined
+                }));
+              }
+    
+              if (compileSucceeded) {
+                // Show success in console and start running the program
+                const haveWarnings = hasWarnings(messages);
+                nextConsole = StyledText.extend(nextConsole, StyledText.text({
+                  text: `Compilation succeeded${haveWarnings ? ' with warnings' : ''}!\n`,
+                  style: STDOUT_STYLE(this.state.theme)
+                }));
+    
+                WorkerInstance.start({
+                  language: 'c',
+                  code: compileResult.result
+                });
+              } else {
+                if (!hasErrors(messages)) {
+                  // Compile failed and there are no error messages; some weird underlying error occurred
+                  // We print the entire stderr to the console
+                  nextConsole = StyledText.extend(nextConsole, StyledText.text({
+                    text: `${compileResult.stderr}\n`,
+                    style: STDERR_STYLE(this.state.theme)
+                  }));
+                }
+    
+                nextConsole = StyledText.extend(nextConsole, StyledText.text({
+                  text: `Compilation failed.\n`,
+                  style: STDERR_STYLE(this.state.theme)
+                }));
+              }
+    
+              this.setState({
+                simulatorState: compileSucceeded ? SimulatorState.RUNNING : SimulatorState.STOPPED,
+                messages,
+                console: nextConsole
+              });
+            })
+            .catch((e: unknown) => {
+              window.console.error(e);
+    
               nextConsole = StyledText.extend(nextConsole, StyledText.text({
-                text: `${compileResult.stderr}\n`,
+                text: 'Something went wrong during compilation.\n',
                 style: STDERR_STYLE(this.state.theme)
               }));
-            }
-
-            nextConsole = StyledText.extend(nextConsole, StyledText.text({
-              text: `Compilation failed.\n`,
-              style: STDERR_STYLE(this.state.theme)
-            }));
-          }
-
-          this.setState({
-            simulatorState: compileSucceeded ? SimulatorState.RUNNING : SimulatorState.STOPPED,
-            messages,
-            console: nextConsole
-          });
-        })
-        .catch((e: unknown) => {
-          window.console.error(e);
-
-          nextConsole = StyledText.extend(nextConsole, StyledText.text({
-            text: 'Something went wrong during compilation.\n',
-            style: STDERR_STYLE(this.state.theme)
-          }));
-
-          this.setState({
-            simulatorState: SimulatorState.STOPPED,
-            messages: [],
-            console: nextConsole
+    
+              this.setState({
+                simulatorState: SimulatorState.STOPPED,
+                messages: [],
+                console: nextConsole
+              });
+            });
+        });
+        break;
+      }
+      case 'python': {
+        this.setState({
+          simulatorState: SimulatorState.RUNNING,
+        }, () => {
+          WorkerInstance.start({
+            language: 'python',
+            code: activeCode
           });
         });
-    });
+        break;
+      }
+    }
+
+    
   };
 
   private onStopClick_ = () => {
@@ -340,9 +385,11 @@ export class Root extends React.Component<Props, State> {
   };
 
   private onDownloadClick_ = () => {
+    const { activeLanguage } = this.state;
+
     const element = document.createElement('a');
-    element.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(this.state.code)}`);
-    element.setAttribute('download', 'program.c');
+    element.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(this.state.code[activeLanguage])}`);
+    element.setAttribute('download', `program.${ProgrammingLanguage.fileExtension(activeLanguage)}`);
     element.style.display = 'none';
     document.body.appendChild(element);
     element.click();
@@ -417,6 +464,7 @@ export class Root extends React.Component<Props, State> {
     const {
       robotStartPosition,
       layout,
+      activeLanguage,
       code,
       modal,
       simulatorState,
@@ -430,7 +478,9 @@ export class Root extends React.Component<Props, State> {
     const theme = DARK;
 
     const commonLayoutProps: LayoutProps = {
-      code,
+      language: activeLanguage,
+      code: code[activeLanguage],
+      onLanguageChange: this.onActiveLanguageChange_,
       robotStartPosition,
       onSetRobotStartPosition: this.onSetRobotStartPosition_,
       theme,

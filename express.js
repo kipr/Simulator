@@ -29,88 +29,100 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use(morgan('combined'));
 
-app.post('/compile', (req, res) => {
-  // const body = JSON.parse();
+// If we have libkipr (C) artifacts and emsdk, we can compile.
+if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env) {
+  console.log('Compiling C programs is enabled.');
 
-  if (!('code' in req.body)) {
-    return res.status(400).json({
-      error: "Expected code key in body"
-    });
-  }
-
-  if (typeof req.body.code !== 'string') {
-    return res.status(400).json({
-      error: "Expected code key in body to be a string"
-    });
-  }
-
-  // Wrap user's main() in our own "main()" that exits properly
-  // Required because Asyncify keeps emscripten runtime alive, which would prevent cleanup code from running
-  const augmentedCode = `${req.body.code}
-    #include <emscripten.h>
-
-    EM_JS(void, on_stop, (), {
-      if (Module.context.onStop) Module.context.onStop();
-    })
-  
-    void simMainWrapper()
-    {
-      main();
-      on_stop();
-      emscripten_force_exit(0);
-    }
-  `;
-
-  
-  const id = uuid.v4();
-  const path = `/tmp/${id}.c`;
-  fs.writeFile(path, augmentedCode, err => {
-    if (err) {
-      return res.status(500).json({
-        error: "Failed to write ${}"
+  app.post('/compile', (req, res) => {
+    if (!('code' in req.body)) {
+      return res.status(400).json({
+        error: "Expected code key in body"
       });
     }
-
-    exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -s ASYNCIFY -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']" -I${config.server.libwallabyRoot}/include -L${config.server.libwallabyRoot}/lib -lkipr -o ${path}.js ${path}`, (err, stdout, stderr) => {
+  
+    if (typeof req.body.code !== 'string') {
+      return res.status(400).json({
+        error: "Expected code key in body to be a string"
+      });
+    }
+  
+    // Wrap user's main() in our own "main()" that exits properly
+    // Required because Asyncify keeps emscripten runtime alive, which would prevent cleanup code from running
+    const augmentedCode = `${req.body.code}
+      #include <emscripten.h>
+  
+      EM_JS(void, on_stop, (), {
+        if (Module.context.onStop) Module.context.onStop();
+      })
+    
+      void simMainWrapper()
+      {
+        main();
+        on_stop();
+        emscripten_force_exit(0);
+      }
+    `;
+  
+    
+    const id = uuid.v4();
+    const path = `/tmp/${id}.c`;
+    fs.writeFile(path, augmentedCode, err => {
       if (err) {
-        return res.status(200).json({
-          stdout,
-          stderr
+        return res.status(500).json({
+          error: "Failed to write ${}"
         });
       }
   
-      fs.readFile(`${path}.js`, (err, data) => {
+      exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -s ASYNCIFY -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']" -I${config.server.dependencies.libkipr_c}/include -L${config.server.dependencies.libkipr_c}/lib -lkipr -o ${path}.js ${path}`, {
+        env: {
+          ...process.env,
+          PATH: `${config.server.dependencies.emsdk_env.PATH}:${process.env.PATH}`,
+          EMSDK: config.server.dependencies.emsdk_env.EMSDK,
+          EM_CONFIG: config.server.dependencies.emsdk_env.EM_CONFIG,
+        }
+      }, (err, stdout, stderr) => {
         if (err) {
-          return res.status(400).json({
-            error: `Failed to open ${path}.js for reading`
+          console.log(stderr);
+          return res.status(200).json({
+            stdout,
+            stderr
           });
         }
-
-        fs.unlink(`${path}.js`, err => {
+    
+        fs.readFile(`${path}.js`, (err, data) => {
           if (err) {
-            return res.status(500).json({
-              error: `Failed to delete ${path}.js`
+            return res.status(400).json({
+              error: `Failed to open ${path}.js for reading`
             });
           }
-          fs.unlink(`${path}`, err => {
+  
+          fs.unlink(`${path}.js`, err => {
             if (err) {
               return res.status(500).json({
-                error: `Failed to delete ${path}`
+                error: `Failed to delete ${path}.js`
               });
             }
-            res.status(200).json({
-              result: data.toString(),
-              stdout,
-              stderr,
+            fs.unlink(`${path}`, err => {
+              if (err) {
+                return res.status(500).json({
+                  error: `Failed to delete ${path}`
+                });
+              }
+              res.status(200).json({
+                result: data.toString(),
+                stdout,
+                stderr,
+              });
             });
           });
         });
       });
     });
+    
+    
   });
-  
-  
-});
+}
+
 
 app.post('/feedback', (req, res) => {
   const hookURL = config.server.feedbackWebhookURL;
@@ -183,6 +195,22 @@ app.post('/feedback', (req, res) => {
 app.use('/static', express.static(`${__dirname}/static`, {
   maxAge: config.caching.staticMaxAge,
 }));
+
+// Expose cpython artifacts
+if (config.server.dependencies.cpython) {
+  console.log('CPython artifacts are enabled.');
+  app.use('/cpython', express.static(`${config.server.dependencies.cpython}`, {
+    maxAge: config.caching.staticMaxAge,
+  }));
+}
+
+// Expose libkipr (Python) artifacts
+if (config.server.dependencies.libkipr_python) {
+  console.log('libkipr (Python) artifacts are enabled.');
+  app.use('/libkipr/python', express.static(`${config.server.dependencies.libkipr_python}`, {
+    maxAge: config.caching.staticMaxAge,
+  }));
+}
 
 app.use('/dist', express.static(`${__dirname}/dist`, {
   setHeaders: setCrossOriginIsolationHeaders,

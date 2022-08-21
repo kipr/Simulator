@@ -1,7 +1,7 @@
 // shared config (dev and prod)
 const { resolve } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { DefinePlugin } = require('webpack');
+const { DefinePlugin, IgnorePlugin } = require('webpack');
 
 const commitHash = require('child_process').execSync('git rev-parse --short=8 HEAD').toString().trim();
 
@@ -17,6 +17,13 @@ module.exports = {
     path: resolve(__dirname, '../../dist'),
     clean: true,
   },
+  externals: [
+    'child_process',
+    'fs',
+    'path',
+    'crypto',
+    '/cpython/python.js',
+  ],
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     fallback: {
@@ -42,7 +49,12 @@ module.exports = {
               plugins: ['@babel/plugin-syntax-import-meta']
             }
           },
-          'ts-loader'
+          {
+            loader: 'ts-loader',
+            options: {
+              allowTsInNodeModules: true,
+            }
+          }
         ],
       },
       {

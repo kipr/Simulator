@@ -283,6 +283,8 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       style,
       className,
       theme,
+      language,
+      onLanguageChange,
       robotStartPosition,
       onSetRobotStartPosition,
       code,
@@ -309,7 +311,18 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       mode: Mode.Floating
     };
 
+<<<<<<< HEAD
     const editorBar = createEditorBarComponents(theme, messages, onIndentCode, onDownloadCode, this.onErrorClick_);
+=======
+    const editorBar = createEditorBarComponents({
+      theme,
+      messages,
+      language,
+      onLanguageChange,
+      onIndentCode,
+      onErrorClick: this.onErrorClick_
+    });
+>>>>>>> cbafc92... Python 3.12 integration
     const consoleBar = createConsoleBarComponents(theme, onClearConsole);
     const worldBar = createWorldBarComponents(theme, onSelectScene);
 
@@ -332,7 +345,15 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
             onSizeChange={this.onEditorSizeChange_}
             barComponents={editorBar}
           >
-            <Editor ref={editorRef} code={code} onCodeChange={onCodeChange} theme={theme} messages={messages} autocomplete={settings.editorAutoComplete} />
+            <Editor
+              ref={editorRef}
+              language={language}
+              code={code}
+              onCodeChange={onCodeChange}
+              theme={theme}
+              messages={messages}
+              autocomplete={settings.editorAutoComplete}
+            />
           </EditorWidget>
           <ConsoleWidget
             {...commonProps}
