@@ -75,7 +75,7 @@ const start = async (message: Protocol.Worker.StartRequest) => {
       break;
     }
     case 'python': {
-      startPython(message);
+      await startPython(message);
       break;
     }
   }
@@ -86,7 +86,7 @@ ctx.onmessage = (e: MessageEvent) => {
   
   switch (message.type) {
     case 'start': {
-      start(message);
+      void start(message);
       break;
     }
 

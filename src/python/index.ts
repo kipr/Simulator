@@ -1,3 +1,12 @@
+// This file interacts with many untyped things, unfortunately.
+// The following ESLint rules are disabled:
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+
 import Protocol from '../WorkerProtocol';
 
 import registersDevice from './registersDevice';
@@ -21,13 +30,11 @@ export default async (params: PythonParams) => {
   let PythonEmscripten: any;
   try {
     // @ts-ignore
-    PythonEmscripten = await import(/* webpackIgnore: true */'/cpython/python.js');
+    PythonEmscripten = await import(/* webpackIgnore: true */ '/cpython/python.js');
   } catch (e) {
     params.printErr(e);
     return;
   }
-
-  console.log(PythonEmscripten);
 
   const libkipr = await fetch('/libkipr/python/kipr.wasm');
   const libkiprBuffer = await libkipr.arrayBuffer();
@@ -36,22 +43,21 @@ export default async (params: PythonParams) => {
   const kiprPyBuffer = await kiprPy.text();
 
   await PythonEmscripten.default({
-    locateFile: (path, prefix) => {
+    locateFile: (path: string, prefix: string) => {
       return `/cpython/${path}`;
     },
-    preRun: [function(module) {
+    preRun: [function (module: any) {
       const a = module.FS.makedev(64, 0);
       module.FS.registerDevice(a, registersDevice({
         onRegistersChange: params.onRegistersChange,
         registers: params.registers
       }));
       module.FS.mkdev('/registers', a);
-      module.FS.mkdir('/kipr')
+      module.FS.mkdir('/kipr');
       module.FS.writeFile('/kipr/_kipr.so', new Uint8Array(libkiprBuffer));
 
       module.FS.writeFile('/kipr/__init__.py', kiprPyBuffer);
       
-      //@ts-ignore
       module.FS.writeFile('main.py', `
 import sys
 sys.path.append('/')
@@ -60,7 +66,7 @@ ${params.code}
 `);
 
     }],
-    arguments: [ 'main.py' ],
+    arguments: ['main.py'],
     ...params
   });
-}
+};

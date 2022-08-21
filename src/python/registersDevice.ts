@@ -54,5 +54,5 @@ export default (params: RegistersDeviceParams): FsDevice => {
 
       return length;
     }
-  }
+  };
 };
