@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import os
-import glob
 import subprocess
 import pathlib
 import json
@@ -20,6 +19,10 @@ if not is_tool('cmake'):
 
 if not is_tool('make'):
   print('Make is not installed. Please install Make and try again.')
+  exit(1)
+
+if not is_tool('swig'):
+  print('SWIG is not installed. Please install SWIG and try again.')
   exit(1)
 
 working_dir = pathlib.Path(__file__).parent.absolute()
@@ -108,7 +111,8 @@ subprocess.run(
 cpython_dir = working_dir / 'cpython'
 
 print('Applying cpython patches...')
-for patch_file in glob.glob('cpython_patches/*.patch'):
+for patch_file in (working_dir / 'cpython_patches').glob('*.patch'):
+  print('Applying patch:', patch_file)
   with open(patch_file) as patch:
     subprocess.run(
       ['patch', '-p0', '--forward'],

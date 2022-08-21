@@ -12,8 +12,8 @@ Simulates a botball/JBC style demobot with a built in IDE.
 ## Requirements
 - [Node.js v16 or higher](https://nodejs.org/)
 - [yarn](https://classic.yarnpkg.com/)
+- [CMake](https://cmake.org/)
 - [SWIG](https://swig.org/)
-
 
 ### Debian/Ubuntu
 ```bash
@@ -39,6 +39,10 @@ brew install node cmake swig
 
 npm install --global yarn
 ```
+
+### Windows
+
+It is recommended to use [WSL2](https://docs.microsoft.com/en-us/windows/wsl/about) with Ubuntu on Windows.
 
 ## Clone repository and submodules
 
