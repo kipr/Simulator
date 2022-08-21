@@ -12,11 +12,14 @@ Simulates a botball/JBC style demobot with a built in IDE.
 ## Requirements
 - [Node.js v16 or higher](https://nodejs.org/)
 - [yarn](https://classic.yarnpkg.com/)
+- [SWIG](https://swig.org/)
 
+
+### Debian/Ubuntu
 ```bash
 # to get newer versions of Node.js through apt-get, you likely need to add the correct NodeSource repositories
 # for details, see https://github.com/nodesource/distributions
-sudo apt-get install nodejs
+sudo apt-get install nodejs cmake build-essential swig
 sudo npm install --global npm
 sudo npm install --global yarn
 yarn --version
@@ -24,10 +27,17 @@ yarn --version
 #(if yarn does not work, reboot or use "sudo yarn" on the rest of the instructions)
 ```
 
-If you do not have cmake and make:
+### macOS
+
+You will need to install Command Line Tools and [Homebrew](https://brew.sh/) before continuing.
+
 ```bash
-sudo apt-get install cmake
-sudo apt-get install build-essential
+# If you need Command Line Tools
+xcode-select --install
+
+brew install node cmake swig
+
+npm install --global yarn
 ```
 
 ## Clone repository and submodules
