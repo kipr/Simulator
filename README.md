@@ -9,25 +9,14 @@ Simulates a botball/JBC style demobot with a built in IDE.
 
 # Development
 
-## Automated Setup
-Navigate to the root of this repository (cd /path/to/simulator/)
-```bash
-sudo chmod 777 install.sh
-sudo ./install.sh
-```
-
-## Manual Setup
-
-### Requirements
+## Requirements
 - [Node.js v16 or higher](https://nodejs.org/)
 - [yarn](https://classic.yarnpkg.com/)
-- Doxygen (libwallaby requirement)
 
 ```bash
 # to get newer versions of Node.js through apt-get, you likely need to add the correct NodeSource repositories
 # for details, see https://github.com/nodesource/distributions
 sudo apt-get install nodejs
-sudo apt-get install doxygen
 sudo npm install --global npm
 sudo npm install --global yarn
 yarn --version
@@ -41,7 +30,7 @@ sudo apt-get install cmake
 sudo apt-get install build-essential
 ```
 
-### Clone repository and submodules
+## Clone repository and submodules
 
 Clone this repository and its submodules:
 
@@ -55,43 +44,20 @@ Or, if you've already cloned the repository without `--recurse-submodules`, you 
 git submodule update --init
 ```
 
-### Install Emscripten
-
-Emscripten requires Node v14, while we require Node v16. This isn't a big deal - just export the location of Node to a variable, which we'll then use later.
-```bash
-# run to get the location of Node v16
-NODE=$(which node)
-```
-
-See more info on Emscripten and installing it here: https://emscripten.org/docs/getting_started/downloads.html
+## Build Dependencies
 
 ```bash
-git clone https://github.com/emscripten-core/emsdk.git
-cd emsdk
-./emsdk install 2.0.2a
-./emsdk activate 2.0.2
+python3 dependencies/build.py
 ```
 
-### Install Dependencies
+## Install JavaScript Dependencies
 
 Navigate to the root directory of this repository, then run:
 ```bash
 yarn install
 ```
 
-### Build libwallaby for JavaScript
-
-Build `libwallaby`:
-```bash
-mkdir libwallaby/build
-cd libwallaby/build
-
-source $PATH_TO_EMSDK/emsdk_env.sh
-emcmake cmake -Demscripten=ON -Dno_wallaby=ON -Dwith_vision_support=OFF -Dbuild_python=OFF -DBUILD_DOCUMENTATION=OFF ..
-emmake make -j8
-```
-
-## Running
+# Running
 
 In one terminal, build in watch mode:
 ```bash
@@ -100,11 +66,8 @@ yarn watch
 
 In another terminal, run the server:
 ```bash
-NODE=$(which node)
-source $PATH_TO_EMSDK/emsdk_env.sh
-$NODE express.js
+node express.js
 ```
-Note that you MUST run the server using Node v16. It is recommended to run the above three commands in a new terminal, as running `source $PATH_TO_EMSDK/emsdk_env.sh` will add it's own Node v14 binary to the PATH.
 
 ## Configuration
 
@@ -112,7 +75,6 @@ The server can be configured using environment variables. Variables without defa
 
 | Variable | Description | Default value |
 | -------- | ----------- | ------------- |
-| `LIBWALLABY_ROOT` | Path to the root directory of libwallaby | `./libwallaby` |
 | `SERVER_PORT` | The port on which to listen for requests | `3000` |
 | `CACHING_STATIC_MAX_AGE` | The max duration (in ms) to allow static assets to be cached | `3600000` (1 hr) |
 | `FEEDBACK_WEBHOOK_URL` | The url for the discord webhook to send feedback to | | 
