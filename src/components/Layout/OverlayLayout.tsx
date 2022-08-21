@@ -311,18 +311,15 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       mode: Mode.Floating
     };
 
-<<<<<<< HEAD
-    const editorBar = createEditorBarComponents(theme, messages, onIndentCode, onDownloadCode, this.onErrorClick_);
-=======
     const editorBar = createEditorBarComponents({
       theme,
       messages,
       language,
       onLanguageChange,
       onIndentCode,
+      onDownloadCode,
       onErrorClick: this.onErrorClick_
     });
->>>>>>> cbafc92... Python 3.12 integration
     const consoleBar = createConsoleBarComponents(theme, onClearConsole);
     const worldBar = createWorldBarComponents(theme, onSelectScene);
 
