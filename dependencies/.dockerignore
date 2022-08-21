@@ -1,0 +1,4 @@
+libkipr_build_c
+libkipr_build_python
+libkipr_install_c
+cpython/builddir
