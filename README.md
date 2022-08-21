@@ -76,6 +76,8 @@ yarn install
 In one terminal, build in watch mode:
 ```bash
 yarn watch
+# If you get an error that says "digital envelope routines::unsupported", use:
+NODE_OPTIONS=--openssl-legacy-provider yarn watch
 ```
 
 In another terminal, run the server:
