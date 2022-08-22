@@ -2,7 +2,6 @@
 // The following ESLint rules are disabled:
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
@@ -10,10 +9,6 @@
 import Protocol from '../WorkerProtocol';
 
 import registersDevice from './registersDevice';
-
-// This is on a non-standard path specified in the webpack config.
-// @ts-ignore
-import PythonEmscripten from 'python.js';
 
 export interface PythonParams {
   code: string;
@@ -24,41 +19,55 @@ export interface PythonParams {
   registers: number[];
 }
 
-/**
- * Initializes the Python interpreter.
- */
-export default async (params: PythonParams) => {
-  const libkipr = await fetch('/libkipr/python/kipr.wasm');
-  const libkiprBuffer = await libkipr.arrayBuffer();
+let python: (params: PythonParams) => Promise<void>;
+if (SIMULATOR_HAS_CPYTHON) {
+  // This is on a non-standard path specified in the webpack config.
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const PythonEmscripten = require('python.js');
 
-  const kiprPy = await fetch('/libkipr/python/binding/python/package/src/kipr/kipr.py');
-  const kiprPyBuffer = await kiprPy.text();
+  /**
+   * Initializes the Python interpreter.
+   */
+  python = async (params: PythonParams) => {
+    const libkipr = await fetch('/libkipr/python/kipr.wasm');
+    const libkiprBuffer = await libkipr.arrayBuffer();
 
-  await PythonEmscripten({
-    locateFile: (path: string, prefix: string) => {
-      return `/cpython/${path}`;
-    },
-    preRun: [function (module: any) {
-      const a = module.FS.makedev(64, 0);
-      module.FS.registerDevice(a, registersDevice({
-        onRegistersChange: params.onRegistersChange,
-        registers: params.registers
-      }));
-      module.FS.mkdev('/registers', a);
-      module.FS.mkdir('/kipr');
-      module.FS.writeFile('/kipr/_kipr.so', new Uint8Array(libkiprBuffer));
+    const kiprPy = await fetch('/libkipr/python/binding/python/package/src/kipr/kipr.py');
+    const kiprPyBuffer = await kiprPy.text();
 
-      module.FS.writeFile('/kipr/__init__.py', kiprPyBuffer);
-      
-      module.FS.writeFile('main.py', `
+    await PythonEmscripten.default({
+      locateFile: (path: string, prefix: string) => {
+        return `/cpython/${path}`;
+      },
+      preRun: [function (module: any) {
+        const a = module.FS.makedev(64, 0);
+        module.FS.registerDevice(a, registersDevice({
+          onRegistersChange: params.onRegistersChange,
+          registers: params.registers
+        }));
+        module.FS.mkdev('/registers', a);
+        module.FS.mkdir('/kipr');
+        module.FS.writeFile('/kipr/_kipr.so', new Uint8Array(libkiprBuffer));
+
+        module.FS.writeFile('/kipr/__init__.py', kiprPyBuffer);
+        
+        module.FS.writeFile('main.py', `
 import sys
 sys.path.append('/')
 del sys
 ${params.code}
-`);
+  `);
 
-    }],
-    arguments: ['main.py'],
-    ...params
-  });
-};
+      }],
+      arguments: ['main.py'],
+      ...params
+    });
+  };
+} else {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  python = async (params: PythonParams) => {
+    params.printErr('Python is not available.');
+  };
+}
+
+export default python;

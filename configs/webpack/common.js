@@ -116,6 +116,7 @@ module.exports = {
     new DefinePlugin({
       SIMULATOR_VERSION: JSON.stringify(require('../../package.json').version),
       SIMULATOR_GIT_HASH: JSON.stringify(commitHash),
+      SIMULATOR_HAS_CPYTHON: JSON.stringify(dependencies.cpython !== undefined),
     }),
   ],
   performance: {
