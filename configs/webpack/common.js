@@ -1,10 +1,19 @@
 // shared config (dev and prod)
-const { resolve } = require('path');
+const { resolve, join } = require('path');
+const { readFileSync } = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { DefinePlugin, IgnorePlugin } = require('webpack');
 
 const commitHash = require('child_process').execSync('git rev-parse --short=8 HEAD').toString().trim();
 
+let dependencies = {};
+try {
+  dependencies = JSON.parse(readFileSync(resolve(__dirname, '..', '..', 'dependencies', 'dependencies.json')));
+} catch (e) {
+  console.log('Failed to read dependencies.json');
+  throw e;
+}
+  
 module.exports = {
   entry: {
     app: './index.tsx',
@@ -22,7 +31,6 @@ module.exports = {
     'fs',
     'path',
     'crypto',
-    '/cpython/python.js',
   ],
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
@@ -31,6 +39,10 @@ module.exports = {
       path: false,
     },
     symlinks: false,
+    modules: [
+      'node_modules',
+      resolve(dependencies.cpython),
+    ]
   },
   context: resolve(__dirname, '../../src'),
   module: {

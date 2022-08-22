@@ -11,6 +11,10 @@ import Protocol from '../WorkerProtocol';
 
 import registersDevice from './registersDevice';
 
+// This is on a non-standard path specified in the webpack config.
+// @ts-ignore
+import PythonEmscripten from 'python.js';
+
 export interface PythonParams {
   code: string;
   printErr: (stderr: string) => void;
@@ -24,25 +28,13 @@ export interface PythonParams {
  * Initializes the Python interpreter.
  */
 export default async (params: PythonParams) => {
-  
-  // We dynamically import the Python JS blob.
-
-  let PythonEmscripten: any;
-  try {
-    // @ts-ignore
-    PythonEmscripten = await import(/* webpackIgnore: true */ '/cpython/python.js');
-  } catch (e) {
-    params.printErr(e);
-    return;
-  }
-
   const libkipr = await fetch('/libkipr/python/kipr.wasm');
   const libkiprBuffer = await libkipr.arrayBuffer();
 
   const kiprPy = await fetch('/libkipr/python/binding/python/package/src/kipr/kipr.py');
   const kiprPyBuffer = await kiprPy.text();
 
-  await PythonEmscripten.default({
+  await PythonEmscripten({
     locateFile: (path: string, prefix: string) => {
       return `/cpython/${path}`;
     },
