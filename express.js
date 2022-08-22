@@ -72,14 +72,21 @@ if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env
           error: "Failed to write ${}"
         });
       }
+
+      // ...process.env causes a linter error for some reason.
+      // We work around this by doing it manually.
+      
+      const env = {};
+      for (const key of Object.keys(process.env)) {
+        env[key] = process.env[key];
+      }
+      
+      env['PATH'] = `${config.server.dependencies.emsdk_env.PATH}:${process.env.PATH}`;
+      env['EMSDK'] = config.server.dependencies.emsdk_env.EMSDK;
+      env['EM_CONFIG'] = config.server.dependencies.emsdk_env.EM_CONFIG;
   
       exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -s ASYNCIFY -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']" -I${config.server.dependencies.libkipr_c}/include -L${config.server.dependencies.libkipr_c}/lib -lkipr -o ${path}.js ${path}`, {
-        env: {
-          ...process.env,
-          PATH: `${config.server.dependencies.emsdk_env.PATH}:${process.env.PATH}`,
-          EMSDK: config.server.dependencies.emsdk_env.EMSDK,
-          EM_CONFIG: config.server.dependencies.emsdk_env.EM_CONFIG,
-        }
+        env
       }, (err, stdout, stderr) => {
         if (err) {
           console.log(stderr);
