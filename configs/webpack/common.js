@@ -11,7 +11,6 @@ try {
   dependencies = JSON.parse(readFileSync(resolve(__dirname, '..', '..', 'dependencies', 'dependencies.json')));
 } catch (e) {
   console.log('Failed to read dependencies.json');
-  throw e;
 }
   
 module.exports = {
@@ -39,9 +38,11 @@ module.exports = {
       path: false,
     },
     symlinks: false,
-    modules: [
+    modules: dependencies.cpython ? [
       'node_modules',
       resolve(dependencies.cpython),
+    ] : [
+      'node_modules',
     ]
   },
   context: resolve(__dirname, '../../src'),
