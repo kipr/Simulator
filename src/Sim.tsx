@@ -74,7 +74,7 @@ export class Space implements Robotable {
 
   // Fractional motor position accumulation
   private leftWheelPositionAccumulation_ = 0;
-  private rightWheelPositionAccumulation_= 0;
+  private rightWheelPositionAccumulation_ = 0;
 
   private sensorObjects_: SensorObject[] = [];
 
