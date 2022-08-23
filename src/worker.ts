@@ -84,8 +84,8 @@ ctx.onmessage = (e: MessageEvent) => {
     case 'start': {
       try {
         void start(message);
-      } catch(e) {
-        printErr(e.message);
+      } catch (e) {
+        printErr(e);
       } finally {
         ctx.postMessage({
           type: 'stopped',

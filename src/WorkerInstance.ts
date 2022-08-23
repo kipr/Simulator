@@ -30,7 +30,7 @@ class WorkerInstance {
     if (this.onStopped) {
       this.onStopped();
     }
-  }
+  };
 
   public setSensorValues = (analogValues: RobotState.AnalogValues, digitalValues: RobotState.DigitalValues) => {
     // Update analog registers
