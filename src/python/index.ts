@@ -53,6 +53,7 @@ if (SIMULATOR_HAS_CPYTHON) {
         module.FS.writeFile('main.py', `
 import sys
 sys.path.append('/')
+sys.path.append('/kipr')
 del sys
 ${params.code}
   `);
