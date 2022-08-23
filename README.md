@@ -14,12 +14,13 @@ Simulates a botball/JBC style demobot with a built in IDE.
 - [yarn](https://classic.yarnpkg.com/)
 - [CMake](https://cmake.org/)
 - [SWIG](https://swig.org/)
+- [Python 3.7 or newer](https://www.python.org/)
 
 ### Debian/Ubuntu
 ```bash
 # to get newer versions of Node.js through apt-get, you likely need to add the correct NodeSource repositories
 # for details, see https://github.com/nodesource/distributions
-sudo apt-get install nodejs cmake build-essential swig
+sudo apt-get install nodejs cmake build-essential swig python3.8
 sudo npm install --global npm
 sudo npm install --global yarn
 yarn --version
@@ -61,6 +62,7 @@ git submodule update --init
 ## Build Dependencies
 
 ```bash
+# Python 3.7+ is required for the build process
 python3 dependencies/build.py
 ```
 
