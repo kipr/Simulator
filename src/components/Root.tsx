@@ -164,7 +164,7 @@ export class Root extends React.Component<Props, State> {
       activeLanguage: 'c',
       code: {
         'c': '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
-        'python': 'import kipr\n\nprint(\'Hello, World!\')',
+        'python': 'from kipr import *\n\nprint(\'Hello, World!\')',
       },
       modal: Modal.NONE,
       simulatorState: SimulatorState.STOPPED,

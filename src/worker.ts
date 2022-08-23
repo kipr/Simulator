@@ -52,16 +52,22 @@ const startC = (message: Protocol.Worker.StartRequest) => {
   });
 };
 
+const runEventLoop = (): Promise<void> => new Promise((resolve, reject) => setTimeout(resolve, 5));
+
 const startPython = async (message: Protocol.Worker.StartRequest) => {
   ctx.postMessage({
     type: 'start'
   });
+
+  await runEventLoop();
+
   await python({
     code: message.code,
     print,
     printErr,
     registers: sharedRegister_,
   });
+  
 };
 
 const start = async (message: Protocol.Worker.StartRequest) => {
@@ -71,7 +77,15 @@ const start = async (message: Protocol.Worker.StartRequest) => {
       break;
     }
     case 'python': {
-      await startPython(message);
+      try {
+        await startPython(message);
+      } catch (e) {
+        printErr(e);
+      } finally {
+        ctx.postMessage({
+          type: 'stopped',
+        } as Protocol.Worker.StoppedRequest);
+      }
       break;
     }
   }
@@ -82,18 +96,9 @@ ctx.onmessage = (e: MessageEvent) => {
   
   switch (message.type) {
     case 'start': {
-      try {
-        void start(message);
-      } catch (e) {
-        printErr(e);
-      } finally {
-        ctx.postMessage({
-          type: 'stopped',
-        } as Protocol.Worker.StoppedRequest);
-      }
+      void start(message);
       break;
     }
-
     case 'set-shared-registers': {
       sharedRegister_ = new SharedRegisters(message.sharedArrayBuffer);
       break;

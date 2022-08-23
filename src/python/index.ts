@@ -62,7 +62,6 @@ ${params.code}
       arguments: ['main.py'],
       ...params
     });
-    console.log('done');
   };
 } else {
   // eslint-disable-next-line @typescript-eslint/require-await

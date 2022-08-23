@@ -19,13 +19,9 @@ class WorkerInstance {
   private readonly sharedRegister_ = new SharedRegisters();
 
   private onStopped_ = () => {
-    console.log('on stopped');
-
     // Reset specific registers to stop motors and disable servos
     this.sharedRegister_.setRegister8b(Registers.REG_RW_MOT_MODES, 0x00);
     this.sharedRegister_.setRegister8b(Registers.REG_RW_MOT_SRV_ALLSTOP, 0xF0);
-
-    console.log(this.sharedRegister_.getSharedArrayBuffer());
 
     if (this.onStopped) {
       this.onStopped();
@@ -190,10 +186,6 @@ class WorkerInstance {
   private startWorker() {
     this.worker_ = new Worker(new URL('./worker.ts', import.meta.url));
     this.worker_.onmessage = this.onMessage;
-    this.worker_.onerror = (e) => {
-      console.log(e);
-      this.onStopped_();
-    };
   }
 
   private worker_: Worker;
