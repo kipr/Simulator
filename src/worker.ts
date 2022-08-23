@@ -60,12 +60,8 @@ const startPython = async (message: Protocol.Worker.StartRequest) => {
     code: message.code,
     print,
     printErr,
-    onRegistersChange,
-    registers,
+    registers: sharedRegister_,
   });
-  ctx.postMessage({
-    type: 'stopped',
-  } as Protocol.Worker.StoppedRequest);
 };
 
 const start = async (message: Protocol.Worker.StartRequest) => {
@@ -86,7 +82,15 @@ ctx.onmessage = (e: MessageEvent) => {
   
   switch (message.type) {
     case 'start': {
-      void start(message);
+      try {
+        void start(message);
+      } catch(e) {
+        printErr(e.message);
+      } finally {
+        ctx.postMessage({
+          type: 'stopped',
+        } as Protocol.Worker.StoppedRequest);
+      }
       break;
     }
 

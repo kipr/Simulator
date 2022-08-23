@@ -9,14 +9,14 @@
 import Protocol from '../WorkerProtocol';
 
 import registersDevice from './registersDevice';
+import SharedRegisters from '../SharedRegisters';
 
 export interface PythonParams {
   code: string;
   printErr: (stderr: string) => void;
   print: (stdout: string) => void;
 
-  onRegistersChange: (registers: Protocol.Worker.Register[]) => void;
-  registers: number[];
+  registers: SharedRegisters;
 }
 
 let python: (params: PythonParams) => Promise<void>;
@@ -42,7 +42,6 @@ if (SIMULATOR_HAS_CPYTHON) {
       preRun: [function (module: any) {
         const a = module.FS.makedev(64, 0);
         module.FS.registerDevice(a, registersDevice({
-          onRegistersChange: params.onRegistersChange,
           registers: params.registers
         }));
         module.FS.mkdev('/registers', a);
@@ -62,6 +61,7 @@ ${params.code}
       arguments: ['main.py'],
       ...params
     });
+    console.log('done');
   };
 } else {
   // eslint-disable-next-line @typescript-eslint/require-await
