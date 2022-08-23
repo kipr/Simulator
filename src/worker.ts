@@ -1,6 +1,6 @@
 import Protocol from './WorkerProtocol';
 import dynRequire from './require';
-import Registers from './RegisterState';
+import SharedRegisters from './SharedRegisters';
 
 // Proper typing of Worker is tricky due to conflicting DOM and WebWorker types
 // See GitHub issue: https://github.com/microsoft/TypeScript/issues/20595
@@ -19,7 +19,7 @@ const printErr = (stderror: string) => {
   });
 };
 
-const registers = new Array<number>(Registers.REG_ALL_COUNT);
+let sharedRegister_: SharedRegisters;
 
 ctx.onmessage = (e: MessageEvent) => {
   
@@ -27,15 +27,12 @@ ctx.onmessage = (e: MessageEvent) => {
   switch (message.type) {
     case 'start': {
       const mod = dynRequire(message.code, {
-        onRegistersChange: (registers) => {
-          if (registers.length > 0) {
-            ctx.postMessage({
-              type: 'setregister',
-              registers,
-            } as Protocol.Worker.SetRegisterRequest);
-          }
-        },
-        registers,
+        setRegister8b: (address: number, value: number) => sharedRegister_.setRegister8b(address, value),
+        setRegister16b: (address: number, value: number) => sharedRegister_.setRegister16b(address, value),
+        setRegister32b: (address: number, value: number) => sharedRegister_.setRegister32b(address, value),
+        readRegister8b: (address: number) => sharedRegister_.getRegisterValue8b(address),
+        readRegister16b: (address: number) => sharedRegister_.getRegisterValue16b(address),
+        readRegister32b: (address: number) => sharedRegister_.getRegisterValue32b(address),
         onStop: () => {
           ctx.postMessage({
             type: 'stopped',
@@ -57,10 +54,8 @@ ctx.onmessage = (e: MessageEvent) => {
       break;
     }
 
-    case 'setregister': {
-      for (const register of message.registers) {
-        registers[register.address] = register.value;
-      }
+    case 'setsharedregisters': {
+      sharedRegister_ = new SharedRegisters(message.sharedArrayBuffer);
       break;
     }
   } 
