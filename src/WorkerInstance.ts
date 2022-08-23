@@ -34,7 +34,6 @@ class WorkerInstance {
   };
 
   public incrementMotorPositions = (motorPositionIncrements: [number, number, number, number]) => {
-    // TODO: Truncating the increment value will be lossy
     this.sharedRegister_.incrementRegister32b(Registers.REG_RW_MOT_0_B3, Math.trunc(motorPositionIncrements[0]) * 250);
     this.sharedRegister_.incrementRegister32b(Registers.REG_RW_MOT_1_B3, Math.trunc(motorPositionIncrements[1]) * 250);
     this.sharedRegister_.incrementRegister32b(Registers.REG_RW_MOT_2_B3, Math.trunc(motorPositionIncrements[2]) * 250);
