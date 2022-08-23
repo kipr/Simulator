@@ -13,7 +13,7 @@ Simulates a botball/JBC style demobot with a built in IDE.
 - [Node.js v16 or higher](https://nodejs.org/)
 - [yarn](https://classic.yarnpkg.com/)
 - [CMake](https://cmake.org/)
-- [SWIG](https://swig.org/)
+- [SWIG 4+](https://swig.org/)
 - [Python 3.7 or newer](https://www.python.org/)
 
 ### Debian/Ubuntu
