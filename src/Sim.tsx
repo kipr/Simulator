@@ -72,6 +72,10 @@ export class Space implements Robotable {
   private armRotationDefault: Babylon.Quaternion;
   private clawRotationDefault: Babylon.Quaternion;
 
+  // Fractional motor position accumulation
+  private leftWheelPositionAccumulation_ = 0;
+  private rightWheelPositionAccumulation_= 0;
+
   private sensorObjects_: SensorObject[] = [];
 
   private canCoordinates: Array<[number, number]>;
@@ -322,11 +326,9 @@ export class Space implements Robotable {
         SensorObject.applyMut(sensorObject, nextRobotState);
       }
 
-      store.dispatch(RobotStateAction.setRobotState({
-        robotState: {
-          ...robotState,
-          ...nextRobotState,
-        },
+      store.dispatch(RobotStateAction.setRobotSensorValues({
+        analogValues: nextRobotState.analogValues,
+        digitalValues: nextRobotState.digitalValues,
       }));
     });
 
@@ -355,15 +357,19 @@ export class Space implements Robotable {
       }
 
       // Update motor positions based on wheel rotation
-      const m3Position = currRobotState.motorPositions[3] + leftRotation * this.WHEEL_TICKS_PER_RADIAN;
-      const m0Position = currRobotState.motorPositions[0] + rightRotation * this.WHEEL_TICKS_PER_RADIAN;
+      this.leftWheelPositionAccumulation_ += leftRotation * this.WHEEL_TICKS_PER_RADIAN;
+      this.rightWheelPositionAccumulation_ += rightRotation * this.WHEEL_TICKS_PER_RADIAN;
+
+      const leftWheelDelta = Math.trunc(this.leftWheelPositionAccumulation_);
+      const rightWheelDelta = Math.trunc(this.rightWheelPositionAccumulation_);
+      if (leftWheelDelta !== 0 || rightWheelDelta !== 0) {
+        this.leftWheelPositionAccumulation_ -= leftWheelDelta;
+        this.rightWheelPositionAccumulation_ -= rightWheelDelta;
       
-      store.dispatch(RobotStateAction.setRobotState({
-        robotState: {
-          ...currRobotState,
-          motorPositions: [m0Position, 0, 0, m3Position],
-        },
-      }));
+        store.dispatch(RobotStateAction.incrementRobotMotorPositions({
+          motorPositions: [rightWheelDelta, 0, 0, leftWheelDelta],
+        }));
+      }
 
       this.leftWheelRotationPrev = leftWheelRotationCurr;
       this.rightWheelRotationPrev = rightWheelRotationCurr;

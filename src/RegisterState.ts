@@ -4,6 +4,8 @@ export default {
   /* READ Only Registers ----------------------- */
   REG_R_START:  0,
 
+  // SHAREDARRAYBUFFER PADDING (1 BYTE)
+
   REG_R_VERSION_H:      1,
   REG_R_VERSION_L:      2,
 
@@ -32,6 +34,8 @@ export default {
   REG_RW_ADC_5_H:     21,
   REG_RW_ADC_5_L:     22,
   REG_RW_ADC_PE:      23,// low 6 bits used
+
+  // SHAREDARRAYBUFFER PADDING (1 BYTE)
 
   REG_RW_MAG_X_H:     24,
   REG_RW_MAG_X_L:     25,
@@ -124,6 +128,8 @@ export default {
   REG_RW_BUTTONS: 88,
 
   REG_READABLE_COUNT: 89,
+
+  // SHAREDARRAYBUFFER PADDING (1 BYTE)
 
 
 

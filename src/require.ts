@@ -1,5 +1,3 @@
-import Protocol from './WorkerProtocol';
-
 export interface EmscriptenModule {
   context: ModuleContext,
   print: (s: string) => void,
@@ -9,8 +7,12 @@ export interface EmscriptenModule {
 }
 
 export interface ModuleContext {
-  registers?: Array<number>,
-  onRegistersChange?: (registers: Protocol.Worker.Register[]) => void,
+  setRegister8b?: (address: number, value: number) => void,
+  setRegister16b?: (address: number, value: number) => void,
+  setRegister32b?: (address: number, value: number) => void,
+  readRegister8b?: (address: number) => number,
+  readRegister16b?: (address: number) => number,
+  readRegister32b?: (address: number) => number,
   onStop?: () => void;
 }
 

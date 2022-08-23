@@ -184,14 +184,18 @@ app.use('/static', express.static(`${__dirname}/static`, {
   maxAge: config.caching.staticMaxAge,
 }));
 
-app.use('/dist', express.static(`${__dirname}/dist`));
+app.use('/dist', express.static(`${__dirname}/dist`, {
+  setHeaders: setCrossOriginIsolationHeaders,
+}));
 
 app.use(express.static(sourceDir, {
   maxAge: config.caching.staticMaxAge,
+  setHeaders: setCrossOriginIsolationHeaders,
 }));
 
 
 app.use('*', (req, res) => {
+  setCrossOriginIsolationHeaders(res);
   res.sendFile(`${__dirname}/${sourceDir}/index.html`);
 });
 
@@ -201,3 +205,9 @@ app.listen(config.server.port, () => {
   console.log(`Express web server started: http://localhost:${config.server.port}`);
   console.log(`Serving content from /${sourceDir}/`);
 });
+
+// Cross-origin isolation required for using features like SharedArrayBuffer
+function setCrossOriginIsolationHeaders(res) {
+  res.header("Cross-Origin-Opener-Policy", "same-origin");
+  res.header("Cross-Origin-Embedder-Policy", "require-corp");
+}

@@ -3,6 +3,7 @@ import Registers, { MotorControlMode } from './RegisterState';
 import { RobotState } from './RobotState';
 
 import deepNeq from './deepNeq';
+import SharedRegisters from './SharedRegisters';
 
 
 class WorkerInstance {
@@ -15,20 +16,32 @@ class WorkerInstance {
   
   onStopped: () => void;
 
-  private registers_ = new Array<number>(Registers.REG_ALL_COUNT)
-    .fill(0)
-    .fill(240,61,62)
-    .fill(5,78,84)
-    .fill(220,79,80)
-    .fill(220,81,82)
-    .fill(220,83,84)
-    .fill(9,84,85)
-    .fill(96,85,86);
-  
-  private didMotorPositionRegistersChange = false;
-  
-  public readServoRegister = (reg1: number, reg2: number) => {
-    const val = reg1 << 8 | reg2;
+  private readonly sharedRegister_ = new SharedRegisters();
+
+  public setSensorValues = (analogValues: RobotState.AnalogValues, digitalValues: RobotState.DigitalValues) => {
+    // Update analog registers
+    this.sharedRegister_.setRegister16b(Registers.REG_RW_ADC_0_H, analogValues[0]);
+    this.sharedRegister_.setRegister16b(Registers.REG_RW_ADC_1_H, analogValues[1]);
+
+    // Update digital registers based on state
+    let digitalRegisterValue = 0;
+    for (let digitalPort = 0; digitalPort < digitalValues.length; ++digitalPort) {
+      if (digitalValues[digitalPort]) {
+        digitalRegisterValue = digitalRegisterValue | (1 << digitalPort);
+      }
+    }
+    this.sharedRegister_.setRegister16b(Registers.REG_RW_DIG_IN_H, digitalRegisterValue);
+  };
+
+  public incrementMotorPositions = (motorPositionIncrements: [number, number, number, number]) => {
+    // TODO: Truncating the increment value will be lossy
+    this.sharedRegister_.incrementRegister32b(Registers.REG_RW_MOT_0_B3, Math.trunc(motorPositionIncrements[0]) * 250);
+    this.sharedRegister_.incrementRegister32b(Registers.REG_RW_MOT_1_B3, Math.trunc(motorPositionIncrements[1]) * 250);
+    this.sharedRegister_.incrementRegister32b(Registers.REG_RW_MOT_2_B3, Math.trunc(motorPositionIncrements[2]) * 250);
+    this.sharedRegister_.incrementRegister32b(Registers.REG_RW_MOT_3_B3, Math.trunc(motorPositionIncrements[3]) * 250);
+  };
+
+  private servoRegisterToPosition = (val: number) => {
     const degrees = (val - 1500.0) / 10.0;
     let dval = (degrees + 90.0)  * 2047.0 / 180.0;
     if (dval < 0.0) dval = 0.0;
@@ -53,40 +66,26 @@ class WorkerInstance {
       digitalValues: [...currentState.digitalValues],
     };
 
-    const registerUpdates: Protocol.Worker.Register[] = [];
-
-    // Motor positions can be changed from simulator or from worker, so changes may conflict
-    // We give precedence to changes coming from the worker (i.e. register changes), so...
-    //   If motor position registers changed (from worker), update state based on registers
-    //   Otherwise, update registers based on state
     // NOTE: Scaling by 250 to account for libwallaby's "update Hz" scaling
-    if (this.didMotorPositionRegistersChange) {
-      nextState.motorPositions = [
-        this.getRegisterValue32b(Registers.REG_RW_MOT_0_B3) / 250,
-        this.getRegisterValue32b(Registers.REG_RW_MOT_1_B3) / 250,
-        this.getRegisterValue32b(Registers.REG_RW_MOT_2_B3) / 250,
-        this.getRegisterValue32b(Registers.REG_RW_MOT_3_B3) / 250,
-      ];
-      this.didMotorPositionRegistersChange = false;
-    } else {
-      this.append32bRegisterUpdates(Registers.REG_RW_MOT_0_B3, Math.trunc(nextState.motorPositions[0]) * 250, registerUpdates);
-      this.append32bRegisterUpdates(Registers.REG_RW_MOT_1_B3, Math.trunc(nextState.motorPositions[1]) * 250, registerUpdates);
-      this.append32bRegisterUpdates(Registers.REG_RW_MOT_2_B3, Math.trunc(nextState.motorPositions[2]) * 250, registerUpdates);
-      this.append32bRegisterUpdates(Registers.REG_RW_MOT_3_B3, Math.trunc(nextState.motorPositions[3]) * 250, registerUpdates);
-    }    
+    nextState.motorPositions = [
+      this.sharedRegister_.getRegisterValue32b(Registers.REG_RW_MOT_0_B3, true) / 250,
+      this.sharedRegister_.getRegisterValue32b(Registers.REG_RW_MOT_1_B3, true) / 250,
+      this.sharedRegister_.getRegisterValue32b(Registers.REG_RW_MOT_2_B3, true) / 250,
+      this.sharedRegister_.getRegisterValue32b(Registers.REG_RW_MOT_3_B3, true) / 250,
+    ];
 
     // Update motor speed state based on registers, taking current motor modes into account
-    const motorModes = this.registers_[Registers.REG_RW_MOT_MODES];
+    const motorModes = this.sharedRegister_.getRegisterValue8b(Registers.REG_RW_MOT_MODES);
     for (let motorNum = 0; motorNum < 4; motorNum++) {
       // Get the 2 bits corresponding to this motor
       const motorMode = (motorModes >> (2 * motorNum)) & 0b11;
       if (motorMode === MotorControlMode.Inactive) {
         nextState.motorSpeeds[motorNum] = 0;
       } else if (motorMode === MotorControlMode.Speed) {
-        nextState.motorSpeeds[motorNum] = this.getRegisterValue16b(Registers.REG_RW_MOT_0_SP_H + (2 * motorNum));
+        nextState.motorSpeeds[motorNum] = this.sharedRegister_.getRegisterValue16b(Registers.REG_RW_MOT_0_SP_H + (2 * motorNum), true);
       } else if (motorMode === MotorControlMode.SpeedPosition) {
-        const motorGoalPosition = this.getRegisterValue32b(Registers.REG_W_MOT_0_GOAL_B3 + (4 * motorNum)) / 250;
-        const motorVelocity = this.getRegisterValue16b(Registers.REG_RW_MOT_0_SP_H + (2 * motorNum));
+        const motorGoalPosition = this.sharedRegister_.getRegisterValue32b(Registers.REG_W_MOT_0_GOAL_B3 + (4 * motorNum), true) / 250;
+        const motorVelocity = this.sharedRegister_.getRegisterValue16b(Registers.REG_RW_MOT_0_SP_H + (2 * motorNum), true);
         if (motorGoalPosition !== nextState.motorPositions[motorNum] && motorGoalPosition > nextState.motorPositions[motorNum] === motorVelocity > 0) {
           // Motor hasn't reached its goal position yet, so keep moving towards it
           nextState.motorSpeeds[motorNum] = motorVelocity;
@@ -97,29 +96,14 @@ class WorkerInstance {
     }
     
     // Set next state servo positions based on register values
-    if (this.registers_[61] === 0) {
+    if (this.sharedRegister_.getRegisterValue8b(Registers.REG_RW_MOT_SRV_ALLSTOP) === 0) {
       nextState.servoPositions = [
-        this.readServoRegister(this.registers_[78], this.registers_[79]),
-        this.readServoRegister(this.registers_[80], this.registers_[81]),
-        this.readServoRegister(this.registers_[82], this.registers_[83]),
-        this.readServoRegister(this.registers_[84], this.registers_[85]),
+        this.servoRegisterToPosition(this.sharedRegister_.getRegisterValue16b(Registers.REG_RW_SERVO_0_H)),
+        this.servoRegisterToPosition(this.sharedRegister_.getRegisterValue16b(Registers.REG_RW_SERVO_1_H)),
+        this.servoRegisterToPosition(this.sharedRegister_.getRegisterValue16b(Registers.REG_RW_SERVO_2_H)),
+        this.servoRegisterToPosition(this.sharedRegister_.getRegisterValue16b(Registers.REG_RW_SERVO_3_H)),
       ];
     }
-
-    // Update analog registers based on state
-    this.append16bRegisterUpdates(Registers.REG_RW_ADC_0_H, nextState.analogValues[0], registerUpdates);
-    this.append16bRegisterUpdates(Registers.REG_RW_ADC_1_H, nextState.analogValues[1], registerUpdates);
-
-    // Update digital registers based on state
-    let digitalRegisterValue = 0;
-    for (let digitalPort = 0; digitalPort < nextState.digitalValues.length; ++digitalPort) {
-      if (nextState.digitalValues[digitalPort]) {
-        digitalRegisterValue = digitalRegisterValue | (1 << digitalPort);
-      }
-    }
-    this.append16bRegisterUpdates(Registers.REG_RW_DIG_IN_H, digitalRegisterValue, registerUpdates);
-
-    this.setRegisters(registerUpdates);
 
     // Only call onStateChange() if any state values have actually changed
     if (deepNeq(nextState, currentState)) {
@@ -134,36 +118,6 @@ class WorkerInstance {
   private onMessage = (e: MessageEvent) => {
     const message = e.data as Protocol.Worker.Request;
     switch (message.type) {
-      case 'setregister': {
-        for (const register of message.registers) {
-          this.registers_[register.address] = register.value;
-
-          // Set "dirty" flag for motor position registers
-          if (Registers.REG_RW_MOT_0_B3 <= register.address && register.address <= Registers.REG_RW_MOT_3_B0) {
-            this.didMotorPositionRegistersChange = true;
-          }
-        }
-        break;
-      }
-      case 'program-ended': {
-        const servoPositions = this.registers_.slice(78,86);
-        this.registers_ = new Array<number>(Registers.REG_ALL_COUNT)
-          .fill(0)
-          .fill(240,61,62)
-          .fill(servoPositions[0],78,79)
-          .fill(servoPositions[1],79,80)
-          .fill(servoPositions[2],80,81)
-          .fill(servoPositions[3],81,82)
-          .fill(servoPositions[4],82,83)
-          .fill(servoPositions[5],83,84)
-          .fill(servoPositions[6],84,85)
-          .fill(servoPositions[7],85,86);
-        this.onStateChange({
-          ...this.getRobotState(),
-          motorSpeeds: [0, 0, 0, 0],
-        });
-        break;
-      }
       case 'programoutput': {
         if (this.onStdOutput) {
           this.onStdOutput(message.stdoutput);
@@ -177,12 +131,11 @@ class WorkerInstance {
         break;
       }
       case 'workerready': {
-        // Once worker is ready for messages, send initial register values so that registers start in sync
-        const initialRegisters: Protocol.Worker.Register[] = this.registers_.map((value, address) => ({ address, value }));
+        // Once worker is ready for messages, send the shared register array buffer
         this.worker_.postMessage({
-          type: 'setregister',
-          registers: initialRegisters,
-        } as Protocol.Worker.SetRegisterRequest);
+          type: 'setsharedregisters',
+          sharedArrayBuffer: this.sharedRegister_.getSharedArrayBuffer(),
+        } as Protocol.Worker.SetSharedRegistersRequest);
         break;
       }
       case 'stopped': {
@@ -203,65 +156,20 @@ class WorkerInstance {
     this.worker_.terminate();
 
     // Reset specific registers to stop motors and disable servos
-    this.registers_[Registers.REG_RW_MOT_MODES] = 0x00;
-    this.registers_[Registers.REG_RW_MOT_SRV_ALLSTOP] = 0xF0;
+    this.sharedRegister_.setRegister8b(Registers.REG_RW_MOT_MODES, 0x00);
+    this.sharedRegister_.setRegister8b(Registers.REG_RW_MOT_SRV_ALLSTOP, 0xF0);
 
     this.startWorker();
   }
 
-  // Batch update registers
-  private setRegisters(registerUpdates: Protocol.Worker.Register[]) {
-    // Find which register updates are actually changes
-    const registerChanges = registerUpdates.filter(regChange => this.registers_[regChange.address] !== regChange.value);
-    if (registerChanges.length === 0) return;
-
-    // Send 'setregister' message to worker
-    this.worker_.postMessage({
-      type: 'setregister',
-      registers: registerChanges,
-    });
-
-    // Update own registers
-    for (const register of registerChanges) {
-      this.registers_[register.address] = register.value;
-    }
-  }
-
-  private append16bRegisterUpdates(startAddress: number, value: number, registerUpdates: Protocol.Worker.Register[]) {
-    const bytes = this.valueTo4Bytes(value);
-    for (let offset = 0; offset < 2; offset++) {
-      registerUpdates.push({ address: startAddress + offset, value: bytes[offset + 2] });
-    }
-  }
-
-  private append32bRegisterUpdates(startAddress: number, value: number, registerUpdates: Protocol.Worker.Register[]) {
-    const bytes = this.valueTo4Bytes(value);
-    for (let offset = 0; offset < 4; offset++) {
-      registerUpdates.push({ address: startAddress + offset, value: bytes[offset] });
-    }
-  }
-
-  private getRegisterValue16b = (startAddress: number): number => {
-    // This accounts for negative numbers by taking advantage of JS's "sign-propagating" right shift operator
-    // If the first byte starts with 1, then ">> 16" will result in 16 leading 1s (a negative number)
-    return (this.registers_[startAddress] << 24 | this.registers_[startAddress + 1] << 16) >> 16;
-  };
-
-  private getRegisterValue32b = (startAddress: number): number => {
-    return this.registers_[startAddress] << 24 | this.registers_[startAddress + 1] << 16 | this.registers_[startAddress + 2] << 8 | this.registers_[startAddress + 3];
-  };
-
-  // Helper for converting number -> 4 separate bytes
-  private valueTo4Bytes(value: number): [number, number, number, number] {
-    return [
-      (value >> 24) & 0xFF,
-      (value >> 16) & 0xFF,
-      (value >> 8) & 0xFF,
-      (value) & 0xFF,
-    ];
-  }
-
   constructor() {
+    // Set initial register values for servos
+    this.sharedRegister_.setRegister8b(Registers.REG_RW_MOT_SRV_ALLSTOP, 0xF0);
+    this.sharedRegister_.setRegister16b(Registers.REG_RW_SERVO_0_H, 1500);
+    this.sharedRegister_.setRegister16b(Registers.REG_RW_SERVO_1_H, 1500);
+    this.sharedRegister_.setRegister16b(Registers.REG_RW_SERVO_2_H, 1500);
+    this.sharedRegister_.setRegister16b(Registers.REG_RW_SERVO_3_H, 2400);
+
     this.startWorker();
     requestAnimationFrame(this.tick);
   }
