@@ -120,9 +120,27 @@ for patch_file in (working_dir / 'cpython_patches').glob('*.patch'):
       cwd = working_dir
     )
 
-print('Building cpython...')
+print('Finding latest host python...')
+
+python = 'python3'
+if is_tool('python3.12'):
+  python = 'python3.12'
+elif is_tool('python3.11'):
+  python = 'python3.11'
+elif is_tool('python3.10'):
+  python = 'python3.10'
+elif is_tool('python3.9'):
+  python = 'python3.9'
+elif is_tool('python3.8'):
+  python = 'python3.8'
+elif is_tool('python3.7'):
+  python = 'python3.7'
+else:
+  print('Warning: Python 3.7+ could not be found. Using python3. This might not work.')
+
+print(f'Building cpython with {python}...')
 subprocess.run(
-  ['Tools/wasm/wasm_build.py', 'emscripten-browser'],
+  [python, 'Tools/wasm/wasm_build.py', 'emscripten-browser'],
   cwd = cpython_dir,
   env = env,
   check = True
