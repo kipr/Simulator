@@ -1,7 +1,10 @@
+import ProgrammingLanguage from './ProgrammingLanguage';
+
 export namespace Protocol {
   export namespace Worker {
     export interface StartRequest {
       type: 'start';
+      language: ProgrammingLanguage;
       code: string;
     }
 
@@ -18,26 +21,34 @@ export namespace Protocol {
       type: 'start';
     }
 
-    export type Response = StartResponse;
-
     export interface SetSharedRegistersRequest {
-      type: 'setsharedregisters';
+      type: 'set-shared-registers';
       sharedArrayBuffer: SharedArrayBuffer;
     }
 
+    export interface ProgramEndedRequest {
+      type: 'program-ended'
+    }
+
+    export interface ProgramEndedResponse {
+      type: 'program-ended'
+    }
+
+    export type Response = StartResponse | ProgramEndedResponse;
+
     export interface ProgramOutputRequest {
-      type: 'programoutput';
+      type: 'program-output';
       stdoutput: string;
     }
     
     export interface ProgramErrorRequest {
-      type: 'programerror';
+      type: 'program-error';
       stdoutput: string;
       stderror: string;
     }
     
     export interface WorkerReadyRequest {
-      type: 'workerready';
+      type: 'worker-ready';
     }
 
     export interface StoppedRequest {

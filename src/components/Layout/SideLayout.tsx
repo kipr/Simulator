@@ -162,6 +162,8 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       className,
       theme,
       code,
+      language,
+      onLanguageChange,
       onCodeChange,
       robotStartPosition,
       onSetRobotStartPosition,
@@ -180,7 +182,15 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       sidePanelSize,
     } = this.state;
 
-    const editorBar = createEditorBarComponents(theme, messages, onIndentCode, onDownloadCode, this.onErrorClick_);
+    const editorBar = createEditorBarComponents({
+      theme,
+      messages,
+      language,
+      onLanguageChange,
+      onIndentCode,
+      onDownloadCode,
+      onErrorClick: this.onErrorClick_
+    });
     const consoleBar = createConsoleBarComponents(theme, onClearConsole);
     const worldBar = createWorldBarComponents(theme, onSelectScene);
 
@@ -206,7 +216,8 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
                 <Editor
                   theme={theme}
                   ref={editorRef}
-                  code={code} 
+                  code={code}
+                  language={language}
                   onCodeChange={onCodeChange}
                   messages={messages}
                   autocomplete={settings.editorAutoComplete}

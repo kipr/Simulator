@@ -98,7 +98,7 @@ module.exports = {
     "/src/ammo.js",
     // Ignore static files
     "/static",
-    // Ignore libwallaby
-    "/libwallaby",
+    // Ignore dependencies
+    "/dependencies",
   ],
 };

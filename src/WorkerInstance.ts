@@ -18,6 +18,16 @@ class WorkerInstance {
 
   private readonly sharedRegister_ = new SharedRegisters();
 
+  private onStopped_ = () => {
+    // Reset specific registers to stop motors and disable servos
+    this.sharedRegister_.setRegister8b(Registers.REG_RW_MOT_MODES, 0x00);
+    this.sharedRegister_.setRegister8b(Registers.REG_RW_MOT_SRV_ALLSTOP, 0xF0);
+
+    if (this.onStopped) {
+      this.onStopped();
+    }
+  };
+
   public setSensorValues = (analogValues: RobotState.AnalogValues, digitalValues: RobotState.DigitalValues) => {
     // Update analog registers
     this.sharedRegister_.setRegister16b(Registers.REG_RW_ADC_0_H, analogValues[0]);
@@ -117,37 +127,37 @@ class WorkerInstance {
   private onMessage = (e: MessageEvent) => {
     const message = e.data as Protocol.Worker.Request;
     switch (message.type) {
-      case 'programoutput': {
+      case 'program-output': {
         if (this.onStdOutput) {
           this.onStdOutput(message.stdoutput);
         }
         break;
       }
-      case 'programerror': {
+      case 'program-error': {
         if (this.onStdError) {
           this.onStdError(message.stderror);
         }
         break;
       }
-      case 'workerready': {
+      case 'worker-ready': {
         // Once worker is ready for messages, send the shared register array buffer
         this.worker_.postMessage({
-          type: 'setsharedregisters',
+          type: 'set-shared-registers',
           sharedArrayBuffer: this.sharedRegister_.getSharedArrayBuffer(),
         } as Protocol.Worker.SetSharedRegistersRequest);
         break;
       }
       case 'stopped': {
-        if (this.onStopped) this.onStopped();
+        this.onStopped_();
         break;
       }
     }
   };
   
-  start(code: string) {
+  start(req: Omit<Protocol.Worker.StartRequest, 'type'>) {
     this.worker_.postMessage({
       type: 'start',
-      code
+      ...req
     });
   }
 
