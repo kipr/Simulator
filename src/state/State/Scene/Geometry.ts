@@ -1,8 +1,8 @@
 import { Vector2, Vector3 } from '../../../unit-math';
 import { Vector3 as RawVector3, Vector2 as RawVector2 } from '../../../math';
 import { Distance } from '../../../util';
-import Patch from './Patch';
 import deepNeq from '../../../deepNeq';
+import Patch from '../../../util/Patch';
 
 namespace Geometry {
   export interface Box {

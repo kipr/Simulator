@@ -1,9 +1,10 @@
 import deepNeq from '../../../deepNeq';
 import { Vector2, Vector3 } from '../../../math';
+import { RobotState } from '../../../RobotState';
 import { ReferenceFrame } from '../../../unit-math';
 import { Angle, DistributiveOmit, Mass } from '../../../util';
+import Patch from '../../../util/Patch';
 import Material from './Material';
-import Patch from './Patch';
 
 namespace Node {
   
@@ -266,6 +267,36 @@ namespace Node {
     };
   }
 
+  export interface Robot extends Base {
+    type: 'robot';
+    robotId: string;
+    state: RobotState;
+  }
+
+  export namespace Robot {
+    export const NIL: Robot = {
+      type: 'robot',
+      ...Base.NIL,
+      robotId: undefined,
+      state: RobotState.NIL,
+    };
+
+    export const from = <T extends Base>(t: T): Robot => ({
+      ...NIL,
+      ...Base.upcast(t)
+    });
+
+    export const diff = (prev: Robot, next: Robot): Patch<Robot> => {
+      if (!deepNeq(prev, next)) return Patch.none(prev);
+
+      return Patch.innerChange(prev, next, {
+        type: Patch.none(prev.type),
+        robotId: Patch.diff(prev.robotId, next.robotId),
+        ...Base.partialDiff(prev, next)
+      });
+    };
+  }
+
   export const diff = (prev: Node, next: Node): Patch<Node> => {
     if (prev.type !== next.type) return Patch.outerChange(prev, next);
 
@@ -276,10 +307,11 @@ namespace Node {
       case 'spot-light': return SpotLight.diff(prev, next as SpotLight);
       case 'directional-light': return DirectionalLight.diff(prev, next as DirectionalLight);
       case 'from-template': return FromTemplate.diff(prev, next as FromTemplate);
+      case 'robot': return Robot.diff(prev, next as Robot);
     }
   };
 
-  export type Type = 'empty' | 'object' | 'point-light' | 'spot-light' | 'directional-light' | 'from-template';
+  export type Type = 'empty' | 'object' | 'point-light' | 'spot-light' | 'directional-light' | 'from-template' | 'robot';
 
   export const transmute = (node: Node, type: Type): Node => {
     switch (type) {
@@ -289,12 +321,21 @@ namespace Node {
       case 'spot-light': return SpotLight.from(node);
       case 'directional-light': return DirectionalLight.from(node);
       case 'from-template': return FromTemplate.from(node);
+      case 'robot': return Robot.from(node);
     }
   };
 
   export type TemplatedNode<T extends Base> = DistributiveOmit<T, keyof Base>;
 }
 
-type Node = Node.Empty | Node.Obj | Node.PointLight | Node.SpotLight | Node.DirectionalLight | Node.FromTemplate;
+type Node = (
+  Node.Empty |
+  Node.Obj |
+  Node.PointLight |
+  Node.SpotLight |
+  Node.DirectionalLight |
+  Node.FromTemplate |
+  Node.Robot
+);
 
 export default Node;

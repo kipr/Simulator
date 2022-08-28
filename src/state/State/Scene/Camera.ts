@@ -1,7 +1,7 @@
 import deepNeq from "../../../deepNeq";
 import { Vector3 } from "../../../unit-math";
 import { Distance } from "../../../util";
-import Patch from "./Patch";
+import Patch from '../../../util/Patch';
 
 namespace Camera {
   export interface ArcRotate {

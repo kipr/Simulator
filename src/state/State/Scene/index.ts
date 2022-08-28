@@ -2,11 +2,10 @@ import Dict from '../../../Dict';
 import Geometry from './Geometry';
 import Node from './Node';
 import Script from './Script';
-import Patch from './Patch';
 import { ReferenceFrame, Vector3 } from '../../../unit-math';
-import Robot from './Robot';
 import Camera from './Camera';
 import { Distance } from '../../../util';
+import Patch from '../../../util/Patch';
 
 interface Scene {
   name: string;
@@ -19,8 +18,6 @@ interface Scene {
   geometry: Dict<Geometry>;
   nodes: Dict<Node>;
   scripts?: Dict<Script>;
-
-  robot?: Robot;
 
   camera: Camera;
 
@@ -38,8 +35,6 @@ interface PatchScene {
   geometry: Dict<Patch<Geometry>>;
   nodes: Dict<Patch<Node>>;
   scripts?: Dict<Patch<Script>>;
-
-  robot?: Patch<Robot>;
 
   camera: Patch<Camera>;
 
@@ -85,7 +80,6 @@ namespace Scene {
     geometry: Patch.diffDict(a.geometry, b.geometry, Geometry.diff),
     nodes: Patch.diffDict(a.nodes, b.nodes, Node.diff),
     scripts: Patch.diffDict(a.scripts, b.scripts, Patch.diff),
-    robot: Robot.diff(a.robot, b.robot),
     camera: Camera.diff(a.camera, b.camera),
     gravity: Patch.diff(a.gravity, b.gravity),
   });

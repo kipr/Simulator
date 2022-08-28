@@ -1,6 +1,6 @@
 import deepNeq from '../../../deepNeq';
+import Patch from '../../../util/Patch';
 import { Color as ColorT } from './Color';
-import Patch from './Patch';
 
 namespace Material {
 

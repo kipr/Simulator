@@ -7,7 +7,7 @@ import Scene from "./state/State/Scene";
 import Camera from "./state/State/Scene/Camera";
 import Geometry from "./state/State/Scene/Geometry";
 import Node from "./state/State/Scene/Node";
-import Patch from "./state/State/Scene/Patch";
+import Patch from "./util/Patch";
 import * as Ammo from './ammo';
 
 import { ReferenceFrame, Rotation, Vector3 } from "./unit-math";
@@ -1056,17 +1056,6 @@ class SceneBinding {
       }
     }
 
-    switch (patch.robot.type) {
-      case Patch.Type.OuterChange: {
-        this.robot_.setOrigin(patch.robot.next.origin);
-        break;
-      }
-      case Patch.Type.InnerChange: {
-        this.robot_.setOrigin(patch.robot.next.origin);
-        break;
-      }
-    }
-
     const oldCamera = this.camera_;
     switch (patch.camera.type) {
       case Patch.Type.OuterChange: {
@@ -1096,12 +1085,6 @@ class SceneBinding {
       this.bScene_.getPhysicsEngine().setGravity(Vector3.toBabylon(patch.gravity.next, 'centimeters'));
     }
 
-    if (patch.robot.type === Patch.Type.InnerChange) {
-      if (patch.robot.inner.origin.type === Patch.Type.OuterChange) {
-        this.robot_.setOrigin(patch.robot.inner.origin.next);
-      }
-    }
-
     this.scene_ = scene;
   };
 }
@@ -1113,6 +1096,5 @@ const IMPOSTER_TYPE_MAPPINGS: { [key in Node.Physics.Type]: number } = {
   'mesh': Babylon.PhysicsImpostor.MeshImpostor,
   'none': Babylon.PhysicsImpostor.NoImpostor,
 };
-  
 
 export default SceneBinding;
