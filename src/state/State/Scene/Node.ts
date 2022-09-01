@@ -292,6 +292,7 @@ namespace Node {
       return Patch.innerChange(prev, next, {
         type: Patch.none(prev.type),
         robotId: Patch.diff(prev.robotId, next.robotId),
+        state: RobotState.diff(prev.state, next.state),
         ...Base.partialDiff(prev, next)
       });
     };

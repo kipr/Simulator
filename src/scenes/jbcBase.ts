@@ -75,15 +75,6 @@ export function createBaseSceneSurfaceA(): Scene {
         visible: true
       },
     },
-    robot: {
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(2),
-          z: Distance.centimeters(0),
-        },
-      }
-    },
     camera: Camera.arcRotate({
       radius: Distance.meters(5),
       target: {
@@ -175,15 +166,6 @@ export function createBaseSceneSurfaceB(): Scene {
         },
         visible: true
       },
-    },
-    robot: {
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(2),
-          z: Distance.centimeters(0),
-        },
-      }
     },
     camera: Camera.arcRotate({
       radius: Distance.meters(5),

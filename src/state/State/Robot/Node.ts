@@ -7,7 +7,6 @@ import Patch from '../../../util/Patch';
 
 namespace Node {
   export enum Type {
-    Frame = 'frame',
     Link = 'link',
     Motor = 'motor',
     Servo = 'servo',
@@ -17,9 +16,6 @@ namespace Node {
   }
   
   interface Base {
-    /// The parent Node, or undefined if a root.
-    parentId?: string;
-
     /// The translation and orientation from the parentId,
     /// or ReferenceFrame.IDENTITY if undefined.
     origin: ReferenceFrame;
@@ -33,35 +29,23 @@ namespace Node {
 
   namespace Base {
     export const innerDiff = (a: Base, b: Base): Patch.InnerPatch<Base> => ({
-      parentId: Patch.diff(a.parentId, b.parentId),
       origin: Patch.diff(a.origin, b.origin),
       name: Patch.diff(a.name, b.name),
       description: Patch.diff(a.description, b.description)
     });
   }
 
-  export interface Frame extends Base {
-    type: Type.Frame;
-  }
-
-  export namespace Frame {
-    export const diff = (a: Frame, b: Frame): Patch<Frame> => {
-      if (!deepNeq(a, b)) return Patch.none(a);
-      if (a === undefined && b !== undefined) return Patch.outerChange(a, b);
-      if (a !== undefined && b === undefined) return Patch.outerChange(a, b);
-
-      return Patch.innerChange(a, b, {
-        type: Patch.none(Type.Frame),
-        ...Base.innerDiff(a, b)
-      });
-    };
-  }
-
   export interface Link extends Base {
     type: Type.Link;
 
+    /// Parent
+    parentId?: string;
+
     /// The mass of the link. If undefined, zero.
     mass?: Mass;
+
+    /// Coefficient of friction. If undefined, zero.
+    friction?: number;
 
     /// The moment of inertia of the Mesh, represented as a
     /// column-wise 3x3 matrix of numbers. If undefined, zeros.
@@ -80,6 +64,7 @@ namespace Node {
     export namespace CollisionBody {
       export enum Type {
         Geometry = 'geometry',
+        Embedded = 'embedded',
         Sphere = 'sphere',
         Box = 'box',
       }
@@ -87,6 +72,11 @@ namespace Node {
       export interface Geometry {
         type: Type.Geometry;
         geometryId: string;
+      }
+
+      export interface Embedded {
+        type: Type.Embedded;
+        prefix?: string;
       }
 
       export interface Sphere {
@@ -100,6 +90,7 @@ namespace Node {
 
     export type CollisionBody = (
       CollisionBody.Geometry |
+      CollisionBody.Embedded |
       CollisionBody.Sphere |
       CollisionBody.Box
     );
@@ -112,9 +103,6 @@ namespace Node {
       return Patch.innerChange(a, b, {
         type: Patch.none(Type.Link),
         parentId: Patch.diff(a.parentId, b.parentId),
-        origin: Patch.diff(a.origin, b.origin),
-        name: Patch.diff(a.name, b.name),
-        description: Patch.diff(a.description, b.description),
         mass: Patch.diff(a.mass, b.mass),
         inertia: Patch.diff(a.inertia, b.inertia),
         collisionBody: Patch.diff(a.collisionBody, b.collisionBody),
@@ -124,8 +112,12 @@ namespace Node {
     };
   }
 
+  /// A `Motor` is a continuous hinge joint.
+  /// It MUST have a parent that is a `Link`.
   export interface Motor extends Base {
     type: Type.Motor;
+
+    parentId: string;
 
     /// The axis of rotation.
     axis: Vector3;
@@ -133,6 +125,10 @@ namespace Node {
     /// The number of ticks in a full revolution of the motor.
     /// If undefined, 1500 is assumed.
     ticksPerRevolution?: number;
+
+    /// Max velocity in ticks per second.
+    /// If undefined, 1500 ticks/sec is assumed.
+    velocityMax?: number;
 
     /// The motor port.
     motorPort: number;
@@ -145,6 +141,7 @@ namespace Node {
       if (a !== undefined && b === undefined) return Patch.outerChange(a, b);
       return Patch.innerChange(a, b, {
         type: Patch.none(Type.Motor),
+        parentId: Patch.diff(a.parentId, b.parentId),
         axis: Patch.diff(a.axis, b.axis),
         ticksPerRevolution: Patch.diff(a.ticksPerRevolution, b.ticksPerRevolution),
         motorPort: Patch.diff(a.motorPort, b.motorPort),
@@ -153,8 +150,12 @@ namespace Node {
     }
   }
 
+  /// A `Servo` is a revolute hinge joint.
+  /// It MUST have a parent that is a `Link`.
   export interface Servo extends Base {
     type: Type.Servo;
+
+    parentId: string;
 
     /// The axis of rotation.
     axis: Vector3;
@@ -162,10 +163,10 @@ namespace Node {
     /// Position limits. Defaults are used (described below) if undefined.
     position?: {
       /// The minimum position of the servo. If undefined,
-      /// assumed to be -90 degrees from origin.
+      /// assumed to be -87.5 degrees from origin.
       min?: Angle;
       /// The maximum position of the servo. If undefined,
-      /// assumed to be 90 degrees from origin.
+      /// assumed to be 87.5 degrees from origin.
       max?: Angle;
     };
 
@@ -180,6 +181,7 @@ namespace Node {
       if (a !== undefined && b === undefined) return Patch.outerChange(a, b);
       return Patch.innerChange(a, b, {
         type: Patch.none(Type.Servo),
+        parentId: Patch.diff(a.parentId, b.parentId),
         axis: Patch.diff(a.axis, b.axis),
         position: Patch.diff(a.position, b.position),
         servoPort: Patch.diff(a.servoPort, b.servoPort),
@@ -192,6 +194,8 @@ namespace Node {
   export interface EtSensor extends Base {
     type: Type.EtSensor;
 
+    parentId: string;
+
     /// The analog port.
     analogPort: number;
   }
@@ -203,6 +207,7 @@ namespace Node {
       if (a !== undefined && b === undefined) return Patch.outerChange(a, b);
       return Patch.innerChange(a, b, {
         type: Patch.none(Type.EtSensor),
+        parentId: Patch.diff(a.parentId, b.parentId),
         analogPort: Patch.diff(a.analogPort, b.analogPort),
         ...Base.innerDiff(a, b)
       });
@@ -211,6 +216,8 @@ namespace Node {
 
   export interface TouchSensor extends Base {
     type: Type.TouchSensor;
+
+    parentId: string;
 
     /// The digital port.
     digitalPort: number;
@@ -223,6 +230,7 @@ namespace Node {
       if (a !== undefined && b === undefined) return Patch.outerChange(a, b);
       return Patch.innerChange(a, b, {
         type: Patch.none(Type.TouchSensor),
+        parentId: Patch.diff(a.parentId, b.parentId),
         digitalPort: Patch.diff(a.digitalPort, b.digitalPort),
         ...Base.innerDiff(a, b)
       });
@@ -231,6 +239,8 @@ namespace Node {
 
   export interface ReflectanceSensor extends Base {
     type: Type.ReflectanceSensor;
+
+    parentId: string;
 
     /// The analog port.
     analogPort: number;
@@ -244,6 +254,7 @@ namespace Node {
 
       return Patch.innerChange(a, b, {
         type: Patch.none(Type.ReflectanceSensor),
+        parentId: Patch.diff(a.parentId, b.parentId),
         analogPort: Patch.diff(a.analogPort, b.analogPort),
         ...Base.innerDiff(a, b)
       });
@@ -256,7 +267,6 @@ namespace Node {
     if (a.type !== b.type) return Patch.outerChange(a, b);
 
     switch (a.type) {
-      case Type.Frame: return Frame.diff(a, b as Frame);
       case Type.Link: return Link.diff(a, b as Link);
       case Type.Motor: return Motor.diff(a, b as Motor);
       case Type.Servo: return Servo.diff(a, b as Servo);
@@ -268,7 +278,6 @@ namespace Node {
 }
 
 type Node = (
-  Node.Frame |
   Node.Link |
   Node.Motor |
   Node.Servo |

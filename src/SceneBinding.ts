@@ -1087,6 +1087,10 @@ class SceneBinding {
 
     this.scene_ = scene;
   };
+
+  tick() {
+    
+  }
 }
 
 const IMPOSTER_TYPE_MAPPINGS: { [key in Node.Physics.Type]: number } = {

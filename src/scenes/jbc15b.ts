@@ -47,17 +47,4 @@ export const JBC_15B: Scene = {
       visible: true,
     },
   },
-  // The normal starting position of the robot doesn't leave room for the paper ream in the starting box
-  // Start the robot forward a bit so that a ream fits behind it
-  robot: {
-    ...baseScene.robot,
-    origin: {
-      ...baseScene.robot.origin,
-      position: {
-        x: Distance.centimeters(0),
-        y: Distance.centimeters(2),
-        z: Distance.centimeters(7),
-      },
-    }
-  },
 };

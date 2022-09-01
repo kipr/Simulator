@@ -140,7 +140,7 @@ class Location extends React.PureComponent<Props & ReduxLocationProps> {
 }
 
 export default connect<unknown, unknown, LocationProps, State>((state: State) => {
-  const origin = state.scene.referenceScene.robot?.origin || IDENTITY_ORIGIN;
+  const origin = IDENTITY_ORIGIN;
   return {
     origin,
   };

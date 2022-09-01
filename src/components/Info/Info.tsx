@@ -263,7 +263,7 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
 }
 
 export default connect<unknown, unknown, InfoProps, ReduxState>((state: ReduxState) => {
-  const startingOrigin = state.scene.referenceScene.robot?.origin || ReferenceFrame.IDENTITY;
+  const startingOrigin = ReferenceFrame.IDENTITY;
   return {
     startingOrigin,
   };

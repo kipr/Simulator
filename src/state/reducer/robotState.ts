@@ -45,7 +45,7 @@ export type RobotStateAction = (
   RobotStateAction.IncrementRobotMotorPositions
 );
 
-export const reduceRobotState = (state: RobotState = RobotState.empty, action: RobotStateAction): RobotState => {
+export const reduceRobotState = (state: RobotState = RobotState.NIL, action: RobotStateAction): RobotState => {
   switch (action.type) {
     case 'set-robot-state':
       return action.robotState;

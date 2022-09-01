@@ -102,15 +102,6 @@ export const TEST_SCENE: Scene = {
       visible: true
     },
   },
-  robot: {
-    origin: {
-      position: {
-        x: Distance.centimeters(0),
-        y: Distance.centimeters(113),
-        z: Distance.centimeters(-50),
-      },
-    }
-  },
   camera: Camera.arcRotate({
     radius: Distance.meters(5),
     target: {

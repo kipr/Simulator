@@ -455,30 +455,6 @@ export const reduceScene = (state: ReferencedScenePair = { referenceScene: JBC_S
           },
         },
       };
-    case 'set-robot-origin': {
-      const nextState: ReferencedScenePair = {
-        ...state,
-        workingScene: {
-          ...state.workingScene,
-          robot: {
-            ...state.workingScene.robot,
-            origin: action.origin,
-          },
-        },
-      };
-
-      if (action.modifyReferenceScene) {
-        nextState.referenceScene = {
-          ...state.referenceScene,
-          robot: {
-            ...state.referenceScene.robot,
-            origin: action.origin,
-          },
-        };
-      }
-
-      return nextState;
-    }
     case 'set-camera': 
       return {
         referenceScene: {
