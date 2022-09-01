@@ -48,7 +48,7 @@ const SimulatorAreaContainer = styled('div', {
 
 const Overlay = styled('div', (props: ThemeProps) => ({
   display: 'grid',
-  gridTemplateColumns: '3fr 5fr 350px',
+  gridTemplateColumns: '4fr 5fr 350px',
   gridTemplateRows: '1fr 300px',
   gap: `${props.theme.widget.padding}px`,
   position: 'absolute',
