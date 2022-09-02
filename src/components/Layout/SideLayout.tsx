@@ -308,7 +308,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
           isVertical={true}
           theme={theme}
           minSizes={[50, 50]}
-          sizes={[1, 3]}
+          sizes={[1.2, 3]}
           visible={[sidePanelSize !== Size.Type.Minimized, true]}
         >
           {content}
