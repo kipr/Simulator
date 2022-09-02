@@ -159,8 +159,7 @@ export class Root extends React.Component<Props, State> {
         z: Distance.centimeters(0),
         theta: Angle.degrees(0),
       },
-      // TODO: set to side by default if on mobile
-      layout: Layout.Overlay,
+      layout: Layout.Side,
       activeLanguage: 'c',
       code: {
         'c': window.localStorage.getItem('code-c') || '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
