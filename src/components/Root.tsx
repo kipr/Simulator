@@ -163,8 +163,8 @@ export class Root extends React.Component<Props, State> {
       layout: Layout.Overlay,
       activeLanguage: 'c',
       code: {
-        'c': '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
-        'python': 'from kipr import *\n\nprint(\'Hello, World!\')',
+        'c': window.localStorage.getItem('code-c') || '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
+        'python': window.localStorage.getItem('code-python') || 'from kipr import *\n\nprint(\'Hello, World!\')',
       },
       modal: Modal.NONE,
       simulatorState: SimulatorState.STOPPED,
@@ -230,6 +230,8 @@ export class Root extends React.Component<Props, State> {
         ...this.state.code,
         [activeLanguage]: code,
       }
+    }, () => {
+      window.localStorage.setItem(`code-${activeLanguage}`, code);
     });
   };
 
