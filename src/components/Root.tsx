@@ -380,9 +380,6 @@ export class Root extends React.Component<Props, State> {
 
   private onStopClick_ = () => {
     WorkerInstance.stop();
-    this.setState({
-      simulatorState: SimulatorState.STOPPED
-    });
   };
 
   private onDownloadClick_ = () => {
