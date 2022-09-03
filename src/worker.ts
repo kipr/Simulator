@@ -23,7 +23,13 @@ const printErr = (stderror: string) => {
 
 let sharedRegister_: SharedRegisters;
 
+interface ExitStatusError extends Error {
+  status: number;
+}
 
+namespace ExitStatusError {
+  export const isExitStatusError = (e: Error): e is ExitStatusError => e.name === 'ExitStatus';
+}
 
 const startC = (message: Protocol.Worker.StartRequest) => {
   const mod = dynRequire(message.code, {
@@ -43,8 +49,24 @@ const startC = (message: Protocol.Worker.StartRequest) => {
   printErr
   );
 
+  console.log(mod);
+
   mod.onRuntimeInitialized = () => {
-    mod._simMainWrapper();
+    try {
+      mod._simMainWrapper();
+    } catch (e) {
+      if (e instanceof Error) {
+        if (ExitStatusError.isExitStatusError(e)) {
+          print(`Program exited with status code ${e.status}`);
+        } else {
+          printErr(e.message);
+        }
+      }
+
+      ctx.postMessage({
+        type: 'stopped',
+      } as Protocol.Worker.StoppedRequest);
+    }
   };
 
   ctx.postMessage({
