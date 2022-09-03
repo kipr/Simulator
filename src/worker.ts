@@ -32,6 +32,16 @@ namespace ExitStatusError {
 }
 
 const startC = (message: Protocol.Worker.StartRequest) => {
+  let stoppedSent = false;
+
+  const sendStopped = () => {
+    if (stoppedSent) return;
+    ctx.postMessage({
+      type: 'stopped',
+    } as Protocol.Worker.StoppedRequest);
+    stoppedSent = true;
+  };
+
   const mod = dynRequire(message.code, {
     setRegister8b: (address: number, value: number) => sharedRegister_.setRegister8b(address, value),
     setRegister16b: (address: number, value: number) => sharedRegister_.setRegister16b(address, value),
@@ -39,11 +49,7 @@ const startC = (message: Protocol.Worker.StartRequest) => {
     readRegister8b: (address: number) => sharedRegister_.getRegisterValue8b(address),
     readRegister16b: (address: number) => sharedRegister_.getRegisterValue16b(address),
     readRegister32b: (address: number) => sharedRegister_.getRegisterValue32b(address),
-    onStop: () => {
-      ctx.postMessage({
-        type: 'stopped',
-      } as Protocol.Worker.StoppedRequest);
-    },
+    onStop: sendStopped
   },
   print,
   printErr
@@ -63,9 +69,7 @@ const startC = (message: Protocol.Worker.StartRequest) => {
         }
       }
 
-      ctx.postMessage({
-        type: 'stopped',
-      } as Protocol.Worker.StoppedRequest);
+      sendStopped();
     }
   };
 
