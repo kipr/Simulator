@@ -44,11 +44,16 @@ interface PatchScene {
 namespace Scene {
   export const nodeOrdering = (scene: Scene): string[] => {
     // Find nodes with no parent
-    const rootNodes = Object.keys(scene.nodes).filter(n => !scene.nodes[n].parentId);
+    const rootNodes = Object.keys(scene.nodes).filter(n => {
+      const node = scene.nodes[n];
+
+      return node.type === 'robot' || !node.parentId;
+    });
 
     const children = new Map<string, string[]>();
     for (const nodeId of Object.keys(scene.nodes)) {
       const node = scene.nodes[nodeId];
+      if (node.type === 'robot') continue;
       if (!node.parentId) continue;
       children.set(node.parentId, ([...(children.get(node.parentId) || []), nodeId]));
     }

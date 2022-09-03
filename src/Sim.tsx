@@ -26,6 +26,9 @@ import SceneBinding from './SceneBinding';
 import Scene from './state/State/Scene';
 import Node from './state/State/Scene/Node';
 import Robotable from './Robotable';
+import { Robots } from './state/State';
+import * as Ammo from './ammo';
+
 
 export let ACTIVE_SPACE: Space;
 
@@ -41,8 +44,6 @@ export class Space implements Robotable {
   private scene: Babylon.Scene;
 
   private currentEngineView: Babylon.EngineView;
-
-  private ammo_: Babylon.AmmoJSPlugin;
 
   private storeSubscription_: Unsubscribe;
 
@@ -73,9 +74,9 @@ export class Space implements Robotable {
       (async () => {
         // Disable physics during scene changes to avoid objects moving before the scene is fully loaded
         this.scene.physicsEnabled = false;
-        await this.sceneBinding_.setScene(state.scene.workingScene);
+        await this.sceneBinding_.setScene(state.scene.workingScene, Robots.loaded(state.robots));
         if (this.latestUnfulfilledScene_ !== state.scene.workingScene) {
-          await this.sceneBinding_.setScene(this.latestUnfulfilledScene_);
+          await this.sceneBinding_.setScene(this.latestUnfulfilledScene_, Robots.loaded(state.robots));
         }
         this.scene.physicsEnabled = true;
       })().finally(() => {
@@ -131,7 +132,7 @@ export class Space implements Robotable {
 
     this.engine = new Babylon.Engine(this.workingCanvas, true, { preserveDrawingBuffer: true, stencil: true });
     this.scene = new Babylon.Scene(this.engine);
-    this.sceneBinding_ = new SceneBinding(this.scene, this);
+    
 
     this.currentEngineView = null;
 
@@ -198,10 +199,12 @@ export class Space implements Robotable {
     // Full gravity will be -9.8 * 10
     const gravityVector = new Babylon.Vector3(0, -9.8 * 50, 0);
     
-    this.scene.enablePhysics(gravityVector, this.ammo_);
-    this.scene.getPhysicsEngine().setSubTimeStep(5);
+    
 
-    await this.sceneBinding_.setScene(store.getState().scene.workingScene);
+    const state = store.getState();
+    this.sceneBinding_ = new SceneBinding(this.scene, await (Ammo as any)());
+    await this.sceneBinding_.setScene(state.scene.workingScene, Robots.loaded(state.robots));
+    this.scene.getPhysicsEngine().setSubTimeStep(5);
 
     // (x, z) coordinates of cans around the board
 

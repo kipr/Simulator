@@ -7,7 +7,7 @@ interface SensorObject {
   
   update(): boolean;
   dispose(): void;
-  getValue(): SensorObject.Value;
+  getValue(): Promise<SensorObject.Value>;
   isVisible: boolean;
   updateVisual(): boolean;
   isNoiseEnabled: boolean;
@@ -85,9 +85,9 @@ namespace SensorObject {
   
   export type Value = Value.U12 | Value.Bool;
 
-  export const apply = (self: SensorObject, state: Partial<RobotState>): Partial<RobotState> => {
+  export const apply = async (self: SensorObject, state: Partial<RobotState>): Promise<Partial<RobotState>> => {
     const { output } = self.sensor;
-    const value = self.getValue();
+    const value = await self.getValue();
 
     const ret: Partial<RobotState> = { ...state };
 
@@ -118,9 +118,9 @@ namespace SensorObject {
     return ret;
   };
 
-  export const applyMut = (self: SensorObject, state: Partial<RobotState>): void => {
+  export const applyMut = async (self: SensorObject, state: Partial<RobotState>): Promise<void> => {
     const { output } = self.sensor;
-    const value = self.getValue();
+    const value = await self.getValue();
 
     switch (output.type) {
       case Sensor.Output.Type.Digital: {

@@ -67,7 +67,7 @@ export class IrSensor implements SensorObject {
     return true;
   }
 
-  public getValue(): SensorObject.Value {
+  public async getValue(): Promise<SensorObject.Value> {
     let sensorValue = 0;
     const hit = this.config_.scene.pickWithRay(this.ray, null);
 
@@ -78,7 +78,7 @@ export class IrSensor implements SensorObject {
       if (this.lastHitTextureId === null || this.lastHitTextureId !== hitTexture.uid) {
         if (hitTexture.isReady()) {
           this.lastHitTextureId = hitTexture.uid;
-          this.lastHitPixels = hitTexture.readPixels();
+          this.lastHitPixels = await hitTexture.readPixels();
         } else {
           // Texture isn't ready yet, so nothing we can do
           this.lastHitTextureId = null;

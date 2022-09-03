@@ -8,13 +8,14 @@ import Camera from "./state/State/Scene/Camera";
 import Geometry from "./state/State/Scene/Geometry";
 import Node from "./state/State/Scene/Node";
 import Patch from "./util/Patch";
-import * as Ammo from './ammo';
 
 import { ReferenceFrame, Rotation, Vector3 } from "./unit-math";
 import { Angle, Distance, Mass, SetOps } from "./util";
 import { Color } from './state/State/Scene/Color';
 import Material from './state/State/Scene/Material';
 import { preBuiltGeometries, preBuiltTemplates } from "./node-templates";
+import { RobotBinding } from './RobotBinding';
+import Robot from './state/State/Robot';
 
 export type FrameLike = Babylon.TransformNode | Babylon.AbstractMesh;
 
@@ -34,12 +35,13 @@ class SceneBinding {
   private shadowGenerators_: Dict<Babylon.ShadowGenerator> = {};
   private physicsViewer_: Babylon.PhysicsViewer;
 
-  private robot_: Robotable;
-
   private camera_: Babylon.Camera;
 
   private engineView_: Babylon.EngineView;
   private ammo_: Babylon.AmmoJSPlugin;
+
+  private robots_: Dict<Robot>;
+  private robotBindings_: Dict<RobotBinding> = {};
 
   get camera() { return this.camera_; }
 
@@ -61,11 +63,20 @@ class SceneBinding {
   
   private materialIdIter_ = 0;
 
-  constructor(bScene: Babylon.Scene, robot: Robotable) {
+  private onCreateCustomShape_ = (imposter: Babylon.PhysicsImpostor) => {
+    console.log('onCreateCustomShape_');
+    
+    if (!(imposter.object instanceof Babylon.Mesh)) throw new Error('Expected mesh');
+
+    imposter.object.metadata
+    
+  };
+
+  constructor(bScene: Babylon.Scene, ammo: any) {
     this.bScene_ = bScene;
-    this.robot_ = robot;
     this.scene_ = Scene.EMPTY;
-    this.ammo_ = new Babylon.AmmoJSPlugin(true, Ammo);
+    this.ammo_ = new Babylon.AmmoJSPlugin(true, ammo);
+    this.ammo_.onCreateCustomShape = this.onCreateCustomShape_;
     this.bScene_.enablePhysics(new Babylon.Vector3(0, -9.8 * 50, 0), this.ammo_);
 
     this.root_ = new Babylon.TransformNode('__scene_root__', this.bScene_);
@@ -544,6 +555,15 @@ class SceneBinding {
     return ret;
   };
 
+  private createRobot_ = async (id: string, node: Node.Robot): Promise<RobotBinding> => {
+    const robotBinding = new RobotBinding(this.bScene_, this.physicsViewer_);
+    const robot = this.robots_[node.robotId];
+    if (!robot) throw new Error(`Robot by id "${node.robotId}" not found`);
+    await robotBinding.setRobot(node, robot);
+    this.robotBindings_[id] = robotBinding;
+    return robotBinding;
+  };
+
   private static createShadowGenerator_ = (light: Babylon.IShadowLight) => {
     const ret = new Babylon.ShadowGenerator(1024, light);
     ret.useKernelBlur = false;
@@ -576,17 +596,15 @@ class SceneBinding {
       case 'directional-light': ret = this.createDirectionalLight_(id, nodeToCreate); break;
       case 'spot-light': ret = this.createSpotLight_(id, nodeToCreate); break;
       case 'point-light': ret = this.createPointLight_(id, nodeToCreate); break;
+      case 'robot': await this.createRobot_(id, nodeToCreate); break;
       default: {
         console.warn('invalid node type for create node:', nodeToCreate.type);
         return null;
       }
     }
 
-    if (!ret) {
-      console.warn('failed to create node:', nodeToCreate.name);
-      return null;
-    }
-
+    if (!ret) return null;
+    
     this.updateNodePosition_(nodeToCreate, ret);
     ret.id = id;
     
@@ -743,6 +761,18 @@ class SceneBinding {
     return bNode;
   };
 
+  private updateRobot_ = async (id: string, node: Patch.InnerChange<Node.Robot>): Promise<RobotBinding> => {
+    const robotBinding = this.robotBindings_[id];
+    if (!robotBinding) throw new Error(`Robot binding not found for id "${id}"`);
+    
+    if (node.inner.robotId.type === Patch.Type.OuterChange) {
+      this.destroyNode_(id);
+      return this.createRobot_(id, node.next) as Promise<RobotBinding>;
+    }
+
+    return robotBinding;
+  };
+
   private updateFromTemplate_ = (id: string, node: Patch.InnerChange<Node.FromTemplate>, nextScene: Scene): Promise<Babylon.Node> => {
     // If the template ID changes, recreate the node entirely
     if (node.inner.templateId.type === Patch.Type.OuterChange) {
@@ -861,6 +891,10 @@ class SceneBinding {
           case 'directional-light': return this.updateDirectionalLight_(id, node as Patch.InnerChange<Node.DirectionalLight>);
           case 'spot-light': return this.updateSpotLight_(id, node as Patch.InnerChange<Node.SpotLight>);
           case 'point-light': return this.updatePointLight_(id, node as Patch.InnerChange<Node.PointLight>);
+          case 'robot': {
+            await this.updateRobot_(id, node as Patch.InnerChange<Node.Robot>);
+            return null;
+          }
           case 'from-template': return this.updateFromTemplate_(id, node as Patch.InnerChange<Node.FromTemplate>, nextScene);
           default: {
             console.error('invalid node type for inner change:', (node.next as Node).type);
@@ -894,17 +928,24 @@ class SceneBinding {
           }
         }
 
+        if (node.prev.type === 'robot') return null;
+
         return this.findBNode_(id);
       }
     }
   };
 
   private destroyNode_ = (id: string) => {
-    const bNode = this.findBNode_(id);
-    bNode.dispose();
+    if (id in this.robotBindings_) {
+      this.robotBindings_[id].dispose();
+      delete this.robotBindings_[id];
+    } else {
+      const bNode = this.findBNode_(id);
+      bNode.dispose();
 
-    const shadowGenerator = this.shadowGenerators_[id];
-    if (shadowGenerator) shadowGenerator.dispose();
+      const shadowGenerator = this.shadowGenerators_[id];
+      if (shadowGenerator) shadowGenerator.dispose();
+    }
   };
 
   private gizmoManager_: Babylon.GizmoManager;
@@ -977,6 +1018,8 @@ class SceneBinding {
       friction: objectNode.physics.friction ?? 5,
     });
 
+    this.physicsViewer_.showImpostor(mesh.physicsImpostor);
+
     mesh.setParent(initialParent);
   };
 
@@ -992,7 +1035,8 @@ class SceneBinding {
     mesh.setParent(parent);
   };
 
-  readonly setScene = async (scene: Scene) => {
+  readonly setScene = async (scene: Scene, robots: Dict<Robot>) => {
+    this.robots_ = robots;
     const patch = Scene.diff(this.scene_, scene);
 
     const nodeIds = Dict.keySet(patch.nodes);

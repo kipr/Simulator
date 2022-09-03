@@ -18,7 +18,7 @@ namespace Node {
   interface Base {
     /// The translation and orientation from the parentId,
     /// or ReferenceFrame.IDENTITY if undefined.
-    origin: ReferenceFrame;
+    origin?: ReferenceFrame;
 
     /// A human readable name for the Node.
     name?: LocalizedString;
@@ -66,6 +66,7 @@ namespace Node {
         Geometry = 'geometry',
         Embedded = 'embedded',
         Sphere = 'sphere',
+        Cylinder = 'cylinder',
         Box = 'box',
       }
 
@@ -83,6 +84,10 @@ namespace Node {
         type: Type.Sphere;
       }
 
+      export interface Cylinder {
+        type: Type.Cylinder;
+      }
+
       export interface Box {
         type: Type.Box;
       }
@@ -92,6 +97,7 @@ namespace Node {
       CollisionBody.Geometry |
       CollisionBody.Embedded |
       CollisionBody.Sphere |
+      CollisionBody.Cylinder |
       CollisionBody.Box
     );
 

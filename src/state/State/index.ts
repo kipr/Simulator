@@ -22,4 +22,14 @@ export namespace Robots {
   export const EMPTY: Robots = {
     robots: {},
   };
+
+  export const loaded = (robots: Robots): Dict<Robot> => {
+    const ret: Dict<Robot> = {};
+    for (const id in robots.robots) {
+      const robot = robots.robots[id];
+      if (robot.type !== Async.Type.Loaded) continue;
+      ret[id] = robot.value;
+    }
+    return ret;
+  }
 }

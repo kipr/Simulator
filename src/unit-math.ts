@@ -12,6 +12,8 @@ import {
   Quaternion,
 } from './math';
 
+import * as Babylon from 'babylonjs';
+
 export interface Vector2 {
   x: Distance;
   y: Distance;
@@ -219,16 +221,34 @@ export namespace ReferenceFrame {
     scale: RawVector3.ONE,
   };
 
-  export const create = (position?: Vector3, orientation?: Rotation): ReferenceFrame => ({
+  export const create = (position?: Vector3, orientation?: Rotation, scale: RawVector3 = RawVector3.ONE): ReferenceFrame => ({
     position,
-    orientation
+    orientation,
+    scale
   });
 
-  export const toRaw = (frame: ReferenceFrame): RawReferenceFrame => {
+  export const toRaw = (frame: ReferenceFrame, distanceType: Distance.Type = 'meters') => {
     return RawReferenceFrame.create(
-      Vector3.toRaw(frame.position, 'meters'),
-      Rotation.toRawQuaternion(frame.orientation)
+      Vector3.toRaw(frame.position || Vector3.zero('meters'), distanceType),
+      Rotation.toRawQuaternion(frame.orientation || Rotation.Euler.identity()),
+      frame.scale || RawVector3.ONE
     );
   };
 
+  export const toBabylon = (frame: ReferenceFrame, distanceType: Distance.Type = 'meters') =>
+    RawReferenceFrame.toBabylon(toRaw(frame || IDENTITY, distanceType));
+
+  export const syncBabylon = (frame: ReferenceFrame, bNode: Babylon.TransformNode | Babylon.AbstractMesh, distanceType: Distance.Type = 'meters') => {
+    const bFrame = toBabylon(frame || IDENTITY, distanceType);
+    
+    bNode.position.copyFrom(bFrame.position);
+    
+    if (bNode.rotationQuaternion) {
+      bNode.rotationQuaternion.copyFrom(bFrame.rotationQuaternion);
+    } else {
+      bNode.rotationQuaternion = bFrame.rotationQuaternion;
+    }
+
+    bNode.scaling.copyFrom(bFrame.scaling);
+  };
 }

@@ -64,11 +64,11 @@ export class EtSensor implements SensorObject {
     return true;
   }
 
-  public getValue(): SensorObject.Value {
+  public getValue(): Promise<SensorObject.Value> {
     const hit = this.config_.scene.pickWithRay(this.ray, null);
     let value = this.distanceToSensorValue(hit.pickedMesh ? hit.distance : Number.POSITIVE_INFINITY);
     if (this.__isNoiseEnabled) value = this.applyNoise(value);
-    return SensorObject.Value.u12(value); 
+    return Promise.resolve(SensorObject.Value.u12(value));
   }
 
   public updateVisual(): boolean {

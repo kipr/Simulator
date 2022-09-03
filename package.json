@@ -39,8 +39,8 @@
   },
   "dependencies": {
     "@types/react": "^16.9.25",
-    "babylonjs": "^4.2.0",
-    "babylonjs-loaders": "^4.2.0",
+    "babylonjs": "^5.22.1",
+    "babylonjs-loaders": "^5.22.1",
     "body-parser": "^1.19.0",
     "css-loader": "^3.5.3",
     "discord.js": "^13.6.0",

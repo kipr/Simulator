@@ -249,7 +249,7 @@ export namespace ReferenceFrame {
     scale: Vector3.ONE
   };
 
-  export const create = (position: Vector3, orientation: Quaternion): ReferenceFrame => ({ position, orientation });
+  export const create = (position: Vector3, orientation: Quaternion, scale: Vector3 = Vector3.ONE): ReferenceFrame => ({ position, orientation, scale });
   export const position = (frame: ReferenceFrame) => (frame ? (frame.position ? frame.position : Vector3.ZERO) : Vector3.ZERO);
   export const orientation = (frame: ReferenceFrame) => (frame ? (frame.orientation ? frame.orientation : Quaternion.IDENTITY) : Quaternion.IDENTITY);
   export const scale = (frame: ReferenceFrame) => (frame ?? {}).scale ?? Vector3.ONE;
@@ -258,6 +258,18 @@ export namespace ReferenceFrame {
     position: frame.position ?? Vector3.ZERO,
     orientation: frame.orientation ?? Quaternion.IDENTITY,
     scale: frame.scale ?? Vector3.ONE
+  });
+
+  export interface ToBabylon {
+    position: Babylon.Vector3;
+    rotationQuaternion: Babylon.Quaternion;
+    scaling: Babylon.Vector3;
+  }
+
+  export const toBabylon = (frame: ReferenceFrame): ToBabylon => ({
+    position: Vector3.toBabylon(frame.position),
+    rotationQuaternion: Quaternion.toBabylon(frame.orientation),
+    scaling: Vector3.toBabylon(frame.scale)
   });
 }
 

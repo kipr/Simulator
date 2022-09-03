@@ -86,8 +86,8 @@ export class TouchSensor implements SensorObject {
     return true;
   }
 
-  public getValue(): SensorObject.Value {
-    return this.isIntersecting_ ? SensorObject.Value.TRUE : SensorObject.Value.FALSE;
+  public getValue(): Promise<SensorObject.Value> {
+    return Promise.resolve(this.isIntersecting_ ? SensorObject.Value.TRUE : SensorObject.Value.FALSE);
   }
 
   public updateVisual(): boolean {

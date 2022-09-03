@@ -1,9 +1,10 @@
 import * as Babylon from 'babylonjs';
+import SceneNode from './state/State/Scene/Node';
 import Robot from './state/State/Robot';
 import Node from './state/State/Robot/Node';
-import { Quaternion, Vector3 as RawVector3 } from './math';
+import { Quaternion, Vector3 as RawVector3, ReferenceFrame as RawReferenceFrame } from './math';
 import { ReferenceFrame, Rotation, Vector3 } from './unit-math';
-import { Distance } from './util';
+import { Distance, Mass } from './util';
 import { FrameLike } from './SceneBinding';
 import Geometry from './state/State/Robot/Geometry';
 import Patch from './util/Patch';
@@ -11,6 +12,8 @@ import Dict from './Dict';
 import { RobotState } from './RobotState';
 
 export class RobotBinding {
+  private bScene_: Babylon.Scene;
+
   private robot_: Robot;
   get robot() { return this.robot_; }
 
@@ -18,82 +21,98 @@ export class RobotBinding {
   private motors_: Dict<Babylon.MotorEnabledJoint> = {};
   private servos_: Dict<Babylon.MotorEnabledJoint> = {};
 
-  constructor() {
-    
+  private physicsViewer_: Babylon.PhysicsViewer;
+
+  constructor(bScene: Babylon.Scene, physicsViewer?: Babylon.PhysicsViewer) {
+    this.bScene_ = bScene;
+    this.physicsViewer_ = physicsViewer;
   }
 
-  private buildGeometry_ = async (name: string, geometry: Geometry): Promise<FrameLike> => {
-    let ret: FrameLike;
+  private buildGeometry_ = async (name: string, geometry: Geometry): Promise<Babylon.Mesh> => {
+    let ret: Babylon.Mesh;
     switch (geometry.type) {
       case 'remote-mesh': {
         const index = geometry.uri.lastIndexOf('/');
         const fileName = geometry.uri.substring(index + 1);
         const baseName = geometry.uri.substring(0, index + 1);
   
-        const res = await Babylon.SceneLoader.ImportMeshAsync(geometry.include ?? '', baseName, fileName);
-        if (res.meshes.length === 1) return res.meshes[0];
-        ret = new Babylon.TransformNode(geometry.uri);
-        for (const mesh of res.meshes) {
-          // GLTF importer adds a __root__ mesh (always the first one) that we can ignore 
-          if (mesh === res.meshes[0]) continue;
-  
-          mesh.setParent(ret);
-        }
+        const res = await Babylon.SceneLoader.ImportMeshAsync(geometry.include ?? '', baseName, fileName, this.bScene_);
+        
+        ret = new Babylon.Mesh(name, this.bScene_);
+        
+        const meshes = res.meshes.slice(1);
+        for (const mesh of meshes) ret.addChild(mesh);
+
         break; 
       }
       default: {
         throw new Error(`Unsupported geometry type: ${geometry.type}`);
       }
     }
-  
-    if (ret instanceof Babylon.AbstractMesh) {
-      ret.visibility = 1;
-    } else {
-      const children = ret.getChildren(c => c instanceof Babylon.AbstractMesh) as Babylon.AbstractMesh[];
-      for (const child of children) {
-        child.visibility = 1;
-      }
-    }
+
+    ret.visibility = 1;
   
     return ret;
   };
 
 
   private createLink_ = async (id: string, link: Node.Link) => {
-    let ret: FrameLike;
-    if (link.geometryId === undefined)
-    {
-      ret = new Babylon.Mesh(id);
-    }
-    else
-    {
+    let ret: Babylon.Mesh;
+    if (link.geometryId === undefined) {
+      ret = new Babylon.Mesh(id, this.bScene_);
+    } else {
       const geometry = this.robot_.geometry[link.geometryId];
       if (!geometry) throw new Error(`Missing geometry: ${link.geometryId}`);
       ret = await this.buildGeometry_(id, geometry);
     }
 
-    const origin = link.origin || {};
-    const position: Vector3 = origin.position ?? Vector3.zero();
-    const orientation: Rotation = origin.orientation ?? Rotation.Euler.identity();
-    const scale = origin.scale ?? RawVector3.ONE;
+    
 
-    ret.position.set(
-      Distance.toCentimetersValue(position.x || Distance.centimeters(0)),
-      Distance.toCentimetersValue(position.y || Distance.centimeters(0)),
-      Distance.toCentimetersValue(position.z || Distance.centimeters(0))
-    );
+    ReferenceFrame.syncBabylon(link.origin, ret, 'centimeters');
+    ret.scaling.scaleInPlace(100);
+    ret.computeWorldMatrix(true);
 
-    ret.rotationQuaternion = Quaternion.toBabylon(Rotation.toRawQuaternion(orientation));
-    ret.scaling.set(scale.x, scale.y, scale.z);
+    
+
+    if (link.collisionBody) {
+      const children = ret.getChildren(c => c instanceof Babylon.Mesh) as Babylon.Mesh[];
+
+      for (const child of children) {
+        console.log(child.id);
+        child.physicsImpostor = new Babylon.PhysicsImpostor(child, Babylon.PhysicsImpostor.BoxImpostor, {
+          mass: 0,
+          restitution: 1,
+          friction: link.friction ?? 0.5,
+        }, this.bScene_);
+        const mat = new Babylon.StandardMaterial('material', this.bScene_);
+        mat.diffuseColor = Babylon.Color3.Red();
+        child.material = mat;
+      }
+      
+      ret.physicsImpostor = new Babylon.PhysicsImpostor(ret, Babylon.PhysicsImpostor.NoImpostor, {
+        mass: 0,
+        restitution: 1,
+      }, this.bScene_);
+
+      this.physicsViewer_.showImpostor(ret.physicsImpostor, ret);
+      
+      
+    }
 
     return ret;
   };
 
-  async setRobot(robot: Robot) {
+  async setRobot(sceneRobot: SceneNode.Robot, robot: Robot) {
     if (this.robot_) throw new Error('Robot already set');
     this.robot_ = robot;
 
+    const rootIds = Robot.rootNodeIds(robot);
+    if (rootIds.length !== 1) throw new Error('Only one root node is supported');
+    const rootId = rootIds[0];
+
     const nodeIds = Robot.breadthFirstNodeIds(robot);
+
+    if (robot.nodes[rootId].type !== Node.Type.Link) throw new Error('Root node must be a link');
 
     for (const nodeId of nodeIds) {
       const node = robot.nodes[nodeId];
@@ -101,5 +120,24 @@ export class RobotBinding {
       const bNode = await this.createLink_(nodeId, node);
       this.links_[nodeId] = bNode;
     }
+
+    for (const nodeId of nodeIds) {
+      const node = robot.nodes[nodeId];
+      if (node.type === Node.Type.Link) continue;
+    }
+
+    // Update root origin
+    const rootLink = this.links_[rootId];
+
+    const bRootOrigin = ReferenceFrame.toBabylon(robot.nodes[rootId].origin, 'centimeters');
+    const bRobotOrigin = ReferenceFrame.toBabylon(sceneRobot.origin, 'centimeters');
+
+    rootLink.position = bRobotOrigin.position.add(bRootOrigin.position);
+    rootLink.rotationQuaternion = bRobotOrigin.rotationQuaternion.multiply(bRootOrigin.rotationQuaternion);
+    rootLink.scaling = bRobotOrigin.scaling.multiply(bRootOrigin.scaling).scaleInPlace(100);
+  }
+
+  dispose() {
+    
   }
 }
