@@ -84,7 +84,7 @@ class SharedCharacterBuffer {
         nextStart = (nextStart + 1) % length;
       }
 
-      this.u32_[nextEnd + SharedCharacterBuffer.HEADER_SIZE / 4] = codePoint.charCodeAt(0);
+      this.u32_[nextEnd + SharedCharacterBuffer.HEADER_SIZE / 4] = codePoint.codePointAt(0);
 
       nextEnd = (nextEnd + 1) % length;
     }
