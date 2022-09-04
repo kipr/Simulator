@@ -1,19 +1,16 @@
+import ProgrammingLanguage from './ProgrammingLanguage';
+
 export namespace Protocol {
   export namespace Worker {
-    export interface Register {
-      address: number;
-      value: number;
-    }
-    
     export interface StartRequest {
       type: 'start';
+      language: ProgrammingLanguage;
       code: string;
     }
 
     export type Request = (
       StartRequest |
-      SetRegisterRequest |
-      ProgramEndedRequest |
+      SetSharedRegistersRequest |
       ProgramOutputRequest |
       ProgramErrorRequest |
       WorkerReadyRequest |
@@ -22,6 +19,11 @@ export namespace Protocol {
 
     export interface StartResponse {
       type: 'start';
+    }
+
+    export interface SetSharedRegistersRequest {
+      type: 'set-shared-registers';
+      sharedArrayBuffer: SharedArrayBuffer;
     }
 
     export interface ProgramEndedRequest {
@@ -34,52 +36,23 @@ export namespace Protocol {
 
     export type Response = StartResponse | ProgramEndedResponse;
 
-
-    export interface SetRegisterRequest {
-      type: 'setregister';
-      registers: Register[];
-    }
-
-    export interface SetRegistersRequest {
-      type: 'setregisters';
-      // Layout: Address is in second byte, value in low byte ((address & 0x0F) << 8 | (value & 0xFF))
-      values: number[];
-    }
-
-    export interface SetRegistersResponse {
-      type: 'setregisters';
-    }
-
-    
-
     export interface ProgramOutputRequest {
-      type: 'programoutput';
+      type: 'program-output';
       stdoutput: string;
     }
     
     export interface ProgramErrorRequest {
-      type: 'programerror';
+      type: 'program-error';
       stdoutput: string;
       stderror: string;
     }
     
     export interface WorkerReadyRequest {
-      type: 'workerready';
+      type: 'worker-ready';
     }
 
     export interface StoppedRequest {
       type: 'stopped'
-    }
-  }
-
-  export namespace Host {
-    export interface GetRegistersRequest {
-      type: 'get-registers'
-    }
-
-    export interface GetRegistersResponse {
-      type: 'get-registers';
-      values: number[];
     }
   }
 }

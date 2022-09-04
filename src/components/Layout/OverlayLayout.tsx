@@ -22,7 +22,6 @@ export interface OverlayLayoutProps extends LayoutProps {
 }
 
 interface ReduxOverlayLayoutProps {
-  onResetScene: () => void;
 }
 
 interface OverlayLayoutState {
@@ -49,7 +48,7 @@ const SimulatorAreaContainer = styled('div', {
 
 const Overlay = styled('div', (props: ThemeProps) => ({
   display: 'grid',
-  gridTemplateColumns: '3fr 5fr 350px',
+  gridTemplateColumns: '4fr 5fr 350px',
   gridTemplateRows: '1fr 300px',
   gap: `${props.theme.widget.padding}px`,
   position: 'absolute',
@@ -284,6 +283,8 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       style,
       className,
       theme,
+      language,
+      onLanguageChange,
       robotStartPosition,
       onSetRobotStartPosition,
       code,
@@ -293,8 +294,8 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       settings,
       onClearConsole,
       onIndentCode,
+      onDownloadCode,
       onSelectScene,
-      onResetScene,
       editorRef
     } = props;
 
@@ -310,9 +311,17 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       mode: Mode.Floating
     };
 
-    const editorBar = createEditorBarComponents(theme, messages, onIndentCode, this.onErrorClick_);
+    const editorBar = createEditorBarComponents({
+      theme,
+      messages,
+      language,
+      onLanguageChange,
+      onIndentCode,
+      onDownloadCode,
+      onErrorClick: this.onErrorClick_
+    });
     const consoleBar = createConsoleBarComponents(theme, onClearConsole);
-    const worldBar = createWorldBarComponents(theme, onSelectScene, onResetScene);
+    const worldBar = createWorldBarComponents(theme, onSelectScene);
 
     return (
       <Container style={style} className={className}>
@@ -333,7 +342,15 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
             onSizeChange={this.onEditorSizeChange_}
             barComponents={editorBar}
           >
-            <Editor ref={editorRef} code={code} onCodeChange={onCodeChange} theme={theme} messages={messages} autocomplete={settings.editorAutoComplete} />
+            <Editor
+              ref={editorRef}
+              language={language}
+              code={code}
+              onCodeChange={onCodeChange}
+              theme={theme}
+              messages={messages}
+              autocomplete={settings.editorAutoComplete}
+            />
           </EditorWidget>
           <ConsoleWidget
             {...commonProps}
@@ -375,7 +392,4 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
 export const OverlayLayoutRedux = connect<unknown, ReduxOverlayLayoutProps, OverlayLayoutProps, ReduxState>((state: ReduxState) => {
   return {};
 }, dispatch => ({
-  onResetScene: () => {
-    dispatch(SceneAction.RESET_SCENE);
-  }
 }), null, { forwardRef: true })(OverlayLayout);

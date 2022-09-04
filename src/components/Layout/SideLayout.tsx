@@ -53,7 +53,6 @@ export interface SideLayoutProps extends LayoutProps {
 }
 
 interface ReduxSideLayoutProps {
-  onResetScene: () => void;
 }
 
 interface SideLayoutState {
@@ -163,6 +162,8 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       className,
       theme,
       code,
+      language,
+      onLanguageChange,
       onCodeChange,
       robotStartPosition,
       onSetRobotStartPosition,
@@ -171,8 +172,8 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       settings,
       onClearConsole,
       onIndentCode,
+      onDownloadCode,
       onSelectScene,
-      onResetScene,
       editorRef,
     } = props;
 
@@ -181,9 +182,17 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       sidePanelSize,
     } = this.state;
 
-    const editorBar = createEditorBarComponents(theme, messages, onIndentCode, this.onErrorClick_);
+    const editorBar = createEditorBarComponents({
+      theme,
+      messages,
+      language,
+      onLanguageChange,
+      onIndentCode,
+      onDownloadCode,
+      onErrorClick: this.onErrorClick_
+    });
     const consoleBar = createConsoleBarComponents(theme, onClearConsole);
-    const worldBar = createWorldBarComponents(theme, onSelectScene, onResetScene);
+    const worldBar = createWorldBarComponents(theme, onSelectScene);
 
     let content: JSX.Element;
     switch (activePanel) {
@@ -207,7 +216,8 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
                 <Editor
                   theme={theme}
                   ref={editorRef}
-                  code={code} 
+                  code={code}
+                  language={language}
                   onCodeChange={onCodeChange}
                   messages={messages}
                   autocomplete={settings.editorAutoComplete}
@@ -298,7 +308,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
           isVertical={true}
           theme={theme}
           minSizes={[50, 50]}
-          sizes={[1, 3]}
+          sizes={[1.2, 3]}
           visible={[sidePanelSize !== Size.Type.Minimized, true]}
         >
           {content}
@@ -312,7 +322,4 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
 export const SideLayoutRedux = connect<unknown, ReduxSideLayoutProps, SideLayoutProps, ReduxState>((state: ReduxState) => {
   return {};
 }, dispatch => ({
-  onResetScene: () => {
-    dispatch(SceneAction.RESET_SCENE);
-  }
 }), null, { forwardRef: true })(SideLayout);

@@ -1,0 +1,50 @@
+*** cpython/configure	2022-08-21 14:00:35.598394100 -0700
+--- cpython/configure.new	2022-08-21 14:00:26.098394100 -0700
+*************** case $ac_sys_system in #(
+*** 8439,8451 ****
+  else
+    wasm_debug=no
+  fi
+- 
+          as_fn_append LDFLAGS_NODIST " -sALLOW_MEMORY_GROWTH -sTOTAL_MEMORY=20971520"
+  
+          as_fn_append LDFLAGS_NODIST " -sWASM_BIGINT"
+  
+          as_fn_append LDFLAGS_NODIST " -sFORCE_FILESYSTEM -lidbfs.js -lnodefs.js -lproxyfs.js -lworkerfs.js"
+  
+      if test "x$enable_wasm_dynamic_linking" = xyes; then :
+  
+        as_fn_append LINKFORSHARED " -sMAIN_MODULE"
+--- 8439,8470 ----
+  else
+    wasm_debug=no
+  fi
+          as_fn_append LDFLAGS_NODIST " -sALLOW_MEMORY_GROWTH -sTOTAL_MEMORY=20971520"
+  
+          as_fn_append LDFLAGS_NODIST " -sWASM_BIGINT"
++         
++         as_fn_append LDFLAGS_NODIST " -sMODULARIZE"
++ 
++         as_fn_append LDFLAGS_NODIST " -sEXPORT_ES6"
++ 
++         as_fn_append LDFLAGS_NODIST " -sNO_EXPORT_ALL"
++ 
++         as_fn_append LDFLAGS_NODIST " -sNO_USE_SDL"
++         
++         as_fn_append LDFLAGS_NODIST " -sNO_USE_SDL_IMAGE"
++         
++         as_fn_append LDFLAGS_NODIST " -sNO_USE_SDL_TTF"
++         
++         as_fn_append LDFLAGS_NODIST " -sNO_USE_SDL_NET"
++ 
++         as_fn_append LDFLAGS_NODIST " -sNO_USE_SDL_MIXER"
++ 
++         as_fn_append LDFLAGS_NODIST " -sENVIRONMENT=web,worker"
+  
+          as_fn_append LDFLAGS_NODIST " -sFORCE_FILESYSTEM -lidbfs.js -lnodefs.js -lproxyfs.js -lworkerfs.js"
+  
++ 
++ 
+      if test "x$enable_wasm_dynamic_linking" = xyes; then :
+  
+        as_fn_append LINKFORSHARED " -sMAIN_MODULE"

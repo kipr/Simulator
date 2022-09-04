@@ -10,6 +10,8 @@ import { BarComponent } from '../Widget';
 import { WarningCharm, ErrorCharm } from './';
 
 import { Ivygate, Message } from 'ivygate';
+import LanguageSelectCharm from './LanguageSelectCharm';
+import ProgrammingLanguage from '../../ProgrammingLanguage';
 
 export enum EditorActionState {
   None,
@@ -18,7 +20,9 @@ export enum EditorActionState {
 }
 
 export interface EditorProps extends StyleProps, ThemeProps {
+  language: ProgrammingLanguage;
   code: string;
+
   onCodeChange: (code: string) => void;
   messages?: Message[];
   autocomplete: boolean;
@@ -43,16 +47,33 @@ const Container = styled('div', (props: ThemeProps) => ({
   height: '100%'
 }));
 
-export const createEditorBarComponents = (
+export const createEditorBarComponents = ({
+  theme,
+  messages,
+  language,
+  onLanguageChange,
+  onIndentCode,
+  onDownloadCode,
+  onErrorClick
+}: {
   theme: Theme, 
   messages: Message[],
+  language: ProgrammingLanguage,
+  onLanguageChange: (language: ProgrammingLanguage) => void,
   onIndentCode: () => void,
+  onDownloadCode: () => void,
   onErrorClick: (event: React.MouseEvent<HTMLDivElement>) => void
-) => {
+}) => {
   
   const editorBar: BarComponent<unknown>[] = [];
   let errors = 0;
   let warnings = 0;
+
+  editorBar.push(BarComponent.create(LanguageSelectCharm, {
+    theme,
+    language,
+    onLanguageChange,
+  }));
 
   editorBar.push(BarComponent.create(Button, {
     theme,
@@ -61,6 +82,16 @@ export const createEditorBarComponents = (
       <>
         <Fa icon='indent'/>
         {' Indent'}
+      </>
+  }));
+
+  editorBar.push(BarComponent.create(Button, {
+    theme,
+    onClick: onDownloadCode,
+    children:
+      <>
+        <Fa icon='file-download'/>
+        {' Download'}
       </>
   }));
 
@@ -109,10 +140,17 @@ class Editor extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { style, className, theme, code, onCodeChange, messages, autocomplete } = this.props;
+    const { style, className, theme, code, onCodeChange, messages, autocomplete, language } = this.props;
     return (
       <Container theme={theme} style={style} className={className}>
-        <Ivygate ref={this.bindIvygate_} code={code} language="c" messages={messages} onCodeChange={onCodeChange} autocomplete={autocomplete} />
+        <Ivygate
+          ref={this.bindIvygate_}
+          code={code}
+          language={language}
+          messages={messages}
+          onCodeChange={onCodeChange}
+          autocomplete={autocomplete}
+        />
       </Container>
       
     );

@@ -1,7 +1,17 @@
 node_modules
 dist
 
-libwallaby/build
-libwallaby/lib
+dependencies/libkipr_build_c
+dependencies/libkipr_build_python
+dependencies/libkipr_install_c
+dependencies/emsdk/.git
+dependencies/emsdk/node
+dependencies/emsdk/upstream
+dependencies/emsdk/zips
+dependencies/emsdk/.emscripten
+dependencies/emsdk/.emscripten.old
+dependencies/cpython/.git
+dependencies/cpython/builddir
+dependencies/libwallaby/.git
 
 **/.github
