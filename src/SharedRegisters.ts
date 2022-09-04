@@ -40,6 +40,12 @@ export default class SharedRegisters {
     return this.registerSharedArrayBuffer_;
   }
 
+  public clone(): SharedRegisters {
+    const newRegisterSharedArrayBuffer = new SharedArrayBuffer(this.registerSharedArrayBuffer_.byteLength);
+    new Uint8Array(newRegisterSharedArrayBuffer).set(this.registerArrayViewU8b_);
+    return new SharedRegisters(newRegisterSharedArrayBuffer);
+  }
+
   public setRegister8b(registerAddress: number, value: number) {
     Atomics.store(this.registerArrayView8b_, SharedRegisters.getBufferIndexForRegisterAddress(registerAddress), value);
   }

@@ -23,9 +23,27 @@ const printErr = (stderror: string) => {
 
 let sharedRegister_: SharedRegisters;
 
+interface ExitStatusError {
+  name: string;
+  message: string;
+  status: number;
+}
 
+namespace ExitStatusError {
+  export const isExitStatusError = (e: unknown): e is ExitStatusError => typeof e === 'object' && e['name'] === 'ExitStatus';
+}
 
 const startC = (message: Protocol.Worker.StartRequest) => {
+  let stoppedSent = false;
+
+  const sendStopped = () => {
+    if (stoppedSent) return;
+    ctx.postMessage({
+      type: 'stopped',
+    } as Protocol.Worker.StoppedRequest);
+    stoppedSent = true;
+  };
+
   const mod = dynRequire(message.code, {
     setRegister8b: (address: number, value: number) => sharedRegister_.setRegister8b(address, value),
     setRegister16b: (address: number, value: number) => sharedRegister_.setRegister16b(address, value),
@@ -33,18 +51,26 @@ const startC = (message: Protocol.Worker.StartRequest) => {
     readRegister8b: (address: number) => sharedRegister_.getRegisterValue8b(address),
     readRegister16b: (address: number) => sharedRegister_.getRegisterValue16b(address),
     readRegister32b: (address: number) => sharedRegister_.getRegisterValue32b(address),
-    onStop: () => {
-      ctx.postMessage({
-        type: 'stopped',
-      } as Protocol.Worker.StoppedRequest);
-    },
+    onStop: sendStopped
   },
   print,
   printErr
   );
 
   mod.onRuntimeInitialized = () => {
-    mod._simMainWrapper();
+    try {
+      mod._simMainWrapper();
+    } catch (e: unknown) {
+      if (ExitStatusError.isExitStatusError(e)) {
+        print(`Program exited with status code ${e.status}`);
+      } else if (e instanceof Error) {
+        printErr(e.message);
+      } else {
+        printErr(`Program exited with an unknown error`);
+      }
+
+      sendStopped();
+    }
   };
 
   ctx.postMessage({

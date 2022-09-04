@@ -16,7 +16,7 @@ class WorkerInstance {
   
   onStopped: () => void;
 
-  private readonly sharedRegister_ = new SharedRegisters();
+  private sharedRegister_ = new SharedRegisters();
 
   private onStopped_ = () => {
     // Reset specific registers to stop motors and disable servos
@@ -162,11 +162,11 @@ class WorkerInstance {
   }
 
   stop() {
+    // Recreate a new set of registers to cut off any communication with the worker
+    this.sharedRegister_ = this.sharedRegister_.clone();
     this.worker_.terminate();
 
-    // Reset specific registers to stop motors and disable servos
-    this.sharedRegister_.setRegister8b(Registers.REG_RW_MOT_MODES, 0x00);
-    this.sharedRegister_.setRegister8b(Registers.REG_RW_MOT_SRV_ALLSTOP, 0xF0);
+    this.onStopped_();
 
     this.startWorker();
   }
