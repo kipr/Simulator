@@ -57,8 +57,6 @@ const startC = (message: Protocol.Worker.StartRequest) => {
   printErr
   );
 
-  console.log(mod);
-
   mod.onRuntimeInitialized = () => {
     try {
       mod._simMainWrapper();
