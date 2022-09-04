@@ -11,19 +11,11 @@ import Tooltip from '../Tooltip';
 import { StyledText } from '../../util';
 import { Fa } from '../Fa';
 
-import { connect } from 'react-redux';
-import { State as ReduxState } from '../../state';
-import { RobotState } from '../../RobotState';
-
 export interface SensorWidgetProps extends ThemeProps, StyleProps {
   name: string;
-  valueSelector: (robotState: RobotState) => number | boolean;
+  value: number | boolean;
   unit?: string;
   plotTitle?: string;
-}
-
-interface ReduxSensorWidgetProps {
-  value: number | boolean;
 }
 
 interface SensorWidgetState {
@@ -72,8 +64,8 @@ const ACTION_ITEMS = [
   StyledText.text({ text: 'asd' })
 ];
 
-class SensorWidget extends React.PureComponent<Props & ReduxSensorWidgetProps, State> {
-  constructor(props: Props & ReduxSensorWidgetProps) {
+class SensorWidget extends React.PureComponent<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     if (!props.plotTitle) {
@@ -203,8 +195,4 @@ class SensorWidget extends React.PureComponent<Props & ReduxSensorWidgetProps, S
   }
 }
 
-export default connect<ReduxSensorWidgetProps, unknown, SensorWidgetProps, ReduxState>((state: ReduxState, ownProps: SensorWidgetProps) => {
-  return {
-    value: ownProps.valueSelector(state.robotState),
-  };
-})(SensorWidget);
+export default SensorWidget;

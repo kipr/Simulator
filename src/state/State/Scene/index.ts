@@ -42,6 +42,16 @@ interface PatchScene {
 }
 
 namespace Scene {
+  export const robots = (scene: Scene): Dict<Node.Robot> => {
+    const robots: Dict<Node.Robot> = {};
+    for (const id in scene.nodes) {
+      const node = scene.nodes[id];
+      if (node.type !== 'robot') continue;
+      robots[id] = node;
+    }
+    return robots;
+  };
+
   export const nodeOrdering = (scene: Scene): string[] => {
     // Find nodes with no parent
     const rootNodes = Object.keys(scene.nodes).filter(n => {

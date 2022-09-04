@@ -8,6 +8,7 @@ import Patch from '../../../util/Patch';
 namespace Node {
   export enum Type {
     Link = 'link',
+    Weight = 'weight',
     Motor = 'motor',
     Servo = 'servo',
     EtSensor = 'et-sensor',
@@ -47,13 +48,15 @@ namespace Node {
     /// Coefficient of friction. If undefined, zero.
     friction?: number;
 
+    /// Restitution (bounciness). If undefined, zero.
+    restitution?: number;
+
     /// The moment of inertia of the Mesh, represented as a
     /// column-wise 3x3 matrix of numbers. If undefined, zeros.
     inertia?: number[];
 
-    /// The physics body used for determining collision. If undefined,
-    /// the geometry at specified by geometryId is used.
-    collisionBody?: Link.CollisionBody;
+    /// The physics body used for determining collision.
+    collisionBody: Link.CollisionBody;
 
     /// The geometry to display for this mesh. If undefined, no mesh
     /// is displayed.
@@ -63,21 +66,14 @@ namespace Node {
   export namespace Link {
     export namespace CollisionBody {
       export enum Type {
-        Geometry = 'geometry',
         Embedded = 'embedded',
         Sphere = 'sphere',
         Cylinder = 'cylinder',
         Box = 'box',
       }
 
-      export interface Geometry {
-        type: Type.Geometry;
-        geometryId: string;
-      }
-
       export interface Embedded {
         type: Type.Embedded;
-        prefix?: string;
       }
 
       export interface Sphere {
@@ -94,7 +90,6 @@ namespace Node {
     }
 
     export type CollisionBody = (
-      CollisionBody.Geometry |
       CollisionBody.Embedded |
       CollisionBody.Sphere |
       CollisionBody.Cylinder |
@@ -118,6 +113,36 @@ namespace Node {
     };
   }
 
+  /// A `Weight` can be attached to a `Link` to distribute mass arbitrarily.
+  /// It has no visual or physical representation.
+  export interface Weight {
+    type: Type.Weight;
+
+    /// Parent. Must be a link.
+    parentId: string;
+
+    /// The translation and orientation from the parentId,
+    /// or ReferenceFrame.IDENTITY if undefined.
+    origin: ReferenceFrame;
+
+    /// The mass of the weight.
+    mass: Mass;
+  }
+
+  export namespace Weight {
+    export const diff = (a: Weight, b: Weight): Patch<Weight> => {
+      if (!deepNeq(a, b)) return Patch.none(a);
+      if (a === undefined && b !== undefined) return Patch.outerChange(a, b);
+      if (a !== undefined && b === undefined) return Patch.outerChange(a, b);
+      return Patch.innerChange(a, b, {
+        type: Patch.none(Type.Weight),
+        parentId: Patch.diff(a.parentId, b.parentId),
+        origin: Patch.diff(a.origin, b.origin),
+        mass: Patch.diff(a.mass, b.mass)
+      });
+    }
+  }
+
   /// A `Motor` is a continuous hinge joint.
   /// It MUST have a parent that is a `Link`.
   export interface Motor extends Base {
@@ -129,7 +154,7 @@ namespace Node {
     axis: Vector3;
 
     /// The number of ticks in a full revolution of the motor.
-    /// If undefined, 1500 is assumed.
+    /// If undefined, 2048 is assumed.
     ticksPerRevolution?: number;
 
     /// Max velocity in ticks per second.
@@ -285,6 +310,7 @@ namespace Node {
 
 type Node = (
   Node.Link |
+  Node.Weight |
   Node.Motor |
   Node.Servo |
   Node.EtSensor |

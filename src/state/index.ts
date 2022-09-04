@@ -13,7 +13,6 @@ const global = window as any;
 export default createStore(combineReducers<State>({
   scene: reducer.reduceScene,
   scenes: reducer.reduceScenes,
-  robotState: reducer.reduceRobotState,
   robots: reducer.reduceRobots,
 }), global.__REDUX_DEVTOOLS_EXTENSION__ && global.__REDUX_DEVTOOLS_EXTENSION__());
 /* eslint-enable @typescript-eslint/no-unsafe-call */
@@ -23,7 +22,6 @@ export interface State {
   scene: ReferencedScenePair;
   scenes: Scenes;
   robots: Robots;
-  robotState: RobotState;
 }
 
 export interface ReferencedScenePair {

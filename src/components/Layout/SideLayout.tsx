@@ -19,6 +19,9 @@ import { Slider } from '../Slider';
 
 import { State as ReduxState } from '../../state';
 import { SceneAction } from '../../state/reducer';
+import Node from '../../state/State/Scene/Node';
+import Dict from '../../Dict';
+import Scene from '../../state/State/Scene';
 
 // 3 panes:
 // Editor / console
@@ -53,6 +56,7 @@ export interface SideLayoutProps extends LayoutProps {
 }
 
 interface ReduxSideLayoutProps {
+  robots: Dict<Node.Robot>;
 }
 
 interface SideLayoutState {
@@ -175,11 +179,13 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       onDownloadCode,
       onSelectScene,
       editorRef,
+      robots
     } = props;
 
     const {
       activePanel,
       sidePanelSize,
+      
     } = this.state;
 
     const editorBar = createEditorBarComponents({
@@ -242,17 +248,23 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
         break;
       }
       case 1: {
-        content = (
-          <SimulatorWidget
-            theme={theme}
-            name='Robot'
-            mode={Mode.Sidebar}
-          >
-            <Info
+        const robotIds = Object.keys(robots);
+        if (robotIds.length === 1) {
+          content = (
+            <SimulatorWidget
               theme={theme}
-            />
-          </SimulatorWidget>
-        );
+              name='Robot'
+              mode={Mode.Sidebar}
+            >
+              <Info
+                theme={theme}
+                nodeId={robotIds[0]}
+              />
+            </SimulatorWidget>
+          );
+        } else {
+          content = null;
+        }
         break;
       }
       case 2: {
@@ -319,7 +331,8 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
   }
 }
 
-export const SideLayoutRedux = connect<unknown, ReduxSideLayoutProps, SideLayoutProps, ReduxState>((state: ReduxState) => {
-  return {};
-}, dispatch => ({
-}), null, { forwardRef: true })(SideLayout);
+export const SideLayoutRedux = connect((state: ReduxState) => ({
+  robots: Scene.robots(state.scene.workingScene)
+}), dispatch => ({
+
+}), null, { forwardRef: true })(SideLayout) as React.ComponentType<SideLayoutProps>;

@@ -31,10 +31,12 @@ import ExceptionDialog from './ExceptionDialog';
 import SelectSceneDialog from './SelectSceneDialog';
 
 import store from '../state';
-import { RobotStateAction, SceneAction } from '../state/reducer';
+import { SceneAction } from '../state/reducer';
 import { Editor } from './Editor';
 import Dict from '../Dict';
 import ProgrammingLanguage from '../ProgrammingLanguage';
+
+import Scene from '../state/State/Scene';
 
 namespace Modal {
   export enum Type {
@@ -181,7 +183,14 @@ export class Root extends React.Component<Props, State> {
 
   componentDidMount() {
     WorkerInstance.onStateChange = this.onWorkerStateChange_;
-    WorkerInstance.getRobotState = () => store.getState().robotState;
+
+    WorkerInstance.getRobotState = () => {
+      // TODO: Multi-robot support
+      const robots = Scene.robots(store.getState().scene.workingScene);
+      const robotIds = Object.keys(robots);
+      if (robotIds.length !== 1) throw new Error('Expected exactly one robot');
+      return robots[robotIds[0]].state;
+    };
     WorkerInstance.onStopped = this.onStopped_;
 
     this.scheduleUpdateConsole_();

@@ -14,7 +14,7 @@ import { Angle, Distance, Mass, SetOps } from "./util";
 import { Color } from './state/State/Scene/Color';
 import Material from './state/State/Scene/Material';
 import { preBuiltGeometries, preBuiltTemplates } from "./node-templates";
-import { RobotBinding } from './RobotBinding';
+import RobotBinding from './RobotBinding';
 import Robot from './state/State/Robot';
 
 export type FrameLike = Babylon.TransformNode | Babylon.AbstractMesh;
@@ -556,7 +556,7 @@ class SceneBinding {
   };
 
   private createRobot_ = async (id: string, node: Node.Robot): Promise<RobotBinding> => {
-    const robotBinding = new RobotBinding(this.bScene_, this.physicsViewer_);
+    const robotBinding = new RobotBinding(this.bScene_);
     const robot = this.robots_[node.robotId];
     if (!robot) throw new Error(`Robot by id "${node.robotId}" not found`);
     await robotBinding.setRobot(node, robot);
@@ -1132,8 +1132,20 @@ class SceneBinding {
     this.scene_ = scene;
   };
 
-  tick() {
-    
+  tick(): Dict<RobotBinding.TickOut> {
+    const ret: Dict<RobotBinding.TickOut> = {};
+    for (const nodeId in this.scene_.nodes) {
+      const node = this.scene_.nodes[nodeId];
+      if (node.type !== 'robot') continue;
+
+      const robotBinding = this.robotBindings_[nodeId];
+      if (!robotBinding) throw new Error(`No robot binding for node ${nodeId}`);
+
+      ret[nodeId] = robotBinding.tick({
+        motorVelocities: node.state.motorSpeeds,
+      });
+    }
+    return ret;
   }
 }
 
