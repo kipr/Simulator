@@ -23,12 +23,14 @@ const printErr = (stderror: string) => {
 
 let sharedRegister_: SharedRegisters;
 
-interface ExitStatusError extends Error {
+interface ExitStatusError {
+  name: string;
+  message: string;
   status: number;
 }
 
 namespace ExitStatusError {
-  export const isExitStatusError = (e: Error): e is ExitStatusError => e.name === 'ExitStatus';
+  export const isExitStatusError = (e: unknown): e is ExitStatusError => typeof e === 'object' && e['name'] === 'ExitStatus';
 }
 
 const startC = (message: Protocol.Worker.StartRequest) => {
@@ -60,13 +62,13 @@ const startC = (message: Protocol.Worker.StartRequest) => {
   mod.onRuntimeInitialized = () => {
     try {
       mod._simMainWrapper();
-    } catch (e) {
-      if (e instanceof Error) {
-        if (ExitStatusError.isExitStatusError(e)) {
-          print(`Program exited with status code ${e.status}`);
-        } else {
-          printErr(e.message);
-        }
+    } catch (e: unknown) {
+      if (ExitStatusError.isExitStatusError(e)) {
+        print(`Program exited with status code ${e.status}`);
+      } else if (e instanceof Error) {
+        printErr(e.message);
+      } else {
+        printErr(`Program exited with an unknown error`);
       }
 
       sendStopped();
