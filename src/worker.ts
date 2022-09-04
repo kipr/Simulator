@@ -8,17 +8,42 @@ import python from './python';
 // See GitHub issue: https://github.com/microsoft/TypeScript/issues/20595
 const ctx: Worker = self as unknown as Worker;
 
+const PRINT_BUFFER_MAX_SIZE = 10000;
+const PRINT_BUFFER_DEBOUCE = 50;
+
+let lastPrint = 0;
+let printBuffer = '';
+
 const print = (s: string) => {
-  ctx.postMessage({
-    type: 'program-output',
-    stdoutput: s
-  });
+  const now = Date.now();
+  const diff = now - lastPrint;
+  if (diff > PRINT_BUFFER_DEBOUCE || printBuffer.length > PRINT_BUFFER_MAX_SIZE) {
+    ctx.postMessage({
+      type: 'program-output',
+      stdoutput: `${printBuffer}${s}`
+    });
+    printBuffer = '';
+  } else {
+    printBuffer += `${s}\n`;
+  }
+  lastPrint = now;
 };
+
+let lastPrintErr = 0;
+let printErrBuffer = '';
+
 const printErr = (stderror: string) => {
-  ctx.postMessage({
-    type: 'program-error',
-    stderror: stderror
-  });
+  const now = Date.now();
+  const diff = now - lastPrintErr;
+  if (diff > PRINT_BUFFER_DEBOUCE || printErrBuffer.length > PRINT_BUFFER_MAX_SIZE) {
+    ctx.postMessage({
+      type: 'program-error',
+      stderror: `${printErrBuffer}${stderror}`
+    });
+    printErrBuffer = '';
+  } else {
+    printErrBuffer += `${stderror}\n`;
+  }
 };
 
 let sharedRegister_: SharedRegisters;
@@ -38,6 +63,23 @@ const startC = (message: Protocol.Worker.StartRequest) => {
 
   const sendStopped = () => {
     if (stoppedSent) return;
+
+    if (printBuffer.length > 0) {
+      ctx.postMessage({
+        type: 'program-output',
+        stdoutput: printBuffer
+      });
+      printBuffer = '';
+    }
+
+    if (printErrBuffer.length > 0) {
+      ctx.postMessage({
+        type: 'program-error',
+        stderror: printErrBuffer
+      });
+      printErrBuffer = '';
+    }
+
     ctx.postMessage({
       type: 'stopped',
     } as Protocol.Worker.StoppedRequest);

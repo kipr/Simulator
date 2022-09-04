@@ -95,9 +95,13 @@ export namespace StyledText {
     ...params
   });
 
-  export const extend = (existing: StyledText, extension: StyledText) => {
-    if (existing.type === Type.Composition) return compose({ items: [...existing.items, extension] });
-    return compose({ items: [existing, extension] });
+  export const extend = (existing: StyledText, extension: StyledText, maxItems = Number.MAX_SAFE_INTEGER): StyledText => {
+    let items: StyledText[] = [
+      ...(existing.type === Type.Composition ? existing.items : [existing]),
+      ...(extension.type === Type.Composition ? extension.items : [extension])
+    ];
+
+    return compose({ items: items.slice(-maxItems) });
   };
 
   // Extracts the text components of a styled text
