@@ -20,7 +20,7 @@ import { Angle, Distance, Mass } from './util';
 import store, { State } from './state';
 import { Unsubscribe } from 'redux';
 import deepNeq from './deepNeq';
-import { RobotStateAction, SceneAction } from './state/reducer';
+import { SceneAction } from './state/reducer';
 import { Gizmo } from 'babylonjs/Gizmos/gizmo';
 import SceneBinding from './SceneBinding';
 import Scene from './state/State/Scene';
@@ -218,7 +218,7 @@ export class Space implements Robotable {
 
     const tickOutputs = this.sceneBinding_.tick();
 
-    const setNodeBatch: SceneAction.SetNodeBatchParams = {
+    const setNodeBatch: Omit<SceneAction.SetNodeBatch, 'type'> = {
       nodeIds: [],
       modifyReferenceScene: false,
     };

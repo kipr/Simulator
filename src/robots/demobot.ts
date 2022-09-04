@@ -69,7 +69,7 @@ export const DEMOBOT: Robot = {
     right_wheel: {
       type: Node.Type.Motor,
       axis: RawVector3.create(1, 0, 0),
-      motorPort: 0,
+      motorPort: 3,
       parentId: 'chassis',
       origin: {
         position: {

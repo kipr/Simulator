@@ -6,6 +6,8 @@ import Camera from "../State/Scene/Camera";
 
 import { JBC_Sandbox_A } from '../../scenes';
 import { ReferencedScenePair } from "..";
+import { RobotState } from '../../RobotState';
+import construct from '../../util/construct';
 
 export namespace SceneAction {
   export interface ReplaceScene {
@@ -13,13 +15,8 @@ export namespace SceneAction {
     scene: Scene;
   }
 
-  export type ReplaceSceneParams = Omit<ReplaceScene, 'type'>;
-
-  export const replaceScene = (params: ReplaceSceneParams): ReplaceScene => ({
-    type: 'replace-scene',
-    ...params
-  });
-
+  export const replaceScene = construct<ReplaceScene>('replace-scene');
+  
   export interface ResetScene {
     type: 'reset-scene';
   }
@@ -32,12 +29,7 @@ export namespace SceneAction {
     node: Node;
   }
 
-  export type AddNodeParams = Omit<AddNode, 'type'>;
-
-  export const addNode = (params: AddNodeParams): AddNode => ({
-    type: 'add-node',
-    ...params
-  });
+  export const addNode = construct<AddNode>('add-node');
 
 
   export interface RemoveNode {
@@ -45,12 +37,7 @@ export namespace SceneAction {
     id: string;
   }
 
-  export type RemoveNodeParams = Omit<RemoveNode, 'type'>;
-
-  export const removeNode = (params: RemoveNodeParams): RemoveNode => ({
-    type: 'remove-node',
-    ...params
-  });
+  export const removeNode = construct<RemoveNode>('remove-node');
 
   export interface SetNode {
     type: 'set-node';
@@ -60,12 +47,8 @@ export namespace SceneAction {
     modifyOrigin: boolean;
   }
 
-  export type SetNodeParams = Omit<SetNode, 'type'>;
 
-  export const setNode = (params: SetNodeParams): SetNode => ({
-    type: 'set-node',
-    ...params
-  });
+  export const setNode = construct<SetNode>('set-node');
 
   export interface SetNodeBatch {
     type: 'set-node-batch';
@@ -76,12 +59,7 @@ export namespace SceneAction {
     modifyReferenceScene: boolean;
   }
 
-  export type SetNodeBatchParams = Omit<SetNodeBatch, 'type'>;
-
-  export const setNodeBatch = (params: SetNodeBatchParams): SetNodeBatch => ({
-    type: 'set-node-batch',
-    ...params
-  });
+  export const setNodeBatch = construct<SetNodeBatch>('set-node-batch');
 
   export interface AddGeometry {
     type: 'add-geometry';
@@ -89,37 +67,22 @@ export namespace SceneAction {
     geometry: Geometry;
   }
 
-  export type AddGeometryParams = Omit<AddGeometry, 'type'>;
-
-  export const addGeometry = (params: AddGeometryParams): AddGeometry => ({
-    type: 'add-geometry',
-    ...params
-  });
+  export const addGeometry = construct<AddGeometry>('add-geometry');
 
   export interface RemoveGeometry {
     type: 'remove-geometry';
     id: string;
   }
 
-  export type RemoveGeometryParams = Omit<RemoveGeometry, 'type'>;
-
-  export const removeGeometry = (params: RemoveGeometryParams): RemoveGeometry => ({
-    type: 'remove-geometry',
-    ...params
-  });
+  export const removeGeometry = construct<RemoveGeometry>('remove-geometry');
 
   export interface SetGeometry {
     type: 'set-geometry';
     id: string;
     geometry: Geometry;
   }
-
-  export type SetGeometryParams = Omit<SetGeometry, 'type'>;
   
-  export const setGeometry = (params: SetGeometryParams): SetGeometry => ({
-    type: 'set-geometry',
-    ...params
-  });
+  export const setGeometry = construct<SetGeometry>('set-geometry');
 
   export interface SetGeometryBatch {
     type: 'set-geometry-batch';
@@ -129,24 +92,14 @@ export namespace SceneAction {
     }[];
   }
 
-  export type SetGeometryBatchParams = Omit<SetGeometryBatch, 'type'>;
-
-  export const setGeometryBatch = (params: SetGeometryBatchParams): SetGeometryBatch => ({
-    type: 'set-geometry-batch',
-    ...params
-  });
+  export const setGeometryBatch = construct<SetGeometryBatch>('set-geometry-batch');
 
   export interface SelectNode {
     type: 'select-node';
     id?: string;
   }
 
-  export type SelectNodeParams = Omit<SelectNode, 'type'>;
-
-  export const selectNode = (params: SelectNodeParams): SelectNode => ({
-    type: 'select-node',
-    ...params
-  });
+  export const selectNode = construct<SelectNode>('select-node');
 
   export interface UnselectAll {
     type: 'unselect-all';
@@ -161,37 +114,22 @@ export namespace SceneAction {
     geometry: Geometry;
   }
 
-  export type AddObjectParams = Omit<AddObject, 'type'>;
+  export const addObject = construct<AddObject>('add-object');
 
-  export const addObject = (params: AddObjectParams): AddObject => ({
-    type: 'add-object',
-    ...params
-  });
-
-  export interface SetRobotOrigin {
-    type: 'set-robot-origin';
-    origin: ReferenceFrame;
-    modifyReferenceScene: boolean;
+  export interface SetRobotState {
+    type: 'set-robot-state';
+    nodeId: string;
+    state: RobotState;
   }
 
-  export type SetRobotOriginParams = Omit<SetRobotOrigin, 'type'>;
-
-  export const setRobotOrigin = (params: SetRobotOriginParams): SetRobotOrigin => ({
-    type: 'set-robot-origin',
-    ...params
-  });
+  export const setRobotState = construct<SetRobotState>('set-robot-state');
 
   export interface SetCamera {
     type: 'set-camera';
     camera: Camera;
   }
 
-  export type SetCameraParams = Omit<SetCamera, 'type'>;
-
-  export const setCamera = (params: SetCameraParams): SetCamera => ({
-    type: 'set-camera',
-    ...params
-  });
+  export const setCamera = construct<SetCamera>('set-camera');
 }
 
 export type SceneAction = (
@@ -208,7 +146,7 @@ export type SceneAction = (
   SceneAction.SelectNode |
   SceneAction.UnselectAll |
   SceneAction.AddObject |
-  SceneAction.SetRobotOrigin |
+  SceneAction.SetRobotState |
   SceneAction.SetCamera
 );
 
@@ -466,6 +404,25 @@ export const reduceScene = (state: ReferencedScenePair = { referenceScene: JBC_S
           camera: action.camera,
         },
       };
+    case 'set-robot-state': {
+      const node = state.workingScene.nodes[action.nodeId];
+      if (!node) return state;
+      if (node.type !== 'robot') return state;
+      const nextState: ReferencedScenePair = {
+        ...state,
+        workingScene: {
+          ...state.workingScene,
+          nodes: {
+            ...state.workingScene.nodes,
+            [action.nodeId]: {
+              ...node,
+              state: action.state,
+            },
+          }
+        },
+      };
+      return nextState;
+    }
     default:
       return state;
   }

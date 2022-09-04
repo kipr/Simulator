@@ -278,6 +278,6 @@ export default connect<unknown, unknown, InfoProps, ReduxState>((state: ReduxSta
   };
 }, dispatch => ({
   onOriginChange: (origin: ReferenceFrame, modifyReferenceScene: boolean) => {
-    dispatch(SceneAction.setRobotOrigin({ origin, modifyReferenceScene }));
+    // dispatch(SceneAction.setRobotOrigin({ origin, modifyReferenceScene }));
   }
 }))(Info) as React.ComponentType<InfoProps>;

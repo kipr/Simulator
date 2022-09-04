@@ -261,9 +261,13 @@ export class Root extends React.Component<Props, State> {
 
   private onModalClose_ = () => this.setState({ modal: Modal.NONE });
 
-  private onWorkerStateChange_ = (robotState: RobotState) => {
-    store.dispatch(RobotStateAction.setRobotState({
-      robotState,
+  private onWorkerStateChange_ = (state: RobotState) => {
+    const robots = Scene.robots(store.getState().scene.workingScene);
+    const robotIds = Object.keys(robots);
+    if (robotIds.length !== 1) throw new Error('Expected exactly one robot');
+    store.dispatch(SceneAction.setRobotState({
+      nodeId: robotIds[0],
+      state,
     }));
   };
 

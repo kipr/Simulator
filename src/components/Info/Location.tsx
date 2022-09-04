@@ -146,6 +146,6 @@ export default connect<unknown, unknown, LocationProps, State>((state: State) =>
   };
 }, dispatch => ({
   onOriginChange: (origin: ReferenceFrame, modifyReferenceScene: boolean) => {
-    dispatch(SceneAction.setRobotOrigin({ origin, modifyReferenceScene }));
+    // dispatch(SceneAction.setRobotOrigin({ origin, modifyReferenceScene }));
   }
 }))(Location) as React.ComponentType<LocationProps>;
