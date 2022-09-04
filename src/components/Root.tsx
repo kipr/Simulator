@@ -288,7 +288,7 @@ export class Root extends React.Component<Props, State> {
 
     switch (activeLanguage) {
       case 'c': {
-        let nextConsole = StyledText.extend(console, StyledText.text({
+        let nextConsole: StyledText = StyledText.extend(console, StyledText.text({
           text: `Compiling...\n`,
           style: STDOUT_STYLE(this.state.theme)
         }));
@@ -299,6 +299,7 @@ export class Root extends React.Component<Props, State> {
         }, () => {
           compile(activeCode)
             .then(compileResult => {
+              nextConsole = this.state.console;
               const messages = sort(parseMessages(compileResult.stderr));
               const compileSucceeded = compileResult.result && compileResult.result.length > 0;
     
@@ -347,7 +348,6 @@ export class Root extends React.Component<Props, State> {
             })
             .catch((e: unknown) => {
               window.console.error(e);
-    
               nextConsole = StyledText.extend(nextConsole, StyledText.text({
                 text: 'Something went wrong during compilation.\n',
                 style: STDERR_STYLE(this.state.theme)
