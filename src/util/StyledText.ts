@@ -17,7 +17,7 @@ export namespace StyledText {
   }
 
   export type TextParams = Omit<Text, 'type'>;
-  export const text = (params: TextParams, addNewline = false): StyledText => {
+  export const text = (params: TextParams): StyledText => {
     
     const { text } = params;
 
@@ -51,8 +51,6 @@ export namespace StyledText {
         props: params.props
       });
     }
-
-    if (addNewline) items.push(newLine());
 
     if (items.length === 1) return items[0];
 

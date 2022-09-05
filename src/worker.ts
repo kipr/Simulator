@@ -3,50 +3,22 @@ import dynRequire from './require';
 import SharedRegisters from './SharedRegisters';
 import Registers from './RegisterState';
 import python from './python';
+import SharedRingBufferUtf32 from './SharedRingBufferUtf32';
 
 // Proper typing of Worker is tricky due to conflicting DOM and WebWorker types
 // See GitHub issue: https://github.com/microsoft/TypeScript/issues/20595
 const ctx: Worker = self as unknown as Worker;
 
-const PRINT_BUFFER_MAX_SIZE = 10000;
-const PRINT_BUFFER_DEBOUCE = 50;
+let sharedRegister_: SharedRegisters;
+let sharedConsole_: SharedRingBufferUtf32;
 
-let lastPrint = 0;
-let printBuffer = '';
-
-const print = (s: string) => {
-  const now = Date.now();
-  const diff = now - lastPrint;
-  if (diff > PRINT_BUFFER_DEBOUCE || printBuffer.length > PRINT_BUFFER_MAX_SIZE) {
-    ctx.postMessage({
-      type: 'program-output',
-      stdoutput: `${printBuffer}${s}`
-    });
-    printBuffer = '';
-  } else {
-    printBuffer += `${s}\n`;
-  }
-  lastPrint = now;
+const print = (stdout: string) => {
+  sharedConsole_.pushStringBlocking(`${stdout}\n`);
 };
-
-let lastPrintErr = 0;
-let printErrBuffer = '';
 
 const printErr = (stderror: string) => {
-  const now = Date.now();
-  const diff = now - lastPrintErr;
-  if (diff > PRINT_BUFFER_DEBOUCE || printErrBuffer.length > PRINT_BUFFER_MAX_SIZE) {
-    ctx.postMessage({
-      type: 'program-error',
-      stderror: `${printErrBuffer}${stderror}`
-    });
-    printErrBuffer = '';
-  } else {
-    printErrBuffer += `${stderror}\n`;
-  }
+  sharedConsole_.pushStringBlocking(`${stderror}\n`);
 };
-
-let sharedRegister_: SharedRegisters;
 
 interface ExitStatusError {
   name: string;
@@ -63,22 +35,6 @@ const startC = (message: Protocol.Worker.StartRequest) => {
 
   const sendStopped = () => {
     if (stoppedSent) return;
-
-    if (printBuffer.length > 0) {
-      ctx.postMessage({
-        type: 'program-output',
-        stdoutput: printBuffer
-      });
-      printBuffer = '';
-    }
-
-    if (printErrBuffer.length > 0) {
-      ctx.postMessage({
-        type: 'program-error',
-        stderror: printErrBuffer
-      });
-      printErrBuffer = '';
-    }
 
     ctx.postMessage({
       type: 'stopped',
@@ -169,6 +125,10 @@ ctx.onmessage = (e: MessageEvent) => {
     }
     case 'set-shared-registers': {
       sharedRegister_ = new SharedRegisters(message.sharedArrayBuffer);
+      break;
+    }
+    case 'set-shared-console': {
+      sharedConsole_ = new SharedRingBufferUtf32(message.sharedArrayBuffer);
       break;
     }
   } 

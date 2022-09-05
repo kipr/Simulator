@@ -4,19 +4,21 @@ import { RobotState } from './RobotState';
 
 import deepNeq from './deepNeq';
 import SharedRegisters from './SharedRegisters';
+import SharedRingBufferUtf32 from './SharedRingBufferUtf32';
 
+const SHARED_CONSOLE_LENGTH = 1024;
 
 class WorkerInstance {
   
   onStateChange: (state: RobotState) => void;
   getRobotState: () => RobotState;
   
-  onStdOutput: (s: string) => void;
-  onStdError: (stderror: string) => void;
-  
   onStopped: () => void;
 
   private sharedRegister_ = new SharedRegisters();
+  private sharedConsole_ = SharedRingBufferUtf32.create(SHARED_CONSOLE_LENGTH);
+  
+  get sharedConsole() { return this.sharedConsole_; }
 
   private onStopped_ = () => {
     // Reset specific registers to stop motors and disable servos
@@ -127,24 +129,16 @@ class WorkerInstance {
   private onMessage = (e: MessageEvent) => {
     const message = e.data as Protocol.Worker.Request;
     switch (message.type) {
-      case 'program-output': {
-        if (this.onStdOutput) {
-          this.onStdOutput(message.stdoutput);
-        }
-        break;
-      }
-      case 'program-error': {
-        if (this.onStdError) {
-          this.onStdError(message.stderror);
-        }
-        break;
-      }
       case 'worker-ready': {
         // Once worker is ready for messages, send the shared register array buffer
         this.worker_.postMessage({
           type: 'set-shared-registers',
           sharedArrayBuffer: this.sharedRegister_.getSharedArrayBuffer(),
         } as Protocol.Worker.SetSharedRegistersRequest);
+        this.worker_.postMessage({
+          type: 'set-shared-console',
+          sharedArrayBuffer: this.sharedConsole_.sharedArrayBuffer,
+        } as Protocol.Worker.SetSharedConsoleRequest);
         break;
       }
       case 'stopped': {
@@ -164,6 +158,7 @@ class WorkerInstance {
   stop() {
     // Recreate a new set of registers to cut off any communication with the worker
     this.sharedRegister_ = this.sharedRegister_.clone();
+    this.sharedConsole_ = SharedRingBufferUtf32.create(SHARED_CONSOLE_LENGTH);
     this.worker_.terminate();
 
     this.onStopped_();
