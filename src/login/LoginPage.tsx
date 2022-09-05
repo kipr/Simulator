@@ -1,16 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import * as React from 'react';
-import { withRouter, Redirect } from 'react-router-dom';
-import * as PropTypes from 'prop-types';
 import { DARK, RED, ThemeProps } from '../components/theme';
 import { StyleProps } from '../style';
-import { styled, withStyleDeep } from 'styletron-react';
+import { styled } from 'styletron-react';
 import { auth, Providers } from '../firebase/firebase';
 import { 
   signInWithEmail, 
-  signInWithSocialMediaRedirect, 
   createUserWithEmail, 
   forgotPassword
 } from '../firebase/modules/auth';
@@ -24,15 +18,14 @@ import { Fa } from '../components/Fa';
 import { Text } from '../components/Text';
 import { StyledText } from '../util';
 import Button from '../components/Button';
-import PageProps from './interfaces/page.interface';
 import { Validators } from '../util/Validator';
 
-export interface HomePageProps extends ThemeProps,StyleProps,PageProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  history: any;
+export interface LoginPageProps extends ThemeProps, StyleProps {
+  externalIndex?: number;
 }
 
-interface HomePageState {
+interface LoginPageState {
+  initialAuthLoaded: boolean,
   authenticating: boolean,
   loggedIn: boolean;
   index: number;
@@ -130,14 +123,15 @@ const SocialContainer = styled('div', (props: ThemeProps) => ({
   fontSize: '1.4em'
 }));
 
-type Props = HomePageProps;
-type State = HomePageState;
+type Props = LoginPageProps;
+type State = LoginPageState;
 
-class HomePage extends React.Component<Props, State> {
+class LoginPage extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
     this.state = {
+      initialAuthLoaded: false,
       authenticating: false,
       loggedIn: auth.currentUser !== null,
       index: this.props.externalIndex !== undefined ? this.props.externalIndex : 0,
@@ -145,10 +139,6 @@ class HomePage extends React.Component<Props, State> {
       logInFailedMessage: null,
     };
   }
-
-  static propTypes = {
-    history: PropTypes.object.isRequired,
-  };
 
   componentDidMount() {
     const a = this.authListener();
@@ -161,9 +151,9 @@ class HomePage extends React.Component<Props, State> {
     }
     auth.onAuthStateChanged((user) => {
       if (user) {
-        this.setState({ loggedIn: true });
+        this.setState({ loggedIn: true, initialAuthLoaded: true });
       } else {
-        this.setState({ loggedIn: false });
+        this.setState({ loggedIn: false, initialAuthLoaded: true });
       }
     });
   };
@@ -256,9 +246,19 @@ class HomePage extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { className, style, history } = props;
-    const { index, authenticating, loggedIn, forgotPassword, logInFailedMessage } = state;
+    const { className, style } = props;
+    const { initialAuthLoaded, index, authenticating, loggedIn, forgotPassword, logInFailedMessage } = state;
     const theme = DARK;
+
+    if (!initialAuthLoaded) {
+      // Auth initialization is fast, so no need to render anything in the meantime
+      return null;
+    }
+
+    if (loggedIn) {
+      window.location.href = '/dashboard';
+      return null;
+    }
 
     const googleButtonItems = [
       StyledText.component ({
@@ -281,7 +281,6 @@ class HomePage extends React.Component<Props, State> {
         }
       })
     ];
-    if (loggedIn) return <Redirect push to = '/dashboard' />;
 
     let kiprLogo: JSX.Element;
     switch (theme.foreground) {
@@ -382,4 +381,4 @@ class HomePage extends React.Component<Props, State> {
   }
 }
 
-export default withRouter(HomePage);
+export default LoginPage;

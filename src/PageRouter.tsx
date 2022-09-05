@@ -1,13 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-
 import * as React from 'react';
 import { BrowserRouter as Router, Switch, Route, RouteComponentProps } from 'react-router-dom';
 import { auth } from './firebase/firebase';
 import routes from './pages/routes';
 import AuthRoute from './firebase/modules/auth/AuthRoute';
-import { getRedirectResult } from '@firebase/auth';
 
 import Loading from './components/Loading';
 
@@ -27,8 +22,8 @@ const PageRouter: React.FunctionComponent<PageRouterProps> = props => {
       setLoading(false);
     });
   }, []);
+
   if (loading) {
-    // const result = getRedirectResult(auth);
     return <Loading />;
   }
 
@@ -42,7 +37,6 @@ const PageRouter: React.FunctionComponent<PageRouterProps> = props => {
             exact={route.exact}
             render={(routeProps: RouteComponentProps) => {
               if (route.protected) return <AuthRoute ><route.component {...routeProps} /></AuthRoute>;
-              if (route.index !== undefined) return <route.component {...routeProps} externalIndex={route.index} />;
               return <route.component  {...routeProps} />;
             }}
           />)}
