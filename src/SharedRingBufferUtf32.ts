@@ -27,7 +27,7 @@ class SharedRingBufferUtf32 implements SharedRingBuffer {
     return this.ringBufferU32_.push(value);
   }
 
-  /// Push a string to the buffer. The number of characters written is returned.
+  // Push a string to the buffer. The number of characters written is returned.
   pushString(value: string): number {
     let i = 0;
     
@@ -56,7 +56,7 @@ class SharedRingBufferUtf32 implements SharedRingBuffer {
     return this.ringBufferU32_.popAll();
   }
 
-  /// Pop a string from the buffer. The read string is returned.
+  // Pop a string from the buffer. The read string is returned.
   popString(): string {
     return String.fromCodePoint(...this.popAll());
   }

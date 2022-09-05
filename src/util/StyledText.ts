@@ -94,7 +94,7 @@ export namespace StyledText {
   });
 
   export const extend = (existing: StyledText, extension: StyledText, maxItems = Number.MAX_SAFE_INTEGER): StyledText => {
-    let items: StyledText[] = [
+    const items: StyledText[] = [
       ...(existing.type === Type.Composition ? existing.items : [existing]),
       ...(extension.type === Type.Composition ? extension.items : [extension])
     ];
