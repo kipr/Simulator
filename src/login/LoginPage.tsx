@@ -222,7 +222,7 @@ class LoginPage extends React.Component<Props, State> {
 
   private signInWithSocialMedia_ = async (provider: AuthProvider) => {
     this.setState({ authenticating: true });
-    await signInWithRedirect(auth, provider);
+    await signInWithPopup(auth, provider);
   };
 
   private onTabIndexChange_ = (index: number) => {
