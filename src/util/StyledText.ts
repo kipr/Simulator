@@ -17,7 +17,7 @@ export namespace StyledText {
   }
 
   export type TextParams = Omit<Text, 'type'>;
-  export const text = (params: TextParams, addNewline = false): StyledText => {
+  export const text = (params: TextParams): StyledText => {
     
     const { text } = params;
 
@@ -51,8 +51,6 @@ export namespace StyledText {
         props: params.props
       });
     }
-
-    if (addNewline) items.push(newLine());
 
     if (items.length === 1) return items[0];
 
@@ -95,9 +93,13 @@ export namespace StyledText {
     ...params
   });
 
-  export const extend = (existing: StyledText, extension: StyledText) => {
-    if (existing.type === Type.Composition) return compose({ items: [...existing.items, extension] });
-    return compose({ items: [existing, extension] });
+  export const extend = (existing: StyledText, extension: StyledText, maxItems = Number.MAX_SAFE_INTEGER): StyledText => {
+    const items: StyledText[] = [
+      ...(existing.type === Type.Composition ? existing.items : [existing]),
+      ...(extension.type === Type.Composition ? extension.items : [extension])
+    ];
+
+    return compose({ items: items.slice(-maxItems) });
   };
 
   // Extracts the text components of a styled text

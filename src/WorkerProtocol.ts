@@ -11,6 +11,7 @@ export namespace Protocol {
     export type Request = (
       StartRequest |
       SetSharedRegistersRequest |
+      SetSharedConsoleRequest |
       ProgramOutputRequest |
       ProgramErrorRequest |
       WorkerReadyRequest |
@@ -23,6 +24,11 @@ export namespace Protocol {
 
     export interface SetSharedRegistersRequest {
       type: 'set-shared-registers';
+      sharedArrayBuffer: SharedArrayBuffer;
+    }
+
+    export interface SetSharedConsoleRequest {
+      type: 'set-shared-console';
       sharedArrayBuffer: SharedArrayBuffer;
     }
 

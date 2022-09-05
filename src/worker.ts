@@ -3,25 +3,22 @@ import dynRequire from './require';
 import SharedRegisters from './SharedRegisters';
 import Registers from './RegisterState';
 import python from './python';
+import SharedRingBufferUtf32 from './SharedRingBufferUtf32';
 
 // Proper typing of Worker is tricky due to conflicting DOM and WebWorker types
 // See GitHub issue: https://github.com/microsoft/TypeScript/issues/20595
 const ctx: Worker = self as unknown as Worker;
 
-const print = (s: string) => {
-  ctx.postMessage({
-    type: 'program-output',
-    stdoutput: s
-  });
-};
-const printErr = (stderror: string) => {
-  ctx.postMessage({
-    type: 'program-error',
-    stderror: stderror
-  });
+let sharedRegister_: SharedRegisters;
+let sharedConsole_: SharedRingBufferUtf32;
+
+const print = (stdout: string) => {
+  sharedConsole_.pushStringBlocking(`${stdout}\n`);
 };
 
-let sharedRegister_: SharedRegisters;
+const printErr = (stderror: string) => {
+  sharedConsole_.pushStringBlocking(`${stderror}\n`);
+};
 
 interface ExitStatusError {
   name: string;
@@ -38,6 +35,7 @@ const startC = (message: Protocol.Worker.StartRequest) => {
 
   const sendStopped = () => {
     if (stoppedSent) return;
+
     ctx.postMessage({
       type: 'stopped',
     } as Protocol.Worker.StoppedRequest);
@@ -127,6 +125,10 @@ ctx.onmessage = (e: MessageEvent) => {
     }
     case 'set-shared-registers': {
       sharedRegister_ = new SharedRegisters(message.sharedArrayBuffer);
+      break;
+    }
+    case 'set-shared-console': {
+      sharedConsole_ = new SharedRingBufferUtf32(message.sharedArrayBuffer);
       break;
     }
   } 

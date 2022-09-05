@@ -182,15 +182,15 @@ export class Root extends React.Component<Props, State> {
   componentDidMount() {
     WorkerInstance.onStateChange = this.onWorkerStateChange_;
     WorkerInstance.getRobotState = () => store.getState().robotState;
-    WorkerInstance.onStdOutput = this.onStdOutput_;
-    WorkerInstance.onStdError = this.onStdError_;
     WorkerInstance.onStopped = this.onStopped_;
 
+    this.scheduleUpdateConsole_();
     window.addEventListener('resize', this.onWindowResize_);
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.onWindowResize_);
+    cancelAnimationFrame(this.updateConsoleHandle_);
   }
 
   private onWindowResize_ = () => {
@@ -258,23 +258,24 @@ export class Root extends React.Component<Props, State> {
     }));
   };
 
-  private onStdOutput_ = (text: string) => {
-    this.setState({
-      console: StyledText.extend(this.state.console, StyledText.text({
-        text,
-        style: STDOUT_STYLE(this.state.theme)
-      }, true))
-    });
+  
+  private updateConsole_ = () => {
+    const text = WorkerInstance.sharedConsole.popString();
+    if (text.length > 0) {
+      this.setState({
+        console: StyledText.extend(this.state.console, StyledText.text({
+          text,
+          style: STDOUT_STYLE(this.state.theme)
+        }), 300)
+      });
+    }
+    
+
+    this.scheduleUpdateConsole_();
   };
 
-  private onStdError_ = (text: string) => {
-    this.setState({
-      console: StyledText.extend(this.state.console, StyledText.text({
-        text,
-        style: STDOUT_STYLE(this.state.theme)
-      }, true))
-    });
-  };
+  private updateConsoleHandle_: number | undefined = undefined;
+  private scheduleUpdateConsole_ = () => this.updateConsoleHandle_ = requestAnimationFrame(this.updateConsole_);
 
   private onErrorMessageClick_ = (line: number) => () => {
     if (this.editorRef.current) this.editorRef.current.ivygate.revealLineInCenter(line);
