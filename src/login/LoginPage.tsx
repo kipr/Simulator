@@ -8,7 +8,7 @@ import {
   createUserWithEmail, 
   forgotPassword
 } from '../firebase/modules/auth';
-import { AuthProvider, getRedirectResult, signInWithRedirect } from 'firebase/auth';
+import { AuthProvider, getRedirectResult, signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import Form from '../components/Form';
 import { TabBar } from '../components/TabBar';
 

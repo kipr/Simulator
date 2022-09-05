@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Redirect } from 'react-router-dom';
 import { auth } from '../../firebase';
+
 interface IAuthRouteProps {
   children: React.ReactNode;
   // any other props that come into the component
@@ -14,6 +14,7 @@ const AuthRoute: React.FunctionComponent<IAuthRouteProps> = props => {
     window.location.href = '/login';
     return null;
   }
+  
   return (
     <div>{children}</div>
   );

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import IRoute from "./interfaces/route.interface";
 import Dashboard from "./Dashboard";
 import { Root } from '../components/Root';
