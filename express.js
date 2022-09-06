@@ -228,6 +228,10 @@ app.use(express.static(sourceDir, {
   setHeaders: setCrossOriginIsolationHeaders,
 }));
 
+app.get('/login', (req, res) => {
+  res.sendFile(`${__dirname}/${sourceDir}/login.html`);
+});
+
 
 app.use('*', (req, res) => {
   setCrossOriginIsolationHeaders(res);

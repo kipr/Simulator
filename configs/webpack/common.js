@@ -16,6 +16,7 @@ try {
 module.exports = {
   entry: {
     app: './index.tsx',
+    login: './login/index.tsx',
     'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js'
   },
   output: {
@@ -112,7 +113,8 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({ template: 'index.html.ejs', }),
+    new HtmlWebpackPlugin({ template: 'index.html.ejs', excludeChunks: ['login'] }),
+    new HtmlWebpackPlugin({ template: 'login/login.html.ejs', filename: 'login.html', chunks: ['login'] }),
     new DefinePlugin({
       SIMULATOR_VERSION: JSON.stringify(require('../../package.json').version),
       SIMULATOR_GIT_HASH: JSON.stringify(commitHash),

@@ -1,8 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { initializeApp } from 'firebase/app';
-import { GoogleAuthProvider, getAuth, getRedirectResult } from 'firebase/auth';
+import { GoogleAuthProvider, getAuth } from 'firebase/auth';
 import config from './config';
 
 const Firebase = initializeApp(config.firebase);
