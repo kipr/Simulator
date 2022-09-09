@@ -17,7 +17,7 @@ module.exports = {
       server: {
         port: getEnvVarOrDefault('SERVER_PORT', 3000),
         feedbackWebhookURL: getEnvVarOrDefault('FEEDBACK_WEBHOOK_URL', ''),
-        deploymentEnvironment: getEnvVarOrDefault('DEPLOYMENT_ENVIRONMENT', 'DEV'),
+        firebaseConfig: getEnvVarOrDefault('FIREBASE_CONFIG', null),
         dependencies
       },
       caching: {
