@@ -20,6 +20,12 @@ try {
   throw e;
 }
 
+const envFileMap = {
+  'DEV': 'dev.js',
+  'PRERELEASE': 'prerelease.js',
+  'PROD': 'prod.js',
+};
+
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -227,6 +233,17 @@ app.use(express.static(sourceDir, {
   maxAge: config.caching.staticMaxAge,
   setHeaders: setCrossOriginIsolationHeaders,
 }));
+
+app.get('/environment.js', (req, res) => {
+  const envFileName = envFileMap[config.server.deploymentEnvironment];
+  if (!envFileName) {
+    console.error(`No environment file found for deployment environment ${config.server.deploymentEnvironment}`);
+    res.sendStatus(404);
+    return;
+  }
+
+  res.sendFile(`${__dirname}/environments/${envFileName}`);
+});
 
 app.get('/login', (req, res) => {
   res.sendFile(`${__dirname}/${sourceDir}/login.html`);

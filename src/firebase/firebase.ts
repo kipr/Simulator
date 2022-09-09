@@ -1,8 +1,8 @@
 import { initializeApp } from 'firebase/app';
 import { GoogleAuthProvider, getAuth } from 'firebase/auth';
-import config from './config';
+import firebaseConfig from './config';
 
-const Firebase = initializeApp(config.firebase);
+const Firebase = initializeApp(firebaseConfig);
 
 // Add or Remove authentication methods here
 export const Providers = {
