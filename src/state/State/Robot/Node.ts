@@ -2,6 +2,7 @@ import deepNeq from '../../../deepNeq';
 import { Vector3 } from '../../../math';
 import { ReferenceFrame } from '../../../unit-math';
 import { Angle, Mass } from '../../../util';
+import construct from '../../../util/construct';
 import LocalizedString from '../../../util/LocalizedString';
 import Patch from '../../../util/Patch';
 
@@ -63,6 +64,8 @@ namespace Node {
     geometryId?: string;
   }
 
+  export const link = construct<Link>(Type.Link);
+
   export namespace Link {
     export namespace CollisionBody {
       export enum Type {
@@ -76,17 +79,25 @@ namespace Node {
         type: Type.Embedded;
       }
 
+      export const EMBEDDED: Embedded = { type: Type.Embedded };
+
       export interface Sphere {
         type: Type.Sphere;
       }
+
+      export const SPHERE: Sphere = { type: Type.Sphere };
 
       export interface Cylinder {
         type: Type.Cylinder;
       }
 
+      export const CYLINDER: Cylinder = { type: Type.Cylinder };
+
       export interface Box {
         type: Type.Box;
       }
+
+      export const BOX: Box = { type: Type.Box };
     }
 
     export type CollisionBody = (
@@ -129,6 +140,8 @@ namespace Node {
     mass: Mass;
   }
 
+  export const weight = construct<Weight>(Type.Weight);
+
   export namespace Weight {
     export const diff = (a: Weight, b: Weight): Patch<Weight> => {
       if (!deepNeq(a, b)) return Patch.none(a);
@@ -164,6 +177,8 @@ namespace Node {
     /// The motor port.
     motorPort: number;
   }
+
+  export const motor = construct<Motor>(Type.Motor);
 
   export namespace Motor {
     export const diff = (a: Motor, b: Motor): Patch<Motor> => {
@@ -205,6 +220,8 @@ namespace Node {
     servoPort: number;
   }
 
+  export const servo = construct<Servo>(Type.Servo);
+
   export namespace Servo {
     export const diff = (a: Servo, b: Servo): Patch<Servo> => {
       if (!deepNeq(a, b)) return Patch.none(a);
@@ -230,6 +247,8 @@ namespace Node {
     /// The analog port.
     analogPort: number;
   }
+
+  export const etSensor = construct<EtSensor>(Type.EtSensor);
 
   export namespace EtSensor {
     export const diff = (a: EtSensor, b: EtSensor): Patch<EtSensor> => {

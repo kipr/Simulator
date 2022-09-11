@@ -66,6 +66,13 @@ export namespace Vector3 {
 
   export const create = (x: Distance, y: Distance, z: Distance): Vector3 => ({ x, y, z });
 
+  export const meters = (x: number, y: number, z: number) => create(
+    Distance.meters(x),
+    Distance.meters(y),
+    Distance.meters(z),
+  );
+
+
   export const toRaw = (v: Vector3, type: Distance.Type) => RawVector3.create(
     Distance.toType(v.x, type).value,
     Distance.toType(v.y, type).value,
@@ -179,6 +186,20 @@ export namespace Rotation {
     z,
     order
   });
+
+  export const eulerDegrees = (x: number, y: number, z: number, order?: RawEuler.Order) => euler(
+    Angle.degrees(x),
+    Angle.degrees(y),
+    Angle.degrees(z),
+    order
+  );
+
+  export const eulerRadians = (x: number, y: number, z: number, order?: RawEuler.Order) => euler(
+    Angle.radians(x),
+    Angle.radians(y),
+    Angle.radians(z),
+    order
+  );
 
   export const toRawQuaternion = (rotation: Rotation) => {
     if (!rotation) return Quaternion.IDENTITY;

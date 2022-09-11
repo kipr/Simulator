@@ -82,11 +82,18 @@ export namespace Vector3 {
     y: l.y - r.y,
     z: l.z - r.z
   });
-  export const multiply = (l: Vector3, r: number): Vector3 => ({
-    x: l.x * r,
-    y: l.y * r,
-    z: l.z * r
+  export const multiply = (l: Vector3, r: Vector3): Vector3 => ({
+    x: l.x * r.x,
+    y: l.y * r.y,
+    z: l.z * r.z
   });
+
+  export const cross = (l: Vector3, r: Vector3): Vector3 => ({
+    x: l.y * r.z - l.z * r.y,
+    y: l.z * r.x - l.x * r.z,
+    z: l.x * r.y - l.y * r.x
+  });
+
   export const multiplyScalar = (vec: Vector3, scalar: number): Vector3 => ({
     x: vec.x * scalar,
     y: vec.y * scalar,
@@ -103,6 +110,29 @@ export namespace Vector3 {
   export const fromBabylon = (vec: Babylon.Vector3): Vector3 => ({ x: vec.x, y: vec.y, z: vec.z });
 
   export const distance = (lhs: Vector3, rhs: Vector3): number => Math.sqrt(Math.pow(rhs.x - lhs.x, 2) + Math.pow(rhs.y - lhs.y, 2) + Math.pow(rhs.z - lhs.z, 2));
+
+  export const dot = (lhs: Vector3, rhs: Vector3): number => lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
+
+  export const normalize = (vec: Vector3) => divideScalar(vec, length(vec));
+
+  export const applyQuaternion = (v: Vector3, q: Quaternion): Vector3 => {
+    const ix = q.w * v.x + q.y * v.z - q.z * v.y;
+    const iy = q.w * v.y + q.z * v.x - q.x * v.z;
+    const iz = q.w * v.z + q.x * v.y - q.y * v.x;
+    const iw = -q.x * v.x - q.y * v.y - q.z * v.z;
+
+    return {
+      x: ix * q.w + iw * -q.x + iy * -q.z - iz * -q.y,
+      y: iy * q.w + iw * -q.y + iz * -q.x - ix * -q.z,
+      z: iz * q.w + iw * -q.z + ix * -q.y - iy * -q.x
+    };
+  };
+
+  export const applyQuaternionTwist = (v: Vector3, q: Quaternion): { swing: Vector3, twist: Quaternion } => {
+    const swing = applyQuaternion(v, q);
+    const twist = Quaternion.multiply(q, Quaternion.fromVector3(swing));
+    return { swing, twist };
+  }
 }
 
 export interface Euler {
@@ -224,7 +254,7 @@ export namespace Quaternion {
     let cos = dot(lhs, rhs);
     if (cos < -1) cos = -1;
     if (cos > 1) cos = 1;
-    return Math.acos(cos);
+    return Math.acos(cos) * 2;
   };
 
   export const slerp = (lhs: Quaternion, rhs: Quaternion, t: number): Quaternion => {
@@ -233,7 +263,23 @@ export namespace Quaternion {
     return fromBabylon(q);
   };
 
-  
+  export const axis = (quat: Quaternion): Vector3 => ({
+    x: quat.x,
+    y: quat.y,
+    z: quat.z
+  });
+
+  export const fromVector3 = (vec: Vector3): Quaternion => ({ x: vec.x, y: vec.y, z: vec.z, w: 0 });
+
+  export const inverse = (quat: Quaternion): Quaternion => {
+    const l = length(quat);
+    return {
+      x: -quat.x / l,
+      y: -quat.y / l,
+      z: -quat.z / l,
+      w: quat.w / l
+    };
+  };
 }
 
 export interface ReferenceFrame {

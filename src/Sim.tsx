@@ -133,6 +133,7 @@ export class Space implements Robotable {
 
     this.engine = new Babylon.Engine(this.workingCanvas, true, { preserveDrawingBuffer: true, stencil: true });
     this.scene = new Babylon.Scene(this.engine);
+    this.scene.useRightHandedSystem = true;
     
 
     this.currentEngineView = null;

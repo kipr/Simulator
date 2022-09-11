@@ -1,3 +1,5 @@
+import construct from '../../../util/construct';
+
 namespace Geometry {
   export enum Type {
     LocalMesh = 'local-mesh',
@@ -14,6 +16,8 @@ namespace Geometry {
     data: string;
   }
 
+  export const localMesh = construct<LocalMesh>(Type.LocalMesh);
+
   export namespace LocalMesh {
     export enum Format {
       Gltf = 'gltf',
@@ -29,6 +33,8 @@ namespace Geometry {
 
     include?: string[];
   }
+
+  export const remoteMesh = construct<RemoteMesh>(Type.RemoteMesh);
 }
 
 type Geometry = (

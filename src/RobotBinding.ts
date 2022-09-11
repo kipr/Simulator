@@ -4,7 +4,7 @@ import Robot from './state/State/Robot';
 import Node from './state/State/Robot/Node';
 import { Quaternion, Vector3 as RawVector3, ReferenceFrame as RawReferenceFrame, clamp } from './math';
 import { ReferenceFrame, Rotation, Vector3 } from './unit-math';
-import { Distance, Mass } from './util';
+import { Angle, Distance, Mass } from './util';
 import { FrameLike } from './SceneBinding';
 import Geometry from './state/State/Robot/Geometry';
 import Patch from './util/Patch';
@@ -39,8 +39,11 @@ class RobotBinding {
   private weights_: Dict<Babylon.Mesh> = {};
   private fixed_: Dict<Babylon.PhysicsJoint> = {};
   private motors_: Dict<Babylon.MotorEnabledJoint> = {};
-  private servos_: Dict<Babylon.MotorEnabledJoint> = {};
+  private servos_: Dict<RobotBinding.ServoJoint> = {};
   private motorPorts_ = new Array<string>(4);
+  private servoPorts_ = new Array<string>(4);
+
+  private colliders_: Set<Babylon.IPhysicsEnabledObject> = new Set();
 
   private physicsViewer_: Babylon.PhysicsViewer;
 
@@ -64,6 +67,8 @@ class RobotBinding {
         const colliders: BuiltGeometry.Collider[] = [];
 
         for (const mesh of res.meshes.slice(1) as Babylon.Mesh[]) {
+          
+
           if (mesh.name.startsWith('collider')) {
             const parts = mesh.name.split('-');
             if (parts.length != 3) throw new Error(`Invalid collider name: ${mesh.name}`);
@@ -133,6 +138,7 @@ class RobotBinding {
           physicsImposterParams,
           this.bScene_
         );
+        this.colliders_.add(ret);
         break;
       }
       case Node.Link.CollisionBody.Type.Cylinder: {
@@ -142,6 +148,7 @@ class RobotBinding {
           physicsImposterParams,
           this.bScene_
         );
+        this.colliders_.add(ret);
         break;
       }
       case Node.Link.CollisionBody.Type.Embedded: {
@@ -159,9 +166,8 @@ class RobotBinding {
             this.bScene_
           );
 
-          // FIXME: Why is this necessary? Something deeper must be wrong.
-          bCollider.position.x = -bCollider.position.x;
           bCollider.visibility = 0;
+          this.colliders_.add(bCollider);
         }
 
         ret.physicsImpostor = new Babylon.PhysicsImpostor(
@@ -170,6 +176,8 @@ class RobotBinding {
           physicsImposterParams,
           this.bScene_
         );
+        this.colliders_.add(ret);
+
         break;
       }
       default: {
@@ -206,6 +214,25 @@ class RobotBinding {
     }
 
     return ret;
+  };
+
+  // Transform a vector using the child frame's orientation. This operation is invariant on a single
+  // axis, so we return a new quaternion with the leftover rotation.
+  private static connectedAxisAngle_ = (rotationAxis: Babylon.Vector3, childOrientation: Babylon.Quaternion): { axis: Babylon.Vector3, twist: Babylon.Quaternion } => {
+    const childOrientationInv = childOrientation.invert();
+    const axis = rotationAxis.applyRotationQuaternion(childOrientationInv);
+    const v = new Babylon.Vector3(childOrientationInv.x, childOrientationInv.y, childOrientationInv.z);
+    const s = childOrientationInv.w;
+    v.multiplyInPlace(axis);
+
+    const twist = new Babylon.Quaternion(v.x, v.y, v.z, s);
+    twist.normalize();
+
+    
+    return {
+      axis,
+      twist,
+    };
   };
 
   private createWeight_ = (id: string, weight: Node.Weight) => {
@@ -288,6 +315,61 @@ class RobotBinding {
     return ret;
   };
 
+  private createServo_ = (id: string, servo: Node.Servo): RobotBinding.ServoJoint => {
+    const children = this.childrenNodeIds_[id];
+    if (children.length !== 1) throw new Error(`Servo "${id}" must have exactly one child`);
+
+    const { parentId } = servo;
+    const childId = children[0];
+
+    const parent = this.robot_.nodes[parentId];
+    if (parent.type !== Node.Type.Link) throw new Error(`Servo "${id}" must have a parent that is a link`);
+    
+    const bParent = this.links_[parentId];
+    if (!bParent) throw new Error(`Missing link: ${parentId}`);
+
+    const child = this.robot_.nodes[childId];
+    if (child.type !== Node.Type.Link) throw new Error(`Servo "${id}" must have a child that is a link`);
+
+    const bChild = this.links_[childId];
+    if (!bChild) throw new Error(`Missing link: ${childId}`);
+
+    const bMotorOrigin = ReferenceFrame.toBabylon(servo.origin, RENDER_SCALE);
+    const childOriginRaw = ReferenceFrame.toRaw(child.origin, RENDER_SCALE);
+    const bChildOrigin = RawReferenceFrame.toBabylon(childOriginRaw);
+
+    const qAxis = Quaternion.fromVector3(servo.axis);
+
+    const bAxis = RawVector3.toBabylon(servo.axis);
+
+    const { axis, twist } = RobotBinding.connectedAxisAngle_(bAxis, bChildOrigin.rotationQuaternion);
+
+    console.log({
+      mainPivot: bMotorOrigin.position,
+      connectedAxis: axis,
+      leftoverEuler: twist.toEulerAngles(),
+    });
+
+    bChild.rotationQuaternion = twist;
+
+    const ret = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint, {
+      mainPivot: bMotorOrigin.position,
+      mainAxis: bAxis,
+      connectedAxis: axis,
+      connectedPivot: Babylon.Vector3.Zero(),
+    });
+
+    bParent.physicsImpostor.addJoint(bChild.physicsImpostor, ret);
+    ret.setMotor();
+
+    return {
+      joint: ret,
+      child: bChild,
+      startOrientation: bChild.rotationQuaternion.clone(),
+      startAngle: Quaternion.angle(twist, Quaternion.IDENTITY),
+    }
+  };
+
   private lastTick_: number = undefined;
   tick(input: RobotBinding.TickIn): RobotBinding.TickOut {
     for (let i = 0; i < input.motorVelocities.length; i++) {
@@ -316,11 +398,46 @@ class RobotBinding {
       bMotor.setMotor(velocity);
     }
 
+    for (let i = 0; i < input.servoPositions.length; i++) {
+      const servoId = this.servoPorts_[i];
+
+      // If no servo is bound to the port, skip it.
+      if (!servoId) continue;
+
+      const servo = this.robot_.nodes[servoId];
+      if (!servo) throw new Error(`Missing servo: ${servoId}`);
+      if (servo.type !== Node.Type.Servo) throw new Error(`Invalid servo type: ${servo.type}`);
+
+      const servoJoint = this.servos_[servoId];
+      if (!servoJoint) throw new Error(`Missing motor instantiation: "${servoId}" on port ${i}`);
+
+      const bServo = servoJoint.joint;
+      const { startAngle, startOrientation, child } = servoJoint;
+
+      const position = servo.position ?? {};
+
+      const min = Angle.toRadiansValue(position.min ?? Angle.degrees(-87.5));
+      const max = Angle.toRadiansValue(position.max ?? Angle.degrees(87.5));
+      
+
+      const range = max - min;
+
+      const servoPosition = clamp(0, input.servoPositions[i], 2048);
+      const desiredAngle = (servoPosition - 1024) * range;
+
+      const currentAngle = Quaternion.angle(startOrientation, child.rotationQuaternion) - startAngle;
+
+      const deltaAngle = desiredAngle - currentAngle;
+
+
+    }
+
     return RobotBinding.TickOut.NIL;
   }
 
   async setRobot(sceneRobot: SceneNode.Robot, robot: Robot) {
     if (this.robot_) throw new Error('Robot already set');
+
     this.robot_ = robot;
 
     const rootIds = Robot.rootNodeIds(robot);
@@ -358,6 +475,13 @@ class RobotBinding {
           console.log('added joint', nodeId);
           break;
         }
+        case Node.Type.Servo: {
+          const bJoint = this.createServo_(nodeId, node);
+          this.servos_[nodeId] = bJoint;
+          console.log('added joint', bJoint);
+          this.servoPorts_[node.servoPort] = nodeId;
+          break;
+        }
       }
     }
 
@@ -367,9 +491,27 @@ class RobotBinding {
     const bRootOrigin = ReferenceFrame.toBabylon(robot.nodes[rootId].origin, RENDER_SCALE);
     const bRobotOrigin = ReferenceFrame.toBabylon(sceneRobot.origin, RENDER_SCALE);
 
-    rootLink.position = bRobotOrigin.position.add(bRootOrigin.position);
-    rootLink.rotationQuaternion = bRobotOrigin.rotationQuaternion.multiply(bRootOrigin.rotationQuaternion);
-    rootLink.scaling = bRobotOrigin.scaling.multiply(bRootOrigin.scaling).scaleInPlace(100);
+    rootLink.position = bRobotOrigin.position
+      .add(bRootOrigin.position);
+    rootLink.rotationQuaternion = bRobotOrigin.rotationQuaternion
+      .multiply(bRootOrigin.rotationQuaternion);
+    rootLink.scaling = bRobotOrigin.scaling
+      .multiply(bRootOrigin.scaling)
+      .scaleInPlace(RENDER_SCALE_METERS_MULTIPLIER);
+
+    for (const impostor of this.bScene_.getPhysicsEngine().getImpostors()) {
+      if (!this.colliders_.has(impostor.object)) {
+        console.log('no collider', impostor);
+        continue;
+      }
+      console.log('impostor', impostor);
+      impostor.executeNativeFunction((world, body) => {
+        console.log('body', body);
+      })
+    }
+
+  
+    console.log();
   }
 
   dispose() {
@@ -381,6 +523,9 @@ namespace RobotBinding {
   export interface TickIn {
     /// Velocities in ticks/second
     motorVelocities: [number, number, number, number];
+
+    /// Servo positions in ticks
+    servoPositions: [number, number, number, number];
   }
 
   export interface TickOut {
@@ -392,6 +537,13 @@ namespace RobotBinding {
     export const NIL: TickOut = {
       motorPositionDeltas: [0, 0, 0, 0],
     };
+  }
+
+  export interface ServoJoint {
+    joint: Babylon.MotorEnabledJoint;
+    child: Babylon.Mesh;
+    startOrientation: Quaternion;
+    startAngle: number;
   }
 }
 

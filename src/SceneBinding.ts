@@ -77,7 +77,7 @@ class SceneBinding {
     this.scene_ = Scene.EMPTY;
     this.ammo_ = new Babylon.AmmoJSPlugin(true, ammo);
     this.ammo_.onCreateCustomShape = this.onCreateCustomShape_;
-    this.bScene_.enablePhysics(new Babylon.Vector3(0, -9.8 * 50, 0), this.ammo_);
+    this.bScene_.enablePhysics(new Babylon.Vector3(0, -9.8 * 100, 0), this.ammo_);
 
     this.root_ = new Babylon.TransformNode('__scene_root__', this.bScene_);
     this.physicsViewer_ = new Babylon.PhysicsViewer(this.bScene_);
@@ -1143,6 +1143,7 @@ class SceneBinding {
 
       ret[nodeId] = robotBinding.tick({
         motorVelocities: node.state.motorSpeeds,
+        servoPositions: node.state.servoPositions,
       });
     }
     return ret;

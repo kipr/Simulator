@@ -3,7 +3,11 @@ import Node from "../state/State/Robot/Node";
 import Geometry from "../state/State/Robot/Geometry";
 import { Angle, Distance, Mass } from '../util';
 import { Vector3 as RawVector3 } from '../math';
-import { Rotation } from '../unit-math';
+import { Rotation, Vector3 } from '../unit-math';
+
+const { meters } = Distance;
+const { degrees } = Angle;
+const { grams } = Mass;
 
 export const DEMOBOT: Robot = {
   name: {
@@ -11,101 +15,80 @@ export const DEMOBOT: Robot = {
   },
   authorId: 'kipr',
   nodes: {
-    chassis: {
-      type: Node.Type.Link,
+    chassis: Node.link({
       name: {
         'en': 'Chassis',
       },
-      collisionBody: {
-        type: Node.Link.CollisionBody.Type.Embedded,
-      },
+      collisionBody: Node.Link.CollisionBody.EMBEDDED,
       geometryId: 'chassis_link',
-      mass: Mass.grams(1126 - 800),
+      mass: grams(1126 - 800),
       friction: 0.1,
-    },
-    wombat: {
-      type: Node.Type.Weight,
+    }),
+    wombat: Node.weight({
       parentId: 'chassis',
-      mass: Mass.grams(800),
+      mass: grams(800),
       origin: {
-        position: {
-          x: Distance.meters(0.0),
-          y: Distance.meters(0.063695),
-          z: Distance.meters(0.08786),
-        }
+        position: Vector3.meters(0.0, 0.063695, 0.08786),
       },
-    },
-    left_wheel: {
-      type: Node.Type.Motor,
+    }),
+    left_wheel: Node.motor({
       axis: RawVector3.create(1, 0, 0),
       motorPort: 0,
       parentId: 'chassis',
       origin: {
-        position: {
-          x: Distance.meters(-0.07492),
-          y: Distance.meters(0.033136),
-          z: Distance.meters(0.0),
-        }
+        position: Vector3.meters(0.07492, 0.033136, 0.0),
       }
-    },
-    left_wheel_link: {
-      type: Node.Type.Link,
+    }),
+    left_wheel_link: Node.link({
       parentId: 'left_wheel',
       geometryId: 'wheel_link',
-      collisionBody: {
-        type: Node.Link.CollisionBody.Type.Cylinder,
-      },
-      mass: Mass.grams(14),
+      collisionBody: Node.Link.CollisionBody.CYLINDER,
+      mass: grams(14),
       friction: 25,
       origin: {
-        orientation: {
-          type: 'euler',
-          x: Angle.degrees(0),
-          y: Angle.degrees(0),
-          z: Angle.degrees(90),
-        }
+        orientation: Rotation.eulerDegrees(0, 0, -90),
       }
-    },
-    right_wheel: {
-      type: Node.Type.Motor,
+    }),
+    right_wheel: Node.motor({
       axis: RawVector3.create(1, 0, 0),
       motorPort: 3,
       parentId: 'chassis',
       origin: {
-        position: {
-          x: Distance.meters(0.07492),
-          y: Distance.meters(0.033136),
-          z: Distance.meters(0.0),
-        }
+        position: Vector3.meters(-0.07492, 0.033136, 0.0),
       }
-    },
-    right_wheel_link: {
-      type: Node.Type.Link,
+    }),
+    right_wheel_link: Node.link({
       parentId: 'right_wheel',
       geometryId: 'wheel_link',
-      collisionBody: {
-        type: Node.Link.CollisionBody.Type.Cylinder,
-      },
-      mass: Mass.grams(14),
+      collisionBody: Node.Link.CollisionBody.CYLINDER,
+      mass: grams(14),
       friction: 25,
       origin: {
-        orientation: {
-          type: 'euler',
-          x: Angle.degrees(0),
-          y: Angle.degrees(0),
-          z: Angle.degrees(-90),
-        }
+        orientation: Rotation.eulerDegrees(0, 0, 90),
       }
-    }
+    }),
+    arm: Node.servo({
+      axis: RawVector3.create(-1, 0, 0),
+      servoPort: 0,
+      parentId: 'chassis',
+      origin: {
+        position: Vector3.meters(-0.010805, 0.068099, -0.068379),
+      }
+    }),
+    arm_link: Node.link({
+      parentId: 'arm',
+      geometryId: 'arm_link',
+      mass: grams(14),
+      friction: 5,
+      collisionBody: Node.Link.CollisionBody.EMBEDDED,
+      origin: {
+        orientation: Rotation.eulerDegrees(-90, 0, 90),
+      }
+    }),
   },
   geometry: {
-    chassis_link: {
-      type: Geometry.Type.RemoteMesh,
-      uri: '/static/chassis.glb',
-    },
-    wheel_link: {
-      type: Geometry.Type.RemoteMesh,
-      uri: '/static/wheel.glb',
-    }
+    chassis_link: Geometry.remoteMesh({ uri: '/static/chassis.glb' }),
+    wheel_link: Geometry.remoteMesh({ uri: '/static/wheel.glb' }),
+    arm_link: Geometry.remoteMesh({ uri: '/static/arm.glb' })
   }
 };
