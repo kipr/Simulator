@@ -1,4 +1,6 @@
-import * as Babylon from 'babylonjs';
+import { AbstractMesh as BabylonAbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
+import { Observer as BabylonObserver } from '@babylonjs/core/Misc/observable';
+
 import Sensor from './Sensor';
 import SensorObject from './SensorObject';
 
@@ -6,16 +8,16 @@ export class TouchSensor implements SensorObject {
   private config_: SensorObject.Config<Sensor.Touch>;
 
   // Keeps track of the meshes in the scene that are eligible for intersection checking
-  private eligibleMeshes_: Babylon.AbstractMesh[];
-  private unprocessedMeshes_: Babylon.AbstractMesh[];
+  private eligibleMeshes_: BabylonAbstractMesh[];
+  private unprocessedMeshes_: BabylonAbstractMesh[];
 
   private isIntersecting_ = false;
-  private prevIntersectingMesh_: Babylon.AbstractMesh = null;
+  private prevIntersectingMesh_: BabylonAbstractMesh = null;
 
   private sinceLastUpdate = 0;
 
-  private meshAddedObserver_: Babylon.Observer<Babylon.AbstractMesh>;
-  private meshRemovedObserver_: Babylon.Observer<Babylon.AbstractMesh>;
+  private meshAddedObserver_: BabylonObserver<BabylonAbstractMesh>;
+  private meshRemovedObserver_: BabylonObserver<BabylonAbstractMesh>;
 
   get sensor(): Sensor.Touch {
     return this.config_.sensor;
@@ -125,13 +127,13 @@ export class TouchSensor implements SensorObject {
     // Digital sensors don't have realism
   }
 
-  private isTouchingMesh = (mesh: Babylon.AbstractMesh) => {
+  private isTouchingMesh = (mesh: BabylonAbstractMesh) => {
     return mesh.isVisible && this.config_.mesh.intersectsMesh(mesh);
   };
 
   // Determines whether the given mesh is eligible for intersection checking
   // Based on the metadata property, which will only exist for meshes created through SceneBinding
-  private static isMeshEligible = (mesh: Babylon.AbstractMesh) => {
+  private static isMeshEligible = (mesh: BabylonAbstractMesh) => {
     return typeof mesh.metadata === 'string' && mesh.metadata.length > 0;
   };
 }

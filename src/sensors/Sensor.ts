@@ -1,4 +1,4 @@
-import * as Babylon from 'babylonjs';
+import { Vector3 as BabylonVector3 } from '@babylonjs/core/Maths/math.vector';
 
 namespace Sensor {
   export namespace Output {
@@ -72,8 +72,8 @@ namespace Sensor {
 
   export interface Et extends Common {
     type: Type.Et;
-    forward: Babylon.Vector3;
-    origin: Babylon.Vector3;
+    forward: BabylonVector3;
+    origin: BabylonVector3;
     maxRange?: number;
     noiseRadius?: number;
   }
@@ -88,8 +88,8 @@ namespace Sensor {
 
   export interface Ir extends Common {
     type: Type.Ir;
-    forward: Babylon.Vector3;
-    origin: Babylon.Vector3;
+    forward: BabylonVector3;
+    origin: BabylonVector3;
     maxRange?: number;
     noiseRadius?: number;
   }

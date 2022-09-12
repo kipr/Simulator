@@ -1,4 +1,4 @@
-import * as Babylon from 'babylonjs';
+import { Color3 as BabylonColor3 } from '@babylonjs/core/Maths/math.color';
 
 export namespace Color {
   export enum Type {
@@ -215,9 +215,9 @@ export namespace Color {
     }
   };
 
-  export const toBabylon = (color: Color): Babylon.Color3 => {
+  export const toBabylon = (color: Color): BabylonColor3 => {
     const { r, g, b } = toRgb(color);
-    return new Babylon.Color3(r / 255, g / 255, b / 255);
+    return new BabylonColor3(r / 255, g / 255, b / 255);
   };
 
   export const WHITE = rgb(255, 255, 255);
