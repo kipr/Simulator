@@ -35,6 +35,8 @@ class RobotBinding {
 
   private childrenNodeIds_: Dict<string[]>;
 
+  private rootId_: string;
+
   private links_: Dict<Babylon.Mesh> = {};
   private weights_: Dict<Babylon.Mesh> = {};
   private fixed_: Dict<Babylon.PhysicsJoint> = {};
@@ -121,6 +123,11 @@ class RobotBinding {
 
     const ret = builtGeometry.mesh;
 
+    const axes = new Babylon.AxesViewer(this.bScene_, 0.05);
+    axes.xAxis.setParent(ret);
+    axes.yAxis.setParent(ret);
+    axes.zAxis.setParent(ret);
+
     const physicsImposterParams: Babylon.PhysicsImpostorParameters = {
       mass: Mass.toGramsValue(link.mass || Mass.grams(0)),
       restitution: link.restitution ?? 0,
@@ -186,33 +193,7 @@ class RobotBinding {
     }
 
     if (this.physicsViewer_) this.physicsViewer_.showImpostor(ret.physicsImpostor, ret);
-
-
-    // If the parent is a link we need to create a fixed joint.
-    // If the parent is not a link, the joint creation will be
-    // handled by the `createJoint_` (e.g., `createMotor_`) method.
-    if (link.parentId) {
-      const parent = this.robot_.nodes[link.parentId];
-      if (!parent) throw new Error(`Missing parent: ${link.parentId}`);
-
-      if (parent.type === Node.Type.Link) {
-        const bParent = this.links_[link.parentId];
-        if (!bParent) throw new Error(`Missing parent: ${link.parentId}`);
-
-        const bOrigin = ReferenceFrame.toBabylon(link.origin, RENDER_SCALE);
-        const bOriginRotationInv = bOrigin.rotationQuaternion.invert();
-
-        const bJoint = new Babylon.PhysicsJoint(Babylon.PhysicsJoint.LockJoint, {
-          mainPivot: bOrigin.position,
-          mainAxis: Babylon.Vector3.Up(),
-          connectedPivot: Babylon.Vector3.Zero(),
-          connectedAxis: Babylon.Vector3.Up().applyRotationQuaternion(bOriginRotationInv),
-        });
-
-        bParent.physicsImpostor.addJoint(ret.physicsImpostor, bJoint);
-      }
-    }
-
+    
     return ret;
   };
 
@@ -271,42 +252,47 @@ class RobotBinding {
     return ret;
   };
 
-  private createMotor_ = (id: string, motor: Node.Motor) => {
+  private bParentChild_ = (id: string, parentId: string): {
+    bParent: Babylon.Mesh;
+    bChild: Babylon.Mesh;
+    childId: string;
+  } => {
+    if (!parentId) throw new Error(`Missing parent: "${parentId}" for node "${id}"`);
+    
     const children = this.childrenNodeIds_[id];
-    if (children.length !== 1) throw new Error(`Motor "${id}" must have exactly one child`);
+    if (children.length !== 1) throw new Error(`"${id}" must have exactly one child`);
 
-    const { parentId } = motor;
     const childId = children[0];
 
-    const parent = this.robot_.nodes[parentId];
-    if (parent.type !== Node.Type.Link) throw new Error(`Motor "${id}" must have a parent that is a link`);
-    
     const bParent = this.links_[parentId];
     if (!bParent) throw new Error(`Missing link: ${parentId}`);
-
-    const child = this.robot_.nodes[childId];
-    if (child.type !== Node.Type.Link) throw new Error(`Motor "${id}" must have a child that is a link`);
 
     const bChild = this.links_[childId];
     if (!bChild) throw new Error(`Missing link: ${childId}`);
 
-    const bMotorOrigin = ReferenceFrame.toBabylon(motor.origin, RENDER_SCALE);
-    const bChildOrigin = ReferenceFrame.toBabylon(child.origin, RENDER_SCALE);
+    return {
+      bParent,
+      bChild,
+      childId,
+    };
+  };
+
+  private createHinge_ = (id: string, hinge: Node.HingeJoint & { parentId: string }) => {
+    const { bParent, bChild } = this.bParentChild_(id, hinge.parentId);
     
-    const bAxis = RawVector3.toBabylon(motor.axis);
+    const childAxis = hinge.childAxis || hinge.parentAxis;
+    const bChildAxis = RawVector3.toBabylon(childAxis);
 
-    console.log({
-      mainPivot: bMotorOrigin.position,
-      connectedAxis:  bAxis.applyRotationQuaternion(bChildOrigin.rotationQuaternion.invert())
-    });
+    if (hinge.childTwist) {
+      bChild.rotationQuaternion = Babylon.Quaternion.RotationAxis(bChildAxis, Angle.toRadiansValue(hinge.childTwist));
+      bChild.computeWorldMatrix(true);
+    }
 
-    const bChildOriginRotationInv = bChildOrigin.rotationQuaternion.invert();
-
-    const ret = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint, {
-      mainPivot: bMotorOrigin.position,
-      mainAxis: bAxis,
-      connectedAxis: bAxis.applyRotationQuaternion(bChildOriginRotationInv),
-      connectedPivot: Babylon.Vector3.Zero(),
+    const ret = new Babylon.HingeJoint({
+      mainPivot: Vector3.toBabylon(hinge.parentPivot, RENDER_SCALE),
+      mainAxis: RawVector3.toBabylon(hinge.parentAxis),
+      connectedAxis: bChildAxis,
+      connectedPivot: Vector3.toBabylon(hinge.childPivot, RENDER_SCALE)
     });
 
     bParent.physicsImpostor.addJoint(bChild.physicsImpostor, ret);
@@ -315,62 +301,21 @@ class RobotBinding {
     return ret;
   };
 
+  private createMotor_ = (id: string, motor: Node.Motor) => this.createHinge_(id, motor);
+
   private createServo_ = (id: string, servo: Node.Servo): RobotBinding.ServoJoint => {
-    const children = this.childrenNodeIds_[id];
-    if (children.length !== 1) throw new Error(`Servo "${id}" must have exactly one child`);
-
-    const { parentId } = servo;
-    const childId = children[0];
-
-    const parent = this.robot_.nodes[parentId];
-    if (parent.type !== Node.Type.Link) throw new Error(`Servo "${id}" must have a parent that is a link`);
-    
-    const bParent = this.links_[parentId];
-    if (!bParent) throw new Error(`Missing link: ${parentId}`);
-
-    const child = this.robot_.nodes[childId];
-    if (child.type !== Node.Type.Link) throw new Error(`Servo "${id}" must have a child that is a link`);
-
-    const bChild = this.links_[childId];
-    if (!bChild) throw new Error(`Missing link: ${childId}`);
-
-    const bMotorOrigin = ReferenceFrame.toBabylon(servo.origin, RENDER_SCALE);
-    const childOriginRaw = ReferenceFrame.toRaw(child.origin, RENDER_SCALE);
-    const bChildOrigin = RawReferenceFrame.toBabylon(childOriginRaw);
-
-    const qAxis = Quaternion.fromVector3(servo.axis);
-
-    const bAxis = RawVector3.toBabylon(servo.axis);
-
-    const { axis, twist } = RobotBinding.connectedAxisAngle_(bAxis, bChildOrigin.rotationQuaternion);
-
-    console.log({
-      mainPivot: bMotorOrigin.position,
-      connectedAxis: axis,
-      leftoverEuler: twist.toEulerAngles(),
-    });
-
-    bChild.rotationQuaternion = twist;
-
-    const ret = new Babylon.MotorEnabledJoint(Babylon.PhysicsJoint.HingeJoint, {
-      mainPivot: bMotorOrigin.position,
-      mainAxis: bAxis,
-      connectedAxis: axis,
-      connectedPivot: Babylon.Vector3.Zero(),
-    });
-
-    bParent.physicsImpostor.addJoint(bChild.physicsImpostor, ret);
-    ret.setMotor();
+    const { bParent, bChild, childId } = this.bParentChild_(id, servo.parentId);
+    const joint = this.createHinge_(id, servo);
 
     return {
-      joint: ret,
       child: bChild,
-      startOrientation: bChild.rotationQuaternion.clone(),
-      startAngle: Quaternion.angle(twist, Quaternion.IDENTITY),
+      childId,
+      joint,
     }
   };
 
-  private lastTick_: number = undefined;
+  private slow_: number = 0;
+
   tick(input: RobotBinding.TickIn): RobotBinding.TickOut {
     for (let i = 0; i < input.motorVelocities.length; i++) {
       const motorId = this.motorPorts_[i];
@@ -412,28 +357,188 @@ class RobotBinding {
       if (!servoJoint) throw new Error(`Missing motor instantiation: "${servoId}" on port ${i}`);
 
       const bServo = servoJoint.joint;
-      const { startAngle, startOrientation, child } = servoJoint;
+      const { child, childId } = servoJoint;
 
       const position = servo.position ?? {};
 
-      const min = Angle.toRadiansValue(position.min ?? Angle.degrees(-87.5));
-      const max = Angle.toRadiansValue(position.max ?? Angle.degrees(87.5));
       
 
-      const range = max - min;
+      const physicalMin = position.min ?? RobotBinding.SERVO_LOGICAL_MIN_ANGLE;
+      const physicalMax = position.max ?? RobotBinding.SERVO_LOGICAL_MAX_ANGLE;
+
+      const physicalMinRads = Angle.toRadiansValue(physicalMin);
+      const physicalMaxRads = Angle.toRadiansValue(physicalMax);
 
       const servoPosition = clamp(0, input.servoPositions[i], 2048);
-      const desiredAngle = (servoPosition - 1024) * range;
+      const desiredAngle = (servoPosition - 1024) * RobotBinding.SERVO_LOGICAL_RANGE_RADS;
 
-      const currentAngle = Quaternion.angle(startOrientation, child.rotationQuaternion) - startAngle;
+      const startOrientation = this.nodeConstraintOrientation_(childId);
 
-      const deltaAngle = desiredAngle - currentAngle;
+      let deltaAngle = Quaternion.angle(child.rotationQuaternion, startOrientation);
+      if (deltaAngle > Math.PI) deltaAngle -= 2 * Math.PI;
+      if (deltaAngle < -Math.PI) deltaAngle += 2 * Math.PI;
 
+      bServo.setMotor(-5, 5);
+
+      if (this.slow_++ % 7 === 0) {
+        console.log(servoId, deltaAngle);
+      }
 
     }
 
     return RobotBinding.TickOut.NIL;
   }
+
+  private nodeOrigins_ = (node: Node): RawReferenceFrame[] => {
+    switch (node.type) {
+      case Node.Type.Link: return [ RawReferenceFrame.IDENTITY ];
+      case Node.Type.Weight:
+      case Node.Type.Frame: {
+        return [ ReferenceFrame.toRaw(node.origin) ];
+      }
+      case Node.Type.Servo:
+      case Node.Type.Motor: {
+        const parentAxis = node.parentAxis;
+        const childAxis = node.childAxis || node.parentAxis;
+        const shortestArc = Quaternion.shortestArc(parentAxis, childAxis);
+        return [{
+          position: Vector3.toRaw(node.parentPivot || Vector3.ZERO_METERS, 'meters'),
+          orientation: Quaternion.inverse(shortestArc),
+        }, {
+          position: Vector3.toRaw(node.childPivot || Vector3.ZERO_METERS, 'meters'),
+          orientation: Quaternion.IDENTITY,
+        }];
+      }
+      default: throw new Error(`Invalid node type: ${node.type}`);
+    }
+  };
+
+  /**
+   * Returns a list of nodes from the root to the given node.
+   * @param node 
+   */
+  private nodePath_ = (nodeId: string): string[] => {
+    const path: string[] = [];
+    let currentId = nodeId;
+    while (currentId) {
+      const node = this.robot_.nodes[currentId];
+      path.push(currentId);
+      currentId = node.parentId;
+    }
+    return path.reverse();
+  };
+
+  private nodeOrientation_ = (nodeId: string): Quaternion => {
+    const path = this.nodePath_(nodeId);
+    const origins: Quaternion[] = [];
+    for (let i = 0; i < path.length; i++) {
+      const node = this.robot_.nodes[path[i]];
+      const nodeOrigins = this.nodeOrigins_(node);
+      for (let j = 0; j < nodeOrigins.length; j++) origins.push(nodeOrigins[j].orientation);
+    }
+
+    return origins
+      .map(Quaternion.toBabylon)
+      .reduce((a, b) => a.multiply(b), Babylon.Quaternion.Identity());
+  };
+
+  private nodeConstraintPath_ = (nodeId: string): string[] => {
+    const path: string[] = [];
+    let currentId = nodeId;
+    while (currentId) {
+      const node = this.robot_.nodes[currentId];
+      path.push(currentId);
+      if (currentId !== nodeId && Node.isConstraint(node)) break;
+
+      currentId = node.parentId;
+    }
+
+    return path.reverse();
+  };
+
+  private nodeConstraintOrientation_ = (nodeId: string): Quaternion => {
+    
+    const path = this.nodeConstraintPath_(nodeId);
+
+    if (path.length < 2) return Quaternion.IDENTITY;
+
+    const rootId = path[0];
+
+    const root = this.robot_.nodes[rootId];
+    const rootParentId = root.parentId;
+
+    const remaining = path.slice(0);
+
+    const origins: Quaternion[] = [];
+    for (let i = 0; i < remaining.length; i++) {
+      const node = this.robot_.nodes[remaining[i]];
+      const nodeOrigins = this.nodeOrigins_(node);
+      for (let j = 0; j < nodeOrigins.length; j++) origins.push(nodeOrigins[j].orientation);
+    }
+
+    return this.links_[rootParentId].rotationQuaternion.multiply(origins
+      .map(Quaternion.toBabylon)
+      .reduce((a, b) => a.multiply(b), Babylon.Quaternion.Identity()));
+  };
+
+
+
+  private createSkeleton_(rootId: string): Babylon.TransformNode {
+    const transforms: Dict<Babylon.TransformNode> = {};
+
+    let queue: [string, string][] = [[undefined, rootId]];
+    while (queue.length > 0) {
+      const [parentId, nodeId] = queue.shift();
+
+      const node = this.robot_.nodes[nodeId];
+      const origins = this.nodeOrigins_(node);
+
+      let tip = parentId;
+
+      for (let i = 0; i < origins.length; i++) {
+        const id = i === 0 ? nodeId : `${nodeId}_${i}`;
+
+        const origin = origins[i];
+        const transform = new Babylon.TransformNode(`skeleton ${id}`, this.bScene_);
+
+        const axes = new Babylon.AxesViewer(this.bScene_, 0.02);
+        axes.xAxis.setParent(transform);
+        axes.yAxis.setParent(transform);
+        axes.zAxis.setParent(transform);
+
+        transforms[id] = transform;
+
+        if (tip) {
+          transform.setParent(transforms[tip]);
+        }
+        
+        RawReferenceFrame.syncBabylon(origin, transform);
+      
+        tip = id;
+      }
+
+      for (const childId of this.childrenNodeIds_[nodeId]) {
+        queue.push([tip, childId]);
+      }
+    }
+
+    this.visit_(transforms[this.rootId_], (node, level) => {
+      if (node instanceof Babylon.AbstractMesh || node instanceof Babylon.TransformNode) {
+        console.log(`  `.repeat(level), node.name, node.position, node.rotationQuaternion ? node.rotationQuaternion.toEulerAngles() : node.rotation);
+      } else {
+        console.log(`  `.repeat(level), node.name);
+      }
+    })
+
+    return transforms[this.rootId_];
+  }
+
+  private visit_ = (node: Babylon.Node, cb: (node: Babylon.Node, level: number) => void, level = 0) => {
+    cb(node, level);
+    for (const child of node.getChildren()) {
+      this.visit_(child, cb, level + 1);
+    }
+  };
 
   async setRobot(sceneRobot: SceneNode.Robot, robot: Robot) {
     if (this.robot_) throw new Error('Robot already set');
@@ -441,13 +546,18 @@ class RobotBinding {
     this.robot_ = robot;
 
     const rootIds = Robot.rootNodeIds(robot);
+    console.log('rootIds', rootIds);
     if (rootIds.length !== 1) throw new Error('Only one root node is supported');
     
-    const rootId = rootIds[0];
+    this.rootId_ = rootIds[0];
+
+
+    console.log(rootIds, this.rootId_);
+
     const nodeIds = Robot.breadthFirstNodeIds(robot);
     this.childrenNodeIds_ = Robot.childrenNodeIds(robot);
 
-    if (robot.nodes[rootId].type !== Node.Type.Link) throw new Error('Root node must be a link');
+    if (robot.nodes[this.rootId_].type !== Node.Type.Link) throw new Error('Root node must be a link');
 
     for (const nodeId of nodeIds) {
       const node = robot.nodes[nodeId];
@@ -485,33 +595,9 @@ class RobotBinding {
       }
     }
 
-    // Update root origin
-    const rootLink = this.links_[rootId];
-
-    const bRootOrigin = ReferenceFrame.toBabylon(robot.nodes[rootId].origin, RENDER_SCALE);
-    const bRobotOrigin = ReferenceFrame.toBabylon(sceneRobot.origin, RENDER_SCALE);
-
-    rootLink.position = bRobotOrigin.position
-      .add(bRootOrigin.position);
-    rootLink.rotationQuaternion = bRobotOrigin.rotationQuaternion
-      .multiply(bRootOrigin.rotationQuaternion);
-    rootLink.scaling = bRobotOrigin.scaling
-      .multiply(bRootOrigin.scaling)
-      .scaleInPlace(RENDER_SCALE_METERS_MULTIPLIER);
-
-    for (const impostor of this.bScene_.getPhysicsEngine().getImpostors()) {
-      if (!this.colliders_.has(impostor.object)) {
-        console.log('no collider', impostor);
-        continue;
-      }
-      console.log('impostor', impostor);
-      impostor.executeNativeFunction((world, body) => {
-        console.log('body', body);
-      })
-    }
-
-  
-    console.log();
+    const rootLink = this.links_[this.rootId_];
+    const skeletonRoot = this.createSkeleton_(this.rootId_);
+    skeletonRoot.parent = rootLink;
   }
 
   dispose() {
@@ -542,9 +628,16 @@ namespace RobotBinding {
   export interface ServoJoint {
     joint: Babylon.MotorEnabledJoint;
     child: Babylon.Mesh;
-    startOrientation: Quaternion;
-    startAngle: number;
+    childId: string;
   }
+
+  export const SERVO_LOGICAL_MIN_ANGLE = Angle.degrees(-87.5);
+  export const SERVO_LOGICAL_MAX_ANGLE = Angle.degrees(87.5);
+
+  export const SERVO_LOGICAL_MIN_ANGLE_RADS = Angle.toRadiansValue(SERVO_LOGICAL_MIN_ANGLE);
+  export const SERVO_LOGICAL_MAX_ANGLE_RADS = Angle.toRadiansValue(SERVO_LOGICAL_MAX_ANGLE);
+
+  export const SERVO_LOGICAL_RANGE_RADS = SERVO_LOGICAL_MAX_ANGLE_RADS - SERVO_LOGICAL_MIN_ANGLE_RADS;
 }
 
 export default RobotBinding;

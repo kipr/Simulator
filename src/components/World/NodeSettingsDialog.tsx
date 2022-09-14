@@ -1,17 +1,9 @@
 import * as React from "react";
 import { styled } from "styletron-react";
-import { ReferenceFrame, Rotation } from "../../unit-math";
-import { Angle, Distance, Mass, Value } from "../../util";
-import ComboBox from "../ComboBox";
+import { ReferenceFrame } from "../../unit-math";
 import { Dialog } from "../Dialog";
-import DialogBar from "../DialogBar";
-import Field from "../Field";
-import Input from "../Input";
 import ScrollArea from "../ScrollArea";
-import Section from "../Section";
 import { ThemeProps } from "../theme";
-import ValueEdit from "../ValueEdit";
-import { AngleAxis, Euler } from "../../math";
 import NodeSettings from "./NodeSettings";
 import Node from '../../state/State/Scene/Node';
 import Scene from "../../state/State/Scene";

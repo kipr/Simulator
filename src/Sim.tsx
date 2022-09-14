@@ -217,7 +217,6 @@ export class Space implements Robotable {
 
     const { nodes } = store.getState().scene.workingScene;
 
-    const tickOutputs = this.sceneBinding_.tick();
 
     const setNodeBatch: Omit<SceneAction.SetNodeBatch, 'type'> = {
       nodeIds: [],
@@ -302,12 +301,17 @@ export class Space implements Robotable {
   
   private startRenderLoop(): void {
     this.initStoreSubscription_();
+  
     this.engine.runRenderLoop(() => {
       // Post updates to the store
       this.updateStore_();
 
       this.scene.render();
+
+      this.sceneBinding_.tick();
     });
+
+    
 
   }
 

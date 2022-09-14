@@ -24,20 +24,19 @@ export const DEMOBOT: Robot = {
       mass: grams(1126 - 800),
       friction: 0.1,
     }),
-    wombat: Node.weight({
+    /*wombat: Node.weight({
       parentId: 'chassis',
       mass: grams(800),
       origin: {
-        position: Vector3.meters(0.0, 0.063695, 0.08786),
+        position: Vector3.meters(-0.08786, 0.063695, 0),
       },
-    }),
+    }),*/
     left_wheel: Node.motor({
-      axis: RawVector3.create(1, 0, 0),
+      parentAxis: RawVector3.NEGATIVE_Z,
+      parentPivot: Vector3.metersZ(-0.07492),
+      childAxis: RawVector3.Y,
       motorPort: 0,
       parentId: 'chassis',
-      origin: {
-        position: Vector3.meters(0.07492, 0.033136, 0.0),
-      }
     }),
     left_wheel_link: Node.link({
       parentId: 'left_wheel',
@@ -45,17 +44,13 @@ export const DEMOBOT: Robot = {
       collisionBody: Node.Link.CollisionBody.CYLINDER,
       mass: grams(14),
       friction: 25,
-      origin: {
-        orientation: Rotation.eulerDegrees(0, 0, -90),
-      }
     }),
     right_wheel: Node.motor({
-      axis: RawVector3.create(1, 0, 0),
+      parentAxis: RawVector3.Z,
+      parentPivot: Vector3.metersZ(0.07492),
+      childAxis: RawVector3.Y,
       motorPort: 3,
       parentId: 'chassis',
-      origin: {
-        position: Vector3.meters(-0.07492, 0.033136, 0.0),
-      }
     }),
     right_wheel_link: Node.link({
       parentId: 'right_wheel',
@@ -63,17 +58,13 @@ export const DEMOBOT: Robot = {
       collisionBody: Node.Link.CollisionBody.CYLINDER,
       mass: grams(14),
       friction: 25,
-      origin: {
-        orientation: Rotation.eulerDegrees(0, 0, 90),
-      }
     }),
     arm: Node.servo({
-      axis: RawVector3.create(-1, 0, 0),
+      parentAxis: RawVector3.NEGATIVE_Z,
+      parentPivot: Vector3.meters(0.068099, 0.034913, -0.010805),
+      childAxis: RawVector3.Y,
       servoPort: 0,
       parentId: 'chassis',
-      origin: {
-        position: Vector3.meters(-0.010805, 0.068099, -0.068379),
-      }
     }),
     arm_link: Node.link({
       parentId: 'arm',
@@ -81,14 +72,26 @@ export const DEMOBOT: Robot = {
       mass: grams(14),
       friction: 5,
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
-      origin: {
-        orientation: Rotation.eulerDegrees(-90, 0, 90),
-      }
+    }),
+    claw: Node.servo({
+      parentAxis: RawVector3.NEGATIVE_Z,
+      childAxis: RawVector3.NEGATIVE_Y,
+      servoPort: 1,
+      parentId: 'arm_link',
+      parentPivot: Vector3.meters(0.097792, -0.024775, 0.026806),
+    }),
+    claw_link: Node.link({
+      parentId: 'claw',
+      geometryId: 'claw_link',
+      mass: grams(14),
+      friction: 5,
+      collisionBody: Node.Link.CollisionBody.EMBEDDED,
     }),
   },
   geometry: {
     chassis_link: Geometry.remoteMesh({ uri: '/static/chassis.glb' }),
     wheel_link: Geometry.remoteMesh({ uri: '/static/wheel.glb' }),
-    arm_link: Geometry.remoteMesh({ uri: '/static/arm.glb' })
+    arm_link: Geometry.remoteMesh({ uri: '/static/arm.glb' }),
+    claw_link: Geometry.remoteMesh({ uri: '/static/claw.glb' }),
   }
 };

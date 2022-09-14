@@ -132,7 +132,12 @@ export namespace Vector3 {
     const swing = applyQuaternion(v, q);
     const twist = Quaternion.multiply(q, Quaternion.fromVector3(swing));
     return { swing, twist };
-  }
+  };
+
+  export const rotate = (v: Vector3, orientation: Quaternion): Vector3 => {
+    const q = Quaternion.multiply(orientation, Quaternion.fromVector3(v));
+    return applyQuaternion(v, q);
+  };
 }
 
 export interface Euler {
@@ -161,13 +166,13 @@ export namespace Euler {
   };
 }
 
-export interface AngleAxis {
+export interface AxisAngle {
   angle: number;
   axis: Vector3;
 }
 
-export namespace AngleAxis {
-  export const fromQuaternion = (q: Quaternion): AngleAxis => {
+export namespace AxisAngle {
+  export const fromQuaternion = (q: Quaternion): AxisAngle => {
     let s = Math.sqrt(1 - q.w * q.w);
     const angle = 2 * Math.atan2(s, Math.abs(q.w));
     if (s < 0.0001) {
@@ -183,23 +188,24 @@ export namespace AngleAxis {
     };
   };
 
-  export const fromEuler = (euler: Euler): AngleAxis => {
+  export const fromEuler = (euler: Euler): AxisAngle => {
     const q = Euler.toQuaternion(euler);
     return fromQuaternion(q);
   };
 
-  export const toQuaternion = (angleAxis: AngleAxis): Quaternion => {
+  export const toQuaternion = (angleAxis: AxisAngle): Quaternion => {
     const { angle, axis } = angleAxis;
+    const normalizedAxis = Vector3.normalize(axis);
     const s = Math.sin(angle / 2);
     const c = Math.cos(angle / 2);
-    return Quaternion.create(axis.x * s, axis.y * s, axis.z * s, c);
+    return Quaternion.create(normalizedAxis.x * s, normalizedAxis.y * s, normalizedAxis.z * s, c);
   };
 
-  export const multiply = (a: AngleAxis, b: AngleAxis): AngleAxis => {
+  export const multiply = (a: AxisAngle, b: AxisAngle): AxisAngle => {
     return fromQuaternion(Quaternion.multiply(toQuaternion(a), toQuaternion(b)));
   };
 
-  export const create = (angle: number, axis: Vector3): AngleAxis => ({
+  export const create = (angle: number, axis: Vector3): AxisAngle => ({
     angle,
     axis
   });
@@ -280,6 +286,11 @@ export namespace Quaternion {
       w: quat.w / l
     };
   };
+
+  export const shortestArc = (from: Vector3, to: Vector3): Quaternion => normalize({
+    ...Vector3.cross(from, to),
+    w: 1 + Vector3.dot(from, to)
+  });
 }
 
 export interface ReferenceFrame {
@@ -313,10 +324,17 @@ export namespace ReferenceFrame {
   }
 
   export const toBabylon = (frame: ReferenceFrame): ToBabylon => ({
-    position: Vector3.toBabylon(frame.position),
+    position: Vector3.toBabylon(frame.position || Vector3.ZERO),
     rotationQuaternion: Quaternion.toBabylon(frame.orientation),
-    scaling: Vector3.toBabylon(frame.scale)
+    scaling: Vector3.toBabylon(frame.scale || Vector3.ONE)
   });
+
+  export const syncBabylon = (frame: ReferenceFrame, bNode: Babylon.TransformNode | Babylon.AbstractMesh) => {
+    const bFrame = toBabylon(frame || IDENTITY);
+    bNode.position = bFrame.position;
+    bNode.rotationQuaternion = bFrame.rotationQuaternion;
+    bNode.scaling.copyFrom(bFrame.scaling);
+  };
 }
 
 export const clamp = (min: number, value: number, max: number) => Math.min(Math.max(value, min), max);

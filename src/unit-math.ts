@@ -7,7 +7,7 @@ import {
   Vector2 as RawVector2,
   Vector3 as RawVector3,
   Quaternion as RawQuaternion,
-  AngleAxis as RawAngleAxis,
+  AxisAngle as RawAxisAngle,
   ReferenceFrame as RawReferenceFrame,
   Quaternion,
 } from './math';
@@ -58,6 +58,8 @@ export namespace Vector3 {
     z: Distance.toType(Distance.meters(0), type),
   });
 
+  export const ZERO_METERS = zero('meters');
+
   export const one = (type: Distance.Type = 'meters'): Vector3 => ({
     x: Distance.toType(Distance.meters(1), type),
     y: Distance.toType(Distance.meters(1), type),
@@ -65,12 +67,19 @@ export namespace Vector3 {
   });
 
   export const create = (x: Distance, y: Distance, z: Distance): Vector3 => ({ x, y, z });
+  export const createX = (x: Distance): Vector3 => ({ x, y: Distance.ZERO_METERS, z: Distance.ZERO_METERS });
+  export const createY = (y: Distance): Vector3 => ({ x: Distance.ZERO_METERS, y, z: Distance.ZERO_METERS });
+  export const createZ = (z: Distance): Vector3 => ({ x: Distance.ZERO_METERS, y: Distance.ZERO_METERS, z });
 
   export const meters = (x: number, y: number, z: number) => create(
     Distance.meters(x),
     Distance.meters(y),
     Distance.meters(z),
   );
+
+  export const metersX = (x: number) => createX(Distance.meters(x));
+  export const metersY = (y: number) => createY(Distance.meters(y));
+  export const metersZ = (z: number) => createZ(Distance.meters(z));
 
 
   export const toRaw = (v: Vector3, type: Distance.Type) => RawVector3.create(
@@ -79,7 +88,7 @@ export namespace Vector3 {
     Distance.toType(v.z, type).value
   );
 
-  export const toBabylon = (v: Vector3, type: Distance.Type) => RawVector3.toBabylon(toRaw(v, type));
+  export const toBabylon = (v: Vector3, type: Distance.Type) => RawVector3.toBabylon(toRaw(v || ZERO_METERS, type));
 
   export const fromRaw = (raw: RawVector3, type: Distance.Type) => ({
     x: { type, value: raw.x },
@@ -105,7 +114,7 @@ export namespace Vector3 {
 
 
 export namespace Rotation {
-  export type Type = 'euler' | 'angle-axis';
+  export type Type = 'euler' | 'axis-angle';
 
   export interface Euler {
     type: 'euler';
@@ -140,43 +149,43 @@ export namespace Rotation {
     });
   }
   
-  export interface AngleAxis {
-    type: 'angle-axis';
+  export interface AxisAngle {
+    type: 'axis-angle';
     angle: Angle;
     axis: Vector3;
   }
 
-  export namespace AngleAxis {
-    export const identity = (angleType: Angle.Type = Angle.Type.Degrees, axisType: Distance.Type = 'meters'): AngleAxis => {
+  export namespace AxisAngle {
+    export const identity = (angleType: Angle.Type = Angle.Type.Degrees, axisType: Distance.Type = 'meters'): AxisAngle => {
       const angle = Angle.toType(Angle.radians(0), angleType);
       const axis = Vector3.zero(axisType);
       return {
-        type: 'angle-axis',
+        type: 'axis-angle',
         angle,
         axis,
       };
     };
 
-    export const toRaw = (a: AngleAxis) => RawAngleAxis.create(
+    export const toRaw = (a: AxisAngle) => RawAxisAngle.create(
       Angle.toType(a.angle, Angle.Type.Radians).value,
       Vector3.toRaw(a.axis, 'meters')
     );
 
-    export const fromRaw = (raw: RawAngleAxis): AngleAxis => {
+    export const fromRaw = (raw: RawAxisAngle): AxisAngle => {
       const angle = Angle.radians(raw.angle);
       const axis = Vector3.fromRaw(raw.axis, 'meters');
       return {
-        type: 'angle-axis',
+        type: 'axis-angle',
         angle,
         axis,
       };
     };
   }
 
-  export const angleAxis = (angle: Angle, axis: Vector3): AngleAxis => ({
-    type: 'angle-axis',
-    angle,
-    axis
+  export const axisAngle = (axis: Vector3, angle: Angle): AxisAngle => ({
+    type: 'axis-angle',
+    angle: angle || Angle.ZERO_RADIANS,
+    axis: axis || Vector3.ZERO_METERS,
   });
 
   export const euler = (x: Angle, y: Angle, z: Angle, order?: RawEuler.Order): Euler => ({
@@ -205,21 +214,21 @@ export namespace Rotation {
     if (!rotation) return Quaternion.IDENTITY;
     switch (rotation.type) {
       case 'euler': return RawEuler.toQuaternion(Euler.toRaw(rotation));
-      case 'angle-axis': return RawAngleAxis.toQuaternion(AngleAxis.toRaw(rotation));
+      case 'axis-angle': return RawAxisAngle.toQuaternion(AxisAngle.toRaw(rotation));
     }
   };
 
   export const toType = (rotation: Rotation, type: Type): Rotation => {
     switch (type) {
       case 'euler': return Euler.fromRaw(RawEuler.fromQuaternion(toRawQuaternion(rotation)));
-      case 'angle-axis': return AngleAxis.fromRaw(RawAngleAxis.fromQuaternion(toRawQuaternion(rotation)));
+      case 'axis-angle': return AxisAngle.fromRaw(RawAxisAngle.fromQuaternion(toRawQuaternion(rotation)));
     }
   };
 
   export const fromRawQuaternion = (q: Quaternion, type: Type): Rotation => {
     switch (type) {
       case 'euler': return Euler.fromRaw(RawEuler.fromQuaternion(q));
-      case 'angle-axis': return AngleAxis.fromRaw(RawAngleAxis.fromQuaternion(q));
+      case 'axis-angle': return AxisAngle.fromRaw(RawAxisAngle.fromQuaternion(q));
     }
   };
 
@@ -227,7 +236,7 @@ export namespace Rotation {
   export const slerp = (lhs: Rotation, rhs: Rotation, t: number, newType: Type = 'euler'): Rotation => fromRawQuaternion(Quaternion.slerp(toRawQuaternion(lhs), toRawQuaternion(rhs), t), newType);
 }
 
-export type Rotation = Rotation.Euler | Rotation.AngleAxis;
+export type Rotation = Rotation.Euler | Rotation.AxisAngle;
 
 export interface ReferenceFrame {
   position?: Vector3;
@@ -260,16 +269,6 @@ export namespace ReferenceFrame {
     RawReferenceFrame.toBabylon(toRaw(frame || IDENTITY, distanceType));
 
   export const syncBabylon = (frame: ReferenceFrame, bNode: Babylon.TransformNode | Babylon.AbstractMesh, distanceType: Distance.Type = 'meters') => {
-    const bFrame = toBabylon(frame || IDENTITY, distanceType);
-    
-    bNode.position.copyFrom(bFrame.position);
-    
-    if (bNode.rotationQuaternion) {
-      bNode.rotationQuaternion.copyFrom(bFrame.rotationQuaternion);
-    } else {
-      bNode.rotationQuaternion = bFrame.rotationQuaternion;
-    }
-
-    bNode.scaling.copyFrom(bFrame.scaling);
+    RawReferenceFrame.syncBabylon(toRaw(frame, distanceType), bNode);
   };
 }
