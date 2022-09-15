@@ -104,7 +104,9 @@ export namespace Vector3 {
     y: vec.y / scalar,
     z: vec.z / scalar
   });
-  export const length = (vec: Vector3): number => Math.sqrt(Math.pow(vec.x, 2) + Math.pow(vec.y, 2) + Math.pow(vec.z, 2));
+
+  export const lengthSquared = (vec: Vector3) => vec.x * vec.x + vec.y * vec.y + vec.z * vec.z;
+  export const length = (vec: Vector3): number => Math.sqrt(lengthSquared(vec));
 
   export const toBabylon = (vec: Vector3): Babylon.Vector3 => new Babylon.Vector3(vec.x, vec.y, vec.z);
   export const fromBabylon = (vec: Babylon.Vector3): Vector3 => ({ x: vec.x, y: vec.y, z: vec.z });
@@ -112,6 +114,7 @@ export namespace Vector3 {
   export const distance = (lhs: Vector3, rhs: Vector3): number => Math.sqrt(Math.pow(rhs.x - lhs.x, 2) + Math.pow(rhs.y - lhs.y, 2) + Math.pow(rhs.z - lhs.z, 2));
 
   export const dot = (lhs: Vector3, rhs: Vector3): number => lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
+
 
   export const normalize = (vec: Vector3) => divideScalar(vec, length(vec));
 
@@ -128,6 +131,12 @@ export namespace Vector3 {
     };
   };
 
+  export const project = (lhs: Vector3, rhs: Vector3): Vector3 => {
+    const dot = Vector3.dot(lhs, rhs);
+    const lengthSquared = Vector3.lengthSquared(rhs);
+    return Vector3.multiplyScalar(rhs, dot / lengthSquared);
+  };
+
   export const applyQuaternionTwist = (v: Vector3, q: Quaternion): { swing: Vector3, twist: Quaternion } => {
     const swing = applyQuaternion(v, q);
     const twist = Quaternion.multiply(q, Quaternion.fromVector3(swing));
@@ -137,6 +146,12 @@ export namespace Vector3 {
   export const rotate = (v: Vector3, orientation: Quaternion): Vector3 => {
     const q = Quaternion.multiply(orientation, Quaternion.fromVector3(v));
     return applyQuaternion(v, q);
+  };
+
+  export const angle = (lhs: Vector3, rhs: Vector3): number => {
+    const dot = Vector3.dot(lhs, rhs);
+    const length = Vector3.length(lhs) * Vector3.length(rhs);
+    return Math.acos(dot / length);
   };
 }
 
@@ -256,11 +271,13 @@ export namespace Quaternion {
 
   export const dot = (lhs: Quaternion, rhs: Quaternion): number => lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
 
-  export const angle = (lhs: Quaternion, rhs: Quaternion): number => {
-    let cos = dot(lhs, rhs);
-    if (cos < -1) cos = -1;
-    if (cos > 1) cos = 1;
-    return Math.acos(cos) * 2;
+  export const angle = (lhs: Quaternion, rhs: Quaternion) => Math.acos(Quaternion.multiply(lhs, conjugate(rhs)).w) * 2;
+
+  export const signedAngle = (lhs: Quaternion, rhs: Quaternion, axis: Vector3) => {
+    const q = Quaternion.multiply(lhs, inverse(rhs));
+    const axisAngle = AxisAngle.fromQuaternion(q);
+    if (Vector3.angle(axisAngle.axis, axis) > Math.PI / 2) return -axisAngle.angle;
+    return axisAngle.angle;
   };
 
   export const slerp = (lhs: Quaternion, rhs: Quaternion, t: number): Quaternion => {
@@ -287,9 +304,31 @@ export namespace Quaternion {
     };
   };
 
-  export const shortestArc = (from: Vector3, to: Vector3): Quaternion => normalize({
-    ...Vector3.cross(from, to),
-    w: 1 + Vector3.dot(from, to)
+  export const shortestArc = (from: Vector3, to: Vector3): Quaternion => {
+    
+    const s = Math.sqrt((1 + Vector3.dot(from, to)) * 2);
+
+    // from = -to
+    if (s < 0.0001) {
+      let axis = Vector3.cross(Vector3.X, from);
+      if (Vector3.length(axis) < 0.0001) {
+        axis = Vector3.cross(Vector3.Y, from);
+      }
+      axis = Vector3.normalize(axis);
+      return AxisAngle.toQuaternion(AxisAngle.create(Math.PI, axis));
+    }
+    
+    return normalize({
+      ...Vector3.divideScalar(Vector3.cross(from, to), s),
+      w: s / 2
+    })
+  };
+
+  export const conjugate = (quat: Quaternion): Quaternion => ({
+    x: -quat.x,
+    y: -quat.y,
+    z: -quat.z,
+    w: quat.w
   });
 }
 

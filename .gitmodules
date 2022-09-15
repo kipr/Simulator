@@ -7,3 +7,6 @@
 [submodule "dependencies/emsdk"]
 	path = dependencies/emsdk
 	url = https://github.com/emscripten-core/emsdk
+[submodule "dependencies/ammo.js"]
+	path = dependencies/ammo.js
+	url = https://github.com/kipr/ammo.js

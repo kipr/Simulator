@@ -2,7 +2,7 @@ import * as Babylon from 'babylonjs';
 import SceneNode from './state/State/Scene/Node';
 import Robot from './state/State/Robot';
 import Node from './state/State/Robot/Node';
-import { Quaternion, Vector3 as RawVector3, ReferenceFrame as RawReferenceFrame, clamp } from './math';
+import { Quaternion, Vector3 as RawVector3, ReferenceFrame as RawReferenceFrame, clamp, AxisAngle } from './math';
 import { ReferenceFrame, Rotation, Vector3 } from './unit-math';
 import { Angle, Distance, Mass } from './util';
 import { FrameLike } from './SceneBinding';
@@ -41,7 +41,7 @@ class RobotBinding {
   private weights_: Dict<Babylon.Mesh> = {};
   private fixed_: Dict<Babylon.PhysicsJoint> = {};
   private motors_: Dict<Babylon.MotorEnabledJoint> = {};
-  private servos_: Dict<RobotBinding.ServoJoint> = {};
+  private servos_: Dict<Babylon.MotorEnabledJoint> = {};
   private motorPorts_ = new Array<string>(4);
   private servoPorts_ = new Array<string>(4);
 
@@ -122,11 +122,6 @@ class RobotBinding {
     }
 
     const ret = builtGeometry.mesh;
-
-    const axes = new Babylon.AxesViewer(this.bScene_, 0.05);
-    axes.xAxis.setParent(ret);
-    axes.yAxis.setParent(ret);
-    axes.zAxis.setParent(ret);
 
     const physicsImposterParams: Babylon.PhysicsImpostorParameters = {
       mass: Mass.toGramsValue(link.mass || Mass.grams(0)),
@@ -302,21 +297,18 @@ class RobotBinding {
   };
 
   private createMotor_ = (id: string, motor: Node.Motor) => this.createHinge_(id, motor);
-
-  private createServo_ = (id: string, servo: Node.Servo): RobotBinding.ServoJoint => {
-    const { bParent, bChild, childId } = this.bParentChild_(id, servo.parentId);
-    const joint = this.createHinge_(id, servo);
-
-    return {
-      child: bChild,
-      childId,
-      joint,
-    }
-  };
+  private createServo_ = (id: string, servo: Node.Servo) => this.createHinge_(id, servo);
 
   private slow_: number = 0;
+  
+  private axis_: Babylon.TransformNode;
 
   tick(input: RobotBinding.TickIn): RobotBinding.TickOut {
+
+    const root = this.links_[this.rootId_];
+    root.position.y = 0.1;
+    // root.rotate(Babylon.Axis.Y, 0.01, Babylon.Space.LOCAL);
+
     for (let i = 0; i < input.motorVelocities.length; i++) {
       const motorId = this.motorPorts_[i];
       
@@ -353,15 +345,10 @@ class RobotBinding {
       if (!servo) throw new Error(`Missing servo: ${servoId}`);
       if (servo.type !== Node.Type.Servo) throw new Error(`Invalid servo type: ${servo.type}`);
 
-      const servoJoint = this.servos_[servoId];
-      if (!servoJoint) throw new Error(`Missing motor instantiation: "${servoId}" on port ${i}`);
-
-      const bServo = servoJoint.joint;
-      const { child, childId } = servoJoint;
+      const bServo = this.servos_[servoId];
+      if (!bServo) throw new Error(`Missing motor instantiation: "${servoId}" on port ${i}`);
 
       const position = servo.position ?? {};
-
-      
 
       const physicalMin = position.min ?? RobotBinding.SERVO_LOGICAL_MIN_ANGLE;
       const physicalMax = position.max ?? RobotBinding.SERVO_LOGICAL_MAX_ANGLE;
@@ -372,18 +359,9 @@ class RobotBinding {
       const servoPosition = clamp(0, input.servoPositions[i], 2048);
       const desiredAngle = (servoPosition - 1024) * RobotBinding.SERVO_LOGICAL_RANGE_RADS;
 
-      const startOrientation = this.nodeConstraintOrientation_(childId);
-
-      let deltaAngle = Quaternion.angle(child.rotationQuaternion, startOrientation);
-      if (deltaAngle > Math.PI) deltaAngle -= 2 * Math.PI;
-      if (deltaAngle < -Math.PI) deltaAngle += 2 * Math.PI;
-
-      bServo.setMotor(-5, 5);
-
-      if (this.slow_++ % 7 === 0) {
-        console.log(servoId, deltaAngle);
-      }
-
+      bServo.executeNativeFunction((world, joint) => {
+        joint.setMotorTarget(desiredAngle + (this.slow_++) / 1000, 0.1);
+      });
     }
 
     return RobotBinding.TickOut.NIL;
@@ -442,104 +420,6 @@ class RobotBinding {
       .reduce((a, b) => a.multiply(b), Babylon.Quaternion.Identity());
   };
 
-  private nodeConstraintPath_ = (nodeId: string): string[] => {
-    const path: string[] = [];
-    let currentId = nodeId;
-    while (currentId) {
-      const node = this.robot_.nodes[currentId];
-      path.push(currentId);
-      if (currentId !== nodeId && Node.isConstraint(node)) break;
-
-      currentId = node.parentId;
-    }
-
-    return path.reverse();
-  };
-
-  private nodeConstraintOrientation_ = (nodeId: string): Quaternion => {
-    
-    const path = this.nodeConstraintPath_(nodeId);
-
-    if (path.length < 2) return Quaternion.IDENTITY;
-
-    const rootId = path[0];
-
-    const root = this.robot_.nodes[rootId];
-    const rootParentId = root.parentId;
-
-    const remaining = path.slice(0);
-
-    const origins: Quaternion[] = [];
-    for (let i = 0; i < remaining.length; i++) {
-      const node = this.robot_.nodes[remaining[i]];
-      const nodeOrigins = this.nodeOrigins_(node);
-      for (let j = 0; j < nodeOrigins.length; j++) origins.push(nodeOrigins[j].orientation);
-    }
-
-    return this.links_[rootParentId].rotationQuaternion.multiply(origins
-      .map(Quaternion.toBabylon)
-      .reduce((a, b) => a.multiply(b), Babylon.Quaternion.Identity()));
-  };
-
-
-
-  private createSkeleton_(rootId: string): Babylon.TransformNode {
-    const transforms: Dict<Babylon.TransformNode> = {};
-
-    let queue: [string, string][] = [[undefined, rootId]];
-    while (queue.length > 0) {
-      const [parentId, nodeId] = queue.shift();
-
-      const node = this.robot_.nodes[nodeId];
-      const origins = this.nodeOrigins_(node);
-
-      let tip = parentId;
-
-      for (let i = 0; i < origins.length; i++) {
-        const id = i === 0 ? nodeId : `${nodeId}_${i}`;
-
-        const origin = origins[i];
-        const transform = new Babylon.TransformNode(`skeleton ${id}`, this.bScene_);
-
-        const axes = new Babylon.AxesViewer(this.bScene_, 0.02);
-        axes.xAxis.setParent(transform);
-        axes.yAxis.setParent(transform);
-        axes.zAxis.setParent(transform);
-
-        transforms[id] = transform;
-
-        if (tip) {
-          transform.setParent(transforms[tip]);
-        }
-        
-        RawReferenceFrame.syncBabylon(origin, transform);
-      
-        tip = id;
-      }
-
-      for (const childId of this.childrenNodeIds_[nodeId]) {
-        queue.push([tip, childId]);
-      }
-    }
-
-    this.visit_(transforms[this.rootId_], (node, level) => {
-      if (node instanceof Babylon.AbstractMesh || node instanceof Babylon.TransformNode) {
-        console.log(`  `.repeat(level), node.name, node.position, node.rotationQuaternion ? node.rotationQuaternion.toEulerAngles() : node.rotation);
-      } else {
-        console.log(`  `.repeat(level), node.name);
-      }
-    })
-
-    return transforms[this.rootId_];
-  }
-
-  private visit_ = (node: Babylon.Node, cb: (node: Babylon.Node, level: number) => void, level = 0) => {
-    cb(node, level);
-    for (const child of node.getChildren()) {
-      this.visit_(child, cb, level + 1);
-    }
-  };
-
   async setRobot(sceneRobot: SceneNode.Robot, robot: Robot) {
     if (this.robot_) throw new Error('Robot already set');
 
@@ -594,10 +474,6 @@ class RobotBinding {
         }
       }
     }
-
-    const rootLink = this.links_[this.rootId_];
-    const skeletonRoot = this.createSkeleton_(this.rootId_);
-    skeletonRoot.parent = rootLink;
   }
 
   dispose() {
@@ -623,12 +499,6 @@ namespace RobotBinding {
     export const NIL: TickOut = {
       motorPositionDeltas: [0, 0, 0, 0],
     };
-  }
-
-  export interface ServoJoint {
-    joint: Babylon.MotorEnabledJoint;
-    child: Babylon.Mesh;
-    childId: string;
   }
 
   export const SERVO_LOGICAL_MIN_ANGLE = Angle.degrees(-87.5);

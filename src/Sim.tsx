@@ -27,7 +27,11 @@ import Scene from './state/State/Scene';
 import Node from './state/State/Scene/Node';
 import Robotable from './Robotable';
 import { Robots } from './state/State';
-import * as Ammo from './ammo';
+
+// This is on a non-standard path specified in the webpack config.
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Ammo = require('ammo.js');
+
 import RobotBinding from './RobotBinding';
 
 

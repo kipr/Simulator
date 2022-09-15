@@ -59,6 +59,7 @@ class SceneBinding {
     engine.inputElement = this.canvas_;
     this.camera_.attachControl(this.engineView_.target, true);
     this.bScene_.attachControl();
+
   }
   
   private materialIdIter_ = 0;
