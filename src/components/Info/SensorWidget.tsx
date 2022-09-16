@@ -14,6 +14,7 @@ import { Fa } from '../Fa';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
 import { RobotState } from '../../RobotState';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 export interface SensorWidgetProps extends ThemeProps, StyleProps {
   name: string;
@@ -147,7 +148,7 @@ class SensorWidget extends React.PureComponent<Props & ReduxSensorWidgetProps, S
       StyledText.component({
         component: StyledToolIcon,
         props: {
-          icon: 'eye',
+          icon: faEye,
           theme,
           onClick: this.onShowPlotClick_,
           disabled: showPlot,
@@ -158,7 +159,7 @@ class SensorWidget extends React.PureComponent<Props & ReduxSensorWidgetProps, S
       StyledText.component({
         component: StyledToolIcon,
         props: {
-          icon: 'eye-slash',
+          icon: faEyeSlash,
           theme,
           onClick: this.onHidePlotClick_,
           disabled: !showPlot

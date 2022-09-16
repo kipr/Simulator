@@ -6,6 +6,8 @@ import { Fa } from '../Fa';
 import { ThemeProps } from '../theme';
 import { charmColor } from '../charm-util';
 
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+
 export interface WarningCharmProps extends StyleProps, ThemeProps {
   count: number;
 
@@ -33,7 +35,7 @@ class WarningCharm extends React.PureComponent<Props> {
     
     return (
       <Container theme={theme} onClick={onClick}>
-        <Fa icon='exclamation-triangle' /> {count} Warning{count === 1 ? '' : 's'}
+        <Fa icon={faExclamationTriangle} /> {count} Warning{count === 1 ? '' : 's'}
       </Container>
     );
   }

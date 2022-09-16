@@ -8,6 +8,7 @@ import { AnyText } from '../util';
 import { Text } from './Text';
 import { Fa } from './Fa';
 
+import { faCaretDown, faCaretUp, faFile } from '@fortawesome/free-solid-svg-icons';
 
 const Container = styled('div', ({ theme, $noBorder }: ThemeProps & { $noBorder: boolean }) => ({
   width: '100%',
@@ -57,7 +58,7 @@ export interface SectionProps extends ThemeProps, StyleProps {
 type Props = SectionProps;
 
 class Section extends React.PureComponent<Props> {
-  private onCollapseClick_ = (event: React.MouseEvent<HTMLSpanElement>) => {
+  private onCollapseClick_ = () => {
     if (!this.props.onCollapsedChange) return;
     this.props.onCollapsedChange(!this.props.collapsed);
   };
@@ -70,7 +71,7 @@ class Section extends React.PureComponent<Props> {
         <Header theme={theme} $noPadding={noHeaderPadding} $canCollapse={!!onCollapsedChange} onClick={this.onCollapseClick_}>
           <Name text={name} />
           <Spacer />
-          {onCollapsedChange ? <Fa icon={!collapsed ? 'caret-up' : 'caret-down'} onClick={this.onCollapseClick_} /> : undefined}
+          {onCollapsedChange ? <Fa icon={!collapsed ? faCaretUp : faCaretDown} onClick={this.onCollapseClick_} /> : undefined}
         </Header>
         {!collapsed ? <Body $noPadding={noBodyPadding} theme={theme}>{children}</Body> : undefined}
       </Container>

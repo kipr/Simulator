@@ -20,6 +20,8 @@ import Scene from "../../state/State/Scene";
 import Geometry from "../../state/State/Scene/Geometry";
 import { Fa } from "../Fa";
 
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
+
 export interface AddNodeAcceptance {
   node: Node;
   geometry?: Geometry;
@@ -153,7 +155,7 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
           />
         </StyledScrollArea>
         <DialogBar theme={theme} onAccept={this.onAccept_}>
-          <Fa icon='check' /> Accept
+          <Fa icon={faCheck} /> Accept
         </DialogBar>
       </Dialog>
     );

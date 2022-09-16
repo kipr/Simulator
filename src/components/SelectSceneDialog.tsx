@@ -13,6 +13,8 @@ import DialogBar from "./DialogBar";
 import ScrollArea from "./ScrollArea";
 import { Fa } from "./Fa";
 
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
+
 export interface SelectSceneDialogProps extends ThemeProps {
   onClose: () => void;
 }
@@ -116,7 +118,7 @@ class SelectSceneDialog extends React.PureComponent<Props & ReduxSelectSceneDial
           </InfoColumn>
         </Container>
         <DialogBar theme={theme} onAccept={this.onAccept}>
-          <Fa icon='check' /> Accept
+          <Fa icon={faCheck} /> Accept
         </DialogBar>
       </Dialog>
     );

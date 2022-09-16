@@ -6,6 +6,8 @@ import { ThemeProps } from '../theme';
 
 import { CanBeVertical, CanBeSelected } from './';
 
+import { faEquals } from '@fortawesome/free-solid-svg-icons';
+
 interface SliderBarProps extends CanBeVertical, CanBeSelected, ThemeProps {
   onMouseDownCallback: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
   onTouchStartCallback: (e: React.TouchEvent<HTMLDivElement>) => void,
@@ -49,7 +51,7 @@ export const SliderBar = React.memo((props: SliderBarProps) => {
     <SliderBubbleSeperator />
     <SliderBubble $vertical={$vertical} theme={theme} selected={selected}>
       <SliderBubbleCharm $vertical={$vertical}>
-        <Fa key={'size-1'} icon='equals' />
+        <Fa key={'size-1'} icon={faEquals} />
       </SliderBubbleCharm>
     </SliderBubble>
     <SliderBubbleSeperator />

@@ -5,6 +5,8 @@ import { Dialog } from './Dialog';
 import { ThemeProps } from './theme';
 import { Fa } from './Fa';
 
+import { faCopyright } from '@fortawesome/free-solid-svg-icons';
+
 import KIPR_LOGO_BLACK from '../assets/KIPR-Logo-Black-Text-Clear-Large.png';
 import KIPR_LOGO_WHITE from '../assets/KIPR-Logo-White-Text-Clear-Large.png';
 
@@ -73,7 +75,7 @@ export class AboutDialog extends React.PureComponent<Props> {
           </LogoRow>
           Version {SIMULATOR_VERSION} ({SIMULATOR_GIT_HASH})
           <br /> <br />
-          <Bold>Copyright <Fa icon='copyright' /> 2022 <Link theme={theme} href="https://kipr.org/" target="_blank">KISS Institute for Practical Robotics</Link> and External Contributors</Bold>
+          <Bold>Copyright <Fa icon={faCopyright} /> 2022 <Link theme={theme} href="https://kipr.org/" target="_blank">KISS Institute for Practical Robotics</Link> and External Contributors</Bold>
           <br /> <br />
           This software is licensed under the terms of the <Link theme={theme} href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">GNU General Public License v3</Link>.
           <br /> <br />

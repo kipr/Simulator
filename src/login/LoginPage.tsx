@@ -19,6 +19,8 @@ import { Text } from '../components/Text';
 import { StyledText } from '../util';
 import Button from '../components/Button';
 import { Validators } from '../util/Validator';
+import { faSignInAlt, faUnlock, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 
 export interface LoginPageProps extends ThemeProps, StyleProps {
   externalIndex?: number;
@@ -90,10 +92,10 @@ interface ClickProps {
 
 const TABS: TabBar.TabDescription[] = [{
   name: 'Sign In',
-  icon: 'sign-in-alt',
+  icon: faSignInAlt,
 }, {
   name: 'Sign Up',
-  icon: 'user-plus',
+  icon: faUserPlus,
 }];
 
 const Logo = styled('img', {
@@ -264,7 +266,7 @@ class LoginPage extends React.Component<Props, State> {
       StyledText.component ({
         component: StyledToolIcon,
         props: {
-          icon: 'google',
+          icon: faGoogle,
           brand: true,
           theme,
         }
@@ -305,7 +307,7 @@ class LoginPage extends React.Component<Props, State> {
             {kiprLogo}
             <Header theme={theme}>Forgot Password</Header>
             <StyledForm
-              finalizeIcon='unlock'
+              finalizeIcon={faUnlock}
               finalizeText='Send Recovery Email'
               theme={theme}
               items={FORGOT_PASSWORD_FORM_ITEMS}
@@ -345,7 +347,7 @@ class LoginPage extends React.Component<Props, State> {
           <Header theme={theme}>{index === 0 ? 'Sign In' : 'Sign Up'}</Header>
           
           <StyledForm
-            finalizeIcon={index === 0 ? 'sign-in-alt' : 'user-plus'}
+            finalizeIcon={index === 0 ? faSignInAlt : faUserPlus}
             finalizeText={index === 0 ? 'Sign In' : 'Sign Up'}
             theme={theme}
             items={FORMS[index]}

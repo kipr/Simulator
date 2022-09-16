@@ -8,6 +8,7 @@ import { Color } from "../state/State/Scene/Color";
 import { Fa } from "./Fa";
 import { Text } from "./Text";
 import { ThemeProps } from "./theme";
+import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 
 const Container = styled('div', (props: ThemeProps & { $focus?: boolean; $minimal?: boolean; }) => ({
   width: !props.$minimal ? '100%' : undefined,
@@ -163,7 +164,7 @@ class ComboBox extends React.PureComponent<ComboBox.Props, ComboBox.State> {
     return (
       <Container ref={this.bindRef_} style={style} className={className} theme={theme} onClick={this.onClick_} $focus={focus} $minimal={minimal}>
         <CurrentOptionContainer theme={theme}><Text text={options[index].text} /></CurrentOptionContainer>
-        <DropIcon icon={focus ? 'caret-up' : 'caret-down'} />
+        <DropIcon icon={focus ? faCaretUp : faCaretDown} />
         {ReactDom.createPortal((focus && this.ref_)
           ? <DropDown theme={theme} style={dropDownStyle}>
             {options.map((option, i) => (

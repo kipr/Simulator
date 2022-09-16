@@ -6,8 +6,10 @@ import { Fa } from '../Fa';
 import { ThemeProps } from '../theme';
 import { charmColor } from '../charm-util';
 
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+
 export interface SentimentCharmProps extends StyleProps, ThemeProps {
-  icon: string;
+  icon: IconProp;
   selected: boolean;
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
