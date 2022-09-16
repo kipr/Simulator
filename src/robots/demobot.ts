@@ -21,7 +21,7 @@ export const DEMOBOT: Robot = {
       },
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
       geometryId: 'chassis_link',
-      mass: grams(0),
+      mass: grams(1160 - 800),
       friction: 0.1,
     }),
     wombat: Node.weight({
@@ -37,6 +37,7 @@ export const DEMOBOT: Robot = {
       childAxis: RawVector3.Y,
       motorPort: 0,
       parentId: 'chassis',
+      plug: Node.Motor.Plug.Inverted
     }),
     left_wheel_link: Node.link({
       parentId: 'left_wheel',

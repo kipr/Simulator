@@ -64,20 +64,10 @@ class SceneBinding {
   
   private materialIdIter_ = 0;
 
-  private onCreateCustomShape_ = (imposter: Babylon.PhysicsImpostor) => {
-    console.log('onCreateCustomShape_');
-    
-    if (!(imposter.object instanceof Babylon.Mesh)) throw new Error('Expected mesh');
-
-    imposter.object.metadata
-    
-  };
-
-  constructor(bScene: Babylon.Scene, ammo: any) {
+  constructor(bScene: Babylon.Scene, ammo: unknown) {
     this.bScene_ = bScene;
     this.scene_ = Scene.EMPTY;
     this.ammo_ = new Babylon.AmmoJSPlugin(true, ammo);
-    this.ammo_.onCreateCustomShape = this.onCreateCustomShape_;
     this.bScene_.enablePhysics(new Babylon.Vector3(0, -9.8 * 100, 0), this.ammo_);
     this.bScene_.getPhysicsEngine().setSubTimeStep(2);
 
@@ -562,6 +552,8 @@ class SceneBinding {
     const robot = this.robots_[node.robotId];
     if (!robot) throw new Error(`Robot by id "${node.robotId}" not found`);
     await robotBinding.setRobot(node, robot);
+    robotBinding.origin = node.origin || ReferenceFrame.IDENTITY;
+    robotBinding.visible = node.visible ?? false;
     this.robotBindings_[id] = robotBinding;
     return robotBinding;
   };
@@ -769,7 +761,15 @@ class SceneBinding {
     
     if (node.inner.robotId.type === Patch.Type.OuterChange) {
       this.destroyNode_(id);
-      return this.createRobot_(id, node.next) as Promise<RobotBinding>;
+      return this.createRobot_(id, node.next);
+    }
+
+    if (node.inner.origin.type === Patch.Type.OuterChange) {
+      robotBinding.origin = node.inner.origin.next;
+    }
+
+    if (node.inner.visible.type === Patch.Type.OuterChange) {
+      robotBinding.visible = node.inner.visible.next;
     }
 
     return robotBinding;

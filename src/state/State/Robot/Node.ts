@@ -1,7 +1,6 @@
 import deepNeq from '../../../deepNeq';
 import { Vector3 } from '../../../math';
-import { Vector3 as UnitVector3 } from '../../../unit-math';
-import { ReferenceFrame } from '../../../unit-math';
+import { Vector3 as UnitVector3, ReferenceFrame } from '../../../unit-math';
 import { Angle, Mass } from '../../../util';
 import construct from '../../../util/construct';
 import LocalizedString from '../../../util/LocalizedString';
@@ -20,10 +19,14 @@ namespace Node {
   }
   
   interface Base {
-    /// A human readable name for the Node.
+    /**
+     * A human readable name for the Node.
+     */
     name?: LocalizedString;
 
-    /// A human readable description of the Node.
+    /**
+     * A human readable description of the Node.
+     */
     description?: LocalizedString;
   }
 
@@ -44,7 +47,7 @@ namespace Node {
      * The translation and orientation from the parentId,
      * or ReferenceFrame.IDENTITY if undefined.
      */
-     origin?: ReferenceFrame;
+    origin?: ReferenceFrame;
   }
 
   namespace FrameLike {
@@ -72,7 +75,7 @@ namespace Node {
         type: Patch.none(Type.Frame),
         ...FrameLike.innerDiff(a, b)
       });
-    }
+    };
   }
 
   export interface Link extends Base {
@@ -173,8 +176,10 @@ namespace Node {
     };
   }
 
-  /// A `Weight` can be attached to a `Link` to distribute mass arbitrarily.
-  /// It has no visual or physical representation.
+  /**
+   * A `Weight` can be attached to a `Link` to distribute mass arbitrarily.
+   * It has no visual or physical representation.
+   */
   export interface Weight {
     type: Type.Weight;
 
@@ -189,7 +194,9 @@ namespace Node {
      */
     origin?: ReferenceFrame;
 
-    /// The mass of the weight.
+    /**
+     * The mass of the weight.
+     */
     mass: Mass;
   }
 
@@ -206,11 +213,13 @@ namespace Node {
         origin: Patch.diff(a.origin, b.origin),
         mass: Patch.diff(a.mass, b.mass)
       });
-    }
+    };
   }
 
   export interface HingeJoint {
-    /// The axis of the parent
+    /**
+     * The axis of the parent
+     */
     parentAxis: Vector3;
     
     /**
@@ -272,11 +281,21 @@ namespace Node {
      * The motor port.
      */
     motorPort: number;
+
+    /**
+     * The connection to the wombat. 'normal' or 'inverted'. If undefined, 'normal' is assumed.
+     */
+    plug?: Motor.Plug;
   }
 
   export const motor = construct<Motor>(Type.Motor);
 
   export namespace Motor {
+    export enum Plug {
+      Normal = 'normal',
+      Inverted = 'inverted',
+    }
+
     export const diff = (a: Motor, b: Motor): Patch<Motor> => {
       if (!deepNeq(a, b)) return Patch.none(a);
       if (a === undefined && b !== undefined) return Patch.outerChange(a, b);
@@ -289,7 +308,7 @@ namespace Node {
         ...HingeJoint.innerDiff(a, b),
         ...Base.innerDiff(a, b)
       });
-    }
+    };
   }
 
   /**
@@ -341,7 +360,7 @@ namespace Node {
         ...HingeJoint.innerDiff(a, b),
         ...Base.innerDiff(a, b)
       });
-    }
+    };
   }
 
   interface DigitalSensor extends FrameLike {
@@ -395,7 +414,7 @@ namespace Node {
         ...Base.innerDiff(a, b),
         ...AnalogSensor.innerDiff(a, b)
       });
-    }
+    };
   }
 
   export interface TouchSensor extends Base, DigitalSensor {
@@ -412,7 +431,7 @@ namespace Node {
         ...Base.innerDiff(a, b),
         ...DigitalSensor.innerDiff(a, b)
       });
-    }
+    };
   }
 
   

@@ -98,7 +98,6 @@ export type Modal = Modal.Settings | Modal.About | Modal.Exception | Modal.Selec
 
 
 interface RootState {
-  robotStartPosition: RobotPosition;
   layout: Layout;
 
   activeLanguage: ProgrammingLanguage;
@@ -155,12 +154,6 @@ export class Root extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      robotStartPosition: {
-        x: Distance.centimeters(0),
-        y: Distance.centimeters(200),
-        z: Distance.centimeters(0),
-        theta: Angle.degrees(0),
-      },
       layout: Layout.Side,
       activeLanguage: 'c',
       code: {
@@ -210,19 +203,6 @@ export class Root extends React.Component<Props, State> {
     this.setState({
       simulatorState: SimulatorState.STOPPED
     });
-  };
-
-  private onSetRobotStartPosition_ = (position: RobotPosition) => {
-    this.setState({
-      robotStartPosition: {
-        x: { ...position.x },
-        y: { ...position.y },
-        z: { ...position.z },
-        theta: { ...position.theta },
-      }
-    });
-
-    Space.getInstance().setRobotPosition(position);
   };
 
   private onActiveLanguageChange_ = (language: ProgrammingLanguage) => {
@@ -474,7 +454,6 @@ export class Root extends React.Component<Props, State> {
   render() {
     const { props, state } = this;
     const {
-      robotStartPosition,
       layout,
       activeLanguage,
       code,
@@ -493,8 +472,6 @@ export class Root extends React.Component<Props, State> {
       language: activeLanguage,
       code: code[activeLanguage],
       onLanguageChange: this.onActiveLanguageChange_,
-      robotStartPosition,
-      onSetRobotStartPosition: this.onSetRobotStartPosition_,
       theme,
       console,
       onCodeChange: this.onCodeChange_,

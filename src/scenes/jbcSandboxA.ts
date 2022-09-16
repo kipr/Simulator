@@ -61,12 +61,5 @@ export const JBC_Sandbox_A: Scene = {
       editable: true,
       visible: false,
     },
-    'robot': {
-      type: 'robot',
-      name: 'Robot',
-      robotId: 'demobot',
-      state: RobotState.NIL,
-      visible: true,
-    }
   }
 };

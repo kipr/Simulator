@@ -1,8 +1,20 @@
-import { Vector3 } from "../unit-math";
+import { Rotation, Vector3 } from "../unit-math";
 import { Angle, Distance, Mass } from "../util";
 import Node from "../state/State/Scene/Node";
 import Camera from "../state/State/Scene/Camera";
 import Scene from "../state/State/Scene";
+import { RobotState } from '../RobotState';
+
+const ROBOT: Node.Robot = {
+  type: 'robot',
+  name: 'Robot',
+  robotId: 'demobot',
+  state: RobotState.NIL,
+  visible: true,
+  origin: {
+    orientation: Rotation.eulerDegrees(0, -90, 0),
+  }
+};
 
 export function createBaseSceneSurfaceA(): Scene {
   return {
@@ -19,6 +31,7 @@ export function createBaseSceneSurfaceA(): Scene {
       },
     },
     nodes: {
+      'robot': ROBOT,
       'jbc_mat_a': {
         type: 'from-template',
         templateId: 'jbc_mat_a',
@@ -111,6 +124,7 @@ export function createBaseSceneSurfaceB(): Scene {
       },
     },
     nodes: {
+      'robot': ROBOT,
       'jbc_mat_b': {
         type: 'from-template',
         templateId: 'jbc_mat_b',

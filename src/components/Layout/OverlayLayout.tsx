@@ -289,8 +289,6 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       theme,
       language,
       onLanguageChange,
-      robotStartPosition,
-      onSetRobotStartPosition,
       code,
       onCodeChange,
       console,

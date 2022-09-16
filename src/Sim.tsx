@@ -25,12 +25,11 @@ import { Gizmo } from 'babylonjs/Gizmos/gizmo';
 import SceneBinding from './SceneBinding';
 import Scene from './state/State/Scene';
 import Node from './state/State/Scene/Node';
-import Robotable from './Robotable';
 import { Robots } from './state/State';
 
 // This is on a non-standard path specified in the webpack config.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const Ammo = require('ammo.js');
+const Ammo: unknown = require('ammo.js');
 
 import RobotBinding from './RobotBinding';
 
@@ -39,7 +38,7 @@ export let ACTIVE_SPACE: Space;
 
 
 
-export class Space implements Robotable {
+export class Space {
   private static instance: Space;
 
   private initializationPromise: Promise<void>;
@@ -92,9 +91,6 @@ export class Space implements Robotable {
       this.latestUnfulfilledScene_ = state.scene.workingScene;
     }
   };
-
-  setOrigin(origin: UnitReferenceFrame): void {
-  }
 
   objectScreenPosition(id: string): Vector2 {
     const mesh = this.scene.getMeshByID(id) || this.scene.getMeshByName(id);
@@ -208,7 +204,11 @@ export class Space implements Robotable {
     
 
     const state = store.getState();
-    this.sceneBinding_ = new SceneBinding(this.scene, await (Ammo as any)());
+    
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any
+    const ammo: unknown = await (Ammo as any)();
+    
+    this.sceneBinding_ = new SceneBinding(this.scene, ammo);
     await this.sceneBinding_.setScene(state.scene.workingScene, Robots.loaded(state.robots));
     this.scene.getPhysicsEngine().setSubTimeStep(5);
 
@@ -219,6 +219,9 @@ export class Space implements Robotable {
   private updateStore_ = () => {
 
 
+    const tickOuts = this.sceneBinding_.tick();
+
+
     const { nodes } = store.getState().scene.workingScene;
 
 
@@ -227,10 +230,39 @@ export class Space implements Robotable {
       modifyReferenceScene: false,
     };
 
+    const tickedIds = Dict.keySet(tickOuts);
+
+    for (const robotId in tickOuts) {
+      const tickOut = tickOuts[robotId];
+      const robot = nodes[robotId] as Node.Robot;
+
+      const nextMotorPositions: [number, number, number, number] = [...robot.state.motorPositions];
+      nextMotorPositions[0] += tickOut.motorPositionDeltas[0];
+      nextMotorPositions[1] += tickOut.motorPositionDeltas[1];
+      nextMotorPositions[2] += tickOut.motorPositionDeltas[2];
+      nextMotorPositions[3] += tickOut.motorPositionDeltas[3];
+
+      console.log(JSON.stringify(robot.state.motorPositions), JSON.stringify(nextMotorPositions));
+
+      setNodeBatch.nodeIds.push({
+        id: robotId,
+        node: {
+          ...robot,
+          origin: tickOut.origin,
+          state: {
+            ...robot.state,
+            motorPositions: nextMotorPositions
+          }
+        }
+      });
+    }
+
     // Check if nodes have moved significant amounts
     for (const nodeId of Dict.keySet(nodes)) {
       const node = nodes[nodeId];
       const bNode = this.scene.getNodeByID(nodeId) || this.scene.getNodeByName(node.name);
+
+      if (tickedIds.has(nodeId)) continue;
 
       // The node may still be loading
       if (!bNode) continue;
@@ -311,28 +343,10 @@ export class Space implements Robotable {
       this.updateStore_();
 
       this.scene.render();
-
-      this.sceneBinding_.tick();
     });
-
-    
-
-  }
-
-  // Resets the position/rotation of the robot to the given values (cm and radians)
-  public setRobotPosition(position: RobotPosition): void {
   }
 
   public handleResize(): void {
     this.engine.resize();
-  }
-  
-  public updateSensorOptions(isNoiseEnabled: boolean, isRealisticEnabled: boolean): void {
-  }
-
-  private setDriveMotors(leftSpeed: number, rightSpeed: number) {
-  }
-
-  private setServoPositions(goals: number[]) {
   }
 }

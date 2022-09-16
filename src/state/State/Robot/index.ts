@@ -51,12 +51,12 @@ namespace Robot {
   export const breadthFirstNodeIds = (robot: Robot): string[] => {
     const ret: string[] = [];
 
-    const queue: string[] = [ ...rootNodeIds(robot) ];
+    const queue: string[] = [...rootNodeIds(robot)];
 
     const children = childrenNodeIds(robot);
 
     while (queue.length > 0) {
-      const nodeId = queue.shift()!;
+      const nodeId = queue.shift();
       ret.push(nodeId);
 
       for (const childId of children[nodeId]) queue.push(childId);

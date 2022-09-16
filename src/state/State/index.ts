@@ -31,5 +31,5 @@ export namespace Robots {
       ret[id] = robot.value;
     }
     return ret;
-  }
+  };
 }

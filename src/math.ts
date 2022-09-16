@@ -321,7 +321,7 @@ export namespace Quaternion {
     return normalize({
       ...Vector3.divideScalar(Vector3.cross(from, to), s),
       w: s / 2
-    })
+    });
   };
 
   export const conjugate = (quat: Quaternion): Quaternion => ({

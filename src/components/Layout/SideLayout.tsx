@@ -169,8 +169,6 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       language,
       onLanguageChange,
       onCodeChange,
-      robotStartPosition,
-      onSetRobotStartPosition,
       console,
       messages,
       settings,
@@ -332,7 +330,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
 }
 
 export const SideLayoutRedux = connect((state: ReduxState) => ({
-  robots: Scene.robots(state.scene.workingScene)
+  robots: Scene.robots(state.scene.workingScene),
 }), dispatch => ({
 
 }), null, { forwardRef: true })(SideLayout) as React.ComponentType<SideLayoutProps>;

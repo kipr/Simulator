@@ -9,10 +9,14 @@ namespace Geometry {
   export interface LocalMesh {
     type: Type.LocalMesh;
 
-    /// The format of the mesh data.
+    /**
+     * The format of the mesh data.
+     */
     format: LocalMesh.Format;
     
-    /// Base 64 encoded mesh data.
+    /**
+     * Base 64 encoded mesh data.
+     */
     data: string;
   }
 
@@ -28,7 +32,9 @@ namespace Geometry {
   export interface RemoteMesh {
     type: Type.RemoteMesh;
 
-    /// The URI of the mesh data. Format is derived from the file extension or MIME type.
+    /**
+     * The URI of the mesh data. Format is derived from the file extension or MIME type.
+     */
     uri: string;
 
     include?: string[];
