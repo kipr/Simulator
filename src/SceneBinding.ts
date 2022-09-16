@@ -72,7 +72,6 @@ class SceneBinding {
     this.bScene_.getPhysicsEngine().setSubTimeStep(2);
 
     this.root_ = new Babylon.TransformNode('__scene_root__', this.bScene_);
-    this.physicsViewer_ = new Babylon.PhysicsViewer(this.bScene_);
     this.gizmoManager_ = new Babylon.GizmoManager(this.bScene_);
 
     this.camera_ = this.createNoneCamera_(Camera.NONE);
@@ -548,7 +547,7 @@ class SceneBinding {
   };
 
   private createRobot_ = async (id: string, node: Node.Robot): Promise<RobotBinding> => {
-    const robotBinding = new RobotBinding(this.bScene_);
+    const robotBinding = new RobotBinding(this.bScene_, this.physicsViewer_);
     const robot = this.robots_[node.robotId];
     if (!robot) throw new Error(`Robot by id "${node.robotId}" not found`);
     await robotBinding.setRobot(node, robot);
@@ -1020,7 +1019,7 @@ class SceneBinding {
       friction: objectNode.physics.friction ?? 5,
     });
 
-    this.physicsViewer_.showImpostor(mesh.physicsImpostor);
+    if (this.physicsViewer_) this.physicsViewer_.showImpostor(mesh.physicsImpostor);
 
     mesh.setParent(initialParent);
   };

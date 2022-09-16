@@ -74,7 +74,7 @@ export const DEMOBOT: Robot = {
     claw: Node.servo({
       parentAxis: RawVector3.NEGATIVE_Z,
       childAxis: RawVector3.NEGATIVE_Y,
-      servoPort: 1,
+      servoPort: 3,
       parentId: 'arm_link',
       parentPivot: Vector3.meters(0.097792, -0.024775, 0.026806),
     }),
@@ -99,7 +99,7 @@ export const DEMOBOT: Robot = {
         position: Vector3.meters(0.088337, -0.029257, -0.007872),
         orientation: Rotation.eulerDegrees(90, 0, 0),
       },
-      analogPort: 0,
+      analogPort: 1,
     }),
     et_sensor: Node.etSensor({
       parentId: 'arm_link',
@@ -107,7 +107,23 @@ export const DEMOBOT: Robot = {
         position: Vector3.meters(0.137919, -0.018379, 0.004399),
         orientation: Rotation.eulerDegrees(0, 90, 0),
       },
-      analogPort: 1,
+      analogPort: 0,
+    }),
+    left_bumper: Node.touchSensor({
+      parentId: 'chassis',
+      origin: {
+        position: Vector3.meters(-0.171735, -0.015347, -0.040404),
+      },
+      digitalPort: 1,
+      collisionBox: Vector3.meters(0.015, 0.015, 0.015),
+    }),
+    right_bumper: Node.touchSensor({
+      parentId: 'chassis',
+      origin: {
+        position: Vector3.meters(-0.171735, -0.015347, 0.040404),
+      },
+      digitalPort: 2,
+      collisionBox: Vector3.meters(0.015, 0.015, 0.015),
     }),
   },
   geometry: {

@@ -458,21 +458,21 @@ export const reduceScene = (state: ReferencedScenePair = { referenceScene: JBC_S
             },
           }
         };
-      } else {
-        return {
-          ...state,
-          workingScene: {
-            ...state.workingScene,
-            nodes: {
-              ...state.workingScene.nodes,
-              [action.nodeId]: {
-                ...state.workingScene.nodes[action.nodeId],
-                origin: action.origin,
-              },
-            },
-          }
-        };
       }
+      
+      return {
+        ...state,
+        workingScene: {
+          ...state.workingScene,
+          nodes: {
+            ...state.workingScene.nodes,
+            [action.nodeId]: {
+              ...state.workingScene.nodes[action.nodeId],
+              origin: action.origin,
+            },
+          },
+        }
+      };
     }
     default:
       return state;

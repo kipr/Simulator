@@ -385,7 +385,7 @@ class RobotBinding {
 
       this.lastMotorAngles_[i] = currentAngle;
 
-      motorPositionDeltas[i] = Math.round(deltaAngle / (2 * Math.PI) * ticksPerRevolution);
+      motorPositionDeltas[i] = ((motor.plug && motor.plug === Node.Motor.Plug.Inverted) ? -1 : 1) * Math.round(deltaAngle / (2 * Math.PI) * ticksPerRevolution);
 
       bMotor.setMotor(velocity);
     }
@@ -686,7 +686,7 @@ namespace RobotBinding {
     export const create = <T>(promise: Promise<T>): OutstandingPromise<T> => {
       const doneObj = { done: false };
       const valueObj = { value: undefined };
-      promise.then(v => {
+      void promise.then(v => {
         valueObj.value = v;
         doneObj.done = true;
       });
@@ -754,11 +754,13 @@ namespace RobotBinding {
       }, scene);
 
       this.intersector_.parent = parent;
-      this.intersector_.visibility = 0;
+      this.intersector_.material = new Babylon.StandardMaterial('touch-sensor-material', scene);
+      this.intersector_.material.wireframe = true;
+
       ReferenceFrame.syncBabylon(origin, this.intersector_, 'meters');
     }
 
-    override async getValue(): Promise<boolean> {
+    override getValue(): Promise<boolean> {
       const { scene, links } = this.parameters;
 
       const meshes = scene.getActiveMeshes();
@@ -770,7 +772,7 @@ namespace RobotBinding {
         hit = this.intersector_.intersectsMesh(mesh, true);
       });
 
-      return hit;
+      return Promise.resolve(hit);
     }
 
     override dispose(): void {
@@ -807,7 +809,7 @@ namespace RobotBinding {
       this.trace_.parent = parent;
     }
 
-    override async getValue(): Promise<number> {
+    override getValue(): Promise<number> {
       const { scene, definition, links, colliders } = this.parameters;
       const { maxDistance, noiseRadius } = definition;
 
@@ -839,7 +841,7 @@ namespace RobotBinding {
         // Closer than 3 cm (linear from 2910 to 0)
         else if (distance <= 3) value = Math.floor(distance * (2910 / 3));
         // 3 - 11.2 cm
-        else if (distance <= 11.2) value =2910;
+        else if (distance <= 11.2) value = 2910;
         // 11.2 - 80 cm (the useful range)
         // Derived by fitting the real-world data to a power model
         else value = Math.floor(3240.7 * Math.pow(distance - 10, -0.776));
@@ -851,7 +853,7 @@ namespace RobotBinding {
         value -= offset;
       }
 
-      return clamp(0, value, 4095);
+      return Promise.resolve(clamp(0, value, 4095));
     }
 
     override dispose(): void {

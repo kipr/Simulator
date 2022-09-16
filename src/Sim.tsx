@@ -20,6 +20,7 @@ import SceneBinding from './SceneBinding';
 import Scene from './state/State/Scene';
 import Node from './state/State/Scene/Node';
 import { Robots } from './state/State';
+import WORKER_INSTANCE from './WorkerInstance';
 
 // This is on a non-standard path specified in the webpack config.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -214,7 +215,6 @@ export class Space {
     const tickOuts = this.sceneBinding_.tick();
     const { nodes } = store.getState().scene.workingScene;
 
-
     const setNodeBatch: Omit<SceneAction.SetNodeBatch, 'type'> = {
       nodeIds: [],
       modifyReferenceScene: false,
@@ -226,25 +226,14 @@ export class Space {
       const tickOut = tickOuts[robotId];
       const robot = nodes[robotId] as Node.Robot;
 
-      const nextMotorPositions: [number, number, number, number] = [...robot.state.motorPositions];
-      nextMotorPositions[0] += tickOut.motorPositionDeltas[0];
-      nextMotorPositions[1] += tickOut.motorPositionDeltas[1];
-      nextMotorPositions[2] += tickOut.motorPositionDeltas[2];
-      nextMotorPositions[3] += tickOut.motorPositionDeltas[3];
-
-      console.log(JSON.stringify(robot.state));
+      WORKER_INSTANCE.incrementMotorPositions(tickOut.motorPositionDeltas);
+      WORKER_INSTANCE.setSensorValues(tickOut.analogValues, tickOut.digitalValues);
 
       setNodeBatch.nodeIds.push({
         id: robotId,
         node: {
           ...robot,
           origin: tickOut.origin,
-          state: {
-            ...robot.state,
-            motorPositions: nextMotorPositions,
-            digitalValues: tickOut.digitalValues,
-            analogValues: tickOut.analogValues,
-          }
         }
       });
     }
