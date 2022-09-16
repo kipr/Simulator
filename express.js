@@ -45,28 +45,10 @@ if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env
         error: "Expected code key in body to be a string"
       });
     }
-  
-    // Wrap user's main() in our own "main()" that exits properly
-    // Required because Asyncify keeps emscripten runtime alive, which would prevent cleanup code from running
-    const augmentedCode = `${req.body.code}
-      #include <emscripten.h>
-  
-      EM_JS(void, on_stop, (), {
-        if (Module.context.onStop) Module.context.onStop();
-      })
-    
-      void simMainWrapper()
-      {
-        main();
-        on_stop();
-        emscripten_force_exit(0);
-      }
-    `;
-  
-    
+
     const id = uuid.v4();
     const path = `/tmp/${id}.c`;
-    fs.writeFile(path, augmentedCode, err => {
+    fs.writeFile(path, req.body.code, err => {
       if (err) {
         return res.status(500).json({
           error: "Failed to write ${}"
@@ -85,7 +67,7 @@ if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env
       env['EMSDK'] = config.server.dependencies.emsdk_env.EMSDK;
       env['EM_CONFIG'] = config.server.dependencies.emsdk_env.EM_CONFIG;
   
-      exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']" -I${config.server.dependencies.libkipr_c}/include -L${config.server.dependencies.libkipr_c}/lib -lkipr -o ${path}.js ${path}`, {
+      exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main']" -I${config.server.dependencies.libkipr_c}/include -L${config.server.dependencies.libkipr_c}/lib -lkipr -o ${path}.js ${path}`, {
         env
       }, (err, stdout, stderr) => {
         if (err) {
