@@ -217,11 +217,7 @@ export class Space {
 
   // Compare Babylon positions with state positions. If they differ significantly, update state
   private updateStore_ = () => {
-
-
     const tickOuts = this.sceneBinding_.tick();
-
-
     const { nodes } = store.getState().scene.workingScene;
 
 
@@ -242,7 +238,7 @@ export class Space {
       nextMotorPositions[2] += tickOut.motorPositionDeltas[2];
       nextMotorPositions[3] += tickOut.motorPositionDeltas[3];
 
-      console.log(JSON.stringify(robot.state.motorPositions), JSON.stringify(nextMotorPositions));
+      console.log(JSON.stringify(robot.state));
 
       setNodeBatch.nodeIds.push({
         id: robotId,
@@ -251,7 +247,9 @@ export class Space {
           origin: tickOut.origin,
           state: {
             ...robot.state,
-            motorPositions: nextMotorPositions
+            motorPositions: nextMotorPositions,
+            digitalValues: tickOut.digitalValues,
+            analogValues: tickOut.analogValues,
           }
         }
       });
@@ -348,5 +346,13 @@ export class Space {
 
   public handleResize(): void {
     this.engine.resize();
+  }
+
+  set realisticSensors(realisticSensors: boolean) {
+    this.sceneBinding_.realisticSensors = realisticSensors;
+  }
+
+  set noisySensors(noisySensors: boolean) {
+    this.sceneBinding_.noisySensors = noisySensors;
   }
 }

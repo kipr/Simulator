@@ -1150,6 +1150,18 @@ class SceneBinding {
     }
     return ret;
   }
+
+  set realisticSensors(realisticSensors: boolean) {
+    for (const robotBinding of Object.values(this.robotBindings_)) {
+      robotBinding.realisticSensors = realisticSensors;
+    }
+  }
+
+  set noisySensors(noisySensors: boolean) {
+    for (const robotBinding of Object.values(this.robotBindings_)) {
+      robotBinding.noisySensors = noisySensors;
+    }
+  }
 }
 
 const IMPOSTER_TYPE_MAPPINGS: { [key in Node.Physics.Type]: number } = {

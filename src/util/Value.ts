@@ -189,6 +189,8 @@ export namespace Distance {
     }
   };
 
+  export const toValue = (distance: Distance, newType: Type): number => toType(distance, newType).value;
+
   export const subtract = (a: Distance, b: Distance, newType: Type): Distance => {
     const aMeters = toMeters(a);
     const bMeters = toMeters(b);

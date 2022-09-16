@@ -16,9 +16,6 @@ export const DEMOBOT: Robot = {
   authorId: 'kipr',
   nodes: {
     chassis: Node.link({
-      name: {
-        'en': 'Chassis',
-      },
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
       geometryId: 'chassis_link',
       mass: grams(1160 - 800),
@@ -87,6 +84,30 @@ export const DEMOBOT: Robot = {
       mass: grams(14),
       friction: 5,
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
+    }),
+    touch_sensor: Node.touchSensor({
+      parentId: 'chassis',
+      origin: {
+        position: Vector3.meters(0.10253, -0.007715, -0.011238),
+      },
+      digitalPort: 0,
+      collisionBox: Vector3.meters(0.015, 0.015, 0.07),
+    }),
+    reflectance_sensor: Node.reflectanceSensor({
+      parentId: 'chassis',
+      origin: {
+        position: Vector3.meters(0.088337, -0.029257, -0.007872),
+        orientation: Rotation.eulerDegrees(90, 0, 0),
+      },
+      analogPort: 0,
+    }),
+    et_sensor: Node.etSensor({
+      parentId: 'arm_link',
+      origin: {
+        position: Vector3.meters(0.137919, -0.018379, 0.004399),
+        orientation: Rotation.eulerDegrees(0, 90, 0),
+      },
+      analogPort: 1,
     }),
   },
   geometry: {

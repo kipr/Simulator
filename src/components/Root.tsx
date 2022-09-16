@@ -416,7 +416,20 @@ export class Root extends React.Component<Props, State> {
 
 
   private onSettingsChange_ = (changedSettings: Partial<Settings>) => {
-    this.setState({ settings: { ...this.state.settings, ...changedSettings } });
+    const nextSettings: Settings = {
+      ...this.state.settings,
+      ...changedSettings
+    };
+
+    if ('simulationRealisticSensors' in changedSettings) {
+      Space.getInstance().realisticSensors = changedSettings.simulationRealisticSensors;
+    }
+    
+    if ('simulationSensorNoise' in changedSettings) {
+      Space.getInstance().noisySensors = changedSettings.simulationSensorNoise;
+    }
+
+    this.setState({ settings: nextSettings });
   };
 
   private onFeedbackChange_ = (changedFeedback: Partial<Feedback>) => {

@@ -1,7 +1,7 @@
 import deepNeq from '../../../deepNeq';
 import { Vector3 } from '../../../math';
 import { Vector3 as UnitVector3, ReferenceFrame } from '../../../unit-math';
-import { Angle, Mass } from '../../../util';
+import { Angle, Distance, Mass } from '../../../util';
 import construct from '../../../util/construct';
 import LocalizedString from '../../../util/LocalizedString';
 import Patch from '../../../util/Patch';
@@ -37,7 +37,7 @@ namespace Node {
     });
   }
 
-  interface FrameLike {
+  export interface FrameLike {
     /**
      * Parent
      */
@@ -400,6 +400,10 @@ namespace Node {
    */
   export interface EtSensor extends Base, AnalogSensor {
     type: Type.EtSensor;
+
+    maxDistance?: Distance;
+
+    noiseRadius?: Distance;
   }
 
   export const etSensor = construct<EtSensor>(Type.EtSensor);
@@ -411,6 +415,8 @@ namespace Node {
       if (a !== undefined && b === undefined) return Patch.outerChange(a, b);
       return Patch.innerChange(a, b, {
         type: Patch.none(Type.EtSensor),
+        maxDistance: Patch.diff(a.maxDistance, b.maxDistance),
+        noiseRadius: Patch.diff(a.noiseRadius, b.noiseRadius),
         ...Base.innerDiff(a, b),
         ...AnalogSensor.innerDiff(a, b)
       });
@@ -419,7 +425,11 @@ namespace Node {
 
   export interface TouchSensor extends Base, DigitalSensor {
     type: Type.TouchSensor;
+
+    collisionBox: UnitVector3;
   }
+
+  export const touchSensor = construct<TouchSensor>(Type.TouchSensor);
 
   export namespace TouchSensor {
     export const diff = (a: TouchSensor, b: TouchSensor): Patch<TouchSensor> => {
@@ -428,6 +438,7 @@ namespace Node {
       if (a !== undefined && b === undefined) return Patch.outerChange(a, b);
       return Patch.innerChange(a, b, {
         type: Patch.none(Type.TouchSensor),
+        collisionBox: Patch.diff(a.collisionBox, b.collisionBox),
         ...Base.innerDiff(a, b),
         ...DigitalSensor.innerDiff(a, b)
       });
@@ -438,7 +449,13 @@ namespace Node {
 
   export interface ReflectanceSensor extends Base, AnalogSensor {
     type: Type.ReflectanceSensor;
+
+    maxDistance?: Distance;
+
+    noiseRadius?: Distance;
   }
+
+  export const reflectanceSensor = construct<ReflectanceSensor>(Type.ReflectanceSensor);
 
   export namespace ReflectanceSensor {
     export const diff = (a: ReflectanceSensor, b: ReflectanceSensor): Patch<ReflectanceSensor> => {
@@ -448,6 +465,8 @@ namespace Node {
 
       return Patch.innerChange(a, b, {
         type: Patch.none(Type.ReflectanceSensor),
+        maxDistance: Patch.diff(a.maxDistance, b.maxDistance),
+        noiseRadius: Patch.diff(a.noiseRadius, b.noiseRadius),
         ...Base.innerDiff(a, b),
         ...AnalogSensor.innerDiff(a, b)
       });

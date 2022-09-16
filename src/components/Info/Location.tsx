@@ -17,9 +17,6 @@ import { SceneAction } from '../../state/reducer';
 import Async from '../../state/State/Async';
 
 export interface LocationProps extends ThemeProps, StyleProps {
-}
-
-export interface ReduxLocationProps {
   origin: ReferenceFrame;
   onOriginChange: (origin: ReferenceFrame, modifyReferenceScene: boolean) => void;
 }
@@ -47,7 +44,7 @@ const SENSOR_NOISE = StyledText.text({
   text: 'Sensor Noise',
 });
 
-class Location extends React.PureComponent<Props & ReduxLocationProps> {
+export default class Location extends React.PureComponent<Props> {
   private onXChange_ = (x: Value) => {
     const origin = this.props.origin;
     const xDistance = Value.toDistance(x);
@@ -138,14 +135,3 @@ class Location extends React.PureComponent<Props & ReduxLocationProps> {
     );
   }
 }
-
-export default connect<unknown, unknown, LocationProps, State>((state: State) => {
-  const origin = IDENTITY_ORIGIN;
-  return {
-    origin,
-  };
-}, dispatch => ({
-  onOriginChange: (origin: ReferenceFrame, modifyReferenceScene: boolean) => {
-    // dispatch(SceneAction.setRobotOrigin({ origin, modifyReferenceScene }));
-  }
-}))(Location) as React.ComponentType<LocationProps>;

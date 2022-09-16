@@ -12,6 +12,7 @@ import Dict from './Dict';
 import { RobotState } from './RobotState';
 import { minmaxReduxPixelShader } from 'babylonjs/Shaders/minmaxRedux.fragment';
 import { RENDER_SCALE, RENDER_SCALE_METERS_MULTIPLIER } from './renderConstants';
+import { SensorObject } from './sensors';
 
 interface BuiltGeometry {
   mesh: Babylon.Mesh;
@@ -45,7 +46,13 @@ class RobotBinding {
   private motorPorts_ = new Array<string>(4);
   private servoPorts_ = new Array<string>(4);
 
-  private colliders_: Set<Babylon.IPhysicsEnabledObject> = new Set();
+  private digitalSensors_: Dict<RobotBinding.Sensor<boolean>> = {};
+  private digitalPorts_ = new Array<string>(6);
+
+  private analogSensors_: Dict<RobotBinding.Sensor<number>> = {};
+  private analogPorts_ = new Array<string>(6);
+
+  private colliders_: Set<Babylon.Mesh> = new Set();
 
   private physicsViewer_: Babylon.PhysicsViewer;
 
@@ -192,6 +199,23 @@ class RobotBinding {
     return ret;
   };
 
+  private createSensor_ = <T extends Node.FrameLike, O, S extends RobotBinding.SensorObject<T, O>>(s: { new(parameters: RobotBinding.SensorParameters<T>): S }) => (id: string, definition: T): S => {
+    const parent = this.links_[definition.parentId];
+    
+    return new s({
+      id,
+      definition,
+      parent,
+      scene: this.bScene_,
+      links: new Set(Object.values(this.links_)),
+      colliders: this.colliders_,
+    });
+  };
+
+  private createTouchSensor_ = this.createSensor_(RobotBinding.TouchSensor);
+  private createEtSensor_ = this.createSensor_(RobotBinding.EtSensor);
+  private createReflectanceSensor_ = this.createSensor_(RobotBinding.ReflectanceSensor);
+
   // Transform a vector using the child frame's orientation. This operation is invariant on a single
   // axis, so we return a new quaternion with the leftover rotation.
   private static connectedAxisAngle_ = (rotationAxis: Babylon.Vector3, childOrientation: Babylon.Quaternion): { axis: Babylon.Vector3, twist: Babylon.Quaternion } => {
@@ -299,15 +323,23 @@ class RobotBinding {
 
   private damp_ = 0;
 
+  private accumulatedMotorPositions_: [number, number, number, number] = [0, 0, 0, 0];
   private lastMotorAngles_: [number, number, number, number] = [0, 0, 0, 0];
 
-  tick(input: RobotBinding.TickIn): RobotBinding.TickOut {
-    this.damp_ = this.damp_ * 0.95 + 0.05;
+  // Getting sensor values is async. We store the pending promises in these dictionaries.
+  private outstandingDigitalGetValues_: Dict<RobotBinding.OutstandingPromise<boolean>> = {};
+  private outstandingAnalogGetValues_: Dict<RobotBinding.OutstandingPromise<number>> = {};
 
-    const root = this.links_[this.rootId_];
+  private latestDigitalValues_: RobotState.DigitalValues = [false, false, false, false, false, false];
+  private latestAnalogValues_: RobotState.AnalogValues = [0, 0, 0, 0, 0, 0];
+
+  tick(input: RobotBinding.TickIn): RobotBinding.TickOut {
+    this.damp_ = this.damp_ * 0.75 + 0.25;
 
     const motorPositionDeltas: [number, number, number, number] = [0, 0, 0, 0];
+    
 
+    // Motors
     for (let i = 0; i < input.motorVelocities.length; i++) {
       const motorId = this.motorPorts_[i];
       
@@ -358,10 +390,9 @@ class RobotBinding {
       motorPositionDeltas[i] = Math.round(deltaAngle / (2 * Math.PI) * ticksPerRevolution);
 
       bMotor.setMotor(velocity);
-
-
     }
 
+    // Servos
     for (let i = 0; i < input.servoPositions.length; i++) {
       const servoId = this.servoPorts_[i];
 
@@ -397,9 +428,56 @@ class RobotBinding {
       });
     }
 
+    // Digital Sensors
+    const digitalValues: RobotState.DigitalValues = [false, false, false, false, false, false];
+    for (let i = 0; i < 6; ++i) {
+      const digitalId = this.digitalPorts_[i];
+      if (!digitalId) continue;
+
+      const digital = this.digitalSensors_[digitalId];
+      if (!digital) throw new Error(`Missing digital sensor: ${digitalId}`);
+
+      const outstanding = this.outstandingDigitalGetValues_[digitalId];
+      if (!outstanding) {
+        this.outstandingDigitalGetValues_[digitalId] = RobotBinding.OutstandingPromise.create(digital.getValue());
+      } else {
+        // console.log(digitalId, 'done', outstanding.done);
+
+        if (RobotBinding.OutstandingPromise.isDone(outstanding)) {
+          this.latestDigitalValues_[i] = RobotBinding.OutstandingPromise.value(outstanding);
+          this.outstandingDigitalGetValues_[digitalId] = RobotBinding.OutstandingPromise.create(digital.getValue());
+        }
+      }
+
+      digitalValues[i] = this.latestDigitalValues_[i];
+    }
+
+    const analogValues: RobotState.AnalogValues = [0, 0, 0, 0, 0, 0];
+    for (let i = 0; i < 6; ++i) {
+      const analogId = this.analogPorts_[i];
+      if (!analogId) continue;
+
+      const analog = this.analogSensors_[analogId];
+      if (!analog) throw new Error(`Missing analog sensor: ${analogId}`);
+
+      const outstanding = this.outstandingAnalogGetValues_[analogId];
+      if (!outstanding) {
+        this.outstandingAnalogGetValues_[analogId] = RobotBinding.OutstandingPromise.create(analog.getValue());
+      } else {
+        if (RobotBinding.OutstandingPromise.isDone(outstanding)) {
+          this.latestAnalogValues_[i] = RobotBinding.OutstandingPromise.value(outstanding);
+          this.outstandingAnalogGetValues_[analogId] = RobotBinding.OutstandingPromise.create(analog.getValue());
+        }
+      }
+
+      analogValues[i] = this.latestAnalogValues_[i];
+    }
+
     return {
       origin: this.origin,
-      motorPositionDeltas
+      motorPositionDeltas,
+      digitalValues,
+      analogValues,
     };
   }
 
@@ -458,13 +536,9 @@ class RobotBinding {
     this.robot_ = robot;
 
     const rootIds = Robot.rootNodeIds(robot);
-    console.log('rootIds', rootIds);
     if (rootIds.length !== 1) throw new Error('Only one root node is supported');
     
     this.rootId_ = rootIds[0];
-
-
-    console.log(rootIds, this.rootId_);
 
     const nodeIds = Robot.breadthFirstNodeIds(robot);
     this.childrenNodeIds_ = Robot.childrenNodeIds(robot);
@@ -492,14 +566,30 @@ class RobotBinding {
           const bJoint = this.createHinge_(nodeId, node);
           this.motors_[nodeId] = bJoint;
           this.motorPorts_[node.motorPort] = nodeId;
-          console.log('added joint', nodeId);
           break;
         }
         case Node.Type.Servo: {
           const bJoint = this.createHinge_(nodeId, node);
           this.servos_[nodeId] = bJoint;
-          console.log('added joint', bJoint);
           this.servoPorts_[node.servoPort] = nodeId;
+          break;
+        }
+        case Node.Type.TouchSensor: {
+          const sensorObject = this.createTouchSensor_(nodeId, node);
+          this.digitalSensors_[nodeId] = sensorObject;
+          this.digitalPorts_[node.digitalPort] = nodeId;
+          break;
+        }
+        case Node.Type.EtSensor: {
+          const sensorObject = this.createEtSensor_(nodeId, node);
+          this.analogSensors_[nodeId] = sensorObject;
+          this.analogPorts_[node.analogPort] = nodeId;
+          break;
+        }
+        case Node.Type.ReflectanceSensor: {
+          const sensorObject = this.createReflectanceSensor_(nodeId, node);
+          this.analogSensors_[nodeId] = sensorObject;
+          this.analogPorts_[node.analogPort] = nodeId;
           break;
         }
       }
@@ -515,6 +605,32 @@ class RobotBinding {
 
     this.motors_ = {};
     this.servos_ = {};
+
+    for (const digitalSensor of Object.values(this.digitalSensors_)) digitalSensor.dispose();
+    this.digitalSensors_ = {};
+
+    for (const analogSensor of Object.values(this.analogSensors_)) analogSensor.dispose();
+    this.analogSensors_ = {};
+
+    this.robot_ = null;
+  }
+
+  set realisticSensors(realisticSensors: boolean) {
+    for (const digitalSensor of Object.values(this.digitalSensors_)) {
+      digitalSensor.realistic = realisticSensors;
+    }
+    for (const analogSensor of Object.values(this.analogSensors_)) {
+      analogSensor.realistic = realisticSensors;
+    }
+  }
+
+  set noisySensors(noisySensors: boolean) {
+    for (const digitalSensor of Object.values(this.digitalSensors_)) {
+      digitalSensor.noisy = noisySensors;
+    }
+    for (const analogSensor of Object.values(this.analogSensors_)) {
+      analogSensor.noisy = noisySensors;
+    }
   }
 }
 
@@ -536,18 +652,308 @@ namespace RobotBinding {
      * The new origin of the robot
      */
     origin: ReferenceFrame;
-    
+
     /**
-     * Delta of motor positions in ticks
+     * Delta of motor positions in ticks since last `tick`
      */
     motorPositionDeltas: [number, number, number, number];
+  
+    /**
+     * Updated digital values
+     */
+    digitalValues: RobotState.DigitalValues;
+
+    /**
+     * Updated analog values
+     */
+    analogValues: RobotState.AnalogValues;
   }
 
   export namespace TickOut {
     export const NIL: TickOut = {
       origin: ReferenceFrame.IDENTITY,
       motorPositionDeltas: [0, 0, 0, 0],
+      digitalValues: [false, false, false, false, false, false],
+      analogValues: [0, 0, 0, 0, 0, 0],
     };
+  }
+
+  export interface OutstandingPromise<T> {
+    // Done needs to be wrapped in an object so we can access by reference.
+    doneObj: { done: boolean; };
+    valueObj: { value: T };
+  }
+
+  export namespace OutstandingPromise {
+    export const create = <T>(promise: Promise<T>): OutstandingPromise<T> => {
+      const doneObj = { done: false };
+      const valueObj = { value: undefined };
+      promise.then(v => {
+        valueObj.value = v;
+        doneObj.done = true;
+      });
+      return { doneObj, valueObj };
+    };
+
+    export const isDone = <T>(promise: OutstandingPromise<T>): boolean => promise.doneObj.done;
+    export const value = <T>(promise: OutstandingPromise<T>): T => promise.valueObj.value;
+  }
+
+  export interface Sensor<T> {
+    getValue(): Promise<T>;
+    dispose(): void;
+
+    realistic: boolean;
+    noisy: boolean;
+  }
+
+  export interface SensorParameters<T> {
+    id: string;
+    definition: T;
+    parent: Babylon.Mesh;
+    scene: Babylon.Scene;
+    links: Set<Babylon.Mesh>;
+    colliders: Set<Babylon.IPhysicsEnabledObject>;
+  }
+
+  export abstract class SensorObject<T, O> implements Sensor<O> {
+    private parameters_: SensorParameters<T>;
+    get parameters() { return this.parameters_; }
+
+    private realistic_ = false;
+    get realistic() { return this.realistic_; }
+    set realistic(realistic: boolean) { this.realistic_ = realistic; }
+
+    private noisy_ = false;
+    get noisy() { return this.noisy_; }
+    set noisy(noisy: boolean) { this.noisy_ = noisy; console.log('set noisy', noisy); }
+
+    constructor(parameters: SensorParameters<T>) {
+      this.parameters_ = parameters;
+    }
+
+    abstract getValue(): Promise<O>;
+
+    abstract dispose(): void;
+  }
+
+  export class TouchSensor extends SensorObject<Node.TouchSensor, boolean> {
+    private intersector_: Babylon.Mesh;
+    
+    constructor(parameters: SensorParameters<Node.TouchSensor>) {
+      super(parameters);
+
+      const { id, definition, parent, scene } = parameters;
+      const { collisionBox, origin } = definition;
+
+      // The parent already has RENDER_SCALE applied, so we don't need to apply it again.
+      const rawCollisionBox = Vector3.toRaw(collisionBox, 'meters');
+
+      this.intersector_ = Babylon.MeshBuilder.CreateBox(id, {
+        depth: rawCollisionBox.z,
+        height: rawCollisionBox.y,
+        width: rawCollisionBox.x,
+      }, scene);
+
+      this.intersector_.parent = parent;
+      this.intersector_.visibility = 0;
+      ReferenceFrame.syncBabylon(origin, this.intersector_, 'meters');
+    }
+
+    override async getValue(): Promise<boolean> {
+      const { scene, links } = this.parameters;
+
+      const meshes = scene.getActiveMeshes();
+
+      let hit = false;
+      meshes.forEach(mesh => {
+        if (hit || mesh === this.intersector_ || links.has(mesh as Babylon.Mesh)) return;
+        if (!mesh.physicsImpostor) return;
+        hit = this.intersector_.intersectsMesh(mesh, true);
+      });
+
+      return hit;
+    }
+
+    override dispose(): void {
+      this.intersector_.dispose();
+    }
+  }
+
+  export class EtSensor extends SensorObject<Node.EtSensor, number> {
+    private trace_: Babylon.LinesMesh;
+
+    private static readonly DEFAULT_MAX_DISTANCE = Distance.centimeters(100);
+    private static readonly DEFAULT_NOISE_RADIUS = Distance.centimeters(160);
+    private static readonly FORWARD: Babylon.Vector3 = new Babylon.Vector3(0, 0, 1);
+
+    constructor(parameters: SensorParameters<Node.EtSensor>) {
+      super(parameters);
+
+      const { id, scene, definition, parent } = parameters;
+      const { origin, maxDistance } = definition;
+
+      // The trace will be parented to a link that is already scaled, so we don't need to apply
+      // RENDER_SCALE again.
+
+      const rawMaxDistance = Distance.toMetersValue(maxDistance ?? EtSensor.DEFAULT_MAX_DISTANCE);
+      
+      this.trace_ = Babylon.MeshBuilder.CreateLines(id, {
+        points: [
+          Babylon.Vector3.Zero(),
+          EtSensor.FORWARD.multiplyByFloats(rawMaxDistance, rawMaxDistance, rawMaxDistance)
+        ],
+      }, scene);
+
+      ReferenceFrame.syncBabylon(origin, this.trace_, 'meters');
+      this.trace_.parent = parent;
+    }
+
+    override async getValue(): Promise<number> {
+      const { scene, definition, links, colliders } = this.parameters;
+      const { maxDistance, noiseRadius } = definition;
+
+      const rawMaxDistance = Distance.toValue(maxDistance || EtSensor.DEFAULT_MAX_DISTANCE, RENDER_SCALE);
+
+
+      const ray = new Babylon.Ray(
+        this.trace_.absolutePosition,
+        EtSensor.FORWARD.applyRotationQuaternion(this.trace_.absoluteRotationQuaternion),
+        rawMaxDistance
+      );
+
+      const hit = scene.pickWithRay(ray, mesh => {
+        return mesh !== this.trace_ && !links.has(mesh as Babylon.Mesh) && !colliders.has(mesh as Babylon.Mesh);
+      });
+
+      const distance = hit.pickedMesh ? hit.distance : Number.POSITIVE_INFINITY;
+
+      let value: number;
+      if (!this.realistic) {
+        // ideal
+        if (distance >= rawMaxDistance) value = 0;
+        else value = 4095 - Math.floor((distance / rawMaxDistance) * 4095);
+      } else {
+        // realistic
+        if (distance >= rawMaxDistance) value = 1100;
+        // Farther than 80 cm
+        else if (distance >= 80) value = 345;
+        // Closer than 3 cm (linear from 2910 to 0)
+        else if (distance <= 3) value = Math.floor(distance * (2910 / 3));
+        // 3 - 11.2 cm
+        else if (distance <= 11.2) value =2910;
+        // 11.2 - 80 cm (the useful range)
+        // Derived by fitting the real-world data to a power model
+        else value = Math.floor(3240.7 * Math.pow(distance - 10, -0.776));
+      }
+
+      if (this.noisy) {
+        const noise = Distance.toValue(noiseRadius || EtSensor.DEFAULT_NOISE_RADIUS, RENDER_SCALE);
+        const offset = Math.floor(noise * Math.random() * 2) - noise;
+        value -= offset;
+      }
+
+      return clamp(0, value, 4095);
+    }
+
+    override dispose(): void {
+      this.trace_.dispose();
+    }
+  }
+
+  export class ReflectanceSensor extends SensorObject<Node.ReflectanceSensor, number> {
+    private trace_: Babylon.LinesMesh;
+
+    private lastHitTextureId_: string | null = null;
+    private lastHitPixels_: ArrayBufferView | null = null;
+
+    private static readonly DEFAULT_MAX_DISTANCE = Distance.centimeters(1.5);
+    private static readonly DEFAULT_NOISE_RADIUS = Distance.centimeters(10);
+    private static readonly FORWARD: Babylon.Vector3 = new Babylon.Vector3(0, 0, 1);
+
+    constructor(parameters: SensorParameters<Node.ReflectanceSensor>) {
+      super(parameters);
+
+      const { id, scene, definition, parent } = parameters;
+      const { origin, maxDistance } = definition;
+
+      // The trace will be parented to a link that is already scaled, so we don't need to apply
+      // RENDER_SCALE again.
+
+      const rawMaxDistance = Distance.toMetersValue(maxDistance ?? ReflectanceSensor.DEFAULT_MAX_DISTANCE);
+      this.trace_ = Babylon.MeshBuilder.CreateLines(id, {
+        points: [
+          Babylon.Vector3.Zero(),
+          ReflectanceSensor.FORWARD.multiplyByFloats(rawMaxDistance, rawMaxDistance, rawMaxDistance)
+        ],
+      }, scene);
+
+      ReferenceFrame.syncBabylon(origin, this.trace_, 'meters');
+      this.trace_.parent = parent;
+    }
+
+    override async getValue(): Promise<number> {
+      const { scene, definition, links, colliders } = this.parameters;
+      const { maxDistance, noiseRadius } = definition;
+
+      const rawMaxDistance = Distance.toValue(maxDistance || ReflectanceSensor.DEFAULT_MAX_DISTANCE, RENDER_SCALE);
+
+
+      const ray = new Babylon.Ray(
+        this.trace_.absolutePosition,
+        ReflectanceSensor.FORWARD.applyRotationQuaternion(this.trace_.absoluteRotationQuaternion),
+        rawMaxDistance
+      );
+
+      const hit = scene.pickWithRay(ray, mesh => {
+        return mesh !== this.trace_ && !links.has(mesh as Babylon.Mesh) && !colliders.has(mesh as Babylon.Mesh);
+      });
+
+      if (!hit.pickedMesh || !hit.pickedMesh.material || hit.pickedMesh.material.getActiveTextures().length === 0) return 0;
+      
+      let sensorValue = 0;
+      
+      const hitTexture = hit.pickedMesh.material.getActiveTextures()[0];
+
+      // Only reprocess the texture if we hit a different texture than before
+      if (this.lastHitTextureId_ === null || this.lastHitTextureId_ !== hitTexture.uid) {
+        if (hitTexture.isReady()) {
+          this.lastHitTextureId_ = hitTexture.uid;
+          this.lastHitPixels_ = await hitTexture.readPixels();
+        } else {
+          // Texture isn't ready yet, so nothing we can do
+          this.lastHitTextureId_ = null;
+          this.lastHitPixels_ = null;
+        }
+      }
+
+      if (this.lastHitPixels_ !== null) {
+        const hitTextureCoordinates = hit.getTextureCoordinates();
+        const arrayIndex = Math.floor(hitTextureCoordinates.x * (hitTexture.getSize().width - 1)) * 4 + Math.floor(hitTextureCoordinates.y * (hitTexture.getSize().height - 1)) * hitTexture.getSize().width * 4;
+
+        const r = this.lastHitPixels_[arrayIndex] as number;
+        const g = this.lastHitPixels_[arrayIndex + 1] as number;
+        const b = this.lastHitPixels_[arrayIndex + 2] as number;
+
+        // Crude conversion from RGB to grayscale
+        const colorAverage = (r + g + b) / 3;
+
+        // Value is a grayscale percentage of 4095
+        sensorValue = Math.floor(4095 * (1 - (colorAverage / 255)));
+      }
+
+      if (this.noisy) {
+        const noise = Distance.toValue(noiseRadius || ReflectanceSensor.DEFAULT_NOISE_RADIUS, RENDER_SCALE);
+        const offset = Math.floor(noise * Math.random() * 2) - noise;
+        sensorValue -= offset;
+      }
+
+      return clamp(0, sensorValue, 4095);
+    }
+
+    override dispose(): void {
+      this.trace_.dispose();
+    }
   }
 
   export const SERVO_LOGICAL_MIN_ANGLE = Angle.degrees(-90.0);

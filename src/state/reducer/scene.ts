@@ -130,6 +130,15 @@ export namespace SceneAction {
   }
 
   export const setCamera = construct<SetCamera>('set-camera');
+
+  export interface SetNodeOrigin {
+    type: 'set-node-origin';
+    nodeId: string;
+    origin: ReferenceFrame;
+    modifyReferenceScene?: boolean;
+  }
+
+  export const setNodeOrigin = construct<SetNodeOrigin>('set-node-origin');
 }
 
 export type SceneAction = (
@@ -147,7 +156,8 @@ export type SceneAction = (
   SceneAction.UnselectAll |
   SceneAction.AddObject |
   SceneAction.SetRobotState |
-  SceneAction.SetCamera
+  SceneAction.SetCamera |
+  SceneAction.SetNodeOrigin
 );
 
 export const reduceScene = (state: ReferencedScenePair = { referenceScene: JBC_Sandbox_A, workingScene: JBC_Sandbox_A }, action: SceneAction): ReferencedScenePair => {
@@ -422,6 +432,47 @@ export const reduceScene = (state: ReferencedScenePair = { referenceScene: JBC_S
         },
       };
       return nextState;
+    }
+    case 'set-node-origin': {
+      if (action.modifyReferenceScene) {
+        return {
+          ...state,
+          referenceScene: {
+            ...state.referenceScene,
+            nodes: {
+              ...state.referenceScene.nodes,
+              [action.nodeId]: {
+                ...state.referenceScene.nodes[action.nodeId],
+                origin: action.origin,
+              },
+            },
+          },
+          workingScene: {
+            ...state.workingScene,
+            nodes: {
+              ...state.workingScene.nodes,
+              [action.nodeId]: {
+                ...state.workingScene.nodes[action.nodeId],
+                origin: action.origin,
+              },
+            },
+          }
+        };
+      } else {
+        return {
+          ...state,
+          workingScene: {
+            ...state.workingScene,
+            nodes: {
+              ...state.workingScene.nodes,
+              [action.nodeId]: {
+                ...state.workingScene.nodes[action.nodeId],
+                origin: action.origin,
+              },
+            },
+          }
+        };
+      }
     }
     default:
       return state;

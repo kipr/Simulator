@@ -12,7 +12,7 @@ import { Fa } from '../Fa';
 import { ReferenceFrame } from '../../unit-math';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
-import { SceneAction } from '../../state/reducer';
+import { SceneAction, ScenesAction } from '../../state/reducer';
 import Node from '../../state/State/Scene/Node';
 
 
@@ -143,6 +143,7 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
       className,
       theme,
       node,
+      startingOrigin
     } = props;
 
     if (!node || node.type !== 'robot') return null;
@@ -221,6 +222,8 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
           >
             <Location
               theme={theme}
+              origin={startingOrigin}
+              onOriginChange={props.onOriginChange}
             />
           </StyledSection>
           <StyledSection
@@ -270,14 +273,18 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
 }
 
 export default connect<unknown, unknown, InfoProps, ReduxState>((state: ReduxState, ownProps: InfoProps) => {
-  const startingOrigin = ReferenceFrame.IDENTITY;
+  const refNode = state.scene.referenceScene.nodes[ownProps.nodeId];
   const node = state.scene.workingScene.nodes[ownProps.nodeId];
   return {
-    startingOrigin,
+    startingOrigin: refNode.origin,
     node
   };
-}, dispatch => ({
+}, (dispatch, ownProps: InfoProps) => ({
   onOriginChange: (origin: ReferenceFrame, modifyReferenceScene: boolean) => {
-    // dispatch(SceneAction.setRobotOrigin({ origin, modifyReferenceScene }));
+    dispatch(SceneAction.setNodeOrigin({
+      nodeId: ownProps.nodeId,
+      origin,
+      modifyReferenceScene
+    }));
   }
 }))(Info) as React.ComponentType<InfoProps>;
