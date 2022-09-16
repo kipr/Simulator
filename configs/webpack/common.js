@@ -119,6 +119,7 @@ module.exports = {
       SIMULATOR_VERSION: JSON.stringify(require('../../package.json').version),
       SIMULATOR_GIT_HASH: JSON.stringify(commitHash),
       SIMULATOR_HAS_CPYTHON: JSON.stringify(dependencies.cpython !== undefined),
+      SIMULATOR_HAS_AMMO: JSON.stringify(dependencies.ammo !== undefined),
     }),
   ],
   performance: {

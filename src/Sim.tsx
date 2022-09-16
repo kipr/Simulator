@@ -22,9 +22,13 @@ import Node from './state/State/Scene/Node';
 import { Robots } from './state/State';
 import WORKER_INSTANCE from './WorkerInstance';
 
-// This is on a non-standard path specified in the webpack config.
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Ammo: unknown = require('ammo.js');
+
+let Ammo: unknown;
+if (SIMULATOR_HAS_AMMO) {
+  // This is on a non-standard path specified in the webpack config.
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  Ammo = require('ammo.js');
+}
 
 import RobotBinding from './RobotBinding';
 
