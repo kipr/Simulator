@@ -10,9 +10,7 @@ import Geometry from './state/State/Robot/Geometry';
 import Patch from './util/Patch';
 import Dict from './Dict';
 import { RobotState } from './RobotState';
-import { minmaxReduxPixelShader } from 'babylonjs/Shaders/minmaxRedux.fragment';
 import { RENDER_SCALE, RENDER_SCALE_METERS_MULTIPLIER } from './renderConstants';
-import { SensorObject } from './sensors';
 
 interface BuiltGeometry {
   mesh: Babylon.Mesh;

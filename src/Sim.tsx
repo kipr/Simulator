@@ -1,12 +1,6 @@
 import * as Babylon from 'babylonjs';
 import 'babylonjs-loaders';
 // import Oimo = require('babylonjs/Oimo');
-import {
-  SensorObject,
-  Sensor,
-  instantiate as instantiateSensor,
-  MAPPINGS as SENSOR_MAPPINGS,
-} from './sensors';
 
 import { RobotState } from './RobotState';
 
