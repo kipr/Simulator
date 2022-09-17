@@ -67,7 +67,7 @@ if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env
       env['EMSDK'] = config.server.dependencies.emsdk_env.EMSDK;
       env['EM_CONFIG'] = config.server.dependencies.emsdk_env.EM_CONFIG;
   
-      exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main']" -I${config.server.dependencies.libkipr_c}/include -L${config.server.dependencies.libkipr_c}/lib -lkipr -o ${path}.js ${path}`, {
+      exec(`emcc -s WASM=1 -s SINGLE_FILE=1 -s INVOKE_RUN=0 -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main']" -I${config.server.dependencies.libkipr_c}/include -L${config.server.dependencies.libkipr_c}/lib -lkipr -o ${path}.js ${path}`, {
         env
       }, (err, stdout, stderr) => {
         if (err) {
