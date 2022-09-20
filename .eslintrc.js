@@ -6,7 +6,7 @@ module.exports = {
     'eslint:recommended',
   ],
   env: {
-    es6: true,
+    es2020: true,
   },
   rules: {
     // Project-specific ESLint rules

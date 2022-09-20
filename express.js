@@ -73,13 +73,7 @@ if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env
         });
       }
 
-      // ...process.env causes a linter error for some reason.
-      // We work around this by doing it manually.
-      
-      const env = {};
-      for (const key of Object.keys(process.env)) {
-        env[key] = process.env[key];
-      }
+      const env = { ...process.env };
       
       env['PATH'] = `${config.server.dependencies.emsdk_env.PATH}:${process.env.PATH}`;
       env['EMSDK'] = config.server.dependencies.emsdk_env.EMSDK;
