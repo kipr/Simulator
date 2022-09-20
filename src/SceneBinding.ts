@@ -70,6 +70,7 @@ class SceneBinding {
     this.ammo_ = new Babylon.AmmoJSPlugin(true, ammo);
     this.bScene_.enablePhysics(new Babylon.Vector3(0, -9.8 * 100, 0), this.ammo_);
     this.bScene_.getPhysicsEngine().setSubTimeStep(2);
+    this.physicsViewer_ = new Babylon.PhysicsViewer(this.bScene_);
 
     this.root_ = new Babylon.TransformNode('__scene_root__', this.bScene_);
     this.gizmoManager_ = new Babylon.GizmoManager(this.bScene_);

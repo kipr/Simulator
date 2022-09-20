@@ -637,7 +637,12 @@ namespace RobotBinding {
     /**
      * Velocities in ticks/second
      */
-    motorVelocities: [number, number, number, number];
+    motorControls: [
+      RobotState.MotorControl,
+      RobotState.MotorControl,
+      RobotState.MotorControl,
+      RobotState.MotorControl
+    ];
 
     /**
      * Servo positions in ticks
