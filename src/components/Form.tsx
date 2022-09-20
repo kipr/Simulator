@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import Dict from '../Dict';
@@ -137,7 +139,7 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
             StyledText.component ({
               component: Fa,
               props: {
-                icon: valid ? 'check' : 'times',
+                icon: valid ? faCheck : faTimes,
                 style: {
                   color: valid ? GREEN.standard : RED.standard,
                 },
@@ -187,7 +189,7 @@ namespace Form {
     onFinalize: (values: { [id: string]: any }) => void;
 
     finalizeText?: string;
-    finalizeIcon?: string;
+    finalizeIcon?: IconProp;
 
     finalizeDisabled?: boolean;
 

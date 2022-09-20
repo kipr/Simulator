@@ -9,6 +9,8 @@ import DialogBar from "../DialogBar";
 import { ThemeProps } from '../theme';
 import { Fa } from '../Fa';
 
+import { faFrown, faMeh, faPaperPlane, faSmileBeam } from '@fortawesome/free-solid-svg-icons';
+
 export interface FeedbackDialogProp extends ThemeProps, StyleProps {
   onClose: () => void;
   onSubmit: () => void;
@@ -57,13 +59,13 @@ export class FeedbackDialog extends React.PureComponent<Props, State> {
 
     return (
       <FeedbackRowContainer theme={theme}>
-        <SentimentCharm theme={theme} icon='frown' selected={getValue(currentFeedback) === Sentiment.Sad} onClick={
+        <SentimentCharm theme={theme} icon={faFrown} selected={getValue(currentFeedback) === Sentiment.Sad} onClick={
           () => onFeedbackChange(getUpdatedFeedback(Sentiment.Sad))
         }/>
-        <SentimentCharm theme={theme} icon='meh' selected={getValue(currentFeedback) === Sentiment.Okay} onClick={
+        <SentimentCharm theme={theme} icon={faMeh} selected={getValue(currentFeedback) === Sentiment.Okay} onClick={
           () => onFeedbackChange(getUpdatedFeedback(Sentiment.Okay))
         }/>
-        <SentimentCharm theme={theme} icon='smile-beam' selected={getValue(currentFeedback) === Sentiment.Happy} onClick={
+        <SentimentCharm theme={theme} icon={faSmileBeam} selected={getValue(currentFeedback) === Sentiment.Happy} onClick={
           () => onFeedbackChange(getUpdatedFeedback(Sentiment.Happy))
         }/>
       </FeedbackRowContainer>
@@ -176,7 +178,7 @@ export class FeedbackDialog extends React.PureComponent<Props, State> {
           }
         </FeedbackContainer>
         <DialogBar theme={theme} onAccept={onSubmit}>
-          <Fa icon='paper-plane'/> Submit
+          <Fa icon={faPaperPlane}/> Submit
         </DialogBar>
       </Dialog>
     );

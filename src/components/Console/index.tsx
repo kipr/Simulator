@@ -11,6 +11,8 @@ import { Fa } from '../Fa';
 import { Button } from '../Button';
 import { BarComponent } from '../Widget';
 
+import { faFile } from '@fortawesome/free-solid-svg-icons';
+
 export const createConsoleBarComponents = (
   theme: Theme, 
   onClearConsole: () => void,
@@ -22,7 +24,7 @@ export const createConsoleBarComponents = (
     onClick: onClearConsole,
     children:
       <>
-        <Fa icon='file' />
+        <Fa icon={faFile} />
         {' Clear'}
       </>,
   }));

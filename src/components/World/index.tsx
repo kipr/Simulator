@@ -32,6 +32,7 @@ import Geometry from '../../state/State/Scene/Geometry';
 
 import { Button } from '../Button';
 import { BarComponent } from '../Widget';
+import { faGlobeAmericas, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 export const createWorldBarComponents = (
   theme: Theme, 
@@ -44,7 +45,7 @@ export const createWorldBarComponents = (
     onClick: onSelectScene,
     children:
       <>
-        <Fa icon='globe-americas' />
+        <Fa icon={faGlobeAmericas} />
         {' Select Scene'}
       </>,
   }));
@@ -272,7 +273,7 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
         StyledText.component({
           component: SectionIcon,
           props: {
-            icon: 'plus',
+            icon: faPlus,
             theme,
             onClick: this.onAddNodeClick_
           }

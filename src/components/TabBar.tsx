@@ -1,3 +1,4 @@
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { StyleProps } from '../style';
@@ -98,6 +99,6 @@ export class TabBar extends React.PureComponent<Props> {
 export namespace TabBar {
   export interface TabDescription {
     name: string;
-    icon?: string;
+    icon?: IconProp;
   }
 }

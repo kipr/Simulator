@@ -6,6 +6,8 @@ import { Spacer } from './common';
 import { Fa } from './Fa';
 import { DARK, ThemeProps } from './theme';
 
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+
 export interface MenuProps extends StyleProps, ThemeProps {}
 
 interface MenuState {}
@@ -99,7 +101,7 @@ export class MainMenu extends React.Component<Props, State> {
         <Logo theme={theme} src={theme.foreground === 'white' ? KIPR_LOGO_BLACK as string : KIPR_LOGO_WHITE as string} onClick={this.onDashboardClick_}/>
         <Spacer style={{ borderRight: `1px solid ${theme.borderColor}` }} />
         {/* <Item theme={theme} onClick={this.onDashboardClick_}><ItemIcon icon='compass'/> Dashboard</Item> */}
-        <Item theme={theme} onClick={this.onLogoutClick_}><ItemIcon icon='sign-out-alt'/> Logout</Item>
+        <Item theme={theme} onClick={this.onLogoutClick_}><ItemIcon icon={faSignOutAlt} /> Logout</Item>
       </Container>
     );
   }

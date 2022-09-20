@@ -5,6 +5,7 @@ import { StyleProps } from '../../style';
 import { Fa } from '../Fa';
 import { Layout } from './Layout';
 import { ThemeProps } from '../theme';
+import { faCaretSquareLeft, faClone, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 export interface LayoutPickerProps extends StyleProps, ThemeProps {
   layout: Layout,
@@ -107,15 +108,15 @@ class LayoutPicker extends React.PureComponent<Props, State> {
     return (
       <Container theme={theme}>
         <Item theme={theme} style={{ fontWeight: 500, backgroundColor: theme.borderColor }}>Layouts</Item>
-        <Item theme={theme} disabled={layout === Layout.Overlay} onClick={layout !== Layout.Overlay ? this.onOverlayClick_ : undefined}><ItemIcon icon='clone' /> Overlay</Item>
-        <Item theme={theme} disabled={layout === Layout.Side} onClick={layout !== Layout.Side ? this.onSideClick_ : undefined}><ItemIcon icon='caret-square-left' /> Side</Item>
-        {/* <Item theme={theme} disabled={layout === Layout.Bottom} onClick={layout !== Layout.Bottom ? this.onBottomClick_ : undefined}><ItemIcon icon='caret-square-down' /> Bottom</Item> */}
+        <Item theme={theme} disabled={layout === Layout.Overlay} onClick={layout !== Layout.Overlay ? this.onOverlayClick_ : undefined}><ItemIcon icon={faClone} /> Overlay</Item>
+        <Item theme={theme} disabled={layout === Layout.Side} onClick={layout !== Layout.Side ? this.onSideClick_ : undefined}><ItemIcon icon={faCaretSquareLeft} /> Side</Item>
+        {/* <Item theme={theme} disabled={layout === Layout.Bottom} onClick={layout !== Layout.Bottom ? this.onBottomClick_ : undefined}><ItemIcon icon={faCaretSquareDown} /> Bottom</Item> */}
         
         {layout === Layout.Overlay ? (
           <>
             <Item theme={theme} style={{ fontWeight: 500, backgroundColor: theme.borderColor }}>Layout Options</Item>
-            <Item theme={theme} onClick={onShowAll}><ItemIcon icon='eye' /> Show All</Item>
-            <Item theme={theme} onClick={onHideAll}><ItemIcon icon='eye-slash' /> Hide All</Item>
+            <Item theme={theme} onClick={onShowAll}><ItemIcon icon={faEye} /> Show All</Item>
+            <Item theme={theme} onClick={onHideAll}><ItemIcon icon={faEyeSlash} /> Hide All</Item>
           </>
         ) : undefined}
       </Container>

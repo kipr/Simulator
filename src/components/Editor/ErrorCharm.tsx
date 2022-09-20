@@ -6,6 +6,8 @@ import { Fa } from '../Fa';
 import { ThemeProps } from '../theme';
 import { charmColor } from '../charm-util';
 
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+
 export interface ErrorCharmProps extends StyleProps, ThemeProps {
   count: number;
 
@@ -33,7 +35,7 @@ class ErrorCharm extends React.PureComponent<Props> {
     
     return (
       <Container theme={theme} onClick={onClick}>
-        <Fa icon='times-circle' /> {count} Error{count === 1 ? '' : 's'}
+        <Fa icon={faTimesCircle} /> {count} Error{count === 1 ? '' : 's'}
       </Container>
     );
   }
