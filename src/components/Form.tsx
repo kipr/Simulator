@@ -77,7 +77,6 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
         ...this.state.values,
         [item.id]: {
           text: event.target.value,
-          valid: item.validator ? item.validator(event.target.value) : true,
         },
         
       }
@@ -102,7 +101,7 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
     const { items, finalizeDisabled } = props;
     const { values } = state;
 
-    return !finalizeDisabled && items.every(item => item.id in values && values[item.id].valid);
+    return !finalizeDisabled && items.every(item => item.id in values && (!item.validator || item.validator(values[item.id].text)));
   };
 
   render() {
@@ -203,7 +202,6 @@ namespace Form {
   export namespace State {
     export interface Value {
       text: string;
-      valid: boolean;
     }
   }
 
@@ -223,6 +221,7 @@ namespace Form {
   export const IDENTITY_FINALIZER = (value: string) => value;
   export const EMAIL_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.Email); 
   export const PASSWORD_VALIDATOR = (value: string) => Validators.validatePassword(value);
+  export const NON_EMPTY_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.Length, 1);
 
 
   export const email = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
@@ -235,12 +234,12 @@ namespace Form {
     assistText,
   });
 
-  export const password = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
+  export const password = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string, shouldValidate = true): Item<string> => ({
     id,
     text,
     tooltip,
     valueHidden: true,
-    validator: PASSWORD_VALIDATOR,
+    validator: shouldValidate ? PASSWORD_VALIDATOR : NON_EMPTY_VALIDATOR,
     finalizer: IDENTITY_FINALIZER,
     assist,
     assistText,

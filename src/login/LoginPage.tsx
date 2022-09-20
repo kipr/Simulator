@@ -319,7 +319,7 @@ class LoginPage extends React.Component<Props, State> {
 
     const LOGIN_FORM_ITEMS: Form.Item[] = [
       Form.email('email', 'Email'),
-      Form.password('password', 'Password', undefined, this.onForgotPasswordClick_, 'Forgot?'),
+      Form.password('password', 'Password', undefined, this.onForgotPasswordClick_, 'Forgot?', false),
     ];
 
     const SIGNUP_FORM_ITEMS: Form.Item[] = [
