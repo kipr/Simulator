@@ -57,7 +57,7 @@ const startC = (message: Protocol.Worker.StartRequest) => {
 
   mod.onRuntimeInitialized = () => {
     try {
-      mod._simMainWrapper();
+      mod._main();
     } catch (e: unknown) {
       if (ExitStatusError.isExitStatusError(e)) {
         print(`Program exited with status code ${e.status}`);
@@ -66,7 +66,7 @@ const startC = (message: Protocol.Worker.StartRequest) => {
       } else {
         printErr(`Program exited with an unknown error`);
       }
-
+    } finally {
       sendStopped();
     }
   };
