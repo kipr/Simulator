@@ -40,19 +40,21 @@ class SharedRegistersRobot implements AbstractRobot {
     const mode = MotorMode.fromBits((modes >> (port * 2)) & 0b11);
     const direction = MotorDirection.fromBits((directions >> (port * 2)) & 0b11);
     const position = this.sharedResisters_.getRegisterValue32b(RegisterState.REG_RW_MOT_0_B3 + port * 4);
+    const pwm = this.sharedResisters_.getRegisterValue16b(RegisterState.REG_RW_MOT_0_PWM_H + port * 2);
 
     switch (mode) {
       case MotorMode.Pwm: {
         return AbstractRobot.Motor.pwm({
           direction,
           position,
-          pwm: this.sharedResisters_.getRegisterValue16b(RegisterState.REG_RW_MOT_0_PWM_H + port * 2),
+          pwm
         });
       }
       case MotorMode.Position: {
         return AbstractRobot.Motor.position({
           direction,
           position,
+          pwm,
           done: this.getMotorDone_(port),
           positionGoal: this.sharedResisters_.getRegisterValue32b(RegisterState.REG_W_MOT_0_GOAL_B3 + port * 4, true),
           ...this.getMotorPid_(port),
@@ -62,6 +64,7 @@ class SharedRegistersRobot implements AbstractRobot {
         return AbstractRobot.Motor.speed({
           direction,
           position,
+          pwm,
           done: this.getMotorDone_(port),
           speedGoal: this.sharedResisters_.getRegisterValue16b(RegisterState.REG_RW_MOT_0_SP_H + port * 2, true),
           ...this.getMotorPid_(port),
@@ -71,6 +74,7 @@ class SharedRegistersRobot implements AbstractRobot {
         return AbstractRobot.Motor.speedPosition({
           direction,
           position,
+          pwm,
           done: this.getMotorDone_(port),
           speedGoal: this.sharedResisters_.getRegisterValue16b(RegisterState.REG_RW_MOT_0_SP_H + port * 2, true),
           positionGoal: this.sharedResisters_.getRegisterValue32b(RegisterState.REG_W_MOT_0_GOAL_B3 + port * 4, true),
@@ -107,6 +111,10 @@ class SharedRegistersRobot implements AbstractRobot {
 
   apply(writeCommands: WriteCommand[]) {
     for (const writeCommand of writeCommands) this.apply_(writeCommand);
+  }
+
+  sync(stateless: AbstractRobot.Stateless) {
+
   }
 }
 

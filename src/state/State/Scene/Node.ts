@@ -1,13 +1,12 @@
+import AbstractRobot from '../../../AbstractRobot';
 import deepNeq from '../../../deepNeq';
 import { Vector2, Vector3 } from '../../../math';
-import { RobotState } from '../../../RobotState';
 import { ReferenceFrame } from '../../../unit-math';
 import { Angle, DistributiveOmit, Mass } from '../../../util';
 import Patch from '../../../util/Patch';
 import Material from './Material';
 
 namespace Node {
-  
   export interface Physics {
     colliderId?: string;
     fixed?: boolean;
@@ -278,7 +277,7 @@ namespace Node {
   export interface Robot extends Base {
     type: 'robot';
     robotId: string;
-    state: RobotState;
+    state: AbstractRobot.Stateless;
   }
 
   export namespace Robot {
@@ -286,7 +285,7 @@ namespace Node {
       type: 'robot',
       ...Base.NIL,
       robotId: undefined,
-      state: RobotState.NIL,
+      state: AbstractRobot.Stateless.NIL,
     };
 
     export const from = <T extends Base>(t: T): Robot => ({
@@ -300,7 +299,7 @@ namespace Node {
       return Patch.innerChange(prev, next, {
         type: Patch.none(prev.type),
         robotId: Patch.diff(prev.robotId, next.robotId),
-        state: RobotState.diff(prev.state, next.state),
+        state: AbstractRobot.Stateless.diff(prev.state, next.state),
         ...Base.partialDiff(prev, next)
       });
     };

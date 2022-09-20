@@ -9,8 +9,9 @@ import { FrameLike } from './SceneBinding';
 import Geometry from './state/State/Robot/Geometry';
 import Patch from './util/Patch';
 import Dict from './Dict';
-import { RobotState } from './RobotState';
 import { RENDER_SCALE, RENDER_SCALE_METERS_MULTIPLIER } from './renderConstants';
+import WriteCommand from './AbstractRobot/WriteCommand';
+import AbstractRobot from './AbstractRobot';
 
 interface BuiltGeometry {
   mesh: Babylon.Mesh;
@@ -319,8 +320,6 @@ class RobotBinding {
     return ret;
   };
 
-  private damp_ = 0;
-
   private accumulatedMotorPositions_: [number, number, number, number] = [0, 0, 0, 0];
   private lastMotorAngles_: [number, number, number, number] = [0, 0, 0, 0];
 
@@ -328,37 +327,37 @@ class RobotBinding {
   private outstandingDigitalGetValues_: Dict<RobotBinding.OutstandingPromise<boolean>> = {};
   private outstandingAnalogGetValues_: Dict<RobotBinding.OutstandingPromise<number>> = {};
 
-  private latestDigitalValues_: RobotState.DigitalValues = [false, false, false, false, false, false];
-  private latestAnalogValues_: RobotState.AnalogValues = [0, 0, 0, 0, 0, 0];
+  private latestDigitalValues_: [boolean, boolean, boolean, boolean, boolean, boolean] = [false, false, false, false, false, false];
+  private latestAnalogValues_: [number, number, number, number, number, number] = [0, 0, 0, 0, 0, 0];
 
-  tick(input: RobotBinding.TickIn): RobotBinding.TickOut {
-    this.damp_ = this.damp_ * 0.75 + 0.25;
-
+  tick(readable: AbstractRobot.Readable): RobotBinding.TickOut {
     const motorPositionDeltas: [number, number, number, number] = [0, 0, 0, 0];
     
 
     // Motors
-    for (let i = 0; i < input.motorVelocities.length; i++) {
+    for (let i = 0; i < 4; i++) {
+      const motor = readable.getMotor(i);
+
       const motorId = this.motorPorts_[i];
       
       // If no motor is bound to the port, skip it.
       if (!motorId) continue;
     
-      const motor = this.robot_.nodes[motorId];
-      if (!motor) throw new Error(`Missing motor: ${motorId}`);
-      if (motor.type !== Node.Type.Motor) throw new Error(`Invalid motor type: ${motor.type}`);
+      const motorNode = this.robot_.nodes[motorId];
+      if (!motorNode) throw new Error(`Missing motor: ${motorId}`);
+      if (motorNode.type !== Node.Type.Motor) throw new Error(`Invalid motor type: ${motorNode.type}`);
 
 
       const bMotor = this.motors_[motorId];
       // If motorId is set but the motor is not found, throw an error.
       if (!bMotor) throw new Error(`Missing motor instantiation: "${motorId}" on port ${i}`);
 
-      const ticksPerRevolution = motor.ticksPerRevolution ?? 2048;
-      const maxVelocity = motor.velocityMax ?? 1500;
+      const ticksPerRevolution = motorNode.ticksPerRevolution ?? 2048;
+      const maxVelocity = motorNode.velocityMax ?? 1500;
 
-      const inputVelocity = (motor.plug === undefined || motor.plug === 'normal')
-        ? input.motorVelocities[i]
-        : -input.motorVelocities[i];
+      const plug = (motorNode.plug === undefined || motorNode.plug === 'normal') ? 1 : -1;
+
+      const inputVelocity = plug * input.motorVelocities[i];
 
       const clampedVelocity = clamp(-maxVelocity, inputVelocity, maxVelocity);
 
@@ -385,13 +384,13 @@ class RobotBinding {
 
       this.lastMotorAngles_[i] = currentAngle;
 
-      motorPositionDeltas[i] = ((motor.plug && motor.plug === Node.Motor.Plug.Inverted) ? -1 : 1) * Math.round(deltaAngle / (2 * Math.PI) * ticksPerRevolution);
+      motorPositionDeltas[i] = plug * Math.round(deltaAngle / (2 * Math.PI) * ticksPerRevolution);
 
       bMotor.setMotor(velocity);
     }
 
     // Servos
-    for (let i = 0; i < input.servoPositions.length; i++) {
+    for (let i = 0; i < 4; i++) {
       const servoId = this.servoPorts_[i];
 
       // If no servo is bound to the port, skip it.
@@ -412,7 +411,7 @@ class RobotBinding {
       const physicalMinRads = Angle.toRadiansValue(physicalMin);
       const physicalMaxRads = Angle.toRadiansValue(physicalMax);
 
-      const servoPosition = clamp(0, input.servoPositions[i], 2048);
+      const servoPosition = clamp(0, readable.getServoPosition(i), 2048);
       const desiredAngle = (servoPosition - 1024) / 2048 * RobotBinding.SERVO_LOGICAL_RANGE_RADS;
 
       bServo.executeNativeFunction((world, joint) => {
@@ -420,14 +419,14 @@ class RobotBinding {
 
         joint.setLimit(physicalMinRads, physicalMaxRads, 0.9, 0.3, 1);
         joint.setMaxMotorImpulse(1000);
-        joint.setMotorTarget(desiredAngle * this.damp_ + joint.getHingeAngle() * (1 - this.damp_), 0.05);
+        joint.setMotorTarget(desiredAngle, 0.05);
       
         /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
       });
     }
 
     // Digital Sensors
-    const digitalValues: RobotState.DigitalValues = [false, false, false, false, false, false];
+    /*const digitalValues: RobotState.DigitalValues = [false, false, false, false, false, false];
     for (let i = 0; i < 6; ++i) {
       const digitalId = this.digitalPorts_[i];
       if (!digitalId) continue;
@@ -469,13 +468,11 @@ class RobotBinding {
       }
 
       analogValues[i] = this.latestAnalogValues_[i];
-    }
+    }*/
 
     return {
       origin: this.origin,
-      motorPositionDeltas,
-      digitalValues,
-      analogValues,
+      writeCommands: []
     };
   }
 
@@ -633,51 +630,19 @@ class RobotBinding {
 }
 
 namespace RobotBinding {
-  export interface TickIn {
-    /**
-     * Velocities in ticks/second
-     */
-    motorControls: [
-      RobotState.MotorControl,
-      RobotState.MotorControl,
-      RobotState.MotorControl,
-      RobotState.MotorControl
-    ];
-
-    /**
-     * Servo positions in ticks
-     */
-    servoPositions: [number, number, number, number];
-  }
-
   export interface TickOut {
     /**
      * The new origin of the robot
      */
     origin: ReferenceFrame;
 
-    /**
-     * Delta of motor positions in ticks since last `tick`
-     */
-    motorPositionDeltas: [number, number, number, number];
-  
-    /**
-     * Updated digital values
-     */
-    digitalValues: RobotState.DigitalValues;
-
-    /**
-     * Updated analog values
-     */
-    analogValues: RobotState.AnalogValues;
+    writeCommands: WriteCommand[];
   }
 
   export namespace TickOut {
     export const NIL: TickOut = {
       origin: ReferenceFrame.IDENTITY,
-      motorPositionDeltas: [0, 0, 0, 0],
-      digitalValues: [false, false, false, false, false, false],
-      analogValues: [0, 0, 0, 0, 0, 0],
+      writeCommands: [],
     };
   }
 

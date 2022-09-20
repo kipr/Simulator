@@ -16,6 +16,7 @@ import Material from './state/State/Scene/Material';
 import { preBuiltGeometries, preBuiltTemplates } from "./node-templates";
 import RobotBinding from './RobotBinding';
 import Robot from './state/State/Robot';
+import AbstractRobot from './AbstractRobot';
 
 export type FrameLike = Babylon.TransformNode | Babylon.AbstractMesh;
 
@@ -1134,19 +1135,16 @@ class SceneBinding {
     this.scene_ = scene;
   };
 
-  tick(): Dict<RobotBinding.TickOut> {
+  tick(abstractRobots: Dict<AbstractRobot.Readable>): Dict<RobotBinding.TickOut> {
     const ret: Dict<RobotBinding.TickOut> = {};
     for (const nodeId in this.scene_.nodes) {
-      const node = this.scene_.nodes[nodeId];
-      if (node.type !== 'robot') continue;
+      const abstractRobot = abstractRobots[nodeId];
+      if (!abstractRobot) continue;
 
       const robotBinding = this.robotBindings_[nodeId];
       if (!robotBinding) throw new Error(`No robot binding for node ${nodeId}`);
 
-      ret[nodeId] = robotBinding.tick({
-        motorVelocities: node.state.motorSpeeds,
-        servoPositions: node.state.servoPositions,
-      });
+      ret[nodeId] = robotBinding.tick(abstractRobots[nodeId]);
     }
     return ret;
   }

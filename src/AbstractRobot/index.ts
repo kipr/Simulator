@@ -1,16 +1,23 @@
+import deepNeq from '../deepNeq';
 import construct from '../util/construct';
+import Patch from '../util/Patch';
 import MotorDirection from './MotorDirection';
 import MotorMode from './MotorMode'
 import WriteCommand from './WriteCommand';
 
-interface AbstractRobot {
-  getMotor(port: number): AbstractRobot.Motor;
-  getServoPosition(port: number): number;
-
-  apply(writeCommands: WriteCommand[]);
-}
+type AbstractRobot = AbstractRobot.Readable & AbstractRobot.Writable;
 
 namespace AbstractRobot {
+  export interface Readable {
+    getMotor(port: number): AbstractRobot.Motor;
+    getServoPosition(port: number): number;
+  }
+  
+  export interface Writable {
+    apply(writeCommands: WriteCommand[]);
+    sync(stateless: AbstractRobot.Stateless);
+  }
+
   export namespace Motor {
     export enum Type {
       Pwm = 'pwm',
@@ -22,12 +29,11 @@ namespace AbstractRobot {
     interface Base {
       position: number;
       direction: MotorDirection;
+      pwm: number;
     }
 
     export interface Pwm extends Base {
       type: Type.Pwm;
-
-      pwm: number;
     }
 
     export const pwm = construct<Pwm>(Type.Pwm);
@@ -71,25 +77,55 @@ namespace AbstractRobot {
     Motor.SpeedPosition
   );
 
-  export interface Stateless {
-    motors: [Motor, Motor, Motor, Motor];
-    servoPositions: [number, number, number, number];
+  export class Stateless implements Readable {
+    motors: Stateless.Motors;
+    servoPositions: Stateless.ServoPositions;
+
+    constructor(motors: Stateless.Motors, servoPositions: Stateless.ServoPositions) {
+      this.motors = motors;
+      this.servoPositions = servoPositions;
+    }
+
+    getMotor(port: number): Motor {
+      return this.motors[port];
+    }
+
+    getServoPosition(port: number): number {
+      return this.servoPositions[port];
+    }
   }
 
-  export const toStateless = (robot: AbstractRobot): Stateless => ({
-    motors: [
-      robot.getMotor(0),
-      robot.getMotor(1),
-      robot.getMotor(2),
-      robot.getMotor(3),
-    ],
-    servoPositions: [
-      robot.getServoPosition(0),
-      robot.getServoPosition(1),
-      robot.getServoPosition(2),
-      robot.getServoPosition(3),
-    ],
-  });
+  export namespace Stateless {
+    export type Motors = [Motor, Motor, Motor, Motor];
+    export type ServoPositions = [number, number, number, number];
+
+    export const NIL = new Stateless([
+        Motor.pwm({ position: 0, direction: MotorDirection.Idle, pwm: 0 }),
+        Motor.pwm({ position: 0, direction: MotorDirection.Idle, pwm: 0 }),
+        Motor.pwm({ position: 0, direction: MotorDirection.Idle, pwm: 0 }),
+        Motor.pwm({ position: 0, direction: MotorDirection.Idle, pwm: 0 }),
+      ],
+      [0, 0, 0, 0],
+    );
+
+    export const diff = (a: Stateless, b: Stateless): Patch<Stateless> => {
+      if (!deepNeq(a, b)) return Patch.none(a);
+      
+      return Patch.outerChange(a, b);
+    };
+  }
+
+  export const toStateless = (robot: AbstractRobot) => new Stateless([
+    robot.getMotor(0),
+    robot.getMotor(1),
+    robot.getMotor(2),
+    robot.getMotor(3),
+  ], [
+    robot.getServoPosition(0),
+    robot.getServoPosition(1),
+    robot.getServoPosition(2),
+    robot.getServoPosition(3),
+  ]);
 }
 
 export default AbstractRobot;

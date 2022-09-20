@@ -6,8 +6,8 @@ import Camera from "../State/Scene/Camera";
 
 import { JBC_Sandbox_A } from '../../scenes';
 import { ReferencedScenePair } from "..";
-import { RobotState } from '../../RobotState';
 import construct from '../../util/construct';
+import WriteCommand from '../../AbstractRobot/WriteCommand';
 
 export namespace SceneAction {
   export interface ReplaceScene {
@@ -116,14 +116,6 @@ export namespace SceneAction {
 
   export const addObject = construct<AddObject>('add-object');
 
-  export interface SetRobotState {
-    type: 'set-robot-state';
-    nodeId: string;
-    state: RobotState;
-  }
-
-  export const setRobotState = construct<SetRobotState>('set-robot-state');
-
   export interface SetCamera {
     type: 'set-camera';
     camera: Camera;
@@ -155,7 +147,6 @@ export type SceneAction = (
   SceneAction.SelectNode |
   SceneAction.UnselectAll |
   SceneAction.AddObject |
-  SceneAction.SetRobotState |
   SceneAction.SetCamera |
   SceneAction.SetNodeOrigin
 );
@@ -414,25 +405,6 @@ export const reduceScene = (state: ReferencedScenePair = { referenceScene: JBC_S
           camera: action.camera,
         },
       };
-    case 'set-robot-state': {
-      const node = state.workingScene.nodes[action.nodeId];
-      if (!node) return state;
-      if (node.type !== 'robot') return state;
-      const nextState: ReferencedScenePair = {
-        ...state,
-        workingScene: {
-          ...state.workingScene,
-          nodes: {
-            ...state.workingScene.nodes,
-            [action.nodeId]: {
-              ...node,
-              state: action.state,
-            },
-          }
-        },
-      };
-      return nextState;
-    }
     case 'set-node-origin': {
       if (action.modifyReferenceScene) {
         return {
