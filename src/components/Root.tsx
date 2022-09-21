@@ -163,6 +163,7 @@ export class Root extends React.Component<Props, State> {
       activeLanguage: 'c',
       code: {
         'c': window.localStorage.getItem('code-c') || '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
+        'cpp': window.localStorage.getItem('code-cpp') || '#include <iostream>\n#include <kipr/wombat.hpp>\n\nint main()\n{\n  std::cout << "Hello, World!" << std::endl;\n  return 0;\n}\n',
         'python': window.localStorage.getItem('code-python') || 'from kipr import *\n\nprint(\'Hello, World!\')',
       },
       modal: Modal.NONE,
@@ -288,7 +289,8 @@ export class Root extends React.Component<Props, State> {
     const activeCode = code[activeLanguage];
 
     switch (activeLanguage) {
-      case 'c': {
+      case 'c':
+      case 'cpp': {
         let nextConsole: StyledText = StyledText.extend(console, StyledText.text({
           text: `Compiling...\n`,
           style: STDOUT_STYLE(this.state.theme)
@@ -298,7 +300,7 @@ export class Root extends React.Component<Props, State> {
           simulatorState: SimulatorState.COMPILING,
           console: nextConsole
         }, () => {
-          compile(activeCode)
+          compile(activeCode, activeLanguage)
             .then(compileResult => {
               nextConsole = this.state.console;
               const messages = sort(parseMessages(compileResult.stderr));
@@ -322,7 +324,7 @@ export class Root extends React.Component<Props, State> {
                 }));
     
                 WorkerInstance.start({
-                  language: 'c',
+                  language: activeLanguage,
                   code: compileResult.result
                 });
               } else {

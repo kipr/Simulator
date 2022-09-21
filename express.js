@@ -46,8 +46,21 @@ if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env
       });
     }
 
+    if (!('language' in req.body)) {
+      return res.status(400).json({
+        error: "Expected language key in body"
+      });
+    }
+
+    if (typeof req.body.language !== 'string' || !['c', 'cpp'].includes(req.body.language)) {
+      return res.status(400).json({
+        error: "Expected language key in body to be a supported language string"
+      });
+    }
+
     const id = uuid.v4();
-    const path = `/tmp/${id}.c`;
+    const fileExtension = req.body.language;
+    const path = `/tmp/${id}.${fileExtension}`;
     fs.writeFile(path, req.body.code, err => {
       if (err) {
         return res.status(500).json({
@@ -60,8 +73,9 @@ if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env
       env['PATH'] = `${config.server.dependencies.emsdk_env.PATH}:${process.env.PATH}`;
       env['EMSDK'] = config.server.dependencies.emsdk_env.EMSDK;
       env['EM_CONFIG'] = config.server.dependencies.emsdk_env.EM_CONFIG;
-  
-      exec(`emcc -s WASM=1 -s SINGLE_FILE=1 -s INVOKE_RUN=0 -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main']" -I${config.server.dependencies.libkipr_c}/include -L${config.server.dependencies.libkipr_c}/lib -lkipr -o ${path}.js ${path}`, {
+
+      const compiler = req.body.language === 'c' ? 'emcc' : 'em++';
+      exec(`${compiler} -s WASM=1 -s SINGLE_FILE=1 -s INVOKE_RUN=0 -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main']" -I${config.server.dependencies.libkipr_c}/include -L${config.server.dependencies.libkipr_c}/lib -lkipr -o ${path}.js ${path}`, {
         env
       }, (err, stdout, stderr) => {
         if (err) {

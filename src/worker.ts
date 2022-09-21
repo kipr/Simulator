@@ -96,7 +96,8 @@ const startPython = async (message: Protocol.Worker.StartRequest) => {
 
 const start = async (message: Protocol.Worker.StartRequest) => {
   switch (message.language) {
-    case 'c': {
+    case 'c':
+    case 'cpp': {
       startC(message);
       break;
     }
