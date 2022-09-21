@@ -5,6 +5,7 @@ namespace WriteCommand {
     DigitalIn = 'digital-in',
     Analog = 'analog',
     MotorPosition = 'motor-position',
+    AddMotorPosition = 'add-motor-position',
     MotorPwm = 'motor-pwm',
     MotorDone = 'motor-done',
   }
@@ -39,6 +40,16 @@ namespace WriteCommand {
 
   export const motorPosition = construct<MotorPosition>(Type.MotorPosition);
 
+  export interface AddMotorPosition {
+    type: Type.AddMotorPosition;
+
+    port: number;
+    
+    positionDelta: number;
+  }
+
+  export const addMotorPosition = construct<AddMotorPosition>(Type.AddMotorPosition);
+
   export interface MotorPwm {
     type: Type.MotorPwm;
   
@@ -64,6 +75,7 @@ type WriteCommand = (
   WriteCommand.DigitalIn |
   WriteCommand.Analog |
   WriteCommand.MotorPosition |
+  WriteCommand.AddMotorPosition |
   WriteCommand.MotorPwm |
   WriteCommand.MotorDone
 );

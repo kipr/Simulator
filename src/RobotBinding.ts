@@ -12,6 +12,7 @@ import Dict from './Dict';
 import { RENDER_SCALE, RENDER_SCALE_METERS_MULTIPLIER } from './renderConstants';
 import WriteCommand from './AbstractRobot/WriteCommand';
 import AbstractRobot from './AbstractRobot';
+import { Motor } from './AbstractRobot/Motor';
 
 interface BuiltGeometry {
   mesh: Babylon.Mesh;
@@ -320,7 +321,23 @@ class RobotBinding {
     return ret;
   };
 
-  private accumulatedMotorPositions_: [number, number, number, number] = [0, 0, 0, 0];
+  private hingeAngle_ = (joint: Babylon.MotorEnabledJoint): number => {
+    let currentAngle: number;
+    joint.executeNativeFunction((world, joint) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+      currentAngle = joint.getHingeAngle();
+    });
+    return currentAngle;
+  };
+
+  private setMotorVelocity_ = (joint: Babylon.MotorEnabledJoint, velocity: number) => {
+    joint.executeNativeFunction((world, joint) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+      joint.enableAngularMotor(true, velocity, 10000);
+    });
+  };
+
+  private lastTick_: number = 0;
   private lastMotorAngles_: [number, number, number, number] = [0, 0, 0, 0];
 
   // Getting sensor values is async. We store the pending promises in these dictionaries.
@@ -330,50 +347,45 @@ class RobotBinding {
   private latestDigitalValues_: [boolean, boolean, boolean, boolean, boolean, boolean] = [false, false, false, false, false, false];
   private latestAnalogValues_: [number, number, number, number, number, number] = [0, 0, 0, 0, 0, 0];
 
+  private lastPErrs_: [number, number, number, number] = [0, 0, 0, 0];
+  private iErrs_: [number, number, number, number] = [0, 0, 0, 0];
+
   tick(readable: AbstractRobot.Readable): RobotBinding.TickOut {
     const motorPositionDeltas: [number, number, number, number] = [0, 0, 0, 0];
+
+    const writeCommands: WriteCommand[] = [];
+
+    const now = performance.now();
+    const delta = (now - this.lastTick_) / 1000;
     
 
-    // Motors
-    for (let i = 0; i < 4; i++) {
-      const motor = readable.getMotor(i);
+    const abstractMotors: [Motor, Motor, Motor, Motor] = [
+      readable.getMotor(0),
+      readable.getMotor(1),
+      readable.getMotor(2),
+      readable.getMotor(3)
+    ];
 
-      const motorId = this.motorPorts_[i];
+    // Update motor position deltas
+    const nextPositions: [number, number, number, number] = [0, 0, 0, 0];
+    for (let port = 0; port < 4; ++port) {
+      const motorId = this.motorPorts_[port];
       
       // If no motor is bound to the port, skip it.
       if (!motorId) continue;
+
+      const abstractMotor = abstractMotors[port];
     
-      const motorNode = this.robot_.nodes[motorId];
-      if (!motorNode) throw new Error(`Missing motor: ${motorId}`);
-      if (motorNode.type !== Node.Type.Motor) throw new Error(`Invalid motor type: ${motorNode.type}`);
-
-
+      const motorNode = this.robot_.nodes[motorId] as Node.Motor;
       const bMotor = this.motors_[motorId];
-      // If motorId is set but the motor is not found, throw an error.
-      if (!bMotor) throw new Error(`Missing motor instantiation: "${motorId}" on port ${i}`);
-
       const ticksPerRevolution = motorNode.ticksPerRevolution ?? 2048;
-      const maxVelocity = motorNode.velocityMax ?? 1500;
 
       const plug = (motorNode.plug === undefined || motorNode.plug === 'normal') ? 1 : -1;
 
-      const inputVelocity = plug * input.motorVelocities[i];
-
-      const clampedVelocity = clamp(-maxVelocity, inputVelocity, maxVelocity);
-
-      // Convert input velocity to radians per second.
-      const velocity = (clampedVelocity / ticksPerRevolution) * (2 * Math.PI);
-
-      let currentAngle: number;
-      bMotor.executeNativeFunction((world, joint) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        currentAngle = joint.getHingeAngle();
-      });
-
-      const lastMotorAngle = this.lastMotorAngles_[i];
-
+      // Get the delta angle of the motor since the last tick.
+      const currentAngle = this.hingeAngle_(bMotor);
+      const lastMotorAngle = this.lastMotorAngles_[port];
       let deltaAngle = 0;
-
       if (lastMotorAngle > Math.PI / 2 && currentAngle < -Math.PI / 2) {
         deltaAngle = currentAngle + 2 * Math.PI - lastMotorAngle;
       } else if (lastMotorAngle < -Math.PI / 2 && currentAngle > Math.PI / 2) {
@@ -381,13 +393,51 @@ class RobotBinding {
       } else {
         deltaAngle = currentAngle - lastMotorAngle;
       }
+      this.lastMotorAngles_[port] = currentAngle;
 
-      this.lastMotorAngles_[i] = currentAngle;
+      const angularVelocity = deltaAngle / delta;
 
-      motorPositionDeltas[i] = plug * Math.round(deltaAngle / (2 * Math.PI) * ticksPerRevolution);
+      const { position, done, mode, speedGoal, positionGoal, kP, kD, kI } = abstractMotor;
 
-      bMotor.setMotor(velocity);
+      // Convert to ticks
+      const positionDelta = plug * Math.round(deltaAngle / (2 * Math.PI) * ticksPerRevolution);
+      const velocity = plug * angularVelocity / (2 * Math.PI) * ticksPerRevolution;
+
+      nextPositions[port] = position + positionDelta;
+      writeCommands.push(WriteCommand.addMotorPosition({ port, positionDelta }));
+
+
+      // This code is taken from Wombat-Firmware for parity.
+      const pErr = speedGoal - velocity;
+      const dErr = pErr - this.lastPErrs_[port];
+      this.lastPErrs_[port] = pErr;
+
+      const iErr = clamp(-10000, this.iErrs_[port] + pErr, 10000);
+      this.iErrs_[port] = iErr;
+
+      let pwm = kP * pErr + kI * iErr + kD * dErr;
+
+      if (mode === Motor.Mode.Position || mode === Motor.Mode.SpeedPosition) {
+        if (speedGoal < 0 && position < positionGoal) {
+          pwm = 0;
+          writeCommands.push(WriteCommand.motorDone({ port, done: true }));
+        } else if (speedGoal > 0 && position > positionGoal) {
+          pwm = 0;
+          writeCommands.push(WriteCommand.motorDone({ port, done: true }));
+        }
+      }
+
+      pwm = clamp(-400, pwm, 400);
+
+      writeCommands.push(WriteCommand.motorPwm({ port, pwm }));
+
+      const normalizedPwm = pwm / 400;
+
+      const velocityMax = motorNode.velocityMax || 1500;
+
+      this.setMotorVelocity_(bMotor, normalizedPwm * velocityMax * 2 * Math.PI / ticksPerRevolution);
     }
+
 
     // Servos
     for (let i = 0; i < 4; i++) {
@@ -510,8 +560,6 @@ class RobotBinding {
     }
 
     resetTransformNode.dispose();
-
-    this.damp_ = 0;
   }
 
   get visible(): boolean {
