@@ -3,7 +3,6 @@ import { combineReducers, createStore,  } from 'redux';
 import * as reducer from './reducer';
 import Scene from './State/Scene';
 import { Robots, Scenes } from './State';
-import { RobotState } from '../RobotState';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
 const global = window as any;

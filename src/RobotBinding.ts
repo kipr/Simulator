@@ -333,7 +333,7 @@ class RobotBinding {
   private setMotorVelocity_ = (joint: Babylon.MotorEnabledJoint, velocity: number) => {
     joint.executeNativeFunction((world, joint) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      joint.enableAngularMotor(true, velocity, 10000);
+      joint.enableAngularMotor(true, velocity, 100);
     });
   };
 
@@ -398,6 +398,7 @@ class RobotBinding {
       const angularVelocity = deltaAngle / delta;
 
       const { position, done, mode, speedGoal, positionGoal, kP, kD, kI } = abstractMotor;
+      let { pwm } = abstractMotor;
 
       // Convert to ticks
       const positionDelta = plug * Math.round(deltaAngle / (2 * Math.PI) * ticksPerRevolution);
@@ -406,36 +407,57 @@ class RobotBinding {
       nextPositions[port] = position + positionDelta;
       writeCommands.push(WriteCommand.addMotorPosition({ port, positionDelta }));
 
+      if (mode !== Motor.Mode.Pwm && !done) {
+        // This code is taken from Wombat-Firmware for parity.
+        const pErr = speedGoal - velocity;
+        const dErr = pErr - this.lastPErrs_[port];
+        this.lastPErrs_[port] = pErr;
 
-      // This code is taken from Wombat-Firmware for parity.
-      const pErr = speedGoal - velocity;
-      const dErr = pErr - this.lastPErrs_[port];
-      this.lastPErrs_[port] = pErr;
+        const iErr = clamp(-10000, this.iErrs_[port] + pErr, 10000);
+        this.iErrs_[port] = iErr;
 
-      const iErr = clamp(-10000, this.iErrs_[port] + pErr, 10000);
-      this.iErrs_[port] = iErr;
+        pwm = kP * pErr + kI * iErr + kD * dErr;
 
-      let pwm = kP * pErr + kI * iErr + kD * dErr;
+        console.log({
+          kP,
+          kI,
+          kD,
+          pErr,
+          iErr,
+          dErr,
+          pwm
+        })
 
-      if (mode === Motor.Mode.Position || mode === Motor.Mode.SpeedPosition) {
-        if (speedGoal < 0 && position < positionGoal) {
-          pwm = 0;
-          writeCommands.push(WriteCommand.motorDone({ port, done: true }));
-        } else if (speedGoal > 0 && position > positionGoal) {
-          pwm = 0;
-          writeCommands.push(WriteCommand.motorDone({ port, done: true }));
+        if (mode === Motor.Mode.Position || mode === Motor.Mode.SpeedPosition) {
+          if (speedGoal < 0 && position < positionGoal) {
+            pwm = 0;
+            writeCommands.push(WriteCommand.motorDone({ port, done: true }));
+          } else if (speedGoal > 0 && position > positionGoal) {
+            pwm = 0;
+            writeCommands.push(WriteCommand.motorDone({ port, done: true }));
+          }
         }
       }
 
       pwm = clamp(-400, pwm, 400);
 
       writeCommands.push(WriteCommand.motorPwm({ port, pwm }));
-
+      
       const normalizedPwm = pwm / 400;
-
       const velocityMax = motorNode.velocityMax || 1500;
+      const nextAngularVelocity = normalizedPwm * velocityMax * 2 * Math.PI / ticksPerRevolution;
 
-      this.setMotorVelocity_(bMotor, normalizedPwm * velocityMax * 2 * Math.PI / ticksPerRevolution);
+      if (nextAngularVelocity !== 0) {
+        console.log({
+          normalizedPwm,
+          velocityMax,
+          nextAngularVelocity,
+        })
+      }
+
+      
+
+      this.setMotorVelocity_(bMotor, nextAngularVelocity);
     }
 
 
@@ -522,7 +544,7 @@ class RobotBinding {
 
     return {
       origin: this.origin,
-      writeCommands: []
+      writeCommands
     };
   }
 

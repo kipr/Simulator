@@ -23,7 +23,7 @@ export namespace Motor {
     Brake,
   }
   
-  export namespace rDirection {
+  export namespace Direction {
     export const fromBits = (bits: number): Direction => {
       switch (bits) {
         case 0: return Direction.Idle;

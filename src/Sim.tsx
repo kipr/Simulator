@@ -2,8 +2,6 @@ import * as Babylon from 'babylonjs';
 import 'babylonjs-loaders';
 // import Oimo = require('babylonjs/Oimo');
 
-import { RobotState } from './RobotState';
-
 import Dict from './Dict';
 
 import { Quaternion, ReferenceFrame, Vector2, Vector3 } from './math';
@@ -31,6 +29,8 @@ if (SIMULATOR_HAS_AMMO) {
 }
 
 import RobotBinding from './RobotBinding';
+import WorkerInstance from './WorkerInstance';
+import AbstractRobot from './AbstractRobot';
 
 
 export let ACTIVE_SPACE: Space;
@@ -216,8 +216,13 @@ export class Space {
 
   // Compare Babylon positions with state positions. If they differ significantly, update state
   private updateStore_ = () => {
-    const tickOuts = this.sceneBinding_.tick();
-    const { nodes } = store.getState().scene.workingScene;
+    const { workingScene } = store.getState().scene;
+    const { nodes } = workingScene;
+
+    const robots = Scene.robots(workingScene);
+
+    const robotWorkerInstances = Dict.map(robots, () => WorkerInstance);
+    const tickOuts = this.sceneBinding_.tick(robotWorkerInstances);
 
     const setNodeBatch: Omit<SceneAction.SetNodeBatch, 'type'> = {
       nodeIds: [],
@@ -230,14 +235,14 @@ export class Space {
       const tickOut = tickOuts[robotId];
       const robot = nodes[robotId] as Node.Robot;
 
-      WORKER_INSTANCE.incrementMotorPositions(tickOut.motorPositionDeltas);
-      WORKER_INSTANCE.setSensorValues(tickOut.analogValues, tickOut.digitalValues);
+      robotWorkerInstances[robotId].apply(tickOut.writeCommands);
 
       setNodeBatch.nodeIds.push({
         id: robotId,
         node: {
           ...robot,
           origin: tickOut.origin,
+          state: AbstractRobot.toStateless(robotWorkerInstances[robotId]),
         }
       });
     }

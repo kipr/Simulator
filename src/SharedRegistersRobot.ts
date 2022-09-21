@@ -1,6 +1,5 @@
 import AbstractRobot from './AbstractRobot';
-import MotorDirection from './AbstractRobot/MotorDirection';
-import MotorMode from './AbstractRobot/MotorMode';
+import { Motor } from './AbstractRobot/Motor';
 import WriteCommand from './AbstractRobot/WriteCommand';
 import RegisterState from './RegisterState';
 import SharedRegisters from './SharedRegisters';
@@ -17,7 +16,7 @@ class SharedRegistersRobot implements AbstractRobot {
     return (done & (1 << (3 - port))) !== 0;
   };
 
-  private readonly getMotorPid_ = (port: number): AbstractRobot.Motor.Pid => {
+  private readonly getMotorPid_ = (port: number): { kP: number; kI: number; kD: number; } => {
     const pNum = this.sharedResisters_.getRegisterValue16b(RegisterState.REG_W_PID_0_P_H + port * 12);
     const pDen = this.sharedResisters_.getRegisterValue16b(RegisterState.REG_W_PID_0_PD_H + port * 12);
     
@@ -34,57 +33,35 @@ class SharedRegistersRobot implements AbstractRobot {
     };
   };
 
-  getMotor(port: number): AbstractRobot.Motor {
+  getMotor(port: number): Motor {
     const modes = this.sharedResisters_.getRegisterValue8b(RegisterState.REG_RW_MOT_MODES);
     const directions = this.sharedResisters_.getRegisterValue8b(RegisterState.REG_RW_MOT_DIRS);
-    const mode = MotorMode.fromBits((modes >> (port * 2)) & 0b11);
-    const direction = MotorDirection.fromBits((directions >> (port * 2)) & 0b11);
+    const mode = Motor.Mode.fromBits((modes >> (port * 2)) & 0b11);
+    const direction = Motor.Direction.fromBits((directions >> (port * 2)) & 0b11);
     const position = this.sharedResisters_.getRegisterValue32b(RegisterState.REG_RW_MOT_0_B3 + port * 4);
     const pwm = this.sharedResisters_.getRegisterValue16b(RegisterState.REG_RW_MOT_0_PWM_H + port * 2);
+    const done = this.getMotorDone_(port);
+    const speedGoal = this.sharedResisters_.getRegisterValue16b(RegisterState.REG_RW_MOT_0_SP_H + port * 2, true);
+    const positionGoal = this.sharedResisters_.getRegisterValue32b(RegisterState.REG_W_MOT_0_GOAL_B3 + port * 4, true);
 
-    switch (mode) {
-      case MotorMode.Pwm: {
-        return AbstractRobot.Motor.pwm({
-          direction,
-          position,
-          pwm
-        });
-      }
-      case MotorMode.Position: {
-        return AbstractRobot.Motor.position({
-          direction,
-          position,
-          pwm,
-          done: this.getMotorDone_(port),
-          positionGoal: this.sharedResisters_.getRegisterValue32b(RegisterState.REG_W_MOT_0_GOAL_B3 + port * 4, true),
-          ...this.getMotorPid_(port),
-        });
-      }
-      case MotorMode.Speed: {
-        return AbstractRobot.Motor.speed({
-          direction,
-          position,
-          pwm,
-          done: this.getMotorDone_(port),
-          speedGoal: this.sharedResisters_.getRegisterValue16b(RegisterState.REG_RW_MOT_0_SP_H + port * 2, true),
-          ...this.getMotorPid_(port),
-        });
-      }
-      case MotorMode.SpeedPosition: {
-        return AbstractRobot.Motor.speedPosition({
-          direction,
-          position,
-          pwm,
-          done: this.getMotorDone_(port),
-          speedGoal: this.sharedResisters_.getRegisterValue16b(RegisterState.REG_RW_MOT_0_SP_H + port * 2, true),
-          positionGoal: this.sharedResisters_.getRegisterValue32b(RegisterState.REG_W_MOT_0_GOAL_B3 + port * 4, true),
-          ...this.getMotorPid_(port),
-        });
-      }
-      default: {
-        throw new Error(`Unknown motor mode: ${mode}`);
-      }
-    }
+    return {
+      mode,
+      direction,
+      position,
+      pwm,
+      done,
+      speedGoal,
+      positionGoal,
+      ...this.getMotorPid_(port),
+    };
+  }
+
+  getDigitalValue(port: number): boolean {
+    return false;
+  }
+
+  getAnalogValue(port: number): number {
+    return 0;
   }
 
   getServoPosition(port: number): number {
@@ -114,7 +91,12 @@ class SharedRegistersRobot implements AbstractRobot {
   }
 
   sync(stateless: AbstractRobot.Stateless) {
+    for (let i = 0; i < 4; ++i) {
+      const motor = stateless.getMotor(i);
 
+      this.sharedResisters_.setRegister16b(RegisterState.REG_W_PID_0_P_H + i * 12, Math.trunc(motor.kP * 1000));
+      this.sharedResisters_.setRegister16b(RegisterState.REG_W_PID_0_PD_H + i * 12, 1000);
+    }
   }
 }
 

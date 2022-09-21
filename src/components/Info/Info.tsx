@@ -176,19 +176,19 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
     }
 
     const motorVelocities: JSX.Element[] = [];
+    const motorPositions: JSX.Element[] = [];
+
     for (let i = 0; i < 4; ++i) {
+      const motor = node.state.getMotor(i);
       motorVelocities.push(
-        <Row key={`motor-velocity-${i}`} theme={theme}>
-          <SensorWidget value={node.state.motorSpeeds[i]} name={`motor ${i}`} plotTitle='Motor Velocity Plot' theme={theme} />
+        <Row key={`motor-pwm-${i}`} theme={theme}>
+          <SensorWidget value={motor.pwm} name={`motor ${i}`} plotTitle='Motor PWM Plot' theme={theme} />
         </Row>
       );
-    }
 
-    const motorPositions: JSX.Element[] = [];
-    for (let i = 0; i < 4; ++i) {
       motorPositions.push(
         <Row key={`motor-pos-${i}`} theme={theme}>
-          <SensorWidget value={node.state.motorPositions[i]} name={`get_motor_position_counter(${i})`} plotTitle='Motor Position Plot' theme={theme} />
+          <SensorWidget value={motor.position} name={`get_motor_position_counter(${i})`} plotTitle='Motor Position Plot' theme={theme} />
         </Row>
       );
     }

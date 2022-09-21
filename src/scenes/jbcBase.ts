@@ -3,13 +3,13 @@ import { Angle, Distance, Mass } from "../util";
 import Node from "../state/State/Scene/Node";
 import Camera from "../state/State/Scene/Camera";
 import Scene from "../state/State/Scene";
-import { RobotState } from '../RobotState';
+import AbstractRobot from '../AbstractRobot';
 
 const ROBOT: Node.Robot = {
   type: 'robot',
   name: 'Robot',
   robotId: 'demobot',
-  state: RobotState.NIL,
+  state: AbstractRobot.Stateless.NIL,
   visible: true,
   origin: {
     orientation: Rotation.eulerDegrees(0, -90, 0),

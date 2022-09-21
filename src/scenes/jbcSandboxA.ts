@@ -1,4 +1,3 @@
-import { RobotState } from '../RobotState';
 import Scene from "../state/State/Scene";
 import { Rotation } from "../unit-math";
 import { Distance } from "../util";

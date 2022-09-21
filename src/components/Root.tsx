@@ -2,7 +2,6 @@ import * as React from 'react';
 import { withRouter } from 'react-router-dom';
 import { signOutOfApp } from '../firebase/modules/auth';
 import WorkerInstance from '../WorkerInstance';
-import { RobotState } from '../RobotState';
 
 import SimMenu from './SimMenu';
 
@@ -175,15 +174,6 @@ export class Root extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    WorkerInstance.onStateChange = this.onWorkerStateChange_;
-
-    WorkerInstance.getRobotState = () => {
-      // TODO: Multi-robot support
-      const robots = Scene.robots(store.getState().scene.workingScene);
-      const robotIds = Object.keys(robots);
-      if (robotIds.length !== 1) throw new Error('Expected exactly one robot');
-      return robots[robotIds[0]].state;
-    };
     WorkerInstance.onStopped = this.onStopped_;
 
     this.scheduleUpdateConsole_();
@@ -240,17 +230,6 @@ export class Root extends React.Component<Props, State> {
   private onModalClick_ = (modal: Modal) => () => this.setState({ modal });
 
   private onModalClose_ = () => this.setState({ modal: Modal.NONE });
-
-  private onWorkerStateChange_ = (state: RobotState) => {
-    const robots = Scene.robots(store.getState().scene.workingScene);
-    const robotIds = Object.keys(robots);
-    if (robotIds.length !== 1) throw new Error('Expected exactly one robot');
-    store.dispatch(SceneAction.setRobotState({
-      nodeId: robotIds[0],
-      state,
-    }));
-  };
-
   
   private updateConsole_ = () => {
     const text = WorkerInstance.sharedConsole.popString();
