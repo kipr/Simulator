@@ -24,6 +24,9 @@ const OPTIONS: ComboBox.Option[] = [{
   text: 'C',
   data: 'c'
 }, {
+  text: 'C++',
+  data: 'cpp'
+}, {
   text: 'Python',
   data: 'python'
 }];
