@@ -96,6 +96,12 @@ class SharedRegistersRobot implements AbstractRobot {
 
       this.sharedResisters_.setRegister16b(RegisterState.REG_W_PID_0_P_H + i * 12, Math.trunc(motor.kP * 1000));
       this.sharedResisters_.setRegister16b(RegisterState.REG_W_PID_0_PD_H + i * 12, 1000);
+
+      this.sharedResisters_.setRegister16b(RegisterState.REG_W_PID_0_I_H + i * 12, Math.trunc(motor.kI * 1000));
+      this.sharedResisters_.setRegister16b(RegisterState.REG_W_PID_0_ID_H + i * 12, 1000);
+
+      this.sharedResisters_.setRegister16b(RegisterState.REG_W_PID_0_D_H + i * 12, Math.trunc(motor.kD * 1000));
+      this.sharedResisters_.setRegister16b(RegisterState.REG_W_PID_0_DD_H + i * 12, 1000);
     }
   }
 }

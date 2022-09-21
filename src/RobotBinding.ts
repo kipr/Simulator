@@ -333,7 +333,7 @@ class RobotBinding {
   private setMotorVelocity_ = (joint: Babylon.MotorEnabledJoint, velocity: number) => {
     joint.executeNativeFunction((world, joint) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      joint.enableAngularMotor(true, velocity, 100);
+      joint.enableAngularMotor(true, velocity, 10000);
     });
   };
 
@@ -402,7 +402,7 @@ class RobotBinding {
 
       // Convert to ticks
       const positionDelta = plug * Math.round(deltaAngle / (2 * Math.PI) * ticksPerRevolution);
-      const velocity = plug * angularVelocity / (2 * Math.PI) * ticksPerRevolution;
+      const velocity = angularVelocity / (2 * Math.PI) * ticksPerRevolution;
 
       nextPositions[port] = position + positionDelta;
       writeCommands.push(WriteCommand.addMotorPosition({ port, positionDelta }));
@@ -439,7 +439,7 @@ class RobotBinding {
         }
       }
 
-      pwm = clamp(-400, pwm, 400);
+      pwm = plug * clamp(-400, pwm, 400);
 
       writeCommands.push(WriteCommand.motorPwm({ port, pwm }));
       
