@@ -56,14 +56,14 @@ namespace AbstractRobot {
     export type DigitalValues = [boolean, boolean, boolean, boolean, boolean, boolean];
 
     export const NIL = new Stateless([
-        Motor.NIL,
-        Motor.NIL,
-        Motor.NIL,
-        Motor.NIL,
-      ],
-      [400, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0],
-      [false, false, false, false, false, false]
+      Motor.NIL,
+      Motor.NIL,
+      Motor.NIL,
+      Motor.NIL,
+    ],
+    [400, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [false, false, false, false, false, false]
     );
 
     export const diff = (a: Stateless, b: Stateless): Patch<Stateless> => {

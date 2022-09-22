@@ -339,7 +339,7 @@ class RobotBinding {
 
   
 
-  private lastTick_: number = 0;
+  private lastTick_ = 0;
   private lastMotorAngles_: [number, number, number, number] = [0, 0, 0, 0];
 
   // Getting sensor values is async. We store the pending promises in these dictionaries.
@@ -907,9 +907,9 @@ namespace RobotBinding {
       const hit = scene.pickWithRay(ray, mesh => {
         return (
           mesh !== this.trace_ &&
-          !links.has(mesh as Babylon.Mesh)
-          && !colliders.has(mesh as Babylon.Mesh)
-          && !!mesh.physicsImpostor
+          !links.has(mesh as Babylon.Mesh) &&
+          !colliders.has(mesh as Babylon.Mesh) &&
+          !!mesh.physicsImpostor
         );
       });
 

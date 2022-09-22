@@ -18,7 +18,6 @@ import SceneBinding from './SceneBinding';
 import Scene from './state/State/Scene';
 import Node from './state/State/Scene/Node';
 import { Robots } from './state/State';
-import WORKER_INSTANCE from './WorkerInstance';
 
 
 let Ammo: unknown;

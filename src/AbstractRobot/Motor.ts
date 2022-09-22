@@ -30,7 +30,6 @@ export namespace Motor {
         case 1: return Direction.Forward;
         case 2: return Direction.Backward;
         case 3: return Direction.Brake;
-        default: throw new Error(`Invalid motor direction: ${bits}`);
       }
     };
 
@@ -40,7 +39,6 @@ export namespace Motor {
         case Direction.Forward: return 1;
         case Direction.Backward: return 2;
         case Direction.Brake: return 3;
-        default: throw new Error(`Invalid motor direction: ${direction}`);
       }
     };
   }
@@ -59,7 +57,6 @@ export namespace Motor {
         case 1: return Mode.Speed;
         case 2: return Mode.Position;
         case 3: return Mode.SpeedPosition;
-        default: throw new Error(`Invalid motor mode: ${bits}`);
       }
     };
 
@@ -69,7 +66,6 @@ export namespace Motor {
         case Mode.Speed: return 1;
         case Mode.Position: return 2;
         case Mode.SpeedPosition: return 3;
-        default: throw new Error(`Invalid motor mode: ${mode}`);
       }
     };
   }
