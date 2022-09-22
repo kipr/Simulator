@@ -1,11 +1,14 @@
 import AbstractRobot from './AbstractRobot';
 import { Motor } from './AbstractRobot/Motor';
 import WriteCommand from './AbstractRobot/WriteCommand';
+import { clamp } from './math';
 import RegisterState from './RegisterState';
 import SharedRegisters from './SharedRegisters';
 
 class SharedRegistersRobot implements AbstractRobot {
   private sharedResisters_: SharedRegisters;
+
+  private static readonly POSITION_GOAL_SCALING = 250; 
 
   constructor(sharedRegisters: SharedRegisters) {
     this.sharedResisters_ = sharedRegisters;
@@ -38,17 +41,17 @@ class SharedRegistersRobot implements AbstractRobot {
     const directions = this.sharedResisters_.getRegisterValue8b(RegisterState.REG_RW_MOT_DIRS);
     const mode = Motor.Mode.fromBits((modes >> (port * 2)) & 0b11);
     const direction = Motor.Direction.fromBits((directions >> (port * 2)) & 0b11);
-    const position = this.sharedResisters_.getRegisterValue32b(RegisterState.REG_RW_MOT_0_B3 + port * 4);
+    const position = this.sharedResisters_.getRegisterValue32b(RegisterState.REG_RW_MOT_0_B3 + port * 4, true);
     const pwm = this.sharedResisters_.getRegisterValue16b(RegisterState.REG_RW_MOT_0_PWM_H + port * 2);
     const done = this.getMotorDone_(port);
     const speedGoal = this.sharedResisters_.getRegisterValue16b(RegisterState.REG_RW_MOT_0_SP_H + port * 2, true);
-    const positionGoal = this.sharedResisters_.getRegisterValue32b(RegisterState.REG_W_MOT_0_GOAL_B3 + port * 4, true);
+    const positionGoal = this.sharedResisters_.getRegisterValue32b(RegisterState.REG_W_MOT_0_GOAL_B3 + port * 4, true) / SharedRegistersRobot.POSITION_GOAL_SCALING;
 
     return {
       mode,
       direction,
       position,
-      pwm,
+      pwm: direction === Motor.Direction.Backward ? -pwm : pwm,
       done,
       speedGoal,
       positionGoal,
@@ -57,15 +60,26 @@ class SharedRegistersRobot implements AbstractRobot {
   }
 
   getDigitalValue(port: number): boolean {
-    return false;
+    return (this.sharedResisters_.getRegisterValue8b(RegisterState.REG_RW_DIG_IN_H) & (1 << port)) !== 0;
   }
 
   getAnalogValue(port: number): number {
-    return 0;
+    return this.sharedResisters_.getRegisterValue16b(RegisterState.REG_RW_ADC_0_H + port * 2);
   }
 
+  private servoRegisterToPosition_ = (val: number) => {
+    const degrees = (val - 1500.0) / 10.0;
+    const dval = (degrees + 90.0)  * 2047.0 / 180.0;
+    return clamp(0.0, dval, 2047.0);
+  };
+
+  private positionToServoRegister_ = (val: number) => {
+    const degrees = val * 180.0 / 2047.0 - 90.0;
+    return Math.round(degrees * 10.0 + 1500.0);
+  };
+
   getServoPosition(port: number): number {
-    return this.sharedResisters_.getRegisterValue16b(RegisterState.REG_RW_SERVO_0_H + port * 2);
+    return this.servoRegisterToPosition_(this.sharedResisters_.getRegisterValue16b(RegisterState.REG_RW_SERVO_0_H + port * 2));
   }
 
   private readonly apply_ = (writeCommand: WriteCommand) => {
@@ -79,9 +93,44 @@ class SharedRegistersRobot implements AbstractRobot {
         this.sharedResisters_.setRegister32b(RegisterState.REG_RW_MOT_0_B3 + writeCommand.port * 4, writeCommand.position);
         break;
       }
-      case WriteCommand.Type.MotorPwm: {
-        this.sharedResisters_.setRegister16b(RegisterState.REG_RW_MOT_0_PWM_H + writeCommand.port * 2, writeCommand.pwm);
+      case WriteCommand.Type.AddMotorPosition: {
+        this.sharedResisters_.incrementRegister32b(RegisterState.REG_RW_MOT_0_B3 + writeCommand.port * 4, writeCommand.positionDelta);
         break;
+      }
+      case WriteCommand.Type.MotorPwm: {
+        const { pwm, port } = writeCommand;
+
+        let directions = this.sharedResisters_.getRegisterValue8b(RegisterState.REG_RW_MOT_DIRS);
+        directions = directions & ~(0b11 << (port * 2));
+
+        if (pwm === 0) {
+          this.sharedResisters_.setRegister8b(RegisterState.REG_RW_MOT_DIRS, directions | (Motor.Direction.toBits(Motor.Direction.Idle) << (port * 2)));
+          this.sharedResisters_.setRegister16b(RegisterState.REG_RW_MOT_0_PWM_H + port * 2, pwm);
+        } else if (pwm > 0) {
+          this.sharedResisters_.setRegister8b(RegisterState.REG_RW_MOT_DIRS, directions | (Motor.Direction.toBits(Motor.Direction.Forward) << (port * 2)));
+          this.sharedResisters_.setRegister16b(RegisterState.REG_RW_MOT_0_PWM_H + port * 2, pwm);
+        } else {
+          this.sharedResisters_.setRegister8b(RegisterState.REG_RW_MOT_DIRS, directions | (Motor.Direction.toBits(Motor.Direction.Backward) << (port * 2)));
+          this.sharedResisters_.setRegister16b(RegisterState.REG_RW_MOT_0_PWM_H + port * 2, -pwm);
+        }
+        break;
+      }
+      case WriteCommand.Type.DigitalIn: {
+        let current = this.sharedResisters_.getRegisterValue8b(RegisterState.REG_RW_DIG_IN_H);
+        current = current & ~(1 << writeCommand.port);
+        if (writeCommand.value) current = current | (1 << writeCommand.port);
+        this.sharedResisters_.setRegister8b(RegisterState.REG_RW_DIG_IN_H, current);
+        break;
+      }
+      case WriteCommand.Type.Analog: {
+        this.sharedResisters_.setRegister16b(RegisterState.REG_RW_ADC_0_H + writeCommand.port * 2, writeCommand.value);
+        break;
+      }
+      case WriteCommand.Type.MotorDirection: {
+        let directions = this.sharedResisters_.getRegisterValue8b(RegisterState.REG_RW_MOT_DIRS);
+        directions = directions & ~(0b11 << (writeCommand.port * 2));
+        directions = directions | (Motor.Direction.toBits(writeCommand.direction) << (writeCommand.port * 2));
+        this.sharedResisters_.setRegister8b(RegisterState.REG_RW_MOT_DIRS, directions);
       }
     }
   };
@@ -91,8 +140,20 @@ class SharedRegistersRobot implements AbstractRobot {
   }
 
   sync(stateless: AbstractRobot.Stateless) {
+
+    let modes = 0;
+    let directions = 0;
+
     for (let i = 0; i < 4; ++i) {
       const motor = stateless.getMotor(i);
+
+      modes = (modes << 2) | Motor.Mode.toBits(motor.mode);
+      directions = (directions << 2) | Motor.Direction.toBits(motor.direction);
+
+      this.sharedResisters_.setRegister16b(RegisterState.REG_RW_MOT_0_PWM_H + i * 2, motor.direction === Motor.Direction.Backward ? -motor.pwm : motor.pwm);
+      this.sharedResisters_.setRegister32b(RegisterState.REG_W_MOT_0_GOAL_B3 + i * 4, motor.positionGoal * SharedRegistersRobot.POSITION_GOAL_SCALING);
+      this.sharedResisters_.setRegister16b(RegisterState.REG_RW_MOT_0_SP_H + i * 2, motor.speedGoal);
+      this.sharedResisters_.setRegister32b(RegisterState.REG_RW_MOT_0_B3 + i * 4, motor.position);
 
       this.sharedResisters_.setRegister16b(RegisterState.REG_W_PID_0_P_H + i * 12, Math.trunc(motor.kP * 1000));
       this.sharedResisters_.setRegister16b(RegisterState.REG_W_PID_0_PD_H + i * 12, 1000);
@@ -103,7 +164,17 @@ class SharedRegistersRobot implements AbstractRobot {
       this.sharedResisters_.setRegister16b(RegisterState.REG_W_PID_0_D_H + i * 12, Math.trunc(motor.kD * 1000));
       this.sharedResisters_.setRegister16b(RegisterState.REG_W_PID_0_DD_H + i * 12, 1000);
     }
+
+    this.sharedResisters_.setRegister8b(RegisterState.REG_RW_MOT_MODES, modes);
+    this.sharedResisters_.setRegister8b(RegisterState.REG_RW_MOT_DIRS, directions);
+
+    for (let i = 0; i < 4; ++i) {
+      const servoPosition = stateless.getServoPosition(i);
+      this.sharedResisters_.setRegister16b(RegisterState.REG_RW_SERVO_0_H + i * 2, this.positionToServoRegister_(servoPosition));
+    }
   }
+
+  
 }
 
 export default SharedRegistersRobot;

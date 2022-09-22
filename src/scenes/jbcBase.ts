@@ -12,6 +12,7 @@ const ROBOT: Node.Robot = {
   state: AbstractRobot.Stateless.NIL,
   visible: true,
   origin: {
+    position: Vector3.meters(0, 0.02, 0),
     orientation: Rotation.eulerDegrees(0, -90, 0),
   }
 };

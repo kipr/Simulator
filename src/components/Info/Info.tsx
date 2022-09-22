@@ -84,7 +84,7 @@ const SERVOS_NAME = StyledText.text({
 });
 
 const MOTOR_VELOCITIES_NAME = StyledText.text({
-  text: 'Motor Velocities',
+  text: 'Motor PWMs',
 });
 
 const MOTOR_POSITIONS_NAME = StyledText.compose({

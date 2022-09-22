@@ -51,6 +51,8 @@ class WorkerInstance implements AbstractRobot {
     this.sharedRegisters_.setRegister16b(Registers.REG_RW_MOT_1_PWM_H, 0);
     this.sharedRegisters_.setRegister16b(Registers.REG_RW_MOT_2_PWM_H, 0);
     this.sharedRegisters_.setRegister16b(Registers.REG_RW_MOT_3_PWM_H, 0);
+    this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_DIRS, 0xFF);
+    this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_DONE, 0);
     this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_SRV_ALLSTOP, 0xF0);
 
     if (this.onStopped) {
@@ -81,6 +83,8 @@ class WorkerInstance implements AbstractRobot {
   };
   
   start(req: Omit<Protocol.Worker.StartRequest, 'type'>) {
+    this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_MODES, 0x00);
+    this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_DIRS, 0x00);
     this.worker_.postMessage({
       type: 'start',
       ...req
@@ -102,7 +106,7 @@ class WorkerInstance implements AbstractRobot {
   constructor() {
     // Set initial register values for servos
     this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_SRV_ALLSTOP, 0xF0);
-    this.sharedRegisters_.setRegister16b(Registers.REG_RW_SERVO_0_H, 1500);
+    this.sharedRegisters_.setRegister16b(Registers.REG_RW_SERVO_0_H, 400);
     this.sharedRegisters_.setRegister16b(Registers.REG_RW_SERVO_1_H, 1500);
     this.sharedRegisters_.setRegister16b(Registers.REG_RW_SERVO_2_H, 1500);
     this.sharedRegisters_.setRegister16b(Registers.REG_RW_SERVO_3_H, 2400);

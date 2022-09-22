@@ -337,6 +337,8 @@ class RobotBinding {
     });
   };
 
+  
+
   private lastTick_: number = 0;
   private lastMotorAngles_: [number, number, number, number] = [0, 0, 0, 0];
 
@@ -349,6 +351,12 @@ class RobotBinding {
 
   private lastPErrs_: [number, number, number, number] = [0, 0, 0, 0];
   private iErrs_: [number, number, number, number] = [0, 0, 0, 0];
+
+  private brakeAt_: [number, number, number, number] = [undefined, undefined, undefined, undefined];
+
+  private positionDeltaFracs_: [number, number, number, number] = [0, 0, 0, 0];
+
+  
 
   tick(readable: AbstractRobot.Readable): RobotBinding.TickOut {
     const motorPositionDeltas: [number, number, number, number] = [0, 0, 0, 0];
@@ -397,15 +405,62 @@ class RobotBinding {
 
       const angularVelocity = deltaAngle / delta;
 
-      const { position, done, mode, speedGoal, positionGoal, kP, kD, kI } = abstractMotor;
-      let { pwm } = abstractMotor;
+      const {
+        position,
+        kP,
+        kD,
+        kI,
+        direction
+      } = abstractMotor;
+      let { pwm, mode, positionGoal, speedGoal, done } = abstractMotor;
 
       // Convert to ticks
-      const positionDelta = plug * Math.round(deltaAngle / (2 * Math.PI) * ticksPerRevolution);
+      const positionDeltaRaw = plug * deltaAngle / (2 * Math.PI) * ticksPerRevolution + this.positionDeltaFracs_[port];
+
+
+
+      const positionDelta = Math.trunc(positionDeltaRaw);
+      this.positionDeltaFracs_[port] = positionDeltaRaw - positionDelta;
+
+
       const velocity = angularVelocity / (2 * Math.PI) * ticksPerRevolution;
 
       nextPositions[port] = position + positionDelta;
+
       writeCommands.push(WriteCommand.addMotorPosition({ port, positionDelta }));
+
+      
+
+      let writePwm = true;
+
+      if (mode === Motor.Mode.Pwm && direction === Motor.Direction.Idle) {
+        this.setMotorVelocity_(bMotor, 0);
+        continue;
+      }
+
+      if (mode === Motor.Mode.Pwm && direction === Motor.Direction.Brake) {
+        if (this.brakeAt_[port] === undefined) {
+          this.brakeAt_[port] = position;
+          this.lastPErrs_[port] = 0;
+          this.iErrs_[port] = 0;
+        }
+
+        done = false;
+
+        if (this.brakeAt_[port] === position) {
+          mode = Motor.Mode.Pwm;
+          pwm = 0;
+        } else {
+          mode = Motor.Mode.SpeedPosition;
+          positionGoal = this.brakeAt_[port];
+          speedGoal = position > positionGoal ? -2 : 2;
+        }
+
+        writePwm = false;
+      } else {
+        this.brakeAt_[port] = undefined;
+      }
+
 
       if (mode !== Motor.Mode.Pwm && !done) {
         // This code is taken from Wombat-Firmware for parity.
@@ -417,16 +472,6 @@ class RobotBinding {
         this.iErrs_[port] = iErr;
 
         pwm = kP * pErr + kI * iErr + kD * dErr;
-
-        console.log({
-          kP,
-          kI,
-          kD,
-          pErr,
-          iErr,
-          dErr,
-          pwm
-        })
 
         if (mode === Motor.Mode.Position || mode === Motor.Mode.SpeedPosition) {
           if (speedGoal < 0 && position < positionGoal) {
@@ -441,21 +486,11 @@ class RobotBinding {
 
       pwm = plug * clamp(-400, pwm, 400);
 
-      writeCommands.push(WriteCommand.motorPwm({ port, pwm }));
+      if (writePwm) writeCommands.push(WriteCommand.motorPwm({ port, pwm }));
       
       const normalizedPwm = pwm / 400;
       const velocityMax = motorNode.velocityMax || 1500;
       const nextAngularVelocity = normalizedPwm * velocityMax * 2 * Math.PI / ticksPerRevolution;
-
-      if (nextAngularVelocity !== 0) {
-        console.log({
-          normalizedPwm,
-          velocityMax,
-          nextAngularVelocity,
-        })
-      }
-
-      
 
       this.setMotorVelocity_(bMotor, nextAngularVelocity);
     }
@@ -490,15 +525,15 @@ class RobotBinding {
         /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
 
         joint.setLimit(physicalMinRads, physicalMaxRads, 0.9, 0.3, 1);
-        joint.setMaxMotorImpulse(1000);
-        joint.setMotorTarget(desiredAngle, 0.05);
+        joint.setMaxMotorImpulse(10000);
+        joint.setMotorTarget(-desiredAngle, 0.05);
       
         /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
       });
     }
 
     // Digital Sensors
-    /*const digitalValues: RobotState.DigitalValues = [false, false, false, false, false, false];
+    const digitalValues: AbstractRobot.Stateless.DigitalValues = [false, false, false, false, false, false];
     for (let i = 0; i < 6; ++i) {
       const digitalId = this.digitalPorts_[i];
       if (!digitalId) continue;
@@ -519,9 +554,10 @@ class RobotBinding {
       }
 
       digitalValues[i] = this.latestDigitalValues_[i];
+      writeCommands.push(WriteCommand.digitalIn({ port: i, value: digitalValues[i] }));
     }
 
-    const analogValues: RobotState.AnalogValues = [0, 0, 0, 0, 0, 0];
+    const analogValues: AbstractRobot.Stateless.AnalogValues = [0, 0, 0, 0, 0, 0];
     for (let i = 0; i < 6; ++i) {
       const analogId = this.analogPorts_[i];
       if (!analogId) continue;
@@ -540,7 +576,8 @@ class RobotBinding {
       }
 
       analogValues[i] = this.latestAnalogValues_[i];
-    }*/
+      writeCommands.push(WriteCommand.analog({ port: i, value: analogValues[i] }));
+    }
 
     return {
       origin: this.origin,
@@ -560,6 +597,10 @@ class RobotBinding {
   set origin(origin: ReferenceFrame) {
     const rootLink = this.links_[this.rootId_];
 
+    this.lastPErrs_ = [0, 0, 0, 0];
+    this.iErrs_ = [0, 0, 0, 0];
+    this.brakeAt_ = [undefined, undefined, undefined, undefined];
+
     const resetTransformNode = new Babylon.TransformNode('resetTransformNode', this.bScene_);
     resetTransformNode.setAbsolutePosition(rootLink.absolutePosition);
     resetTransformNode.rotationQuaternion = rootLink.absoluteRotationQuaternion;
@@ -569,9 +610,9 @@ class RobotBinding {
 
 
     for (const link of Object.values(this.links_)) {
+      link.setParent(resetTransformNode);
       link.physicsImpostor.setLinearVelocity(Babylon.Vector3.Zero());
       link.physicsImpostor.setAngularVelocity(Babylon.Vector3.Zero());
-      link.setParent(resetTransformNode);
     }
 
     resetTransformNode.setAbsolutePosition(Vector3.toBabylon(origin.position, RENDER_SCALE));
@@ -796,6 +837,7 @@ namespace RobotBinding {
       this.intersector_.parent = parent;
       this.intersector_.material = new Babylon.StandardMaterial('touch-sensor-material', scene);
       this.intersector_.material.wireframe = true;
+      this.intersector_.visibility = 0;
 
       ReferenceFrame.syncBabylon(origin, this.intersector_, 'meters');
     }
@@ -863,7 +905,12 @@ namespace RobotBinding {
       );
 
       const hit = scene.pickWithRay(ray, mesh => {
-        return mesh !== this.trace_ && !links.has(mesh as Babylon.Mesh) && !colliders.has(mesh as Babylon.Mesh);
+        return (
+          mesh !== this.trace_ &&
+          !links.has(mesh as Babylon.Mesh)
+          && !colliders.has(mesh as Babylon.Mesh)
+          && !!mesh.physicsImpostor
+        );
       });
 
       const distance = hit.pickedMesh ? hit.distance : Number.POSITIVE_INFINITY;

@@ -1,4 +1,5 @@
 import construct from '../util/construct';
+import { Motor } from './Motor';
 
 namespace WriteCommand {
   export enum Type {
@@ -8,6 +9,7 @@ namespace WriteCommand {
     AddMotorPosition = 'add-motor-position',
     MotorPwm = 'motor-pwm',
     MotorDone = 'motor-done',
+    MotorDirection = 'motor-direction',
   }
 
   export interface DigitalIn {
@@ -69,6 +71,14 @@ namespace WriteCommand {
   }
 
   export const motorDone = construct<MotorDone>(Type.MotorDone);
+
+  export interface MotorDirection {
+    type: Type.MotorDirection;
+
+    port: number;
+
+    direction: Motor.Direction;
+  }
 }
 
 type WriteCommand = (
@@ -77,7 +87,8 @@ type WriteCommand = (
   WriteCommand.MotorPosition |
   WriteCommand.AddMotorPosition |
   WriteCommand.MotorPwm |
-  WriteCommand.MotorDone
+  WriteCommand.MotorDone |
+  WriteCommand.MotorDirection
 );
 
 export default WriteCommand;

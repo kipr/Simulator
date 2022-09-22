@@ -72,7 +72,7 @@ class SceneBinding {
     this.ammo_ = new Babylon.AmmoJSPlugin(true, ammo);
     this.bScene_.enablePhysics(new Babylon.Vector3(0, -9.8 * 100, 0), this.ammo_);
     this.bScene_.getPhysicsEngine().setSubTimeStep(2);
-    this.physicsViewer_ = new Babylon.PhysicsViewer(this.bScene_);
+    // this.physicsViewer_ = new Babylon.PhysicsViewer(this.bScene_);
 
     this.root_ = new Babylon.TransformNode('__scene_root__', this.bScene_);
     this.gizmoManager_ = new Babylon.GizmoManager(this.bScene_);
@@ -553,6 +553,7 @@ class SceneBinding {
     // This should probably be somewhere else, but it ensures this is called during
     // initial instantiation and when a new scene is loaded.
     WorkerInstance.sync(node.state);
+    console.log('position', WorkerInstance.getMotor(0).position);
     const robotBinding = new RobotBinding(this.bScene_, this.physicsViewer_);
     const robot = this.robots_[node.robotId];
     if (!robot) throw new Error(`Robot by id "${node.robotId}" not found`);

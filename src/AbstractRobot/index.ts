@@ -61,7 +61,7 @@ namespace AbstractRobot {
         Motor.NIL,
         Motor.NIL,
       ],
-      [0, 0, 0, 0],
+      [400, 0, 0, 0],
       [0, 0, 0, 0, 0, 0],
       [false, false, false, false, false, false]
     );

@@ -33,12 +33,22 @@ export namespace Motor {
         default: throw new Error(`Invalid motor direction: ${bits}`);
       }
     };
+
+    export const toBits = (direction: Direction): number => {
+      switch (direction) {
+        case Direction.Idle: return 0;
+        case Direction.Forward: return 1;
+        case Direction.Backward: return 2;
+        case Direction.Brake: return 3;
+        default: throw new Error(`Invalid motor direction: ${direction}`);
+      }
+    };
   }
 
   export enum Mode {
     Pwm,
-    Position,
     Speed,
+    Position,
     SpeedPosition,
   }
   
@@ -46,10 +56,20 @@ export namespace Motor {
     export const fromBits = (bits: number): Mode => {
       switch (bits) {
         case 0: return Mode.Pwm;
-        case 1: return Mode.Position;
-        case 2: return Mode.Speed;
+        case 1: return Mode.Speed;
+        case 2: return Mode.Position;
         case 3: return Mode.SpeedPosition;
         default: throw new Error(`Invalid motor mode: ${bits}`);
+      }
+    };
+
+    export const toBits = (mode: Mode): number => {
+      switch (mode) {
+        case Mode.Pwm: return 0;
+        case Mode.Speed: return 1;
+        case Mode.Position: return 2;
+        case Mode.SpeedPosition: return 3;
+        default: throw new Error(`Invalid motor mode: ${mode}`);
       }
     };
   }
@@ -57,7 +77,7 @@ export namespace Motor {
   
   export const NIL: Motor = {
     mode: Mode.Pwm,
-    direction: Direction.Idle,
+    direction: Direction.Brake,
     position: 0,
     pwm: 0,
     done: true,
