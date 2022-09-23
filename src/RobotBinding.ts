@@ -42,8 +42,8 @@ class RobotBinding {
   private links_: Dict<Babylon.Mesh> = {};
   private weights_: Dict<Babylon.Mesh> = {};
   private fixed_: Dict<Babylon.PhysicsJoint> = {};
-  private motors_: Dict<Babylon.MotorEnabledJoint> = {};
-  private servos_: Dict<Babylon.MotorEnabledJoint> = {};
+  private motors_: Dict<Babylon.HingeJoint> = {};
+  private servos_: Dict<Babylon.HingeJoint> = {};
   private motorPorts_ = new Array<string>(4);
   private servoPorts_ = new Array<string>(4);
 
@@ -612,28 +612,18 @@ class RobotBinding {
     this.iErrs_ = [0, 0, 0, 0];
     this.brakeAt_ = [undefined, undefined, undefined, undefined];
 
-    const resetTransformNode = new Babylon.TransformNode('resetTransformNode', this.bScene_);
-    resetTransformNode.setAbsolutePosition(rootLink.absolutePosition);
-    resetTransformNode.rotationQuaternion = rootLink.absoluteRotationQuaternion;
+    const rawOrigin = ReferenceFrame.toRaw(origin, RENDER_SCALE);
 
-    console.log('rootLink absolute position', rootLink.absolutePosition);
-    console.log('rootLink absolute rotation', rootLink.absoluteRotationQuaternion);
-
+    const deltaPosition = rootLink.position.subtract(RawVector3.toBabylon(rawOrigin.position));
+    const deltaOrientation = Quaternion.toBabylon(rawOrigin.orientation).multiply(rootLink.rotationQuaternion.invert());
 
     for (const link of Object.values(this.links_)) {
-      link.setParent(resetTransformNode);
+      link.position = link.position.subtract(deltaPosition);
+      link.rotationQuaternion = link.rotationQuaternion.multiply(deltaOrientation);
+
       link.physicsImpostor.setLinearVelocity(Babylon.Vector3.Zero());
       link.physicsImpostor.setAngularVelocity(Babylon.Vector3.Zero());
     }
-
-    resetTransformNode.setAbsolutePosition(Vector3.toBabylon(origin.position, RENDER_SCALE));
-    resetTransformNode.rotationQuaternion = Quaternion.toBabylon(Rotation.toRawQuaternion(origin.orientation));
-
-    for (const link of Object.values(this.links_)) {
-      link.setParent(null);
-    }
-
-    resetTransformNode.dispose();
   }
 
   get visible(): boolean {
