@@ -463,7 +463,6 @@ class RobotBinding {
         this.brakeAt_[port] = undefined;
       }
 
-
       if (mode !== Motor.Mode.Pwm && !done) {
         // This code is taken from Wombat-Firmware for parity.
         const pErr = speedGoal - velocity;
@@ -487,6 +486,7 @@ class RobotBinding {
       } else {
         this.lastPErrs_[port] = 0;
         this.iErrs_[port] = 0;
+        console.log('reset PIDs');
       }
 
       pwm = plug * clamp(-400, pwm, 400);
@@ -522,13 +522,15 @@ class RobotBinding {
       const physicalMin = position.min ?? RobotBinding.SERVO_LOGICAL_MIN_ANGLE;
       const physicalMax = position.max ?? RobotBinding.SERVO_LOGICAL_MAX_ANGLE;
 
-      const physicalMinRads = Angle.toRadiansValue(physicalMin);
-      const physicalMaxRads = Angle.toRadiansValue(physicalMax);
+      const twist = Angle.toRadiansValue(servo.childTwist || Angle.degrees(0));
+
+      const physicalMinRads = Angle.toRadiansValue(physicalMin) + twist;
+      const physicalMaxRads = Angle.toRadiansValue(physicalMax) + twist;
 
       if (abstractServo.enabled) {
         const servoPosition = clamp(0, abstractServo.position, 2048);
         const desiredAngle = (servoPosition - 1024) / 2048 * RobotBinding.SERVO_LOGICAL_RANGE_RADS;
-        this.lastServoEnabledAngle_[i] = -desiredAngle;
+        this.lastServoEnabledAngle_[i] = -desiredAngle + twist;
       }
 
       bServo.executeNativeFunction((world, joint) => {
@@ -917,8 +919,7 @@ namespace RobotBinding {
         return (
           mesh !== this.trace_ &&
           !links.has(mesh as Babylon.Mesh) &&
-          !colliders.has(mesh as Babylon.Mesh) &&
-          !!mesh.physicsImpostor
+          !colliders.has(mesh as Babylon.Mesh)
         );
       });
 

@@ -72,8 +72,9 @@ export const DEMOBOT: Robot = {
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
     }),
     claw: Node.servo({
-      parentAxis: RawVector3.NEGATIVE_Z,
-      childAxis: RawVector3.NEGATIVE_Y,
+      parentAxis: RawVector3.Z,
+      childAxis: RawVector3.Y,
+      childTwist: degrees(-90),
       servoPort: 3,
       parentId: 'arm_link',
       parentPivot: Vector3.meters(0.097792, -0.024775, 0.026806),

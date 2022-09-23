@@ -80,7 +80,7 @@ namespace Motor {
     positionGoal: 0,
     speedGoal: 0,
     kP: 2000 / 1000,
-    kI: 200 / 1000,
+    kI: 1 / 1000,
     kD: 1 / 1000
   };
 }
