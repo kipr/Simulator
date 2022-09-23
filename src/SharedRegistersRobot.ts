@@ -1,5 +1,6 @@
 import AbstractRobot from './AbstractRobot';
-import { Motor } from './AbstractRobot/Motor';
+import Motor from './AbstractRobot/Motor';
+import Servo from './AbstractRobot/Servo';
 import WriteCommand from './AbstractRobot/WriteCommand';
 import { clamp } from './math';
 import RegisterState from './RegisterState';
@@ -78,8 +79,14 @@ class SharedRegistersRobot implements AbstractRobot {
     return Math.round(degrees * 10.0 + 1500.0);
   };
 
-  getServoPosition(port: number): number {
-    return this.servoRegisterToPosition_(this.sharedResisters_.getRegisterValue16b(RegisterState.REG_RW_SERVO_0_H + port * 2));
+  getServo(port: number): Servo {
+    const position = this.servoRegisterToPosition_(this.sharedResisters_.getRegisterValue16b(RegisterState.REG_RW_SERVO_0_H + port * 2));
+    const enabled = (this.sharedResisters_.getRegisterValue8b(RegisterState.REG_RW_MOT_SRV_ALLSTOP) & (1 << (port + 4))) === 0;
+
+    return {
+      position,
+      enabled,
+    };
   }
 
   private readonly apply_ = (writeCommand: WriteCommand) => {
@@ -168,13 +175,15 @@ class SharedRegistersRobot implements AbstractRobot {
     this.sharedResisters_.setRegister8b(RegisterState.REG_RW_MOT_MODES, modes);
     this.sharedResisters_.setRegister8b(RegisterState.REG_RW_MOT_DIRS, directions);
 
+    let servoAllStop = 0;
     for (let i = 0; i < 4; ++i) {
-      const servoPosition = stateless.getServoPosition(i);
-      this.sharedResisters_.setRegister16b(RegisterState.REG_RW_SERVO_0_H + i * 2, this.positionToServoRegister_(servoPosition));
+      const servo = stateless.getServo(i);
+      this.sharedResisters_.setRegister16b(RegisterState.REG_RW_SERVO_0_H + i * 2, this.positionToServoRegister_(servo.position));
+      servoAllStop |= (servo.enabled ? 0 : 1) << (i + 4);
     }
-  }
 
-  
+    this.sharedResisters_.setRegister8b(RegisterState.REG_RW_MOT_SRV_ALLSTOP, servoAllStop);
+  }
 }
 
 export default SharedRegistersRobot;

@@ -1,4 +1,4 @@
-export interface Motor {
+interface Motor {
   mode: Motor.Mode;
   direction: Motor.Direction;
 
@@ -15,7 +15,7 @@ export interface Motor {
   kD: number;
 }
 
-export namespace Motor {
+namespace Motor {
   export enum Direction {
     Idle,
     Forward,
@@ -84,3 +84,5 @@ export namespace Motor {
     kD: 1 / 1000
   };
 }
+
+export default Motor;

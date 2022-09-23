@@ -22,8 +22,8 @@ class WorkerInstance implements AbstractRobot {
     return this.sharedRegistersRobot_.getMotor(port);
   }
 
-  getServoPosition(port: number): number {
-    return this.sharedRegistersRobot_.getServoPosition(port);
+  getServo(port: number) {
+    return this.sharedRegistersRobot_.getServo(port);
   }
 
   getAnalogValue(port: number): number {
@@ -85,6 +85,7 @@ class WorkerInstance implements AbstractRobot {
   start(req: Omit<Protocol.Worker.StartRequest, 'type'>) {
     this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_MODES, 0x00);
     this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_DIRS, 0x00);
+    this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_SRV_ALLSTOP, 0xF0);
     this.worker_.postMessage({
       type: 'start',
       ...req
@@ -106,7 +107,7 @@ class WorkerInstance implements AbstractRobot {
   constructor() {
     // Set initial register values for servos
     this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_SRV_ALLSTOP, 0xF0);
-    this.sharedRegisters_.setRegister16b(Registers.REG_RW_SERVO_0_H, 400);
+    this.sharedRegisters_.setRegister16b(Registers.REG_RW_SERVO_0_H, 1500);
     this.sharedRegisters_.setRegister16b(Registers.REG_RW_SERVO_1_H, 1500);
     this.sharedRegisters_.setRegister16b(Registers.REG_RW_SERVO_2_H, 1500);
     this.sharedRegisters_.setRegister16b(Registers.REG_RW_SERVO_3_H, 2400);

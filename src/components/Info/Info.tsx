@@ -170,7 +170,7 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
     for (let i = 0; i < 4; ++i) {
       servos.push(
         <Row key={`servo-pos-${i}`} theme={theme}>
-          <SensorWidget value={node.state.servoPositions[i]} name={`get_servo_position(${i})`} plotTitle='Servo Position Plot' theme={theme} />
+          <SensorWidget value={node.state.servos[i].position} name={`get_servo_position(${i})`} plotTitle='Servo Position Plot' theme={theme} />
         </Row>
       );
     }

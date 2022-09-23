@@ -1,5 +1,5 @@
 import construct from '../util/construct';
-import { Motor } from './Motor';
+import Motor from './Motor';
 
 namespace WriteCommand {
   export enum Type {

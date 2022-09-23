@@ -12,7 +12,8 @@ import Dict from './Dict';
 import { RENDER_SCALE, RENDER_SCALE_METERS_MULTIPLIER } from './renderConstants';
 import WriteCommand from './AbstractRobot/WriteCommand';
 import AbstractRobot from './AbstractRobot';
-import { Motor } from './AbstractRobot/Motor';
+import Motor from './AbstractRobot/Motor';
+import Servo from './AbstractRobot/Servo';
 
 interface BuiltGeometry {
   mesh: Babylon.Mesh;
@@ -355,6 +356,7 @@ class RobotBinding {
   private brakeAt_: [number, number, number, number] = [undefined, undefined, undefined, undefined];
 
   private positionDeltaFracs_: [number, number, number, number] = [0, 0, 0, 0];
+  private lastServoEnabledAngle_: [number, number, number, number] = [0, 0, 0, 0];
 
   
 
@@ -482,6 +484,9 @@ class RobotBinding {
             writeCommands.push(WriteCommand.motorDone({ port, done: true }));
           }
         }
+      } else {
+        this.lastPErrs_[port] = 0;
+        this.iErrs_[port] = 0;
       }
 
       pwm = plug * clamp(-400, pwm, 400);
@@ -510,6 +515,8 @@ class RobotBinding {
       const bServo = this.servos_[servoId];
       if (!bServo) throw new Error(`Missing motor instantiation: "${servoId}" on port ${i}`);
 
+      const abstractServo = readable.getServo(i);
+
       const position = servo.position ?? {};
 
       const physicalMin = position.min ?? RobotBinding.SERVO_LOGICAL_MIN_ANGLE;
@@ -518,16 +525,18 @@ class RobotBinding {
       const physicalMinRads = Angle.toRadiansValue(physicalMin);
       const physicalMaxRads = Angle.toRadiansValue(physicalMax);
 
-      const servoPosition = clamp(0, readable.getServoPosition(i), 2048);
-      const desiredAngle = (servoPosition - 1024) / 2048 * RobotBinding.SERVO_LOGICAL_RANGE_RADS;
+      if (abstractServo.enabled) {
+        const servoPosition = clamp(0, abstractServo.position, 2048);
+        const desiredAngle = (servoPosition - 1024) / 2048 * RobotBinding.SERVO_LOGICAL_RANGE_RADS;
+        this.lastServoEnabledAngle_[i] = -desiredAngle;
+      }
 
       bServo.executeNativeFunction((world, joint) => {
         /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
 
         joint.setLimit(physicalMinRads, physicalMaxRads, 0.9, 0.3, 1);
         joint.setMaxMotorImpulse(10000);
-        joint.setMotorTarget(-desiredAngle, 0.05);
-      
+        joint.setMotorTarget(this.lastServoEnabledAngle_[i], 0.05);
         /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
       });
     }

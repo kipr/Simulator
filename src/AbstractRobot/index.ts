@@ -1,7 +1,8 @@
 import deepNeq from '../deepNeq';
 import construct from '../util/construct';
 import Patch from '../util/Patch';
-import { Motor } from './Motor';
+import Motor from './Motor';
+import Servo from './Servo';
 import WriteCommand from './WriteCommand';
 
 type AbstractRobot = AbstractRobot.Readable & AbstractRobot.Writable;
@@ -9,7 +10,7 @@ type AbstractRobot = AbstractRobot.Readable & AbstractRobot.Writable;
 namespace AbstractRobot {
   export interface Readable {
     getMotor(port: number): Motor;
-    getServoPosition(port: number): number;
+    getServo(port: number): Servo;
     getAnalogValue(port: number): number;
     getDigitalValue(port: number): boolean;
   }
@@ -21,13 +22,13 @@ namespace AbstractRobot {
 
   export class Stateless implements Readable {
     motors: Stateless.Motors;
-    servoPositions: Stateless.ServoPositions;
+    servos: Stateless.Servos;
     analogValues: Stateless.AnalogValues;
     digitalValues: Stateless.DigitalValues;
 
-    constructor(motors: Stateless.Motors, servoPositions: Stateless.ServoPositions, analogValues: Stateless.AnalogValues, digitalValues: Stateless.DigitalValues) {
+    constructor(motors: Stateless.Motors, servos: Stateless.Servos, analogValues: Stateless.AnalogValues, digitalValues: Stateless.DigitalValues) {
       this.motors = motors;
-      this.servoPositions = servoPositions;
+      this.servos = servos;
       this.analogValues = analogValues;
       this.digitalValues = digitalValues;
     }
@@ -36,8 +37,8 @@ namespace AbstractRobot {
       return this.motors[port];
     }
 
-    getServoPosition(port: number): number {
-      return this.servoPositions[port];
+    getServo(port: number): Servo {
+      return this.servos[port];
     }
 
     getAnalogValue(port: number): number {
@@ -51,7 +52,7 @@ namespace AbstractRobot {
 
   export namespace Stateless {
     export type Motors = [Motor, Motor, Motor, Motor];
-    export type ServoPositions = [number, number, number, number];
+    export type Servos = [Servo, Servo, Servo, Servo];
     export type AnalogValues = [number, number, number, number, number, number];
     export type DigitalValues = [boolean, boolean, boolean, boolean, boolean, boolean];
 
@@ -61,7 +62,7 @@ namespace AbstractRobot {
       Motor.NIL,
       Motor.NIL,
     ],
-    [400, 0, 0, 0],
+    [{ enabled: true, position: 400 }, {enabled: true, position: 0 }, { enabled: true, position: 0 }, {enabled: true, position: 0 }],
     [0, 0, 0, 0, 0, 0],
     [false, false, false, false, false, false]
     );
@@ -79,10 +80,10 @@ namespace AbstractRobot {
     robot.getMotor(2),
     robot.getMotor(3),
   ], [
-    robot.getServoPosition(0),
-    robot.getServoPosition(1),
-    robot.getServoPosition(2),
-    robot.getServoPosition(3),
+    robot.getServo(0),
+    robot.getServo(1),
+    robot.getServo(2),
+    robot.getServo(3),
   ], [
     robot.getAnalogValue(0),
     robot.getAnalogValue(1),
