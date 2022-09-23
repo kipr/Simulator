@@ -538,7 +538,7 @@ class RobotBinding {
 
         joint.setLimit(physicalMinRads, physicalMaxRads, 0.9, 0.3, 1);
         joint.setMaxMotorImpulse(10000);
-        joint.setMotorTarget(this.lastServoEnabledAngle_[i], 0.05);
+        joint.setMotorTarget(this.lastServoEnabledAngle_[i], 0.2);
         /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
       });
     }
