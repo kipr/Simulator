@@ -374,6 +374,11 @@ export namespace ReferenceFrame {
     bNode.rotationQuaternion = bFrame.rotationQuaternion;
     bNode.scaling.copyFrom(bFrame.scaling);
   };
+
+  export const compose = (parent: ReferenceFrame, child: ReferenceFrame): ReferenceFrame => ({
+    position: Vector3.add(parent.position || Vector3.ZERO, Vector3.applyQuaternion(child.position || Vector3.ZERO, child.orientation)),
+    orientation: Quaternion.normalize(Quaternion.multiply(parent.orientation || Quaternion.IDENTITY, child.orientation || Quaternion.IDENTITY)),
+  });
 }
 
 export const clamp = (min: number, value: number, max: number) => Math.min(Math.max(value, min), max);

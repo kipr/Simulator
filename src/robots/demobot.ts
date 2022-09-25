@@ -132,5 +132,8 @@ export const DEMOBOT: Robot = {
     wheel_link: Geometry.remoteMesh({ uri: '/static/wheel.glb' }),
     arm_link: Geometry.remoteMesh({ uri: '/static/arm.glb' }),
     claw_link: Geometry.remoteMesh({ uri: '/static/claw.glb' }),
+  },
+  origin: {
+    orientation: Rotation.eulerDegrees(0, -90, 0),
   }
 };

@@ -77,6 +77,12 @@ export namespace Vector3 {
     Distance.meters(z),
   );
 
+  export const centimeters = (x: number, y: number, z: number) => create(
+    Distance.centimeters(x),
+    Distance.centimeters(y),
+    Distance.centimeters(z),
+  );
+
   export const metersX = (x: number) => createX(Distance.meters(x));
   export const metersY = (y: number) => createY(Distance.meters(y));
   export const metersZ = (z: number) => createZ(Distance.meters(z));
