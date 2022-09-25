@@ -106,7 +106,7 @@ class RobotBinding {
         }
 
         const mesh = Babylon.Mesh.MergeMeshes(nonColliders, true, true, undefined, false, true);
-        mesh.visibility = 1;
+        mesh.visibility = 0;
         ret = { mesh, colliders };
         break; 
       }
@@ -486,7 +486,6 @@ class RobotBinding {
       } else {
         this.lastPErrs_[port] = 0;
         this.iErrs_[port] = 0;
-        console.log('reset PIDs');
       }
 
       pwm = plug * clamp(-400, pwm, 400);
@@ -538,7 +537,12 @@ class RobotBinding {
 
         joint.setLimit(physicalMinRads, physicalMaxRads, 0.9, 0.3, 1);
         joint.setMaxMotorImpulse(10000);
-        joint.setMotorTarget(this.lastServoEnabledAngle_[i], 0.2);
+        const angle = this.lastServoEnabledAngle_[i];
+        if (Math.abs(angle - joint.getHingeAngle()) > Math.PI / 8) {
+          joint.setMotorTarget(angle, 0.2);
+        } else {
+          joint.setMotorTarget(angle, 0.1);
+        }
         /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
       });
     }
@@ -556,8 +560,6 @@ class RobotBinding {
       if (!outstanding) {
         this.outstandingDigitalGetValues_[digitalId] = RobotBinding.OutstandingPromise.create(digital.getValue());
       } else {
-        // console.log(digitalId, 'done', outstanding.done);
-
         if (RobotBinding.OutstandingPromise.isDone(outstanding)) {
           this.latestDigitalValues_[i] = RobotBinding.OutstandingPromise.value(outstanding);
           this.outstandingDigitalGetValues_[digitalId] = RobotBinding.OutstandingPromise.create(digital.getValue());
@@ -606,7 +608,6 @@ class RobotBinding {
   }
 
   set origin(origin: ReferenceFrame) {
-    const rootLink = this.links_[this.rootId_];
 
     this.lastPErrs_ = [0, 0, 0, 0];
     this.iErrs_ = [0, 0, 0, 0];
@@ -614,16 +615,35 @@ class RobotBinding {
 
     const rawOrigin = ReferenceFrame.toRaw(origin, RENDER_SCALE);
 
-    const deltaPosition = rootLink.position.subtract(RawVector3.toBabylon(rawOrigin.position));
-    const deltaOrientation = Quaternion.toBabylon(rawOrigin.orientation).multiply(rootLink.rotationQuaternion.invert());
+    const rootLink = this.links_[this.rootId_];
+
+    const rootTransformNode = new Babylon.TransformNode('root-transform-node', this.bScene_);
+    rootTransformNode.position = rootLink.absolutePosition;
+    rootTransformNode.rotationQuaternion = rootLink.absoluteRotationQuaternion;
 
     for (const link of Object.values(this.links_)) {
-      link.position = link.position.subtract(deltaPosition);
-      link.rotationQuaternion = link.rotationQuaternion.multiply(deltaOrientation);
-
-      link.physicsImpostor.setLinearVelocity(Babylon.Vector3.Zero());
+      link.setParent(rootTransformNode);
       link.physicsImpostor.setAngularVelocity(Babylon.Vector3.Zero());
+      link.physicsImpostor.setLinearVelocity(Babylon.Vector3.Zero());
     }
+
+    for (const weight of Object.values(this.weights_)) {
+      weight.setParent(rootTransformNode);
+      weight.physicsImpostor.setAngularVelocity(Babylon.Vector3.Zero());
+      weight.physicsImpostor.setLinearVelocity(Babylon.Vector3.Zero());
+    }
+
+    RawReferenceFrame.syncBabylon(rawOrigin, rootTransformNode);
+
+    for (const link of Object.values(this.links_)) {
+      link.setParent(null);
+    }
+
+    for (const weight of Object.values(this.weights_)) {
+      weight.setParent(null);
+    }
+
+    rootTransformNode.dispose();
   }
 
   get visible(): boolean {
@@ -634,6 +654,12 @@ class RobotBinding {
     const visibility = visible ? 1 : 0;
     for (const link of Object.values(this.links_)) {
       link.visibility = visibility;
+    }
+    for (const analogSensor of Object.values(this.analogSensors_)) {
+      analogSensor.visible = visible;
+    }
+    for (const digitalSensor of Object.values(this.digitalSensors_)) {
+      digitalSensor.visible = visible;
     }
   }
 
@@ -785,6 +811,7 @@ namespace RobotBinding {
 
     realistic: boolean;
     noisy: boolean;
+    visible: boolean;
   }
 
   export interface SensorParameters<T> {
@@ -804,9 +831,13 @@ namespace RobotBinding {
     get realistic() { return this.realistic_; }
     set realistic(realistic: boolean) { this.realistic_ = realistic; }
 
+    private visible_ = false;
+    get visible() { return this.visible_; }
+    set visible(visible: boolean) { this.visible_ = visible; }
+
     private noisy_ = false;
     get noisy() { return this.noisy_; }
-    set noisy(noisy: boolean) { this.noisy_ = noisy; console.log('set noisy', noisy); }
+    set noisy(noisy: boolean) { this.noisy_ = noisy; }
 
     constructor(parameters: SensorParameters<T>) {
       this.parameters_ = parameters;
@@ -887,6 +918,7 @@ namespace RobotBinding {
           EtSensor.FORWARD.multiplyByFloats(rawMaxDistance, rawMaxDistance, rawMaxDistance)
         ],
       }, scene);
+      this.trace_.visibility = 0;
 
       ReferenceFrame.syncBabylon(origin, this.trace_, 'meters');
       this.trace_.parent = parent;
@@ -897,7 +929,7 @@ namespace RobotBinding {
       const { maxDistance, noiseRadius } = definition;
 
       const rawMaxDistance = Distance.toValue(maxDistance || EtSensor.DEFAULT_MAX_DISTANCE, RENDER_SCALE);
-
+      this.trace_.visibility = this.visible ? 1 : 0;
 
       const ray = new Babylon.Ray(
         this.trace_.absolutePosition,
@@ -974,6 +1006,7 @@ namespace RobotBinding {
           ReflectanceSensor.FORWARD.multiplyByFloats(rawMaxDistance, rawMaxDistance, rawMaxDistance)
         ],
       }, scene);
+      this.trace_.visibility = 0;
 
       ReferenceFrame.syncBabylon(origin, this.trace_, 'meters');
       this.trace_.parent = parent;
@@ -984,7 +1017,7 @@ namespace RobotBinding {
       const { maxDistance, noiseRadius } = definition;
 
       const rawMaxDistance = Distance.toValue(maxDistance || ReflectanceSensor.DEFAULT_MAX_DISTANCE, RENDER_SCALE);
-
+      this.trace_.visibility = this.visible ? 1 : 0;
 
       const ray = new Babylon.Ray(
         this.trace_.absolutePosition,

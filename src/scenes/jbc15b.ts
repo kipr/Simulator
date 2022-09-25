@@ -12,6 +12,18 @@ export const JBC_15B: Scene = {
   description: `Junior Botball Challenge 15B: Bump Bump`,
   nodes: {
     ...baseScene.nodes,
+    // The normal starting position of the robot doesn't leave room for the paper ream in the starting box
+    // Start the robot forward a bit so that a ream fits behind it
+    'robot': {
+      ...baseScene.nodes['robot'],
+      origin: {
+        ...baseScene.nodes['robot'].origin,
+        position: {
+          ...baseScene.nodes['robot'].origin.position,
+          z: Distance.centimeters(7)
+        },
+      }
+    },
     'ream1': {
       type: 'from-template',
       templateId: 'ream',

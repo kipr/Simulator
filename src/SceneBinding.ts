@@ -558,8 +558,13 @@ class SceneBinding {
     const robot = this.robots_[node.robotId];
     if (!robot) throw new Error(`Robot by id "${node.robotId}" not found`);
     await robotBinding.setRobot(node, robot);
-    robotBinding.origin = node.origin || ReferenceFrame.IDENTITY;
-    robotBinding.visible = node.visible ?? false;
+    // FIXME: For some reason this origin isn't respected immediately. We need to look into it.
+    robotBinding.visible = false;
+    setTimeout(() => {
+      robotBinding.origin = node.origin || ReferenceFrame.IDENTITY;
+      robotBinding.visible = node.visible ?? false;
+    }, 100);
+    
     this.robotBindings_[id] = robotBinding;
     return robotBinding;
   };

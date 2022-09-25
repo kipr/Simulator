@@ -11,6 +11,18 @@ export const JBC_7B: Scene = {
   description: `Junior Botball Challenge 7B: Cover Your Bases`,
   nodes: {
     ...baseScene.nodes,
+    // The normal starting position of the robot covers the tape
+    // Start the robot back a bit so that a can fits on the tape in front of the robot
+    'robot': {
+      ...baseScene.nodes['robot'],
+      origin: {
+        ...baseScene.nodes['robot'].origin,
+        position: {
+          ...baseScene.nodes['robot'].origin.position,
+          z: Distance.centimeters(-8)
+        },
+      }
+    },
     'can1': createCanNode(1, { x: Distance.centimeters(-24), y: Distance.centimeters(0), z: Distance.centimeters(15.5) }),
     'can2': createCanNode(2, { x: Distance.centimeters(-16), y: Distance.centimeters(0), z: Distance.centimeters(15.5) }),
     'can3': createCanNode(3, { x: Distance.centimeters(-8), y: Distance.centimeters(0), z: Distance.centimeters(15.5) }),

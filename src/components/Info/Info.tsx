@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
 import { SceneAction, ScenesAction } from '../../state/reducer';
 import Node from '../../state/State/Scene/Node';
+import Motor from '../../AbstractRobot/Motor';
 
 
 export interface InfoProps extends StyleProps, ThemeProps {
@@ -84,7 +85,7 @@ const SERVOS_NAME = StyledText.text({
 });
 
 const MOTOR_VELOCITIES_NAME = StyledText.text({
-  text: 'Motor PWMs',
+  text: 'Motor Velocities',
 });
 
 const MOTOR_POSITIONS_NAME = StyledText.compose({
@@ -181,8 +182,8 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
     for (let i = 0; i < 4; ++i) {
       const motor = node.state.getMotor(i);
       motorVelocities.push(
-        <Row key={`motor-pwm-${i}`} theme={theme}>
-          <SensorWidget value={motor.pwm} name={`motor ${i}`} plotTitle='Motor PWM Plot' theme={theme} />
+        <Row key={`motor-velocity-${i}`} theme={theme}>
+          <SensorWidget value={motor.mode !== Motor.Mode.Pwm ? motor.speedGoal : 0} name={`motor ${i}`} plotTitle='Motor Velocity Plot' theme={theme} />
         </Row>
       );
 
