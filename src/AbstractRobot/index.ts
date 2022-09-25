@@ -62,7 +62,7 @@ namespace AbstractRobot {
       Motor.NIL,
       Motor.NIL,
     ],
-    [{ enabled: true, position: 400 }, {enabled: true, position: 0 }, { enabled: true, position: 0 }, { enabled: true, position: 1024 }],
+    [{ enabled: true, position: 400 }, { enabled: true, position: 0 }, { enabled: true, position: 0 }, { enabled: true, position: 1024 }],
     [0, 0, 0, 0, 0, 0],
     [false, false, false, false, false, false]
     );
