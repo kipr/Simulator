@@ -61,6 +61,7 @@ export const DEMOBOT: Robot = {
       parentAxis: RawVector3.NEGATIVE_Z,
       parentPivot: Vector3.meters(0.068099, 0.034913, -0.010805),
       childAxis: RawVector3.Y,
+      childTwist:degrees(65),
       servoPort: 0,
       parentId: 'chassis',
     }),
@@ -74,7 +75,7 @@ export const DEMOBOT: Robot = {
     claw: Node.servo({
       parentAxis: RawVector3.Z,
       childAxis: RawVector3.Y,
-      childTwist: degrees(-90),
+      childTwist: degrees(0),
       servoPort: 3,
       parentId: 'arm_link',
       parentPivot: Vector3.meters(0.097792, -0.024775, 0.026806),
