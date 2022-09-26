@@ -5,7 +5,7 @@ import Node from './state/State/Robot/Node';
 import { Quaternion, Vector3 as RawVector3, ReferenceFrame as RawReferenceFrame, clamp, AxisAngle, Euler } from './math';
 import { ReferenceFrame, Rotation, Vector3 } from './unit-math';
 import { Angle, Distance, Mass } from './util';
-import { FrameLike } from './SceneBinding';
+import { FrameLike, SceneMeshMetadata } from './SceneBinding';
 import Geometry from './state/State/Robot/Geometry';
 import Patch from './util/Patch';
 import Dict from './Dict';
@@ -943,10 +943,12 @@ namespace RobotBinding {
       );
 
       const hit = scene.pickWithRay(ray, mesh => {
+        const metadata = mesh.metadata as SceneMeshMetadata;
         return (
           mesh !== this.trace_ &&
           !links.has(mesh as Babylon.Mesh) &&
-          !colliders.has(mesh as Babylon.Mesh)
+          !colliders.has(mesh as Babylon.Mesh) &&
+          (!!mesh.physicsImpostor || metadata.selected)
         );
       });
 

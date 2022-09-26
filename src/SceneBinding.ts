@@ -21,6 +21,10 @@ import WorkerInstance from "./WorkerInstance";
 
 export type FrameLike = Babylon.TransformNode | Babylon.AbstractMesh;
 
+export interface SceneMeshMetadata {
+  selected?: boolean;
+}
+
 class SceneBinding {
   private bScene_: Babylon.Scene;
   get bScene() { return this.bScene_; }
@@ -1097,6 +1101,7 @@ class SceneBinding {
         }
         const prevBNode = this.bScene_.getNodeByID(prev);
         if (prevNodeObj && (prevBNode instanceof Babylon.AbstractMesh || prevBNode instanceof Babylon.TransformNode)) {
+          prevBNode.metadata = { ...(prevBNode.metadata as SceneMeshMetadata || {}), selected: false };
           SceneBinding.apply_(prevBNode, m => this.restorePhysicsImpostor(m, prevNodeObj, prev, scene));
         }
 
@@ -1108,6 +1113,7 @@ class SceneBinding {
         const node = this.bScene_.getNodeByID(next);
         if (node instanceof Babylon.AbstractMesh || node instanceof Babylon.TransformNode) {
           SceneBinding.apply_(node, m => this.removePhysicsImpostor(m));
+          node.metadata = { ...(node.metadata as SceneMeshMetadata || {}), selected: true };
           this.gizmoManager_.attachToNode(node);
         }
       }
