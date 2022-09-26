@@ -563,7 +563,7 @@ class SceneBinding {
     setTimeout(() => {
       robotBinding.origin = node.origin || ReferenceFrame.IDENTITY;
       robotBinding.visible = node.visible ?? false;
-    }, 100);
+    }, 200);
     
     this.robotBindings_[id] = robotBinding;
     return robotBinding;
