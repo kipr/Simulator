@@ -69,7 +69,7 @@ export const DEMOBOT: Robot = {
       parentId: 'arm',
       geometryId: 'arm_link',
       mass: grams(14),
-      friction: 5,
+      friction: 50,
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
     }),
     claw: Node.servo({
@@ -84,7 +84,7 @@ export const DEMOBOT: Robot = {
       parentId: 'claw',
       geometryId: 'claw_link',
       mass: grams(14),
-      friction: 5,
+      friction: 50,
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
     }),
     touch_sensor: Node.touchSensor({
