@@ -6,13 +6,34 @@ import { StyleProps } from "../../style";
 import { StyledText } from "../../util";
 import { Editor } from "../Editor";
 import { ThemeProps } from "../theme";
+import SceneScript from '../../state/State/Scene/Script';
+
+export namespace LayoutEditorTarget {
+  export enum Type {
+    Robot = 'robot',
+    Script = 'script',
+  }
+
+  export interface Robot {
+    type: Type.Robot;
+    language: ProgrammingLanguage;
+    onLanguageChange: (language: ProgrammingLanguage) => void;
+    code: string;
+    onCodeChange: (code: string) => void;
+  }
+
+  export interface Script {
+    type: Type.Script;
+    script: SceneScript;
+    onScriptChange: (script: SceneScript) => void;
+  }
+}
+
+export type LayoutEditorTarget = LayoutEditorTarget.Robot | LayoutEditorTarget.Script;
 
 export interface LayoutProps extends StyleProps, ThemeProps {
   sceneId: string;
-  language: ProgrammingLanguage;
-  onLanguageChange: (language: ProgrammingLanguage) => void;
-  code: string;
-  onCodeChange: (code: string) => void;
+  editorTarget: LayoutEditorTarget;
   console: StyledText;
   messages: Message[];
   settings: Settings;

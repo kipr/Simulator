@@ -34,6 +34,7 @@ import { ScenesAction } from '../state/reducer';
 import { Editor } from './Editor';
 import Dict from '../Dict';
 import ProgrammingLanguage from '../ProgrammingLanguage';
+import Script from '../state/State/Scene/Script';
 
 import Scene, { AsyncScene } from '../state/State/Scene';
 import { RouteComponentProps } from 'react-router';
@@ -185,6 +186,9 @@ interface RootPrivateProps {
   unfailScene: (id: string) => void;
 
   goToLogin: () => void;
+
+  selectedScript?: Script;
+  onSelectedScriptChange: (script: Script) => void;
 }
 
 interface RootState {

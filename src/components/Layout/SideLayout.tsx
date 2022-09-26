@@ -6,11 +6,11 @@ import { styled } from 'styletron-react';
 import { Button } from '../Button';
 
 import { Console, createConsoleBarComponents } from '../Console';
-import { Editor, createEditorBarComponents } from '../Editor';
+import { Editor, createEditorBarComponents, EditorBarTarget } from '../Editor';
 import World, { createWorldBarComponents } from '../World';
 
 import { Info } from '../Info';
-import { LayoutProps } from './Layout';
+import { LayoutEditorTarget, LayoutProps } from './Layout';
 import { SimulatorArea } from '../SimulatorArea';
 import { TabBar } from '../TabBar';
 import Widget, { BarComponent, Mode, Size } from '../Widget';
@@ -160,16 +160,24 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     // not implemented
   };
 
+  private onScriptCodeChange_ = (code: string) => {
+    const { props } = this;
+    const { editorTarget } = props;
+
+    const scriptEditorTarget = editorTarget as LayoutEditorTarget.Script;
+    scriptEditorTarget.onScriptChange({
+      ...scriptEditorTarget.script,
+      code,
+    });
+  };
+
   render() {
     const { props } = this;
     const {
       style,
       className,
       theme,
-      code,
-      language,
-      onLanguageChange,
-      onCodeChange,
+      editorTarget,
       console,
       messages,
       settings,
@@ -187,14 +195,54 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       
     } = this.state;
 
-    const editorBar = createEditorBarComponents({
+    let editorBarTarget: EditorBarTarget;
+    let editor: JSX.Element;
+    switch (editorTarget.type) {
+      case LayoutEditorTarget.Type.Robot: {
+        editorBarTarget = {
+          type: EditorBarTarget.Type.Robot,
+          messages,
+          language: editorTarget.language,
+          onLanguageChange: editorTarget.onLanguageChange,
+          onIndentCode,
+          onDownloadCode,
+          onErrorClick: this.onErrorClick_
+        };
+        editor = (
+          <Editor
+            theme={theme}
+            ref={editorRef}
+            code={editorTarget.code}
+            language={editorTarget.language}
+            onCodeChange={editorTarget.onCodeChange}
+            messages={messages}
+            autocomplete={settings.editorAutoComplete}
+          />
+        );
+        break;
+      }
+      case LayoutEditorTarget.Type.Script: {
+        editorBarTarget = {
+          type: EditorBarTarget.Type.Script,
+          language: editorTarget.script.language,
+        };
+        editor = (
+          <Editor
+            theme={theme}
+            ref={editorRef}
+            code={editorTarget.script.code}
+            language={editorTarget.script.language}
+            onCodeChange={this.onScriptCodeChange_}
+            autocomplete={settings.editorAutoComplete}
+          />
+        );
+        break;
+      }
+    }
+
+    let editorBar = createEditorBarComponents({
       theme,
-      messages,
-      language,
-      onLanguageChange,
-      onIndentCode,
-      onDownloadCode,
-      onErrorClick: this.onErrorClick_
+      target: editorBarTarget,
     });
     const consoleBar = createConsoleBarComponents(theme, onClearConsole);
 
@@ -216,16 +264,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
                 mode={Mode.Sidebar}
                 barComponents={editorBar}
               >
-                
-                <Editor
-                  theme={theme}
-                  ref={editorRef}
-                  code={code}
-                  language={language}
-                  onCodeChange={onCodeChange}
-                  messages={messages}
-                  autocomplete={settings.editorAutoComplete}
-                />
+                {editor}
               </SimulatorWidget>
             </SimultorWidgetContainer>
 

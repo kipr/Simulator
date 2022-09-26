@@ -5,11 +5,11 @@ import { styled } from 'styletron-react';
 import { Button } from '../Button';
 
 import { Console, createConsoleBarComponents } from '../Console';
-import { Editor, createEditorBarComponents } from '../Editor';
+import { Editor, createEditorBarComponents, EditorBarTarget } from '../Editor';
 import World, { createWorldBarComponents } from '../World';
 
 import { Info } from '../Info';
-import { Layout, LayoutProps } from './Layout';
+import { LayoutEditorTarget, LayoutProps } from './Layout';
 import { SimulatorArea } from '../SimulatorArea';
 import { Theme, ThemeProps } from '../theme';
 import Widget, { BarComponent, Mode, Size, WidgetProps } from '../Widget';
@@ -280,6 +280,17 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
     // not implemented
   };
 
+  private onScriptCodeChange_ = (code: string) => {
+    const { props } = this;
+    const { editorTarget } = props;
+
+    const scriptEditorTarget = editorTarget as LayoutEditorTarget.Script;
+    scriptEditorTarget.onScriptChange({
+      ...scriptEditorTarget.script,
+      code,
+    });
+  };
+
   render() {
     const { props } = this;
     
@@ -287,10 +298,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       style,
       className,
       theme,
-      language,
-      onLanguageChange,
-      code,
-      onCodeChange,
+      editorTarget,
       console,
       messages,
       settings,
@@ -314,14 +322,54 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       mode: Mode.Floating
     };
 
+    let editorBarTarget: EditorBarTarget;
+    let editor: JSX.Element;
+    switch (editorTarget.type) {
+      case LayoutEditorTarget.Type.Robot: {
+        editorBarTarget = {
+          type: EditorBarTarget.Type.Robot,
+          messages,
+          language: editorTarget.language,
+          onLanguageChange: editorTarget.onLanguageChange,
+          onIndentCode,
+          onDownloadCode,
+          onErrorClick: this.onErrorClick_
+        };
+        editor = (
+          <Editor
+            theme={theme}
+            ref={editorRef}
+            code={editorTarget.code}
+            language={editorTarget.language}
+            onCodeChange={editorTarget.onCodeChange}
+            messages={messages}
+            autocomplete={settings.editorAutoComplete}
+          />
+        );
+        break;
+      }
+      case LayoutEditorTarget.Type.Script: {
+        editorBarTarget = {
+          type: EditorBarTarget.Type.Script,
+          language: editorTarget.script.language,
+        };
+        editor = (
+          <Editor
+            theme={theme}
+            ref={editorRef}
+            code={editorTarget.script.code}
+            language={editorTarget.script.language}
+            onCodeChange={this.onScriptCodeChange_}
+            autocomplete={settings.editorAutoComplete}
+          />
+        );
+        break;
+      }
+    }
+
     const editorBar = createEditorBarComponents({
       theme,
-      messages,
-      language,
-      onLanguageChange,
-      onIndentCode,
-      onDownloadCode,
-      onErrorClick: this.onErrorClick_
+      target: editorBarTarget,
     });
     const consoleBar = createConsoleBarComponents(theme, onClearConsole);
 
@@ -346,15 +394,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
             onSizeChange={this.onEditorSizeChange_}
             barComponents={editorBar}
           >
-            <Editor
-              ref={editorRef}
-              language={language}
-              code={code}
-              onCodeChange={onCodeChange}
-              theme={theme}
-              messages={messages}
-              autocomplete={settings.editorAutoComplete}
-            />
+            {editor}
           </EditorWidget>
           <ConsoleWidget
             {...commonProps}
