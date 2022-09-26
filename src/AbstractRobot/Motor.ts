@@ -79,9 +79,9 @@ namespace Motor {
     done: true,
     positionGoal: 0,
     speedGoal: 0,
-    kP: 2000 / 1000,
-    kI: 1 / 1000,
-    kD: 1 / 1000
+    kP: 1,
+    kI: 100 / 1000,
+    kD: 100 / 1000
   };
 }
 

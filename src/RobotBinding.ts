@@ -367,6 +367,9 @@ class RobotBinding {
 
     const now = performance.now();
     const delta = (now - this.lastTick_) / 1000;
+    this.lastTick_ = now;
+
+
     
 
     const abstractMotors: [Motor, Motor, Motor, Motor] = [
@@ -425,7 +428,7 @@ class RobotBinding {
       this.positionDeltaFracs_[port] = positionDeltaRaw - positionDelta;
 
 
-      const velocity = angularVelocity / (2 * Math.PI) * ticksPerRevolution;
+      const velocity = plug * angularVelocity / (2 * Math.PI) * ticksPerRevolution;
 
       nextPositions[port] = position + positionDelta;
 
@@ -440,7 +443,7 @@ class RobotBinding {
         continue;
       }
 
-      if (mode === Motor.Mode.Pwm && direction === Motor.Direction.Brake) {
+      /*if (mode === Motor.Mode.Pwm && direction === Motor.Direction.Brake) {
         if (this.brakeAt_[port] === undefined) {
           this.brakeAt_[port] = position;
           this.lastPErrs_[port] = 0;
@@ -461,7 +464,7 @@ class RobotBinding {
         writePwm = false;
       } else {
         this.brakeAt_[port] = undefined;
-      }
+      }*/
 
       if (mode !== Motor.Mode.Pwm && !done) {
         // This code is taken from Wombat-Firmware for parity.
@@ -473,6 +476,8 @@ class RobotBinding {
         this.iErrs_[port] = iErr;
 
         pwm = kP * pErr + kI * iErr + kD * dErr;
+
+        console.log({ port, pwm, pErr, iErr, dErr, speedGoal, velocity, position, positionGoal });
 
         if (mode === Motor.Mode.Position || mode === Motor.Mode.SpeedPosition) {
           if (speedGoal < 0 && position < positionGoal) {
