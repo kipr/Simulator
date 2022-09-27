@@ -97,11 +97,11 @@ class SharedRegistersRobot implements AbstractRobot {
         break;
       }
       case WriteCommand.Type.MotorPosition: {
-        this.sharedResisters_.setRegister32b(RegisterState.REG_RW_MOT_0_B3 + writeCommand.port * 4, writeCommand.position);
+        this.sharedResisters_.setRegister32b(RegisterState.REG_RW_MOT_0_B3 + writeCommand.port * 4, writeCommand.position * SharedRegistersRobot.POSITION_GOAL_SCALING);
         break;
       }
       case WriteCommand.Type.AddMotorPosition: {
-        this.sharedResisters_.incrementRegister32b(RegisterState.REG_RW_MOT_0_B3 + writeCommand.port * 4, writeCommand.positionDelta);
+        this.sharedResisters_.incrementRegister32b(RegisterState.REG_RW_MOT_0_B3 + writeCommand.port * 4, writeCommand.positionDelta * SharedRegistersRobot.POSITION_GOAL_SCALING);
         break;
       }
       case WriteCommand.Type.MotorPwm: {
