@@ -10,15 +10,17 @@ export const JBC_17B: Scene = {
   name: 'JBC 17B',
   description: 'Junior Botball Challenge 17: Walk the Line II',
   // Start the robot on the black tape
-  robot: {
-    ...baseScene.robot,
-    origin: {
-      ...baseScene.robot.origin,
-      position: {
-        x: Distance.centimeters(16.5),
-        y: Distance.centimeters(2),
-        z: Distance.centimeters(0),
-      },
-    }
-  },
+  nodes: {
+    ...baseScene.nodes,
+    'robot': {
+      ...baseScene.nodes['robot'],
+      origin: {
+        ...baseScene.nodes['robot'].origin,
+        position: {
+          ...baseScene.nodes['robot'].origin.position,
+          x: Distance.centimeters(16.5),
+        },
+      }
+    },
+  }
 };

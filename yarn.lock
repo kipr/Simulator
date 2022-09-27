@@ -1410,23 +1410,23 @@ babel-loader@^8.1.0:
     make-dir "^3.1.0"
     schema-utils "^2.6.5"
 
-babylonjs-gltf2interface@4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/babylonjs-gltf2interface/-/babylonjs-gltf2interface-4.2.0.tgz#b0ef1e11e3574cf2c6f573d0c5c34857a2a7b322"
-  integrity sha512-Fn/ThxwZWP9kEAqk+9FX9CAeF4ah/I0/8wzAZR8MQuYqlYpEfM+E/IztJ+4LoOOxQYMWNs5lgj8OXSkX0tqc4g==
+babylonjs-gltf2interface@^5.22.1:
+  version "5.22.1"
+  resolved "https://registry.yarnpkg.com/babylonjs-gltf2interface/-/babylonjs-gltf2interface-5.22.1.tgz#1415020ae399e3ee1d9a2af5d592478529041cd6"
+  integrity sha512-6BYKE5ZLsfu7nJ4IbldTB80ewbVH6G5Xyy/lakKvm+4GYtMcbSrlkt4EA7a7g1M8hys7y7kKABnqf+PppE6GAA==
 
-babylonjs-loaders@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/babylonjs-loaders/-/babylonjs-loaders-4.2.0.tgz#3d536cb72bf8650fe7f1cee12380bea3227d79c0"
-  integrity sha512-GGLvo4ibbSHMY0Kj/DBu4827NBWeDT0NOBi/UuifXltzqPJtJRi3PCEcELj4Ga8cRxkfYi/7PMKcce2zVnpLZA==
+babylonjs-loaders@^5.22.1:
+  version "5.22.1"
+  resolved "https://registry.yarnpkg.com/babylonjs-loaders/-/babylonjs-loaders-5.22.1.tgz#f561558789004aac9a0f0d641592c99d47e479ed"
+  integrity sha512-0mwzvXKbwgoj9CD/R65JNBvbi0Ptn2+W4i3GSbDoAZ0bLS6cSGei41t5Xgo5jrhiNfcAOe+Aycv4XU17LVUH/g==
   dependencies:
-    babylonjs "4.2.0"
-    babylonjs-gltf2interface "4.2.0"
+    babylonjs "^5.22.1"
+    babylonjs-gltf2interface "^5.22.1"
 
-babylonjs@4.2.0, babylonjs@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/babylonjs/-/babylonjs-4.2.0.tgz#8f0d957a726de4c065904b14c2f413f455145d38"
-  integrity sha512-4hniJzWRkV0tDTTYGEHPk1lnfWn0HIw7HOvNWPK0rpUIbJooyeD9E5uVyHnslDedt0mtrA7QZu4i2Cz1DEmSsA==
+babylonjs@^5.22.1:
+  version "5.22.1"
+  resolved "https://registry.yarnpkg.com/babylonjs/-/babylonjs-5.22.1.tgz#f2f0e83571a932940bab58af0f396e63b1aa7847"
+  integrity sha512-GLqxLo64gMiLr5Cmml+bzJxnBOSn0Llgu/IcqRZx3Zd0xlUzsqlBzf6/B0sDdp0/mg/1yUQOF4pLSmb910ya4A==
 
 balanced-match@^1.0.0:
   version "1.0.2"
@@ -4946,11 +4946,6 @@ no-case@^3.0.4:
     lower-case "^2.0.2"
     tslib "^2.0.3"
 
-node-bin-setup@^1.0.0:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/node-bin-setup/-/node-bin-setup-1.0.6.tgz#4b5c9bb937ece702d7069b36ca78af4684677528"
-  integrity sha512-uPIxXNis1CRbv1DwqAxkgBk5NFV3s7cMN/Gf556jSw6jBvV7ca4F9lRL/8cALcZecRibeqU+5dFYqFFmzv5a0Q==
-
 node-fetch@2.6.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
@@ -4972,13 +4967,6 @@ node-releases@^1.1.71:
   version "1.1.73"
   resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-1.1.73.tgz#dd4e81ddd5277ff846b80b52bb40c49edf7a7b20"
   integrity sha512-uW7fodD6pyW2FZNZnp/Z3hvWKeEW1Y8R1+1CnErE8cXFXzl5blBOoVB41CvMer6P6Q0S5FXDwcHgFd1Wj0U9zg==
-
-node@13.12.0:
-  version "13.12.0"
-  resolved "https://registry.yarnpkg.com/node/-/node-13.12.0.tgz#6b254774a4d2a7bb1dd9e5487e2c4ba66f125621"
-  integrity sha512-y59XTAeL1CYS645Bm6HFgNpp1NwFd/jTKP0q7j7z0EA0bDwieRNRNKdccvuHLDCMpxXti+r7Yu7Lxn2e/mUaIw==
-  dependencies:
-    node-bin-setup "^1.0.0"
 
 normalize-package-data@^2.3.2, normalize-package-data@^2.3.4:
   version "2.5.0"

@@ -1,12 +1,12 @@
+import AbstractRobot from '../../../AbstractRobot';
 import deepNeq from '../../../deepNeq';
 import { Vector2, Vector3 } from '../../../math';
 import { ReferenceFrame } from '../../../unit-math';
 import { Angle, DistributiveOmit, Mass } from '../../../util';
+import Patch from '../../../util/Patch';
 import Material from './Material';
-import Patch from './Patch';
 
 namespace Node {
-  
   export interface Physics {
     colliderId?: string;
     fixed?: boolean;
@@ -35,7 +35,6 @@ namespace Node {
 
   interface Base {
     name: string;
-    parentId?: string;
     origin?: ReferenceFrame;
     scriptIds?: string[];
     documentIds?: string[];
@@ -46,7 +45,6 @@ namespace Node {
   export namespace Base {
     export const NIL: Base = {
       name: '',
-      parentId: undefined,
       origin: undefined,
       scriptIds: undefined,
       documentIds: undefined,
@@ -56,7 +54,6 @@ namespace Node {
 
     export const upcast = <T extends Base>(t: T): Base => ({
       name: t.name,
-      parentId: t.parentId,
       origin: t.origin,
       scriptIds: t.scriptIds,
       documentIds: t.documentIds,
@@ -66,7 +63,6 @@ namespace Node {
 
     export const partialDiff = (prev: Base, next: Base): Patch.InnerPatch<Base> => ({
       name: Patch.diff(prev.name, next.name),
-      parentId: Patch.diff(prev.parentId, next.parentId),
       origin: Patch.diff(prev.origin, next.origin),
       scriptIds: Patch.diff(prev.scriptIds, next.scriptIds),
       documentIds: Patch.diff(prev.documentIds, next.documentIds),
@@ -77,6 +73,7 @@ namespace Node {
 
   export interface Empty extends Base {
     type: 'empty';
+    parentId?: string;
   }
 
   export namespace Empty {
@@ -95,6 +92,7 @@ namespace Node {
 
       return Patch.innerChange(prev, next, {
         type: Patch.none(prev.type),
+        parentId: Patch.diff(prev.parentId, next.parentId),
         ...Base.partialDiff(prev, next)
       });
     };
@@ -102,6 +100,7 @@ namespace Node {
 
   export interface Obj extends Base {
     type: 'object';
+    parentId?: string;
     geometryId: string;
     physics?: Physics;
     material?: Material;
@@ -125,6 +124,7 @@ namespace Node {
 
       return Patch.innerChange(prev, next, {
         type: Patch.none(prev.type),
+        parentId: Patch.diff(prev.parentId, next.parentId),
         geometryId: Patch.diff(prev.geometryId, next.geometryId),
         physics: Patch.diff(prev.physics, next.physics),
         material: Material.diff(prev.material, next.material),
@@ -136,6 +136,7 @@ namespace Node {
 
   export interface PointLight extends Base {
     type: 'point-light';
+    parentId?: string;
     intensity: number;
     radius?: number;
     range?: number;
@@ -158,6 +159,7 @@ namespace Node {
 
       return Patch.innerChange(prev, next, {
         type: Patch.none(prev.type),
+        parentId: Patch.diff(prev.parentId, next.parentId),
         intensity: Patch.diff(prev.intensity, next.intensity),
         radius: Patch.diff(prev.radius, next.radius),
         range: Patch.diff(prev.range, next.range),
@@ -168,6 +170,7 @@ namespace Node {
 
   export interface SpotLight extends Base {
     type: 'spot-light';
+    parentId?: string;
     direction: Vector3;
     angle: Angle;
     exponent: number;
@@ -194,6 +197,7 @@ namespace Node {
 
       return Patch.innerChange(prev, next, {
         type: Patch.none(prev.type),
+        parentId: Patch.diff(prev.parentId, next.parentId),
         direction: Patch.diff(prev.direction, next.direction),
         angle: Patch.diff(prev.angle, next.angle),
         exponent: Patch.diff(prev.exponent, next.exponent),
@@ -205,6 +209,7 @@ namespace Node {
 
   export interface DirectionalLight extends Base {
     type: 'directional-light';
+    parentId?: string;
     radius?: number;
     range?: number;
     direction: Vector3;
@@ -229,6 +234,7 @@ namespace Node {
 
       return Patch.innerChange(prev, next, {
         type: Patch.none(prev.type),
+        parentId: Patch.diff(prev.parentId, next.parentId),
         radius: Patch.diff(prev.radius, next.radius),
         range: Patch.diff(prev.range, next.range),
         direction: Patch.diff(prev.direction, next.direction),
@@ -240,6 +246,7 @@ namespace Node {
 
   export interface FromTemplate extends Base {
     type: 'from-template';
+    parentId?: string;
     templateId: string;
   }
 
@@ -260,8 +267,40 @@ namespace Node {
 
       return Patch.innerChange(prev, next, {
         type: Patch.none(prev.type),
+        parentId: Patch.diff(prev.parentId, next.parentId),
         templateId: Patch.diff(prev.templateId, next.templateId),
         ...Base.partialDiff(prev, next),
+      });
+    };
+  }
+
+  export interface Robot extends Base {
+    type: 'robot';
+    robotId: string;
+    state: AbstractRobot.Stateless;
+  }
+
+  export namespace Robot {
+    export const NIL: Robot = {
+      type: 'robot',
+      ...Base.NIL,
+      robotId: undefined,
+      state: AbstractRobot.Stateless.NIL,
+    };
+
+    export const from = <T extends Base>(t: T): Robot => ({
+      ...NIL,
+      ...Base.upcast(t)
+    });
+
+    export const diff = (prev: Robot, next: Robot): Patch<Robot> => {
+      if (!deepNeq(prev, next)) return Patch.none(prev);
+
+      return Patch.innerChange(prev, next, {
+        type: Patch.none(prev.type),
+        robotId: Patch.diff(prev.robotId, next.robotId),
+        state: AbstractRobot.Stateless.diff(prev.state, next.state),
+        ...Base.partialDiff(prev, next)
       });
     };
   }
@@ -276,10 +315,11 @@ namespace Node {
       case 'spot-light': return SpotLight.diff(prev, next as SpotLight);
       case 'directional-light': return DirectionalLight.diff(prev, next as DirectionalLight);
       case 'from-template': return FromTemplate.diff(prev, next as FromTemplate);
+      case 'robot': return Robot.diff(prev, next as Robot);
     }
   };
 
-  export type Type = 'empty' | 'object' | 'point-light' | 'spot-light' | 'directional-light' | 'from-template';
+  export type Type = 'empty' | 'object' | 'point-light' | 'spot-light' | 'directional-light' | 'from-template' | 'robot';
 
   export const transmute = (node: Node, type: Type): Node => {
     switch (type) {
@@ -289,12 +329,21 @@ namespace Node {
       case 'spot-light': return SpotLight.from(node);
       case 'directional-light': return DirectionalLight.from(node);
       case 'from-template': return FromTemplate.from(node);
+      case 'robot': return Robot.from(node);
     }
   };
 
   export type TemplatedNode<T extends Base> = DistributiveOmit<T, keyof Base>;
 }
 
-type Node = Node.Empty | Node.Obj | Node.PointLight | Node.SpotLight | Node.DirectionalLight | Node.FromTemplate;
+type Node = (
+  Node.Empty |
+  Node.Obj |
+  Node.PointLight |
+  Node.SpotLight |
+  Node.DirectionalLight |
+  Node.FromTemplate |
+  Node.Robot
+);
 
 export default Node;

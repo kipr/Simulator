@@ -82,11 +82,18 @@ export namespace Vector3 {
     y: l.y - r.y,
     z: l.z - r.z
   });
-  export const multiply = (l: Vector3, r: number): Vector3 => ({
-    x: l.x * r,
-    y: l.y * r,
-    z: l.z * r
+  export const multiply = (l: Vector3, r: Vector3): Vector3 => ({
+    x: l.x * r.x,
+    y: l.y * r.y,
+    z: l.z * r.z
   });
+
+  export const cross = (l: Vector3, r: Vector3): Vector3 => ({
+    x: l.y * r.z - l.z * r.y,
+    y: l.z * r.x - l.x * r.z,
+    z: l.x * r.y - l.y * r.x
+  });
+
   export const multiplyScalar = (vec: Vector3, scalar: number): Vector3 => ({
     x: vec.x * scalar,
     y: vec.y * scalar,
@@ -97,12 +104,55 @@ export namespace Vector3 {
     y: vec.y / scalar,
     z: vec.z / scalar
   });
-  export const length = (vec: Vector3): number => Math.sqrt(Math.pow(vec.x, 2) + Math.pow(vec.y, 2) + Math.pow(vec.z, 2));
+
+  export const lengthSquared = (vec: Vector3) => vec.x * vec.x + vec.y * vec.y + vec.z * vec.z;
+  export const length = (vec: Vector3): number => Math.sqrt(lengthSquared(vec));
 
   export const toBabylon = (vec: Vector3): Babylon.Vector3 => new Babylon.Vector3(vec.x, vec.y, vec.z);
   export const fromBabylon = (vec: Babylon.Vector3): Vector3 => ({ x: vec.x, y: vec.y, z: vec.z });
 
   export const distance = (lhs: Vector3, rhs: Vector3): number => Math.sqrt(Math.pow(rhs.x - lhs.x, 2) + Math.pow(rhs.y - lhs.y, 2) + Math.pow(rhs.z - lhs.z, 2));
+
+  export const dot = (lhs: Vector3, rhs: Vector3): number => lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
+
+
+  export const normalize = (vec: Vector3) => divideScalar(vec, length(vec));
+
+  export const applyQuaternion = (v: Vector3, q: Quaternion): Vector3 => {
+    const ix = q.w * v.x + q.y * v.z - q.z * v.y;
+    const iy = q.w * v.y + q.z * v.x - q.x * v.z;
+    const iz = q.w * v.z + q.x * v.y - q.y * v.x;
+    const iw = -q.x * v.x - q.y * v.y - q.z * v.z;
+
+    return {
+      x: ix * q.w + iw * -q.x + iy * -q.z - iz * -q.y,
+      y: iy * q.w + iw * -q.y + iz * -q.x - ix * -q.z,
+      z: iz * q.w + iw * -q.z + ix * -q.y - iy * -q.x
+    };
+  };
+
+  export const project = (lhs: Vector3, rhs: Vector3): Vector3 => {
+    const dot = Vector3.dot(lhs, rhs);
+    const lengthSquared = Vector3.lengthSquared(rhs);
+    return Vector3.multiplyScalar(rhs, dot / lengthSquared);
+  };
+
+  export const applyQuaternionTwist = (v: Vector3, q: Quaternion): { swing: Vector3, twist: Quaternion } => {
+    const swing = applyQuaternion(v, q);
+    const twist = Quaternion.multiply(q, Quaternion.fromVector3(swing));
+    return { swing, twist };
+  };
+
+  export const rotate = (v: Vector3, orientation: Quaternion): Vector3 => {
+    const q = Quaternion.multiply(orientation, Quaternion.fromVector3(v));
+    return applyQuaternion(v, q);
+  };
+
+  export const angle = (lhs: Vector3, rhs: Vector3): number => {
+    const dot = Vector3.dot(lhs, rhs);
+    const length = Vector3.length(lhs) * Vector3.length(rhs);
+    return Math.acos(dot / length);
+  };
 }
 
 export interface Euler {
@@ -131,13 +181,13 @@ export namespace Euler {
   };
 }
 
-export interface AngleAxis {
+export interface AxisAngle {
   angle: number;
   axis: Vector3;
 }
 
-export namespace AngleAxis {
-  export const fromQuaternion = (q: Quaternion): AngleAxis => {
+export namespace AxisAngle {
+  export const fromQuaternion = (q: Quaternion): AxisAngle => {
     let s = Math.sqrt(1 - q.w * q.w);
     const angle = 2 * Math.atan2(s, Math.abs(q.w));
     if (s < 0.0001) {
@@ -153,23 +203,24 @@ export namespace AngleAxis {
     };
   };
 
-  export const fromEuler = (euler: Euler): AngleAxis => {
+  export const fromEuler = (euler: Euler): AxisAngle => {
     const q = Euler.toQuaternion(euler);
     return fromQuaternion(q);
   };
 
-  export const toQuaternion = (angleAxis: AngleAxis): Quaternion => {
+  export const toQuaternion = (angleAxis: AxisAngle): Quaternion => {
     const { angle, axis } = angleAxis;
+    const normalizedAxis = Vector3.normalize(axis);
     const s = Math.sin(angle / 2);
     const c = Math.cos(angle / 2);
-    return Quaternion.create(axis.x * s, axis.y * s, axis.z * s, c);
+    return Quaternion.create(normalizedAxis.x * s, normalizedAxis.y * s, normalizedAxis.z * s, c);
   };
 
-  export const multiply = (a: AngleAxis, b: AngleAxis): AngleAxis => {
+  export const multiply = (a: AxisAngle, b: AxisAngle): AxisAngle => {
     return fromQuaternion(Quaternion.multiply(toQuaternion(a), toQuaternion(b)));
   };
 
-  export const create = (angle: number, axis: Vector3): AngleAxis => ({
+  export const create = (angle: number, axis: Vector3): AxisAngle => ({
     angle,
     axis
   });
@@ -220,11 +271,13 @@ export namespace Quaternion {
 
   export const dot = (lhs: Quaternion, rhs: Quaternion): number => lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
 
-  export const angle = (lhs: Quaternion, rhs: Quaternion): number => {
-    let cos = dot(lhs, rhs);
-    if (cos < -1) cos = -1;
-    if (cos > 1) cos = 1;
-    return Math.acos(cos);
+  export const angle = (lhs: Quaternion, rhs: Quaternion) => Math.acos(Quaternion.multiply(lhs, conjugate(rhs)).w) * 2;
+
+  export const signedAngle = (lhs: Quaternion, rhs: Quaternion, axis: Vector3) => {
+    const q = Quaternion.multiply(lhs, inverse(rhs));
+    const axisAngle = AxisAngle.fromQuaternion(q);
+    if (Vector3.angle(axisAngle.axis, axis) > Math.PI / 2) return -axisAngle.angle;
+    return axisAngle.angle;
   };
 
   export const slerp = (lhs: Quaternion, rhs: Quaternion, t: number): Quaternion => {
@@ -233,7 +286,50 @@ export namespace Quaternion {
     return fromBabylon(q);
   };
 
-  
+  export const axis = (quat: Quaternion): Vector3 => ({
+    x: quat.x,
+    y: quat.y,
+    z: quat.z
+  });
+
+  export const fromVector3 = (vec: Vector3): Quaternion => ({ x: vec.x, y: vec.y, z: vec.z, w: 0 });
+
+  export const inverse = (quat: Quaternion): Quaternion => {
+    const l = length(quat);
+    return {
+      x: -quat.x / l,
+      y: -quat.y / l,
+      z: -quat.z / l,
+      w: quat.w / l
+    };
+  };
+
+  export const shortestArc = (from: Vector3, to: Vector3): Quaternion => {
+    
+    const s = Math.sqrt((1 + Vector3.dot(from, to)) * 2);
+
+    // from = -to
+    if (s < 0.0001) {
+      let axis = Vector3.cross(Vector3.X, from);
+      if (Vector3.length(axis) < 0.0001) {
+        axis = Vector3.cross(Vector3.Y, from);
+      }
+      axis = Vector3.normalize(axis);
+      return AxisAngle.toQuaternion(AxisAngle.create(Math.PI, axis));
+    }
+    
+    return normalize({
+      ...Vector3.divideScalar(Vector3.cross(from, to), s),
+      w: s / 2
+    });
+  };
+
+  export const conjugate = (quat: Quaternion): Quaternion => ({
+    x: -quat.x,
+    y: -quat.y,
+    z: -quat.z,
+    w: quat.w
+  });
 }
 
 export interface ReferenceFrame {
@@ -249,7 +345,7 @@ export namespace ReferenceFrame {
     scale: Vector3.ONE
   };
 
-  export const create = (position: Vector3, orientation: Quaternion): ReferenceFrame => ({ position, orientation });
+  export const create = (position: Vector3, orientation: Quaternion, scale: Vector3 = Vector3.ONE): ReferenceFrame => ({ position, orientation, scale });
   export const position = (frame: ReferenceFrame) => (frame ? (frame.position ? frame.position : Vector3.ZERO) : Vector3.ZERO);
   export const orientation = (frame: ReferenceFrame) => (frame ? (frame.orientation ? frame.orientation : Quaternion.IDENTITY) : Quaternion.IDENTITY);
   export const scale = (frame: ReferenceFrame) => (frame ?? {}).scale ?? Vector3.ONE;
@@ -258,6 +354,30 @@ export namespace ReferenceFrame {
     position: frame.position ?? Vector3.ZERO,
     orientation: frame.orientation ?? Quaternion.IDENTITY,
     scale: frame.scale ?? Vector3.ONE
+  });
+
+  export interface ToBabylon {
+    position: Babylon.Vector3;
+    rotationQuaternion: Babylon.Quaternion;
+    scaling: Babylon.Vector3;
+  }
+
+  export const toBabylon = (frame: ReferenceFrame): ToBabylon => ({
+    position: Vector3.toBabylon(frame.position || Vector3.ZERO),
+    rotationQuaternion: Quaternion.toBabylon(frame.orientation),
+    scaling: Vector3.toBabylon(frame.scale || Vector3.ONE)
+  });
+
+  export const syncBabylon = (frame: ReferenceFrame, bNode: Babylon.TransformNode | Babylon.AbstractMesh) => {
+    const bFrame = toBabylon(frame || IDENTITY);
+    bNode.position = bFrame.position;
+    bNode.rotationQuaternion = bFrame.rotationQuaternion;
+    bNode.scaling.copyFrom(bFrame.scaling);
+  };
+
+  export const compose = (parent: ReferenceFrame, child: ReferenceFrame): ReferenceFrame => ({
+    position: Vector3.add(parent.position || Vector3.ZERO, Vector3.applyQuaternion(child.position || Vector3.ZERO, child.orientation)),
+    orientation: Quaternion.normalize(Quaternion.multiply(parent.orientation || Quaternion.IDENTITY, child.orientation || Quaternion.IDENTITY)),
   });
 }
 

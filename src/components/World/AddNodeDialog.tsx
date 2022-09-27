@@ -11,7 +11,7 @@ import ScrollArea from "../ScrollArea";
 import Section from "../Section";
 import { ThemeProps } from "../theme";
 import ValueEdit from "../ValueEdit";
-import { AngleAxis, Euler } from "../../math";
+import { AxisAngle, Euler } from "../../math";
 import NodeSettings from "./NodeSettings";
 import Node from "../../state/State/Scene/Node";
 

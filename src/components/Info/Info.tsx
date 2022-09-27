@@ -12,14 +12,18 @@ import { Fa } from '../Fa';
 import { ReferenceFrame } from '../../unit-math';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
-import { SceneAction } from '../../state/reducer';
+import { SceneAction, ScenesAction } from '../../state/reducer';
+import Node from '../../state/State/Scene/Node';
+import Motor from '../../AbstractRobot/Motor';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
 
 
 export interface InfoProps extends StyleProps, ThemeProps {
+  nodeId: string;
 }
 
 interface ReduxInfoProps {
+  node: Node;
   startingOrigin: ReferenceFrame;
   onOriginChange: (origin: ReferenceFrame, modifyReferenceScene: boolean) => void;
 }
@@ -140,7 +144,12 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
       style,
       className,
       theme,
+      node,
+      startingOrigin
     } = props;
+
+    if (!node || node.type !== 'robot') return null;
+
     const { collapsed } = state;
 
     const locationName = StyledText.compose({
@@ -163,25 +172,25 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
     for (let i = 0; i < 4; ++i) {
       servos.push(
         <Row key={`servo-pos-${i}`} theme={theme}>
-          <SensorWidget valueSelector={robotState => robotState.servoPositions[i]} name={`get_servo_position(${i})`} plotTitle='Servo Position Plot' theme={theme} />
+          <SensorWidget value={node.state.servos[i].position} name={`get_servo_position(${i})`} plotTitle='Servo Position Plot' theme={theme} />
         </Row>
       );
     }
 
     const motorVelocities: JSX.Element[] = [];
+    const motorPositions: JSX.Element[] = [];
+
     for (let i = 0; i < 4; ++i) {
+      const motor = node.state.getMotor(i);
       motorVelocities.push(
         <Row key={`motor-velocity-${i}`} theme={theme}>
-          <SensorWidget valueSelector={robotState => robotState.motorSpeeds[i]} name={`motor ${i}`} plotTitle='Motor Velocity Plot' theme={theme} />
+          <SensorWidget value={motor.mode !== Motor.Mode.Pwm ? motor.speedGoal : 0} name={`motor ${i}`} plotTitle='Motor Velocity Plot' theme={theme} />
         </Row>
       );
-    }
 
-    const motorPositions: JSX.Element[] = [];
-    for (let i = 0; i < 4; ++i) {
       motorPositions.push(
         <Row key={`motor-pos-${i}`} theme={theme}>
-          <SensorWidget valueSelector={robotState => robotState.motorPositions[i]} name={`get_motor_position_counter(${i})`} plotTitle='Motor Position Plot' theme={theme} />
+          <SensorWidget value={motor.position} name={`get_motor_position_counter(${i})`} plotTitle='Motor Position Plot' theme={theme} />
         </Row>
       );
     }
@@ -190,7 +199,7 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
     for (let i = 0; i < 6; ++i) {
       analogSensors.push(
         <Row key={`analog-${i}`} theme={theme}>
-          <SensorWidget valueSelector={robotState => robotState.analogValues[i]} name={`analog(${i})`} plotTitle='Analog Sensor Plot' theme={theme} />
+          <SensorWidget value={node.state.analogValues[i]} name={`analog(${i})`} plotTitle='Analog Sensor Plot' theme={theme} />
         </Row>
       );
     }
@@ -199,7 +208,7 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
     for (let i = 0; i < 6; ++i) {
       digitalSensors.push(
         <Row key={`digital-${i}`} theme={theme}>
-          <SensorWidget valueSelector={robotState => robotState.digitalValues[i]} name={`digital(${i})`} plotTitle='Digital Sensor Plot' theme={theme} />
+          <SensorWidget value={node.state.digitalValues[i]} name={`digital(${i})`} plotTitle='Digital Sensor Plot' theme={theme} />
         </Row>
       );
     }
@@ -215,6 +224,8 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
           >
             <Location
               theme={theme}
+              origin={startingOrigin}
+              onOriginChange={props.onOriginChange}
             />
           </StyledSection>
           <StyledSection
@@ -263,13 +274,19 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
   }
 }
 
-export default connect<unknown, unknown, InfoProps, ReduxState>((state: ReduxState) => {
-  const startingOrigin = state.scene.referenceScene.robot?.origin || ReferenceFrame.IDENTITY;
+export default connect<unknown, unknown, InfoProps, ReduxState>((state: ReduxState, ownProps: InfoProps) => {
+  const refNode = state.scene.referenceScene.nodes[ownProps.nodeId];
+  const node = state.scene.workingScene.nodes[ownProps.nodeId];
   return {
-    startingOrigin,
+    startingOrigin: refNode.origin,
+    node
   };
-}, dispatch => ({
+}, (dispatch, ownProps: InfoProps) => ({
   onOriginChange: (origin: ReferenceFrame, modifyReferenceScene: boolean) => {
-    dispatch(SceneAction.setRobotOrigin({ origin, modifyReferenceScene }));
+    dispatch(SceneAction.setNodeOrigin({
+      nodeId: ownProps.nodeId,
+      origin,
+      modifyReferenceScene
+    }));
   }
 }))(Info) as React.ComponentType<InfoProps>;

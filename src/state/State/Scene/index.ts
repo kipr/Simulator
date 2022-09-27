@@ -2,11 +2,10 @@ import Dict from '../../../Dict';
 import Geometry from './Geometry';
 import Node from './Node';
 import Script from './Script';
-import Patch from './Patch';
 import { ReferenceFrame, Vector3 } from '../../../unit-math';
-import Robot from './Robot';
 import Camera from './Camera';
 import { Distance } from '../../../util';
+import Patch from '../../../util/Patch';
 
 interface Scene {
   name: string;
@@ -19,8 +18,6 @@ interface Scene {
   geometry: Dict<Geometry>;
   nodes: Dict<Node>;
   scripts?: Dict<Script>;
-
-  robot?: Robot;
 
   camera: Camera;
 
@@ -39,21 +36,34 @@ interface PatchScene {
   nodes: Dict<Patch<Node>>;
   scripts?: Dict<Patch<Script>>;
 
-  robot?: Patch<Robot>;
-
   camera: Patch<Camera>;
 
   gravity: Patch<Vector3>;
 }
 
 namespace Scene {
+  export const robots = (scene: Scene): Dict<Node.Robot> => {
+    const robots: Dict<Node.Robot> = {};
+    for (const id in scene.nodes) {
+      const node = scene.nodes[id];
+      if (node.type !== 'robot') continue;
+      robots[id] = node;
+    }
+    return robots;
+  };
+
   export const nodeOrdering = (scene: Scene): string[] => {
     // Find nodes with no parent
-    const rootNodes = Object.keys(scene.nodes).filter(n => !scene.nodes[n].parentId);
+    const rootNodes = Object.keys(scene.nodes).filter(n => {
+      const node = scene.nodes[n];
+
+      return node.type === 'robot' || !node.parentId;
+    });
 
     const children = new Map<string, string[]>();
     for (const nodeId of Object.keys(scene.nodes)) {
       const node = scene.nodes[nodeId];
+      if (node.type === 'robot') continue;
       if (!node.parentId) continue;
       children.set(node.parentId, ([...(children.get(node.parentId) || []), nodeId]));
     }
@@ -85,7 +95,6 @@ namespace Scene {
     geometry: Patch.diffDict(a.geometry, b.geometry, Geometry.diff),
     nodes: Patch.diffDict(a.nodes, b.nodes, Node.diff),
     scripts: Patch.diffDict(a.scripts, b.scripts, Patch.diff),
-    robot: Robot.diff(a.robot, b.robot),
     camera: Camera.diff(a.camera, b.camera),
     gravity: Patch.diff(a.gravity, b.gravity),
   });

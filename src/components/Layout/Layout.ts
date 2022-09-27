@@ -12,8 +12,6 @@ export interface LayoutProps extends StyleProps, ThemeProps {
   onLanguageChange: (language: ProgrammingLanguage) => void;
   code: string;
   onCodeChange: (code: string) => void;
-  robotStartPosition: RobotPosition;
-  onSetRobotStartPosition: (position: RobotPosition) => void;
   console: StyledText;
   messages: Message[];
   settings: Settings;

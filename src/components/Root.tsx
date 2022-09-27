@@ -2,7 +2,6 @@ import * as React from 'react';
 import { withRouter } from 'react-router-dom';
 import { signOutOfApp } from '../firebase/modules/auth';
 import WorkerInstance from '../WorkerInstance';
-import { RobotState } from '../RobotState';
 
 import SimMenu from './SimMenu';
 
@@ -31,10 +30,12 @@ import ExceptionDialog from './ExceptionDialog';
 import SelectSceneDialog from './SelectSceneDialog';
 
 import store from '../state';
-import { RobotStateAction, SceneAction } from '../state/reducer';
+import { SceneAction } from '../state/reducer';
 import { Editor } from './Editor';
 import Dict from '../Dict';
 import ProgrammingLanguage from '../ProgrammingLanguage';
+
+import Scene from '../state/State/Scene';
 
 namespace Modal {
   export enum Type {
@@ -96,7 +97,6 @@ export type Modal = Modal.Settings | Modal.About | Modal.Exception | Modal.Selec
 
 
 interface RootState {
-  robotStartPosition: RobotPosition;
   layout: Layout;
 
   activeLanguage: ProgrammingLanguage;
@@ -153,12 +153,6 @@ export class Root extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      robotStartPosition: {
-        x: Distance.centimeters(0),
-        y: Distance.centimeters(200),
-        z: Distance.centimeters(0),
-        theta: Angle.degrees(0),
-      },
       layout: Layout.Side,
       activeLanguage: 'c',
       code: {
@@ -181,8 +175,6 @@ export class Root extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    WorkerInstance.onStateChange = this.onWorkerStateChange_;
-    WorkerInstance.getRobotState = () => store.getState().robotState;
     WorkerInstance.onStopped = this.onStopped_;
 
     this.scheduleUpdateConsole_();
@@ -202,19 +194,6 @@ export class Root extends React.Component<Props, State> {
     this.setState({
       simulatorState: SimulatorState.STOPPED
     });
-  };
-
-  private onSetRobotStartPosition_ = (position: RobotPosition) => {
-    this.setState({
-      robotStartPosition: {
-        x: { ...position.x },
-        y: { ...position.y },
-        z: { ...position.z },
-        theta: { ...position.theta },
-      }
-    });
-
-    Space.getInstance().setRobotPosition(position);
   };
 
   private onActiveLanguageChange_ = (language: ProgrammingLanguage) => {
@@ -252,13 +231,6 @@ export class Root extends React.Component<Props, State> {
   private onModalClick_ = (modal: Modal) => () => this.setState({ modal });
 
   private onModalClose_ = () => this.setState({ modal: Modal.NONE });
-
-  private onWorkerStateChange_ = (robotState: RobotState) => {
-    store.dispatch(RobotStateAction.setRobotState({
-      robotState,
-    }));
-  };
-
   
   private updateConsole_ = () => {
     const text = WorkerInstance.sharedConsole.popString();
@@ -425,7 +397,20 @@ export class Root extends React.Component<Props, State> {
 
 
   private onSettingsChange_ = (changedSettings: Partial<Settings>) => {
-    this.setState({ settings: { ...this.state.settings, ...changedSettings } });
+    const nextSettings: Settings = {
+      ...this.state.settings,
+      ...changedSettings
+    };
+
+    if ('simulationRealisticSensors' in changedSettings) {
+      Space.getInstance().realisticSensors = changedSettings.simulationRealisticSensors;
+    }
+    
+    if ('simulationSensorNoise' in changedSettings) {
+      Space.getInstance().noisySensors = changedSettings.simulationSensorNoise;
+    }
+
+    this.setState({ settings: nextSettings });
   };
 
   private onFeedbackChange_ = (changedFeedback: Partial<Feedback>) => {
@@ -463,7 +448,6 @@ export class Root extends React.Component<Props, State> {
   render() {
     const { props, state } = this;
     const {
-      robotStartPosition,
       layout,
       activeLanguage,
       code,
@@ -482,8 +466,6 @@ export class Root extends React.Component<Props, State> {
       language: activeLanguage,
       code: code[activeLanguage],
       onLanguageChange: this.onActiveLanguageChange_,
-      robotStartPosition,
-      onSetRobotStartPosition: this.onSetRobotStartPosition_,
       theme,
       console,
       onCodeChange: this.onCodeChange_,

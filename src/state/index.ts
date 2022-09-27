@@ -2,8 +2,7 @@ import { combineReducers, createStore,  } from 'redux';
 
 import * as reducer from './reducer';
 import Scene from './State/Scene';
-import { Scenes } from './State';
-import { RobotState } from '../RobotState';
+import { Robots, Scenes } from './State';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
 const global = window as any;
@@ -13,7 +12,7 @@ const global = window as any;
 export default createStore(combineReducers<State>({
   scene: reducer.reduceScene,
   scenes: reducer.reduceScenes,
-  robotState: reducer.reduceRobotState,
+  robots: reducer.reduceRobots,
 }), global.__REDUX_DEVTOOLS_EXTENSION__ && global.__REDUX_DEVTOOLS_EXTENSION__());
 /* eslint-enable @typescript-eslint/no-unsafe-call */
 /* eslint-enable @typescript-eslint/no-unsafe-member-access */
@@ -21,7 +20,7 @@ export default createStore(combineReducers<State>({
 export interface State {
   scene: ReferencedScenePair;
   scenes: Scenes;
-  robotState: RobotState;
+  robots: Robots;
 }
 
 export interface ReferencedScenePair {

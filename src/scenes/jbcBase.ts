@@ -1,8 +1,21 @@
-import { Vector3 } from "../unit-math";
+import { Rotation, Vector3 } from "../unit-math";
 import { Angle, Distance, Mass } from "../util";
 import Node from "../state/State/Scene/Node";
 import Camera from "../state/State/Scene/Camera";
 import Scene from "../state/State/Scene";
+import AbstractRobot from '../AbstractRobot';
+
+const ROBOT: Node.Robot = {
+  type: 'robot',
+  name: 'Robot',
+  robotId: 'demobot',
+  state: AbstractRobot.Stateless.NIL,
+  visible: true,
+  origin: {
+    position: Vector3.centimeters(0, 2, 0),
+    orientation: Rotation.eulerDegrees(0, 0, 0),
+  }
+};
 
 export function createBaseSceneSurfaceA(): Scene {
   return {
@@ -19,6 +32,7 @@ export function createBaseSceneSurfaceA(): Scene {
       },
     },
     nodes: {
+      'robot': ROBOT,
       'jbc_mat_a': {
         type: 'from-template',
         templateId: 'jbc_mat_a',
@@ -75,15 +89,6 @@ export function createBaseSceneSurfaceA(): Scene {
         visible: true
       },
     },
-    robot: {
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(2),
-          z: Distance.centimeters(0),
-        },
-      }
-    },
     camera: Camera.arcRotate({
       radius: Distance.meters(5),
       target: {
@@ -120,6 +125,7 @@ export function createBaseSceneSurfaceB(): Scene {
       },
     },
     nodes: {
+      'robot': ROBOT,
       'jbc_mat_b': {
         type: 'from-template',
         templateId: 'jbc_mat_b',
@@ -175,15 +181,6 @@ export function createBaseSceneSurfaceB(): Scene {
         },
         visible: true
       },
-    },
-    robot: {
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(2),
-          z: Distance.centimeters(0),
-        },
-      }
     },
     camera: Camera.arcRotate({
       radius: Distance.meters(5),

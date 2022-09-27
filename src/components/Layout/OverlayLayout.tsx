@@ -15,12 +15,16 @@ import { Theme, ThemeProps } from '../theme';
 import Widget, { BarComponent, Mode, Size, WidgetProps } from '../Widget';
 import { State as ReduxState } from '../../state';
 import { SceneAction } from '../../state/reducer';
+import Scene from '../../state/State/Scene';
+import Node from '../../state/State/Scene/Node';
+import Dict from '../../Dict';
 
 export interface OverlayLayoutProps extends LayoutProps {
   
 }
 
 interface ReduxOverlayLayoutProps {
+  robots: Dict<Node.Robot>;
 }
 
 interface OverlayLayoutState {
@@ -284,8 +288,6 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       theme,
       language,
       onLanguageChange,
-      robotStartPosition,
-      onSetRobotStartPosition,
       code,
       onCodeChange,
       console,
@@ -295,7 +297,8 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       onIndentCode,
       onDownloadCode,
       onSelectScene,
-      editorRef
+      editorRef,
+      robots
     } = props;
 
     const {
@@ -321,6 +324,8 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
     });
     const consoleBar = createConsoleBarComponents(theme, onClearConsole);
     const worldBar = createWorldBarComponents(theme, onSelectScene);
+
+    const robotIds = Object.keys(robots);
 
     return (
       <Container style={style} className={className}>
@@ -361,17 +366,20 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
           >
             <FlexConsole theme={theme} text={console} />
           </ConsoleWidget>
-          <InfoWidget
-            {...commonProps}
-            name='Robot'
-            sizes={INFO_SIZES}
-            size={INFO_SIZE[infoSize]}
-            onSizeChange={this.onInfoSizeChange_}
-          >
-            <Info
-              theme={theme}
-            />
-          </InfoWidget>
+          {robotIds.length === 1 ? (
+            <InfoWidget
+              {...commonProps}
+              name='Robot'
+              sizes={INFO_SIZES}
+              size={INFO_SIZE[infoSize]}
+              onSizeChange={this.onInfoSizeChange_}
+            >
+              <Info
+                theme={theme}
+                nodeId={robotIds[0]}
+              />
+            </InfoWidget>
+          ) : null}
           <WorldWidget
             {...commonProps}
             name='World'
@@ -388,7 +396,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
   }
 }
 
-export const OverlayLayoutRedux = connect<unknown, ReduxOverlayLayoutProps, OverlayLayoutProps, ReduxState>((state: ReduxState) => {
-  return {};
-}, dispatch => ({
+export const OverlayLayoutRedux = connect((state: ReduxState) => ({
+  robots: Scene.robots(state.scene.workingScene),
+}), dispatch => ({
 }), null, { forwardRef: true })(OverlayLayout);

@@ -12,6 +12,11 @@ try {
 } catch (e) {
   console.log('Failed to read dependencies.json');
 }
+
+const modules = ['node_modules'];
+if (dependencies.cpython) modules.push(resolve(dependencies.cpython));
+if (dependencies.ammo) modules.push(resolve(dependencies.ammo));
+
   
 module.exports = {
   entry: {
@@ -39,12 +44,7 @@ module.exports = {
       path: false,
     },
     symlinks: false,
-    modules: dependencies.cpython ? [
-      'node_modules',
-      resolve(dependencies.cpython),
-    ] : [
-      'node_modules',
-    ]
+    modules
   },
   context: resolve(__dirname, '../../src'),
   module: {
@@ -119,6 +119,7 @@ module.exports = {
       SIMULATOR_VERSION: JSON.stringify(require('../../package.json').version),
       SIMULATOR_GIT_HASH: JSON.stringify(commitHash),
       SIMULATOR_HAS_CPYTHON: JSON.stringify(dependencies.cpython !== undefined),
+      SIMULATOR_HAS_AMMO: JSON.stringify(dependencies.ammo !== undefined),
     }),
   ],
   performance: {

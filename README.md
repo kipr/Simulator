@@ -10,6 +10,7 @@ Simulates a botball/JBC style demobot with a built in IDE.
 # Development
 
 ## Requirements
+- [Git Large File Storage](https://git-lfs.github.com/)
 - [Node.js v16 or higher](https://nodejs.org/)
 - [yarn](https://classic.yarnpkg.com/)
 - [CMake](https://cmake.org/)
@@ -47,7 +48,7 @@ It is recommended to use [WSL2](https://docs.microsoft.com/en-us/windows/wsl/abo
 
 ## Clone repository and submodules
 
-Clone this repository and its submodules:
+### Clone this repository and its submodules:
 
 ```bash
 git clone --recurse-submodules https://github.com/kipr/Simulator
@@ -57,6 +58,12 @@ Or, if you've already cloned the repository without `--recurse-submodules`, you 
 
 ```bash
 git submodule update --init
+```
+
+### Pull large files
+
+```bash
+git lfs pull
 ```
 
 ## Build Dependencies

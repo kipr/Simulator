@@ -1,6 +1,6 @@
 import * as React from "react";
 import { styled } from "styletron-react";
-import { Vector3 as RawVector3, AngleAxis, Euler } from "../../math";
+import { Vector3 as RawVector3, AxisAngle, Euler } from "../../math";
 import { ReferenceFrame, Rotation, Vector3 } from "../../unit-math";
 
 import { Angle, Distance, Mass, UnitlessValue, Value } from "../../util";
@@ -191,9 +191,9 @@ class NodeSettings extends React.PureComponent<Props, State> {
           orientation: Rotation.Euler.fromRaw(Euler.fromQuaternion(Rotation.toRawQuaternion(node.origin.orientation))),
         });
         break;
-      case 'angle-axis':
+      case 'axis-angle':
         this.props.onNodeOriginChange({
-          orientation: Rotation.AngleAxis.fromRaw(AngleAxis.fromQuaternion(Rotation.toRawQuaternion(node.origin.orientation))),
+          orientation: Rotation.AxisAngle.fromRaw(AxisAngle.fromQuaternion(Rotation.toRawQuaternion(node.origin.orientation))),
         });
         break;
     }
@@ -694,7 +694,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
   private onOrientationAngleAxisXChange_ = (value: Value) => {
     const { node } = this.props;
     const origin = node.origin || {};
-    const orientation: Rotation.AngleAxis = origin.orientation as Rotation.AngleAxis || Rotation.AngleAxis.identity(Angle.Type.Degrees);
+    const orientation: Rotation.AxisAngle = origin.orientation as Rotation.AxisAngle || Rotation.AxisAngle.identity(Angle.Type.Degrees);
 
     this.props.onNodeOriginChange({
       orientation: {
@@ -710,7 +710,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
   private onOrientationAngleAxisYChange_ = (value: Value) => {
     const { node } = this.props;
     const origin = node.origin || {};
-    const orientation: Rotation.AngleAxis = origin.orientation as Rotation.AngleAxis || Rotation.AngleAxis.identity(Angle.Type.Degrees);
+    const orientation: Rotation.AxisAngle = origin.orientation as Rotation.AxisAngle || Rotation.AxisAngle.identity(Angle.Type.Degrees);
 
     this.props.onNodeOriginChange({
       orientation: {
@@ -726,7 +726,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
   private onOrientationAngleAxisZChange_ = (value: Value) => {
     const { node } = this.props;
     const origin = node.origin || {};
-    const orientation: Rotation.AngleAxis = origin.orientation as Rotation.AngleAxis || Rotation.AngleAxis.identity(Angle.Type.Degrees);
+    const orientation: Rotation.AxisAngle = origin.orientation as Rotation.AxisAngle || Rotation.AxisAngle.identity(Angle.Type.Degrees);
 
     this.props.onNodeOriginChange({
       orientation: {
@@ -742,7 +742,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
   private onOrientationAngleAxisAngleChange_ = (value: Value) => {
     const { node } = this.props;
     const origin = node.origin || {};
-    const orientation: Rotation.AngleAxis = origin.orientation as Rotation.AngleAxis || Rotation.AngleAxis.identity(Angle.Type.Degrees);
+    const orientation: Rotation.AxisAngle = origin.orientation as Rotation.AxisAngle || Rotation.AxisAngle.identity(Angle.Type.Degrees);
 
     this.props.onNodeOriginChange({
       orientation: {

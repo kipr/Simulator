@@ -12,6 +12,18 @@ export const JBC_15B: Scene = {
   description: `Junior Botball Challenge 15B: Bump Bump`,
   nodes: {
     ...baseScene.nodes,
+    // The normal starting position of the robot doesn't leave room for the paper ream in the starting box
+    // Start the robot forward a bit so that a ream fits behind it
+    'robot': {
+      ...baseScene.nodes['robot'],
+      origin: {
+        ...baseScene.nodes['robot'].origin,
+        position: {
+          ...baseScene.nodes['robot'].origin.position,
+          z: Distance.centimeters(7)
+        },
+      }
+    },
     'ream1': {
       type: 'from-template',
       templateId: 'ream',
@@ -22,7 +34,7 @@ export const JBC_15B: Scene = {
           y: Distance.centimeters(5),
           z: Distance.centimeters(48),
         },
-        orientation: Rotation.AngleAxis.fromRaw({
+        orientation: Rotation.AxisAngle.fromRaw({
           axis: { x: 1, y: 0, z: 0 },
           angle: -Math.PI / 2,
         }),
@@ -39,25 +51,12 @@ export const JBC_15B: Scene = {
           y: Distance.centimeters(5),
           z: Distance.centimeters(-6.3),
         },
-        orientation: Rotation.AngleAxis.fromRaw({
+        orientation: Rotation.AxisAngle.fromRaw({
           axis: { x: 1, y: 0, z: 0 },
           angle: -Math.PI / 2,
         }),
       },
       visible: true,
     },
-  },
-  // The normal starting position of the robot doesn't leave room for the paper ream in the starting box
-  // Start the robot forward a bit so that a ream fits behind it
-  robot: {
-    ...baseScene.robot,
-    origin: {
-      ...baseScene.robot.origin,
-      position: {
-        x: Distance.centimeters(0),
-        y: Distance.centimeters(2),
-        z: Distance.centimeters(7),
-      },
-    }
   },
 };

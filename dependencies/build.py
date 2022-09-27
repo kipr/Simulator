@@ -192,9 +192,34 @@ subprocess.run(
   env = env
 )
 
+print('Configuring ammo.js...')
+ammo_dir = working_dir / 'ammo.js'
+ammo_build_dir = working_dir / 'ammo_build'
+os.makedirs(ammo_build_dir, exist_ok=True)
+subprocess.run(
+  [
+    'emcmake',
+    'cmake',
+    '-DCLOSURE=1',
+    '-DTOTAL_MEMORY=268435456',
+    '-DALLOW_MEMORY_GROWTH=1',
+    ammo_dir
+  ],
+  cwd = ammo_build_dir,
+  check = True,
+  env = env
+)
+
+print('Building ammo.js...')
+subprocess.run(
+  [ 'emmake', 'make', f'-j{multiprocessing.cpu_count()}' ],
+  cwd = ammo_build_dir,
+  check = True,
+  env = env
+)
+
+
 print('Outputting results...')
-
-
 output = json.dumps({
   'emsdk_version': emsdk_version,
   'emsdk_path': f'{emsdk_dir}',
@@ -205,7 +230,8 @@ output = json.dumps({
   },
   'libkipr_c': f'{libkipr_install_c_dir}',
   'libkipr_python': f'{libkipr_build_python_dir}',
-  'cpython': f'{cpython_emscripten_build_dir}'
+  'cpython': f'{cpython_emscripten_build_dir}',
+  'ammo': f'{ammo_build_dir}',
 })
 
 with open(working_dir / 'dependencies.json', 'w') as f:

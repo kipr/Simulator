@@ -27,6 +27,8 @@ export namespace Angle {
   export const degrees = (value: number): Degrees => ({ type: Type.Degrees, value });
   export const radians = (value: number): Radians => ({ type: Type.Radians, value });
 
+  export const ZERO_RADIANS = radians(0);
+
   export const toRadians = (angle: Angle): Radians => {
     switch (angle.type) {
       case Type.Radians: return angle;
@@ -74,6 +76,8 @@ export namespace Distance {
     type: 'meters';
   }
   export const meters = (value: number): Meters => ({ type: 'meters', value });
+
+  export const ZERO_METERS = meters(0);
 
   export interface Centimeters extends UnitlessValue {
     type: 'centimeters';
@@ -184,6 +188,8 @@ export namespace Distance {
       case 'inches': return toInches(distance);
     }
   };
+
+  export const toValue = (distance: Distance, newType: Type): number => toType(distance, newType).value;
 
   export const subtract = (a: Distance, b: Distance, newType: Type): Distance => {
     const aMeters = toMeters(a);
