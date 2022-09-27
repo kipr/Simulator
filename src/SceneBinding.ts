@@ -564,11 +564,19 @@ class SceneBinding {
     await robotBinding.setRobot(node, robot);
     // FIXME: For some reason this origin isn't respected immediately. We need to look into it.
     robotBinding.visible = false;
-    setTimeout(() => {
-      robotBinding.origin = node.origin || ReferenceFrame.IDENTITY;
-      robotBinding.visible = node.visible ?? false;
-    }, 200);
+    const observerObj: { observer: Babylon.Observer<Babylon.Scene> } = { observer: null };
     
+    let count = 0;
+    
+    observerObj.observer = this.bScene_.onAfterRenderObservable.add((data, state) => {
+      robotBinding.origin = node.origin || ReferenceFrame.IDENTITY;
+      
+      if (count++ < 10) return;
+
+      robotBinding.visible = node.visible ?? false;
+      observerObj.observer.unregisterOnNextCall = true;
+    });
+
     this.robotBindings_[id] = robotBinding;
     return robotBinding;
   };
