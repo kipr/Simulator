@@ -42,7 +42,7 @@ class SharedRegistersRobot implements AbstractRobot {
     const directions = this.sharedResisters_.getRegisterValue8b(RegisterState.REG_RW_MOT_DIRS);
     const mode = Motor.Mode.fromBits((modes >> (port * 2)) & 0b11);
     const direction = Motor.Direction.fromBits((directions >> (port * 2)) & 0b11);
-    const position = this.sharedResisters_.getRegisterValue32b(RegisterState.REG_RW_MOT_0_B3 + port * 4, true);
+    const position = this.sharedResisters_.getRegisterValue32b(RegisterState.REG_RW_MOT_0_B3 + port * 4, true) / SharedRegistersRobot.POSITION_GOAL_SCALING;
     const pwm = this.sharedResisters_.getRegisterValue16b(RegisterState.REG_RW_MOT_0_PWM_H + port * 2);
     const done = this.getMotorDone_(port);
     const speedGoal = this.sharedResisters_.getRegisterValue16b(RegisterState.REG_RW_MOT_0_SP_H + port * 2, true);
