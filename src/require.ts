@@ -3,7 +3,7 @@ export interface EmscriptenModule {
   print: (s: string) => void,
   printErr: (stderror: string) => void,
   onRuntimeInitialized?: () => void,
-  _simMainWrapper?: () => void,
+  _main?: () => void,
 }
 
 export interface ModuleContext {

@@ -1,4 +1,6 @@
-export default (code: string): Promise<CompileResult> => {
+import ProgrammingLanguage from "./ProgrammingLanguage";
+
+export default (code: string, language: ProgrammingLanguage): Promise<CompileResult> => {
 
   return new Promise<CompileResult>((resolve, reject) => {
     const req = new XMLHttpRequest();
@@ -19,7 +21,8 @@ export default (code: string): Promise<CompileResult> => {
     req.setRequestHeader('Content-Type', 'application/json');
 
     req.send(JSON.stringify({
-      code
+      code,
+      language,
     }));
   });
   

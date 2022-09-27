@@ -57,7 +57,7 @@ const startC = (message: Protocol.Worker.StartRequest) => {
 
   mod.onRuntimeInitialized = () => {
     try {
-      mod._simMainWrapper();
+      mod._main();
     } catch (e: unknown) {
       if (ExitStatusError.isExitStatusError(e)) {
         print(`Program exited with status code ${e.status}`);
@@ -66,7 +66,7 @@ const startC = (message: Protocol.Worker.StartRequest) => {
       } else {
         printErr(`Program exited with an unknown error`);
       }
-
+    } finally {
       sendStopped();
     }
   };
@@ -96,7 +96,8 @@ const startPython = async (message: Protocol.Worker.StartRequest) => {
 
 const start = async (message: Protocol.Worker.StartRequest) => {
   switch (message.language) {
-    case 'c': {
+    case 'c':
+    case 'cpp': {
       startC(message);
       break;
     }

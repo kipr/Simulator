@@ -9,7 +9,6 @@ import { Console, createConsoleBarComponents } from '../Console';
 import { Editor, createEditorBarComponents } from '../Editor';
 import World, { createWorldBarComponents } from '../World';
 
-import { Fa } from '../Fa';
 import { Info } from '../Info';
 import { LayoutProps } from './Layout';
 import { SimulatorArea } from '../SimulatorArea';
@@ -22,6 +21,7 @@ import { SceneAction } from '../../state/reducer';
 import Node from '../../state/State/Scene/Node';
 import Dict from '../../Dict';
 import Scene from '../../state/State/Scene';
+import { faCode, faGlobeAmericas, faRobot } from '@fortawesome/free-solid-svg-icons';
 
 // 3 panes:
 // Editor / console
@@ -30,13 +30,13 @@ import Scene from '../../state/State/Scene';
 
 const TABS = [{
   name: 'Editor',
-  icon: 'code'
+  icon: faCode,
 }, {
   name: 'Robot',
-  icon: 'robot'
+  icon: faRobot,
 }, {
   name: 'World',
-  icon: 'globe-americas'
+  icon: faGlobeAmericas,
 }];
 
 const sizeDict = (sizes: Size[]) => {

@@ -7,6 +7,9 @@ import { Spacer } from './common';
 import { Fa } from './Fa';
 import { ThemeProps } from './theme';
 
+import { faAngleDown, faAngleUp, faAngleLeft, faAngleRight, faAngleDoubleUp, faAngleDoubleDown, faAngleDoubleLeft, faAngleDoubleRight, faTimes, faExpand } from '@fortawesome/free-solid-svg-icons';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+
 export namespace Size {
   export enum Type {
     Maximized,
@@ -146,28 +149,28 @@ const Title = styled('span', (props: ThemeProps & { $hasComponents: boolean }) =
   borderRight: props.$hasComponents ? `1px solid ${props.theme.borderColor}` : undefined
 }));
 
-const sizeIcon = (size: Size) => {
+const sizeIcon = (size: Size): IconProp => {
   switch (size.type) {
     case Size.Type.Partial: {
       switch (size.direction) {
-        case Size.Direction.Up: return 'angle-up';
-        case Size.Direction.Down: return 'angle-down';
-        case Size.Direction.Left: return 'angle-left';
-        case Size.Direction.Right: return 'angle-right';
+        case Size.Direction.Up: return faAngleUp;
+        case Size.Direction.Down: return faAngleDown;
+        case Size.Direction.Left: return faAngleLeft;
+        case Size.Direction.Right: return faAngleRight;
         default: return null;
       }
     }
     case Size.Type.Miniature: {
       switch (size.direction) {
-        case Size.Direction.Up: return 'angle-double-up';
-        case Size.Direction.Down: return 'angle-double-down';
-        case Size.Direction.Left: return 'angle-double-left';
-        case Size.Direction.Right: return 'angle-double-right';
+        case Size.Direction.Up: return faAngleDoubleUp;
+        case Size.Direction.Down: return faAngleDoubleDown;
+        case Size.Direction.Left: return faAngleDoubleLeft;
+        case Size.Direction.Right: return faAngleDoubleRight;
         default: return null;
       }
     }
-    case Size.Type.Minimized: return 'times';
-    case Size.Type.Maximized: return 'expand';
+    case Size.Type.Minimized: return faTimes;
+    case Size.Type.Maximized: return faExpand;
   }
 };
 
@@ -176,7 +179,7 @@ class Widget extends React.PureComponent<Props, State> {
     super(props);
   }
 
-  private onSizeChange_ = (index: number) => (event: React.MouseEvent<HTMLElement>) => {
+  private onSizeChange_ = (index: number) => (event: React.MouseEvent<SVGSVGElement>) => {
     const { onSizeChange } = this.props;
     
     if (!onSizeChange) return;

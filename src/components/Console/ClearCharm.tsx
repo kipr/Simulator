@@ -6,6 +6,8 @@ import { Fa } from '../Fa';
 import { ThemeProps } from '../theme';
 import { charmColor } from '../charm-util';
 
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+
 export interface ClearCharmProps extends StyleProps, ThemeProps {
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
@@ -30,7 +32,7 @@ class ClearCharm extends React.PureComponent<Props> {
     
     return (
       <Container theme={theme} onClick={onClick}>
-        <Fa icon='times' /> Clear
+        <Fa icon={faTimes} /> Clear
       </Container>
     );
   }

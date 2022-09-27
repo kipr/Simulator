@@ -8,7 +8,6 @@ import { Console, createConsoleBarComponents } from '../Console';
 import { Editor, createEditorBarComponents } from '../Editor';
 import World, { createWorldBarComponents } from '../World';
 
-import { Fa } from '../Fa';
 import { Info } from '../Info';
 import { LayoutProps } from './Layout';
 import { SimulatorArea } from '../SimulatorArea';

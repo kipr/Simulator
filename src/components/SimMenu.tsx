@@ -39,6 +39,7 @@ type State = MenuState;
 
 import KIPR_LOGO_BLACK from '../assets/KIPR-Logo-Black-Text-Clear-Large.png';
 import KIPR_LOGO_WHITE from '../assets/KIPR-Logo-White-Text-Clear-Large.png';
+import { faBook, faClone, faCogs, faCommentDots, faPlay, faQuestion, faSignOutAlt, faStop, faSync } from '@fortawesome/free-solid-svg-icons';
 
 const Container = styled('div', (props: ThemeProps) => ({
   backgroundColor: props.theme.backgroundColor,
@@ -173,7 +174,7 @@ class SimMenu extends React.PureComponent<Props, State> {
           onClick={onStopClick}
           disabled={false}
         >
-          <ItemIcon icon='stop' />
+          <ItemIcon icon={faStop} />
           Stop
         </StopItem>
       ) : (
@@ -183,7 +184,7 @@ class SimMenu extends React.PureComponent<Props, State> {
           disabled={!SimulatorState.isStopped(simulatorState)}
           style={{ borderLeft: `1px solid ${theme.borderColor}` }}
         >
-          <ItemIcon icon='play' />
+          <ItemIcon icon={faPlay} />
           Run
         </RunItem>
       );
@@ -194,24 +195,24 @@ class SimMenu extends React.PureComponent<Props, State> {
           <Logo theme={theme} onClick={onDashboardClick} src={theme.foreground === 'white' ? KIPR_LOGO_BLACK as string : KIPR_LOGO_WHITE as string}/>
 
           {runOrStopItem}
-          <Item theme={theme} onClick={onResetWorldClick}><ItemIcon icon='sync' />Reset World</Item>
+          <Item theme={theme} onClick={onResetWorldClick}><ItemIcon icon={faSync} />Reset World</Item>
 
           <Spacer style={{ borderRight: `1px solid ${theme.borderColor}` }} />
 
           <Item theme={theme} onClick={this.onLayoutClick_} style={{ position: 'relative' }}>
-            <ItemIcon icon='clone' /> Layout
+            <ItemIcon icon={faClone} /> Layout
             {layoutPicker ? (
               <LayoutPicker style={{ zIndex: 9 }} onLayoutChange={onLayoutChange} onShowAll={onShowAll} onHideAll={onHideAll} layout={layout} theme={theme} />
             ) : undefined}
           </Item>
 
-          <Item theme={theme} onClick={onDocumentationClick}><ItemIcon icon='book' /> Documentation</Item>
+          <Item theme={theme} onClick={onDocumentationClick}><ItemIcon icon={faBook} /> Documentation</Item>
           
-          <Item theme={theme} onClick={onSettingsClick}><ItemIcon icon='cogs'/> Settings</Item>
-          <Item theme={theme} onClick={onAboutClick}><ItemIcon icon='question'/> About</Item>
-          <Item theme={theme} onClick={onFeedbackClick}><ItemIcon icon='comment-dots'/> Feedback</Item>
+          <Item theme={theme} onClick={onSettingsClick}><ItemIcon icon={faCogs} /> Settings</Item>
+          <Item theme={theme} onClick={onAboutClick}><ItemIcon icon={faQuestion} /> About</Item>
+          <Item theme={theme} onClick={onFeedbackClick}><ItemIcon icon={faCommentDots} /> Feedback</Item>
           {/* <Item theme={theme} onClick={onDashboardClick}><ItemIcon icon='compass'/> Dashboard</Item> */}
-          <Item theme={theme} onClick={onLogoutClick}><ItemIcon icon='sign-out-alt'/> Logout</Item>
+          <Item theme={theme} onClick={onLogoutClick}><ItemIcon icon={faSignOutAlt} /> Logout</Item>
         </Container>
         
       </>

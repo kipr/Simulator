@@ -6,6 +6,8 @@ import { Fa } from '../Fa';
 import { ThemeProps } from '../theme';
 import { charmColor } from '../charm-util';
 
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
+
 export interface PerfectCharmProps extends StyleProps, ThemeProps {
 }
 
@@ -28,7 +30,7 @@ class PerfectCharm extends React.PureComponent<Props> {
     
     return (
       <Container theme={theme}>
-        <Fa icon='check' /> Perfect!
+        <Fa icon={faCheck} /> Perfect!
       </Container>
     );
   }

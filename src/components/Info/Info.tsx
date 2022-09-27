@@ -15,6 +15,7 @@ import { State as ReduxState } from '../../state';
 import { SceneAction, ScenesAction } from '../../state/reducer';
 import Node from '../../state/State/Scene/Node';
 import Motor from '../../AbstractRobot/Motor';
+import { faSync } from '@fortawesome/free-solid-svg-icons';
 
 
 export interface InfoProps extends StyleProps, ThemeProps {
@@ -159,7 +160,7 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
         StyledText.component({
           component: ResetIcon,
           props: {
-            icon: 'sync',
+            icon: faSync,
             onClick: this.onResetLocationClick_,
             theme
           }

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { styled, withStyleDeep } from 'styletron-react';
 import { StyleProps } from '../../style';
 import Charm from '../Charm';
-import { Fa } from '../Fa';
 import { ThemeProps } from '../theme';
 import { charmColor } from '../charm-util';
 import ComboBox from '../ComboBox';
@@ -24,6 +23,9 @@ const Container = styled('div', {
 const OPTIONS: ComboBox.Option[] = [{
   text: 'C',
   data: 'c'
+}, {
+  text: 'C++',
+  data: 'cpp'
 }, {
   text: 'Python',
   data: 'python'

@@ -45,47 +45,37 @@ if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env
         error: "Expected code key in body to be a string"
       });
     }
-  
-    // Wrap user's main() in our own "main()" that exits properly
-    // Required because Asyncify keeps emscripten runtime alive, which would prevent cleanup code from running
-    const augmentedCode = `${req.body.code}
-      #include <emscripten.h>
-  
-      EM_JS(void, on_stop, (), {
-        if (Module.context.onStop) Module.context.onStop();
-      })
-    
-      void simMainWrapper()
-      {
-        main();
-        on_stop();
-        emscripten_force_exit(0);
-      }
-    `;
-  
-    
+
+    if (!('language' in req.body)) {
+      return res.status(400).json({
+        error: "Expected language key in body"
+      });
+    }
+
+    if (typeof req.body.language !== 'string' || !['c', 'cpp'].includes(req.body.language)) {
+      return res.status(400).json({
+        error: "Expected language key in body to be a supported language string"
+      });
+    }
+
     const id = uuid.v4();
-    const path = `/tmp/${id}.c`;
-    fs.writeFile(path, augmentedCode, err => {
+    const fileExtension = req.body.language;
+    const path = `/tmp/${id}.${fileExtension}`;
+    fs.writeFile(path, req.body.code, err => {
       if (err) {
         return res.status(500).json({
           error: "Failed to write ${}"
         });
       }
 
-      // ...process.env causes a linter error for some reason.
-      // We work around this by doing it manually.
-      
-      const env = {};
-      for (const key of Object.keys(process.env)) {
-        env[key] = process.env[key];
-      }
+      const env = { ...process.env };
       
       env['PATH'] = `${config.server.dependencies.emsdk_env.PATH}:${process.env.PATH}`;
       env['EMSDK'] = config.server.dependencies.emsdk_env.EMSDK;
       env['EM_CONFIG'] = config.server.dependencies.emsdk_env.EM_CONFIG;
-  
-      exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']" -I${config.server.dependencies.libkipr_c}/include -L${config.server.dependencies.libkipr_c}/lib -lkipr -o ${path}.js ${path}`, {
+
+      const compiler = req.body.language === 'c' ? 'emcc' : 'em++';
+      exec(`${compiler} -s WASM=1 -s SINGLE_FILE=1 -s INVOKE_RUN=0 -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main']" -I${config.server.dependencies.libkipr_c}/include -L${config.server.dependencies.libkipr_c}/lib -lkipr -o ${path}.js ${path}`, {
         env
       }, (err, stdout, stderr) => {
         if (err) {

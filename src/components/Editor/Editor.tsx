@@ -13,6 +13,8 @@ import { Ivygate, Message } from 'ivygate';
 import LanguageSelectCharm from './LanguageSelectCharm';
 import ProgrammingLanguage from '../../ProgrammingLanguage';
 
+import { faFileDownload, faIndent } from '@fortawesome/free-solid-svg-icons';
+
 export enum EditorActionState {
   None,
   Compiling,
@@ -80,7 +82,7 @@ export const createEditorBarComponents = ({
     onClick: onIndentCode,
     children:
       <>
-        <Fa icon='indent'/>
+        <Fa icon={faIndent} />
         {' Indent'}
       </>
   }));
@@ -90,7 +92,7 @@ export const createEditorBarComponents = ({
     onClick: onDownloadCode,
     children:
       <>
-        <Fa icon='file-download'/>
+        <Fa icon={faFileDownload} />
         {' Download'}
       </>
   }));

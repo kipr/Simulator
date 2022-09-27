@@ -1,3 +1,4 @@
+import { faCog, faEye, faEyeSlash, faSync, faTimes } from "@fortawesome/free-solid-svg-icons";
 import * as React from "react";
 import { styled, withStyleDeep } from "styletron-react";
 import { StyleProps } from "../style";
@@ -145,22 +146,22 @@ namespace EditableList {
             <StandardItem.OptionsContainer>
               {onVisibilityChange && (
                 <StandardItem.VisibilityIconContainer onClick={this.onVisibilityChange_}>
-                  <StandardItem.OptionIcon icon={visible ? 'eye' : 'eye-slash'} />
+                  <StandardItem.OptionIcon icon={visible ? faEye : faEyeSlash} />
                 </StandardItem.VisibilityIconContainer>
               )}
               {onReset && (
                 <StandardItem.ResetIconContainer onClick={visible ? onReset : undefined} $disabled={!visible}>
-                  <StandardItem.OptionIcon icon='sync' />
+                  <StandardItem.OptionIcon icon={faSync} />
                 </StandardItem.ResetIconContainer>
               )}
               {onSettings && (
                 <StandardItem.SettingsIconContainer onClick={onSettings}>
-                  <StandardItem.OptionIcon icon='cog' />
+                  <StandardItem.OptionIcon icon={faCog} />
                 </StandardItem.SettingsIconContainer>
               )}
               {onRemove && (
                 <StandardItem.RemoveIconContainer onClick={onRemove}>
-                  <StandardItem.OptionIcon icon='times' />
+                  <StandardItem.OptionIcon icon={faTimes} />
                 </StandardItem.RemoveIconContainer>
               )}
               
