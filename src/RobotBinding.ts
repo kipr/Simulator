@@ -334,7 +334,7 @@ class RobotBinding {
   private setMotorVelocity_ = (joint: Babylon.MotorEnabledJoint, velocity: number) => {
     joint.executeNativeFunction((world, joint) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      joint.enableAngularMotor(true, velocity, 10000);
+      joint.enableAngularMotor(true, velocity, 100000);
     });
   };
 
@@ -443,7 +443,7 @@ class RobotBinding {
         continue;
       }
 
-      /*if (mode === Motor.Mode.Pwm && direction === Motor.Direction.Brake) {
+      if (mode === Motor.Mode.Pwm && direction === Motor.Direction.Brake) {
         if (this.brakeAt_[port] === undefined) {
           this.brakeAt_[port] = position;
           this.lastPErrs_[port] = 0;
@@ -464,7 +464,9 @@ class RobotBinding {
         writePwm = false;
       } else {
         this.brakeAt_[port] = undefined;
-      }*/
+      }
+
+      const velocityMax = motorNode.velocityMax || 1500;
 
       if (mode !== Motor.Mode.Pwm && !done) {
         // This code is taken from Wombat-Firmware for parity.
@@ -475,9 +477,8 @@ class RobotBinding {
         const iErr = clamp(-10000, this.iErrs_[port] + pErr, 10000);
         this.iErrs_[port] = iErr;
 
-        pwm = kP * pErr + kI * iErr + kD * dErr;
-
-        console.log({ port, pwm, pErr, iErr, dErr, speedGoal, velocity, position, positionGoal });
+        pwm = speedGoal / velocityMax * 400;
+        pwm = pwm + kP * pErr + kI * iErr + kD * dErr;
 
         if (mode === Motor.Mode.Position || mode === Motor.Mode.SpeedPosition) {
           if (speedGoal < 0 && position < positionGoal) {
@@ -498,7 +499,6 @@ class RobotBinding {
       if (writePwm) writeCommands.push(WriteCommand.motorPwm({ port, pwm }));
       
       const normalizedPwm = pwm / 400;
-      const velocityMax = motorNode.velocityMax || 1500;
       const nextAngularVelocity = normalizedPwm * velocityMax * 2 * Math.PI / ticksPerRevolution;
 
       this.setMotorVelocity_(bMotor, nextAngularVelocity);
