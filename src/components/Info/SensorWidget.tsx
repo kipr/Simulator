@@ -13,7 +13,6 @@ import { Fa } from '../Fa';
 
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
-import { RobotState } from '../../RobotState';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 export interface SensorWidgetProps extends ThemeProps, StyleProps {
