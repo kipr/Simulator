@@ -8,7 +8,7 @@ import SimMenu from './SimMenu';
 
 import { styled } from 'styletron-react';
 import { DARK, Theme } from './theme';
-import { Layout, LayoutProps, BottomLayout, OverlayLayout, OverlayLayoutRedux, SideLayoutRedux  } from './Layout';
+import { Layout, LayoutProps, OverlayLayout, OverlayLayoutRedux, SideLayoutRedux  } from './Layout';
 
 import { SettingsDialog } from './SettingsDialog';
 import { AboutDialog } from './AboutDialog';
@@ -57,6 +57,7 @@ import { push } from 'connected-react-router';
 import Loading from './Loading';
 import LocalizedString from '../util/LocalizedString';
 import SceneSettingsDialog from './SceneSettingsDialog';
+import { LayoutEditorTarget } from './Layout/Layout';
 
 namespace Modal {
   export enum Type {
@@ -187,8 +188,11 @@ interface RootPrivateProps {
 
   goToLogin: () => void;
 
+  selectedScriptId?: string;
   selectedScript?: Script;
-  onSelectedScriptChange: (script: Script) => void;
+
+  onScriptChange: (sceneId: string, scriptId: string, script: Script) => void;
+  onSelectedScriptChange: (sceneId: string, scriptId: string) => void;
 }
 
 interface RootState {
@@ -612,6 +616,10 @@ class Root extends React.Component<Props, State> {
   private onSaveSceneClick_ = () => {
     this.props.onSaveScene(this.props.match.params.sceneId);
   };
+  private onScriptChange_ = (script: Script) => {
+    const { selectedScriptId } = this.props;
+    this.props.onSelectedScriptChange(this.props.match.params.sceneId, selectedScriptId);
+  }
 
   render() {
     const { props, state } = this;
@@ -622,6 +630,10 @@ class Root extends React.Component<Props, State> {
       return <Loading />;
     }
 
+    const {
+      selectedScript,
+      selectedScriptId
+    } = props;
     const {
       layout,
       activeLanguage,
@@ -637,13 +649,28 @@ class Root extends React.Component<Props, State> {
 
     const theme = DARK;
 
+    let editorTarget: LayoutEditorTarget;
+    if (selectedScript) {
+      editorTarget = {
+        type: LayoutEditorTarget.Type.Script,
+        onScriptChange: this.onScriptChange_,
+        script: selectedScript,
+      };
+    } else {
+      editorTarget = {
+        type: LayoutEditorTarget.Type.Robot,
+        code: code[activeLanguage],
+        language: activeLanguage,
+        onCodeChange: this.onCodeChange_,
+        onLanguageChange: this.onActiveLanguageChange_,
+      };
+    }
+    
+
     const commonLayoutProps: LayoutProps = {
-      language: activeLanguage,
-      code: code[activeLanguage],
-      onLanguageChange: this.onActiveLanguageChange_,
+      editorTarget,
       theme,
       console,
-      onCodeChange: this.onCodeChange_,
       messages,
       settings,
       onClearConsole: this.onClearConsole_,
@@ -658,12 +685,6 @@ class Root extends React.Component<Props, State> {
       case Layout.Overlay: {
         impl = (
           <OverlayLayoutRedux ref={this.overlayLayoutRef} {...commonLayoutProps} />
-        );
-        break;
-      }
-      case Layout.Bottom: {
-        impl = (
-          <BottomLayout {...commonLayoutProps} />
         );
         break;
       }
@@ -802,9 +823,18 @@ class Root extends React.Component<Props, State> {
   }
 }
 
-export default connect((state: ReduxState, { match: { params: { sceneId } } }: RootPublicProps) => ({
-  scene: state.scenes[sceneId]
-}), (dispatch, { match: { params: { sceneId } } }: RootPublicProps) => ({
+export default connect((state: ReduxState, { match: { params: { sceneId } } }: RootPublicProps) => {
+  const scene = state.scenes[sceneId];
+  const latestScene = Async.latestValue(scene);
+  const selectedScriptId = latestScene && latestScene.selectedScriptId;
+  return {
+    scene,
+    selectedScriptId,
+    selectedScript: latestScene && selectedScriptId
+      ? latestScene.scripts[selectedScriptId]
+      : undefined,
+  };
+}, (dispatch, { match: { params: { sceneId } } }: RootPublicProps) => ({
   onNodeAdd: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
   onNodeRemove: (nodeId: string) => dispatch(ScenesAction.removeNode({ sceneId, nodeId })),
   onNodeChange: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
@@ -827,5 +857,12 @@ export default connect((state: ReduxState, { match: { params: { sceneId } } }: R
   goToLogin: () => {
     window.location.href = `/login?from=${window.location.pathname}`;
   },
+  onScriptChange: (sceneId: string, scriptId: string, script: Script) => {
+    dispatch(ScenesAction.setScript({ sceneId, scriptId, script }));
+  },
+  onSelectedScriptChange: (sceneId: string, scriptId: string) => {
+    dispatch(ScenesAction.selectScript({ sceneId, scriptId }));
+  }
 }))(Root) as React.ComponentType<RootPublicProps>;
+
 export { RootState };

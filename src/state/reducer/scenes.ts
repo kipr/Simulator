@@ -17,6 +17,8 @@ import Dict from '../../Dict';
 import LocalizedString from '../../util/LocalizedString';
 import { Angle } from '../../util';
 import produce, { original } from 'immer';
+import Script from '../State/Scene/Script';
+import { v4 } from 'uuid';
 
 export namespace ScenesAction {
   export interface RemoveScene {
@@ -219,6 +221,40 @@ export namespace ScenesAction {
   }
 
   export const unfailScene = construct<UnfailScene>('scenes/unfail-scene');
+
+  export interface AddScript {
+    type: 'scenes/add-script';
+    sceneId: string;
+    scriptId: string;
+    script: Script;
+  }
+
+  export const addScript = construct<AddScript>('scenes/add-script');
+
+  export interface RemoveScript {
+    type: 'scenes/remove-script';
+    sceneId: string;
+    scriptId: string;
+  }
+
+  export const removeScript = construct<RemoveScript>('scenes/remove-script');
+
+  export interface SetScript {
+    type: 'scenes/set-script';
+    sceneId: string;
+    scriptId: string;
+    script: Script;
+  }
+
+  export const setScript = construct<SetScript>('scenes/set-script');
+
+  export interface SelectScript {
+    type: 'scenes/select-script';
+    sceneId: string;
+    scriptId?: string;
+  }
+
+  export const selectScript = construct<SelectScript>('scenes/select-script');
 }
 
 export type ScenesAction = (
@@ -245,7 +281,11 @@ export type ScenesAction = (
   ScenesAction.CreateScene |
   ScenesAction.SaveScene |
   ScenesAction.ListUserScenes |
-  ScenesAction.UnfailScene
+  ScenesAction.UnfailScene |
+  ScenesAction.AddScript |
+  ScenesAction.RemoveScript |
+  ScenesAction.SetScript |
+  ScenesAction.SelectScript
 );
 
 const DEFAULT_SCENES: Scenes = {
@@ -617,6 +657,30 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
     case 'scenes/unfail-scene': return {
       ...state,
       [action.sceneId]: Async.unfail(state[action.sceneId]),
+    };
+    case 'scenes/add-script': return {
+      ...state,
+      [action.sceneId]: Async.mutate(state[action.sceneId], scene => {
+        scene.scripts[action.scriptId] = action.script;
+      }),
+    };
+    case 'scenes/remove-script': return {
+      ...state,
+      [action.sceneId]: Async.mutate(state[action.sceneId], scene => {
+        delete scene.scripts[action.scriptId];
+      }),
+    };
+    case 'scenes/set-script': return {
+      ...state,
+      [action.sceneId]: Async.mutate(state[action.sceneId], scene => {
+        scene.scripts[action.scriptId] = action.script;
+      }),
+    };
+    case 'scenes/select-script': return {
+      ...state,
+      [action.sceneId]: Async.mutate(state[action.sceneId], scene => {
+        scene.selectedScriptId = action.scriptId;
+      }),
     };
     default: return state;
   }

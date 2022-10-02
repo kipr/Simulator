@@ -36,6 +36,9 @@ import { faGlobeAmericas, faPlus, faSave } from '@fortawesome/free-solid-svg-ico
 import Scene, { AsyncScene } from '../../state/State/Scene';
 import Async from '../../state/State/Async';
 import LocalizedString from '../../util/LocalizedString';
+import Script from '../../state/State/Scene/Script';
+import AddScriptDialog, { AddScriptAcceptance } from './AddScriptDialog';
+import ScriptSettingsDialog, { ScriptSettingsAcceptance } from './ScriptSettingsDialog';
 
 namespace SceneState {
   export enum Type {
@@ -126,6 +129,12 @@ interface ReduxWorldProps {
   onGeometryAdd: (id: string, geometry: Geometry) => void;
   onGeometryRemove: (id: string) => void;
   onGeometryChange: (id: string, geometry: Geometry) => void;
+
+  onScriptAdd: (id: string, script: Script) => void;
+  onScriptRemove: (id: string) => void;
+  onScriptChange: (id: string, script: Script) => void;
+
+  onScriptClick: (id: string) => void;
 }
 
 namespace UiState {
@@ -133,6 +142,8 @@ namespace UiState {
     None,
     AddNode,
     NodeSettings,
+    AddScript,
+    ScriptSettings
   }
 
   export interface None {
@@ -153,9 +164,28 @@ namespace UiState {
   }
 
   export const itemSettings = (id: string): NodeSettings => ({ type: Type.NodeSettings, id });
+
+  export interface AddScript {
+    type: Type.AddScript;
+  }
+
+  export const ADD_SCRIPT: AddScript = { type: Type.AddScript };
+
+  export interface ScriptSettings {
+    type: Type.ScriptSettings;
+    id: string;
+  }
+
+  export const scriptSettings = (id: string): ScriptSettings => ({ type: Type.ScriptSettings, id });
 }
 
-type UiState = UiState.None | UiState.AddNode | UiState.NodeSettings;
+type UiState = (
+  UiState.None |
+  UiState.AddNode |
+  UiState.NodeSettings |
+  UiState.AddScript |
+  UiState.ScriptSettings
+);
 
 interface WorldState {
   collapsed: { [section: string]: boolean };
@@ -227,8 +257,18 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
     }
   };
 
+  private onAddScriptAccept_ = (acceptance: AddScriptAcceptance) => {
+    this.setState({ modal: UiState.NONE }, () => {
+      this.props.onScriptAdd(uuid.v4(), acceptance.script);
+    });
+  }
+
   private onNodeSettingsAccept_ = (id: string) => (acceptance: NodeSettingsAcceptance) => {
     this.props.onNodeChange(id, acceptance, true, false);
+  };
+
+  private onScriptSettingsAccept_ = (id: string) => (acceptance: ScriptSettingsAcceptance) => {
+    this.props.onScriptChange(id, acceptance);
   };
 
   private onNodeOriginAccept_ = (id: string) => (origin: ReferenceFrame) => {
@@ -242,6 +282,12 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
 
   private onAddNodeClick_ = (event: React.SyntheticEvent<MouseEvent>) => {
     this.setState({ modal: UiState.ADD_NODE });
+    event.stopPropagation();
+    event.preventDefault();
+  };
+
+  private onAddScriptClick_ = (event: React.SyntheticEvent<MouseEvent>) => {
+    this.setState({ modal: UiState.ADD_SCRIPT });
     event.stopPropagation();
     event.preventDefault();
   };
@@ -262,6 +308,7 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
     }, false, true);
   };
   private onItemSettingsClick_ = (id: string) => () => this.setState({ modal: UiState.itemSettings(id) });
+  private onScriptSettingsClick_ = (id: string) => () => this.setState({ modal: UiState.scriptSettings(id) });
   private onModalClose_ = () => this.setState({ modal: UiState.NONE });
 
   private onNodeRemove_ = (index: number, id?: unknown) => {
@@ -291,6 +338,10 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
     this.props.onNodeRemove(idStr);
   };
 
+  private onScriptRemove_ = (index: number, id?: unknown) => {
+    this.props.onScriptRemove(id as string);
+  };
+
   private onItemVisibilityChange_ = (id: string) => (visibility: boolean) => {
     const originalNode = Async.previousValue(this.props.scene).nodes[id];
 
@@ -298,6 +349,18 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
       ...originalNode,
       visible: visibility,
     }, true, false);
+  };
+
+  private onScriptClick_ = (id: string) => () => {
+    const { props } = this;
+    const { scene } = props;
+    const latestScene = Async.latestValue(scene);
+
+    if (latestScene.selectedScriptId === id) {
+      props.onScriptClick(undefined);
+    } else {
+      this.props.onScriptClick(id);
+    }
   };
 
   render() {
@@ -324,6 +387,24 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
       }));
     }
 
+    const scriptList: EditableList.Item[] = [];
+    for (const scriptId of Dict.keySet(workingScene.scripts || {})) {
+      const script = workingScene.scripts[scriptId];
+      scriptList.push(EditableList.Item.standard({
+        component: Item,
+        props: {
+          name: script.name,
+          theme,
+          onClick: this.onScriptClick_(scriptId),
+          selected: workingScene.selectedScriptId === scriptId
+        },
+        onSettings: this.onScriptSettingsClick_(scriptId),
+      }, {
+        removable: true,
+        userdata: scriptId,
+      }));
+    }
+
     const itemsName = StyledText.compose({
       items: [
         StyledText.text({
@@ -335,6 +416,22 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
             icon: faPlus,
             theme,
             onClick: this.onAddNodeClick_
+          }
+        })
+      ]
+    });
+
+    const scriptsName = StyledText.compose({
+      items: [
+        StyledText.text({
+          text: `Script${itemList.length === 1 ? '' : 's'} (${scriptList.length})`,
+        }),
+        StyledText.component({
+          component: SectionIcon,
+          props: {
+            icon: faPlus,
+            theme,
+            onClick: this.onAddScriptClick_
           }
         })
       ]
@@ -356,9 +453,19 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
             >
               <EditableList onItemRemove={this.onNodeRemove_} items={itemList} theme={theme} />
             </StyledListSection>
+            <StyledListSection 
+              name={scriptsName}
+              theme={theme}
+              onCollapsedChange={this.onCollapsedChange_('scripts')}
+              collapsed={collapsed['scripts']}
+              noBodyPadding
+            >
+              <EditableList onItemRemove={this.onScriptRemove_} items={scriptList} theme={theme} />
+            </StyledListSection>
           </Container>
         </ScrollArea>
         {modal.type === UiState.Type.AddNode && <AddNodeDialog scene={workingScene} theme={theme} onClose={this.onModalClose_} onAccept={this.onAddNodeAccept_} />}
+        {modal.type === UiState.Type.AddScript && <AddScriptDialog theme={theme} onClose={this.onModalClose_} onAccept={this.onAddScriptAccept_} />}
         {modal.type === UiState.Type.NodeSettings && <NodeSettingsDialog
           onGeometryAdd={onGeometryAdd}
           onGeometryRemove={onGeometryRemove}
@@ -370,6 +477,13 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
           onClose={this.onModalClose_}
           onChange={this.onNodeSettingsAccept_(modal.id)}
           onOriginChange={this.onNodeOriginAccept_(modal.id)}
+        />}
+        {modal.type === UiState.Type.ScriptSettings && <ScriptSettingsDialog
+          id={modal.id}
+          script={referenceScene.scripts[modal.id]}
+          theme={theme}
+          onClose={this.onModalClose_}
+          onChange={this.onScriptSettingsAccept_(modal.id)}
         />}
       </>
     );
@@ -402,6 +516,16 @@ export default connect<unknown, unknown, Props, ReduxState>((state: ReduxState, 
   onObjectAdd: (nodeId: string, object: Node.Obj, geometry: Geometry) => {
     dispatch(ScenesAction.addObject({ sceneId, nodeId, object, geometry }));
   },
-
-
+  onScriptAdd: (scriptId: string, script: Script) => {
+    dispatch(ScenesAction.addScript({ sceneId, scriptId, script }));
+  },
+  onScriptChange: (scriptId: string, script: Script) => {
+    dispatch(ScenesAction.setScript({ sceneId, scriptId, script }));
+  },
+  onScriptRemove: (scriptId: string) => {
+    dispatch(ScenesAction.removeScript({ sceneId, scriptId }));
+  },
+  onScriptClick: (scriptId?: string) => {
+    dispatch(ScenesAction.selectScript({ sceneId, scriptId }));
+  },
 }))(World_) as React.ComponentType<Props>;

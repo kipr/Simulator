@@ -1,4 +1,5 @@
 interface Script {
+  name: string;
   language: Script.Language;
   code: string;
 }
