@@ -22,6 +22,7 @@ import WorkerInstance from "./WorkerInstance";
 export type FrameLike = Babylon.TransformNode | Babylon.AbstractMesh;
 
 export interface SceneMeshMetadata {
+  id: string;
   selected?: boolean;
 }
 
@@ -156,7 +157,7 @@ class SceneBinding {
         ret = new Babylon.TransformNode(geometry.uri, this.bScene_);
         for (const mesh of res.meshes) {
           // GLTF importer adds a __root__ mesh (always the first one) that we can ignore 
-          if (mesh === res.meshes[0]) continue;
+          if (mesh.name === '__root__') continue;
 
           mesh.setParent(ret);
         }
@@ -625,11 +626,11 @@ class SceneBinding {
     this.updateNodePosition_(nodeToCreate, ret);
     ret.id = id;
     
-    ret.metadata = id;
+    ret.metadata = { id } as SceneMeshMetadata;
 
     if (ret instanceof Babylon.AbstractMesh || ret instanceof Babylon.TransformNode) {
       SceneBinding.apply_(ret, m => {
-        m.metadata = id;
+        m.metadata = { id } as SceneMeshMetadata;
       });
     }
 
@@ -1109,7 +1110,7 @@ class SceneBinding {
         }
         const prevBNode = this.bScene_.getNodeByID(prev);
         if (prevNodeObj && (prevBNode instanceof Babylon.AbstractMesh || prevBNode instanceof Babylon.TransformNode)) {
-          prevBNode.metadata = { ...(prevBNode.metadata as SceneMeshMetadata || {}), selected: false };
+          prevBNode.metadata = { ...(prevBNode.metadata as SceneMeshMetadata), selected: false };
           SceneBinding.apply_(prevBNode, m => this.restorePhysicsImpostor(m, prevNodeObj, prev, scene));
         }
 
@@ -1121,7 +1122,7 @@ class SceneBinding {
         const node = this.bScene_.getNodeByID(next);
         if (node instanceof Babylon.AbstractMesh || node instanceof Babylon.TransformNode) {
           SceneBinding.apply_(node, m => this.removePhysicsImpostor(m));
-          node.metadata = { ...(node.metadata as SceneMeshMetadata || {}), selected: true };
+          node.metadata = { ...(node.metadata as SceneMeshMetadata), selected: true };
           this.gizmoManager_.attachToNode(node);
         }
       }
