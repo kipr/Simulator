@@ -618,7 +618,7 @@ class Root extends React.Component<Props, State> {
   };
   private onScriptChange_ = (script: Script) => {
     const { selectedScriptId } = this.props;
-    this.props.onSelectedScriptChange(this.props.match.params.sceneId, selectedScriptId);
+    this.props.onScriptChange(this.props.match.params.sceneId, selectedScriptId, script);
   }
 
   render() {
@@ -648,6 +648,8 @@ class Root extends React.Component<Props, State> {
     } = state;
 
     const theme = DARK;
+
+    window.console.log(selectedScript);
 
     let editorTarget: LayoutEditorTarget;
     if (selectedScript) {
