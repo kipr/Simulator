@@ -19,6 +19,7 @@ import Robot from './state/State/Robot';
 import AbstractRobot from './AbstractRobot';
 import WorkerInstance from "./WorkerInstance";
 import LocalizedString from './util/LocalizedString';
+import ScriptManager from './ScriptManager';
 
 export type FrameLike = Babylon.TransformNode | Babylon.AbstractMesh;
 
@@ -50,6 +51,9 @@ class SceneBinding {
 
   private robots_: Dict<Robot>;
   private robotBindings_: Dict<RobotBinding> = {};
+
+  private scriptManager_ = new ScriptManager();
+  get scriptManager() { return this.scriptManager_; }
 
   get camera() { return this.camera_; }
 
@@ -607,6 +611,8 @@ class SceneBinding {
       };
     }
 
+    for (const scriptId of nodeToCreate.scriptIds || []) this.scriptManager_.bind(scriptId, id);
+
     let ret: Babylon.Node;
     switch (nodeToCreate.type) {
       case 'object': ret = await this.createObject_(nodeToCreate, nextScene); break;
@@ -902,6 +908,12 @@ class SceneBinding {
     switch (node.type) {
       // The node hasn't changed type, but some fields have been changed
       case Patch.Type.InnerChange: {
+        // If scriptIds changed, rebind the scripts
+        if (node.inner.scriptIds.type === Patch.Type.OuterChange) {
+          for (const scriptId of node.inner.scriptIds.prev || []) this.scriptManager_.unbind(scriptId, id);
+          for (const scriptId of node.inner.scriptIds.next || []) this.scriptManager_.bind(scriptId, id);
+        }
+
         switch (node.next.type) {
           case 'empty': return this.updateEmpty_(id, node as Patch.InnerChange<Node.Empty>);
           case 'object': {
@@ -940,6 +952,8 @@ class SceneBinding {
       }
       // The node was removed from the scene
       case Patch.Type.Remove: {
+        // unbind scripts
+        for (const scriptId of node.prev.scriptIds || []) this.scriptManager_.unbind(scriptId, id);
         this.destroyNode_(id);
 
         return undefined;
@@ -1064,6 +1078,24 @@ class SceneBinding {
   readonly setScene = async (scene: Scene, robots: Dict<Robot>) => {
     this.robots_ = robots;
     const patch = Scene.diff(this.scene_, scene);
+    this.scriptManager_.scene = scene;
+
+    const reinitializedScripts = new Set<string>();
+    for (const scriptId in patch.scripts) {
+      const script = patch.scripts[scriptId];
+      switch (script.type) {
+        case Patch.Type.Add:
+        case Patch.Type.OuterChange: {
+          this.scriptManager_.set(scriptId, script.next);
+          reinitializedScripts.add(scriptId);
+          break;
+        }
+        case Patch.Type.Remove: {
+          this.scriptManager_.remove(scriptId);
+          break;
+        }
+      }
+    }
 
     const nodeIds = Dict.keySet(patch.nodes);
 
@@ -1155,6 +1187,14 @@ class SceneBinding {
 
     if (patch.gravity.type === Patch.Type.OuterChange) {
       this.bScene_.getPhysicsEngine().setGravity(Vector3.toBabylon(patch.gravity.next, 'centimeters'));
+    }
+
+    // Iterate through all nodes to find reinitialized binds
+    for (const nodeId in scene.nodes) {
+      const node = scene.nodes[nodeId];
+      for (const scriptId of node.scriptIds || []) {
+        if (reinitializedScripts.has(scriptId)) this.scriptManager_.bind(scriptId, nodeId);
+      }
     }
 
     this.scene_ = scene;

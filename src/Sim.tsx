@@ -31,6 +31,7 @@ import RobotBinding from './RobotBinding';
 import WorkerInstance from './WorkerInstance';
 import AbstractRobot from './AbstractRobot';
 import LocalizedString from './util/LocalizedString';
+import ScriptManager from './ScriptManager';
 
 
 export let ACTIVE_SPACE: Space;
@@ -330,7 +331,7 @@ export class Space {
     this.engine.runRenderLoop(() => {
       // Post updates to the store
       this.updateStore_();
-
+      this.sceneBinding_.scriptManager.trigger(ScriptManager.Event.RENDER);
       this.bScene_.render();
     });
   }

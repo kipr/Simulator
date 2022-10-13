@@ -268,7 +268,11 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
   };
 
   private onScriptSettingsAccept_ = (id: string) => (acceptance: ScriptSettingsAcceptance) => {
-    this.props.onScriptChange(id, acceptance);
+    this.setState({
+      modal: UiState.NONE
+    }, () => {
+      this.props.onScriptChange(id, acceptance)
+    });
   };
 
   private onNodeOriginAccept_ = (id: string) => (origin: ReferenceFrame) => {
@@ -483,7 +487,7 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
           script={referenceScene.scripts[modal.id]}
           theme={theme}
           onClose={this.onModalClose_}
-          onChange={this.onScriptSettingsAccept_(modal.id)}
+          onAccept={this.onScriptSettingsAccept_(modal.id)}
         />}
       </>
     );

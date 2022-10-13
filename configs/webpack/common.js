@@ -2,6 +2,7 @@
 const { resolve, join } = require('path');
 const { readFileSync } = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const NpmDtsPlugin = require('npm-dts-webpack-plugin')
 const { DefinePlugin, IgnorePlugin } = require('webpack');
 
 const commitHash = require('child_process').execSync('git rev-parse --short=8 HEAD').toString().trim();
@@ -17,16 +18,19 @@ const modules = ['node_modules'];
 if (dependencies.cpython) modules.push(resolve(dependencies.cpython));
 if (dependencies.ammo) modules.push(resolve(dependencies.ammo));
 
-  
+
 module.exports = {
   entry: {
     app: './index.tsx',
     login: './login/index.tsx',
-    'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js'
+    'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js',
+    'ts.worker': 'monaco-editor/esm/vs/language/typescript/ts.worker.js',
   },
   output: {
     filename: (pathData) => {
-      return pathData.chunk.name === 'editor.worker' ? 'editor.worker.bundle.js' : 'js/[name].[contenthash].min.js';
+      if (pathData.chunk.name === 'editor.worker') return 'editor.worker.bundle.js';
+      if (pathData.chunk.name === 'ts.worker') return 'ts.worker.bundle.js';
+      return 'js/[name].[contenthash].min.js';
     },
     path: resolve(__dirname, '../../dist'),
     publicPath: '/',
@@ -122,6 +126,12 @@ module.exports = {
       SIMULATOR_HAS_CPYTHON: JSON.stringify(dependencies.cpython !== undefined),
       SIMULATOR_HAS_AMMO: JSON.stringify(dependencies.ammo !== undefined),
     }),
+    new NpmDtsPlugin({
+      root: resolve(__dirname, '../../'),
+      logLevel: 'error',
+      force: true,
+      output: resolve(__dirname, '../../dist/simulator.d.ts'),
+    })
   ],
   performance: {
     hints: false,

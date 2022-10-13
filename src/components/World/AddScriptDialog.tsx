@@ -37,7 +37,8 @@ interface AddScriptDialogState {
 type Props = AddScriptDialogProps;
 type State = AddScriptDialogState;
 
-const StyledScrollArea = styled(ScrollArea, (props: ThemeProps) => ({
+const InnerContainer = styled('div', () => ({
+  display: 'flex',
   minHeight: '400px',
   flex: '1 1',
 }));
@@ -71,14 +72,14 @@ class AddScriptDialog extends React.PureComponent<Props, State> {
 
     return (
       <Dialog theme={theme} name='Add Script' onClose={onClose}>
-        <StyledScrollArea theme={theme}>
+        <InnerContainer>
           <ScriptSettings
             theme={theme}
             script={script}
             id={id}
             onScriptChange={this.onScriptChange_}
           />
-        </StyledScrollArea>
+        </InnerContainer>
         <DialogBar theme={theme} onAccept={this.onAccept_}>
           <Fa icon={faCheck} /> Accept
         </DialogBar>

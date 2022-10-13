@@ -651,22 +651,13 @@ class Root extends React.Component<Props, State> {
 
     window.console.log(selectedScript);
 
-    let editorTarget: LayoutEditorTarget;
-    if (selectedScript) {
-      editorTarget = {
-        type: LayoutEditorTarget.Type.Script,
-        onScriptChange: this.onScriptChange_,
-        script: selectedScript,
-      };
-    } else {
-      editorTarget = {
-        type: LayoutEditorTarget.Type.Robot,
-        code: code[activeLanguage],
-        language: activeLanguage,
-        onCodeChange: this.onCodeChange_,
-        onLanguageChange: this.onActiveLanguageChange_,
-      };
-    }
+    let editorTarget: LayoutEditorTarget = {
+      type: LayoutEditorTarget.Type.Robot,
+      code: code[activeLanguage],
+      language: activeLanguage,
+      onCodeChange: this.onCodeChange_,
+      onLanguageChange: this.onActiveLanguageChange_,
+    };
     
 
     const commonLayoutProps: LayoutProps = {

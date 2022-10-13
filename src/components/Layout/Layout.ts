@@ -11,7 +11,6 @@ import SceneScript from '../../state/State/Scene/Script';
 export namespace LayoutEditorTarget {
   export enum Type {
     Robot = 'robot',
-    Script = 'script',
   }
 
   export interface Robot {
@@ -21,15 +20,9 @@ export namespace LayoutEditorTarget {
     code: string;
     onCodeChange: (code: string) => void;
   }
-
-  export interface Script {
-    type: Type.Script;
-    script: SceneScript;
-    onScriptChange: (script: SceneScript) => void;
-  }
 }
 
-export type LayoutEditorTarget = LayoutEditorTarget.Robot | LayoutEditorTarget.Script;
+export type LayoutEditorTarget = LayoutEditorTarget.Robot;
 
 export interface LayoutProps extends StyleProps, ThemeProps {
   sceneId: string;

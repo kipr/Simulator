@@ -63,6 +63,7 @@ interface ReduxSideLayoutProps {
 interface SideLayoutState {
   activePanel: number;
   sidePanelSize: Size.Type;
+  workingScriptCode?: string;
 }
 
 type Props = SideLayoutProps;
@@ -160,17 +161,6 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     // not implemented
   };
 
-  private onScriptCodeChange_ = (code: string) => {
-    const { props } = this;
-    const { editorTarget } = props;
-
-    const scriptEditorTarget = editorTarget as LayoutEditorTarget.Script;
-    scriptEditorTarget.onScriptChange({
-      ...scriptEditorTarget.script,
-      code,
-    });
-  };
-
   render() {
     const { props } = this;
     const {
@@ -221,23 +211,6 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
         );
         break;
       }
-      case LayoutEditorTarget.Type.Script: {
-        editorBarTarget = {
-          type: EditorBarTarget.Type.Script,
-          language: editorTarget.script.language,
-        };
-        editor = (
-          <Editor
-            theme={theme}
-            ref={editorRef}
-            code={editorTarget.script.code}
-            language={editorTarget.script.language}
-            onCodeChange={this.onScriptCodeChange_}
-            autocomplete={settings.editorAutoComplete}
-          />
-        );
-        break;
-      }
     }
 
     let editorBar = createEditorBarComponents({
@@ -260,7 +233,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
             <SimultorWidgetContainer>
               <SimulatorWidget
                 theme={theme}
-                name='Editor'
+                name={editorTarget.type === LayoutEditorTarget.Type.Robot ? 'Editor' : 'Script Editor'}
                 mode={Mode.Sidebar}
                 barComponents={editorBar}
               >

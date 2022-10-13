@@ -66,14 +66,9 @@ export namespace EditorBarTarget {
     onDownloadCode: () => void;
     onErrorClick: (event: React.MouseEvent<HTMLDivElement>) => void;
   }
-
-  export interface Script {
-    type: Type.Script;
-    language: Script.Language;
-  }
 }
 
-export type EditorBarTarget = EditorBarTarget.Robot | EditorBarTarget.Script;
+export type EditorBarTarget = EditorBarTarget.Robot;
 
 export const createEditorBarComponents = ({
   theme,
@@ -142,9 +137,6 @@ export const createEditorBarComponents = ({
       }));
       break;
     }
-    case EditorBarTarget.Type.Script: {
-      break;
-    }
   }
 
   return editorBar;
@@ -169,7 +161,17 @@ class Editor extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { style, className, theme, code, onCodeChange, messages, autocomplete, language } = this.props;
+    const {
+      style,
+      className,
+      theme,
+      code,
+      onCodeChange,
+      messages,
+      autocomplete,
+      language
+    } = this.props;
+
     return (
       <Container theme={theme} style={style} className={className}>
         <Ivygate

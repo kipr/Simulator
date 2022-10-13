@@ -33,6 +33,7 @@ interface OverlayLayoutState {
   infoSize: Size.Type;
   editorSize: Size.Type;
   worldSize: Size.Type;
+  workingScriptCode?: string;
 }
 
 type Props = OverlayLayoutProps;
@@ -280,17 +281,6 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
     // not implemented
   };
 
-  private onScriptCodeChange_ = (code: string) => {
-    const { props } = this;
-    const { editorTarget } = props;
-
-    const scriptEditorTarget = editorTarget as LayoutEditorTarget.Script;
-    scriptEditorTarget.onScriptChange({
-      ...scriptEditorTarget.script,
-      code,
-    });
-  };
-
   render() {
     const { props } = this;
     
@@ -314,7 +304,8 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       editorSize,
       consoleSize,
       infoSize,
-      worldSize
+      worldSize,
+      workingScriptCode
     } = this.state;
 
     const commonProps = {
@@ -343,23 +334,6 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
             language={editorTarget.language}
             onCodeChange={editorTarget.onCodeChange}
             messages={messages}
-            autocomplete={settings.editorAutoComplete}
-          />
-        );
-        break;
-      }
-      case LayoutEditorTarget.Type.Script: {
-        editorBarTarget = {
-          type: EditorBarTarget.Type.Script,
-          language: editorTarget.script.language,
-        };
-        editor = (
-          <Editor
-            theme={theme}
-            ref={editorRef}
-            code={editorTarget.script.code}
-            language={editorTarget.script.language}
-            onCodeChange={this.onScriptCodeChange_}
             autocomplete={settings.editorAutoComplete}
           />
         );
