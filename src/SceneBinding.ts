@@ -82,6 +82,7 @@ class SceneBinding {
     this.ammo_ = new Babylon.AmmoJSPlugin(true, ammo);
     this.bScene_.enablePhysics(new Babylon.Vector3(0, -9.8 * 100, 0), this.ammo_);
     this.bScene_.getPhysicsEngine().setSubTimeStep(2);
+    
     // this.physicsViewer_ = new Babylon.PhysicsViewer(this.bScene_);
 
     this.root_ = new Babylon.TransformNode('__scene_root__', this.bScene_);
@@ -1061,6 +1062,7 @@ class SceneBinding {
     if (this.physicsViewer_) this.physicsViewer_.showImpostor(mesh.physicsImpostor);
 
     mesh.setParent(initialParent);
+
   };
 
   private removePhysicsImpostor = (mesh: Babylon.AbstractMesh) => {
@@ -1074,6 +1076,18 @@ class SceneBinding {
 
     mesh.setParent(parent);
   };
+
+  private onCollideEvent_ = (collider: Babylon.PhysicsImpostor, collidedWith: Babylon.PhysicsImpostor) => {
+    if (!('metadata' in collider.object)) return;
+    if (!('metadata' in collidedWith.object)) return;
+
+    const colliderMetadata = collider.object['metadata'] as SceneMeshMetadata;
+    const collidedWithMetadata = collidedWith.object['metadata'] as SceneMeshMetadata;
+
+    if (!colliderMetadata) return;
+    if (!collidedWithMetadata) return;
+
+    
 
   readonly setScene = async (scene: Scene, robots: Dict<Robot>) => {
     this.robots_ = robots;
@@ -1211,6 +1225,7 @@ class SceneBinding {
 
       ret[nodeId] = robotBinding.tick(abstractRobots[nodeId]);
     }
+
     return ret;
   }
 

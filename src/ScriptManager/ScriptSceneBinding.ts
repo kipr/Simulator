@@ -4,6 +4,16 @@ import Geometry from '../state/State/Scene/Geometry';
 import Node from '../state/State/Scene/Node';
 import { Vector3 } from '../unit-math';
 
+export type Ids = string | string[] | Set<string>;
+
+export namespace Ids {
+  export const toSet = (ids: Ids): Set<string> => {
+    if (typeof ids === 'string') return new Set([ids]);
+    if (Array.isArray(ids)) return new Set(ids);
+    return ids;
+  };
+}
+
 export interface ScriptSceneBinding {
   readonly nodes: Dict<Node>;
   addNode(node: Node, id?: string): string;
@@ -21,6 +31,8 @@ export interface ScriptSceneBinding {
   selectedNodeId?: string;
 
   addOnRenderListener(cb: () => void): string;
+  addOnCollisionListener(cb: (aId: string, bId: string) => void, filterIds?: Ids): string;
+  addOnIntersectionListener(cb: (type: 'start' | 'end', aId: string, bId: string) => void, filterIds?: Ids): string;
 
   removeListener(handle: string): void;
 

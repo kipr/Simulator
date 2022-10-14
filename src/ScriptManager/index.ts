@@ -8,7 +8,7 @@ import { Vector3 } from '../unit-math';
 
 import { v4 as uuid } from 'uuid';
 import construct from '../util/construct';
-import { ScriptSceneBinding } from './ScriptSceneBinding';
+import { Ids, ScriptSceneBinding } from './ScriptSceneBinding';
 
 class ScriptManager {
   private scene_: Scene;
@@ -53,7 +53,10 @@ class ScriptManager {
 namespace ScriptManager {
   export namespace Event {
     export enum Type {
-      Render
+      Render,
+      Collision,
+      IntersectionStart,
+      IntersectionEnd,
     }
 
     export interface Render {
@@ -61,15 +64,44 @@ namespace ScriptManager {
     }
 
     export const RENDER: Render = { type: Type.Render };
+
+    export interface Collision {
+      type: Type.Collision;
+      aId: string;
+      bId: string;
+    }
+
+    export const collision = construct<Collision>(Type.Collision);
+  
+    export interface IntersectionStart {
+      type: Type.IntersectionStart;
+      aId: string;
+      bId: string;
+    }
+
+    export const intersectionStart = construct<IntersectionStart>(Type.IntersectionStart);
+
+    export interface IntersectionEnd {
+      type: Type.IntersectionEnd;
+      aId: string;
+      bId: string;
+    }
+
+    export const intersectionEnd = construct<IntersectionEnd>(Type.IntersectionEnd);
   }
 
   export type Event = (
-    Event.Render
+    Event.Render |
+    Event.Collision |
+    Event.IntersectionStart |
+    Event.IntersectionEnd
   );
 
   export namespace Listener {
     export enum Type {
       Render,
+      Collision,
+      Intersection,
     }
 
     export interface Render {
@@ -78,10 +110,28 @@ namespace ScriptManager {
     }
 
     export const render = construct<Render>(Type.Render);
+  
+    export interface Collision {
+      type: Type.Collision;
+      filterIds?: Set<string>;
+      cb: (aId: string, bId: string) => void;
+    }
+
+    export const collision = construct<Collision>(Type.Collision);
+  
+    export interface Intersection {
+      type: Type.Intersection;
+      filterIds?: Set<string>;
+      cb: (type: 'start' | 'end', aId: string, bId: string) => void;
+    }
+
+    export const intersection = construct<Intersection>(Type.Intersection);
   }
 
   export type Listener = (
-    Listener.Render
+    Listener.Render |
+    Listener.Collision |
+    Listener.Intersection
   );
 
   
@@ -103,16 +153,41 @@ namespace ScriptManager {
     trigger(event: Event) {
       switch (event.type) {
         case Event.Type.Render: {
-          this.triggerRender(event);
+          this.triggerRender_(event);
+          break;
+        }
+        case Event.Type.Collision: {
+          this.triggerCollision_(event);
+          break;
+        }
+        case Event.Type.IntersectionStart:
+        case Event.Type.IntersectionEnd: {
+          this.triggerIntersection_(event);
           break;
         }
       }
     }
 
-    private triggerRender(event: Event.Render) {
+    private triggerRender_(event: Event.Render) {
       for (const listener of Dict.values(this.listeners_)) {
         if (listener.type !== Listener.Type.Render) return;
         listener.cb();
+      }
+    }
+
+    private triggerCollision_(event: Event.Collision) {
+      for (const listener of Dict.values(this.listeners_)) {
+        if (listener.type !== Listener.Type.Collision) return;
+        if (listener.filterIds && !listener.filterIds.has(event.aId)) return;
+        listener.cb(event.aId, event.bId);
+      }
+    }
+
+    private triggerIntersection_(event: Event.IntersectionStart | Event.IntersectionEnd) {
+      for (const listener of Dict.values(this.listeners_)) {
+        if (listener.type !== Listener.Type.Intersection) return;
+        if (listener.filterIds && !listener.filterIds.has(event.aId)) return;
+        listener.cb(event.type === Event.Type.IntersectionStart ? 'start' : 'end', event.aId, event.bId);
       }
     }
 
@@ -241,6 +316,18 @@ namespace ScriptManager {
     addOnRenderListener(cb: () => void): string {
       const handle = uuid();
       this.listeners_[handle] = Listener.render({ cb });
+      return handle;
+    }
+
+    addOnCollisionListener(cb: (aId: string, bId: string) => void, filterIds?: Ids): string {
+      const handle = uuid();
+      this.listeners_[handle] = Listener.collision({ cb, filterIds: Ids.toSet(filterIds) });
+      return handle;
+    }
+
+    addOnIntersectionListener(cb: (type: 'start' | 'end', aId: string, bId: string) => void, filterIds?: Ids): string {
+      const handle = uuid();
+      this.listeners_[handle] = Listener.intersection({ cb, filterIds: Ids.toSet(filterIds) });
       return handle;
     }
 
