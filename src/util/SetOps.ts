@@ -16,4 +16,6 @@ export namespace SetOps {
     for (const elem of a) if (!f(elem)) ret.delete(elem);
     return ret;
   };
+
+  export const intersection = <T>(a: Set<T>, b: Set<T>) => filter(a, x => b.has(x));
 }

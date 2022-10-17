@@ -16,7 +16,17 @@ class ScriptManager {
   get scene() { return this.scene_; }
   set scene(scene: Scene) { this.scene_ = scene; }
 
-  onSceneChange: (scene: Scene) => void;
+  onNodeAdd?: (id: string, node: Node) => void;
+  onNodeRemove?: (id: string) => void;
+  onNodeChange?: (id: string, node: Node) => void;
+
+  onGeometryAdd?: (id: string, geometry: Geometry) => void;
+  onGeometryRemove?: (id: string) => void;
+
+  onGravityChange?: (gravity: Vector3) => void;
+  onCameraChange?: (camera: Camera) => void;
+  onSelectedNodeIdChange?: (id: string) => void;
+
 
   private scriptExecutions_: Dict<ScriptManager.ScriptExecution> = {};
 
@@ -48,6 +58,73 @@ class ScriptManager {
   trigger(event: ScriptManager.Event) {
     for (const id in this.scriptExecutions_) this.scriptExecutions_[id].trigger(event);
   }
+
+  dispose() {
+    for (const id in this.scriptExecutions_) this.scriptExecutions_[id].dispose();
+    this.scriptExecutions_ = {};
+  }
+
+  // Map of nodeId to filtered node id reference counts.
+  private collisionRefCounts_ = new Map<string, Map<string, number>>();
+  private intersectionRefCounts_ = new Map<string, Map<string, number>>();
+
+  onCollisionFiltersChanged: (nodeId: string, filterIds: Set<string>) => void;
+  onIntersectionFiltersChanged: (nodeId: string, filterIds: Set<string>) => void;
+
+
+  // Babylon needs to know about the details of collision and intersection listeners.
+  // The following methods are called by ScriptExecutions to register listeners with us,
+  // which we then forward to Babylon.
+  private addRefCounts_ = <T extends { nodeId: string; filterIds: Set<string>; }>(
+    nodeRefCounts: Map<string, Map<string, number>>,
+    onChangedKey: string,
+  ) => (listener: T) => {
+    if (!nodeRefCounts.has(listener.nodeId)) {
+      nodeRefCounts.set(listener.nodeId, new Map<string, number>());
+    }
+
+    const refCounts = nodeRefCounts.get(listener.nodeId);
+
+    for (const filterId of listener.filterIds) {
+      if (refCounts.has(filterId)) {
+        refCounts.set(filterId, refCounts.get(filterId) + 1);
+      } else {
+        refCounts.set(filterId, 1);
+      }
+    }
+    
+    if (this[onChangedKey]) this[onChangedKey](listener.nodeId, new Set(refCounts.keys()));
+  };
+
+  private removeRefCounts_ = <T extends { nodeId: string; filterIds: Set<string>; }>(
+    nodeRefCounts: Map<string, Map<string, number>>,
+    onChangedKey: string,
+  ) => (listener: T) => {
+    if (!nodeRefCounts.has(listener.nodeId)) return;
+
+    const refCounts = nodeRefCounts.get(listener.nodeId);
+
+    for (const filterId of listener.filterIds) {
+      if (refCounts.has(filterId)) {
+        const count = refCounts.get(filterId);
+        if (count === 1) {
+          refCounts.delete(filterId);
+        } else {
+          refCounts.set(filterId, count - 1);
+        }
+      }
+    }
+
+    if (this[onChangedKey]) this[onChangedKey](listener.nodeId, new Set(refCounts.keys()));
+  };
+
+  readonly addCollisionRefCounts_ = this.addRefCounts_<ScriptManager.Listener.Collision>(this.collisionRefCounts_, 'onCollisionFiltersChanged');
+  readonly removeCollisionRefCounts_ = this.removeRefCounts_<ScriptManager.Listener.Collision>(this.collisionRefCounts_, 'onCollisionFiltersChanged');
+
+  readonly addIntersectionRefCounts_ = this.addRefCounts_<ScriptManager.Listener.Intersection>(this.intersectionRefCounts_, 'onIntersectionFiltersChanged');
+  readonly removeIntersectionRefCounts_ = this.removeRefCounts_<ScriptManager.Listener.Intersection>(this.intersectionRefCounts_, 'onIntersectionFiltersChanged');
+
+  onPostTestResult: (data: unknown) => void;
 }
 
 namespace ScriptManager {
@@ -67,24 +144,25 @@ namespace ScriptManager {
 
     export interface Collision {
       type: Type.Collision;
-      aId: string;
-      bId: string;
+      nodeId: string;
+      otherNodeId: string;
+      point: Vector3;
     }
 
     export const collision = construct<Collision>(Type.Collision);
   
     export interface IntersectionStart {
       type: Type.IntersectionStart;
-      aId: string;
-      bId: string;
+      nodeId: string;
+      otherNodeId: string;
     }
 
     export const intersectionStart = construct<IntersectionStart>(Type.IntersectionStart);
 
     export interface IntersectionEnd {
       type: Type.IntersectionEnd;
-      aId: string;
-      bId: string;
+      nodeId: string;
+      otherNodeId: string;
     }
 
     export const intersectionEnd = construct<IntersectionEnd>(Type.IntersectionEnd);
@@ -113,16 +191,18 @@ namespace ScriptManager {
   
     export interface Collision {
       type: Type.Collision;
-      filterIds?: Set<string>;
-      cb: (aId: string, bId: string) => void;
+      nodeId: string;
+      filterIds: Set<string>;
+      cb: (otherNodeId: string, point: Vector3) => void;
     }
 
     export const collision = construct<Collision>(Type.Collision);
   
     export interface Intersection {
       type: Type.Intersection;
-      filterIds?: Set<string>;
-      cb: (type: 'start' | 'end', aId: string, bId: string) => void;
+      nodeId: string;
+      filterIds: Set<string>;
+      cb: (type: 'start' | 'end', otherNodeId: string) => void;
     }
 
     export const intersection = construct<Intersection>(Type.Intersection);
@@ -134,7 +214,28 @@ namespace ScriptManager {
     Listener.Intersection
   );
 
-  
+  export type CachedListener = Omit<Listener.Collision | Listener.Intersection, 'cb' | 'nodeId'>;
+
+  export interface TaggedCachedListener extends CachedListener {
+    handle: string;
+  }
+
+  export interface ListenerRefCount {
+    /**
+     * Map of filtered node ids to reference counts.
+     */
+    filterIds: Dict<number>;
+  }
+
+  export namespace TaggedCachedListener {
+    export const fromListener = (handle: string, listener: Listener.Collision | Listener.Intersection): TaggedCachedListener => {
+      return {
+        type: listener.type,
+        filterIds: listener.filterIds,
+        handle,
+      };
+    };
+  }
 
   export class ScriptExecution implements ScriptSceneBinding {
     private script_: Script;
@@ -170,24 +271,26 @@ namespace ScriptManager {
 
     private triggerRender_(event: Event.Render) {
       for (const listener of Dict.values(this.listeners_)) {
-        if (listener.type !== Listener.Type.Render) return;
+        if (listener.type !== Listener.Type.Render) continue;
         listener.cb();
       }
     }
 
     private triggerCollision_(event: Event.Collision) {
       for (const listener of Dict.values(this.listeners_)) {
-        if (listener.type !== Listener.Type.Collision) return;
-        if (listener.filterIds && !listener.filterIds.has(event.aId)) return;
-        listener.cb(event.aId, event.bId);
+        if (listener.type !== Listener.Type.Collision) continue;
+        if (listener.nodeId !== event.nodeId) continue;
+        if (listener.filterIds && !listener.filterIds.has(event.otherNodeId)) continue;
+        listener.cb(event.otherNodeId, event.point);
       }
     }
 
     private triggerIntersection_(event: Event.IntersectionStart | Event.IntersectionEnd) {
       for (const listener of Dict.values(this.listeners_)) {
-        if (listener.type !== Listener.Type.Intersection) return;
-        if (listener.filterIds && !listener.filterIds.has(event.aId)) return;
-        listener.cb(event.type === Event.Type.IntersectionStart ? 'start' : 'end', event.aId, event.bId);
+        if (listener.type !== Listener.Type.Intersection) continue;
+        if (listener.nodeId !== event.nodeId) continue;
+        if (listener.filterIds && !listener.filterIds.has(event.otherNodeId)) continue;
+        listener.cb(event.type === Event.Type.IntersectionStart ? 'start' : 'end', event.otherNodeId);
       }
     }
 
@@ -204,6 +307,11 @@ namespace ScriptManager {
     }
     
     dispose() {
+      // TODO: This code could be more efficient. We need to unregister the collision and intersection listeners
+      // from the parent, but doing it as a single operation would be better.
+      for (const handle of Dict.keySet(this.listeners_)) {
+        this.removeListener(handle);
+      }
       this.boundNodeIds_.clear();
       if (this.onDispose) this.onDispose();
     }
@@ -213,8 +321,8 @@ namespace ScriptManager {
     }
 
     addNode(node: Node, id?: string): string {
-      const { onSceneChange } = this.manager_;
-      if (!onSceneChange) return;
+      const { onNodeAdd } = this.manager_;
+      if (!onNodeAdd) return undefined;
 
       if (!id) id = uuid();
 
@@ -222,45 +330,31 @@ namespace ScriptManager {
         throw new Error(`Node with id ${id} already exists`);
       }
       
-      onSceneChange({
-        ...this.manager_.scene,
-        nodes: {
-          ...this.manager_.scene.nodes,
-          [id]: node
-        }
-      });
+      onNodeAdd(id, node);
+
+      return id;
     }
 
     removeNode(id: string): void {
-      const { onSceneChange } = this.manager_;
-      if (!onSceneChange) return;
+      const { onNodeRemove } = this.manager_;
+      if (!onNodeRemove) return;
 
       if (!(id in this.manager_.scene.nodes)) {
         throw new Error(`Node with id ${id} does not exist`);
       }
 
-      const { [id]: _, ...nodes } = this.manager_.scene.nodes;
-      onSceneChange({
-        ...this.manager_.scene,
-        nodes
-      });
+      onNodeRemove(id);
     }
     
     setNode(id: string, node: Node): void {
-      const { onSceneChange } = this.manager_;
-      if (!onSceneChange) return;
+      const { onNodeChange } = this.manager_;
+      if (!onNodeChange) return;
 
       if (!(id in this.manager_.scene.nodes)) {
         throw new Error(`Node with id ${id} does not exist`);
       }
 
-      onSceneChange({
-        ...this.manager_.scene,
-        nodes: {
-          ...this.manager_.scene.nodes,
-          [id]: node
-        }
-      });
+      onNodeChange(id, node);
     }
 
     get geometry(): Dict<Geometry> {
@@ -268,50 +362,60 @@ namespace ScriptManager {
     }
 
     addGeometry(geometry: Geometry, id?: string): string {
-      const { onSceneChange } = this.manager_;
-      if (!onSceneChange) return;
+      const { onGeometryAdd } = this.manager_;
+      if (!onGeometryAdd) return undefined;
 
       if (!id) id = uuid();
 
       if (id in this.manager_.scene.geometry) {
         throw new Error(`Geometry with id ${id} already exists`);
       }
-      
-      onSceneChange({
-        ...this.manager_.scene,
-        geometry: {
-          ...this.manager_.scene.geometry,
-          [id]: geometry
-        }
-      });
+
+      onGeometryAdd(id, geometry);
+
+      return id;
     }
 
     removeGeometry(id: string): void {
-      const { onSceneChange } = this.manager_;
-      if (!onSceneChange) return;
+      const { onGeometryRemove } = this.manager_;
+      if (!onGeometryRemove) return;
 
       if (!(id in this.manager_.scene.geometry)) {
         throw new Error(`Geometry with id ${id} does not exist`);
       }
 
-      const { [id]: _, ...geometry } = this.manager_.scene.geometry;
-      onSceneChange({
-        ...this.manager_.scene,
-        geometry
-      });
+      onGeometryRemove(id);
     }
     
     get gravity(): Vector3 {
       return this.manager_.scene.gravity;
     }
 
+    set gravity(gravity: Vector3) {
+      const { onGravityChange } = this.manager_;
+      if (!onGravityChange) return;
+      onGravityChange(gravity);
+    };
+
     get camera(): Camera {
       return this.manager_.scene.camera;
     }
 
+    set camera(camera: Camera) {
+      const { onCameraChange } = this.manager_;
+      if (!onCameraChange) return;
+      onCameraChange(camera);
+    };
+
     get selectedNodeId(): string | null {
       return this.manager_.scene.selectedNodeId;
     }
+
+    set selectedNodeId(nodeId: string | null) {
+      const { onSelectedNodeIdChange } = this.manager_;
+      if (!onSelectedNodeIdChange) return;
+      onSelectedNodeIdChange(nodeId);
+    };
 
     addOnRenderListener(cb: () => void): string {
       const handle = uuid();
@@ -319,25 +423,47 @@ namespace ScriptManager {
       return handle;
     }
 
-    addOnCollisionListener(cb: (aId: string, bId: string) => void, filterIds?: Ids): string {
+    addOnCollisionListener(nodeId: string, cb: (otherNoedId: string, point: Vector3) => void, filterIds?: Ids): string {
       const handle = uuid();
-      this.listeners_[handle] = Listener.collision({ cb, filterIds: Ids.toSet(filterIds) });
+      const listener = Listener.collision({ nodeId, cb, filterIds: Ids.toSet(filterIds) });
+      this.listeners_[handle] = listener;
+      this.manager_.addCollisionRefCounts_(listener);
       return handle;
     }
 
-    addOnIntersectionListener(cb: (type: 'start' | 'end', aId: string, bId: string) => void, filterIds?: Ids): string {
+    addOnIntersectionListener(nodeId: string, cb: (type: 'start' | 'end', otherNodeId: string) => void, filterIds?: Ids): string {
       const handle = uuid();
-      this.listeners_[handle] = Listener.intersection({ cb, filterIds: Ids.toSet(filterIds) });
+      const listener = Listener.intersection({ nodeId, cb, filterIds: Ids.toSet(filterIds) });
+      this.listeners_[handle] = listener;
+      this.manager_.addIntersectionRefCounts_(listener);
       return handle;
     }
 
     removeListener(handle: string): void {
+      if (!(handle in this.listeners_)) return;
+
+      const listener = this.listeners_[handle];
+
+      switch (listener.type) {
+        case Listener.Type.Collision:
+          this.manager_.removeCollisionRefCounts_(listener);
+          break;
+        case Listener.Type.Intersection:
+          this.manager_.removeIntersectionRefCounts_(listener);
+          break;
+      }
+      
       delete this.listeners_[handle];
     }
 
     onBind?: (nodeId: string) => void;
     onUnbind?: (nodeId: string) => void;
     onDispose?: () => void;
+
+    postTestResult(data: unknown) {
+      if (!this.manager_.onPostTestResult) return;
+      this.manager_.onPostTestResult(data);
+    }
   }
 }
 

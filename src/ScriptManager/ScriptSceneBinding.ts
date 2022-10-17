@@ -31,12 +31,15 @@ export interface ScriptSceneBinding {
   selectedNodeId?: string;
 
   addOnRenderListener(cb: () => void): string;
-  addOnCollisionListener(cb: (aId: string, bId: string) => void, filterIds?: Ids): string;
-  addOnIntersectionListener(cb: (type: 'start' | 'end', aId: string, bId: string) => void, filterIds?: Ids): string;
+  addOnCollisionListener(nodeId: string, cb: (otherNodeId: string, point: Vector3) => void, filterIds: Ids): string;
+  addOnIntersectionListener(nodeId: string, cb: (type: 'start' | 'end', otherNodeId: string) => void, filterIds: Ids): string;
 
   removeListener(handle: string): void;
 
   onBind?: (nodeId: string) => void;
   onUnbind?: (nodeId: string) => void;
   onDispose?: () => void;
+
+  // Used only for unit tests
+  postTestResult: (data: unknown) => void;
 }

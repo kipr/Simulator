@@ -49,15 +49,6 @@ const Container = styled('div', (props: ThemeProps) => ({
   
 }));
 
-
-(async () => {
-  const simulator = await (await fetch('/simulator.d.ts')).text();
-  console.log(simulator);
-  monaco.languages.typescript.typescriptDefaults.addExtraLib(simulator);
-})().catch(err => {
-  console.error(err);
-});
-
 class ScriptSettings extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -91,7 +82,7 @@ class ScriptSettings extends React.PureComponent<Props, State> {
         </StyledField>
         <Ivygate
           code={script.code}
-          language={'typescript'}
+          language={'javascript'}
           onCodeChange={this.onCodeChange_}
           autocomplete
           style={{ flex: '1 1' }}

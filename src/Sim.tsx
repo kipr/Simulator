@@ -32,6 +32,8 @@ import WorkerInstance from './WorkerInstance';
 import AbstractRobot from './AbstractRobot';
 import LocalizedString from './util/LocalizedString';
 import ScriptManager from './ScriptManager';
+import Geometry from './state/State/Scene/Geometry';
+import Camera from './state/State/Scene/Camera';
 
 
 export let ACTIVE_SPACE: Space;
@@ -55,6 +57,14 @@ export class Space {
 
   onSelectNodeId?: (nodeId: string) => void;
   onSetNodeBatch?: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => void;
+  onNodeAdd?: (nodeId: string, node: Node) => void;
+  onNodeRemove?: (nodeId: string) => void;
+  onNodeChange?: (nodeId: string, node: Node) => void;
+  onGeometryAdd?: (geometryId: string, geometry: Geometry) => void;
+  onGeometryRemove?: (geometryId: string) => void;
+  onCameraChange?: (camera: Camera) => void;
+  onGravityChange?: (gravity: UnitVector3) => void;
+
 
   private debounceUpdate_ = false;
   private sceneSetting_ = false;
@@ -199,6 +209,17 @@ export class Space {
     const ammo: unknown = await (Ammo as any)();
     
     this.sceneBinding_ = new SceneBinding(this.bScene_, ammo);
+
+    const scriptManager = this.sceneBinding_.scriptManager;
+    scriptManager.onNodeAdd = (id, node) => this.onNodeAdd?.(id, node);
+    scriptManager.onNodeRemove = id => this.onNodeRemove?.(id);
+    scriptManager.onNodeChange = (id, node) => this.onNodeChange?.(id, node);
+    scriptManager.onGeometryAdd = (id, geometry) => this.onGeometryAdd?.(id, geometry);
+    scriptManager.onGeometryRemove = id => this.onGeometryRemove?.(id);
+    scriptManager.onCameraChange = camera => this.onCameraChange?.(camera);
+    scriptManager.onGravityChange = gravity => this.onGravityChange?.(gravity);
+    scriptManager.onSelectedNodeIdChange = id => this.onSelectNodeId?.(id);
+    
     await this.sceneBinding_.setScene(this.scene_, Robots.loaded(state.robots));
     this.bScene_.getPhysicsEngine().setSubTimeStep(5);
 

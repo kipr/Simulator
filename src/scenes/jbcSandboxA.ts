@@ -1,10 +1,6 @@
 import Scene from "../state/State/Scene";
-<<<<<<< HEAD
-import { ReferenceFrame, Rotation } from "../unit-math";
-=======
 import Script from '../state/State/Scene/Script';
-import { Rotation } from "../unit-math";
->>>>>>> 20dbcd0... Script bindings executing and editable
+import { ReferenceFrame, Rotation } from "../unit-math";
 import { Distance } from "../util";
 import LocalizedString from '../util/LocalizedString';
 

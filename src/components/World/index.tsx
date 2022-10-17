@@ -133,8 +133,7 @@ interface ReduxWorldProps {
   onScriptAdd: (id: string, script: Script) => void;
   onScriptRemove: (id: string) => void;
   onScriptChange: (id: string, script: Script) => void;
-
-  onScriptClick: (id: string) => void;
+  onScriptClick: (id?: string) => void;
 }
 
 namespace UiState {
