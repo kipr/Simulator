@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { withRouter } from 'react-router-dom';
 import { signOutOfApp } from '../firebase/modules/auth';
 import WorkerInstance from '../WorkerInstance';
+
+import { State as ReduxState } from '../state';
 
 import SimMenu from './SimMenu';
 
@@ -30,12 +31,16 @@ import ExceptionDialog from './ExceptionDialog';
 import SelectSceneDialog from './SelectSceneDialog';
 
 import store from '../state';
-import { SceneAction } from '../state/reducer';
+import { ScenesAction } from '../state/reducer';
 import { Editor } from './Editor';
 import Dict from '../Dict';
 import ProgrammingLanguage from '../ProgrammingLanguage';
 
-import Scene from '../state/State/Scene';
+import Scene, { AsyncScene } from '../state/State/Scene';
+import { RouteComponentProps } from 'react-router';
+import Node from '../state/State/Scene/Node';
+import { connect } from 'react-redux';
+import Async from '../state/State/Async';
 
 namespace Modal {
   export enum Type {
@@ -95,6 +100,23 @@ namespace Modal {
 
 export type Modal = Modal.Settings | Modal.About | Modal.Exception | Modal.SelectScene | Modal.Feedback | Modal.FeedbackSuccess | Modal.None;
 
+interface RootParams {
+  sceneId: string;
+}
+
+export interface RootPublicProps extends RouteComponentProps<RootParams> {
+
+}
+
+interface RootPrivateProps {
+  scene: AsyncScene;
+
+  onNodeAdd: (id: string, node: Node) => void;
+  onNodeRemove: (id: string) => void;
+  onNodeChange: (id: string, node: Node) => void;
+  onNodesChange: (nodes: Dict<Node>) => void;
+  onResetScene: () => void;
+}
 
 interface RootState {
   layout: Layout;
@@ -120,7 +142,7 @@ interface RootState {
   windowInnerHeight: number;
 }
 
-type Props = Record<string, never>;
+type Props = RootPublicProps & RootPrivateProps;
 type State = RootState;
 
 // We can't set innerheight statically, becasue the window can change
@@ -145,7 +167,7 @@ const STDERR_STYLE = (theme: Theme) => ({
   color: 'red'
 });
 
-export class Root extends React.Component<Props, State> {
+class Root extends React.Component<Props, State> {
   private editorRef: React.MutableRefObject<Editor>;
   private overlayLayoutRef:  React.MutableRefObject<OverlayLayout>;
 
@@ -172,6 +194,7 @@ export class Root extends React.Component<Props, State> {
 
     this.editorRef = React.createRef();
     this.overlayLayoutRef = React.createRef();
+    Space.getInstance().scene = Async.latestValue(props.scene) || Scene.EMPTY;
   }
 
   componentDidMount() {
@@ -184,6 +207,12 @@ export class Root extends React.Component<Props, State> {
   componentWillUnmount() {
     window.removeEventListener('resize', this.onWindowResize_);
     cancelAnimationFrame(this.updateConsoleHandle_);
+  }
+
+  getSnapshotBeforeUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>) {
+    if (this.props.scene !== prevProps.scene) {
+      Space.getInstance().scene = Async.latestValue(this.props.scene) || Scene.EMPTY;
+    }
   }
 
   private onWindowResize_ = () => {
@@ -370,7 +399,7 @@ export class Root extends React.Component<Props, State> {
   };
 
   private onResetWorldClick_ = () => {
-    store.dispatch(SceneAction.RESET_SCENE);
+    this.props.onResetScene();
   };
 
   private onClearConsole_ = () => {
@@ -501,11 +530,9 @@ export class Root extends React.Component<Props, State> {
       default: {
         return null;
       }
-
     }
 
     return (
-
       <>
         <Container $windowInnerHeight={windowInnerHeight}>
           <SimMenu
@@ -527,19 +554,60 @@ export class Root extends React.Component<Props, State> {
           />
           {impl}
         </Container>
-        {modal.type === Modal.Type.Settings ? <SettingsDialog theme={theme} settings={settings} onSettingsChange={this.onSettingsChange_} onClose={this.onModalClose_} /> : undefined}
-        {modal.type === Modal.Type.About ? <AboutDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
-        {modal.type === Modal.Type.Feedback ? <FeedbackDialog theme={theme} feedback={feedback} onFeedbackChange={this.onFeedbackChange_} onClose={this.onModalClose_} onSubmit={this.onFeedbackSubmit_} /> : undefined}
-        {modal.type === Modal.Type.FeedbackSuccess ? <FeedbackSuccessDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
-        {modal.type === Modal.Type.Exception ? <ExceptionDialog error={modal.error} theme={theme} onClose={this.onModalClose_} /> : undefined}
-        {modal.type === Modal.Type.SelectScene ? <SelectSceneDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
+        {modal.type === Modal.Type.Settings ? (
+          <SettingsDialog
+            theme={theme}
+            settings={settings}
+            onSettingsChange={this.onSettingsChange_}
+            onClose={this.onModalClose_}
+          />
+        ) : undefined}
+        {modal.type === Modal.Type.About ? (
+          <AboutDialog
+            theme={theme}
+            onClose={this.onModalClose_}
+          />
+        ) : undefined}
+        {modal.type === Modal.Type.Feedback ? (
+          <FeedbackDialog
+            theme={theme}
+            feedback={feedback}
+            onFeedbackChange={this.onFeedbackChange_}
+            onClose={this.onModalClose_}
+            onSubmit={this.onFeedbackSubmit_}
+          />
+        ) : undefined}
+        {modal.type === Modal.Type.FeedbackSuccess ? (
+          <FeedbackSuccessDialog
+            theme={theme}
+            onClose={this.onModalClose_}
+          />
+        ) : undefined}
+        {modal.type === Modal.Type.Exception ? (
+          <ExceptionDialog
+            error={modal.error}
+            theme={theme}
+            onClose={this.onModalClose_}
+          />
+        ) : undefined}
+        {modal.type === Modal.Type.SelectScene ? (
+          <SelectSceneDialog
+            theme={theme}
+            onClose={this.onModalClose_}
+          />
+        ) : undefined}
       </>
 
     );
   }
 }
 
-// All logic inside of index.tsx
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-export default withRouter(Root);
+export default connect((state: ReduxState, { match: { params: { sceneId } } }: RootPublicProps) => ({
+  scene: state.scenes[sceneId]
+}), (dispatch, { match: { params: { sceneId } }}: RootPublicProps) => ({
+  onNodeAdd: (nodeId: string, node: Node) => ScenesAction.setNode({ sceneId, nodeId, node }),
+  onNodeRemove: (nodeId: string) => ScenesAction.removeNode({ sceneId, nodeId }),
+  onNodeChange: (nodeId: string, node: Node) => ScenesAction.setNode({ sceneId, nodeId, node }),
+  onResetScene: () => ScenesAction.resetScene({ sceneId }),
+}))(Root) as React.ComponentType<RootPublicProps>;
 export { RootState };

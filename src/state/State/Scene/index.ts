@@ -6,6 +6,7 @@ import { ReferenceFrame, Vector3 } from '../../../unit-math';
 import Camera from './Camera';
 import { Distance } from '../../../util';
 import Patch from '../../../util/Patch';
+import Async from '../Async';
 
 interface Scene {
   name: string;
@@ -23,6 +24,10 @@ interface Scene {
 
   gravity: Vector3;
 }
+
+export type SceneBrief = Pick<Scene, 'name' | 'authorId' | 'description'>;
+
+export type AsyncScene = Async<SceneBrief, Scene>;
 
 interface PatchScene {
   name: Patch<string>;

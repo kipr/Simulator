@@ -43,7 +43,7 @@ export class Space {
 
   private engine: Babylon.Engine;
   private workingCanvas: HTMLCanvasElement;
-  private scene: Babylon.Scene;
+  private bScene_: Babylon.Scene;
 
   private currentEngineView: Babylon.EngineView;
 
@@ -51,47 +51,31 @@ export class Space {
 
   private sceneBinding_: SceneBinding;
 
-
-  private initStoreSubscription_ = () => {
-    if (this.storeSubscription_) return;
-    this.storeSubscription_ = store.subscribe(() => {
-      this.onStoreChange_(store.getState());
-    });
-  };
-
+  private scene_: Scene;
+  get scene() { return this.scene_; }
+  
   private debounceUpdate_ = false;
+  private sceneSetting_ = false;
+  set scene(scene: Scene) {
+    this.scene_ = scene;
+    if (this.sceneSetting_ || this.debounceUpdate_) return;
 
-  private sceneSetting_: boolean;
-  private latestUnfulfilledScene_: Scene;
-
-  private onStoreChange_ = (state: State) => {
-    if (this.debounceUpdate_) {
-      this.sceneBinding_.scene = state.scene.workingScene;
-      return;
-    }
-
-    if (!this.sceneSetting_) {
-      this.sceneSetting_ = true;
-      this.latestUnfulfilledScene_ = state.scene.workingScene;
-      (async () => {
-        // Disable physics during scene changes to avoid objects moving before the scene is fully loaded
-        this.scene.physicsEnabled = false;
-        await this.sceneBinding_.setScene(state.scene.workingScene, Robots.loaded(state.robots));
-        if (this.latestUnfulfilledScene_ !== state.scene.workingScene) {
-          await this.sceneBinding_.setScene(this.latestUnfulfilledScene_, Robots.loaded(state.robots));
-        }
-        this.scene.physicsEnabled = true;
-      })().finally(() => {
-        this.sceneSetting_ = false;
-      });
-        
-    } else {
-      this.latestUnfulfilledScene_ = state.scene.workingScene;
-    }
-  };
+    this.sceneSetting_ = true;
+    (async () => {
+      // Disable physics during scene changes to avoid objects moving before the scene is fully loaded
+      this.bScene_.physicsEnabled = false;
+      await this.sceneBinding_.setScene(scene, Robots.loaded(store.getState().robots));
+      if (this.scene_ !== scene) {
+        await this.sceneBinding_.setScene(this.scene_, Robots.loaded(store.getState().robots));
+      }
+      this.bScene_.physicsEnabled = true;
+    })().finally(() => {
+      this.sceneSetting_ = false;
+    });
+  }
 
   objectScreenPosition(id: string): Vector2 {
-    const mesh = this.scene.getMeshByID(id) || this.scene.getMeshByName(id);
+    const mesh = this.bScene_.getMeshByID(id) || this.bScene_.getMeshByName(id);
     if (!mesh) return undefined;
 
     if (this.engine.views.length <= 0) return undefined;
@@ -101,7 +85,7 @@ export class Space {
     const coordinates = Babylon.Vector3.Project(
       position,
       Babylon.Matrix.Identity(),
-      this.scene.getTransformMatrix(),
+      this.bScene_.getTransformMatrix(),
       this.sceneBinding_.camera.viewport.toGlobal(
         this.engine.getRenderWidth(),
         this.engine.getRenderHeight(),
@@ -130,8 +114,8 @@ export class Space {
     this.workingCanvas = document.createElement('canvas');
 
     this.engine = new Babylon.Engine(this.workingCanvas, true, { preserveDrawingBuffer: true, stencil: true });
-    this.scene = new Babylon.Scene(this.engine);
-    this.scene.useRightHandedSystem = true;
+    this.bScene_ = new Babylon.Scene(this.engine);
+    this.bScene_.useRightHandedSystem = true;
     
 
     this.currentEngineView = null;
@@ -189,9 +173,9 @@ export class Space {
   };
 
   private async createScene(): Promise<void> {
-    this.scene.onPointerObservable.add(this.onPointerTap_, Babylon.PointerEventTypes.POINTERTAP);
+    this.bScene_.onPointerObservable.add(this.onPointerTap_, Babylon.PointerEventTypes.POINTERTAP);
 
-    const light = new Babylon.HemisphericLight('light1', new Babylon.Vector3(0, 1, 0), this.scene);
+    const light = new Babylon.HemisphericLight('light1', new Babylon.Vector3(0, 1, 0), this.bScene_);
     light.intensity = 0.5;
     light.diffuse = new Babylon.Color3(1.0, 1.0, 1.0);
 
@@ -206,9 +190,9 @@ export class Space {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any
     const ammo: unknown = await (Ammo as any)();
     
-    this.sceneBinding_ = new SceneBinding(this.scene, ammo);
+    this.sceneBinding_ = new SceneBinding(this.bScene_, ammo);
     await this.sceneBinding_.setScene(state.scene.workingScene, Robots.loaded(state.robots));
-    this.scene.getPhysicsEngine().setSubTimeStep(5);
+    this.bScene_.getPhysicsEngine().setSubTimeStep(5);
 
     // (x, z) coordinates of cans around the board
   }
@@ -249,7 +233,7 @@ export class Space {
     // Check if nodes have moved significant amounts
     for (const nodeId of Dict.keySet(nodes)) {
       const node = nodes[nodeId];
-      const bNode = this.scene.getNodeByID(nodeId) || this.scene.getNodeByName(node.name);
+      const bNode = this.bScene_.getNodeByID(nodeId) || this.bScene_.getNodeByName(node.name);
 
       if (tickedIds.has(nodeId)) continue;
 
@@ -325,13 +309,11 @@ export class Space {
   }
   
   private startRenderLoop(): void {
-    this.initStoreSubscription_();
-  
     this.engine.runRenderLoop(() => {
       // Post updates to the store
       this.updateStore_();
 
-      this.scene.render();
+      this.bScene_.render();
     });
   }
 

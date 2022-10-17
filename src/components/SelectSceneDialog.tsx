@@ -8,7 +8,7 @@ import Async from "../state/State/Async";
 import Scene from "../state/State/Scene";
 import { Dialog } from "./Dialog";
 import { ThemeProps } from "./theme";
-import { SceneAction } from "../state/reducer";
+import { ScenesAction } from "../state/reducer";
 import DialogBar from "./DialogBar";
 import ScrollArea from "./ScrollArea";
 import { Fa } from "./Fa";

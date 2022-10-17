@@ -1,21 +1,16 @@
 import Dict from '../../Dict';
 import Async from "./Async";
 import Robot from './Robot';
-import Scene from "./Scene";
+import Scene, { AsyncScene } from './Scene';
 
-export interface Scenes {
-  scenes: Dict<Async<Scene>>;
-  activeId?: string;
-}
+export type Scenes = Dict<AsyncScene>;
 
 export namespace Scenes {
-  export const EMPTY: Scenes = {
-    scenes: {},
-  };
+  export const EMPTY: Scenes = {};
 }
 
 export interface Robots {
-  robots: Dict<Async<Robot>>;
+  robots: Dict<Async<{}, Robot>>;
 }
 
 export namespace Robots {
