@@ -260,7 +260,7 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
     this.setState({ modal: UiState.NONE }, () => {
       this.props.onScriptAdd(uuid.v4(), acceptance.script);
     });
-  }
+  };
 
   private onNodeSettingsAccept_ = (id: string) => (acceptance: NodeSettingsAcceptance) => {
     this.props.onNodeChange(id, acceptance, true, false);
@@ -270,7 +270,7 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
     this.setState({
       modal: UiState.NONE
     }, () => {
-      this.props.onScriptChange(id, acceptance)
+      this.props.onScriptChange(id, acceptance);
     });
   };
 

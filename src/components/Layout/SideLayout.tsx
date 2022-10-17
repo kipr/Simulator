@@ -213,7 +213,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       }
     }
 
-    let editorBar = createEditorBarComponents({
+    const editorBar = createEditorBarComponents({
       theme,
       target: editorBarTarget,
     });

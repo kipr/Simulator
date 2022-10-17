@@ -100,5 +100,7 @@ module.exports = {
     "/static",
     // Ignore dependencies
     "/dependencies",
+    // Ignore tests
+    "/test",
   ],
 };

@@ -93,6 +93,7 @@ class ScriptManager {
       }
     }
     
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     if (this[onChangedKey]) this[onChangedKey](listener.nodeId, new Set(refCounts.keys()));
   };
 
@@ -115,6 +116,7 @@ class ScriptManager {
       }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     if (this[onChangedKey]) this[onChangedKey](listener.nodeId, new Set(refCounts.keys()));
   };
 
@@ -248,6 +250,7 @@ namespace ScriptManager {
       this.script_ = script;
       this.manager_ = manager;
     
+      // eslint-disable-next-line @typescript-eslint/no-implied-eval
       new Function("scene", `"use strict"; ${this.script_.code}`)(this);
     }
 
@@ -324,15 +327,15 @@ namespace ScriptManager {
       const { onNodeAdd } = this.manager_;
       if (!onNodeAdd) return undefined;
 
-      if (!id) id = uuid();
+      const resolvedId = id ? id : uuid();
 
-      if (id in this.manager_.scene.nodes) {
-        throw new Error(`Node with id ${id} already exists`);
+      if (resolvedId in this.manager_.scene.nodes) {
+        throw new Error(`Node with id ${resolvedId} already exists`);
       }
       
-      onNodeAdd(id, node);
+      onNodeAdd(resolvedId, node);
 
-      return id;
+      return resolvedId;
     }
 
     removeNode(id: string): void {
@@ -365,15 +368,15 @@ namespace ScriptManager {
       const { onGeometryAdd } = this.manager_;
       if (!onGeometryAdd) return undefined;
 
-      if (!id) id = uuid();
+      const resolvedId = id ? id : uuid();
 
-      if (id in this.manager_.scene.geometry) {
-        throw new Error(`Geometry with id ${id} already exists`);
+      if (resolvedId in this.manager_.scene.geometry) {
+        throw new Error(`Geometry with id ${resolvedId} already exists`);
       }
 
-      onGeometryAdd(id, geometry);
+      onGeometryAdd(resolvedId, geometry);
 
-      return id;
+      return resolvedId;
     }
 
     removeGeometry(id: string): void {
@@ -395,7 +398,7 @@ namespace ScriptManager {
       const { onGravityChange } = this.manager_;
       if (!onGravityChange) return;
       onGravityChange(gravity);
-    };
+    }
 
     get camera(): Camera {
       return this.manager_.scene.camera;
@@ -405,7 +408,7 @@ namespace ScriptManager {
       const { onCameraChange } = this.manager_;
       if (!onCameraChange) return;
       onCameraChange(camera);
-    };
+    }
 
     get selectedNodeId(): string | null {
       return this.manager_.scene.selectedNodeId;
@@ -415,7 +418,7 @@ namespace ScriptManager {
       const { onSelectedNodeIdChange } = this.manager_;
       if (!onSelectedNodeIdChange) return;
       onSelectedNodeIdChange(nodeId);
-    };
+    }
 
     addOnRenderListener(cb: () => void): string {
       const handle = uuid();
