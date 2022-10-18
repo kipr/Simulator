@@ -6,7 +6,6 @@ import { Provider as StyletronProvider, DebugEngine } from "styletron-react";
 import { Client as Styletron } from "styletron-engine-atomic";
 
 import store from './state';
-import PageRouter from './PageRouter';
 
 const reactRoot = document.getElementById('reactRoot');
 

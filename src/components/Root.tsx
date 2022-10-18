@@ -28,7 +28,7 @@ import { RobotPosition } from '../RobotPosition';
 import { DEFAULT_SETTINGS, Settings } from '../Settings';
 import { DEFAULT_FEEDBACK, Feedback } from '../Feedback';
 import ExceptionDialog from './ExceptionDialog';
-import SelectSceneDialog from './SelectSceneDialog';
+import OpenSceneDialog from './OpenSceneDialog';
 
 import store from '../state';
 import { ScenesAction } from '../state/reducer';
@@ -47,7 +47,7 @@ namespace Modal {
     Settings,
     About,
     Exception,
-    SelectScene,
+    OpenScene,
     Feedback,
     FeedbackSuccess,
     None,
@@ -86,10 +86,10 @@ namespace Modal {
   export const exception = (error: Error, info?: React.ErrorInfo): Exception => ({ type: Type.Exception, error, info });
 
   export interface SelectScene {
-    type: Type.SelectScene;
+    type: Type.OpenScene;
   }
 
-  export const SELECT_SCENE: SelectScene = { type: Type.SelectScene };
+  export const SELECT_SCENE: SelectScene = { type: Type.OpenScene };
 
   export interface None {
     type: Type.None;
@@ -98,7 +98,15 @@ namespace Modal {
   export const NONE: None = { type: Type.None };
 }
 
-export type Modal = Modal.Settings | Modal.About | Modal.Exception | Modal.SelectScene | Modal.Feedback | Modal.FeedbackSuccess | Modal.None;
+export type Modal = (
+  Modal.Settings |
+  Modal.About |
+  Modal.Exception |
+  Modal.SelectScene |
+  Modal.Feedback |
+  Modal.FeedbackSuccess |
+  Modal.None
+);
 
 interface RootParams {
   sceneId: string;
@@ -115,6 +123,8 @@ interface RootPrivateProps {
   onNodeRemove: (id: string) => void;
   onNodeChange: (id: string, node: Node) => void;
   onNodesChange: (nodes: Dict<Node>) => void;
+  onSelectNodeId: (id: string) => void;
+  onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => void;
   onResetScene: () => void;
 }
 
@@ -194,11 +204,16 @@ class Root extends React.Component<Props, State> {
 
     this.editorRef = React.createRef();
     this.overlayLayoutRef = React.createRef();
+
     Space.getInstance().scene = Async.latestValue(props.scene) || Scene.EMPTY;
+    
   }
 
   componentDidMount() {
     WorkerInstance.onStopped = this.onStopped_;
+
+    Space.getInstance().onSetNodeBatch = this.props.onSetNodeBatch;
+    Space.getInstance().onSelectNodeId = this.props.onSelectNodeId;
 
     this.scheduleUpdateConsole_();
     window.addEventListener('resize', this.onWindowResize_);
@@ -207,12 +222,29 @@ class Root extends React.Component<Props, State> {
   componentWillUnmount() {
     window.removeEventListener('resize', this.onWindowResize_);
     cancelAnimationFrame(this.updateConsoleHandle_);
+  
+    Space.getInstance().onSelectNodeId = undefined;
+    Space.getInstance().onSetNodeBatch = undefined;
   }
 
   getSnapshotBeforeUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>) {
     if (this.props.scene !== prevProps.scene) {
       Space.getInstance().scene = Async.latestValue(this.props.scene) || Scene.EMPTY;
     }
+
+    if (this.props.onSelectNodeId !== prevProps.onSelectNodeId) {
+      Space.getInstance().onSelectNodeId = this.props.onSelectNodeId;
+    }
+
+    if (this.props.onSetNodeBatch !== prevProps.onSetNodeBatch) {
+      Space.getInstance().onSetNodeBatch = this.props.onSetNodeBatch;
+    }
+
+    return null;
+  }
+
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>, snapshot?: any): void {
+    
   }
 
   private onWindowResize_ = () => {
@@ -462,7 +494,7 @@ class Root extends React.Component<Props, State> {
       });
   };
 
-  private onSelectSceneClick_ = () => {
+  private onOpenSceneClick_ = () => {
     this.setState({
       modal: Modal.SELECT_SCENE
     });
@@ -476,6 +508,8 @@ class Root extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
+    
+    const { match: { params: { sceneId } } } = props;
     const {
       layout,
       activeLanguage,
@@ -503,8 +537,8 @@ class Root extends React.Component<Props, State> {
       onClearConsole: this.onClearConsole_,
       onIndentCode: this.onIndentCode_,
       onDownloadCode: this.onDownloadClick_,
-      onSelectScene: this.onSelectSceneClick_,
       editorRef: this.editorRef,
+      sceneId
     };
 
     let impl: JSX.Element;
@@ -550,6 +584,7 @@ class Root extends React.Component<Props, State> {
             onDashboardClick={this.onDashboardClick}
             onLogoutClick={this.onLogoutClick}
             onFeedbackClick={this.onModalClick_(Modal.FEEDBACK)}
+            onOpenSceneClick={this.onOpenSceneClick_}
             simulatorState={simulatorState}
           />
           {impl}
@@ -590,8 +625,8 @@ class Root extends React.Component<Props, State> {
             onClose={this.onModalClose_}
           />
         ) : undefined}
-        {modal.type === Modal.Type.SelectScene ? (
-          <SelectSceneDialog
+        {modal.type === Modal.Type.OpenScene ? (
+          <OpenSceneDialog
             theme={theme}
             onClose={this.onModalClose_}
           />
@@ -605,9 +640,12 @@ class Root extends React.Component<Props, State> {
 export default connect((state: ReduxState, { match: { params: { sceneId } } }: RootPublicProps) => ({
   scene: state.scenes[sceneId]
 }), (dispatch, { match: { params: { sceneId } }}: RootPublicProps) => ({
-  onNodeAdd: (nodeId: string, node: Node) => ScenesAction.setNode({ sceneId, nodeId, node }),
-  onNodeRemove: (nodeId: string) => ScenesAction.removeNode({ sceneId, nodeId }),
-  onNodeChange: (nodeId: string, node: Node) => ScenesAction.setNode({ sceneId, nodeId, node }),
-  onResetScene: () => ScenesAction.resetScene({ sceneId }),
+  onNodeAdd: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
+  onNodeRemove: (nodeId: string) => dispatch(ScenesAction.removeNode({ sceneId, nodeId })),
+  onNodeChange: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
+  onSelectNodeId: (nodeId: string) => dispatch(ScenesAction.selectNode({ sceneId, nodeId })),
+  onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) =>
+    dispatch(ScenesAction.setNodeBatch({ sceneId, ...setNodeBatch })),
+  onResetScene: () => dispatch(ScenesAction.resetScene({ sceneId })),
 }))(Root) as React.ComponentType<RootPublicProps>;
 export { RootState };

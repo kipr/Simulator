@@ -4,18 +4,15 @@ import { StyleProps } from '../style';
 import { styled } from 'styletron-react';
 import { Card } from '../components/Card';
 import MainMenu from '../components/MainMenu';
-import { Vector2 } from '../math';
-import resizeListener, { ResizeListener } from '../components/ResizeListener';
 import IFrame from '../components/IFrame';
 import { tutorialList } from './tutorialList';
+import { Vector2 } from '../math';
 
 
 export interface TutorialsProps extends StyleProps, ThemeProps {}
 
 interface TutorialsState {
   selected: string;
-  videoWidth: number;
-  videoHeight: number;
 }
 
 type Props = TutorialsProps;
@@ -88,12 +85,10 @@ class Tutorials extends React.Component<Props, State> {
 
     this.state = {
       selected: '',
-      videoWidth: 0,
-      videoHeight: 0,
     };
   }
 
-  private onSelect_ = (index: number) => {
+  private onSelect_ = (index: number) => () => {
     this.setState({
       selected: tutorialList[index].src,
     });
@@ -103,44 +98,35 @@ class Tutorials extends React.Component<Props, State> {
   render() {
     const { props, state } = this;
     const { style } = props;
+    const { selected } = state;
     const theme = DARK;
 
     return (
       <Container style={style} theme={theme}>
-        <MainMenu theme={theme}/>
+        <MainMenu theme={theme} />
         <TutorialsContainer style={style} theme={theme}>
-          {
-            (this.state.selected !== '') 
-              ? (
-                <VideoContainer theme={theme}>
-                  <IFrame theme={theme} src={this.state.selected}/>
-                </VideoContainer>
-              ) : <></>
-          }
+          {this.state.selected !== '' ? (
+            <VideoContainer theme={theme}>
+              <IFrame theme={theme} src={selected} />
+            </VideoContainer>
+          ) : null}
           <CardContainer style={style} theme={theme}>
-            {
-              tutorialList.map((tutorial, index) => {
-                return (
-                  <Card
-                    theme={theme}
-                    title={tutorial.title}
-                    description={tutorial.description}
-                    src={tutorial.src}
-                    backgroundImage={tutorial.backgroundImage}
-                    backgroundColor={tutorial.backgroundColor}
-                    backgroundPosition={tutorial.backgroundPosition}
-                    backgroundSize={tutorial.backgroundSize}
-                    hoverBackgroundSize={tutorial.hoverBackgroundSize}
-                    onSelect={this.onSelect_}
-                    index={index}
-                    key={index}
-                  />
-                );
-              })
-            }
+            {tutorialList.map((tutorial, index) => (
+              <Card
+                theme={theme}
+                title={tutorial.title}
+                description={tutorial.description}
+                backgroundImage={tutorial.backgroundImage}
+                backgroundColor={tutorial.backgroundColor}
+                backgroundPosition={tutorial.backgroundPosition}
+                backgroundSize={tutorial.backgroundSize}
+                hoverBackgroundSize={tutorial.hoverBackgroundSize}
+                onClick={this.onSelect_(index)}
+                key={index}
+              />
+            ))}
           </CardContainer>
         </TutorialsContainer>
-        <div/>
       </Container>
     );
   }

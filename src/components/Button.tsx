@@ -1,4 +1,4 @@
-import { ThemeProps } from './theme';
+import { Theme, ThemeProps } from './theme';
 
 import * as React from 'react';
 import { styled } from 'styletron-react';
@@ -8,6 +8,7 @@ export interface ButtonProps extends StyleProps, ThemeProps {
   children: React.ReactNode;
 
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  disabled?: boolean;
 }
 
 interface ButtonState {
@@ -17,12 +18,12 @@ interface ButtonState {
 type Props = ButtonProps;
 type State = ButtonState;
 
-const Container = styled('div', (props: ThemeProps) => ({
-  borderRadius: `${props.theme.itemPadding}px`,
-  paddingTop: `${props.theme.itemPadding / 2}px`,
-  paddingBottom: `${props.theme.itemPadding / 2}px`,
-  paddingLeft: `${props.theme.itemPadding}px`,
-  paddingRight: `${props.theme.itemPadding}px`,
+const Container = styled('div', ({ $disabled, $theme }: { $disabled: boolean; $theme: Theme; }) => ({
+  borderRadius: `${$theme.itemPadding}px`,
+  paddingTop: `${$theme.itemPadding / 2}px`,
+  paddingBottom: `${$theme.itemPadding / 2}px`,
+  paddingLeft: `${$theme.itemPadding}px`,
+  paddingRight: `${$theme.itemPadding}px`,
   ':first-child': {
     paddingLeft: 0
   },
@@ -31,10 +32,11 @@ const Container = styled('div', (props: ThemeProps) => ({
   },
   userSelect: 'none',
   ':hover': {
-    backgroundColor: props.theme.lighten(0.1),
+    backgroundColor: $theme.lighten(0.1),
   },
   transition: 'background-color 0.2s',
-  cursor: 'pointer'
+  cursor: !$disabled ? 'pointer' : 'default',
+  opacity: $disabled ? 0.5 : 1,
 }));
 
 export class Button extends React.PureComponent<Props, State> {
@@ -44,9 +46,22 @@ export class Button extends React.PureComponent<Props, State> {
 
   render() {
     const { props } = this;
-    const { style, className, theme, children, onClick } = props;
+    const {
+      style,
+      className,
+      theme,
+      children,
+      onClick,
+      disabled
+    } = props;
     return (
-      <Container style={style} className={className} theme={theme} onClick={onClick}>
+      <Container
+        style={style}
+        className={className}
+        $theme={theme}
+        $disabled={disabled}
+        onClick={!disabled ? onClick : undefined}
+      >
         {children}
       </Container>
     );

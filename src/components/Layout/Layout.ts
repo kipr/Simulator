@@ -8,6 +8,7 @@ import { Editor } from "../Editor";
 import { ThemeProps } from "../theme";
 
 export interface LayoutProps extends StyleProps, ThemeProps {
+  sceneId: string;
   language: ProgrammingLanguage;
   onLanguageChange: (language: ProgrammingLanguage) => void;
   code: string;
@@ -18,7 +19,6 @@ export interface LayoutProps extends StyleProps, ThemeProps {
   onClearConsole: () => void;
   onIndentCode: () => void;
   onDownloadCode: () => void;
-  onSelectScene: () => void;
   editorRef: React.MutableRefObject<Editor>;
 }
 

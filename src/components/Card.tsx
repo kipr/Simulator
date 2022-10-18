@@ -7,15 +7,13 @@ export interface CardProps extends StyleProps, ThemeProps {
   title?: string;
   description?: string;
   link?: string;
-  src?: string;
   backgroundImage?: string;
   backgroundColor?: string;
   backgroundPosition?: string;
   backgroundSize?: string;
   hoverBackgroundSize?: string;
-  onSelect?: (index: number) => void;
   selected?: boolean;
-  index?: number;
+  onClick: (event: React.MouseEvent) => void;
 }
 
 interface CardState { }
@@ -99,14 +97,6 @@ export class Card extends React.Component<Props, State> {
     super(props);
   }
 
-  private onClick_ = () => {
-    if (this.props.link) {
-      window.location.href = this.props.link;
-    } else if (this.props.src) {
-      this.props.onSelect(this.props.index);
-    }
-  };
-
   render() {
     const { 
       backgroundImage,
@@ -116,7 +106,8 @@ export class Card extends React.Component<Props, State> {
       hoverBackgroundSize,
       title,
       description,
-      theme
+      theme,
+      onClick
     } = this.props;
 
     return (
@@ -127,7 +118,7 @@ export class Card extends React.Component<Props, State> {
         backgroundposition={backgroundPosition}
         backgroundsize={backgroundSize}
         hoverbackgroundsize={hoverBackgroundSize}
-        onClick={this.onClick_}
+        onClick={onClick}
       >
         <Gradient theme={theme} />
         <Header theme={theme}>{title}</Header>

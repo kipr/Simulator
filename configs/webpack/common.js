@@ -29,6 +29,7 @@ module.exports = {
       return pathData.chunk.name === 'editor.worker' ? 'editor.worker.bundle.js' : 'js/[name].[contenthash].min.js';
     },
     path: resolve(__dirname, '../../dist'),
+    publicPath: '/',
     clean: true,
   },
   externals: [

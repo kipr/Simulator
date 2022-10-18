@@ -9,15 +9,16 @@ import { Editor, createEditorBarComponents } from '../Editor';
 import World, { createWorldBarComponents } from '../World';
 
 import { Info } from '../Info';
-import { LayoutProps } from './Layout';
+import { Layout, LayoutProps } from './Layout';
 import { SimulatorArea } from '../SimulatorArea';
 import { Theme, ThemeProps } from '../theme';
 import Widget, { BarComponent, Mode, Size, WidgetProps } from '../Widget';
 import { State as ReduxState } from '../../state';
-import { SceneAction } from '../../state/reducer';
 import Scene from '../../state/State/Scene';
 import Node from '../../state/State/Scene/Node';
 import Dict from '../../Dict';
+import Async from '../../state/State/Async';
+import { EMPTY_OBJECT } from '../../util';
 
 export interface OverlayLayoutProps extends LayoutProps {
   
@@ -296,9 +297,9 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       onClearConsole,
       onIndentCode,
       onDownloadCode,
-      onSelectScene,
       editorRef,
-      robots
+      robots,
+      sceneId,
     } = props;
 
     const {
@@ -323,7 +324,6 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       onErrorClick: this.onErrorClick_
     });
     const consoleBar = createConsoleBarComponents(theme, onClearConsole);
-    const worldBar = createWorldBarComponents(theme, onSelectScene);
 
     const robotIds = Object.keys(robots);
 
@@ -376,6 +376,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
             >
               <Info
                 theme={theme}
+                sceneId={sceneId}
                 nodeId={robotIds[0]}
               />
             </InfoWidget>
@@ -386,9 +387,8 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
             sizes={WORLD_SIZES}
             size={WORLD_SIZE[worldSize]}
             onSizeChange={this.onWorldSizeChange_}
-            barComponents={worldBar}
           >
-            <World theme={theme} />
+            <World theme={theme} sceneId={sceneId} />
           </WorldWidget>
         </Overlay>
       </Container>
@@ -396,7 +396,14 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
   }
 }
 
-export const OverlayLayoutRedux = connect((state: ReduxState) => ({
-  robots: Scene.robots(state.scene.workingScene),
-}), dispatch => ({
+export const OverlayLayoutRedux = connect((state: ReduxState, { sceneId }: LayoutProps) => {
+  const asyncScene = state.scenes[sceneId];
+  const scene = Async.latestValue(asyncScene);
+  let robots: Dict<Node.Robot> = EMPTY_OBJECT;
+  if (scene) robots = Scene.robots(scene);
+  
+  return {
+    robots,
+  };
+}, dispatch => ({
 }), null, { forwardRef: true })(OverlayLayout);

@@ -12,7 +12,7 @@ import { Angle, Distance, Mass } from './util';
 import store, { State } from './state';
 import { Unsubscribe } from 'redux';
 import deepNeq from './deepNeq';
-import { SceneAction } from './state/reducer';
+import { ScenesAction } from './state/reducer';
 import { Gizmo } from 'babylonjs/Gizmos/gizmo';
 import SceneBinding, { SceneMeshMetadata } from './SceneBinding';
 import Scene from './state/State/Scene';
@@ -51,14 +51,17 @@ export class Space {
 
   private sceneBinding_: SceneBinding;
 
-  private scene_: Scene;
+  private scene_ = Scene.EMPTY;
   get scene() { return this.scene_; }
   
+  onSelectNodeId?: (nodeId: string) => void;
+  onSetNodeBatch?: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => void;
+
   private debounceUpdate_ = false;
   private sceneSetting_ = false;
   set scene(scene: Scene) {
     this.scene_ = scene;
-    if (this.sceneSetting_ || this.debounceUpdate_) return;
+    if (this.sceneSetting_ || this.debounceUpdate_ || !this.sceneBinding_) return;
 
     this.sceneSetting_ = true;
     (async () => {
@@ -157,18 +160,18 @@ export class Space {
 
   private onPointerTap_ = (eventData: Babylon.PointerInfo, eventState: Babylon.EventState) => {
     if (!eventData.pickInfo.hit) {
-      store.dispatch(SceneAction.UNSELECT_ALL);
+      this.onSelectNodeId?.(undefined);
       return;
     }
 
 
     const mesh = eventData.pickInfo.pickedMesh;
     const id = (mesh.metadata as SceneMeshMetadata).id;
-    const prevId = store.getState().scene.workingScene.selectedNodeId;
-    if (id !== prevId && store.getState().scene.workingScene.nodes[id]?.editable) {
-      store.dispatch(SceneAction.selectNode({ id }));
+    const prevId = this.scene_.selectedNodeId;
+    if (id !== prevId && this.scene_.nodes[id]?.editable) {
+      this.onSelectNodeId?.(id);
     } else {
-      store.dispatch(SceneAction.UNSELECT_ALL);
+      this.onSelectNodeId?.(undefined);
     }
   };
 
@@ -191,7 +194,7 @@ export class Space {
     const ammo: unknown = await (Ammo as any)();
     
     this.sceneBinding_ = new SceneBinding(this.bScene_, ammo);
-    await this.sceneBinding_.setScene(state.scene.workingScene, Robots.loaded(state.robots));
+    await this.sceneBinding_.setScene(this.scene_, Robots.loaded(state.robots));
     this.bScene_.getPhysicsEngine().setSubTimeStep(5);
 
     // (x, z) coordinates of cans around the board
@@ -199,17 +202,15 @@ export class Space {
 
   // Compare Babylon positions with state positions. If they differ significantly, update state
   private updateStore_ = () => {
-    const { workingScene } = store.getState().scene;
-    const { nodes } = workingScene;
+    const { nodes } = this.scene_;
 
-    const robots = Scene.robots(workingScene);
+    const robots = Scene.robots(this.scene_);
 
     const robotWorkerInstances = Dict.map(robots, () => WorkerInstance);
     const tickOuts = this.sceneBinding_.tick(robotWorkerInstances);
 
-    const setNodeBatch: Omit<SceneAction.SetNodeBatch, 'type'> = {
+    const setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'> = {
       nodeIds: [],
-      modifyReferenceScene: false,
     };
 
     const tickedIds = Dict.keySet(tickOuts);
@@ -258,7 +259,7 @@ export class Space {
 
     // Update state with significant changes, if needed
     this.debounceUpdate_ = true;
-    if (setNodeBatch.nodeIds.length > 0) store.dispatch(SceneAction.setNodeBatch(setNodeBatch));
+    if (setNodeBatch.nodeIds.length > 0) this.onSetNodeBatch?.(setNodeBatch);
     this.debounceUpdate_ = false;
   };
 

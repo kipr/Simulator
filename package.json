@@ -59,7 +59,7 @@
     "image-loader": "^0.0.1",
     "image-webpack-loader": "^6.0.0",
     "immer": "^9.0.15",
-    "ivygate": "https://github.com/kipr/ivygate#v0.1.1",
+    "ivygate": "https://github.com/kipr/ivygate#v0.1.2",
     "morgan": "^1.10.0",
     "prop-types": "^15.8.1",
     "react": "^17.0.1",

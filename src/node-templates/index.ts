@@ -87,10 +87,10 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   },
   'jbc_mat_a': {
     type: 'file',
-    uri: 'static/jbcMatA.glb'
+    uri: '/static/jbcMatA.glb'
   },
   'jbc_mat_b': {
     type: 'file',
-    uri: 'static/jbcMatB.glb'
+    uri: '/static/jbcMatB.glb'
   },
 });

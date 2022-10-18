@@ -17,11 +17,12 @@ import Widget, { BarComponent, Mode, Size } from '../Widget';
 import { Slider } from '../Slider';
 
 import { State as ReduxState } from '../../state';
-import { SceneAction } from '../../state/reducer';
 import Node from '../../state/State/Scene/Node';
 import Dict from '../../Dict';
 import Scene from '../../state/State/Scene';
 import { faCode, faGlobeAmericas, faRobot } from '@fortawesome/free-solid-svg-icons';
+import Async from '../../state/State/Async';
+import { EMPTY_OBJECT } from '../../util';
 
 // 3 panes:
 // Editor / console
@@ -175,9 +176,9 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       onClearConsole,
       onIndentCode,
       onDownloadCode,
-      onSelectScene,
       editorRef,
-      robots
+      robots,
+      sceneId,
     } = props;
 
     const {
@@ -196,7 +197,6 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       onErrorClick: this.onErrorClick_
     });
     const consoleBar = createConsoleBarComponents(theme, onClearConsole);
-    const worldBar = createWorldBarComponents(theme, onSelectScene);
 
     let content: JSX.Element;
     switch (activePanel) {
@@ -257,6 +257,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
               <Info
                 theme={theme}
                 nodeId={robotIds[0]}
+                sceneId={sceneId}
               />
             </SimulatorWidget>
           );
@@ -270,10 +271,9 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
           <SimulatorWidget
             theme={theme}
             name='World'
-            barComponents={worldBar}
             mode={Mode.Sidebar}
           >
-            <World theme={theme} />
+            <World theme={theme} sceneId={sceneId} />
           </SimulatorWidget>
         );
         break;
@@ -329,8 +329,15 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
   }
 }
 
-export const SideLayoutRedux = connect((state: ReduxState) => ({
-  robots: Scene.robots(state.scene.workingScene),
-}), dispatch => ({
+export const SideLayoutRedux = connect((state: ReduxState, { sceneId }: LayoutProps) => {
+  const asyncScene = state.scenes[sceneId];
+  const scene = Async.latestValue(asyncScene);
+  let robots: Dict<Node.Robot> = EMPTY_OBJECT;
+  if (scene) robots = Scene.robots(scene);
+  
+  return {
+    robots,
+  };
+}, dispatch => ({
 
 }), null, { forwardRef: true })(SideLayout) as React.ComponentType<SideLayoutProps>;
