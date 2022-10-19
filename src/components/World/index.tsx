@@ -35,6 +35,7 @@ import { BarComponent } from '../Widget';
 import { faGlobeAmericas, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
 import Scene, { AsyncScene } from '../../state/State/Scene';
 import Async from '../../state/State/Async';
+import LocalizedString from '../../util/LocalizedString';
 
 namespace SceneState {
   export enum Type {
@@ -315,7 +316,7 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
       const hasReset = referenceScene.nodes[nodeId] !== undefined;
       itemList.push(EditableList.Item.standard({
         component: Item,
-        props: { name: node.name, theme },
+        props: { name: node.name[LocalizedString.EN_US], theme },
         onReset: hasReset ? this.onNodeResetClick_(nodeId) : undefined,
         onSettings: node.editable ? this.onItemSettingsClick_(nodeId) : undefined,
         onVisibilityChange: this.onItemVisibilityChange_(nodeId),

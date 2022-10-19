@@ -3,10 +3,11 @@
 import Scene from "../state/State/Scene";
 import Camera from "../state/State/Scene/Camera";
 import { Distance, Mass } from "../util";
+import LocalizedString from '../util/LocalizedString';
 
 export const TEST_SCENE: Scene = {
-  name: 'Test',
-  description: 'A test scene, including an arena',
+  name: { [LocalizedString.EN_US]: 'Test' },
+  description: { [LocalizedString.EN_US]: 'A test scene, including an arena' },
   authorId: 'Braden',
   geometry: {
     'box': {
@@ -30,7 +31,7 @@ export const TEST_SCENE: Scene = {
     'table': {
       type: 'object',
       geometryId: 'table',
-      name: 'A Table',
+      name: { [LocalizedString.EN_US]: 'A Table' },
       origin: {
         scale: {
           x: 30,
@@ -48,7 +49,7 @@ export const TEST_SCENE: Scene = {
     'jbc_mat': {
       type: 'object',
       geometryId: 'jbc_mat',
-      name: 'JBC Surface A',
+      name: { [LocalizedString.EN_US]: 'JBC Surface A' },
       origin: {
         position: {
           x: Distance.meters(0),
@@ -71,7 +72,7 @@ export const TEST_SCENE: Scene = {
     'box0': {
       type: 'object',
       geometryId: 'box',
-      name: 'box0',
+      name: { [LocalizedString.EN_US]: 'box0' },
       origin: {
         position: {
           x: Distance.meters(0.5),
@@ -91,7 +92,7 @@ export const TEST_SCENE: Scene = {
     'light0': {
       type: 'point-light',
       intensity: 10000,
-      name: 'Light',
+      name: { [LocalizedString.EN_US]: 'Light' },
       origin: {
         position: {
           x: Distance.meters(0),

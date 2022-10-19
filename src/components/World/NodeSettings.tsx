@@ -21,6 +21,7 @@ import Material from '../../state/State/Scene/Material';
 import { Color } from '../../state/State/Scene/Color';
 
 import * as uuid from 'uuid';
+import LocalizedString from '../../util/LocalizedString';
 
 export interface NodeSettingsProps extends ThemeProps {
   onNodeChange: (node: Node) => void;
@@ -215,7 +216,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
   private onNameChange_ = (event: React.SyntheticEvent<HTMLInputElement>) => {
     this.props.onNodeChange({
       ...this.props.node,
-      name: event.currentTarget.value
+      name: { [LocalizedString.EN_US]: event.currentTarget.value }
     });
   };
 
@@ -950,7 +951,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
       <Container theme={theme}>
         <Section name='General' theme={theme}>
           <StyledField name='Name' theme={theme} long>
-            <Input theme={theme} type='text' value={node.name} onChange={this.onNameChange_} />
+            <Input theme={theme} type='text' value={node.name[LocalizedString.EN_US]} onChange={this.onNameChange_} />
           </StyledField>
           {/* <StyledField name='Parent' theme={theme} long>
             <ComboBox options={parentOptions} theme={theme} index={parentIndex} onSelect={this.onParentSelect_} />

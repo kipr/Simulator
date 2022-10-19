@@ -1,5 +1,6 @@
 import Scene from "../state/State/Scene";
 import { Distance } from "../util";
+import LocalizedString from '../util/LocalizedString';
 
 import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
 
@@ -7,8 +8,8 @@ const baseScene = createBaseSceneSurfaceA();
 
 export const JBC_7B: Scene = {
   ...baseScene,
-  name: 'JBC 7B',
-  description: `Junior Botball Challenge 7B: Cover Your Bases`,
+  name: { [LocalizedString.EN_US]: 'JBC 7B' },
+  description: { [LocalizedString.EN_US]: `Junior Botball Challenge 7B: Cover Your Bases` },
   nodes: {
     ...baseScene.nodes,
     // The normal starting position of the robot covers the tape

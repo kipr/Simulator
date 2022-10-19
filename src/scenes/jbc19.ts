@@ -1,6 +1,7 @@
 import Scene from "../state/State/Scene";
 import { Rotation } from "../unit-math";
 import { Distance, Mass } from "../util";
+import LocalizedString from '../util/LocalizedString';
 
 import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
 
@@ -8,8 +9,8 @@ const baseScene = createBaseSceneSurfaceA();
 
 export const JBC_19: Scene = {
   ...baseScene,
-  name: 'JBC 19',
-  description: `Junior Botball Challenge 19: Mountain Rescue`,
+  name: { [LocalizedString.EN_US]: 'JBC 19' },
+  description: { [LocalizedString.EN_US]: `Junior Botball Challenge 19: Mountain Rescue` },
   nodes: {
     ...baseScene.nodes,
     'can1': createCanNode(1, { x: Distance.centimeters(3), y: Distance.centimeters(6), z: Distance.centimeters(84.6) }),
@@ -18,7 +19,7 @@ export const JBC_19: Scene = {
     'ream': {
       type: 'from-template',
       templateId: 'ream',
-      name: 'Paper Ream',
+      name: { [LocalizedString.EN_US]: 'Paper Ream' },
       origin: {
         position: {
           x: Distance.centimeters(10),

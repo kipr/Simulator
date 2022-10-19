@@ -1,6 +1,7 @@
 import Scene from "../state/State/Scene";
 import { Rotation } from "../unit-math";
 import { Distance, Mass } from "../util";
+import LocalizedString from '../util/LocalizedString';
 
 import { createBaseSceneSurfaceA } from './jbcBase';
 
@@ -8,8 +9,8 @@ const baseScene = createBaseSceneSurfaceA();
 
 export const JBC_15B: Scene = {
   ...baseScene,
-  name: 'JBC 15B',
-  description: `Junior Botball Challenge 15B: Bump Bump`,
+  name: { [LocalizedString.EN_US]: 'JBC 15B' },
+  description: { [LocalizedString.EN_US]: `Junior Botball Challenge 15B: Bump Bump` },
   nodes: {
     ...baseScene.nodes,
     // The normal starting position of the robot doesn't leave room for the paper ream in the starting box
@@ -27,7 +28,7 @@ export const JBC_15B: Scene = {
     'ream1': {
       type: 'from-template',
       templateId: 'ream',
-      name: 'Paper Ream 1',
+      name: { [LocalizedString.EN_US]: 'Paper Ream 1' },
       origin: {
         position: {
           x: Distance.centimeters(0),
@@ -44,7 +45,7 @@ export const JBC_15B: Scene = {
     'ream2': {
       type: 'from-template',
       templateId: 'ream',
-      name: 'Paper Ream 2',
+      name: { [LocalizedString.EN_US]: 'Paper Ream 2' },
       origin: {
         position: {
           x: Distance.centimeters(0),

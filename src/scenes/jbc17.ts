@@ -1,5 +1,6 @@
 import Scene from "../state/State/Scene";
 import { Distance } from "../util";
+import LocalizedString from '../util/LocalizedString';
 
 import { createBaseSceneSurfaceB } from './jbcBase';
 
@@ -7,6 +8,6 @@ const baseScene = createBaseSceneSurfaceB();
 
 export const JBC_17: Scene = {
   ...baseScene,
-  name: 'JBC 17',
-  description: 'Junior Botball Challenge 17: Walk the Line',
+  name: { [LocalizedString.EN_US]: 'JBC 17' },
+  description: { [LocalizedString.EN_US]: 'Junior Botball Challenge 17: Walk the Line' },
 };

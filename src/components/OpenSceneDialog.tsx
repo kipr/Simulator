@@ -15,6 +15,7 @@ import { Fa } from "./Fa";
 
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { push } from 'connected-react-router';
+import LocalizedString from '../util/LocalizedString';
 
 export interface OpenSceneDialogProps extends ThemeProps {
   onClose: () => void;
@@ -162,12 +163,12 @@ class OpenSceneDialog extends React.PureComponent<Props & ReduxOpenSceneDialogPr
       const value = Async.latestValue(scene);
       if (!value) return <InfoText theme={theme}>Unknown</InfoText>;
 
-      name = value.name;
-      description = value.description;
+      name = value.name[LocalizedString.EN_US];
+      description = value.description[LocalizedString.EN_US];
       authorId = value.authorId;
     } else {
-      name = brief.name;
-      description = brief.description;
+      name = brief.name[LocalizedString.EN_US];
+      description = brief.description[LocalizedString.EN_US];
       authorId = brief.authorId;
     }
 

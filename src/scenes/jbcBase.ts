@@ -4,10 +4,11 @@ import Node from "../state/State/Scene/Node";
 import Camera from "../state/State/Scene/Camera";
 import Scene from "../state/State/Scene";
 import AbstractRobot from '../AbstractRobot';
+import LocalizedString from '../util/LocalizedString';
 
 const ROBOT: Node.Robot = {
   type: 'robot',
-  name: 'Robot',
+  name: { [LocalizedString.EN_US]: 'Robot' },
   robotId: 'demobot',
   state: AbstractRobot.Stateless.NIL,
   visible: true,
@@ -19,8 +20,8 @@ const ROBOT: Node.Robot = {
 
 export function createBaseSceneSurfaceA(): Scene {
   return {
-    name: 'Base Scene - Surface A',
-    description: 'A base scene using Surface A. Intended to be augmented to create full JBC scenes',
+    name: { [LocalizedString.EN_US]: 'Base Scene - Surface A' },
+    description: { [LocalizedString.EN_US]: 'A base scene using Surface A. Intended to be augmented to create full JBC scenes' },
     authorId: 'KIPR',
     geometry: {
       'ground': {
@@ -36,7 +37,7 @@ export function createBaseSceneSurfaceA(): Scene {
       'jbc_mat_a': {
         type: 'from-template',
         templateId: 'jbc_mat_a',
-        name: 'JBC Surface A',
+        name: { [LocalizedString.EN_US]: 'JBC Surface A' },
         origin: {
           position: {
             x: Distance.centimeters(0),
@@ -54,7 +55,7 @@ export function createBaseSceneSurfaceA(): Scene {
       'ground': {
         type: 'object',
         geometryId: 'ground',
-        name: 'Ground',
+        name: { [LocalizedString.EN_US]: 'Ground' },
         origin: {
           position: {
             x: Distance.centimeters(0),
@@ -78,7 +79,7 @@ export function createBaseSceneSurfaceA(): Scene {
       'light0': {
         type: 'point-light',
         intensity: 1,
-        name: 'Light',
+        name: { [LocalizedString.EN_US]: 'Light' },
         origin: {
           position: {
             x: Distance.meters(0),
@@ -112,8 +113,8 @@ export function createBaseSceneSurfaceA(): Scene {
 
 export function createBaseSceneSurfaceB(): Scene {
   return {
-    name: 'Base Scene - Surface B',
-    description: 'A base scene using Surface B. Intended to be augmented to create full JBC scenes',
+    name: { [LocalizedString.EN_US]: 'Base Scene - Surface B' },
+    description: { [LocalizedString.EN_US]: 'A base scene using Surface B. Intended to be augmented to create full JBC scenes' },
     authorId: 'KIPR',
     geometry: {
       'ground': {
@@ -129,7 +130,7 @@ export function createBaseSceneSurfaceB(): Scene {
       'jbc_mat_b': {
         type: 'from-template',
         templateId: 'jbc_mat_b',
-        name: 'JBC Surface B',
+        name: { [LocalizedString.EN_US]: 'JBC Surface B' },
         origin: {
           position: {
             x: Distance.centimeters(0),
@@ -147,7 +148,7 @@ export function createBaseSceneSurfaceB(): Scene {
       'ground': {
         type: 'object',
         geometryId: 'ground',
-        name: 'Ground',
+        name: { [LocalizedString.EN_US]: 'Ground' },
         origin: {
           position: {
             x: Distance.centimeters(0),
@@ -171,7 +172,7 @@ export function createBaseSceneSurfaceB(): Scene {
       'light0': {
         type: 'point-light',
         intensity: 10000,
-        name: 'Light',
+        name: { [LocalizedString.EN_US]: 'Light' },
         origin: {
           position: {
             x: Distance.meters(0),
@@ -215,7 +216,7 @@ export function createCanNode(canNumber: number, canPosition?: Vector3, editable
   return {
     type: 'from-template',
     templateId: 'can',
-    name: `Can ${canNumber}`,
+    name: { [LocalizedString.EN_US]: `Can ${canNumber}` },
     origin: {
       position: canPosition ?? canPositions[canNumber - 1],
     },

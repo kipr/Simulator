@@ -3,6 +3,7 @@ import deepNeq from '../../../deepNeq';
 import { Vector2, Vector3 } from '../../../math';
 import { ReferenceFrame } from '../../../unit-math';
 import { Angle, DistributiveOmit, Mass } from '../../../util';
+import LocalizedString from '../../../util/LocalizedString';
 import Patch from '../../../util/Patch';
 import Material from './Material';
 
@@ -34,7 +35,7 @@ namespace Node {
   }
 
   interface Base {
-    name: string;
+    name: LocalizedString;
     origin?: ReferenceFrame;
     scriptIds?: string[];
     documentIds?: string[];
@@ -44,7 +45,7 @@ namespace Node {
 
   export namespace Base {
     export const NIL: Base = {
-      name: '',
+      name: { [LocalizedString.EN_US]: '' },
       origin: undefined,
       scriptIds: undefined,
       documentIds: undefined,

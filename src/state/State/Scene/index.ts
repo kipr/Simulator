@@ -7,11 +7,12 @@ import Camera from './Camera';
 import { Distance } from '../../../util';
 import Patch from '../../../util/Patch';
 import Async from '../Async';
+import LocalizedString from '../../../util/LocalizedString';
 
 interface Scene {
-  name: string;
+  name: LocalizedString;
   authorId: string;
-  description: string;
+  description: LocalizedString;
   selectedNodeId?: string;
 
   hdriUri?: string;
@@ -30,9 +31,9 @@ export type SceneBrief = Pick<Scene, 'name' | 'authorId' | 'description'>;
 export type AsyncScene = Async<SceneBrief, Scene>;
 
 interface PatchScene {
-  name: Patch<string>;
+  name: Patch<LocalizedString>;
   authorId: Patch<string>;
-  description: Patch<string>;
+  description: Patch<LocalizedString>;
   selectedNodeId: Patch<string>;
 
   hdriUri?: Patch<string>;
@@ -106,9 +107,9 @@ namespace Scene {
 
   export const EMPTY: Scene = {
     authorId: '',
-    description: '',
+    description: { [LocalizedString.EN_US]: '' },
     geometry: {},
-    name: '',
+    name: { [LocalizedString.EN_US]: '' },
     nodes: {},
     camera: Camera.NONE,
     gravity: Vector3.zero('meters'),
