@@ -21,6 +21,7 @@ import Geometry from "../../state/State/Scene/Geometry";
 import { Fa } from "../Fa";
 
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import LocalizedString from '../../util/LocalizedString';
 
 export interface AddNodeAcceptance {
   node: Node;
@@ -57,7 +58,7 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
       node: {
         type: 'from-template',
         templateId: 'can',
-        name: 'Unnamed Object',
+        name: { [LocalizedString.EN_US]: 'Unnamed Object' },
         origin: {
           position: {
             x: Distance.centimeters(0),

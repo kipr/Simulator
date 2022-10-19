@@ -30,6 +30,7 @@ if (SIMULATOR_HAS_AMMO) {
 import RobotBinding from './RobotBinding';
 import WorkerInstance from './WorkerInstance';
 import AbstractRobot from './AbstractRobot';
+import LocalizedString from './util/LocalizedString';
 
 
 export let ACTIVE_SPACE: Space;
@@ -234,7 +235,7 @@ export class Space {
     // Check if nodes have moved significant amounts
     for (const nodeId of Dict.keySet(nodes)) {
       const node = nodes[nodeId];
-      const bNode = this.bScene_.getNodeByID(nodeId) || this.bScene_.getNodeByName(node.name);
+      const bNode = this.bScene_.getNodeByID(nodeId) || this.bScene_.getNodeByName(node.name[LocalizedString.EN_US]);
 
       if (tickedIds.has(nodeId)) continue;
 

@@ -18,6 +18,7 @@ import RobotBinding from './RobotBinding';
 import Robot from './state/State/Robot';
 import AbstractRobot from './AbstractRobot';
 import WorkerInstance from "./WorkerInstance";
+import LocalizedString from './util/LocalizedString';
 
 export type FrameLike = Babylon.TransformNode | Babylon.AbstractMesh;
 
@@ -478,14 +479,14 @@ class SceneBinding {
       return null;
     }
 
-    const ret = await this.buildGeometry_(node.name, geometry, node.faceUvs);
+    const ret = await this.buildGeometry_(node.name[LocalizedString.EN_US], geometry, node.faceUvs);
 
     if (!node.visible) {
       SceneBinding.apply_(ret, m => m.isVisible = false);
     }
 
     if (node.material) {
-      const material = this.createMaterial_(node.name, node.material);
+      const material = this.createMaterial_(node.name[LocalizedString.EN_US], node.material);
       SceneBinding.apply_(ret, m => m.material = material);
     }
 
@@ -500,13 +501,13 @@ class SceneBinding {
   private createEmpty_ = (node: Node.Empty): Babylon.TransformNode => {
     const parent = this.findBNode_(node.parentId, true);
 
-    const ret = new Babylon.TransformNode(node.name, this.bScene_);
+    const ret = new Babylon.TransformNode(node.name[LocalizedString.EN_US], this.bScene_);
     ret.setParent(parent);
     return ret;
   };
 
   private createDirectionalLight_ = (id: string, node: Node.DirectionalLight): Babylon.DirectionalLight => {
-    const ret = new Babylon.DirectionalLight(node.name, RawVector3.toBabylon(node.direction), this.bScene_);
+    const ret = new Babylon.DirectionalLight(node.name[LocalizedString.EN_US], RawVector3.toBabylon(node.direction), this.bScene_);
 
     ret.intensity = node.intensity;
     if (node.radius !== undefined) ret.radius = node.radius;
@@ -522,7 +523,7 @@ class SceneBinding {
     const position: Vector3 = origin.position ?? Vector3.zero();
     
     const ret = new Babylon.SpotLight(
-      node.name,
+      node.name[LocalizedString.EN_US],
       RawVector3.toBabylon(Vector3.toRaw(position, 'centimeters')),
       RawVector3.toBabylon(node.direction),
       Angle.toRadiansValue(node.angle),
@@ -540,7 +541,7 @@ class SceneBinding {
     const position: Vector3 = origin.position ?? Vector3.zero();
 
     const ret = new Babylon.PointLight(
-      node.name,
+      node.name[LocalizedString.EN_US],
       RawVector3.toBabylon(Vector3.toRaw(position, 'centimeters')),
       this.bScene_
     );
@@ -671,7 +672,7 @@ class SceneBinding {
     const bNode = this.findBNode_(id) as Babylon.TransformNode;
 
     if (node.inner.name.type === Patch.Type.OuterChange) {
-      bNode.name = node.inner.name.next;
+      bNode.name = node.inner.name.next[LocalizedString.EN_US];
     }
 
     if (node.inner.parentId.type === Patch.Type.OuterChange) {
@@ -709,7 +710,7 @@ class SceneBinding {
     }
 
     if (node.inner.name.type === Patch.Type.OuterChange) {
-      bNode.name = node.inner.name.next;
+      bNode.name = node.inner.name.next[LocalizedString.EN_US];
     }
 
     if (node.inner.parentId.type === Patch.Type.OuterChange) {
