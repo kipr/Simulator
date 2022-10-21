@@ -14,7 +14,7 @@ import { Unsubscribe } from 'redux';
 import deepNeq from './deepNeq';
 import { SceneAction } from './state/reducer';
 import { Gizmo } from 'babylonjs/Gizmos/gizmo';
-import SceneBinding from './SceneBinding';
+import SceneBinding, { SceneMeshMetadata } from './SceneBinding';
 import Scene from './state/State/Scene';
 import Node from './state/State/Scene/Node';
 import { Robots } from './state/State';
@@ -179,7 +179,7 @@ export class Space {
 
 
     const mesh = eventData.pickInfo.pickedMesh;
-    const id = mesh.metadata as string;
+    const id = (mesh.metadata as SceneMeshMetadata).id;
     const prevId = store.getState().scene.workingScene.selectedNodeId;
     if (id !== prevId && store.getState().scene.workingScene.nodes[id]?.editable) {
       store.dispatch(SceneAction.selectNode({ id }));

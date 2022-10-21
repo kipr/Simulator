@@ -948,8 +948,9 @@ namespace RobotBinding {
       );
 
       const hit = scene.pickWithRay(ray, mesh => {
-        const metadata = mesh.metadata as SceneMeshMetadata || {};
+        const metadata = mesh.metadata as SceneMeshMetadata;
         return (
+          metadata &&
           mesh !== this.trace_ &&
           !links.has(mesh as Babylon.Mesh) &&
           !colliders.has(mesh as Babylon.Mesh) &&
