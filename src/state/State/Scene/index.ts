@@ -8,10 +8,11 @@ import { Distance } from '../../../util';
 import Patch from '../../../util/Patch';
 import Async from '../Async';
 import LocalizedString from '../../../util/LocalizedString';
+import Author from '../../../db/Author';
 
 interface Scene {
   name: LocalizedString;
-  authorId: string;
+  author: Author;
   description: LocalizedString;
   selectedNodeId?: string;
 
@@ -26,13 +27,38 @@ interface Scene {
   gravity: Vector3;
 }
 
-export type SceneBrief = Pick<Scene, 'name' | 'authorId' | 'description'>;
+export type SceneBrief = Pick<Scene, 'name' | 'author' | 'description'>;
+
+export namespace SceneBrief {
+  export const fromScene = (scene: Scene): SceneBrief => ({
+    name: scene.name,
+    description: scene.description,
+    author: scene.author,
+  });
+}
 
 export type AsyncScene = Async<SceneBrief, Scene>;
 
+export namespace AsyncScene {
+  export const unloaded = (brief: SceneBrief): AsyncScene => ({
+    type: Async.Type.Unloaded,
+    brief,
+  });
+
+  export const loaded = (scene: Scene): AsyncScene => ({
+    type: Async.Type.Loaded,
+    brief: {
+      name: scene.name,
+      description: scene.description,
+      author: scene.author,
+    },
+    value: scene,
+  });
+}
+
 interface PatchScene {
   name: Patch<LocalizedString>;
-  authorId: Patch<string>;
+  author: Patch<Author>;
   description: Patch<LocalizedString>;
   selectedNodeId: Patch<string>;
 
@@ -94,7 +120,7 @@ namespace Scene {
 
   export const diff = (a: Scene, b: Scene): PatchScene => ({
     name: Patch.diff(a.name, b.name),
-    authorId: Patch.diff(a.authorId, b.authorId),
+    author: Patch.diff(a.author, b.author),
     description: Patch.diff(a.description, b.description),
     hdriUri: Patch.diff(a.hdriUri, b.hdriUri),
     selectedNodeId: Patch.diff(a.selectedNodeId, b.selectedNodeId),
@@ -106,7 +132,7 @@ namespace Scene {
   });
 
   export const EMPTY: Scene = {
-    authorId: '',
+    author: Author.user(''),
     description: { [LocalizedString.EN_US]: '' },
     geometry: {},
     name: { [LocalizedString.EN_US]: '' },

@@ -1,4 +1,4 @@
-import Scene from "../State/Scene";
+import Scene, { AsyncScene, SceneBrief } from "../State/Scene";
 import { Scenes } from "../State";
 import Async from "../State/Async";
 import * as JBC_SCENES from '../../scenes';
@@ -7,11 +7,17 @@ import Geometry from '../State/Scene/Geometry';
 import Node from '../State/Scene/Node';
 import Camera from '../State/Scene/Camera';
 import { ReferenceFrame } from '../../unit-math';
+import db from '../../db';
+import { SCENE_COLLECTION } from '../../db/constants';
+import store from '..';
+import Error from '../../db/Error';
+import Selector from '../../db/Selector';
+import Dict from '../../Dict';
 
 export namespace ScenesAction {
   export interface RemoveScene {
     type: 'scenes/remove-scene';
-    id: string;
+    sceneId: string;
   }
 
   export const removeScene = construct<RemoveScene>('scenes/remove-scene');
@@ -23,6 +29,23 @@ export namespace ScenesAction {
   }
 
   export const setScene = construct<SetScene>('scenes/set-scene');
+
+  export interface SetSceneInternal {
+    type: 'scenes/set-scene-internal';
+    sceneId: string;
+    scene: AsyncScene;
+  }
+
+  export const setSceneInternal = construct<SetSceneInternal>('scenes/set-scene-internal');
+
+  export interface SetScenesInternal {
+    type: 'scenes/set-scenes-internal';
+    scenes: {
+      [sceneId: string]: AsyncScene;
+    };
+  }
+
+  export const setScenesInternal = construct<SetScenesInternal>('scenes/set-scenes-internal');
 
   export interface SetSceneBatch {
     type: 'scenes/set-scene-batch';
@@ -40,6 +63,27 @@ export namespace ScenesAction {
   }
 
   export const loadScene = construct<LoadScene>('scenes/load-scene');
+
+  export interface CreateScene {
+    type: 'scenes/create-scene';
+    sceneId: string;
+    scene: Scene;
+  }
+
+  export const createScene = construct<CreateScene>('scenes/create-scene');
+
+  export interface SaveScene {
+    type: 'scenes/save-scene';
+    sceneId: string;
+  }
+
+  export const saveScene = construct<SaveScene>('scenes/save-scene');
+
+  export interface ListUserScenes {
+    type: 'scenes/list-user-scenes';
+  }
+
+  export const LIST_USER_SCENES: ListUserScenes = { type: 'scenes/list-user-scenes' };
 
   export interface ResetScene {
     type: 'scenes/reset-scene';
@@ -153,6 +197,8 @@ export namespace ScenesAction {
 export type ScenesAction = (
   ScenesAction.RemoveScene |
   ScenesAction.SetScene |
+  ScenesAction.SetSceneInternal |
+  ScenesAction.SetScenesInternal |
   ScenesAction.SetSceneBatch |
   ScenesAction.LoadScene |
   ScenesAction.ResetScene |
@@ -166,7 +212,10 @@ export type ScenesAction = (
   ScenesAction.SelectNode |
   ScenesAction.AddObject |
   ScenesAction.SetCamera |
-  ScenesAction.SetNodeOrigin
+  ScenesAction.SetNodeOrigin |
+  ScenesAction.CreateScene |
+  ScenesAction.SaveScene |
+  ScenesAction.ListUserScenes
 );
 
 const DEFAULT_SCENES: Scenes = {
@@ -207,17 +256,148 @@ const DEFAULT_SCENES: Scenes = {
   jbc22: Async.loaded({ value: JBC_SCENES.JBC_22 }),
 };
 
+const create = async (sceneId: string, next: Async.Creating<Scene>) => {
+  try {
+    await db.set(Selector.scene(sceneId), next.value);
+    store.dispatch(ScenesAction.setSceneInternal({
+      scene: Async.loaded({
+        brief: SceneBrief.fromScene(next.value),
+        value: next.value
+      }),
+      sceneId,
+    }));
+  } catch (error) {
+    if (!Error.is(error)) throw error;
+    store.dispatch(ScenesAction.setSceneInternal({
+      scene: Async.createFailed({
+        value: next.value,
+        error
+      }),
+      sceneId,
+    }));
+  }
+};
+
+const save = async (sceneId: string, current: Async.Saveable<SceneBrief, Scene>) => {
+  try {
+    await db.set(Selector.scene(sceneId), current.value);
+    store.dispatch(ScenesAction.setSceneInternal({
+      scene: Async.loaded({
+        brief: current.brief,
+        value: current.value
+      }),
+      sceneId,
+    }));
+  } catch (error) {
+    if (!Error.is(error)) throw error;
+    store.dispatch(ScenesAction.setSceneInternal({
+      scene: Async.saveFailed({
+        brief: current.brief,
+        original: current.original,
+        value: current.value,
+        error
+      }),
+      sceneId,
+    }));
+  }
+};
+
+const load = async (sceneId: string, current: AsyncScene | undefined) => {
+  const brief = Async.brief(current);
+  try {
+    const value = await db.get<Scene>(Selector.scene(sceneId));
+    store.dispatch(ScenesAction.setSceneInternal({
+      scene: Async.loaded({ brief, value }),
+      sceneId,
+    }));
+  } catch (error) {
+    if (!Error.is(error)) throw error;
+    store.dispatch(ScenesAction.setSceneInternal({
+      scene: Async.loadFailed({ brief, error }),
+      sceneId,
+    }));
+  }
+};
+
+export const remove = async (sceneId: string, next: Async.Deleting<SceneBrief, Scene>) => {
+  try {
+    await db.delete(Selector.scene(sceneId));
+    store.dispatch(ScenesAction.setSceneInternal({ sceneId, scene: undefined }));
+  } catch (error) {
+    if (!Error.is(error)) throw error;
+    store.dispatch(ScenesAction.setSceneInternal({
+      scene: Async.deleteFailed({ brief: next.brief, value: next.value, error }),
+      sceneId,
+    }));
+  }
+};
+
+export const listUserScenes = async () => {
+  const scenes = await db.list<Scene>(SCENE_COLLECTION);
+  store.dispatch(ScenesAction.setScenesInternal({
+    scenes: Dict.map(scenes, scene => Async.loaded({
+      brief: SceneBrief.fromScene(scene),
+      value: scene
+    }))
+  }));
+};
+
 export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesAction): Scenes => {
   switch (action.type) {
     case 'scenes/remove-scene': {
-      const nextState: Scenes = { ...state };
-      delete nextState[action.id];
+      const current = state[action.sceneId];
+      const deleting = Async.deleting({
+        brief: Async.brief(current),
+        value: Async.latestValue(current)
+      });
+
+      remove(action.sceneId, deleting);
+
+      return {
+        ...state,
+        [action.sceneId]: deleting,
+      };
+    }
+    case 'scenes/set-scene': {
+      const current = state[action.sceneId];
+
+      if (!current) return state;
+
+      if (current.type === Async.Type.Loaded) {
+        return {
+          ...state,
+          [action.sceneId]: Async.saveable({
+            brief: current.brief,
+            original: current.value,
+            value: action.scene,
+          })
+        };
+      }
+
+      if (current.type === Async.Type.Saveable) {
+        return {
+          ...state,
+          [action.sceneId]: Async.saveable({
+            brief: current.brief,
+            original: current.original,
+            value: action.scene,
+          })
+        };
+      }
+      
+      return state;
+    }
+    case 'scenes/set-scene-internal': return {
+      ...state,
+      [action.sceneId]: action.scene,
+    };
+    case 'scenes/set-scenes-internal': {
+      const nextState = { ...state };
+      for (const sceneId in action.scenes) {
+        nextState[sceneId] = action.scenes[sceneId];
+      }
       return nextState;
     }
-    case 'scenes/set-scene': return {
-      ...state,
-      [action.sceneId]: Async.loaded({ value: action.scene }),
-    };
     case 'scenes/set-scene-batch': {
       const nextState: Scenes = { ...state };
 
@@ -227,10 +407,34 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
 
       return nextState;
     }
-    case 'scenes/load-scene': return {
-      ...state,
-      [action.sceneId]: Async.loading({ brief: Async.brief(state[action.sceneId]) }),
-    };
+    case 'scenes/load-scene': {
+      load(action.sceneId, state[action.sceneId]);
+      return {
+        ...state,
+        [action.sceneId]: Async.loading({ brief: Async.brief(state[action.sceneId]) }),
+      };
+    }
+    case 'scenes/create-scene': {
+      const creating = Async.creating({ value: action.scene });
+      create(action.sceneId, creating);
+      return {
+        ...state,
+        [action.sceneId]: creating,
+      };
+    }
+    case 'scenes/save-scene': {
+      const current = state[action.sceneId];
+      if (current.type !== Async.Type.Saveable) return state;
+      save(action.sceneId, current);
+      return {
+        ...state,
+        [action.sceneId]: Async.saving({
+          brief: current.brief,
+          original: current.original,
+          value: current.value,
+        }),
+      };
+    }
     case 'scenes/reset-scene': return {
       ...state,
       [action.sceneId]: Async.reset(state[action.sceneId]),
@@ -306,6 +510,9 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
         scene.nodes[action.nodeId].origin = action.origin;
       }),
     };
+    case 'scenes/list-user-scenes': {
+      listUserScenes();
+    }
     default: return state;
   }
 };

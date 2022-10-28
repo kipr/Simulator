@@ -72,7 +72,7 @@ export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSav
   onSaveScene: () => void,
   onCopyScene: () => void
 }) => {
-  const worldBar: BarComponent<unknown>[] = [];
+  const worldBar: BarComponent<object>[] = [];
 
   worldBar.push(BarComponent.create(Button, {
     theme,

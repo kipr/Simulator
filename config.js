@@ -21,7 +21,8 @@ module.exports = {
       },
       caching: {
         staticMaxAge: getEnvVarOrDefault('CACHING_STATIC_MAX_AGE', 60 * 60 * 1000),
-      }
+      },
+      apiUrl: getEnvVarOrDefault('API_URL', 'http://localhost:4000'),
     };
   },
 };

@@ -17,6 +17,7 @@ type Props = SceneSettingsProps;
 
 const Container = styled('div', {
   display: 'flex',
+  flexDirection: 'column',
 });
 
 class SceneSettings extends React.Component<Props> {
@@ -57,7 +58,7 @@ class SceneSettings extends React.Component<Props> {
         <Field name='Description' theme={theme}>
           <Input
             theme={theme}
-            value={scene.name[LocalizedString.EN_US]}
+            value={scene.description[LocalizedString.EN_US]}
             onChange={this.onDescriptionChange_}
           />
         </Field>
@@ -65,3 +66,5 @@ class SceneSettings extends React.Component<Props> {
     );
   }
 }
+
+export default SceneSettings;

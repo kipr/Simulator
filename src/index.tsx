@@ -16,6 +16,12 @@ const debug = process.env.NODE_ENV === "production" ? void 0 : new DebugEngine()
 import { ConnectedRouter } from 'connected-react-router';
 import history from './state/history';
 import App from './App';
+import { auth } from './firebase/firebase';
+import db from './db';
+
+if (auth.currentUser) {
+  auth.currentUser.getIdToken().then(token => db.token = token);
+}
 
 ReactDom.render(
   <StyletronProvider value={engine} debug={debug} debugAfterHydration>

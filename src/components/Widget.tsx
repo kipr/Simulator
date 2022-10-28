@@ -72,7 +72,7 @@ export interface ModeProps {
   mode: Mode
 }
 
-export interface BarComponent<P> {
+export interface BarComponent<P extends object> {
   component: React.ComponentType<P>;
   props: P;
 }
@@ -95,7 +95,7 @@ export interface WidgetProps extends StyleProps, ThemeProps, ModeProps {
 
   children: React.ReactNode;
 
-  barComponents?: BarComponent<unknown>[];
+  barComponents?: BarComponent<object>[];
 }
 
 interface WidgetState {

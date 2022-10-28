@@ -84,7 +84,7 @@ class SceneMenu extends React.PureComponent<Props, State> {
     return (
       <Container theme={theme}>
         <Item theme={theme} disabled={!onOpenScene} onClick={onOpenScene}><ItemIcon icon={faFolderOpen} /> Open</Item>
-        <Item theme={theme} disabled={!onNewScene} onClick={onSaveScene}><ItemIcon icon={faPlus} /> New</Item>
+        <Item theme={theme} disabled={!onNewScene} onClick={onNewScene}><ItemIcon icon={faPlus} /> New</Item>
         <Item theme={theme} disabled={!onSaveScene} onClick={onSaveScene}><ItemIcon icon={faSave} /> Save</Item>
         <Item theme={theme} disabled={!onCopyScene} onClick={onCopyScene}><ItemIcon icon={faCopy} /> Copy</Item>
       </Container>

@@ -7,32 +7,41 @@ import { Fa } from './Fa';
 import Scene from '../state/State/Scene';
 import SceneSettings from './SceneSettings';
 import DialogBar from './DialogBar';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import deepNeq from '../deepNeq';
 
-export interface NewSceneDialogProps extends ThemeProps, StyleProps {
+export interface CopySceneDialogProps extends ThemeProps, StyleProps {
+  scene: Scene;
+
   onClose: () => void;
   onAccept: (scene: Scene) => void;
 }
 
-interface NewSceneDialogState {
+interface CopySceneDialogState {
   scene: Scene;
 }
 
-type Props = NewSceneDialogProps;
-type State = NewSceneDialogState;
+type Props = CopySceneDialogProps;
+type State = CopySceneDialogState;
 
 const StyledSceneSettings = styled(SceneSettings, ({ theme }: ThemeProps) => ({
   color: theme.color,
   padding: `${theme.itemPadding * 2}px`, 
 }));
 
-class NewSceneDialog extends React.PureComponent<Props, State> {
+class CopySceneDialog extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
 
     this.state = {
-      scene: Scene.EMPTY,
+      scene: props.scene,
     };
+  }
+
+  componentDidUpdate(prevProps: Readonly<CopySceneDialogProps>, prevState: Readonly<CopySceneDialogState>, snapshot?: any): void {
+    if (deepNeq(prevProps.scene.name, this.props.scene.name) || deepNeq(prevProps.scene.description, this.props.scene.description)) {
+      this.setState({ scene: this.props.scene });
+    }
   }
 
   private onSceneChange_ = (scene: Scene) => this.setState({ scene });
@@ -41,20 +50,20 @@ class NewSceneDialog extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { theme, onClose, onAccept } = props;
+    const { theme, onClose } = props;
     const { scene } = state;
 
     return (
-      <Dialog theme={theme} name='New World' onClose={onClose}>
+      <Dialog theme={theme} name='World Settings' onClose={onClose}>
         <StyledSceneSettings
           scene={scene}
           onSceneChange={this.onSceneChange_}
           theme={theme}
         />
-        <DialogBar theme={theme} onAccept={this.onAccept_}><Fa icon={faPlus} /> Create</DialogBar>
+        <DialogBar theme={theme} onAccept={this.onAccept_}><Fa icon={faCheck} /> Accept</DialogBar>
       </Dialog>
     );
   }
 }
 
-export default NewSceneDialog;
+export default CopySceneDialog;

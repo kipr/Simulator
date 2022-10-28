@@ -7,6 +7,7 @@ import Loading from './components/Loading';
 import Dashboard from './pages/Dashboard';
 import Tutorials from './pages/Tutorials';
 import Root from './components/Root';
+import db from './db';
 
 export interface AppProps {
 
@@ -34,8 +35,10 @@ class App extends React.Component<Props, State> {
     this.onAuthStateChangedSubscription_ = auth.onAuthStateChanged(user => {
       if (user) {
         console.log('User detected.');
+        user.getIdToken().then(token => db.token = token);
       } else {
         console.log('No user detected');
+        db.token = null;
       }
       this.setState({ loading: false });
     });

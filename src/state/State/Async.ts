@@ -19,6 +19,8 @@ namespace Async {
     Saveable,
     Saving,
     SaveFailed,
+    Deleting,
+    DeleteFailed,
   }
 
   export interface Unloaded<B> {
@@ -139,6 +141,33 @@ namespace Async {
     type: Type.SaveFailed,
   });
 
+  export interface Deleting<B, T> {
+    type: Type.Deleting;
+    brief?: B;
+    value: T;
+  }
+
+  export type DeletingParams<B, T> = Omit<Deleting<B, T>, 'type'>;
+
+  export const deleting = <B, T>(params: DeletingParams<B, T>): Deleting<B, T> => ({
+    ...params,
+    type: Type.Deleting,
+  });
+
+  export interface DeleteFailed<B, T> {
+    type: Type.DeleteFailed;
+    brief?: B;
+    value: T;
+    error: Error;
+  }
+
+  export type DeleteFailedParams<B, T> = Omit<DeleteFailed<B, T>, 'type'>;
+
+  export const deleteFailed = <B, T>(params: DeleteFailedParams<B, T>): DeleteFailed<B, T> => ({
+    ...params,
+    type: Type.DeleteFailed,
+  });
+
   export const set = <B, T>(current: Async<B, T>, value: T): Async<B, T> => {
     switch (current.type) {
       case Type.Unloaded: return loaded({ brief: current.brief, value });
@@ -150,6 +179,8 @@ namespace Async {
       case Type.Saveable: return saveable({ ...current, value });
       case Type.Saving: return saveable({ ...current, value });
       case Type.SaveFailed: return saveable({ ...current, value });
+      case Type.Deleting: return loaded({ brief: current.brief, value });
+      case Type.DeleteFailed: return loaded({ brief: current.brief, value });
     }
   };
 
@@ -164,6 +195,8 @@ namespace Async {
       case Type.Saveable: return saveFailed({ ...current, error });
       case Type.Saving: return saveFailed({ ...current, error });
       case Type.SaveFailed: return saveFailed({ ...current, error });
+      case Type.Deleting: return deleteFailed({ ...current, error });
+      case Type.DeleteFailed: return deleteFailed({ ...current, error });
     }
   };
 
@@ -178,6 +211,8 @@ namespace Async {
       case Type.Saveable: return current;
       case Type.Saving: return current;
       case Type.SaveFailed: return saveable(current);
+      case Type.Deleting: return current;
+      case Type.DeleteFailed: return loaded(current);
     }
   };
 
@@ -194,6 +229,8 @@ namespace Async {
       case Type.Saveable: return current.brief;
       case Type.Saving: return current.brief;
       case Type.SaveFailed: return current.brief;
+      case Type.Deleting: return current.brief;
+      case Type.DeleteFailed: return current.brief;
     }
   };
 
@@ -211,6 +248,8 @@ namespace Async {
       case Type.Saveable: return async.original;
       case Type.Saving: return async.original;
       case Type.SaveFailed: return async.original;
+      case Type.Deleting: return async.value;
+      case Type.DeleteFailed: return async.value;
     }
   };
 
@@ -227,6 +266,8 @@ namespace Async {
       case Type.Saveable: return async.value;
       case Type.Saving: return async.value;
       case Type.SaveFailed: return async.value;
+      case Type.Deleting: return async.value;
+      case Type.DeleteFailed: return async.value;
     }
   };
 
@@ -269,7 +310,9 @@ type Async<B, T> = (
   Async.Loaded<B, T> |
   Async.Saveable<B, T> |
   Async.Saving<B, T> |
-  Async.SaveFailed<B, T>
+  Async.SaveFailed<B, T> |
+  Async.Deleting<B, T> |
+  Async.DeleteFailed<B, T>
 );
 
 export default Async;

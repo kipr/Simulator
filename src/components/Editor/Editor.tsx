@@ -67,7 +67,7 @@ export const createEditorBarComponents = ({
   onErrorClick: (event: React.MouseEvent<HTMLDivElement>) => void
 }) => {
   
-  const editorBar: BarComponent<unknown>[] = [];
+  const editorBar: BarComponent<object>[] = [];
   let errors = 0;
   let warnings = 0;
 

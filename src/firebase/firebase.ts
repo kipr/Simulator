@@ -11,6 +11,5 @@ export const Providers = {
 };
 
 export const auth = getAuth();
-export const firestore = getFirestore(firebase);
 
 export default firebase;

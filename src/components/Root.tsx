@@ -41,6 +41,17 @@ import { RouteComponentProps } from 'react-router';
 import Node from '../state/State/Scene/Node';
 import { connect } from 'react-redux';
 import Async from '../state/State/Async';
+import construct from '../util/construct';
+import NewSceneDialog from './NewSceneDialog';
+import DeleteDialog from './DeleteDialog';
+import Record from '../db/Record';
+import Selector from '../db/Selector';
+
+import * as uuid from 'uuid';
+import Author from '../db/Author';
+import db from '../db';
+import { auth } from '../firebase/firebase';
+import CopySceneDialog from './CopySceneDialog';
 
 namespace Modal {
   export enum Type {
@@ -51,6 +62,9 @@ namespace Modal {
     Feedback,
     FeedbackSuccess,
     None,
+    NewScene,
+    CopyScene,
+    DeleteRecord
   }
 
   export interface Settings {
@@ -96,6 +110,26 @@ namespace Modal {
   }
 
   export const NONE: None = { type: Type.None };
+
+  export interface NewScene {
+    type: Type.NewScene;
+  }
+
+  export const NEW_SCENE: NewScene = { type: Type.NewScene };
+
+  export interface CopyScene {
+    type: Type.CopyScene;
+    scene: Scene;
+  }
+
+  export const copyScene = construct<CopyScene>(Type.CopyScene);
+
+  export interface DeleteRecord {
+    type: Type.DeleteRecord;
+    record: Record;
+  }
+
+  export const deleteRecord = construct<DeleteRecord>(Type.DeleteRecord);
 }
 
 export type Modal = (
@@ -105,7 +139,10 @@ export type Modal = (
   Modal.SelectScene |
   Modal.Feedback |
   Modal.FeedbackSuccess |
-  Modal.None
+  Modal.None |
+  Modal.NewScene |
+  Modal.CopyScene |
+  Modal.DeleteRecord
 );
 
 interface RootParams {
@@ -126,6 +163,10 @@ interface RootPrivateProps {
   onSelectNodeId: (id: string) => void;
   onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => void;
   onResetScene: () => void;
+
+  onCreateScene: (id: string, scene: Scene) => void;
+
+  loadScene: (id: string) => void;
 }
 
 interface RootState {
@@ -244,7 +285,9 @@ class Root extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>, snapshot?: any): void {
-    
+    if (this.props.scene === undefined || this.props.scene.type === Async.Type.Unloaded) {
+      this.props.loadScene(this.props.match.params.sceneId);
+    }
   }
 
   private onWindowResize_ = () => {
@@ -506,10 +549,27 @@ class Root extends React.Component<Props, State> {
     });
   }
 
+  private onNewSceneAccept_ = (scene: Scene) => {
+    this.setState({
+      modal: Modal.NONE,
+    }, () => {
+      const nextScene = { ...scene };
+      nextScene.author = Author.user(auth.currentUser.uid);
+      this.props.onCreateScene(uuid.v4(), nextScene);
+    });
+  };
+
+  private onCopySceneAccept_ = (scene: Scene) => {
+
+  };
+
+  private onDeleteRecordAccept_ = (selector: Selector) => () => {
+  };
+
   render() {
     const { props, state } = this;
     
-    const { match: { params: { sceneId } } } = props;
+    const { match: { params: { sceneId } }, scene } = props;
     const {
       layout,
       activeLanguage,
@@ -586,24 +646,27 @@ class Root extends React.Component<Props, State> {
             onFeedbackClick={this.onModalClick_(Modal.FEEDBACK)}
             onOpenSceneClick={this.onOpenSceneClick_}
             simulatorState={simulatorState}
+            onNewSceneClick={this.onModalClick_(Modal.NEW_SCENE)}
+            onCopySceneClick={this.onModalClick_(Modal.copyScene({ scene: Async.latestValue(scene) }))}
+            
           />
           {impl}
         </Container>
-        {modal.type === Modal.Type.Settings ? (
+        {modal.type === Modal.Type.Settings && (
           <SettingsDialog
             theme={theme}
             settings={settings}
             onSettingsChange={this.onSettingsChange_}
             onClose={this.onModalClose_}
           />
-        ) : undefined}
-        {modal.type === Modal.Type.About ? (
+        )}
+        {modal.type === Modal.Type.About && (
           <AboutDialog
             theme={theme}
             onClose={this.onModalClose_}
           />
-        ) : undefined}
-        {modal.type === Modal.Type.Feedback ? (
+        )}
+        {modal.type === Modal.Type.Feedback && (
           <FeedbackDialog
             theme={theme}
             feedback={feedback}
@@ -611,26 +674,49 @@ class Root extends React.Component<Props, State> {
             onClose={this.onModalClose_}
             onSubmit={this.onFeedbackSubmit_}
           />
-        ) : undefined}
-        {modal.type === Modal.Type.FeedbackSuccess ? (
+        )}
+        {modal.type === Modal.Type.FeedbackSuccess && (
           <FeedbackSuccessDialog
             theme={theme}
             onClose={this.onModalClose_}
           />
-        ) : undefined}
-        {modal.type === Modal.Type.Exception ? (
+        )}
+        {modal.type === Modal.Type.Exception && (
           <ExceptionDialog
             error={modal.error}
             theme={theme}
             onClose={this.onModalClose_}
           />
-        ) : undefined}
-        {modal.type === Modal.Type.OpenScene ? (
+        )}
+        {modal.type === Modal.Type.OpenScene && (
           <OpenSceneDialog
             theme={theme}
             onClose={this.onModalClose_}
           />
-        ) : undefined}
+        )}
+        {modal.type === Modal.Type.NewScene && (
+          <NewSceneDialog
+            theme={theme}
+            onClose={this.onModalClose_}
+            onAccept={this.onNewSceneAccept_}
+          />
+        )}
+        {modal.type === Modal.Type.CopyScene && (
+          <CopySceneDialog
+            theme={theme}
+            scene={Async.latestValue(scene)}
+            onClose={this.onModalClose_}
+            onAccept={this.onNewSceneAccept_}
+          />
+        )}
+        {modal.type === Modal.Type.DeleteRecord && modal.record.type === Record.Type.Scene && (
+          <DeleteDialog
+            name={Record.latestName(modal.record)}
+            theme={theme}
+            onClose={this.onModalClose_}
+            onAccept={this.onDeleteRecordAccept_(Record.selector(modal.record))}
+          />
+        )}
       </>
 
     );
@@ -647,5 +733,7 @@ export default connect((state: ReduxState, { match: { params: { sceneId } } }: R
   onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) =>
     dispatch(ScenesAction.setNodeBatch({ sceneId, ...setNodeBatch })),
   onResetScene: () => dispatch(ScenesAction.resetScene({ sceneId })),
+  onCreateScene: (sceneId: string, scene: Scene) => dispatch(ScenesAction.createScene({ sceneId, scene })),
+  loadScene: (sceneId: string) => dispatch(ScenesAction.loadScene({ sceneId })),
 }))(Root) as React.ComponentType<RootPublicProps>;
 export { RootState };

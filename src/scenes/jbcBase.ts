@@ -5,6 +5,7 @@ import Camera from "../state/State/Scene/Camera";
 import Scene from "../state/State/Scene";
 import AbstractRobot from '../AbstractRobot';
 import LocalizedString from '../util/LocalizedString';
+import Author from '../db/Author';
 
 const ROBOT: Node.Robot = {
   type: 'robot',
@@ -22,7 +23,7 @@ export function createBaseSceneSurfaceA(): Scene {
   return {
     name: { [LocalizedString.EN_US]: 'Base Scene - Surface A' },
     description: { [LocalizedString.EN_US]: 'A base scene using Surface A. Intended to be augmented to create full JBC scenes' },
-    authorId: 'KIPR',
+    author: Author.organization('kipr'),
     geometry: {
       'ground': {
         type: 'plane',
@@ -115,7 +116,7 @@ export function createBaseSceneSurfaceB(): Scene {
   return {
     name: { [LocalizedString.EN_US]: 'Base Scene - Surface B' },
     description: { [LocalizedString.EN_US]: 'A base scene using Surface B. Intended to be augmented to create full JBC scenes' },
-    authorId: 'KIPR',
+    author: Author.organization('kipr'),
     geometry: {
       'ground': {
         type: 'plane',

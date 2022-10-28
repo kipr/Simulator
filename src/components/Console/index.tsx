@@ -17,7 +17,7 @@ export const createConsoleBarComponents = (
   theme: Theme, 
   onClearConsole: () => void,
 ) => {
-  const consoleBar: BarComponent<unknown>[] = [];
+  const consoleBar: BarComponent<object>[] = [];
 
   consoleBar.push(BarComponent.create(Button, {
     theme,
