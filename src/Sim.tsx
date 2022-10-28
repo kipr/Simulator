@@ -62,16 +62,16 @@ export class Space {
   private sceneSetting_ = false;
   set scene(scene: Scene) {
     this.scene_ = scene;
+    
     if (this.sceneSetting_ || this.debounceUpdate_ || !this.sceneBinding_) return;
+
+    console.log('Setting scene', scene);
 
     this.sceneSetting_ = true;
     (async () => {
       // Disable physics during scene changes to avoid objects moving before the scene is fully loaded
       this.bScene_.physicsEnabled = false;
       await this.sceneBinding_.setScene(scene, Robots.loaded(store.getState().robots));
-      if (this.scene_ !== scene) {
-        await this.sceneBinding_.setScene(this.scene_, Robots.loaded(store.getState().robots));
-      }
       this.bScene_.physicsEnabled = true;
     })().finally(() => {
       this.sceneSetting_ = false;

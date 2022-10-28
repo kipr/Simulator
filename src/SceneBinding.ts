@@ -559,7 +559,6 @@ class SceneBinding {
     // This should probably be somewhere else, but it ensures this is called during
     // initial instantiation and when a new scene is loaded.
     WorkerInstance.sync(node.state);
-    console.log('position', WorkerInstance.getMotor(0).position);
     const robotBinding = new RobotBinding(this.bScene_, this.physicsViewer_);
     const robot = this.robots_[node.robotId];
     if (!robot) throw new Error(`Robot by id "${node.robotId}" not found`);

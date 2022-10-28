@@ -62,7 +62,7 @@ if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env
       {
         main();
         on_stop();
-        emscripten_force_exit(0);Yeah
+        emscripten_force_exit(0);
       }
     `;
   

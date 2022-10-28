@@ -44,15 +44,8 @@ export const signInWithEmail = (email: string, password: string) => {
     });
 };
 
-export const signOutOfApp = () => {
-  signOut(auth)
-    .then(() => {
-      console.log("Logged out");
-      window.location.reload();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+export const signOutOfApp = async () => {
+  return await signOut(auth);
 };
 
 export const forgotPassword = (email: string) => {

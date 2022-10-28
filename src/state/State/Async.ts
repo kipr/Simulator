@@ -4,7 +4,7 @@ import produce, {  } from 'immer';
 import { WritableDraft } from 'immer/dist/internal';
 
 namespace Async {
-  interface Error {
+  export interface Error {
     message?: string;
     code: number;
   }
@@ -22,6 +22,10 @@ namespace Async {
     Deleting,
     DeleteFailed,
   }
+
+  export const isFailed = <B, T>(async: Async<B, T>): async is (CreateFailed<T> | LoadFailed<B> | SaveFailed<B, T> | DeleteFailed<B, T>) => {
+    return async.type === Type.CreateFailed || async.type === Type.LoadFailed || async.type === Type.SaveFailed || async.type === Type.DeleteFailed;
+  };
 
   export interface Unloaded<B> {
     type: Type.Unloaded;
@@ -296,7 +300,7 @@ namespace Async {
         value: produce(async.value, recipe),
         error: async.error,
       });
-      default: throw new Error(`Cannot mutate Async type ${async.type}`);
+      default: return async;
     }
   };
 }

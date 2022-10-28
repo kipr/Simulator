@@ -152,7 +152,7 @@ class SharedRegistersRobot implements AbstractRobot {
     let directions = 0;
 
     for (let i = 0; i < 4; ++i) {
-      const motor = stateless.getMotor(i);
+      const motor = stateless.motors[i];
 
       modes = (modes << 2) | Motor.Mode.toBits(motor.mode);
       directions = (directions << 2) | Motor.Direction.toBits(motor.direction);
@@ -177,7 +177,7 @@ class SharedRegistersRobot implements AbstractRobot {
 
     let servoAllStop = 0;
     for (let i = 0; i < 4; ++i) {
-      const servo = stateless.getServo(i);
+      const servo = stateless.servos[i];
       this.sharedResisters_.setRegister16b(RegisterState.REG_RW_SERVO_0_H + i * 2, this.positionToServoRegister_(servo.position));
       servoAllStop |= (servo.enabled ? 0 : 1) << (i + 4);
     }

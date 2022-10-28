@@ -52,6 +52,9 @@ import Author from '../db/Author';
 import db from '../db';
 import { auth } from '../firebase/firebase';
 import CopySceneDialog from './CopySceneDialog';
+import SceneErrorDialog from './SceneErrorDialog';
+import { push } from 'connected-react-router';
+import Loading from './Loading';
 
 namespace Modal {
   export enum Type {
@@ -165,8 +168,12 @@ interface RootPrivateProps {
   onResetScene: () => void;
 
   onCreateScene: (id: string, scene: Scene) => void;
+  onSaveScene: (id: string) => void;
 
   loadScene: (id: string) => void;
+  unfailScene: (id: string) => void;
+
+  goToLogin: () => void;
 }
 
 interface RootState {
@@ -225,6 +232,10 @@ class Root extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    if (!props.scene || props.scene.type === Async.Type.Unloaded) {
+      props.loadScene(props.match.params.sceneId);
+    }
+
     this.state = {
       layout: Layout.Side,
       activeLanguage: 'c',
@@ -268,7 +279,11 @@ class Root extends React.Component<Props, State> {
     Space.getInstance().onSetNodeBatch = undefined;
   }
 
-  getSnapshotBeforeUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>) {
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>): void {
+    if (this.props.scene === undefined || this.props.scene.type === Async.Type.Unloaded) {
+      this.props.loadScene(this.props.match.params.sceneId);
+    }
+
     if (this.props.scene !== prevProps.scene) {
       Space.getInstance().scene = Async.latestValue(this.props.scene) || Scene.EMPTY;
     }
@@ -279,14 +294,6 @@ class Root extends React.Component<Props, State> {
 
     if (this.props.onSetNodeBatch !== prevProps.onSetNodeBatch) {
       Space.getInstance().onSetNodeBatch = this.props.onSetNodeBatch;
-    }
-
-    return null;
-  }
-
-  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>, snapshot?: any): void {
-    if (this.props.scene === undefined || this.props.scene.type === Async.Type.Unloaded) {
-      this.props.loadScene(this.props.match.params.sceneId);
     }
   }
 
@@ -492,7 +499,9 @@ class Root extends React.Component<Props, State> {
   };
 
   onLogoutClick = () => {
-    signOutOfApp();
+    signOutOfApp().then(() => {
+      this.props.goToLogin();
+    });
   };
 
   onDashboardClick = () => {
@@ -554,22 +563,32 @@ class Root extends React.Component<Props, State> {
       modal: Modal.NONE,
     }, () => {
       const nextScene = { ...scene };
+      if (!auth.currentUser) return;
       nextScene.author = Author.user(auth.currentUser.uid);
       this.props.onCreateScene(uuid.v4(), nextScene);
     });
   };
 
-  private onCopySceneAccept_ = (scene: Scene) => {
-
+  private onDeleteRecordAccept_ = (selector: Selector) => () => {
   };
 
-  private onDeleteRecordAccept_ = (selector: Selector) => () => {
+  private onSceneErrorResolved_ = () => {
+    this.props.unfailScene(this.props.match.params.sceneId);
+  };
+
+  private onSaveSceneClick_ = () => {
+    this.props.onSaveScene(this.props.match.params.sceneId);
   };
 
   render() {
     const { props, state } = this;
     
     const { match: { params: { sceneId } }, scene } = props;
+
+    if (!scene || scene.type === Async.Type.Unloaded) {
+      return <Loading />;
+    }
+
     const {
       layout,
       activeLanguage,
@@ -626,6 +645,8 @@ class Root extends React.Component<Props, State> {
       }
     }
 
+    window.console.log(scene.type, Async.isFailed(scene));
+
     return (
       <>
         <Container $windowInnerHeight={windowInnerHeight}>
@@ -648,10 +669,18 @@ class Root extends React.Component<Props, State> {
             simulatorState={simulatorState}
             onNewSceneClick={this.onModalClick_(Modal.NEW_SCENE)}
             onCopySceneClick={this.onModalClick_(Modal.copyScene({ scene: Async.latestValue(scene) }))}
+            onSaveSceneClick={scene && scene.type === Async.Type.Saveable ? this.onSaveSceneClick_ : undefined}
             
           />
           {impl}
         </Container>
+        {modal.type === Modal.Type.None && Async.isFailed(scene) && (
+          <SceneErrorDialog
+            error={scene.error}
+            theme={theme}
+            onClose={this.onSceneErrorResolved_}
+          />
+        )}
         {modal.type === Modal.Type.Settings && (
           <SettingsDialog
             theme={theme}
@@ -733,7 +762,13 @@ export default connect((state: ReduxState, { match: { params: { sceneId } } }: R
   onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) =>
     dispatch(ScenesAction.setNodeBatch({ sceneId, ...setNodeBatch })),
   onResetScene: () => dispatch(ScenesAction.resetScene({ sceneId })),
-  onCreateScene: (sceneId: string, scene: Scene) => dispatch(ScenesAction.createScene({ sceneId, scene })),
+  onCreateScene: (sceneId: string, scene: Scene) => {
+    dispatch(ScenesAction.createScene({ sceneId, scene }));
+    dispatch(push(`/scene/${sceneId}`));
+  },
+  onSaveScene: (sceneId: string) => dispatch(ScenesAction.saveScene({ sceneId })),
   loadScene: (sceneId: string) => dispatch(ScenesAction.loadScene({ sceneId })),
+  unfailScene: (sceneId: string) => dispatch(ScenesAction.unfailScene({ sceneId })),
+  goToLogin: () => dispatch(push('/login', { from: window.location.pathname })),
 }))(Root) as React.ComponentType<RootPublicProps>;
 export { RootState };

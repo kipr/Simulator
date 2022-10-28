@@ -3,6 +3,7 @@ import Scene, { AsyncScene } from '../state/State/Scene';
 import Error from './Error';
 import Record from './Record';
 import Selector from './Selector';
+import TokenManager from './TokenManager';
 
 interface Request {
   url: string;
@@ -22,14 +23,14 @@ interface PendingRequest {
 
 class Db {
   private uri_: string;
-  private token_: string;
+  private tokenManager_: TokenManager;
 
   private pendingRequests_: PendingRequest[] = [];
 
-  get token() { return this.token_; }
-  set token(token: string) {
-    const firePending = this.token_ === undefined && token !== undefined;
-    this.token_ = token;
+  get tokenManager() { return this.tokenManager_; }
+  set tokenManager(tokenManager: TokenManager) {
+    const firePending = this.tokenManager_ === undefined && tokenManager !== undefined;
+    this.tokenManager_ = tokenManager;
     if (firePending) this.firePending_();
   }
 
@@ -43,15 +44,15 @@ class Db {
     }
   }
 
-  constructor(uri: string, token?: string) {
+  constructor(uri: string, tokenManager?: TokenManager) {
     this.uri_ = uri;
-    this.token_ = token;
+    this.tokenManager_ = tokenManager;
   }
 
-  private headers_(): Headers {
+  private async headers_() {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    if (this.token_) headers.append('Authorization', `Bearer ${this.token_}`);
+    if (this.tokenManager_) headers.append('Authorization', `Bearer ${await this.tokenManager_.token()}`);
     return headers;
   }
 
@@ -78,7 +79,7 @@ class Db {
 
   private async request_(request: Request) {
     return await fetch(request.url, {
-      headers: this.headers_(),
+      headers: await this.headers_(),
       method: request.method,
       body: request.body,
     });
@@ -105,7 +106,7 @@ class Db {
     };
 
     let promise: Promise<Response>;
-    if (!this.token_) {
+    if (!this.tokenManager_) {
       const [outPromise, outstandingPromise] = Db.outstandingPromise_<Response>();
       this.pendingRequests_.push({ request, outstandingPromise });
       promise = outPromise;
@@ -113,8 +114,8 @@ class Db {
       promise = this.request_(request);
     }
 
-    return promise.then(res => {
-      if (res.status !== 204) throw Db.parseError_(res);
+    return promise.then(async res => {
+      if (res.status !== 204) throw await Db.parseError_(res);
     });
   }
 
@@ -126,7 +127,7 @@ class Db {
 
     let promise: Promise<Response>;
 
-    if (!this.token_) {
+    if (!this.tokenManager_) {
       const [outPromise, outstandingPromise] = Db.outstandingPromise_<Response>();
       this.pendingRequests_.push({ request, outstandingPromise });
       promise = outPromise;
@@ -135,8 +136,8 @@ class Db {
     }
 
 
-    return promise.then(res => {
-      if (res.status !== 204) throw Db.parseError_(res);
+    return promise.then(async res => {
+      if (res.status !== 204) throw await Db.parseError_(res);
     });
   }
 
@@ -146,7 +147,7 @@ class Db {
     };
 
     let promise: Promise<Response>;
-    if (!this.token_) {
+    if (!this.tokenManager_) {
       const [outPromise, outstandingPromise] = Db.outstandingPromise_<Response>();
       this.pendingRequests_.push({ request, outstandingPromise });
       promise = outPromise;
@@ -155,7 +156,7 @@ class Db {
     }
 
     return promise.then(async res => {
-      if (res.status !== 200) throw Db.parseError_(res);
+      if (res.status !== 200) throw await Db.parseError_(res);
       return await res.json() as T;
     });
   }
@@ -166,7 +167,7 @@ class Db {
     };
 
     let promise: Promise<Response>;
-    if (!this.token_) {
+    if (!this.tokenManager_) {
       const [outPromise, outstandingPromise] = Db.outstandingPromise_<Response>();
       this.pendingRequests_.push({ request, outstandingPromise });
       promise = outPromise;
@@ -175,7 +176,7 @@ class Db {
     }
 
     return promise.then(async res => {
-      if (res.status !== 200) throw Db.parseError_(res);
+      if (res.status !== 200) throw await Db.parseError_(res);
       return await res.json() as Dict<T>;
     });
   }

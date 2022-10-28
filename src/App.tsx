@@ -8,16 +8,23 @@ import Dashboard from './pages/Dashboard';
 import Tutorials from './pages/Tutorials';
 import Root from './components/Root';
 import db from './db';
+import { connect } from 'react-redux';
+import { push } from 'connected-react-router';
+import LoginPage from './login/LoginPage';
 
-export interface AppProps {
+export interface AppPublicProps {
 
+}
+
+interface AppPrivateProps {
+  login: () => void;
 }
 
 interface AppState {
   loading: boolean;
 }
 
-type Props = AppProps;
+type Props = AppPublicProps & AppPrivateProps;
 type State = AppState;
 
 class App extends React.Component<Props, State> {
@@ -35,12 +42,12 @@ class App extends React.Component<Props, State> {
     this.onAuthStateChangedSubscription_ = auth.onAuthStateChanged(user => {
       if (user) {
         console.log('User detected.');
-        user.getIdToken().then(token => db.token = token);
       } else {
         console.log('No user detected');
-        db.token = null;
       }
-      this.setState({ loading: false });
+      this.setState({ loading: false }, () => {
+        if (!user) this.props.login();
+      });
     });
   }
 
@@ -59,6 +66,7 @@ class App extends React.Component<Props, State> {
     return (
       <Switch>
         <Route path="/" exact component={Dashboard} />
+        <Route path="/login" exact component={LoginPage} />
         <Route path="/tutorials" exact component={Tutorials} />
         <Route path="/scene/:sceneId" component={Root} />
       </Switch>
@@ -66,4 +74,9 @@ class App extends React.Component<Props, State> {
   }
 }
 
-export default App;
+export default connect(undefined, dispatch => ({
+  login: () => {
+    console.log('Redirecting to login page', window.location.pathname);
+    dispatch(push('/login', { from: window.location.pathname === '/login' ? undefined : window.location.pathname }));
+  }
+}))(App) as React.ComponentType<AppPublicProps>;
