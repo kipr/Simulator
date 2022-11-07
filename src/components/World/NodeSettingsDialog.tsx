@@ -8,6 +8,7 @@ import NodeSettings from "./NodeSettings";
 import Node from '../../state/State/Scene/Node';
 import Scene from "../../state/State/Scene";
 import Geometry from "../../state/State/Scene/Geometry";
+import LocalizedString from '../../util/LocalizedString';
 
 export type NodeSettingsAcceptance = Node;
 
@@ -49,7 +50,7 @@ class NodeSettingsDialog extends React.PureComponent<Props, State> {
     const { theme, onClose, onChange, onOriginChange, node, id, scene, onGeometryAdd, onGeometryChange, onGeometryRemove } = props;
 
     return (
-      <Dialog theme={theme} name={`${node.name || ''} Settings`} onClose={onClose}>
+      <Dialog theme={theme} name={`${LocalizedString.lookup(node.name, LocalizedString.EN_US) || ''} Settings`} onClose={onClose}>
         <StyledScrollArea theme={theme}>
           <NodeSettings
             theme={theme}

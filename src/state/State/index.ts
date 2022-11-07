@@ -10,7 +10,7 @@ export namespace Scenes {
 }
 
 export interface Robots {
-  robots: Dict<Async<{}, Robot>>;
+  robots: Dict<Async<Record<string, never>, Robot>>;
 }
 
 export namespace Robots {

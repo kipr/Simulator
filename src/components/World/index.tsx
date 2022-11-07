@@ -72,6 +72,7 @@ export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSav
   onSaveScene: () => void,
   onCopyScene: () => void
 }) => {
+  // eslint-disable-next-line @typescript-eslint/ban-types
   const worldBar: BarComponent<object>[] = [];
 
   worldBar.push(BarComponent.create(Button, {

@@ -36,11 +36,13 @@ class Db {
 
   private firePending_() {
     for (const pendingRequest of this.pendingRequests_) {
-      this.request_(pendingRequest.request).then(res => {
-        pendingRequest.outstandingPromise.resolve(res);
-      }).catch(err => {
-        pendingRequest.outstandingPromise.reject(err);
-      });
+      this.request_(pendingRequest.request)
+        .then(res => {
+          pendingRequest.outstandingPromise.resolve(res);
+        })
+        .catch(err => {
+          pendingRequest.outstandingPromise.reject(err);
+        });
     }
   }
 
@@ -62,6 +64,7 @@ class Db {
 
     if (text && text.length > 0) {
       try {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         message = JSON.parse(text).message;
       } catch (e) {
         message = text;
@@ -86,7 +89,7 @@ class Db {
   }
 
   private static outstandingPromise_<T = unknown>(): [Promise<T>, OutstandingPromise<T>] {
-    let ret: OutstandingPromise<T> = {
+    const ret: OutstandingPromise<T> = {
       resolve: null,
       reject: null,
     };

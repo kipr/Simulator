@@ -22,8 +22,6 @@ namespace Record {
     switch (record.type) {
       case Type.Scene: return { collection: SCENE_COLLECTION, id: record.id };
     }
-
-    throw new Error(`Unknown record type: ${record.type}`);
   };
 
   export const latestName = (record: Record) => Async.latestValue(record.value).name;

@@ -66,7 +66,7 @@ export const createEditorBarComponents = ({
   onDownloadCode: () => void,
   onErrorClick: (event: React.MouseEvent<HTMLDivElement>) => void
 }) => {
-  
+  // eslint-disable-next-line @typescript-eslint/ban-types
   const editorBar: BarComponent<object>[] = [];
   let errors = 0;
   let warnings = 0;

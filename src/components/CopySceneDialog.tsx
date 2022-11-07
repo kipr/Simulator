@@ -38,7 +38,7 @@ class CopySceneDialog extends React.PureComponent<Props, State> {
     };
   }
 
-  componentDidUpdate(prevProps: Readonly<CopySceneDialogProps>, prevState: Readonly<CopySceneDialogState>, snapshot?: any): void {
+  componentDidUpdate(prevProps: Readonly<CopySceneDialogProps>, prevState: Readonly<CopySceneDialogState>): void {
     if (deepNeq(prevProps.scene.name, this.props.scene.name) || deepNeq(prevProps.scene.description, this.props.scene.description)) {
       this.setState({ scene: this.props.scene });
     }

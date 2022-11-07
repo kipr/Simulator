@@ -30,7 +30,6 @@ import { DEFAULT_FEEDBACK, Feedback } from '../Feedback';
 import ExceptionDialog from './ExceptionDialog';
 import OpenSceneDialog from './OpenSceneDialog';
 
-import store from '../state';
 import { ScenesAction } from '../state/reducer';
 import { Editor } from './Editor';
 import Dict from '../Dict';
@@ -511,7 +510,7 @@ class Root extends React.Component<Props, State> {
   };
 
   onLogoutClick = () => {
-    signOutOfApp().then(() => {
+    void signOutOfApp().then(() => {
       this.props.goToLogin();
     });
   };
@@ -676,8 +675,6 @@ class Root extends React.Component<Props, State> {
       }
     }
 
-    window.console.log(scene.type, Async.isFailed(scene));
-
     return (
       <>
         <Container $windowInnerHeight={windowInnerHeight}>
@@ -801,7 +798,7 @@ class Root extends React.Component<Props, State> {
 
 export default connect((state: ReduxState, { match: { params: { sceneId } } }: RootPublicProps) => ({
   scene: state.scenes[sceneId]
-}), (dispatch, { match: { params: { sceneId } }}: RootPublicProps) => ({
+}), (dispatch, { match: { params: { sceneId } } }: RootPublicProps) => ({
   onNodeAdd: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
   onNodeRemove: (nodeId: string) => dispatch(ScenesAction.removeNode({ sceneId, nodeId })),
   onNodeChange: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),

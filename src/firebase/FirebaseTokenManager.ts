@@ -12,7 +12,6 @@ class FirebaseTokenManager implements TokenManager {
     const user = this.auth_.currentUser;
     if (!user) throw new Error('No user is signed in');
     const token = await user.getIdToken();
-    console.log(token);
     return token;
   }
 }

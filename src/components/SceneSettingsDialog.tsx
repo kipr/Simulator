@@ -38,7 +38,7 @@ class SceneSettingsDialog extends React.PureComponent<Props, State> {
     };
   }
 
-  componentDidUpdate(prevProps: Readonly<SceneSettingsDialogProps>, prevState: Readonly<SceneSettingsDialogState>, snapshot?: any): void {
+  componentDidUpdate(prevProps: Readonly<SceneSettingsDialogProps>, prevState: Readonly<SceneSettingsDialogState>): void {
     if (deepNeq(prevProps.scene.name, this.props.scene.name) || deepNeq(prevProps.scene.description, this.props.scene.description)) {
       this.setState({ scene: this.props.scene });
     }

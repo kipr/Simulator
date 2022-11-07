@@ -52,20 +52,20 @@ export class Space {
 
   private sceneBinding_: SceneBinding;
 
-  private scene_ = Scene.EMPTY;
-  get scene() { return this.scene_; }
-  
   onSelectNodeId?: (nodeId: string) => void;
   onSetNodeBatch?: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => void;
 
   private debounceUpdate_ = false;
   private sceneSetting_ = false;
+
+  private scene_ = Scene.EMPTY;
+  get scene() { return this.scene_; }
+  
+  
   set scene(scene: Scene) {
     this.scene_ = scene;
     
     if (this.sceneSetting_ || this.debounceUpdate_ || !this.sceneBinding_) return;
-
-    console.log('Setting scene', scene);
 
     this.sceneSetting_ = true;
     (async () => {

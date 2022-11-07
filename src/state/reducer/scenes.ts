@@ -274,14 +274,14 @@ const DEFAULT_SCENES: Scenes = {
   jbc22: Async.loaded({ value: JBC_SCENES.JBC_22 }),
 };
 
-export const errorToAsyncError = (error: any): Async.Error => {
+export const errorToAsyncError = (error: unknown): Async.Error => {
   if (DbError.is(error)) return error;
   if (error instanceof Error) return {
     code: 0,
     message: error.message,
   };
   throw error;
-}
+};
 
 const create = async (sceneId: string, next: Async.Creating<Scene>) => {
   try {
@@ -294,7 +294,6 @@ const create = async (sceneId: string, next: Async.Creating<Scene>) => {
       sceneId,
     }));
   } catch (error) {
-    console.log(error, DbError.is(error));
     store.dispatch(ScenesAction.setSceneInternal({
       scene: Async.createFailed({
         value: next.value,
@@ -375,7 +374,7 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
         value: Async.latestValue(current)
       });
 
-      remove(action.sceneId, deleting);
+      void remove(action.sceneId, deleting);
 
       return {
         ...state,
@@ -467,7 +466,7 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
       return nextState;
     }
     case 'scenes/load-scene': {
-      load(action.sceneId, state[action.sceneId]);
+      void load(action.sceneId, state[action.sceneId]);
       return {
         ...state,
         [action.sceneId]: Async.loading({ brief: Async.brief(state[action.sceneId]) }),
@@ -475,7 +474,7 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
     }
     case 'scenes/create-scene': {
       const creating = Async.creating({ value: action.scene });
-      create(action.sceneId, creating);
+      void create(action.sceneId, creating);
       return {
         ...state,
         [action.sceneId]: creating,
@@ -484,7 +483,7 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
     case 'scenes/save-scene': {
       const current = state[action.sceneId];
       if (current.type !== Async.Type.Saveable) return state;
-      save(action.sceneId, current);
+      void save(action.sceneId, current);
       return {
         ...state,
         [action.sceneId]: Async.saving({
@@ -570,7 +569,7 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
       }),
     };
     case 'scenes/list-user-scenes': {
-      listUserScenes();
+      void listUserScenes();
       return state;
     }
     case 'scenes/unfail-scene': return {

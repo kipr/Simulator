@@ -71,7 +71,9 @@ export namespace StyledText {
   export interface Component {
     type: Type.Component;
 
+    // eslint-disable-next-line @typescript-eslint/ban-types
     component: React.ComponentType<object>,
+    // eslint-disable-next-line @typescript-eslint/ban-types
     props?: object;
   }
 

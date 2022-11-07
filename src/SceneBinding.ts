@@ -475,7 +475,7 @@ class SceneBinding {
 
     const geometry = nextScene.geometry[node.geometryId] ?? preBuiltGeometries[node.geometryId];
     if (!geometry) {
-      console.error(`node ${node.name} has invalid geometry ID: ${node.geometryId}`);
+      console.error(`node ${LocalizedString.lookup(node.name, LocalizedString.EN_US)} has invalid geometry ID: ${node.geometryId}`);
       return null;
     }
 

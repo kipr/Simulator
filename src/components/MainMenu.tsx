@@ -86,7 +86,7 @@ export class MainMenu extends React.Component<Props, State> {
   }
 
   private onLogoutClick_ = (event: React.MouseEvent<HTMLDivElement>) => {
-    signOutOfApp();
+    void signOutOfApp();
   };
 
   private onDashboardClick_ = (event: React.MouseEvent<HTMLDivElement>) => {

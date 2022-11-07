@@ -113,7 +113,7 @@ namespace LocalizedString {
 
   export const lookup = (localizedString: LocalizedString, locale: string) => {
     let currentLocale = locale;
-    let fallbacks = FALLBACKS[locale] || [];
+    const fallbacks = FALLBACKS[locale] || [];
     let fallbackIndex = 0;
 
     while (!(currentLocale in localizedString)) {

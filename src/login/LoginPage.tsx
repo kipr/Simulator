@@ -394,10 +394,12 @@ class LoginPage extends React.Component<Props, State> {
 }
 
 export default connect((state: ReduxState) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const locationState = state.router.location.state || EMPTY_OBJECT;
-  console.log('locationState', locationState);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const from = locationState['from'] || '/';
   return {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     from,
   };
 }, dispatch => ({
