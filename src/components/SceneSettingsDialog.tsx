@@ -10,26 +10,26 @@ import DialogBar from './DialogBar';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import deepNeq from '../deepNeq';
 
-export interface CopySceneDialogProps extends ThemeProps, StyleProps {
+export interface SceneSettingsDialogProps extends ThemeProps, StyleProps {
   scene: Scene;
 
   onClose: () => void;
   onAccept: (scene: Scene) => void;
 }
 
-interface CopySceneDialogState {
+interface SceneSettingsDialogState {
   scene: Scene;
 }
 
-type Props = CopySceneDialogProps;
-type State = CopySceneDialogState;
+type Props = SceneSettingsDialogProps;
+type State = SceneSettingsDialogState;
 
 const StyledSceneSettings = styled(SceneSettings, ({ theme }: ThemeProps) => ({
   color: theme.color,
   padding: `${theme.itemPadding * 2}px`, 
 }));
 
-class CopySceneDialog extends React.PureComponent<Props, State> {
+class SceneSettingsDialog extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -38,7 +38,7 @@ class CopySceneDialog extends React.PureComponent<Props, State> {
     };
   }
 
-  componentDidUpdate(prevProps: Readonly<CopySceneDialogProps>, prevState: Readonly<CopySceneDialogState>, snapshot?: any): void {
+  componentDidUpdate(prevProps: Readonly<SceneSettingsDialogProps>, prevState: Readonly<SceneSettingsDialogState>, snapshot?: any): void {
     if (deepNeq(prevProps.scene.name, this.props.scene.name) || deepNeq(prevProps.scene.description, this.props.scene.description)) {
       this.setState({ scene: this.props.scene });
     }
@@ -66,4 +66,4 @@ class CopySceneDialog extends React.PureComponent<Props, State> {
   }
 }
 
-export default CopySceneDialog;
+export default SceneSettingsDialog;

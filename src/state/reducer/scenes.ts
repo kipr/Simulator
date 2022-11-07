@@ -13,6 +13,7 @@ import store from '..';
 import DbError from '../../db/Error';
 import Selector from '../../db/Selector';
 import Dict from '../../Dict';
+import LocalizedString from '../../util/LocalizedString';
 
 export namespace ScenesAction {
   export interface RemoveScene {
@@ -29,6 +30,14 @@ export namespace ScenesAction {
   }
 
   export const setScene = construct<SetScene>('scenes/set-scene');
+
+  export interface SetScenePartial {
+    type: 'scenes/set-scene-partial';
+    sceneId: string;
+    partialScene: Partial<Scene>;
+  }
+
+  export const setScenePartial = construct<SetScenePartial>('scenes/set-scene-partial');
 
   export interface SetSceneInternal {
     type: 'scenes/set-scene-internal';
@@ -204,6 +213,7 @@ export namespace ScenesAction {
 export type ScenesAction = (
   ScenesAction.RemoveScene |
   ScenesAction.SetScene |
+  ScenesAction.SetScenePartial |
   ScenesAction.SetSceneInternal |
   ScenesAction.SetScenesInternal |
   ScenesAction.SetSceneBatch |
@@ -399,6 +409,41 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
         };
       }
       
+      return state;
+    }
+    case 'scenes/set-scene-partial': {
+      const current = state[action.sceneId];
+
+      if (!current) return state;
+
+      if (current.type === Async.Type.Loaded) {
+        return {
+          ...state,
+          [action.sceneId]: Async.saveable({
+            brief: current.brief,
+            original: current.value,
+            value: {
+              ...current.value,
+              ...action.partialScene,
+            },
+          })
+        };
+      }
+
+      if (current.type === Async.Type.Saveable) {
+        return {
+          ...state,
+          [action.sceneId]: Async.saveable({
+            brief: current.brief,
+            original: current.original,
+            value: {
+              ...current.value,
+              ...action.partialScene,
+            },
+          })
+        };
+      }
+
       return state;
     }
     case 'scenes/set-scene-internal': return {

@@ -27,7 +27,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   position: 'absolute',
   top: '100%',
   left: `-1px`,
-  width: '200px',
+  right: '-1px',
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
   
@@ -114,7 +114,7 @@ class LayoutPicker extends React.PureComponent<Props, State> {
         
         {layout === Layout.Overlay ? (
           <>
-            <Item theme={theme} style={{ fontWeight: 500, backgroundColor: theme.borderColor }}>Layout Options</Item>
+            <Item theme={theme} style={{ fontWeight: 500, backgroundColor: theme.borderColor }}>Options</Item>
             <Item theme={theme} onClick={onShowAll}><ItemIcon icon={faEye} /> Show All</Item>
             <Item theme={theme} onClick={onHideAll}><ItemIcon icon={faEyeSlash} /> Hide All</Item>
           </>

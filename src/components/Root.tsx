@@ -55,6 +55,8 @@ import CopySceneDialog from './CopySceneDialog';
 import SceneErrorDialog from './SceneErrorDialog';
 import { push } from 'connected-react-router';
 import Loading from './Loading';
+import LocalizedString from '../util/LocalizedString';
+import SceneSettingsDialog from './SceneSettingsDialog';
 
 namespace Modal {
   export enum Type {
@@ -67,6 +69,7 @@ namespace Modal {
     None,
     NewScene,
     CopyScene,
+    SettingsScene,
     DeleteRecord
   }
 
@@ -133,6 +136,12 @@ namespace Modal {
   }
 
   export const deleteRecord = construct<DeleteRecord>(Type.DeleteRecord);
+
+  export interface SettingsScene {
+    type: Type.SettingsScene;
+  }
+
+  export const SETTINGS_SCENE: SettingsScene = { type: Type.SettingsScene };
 }
 
 export type Modal = (
@@ -145,7 +154,8 @@ export type Modal = (
   Modal.None |
   Modal.NewScene |
   Modal.CopyScene |
-  Modal.DeleteRecord
+  Modal.DeleteRecord |
+  Modal.SettingsScene
 );
 
 interface RootParams {
@@ -169,6 +179,8 @@ interface RootPrivateProps {
 
   onCreateScene: (id: string, scene: Scene) => void;
   onSaveScene: (id: string) => void;
+  onDeleteRecord: (selector: Selector) => void;
+  onSetScenePartial: (partialScene: Partial<Scene>) => void;
 
   loadScene: (id: string) => void;
   unfailScene: (id: string) => void;
@@ -552,6 +564,13 @@ class Root extends React.Component<Props, State> {
     });
   };
 
+  private onSettingsSceneClick_ = () => {
+    this.setState({
+      modal: Modal.SETTINGS_SCENE
+    });
+  };
+
+
   componentDidCatch(error: Error, info: React.ErrorInfo) {
     this.setState({
       modal: Modal.exception(error, info)
@@ -570,6 +589,18 @@ class Root extends React.Component<Props, State> {
   };
 
   private onDeleteRecordAccept_ = (selector: Selector) => () => {
+    this.props.onDeleteRecord(selector);
+  };
+
+  private onSettingsSceneAccept_ = (scene: Scene) => {
+    this.setState({
+      modal: Modal.NONE,
+    }, () => {
+      this.props.onSetScenePartial({
+        name: scene.name,
+        description: scene.description,
+      });
+    });
   };
 
   private onSceneErrorResolved_ = () => {
@@ -669,7 +700,15 @@ class Root extends React.Component<Props, State> {
             simulatorState={simulatorState}
             onNewSceneClick={this.onModalClick_(Modal.NEW_SCENE)}
             onCopySceneClick={this.onModalClick_(Modal.copyScene({ scene: Async.latestValue(scene) }))}
-            onSaveSceneClick={scene && scene.type === Async.Type.Saveable ? this.onSaveSceneClick_ : undefined}
+            onSettingsSceneClick={this.onSettingsSceneClick_}
+            onDeleteSceneClick={this.onModalClick_(Modal.deleteRecord({
+              record: {
+                type: Record.Type.Scene,
+                id: sceneId,
+                value: scene,
+              }
+            }))}
+            onSaveSceneClick={scene && scene.type === Async.Type.Saveable && scene.value.author.id === auth.currentUser.uid ? this.onSaveSceneClick_ : undefined}
             
           />
           {impl}
@@ -746,6 +785,14 @@ class Root extends React.Component<Props, State> {
             onAccept={this.onDeleteRecordAccept_(Record.selector(modal.record))}
           />
         )}
+        {modal.type === Modal.Type.SettingsScene && (
+          <SceneSettingsDialog
+            scene={Async.latestValue(scene)}
+            theme={theme}
+            onClose={this.onModalClose_}
+            onAccept={this.onSettingsSceneAccept_}
+          />
+        )}
       </>
 
     );
@@ -766,7 +813,12 @@ export default connect((state: ReduxState, { match: { params: { sceneId } } }: R
     dispatch(ScenesAction.createScene({ sceneId, scene }));
     dispatch(push(`/scene/${sceneId}`));
   },
+  onDeleteRecord: (selector: Selector) => {
+    dispatch(ScenesAction.removeScene({ sceneId: selector.id })),
+    dispatch(push('/'));
+  },
   onSaveScene: (sceneId: string) => dispatch(ScenesAction.saveScene({ sceneId })),
+  onSetScenePartial: (partialScene: Partial<Scene>) => dispatch(ScenesAction.setScenePartial({ sceneId, partialScene })),
   loadScene: (sceneId: string) => dispatch(ScenesAction.loadScene({ sceneId })),
   unfailScene: (sceneId: string) => dispatch(ScenesAction.unfailScene({ sceneId })),
   goToLogin: () => dispatch(push('/login', { from: window.location.pathname })),

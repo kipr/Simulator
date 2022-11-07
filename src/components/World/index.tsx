@@ -310,7 +310,6 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
 
     const workingScene = Async.latestValue(scene);
     const referenceScene = Async.previousValue(scene);
-    // Mock list
     for (const nodeId of Dict.keySet(workingScene.nodes)) {
       const node = workingScene.nodes[nodeId];
       const hasReset = referenceScene.nodes[nodeId] !== undefined;

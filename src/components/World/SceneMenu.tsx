@@ -4,13 +4,15 @@ import { styled } from 'styletron-react';
 import { StyleProps } from '../../style';
 import { Fa } from '../Fa';
 import { ThemeProps } from '../theme';
-import { faCaretSquareLeft, faClone, faCopy, faEye, faEyeSlash, faFolderOpen, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faCaretSquareLeft, faClone, faCogs, faCopy, faEye, faEyeSlash, faFolderOpen, faPlus, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 export interface SceneMenuProps extends StyleProps, ThemeProps {
   onSaveScene?: (event: React.MouseEvent) => void;
   onNewScene?: (event: React.MouseEvent) => void;
   onCopyScene?: (event: React.MouseEvent) => void;
   onOpenScene?: (event: React.MouseEvent) => void;
+  onSettingsScene?: (event: React.MouseEvent) => void;
+  onDeleteScene?: (event: React.MouseEvent) => void;
 }
 
 interface SceneMenuState {
@@ -24,7 +26,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   position: 'absolute',
   top: '100%',
   left: `-1px`,
-  width: '200px',
+  right: '-1px',
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
   
@@ -80,13 +82,14 @@ class SceneMenu extends React.PureComponent<Props, State> {
 
   render() {
     const { props } = this;
-    const { theme, onCopyScene, onNewScene, onSaveScene, onOpenScene } = props;
+    const { theme, onCopyScene, onNewScene, onSaveScene, onOpenScene, onSettingsScene, onDeleteScene } = props;
     return (
       <Container theme={theme}>
+        <Item theme={theme} disabled={!onSettingsScene} onClick={onSettingsScene}><ItemIcon icon={faCogs} /> Settings</Item>
         <Item theme={theme} disabled={!onOpenScene} onClick={onOpenScene}><ItemIcon icon={faFolderOpen} /> Open</Item>
-        <Item theme={theme} disabled={!onNewScene} onClick={onNewScene}><ItemIcon icon={faPlus} /> New</Item>
         <Item theme={theme} disabled={!onSaveScene} onClick={onSaveScene}><ItemIcon icon={faSave} /> Save</Item>
         <Item theme={theme} disabled={!onCopyScene} onClick={onCopyScene}><ItemIcon icon={faCopy} /> Copy</Item>
+        <Item theme={theme} disabled={!onDeleteScene} onClick={onDeleteScene}><ItemIcon icon={faTrash} /> Delete</Item>
       </Container>
     );
   }

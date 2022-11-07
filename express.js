@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use(morgan('combined'));
 
-app.use('/api', proxy(config.apiUrl));
+app.use('/api', proxy(config.dbUrl));
 
 // If we have libkipr (C) artifacts and emsdk, we can compile.
 if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env) {
