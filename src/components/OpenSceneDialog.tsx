@@ -138,9 +138,7 @@ class OpenSceneDialog extends React.PureComponent<Props & ReduxOpenSceneDialogPr
     const { selectedSceneId } = this.state;
 
     const selectedAsyncScene = selectedSceneId !== null ? scenes[selectedSceneId] : null;
-    const selectedScene = selectedAsyncScene?.type === Async.Type.Loaded
-      ? selectedAsyncScene.value
-      : null;
+    const selectedScene = Async.latestValue(selectedAsyncScene);
     
     if (selectedScene) this.props.onSceneChange(selectedSceneId);
     this.props.onClose();

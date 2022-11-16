@@ -279,13 +279,12 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
 export default connect<unknown, unknown, InfoProps, ReduxState>((state: ReduxState, ownProps: InfoProps) => {
   const asyncScene = state.scenes[ownProps.sceneId];
   
-  const scene = Async.previousValue(asyncScene);
+  const scene = Async.latestValue(asyncScene);
   if (!scene) return {};
 
-  const refNode = scene.nodes[ownProps.nodeId];
   const node = scene.nodes[ownProps.nodeId];
   return {
-    startingOrigin: refNode.origin,
+    startingOrigin: node.startingOrigin,
     node
   };
 }, (dispatch, { sceneId, nodeId }: InfoProps) => ({
@@ -294,6 +293,7 @@ export default connect<unknown, unknown, InfoProps, ReduxState>((state: ReduxSta
       sceneId,
       nodeId,
       origin,
+      updateStarting: true
     }));
   }
 }))(Info) as React.ComponentType<InfoProps>;

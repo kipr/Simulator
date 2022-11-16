@@ -107,6 +107,8 @@ export default class Location extends React.PureComponent<Props> {
     const { props } = this;
     const { theme, style, className, origin } = props;
 
+    if (!origin) return null;
+
     let euler = Rotation.Euler.identity(Angle.Type.Degrees);
     if (origin.orientation) {
       if (origin.orientation.type === 'euler') {

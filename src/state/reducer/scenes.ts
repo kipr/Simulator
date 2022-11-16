@@ -207,6 +207,7 @@ export namespace ScenesAction {
     sceneId: string;
     nodeId: string;
     origin: ReferenceFrame;
+    updateStarting?: boolean;
   }
 
   export const setNodeOrigin = construct<SetNodeOrigin>('scenes/set-node-origin');
@@ -521,8 +522,6 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
         for (const nodeId in nextScene.value.nodes) {
           const { startingOrigin } = nextScene.value.nodes[nodeId];
 
-          console.log({ nodeId, startingOrigin, origin: nextScene.value.nodes[nodeId].origin });
-
           if (!startingOrigin) continue;
 
           nextScene.value.nodes[nodeId] = {
@@ -614,6 +613,9 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
       ...state,
       [action.sceneId]: Async.mutate(state[action.sceneId], scene => {
         scene.nodes[action.nodeId].origin = action.origin;
+        if (action.updateStarting) {
+          scene.nodes[action.nodeId].startingOrigin = action.origin;
+        }
       }),
     };
     case 'scenes/list-user-scenes': {

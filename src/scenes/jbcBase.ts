@@ -7,16 +7,19 @@ import AbstractRobot from '../AbstractRobot';
 import LocalizedString from '../util/LocalizedString';
 import Author from '../db/Author';
 
+const ROBOT_ORIGIN: ReferenceFrame = {
+  position: Vector3.centimeters(0, 2, 0),
+  orientation: Rotation.eulerDegrees(0, 0, 0),
+};
+
 const ROBOT: Node.Robot = {
   type: 'robot',
   name: { [LocalizedString.EN_US]: 'Robot' },
   robotId: 'demobot',
   state: AbstractRobot.Stateless.NIL,
   visible: true,
-  origin: {
-    position: Vector3.centimeters(0, 2, 0),
-    orientation: Rotation.eulerDegrees(0, 0, 0),
-  }
+  startingOrigin: ROBOT_ORIGIN,
+  origin: ROBOT_ORIGIN
 };
 
 const JBC_MAT_ORIGIN: ReferenceFrame = {
