@@ -1,4 +1,4 @@
-import { Rotation, Vector3 } from "../unit-math";
+import { ReferenceFrame, Rotation, Vector3 } from "../unit-math";
 import { Angle, Distance, Mass } from "../util";
 import Node from "../state/State/Scene/Node";
 import Camera from "../state/State/Scene/Camera";
@@ -17,6 +17,41 @@ const ROBOT: Node.Robot = {
     position: Vector3.centimeters(0, 2, 0),
     orientation: Rotation.eulerDegrees(0, 0, 0),
   }
+};
+
+const JBC_MAT_ORIGIN: ReferenceFrame = {
+  position: {
+    x: Distance.centimeters(0),
+    y: Distance.centimeters(-7),
+    z: Distance.centimeters(50),
+  },
+  scale: {
+    x: 100,
+    y: 100,
+    z: 100,
+  }
+};
+
+const GROUND_ORIGIN: ReferenceFrame = {
+  position: {
+    x: Distance.centimeters(0),
+    y: Distance.centimeters(-7.2),
+    z: Distance.centimeters(50),
+  },
+  orientation: {
+    type: 'euler',
+    x: Angle.degrees(90),
+    y: Angle.degrees(0),
+    z: Angle.degrees(0),
+  }
+};
+
+const LIGHT_ORIGIN: ReferenceFrame = {
+  position: {
+    x: Distance.meters(0),
+    y: Distance.meters(0.91),
+    z: Distance.meters(0.5),
+  },
 };
 
 export function createBaseSceneSurfaceA(): Scene {
@@ -39,37 +74,16 @@ export function createBaseSceneSurfaceA(): Scene {
         type: 'from-template',
         templateId: 'jbc_mat_a',
         name: { [LocalizedString.EN_US]: 'JBC Surface A' },
-        origin: {
-          position: {
-            x: Distance.centimeters(0),
-            y: Distance.centimeters(-7),
-            z: Distance.centimeters(50),
-          },
-          scale: {
-            x: 100,
-            y: 100,
-            z: 100,
-          }
-        },
+        startingOrigin: JBC_MAT_ORIGIN,
+        origin: JBC_MAT_ORIGIN,
         visible: true,
       },
       'ground': {
         type: 'object',
         geometryId: 'ground',
         name: { [LocalizedString.EN_US]: 'Ground' },
-        origin: {
-          position: {
-            x: Distance.centimeters(0),
-            y: Distance.centimeters(-7.2),
-            z: Distance.centimeters(50),
-          },
-          orientation: {
-            type: 'euler',
-            x: Angle.degrees(90),
-            y: Angle.degrees(0),
-            z: Angle.degrees(0),
-          }
-        },
+        startingOrigin: GROUND_ORIGIN,
+        origin: GROUND_ORIGIN,
         visible: true,
         physics: {
           type: 'box',
@@ -81,15 +95,10 @@ export function createBaseSceneSurfaceA(): Scene {
         type: 'point-light',
         intensity: 1,
         name: { [LocalizedString.EN_US]: 'Light' },
-        origin: {
-          position: {
-            x: Distance.meters(0),
-            y: Distance.meters(0.91),
-            z: Distance.meters(0.5),
-          },
-        },
+        startingOrigin: LIGHT_ORIGIN,
+        origin: LIGHT_ORIGIN,
         visible: true
-      },
+      }
     },
     camera: Camera.arcRotate({
       radius: Distance.meters(5),
@@ -113,6 +122,8 @@ export function createBaseSceneSurfaceA(): Scene {
 }
 
 export function createBaseSceneSurfaceB(): Scene {
+  
+
   return {
     name: { [LocalizedString.EN_US]: 'Base Scene - Surface B' },
     description: { [LocalizedString.EN_US]: 'A base scene using Surface B. Intended to be augmented to create full JBC scenes' },
@@ -132,37 +143,16 @@ export function createBaseSceneSurfaceB(): Scene {
         type: 'from-template',
         templateId: 'jbc_mat_b',
         name: { [LocalizedString.EN_US]: 'JBC Surface B' },
-        origin: {
-          position: {
-            x: Distance.centimeters(0),
-            y: Distance.centimeters(-7),
-            z: Distance.centimeters(50),
-          },
-          scale: {
-            x: 100,
-            y: 100,
-            z: 100,
-          }
-        },
+        startingOrigin: JBC_MAT_ORIGIN,
+        origin: JBC_MAT_ORIGIN,
         visible: true,
       },
       'ground': {
         type: 'object',
         geometryId: 'ground',
         name: { [LocalizedString.EN_US]: 'Ground' },
-        origin: {
-          position: {
-            x: Distance.centimeters(0),
-            y: Distance.centimeters(-7.2),
-            z: Distance.centimeters(50),
-          },
-          orientation: {
-            type: 'euler',
-            x: Angle.degrees(90),
-            y: Angle.degrees(0),
-            z: Angle.degrees(0),
-          }
-        },
+        startingOrigin: GROUND_ORIGIN,
+        origin: GROUND_ORIGIN,
         visible: true,
         physics: {
           type: 'box',
@@ -174,13 +164,8 @@ export function createBaseSceneSurfaceB(): Scene {
         type: 'point-light',
         intensity: 10000,
         name: { [LocalizedString.EN_US]: 'Light' },
-        origin: {
-          position: {
-            x: Distance.meters(0),
-            y: Distance.meters(0.91),
-            z: Distance.meters(0.5),
-          },
-        },
+        startingOrigin: LIGHT_ORIGIN,
+        origin: LIGHT_ORIGIN,
         visible: true
       },
     },
@@ -214,13 +199,16 @@ export function createBaseSceneSurfaceB(): Scene {
  * @returns A can Node that can be inserted into a Scene
  */
 export function createCanNode(canNumber: number, canPosition?: Vector3, editable?: boolean, visible?: boolean): Node {
+  const origin: ReferenceFrame = {
+    position: canPosition ?? canPositions[canNumber - 1],
+  };
+
   return {
     type: 'from-template',
     templateId: 'can',
     name: { [LocalizedString.EN_US]: `Can ${canNumber}` },
-    origin: {
-      position: canPosition ?? canPositions[canNumber - 1],
-    },
+    startingOrigin: origin,
+    origin,
     editable: editable ?? false,
     visible: visible ?? true,
   };

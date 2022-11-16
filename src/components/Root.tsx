@@ -50,7 +50,7 @@ import * as uuid from 'uuid';
 import Author from '../db/Author';
 import db from '../db';
 import { auth } from '../firebase/firebase';
-import CopySceneDialog from './CopySceneDialog';
+import SaveAsSceneDialog from './SaveAsSceneDialog';
 import SceneErrorDialog from './SceneErrorDialog';
 import { push } from 'connected-react-router';
 import Loading from './Loading';
@@ -675,6 +675,9 @@ class Root extends React.Component<Props, State> {
       }
     }
 
+    const latestScene = Async.latestValue(scene);
+    const isAuthor = latestScene && latestScene.author.id === auth.currentUser.uid;
+
     return (
       <>
         <Container $windowInnerHeight={windowInnerHeight}>
@@ -696,16 +699,16 @@ class Root extends React.Component<Props, State> {
             onOpenSceneClick={this.onOpenSceneClick_}
             simulatorState={simulatorState}
             onNewSceneClick={this.onModalClick_(Modal.NEW_SCENE)}
-            onCopySceneClick={this.onModalClick_(Modal.copyScene({ scene: Async.latestValue(scene) }))}
-            onSettingsSceneClick={this.onSettingsSceneClick_}
-            onDeleteSceneClick={this.onModalClick_(Modal.deleteRecord({
+            onSaveAsSceneClick={this.onModalClick_(Modal.copyScene({ scene: Async.latestValue(scene) }))}
+            onSettingsSceneClick={isAuthor && this.onSettingsSceneClick_}
+            onDeleteSceneClick={isAuthor && this.onModalClick_(Modal.deleteRecord({
               record: {
                 type: Record.Type.Scene,
                 id: sceneId,
                 value: scene,
               }
             }))}
-            onSaveSceneClick={scene && scene.type === Async.Type.Saveable && scene.value.author.id === auth.currentUser.uid ? this.onSaveSceneClick_ : undefined}
+            onSaveSceneClick={scene && scene.type === Async.Type.Saveable && isAuthor ? this.onSaveSceneClick_ : undefined}
             
           />
           {impl}
@@ -767,7 +770,7 @@ class Root extends React.Component<Props, State> {
           />
         )}
         {modal.type === Modal.Type.CopyScene && (
-          <CopySceneDialog
+          <SaveAsSceneDialog
             theme={theme}
             scene={Async.latestValue(scene)}
             onClose={this.onModalClose_}
@@ -805,7 +808,7 @@ export default connect((state: ReduxState, { match: { params: { sceneId } } }: R
   onSelectNodeId: (nodeId: string) => dispatch(ScenesAction.selectNode({ sceneId, nodeId })),
   onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) =>
     dispatch(ScenesAction.setNodeBatch({ sceneId, ...setNodeBatch })),
-  onResetScene: () => dispatch(ScenesAction.resetScene({ sceneId })),
+  onResetScene: () => dispatch(ScenesAction.softResetScene({ sceneId })),
   onCreateScene: (sceneId: string, scene: Scene) => {
     dispatch(ScenesAction.createScene({ sceneId, scene }));
     dispatch(push(`/scene/${sceneId}`));

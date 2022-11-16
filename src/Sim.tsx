@@ -245,16 +245,29 @@ export class Space {
       const origin = node.origin ?? {};
       const nodeOriginChange = this.getSignificantOriginChange(origin, bNode);
       if (nodeOriginChange.position || nodeOriginChange.orientation || nodeOriginChange.scale) {
-        setNodeBatch.nodeIds.push({
-          id: nodeId,
-          node: {
-            ...node,
-            origin: {
-              ...node.origin,
-              ...nodeOriginChange,
-            }
-          },
-        });
+        const nextOrigin: UnitReferenceFrame = {
+          ...node.origin,
+          ...nodeOriginChange
+        };
+
+        if (this.scene_.selectedNodeId === nodeId) {
+          setNodeBatch.nodeIds.push({
+            id: nodeId,
+            node: {
+              ...node,
+              startingOrigin: nextOrigin,
+              origin: nextOrigin
+            },
+          });
+        } else {
+          setNodeBatch.nodeIds.push({
+            id: nodeId,
+            node: {
+              ...node,
+              origin: nextOrigin
+            },
+          });
+        }
       }
     }
 

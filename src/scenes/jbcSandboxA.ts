@@ -1,11 +1,35 @@
 import Scene from "../state/State/Scene";
-import { Rotation } from "../unit-math";
+import { ReferenceFrame, Rotation } from "../unit-math";
 import { Distance } from "../util";
 import LocalizedString from '../util/LocalizedString';
 
 import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
 
 const baseScene = createBaseSceneSurfaceA();
+
+const REAM1_ORIGIN: ReferenceFrame = {
+  position: {
+    x: Distance.centimeters(0),
+    y: Distance.centimeters(5),
+    z: Distance.centimeters(67.5),
+  },
+  orientation: Rotation.AxisAngle.fromRaw({
+    axis: { x: 1, y: 0, z: 0 },
+    angle: -Math.PI / 2,
+  }),
+};
+
+const REAM2_ORIGIN: ReferenceFrame = {
+  position: {
+    x: Distance.centimeters(0),
+    y: Distance.centimeters(5),
+    z: Distance.centimeters(-6.3),
+  },
+  orientation: Rotation.AxisAngle.fromRaw({
+    axis: { x: 1, y: 0, z: 0 },
+    angle: -Math.PI / 2,
+  }),
+};
 
 export const JBC_Sandbox_A: Scene = {
   ...baseScene,
@@ -33,17 +57,8 @@ export const JBC_Sandbox_A: Scene = {
       type: 'from-template',
       templateId: 'ream',
       name: { [LocalizedString.EN_US]: 'Paper Ream 1' },
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(5),
-          z: Distance.centimeters(67.5),
-        },
-        orientation: Rotation.AxisAngle.fromRaw({
-          axis: { x: 1, y: 0, z: 0 },
-          angle: -Math.PI / 2,
-        }),
-      },
+      startingOrigin: REAM1_ORIGIN,
+      origin: REAM1_ORIGIN,
       editable: true,
       visible: false,
     },
@@ -51,17 +66,8 @@ export const JBC_Sandbox_A: Scene = {
       type: 'from-template',
       templateId: 'ream',
       name: { [LocalizedString.EN_US]: 'Paper Ream 2' },
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(5),
-          z: Distance.centimeters(-6.3),
-        },
-        orientation: Rotation.AxisAngle.fromRaw({
-          axis: { x: 1, y: 0, z: 0 },
-          angle: -Math.PI / 2,
-        }),
-      },
+      startingOrigin: REAM2_ORIGIN,
+      origin: REAM2_ORIGIN,
       editable: true,
       visible: false,
     },

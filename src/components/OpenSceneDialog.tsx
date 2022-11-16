@@ -113,7 +113,7 @@ class OpenSceneDialog extends React.PureComponent<Props & ReduxOpenSceneDialogPr
     });
 
     return (
-      <Dialog name='Select Scene' theme={theme} onClose={onClose}>
+      <Dialog name='Open World' theme={theme} onClose={onClose}>
         <Container theme={theme}>
           <SceneColumn theme={theme}>
             {loadedScenesArray.map(s => this.createSceneName(s[0], s[1]))}

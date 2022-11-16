@@ -235,10 +235,8 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
     const originalNode = Async.previousValue(this.props.scene).nodes[id];
     this.props.onNodeChange(id, {
       ...originalNode,
-      origin: {
-        ...originalNode.origin,
-        ...origin,
-      },
+      startingOrigin: origin,
+      origin,
     }, true, true);
   };
 
@@ -252,14 +250,14 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
     const { props } = this;
     const { scene } = props;
 
-    const originalNode = Async.previousValue(scene).nodes[id];
+    const originalNode = Async.latestValue(scene).nodes[id];
     
     this.props.onNodeChange(id, {
       ...originalNode,
       origin: {
-        position: originalNode.origin?.position || Vector3.zero('centimeters'),
-        orientation: originalNode.origin?.orientation || Rotation.Euler.identity(Angle.Type.Degrees),
-        scale: originalNode.origin?.scale || RawVector3.ONE,
+        position: originalNode.startingOrigin?.position || Vector3.zero('centimeters'),
+        orientation: originalNode.startingOrigin?.orientation || Rotation.Euler.identity(Angle.Type.Degrees),
+        scale: originalNode.startingOrigin?.scale || RawVector3.ONE,
       },
     }, false, true);
   };

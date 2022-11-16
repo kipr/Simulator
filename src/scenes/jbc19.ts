@@ -1,3 +1,4 @@
+import { ReferenceFrame } from '../unit-math';
 import Scene from "../state/State/Scene";
 import { Rotation } from "../unit-math";
 import { Distance, Mass } from "../util";
@@ -6,6 +7,18 @@ import LocalizedString from '../util/LocalizedString';
 import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
 
 const baseScene = createBaseSceneSurfaceA();
+
+const REAM_ORIGIN: ReferenceFrame = {
+  position: {
+    x: Distance.centimeters(10),
+    y: Distance.centimeters(-3),
+    z: Distance.centimeters(91.6),
+  },
+  orientation: Rotation.AxisAngle.fromRaw({
+    axis: { x: 0, y: 1, z: 0 },
+    angle: -Math.PI / 4,
+  }),
+};
 
 export const JBC_19: Scene = {
   ...baseScene,
@@ -20,17 +33,8 @@ export const JBC_19: Scene = {
       type: 'from-template',
       templateId: 'ream',
       name: { [LocalizedString.EN_US]: 'Paper Ream' },
-      origin: {
-        position: {
-          x: Distance.centimeters(10),
-          y: Distance.centimeters(-3),
-          z: Distance.centimeters(91.6),
-        },
-        orientation: Rotation.AxisAngle.fromRaw({
-          axis: { x: 0, y: 1, z: 0 },
-          angle: -Math.PI / 4,
-        }),
-      },
+      startingOrigin: REAM_ORIGIN,
+      origin: REAM_ORIGIN,
       visible: true,
     },
   }

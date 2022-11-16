@@ -9,7 +9,7 @@ import { faCaretSquareLeft, faClone, faCogs, faCopy, faEye, faEyeSlash, faFolder
 export interface SceneMenuProps extends StyleProps, ThemeProps {
   onSaveScene?: (event: React.MouseEvent) => void;
   onNewScene?: (event: React.MouseEvent) => void;
-  onCopyScene?: (event: React.MouseEvent) => void;
+  onSaveAsScene?: (event: React.MouseEvent) => void;
   onOpenScene?: (event: React.MouseEvent) => void;
   onSettingsScene?: (event: React.MouseEvent) => void;
   onDeleteScene?: (event: React.MouseEvent) => void;
@@ -82,13 +82,13 @@ class SceneMenu extends React.PureComponent<Props, State> {
 
   render() {
     const { props } = this;
-    const { theme, onCopyScene, onNewScene, onSaveScene, onOpenScene, onSettingsScene, onDeleteScene } = props;
+    const { theme, onSaveAsScene, onNewScene, onSaveScene, onOpenScene, onSettingsScene, onDeleteScene } = props;
     return (
       <Container theme={theme}>
         <Item theme={theme} disabled={!onSettingsScene} onClick={onSettingsScene}><ItemIcon icon={faCogs} /> Settings</Item>
         <Item theme={theme} disabled={!onOpenScene} onClick={onOpenScene}><ItemIcon icon={faFolderOpen} /> Open</Item>
         <Item theme={theme} disabled={!onSaveScene} onClick={onSaveScene}><ItemIcon icon={faSave} /> Save</Item>
-        <Item theme={theme} disabled={!onCopyScene} onClick={onCopyScene}><ItemIcon icon={faCopy} /> Copy</Item>
+        <Item theme={theme} disabled={!onSaveAsScene} onClick={onSaveAsScene}><ItemIcon icon={faCopy} /> Save As</Item>
         <Item theme={theme} disabled={!onDeleteScene} onClick={onDeleteScene}><ItemIcon icon={faTrash} /> Delete</Item>
       </Container>
     );

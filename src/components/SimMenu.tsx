@@ -49,7 +49,7 @@ export interface MenuProps extends StyleProps, ThemeProps {
 
   onNewSceneClick?: (event: React.MouseEvent) => void;
   onSaveSceneClick?: (event: React.MouseEvent) => void;
-  onCopySceneClick?: (event: React.MouseEvent) => void;
+  onSaveAsSceneClick?: (event: React.MouseEvent) => void;
   onOpenSceneClick?: (event: React.MouseEvent) => void;
   onSettingsSceneClick?: (event: React.MouseEvent) => void;
   onDeleteSceneClick?: (event: React.MouseEvent) => void;
@@ -239,7 +239,7 @@ class SimMenu extends React.PureComponent<Props, State> {
       onOpenSceneClick,
       onSaveSceneClick,
       onNewSceneClick,
-      onCopySceneClick,
+      onSaveAsSceneClick: onCopySceneClick,
       onSettingsSceneClick,
       onDeleteSceneClick,
       simulatorState
@@ -299,7 +299,7 @@ class SimMenu extends React.PureComponent<Props, State> {
               <SceneMenu
                 style={{ zIndex: 9 }}
                 theme={theme}
-                onCopyScene={onCopySceneClick}
+                onSaveAsScene={onCopySceneClick}
                 onNewScene={onNewSceneClick}
                 onSaveScene={onSaveSceneClick}
                 onOpenScene={onOpenSceneClick}

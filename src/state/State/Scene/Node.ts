@@ -36,6 +36,7 @@ namespace Node {
 
   interface Base {
     name: LocalizedString;
+    startingOrigin?: ReferenceFrame;
     origin?: ReferenceFrame;
     scriptIds?: string[];
     documentIds?: string[];

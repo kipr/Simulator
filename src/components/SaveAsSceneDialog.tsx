@@ -29,7 +29,7 @@ const StyledSceneSettings = styled(SceneSettings, ({ theme }: ThemeProps) => ({
   padding: `${theme.itemPadding * 2}px`, 
 }));
 
-class CopySceneDialog extends React.PureComponent<Props, State> {
+class SaveAsSceneDialog extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -66,4 +66,4 @@ class CopySceneDialog extends React.PureComponent<Props, State> {
   }
 }
 
-export default CopySceneDialog;
+export default SaveAsSceneDialog;

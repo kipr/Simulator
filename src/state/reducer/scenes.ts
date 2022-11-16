@@ -6,7 +6,8 @@ import construct from '../../util/construct';
 import Geometry from '../State/Scene/Geometry';
 import Node from '../State/Scene/Node';
 import Camera from '../State/Scene/Camera';
-import { ReferenceFrame } from '../../unit-math';
+import { Vector3 as RawVector3 } from '../../math';
+import { ReferenceFrame, Rotation, Vector3 } from '../../unit-math';
 import db from '../../db';
 import { SCENE_COLLECTION } from '../../db/constants';
 import store from '..';
@@ -14,6 +15,7 @@ import DbError from '../../db/Error';
 import Selector from '../../db/Selector';
 import Dict from '../../Dict';
 import LocalizedString from '../../util/LocalizedString';
+import { Angle } from '../../util';
 
 export namespace ScenesAction {
   export interface RemoveScene {
@@ -100,6 +102,13 @@ export namespace ScenesAction {
   }
 
   export const resetScene = construct<ResetScene>('scenes/reset-scene');
+
+  export interface SoftResetScene {
+    type: 'scenes/soft-reset-scene';
+    sceneId: string;
+  }
+
+  export const softResetScene = construct<SoftResetScene>('scenes/soft-reset-scene');
 
   export interface RemoveNode {
     type: 'scenes/remove-node';
@@ -219,6 +228,7 @@ export type ScenesAction = (
   ScenesAction.SetSceneBatch |
   ScenesAction.LoadScene |
   ScenesAction.ResetScene |
+  ScenesAction.SoftResetScene |
   ScenesAction.RemoveNode |
   ScenesAction.SetNode |
   ScenesAction.SetNodeBatch |
@@ -491,6 +501,44 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
           original: current.original,
           value: current.value,
         }),
+      };
+    }
+    case 'scenes/soft-reset-scene': {
+      const scene = state[action.sceneId];
+
+      if (!scene) return state;
+
+      const nextScene = { ...scene };
+
+      if (nextScene.type === Async.Type.Loaded || nextScene.type === Async.Type.Saveable) {
+        nextScene.value = {
+          ...nextScene.value,
+          nodes: {
+            ...nextScene.value.nodes,
+          }
+        };
+
+        for (const nodeId in nextScene.value.nodes) {
+          const { startingOrigin } = nextScene.value.nodes[nodeId];
+
+          console.log({ nodeId, startingOrigin, origin: nextScene.value.nodes[nodeId].origin });
+
+          if (!startingOrigin) continue;
+
+          nextScene.value.nodes[nodeId] = {
+            ...nextScene.value.nodes[nodeId],
+            origin: {
+              position: startingOrigin.position ? startingOrigin.position : undefined,
+              orientation: startingOrigin.orientation ? startingOrigin.orientation : undefined,
+              scale: startingOrigin.scale ? startingOrigin.scale : undefined,
+            }
+          };
+        }
+      }
+      
+      return {
+        ...state,
+        [action.sceneId]: nextScene,
       };
     }
     case 'scenes/reset-scene': return {

@@ -53,26 +53,29 @@ const StyledScrollArea = styled(ScrollArea, (props: ThemeProps) => ({
 class AddNodeDialog extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
+    const origin: ReferenceFrame = {
+      position: {
+        x: Distance.centimeters(0),
+        y: Distance.centimeters(0),
+        z: Distance.centimeters(50),
+      },
+      orientation: {
+        type: 'euler',
+        x: Angle.degrees(0),
+        y: Angle.degrees(0),
+        z: Angle.degrees(0),
+        order: 'yzx',
+      }
+    };
+
     this.state = {
       id: uuid.v4(),
       node: {
         type: 'from-template',
         templateId: 'can',
         name: { [LocalizedString.EN_US]: 'Unnamed Object' },
-        origin: {
-          position: {
-            x: Distance.centimeters(0),
-            y: Distance.centimeters(0),
-            z: Distance.centimeters(50),
-          },
-          orientation: {
-            type: 'euler',
-            x: Angle.degrees(0),
-            y: Angle.degrees(0),
-            z: Angle.degrees(0),
-            order: 'yzx',
-          }
-        },
+        startingOrigin: origin,
+        origin,
         editable: true,
         visible: true,
       },
