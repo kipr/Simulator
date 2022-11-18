@@ -6,11 +6,14 @@ import { ReferenceFrame, Vector3 } from '../../../unit-math';
 import Camera from './Camera';
 import { Distance } from '../../../util';
 import Patch from '../../../util/Patch';
+import Async from '../Async';
+import LocalizedString from '../../../util/LocalizedString';
+import Author from '../../../db/Author';
 
 interface Scene {
-  name: string;
-  authorId: string;
-  description: string;
+  name: LocalizedString;
+  author: Author;
+  description: LocalizedString;
   selectedNodeId?: string;
 
   hdriUri?: string;
@@ -24,10 +27,39 @@ interface Scene {
   gravity: Vector3;
 }
 
+export type SceneBrief = Pick<Scene, 'name' | 'author' | 'description'>;
+
+export namespace SceneBrief {
+  export const fromScene = (scene: Scene): SceneBrief => ({
+    name: scene.name,
+    description: scene.description,
+    author: scene.author,
+  });
+}
+
+export type AsyncScene = Async<SceneBrief, Scene>;
+
+export namespace AsyncScene {
+  export const unloaded = (brief: SceneBrief): AsyncScene => ({
+    type: Async.Type.Unloaded,
+    brief,
+  });
+
+  export const loaded = (scene: Scene): AsyncScene => ({
+    type: Async.Type.Loaded,
+    brief: {
+      name: scene.name,
+      description: scene.description,
+      author: scene.author,
+    },
+    value: scene,
+  });
+}
+
 interface PatchScene {
-  name: Patch<string>;
-  authorId: Patch<string>;
-  description: Patch<string>;
+  name: Patch<LocalizedString>;
+  author: Patch<Author>;
+  description: Patch<LocalizedString>;
   selectedNodeId: Patch<string>;
 
   hdriUri?: Patch<string>;
@@ -88,7 +120,7 @@ namespace Scene {
 
   export const diff = (a: Scene, b: Scene): PatchScene => ({
     name: Patch.diff(a.name, b.name),
-    authorId: Patch.diff(a.authorId, b.authorId),
+    author: Patch.diff(a.author, b.author),
     description: Patch.diff(a.description, b.description),
     hdriUri: Patch.diff(a.hdriUri, b.hdriUri),
     selectedNodeId: Patch.diff(a.selectedNodeId, b.selectedNodeId),
@@ -100,10 +132,10 @@ namespace Scene {
   });
 
   export const EMPTY: Scene = {
-    authorId: '',
-    description: '',
+    author: Author.user(''),
+    description: { [LocalizedString.EN_US]: '' },
     geometry: {},
-    name: '',
+    name: { [LocalizedString.EN_US]: '' },
     nodes: {},
     camera: Camera.NONE,
     gravity: Vector3.zero('meters'),

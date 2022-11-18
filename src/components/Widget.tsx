@@ -72,7 +72,8 @@ export interface ModeProps {
   mode: Mode
 }
 
-export interface BarComponent<P> {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export interface BarComponent<P extends object> {
   component: React.ComponentType<P>;
   props: P;
 }
@@ -95,7 +96,8 @@ export interface WidgetProps extends StyleProps, ThemeProps, ModeProps {
 
   children: React.ReactNode;
 
-  barComponents?: BarComponent<unknown>[];
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  barComponents?: BarComponent<object>[];
 }
 
 interface WidgetState {

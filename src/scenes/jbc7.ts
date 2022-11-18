@@ -1,4 +1,5 @@
 import Scene from "../state/State/Scene";
+import LocalizedString from '../util/LocalizedString';
 
 import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
 
@@ -6,8 +7,8 @@ const baseScene = createBaseSceneSurfaceA();
 
 export const JBC_7: Scene = {
   ...baseScene,
-  name: 'JBC 7',
-  description: `Junior Botball Challenge 7: Bulldozer Mania`,
+  name: { [LocalizedString.EN_US]: 'JBC 7' },
+  description: { [LocalizedString.EN_US]: `Junior Botball Challenge 7: Bulldozer Mania` },
   nodes: {
     ...baseScene.nodes,
     'can1': createCanNode(1),

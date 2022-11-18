@@ -4,11 +4,21 @@ import { StyleProps } from '../style';
 import { styled } from 'styletron-react';
 import { Card } from '../components/Card';
 import MainMenu from '../components/MainMenu';
+import { RouteComponentProps } from 'react-router';
+import { connect } from 'react-redux';
+import { push } from 'connected-react-router';
 
 
-export interface DashboardProps extends ThemeProps,StyleProps {}
+export interface DashboardPublicProps extends RouteComponentProps, ThemeProps, StyleProps {
 
-interface DashboardState {}
+}
+
+interface DashboardPrivateProps {
+  onTutorialsClick: () => void;
+  onSimulatorClick: () => void;
+}
+
+type Props = DashboardPublicProps & DashboardPrivateProps;
 
 const Container = styled('div', (props: ThemeProps) => ({
   display: 'flex',
@@ -43,50 +53,46 @@ const CardContainer = styled('div', (props: ThemeProps) => ({
   height: 'calc(100vh - 48px)',
 }));
 
-type Props = DashboardProps;
-type State = DashboardState;
 
-class Dashboard extends React.PureComponent<Props, State> {
-  constructor(props: Props) {
-    super(props);
-  }
-
-  private name = 'Dashboard';
+class Dashboard extends React.PureComponent<Props> {
+  private onAboutClick_ = (event: React.MouseEvent) => {
+    window.location.href = 'https://www.kipr.org/kipr/about-kipr';
+  };
 
   render() {
-    const { props, state } = this;
-    const { style } = props;
+    const { props } = this;
+    const { className, style, onTutorialsClick, onSimulatorClick } = props;
     const theme = DARK;
 
     return (
-      <Container style={style} theme={theme}>
+      <Container className={className} style={style} theme={theme}>
         <MainMenu theme={theme}/>
-        <CardContainer style={style} theme={theme}>
+        <CardContainer theme={theme}>
           <Card
             theme={theme}
             title={'Tutorials'}
             description={'Learn how to get started with the simulator'}
-            link={'/tutorials'}
             backgroundColor={'#6c6ca1'}
             backgroundImage={'url(../../static/Laptop_Icon_Sunscreen.png)'}
+            onClick={onTutorialsClick}
           />
           <Card 
             theme={theme}
             title={'3D Simulator'}
             description={'A simulator for the Botball demobot.'}
-            link={'/sim'}
             backgroundImage={'url(../../static/Simulator-Robot-Closeup.png)'}
             backgroundPosition={'center top'}
+            onClick={onSimulatorClick}
           />
           <Card
             theme={theme}
             title={'About'}
             description={'KIPR is a 501(c) 3 organization started to make the long-term educational benefits of robotics accessible to students.'}
-            link={'https://www.kipr.org/kipr/about-kipr'}
             backgroundImage={'linear-gradient(#3b3c3c, transparent), url(../../static/Botguy-Picture-Small.png)'}
             backgroundColor={'#3b3c3c'}
             backgroundSize={'80%'}
             hoverBackgroundSize={'95%'}
+            onClick={this.onAboutClick_}
           />
         </CardContainer>
       </Container>
@@ -94,4 +100,7 @@ class Dashboard extends React.PureComponent<Props, State> {
   }
 }
 
-export default Dashboard;
+export default connect(undefined, dispatch => ({
+  onTutorialsClick: () => dispatch(push('/tutorials')),
+  onSimulatorClick: () => dispatch(push('/scene/jbcSandboxA')),
+}))(Dashboard) as React.ComponentType<DashboardPublicProps>;

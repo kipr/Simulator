@@ -4,20 +4,11 @@ import { StyleProps } from '../../style';
 import { Value, StyledText, Angle, Distance } from '../../util';
 import { ThemeProps } from '../theme';
 import ValueEdit from '../ValueEdit';
-import Field from '../Field';
-import { Spacer } from '../common';
-import { Switch } from '../Switch';
-import Button from '../Button';
-import { RobotPosition } from '../../RobotPosition';
 import deepNeq from '../../deepNeq';
 import { ReferenceFrame, Rotation, Vector3 } from '../../unit-math';
-import { connect } from 'react-redux';
-import { State } from '../../state';
-import { SceneAction } from '../../state/reducer';
-import Async from '../../state/State/Async';
 
 export interface LocationProps extends ThemeProps, StyleProps {
-  origin: ReferenceFrame;
+  origin?: ReferenceFrame;
   onOriginChange: (origin: ReferenceFrame, modifyReferenceScene: boolean) => void;
 }
 
@@ -116,6 +107,8 @@ export default class Location extends React.PureComponent<Props> {
     const { props } = this;
     const { theme, style, className, origin } = props;
 
+    if (!origin) return null;
+
     let euler = Rotation.Euler.identity(Angle.Type.Degrees);
     if (origin.orientation) {
       if (origin.orientation.type === 'euler') {
@@ -127,9 +120,9 @@ export default class Location extends React.PureComponent<Props> {
 
     return (
       <Container style={style} className={className}>
-        <StyledValueEdit value={Value.distance(origin.position?.x || Distance.centimeters(0))} onValueChange={this.onXChange_} theme={theme} name='X' />
-        <StyledValueEdit value={Value.distance(origin.position?.y || Distance.centimeters(0))} onValueChange={this.onYChange_} theme={theme} name='Y' />
-        <StyledValueEdit value={Value.distance(origin.position?.z || Distance.centimeters(0))} onValueChange={this.onZChange_} theme={theme} name='Z' />
+        <StyledValueEdit value={Value.distance(origin?.position?.x || Distance.centimeters(0))} onValueChange={this.onXChange_} theme={theme} name='X' />
+        <StyledValueEdit value={Value.distance(origin?.position?.y || Distance.centimeters(0))} onValueChange={this.onYChange_} theme={theme} name='Y' />
+        <StyledValueEdit value={Value.distance(origin?.position?.z || Distance.centimeters(0))} onValueChange={this.onZChange_} theme={theme} name='Z' />
         <StyledValueEdit value={Value.angle(euler.y)} onValueChange={this.onThetaChange_} theme={theme} name='Rotation' />
       </Container>
     );

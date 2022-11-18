@@ -1,5 +1,6 @@
 import Scene from "../state/State/Scene";
 import { Distance } from "../util";
+import LocalizedString from '../util/LocalizedString';
 
 import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
 
@@ -7,8 +8,8 @@ const baseScene = createBaseSceneSurfaceA();
 
 export const JBC_12: Scene = {
   ...baseScene,
-  name: 'JBC 12',
-  description: `Junior Botball Challenge 12: Unload 'Em`,
+  name: { [LocalizedString.EN_US]: 'JBC 12' },
+  description: { [LocalizedString.EN_US]: `Junior Botball Challenge 12: Unload 'Em` },
   nodes: {
     ...baseScene.nodes,
     'can1': createCanNode(1, { x: Distance.centimeters(0), y: Distance.centimeters(0), z: Distance.centimeters(53.3) }),

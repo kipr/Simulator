@@ -21,6 +21,7 @@ import Geometry from "../../state/State/Scene/Geometry";
 import { Fa } from "../Fa";
 
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import LocalizedString from '../../util/LocalizedString';
 
 export interface AddNodeAcceptance {
   node: Node;
@@ -52,26 +53,29 @@ const StyledScrollArea = styled(ScrollArea, (props: ThemeProps) => ({
 class AddNodeDialog extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
+    const origin: ReferenceFrame = {
+      position: {
+        x: Distance.centimeters(0),
+        y: Distance.centimeters(0),
+        z: Distance.centimeters(50),
+      },
+      orientation: {
+        type: 'euler',
+        x: Angle.degrees(0),
+        y: Angle.degrees(0),
+        z: Angle.degrees(0),
+        order: 'yzx',
+      }
+    };
+
     this.state = {
       id: uuid.v4(),
       node: {
         type: 'from-template',
         templateId: 'can',
-        name: 'Unnamed Object',
-        origin: {
-          position: {
-            x: Distance.centimeters(0),
-            y: Distance.centimeters(0),
-            z: Distance.centimeters(50),
-          },
-          orientation: {
-            type: 'euler',
-            x: Angle.degrees(0),
-            y: Angle.degrees(0),
-            z: Angle.degrees(0),
-            order: 'yzx',
-          }
-        },
+        name: { [LocalizedString.EN_US]: 'Unnamed Object' },
+        startingOrigin: origin,
+        origin,
         editable: true,
         visible: true,
       },

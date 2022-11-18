@@ -17,7 +17,8 @@ export const createConsoleBarComponents = (
   theme: Theme, 
   onClearConsole: () => void,
 ) => {
-  const consoleBar: BarComponent<unknown>[] = [];
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  const consoleBar: BarComponent<object>[] = [];
 
   consoleBar.push(BarComponent.create(Button, {
     theme,

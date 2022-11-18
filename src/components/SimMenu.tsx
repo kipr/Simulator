@@ -8,9 +8,51 @@ import { Layout, LayoutPicker } from './Layout';
 import { SimulatorState } from './SimulatorState';
 import { GREEN, RED, ThemeProps } from './theme';
 
+namespace SubMenu {
+  export enum Type {
+    None,
+    LayoutPicker,
+    SceneMenu,
+    ExtraMenu
+  }
+
+  export interface None {
+    type: Type.None;
+  }
+
+  export const NONE: None = { type: Type.None };
+
+  export interface LayoutPicker {
+    type: Type.LayoutPicker;
+  }
+
+  export const LAYOUT_PICKER: LayoutPicker = { type: Type.LayoutPicker };
+
+  export interface SceneMenu {
+    type: Type.SceneMenu;
+  }
+
+  export const SCENE_MENU: SceneMenu = { type: Type.SceneMenu };
+
+  export interface ExtraMenu {
+    type: Type.ExtraMenu;
+  }
+
+  export const EXTRA_MENU: ExtraMenu = { type: Type.ExtraMenu };
+}
+
+type SubMenu = SubMenu.None | SubMenu.LayoutPicker | SubMenu.SceneMenu | SubMenu.ExtraMenu;
+
 export interface MenuProps extends StyleProps, ThemeProps {
   layout: Layout;
   onLayoutChange: (layout: Layout) => void;
+
+  onNewSceneClick?: (event: React.MouseEvent) => void;
+  onSaveSceneClick?: (event: React.MouseEvent) => void;
+  onSaveAsSceneClick?: (event: React.MouseEvent) => void;
+  onOpenSceneClick?: (event: React.MouseEvent) => void;
+  onSettingsSceneClick?: (event: React.MouseEvent) => void;
+  onDeleteSceneClick?: (event: React.MouseEvent) => void;
 
   onShowAll: () => void;
   onHideAll: () => void;
@@ -31,7 +73,7 @@ export interface MenuProps extends StyleProps, ThemeProps {
 }
 
 interface MenuState {
-  layoutPicker: boolean
+  subMenu: SubMenu;
 }
 
 type Props = MenuProps;
@@ -39,7 +81,9 @@ type State = MenuState;
 
 import KIPR_LOGO_BLACK from '../assets/KIPR-Logo-Black-Text-Clear-Large.png';
 import KIPR_LOGO_WHITE from '../assets/KIPR-Logo-White-Text-Clear-Large.png';
-import { faBook, faClone, faCogs, faCommentDots, faPlay, faQuestion, faSignOutAlt, faStop, faSync } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faBook, faClone, faCogs, faCommentDots, faGlobeAmericas, faPlay, faQuestion, faSignOutAlt, faStop, faSync } from '@fortawesome/free-solid-svg-icons';
+import SceneMenu from './World/SceneMenu';
+import ExtraMenu from './ExtraMenu';
 
 const Container = styled('div', (props: ThemeProps) => ({
   backgroundColor: props.theme.backgroundColor,
@@ -81,8 +125,8 @@ const Item = styled('div', (props: ThemeProps & ClickProps) => ({
   alignItems: 'center',
   flexDirection: 'row',
   borderRight: `1px solid ${props.theme.borderColor}`,
-  paddingLeft: '20px',
-  paddingRight: '20px',
+  paddingLeft: '30px',
+  paddingRight: '30px',
   height: '100%',
   opacity: props.disabled ? '0.5' : '1.0',
   ':last-child': {
@@ -121,28 +165,58 @@ class SimMenu extends React.PureComponent<Props, State> {
     super(props);
 
     this.state = {
-      layoutPicker: false
+      subMenu: SubMenu.NONE
     };
   }
 
   private onLayoutClick_ = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    const layoutPickerNext = !this.state.layoutPicker;
+    const currentType = this.state.subMenu.type;
     this.setState({
-      layoutPicker: layoutPickerNext
+      subMenu: currentType === SubMenu.Type.LayoutPicker ? SubMenu.NONE : SubMenu.LAYOUT_PICKER
+    }, () => {
+      if (currentType !== SubMenu.Type.LayoutPicker) {
+        window.addEventListener('click', this.onClickOutside_);
+      } else {
+        window.removeEventListener('click', this.onClickOutside_);
+      }
     });
-
-    if (layoutPickerNext) {
-      window.addEventListener('click', this.onLayoutClickOutside_);
-    } else {
-      window.removeEventListener('click', this.onLayoutClickOutside_);
-    }
 
     event.stopPropagation();
   };
 
-  private onLayoutClickOutside_ = (event: MouseEvent) => {
-    this.setState({ layoutPicker: false });
-    window.removeEventListener('click', this.onLayoutClickOutside_);
+  private onSceneClick_ = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const currentType = this.state.subMenu.type;
+    this.setState({
+      subMenu: currentType === SubMenu.Type.SceneMenu ? SubMenu.NONE : SubMenu.SCENE_MENU
+    }, () => {
+      if (currentType !== SubMenu.Type.SceneMenu) {
+        window.addEventListener('click', this.onClickOutside_);
+      } else {
+        window.removeEventListener('click', this.onClickOutside_);
+      }
+    });
+
+    event.stopPropagation();
+  };
+
+  private onExtraClick_ = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const currentType = this.state.subMenu.type;
+    this.setState({
+      subMenu: currentType === SubMenu.Type.ExtraMenu ? SubMenu.NONE : SubMenu.EXTRA_MENU
+    }, () => {
+      if (currentType !== SubMenu.Type.ExtraMenu) {
+        window.addEventListener('click', this.onClickOutside_);
+      } else {
+        window.removeEventListener('click', this.onClickOutside_);
+      }
+    });
+
+    event.stopPropagation();
+  };
+
+  private onClickOutside_ = (event: MouseEvent) => {
+    this.setState({ subMenu: SubMenu.NONE });
+    window.removeEventListener('click', this.onClickOutside_);
   };
 
   render() {
@@ -162,10 +236,16 @@ class SimMenu extends React.PureComponent<Props, State> {
       onDashboardClick,
       onLogoutClick,
       onFeedbackClick,
+      onOpenSceneClick,
+      onSaveSceneClick,
+      onNewSceneClick,
+      onSaveAsSceneClick: onCopySceneClick,
+      onSettingsSceneClick,
+      onDeleteSceneClick,
       simulatorState
     } = props;
 
-    const { layoutPicker } = state;
+    const { subMenu } = state;
 
     const runOrStopItem: JSX.Element = SimulatorState.isRunning(simulatorState)
       ? (
@@ -201,18 +281,48 @@ class SimMenu extends React.PureComponent<Props, State> {
 
           <Item theme={theme} onClick={this.onLayoutClick_} style={{ position: 'relative' }}>
             <ItemIcon icon={faClone} /> Layout
-            {layoutPicker ? (
-              <LayoutPicker style={{ zIndex: 9 }} onLayoutChange={onLayoutChange} onShowAll={onShowAll} onHideAll={onHideAll} layout={layout} theme={theme} />
+            {subMenu.type === SubMenu.Type.LayoutPicker ? (
+              <LayoutPicker
+                style={{ zIndex: 9 }}
+                onLayoutChange={onLayoutChange}
+                onShowAll={onShowAll}
+                onHideAll={onHideAll}
+                layout={layout}
+                theme={theme}
+              />
             ) : undefined}
           </Item>
 
-          <Item theme={theme} onClick={onDocumentationClick}><ItemIcon icon={faBook} /> Documentation</Item>
-          
-          <Item theme={theme} onClick={onSettingsClick}><ItemIcon icon={faCogs} /> Settings</Item>
-          <Item theme={theme} onClick={onAboutClick}><ItemIcon icon={faQuestion} /> About</Item>
-          <Item theme={theme} onClick={onFeedbackClick}><ItemIcon icon={faCommentDots} /> Feedback</Item>
-          {/* <Item theme={theme} onClick={onDashboardClick}><ItemIcon icon='compass'/> Dashboard</Item> */}
-          <Item theme={theme} onClick={onLogoutClick}><ItemIcon icon={faSignOutAlt} /> Logout</Item>
+          <Item theme={theme} onClick={this.onSceneClick_} style={{ position: 'relative' }}>
+            <ItemIcon icon={faGlobeAmericas} /> World
+            {subMenu.type === SubMenu.Type.SceneMenu ? (
+              <SceneMenu
+                style={{ zIndex: 9 }}
+                theme={theme}
+                onSaveAsScene={onCopySceneClick}
+                onNewScene={onNewSceneClick}
+                onSaveScene={onSaveSceneClick}
+                onOpenScene={onOpenSceneClick}
+                onSettingsScene={onSettingsSceneClick}
+                onDeleteScene={onDeleteSceneClick}
+              />
+            ) : undefined}
+          </Item>
+
+          <Item theme={theme} onClick={this.onExtraClick_} style={{ position: 'relative' }}>
+            <ItemIcon icon={faBars} style={{ padding: 0 }} />
+            {subMenu.type === SubMenu.Type.ExtraMenu ? (
+              <ExtraMenu
+                style={{ zIndex: 9 }}
+                theme={theme}
+                onLogoutClick={onLogoutClick}
+                onDocumentationClick={onDocumentationClick}
+                onAboutClick={onAboutClick}
+                onFeedbackClick={onFeedbackClick}
+                onSettingsClick={onSettingsClick}
+              />
+            ) : undefined}
+          </Item>
         </Container>
         
       </>

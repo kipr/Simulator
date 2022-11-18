@@ -21,7 +21,6 @@ if (dependencies.ammo) modules.push(resolve(dependencies.ammo));
 module.exports = {
   entry: {
     app: './index.tsx',
-    login: './login/index.tsx',
     'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js'
   },
   output: {
@@ -29,6 +28,7 @@ module.exports = {
       return pathData.chunk.name === 'editor.worker' ? 'editor.worker.bundle.js' : 'js/[name].[contenthash].min.js';
     },
     path: resolve(__dirname, '../../dist'),
+    publicPath: '/',
     clean: true,
   },
   externals: [

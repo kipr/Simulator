@@ -10,6 +10,7 @@ const app = express();
 const sourceDir = 'dist';
 const { get: getConfig } = require('./config');
 const { WebhookClient } = require('discord.js');
+const proxy = require('express-http-proxy');
 
 
 let config;
@@ -29,6 +30,8 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use(morgan('combined'));
 
+app.use('/api', proxy(config.dbUrl));
+
 // If we have libkipr (C) artifacts and emsdk, we can compile.
 if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env) {
   console.log('Compiling C programs is enabled.');
@@ -45,37 +48,47 @@ if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env
         error: "Expected code key in body to be a string"
       });
     }
-
-    if (!('language' in req.body)) {
-      return res.status(400).json({
-        error: "Expected language key in body"
-      });
-    }
-
-    if (typeof req.body.language !== 'string' || !['c', 'cpp'].includes(req.body.language)) {
-      return res.status(400).json({
-        error: "Expected language key in body to be a supported language string"
-      });
-    }
-
+  
+    // Wrap user's main() in our own "main()" that exits properly
+    // Required because Asyncify keeps emscripten runtime alive, which would prevent cleanup code from running
+    const augmentedCode = `${req.body.code}
+      #include <emscripten.h>
+  
+      EM_JS(void, on_stop, (), {
+        if (Module.context.onStop) Module.context.onStop();
+      })
+    
+      void simMainWrapper()
+      {
+        main();
+        on_stop();
+        emscripten_force_exit(0);
+      }
+    `;
+  
+    
     const id = uuid.v4();
-    const fileExtension = req.body.language;
-    const path = `/tmp/${id}.${fileExtension}`;
-    fs.writeFile(path, req.body.code, err => {
+    const path = `/tmp/${id}.c`;
+    fs.writeFile(path, augmentedCode, err => {
       if (err) {
         return res.status(500).json({
           error: "Failed to write ${}"
         });
       }
 
-      const env = { ...process.env };
+      // ...process.env causes a linter error for some reason.
+      // We work around this by doing it manually.
+      
+      const env = {};
+      for (const key of Object.keys(process.env)) {
+        env[key] = process.env[key];
+      }
       
       env['PATH'] = `${config.server.dependencies.emsdk_env.PATH}:${process.env.PATH}`;
       env['EMSDK'] = config.server.dependencies.emsdk_env.EMSDK;
       env['EM_CONFIG'] = config.server.dependencies.emsdk_env.EM_CONFIG;
-
-      const compiler = req.body.language === 'c' ? 'emcc' : 'em++';
-      exec(`${compiler} -s WASM=1 -s SINGLE_FILE=1 -s INVOKE_RUN=0 -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main']" -I${config.server.dependencies.libkipr_c}/include -L${config.server.dependencies.libkipr_c}/lib -lkipr -o ${path}.js ${path}`, {
+  
+      exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -s ASYNCIFY -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']" -I${config.server.dependencies.libkipr_c}/include -L${config.server.dependencies.libkipr_c}/lib -lkipr -o ${path}.js ${path}`, {
         env
       }, (err, stdout, stderr) => {
         if (err) {
@@ -217,10 +230,6 @@ app.use(express.static(sourceDir, {
   maxAge: config.caching.staticMaxAge,
   setHeaders: setCrossOriginIsolationHeaders,
 }));
-
-app.get('/login', (req, res) => {
-  res.sendFile(`${__dirname}/${sourceDir}/login.html`);
-});
 
 
 app.use('*', (req, res) => {

@@ -605,9 +605,16 @@ class RobotBinding {
 
   get origin(): ReferenceFrame {
     const rootLink = this.links_[this.rootId_];
+    const rawOrientation = rootLink.rotationQuaternion;
+    const rawInternalOrigin = ReferenceFrame.toRaw(this.robot_.origin || ReferenceFrame.IDENTITY, RENDER_SCALE);
+
+    const orientation = Quaternion.toBabylon(rawOrientation || Quaternion.IDENTITY).multiply(
+      Quaternion.toBabylon(rawInternalOrigin.orientation || Quaternion.IDENTITY).invert()
+    );
+
     return {
       position: Vector3.fromRaw(RawVector3.fromBabylon(rootLink.position), RENDER_SCALE),
-      orientation: Rotation.Euler.fromRaw(Euler.fromQuaternion(rootLink.rotationQuaternion)),
+      orientation: Rotation.Euler.fromRaw(Euler.fromQuaternion(orientation)),
       scale: RawVector3.divideScalar(RawVector3.fromBabylon(rootLink.scaling), RENDER_SCALE_METERS_MULTIPLIER),
     };
   }
@@ -641,8 +648,8 @@ class RobotBinding {
 
     rootTransformNode.position = RawVector3.toBabylon(rawOrigin.position || RawVector3.ZERO)
       .add(RawVector3.toBabylon(rawInternalOrigin.position || RawVector3.ZERO));
-    rootTransformNode.rotationQuaternion = Quaternion.toBabylon(rawOrigin.orientation || Quaternion.IDENTITY)
-      .multiply(Quaternion.toBabylon(rawInternalOrigin.orientation || Quaternion.IDENTITY));
+    rootTransformNode.rotationQuaternion = Quaternion.toBabylon(rawInternalOrigin.orientation || Quaternion.IDENTITY)
+      .multiply(Quaternion.toBabylon(rawOrigin.orientation || Quaternion.IDENTITY));
 
 
     for (const link of Object.values(this.links_)) {

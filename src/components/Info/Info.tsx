@@ -12,20 +12,22 @@ import { Fa } from '../Fa';
 import { ReferenceFrame } from '../../unit-math';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
-import { SceneAction, ScenesAction } from '../../state/reducer';
+import { ScenesAction } from '../../state/reducer';
 import Node from '../../state/State/Scene/Node';
 import Motor from '../../AbstractRobot/Motor';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
+import Async from '../../state/State/Async';
 
 
 export interface InfoProps extends StyleProps, ThemeProps {
+  sceneId: string;
   nodeId: string;
 }
 
 interface ReduxInfoProps {
-  node: Node;
-  startingOrigin: ReferenceFrame;
-  onOriginChange: (origin: ReferenceFrame, modifyReferenceScene: boolean) => void;
+  node?: Node;
+  startingOrigin?: ReferenceFrame;
+  onOriginChange: (origin: ReferenceFrame) => void;
 }
 
 interface InfoState {
@@ -135,7 +137,7 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
   private onResetLocationClick_ = (event: React.MouseEvent<HTMLSpanElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    this.props.onOriginChange(this.props.startingOrigin, false);
+    this.props.onOriginChange(this.props.startingOrigin);
   };
 
   render() {
@@ -181,7 +183,7 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
     const motorPositions: JSX.Element[] = [];
 
     for (let i = 0; i < 4; ++i) {
-      const motor = node.state.getMotor(i);
+      const motor = node.state.motors[i];
       motorVelocities.push(
         <Row key={`motor-velocity-${i}`} theme={theme}>
           <SensorWidget value={motor.mode !== Motor.Mode.Pwm ? motor.speedGoal : 0} name={`motor ${i}`} plotTitle='Motor Velocity Plot' theme={theme} />
@@ -275,18 +277,23 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
 }
 
 export default connect<unknown, unknown, InfoProps, ReduxState>((state: ReduxState, ownProps: InfoProps) => {
-  const refNode = state.scene.referenceScene.nodes[ownProps.nodeId];
-  const node = state.scene.workingScene.nodes[ownProps.nodeId];
+  const asyncScene = state.scenes[ownProps.sceneId];
+  
+  const scene = Async.latestValue(asyncScene);
+  if (!scene) return {};
+
+  const node = scene.nodes[ownProps.nodeId];
   return {
-    startingOrigin: refNode.origin,
+    startingOrigin: node.startingOrigin,
     node
   };
-}, (dispatch, ownProps: InfoProps) => ({
-  onOriginChange: (origin: ReferenceFrame, modifyReferenceScene: boolean) => {
-    dispatch(SceneAction.setNodeOrigin({
-      nodeId: ownProps.nodeId,
+}, (dispatch, { sceneId, nodeId }: InfoProps) => ({
+  onOriginChange: (origin: ReferenceFrame) => {
+    dispatch(ScenesAction.setNodeOrigin({
+      sceneId,
+      nodeId,
       origin,
-      modifyReferenceScene
+      updateStarting: true
     }));
   }
 }))(Info) as React.ComponentType<InfoProps>;

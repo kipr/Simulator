@@ -18,9 +18,9 @@ import { Fa } from '../Fa';
 import NodeSettingsDialog, { NodeSettingsAcceptance } from './NodeSettingsDialog';
 import { connect } from 'react-redux';
 
-import { ReferencedScenePair, State as ReduxState } from '../../state';
+import { State as ReduxState } from '../../state';
 
-import { SceneAction } from '../../state/reducer';
+import { ScenesAction } from '../../state/reducer';
 
 import * as uuid from 'uuid';
 import { ReferenceFrame, Rotation, Vector3 } from '../../unit-math';
@@ -32,13 +32,48 @@ import Geometry from '../../state/State/Scene/Geometry';
 
 import { Button } from '../Button';
 import { BarComponent } from '../Widget';
-import { faGlobeAmericas, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faGlobeAmericas, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
+import Scene, { AsyncScene } from '../../state/State/Scene';
+import Async from '../../state/State/Async';
+import LocalizedString from '../../util/LocalizedString';
 
-export const createWorldBarComponents = (
-  theme: Theme, 
-  onSelectScene: () => void
-) => {
-  const worldBar: BarComponent<unknown>[] = [];
+namespace SceneState {
+  export enum Type {
+    Clean,
+    Saveable,
+    Copyable
+  }
+
+  export interface Clean {
+    type: Type.Clean;
+  }
+
+  export const CLEAN: Clean = { type: Type.Clean };
+
+  export interface Saveable {
+    type: Type.Saveable;
+  }
+
+  export const SAVEABLE: Saveable = { type: Type.Saveable };
+
+  export interface Copyable {
+    type: Type.Copyable;
+  }
+
+  export const COPYABLE: Copyable = { type: Type.Copyable };
+}
+
+export type SceneState = SceneState.Clean | SceneState.Saveable | SceneState.Copyable;
+
+export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSaveScene, onCopyScene }: {
+  theme: Theme,
+  saveable: boolean,
+  onSelectScene: () => void,
+  onSaveScene: () => void,
+  onCopyScene: () => void
+}) => {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  const worldBar: BarComponent<object>[] = [];
 
   worldBar.push(BarComponent.create(Button, {
     theme,
@@ -50,14 +85,37 @@ export const createWorldBarComponents = (
       </>,
   }));
 
+  worldBar.push(BarComponent.create(Button, {
+    theme,
+    onClick: onSaveScene,
+    disabled: !saveable,
+    children:
+      <>
+        <Fa icon={faSave} />
+        {' Save Scene'}
+      </>,
+  }));
+
+  worldBar.push(BarComponent.create(Button, {
+    theme,
+    onClick: onCopyScene,
+    children:
+      <>
+        <Fa icon={faPlus} />
+        {' Copy Scene'}
+      </>,
+  }));
+
   return worldBar;
 };
 
 export interface WorldProps extends StyleProps, ThemeProps {
+  sceneId: string;
+
 }
 
 interface ReduxWorldProps {
-  scene: ReferencedScenePair;
+  scene: AsyncScene;
 
   onNodeAdd: (id: string, node: Node) => void;
   onNodeRemove: (id: string) => void;
@@ -174,13 +232,11 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
   };
 
   private onNodeOriginAccept_ = (id: string) => (origin: ReferenceFrame) => {
-    const originalNode = this.props.scene.referenceScene.nodes[id];
+    const originalNode = Async.previousValue(this.props.scene).nodes[id];
     this.props.onNodeChange(id, {
       ...originalNode,
-      origin: {
-        ...originalNode.origin,
-        ...origin,
-      },
+      startingOrigin: origin,
+      origin,
     }, true, true);
   };
 
@@ -194,14 +250,14 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
     const { props } = this;
     const { scene } = props;
 
-    const originalNode = scene.referenceScene.nodes[id];
+    const originalNode = Async.latestValue(scene).nodes[id];
     
     this.props.onNodeChange(id, {
       ...originalNode,
       origin: {
-        position: originalNode.origin?.position || Vector3.zero('centimeters'),
-        orientation: originalNode.origin?.orientation || Rotation.Euler.identity(Angle.Type.Degrees),
-        scale: originalNode.origin?.scale || RawVector3.ONE,
+        position: originalNode.startingOrigin?.position || Vector3.zero('centimeters'),
+        orientation: originalNode.startingOrigin?.orientation || Rotation.Euler.identity(Angle.Type.Degrees),
+        scale: originalNode.startingOrigin?.scale || RawVector3.ONE,
       },
     }, false, true);
   };
@@ -212,12 +268,15 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
     const { props } = this;
     const { scene } = props;
     const idStr = id as string;
-    const node = scene.referenceScene.nodes[idStr];
+
+    const referenceScene = Async.previousValue(scene);
+    
+    const node = referenceScene.nodes[idStr];
     if (node.type === 'object') {
       if (node.geometryId !== undefined) {
         let unique = true;
-        for (const nodeId in scene.referenceScene.nodes) {
-          const otherNode = scene.referenceScene.nodes[nodeId];
+        for (const nodeId in referenceScene.nodes) {
+          const otherNode = referenceScene.nodes[nodeId];
           if (nodeId !== idStr && otherNode.type === 'object' && node.geometryId === otherNode.geometryId) {
             unique = false;
             break;
@@ -233,7 +292,7 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
   };
 
   private onItemVisibilityChange_ = (id: string) => (visibility: boolean) => {
-    const originalNode = this.props.scene.referenceScene.nodes[id];
+    const originalNode = Async.previousValue(this.props.scene).nodes[id];
 
     this.props.onNodeChange(id, {
       ...originalNode,
@@ -247,14 +306,15 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
     const { collapsed, modal } = state;
 
     const itemList: EditableList.Item[] = [];
-    // Mock list
-    for (const nodeId of Dict.keySet(scene.workingScene.nodes)) {
-      const node = scene.workingScene.nodes[nodeId];
-      const referenceScene = scene.referenceScene;
+
+    const workingScene = Async.latestValue(scene);
+    const referenceScene = Async.previousValue(scene);
+    for (const nodeId of Dict.keySet(workingScene.nodes)) {
+      const node = workingScene.nodes[nodeId];
       const hasReset = referenceScene.nodes[nodeId] !== undefined;
       itemList.push(EditableList.Item.standard({
         component: Item,
-        props: { name: node.name, theme },
+        props: { name: node.name[LocalizedString.EN_US], theme },
         onReset: hasReset ? this.onNodeResetClick_(nodeId) : undefined,
         onSettings: node.editable ? this.onItemSettingsClick_(nodeId) : undefined,
         onVisibilityChange: this.onItemVisibilityChange_(nodeId),
@@ -299,14 +359,14 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
             </StyledListSection>
           </Container>
         </ScrollArea>
-        {modal.type === UiState.Type.AddNode && <AddNodeDialog scene={scene.referenceScene} theme={theme} onClose={this.onModalClose_} onAccept={this.onAddNodeAccept_} />}
+        {modal.type === UiState.Type.AddNode && <AddNodeDialog scene={referenceScene} theme={theme} onClose={this.onModalClose_} onAccept={this.onAddNodeAccept_} />}
         {modal.type === UiState.Type.NodeSettings && <NodeSettingsDialog
           onGeometryAdd={onGeometryAdd}
           onGeometryRemove={onGeometryRemove}
           onGeometryChange={onGeometryChange}
-          scene={scene.referenceScene}
+          scene={referenceScene}
           id={modal.id}
-          node={scene.referenceScene.nodes[modal.id]}
+          node={referenceScene.nodes[modal.id]}
           theme={theme}
           onClose={this.onModalClose_}
           onChange={this.onNodeSettingsAccept_(modal.id)}
@@ -317,31 +377,31 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
   }
 }
 
-export default connect<unknown, unknown, Props, ReduxState>(state => {
+export default connect<unknown, unknown, Props, ReduxState>((state: ReduxState, { sceneId }: WorldProps) => {
   return {
-    scene: state.scene,
+    scene: state.scenes[sceneId],
   };
-}, (dispatch) => ({
-  onNodeAdd: (id: string, node: Node) => {
-    dispatch(SceneAction.addNode({ id, node }));
+}, (dispatch, { sceneId }: WorldProps) => ({
+  onNodeAdd: (nodeId: string, node: Node) => {
+    dispatch(ScenesAction.setNode({ sceneId, nodeId, node }));
   },
-  onNodeChange: (id: string, node: Node, modifyReferenceScene: boolean, modifyOrigin: boolean) => {
-    dispatch(SceneAction.setNode({ id, node, modifyReferenceScene, modifyOrigin }));
+  onNodeChange: (nodeId: string, node: Node) => {
+    dispatch(ScenesAction.setNode({ sceneId, nodeId, node }));
   },
-  onNodeRemove: (id: string) => {
-    dispatch(SceneAction.removeNode({ id }));
+  onNodeRemove: (nodeId: string) => {
+    dispatch(ScenesAction.removeNode({ sceneId, nodeId }));
   },
-  onGeometryAdd: (id: string, geometry: Geometry) => {
-    dispatch(SceneAction.addGeometry({ id, geometry }));
+  onGeometryAdd: (geometryId: string, geometry: Geometry) => {
+    dispatch(ScenesAction.addGeometry({ sceneId, geometryId, geometry }));
   },
-  onGeometryChange: (id: string, geometry: Geometry) => {
-    dispatch(SceneAction.setGeometry({ id, geometry }));
+  onGeometryChange: (geometryId: string, geometry: Geometry) => {
+    dispatch(ScenesAction.setGeometry({ sceneId, geometryId, geometry }));
   },
-  onGeometryRemove: (id: string) => {
-    dispatch(SceneAction.removeGeometry({ id }));
+  onGeometryRemove: (geometryId: string) => {
+    dispatch(ScenesAction.removeGeometry({ sceneId, geometryId }));
   },
-  onObjectAdd: (id: string, object: Node.Obj, geometry: Geometry) => {
-    dispatch(SceneAction.addObject({ id, object, geometry }));
+  onObjectAdd: (nodeId: string, object: Node.Obj, geometry: Geometry) => {
+    dispatch(ScenesAction.addObject({ sceneId, nodeId, object, geometry }));
   },
 
 

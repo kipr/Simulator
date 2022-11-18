@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { withRouter } from 'react-router-dom';
 import { signOutOfApp } from '../firebase/modules/auth';
 import WorkerInstance from '../WorkerInstance';
+
+import { State as ReduxState } from '../state';
 
 import SimMenu from './SimMenu';
 
@@ -27,25 +28,48 @@ import { RobotPosition } from '../RobotPosition';
 import { DEFAULT_SETTINGS, Settings } from '../Settings';
 import { DEFAULT_FEEDBACK, Feedback } from '../Feedback';
 import ExceptionDialog from './ExceptionDialog';
-import SelectSceneDialog from './SelectSceneDialog';
+import OpenSceneDialog from './OpenSceneDialog';
 
-import store from '../state';
-import { SceneAction } from '../state/reducer';
+import { ScenesAction } from '../state/reducer';
 import { Editor } from './Editor';
 import Dict from '../Dict';
 import ProgrammingLanguage from '../ProgrammingLanguage';
 
-import Scene from '../state/State/Scene';
+import Scene, { AsyncScene } from '../state/State/Scene';
+import { RouteComponentProps } from 'react-router';
+import Node from '../state/State/Scene/Node';
+import { connect } from 'react-redux';
+import Async from '../state/State/Async';
+import construct from '../util/construct';
+import NewSceneDialog from './NewSceneDialog';
+import DeleteDialog from './DeleteDialog';
+import Record from '../db/Record';
+import Selector from '../db/Selector';
+
+import * as uuid from 'uuid';
+import Author from '../db/Author';
+import db from '../db';
+import { auth } from '../firebase/firebase';
+import SaveAsSceneDialog from './SaveAsSceneDialog';
+import SceneErrorDialog from './SceneErrorDialog';
+import { push } from 'connected-react-router';
+import Loading from './Loading';
+import LocalizedString from '../util/LocalizedString';
+import SceneSettingsDialog from './SceneSettingsDialog';
 
 namespace Modal {
   export enum Type {
     Settings,
     About,
     Exception,
-    SelectScene,
+    OpenScene,
     Feedback,
     FeedbackSuccess,
     None,
+    NewScene,
+    CopyScene,
+    SettingsScene,
+    DeleteRecord
   }
 
   export interface Settings {
@@ -81,20 +105,87 @@ namespace Modal {
   export const exception = (error: Error, info?: React.ErrorInfo): Exception => ({ type: Type.Exception, error, info });
 
   export interface SelectScene {
-    type: Type.SelectScene;
+    type: Type.OpenScene;
   }
 
-  export const SELECT_SCENE: SelectScene = { type: Type.SelectScene };
+  export const SELECT_SCENE: SelectScene = { type: Type.OpenScene };
 
   export interface None {
     type: Type.None;
   }
 
   export const NONE: None = { type: Type.None };
+
+  export interface NewScene {
+    type: Type.NewScene;
+  }
+
+  export const NEW_SCENE: NewScene = { type: Type.NewScene };
+
+  export interface CopyScene {
+    type: Type.CopyScene;
+    scene: Scene;
+  }
+
+  export const copyScene = construct<CopyScene>(Type.CopyScene);
+
+  export interface DeleteRecord {
+    type: Type.DeleteRecord;
+    record: Record;
+  }
+
+  export const deleteRecord = construct<DeleteRecord>(Type.DeleteRecord);
+
+  export interface SettingsScene {
+    type: Type.SettingsScene;
+  }
+
+  export const SETTINGS_SCENE: SettingsScene = { type: Type.SettingsScene };
 }
 
-export type Modal = Modal.Settings | Modal.About | Modal.Exception | Modal.SelectScene | Modal.Feedback | Modal.FeedbackSuccess | Modal.None;
+export type Modal = (
+  Modal.Settings |
+  Modal.About |
+  Modal.Exception |
+  Modal.SelectScene |
+  Modal.Feedback |
+  Modal.FeedbackSuccess |
+  Modal.None |
+  Modal.NewScene |
+  Modal.CopyScene |
+  Modal.DeleteRecord |
+  Modal.SettingsScene
+);
 
+interface RootParams {
+  sceneId: string;
+}
+
+export interface RootPublicProps extends RouteComponentProps<RootParams> {
+
+}
+
+interface RootPrivateProps {
+  scene: AsyncScene;
+
+  onNodeAdd: (id: string, node: Node) => void;
+  onNodeRemove: (id: string) => void;
+  onNodeChange: (id: string, node: Node) => void;
+  onNodesChange: (nodes: Dict<Node>) => void;
+  onSelectNodeId: (id: string) => void;
+  onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => void;
+  onResetScene: () => void;
+
+  onCreateScene: (id: string, scene: Scene) => void;
+  onSaveScene: (id: string) => void;
+  onDeleteRecord: (selector: Selector) => void;
+  onSetScenePartial: (partialScene: Partial<Scene>) => void;
+
+  loadScene: (id: string) => void;
+  unfailScene: (id: string) => void;
+
+  goToLogin: () => void;
+}
 
 interface RootState {
   layout: Layout;
@@ -120,7 +211,7 @@ interface RootState {
   windowInnerHeight: number;
 }
 
-type Props = Record<string, never>;
+type Props = RootPublicProps & RootPrivateProps;
 type State = RootState;
 
 // We can't set innerheight statically, becasue the window can change
@@ -145,12 +236,16 @@ const STDERR_STYLE = (theme: Theme) => ({
   color: 'red'
 });
 
-export class Root extends React.Component<Props, State> {
+class Root extends React.Component<Props, State> {
   private editorRef: React.MutableRefObject<Editor>;
   private overlayLayoutRef:  React.MutableRefObject<OverlayLayout>;
 
   constructor(props: Props) {
     super(props);
+
+    if (!props.scene || props.scene.type === Async.Type.Unloaded) {
+      props.loadScene(props.match.params.sceneId);
+    }
 
     this.state = {
       layout: Layout.Side,
@@ -172,10 +267,16 @@ export class Root extends React.Component<Props, State> {
 
     this.editorRef = React.createRef();
     this.overlayLayoutRef = React.createRef();
+
+    Space.getInstance().scene = Async.latestValue(props.scene) || Scene.EMPTY;
+    
   }
 
   componentDidMount() {
     WorkerInstance.onStopped = this.onStopped_;
+
+    Space.getInstance().onSetNodeBatch = this.props.onSetNodeBatch;
+    Space.getInstance().onSelectNodeId = this.props.onSelectNodeId;
 
     this.scheduleUpdateConsole_();
     window.addEventListener('resize', this.onWindowResize_);
@@ -184,6 +285,27 @@ export class Root extends React.Component<Props, State> {
   componentWillUnmount() {
     window.removeEventListener('resize', this.onWindowResize_);
     cancelAnimationFrame(this.updateConsoleHandle_);
+  
+    Space.getInstance().onSelectNodeId = undefined;
+    Space.getInstance().onSetNodeBatch = undefined;
+  }
+
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>): void {
+    if (this.props.scene === undefined || this.props.scene.type === Async.Type.Unloaded) {
+      this.props.loadScene(this.props.match.params.sceneId);
+    }
+
+    if (this.props.scene !== prevProps.scene) {
+      Space.getInstance().scene = Async.latestValue(this.props.scene) || Scene.EMPTY;
+    }
+
+    if (this.props.onSelectNodeId !== prevProps.onSelectNodeId) {
+      Space.getInstance().onSelectNodeId = this.props.onSelectNodeId;
+    }
+
+    if (this.props.onSetNodeBatch !== prevProps.onSetNodeBatch) {
+      Space.getInstance().onSetNodeBatch = this.props.onSetNodeBatch;
+    }
   }
 
   private onWindowResize_ = () => {
@@ -370,7 +492,7 @@ export class Root extends React.Component<Props, State> {
   };
 
   private onResetWorldClick_ = () => {
-    store.dispatch(SceneAction.RESET_SCENE);
+    this.props.onResetScene();
   };
 
   private onClearConsole_ = () => {
@@ -388,7 +510,9 @@ export class Root extends React.Component<Props, State> {
   };
 
   onLogoutClick = () => {
-    signOutOfApp();
+    void signOutOfApp().then(() => {
+      this.props.goToLogin();
+    });
   };
 
   onDashboardClick = () => {
@@ -433,11 +557,18 @@ export class Root extends React.Component<Props, State> {
       });
   };
 
-  private onSelectSceneClick_ = () => {
+  private onOpenSceneClick_ = () => {
     this.setState({
       modal: Modal.SELECT_SCENE
     });
   };
+
+  private onSettingsSceneClick_ = () => {
+    this.setState({
+      modal: Modal.SETTINGS_SCENE
+    });
+  };
+
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
     this.setState({
@@ -445,8 +576,49 @@ export class Root extends React.Component<Props, State> {
     });
   }
 
+  private onNewSceneAccept_ = (scene: Scene) => {
+    this.setState({
+      modal: Modal.NONE,
+    }, () => {
+      const nextScene = { ...scene };
+      if (!auth.currentUser) return;
+      nextScene.author = Author.user(auth.currentUser.uid);
+      this.props.onCreateScene(uuid.v4(), nextScene);
+    });
+  };
+
+  private onDeleteRecordAccept_ = (selector: Selector) => () => {
+    this.props.onDeleteRecord(selector);
+  };
+
+  private onSettingsSceneAccept_ = (scene: Scene) => {
+    this.setState({
+      modal: Modal.NONE,
+    }, () => {
+      this.props.onSetScenePartial({
+        name: scene.name,
+        description: scene.description,
+      });
+    });
+  };
+
+  private onSceneErrorResolved_ = () => {
+    this.props.unfailScene(this.props.match.params.sceneId);
+  };
+
+  private onSaveSceneClick_ = () => {
+    this.props.onSaveScene(this.props.match.params.sceneId);
+  };
+
   render() {
     const { props, state } = this;
+    
+    const { match: { params: { sceneId } }, scene } = props;
+
+    if (!scene || scene.type === Async.Type.Unloaded) {
+      return <Loading />;
+    }
+
     const {
       layout,
       activeLanguage,
@@ -474,8 +646,8 @@ export class Root extends React.Component<Props, State> {
       onClearConsole: this.onClearConsole_,
       onIndentCode: this.onIndentCode_,
       onDownloadCode: this.onDownloadClick_,
-      onSelectScene: this.onSelectSceneClick_,
       editorRef: this.editorRef,
+      sceneId
     };
 
     let impl: JSX.Element;
@@ -501,11 +673,12 @@ export class Root extends React.Component<Props, State> {
       default: {
         return null;
       }
-
     }
 
-    return (
+    const latestScene = Async.latestValue(scene);
+    const isAuthor = latestScene && latestScene.author.id === auth.currentUser.uid;
 
+    return (
       <>
         <Container $windowInnerHeight={windowInnerHeight}>
           <SimMenu
@@ -523,23 +696,131 @@ export class Root extends React.Component<Props, State> {
             onDashboardClick={this.onDashboardClick}
             onLogoutClick={this.onLogoutClick}
             onFeedbackClick={this.onModalClick_(Modal.FEEDBACK)}
+            onOpenSceneClick={this.onOpenSceneClick_}
             simulatorState={simulatorState}
+            onNewSceneClick={this.onModalClick_(Modal.NEW_SCENE)}
+            onSaveAsSceneClick={this.onModalClick_(Modal.copyScene({ scene: Async.latestValue(scene) }))}
+            onSettingsSceneClick={isAuthor && this.onSettingsSceneClick_}
+            onDeleteSceneClick={isAuthor && this.onModalClick_(Modal.deleteRecord({
+              record: {
+                type: Record.Type.Scene,
+                id: sceneId,
+                value: scene,
+              }
+            }))}
+            onSaveSceneClick={scene && scene.type === Async.Type.Saveable && isAuthor ? this.onSaveSceneClick_ : undefined}
+            
           />
           {impl}
         </Container>
-        {modal.type === Modal.Type.Settings ? <SettingsDialog theme={theme} settings={settings} onSettingsChange={this.onSettingsChange_} onClose={this.onModalClose_} /> : undefined}
-        {modal.type === Modal.Type.About ? <AboutDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
-        {modal.type === Modal.Type.Feedback ? <FeedbackDialog theme={theme} feedback={feedback} onFeedbackChange={this.onFeedbackChange_} onClose={this.onModalClose_} onSubmit={this.onFeedbackSubmit_} /> : undefined}
-        {modal.type === Modal.Type.FeedbackSuccess ? <FeedbackSuccessDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
-        {modal.type === Modal.Type.Exception ? <ExceptionDialog error={modal.error} theme={theme} onClose={this.onModalClose_} /> : undefined}
-        {modal.type === Modal.Type.SelectScene ? <SelectSceneDialog theme={theme} onClose={this.onModalClose_} /> : undefined}
+        {modal.type === Modal.Type.None && Async.isFailed(scene) && (
+          <SceneErrorDialog
+            error={scene.error}
+            theme={theme}
+            onClose={this.onSceneErrorResolved_}
+          />
+        )}
+        {modal.type === Modal.Type.Settings && (
+          <SettingsDialog
+            theme={theme}
+            settings={settings}
+            onSettingsChange={this.onSettingsChange_}
+            onClose={this.onModalClose_}
+          />
+        )}
+        {modal.type === Modal.Type.About && (
+          <AboutDialog
+            theme={theme}
+            onClose={this.onModalClose_}
+          />
+        )}
+        {modal.type === Modal.Type.Feedback && (
+          <FeedbackDialog
+            theme={theme}
+            feedback={feedback}
+            onFeedbackChange={this.onFeedbackChange_}
+            onClose={this.onModalClose_}
+            onSubmit={this.onFeedbackSubmit_}
+          />
+        )}
+        {modal.type === Modal.Type.FeedbackSuccess && (
+          <FeedbackSuccessDialog
+            theme={theme}
+            onClose={this.onModalClose_}
+          />
+        )}
+        {modal.type === Modal.Type.Exception && (
+          <ExceptionDialog
+            error={modal.error}
+            theme={theme}
+            onClose={this.onModalClose_}
+          />
+        )}
+        {modal.type === Modal.Type.OpenScene && (
+          <OpenSceneDialog
+            theme={theme}
+            onClose={this.onModalClose_}
+          />
+        )}
+        {modal.type === Modal.Type.NewScene && (
+          <NewSceneDialog
+            theme={theme}
+            onClose={this.onModalClose_}
+            onAccept={this.onNewSceneAccept_}
+          />
+        )}
+        {modal.type === Modal.Type.CopyScene && (
+          <SaveAsSceneDialog
+            theme={theme}
+            scene={Async.latestValue(scene)}
+            onClose={this.onModalClose_}
+            onAccept={this.onNewSceneAccept_}
+          />
+        )}
+        {modal.type === Modal.Type.DeleteRecord && modal.record.type === Record.Type.Scene && (
+          <DeleteDialog
+            name={Record.latestName(modal.record)}
+            theme={theme}
+            onClose={this.onModalClose_}
+            onAccept={this.onDeleteRecordAccept_(Record.selector(modal.record))}
+          />
+        )}
+        {modal.type === Modal.Type.SettingsScene && (
+          <SceneSettingsDialog
+            scene={Async.latestValue(scene)}
+            theme={theme}
+            onClose={this.onModalClose_}
+            onAccept={this.onSettingsSceneAccept_}
+          />
+        )}
       </>
 
     );
   }
 }
 
-// All logic inside of index.tsx
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-export default withRouter(Root);
+export default connect((state: ReduxState, { match: { params: { sceneId } } }: RootPublicProps) => ({
+  scene: state.scenes[sceneId]
+}), (dispatch, { match: { params: { sceneId } } }: RootPublicProps) => ({
+  onNodeAdd: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
+  onNodeRemove: (nodeId: string) => dispatch(ScenesAction.removeNode({ sceneId, nodeId })),
+  onNodeChange: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
+  onSelectNodeId: (nodeId: string) => dispatch(ScenesAction.selectNode({ sceneId, nodeId })),
+  onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) =>
+    dispatch(ScenesAction.setNodeBatch({ sceneId, ...setNodeBatch })),
+  onResetScene: () => dispatch(ScenesAction.softResetScene({ sceneId })),
+  onCreateScene: (sceneId: string, scene: Scene) => {
+    dispatch(ScenesAction.createScene({ sceneId, scene }));
+    dispatch(push(`/scene/${sceneId}`));
+  },
+  onDeleteRecord: (selector: Selector) => {
+    dispatch(ScenesAction.removeScene({ sceneId: selector.id })),
+    dispatch(push('/'));
+  },
+  onSaveScene: (sceneId: string) => dispatch(ScenesAction.saveScene({ sceneId })),
+  onSetScenePartial: (partialScene: Partial<Scene>) => dispatch(ScenesAction.setScenePartial({ sceneId, partialScene })),
+  loadScene: (sceneId: string) => dispatch(ScenesAction.loadScene({ sceneId })),
+  unfailScene: (sceneId: string) => dispatch(ScenesAction.unfailScene({ sceneId })),
+  goToLogin: () => dispatch(push('/login', { from: window.location.pathname })),
+}))(Root) as React.ComponentType<RootPublicProps>;
 export { RootState };

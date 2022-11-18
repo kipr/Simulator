@@ -103,6 +103,15 @@ The server can be configured using environment variables. Variables without defa
 | `SERVER_PORT` | The port on which to listen for requests | `3000` |
 | `CACHING_STATIC_MAX_AGE` | The max duration (in ms) to allow static assets to be cached | `3600000` (1 hr) |
 | `FEEDBACK_WEBHOOK_URL` | The url for the discord webhook to send feedback to | | 
+| `API_URL` | The url for the KIPR database server | `https://db-prerelease.botballacademy.org` |
+
+## Using a local `database` service
+
+Clone the [KIPR database](https://github.com/kipr/database) service and follow the instructions. Start the simulator server with:
+
+```sh
+API_URL=http://localhost:4000 node express.js
+```
 
 ## Linting
 

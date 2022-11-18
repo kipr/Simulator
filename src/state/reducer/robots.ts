@@ -60,7 +60,6 @@ export namespace RobotsAction {
   export interface LoadRobot {
     type: 'load-robot';
     id: string;
-    uri: string;
   }
 
   export type LoadRobotParams = Omit<LoadRobot, 'type'>;
@@ -134,7 +133,9 @@ export const reduceRobots = (state: Robots = DEFAULT_ROBOTS, action: RobotsActio
         ...state,
         robots: {
           ...state.robots,
-          [action.id]: Async.loading({ uri: action.uri }),
+          [action.id]: Async.loading({
+            brief: Async.brief(state.robots[action.id])
+          }),
         },
       };
     default:

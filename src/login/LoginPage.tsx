@@ -16,14 +16,24 @@ import KIPR_LOGO_BLACK from '../assets/KIPR-Logo-Black-Text-Clear-Large.png';
 import KIPR_LOGO_WHITE from '../assets/KIPR-Logo-White-Text-Clear-Large.png';
 import { Fa } from '../components/Fa';
 import { Text } from '../components/Text';
-import { StyledText } from '../util';
+import { EMPTY_OBJECT, StyledText } from '../util';
 import Button from '../components/Button';
 import { Validators } from '../util/Validator';
 import { faSignInAlt, faUnlock, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { RouteComponentProps } from 'react-router';
+import qs from 'qs';
+import { connect } from 'react-redux';
+import { State as ReduxState } from '../state';
+import { push } from 'connected-react-router';
 
-export interface LoginPageProps extends ThemeProps, StyleProps {
+export interface LoginPagePublicProps extends ThemeProps, StyleProps {
   externalIndex?: number;
+}
+
+interface LoginPagePrivateProps {
+  from?: string;
+  redirect: (from: string) => void;
 }
 
 interface LoginPageState {
@@ -125,7 +135,7 @@ const SocialContainer = styled('div', (props: ThemeProps) => ({
   fontSize: '1.4em'
 }));
 
-type Props = LoginPageProps;
+type Props = LoginPagePublicProps & LoginPagePrivateProps;
 type State = LoginPageState;
 
 class LoginPage extends React.Component<Props, State> {
@@ -248,7 +258,7 @@ class LoginPage extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { className, style } = props;
+    const { className, style, from, redirect } = props;
     const { initialAuthLoaded, index, authenticating, loggedIn, forgotPassword, logInFailedMessage } = state;
     const theme = DARK;
 
@@ -258,7 +268,7 @@ class LoginPage extends React.Component<Props, State> {
     }
 
     if (loggedIn) {
-      window.location.href = '/dashboard';
+      setTimeout(() => redirect(from));
       return null;
     }
 
@@ -383,4 +393,15 @@ class LoginPage extends React.Component<Props, State> {
   }
 }
 
-export default LoginPage;
+export default connect((state: ReduxState) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const locationState = state.router.location.state || EMPTY_OBJECT;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const from = locationState['from'] || '/';
+  return {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    from,
+  };
+}, dispatch => ({
+  redirect: (path?: string) => dispatch(push(path || '/')),
+}))(LoginPage) as React.ComponentType<LoginPagePublicProps>;

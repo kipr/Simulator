@@ -5,26 +5,31 @@ import Dict from "../Dict";
 import { State as ReduxState } from "../state";
 import { Scenes } from "../state/State";
 import Async from "../state/State/Async";
-import Scene from "../state/State/Scene";
+import Scene, { AsyncScene } from "../state/State/Scene";
 import { Dialog } from "./Dialog";
 import { ThemeProps } from "./theme";
-import { SceneAction } from "../state/reducer";
+import { ScenesAction } from "../state/reducer";
 import DialogBar from "./DialogBar";
 import ScrollArea from "./ScrollArea";
 import { Fa } from "./Fa";
 
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { push } from 'connected-react-router';
+import LocalizedString from '../util/LocalizedString';
+import Author from '../db/Author';
+import { auth } from '../firebase/firebase';
 
-export interface SelectSceneDialogProps extends ThemeProps {
+export interface OpenSceneDialogProps extends ThemeProps {
   onClose: () => void;
 }
 
-interface ReduxSelectSceneDialogProps {
+interface ReduxOpenSceneDialogProps {
   scenes: Scenes;
-  onSceneChange: (scene: Scene) => void;
+  onSceneChange: (sceneId: string) => void;
+  listUserScenes: () => void;
 }
 
-type Props = SelectSceneDialogProps;
+type Props = OpenSceneDialogProps;
 
 interface SelectSceneDialogState {
   selectedSceneId: string | null;
@@ -75,18 +80,22 @@ interface SectionProps {
   selected?: boolean;
 }
 
-class SelectSceneDialog extends React.PureComponent<Props & ReduxSelectSceneDialogProps, SelectSceneDialogState> {
-  constructor(props: Props & ReduxSelectSceneDialogProps) {
+class OpenSceneDialog extends React.PureComponent<Props & ReduxOpenSceneDialogProps, SelectSceneDialogState> {
+  constructor(props: Props & ReduxOpenSceneDialogProps) {
     super(props);
     this.state = {
       selectedSceneId: null,
     };
   }
 
-  componentDidUpdate(prevProps: Readonly<SelectSceneDialogProps & ReduxSelectSceneDialogProps>) {
+  componentDidMount(): void {
+    this.props.listUserScenes();
+  }
+
+  componentDidUpdate(prevProps: Readonly<OpenSceneDialogProps & ReduxOpenSceneDialogProps>) {
     // Check if selectedSceneId is not longer one of the scenes
     if (this.props.scenes !== prevProps.scenes) {
-      if (!Object.prototype.hasOwnProperty.call(this.props.scenes.scenes, this.state.selectedSceneId)) {
+      if (!Object.prototype.hasOwnProperty.call(this.props.scenes, this.state.selectedSceneId)) {
         this.setState({ selectedSceneId: null });
       }
     }
@@ -97,14 +106,14 @@ class SelectSceneDialog extends React.PureComponent<Props & ReduxSelectSceneDial
     const { selectedSceneId } = this.state;
 
     const loadedScenesArray: [string, Scene][] = [];
-    Dict.forEach(scenes.scenes, (value, key) => {
-      if (value.type === Async.Type.Loaded) {
-        loadedScenesArray.push([key, value.value]);
-      }
+    Dict.forEach(scenes, (value, key) => {
+      const underlying = Async.latestValue(value);
+      if (!underlying) return;
+      loadedScenesArray.push([key, underlying]);
     });
 
     return (
-      <Dialog name='Select Scene' theme={theme} onClose={onClose}>
+      <Dialog name='Open World' theme={theme} onClose={onClose}>
         <Container theme={theme}>
           <SceneColumn theme={theme}>
             {loadedScenesArray.map(s => this.createSceneName(s[0], s[1]))}
@@ -113,7 +122,7 @@ class SelectSceneDialog extends React.PureComponent<Props & ReduxSelectSceneDial
             <InfoContainer theme={theme}>
               {selectedSceneId === null
                 ? this.createNoSceneInfo()
-                : this.createSceneInfo(scenes.scenes[selectedSceneId])}
+                : this.createSceneInfo(scenes[selectedSceneId])}
             </InfoContainer>
           </InfoColumn>
         </Container>
@@ -128,12 +137,10 @@ class SelectSceneDialog extends React.PureComponent<Props & ReduxSelectSceneDial
     const { scenes } = this.props;
     const { selectedSceneId } = this.state;
 
-    const selectedAsyncScene = selectedSceneId !== null ? scenes.scenes[selectedSceneId] : null;
-    const selectedScene = selectedAsyncScene?.type === Async.Type.Loaded
-      ? selectedAsyncScene.value
-      : null;
+    const selectedAsyncScene = selectedSceneId !== null ? scenes[selectedSceneId] : null;
+    const selectedScene = Async.latestValue(selectedAsyncScene);
     
-    if (selectedScene) this.props.onSceneChange(selectedScene);
+    if (selectedScene) this.props.onSceneChange(selectedSceneId);
     this.props.onClose();
   };
 
@@ -143,25 +150,39 @@ class SelectSceneDialog extends React.PureComponent<Props & ReduxSelectSceneDial
     
     return (
       <SceneName key={sceneId} theme={theme} selected={sceneId === selectedSceneId} onClick={() => this.onSceneClick(sceneId)}>
-        {scene.name}
+        {LocalizedString.lookup(scene.name, LocalizedString.EN_US)}
       </SceneName>
     );
   };
 
-  private createSceneInfo = (scene: Async<Scene>) => {
+  private createSceneInfo = (scene: AsyncScene) => {
     const { theme } = this.props;
 
-    switch (scene.type) {
-      case Async.Type.Loaded:
-        return <>
-          <InfoText theme={theme}>{`Description: ${scene.value.description}`}</InfoText>
-          <InfoText theme={theme}>{`Author: ${scene.value.authorId}`}</InfoText>
-        </>;
-      case Async.Type.Loading:
-        return <InfoText theme={theme}>Loading...</InfoText>;
-      default:
-        return <InfoText theme={theme}>The scene is not available.</InfoText>;
+    let name: string;
+    let description: string;
+    let author: Author;
+
+    const brief = Async.brief(scene);
+
+    if (!brief) {
+      const value = Async.latestValue(scene);
+      if (!value) return <InfoText theme={theme}>Unknown</InfoText>;
+
+      name = LocalizedString.lookup(value.name, LocalizedString.EN_US);
+      description = LocalizedString.lookup(value.description, LocalizedString.EN_US);
+      author = value.author;
+    } else {
+      name = LocalizedString.lookup(brief.name, LocalizedString.EN_US);
+      description = LocalizedString.lookup(brief.description, LocalizedString.EN_US);
+      author = brief.author;
     }
+
+    return (
+      <>
+        <InfoText theme={theme}>{`Description: ${description}`}</InfoText>
+        <InfoText theme={theme}>{`Author: ${author.id === auth.currentUser.uid ? 'Me' : author.id}`}</InfoText>
+      </>
+    );
   };
 
   private createNoSceneInfo = () => {
@@ -178,7 +199,8 @@ class SelectSceneDialog extends React.PureComponent<Props & ReduxSelectSceneDial
 export default connect<unknown, unknown, Props>((state: ReduxState, ownProps) => ({
   scenes: state.scenes,
 }), (dispatch, b) => ({
-  onSceneChange: (scene: Scene) => {
-    dispatch(SceneAction.replaceScene({ scene }));
-  }
-}))(SelectSceneDialog) as React.ComponentType<SelectSceneDialogProps>;
+  onSceneChange: (sceneId: string) => {
+    dispatch(push(`/scene/${sceneId}`));
+  },
+  listUserScenes: () => dispatch(ScenesAction.LIST_USER_SCENES),
+}))(OpenSceneDialog) as React.ComponentType<OpenSceneDialogProps>;
