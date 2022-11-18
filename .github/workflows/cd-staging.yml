@@ -105,5 +105,5 @@ jobs:
           --namespace prerelease \
           --values ./simulator/values.prerelease.yaml \
           --set imageVersion=${{ needs.build-publish.outputs.image_version }} \
-          --set apiUrl=database.prerelease.svc.cluster.local:4000 \
+          --set apiUrl=http://database.prerelease.svc.cluster.local:4000 \
           simulator-prerelease ./simulator
