@@ -65,7 +65,10 @@ export class Space {
   set scene(scene: Scene) {
     this.scene_ = scene;
     
-    if (this.sceneSetting_ || this.debounceUpdate_ || !this.sceneBinding_) return;
+    if (this.sceneSetting_ || this.debounceUpdate_ || !this.sceneBinding_) {
+      if (this.sceneBinding_) this.sceneBinding_.scene = scene;
+      return;
+    }
 
     this.sceneSetting_ = true;
     (async () => {

@@ -16,6 +16,7 @@ import Selector from '../../db/Selector';
 import Dict from '../../Dict';
 import LocalizedString from '../../util/LocalizedString';
 import { Angle } from '../../util';
+import produce, { original } from 'immer';
 
 export namespace ScenesAction {
   export interface RemoveScene {
@@ -509,36 +510,27 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
 
       if (!scene) return state;
 
-      const nextScene = { ...scene };
-
-      if (nextScene.type === Async.Type.Loaded || nextScene.type === Async.Type.Saveable) {
-        nextScene.value = {
-          ...nextScene.value,
-          nodes: {
-            ...nextScene.value.nodes,
-          }
-        };
-
-        for (const nodeId in nextScene.value.nodes) {
-          const { startingOrigin } = nextScene.value.nodes[nodeId];
-
-          if (!startingOrigin) continue;
-
-          nextScene.value.nodes[nodeId] = {
-            ...nextScene.value.nodes[nodeId],
-            origin: {
-              position: startingOrigin.position ? startingOrigin.position : undefined,
-              orientation: startingOrigin.orientation ? startingOrigin.orientation : undefined,
-              scale: startingOrigin.scale ? startingOrigin.scale : undefined,
+      
+      if (scene.type === Async.Type.Loaded || scene.type === Async.Type.Saveable) {
+        return {
+          ...state,
+          [action.sceneId]: Async.mutate(scene, draft => {
+            for (const nodeId in draft.nodes) {
+              const { origin, startingOrigin } = draft.nodes[nodeId];
+    
+              if (!startingOrigin) continue;
+    
+              draft.nodes[nodeId].origin = {
+                position: startingOrigin.position ? startingOrigin.position : undefined,
+                orientation: startingOrigin.orientation ? startingOrigin.orientation : undefined,
+                scale: startingOrigin.scale ? startingOrigin.scale : undefined,
+              };
             }
-          };
-        }
+          }),
+        };
       }
       
-      return {
-        ...state,
-        [action.sceneId]: nextScene,
-      };
+      return state;
     }
     case 'scenes/reset-scene': return {
       ...state,
