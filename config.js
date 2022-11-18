@@ -22,7 +22,7 @@ module.exports = {
       caching: {
         staticMaxAge: getEnvVarOrDefault('CACHING_STATIC_MAX_AGE', 60 * 60 * 1000),
       },
-      dbUrl: getEnvVarOrDefault('API_URL', 'https://db.botballacademy.org'),
+      dbUrl: getEnvVarOrDefault('API_URL', 'https://db-prerelease.botballacademy.org'),
     };
   },
 };
