@@ -74,5 +74,5 @@ jobs:
           --install \
           --namespace prod \
           --set imageVersion=${{ steps.check_version.outputs.VERSION }} \
-          --set apiUrl=http://database.prod.svc.cluster.local \
+          --set apiUrl=http://database.prod.svc.cluster.local:4000 \
           simulator ./simulator
