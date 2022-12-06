@@ -19,6 +19,7 @@ import { Angle } from '../../util';
 import produce, { original } from 'immer';
 import Script from '../State/Scene/Script';
 import { v4 } from 'uuid';
+import { WritableDraft } from 'immer/dist/internal';
 
 export namespace ScenesAction {
   export interface RemoveScene {
@@ -205,6 +206,14 @@ export namespace ScenesAction {
 
   export const setCamera = construct<SetCamera>('scenes/set-camera');
 
+  export interface SetGravity {
+    type: 'scenes/set-gravity';
+    sceneId: string;
+    gravity: Vector3;
+  }
+
+  export const setGravity = construct<SetGravity>('scenes/set-gravity');
+
   export interface SetNodeOrigin {
     type: 'scenes/set-node-origin';
     sceneId: string;
@@ -247,14 +256,6 @@ export namespace ScenesAction {
   }
 
   export const setScript = construct<SetScript>('scenes/set-script');
-
-  export interface SelectScript {
-    type: 'scenes/select-script';
-    sceneId: string;
-    scriptId?: string;
-  }
-
-  export const selectScript = construct<SelectScript>('scenes/select-script');
 }
 
 export type ScenesAction = (
@@ -277,6 +278,7 @@ export type ScenesAction = (
   ScenesAction.SelectNode |
   ScenesAction.AddObject |
   ScenesAction.SetCamera |
+  ScenesAction.SetGravity |
   ScenesAction.SetNodeOrigin |
   ScenesAction.CreateScene |
   ScenesAction.SaveScene |
@@ -284,8 +286,7 @@ export type ScenesAction = (
   ScenesAction.UnfailScene |
   ScenesAction.AddScript |
   ScenesAction.RemoveScript |
-  ScenesAction.SetScript |
-  ScenesAction.SelectScript
+  ScenesAction.SetScript
 );
 
 const DEFAULT_SCENES: Scenes = {
@@ -416,6 +417,11 @@ export const listUserScenes = async () => {
     }))
   }));
 };
+
+export const mutate = (scenes: Scenes, sceneId: string, recipe: (draft: WritableDraft<Scene>) => void) => ({
+  ...scenes,
+  [sceneId]: Async.mutate(scenes[sceneId], recipe),
+});
 
 export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesAction): Scenes => {
   switch (action.type) {
@@ -582,74 +588,43 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
         delete scene.nodes[action.nodeId];
       }),
     };
-    case 'scenes/set-node': return {
-      ...state,
-      [action.sceneId]: Async.mutate(state[action.sceneId], scene => {
-        scene.nodes[action.nodeId] = action.node;
-      }),
-    };
-    case 'scenes/set-node-batch': return {
-      ...state,
-      [action.sceneId]: Async.mutate(state[action.sceneId], scene => {
-        for (const { id, node } of action.nodeIds) {
-          scene.nodes[id] = node;
-        }
-      }),
-    };
-    case 'scenes/add-geometry': return {
-      ...state,
-      [action.sceneId]: Async.mutate(state[action.sceneId], scene => {
-        scene.geometry[action.geometryId] = action.geometry;
-      }),
-    };
-    case 'scenes/remove-geometry': return {
-      ...state,
-      [action.sceneId]: Async.mutate(state[action.sceneId], scene => {
-        delete scene.geometry[action.geometryId];
-      }),
-    };
-    case 'scenes/set-geometry': return {
-      ...state,
-      [action.sceneId]: Async.mutate(state[action.sceneId], scene => {
-        scene.geometry[action.geometryId] = action.geometry;
-      }),
-    };
-    case 'scenes/set-geometry-batch': return {
-      ...state,
-      [action.sceneId]: Async.mutate(state[action.sceneId], scene => {
-        for (const { id, geometry } of action.geometryIds) {
-          scene.geometry[id] = geometry;
-        }
-      }),
-    };
-    case 'scenes/select-node': return {
-      ...state,
-      [action.sceneId]: Async.mutate(state[action.sceneId], scene => {
-        scene.selectedNodeId = action.nodeId;
-      }),
-    };
-    case 'scenes/add-object': return {
-      ...state,
-      [action.sceneId]: Async.mutate(state[action.sceneId], scene => {
-        scene.geometry[action.object.geometryId] = action.geometry;
-        scene.nodes[action.nodeId] = action.object;
-      }),
-    };
-    case 'scenes/set-camera': return {
-      ...state,
-      [action.sceneId]: Async.mutate(state[action.sceneId], scene => {
-        scene.camera = action.camera;
-      }),
-    };
-    case 'scenes/set-node-origin': return {
-      ...state,
-      [action.sceneId]: Async.mutate(state[action.sceneId], scene => {
-        scene.nodes[action.nodeId].origin = action.origin;
-        if (action.updateStarting) {
-          scene.nodes[action.nodeId].startingOrigin = action.origin;
-        }
-      }),
-    };
+    case 'scenes/set-node': return mutate(state, action.sceneId, scene => {
+      scene.nodes[action.nodeId] = action.node;
+    });
+    case 'scenes/set-node-batch': return mutate(state, action.sceneId, scene => {
+      for (const { id, node } of action.nodeIds) scene.nodes[id] = node;
+    });
+    case 'scenes/add-geometry': return mutate(state, action.sceneId, scene => {
+      scene.geometry[action.geometryId] = action.geometry;
+    });
+    case 'scenes/remove-geometry': return mutate(state, action.sceneId, scene => {
+      delete scene.geometry[action.geometryId];
+    });
+    case 'scenes/set-geometry': return mutate(state, action.sceneId, scene => {
+      scene.geometry[action.geometryId] = action.geometry;
+    });
+    case 'scenes/set-geometry-batch': return mutate(state, action.sceneId, scene => {
+      for (const { id, geometry } of action.geometryIds) scene.geometry[id] = geometry;
+    });
+    case 'scenes/select-node': return mutate(state, action.sceneId, scene => {
+      scene.selectedNodeId = action.nodeId;
+    });
+    case 'scenes/add-object': return mutate(state, action.sceneId, scene => {
+      scene.geometry[action.object.geometryId] = action.geometry;
+      scene.nodes[action.nodeId] = action.object;
+    });
+    case 'scenes/set-camera': return mutate(state, action.sceneId, scene => {
+      scene.camera = action.camera;
+    });
+    case 'scenes/set-gravity': return mutate(state, action.sceneId, scene => {
+      scene.gravity = action.gravity;
+    });
+    case 'scenes/set-node-origin': return mutate(state, action.sceneId, scene => {
+      scene.nodes[action.nodeId].origin = action.origin;
+      if (action.updateStarting) {
+        scene.nodes[action.nodeId].startingOrigin = action.origin;
+      }
+    });
     case 'scenes/list-user-scenes': {
       void listUserScenes();
       return state;
@@ -658,30 +633,15 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
       ...state,
       [action.sceneId]: Async.unfail(state[action.sceneId]),
     };
-    case 'scenes/add-script': return {
-      ...state,
-      [action.sceneId]: Async.mutate(state[action.sceneId], scene => {
-        scene.scripts[action.scriptId] = action.script;
-      }),
-    };
-    case 'scenes/remove-script': return {
-      ...state,
-      [action.sceneId]: Async.mutate(state[action.sceneId], scene => {
-        delete scene.scripts[action.scriptId];
-      }),
-    };
-    case 'scenes/set-script': return {
-      ...state,
-      [action.sceneId]: Async.mutate(state[action.sceneId], scene => {
-        scene.scripts[action.scriptId] = action.script;
-      }),
-    };
-    case 'scenes/select-script': return {
-      ...state,
-      [action.sceneId]: Async.mutate(state[action.sceneId], scene => {
-        scene.selectedScriptId = action.scriptId;
-      }),
-    };
+    case 'scenes/add-script': return mutate(state, action.sceneId, scene => {
+      scene.scripts[action.scriptId] = action.script;
+    });
+    case 'scenes/remove-script': return mutate(state, action.sceneId, scene => {
+      delete scene.scripts[action.scriptId];
+    });
+    case 'scenes/set-script': return mutate(state, action.sceneId, scene => {
+      scene.scripts[action.scriptId] = action.script;
+    });
     default: return state;
   }
 };

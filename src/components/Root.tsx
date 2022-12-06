@@ -57,7 +57,9 @@ import { push } from 'connected-react-router';
 import Loading from './Loading';
 import LocalizedString from '../util/LocalizedString';
 import SceneSettingsDialog from './SceneSettingsDialog';
-import { LayoutEditorTarget } from './Layout/Layout';
+import Geometry from '../state/State/Scene/Geometry';
+import Camera from '../state/State/Scene/Camera';
+import { Vector3 } from '../unit-math';
 
 namespace Modal {
   export enum Type {
@@ -174,6 +176,10 @@ interface RootPrivateProps {
   onNodeRemove: (id: string) => void;
   onNodeChange: (id: string, node: Node) => void;
   onNodesChange: (nodes: Dict<Node>) => void;
+  onGeometryAdd: (id: string, geometry: Geometry) => void;
+  onGeometryRemove: (id: string) => void;
+  onCameraChange: (camera: Camera) => void;
+  onGravityChange: (gravity: Vector3) => void;
   onSelectNodeId: (id: string) => void;
   onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => void;
   onResetScene: () => void;
@@ -283,8 +289,16 @@ class Root extends React.Component<Props, State> {
   componentDidMount() {
     WorkerInstance.onStopped = this.onStopped_;
 
-    Space.getInstance().onSetNodeBatch = this.props.onSetNodeBatch;
-    Space.getInstance().onSelectNodeId = this.props.onSelectNodeId;
+    const space = Space.getInstance();
+    space.onSetNodeBatch = this.props.onSetNodeBatch;
+    space.onSelectNodeId = this.props.onSelectNodeId;
+    space.onNodeAdd = this.props.onNodeAdd;
+    space.onNodeRemove = this.props.onNodeRemove;
+    space.onNodeChange = this.props.onNodeChange;
+    space.onGeometryAdd = this.props.onGeometryAdd;
+    space.onGeometryRemove = this.props.onGeometryRemove;
+    space.onGravityChange = this.props.onGravityChange;
+    space.onCameraChange = this.props.onCameraChange;
 
     this.scheduleUpdateConsole_();
     window.addEventListener('resize', this.onWindowResize_);
@@ -649,17 +663,11 @@ class Root extends React.Component<Props, State> {
 
     const theme = DARK;
 
-    const editorTarget: LayoutEditorTarget = {
-      type: LayoutEditorTarget.Type.Robot,
-      code: code[activeLanguage],
-      language: activeLanguage,
+    const commonLayoutProps: LayoutProps = {
       onCodeChange: this.onCodeChange_,
       onLanguageChange: this.onActiveLanguageChange_,
-    };
-    
-
-    const commonLayoutProps: LayoutProps = {
-      editorTarget,
+      code: code[activeLanguage],
+      language: activeLanguage,
       theme,
       console,
       messages,
@@ -817,18 +825,17 @@ class Root extends React.Component<Props, State> {
 export default connect((state: ReduxState, { match: { params: { sceneId } } }: RootPublicProps) => {
   const scene = state.scenes[sceneId];
   const latestScene = Async.latestValue(scene);
-  const selectedScriptId = latestScene && latestScene.selectedScriptId;
   return {
     scene,
-    selectedScriptId,
-    selectedScript: latestScene && selectedScriptId
-      ? latestScene.scripts[selectedScriptId]
-      : undefined,
   };
 }, (dispatch, { match: { params: { sceneId } } }: RootPublicProps) => ({
   onNodeAdd: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
   onNodeRemove: (nodeId: string) => dispatch(ScenesAction.removeNode({ sceneId, nodeId })),
   onNodeChange: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
+  onGeometryAdd: (geometryId: string, geometry: Geometry) => dispatch(ScenesAction.addGeometry({ sceneId, geometryId, geometry })),
+  onGeometryRemove: (geometryId: string) => dispatch(ScenesAction.removeGeometry({ sceneId, geometryId })),
+  onCameraChange: (camera: Camera) => dispatch(ScenesAction.setCamera({ sceneId, camera })),
+  onGravityChange: (gravity: Vector3) => dispatch(ScenesAction.setGravity({ sceneId, gravity })),
   onSelectNodeId: (nodeId: string) => dispatch(ScenesAction.selectNode({ sceneId, nodeId })),
   onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) =>
     dispatch(ScenesAction.setNodeBatch({ sceneId, ...setNodeBatch })),
@@ -851,9 +858,6 @@ export default connect((state: ReduxState, { match: { params: { sceneId } } }: R
   onScriptChange: (sceneId: string, scriptId: string, script: Script) => {
     dispatch(ScenesAction.setScript({ sceneId, scriptId, script }));
   },
-  onSelectedScriptChange: (sceneId: string, scriptId: string) => {
-    dispatch(ScenesAction.selectScript({ sceneId, scriptId }));
-  }
 }))(Root) as React.ComponentType<RootPublicProps>;
 
 export { RootState };
