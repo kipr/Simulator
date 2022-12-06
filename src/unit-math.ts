@@ -199,7 +199,7 @@ export namespace Rotation {
     x,
     y,
     z,
-    order
+    order: order || 'yzx',
   });
 
   export const eulerDegrees = (x: number, y: number, z: number, order?: RawEuler.Order) => euler(

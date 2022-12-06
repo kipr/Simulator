@@ -41,6 +41,10 @@ export const JBC_Sandbox_A: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
+    'robot': {
+      ...baseScene.nodes['robot'],
+      editable: true,
+    },
     'can1': createCanNode(1, undefined, true, false),
     'can2': createCanNode(2, undefined, true, false),
     'can3': createCanNode(3, undefined, true, false),
