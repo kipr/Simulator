@@ -21,6 +21,7 @@ if (dependencies.ammo) modules.push(resolve(dependencies.ammo));
 module.exports = {
   entry: {
     app: './index.tsx',
+    login: './login/index.tsx',
     'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js'
   },
   output: {

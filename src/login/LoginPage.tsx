@@ -32,8 +32,6 @@ export interface LoginPagePublicProps extends ThemeProps, StyleProps {
 }
 
 interface LoginPagePrivateProps {
-  from?: string;
-  redirect: (from: string) => void;
 }
 
 interface LoginPageState {
@@ -258,7 +256,7 @@ class LoginPage extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { className, style, from, redirect } = props;
+    const { className, style } = props;
     const { initialAuthLoaded, index, authenticating, loggedIn, forgotPassword, logInFailedMessage } = state;
     const theme = DARK;
 
@@ -268,7 +266,12 @@ class LoginPage extends React.Component<Props, State> {
     }
 
     if (loggedIn) {
-      setTimeout(() => redirect(from));
+      setTimeout(() => {
+        const { search } = window.location;
+        const q = qs.parse(search.length > 0 ? search.substring(1) : '');
+        const { from } = q;
+        window.location.href = from ? from.toString() : '/';
+      });
       return null;
     }
 
@@ -393,15 +396,4 @@ class LoginPage extends React.Component<Props, State> {
   }
 }
 
-export default connect((state: ReduxState) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const locationState = state.router.location.state || EMPTY_OBJECT;
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const from = locationState['from'] || '/';
-  return {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    from,
-  };
-}, dispatch => ({
-  redirect: (path?: string) => dispatch(push(path || '/')),
-}))(LoginPage) as React.ComponentType<LoginPagePublicProps>;
+export default LoginPage;

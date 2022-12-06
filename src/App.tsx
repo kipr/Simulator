@@ -66,7 +66,6 @@ class App extends React.Component<Props, State> {
     return (
       <Switch>
         <Route path="/" exact component={Dashboard} />
-        <Route path="/login" exact component={LoginPage} />
         <Route path="/tutorials" exact component={Tutorials} />
         <Route path="/scene/:sceneId" component={Root} />
       </Switch>
@@ -77,6 +76,6 @@ class App extends React.Component<Props, State> {
 export default connect(undefined, dispatch => ({
   login: () => {
     console.log('Redirecting to login page', window.location.pathname);
-    dispatch(push('/login', { from: window.location.pathname === '/login' ? undefined : window.location.pathname }));
+    window.location.href = `/login${window.location.pathname === '/login' ? '' : `?from=${window.location.pathname}`}`;
   }
 }))(App) as React.ComponentType<AppPublicProps>;
