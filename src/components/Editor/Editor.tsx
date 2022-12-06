@@ -78,6 +78,7 @@ export const createEditorBarComponents = ({
   target: EditorBarTarget,
 }) => {
   
+  // eslint-disable-next-line @typescript-eslint/ban-types
   const editorBar: BarComponent<object>[] = [];
   
   switch (target.type) {

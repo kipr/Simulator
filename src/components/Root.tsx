@@ -619,7 +619,7 @@ class Root extends React.Component<Props, State> {
   private onScriptChange_ = (script: Script) => {
     const { selectedScriptId } = this.props;
     this.props.onScriptChange(this.props.match.params.sceneId, selectedScriptId, script);
-  }
+  };
 
   render() {
     const { props, state } = this;
