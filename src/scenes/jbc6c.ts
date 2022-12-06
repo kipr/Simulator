@@ -13,7 +13,7 @@ export const JBC_6C: Scene = {
   nodes: {
     ...baseScene.nodes,
     'can1': createCanNode(1, { x: Distance.centimeters(0), y: Distance.centimeters(0), z: Distance.centimeters(53.3) }),
-    'can2': createCanNode(2, { x: Distance.centimeters(-18.5), y: Distance.centimeters(0), z: Distance.centimeters(78) }),
-    'can3': createCanNode(3, { x: Distance.centimeters(12.3), y: Distance.centimeters(0), z: Distance.centimeters(93.9) }),
+    'can2': createCanNode(2, { x: Distance.centimeters(18.5), y: Distance.centimeters(0), z: Distance.centimeters(78) }),
+    'can3': createCanNode(3, { x: Distance.centimeters(-12.3), y: Distance.centimeters(0), z: Distance.centimeters(93.9) }),
   }
 };

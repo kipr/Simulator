@@ -12,6 +12,6 @@ export const JBC_10: Scene = {
   description: { [LocalizedString.EN_US]: 'Junior Botball Challenge 10: Solo Joust' },
   nodes: {
     ...baseScene.nodes,
-    'can1': createCanNode(1, { x: Distance.centimeters(-11), y: Distance.centimeters(0), z: Distance.centimeters(91) }),
+    'can1': createCanNode(1, { x: Distance.centimeters(11), y: Distance.centimeters(0), z: Distance.centimeters(91) }),
   }
 };
