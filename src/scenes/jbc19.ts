@@ -9,7 +9,7 @@ const baseScene = createBaseSceneSurfaceA();
 
 const REAM_ORIGIN: ReferenceFrame = {
   position: {
-    x: Distance.centimeters(10),
+    x: Distance.centimeters(-10),
     y: Distance.centimeters(-3),
     z: Distance.centimeters(91.6),
   },
@@ -25,9 +25,9 @@ export const JBC_19: Scene = {
   description: { [LocalizedString.EN_US]: `Junior Botball Challenge 19: Mountain Rescue` },
   nodes: {
     ...baseScene.nodes,
-    'can1': createCanNode(1, { x: Distance.centimeters(3), y: Distance.centimeters(6), z: Distance.centimeters(84.6) }),
-    'can2': createCanNode(2, { x: Distance.centimeters(10), y: Distance.centimeters(6), z: Distance.centimeters(91.6) }),
-    'can3': createCanNode(3, { x: Distance.centimeters(17), y: Distance.centimeters(6), z: Distance.centimeters(98.6) }),
+    'can1': createCanNode(1, { x: Distance.centimeters(-3), y: Distance.centimeters(6), z: Distance.centimeters(98.6) }),
+    'can2': createCanNode(2, { x: Distance.centimeters(-10), y: Distance.centimeters(6), z: Distance.centimeters(91.6) }),
+    'can3': createCanNode(3, { x: Distance.centimeters(-17), y: Distance.centimeters(6), z: Distance.centimeters(84.6) }),
     'ream': {
       type: 'from-template',
       templateId: 'ream',

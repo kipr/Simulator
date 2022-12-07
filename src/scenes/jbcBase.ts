@@ -222,7 +222,7 @@ export function createCanNode(canNumber: number, canPosition?: Vector3, editable
  */
 const canPositions: Vector3[] = [
   {
-    x: Distance.centimeters(-22.7),
+    x: Distance.centimeters(22.7),
     y: Distance.centimeters(0),
     z: Distance.centimeters(35.2),
   },
@@ -232,7 +232,7 @@ const canPositions: Vector3[] = [
     z: Distance.centimeters(28.8),
   },
   {
-    x: Distance.centimeters(16.2),
+    x: Distance.centimeters(-16.2),
     y: Distance.centimeters(0),
     z: Distance.centimeters(25.7),
   },
@@ -242,7 +242,7 @@ const canPositions: Vector3[] = [
     z: Distance.centimeters(42.7),
   },
   {
-    x: Distance.centimeters(-14.3),
+    x: Distance.centimeters(14.3),
     y: Distance.centimeters(0),
     z: Distance.centimeters(56.9),
   },
@@ -252,12 +252,12 @@ const canPositions: Vector3[] = [
     z: Distance.centimeters(57.2),
   },
   {
-    x: Distance.centimeters(13.8),
+    x: Distance.centimeters(-13.8),
     y: Distance.centimeters(0),
     z: Distance.centimeters(56.9),
   },
   {
-    x: Distance.centimeters(26),
+    x: Distance.centimeters(-26),
     y: Distance.centimeters(0),
     z: Distance.centimeters(65.5),
   },
@@ -267,7 +267,7 @@ const canPositions: Vector3[] = [
     z: Distance.centimeters(85.4),
   },
   {
-    x: Distance.centimeters(-19.3),
+    x: Distance.centimeters(19.3),
     y: Distance.centimeters(0),
     z: Distance.centimeters(96.9),
   },
@@ -277,7 +277,7 @@ const canPositions: Vector3[] = [
     z: Distance.centimeters(106.6),
   },
   {
-    x: Distance.centimeters(19.2),
+    x: Distance.centimeters(-19.2),
     y: Distance.centimeters(0),
     z: Distance.centimeters(96.9),
   },

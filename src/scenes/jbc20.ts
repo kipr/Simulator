@@ -11,13 +11,13 @@ const ROBOT_ORIGIN: ReferenceFrame = {
   ...baseScene.nodes['robot'].origin,
   position: {
     ...baseScene.nodes['robot'].origin.position,
-    x: Distance.centimeters(-18)
+    x: Distance.centimeters(18)
   },
 };
 
 const REAM_ORIGIN: ReferenceFrame = {
   position: {
-    x: Distance.centimeters(12),
+    x: Distance.centimeters(-12),
     y: Distance.centimeters(-3),
     z: Distance.centimeters(3),
   },
