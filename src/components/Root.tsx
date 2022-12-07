@@ -821,6 +821,8 @@ export default connect((state: ReduxState, { match: { params: { sceneId } } }: R
   onSetScenePartial: (partialScene: Partial<Scene>) => dispatch(ScenesAction.setScenePartial({ sceneId, partialScene })),
   loadScene: (sceneId: string) => dispatch(ScenesAction.loadScene({ sceneId })),
   unfailScene: (sceneId: string) => dispatch(ScenesAction.unfailScene({ sceneId })),
-  goToLogin: () => dispatch(push('/login', { from: window.location.pathname })),
+  goToLogin: () => {
+    window.location.href = `/login?from=${window.location.pathname}`;
+  },
 }))(Root) as React.ComponentType<RootPublicProps>;
 export { RootState };
