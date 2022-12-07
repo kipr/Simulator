@@ -17,6 +17,7 @@ import Dict from '../../Dict';
 import LocalizedString from '../../util/LocalizedString';
 import { Angle } from '../../util';
 import produce, { original } from 'immer';
+import { errorToAsyncError } from './util';
 
 export namespace ScenesAction {
   export interface RemoveScene {
@@ -286,15 +287,6 @@ const DEFAULT_SCENES: Scenes = {
   jbc22: Async.loaded({ value: JBC_SCENES.JBC_22 }),
 };
 
-export const errorToAsyncError = (error: unknown): Async.Error => {
-  if (DbError.is(error)) return error;
-  if (error instanceof Error) return {
-    code: 0,
-    message: error.message,
-  };
-  throw error;
-};
-
 const create = async (sceneId: string, next: Async.Creating<Scene>) => {
   try {
     await db.set(Selector.scene(sceneId), next.value);
@@ -355,7 +347,7 @@ const load = async (sceneId: string, current: AsyncScene | undefined) => {
   }
 };
 
-export const remove = async (sceneId: string, next: Async.Deleting<SceneBrief, Scene>) => {
+const remove = async (sceneId: string, next: Async.Deleting<SceneBrief, Scene>) => {
   try {
     await db.delete(Selector.scene(sceneId));
     store.dispatch(ScenesAction.setSceneInternal({ sceneId, scene: undefined }));

@@ -1,5 +1,6 @@
 import Dict from '../../Dict';
 import Async from "./Async";
+import { AsyncChallenge } from './Challenge';
 import Robot from './Robot';
 import Scene, { AsyncScene } from './Scene';
 
@@ -11,6 +12,12 @@ export namespace Scenes {
 
 export interface Robots {
   robots: Dict<Async<Record<string, never>, Robot>>;
+}
+
+export type Challenges = Dict<AsyncChallenge>;
+
+export namespace Challenges {
+  export const EMPTY: Challenges = {};
 }
 
 export namespace Robots {

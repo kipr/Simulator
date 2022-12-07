@@ -56,6 +56,7 @@ import { push } from 'connected-react-router';
 import Loading from './Loading';
 import LocalizedString from '../util/LocalizedString';
 import SceneSettingsDialog from './SceneSettingsDialog';
+import { AsyncChallenge } from '../state/State/Challenge';
 
 namespace Modal {
   export enum Type {
@@ -158,7 +159,8 @@ export type Modal = (
 );
 
 interface RootParams {
-  sceneId: string;
+  challengeId?: string;
+  sceneId?: string;
 }
 
 export interface RootPublicProps extends RouteComponentProps<RootParams> {
@@ -166,6 +168,7 @@ export interface RootPublicProps extends RouteComponentProps<RootParams> {
 }
 
 interface RootPrivateProps {
+  challenge: AsyncChallenge;
   scene: AsyncScene;
 
   onNodeAdd: (id: string, node: Node) => void;

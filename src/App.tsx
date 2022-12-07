@@ -69,6 +69,7 @@ class App extends React.Component<Props, State> {
         <Route path="/login" exact component={LoginPage} />
         <Route path="/tutorials" exact component={Tutorials} />
         <Route path="/scene/:sceneId" component={Root} />
+        <Route path="/challenge/:challengeId" component={Root} />
       </Switch>
     );
   }

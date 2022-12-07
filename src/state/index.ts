@@ -1,7 +1,7 @@
 import { applyMiddleware, combineReducers, compose, createStore,  } from 'redux';
 
 import * as reducer from './reducer';
-import { Robots, Scenes } from './State';
+import { Challenges, Robots, Scenes } from './State';
 import { connectRouter, RouterState, routerMiddleware } from 'connected-react-router';
 import history from './history';
 import { AsyncScene } from './State/Scene';
@@ -18,6 +18,7 @@ const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ||
 export default createStore(combineReducers<State>({
   scenes: reducer.reduceScenes,
   robots: reducer.reduceRobots,
+  challenges: reducer.reduceChallenges,
   router: connectRouter(history),
 }), composeEnhancers(
   applyMiddleware(
@@ -29,6 +30,7 @@ export default createStore(combineReducers<State>({
 
 export interface State {
   scenes: Scenes;
+  challenges: Challenges;
   robots: Robots;
   router: RouterState;
 }
