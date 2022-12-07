@@ -60,6 +60,7 @@ import SceneSettingsDialog from './SceneSettingsDialog';
 import Geometry from '../state/State/Scene/Geometry';
 import Camera from '../state/State/Scene/Camera';
 import { Vector3 } from '../unit-math';
+import { LayoutEditorTarget } from './Layout/Layout';
 
 namespace Modal {
   export enum Type {
@@ -663,15 +664,20 @@ class Root extends React.Component<Props, State> {
 
     const theme = DARK;
 
-    const commonLayoutProps: LayoutProps = {
-      onCodeChange: this.onCodeChange_,
-      onLanguageChange: this.onActiveLanguageChange_,
+    const editorTarget: LayoutEditorTarget = {
+      type: LayoutEditorTarget.Type.Robot,
       code: code[activeLanguage],
       language: activeLanguage,
+      onCodeChange: this.onCodeChange_,
+      onLanguageChange: this.onActiveLanguageChange_,
+    };
+
+    const commonLayoutProps: LayoutProps = {
       theme,
       console,
       messages,
       settings,
+      editorTarget,
       onClearConsole: this.onClearConsole_,
       onIndentCode: this.onIndentCode_,
       onDownloadCode: this.onDownloadClick_,

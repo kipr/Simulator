@@ -3,6 +3,7 @@ import { Color } from '../state/State/Scene/Color';
 import Script from '../state/State/Scene/Script';
 import { Rotation } from "../unit-math";
 import { Distance } from "../util";
+import LocalizedString from '../util/LocalizedString';
 
 import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
 
@@ -44,8 +45,8 @@ scene.addOnCollisionListener('can6', (otherNodeId) => {
 
 export const scriptPlayground: Scene = {
   ...baseScene,
-  name: 'Script Playground',
-  description: `Script tests`,
+  name: { [LocalizedString.EN_US]: 'Script Playground' },
+  description: { [LocalizedString.EN_US]: `Script tests` },
   scripts: {
     'intersection': Script.ecmaScript('Intersection', intersection),
     'collision': Script.ecmaScript('Collision', collision),
@@ -66,7 +67,7 @@ export const scriptPlayground: Scene = {
     'volume': {
       type: 'object',
       geometryId: 'volume_geom',
-      name: 'Volume',
+      name: { [LocalizedString.EN_US]: 'Volume' },
       visible: true,
       origin: {
         position: {
@@ -98,7 +99,7 @@ export const scriptPlayground: Scene = {
     'ream1': {
       type: 'from-template',
       templateId: 'ream',
-      name: 'Paper Ream 1',
+      name: { [LocalizedString.EN_US]: 'Paper Ream 1' },
       origin: {
         position: {
           x: Distance.centimeters(0),
@@ -116,7 +117,7 @@ export const scriptPlayground: Scene = {
     'ream2': {
       type: 'from-template',
       templateId: 'ream',
-      name: 'Paper Ream 2',
+      name: { [LocalizedString.EN_US]: 'Paper Ream 2' },
       origin: {
         position: {
           x: Distance.centimeters(0),

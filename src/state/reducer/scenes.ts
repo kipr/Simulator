@@ -634,6 +634,7 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
       [action.sceneId]: Async.unfail(state[action.sceneId]),
     };
     case 'scenes/add-script': return mutate(state, action.sceneId, scene => {
+      if (!scene.scripts) scene.scripts = {};
       scene.scripts[action.scriptId] = action.script;
     });
     case 'scenes/remove-script': return mutate(state, action.sceneId, scene => {

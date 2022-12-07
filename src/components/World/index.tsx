@@ -133,7 +133,6 @@ interface ReduxWorldProps {
   onScriptAdd: (id: string, script: Script) => void;
   onScriptRemove: (id: string) => void;
   onScriptChange: (id: string, script: Script) => void;
-  onScriptClick: (id?: string) => void;
 }
 
 namespace UiState {
@@ -354,18 +353,6 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
     }, true, false);
   };
 
-  private onScriptClick_ = (id: string) => () => {
-    const { props } = this;
-    const { scene } = props;
-    const latestScene = Async.latestValue(scene);
-
-    if (latestScene.selectedScriptId === id) {
-      props.onScriptClick(undefined);
-    } else {
-      this.props.onScriptClick(id);
-    }
-  };
-
   render() {
     const { props, state } = this;
     const { style, className, theme, scene, onGeometryAdd, onGeometryRemove, onGeometryChange } = props;
@@ -398,7 +385,6 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
         props: {
           name: script.name,
           theme,
-          onClick: this.onScriptClick_(scriptId),
           selected: workingScene.selectedScriptId === scriptId
         },
         onSettings: this.onScriptSettingsClick_(scriptId),
@@ -527,8 +513,5 @@ export default connect<unknown, unknown, Props, ReduxState>((state: ReduxState, 
   },
   onScriptRemove: (scriptId: string) => {
     dispatch(ScenesAction.removeScript({ sceneId, scriptId }));
-  },
-  onScriptClick: (scriptId?: string) => {
-    dispatch(ScenesAction.selectScript({ sceneId, scriptId }));
   },
 }))(World_) as React.ComponentType<Props>;
