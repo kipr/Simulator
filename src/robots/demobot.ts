@@ -4,6 +4,7 @@ import Geometry from "../state/State/Robot/Geometry";
 import { Angle, Distance, Mass } from '../util';
 import { Vector3 as RawVector3 } from '../math';
 import { Rotation, Vector3 } from '../unit-math';
+import LocalizedString from '../util/LocalizedString';
 
 const { meters } = Distance;
 const { degrees } = Angle;
@@ -11,7 +12,7 @@ const { grams } = Mass;
 
 export const DEMOBOT: Robot = {
   name: {
-    'en': 'Demobot',
+    [LocalizedString.EN_US]: 'Demobot',
   },
   authorId: 'kipr',
   nodes: {

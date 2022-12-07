@@ -19,11 +19,15 @@ import Scene from "../../state/State/Scene";
 import Dict from "../../Dict";
 import Material from '../../state/State/Scene/Material';
 import { Color } from '../../state/State/Scene/Color';
+import { State as ReduxState } from '../../state/index';
 
 import * as uuid from 'uuid';
 import LocalizedString from '../../util/LocalizedString';
+import Robot from '../../state/State/Robot';
+import { connect } from 'react-redux';
+import Async from '../../state/State/Async';
 
-export interface NodeSettingsProps extends ThemeProps {
+export interface NodeSettingsPublicProps extends ThemeProps {
   onNodeChange: (node: Node) => void;
   onNodeOriginChange: (origin: ReferenceFrame) => void;
   node: Node;
@@ -36,11 +40,15 @@ export interface NodeSettingsProps extends ThemeProps {
   scene: Scene;
 }
 
+interface NodeSettingsPrivateProps {
+  robots: Dict<Async<Record<string, never>, Robot>>;
+}
+
 interface NodeSettingsState {
   collapsed: { [key: string]: boolean };
 }
 
-type Props = NodeSettingsProps;
+type Props = NodeSettingsPublicProps & NodeSettingsPrivateProps;
 type State = NodeSettingsState;
 
 const StyledField = styled(Field, (props: ThemeProps) => ({
@@ -907,12 +915,20 @@ class NodeSettings extends React.PureComponent<Props, State> {
     });
   };
 
+  private onRobotSelect_ = (index: number, option: ComboBox.Option) => {
+    const { node } = this.props;
+    if (node.type !== 'robot') return;
 
+    this.props.onNodeChange({
+      ...node,
+      robotId: option.data as string
+    });
+  };
 
 
   render() {
     const { props, state } = this;
-    const { theme, node, scene, id } = props;
+    const { theme, node, scene, id, robots } = props;
     const { collapsed } = state;
 
     // const { parentId } = node;
@@ -947,28 +963,67 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
     const geometry = node.type === 'object' ? scene.geometry[node.geometryId] : undefined;
 
+    const robotOptions: ComboBox.Option[] = Dict.toList(robots)
+      .map(([id, robot]) => ([id, Async.latestValue(robot)]))
+      .filter(([, robot]: [string, Robot]) => robot !== undefined)
+      .map(([id, robot]: [string, Robot]) => ComboBox.option(LocalizedString.lookup(robot.name, LocalizedString.EN_US), id));
+
     return (
       <Container theme={theme}>
         <Section name='General' theme={theme}>
           <StyledField name='Name' theme={theme} long>
-            <Input theme={theme} type='text' value={node.name[LocalizedString.EN_US]} onChange={this.onNameChange_} />
+            <Input
+              theme={theme}
+              type='text'
+              value={node.name[LocalizedString.EN_US]}
+              onChange={this.onNameChange_}
+            />
           </StyledField>
           {/* <StyledField name='Parent' theme={theme} long>
             <ComboBox options={parentOptions} theme={theme} index={parentIndex} onSelect={this.onParentSelect_} />
           </StyledField> */}
-          <StyledField name='Type' theme={theme} long>
-            <ComboBox options={NODE_TYPE_OPTIONS} theme={theme} index={NODE_TYPE_OPTIONS_REV[node.type]} onSelect={this.onTypeSelect_} />
-          </StyledField>
+          
+          {node.type !== 'robot' && (
+            <StyledField name='Type' theme={theme} long>
+              <ComboBox
+                options={NODE_TYPE_OPTIONS}
+                theme={theme}
+                index={NODE_TYPE_OPTIONS_REV[node.type]}
+                onSelect={this.onTypeSelect_}
+              />
+            </StyledField>
+          )}
+
+          {node.type === 'robot' && (
+            <StyledField name='Robot' theme={theme} long>
+              <ComboBox
+                options={robotOptions}
+                theme={theme}
+                index={robotOptions.findIndex(option => option.data === node.robotId)}
+                onSelect={this.onRobotSelect_}
+              />
+            </StyledField>
+          )}
           
           {node.type === 'object' && (
             <StyledField name='Geometry' theme={theme} long>
-              <ComboBox options={GEOMETRY_OPTIONS} theme={theme} index={GEOMETRY_REVERSE_OPTIONS[geometry.type]} onSelect={this.onGeometrySelect_} />
+              <ComboBox
+                options={GEOMETRY_OPTIONS}
+                theme={theme}
+                index={GEOMETRY_REVERSE_OPTIONS[geometry.type]}
+                onSelect={this.onGeometrySelect_}
+              />
             </StyledField>
           )}
 
           {node.type === 'from-template' && (
             <StyledField name='Item' theme={theme} long>
-              <ComboBox options={TEMPLATE_OPTIONS} theme={theme} index={TEMPLATE_REVERSE_OPTIONS[node.templateId]} onSelect={this.onTemplateSelect_} />
+              <ComboBox
+                options={TEMPLATE_OPTIONS}
+                theme={theme}
+                index={TEMPLATE_REVERSE_OPTIONS[node.templateId]}
+                onSelect={this.onTemplateSelect_}
+              />
             </StyledField>
           )}
         </Section>
@@ -1471,4 +1526,8 @@ const PHSYICS_TYPE_MAPPINGS: { [key in Geometry.Type]: Node.Physics.Type } = {
   'sphere': 'sphere',
 };
 
-export default NodeSettings;
+export default connect((state: ReduxState, ownProps: NodeSettingsPublicProps) => {
+  return {
+    robots: state.robots.robots,
+  };
+})(NodeSettings) as React.ComponentType<NodeSettingsPublicProps>;

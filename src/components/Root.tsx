@@ -569,7 +569,6 @@ class Root extends React.Component<Props, State> {
     });
   };
 
-
   componentDidCatch(error: Error, info: React.ErrorInfo) {
     this.setState({
       modal: Modal.exception(error, info)

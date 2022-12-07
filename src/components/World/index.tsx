@@ -320,7 +320,7 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
         onVisibilityChange: this.onItemVisibilityChange_(nodeId),
         visible: node.visible,
       }, {
-        removable: node.editable,
+        removable: node.editable && node.type !== 'robot',
         userdata: nodeId,
       }));
     }
