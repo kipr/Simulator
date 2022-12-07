@@ -14,7 +14,7 @@ interface Challenge {
   successPredicate?: Expr;
   failurePredicate?: Expr;
 
-  scene: Reference<Scene>;
+  sceneId: string;
 }
 
 export default Challenge;
