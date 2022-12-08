@@ -469,7 +469,7 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
         />}
         {modal.type === UiState.Type.ScriptSettings && <ScriptSettingsDialog
           id={modal.id}
-          script={referenceScene.scripts[modal.id]}
+          script={workingScene.scripts[modal.id]}
           theme={theme}
           onClose={this.onModalClose_}
           onAccept={this.onScriptSettingsAccept_(modal.id)}
