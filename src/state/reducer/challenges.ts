@@ -203,7 +203,7 @@ const create = async (challengeId: string, next: Async.Creating<Challenge>) => {
     await db.set(Selector.challenge(challengeId), next.value);
     store.dispatch(ChallengesAction.setChallengeInternal({
       challenge: Async.loaded({
-        brief: ChallengeBrief .fromChallenge(next.value),
+        brief: ChallengeBrief.fromChallenge(next.value),
         value: next.value
       }),
       challengeId,

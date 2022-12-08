@@ -120,6 +120,21 @@ const EditorWidget = styled(Widget, (props: WidgetProps) => {
   }
 });
 
+const ChallengeWidget = styled(Widget, (props: WidgetProps) => {
+  const size = props.sizes[props.size];
+  switch (size.type) {
+    case Size.Type.Minimized: return {
+      display: 'none'
+    };
+    default:
+    case Size.Type.Partial: return {
+      gridColumn: 3,
+      gridRow: 2,
+      ...transparentStyling(props.theme)
+    };
+  }
+});
+
 const InfoWidget = styled(Widget, (props: WidgetProps) => {
   const size = props.sizes[props.size];
   switch (size.type) {
@@ -217,18 +232,13 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
     });
   };
 
-  private onInfoSizeChange_ = (index: number) => {
-    
-    this.setState({
-      infoSize: INFO_SIZES[index].type
-    });
-  };
+  private onInfoSizeChange_ = (index: number) => this.setState({
+    infoSize: INFO_SIZES[index].type
+  });
 
-  private onWorldSizeChange_ = (index: number) => {
-    this.setState({
-      worldSize: WORLD_SIZES[index].type
-    });
-  };
+  private onWorldSizeChange_ = (index: number) => this.setState({
+    worldSize: WORLD_SIZES[index].type
+  });
 
   private onConsoleSizeChange_ = (index: number) => {
     const size = CONSOLE_SIZES[index];

@@ -616,7 +616,7 @@ class Root extends React.Component<Props, State> {
   render() {
     const { props, state } = this;
     
-    const { match: { params: { sceneId } }, scene } = props;
+    const { match: { params: { sceneId, challengeId } }, scene, challenge } = props;
 
     if (!scene || scene.type === Async.Type.Unloaded) {
       return <Loading />;
@@ -802,9 +802,25 @@ class Root extends React.Component<Props, State> {
   }
 }
 
-export default connect((state: ReduxState, { match: { params: { sceneId } } }: RootPublicProps) => ({
-  scene: state.scenes[sceneId]
-}), (dispatch, { match: { params: { sceneId } } }: RootPublicProps) => ({
+export default connect((state: ReduxState, { match: { params: { challengeId, sceneId } } }: RootPublicProps) => {
+  if (!sceneId && !challengeId) throw new Error('sceneId or challengeId must be specified');
+
+  let challenge: AsyncChallenge;
+  let scene: AsyncScene;
+
+  if (!sceneId) {
+    challenge = state.challenges[challengeId];
+    const latestChallenge = Async.latestValue(challenge)
+    if (latestChallenge) scene = state.scenes[latestChallenge.sceneId];
+  } else {
+    scene = state.scenes[sceneId];
+  }
+  
+  return {
+    challenge,
+    scene
+  };
+}, (dispatch, { match: { params: { sceneId } } }: RootPublicProps) => ({
   onNodeAdd: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
   onNodeRemove: (nodeId: string) => dispatch(ScenesAction.removeNode({ sceneId, nodeId })),
   onNodeChange: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),

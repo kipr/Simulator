@@ -9,6 +9,7 @@ import { ThemeProps } from "../theme";
 
 export interface LayoutProps extends StyleProps, ThemeProps {
   sceneId: string;
+  challengeId?: string;
   language: ProgrammingLanguage;
   onLanguageChange: (language: ProgrammingLanguage) => void;
   code: string;
