@@ -189,12 +189,12 @@ class NodeSettings extends React.PureComponent<Props, State> {
     switch (type) {
       case 'euler':
         this.props.onNodeOriginChange({
-          orientation: Rotation.Euler.fromRaw(Euler.fromQuaternion(Rotation.toRawQuaternion(node.origin.orientation))),
+          orientation: Rotation.Euler.fromRaw(Euler.fromQuaternion(Rotation.toRawQuaternion(node.startingOrigin.orientation))),
         });
         break;
       case 'axis-angle':
         this.props.onNodeOriginChange({
-          orientation: Rotation.AxisAngle.fromRaw(AxisAngle.fromQuaternion(Rotation.toRawQuaternion(node.origin.orientation))),
+          orientation: Rotation.AxisAngle.fromRaw(AxisAngle.fromQuaternion(Rotation.toRawQuaternion(node.startingOrigin.orientation))),
         });
         break;
     }
@@ -206,7 +206,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
     this.props.onNodeOriginChange({
       orientation: {
-        ...node.origin.orientation as Rotation.Euler,
+        ...node.startingOrigin.orientation as Rotation.Euler,
         order,
       },
     });
@@ -622,7 +622,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onPositionXChange_ = (value: Value) => {
     const { node } = this.props;
-    const origin = node.origin || {};
+    const origin = node.startingOrigin || {};
 
     this.props.onNodeOriginChange({
       position: {
@@ -634,7 +634,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onPositionYChange_ = (value: Value) => {
     const { node } = this.props;
-    const origin = node.origin || {};
+    const origin = node.startingOrigin || {};
 
     this.props.onNodeOriginChange({
       position: {
@@ -646,7 +646,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onPositionZChange_ = (value: Value) => {
     const { node } = this.props;
-    const origin = node.origin || {};
+    const origin = node.startingOrigin || {};
 
     this.props.onNodeOriginChange({
       position: {
@@ -658,7 +658,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onOrientationEulerXChange_ = (value: Value) => {
     const { node } = this.props;
-    const origin = node.origin || {};
+    const origin = node.startingOrigin || {};
 
     this.props.onNodeOriginChange({
       orientation: {
@@ -670,7 +670,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onOrientationEulerYChange_ = (value: Value) => {
     const { node } = this.props;
-    const origin = node.origin || {};
+    const origin = node.startingOrigin || {};
 
     this.props.onNodeOriginChange({
       orientation: {
@@ -682,7 +682,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onOrientationEulerZChange_ = (value: Value) => {
     const { node } = this.props;
-    const origin = node.origin || {};
+    const origin = node.startingOrigin || {};
 
     this.props.onNodeOriginChange({
       orientation: {
@@ -694,7 +694,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onOrientationAngleAxisXChange_ = (value: Value) => {
     const { node } = this.props;
-    const origin = node.origin || {};
+    const origin = node.startingOrigin || {};
     const orientation: Rotation.AxisAngle = origin.orientation as Rotation.AxisAngle || Rotation.AxisAngle.identity(Angle.Type.Degrees);
 
     this.props.onNodeOriginChange({
@@ -710,7 +710,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onOrientationAngleAxisYChange_ = (value: Value) => {
     const { node } = this.props;
-    const origin = node.origin || {};
+    const origin = node.startingOrigin || {};
     const orientation: Rotation.AxisAngle = origin.orientation as Rotation.AxisAngle || Rotation.AxisAngle.identity(Angle.Type.Degrees);
 
     this.props.onNodeOriginChange({
@@ -726,7 +726,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onOrientationAngleAxisZChange_ = (value: Value) => {
     const { node } = this.props;
-    const origin = node.origin || {};
+    const origin = node.startingOrigin || {};
     const orientation: Rotation.AxisAngle = origin.orientation as Rotation.AxisAngle || Rotation.AxisAngle.identity(Angle.Type.Degrees);
 
     this.props.onNodeOriginChange({
@@ -742,7 +742,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onOrientationAngleAxisAngleChange_ = (value: Value) => {
     const { node } = this.props;
-    const origin = node.origin || {};
+    const origin = node.startingOrigin || {};
     const orientation: Rotation.AxisAngle = origin.orientation as Rotation.AxisAngle || Rotation.AxisAngle.identity(Angle.Type.Degrees);
 
     this.props.onNodeOriginChange({
@@ -755,7 +755,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onScaleXChange_ = (value: Value) => {
     const { node } = this.props;
-    const origin = node.origin || {};
+    const origin = node.startingOrigin || {};
     const scale = origin.scale || RawVector3.ONE;
 
     this.props.onNodeOriginChange({
@@ -768,7 +768,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onScaleYChange_ = (value: Value) => {
     const { node } = this.props;
-    const origin = node.origin || {};
+    const origin = node.startingOrigin || {};
     const scale = origin.scale || RawVector3.ONE;
 
     this.props.onNodeOriginChange({
@@ -781,7 +781,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onScaleZChange_ = (value: Value) => {
     const { node } = this.props;
-    const origin = node.origin || {};
+    const origin = node.startingOrigin || {};
     const scale = origin.scale || RawVector3.ONE;
 
     this.props.onNodeOriginChange({
@@ -917,7 +917,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
     // const { parentId } = node;
 
-    const origin = node.origin || {};
+    const origin = node.startingOrigin || {};
     const orientation = origin.orientation || Rotation.Euler.identity(Angle.Type.Degrees);
 
     const position = origin.position || Vector3.zero('centimeters');
