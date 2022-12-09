@@ -15,27 +15,27 @@ namespace Expr {
 
   export interface And {
     type: Type.And;
-    args: Expr[];
+    argIds: string[];
   }
 
   export interface Or {
     type: Type.Or;
-    args: Expr[];
+    argIds: string[];
   }
 
   export interface Xor {
     type: Type.Xor;
-    args: Expr[];
+    argIds: string[];
   }
 
   export interface Not {
     type: Type.Not;
-    arg: Expr;
+    argId: string;
   }
 
   export interface Once {
     type: Type.Once;
-    arg: Expr;
+    argId: string;
   }
 }
 

@@ -6,6 +6,7 @@ import Async from '../Async';
 import Scene from '../Scene';
 import Event from './Event';
 import Expr from './Expr';
+import Predicate from './Predicate';
 
 interface Challenge {
   name: LocalizedString;
@@ -14,8 +15,8 @@ interface Challenge {
 
   events: Dict<Event>;
 
-  successPredicate?: Expr;
-  failurePredicate?: Expr;
+  success?: Predicate;
+  failure?: Predicate;
 
   sceneId: string;
 }
