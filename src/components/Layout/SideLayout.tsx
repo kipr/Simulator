@@ -174,6 +174,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       onClearConsole,
       onIndentCode,
       onDownloadCode,
+      onResetCode,
       editorRef,
       robots,
       sceneId,
@@ -196,6 +197,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
           onLanguageChange: editorTarget.onLanguageChange,
           onIndentCode,
           onDownloadCode,
+          onResetCode,
           onErrorClick: this.onErrorClick_
         };
         editor = (
