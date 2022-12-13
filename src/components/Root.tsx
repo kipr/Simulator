@@ -266,9 +266,9 @@ class Root extends React.Component<Props, State> {
       layout: Layout.Side,
       activeLanguage: 'c',
       code: {
-        'c': window.localStorage.getItem('code-c') || ProgrammingLanguage.defaultCode('c'),
-        'cpp': window.localStorage.getItem('code-cpp') || ProgrammingLanguage.defaultCode('cpp'),
-        'python': window.localStorage.getItem('code-python') || ProgrammingLanguage.defaultCode('python'),
+        'c': window.localStorage.getItem('code-c') || ProgrammingLanguage.DEFAULT_CODE['c'],
+        'cpp': window.localStorage.getItem('code-cpp') || ProgrammingLanguage.DEFAULT_CODE['cpp'],
+        'python': window.localStorage.getItem('code-python') || ProgrammingLanguage.DEFAULT_CODE['python'],
       },
       modal: Modal.NONE,
       simulatorState: SimulatorState.STOPPED,
@@ -513,7 +513,7 @@ class Root extends React.Component<Props, State> {
 
     const element = document.createElement('a');
     element.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(this.state.code[activeLanguage])}`);
-    element.setAttribute('download', `program.${ProgrammingLanguage.fileExtension(activeLanguage)}`);
+    element.setAttribute('download', `program.${ProgrammingLanguage.FILE_EXTENSION[activeLanguage]}`);
     element.style.display = 'none';
     document.body.appendChild(element);
     element.click();
@@ -539,7 +539,7 @@ class Root extends React.Component<Props, State> {
     this.setState({
       code: {
         ...this.state.code,
-        [activeLanguage]: ProgrammingLanguage.defaultCode(activeLanguage)
+        [activeLanguage]: ProgrammingLanguage.DEFAULT_CODE[activeLanguage]
       }
     });
   };
