@@ -13,7 +13,7 @@ import { Ivygate, Message } from 'ivygate';
 import LanguageSelectCharm from './LanguageSelectCharm';
 import ProgrammingLanguage from '../../ProgrammingLanguage';
 
-import { faArrowsRotate, faFileDownload, faIndent} from '@fortawesome/free-solid-svg-icons';
+import { faArrowsRotate, faFileDownload, faIndent } from '@fortawesome/free-solid-svg-icons';
 import Script from '../../state/State/Scene/Script';
 import Dict from '../../Dict';
 
