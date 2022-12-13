@@ -8,7 +8,7 @@ import SimMenu from './SimMenu';
 
 import { styled } from 'styletron-react';
 import { DARK, Theme } from './theme';
-import { Layout, LayoutProps, BottomLayout, OverlayLayout, OverlayLayoutRedux, SideLayoutRedux  } from './Layout';
+import { Layout, LayoutProps, OverlayLayout, OverlayLayoutRedux, SideLayoutRedux  } from './Layout';
 
 import { SettingsDialog } from './SettingsDialog';
 import { AboutDialog } from './AboutDialog';
@@ -34,6 +34,7 @@ import { ScenesAction } from '../state/reducer';
 import { Editor } from './Editor';
 import Dict from '../Dict';
 import ProgrammingLanguage from '../ProgrammingLanguage';
+import Script from '../state/State/Scene/Script';
 
 import Scene, { AsyncScene } from '../state/State/Scene';
 import { RouteComponentProps } from 'react-router';
@@ -56,6 +57,10 @@ import { push } from 'connected-react-router';
 import Loading from './Loading';
 import LocalizedString from '../util/LocalizedString';
 import SceneSettingsDialog from './SceneSettingsDialog';
+import Geometry from '../state/State/Scene/Geometry';
+import Camera from '../state/State/Scene/Camera';
+import { Vector3 } from '../unit-math';
+import { LayoutEditorTarget } from './Layout/Layout';
 
 namespace Modal {
   export enum Type {
@@ -172,6 +177,10 @@ interface RootPrivateProps {
   onNodeRemove: (id: string) => void;
   onNodeChange: (id: string, node: Node) => void;
   onNodesChange: (nodes: Dict<Node>) => void;
+  onGeometryAdd: (id: string, geometry: Geometry) => void;
+  onGeometryRemove: (id: string) => void;
+  onCameraChange: (camera: Camera) => void;
+  onGravityChange: (gravity: Vector3) => void;
   onSelectNodeId: (id: string) => void;
   onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => void;
   onResetScene: () => void;
@@ -185,6 +194,12 @@ interface RootPrivateProps {
   unfailScene: (id: string) => void;
 
   goToLogin: () => void;
+
+  selectedScriptId?: string;
+  selectedScript?: Script;
+
+  onScriptChange: (sceneId: string, scriptId: string, script: Script) => void;
+  onSelectedScriptChange: (sceneId: string, scriptId: string) => void;
 }
 
 interface RootState {
@@ -275,8 +290,16 @@ class Root extends React.Component<Props, State> {
   componentDidMount() {
     WorkerInstance.onStopped = this.onStopped_;
 
-    Space.getInstance().onSetNodeBatch = this.props.onSetNodeBatch;
-    Space.getInstance().onSelectNodeId = this.props.onSelectNodeId;
+    const space = Space.getInstance();
+    space.onSetNodeBatch = this.props.onSetNodeBatch;
+    space.onSelectNodeId = this.props.onSelectNodeId;
+    space.onNodeAdd = this.props.onNodeAdd;
+    space.onNodeRemove = this.props.onNodeRemove;
+    space.onNodeChange = this.props.onNodeChange;
+    space.onGeometryAdd = this.props.onGeometryAdd;
+    space.onGeometryRemove = this.props.onGeometryRemove;
+    space.onGravityChange = this.props.onGravityChange;
+    space.onCameraChange = this.props.onCameraChange;
 
     this.scheduleUpdateConsole_();
     window.addEventListener('resize', this.onWindowResize_);
@@ -295,16 +318,22 @@ class Root extends React.Component<Props, State> {
       this.props.loadScene(this.props.match.params.sceneId);
     }
 
+    if (this.props.onSelectNodeId !== prevProps.onSelectNodeId) Space.getInstance().onSelectNodeId = this.props.onSelectNodeId;
+
+    if (this.props.onSetNodeBatch !== prevProps.onSetNodeBatch) Space.getInstance().onSetNodeBatch = this.props.onSetNodeBatch;
+    if (this.props.onNodeChange !== prevProps.onNodeChange) Space.getInstance().onNodeChange = this.props.onNodeChange;
+    if (this.props.onNodeAdd !== prevProps.onNodeAdd) Space.getInstance().onNodeAdd = this.props.onNodeAdd;
+    if (this.props.onNodeRemove !== prevProps.onNodeRemove) Space.getInstance().onNodeRemove = this.props.onNodeRemove;
+
+    if (this.props.onGravityChange !== prevProps.onGravityChange) Space.getInstance().onGravityChange = this.props.onGravityChange;
+    if (this.props.onCameraChange !== prevProps.onCameraChange) Space.getInstance().onCameraChange = this.props.onCameraChange;
+
+    if (this.props.onGeometryAdd !== prevProps.onGeometryAdd) Space.getInstance().onGeometryAdd = this.props.onGeometryAdd;
+    if (this.props.onGeometryRemove !== prevProps.onGeometryRemove) Space.getInstance().onGeometryRemove = this.props.onGeometryRemove;
+
+
     if (this.props.scene !== prevProps.scene) {
       Space.getInstance().scene = Async.latestValue(this.props.scene) || Scene.EMPTY;
-    }
-
-    if (this.props.onSelectNodeId !== prevProps.onSelectNodeId) {
-      Space.getInstance().onSelectNodeId = this.props.onSelectNodeId;
-    }
-
-    if (this.props.onSetNodeBatch !== prevProps.onSetNodeBatch) {
-      Space.getInstance().onSetNodeBatch = this.props.onSetNodeBatch;
     }
   }
 
@@ -608,6 +637,10 @@ class Root extends React.Component<Props, State> {
   private onSaveSceneClick_ = () => {
     this.props.onSaveScene(this.props.match.params.sceneId);
   };
+  private onScriptChange_ = (script: Script) => {
+    const { selectedScriptId } = this.props;
+    this.props.onScriptChange(this.props.match.params.sceneId, selectedScriptId, script);
+  };
 
   render() {
     const { props, state } = this;
@@ -618,6 +651,10 @@ class Root extends React.Component<Props, State> {
       return <Loading />;
     }
 
+    const {
+      selectedScript,
+      selectedScriptId
+    } = props;
     const {
       layout,
       activeLanguage,
@@ -633,15 +670,20 @@ class Root extends React.Component<Props, State> {
 
     const theme = DARK;
 
-    const commonLayoutProps: LayoutProps = {
-      language: activeLanguage,
+    const editorTarget: LayoutEditorTarget = {
+      type: LayoutEditorTarget.Type.Robot,
       code: code[activeLanguage],
+      language: activeLanguage,
+      onCodeChange: this.onCodeChange_,
       onLanguageChange: this.onActiveLanguageChange_,
+    };
+
+    const commonLayoutProps: LayoutProps = {
       theme,
       console,
-      onCodeChange: this.onCodeChange_,
       messages,
       settings,
+      editorTarget,
       onClearConsole: this.onClearConsole_,
       onIndentCode: this.onIndentCode_,
       onDownloadCode: this.onDownloadClick_,
@@ -654,12 +696,6 @@ class Root extends React.Component<Props, State> {
       case Layout.Overlay: {
         impl = (
           <OverlayLayoutRedux ref={this.overlayLayoutRef} {...commonLayoutProps} />
-        );
-        break;
-      }
-      case Layout.Bottom: {
-        impl = (
-          <BottomLayout {...commonLayoutProps} />
         );
         break;
       }
@@ -798,12 +834,21 @@ class Root extends React.Component<Props, State> {
   }
 }
 
-export default connect((state: ReduxState, { match: { params: { sceneId } } }: RootPublicProps) => ({
-  scene: state.scenes[sceneId]
-}), (dispatch, { match: { params: { sceneId } } }: RootPublicProps) => ({
+export default connect((state: ReduxState, { match: { params: { sceneId } } }: RootPublicProps) => {
+  const scene = state.scenes[sceneId];
+  const latestScene = Async.latestValue(scene);
+  return {
+    scene,
+  };
+}, (dispatch, { match: { params: { sceneId } } }: RootPublicProps) => ({
   onNodeAdd: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
   onNodeRemove: (nodeId: string) => dispatch(ScenesAction.removeNode({ sceneId, nodeId })),
-  onNodeChange: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
+  onNodeChange: (nodeId: string, node: Node) => {
+    dispatch(ScenesAction.setNode({ sceneId, nodeId, node }));
+  }, onGeometryAdd: (geometryId: string, geometry: Geometry) => dispatch(ScenesAction.addGeometry({ sceneId, geometryId, geometry })),
+  onGeometryRemove: (geometryId: string) => dispatch(ScenesAction.removeGeometry({ sceneId, geometryId })),
+  onCameraChange: (camera: Camera) => dispatch(ScenesAction.setCamera({ sceneId, camera })),
+  onGravityChange: (gravity: Vector3) => dispatch(ScenesAction.setGravity({ sceneId, gravity })),
   onSelectNodeId: (nodeId: string) => dispatch(ScenesAction.selectNode({ sceneId, nodeId })),
   onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) =>
     dispatch(ScenesAction.setNodeBatch({ sceneId, ...setNodeBatch })),
@@ -823,5 +868,9 @@ export default connect((state: ReduxState, { match: { params: { sceneId } } }: R
   goToLogin: () => {
     window.location.href = `/login?from=${window.location.pathname}`;
   },
+  onScriptChange: (sceneId: string, scriptId: string, script: Script) => {
+    dispatch(ScenesAction.setScript({ sceneId, scriptId, script }));
+  },
 }))(Root) as React.ComponentType<RootPublicProps>;
+
 export { RootState };

@@ -40,6 +40,9 @@ class RobotBinding {
   private rootId_: string;
 
   private links_: Dict<Babylon.Mesh> = {};
+
+  get links() { return this.links_; }
+
   private weights_: Dict<Babylon.Mesh> = {};
   private fixed_: Dict<Babylon.PhysicsJoint> = {};
   private motors_: Dict<Babylon.HingeJoint> = {};

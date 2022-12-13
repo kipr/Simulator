@@ -5,11 +5,11 @@ import { styled } from 'styletron-react';
 import { Button } from '../Button';
 
 import { Console, createConsoleBarComponents } from '../Console';
-import { Editor, createEditorBarComponents } from '../Editor';
+import { Editor, createEditorBarComponents, EditorBarTarget } from '../Editor';
 import World, { createWorldBarComponents } from '../World';
 
 import { Info } from '../Info';
-import { Layout, LayoutProps } from './Layout';
+import { LayoutEditorTarget, LayoutProps } from './Layout';
 import { SimulatorArea } from '../SimulatorArea';
 import { Theme, ThemeProps } from '../theme';
 import Widget, { BarComponent, Mode, Size, WidgetProps } from '../Widget';
@@ -33,6 +33,7 @@ interface OverlayLayoutState {
   infoSize: Size.Type;
   editorSize: Size.Type;
   worldSize: Size.Type;
+  workingScriptCode?: string;
 }
 
 type Props = OverlayLayoutProps;
@@ -287,10 +288,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       style,
       className,
       theme,
-      language,
-      onLanguageChange,
-      code,
-      onCodeChange,
+      editorTarget,
       console,
       messages,
       settings,
@@ -306,7 +304,8 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       editorSize,
       consoleSize,
       infoSize,
-      worldSize
+      worldSize,
+      workingScriptCode
     } = this.state;
 
     const commonProps = {
@@ -314,14 +313,37 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       mode: Mode.Floating
     };
 
+    let editorBarTarget: EditorBarTarget;
+    let editor: JSX.Element;
+    switch (editorTarget.type) {
+      case LayoutEditorTarget.Type.Robot: {
+        editorBarTarget = {
+          type: EditorBarTarget.Type.Robot,
+          messages,
+          language: editorTarget.language,
+          onLanguageChange: editorTarget.onLanguageChange,
+          onIndentCode,
+          onDownloadCode,
+          onErrorClick: this.onErrorClick_
+        };
+        editor = (
+          <Editor
+            theme={theme}
+            ref={editorRef}
+            code={editorTarget.code}
+            language={editorTarget.language}
+            onCodeChange={editorTarget.onCodeChange}
+            messages={messages}
+            autocomplete={settings.editorAutoComplete}
+          />
+        );
+        break;
+      }
+    }
+
     const editorBar = createEditorBarComponents({
       theme,
-      messages,
-      language,
-      onLanguageChange,
-      onIndentCode,
-      onDownloadCode,
-      onErrorClick: this.onErrorClick_
+      target: editorBarTarget,
     });
     const consoleBar = createConsoleBarComponents(theme, onClearConsole);
 
@@ -346,15 +368,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
             onSizeChange={this.onEditorSizeChange_}
             barComponents={editorBar}
           >
-            <Editor
-              ref={editorRef}
-              language={language}
-              code={code}
-              onCodeChange={onCodeChange}
-              theme={theme}
-              messages={messages}
-              autocomplete={settings.editorAutoComplete}
-            />
+            {editor}
           </EditorWidget>
           <ConsoleWidget
             {...commonProps}

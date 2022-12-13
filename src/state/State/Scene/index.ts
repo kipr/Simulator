@@ -15,6 +15,7 @@ interface Scene {
   author: Author;
   description: LocalizedString;
   selectedNodeId?: string;
+  selectedScriptId?: string;
 
   hdriUri?: string;
 
@@ -61,6 +62,7 @@ interface PatchScene {
   author: Patch<Author>;
   description: Patch<LocalizedString>;
   selectedNodeId: Patch<string>;
+  selectedScriptId: Patch<string>;
 
   hdriUri?: Patch<string>;
 
@@ -124,6 +126,7 @@ namespace Scene {
     description: Patch.diff(a.description, b.description),
     hdriUri: Patch.diff(a.hdriUri, b.hdriUri),
     selectedNodeId: Patch.diff(a.selectedNodeId, b.selectedNodeId),
+    selectedScriptId: Patch.diff(a.selectedScriptId, b.selectedScriptId),
     geometry: Patch.diffDict(a.geometry, b.geometry, Geometry.diff),
     nodes: Patch.diffDict(a.nodes, b.nodes, Node.diff),
     scripts: Patch.diffDict(a.scripts, b.scripts, Patch.diff),

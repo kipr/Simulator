@@ -31,6 +31,9 @@ import RobotBinding from './RobotBinding';
 import WorkerInstance from './WorkerInstance';
 import AbstractRobot from './AbstractRobot';
 import LocalizedString from './util/LocalizedString';
+import ScriptManager from './ScriptManager';
+import Geometry from './state/State/Scene/Geometry';
+import Camera from './state/State/Scene/Camera';
 
 
 export let ACTIVE_SPACE: Space;
@@ -54,19 +57,28 @@ export class Space {
 
   onSelectNodeId?: (nodeId: string) => void;
   onSetNodeBatch?: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => void;
+  onNodeAdd?: (nodeId: string, node: Node) => void;
+  onNodeRemove?: (nodeId: string) => void;
+  onNodeChange?: (nodeId: string, node: Node) => void;
+  onGeometryAdd?: (geometryId: string, geometry: Geometry) => void;
+  onGeometryRemove?: (geometryId: string) => void;
+  onCameraChange?: (camera: Camera) => void;
+  onGravityChange?: (gravity: UnitVector3) => void;
+
 
   private debounceUpdate_ = false;
   private sceneSetting_ = false;
-
+  
+  private nextScene_: Scene | undefined;
   private scene_ = Scene.EMPTY;
   get scene() { return this.scene_; }
-  
   
   set scene(scene: Scene) {
     this.scene_ = scene;
     
     if (this.sceneSetting_ || this.debounceUpdate_ || !this.sceneBinding_) {
-      if (this.sceneBinding_) this.sceneBinding_.scene = scene;
+      if (this.sceneBinding_ && !this.sceneSetting_) this.sceneBinding_.scene = scene;
+      if (this.sceneSetting_ && !this.debounceUpdate_) this.nextScene_ = scene;
       return;
     }
 
@@ -74,7 +86,14 @@ export class Space {
     (async () => {
       // Disable physics during scene changes to avoid objects moving before the scene is fully loaded
       this.bScene_.physicsEnabled = false;
+     
       await this.sceneBinding_.setScene(scene, Robots.loaded(store.getState().robots));
+      while (this.nextScene_) {
+        const nextScene = this.nextScene_;
+        this.nextScene_ = undefined;
+        await this.sceneBinding_.setScene(nextScene, Robots.loaded(store.getState().robots));
+      
+      }
       this.bScene_.physicsEnabled = true;
     })().finally(() => {
       this.sceneSetting_ = false;
@@ -198,6 +217,17 @@ export class Space {
     const ammo: unknown = await (Ammo as any)();
     
     this.sceneBinding_ = new SceneBinding(this.bScene_, ammo);
+
+    const scriptManager = this.sceneBinding_.scriptManager;
+    scriptManager.onNodeAdd = (id, node) => this.onNodeAdd?.(id, node);
+    scriptManager.onNodeRemove = id => this.onNodeRemove?.(id);
+    scriptManager.onNodeChange = (id, node) => this.onNodeChange?.(id, node);
+    scriptManager.onGeometryAdd = (id, geometry) => this.onGeometryAdd?.(id, geometry);
+    scriptManager.onGeometryRemove = id => this.onGeometryRemove?.(id);
+    scriptManager.onCameraChange = camera => this.onCameraChange?.(camera);
+    scriptManager.onGravityChange = gravity => this.onGravityChange?.(gravity);
+    scriptManager.onSelectedNodeIdChange = id => this.onSelectNodeId?.(id);
+    
     await this.sceneBinding_.setScene(this.scene_, Robots.loaded(state.robots));
     this.bScene_.getPhysicsEngine().setSubTimeStep(5);
 
@@ -330,7 +360,7 @@ export class Space {
     this.engine.runRenderLoop(() => {
       // Post updates to the store
       this.updateStore_();
-
+      this.sceneBinding_.scriptManager.trigger(ScriptManager.Event.RENDER);
       this.bScene_.render();
     });
   }

@@ -19,6 +19,8 @@ import Robot from './state/State/Robot';
 import AbstractRobot from './AbstractRobot';
 import WorkerInstance from "./WorkerInstance";
 import LocalizedString from './util/LocalizedString';
+import ScriptManager from './ScriptManager';
+import { RENDER_SCALE } from './renderConstants';
 
 export type FrameLike = Babylon.TransformNode | Babylon.AbstractMesh;
 
@@ -51,6 +53,9 @@ class SceneBinding {
   private robots_: Dict<Robot>;
   private robotBindings_: Dict<RobotBinding> = {};
 
+  private scriptManager_ = new ScriptManager();
+  get scriptManager() { return this.scriptManager_; }
+
   get camera() { return this.camera_; }
 
   private canvas_: HTMLCanvasElement;
@@ -78,6 +83,7 @@ class SceneBinding {
     this.ammo_ = new Babylon.AmmoJSPlugin(true, ammo);
     this.bScene_.enablePhysics(new Babylon.Vector3(0, -9.8 * 100, 0), this.ammo_);
     this.bScene_.getPhysicsEngine().setSubTimeStep(2);
+    
     // this.physicsViewer_ = new Babylon.PhysicsViewer(this.bScene_);
 
     this.root_ = new Babylon.TransformNode('__scene_root__', this.bScene_);
@@ -90,6 +96,9 @@ class SceneBinding {
     this.gizmoManager_.rotationGizmoEnabled = true;
     this.gizmoManager_.scaleGizmoEnabled = false;
     this.gizmoManager_.usePointerToAttachGizmos = false;
+
+    this.scriptManager_.onCollisionFiltersChanged = this.onCollisionFiltersChanged_;
+    this.scriptManager_.onIntersectionFiltersChanged = this.onIntersectionFiltersChanged_;
   }
 
   private static apply_ = (g: Babylon.Node, f: (m: Babylon.AbstractMesh) => void) => {
@@ -579,6 +588,9 @@ class SceneBinding {
     });
 
     this.robotBindings_[id] = robotBinding;
+
+    this.syncCollisionFilters_();
+
     return robotBinding;
   };
 
@@ -606,6 +618,8 @@ class SceneBinding {
         ...nodeTemplate,
       };
     }
+
+    for (const scriptId of nodeToCreate.scriptIds || []) this.scriptManager_.bind(scriptId, id);
 
     let ret: Babylon.Node;
     switch (nodeToCreate.type) {
@@ -902,6 +916,12 @@ class SceneBinding {
     switch (node.type) {
       // The node hasn't changed type, but some fields have been changed
       case Patch.Type.InnerChange: {
+        // If scriptIds changed, rebind the scripts
+        if (node.inner.scriptIds.type === Patch.Type.OuterChange) {
+          for (const scriptId of node.inner.scriptIds.prev || []) this.scriptManager_.unbind(scriptId, id);
+          for (const scriptId of node.inner.scriptIds.next || []) this.scriptManager_.bind(scriptId, id);
+        }
+
         switch (node.next.type) {
           case 'empty': return this.updateEmpty_(id, node as Patch.InnerChange<Node.Empty>);
           case 'object': {
@@ -940,6 +960,8 @@ class SceneBinding {
       }
       // The node was removed from the scene
       case Patch.Type.Remove: {
+        // unbind scripts
+        for (const scriptId of node.prev.scriptIds || []) this.scriptManager_.unbind(scriptId, id);
         this.destroyNode_(id);
 
         return undefined;
@@ -1025,6 +1047,11 @@ class SceneBinding {
     return ret;
   };
 
+  private cachedCollideCallbacks_: Dict<{
+    callback: (collider: Babylon.PhysicsImpostor, collidedWith: Babylon.PhysicsImpostor, point: Babylon.Vector3) => void;
+    otherImpostors: Babylon.PhysicsImpostor[];
+  }[]> = {};
+
   private restorePhysicsImpostor = (mesh: Babylon.AbstractMesh, objectNode: Node.Obj, nodeId: string, scene: Scene): void => {
     // Physics impostors should only be added to physics-enabled, visible, non-selected objects
     if (
@@ -1047,8 +1074,11 @@ class SceneBinding {
     if (this.physicsViewer_) this.physicsViewer_.showImpostor(mesh.physicsImpostor);
 
     mesh.setParent(initialParent);
+
+    this.syncCollisionFilters_();
   };
 
+  
   private removePhysicsImpostor = (mesh: Babylon.AbstractMesh) => {
     if (!mesh.physicsImpostor) return;
 
@@ -1059,11 +1089,82 @@ class SceneBinding {
     mesh.physicsImpostor = undefined;
 
     mesh.setParent(parent);
+
+    this.syncCollisionFilters_();
   };
+
+  private collisionFilters_: Dict<Set<string>> = {};
+  private intersectionFilters_: Dict<Set<string>> = {};
+
+  private syncCollisionFilters_ = () => {
+    for (const nodeId in this.collisionFilters_) {
+      const meshes = this.nodeMeshes_(nodeId);
+      if (meshes.length === 0) continue;
+
+      const impostors = meshes
+        .map(mesh => mesh.physicsImpostor)
+        .filter(impostor => impostor && !impostor.isDisposed);
+
+      if (impostors.length === 0) continue;
+
+      const filterIds = this.collisionFilters_[nodeId];
+
+      const otherImpostors = Array.from(filterIds)
+        .map(id => this.nodeMeshes_(id))
+        .reduce((acc, val) => [...acc, ...val], [])
+        .filter(mesh => mesh && mesh.physicsImpostor)
+        .map(mesh => mesh.physicsImpostor);
+
+      for (const impostor of impostors) {
+        impostor._onPhysicsCollideCallbacks = [{
+          callback: this.onCollideEvent_,
+          otherImpostors,
+        }];
+      }
+    }
+  };
+
+  private onCollisionFiltersChanged_ = (nodeId: string, filterIds: Set<string>) => {
+    this.collisionFilters_[nodeId] = filterIds;
+    this.syncCollisionFilters_();
+  };
+
+  private onIntersectionFiltersChanged_ = (nodeId: string, filterIds: Set<string>) => {
+    if (SetOps.intersection(filterIds, Dict.keySet(this.robotBindings_)).size > 0) {
+      throw new Error(`Cannot add a robot to a collision's filter. Please make the robot the primary nodeId.`);
+    }
+    
+    this.intersectionFilters_[nodeId] = filterIds;
+    this.syncCollisionFilters_();
+  };
+
+  private onCollideEvent_ = (
+    collider: Babylon.PhysicsImpostor,
+    collidedWith: Babylon.PhysicsImpostor,
+    point: Babylon.Vector3
+  ) => {
+    if (!('metadata' in collider.object)) return;
+    if (!('metadata' in collidedWith.object)) return;
+
+    const colliderMetadata = collider.object['metadata'] as SceneMeshMetadata;
+    const collidedWithMetadata = collidedWith.object['metadata'] as SceneMeshMetadata;
+
+    if (!colliderMetadata) return;
+    if (!collidedWithMetadata) return;
+
+    this.scriptManager_.trigger(ScriptManager.Event.collision({
+      nodeId: colliderMetadata.id,
+      otherNodeId: collidedWithMetadata.id,
+      point: Vector3.fromRaw(RawVector3.fromBabylon(point), RENDER_SCALE),
+    }));
+  };
+
+    
 
   readonly setScene = async (scene: Scene, robots: Dict<Robot>) => {
     this.robots_ = robots;
     const patch = Scene.diff(this.scene_, scene);
+    this.scriptManager_.scene = scene;
 
     const nodeIds = Dict.keySet(patch.nodes);
 
@@ -1157,8 +1258,58 @@ class SceneBinding {
       this.bScene_.getPhysicsEngine().setGravity(Vector3.toBabylon(patch.gravity.next, 'centimeters'));
     }
 
+    // Scripts **must** be initialized after the scene is fully loaded
+    const reinitializedScripts = new Set<string>();
+    for (const scriptId in patch.scripts) {
+      const script = patch.scripts[scriptId];
+      switch (script.type) {
+        case Patch.Type.Add:
+        case Patch.Type.OuterChange: {
+          this.scriptManager_.set(scriptId, script.next);
+          reinitializedScripts.add(scriptId);
+          break;
+        }
+        case Patch.Type.Remove: {
+          this.scriptManager_.remove(scriptId);
+          break;
+        }
+      }
+    }
+
+    // Iterate through all nodes to find reinitialized binds
+    for (const nodeId in scene.nodes) {
+      const node = scene.nodes[nodeId];
+      for (const scriptId of node.scriptIds || []) {
+        if (reinitializedScripts.has(scriptId)) this.scriptManager_.bind(scriptId, nodeId);
+      }
+    }
+
     this.scene_ = scene;
   };
+
+  private currentIntersections_: Dict<Set<string>> = {};
+
+  private nodeMeshes_ = (id: string): Babylon.AbstractMesh[] => {
+    if (id in this.robotBindings_) return Dict.values(this.robotBindings_[id].links);
+    
+    const bNode = this.findBNode_(id);
+    if (bNode && bNode instanceof Babylon.AbstractMesh) return [bNode];
+
+    return [];
+  };
+
+  private nodeMinMaxes_ = (id: string): { min: Babylon.Vector3; max: Babylon.Vector3; }[] => {
+    const meshes = this.nodeMeshes_(id);
+    if (meshes.length === 0) return [];
+
+    const ret: { min: Babylon.Vector3; max: Babylon.Vector3; }[] = [];
+    for (const mesh of meshes) ret.push(mesh.getHierarchyBoundingVectors());
+
+    return ret;
+  };
+
+  private nodeBoundingBoxes_ = (id: string): Babylon.BoundingBox[] => this.nodeMinMaxes_(id)
+    .map(({ min, max }) => new Babylon.BoundingBox(min, max));
 
   tick(abstractRobots: Dict<AbstractRobot.Readable>): Dict<RobotBinding.TickOut> {
     const ret: Dict<RobotBinding.TickOut> = {};
@@ -1171,6 +1322,46 @@ class SceneBinding {
 
       ret[nodeId] = robotBinding.tick(abstractRobots[nodeId]);
     }
+
+    // Update intersections
+    for (const nodeId in this.intersectionFilters_) {
+      const nodeBoundingBoxes = this.nodeBoundingBoxes_(nodeId);
+      const filterIds = this.intersectionFilters_[nodeId];
+      for (const filterId of filterIds) {
+        const filterMinMaxes = this.nodeMinMaxes_(filterId);
+
+        let intersection = false;
+        for (const nodeBoundingBox of nodeBoundingBoxes) {
+          for (const filterMinMax of filterMinMaxes) {
+            intersection = nodeBoundingBox.intersectsMinMax(filterMinMax.min, filterMinMax.max);
+            if (intersection) break;
+          }
+          if (intersection) break;
+        }
+
+        if (intersection) {
+          if (!this.currentIntersections_[nodeId]) this.currentIntersections_[nodeId] = new Set();
+          else if (this.currentIntersections_[nodeId].has(filterId)) continue;
+
+          this.currentIntersections_[nodeId].add(filterId);
+
+          this.scriptManager_.trigger(ScriptManager.Event.intersectionStart({
+            nodeId,
+            otherNodeId: filterId,
+          }));
+        } else {
+          if (!this.currentIntersections_[nodeId] || !this.currentIntersections_[nodeId].has(filterId)) continue;
+
+          this.currentIntersections_[nodeId].delete(filterId);
+
+          this.scriptManager_.trigger(ScriptManager.Event.intersectionEnd({
+            nodeId,
+            otherNodeId: filterId,
+          }));
+        }
+      }
+    }
+
     return ret;
   }
 

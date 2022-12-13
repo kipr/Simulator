@@ -6,11 +6,11 @@ import { styled } from 'styletron-react';
 import { Button } from '../Button';
 
 import { Console, createConsoleBarComponents } from '../Console';
-import { Editor, createEditorBarComponents } from '../Editor';
+import { Editor, createEditorBarComponents, EditorBarTarget } from '../Editor';
 import World, { createWorldBarComponents } from '../World';
 
 import { Info } from '../Info';
-import { LayoutProps } from './Layout';
+import { LayoutEditorTarget, LayoutProps } from './Layout';
 import { SimulatorArea } from '../SimulatorArea';
 import { TabBar } from '../TabBar';
 import Widget, { BarComponent, Mode, Size } from '../Widget';
@@ -63,6 +63,7 @@ interface ReduxSideLayoutProps {
 interface SideLayoutState {
   activePanel: number;
   sidePanelSize: Size.Type;
+  workingScriptCode?: string;
 }
 
 type Props = SideLayoutProps;
@@ -166,10 +167,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       style,
       className,
       theme,
-      code,
-      language,
-      onLanguageChange,
-      onCodeChange,
+      editorTarget,
       console,
       messages,
       settings,
@@ -187,14 +185,37 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       
     } = this.state;
 
+    let editorBarTarget: EditorBarTarget;
+    let editor: JSX.Element;
+    switch (editorTarget.type) {
+      case LayoutEditorTarget.Type.Robot: {
+        editorBarTarget = {
+          type: EditorBarTarget.Type.Robot,
+          messages,
+          language: editorTarget.language,
+          onLanguageChange: editorTarget.onLanguageChange,
+          onIndentCode,
+          onDownloadCode,
+          onErrorClick: this.onErrorClick_
+        };
+        editor = (
+          <Editor
+            theme={theme}
+            ref={editorRef}
+            code={editorTarget.code}
+            language={editorTarget.language}
+            onCodeChange={editorTarget.onCodeChange}
+            messages={messages}
+            autocomplete={settings.editorAutoComplete}
+          />
+        );
+        break;
+      }
+    }
+
     const editorBar = createEditorBarComponents({
       theme,
-      messages,
-      language,
-      onLanguageChange,
-      onIndentCode,
-      onDownloadCode,
-      onErrorClick: this.onErrorClick_
+      target: editorBarTarget,
     });
     const consoleBar = createConsoleBarComponents(theme, onClearConsole);
 
@@ -212,20 +233,11 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
             <SimultorWidgetContainer>
               <SimulatorWidget
                 theme={theme}
-                name='Editor'
+                name={editorTarget.type === LayoutEditorTarget.Type.Robot ? 'Editor' : 'Script Editor'}
                 mode={Mode.Sidebar}
                 barComponents={editorBar}
               >
-                
-                <Editor
-                  theme={theme}
-                  ref={editorRef}
-                  code={code}
-                  language={language}
-                  onCodeChange={onCodeChange}
-                  messages={messages}
-                  autocomplete={settings.editorAutoComplete}
-                />
+                {editor}
               </SimulatorWidget>
             </SimultorWidgetContainer>
 

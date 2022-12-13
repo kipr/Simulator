@@ -1,37 +1,19 @@
-namespace Script {
-  interface Base {
-    code: string;
-  }
-
-  export interface Timer extends Base {
-    type: 'timer';
-    frequency: number;
-  }
-
-  export type TimerParams = Omit<Timer, 'type'>;
-
-  export const timer = (params: TimerParams): Timer => ({
-    type: 'timer',
-    ...params,
-  });
-
-  export interface Event extends Base {
-    type: 'event';
-    kind: Event.Kind;
-  }
-
-  export type EventParams = Omit<Event, 'type'>;
-
-  export const event = (params: EventParams): Event => ({
-    type: 'event',
-    ...params,
-  });
-
-  export namespace Event {
-    export type Kind = 'tick';
-  }
+interface Script {
+  name: string;
+  language: Script.Language;
+  code: string;
 }
 
-type Script = Script.Timer | Script.Event;
+namespace Script {
+  export enum Language {
+    EcmaScript = 'ecmascript',
+  }
+
+  export const ecmaScript = (name: string, code: string): Script => ({
+    name,
+    language: Language.EcmaScript,
+    code,
+  });
+}
 
 export default Script;
