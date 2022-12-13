@@ -232,7 +232,7 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
   };
 
   private onNodeOriginAccept_ = (id: string) => (origin: ReferenceFrame) => {
-    const originalNode = Async.previousValue(this.props.scene).nodes[id];
+    const originalNode = Async.latestValue(this.props.scene).nodes[id];
     this.props.onNodeChange(id, {
       ...originalNode,
       startingOrigin: origin,
@@ -269,14 +269,14 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
     const { scene } = props;
     const idStr = id as string;
 
-    const referenceScene = Async.previousValue(scene);
+    const workingScene = Async.latestValue(scene);
     
-    const node = referenceScene.nodes[idStr];
+    const node = workingScene.nodes[idStr];
     if (node.type === 'object') {
       if (node.geometryId !== undefined) {
         let unique = true;
-        for (const nodeId in referenceScene.nodes) {
-          const otherNode = referenceScene.nodes[nodeId];
+        for (const nodeId in workingScene.nodes) {
+          const otherNode = workingScene.nodes[nodeId];
           if (nodeId !== idStr && otherNode.type === 'object' && node.geometryId === otherNode.geometryId) {
             unique = false;
             break;
@@ -308,10 +308,9 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
     const itemList: EditableList.Item[] = [];
 
     const workingScene = Async.latestValue(scene);
-    const referenceScene = Async.previousValue(scene);
     for (const nodeId of Dict.keySet(workingScene.nodes)) {
       const node = workingScene.nodes[nodeId];
-      const hasReset = referenceScene.nodes[nodeId] !== undefined;
+      const hasReset = workingScene.nodes[nodeId].startingOrigin !== undefined;
       itemList.push(EditableList.Item.standard({
         component: Item,
         props: { name: node.name[LocalizedString.EN_US], theme },
@@ -359,14 +358,14 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
             </StyledListSection>
           </Container>
         </ScrollArea>
-        {modal.type === UiState.Type.AddNode && <AddNodeDialog scene={referenceScene} theme={theme} onClose={this.onModalClose_} onAccept={this.onAddNodeAccept_} />}
+        {modal.type === UiState.Type.AddNode && <AddNodeDialog scene={workingScene} theme={theme} onClose={this.onModalClose_} onAccept={this.onAddNodeAccept_} />}
         {modal.type === UiState.Type.NodeSettings && <NodeSettingsDialog
           onGeometryAdd={onGeometryAdd}
           onGeometryRemove={onGeometryRemove}
           onGeometryChange={onGeometryChange}
-          scene={referenceScene}
+          scene={workingScene}
           id={modal.id}
-          node={referenceScene.nodes[modal.id]}
+          node={workingScene.nodes[modal.id]}
           theme={theme}
           onClose={this.onModalClose_}
           onChange={this.onNodeSettingsAccept_(modal.id)}
