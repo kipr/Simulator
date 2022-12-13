@@ -318,16 +318,22 @@ class Root extends React.Component<Props, State> {
       this.props.loadScene(this.props.match.params.sceneId);
     }
 
+    if (this.props.onSelectNodeId !== prevProps.onSelectNodeId) Space.getInstance().onSelectNodeId = this.props.onSelectNodeId;
+
+    if (this.props.onSetNodeBatch !== prevProps.onSetNodeBatch) Space.getInstance().onSetNodeBatch = this.props.onSetNodeBatch;
+    if (this.props.onNodeChange !== prevProps.onNodeChange) Space.getInstance().onNodeChange = this.props.onNodeChange;
+    if (this.props.onNodeAdd !== prevProps.onNodeAdd) Space.getInstance().onNodeAdd = this.props.onNodeAdd;
+    if (this.props.onNodeRemove !== prevProps.onNodeRemove) Space.getInstance().onNodeRemove = this.props.onNodeRemove;
+
+    if (this.props.onGravityChange !== prevProps.onGravityChange) Space.getInstance().onGravityChange = this.props.onGravityChange;
+    if (this.props.onCameraChange !== prevProps.onCameraChange) Space.getInstance().onCameraChange = this.props.onCameraChange;
+
+    if (this.props.onGeometryAdd !== prevProps.onGeometryAdd) Space.getInstance().onGeometryAdd = this.props.onGeometryAdd;
+    if (this.props.onGeometryRemove !== prevProps.onGeometryRemove) Space.getInstance().onGeometryRemove = this.props.onGeometryRemove;
+
+
     if (this.props.scene !== prevProps.scene) {
       Space.getInstance().scene = Async.latestValue(this.props.scene) || Scene.EMPTY;
-    }
-
-    if (this.props.onSelectNodeId !== prevProps.onSelectNodeId) {
-      Space.getInstance().onSelectNodeId = this.props.onSelectNodeId;
-    }
-
-    if (this.props.onSetNodeBatch !== prevProps.onSetNodeBatch) {
-      Space.getInstance().onSetNodeBatch = this.props.onSetNodeBatch;
     }
   }
 
