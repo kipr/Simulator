@@ -325,6 +325,7 @@ const DEFAULT_SCENES: Scenes = {
   jbc20: Async.loaded({ value: JBC_SCENES.JBC_20 }),
   jbc21: Async.loaded({ value: JBC_SCENES.JBC_21 }),
   jbc22: Async.loaded({ value: JBC_SCENES.JBC_22 }),
+  scriptPlayground: Async.loaded({ value: JBC_SCENES.scriptPlayground }),
 };
 
 export const errorToAsyncError = (error: unknown): Async.Error => {

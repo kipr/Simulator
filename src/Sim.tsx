@@ -72,12 +72,13 @@ export class Space {
   private scene_ = Scene.EMPTY;
   get scene() { return this.scene_; }
   
-  
+  private nextScene_: Scene | undefined;
   set scene(scene: Scene) {
     this.scene_ = scene;
     
     if (this.sceneSetting_ || this.debounceUpdate_ || !this.sceneBinding_) {
-      if (this.sceneBinding_) this.sceneBinding_.scene = scene;
+      if (this.sceneBinding_ && !this.sceneSetting_) this.sceneBinding_.scene = scene;
+      if (this.sceneSetting_ && !this.debounceUpdate_) this.nextScene_ = scene;
       return;
     }
 
@@ -86,6 +87,11 @@ export class Space {
       // Disable physics during scene changes to avoid objects moving before the scene is fully loaded
       this.bScene_.physicsEnabled = false;
       await this.sceneBinding_.setScene(scene, Robots.loaded(store.getState().robots));
+      while (this.nextScene_) {
+        const nextScene = this.nextScene_;
+        this.nextScene_ = undefined;
+        await this.sceneBinding_.setScene(nextScene, Robots.loaded(store.getState().robots));
+      }
       this.bScene_.physicsEnabled = true;
     })().finally(() => {
       this.sceneSetting_ = false;
