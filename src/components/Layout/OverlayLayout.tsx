@@ -295,6 +295,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       onClearConsole,
       onIndentCode,
       onDownloadCode,
+      onResetCode,
       editorRef,
       robots,
       sceneId,
@@ -324,6 +325,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
           onLanguageChange: editorTarget.onLanguageChange,
           onIndentCode,
           onDownloadCode,
+          onResetCode,
           onErrorClick: this.onErrorClick_
         };
         editor = (

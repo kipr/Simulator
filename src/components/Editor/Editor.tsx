@@ -13,7 +13,7 @@ import { Ivygate, Message } from 'ivygate';
 import LanguageSelectCharm from './LanguageSelectCharm';
 import ProgrammingLanguage from '../../ProgrammingLanguage';
 
-import { faFileDownload, faIndent } from '@fortawesome/free-solid-svg-icons';
+import { faArrowsRotate, faFileDownload, faIndent } from '@fortawesome/free-solid-svg-icons';
 import Script from '../../state/State/Scene/Script';
 import Dict from '../../Dict';
 
@@ -64,6 +64,7 @@ export namespace EditorBarTarget {
     onLanguageChange: (language: ProgrammingLanguage) => void;
     onIndentCode: () => void;
     onDownloadCode: () => void;
+    onResetCode: () => void;
     onErrorClick: (event: React.MouseEvent<HTMLDivElement>) => void;
   }
 }
@@ -109,6 +110,16 @@ export const createEditorBarComponents = ({
           <>
             <Fa icon={faFileDownload} />
             {' Download'}
+          </>
+      }));
+
+      editorBar.push(BarComponent.create(Button, {
+        theme,
+        onClick: target.onResetCode,
+        children:
+          <>
+            <Fa icon={faArrowsRotate} />
+            {' Reset'}
           </>
       }));
 

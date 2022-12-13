@@ -266,9 +266,9 @@ class Root extends React.Component<Props, State> {
       layout: Layout.Side,
       activeLanguage: 'c',
       code: {
-        'c': window.localStorage.getItem('code-c') || '#include <stdio.h>\n#include <kipr/wombat.h>\n\nint main()\n{\n  printf("Hello, World!\\n");\n  return 0;\n}\n',
-        'cpp': window.localStorage.getItem('code-cpp') || '#include <iostream>\n#include <kipr/wombat.hpp>\n\nint main()\n{\n  std::cout << "Hello, World!" << std::endl;\n  return 0;\n}\n',
-        'python': window.localStorage.getItem('code-python') || 'from kipr import *\n\nprint(\'Hello, World!\')',
+        'c': window.localStorage.getItem('code-c') || ProgrammingLanguage.DEFAULT_CODE['c'],
+        'cpp': window.localStorage.getItem('code-cpp') || ProgrammingLanguage.DEFAULT_CODE['cpp'],
+        'python': window.localStorage.getItem('code-python') || ProgrammingLanguage.DEFAULT_CODE['python'],
       },
       modal: Modal.NONE,
       simulatorState: SimulatorState.STOPPED,
@@ -513,7 +513,7 @@ class Root extends React.Component<Props, State> {
 
     const element = document.createElement('a');
     element.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(this.state.code[activeLanguage])}`);
-    element.setAttribute('download', `program.${ProgrammingLanguage.fileExtension(activeLanguage)}`);
+    element.setAttribute('download', `program.${ProgrammingLanguage.FILE_EXTENSION[activeLanguage]}`);
     element.style.display = 'none';
     document.body.appendChild(element);
     element.click();
@@ -532,6 +532,16 @@ class Root extends React.Component<Props, State> {
 
   private onIndentCode_ = () => {
     if (this.editorRef.current) this.editorRef.current.ivygate.formatCode();
+  };
+
+  private onResetCode_ = () => {
+    const { activeLanguage } = this.state;
+    this.setState({
+      code: {
+        ...this.state.code,
+        [activeLanguage]: ProgrammingLanguage.DEFAULT_CODE[activeLanguage]
+      }
+    });
   };
   
   onDocumentationClick = () => {
@@ -687,6 +697,7 @@ class Root extends React.Component<Props, State> {
       onClearConsole: this.onClearConsole_,
       onIndentCode: this.onIndentCode_,
       onDownloadCode: this.onDownloadClick_,
+      onResetCode: this.onResetCode_,
       editorRef: this.editorRef,
       sceneId
     };
