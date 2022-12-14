@@ -1,5 +1,7 @@
 import Dict from '../../Dict';
 import Async from "./Async";
+import { AsyncChallenge } from './Challenge';
+import { AsyncChallengeCompletion } from './ChallengeCompletion';
 import Robot from './Robot';
 import Scene, { AsyncScene } from './Scene';
 
@@ -7,6 +9,18 @@ export type Scenes = Dict<AsyncScene>;
 
 export namespace Scenes {
   export const EMPTY: Scenes = {};
+}
+
+export type Challenges = Dict<AsyncChallenge>;
+
+export namespace Challenges {
+  export const EMPTY: Challenges = {};
+}
+
+export type ChallengeCompletions = Dict<AsyncChallengeCompletion>;
+
+export namespace ChallengeCompletions {
+  export const EMPTY: ChallengeCompletions = {};
 }
 
 export interface Robots {

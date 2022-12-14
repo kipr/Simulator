@@ -11,6 +11,7 @@ import db from './db';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import LoginPage from './login/LoginPage';
+import WidgetTest from './pages/WidgetTest';
 
 export interface AppPublicProps {
 
@@ -68,6 +69,8 @@ class App extends React.Component<Props, State> {
         <Route path="/" exact component={Dashboard} />
         <Route path="/tutorials" exact component={Tutorials} />
         <Route path="/scene/:sceneId" component={Root} />
+        <Route path="/challenge/:challengeId" component={Root} />
+        <Route path="/widget_test" component={WidgetTest} />
       </Switch>
     );
   }

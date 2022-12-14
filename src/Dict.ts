@@ -60,6 +60,30 @@ namespace Dict {
   };
 
   export const keySet = <T>(dict: Dict<T>): Set<string> => new Set(Object.keys(dict));
+
+  export const generate = <T>(list: string[], f: (id: string) => T): Dict<T> => {
+    const ret: Dict<T> = {};
+    for (const id of list) ret[id] = f(id);
+    return ret;
+  };
+
+  export const every = <T>(dict: Dict<T>, f: (value: T, key: string) => boolean): boolean => {
+    const keys = Object.keys(dict);
+    for (const key of keys) {
+      const value = dict[key];
+      if (!f(value, key)) return false;
+    }
+    return true;
+  };
+
+  export const some = <T>(dict: Dict<T>, f: (value: T, key: string) => boolean): boolean => {
+    const keys = Object.keys(dict);
+    for (const key of keys) {
+      const value = dict[key];
+      if (f(value, key)) return true;
+    }
+    return false;
+  };
 }
 
 export default Dict;

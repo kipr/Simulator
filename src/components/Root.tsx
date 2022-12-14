@@ -61,6 +61,7 @@ import Geometry from '../state/State/Scene/Geometry';
 import Camera from '../state/State/Scene/Camera';
 import { Vector3 } from '../unit-math';
 import { LayoutEditorTarget } from './Layout/Layout';
+import { AsyncChallenge } from '../state/State/Challenge';
 
 namespace Modal {
   export enum Type {
@@ -163,7 +164,8 @@ export type Modal = (
 );
 
 interface RootParams {
-  sceneId: string;
+  sceneId?: string;
+  challengeId?: string;
 }
 
 export interface RootPublicProps extends RouteComponentProps<RootParams> {
@@ -172,6 +174,7 @@ export interface RootPublicProps extends RouteComponentProps<RootParams> {
 
 interface RootPrivateProps {
   scene: AsyncScene;
+  challenge?: AsyncChallenge;
 
   onNodeAdd: (id: string, node: Node) => void;
   onNodeRemove: (id: string) => void;
@@ -845,9 +848,10 @@ class Root extends React.Component<Props, State> {
   }
 }
 
-export default connect((state: ReduxState, { match: { params: { sceneId } } }: RootPublicProps) => {
+export default connect((state: ReduxState, { match: { params: { sceneId, challengeId } } }: RootPublicProps) => {
+
+
   const scene = state.scenes[sceneId];
-  const latestScene = Async.latestValue(scene);
   return {
     scene,
   };
