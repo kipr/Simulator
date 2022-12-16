@@ -21,6 +21,7 @@ import { Robots } from './state/State';
 
 
 let Ammo: unknown;
+console.log(SIMULATOR_HAS_AMMO);
 if (SIMULATOR_HAS_AMMO) {
   // This is on a non-standard path specified in the webpack config.
   // eslint-disable-next-line @typescript-eslint/no-var-requires

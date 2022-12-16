@@ -15,7 +15,7 @@ import { SimulatorArea } from '../SimulatorArea';
 import { TabBar } from '../TabBar';
 import Widget, { BarComponent, Mode, Size } from '../Widget';
 import { Slider } from '../Slider';
-
+import { ThemeProps } from "../theme";
 import { State as ReduxState } from '../../state';
 import Node from '../../state/State/Scene/Node';
 import Dict from '../../Dict';
@@ -113,6 +113,12 @@ const SimulatorWidget = styled(Widget, {
 const FlexConsole = styled(Console, {
   flex: '1 1',
 });
+
+const WorldSceneText = styled('span', (props: ThemeProps) => ({
+  userSelect: 'none',
+  padding: `1em 10em` ,
+  color: `rgba(255, 255, 255,1)`
+}));
 
 const SideBarMinimizedTab = -1;
 
@@ -287,8 +293,10 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
             name='World'
             mode={Mode.Sidebar}
           >
+          <WorldSceneText theme={theme}>Current World Scene: {sceneId}</WorldSceneText>
             <World theme={theme} sceneId={sceneId} />
           </SimulatorWidget>
+          
         );
         break;
       }

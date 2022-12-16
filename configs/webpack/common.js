@@ -13,7 +13,7 @@ try {
 } catch (e) {
   console.log('Failed to read dependencies.json');
 }
-
+console.log(JSON.stringify(dependencies, undefined, 2));
 const modules = ['node_modules'];
 if (dependencies.cpython) modules.push(resolve(dependencies.cpython));
 if (dependencies.ammo) modules.push(resolve(dependencies.ammo));
