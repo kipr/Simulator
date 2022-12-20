@@ -8,7 +8,7 @@ import { Button } from '../Button';
 import { Console, createConsoleBarComponents } from '../Console';
 import { Editor, createEditorBarComponents, EditorBarTarget } from '../Editor';
 import World, { createWorldBarComponents } from '../World';
-
+import { Scenes } from "../../state/State";
 import { Info } from '../Info';
 import { LayoutEditorTarget, LayoutProps } from './Layout';
 import { SimulatorArea } from '../SimulatorArea';
@@ -23,6 +23,7 @@ import Scene from '../../state/State/Scene';
 import { faCode, faGlobeAmericas, faRobot } from '@fortawesome/free-solid-svg-icons';
 import Async from '../../state/State/Async';
 import { EMPTY_OBJECT } from '../../util';
+import LocalizedString from '../../util/LocalizedString';
 
 // 3 panes:
 // Editor / console
@@ -58,12 +59,16 @@ export interface SideLayoutProps extends LayoutProps {
 
 interface ReduxSideLayoutProps {
   robots: Dict<Node.Robot>;
+  scene: Scene;
+  scenes: Scenes;
 }
 
 interface SideLayoutState {
   activePanel: number;
   sidePanelSize: Size.Type;
   workingScriptCode?: string;
+  scene: Scene;
+  scenes: Scenes;
 }
 
 type Props = SideLayoutProps;
@@ -129,6 +134,8 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     this.state = {
       sidePanelSize: Size.Type.Miniature,
       activePanel: 0,
+      scene: props.scene,
+      scenes: this.props.scenes,
     };
 
     // TODO: this isn't working yet. Needs more tinkering
@@ -184,13 +191,17 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       editorRef,
       robots,
       sceneId,
+      scenes
     } = props;
 
     const {
       activePanel,
       sidePanelSize,
-      
+      scene,
     } = this.state;
+
+    
+   
 
     let editorBarTarget: EditorBarTarget;
     let editor: JSX.Element;
@@ -287,6 +298,8 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
         break;
       }
       case 2: {
+
+      
         content = (
           <SimulatorWidget
             theme={theme}
@@ -327,7 +340,8 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     //   //     </SidePanelContainer>
     //   //   </SidePanelContainer>;
     //   default:
-    return <Container style={style} className={className}>
+    
+    return( <Container style={style} className={className}>
       <SidePanelContainer>
         <TabBar 
           theme={theme} isVertical={true} tabs={TABS} index={activePanel} 
@@ -347,7 +361,9 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
           {simulator}
         </Slider>
       </SidePanelContainer>
-    </Container>;
+    </Container>
+
+    );
   }
 }
 

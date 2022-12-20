@@ -216,7 +216,7 @@ interface RootState {
 
   console: StyledText;
   messages: Message[];
-
+  currSceneId: LocalizedString;
   theme: Theme;
 
   settings: Settings;
@@ -254,6 +254,7 @@ const STDERR_STYLE = (theme: Theme) => ({
 class Root extends React.Component<Props, State> {
   private editorRef: React.MutableRefObject<Editor>;
   private overlayLayoutRef:  React.MutableRefObject<OverlayLayout>;
+  currSceneId: LocalizedString;
 
   constructor(props: Props) {
     super(props);
@@ -274,6 +275,7 @@ class Root extends React.Component<Props, State> {
       simulatorState: SimulatorState.STOPPED,
       console: StyledText.text({ text: 'Welcome to the KIPR Simulator!\n', style: STDOUT_STYLE(DARK) }),
       theme: DARK,
+      currSceneId: Async.latestValue(props.scene).name,
       messages: [],
       settings: DEFAULT_SETTINGS,
       feedback: DEFAULT_FEEDBACK,
@@ -383,6 +385,11 @@ class Root extends React.Component<Props, State> {
 
   private onModalClose_ = () => this.setState({ modal: Modal.NONE });
   
+  private sendCurrentScene = () => {
+    
+    return this.currSceneId;
+  }
+
   private updateConsole_ = () => {
     const text = WorkerInstance.sharedConsole.popString();
     if (text.length > 0) {
@@ -599,6 +606,7 @@ class Root extends React.Component<Props, State> {
   private onOpenSceneClick_ = () => {
     this.setState({
       modal: Modal.SELECT_SCENE
+      
     });
   };
 
@@ -722,6 +730,7 @@ class Root extends React.Component<Props, State> {
     }
 
     const latestScene = Async.latestValue(scene);
+    
     const isAuthor = latestScene && latestScene.author.id === auth.currentUser.uid;
 
     return (
@@ -804,8 +813,10 @@ class Root extends React.Component<Props, State> {
         )}
         {modal.type === Modal.Type.OpenScene && (
           <OpenSceneDialog
+            scene={Async.latestValue(scene)}
             theme={theme}
             onClose={this.onModalClose_}
+            
           />
         )}
         {modal.type === Modal.Type.NewScene && (
