@@ -7,7 +7,7 @@ import ScrollArea from './ScrollArea';
 import { Switch } from './Switch';
 import { ThemeProps } from './theme';
 
-type SettingsSection = 'simulation' | 'editor';
+type SettingsSection = 'simulation' | 'editor' | 'accessibility';
 
 export interface SettingsDialogProp extends ThemeProps, StyleProps {
   onClose: () => void;
@@ -115,6 +115,7 @@ export class SettingsDialog extends React.PureComponent<Props, State> {
           <SectionsColumn theme={theme}>
             <SectionName theme={theme} selected={selectedSection === 'simulation'} onClick={() => this.setSelectedSection('simulation')}>Simulation</SectionName>
             <SectionName theme={theme} selected={selectedSection === 'editor'} onClick={() => this.setSelectedSection('editor')}>Editor</SectionName>
+            <SectionName theme={theme} selected={selectedSection === 'accessibility'} onClick={() => this.setSelectedSection('accessibility')}>Accessibility</SectionName>
           </SectionsColumn>
           <SettingsColumn theme={theme}>
             {selectedSection === 'simulation' && (
@@ -138,6 +139,18 @@ export class SettingsDialog extends React.PureComponent<Props, State> {
                 {this.createBooleanSetting(
                   'Autocomplete',
                   'Controls autocompletion of code, brackets, and quotes',
+                  (settings: Settings) => settings.editorAutoComplete,
+                  (newValue: boolean) => ({ editorAutoComplete: newValue })
+                )}
+              </>
+            )}
+
+
+              {selectedSection === 'accessibility' && (
+              <>
+                {this.createBooleanSetting(
+                  'Dark Mode',
+                  'Changes simulator UI to or from dark mode',
                   (settings: Settings) => settings.editorAutoComplete,
                   (newValue: boolean) => ({ editorAutoComplete: newValue })
                 )}
