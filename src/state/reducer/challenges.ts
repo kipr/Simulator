@@ -146,7 +146,7 @@ const create = async (challengeId: string, next: Async.Creating<Challenge>) => {
 
 const save = async (challengeId: string, current: Async.Saveable<ChallengeBrief, Challenge>) => {
   try {
-    await db.set(Selector.scene(challengeId), current.value);
+    await db.set(Selector.challenge(challengeId), current.value);
     store.dispatch(ChallengesAction.setChallengeInternal({
       challenge: Async.loaded({
         brief: current.brief,

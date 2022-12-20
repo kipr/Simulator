@@ -30,7 +30,7 @@ import { DEFAULT_FEEDBACK, Feedback } from '../Feedback';
 import ExceptionDialog from './ExceptionDialog';
 import OpenSceneDialog from './OpenSceneDialog';
 
-import { ScenesAction } from '../state/reducer';
+import { ChallengesAction, ScenesAction, ChallengeCompletionsAction } from '../state/reducer';
 import { Editor } from './Editor';
 import Dict from '../Dict';
 import ProgrammingLanguage from '../ProgrammingLanguage';
@@ -62,6 +62,10 @@ import Camera from '../state/State/Scene/Camera';
 import { Vector3 } from '../unit-math';
 import { LayoutEditorTarget } from './Layout/Layout';
 import { AsyncChallenge } from '../state/State/Challenge';
+import Builder from '../db/Builder';
+import ChallengeCompletion, { AsyncChallengeCompletion } from '../state/State/ChallengeCompletion';
+import Patch from '../util/Patch';
+import PredicateCompletion from '../state/State/ChallengeCompletion/PredicateCompletion';
 
 namespace Modal {
   export enum Type {
@@ -175,6 +179,7 @@ export interface RootPublicProps extends RouteComponentProps<RootParams> {
 interface RootPrivateProps {
   scene: AsyncScene;
   challenge?: AsyncChallenge;
+  challengeCompletion?: AsyncChallengeCompletion;
 
   onNodeAdd: (id: string, node: Node) => void;
   onNodeRemove: (id: string) => void;
@@ -188,12 +193,19 @@ interface RootPrivateProps {
   onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => void;
   onResetScene: () => void;
 
+  onChallengeCompletionCreate: (challengeId: string, challengeCompletion: ChallengeCompletion) => void;
+  onChallengeCompletionSceneDiffChange: (challengeId: string, sceneDiff: Patch<Scene>) => void;
+  onChallengeCompletionEventStateRemove: (challengeId: string, eventId: string) => void;
+  onChallengeCompletionEventStateChange: (challengeId: string, eventId: string, eventState: boolean) => void;
+  onChallengeCompletionEventStatesChange: (challengeId: string, eventState: Dict<boolean>) => void;
+  onChallengeCompletionSuccessPredicateCompletionChange: (challengeId: string, success?: PredicateCompletion) => void;
+  onChallengeCompletionFailurePredicateCompletionChange: (challengeId: string, failure?: PredicateCompletion) => void;
+
   onCreateScene: (id: string, scene: Scene) => void;
   onSaveScene: (id: string) => void;
   onDeleteRecord: (selector: Selector) => void;
   onSetScenePartial: (partialScene: Partial<Scene>) => void;
 
-  loadScene: (id: string) => void;
   unfailScene: (id: string) => void;
 
   goToLogin: () => void;
@@ -261,10 +273,6 @@ class Root extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    if (!props.scene || props.scene.type === Async.Type.Unloaded) {
-      props.loadScene(props.match.params.sceneId);
-    }
-
     this.state = {
       layout: Layout.Side,
       activeLanguage: 'c',
@@ -287,14 +295,16 @@ class Root extends React.Component<Props, State> {
     this.overlayLayoutRef = React.createRef();
 
     Space.getInstance().scene = Async.latestValue(props.scene) || Scene.EMPTY;
-    
   }
+
+  private onSetNodeBatch_ = (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => {
+  };
 
   componentDidMount() {
     WorkerInstance.onStopped = this.onStopped_;
 
     const space = Space.getInstance();
-    space.onSetNodeBatch = this.props.onSetNodeBatch;
+    space.onSetNodeBatch = this.onSetNodeBatch_;
     space.onSelectNodeId = this.props.onSelectNodeId;
     space.onNodeAdd = this.props.onNodeAdd;
     space.onNodeRemove = this.props.onNodeRemove;
@@ -317,24 +327,6 @@ class Root extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>): void {
-    if (this.props.scene === undefined || this.props.scene.type === Async.Type.Unloaded) {
-      this.props.loadScene(this.props.match.params.sceneId);
-    }
-
-    if (this.props.onSelectNodeId !== prevProps.onSelectNodeId) Space.getInstance().onSelectNodeId = this.props.onSelectNodeId;
-
-    if (this.props.onSetNodeBatch !== prevProps.onSetNodeBatch) Space.getInstance().onSetNodeBatch = this.props.onSetNodeBatch;
-    if (this.props.onNodeChange !== prevProps.onNodeChange) Space.getInstance().onNodeChange = this.props.onNodeChange;
-    if (this.props.onNodeAdd !== prevProps.onNodeAdd) Space.getInstance().onNodeAdd = this.props.onNodeAdd;
-    if (this.props.onNodeRemove !== prevProps.onNodeRemove) Space.getInstance().onNodeRemove = this.props.onNodeRemove;
-
-    if (this.props.onGravityChange !== prevProps.onGravityChange) Space.getInstance().onGravityChange = this.props.onGravityChange;
-    if (this.props.onCameraChange !== prevProps.onCameraChange) Space.getInstance().onCameraChange = this.props.onCameraChange;
-
-    if (this.props.onGeometryAdd !== prevProps.onGeometryAdd) Space.getInstance().onGeometryAdd = this.props.onGeometryAdd;
-    if (this.props.onGeometryRemove !== prevProps.onGeometryRemove) Space.getInstance().onGeometryRemove = this.props.onGeometryRemove;
-
-
     if (this.props.scene !== prevProps.scene) {
       Space.getInstance().scene = Async.latestValue(this.props.scene) || Scene.EMPTY;
     }
@@ -849,11 +841,22 @@ class Root extends React.Component<Props, State> {
 }
 
 export default connect((state: ReduxState, { match: { params: { sceneId, challengeId } } }: RootPublicProps) => {
+  const builder = new Builder(state);
 
+  if (challengeId) {
+    const challenge = builder.challenge(challengeId);
+    challenge.scene();
+    challenge.completion();
+  } else {
+    builder.scene(sceneId);
+  }
 
-  const scene = state.scenes[sceneId];
+  builder.dispatchLoads();
+
   return {
-    scene,
+    scene: Dict.unique(builder.scenes),
+    challenge: Dict.unique(builder.challenges),
+    challengeCompletion: Dict.unique(builder.challengeCompletions),
   };
 }, (dispatch, { match: { params: { sceneId } } }: RootPublicProps) => ({
   onNodeAdd: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
@@ -872,13 +875,33 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
     dispatch(ScenesAction.createScene({ sceneId, scene }));
     dispatch(push(`/scene/${sceneId}`));
   },
+  onChallengeCompletionCreate: (challengeId: string, challengeCompletion: ChallengeCompletion) => {
+    dispatch(ChallengeCompletionsAction.createChallengeCompletion({ challengeId, challengeCompletion }));
+  },
+  onChallengeCompletionSceneDiffChange: (challengeId: string, sceneDiff: Patch<Scene>) => {
+    dispatch(ChallengeCompletionsAction.setSceneDiff({ challengeId, sceneDiff }));
+  },
+  onChallengeCompletionEventStateRemove: (challengeId: string, eventId: string) => {
+    dispatch(ChallengeCompletionsAction.removeEventState({ challengeId, eventId }));
+  },
+  onChallengeCompletionEventStateChange: (challengeId: string, eventId: string, eventState: boolean) => {
+    dispatch(ChallengeCompletionsAction.setEventState({ challengeId, eventId, eventState }));
+  },
+  onChallengeCompletionEventStatesChange: (challengeId: string, eventStates: Dict<boolean>) => {
+    dispatch(ChallengeCompletionsAction.setEventStates({ challengeId, eventStates }));
+  },
+  onChallengeCompletionSuccessPredicateCompletionChange: (challengeId: string, success?: PredicateCompletion) => {
+    dispatch(ChallengeCompletionsAction.setSuccessPredicateCompletion({ challengeId, success }));
+  },
+  onChallengeCompletionFailurePredicateCompletionChange: (challengeId: string, failure?: PredicateCompletion) => {
+    dispatch(ChallengeCompletionsAction.setFailurePredicateCompletion({ challengeId, failure }));
+  },
   onDeleteRecord: (selector: Selector) => {
     dispatch(ScenesAction.removeScene({ sceneId: selector.id })),
     dispatch(push('/'));
   },
   onSaveScene: (sceneId: string) => dispatch(ScenesAction.saveScene({ sceneId })),
   onSetScenePartial: (partialScene: Partial<Scene>) => dispatch(ScenesAction.setScenePartial({ sceneId, partialScene })),
-  loadScene: (sceneId: string) => dispatch(ScenesAction.loadScene({ sceneId })),
   unfailScene: (sceneId: string) => dispatch(ScenesAction.unfailScene({ sceneId })),
   goToLogin: () => {
     window.location.href = `/login?from=${window.location.pathname}`;

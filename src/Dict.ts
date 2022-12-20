@@ -84,6 +84,12 @@ namespace Dict {
     }
     return false;
   };
+
+  export const unique = <T>(dict: Dict<T>): T => {
+    const keys = Object.keys(dict);
+    if (keys.length !== 1) throw new Error('Expected exactly one key');
+    return dict[keys[0]];
+  };
 }
 
 export default Dict;

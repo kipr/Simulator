@@ -5,8 +5,8 @@ import Scene from '../Scene';
 import PredicateCompletion from './PredicateCompletion';
 
 interface ChallengeCompletion {
-  scene: Patch<Scene>;
-  events: Dict<boolean>;
+  sceneDiff: Patch<Scene>;
+  eventStates: Dict<boolean>;
   success?: PredicateCompletion;
   failure?: PredicateCompletion;
 }

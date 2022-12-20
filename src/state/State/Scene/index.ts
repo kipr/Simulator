@@ -134,6 +134,20 @@ namespace Scene {
     gravity: Patch.diff(a.gravity, b.gravity),
   });
 
+  export const apply = (scene: Scene, patch: PatchScene): Scene => ({
+    name: Patch.apply(patch.name, scene.name),
+    description: Patch.apply(patch.description, scene.description),
+    author: Patch.apply(patch.author, scene.author),
+    hdriUri: Patch.apply(patch.hdriUri, scene.hdriUri),
+    selectedNodeId: Patch.apply(patch.selectedNodeId, scene.selectedNodeId),
+    selectedScriptId: Patch.apply(patch.selectedScriptId, scene.selectedScriptId),
+    camera: Patch.apply(patch.camera, scene.camera),
+    gravity: Patch.apply(patch.gravity, scene.gravity),
+    nodes: Patch.applyDict(patch.nodes, scene.nodes),
+    geometry: Patch.applyDict(patch.geometry, scene.geometry),
+    scripts: Patch.applyDict(patch.scripts, scene.scripts),
+  });
+
   export const EMPTY: Scene = {
     author: Author.user(''),
     description: { [LocalizedString.EN_US]: '' },
