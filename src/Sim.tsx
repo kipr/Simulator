@@ -376,4 +376,5 @@ export class Space {
   set noisySensors(noisySensors: boolean) {
     this.sceneBinding_.noisySensors = noisySensors;
   }
+
 }

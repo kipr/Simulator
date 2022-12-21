@@ -7,7 +7,7 @@ import { State as ReduxState } from '../state';
 import SimMenu from './SimMenu';
 
 import { styled } from 'styletron-react';
-import { DARK, Theme } from './theme';
+import { DARK, LIGHT, Theme } from './theme';
 import { Layout, LayoutProps, OverlayLayout, OverlayLayoutRedux, SideLayoutRedux  } from './Layout';
 
 import { SettingsDialog } from './SettingsDialog';
@@ -262,6 +262,7 @@ class Root extends React.Component<Props, State> {
       props.loadScene(props.match.params.sceneId);
     }
 
+    
     this.state = {
       layout: Layout.Side,
       activeLanguage: 'c',
@@ -573,6 +574,22 @@ class Root extends React.Component<Props, State> {
       Space.getInstance().noisySensors = changedSettings.simulationSensorNoise;
     }
 
+    if ('darkModeToggle' in changedSettings){
+      if(this.state.theme == LIGHT){
+        this.setState({theme: DARK});
+        this.setState({console: StyledText.text({ text: 'Welcome to the KIPR Simulator!\n', style: STDOUT_STYLE(DARK) }),})
+        
+        console.log("Changed from LIGHT to DARK");
+
+      }
+      if(this.state.theme == DARK){
+        this.setState({theme: LIGHT});
+        this.setState({console: StyledText.text({ text: 'Welcome to the KIPR Simulator!\n', style: STDOUT_STYLE(LIGHT) }),})
+        console.log("Changed from DARK to LIGHT");
+      }
+        
+    }
+
     this.setState({ settings: nextSettings });
   };
 
@@ -676,9 +693,10 @@ class Root extends React.Component<Props, State> {
       settings,
       feedback,
       windowInnerHeight,
+      theme
     } = state;
 
-    const theme = DARK;
+    
 
     const editorTarget: LayoutEditorTarget = {
       type: LayoutEditorTarget.Type.Robot,

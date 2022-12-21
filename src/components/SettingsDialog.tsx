@@ -151,8 +151,8 @@ export class SettingsDialog extends React.PureComponent<Props, State> {
                 {this.createBooleanSetting(
                   'Dark Mode',
                   'Changes simulator UI to or from dark mode',
-                  (settings: Settings) => settings.editorAutoComplete,
-                  (newValue: boolean) => ({ editorAutoComplete: newValue })
+                  (settings: Settings) => settings.darkModeToggle,
+                  (newValue: boolean) => ({ darkModeToggle: newValue })
                 )}
               </>
             )}
