@@ -39,6 +39,8 @@ import LocalizedString from '../../util/LocalizedString';
 import Script from '../../state/State/Scene/Script';
 import AddScriptDialog, { AddScriptAcceptance } from './AddScriptDialog';
 import ScriptSettingsDialog, { ScriptSettingsAcceptance } from './ScriptSettingsDialog';
+import { AsyncChallenge } from '../../state/State/Challenge';
+import Builder from '../../db/Builder';
 
 namespace SceneState {
   export enum Type {
@@ -113,26 +115,25 @@ export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSav
 };
 
 export interface WorldProps extends StyleProps, ThemeProps {
-  sceneId: string;
+  scene: AsyncScene;
 
+  onNodeAdd: (nodeId: string, node: Node) => void;
+  onNodeRemove: (nodeId: string) => void;
+  onNodeChange: (nodeId: string, node: Node) => void;
+
+  onObjectAdd: (nodeId: string, object: Node.Obj, geometry: Geometry) => void;
+
+  onGeometryAdd: (geometryId: string, geometry: Geometry) => void;
+  onGeometryRemove: (geometryId: string) => void;
+  onGeometryChange: (geometryId: string, geometry: Geometry) => void;
+
+  onScriptAdd: (scriptId: string, script: Script) => void;
+  onScriptRemove: (scriptId: string) => void;
+  onScriptChange: (scriptId: string, script: Script) => void;
 }
 
 interface ReduxWorldProps {
-  scene: AsyncScene;
-
-  onNodeAdd: (id: string, node: Node) => void;
-  onNodeRemove: (id: string) => void;
-  onNodeChange: (id: string, node: Node, modifyReferenceScene: boolean, modifyOrigin: boolean) => void;
-
-  onObjectAdd: (id: string, object: Node.Obj, geometry: Geometry) => void;
-
-  onGeometryAdd: (id: string, geometry: Geometry) => void;
-  onGeometryRemove: (id: string) => void;
-  onGeometryChange: (id: string, geometry: Geometry) => void;
-
-  onScriptAdd: (id: string, script: Script) => void;
-  onScriptRemove: (id: string) => void;
-  onScriptChange: (id: string, script: Script) => void;
+  
 }
 
 namespace UiState {
@@ -223,7 +224,7 @@ const SectionIcon = styled(Fa, (props: ThemeProps) => ({
   transition: 'opacity 0.2s'
 }));
 
-class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
+class World extends React.PureComponent<Props & ReduxWorldProps, State> {
   constructor(props: Props & ReduxWorldProps) {
     super(props);
 
@@ -262,7 +263,7 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
   };
 
   private onNodeSettingsAccept_ = (id: string) => (acceptance: NodeSettingsAcceptance) => {
-    this.props.onNodeChange(id, acceptance, true, false);
+    this.props.onNodeChange(id, acceptance);
   };
 
   private onScriptSettingsAccept_ = (id: string) => (acceptance: ScriptSettingsAcceptance) => {
@@ -279,7 +280,7 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
       ...originalNode,
       startingOrigin: origin,
       origin,
-    }, true, true);
+    });
   };
 
   private onAddNodeClick_ = (event: React.SyntheticEvent<MouseEvent>) => {
@@ -307,7 +308,7 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
         orientation: originalNode.startingOrigin?.orientation || Rotation.Euler.identity(Angle.Type.Degrees),
         scale: originalNode.startingOrigin?.scale || RawVector3.ONE,
       },
-    }, false, true);
+    });
   };
   private onItemSettingsClick_ = (id: string) => () => this.setState({ modal: UiState.itemSettings(id) });
   private onScriptSettingsClick_ = (id: string) => () => this.setState({ modal: UiState.scriptSettings(id) });
@@ -350,7 +351,7 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
     this.props.onNodeChange(id, {
       ...originalNode,
       visible: visibility,
-    }, true, false);
+    });
   };
 
   render() {
@@ -479,39 +480,4 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
   }
 }
 
-export default connect<unknown, unknown, Props, ReduxState>((state: ReduxState, { sceneId }: WorldProps) => {
-  return {
-    scene: state.scenes[sceneId],
-  };
-}, (dispatch, { sceneId }: WorldProps) => ({
-  onNodeAdd: (nodeId: string, node: Node) => {
-    dispatch(ScenesAction.setNode({ sceneId, nodeId, node }));
-  },
-  onNodeChange: (nodeId: string, node: Node) => {
-    dispatch(ScenesAction.setNode({ sceneId, nodeId, node }));
-  },
-  onNodeRemove: (nodeId: string) => {
-    dispatch(ScenesAction.removeNode({ sceneId, nodeId }));
-  },
-  onGeometryAdd: (geometryId: string, geometry: Geometry) => {
-    dispatch(ScenesAction.addGeometry({ sceneId, geometryId, geometry }));
-  },
-  onGeometryChange: (geometryId: string, geometry: Geometry) => {
-    dispatch(ScenesAction.setGeometry({ sceneId, geometryId, geometry }));
-  },
-  onGeometryRemove: (geometryId: string) => {
-    dispatch(ScenesAction.removeGeometry({ sceneId, geometryId }));
-  },
-  onObjectAdd: (nodeId: string, object: Node.Obj, geometry: Geometry) => {
-    dispatch(ScenesAction.addObject({ sceneId, nodeId, object, geometry }));
-  },
-  onScriptAdd: (scriptId: string, script: Script) => {
-    dispatch(ScenesAction.addScript({ sceneId, scriptId, script }));
-  },
-  onScriptChange: (scriptId: string, script: Script) => {
-    dispatch(ScenesAction.setScript({ sceneId, scriptId, script }));
-  },
-  onScriptRemove: (scriptId: string) => {
-    dispatch(ScenesAction.removeScript({ sceneId, scriptId }));
-  },
-}))(World_) as React.ComponentType<Props>;
+export default World;

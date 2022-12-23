@@ -35,10 +35,11 @@ import Async from '../../state/State/Async';
 import LocalizedString from '../../util/LocalizedString';
 import Script from '../../state/State/Scene/Script';
 import { AsyncChallenge } from '../../state/State/Challenge';
+import { AsyncChallengeCompletion } from '../../state/State/ChallengeCompletion';
 
 export interface ChallengePublicProps extends StyleProps, ThemeProps {
-  challengeId: string;
-
+  challenge: AsyncChallenge;
+  challengeCompletion: AsyncChallengeCompletion;
 }
 
 interface ChallengePrivateProps {
@@ -99,7 +100,7 @@ const SectionIcon = styled(Fa, (props: ThemeProps) => ({
   transition: 'opacity 0.2s'
 }));
 
-class Challenge_ extends React.PureComponent<Props, State> {
+class Challenge extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -137,9 +138,4 @@ class Challenge_ extends React.PureComponent<Props, State> {
   }
 }
 
-export default connect<unknown, unknown, Props, ReduxState>((state: ReduxState, { challengeId }: ChallengePublicProps) => {
-  return {
-    challenge: state.challenges[challengeId],
-  };
-}, (dispatch, { challengeId }: ChallengePublicProps) => ({
-}))(Challenge_) as React.ComponentType<ChallengePublicProps>;
+export default Challenge;

@@ -19,6 +19,7 @@ import Node from '../../state/State/Scene/Node';
 import Dict from '../../Dict';
 import Async from '../../state/State/Async';
 import { EMPTY_OBJECT } from '../../util';
+import Challenge from '../Challenge';
 
 export interface OverlayLayoutProps extends LayoutProps {
   
@@ -33,6 +34,7 @@ interface OverlayLayoutState {
   infoSize: Size.Type;
   editorSize: Size.Type;
   worldSize: Size.Type;
+  challengeSize: Size.Type;
   workingScriptCode?: string;
 }
 
@@ -51,10 +53,10 @@ const SimulatorAreaContainer = styled('div', {
   height: '100%',
 });
 
-const Overlay = styled('div', (props: ThemeProps) => ({
+const Overlay = styled('div', (props: ThemeProps & { $challenge?: boolean; }) => ({
   display: 'grid',
   gridTemplateColumns: '4fr 5fr 350px',
-  gridTemplateRows: '1fr 300px',
+  gridTemplateRows: props.$challenge ? '1fr 1fr 300px' : '1fr 300px',
   gap: `${props.theme.widget.padding}px`,
   position: 'absolute',
   width: '100%',
@@ -71,7 +73,7 @@ const transparentStyling = (theme: Theme): React.CSSProperties => ({
   backdropFilter: 'blur(16px)'
 });
 
-const ConsoleWidget = styled(Widget, (props: WidgetProps) => {
+const ConsoleWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
@@ -79,24 +81,24 @@ const ConsoleWidget = styled(Widget, (props: WidgetProps) => {
     };
     case Size.Type.Maximized: return {
       gridColumn: '1 / span 3',
-      gridRow: '1 / span 2',
+      gridRow: props.$challenge ? '1 / span 3' : '1 / span 2',
       ...transparentStyling(props.theme)
     };
     case Size.Type.Miniature: return {
       gridColumn: 1,
-      gridRow: 2,
+      gridRow: props.$challenge ? 3 : 2,
       ...transparentStyling(props.theme)
     };
     default:
     case Size.Type.Partial: return {
       gridColumn: '1 / span 2',
-      gridRow: 2,
+      gridRow: props.$challenge ? 3 : 2,
       ...transparentStyling(props.theme)
     };
   } 
 });
 
-const EditorWidget = styled(Widget, (props: WidgetProps) => {
+const EditorWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
@@ -104,7 +106,7 @@ const EditorWidget = styled(Widget, (props: WidgetProps) => {
     };
     case Size.Type.Maximized: return {
       gridColumn: '1 / span 3',
-      gridRow: '1 / span 2',
+      gridRow: props.$challenge ? '1 / span 3' : '1 / span 2',
       ...transparentStyling(props.theme)
     };
     case Size.Type.Miniature: return {
@@ -121,7 +123,7 @@ const EditorWidget = styled(Widget, (props: WidgetProps) => {
   }
 });
 
-const InfoWidget = styled(Widget, (props: WidgetProps) => {
+const InfoWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
@@ -136,7 +138,7 @@ const InfoWidget = styled(Widget, (props: WidgetProps) => {
   }
 });
 
-const WorldWidget = styled(Widget, (props: WidgetProps) => {
+const ChallengeWidget = styled(Widget, (props: WidgetProps) => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
@@ -147,7 +149,21 @@ const WorldWidget = styled(Widget, (props: WidgetProps) => {
       gridColumn: 3,
       gridRow: 2,
       ...transparentStyling(props.theme)
-      
+    };
+  }
+});
+
+const WorldWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
+  const size = props.sizes[props.size];
+  switch (size.type) {
+    case Size.Type.Minimized: return {
+      display: 'none'
+    };
+    default:
+    case Size.Type.Partial: return {
+      gridColumn: 3,
+      gridRow: props.$challenge ? 3 : 2,
+      ...transparentStyling(props.theme)
     };
   }
 });
@@ -155,6 +171,7 @@ const WorldWidget = styled(Widget, (props: WidgetProps) => {
 const EDITOR_SIZES: Size[] = [Size.MINIATURE_LEFT, Size.PARTIAL_LEFT, Size.MAXIMIZED, Size.MINIMIZED];
 const INFO_SIZES: Size[] = [Size.PARTIAL_RIGHT, Size.MINIMIZED];
 const WORLD_SIZES: Size[] = [Size.PARTIAL_RIGHT, Size.MINIMIZED];
+const CHALLENGE_SIZES: Size[] = [Size.PARTIAL_RIGHT, Size.MINIMIZED];
 const CONSOLE_SIZES: Size[] = [Size.MINIATURE_LEFT, Size.PARTIAL_DOWN, Size.MAXIMIZED, Size.MINIMIZED];
 
 const sizeDict = (sizes: Size[]) => {
@@ -174,6 +191,7 @@ const FlexConsole = styled(Console, {
 
 const EDITOR_SIZE = sizeDict(EDITOR_SIZES);
 const INFO_SIZE = sizeDict(INFO_SIZES);
+const CHALLENGE_SIZE = sizeDict(CHALLENGE_SIZES);
 const WORLD_SIZE = sizeDict(WORLD_SIZES);
 const CONSOLE_SIZE = sizeDict(CONSOLE_SIZES);
 
@@ -186,13 +204,14 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       infoSize: Size.Type.Partial,
       consoleSize: Size.Type.Miniature,
       worldSize: Size.Type.Partial,
+      challengeSize: Size.Type.Partial,
     };
   }
 
   private onEditorSizeChange_ = (index: number) => {
     const size = EDITOR_SIZES[index];
 
-    let { infoSize, consoleSize, worldSize } = this.state;
+    let { infoSize, consoleSize, worldSize, challengeSize } = this.state;
 
     
     switch (size.type) {
@@ -200,12 +219,14 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
         infoSize = Size.Type.Minimized;
         consoleSize = Size.Type.Minimized;
         worldSize = Size.Type.Minimized;
+        challengeSize = Size.Type.Minimized;
         break;
       }
       case Size.Type.Partial: {
         if (infoSize === Size.Type.Minimized) infoSize = Size.Type.Partial;
         if (worldSize === Size.Type.Minimized) worldSize = Size.Type.Partial;
         if (consoleSize === Size.Type.Minimized) consoleSize = Size.Type.Miniature;
+        if (challengeSize === Size.Type.Minimized) challengeSize = Size.Type.Partial;
         break;
       }
     }
@@ -214,12 +235,12 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       editorSize: EDITOR_SIZES[index].type,
       infoSize,
       consoleSize,
-      worldSize
+      worldSize,
+      challengeSize
     });
   };
 
   private onInfoSizeChange_ = (index: number) => {
-    
     this.setState({
       infoSize: INFO_SIZES[index].type
     });
@@ -231,22 +252,30 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
     });
   };
 
+  private onChallengeSizeChange_ = (index: number) => {
+    this.setState({
+      challengeSize: CHALLENGE_SIZES[index].type
+    });
+  };
+
   private onConsoleSizeChange_ = (index: number) => {
     const size = CONSOLE_SIZES[index];
 
-    let { infoSize, editorSize, worldSize } = this.state;
+    let { infoSize, editorSize, worldSize, challengeSize } = this.state;
     
     switch (size.type) {
       case Size.Type.Maximized: {
         infoSize = Size.Type.Minimized;
         editorSize = Size.Type.Minimized;
         worldSize = Size.Type.Minimized;
+        challengeSize = Size.Type.Minimized;
         break;
       }
       case Size.Type.Partial: {
         if (infoSize === Size.Type.Minimized) infoSize = Size.Type.Partial;
         if (worldSize === Size.Type.Minimized) worldSize = Size.Type.Partial;
         if (editorSize === Size.Type.Minimized) editorSize = Size.Type.Partial;
+        if (challengeSize === Size.Type.Minimized) challengeSize = Size.Type.Partial;
         break;
       }
     }
@@ -255,7 +284,8 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       consoleSize: size.type,
       infoSize,
       editorSize,
-      worldSize
+      worldSize,
+      challengeSize
     });
   };
 
@@ -265,6 +295,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       infoSize: Size.Type.Partial,
       consoleSize: Size.Type.Miniature,
       worldSize: Size.Type.Partial,
+      challengeSize: Size.Type.Partial
     });
   }
 
@@ -273,7 +304,8 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       editorSize: Size.Type.Minimized,
       infoSize: Size.Type.Minimized,
       consoleSize: Size.Type.Minimized,
-      worldSize: Size.Type.Minimized
+      worldSize: Size.Type.Minimized,
+      challengeSize: Size.Type.Minimized
     });
   }
 
@@ -299,6 +331,18 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       editorRef,
       robots,
       sceneId,
+      scene,
+      onNodeAdd,
+      onNodeChange,
+      onNodeRemove,
+      onGeometryAdd,
+      onGeometryChange,
+      onGeometryRemove,
+      onScriptAdd,
+      onScriptChange,
+      onScriptRemove,
+      onObjectAdd,
+      challengeState
     } = props;
 
     const {
@@ -306,6 +350,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       consoleSize,
       infoSize,
       worldSize,
+      challengeSize,
       workingScriptCode
     } = this.state;
 
@@ -369,6 +414,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
             size={EDITOR_SIZE[editorSize]}
             onSizeChange={this.onEditorSizeChange_}
             barComponents={editorBar}
+            $challenge={!!challengeState}
           >
             {editor}
           </EditorWidget>
@@ -379,6 +425,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
             size={CONSOLE_SIZE[consoleSize]}
             onSizeChange={this.onConsoleSizeChange_}
             barComponents={consoleBar}
+            $challenge={!!challengeState}
           >
             <FlexConsole theme={theme} text={console} />
           </ConsoleWidget>
@@ -389,6 +436,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
               sizes={INFO_SIZES}
               size={INFO_SIZE[infoSize]}
               onSizeChange={this.onInfoSizeChange_}
+              $challenge={!!challengeState}
             >
               <Info
                 theme={theme}
@@ -397,14 +445,43 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
               />
             </InfoWidget>
           ) : null}
+          {challengeState ? (
+            <ChallengeWidget
+              {...commonProps}
+              name='Challenge'
+              sizes={CHALLENGE_SIZES}
+              size={CHALLENGE_SIZE[challengeSize]}
+              onSizeChange={this.onChallengeSizeChange_}
+            >
+              <Challenge
+                theme={theme}
+                challenge={challengeState.challenge}
+                challengeCompletion={challengeState.challengeCompletion}
+              />
+            </ChallengeWidget>
+          ) : undefined}
           <WorldWidget
             {...commonProps}
             name='World'
             sizes={WORLD_SIZES}
             size={WORLD_SIZE[worldSize]}
             onSizeChange={this.onWorldSizeChange_}
+            $challenge={!!challengeState}
           >
-            <World theme={theme} sceneId={sceneId} />
+            <World
+              theme={theme}
+              scene={scene}
+              onNodeAdd={onNodeAdd}
+              onNodeChange={onNodeChange}
+              onNodeRemove={onNodeRemove}
+              onGeometryAdd={onGeometryAdd}
+              onGeometryChange={onGeometryChange}
+              onGeometryRemove={onGeometryRemove}
+              onScriptAdd={onScriptAdd}
+              onScriptChange={onScriptChange}
+              onScriptRemove={onScriptRemove}
+              onObjectAdd={onObjectAdd}
+            />
           </WorldWidget>
         </Overlay>
       </Container>

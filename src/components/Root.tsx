@@ -270,6 +270,46 @@ class Root extends React.Component<Props, State> {
   private editorRef: React.MutableRefObject<Editor>;
   private overlayLayoutRef:  React.MutableRefObject<OverlayLayout>;
 
+  private onNodeAdd_ = (nodeId: string, node: Node) => {
+
+  };
+
+  private onNodeChange_ = (nodeId: string, node: Node) => {
+  };
+
+  private onNodeRemove_ = (nodeId: string) => {
+  };
+
+  private onGeometryAdd_ = (geometryId: string, geometry: Geometry) => {
+  };
+
+  private onGeometryChange_ = (geometryId: string, geometry: Geometry) => {
+  };
+
+  private onGeometryRemove_ = (geometryId: string) => {
+  };
+
+  private onScriptAdd_ = (scriptId: string, script: Script) => {
+  };
+
+  private onScriptChange_ = (scriptId: string, script: Script) => {
+  };
+
+  private onScriptRemove_ = (scriptId: string) => {
+  };
+
+  private onObjectAdd_ = (nodeId: string, obj: Node.Obj, geometry: Geometry) => {
+  };
+
+  private onCameraChange_ = (camera: Camera) => {
+  };
+
+  private onGravityChange_ = (gravity: Vector3) => {
+  };
+
+  private onSelectNodeId_ = (nodeId: string) => {
+  };
+
   constructor(props: Props) {
     super(props);
 
@@ -298,6 +338,19 @@ class Root extends React.Component<Props, State> {
   }
 
   private onSetNodeBatch_ = (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => {
+    const {
+      scene,
+      challenge,
+      challengeCompletion,
+      onSetNodeBatch,
+      onChallengeCompletionSceneDiffChange,
+    } = this.props;
+
+    if (challenge) {
+      
+    } else {
+      onSetNodeBatch(setNodeBatch);
+    }
   };
 
   componentDidMount() {
@@ -305,14 +358,14 @@ class Root extends React.Component<Props, State> {
 
     const space = Space.getInstance();
     space.onSetNodeBatch = this.onSetNodeBatch_;
-    space.onSelectNodeId = this.props.onSelectNodeId;
-    space.onNodeAdd = this.props.onNodeAdd;
-    space.onNodeRemove = this.props.onNodeRemove;
-    space.onNodeChange = this.props.onNodeChange;
-    space.onGeometryAdd = this.props.onGeometryAdd;
-    space.onGeometryRemove = this.props.onGeometryRemove;
-    space.onGravityChange = this.props.onGravityChange;
-    space.onCameraChange = this.props.onCameraChange;
+    space.onSelectNodeId = this.onSelectNodeId_;
+    space.onNodeAdd = this.onNodeAdd_;
+    space.onNodeRemove = this.onNodeRemove_;
+    space.onNodeChange = this.onNodeChange_;
+    space.onGeometryAdd = this.onGeometryAdd_;
+    space.onGeometryRemove = this.onGeometryRemove_;
+    space.onGravityChange = this.onGravityChange_;
+    space.onCameraChange = this.onCameraChange_;
 
     this.scheduleUpdateConsole_();
     window.addEventListener('resize', this.onWindowResize_);
@@ -642,10 +695,6 @@ class Root extends React.Component<Props, State> {
   private onSaveSceneClick_ = () => {
     this.props.onSaveScene(this.props.match.params.sceneId);
   };
-  private onScriptChange_ = (script: Script) => {
-    const { selectedScriptId } = this.props;
-    this.props.onScriptChange(this.props.match.params.sceneId, selectedScriptId, script);
-  };
 
   render() {
     const { props, state } = this;
@@ -658,7 +707,9 @@ class Root extends React.Component<Props, State> {
 
     const {
       selectedScript,
-      selectedScriptId
+      selectedScriptId,
+      challenge,
+      challengeCompletion
     } = props;
     const {
       layout,
@@ -694,7 +745,22 @@ class Root extends React.Component<Props, State> {
       onDownloadCode: this.onDownloadClick_,
       onResetCode: this.onResetCode_,
       editorRef: this.editorRef,
-      sceneId
+      sceneId,
+      scene,
+      onNodeAdd: this.onNodeAdd_,
+      onNodeChange: this.onNodeChange_,
+      onNodeRemove: this.onNodeRemove_,
+      onGeometryAdd: this.onGeometryAdd_,
+      onGeometryChange: this.onGeometryChange_,
+      onGeometryRemove: this.onGeometryRemove_,
+      onScriptAdd: this.onScriptAdd_,
+      onScriptChange: this.onScriptChange_,
+      onScriptRemove: this.onScriptRemove_,
+      onObjectAdd: this.onObjectAdd_,
+      challengeState: challenge ? {
+        challenge,
+        challengeCompletion: challengeCompletion || Async.unloaded({ brief: {} }),
+      } : undefined
     };
 
     let impl: JSX.Element;
