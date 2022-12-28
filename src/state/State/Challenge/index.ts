@@ -1,5 +1,6 @@
 import Author from '../../../db/Author';
 import Dict from '../../../Dict';
+import ProgrammingLanguage from '../../../ProgrammingLanguage';
 import LocalizedString from '../../../util/LocalizedString';
 import Reference from '../../../util/Reference';
 import Async from '../Async';
@@ -12,6 +13,9 @@ interface Challenge {
   name: LocalizedString;
   description: LocalizedString;
   author: Author;
+
+  code: { [language in ProgrammingLanguage]: string };
+  defaultLanguage: ProgrammingLanguage;
 
   events: Dict<Event>;
 

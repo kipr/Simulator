@@ -5,8 +5,11 @@ import Scene from '../Scene';
 import PredicateCompletion from './PredicateCompletion';
 
 import { ObjectPatch, OuterObjectPatch } from 'symmetry';
+import ProgrammingLanguage from '../../../ProgrammingLanguage';
 
 interface ChallengeCompletion {
+  code: { [language in ProgrammingLanguage]: string };
+  currentLanguage: ProgrammingLanguage;
   sceneDiff: OuterObjectPatch<Scene>;
   eventStates: Dict<boolean>;
   success?: PredicateCompletion;
@@ -15,6 +18,12 @@ interface ChallengeCompletion {
 
 namespace ChallengeCompletion {
   export const EMPTY: ChallengeCompletion = {
+    code: {
+      'c': '',
+      'cpp': '',
+      'python': '',
+    },
+    currentLanguage: 'c',
     sceneDiff: { t: 'o' },
     eventStates: {},
   };

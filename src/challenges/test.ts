@@ -10,6 +10,11 @@ export default {
     type: Author.Type.Organization,
     id: 'kipr'
   },
+  code: {
+    'c': `#include <kipr/botball.h>`,
+    'cpp': `#include <kipr/botball.h>`,
+    'python': `from kipr import botball`,
+  },
   events: {
     a: {
       name: { [LocalizedString.EN_US]: 'A' },
