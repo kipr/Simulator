@@ -128,6 +128,18 @@ namespace Scene {
     },
   });
 
+  export const addObject = (scene: Scene, nodeId: string, obj: Node.Obj, geometry: Geometry): Scene => ({
+    ...scene,
+    nodes: {
+      ...scene.nodes,
+      [nodeId]: obj,
+    },
+    geometry: {
+      ...scene.geometry,
+      [obj.geometryId]: geometry,
+    },
+  });
+
   export const removeNode = (scene: Scene, nodeId: string): Scene => {
     const nodes = { ...scene.nodes };
     delete nodes[nodeId];
@@ -171,6 +183,15 @@ namespace Scene {
       [scriptId]: script,
     },
   });
+
+  export const removeScript = (scene: Scene, scriptId: string): Scene => {
+    const scripts = { ...scene.scripts };
+    delete scripts[scriptId];
+    return {
+      ...scene,
+      scripts,
+    };
+  };
 
   export const diff = (a: Scene, b: Scene): PatchScene => ({
     name: Patch.diff(a.name, b.name),

@@ -187,8 +187,10 @@ interface RootPrivateProps {
   onNodeAdd: (id: string, node: Node) => void;
   onNodeRemove: (id: string) => void;
   onNodeChange: (id: string, node: Node) => void;
+  onObjectAdd: (id: string, obj: Node.Obj, geometry: Geometry) => void;
   onNodesChange: (nodes: Dict<Node>) => void;
   onGeometryAdd: (id: string, geometry: Geometry) => void;
+  onGeometryChange: (id: string, geometry: Geometry) => void;
   onGeometryRemove: (id: string) => void;
   onCameraChange: (camera: Camera) => void;
   onGravityChange: (gravity: Vector3) => void;
@@ -218,6 +220,7 @@ interface RootPrivateProps {
   selectedScript?: Script;
 
   onScriptChange: (scriptId: string, script: Script) => void;
+  onScriptRemove: (scriptId: string) => void;
 }
 
 interface RootState {
@@ -327,17 +330,19 @@ class Root extends React.Component<Props, State> {
     }
   };
 
-  private onGeometryAdd_ = (geometryId: string, geometry: Geometry) => {
-    const { challenge, onGeometryAdd } = this.props;
+  private onGeometryChange_ = (geometryId: string, geometry: Geometry) => {
+    const { challenge, onGeometryChange } = this.props;
 
     if (challenge) {
       const latestScene = this.latestScene_();
       if (!latestScene) return;
       this.workingChallengeScene = Scene.setGeometry(latestScene, geometryId, geometry);
     } else {
-      onGeometryAdd(geometryId, geometry);
+      onGeometryChange(geometryId, geometry);
     }
   };
+
+  private onGeometryAdd_ = this.onGeometryChange_;
 
   private onGeometryRemove_ = (geometryId: string) => {
     const { challenge, onGeometryRemove } = this.props;
@@ -367,10 +372,27 @@ class Root extends React.Component<Props, State> {
   private onScriptAdd_ = this.onScriptChange_;
 
   private onScriptRemove_ = (scriptId: string) => {
-    
+    const { challenge, onScriptRemove } = this.props;
+
+    if (challenge) {
+      const latestScene = this.latestScene_();
+      if (!latestScene) return;
+      this.workingChallengeScene = Scene.removeScript(latestScene, scriptId);
+    } else {
+      onScriptRemove(scriptId);
+    }
   };
 
   private onObjectAdd_ = (nodeId: string, obj: Node.Obj, geometry: Geometry) => {
+    const { challenge, onObjectAdd } = this.props;
+
+    if (challenge) {
+      const latestScene = this.latestScene_();
+      if (!latestScene) return;
+      this.workingChallengeScene = Scene.addObject(latestScene, nodeId, obj, geometry);
+    } else {
+      onObjectAdd(nodeId, obj, geometry);
+    }
   };
 
   private onCameraChange_ = (camera: Camera) => {
@@ -1077,7 +1099,10 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
   onNodeRemove: (nodeId: string) => dispatch(ScenesAction.removeNode({ sceneId, nodeId })),
   onNodeChange: (nodeId: string, node: Node) => {
     dispatch(ScenesAction.setNode({ sceneId, nodeId, node }));
-  }, onGeometryAdd: (geometryId: string, geometry: Geometry) => dispatch(ScenesAction.addGeometry({ sceneId, geometryId, geometry })),
+  },
+  onObjectAdd: (nodeId: string, object: Node.Obj, geometry: Geometry) => dispatch(ScenesAction.addObject({ sceneId, nodeId, object, geometry })),
+  onGeometryAdd: (geometryId: string, geometry: Geometry) => dispatch(ScenesAction.addGeometry({ sceneId, geometryId, geometry })),
+  onGeometryChange: (geometryId: string, geometry: Geometry) => dispatch(ScenesAction.setGeometry({ sceneId, geometryId, geometry })),
   onGeometryRemove: (geometryId: string) => dispatch(ScenesAction.removeGeometry({ sceneId, geometryId })),
   onCameraChange: (camera: Camera) => dispatch(ScenesAction.setCamera({ sceneId, camera })),
   onGravityChange: (gravity: Vector3) => dispatch(ScenesAction.setGravity({ sceneId, gravity })),
@@ -1125,6 +1150,9 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
   },
   onScriptChange: (scriptId: string, script: Script) => {
     dispatch(ScenesAction.setScript({ sceneId, scriptId, script }));
+  },
+  onScriptRemove: (scriptId: string) => {
+    dispatch(ScenesAction.removeScript({ sceneId, scriptId }));
   },
 }))(Root) as React.ComponentType<RootPublicProps>;
 
