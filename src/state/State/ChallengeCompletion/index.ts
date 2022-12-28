@@ -4,12 +4,22 @@ import Async from '../Async';
 import Scene from '../Scene';
 import PredicateCompletion from './PredicateCompletion';
 
+import { ObjectPatch, OuterObjectPatch } from 'symmetry';
+
 interface ChallengeCompletion {
-  sceneDiff: Patch<Scene>;
+  sceneDiff: OuterObjectPatch<Scene>;
   eventStates: Dict<boolean>;
   success?: PredicateCompletion;
   failure?: PredicateCompletion;
 }
+
+namespace ChallengeCompletion {
+  export const EMPTY: ChallengeCompletion = {
+    sceneDiff: { t: 'o' },
+    eventStates: {},
+  };
+}
+
 
 export interface ChallengeCompletionBrief {
 }

@@ -7500,6 +7500,11 @@ svgo@^1.3.2:
     unquote "~1.1.1"
     util.promisify "~1.0.0"
 
+symmetry@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/symmetry/-/symmetry-0.6.1.tgz#eda640bfd52b35328f84f059bce78c89f55f3931"
+  integrity sha512-pWFAm2vqVz1qOmb0ZRFq+QVa4vzyJGwm3BcTD5SX7y0kUZvTLeBmQngeeSWXfdRUG0dmBbwYxLRlpgbtUFVcDg==
+
 table@^6.0.9:
   version "6.7.1"
   resolved "https://registry.yarnpkg.com/table/-/table-6.7.1.tgz#ee05592b7143831a8c94f3cee6aae4c1ccef33e2"

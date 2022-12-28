@@ -66,6 +66,9 @@ import Builder from '../db/Builder';
 import ChallengeCompletion, { AsyncChallengeCompletion } from '../state/State/ChallengeCompletion';
 import Patch from '../util/Patch';
 import PredicateCompletion from '../state/State/ChallengeCompletion/PredicateCompletion';
+import LoadingOverlay from './Challenge/LoadingOverlay';
+import DbError from '../db/Error';
+import { applyObjectPatch, applyPatch, createObjectPatch, createPatch, ObjectPatch, OuterObjectPatch } from 'symmetry';
 
 namespace Modal {
   export enum Type {
@@ -194,12 +197,13 @@ interface RootPrivateProps {
   onResetScene: () => void;
 
   onChallengeCompletionCreate: (challengeId: string, challengeCompletion: ChallengeCompletion) => void;
-  onChallengeCompletionSceneDiffChange: (challengeId: string, sceneDiff: Patch<Scene>) => void;
+  onChallengeCompletionSceneDiffChange: (challengeId: string, sceneDiff: OuterObjectPatch<Scene>) => void;
   onChallengeCompletionEventStateRemove: (challengeId: string, eventId: string) => void;
   onChallengeCompletionEventStateChange: (challengeId: string, eventId: string, eventState: boolean) => void;
   onChallengeCompletionEventStatesChange: (challengeId: string, eventState: Dict<boolean>) => void;
   onChallengeCompletionSuccessPredicateCompletionChange: (challengeId: string, success?: PredicateCompletion) => void;
   onChallengeCompletionFailurePredicateCompletionChange: (challengeId: string, failure?: PredicateCompletion) => void;
+  onChallengeCompletionReset: (challengeId: string) => void;
 
   onCreateScene: (id: string, scene: Scene) => void;
   onSaveScene: (id: string) => void;
@@ -213,8 +217,7 @@ interface RootPrivateProps {
   selectedScriptId?: string;
   selectedScript?: Script;
 
-  onScriptChange: (sceneId: string, scriptId: string, script: Script) => void;
-  onSelectedScriptChange: (sceneId: string, scriptId: string) => void;
+  onScriptChange: (scriptId: string, script: Script) => void;
 }
 
 interface RootState {
@@ -239,6 +242,8 @@ interface RootState {
   feedback: Feedback;
 
   windowInnerHeight: number;
+
+  challengeStarted?: boolean;
 }
 
 type Props = RootPublicProps & RootPrivateProps;
@@ -270,41 +275,131 @@ class Root extends React.Component<Props, State> {
   private editorRef: React.MutableRefObject<Editor>;
   private overlayLayoutRef:  React.MutableRefObject<OverlayLayout>;
 
-  private onNodeAdd_ = (nodeId: string, node: Node) => {
+  private workingChallengeScene_: Scene | undefined;
+  private latestScene_ = (): Scene => {
+    const { scene, challengeCompletion } = this.props;
+  
+    const latestChallengeCompletion = Async.latestValue(challengeCompletion);
+    if (!latestChallengeCompletion) return Async.latestValue(scene);
+    
+    if (this.workingChallengeScene_) return this.workingChallengeScene_;
 
+    const latestScene = Async.latestValue(scene);
+    if (!latestScene) return undefined;
+
+    const { sceneDiff } = latestChallengeCompletion;
+
+    if (sceneDiff === 'none' || sceneDiff === 'reset') return latestScene;
+
+    this.workingChallengeScene_ = applyObjectPatch(latestScene, latestChallengeCompletion.sceneDiff as ObjectPatch<Scene>);
+    return this.workingChallengeScene_;
   };
+
+  private set workingChallengeScene(scene: Scene) {
+    if (scene === this.workingChallengeScene_) return;
+    this.workingChallengeScene_ = scene;
+    Space.getInstance().scene = scene;
+  }
 
   private onNodeChange_ = (nodeId: string, node: Node) => {
+    const { challenge, onNodeChange } = this.props;
+
+    if (challenge) {
+      const latestScene = this.latestScene_();
+      if (!latestScene) return;
+      this.workingChallengeScene = Scene.setNode(latestScene, nodeId, node);
+    } else {
+      onNodeChange(nodeId, node);
+    }
   };
 
+  private onNodeAdd_ = this.onNodeChange_;
+
   private onNodeRemove_ = (nodeId: string) => {
+    const { challenge, onNodeRemove } = this.props;
+
+    if (challenge) {
+      const latestScene = this.latestScene_();
+      if (!latestScene) return;
+      this.workingChallengeScene = Scene.removeNode(latestScene, nodeId);
+    } else {
+      onNodeRemove(nodeId);
+    }
   };
 
   private onGeometryAdd_ = (geometryId: string, geometry: Geometry) => {
-  };
+    const { challenge, onGeometryAdd } = this.props;
 
-  private onGeometryChange_ = (geometryId: string, geometry: Geometry) => {
+    if (challenge) {
+      const latestScene = this.latestScene_();
+      if (!latestScene) return;
+      this.workingChallengeScene = Scene.setGeometry(latestScene, geometryId, geometry);
+    } else {
+      onGeometryAdd(geometryId, geometry);
+    }
   };
 
   private onGeometryRemove_ = (geometryId: string) => {
+    const { challenge, onGeometryRemove } = this.props;
+
+    if (challenge) {
+      const latestScene = this.latestScene_();
+      if (!latestScene) return;
+      this.workingChallengeScene = Scene.removeGeometry(latestScene, geometryId);
+    } else {
+      onGeometryRemove(geometryId);
+    }
   };
 
-  private onScriptAdd_ = (scriptId: string, script: Script) => {
-  };
 
   private onScriptChange_ = (scriptId: string, script: Script) => {
+    const { challenge, onScriptChange } = this.props;
+
+    if (challenge) {
+      const latestScene = this.latestScene_();
+      if (!latestScene) return;
+      this.workingChallengeScene = Scene.setScript(latestScene, scriptId, script);
+    } else {
+      onScriptChange(scriptId, script);
+    }
   };
 
+  private onScriptAdd_ = this.onScriptChange_;
+
   private onScriptRemove_ = (scriptId: string) => {
+    
   };
 
   private onObjectAdd_ = (nodeId: string, obj: Node.Obj, geometry: Geometry) => {
   };
 
   private onCameraChange_ = (camera: Camera) => {
+    const { challenge, onCameraChange } = this.props;
+
+    if (challenge) {
+      const latestScene = this.latestScene_();
+      if (!latestScene) return;
+
+      this.workingChallengeScene = Scene.setCamera(latestScene, camera);
+    } else {
+      onCameraChange(camera);
+    }
   };
 
   private onGravityChange_ = (gravity: Vector3) => {
+    const {
+      challenge,
+      onGravityChange,
+    } = this.props;
+
+    if (challenge) {
+      const latestScene = this.latestScene_();
+      if (!latestScene) return;
+
+      this.workingChallengeScene = Scene.setGravity(latestScene, gravity);
+    } else {
+      onGravityChange(gravity);
+    }
   };
 
   private onSelectNodeId_ = (nodeId: string) => {
@@ -339,19 +434,42 @@ class Root extends React.Component<Props, State> {
 
   private onSetNodeBatch_ = (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => {
     const {
-      scene,
       challenge,
-      challengeCompletion,
       onSetNodeBatch,
-      onChallengeCompletionSceneDiffChange,
     } = this.props;
 
     if (challenge) {
-      
+      const latestScene = this.latestScene_();
+      if (!latestScene) return;
+
+      let nextScene = latestScene;
+      for (const { id, node } of setNodeBatch.nodeIds) nextScene = Scene.setNode(nextScene, id, node);
+      this.workingChallengeScene = nextScene;
     } else {
       onSetNodeBatch(setNodeBatch);
     }
   };
+
+  private onResetScene_ = () => {
+    const {
+      scene,
+      challenge,
+      challengeCompletion,
+      match: { params: { challengeId } },
+      onResetScene,
+      onChallengeCompletionReset,
+    } = this.props;
+
+    console.log('onResetScene', challenge, challengeCompletion)
+
+    if (challenge) {
+      if (!challengeCompletion) return;
+
+      this.workingChallengeScene = Async.latestValue(scene);
+    } else {
+      onResetScene();
+    }
+  }
 
   componentDidMount() {
     WorkerInstance.onStopped = this.onStopped_;
@@ -380,8 +498,18 @@ class Root extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>): void {
-    if (this.props.scene !== prevProps.scene) {
-      Space.getInstance().scene = Async.latestValue(this.props.scene) || Scene.EMPTY;
+    const { match: { params: { challengeId } }, challenge, challengeCompletion } = this.props;
+    
+    if (challengeId && challenge && challengeCompletion && challengeCompletion.type === Async.Type.LoadFailed) {
+      if (challengeCompletion.error.code === DbError.CODE_NOT_FOUND) {
+        console.log('Challenge completion not found');
+        this.props.onChallengeCompletionCreate(challengeId, ChallengeCompletion.EMPTY);
+      }
+    }
+    
+    if (this.props.scene !== prevProps.scene || this.props.challengeCompletion !== prevProps.challengeCompletion) {
+      const scene = this.latestScene_();
+      Space.getInstance().scene = scene || Scene.EMPTY;
     }
   }
 
@@ -569,7 +697,7 @@ class Root extends React.Component<Props, State> {
   };
 
   private onResetWorldClick_ = () => {
-    this.props.onResetScene();
+    this.onResetScene_();
   };
 
   private onClearConsole_ = () => {
@@ -696,21 +824,41 @@ class Root extends React.Component<Props, State> {
     this.props.onSaveScene(this.props.match.params.sceneId);
   };
 
+  private onChallengeStartClick_ = () => {
+    this.setState({
+      challengeStarted: true
+    });
+  };
+
   render() {
     const { props, state } = this;
     
-    const { match: { params: { sceneId } }, scene } = props;
+    const {
+      match: { params: { sceneId, challengeId } },
+      scene,
+      challenge,
+      challengeCompletion
+    } = props;
+
+    const {
+      challengeStarted
+    } = state;
+
+    const latestChallengeCompletion = Async.latestValue(challengeCompletion);
+    if (challengeId && !challengeStarted) {
+      return (
+        <LoadingOverlay
+          onStartClick={this.onChallengeStartClick_}
+          challenge={challenge}
+          loading={!latestChallengeCompletion}
+        />
+      );
+    }
 
     if (!scene || scene.type === Async.Type.Unloaded) {
       return <Loading />;
     }
 
-    const {
-      selectedScript,
-      selectedScriptId,
-      challenge,
-      challengeCompletion
-    } = props;
     const {
       layout,
       activeLanguage,
@@ -805,17 +953,17 @@ class Root extends React.Component<Props, State> {
             onFeedbackClick={this.onModalClick_(Modal.FEEDBACK)}
             onOpenSceneClick={this.onOpenSceneClick_}
             simulatorState={simulatorState}
-            onNewSceneClick={this.onModalClick_(Modal.NEW_SCENE)}
-            onSaveAsSceneClick={this.onModalClick_(Modal.copyScene({ scene: Async.latestValue(scene) }))}
-            onSettingsSceneClick={isAuthor && this.onSettingsSceneClick_}
-            onDeleteSceneClick={isAuthor && this.onModalClick_(Modal.deleteRecord({
+            onNewSceneClick={!challenge && this.onModalClick_(Modal.NEW_SCENE)}
+            onSaveAsSceneClick={!challenge && this.onModalClick_(Modal.copyScene({ scene: Async.latestValue(scene) }))}
+            onSettingsSceneClick={isAuthor && !challenge && this.onSettingsSceneClick_}
+            onDeleteSceneClick={isAuthor && !challenge && this.onModalClick_(Modal.deleteRecord({
               record: {
                 type: Record.Type.Scene,
                 id: sceneId,
                 value: scene,
               }
             }))}
-            onSaveSceneClick={scene && scene.type === Async.Type.Saveable && isAuthor ? this.onSaveSceneClick_ : undefined}
+            onSaveSceneClick={scene && !challenge && scene.type === Async.Type.Saveable && isAuthor ? this.onSaveSceneClick_ : undefined}
             
           />
           {impl}
@@ -944,7 +1092,7 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
   onChallengeCompletionCreate: (challengeId: string, challengeCompletion: ChallengeCompletion) => {
     dispatch(ChallengeCompletionsAction.createChallengeCompletion({ challengeId, challengeCompletion }));
   },
-  onChallengeCompletionSceneDiffChange: (challengeId: string, sceneDiff: Patch<Scene>) => {
+  onChallengeCompletionSceneDiffChange: (challengeId: string, sceneDiff: OuterObjectPatch<Scene>) => {
     dispatch(ChallengeCompletionsAction.setSceneDiff({ challengeId, sceneDiff }));
   },
   onChallengeCompletionEventStateRemove: (challengeId: string, eventId: string) => {
@@ -962,6 +1110,9 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
   onChallengeCompletionFailurePredicateCompletionChange: (challengeId: string, failure?: PredicateCompletion) => {
     dispatch(ChallengeCompletionsAction.setFailurePredicateCompletion({ challengeId, failure }));
   },
+  onChallengeCompletionReset: (challengeId: string) => {
+    dispatch(ChallengeCompletionsAction.resetChallengeCompletion({ challengeId }));
+  },
   onDeleteRecord: (selector: Selector) => {
     dispatch(ScenesAction.removeScene({ sceneId: selector.id })),
     dispatch(push('/'));
@@ -972,7 +1123,7 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
   goToLogin: () => {
     window.location.href = `/login?from=${window.location.pathname}`;
   },
-  onScriptChange: (sceneId: string, scriptId: string, script: Script) => {
+  onScriptChange: (scriptId: string, script: Script) => {
     dispatch(ScenesAction.setScript({ sceneId, scriptId, script }));
   },
 }))(Root) as React.ComponentType<RootPublicProps>;

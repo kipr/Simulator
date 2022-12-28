@@ -20,13 +20,8 @@ import Async from '../../state/State/Async';
 
 
 export interface InfoProps extends StyleProps, ThemeProps {
-  sceneId: string;
-  nodeId: string;
-}
+  node: Node.Robot;
 
-interface ReduxInfoProps {
-  node?: Node;
-  startingOrigin?: ReferenceFrame;
   onOriginChange: (origin: ReferenceFrame) => void;
 }
 
@@ -116,8 +111,8 @@ const ResetIcon = styled(Fa, ({ theme }: ThemeProps) => ({
   transition: 'opacity 0.2s'
 }));
 
-class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
-  constructor(props: Props & ReduxInfoProps) {
+class Info extends React.PureComponent<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -137,7 +132,7 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
   private onResetLocationClick_ = (event: React.MouseEvent<HTMLSpanElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    this.props.onOriginChange(this.props.startingOrigin);
+    this.props.onOriginChange(this.props.node.startingOrigin);
   };
 
   render() {
@@ -147,7 +142,6 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
       className,
       theme,
       node,
-      startingOrigin
     } = props;
 
     if (!node || node.type !== 'robot') return null;
@@ -226,7 +220,7 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
           >
             <Location
               theme={theme}
-              origin={startingOrigin}
+              origin={node.startingOrigin}
               onOriginChange={props.onOriginChange}
             />
           </StyledSection>
@@ -276,24 +270,4 @@ class Info extends React.PureComponent<Props & ReduxInfoProps, State> {
   }
 }
 
-export default connect<unknown, unknown, InfoProps, ReduxState>((state: ReduxState, ownProps: InfoProps) => {
-  const asyncScene = state.scenes[ownProps.sceneId];
-  
-  const scene = Async.latestValue(asyncScene);
-  if (!scene) return {};
-
-  const node = scene.nodes[ownProps.nodeId];
-  return {
-    startingOrigin: node.startingOrigin,
-    node
-  };
-}, (dispatch, { sceneId, nodeId }: InfoProps) => ({
-  onOriginChange: (origin: ReferenceFrame) => {
-    dispatch(ScenesAction.setNodeOrigin({
-      sceneId,
-      nodeId,
-      origin,
-      updateStarting: true
-    }));
-  }
-}))(Info) as React.ComponentType<InfoProps>;
+export default Info;

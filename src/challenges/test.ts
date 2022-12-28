@@ -20,13 +20,23 @@ export default {
       description: { [LocalizedString.EN_US]: 'B' },
     }
   },
-  successPredicate: {
-    type: Expr.Type.Event,
-    eventId: 'a',
+  success: {
+    exprs: {
+      a: {
+        type: Expr.Type.Event,
+        eventId: 'a',
+      }
+    },
+    rootId: 'a',
   },
-  failurePredicate: {
-    type: Expr.Type.Event,
-    eventId: 'b',
+  failure: {
+    exprs: {
+      b: {
+        type: Expr.Type.Event,
+        eventId: 'b',
+      }
+    },
+    rootId: 'b',
   },
   sceneId: 'jbcSandboxA',
 } as Challenge;

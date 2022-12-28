@@ -20,6 +20,7 @@ import Dict from '../../Dict';
 import Async from '../../state/State/Async';
 import { EMPTY_OBJECT } from '../../util';
 import Challenge from '../Challenge';
+import { ReferenceFrame } from '../../unit-math';
 
 export interface OverlayLayoutProps extends LayoutProps {
   
@@ -111,13 +112,13 @@ const EditorWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean
     };
     case Size.Type.Miniature: return {
       gridColumn: 1,
-      gridRow: 1,
+      gridRow: props.$challenge ? '1 / span 2' : 1,
       ...transparentStyling(props.theme)
     };
     default:
     case Size.Type.Partial: return {
       gridColumn: '1 / span 2',
-      gridRow: 1,
+      gridRow: props.$challenge ? '1 / span 2' : 1,
       ...transparentStyling(props.theme)
     };
   }
@@ -313,6 +314,21 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
     // not implemented
   };
 
+  private onRobotOriginChange_ = (origin: ReferenceFrame) => {
+    const { scene, onNodeChange } = this.props;
+    
+    const latestScene = Async.latestValue(scene);
+
+    if (!latestScene) return;
+
+    const robots = Scene.robots(latestScene);
+    const robotId = Object.keys(robots)[0];
+    this.props.onNodeChange(robotId, {
+      ...robots[robotId],
+      origin
+    });
+  };
+
   render() {
     const { props } = this;
     
@@ -394,7 +410,12 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
     });
     const consoleBar = createConsoleBarComponents(theme, onClearConsole);
 
-    const robotIds = Object.keys(robots);
+    const latestScene = Async.latestValue(scene);
+    let robotNode: Node.Robot;
+    if (latestScene) {
+      const robots = Scene.robots(latestScene);
+      robotNode = Dict.unique(robots);
+    }
 
     return (
       <Container style={style} className={className}>
@@ -406,7 +427,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
             isRealisticSensorsEnabled={settings.simulationRealisticSensors}
           />
         </SimulatorAreaContainer>
-        <Overlay theme={theme}>
+        <Overlay theme={theme} $challenge={!!challengeState}>
           <EditorWidget
             {...commonProps}
             name='Editor'
@@ -429,7 +450,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
           >
             <FlexConsole theme={theme} text={console} />
           </ConsoleWidget>
-          {robotIds.length === 1 ? (
+          {!!robotNode ? (
             <InfoWidget
               {...commonProps}
               name='Robot'
@@ -440,8 +461,8 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
             >
               <Info
                 theme={theme}
-                sceneId={sceneId}
-                nodeId={robotIds[0]}
+                node={robotNode}
+                onOriginChange={this.onRobotOriginChange_}
               />
             </InfoWidget>
           ) : null}

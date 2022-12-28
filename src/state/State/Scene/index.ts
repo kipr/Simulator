@@ -57,7 +57,7 @@ export namespace AsyncScene {
   });
 }
 
-interface PatchScene {
+export interface PatchScene {
   name: Patch<LocalizedString>;
   author: Patch<Author>;
   description: Patch<LocalizedString>;
@@ -119,6 +119,58 @@ namespace Scene {
     
     return ret;
   };
+
+  export const setNode = (scene: Scene, nodeId: string, node: Node): Scene => ({
+    ...scene,
+    nodes: {
+      ...scene.nodes,
+      [nodeId]: node,
+    },
+  });
+
+  export const removeNode = (scene: Scene, nodeId: string): Scene => {
+    const nodes = { ...scene.nodes };
+    delete nodes[nodeId];
+    return {
+      ...scene,
+      nodes,
+    };
+  };
+
+  export const setGravity = (scene: Scene, gravity: Vector3): Scene => ({
+    ...scene,
+    gravity,
+  });
+
+  export const setCamera = (scene: Scene, camera: Camera): Scene => ({
+    ...scene,
+    camera,
+  });
+
+  export const setGeometry = (scene: Scene, geometryId: string, geometry: Geometry): Scene => ({
+    ...scene,
+    geometry: {
+      ...scene.geometry,
+      [geometryId]: geometry,
+    },
+  });
+
+  export const removeGeometry = (scene: Scene, geometryId: string): Scene => {
+    const geometry = { ...scene.geometry };
+    delete geometry[geometryId];
+    return {
+      ...scene,
+      geometry,
+    };
+  };
+
+  export const setScript = (scene: Scene, scriptId: string, script: Script): Scene => ({
+    ...scene,
+    scripts: {
+      ...scene.scripts,
+      [scriptId]: script,
+    },
+  });
 
   export const diff = (a: Scene, b: Scene): PatchScene => ({
     name: Patch.diff(a.name, b.name),

@@ -275,6 +275,24 @@ namespace Async {
     }
   };
 
+  export const isResident = <B, T>(async: Async<B, T>): boolean => {
+    if (!async) return false;
+
+    switch (async.type) {
+      case Type.Unloaded: return false;
+      case Type.Creating: return false;
+      case Type.CreateFailed: return false;
+      case Type.Loading: return false;
+      case Type.LoadFailed: return false;
+      case Type.Loaded: return true;
+      case Type.Saveable: return true;
+      case Type.Saving: return true;
+      case Type.SaveFailed: return true;
+      case Type.Deleting: return false;
+      case Type.DeleteFailed: return false;
+    }
+  };
+
   export const reset = <B, T>(async: Async<B, T>): Async<B, T> => {
     switch (async.type) {
       case Type.Loaded: return async;

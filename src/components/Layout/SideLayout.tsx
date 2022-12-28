@@ -24,6 +24,7 @@ import { faCode, faFlagCheckered, faGlobeAmericas, faRobot } from '@fortawesome/
 import Async from '../../state/State/Async';
 import { EMPTY_OBJECT } from '../../util';
 import Challenge from '../Challenge';
+import { ReferenceFrame } from '../../unit-math';
 
 // 3 panes:
 // Editor / console
@@ -153,6 +154,22 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     // not implemented
   };
 
+  private onRobotOriginChange_ = (origin: ReferenceFrame) => {
+    const { scene, onNodeChange } = this.props;
+    
+    const latestScene = Async.latestValue(scene);
+
+    if (!latestScene) return;
+
+    const robots = Scene.robots(latestScene);
+    const robotId = Object.keys(robots)[0];
+    this.props.onNodeChange(robotId, {
+      ...robots[robotId],
+      origin
+    });
+  };
+
+
   render() {
     const { props } = this;
     const {
@@ -264,8 +281,13 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
         break;
       }
       case 1: {
-        const robotIds = Object.keys(robots);
-        if (robotIds.length === 1) {
+        const latestScene = Async.latestValue(scene);
+        let robotNode: Node.Robot;
+        if (latestScene) {
+          const robots = Scene.robots(latestScene);
+          robotNode = Dict.unique(robots);
+        }
+        if (robotNode) {
           content = (
             <SimulatorWidget
               theme={theme}
@@ -274,8 +296,8 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
             >
               <Info
                 theme={theme}
-                nodeId={robotIds[0]}
-                sceneId={sceneId}
+                node={robotNode}
+                onOriginChange={this.onRobotOriginChange_}
               />
             </SimulatorWidget>
           );

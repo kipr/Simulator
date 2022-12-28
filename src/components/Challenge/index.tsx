@@ -36,6 +36,7 @@ import LocalizedString from '../../util/LocalizedString';
 import Script from '../../state/State/Scene/Script';
 import { AsyncChallenge } from '../../state/State/Challenge';
 import { AsyncChallengeCompletion } from '../../state/State/ChallengeCompletion';
+import PredicateEditor from './PredicateEditor';
 
 export interface ChallengePublicProps extends StyleProps, ThemeProps {
   challenge: AsyncChallenge;
@@ -123,14 +124,38 @@ class Challenge extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { style, className, theme, challenge } = props;
+    const { style, className, theme, challenge, challengeCompletion } = props;
     const { collapsed, modal } = state;
+
+
+    const latestChallenge = Async.latestValue(challenge);
+    if (!latestChallenge) return null;
+
+    const latestChallengeCompletion = Async.latestValue(challengeCompletion);
+
 
     return (
       <>
         <ScrollArea theme={theme} style={{ flex: '1 1' }}>
           <Container theme={theme} style={style} className={className}>
-            
+            {latestChallenge.success && (
+              <Section name={'Success'} theme={theme}>
+                <PredicateEditor
+                  events={latestChallenge.events}
+                  predicate={latestChallenge.success}
+                  predicateCompletion={latestChallengeCompletion ? latestChallengeCompletion.success : undefined}
+                />
+              </Section>
+            )}
+            {latestChallenge.failure && (
+              <Section name={'Failure'} theme={theme}>
+                <PredicateEditor
+                  events={latestChallenge.events}
+                  predicate={latestChallenge.failure}
+                  predicateCompletion={latestChallengeCompletion ? latestChallengeCompletion.failure : undefined}
+                />
+              </Section>
+            )}
           </Container>
         </ScrollArea>
       </>

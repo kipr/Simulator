@@ -7,9 +7,9 @@ import store from '..';
 import { errorToAsyncError, mutate } from './util';
 import ChallengeCompletion, { AsyncChallengeCompletion, ChallengeCompletionBrief } from '../State/ChallengeCompletion';
 import PredicateCompletion from '../State/ChallengeCompletion/PredicateCompletion';
-import Patch from '../../util/Patch';
 import Scene from '../State/Scene';
 import Dict from '../../Dict';
+import { ObjectPatch, OuterObjectPatch } from 'symmetry/dist';
 
 
 export namespace ChallengeCompletionsAction {
@@ -94,10 +94,17 @@ export namespace ChallengeCompletionsAction {
   export interface SetSceneDiff {
     type: 'challenge-completions/set-scene-diff';
     challengeId: string;
-    sceneDiff: Patch<Scene>;
+    sceneDiff: OuterObjectPatch<Scene>;
   }
 
   export const setSceneDiff = construct<SetSceneDiff>('challenge-completions/set-scene-diff');
+
+  export interface ResetChallengeCompletion {
+    type: 'challenge-completions/reset-challenge-completion';
+    challengeId: string;
+  }
+
+  export const resetChallengeCompletion = construct<ResetChallengeCompletion>('challenge-completions/reset-challenge-completion');
 }
 
 export type ChallengeCompletionsAction = (
@@ -111,7 +118,8 @@ export type ChallengeCompletionsAction = (
   ChallengeCompletionsAction.RemoveEventState |
   ChallengeCompletionsAction.SetEventState |
   ChallengeCompletionsAction.SetEventStates |
-  ChallengeCompletionsAction.SetSceneDiff
+  ChallengeCompletionsAction.SetSceneDiff |
+  ChallengeCompletionsAction.ResetChallengeCompletion
 );
 
 const DEFAULT_CHALLENGE_COMPLETIONS: ChallengeCompletions = {
@@ -119,7 +127,7 @@ const DEFAULT_CHALLENGE_COMPLETIONS: ChallengeCompletions = {
 
 const create = async (challengeId: string, next: Async.Creating<ChallengeCompletion>) => {
   try {
-    await db.set(Selector.challenge(challengeId), next.value);
+    await db.set(Selector.challengeCompletion(challengeId), next.value);
     store.dispatch(ChallengeCompletionsAction.setChallengeCompletionInternal({
       challengeCompletion: Async.loaded({
         brief: {},
@@ -251,6 +259,12 @@ export const reduceChallengeCompletions = (state: ChallengeCompletions = DEFAULT
     });
     case 'challenge-completions/set-scene-diff': return mutate(state, action.challengeId, challenge => {
       challenge.sceneDiff = action.sceneDiff;
+    });
+    case 'challenge-completions/reset-challenge-completion': return mutate(state, action.challengeId, challenge => {
+      challenge.eventStates = {};
+      challenge.success = undefined;
+      challenge.failure = undefined;
+      challenge.sceneDiff = { t: "o" };
     });
     default: return state;
   }
