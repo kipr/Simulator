@@ -25,6 +25,10 @@ if not is_tool('swig'):
   print('SWIG is not installed. Please install SWIG and try again.')
   exit(1)
 
+if not is_tool('doxygen'):
+  print('Doxygen is not installed. Please install Doxygen and try again.')
+  exit(1)
+
 working_dir = pathlib.Path(__file__).parent.absolute()
 
 emsdk_dir = working_dir / 'emsdk'
@@ -80,7 +84,7 @@ subprocess.run(
     '-Dwith_camera=OFF',
     '-Dwith_tello=OFF',
     '-Dwith_python_binding=OFF',
-    '-Dwith_documentation=OFF',
+    '-Dwith_documentation=ON',
     '-Dwith_tests=OFF',
     f'-DCMAKE_INSTALL_PREFIX={libkipr_install_c_dir}',
     libkipr_dir
