@@ -50,6 +50,7 @@ const treeify = (exprs: Dict<Expr>, rootId: string, events: Dict<Event>, exprSta
         type: Node.Type.NonTerminal,
         parent: {
           component: Operator,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
           props: { type: root.type } as any
         },
         children: Dict.generate(root.argIds, id => treeify(exprs, id, events, exprStates)),
@@ -63,6 +64,7 @@ const treeify = (exprs: Dict<Expr>, rootId: string, events: Dict<Event>, exprSta
         type: Node.Type.NonTerminal,
         parent: {
           component: Operator,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
           props: { type: root.type } as any
         },
         children: Dict.generate([root.argId], id => treeify(exprs, id, events, exprStates)),
@@ -75,6 +77,7 @@ const treeify = (exprs: Dict<Expr>, rootId: string, events: Dict<Event>, exprSta
         type: Node.Type.Terminal,
         node: {
           component: EventViewer,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
           props: { event: events[root.eventId] } as any
         },
         state: exprStates ? exprStates[rootId] : undefined

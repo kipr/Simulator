@@ -450,7 +450,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
           >
             <FlexConsole theme={theme} text={console} />
           </ConsoleWidget>
-          {!!robotNode ? (
+          {robotNode ? (
             <InfoWidget
               {...commonProps}
               name='Robot'

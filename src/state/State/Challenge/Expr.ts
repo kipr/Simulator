@@ -36,7 +36,7 @@ namespace Expr {
   export namespace And {
     export const evaluate = (and: And, context: EvaluationContext): boolean => {
       const argStates = and.argIds.map(argId => Expr.evaluate(argId, context));
-      return argStates.every(argState => argState === undefined ? false : argState);
+      return argStates.every(argState => (argState === undefined ? false : argState));
     };
   }
 
@@ -48,7 +48,7 @@ namespace Expr {
   export namespace Or {
     export const evaluate = (or: Or, context: EvaluationContext): boolean => {
       const argStates = or.argIds.map(argId => Expr.evaluate(argId, context));
-      return argStates.some(argState => argState === undefined ? false : argState);
+      return argStates.some(argState => (argState === undefined ? false : argState));
     };
   }
 
@@ -60,7 +60,7 @@ namespace Expr {
   export namespace Xor {
     export const evaluate = (xor: Xor, context: EvaluationContext): boolean => {
       const argStates = xor.argIds.map(argId => Expr.evaluate(argId, context));
-      return argStates.filter(argState => argState === undefined ? false : argState).length === 1;
+      return argStates.filter(argState => (argState === undefined ? false : argState)).length === 1;
     };
   }
 

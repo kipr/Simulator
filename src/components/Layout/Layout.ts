@@ -6,7 +6,6 @@ import { StyleProps } from "../../style";
 import { StyledText } from "../../util";
 import { Editor } from "../Editor";
 import { ThemeProps } from "../theme";
-import SceneScript from '../../state/State/Scene/Script';
 import Challenge, { AsyncChallenge } from '../../state/State/Challenge';
 import ChallengeCompletion, { AsyncChallengeCompletion } from '../../state/State/ChallengeCompletion';
 import { AsyncScene } from '../../state/State/Scene';

@@ -121,8 +121,11 @@ namespace Patch {
   };
 
   export const applyInner = <T>(patch: InnerChange<T>, value: T): T => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const ret: any = {};
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     for (const key in patch.inner) ret[key] = apply(patch.inner[key], value[key]);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return ret;
   };
 

@@ -5,11 +5,9 @@ import { Vector2 } from '../math';
 import { StyleProps } from '../style';
 import Svg, { DrawFunction } from './Svg';
 
-
-
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface HTreeNode<P = any> {
-  component: React.ComponentType<P>
+  component: React.ComponentType<P>;
   props: P;
 }
 
@@ -75,7 +73,7 @@ const drawCurly = (decorationColor?: string) => (size: Vector2) => {
         strokeWidth="1"
       />
     </>
-  )
+  );
 };
   
 const HTree: React.FC<Props> = ({
@@ -96,7 +94,9 @@ const HTree: React.FC<Props> = ({
       </Decoration>
       <OperandList>
         {childrenOrdering.map(id => {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const { component: Child, props: childProps } = children[id];
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           return <Child key={id} {...childProps} />;
         })}
       </OperandList>

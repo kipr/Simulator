@@ -359,7 +359,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       icon: faGlobeAmericas,
     }];
 
-    if (!!challengeState) {
+    if (challengeState) {
       tabs.push({
         name: 'Challenge',
         icon: faFlagCheckered,

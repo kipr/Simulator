@@ -352,6 +352,7 @@ class Root extends React.Component<Props, State> {
   };
 
   private onSelectNodeId_ = (nodeId: string) => {
+    // disabled
   };
 
   constructor(props: Props) {
@@ -392,13 +393,11 @@ class Root extends React.Component<Props, State> {
       challengeCompletion,
     } = this.props;
 
-    console.log('onResetScene', challenge, challengeCompletion)
-
     if (!challengeCompletion) return;
     this.onStopClick_();
     this.workingChallengeScene = Async.latestValue(scene);
     this.syncChallengeCompletion_();
-  }
+  };
 
   private onSetEventValue_ = (eventId: string, value: boolean) => {
     const { challenge, challengeCompletion } = this.props;
@@ -498,7 +497,7 @@ class Root extends React.Component<Props, State> {
 
   private syncChallengeCompletion_ = () => {
     const sceneDiff = createObjectPatch(this.workingChallengeScene_, Async.latestValue(this.props.scene));
-    this.props.onChallengeCompletionSceneDiffChange(sceneDiff as OuterObjectPatch<Scene>);
+    this.props.onChallengeCompletionSceneDiffChange(sceneDiff);
 
     this.scheduleSaveChallengeCompletion_();
   };
