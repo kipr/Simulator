@@ -27,6 +27,8 @@ class ScriptManager {
   onCameraChange?: (camera: Camera) => void;
   onSelectedNodeIdChange?: (id: string) => void;
 
+  onChallengeSetEventValue?: (eventId: string, value: boolean) => void;
+
 
   private scriptExecutions_: Dict<ScriptManager.ScriptExecution> = {};
 
@@ -466,6 +468,11 @@ namespace ScriptManager {
     postTestResult(data: unknown) {
       if (!this.manager_.onPostTestResult) return;
       this.manager_.onPostTestResult(data);
+    }
+
+    setChallengeEventValue(eventId: string, value: boolean) {
+      if (!this.manager_.onChallengeSetEventValue) return;
+      this.manager_.onChallengeSetEventValue(eventId, value);
     }
   }
 }

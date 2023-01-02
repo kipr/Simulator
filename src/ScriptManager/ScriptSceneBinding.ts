@@ -42,4 +42,6 @@ export interface ScriptSceneBinding {
 
   // Used only for unit tests
   postTestResult: (data: unknown) => void;
+
+  setChallengeEventValue: (eventId: string, value: boolean) => void;
 }

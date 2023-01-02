@@ -65,6 +65,8 @@ export class Space {
   onCameraChange?: (camera: Camera) => void;
   onGravityChange?: (gravity: UnitVector3) => void;
 
+  onChallengeSetEventValue?: (eventId: string, value: boolean) => void;
+
 
   private debounceUpdate_ = false;
   private sceneSetting_ = false;
@@ -227,6 +229,7 @@ export class Space {
     scriptManager.onCameraChange = camera => this.onCameraChange?.(camera);
     scriptManager.onGravityChange = gravity => this.onGravityChange?.(gravity);
     scriptManager.onSelectedNodeIdChange = id => this.onSelectNodeId?.(id);
+    scriptManager.onChallengeSetEventValue = (id, value) => this.onChallengeSetEventValue?.(id, value);
     
     await this.sceneBinding_.setScene(this.scene_, Robots.loaded(state.robots));
     this.bScene_.getPhysicsEngine().setSubTimeStep(5);

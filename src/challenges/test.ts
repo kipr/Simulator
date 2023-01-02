@@ -15,6 +15,7 @@ export default {
     'cpp': `#include <kipr/botball.h>`,
     'python': `from kipr import botball`,
   },
+  defaultLanguage: 'c',
   events: {
     a: {
       name: { [LocalizedString.EN_US]: 'A' },
@@ -43,5 +44,5 @@ export default {
     },
     rootId: 'b',
   },
-  sceneId: 'jbcSandboxA',
+  sceneId: 'scriptPlayground',
 } as Challenge;

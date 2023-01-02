@@ -20,9 +20,7 @@ const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
   console.log('Intersection!', type, otherNodeId);
   const visible = type === 'start';
-  setNodeVisible('can10', visible);
-  setNodeVisible('can11', visible);
-  setNodeVisible('can12', visible);
+  scene.setChallengeEventValue('a', visible);
 }, 'volume');
 `;
 

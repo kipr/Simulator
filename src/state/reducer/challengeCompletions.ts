@@ -10,6 +10,7 @@ import PredicateCompletion from '../State/ChallengeCompletion/PredicateCompletio
 import Scene from '../State/Scene';
 import Dict from '../../Dict';
 import { ObjectPatch, OuterObjectPatch } from 'symmetry/dist';
+import ProgrammingLanguage from '../../ProgrammingLanguage';
 
 
 export namespace ChallengeCompletionsAction {
@@ -91,6 +92,16 @@ export namespace ChallengeCompletionsAction {
 
   export const setEventStates = construct<SetEventStates>('challenge-completions/set-event-states');
 
+  export interface SetEventStatesAndPredicateCompletions {
+    type: 'challenge-completions/set-event-states-and-predicate-completions';
+    challengeId: string;
+    eventStates: Dict<boolean>;
+    success?: PredicateCompletion;
+    failure?: PredicateCompletion;
+  }
+
+  export const setEventStatesAndPredicateCompletions = construct<SetEventStatesAndPredicateCompletions>('challenge-completions/set-event-states-and-predicate-completions');
+
   export interface SetSceneDiff {
     type: 'challenge-completions/set-scene-diff';
     challengeId: string;
@@ -105,6 +116,23 @@ export namespace ChallengeCompletionsAction {
   }
 
   export const resetChallengeCompletion = construct<ResetChallengeCompletion>('challenge-completions/reset-challenge-completion');
+
+  export interface SetCode {
+    type: 'challenge-completions/set-code';
+    challengeId: string;
+    language: ProgrammingLanguage;
+    code: string;
+  }
+
+  export const setCode = construct<SetCode>('challenge-completions/set-code');
+
+  export interface SetCurrentLanguage {
+    type: 'challenge-completions/set-current-language';
+    challengeId: string;
+    language: ProgrammingLanguage;
+  }
+
+  export const setCurrentLanguage = construct<SetCurrentLanguage>('challenge-completions/set-current-language');
 }
 
 export type ChallengeCompletionsAction = (
@@ -118,8 +146,11 @@ export type ChallengeCompletionsAction = (
   ChallengeCompletionsAction.RemoveEventState |
   ChallengeCompletionsAction.SetEventState |
   ChallengeCompletionsAction.SetEventStates |
+  ChallengeCompletionsAction.SetEventStatesAndPredicateCompletions |
   ChallengeCompletionsAction.SetSceneDiff |
-  ChallengeCompletionsAction.ResetChallengeCompletion
+  ChallengeCompletionsAction.ResetChallengeCompletion |
+  ChallengeCompletionsAction.SetCode |
+  ChallengeCompletionsAction.SetCurrentLanguage
 );
 
 const DEFAULT_CHALLENGE_COMPLETIONS: ChallengeCompletions = {
@@ -257,6 +288,14 @@ export const reduceChallengeCompletions = (state: ChallengeCompletions = DEFAULT
     case 'challenge-completions/set-event-state': return mutate(state, action.challengeId, challenge => {
       challenge.eventStates[action.eventId] = action.eventState;
     });
+    case 'challenge-completions/set-event-states': return mutate(state, action.challengeId, challenge => {
+      challenge.eventStates = action.eventStates;
+    });
+    case 'challenge-completions/set-event-states-and-predicate-completions': return mutate(state, action.challengeId, challenge => {
+      challenge.eventStates = action.eventStates;
+      challenge.success = action.success;
+      challenge.failure = action.failure;
+    });
     case 'challenge-completions/set-scene-diff': return mutate(state, action.challengeId, challenge => {
       challenge.sceneDiff = action.sceneDiff;
     });
@@ -265,6 +304,12 @@ export const reduceChallengeCompletions = (state: ChallengeCompletions = DEFAULT
       challenge.success = undefined;
       challenge.failure = undefined;
       challenge.sceneDiff = { t: "o" };
+    });
+    case 'challenge-completions/set-code': return mutate(state, action.challengeId, challenge => {
+      challenge.code[action.language] = action.code;
+    });
+    case 'challenge-completions/set-current-language': return mutate(state, action.challengeId, challenge => {
+      challenge.currentLanguage = action.language;
     });
     default: return state;
   }

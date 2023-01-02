@@ -69,6 +69,7 @@ import PredicateCompletion from '../state/State/ChallengeCompletion/PredicateCom
 import LoadingOverlay from './Challenge/LoadingOverlay';
 import DbError from '../db/Error';
 import { applyObjectPatch, applyPatch, createObjectPatch, createPatch, ObjectPatch, OuterObjectPatch } from 'symmetry';
+import ChallengeMenu from './ChallengeMenu';
 
 namespace Modal {
   export enum Type {
@@ -171,8 +172,7 @@ export type Modal = (
 );
 
 interface RootParams {
-  sceneId?: string;
-  challengeId?: string;
+  challengeId: string;
 }
 
 export interface RootPublicProps extends RouteComponentProps<RootParams> {
@@ -184,43 +184,23 @@ interface RootPrivateProps {
   challenge?: AsyncChallenge;
   challengeCompletion?: AsyncChallengeCompletion;
 
-  onNodeAdd: (id: string, node: Node) => void;
-  onNodeRemove: (id: string) => void;
-  onNodeChange: (id: string, node: Node) => void;
-  onObjectAdd: (id: string, obj: Node.Obj, geometry: Geometry) => void;
-  onNodesChange: (nodes: Dict<Node>) => void;
-  onGeometryAdd: (id: string, geometry: Geometry) => void;
-  onGeometryChange: (id: string, geometry: Geometry) => void;
-  onGeometryRemove: (id: string) => void;
-  onCameraChange: (camera: Camera) => void;
-  onGravityChange: (gravity: Vector3) => void;
-  onSelectNodeId: (id: string) => void;
-  onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => void;
-  onResetScene: () => void;
-
-  onCreateScene: (id: string, scene: Scene) => void;
-  onSaveScene: (id: string) => void;
-  onDeleteRecord: (selector: Selector) => void;
-  onSetScenePartial: (partialScene: Partial<Scene>) => void;
-
-  unfailScene: (id: string) => void;
+  onChallengeCompletionCreate: (challengeCompletion: ChallengeCompletion) => void;
+  onChallengeCompletionSceneDiffChange: (sceneDiff: OuterObjectPatch<Scene>) => void;
+  onChallengeCompletionEventStateRemove: (eventId: string) => void;
+  onChallengeCompletionEventStateChange: (eventId: string, eventState: boolean) => void;
+  onChallengeCompletionEventStatesAndPredicateCompletionsChange: (eventState: Dict<boolean>, success: PredicateCompletion, failure: PredicateCompletion) => void;
+  onChallengeCompletionSuccessPredicateCompletionChange: (success?: PredicateCompletion) => void;
+  onChallengeCompletionFailurePredicateCompletionChange: (failure?: PredicateCompletion) => void;
+  onChallengeCompletionReset: () => void;
+  onChallengeCompletionSetCode: (language: ProgrammingLanguage, code: string) => void;
+  onChallengeCompletionSetCurrentLanguage: (language: ProgrammingLanguage) => void;
+  onChallengeCompletionSave: () => void;
 
   goToLogin: () => void;
-
-  selectedScriptId?: string;
-  selectedScript?: Script;
-
-  onScriptChange: (scriptId: string, script: Script) => void;
-  onScriptRemove: (scriptId: string) => void;
 }
 
 interface RootState {
   layout: Layout;
-
-  activeLanguage: ProgrammingLanguage;
-
-  // A map of language to code.
-  code: Dict<string>;
 
   simulatorState: SimulatorState;
 
@@ -236,6 +216,10 @@ interface RootState {
   feedback: Feedback;
 
   windowInnerHeight: number;
+
+  challengeStarted?: boolean;
+
+  nonce: number;
 }
 
 type Props = RootPublicProps & RootPrivateProps;
@@ -267,17 +251,114 @@ class Root extends React.Component<Props, State> {
   private editorRef: React.MutableRefObject<Editor>;
   private overlayLayoutRef:  React.MutableRefObject<OverlayLayout>;
 
+  private workingChallengeScene_: Scene;
+
+  private incrementNonce_ = () => {
+    this.setState({
+      nonce: (this.state.nonce + 1) % 100000
+    });
+  };
+
+  private latestScene_ = (): Scene => {
+    const { scene, challengeCompletion } = this.props;
+  
+    const latestChallengeCompletion = Async.latestValue(challengeCompletion);
+    if (!latestChallengeCompletion) return Async.latestValue(scene);
+    
+    if (this.workingChallengeScene_) return this.workingChallengeScene_;
+
+    const latestScene = Async.latestValue(scene);
+    if (!latestScene) return undefined;
+
+    const { sceneDiff } = latestChallengeCompletion;
+
+    if (sceneDiff === 'none' || sceneDiff === 'reset') return latestScene;
+
+    this.workingChallengeScene_ = applyObjectPatch(latestScene, latestChallengeCompletion.sceneDiff as ObjectPatch<Scene>);
+    
+    this.incrementNonce_();
+
+    return this.workingChallengeScene_;
+  };
+
+  private set workingChallengeScene(scene: Scene) {
+    if (scene === this.workingChallengeScene_) return;
+    this.workingChallengeScene_ = scene;
+    Space.getInstance().scene = scene;
+    this.incrementNonce_();
+  }
+
+  private onNodeChange_ = (nodeId: string, node: Node) => {
+    const latestScene = this.latestScene_();
+    if (!latestScene) return;
+    this.workingChallengeScene = Scene.setNode(latestScene, nodeId, node);
+  };
+
+  private onNodeAdd_ = this.onNodeChange_;
+
+  private onNodeRemove_ = (nodeId: string) => {
+    const latestScene = this.latestScene_();
+    if (!latestScene) return;
+    this.workingChallengeScene = Scene.removeNode(latestScene, nodeId);
+  };
+
+  private onGeometryChange_ = (geometryId: string, geometry: Geometry) => {
+    const latestScene = this.latestScene_();
+    if (!latestScene) return;
+    this.workingChallengeScene = Scene.setGeometry(latestScene, geometryId, geometry);
+  };
+
+  private onGeometryAdd_ = this.onGeometryChange_;
+
+  private onGeometryRemove_ = (geometryId: string) => {
+    const latestScene = this.latestScene_();
+    if (!latestScene) return;
+    this.workingChallengeScene = Scene.removeGeometry(latestScene, geometryId);
+  };
+
+
+  private onScriptChange_ = (scriptId: string, script: Script) => {
+    const latestScene = this.latestScene_();
+    if (!latestScene) return;
+    this.workingChallengeScene = Scene.setScript(latestScene, scriptId, script);
+  };
+
+  private onScriptAdd_ = this.onScriptChange_;
+
+  private onScriptRemove_ = (scriptId: string) => {
+    const latestScene = this.latestScene_();
+    if (!latestScene) return;
+    this.workingChallengeScene = Scene.removeScript(latestScene, scriptId);
+  };
+
+  private onObjectAdd_ = (nodeId: string, obj: Node.Obj, geometry: Geometry) => {
+    const latestScene = this.latestScene_();
+    if (!latestScene) return;
+    this.workingChallengeScene = Scene.addObject(latestScene, nodeId, obj, geometry);
+  };
+
+  private onCameraChange_ = (camera: Camera) => {
+    const latestScene = this.latestScene_();
+    if (!latestScene) return;
+
+    this.workingChallengeScene = Scene.setCamera(latestScene, camera);
+  };
+
+  private onGravityChange_ = (gravity: Vector3) => {
+    const latestScene = this.latestScene_();
+    if (!latestScene) return;
+
+    this.workingChallengeScene = Scene.setGravity(latestScene, gravity);
+  };
+
+  private onSelectNodeId_ = (nodeId: string) => {
+  };
+
   constructor(props: Props) {
     super(props);
 
     this.state = {
       layout: Layout.Side,
-      activeLanguage: 'c',
-      code: {
-        'c': window.localStorage.getItem('code-c') || ProgrammingLanguage.DEFAULT_CODE['c'],
-        'cpp': window.localStorage.getItem('code-cpp') || ProgrammingLanguage.DEFAULT_CODE['cpp'],
-        'python': window.localStorage.getItem('code-python') || ProgrammingLanguage.DEFAULT_CODE['python'],
-      },
       modal: Modal.NONE,
       simulatorState: SimulatorState.STOPPED,
       console: StyledText.text({ text: 'Welcome to the KIPR Simulator!\n', style: STDOUT_STYLE(DARK) }),
@@ -286,6 +367,7 @@ class Root extends React.Component<Props, State> {
       settings: DEFAULT_SETTINGS,
       feedback: DEFAULT_FEEDBACK,
       windowInnerHeight: window.innerHeight,
+      nonce: 0
     };
 
     this.editorRef = React.createRef();
@@ -294,19 +376,69 @@ class Root extends React.Component<Props, State> {
     Space.getInstance().scene = Async.latestValue(props.scene) || Scene.EMPTY;
   }
 
+  private onSetNodeBatch_ = (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => {
+    const latestScene = this.latestScene_();
+    if (!latestScene) return;
+
+    let nextScene = latestScene;
+    for (const { id, node } of setNodeBatch.nodeIds) nextScene = Scene.setNode(nextScene, id, node);
+    this.workingChallengeScene = nextScene;
+  };
+
+  private onResetScene_ = () => {
+    const {
+      scene,
+      challenge,
+      challengeCompletion,
+    } = this.props;
+
+    console.log('onResetScene', challenge, challengeCompletion)
+
+    if (!challengeCompletion) return;
+    this.onStopClick_();
+    this.workingChallengeScene = Async.latestValue(scene);
+    this.syncChallengeCompletion_();
+  }
+
+  private onSetEventValue_ = (eventId: string, value: boolean) => {
+    const { challenge, challengeCompletion } = this.props;
+    
+    const latestChallenge = Async.latestValue(challenge);
+    if (!latestChallenge) return;
+
+    const latestChallengeCompletion = Async.latestValue(challengeCompletion);
+    if (!latestChallengeCompletion) return;
+
+    const { success, failure } = latestChallenge;
+
+    const nextEventStates = {
+      ...latestChallengeCompletion.eventStates,
+      [eventId]: value,
+    };
+
+    this.props.onChallengeCompletionEventStatesAndPredicateCompletionsChange(
+      nextEventStates,
+      success ? PredicateCompletion.update(success, nextEventStates) : undefined,
+      failure ? PredicateCompletion.update(failure, nextEventStates) : undefined
+    );
+
+    this.scheduleSaveChallengeCompletion_();
+  };
+
   componentDidMount() {
     WorkerInstance.onStopped = this.onStopped_;
 
     const space = Space.getInstance();
-    space.onSetNodeBatch = this.props.onSetNodeBatch;
-    space.onSelectNodeId = this.props.onSelectNodeId;
-    space.onNodeAdd = this.props.onNodeAdd;
-    space.onNodeRemove = this.props.onNodeRemove;
-    space.onNodeChange = this.props.onNodeChange;
-    space.onGeometryAdd = this.props.onGeometryAdd;
-    space.onGeometryRemove = this.props.onGeometryRemove;
-    space.onGravityChange = this.props.onGravityChange;
-    space.onCameraChange = this.props.onCameraChange;
+    space.onSetNodeBatch = this.onSetNodeBatch_;
+    space.onSelectNodeId = this.onSelectNodeId_;
+    space.onNodeAdd = this.onNodeAdd_;
+    space.onNodeRemove = this.onNodeRemove_;
+    space.onNodeChange = this.onNodeChange_;
+    space.onGeometryAdd = this.onGeometryAdd_;
+    space.onGeometryRemove = this.onGeometryRemove_;
+    space.onGravityChange = this.onGravityChange_;
+    space.onCameraChange = this.onCameraChange_;
+    space.onChallengeSetEventValue = this.onSetEventValue_;
 
     this.scheduleUpdateConsole_();
     window.addEventListener('resize', this.onWindowResize_);
@@ -320,46 +452,95 @@ class Root extends React.Component<Props, State> {
     Space.getInstance().onSetNodeBatch = undefined;
   }
 
-  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>): void {    
-    if (this.props.scene !== prevProps.scene) {
-      Space.getInstance().scene = Async.latestValue(this.props.scene) || Scene.EMPTY;
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>): void {
+    const { match: { params: { challengeId } }, challenge, challengeCompletion } = this.props;
+    
+    if (challengeId && challenge && challengeCompletion && challengeCompletion.type === Async.Type.LoadFailed) {
+      const latestChallenge = Async.latestValue(challenge);
+      if (challengeCompletion.error.code === DbError.CODE_NOT_FOUND && latestChallenge) {
+        console.log('Challenge completion not found');
+        this.props.onChallengeCompletionCreate({
+          ...ChallengeCompletion.EMPTY,
+          code: latestChallenge.code,
+          currentLanguage: latestChallenge.defaultLanguage,
+        });
+      }
     }
+    
+    if (this.props.scene !== prevProps.scene || this.props.challengeCompletion !== prevProps.challengeCompletion) {
+      const latestScene = Async.latestValue(this.props.scene);
+      const latestChallengeCompletion = Async.latestValue(this.props.challengeCompletion);
 
-    if (this.props.onNodeAdd !== prevProps.onNodeAdd) Space.getInstance().onNodeAdd = this.props.onNodeAdd;
-    if (this.props.onNodeRemove !== prevProps.onNodeRemove) Space.getInstance().onNodeRemove = this.props.onNodeRemove;
-    if (this.props.onNodeChange !== prevProps.onNodeChange) Space.getInstance().onNodeChange = this.props.onNodeChange;
-    if (this.props.onGeometryAdd !== prevProps.onGeometryAdd) Space.getInstance().onGeometryAdd = this.props.onGeometryAdd;
-    if (this.props.onGeometryRemove !== prevProps.onGeometryRemove) Space.getInstance().onGeometryRemove = this.props.onGeometryRemove;
-    if (this.props.onGravityChange !== prevProps.onGravityChange) Space.getInstance().onGravityChange = this.props.onGravityChange;
-    if (this.props.onCameraChange !== prevProps.onCameraChange) Space.getInstance().onCameraChange = this.props.onCameraChange;
+      if (latestScene && latestChallengeCompletion) {
+        this.workingChallengeScene_ = applyObjectPatch(
+          latestScene,
+          latestChallengeCompletion.sceneDiff as ObjectPatch<Scene>
+        );
+      }
+    }
   }
+
 
   private onWindowResize_ = () => {
     this.setState({ windowInnerHeight: window.innerHeight });
   };
 
+  private saveChallengeCompletionTimeout_?: number;
+  private saveChallengeCompletion_ = () => {
+    this.props.onChallengeCompletionSave();
+  };
+
+  private scheduleSaveChallengeCompletion_ = () => {
+    if (this.saveChallengeCompletionTimeout_) clearTimeout(this.saveChallengeCompletionTimeout_);
+    this.saveChallengeCompletionTimeout_ = window.setTimeout(this.saveChallengeCompletion_, 5000);
+  };
+
+
+  private syncChallengeCompletion_ = () => {
+    const sceneDiff = createObjectPatch(this.workingChallengeScene_, Async.latestValue(this.props.scene));
+    this.props.onChallengeCompletionSceneDiffChange(sceneDiff as OuterObjectPatch<Scene>);
+
+    this.scheduleSaveChallengeCompletion_();
+  };
+
   private onStopped_ = () => {
     this.setState({
       simulatorState: SimulatorState.STOPPED
+    }, () => {
+      this.syncChallengeCompletion_();
     });
   };
 
   private onActiveLanguageChange_ = (language: ProgrammingLanguage) => {
-    this.setState({
-      activeLanguage: language
-    });
+    this.props.onChallengeCompletionSetCurrentLanguage(language);
+
+    this.scheduleSaveChallengeCompletion_();
   };
 
+  private get currentLanguage(): ProgrammingLanguage {
+    const { challenge, challengeCompletion } = this.props;
+
+    const latestChallengeCompletion = Async.latestValue(challengeCompletion);
+    const latestChallenge = Async.latestValue(challenge);
+
+    return latestChallengeCompletion
+      ? latestChallengeCompletion.currentLanguage
+      : latestChallenge.defaultLanguage;
+  }
+
+  private get code(): { [language in ProgrammingLanguage]: string } {
+    const { challenge, challengeCompletion } = this.props;
+    const latestChallengeCompletion = Async.latestValue(challengeCompletion);
+    const latestChallenge = Async.latestValue(challenge);
+
+    return latestChallengeCompletion
+      ? latestChallengeCompletion.code
+      : latestChallenge.code;
+  }
+
   private onCodeChange_ = (code: string) => {
-    const { activeLanguage } = this.state;
-    this.setState({
-      code: {
-        ...this.state.code,
-        [activeLanguage]: code,
-      }
-    }, () => {
-      window.localStorage.setItem(`code-${activeLanguage}`, code);
-    });
+    this.props.onChallengeCompletionSetCode(this.currentLanguage, code);
+    this.scheduleSaveChallengeCompletion_();
   };
 
   private onShowAll_ = () => {
@@ -404,11 +585,12 @@ class Root extends React.Component<Props, State> {
 
   private onRunClick_ = () => {
     const { state } = this;
-    const { activeLanguage, code, console, theme } = state;
+    const { console, theme } = state;
 
-    const activeCode = code[activeLanguage];
+    const language = this.currentLanguage;
+    const activeCode = this.code[language];
 
-    switch (activeLanguage) {
+    switch (this.currentLanguage) {
       case 'c':
       case 'cpp': {
         let nextConsole: StyledText = StyledText.extend(console, StyledText.text({
@@ -420,7 +602,7 @@ class Root extends React.Component<Props, State> {
           simulatorState: SimulatorState.COMPILING,
           console: nextConsole
         }, () => {
-          compile(activeCode, activeLanguage)
+          compile(activeCode, language)
             .then(compileResult => {
               nextConsole = this.state.console;
               const messages = sort(parseMessages(compileResult.stderr));
@@ -444,7 +626,7 @@ class Root extends React.Component<Props, State> {
                 }));
     
                 WorkerInstance.start({
-                  language: activeLanguage,
+                  language: language,
                   code: compileResult.result
                 });
               } else {
@@ -506,19 +688,20 @@ class Root extends React.Component<Props, State> {
   };
 
   private onDownloadClick_ = () => {
-    const { activeLanguage } = this.state;
+    const language = this.currentLanguage;
+    const code = this.code[language];
 
     const element = document.createElement('a');
-    element.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(this.state.code[activeLanguage])}`);
-    element.setAttribute('download', `program.${ProgrammingLanguage.FILE_EXTENSION[activeLanguage]}`);
+    element.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(code)}`);
+    element.setAttribute('download', `program.${ProgrammingLanguage.fileExtension(language)}`);
     element.style.display = 'none';
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
   };
 
-  private onResetWorldClick_ = () => {
-    this.props.onResetScene();
+  private onResetChallengeClick_ = () => {
+    this.onResetScene_();
   };
 
   private onClearConsole_ = () => {
@@ -529,16 +712,6 @@ class Root extends React.Component<Props, State> {
 
   private onIndentCode_ = () => {
     if (this.editorRef.current) this.editorRef.current.ivygate.formatCode();
-  };
-
-  private onResetCode_ = () => {
-    const { activeLanguage } = this.state;
-    this.setState({
-      code: {
-        ...this.state.code,
-        [activeLanguage]: ProgrammingLanguage.DEFAULT_CODE[activeLanguage]
-      }
-    });
   };
   
   onDocumentationClick = () => {
@@ -577,31 +750,9 @@ class Root extends React.Component<Props, State> {
     this.setState({ feedback: { ...this.state.feedback, ...changedFeedback } });
   };
 
-  private onFeedbackSubmit_ = () => {
-    sendFeedback(this.state)
-      .then((resp: FeedbackResponse) => {
-        this.onFeedbackChange_(({ message: resp.message }));
-        this.onFeedbackChange_(({ error: resp.networkError }));
-
-        this.onFeedbackChange_(DEFAULT_FEEDBACK);
-
-        this.onModalClick_(Modal.FEEDBACKSUCCESS)();
-      })
-      .catch((resp: FeedbackResponse) => {
-        this.onFeedbackChange_(({ message: resp.message }));
-        this.onFeedbackChange_(({ error: resp.networkError }));
-      });
-  };
-
   private onOpenSceneClick_ = () => {
     this.setState({
       modal: Modal.SELECT_SCENE
-    });
-  };
-
-  private onSettingsSceneClick_ = () => {
-    this.setState({
-      modal: Modal.SETTINGS_SCENE
     });
   };
 
@@ -611,58 +762,46 @@ class Root extends React.Component<Props, State> {
     });
   }
 
-  private onNewSceneAccept_ = (scene: Scene) => {
+  private onChallengeStartClick_ = () => {
     this.setState({
-      modal: Modal.NONE,
-    }, () => {
-      const nextScene = { ...scene };
-      if (!auth.currentUser) return;
-      nextScene.author = Author.user(auth.currentUser.uid);
-      this.props.onCreateScene(uuid.v4(), nextScene);
+      challengeStarted: true
     });
-  };
-
-  private onDeleteRecordAccept_ = (selector: Selector) => () => {
-    this.props.onDeleteRecord(selector);
-  };
-
-  private onSettingsSceneAccept_ = (scene: Scene) => {
-    this.setState({
-      modal: Modal.NONE,
-    }, () => {
-      this.props.onSetScenePartial({
-        name: scene.name,
-        description: scene.description,
-      });
-    });
-  };
-
-  private onSceneErrorResolved_ = () => {
-    this.props.unfailScene(this.props.match.params.sceneId);
-  };
-
-  private onSaveSceneClick_ = () => {
-    this.props.onSaveScene(this.props.match.params.sceneId);
   };
 
   render() {
     const { props, state } = this;
     
     const {
-      match: { params: { sceneId, challengeId } },
+      match: { params: { challengeId } },
       scene,
       challenge,
       challengeCompletion
     } = props;
 
-    if (!scene || scene.type === Async.Type.Unloaded) {
+    const {
+      challengeStarted
+    } = state;
+
+    const latestChallengeCompletion = Async.latestValue(challengeCompletion);
+    if (challengeId && !challengeStarted) {
+      return (
+        <LoadingOverlay
+          onStartClick={this.onChallengeStartClick_}
+          challenge={challenge}
+          loading={!latestChallengeCompletion}
+        />
+      );
+    }
+
+    const language = this.currentLanguage;
+    const code = language ? this.code[language] : undefined;
+
+    if (!scene || scene.type === Async.Type.Unloaded || !language || !code) {
       return <Loading />;
     }
 
     const {
       layout,
-      activeLanguage,
-      code,
       modal,
       simulatorState,
       console,
@@ -674,13 +813,19 @@ class Root extends React.Component<Props, State> {
 
     const theme = DARK;
 
+    
+
     const editorTarget: LayoutEditorTarget = {
       type: LayoutEditorTarget.Type.Robot,
-      code: code[activeLanguage],
-      language: activeLanguage,
+      code,
+      language,
       onCodeChange: this.onCodeChange_,
       onLanguageChange: this.onActiveLanguageChange_,
     };
+
+    const workingScene: AsyncScene = this.workingChallengeScene_
+      ? Async.loaded({ value: this.workingChallengeScene_ })
+      : scene;
 
     const commonLayoutProps: LayoutProps = {
       theme,
@@ -691,20 +836,19 @@ class Root extends React.Component<Props, State> {
       onClearConsole: this.onClearConsole_,
       onIndentCode: this.onIndentCode_,
       onDownloadCode: this.onDownloadClick_,
-      onResetCode: this.onResetCode_,
       editorRef: this.editorRef,
-      sceneId,
-      scene,
-      onNodeAdd: this.props.onNodeAdd,
-      onNodeChange: this.props.onNodeChange,
-      onNodeRemove: this.props.onNodeRemove,
-      onGeometryAdd: this.props.onGeometryAdd,
-      onGeometryChange: this.props.onGeometryChange,
-      onGeometryRemove: this.props.onGeometryRemove,
-      onScriptAdd: this.props.onScriptChange,
-      onScriptChange: this.props.onScriptChange,
-      onScriptRemove: this.props.onScriptRemove,
-      onObjectAdd: this.props.onObjectAdd,
+      sceneId: undefined,
+      scene: workingScene,
+      onNodeAdd: this.onNodeAdd_,
+      onNodeChange: this.onNodeChange_,
+      onNodeRemove: this.onNodeRemove_,
+      onGeometryAdd: this.onGeometryAdd_,
+      onGeometryChange: this.onGeometryChange_,
+      onGeometryRemove: this.onGeometryRemove_,
+      onScriptAdd: this.onScriptAdd_,
+      onScriptChange: this.onScriptChange_,
+      onScriptRemove: this.onScriptRemove_,
+      onObjectAdd: this.onObjectAdd_,
       challengeState: challenge ? {
         challenge,
         challengeCompletion: challengeCompletion || Async.unloaded({ brief: {} }),
@@ -730,13 +874,10 @@ class Root extends React.Component<Props, State> {
       }
     }
 
-    const latestScene = Async.latestValue(scene);
-    const isAuthor = latestScene && latestScene.author.id === auth.currentUser.uid;
-
     return (
       <>
         <Container $windowInnerHeight={windowInnerHeight}>
-          <SimMenu
+          <ChallengeMenu
             layout={layout}
             onLayoutChange={this.onLayoutChange_}
             theme={theme}
@@ -744,37 +885,16 @@ class Root extends React.Component<Props, State> {
             onHideAll={this.onHideAll_}
             onSettingsClick={this.onModalClick_(Modal.SETTINGS)}
             onAboutClick={this.onModalClick_(Modal.ABOUT)}
-            onResetWorldClick={this.onResetWorldClick_}
+            onResetChallengeClick={this.onResetChallengeClick_}
             onRunClick={this.onRunClick_}
             onStopClick={this.onStopClick_}
             onDocumentationClick={this.onDocumentationClick}
             onDashboardClick={this.onDashboardClick}
             onLogoutClick={this.onLogoutClick}
-            onFeedbackClick={this.onModalClick_(Modal.FEEDBACK)}
-            onOpenSceneClick={this.onOpenSceneClick_}
             simulatorState={simulatorState}
-            onNewSceneClick={!challenge && this.onModalClick_(Modal.NEW_SCENE)}
-            onSaveAsSceneClick={!challenge && this.onModalClick_(Modal.copyScene({ scene: Async.latestValue(scene) }))}
-            onSettingsSceneClick={isAuthor && !challenge && this.onSettingsSceneClick_}
-            onDeleteSceneClick={isAuthor && !challenge && this.onModalClick_(Modal.deleteRecord({
-              record: {
-                type: Record.Type.Scene,
-                id: sceneId,
-                value: scene,
-              }
-            }))}
-            onSaveSceneClick={scene && !challenge && scene.type === Async.Type.Saveable && isAuthor ? this.onSaveSceneClick_ : undefined}
-            
           />
           {impl}
         </Container>
-        {modal.type === Modal.Type.None && Async.isFailed(scene) && (
-          <SceneErrorDialog
-            error={scene.error}
-            theme={theme}
-            onClose={this.onSceneErrorResolved_}
-          />
-        )}
         {modal.type === Modal.Type.Settings && (
           <SettingsDialog
             theme={theme}
@@ -787,15 +907,6 @@ class Root extends React.Component<Props, State> {
           <AboutDialog
             theme={theme}
             onClose={this.onModalClose_}
-          />
-        )}
-        {modal.type === Modal.Type.Feedback && (
-          <FeedbackDialog
-            theme={theme}
-            feedback={feedback}
-            onFeedbackChange={this.onFeedbackChange_}
-            onClose={this.onModalClose_}
-            onSubmit={this.onFeedbackSubmit_}
           />
         )}
         {modal.type === Modal.Type.FeedbackSuccess && (
@@ -817,53 +928,17 @@ class Root extends React.Component<Props, State> {
             onClose={this.onModalClose_}
           />
         )}
-        {modal.type === Modal.Type.NewScene && (
-          <NewSceneDialog
-            theme={theme}
-            onClose={this.onModalClose_}
-            onAccept={this.onNewSceneAccept_}
-          />
-        )}
-        {modal.type === Modal.Type.CopyScene && (
-          <SaveAsSceneDialog
-            theme={theme}
-            scene={Async.latestValue(scene)}
-            onClose={this.onModalClose_}
-            onAccept={this.onNewSceneAccept_}
-          />
-        )}
-        {modal.type === Modal.Type.DeleteRecord && modal.record.type === Record.Type.Scene && (
-          <DeleteDialog
-            name={Record.latestName(modal.record)}
-            theme={theme}
-            onClose={this.onModalClose_}
-            onAccept={this.onDeleteRecordAccept_(Record.selector(modal.record))}
-          />
-        )}
-        {modal.type === Modal.Type.SettingsScene && (
-          <SceneSettingsDialog
-            scene={Async.latestValue(scene)}
-            theme={theme}
-            onClose={this.onModalClose_}
-            onAccept={this.onSettingsSceneAccept_}
-          />
-        )}
       </>
-
     );
   }
 }
 
-export default connect((state: ReduxState, { match: { params: { sceneId, challengeId } } }: RootPublicProps) => {
+export default connect((state: ReduxState, { match: { params: { challengeId } } }: RootPublicProps) => {
   const builder = new Builder(state);
 
-  if (challengeId) {
-    const challenge = builder.challenge(challengeId);
-    challenge.scene();
-    challenge.completion();
-  } else {
-    builder.scene(sceneId);
-  }
+  const challenge = builder.challenge(challengeId);
+  challenge.scene();
+  challenge.completion();
 
   builder.dispatchLoads();
 
@@ -872,65 +947,46 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
     challenge: Dict.unique(builder.challenges),
     challengeCompletion: Dict.unique(builder.challengeCompletions),
   };
-}, (dispatch, { match: { params: { sceneId } } }: RootPublicProps) => ({
-  onNodeAdd: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
-  onNodeRemove: (nodeId: string) => dispatch(ScenesAction.removeNode({ sceneId, nodeId })),
-  onNodeChange: (nodeId: string, node: Node) => {
-    dispatch(ScenesAction.setNode({ sceneId, nodeId, node }));
-  },
-  onObjectAdd: (nodeId: string, object: Node.Obj, geometry: Geometry) => dispatch(ScenesAction.addObject({ sceneId, nodeId, object, geometry })),
-  onGeometryAdd: (geometryId: string, geometry: Geometry) => dispatch(ScenesAction.addGeometry({ sceneId, geometryId, geometry })),
-  onGeometryChange: (geometryId: string, geometry: Geometry) => dispatch(ScenesAction.setGeometry({ sceneId, geometryId, geometry })),
-  onGeometryRemove: (geometryId: string) => dispatch(ScenesAction.removeGeometry({ sceneId, geometryId })),
-  onCameraChange: (camera: Camera) => dispatch(ScenesAction.setCamera({ sceneId, camera })),
-  onGravityChange: (gravity: Vector3) => dispatch(ScenesAction.setGravity({ sceneId, gravity })),
-  onSelectNodeId: (nodeId: string) => dispatch(ScenesAction.selectNode({ sceneId, nodeId })),
-  onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) =>
-    dispatch(ScenesAction.setNodeBatch({ sceneId, ...setNodeBatch })),
-  onResetScene: () => dispatch(ScenesAction.softResetScene({ sceneId })),
-  onCreateScene: (sceneId: string, scene: Scene) => {
-    dispatch(ScenesAction.createScene({ sceneId, scene }));
-    dispatch(push(`/scene/${sceneId}`));
-  },
-  onChallengeCompletionCreate: (challengeId: string, challengeCompletion: ChallengeCompletion) => {
+}, (dispatch, { match: { params: { challengeId } } }: RootPublicProps) => ({
+  onChallengeCompletionCreate: (challengeCompletion: ChallengeCompletion) => {
     dispatch(ChallengeCompletionsAction.createChallengeCompletion({ challengeId, challengeCompletion }));
   },
-  onChallengeCompletionSceneDiffChange: (challengeId: string, sceneDiff: OuterObjectPatch<Scene>) => {
+  onChallengeCompletionSceneDiffChange: (sceneDiff: OuterObjectPatch<Scene>) => {
     dispatch(ChallengeCompletionsAction.setSceneDiff({ challengeId, sceneDiff }));
   },
-  onChallengeCompletionEventStateRemove: (challengeId: string, eventId: string) => {
+  onChallengeCompletionEventStateRemove: (eventId: string) => {
     dispatch(ChallengeCompletionsAction.removeEventState({ challengeId, eventId }));
   },
-  onChallengeCompletionEventStateChange: (challengeId: string, eventId: string, eventState: boolean) => {
+  onChallengeCompletionEventStateChange: (eventId: string, eventState: boolean) => {
     dispatch(ChallengeCompletionsAction.setEventState({ challengeId, eventId, eventState }));
   },
-  onChallengeCompletionEventStatesChange: (challengeId: string, eventStates: Dict<boolean>) => {
-    dispatch(ChallengeCompletionsAction.setEventStates({ challengeId, eventStates }));
+  onChallengeCompletionEventStatesAndPredicateCompletionsChange: (eventStates: Dict<boolean>, success: PredicateCompletion, failure: PredicateCompletion) => {
+    dispatch(ChallengeCompletionsAction.setEventStatesAndPredicateCompletions({ challengeId, eventStates, success, failure }));
   },
-  onChallengeCompletionSuccessPredicateCompletionChange: (challengeId: string, success?: PredicateCompletion) => {
+  onChallengeCompletionSuccessPredicateCompletionChange: (success?: PredicateCompletion) => {
     dispatch(ChallengeCompletionsAction.setSuccessPredicateCompletion({ challengeId, success }));
   },
-  onChallengeCompletionFailurePredicateCompletionChange: (challengeId: string, failure?: PredicateCompletion) => {
+  onChallengeCompletionFailurePredicateCompletionChange: (failure?: PredicateCompletion) => {
     dispatch(ChallengeCompletionsAction.setFailurePredicateCompletion({ challengeId, failure }));
   },
-  onChallengeCompletionReset: (challengeId: string) => {
+  onChallengeCompletionReset: () => {
     dispatch(ChallengeCompletionsAction.resetChallengeCompletion({ challengeId }));
+  },
+  onChallengeCompletionSetCode: (language: ProgrammingLanguage, code: string) => {
+    dispatch(ChallengeCompletionsAction.setCode({ challengeId, language, code }));
+  },
+  onChallengeCompletionSetCurrentLanguage: (language: ProgrammingLanguage) => {
+    dispatch(ChallengeCompletionsAction.setCurrentLanguage({ challengeId, language }));
+  },
+  onChallengeCompletionSave: () => {
+    dispatch(ChallengeCompletionsAction.saveChallengeCompletion({ challengeId }));
   },
   onDeleteRecord: (selector: Selector) => {
     dispatch(ScenesAction.removeScene({ sceneId: selector.id })),
     dispatch(push('/'));
   },
-  onSaveScene: (sceneId: string) => dispatch(ScenesAction.saveScene({ sceneId })),
-  onSetScenePartial: (partialScene: Partial<Scene>) => dispatch(ScenesAction.setScenePartial({ sceneId, partialScene })),
-  unfailScene: (sceneId: string) => dispatch(ScenesAction.unfailScene({ sceneId })),
   goToLogin: () => {
     window.location.href = `/login?from=${window.location.pathname}`;
-  },
-  onScriptChange: (scriptId: string, script: Script) => {
-    dispatch(ScenesAction.setScript({ sceneId, scriptId, script }));
-  },
-  onScriptRemove: (scriptId: string) => {
-    dispatch(ScenesAction.removeScript({ sceneId, scriptId }));
   },
 }))(Root) as React.ComponentType<RootPublicProps>;
 
