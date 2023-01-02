@@ -415,6 +415,8 @@ class Root extends React.Component<Props, State> {
       [eventId]: value,
     };
 
+    console.log(PredicateCompletion.update(success, nextEventStates));
+
     this.props.onChallengeCompletionEventStatesAndPredicateCompletionsChange(
       nextEventStates,
       success ? PredicateCompletion.update(success, nextEventStates) : undefined,

@@ -95,7 +95,13 @@ const NodeEditor: React.FC<{ node: Node } & StyleProps> = ({ node, style, classN
   switch (node.type) {
     case Node.Type.Terminal: {
       const { component: Component, props } = node.node;
-      return <Component {...props} />;
+      let style = props.style || {};
+      if (node.state === true) {
+        style = { ...style, color: STATE_TRUE_COLOR };
+      } else if (node.state === false) {
+        style = { ...style, color: STATE_FALSE_COLOR };
+      }
+      return <Component {...props} style={style} />;
     }
     case Node.Type.NonTerminal: {
       const children: Dict<HTreeNode> = Dict.map(node.children, child => ({

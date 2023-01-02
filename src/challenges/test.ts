@@ -28,12 +28,24 @@ export default {
   },
   success: {
     exprs: {
+      and: {
+        type: Expr.Type.And,
+        argIds: ['a', 'b'],
+      },
       a: {
         type: Expr.Type.Event,
         eventId: 'a',
+      },
+      b: {
+        type: Expr.Type.Or,
+        argIds: ['a', 'c'],
+      },
+      c: {
+        type: Expr.Type.Event,
+        eventId: 'b',
       }
     },
-    rootId: 'a',
+    rootId: 'and',
   },
   failure: {
     exprs: {
