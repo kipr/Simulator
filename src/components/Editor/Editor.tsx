@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../style';
-import { Theme, ThemeProps } from '../theme';
+import { LIGHT, Theme, ThemeProps } from '../theme';
 
 import { Fa } from '../Fa';
 import { Button } from '../Button';
@@ -26,14 +26,14 @@ export enum EditorActionState {
 export interface EditorProps extends StyleProps, ThemeProps {
   language: ProgrammingLanguage | Script.Language;
   code: string;
-
+  theme: Theme;
   onCodeChange: (code: string) => void;
   messages?: Message[];
   autocomplete: boolean;
 }
 
 interface EditorState {
-  
+  theme: Theme;
 }
 
 type Props = EditorProps;
@@ -161,8 +161,12 @@ export const IVYGATE_LANGUAGE_MAPPING: Dict<string> = {
 class Editor extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
+    this.state = {
+      theme: LIGHT
+    };
   }
 
+  
   private ivygate_: Ivygate;
   private bindIvygate_ = (ivygate: Ivygate) => {
     this.ivygate_ = ivygate;
@@ -189,6 +193,7 @@ class Editor extends React.PureComponent<Props, State> {
         <Ivygate
           ref={this.bindIvygate_}
           code={code}
+          theme = {theme}
           language={IVYGATE_LANGUAGE_MAPPING[language] || language}
           messages={messages}
           onCodeChange={onCodeChange}

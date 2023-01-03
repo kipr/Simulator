@@ -4,7 +4,7 @@ import { styled } from "styletron-react";
 import Field from "../Field";
 import Input from "../Input";
 import Section from "../Section";
-import { ThemeProps } from "../theme";
+import { LIGHT, Theme, ThemeProps } from "../theme";
 import ValueEdit from "../ValueEdit";
 import Script from "../../state/State/Scene/Script";
 import { Ivygate } from 'ivygate';
@@ -19,6 +19,7 @@ export interface ScriptSettingsProps extends ThemeProps {
 }
 
 interface ScriptSettingsState {
+  theme: Theme
 }
 
 type Props = ScriptSettingsProps;
@@ -53,6 +54,7 @@ class ScriptSettings extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      theme: LIGHT
     };
   }
 
@@ -73,7 +75,8 @@ class ScriptSettings extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { theme, script, id } = props;
+    const { script, id } = props;
+    const{theme} = state;
 
     return (
       <Container theme={theme}>
@@ -82,6 +85,7 @@ class ScriptSettings extends React.PureComponent<Props, State> {
         </StyledField>
         <Ivygate
           code={script.code}
+          theme = {theme}
           language={'javascript'}
           onCodeChange={this.onCodeChange_}
           autocomplete
