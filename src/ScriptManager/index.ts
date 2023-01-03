@@ -428,7 +428,7 @@ namespace ScriptManager {
       return handle;
     }
 
-    addOnCollisionListener(nodeId: string, cb: (otherNoedId: string, point: Vector3) => void, filterIds?: Ids): string {
+    addOnCollisionListener(nodeId: string, cb: (otherNodeId: string, point: Vector3) => void, filterIds?: Ids): string {
       const handle = uuid();
       const listener = Listener.collision({ nodeId, cb, filterIds: Ids.toSet(filterIds) });
       this.listeners_[handle] = listener;

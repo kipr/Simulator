@@ -12,6 +12,7 @@ import db from '../../db';
 import store from '..';
 import { errorToAsyncError, mutate } from './util';
 import test from '../../challenges/test';
+import jbc6c from "../../challenges/jbc6c";
 
 
 export namespace ChallengesAction {
@@ -120,6 +121,10 @@ const DEFAULT_CHALLENGES: Challenges = {
   'test': Async.loaded({
     value: test,
     brief: ChallengeBrief.fromChallenge(test),
+  }),
+  'jbc6c': Async.loaded({
+    value: jbc6c,
+    brief: ChallengeBrief.fromChallenge(jbc6c),
   })
 };
 

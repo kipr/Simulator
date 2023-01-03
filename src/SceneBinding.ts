@@ -271,6 +271,7 @@ class SceneBinding {
         }
 
         if (emissive) {
+          const glow = new Babylon.GlowLayer('glow', this.bScene_);
           switch (emissive.type) {
             case 'color3': {
               pbr.emissiveColor = Color.toBabylon(emissive.color);
