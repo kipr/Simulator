@@ -30,6 +30,12 @@ class ScriptManager {
 
   onChallengeSetEventValue?: (eventId: string, value: boolean) => void;
 
+  private programStatus_: 'running' | 'stopped' = 'stopped';
+  get programStatus() { return this.programStatus_; }
+  set programStatus(status: 'running' | 'stopped') {
+    this.programStatus_ = status;
+  }
+
 
   private scriptExecutions_: Dict<ScriptManager.ScriptExecution> = {};
 
@@ -252,9 +258,14 @@ namespace ScriptManager {
     constructor(script: Script, manager: ScriptManager) {
       this.script_ = script;
       this.manager_ = manager;
+
     
       // eslint-disable-next-line @typescript-eslint/no-implied-eval
       new Function("scene, Rotation, AxisAngle", `"use strict"; ${this.script_.code}`)(this, Rotation, AxisAngle);
+    }
+
+    get programStatus() {
+      return this.manager_.programStatus;
     }
 
     trigger(event: Event) {

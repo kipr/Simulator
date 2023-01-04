@@ -332,6 +332,9 @@ class Root extends React.Component<Props, State> {
     if (this.props.onGeometryRemove !== prevProps.onGeometryRemove) Space.getInstance().onGeometryRemove = this.props.onGeometryRemove;
     if (this.props.onGravityChange !== prevProps.onGravityChange) Space.getInstance().onGravityChange = this.props.onGravityChange;
     if (this.props.onCameraChange !== prevProps.onCameraChange) Space.getInstance().onCameraChange = this.props.onCameraChange;
+    if (this.state.simulatorState.type !== prevState.simulatorState.type) {
+      Space.getInstance().sceneBinding.scriptManager.programStatus = this.state.simulatorState.type === SimulatorState.Type.Running ? 'running' : 'stopped';
+    }
   }
 
   private onWindowResize_ = () => {

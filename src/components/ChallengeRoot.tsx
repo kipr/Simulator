@@ -493,6 +493,10 @@ class Root extends React.Component<Props, State> {
       }
     }
 
+    if (this.state.simulatorState.type !== prevState.simulatorState.type) {
+      Space.getInstance().sceneBinding.scriptManager.programStatus = this.state.simulatorState.type === SimulatorState.Type.Running ? 'running' : 'stopped';
+    }
+
     if (this.props.match.params.challengeId !== prevProps.match.params.challengeId) {
       this.initedChallengeCompletionScene_ = false;
     }

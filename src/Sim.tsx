@@ -74,6 +74,8 @@ export class Space {
   private nextScene_: Scene | undefined;
   private scene_ = Scene.EMPTY;
   get scene() { return this.scene_; }
+
+  get sceneBinding() { return this.sceneBinding_; }
   
   set scene(scene: Scene) {
     this.scene_ = scene;
