@@ -9,29 +9,22 @@ import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
 
 const baseScene = createBaseSceneSurfaceA();
 
-const intersect2 = `
-// When the the green garage can is intersecting circle 2, the circle glows.
-
+const circleIntersects = `
 const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
   ...scene.nodes[nodeId],
   visible
 });
+
+// When the the green garage can is intersecting circle 2, the circle glows.
 
 scene.addOnIntersectionListener('can1', (type, otherNodeId) => {
   console.log('Can 1 placed!', type, otherNodeId);
   const visible = type === 'start';
   setNodeVisible('circle2', visible);
-  scene.setChallengeEventValue('canAPlaced', visible);
+  // scene.setChallengeEventValue('canAPlaced', visible);
 }, 'circle2');
-`;
 
-const intersect10 = `
 // When the the blue garage can is intersecting circle 10, the circle glows.
-
-const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
-  ...scene.nodes[nodeId],
-  visible
-});
 
 scene.addOnIntersectionListener('can2', (type, otherNodeId) => {
   console.log('Can 2 placed!', type, otherNodeId);
@@ -39,15 +32,8 @@ scene.addOnIntersectionListener('can2', (type, otherNodeId) => {
   setNodeVisible('circle10', visible);
   scene.setChallengeEventValue('canBPlaced', visible);
 }, 'circle10');
-`;
 
-const intersect9 = `
 // When the the yellow garage can is intersecting circle 9, the circle glows.
-
-const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
-  ...scene.nodes[nodeId],
-  visible
-});
 
 scene.addOnIntersectionListener('can3', (type, otherNodeId) => {
   console.log('Can 3 placed!', type, otherNodeId);
@@ -57,14 +43,34 @@ scene.addOnIntersectionListener('can3', (type, otherNodeId) => {
 }, 'circle9');
 `;
 
+const matIntersect = `
+// When a can is not intersecting the mat, the lift condition is met.
+
+scene.addOnIntersectionListener('matSurface', (type, otherNodeId) => {
+  switch (otherNodeId) {
+    case 'can1':
+      console.log('Can 1 lifted!', type, otherNodeId);
+      scene.setChallengeEventValue('canALifted', type === 'end');
+      break;
+    case 'can2':
+      console.log('Can 2 lifted!', type, otherNodeId);
+      scene.setChallengeEventValue('canBLifted', type === 'end');
+      break;
+    case 'can3':
+      console.log('Can 3 lifted!', type, otherNodeId);
+      scene.setChallengeEventValue('canCLifted', type === 'end');
+      break;
+  }
+}, 'can1', 'can2', 'can3');
+`;
+
 export const JBC_6C: Scene = {
   ...baseScene,
   name: { [LocalizedString.EN_US]: 'JBC 6C' },
   description: { [LocalizedString.EN_US]: `Junior Botball Challenge 6C: Empty the Garage` },
   scripts: {
-    'intersect2': Script.ecmaScript('Intersect 2', intersect2),
-    'intersect9': Script.ecmaScript('Intersect 9', intersect9),
-    'intersect10': Script.ecmaScript('Intersect 10', intersect10),
+    'circleIntersects': Script.ecmaScript('Circle Intersects', circleIntersects),
+    'matIntersect': Script.ecmaScript('Mat Intersect', matIntersect),
   },
   geometry: {
     ...baseScene.geometry,
@@ -82,6 +88,14 @@ export const JBC_6C: Scene = {
       type: 'cylinder',
       radius: Distance.centimeters(3),
       height: Distance.centimeters(0.1),
+    },
+    'matSurface_geom': {
+      type: 'box',
+      size: {
+        x: Distance.meters(3.54),
+        y: Distance.centimeters(0.1),
+        z: Distance.meters(3.54),
+      },
     },
   },
   nodes: {
@@ -144,6 +158,26 @@ export const JBC_6C: Scene = {
           type: 'color3',
           color: Color.rgb(255, 255, 255),
         },
+      },
+    },
+    'matSurface': {
+      type: 'object',
+      geometryId: 'matSurface_geom',
+      name: { [LocalizedString.EN_US]: 'Mat Surface' },
+      visible: false,
+      origin: {
+        position: {
+          x: Distance.centimeters(0),
+          y: Distance.centimeters(-6.9),
+          z: Distance.inches(19.75),
+        },
+      },
+      material: {
+        type: 'basic',
+        color: {
+          type: 'color3',
+          color: Color.rgb(0, 0, 0)
+        }
       },
     },
     'can1': createCanNode(1, { x: Distance.centimeters(0), y: Distance.centimeters(0), z: Distance.centimeters(53.3) }),

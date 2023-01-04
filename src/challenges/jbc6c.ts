@@ -22,12 +22,12 @@ export default {
             description: { [LocalizedString.EN_US]: 'Can A picked up' },
         },
         canBLifted: {
-            name: { [LocalizedString.EN_US]: 'Can A Lifted' },
-            description: { [LocalizedString.EN_US]: 'Can A picked up' },
+            name: { [LocalizedString.EN_US]: 'Can B Lifted' },
+            description: { [LocalizedString.EN_US]: 'Can B picked up' },
         },
         canCLifted: {
-            name: { [LocalizedString.EN_US]: 'Can A Lifted' },
-            description: { [LocalizedString.EN_US]: 'Can A picked up' },
+            name: { [LocalizedString.EN_US]: 'Can C Lifted' },
+            description: { [LocalizedString.EN_US]: 'Can C picked up' },
         },
         canAPlaced: {
             name: { [LocalizedString.EN_US]: 'Can A Placed' },
@@ -126,30 +126,17 @@ export default {
                 eventId: 'canCUpright',
             },
             // Placed upright logic
-            aPlacedUpright: {
-                type: Expr.Type.And,
-                argIds: ['canAPlaced', 'canAUpright'],
-            },
-            bPlacedUpright: {
-                type: Expr.Type.And,
-                argIds: ['canBPlaced', 'canBUpright'],
-            },
-            cPlacedUpright: {
-                type: Expr.Type.And,
-                argIds: ['canCPlaced', 'canCUpright'],
-            },
-            // At least two cans placed upright logic
             abPlacedUpright: {
                 type: Expr.Type.And,
-                argIds: ['aPlacedUpright', 'bPlacedUpright'],
+                argIds: ['canAPlaced', 'canAUpright','canBPlaced', 'canBUpright'],
             },
             acPlacedUpright: {
                 type: Expr.Type.And,
-                argIds: ['aPlacedUpright', 'cPlacedUpright'],
+                argIds: ['canAPlaced', 'canAUpright','canCPlaced', 'canCUpright'],
             },
             bcPlacedUpright: {
                 type: Expr.Type.And,
-                argIds: ['bPlacedUpright', 'cPlacedUpright'],
+                argIds: ['canBPlaced', 'canBUpright','canCPlaced', 'canCUpright'],
             },
             abcPlacedUpright: {
                 type: Expr.Type.Or,
