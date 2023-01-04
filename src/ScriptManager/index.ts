@@ -4,11 +4,12 @@ import Camera from '../state/State/Scene/Camera';
 import Geometry from '../state/State/Scene/Geometry';
 import Node from '../state/State/Scene/Node';
 import Script from '../state/State/Scene/Script';
-import { Vector3 } from '../unit-math';
+import { Rotation, Vector3 } from '../unit-math';
 
 import { v4 as uuid } from 'uuid';
 import construct from '../util/construct';
 import { Ids, ScriptSceneBinding } from './ScriptSceneBinding';
+import { AxisAngle } from '../math';
 
 class ScriptManager {
   private scene_: Scene;
@@ -253,7 +254,7 @@ namespace ScriptManager {
       this.manager_ = manager;
     
       // eslint-disable-next-line @typescript-eslint/no-implied-eval
-      new Function("scene", `"use strict"; ${this.script_.code}`)(this);
+      new Function("scene, Rotation, AxisAngle", `"use strict"; ${this.script_.code}`)(this, Rotation, AxisAngle);
     }
 
     trigger(event: Event) {
