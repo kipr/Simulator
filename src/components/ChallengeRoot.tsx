@@ -303,6 +303,7 @@ class Root extends React.Component<Props, State> {
   private onNodeChange_ = (nodeId: string, node: Node) => {
     const latestScene = this.latestScene_();
     if (!latestScene) return;
+    console.log('onNodeChange_', nodeId, node, 'prev', latestScene.nodes[nodeId]);
     this.workingChallengeScene = Scene.setNode(latestScene, nodeId, node);
   };
 
@@ -398,6 +399,8 @@ class Root extends React.Component<Props, State> {
     this.workingChallengeScene = nextScene;
   };
 
+  private debounceChallengeCompletionSceneUpdate_ = false;
+
   private onResetScene_ = () => {
     const {
       scene,
@@ -408,7 +411,10 @@ class Root extends React.Component<Props, State> {
     if (!challengeCompletion) return;
     this.onStopClick_();
     this.workingChallengeScene = Async.latestValue(scene);
+    this.debounceChallengeCompletionSceneUpdate_ = true;
     this.syncChallengeCompletion_();
+    this.debounceChallengeCompletionSceneUpdate_ = false;
+
   };
 
   private onSetEventValue_ = (eventId: string, value: boolean) => {
@@ -428,12 +434,13 @@ class Root extends React.Component<Props, State> {
     };
 
     console.log(PredicateCompletion.update(success, nextEventStates));
-
+    this.debounceChallengeCompletionSceneUpdate_ = true;
     this.props.onChallengeCompletionEventStatesAndPredicateCompletionsChange(
       nextEventStates,
       success ? PredicateCompletion.update(success, nextEventStates) : undefined,
       failure ? PredicateCompletion.update(failure, nextEventStates) : undefined
     );
+    this.debounceChallengeCompletionSceneUpdate_ = false;
 
     this.scheduleSaveChallengeCompletion_();
   };
@@ -457,12 +464,16 @@ class Root extends React.Component<Props, State> {
     window.addEventListener('resize', this.onWindowResize_);
   }
 
+  private initedChallengeCompletionScene_ = false;
+
   componentWillUnmount() {
     window.removeEventListener('resize', this.onWindowResize_);
     cancelAnimationFrame(this.updateConsoleHandle_);
   
     Space.getInstance().onSelectNodeId = undefined;
     Space.getInstance().onSetNodeBatch = undefined;
+
+    this.initedChallengeCompletionScene_ = false;
   }
 
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>): void {
@@ -479,16 +490,21 @@ class Root extends React.Component<Props, State> {
         });
       }
     }
+
+    if (this.props.match.params.challengeId !== prevProps.match.params.challengeId) {
+      this.initedChallengeCompletionScene_ = false;
+    }
     
     if (this.props.scene !== prevProps.scene || this.props.challengeCompletion !== prevProps.challengeCompletion) {
       const latestScene = Async.latestValue(this.props.scene);
       const latestChallengeCompletion = Async.latestValue(this.props.challengeCompletion);
 
-      if (latestScene && latestChallengeCompletion) {
+      if (latestScene && latestChallengeCompletion && !this.initedChallengeCompletionScene_ && !this.debounceChallengeCompletionSceneUpdate_) {
         this.workingChallengeScene_ = applyObjectPatch(
           latestScene,
           latestChallengeCompletion.sceneDiff as ObjectPatch<Scene>
         );
+        this.initedChallengeCompletionScene_ = true;
       }
     }
   }

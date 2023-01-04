@@ -18,7 +18,7 @@ const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
 // When the the green garage can is intersecting circle 2, the circle glows.
 
 scene.addOnIntersectionListener('can1', (type, otherNodeId) => {
-  console.log('Can 1 placed!', type, otherNodeId);
+  console.log('Can 1 placed!', type, otherNodeId, Date.now());
   const visible = type === 'start';
   setNodeVisible('circle2', visible);
   // scene.setChallengeEventValue('canAPlaced', visible);
