@@ -8,6 +8,9 @@ from dataclasses import dataclass, asdict
 from typing import List
 import json
 
+def eprint(*args, **kwargs):
+  print(*args, file=sys.stderr, **kwargs)
+
 # Get all XML files in a directory passed in as the first argument
 xml_files = glob.glob(sys.argv[1] + '/*.xml')
 
@@ -32,6 +35,7 @@ class Function:
   name: str
   parameters: List[FunctionParameter]
   return_type: str
+  return_description: str | None
   brief_description: str | None
   detailed_description: str | None
 
@@ -74,9 +78,9 @@ def parse_detaileddescription(node):
   parameter_descriptions = {}
   for item in parameter_items:
     if item.tag == 'parameternamelist':
-      parameter_name = item.find('parametername').text
+      parameter_name = parse_text(item.find('parametername'))
     elif item.tag == 'parameterdescription':
-      parameter_descriptions[parameter_name] = item.text.strip()
+      parameter_descriptions[parameter_name] = parse_text(item)
   return parameter_descriptions
 
 def parse_function(node):
@@ -84,7 +88,17 @@ def parse_function(node):
 
   id = node.get('id')
   name = node.find('name').text
-  return_type = node.find('type').text
+  return_type = None
+  return_type_raw = node.find('type')
+  # Extract last reference from return type or use entire text
+  if return_type_raw is not None:
+    return_type = parse_text(return_type_raw)
+    refs_gen = return_type_raw.findall('ref')
+    refs = [ref for ref in refs_gen]
+    if len(refs) > 0:
+      return_type = parse_text(refs[-1])
+
+
 
   parameters = []
 
@@ -101,9 +115,18 @@ def parse_function(node):
     if declname is None or type is None: continue
     parameters.append(FunctionParameter(
       declname.text,
-      type.text,
+      parse_text(type),
       parameter_items.get(declname.text, None)
     ))
+
+  # Extract return description from <simplesect kind="return"> in detaileddescription
+  return_description = None
+  if detaileddescription is not None:
+    return_description = detaileddescription.find('simplesect')
+    if return_description is not None:
+      return_description = parse_text(return_description)
+    else:
+      return_description = None
 
   brief_description = node.find('briefdescription')
 
@@ -112,6 +135,7 @@ def parse_function(node):
     name,
     parameters,
     return_type,
+    return_description,
     parse_text(brief_description) if brief_description is not None else None,
     detailed_description
   ))
