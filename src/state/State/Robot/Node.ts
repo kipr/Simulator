@@ -16,6 +16,7 @@ namespace Node {
     EtSensor = 'et-sensor',
     TouchSensor = 'touch-sensor',
     ReflectanceSensor = 'reflectance-sensor',
+    IRobotCreate = 'irobot-create',
   }
   
   interface Base {
@@ -444,9 +445,7 @@ namespace Node {
       });
     };
   }
-
   
-
   export interface ReflectanceSensor extends Base, AnalogSensor {
     type: Type.ReflectanceSensor;
 
@@ -473,6 +472,25 @@ namespace Node {
     };
   }
 
+  export interface IRobotCreate extends Base, FrameLike {
+    type: Type.IRobotCreate;
+  }
+
+  export const iRobotCreate = construct<IRobotCreate>(Type.IRobotCreate);
+
+  export namespace IRobotCreate {
+    export const diff = (a: IRobotCreate, b: IRobotCreate): Patch<IRobotCreate> => {
+      if (!deepNeq(a, b)) return Patch.none(a);
+      if (a === undefined && b !== undefined) return Patch.outerChange(a, b);
+      if (a !== undefined && b === undefined) return Patch.outerChange(a, b);
+      return Patch.innerChange(a, b, {
+        type: Patch.none(Type.IRobotCreate),
+        ...Base.innerDiff(a, b),
+        ...FrameLike.innerDiff(a, b)
+      });
+    };
+  }
+
   export const diff = (a: Node, b: Node): Patch<Node> => {
     if (a === undefined && b !== undefined) return Patch.outerChange(a, b);
     if (a !== undefined && b === undefined) return Patch.outerChange(a, b);
@@ -486,6 +504,7 @@ namespace Node {
       case Type.EtSensor: return EtSensor.diff(a, b as EtSensor);
       case Type.TouchSensor: return TouchSensor.diff(a, b as TouchSensor);
       case Type.ReflectanceSensor: return ReflectanceSensor.diff(a, b as ReflectanceSensor);
+      case Type.IRobotCreate: return IRobotCreate.diff(a, b as IRobotCreate);
     }
   };
 
@@ -502,7 +521,8 @@ type Node = (
   Node.Servo |
   Node.EtSensor |
   Node.TouchSensor |
-  Node.ReflectanceSensor
+  Node.ReflectanceSensor |
+  Node.IRobotCreate
 );
 
 export default Node;

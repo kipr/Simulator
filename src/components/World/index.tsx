@@ -114,6 +114,28 @@ export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSav
   return worldBar;
 };
 
+export interface Capabilities {
+  addNode?: boolean;
+  addScript?: boolean;
+  scriptSettings?: boolean;
+  removeNode?: boolean;
+  removeScript?: boolean;
+  nodeSettings?: boolean;
+  nodeVisibility?: boolean;
+  nodeReset?: boolean;
+}
+
+export const DEFAULT_CAPABILITIES: Capabilities = {
+  addNode: true,
+  addScript: true,
+  scriptSettings: true,
+  removeNode: true,
+  removeScript: true,
+  nodeSettings: true,
+  nodeVisibility: true,
+  nodeReset: true,
+};
+
 export interface WorldProps extends StyleProps, ThemeProps {
   scene: AsyncScene;
 
@@ -130,6 +152,8 @@ export interface WorldProps extends StyleProps, ThemeProps {
   onScriptAdd: (scriptId: string, script: Script) => void;
   onScriptRemove: (scriptId: string) => void;
   onScriptChange: (scriptId: string, script: Script) => void;
+
+  capabilities?: Capabilities;
 }
 
 interface ReduxWorldProps {
@@ -356,8 +380,27 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
 
   render() {
     const { props, state } = this;
-    const { style, className, theme, scene, onGeometryAdd, onGeometryRemove, onGeometryChange } = props;
+    const {
+      style,
+      className,
+      theme,
+      scene,
+      onGeometryAdd,
+      onGeometryRemove,
+      onGeometryChange
+    } = props;
     const { collapsed, modal } = state;
+
+    const capabilities = props.capabilities || DEFAULT_CAPABILITIES;
+
+    const addNode = capabilities.addNode ?? true;
+    const addScript = capabilities.addScript ?? true;
+    const removeNode = capabilities.removeNode ?? true;
+    const removeScript = capabilities.removeScript ?? true;
+    const nodeReset = capabilities.nodeReset ?? true;
+    const nodeSettings = capabilities.nodeSettings ?? true;
+    const nodeVisiblity = capabilities.nodeVisibility ?? true;
+    const scriptSettings = capabilities.scriptSettings ?? true;
 
     const itemList: EditableList.Item[] = [];
 
@@ -368,9 +411,9 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
       itemList.push(EditableList.Item.standard({
         component: Item,
         props: { name: node.name[LocalizedString.EN_US], theme },
-        onReset: hasReset ? this.onNodeResetClick_(nodeId) : undefined,
-        onSettings: node.editable ? this.onItemSettingsClick_(nodeId) : undefined,
-        onVisibilityChange: this.onItemVisibilityChange_(nodeId),
+        onReset: hasReset && nodeReset ? this.onNodeResetClick_(nodeId) : undefined,
+        onSettings: node.editable && nodeSettings ? this.onItemSettingsClick_(nodeId) : undefined,
+        onVisibilityChange: nodeVisiblity ? this.onItemVisibilityChange_(nodeId) : undefined,
         visible: node.visible,
       }, {
         removable: node.editable && node.type !== 'robot',
@@ -388,9 +431,9 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
           theme,
           selected: workingScene.selectedScriptId === scriptId
         },
-        onSettings: this.onScriptSettingsClick_(scriptId),
+        onSettings: scriptSettings ? this.onScriptSettingsClick_(scriptId) : undefined,
       }, {
-        removable: true,
+        removable: removeScript,
         userdata: scriptId,
       }));
     }
@@ -399,41 +442,44 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
       items: [
         StyledText.text({
           text: `Item${itemList.length === 1 ? '' : 's'} (${itemList.length})`,
-        }),
-        StyledText.component({
-          component: SectionIcon,
-          props: {
-            icon: faPlus,
-            theme,
-            onClick: this.onAddNodeClick_
-          }
         })
       ]
     });
+
+    if (addNode) {
+      itemsName.items.push(StyledText.component({
+        component: SectionIcon,
+        props: {
+          icon: faPlus,
+          theme,
+          onClick: this.onAddNodeClick_
+        }
+      }));
+    }
 
     const scriptsName = StyledText.compose({
       items: [
         StyledText.text({
           text: `Script${itemList.length === 1 ? '' : 's'} (${scriptList.length})`,
-        }),
-        StyledText.component({
-          component: SectionIcon,
-          props: {
-            icon: faPlus,
-            theme,
-            onClick: this.onAddScriptClick_
-          }
         })
       ]
     });
 
+    if (addScript) {
+      scriptsName.items.push(StyledText.component({
+        component: SectionIcon,
+        props: {
+          icon: faPlus,
+          theme,
+          onClick: this.onAddScriptClick_
+        }
+      }));
+    }
     
-
     return (
       <>
         <ScrollArea theme={theme} style={{ flex: '1 1' }}>
           <Container theme={theme} style={style} className={className}>
-            
             <StyledListSection 
               name={itemsName}
               theme={theme}
@@ -441,7 +487,11 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
               collapsed={collapsed['items']}
               noBodyPadding
             >
-              <EditableList onItemRemove={this.onNodeRemove_} items={itemList} theme={theme} />
+              <EditableList
+                onItemRemove={removeNode ? this.onNodeRemove_ : undefined}
+                items={itemList}
+                theme={theme}
+              />
             </StyledListSection>
             <StyledListSection 
               name={scriptsName}
@@ -450,12 +500,29 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
               collapsed={collapsed['scripts']}
               noBodyPadding
             >
-              <EditableList onItemRemove={this.onScriptRemove_} items={scriptList} theme={theme} />
+              <EditableList
+                onItemRemove={removeScript ? this.onScriptRemove_ : undefined}
+                items={scriptList}
+                theme={theme}
+              />
             </StyledListSection>
           </Container>
         </ScrollArea>
-        {modal.type === UiState.Type.AddNode && <AddNodeDialog scene={workingScene} theme={theme} onClose={this.onModalClose_} onAccept={this.onAddNodeAccept_} />}
-        {modal.type === UiState.Type.AddScript && <AddScriptDialog theme={theme} onClose={this.onModalClose_} onAccept={this.onAddScriptAccept_} />}
+        {modal.type === UiState.Type.AddNode && (
+          <AddNodeDialog
+            scene={workingScene}
+            theme={theme}
+            onClose={this.onModalClose_}
+            onAccept={this.onAddNodeAccept_}
+          />
+        )}
+        {modal.type === UiState.Type.AddScript && (
+          <AddScriptDialog
+            theme={theme}
+            onClose={this.onModalClose_}
+            onAccept={this.onAddScriptAccept_}
+          />
+        )}
         {modal.type === UiState.Type.NodeSettings && <NodeSettingsDialog
           onGeometryAdd={onGeometryAdd}
           onGeometryRemove={onGeometryRemove}

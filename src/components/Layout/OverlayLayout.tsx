@@ -358,7 +358,8 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       onScriptChange,
       onScriptRemove,
       onObjectAdd,
-      challengeState
+      challengeState,
+      worldCapabilities
     } = props;
 
     const {
@@ -502,6 +503,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
               onScriptChange={onScriptChange}
               onScriptRemove={onScriptRemove}
               onObjectAdd={onObjectAdd}
+              capabilities={worldCapabilities}
             />
           </WorldWidget>
         </Overlay>

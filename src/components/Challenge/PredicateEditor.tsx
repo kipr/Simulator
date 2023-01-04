@@ -88,7 +88,7 @@ const treeify = (exprs: Dict<Expr>, rootId: string, events: Dict<Event>, exprSta
 
 const STATE_TRUE_COLOR = 'green';
 const STATE_FALSE_COLOR = 'red';
-const STATE_NONE_COLOR = 'black';
+const STATE_NONE_COLOR = 'white';
 const STATE_INCOMPLETE_COLOR = 'yellow';
 
 const NodeEditor: React.FC<{ node: Node } & StyleProps> = ({ node, style, className }) => {

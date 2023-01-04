@@ -12,6 +12,7 @@ import { AsyncScene } from '../../state/State/Scene';
 import Node from '../../state/State/Scene/Node';
 import Geometry from '../../state/State/Scene/Geometry';
 import Script from '../../state/State/Scene/Script';
+import { Capabilities } from '../World';
 
 export namespace LayoutEditorTarget {
   export enum Type {
@@ -58,6 +59,7 @@ export interface LayoutProps extends StyleProps, ThemeProps {
   onScriptChange: (scriptId: string, script: Script) => void;
 
   challengeState?: ChallengeState;
+  worldCapabilities?: Capabilities;
 }
 
 export enum Layout {

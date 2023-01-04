@@ -198,7 +198,8 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       onScriptChange,
       onScriptRemove,
       onObjectAdd,
-      challengeState
+      challengeState,
+      worldCapabilities
     } = props;
 
     const {
@@ -326,6 +327,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
               onScriptChange={onScriptChange}
               onScriptRemove={onScriptRemove}
               onObjectAdd={onObjectAdd}
+              capabilities={worldCapabilities}
             />
           </SimulatorWidget>
         );

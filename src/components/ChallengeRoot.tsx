@@ -70,6 +70,7 @@ import LoadingOverlay from './Challenge/LoadingOverlay';
 import DbError from '../db/Error';
 import { applyObjectPatch, applyPatch, createObjectPatch, createPatch, ObjectPatch, OuterObjectPatch } from 'symmetry';
 import ChallengeMenu from './ChallengeMenu';
+import { Capabilities } from './World';
 
 namespace Modal {
   export enum Type {
@@ -246,6 +247,17 @@ const STDOUT_STYLE = (theme: Theme) => ({
 const STDERR_STYLE = (theme: Theme) => ({
   color: 'red'
 });
+
+const WORLD_CAPABILITIES: Capabilities = {
+  addNode: false,
+  addScript: false,
+  nodeReset: false,
+  nodeSettings: false,
+  nodeVisibility: false,
+  removeNode: false,
+  removeScript: false,
+  scriptSettings: false,
+};
 
 class Root extends React.Component<Props, State> {
   private editorRef: React.MutableRefObject<Editor>;
@@ -853,7 +865,8 @@ class Root extends React.Component<Props, State> {
       challengeState: challenge ? {
         challenge,
         challengeCompletion: challengeCompletion || Async.unloaded({ brief: {} }),
-      } : undefined
+      } : undefined,
+      worldCapabilities: WORLD_CAPABILITIES
     };
 
     let impl: JSX.Element;

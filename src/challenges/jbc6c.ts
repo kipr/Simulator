@@ -161,13 +161,7 @@ export default {
                 argIds: ['abcLifted', 'abcPlacedUpright'],
             },
         },
-        rootId: 'success',
-    },
-    failure: {
-        exprs: {
-            // Test for failure
-        },
-        rootId: 'failure',
+        rootId: 'completion',
     },
     sceneId: 'jbc6c',
 } as Challenge;
