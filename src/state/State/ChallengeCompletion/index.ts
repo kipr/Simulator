@@ -10,7 +10,7 @@ import ProgrammingLanguage from '../../../ProgrammingLanguage';
 interface ChallengeCompletion {
   code: { [language in ProgrammingLanguage]: string };
   currentLanguage: ProgrammingLanguage;
-  sceneDiff: OuterObjectPatch<Scene>;
+  serializedSceneDiff: string;
   eventStates: Dict<boolean>;
   success?: PredicateCompletion;
   failure?: PredicateCompletion;
@@ -24,7 +24,7 @@ namespace ChallengeCompletion {
       'python': '',
     },
     currentLanguage: 'c',
-    sceneDiff: { t: 'o' },
+    serializedSceneDiff: JSON.stringify({ t: 'o' }),
     eventStates: {},
   };
 }

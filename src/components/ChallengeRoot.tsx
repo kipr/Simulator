@@ -282,11 +282,13 @@ class Root extends React.Component<Props, State> {
     const latestScene = Async.latestValue(scene);
     if (!latestScene) return undefined;
 
-    const { sceneDiff } = latestChallengeCompletion;
+    const { serializedSceneDiff } = latestChallengeCompletion;
+
+    const sceneDiff = serializedSceneDiff ? JSON.parse(serializedSceneDiff) : 'none';
 
     if (sceneDiff === 'none' || sceneDiff === 'reset') return latestScene;
 
-    this.workingChallengeScene_ = applyObjectPatch(latestScene, latestChallengeCompletion.sceneDiff as ObjectPatch<Scene>);
+    this.workingChallengeScene_ = applyObjectPatch(latestScene, sceneDiff as ObjectPatch<Scene>);
     
     this.incrementNonce_();
 
@@ -500,9 +502,9 @@ class Root extends React.Component<Props, State> {
       const latestChallengeCompletion = Async.latestValue(this.props.challengeCompletion);
 
       if (latestScene && latestChallengeCompletion && !this.initedChallengeCompletionScene_ && !this.debounceChallengeCompletionSceneUpdate_) {
-        this.workingChallengeScene_ = applyObjectPatch(
+        if (latestChallengeCompletion.serializedSceneDiff) this.workingChallengeScene = applyObjectPatch(
           latestScene,
-          latestChallengeCompletion.sceneDiff as ObjectPatch<Scene>
+          JSON.parse(latestChallengeCompletion.serializedSceneDiff) as ObjectPatch<Scene>
         );
         this.initedChallengeCompletionScene_ = true;
       }

@@ -297,13 +297,13 @@ export const reduceChallengeCompletions = (state: ChallengeCompletions = DEFAULT
       challenge.failure = action.failure;
     });
     case 'challenge-completions/set-scene-diff': return mutate(state, action.challengeId, challenge => {
-      challenge.sceneDiff = action.sceneDiff;
+      challenge.serializedSceneDiff = JSON.stringify(action.sceneDiff);
     });
     case 'challenge-completions/reset-challenge-completion': return mutate(state, action.challengeId, challenge => {
       challenge.eventStates = {};
       challenge.success = undefined;
       challenge.failure = undefined;
-      challenge.sceneDiff = { t: "o" };
+      challenge.serializedSceneDiff = JSON.stringify({ t: "o" });
     });
     case 'challenge-completions/set-code': return mutate(state, action.challengeId, challenge => {
       challenge.code[action.language] = action.code;
