@@ -580,11 +580,19 @@ class SceneBinding {
     let count = 0;
     
     observerObj.observer = this.bScene_.onAfterRenderObservable.add((data, state) => {
-      robotBinding.origin = node.origin || ReferenceFrame.IDENTITY;
+      const node = this.scene_.nodes[id];
+      if (!node) {
+        observerObj.observer.unregisterOnNextCall = true;
+        return;
+      }
+
+      const { origin, visible } = node;
+
+      robotBinding.origin = origin || ReferenceFrame.IDENTITY;
       
       if (count++ < 10) return;
 
-      robotBinding.visible = node.visible ?? false;
+      robotBinding.visible = visible ?? false;
       observerObj.observer.unregisterOnNextCall = true;
     });
 

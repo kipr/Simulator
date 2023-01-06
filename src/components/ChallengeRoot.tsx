@@ -71,6 +71,8 @@ import DbError from '../db/Error';
 import { applyObjectPatch, applyPatch, createObjectPatch, createPatch, ObjectPatch, OuterObjectPatch } from 'symmetry';
 import ChallengeMenu from './ChallengeMenu';
 import { Capabilities } from './World';
+import Robot from '../state/State/Robot';
+import AbstractRobot from '../AbstractRobot';
 
 namespace Modal {
   export enum Type {
@@ -271,30 +273,6 @@ class Root extends React.Component<Props, State> {
     });
   };
 
-  private latestScene_ = (): Scene => {
-    const { scene, challengeCompletion } = this.props;
-  
-    const latestChallengeCompletion = Async.latestValue(challengeCompletion);
-    if (!latestChallengeCompletion) return Async.latestValue(scene);
-    
-    if (this.workingChallengeScene_) return this.workingChallengeScene_;
-
-    const latestScene = Async.latestValue(scene);
-    if (!latestScene) return undefined;
-
-    const { serializedSceneDiff } = latestChallengeCompletion;
-
-    const sceneDiff = serializedSceneDiff ? JSON.parse(serializedSceneDiff) : 'none';
-
-    if (sceneDiff === 'none' || sceneDiff === 'reset') return latestScene;
-
-    this.workingChallengeScene_ = applyObjectPatch(latestScene, sceneDiff as ObjectPatch<Scene>);
-    
-    this.incrementNonce_();
-
-    return this.workingChallengeScene_;
-  };
-
   private set workingChallengeScene(scene: Scene) {
     if (scene === this.workingChallengeScene_) return;
     this.workingChallengeScene_ = scene;
@@ -303,67 +281,58 @@ class Root extends React.Component<Props, State> {
   }
 
   private onNodeChange_ = (nodeId: string, node: Node) => {
-    const latestScene = this.latestScene_();
-    if (!latestScene) return;
-    console.log('onNodeChange_', nodeId, node, 'prev', latestScene.nodes[nodeId]);
-    this.workingChallengeScene = Scene.setNode(latestScene, nodeId, node);
+    if (!this.workingChallengeScene_) return;
+    console.log('onNodeChange_', nodeId, node, 'prev', this.workingChallengeScene_.nodes[nodeId]);
+    this.workingChallengeScene = Scene.setNode(this.workingChallengeScene_, nodeId, node);
   };
 
   private onNodeAdd_ = this.onNodeChange_;
 
   private onNodeRemove_ = (nodeId: string) => {
-    const latestScene = this.latestScene_();
-    if (!latestScene) return;
-    this.workingChallengeScene = Scene.removeNode(latestScene, nodeId);
+    if (!this.workingChallengeScene_) return;
+    this.workingChallengeScene = Scene.removeNode(this.workingChallengeScene_, nodeId);
   };
 
   private onGeometryChange_ = (geometryId: string, geometry: Geometry) => {
-    const latestScene = this.latestScene_();
-    if (!latestScene) return;
-    this.workingChallengeScene = Scene.setGeometry(latestScene, geometryId, geometry);
+    if (!this.workingChallengeScene_) return;
+    this.workingChallengeScene = Scene.setGeometry(this.workingChallengeScene_, geometryId, geometry);
   };
 
   private onGeometryAdd_ = this.onGeometryChange_;
 
   private onGeometryRemove_ = (geometryId: string) => {
-    const latestScene = this.latestScene_();
-    if (!latestScene) return;
-    this.workingChallengeScene = Scene.removeGeometry(latestScene, geometryId);
+    if (!this.workingChallengeScene_) return;
+    this.workingChallengeScene = Scene.removeGeometry(this.workingChallengeScene_, geometryId);
   };
 
 
   private onScriptChange_ = (scriptId: string, script: Script) => {
-    const latestScene = this.latestScene_();
-    if (!latestScene) return;
-    this.workingChallengeScene = Scene.setScript(latestScene, scriptId, script);
+    if (!this.workingChallengeScene_) return;
+    this.workingChallengeScene = Scene.setScript(this.workingChallengeScene_, scriptId, script);
   };
 
   private onScriptAdd_ = this.onScriptChange_;
 
   private onScriptRemove_ = (scriptId: string) => {
-    const latestScene = this.latestScene_();
-    if (!latestScene) return;
-    this.workingChallengeScene = Scene.removeScript(latestScene, scriptId);
+    if (!this.workingChallengeScene_) return;
+    this.workingChallengeScene = Scene.removeScript(this.workingChallengeScene_, scriptId);
   };
 
   private onObjectAdd_ = (nodeId: string, obj: Node.Obj, geometry: Geometry) => {
-    const latestScene = this.latestScene_();
-    if (!latestScene) return;
-    this.workingChallengeScene = Scene.addObject(latestScene, nodeId, obj, geometry);
+    if (!this.workingChallengeScene_) return;
+    this.workingChallengeScene = Scene.addObject(this.workingChallengeScene_, nodeId, obj, geometry);
   };
 
   private onCameraChange_ = (camera: Camera) => {
-    const latestScene = this.latestScene_();
-    if (!latestScene) return;
+    if (!this.workingChallengeScene_) return;
 
-    this.workingChallengeScene = Scene.setCamera(latestScene, camera);
+    this.workingChallengeScene = Scene.setCamera(this.workingChallengeScene_, camera);
   };
 
   private onGravityChange_ = (gravity: Vector3) => {
-    const latestScene = this.latestScene_();
-    if (!latestScene) return;
+    if (!this.workingChallengeScene_) return;
 
-    this.workingChallengeScene = Scene.setGravity(latestScene, gravity);
+    this.workingChallengeScene = Scene.setGravity(this.workingChallengeScene_, gravity);
   };
 
   private onSelectNodeId_ = (nodeId: string) => {
@@ -389,19 +358,16 @@ class Root extends React.Component<Props, State> {
     this.editorRef = React.createRef();
     this.overlayLayoutRef = React.createRef();
 
-    Space.getInstance().scene = Async.latestValue(props.scene) || Scene.EMPTY;
+    Space.getInstance().scene = Scene.EMPTY;
   }
 
   private onSetNodeBatch_ = (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => {
-    const latestScene = this.latestScene_();
-    if (!latestScene) return;
+    if (!this.workingChallengeScene_) return;
 
-    let nextScene = latestScene;
+    let nextScene = this.workingChallengeScene_;
     for (const { id, node } of setNodeBatch.nodeIds) nextScene = Scene.setNode(nextScene, id, node);
     this.workingChallengeScene = nextScene;
   };
-
-  private debounceChallengeCompletionSceneUpdate_ = false;
 
   private onResetScene_ = () => {
     const {
@@ -413,10 +379,7 @@ class Root extends React.Component<Props, State> {
     if (!challengeCompletion) return;
     this.onStopClick_();
     this.workingChallengeScene = Async.latestValue(scene);
-    this.debounceChallengeCompletionSceneUpdate_ = true;
     this.syncChallengeCompletion_();
-    this.debounceChallengeCompletionSceneUpdate_ = false;
-
   };
 
   private onSetEventValue_ = (eventId: string, value: boolean) => {
@@ -436,13 +399,11 @@ class Root extends React.Component<Props, State> {
     };
 
     console.log(PredicateCompletion.update(success, nextEventStates));
-    this.debounceChallengeCompletionSceneUpdate_ = true;
     this.props.onChallengeCompletionEventStatesAndPredicateCompletionsChange(
       nextEventStates,
       success ? PredicateCompletion.update(success, nextEventStates) : undefined,
       failure ? PredicateCompletion.update(failure, nextEventStates) : undefined
     );
-    this.debounceChallengeCompletionSceneUpdate_ = false;
 
     this.scheduleSaveChallengeCompletion_();
   };
@@ -474,6 +435,14 @@ class Root extends React.Component<Props, State> {
   
     Space.getInstance().onSelectNodeId = undefined;
     Space.getInstance().onSetNodeBatch = undefined;
+    Space.getInstance().onNodeAdd = undefined;
+    Space.getInstance().onNodeRemove = undefined;
+    Space.getInstance().onNodeChange = undefined;
+    Space.getInstance().onGeometryAdd = undefined;
+    Space.getInstance().onGeometryRemove = undefined;
+    Space.getInstance().onGravityChange = undefined;
+    Space.getInstance().onCameraChange = undefined;
+    Space.getInstance().onChallengeSetEventValue = undefined;
 
     this.initedChallengeCompletionScene_ = false;
   }
@@ -505,12 +474,13 @@ class Root extends React.Component<Props, State> {
       const latestScene = Async.latestValue(this.props.scene);
       const latestChallengeCompletion = Async.latestValue(this.props.challengeCompletion);
 
-      if (latestScene && latestChallengeCompletion && !this.initedChallengeCompletionScene_ && !this.debounceChallengeCompletionSceneUpdate_) {
-        if (latestChallengeCompletion.serializedSceneDiff) this.workingChallengeScene = applyObjectPatch(
-          latestScene,
-          JSON.parse(latestChallengeCompletion.serializedSceneDiff) as ObjectPatch<Scene>
-        );
-        this.initedChallengeCompletionScene_ = true;
+      if (latestScene && latestChallengeCompletion && !this.initedChallengeCompletionScene_) {
+        if (latestChallengeCompletion.serializedSceneDiff) {
+          const sceneDiff = JSON.parse(latestChallengeCompletion.serializedSceneDiff);
+          this.workingChallengeScene = applyObjectPatch(latestScene, sceneDiff as ObjectPatch<Scene>);
+          console.log('inited', latestScene, sceneDiff, this.workingChallengeScene_);
+          this.initedChallengeCompletionScene_ = true;
+        }
       }
     }
   }
@@ -527,12 +497,38 @@ class Root extends React.Component<Props, State> {
 
   private scheduleSaveChallengeCompletion_ = () => {
     if (this.saveChallengeCompletionTimeout_) clearTimeout(this.saveChallengeCompletionTimeout_);
-    this.saveChallengeCompletionTimeout_ = window.setTimeout(this.saveChallengeCompletion_, 5000);
+    this.saveChallengeCompletionTimeout_ = window.setTimeout(this.saveChallengeCompletion_, 1000);
   };
 
 
   private syncChallengeCompletion_ = () => {
-    const sceneDiff = createObjectPatch(this.workingChallengeScene_, Async.latestValue(this.props.scene));
+    let savedScene = this.workingChallengeScene_;
+    // Work around robot moving when reloading
+    for (const nodeId in savedScene.nodes) {
+      const node = savedScene.nodes[nodeId];
+      if (node.type !== 'robot') continue;
+
+      savedScene = {
+        ...savedScene,
+        nodes: {
+          ...savedScene.nodes,
+          [nodeId]: {
+            ...node,
+            state: {
+              ...node.state,
+              motors: [
+                { ...node.state.motors[0], pwm: 0, done: true },
+                { ...node.state.motors[1], pwm: 0, done: true },
+                { ...node.state.motors[2], pwm: 0, done: true },
+                { ...node.state.motors[3], pwm: 0, done: true },
+              ]
+            }
+          } as Node.Robot
+        }
+      };
+    }
+
+    const sceneDiff = createObjectPatch(Async.latestValue(this.props.scene), savedScene);
     this.props.onChallengeCompletionSceneDiffChange(sceneDiff);
 
     this.scheduleSaveChallengeCompletion_();
