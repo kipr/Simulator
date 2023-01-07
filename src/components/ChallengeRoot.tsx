@@ -491,6 +491,7 @@ class Root extends React.Component<Props, State> {
 
       if (latestScene && latestChallengeCompletion && !this.initedChallengeCompletionScene_) {
         if (latestChallengeCompletion.serializedSceneDiff) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const sceneDiff = JSON.parse(latestChallengeCompletion.serializedSceneDiff);
           this.workingChallengeScene = applyObjectPatch(latestScene, sceneDiff as ObjectPatch<Scene>);
           this.initedChallengeCompletionScene_ = true;
