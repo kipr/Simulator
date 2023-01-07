@@ -248,6 +248,8 @@ export class Space {
     const robotWorkerInstances = Dict.map(robots, () => WorkerInstance);
     const tickOuts = this.sceneBinding_.tick(robotWorkerInstances);
 
+    if (!tickOuts) return;
+
     const setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'> = {
       nodeIds: [],
     };

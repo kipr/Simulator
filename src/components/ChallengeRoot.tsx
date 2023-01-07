@@ -73,6 +73,7 @@ import ChallengeMenu from './ChallengeMenu';
 import { Capabilities } from './World';
 import Robot from '../state/State/Robot';
 import AbstractRobot from '../AbstractRobot';
+import Motor from '../AbstractRobot/Motor';
 
 namespace Modal {
   export enum Type {
@@ -282,7 +283,6 @@ class Root extends React.Component<Props, State> {
 
   private onNodeChange_ = (nodeId: string, node: Node) => {
     if (!this.workingChallengeScene_) return;
-    console.log('onNodeChange_', nodeId, node, 'prev', this.workingChallengeScene_.nodes[nodeId]);
     this.workingChallengeScene = Scene.setNode(this.workingChallengeScene_, nodeId, node);
   };
 
@@ -377,8 +377,23 @@ class Root extends React.Component<Props, State> {
     } = this.props;
 
     if (!challengeCompletion) return;
+
+
+    
     this.onStopClick_();
     this.workingChallengeScene = Async.latestValue(scene);
+    
+    const latestChallenge = Async.latestValue(challenge);
+    const latestChallengeCompletion = Async.latestValue(challengeCompletion);
+    if (latestChallengeCompletion && latestChallenge) {
+      const eventStates = Dict.map(latestChallengeCompletion.eventStates, () => false);
+      this.props.onChallengeCompletionEventStatesAndPredicateCompletionsChange(
+        eventStates,
+        latestChallenge.success ? PredicateCompletion.update(PredicateCompletion.EMPTY, latestChallenge.success, eventStates) : undefined,
+        latestChallenge.failure ? PredicateCompletion.update(PredicateCompletion.EMPTY, latestChallenge.failure, eventStates) : undefined,
+      );
+    }
+    
     this.syncChallengeCompletion_();
   };
 
@@ -392,17 +407,17 @@ class Root extends React.Component<Props, State> {
     if (!latestChallengeCompletion) return;
 
     const { success, failure } = latestChallenge;
+    const { success: successCompletion, failure: failureCompletion } = latestChallengeCompletion;
 
     const nextEventStates = {
       ...latestChallengeCompletion.eventStates,
       [eventId]: value,
     };
 
-    console.log(PredicateCompletion.update(success, nextEventStates));
     this.props.onChallengeCompletionEventStatesAndPredicateCompletionsChange(
       nextEventStates,
-      success ? PredicateCompletion.update(success, nextEventStates) : undefined,
-      failure ? PredicateCompletion.update(failure, nextEventStates) : undefined
+      success ? PredicateCompletion.update(successCompletion || PredicateCompletion.EMPTY, success, nextEventStates) : undefined,
+      failure ? PredicateCompletion.update(failureCompletion || PredicateCompletion.EMPTY, failure, nextEventStates) : undefined
     );
 
     this.scheduleSaveChallengeCompletion_();
@@ -478,7 +493,6 @@ class Root extends React.Component<Props, State> {
         if (latestChallengeCompletion.serializedSceneDiff) {
           const sceneDiff = JSON.parse(latestChallengeCompletion.serializedSceneDiff);
           this.workingChallengeScene = applyObjectPatch(latestScene, sceneDiff as ObjectPatch<Scene>);
-          console.log('inited', latestScene, sceneDiff, this.workingChallengeScene_);
           this.initedChallengeCompletionScene_ = true;
         }
       }
@@ -517,10 +531,10 @@ class Root extends React.Component<Props, State> {
             state: {
               ...node.state,
               motors: [
-                { ...node.state.motors[0], pwm: 0, done: true },
-                { ...node.state.motors[1], pwm: 0, done: true },
-                { ...node.state.motors[2], pwm: 0, done: true },
-                { ...node.state.motors[3], pwm: 0, done: true },
+                { ...node.state.motors[0], pwm: 0, direction: Motor.Direction.Brake, done: true, mode: Motor.Mode.Pwm },
+                { ...node.state.motors[1], pwm: 0, direction: Motor.Direction.Brake, done: true, mode: Motor.Mode.Pwm },
+                { ...node.state.motors[2], pwm: 0, direction: Motor.Direction.Brake, done: true, mode: Motor.Mode.Pwm },
+                { ...node.state.motors[3], pwm: 0, direction: Motor.Direction.Brake, done: true, mode: Motor.Mode.Pwm },
               ]
             }
           } as Node.Robot

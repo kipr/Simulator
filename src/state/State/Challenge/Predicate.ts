@@ -11,9 +11,9 @@ namespace Predicate {
     const ret: Dict<boolean> = {};
     for (const exprId in exprs) {
       const expr = exprs[exprId];
-      if (expr.type === Expr.Type.Once) {
-        ret[exprId] = exprStates[exprId];
-      }
+      if (expr.type !== Expr.Type.Once) continue;
+      if (!exprStates[exprId]) continue;
+      ret[exprId] = exprStates[exprId];
     }
     return ret;
   };

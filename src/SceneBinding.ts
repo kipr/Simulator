@@ -74,6 +74,12 @@ class SceneBinding {
     this.bScene_.attachControl();
 
   }
+
+  /**
+   * `declineTicks` is used for a race between initial robot origin setting and tick origin updates.
+   * When this is true, the tick() method will exit immediately and return undefined.
+   */
+  private declineTicks_ = false;
   
   private materialIdIter_ = 0;
 
@@ -579,10 +585,12 @@ class SceneBinding {
     
     let count = 0;
     
+    this.declineTicks_ = true;
     observerObj.observer = this.bScene_.onAfterRenderObservable.add((data, state) => {
       const node = this.scene_.nodes[id];
       if (!node) {
         observerObj.observer.unregisterOnNextCall = true;
+        this.declineTicks_ = false;
         return;
       }
 
@@ -594,6 +602,7 @@ class SceneBinding {
 
       robotBinding.visible = visible ?? false;
       observerObj.observer.unregisterOnNextCall = true;
+      this.declineTicks_ = false;
     });
 
     this.robotBindings_[id] = robotBinding;
@@ -1321,6 +1330,8 @@ class SceneBinding {
     .map(({ min, max }) => new Babylon.BoundingBox(min, max));
 
   tick(abstractRobots: Dict<AbstractRobot.Readable>): Dict<RobotBinding.TickOut> {
+    if (this.declineTicks_) return undefined;
+
     const ret: Dict<RobotBinding.TickOut> = {};
     for (const nodeId in this.scene_.nodes) {
       const abstractRobot = abstractRobots[nodeId];

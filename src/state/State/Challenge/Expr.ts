@@ -83,16 +83,22 @@ namespace Expr {
 
   export namespace Once {
     export const evaluate = (once: Once, context: EvaluationContext): boolean => {
-      const argState = Expr.evaluate(once.argId, context);
-      return false;
+      return Expr.evaluate(once.argId, context);
     };
   }
+
+  const passthrough = <E extends { argId: string; }>(expr: E, context: EvaluationContext): boolean => {
+    return Expr.evaluate(expr.argId, context);
+  };
 
   export const evaluate = (exprId: string, context: EvaluationContext): boolean => {
     const expr = context.exprs[exprId];
     if (expr === undefined) return false;
     
-    if (context.exprStates[exprId] !== undefined) return context.exprStates[exprId];
+    if (context.exprStates[exprId] !== undefined) {
+      if (expr.type === Expr.Type.Once) passthrough(expr, context);
+      return context.exprStates[exprId];
+    }
 
     let ret = false;
     switch (expr.type) {
