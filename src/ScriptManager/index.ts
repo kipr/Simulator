@@ -9,7 +9,7 @@ import { Rotation, Vector3 } from '../unit-math';
 import { v4 as uuid } from 'uuid';
 import construct from '../util/construct';
 import { Ids, ScriptSceneBinding } from './ScriptSceneBinding';
-import { AxisAngle } from '../math';
+import { AxisAngle, Quaternion, ReferenceFrame, Vector3 as RawVector3 } from '../math';
 
 class ScriptManager {
   private scene_: Scene;
@@ -261,7 +261,7 @@ namespace ScriptManager {
 
     
       // eslint-disable-next-line @typescript-eslint/no-implied-eval
-      new Function("scene, Rotation, AxisAngle", `"use strict"; ${this.script_.code}`)(this, Rotation, AxisAngle);
+      new Function("scene, Rotation, AxisAngle, Vector3, Quaternion, ReferenceFrame", `"use strict"; ${this.script_.code}`)(this, Rotation, AxisAngle, RawVector3, Quaternion, ReferenceFrame);
     }
 
     get programStatus() {

@@ -1,11 +1,13 @@
 import Scene from "../state/State/Scene";
 import { Color } from '../state/State/Scene/Color';
+import { Vector3, Quaternion, ReferenceFrame } from "../math";
 import { Color3, StandardMaterial, GlowLayer } from 'babylonjs';
 import Script from '../state/State/Scene/Script';
 import { Distance } from "../util";
 import LocalizedString from '../util/LocalizedString';
 
 import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
+import jbc6c from "../challenges/jbc6c";
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -21,7 +23,7 @@ scene.addOnIntersectionListener('can1', (type, otherNodeId) => {
   console.log('Can 1 placed!', type, otherNodeId, Date.now());
   const visible = type === 'start';
   setNodeVisible('circle2', visible);
-  // scene.setChallengeEventValue('canAPlaced', visible);
+  scene.setChallengeEventValue('canAPlaced', visible);
 }, 'circle2');
 
 // When the the blue garage can is intersecting circle 10, the circle glows.
@@ -50,18 +52,56 @@ scene.addOnIntersectionListener('matSurface', (type, otherNodeId) => {
   switch (otherNodeId) {
     case 'can1':
       console.log('Can 1 lifted!', type, otherNodeId);
-      scene.setChallengeEventValue('canALifted', type === 'end');
+      if (scene.programStatus === 'running') {
+        scene.setChallengeEventValue('canALifted', type === 'end');
+      }
       break;
     case 'can2':
       console.log('Can 2 lifted!', type, otherNodeId);
-      scene.setChallengeEventValue('canBLifted', type === 'end');
+      if (scene.programStatus === 'running') {
+        scene.setChallengeEventValue('canBLifted', type === 'end');
+      }
       break;
     case 'can3':
       console.log('Can 3 lifted!', type, otherNodeId);
-      scene.setChallengeEventValue('canCLifted', type === 'end');
+      if (scene.programStatus === 'running') {
+        scene.setChallengeEventValue('canCLifted', type === 'end');
+      }
       break;
   }
-}, 'can1', 'can2', 'can3');
+}, ['can1', 'can2', 'can3']);
+`;
+
+const uprightCans = `
+// When a can is standing upright, the upright condition is met.
+
+// const start = (nodeId) => console.log(nodeId, ': ',scene.nodes[nodeId]);
+
+// start('can1');
+// start('can2');
+// start('can3');
+
+const startingOrientationInv = (nodeId) => Quaternion.inverse(Rotation.toRawQuaternion(scene.nodes[nodeId].origin.orientation));
+let startTime = Date.now();
+const yAngle = (nodeId) => Vector3.dot(Vector3.applyQuaternion(Vector3.Y, Quaternion.multiply(Rotation.toRawQuaternion(scene.nodes[nodeId].origin.orientation), startingOrientationInv(nodeId))), Vector3.Y);
+
+scene.addOnRenderListener(() => {
+  const currTime = Date.now();
+  const timeDiff = currTime - startTime;
+  const upright1 = yAngle('can1') < 1;
+  if(timeDiff > 1000 && !upright1) {
+    console.log('can1 not upright: ', yAngle('can1'));
+    console.log(scene.nodes['can1']);
+    startTime = currTime;
+  }
+  const upright2 = yAngle('can2') < 1;
+  // if(!upright2) console.log('can2 not upright: ', yAngle('can2'));
+  const upright3 = yAngle('can3') < 1;
+  // if(!upright3) console.log('can3 not upright: ', yAngle('can3'));
+  scene.setChallengeEventValue('canAUpright', upright1);
+  scene.setChallengeEventValue('canBUpright', upright2);
+  scene.setChallengeEventValue('canCUpright', upright3);
+});
 `;
 
 export const JBC_6C: Scene = {
@@ -71,6 +111,7 @@ export const JBC_6C: Scene = {
   scripts: {
     'circleIntersects': Script.ecmaScript('Circle Intersects', circleIntersects),
     'matIntersect': Script.ecmaScript('Mat Intersect', matIntersect),
+    'uprightCans': Script.ecmaScript('Upright Cans', uprightCans),
   },
   geometry: {
     ...baseScene.geometry,
