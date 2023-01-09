@@ -1037,7 +1037,7 @@ export default connect((state: ReduxState, { match: { params: { challengeId } } 
   onChallengeCompletionSetRobotLinkOrigins: (robotLinkOrigins: Dict<Dict<ReferenceFrame>>) => {
     dispatch(ChallengeCompletionsAction.setRobotLinkOrigins({ challengeId, robotLinkOrigins }));
   },
-    onChallengeCompletionSave: () => {
+  onChallengeCompletionSave: () => {
     dispatch(ChallengeCompletionsAction.saveChallengeCompletion({ challengeId }));
   },
   onDeleteRecord: (selector: Selector) => {
