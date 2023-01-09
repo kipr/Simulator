@@ -406,6 +406,9 @@ class Root extends React.Component<Props, State> {
     const latestChallengeCompletion = Async.latestValue(challengeCompletion);
     if (!latestChallengeCompletion) return;
 
+    // check if event value is the same as the current value
+    if (latestChallengeCompletion.eventStates[eventId] === value) return;
+
     const { success, failure } = latestChallenge;
     const { success: successCompletion, failure: failureCompletion } = latestChallengeCompletion;
 
@@ -507,10 +510,12 @@ class Root extends React.Component<Props, State> {
 
   private saveChallengeCompletionTimeout_?: number;
   private saveChallengeCompletion_ = () => {
+    console.log('saveChallengeCompletion_');
     this.props.onChallengeCompletionSave();
   };
 
   private scheduleSaveChallengeCompletion_ = () => {
+    console.log('scheduleSaveChallengeCompletion_');
     if (this.saveChallengeCompletionTimeout_) clearTimeout(this.saveChallengeCompletionTimeout_);
     this.saveChallengeCompletionTimeout_ = window.setTimeout(this.saveChallengeCompletion_, 1000);
   };

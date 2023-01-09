@@ -1182,7 +1182,6 @@ class SceneBinding {
   readonly setScene = async (scene: Scene, robots: Dict<Robot>) => {
     this.robots_ = robots;
     const patch = Scene.diff(this.scene_, scene);
-    this.scriptManager_.scene = scene;
 
     const nodeIds = Dict.keySet(patch.nodes);
 

@@ -79,6 +79,7 @@ export class Space {
   get scene() { return this.scene_; }
   set scene(scene: Scene) {
     this.scene_ = scene;
+    if (this.sceneBinding_) this.sceneBinding_.scriptManager.scene = this.scene_;
     
     if (this.sceneSetting_ || this.debounceUpdate_ || !this.sceneBinding_) {
       if (this.sceneBinding_ && !this.sceneSetting_) this.sceneBinding_.scene = scene;
@@ -233,7 +234,9 @@ export class Space {
     scriptManager.onSelectedNodeIdChange = id => this.onSelectNodeId?.(id);
     scriptManager.onChallengeSetEventValue = (id, value) => this.onChallengeSetEventValue?.(id, value);
     
+    this.sceneBinding_.scriptManager.scene = this.scene_;
     await this.sceneBinding_.setScene(this.scene_, Robots.loaded(state.robots));
+    
     this.bScene_.getPhysicsEngine().setSubTimeStep(5);
 
     // (x, z) coordinates of cans around the board
