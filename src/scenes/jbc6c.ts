@@ -45,10 +45,10 @@ scene.addOnIntersectionListener('can3', (type, otherNodeId) => {
 }, 'circle9');
 `;
 
-const matIntersect = `
+const surfaceIntersect = `
 // When a can is not intersecting the mat, the lift condition is met.
 
-scene.addOnIntersectionListener('matSurface', (type, otherNodeId) => {
+scene.addOnIntersectionListener('mainSurface', (type, otherNodeId) => {
   switch (otherNodeId) {
     case 'can1':
       console.log('Can 1 lifted!', type, otherNodeId);
@@ -75,29 +75,22 @@ scene.addOnIntersectionListener('matSurface', (type, otherNodeId) => {
 const uprightCans = `
 // When a can is standing upright, the upright condition is met.
 
-// const start = (nodeId) => console.log(nodeId, ': ',scene.nodes[nodeId]);
-
-// start('can1');
-// start('can2');
-// start('can3');
-
-const startingOrientationInv = (nodeId) => Quaternion.inverse(Rotation.toRawQuaternion(scene.nodes[nodeId].origin.orientation));
 let startTime = Date.now();
-const yAngle = (nodeId) => Vector3.dot(Vector3.applyQuaternion(Vector3.Y, Quaternion.multiply(Rotation.toRawQuaternion(scene.nodes[nodeId].origin.orientation), startingOrientationInv(nodeId))), Vector3.Y);
+const EULER_IDENTITY = Rotation.Euler.identity();
+const startingOrientationInv = (nodeId) => Quaternion.inverse(Rotation.toRawQuaternion(scene.nodes[nodeId].startingOrigin.orientation || EULER_IDENTITY));
+const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3.dot(Vector3.applyQuaternion(Vector3.Y, Rotation.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3.Y));
+
 
 scene.addOnRenderListener(() => {
   const currTime = Date.now();
   const timeDiff = currTime - startTime;
-  const upright1 = yAngle('can1') < 1;
-  if(timeDiff > 1000 && !upright1) {
-    console.log('can1 not upright: ', yAngle('can1'));
-    console.log(scene.nodes['can1']);
-    startTime = currTime;
-  }
-  const upright2 = yAngle('can2') < 1;
-  // if(!upright2) console.log('can2 not upright: ', yAngle('can2'));
-  const upright3 = yAngle('can3') < 1;
-  // if(!upright3) console.log('can3 not upright: ', yAngle('can3'));
+  const upright1 = yAngle('can1') < 5;
+  const upright2 = yAngle('can2') < 5;
+  const upright3 = yAngle('can3') < 5;
+  // if(timeDiff > 1000) {
+  //   console.log('can1 angle: ', yAngle('can1'));
+  //   startTime = currTime;
+  // }
   scene.setChallengeEventValue('canAUpright', upright1);
   scene.setChallengeEventValue('canBUpright', upright2);
   scene.setChallengeEventValue('canCUpright', upright3);
@@ -110,7 +103,7 @@ export const JBC_6C: Scene = {
   description: { [LocalizedString.EN_US]: `Junior Botball Challenge 6C: Empty the Garage` },
   scripts: {
     'circleIntersects': Script.ecmaScript('Circle Intersects', circleIntersects),
-    'matIntersect': Script.ecmaScript('Mat Intersect', matIntersect),
+    'surfaceIntersect': Script.ecmaScript('Surface Intersect', surfaceIntersect),
     'uprightCans': Script.ecmaScript('Upright Cans', uprightCans),
   },
   geometry: {
@@ -130,7 +123,7 @@ export const JBC_6C: Scene = {
       radius: Distance.centimeters(3),
       height: Distance.centimeters(0.1),
     },
-    'matSurface_geom': {
+    'mainSurface_geom': {
       type: 'box',
       size: {
         x: Distance.meters(3.54),
@@ -201,9 +194,9 @@ export const JBC_6C: Scene = {
         },
       },
     },
-    'matSurface': {
+    'mainSurface': {
       type: 'object',
-      geometryId: 'matSurface_geom',
+      geometryId: 'mainSurface_geom',
       name: { [LocalizedString.EN_US]: 'Mat Surface' },
       visible: false,
       origin: {
