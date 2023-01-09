@@ -6,11 +6,13 @@ import PredicateCompletion from './PredicateCompletion';
 
 import { ObjectPatch, OuterObjectPatch } from 'symmetry';
 import ProgrammingLanguage from '../../../ProgrammingLanguage';
+import { ReferenceFrame } from '../../../unit-math';
 
 interface ChallengeCompletion {
   code: { [language in ProgrammingLanguage]: string };
   currentLanguage: ProgrammingLanguage;
   serializedSceneDiff: string;
+  robotLinkOrigins?: Dict<Dict<ReferenceFrame>>;
   eventStates: Dict<boolean>;
   success?: PredicateCompletion;
   failure?: PredicateCompletion;

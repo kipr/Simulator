@@ -59,7 +59,7 @@ import LocalizedString from '../util/LocalizedString';
 import SceneSettingsDialog from './SceneSettingsDialog';
 import Geometry from '../state/State/Scene/Geometry';
 import Camera from '../state/State/Scene/Camera';
-import { Vector3 } from '../unit-math';
+import { ReferenceFrame, Vector3 } from '../unit-math';
 import { LayoutEditorTarget } from './Layout/Layout';
 import { AsyncChallenge } from '../state/State/Challenge';
 import Builder from '../db/Builder';
@@ -198,6 +198,7 @@ interface RootPrivateProps {
   onChallengeCompletionReset: () => void;
   onChallengeCompletionSetCode: (language: ProgrammingLanguage, code: string) => void;
   onChallengeCompletionSetCurrentLanguage: (language: ProgrammingLanguage) => void;
+  onChallengeCompletionSetRobotLinkOrigins: (robotLinkOrigins: Dict<Dict<ReferenceFrame>>) => void;
   onChallengeCompletionSave: () => void;
 
   goToLogin: () => void;
@@ -496,6 +497,7 @@ class Root extends React.Component<Props, State> {
         if (latestChallengeCompletion.serializedSceneDiff) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const sceneDiff = JSON.parse(latestChallengeCompletion.serializedSceneDiff);
+          Space.getInstance().robotLinkOrigins = latestChallengeCompletion.robotLinkOrigins || {};
           this.workingChallengeScene = applyObjectPatch(latestScene, sceneDiff as ObjectPatch<Scene>);
           this.initedChallengeCompletionScene_ = true;
         }
@@ -508,16 +510,21 @@ class Root extends React.Component<Props, State> {
     this.setState({ windowInnerHeight: window.innerHeight });
   };
 
-  private saveChallengeCompletionTimeout_?: number;
+  private lastSaveChallengeCompletionTime_ = 0;
+
   private saveChallengeCompletion_ = () => {
     console.log('saveChallengeCompletion_');
+    this.props.onChallengeCompletionSetRobotLinkOrigins(Space.getInstance().sceneBinding.currentRobotLinkOrigins);
     this.props.onChallengeCompletionSave();
+
+    this.lastSaveChallengeCompletionTime_ = Date.now();
   };
 
   private scheduleSaveChallengeCompletion_ = () => {
     console.log('scheduleSaveChallengeCompletion_');
-    if (this.saveChallengeCompletionTimeout_) clearTimeout(this.saveChallengeCompletionTimeout_);
-    this.saveChallengeCompletionTimeout_ = window.setTimeout(this.saveChallengeCompletion_, 1000);
+    if (Date.now() - this.lastSaveChallengeCompletionTime_ < 1000) return;
+
+    this.saveChallengeCompletion_();
   };
 
 
@@ -1030,7 +1037,10 @@ export default connect((state: ReduxState, { match: { params: { challengeId } } 
   onChallengeCompletionSetCurrentLanguage: (language: ProgrammingLanguage) => {
     dispatch(ChallengeCompletionsAction.setCurrentLanguage({ challengeId, language }));
   },
-  onChallengeCompletionSave: () => {
+  onChallengeCompletionSetRobotLinkOrigins: (robotLinkOrigins: Dict<Dict<ReferenceFrame>>) => {
+    dispatch(ChallengeCompletionsAction.setRobotLinkOrigins({ challengeId, robotLinkOrigins }));
+  },
+    onChallengeCompletionSave: () => {
     dispatch(ChallengeCompletionsAction.saveChallengeCompletion({ challengeId }));
   },
   onDeleteRecord: (selector: Selector) => {

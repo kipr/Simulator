@@ -107,6 +107,21 @@ class SceneBinding {
     this.scriptManager_.onIntersectionFiltersChanged = this.onIntersectionFiltersChanged_;
   }
 
+  private robotLinkOrigins_: Dict<Dict<ReferenceFrame>> = {};
+  set robotLinkOrigins(robotLinkOrigins: Dict<Dict<ReferenceFrame>>) {
+    this.robotLinkOrigins_ = robotLinkOrigins;
+  }
+
+  get currentRobotLinkOrigins(): Dict<Dict<ReferenceFrame>> {
+    // iterate over all robots
+    const ret: Dict<Dict<ReferenceFrame>> = {};
+    for (const robotId in this.robotBindings_) {
+      const robotBinding = this.robotBindings_[robotId];
+      ret[robotId] = robotBinding.linkOrigins;
+    }
+    return ret;
+  }
+
   private static apply_ = (g: Babylon.Node, f: (m: Babylon.AbstractMesh) => void) => {
     if (g instanceof Babylon.AbstractMesh) {
       f(g);
@@ -579,6 +594,8 @@ class SceneBinding {
     const robot = this.robots_[node.robotId];
     if (!robot) throw new Error(`Robot by id "${node.robotId}" not found`);
     await robotBinding.setRobot(node, robot);
+    robotBinding.linkOrigins = this.robotLinkOrigins_[id] || {};
+
     // FIXME: For some reason this origin isn't respected immediately. We need to look into it.
     robotBinding.visible = false;
     const observerObj: { observer: Babylon.Observer<Babylon.Scene> } = { observer: null };
@@ -597,6 +614,9 @@ class SceneBinding {
       const { origin, visible } = node;
 
       robotBinding.origin = origin || ReferenceFrame.IDENTITY;
+
+      const linkOrigins = this.robotLinkOrigins_[id];
+      if (linkOrigins) robotBinding.linkOrigins = linkOrigins;
       
       if (count++ < 10) return;
 

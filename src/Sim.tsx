@@ -75,6 +75,12 @@ export class Space {
   private scene_ = Scene.EMPTY;
 
   get sceneBinding() { return this.sceneBinding_; }
+
+  private robotLinkOrigins_: Dict<Dict<UnitReferenceFrame>> = {};
+  get robotLinkOrigins() { return this.robotLinkOrigins_; }
+  set robotLinkOrigins(robotLinkOrigins: Dict<Dict<UnitReferenceFrame>>) {
+    this.robotLinkOrigins_ = robotLinkOrigins;
+  }
   
   get scene() { return this.scene_; }
   set scene(scene: Scene) {
@@ -222,6 +228,7 @@ export class Space {
     const ammo: unknown = await (Ammo as any)();
     
     this.sceneBinding_ = new SceneBinding(this.bScene_, ammo);
+    this.sceneBinding_.robotLinkOrigins = this.robotLinkOrigins_;
 
     const scriptManager = this.sceneBinding_.scriptManager;
     scriptManager.onNodeAdd = (id, node) => this.onNodeAdd?.(id, node);

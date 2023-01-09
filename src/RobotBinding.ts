@@ -606,6 +606,32 @@ class RobotBinding {
     };
   }
 
+  get linkOrigins(): Dict<ReferenceFrame> {
+    const linkOrigins: Dict<ReferenceFrame> = {};
+    for (const [linkId, link] of Object.entries(this.links_)) {
+      const rawLinkPosition = RawVector3.fromBabylon(link.position);
+      const rawLinkOrientation = Quaternion.fromBabylon(link.rotationQuaternion);
+      const rawLinkScale = RawVector3.fromBabylon(link.scaling);
+
+      linkOrigins[linkId] = {
+        position: Vector3.fromRaw(rawLinkPosition, RENDER_SCALE),
+        orientation: Rotation.Euler.fromRaw(Euler.fromQuaternion(rawLinkOrientation)),
+        scale: rawLinkScale
+      };
+    }
+    return linkOrigins;
+  }
+
+  set linkOrigins(linkOrigins: Dict<ReferenceFrame>) {
+    for (const [linkId, link] of Object.entries(this.links_)) {
+      if (!(linkId in linkOrigins)) continue;
+      const rawLinkPosition = ReferenceFrame.toRaw(linkOrigins[linkId], RENDER_SCALE);
+      link.position = RawVector3.toBabylon(rawLinkPosition.position);
+      link.rotationQuaternion = Quaternion.toBabylon(rawLinkPosition.orientation);
+      link.scaling = RawVector3.toBabylon(rawLinkPosition.scale);
+    }
+  }
+
   get origin(): ReferenceFrame {
     const rootLink = this.links_[this.rootId_];
     const rawOrientation = rootLink.rotationQuaternion;

@@ -11,6 +11,7 @@ import Scene from '../State/Scene';
 import Dict from '../../Dict';
 import { ObjectPatch, OuterObjectPatch } from 'symmetry/dist';
 import ProgrammingLanguage from '../../ProgrammingLanguage';
+import { ReferenceFrame } from '../../unit-math';
 
 
 export namespace ChallengeCompletionsAction {
@@ -133,6 +134,14 @@ export namespace ChallengeCompletionsAction {
   }
 
   export const setCurrentLanguage = construct<SetCurrentLanguage>('challenge-completions/set-current-language');
+
+  export interface SetRobotLinkOrigins {
+    type: 'challenge-completions/set-robot-link-origins';
+    challengeId: string;
+    robotLinkOrigins: Dict<Dict<ReferenceFrame>>;
+  }
+
+  export const setRobotLinkOrigins = construct<SetRobotLinkOrigins>('challenge-completions/set-robot-link-origins');
 }
 
 export type ChallengeCompletionsAction = (
@@ -150,7 +159,8 @@ export type ChallengeCompletionsAction = (
   ChallengeCompletionsAction.SetSceneDiff |
   ChallengeCompletionsAction.ResetChallengeCompletion |
   ChallengeCompletionsAction.SetCode |
-  ChallengeCompletionsAction.SetCurrentLanguage
+  ChallengeCompletionsAction.SetCurrentLanguage |
+  ChallengeCompletionsAction.SetRobotLinkOrigins
 );
 
 const DEFAULT_CHALLENGE_COMPLETIONS: ChallengeCompletions = {
@@ -310,6 +320,9 @@ export const reduceChallengeCompletions = (state: ChallengeCompletions = DEFAULT
     });
     case 'challenge-completions/set-current-language': return mutate(state, action.challengeId, challenge => {
       challenge.currentLanguage = action.language;
+    });
+    case 'challenge-completions/set-robot-link-origins': return mutate(state, action.challengeId, challenge => {
+      challenge.robotLinkOrigins = action.robotLinkOrigins;
     });
     default: return state;
   }
