@@ -1,13 +1,13 @@
 import Scene from "../state/State/Scene";
 import { Color } from '../state/State/Scene/Color';
-import { Vector3, Quaternion, ReferenceFrame } from "../math";
-import { Color3, StandardMaterial, GlowLayer } from 'babylonjs';
+// import { Vector3, Quaternion, ReferenceFrame } from "../math";
+// import { Color3, StandardMaterial, GlowLayer } from 'babylonjs';
 import Script from '../state/State/Scene/Script';
 import { Distance } from "../util";
 import LocalizedString from '../util/LocalizedString';
 
 import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
-import jbc6c from "../challenges/jbc6c";
+// import jbc6c from "../challenges/jbc6c";
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -20,10 +20,10 @@ const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
 // When the the green garage can is intersecting circle 2, the circle glows.
 
 scene.addOnIntersectionListener('can1', (type, otherNodeId) => {
-  console.log('Can 1 placed!', type, otherNodeId, Date.now());
+  console.log('Can 1 placed!', type, otherNodeId);
   const visible = type === 'start';
-  setNodeVisible('circle2', visible);
   scene.setChallengeEventValue('canAPlaced', visible);
+  setNodeVisible('circle2', visible);
 }, 'circle2');
 
 // When the the blue garage can is intersecting circle 10, the circle glows.
@@ -31,8 +31,8 @@ scene.addOnIntersectionListener('can1', (type, otherNodeId) => {
 scene.addOnIntersectionListener('can2', (type, otherNodeId) => {
   console.log('Can 2 placed!', type, otherNodeId);
   const visible = type === 'start';
-  setNodeVisible('circle10', visible);
   scene.setChallengeEventValue('canBPlaced', visible);
+  setNodeVisible('circle10', visible);
 }, 'circle10');
 
 // When the the yellow garage can is intersecting circle 9, the circle glows.
@@ -40,8 +40,8 @@ scene.addOnIntersectionListener('can2', (type, otherNodeId) => {
 scene.addOnIntersectionListener('can3', (type, otherNodeId) => {
   console.log('Can 3 placed!', type, otherNodeId);
   const visible = type === 'start';
-  setNodeVisible('circle9', visible);
   scene.setChallengeEventValue('canCPlaced', visible);
+  setNodeVisible('circle9', visible);
 }, 'circle9');
 `;
 
@@ -51,19 +51,19 @@ const surfaceIntersect = `
 scene.addOnIntersectionListener('mainSurface', (type, otherNodeId) => {
   switch (otherNodeId) {
     case 'can1':
-      console.log('Can 1 lifted!', type, otherNodeId);
+      // console.log('Can 1 lifted!', type, otherNodeId);
       if (scene.programStatus === 'running') {
         scene.setChallengeEventValue('canALifted', type === 'end');
       }
       break;
     case 'can2':
-      console.log('Can 2 lifted!', type, otherNodeId);
+      // console.log('Can 2 lifted!', type, otherNodeId);
       if (scene.programStatus === 'running') {
         scene.setChallengeEventValue('canBLifted', type === 'end');
       }
       break;
     case 'can3':
-      console.log('Can 3 lifted!', type, otherNodeId);
+      // console.log('Can 3 lifted!', type, otherNodeId);
       if (scene.programStatus === 'running') {
         scene.setChallengeEventValue('canCLifted', type === 'end');
       }
@@ -75,15 +75,15 @@ scene.addOnIntersectionListener('mainSurface', (type, otherNodeId) => {
 const uprightCans = `
 // When a can is standing upright, the upright condition is met.
 
-let startTime = Date.now();
+// let startTime = Date.now();
 const EULER_IDENTITY = Rotation.Euler.identity();
-const startingOrientationInv = (nodeId) => Quaternion.inverse(Rotation.toRawQuaternion(scene.nodes[nodeId].startingOrigin.orientation || EULER_IDENTITY));
+// const startingOrientationInv = (nodeId) => Quaternion.inverse(Rotation.toRawQuaternion(scene.nodes[nodeId].startingOrigin.orientation || EULER_IDENTITY));
 const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3.dot(Vector3.applyQuaternion(Vector3.Y, Rotation.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3.Y));
 
 
 scene.addOnRenderListener(() => {
-  const currTime = Date.now();
-  const timeDiff = currTime - startTime;
+  // const currTime = Date.now();
+  // const timeDiff = currTime - startTime;
   const upright1 = yAngle('can1') < 5;
   const upright2 = yAngle('can2') < 5;
   const upright3 = yAngle('can3') < 5;
