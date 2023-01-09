@@ -313,6 +313,10 @@ namespace Async {
         original: async.original,
         value: produce(async.value, recipe)
       });
+      case Type.Saving: return saveable({
+        original: async.original,
+        value: produce(async.value, recipe)
+      });
       case Type.SaveFailed: return saveFailed({
         original: async.original,
         value: produce(async.value, recipe),

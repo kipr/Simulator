@@ -190,11 +190,24 @@ const create = async (challengeId: string, next: Async.Creating<ChallengeComplet
 const save = async (challengeId: string, current: Async.Saveable<ChallengeCompletionBrief, ChallengeCompletion>) => {
   try {
     await db.set(Selector.challengeCompletion(challengeId), current.value);
-    store.dispatch(ChallengeCompletionsAction.setChallengeCompletionInternal({
-      challengeCompletion: Async.loaded({
+
+    const latest = Async.latestValue(store.getState().challengeCompletions[challengeId]);
+
+    let next: AsyncChallengeCompletion;
+    if (latest === current.value) {
+      next = Async.loaded({
         brief: current.brief,
         value: current.value
-      }),
+      });
+    } else {
+      next = Async.saveable({
+        brief: current.brief,
+        original: current.value,
+        value: latest,
+      });
+    }
+    store.dispatch(ChallengeCompletionsAction.setChallengeCompletionInternal({
+      challengeCompletion: next,
       challengeId,
     }));
   } catch (error) {

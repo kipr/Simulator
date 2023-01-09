@@ -407,11 +407,10 @@ class Root extends React.Component<Props, State> {
     const latestChallengeCompletion = Async.latestValue(challengeCompletion);
     if (!latestChallengeCompletion) return;
 
-    // check if event value is the same as the current value
-    if (latestChallengeCompletion.eventStates[eventId] === value) return;
-
     const { success, failure } = latestChallenge;
     const { success: successCompletion, failure: failureCompletion } = latestChallengeCompletion;
+
+    if (latestChallengeCompletion.eventStates[eventId] === value) return;
 
     const nextEventStates = {
       ...latestChallengeCompletion.eventStates,
@@ -513,7 +512,6 @@ class Root extends React.Component<Props, State> {
   private lastSaveChallengeCompletionTime_ = 0;
 
   private saveChallengeCompletion_ = () => {
-    console.log('saveChallengeCompletion_');
     this.props.onChallengeCompletionSetRobotLinkOrigins(Space.getInstance().sceneBinding.currentRobotLinkOrigins);
     this.props.onChallengeCompletionSave();
 
@@ -521,7 +519,6 @@ class Root extends React.Component<Props, State> {
   };
 
   private scheduleSaveChallengeCompletion_ = () => {
-    console.log('scheduleSaveChallengeCompletion_');
     if (Date.now() - this.lastSaveChallengeCompletionTime_ < 1000) return;
 
     this.saveChallengeCompletion_();
