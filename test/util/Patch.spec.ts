@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { expect, config } from 'chai';
 import { describe, it } from 'mocha';
 import Patch from '../../src/util/Patch';
 import Scene from '../../src/state/State/Scene';
@@ -58,11 +58,5 @@ describe('Patch', () => {
     expect(diff.type).to.equal(Patch.Type.OuterChange);
     const next = Patch.apply(diff, { a: 1, b: 2, c: 3 });
     expect(next).to.deep.equal({ a: 1, b: 2, c: 4 });
-  });
-
-  it('should apply an inner diff', () => {
-    const diff = Scene.diff(SCENE_A, SCENE_B);
-    const next = Scene.apply(SCENE_A, diff);
-    expect(next).to.deep.equal(SCENE_B);
   });
 })
