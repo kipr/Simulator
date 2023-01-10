@@ -43,6 +43,11 @@ export namespace Vector2 {
     y: obj.top
   });
 
+  export const fromWidthHeight = <T extends { width: number, height: number }>(obj: T): Vector2 => ({
+    x: obj.width,
+    y: obj.height
+  });
+
   export const fromX = (x: number): Vector2 => ({ x, y: 0 });
   export const fromY = (y: number): Vector2 => ({ x: 0, y });
 

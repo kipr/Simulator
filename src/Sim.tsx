@@ -65,16 +65,27 @@ export class Space {
   onCameraChange?: (camera: Camera) => void;
   onGravityChange?: (gravity: UnitVector3) => void;
 
+  onChallengeSetEventValue?: (eventId: string, value: boolean) => void;
+
 
   private debounceUpdate_ = false;
   private sceneSetting_ = false;
   
   private nextScene_: Scene | undefined;
   private scene_ = Scene.EMPTY;
-  get scene() { return this.scene_; }
+
+  get sceneBinding() { return this.sceneBinding_; }
+
+  private robotLinkOrigins_: Dict<Dict<UnitReferenceFrame>> = {};
+  get robotLinkOrigins() { return this.robotLinkOrigins_; }
+  set robotLinkOrigins(robotLinkOrigins: Dict<Dict<UnitReferenceFrame>>) {
+    this.robotLinkOrigins_ = robotLinkOrigins;
+  }
   
+  get scene() { return this.scene_; }
   set scene(scene: Scene) {
     this.scene_ = scene;
+    if (this.sceneBinding_) this.sceneBinding_.scriptManager.scene = this.scene_;
     
     if (this.sceneSetting_ || this.debounceUpdate_ || !this.sceneBinding_) {
       if (this.sceneBinding_ && !this.sceneSetting_) this.sceneBinding_.scene = scene;
@@ -217,6 +228,7 @@ export class Space {
     const ammo: unknown = await (Ammo as any)();
     
     this.sceneBinding_ = new SceneBinding(this.bScene_, ammo);
+    this.sceneBinding_.robotLinkOrigins = this.robotLinkOrigins_;
 
     const scriptManager = this.sceneBinding_.scriptManager;
     scriptManager.onNodeAdd = (id, node) => this.onNodeAdd?.(id, node);
@@ -227,8 +239,11 @@ export class Space {
     scriptManager.onCameraChange = camera => this.onCameraChange?.(camera);
     scriptManager.onGravityChange = gravity => this.onGravityChange?.(gravity);
     scriptManager.onSelectedNodeIdChange = id => this.onSelectNodeId?.(id);
+    scriptManager.onChallengeSetEventValue = (id, value) => this.onChallengeSetEventValue?.(id, value);
     
+    this.sceneBinding_.scriptManager.scene = this.scene_;
     await this.sceneBinding_.setScene(this.scene_, Robots.loaded(state.robots));
+    
     this.bScene_.getPhysicsEngine().setSubTimeStep(5);
 
     // (x, z) coordinates of cans around the board
@@ -242,6 +257,8 @@ export class Space {
 
     const robotWorkerInstances = Dict.map(robots, () => WorkerInstance);
     const tickOuts = this.sceneBinding_.tick(robotWorkerInstances);
+
+    if (!tickOuts) return;
 
     const setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'> = {
       nodeIds: [],

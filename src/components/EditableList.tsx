@@ -50,7 +50,13 @@ class EditableList extends React.PureComponent<Props, State> {
       <Container style={style} className={className}>
         {items.map((item, index) => {
           const Component = item.component;
-          return <Component {...item.props} onRemove={item.removable ? this.onRemove_(index, item.userdata) : undefined} key={index} />;
+          return (
+            <Component
+              {...item.props}
+              onRemove={item.removable ? this.onRemove_(index, item.userdata) : undefined}
+              key={index}
+            />
+          );
         })}
       </Container >
     );
@@ -135,10 +141,16 @@ namespace EditableList {
 
     render() {
       const { props, state } = this;
-      const { component, onRemove, onSettings, onReset, onVisibilityChange, visible } = props;
-      const componentProps = props.props;
+      const {
+        component: Component,
+        onRemove,
+        onSettings,
+        onReset,
+        onVisibilityChange,
+        visible,
+        props: componentProps
+      } = props;
       const { hover, initialTouch } = state;
-      const Component = component;
       return (
         <StandardItem.Container onMouseEnter={this.onMouseEnter_} onMouseLeave={this.onMouseLeave_} onTouchEnd={this.onTouchEnd_} onClick={this.onClick_}>
           <Component style={{ flex: '1 1' }} {...componentProps} />

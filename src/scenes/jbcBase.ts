@@ -8,7 +8,7 @@ import LocalizedString from '../util/LocalizedString';
 import Author from '../db/Author';
 
 const ROBOT_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(0, 2, 0),
+  position: Vector3.centimeters(0, 5, 0),
   orientation: Rotation.eulerDegrees(0, 0, 0),
 };
 

@@ -30,6 +30,8 @@ export interface ScriptSceneBinding {
 
   selectedNodeId?: string;
 
+  readonly programStatus: 'running' | 'stopped';
+
   addOnRenderListener(cb: () => void): string;
   addOnCollisionListener(nodeId: string, cb: (otherNodeId: string, point: Vector3) => void, filterIds: Ids): string;
   addOnIntersectionListener(nodeId: string, cb: (type: 'start' | 'end', otherNodeId: string) => void, filterIds: Ids): string;
@@ -42,4 +44,6 @@ export interface ScriptSceneBinding {
 
   // Used only for unit tests
   postTestResult: (data: unknown) => void;
+
+  setChallengeEventValue: (eventId: string, value: boolean) => void;
 }

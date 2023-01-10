@@ -7,17 +7,18 @@ export interface FieldProps extends ThemeProps, StyleProps {
   name: string;
   children: React.ReactNode;
   long?: boolean;
+  multiline?: boolean;
 }
 
 type Props = FieldProps;
 
-const Container = styled('div', {
+const Container = styled('div', ({ $multiline }: { $multiline?: boolean; }) => ({
   display: 'flex',
-  flexDirection: 'row',
+  flexDirection: !$multiline ? 'row' : 'column',
   alignItems: 'center',
   width: '100%',
   fontSize: '14px'
-});
+}));
 
 const NameLabel = styled('span', (props: { $long?: boolean; }) => ({
   width: props.$long ? '140px' : `70px`,
@@ -33,10 +34,10 @@ export class Field extends React.PureComponent<Props> {
 
   render() {
     const { props } = this;
-    const { theme, style, className, name, children, long } = props;
+    const { theme, style, className, name, children, long, multiline } = props;
   
     return (
-      <Container style={style} className={className}>
+      <Container style={style} className={className} $multiline={multiline}>
         <NameLabel $long={long}>{name}</NameLabel>
         {children}
       </Container>

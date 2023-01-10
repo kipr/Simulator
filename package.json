@@ -83,6 +83,7 @@
     "styletron": "^3.0.4",
     "styletron-engine-atomic": "^1.4.7",
     "styletron-react": "^6.0.1",
+    "symmetry": "^0.6.1",
     "url-loader": "^4.1.1",
     "uuid": "^8.3.2"
   }

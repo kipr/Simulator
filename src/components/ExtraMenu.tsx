@@ -8,7 +8,7 @@ import { faBook, faCaretSquareLeft, faClone, faCogs, faCommentDots, faCopy, faEy
 
 export interface ExtraMenuProps extends StyleProps, ThemeProps {
   onLogoutClick: (event: React.MouseEvent) => void;
-  onFeedbackClick: (event: React.MouseEvent) => void;
+  onFeedbackClick?: (event: React.MouseEvent) => void;
   onDocumentationClick: (event: React.MouseEvent) => void;
   onSettingsClick: (event: React.MouseEvent) => void;
   onAboutClick: (event: React.MouseEvent) => void;
@@ -96,7 +96,7 @@ class ExtraMenu extends React.PureComponent<Props, State> {
         <Item theme={theme} onClick={onDocumentationClick}><ItemIcon icon={faBook} /> Documentation</Item>
         <Item theme={theme} onClick={onSettingsClick}><ItemIcon icon={faCogs} /> Settings</Item>
         <Item theme={theme} onClick={onAboutClick}><ItemIcon icon={faQuestion} /> About</Item>
-        <Item theme={theme} onClick={onFeedbackClick}><ItemIcon icon={faCommentDots} /> Feedback</Item>
+        {onFeedbackClick && <Item theme={theme} onClick={onFeedbackClick}><ItemIcon icon={faCommentDots} /> Feedback</Item>}
         <Item theme={theme} onClick={onLogoutClick}><ItemIcon icon={faSignOutAlt} /> Logout</Item>
       </Container>
     );

@@ -20,6 +20,7 @@ import produce, { original } from 'immer';
 import Script from '../State/Scene/Script';
 import { v4 } from 'uuid';
 import { WritableDraft } from 'immer/dist/internal';
+import { errorToAsyncError, mutate } from './util';
 
 export namespace ScenesAction {
   export interface RemoveScene {
@@ -328,15 +329,6 @@ const DEFAULT_SCENES: Scenes = {
   scriptPlayground: Async.loaded({ value: JBC_SCENES.scriptPlayground }),
 };
 
-export const errorToAsyncError = (error: unknown): Async.Error => {
-  if (DbError.is(error)) return error;
-  if (error instanceof Error) return {
-    code: 0,
-    message: error.message,
-  };
-  throw error;
-};
-
 const create = async (sceneId: string, next: Async.Creating<Scene>) => {
   try {
     await db.set(Selector.scene(sceneId), next.value);
@@ -397,7 +389,7 @@ const load = async (sceneId: string, current: AsyncScene | undefined) => {
   }
 };
 
-export const remove = async (sceneId: string, next: Async.Deleting<SceneBrief, Scene>) => {
+const remove = async (sceneId: string, next: Async.Deleting<SceneBrief, Scene>) => {
   try {
     await db.delete(Selector.scene(sceneId));
     store.dispatch(ScenesAction.setSceneInternal({ sceneId, scene: undefined }));
@@ -418,11 +410,6 @@ export const listUserScenes = async () => {
     }))
   }));
 };
-
-export const mutate = (scenes: Scenes, sceneId: string, recipe: (draft: WritableDraft<Scene>) => void) => ({
-  ...scenes,
-  [sceneId]: Async.mutate(scenes[sceneId], recipe),
-});
 
 export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesAction): Scenes => {
   switch (action.type) {

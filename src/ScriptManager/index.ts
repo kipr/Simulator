@@ -4,11 +4,12 @@ import Camera from '../state/State/Scene/Camera';
 import Geometry from '../state/State/Scene/Geometry';
 import Node from '../state/State/Scene/Node';
 import Script from '../state/State/Scene/Script';
-import { Vector3 } from '../unit-math';
+import { Rotation, Vector3 } from '../unit-math';
 
 import { v4 as uuid } from 'uuid';
 import construct from '../util/construct';
 import { Ids, ScriptSceneBinding } from './ScriptSceneBinding';
+import { AxisAngle, Quaternion, ReferenceFrame, Vector3 as RawVector3 } from '../math';
 
 class ScriptManager {
   private scene_: Scene;
@@ -26,6 +27,14 @@ class ScriptManager {
   onGravityChange?: (gravity: Vector3) => void;
   onCameraChange?: (camera: Camera) => void;
   onSelectedNodeIdChange?: (id: string) => void;
+
+  onChallengeSetEventValue?: (eventId: string, value: boolean) => void;
+
+  private programStatus_: 'running' | 'stopped' = 'stopped';
+  get programStatus() { return this.programStatus_; }
+  set programStatus(status: 'running' | 'stopped') {
+    this.programStatus_ = status;
+  }
 
 
   private scriptExecutions_: Dict<ScriptManager.ScriptExecution> = {};
@@ -249,9 +258,14 @@ namespace ScriptManager {
     constructor(script: Script, manager: ScriptManager) {
       this.script_ = script;
       this.manager_ = manager;
+
     
       // eslint-disable-next-line @typescript-eslint/no-implied-eval
-      new Function("scene", `"use strict"; ${this.script_.code}`)(this);
+      new Function("scene, Rotation, AxisAngle, Vector3, Quaternion, ReferenceFrame", `"use strict"; ${this.script_.code}`)(this, Rotation, AxisAngle, RawVector3, Quaternion, ReferenceFrame);
+    }
+
+    get programStatus() {
+      return this.manager_.programStatus;
     }
 
     trigger(event: Event) {
@@ -426,7 +440,7 @@ namespace ScriptManager {
       return handle;
     }
 
-    addOnCollisionListener(nodeId: string, cb: (otherNoedId: string, point: Vector3) => void, filterIds?: Ids): string {
+    addOnCollisionListener(nodeId: string, cb: (otherNodeId: string, point: Vector3) => void, filterIds?: Ids): string {
       const handle = uuid();
       const listener = Listener.collision({ nodeId, cb, filterIds: Ids.toSet(filterIds) });
       this.listeners_[handle] = listener;
@@ -466,6 +480,11 @@ namespace ScriptManager {
     postTestResult(data: unknown) {
       if (!this.manager_.onPostTestResult) return;
       this.manager_.onPostTestResult(data);
+    }
+
+    setChallengeEventValue(eventId: string, value: boolean) {
+      if (!this.manager_.onChallengeSetEventValue) return;
+      this.manager_.onChallengeSetEventValue(eventId, value);
     }
   }
 }

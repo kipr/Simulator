@@ -119,6 +119,36 @@ namespace Patch {
 
     return ret;
   };
+
+  export const applyInner = <T>(patch: InnerChange<T>, value: T): T => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const ret: any = {};
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    for (const key in patch.inner) ret[key] = apply(patch.inner[key], value[key]);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return ret;
+  };
+
+  export const apply = <T>(patch: Patch<T>, value: T): T => {
+    switch (patch.type) {
+      case Type.None:
+        return value;
+      case Type.Add:
+        return patch.next;
+      case Type.Remove:
+        return undefined;
+      case Type.OuterChange:
+        return patch.next;
+      case Type.InnerChange:
+        return applyInner(patch, value);
+    }
+  };
+
+  export const applyDict = <T>(patch: Dict<Patch<T>>, value: Dict<T>): Dict<T> => {
+    const ret: Dict<T> = {};
+    for (const key in patch) ret[key] = apply(patch[key], value[key]);
+    return ret;
+  };
 }
 
 /**

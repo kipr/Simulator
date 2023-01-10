@@ -20,25 +20,18 @@ import { State as ReduxState } from '../../state';
 import Node from '../../state/State/Scene/Node';
 import Dict from '../../Dict';
 import Scene from '../../state/State/Scene';
-import { faCode, faGlobeAmericas, faRobot } from '@fortawesome/free-solid-svg-icons';
+import { faCode, faFlagCheckered, faGlobeAmericas, faRobot } from '@fortawesome/free-solid-svg-icons';
 import Async from '../../state/State/Async';
 import { EMPTY_OBJECT } from '../../util';
+import Challenge from '../Challenge';
+import { ReferenceFrame } from '../../unit-math';
 
 // 3 panes:
 // Editor / console
 // Robot Info
 // World
 
-const TABS = [{
-  name: 'Editor',
-  icon: faCode,
-}, {
-  name: 'Robot',
-  icon: faRobot,
-}, {
-  name: 'World',
-  icon: faGlobeAmericas,
-}];
+
 
 const sizeDict = (sizes: Size[]) => {
   const forward: { [type: number]: number } = {};
@@ -161,6 +154,22 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     // not implemented
   };
 
+  private onRobotOriginChange_ = (origin: ReferenceFrame) => {
+    const { scene, onNodeChange } = this.props;
+    
+    const latestScene = Async.latestValue(scene);
+
+    if (!latestScene) return;
+
+    const robots = Scene.robots(latestScene);
+    const robotId = Object.keys(robots)[0];
+    this.props.onNodeChange(robotId, {
+      ...robots[robotId],
+      origin
+    });
+  };
+
+
   render() {
     const { props } = this;
     const {
@@ -178,6 +187,19 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       editorRef,
       robots,
       sceneId,
+      scene,
+      onNodeAdd,
+      onNodeChange,
+      onNodeRemove,
+      onGeometryAdd,
+      onGeometryChange,
+      onGeometryRemove,
+      onScriptAdd,
+      onScriptChange,
+      onScriptRemove,
+      onObjectAdd,
+      challengeState,
+      worldCapabilities
     } = props;
 
     const {
@@ -260,8 +282,13 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
         break;
       }
       case 1: {
-        const robotIds = Object.keys(robots);
-        if (robotIds.length === 1) {
+        const latestScene = Async.latestValue(scene);
+        let robotNode: Node.Robot;
+        if (latestScene) {
+          const robots = Scene.robots(latestScene);
+          robotNode = Dict.unique(robots);
+        }
+        if (robotNode) {
           content = (
             <SimulatorWidget
               theme={theme}
@@ -270,8 +297,8 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
             >
               <Info
                 theme={theme}
-                nodeId={robotIds[0]}
-                sceneId={sceneId}
+                node={robotNode}
+                onOriginChange={this.onRobotOriginChange_}
               />
             </SimulatorWidget>
           );
@@ -287,12 +314,60 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
             name='World'
             mode={Mode.Sidebar}
           >
-            <World theme={theme} sceneId={sceneId} />
+            <World
+              theme={theme}
+              scene={scene}
+              onNodeAdd={onNodeAdd}
+              onNodeChange={onNodeChange}
+              onNodeRemove={onNodeRemove}
+              onGeometryAdd={onGeometryAdd}
+              onGeometryChange={onGeometryChange}
+              onGeometryRemove={onGeometryRemove}
+              onScriptAdd={onScriptAdd}
+              onScriptChange={onScriptChange}
+              onScriptRemove={onScriptRemove}
+              onObjectAdd={onObjectAdd}
+              capabilities={worldCapabilities}
+            />
           </SimulatorWidget>
         );
         break;
       }
+      case 3: {
+        content = (
+          <SimulatorWidget
+            theme={theme}
+            name='Challenge'
+            mode={Mode.Sidebar}
+          >
+            <Challenge
+              theme={theme}
+              challenge={challengeState.challenge}
+              challengeCompletion={challengeState.challengeCompletion}
+            />
+          </SimulatorWidget>
+        );
+      }
     }
+
+    const tabs = [{
+      name: 'Editor',
+      icon: faCode,
+    }, {
+      name: 'Robot',
+      icon: faRobot,
+    }, {
+      name: 'World',
+      icon: faGlobeAmericas,
+    }];
+
+    if (challengeState) {
+      tabs.push({
+        name: 'Challenge',
+        icon: faFlagCheckered,
+      });
+    }
+
 
     const simulator = <SimulatorAreaContainer>
       <SimulatorArea
@@ -303,26 +378,10 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       />
     </SimulatorAreaContainer>;
 
-    // const tabBar = <TabBar isVertical={true} tabs={TABS} index={activePanel} onIndexChange={this.onTabBarIndexChange_} theme={theme} />;
-
-    // switch (sidePanelSize) {
-    //   case Size.Type.MinimizedS:
-    //     return <SidePanelContainer>
-    //       {simulator}
-    //     </SidePanelContainer>;
-    //   // not yet implemented, but could be on a device with a small enough screen that a slider doesn't make sense
-    //   // case Size.Type.Maximized:
-    //   //   return <SidePanelContainer>
-    //   //     {tabBar}
-    //   //     <SidePanelContainer>
-    //   //       {sideBar}
-    //   //     </SidePanelContainer>
-    //   //   </SidePanelContainer>;
-    //   default:
     return <Container style={style} className={className}>
       <SidePanelContainer>
         <TabBar 
-          theme={theme} isVertical={true} tabs={TABS} index={activePanel} 
+          theme={theme} isVertical={true} tabs={tabs} index={activePanel} 
           onIndexChange={sidePanelSize === Size.Type.Minimized 
             ? this.onTabBarExpand_
             : this.onTabBarIndexChange_ 
