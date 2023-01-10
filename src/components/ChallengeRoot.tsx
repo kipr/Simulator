@@ -748,7 +748,7 @@ class Root extends React.Component<Props, State> {
 
     const element = document.createElement('a');
     element.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(code)}`);
-    element.setAttribute('download', `program.${ProgrammingLanguage.fileExtension(language)}`);
+    element.setAttribute('download', `program.${ProgrammingLanguage.FILE_EXTENSION[language]}`);
     element.style.display = 'none';
     document.body.appendChild(element);
     element.click();
@@ -821,6 +821,18 @@ class Root extends React.Component<Props, State> {
     this.setState({
       challengeStarted: true
     });
+  };
+
+  private onResetCode_ = () => {
+    const { challenge } = this.props;
+    if (!challenge) return;
+
+    const latestChallenge = Async.latestValue(challenge);
+
+    const language = this.currentLanguage;
+    
+    this.props.onChallengeCompletionSetCode(language, latestChallenge.code[language]);
+    this.scheduleSaveChallengeCompletion_();
   };
 
   render() {
@@ -904,6 +916,7 @@ class Root extends React.Component<Props, State> {
       onScriptChange: this.onScriptChange_,
       onScriptRemove: this.onScriptRemove_,
       onObjectAdd: this.onObjectAdd_,
+      onResetCode: this.onResetCode_,
       challengeState: challenge ? {
         challenge,
         challengeCompletion: challengeCompletion || Async.unloaded({ brief: {} }),
