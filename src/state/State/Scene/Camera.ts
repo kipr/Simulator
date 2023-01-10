@@ -1,6 +1,6 @@
 import deepNeq from "../../../deepNeq";
 import { Vector3 } from "../../../unit-math";
-import { Distance } from "../../../util";
+import { Distance } from "../../../util/Value";
 import Patch from '../../../util/Patch';
 
 namespace Camera {
