@@ -5,9 +5,13 @@ namespace DocumentationLocation {
     None,
     File,
     Function,
+<<<<<<< HEAD
     Module,
     Structure,
     Enumeration
+=======
+    Module
+>>>>>>> 177f259 (Further work on documentation UI:)
   }
 
   export interface None {

@@ -169,6 +169,11 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
     this.props.onDocumentationSizeChange(SIZES[index]);
   };
 
+  componentWillUnmount() {
+    GLOBAL_EVENTS.remove(this.onMouseMoveHandle_);
+    GLOBAL_EVENTS.remove(this.onMouseUpHandle_);
+  }
+
   render() {
     const { props, state } = this;
     const {

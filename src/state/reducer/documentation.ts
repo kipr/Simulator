@@ -4,7 +4,10 @@ import * as ROBOTS from '../../robots';
 import { DocumentationState, Robots } from '../State';
 import DocumentationLocation from '../State/Documentation/DocumentationLocation';
 import construct from '../../util/construct';
+<<<<<<< HEAD
 import { Size } from '../../components/Widget';
+=======
+>>>>>>> 177f259 (Further work on documentation UI:)
 
 export namespace DocumentationAction {
   export interface Push {
