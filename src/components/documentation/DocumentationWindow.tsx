@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Vector2 } from '../../math';
 import { ThemeProps } from '../theme';
-import Widget, { Mode } from '../Widget';
+import Widget, { Mode, Size } from '../Widget';
 import DocumentationRoot from './DocumentationRoot';
 
 import { GLOBAL_EVENTS, GlobalEvents } from '../../util/GlobalEvents';
@@ -10,6 +10,12 @@ import { styled } from 'styletron-react';
 import { DocumentationState } from '../../state/State';
 import { State as ReduxState } from '../../state';
 import { connect } from 'react-redux';
+import { DocumentationAction } from '../../state/reducer';
+import { Fa } from '../Fa';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import ScrollArea from '../ScrollArea';
+import DocumentationLocation from '../../state/State/Documentation/DocumentationLocation';
+import RootDocumentation from './RootDocumentation';
 
 namespace DragState {
   export interface None {
@@ -36,6 +42,10 @@ export interface DocumentationWindowPublicProps extends ThemeProps {
 
 interface DocumentationWindowPrivateProps {
   documentationState: DocumentationState;
+
+  onDocumentationSizeChange: (size: Size) => void;
+  onDocumentationPop: () => void;
+  onDocumentationPush: (location: DocumentationLocation) => void;
 }
 
 interface DocumentationWindowState {
@@ -48,11 +58,35 @@ type State = DocumentationWindowState;
 const Container = styled('div', ({ theme }: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'column',
-  width: '300px',
-  height: '400px',
+  minWidth: '600px',
+  minHeight: '400px',
+  width: '100%',
+  height: '100%',
   color: theme.color,
-  backgroundColor: theme.backgroundColor
+  backgroundColor: theme.backgroundColor,
+  transition: 'opacity 0.2s',
 }));
+
+const LowerBar = styled('div', ({ theme }: ThemeProps) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  borderTop: `1px solid ${theme.borderColor}`,
+}));
+
+const Button = styled('div', ({ theme }: ThemeProps) => ({
+  padding: `${theme.itemPadding * 2}px`,
+}));
+
+const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
+  flex: 1,
+}));
+
+const SIZES: Size[] = [
+  Size.MAXIMIZED,
+  Size.PARTIAL,
+  Size.MINIMIZED
+];
 
 class DocumentationWindow extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -121,25 +155,70 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
     GLOBAL_EVENTS.remove(this.onMouseUpHandle_);
   }
 
+  private onSizeChange_ = (index: number) => {
+    this.props.onDocumentationSizeChange(SIZES[index]);
+  };
+
   render() {
     const { props, state } = this;
-    const { theme, documentationState } = props;
+    const { theme, documentationState, onDocumentationPop, onDocumentationPush } = props;
     const { dragState } = state;
 
-    const { documentation, locationStack, visible } = documentationState;
+    const { documentation, locationStack, size } = documentationState;
 
-    if (!visible) return null;
+    if (size.type === Size.Type.Minimized) return null;
+
+    const sizeIndex = SIZES.findIndex(s => s.type === size.type);
+
+    let mode = Mode.Floating;
+    const style: React.CSSProperties = {
+      position: 'absolute',
+      opacity: dragState.type === 'dragging' ? 0.8 : 1,
+    };
+
+    switch (size.type) {
+      case Size.Type.Partial: {
+        style.left = `${dragState.position.x}px`;
+        style.top = `${dragState.position.y}px`;
+        break;
+      }
+      case Size.Type.Maximized: {
+        mode = Mode.Inline;
+        style.left = '0px';
+        style.top = '0px';
+        style.width = '100%';
+        style.height = '100%';
+        break;
+      }
+    }
 
     return (
       <DocumentationRoot>
         <Widget
           name='Documentation'
           theme={theme}
-          mode={Mode.Floating}
-          style={{ position: 'absolute', left: `${dragState.position.x}px`, top: `${dragState.position.y}px` }}
-          onChromeMouseDown={this.onChromeMouseDown_}
+          mode={mode}
+          style={style}
+          onChromeMouseDown={size.type !== Size.Type.Maximized ? this.onChromeMouseDown_ : undefined}
+          size={sizeIndex}
+          sizes={SIZES}
+          onSizeChange={this.onSizeChange_}
         >
           <Container theme={theme}>
+            <StyledScrollArea theme={theme}>
+              {locationStack.length === 0 && (
+                <RootDocumentation
+                  theme={theme}
+                  onDocumentationPush={onDocumentationPush}
+                  documentation={documentation}
+                />
+              )}
+            </StyledScrollArea>
+            <LowerBar theme={theme}>
+              <Button theme={theme} onClick={locationStack.length > 0 ? onDocumentationPop : undefined}>
+                <Fa disabled={locationStack.length === 0} icon={faChevronLeft} />
+              </Button>
+            </LowerBar>
           </Container>
         </Widget>
       </DocumentationRoot>
@@ -149,4 +228,8 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
 
 export default connect((state: ReduxState) => ({
   documentationState: state.documentation
+}), dispatch => ({
+  onDocumentationSizeChange: (size: Size) => dispatch(DocumentationAction.setSize({ size })),
+  onDocumentationPop: () => dispatch(DocumentationAction.POP),
+  onDocumentationPush: (location: DocumentationLocation) => dispatch(DocumentationAction.pushLocation({ location })),
 }))(DocumentationWindow) as React.ComponentType<DocumentationWindowPublicProps>;

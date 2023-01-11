@@ -6,7 +6,7 @@
   "license": "GPL-3.0-only",
   "scripts": {
     "build": "yarn run clean-dist && webpack --config=configs/webpack/prod.js",
-    "watch": "webpack --watch --config=configs/webpack/dev.js",
+    "watch": "node --max-old-space-size=8192 node_modules/webpack/bin/webpack.js --watch --config=configs/webpack/dev.js",
     "clean-dist": "rm -f -r -d dist",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "test": "env TS_NODE_PROJECT=\"tsconfig.testing.json\" mocha --recursive --extension ts --require ts-node/register test",

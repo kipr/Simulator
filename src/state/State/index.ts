@@ -1,3 +1,4 @@
+import { Size } from '../../components/Widget';
 import Dict from '../../Dict';
 import Async from "./Async";
 import { AsyncChallenge } from './Challenge';
@@ -48,15 +49,13 @@ export namespace Robots {
 export interface DocumentationState {
   documentation: Documentation;
   locationStack: DocumentationLocation[];
-  visible: boolean;
+  size: Size;
 }
 
 export namespace DocumentationState {
   export const DEFAULT: DocumentationState = {
-    documentation: SIMULATOR_LIBKIPR_C_DOCUMENTATION
-      ? JSON.parse(SIMULATOR_LIBKIPR_C_DOCUMENTATION) as Documentation
-      : Documentation.EMPTY,
+    documentation: SIMULATOR_LIBKIPR_C_DOCUMENTATION as Documentation || Documentation.EMPTY,
     locationStack: [],
-    visible: false,
+    size: Size.MINIMIZED,
   };
 }

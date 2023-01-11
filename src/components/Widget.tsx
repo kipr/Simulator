@@ -7,7 +7,7 @@ import { Spacer } from './common';
 import { Fa } from './Fa';
 import { ThemeProps } from './theme';
 
-import { faAngleDown, faAngleUp, faAngleLeft, faAngleRight, faAngleDoubleUp, faAngleDoubleDown, faAngleDoubleLeft, faAngleDoubleRight, faTimes, faExpand } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp, faAngleLeft, faAngleRight, faAngleDoubleUp, faAngleDoubleDown, faAngleDoubleLeft, faAngleDoubleRight, faTimes, faExpand, faWindowRestore } from '@fortawesome/free-solid-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 export namespace Size {
@@ -25,6 +25,7 @@ export namespace Size {
   export const MAXIMIZED: Maximized = { type: Type.Maximized };
 
   export enum Direction {
+    None,
     Left,
     Right,
     Up,
@@ -33,8 +34,10 @@ export namespace Size {
 
   export interface Partial {
     type: Type.Partial;
-    direction: Direction
+    direction: Direction;
   }
+
+  export const PARTIAL: Partial = { type: Type.Partial, direction: Direction.None };
 
   export const PARTIAL_UP: Partial = { type: Type.Partial, direction: Direction.Up };
   export const PARTIAL_DOWN: Partial = { type: Type.Partial, direction: Direction.Down };
@@ -159,6 +162,7 @@ const sizeIcon = (size: Size): IconProp => {
   switch (size.type) {
     case Size.Type.Partial: {
       switch (size.direction) {
+        case Size.Direction.None: return faWindowRestore;
         case Size.Direction.Up: return faAngleUp;
         case Size.Direction.Down: return faAngleDown;
         case Size.Direction.Left: return faAngleLeft;
