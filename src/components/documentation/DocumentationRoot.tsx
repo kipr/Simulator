@@ -9,7 +9,7 @@ type Props = ModalProps;
 
 const DOCUMENTATION_ROOT = document.getElementById('documentation-root');
 
-export class DocumentationRoot extends React.PureComponent<Props> {
+class DocumentationRoot extends React.PureComponent<Props> {
   static get active() {
     return DOCUMENTATION_ROOT.children.length !== 0; 
   }
@@ -19,12 +19,10 @@ export class DocumentationRoot extends React.PureComponent<Props> {
   }
 
   componentDidMount() {
-    DOCUMENTATION_ROOT.style.pointerEvents = 'auto';
     DOCUMENTATION_ROOT.style.opacity = '1';
   }
 
   componentWillUnmount() {
-    DOCUMENTATION_ROOT.style.pointerEvents = 'none';
     DOCUMENTATION_ROOT.style.opacity = '0';
   }
 
@@ -36,3 +34,5 @@ export class DocumentationRoot extends React.PureComponent<Props> {
     return ReactDom.createPortal(this.props.children, DOCUMENTATION_ROOT);
   }
 }
+
+export default DocumentationRoot;

@@ -18,6 +18,11 @@ const modules = ['node_modules'];
 if (dependencies.cpython) modules.push(resolve(dependencies.cpython));
 if (dependencies.ammo) modules.push(resolve(dependencies.ammo));
 
+let libkiprCDocumentation = undefined;
+if (dependencies.libkipr_c_documentation) {
+  libkiprCDocumentation = readFileSync(dependencies.libkipr_c_documentation);
+}
+
 
 module.exports = {
   entry: {
@@ -125,9 +130,7 @@ module.exports = {
       SIMULATOR_GIT_HASH: JSON.stringify(commitHash),
       SIMULATOR_HAS_CPYTHON: JSON.stringify(dependencies.cpython !== undefined),
       SIMULATOR_HAS_AMMO: JSON.stringify(dependencies.ammo !== undefined),
-      SIMULATOR_LIBKIPR_C_DOCUMENTATION: dependencies.libkipr_c_documentation
-        ? JSON.stringify(dependencies.libkipr_c_documentation)
-        : undefined,
+      SIMULATOR_LIBKIPR_C_DOCUMENTATION: libkiprCDocumentation,
     }),
     new NpmDtsPlugin({
       root: resolve(__dirname, '../../'),

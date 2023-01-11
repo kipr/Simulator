@@ -1,0 +1,1 @@
+// const FunctionDocumentation = ({ func: }) => {
