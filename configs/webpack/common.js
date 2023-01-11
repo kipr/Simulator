@@ -125,6 +125,9 @@ module.exports = {
       SIMULATOR_GIT_HASH: JSON.stringify(commitHash),
       SIMULATOR_HAS_CPYTHON: JSON.stringify(dependencies.cpython !== undefined),
       SIMULATOR_HAS_AMMO: JSON.stringify(dependencies.ammo !== undefined),
+      SIMULATOR_LIBKIPR_C_DOCUMENTATION: dependencies.libkipr_c_documentation
+        ? JSON.stringify(dependencies.libkipr_c_documentation)
+        : undefined,
     }),
     new NpmDtsPlugin({
       root: resolve(__dirname, '../../'),
