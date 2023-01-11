@@ -57,6 +57,17 @@
       overflow: hidden;
     }
 
+    #documentation-root {
+      position: absolute;
+      width: 100vw;
+      height: 100vh;
+      top: 0;
+      left: 0;
+      z-index: 2;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
     #combo-box-root {
       position: absolute;
       width: 100vw;
@@ -143,6 +154,7 @@
 <body>
   <div id="swap"></div>
   <div id="reactRoot" ></div>
+  <div id="documentation-root"></div>
   <div id="modal-root"></div>
   <div id="combo-box-root"></div>
   <div id="tooltip-root"></div>

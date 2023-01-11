@@ -98,6 +98,9 @@ export interface WidgetProps extends StyleProps, ThemeProps, ModeProps {
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   barComponents?: BarComponent<object>[];
+
+  onChromeMouseDown?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  onChromeMouseUp?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 interface WidgetState {
@@ -131,7 +134,7 @@ const Container = styled('div', (props: ThemeProps & ModeProps) => ({
   borderBottom: props.mode === Mode.Inline ? 'none' : undefined
 }));
 
-const Chrome = styled('div', (props: ThemeProps & ModeProps) => ({
+const Chrome = styled('div', (props: ThemeProps & ModeProps & { $onChromeMouseDown?: boolean; $onChromeMouseUp?: boolean; }) => ({
   width: '100%',
   display: 'flex',
   flexDirection: 'row',
@@ -139,7 +142,8 @@ const Chrome = styled('div', (props: ThemeProps & ModeProps) => ({
   alignItems: 'center',
   backgroundColor: `rgba(0, 0, 0, 0.1)`,
   color: props.theme.color,
-  borderBottom: `1px solid ${props.theme.borderColor}`
+  borderBottom: `1px solid ${props.theme.borderColor}`,
+  cursor: props.$onChromeMouseDown || props.$onChromeMouseUp ? 'grab' : undefined,
 }));
 
 const Title = styled('span', (props: ThemeProps & { $hasComponents: boolean }) => ({
@@ -185,6 +189,9 @@ class Widget extends React.PureComponent<Props, State> {
     const { onSizeChange } = this.props;
     
     if (!onSizeChange) return;
+
+    event.stopPropagation();
+    event.preventDefault();
     onSizeChange(index);
   };
 
@@ -201,13 +208,22 @@ class Widget extends React.PureComponent<Props, State> {
       sizes,
       mode,
       barComponents,
-      hideActiveSize
+      hideActiveSize,
+      onChromeMouseDown,
+      onChromeMouseUp
     } = props;
     
     
     return (
       <Container style={style} className={className} theme={theme} mode={mode}>
-        <Chrome theme={theme} mode={mode}>
+        <Chrome
+          theme={theme}
+          mode={mode}
+          onMouseDown={onChromeMouseDown}
+          onMouseUp={onChromeMouseUp}
+          $onChromeMouseDown={!!onChromeMouseDown}
+          $onChromeMouseUp={!!onChromeMouseUp}
+        >
           <Title theme={theme} $hasComponents={barComponents && barComponents.length > 0}>{name}</Title>
           {barComponents ? barComponents.map((barComponent, i) => {
             const Component = barComponent.component;
