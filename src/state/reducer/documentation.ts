@@ -4,10 +4,7 @@ import * as ROBOTS from '../../robots';
 import { DocumentationState, Robots } from '../State';
 import DocumentationLocation from '../State/Documentation/DocumentationLocation';
 import construct from '../../util/construct';
-<<<<<<< HEAD
 import { Size } from '../../components/Widget';
-=======
->>>>>>> 177f259 (Further work on documentation UI:)
 
 export namespace DocumentationAction {
   export interface Push {
@@ -76,9 +73,13 @@ export type DocumentationAction = (
   DocumentationAction.Hide |
   DocumentationAction.Show |
   DocumentationAction.SetSize |
+<<<<<<< HEAD
   DocumentationAction.Toggle |
   DocumentationAction.PopSome |
   DocumentationAction.SetLanguage
+=======
+  DocumentationAction.Toggle
+>>>>>>> 4b13b18 (Additional work on documentation UI)
 );
 
 export const reduceDocumentation = (state: DocumentationState = DocumentationState.DEFAULT, action: DocumentationAction): DocumentationState => {
