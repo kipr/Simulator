@@ -222,6 +222,15 @@ subprocess.run(
   env = env
 )
 
+print('Generating JSON documentation...')
+libkipr_c_documentation_json = f'{libkipr_build_c_dir}/documentation/json.json'
+subprocess.run(
+  [ 'python3', 'generate_doxygen_json.py', f'{libkipr_build_c_dir}/documentation/xml', libkipr_c_documentation_json ],
+  cwd = working_dir,
+  check = True
+)
+
+
 
 print('Outputting results...')
 output = json.dumps({
@@ -236,6 +245,7 @@ output = json.dumps({
   'libkipr_python': f'{libkipr_build_python_dir}',
   'cpython': f'{cpython_emscripten_build_dir}',
   'ammo': f'{ammo_build_dir}',
+  "libkipr_c_documentation": libkipr_c_documentation_json,
 })
 
 with open(working_dir / 'dependencies.json', 'w') as f:

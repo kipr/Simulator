@@ -7,12 +7,30 @@ import sys
 from dataclasses import dataclass, asdict
 from typing import List
 import json
+import argparse
+
+parser = argparse.ArgumentParser(
+  prog = 'generate_doxygen_json',
+  description = 'Generates a JSON file from Doxygen XML output'
+)
+
+parser.add_argument(
+  'input_dir',
+  help = 'Directory containing Doxygen XML output'
+)
+
+parser.add_argument(
+  'output_file',
+  help = 'Output file to write JSON to'
+)
+
+args = parser.parse_args()
 
 def eprint(*args, **kwargs):
   print(*args, file=sys.stderr, **kwargs)
 
 # Get all XML files in a directory passed in as the first argument
-xml_files = glob.glob(sys.argv[1] + '/*.xml')
+xml_files = glob.glob(args.input_dir + '/*.xml')
 
 
 @dataclass
@@ -182,10 +200,10 @@ modules_dict = {module.id: asdict(module) for module in modules}
 types_dict = {type.name: asdict(type) for type in types}
 
 
-
-print(json.dumps({
-  'files': files_dict,
-  'functions': functions_dict,
-  'modules': modules_dict,
-  'types': types_dict
-}, indent=2))
+with open(args.output_file, 'w') as f:
+  f.write(json.dumps({
+    'files': files_dict,
+    'functions': functions_dict,
+    'modules': modules_dict,
+    'types': types_dict
+  }, indent = 2))
