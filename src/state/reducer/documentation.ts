@@ -73,13 +73,9 @@ export type DocumentationAction = (
   DocumentationAction.Hide |
   DocumentationAction.Show |
   DocumentationAction.SetSize |
-<<<<<<< HEAD
   DocumentationAction.Toggle |
   DocumentationAction.PopSome |
   DocumentationAction.SetLanguage
-=======
-  DocumentationAction.Toggle
->>>>>>> 4b13b18 (Additional work on documentation UI)
 );
 
 export const reduceDocumentation = (state: DocumentationState = DocumentationState.DEFAULT, action: DocumentationAction): DocumentationState => {

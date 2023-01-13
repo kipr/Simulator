@@ -169,11 +169,6 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
     this.props.onDocumentationSizeChange(SIZES[index]);
   };
 
-  componentWillUnmount() {
-    GLOBAL_EVENTS.remove(this.onMouseMoveHandle_);
-    GLOBAL_EVENTS.remove(this.onMouseUpHandle_);
-  }
-
   render() {
     const { props, state } = this;
     const {
@@ -277,6 +272,8 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
               )}
             </StyledScrollArea>
             <LowerBar theme={theme}>
+              
+              
               <Button theme={theme} onClick={locationStack.length > 0 ? onDocumentationPop : undefined}>
                 <Fa disabled={locationStack.length === 0} icon={faChevronLeft} />
               </Button>
