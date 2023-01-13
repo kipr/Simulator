@@ -50,6 +50,20 @@ export namespace DocumentationAction {
   }
 
   export const TOGGLE: Toggle = { type: 'documentation/toggle' };
+
+  export interface PopSome {
+    type: 'documentation/pop-some';
+    count: number;
+  }
+
+  export const popSome = construct<PopSome>('documentation/pop-some');
+
+  export interface SetLanguage {
+    type: 'documentation/set-language';
+    language: 'c' | 'python';
+  }
+
+  export const setLanguage = construct<SetLanguage>('documentation/set-language');
 }
 
 export type DocumentationAction = (
@@ -59,7 +73,9 @@ export type DocumentationAction = (
   DocumentationAction.Hide |
   DocumentationAction.Show |
   DocumentationAction.SetSize |
-  DocumentationAction.Toggle
+  DocumentationAction.Toggle |
+  DocumentationAction.PopSome |
+  DocumentationAction.SetLanguage
 );
 
 export const reduceDocumentation = (state: DocumentationState = DocumentationState.DEFAULT, action: DocumentationAction): DocumentationState => {
@@ -91,6 +107,14 @@ export const reduceDocumentation = (state: DocumentationState = DocumentationSta
     case 'documentation/toggle': return {
       ...state,
       size: state.size.type === Size.Type.Minimized ? Size.PARTIAL : Size.MINIMIZED,
+    };
+    case 'documentation/pop-some': return {
+      ...state,
+      locationStack: state.locationStack.slice(0, -action.count),
+    };
+    case 'documentation/set-language': return {
+      ...state,
+      language: action.language,
     };
     default: return state;
   }

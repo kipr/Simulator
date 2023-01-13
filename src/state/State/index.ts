@@ -50,6 +50,7 @@ export interface DocumentationState {
   documentation: Documentation;
   locationStack: DocumentationLocation[];
   size: Size;
+  language: 'c' | 'python';
 }
 
 export namespace DocumentationState {
@@ -57,5 +58,6 @@ export namespace DocumentationState {
     documentation: SIMULATOR_LIBKIPR_C_DOCUMENTATION as Documentation || Documentation.EMPTY,
     locationStack: [],
     size: Size.MINIMIZED,
+    language: 'c'
   };
 }

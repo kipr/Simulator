@@ -55,6 +55,7 @@
     "babylonjs": "^5.22.1",
     "babylonjs-loaders": "^5.22.1",
     "body-parser": "^1.19.0",
+    "colorjs.io": "^0.4.2",
     "connected-react-router": "^6.9.3",
     "css-loader": "^3.5.3",
     "discord.js": "^13.6.0",

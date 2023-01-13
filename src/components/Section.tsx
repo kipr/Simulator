@@ -13,7 +13,10 @@ import { faCaretDown, faCaretUp, faFile } from '@fortawesome/free-solid-svg-icon
 const Container = styled('div', ({ theme, $noBorder }: ThemeProps & { $noBorder: boolean }) => ({
   width: '100%',
   overflow: 'none',
-  borderBottom: !$noBorder ? `1px solid ${theme.borderColor}` : undefined,
+  borderTop: !$noBorder ? `1px solid ${theme.borderColor}` : undefined,
+  ':first-child': {
+    borderTop: 'none'
+  }
 }));
 
 const Name = styled(Text, {
@@ -28,9 +31,6 @@ const Header = styled('div', (props: ThemeProps & { $noPadding?: boolean; $canCo
   fontSize: '16px',
   fontWeight: 400,
   padding: props.$noPadding ? undefined : `${props.theme.itemPadding * 2}px`,
-  ':last-child': {
-    borderBottom: 'none'
-  },
   ':hover': props.$canCollapse ? {
     backgroundColor: `rgba(255, 255, 255, 0.1)`
   } : undefined,
@@ -67,13 +67,35 @@ class Section extends React.PureComponent<Props> {
     const { props } = this;
     const { name, theme, children, collapsed, onCollapsedChange, style, className, noBodyPadding, noHeaderPadding, noBorder } = props;
     return (
-      <Container theme={theme} style={style} className={className} $noBorder={noBorder}>
-        <Header theme={theme} $noPadding={noHeaderPadding} $canCollapse={!!onCollapsedChange} onClick={this.onCollapseClick_}>
+      <Container
+        theme={theme}
+        style={style}
+        className={className}
+        $noBorder={noBorder}
+      >
+        <Header
+          theme={theme}
+          $noPadding={noHeaderPadding}
+          $canCollapse={!!onCollapsedChange}
+          onClick={this.onCollapseClick_}
+        >
           <Name text={name} />
           <Spacer />
-          {onCollapsedChange ? <Fa icon={!collapsed ? faCaretUp : faCaretDown} onClick={this.onCollapseClick_} /> : undefined}
+          {onCollapsedChange && (
+            <Fa
+              icon={!collapsed ? faCaretUp : faCaretDown}
+              onClick={this.onCollapseClick_}
+            />
+          )}
         </Header>
-        {!collapsed ? <Body $noPadding={noBodyPadding} theme={theme}>{children}</Body> : undefined}
+        {!collapsed && (
+          <Body
+            $noPadding={noBodyPadding}
+            theme={theme}
+          >
+            {children}
+          </Body>
+        )}
       </Container>
     );
   }

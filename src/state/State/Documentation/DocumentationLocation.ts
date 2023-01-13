@@ -5,7 +5,9 @@ namespace DocumentationLocation {
     None,
     File,
     Function,
-    Module
+    Module,
+    Structure,
+    Enumeration
   }
 
   export interface None {
@@ -34,8 +36,29 @@ namespace DocumentationLocation {
   }
 
   export const module = construct<Module>(Type.Module);
+
+  export interface Structure {
+    type: Type.Structure;
+    id: string;
+  }
+
+  export const structure = construct<Structure>(Type.Structure);
+
+  export interface Enumeration {
+    type: Type.Enumeration;
+    id: string;
+  }
+
+  export const enumeration = construct<Enumeration>(Type.Enumeration);
 }
 
-type DocumentationLocation = DocumentationLocation.None | DocumentationLocation.File | DocumentationLocation.Function | DocumentationLocation.Module;
+type DocumentationLocation = (
+  DocumentationLocation.None |
+  DocumentationLocation.File |
+  DocumentationLocation.Function |
+  DocumentationLocation.Module |
+  DocumentationLocation.Structure |
+  DocumentationLocation.Enumeration
+);
 
 export default DocumentationLocation;

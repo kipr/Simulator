@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 
-import FileDocumentation from '../../state/State/Documentation/FileDocumentation';
+import ModuleDocumentation from '../../state/State/Documentation/ModuleDocumentation';
 import { StyleProps } from '../../style';
 import { ThemeProps } from '../theme';
-import FileName from './FileName';
+import ModuleName from './ModuleName';
 
 export interface FileBriefProps extends StyleProps, ThemeProps {
-  file: FileDocumentation;
+  module: ModuleDocumentation;
   onClick?: (event: React.MouseEvent) => void;
 }
 
 type Props = FileBriefProps;
 
-const StyledFileName = styled(FileName, ({ theme }: ThemeProps) => ({
+const StyledModuleName = styled(ModuleName, ({ theme }: ThemeProps) => ({
   display: 'block',
   marginBottom: `${theme.itemPadding}px`,
   ':last-child': {
@@ -21,15 +21,15 @@ const StyledFileName = styled(FileName, ({ theme }: ThemeProps) => ({
   },
 }));
 
-const FileBrief = ({ theme, file, onClick, style, className }: Props) => (
-  <StyledFileName
+const ModuleBrief = ({ theme, module, onClick, style, className }: Props) => (
+  <StyledModuleName
     theme={theme}
     style={style}
     className={className}
     onClick={onClick}
   >
-    {file.name}
-  </StyledFileName>
+    {module.name}
+  </StyledModuleName>
 );
 
-export default FileBrief;
+export default ModuleBrief;

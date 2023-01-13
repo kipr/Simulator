@@ -12,10 +12,16 @@ import { State as ReduxState } from '../../state';
 import { connect } from 'react-redux';
 import { DocumentationAction } from '../../state/reducer';
 import { Fa } from '../Fa';
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faFile, faGear, faHome, faSection } from '@fortawesome/free-solid-svg-icons';
 import ScrollArea from '../ScrollArea';
 import DocumentationLocation from '../../state/State/Documentation/DocumentationLocation';
 import RootDocumentation from './RootDocumentation';
+import FunctionDocumentation from './FunctionDocumentation';
+import FileDocumentation from './FileDocumentation';
+import Documentation from '../../state/State/Documentation';
+import { Spacer } from '../common';
+import { FunctionName } from './common';
+import ModuleDocumentation from './ModuleDocumentation';
 
 namespace DragState {
   export interface None {
@@ -72,14 +78,19 @@ const LowerBar = styled('div', ({ theme }: ThemeProps) => ({
   flexDirection: 'row',
   alignItems: 'center',
   borderTop: `1px solid ${theme.borderColor}`,
+  padding: `${theme.itemPadding * 2}px`,
 }));
 
 const Button = styled('div', ({ theme }: ThemeProps) => ({
-  padding: `${theme.itemPadding * 2}px`,
+  
 }));
 
 const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
   flex: 1,
+}));
+
+const LocationIcon = styled(Fa, ({ theme }: ThemeProps) => ({
+  marginLeft: `${theme.itemPadding * 2}px`,
 }));
 
 const SIZES: Size[] = [
@@ -133,7 +144,6 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
   private onMouseMoveHandle_: number;
   private onMouseUpHandle_: number;
   private onChromeMouseDown_ = (e: React.MouseEvent) => {
-    console.log('onChromeMouseDown_');
     const { state } = this;
     const { dragState } = state;
     const topLeft = Vector2.fromTopLeft(e.currentTarget.getBoundingClientRect());
@@ -161,10 +171,19 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { theme, documentationState, onDocumentationPop, onDocumentationPush } = props;
+    const {
+      theme,
+      documentationState,
+      onDocumentationPop,
+      onDocumentationPush
+    } = props;
     const { dragState } = state;
 
-    const { documentation, locationStack, size } = documentationState;
+    const {
+      documentation,
+      locationStack,
+      size
+    } = documentationState;
 
     if (size.type === Size.Type.Minimized) return null;
 
@@ -192,6 +211,8 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
       }
     }
 
+    const locationStackTop = locationStack[locationStack.length - 1];
+
     return (
       <DocumentationRoot>
         <Widget
@@ -206,18 +227,63 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
         >
           <Container theme={theme}>
             <StyledScrollArea theme={theme}>
-              {locationStack.length === 0 && (
+              {locationStackTop === undefined && (
                 <RootDocumentation
                   theme={theme}
                   onDocumentationPush={onDocumentationPush}
                   documentation={documentation}
                 />
               )}
+              {locationStackTop && locationStackTop.type === DocumentationLocation.Type.Function && (
+                <FunctionDocumentation
+                  func={documentation.functions[locationStackTop.id]}
+                  onDocumentationPush={onDocumentationPush}
+                  theme={theme}
+                />
+              )}
+              {locationStackTop && locationStackTop.type === DocumentationLocation.Type.File && (
+                <FileDocumentation
+                  file={documentation.files[locationStackTop.id]}
+                  documentation={Documentation.subset(documentation, documentation.files[locationStackTop.id])}
+                  onDocumentationPush={onDocumentationPush}
+                  theme={theme}
+                />
+              )}
+              {locationStackTop && locationStackTop.type === DocumentationLocation.Type.Module && (
+                <ModuleDocumentation
+                  module={documentation.modules[locationStackTop.id]}
+                  documentation={Documentation.subset(documentation, documentation.modules[locationStackTop.id])}
+                  onDocumentationPush={onDocumentationPush}
+                  theme={theme}
+                />
+              )}
             </StyledScrollArea>
             <LowerBar theme={theme}>
+              
+              
               <Button theme={theme} onClick={locationStack.length > 0 ? onDocumentationPop : undefined}>
                 <Fa disabled={locationStack.length === 0} icon={faChevronLeft} />
               </Button>
+              <Spacer />
+              {locationStackTop === undefined && <LocationIcon theme={theme} icon={faHome} />}
+              {locationStackTop && locationStackTop.type === DocumentationLocation.Type.Function && (
+                <>
+                  <FunctionName>{documentation.functions[locationStackTop.id].name}</FunctionName>
+                  <LocationIcon theme={theme} icon={faGear} />
+                </>
+              )}
+              {locationStackTop && locationStackTop.type === DocumentationLocation.Type.File && (
+                <>
+                  <FunctionName>{documentation.files[locationStackTop.id].name}</FunctionName>
+                  <LocationIcon theme={theme} icon={faFile} />
+                </>
+              )}
+              {locationStackTop && locationStackTop.type === DocumentationLocation.Type.Module && (
+                <>
+                  <FunctionName>{documentation.modules[locationStackTop.id].name}</FunctionName>
+                  <LocationIcon theme={theme} icon={faSection} />
+                </>
+              )}
             </LowerBar>
           </Container>
         </Widget>

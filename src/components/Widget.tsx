@@ -8,6 +8,8 @@ import { Fa } from './Fa';
 import { ThemeProps } from './theme';
 
 import { faAngleDown, faAngleUp, faAngleLeft, faAngleRight, faAngleDoubleUp, faAngleDoubleDown, faAngleDoubleLeft, faAngleDoubleRight, faTimes, faExpand, faWindowRestore } from '@fortawesome/free-solid-svg-icons';
+
+//@ts-ignore
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 export namespace Size {
@@ -134,7 +136,8 @@ const Container = styled('div', (props: ThemeProps & ModeProps) => ({
   pointerEvents: 'auto',
   backgroundColor: props.theme.backgroundColor,
   borderTop: props.mode === Mode.Sidebar ? 'none' : undefined,
-  borderBottom: props.mode === Mode.Inline ? 'none' : undefined
+  borderBottom: props.mode === Mode.Inline ? 'none' : undefined,
+  boxShadow: props.mode === Mode.Floating ? `rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px` : undefined,
 }));
 
 const Chrome = styled('div', (props: ThemeProps & ModeProps & { $onChromeMouseDown?: boolean; $onChromeMouseUp?: boolean; }) => ({

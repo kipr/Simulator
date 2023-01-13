@@ -201,6 +201,7 @@ interface RootPrivateProps {
 
   onDocumentationClick: () => void;
   onDocumentationPush: (location: DocumentationLocation) => void;
+  onDocumentationSetLanguage: (language: 'c' | 'python') => void;
 
   onCreateScene: (id: string, scene: Scene) => void;
   onSaveScene: (id: string) => void;
@@ -354,6 +355,8 @@ class Root extends React.Component<Props, State> {
   private onActiveLanguageChange_ = (language: ProgrammingLanguage) => {
     this.setState({
       activeLanguage: language
+    }, () => {
+      this.props.onDocumentationSetLanguage(language === 'python' ? 'python' : 'c');
     });
   };
 
@@ -935,6 +938,7 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
   },
   onDocumentationClick: () => dispatch(DocumentationAction.TOGGLE),
   onDocumentationPush: (location: DocumentationLocation) => dispatch(DocumentationAction.pushLocation({ location })),
+  onDocumentationSetLanguage: (language: 'c' | 'python') => dispatch(DocumentationAction.setLanguage({ language })),
   onSaveScene: (sceneId: string) => dispatch(ScenesAction.saveScene({ sceneId })),
   onSetScenePartial: (partialScene: Partial<Scene>) => dispatch(ScenesAction.setScenePartial({ sceneId, partialScene })),
   unfailScene: (sceneId: string) => dispatch(ScenesAction.unfailScene({ sceneId })),
