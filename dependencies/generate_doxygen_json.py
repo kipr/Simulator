@@ -38,8 +38,8 @@ class File:
   id: str
   name: str
   functions: List[str]
-  modules: List[str]
-  types: List[str]
+  structures: List[str]
+  enumerations: List[str]
 
 @dataclass
 class FunctionParameter:
@@ -62,7 +62,8 @@ class Module:
   id: str
   name: str
   functions: List[str]
-  types: List[str]
+  structures: List[str]
+  enumerations: List[str]
 
 @dataclass
 class StructureMember:
@@ -115,8 +116,9 @@ def parse_function(node):
     refs = [ref for ref in refs_gen]
     if len(refs) > 0:
       return_type = parse_text(refs[-1])
-
-
+    
+    # Remove EXPORT_SYM from return type
+    return_type = return_type.replace('EXPORT_SYM ', '')
 
   parameters = []
 
@@ -158,6 +160,25 @@ def parse_function(node):
     detailed_description
   ))
 
+def parse_module(node):
+  global modules
+
+  function_ids = []
+
+  sections = node.findall('sectiondef')
+  for section in sections:
+    if section.get('kind') == 'func':
+      for member in section.findall('memberdef'):
+        if member.get('kind') == 'function':
+          function_ids.append(member.get('id'))
+
+  modules.append(Module(
+    node.get('id'),
+    node.find('compoundname').text,
+    function_ids,
+    [],
+    []
+  ))
 
 def parse_file(node):
   global files
@@ -182,6 +203,8 @@ def parse_compounddef(node):
   kind = node.get('kind')
   if kind == 'file':
     parse_file(node)
+  if kind == 'group':
+    parse_module(node)
 
 def parse_xml(tree):
   root = tree.getroot()
