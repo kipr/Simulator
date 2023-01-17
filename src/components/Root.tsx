@@ -202,6 +202,7 @@ interface RootPrivateProps {
   onDocumentationClick: () => void;
   onDocumentationPush: (location: DocumentationLocation) => void;
   onDocumentationSetLanguage: (language: 'c' | 'python') => void;
+  onDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => void;
 
   onCreateScene: (id: string, scene: Scene) => void;
   onSaveScene: (id: string) => void;
@@ -672,7 +673,8 @@ class Root extends React.Component<Props, State> {
     const {
       selectedScript,
       selectedScriptId,
-      onDocumentationClick
+      onDocumentationClick,
+      onDocumentationGoToFuzzy
     } = props;
 
     const {
@@ -939,6 +941,7 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
   onDocumentationClick: () => dispatch(DocumentationAction.TOGGLE),
   onDocumentationPush: (location: DocumentationLocation) => dispatch(DocumentationAction.pushLocation({ location })),
   onDocumentationSetLanguage: (language: 'c' | 'python') => dispatch(DocumentationAction.setLanguage({ language })),
+  onDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => dispatch(DocumentationAction.goToFuzzy({ query, language })),
   onSaveScene: (sceneId: string) => dispatch(ScenesAction.saveScene({ sceneId })),
   onSetScenePartial: (partialScene: Partial<Scene>) => dispatch(ScenesAction.setScenePartial({ sceneId, partialScene })),
   unfailScene: (sceneId: string) => dispatch(ScenesAction.unfailScene({ sceneId })),

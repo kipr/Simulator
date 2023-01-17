@@ -1,5 +1,6 @@
 import Dict from '../../../Dict';
 import EnumerationDocumentation from './EnumerationDocumentation';
+import DocumentationLocation from './DocumentationLocation';
 import FileDocumentation from './FileDocumentation';
 import FunctionDocumentation from './FunctionDocumentation';
 import ModuleDocumentation from './ModuleDocumentation';

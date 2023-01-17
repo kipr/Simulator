@@ -199,7 +199,8 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       onScriptRemove,
       onObjectAdd,
       challengeState,
-      worldCapabilities
+      worldCapabilities,
+      onDocumentationGoToFuzzy,
     } = props;
 
     const {
@@ -231,6 +232,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
             onCodeChange={editorTarget.onCodeChange}
             messages={messages}
             autocomplete={settings.editorAutoComplete}
+            onDocumentationGoToFuzzy={onDocumentationGoToFuzzy}
           />
         );
         break;
