@@ -10,6 +10,7 @@ import { ThemeProps } from '../theme';
 import FunctionBrief from './FunctionBrief';
 
 export interface FileDocumentationProps extends StyleProps, ThemeProps {
+  language: 'c' | 'python';
   file: FileDocumentationModel;
   documentation: Documentation;
 
@@ -23,6 +24,7 @@ const Container = styled('div', {
 });
 
 const FileDocumentation = ({
+  language,
   file,
   documentation,
   onDocumentationPush,
@@ -35,6 +37,7 @@ const FileDocumentation = ({
       <Section name='Functions' theme={theme}>
         {file.functions.map(id => (
           <FunctionBrief
+            language={language}
             theme={theme}
             key={id}
             func={documentation.functions[id]}

@@ -16,8 +16,8 @@ import ModuleDocumentation from '../../state/State/Documentation/ModuleDocumenta
 import ModuleBrief from './ModuleBrief';
 
 export interface RootDocumentationProps extends ThemeProps {
+  language: 'c' | 'python';
   documentation: Documentation;
-
   onDocumentationPush: (location: DocumentationLocation) => void;
 }
 
@@ -75,7 +75,7 @@ class RootDocumentation extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { theme, documentation } = props;
+    const { theme, documentation, language } = props;
     const { query } = state;
 
     let sections: JSX.Element[] = [];
@@ -112,6 +112,7 @@ class RootDocumentation extends React.PureComponent<Props, State> {
         <Section name='Functions' theme={theme} noBorder={first} key='functions'>
           {functions.map(([id, func]) => (
               <FunctionBrief
+                language={language}
                 theme={theme}
                 key={id}
                 func={func}
@@ -133,6 +134,7 @@ class RootDocumentation extends React.PureComponent<Props, State> {
         <Section name='Files' theme={theme} noBorder={first} key='files'>
           {files.map(([id, file]) => (
               <StyledFileBrief
+                language={language}
                 theme={theme}
                 key={id}
                 file={file}

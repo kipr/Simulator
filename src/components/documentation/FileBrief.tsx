@@ -7,6 +7,7 @@ import { ThemeProps } from '../theme';
 import FileName from './FileName';
 
 export interface FileBriefProps extends StyleProps, ThemeProps {
+  language: 'c' | 'python';
   file: FileDocumentation;
   onClick?: (event: React.MouseEvent) => void;
 }
@@ -21,14 +22,14 @@ const StyledFileName = styled(FileName, ({ theme }: ThemeProps) => ({
   },
 }));
 
-const FileBrief = ({ theme, file, onClick, style, className }: Props) => (
+const FileBrief = ({ language, theme, file, onClick, style, className }: Props) => (
   <StyledFileName
     theme={theme}
     style={style}
     className={className}
     onClick={onClick}
   >
-    {file.name}
+    {language === 'c' ? file.name : file.name.replace(/\.hp?p?$/, '.py')}
   </StyledFileName>
 );
 

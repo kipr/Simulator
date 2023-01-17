@@ -10,6 +10,7 @@ import { ThemeProps } from '../theme';
 import FunctionBrief from './FunctionBrief';
 
 export interface ModuleDocumentationProps extends StyleProps, ThemeProps {
+  language: 'c' | 'python';
   module: ModuleDocumentationModel;
   documentation: Documentation;
 
@@ -23,6 +24,7 @@ const Container = styled('div', {
 });
 
 const ModuleDocumentation = ({
+  language,
   module,
   documentation,
   onDocumentationPush,
@@ -35,6 +37,7 @@ const ModuleDocumentation = ({
       <Section name='Functions' theme={theme}>
         {module.functions.map(id => (
           <FunctionBrief
+            language={language}
             theme={theme}
             key={id}
             func={documentation.functions[id]}

@@ -12,6 +12,7 @@ const Container = styled('div', ({ onClick }: { onClick?: (event: React.MouseEve
 }));
 
 export interface FunctionBriefProps extends StyleProps, ThemeProps {
+  language: 'c' | 'python';
   func: FunctionDocumentation;
   onClick?: (event: React.MouseEvent) => void;
 }
@@ -25,8 +26,9 @@ const StyledFunctionPrototype = styled(FunctionPrototype, ({ theme }: ThemeProps
   }
 }));
 
-const FunctionBrief = ({ func, onClick, style, className, theme }: Props) => (
+const FunctionBrief = ({ language, func, onClick, style, className, theme }: Props) => (
   <StyledFunctionPrototype
+    language={language}
     theme={theme}
     func={func}
     onClick={onClick}

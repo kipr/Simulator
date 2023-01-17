@@ -182,7 +182,8 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
     const {
       documentation,
       locationStack,
-      size
+      size,
+      language
     } = documentationState;
 
     if (size.type === Size.Type.Minimized) return null;
@@ -229,6 +230,7 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
             <StyledScrollArea theme={theme}>
               {locationStackTop === undefined && (
                 <RootDocumentation
+                  language={language}
                   theme={theme}
                   onDocumentationPush={onDocumentationPush}
                   documentation={documentation}
@@ -236,6 +238,7 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
               )}
               {locationStackTop && locationStackTop.type === DocumentationLocation.Type.Function && (
                 <FunctionDocumentation
+                  language={language}
                   func={documentation.functions[locationStackTop.id]}
                   onDocumentationPush={onDocumentationPush}
                   theme={theme}
@@ -243,6 +246,7 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
               )}
               {locationStackTop && locationStackTop.type === DocumentationLocation.Type.File && (
                 <FileDocumentation
+                  language={language}
                   file={documentation.files[locationStackTop.id]}
                   documentation={Documentation.subset(documentation, documentation.files[locationStackTop.id])}
                   onDocumentationPush={onDocumentationPush}
@@ -251,6 +255,7 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
               )}
               {locationStackTop && locationStackTop.type === DocumentationLocation.Type.Module && (
                 <ModuleDocumentation
+                  language={language}
                   module={documentation.modules[locationStackTop.id]}
                   documentation={Documentation.subset(documentation, documentation.modules[locationStackTop.id])}
                   onDocumentationPush={onDocumentationPush}
@@ -259,8 +264,6 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
               )}
             </StyledScrollArea>
             <LowerBar theme={theme}>
-              
-              
               <Button theme={theme} onClick={locationStack.length > 0 ? onDocumentationPop : undefined}>
                 <Fa disabled={locationStack.length === 0} icon={faChevronLeft} />
               </Button>

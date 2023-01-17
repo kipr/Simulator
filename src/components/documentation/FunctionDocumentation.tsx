@@ -8,8 +8,10 @@ import Section from '../Section';
 import { ThemeProps } from '../theme';
 import { ParameterName, Type } from './common';
 import FunctionPrototype from './FunctionPrototype';
+import { toPythonType } from './util';
 
 export interface FunctionDocumentationProps extends StyleProps, ThemeProps {
+  language: 'c' | 'python';
   func: FunctionDocumentationModel;
 
   onDocumentationPush: (location: DocumentationLocation) => void;
@@ -40,10 +42,10 @@ const ParameterPrototype = styled('span', {
   fontSize: '1.2em',
 });
 
-const FunctionDocumentation = ({ func, style, className, theme }: Props) => {
+const FunctionDocumentation = ({ language, func, style, className, theme }: Props) => {
   return (
     <Container className={className} style={style}>
-      <StyledFunctionPrototype theme={theme} func={func} />
+      <StyledFunctionPrototype language={language} theme={theme} func={func} />
       {func.brief_description && (
         <BriefDescription theme={theme}>
           {func.brief_description}
@@ -56,25 +58,41 @@ const FunctionDocumentation = ({ func, style, className, theme }: Props) => {
       )}
       {func.parameters.length > 0 && (
         <Section name='Parameters' theme={theme}>
-          {func.parameters.map((parameter, index) => (
-            <ParameterContainer key={index} theme={theme}>
-              <ParameterPrototype>
-                <Type>{parameter.type}</Type>
-                <ParameterName>{parameter.name}</ParameterName>
-              </ParameterPrototype>
-              {parameter.description && (
-                <div>
-                  {parameter.description}
-                </div>
-              )}
-            </ParameterContainer>
-          ))}
+          {language === 'c' ? (
+            func.parameters.map((parameter, index) => (
+              <ParameterContainer key={index} theme={theme}>
+                <ParameterPrototype>
+                  <Type $language={language}>{parameter.type}</Type>
+                  <ParameterName>{parameter.name}</ParameterName>
+                </ParameterPrototype>
+                {parameter.description && (
+                  <div>
+                    {parameter.description}
+                  </div>
+                )}
+              </ParameterContainer>
+            ))
+          ) : (
+            func.parameters.map((parameter, index) => (
+              <ParameterContainer key={index} theme={theme}>
+                <ParameterPrototype>
+                  <ParameterName>{parameter.name}: </ParameterName>
+                  <Type $language={language}>{toPythonType(parameter.type)}</Type>
+                </ParameterPrototype>
+                {parameter.description && (
+                  <div>
+                    {parameter.description}
+                  </div>
+                )}
+              </ParameterContainer>
+            ))
+          )}
         </Section>
       )}
       {func.return_type !== 'void' && (
         <Section name='Return Value' theme={theme}>
           <ParameterPrototype>
-            <Type>{func.return_type}</Type>
+            <Type $language={language}>{language === 'c' ? func.return_type : toPythonType(func.return_type)}</Type>
           </ParameterPrototype>
           {func.return_description && (
             <div>
