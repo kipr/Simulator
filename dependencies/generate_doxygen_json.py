@@ -29,17 +29,45 @@ args = parser.parse_args()
 def eprint(*args, **kwargs):
   print(*args, file=sys.stderr, **kwargs)
 
-# Get all XML files in a directory passed in as the first argument
-xml_files = glob.glob(args.input_dir + '/*.xml')
 
+
+# Get all XML files in a directory passed in as the first argument
+xml_file_matches = [
+  'analog*.xml',
+  'botball*.xml',
+  'button*.xml',
+  'class*.xml',
+  'color*.xml',
+  'console*.xml',
+  'digital*.xml',
+  'display*.xml',
+  'geometry*.xml',
+  'group__analog*.xml',
+  'group__button*.xml',
+  'group__console*.xml',
+  'group__digital*.xml',
+  'group__motor*.xml',
+  'group__servo*.xml',
+  'log*.xml',
+  'motor*.xml',
+  'sensor*.xml',
+  'servo*.xml',
+  'struct*.xml',
+  'time*.xml',
+  'wait__for*.xml',
+]
+
+xml_files = []
+for match in xml_file_matches:
+  xml_files += glob.glob(args.input_dir + '/' + match)
 
 @dataclass
 class File:
   id: str
   name: str
   functions: List[str]
-  structures: List[str]
-  enumerations: List[str]
+  modules: List[str]
+  types: List[str]
 
 @dataclass
 class FunctionParameter:
@@ -62,8 +90,7 @@ class Module:
   id: str
   name: str
   functions: List[str]
-  structures: List[str]
-  enumerations: List[str]
+  types: List[str]
 
 @dataclass
 class StructureMember:
@@ -116,9 +143,8 @@ def parse_function(node):
     refs = [ref for ref in refs_gen]
     if len(refs) > 0:
       return_type = parse_text(refs[-1])
-    
-    # Remove EXPORT_SYM from return type
-    return_type = return_type.replace('EXPORT_SYM ', '')
+
+
 
   parameters = []
 
@@ -160,25 +186,6 @@ def parse_function(node):
     detailed_description
   ))
 
-def parse_module(node):
-  global modules
-
-  function_ids = []
-
-  sections = node.findall('sectiondef')
-  for section in sections:
-    if section.get('kind') == 'func':
-      for member in section.findall('memberdef'):
-        if member.get('kind') == 'function':
-          function_ids.append(member.get('id'))
-
-  modules.append(Module(
-    node.get('id'),
-    node.find('compoundname').text,
-    function_ids,
-    [],
-    []
-  ))
 
 def parse_file(node):
   global files
@@ -203,8 +210,6 @@ def parse_compounddef(node):
   kind = node.get('kind')
   if kind == 'file':
     parse_file(node)
-  if kind == 'group':
-    parse_module(node)
 
 def parse_xml(tree):
   root = tree.getroot()
