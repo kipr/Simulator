@@ -96,18 +96,45 @@ class Module:
 class StructureMember:
   name: str
   type: str
+  brief_description: str | None
+  detailed_description: str | None
 
 @dataclass
 class Structure:
+  id: str
   name: str
   members: List[StructureMember]
+  brief_description: str | None
+  detailed_description: str | None
+
+@dataclass
+class EnumerationValue:
+  name: str
+  brief_description: str | None
+  detailed_description: str | None
+
+@dataclass
+class Enumeration:
+  id: str
+  name: str
+  values: List[EnumerationValue]
+  brief_description: str | None
+  detailed_description: str | None
+
+@dataclass
+class Type:
+  id: str
+  type: str
 
 functions: List[Function] = []
 modules: List[Module] = []
-types: List[Structure] = []
+structures: List[Structure] = []
+enumerations: List[Enumeration] = []
+types: List[Type] = []
 files: List[File] = []
 
 def parse_text(node):
+  if node is None: return None
   # Collect all subtext ignoring parameterlist and simplesect tags
   if node.tag == 'parameterlist' or node.tag == 'simplesect':
     return ''
@@ -205,11 +232,86 @@ def parse_file(node):
 
   files.append(File(id, name, functions, [], []))
 
+def parse_struct(node):
+  global structures
+
+  name = node.find('compoundname').text
+  members = []
+
+  for member in node.findall('sectiondef/memberdef'):
+    if member.get('kind') == 'variable':
+      members.append(StructureMember(
+        member.find('name').text,
+        parse_text(member.find('type')),
+        parse_text(member.find('briefdescription')),
+        parse_text(member.find('detaileddescription'))
+      ))
+
+  brief_description = node.find('briefdescription')
+  detailed_description = node.find('detaileddescription')
+
+
+
+  structures.append(
+    Structure(node.get('id'), name, members, parse_text(brief_description), parse_text(detailed_description))
+  )
+
+  types.append(Type(node.get('id'), 'structure'))
+
+def parse_enum(node):
+  global enumerations
+
+  name = node.find('compoundname').text
+
+  members = []
+
+  for member in node.findall('sectiondef/memberdef'):
+    if member.get('kind') == 'enum':
+      members.append(
+        EnumerationValue(
+          member.find('name').text,
+          parse_text(member.find('briefdescription')),
+          parse_text(member.find('detaileddescription'))
+        )
+      )
+
+  enumerations.append(
+    Enumeration(
+      node.get('id'),
+      name,
+      members,
+      parse_text(node.find('briefdescription')),
+      parse_text(node.find('detaileddescription'))
+    )
+  )
+
+  types.append(Type(node.get('id'), 'enumeration'))
+
+def parse_group(node):
+  global modules
+
+  id = node.get('id')
+  name = node.find('compoundname').text
+  functions = []
+
+  for member in node.findall('sectiondef/memberdef'):
+    if member.get('kind') == 'function':
+      functions.append(member.get('id'))
+
+  modules.append(Module(id, name, functions, []))
+
+
 def parse_compounddef(node):
   # Determine kind
   kind = node.get('kind')
   if kind == 'file':
     parse_file(node)
+  elif kind == 'group':
+    parse_group(node)
+  elif kind == 'struct':
+    parse_struct(node)
+  elif kind == 'enum':
+    parse_enum(node)
 
 def parse_xml(tree):
   root = tree.getroot()
@@ -225,7 +327,9 @@ for xml_file in xml_files:
 files_dict = {file.id: asdict(file) for file in files}
 functions_dict = {function.id: asdict(function) for function in functions}
 modules_dict = {module.id: asdict(module) for module in modules}
-types_dict = {type.name: asdict(type) for type in types}
+structures_dict = {structure.name: asdict(structure) for structure in structures}
+enumerations_dict = {enumeration.name: asdict(enumeration) for enumeration in enumerations}
+types_dict = {type.id: asdict(type) for type in types}
 
 
 with open(args.output_file, 'w') as f:
@@ -233,5 +337,7 @@ with open(args.output_file, 'w') as f:
     'files': files_dict,
     'functions': functions_dict,
     'modules': modules_dict,
+    'structures': structures_dict,
+    'enumerations': enumerations_dict,
     'types': types_dict
   }, indent = 2))
