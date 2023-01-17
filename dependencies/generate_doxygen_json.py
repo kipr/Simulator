@@ -170,8 +170,8 @@ def parse_function(node):
     refs = [ref for ref in refs_gen]
     if len(refs) > 0:
       return_type = parse_text(refs[-1])
-
-
+    # Remove EXPORT_SYM
+    return_type = return_type.replace('EXPORT_SYM ', '')
 
   parameters = []
 
