@@ -1,15 +1,19 @@
 import Dict from '../../../Dict';
 import { EMPTY_ARRAY } from '../../../util';
+import EnumerationDocumentation from './EnumerationDocumentation';
 import FileDocumentation from './FileDocumentation';
 import FunctionDocumentation from './FunctionDocumentation';
 import ModuleDocumentation from './ModuleDocumentation';
+import StructureDocumentation from './StructureDocumentation';
+import TypeDocumentation from './TypeDocumentation';
 
 interface Documentation {
   files: Dict<FileDocumentation>;
   functions: Dict<FunctionDocumentation>;
   modules: Dict<ModuleDocumentation>;
-  structures: Dict<any>;
-  enumerations: Dict<any>;
+  structures: Dict<StructureDocumentation>;
+  enumerations: Dict<EnumerationDocumentation>;
+  types: Dict<TypeDocumentation>;
 }
 
 namespace Documentation {
@@ -19,6 +23,7 @@ namespace Documentation {
     modules: {},
     structures: {},
     enumerations: {},
+    types: {},
   };
 
   export interface SubsetParams {
@@ -27,6 +32,7 @@ namespace Documentation {
     modules?: string[];
     structures?: string[];
     enumerations?: string[];
+    types?: string[];
   }
 
   export const subset = (doc: Documentation, params: SubsetParams): Documentation => {
@@ -36,6 +42,7 @@ namespace Documentation {
       modules: {},
       structures: {},
       enumerations: {},
+      types: {},
     };
 
     for (const file of params.files || EMPTY_ARRAY) ret.files[file] = doc.files[file];
@@ -43,6 +50,7 @@ namespace Documentation {
     for (const module of params.modules || EMPTY_ARRAY) ret.modules[module] = doc.modules[module];
     for (const type of params.structures || EMPTY_ARRAY) ret.structures[type] = doc.structures[type];
     for (const type of params.enumerations || EMPTY_ARRAY) ret.enumerations[type] = doc.enumerations[type];
+    for (const type of params.types || EMPTY_ARRAY) ret.types[type] = doc.types[type];
 
     return ret;
   }

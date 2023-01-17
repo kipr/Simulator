@@ -11,6 +11,11 @@ export const Type = styled('span', ({ $language }: { $language: 'c' | 'python' }
   marginRight: $language === 'c' ? '0.5em' : 0,
 }));
 
+export const Keyword = styled('span', {
+  fontFamily: 'monospace',
+  color: 'rgb(100, 255, 100)',
+});
+
 export const ParameterName = styled('span', {
   fontFamily: 'monospace',
   fontStyle: 'italic',

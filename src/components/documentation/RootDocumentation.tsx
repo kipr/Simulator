@@ -14,6 +14,10 @@ import FunctionBrief from './FunctionBrief';
 import Color from 'colorjs.io';
 import ModuleDocumentation from '../../state/State/Documentation/ModuleDocumentation';
 import ModuleBrief from './ModuleBrief';
+import StructureDocumentation from '../../state/State/Documentation/StructureDocumentation';
+import StructureBrief from './StructureBrief';
+import EnumerationBrief from './EnumerationBrief';
+import EnumerationDocumentation from '../../state/State/Documentation/EnumerationDocumentation';
 
 export interface RootDocumentationProps extends ThemeProps {
   language: 'c' | 'python';
@@ -63,6 +67,14 @@ class RootDocumentation extends React.PureComponent<Props, State> {
 
   private onFunctionClick_ = (id: string) => (event: React.MouseEvent) => {
     this.props.onDocumentationPush(DocumentationLocation.func({ id }));
+  };
+
+  private onStructureClick_ = (id: string) => (event: React.MouseEvent) => {
+    this.props.onDocumentationPush(DocumentationLocation.structure({ id }));
+  };
+
+  private onEnumerationClick_ = (id: string) => (event: React.MouseEvent) => {
+    this.props.onDocumentationPush(DocumentationLocation.enumeration({ id }));
   };
 
   private onFileClick_ = (id: string) => (event: React.MouseEvent) => {
@@ -117,6 +129,50 @@ class RootDocumentation extends React.PureComponent<Props, State> {
                 key={id}
                 func={func}
                 onClick={this.onFunctionClick_(id)}
+              />
+            ))
+          }
+        </Section>
+      ));
+      first = false;
+    }
+
+    const structures = Dict.toList(documentation.structures)
+      .sort(([idA, a], [idB, b]) => StructureDocumentation.compare(a, b))
+      .filter(([id, f]) => f.name.search(new RegExp(query, 'i')) !== -1);
+
+    if (structures.length > 0) {
+      sections.push((
+        <Section name='Structures' theme={theme} noBorder={first} key='structures'>
+          {structures.map(([id, structure]) => (
+              <StructureBrief
+                language={language}
+                theme={theme}
+                key={id}
+                structure={structure}
+                onClick={this.onStructureClick_(id)}
+              />
+            ))
+          }
+        </Section>
+      ));
+      first = false;
+    }
+
+    const enumerations = Dict.toList(documentation.enumerations)
+      .sort(([idA, a], [idB, b]) => EnumerationDocumentation.compare(a, b))
+      .filter(([id, f]) => f.name.search(new RegExp(query, 'i')) !== -1);
+
+    if (enumerations.length > 0) {
+      sections.push((
+        <Section name='Enumerations' theme={theme} noBorder={first} key='enumerations'>
+          {enumerations.map(([id, enumeration]) => (
+              <EnumerationBrief
+                language={language}
+                theme={theme}
+                key={id}
+                enumeration={enumeration}
+                onClick={this.onEnumerationClick_(id)}
               />
             ))
           }

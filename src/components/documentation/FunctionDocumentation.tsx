@@ -46,12 +46,12 @@ const FunctionDocumentation = ({ language, func, style, className, theme }: Prop
   return (
     <Container className={className} style={style}>
       <StyledFunctionPrototype language={language} theme={theme} func={func} />
-      {func.brief_description && (
+      {func.brief_description && func.brief_description.length > 0 && (
         <BriefDescription theme={theme}>
           {func.brief_description}
         </BriefDescription>
       )}
-      {func.detailed_description && (
+      {func.detailed_description && func.detailed_description.length > 0 && (
         <Section name='Detailed Description' theme={theme}>
           {func.detailed_description}
         </Section>

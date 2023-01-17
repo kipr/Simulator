@@ -12,7 +12,7 @@ import { State as ReduxState } from '../../state';
 import { connect } from 'react-redux';
 import { DocumentationAction } from '../../state/reducer';
 import { Fa } from '../Fa';
-import { faChevronLeft, faFile, faGear, faHome, faSection } from '@fortawesome/free-solid-svg-icons';
+import { faBox, faChevronLeft, faFile, faFilter, faGear, faHome, faSection } from '@fortawesome/free-solid-svg-icons';
 import ScrollArea from '../ScrollArea';
 import DocumentationLocation from '../../state/State/Documentation/DocumentationLocation';
 import RootDocumentation from './RootDocumentation';
@@ -22,6 +22,7 @@ import Documentation from '../../state/State/Documentation';
 import { Spacer } from '../common';
 import { FunctionName } from './common';
 import ModuleDocumentation from './ModuleDocumentation';
+import StructureDocumentation from './StructureDocumentation';
 
 namespace DragState {
   export interface None {
@@ -262,6 +263,14 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
                   theme={theme}
                 />
               )}
+              {locationStackTop && locationStackTop.type === DocumentationLocation.Type.Structure && (
+                <StructureDocumentation
+                  language={language}
+                  structure={documentation.structures[locationStackTop.id]}
+                  onDocumentationPush={onDocumentationPush}
+                  theme={theme}
+                />
+              )}
             </StyledScrollArea>
             <LowerBar theme={theme}>
               <Button theme={theme} onClick={locationStack.length > 0 ? onDocumentationPop : undefined}>
@@ -285,6 +294,18 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
                 <>
                   <FunctionName>{documentation.modules[locationStackTop.id].name}</FunctionName>
                   <LocationIcon theme={theme} icon={faSection} />
+                </>
+              )}
+              {locationStackTop && locationStackTop.type === DocumentationLocation.Type.Structure && (
+                <>
+                  <FunctionName>{documentation.structures[locationStackTop.id].name}</FunctionName>
+                  <LocationIcon theme={theme} icon={faBox} />
+                </>
+              )}
+              {locationStackTop && locationStackTop.type === DocumentationLocation.Type.Enumeration && (
+                <>
+                  <FunctionName>{documentation.enumerations[locationStackTop.id].name}</FunctionName>
+                  <LocationIcon theme={theme} icon={faFilter} />
                 </>
               )}
             </LowerBar>
