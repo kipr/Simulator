@@ -25,6 +25,10 @@ if not is_tool('swig'):
   print('SWIG is not installed. Please install SWIG and try again.')
   exit(1)
 
+if not is_tool('doxygen'):
+  print('Doxygen is not installed. Please install Doxygen and try again.')
+  exit(1)
+
 working_dir = pathlib.Path(__file__).parent.absolute()
 
 emsdk_dir = working_dir / 'emsdk'
@@ -80,7 +84,7 @@ subprocess.run(
     '-Dwith_camera=OFF',
     '-Dwith_tello=OFF',
     '-Dwith_python_binding=OFF',
-    '-Dwith_documentation=OFF',
+    '-Dwith_documentation=ON',
     '-Dwith_tests=OFF',
     f'-DCMAKE_INSTALL_PREFIX={libkipr_install_c_dir}',
     libkipr_dir
@@ -218,6 +222,15 @@ subprocess.run(
   env = env
 )
 
+print('Generating JSON documentation...')
+libkipr_c_documentation_json = f'{libkipr_build_c_dir}/documentation/json.json'
+subprocess.run(
+  [ 'python3', 'generate_doxygen_json.py', f'{libkipr_build_c_dir}/documentation/xml', libkipr_c_documentation_json ],
+  cwd = working_dir,
+  check = True
+)
+
+
 
 print('Outputting results...')
 output = json.dumps({
@@ -232,6 +245,7 @@ output = json.dumps({
   'libkipr_python': f'{libkipr_build_python_dir}',
   'cpython': f'{cpython_emscripten_build_dir}',
   'ammo': f'{ammo_build_dir}',
+  "libkipr_c_documentation": libkipr_c_documentation_json,
 })
 
 with open(working_dir / 'dependencies.json', 'w') as f:
