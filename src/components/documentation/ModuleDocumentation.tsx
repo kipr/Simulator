@@ -11,10 +11,7 @@ import { ThemeProps } from '../theme';
 import FunctionBrief from './FunctionBrief';
 
 export interface ModuleDocumentationProps extends StyleProps, ThemeProps {
-<<<<<<< HEAD
   language: 'c' | 'python';
-=======
->>>>>>> 2030e68 (Additional work on documentation UI)
   module: ModuleDocumentationModel;
   documentation: Documentation;
 
@@ -28,10 +25,7 @@ const Container = styled('div', {
 });
 
 const ModuleDocumentation = ({
-<<<<<<< HEAD
   language,
-=======
->>>>>>> 2030e68 (Additional work on documentation UI)
   module,
   documentation,
   onDocumentationPush,

@@ -14,13 +14,10 @@ import FunctionBrief from './FunctionBrief';
 import Color from 'colorjs.io';
 import ModuleDocumentation from '../../state/State/Documentation/ModuleDocumentation';
 import ModuleBrief from './ModuleBrief';
-<<<<<<< HEAD
 import StructureDocumentation from '../../state/State/Documentation/StructureDocumentation';
 import StructureBrief from './StructureBrief';
 import EnumerationBrief from './EnumerationBrief';
 import EnumerationDocumentation from '../../state/State/Documentation/EnumerationDocumentation';
-=======
->>>>>>> 2030e68 (Additional work on documentation UI)
 
 export interface RootDocumentationProps extends ThemeProps {
   language: 'c' | 'python';
@@ -47,7 +44,6 @@ const StyledInput = styled(Input, ({ theme }: ThemeProps) => ({
   borderRadius: 0,
   position: 'sticky',
   top: 0,
-<<<<<<< HEAD
   backgroundColor: new Color(theme.backgroundColor).darken(0.1)
     .toString(),
 }));
@@ -56,15 +52,6 @@ const StyledFileBrief = styled(FileBrief, ({ theme }: ThemeProps) => ({
   marginBottom: `${theme.itemPadding}px`
 }));
 
-=======
-  backgroundColor: new Color(theme.backgroundColor).darken(0.1).toString(),
-}));
-
-const StyledFileBrief = styled(FileBrief, ({ theme }: ThemeProps) => ({
-  marginBottom: `${theme.itemPadding}px`
-}));
-
->>>>>>> 2030e68 (Additional work on documentation UI)
 
 class RootDocumentation extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -83,7 +70,6 @@ class RootDocumentation extends React.PureComponent<Props, State> {
     this.props.onDocumentationPush(DocumentationLocation.func({ id }));
   };
 
-<<<<<<< HEAD
   private onStructureClick_ = (id: string) => (event: React.MouseEvent) => {
     this.props.onDocumentationPush(DocumentationLocation.structure({ id }));
   };
@@ -92,8 +78,6 @@ class RootDocumentation extends React.PureComponent<Props, State> {
     this.props.onDocumentationPush(DocumentationLocation.enumeration({ id }));
   };
 
-=======
->>>>>>> 2030e68 (Additional work on documentation UI)
   private onFileClick_ = (id: string) => (event: React.MouseEvent) => {
     this.props.onDocumentationPush(DocumentationLocation.file({ id }));
   };
@@ -115,7 +99,6 @@ class RootDocumentation extends React.PureComponent<Props, State> {
 
     let first = true;
 
-<<<<<<< HEAD
     if (modules.length > 0) {
       sections.push((
         <Section name='Modules' theme={theme} noBorder={first} key='modules'>
@@ -127,52 +110,10 @@ class RootDocumentation extends React.PureComponent<Props, State> {
               onClick={this.onModuleClick_(id)}
             />
           ))}
-=======
-    const modules = Dict.toList(documentation.modules)
-      .sort(([idA, a], [idB, b]) => ModuleDocumentation.compare(a, b))
-      .filter(([id, f]) => f.name.search(new RegExp(query, 'i')) !== -1);
-
-    let first = true;
-
-    if (modules.length > 0) {
-      sections.push((
-        <Section name='Modules' theme={theme} noBorder={first} key='modules'>
-          {modules.map(([id, module]) => (
-              <ModuleBrief
-                theme={theme}
-                key={id}
-                module={module}
-                onClick={this.onModuleClick_(id)}
-              />
-            ))
-          }
         </Section>
       ));
       first = false;
     }
-
-    const functions = Dict.toList(documentation.functions)
-      .sort(([idA, a], [idB, b]) => FunctionDocumentation.compare(a, b))
-      .filter(([id, f]) => f.name.search(new RegExp(query, 'i')) !== -1);
-
-    if (functions.length > 0) {
-      sections.push((
-        <Section name='Functions' theme={theme} noBorder={first} key='functions'>
-          {functions.map(([id, func]) => (
-              <FunctionBrief
-                theme={theme}
-                key={id}
-                func={func}
-                onClick={this.onFunctionClick_(id)}
-              />
-            ))
-          }
->>>>>>> 2030e68 (Additional work on documentation UI)
-        </Section>
-      ));
-      first = false;
-    }
-<<<<<<< HEAD
 
     const functions = Dict.toList(documentation.functions)
       .sort(([idA, a], [idB, b]) => FunctionDocumentation.compare(a, b))
@@ -236,8 +177,6 @@ class RootDocumentation extends React.PureComponent<Props, State> {
       ));
       first = false;
     }
-=======
->>>>>>> 2030e68 (Additional work on documentation UI)
     
     const files = Dict.toList(documentation.files)
       .sort(([idA, a], [idB, b]) => FileDocumentation.compare(a, b))
@@ -247,7 +186,6 @@ class RootDocumentation extends React.PureComponent<Props, State> {
       sections.push((
         <Section name='Files' theme={theme} noBorder={first} key='files'>
           {files.map(([id, file]) => (
-<<<<<<< HEAD
             <StyledFileBrief
               language={language}
               theme={theme}
@@ -256,16 +194,6 @@ class RootDocumentation extends React.PureComponent<Props, State> {
               onClick={this.onFileClick_(id)}
             />
           ))}
-=======
-              <StyledFileBrief
-                theme={theme}
-                key={id}
-                file={file}
-                onClick={this.onFileClick_(id)}
-              />
-            ))
-          }
->>>>>>> 2030e68 (Additional work on documentation UI)
         </Section>
       ));
       first = false;
