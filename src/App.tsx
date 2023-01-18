@@ -11,15 +11,10 @@ import db from './db';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import LoginPage from './login/LoginPage';
-<<<<<<< HEAD
 import WidgetTest from './pages/WidgetTest';
 import ChallengeRoot from './components/ChallengeRoot';
-import { DocumentationRoot } from './components/documentation/DocumentationRoot';
-import { DocumentationWindow } from './components/documentation/DocumentationWindow';
-=======
 import DocumentationRoot from './components/documentation/DocumentationRoot';
 import DocumentationWindow from './components/documentation/DocumentationWindow';
->>>>>>> 177f259 (Further work on documentation UI:)
 import { State as ReduxState } from './state';
 import { DARK } from './components/theme';
 
