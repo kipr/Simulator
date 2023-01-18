@@ -23,11 +23,13 @@ namespace DocumentationLocation {
 
   export const file = construct<File>(Type.File);
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   export interface Function {
     type: Type.Function;
     id: string;
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   export const func = construct<Function>(Type.Function);
 
   export interface Module {

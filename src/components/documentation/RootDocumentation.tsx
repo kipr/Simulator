@@ -44,7 +44,8 @@ const StyledInput = styled(Input, ({ theme }: ThemeProps) => ({
   borderRadius: 0,
   position: 'sticky',
   top: 0,
-  backgroundColor: new Color(theme.backgroundColor).darken(0.1).toString(),
+  backgroundColor: new Color(theme.backgroundColor).darken(0.1)
+    .toString(),
 }));
 
 const StyledFileBrief = styled(FileBrief, ({ theme }: ThemeProps) => ({
@@ -90,7 +91,7 @@ class RootDocumentation extends React.PureComponent<Props, State> {
     const { theme, documentation, language } = props;
     const { query } = state;
 
-    let sections: JSX.Element[] = [];
+    const sections: JSX.Element[] = [];
 
     const modules = Dict.toList(documentation.modules)
       .sort(([idA, a], [idB, b]) => ModuleDocumentation.compare(a, b))
@@ -102,14 +103,13 @@ class RootDocumentation extends React.PureComponent<Props, State> {
       sections.push((
         <Section name='Modules' theme={theme} noBorder={first} key='modules'>
           {modules.map(([id, module]) => (
-              <ModuleBrief
-                theme={theme}
-                key={id}
-                module={module}
-                onClick={this.onModuleClick_(id)}
-              />
-            ))
-          }
+            <ModuleBrief
+              theme={theme}
+              key={id}
+              module={module}
+              onClick={this.onModuleClick_(id)}
+            />
+          ))}
         </Section>
       ));
       first = false;
@@ -123,15 +123,14 @@ class RootDocumentation extends React.PureComponent<Props, State> {
       sections.push((
         <Section name='Functions' theme={theme} noBorder={first} key='functions'>
           {functions.map(([id, func]) => (
-              <FunctionBrief
-                language={language}
-                theme={theme}
-                key={id}
-                func={func}
-                onClick={this.onFunctionClick_(id)}
-              />
-            ))
-          }
+            <FunctionBrief
+              language={language}
+              theme={theme}
+              key={id}
+              func={func}
+              onClick={this.onFunctionClick_(id)}
+            />
+          ))}
         </Section>
       ));
       first = false;
@@ -145,15 +144,14 @@ class RootDocumentation extends React.PureComponent<Props, State> {
       sections.push((
         <Section name='Structures' theme={theme} noBorder={first} key='structures'>
           {structures.map(([id, structure]) => (
-              <StructureBrief
-                language={language}
-                theme={theme}
-                key={id}
-                structure={structure}
-                onClick={this.onStructureClick_(id)}
-              />
-            ))
-          }
+            <StructureBrief
+              language={language}
+              theme={theme}
+              key={id}
+              structure={structure}
+              onClick={this.onStructureClick_(id)}
+            />
+          ))}
         </Section>
       ));
       first = false;
@@ -167,15 +165,14 @@ class RootDocumentation extends React.PureComponent<Props, State> {
       sections.push((
         <Section name='Enumerations' theme={theme} noBorder={first} key='enumerations'>
           {enumerations.map(([id, enumeration]) => (
-              <EnumerationBrief
-                language={language}
-                theme={theme}
-                key={id}
-                enumeration={enumeration}
-                onClick={this.onEnumerationClick_(id)}
-              />
-            ))
-          }
+            <EnumerationBrief
+              language={language}
+              theme={theme}
+              key={id}
+              enumeration={enumeration}
+              onClick={this.onEnumerationClick_(id)}
+            />
+          ))}
         </Section>
       ));
       first = false;
@@ -189,15 +186,14 @@ class RootDocumentation extends React.PureComponent<Props, State> {
       sections.push((
         <Section name='Files' theme={theme} noBorder={first} key='files'>
           {files.map(([id, file]) => (
-              <StyledFileBrief
-                language={language}
-                theme={theme}
-                key={id}
-                file={file}
-                onClick={this.onFileClick_(id)}
-              />
-            ))
-          }
+            <StyledFileBrief
+              language={language}
+              theme={theme}
+              key={id}
+              file={file}
+              onClick={this.onFileClick_(id)}
+            />
+          ))}
         </Section>
       ));
       first = false;

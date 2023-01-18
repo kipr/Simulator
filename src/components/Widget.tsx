@@ -9,7 +9,8 @@ import { ThemeProps } from './theme';
 
 import { faAngleDown, faAngleUp, faAngleLeft, faAngleRight, faAngleDoubleUp, faAngleDoubleDown, faAngleDoubleLeft, faAngleDoubleRight, faTimes, faExpand, faWindowRestore } from '@fortawesome/free-solid-svg-icons';
 
-//@ts-ignore
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 export namespace Size {

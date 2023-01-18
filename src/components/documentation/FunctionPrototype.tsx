@@ -18,7 +18,7 @@ export interface FunctionPrototypeProps extends StyleProps {
 
 type Props = FunctionPrototypeProps;
 
-const FunctionPrototype = ({ language, func, onClick, style, className }: Props) => language === 'c' ? (
+const FunctionPrototype = ({ language, func, onClick, style, className }: Props) => (language === 'c' ? (
   <Container onClick={onClick} style={style} className={className}>
     <Type $language={language}>{func.return_type}</Type>
     <FunctionName>{func.name}</FunctionName>
@@ -48,6 +48,6 @@ const FunctionPrototype = ({ language, func, onClick, style, className }: Props)
     <Decoration> -&gt; </Decoration>
     <Type $language={language}>{toPythonType(func.return_type)}</Type>
   </Container>
-);
+));
 
 export default FunctionPrototype;

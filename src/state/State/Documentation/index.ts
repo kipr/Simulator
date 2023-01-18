@@ -1,5 +1,4 @@
 import Dict from '../../../Dict';
-import { EMPTY_ARRAY } from '../../../util';
 import EnumerationDocumentation from './EnumerationDocumentation';
 import FileDocumentation from './FileDocumentation';
 import FunctionDocumentation from './FunctionDocumentation';
@@ -45,15 +44,15 @@ namespace Documentation {
       types: {},
     };
 
-    for (const file of params.files || EMPTY_ARRAY) ret.files[file] = doc.files[file];
-    for (const func of params.functions || EMPTY_ARRAY) ret.functions[func] = doc.functions[func];
-    for (const module of params.modules || EMPTY_ARRAY) ret.modules[module] = doc.modules[module];
-    for (const type of params.structures || EMPTY_ARRAY) ret.structures[type] = doc.structures[type];
-    for (const type of params.enumerations || EMPTY_ARRAY) ret.enumerations[type] = doc.enumerations[type];
-    for (const type of params.types || EMPTY_ARRAY) ret.types[type] = doc.types[type];
+    for (const file of params.files || []) ret.files[file] = doc.files[file];
+    for (const func of params.functions || []) ret.functions[func] = doc.functions[func];
+    for (const module of params.modules || []) ret.modules[module] = doc.modules[module];
+    for (const type of params.structures || []) ret.structures[type] = doc.structures[type];
+    for (const type of params.enumerations || []) ret.enumerations[type] = doc.enumerations[type];
+    for (const type of params.types || []) ret.types[type] = doc.types[type];
 
     return ret;
-  }
+  };
 }
 
 export default Documentation;

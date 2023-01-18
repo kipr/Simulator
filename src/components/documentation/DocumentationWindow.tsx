@@ -110,7 +110,6 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
   }
 
   private onWindowMouseMove_ = (e: MouseEvent) => {
-    console.log('onWindowMouseMove_')
     const { state } = this;
     const { dragState } = state;
     if (dragState.type !== 'dragging') return false;
