@@ -151,14 +151,14 @@ export const reduceDocumentation = (state: DocumentationState = DocumentationSta
           language,
           size: state.size === Size.MINIMIZED ? Size.PARTIAL : state.size,
         };
-      } else {
-        return {
-          ...state,
-          locationStack: [],
-          language,
-          size: state.size === Size.MINIMIZED ? Size.PARTIAL : state.size,
-        };
       }
+      
+      return {
+        ...state,
+        locationStack: [],
+        language,
+        size: state.size === Size.MINIMIZED ? Size.PARTIAL : state.size,
+      };
     }
     default: return state;
   }

@@ -191,7 +191,7 @@ class Editor extends React.PureComponent<Props, State> {
       label: 'Open Documentation',
       contextMenuOrder: 0,
       contextMenuGroupId: "operation",
-      keybindings: [ monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter ],
+      keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
       run: this.openDocumentation_,
     });
   };

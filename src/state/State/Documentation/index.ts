@@ -54,6 +54,36 @@ namespace Documentation {
 
     return ret;
   };
+
+  export const lookup = (doc: Documentation, query: string): DocumentationLocation => {
+    for (const funcId in doc.functions) {
+      const func = doc.functions[funcId];
+      if (func.name === query) return DocumentationLocation.func({ id: funcId });
+    }
+
+    for (const structId in doc.structures) {
+      const struct = doc.structures[structId];
+      if (struct.name === query) return DocumentationLocation.structure({ id: structId });
+    }
+
+    for (const enumId in doc.enumerations) {
+      const enum_ = doc.enumerations[enumId];
+      if (enum_.name === query) return DocumentationLocation.enumeration({ id: enumId });
+    }
+
+    for (const moduleId in doc.modules) {
+      const module = doc.modules[moduleId];
+      if (module.name === query) return DocumentationLocation.module({ id: moduleId });
+    }
+    
+    for (const fileId in doc.files) {
+      const file = doc.files[fileId];
+      if (file.name === query) return DocumentationLocation.file({ id: fileId });
+    }
+
+    return undefined;
+  };
+
 }
 
 export default Documentation;

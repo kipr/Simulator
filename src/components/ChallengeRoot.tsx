@@ -205,6 +205,7 @@ interface RootPrivateProps {
   onDocumentationClick: () => void;
   onDocumentationPush: (location: DocumentationLocation) => void;
   onDocumentationSetLanguage: (language: 'c' | 'python') => void;
+  onDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => void;
 
   goToLogin: () => void;
 }
@@ -380,6 +381,7 @@ class Root extends React.Component<Props, State> {
       scene,
       challenge,
       challengeCompletion,
+
     } = this.props;
 
     if (!challengeCompletion) return;
@@ -848,7 +850,8 @@ class Root extends React.Component<Props, State> {
       scene,
       challenge,
       challengeCompletion,
-      onDocumentationClick
+      onDocumentationClick,
+      onDocumentationGoToFuzzy
     } = props;
 
     const {
@@ -928,7 +931,8 @@ class Root extends React.Component<Props, State> {
         challenge,
         challengeCompletion: challengeCompletion || Async.unloaded({ brief: {} }),
       } : undefined,
-      worldCapabilities: WORLD_CAPABILITIES
+      worldCapabilities: WORLD_CAPABILITIES,
+      onDocumentationGoToFuzzy,
     };
 
     let impl: JSX.Element;
@@ -1063,6 +1067,7 @@ export default connect((state: ReduxState, { match: { params: { challengeId } } 
   onDocumentationClick: () => dispatch(DocumentationAction.TOGGLE),
   onDocumentationPush: (location: DocumentationLocation) => dispatch(DocumentationAction.pushLocation({ location })),
   onDocumentationSetLanguage: (language: 'c' | 'python') => dispatch(DocumentationAction.setLanguage({ language })),
+  onDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => dispatch(DocumentationAction.goToFuzzy({ query, language })),
   onDeleteRecord: (selector: Selector) => {
     dispatch(ScenesAction.removeScene({ sceneId: selector.id })),
     dispatch(push('/'));

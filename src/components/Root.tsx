@@ -726,7 +726,8 @@ class Root extends React.Component<Props, State> {
       challengeState: challenge ? {
         challenge,
         challengeCompletion: challengeCompletion || Async.unloaded({ brief: {} }),
-      } : undefined
+      } : undefined,
+      onDocumentationGoToFuzzy,
     };
 
     let impl: JSX.Element;
