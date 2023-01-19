@@ -3,6 +3,7 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import Documentation from '../../state/State/Documentation';
 import DocumentationLocation from '../../state/State/Documentation/DocumentationLocation';
+import FunctionDocumentation from '../../state/State/Documentation/FunctionDocumentation';
 import ModuleDocumentationModel from '../../state/State/Documentation/ModuleDocumentation';
 import { StyleProps } from '../../style';
 import Section from '../Section';
@@ -32,15 +33,20 @@ const ModuleDocumentation = ({
   className,
   theme
 }: Props) => {
+  const functions: [string, FunctionDocumentation][] = module.functions.map(f => [f, documentation.functions[f]]);
+
+  // Sort
+  functions.sort(([idA, a], [idB, b]) => FunctionDocumentation.compare(a, b));
+
   return (
     <Container className={className} style={style}>
       <Section name='Functions' theme={theme}>
-        {module.functions.map(id => (
+        {functions.map(([id, f]) => (
           <FunctionBrief
             language={language}
             theme={theme}
             key={id}
-            func={documentation.functions[id]}
+            func={f}
             onClick={event => onDocumentationPush(DocumentationLocation.func({ id }))}
           />
         ))}
