@@ -72,6 +72,41 @@ namespace LocalizedString {
   // Urdu
   export const UR_PK = 'ur-PK';
 
+  export type Language = (
+    typeof EN_US | typeof EN_UK |
+    typeof ZH_CN | typeof ZH_TW |
+    typeof JA_JP |
+    typeof KO_KR |
+    typeof HI_IN |
+    typeof ES_ES | typeof ES_MX |
+    typeof FR_FR |
+    typeof DE_DE |
+    typeof IT_IT |
+    typeof PT_BR | typeof PT_PT |
+    typeof RU_RU |
+    typeof AR_SA |
+    typeof TR_TR |
+    typeof PL_PL |
+    typeof NL_NL |
+    typeof SV_SE |
+    typeof DA_DK |
+    typeof NO_NO |
+    typeof FI_FI |
+    typeof HU_HU |
+    typeof CS_CZ |
+    typeof SK_SK |
+    typeof RO_RO |
+    typeof BG_BG |
+    typeof EL_GR |
+    typeof HE_IL |
+    typeof TH_TH |
+    typeof VI_VN |
+    typeof ID_ID |
+    typeof MS_MY |
+    typeof FA_IR |
+    typeof UR_PK
+  );
+
   export const FALLBACKS: { [locale: string]: string[] } = {
     [EN_US]: [],
     [EN_UK]: [EN_US],
