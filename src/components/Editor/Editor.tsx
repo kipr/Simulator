@@ -185,8 +185,9 @@ class Editor extends React.PureComponent<Props, State> {
     
   };
 
+  private openDocumentationAction_?: monaco.IDisposable;
   private setupCodeEditor_ = (editor: monaco.editor.IStandaloneCodeEditor) => {
-    if (this.props.onDocumentationGoToFuzzy) editor.addAction({
+    if (this.props.onDocumentationGoToFuzzy) this.openDocumentationAction_ = editor.addAction({
       id: 'open-documentation',
       label: 'Open Documentation',
       contextMenuOrder: 0,
@@ -196,11 +197,20 @@ class Editor extends React.PureComponent<Props, State> {
     });
   };
 
+  private disposeCodeEditor_ = (editor: monaco.editor.IStandaloneCodeEditor) => {
+    if (this.openDocumentationAction_) this.openDocumentationAction_.dispose();
+  };
+
   private ivygate_: Ivygate;
   private bindIvygate_ = (ivygate: Ivygate) => {
     if (this.ivygate_ === ivygate) return;
+    const old = this.ivygate_;
     this.ivygate_ = ivygate;
-    this.setupCodeEditor_(this.ivygate_.editor as monaco.editor.IStandaloneCodeEditor);
+    if (this.ivygate_ && this.ivygate_.editor) {
+      this.setupCodeEditor_(this.ivygate_.editor as monaco.editor.IStandaloneCodeEditor);
+    } else {
+      this.disposeCodeEditor_(old.editor as monaco.editor.IStandaloneCodeEditor);
+    }
   };
 
   get ivygate() {
