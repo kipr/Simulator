@@ -447,7 +447,7 @@ class World extends React.PureComponent<Props, State> {
     const itemsName = StyledText.compose({
       items: [
         StyledText.text({
-          text: LocalizedString.lookup(Dict.map(tr('Item(s) (%1)'), str => sprintf(str, itemList.length)), locale)
+          text: LocalizedString.lookup(Dict.map(tr('Item(s) (%s)'), (str: string) => sprintf(str, itemList.length)), locale)
         })
       ]
     });
@@ -466,7 +466,7 @@ class World extends React.PureComponent<Props, State> {
     const scriptsName = StyledText.compose({
       items: [
         StyledText.text({
-          text: LocalizedString.lookup(Dict.map(tr('Script(s) (%1)'), str => sprintf(str, scriptList.length)), locale)
+          text: LocalizedString.lookup(Dict.map(tr('Script(s) (%s)'), (str: string) => sprintf(str, scriptList.length)), locale)
         })
       ]
     });

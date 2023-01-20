@@ -41,7 +41,7 @@ class SceneErrorDialog extends React.Component<Props> {
     return (
       <Dialog
         theme={theme}
-        name={LocalizedString.lookup(Dict.map(tr('Error %1'), str => sprintf(str, error.code)), locale)}
+        name={LocalizedString.lookup(Dict.map(tr('Error %s'), (str: string) => sprintf(str, error.code)), locale)}
         onClose={onClose}
       >
         <Container theme={theme}>

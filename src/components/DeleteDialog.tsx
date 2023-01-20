@@ -41,11 +41,11 @@ class DeleteDialog extends React.PureComponent<Props> {
     return (
       <Dialog
         theme={theme}
-        name={LocalizedString.lookup(Dict.map(tr('Delete %1?'), str => sprintf(str, LocalizedString.lookup(name, locale))), locale)}
+        name={LocalizedString.lookup(Dict.map(tr('Delete %s?'), (str: string) => sprintf(str, LocalizedString.lookup(name, locale))), locale)}
         onClose={onClose}
       >
         <Container theme={theme}>
-          {LocalizedString.lookup(Dict.map(tr('Are you sure you want to delete %1?'), str => sprintf(str, LocalizedString.lookup(name, locale))), locale)}
+          {LocalizedString.lookup(Dict.map(tr('Are you sure you want to delete %s?'), (str: string) => sprintf(str, LocalizedString.lookup(name, locale))), locale)}
         </Container>
         <DialogBar theme={theme} onAccept={onAccept}><Fa icon={faTrash} /> {LocalizedString.lookup(tr('Delete'), locale)}</DialogBar>
       </Dialog>

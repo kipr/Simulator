@@ -213,7 +213,7 @@ export function createCanNode(canNumber: number, canPosition?: Vector3, editable
   return {
     type: 'from-template',
     templateId: 'can',
-    name: Dict.map(tr('Can %1'), str => sprintf(str, canNumber)),
+    name: Dict.map(tr('Can %s'), (str: string) => sprintf(str, canNumber)),
     startingOrigin: origin,
     origin,
     editable: editable ?? false,

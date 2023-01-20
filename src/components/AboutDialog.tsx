@@ -85,7 +85,7 @@ class AboutDialog extends React.PureComponent<Props> {
           <LogoRow>
             {logo}
           </LogoRow>
-          {LocalizedString.lookup(Dict.map(tr('Version %1 (%2)'), str => sprintf(str, SIMULATOR_VERSION, SIMULATOR_GIT_HASH)), locale)}
+          {LocalizedString.lookup(Dict.map(tr('Version %s (%s)'), (str: string) => sprintf(str, SIMULATOR_VERSION, SIMULATOR_GIT_HASH)), locale)}
           <br /> <br />
           <Bold>{LocalizedString.lookup(tr('Copyright'), locale)} <Fa icon={faCopyright} /> 2023 <Link theme={theme} href="https://kipr.org/" target="_blank">KISS Institute for Practical Robotics</Link> {LocalizedString.lookup(tr('and External Contributors', 'Part of copyright notice, after KIPR is listed'), locale)}</Bold>
           <br /> <br />
