@@ -942,6 +942,45 @@ msgstr ""
 msgid "Start"
 msgstr ""
 
+msgid "RGB"
+msgstr ""
+
+msgid "Challenge"
+msgstr ""
+
+msgid "Stop"
+msgstr ""
+
+msgid "Run"
+msgstr ""
+
+msgid "and External Contributors"
+msgstr ""
+
+msgid "Visit our"
+msgstr ""
+
+msgid "Can %s"
+msgstr ""
+
+msgid "Item(s) (%d)"
+msgstr ""
+
+msgid "Script(s) (%d)"
+msgstr ""
+
+msgid "Version %s (%s)"
+msgstr ""
+
+msgid "Delete %s?"
+msgstr ""
+
+msgid "Are you sure you want to delete %s?"
+msgstr ""
+
+msgid "Error %d"
+msgstr ""
+
 msgid "Volume"
 msgstr ""
 
