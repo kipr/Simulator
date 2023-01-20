@@ -13,6 +13,10 @@ import { push } from 'connected-react-router';
 import LoginPage from './login/LoginPage';
 import WidgetTest from './pages/WidgetTest';
 import ChallengeRoot from './components/ChallengeRoot';
+import DocumentationRoot from './components/documentation/DocumentationRoot';
+import DocumentationWindow from './components/documentation/DocumentationWindow';
+import { State as ReduxState } from './state';
+import { DARK } from './components/theme';
 
 export interface AppPublicProps {
 
@@ -66,18 +70,25 @@ class App extends React.Component<Props, State> {
     if (loading) return <Loading />;
 
     return (
-      <Switch>
-        <Route path="/" exact component={Dashboard} />
-        <Route path="/tutorials" exact component={Tutorials} />
-        <Route path="/scene/:sceneId" component={Root} />
-        <Route path="/challenge/:challengeId" component={ChallengeRoot} />
-        <Route path="/widget_test" component={WidgetTest} />
-      </Switch>
+      <>
+        <Switch>
+          <Route path="/" exact component={Dashboard} />
+          <Route path="/tutorials" exact component={Tutorials} />
+          <Route path="/scene/:sceneId" component={Root} />
+          <Route path="/challenge/:challengeId" component={ChallengeRoot} />
+          <Route path="/widget_test" component={WidgetTest} />
+        </Switch>
+        <DocumentationWindow theme={DARK} />
+      </>
     );
   }
 }
 
-export default connect(undefined, dispatch => ({
+export default connect((state: ReduxState) => {
+  return {
+    
+  };
+}, dispatch => ({
   login: () => {
     console.log('Redirecting to login page', window.location.pathname);
     window.location.href = `/login${window.location.pathname === '/login' ? '' : `?from=${window.location.pathname}`}`;

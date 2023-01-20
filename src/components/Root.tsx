@@ -30,7 +30,7 @@ import { DEFAULT_FEEDBACK, Feedback } from '../Feedback';
 import ExceptionDialog from './ExceptionDialog';
 import OpenSceneDialog from './OpenSceneDialog';
 
-import { ChallengesAction, ScenesAction, ChallengeCompletionsAction } from '../state/reducer';
+import { ChallengesAction, DocumentationAction, ScenesAction, ChallengeCompletionsAction } from '../state/reducer';
 import { Editor } from './Editor';
 import Dict from '../Dict';
 import ProgrammingLanguage from '../ProgrammingLanguage';
@@ -69,6 +69,7 @@ import PredicateCompletion from '../state/State/ChallengeCompletion/PredicateCom
 import LoadingOverlay from './Challenge/LoadingOverlay';
 import DbError from '../db/Error';
 import { applyObjectPatch, applyPatch, createObjectPatch, createPatch, ObjectPatch, OuterObjectPatch } from 'symmetry';
+import DocumentationLocation from '../state/State/Documentation/DocumentationLocation';
 
 namespace Modal {
   export enum Type {
@@ -197,6 +198,10 @@ interface RootPrivateProps {
   onSelectNodeId: (id: string) => void;
   onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => void;
   onResetScene: () => void;
+
+  onDocumentationClick: () => void;
+  onDocumentationPush: (location: DocumentationLocation) => void;
+  onDocumentationSetLanguage: (language: 'c' | 'python') => void;
 
   onCreateScene: (id: string, scene: Scene) => void;
   onSaveScene: (id: string) => void;
@@ -350,6 +355,8 @@ class Root extends React.Component<Props, State> {
   private onActiveLanguageChange_ = (language: ProgrammingLanguage) => {
     this.setState({
       activeLanguage: language
+    }, () => {
+      this.props.onDocumentationSetLanguage(language === 'python' ? 'python' : 'c');
     });
   };
 
@@ -663,6 +670,12 @@ class Root extends React.Component<Props, State> {
     }
 
     const {
+      selectedScript,
+      selectedScriptId,
+      onDocumentationClick
+    } = props;
+
+    const {
       layout,
       activeLanguage,
       code,
@@ -750,7 +763,7 @@ class Root extends React.Component<Props, State> {
             onResetWorldClick={this.onResetWorldClick_}
             onRunClick={this.onRunClick_}
             onStopClick={this.onStopClick_}
-            onDocumentationClick={this.onDocumentationClick}
+            onDocumentationClick={onDocumentationClick}
             onDashboardClick={this.onDashboardClick}
             onLogoutClick={this.onLogoutClick}
             onFeedbackClick={this.onModalClick_(Modal.FEEDBACK)}
@@ -923,6 +936,9 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
     dispatch(ScenesAction.removeScene({ sceneId: selector.id })),
     dispatch(push('/'));
   },
+  onDocumentationClick: () => dispatch(DocumentationAction.TOGGLE),
+  onDocumentationPush: (location: DocumentationLocation) => dispatch(DocumentationAction.pushLocation({ location })),
+  onDocumentationSetLanguage: (language: 'c' | 'python') => dispatch(DocumentationAction.setLanguage({ language })),
   onSaveScene: (sceneId: string) => dispatch(ScenesAction.saveScene({ sceneId })),
   onSetScenePartial: (partialScene: Partial<Scene>) => dispatch(ScenesAction.setScenePartial({ sceneId, partialScene })),
   unfailScene: (sceneId: string) => dispatch(ScenesAction.unfailScene({ sceneId })),
