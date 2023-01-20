@@ -12,7 +12,8 @@
     "test": "env TS_NODE_PROJECT=\"tsconfig.testing.json\" mocha --recursive --extension ts --require ts-node/register test",
     "start": "yarn run start-dev",
     "start-dev": "webpack-dev-server --host 0.0.0.0 --config=configs/webpack/dev.js",
-    "start-prod": "yarn run build && node express.js"
+    "start-prod": "yarn run build && node express.js",
+    "generate-i18n": "ts-node i18n/generate.ts"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

@@ -20,6 +20,7 @@ import Node from './state/State/Scene/Node';
 import { Robots } from './state/State';
 
 
+
 let Ammo: unknown;
 if (SIMULATOR_HAS_AMMO) {
   // This is on a non-standard path specified in the webpack config.
@@ -35,6 +36,9 @@ import ScriptManager from './ScriptManager';
 import Geometry from './state/State/Scene/Geometry';
 import Camera from './state/State/Scene/Camera';
 
+import tr from '@i18n';
+
+const TEST = tr('test');
 
 export let ACTIVE_SPACE: Space;
 
@@ -164,7 +168,7 @@ export class Space {
       decoder: {
         wasmUrl: '/static/draco_wasm_wrapper_gltf.js',
         wasmBinaryUrl: '/static/draco_decoder_gltf.wasm',
-        fallbackUrl: '/static/draco_decoder_gltf.js'
+        fallbackUrl: '/static/draco_decoder_gltf.js',
       }
     };
   }

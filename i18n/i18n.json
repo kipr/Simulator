@@ -1,0 +1,42 @@
+{
+  "src/scenes/jbc5.ts/JBC_5.name": {
+    "descriptions": [
+      "JBC 5 Name"
+    ],
+    "translations": {}
+  },
+  "src/scenes/jbc5.ts/JBC_5.description": {
+    "descriptions": [
+      "JBC 5 Description"
+    ],
+    "translations": {}
+  },
+  "src/scenes/jbc5b.ts/JBC_5B.name": {
+    "descriptions": [
+      "JBC 5B Name"
+    ],
+    "translations": {}
+  },
+  "src/scenes/jbc5b.ts/JBC_5B.description": {
+    "descriptions": [
+      "JBC 5B Description"
+    ],
+    "translations": {}
+  },
+  "src/scenes/jbc5c.ts/JBC_5C.name": {
+    "descriptions": [
+      "JBC 5C Name"
+    ],
+    "translations": {}
+  },
+  "src/scenes/jbc5c.ts/JBC_5C.description": {
+    "descriptions": [
+      "JBC 5C Description"
+    ],
+    "translations": {}
+  },
+  "test": {
+    "descriptions": [],
+    "translations": {}
+  }
+}

@@ -119,6 +119,29 @@ The project is set up with [ESLint](https://eslint.org/) for JavaScript/TypeScri
 
 To ease development, we highly recommend enabling ESLint within your editor so you can see issues in real time. If you're using Visual Studio Code, you can use the [VS Code ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint). For other editors, see [available ESLint integrations](https://eslint.org/docs/user-guide/integrations).
 
+## Internationalization (i18n)
+
+Simulator uses a mechanism similar to Qt's i18n to automatically create a `i18n.json` file located in `/i18n/i18n.json`. The source files are scanned for imports of `@i18n`, and uses of the default exported function (`tr` by convention) are detected and inserted into the file. This file is then injected into the client via webpack's `DefinePlugin` (see `configs/webpack/common.js` for details). The `tr` function reads this object at runtime to make translations available.
+
+To update this file, run `yarn run generate-i18n`. While the generation script *should* preserve your work-in-progress, it is recommended to commit, stash, or otherwise backup the `i18n.json` file prior to running this script.
+
+The format of the `i18n.json` is as follows:
+```json
+{
+  "TRANSLATION_ID_1": {
+    "descriptions": [
+      "Description 1 from the first tr(), if available",
+      "Description 2 from the second tr() using the same id, if available"
+    ],
+    "translations": {
+      "en-US": "See `src/util/LocalizedString.ts` for a list of available language identifiers",
+      "ja-JP": "利用可能な言語識別子のリストについては、「src/util/LocalizedString.ts」を参照してください"
+    }
+  },
+  "..."
+}
+```
+
 # Building image
 
 The repo includes a `Dockerfile` for building a Docker image of the simulator:
