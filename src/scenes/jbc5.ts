@@ -1,5 +1,4 @@
 import Scene from "../state/State/Scene";
-import LocalizedString from '../util/LocalizedString';
 
 import { createBaseSceneSurfaceA } from './jbcBase';
 
@@ -9,6 +8,6 @@ const baseScene = createBaseSceneSurfaceA();
 
 export const JBC_5: Scene = {
   ...baseScene,
-  name: tr('src/scenes/jbc5.ts/JBC_5.name', 'JBC 5 Name'),
-  description: tr('src/scenes/jbc5.ts/JBC_5.description', 'JBC 5 Description')
+  name: tr('JBC 5'),
+  description: tr('Junior Botball Challenge 5: Dance Party')
 };

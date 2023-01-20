@@ -38,13 +38,15 @@ import { AsyncChallenge } from '../../state/State/Challenge';
 import { AsyncChallengeCompletion } from '../../state/State/ChallengeCompletion';
 import PredicateEditor from './PredicateEditor';
 
+import tr from '@i18n';
+
 export interface ChallengePublicProps extends StyleProps, ThemeProps {
   challenge: AsyncChallenge;
   challengeCompletion: AsyncChallengeCompletion;
 }
 
 interface ChallengePrivateProps {
-  challenge: AsyncChallenge;
+  locale: LocalizedString.Language;
 }
 
 namespace UiState {
@@ -124,7 +126,7 @@ class Challenge extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { style, className, theme, challenge, challengeCompletion } = props;
+    const { style, className, theme, challenge, challengeCompletion, locale } = props;
     const { collapsed, modal } = state;
 
 
@@ -139,20 +141,22 @@ class Challenge extends React.PureComponent<Props, State> {
         <ScrollArea theme={theme} style={{ flex: '1 1' }}>
           <Container theme={theme} style={style} className={className}>
             {latestChallenge.success && (
-              <Section name={'Success'} theme={theme}>
+              <Section name={LocalizedString.lookup(tr('Success'), locale)} theme={theme}>
                 <PredicateEditor
                   events={latestChallenge.events}
                   predicate={latestChallenge.success}
                   predicateCompletion={latestChallengeCompletion ? latestChallengeCompletion.success : undefined}
+                  locale={locale}
                 />
               </Section>
             )}
             {latestChallenge.failure && (
-              <Section name={'Failure'} theme={theme}>
+              <Section name={LocalizedString.lookup(tr('Failure'), locale)} theme={theme}>
                 <PredicateEditor
                   events={latestChallenge.events}
                   predicate={latestChallenge.failure}
                   predicateCompletion={latestChallengeCompletion ? latestChallengeCompletion.failure : undefined}
+                  locale={locale}
                 />
               </Section>
             )}
@@ -163,4 +167,6 @@ class Challenge extends React.PureComponent<Props, State> {
   }
 }
 
-export default Challenge;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(Challenge) as React.ComponentType<ChallengePublicProps>;

@@ -6,14 +6,14 @@ import { Vector3 as RawVector3 } from '../math';
 import { Rotation, Vector3 } from '../unit-math';
 import LocalizedString from '../util/LocalizedString';
 
+import tr from '@i18n';
+
 const { meters } = Distance;
 const { degrees } = Angle;
 const { grams } = Mass;
 
 export const DEMOBOT: Robot = {
-  name: {
-    [LocalizedString.EN_US]: 'Demobot',
-  },
+  name: tr('Demobot'),
   authorId: 'kipr',
   nodes: {
     chassis: Node.link({

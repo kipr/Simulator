@@ -7,19 +7,33 @@ import ScrollArea from './ScrollArea';
 import { Switch } from './Switch';
 import { ThemeProps } from './theme';
 
-type SettingsSection = 'simulation' | 'editor';
+import tr from '@i18n';
+import LocalizedString from '../util/LocalizedString';
+import ComboBox from './ComboBox';
+import Dict from '../Dict';
 
-export interface SettingsDialogProp extends ThemeProps, StyleProps {
+import { State as ReduxState } from '../state';
+import { I18nAction } from '../state/reducer';
+import { connect } from 'react-redux';
+
+type SettingsSection = 'user-interface' | 'simulation' | 'editor';
+
+export interface SettingsDialogPublicProps extends ThemeProps, StyleProps {
   onClose: () => void;
   settings: Settings;
   onSettingsChange: (settings: Partial<Settings>) => void;
+}
+
+interface SettingsDialogPrivateProps {
+  locale: LocalizedString.Language;
+  onLocaleChange: (locale: LocalizedString.Language) => void;
 }
 
 interface SettingsDialogState {
   selectedSection: SettingsSection;
 }
 
-type Props = SettingsDialogProp;
+type Props = SettingsDialogPublicProps & SettingsDialogPrivateProps;
 type State = SettingsDialogState;
 
 const Container = styled('div', (props: ThemeProps) => ({
@@ -76,11 +90,26 @@ interface SectionProps {
   selected?: boolean;
 }
 
-export class SettingsDialog extends React.PureComponent<Props, State> {
+const LOCALE_OPTIONS: ComboBox.Option[] = (() => {
+  const ret = [];
+  for (const locale of [ LocalizedString.EN_US, LocalizedString.JA_JP ]) {
+    ret.push({
+      text: LocalizedString.NATIVE_LOCALE_NAMES[locale],
+      data: locale,
+    });
+  }
+  return ret;
+})();
+
+const StyledComboBox = styled(ComboBox, {
+  flex: '1 1',
+});
+
+class SettingsDialog extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      selectedSection: 'simulation',
+      selectedSection: 'user-interface',
     };
   }
 
@@ -104,30 +133,74 @@ export class SettingsDialog extends React.PureComponent<Props, State> {
     );
   };
 
+  private onLocaleSelect_ = (index: number, option: ComboBox.Option) => {
+    this.props.onLocaleChange(option.data as LocalizedString.Language);
+  };
+
+
   render() {
     const { props, state } = this;
-    const { style, className, theme, onClose } = props;
+    const { style, className, theme, onClose, locale } = props;
     const { selectedSection } = state;
 
     return (
-      <Dialog theme={theme} name='Settings' onClose={onClose}>
-        <Container theme={theme}>
+      <Dialog
+        theme={theme}
+        name={LocalizedString.lookup(tr('Settings'), locale)}
+        onClose={onClose}
+      >
+        <Container theme={theme} style={style} className={className}>
           <SectionsColumn theme={theme}>
-            <SectionName theme={theme} selected={selectedSection === 'simulation'} onClick={() => this.setSelectedSection('simulation')}>Simulation</SectionName>
-            <SectionName theme={theme} selected={selectedSection === 'editor'} onClick={() => this.setSelectedSection('editor')}>Editor</SectionName>
+            <SectionName
+              theme={theme}
+              selected={selectedSection === 'user-interface'}
+              onClick={() => this.setSelectedSection('user-interface')}
+            >
+              {LocalizedString.lookup(tr('User Interface'), locale)}
+            </SectionName>
+            <SectionName
+              theme={theme}
+              selected={selectedSection === 'simulation'}
+              onClick={() => this.setSelectedSection('simulation')}
+            >
+              {LocalizedString.lookup(tr('Simulation'), locale)}
+            </SectionName>
+            <SectionName
+              theme={theme}
+              selected={selectedSection === 'editor'}
+              onClick={() => this.setSelectedSection('editor')}
+            >
+              {LocalizedString.lookup(tr('Editor'), locale)}
+            </SectionName>
           </SectionsColumn>
           <SettingsColumn theme={theme}>
+            {selectedSection === 'user-interface' && (
+              <>
+                <SettingContainer theme={theme}>
+                  <SettingInfoContainer>
+                    <SettingInfoText>{LocalizedString.lookup(tr('Locale'), locale)}</SettingInfoText>
+                    <SettingInfoSubtext>{LocalizedString.lookup(tr('Switch languages'), locale)}</SettingInfoSubtext>
+                  </SettingInfoContainer>
+                  <StyledComboBox
+                    options={LOCALE_OPTIONS}
+                    index={LOCALE_OPTIONS.findIndex(opt => opt.data === locale)}
+                    onSelect={this.onLocaleSelect_}
+                    theme={theme}
+                  />
+                </SettingContainer>
+              </>
+            )}
             {selectedSection === 'simulation' && (
               <>
                 {this.createBooleanSetting(
-                  'Sensor noise',
-                  'Controls whether sensor outputs are affected by random noise',
+                  LocalizedString.lookup(tr('Sensor noise'), locale),
+                  LocalizedString.lookup(tr('Controls whether sensor outputs are affected by random noise'), locale),
                   (settings: Settings) => settings.simulationSensorNoise,
                   (newValue: boolean) => ({ simulationSensorNoise: newValue })
                 )}
                 {this.createBooleanSetting(
-                  'Realistic sensors',
-                  'Controls whether sensors behave like real-world sensors instead of like ideal sensors. For example, real-world ET sensors are nonlinear',
+                  LocalizedString.lookup(tr('Realistic sensors'), locale),
+                  LocalizedString.lookup(tr('Controls whether sensors behave like real-world sensors instead of like ideal sensors. For example, real-world ET sensors are nonlinear'), locale),
                   (settings: Settings) => settings.simulationRealisticSensors,
                   (newValue: boolean) => ({ simulationRealisticSensors: newValue })
                 )}
@@ -136,8 +209,8 @@ export class SettingsDialog extends React.PureComponent<Props, State> {
             {selectedSection === 'editor' && (
               <>
                 {this.createBooleanSetting(
-                  'Autocomplete',
-                  'Controls autocompletion of code, brackets, and quotes',
+                  LocalizedString.lookup(tr('Autocomplete'), locale),
+                  LocalizedString.lookup(tr('Controls autocompletion of code, brackets, and quotes'), locale),
                   (settings: Settings) => settings.editorAutoComplete,
                   (newValue: boolean) => ({ editorAutoComplete: newValue })
                 )}
@@ -149,3 +222,9 @@ export class SettingsDialog extends React.PureComponent<Props, State> {
     );
   }
 }
+
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale
+}), dispatch => ({
+  onLocaleChange: (locale: LocalizedString.Language) => dispatch(I18nAction.setLocale({ locale })),
+}))(SettingsDialog) as React.ComponentType<SettingsDialogPublicProps>;

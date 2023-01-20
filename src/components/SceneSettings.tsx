@@ -8,12 +8,22 @@ import Field from './Field';
 import Input from './Input';
 import { ThemeProps } from './theme';
 
-export interface SceneSettingsProps extends StyleProps, ThemeProps {
+import tr from '@i18n';
+
+import { connect } from 'react-redux';
+
+import { State as ReduxState } from '../state';
+
+export interface SceneSettingsPublicProps extends StyleProps, ThemeProps {
   scene: Scene;
   onSceneChange: (scene: Scene) => void;
 }
 
-type Props = SceneSettingsProps;
+interface SceneSettingsPrivateProps {
+  locale: LocalizedString.Language;
+}
+
+type Props = SceneSettingsPublicProps & SceneSettingsPrivateProps;
 
 const Container = styled('div', {
   display: 'flex',
@@ -23,42 +33,48 @@ const Container = styled('div', {
 class SceneSettings extends React.Component<Props> {
   private onNameChange_ = (event: React.SyntheticEvent<HTMLInputElement>) => {
     const { props } = this;
-    const { scene, onSceneChange } = props;
+    const { scene, onSceneChange, locale } = props;
 
     onSceneChange({
       ...scene,
-      name: { [LocalizedString.EN_US]: event.currentTarget.value }
+      name: {
+        ...(scene.name || {}),
+        [locale]: event.currentTarget.value
+      }
     });
   };
   
   private onDescriptionChange_ = (event: React.SyntheticEvent<HTMLInputElement>) => {
     const { props } = this;
-    const { scene, onSceneChange } = props;
+    const { scene, onSceneChange, locale } = props;
 
     onSceneChange({
       ...scene,
-      description: { [LocalizedString.EN_US]: event.currentTarget.value }
+      description: {
+        ...(scene.description || {}),
+        [locale]: event.currentTarget.value
+      }
     });
   };
 
   render() {
     const { props } = this;
 
-    const { scene, style, className, theme } = props;
+    const { scene, style, className, theme, locale } = props;
 
     return (
       <Container className={className} style={style}>
-        <Field name='Name' theme={theme}>
+        <Field name={LocalizedString.lookup(tr('Name'), locale)} theme={theme}>
           <Input
             theme={theme}
-            value={scene.name[LocalizedString.EN_US]}
+            value={LocalizedString.lookup(scene.name, locale)}
             onChange={this.onNameChange_}
           />
         </Field>
-        <Field name='Description' theme={theme}>
+        <Field name={LocalizedString.lookup(tr('Description'), locale)} theme={theme}>
           <Input
             theme={theme}
-            value={scene.description[LocalizedString.EN_US]}
+            value={LocalizedString.lookup(scene.description, locale)}
             onChange={this.onDescriptionChange_}
           />
         </Field>
@@ -67,4 +83,6 @@ class SceneSettings extends React.Component<Props> {
   }
 }
 
-export default SceneSettings;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(SceneSettings) as React.ComponentType<SceneSettingsPublicProps>;

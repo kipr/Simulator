@@ -10,11 +10,23 @@ import { faCopyright } from '@fortawesome/free-solid-svg-icons';
 import KIPR_LOGO_BLACK from '../assets/KIPR-Logo-Black-Text-Clear-Large.png';
 import KIPR_LOGO_WHITE from '../assets/KIPR-Logo-White-Text-Clear-Large.png';
 
-export interface AboutDialogProps extends ThemeProps, StyleProps {
+import tr from '@i18n';
+
+import { connect } from 'react-redux';
+import { State as ReduxState } from '../state';
+import LocalizedString from '../util/LocalizedString';
+import { sprintf } from 'sprintf-js';
+import Dict from '../Dict';
+
+export interface AboutDialogPublicProps extends ThemeProps, StyleProps {
   onClose: () => void;
 }
 
-type Props = AboutDialogProps;
+interface AboutDialogPrivateProps {
+  locale: LocalizedString.Language;
+}
+
+type Props = AboutDialogPublicProps & AboutDialogPrivateProps;
 
 const Logo = styled('img', {
   width: '150px',
@@ -49,10 +61,10 @@ const CopyrightContainer = styled('div', {
   flex: '1 1'
 });
 
-export class AboutDialog extends React.PureComponent<Props> {
+class AboutDialog extends React.PureComponent<Props> {
   render() {
     const { props } = this;
-    const { theme, onClose } = props;
+    const { theme, onClose, locale } = props;
     
     let logo: JSX.Element;
 
@@ -68,18 +80,18 @@ export class AboutDialog extends React.PureComponent<Props> {
     }
     
     return (
-      <Dialog theme={theme} name='About' onClose={onClose}>
+      <Dialog theme={theme} name={LocalizedString.lookup(tr('About'), locale)} onClose={onClose}>
         <Container theme={theme}>
           <LogoRow>
             {logo}
           </LogoRow>
-          Version {SIMULATOR_VERSION} ({SIMULATOR_GIT_HASH})
+          {LocalizedString.lookup(Dict.map(tr('Version %1 (%2)'), str => sprintf(str, SIMULATOR_VERSION, SIMULATOR_GIT_HASH)), locale)}
           <br /> <br />
-          <Bold>Copyright <Fa icon={faCopyright} /> 2022 <Link theme={theme} href="https://kipr.org/" target="_blank">KISS Institute for Practical Robotics</Link> and External Contributors</Bold>
+          <Bold>{LocalizedString.lookup(tr('Copyright'), locale)} <Fa icon={faCopyright} /> 2023 <Link theme={theme} href="https://kipr.org/" target="_blank">KISS Institute for Practical Robotics</Link> {LocalizedString.lookup(tr('and External Contributors', 'Part of copyright notice, after KIPR is listed'), locale)}</Bold>
           <br /> <br />
-          This software is licensed under the terms of the <Link theme={theme} href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">GNU General Public License v3</Link>.
+          {LocalizedString.lookup(tr('This software is licensed under the terms of the'), locale)} <Link theme={theme} href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">GNU General Public License v3</Link>.
           <br /> <br />
-          Thank you to the following contributors and testers:
+          {LocalizedString.lookup(tr('Thank you to the following contributors and testers:'), locale)}
           <ul>
             <li>Tim Corbly</li>
             <li>Will Hawkins</li>
@@ -89,11 +101,15 @@ export class AboutDialog extends React.PureComponent<Props> {
             <li>Nafis Zaman</li>
           </ul>
 
-          Want to help improve the simulator and get your name listed here? <br />
-          Visit our <Link theme={theme} href="https://github.com/kipr/simulator" target="_blank">GitHub repository</Link>.
-          We're happy to help you get started!
+          {LocalizedString.lookup(tr('Want to help improve the simulator and get your name listed here?'), locale)} <br />
+          {LocalizedString.lookup(tr('Visit our', 'URL link to github repository follows'), locale)} <Link theme={theme} href="https://github.com/kipr/simulator" target="_blank">{LocalizedString.lookup(tr('GitHub repository'), locale)}</Link>.
+          {LocalizedString.lookup(tr('We\'re happy to help you get started!'), locale)}
         </Container>
       </Dialog>
     );
   }
 }
+
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(AboutDialog) as React.ComponentType<AboutDialogPublicProps>;

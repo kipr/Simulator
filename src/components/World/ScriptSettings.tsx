@@ -11,17 +11,26 @@ import { Ivygate } from 'ivygate';
 import { Editor } from '../Editor';
 import * as monaco from 'monaco-editor';
 
+import LocalizedString from '../../util/LocalizedString';
+import { connect } from 'react-redux';
+import { State as ReduxState } from '../../state';
+import tr from '@i18n';
 
-export interface ScriptSettingsProps extends ThemeProps {
+
+export interface ScriptSettingsPublicProps extends ThemeProps {
   onScriptChange: (script: Script) => void;
   script: Script;
   id: string;
 }
 
+interface ScriptSettingsPrivateProps {
+  locale: LocalizedString.Language;
+}
+
 interface ScriptSettingsState {
 }
 
-type Props = ScriptSettingsProps;
+type Props = ScriptSettingsPublicProps & ScriptSettingsPrivateProps;
 type State = ScriptSettingsState;
 
 const StyledField = styled(Field, (props: ThemeProps) => ({
@@ -73,11 +82,11 @@ class ScriptSettings extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { theme, script, id } = props;
+    const { theme, script, id, locale } = props;
 
     return (
       <Container theme={theme}>
-        <StyledField name='Name' theme={theme} long>
+        <StyledField name={LocalizedString.lookup(tr('Name'), locale)} theme={theme} long>
           <Input theme={theme} type='text' value={script.name} onChange={this.onNameChange_} />
         </StyledField>
         <Ivygate
@@ -92,4 +101,6 @@ class ScriptSettings extends React.PureComponent<Props, State> {
   }
 }
 
-export default ScriptSettings;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(ScriptSettings) as React.ComponentType<ScriptSettingsPublicProps>; 

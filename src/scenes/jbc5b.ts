@@ -9,6 +9,6 @@ const baseScene = createBaseSceneSurfaceA();
 
 export const JBC_5B: Scene = {
   ...baseScene,
-  name: tr('src/scenes/jbc5b.ts/JBC_5B.name', 'JBC 5B Name'),
-  description: tr('src/scenes/jbc5b.ts/JBC_5B.description', 'JBC 5B Description')
+  name: tr('JBC 5B'),
+  description: tr('Junior Botball Challenge 5B: Line Dance')
 };

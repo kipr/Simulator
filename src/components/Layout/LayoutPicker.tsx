@@ -6,8 +6,12 @@ import { Fa } from '../Fa';
 import { Layout } from './Layout';
 import { ThemeProps } from '../theme';
 import { faCaretSquareLeft, faClone, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import LocalizedString from '../../util/LocalizedString';
+import { connect } from 'react-redux';
+import { State as ReduxState } from '../../state';
+import tr from '@i18n';
 
-export interface LayoutPickerProps extends StyleProps, ThemeProps {
+export interface LayoutPickerPublicProps extends StyleProps, ThemeProps {
   layout: Layout,
 
   onLayoutChange: (layout: Layout) => void;
@@ -16,11 +20,15 @@ export interface LayoutPickerProps extends StyleProps, ThemeProps {
   onHideAll: () => void;
 }
 
+interface LayoutPickerPrivateProps {
+  locale: LocalizedString.Language;
+}
+
 interface LayoutPickerState {
   
 }
 
-type Props = LayoutPickerProps;
+type Props = LayoutPickerPublicProps & LayoutPickerPrivateProps;
 type State = LayoutPickerState;
 
 const Container = styled('div', (props: ThemeProps) => ({
@@ -104,19 +112,19 @@ class LayoutPicker extends React.PureComponent<Props, State> {
 
   render() {
     const { props } = this;
-    const { theme, layout, onHideAll, onShowAll } = props;
+    const { theme, layout, onHideAll, onShowAll, locale } = props;
     return (
       <Container theme={theme}>
-        <Item theme={theme} style={{ fontWeight: 500, backgroundColor: theme.borderColor }}>Layouts</Item>
-        <Item theme={theme} disabled={layout === Layout.Overlay} onClick={layout !== Layout.Overlay ? this.onOverlayClick_ : undefined}><ItemIcon icon={faClone} /> Overlay</Item>
-        <Item theme={theme} disabled={layout === Layout.Side} onClick={layout !== Layout.Side ? this.onSideClick_ : undefined}><ItemIcon icon={faCaretSquareLeft} /> Side</Item>
+        <Item theme={theme} style={{ fontWeight: 500, backgroundColor: theme.borderColor }}>{LocalizedString.lookup(tr('Layouts'), locale)}</Item>
+        <Item theme={theme} disabled={layout === Layout.Overlay} onClick={layout !== Layout.Overlay ? this.onOverlayClick_ : undefined}><ItemIcon icon={faClone} /> {LocalizedString.lookup(tr('Overlay'), locale)}</Item>
+        <Item theme={theme} disabled={layout === Layout.Side} onClick={layout !== Layout.Side ? this.onSideClick_ : undefined}><ItemIcon icon={faCaretSquareLeft} /> {LocalizedString.lookup(tr('Side'), locale)}</Item>
         {/* <Item theme={theme} disabled={layout === Layout.Bottom} onClick={layout !== Layout.Bottom ? this.onBottomClick_ : undefined}><ItemIcon icon={faCaretSquareDown} /> Bottom</Item> */}
         
         {layout === Layout.Overlay ? (
           <>
-            <Item theme={theme} style={{ fontWeight: 500, backgroundColor: theme.borderColor }}>Options</Item>
-            <Item theme={theme} onClick={onShowAll}><ItemIcon icon={faEye} /> Show All</Item>
-            <Item theme={theme} onClick={onHideAll}><ItemIcon icon={faEyeSlash} /> Hide All</Item>
+            <Item theme={theme} style={{ fontWeight: 500, backgroundColor: theme.borderColor }}>{LocalizedString.lookup(tr('Options'), locale)}</Item>
+            <Item theme={theme} onClick={onShowAll}><ItemIcon icon={faEye} /> {LocalizedString.lookup(tr('Show All'), locale)}</Item>
+            <Item theme={theme} onClick={onHideAll}><ItemIcon icon={faEyeSlash} /> {LocalizedString.lookup(tr('Hide All'), locale)}</Item>
           </>
         ) : undefined}
       </Container>
@@ -124,4 +132,6 @@ class LayoutPicker extends React.PureComponent<Props, State> {
   }
 }
 
-export default LayoutPicker;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale
+}))(LayoutPicker) as React.ComponentType<LayoutPickerPublicProps>;

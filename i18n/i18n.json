@@ -1,42 +1,69 @@
 {
-  "src/scenes/jbc5.ts/JBC_5.name": {
-    "descriptions": [
-      "JBC 5 Name"
-    ],
-    "translations": {}
-  },
-  "src/scenes/jbc5.ts/JBC_5.description": {
-    "descriptions": [
-      "JBC 5 Description"
-    ],
-    "translations": {}
-  },
-  "src/scenes/jbc5b.ts/JBC_5B.name": {
-    "descriptions": [
-      "JBC 5B Name"
-    ],
-    "translations": {}
-  },
-  "src/scenes/jbc5b.ts/JBC_5B.description": {
-    "descriptions": [
-      "JBC 5B Description"
-    ],
-    "translations": {}
-  },
-  "src/scenes/jbc5c.ts/JBC_5C.name": {
-    "descriptions": [
-      "JBC 5C Name"
-    ],
-    "translations": {}
-  },
-  "src/scenes/jbc5c.ts/JBC_5C.description": {
-    "descriptions": [
-      "JBC 5C Description"
-    ],
-    "translations": {}
-  },
-  "test": {
-    "descriptions": [],
-    "translations": {}
+  "": {
+    "JBC 5": {
+      "en-US": "JBC 5"
+    },
+    "Junior Botball Challenge 5: Dance Party": {
+      "en-US": "Junior Botball Challenge 5: Dance Party"
+    },
+    "JBC 5B": {
+      "en-US": "JBC 5B"
+    },
+    "Junior Botball Challenge 5B: Line Dance": {
+      "en-US": "Junior Botball Challenge 5B: Line Dance"
+    },
+    "JBC 5C": {
+      "en-US": "JBC 5C"
+    },
+    "Junior Botball Challenge 5C: Synchronized Dancing": {
+      "en-US": "Junior Botball Challenge 5C: Synchronized Dancing"
+    },
+    "test": {
+      "en-US": "test"
+    },
+    "Settings": {
+      "en-US": "Settings"
+    },
+    "User Interface": {
+      "en-US": "User Interface",
+      "ja-JP": "ユーザーインターフェース"
+    },
+    "Simulation": {
+      "en-US": "Simulation",
+      "ja-JP": "シミュレーション"
+    },
+    "Editor": {
+      "en-US": "Editor",
+      "ja-JP": "編集者"
+    },
+    "Locale": {
+      "en-US": "Locale",
+      "ja-JP": "言語"
+    },
+    "Switch languages": {
+      "en-US": "Switch languages",
+      "ja-JP": "言語切り替え"
+    },
+    "Sensor noise": {
+      "en-US": "Sensor noise"
+    },
+    "Controls whether sensor outputs are affected by random noise": {
+      "en-US": "Controls whether sensor outputs are affected by random noise",
+      "ja-JP": "センサー出力がランダムノイズの影響を受けるかどうかを制御する"
+    },
+    "Realistic sensors": {
+      "en-US": "Realistic sensors"
+    },
+    "Controls whether sensors behave like real-world sensors instead of like ideal sensors. For example, real-world ET sensors are nonlinear": {
+      "en-US": "Controls whether sensors behave like real-world sensors instead of like ideal sensors. For example, real-world ET sensors are nonlinear",
+      "ja-JP": "センサーが理想的なセンサーではなく、現実のセンサーのように振る舞うかどうかを制御します。例えば、実世界のETセンサーは非線形である"
+    },
+    "Autocomplete": {
+      "en-US": "Autocomplete"
+    },
+    "Controls autocompletion of code, brackets, and quotes": {
+      "en-US": "Controls autocompletion of code, brackets, and quotes",
+      "ja-JP": "コード、括弧、引用符のオートコンプリートを制御する。"
+    }
   }
 }

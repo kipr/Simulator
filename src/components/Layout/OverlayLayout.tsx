@@ -10,7 +10,7 @@ import World, { createWorldBarComponents } from '../World';
 
 import { Info } from '../Info';
 import { LayoutEditorTarget, LayoutProps } from './Layout';
-import { SimulatorArea } from '../SimulatorArea';
+import SimulatorArea from '../SimulatorArea';
 import { Theme, ThemeProps } from '../theme';
 import Widget, { BarComponent, Mode, Size, WidgetProps } from '../Widget';
 import { State as ReduxState } from '../../state';
@@ -21,6 +21,9 @@ import Async from '../../state/State/Async';
 import { EMPTY_OBJECT } from '../../util';
 import Challenge from '../Challenge';
 import { ReferenceFrame } from '../../unit-math';
+import LocalizedString from '../../util/LocalizedString';
+
+import tr from '@i18n';
 
 export interface OverlayLayoutProps extends LayoutProps {
   
@@ -28,6 +31,7 @@ export interface OverlayLayoutProps extends LayoutProps {
 
 interface ReduxOverlayLayoutProps {
   robots: Dict<Node.Robot>;
+  locale: LocalizedString.Language;
 }
 
 interface OverlayLayoutState {
@@ -361,6 +365,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       challengeState,
       worldCapabilities,
       onDocumentationGoToFuzzy
+      locale
     } = props;
 
     const {
@@ -410,8 +415,9 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
     const editorBar = createEditorBarComponents({
       theme,
       target: editorBarTarget,
+      locale
     });
-    const consoleBar = createConsoleBarComponents(theme, onClearConsole);
+    const consoleBar = createConsoleBarComponents(theme, onClearConsole, locale);
 
     const latestScene = Async.latestValue(scene);
     let robotNode: Node.Robot;
@@ -433,7 +439,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
         <Overlay theme={theme} $challenge={!!challengeState}>
           <EditorWidget
             {...commonProps}
-            name='Editor'
+            name={LocalizedString.lookup(tr('Editor'), locale)}
             sizes={EDITOR_SIZES}
             size={EDITOR_SIZE[editorSize]}
             onSizeChange={this.onEditorSizeChange_}
@@ -444,7 +450,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
           </EditorWidget>
           <ConsoleWidget
             {...commonProps}
-            name='Console'
+            name={LocalizedString.lookup(tr('Console', 'Computer text command line (e.g., DOS)'), locale)}
             sizes={CONSOLE_SIZES}
             size={CONSOLE_SIZE[consoleSize]}
             onSizeChange={this.onConsoleSizeChange_}
@@ -456,7 +462,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
           {robotNode ? (
             <InfoWidget
               {...commonProps}
-              name='Robot'
+              name={LocalizedString.lookup(tr('Robot'), locale)}
               sizes={INFO_SIZES}
               size={INFO_SIZE[infoSize]}
               onSizeChange={this.onInfoSizeChange_}
@@ -472,7 +478,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
           {challengeState ? (
             <ChallengeWidget
               {...commonProps}
-              name='Challenge'
+              name={LocalizedString.lookup(tr('Challenge', 'A predefined task for the user to complete'), locale)}
               sizes={CHALLENGE_SIZES}
               size={CHALLENGE_SIZE[challengeSize]}
               onSizeChange={this.onChallengeSizeChange_}
@@ -486,7 +492,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
           ) : undefined}
           <WorldWidget
             {...commonProps}
-            name='World'
+            name={LocalizedString.lookup(tr('World'), locale)}
             sizes={WORLD_SIZES}
             size={WORLD_SIZE[worldSize]}
             onSizeChange={this.onWorldSizeChange_}
@@ -522,6 +528,7 @@ export const OverlayLayoutRedux = connect((state: ReduxState, { sceneId }: Layou
   
   return {
     robots,
+    locale: state.i18n.locale,
   };
 }, dispatch => ({
 }), null, { forwardRef: true })(OverlayLayout);

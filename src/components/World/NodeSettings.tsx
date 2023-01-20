@@ -27,6 +27,8 @@ import Robot from '../../state/State/Robot';
 import { connect } from 'react-redux';
 import Async from '../../state/State/Async';
 
+import tr from '@i18n';
+
 export interface NodeSettingsPublicProps extends ThemeProps {
   onNodeChange: (node: Node) => void;
   onNodeOriginChange: (origin: ReferenceFrame) => void;
@@ -42,6 +44,7 @@ export interface NodeSettingsPublicProps extends ThemeProps {
 
 interface NodeSettingsPrivateProps {
   robots: Dict<Async<Record<string, never>, Robot>>;
+  locale: LocalizedString.Language;
 }
 
 interface NodeSettingsState {
@@ -76,104 +79,6 @@ const StyledScrollArea = styled(ScrollArea, (props: ThemeProps) => ({
   minHeight: '300px',
   flex: '1 1',
 }));
-
-const GEOMETRY_OPTIONS: ComboBox.Option[] = [
-  ComboBox.option('Box', 'box'),
-  ComboBox.option('Sphere', 'sphere'),
-  ComboBox.option('Cylinder', 'cylinder'),
-  ComboBox.option('Cone', 'cone'),
-  ComboBox.option('Plane', 'plane'),
-  ComboBox.option('File', 'file'),
-];
-
-const GEOMETRY_REVERSE_OPTIONS: Dict<number> = GEOMETRY_OPTIONS.reduce((dict, option, i) => {
-  dict[option.data as string] = i;
-  return dict;
-}, {});
-
-
-const TEMPLATE_OPTIONS: ComboBox.Option[] = [
-  ComboBox.option('Can', 'can'),
-  ComboBox.option('Paper Ream', 'ream'),
-];
-
-const TEMPLATE_REVERSE_OPTIONS: Dict<number> = TEMPLATE_OPTIONS.reduce((dict, option, i) => {
-  dict[option.data as string] = i;
-  return dict;
-}, {});
-
-const ROTATION_TYPES: ComboBox.Option[] = [
-  ComboBox.option('Euler', 'euler'),
-  ComboBox.option('Axis Angle', 'angle-axis'),
-];
-
-const EULER_ORDER_OPTIONS: ComboBox.Option[] = [
-  ComboBox.option('XYZ', 'xyz'),
-  ComboBox.option('YZX', 'yzx'),
-  ComboBox.option('ZXY', 'zxy'),
-  ComboBox.option('XZY', 'xzy'),
-  ComboBox.option('YXZ', 'yxz'),
-  ComboBox.option('ZYX', 'zyx'),
-];
-
-const NODE_TYPE_OPTIONS: ComboBox.Option[] = [
-  ComboBox.option('Empty', 'empty'),
-  ComboBox.option('Standard Object', 'from-template'),
-  ComboBox.option('Custom Object', 'object'),
-  // ComboBox.option('Directional Light', 'directional-light'),
-  ComboBox.option('Point Light', 'point-light'),
-  // ComboBox.option('Spot Light', 'spot-light'),
-];
-
-const NODE_TYPE_OPTIONS_REV = (() => {
-  const map: Record<string, number> = {};
-  NODE_TYPE_OPTIONS.forEach((option, i) => {
-    map[option.data as string] = i;
-  });
-  return map;
-})();
-
-const MATERIAL_TYPE_OPTIONS: ComboBox.Option[] = [
-  ComboBox.option('Unset', 'unset'),
-  ComboBox.option('Basic', 'basic'),
-  // ComboBox.option('PBR', 'pbr'),
-];
-
-const MATERIAL_TYPE_OPTIONS_REV = (() => {
-  const map: Record<string, number> = {};
-  MATERIAL_TYPE_OPTIONS.forEach((option, i) => {
-    map[option.data as string] = i;
-  });
-  return map;
-})();
-
-const MATERIAL_SOURCE3_TYPE_OPTIONS: ComboBox.Option[] = [
-  ComboBox.option('Unset', 'unset'),
-  ComboBox.option('RGB', 'color3'),
-  ComboBox.option('Texture', 'texture'),
-];
-
-const MATERIAL_SOURCE3_TYPE_OPTIONS_REV = (() => {
-  const map: Record<string, number> = {};
-  MATERIAL_SOURCE3_TYPE_OPTIONS.forEach((option, i) => {
-    map[option.data as string] = i;
-  });
-  return map;
-})();
-
-const MATERIAL_SOURCE1_TYPE_OPTIONS: ComboBox.Option[] = [
-  ComboBox.option('Unset', 'unset'),
-  ComboBox.option('Value', 'color1'),
-  ComboBox.option('Texture', 'texture'),
-];
-
-const MATERIAL_SOURCE1_TYPE_OPTIONS_REV = (() => {
-  const map: Record<string, number> = {};
-  MATERIAL_SOURCE3_TYPE_OPTIONS.forEach((option, i) => {
-    map[option.data as string] = i;
-  });
-  return map;
-})();
 
 class NodeSettings extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -224,12 +129,15 @@ class NodeSettings extends React.PureComponent<Props, State> {
   private onNameChange_ = (event: React.SyntheticEvent<HTMLInputElement>) => {
     this.props.onNodeChange({
       ...this.props.node,
-      name: { [LocalizedString.EN_US]: event.currentTarget.value }
+      name: {
+        ...this.props.node.name,
+        [this.props.locale]: event.currentTarget.value
+      }
     });
   };
 
   private onTypeSelect_ = (index: number, option: ComboBox.Option) => {
-    const { node } = this.props;
+    const { node, locale } = this.props;
     
     // If the type didn't change, do nothing
     const selectedType = option.data as Node.Type;
@@ -238,6 +146,11 @@ class NodeSettings extends React.PureComponent<Props, State> {
     }
 
     let transmutedNode = Node.transmute(node, selectedType);
+
+    const TEMPLATE_OPTIONS: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('Can'), locale), 'can'),
+      ComboBox.option(LocalizedString.lookup(tr('Paper Ream'), locale), 'ream'),
+    ];
 
     // If the new type is from a template, set the template ID to a default value
     if (transmutedNode.type === 'from-template') {
@@ -928,7 +841,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { theme, node, scene, id, robots } = props;
+    const { theme, node, scene, id, robots, locale } = props;
     const { collapsed } = state;
 
     // const { parentId } = node;
@@ -966,16 +879,114 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const robotOptions: ComboBox.Option[] = Dict.toList(robots)
       .map(([id, robot]) => ([id, Async.latestValue(robot)]))
       .filter(([, robot]: [string, Robot]) => robot !== undefined)
-      .map(([id, robot]: [string, Robot]) => ComboBox.option(LocalizedString.lookup(robot.name, LocalizedString.EN_US), id));
+      .map(([id, robot]: [string, Robot]) => ComboBox.option(LocalizedString.lookup(robot.name, locale), id));
+
+    const GEOMETRY_OPTIONS: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('Box'), locale), 'box'),
+      ComboBox.option(LocalizedString.lookup(tr('Sphere'), locale), 'sphere'),
+      ComboBox.option(LocalizedString.lookup(tr('Cylinder'), locale), 'cylinder'),
+      ComboBox.option(LocalizedString.lookup(tr('Cone'), locale), 'cone'),
+      ComboBox.option(LocalizedString.lookup(tr('Plane'), locale), 'plane'),
+      ComboBox.option(LocalizedString.lookup(tr('File'), locale), 'file'),
+    ];
+    
+    const GEOMETRY_REVERSE_OPTIONS: Dict<number> = GEOMETRY_OPTIONS.reduce((dict, option, i) => {
+      dict[option.data as string] = i;
+      return dict;
+    }, {});
+    
+    
+    const TEMPLATE_OPTIONS: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('Can'), locale), 'can'),
+      ComboBox.option(LocalizedString.lookup(tr('Paper Ream'), locale), 'ream'),
+    ];
+    
+    const TEMPLATE_REVERSE_OPTIONS: Dict<number> = TEMPLATE_OPTIONS.reduce((dict, option, i) => {
+      dict[option.data as string] = i;
+      return dict;
+    }, {});
+    
+    const ROTATION_TYPES: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('Euler'), locale), 'euler'),
+      ComboBox.option(LocalizedString.lookup(tr('Axis Angle'), locale), 'angle-axis'),
+    ];
+    
+    const EULER_ORDER_OPTIONS: ComboBox.Option[] = [
+      ComboBox.option('XYZ', 'xyz'),
+      ComboBox.option('YZX', 'yzx'),
+      ComboBox.option('ZXY', 'zxy'),
+      ComboBox.option('XZY', 'xzy'),
+      ComboBox.option('YXZ', 'yxz'),
+      ComboBox.option('ZYX', 'zyx'),
+    ];
+    
+    const NODE_TYPE_OPTIONS: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('Empty'), locale), 'empty'),
+      ComboBox.option(LocalizedString.lookup(tr('Standard Object'), locale), 'from-template'),
+      ComboBox.option(LocalizedString.lookup(tr('Custom Object'), locale), 'object'),
+      // ComboBox.option('Directional Light', 'directional-light'),
+      ComboBox.option(LocalizedString.lookup(tr('Point Light'), locale), 'point-light'),
+      // ComboBox.option('Spot Light', 'spot-light'),
+    ];
+    
+    const NODE_TYPE_OPTIONS_REV = (() => {
+      const map: Record<string, number> = {};
+      NODE_TYPE_OPTIONS.forEach((option, i) => {
+        map[option.data as string] = i;
+      });
+      return map;
+    })();
+    
+    const MATERIAL_TYPE_OPTIONS: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('Unset'), locale), 'unset'),
+      ComboBox.option(LocalizedString.lookup(tr('Basic'), locale), 'basic'),
+      // ComboBox.option('PBR', 'pbr'),
+    ];
+    
+    const MATERIAL_TYPE_OPTIONS_REV = (() => {
+      const map: Record<string, number> = {};
+      MATERIAL_TYPE_OPTIONS.forEach((option, i) => {
+        map[option.data as string] = i;
+      });
+      return map;
+    })();
+    
+    const MATERIAL_SOURCE3_TYPE_OPTIONS: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('Unset'), locale), 'unset'),
+      ComboBox.option(LocalizedString.lookup(tr('RGB', 'Red, Green, Blue'), locale), 'color3'),
+      ComboBox.option(LocalizedString.lookup(tr('Texture'), locale), 'texture'),
+    ];
+    
+    const MATERIAL_SOURCE3_TYPE_OPTIONS_REV = (() => {
+      const map: Record<string, number> = {};
+      MATERIAL_SOURCE3_TYPE_OPTIONS.forEach((option, i) => {
+        map[option.data as string] = i;
+      });
+      return map;
+    })();
+    
+    const MATERIAL_SOURCE1_TYPE_OPTIONS: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('Unset'), locale), 'unset'),
+      ComboBox.option(LocalizedString.lookup(tr('Value'), locale), 'color1'),
+      ComboBox.option(LocalizedString.lookup(tr('Texture'), locale), 'texture'),
+    ];
+    
+    const MATERIAL_SOURCE1_TYPE_OPTIONS_REV = (() => {
+      const map: Record<string, number> = {};
+      MATERIAL_SOURCE3_TYPE_OPTIONS.forEach((option, i) => {
+        map[option.data as string] = i;
+      });
+      return map;
+    })();
 
     return (
       <Container theme={theme}>
-        <Section name='General' theme={theme}>
-          <StyledField name='Name' theme={theme} long>
+        <Section name={LocalizedString.lookup(tr('General'), locale)} theme={theme}>
+          <StyledField name={LocalizedString.lookup(tr('Name'), locale)} theme={theme} long>
             <Input
               theme={theme}
               type='text'
-              value={node.name[LocalizedString.EN_US]}
+              value={LocalizedString.lookup(node.name, locale)}
               onChange={this.onNameChange_}
             />
           </StyledField>
@@ -984,7 +995,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
           </StyledField> */}
           
           {node.type !== 'robot' && (
-            <StyledField name='Type' theme={theme} long>
+            <StyledField name={LocalizedString.lookup(tr('Type'), locale)} theme={theme} long>
               <ComboBox
                 options={NODE_TYPE_OPTIONS}
                 theme={theme}
@@ -995,7 +1006,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
           )}
 
           {node.type === 'robot' && (
-            <StyledField name='Robot' theme={theme} long>
+            <StyledField name={LocalizedString.lookup(tr('Robot'), locale)} theme={theme} long>
               <ComboBox
                 options={robotOptions}
                 theme={theme}
@@ -1006,7 +1017,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
           )}
           
           {node.type === 'object' && (
-            <StyledField name='Geometry' theme={theme} long>
+            <StyledField name={LocalizedString.lookup(tr('Geometry'), locale)} theme={theme} long>
               <ComboBox
                 options={GEOMETRY_OPTIONS}
                 theme={theme}
@@ -1017,7 +1028,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
           )}
 
           {node.type === 'from-template' && (
-            <StyledField name='Item' theme={theme} long>
+            <StyledField name={LocalizedString.lookup(tr('Item'), locale)} theme={theme} long>
               <ComboBox
                 options={TEMPLATE_OPTIONS}
                 theme={theme}
@@ -1029,27 +1040,27 @@ class NodeSettings extends React.PureComponent<Props, State> {
         </Section>
         {(node.type === 'object' && geometry && geometry.type === 'box') ? (
           <Section
-            name='Box Options'
+            name={LocalizedString.lookup(tr('Box Options'), locale)}
             theme={theme}
             collapsed={collapsed['geometry']}
             onCollapsedChange={this.onCollapsedChange_('geometry')}
           >
             <StyledValueEdit
-              name='Size X'
+              name={LocalizedString.lookup(tr('Size X'), locale)}
               long
               value={Value.distance(geometry.size.x)}
               onValueChange={this.onBoxSizeXChange_(node.geometryId)}
               theme={theme}
             />
             <StyledValueEdit
-              name='Size Y'
+              name={LocalizedString.lookup(tr('Size Y'), locale)}
               long
               value={Value.distance(geometry.size.y)}
               onValueChange={this.onBoxSizeYChange_(node.geometryId)}
               theme={theme}
             />
             <StyledValueEdit
-              name='Size Z'
+              name={LocalizedString.lookup(tr('Size Z'), locale)}
               long
               value={Value.distance(geometry.size.z)}
               onValueChange={this.onBoxSizeZChange_(node.geometryId)}
@@ -1059,13 +1070,13 @@ class NodeSettings extends React.PureComponent<Props, State> {
         ) : undefined}
         {(node.type === 'object' && geometry.type === 'sphere') ? (
           <Section
-            name='Sphere Options'
+            name={LocalizedString.lookup(tr('Sphere Options'), locale)}
             theme={theme}
             collapsed={collapsed['geometry']}
             onCollapsedChange={this.onCollapsedChange_('geometry')}
           >
             <StyledValueEdit
-              name='Radius'
+              name={LocalizedString.lookup(tr('Radius'), locale)}
               long
               value={Value.distance(geometry.radius)}
               onValueChange={this.onSphereRadiusChange_(node.geometryId)}
@@ -1075,20 +1086,20 @@ class NodeSettings extends React.PureComponent<Props, State> {
         ) : undefined}
         {(node.type === 'object' && geometry.type === 'cylinder') ? (
           <Section
-            name='Cylinder Options'
+            name={LocalizedString.lookup(tr('Cylinder Options'), locale)}
             theme={theme}
             collapsed={collapsed['geometry']}
             onCollapsedChange={this.onCollapsedChange_('geometry')}
           >
             <StyledValueEdit
-              name='Radius'
+              name={LocalizedString.lookup(tr('Radius'), locale)}
               long
               value={Value.distance(geometry.radius)}
               onValueChange={this.onCylinderRadiusChange_(node.geometryId)}
               theme={theme}
             />
             <StyledValueEdit
-              name='Height'
+              name={LocalizedString.lookup(tr('Height'), locale)}
               long
               value={Value.distance(geometry.height)}
               onValueChange={this.onCylinderHeightChange_(node.geometryId)}
@@ -1097,16 +1108,16 @@ class NodeSettings extends React.PureComponent<Props, State> {
           </Section>
         ) : undefined}
         {(node.type === 'object' && geometry.type === 'plane') ? (
-          <Section name='Plane Options' theme={theme} collapsed={collapsed['geometry']} onCollapsedChange={this.onCollapsedChange_('geometry')}>
+          <Section name={LocalizedString.lookup(tr('Plane Options'), locale)} theme={theme} collapsed={collapsed['geometry']} onCollapsedChange={this.onCollapsedChange_('geometry')}>
             <StyledValueEdit
-              name='Size X'
+              name={LocalizedString.lookup(tr('Size X'), locale)}
               long
               value={Value.distance(geometry.size.x)}
               onValueChange={this.onPlaneSizeXChange_(node.geometryId)}
               theme={theme}
             />
             <StyledValueEdit
-              name='Size Y'
+              name={LocalizedString.lookup(tr('Size Y'), locale)}
               long
               value={Value.distance(geometry.size.y)}
               onValueChange={this.onPlaneSizeYChange_(node.geometryId)}
@@ -1116,21 +1127,21 @@ class NodeSettings extends React.PureComponent<Props, State> {
         ) : undefined}
         
         {(node.type === 'object' && geometry.type === 'file') ? (
-          <Section name='File Options' theme={theme} collapsed={collapsed['geometry']} onCollapsedChange={this.onCollapsedChange_('geometry')}>
-            <StyledField name='URI' long theme={theme}>
+          <Section name={LocalizedString.lookup(tr('File Options'), locale)} theme={theme} collapsed={collapsed['geometry']} onCollapsedChange={this.onCollapsedChange_('geometry')}>
+            <StyledField name={LocalizedString.lookup(tr('URI'), locale)} long theme={theme}>
               <Input theme={theme} type='text' value={geometry.uri} onChange={this.onFileUriChange_(node.geometryId)} />
             </StyledField>
           </Section>
         ) : undefined}
         {node.type === 'object' ? (
-          <Section name='Material' theme={theme} collapsed={collapsed['material']} onCollapsedChange={this.onCollapsedChange_('material')}>
-            <StyledField name='Type' long theme={theme}>
+          <Section name={LocalizedString.lookup(tr('Material'), locale)} theme={theme} collapsed={collapsed['material']} onCollapsedChange={this.onCollapsedChange_('material')}>
+            <StyledField name={LocalizedString.lookup(tr('Type'), locale)} long theme={theme}>
               <ComboBox options={MATERIAL_TYPE_OPTIONS} theme={theme} index={MATERIAL_TYPE_OPTIONS_REV[NodeSettings.materialType(node.material)]} onSelect={this.onMaterialTypeSelect_} />
             </StyledField>
 
             {/* Basic Color */}
             {node.material && node.material.type === 'basic' && (
-              <StyledField name='Color Type' long theme={theme}>
+              <StyledField name={LocalizedString.lookup(tr('Color Type'), locale)} long theme={theme}>
                 <ComboBox
                   options={MATERIAL_SOURCE3_TYPE_OPTIONS}
                   theme={theme}
@@ -1142,21 +1153,21 @@ class NodeSettings extends React.PureComponent<Props, State> {
             {node.material && node.material.type === 'basic' && node.material.color && node.material.color.type === 'color3' && (
               <>
                 <StyledValueEdit
-                  name='Color Red'
+                  name={LocalizedString.lookup(tr('Color Red'), locale)}
                   long
                   theme={theme}
                   value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.color.color).r))}
                   onValueChange={this.onMaterialBasicColorRChange_}
                 />
                 <StyledValueEdit
-                  name='Color Green'
+                  name={LocalizedString.lookup(tr('Color Green'), locale)}
                   long
                   theme={theme}
                   value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.color.color).g))}
                   onValueChange={this.onMaterialBasicColorGChange_}
                 />
                 <StyledValueEdit
-                  name='Color Blue'
+                  name={LocalizedString.lookup(tr('Color Blue'), locale)}
                   long
                   theme={theme}
                   value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.color.color).b))}
@@ -1165,14 +1176,14 @@ class NodeSettings extends React.PureComponent<Props, State> {
               </>
             )}
             {node.material && node.material.type === 'basic' && node.material.color && node.material.color.type === 'texture' && (
-              <StyledField name='Color Texture URI' long theme={theme}>
+              <StyledField name={LocalizedString.lookup(tr('Color Texture URI'), locale)} long theme={theme}>
                 <Input theme={theme} type='text' value={node.material.color.uri} onChange={this.onMaterialBasicColorTextureUriChange_} />
               </StyledField>
             )}
 
             {/* Albedo */}
             {node.material && node.material.type === 'pbr' && (
-              <StyledField name='Albedo Type' long theme={theme}>
+              <StyledField name={LocalizedString.lookup(tr('Albedo Type'), locale)} long theme={theme}>
                 <ComboBox
                   options={MATERIAL_SOURCE3_TYPE_OPTIONS}
                   theme={theme}
@@ -1184,21 +1195,21 @@ class NodeSettings extends React.PureComponent<Props, State> {
             {node.material && node.material.type === 'pbr' && node.material.albedo && node.material.albedo.type === 'color3' && (
               <>
                 <StyledValueEdit
-                  name='Albedo Red'
+                  name={LocalizedString.lookup(tr('Albedo Red'), locale)}
                   long
                   theme={theme}
                   value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.albedo.color).r))}
                   onValueChange={this.onMaterialPbrAlbedoRChange_}
                 />
                 <StyledValueEdit
-                  name='Albedo Green'
+                  name={LocalizedString.lookup(tr('Albedo Green'), locale)}
                   long
                   theme={theme}
                   value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.albedo.color).g))}
                   onValueChange={this.onMaterialPbrAlbedoGChange_}
                 />
                 <StyledValueEdit
-                  name='Albedo Blue'
+                  name={LocalizedString.lookup(tr('Albedo Blue'), locale)}
                   long
                   theme={theme}
                   value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.albedo.color).b))}
@@ -1207,14 +1218,14 @@ class NodeSettings extends React.PureComponent<Props, State> {
               </>
             )}
             {node.material && node.material.type === 'pbr' && node.material.albedo && node.material.albedo.type === 'texture' && (
-              <StyledField name='Albedo Texture URI' long theme={theme}>
+              <StyledField name={LocalizedString.lookup(tr('Albedo Texture URI'), locale)} long theme={theme}>
                 <Input theme={theme} type='text' value={node.material.albedo.uri} onChange={this.onMaterialPbrAlbedoTextureUriChange_} />
               </StyledField>
             )}
 
             {/* Reflection */}
             {node.material && node.material.type === 'pbr' && (
-              <StyledField name='Reflection Type' long theme={theme}>
+              <StyledField name={LocalizedString.lookup(tr('Reflection Type'), locale)} long theme={theme}>
                 <ComboBox
                   options={MATERIAL_SOURCE3_TYPE_OPTIONS}
                   theme={theme}
@@ -1227,21 +1238,21 @@ class NodeSettings extends React.PureComponent<Props, State> {
             {node.material && node.material.type === 'pbr' && node.material.reflection && node.material.reflection.type === 'color3' && (
               <>
                 <StyledValueEdit
-                  name='Reflection Red'
+                  name={LocalizedString.lookup(tr('Reflection Red'), locale)}
                   long
                   theme={theme}
                   value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.reflection.color).r))}
                   onValueChange={this.onMaterialPbrReflectionRChange_}
                 />
                 <StyledValueEdit
-                  name='Reflection Green'
+                  name={LocalizedString.lookup(tr('Reflection Green'), locale)}
                   long
                   theme={theme}
                   value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.reflection.color).g))}
                   onValueChange={this.onMaterialPbrReflectionGChange_}
                 />
                 <StyledValueEdit
-                  name='Reflection Blue'
+                  name={LocalizedString.lookup(tr('Reflection Blue'), locale)}
                   long
                   theme={theme}
                   value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.reflection.color).b))}
@@ -1250,14 +1261,14 @@ class NodeSettings extends React.PureComponent<Props, State> {
               </>
             )}
             {node.material && node.material.type === 'pbr' && node.material.reflection && node.material.reflection.type === 'texture' && (
-              <StyledField name='Reflection Texture URI' long theme={theme}>
+              <StyledField name={LocalizedString.lookup(tr('Reflection Texture URI'), locale)} long theme={theme}>
                 <Input theme={theme} type='text' value={node.material.reflection.uri} onChange={this.onMaterialPbrReflectionTextureUriChange_} />
               </StyledField>
             )}
 
             {/* Emissive */}
             {node.material && node.material.type === 'pbr' && (
-              <StyledField name='Emissive Type' long theme={theme}>
+              <StyledField name={LocalizedString.lookup(tr('Emissive Type'), locale)} long theme={theme}>
                 <ComboBox
                   options={MATERIAL_SOURCE3_TYPE_OPTIONS}
                   theme={theme}
@@ -1269,21 +1280,21 @@ class NodeSettings extends React.PureComponent<Props, State> {
             {node.material && node.material.type === 'pbr' && node.material.emissive && node.material.emissive.type === 'color3' && (
               <>
                 <StyledValueEdit
-                  name='Emissive Red'
+                  name={LocalizedString.lookup(tr('Emissive Red'), locale)}
                   long
                   theme={theme}
                   value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.emissive.color).r))}
                   onValueChange={this.onMaterialPbrEmissiveRChange_}
                 />
                 <StyledValueEdit
-                  name='Emissive Green'
+                  name={LocalizedString.lookup(tr('Emissive Green'), locale)}
                   long
                   theme={theme}
                   value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.emissive.color).g))}
                   onValueChange={this.onMaterialPbrEmissiveGChange_}
                 />
                 <StyledValueEdit
-                  name='Emissive Blue'
+                  name={LocalizedString.lookup(tr('Emissive Blue'), locale)}
                   long
                   theme={theme}
                   value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.emissive.color).b))}
@@ -1292,14 +1303,14 @@ class NodeSettings extends React.PureComponent<Props, State> {
               </>
             )}
             {node.material && node.material.type === 'pbr' && node.material.emissive && node.material.emissive.type === 'texture' && (
-              <StyledField name='Emissive Texture URI' long theme={theme}>
+              <StyledField name={LocalizedString.lookup(tr('Emissive Texture URI'), locale)} long theme={theme}>
                 <Input theme={theme} type='text' value={node.material.emissive.uri} onChange={this.onMaterialPbrEmissiveTextureUriChange_} />
               </StyledField>
             )}
 
             {/* Ambient */}
             {node.material && node.material.type === 'pbr' && (
-              <StyledField name='Ambient Type' long theme={theme}>
+              <StyledField name={LocalizedString.lookup(tr('Ambient Type'), locale)} long theme={theme}>
                 <ComboBox
                   options={MATERIAL_SOURCE3_TYPE_OPTIONS}
                   theme={theme}
@@ -1311,21 +1322,21 @@ class NodeSettings extends React.PureComponent<Props, State> {
             {node.material && node.material.type === 'pbr' && node.material.ambient && node.material.ambient.type === 'color3' && (
               <>
                 <StyledValueEdit
-                  name='Ambient Red'
+                  name={LocalizedString.lookup(tr('Ambient Red'), locale)}
                   long
                   theme={theme}
                   value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.ambient.color).r))}
                   onValueChange={this.onMaterialPbrAmbientRChange_}
                 />
                 <StyledValueEdit
-                  name='Ambient Green'
+                  name={LocalizedString.lookup(tr('Ambient Green'), locale)}
                   long
                   theme={theme}
                   value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.ambient.color).g))}
                   onValueChange={this.onMaterialPbrAmbientGChange_}
                 />
                 <StyledValueEdit
-                  name='Ambient Blue'
+                  name={LocalizedString.lookup(tr('Ambient Blue'), locale)}
                   long
                   theme={theme}
                   value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.ambient.color).b))} 
@@ -1334,7 +1345,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
               </>
             )}
             {node.material && node.material.type === 'pbr' && node.material.ambient && node.material.ambient.type === 'texture' && (
-              <StyledField name='Ambient Texture URI' long theme={theme}>
+              <StyledField name={LocalizedString.lookup(tr('Ambient Texture URI'), locale)} long theme={theme}>
                 <Input theme={theme} type='text' value={node.material.ambient.uri} onChange={this.onMaterialPbrAmbientTextureUriChange_} />
               </StyledField>
             )}
@@ -1342,7 +1353,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
             {/* Metalness */}
 
             {node.material && node.material.type === 'pbr' && (
-              <StyledField name='Metalness Type' long theme={theme}>
+              <StyledField name={LocalizedString.lookup(tr('Metalness Type'), locale)} long theme={theme}>
                 <ComboBox
                   options={MATERIAL_SOURCE1_TYPE_OPTIONS}
                   theme={theme}
@@ -1354,7 +1365,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
             {node.material && node.material.type === 'pbr' && node.material.metalness && node.material.metalness.type === 'color1' && (
               <>
                 <StyledValueEdit
-                  name='Metalness'
+                  name={LocalizedString.lookup(tr('Metalness'), locale)}
                   long
                   theme={theme}
                   value={Value.unitless(UnitlessValue.create(node.material.metalness.color))}
@@ -1363,34 +1374,34 @@ class NodeSettings extends React.PureComponent<Props, State> {
               </>
             )}
             {node.material && node.material.type === 'pbr' && node.material.metalness && node.material.metalness.type === 'texture' && (
-              <StyledField name='Metalness Texture URI' long theme={theme}>
+              <StyledField name={LocalizedString.lookup(tr('Metalness Texture URI'), locale)} long theme={theme}>
                 <Input theme={theme} type='text' value={node.material.metalness.uri} onChange={this.onMaterialPbrMetalnessTextureUriChange_} />
               </StyledField>
             )}
           </Section>
         ) : undefined}
         <Section
-          name='Position'
+          name={LocalizedString.lookup(tr('Position'), locale)}
           theme={theme}
           collapsed={collapsed['position']}
           onCollapsedChange={this.onCollapsedChange_('position')}
         >
           <StyledValueEdit
-            name='X'
+            name={LocalizedString.lookup(tr('X'), locale)}
             long
             value={Value.distance(position.x)}
             onValueChange={this.onPositionXChange_}
             theme={theme}
           />
           <StyledValueEdit
-            name='Y'
+            name={LocalizedString.lookup(tr('Y'), locale)}
             long
             value={Value.distance(position.y)}
             onValueChange={this.onPositionYChange_}
             theme={theme}
           />
           <StyledValueEdit
-            name='Z'
+            name={LocalizedString.lookup(tr('Z'), locale)}
             long
             value={Value.distance(position.z)}
             onValueChange={this.onPositionZChange_}
@@ -1398,38 +1409,38 @@ class NodeSettings extends React.PureComponent<Props, State> {
           />
         </Section>
         <Section
-          name='Orientation'
+          name={LocalizedString.lookup(tr('Orientation'), locale)}
           theme={theme}
           collapsed={collapsed['orientation']}
           onCollapsedChange={this.onCollapsedChange_('orientation')}
         >
-          <StyledField name='Type' long theme={theme}>
+          <StyledField name={LocalizedString.lookup(tr('Type'), locale)} long theme={theme}>
             <ComboBox options={ROTATION_TYPES} theme={theme} index={ROTATION_TYPES.findIndex(r => r.data === orientation.type)} onSelect={this.onRotationTypeChange_} />
           </StyledField>
           {orientation.type === 'euler' ? (
             <>
               <StyledValueEdit
-                name='X'
+                name={LocalizedString.lookup(tr('X'), locale)}
                 long
                 value={Value.angle(orientation.x)}
                 onValueChange={this.onOrientationEulerXChange_}
                 theme={theme}
               />
               <StyledValueEdit
-                name='Y'
+                name={LocalizedString.lookup(tr('Y'), locale)}
                 long
                 value={Value.angle(orientation.y)}
                 onValueChange={this.onOrientationEulerYChange_}
                 theme={theme}
               />
               <StyledValueEdit
-                name='Z'
+                name={LocalizedString.lookup(tr('Z'), locale)}
                 long
                 value={Value.angle(orientation.z)}
                 onValueChange={this.onOrientationEulerZChange_}
                 theme={theme}
               />
-              <StyledField name='Order' long theme={theme}>
+              <StyledField name={LocalizedString.lookup(tr('Order'), locale)} long theme={theme}>
                 <ComboBox
                   options={EULER_ORDER_OPTIONS}
                   theme={theme}
@@ -1441,28 +1452,28 @@ class NodeSettings extends React.PureComponent<Props, State> {
           ) : (
             <>
               <StyledValueEdit
-                name='X'
+                name={LocalizedString.lookup(tr('X'), locale)}
                 long
                 value={Value.distance(orientation.axis.x)}
                 onValueChange={this.onOrientationAngleAxisXChange_}
                 theme={theme}
               />
               <StyledValueEdit
-                name='Y'
+                name={LocalizedString.lookup(tr('Y'), locale)}
                 long
                 value={Value.distance(orientation.axis.y)}
                 onValueChange={this.onOrientationAngleAxisYChange_}
                 theme={theme}
               />
               <StyledValueEdit
-                name='Z'
+                name={LocalizedString.lookup(tr('Z'), locale)}
                 long
                 value={Value.distance(orientation.axis.z)}
                 onValueChange={this.onOrientationAngleAxisZChange_}
                 theme={theme}
               />
               <StyledValueEdit
-                name='Angle'
+                name={LocalizedString.lookup(tr('Angle'), locale)}
                 long
                 value={Value.angle(orientation.angle)}
                 onValueChange={this.onOrientationAngleAxisAngleChange_}
@@ -1472,27 +1483,27 @@ class NodeSettings extends React.PureComponent<Props, State> {
           )}
         </Section>
         <Section
-          name='Scale'
+          name={LocalizedString.lookup(tr('Scale'), locale)}
           theme={theme}
           collapsed={collapsed['scale']}
           onCollapsedChange={this.onCollapsedChange_('scale')}
         >
           <StyledValueEdit
-            name='X'
+            name={LocalizedString.lookup(tr('X'), locale)}
             long
             value={Value.unitless(UnitlessValue.create(scale.x))}
             onValueChange={this.onScaleXChange_}
             theme={theme}
           />
           <StyledValueEdit
-            name='Y'
+            name={LocalizedString.lookup(tr('Y'), locale)}
             long
             value={Value.unitless(UnitlessValue.create(scale.y))}
             onValueChange={this.onScaleYChange_}
             theme={theme}
           />
           <StyledValueEdit
-            name='Z'
+            name={LocalizedString.lookup(tr('Z'), locale)}
             long
             value={Value.unitless(UnitlessValue.create(scale.z))}
             onValueChange={this.onScaleZChange_}
@@ -1501,14 +1512,14 @@ class NodeSettings extends React.PureComponent<Props, State> {
         </Section>
         {node.type === 'object' && (
           <Section
-            name='Physics'
+            name={LocalizedString.lookup(tr('Physics'), locale)}
             theme={theme}
             collapsed={collapsed['physics']}
             onCollapsedChange={this.onCollapsedChange_('physics')}
             noBorder
           >
-            <StyledValueEdit name='Mass' value={Value.mass(mass)} onValueChange={this.onMassChange_} theme={theme} />
-            <StyledValueEdit name='Friction' value={Value.unitless(friction)} onValueChange={this.onFrictionChange_} theme={theme} />
+            <StyledValueEdit name={LocalizedString.lookup(tr('Mass'), locale)} value={Value.mass(mass)} onValueChange={this.onMassChange_} theme={theme} />
+            <StyledValueEdit name={LocalizedString.lookup(tr('Friction'), locale)} value={Value.unitless(friction)} onValueChange={this.onFrictionChange_} theme={theme} />
           </Section>)}
         
       </Container>
@@ -1529,5 +1540,6 @@ const PHSYICS_TYPE_MAPPINGS: { [key in Geometry.Type]: Node.Physics.Type } = {
 export default connect((state: ReduxState, ownProps: NodeSettingsPublicProps) => {
   return {
     robots: state.robots.robots,
+    locale: state.i18n.locale,
   };
 })(NodeSettings) as React.ComponentType<NodeSettingsPublicProps>;

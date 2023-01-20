@@ -23,6 +23,13 @@ if (dependencies.libkipr_c_documentation) {
   libkiprCDocumentation = JSON.parse(readFileSync(resolve(dependencies.libkipr_c_documentation)));
 }
 
+let i18n = {};
+try {
+  i18n = JSON.parse(readFileSync(resolve(__dirname, '..', '..', 'i18n', 'i18n.json')));
+} catch (e) {
+  console.log('Failed to read i18n.json');
+}
+
 
 module.exports = {
   entry: {
@@ -52,6 +59,9 @@ module.exports = {
     fallback: {
       fs: false,
       path: false,
+    },
+    alias: {
+      '@i18n': resolve(__dirname, '../../src/i18n'),
     },
     symlinks: false,
     modules
@@ -131,6 +141,7 @@ module.exports = {
       SIMULATOR_HAS_CPYTHON: JSON.stringify(dependencies.cpython !== undefined),
       SIMULATOR_HAS_AMMO: JSON.stringify(dependencies.ammo !== undefined),
       SIMULATOR_LIBKIPR_C_DOCUMENTATION: JSON.stringify(libkiprCDocumentation),
+      SIMULATOR_I18N: JSON.stringify(i18n),
     }),
     new NpmDtsPlugin({
       root: resolve(__dirname, '../../'),

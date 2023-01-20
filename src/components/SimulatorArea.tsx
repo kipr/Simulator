@@ -11,6 +11,11 @@ import Loading from './Loading';
 import MotorsSwappedDialog from './MotorsSwappedDialog';
 import { Theme } from './theme';
 
+import LocalizedString from '../util/LocalizedString';
+import tr from '@i18n';
+import { connect } from 'react-redux';
+import { State as ReduxState } from '../state';
+
 namespace ModalDialog {
   export enum Type {
     None,
@@ -59,11 +64,17 @@ namespace ModalDialog {
 
 type ModalDialog = ModalDialog.None | ModalDialog.MotorsSwapped;
 
-export interface SimulatorAreaProps {
+export interface SimulatorAreaPublicProps {
   theme: Theme;
   isSensorNoiseEnabled: boolean;
   isRealisticSensorsEnabled: boolean;
 }
+
+interface SimulatorAreaPrivateProps {
+  locale: LocalizedString.Language;
+}
+
+type Props = SimulatorAreaPublicProps & SimulatorAreaPrivateProps;
 
 interface SimulatorAreaState {
   loading: boolean;
@@ -85,11 +96,11 @@ const Canvas = styled('canvas', {
   touchAction: 'none',
 });
 
-export class SimulatorArea extends React.Component<SimulatorAreaProps, SimulatorAreaState> {
+export class SimulatorArea extends React.Component<Props, SimulatorAreaState> {
   private containerRef_: HTMLDivElement;
   private canvasRef_: HTMLCanvasElement;
 
-  constructor(props: SimulatorAreaProps) {
+  constructor(props: Props) {
     super(props);
     this.state = { 
       loading: true,
@@ -104,13 +115,17 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
     // 30 second message: still going, might have fail
     setTimeout(() => {
       if (this.state.loading) {
-        this.setState({ loadingMessage: 'This process is taking longer than expected...\nIf you have a poor internet connection, this can take some time' });
+        this.setState({
+          loadingMessage: LocalizedString.lookup(tr('This process is taking longer than expected...\nIf you have a poor internet connection, this can take some time'), this.props.locale)
+        });
       }
     }, 30 * 1000);
     // 120 second message: likely failed
     setTimeout(() => {
       if (this.state.loading) {
-        this.setState({ loadingMessage: 'The simulator may have failed to load.\nPlease submit a feedback form to let us know!' });
+        this.setState({
+          loadingMessage: LocalizedString.lookup(tr('The simulator may have failed to load.\nPlease submit a feedback form to let us know!'), this.props.locale)
+        });
       }
     }, 120 * 1000);
 
@@ -149,7 +164,7 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
     this.resizeListener_.disconnect();
   }
 
-  componentDidUpdate(prevProps: SimulatorAreaProps) {
+  componentDidUpdate(prevProps: Props) {
     // Check if simulation settings were changed
     if (prevProps.isSensorNoiseEnabled !== this.props.isSensorNoiseEnabled || prevProps.isRealisticSensorsEnabled !== this.props.isRealisticSensorsEnabled) {
       // Sim.Space.getInstance().updateSensorOptions(this.props.isSensorNoiseEnabled, this.props.isRealisticSensorsEnabled);
@@ -177,13 +192,13 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
 
   render() {
     const { props, state } = this;
-    const { theme } = props;
+    const { theme, locale } = props;
     const { modalDialog, loading, loadingMessage } = state;
     if (loading) {
       return (
         <Container >
           <Loading 
-            message='Initializing Simulator...'
+            message={LocalizedString.lookup(tr('Initializing Simulator...'), locale)}
             errorMessage={loadingMessage}
           />
         </Container>
@@ -199,3 +214,7 @@ export class SimulatorArea extends React.Component<SimulatorAreaProps, Simulator
     );
   }
 }
+
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(SimulatorArea) as React.ComponentType<SimulatorAreaPublicProps>;

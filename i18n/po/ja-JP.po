@@ -1,0 +1,397 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ja_JP\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.2.2\n"
+
+msgid "JBC 5"
+msgstr ""
+
+msgid "Junior Botball Challenge 5: Dance Party"
+msgstr ""
+
+msgid "JBC 5B"
+msgstr ""
+
+msgid "Junior Botball Challenge 5B: Line Dance"
+msgstr ""
+
+msgid "JBC 5C"
+msgstr ""
+
+msgid "Junior Botball Challenge 5C: Synchronized Dancing"
+msgstr ""
+
+msgid "test"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "User Interface"
+msgstr "ユーザーインターフェース"
+
+msgid "Simulation"
+msgstr "シミュレーション"
+
+msgid "Editor"
+msgstr "編集者"
+
+msgid "Locale"
+msgstr "言語"
+
+msgid "Switch languages"
+msgstr "言語切り替え"
+
+msgid "Sensor noise"
+msgstr ""
+
+msgid "Controls whether sensor outputs are affected by random noise"
+msgstr "センサー出力がランダムノイズの影響を受けるかどうかを制御する"
+
+msgid "Realistic sensors"
+msgstr ""
+
+msgid ""
+"Controls whether sensors behave like real-world sensors instead of like "
+"ideal sensors. For example, real-world ET sensors are nonlinear"
+msgstr "センサーが理想的なセンサーではなく、現実のセンサーのように振る舞うかどうかを制御します。例えば、実世界のETセンサーは非線形である"
+
+msgid "Autocomplete"
+msgstr ""
+
+msgid "Controls autocompletion of code, brackets, and quotes"
+msgstr "コード、括弧、引用符のオートコンプリートを制御する。"
+
+msgid "Robot"
+msgstr ""
+
+msgid "Base Scene - Surface A"
+msgstr ""
+
+msgid ""
+"A base scene using Surface A. Intended to be augmented to create full JBC "
+"scenes"
+msgstr ""
+
+msgid "JBC Surface A"
+msgstr ""
+
+msgid "Ground"
+msgstr ""
+
+msgid "Light"
+msgstr ""
+
+msgid "Base Scene - Surface B"
+msgstr ""
+
+msgid ""
+"A base scene using Surface B. Intended to be augmented to create full JBC "
+"scenes"
+msgstr ""
+
+msgid "JBC Surface B"
+msgstr ""
+
+msgid "JBC 1"
+msgstr ""
+
+msgid "JBC 2"
+msgstr ""
+
+msgid "Junior Botball Challenge 2: Ring Around the Can"
+msgstr ""
+
+msgid "JBC 2B"
+msgstr ""
+
+msgid "Junior Botball Challenge 2B: Ring Around the Can, Sr."
+msgstr ""
+
+msgid "JBC 2C"
+msgstr ""
+
+msgid "Junior Botball Challenge 2C: Back It Up"
+msgstr ""
+
+msgid "JBC 2D"
+msgstr ""
+
+msgid "Junior Botball Challenge 2D: Ring Around the Can and Back It Up"
+msgstr ""
+
+msgid "JBC 3"
+msgstr ""
+
+msgid "Junior Botball Challenge 3: Precision Parking"
+msgstr ""
+
+msgid "JBC 3B"
+msgstr ""
+
+msgid "Junior Botball Challenge 3B: Parallel Parking"
+msgstr ""
+
+msgid "JBC 3C"
+msgstr ""
+
+msgid "Junior Botball Challenge 3C: Quick Get Away!"
+msgstr ""
+
+msgid "JBC 4"
+msgstr ""
+
+msgid "Junior Botball Challenge 4: Figure Eight"
+msgstr ""
+
+msgid "JBC 4B"
+msgstr ""
+
+msgid "Junior Botball Challenge 4B: Barrel Racing"
+msgstr ""
+
+msgid "JBC 6"
+msgstr ""
+
+msgid "JBC 6B"
+msgstr ""
+
+msgid "JBC 6C"
+msgstr ""
+
+msgid "Circle 2"
+msgstr ""
+
+msgid "Circle 9"
+msgstr ""
+
+msgid "Circle 10"
+msgstr ""
+
+msgid "Mat Surface"
+msgstr ""
+
+msgid "Can %1"
+msgstr ""
+
+msgid "JBC Sandbox A"
+msgstr ""
+
+msgid ""
+"Junior Botball Challenge Sandbox on Mat A. All cans 1-12 are available by "
+"default."
+msgstr ""
+
+msgid "Paper Ream 1"
+msgstr ""
+
+msgid "Paper Ream 2"
+msgstr ""
+
+msgid "JBC Sandbox B"
+msgstr ""
+
+msgid "Junior Botball Challenge Sandbox on Mat B."
+msgstr ""
+
+msgid "Junior Botball Challenge 1: Tag, You're It!"
+msgstr ""
+
+msgid "Junior Botball Challenge 6: Load 'Em Up"
+msgstr ""
+
+msgid "Junior Botball Challenge 6B: Pick 'Em Up"
+msgstr ""
+
+msgid "Junior Botball Challenge 6C: Empty the Garage"
+msgstr ""
+
+msgid "JBC 7"
+msgstr ""
+
+msgid "Junior Botball Challenge 7: Bulldozer Mania"
+msgstr ""
+
+msgid "JBC 7B"
+msgstr ""
+
+msgid "Junior Botball Challenge 7B: Cover Your Bases"
+msgstr ""
+
+msgid "JBC 8"
+msgstr ""
+
+msgid "Junior Botball Challenge 8: Serpentine"
+msgstr ""
+
+msgid "JBC 8B"
+msgstr ""
+
+msgid "Junior Botball Challenge 8B: Serpentine Jr."
+msgstr ""
+
+msgid "JBC 9"
+msgstr ""
+
+msgid "Junior Botball Challenge 9: Add It Up"
+msgstr ""
+
+msgid "JBC 9B"
+msgstr ""
+
+msgid "Junior Botball Challenge 9B: Balancing Act"
+msgstr ""
+
+msgid "JBC 10"
+msgstr ""
+
+msgid "Junior Botball Challenge 10: Solo Joust"
+msgstr ""
+
+msgid "JBC 10B"
+msgstr ""
+
+msgid "Junior Botball Challenge 10: Solo Joust Jr."
+msgstr ""
+
+msgid "JBC 12"
+msgstr ""
+
+msgid "Junior Botball Challenge 12: Unload 'Em"
+msgstr ""
+
+msgid "JBC 13"
+msgstr ""
+
+msgid "Junior Botball Challenge 13: Clean the Mat"
+msgstr ""
+
+msgid "JBC 15B"
+msgstr ""
+
+msgid "Junior Botball Challenge 15B: Bump Bump"
+msgstr ""
+
+msgid "JBC 17"
+msgstr ""
+
+msgid "Junior Botball Challenge 17: Walk the Line"
+msgstr ""
+
+msgid "JBC 17B"
+msgstr ""
+
+msgid "Junior Botball Challenge 17: Walk the Line II"
+msgstr ""
+
+msgid "JBC 19"
+msgstr ""
+
+msgid "Junior Botball Challenge 19: Mountain Rescue"
+msgstr ""
+
+msgid "Paper Ream"
+msgstr ""
+
+msgid "JBC 20"
+msgstr ""
+
+msgid "Junior Botball Challenge 20: Rescue the Cans"
+msgstr ""
+
+msgid "JBC 21"
+msgstr ""
+
+msgid "Junior Botball Challenge 21: Foot Tall"
+msgstr ""
+
+msgid "JBC 22"
+msgstr ""
+
+msgid "Junior Botball Challenge 22: Stackerz"
+msgstr ""
+
+msgid "Script Playground"
+msgstr ""
+
+msgid "Script tests"
+msgstr ""
+
+msgid "Demobot"
+msgstr ""
+
+msgid "Tutorials"
+msgstr ""
+
+msgid "Learn how to get started with the simulator"
+msgstr ""
+
+msgid "3D Simulator"
+msgstr ""
+
+msgid "A simulator for the Botball demobot."
+msgstr ""
+
+msgid "About"
+msgstr ""
+
+msgid ""
+"KIPR is a 501(c) 3 organization started to make the long-term educational "
+"benefits of robotics accessible to students."
+msgstr ""
+
+msgid "Quick Start"
+msgstr ""
+
+msgid "Navigating in 3D"
+msgstr ""
+
+msgid "Learn the controls for navigating in 3D in the simulator"
+msgstr ""
+
+msgid "Robot Section"
+msgstr ""
+
+msgid "How to use the robot section"
+msgstr ""
+
+msgid "World Section"
+msgstr ""
+
+msgid "Learn how to create and manipulate items and scene in the simulator"
+msgstr ""
+
+msgid "Open World"
+msgstr ""
+
+msgid "Unknown"
+msgstr ""
+
+msgid "Description: "
+msgstr ""
+
+msgid "Author: "
+msgstr ""
+
+msgid "Me"
+msgstr ""
+
+msgid "Select a scene to see more details"
+msgstr ""
+
+msgid "New World"
+msgstr ""
+
+msgid "Create"
+msgstr ""
+
+msgid "Volume"
+msgstr ""

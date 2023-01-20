@@ -1,6 +1,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as typescript from 'typescript';
+import * as gettextParser from 'gettext-parser';
+import LocalizedString from '../src/util/LocalizedString';
+import { DEFAULT_PO, PO_PATH } from './po';
+import { walkDir } from './util';
 
 const tsConfigPath = path.resolve(__dirname, '..', 'tsconfig.json');
 const tsConfig = typescript.readConfigFile(tsConfigPath, (path) => fs.readFileSync(path, 'utf8'));
@@ -10,19 +14,6 @@ const compilerOptions = tsConfig.config.compilerOptions as typescript.CompilerOp
 // TypeScript complains about moduleResolution being "node".
 // We don't need it, so we can just delete it.
 delete compilerOptions.moduleResolution;
-
-const walkDir = (dir: string, callback: (file: string) => void) => {
-  const files = fs.readdirSync(dir);
-  for (const file of files) {
-    const filePath = path.resolve(dir, file);
-    const stat = fs.statSync(filePath);
-    if (stat.isDirectory()) {
-      walkDir(filePath, callback);
-    } else if (stat.isFile()) {
-      callback(filePath);
-    }
-  }
-};
 
 const rootNames = [];
 
@@ -38,7 +29,7 @@ const program = typescript.createProgram({
 const sourceFiles = program.getSourceFiles();
 
 interface Tr {
-  id: string;
+  enUs: string;
   description?: string;
 }
 
@@ -49,13 +40,13 @@ const findTrs = (funcName: string, sourceFile: typescript.SourceFile, node: type
     const expression = node.expression;
     if (typescript.isIdentifier(expression)) {
       if (expression.text === funcName) {
-        const id = node.arguments[0];
-        if (typescript.isStringLiteral(id)) {
+        const enUs = node.arguments[0];
+        if (typescript.isStringLiteral(enUs)) {
           const description = node.arguments[1];
           if (description !== undefined && typescript.isStringLiteral(description)) {
-            ret.push({ id: id.text, description: description.text });
+            ret.push({ enUs: enUs.text, description: description.text });
           } else {
-            ret.push({ id: id.text });
+            ret.push({ enUs: enUs.text });
           }
         }
       }
@@ -67,32 +58,50 @@ const findTrs = (funcName: string, sourceFile: typescript.SourceFile, node: type
   return ret;
 };
 
-interface Entry {
-  descriptions: string[];
-  translations: { [key: string]: string };
+
+
+const trDict: { [locale in LocalizedString.Language]?: gettextParser.GetTextTranslations } = {};
+
+// Load existing PO files
+
+
+for (const language of LocalizedString.SUPPORTED_LANGUAGES) {
+  const poPath = path.resolve(PO_PATH, `${language}.po`);
+  if (!fs.existsSync(poPath)) continue;
+  if (language === LocalizedString.AR_SA) console.log(fs.readFileSync(poPath, 'utf8'));
+  const po = gettextParser.po.parse(fs.readFileSync(poPath, 'utf8'));
+  trDict[language] = po;
+  if (language === LocalizedString.AR_SA) console.log(`Loaded ${language}.po`, JSON.stringify(po, null, 2));
 }
-
-const i18nJsonPath = path.resolve(__dirname, 'i18n.json');
-
-const existingTrDict = fs.existsSync(i18nJsonPath) ? JSON.parse(fs.readFileSync(i18nJsonPath, 'utf8')) : {} as { [key: string]: Entry };
-const trDict: { [key: string]: Entry } = {};
 
 for (const sourceFile of sourceFiles) {
   const trs = findTrs('tr', sourceFile, sourceFile);
-  for (const tr of trs) {
-    const { id, description } = tr;
-    if (id in trDict) {
-      if (description !== undefined) {
-        trDict[id].descriptions.push(description);
-      }
-    } else {
-      trDict[id] = {
-        descriptions: description !== undefined ? [description] : [],
-        translations: existingTrDict[id] !== undefined ? existingTrDict[id].translations : {},
+  for (const language of LocalizedString.SUPPORTED_LANGUAGES) {
+    const po: gettextParser.GetTextTranslations = trDict[language] || DEFAULT_PO;
+    trDict[language] = po;
+    for (const tr of trs) {
+      const { enUs, description } = tr;
+    
+      const context = description || '';
+      if (!po.translations) po.translations = {};
+      if (!po.translations[context]) po.translations[context] = {};
+      const translation = po.translations[context][enUs];
+      if (translation) continue;
+
+      po.translations[context][enUs] = {
+        msgid: enUs,
+        msgstr: [''],
       };
+
+      console.log(`Added ${enUs} to ${language}.po`);
     }
   }
 }
 
-// Write the new i18n.json file.
-fs.writeFileSync(path.resolve(__dirname, 'i18n.json'), JSON.stringify(trDict, null, 2));
+// Write the PO files
+for (const language of LocalizedString.SUPPORTED_LANGUAGES) {
+  const poPath = path.resolve(PO_PATH, `${language}.po`);
+  const po = trDict[language];
+  if (!po) continue;
+  fs.writeFileSync(poPath, gettextParser.po.compile(po), 'utf8');
+}

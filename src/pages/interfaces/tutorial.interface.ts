@@ -1,6 +1,8 @@
+import LocalizedString from 'util/LocalizedString';
+
 export default interface Tutorial {
-  title?: string;
-  description?: string;
+  title?: LocalizedString;
+  description?: LocalizedString;
   src?: string;
   backgroundImage?: string;
   backgroundColor?: string;

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import LocalizedString from '../../util/LocalizedString';
 import Dict from '../../Dict';
 import Event from '../../state/State/Challenge/Event';
 import Expr from '../../state/State/Challenge/Expr';
@@ -14,6 +15,7 @@ export interface PredicateEditorProps extends StyleProps {
   predicate: Predicate;
   predicateCompletion?: PredicateCompletion;
   events: Dict<Event>;
+  locale: LocalizedString.Language;
 }
 
 namespace Node {
@@ -39,7 +41,7 @@ namespace Node {
 
 type Node<P extends StyleProps = StyleProps> = Node.Terminal<P> | Node.NonTerminal<P>;
 
-const treeify = (exprs: Dict<Expr>, rootId: string, events: Dict<Event>, exprStates?: Dict<boolean>): Node => {
+const treeify = (exprs: Dict<Expr>, rootId: string, events: Dict<Event>, locale: LocalizedString.Language, exprStates?: Dict<boolean>): Node => {
   const root = exprs[rootId];
 
   switch (root.type) {
@@ -53,7 +55,7 @@ const treeify = (exprs: Dict<Expr>, rootId: string, events: Dict<Event>, exprSta
           // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
           props: { type: root.type } as any
         },
-        children: Dict.generate(root.argIds, id => treeify(exprs, id, events, exprStates)),
+        children: Dict.generate(root.argIds, id => treeify(exprs, id, events, locale, exprStates)),
         childrenOrdering: root.argIds,
         state: exprStates ? exprStates[rootId] : undefined
       };
@@ -67,7 +69,7 @@ const treeify = (exprs: Dict<Expr>, rootId: string, events: Dict<Event>, exprSta
           // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
           props: { type: root.type } as any
         },
-        children: Dict.generate([root.argId], id => treeify(exprs, id, events, exprStates)),
+        children: Dict.generate([root.argId], id => treeify(exprs, id, events, locale, exprStates)),
         childrenOrdering: [root.argId],
         state: exprStates ? exprStates[rootId] : undefined
       };
@@ -78,7 +80,7 @@ const treeify = (exprs: Dict<Expr>, rootId: string, events: Dict<Event>, exprSta
         node: {
           component: EventViewer,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
-          props: { event: events[root.eventId] } as any
+          props: { event: events[root.eventId], locale } as any
         },
         state: exprStates ? exprStates[rootId] : undefined
       };
@@ -164,11 +166,12 @@ const PredicateEditor: React.FC<PredicateEditorProps> = ({
   predicateCompletion,
   events,
   style,
-  className
+  className,
+  locale
 }) => {
   const { exprs, rootId } = predicate;
 
-  const tree = treeify(exprs, rootId, events, predicateCompletion ? predicateCompletion.exprStates : undefined);
+  const tree = treeify(exprs, rootId, events, locale, predicateCompletion ? predicateCompletion.exprStates : undefined);
   
   return (
     <NodeEditor

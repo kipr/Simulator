@@ -5,13 +5,23 @@ import { Angle, Distance, EMPTY_OBJECT, Mass, Slow, Value } from '../../util';
 import { ThemeProps } from '../theme';
 import Field from '../Field';
 import ComboBox from '../ComboBox';
+import LocalizedString from '../../util/LocalizedString';
+import { connect } from 'react-redux';
+import { State as ReduxState } from '../../state';
+import tr from '@i18n';
 
-export interface ValueEditProps extends ThemeProps, StyleProps {
+export interface ValueEditPublicProps extends ThemeProps, StyleProps {
   name: string;
   long?: boolean;
   value: Value;
   onValueChange: (value: Value) => void;
 }
+
+interface ValueEditPrivateProps {
+  locale: LocalizedString.Language;
+}
+
+
 
 interface ValueEditState {
   input: string;
@@ -20,7 +30,7 @@ interface ValueEditState {
   unitFocus: boolean;
 }
 
-type Props = ValueEditProps;
+type Props = ValueEditPublicProps & ValueEditPrivateProps;
 type State = ValueEditState;
 
 const SubContainer = styled('div', (props: ThemeProps) => ({
@@ -69,30 +79,7 @@ const StyledComboBox = styled(ComboBox, (props: ThemeProps) => ({
 
 const NUMBER_REGEX = /^[+-]?([0-9]*[.])?[0-9]+$/;
 
-const MASS_OPTIONS: ComboBox.Option[] = [
-  ComboBox.option('grams', Mass.Type.Grams),
-  ComboBox.option('kilograms', Mass.Type.Kilograms),
-  ComboBox.option('pounds', Mass.Type.Pounds),
-  ComboBox.option('ounces', Mass.Type.Ounces),
-];
 
-const DISTANCE_OPTIONS: ComboBox.Option[] = [
-  ComboBox.option('meters', 'meters'),
-  ComboBox.option('centimeters', 'centimeters'),
-  ComboBox.option('feet', 'feet'),
-  ComboBox.option('inches', 'inches'),
-];
-
-const ANGLE_OPTIONS: ComboBox.Option[] = [
-  ComboBox.option('radians', Angle.Type.Radians),
-  ComboBox.option('degrees', Angle.Type.Degrees),
-];
-
-const VALUE_OPTIONS: { [key: number]: ComboBox.Option[] } = {
-  [Value.Type.Angle]: ANGLE_OPTIONS,
-  [Value.Type.Distance]: DISTANCE_OPTIONS,
-  [Value.Type.Mass]: MASS_OPTIONS,
-};
 
 
 
@@ -184,10 +171,35 @@ export class ValueEdit extends React.PureComponent<Props, State> {
   
   render() {
     const { props, state } = this;
-    const { theme, style, className, name, value, long } = props;
+    const { theme, style, className, name, value, long, locale } = props;
     const { input, unitFocus } = state;
     const errorStyle: React.CSSProperties = {
       backgroundColor: !state.valid ? `rgba(255, 0, 0, 0.2)` : undefined,
+    };
+
+    const massOptions: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('grams'), locale), Mass.Type.Grams),
+      ComboBox.option(LocalizedString.lookup(tr('kilograms'), locale), Mass.Type.Kilograms),
+      ComboBox.option(LocalizedString.lookup(tr('pounds'), locale), Mass.Type.Pounds),
+      ComboBox.option(LocalizedString.lookup(tr('ounces'), locale), Mass.Type.Ounces),
+    ];
+    
+    const distanceOptions: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('meters'), locale), 'meters'),
+      ComboBox.option(LocalizedString.lookup(tr('centimeters'), locale), 'centimeters'),
+      ComboBox.option(LocalizedString.lookup(tr('feet'), locale), 'feet'),
+      ComboBox.option(LocalizedString.lookup(tr('inches'), locale), 'inches'),
+    ];
+    
+    const angleOptions: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('radians'), locale), Angle.Type.Radians),
+      ComboBox.option(LocalizedString.lookup(tr('degrees'), locale), Angle.Type.Degrees),
+    ];
+    
+    const VALUE_OPTIONS: { [key: number]: ComboBox.Option[] } = {
+      [Value.Type.Angle]: angleOptions,
+      [Value.Type.Distance]: distanceOptions,
+      [Value.Type.Mass]: massOptions,
     };
 
     const unitOptions = VALUE_OPTIONS[value.type];
@@ -223,4 +235,6 @@ export class ValueEdit extends React.PureComponent<Props, State> {
   }
 }
 
-export default ValueEdit;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(ValueEdit) as React.ComponentType<ValueEditPublicProps>;

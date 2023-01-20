@@ -10,12 +10,12 @@ import { styled } from 'styletron-react';
 import { DARK, Theme } from './theme';
 import { Layout, LayoutProps, OverlayLayout, OverlayLayoutRedux, SideLayoutRedux  } from './Layout';
 
-import { SettingsDialog } from './SettingsDialog';
-import { AboutDialog } from './AboutDialog';
+import SettingsDialog from './SettingsDialog';
+import AboutDialog from './AboutDialog';
 
-import { FeedbackDialog } from './Feedback';
+import FeedbackDialog from './Feedback';
 import { sendFeedback, FeedbackResponse } from './Feedback/SendFeedback';
-import { FeedbackSuccessDialog } from './Feedback/SuccessModal';
+import FeedbackSuccessDialog from './Feedback/SuccessModal';
 
 import compile from '../compile';
 import { SimulatorState } from './SimulatorState';

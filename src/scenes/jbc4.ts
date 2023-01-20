@@ -5,10 +5,12 @@ import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
 
 const baseScene = createBaseSceneSurfaceA();
 
+import tr from '@i18n';
+
 export const JBC_4: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 4' },
-  description: { [LocalizedString.EN_US]: 'Junior Botball Challenge 4: Figure Eight' },
+  name: tr('JBC 4'),
+  description: tr('Junior Botball Challenge 4: Figure Eight'),
   nodes: {
     ...baseScene.nodes,
     'can4': createCanNode(4),

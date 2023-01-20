@@ -10,13 +10,23 @@ import DialogBar from './DialogBar';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import LocalizedString from '../util/LocalizedString';
 
-export interface DeleteDialogProps extends ThemeProps, StyleProps {
+import tr from '@i18n';
+import { connect } from 'react-redux';
+import { State as ReduxState } from '../state';
+import Dict from '../Dict';
+import { sprintf } from 'sprintf-js';
+
+export interface DeleteDialogPublicProps extends ThemeProps, StyleProps {
   name: LocalizedString;
   onClose: () => void;
   onAccept: () => void;
 }
 
-type Props = DeleteDialogProps;
+interface DeleteDialogPrivateProps {
+  locale: LocalizedString.Language;
+}
+
+type Props = DeleteDialogPublicProps & DeleteDialogPrivateProps;
 
 const Container = styled('div', (props: ThemeProps) => ({
   color: props.theme.color,
@@ -26,17 +36,23 @@ const Container = styled('div', (props: ThemeProps) => ({
 class DeleteDialog extends React.PureComponent<Props> {
   render() {
     const { props } = this;
-    const { name, theme, onClose, onAccept } = props;
+    const { name, theme, onClose, onAccept, locale } = props;
 
     return (
-      <Dialog theme={theme} name={`Delete ${name[LocalizedString.EN_US]}?`} onClose={onClose}>
+      <Dialog
+        theme={theme}
+        name={LocalizedString.lookup(Dict.map(tr('Delete %1?'), str => sprintf(str, LocalizedString.lookup(name, locale))), locale)}
+        onClose={onClose}
+      >
         <Container theme={theme}>
-          Are you sure you want to delete {name[LocalizedString.EN_US] || 'this'}?
+          {LocalizedString.lookup(Dict.map(tr('Are you sure you want to delete %1?'), str => sprintf(str, LocalizedString.lookup(name, locale))), locale)}
         </Container>
-        <DialogBar theme={theme} onAccept={onAccept}><Fa icon={faTrash} /> Delete</DialogBar>
+        <DialogBar theme={theme} onAccept={onAccept}><Fa icon={faTrash} /> {LocalizedString.lookup(tr('Delete'), locale)}</DialogBar>
       </Dialog>
     );
   }
 }
 
-export default DeleteDialog;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(DeleteDialog) as React.ComponentType<DeleteDialogPublicProps>;
