@@ -385,3 +385,573 @@ msgstr ""
 
 msgid "Volume"
 msgstr ""
+
+msgid "JBC Challenge 6C"
+msgstr ""
+
+msgid "Can A Lifted"
+msgstr ""
+
+msgid "Can A picked up"
+msgstr ""
+
+msgid "Can B Lifted"
+msgstr ""
+
+msgid "Can B picked up"
+msgstr ""
+
+msgid "Can C Lifted"
+msgstr ""
+
+msgid "Can C picked up"
+msgstr ""
+
+msgid "Can A Placed"
+msgstr ""
+
+msgid "Can A placed on circle 2"
+msgstr ""
+
+msgid "Can B Placed"
+msgstr ""
+
+msgid "Can A placed on circle 9"
+msgstr ""
+
+msgid "Can C Placed"
+msgstr ""
+
+msgid "Can A placed on circle 10"
+msgstr ""
+
+msgid "Can A Upright"
+msgstr ""
+
+msgid "Can A upright on circle 2"
+msgstr ""
+
+msgid "Can B Upright"
+msgstr ""
+
+msgid "Can B upright on circle 9"
+msgstr ""
+
+msgid "Can C Upright"
+msgstr ""
+
+msgid "Can C upright on circle 10"
+msgstr ""
+
+msgid "Loading..."
+msgstr ""
+
+msgid "Logout"
+msgstr ""
+
+msgid "Indent"
+msgstr ""
+
+msgid "Download"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "Error(s)"
+msgstr ""
+
+msgid "Warning(s)"
+msgstr ""
+
+msgid "grams"
+msgstr ""
+
+msgid "kilograms"
+msgstr ""
+
+msgid "pounds"
+msgstr ""
+
+msgid "ounces"
+msgstr ""
+
+msgid "meters"
+msgstr ""
+
+msgid "centimeters"
+msgstr ""
+
+msgid "feet"
+msgstr ""
+
+msgid "inches"
+msgstr ""
+
+msgid "radians"
+msgstr ""
+
+msgid "degrees"
+msgstr ""
+
+msgid "Can"
+msgstr ""
+
+msgid "Box"
+msgstr ""
+
+msgid "Sphere"
+msgstr ""
+
+msgid "Cylinder"
+msgstr ""
+
+msgid "Cone"
+msgstr ""
+
+msgid "Plane"
+msgstr ""
+
+msgid "File"
+msgstr ""
+
+msgid "Euler"
+msgstr ""
+
+msgid "Axis Angle"
+msgstr ""
+
+msgid "Empty"
+msgstr ""
+
+msgid "Standard Object"
+msgstr ""
+
+msgid "Custom Object"
+msgstr ""
+
+msgid "Point Light"
+msgstr ""
+
+msgid "Unset"
+msgstr ""
+
+msgid "Basic"
+msgstr ""
+
+msgid "Texture"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+msgid "General"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "Geometry"
+msgstr ""
+
+msgid "Item"
+msgstr ""
+
+msgid "Box Options"
+msgstr ""
+
+msgid "Size X"
+msgstr ""
+
+msgid "Size Y"
+msgstr ""
+
+msgid "Size Z"
+msgstr ""
+
+msgid "Sphere Options"
+msgstr ""
+
+msgid "Radius"
+msgstr ""
+
+msgid "Cylinder Options"
+msgstr ""
+
+msgid "Height"
+msgstr ""
+
+msgid "Plane Options"
+msgstr ""
+
+msgid "File Options"
+msgstr ""
+
+msgid "URI"
+msgstr ""
+
+msgid "Material"
+msgstr ""
+
+msgid "Color Type"
+msgstr ""
+
+msgid "Color Red"
+msgstr ""
+
+msgid "Color Green"
+msgstr ""
+
+msgid "Color Blue"
+msgstr ""
+
+msgid "Color Texture URI"
+msgstr ""
+
+msgid "Albedo Type"
+msgstr ""
+
+msgid "Albedo Red"
+msgstr ""
+
+msgid "Albedo Green"
+msgstr ""
+
+msgid "Albedo Blue"
+msgstr ""
+
+msgid "Albedo Texture URI"
+msgstr ""
+
+msgid "Reflection Type"
+msgstr ""
+
+msgid "Reflection Red"
+msgstr ""
+
+msgid "Reflection Green"
+msgstr ""
+
+msgid "Reflection Blue"
+msgstr ""
+
+msgid "Reflection Texture URI"
+msgstr ""
+
+msgid "Emissive Type"
+msgstr ""
+
+msgid "Emissive Red"
+msgstr ""
+
+msgid "Emissive Green"
+msgstr ""
+
+msgid "Emissive Blue"
+msgstr ""
+
+msgid "Emissive Texture URI"
+msgstr ""
+
+msgid "Ambient Type"
+msgstr ""
+
+msgid "Ambient Red"
+msgstr ""
+
+msgid "Ambient Green"
+msgstr ""
+
+msgid "Ambient Blue"
+msgstr ""
+
+msgid "Ambient Texture URI"
+msgstr ""
+
+msgid "Metalness Type"
+msgstr ""
+
+msgid "Metalness"
+msgstr ""
+
+msgid "Metalness Texture URI"
+msgstr ""
+
+msgid "Position"
+msgstr ""
+
+msgid "X"
+msgstr ""
+
+msgid "Y"
+msgstr ""
+
+msgid "Z"
+msgstr ""
+
+msgid "Orientation"
+msgstr ""
+
+msgid "Order"
+msgstr ""
+
+msgid "Angle"
+msgstr ""
+
+msgid "Scale"
+msgstr ""
+
+msgid "Physics"
+msgstr ""
+
+msgid "Mass"
+msgstr ""
+
+msgid "Friction"
+msgstr ""
+
+msgid "Unnamed Object"
+msgstr ""
+
+msgid "Add Item"
+msgstr ""
+
+msgid "Accept"
+msgstr ""
+
+msgid "Add Script"
+msgstr ""
+
+msgid "Select Scene"
+msgstr ""
+
+msgid "Save Scene"
+msgstr ""
+
+msgid "Copy Scene"
+msgstr ""
+
+msgid "Item(s) (%1)"
+msgstr ""
+
+msgid "Script(s) (%1)"
+msgstr ""
+
+msgid "Layouts"
+msgstr ""
+
+msgid "Overlay"
+msgstr ""
+
+msgid "Side"
+msgstr ""
+
+msgid "Options"
+msgstr ""
+
+msgid "Show All"
+msgstr ""
+
+msgid "Hide All"
+msgstr ""
+
+msgid "Clear"
+msgstr ""
+
+msgid "Start Location"
+msgstr ""
+
+msgid "Motor Velocity Plot"
+msgstr ""
+
+msgid "Motor Position Plot"
+msgstr ""
+
+msgid "Analog Sensor Plot"
+msgstr ""
+
+msgid "Digital Sensor Plot"
+msgstr ""
+
+msgid "Analog Sensors"
+msgstr ""
+
+msgid "Digital Sensors"
+msgstr ""
+
+msgid ""
+"This process is taking longer than expected...\n"
+"If you have a poor internet connection, this can take some time"
+msgstr ""
+
+msgid ""
+"The simulator may have failed to load.\n"
+"Please submit a feedback form to let us know!"
+msgstr ""
+
+msgid "Initializing Simulator..."
+msgstr ""
+
+msgid "all of"
+msgstr ""
+
+msgid "one or more of"
+msgstr ""
+
+msgid "exactly one of"
+msgstr ""
+
+msgid "once"
+msgstr ""
+
+msgid "not"
+msgstr ""
+
+msgid "Success"
+msgstr ""
+
+msgid "Failure"
+msgstr ""
+
+msgid "World"
+msgstr ""
+
+msgid "Script Editor"
+msgstr ""
+
+msgid "Console"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Save As"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Documentation"
+msgstr ""
+
+msgid "Feedback"
+msgstr ""
+
+msgid "Version %1 (%2)"
+msgstr ""
+
+msgid "Copyright"
+msgstr ""
+
+msgid "This software is licensed under the terms of the"
+msgstr ""
+
+msgid "Thank you to the following contributors and testers:"
+msgstr ""
+
+msgid "Want to help improve the simulator and get your name listed here?"
+msgstr ""
+
+msgid "GitHub repository"
+msgstr ""
+
+msgid "We're happy to help you get started!"
+msgstr ""
+
+msgid ""
+"Thanks for using the KIPR Simulator! Find a bug? Have a feature request? "
+"Let us know!"
+msgstr ""
+
+msgid "How has your experience using the KIPR Simulator been?"
+msgstr ""
+
+msgid "Email (optional): "
+msgstr ""
+
+msgid "Include anonymous usage data to help KIPR developers"
+msgstr ""
+
+msgid "Please try again,"
+msgstr ""
+
+msgid "open an issue on our github page"
+msgstr ""
+
+msgid ", or"
+msgstr ""
+
+msgid "email KIPR."
+msgstr ""
+
+msgid "Submit"
+msgstr ""
+
+msgid "Feedback Success"
+msgstr ""
+
+msgid "Feedback successfully submitted!"
+msgstr ""
+
+msgid "Thank you for helping improve the KIPR Simulator!"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Delete %1?"
+msgstr ""
+
+msgid "Are you sure you want to delete %1?"
+msgstr ""
+
+msgid "Copy World"
+msgstr ""
+
+msgid "Error %1"
+msgstr ""
+
+msgid "Closing this dialog will take you back to the last well-known state."
+msgstr ""
+
+msgid "If this error persists, please submit feedback."
+msgstr ""
+
+msgid "World Settings"
+msgstr ""
+
+msgid "CHALLENGE"
+msgstr ""
+
+msgid "Start"
+msgstr ""
+
+msgid "Volume"
+msgstr ""
+
+msgid "RGB"
+msgstr ""
+
+msgid "Console"
+msgstr ""
+
+msgid "Challenge"
+msgstr ""
+
+msgid "Stop"
+msgstr ""
+
+msgid "Run"
+msgstr ""
+
+msgid "and External Contributors"
+msgstr ""
+
+msgid "Visit our"
+msgstr ""
