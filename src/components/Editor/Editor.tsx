@@ -17,26 +17,33 @@ import { faArrowsRotate, faFileDownload, faIndent } from '@fortawesome/free-soli
 import Script from '../../state/State/Scene/Script';
 import Dict from '../../Dict';
 
+import * as monaco from 'monaco-editor';
+import DocumentationLocation from '../../state/State/Documentation/DocumentationLocation';
+import { DocumentationAction } from '../../state/reducer';
+import { connect } from 'react-redux';
+
 export enum EditorActionState {
   None,
   Compiling,
   Running,
 }
 
-export interface EditorProps extends StyleProps, ThemeProps {
+export interface EditorPublicProps extends StyleProps, ThemeProps {
   language: ProgrammingLanguage | Script.Language;
   code: string;
 
   onCodeChange: (code: string) => void;
   messages?: Message[];
   autocomplete: boolean;
+
+  onDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python') => void;
 }
 
 interface EditorState {
   
 }
 
-type Props = EditorProps;
+type Props = EditorPublicProps;
 type State = EditorState;
 
 const Container = styled('div', (props: ThemeProps) => ({
@@ -158,14 +165,52 @@ export const IVYGATE_LANGUAGE_MAPPING: Dict<string> = {
   'ecmascript': 'javascript',
 };
 
+const DOCUMENTATION_LANGUAGE_MAPPING: { [key in ProgrammingLanguage | Script.Language]: 'c' | 'python' | undefined } = {
+  'ecmascript': undefined,
+  'python': 'python',
+  'c': 'c',
+  'cpp': 'c',
+};
+
 class Editor extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
   }
 
+  private openDocumentation_ = () => {
+    const { word } = this.ivygate_.editor.getModel().getWordAtPosition(this.ivygate_.editor.getPosition());
+    const language = DOCUMENTATION_LANGUAGE_MAPPING[this.props.language];
+    if (!language) return;
+    this.props.onDocumentationGoToFuzzy?.(word, language);
+    
+  };
+
+  private openDocumentationAction_?: monaco.IDisposable;
+  private setupCodeEditor_ = (editor: monaco.editor.IStandaloneCodeEditor) => {
+    if (this.props.onDocumentationGoToFuzzy) this.openDocumentationAction_ = editor.addAction({
+      id: 'open-documentation',
+      label: 'Open Documentation',
+      contextMenuOrder: 0,
+      contextMenuGroupId: "operation",
+      keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
+      run: this.openDocumentation_,
+    });
+  };
+
+  private disposeCodeEditor_ = (editor: monaco.editor.IStandaloneCodeEditor) => {
+    if (this.openDocumentationAction_) this.openDocumentationAction_.dispose();
+  };
+
   private ivygate_: Ivygate;
   private bindIvygate_ = (ivygate: Ivygate) => {
+    if (this.ivygate_ === ivygate) return;
+    const old = this.ivygate_;
     this.ivygate_ = ivygate;
+    if (this.ivygate_ && this.ivygate_.editor) {
+      this.setupCodeEditor_(this.ivygate_.editor as monaco.editor.IStandaloneCodeEditor);
+    } else {
+      this.disposeCodeEditor_(old.editor as monaco.editor.IStandaloneCodeEditor);
+    }
   };
 
   get ivygate() {

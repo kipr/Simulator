@@ -60,6 +60,7 @@ export interface LayoutProps extends StyleProps, ThemeProps {
 
   challengeState?: ChallengeState;
   worldCapabilities?: Capabilities;
+  onDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python') => void;
 }
 
 export enum Layout {

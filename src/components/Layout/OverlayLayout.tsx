@@ -359,7 +359,8 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       onScriptRemove,
       onObjectAdd,
       challengeState,
-      worldCapabilities
+      worldCapabilities,
+      onDocumentationGoToFuzzy
     } = props;
 
     const {
@@ -399,6 +400,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
             onCodeChange={editorTarget.onCodeChange}
             messages={messages}
             autocomplete={settings.editorAutoComplete}
+            onDocumentationGoToFuzzy={onDocumentationGoToFuzzy}
           />
         );
         break;

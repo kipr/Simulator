@@ -272,6 +272,8 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
               )}
             </StyledScrollArea>
             <LowerBar theme={theme}>
+              
+              
               <Button theme={theme} onClick={locationStack.length > 0 ? onDocumentationPop : undefined}>
                 <Fa disabled={locationStack.length === 0} icon={faChevronLeft} />
               </Button>

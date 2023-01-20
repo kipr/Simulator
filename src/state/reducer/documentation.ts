@@ -5,6 +5,7 @@ import { DocumentationState, Robots } from '../State';
 import DocumentationLocation from '../State/Documentation/DocumentationLocation';
 import construct from '../../util/construct';
 import { Size } from '../../components/Widget';
+import Documentation from '../State/Documentation';
 
 export namespace DocumentationAction {
   export interface Push {
@@ -64,6 +65,22 @@ export namespace DocumentationAction {
   }
 
   export const setLanguage = construct<SetLanguage>('documentation/set-language');
+
+  export interface GoTo {
+    type: 'documentation/go-to';
+    location: DocumentationLocation;
+    language: 'c' | 'python';
+  }
+
+  export const goTo = construct<GoTo>('documentation/go-to');
+
+  export interface GoToFuzzy {
+    type: 'documentation/go-to-fuzzy';
+    query: string;
+    language: 'c' | 'python';
+  }
+
+  export const goToFuzzy = construct<GoToFuzzy>('documentation/go-to-fuzzy');
 }
 
 export type DocumentationAction = (
@@ -75,7 +92,9 @@ export type DocumentationAction = (
   DocumentationAction.SetSize |
   DocumentationAction.Toggle |
   DocumentationAction.PopSome |
-  DocumentationAction.SetLanguage
+  DocumentationAction.SetLanguage |
+  DocumentationAction.GoTo |
+  DocumentationAction.GoToFuzzy
 );
 
 export const reduceDocumentation = (state: DocumentationState = DocumentationState.DEFAULT, action: DocumentationAction): DocumentationState => {
@@ -116,6 +135,31 @@ export const reduceDocumentation = (state: DocumentationState = DocumentationSta
       ...state,
       language: action.language,
     };
+    case 'documentation/go-to': return {
+      ...state,
+      locationStack: [action.location],
+      language: action.language,
+      size: state.size === Size.MINIMIZED ? Size.PARTIAL : state.size,
+    };
+    case 'documentation/go-to-fuzzy': {
+      const { query, language } = action;
+      const location = Documentation.lookup(state.documentation, query);
+      if (location) {
+        return {
+          ...state,
+          locationStack: [location],
+          language,
+          size: state.size === Size.MINIMIZED ? Size.PARTIAL : state.size,
+        };
+      }
+      
+      return {
+        ...state,
+        locationStack: [],
+        language,
+        size: state.size === Size.MINIMIZED ? Size.PARTIAL : state.size,
+      };
+    }
     default: return state;
   }
 };
