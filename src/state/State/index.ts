@@ -61,6 +61,8 @@ export namespace DocumentationState {
     size: Size.MINIMIZED,
     language: 'c'
   };
+}
+
 export interface I18n {
   locale: LocalizedString.Language;
 }
