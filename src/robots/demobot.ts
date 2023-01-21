@@ -22,6 +22,14 @@ export const DEMOBOT: Robot = {
       mass: grams(1160 - 800),
       friction: 0.1,
     }),
+    lightSensor: Node.lightSensor({
+      parentId: 'chassis',
+      origin: {
+        position: Vector3.meters(0.3, 0, 0),
+        orientation: Rotation.eulerDegrees(90, 0, 0),
+      },
+      analogPort: 3,
+    }),
     wombat: Node.weight({
       parentId: 'chassis',
       mass: grams(800),

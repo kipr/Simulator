@@ -218,6 +218,7 @@ class RobotBinding {
 
   private createTouchSensor_ = this.createSensor_(RobotBinding.TouchSensor);
   private createEtSensor_ = this.createSensor_(RobotBinding.EtSensor);
+  private createLightSensor_ = this.createSensor_(RobotBinding.LightSensor);
   private createReflectanceSensor_ = this.createSensor_(RobotBinding.ReflectanceSensor);
 
   // Transform a vector using the child frame's orientation. This operation is invariant on a single
@@ -765,6 +766,12 @@ class RobotBinding {
           this.analogPorts_[node.analogPort] = nodeId;
           break;
         }
+        case Node.Type.LightSensor: {
+          const sensorObject = this.createLightSensor_(nodeId, node);
+          this.analogSensors_[nodeId] = sensorObject;
+          this.analogPorts_[node.analogPort] = nodeId;
+          break;
+        }
         case Node.Type.ReflectanceSensor: {
           const sensorObject = this.createReflectanceSensor_(nodeId, node);
           this.analogSensors_[nodeId] = sensorObject;
@@ -1022,6 +1029,110 @@ namespace RobotBinding {
       }
 
       return Promise.resolve(clamp(0, value, 4095));
+    }
+
+    override dispose(): void {
+      this.trace_.dispose();
+    }
+  }
+
+  /**
+   * A light sensor that detects the amount of light at a given point in space.
+   * 
+   * This assumes the sensor can receive light from all directions. A ray is cast
+   * to every light in the scene. If it collides with a mesh, it is considered
+   * blocked. Otherwise, the light is considered to be received.
+   * 
+   * The sensor value is the sum of the light intensities of all lights that are
+   * not blocked, normalized to a calibrated value from measurements on a Wombat.
+   */
+  export class LightSensor extends SensorObject<Node.LightSensor, number> {
+    private trace_: Babylon.AbstractMesh;
+
+    constructor(parameters: SensorParameters<Node.LightSensor>) {
+      super(parameters);
+
+      const { id, scene, definition, parent } = parameters;
+      const { origin } = definition;
+      
+
+      this.trace_ = Babylon.MeshBuilder.CreateIcoSphere(`${id}-light-sensor-trace`, {
+        radius: 0.01,
+        subdivisions: 1,
+      });
+
+      this.trace_.material = new Babylon.StandardMaterial(`${id}-light-sensor-trace-material`, scene);
+      this.trace_.material.wireframe = true;
+
+
+      ReferenceFrame.syncBabylon(origin, this.trace_, 'meters');
+      this.trace_.parent = parameters.parent;
+
+      this.trace_.visibility = 0;
+    }
+
+    intersects(ray: Babylon.Ray) {
+      const { scene } = this.parameters;
+      const meshes = scene.getActiveMeshes();
+
+      let hit = false;
+      for (let i = 0; i < meshes.length; i++) {
+        const mesh = meshes.data[i];
+        if (mesh === this.trace_) continue;
+        if (!mesh.physicsImpostor) continue;
+        hit = ray.intersectsBox(mesh.getBoundingInfo().boundingBox);
+        if (hit) break;
+      }
+
+      return hit;
+    }
+
+    override async getValue(): Promise<number> {
+      const { scene } = this.parameters;
+      this.trace_.visibility = this.visible ? 1 : 0;
+
+      const position = this.trace_.getAbsolutePosition();
+
+      let totalLux = 0;
+      for (const light of scene.lights) {
+        if (light instanceof Babylon.HemisphericLight) continue;
+
+        const intensity = light.getScaledIntensity();
+        const lightPosition = light.getAbsolutePosition();
+        const offset = lightPosition.subtract(position);
+        const distance = offset.length();
+        const ray = new Babylon.Ray(position, offset, distance);
+
+        if (this.intersects(ray)) continue;
+
+        // If the light is directional, determine if it is pointing towards the
+        // sensor. If not, it is not received.
+        if (light instanceof Babylon.DirectionalLight) {
+          const direction = Babylon.Vector3.Forward(true)
+            .applyRotationQuaternion(Babylon.Quaternion.FromEulerVector(light.getRotation()));
+          
+          const dot = Babylon.Vector3.Dot(direction, offset);
+          const angle = Math.acos(dot / offset.length());
+
+          if (angle > Math.PI / 2) continue;
+        }
+
+        // Similar for spot light
+        if (light instanceof Babylon.SpotLight) {
+          const direction = Babylon.Vector3.Forward(true)
+            .applyRotationQuaternion(Babylon.Quaternion.FromEulerVector(light.getRotation()));
+          
+          const dot = Babylon.Vector3.Dot(direction, offset);
+          const angle = Math.acos(dot / offset.length());
+
+          if (angle > light.angle / 2) continue;
+        }
+
+        
+        totalLux += intensity / (distance * distance);
+      }
+
+      return 4095 - clamp(0, totalLux * 4095, 1);
     }
 
     override dispose(): void {

@@ -94,12 +94,24 @@ export namespace Vector3 {
     Distance.toType(v.z, type).value
   );
 
+  export const toRawGranular = (v: Vector3, x: Distance.Type, y: Distance.Type, z: Distance.Type) => RawVector3.create(
+    Distance.toType(v.x, x).value,
+    Distance.toType(v.y, y).value,
+    Distance.toType(v.z, z).value
+  );
+
   export const toBabylon = (v: Vector3, type: Distance.Type) => RawVector3.toBabylon(toRaw(v || ZERO_METERS, type));
 
   export const fromRaw = (raw: RawVector3, type: Distance.Type) => ({
     x: { type, value: raw.x },
     y: { type, value: raw.y },
     z: { type, value: raw.z },
+  });
+
+  export const fromRawGranular = (raw: RawVector3, x: Distance.Type, y: Distance.Type, z: Distance.Type) => ({
+    x: { type: x, value: raw.x },
+    y: { type: y, value: raw.y },
+    z: { type: z, value: raw.z },
   });
 
   export const toTypeGranular = (v: Vector3, x: Distance.Type, y: Distance.Type, z: Distance.Type): Vector3 => {
@@ -113,6 +125,37 @@ export namespace Vector3 {
   export const distance = (lhs: Vector3, rhs: Vector3, newType: Distance.Type = 'meters'): Distance => {
     const raw = Distance.meters(RawVector3.distance(Vector3.toRaw(lhs, 'meters'), Vector3.toRaw(rhs, 'meters')));
     return Distance.toType(raw, newType);
+  };
+
+  /**
+   * Adds two vectors together
+   * 
+   * @param lhs The left hand side of the addition. The units of this vector will be used for the result.
+   * @param rhs The right hand side of the addition.
+   */
+  export const add = (lhs: Vector3, rhs: Vector3): Vector3 => {
+    const raw = RawVector3.add(Vector3.toRawGranular(lhs, lhs.x.type, lhs.y.type, lhs.z.type), Vector3.toRawGranular(rhs, lhs.x.type, lhs.y.type, lhs.z.type));
+    return Vector3.fromRawGranular(raw, lhs.x.type, lhs.y.type, lhs.z.type);
+  };
+
+  export const subtract = (lhs: Vector3, rhs: Vector3): Vector3 => {
+    const raw = RawVector3.subtract(Vector3.toRawGranular(lhs, lhs.x.type, lhs.y.type, lhs.z.type), Vector3.toRawGranular(rhs, lhs.x.type, lhs.y.type, lhs.z.type));
+    return Vector3.fromRawGranular(raw, lhs.x.type, lhs.y.type, lhs.z.type);
+  };
+
+  /**
+   * Clamp a vector between a min and max value
+   * @param min The minimum
+   * @param v The value to clamp. The units of this vector will be used for the result.
+   * @param max The maximum
+   */
+  export const clamp = (min: Vector3, v: Vector3, max: Vector3): Vector3 => {
+    const minConv = Vector3.toRawGranular(min, v.x.type, v.y.type, v.z.type);
+    const maxConv = Vector3.toRawGranular(max, v.x.type, v.y.type, v.z.type);
+    const vConv = Vector3.toRawGranular(v, v.x.type, v.y.type, v.z.type);
+
+    const raw = RawVector3.clampVec(minConv, vConv, maxConv);
+    return Vector3.fromRawGranular(raw, v.x.type, v.y.type, v.z.type);
   };
 
 }

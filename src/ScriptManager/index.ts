@@ -10,6 +10,7 @@ import { v4 as uuid } from 'uuid';
 import construct from '../util/construct';
 import { Ids, ScriptSceneBinding } from './ScriptSceneBinding';
 import { AxisAngle, Quaternion, ReferenceFrame, Vector3 as RawVector3 } from '../math';
+import { Angle, Distance, Mass } from '../util';
 
 class ScriptManager {
   private scene_: Scene;
@@ -255,13 +256,28 @@ namespace ScriptManager {
     private listeners_: Dict<Listener> = {};
     private boundNodeIds_ = new Set<string>();
 
+    private spawnFunc_ = (params: Dict<unknown>, code: string) => {
+      const paramNames = Object.keys(params);
+      // eslint-disable-next-line @typescript-eslint/no-implied-eval
+      return new Function(paramNames.join(','), `"use strict"; ${code}`)(...paramNames.map(name => params[name]));
+    }
+
     constructor(script: Script, manager: ScriptManager) {
       this.script_ = script;
       this.manager_ = manager;
-
-    
-      // eslint-disable-next-line @typescript-eslint/no-implied-eval
-      new Function("scene, Rotation, AxisAngle, Vector3, Quaternion, ReferenceFrame", `"use strict"; ${this.script_.code}`)(this, Rotation, AxisAngle, RawVector3, Quaternion, ReferenceFrame);
+      
+      this.spawnFunc_({
+        scene: this,
+        Rotation,
+        AxisAngle,
+        Vector3: RawVector3,
+        UnitVector3: Vector3,
+        Quaternion,
+        ReferenceFrame,
+        Distance,
+        Mass,
+        Angle,
+      }, this.script_.code);
     }
 
     get programStatus() {
