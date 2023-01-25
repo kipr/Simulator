@@ -69,6 +69,7 @@ import PredicateCompletion from '../state/State/ChallengeCompletion/PredicateCom
 import LoadingOverlay from './Challenge/LoadingOverlay';
 import DbError from '../db/Error';
 import { applyObjectPatch, applyPatch, createObjectPatch, createPatch, ObjectPatch, OuterObjectPatch } from 'symmetry';
+import { sceneFragmentDeclaration } from 'babylonjs/Shaders/ShadersInclude/sceneFragmentDeclaration';
 
 namespace Modal {
   export enum Type {
@@ -236,6 +237,8 @@ interface RootState {
   feedback: Feedback;
 
   windowInnerHeight: number;
+
+  
 }
 
 type Props = RootPublicProps & RootPrivateProps;
@@ -266,7 +269,8 @@ const STDERR_STYLE = (theme: Theme) => ({
 class Root extends React.Component<Props, State> {
   private editorRef: React.MutableRefObject<Editor>;
   private overlayLayoutRef:  React.MutableRefObject<OverlayLayout>;
-
+  
+  
   constructor(props: Props) {
     super(props);
 
@@ -286,6 +290,7 @@ class Root extends React.Component<Props, State> {
       settings: DEFAULT_SETTINGS,
       feedback: DEFAULT_FEEDBACK,
       windowInnerHeight: window.innerHeight,
+      
     };
 
     this.editorRef = React.createRef();
@@ -524,6 +529,10 @@ class Root extends React.Component<Props, State> {
     this.props.onResetScene();
   };
 
+  private onStartChallengeClick_ = () => {
+    window.location.href = `/challenge/${this.props.match.params.sceneId}`;
+  };
+  
   private onClearConsole_ = () => {
     this.setState({
       console: StyledText.compose({ items: [] })
@@ -673,6 +682,7 @@ class Root extends React.Component<Props, State> {
       settings,
       feedback,
       windowInnerHeight,
+      
     } = state;
 
     const theme = DARK;
@@ -748,6 +758,7 @@ class Root extends React.Component<Props, State> {
             onSettingsClick={this.onModalClick_(Modal.SETTINGS)}
             onAboutClick={this.onModalClick_(Modal.ABOUT)}
             onResetWorldClick={this.onResetWorldClick_}
+            onStartChallengeClick={this.onStartChallengeClick_}
             onRunClick={this.onRunClick_}
             onStopClick={this.onStopClick_}
             onDocumentationClick={this.onDocumentationClick}

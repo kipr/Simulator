@@ -57,14 +57,15 @@ export interface MenuProps extends StyleProps, ThemeProps {
   onOpenSceneClick?: (event: React.MouseEvent) => void;
   onSettingsSceneClick?: (event: React.MouseEvent) => void;
   onDeleteSceneClick?: (event: React.MouseEvent) => void;
-
+  
+  onStartChallengeClick: () => void;
   onShowAll: () => void;
   onHideAll: () => void;
 
   onRunClick: () => void;
   onStopClick: () => void;
   onResetWorldClick: () => void;
-
+ 
   onSettingsClick: () => void;
   onAboutClick: () => void;
   onDocumentationClick: () => void;
@@ -220,6 +221,8 @@ class SimMenu extends React.PureComponent<Props, State> {
     event.stopPropagation();
   };
 
+
+
   private onSceneClick_ = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
@@ -293,6 +296,7 @@ class SimMenu extends React.PureComponent<Props, State> {
       onNewSceneClick,
       onSaveAsSceneClick: onCopySceneClick,
       onSettingsSceneClick,
+      onStartChallengeClick,
       onDeleteSceneClick,
       simulatorState,
     } = props;
@@ -343,7 +347,7 @@ class SimMenu extends React.PureComponent<Props, State> {
 
           <Item
             theme={theme}
-           
+            onClick={onStartChallengeClick}
             style={{ position: "relative" }}
           >
             <ItemIcon icon={faFlagCheckered} /> Start Challenge
