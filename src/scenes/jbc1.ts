@@ -48,11 +48,12 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 `;
 
 const robotTouches = `
-scene.addOnCollisionListener('can9', (otherNodeId, point)=> {
-  console.log('Can A touched!', otherNodeId, point);
-  const visible = point === canPositions;
-  scene.setChallengeEventValue('canATouched', visible);
-}, 'robot');
+scene.onBind = nodeId => {
+  scene.addOnCollisionListener(nodeId, (otherNodeId, point)=> {
+    console.log('Can A touched!', otherNodeId, point);
+    scene.setChallengeEventValue(nodeId + 'Touched', true);
+  }, 'robot');
+};
 `;
 const uprightCans = `
 // When a can is standing upright, the upright condition is met.
@@ -178,7 +179,10 @@ export const JBC_1: Scene = {
         },
       },
     },
-    'can9': createCanNode(9, { x: Distance.centimeters(0), y: Distance.centimeters(0), z: Distance.centimeters(85.4) }),
+    can9: {
+      ...createCanNode(9, { x: Distance.centimeters(0), y: Distance.centimeters(0), z: Distance.centimeters(85.4) }),
+      scriptIds: [ 'robotTouches' ]
+    }
     
   }
   
