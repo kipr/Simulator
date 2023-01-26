@@ -98,6 +98,7 @@ import {
   faSignOutAlt,
   faFlagCheckered,
   faStop,
+  faFlag,
   faSync,
 } from "@fortawesome/free-solid-svg-icons";
 import SceneMenu from "./World/SceneMenu";
@@ -350,7 +351,7 @@ class SimMenu extends React.PureComponent<Props, State> {
             onClick={onStartChallengeClick}
             style={{ position: "relative" }}
           >
-            <ItemIcon icon={faFlagCheckered} /> Start Challenge
+            <ItemIcon icon={faFlag} /> Start Challenge
             
           </Item>
           <Item

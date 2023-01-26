@@ -823,6 +823,10 @@ class Root extends React.Component<Props, State> {
     });
   };
 
+  private onEndChallengeClick_ = () => {
+    window.location.href = `/scene/${this.props.match.params.challengeId}`;
+  };
+
   private onResetCode_ = () => {
     const { challenge } = this.props;
     if (!challenge) return;
@@ -960,6 +964,7 @@ class Root extends React.Component<Props, State> {
             onDocumentationClick={this.onDocumentationClick}
             onDashboardClick={this.onDashboardClick}
             onLogoutClick={this.onLogoutClick}
+            onEndChallengeClick={this.onEndChallengeClick_}
             simulatorState={simulatorState}
           />
           {impl}
