@@ -18,7 +18,7 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
-    canATouched: {
+    can9Touched: {
       name: { [LocalizedString.EN_US]: 'Can A Touched' },
       description: { [LocalizedString.EN_US]: 'Can A touched' },
     },
@@ -44,10 +44,11 @@ export default {
   success: {
     exprs: {
       // Touch Events
-      canATouched: {
+      can9Touched: {
         type: Expr.Type.Event,
-        eventId: 'canATouched',
+        eventId: 'can9Touched',
       },
+
       // Intersects Events
       canAIntersects: {
         type: Expr.Type.Event,
@@ -81,7 +82,7 @@ export default {
 
 
 
-      boxStuff:{
+      startingBox:{
         type:Expr.Type.And,
         argIds:['leaveStartBoxOnce', 'returnStartBoxOnce'],
       },
@@ -95,7 +96,7 @@ export default {
       //Success Logic = Can A upright, intersects and touched
       completion: {
         type: Expr.Type.And,
-        argIds: ['canATouched', 'aIntersectsUpright', 'boxStuff'],
+        argIds: ['can9Touched', 'aIntersectsUpright', 'startingBox'],
       },
     },
     rootId: 'completion',
