@@ -9,6 +9,7 @@ export default {
   author: {
     type: Author.Type.Organization,
     id: 'kipr'
+    //COMME
   },
   code: {
     'c': `#include <kipr/botball.h>`,
@@ -21,100 +22,80 @@ export default {
       name: { [LocalizedString.EN_US]: 'Can A Touched' },
       description: { [LocalizedString.EN_US]: 'Can A touched' },
     },
-   
+    canAIntersects: {
+      name: { [LocalizedString.EN_US]: 'Can A Intersects' },
+      description: { [LocalizedString.EN_US]: 'Can A intersects circle 9' },
+    },
+
+    canAUpright: {
+      name: { [LocalizedString.EN_US]: 'Can A Upright' },
+      description: { [LocalizedString.EN_US]: 'Can A upright on circle 9' },
+    },
+    
+    leaveStartBox: {
+      name: { [LocalizedString.EN_US]: 'Robot Left Start' },
+      description: { [LocalizedString.EN_US]: 'Robot left starting box' },
+    },
+    returnStartBox: {
+      name: { [LocalizedString.EN_US]: 'Robot Rentered Start' },
+      description: { [LocalizedString.EN_US]: 'Robot reentered starting box' },
+    },
   },
   success: {
     exprs: {
-      // Lift events
-      canALifted: {
+      // Touch Events
+      canATouched: {
         type: Expr.Type.Event,
-        eventId: 'canALifted',
+        eventId: 'canATouched',
       },
-      canBLifted: {
+      // Intersects Events
+      canAIntersects: {
         type: Expr.Type.Event,
-        eventId: 'canBLifted',
+        eventId: 'canAIntersects',
       },
-      canCLifted: {
-        type: Expr.Type.Event,
-        eventId: 'canCLifted',
-      },
-      // Lift once Logic
-      aLiftedOnce: {
-        type: Expr.Type.Once,
-        argId: 'canALifted',
-      },
-      bLiftedOnce: {
-        type: Expr.Type.Once,
-        argId: 'canBLifted',
-      },
-      cLiftedOnce: {
-        type: Expr.Type.Once,
-        argId: 'canCLifted',
-      },
-      // At least two cans lifted logic
-      abLifted: {
-        type: Expr.Type.And,
-        argIds: ['aLiftedOnce', 'bLiftedOnce'],
-      },
-      acLifted: {
-        type: Expr.Type.And,
-        argIds: ['aLiftedOnce', 'cLiftedOnce'],
-      },
-      bcLifted: {
-        type: Expr.Type.And,
-        argIds: ['bLiftedOnce', 'cLiftedOnce'],
-      },
-      abcLifted: {
-        type: Expr.Type.Or,
-        argIds: ['abLifted', 'acLifted', 'bcLifted'],
-      },
-      // Place events
-      canAPlaced: {
-        type: Expr.Type.Event,
-        eventId: 'canAPlaced',
-      },
-      canBPlaced: {
-        type: Expr.Type.Event,
-        eventId: 'canBPlaced',
-      },
-      canCPlaced: {
-        type: Expr.Type.Event,
-        eventId: 'canCPlaced',
-      },
-      // Upright events
+
+      //Upright Events
       canAUpright: {
         type: Expr.Type.Event,
         eventId: 'canAUpright',
       },
-      canBUpright: {
+
+      //Start Box Events
+      leaveStartBox: {
         type: Expr.Type.Event,
-        eventId: 'canBUpright',
+        eventId: 'leaveStartBox',
       },
-      canCUpright: {
+      leaveStartBoxOnce: {
+        type: Expr.Type.Once,
+        argId: 'leaveStartBox',
+      },
+
+      returnStartBox: {
         type: Expr.Type.Event,
-        eventId: 'canCUpright',
+        eventId: 'returnStartBox',
       },
-      // Placed upright logic
-      abPlacedUpright: {
+      returnStartBoxOnce: {
+        type: Expr.Type.Once,
+        argId: 'returnStartBox',
+      },
+
+
+
+      boxStuff:{
+        type:Expr.Type.And,
+        argIds:['leaveStartBoxOnce', 'returnStartBoxOnce'],
+      },
+
+      //Intersects and upright logic
+      aIntersectsUpright: {
         type: Expr.Type.And,
-        argIds: ['canAPlaced', 'canAUpright', 'canBPlaced', 'canBUpright'],
+        argIds: ['canAIntersects', 'canAUpright'],
       },
-      acPlacedUpright: {
-        type: Expr.Type.And,
-        argIds: ['canAPlaced', 'canAUpright', 'canCPlaced', 'canCUpright'],
-      },
-      bcPlacedUpright: {
-        type: Expr.Type.And,
-        argIds: ['canBPlaced', 'canBUpright', 'canCPlaced', 'canCUpright'],
-      },
-      abcPlacedUpright: {
-        type: Expr.Type.Or,
-        argIds: ['abPlacedUpright', 'acPlacedUpright', 'bcPlacedUpright'],
-      },
-      // Success logic
+
+      //Success Logic = Can A upright, intersects and touched
       completion: {
         type: Expr.Type.And,
-        argIds: ['abcLifted', 'abcPlacedUpright'],
+        argIds: ['canATouched', 'aIntersectsUpright', 'boxStuff'],
       },
     },
     rootId: 'completion',
