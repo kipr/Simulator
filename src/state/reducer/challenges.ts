@@ -15,6 +15,7 @@ import test from '../../challenges/test';
 import jbc6c from "../../challenges/jbc6c";
 import jbc1 from "../../challenges/jbc1";
 import jbc2 from "../../challenges/jbc2";
+import jbc2b from "../../challenges/jbc2b";
 
 export namespace ChallengesAction {
   export interface LoadChallenge {
@@ -134,6 +135,10 @@ const DEFAULT_CHALLENGES: Challenges = {
   'jbc2': Async.loaded({
     value: jbc2,
     brief: ChallengeBrief.fromChallenge(jbc2),
+  }),
+  'jbc2b': Async.loaded({
+    value: jbc2b,
+    brief: ChallengeBrief.fromChallenge(jbc2b),
   })
 };
 
