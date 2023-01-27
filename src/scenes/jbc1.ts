@@ -110,10 +110,6 @@ export const JBC_1: Scene = {
         z: Distance.centimeters(0),
       },
     },
-
-
-
-
   },
   
   nodes: {
