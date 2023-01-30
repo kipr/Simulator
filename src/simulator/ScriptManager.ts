@@ -10,6 +10,7 @@ import { v4 as uuid } from 'uuid';
 import construct from '../util/redux/construct';
 import { RawAxisAngle, RawQuaternion, RawReferenceFrame, RawVector3 } from '../util/math/math';
 import { Angle, Mass, Distance } from '../util/math/Value';
+import {SharedRegistersRobot} from '../programming/SharedRegistersRobot';
 
 
 export type Ids = string | string[] | Set<string>;
@@ -56,7 +57,6 @@ export interface ScriptSceneBinding {
 
   setChallengeEventValue: (eventId: string, value: boolean) => void;
 }
-
 
 class ScriptManager {
   private scene_: Scene;
