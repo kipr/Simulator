@@ -2,8 +2,11 @@ import Scene from "../state/State/Scene";
 import LocalizedString from "../util/LocalizedString";
 import { createBaseSceneSurfaceA, createCanNode } from "./jbcBase";
 import { Color } from "../state/State/Scene/Color";
-import { Distance } from "../util";
+import { Distance , Angle} from "../util";
 import Script from "../state/State/Scene/Script";
+import { Euler } from "../math";
+import { Rotation } from "../unit-math";
+import {SharedRegistersRobot} from '../SharedRegistersRobot';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -13,7 +16,7 @@ const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
   ...scene.nodes[nodeId],
   visible
 });
-
+//const sharedRegistersRobot_ = SharedRegistersRobot;
 // When the can (can2) is intersecting the green garage, the garage glows
 
 scene.addOnIntersectionListener('can2', (type, otherNodeId) => {
@@ -29,8 +32,8 @@ scene.addOnIntersectionListener('can9', (type, otherNodeId) => {
   console.log('Can 9 placed!', type, otherNodeId);
   const visible = type === 'start';
   scene.setChallengeEventValue('can9Intersects', visible);
-  setNodeVisible('circle9', visible);
-}, 'circle9');
+  setNodeVisible('blueGarage', visible);
+}, 'blueGarage');
 
 
 // // When the can (can10) is intersecting the yellow garage, the garage glows
@@ -109,9 +112,9 @@ export const JBC_6: Scene = {
     blueGarage_geom: {
       type: "box",
       size: {
-        x: Distance.centimeters(20),
+        x: Distance.centimeters(16),
         y: Distance.centimeters(0.1),
-        z: Distance.centimeters(20),
+        z: Distance.centimeters(18),
       },
     },
   },
@@ -167,7 +170,7 @@ export const JBC_6: Scene = {
         position: {
           x: Distance.centimeters(0),
           y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(53.2),
+          z: Distance.centimeters(53),
         },
       },
       material: {
@@ -186,9 +189,16 @@ export const JBC_6: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(0),
+          x: Distance.centimeters(-13.4),
           y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(53.2),
+          z: Distance.centimeters(94),
+        },
+        orientation: {
+
+          type: 'euler',
+          x: Angle.degrees(0),
+          y: Angle.degrees(45),
+          z: Angle.degrees(0),
         },
       },
       material: {
@@ -200,8 +210,12 @@ export const JBC_6: Scene = {
       },
     },
     ...baseScene.nodes,
-    can2: createCanNode(2),
-    can9: createCanNode(9),
-    can10: createCanNode(10),
+    can2: {...createCanNode(2), scriptIds: ["garageIntersects"]},
+    can9: {...createCanNode(9,{
+      x: Distance.centimeters(0.3),
+      y: Distance.centimeters(0),
+      z: Distance.centimeters(85),
+    }), scriptIds: ["garageIntersects"]},
+    can10: {...createCanNode(10), scriptIds: ["garageIntersects"]},
   },
 };

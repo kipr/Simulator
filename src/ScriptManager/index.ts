@@ -10,7 +10,7 @@ import { v4 as uuid } from 'uuid';
 import construct from '../util/construct';
 import { Ids, ScriptSceneBinding } from './ScriptSceneBinding';
 import { AxisAngle, Quaternion, ReferenceFrame, Vector3 as RawVector3 } from '../math';
-
+import {SharedRegistersRobot} from '../SharedRegistersRobot';
 class ScriptManager {
   private scene_: Scene;
 
@@ -261,7 +261,7 @@ namespace ScriptManager {
 
     
       // eslint-disable-next-line @typescript-eslint/no-implied-eval
-      new Function("scene, Rotation, AxisAngle, Vector3, Quaternion, ReferenceFrame", `"use strict"; ${this.script_.code}`)(this, Rotation, AxisAngle, RawVector3, Quaternion, ReferenceFrame);
+      new Function("scene, Rotation, AxisAngle, Vector3, Quaternion, ReferenceFrame, SharedRegistersRobot", `"use strict"; ${this.script_.code}`)(this, Rotation, AxisAngle, RawVector3, Quaternion, ReferenceFrame, SharedRegistersRobot);
     }
 
     get programStatus() {
