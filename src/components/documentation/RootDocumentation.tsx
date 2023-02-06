@@ -20,7 +20,7 @@ import EnumerationBrief from './EnumerationBrief';
 import EnumerationDocumentation from '../../state/State/Documentation/EnumerationDocumentation';
 
 import tr from '@i18n';
-import LocalizedString from 'util/LocalizedString';
+import LocalizedString from '../../util/LocalizedString';
 
 export interface RootDocumentationProps extends ThemeProps {
   language: 'c' | 'python';

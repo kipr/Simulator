@@ -25,7 +25,7 @@ import ModuleDocumentation from './ModuleDocumentation';
 import StructureDocumentation from './StructureDocumentation';
 
 import tr from '@i18n';
-import LocalizedString from 'util/LocalizedString';
+import LocalizedString from '../../util/LocalizedString';
 
 namespace DragState {
   export interface None {

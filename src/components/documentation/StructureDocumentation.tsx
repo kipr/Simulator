@@ -13,7 +13,7 @@ import StructureBrief from './StructureBrief';
 import { toPythonType } from './util';
 
 import tr from '@i18n';
-import LocalizedString from 'util/LocalizedString';
+import LocalizedString from '../../util/LocalizedString';
 
 export interface StructureDocumentationProps extends StyleProps, ThemeProps {
   language: 'c' | 'python';

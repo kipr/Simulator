@@ -6,7 +6,7 @@ import { ThemeProps } from '../theme';
 import ValueEdit from '../ValueEdit';
 import deepNeq from '../../deepNeq';
 import { ReferenceFrame, Rotation, Vector3 } from '../../unit-math';
-import LocalizedString from 'util/LocalizedString';
+import LocalizedString from '../../util/LocalizedString';
 
 import tr from '@i18n';
 

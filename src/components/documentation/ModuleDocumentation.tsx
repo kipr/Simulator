@@ -11,7 +11,7 @@ import { ThemeProps } from '../theme';
 import FunctionBrief from './FunctionBrief';
 
 import tr from '@i18n';
-import LocalizedString from 'util/LocalizedString';
+import LocalizedString from '../../util/LocalizedString';
 
 export interface ModuleDocumentationProps extends StyleProps, ThemeProps {
   language: 'c' | 'python';

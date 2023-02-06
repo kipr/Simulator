@@ -11,7 +11,7 @@ import FunctionPrototype from './FunctionPrototype';
 import { toPythonType } from './util';
 
 import tr from '@i18n';
-import LocalizedString from 'util/LocalizedString';
+import LocalizedString from '../../util/LocalizedString';
 
 export interface FunctionDocumentationProps extends StyleProps, ThemeProps {
   language: 'c' | 'python';
