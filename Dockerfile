@@ -21,5 +21,6 @@ EXPOSE 3000
 # WORKDIR /app/simulator
 # RUN yarn install --cache-folder ./.yarncache && yarn build; true
 RUN yarn install --cache-folder ./.yarncache
+RUN yarn run build-i18n
 RUN export NODE_OPTIONS=--openssl-legacy-provider && yarn build
 CMD node express.js

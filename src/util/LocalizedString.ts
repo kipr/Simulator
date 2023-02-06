@@ -107,7 +107,7 @@ namespace LocalizedString {
     typeof UR_PK
   );
 
-  export const FALLBACKS: { [locale: string]: string[] } = {
+  export const FALLBACKS: { [locale in Language]: Language[] } = {
     [EN_US]: [],
     [EN_UK]: [EN_US],
     [ZH_CN]: [EN_US],

@@ -10,10 +10,14 @@ import Section from '../Section';
 import { ThemeProps } from '../theme';
 import FunctionBrief from './FunctionBrief';
 
+import tr from '@i18n';
+import LocalizedString from 'util/LocalizedString';
+
 export interface ModuleDocumentationProps extends StyleProps, ThemeProps {
   language: 'c' | 'python';
   module: ModuleDocumentationModel;
   documentation: Documentation;
+  locale: LocalizedString.Language;
 
   onDocumentationPush: (location: DocumentationLocation) => void;
 }
@@ -31,7 +35,8 @@ const ModuleDocumentation = ({
   onDocumentationPush,
   style,
   className,
-  theme
+  theme,
+  locale
 }: Props) => {
   const functions: [string, FunctionDocumentation][] = module.functions.map(f => [f, documentation.functions[f]]);
 
@@ -40,7 +45,7 @@ const ModuleDocumentation = ({
 
   return (
     <Container className={className} style={style}>
-      <Section name='Functions' theme={theme}>
+      <Section name={LocalizedString.lookup(tr('Functions'), locale)} theme={theme}>
         {functions.map(([id, f]) => (
           <FunctionBrief
             language={language}

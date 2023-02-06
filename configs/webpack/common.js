@@ -4,6 +4,7 @@ const { readFileSync } = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const NpmDtsPlugin = require('npm-dts-webpack-plugin')
 const { DefinePlugin, IgnorePlugin } = require('webpack');
+const process = require('process');
 
 const commitHash = require('child_process').execSync('git rev-parse --short=8 HEAD').toString().trim();
 
@@ -28,6 +29,8 @@ try {
   i18n = JSON.parse(readFileSync(resolve(__dirname, '..', '..', 'i18n', 'i18n.json')));
 } catch (e) {
   console.log('Failed to read i18n.json');
+  console.log(`Please run 'yarn run build-i18n'`);
+  process.exit(1);
 }
 
 

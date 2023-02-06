@@ -287,12 +287,14 @@ class SimMenu extends React.PureComponent<Props, State> {
           <Logo theme={theme} onClick={onDashboardClick} src={theme.foreground === 'white' ? KIPR_LOGO_BLACK as string : KIPR_LOGO_WHITE as string}/>
 
           {runOrStopItem}
-          <Item theme={theme} onClick={onResetWorldClick}><ItemIcon icon={faSync} />Reset World</Item>
+          <Item theme={theme} onClick={onResetWorldClick}><ItemIcon icon={faSync} />
+            {LocalizedString.lookup(tr('Reset World'), locale)}
+          </Item>
 
           <Spacer style={{ borderRight: `1px solid ${theme.borderColor}` }} />
 
           <Item theme={theme} onClick={this.onLayoutClick_} style={{ position: 'relative' }}>
-            <ItemIcon icon={faClone} /> Layout
+            <ItemIcon icon={faClone} /> {LocalizedString.lookup(tr('Layout'), locale)}
             {subMenu.type === SubMenu.Type.LayoutPicker ? (
               <LayoutPicker
                 style={{ zIndex: 9 }}
@@ -306,7 +308,7 @@ class SimMenu extends React.PureComponent<Props, State> {
           </Item>
 
           <Item theme={theme} onClick={this.onSceneClick_} style={{ position: 'relative' }}>
-            <ItemIcon icon={faGlobeAmericas} /> World
+            <ItemIcon icon={faGlobeAmericas} /> {LocalizedString.lookup(tr('World'), locale)}
             {subMenu.type === SubMenu.Type.SceneMenu ? (
               <SceneMenu
                 style={{ zIndex: 9 }}

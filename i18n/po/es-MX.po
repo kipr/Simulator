@@ -1,65 +1,6 @@
 msgid ""
 msgstr "Content-Type: text/plain\n"
 
-msgid "JBC 5"
-msgstr ""
-
-msgid "Junior Botball Challenge 5: Dance Party"
-msgstr ""
-
-msgid "JBC 5B"
-msgstr ""
-
-msgid "Junior Botball Challenge 5B: Line Dance"
-msgstr ""
-
-msgid "JBC 5C"
-msgstr ""
-
-msgid "Junior Botball Challenge 5C: Synchronized Dancing"
-msgstr ""
-
-msgid "test"
-msgstr ""
-
-msgid "Settings"
-msgstr ""
-
-msgid "User Interface"
-msgstr ""
-
-msgid "Simulation"
-msgstr ""
-
-msgid "Editor"
-msgstr ""
-
-msgid "Locale"
-msgstr ""
-
-msgid "Switch languages"
-msgstr ""
-
-msgid "Sensor noise"
-msgstr ""
-
-msgid "Controls whether sensor outputs are affected by random noise"
-msgstr ""
-
-msgid "Realistic sensors"
-msgstr ""
-
-msgid ""
-"Controls whether sensors behave like real-world sensors instead of like "
-"ideal sensors. For example, real-world ET sensors are nonlinear"
-msgstr ""
-
-msgid "Autocomplete"
-msgstr ""
-
-msgid "Controls autocompletion of code, brackets, and quotes"
-msgstr ""
-
 msgid "Robot"
 msgstr ""
 
@@ -91,7 +32,33 @@ msgstr ""
 msgid "JBC Surface B"
 msgstr ""
 
+msgid "Can %s"
+msgstr ""
+
+msgid "JBC Sandbox A"
+msgstr ""
+
+msgid ""
+"Junior Botball Challenge Sandbox on Mat A. All cans 1-12 are available by "
+"default."
+msgstr ""
+
+msgid "Paper Ream 1"
+msgstr ""
+
+msgid "Paper Ream 2"
+msgstr ""
+
+msgid "JBC Sandbox B"
+msgstr ""
+
+msgid "Junior Botball Challenge Sandbox on Mat B."
+msgstr ""
+
 msgid "JBC 1"
+msgstr ""
+
+msgid "Junior Botball Challenge 1: Tag, You're It!"
 msgstr ""
 
 msgid "JBC 2"
@@ -148,13 +115,40 @@ msgstr ""
 msgid "Junior Botball Challenge 4B: Barrel Racing"
 msgstr ""
 
+msgid "JBC 5"
+msgstr ""
+
+msgid "Junior Botball Challenge 5: Dance Party"
+msgstr ""
+
+msgid "JBC 5B"
+msgstr ""
+
+msgid "Junior Botball Challenge 5B: Line Dance"
+msgstr ""
+
+msgid "JBC 5C"
+msgstr ""
+
+msgid "Junior Botball Challenge 5C: Synchronized Dancing"
+msgstr ""
+
 msgid "JBC 6"
+msgstr ""
+
+msgid "Junior Botball Challenge 6: Load 'Em Up"
 msgstr ""
 
 msgid "JBC 6B"
 msgstr ""
 
+msgid "Junior Botball Challenge 6B: Pick 'Em Up"
+msgstr ""
+
 msgid "JBC 6C"
+msgstr ""
+
+msgid "Junior Botball Challenge 6C: Empty the Garage"
 msgstr ""
 
 msgid "Circle 2"
@@ -167,41 +161,6 @@ msgid "Circle 10"
 msgstr ""
 
 msgid "Mat Surface"
-msgstr ""
-
-msgid "Can %1"
-msgstr ""
-
-msgid "JBC Sandbox A"
-msgstr ""
-
-msgid ""
-"Junior Botball Challenge Sandbox on Mat A. All cans 1-12 are available by "
-"default."
-msgstr ""
-
-msgid "Paper Ream 1"
-msgstr ""
-
-msgid "Paper Ream 2"
-msgstr ""
-
-msgid "JBC Sandbox B"
-msgstr ""
-
-msgid "Junior Botball Challenge Sandbox on Mat B."
-msgstr ""
-
-msgid "Junior Botball Challenge 1: Tag, You're It!"
-msgstr ""
-
-msgid "Junior Botball Challenge 6: Load 'Em Up"
-msgstr ""
-
-msgid "Junior Botball Challenge 6B: Pick 'Em Up"
-msgstr ""
-
-msgid "Junior Botball Challenge 6C: Empty the Garage"
 msgstr ""
 
 msgid "JBC 7"
@@ -318,74 +277,6 @@ msgstr ""
 msgid "Demobot"
 msgstr ""
 
-msgid "Tutorials"
-msgstr ""
-
-msgid "Learn how to get started with the simulator"
-msgstr ""
-
-msgid "3D Simulator"
-msgstr ""
-
-msgid "A simulator for the Botball demobot."
-msgstr ""
-
-msgid "About"
-msgstr ""
-
-msgid ""
-"KIPR is a 501(c) 3 organization started to make the long-term educational "
-"benefits of robotics accessible to students."
-msgstr ""
-
-msgid "Quick Start"
-msgstr ""
-
-msgid "Navigating in 3D"
-msgstr ""
-
-msgid "Learn the controls for navigating in 3D in the simulator"
-msgstr ""
-
-msgid "Robot Section"
-msgstr ""
-
-msgid "How to use the robot section"
-msgstr ""
-
-msgid "World Section"
-msgstr ""
-
-msgid "Learn how to create and manipulate items and scene in the simulator"
-msgstr ""
-
-msgid "Open World"
-msgstr ""
-
-msgid "Unknown"
-msgstr ""
-
-msgid "Description: "
-msgstr ""
-
-msgid "Author: "
-msgstr ""
-
-msgid "Me"
-msgstr ""
-
-msgid "Select a scene to see more details"
-msgstr ""
-
-msgid "New World"
-msgstr ""
-
-msgid "Create"
-msgstr ""
-
-msgid "Volume"
-msgstr ""
-
 msgid "JBC Challenge 6C"
 msgstr ""
 
@@ -447,6 +338,47 @@ msgid "Loading..."
 msgstr ""
 
 msgid "Logout"
+msgstr ""
+
+msgid "Tutorials"
+msgstr ""
+
+msgid "Learn how to get started with the simulator"
+msgstr ""
+
+msgid "3D Simulator"
+msgstr ""
+
+msgid "A simulator for the Botball demobot."
+msgstr ""
+
+msgid "About"
+msgstr ""
+
+msgid ""
+"KIPR is a 501(c) 3 organization started to make the long-term educational "
+"benefits of robotics accessible to students."
+msgstr ""
+
+msgid "Quick Start"
+msgstr ""
+
+msgid "Navigating in 3D"
+msgstr ""
+
+msgid "Learn the controls for navigating in 3D in the simulator"
+msgstr ""
+
+msgid "Robot Section"
+msgstr ""
+
+msgid "How to use the robot section"
+msgstr ""
+
+msgid "World Section"
+msgstr ""
+
+msgid "Learn how to create and manipulate items and scene in the simulator"
 msgstr ""
 
 msgid "Indent"
@@ -722,6 +654,9 @@ msgstr ""
 msgid "Accept"
 msgstr ""
 
+msgid "Settings"
+msgstr ""
+
 msgid "Add Script"
 msgstr ""
 
@@ -734,10 +669,10 @@ msgstr ""
 msgid "Copy Scene"
 msgstr ""
 
-msgid "Item(s) (%1)"
+msgid "Item(s) (%d)"
 msgstr ""
 
-msgid "Script(s) (%1)"
+msgid "Script(s) (%d)"
 msgstr ""
 
 msgid "Layouts"
@@ -761,6 +696,9 @@ msgstr ""
 msgid "Clear"
 msgstr ""
 
+msgid "Rotation"
+msgstr ""
+
 msgid "Start Location"
 msgstr ""
 
@@ -780,6 +718,15 @@ msgid "Analog Sensors"
 msgstr ""
 
 msgid "Digital Sensors"
+msgstr ""
+
+msgid "Servos"
+msgstr ""
+
+msgid "Motor Velocities"
+msgstr ""
+
+msgid "Motor Positions"
 msgstr ""
 
 msgid ""
@@ -816,6 +763,9 @@ msgstr ""
 msgid "Failure"
 msgstr ""
 
+msgid "Editor"
+msgstr ""
+
 msgid "World"
 msgstr ""
 
@@ -843,7 +793,45 @@ msgstr ""
 msgid "Feedback"
 msgstr ""
 
-msgid "Version %1 (%2)"
+msgid "Reset World"
+msgstr ""
+
+msgid "Layout"
+msgstr ""
+
+msgid "User Interface"
+msgstr ""
+
+msgid "Simulation"
+msgstr ""
+
+msgid "Locale"
+msgstr ""
+
+msgid "Switch languages"
+msgstr ""
+
+msgid "Sensor noise"
+msgstr ""
+
+msgid "Controls whether sensor outputs are affected by random noise"
+msgstr ""
+
+msgid "Realistic sensors"
+msgstr ""
+
+msgid ""
+"Controls whether sensors behave like real-world sensors instead of like "
+"ideal sensors. For example, real-world ET sensors are nonlinear"
+msgstr ""
+
+msgid "Autocomplete"
+msgstr ""
+
+msgid "Controls autocompletion of code, brackets, and quotes"
+msgstr ""
+
+msgid "Version %s (%s)"
 msgstr ""
 
 msgid "Copyright"
@@ -862,6 +850,11 @@ msgid "GitHub repository"
 msgstr ""
 
 msgid "We're happy to help you get started!"
+msgstr ""
+
+msgid ""
+"Give a helpful description of a problem you're facing, or a feature you'd "
+"like to request"
 msgstr ""
 
 msgid ""
@@ -902,19 +895,43 @@ msgstr ""
 msgid "Thank you for helping improve the KIPR Simulator!"
 msgstr ""
 
+msgid "Open World"
+msgstr ""
+
+msgid "Unknown"
+msgstr ""
+
+msgid "Description: "
+msgstr ""
+
+msgid "Author: "
+msgstr ""
+
+msgid "Me"
+msgstr ""
+
+msgid "Select a scene to see more details"
+msgstr ""
+
 msgid "Description"
 msgstr ""
 
-msgid "Delete %1?"
+msgid "New World"
 msgstr ""
 
-msgid "Are you sure you want to delete %1?"
+msgid "Create"
+msgstr ""
+
+msgid "Delete %s?"
+msgstr ""
+
+msgid "Are you sure you want to delete %s?"
 msgstr ""
 
 msgid "Copy World"
 msgstr ""
 
-msgid "Error %1"
+msgid "Error %d"
 msgstr ""
 
 msgid "Closing this dialog will take you back to the last well-known state."
@@ -930,6 +947,63 @@ msgid "CHALLENGE"
 msgstr ""
 
 msgid "Start"
+msgstr ""
+
+msgid "Welcome to the KIPR Simulator!\n"
+msgstr ""
+
+msgid "Compiling...\n"
+msgstr ""
+
+msgid "Compilation succeeded with warnings.\n"
+msgstr ""
+
+msgid "Compilation succeeded.\n"
+msgstr ""
+
+msgid "Compilation failed.\n"
+msgstr ""
+
+msgid "Something went wrong during compilation.\n"
+msgstr ""
+
+msgid "Compilation succeeded with warnings\n"
+msgstr ""
+
+msgid "Compilation succeeded\n"
+msgstr ""
+
+msgid "Modules"
+msgstr ""
+
+msgid "Functions"
+msgstr ""
+
+msgid "Structures"
+msgstr ""
+
+msgid "Enumerations"
+msgstr ""
+
+msgid "Files"
+msgstr ""
+
+msgid "Search..."
+msgstr ""
+
+msgid "Detailed Description"
+msgstr ""
+
+msgid "Parameters"
+msgstr ""
+
+msgid "Return Value"
+msgstr ""
+
+msgid "Fields"
+msgstr ""
+
+msgid "Volume"
 msgstr ""
 
 msgid "RGB"
@@ -950,47 +1024,34 @@ msgstr ""
 msgid "Visit our"
 msgstr ""
 
-msgid "Can %s"
-msgstr ""
-
-msgid "Item(s) (%d)"
-msgstr ""
-
-msgid "Script(s) (%d)"
-msgstr ""
-
-msgid "Version %s (%s)"
-msgstr ""
-
-msgid "Delete %s?"
-msgstr ""
-
-msgid "Are you sure you want to delete %s?"
-msgstr ""
-
-msgid "Error %d"
-msgstr ""
-
+msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
 msgstr ""
 
+msgctxt "Red, Green, Blue"
 msgid "RGB"
 msgstr ""
 
+msgctxt "Computer text command line (e.g., DOS)"
 msgid "Console"
 msgstr ""
 
+msgctxt "A predefined task for the user to complete"
 msgid "Challenge"
 msgstr ""
 
+msgctxt "Terminate program execution"
 msgid "Stop"
 msgstr ""
 
+msgctxt "Begin program execution"
 msgid "Run"
 msgstr ""
 
+msgctxt "Part of copyright notice, after KIPR is listed"
 msgid "and External Contributors"
 msgstr ""
 
+msgctxt "URL link to github repository follows"
 msgid "Visit our"
 msgstr ""

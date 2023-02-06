@@ -88,12 +88,14 @@ for (const sourceFile of sourceFiles) {
       const translation = po.translations[context][enUs];
       if (translation) continue;
 
+      if (context.length > 0) console.log(`Adding ${language} translation for "${enUs}" (context: "${context}")`);
+
       po.translations[context][enUs] = {
         msgid: enUs,
+        msgctxt: context,
         msgstr: [''],
       };
 
-      console.log(`Added ${enUs} to ${language}.po`);
     }
   }
 }

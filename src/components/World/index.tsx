@@ -416,7 +416,7 @@ class World extends React.PureComponent<Props, State> {
       const hasReset = workingScene.nodes[nodeId].startingOrigin !== undefined;
       itemList.push(EditableList.Item.standard({
         component: Item,
-        props: { name: node.name[LocalizedString.EN_US], theme },
+        props: { name: LocalizedString.lookup(node.name, locale), theme },
         onReset: hasReset && nodeReset ? this.onNodeResetClick_(nodeId) : undefined,
         onSettings: node.editable && nodeSettings ? this.onItemSettingsClick_(nodeId) : undefined,
         onVisibilityChange: nodeVisiblity ? this.onItemVisibilityChange_(nodeId) : undefined,

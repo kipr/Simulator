@@ -36,13 +36,7 @@ import ScriptManager from './ScriptManager';
 import Geometry from './state/State/Scene/Geometry';
 import Camera from './state/State/Scene/Camera';
 
-import tr from '@i18n';
-
-const TEST = tr('test');
-
 export let ACTIVE_SPACE: Space;
-
-
 
 export class Space {
   private static instance: Space;

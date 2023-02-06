@@ -76,6 +76,8 @@ import AbstractRobot from '../AbstractRobot';
 import Motor from '../AbstractRobot/Motor';
 import DocumentationLocation from '../state/State/Documentation/DocumentationLocation';
 
+import tr from '@i18n';
+
 namespace Modal {
   export enum Type {
     Settings,
@@ -188,6 +190,7 @@ interface RootPrivateProps {
   scene: AsyncScene;
   challenge?: AsyncChallenge;
   challengeCompletion?: AsyncChallengeCompletion;
+  locale: LocalizedString.Language;
 
   onChallengeCompletionCreate: (challengeCompletion: ChallengeCompletion) => void;
   onChallengeCompletionSceneDiffChange: (sceneDiff: OuterObjectPatch<Scene>) => void;
@@ -353,7 +356,7 @@ class Root extends React.Component<Props, State> {
       layout: Layout.Side,
       modal: Modal.NONE,
       simulatorState: SimulatorState.STOPPED,
-      console: StyledText.text({ text: 'Welcome to the KIPR Simulator!\n', style: STDOUT_STYLE(DARK) }),
+      console: StyledText.text({ text: LocalizedString.lookup(tr('Welcome to the KIPR Simulator!\n'), props.locale), style: STDOUT_STYLE(DARK) }),
       theme: DARK,
       messages: [],
       settings: DEFAULT_SETTINGS,
@@ -646,7 +649,8 @@ class Root extends React.Component<Props, State> {
   };
 
   private onRunClick_ = () => {
-    const { state } = this;
+    const { props, state } = this;
+    const { locale } = props;
     const { console, theme } = state;
 
     const language = this.currentLanguage;
@@ -656,7 +660,7 @@ class Root extends React.Component<Props, State> {
       case 'c':
       case 'cpp': {
         let nextConsole: StyledText = StyledText.extend(console, StyledText.text({
-          text: `Compiling...\n`,
+          text: LocalizedString.lookup(tr('Compiling...\n'), locale),
           style: STDOUT_STYLE(this.state.theme)
         }));
     
@@ -683,7 +687,9 @@ class Root extends React.Component<Props, State> {
                 // Show success in console and start running the program
                 const haveWarnings = hasWarnings(messages);
                 nextConsole = StyledText.extend(nextConsole, StyledText.text({
-                  text: `Compilation succeeded${haveWarnings ? ' with warnings' : ''}!\n`,
+                  text: haveWarnings
+                    ? LocalizedString.lookup(tr('Compilation succeeded with warnings\n'), locale)
+                    : LocalizedString.lookup(tr('Compilation succeeded\n'), locale),
                   style: STDOUT_STYLE(this.state.theme)
                 }));
     
@@ -702,7 +708,7 @@ class Root extends React.Component<Props, State> {
                 }
     
                 nextConsole = StyledText.extend(nextConsole, StyledText.text({
-                  text: `Compilation failed.\n`,
+                  text: LocalizedString.lookup(tr('Compilation failed.\n'), locale),
                   style: STDERR_STYLE(this.state.theme)
                 }));
               }
@@ -716,7 +722,7 @@ class Root extends React.Component<Props, State> {
             .catch((e: unknown) => {
               window.console.error(e);
               nextConsole = StyledText.extend(nextConsole, StyledText.text({
-                text: 'Something went wrong during compilation.\n',
+                text: LocalizedString.lookup(tr('Something went wrong during compilation.\n'), locale),
                 style: STDERR_STYLE(this.state.theme)
               }));
     
@@ -1026,6 +1032,7 @@ export default connect((state: ReduxState, { match: { params: { challengeId } } 
     scene: Dict.unique(builder.scenes),
     challenge: Dict.unique(builder.challenges),
     challengeCompletion: Dict.unique(builder.challengeCompletions),
+    locale: state.i18n.locale,
   };
 }, (dispatch, { match: { params: { challengeId } } }: RootPublicProps) => ({
   onChallengeCompletionCreate: (challengeCompletion: ChallengeCompletion) => {

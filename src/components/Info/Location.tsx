@@ -6,10 +6,14 @@ import { ThemeProps } from '../theme';
 import ValueEdit from '../ValueEdit';
 import deepNeq from '../../deepNeq';
 import { ReferenceFrame, Rotation, Vector3 } from '../../unit-math';
+import LocalizedString from 'util/LocalizedString';
+
+import tr from '@i18n';
 
 export interface LocationProps extends ThemeProps, StyleProps {
   origin?: ReferenceFrame;
   onOriginChange: (origin: ReferenceFrame, modifyReferenceScene: boolean) => void;
+  locale: LocalizedString.Language;
 }
 
 type Props = LocationProps;
@@ -105,7 +109,7 @@ export default class Location extends React.PureComponent<Props> {
   
   render() {
     const { props } = this;
-    const { theme, style, className, origin } = props;
+    const { theme, style, className, origin, locale } = props;
 
     if (!origin) return null;
 
@@ -120,10 +124,10 @@ export default class Location extends React.PureComponent<Props> {
 
     return (
       <Container style={style} className={className}>
-        <StyledValueEdit value={Value.distance(origin?.position?.x || Distance.centimeters(0))} onValueChange={this.onXChange_} theme={theme} name='X' />
-        <StyledValueEdit value={Value.distance(origin?.position?.y || Distance.centimeters(0))} onValueChange={this.onYChange_} theme={theme} name='Y' />
-        <StyledValueEdit value={Value.distance(origin?.position?.z || Distance.centimeters(0))} onValueChange={this.onZChange_} theme={theme} name='Z' />
-        <StyledValueEdit value={Value.angle(euler.y)} onValueChange={this.onThetaChange_} theme={theme} name='Rotation' />
+        <StyledValueEdit value={Value.distance(origin?.position?.x || Distance.centimeters(0))} onValueChange={this.onXChange_} theme={theme} name={LocalizedString.lookup(tr('X'), locale)} />
+        <StyledValueEdit value={Value.distance(origin?.position?.y || Distance.centimeters(0))} onValueChange={this.onYChange_} theme={theme} name={LocalizedString.lookup(tr('Y'), locale)} />
+        <StyledValueEdit value={Value.distance(origin?.position?.z || Distance.centimeters(0))} onValueChange={this.onZChange_} theme={theme} name={LocalizedString.lookup(tr('Z'), locale)} />
+        <StyledValueEdit value={Value.angle(euler.y)} onValueChange={this.onThetaChange_} theme={theme} name={LocalizedString.lookup(tr('Rotation'), locale)} />
       </Container>
     );
   }

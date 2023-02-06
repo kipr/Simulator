@@ -19,9 +19,13 @@ import StructureBrief from './StructureBrief';
 import EnumerationBrief from './EnumerationBrief';
 import EnumerationDocumentation from '../../state/State/Documentation/EnumerationDocumentation';
 
+import tr from '@i18n';
+import LocalizedString from 'util/LocalizedString';
+
 export interface RootDocumentationProps extends ThemeProps {
   language: 'c' | 'python';
   documentation: Documentation;
+  locale: LocalizedString.Language;
   onDocumentationPush: (location: DocumentationLocation) => void;
 }
 
@@ -88,7 +92,7 @@ class RootDocumentation extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { theme, documentation, language } = props;
+    const { theme, documentation, language, locale } = props;
     const { query } = state;
 
     const sections: JSX.Element[] = [];
@@ -101,7 +105,7 @@ class RootDocumentation extends React.PureComponent<Props, State> {
 
     if (modules.length > 0) {
       sections.push((
-        <Section name='Modules' theme={theme} noBorder={first} key='modules'>
+        <Section name={LocalizedString.lookup(tr('Modules'), locale)} theme={theme} noBorder={first} key='modules'>
           {modules.map(([id, module]) => (
             <ModuleBrief
               theme={theme}
@@ -121,7 +125,7 @@ class RootDocumentation extends React.PureComponent<Props, State> {
 
     if (functions.length > 0) {
       sections.push((
-        <Section name='Functions' theme={theme} noBorder={first} key='functions'>
+        <Section name={LocalizedString.lookup(tr('Functions'), locale)} theme={theme} noBorder={first} key='functions'>
           {functions.map(([id, func]) => (
             <FunctionBrief
               language={language}
@@ -142,7 +146,7 @@ class RootDocumentation extends React.PureComponent<Props, State> {
 
     if (structures.length > 0) {
       sections.push((
-        <Section name='Structures' theme={theme} noBorder={first} key='structures'>
+        <Section name={LocalizedString.lookup(tr('Structures'), locale)} theme={theme} noBorder={first} key='structures'>
           {structures.map(([id, structure]) => (
             <StructureBrief
               language={language}
@@ -163,7 +167,7 @@ class RootDocumentation extends React.PureComponent<Props, State> {
 
     if (enumerations.length > 0) {
       sections.push((
-        <Section name='Enumerations' theme={theme} noBorder={first} key='enumerations'>
+        <Section name={LocalizedString.lookup(tr('Enumerations'), locale)} theme={theme} noBorder={first} key='enumerations'>
           {enumerations.map(([id, enumeration]) => (
             <EnumerationBrief
               language={language}
@@ -184,7 +188,7 @@ class RootDocumentation extends React.PureComponent<Props, State> {
 
     if (files.length > 0) {
       sections.push((
-        <Section name='Files' theme={theme} noBorder={first} key='files'>
+        <Section name={LocalizedString.lookup(tr('Files'), locale)} theme={theme} noBorder={first} key='files'>
           {files.map(([id, file]) => (
             <StyledFileBrief
               language={language}
@@ -206,7 +210,7 @@ class RootDocumentation extends React.PureComponent<Props, State> {
           type='text'
           onChange={this.onQueryChange_}
           value={query}
-          placeholder='Search...'
+          placeholder={LocalizedString.lookup(tr('Search...'), locale)}
         />
         {sections}
       </Container>

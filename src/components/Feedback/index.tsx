@@ -93,10 +93,10 @@ class FeedbackDialog extends React.PureComponent<Props, State> {
   };
 
   private createFeedbackTextArea = (getValue: (feedback: Feedback) => string, getUpdatedFeedback: (newValue: string) => Partial<Feedback>) => {
-    const { theme, feedback: currentFeedback, onFeedbackChange } = this.props;
+    const { theme, feedback: currentFeedback, onFeedbackChange, locale } = this.props;
 
     return (
-      <FeedbackTextArea theme={theme} placeholder="Give a helpful description of a problem you're facing, or a feature you'd like to request"
+      <FeedbackTextArea theme={theme} placeholder={LocalizedString.lookup(tr('Give a helpful description of a problem you\'re facing, or a feature you\'d like to request'), locale)}
         value={getValue(currentFeedback)} 
         onChange={(event) => {
           onFeedbackChange(getUpdatedFeedback(event.target.value));

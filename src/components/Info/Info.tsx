@@ -85,21 +85,7 @@ const SIMULATION_NAME = StyledText.text({
   text: 'Simulation',
 });
 
-const SERVOS_NAME = StyledText.text({
-  text: 'Servos',
-});
 
-const MOTOR_VELOCITIES_NAME = StyledText.text({
-  text: 'Motor Velocities',
-});
-
-const MOTOR_POSITIONS_NAME = StyledText.compose({
-  items: [
-    StyledText.text({
-      text: 'Motor Positions',
-    }),
-  ]
-});
 
 const ResetIcon = styled(Fa, ({ theme }: ThemeProps) => ({
   marginLeft: `${theme.itemPadding * 2}px`,
@@ -216,6 +202,22 @@ class Info extends React.PureComponent<Props, State> {
     const digitalName = StyledText.text({
       text: LocalizedString.lookup(tr('Digital Sensors'), locale),
     });
+
+    const servosName = StyledText.text({
+      text: LocalizedString.lookup(tr('Servos'), locale),
+    });
+    
+    const motorVelocitiesName = StyledText.text({
+      text: LocalizedString.lookup(tr('Motor Velocities'), locale),
+    });
+    
+    const motorPositionsName = StyledText.compose({
+      items: [
+        StyledText.text({
+          text: LocalizedString.lookup(tr('Motor Positions'), locale),
+        }),
+      ]
+    });
     
     return (
       <ScrollArea theme={theme} style={{ flex: '1 1' }}>
@@ -230,10 +232,11 @@ class Info extends React.PureComponent<Props, State> {
               theme={theme}
               origin={node.startingOrigin}
               onOriginChange={props.onOriginChange}
+              locale={locale}
             />
           </StyledSection>
           <StyledSection
-            name={SERVOS_NAME}
+            name={servosName}
             theme={theme}
             onCollapsedChange={this.onCollapsedChange_('servo_pos')}
             collapsed={collapsed['servo_pos']}
@@ -241,7 +244,7 @@ class Info extends React.PureComponent<Props, State> {
             {servos}
           </StyledSection>
           <StyledSection
-            name={MOTOR_VELOCITIES_NAME}
+            name={motorVelocitiesName}
             theme={theme}
             onCollapsedChange={this.onCollapsedChange_('motor_vel')}
             collapsed={collapsed['motor_vel']}
@@ -249,7 +252,7 @@ class Info extends React.PureComponent<Props, State> {
             {motorVelocities}
           </StyledSection>
           <StyledSection
-            name={MOTOR_POSITIONS_NAME}
+            name={motorPositionsName}
             theme={theme}
             onCollapsedChange={this.onCollapsedChange_('motor_pos')}
             collapsed={collapsed['motor_pos']}

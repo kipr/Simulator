@@ -10,9 +10,13 @@ import { ParameterName, Type } from './common';
 import FunctionPrototype from './FunctionPrototype';
 import { toPythonType } from './util';
 
+import tr from '@i18n';
+import LocalizedString from 'util/LocalizedString';
+
 export interface FunctionDocumentationProps extends StyleProps, ThemeProps {
   language: 'c' | 'python';
   func: FunctionDocumentationModel;
+  locale: LocalizedString.Language;
 
   onDocumentationPush: (location: DocumentationLocation) => void;
 }
@@ -42,7 +46,7 @@ const ParameterPrototype = styled('span', {
   fontSize: '1.2em',
 });
 
-const FunctionDocumentation = ({ language, func, style, className, theme }: Props) => {
+const FunctionDocumentation = ({ language, func, style, className, theme, locale }: Props) => {
   return (
     <Container className={className} style={style}>
       <StyledFunctionPrototype language={language} theme={theme} func={func} />
@@ -52,12 +56,12 @@ const FunctionDocumentation = ({ language, func, style, className, theme }: Prop
         </BriefDescription>
       )}
       {func.detailed_description && func.detailed_description.length > 0 && (
-        <Section name='Detailed Description' theme={theme}>
+        <Section name={LocalizedString.lookup(tr('Detailed Description'), locale)} theme={theme}>
           {func.detailed_description}
         </Section>
       )}
       {func.parameters.length > 0 && (
-        <Section name='Parameters' theme={theme}>
+        <Section name={LocalizedString.lookup(tr('Parameters'), locale)} theme={theme}>
           {language === 'c' ? (
             func.parameters.map((parameter, index) => (
               <ParameterContainer key={index} theme={theme}>
@@ -90,7 +94,7 @@ const FunctionDocumentation = ({ language, func, style, className, theme }: Prop
         </Section>
       )}
       {func.return_type !== 'void' && (
-        <Section name='Return Value' theme={theme}>
+        <Section name={LocalizedString.lookup(tr('Return Value'), locale)} theme={theme}>
           <ParameterPrototype>
             <Type $language={language}>{language === 'c' ? func.return_type : toPythonType(func.return_type)}</Type>
           </ParameterPrototype>
