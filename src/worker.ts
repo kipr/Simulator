@@ -113,6 +113,13 @@ const start = async (message: Protocol.Worker.StartRequest) => {
       }
       break;
     }
+    case 'scratch': {
+      printErr('Scratch is not yet supported');
+      ctx.postMessage({
+        type: 'stopped',
+      } as Protocol.Worker.StoppedRequest);
+      break;
+    }
   }
 };
 
