@@ -146,7 +146,7 @@ namespace LocalizedString {
     [UR_PK]: [EN_US]
   };
 
-  export const lookup = (localizedString: LocalizedString, locale: string) => {
+  export const lookup = (localizedString: LocalizedString, locale: Language) => {
     let currentLocale = locale;
     const fallbacks = FALLBACKS[locale] || [];
     let fallbackIndex = 0;
