@@ -24,6 +24,7 @@ import tr from '@i18n';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
 import LocalizedString from '../../util/LocalizedString';
+import ScratchEditor from './ScratchEditor';
 
 export enum EditorActionState {
   None,
@@ -176,8 +177,7 @@ export const IVYGATE_LANGUAGE_MAPPING: Dict<string> = {
   'ecmascript': 'javascript',
 };
 
-const DOCUMENTATION_LANGUAGE_MAPPING: { [key in ProgrammingLanguage | Script.Language]: 'c' | 'python' | undefined } = {
-  'ecmascript': undefined,
+const DOCUMENTATION_LANGUAGE_MAPPING: { [key in ProgrammingLanguage | Script.Language]?: 'c' | 'python' | undefined } = {
   'python': 'python',
   'c': 'c',
   'cpp': 'c',
@@ -240,8 +240,17 @@ class Editor extends React.PureComponent<Props, State> {
       language
     } = this.props;
 
-    return (
-      <Container theme={theme} style={style} className={className}>
+    let component: JSX.Element;
+    if (language === 'scratch') {
+      component = (
+        <ScratchEditor
+          code={code}
+          onCodeChange={onCodeChange}
+          theme={theme}
+        />
+      );
+    } else {
+      component = (
         <Ivygate
           ref={this.bindIvygate_}
           code={code}
@@ -250,6 +259,12 @@ class Editor extends React.PureComponent<Props, State> {
           onCodeChange={onCodeChange}
           autocomplete={autocomplete}
         />
+      );
+    }
+
+    return (
+      <Container theme={theme} style={style} className={className}>
+        {component}
       </Container>
       
     );

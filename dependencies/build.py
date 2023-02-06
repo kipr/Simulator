@@ -225,12 +225,25 @@ subprocess.run(
 print('Generating JSON documentation...')
 libkipr_c_documentation_json = f'{libkipr_build_c_dir}/documentation/json.json'
 subprocess.run(
-  [ 'python3', 'generate_doxygen_json.py', f'{libkipr_build_c_dir}/documentation/xml', libkipr_c_documentation_json ],
+  [ python, 'generate_doxygen_json.py', f'{libkipr_build_c_dir}/documentation/xml', libkipr_c_documentation_json ],
   cwd = working_dir,
   check = True
 )
 
+print('Building kipr-scratch...')
+kipr_scratch_path = working_dir / 'kipr-scratch'
+subprocess.run(
+  [ python, kipr_scratch_path / 'build.py' ],
+  cwd = kipr_scratch_path,
+  check = True
+)
 
+print('Packaging kipr-scratch...')
+subprocess.run(
+  [ python, kipr_scratch_path / 'package.py' ],
+  cwd = kipr_scratch_path,
+  check = True
+)
 
 print('Outputting results...')
 output = json.dumps({
