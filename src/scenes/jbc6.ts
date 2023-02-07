@@ -36,14 +36,14 @@ scene.addOnIntersectionListener('can9', (type, otherNodeId) => {
 }, 'blueGarage');
 
 
-// // When the can (can10) is intersecting the yellow garage, the garage glows
+// When the can (can10) is intersecting the yellow garage, the garage glows
 
-// scene.addOnIntersectionListener('can12', (type, otherNodeId) => {
-//   console.log('Can 12 placed!', type, otherNodeId);
-//   const visible = type === 'start';
-//   scene.setChallengeEventValue('can12Intersects', visible);
-//   setNodeVisible('circle12', visible);
-// }, 'circle12');
+scene.addOnIntersectionListener('can10', (type, otherNodeId) => {
+  console.log('Can 10 placed!', type, otherNodeId);
+  const visible = type === 'start';
+  scene.setChallengeEventValue('can10Intersects', visible);
+  setNodeVisible('yellowGarage', visible);
+}, 'yellowGarage');
 `;
 
 
@@ -110,6 +110,14 @@ export const JBC_6: Scene = {
     },
 
     blueGarage_geom: {
+      type: "box",
+      size: {
+        x: Distance.centimeters(16),
+        y: Distance.centimeters(0.1),
+        z: Distance.centimeters(16),
+      },
+    },
+    yellowGarage_geom: {
       type: "box",
       size: {
         x: Distance.centimeters(16),
@@ -186,19 +194,41 @@ export const JBC_6: Scene = {
       type: "object",
       geometryId: "blueGarage_geom",
       name: { [LocalizedString.EN_US]: "Blue Garage" },
-      visible: false,
+      visible: true,
       origin: {
         position: {
           x: Distance.centimeters(-13.4),
           y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(94),
+          z: Distance.centimeters(96),
         },
         orientation: {
 
           type: 'euler',
           x: Angle.degrees(0),
-          y: Angle.degrees(45),
+          y: Angle.degrees(-45),
           z: Angle.degrees(0),
+        },
+      },
+      material: {
+        type: "basic",
+        color: {
+          type: "color3",
+          color: Color.rgb(255, 255, 255),
+        },
+      },
+
+      
+    },
+    yellowGarage: {
+      type: "object",
+      geometryId: "yellowGarage_geom",
+      name: { [LocalizedString.EN_US]: "Yellow Garage" },
+      visible: false,
+      origin: {
+        position: {
+          x: Distance.centimeters(18.8),
+          y: Distance.centimeters(-6.9),
+          z: Distance.centimeters(78),
         },
       },
       material: {
@@ -214,7 +244,7 @@ export const JBC_6: Scene = {
     can9: {...createCanNode(9,{
       x: Distance.centimeters(0.3),
       y: Distance.centimeters(0),
-      z: Distance.centimeters(85),
+      z: Distance.centimeters(85.4),
     }), scriptIds: ["garageIntersects"]},
     can10: {...createCanNode(10), scriptIds: ["garageIntersects"]},
   },
