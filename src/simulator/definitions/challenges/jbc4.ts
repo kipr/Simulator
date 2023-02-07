@@ -47,114 +47,24 @@ export default {
       description: { [LocalizedString.EN_US]: "Robot reentered starting box" },
     },
 
-    rightSide4: {
-      name: { [LocalizedString.EN_US]: "Robot Passed Right Side" },
+    figureEight: {
+      name: { [LocalizedString.EN_US]: "Robot Figure Eight" },
       description: {
-        [LocalizedString.EN_US]: "Robot passed right side of can 4",
-      },
-    },
-
-    rightSide9: {
-      name: { [LocalizedString.EN_US]: "Robot Passed Right Side" },
-      description: {
-        [LocalizedString.EN_US]: "Robot passed right side of can 9",
-      },
-    },
-
-    middleCheck: {
-      name: { [LocalizedString.EN_US]: "Robot Passed Middle" },
-      description: {
-        [LocalizedString.EN_US]: "Robot passed between cans 4 and 9",
-      },
-    },
-
-    topSide: {
-      name: { [LocalizedString.EN_US]: "Robot Passed Top Side" },
-      description: {
-        [LocalizedString.EN_US]: "Robot passed top side of can 9",
-      },
-    },
-
-    leftSide4: {
-      name: { [LocalizedString.EN_US]: "Robot Passed Left" },
-      description: {
-        [LocalizedString.EN_US]: "Robot passed left side of can 4",
-      },
-    },
-    leftSide9: {
-      name: { [LocalizedString.EN_US]: "Robot Passed Left" },
-      description: {
-        [LocalizedString.EN_US]: "Robot passed left side of can 9",
+        [LocalizedString.EN_US]: "Robot did a figure eight around cans 4 and 9",
       },
     },
   },
   success: {
     exprs: {
-      //Passing side events
-      rightSide4: {
+      //Figure Eight Event
+      figureEight: {
         type: Expr.Type.Event,
-        eventId: "rightSide4",
+        eventId: "figureEight",
       },
-      rightSide4Once: {
+      figureEightOnce: {
         type: Expr.Type.Once,
-        argId: "rightSide4",
+        argId: "figureEight",
       },
-      rightSide9: {
-        type: Expr.Type.Event,
-        eventId: "rightSide9",
-      },
-      rightSide9Once: {
-        type: Expr.Type.Once,
-        argId: "rightSide9",
-      },
-      leftSide4: {
-        type: Expr.Type.Event,
-        eventId: "leftSide4",
-      },
-      leftSide4Once: {
-        type: Expr.Type.Once,
-        argId: "leftSide4",
-      },
-      leftSide9: {
-        type: Expr.Type.Event,
-        eventId: "leftSide9",
-      },
-      leftSide9Once: {
-        type: Expr.Type.Once,
-        argId: "leftSide9",
-      },
-      middleCheck: {
-        type: Expr.Type.Event,
-        eventId: "middleCheck",
-      },
-      middleCheckOnce: {
-        type: Expr.Type.Once,
-        argId: "middleCheck",
-      },
-      topSide: {
-        type: Expr.Type.Event,
-        eventId: "topSide",
-      },
-      topSideOnce: {
-        type: Expr.Type.Once,
-        argId: "topSide",
-      },
-
-
-
-
-      left4ThenMiddle: {
-        type: Expr.Type.And,
-        argIds: ["leftSide4Once", "middleCheckOnce"],
-      },
-
-      left4MiddleRight9: {
-        type: Expr.Type.And,
-        argIds: ["left4ThenMiddle", "rightSide9Once"],
-      },
-    
-      
-      
 
       // Intersects Events
       can4Intersects: {
@@ -212,13 +122,7 @@ export default {
       //Success Logic = Can A upright, intersects and touched
       completion: {
         type: Expr.Type.And,
-        argIds: [
-          "IntersectsUpright4",
-          "IntersectsUpright9",
-          "startingBox",
-          "left4ThenMiddle"
-          
-        ],
+        argIds: ["IntersectsUpright4", "IntersectsUpright9", "startingBox","figureEightOnce"],
       },
     },
     rootId: "completion",

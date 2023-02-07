@@ -57,48 +57,63 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 `;
 
 const passedSide = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  switch(otherNodeId){
-    case 'leftCan4':
-      console.log('Robot passed the left side of can 4!', type, otherNodeId);
-      if(scene.programStatus === 'running'){
-        scene.setChallengeEventValue('leftSide4', type === 'start');
-      }
-      break;
-    case 'middle':
-      console.log('Robot passed between cans 4 and 9!', type, otherNodeId);
-      if(scene.programStatus === 'running'){
-        scene.setChallengeEventValue('middleCheck', type === 'start');
-      }
-      break;
-    // case 'leftSideCan':
-    //   console.log('Robot passed the left side of the can!', type, otherNodeId);
-    //   if(scene.programStatus === 'running'){
-    //     scene.setChallengeEventValue('leftSide', type === 'start');
-    //   }
-    //   break;
-  }
-}, ['leftCan4','middle']);
+
+let count = 0;
+let position = 0;
+scene.onBind = nodeId => {
+  
+  scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
+   
+    if(otherNodeId == "startBox"){
+      count = 0;
+      position = 0;
+    }
+
+    if(type === "start"){
+      position++;
+      console.log(count + ":" + otherNodeId + ":" + type + ":Position:" +position );
+    }
+    
+    //Sets values for second crossing in the middle
+    if(count == 2 && (otherNodeId == "n1")){ 
+      count++;
+      position = 3;
+      console.log(count + ":" + otherNodeId + ":" + type);
+    }
+    if(type==="start" && (otherNodeId == "n" +position)){
+      count++;
+      console.log(count + ":" + otherNodeId + ":" + type);
+     
+    }
+
+    //Passed three checkmarks and recently passed the middle checkmark
+    if(count == 3 && otherNodeId == "n1"){
+      scene.setChallengeEventValue('figureEight', true);
+    }
+    else{
+      scene.setChallengeEventValue('figureEight', false);
+    }
+  
+    if(position == 0 ){
+      count = 0;
+    }
+    
+    
+  }, ['startBox', 'n1', 'n2']);
+};
 
 `;
 const uprightCans = `
 // When a can is standing upright, the upright condition is met.
 
-// let startTime = Date.now();
 const EULER_IDENTITY = Rotation.Euler.identity();
-// const startingOrientationInv = (nodeId) => Quaternion.inverse(Rotation.toRawQuaternion(scene.nodes[nodeId].startingOrigin.orientation || EULER_IDENTITY));
 const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3.dot(Vector3.applyQuaternion(Vector3.Y, Rotation.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3.Y));
 
-
 scene.addOnRenderListener(() => {
-  // const currTime = Date.now();
-  // const timeDiff = currTime - startTime;
+ 
   const upright4 = yAngle('can4') < 5;
   const upright9 = yAngle('can9') < 5;
-  // if(timeDiff > 1000) {
-  //   console.log('can6 angle: ', yAngle('can6'));
-  //   startTime = currTime;
-  // }
+  
   scene.setChallengeEventValue('can4Upright', upright4);
   scene.setChallengeEventValue('can9Upright', upright9);
 });
@@ -147,7 +162,7 @@ export const JBC_4: Scene = {
       },
     },
 
-    leftCan4_geom:{
+    leftCan4_geom: {
       type: "box",
       size: {
         x: Distance.centimeters(150),
@@ -155,7 +170,7 @@ export const JBC_4: Scene = {
         z: Distance.centimeters(5),
       },
     },
-    middle_geom:{
+    middle_geom: {
       type: "box",
       size: {
         x: Distance.centimeters(-1),
@@ -163,7 +178,23 @@ export const JBC_4: Scene = {
         z: Distance.centimeters(30),
       },
     },
-    rightCan9_geom:{
+    rightCan9_geom: {
+      type: "box",
+      size: {
+        x: Distance.centimeters(150),
+        y: Distance.centimeters(1),
+        z: Distance.centimeters(5),
+      },
+    },
+    topCan9_geom: {
+      type: "box",
+      size: {
+        x: Distance.centimeters(-1),
+        y: Distance.centimeters(-8),
+        z: Distance.centimeters(50),
+      },
+    },
+    rightCan4_geom: {
       type: "box",
       size: {
         x: Distance.centimeters(150),
@@ -236,7 +267,6 @@ export const JBC_4: Scene = {
       },
     },
 
-
     startBox: {
       type: "object",
       geometryId: "startBox_geom",
@@ -257,29 +287,7 @@ export const JBC_4: Scene = {
         },
       },
     },
-
-
-    leftCan4: {
-      type: "object",
-      geometryId: "leftCan4_geom",
-      name: { [LocalizedString.EN_US]: "Left of Can 4" },
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(50),
-          y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(42.7),
-        },
-      },
-      material: {
-        type: "pbr",
-        emissive: {
-          type: "color3",
-          color: Color.rgb(255, 255, 255),
-        },
-      },
-    },
-    middle: {
+    n1: {
       type: "object",
       geometryId: "middle_geom",
       name: { [LocalizedString.EN_US]: "Between cans 4 and 9" },
@@ -299,16 +307,17 @@ export const JBC_4: Scene = {
         },
       },
     },
-    rightCan9: {
+  
+    n2: {
       type: "object",
-      geometryId: "rightCan9_geom",
-      name: { [LocalizedString.EN_US]: "Right side of can 9" },
+      geometryId: "topCan9_geom",
+      name: { [LocalizedString.EN_US]: "Top side of can 9" },
       visible: true,
       origin: {
         position: {
           x: Distance.centimeters(0),
           y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(70),
+          z: Distance.centimeters(115),
         },
       },
       material: {
@@ -320,9 +329,8 @@ export const JBC_4: Scene = {
       },
     },
 
- 
-
-    can4: {...createCanNode(4),scriptIds: ["passedSide"]},
-    can9: {...createCanNode(9),scriptIds: ["passedSide"]},
+    
+    can4: { ...createCanNode(4) },
+    can9: { ...createCanNode(9), scriptIds: ["passedSide"] },
   },
 };
