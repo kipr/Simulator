@@ -207,3 +207,4 @@ export const JBC_6: Scene = {
     can10: createCanNode(10),
   },
 };
+

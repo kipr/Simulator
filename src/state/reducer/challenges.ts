@@ -21,7 +21,10 @@ import jbc6c from "../../challenges/jbc6c";
 import jbc1 from "../../challenges/jbc1";
 import jbc2 from "../../challenges/jbc2";
 import jbc2b from "../../challenges/jbc2b";
+import jbc2c from "../../challenges/jbc2c";
+import jbc4 from "../../challenges/jbc4";
 import jbc6 from "../../challenges/jbc6";
+import jbc7 from "../../challenges/jbc7";
 
 
 export namespace ChallengesAction {
@@ -147,9 +150,21 @@ const DEFAULT_CHALLENGES: Challenges = {
     value: jbc2b,
     brief: ChallengeBrief.fromChallenge(jbc2b),
   }),
+  'jbc2c': Async.loaded({
+    value: jbc2c,
+    brief: ChallengeBrief.fromChallenge(jbc2c),
+  }),
+  'jbc4': Async.loaded({
+    value: jbc4,
+    brief: ChallengeBrief.fromChallenge(jbc4),
+  }),
   'jbc6': Async.loaded({
     value: jbc6,
     brief: ChallengeBrief.fromChallenge(jbc6),
+  }),
+  'jbc7': Async.loaded({
+    value: jbc7,
+    brief: ChallengeBrief.fromChallenge(jbc7),
   })
 };
 

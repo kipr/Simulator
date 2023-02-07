@@ -76,7 +76,7 @@ class ScriptManager {
   onSelectedNodeIdChange?: (id: string) => void;
 
   onChallengeSetEventValue?: (eventId: string, value: boolean) => void;
-
+  onChallengeGetEventValue?: (eventId: string, value: boolean) => boolean;
   private programStatus_: 'running' | 'stopped' = 'stopped';
   get programStatus() { return this.programStatus_; }
   set programStatus(status: 'running' | 'stopped') {
@@ -584,8 +584,16 @@ namespace ScriptManager {
     setChallengeEventValue(eventId: string, value: boolean) {
       if (!this.manager_.onChallengeSetEventValue) return;
       this.manager_.onChallengeSetEventValue(eventId, value);
+      this.getChallengeEventValue(eventId,value);
+    }
+
+    getChallengeEventValue(eventId: string, value: boolean) {
+      if (!this.manager_.onChallengeGetEventValue) return;
+      return value;
     }
   }
+
+
 }
 
 export default ScriptManager;
