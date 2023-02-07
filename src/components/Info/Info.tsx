@@ -18,18 +18,25 @@ import Motor from '../../AbstractRobot/Motor';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
 import Async from '../../state/State/Async';
 
+import tr from '@i18n';
+import LocalizedString from '../../util/LocalizedString';
 
-export interface InfoProps extends StyleProps, ThemeProps {
+
+export interface InfoPublicProps extends StyleProps, ThemeProps {
   node: Node.Robot;
 
   onOriginChange: (origin: ReferenceFrame) => void;
+}
+
+interface InfoPrivateProps {
+  locale: LocalizedString.Language;
 }
 
 interface InfoState {
   collapsed: { [section: string]: boolean }
 }
 
-type Props = InfoProps;
+type Props = InfoPublicProps & InfoPrivateProps;
 type State = InfoState;
 
 const Row = styled('div', (props: ThemeProps) => ({
@@ -78,29 +85,7 @@ const SIMULATION_NAME = StyledText.text({
   text: 'Simulation',
 });
 
-const SERVOS_NAME = StyledText.text({
-  text: 'Servos',
-});
 
-const MOTOR_VELOCITIES_NAME = StyledText.text({
-  text: 'Motor Velocities',
-});
-
-const MOTOR_POSITIONS_NAME = StyledText.compose({
-  items: [
-    StyledText.text({
-      text: 'Motor Positions',
-    }),
-  ]
-});
-
-const ANALOG_NAME = StyledText.text({
-  text: 'Analog Sensors',
-});
-
-const DIGITAL_NAME = StyledText.text({
-  text: 'Digital Sensors',
-});
 
 const ResetIcon = styled(Fa, ({ theme }: ThemeProps) => ({
   marginLeft: `${theme.itemPadding * 2}px`,
@@ -142,6 +127,7 @@ class Info extends React.PureComponent<Props, State> {
       className,
       theme,
       node,
+      locale
     } = props;
 
     if (!node || node.type !== 'robot') return null;
@@ -151,7 +137,7 @@ class Info extends React.PureComponent<Props, State> {
     const locationName = StyledText.compose({
       items: [
         StyledText.text({
-          text: 'Start Location',
+          text: LocalizedString.lookup(tr('Start Location'), locale),
         }),
         StyledText.component({
           component: ResetIcon,
@@ -180,13 +166,13 @@ class Info extends React.PureComponent<Props, State> {
       const motor = node.state.motors[i];
       motorVelocities.push(
         <Row key={`motor-velocity-${i}`} theme={theme}>
-          <SensorWidget value={motor.mode !== Motor.Mode.Pwm ? motor.speedGoal : 0} name={`motor ${i}`} plotTitle='Motor Velocity Plot' theme={theme} />
+          <SensorWidget value={motor.mode !== Motor.Mode.Pwm ? motor.speedGoal : 0} name={`motor ${i}`} plotTitle={LocalizedString.lookup(tr('Motor Velocity Plot'), locale)} theme={theme} />
         </Row>
       );
 
       motorPositions.push(
         <Row key={`motor-pos-${i}`} theme={theme}>
-          <SensorWidget value={motor.position} name={`get_motor_position_counter(${i})`} plotTitle='Motor Position Plot' theme={theme} />
+          <SensorWidget value={motor.position} name={`get_motor_position_counter(${i})`} plotTitle={LocalizedString.lookup(tr('Motor Position Plot'), locale)} theme={theme} />
         </Row>
       );
     }
@@ -195,7 +181,7 @@ class Info extends React.PureComponent<Props, State> {
     for (let i = 0; i < 6; ++i) {
       analogSensors.push(
         <Row key={`analog-${i}`} theme={theme}>
-          <SensorWidget value={node.state.analogValues[i]} name={`analog(${i})`} plotTitle='Analog Sensor Plot' theme={theme} />
+          <SensorWidget value={node.state.analogValues[i]} name={`analog(${i})`} plotTitle={LocalizedString.lookup(tr('Analog Sensor Plot'), locale)} theme={theme} />
         </Row>
       );
     }
@@ -204,10 +190,34 @@ class Info extends React.PureComponent<Props, State> {
     for (let i = 0; i < 6; ++i) {
       digitalSensors.push(
         <Row key={`digital-${i}`} theme={theme}>
-          <SensorWidget value={node.state.digitalValues[i]} name={`digital(${i})`} plotTitle='Digital Sensor Plot' theme={theme} />
+          <SensorWidget value={node.state.digitalValues[i]} name={`digital(${i})`} plotTitle={LocalizedString.lookup(tr('Digital Sensor Plot'), locale)} theme={theme} />
         </Row>
       );
     }
+
+    const analogName = StyledText.text({
+      text: LocalizedString.lookup(tr('Analog Sensors'), locale),
+    });
+    
+    const digitalName = StyledText.text({
+      text: LocalizedString.lookup(tr('Digital Sensors'), locale),
+    });
+
+    const servosName = StyledText.text({
+      text: LocalizedString.lookup(tr('Servos'), locale),
+    });
+    
+    const motorVelocitiesName = StyledText.text({
+      text: LocalizedString.lookup(tr('Motor Velocities'), locale),
+    });
+    
+    const motorPositionsName = StyledText.compose({
+      items: [
+        StyledText.text({
+          text: LocalizedString.lookup(tr('Motor Positions'), locale),
+        }),
+      ]
+    });
     
     return (
       <ScrollArea theme={theme} style={{ flex: '1 1' }}>
@@ -222,10 +232,11 @@ class Info extends React.PureComponent<Props, State> {
               theme={theme}
               origin={node.startingOrigin}
               onOriginChange={props.onOriginChange}
+              locale={locale}
             />
           </StyledSection>
           <StyledSection
-            name={SERVOS_NAME}
+            name={servosName}
             theme={theme}
             onCollapsedChange={this.onCollapsedChange_('servo_pos')}
             collapsed={collapsed['servo_pos']}
@@ -233,7 +244,7 @@ class Info extends React.PureComponent<Props, State> {
             {servos}
           </StyledSection>
           <StyledSection
-            name={MOTOR_VELOCITIES_NAME}
+            name={motorVelocitiesName}
             theme={theme}
             onCollapsedChange={this.onCollapsedChange_('motor_vel')}
             collapsed={collapsed['motor_vel']}
@@ -241,7 +252,7 @@ class Info extends React.PureComponent<Props, State> {
             {motorVelocities}
           </StyledSection>
           <StyledSection
-            name={MOTOR_POSITIONS_NAME}
+            name={motorPositionsName}
             theme={theme}
             onCollapsedChange={this.onCollapsedChange_('motor_pos')}
             collapsed={collapsed['motor_pos']}
@@ -249,7 +260,7 @@ class Info extends React.PureComponent<Props, State> {
             {motorPositions}
           </StyledSection>
           <StyledSection
-            name={ANALOG_NAME}
+            name={analogName}
             theme={theme}
             onCollapsedChange={this.onCollapsedChange_('analog')}
             collapsed={collapsed['analog']}
@@ -257,7 +268,7 @@ class Info extends React.PureComponent<Props, State> {
             {analogSensors}
           </StyledSection>
           <StyledSection
-            name={DIGITAL_NAME}
+            name={digitalName}
             theme={theme}
             onCollapsedChange={this.onCollapsedChange_('digital')}
             collapsed={collapsed['digital']}
@@ -270,4 +281,6 @@ class Info extends React.PureComponent<Props, State> {
   }
 }
 
-export default Info;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale
+}))(Info) as React.ComponentType<InfoPublicProps>;

@@ -72,7 +72,42 @@ namespace LocalizedString {
   // Urdu
   export const UR_PK = 'ur-PK';
 
-  export const FALLBACKS: { [locale: string]: string[] } = {
+  export type Language = (
+    typeof EN_US | typeof EN_UK |
+    typeof ZH_CN | typeof ZH_TW |
+    typeof JA_JP |
+    typeof KO_KR |
+    typeof HI_IN |
+    typeof ES_ES | typeof ES_MX |
+    typeof FR_FR |
+    typeof DE_DE |
+    typeof IT_IT |
+    typeof PT_BR | typeof PT_PT |
+    typeof RU_RU |
+    typeof AR_SA |
+    typeof TR_TR |
+    typeof PL_PL |
+    typeof NL_NL |
+    typeof SV_SE |
+    typeof DA_DK |
+    typeof NO_NO |
+    typeof FI_FI |
+    typeof HU_HU |
+    typeof CS_CZ |
+    typeof SK_SK |
+    typeof RO_RO |
+    typeof BG_BG |
+    typeof EL_GR |
+    typeof HE_IL |
+    typeof TH_TH |
+    typeof VI_VN |
+    typeof ID_ID |
+    typeof MS_MY |
+    typeof FA_IR |
+    typeof UR_PK
+  );
+
+  export const FALLBACKS: { [locale in Language]: Language[] } = {
     [EN_US]: [],
     [EN_UK]: [EN_US],
     [ZH_CN]: [EN_US],
@@ -111,7 +146,7 @@ namespace LocalizedString {
     [UR_PK]: [EN_US]
   };
 
-  export const lookup = (localizedString: LocalizedString, locale: string) => {
+  export const lookup = (localizedString: LocalizedString, locale: Language) => {
     let currentLocale = locale;
     const fallbacks = FALLBACKS[locale] || [];
     let fallbackIndex = 0;
@@ -122,6 +157,84 @@ namespace LocalizedString {
     }
 
     return localizedString[currentLocale];
+  };
+
+  export const SUPPORTED_LANGUAGES = [
+    LocalizedString.AR_SA,
+    LocalizedString.BG_BG,
+    LocalizedString.CS_CZ,
+    LocalizedString.DA_DK,
+    LocalizedString.DE_DE,
+    LocalizedString.EL_GR,
+    LocalizedString.EN_UK,
+    LocalizedString.EN_US,
+    LocalizedString.ES_ES,
+    LocalizedString.ES_MX,
+    LocalizedString.FA_IR,
+    LocalizedString.FI_FI,
+    LocalizedString.FR_FR,
+    LocalizedString.HE_IL,
+    LocalizedString.HI_IN,
+    LocalizedString.HU_HU,
+    LocalizedString.ID_ID,
+    LocalizedString.IT_IT,
+    LocalizedString.JA_JP,
+    LocalizedString.KO_KR,
+    LocalizedString.MS_MY,
+    LocalizedString.NL_NL,
+    LocalizedString.NO_NO,
+    LocalizedString.PL_PL,
+    LocalizedString.PT_BR,
+    LocalizedString.PT_PT,
+    LocalizedString.RO_RO,
+    LocalizedString.RU_RU,
+    LocalizedString.SK_SK,
+    LocalizedString.SV_SE,
+    LocalizedString.TH_TH,
+    LocalizedString.TR_TR,
+    LocalizedString.UR_PK,
+    LocalizedString.VI_VN,  
+    LocalizedString.ZH_CN,
+    LocalizedString.ZH_TW,
+  ];
+
+  export const NATIVE_LOCALE_NAMES: { [locale in Language]: string } = {
+    [LocalizedString.AR_SA]: 'العربية',
+    [LocalizedString.BG_BG]: 'български',
+    [LocalizedString.CS_CZ]: 'čeština',
+    [LocalizedString.DA_DK]: 'dansk',
+    [LocalizedString.DE_DE]: 'Deutsch',
+    [LocalizedString.EL_GR]: 'ελληνικά',
+    [LocalizedString.EN_UK]: 'English (UK)',
+    [LocalizedString.EN_US]: 'English (US)',
+    [LocalizedString.ES_ES]: 'español',
+    [LocalizedString.ES_MX]: 'español (MX)',
+    [LocalizedString.FA_IR]: 'فارسی',
+    [LocalizedString.FI_FI]: 'suomi',
+    [LocalizedString.FR_FR]: 'français',
+    [LocalizedString.HE_IL]: 'עברית',
+    [LocalizedString.HI_IN]: 'हिन्दी',
+    [LocalizedString.HU_HU]: 'magyar',
+    [LocalizedString.ID_ID]: 'Bahasa Indonesia',
+    [LocalizedString.IT_IT]: 'italiano',
+    [LocalizedString.JA_JP]: '日本語',
+    [LocalizedString.KO_KR]: '한국어',
+    [LocalizedString.MS_MY]: 'Bahasa Melayu',
+    [LocalizedString.NL_NL]: 'Nederlands',
+    [LocalizedString.NO_NO]: 'norsk',
+    [LocalizedString.PL_PL]: 'polski',
+    [LocalizedString.PT_BR]: 'português (BR)',
+    [LocalizedString.PT_PT]: 'português (PT)',
+    [LocalizedString.RO_RO]: 'română',
+    [LocalizedString.RU_RU]: 'русский',
+    [LocalizedString.SK_SK]: 'slovenčina',
+    [LocalizedString.SV_SE]: 'svenska',
+    [LocalizedString.TH_TH]: 'ไทย',
+    [LocalizedString.TR_TR]: 'Türkçe',
+    [LocalizedString.UR_PK]: 'اردو',
+    [LocalizedString.VI_VN]: 'Tiếng Việt',
+    [LocalizedString.ZH_CN]: '简体中文',
+    [LocalizedString.ZH_TW]: '繁體中文',
   };
 }
 

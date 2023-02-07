@@ -20,6 +20,9 @@ jobs:
       # See https://github.com/yarnpkg/yarn/issues/7212
       run: yarn install --cache-folder ./.yarncache
       working-directory: simulator
+    - name: Build i18n
+      run: yarn run build-i18n
+      working-directory: simulator
     - name: Build production bundle
       run: yarn build
       working-directory: simulator

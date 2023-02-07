@@ -12,9 +12,13 @@ import FunctionBrief from './FunctionBrief';
 import StructureBrief from './StructureBrief';
 import { toPythonType } from './util';
 
+import tr from '@i18n';
+import LocalizedString from '../../util/LocalizedString';
+
 export interface StructureDocumentationProps extends StyleProps, ThemeProps {
   language: 'c' | 'python';
   structure: StructureDocumentationModel;
+  locale: LocalizedString.Language;
 
   onDocumentationPush: (location: DocumentationLocation) => void;
 }
@@ -50,7 +54,8 @@ const StructureDocumentation = ({
   onDocumentationPush,
   style,
   className,
-  theme
+  theme,
+  locale
 }: Props) => {
   return (
     <Container className={className} style={style}>
@@ -61,12 +66,12 @@ const StructureDocumentation = ({
         </BriefDescription>
       )}
       {structure.detailed_description && structure.detailed_description.length > 0 && (
-        <Section name='Detailed Description' theme={theme}>
+        <Section name={LocalizedString.lookup(tr('Detailed Description'), locale)} theme={theme}>
           {structure.detailed_description}
         </Section>
       )}
       {structure.members.length > 0 && (
-        <Section name='Fields' theme={theme}>
+        <Section name={LocalizedString.lookup(tr('Fields'), locale)} theme={theme}>
           {language === 'c' ? (
             structure.members.map((member, index) => (
               <FieldContainer key={index} theme={theme}>

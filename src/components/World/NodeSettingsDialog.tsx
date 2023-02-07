@@ -9,10 +9,13 @@ import Node from '../../state/State/Scene/Node';
 import Scene from "../../state/State/Scene";
 import Geometry from "../../state/State/Scene/Geometry";
 import LocalizedString from '../../util/LocalizedString';
+import tr from '@i18n';
+import { connect } from 'react-redux';
+import { State as ReduxState } from '../../state';
 
 export type NodeSettingsAcceptance = Node;
 
-export interface NodeSettingsDialogProps extends ThemeProps {
+export interface NodeSettingsDialogPublicProps extends ThemeProps {
   node: Node;
   id: string;
   scene: Scene;
@@ -27,10 +30,14 @@ export interface NodeSettingsDialogProps extends ThemeProps {
   onClose: () => void;
 }
 
+interface NodeSettingsDialogPrivateProps {
+  locale: LocalizedString.Language;
+}
+
 interface NodeSettingsDialogState {
 }
 
-type Props = NodeSettingsDialogProps;
+type Props = NodeSettingsDialogPublicProps & NodeSettingsDialogPrivateProps;
 type State = NodeSettingsDialogState;
 
 const StyledScrollArea = styled(ScrollArea, (props: ThemeProps) => ({
@@ -47,10 +54,10 @@ class NodeSettingsDialog extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { theme, onClose, onChange, onOriginChange, node, id, scene, onGeometryAdd, onGeometryChange, onGeometryRemove } = props;
+    const { theme, onClose, onChange, onOriginChange, node, id, scene, onGeometryAdd, onGeometryChange, onGeometryRemove, locale } = props;
 
     return (
-      <Dialog theme={theme} name={`${LocalizedString.lookup(node.name, LocalizedString.EN_US) || ''} Settings`} onClose={onClose}>
+      <Dialog theme={theme} name={`${LocalizedString.lookup(node.name, locale) || ''} ${LocalizedString.lookup(tr('Settings'), locale)}`} onClose={onClose}>
         <StyledScrollArea theme={theme}>
           <NodeSettings
             theme={theme}
@@ -69,4 +76,6 @@ class NodeSettingsDialog extends React.PureComponent<Props, State> {
   }
 }
 
-export default NodeSettingsDialog;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(NodeSettingsDialog) as React.ComponentType<NodeSettingsDialogPublicProps>;

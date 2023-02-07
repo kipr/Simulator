@@ -6,6 +6,8 @@ import Script from '../state/State/Scene/Script';
 import { Distance } from "../util";
 import LocalizedString from '../util/LocalizedString';
 
+import tr from '@i18n';
+
 import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
 // import jbc6c from "../challenges/jbc6c";
 
@@ -99,8 +101,8 @@ scene.addOnRenderListener(() => {
 
 export const JBC_6C: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 6C' },
-  description: { [LocalizedString.EN_US]: `Junior Botball Challenge 6C: Empty the Garage` },
+  name: tr('JBC 6C'),
+  description: tr('Junior Botball Challenge 6C: Empty the Garage'),
   scripts: {
     'circleIntersects': Script.ecmaScript('Circle Intersects', circleIntersects),
     'surfaceIntersect': Script.ecmaScript('Surface Intersect', surfaceIntersect),
@@ -137,7 +139,7 @@ export const JBC_6C: Scene = {
     'circle2': {
       type: 'object',
       geometryId: 'circle2_geom',
-      name: { [LocalizedString.EN_US]: 'Circle 2' },
+      name: tr('Circle 2'),
       visible: false,
       origin: {
         position: {
@@ -157,7 +159,7 @@ export const JBC_6C: Scene = {
     'circle9': {
       type: 'object',
       geometryId: 'circle9_geom',
-      name: { [LocalizedString.EN_US]: 'Circle 9' },
+      name: tr('Circle 9'),
       visible: false,
       origin: {
         position: {
@@ -177,7 +179,7 @@ export const JBC_6C: Scene = {
     'circle10': {
       type: 'object',
       geometryId: 'circle10_geom',
-      name: { [LocalizedString.EN_US]: 'Circle 10' },
+      name: tr('Circle 10'),
       visible: false,
       origin: {
         position: {
@@ -197,7 +199,7 @@ export const JBC_6C: Scene = {
     'mainSurface': {
       type: 'object',
       geometryId: 'mainSurface_geom',
-      name: { [LocalizedString.EN_US]: 'Mat Surface' },
+      name: tr('Mat Surface'),
       visible: false,
       origin: {
         position: {

@@ -1,4 +1,5 @@
 import { Size } from '../../components/Widget';
+import LocalizedString from '../../util/LocalizedString';
 import Dict from '../../Dict';
 import Async from "./Async";
 import { AsyncChallenge } from './Challenge';
@@ -60,4 +61,8 @@ export namespace DocumentationState {
     size: Size.MINIMIZED,
     language: 'c'
   };
+}
+
+export interface I18n {
+  locale: LocalizedString.Language;
 }

@@ -9,10 +9,14 @@ import Section from '../Section';
 import { ThemeProps } from '../theme';
 import FunctionBrief from './FunctionBrief';
 
+import tr from '@i18n';
+import LocalizedString from '../../util/LocalizedString';
+
 export interface FileDocumentationProps extends StyleProps, ThemeProps {
   language: 'c' | 'python';
   file: FileDocumentationModel;
   documentation: Documentation;
+  locale: LocalizedString.Language;
 
   onDocumentationPush: (location: DocumentationLocation) => void;
 }
@@ -30,11 +34,12 @@ const FileDocumentation = ({
   onDocumentationPush,
   style,
   className,
-  theme
+  theme,
+  locale
 }: Props) => {
   return (
     <Container className={className} style={style}>
-      <Section name='Functions' theme={theme}>
+      <Section name={LocalizedString.lookup(tr('Functions'), locale)} theme={theme}>
         {file.functions.map(id => (
           <FunctionBrief
             language={language}

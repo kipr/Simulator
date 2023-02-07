@@ -3,9 +3,11 @@ import Challenge from '../state/State/Challenge';
 import Expr from '../state/State/Challenge/Expr';
 import LocalizedString from '../util/LocalizedString';
 
+import tr from '@i18n';
+
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 6C' },
-  description: { [LocalizedString.EN_US]: 'Junior Botball Challenge 6C: Empty the Garage' },
+  name: tr('JBC Challenge 6C'),
+  description: tr('Junior Botball Challenge 6C: Empty the Garage'),
   author: {
     type: Author.Type.Organization,
     id: 'kipr'
@@ -18,40 +20,40 @@ export default {
   defaultLanguage: 'c',
   events: {
     canALifted: {
-      name: { [LocalizedString.EN_US]: 'Can A Lifted' },
-      description: { [LocalizedString.EN_US]: 'Can A picked up' },
+      name: tr('Can A Lifted'),
+      description: tr('Can A picked up')
     },
     canBLifted: {
-      name: { [LocalizedString.EN_US]: 'Can B Lifted' },
-      description: { [LocalizedString.EN_US]: 'Can B picked up' },
+      name: tr('Can B Lifted'),
+      description: tr('Can B picked up'),
     },
     canCLifted: {
-      name: { [LocalizedString.EN_US]: 'Can C Lifted' },
-      description: { [LocalizedString.EN_US]: 'Can C picked up' },
+      name: tr('Can C Lifted'),
+      description: tr('Can C picked up'),
     },
     canAPlaced: {
-      name: { [LocalizedString.EN_US]: 'Can A Placed' },
-      description: { [LocalizedString.EN_US]: 'Can A placed on circle 2' },
+      name: tr('Can A Placed'),
+      description: tr('Can A placed on circle 2'),
     },
     canBPlaced: {
-      name: { [LocalizedString.EN_US]: 'Can B Placed' },
-      description: { [LocalizedString.EN_US]: 'Can A placed on circle 9' },
+      name: tr('Can B Placed'),
+      description: tr('Can A placed on circle 9'),
     },
     canCPlaced: {
-      name: { [LocalizedString.EN_US]: 'Can C Placed' },
-      description: { [LocalizedString.EN_US]: 'Can A placed on circle 10' },
+      name: tr('Can C Placed'),
+      description: tr('Can A placed on circle 10'),
     },
     canAUpright: {
-      name: { [LocalizedString.EN_US]: 'Can A Upright' },
-      description: { [LocalizedString.EN_US]: 'Can A upright on circle 2' },
+      name: tr('Can A Upright'),
+      description: tr('Can A upright on circle 2'),
     },
     canBUpright: {
-      name: { [LocalizedString.EN_US]: 'Can B Upright' },
-      description: { [LocalizedString.EN_US]: 'Can B upright on circle 9' },
+      name: tr('Can B Upright'),
+      description: tr('Can B upright on circle 9'),
     },
     canCUpright: {
-      name: { [LocalizedString.EN_US]: 'Can C Upright' },
-      description: { [LocalizedString.EN_US]: 'Can C upright on circle 10' },
+      name: tr('Can C Upright'),
+      description: tr('Can C upright on circle 10'),
     },
   },
   success: {

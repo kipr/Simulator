@@ -159,7 +159,9 @@ const Title = styled('span', (props: ThemeProps & { $hasComponents: boolean }) =
   userSelect: 'none',
   paddingRight: props.$hasComponents ? `${props.theme.itemPadding}px` : undefined,
   marginRight: props.$hasComponents ? `${props.theme.itemPadding}px` : undefined,
-  borderRight: props.$hasComponents ? `1px solid ${props.theme.borderColor}` : undefined
+  borderRight: props.$hasComponents ? `1px solid ${props.theme.borderColor}` : undefined,
+  wordBreak: 'keep-all',
+  whiteSpace: 'nowrap',
 }));
 
 const sizeIcon = (size: Size): IconProp => {

@@ -20,7 +20,10 @@ import Dict from '../../Dict';
 import * as monaco from 'monaco-editor';
 import DocumentationLocation from '../../state/State/Documentation/DocumentationLocation';
 import { DocumentationAction } from '../../state/reducer';
+import tr from '@i18n';
 import { connect } from 'react-redux';
+import { State as ReduxState } from '../../state';
+import LocalizedString from '../../util/LocalizedString';
 
 export enum EditorActionState {
   None,
@@ -37,6 +40,10 @@ export interface EditorPublicProps extends StyleProps, ThemeProps {
   autocomplete: boolean;
 
   onDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python') => void;
+}
+
+interface EditorPrivateProps {
+  locale: LocalizedString.Language;
 }
 
 interface EditorState {
@@ -80,10 +87,12 @@ export type EditorBarTarget = EditorBarTarget.Robot;
 
 export const createEditorBarComponents = ({
   theme,
-  target
+  target,
+  locale
 }: {
   theme: Theme, 
   target: EditorBarTarget,
+  locale: LocalizedString.Language
 }) => {
   
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -106,7 +115,7 @@ export const createEditorBarComponents = ({
         children:
           <>
             <Fa icon={faIndent} />
-            {' Indent'}
+            {' '} {LocalizedString.lookup(tr('Indent'), locale)}
           </>
       }));
 
@@ -116,7 +125,7 @@ export const createEditorBarComponents = ({
         children:
           <>
             <Fa icon={faFileDownload} />
-            {' Download'}
+            {' '} {LocalizedString.lookup(tr('Download'), locale)}
           </>
       }));
 
@@ -126,7 +135,7 @@ export const createEditorBarComponents = ({
         children:
           <>
             <Fa icon={faArrowsRotate} />
-            {' Reset'}
+            {' '} {LocalizedString.lookup(tr('Reset'), locale)}
           </>
       }));
 
@@ -146,13 +155,15 @@ export const createEditorBarComponents = ({
       if (errors > 0) editorBar.push(BarComponent.create(ErrorCharm, {
         theme,
         count: errors,
-        onClick: target.onErrorClick
+        onClick: target.onErrorClick,
+        locale
       }));
 
       if (warnings > 0) editorBar.push(BarComponent.create(WarningCharm, {
         theme,
         count: warnings,
-        onClick: target.onErrorClick
+        onClick: target.onErrorClick,
+        locale
       }));
       break;
     }

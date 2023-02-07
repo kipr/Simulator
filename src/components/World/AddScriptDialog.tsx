@@ -20,13 +20,22 @@ import { Fa } from "../Fa";
 
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
+import LocalizedString from '../../util/LocalizedString';
+import { connect } from 'react-redux';
+import { State as ReduxState } from '../../state';
+import tr from '@i18n';
+
 export interface AddScriptAcceptance {
   script: Script;
 }
 
-export interface AddScriptDialogProps extends ThemeProps {
+export interface AddScriptDialogPublicProps extends ThemeProps {
   onAccept: (acceptance: AddScriptAcceptance) => void;
   onClose: () => void;
+}
+
+interface AddScriptDialogPrivateProps {
+  locale: LocalizedString.Language;
 }
 
 interface AddScriptDialogState {
@@ -34,7 +43,7 @@ interface AddScriptDialogState {
   script: Script;
 }
 
-type Props = AddScriptDialogProps;
+type Props = AddScriptDialogPublicProps & AddScriptDialogPrivateProps;
 type State = AddScriptDialogState;
 
 const InnerContainer = styled('div', () => ({
@@ -67,11 +76,11 @@ class AddScriptDialog extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { theme, onClose } = props;
+    const { theme, onClose, locale } = props;
     const { script, id } = state;
 
     return (
-      <Dialog theme={theme} name='Add Script' onClose={onClose}>
+      <Dialog theme={theme} name={LocalizedString.lookup(tr('Add Script'), locale)} onClose={onClose}>
         <InnerContainer>
           <ScriptSettings
             theme={theme}
@@ -81,11 +90,13 @@ class AddScriptDialog extends React.PureComponent<Props, State> {
           />
         </InnerContainer>
         <DialogBar theme={theme} onAccept={this.onAccept_}>
-          <Fa icon={faCheck} /> Accept
+          <Fa icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}
         </DialogBar>
       </Dialog>
     );
   }
 }
 
-export default AddScriptDialog;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(AddScriptDialog) as React.ComponentType<AddScriptDialogPublicProps>;

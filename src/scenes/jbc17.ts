@@ -4,10 +4,12 @@ import LocalizedString from '../util/LocalizedString';
 
 import { createBaseSceneSurfaceB } from './jbcBase';
 
+import tr from '@i18n';
+
 const baseScene = createBaseSceneSurfaceB();
 
 export const JBC_17: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 17' },
-  description: { [LocalizedString.EN_US]: 'Junior Botball Challenge 17: Walk the Line' },
+  name: tr('JBC 17'),
+  description: tr('Junior Botball Challenge 17: Walk the Line'),
 };

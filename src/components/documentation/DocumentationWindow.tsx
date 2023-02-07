@@ -24,6 +24,9 @@ import { FunctionName } from './common';
 import ModuleDocumentation from './ModuleDocumentation';
 import StructureDocumentation from './StructureDocumentation';
 
+import tr from '@i18n';
+import LocalizedString from '../../util/LocalizedString';
+
 namespace DragState {
   export interface None {
     type: 'none';
@@ -49,6 +52,7 @@ export interface DocumentationWindowPublicProps extends ThemeProps {
 
 interface DocumentationWindowPrivateProps {
   documentationState: DocumentationState;
+  locale: LocalizedString.Language;
 
   onDocumentationSizeChange: (size: Size) => void;
   onDocumentationPop: () => void;
@@ -172,6 +176,7 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
   render() {
     const { props, state } = this;
     const {
+      locale,
       theme,
       documentationState,
       onDocumentationPop,
@@ -217,7 +222,7 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
     return (
       <DocumentationRoot>
         <Widget
-          name='Documentation'
+          name={LocalizedString.lookup(tr('Documentation'), locale)}
           theme={theme}
           mode={mode}
           style={style}
@@ -234,6 +239,7 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
                   theme={theme}
                   onDocumentationPush={onDocumentationPush}
                   documentation={documentation}
+                  locale={locale}
                 />
               )}
               {locationStackTop && locationStackTop.type === DocumentationLocation.Type.Function && (
@@ -242,6 +248,7 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
                   func={documentation.functions[locationStackTop.id]}
                   onDocumentationPush={onDocumentationPush}
                   theme={theme}
+                  locale={locale}
                 />
               )}
               {locationStackTop && locationStackTop.type === DocumentationLocation.Type.File && (
@@ -251,6 +258,7 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
                   documentation={Documentation.subset(documentation, documentation.files[locationStackTop.id])}
                   onDocumentationPush={onDocumentationPush}
                   theme={theme}
+                  locale={locale}
                 />
               )}
               {locationStackTop && locationStackTop.type === DocumentationLocation.Type.Module && (
@@ -260,6 +268,7 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
                   documentation={Documentation.subset(documentation, documentation.modules[locationStackTop.id])}
                   onDocumentationPush={onDocumentationPush}
                   theme={theme}
+                  locale={locale}
                 />
               )}
               {locationStackTop && locationStackTop.type === DocumentationLocation.Type.Structure && (
@@ -268,6 +277,7 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
                   structure={documentation.structures[locationStackTop.id]}
                   onDocumentationPush={onDocumentationPush}
                   theme={theme}
+                  locale={locale}
                 />
               )}
             </StyledScrollArea>
@@ -318,7 +328,8 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
 }
 
 export default connect((state: ReduxState) => ({
-  documentationState: state.documentation
+  documentationState: state.documentation,
+  locale: state.i18n.locale,
 }), dispatch => ({
   onDocumentationSizeChange: (size: Size) => dispatch(DocumentationAction.setSize({ size })),
   onDocumentationPop: () => dispatch(DocumentationAction.POP),

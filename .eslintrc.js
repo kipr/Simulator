@@ -102,5 +102,7 @@ module.exports = {
     "/dependencies",
     // Ignore tests
     "/test",
+    // Ignore i18n
+    "/i18n",
   ],
 };
