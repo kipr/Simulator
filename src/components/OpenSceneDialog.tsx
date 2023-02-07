@@ -130,7 +130,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
           </InfoColumn>
         </Container>
         <DialogBar theme={theme} onAccept={this.onAccept}>
-          <Fa icon={faCheck} /> Accept
+          <Fa icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}
         </DialogBar>
       </Dialog>
     );
