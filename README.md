@@ -80,6 +80,11 @@ Navigate to the root directory of this repository, then run:
 yarn install
 ```
 
+## Build Translations
+```bash
+yarn run build-i18n
+```
+
 # Running
 
 In one terminal, build in watch mode:
