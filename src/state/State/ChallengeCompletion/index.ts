@@ -9,7 +9,7 @@ import ProgrammingLanguage from '../../../ProgrammingLanguage';
 import { ReferenceFrame } from '../../../unit-math';
 
 interface ChallengeCompletion {
-  code: { [language in ProgrammingLanguage]: string };
+  code: { [language in ProgrammingLanguage]?: string };
   currentLanguage: ProgrammingLanguage;
   serializedSceneDiff: string;
   robotLinkOrigins?: Dict<Dict<ReferenceFrame>>;
@@ -21,9 +21,10 @@ interface ChallengeCompletion {
 namespace ChallengeCompletion {
   export const EMPTY: ChallengeCompletion = {
     code: {
-      'c': '',
-      'cpp': '',
-      'python': '',
+      c: '',
+      cpp: '',
+      python: '',
+      scratch: ''
     },
     currentLanguage: 'c',
     serializedSceneDiff: JSON.stringify({ t: 'o' }),

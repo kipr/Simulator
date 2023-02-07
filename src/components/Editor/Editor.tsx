@@ -110,15 +110,17 @@ export const createEditorBarComponents = ({
         onLanguageChange: target.onLanguageChange,
       }));
 
-      editorBar.push(BarComponent.create(Button, {
-        theme,
-        onClick: target.onIndentCode,
-        children:
-          <>
-            <Fa icon={faIndent} />
-            {' '} {LocalizedString.lookup(tr('Indent'), locale)}
-          </>
-      }));
+      if (target.language !== 'scratch') {
+        editorBar.push(BarComponent.create(Button, {
+          theme,
+          onClick: target.onIndentCode,
+          children:
+            <>
+              <Fa icon={faIndent} />
+              {' '} {LocalizedString.lookup(tr('Indent'), locale)}
+            </>
+        }));
+      }
 
       editorBar.push(BarComponent.create(Button, {
         theme,

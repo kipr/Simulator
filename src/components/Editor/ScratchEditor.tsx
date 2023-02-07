@@ -1,5 +1,9 @@
 import { ThemeProps } from 'components/theme';
+import { Vector2 } from '../../math';
 import * as React from 'react';
+import { styled } from 'styletron-react';
+
+import resizeListener, { ResizeListener } from '../ResizeListener';
 
 export interface ScratchEditorProps extends ThemeProps {
   code: string;
@@ -7,24 +11,63 @@ export interface ScratchEditorProps extends ThemeProps {
 }
 
 interface ScratchEditorState {
+  size: Vector2;
 }
 
 type Props = ScratchEditorProps;
 type State = ScratchEditorState;
 
+const OuterContainer = styled('div', (props: ThemeProps) => ({
+  position: 'relative',
+  width: '100%',
+  height: '100%',
+  zIndex: 0,
+}));
+
+const Container = styled('div', (props: ThemeProps) => ({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+}));
+
 class ScratchEditor extends React.Component<Props, State> {
+  private resizeListener_ = resizeListener(size => this.setState({ size }));
+
   constructor(props: Props) {
     super(props);
+
+    this.state = {
+      size: Vector2.ZERO,
+    }
   }
 
   componentDidUpdate(prevProps: Readonly<ScratchEditorProps>, prevState: Readonly<ScratchEditorState>) {
-    const nextProps = this.props;
+    const { props: nextProps, state: nextState } = this;
 
     if (this.workspace_) {
       if (prevProps.code !== nextProps.code) {
         Blockly.Xml.domToWorkspace(undefined, this.workspace_);
       }
+
+      if (prevState.size !== nextState.size) {
+        Blockly.svgResize(this.workspace_);
+      }
     }
+  
+  }
+
+  componentWillUnmount() {
+    this.resizeListener_.disconnect();
+  }
+
+  private outerContainerRef_: HTMLDivElement | null = null;
+  private bindOuterContainerRef_ = (ref: HTMLDivElement) => {
+    if (this.outerContainerRef_) this.resizeListener_.unobserve(this.outerContainerRef_);
+    
+
+    this.outerContainerRef_ = ref;
+
+    if (this.outerContainerRef_) this.resizeListener_.observe(this.outerContainerRef_);
     
   }
   
@@ -49,15 +92,15 @@ class ScratchEditor extends React.Component<Props, State> {
       collapse: false,
       media: '../media/',
       readOnly: false,
-      rtl: true,
+      rtl: false,
       scrollbars: true,
       toolbox: undefined,
       toolboxPosition: 'start',
-      horizontalLayout: 'bottom',
-      trashcan: true,
+      verticalLayout: 'right',
+      trashcan: false,
       sounds: false,
       zoom: {
-        controls: true,
+        controls: false,
         wheel: true,
         startScale: 0.75,
         maxScale: 4,
@@ -72,8 +115,19 @@ class ScratchEditor extends React.Component<Props, State> {
   }
 
   render() {
+    const { props, state } = this;
+    const { theme } = props;
+    const { size } = state;
+
+    const containerStyle: React.CSSProperties = {
+      width: `${size.x}px`,
+      height: `${size.y}px`,
+    };
+
     return (
-      <div ref={this.bindContainerRef_} />
+      <OuterContainer theme={theme} ref={this.bindOuterContainerRef_}>
+        <Container style={containerStyle} theme={theme} ref={this.bindContainerRef_} />
+      </OuterContainer>
     );
   }
 }
