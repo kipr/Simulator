@@ -34,3 +34,4 @@ export * from './jbc20';
 export * from './jbc21';
 export * from './jbc22';
 export * from './scriptPlayground';
+export * from './lightSensorTest';

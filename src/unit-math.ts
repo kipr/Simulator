@@ -158,6 +158,10 @@ export namespace Vector3 {
     return Vector3.fromRawGranular(raw, v.x.type, v.y.type, v.z.type);
   };
 
+  export const length = (v: Vector3): Distance => {
+    const raw = Distance.meters(RawVector3.length(Vector3.toRaw(v, 'meters')));
+    return Distance.toType(raw, v.x.type);
+  };
 }
 
 

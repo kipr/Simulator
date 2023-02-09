@@ -4,7 +4,7 @@ import Robot from './state/State/Robot';
 import Node from './state/State/Robot/Node';
 import { Quaternion, Vector3 as RawVector3, ReferenceFrame as RawReferenceFrame, clamp, AxisAngle, Euler } from './math';
 import { ReferenceFrame, Rotation, Vector3 } from './unit-math';
-import { Angle, Distance, Mass } from './util';
+import { Angle, Distance, Mass, Slow } from './util';
 import { FrameLike, SceneMeshMetadata } from './SceneBinding';
 import Geometry from './state/State/Robot/Geometry';
 import Patch from './util/Patch';
@@ -1048,6 +1048,16 @@ namespace RobotBinding {
    */
   export class LightSensor extends SensorObject<Node.LightSensor, number> {
     private trace_: Babylon.AbstractMesh;
+    private rayTrace_: Babylon.LinesMesh;
+
+    // Calibrated value from real sensor with overhead light on
+    private static AMBIENT_LIGHT_VALUE = 4095 - 3645;
+
+    private static lightValue_ = (distance: Distance) => {
+      const cm = Distance.toCentimetersValue(distance);
+      if (cm < 0) return 0;
+      return 4095 - 19.4 + -0.678 * cm + 0.058 * cm * cm + -5.89e-04 * cm * cm * cm;
+    };
 
     constructor(parameters: SensorParameters<Node.LightSensor>) {
       super(parameters);
@@ -1091,17 +1101,25 @@ namespace RobotBinding {
       const { scene } = this.parameters;
       this.trace_.visibility = this.visible ? 1 : 0;
 
-      const position = this.trace_.getAbsolutePosition();
+      const position = Vector3.fromRaw(RawVector3.fromBabylon(this.trace_.getAbsolutePosition()), RENDER_SCALE);
 
-      let totalLux = 0;
+      let valueSum = 0;
       for (const light of scene.lights) {
-        if (light instanceof Babylon.HemisphericLight) continue;
+        if (!light.isEnabled(false)) continue;
+        if (light instanceof Babylon.HemisphericLight) {
+          valueSum += light.intensity * LightSensor.AMBIENT_LIGHT_VALUE;
+          continue;
+        }
 
         const intensity = light.getScaledIntensity();
-        const lightPosition = light.getAbsolutePosition();
-        const offset = lightPosition.subtract(position);
-        const distance = offset.length();
-        const ray = new Babylon.Ray(position, offset, distance);
+        const lightPosition = Vector3.fromRaw(RawVector3.fromBabylon(light.getAbsolutePosition()), RENDER_SCALE);
+        const offset = Vector3.subtract(position, lightPosition);
+        const distance = Vector3.length(offset);
+        const ray = new Babylon.Ray(
+          Vector3.toBabylon(position, RENDER_SCALE),
+          Vector3.toBabylon(offset, RENDER_SCALE),
+          Distance.toValue(distance, RENDER_SCALE)
+        );
 
         if (this.intersects(ray)) continue;
 
@@ -1111,8 +1129,8 @@ namespace RobotBinding {
           const direction = Babylon.Vector3.Forward(true)
             .applyRotationQuaternion(Babylon.Quaternion.FromEulerVector(light.getRotation()));
           
-          const dot = Babylon.Vector3.Dot(direction, offset);
-          const angle = Math.acos(dot / offset.length());
+          const dot = Babylon.Vector3.Dot(direction, Vector3.toBabylon(offset, RENDER_SCALE));
+          const angle = Math.acos(dot / Distance.toValue(Vector3.length(offset), RENDER_SCALE));
 
           if (angle > Math.PI / 2) continue;
         }
@@ -1122,17 +1140,16 @@ namespace RobotBinding {
           const direction = Babylon.Vector3.Forward(true)
             .applyRotationQuaternion(Babylon.Quaternion.FromEulerVector(light.getRotation()));
           
-          const dot = Babylon.Vector3.Dot(direction, offset);
-          const angle = Math.acos(dot / offset.length());
+          const dot = Babylon.Vector3.Dot(direction, Vector3.toBabylon(offset, RENDER_SCALE));
+          const angle = Math.acos(dot / Distance.toValue(Vector3.length(offset), RENDER_SCALE));
 
           if (angle > light.angle / 2) continue;
         }
 
-        
-        totalLux += intensity / (distance * distance);
+        valueSum += intensity * LightSensor.lightValue_(distance);
       }
 
-      return 4095 - clamp(0, totalLux * 4095, 1);
+      return 4095 - clamp(0, valueSum, 4095);
     }
 
     override dispose(): void {
