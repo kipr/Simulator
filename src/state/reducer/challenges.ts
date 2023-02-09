@@ -13,7 +13,6 @@ import store from '..';
 import { errorToAsyncError, mutate } from './util';
 import test from '../../challenges/test';
 import jbc6c from "../../challenges/jbc6c";
-import jbc1 from "../../challenges/jbc1";
 
 
 export namespace ChallengesAction {
@@ -127,10 +126,6 @@ const DEFAULT_CHALLENGES: Challenges = {
     value: jbc6c,
     brief: ChallengeBrief.fromChallenge(jbc6c),
   }),
-  'jbc1': Async.loaded({
-    value: jbc1,
-    brief: ChallengeBrief.fromChallenge(jbc1),
-  })
 };
 
 const create = async (challengeId: string, next: Async.Creating<Challenge>) => {
