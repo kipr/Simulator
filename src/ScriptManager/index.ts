@@ -259,8 +259,8 @@ namespace ScriptManager {
     private spawnFunc_ = (params: Dict<unknown>, code: string) => {
       const paramNames = Object.keys(params);
       // eslint-disable-next-line @typescript-eslint/no-implied-eval
-      return new Function(paramNames.join(','), `"use strict"; ${code}`)(...paramNames.map(name => params[name]));
-    }
+      new Function(paramNames.join(','), `"use strict"; ${code}`)(...paramNames.map(name => params[name]));
+    };
 
     constructor(script: Script, manager: ScriptManager) {
       this.script_ = script;

@@ -1053,6 +1053,8 @@ namespace RobotBinding {
     // Calibrated value from real sensor with overhead light on
     private static AMBIENT_LIGHT_VALUE = 4095 - 3645;
 
+    private static DEFAULT_NOISE_RADIUS = 10;
+
     private static lightValue_ = (distance: Distance) => {
       const cm = Distance.toCentimetersValue(distance);
       if (cm < 0) return 0;
@@ -1097,7 +1099,7 @@ namespace RobotBinding {
       return hit;
     }
 
-    override async getValue(): Promise<number> {
+    override getValue(): Promise<number> {
       const { scene } = this.parameters;
       this.trace_.visibility = this.visible ? 1 : 0;
 
@@ -1149,7 +1151,12 @@ namespace RobotBinding {
         valueSum += intensity * LightSensor.lightValue_(distance);
       }
 
-      return 4095 - clamp(0, valueSum, 4095);
+      if (this.noisy) {
+        const offset = Math.floor(LightSensor.DEFAULT_NOISE_RADIUS * Math.random() * 2) - LightSensor.DEFAULT_NOISE_RADIUS;
+        valueSum -= offset;
+      }
+
+      return Promise.resolve(4095 - clamp(0, valueSum, 4095));
     }
 
     override dispose(): void {
