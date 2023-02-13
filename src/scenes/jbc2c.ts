@@ -5,8 +5,7 @@ import { createCanNode, createBaseSceneSurfaceA } from "./jbcBase";
 import { Color } from "../state/State/Scene/Color";
 import { Distance } from "../util";
 import { SharedRegistersRobot } from "../SharedRegistersRobot";
-import Robot from "../state/State/Robot";
-import SharedRegisters from "../SharedRegisters";
+
 const baseScene = createBaseSceneSurfaceA();
 
 const circleIntersects = `
@@ -82,20 +81,12 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 const uprightCans = `
 // When a can is standing upright, the upright condition is met.
 
-// let startTime = Date.now();
 const EULER_IDENTITY = Rotation.Euler.identity();
-// const startingOrientationInv = (nodeId) => Quaternion.inverse(Rotation.toRawQuaternion(scene.nodes[nodeId].startingOrigin.orientation || EULER_IDENTITY));
 const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3.dot(Vector3.applyQuaternion(Vector3.Y, Rotation.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3.Y));
 
-
 scene.addOnRenderListener(() => {
-  // const currTime = Date.now();
-  // const timeDiff = currTime - startTime;
+
   const upright6 = yAngle('can6') < 5;
-  // if(timeDiff > 1000) {
-  //   console.log('can6 angle: ', yAngle('can6'));
-  //   startTime = currTime;
-  // }
   scene.setChallengeEventValue('can6Upright', upright6);
 
 });
@@ -103,19 +94,16 @@ scene.addOnRenderListener(() => {
 
 const goingBackwards = `
 scene.addOnRenderListener(() => {
-  const sharedRegistersRobot_ = SharedRegistersRobot;
-  if (sharedRegistersRobot_.robot.getMotor(0))
-  //scene.setChallengeEventValue('can6Upright', upright6);
-  console.log('Going backwards!');
-});
 
-`;
+  if(scene.nodes['robot'].state.motors[0].direction === 1 && scene.nodes['robot'].state.motors[3].direction === 1){
+    scene.setChallengeEventValue('driveBackwards', false);
+  }
+  else {
+    scene.setChallengeEventValue('driveBackwards', true);
+  }
+});`;
 
-const sharedRegistersRobot_ = SharedRegistersRobot;
-const robot = baseScene.nodes.robot;
-const sharedRegisters_ = new SharedRegisters();
 
-//console.log(sharedRegistersRobot_);
 
 export const JBC_2C: Scene = {
   ...baseScene,
