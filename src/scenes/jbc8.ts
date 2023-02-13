@@ -175,7 +175,7 @@ export const JBC_8: Scene = {
       type: 'object',
       geometryId: 'startBox_geom',
       name: { [LocalizedString.EN_US]: 'Start Box' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(0),
@@ -215,7 +215,7 @@ export const JBC_8: Scene = {
       type: 'object',
       geometryId: 'n_geom',
       name: { [LocalizedString.EN_US]: 'Circle 1' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(23.5), //can 1
@@ -255,7 +255,7 @@ export const JBC_8: Scene = {
       type: 'object',
       geometryId: 'n_geom',
       name: { [LocalizedString.EN_US]: 'Circle 2' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(0), //can 2
@@ -295,7 +295,7 @@ export const JBC_8: Scene = {
       type: 'object',
       geometryId: 'n_geom',
       name: { [LocalizedString.EN_US]: 'Circle 3' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(-16.2), //can 3
@@ -335,7 +335,7 @@ export const JBC_8: Scene = {
       type: 'object',
       geometryId: 'n_geom',
       name: { [LocalizedString.EN_US]: 'Circle 4' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(-3), //can 4
@@ -375,7 +375,7 @@ export const JBC_8: Scene = {
       type: 'object',
       geometryId: 'n_geom',
       name: { [LocalizedString.EN_US]: 'Circle 5' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(17), //can 5
@@ -415,7 +415,7 @@ export const JBC_8: Scene = {
       type: 'object',
       geometryId: 'n_geom',
       name: { [LocalizedString.EN_US]: 'Circle 6' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(-6), //can 6
@@ -455,7 +455,7 @@ export const JBC_8: Scene = {
       type: 'object',
       geometryId: 'n_geom',
       name: { [LocalizedString.EN_US]: 'Circle 7' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(-18), //can 7
@@ -495,7 +495,7 @@ export const JBC_8: Scene = {
       type: 'object',
       geometryId: 'n_geom',
       name: { [LocalizedString.EN_US]: 'Circle 8' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(-26), //can 8
