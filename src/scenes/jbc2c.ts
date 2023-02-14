@@ -4,7 +4,7 @@ import Script from "../state/State/Scene/Script";
 import { createCanNode, createBaseSceneSurfaceA } from "./jbcBase";
 import { Color } from "../state/State/Scene/Color";
 import { Distance } from "../util";
-import { SharedRegistersRobot } from "../SharedRegistersRobot";
+
 
 const baseScene = createBaseSceneSurfaceA();
 

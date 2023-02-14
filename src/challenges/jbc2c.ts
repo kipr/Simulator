@@ -4,7 +4,7 @@ import Expr from "../state/State/Challenge/Expr";
 import LocalizedString from "../util/LocalizedString";
 
 export default {
-  name: { [LocalizedString.EN_US]: "JBC Challenge 2" },
+  name: { [LocalizedString.EN_US]: "JBC Challenge 2C" },
   description: {
     [LocalizedString.EN_US]: `Junior Botball Challenge 2C: Back It Up`,
   },
