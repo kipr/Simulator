@@ -8,6 +8,7 @@ import { Distance } from "../util";
 
 const baseScene = createBaseSceneSurfaceA();
 
+
 const circleIntersects = `
 const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
   ...scene.nodes[nodeId],
@@ -25,16 +26,6 @@ scene.addOnIntersectionListener('can6', (type, otherNodeId) => {
 
 `;
 
-const leftStartBox = `
-
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot left start box!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('leaveStartBox', type === 'end');
-  }
-  
-}, 'startBox');
-`;
 const robotTouches = `
 scene.onBind = nodeId => {
   scene.addOnCollisionListener(nodeId, (otherNodeId, point)=> {
@@ -45,12 +36,22 @@ scene.onBind = nodeId => {
 `;
 const enterStartBox = `
 
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot returned start box!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('returnStartBox', type === 'start');
-  }
-}, 'startBox');
+scene.onBind = nodeId => {
+  let count = 0;
+  scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
+    
+    if(scene.programStatus === 'running' && count == 0 && type === 'start'){
+      scene.setChallengeEventValue('returnStartBox1', type === 'start');
+      console.log('Robot returned start box the 1st time!', type, otherNodeId);
+      count = 1;
+    }
+    else if(scene.programStatus === 'running' && count == 1 && type === 'start'){
+      scene.setChallengeEventValue('returnStartBox2', type === 'start');
+      console.log('Robot returned start box the 2nd time!', type, otherNodeId);
+      count = 0;
+    }
+  }, 'startBox');
+};
 `;
 
 const passedSide = `
@@ -93,31 +94,35 @@ scene.addOnRenderListener(() => {
 `;
 
 const goingBackwards = `
+
 scene.addOnRenderListener(() => {
 
-  if(scene.nodes['robot'].state.motors[0].direction === 1 && scene.nodes['robot'].state.motors[3].direction === 1){
-    scene.setChallengeEventValue('driveBackwards', false);
+  //robot going forwards
+  if(scene.nodes['robot'].state.motors[0].direction == 1 || scene.nodes['robot'].state.motors[3].direction == 1){
+    scene.setChallengeEventValue('driveForwards', true);
   }
-  else {
+
+  //robot going backwards
+  else if (scene.nodes['robot'].state.motors[0].direction === 2 && scene.nodes['robot'].state.motors[3].direction ===2){
     scene.setChallengeEventValue('driveBackwards', true);
   }
-});`;
+
+});
+
+`;
 
 
 
-export const JBC_2C: Scene = {
+export const JBC_2D: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: "JBC 2C" },
-  description: {
-    [LocalizedString.EN_US]: "Junior Botball Challenge 2C: Back It Up",
-  },
+  name: { [LocalizedString.EN_US]: 'JBC 2D' },
+  description: { [LocalizedString.EN_US]: 'Junior Botball Challenge 2D: Ring Around the Can and Back It Up' },
   scripts: {
     circleIntersects: Script.ecmaScript("Circle Intersects", circleIntersects),
     goingBackwards: Script.ecmaScript("Going Backwards", goingBackwards),
     uprightCans: Script.ecmaScript("Upright Cans", uprightCans),
     robotTouches: Script.ecmaScript("Robot Touches", robotTouches),
     passedSide: Script.ecmaScript("Passed Side", passedSide),
-    leftStartBox: Script.ecmaScript("Robot Left Start", leftStartBox),
     enterStartBox: Script.ecmaScript("Robot Reentered Start", enterStartBox),
   },
 
@@ -305,7 +310,7 @@ export const JBC_2C: Scene = {
         y: Distance.centimeters(0),
         z: Distance.centimeters(57),
       }),
-      scriptIds: ["robotTouches"],
+      scriptIds: ["robotTouches", "enterStartBox", "goingBackwards"],
     },
   },
 };
