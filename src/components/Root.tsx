@@ -245,6 +245,8 @@ interface RootState {
   feedback: Feedback;
 
   windowInnerHeight: number;
+
+  miniEditor: boolean;
 }
 
 type Props = RootPublicProps & RootPrivateProps;
@@ -286,6 +288,7 @@ class Root extends React.Component<Props, State> {
         'c': window.localStorage.getItem('code-c') || ProgrammingLanguage.DEFAULT_CODE['c'],
         'cpp': window.localStorage.getItem('code-cpp') || ProgrammingLanguage.DEFAULT_CODE['cpp'],
         'python': window.localStorage.getItem('code-python') || ProgrammingLanguage.DEFAULT_CODE['python'],
+        'scratch': window.localStorage.getItem('code-scratch') || ProgrammingLanguage.DEFAULT_CODE['scratch'],
       },
       modal: Modal.NONE,
       simulatorState: SimulatorState.STOPPED,
@@ -295,6 +298,7 @@ class Root extends React.Component<Props, State> {
       settings: DEFAULT_SETTINGS,
       feedback: DEFAULT_FEEDBACK,
       windowInnerHeight: window.innerHeight,
+      miniEditor: true
     };
 
     this.editorRef = React.createRef();
@@ -673,6 +677,12 @@ class Root extends React.Component<Props, State> {
     this.props.onSaveScene(this.props.match.params.sceneId);
   };
 
+  private onMiniEditorToggle_ = () => {
+    this.setState({
+      miniEditor: !this.state.miniEditor
+    });
+  };
+
   render() {
     const { props, state } = this;
     
@@ -705,6 +715,7 @@ class Root extends React.Component<Props, State> {
       settings,
       feedback,
       windowInnerHeight,
+      miniEditor
     } = state;
 
     const theme = DARK;
@@ -715,6 +726,8 @@ class Root extends React.Component<Props, State> {
       language: activeLanguage,
       onCodeChange: this.onCodeChange_,
       onLanguageChange: this.onActiveLanguageChange_,
+      mini: miniEditor,
+      onMiniClick: this.onMiniEditorToggle_
     };
 
     const commonLayoutProps: LayoutProps = {

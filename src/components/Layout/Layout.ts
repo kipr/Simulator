@@ -25,6 +25,8 @@ export namespace LayoutEditorTarget {
     onLanguageChange: (language: ProgrammingLanguage) => void;
     code: string;
     onCodeChange: (code: string) => void;
+    mini?: boolean;
+    onMiniClick?: () => void;
   }
 }
 

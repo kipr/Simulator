@@ -228,7 +228,9 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
           onIndentCode,
           onDownloadCode,
           onResetCode,
-          onErrorClick: this.onErrorClick_
+          onErrorClick: this.onErrorClick_,
+          mini: editorTarget.mini,
+          onMiniClick: editorTarget.onMiniClick,
         };
         editor = (
           <Editor
@@ -401,7 +403,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
           isVertical={true}
           theme={theme}
           minSizes={[50, 50]}
-          sizes={[1.2, 3]}
+          sizes={[2, 3]}
           visible={[sidePanelSize !== Size.Type.Minimized, true]}
         >
           {content}

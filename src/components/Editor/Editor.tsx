@@ -13,7 +13,7 @@ import { Ivygate, Message } from 'ivygate';
 import LanguageSelectCharm from './LanguageSelectCharm';
 import ProgrammingLanguage from '../../ProgrammingLanguage';
 
-import { faArrowsRotate, faFileDownload, faIndent } from '@fortawesome/free-solid-svg-icons';
+import { faArrowsRotate, faCompress, faExpand, faFileDownload, faIndent } from '@fortawesome/free-solid-svg-icons';
 import Script from '../../state/State/Scene/Script';
 import Dict from '../../Dict';
 
@@ -41,6 +41,8 @@ export interface EditorPublicProps extends StyleProps, ThemeProps {
   autocomplete: boolean;
 
   onDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python') => void;
+
+  mini?: boolean;
 }
 
 interface EditorPrivateProps {
@@ -81,6 +83,8 @@ export namespace EditorBarTarget {
     onDownloadCode: () => void;
     onResetCode: () => void;
     onErrorClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+    mini?: boolean;
+    onMiniClick?: () => void;
   }
 }
 
@@ -120,6 +124,16 @@ export const createEditorBarComponents = ({
               {' '} {LocalizedString.lookup(tr('Indent'), locale)}
             </>
         }));
+      } else {
+        /*editorBar.push(BarComponent.create(Button, {
+          theme,
+          onClick: target.onMiniClick,
+          children:
+            <>
+              <Fa icon={target.mini ? faExpand : faCompress} />
+              {' '} {LocalizedString.lookup(target.mini ? tr('Show Toolbox') : tr('Hide Toolbox'), locale)}
+            </>
+        }));*/
       }
 
       editorBar.push(BarComponent.create(Button, {
@@ -239,7 +253,8 @@ class Editor extends React.PureComponent<Props, State> {
       onCodeChange,
       messages,
       autocomplete,
-      language
+      language,
+      mini
     } = this.props;
 
     let component: JSX.Element;
@@ -249,6 +264,7 @@ class Editor extends React.PureComponent<Props, State> {
           code={code}
           onCodeChange={onCodeChange}
           theme={theme}
+          toolboxHidden={mini}
         />
       );
     } else {

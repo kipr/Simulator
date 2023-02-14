@@ -211,6 +211,10 @@ app.use('/scratch', express.static(path.resolve(__dirname, 'node_modules', 'kipr
   maxAge: config.caching.staticMaxAge,
 }));
 
+app.use('/media', express.static(path.resolve(__dirname, 'node_modules', 'kipr-scratch', 'media'), {
+  maxAge: config.caching.staticMaxAge,
+}));
+
 // Expose cpython artifacts
 if (config.server.dependencies.cpython) {
   console.log('CPython artifacts are enabled.');

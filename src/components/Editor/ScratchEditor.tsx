@@ -8,6 +8,8 @@ import resizeListener, { ResizeListener } from '../ResizeListener';
 export interface ScratchEditorProps extends ThemeProps {
   code: string;
   onCodeChange: (code: string) => void;
+
+  toolboxHidden?: boolean;
 }
 
 interface ScratchEditorState {
@@ -28,6 +30,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   position: 'absolute',
   top: 0,
   left: 0,
+  backgroundColor: '#212121'
 }));
 
 class ScratchEditor extends React.Component<Props, State> {
@@ -41,12 +44,16 @@ class ScratchEditor extends React.Component<Props, State> {
     }
   }
 
+  private debounce_: boolean;
   componentDidUpdate(prevProps: Readonly<ScratchEditorProps>, prevState: Readonly<ScratchEditorState>) {
     const { props: nextProps, state: nextState } = this;
 
     if (this.workspace_) {
-      if (prevProps.code !== nextProps.code) {
-        Blockly.Xml.domToWorkspace(undefined, this.workspace_);
+      if (prevProps.code !== nextProps.code && !this.debounce_) {
+        Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(this.props.code), this.workspace_);
+      }
+
+      if (prevProps.toolboxHidden !== nextProps.toolboxHidden) {
       }
 
       if (prevState.size !== nextState.size) {
@@ -84,7 +91,7 @@ class ScratchEditor extends React.Component<Props, State> {
     }
   }
 
-  private workspace_: unknown;
+  private workspace_: Blockly.Workspace;
   private injectBlockly_ = () => {
     this.workspace_ = Blockly.inject(this.containerRef_, {
       comments: true,
@@ -112,7 +119,25 @@ class ScratchEditor extends React.Component<Props, State> {
         dragShadowOpacity: 0.6
       }
     });
+
+    console.log(this.props.code);
+    if (this.props.code.length > 0) {
+      Blockly.Xml.domToWorkspace(
+        Blockly.Xml.textToDom(this.props.code),
+        this.workspace_
+      );
+    }
+
+    this.workspace_.addChangeListener(this.onChange_);
   }
+
+  private onChange_ = () => {
+    this.debounce_ = true;
+    const code = Blockly.Xml.domToPrettyText(Blockly.Xml.workspaceToDom(this.workspace_));
+    console.log(code);
+    this.props.onCodeChange(code);
+    this.debounce_ = false;
+  };
 
   render() {
     const { props, state } = this;
