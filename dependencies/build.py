@@ -245,6 +245,26 @@ subprocess.run(
   check = True
 )
 
+print('Generating scratch runtime...')
+scratch_runtime_path = working_dir / 'scratch-rt'
+# emcc -s WASM=0 -s INVOKE_RUN=0 -s ASYNCIFY -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']" -I${config.server.dependencies.libkipr_c}/include -Wl,--whole-archive -L${config.server.dependencies.libkipr_c}/lib -lkipr -o ${path}.js ${path}
+subprocess.run([
+    'emcc',
+    '-s', 'WASM=0',
+    '-s', 'INVOKE_RUN=0',
+    '-s', 'EXIT_RUNTIME=0',
+    f'-L${libkipr_install_c_dir}/lib',
+    '-Wl,--whole-archive',
+    '-lkipr',
+    '-Wl,--no-whole-archive',
+    f'-o',
+    f'{scratch_runtime_path}.js',
+    f'{scratch_runtime_path}.c'
+  ],
+  env = env,
+  check = True
+)
+
 print('Outputting results...')
 output = json.dumps({
   'emsdk_version': emsdk_version,
@@ -259,6 +279,7 @@ output = json.dumps({
   'cpython': f'{cpython_emscripten_build_dir}',
   'ammo': f'{ammo_build_dir}',
   "libkipr_c_documentation": libkipr_c_documentation_json,
+  'scratch_rt': f'{scratch_runtime_path}.js',
 })
 
 with open(working_dir / 'dependencies.json', 'w') as f:
