@@ -23,13 +23,14 @@ import jbc2 from "../../challenges/jbc2";
 import jbc2b from "../../challenges/jbc2b";
 import jbc2c from "../../challenges/jbc2c";
 import jbc2d from "../../challenges/jbc2d";
+import jbc5 from "../../challenges/jbc5";
 import jbc4 from "../../challenges/jbc4";
 import jbc4b from "../../challenges/jbc4b";
 import jbc6 from "../../challenges/jbc6";
 import jbc7 from "../../challenges/jbc7";
 import jbc7b from "../../challenges/jbc7b";
 import jbc8 from "../../challenges/jbc8";
-
+import jbc8b from "../../challenges/jbc8b";
 
 export namespace ChallengesAction {
   export interface LoadChallenge {
@@ -162,6 +163,10 @@ const DEFAULT_CHALLENGES: Challenges = {
     value: jbc2d,
     brief: ChallengeBrief.fromChallenge(jbc2d),
   }),
+  'jbc5': Async.loaded({
+    value: jbc5,
+    brief: ChallengeBrief.fromChallenge(jbc5),
+  }),
   'jbc4': Async.loaded({
     value: jbc4,
     brief: ChallengeBrief.fromChallenge(jbc4),
@@ -185,6 +190,10 @@ const DEFAULT_CHALLENGES: Challenges = {
   'jbc8': Async.loaded({
     value: jbc8,
     brief: ChallengeBrief.fromChallenge(jbc8),
+  }),
+  'jbc8b': Async.loaded({
+    value: jbc8b,
+    brief: ChallengeBrief.fromChallenge(jbc8b),
   }),
 };
 
