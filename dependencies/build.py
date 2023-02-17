@@ -107,6 +107,7 @@ subprocess.run(
     '-Dwith_python_binding=OFF',
     '-Dwith_documentation=ON',
     '-Dwith_tests=OFF',
+    '-Dwith_graphics=OFF',
     f'-DCMAKE_INSTALL_PREFIX={libkipr_install_c_dir}',
     libkipr_dir
   ],

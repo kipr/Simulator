@@ -10,16 +10,163 @@ import data from 'itch/src/module/data';
 import operator from 'itch/src/module/operator';
 
 import { DOMParser } from 'xmldom';
+import { toNumber } from 'itch/src/util';
+
+const resolveNumber = (ctx: DispatchContext, name: string) => toNumber(ctx.resolveValue(name));
 
 const motor = (rt: any) => ({
   motor: (ctx: DispatchContext) => {
-    const motor = ctx.resolveValue('MOTOR')
-    if (typeof motor !== 'number') throw new Error('MOTOR must be a number');
-    const percent = ctx.resolveValue('PERCENT')
-    if (typeof percent !== 'number') throw new Error('SPEED must be a number');
+    rt._motor(
+      toNumber(ctx.resolveValue('MOTOR')),
+      toNumber(ctx.resolveValue('PERCENT'))
+    );
+  },
+  fd: (ctx: DispatchContext) => rt._fd(resolveNumber(ctx, 'MOTOR')),
+  bk: (ctx: DispatchContext) => rt._bk(resolveNumber(ctx, 'MOTOR')),
+  off: (ctx: DispatchContext) => rt._off(resolveNumber(ctx, 'MOTOR')),
+  ao: (ctx: DispatchContext) => rt._ao(),
+  alloff: (ctx: DispatchContext) => rt._alloff(),
+  gmpc: (ctx: DispatchContext) => rt._gmpc(resolveNumber(ctx, 'MOTOR')),
+  get_motor_position_counter: (ctx: DispatchContext) => rt._get_motor_position_counter(
+    resolveNumber(ctx, 'MOTOR')
+  ),
+  freeze: (ctx: DispatchContext) => rt._freeze(resolveNumber(ctx, 'MOTOR')),
+  cmpc: (ctx: DispatchContext) => rt._cmpc(
+    resolveNumber(ctx, 'MOTOR')
+  ),
+  clear_motor_position_counter: (ctx: DispatchContext) => rt._clear_motor_position_counter(
+    resolveNumber(ctx, 'MOTOR')
+  ),
+  mav: (ctx: DispatchContext) => rt._mav(
+    resolveNumber(ctx, 'MOTOR'),
+    resolveNumber(ctx, 'VELOCITY')
+  ),
+  move_at_velocity: (ctx: DispatchContext) => rt._move_at_velocity(
+    resolveNumber(ctx, 'MOTOR'),
+    resolveNumber(ctx, 'VELOCITY')
+  ),
+  mtp: (ctx: DispatchContext) => rt._mtp(
+    resolveNumber(ctx, 'MOTOR'),
+    resolveNumber(ctx, 'SPEED'),
+    resolveNumber(ctx, 'GOAL_POS')
+  ),
+  move_to_position: (ctx: DispatchContext) => rt._move_to_position(
+    resolveNumber(ctx, 'MOTOR'),
+    resolveNumber(ctx, 'SPEED'),
+    resolveNumber(ctx, 'GOAL_POS')
+  ),
+  mrp: (ctx: DispatchContext) => rt._mrp(
+    resolveNumber(ctx, 'MOTOR'),
+    resolveNumber(ctx, 'SPEED'),
+    resolveNumber(ctx, 'DELTA_POS')
+  ),
+  move_relative_position: (ctx: DispatchContext) => rt._move_relative_position(
+    resolveNumber(ctx, 'MOTOR'),
+    resolveNumber(ctx, 'SPEED'),
+    resolveNumber(ctx, 'DELTA_POS')
+  ),
+  get_motor_done: (ctx: DispatchContext) => rt._get_motor_done(
+    resolveNumber(ctx, 'MOTOR')
+  ),
+  block_motor_done: (ctx: DispatchContext) => rt._block_motor_done(
+    resolveNumber(ctx, 'MOTOR')
+  ),
+  bmd: (ctx: DispatchContext) => rt._bmd(
+    resolveNumber(ctx, 'MOTOR')
+  ),
+  setpwm: (ctx: DispatchContext) => rt._setpwm(
+    resolveNumber(ctx, 'MOTOR'),
+    resolveNumber(ctx, 'PERCENT')
+  ),
+  getpwm: (ctx: DispatchContext) => rt._getpwm(
+    resolveNumber(ctx, 'MOTOR')
+  ),
+  baasbennaguui: (ctx: DispatchContext) => rt._baasbennaguui(
+    resolveNumber(ctx, 'MOTOR'),
+    resolveNumber(ctx, 'PERCENT')
+  ),
+  motor_power: (ctx: DispatchContext) => rt._motor_power(
+    resolveNumber(ctx, 'MOTOR'),
+    resolveNumber(ctx, 'PERCENT')
+  ),
+});
 
-    rt._motor(motor, percent);
-  }
+const time = (rt: any) => ({
+  msleep: (ctx: DispatchContext) => rt._msleep(
+    resolveNumber(ctx, 'MSECS')
+  ),
+  systime: (ctx: DispatchContext) => rt._systime(),
+  seconds: (ctx: DispatchContext) => rt._seconds(),
+});
+
+const wait_for = (rt: any) => ({
+  wait_for_milliseconds: (ctx: DispatchContext) => rt._wait_for_milliseconds(
+    resolveNumber(ctx, 'MSECS')
+  ),
+  wait_for_touch: (ctx: DispatchContext) => rt._wait_for_touch(
+    resolveNumber(ctx, 'PORT')
+  ),
+});
+
+const servo = (rt: any) => ({
+  enable_servos: (ctx: DispatchContext) => rt._enable_servos(),
+  disable_servos: (ctx: DispatchContext) => rt._disable_servos(),
+  enable_servo: (ctx: DispatchContext) => rt._enable_servo(resolveNumber(ctx, 'PORT')),
+  disable_servo: (ctx: DispatchContext) => rt._disable_servo(resolveNumber(ctx, 'PORT')),
+  set_servo_position: (ctx: DispatchContext) => rt._set_servo_position(
+    resolveNumber(ctx, 'PORT'),
+    resolveNumber(ctx, 'POSITION')
+  ),
+  get_servo_position: (ctx: DispatchContext) => rt._get_servo_position(
+    resolveNumber(ctx, 'PORT')
+  ),
+  get_servo_enabled: (ctx: DispatchContext) => rt._get_servo_enabled(
+    resolveNumber(ctx, 'PORT')
+  ),
+  set_servo_enabled: (ctx: DispatchContext) => rt._set_servo_enabled(
+    resolveNumber(ctx, 'PORT'),
+    resolveNumber(ctx, 'ENABLED')
+  ),
+});
+
+const analog = (rt: any) => ({
+  analog: (ctx: DispatchContext) => rt._analog(resolveNumber(ctx, 'PORT')),
+  analog8: (ctx: DispatchContext) => rt._analog8(resolveNumber(ctx, 'PORT')),
+  analog10: (ctx: DispatchContext) => rt._analog10(resolveNumber(ctx, 'PORT')),
+  analog12: (ctx: DispatchContext) => rt._analog12(resolveNumber(ctx, 'PORT')),
+  analog_et: (ctx: DispatchContext) => rt._analog_et(resolveNumber(ctx, 'PORT')),
+  set_analog_pullup: (ctx: DispatchContext) => rt._set_analog_pullup(
+    resolveNumber(ctx, 'PORT'),
+    resolveNumber(ctx, 'PULLUP')
+  ),
+  get_analog_pullup: (ctx: DispatchContext) => rt._get_analog_pullup(
+    resolveNumber(ctx, 'PORT')
+  ),
+});
+
+const digital = (rt: any) => ({
+  digital: (ctx: DispatchContext) => rt._digital(resolveNumber(ctx, 'PORT')),
+  set_digital_pullup: (ctx: DispatchContext) => rt._set_digital_pullup(
+    resolveNumber(ctx, 'PORT'),
+    resolveNumber(ctx, 'PULLUP')
+  ),
+  get_digital_pullup: (ctx: DispatchContext) => rt._get_digital_pullup(
+    resolveNumber(ctx, 'PORT')
+  ),
+  set_digital_output: (ctx: DispatchContext) => rt._set_digital_output(
+    resolveNumber(ctx, 'PORT'),
+    resolveNumber(ctx, 'OUT')
+  ),
+  get_digital_output: (ctx: DispatchContext) => rt._get_digital_output(
+    resolveNumber(ctx, 'PORT')
+  ),
+  set_digital_value: (ctx: DispatchContext) => rt._set_digital_value(
+    resolveNumber(ctx, 'PORT'),
+    resolveNumber(ctx, 'VALUE')
+  ),
+  get_digital_value: (ctx: DispatchContext) => rt._get_digital_value(
+    resolveNumber(ctx, 'PORT')
+  ),
 });
 
 // Proper typing of Worker is tricky due to conflicting DOM and WebWorker types
@@ -144,27 +291,55 @@ const startScratch = async (message: Protocol.Worker.StartRequest) => {
   printErr
   );
 
-  try {
-    const instance = new Instance({
-      source: new DOMParser().parseFromString(message.code, "text/xml"),
-      modules: {
-        control,
-        data,
-        operator,
-        motor: motor(mod),
+  mod.onRuntimeInitialized = () => {
+    try {
+      mod._main();
+    } catch (e: unknown) {
+      if (ExitStatusError.isExitStatusError(e)) {
+        print(`Program exited with status code ${e.status}`);
+      } else if (e instanceof Error) {
+        printErr(e.message);
+      } else {
+        printErr(`Program exited with an unknown error`);
       }
-    });
-
-    instance.run();
-  } catch (e) {
-    if (InstanceError.is(e)) {
-      printErr(`${e.module}/${e.function}: ${e.original.name}: ${e.original.message}`);
-    } else {
-      const err = e as Error;
-      printErr(`${err.name}: ${err.message}`);
-      if (err.stack) printErr(err.stack);
+      return;
     }
-  }
+
+    try {
+      const instance = new Instance({
+        source: new DOMParser().parseFromString(message.code, "text/xml"),
+        modules: {
+          control,
+          data,
+          operator,
+          motor: motor(mod),
+          time: time(mod),
+          wait_for: wait_for(mod),
+          servo: servo(mod),
+          digital: digital(mod),
+          analog: analog(mod),
+        }
+      });
+  
+      instance.run();
+    } catch (e) {
+      console.error(e);
+      let last = e;
+      while (InstanceError.is(e)) {
+        e = e.original;
+        last = e;
+      }
+  
+      if (InstanceError.is(last)) {
+        printErr(`${last.module}/${last.function}: ${e.name}: ${e.message}`);
+      } else {
+        printErr(e.message);
+      }
+      
+    }
+  };
+
+  
 };
 
 const start = async (message: Protocol.Worker.StartRequest) => {
