@@ -50,7 +50,11 @@ class ScratchEditor extends React.Component<Props, State> {
 
     if (this.workspace_) {
       if (prevProps.code !== nextProps.code && !this.debounce_) {
-        Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(this.props.code), this.workspace_);
+        if (this.props.code === '') {
+          this.workspace_.clear();
+        } else {
+          Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(this.props.code), this.workspace_);
+        }
       }
 
       if (prevProps.toolboxHidden !== nextProps.toolboxHidden) {
@@ -122,10 +126,17 @@ class ScratchEditor extends React.Component<Props, State> {
 
     console.log(this.props.code);
     if (this.props.code.length > 0) {
-      Blockly.Xml.domToWorkspace(
-        Blockly.Xml.textToDom(this.props.code),
-        this.workspace_
-      );
+      try {
+        Blockly.Xml.domToWorkspace(
+          Blockly.Xml.textToDom(this.props.code),
+          this.workspace_
+        );
+      } catch (e) {
+        console.error(e);
+        this.workspace_.clear();
+        this.props.onCodeChange('');
+
+      }
     }
 
     this.workspace_.addChangeListener(this.onChange_);

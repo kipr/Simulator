@@ -6,6 +6,7 @@
   "license": "GPL-3.0-only",
   "scripts": {
     "build": "yarn run clean-dist && webpack --config=configs/webpack/prod.js",
+    "build-deps": "python3 dependencies/build.py && yarn add file:dependencies/kipr-scratch/kipr-scratch",
     "watch": "node --max-old-space-size=8192 node_modules/webpack/bin/webpack.js --watch --config=configs/webpack/dev.js",
     "clean-dist": "rm -f -r -d dist",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
@@ -31,6 +32,7 @@
     "@types/styletron-engine-atomic": "^1.1.1",
     "@types/styletron-react": "^5.0.2",
     "@types/uuid": "^8.3.1",
+    "@types/xmldom": "^0.1.31",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",
     "babel-loader": "^8.1.0",
@@ -73,6 +75,7 @@
     "image-loader": "^0.0.1",
     "image-webpack-loader": "^6.0.0",
     "immer": "^9.0.15",
+    "itch": "https://github.com/kipr/itch#5",
     "ivygate": "https://github.com/kipr/ivygate#v0.1.5",
     "kipr-scratch": "file:dependencies/kipr-scratch/kipr-scratch",
     "morgan": "^1.10.0",
@@ -93,6 +96,7 @@
     "styletron-react": "^6.0.1",
     "symmetry": "^0.6.1",
     "url-loader": "^4.1.1",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "xmldom": "^0.6.0"
   }
 }

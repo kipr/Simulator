@@ -89,7 +89,7 @@ if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env
       env['EMSDK'] = config.server.dependencies.emsdk_env.EMSDK;
       env['EM_CONFIG'] = config.server.dependencies.emsdk_env.EM_CONFIG;
   
-      exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -s ASYNCIFY -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']" -I${config.server.dependencies.libkipr_c}/include -L${config.server.dependencies.libkipr_c}/lib -lkipr -o ${path}.js ${path}`, {
+      exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -s ASYNCIFY -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']" -I${config.server.dependencies.libkipr_c}/include -Wl,--whole-archive -L${config.server.dependencies.libkipr_c}/lib -lkipr -o ${path}.js ${path}`, {
         env
       }, (err, stdout, stderr) => {
         if (err) {
@@ -206,6 +206,13 @@ app.post('/feedback', (req, res) => {
 app.use('/static', express.static(`${__dirname}/static`, {
   maxAge: config.caching.staticMaxAge,
 }));
+
+if (config.server.dependencies.scratch_rt) {
+  console.log('Scratch Runtime is enabled.');
+  app.use('/scratch/rt.js', express.static(`${config.server.dependencies.scratch_rt}`, {
+    maxAge: config.caching.staticMaxAge,
+  }));
+}
 
 app.use('/scratch', express.static(path.resolve(__dirname, 'node_modules', 'kipr-scratch'), {
   maxAge: config.caching.staticMaxAge,

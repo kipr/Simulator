@@ -2,6 +2,7 @@ declare namespace Blockly {
   interface Workspace {
     addChangeListener(listener: (event: any) => void): void;
     removeChangeListener(listener: (event: any) => void): void;
+    clear();
   }
 
   function inject(container: Element, options: any): Workspace;
@@ -24,4 +25,5 @@ declare namespace Blockly {
   }
 
   function getMainWorkspace(): MainWorkspace;
+  
 }

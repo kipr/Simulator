@@ -4,6 +4,23 @@ import SharedRegisters from './SharedRegisters';
 import Registers from './RegisterState';
 import python from './python';
 import SharedRingBufferUtf32 from './SharedRingBufferUtf32';
+import Instance, { DispatchContext, InstanceError } from 'itch/src/Instance';
+import control from 'itch/src/module/control';
+import data from 'itch/src/module/data';
+import operator from 'itch/src/module/operator';
+
+import { DOMParser } from 'xmldom';
+
+const motor = (rt: any) => ({
+  motor: (ctx: DispatchContext) => {
+    const motor = ctx.resolveValue('MOTOR')
+    if (typeof motor !== 'number') throw new Error('MOTOR must be a number');
+    const percent = ctx.resolveValue('PERCENT')
+    if (typeof percent !== 'number') throw new Error('SPEED must be a number');
+
+    rt._motor(motor, percent);
+  }
+});
 
 // Proper typing of Worker is tricky due to conflicting DOM and WebWorker types
 // See GitHub issue: https://github.com/microsoft/TypeScript/issues/20595
@@ -91,7 +108,63 @@ const startPython = async (message: Protocol.Worker.StartRequest) => {
     printErr,
     registers: sharedRegister_,
   });
-  
+};
+
+let cachedRt: string;
+
+const startScratch = async (message: Protocol.Worker.StartRequest) => {
+  if (cachedRt === undefined) {
+    const res = await fetch('/scratch/rt.js', {
+
+    });
+    cachedRt = await res.text();
+  }
+
+  let stoppedSent = false;
+
+  const sendStopped = () => {
+    if (stoppedSent) return;
+
+    ctx.postMessage({
+      type: 'stopped',
+    } as Protocol.Worker.StoppedRequest);
+    stoppedSent = true;
+  };
+
+  const mod = dynRequire(cachedRt, {
+    setRegister8b: (address: number, value: number) => sharedRegister_.setRegister8b(address, value),
+    setRegister16b: (address: number, value: number) => sharedRegister_.setRegister16b(address, value),
+    setRegister32b: (address: number, value: number) => sharedRegister_.setRegister32b(address, value),
+    readRegister8b: (address: number) => sharedRegister_.getRegisterValue8b(address),
+    readRegister16b: (address: number) => sharedRegister_.getRegisterValue16b(address),
+    readRegister32b: (address: number) => sharedRegister_.getRegisterValue32b(address),
+    onStop: sendStopped
+  },
+  print,
+  printErr
+  );
+
+  try {
+    const instance = new Instance({
+      source: new DOMParser().parseFromString(message.code, "text/xml"),
+      modules: {
+        control,
+        data,
+        operator,
+        motor: motor(mod),
+      }
+    });
+
+    instance.run();
+  } catch (e) {
+    if (InstanceError.is(e)) {
+      printErr(`${e.module}/${e.function}: ${e.original.name}: ${e.original.message}`);
+    } else {
+      const err = e as Error;
+      printErr(`${err.name}: ${err.message}`);
+      if (err.stack) printErr(err.stack);
+    }
+  }
 };
 
 const start = async (message: Protocol.Worker.StartRequest) => {
@@ -114,7 +187,7 @@ const start = async (message: Protocol.Worker.StartRequest) => {
       break;
     }
     case 'scratch': {
-      printErr('Scratch is not yet supported');
+      startScratch(message);
       ctx.postMessage({
         type: 'stopped',
       } as Protocol.Worker.StoppedRequest);
