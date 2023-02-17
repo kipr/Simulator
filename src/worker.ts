@@ -292,6 +292,10 @@ const startScratch = async (message: Protocol.Worker.StartRequest) => {
   );
 
   mod.onRuntimeInitialized = () => {
+    ctx.postMessage({
+      type: 'start'
+    });
+    
     try {
       mod._main();
     } catch (e: unknown) {
@@ -338,8 +342,6 @@ const startScratch = async (message: Protocol.Worker.StartRequest) => {
       
     }
   };
-
-  
 };
 
 const start = async (message: Protocol.Worker.StartRequest) => {
