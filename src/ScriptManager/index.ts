@@ -10,7 +10,7 @@ import { v4 as uuid } from 'uuid';
 import construct from '../util/construct';
 import { Ids, ScriptSceneBinding } from './ScriptSceneBinding';
 import { AxisAngle, Quaternion, ReferenceFrame, Vector3 as RawVector3 } from '../math';
-import { Angle, Distance, Mass } from '../util';
+import { Angle, Mass, Distance } from '../util/Value';
 
 class ScriptManager {
   private scene_: Scene;
