@@ -339,7 +339,8 @@ const startScratch = async (message: Protocol.Worker.StartRequest) => {
       } else {
         printErr(e.message);
       }
-      
+    } finally {
+      sendStopped();
     }
   };
 };
@@ -365,9 +366,6 @@ const start = async (message: Protocol.Worker.StartRequest) => {
     }
     case 'scratch': {
       startScratch(message);
-      ctx.postMessage({
-        type: 'stopped',
-      } as Protocol.Worker.StoppedRequest);
       break;
     }
   }
