@@ -1,3 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+
 import Protocol from './WorkerProtocol';
 import dynRequire from './require';
 import SharedRegisters from './SharedRegisters';
@@ -330,6 +337,7 @@ const startScratch = async (message: Protocol.Worker.StartRequest) => {
       console.error(e);
       let last = e;
       while (InstanceError.is(e)) {
+        // eslint-disable-next-line no-ex-assign
         e = e.original;
         last = e;
       }
@@ -364,7 +372,7 @@ const start = async (message: Protocol.Worker.StartRequest) => {
       break;
     }
     case 'scratch': {
-      startScratch(message);
+      void startScratch(message);
       ctx.postMessage({
         type: 'stopped',
       } as Protocol.Worker.StoppedRequest);

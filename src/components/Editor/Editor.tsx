@@ -125,7 +125,7 @@ export const createEditorBarComponents = ({
             </>
         }));
       } else {
-        /*editorBar.push(BarComponent.create(Button, {
+        /* editorBar.push(BarComponent.create(Button, {
           theme,
           onClick: target.onMiniClick,
           children:
@@ -133,7 +133,7 @@ export const createEditorBarComponents = ({
               <Fa icon={target.mini ? faExpand : faCompress} />
               {' '} {LocalizedString.lookup(target.mini ? tr('Show Toolbox') : tr('Hide Toolbox'), locale)}
             </>
-        }));*/
+        })); */
       }
 
       editorBar.push(BarComponent.create(Button, {

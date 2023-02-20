@@ -41,7 +41,7 @@ class ScratchEditor extends React.Component<Props, State> {
 
     this.state = {
       size: Vector2.ZERO,
-    }
+    };
   }
 
   private debounce_: boolean;
@@ -55,9 +55,6 @@ class ScratchEditor extends React.Component<Props, State> {
         } else {
           Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(this.props.code), this.workspace_);
         }
-      }
-
-      if (prevProps.toolboxHidden !== nextProps.toolboxHidden) {
       }
 
       if (prevState.size !== nextState.size) {
@@ -80,7 +77,7 @@ class ScratchEditor extends React.Component<Props, State> {
 
     if (this.outerContainerRef_) this.resizeListener_.observe(this.outerContainerRef_);
     
-  }
+  };
   
   private containerRef_: HTMLDivElement | null = null;
   private bindContainerRef_ = (ref: HTMLDivElement) => {
@@ -93,7 +90,7 @@ class ScratchEditor extends React.Component<Props, State> {
     if (this.containerRef_) {
       this.injectBlockly_();
     }
-  }
+  };
 
   private workspace_: Blockly.Workspace;
   private injectBlockly_ = () => {
@@ -140,7 +137,7 @@ class ScratchEditor extends React.Component<Props, State> {
     }
 
     this.workspace_.addChangeListener(this.onChange_);
-  }
+  };
 
   private onChange_ = () => {
     this.debounce_ = true;
