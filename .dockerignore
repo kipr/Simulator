@@ -13,5 +13,7 @@ dependencies/emsdk/.emscripten.old
 dependencies/cpython/.git
 dependencies/cpython/builddir
 dependencies/libwallaby/.git
+dependencies/kipr-scratch/libwallaby-build
+dependencies/kipr-scratch/kipr-scratch
 
 **/.github
