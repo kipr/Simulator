@@ -10,6 +10,7 @@ namespace Record {
     Scene = 'scene',
     Challenge = 'challenge',
     ChallengeCompletion = 'challenge-completion',
+    Assignment = 'assignment',
   }
 
   interface Base<T> {
