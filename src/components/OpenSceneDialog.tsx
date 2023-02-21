@@ -130,7 +130,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
           </InfoColumn>
         </Container>
         <DialogBar theme={theme} onAccept={this.onAccept}>
-          <Fa icon={faCheck} /> Accept
+          <Fa icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}
         </DialogBar>
       </Dialog>
     );
@@ -148,12 +148,12 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
   };
 
   private createSceneName = (sceneId: string, scene: Scene) => {
-    const { theme } = this.props;
+    const { theme, locale } = this.props;
     const { selectedSceneId } = this.state;
     
     return (
       <SceneName key={sceneId} theme={theme} selected={sceneId === selectedSceneId} onClick={() => this.onSceneClick(sceneId)}>
-        {LocalizedString.lookup(scene.name, LocalizedString.EN_US)}
+        {LocalizedString.lookup(scene.name, locale)}
       </SceneName>
     );
   };

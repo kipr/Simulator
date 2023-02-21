@@ -912,12 +912,12 @@ class NodeSettings extends React.PureComponent<Props, State> {
     ];
     
     const EULER_ORDER_OPTIONS: ComboBox.Option[] = [
-      ComboBox.option('XYZ', 'xyz'),
-      ComboBox.option('YZX', 'yzx'),
-      ComboBox.option('ZXY', 'zxy'),
-      ComboBox.option('XZY', 'xzy'),
-      ComboBox.option('YXZ', 'yxz'),
-      ComboBox.option('ZYX', 'zyx'),
+      ComboBox.option(LocalizedString.lookup(tr('XYZ', 'Rotation order'), locale), 'xyz'),
+      ComboBox.option(LocalizedString.lookup(tr('YZX', 'Rotation order'), locale), 'yzx'),
+      ComboBox.option(LocalizedString.lookup(tr('ZXY', 'Rotation order'), locale), 'zxy'),
+      ComboBox.option(LocalizedString.lookup(tr('XZY', 'Rotation order'), locale), 'xzy'),
+      ComboBox.option(LocalizedString.lookup(tr('YXZ', 'Rotation order'), locale), 'yxz'),
+      ComboBox.option(LocalizedString.lookup(tr('ZYX', 'Rotation order'), locale), 'zyx'),
     ];
     
     const NODE_TYPE_OPTIONS: ComboBox.Option[] = [

@@ -4,7 +4,7 @@
 
 ![CD prod status](https://github.com/kipr/simulator/actions/workflows/cd-prod.yml/badge.svg)
 
-A Robotics Simulator built in typescript.
+A Robotics Simulator built in TypeScript.
 Simulates a botball/JBC style demobot with a built in IDE.
 
 # Development
@@ -76,6 +76,11 @@ yarn run build-deps
 Navigate to the root directory of this repository, then run:
 ```bash
 yarn install
+```
+
+## Build Translations
+```bash
+yarn run build-i18n
 ```
 
 # Running
