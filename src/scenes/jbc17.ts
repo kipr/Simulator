@@ -96,7 +96,7 @@ export const JBC_17: Scene = {
       type: 'object',
       geometryId: 'finish_geom',
       name: { [LocalizedString.EN_US]: 'Finish Line' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(18),
@@ -116,7 +116,7 @@ export const JBC_17: Scene = {
       type: 'object',
       geometryId: 'startBox_geom',
       name: { [LocalizedString.EN_US]: 'Finish Line' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(-70),
@@ -137,7 +137,7 @@ export const JBC_17: Scene = {
       type: 'object',
       geometryId: 'n_geom',
       name: { [LocalizedString.EN_US]: 'Checkpoint 1' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(-18),
@@ -158,7 +158,7 @@ export const JBC_17: Scene = {
       type: 'object',
       geometryId: 'n_geom',
       name: { [LocalizedString.EN_US]: 'Checkpoint 3' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(18),
@@ -179,7 +179,7 @@ export const JBC_17: Scene = {
       type: 'object',
       geometryId: 'n_geom',
       name: { [LocalizedString.EN_US]: 'Checkpoint 2' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(0),
