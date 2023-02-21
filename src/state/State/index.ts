@@ -8,6 +8,14 @@ import Documentation from './Documentation';
 import DocumentationLocation from './Documentation/DocumentationLocation';
 import Robot from './Robot';
 import Scene, { AsyncScene } from './Scene';
+import User from './User';
+import { AsyncAssignment } from './Assignment';
+
+export type Assignments = Dict<AsyncAssignment>;
+
+export namespace Assignments {
+  export const EMPTY: Assignments = {};
+}
 
 export type Scenes = Dict<AsyncScene>;
 
@@ -65,4 +73,8 @@ export namespace DocumentationState {
 
 export interface I18n {
   locale: LocalizedString.Language;
+}
+
+export interface Users {
+  me: Async<Record<string, never>, User>;
 }

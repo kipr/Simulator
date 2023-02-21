@@ -16,6 +16,7 @@ import DocumentationRoot from './components/documentation/DocumentationRoot';
 import DocumentationWindow from './components/documentation/DocumentationWindow';
 import { State as ReduxState } from './state';
 import { DARK } from './components/theme';
+import CurriculumPage from './lms/CurriculumPage';
 
 export interface AppPublicProps {
 
@@ -75,6 +76,7 @@ class App extends React.Component<Props, State> {
           <Route path="/tutorials" exact component={Tutorials} />
           <Route path="/scene/:sceneId" component={Root} />
           <Route path="/challenge/:challengeId" component={ChallengeRoot} />
+          <Route path="/curriculum" component={CurriculumPage} />
         </Switch>
         <DocumentationWindow theme={DARK} />
       </>
