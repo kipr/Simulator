@@ -1055,3 +1055,27 @@ msgstr ""
 msgctxt "URL link to github repository follows"
 msgid "Visit our"
 msgstr ""
+
+msgctxt "Rotation order"
+msgid "XYZ"
+msgstr ""
+
+msgctxt "Rotation order"
+msgid "YZX"
+msgstr ""
+
+msgctxt "Rotation order"
+msgid "ZXY"
+msgstr ""
+
+msgctxt "Rotation order"
+msgid "XZY"
+msgstr ""
+
+msgctxt "Rotation order"
+msgid "YXZ"
+msgstr ""
+
+msgctxt "Rotation order"
+msgid "ZYX"
+msgstr ""

@@ -57,7 +57,7 @@ export const JBC_15B: Scene = {
     'ream1': {
       type: 'from-template',
       templateId: 'ream',
-      name: { [LocalizedString.EN_US]: 'Paper Ream 1' },
+      name: tr('Paper Ream 1'),
       startingOrigin: REAM1_ORIGIN,
       origin: REAM1_ORIGIN,
       visible: true,
@@ -65,7 +65,7 @@ export const JBC_15B: Scene = {
     'ream2': {
       type: 'from-template',
       templateId: 'ream',
-      name: { [LocalizedString.EN_US]: 'Paper Ream 2' },
+      name: tr('Paper Ream 2'),
       startingOrigin: REAM2_ORIGIN,
       origin: REAM2_ORIGIN,
       visible: true,
