@@ -24,7 +24,7 @@ jobs:
       run: yarn run build-i18n
       working-directory: simulator
     - name: Build production bundle
-      run: yarn build
+      run: NODE_OPTIONS=--openssl-legacy-provider yarn build
       working-directory: simulator
     - name: Run linter
       run: yarn lint

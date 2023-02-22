@@ -578,7 +578,7 @@ class SceneBinding {
     );
 
     ret.intensity = node.intensity;
-
+    
     this.shadowGenerators_[id] = SceneBinding.createShadowGenerator_(ret);
 
     ret.setEnabled(node.visible);

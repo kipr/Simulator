@@ -210,7 +210,7 @@ export class Space {
   private async createScene(): Promise<void> {
     this.bScene_.onPointerObservable.add(this.onPointerTap_, Babylon.PointerEventTypes.POINTERTAP);
 
-    const light = new Babylon.HemisphericLight('light1', new Babylon.Vector3(0, 1, 0), this.bScene_);
+    const light = new Babylon.HemisphericLight('hemispheric_light', new Babylon.Vector3(0, 1, 0), this.bScene_);
     light.intensity = 0.5;
     light.diffuse = new Babylon.Color3(1.0, 1.0, 1.0);
 
@@ -339,8 +339,10 @@ export class Space {
     } else if (bNode instanceof Babylon.ShadowLight) {
       bPosition = bNode.position;
       bRotation = Babylon.Quaternion.Identity();
-    } else {
-      throw new Error(`Unknown node type: ${bNode.constructor.name}`);
+    } else if (bNode.getClassName() === 'PointLight') {
+      const pointLight = bNode as Babylon.PointLight;
+      bPosition = pointLight.position;
+      bRotation = Babylon.Quaternion.Identity();
     }
 
     if (bPosition) {
