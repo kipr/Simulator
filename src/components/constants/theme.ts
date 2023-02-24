@@ -82,12 +82,13 @@ export const LIGHT: Theme = {
   ...COMMON,
   foreground: 'white',
   color: '#000',
-  backgroundColor: '#fff',
+  backgroundColor: '#efefef',
+  borderColor: '#c0c0c0',
   transparentBackgroundColor: a => `rgba(255, 255, 255, ${a})`,
   switch: {
     on: {
-      primary: 'rgb(0, 0, 0)',
-      secondary: 'rgb(72, 139, 73)'
+      primary: 'rgb(63, 63, 63)',
+      secondary: 'rgb(72, 200, 73)'
     },
     off: {
       primary: 'rgb(127, 127, 127)',

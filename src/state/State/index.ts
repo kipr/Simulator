@@ -8,13 +8,34 @@ import Documentation from './Documentation';
 import DocumentationLocation from './Documentation/DocumentationLocation';
 import Robot from './Robot';
 import Scene, { AsyncScene } from './Scene';
-import User from './User';
+import User, { AsyncUser } from './User';
 import { AsyncAssignment } from './Assignment';
+
+import tr from '@i18n';
+import Author from '../../db/Author';
+import Subject from './Assignment/Subject';
+import StandardsLocation from './Assignment/StandardsLocation';
 
 export type Assignments = Dict<AsyncAssignment>;
 
 export namespace Assignments {
   export const EMPTY: Assignments = {};
+
+  export const TEST: Assignments = {
+    'test': Async.loaded({
+      value: {
+        name: tr('Test Assignment'),
+        description: tr('This is a test assignment.'),
+        author: Author.organization('kipr'),
+        assets: {},
+        educatorNotes: tr('Educator notes'),
+        studentNotes: tr('Student notes'),
+        gradeLevels: [0, 1, 2, 3, 4, 7, 8, 9, 11, 12],
+        subjects: [Subject.Science],
+        standardsConformance: [StandardsLocation.Alaska, StandardsLocation.Oklahoma],
+      }
+    }),
+  };
 }
 
 export type Scenes = Dict<AsyncScene>;
@@ -76,5 +97,12 @@ export interface I18n {
 }
 
 export interface Users {
-  me: Async<Record<string, never>, User>;
+  me?: string;
+  users: Dict<AsyncUser>;
+}
+
+export namespace Users {
+  export const EMPTY: Users = {
+    users: {},
+  };
 }
