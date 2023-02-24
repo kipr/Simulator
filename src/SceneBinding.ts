@@ -951,6 +951,7 @@ class SceneBinding {
   };
 
   private updateNode_ = async (id: string, node: Patch<Node>, geometryPatches: Dict<Patch<Geometry>>, nextScene: Scene): Promise<Babylon.Node> => {
+    
     switch (node.type) {
       // The node hasn't changed type, but some fields have been changed
       case Patch.Type.InnerChange: {
@@ -1211,7 +1212,7 @@ class SceneBinding {
     for (const nodeId of nodeIds) {
       const node = patch.nodes[nodeId];
       if (node.type !== Patch.Type.Remove) continue;
-
+      console.log("Node from setScene(forloop): " + node);
       await this.updateNode_(nodeId, node, patch.geometry, scene);
       
       delete this.nodes_[nodeId];
@@ -1226,7 +1227,8 @@ class SceneBinding {
     for (const nodeId of sortedNodeIds) {
       if (removedKeys.has(nodeId)) continue;
       const node = patch.nodes[nodeId];
-
+      console.log("Node from setScene: " + node + " with nodeId: " + nodeId);
+      
       const updatedNode = await this.updateNode_(nodeId, node, patch.geometry, scene);
       if (updatedNode) {
         this.nodes_[nodeId] = updatedNode;
