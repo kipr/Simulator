@@ -5,6 +5,7 @@ import Subject from './Subject';
 import tr from '@i18n';
 import Dict from '../../../Dict';
 import Async from '../Async';
+import StandardsLocation from './StandardsLocation';
 
 interface Assignment {
   author: Author;
@@ -18,12 +19,12 @@ interface Assignment {
   subjects: Subject[];
 
   educatorNotes: LocalizedString;
-  studentNodes: LocalizedString;
+  studentNotes: LocalizedString;
 
   assets: Dict<string>;
 }
 
-export type AssignmentBrief = Pick<Assignment, 'author' | 'name' | 'gradeLevels' | 'subjects'>;
+export type AssignmentBrief = Pick<Assignment, 'author' | 'name' | 'gradeLevels' | 'subjects' | 'standardsConformance'>;
 
 namespace Assignment {
   /**
@@ -33,37 +34,37 @@ namespace Assignment {
    */
   export const gradeLevelString = (gradeLevel: number) => {
     switch (gradeLevel) {
-      case 0: return tr('Kindergarten');
-      case 1: return tr('1st grade');
-      case 2: return tr('2nd grade');
-      case 3: return tr('3rd grade');
-      case 4: return tr('4th grade');
-      case 5: return tr('5th grade');
-      case 6: return tr('6th grade');
-      case 7: return tr('7th grade');
-      case 8: return tr('8th grade');
-      case 9: return tr('9th grade');
-      case 10: return tr('10th grade');
-      case 11: return tr('11th grade');
-      case 12: return tr('12th grade');
+      case 0: return tr('Kindergarten', 'Student grade level');
+      case 1: return tr('1st grade', 'Student grade level');
+      case 2: return tr('2nd grade', 'Student grade level');
+      case 3: return tr('3rd grade', 'Student grade level');
+      case 4: return tr('4th grade', 'Student grade level');
+      case 5: return tr('5th grade', 'Student grade level');
+      case 6: return tr('6th grade', 'Student grade level');
+      case 7: return tr('7th grade', 'Student grade level');
+      case 8: return tr('8th grade', 'Student grade level');
+      case 9: return tr('9th grade', 'Student grade level');
+      case 10: return tr('10th grade', 'Student grade level');
+      case 11: return tr('11th grade', 'Student grade level');
+      case 12: return tr('12th grade', 'Student grade level');
     }
   };
 
   export const gradeLevelAbbreviatedString = (gradeLevel: number) => {
     switch (gradeLevel) {
-      case 0: return tr('K');
-      case 1: return tr('1st');
-      case 2: return tr('2nd');
-      case 3: return tr('3rd');
-      case 4: return tr('4th');
-      case 5: return tr('5th');
-      case 6: return tr('6th');
-      case 7: return tr('7th');
-      case 8: return tr('8th');
-      case 9: return tr('9th');
-      case 10: return tr('10th');
-      case 11: return tr('11th');
-      case 12: return tr('12th');
+      case 0: return tr('K', 'Student grade level; Kingergarten');
+      case 1: return tr('1st', 'Student grade level');
+      case 2: return tr('2nd', 'Student grade level');
+      case 3: return tr('3rd', 'Student grade level');
+      case 4: return tr('4th', 'Student grade level');
+      case 5: return tr('5th', 'Student grade level');
+      case 6: return tr('6th', 'Student grade level');
+      case 7: return tr('7th', 'Student grade level');
+      case 8: return tr('8th', 'Student grade level');
+      case 9: return tr('9th', 'Student grade level');
+      case 10: return tr('10th', 'Student grade level');
+      case 11: return tr('11th', 'Student grade level');
+      case 12: return tr('12th', 'Student grade level');
     }
   };
 

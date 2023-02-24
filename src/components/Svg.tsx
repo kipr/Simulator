@@ -14,6 +14,8 @@ export interface SvgProps extends StyleProps {
   onMouseEnter?: (event: React.MouseEvent) => void;
   onMouseLeave?: (event: React.MouseEvent) => void;
   onMouseMove?: (event: React.MouseEvent) => void;
+
+  svgRef?: React.Ref<SVGSVGElement>;
 }
 
 interface SvgState {
@@ -76,12 +78,12 @@ class Svg extends React.Component<Props, State> {
   
   render() {
     const { props, state } = this;
-    const { className, style, draw, ...rest } = props;
+    const { className, style, draw, svgRef, ...rest } = props;
     const { size } = state;
 
     return (
       <RootContainer className={className} style={style} ref={this.bindContainerRef_}>
-        <Container $width={size.x} $height={size.y} viewBox={`0 0 ${size.x} ${size.y}`} {...rest}>
+        <Container ref={svgRef} $width={size.x} $height={size.y} viewBox={`0 0 ${size.x} ${size.y}`} {...rest}>
           {draw(size)}
         </Container>
       </RootContainer>

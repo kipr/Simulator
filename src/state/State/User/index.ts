@@ -1,3 +1,5 @@
+import Async from '../Async';
+
 export interface CurriculumAccess {
   /** A ISO 8601 timestamp of when the curriculum access begins. */
   startDate: string;
@@ -6,7 +8,14 @@ export interface CurriculumAccess {
 }
 
 interface User {
+  name?: string;
   cirriculumAccess?: CurriculumAccess;
+
+  myAssignments?: string[];
 }
+
+export type UserBrief = Pick<User, 'name'>;
+
+export type AsyncUser = Async<UserBrief, User>;
 
 export default User;
