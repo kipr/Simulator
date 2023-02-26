@@ -75,7 +75,7 @@
     "image-loader": "^0.0.1",
     "image-webpack-loader": "^6.0.0",
     "immer": "^9.0.15",
-    "itch": "https://github.com/kipr/itch#23",
+    "itch": "https://github.com/kipr/itch#24",
     "ivygate": "https://github.com/kipr/ivygate#v0.1.5",
     "kipr-scratch": "file:dependencies/kipr-scratch/kipr-scratch",
     "morgan": "^1.10.0",
