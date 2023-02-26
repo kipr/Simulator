@@ -163,7 +163,6 @@ app.post('/feedback', (req, res) => {
   let files = null;
 
   if (body.includeAnonData) {
-    content += `User Code:\n\`\`\`${body.state.code} \`\`\``;
     content += `Browser User-Agent: ${body.userAgent}\n`;
     files = [{
       attachment: Buffer.from(JSON.stringify(body.state, undefined, 2)),
