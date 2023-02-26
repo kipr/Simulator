@@ -7,12 +7,8 @@ import Loading from './components/Loading';
 import Dashboard from './pages/Dashboard';
 import Tutorials from './pages/Tutorials';
 import Root from './components/Root';
-import db from './db';
 import { connect } from 'react-redux';
-import { push } from 'connected-react-router';
-import LoginPage from './login/LoginPage';
 import ChallengeRoot from './components/ChallengeRoot';
-import DocumentationRoot from './components/documentation/DocumentationRoot';
 import DocumentationWindow from './components/documentation/DocumentationWindow';
 import { State as ReduxState } from './state';
 import { DARK } from './components/theme';
@@ -47,12 +43,11 @@ class App extends React.Component<Props, State> {
     this.onAuthStateChangedSubscription_ = auth.onAuthStateChanged(user => {
       if (user) {
         console.log('User detected.');
+        this.setState({ loading: false });
       } else {
         console.log('No user detected');
+        this.props.login();
       }
-      this.setState({ loading: false }, () => {
-        if (!user) this.props.login();
-      });
     });
   }
 
