@@ -6,13 +6,13 @@ import {
   Euler as RawEuler,
   Vector2 as RawVector2,
   Vector3 as RawVector3,
-  Quaternion as RawQuaternion,
   AxisAngle as RawAxisAngle,
   ReferenceFrame as RawReferenceFrame,
   Quaternion,
 } from './math';
 
-import * as Babylon from 'babylonjs';
+import { TransformNode as BabylonTransformNode } from '@babylonjs/core/Meshes/transformNode';
+import { AbstractMesh as BabylonAbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
 
 export interface Vector2 {
   x: Distance;
@@ -321,7 +321,7 @@ export namespace ReferenceFrame {
   export const toBabylon = (frame: ReferenceFrame, distanceType: Distance.Type = 'meters') =>
     RawReferenceFrame.toBabylon(toRaw(frame || IDENTITY, distanceType));
 
-  export const syncBabylon = (frame: ReferenceFrame, bNode: Babylon.TransformNode | Babylon.AbstractMesh, distanceType: Distance.Type = 'meters') => {
+  export const syncBabylon = (frame: ReferenceFrame, bNode: BabylonTransformNode | BabylonAbstractMesh, distanceType: Distance.Type = 'meters') => {
     RawReferenceFrame.syncBabylon(toRaw(frame, distanceType), bNode);
   };
 }

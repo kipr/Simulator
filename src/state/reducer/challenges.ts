@@ -1,7 +1,5 @@
-import Robot from "../State/Robot";
 import Async from "../State/Async";
-import * as ROBOTS from '../../robots';
-import { Challenges, Robots } from '../State';
+import { Challenges } from '../State';
 import Challenge, { AsyncChallenge, ChallengeBrief } from '../State/Challenge';
 import construct from '../../util/construct';
 import Predicate from '../State/Challenge/Predicate';

@@ -2,7 +2,6 @@ import Async from '../state/State/Async';
 import { AsyncChallenge } from '../state/State/Challenge';
 import { AsyncChallengeCompletion } from '../state/State/ChallengeCompletion';
 import { AsyncScene } from '../state/State/Scene';
-import LocalizedString from '../util/LocalizedString';
 import { CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, SCENE_COLLECTION } from './constants';
 import Selector from './Selector';
 

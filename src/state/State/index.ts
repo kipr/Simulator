@@ -7,7 +7,7 @@ import { AsyncChallengeCompletion } from './ChallengeCompletion';
 import Documentation from './Documentation';
 import DocumentationLocation from './Documentation/DocumentationLocation';
 import Robot from './Robot';
-import Scene, { AsyncScene } from './Scene';
+import { AsyncScene } from './Scene';
 
 export type Scenes = Dict<AsyncScene>;
 

@@ -1,4 +1,6 @@
-import * as Babylon from 'babylonjs';
+import { Vector3 as BabylonVector3, Quaternion as BabylonQuaternion } from '@babylonjs/core/Maths/math.vector';
+import { TransformNode as BabylonTransformNode } from '@babylonjs/core/Meshes/transformNode';
+import { AbstractMesh as BabylonAbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
 
 export interface Vector2 {
   x: number;
@@ -113,8 +115,8 @@ export namespace Vector3 {
   export const lengthSquared = (vec: Vector3) => vec.x * vec.x + vec.y * vec.y + vec.z * vec.z;
   export const length = (vec: Vector3): number => Math.sqrt(lengthSquared(vec));
 
-  export const toBabylon = (vec: Vector3): Babylon.Vector3 => new Babylon.Vector3(vec.x, vec.y, vec.z);
-  export const fromBabylon = (vec: Babylon.Vector3): Vector3 => ({ x: vec.x, y: vec.y, z: vec.z });
+  export const toBabylon = (vec: Vector3): BabylonVector3 => new BabylonVector3(vec.x, vec.y, vec.z);
+  export const fromBabylon = (vec: BabylonVector3): Vector3 => ({ x: vec.x, y: vec.y, z: vec.z });
 
   export const distance = (lhs: Vector3, rhs: Vector3): number => Math.sqrt(Math.pow(rhs.x - lhs.x, 2) + Math.pow(rhs.y - lhs.y, 2) + Math.pow(rhs.z - lhs.z, 2));
 
@@ -183,13 +185,13 @@ export namespace Euler {
 
   export const fromQuaternion = (q: Quaternion): Euler => {
     // I'm cheating here... FIXME.
-    const q1 = new Babylon.Quaternion(q.x, q.y, q.z, q.w);
+    const q1 = new BabylonQuaternion(q.x, q.y, q.z, q.w);
     const e = q1.toEulerAngles();
     return { x: e.x, y: e.y, z: e.z, order: 'yzx' };
   };
 
   export const toQuaternion = (euler: Euler): Quaternion => {
-    return Quaternion.fromBabylon(Babylon.Quaternion.FromEulerAngles(euler.x, euler.y, euler.z));
+    return Quaternion.fromBabylon(BabylonQuaternion.FromEulerAngles(euler.x, euler.y, euler.z));
   };
 }
 
@@ -273,8 +275,8 @@ export namespace Quaternion {
     };
   };
 
-  export const toBabylon = (quat: Quaternion): Babylon.Quaternion => new Babylon.Quaternion(quat.x, quat.y, quat.z, quat.w);
-  export const fromBabylon = (quat: Babylon.Quaternion): Quaternion => ({
+  export const toBabylon = (quat: Quaternion): BabylonQuaternion => new BabylonQuaternion(quat.x, quat.y, quat.z, quat.w);
+  export const fromBabylon = (quat: BabylonQuaternion): Quaternion => ({
     x: quat.x,
     y: quat.y,
     z: quat.z,
@@ -294,7 +296,7 @@ export namespace Quaternion {
 
   export const slerp = (lhs: Quaternion, rhs: Quaternion, t: number): Quaternion => {
     // We're going to cheat
-    const q = Babylon.Quaternion.Slerp(toBabylon(lhs), toBabylon(rhs), t);
+    const q = BabylonQuaternion.Slerp(toBabylon(lhs), toBabylon(rhs), t);
     return fromBabylon(q);
   };
 
@@ -369,9 +371,9 @@ export namespace ReferenceFrame {
   });
 
   export interface ToBabylon {
-    position: Babylon.Vector3;
-    rotationQuaternion: Babylon.Quaternion;
-    scaling: Babylon.Vector3;
+    position: BabylonVector3;
+    rotationQuaternion: BabylonQuaternion;
+    scaling: BabylonVector3;
   }
 
   export const toBabylon = (frame: ReferenceFrame): ToBabylon => ({
@@ -380,7 +382,7 @@ export namespace ReferenceFrame {
     scaling: Vector3.toBabylon(frame.scale || Vector3.ONE)
   });
 
-  export const syncBabylon = (frame: ReferenceFrame, bNode: Babylon.TransformNode | Babylon.AbstractMesh) => {
+  export const syncBabylon = (frame: ReferenceFrame, bNode: BabylonTransformNode | BabylonAbstractMesh) => {
     const bFrame = toBabylon(frame || IDENTITY);
     bNode.position = bFrame.position;
     bNode.rotationQuaternion = bFrame.rotationQuaternion;

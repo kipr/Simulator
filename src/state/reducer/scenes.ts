@@ -6,20 +6,13 @@ import construct from '../../util/construct';
 import Geometry from '../State/Scene/Geometry';
 import Node from '../State/Scene/Node';
 import Camera from '../State/Scene/Camera';
-import { Vector3 as RawVector3 } from '../../math';
-import { ReferenceFrame, Rotation, Vector3 } from '../../unit-math';
+import { ReferenceFrame, Vector3 } from '../../unit-math';
 import db from '../../db';
 import { SCENE_COLLECTION } from '../../db/constants';
 import store from '..';
-import DbError from '../../db/Error';
 import Selector from '../../db/Selector';
 import Dict from '../../Dict';
-import LocalizedString from '../../util/LocalizedString';
-import { Angle } from '../../util';
-import produce, { original } from 'immer';
 import Script from '../State/Scene/Script';
-import { v4 } from 'uuid';
-import { WritableDraft } from 'immer/dist/internal';
 import { errorToAsyncError, mutate } from './util';
 
 export namespace ScenesAction {

@@ -1,5 +1,4 @@
 import deepNeq from '../deepNeq';
-import construct from '../util/construct';
 import Patch from '../util/Patch';
 import Motor from './Motor';
 import Servo from './Servo';

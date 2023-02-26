@@ -1,4 +1,3 @@
-import Protocol from '../WorkerProtocol';
 import FsDevice from './FsDevice';
 import SharedRegisters from '../SharedRegisters';
 

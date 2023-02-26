@@ -9,7 +9,7 @@ import ChallengeCompletion, { AsyncChallengeCompletion, ChallengeCompletionBrief
 import PredicateCompletion from '../State/ChallengeCompletion/PredicateCompletion';
 import Scene from '../State/Scene';
 import Dict from '../../Dict';
-import { ObjectPatch, OuterObjectPatch } from 'symmetry/dist';
+import { OuterObjectPatch } from 'symmetry/dist';
 import ProgrammingLanguage from '../../ProgrammingLanguage';
 import { ReferenceFrame } from '../../unit-math';
 

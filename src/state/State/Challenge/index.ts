@@ -2,11 +2,8 @@ import Author from '../../../db/Author';
 import Dict from '../../../Dict';
 import ProgrammingLanguage from '../../../ProgrammingLanguage';
 import LocalizedString from '../../../util/LocalizedString';
-import Reference from '../../../util/Reference';
 import Async from '../Async';
-import Scene from '../Scene';
 import Event from './Event';
-import Expr from './Expr';
 import Predicate from './Predicate';
 
 interface Challenge {

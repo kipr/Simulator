@@ -1,7 +1,6 @@
 import Protocol from './WorkerProtocol';
-import Registers, { MotorControlMode } from './RegisterState';
+import Registers from './RegisterState';
 
-import deepNeq from './deepNeq';
 import SharedRegisters from './SharedRegisters';
 import SharedRingBufferUtf32 from './SharedRingBufferUtf32';
 import SharedRegistersRobot from './SharedRegistersRobot';

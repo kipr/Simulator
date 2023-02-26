@@ -6,7 +6,7 @@ import { StyleProps } from '../style';
 import { styled } from 'styletron-react';
 import { Theme, ThemeProps } from './theme';
 import resizeListener, { ResizeListener } from './ResizeListener';
-import { GlobalEvents, GLOBAL_EVENTS, Slow } from '../util';
+import { GlobalEvents, GLOBAL_EVENTS } from '../util';
 
 export interface ScrollAreaProps extends StyleProps, ThemeProps {
   children: React.ReactNode;

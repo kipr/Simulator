@@ -4,7 +4,6 @@ import * as reducer from './reducer';
 import { DocumentationState, ChallengeCompletions, Challenges, I18n, Robots, Scenes } from './State';
 import { connectRouter, RouterState, routerMiddleware } from 'connected-react-router';
 import history from './history';
-import { AsyncScene } from './State/Scene';
 import { CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, SCENE_COLLECTION } from '../db/constants';
 import Record from '../db/Record';
 import Selector from '../db/Selector';

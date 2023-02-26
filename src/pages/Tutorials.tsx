@@ -6,9 +6,7 @@ import { Card } from '../components/Card';
 import MainMenu from '../components/MainMenu';
 import IFrame from '../components/IFrame';
 import { tutorialList } from './tutorialList';
-import { Vector2 } from '../math';
 
-import tr from '@i18n';
 import LocalizedString from '../util/LocalizedString';
 import { connect } from 'react-redux';
 
