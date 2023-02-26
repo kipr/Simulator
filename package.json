@@ -6,7 +6,7 @@
   "license": "GPL-3.0-only",
   "scripts": {
     "build": "yarn run clean-dist && webpack --config=configs/webpack/prod.js",
-    "build-deps": "python3 dependencies/build.py && yarn add file:dependencies/kipr-scratch/kipr-scratch",
+    "build-deps": "python3 dependencies/build.py && yarn add file:dependencies/kipr-scratch/kipr-scratch --cache-folder ./.yarncache",
     "watch": "node --max-old-space-size=8192 node_modules/webpack/bin/webpack.js --watch --config=configs/webpack/dev.js",
     "clean-dist": "rm -f -r -d dist",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
@@ -75,7 +75,7 @@
     "image-loader": "^0.0.1",
     "image-webpack-loader": "^6.0.0",
     "immer": "^9.0.15",
-    "itch": "https://github.com/kipr/itch#20",
+    "itch": "https://github.com/kipr/itch#23",
     "ivygate": "https://github.com/kipr/ivygate#v0.1.5",
     "kipr-scratch": "file:dependencies/kipr-scratch/kipr-scratch",
     "morgan": "^1.10.0",
