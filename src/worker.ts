@@ -182,6 +182,7 @@ const ctx: Worker = self as unknown as Worker;
 
 let sharedRegister_: SharedRegisters;
 let sharedConsole_: SharedRingBufferUtf32;
+let sharedDebug_: SharedArrayBuffer;
 
 const print = (stdout: string) => {
   sharedConsole_.pushStringBlocking(`${stdout}\n`);
@@ -319,6 +320,7 @@ const startScratch = async (message: Protocol.Worker.StartRequest) => {
     try {
       const instance = new Instance({
         source: new DOMParser().parseFromString(message.code, "text/xml"),
+        show: (ctx, name) => console.log(name, ctx.heap.get(name)),
         modules: {
           control,
           data,
@@ -393,6 +395,10 @@ ctx.onmessage = (e: MessageEvent) => {
     }
     case 'set-shared-console': {
       sharedConsole_ = new SharedRingBufferUtf32(message.sharedArrayBuffer);
+      break;
+    }
+    case 'set-shared-variables': {
+      sharedVariables_ = new SharedRingBufferUtf32(message.sharedArrayBuffer);
       break;
     }
   } 

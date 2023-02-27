@@ -12,6 +12,7 @@ export namespace Protocol {
       StartRequest |
       SetSharedRegistersRequest |
       SetSharedConsoleRequest |
+      SetSharedVariables |
       ProgramOutputRequest |
       ProgramErrorRequest |
       WorkerReadyRequest |
@@ -29,6 +30,11 @@ export namespace Protocol {
 
     export interface SetSharedConsoleRequest {
       type: 'set-shared-console';
+      sharedArrayBuffer: SharedArrayBuffer;
+    }
+
+    export interface SetSharedVariables {
+      type: 'set-shared-variables';
       sharedArrayBuffer: SharedArrayBuffer;
     }
 
