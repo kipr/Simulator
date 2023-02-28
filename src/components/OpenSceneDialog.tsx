@@ -21,7 +21,7 @@ import { auth } from '../firebase/firebase';
 
 
 export interface OpenSceneDialogProps extends ThemeProps {
-  scene:Scene;
+  scene: Scene;
   onClose: () => void;
 
 }
@@ -122,8 +122,8 @@ class OpenSceneDialog extends React.PureComponent<Props & ReduxOpenSceneDialogPr
   }
   
   render() {
-    const {props, state} = this;
-    const { theme, onClose, scenes} = props;
+    const { props, state } = this;
+    const { theme, onClose, scenes } = props;
     const { selectedSceneId, scene } = state;
     
 
@@ -172,27 +172,26 @@ class OpenSceneDialog extends React.PureComponent<Props & ReduxOpenSceneDialogPr
     const { theme } = this.props;
     const { selectedSceneId, scene } = this.state;
     
-    if(sceneIteration.name != scene.name)
-      {
-        return (
-          <SceneName key={sceneId} theme={theme} selected={sceneId === selectedSceneId} onClick={() => this.onSceneClick(sceneId)}>
-            {LocalizedString.lookup(sceneIteration.name, LocalizedString.EN_US)}
-          </SceneName>
-        );
-      }
-    else {
-      return(
-        <CurrentSceneName theme={theme} onClick={() => this.onSceneClick(sceneId)}>
-              {scene.name[LocalizedString.EN_US]}
-      </CurrentSceneName>
+    if (sceneIteration.name !== scene.name) {
+      return (
+        <SceneName key={sceneId} theme={theme} selected={sceneId === selectedSceneId} onClick={() => this.onSceneClick(sceneId)}>
+          {LocalizedString.lookup(sceneIteration.name, LocalizedString.EN_US)}
+        </SceneName>
       );
     }
+    
+    return (
+      <CurrentSceneName theme={theme} onClick={() => this.onSceneClick(sceneId)}>
+        {scene.name[LocalizedString.EN_US]}
+      </CurrentSceneName>
+    );
+    
     
   };
 
   private createSceneInfo = (currScene: AsyncScene) => {
     const { theme } = this.props;
-    const {scene} = this.state;
+    const { scene } = this.state;
 
     let name: string;
     let description: string;
@@ -203,12 +202,11 @@ class OpenSceneDialog extends React.PureComponent<Props & ReduxOpenSceneDialogPr
     if (!brief) {
       const value = Async.latestValue(currScene);
       
-      if (!value){
+      if (!value) {
         name = LocalizedString.lookup(scene.name, LocalizedString.EN_US);
         description = LocalizedString.lookup(scene.description, LocalizedString.EN_US);
         author = scene.author;
-      } 
-      else{
+      } else {
         name = LocalizedString.lookup(value.name, LocalizedString.EN_US);
         description = LocalizedString.lookup(value.description, LocalizedString.EN_US);
         author = value.author;
@@ -229,8 +227,7 @@ class OpenSceneDialog extends React.PureComponent<Props & ReduxOpenSceneDialogPr
   };
 
   private createNoSceneInfo = (loadedScenesArray: [string, Scene][]) => {
-    let description: string;
-    description = LocalizedString.lookup(loadedScenesArray[0][1].description, LocalizedString.EN_US);
+    const description = LocalizedString.lookup(loadedScenesArray[0][1].description, LocalizedString.EN_US);
     return <InfoText theme={this.props.theme}> {description}</InfoText>;
   };
 

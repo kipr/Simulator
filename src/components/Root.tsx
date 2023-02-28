@@ -388,7 +388,7 @@ class Root extends React.Component<Props, State> {
   private sendCurrentScene = () => {
     
     return this.currSceneId;
-  }
+  };
 
   private updateConsole_ = () => {
     const text = WorkerInstance.sharedConsole.popString();

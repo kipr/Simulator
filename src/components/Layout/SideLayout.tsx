@@ -306,7 +306,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
             name='World'
             mode={Mode.Sidebar}
           >
-          <WorldSceneText theme={theme}>Current World Scene: {sceneId}</WorldSceneText>
+            <WorldSceneText theme={theme}>Current World Scene: {sceneId}</WorldSceneText>
             <World theme={theme} sceneId={sceneId} />
           </SimulatorWidget>
           
@@ -341,7 +341,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     //   //   </SidePanelContainer>;
     //   default:
     
-    return( <Container style={style} className={className}>
+    return (<Container style={style} className={className}>
       <SidePanelContainer>
         <TabBar 
           theme={theme} isVertical={true} tabs={TABS} index={activePanel} 
