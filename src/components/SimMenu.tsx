@@ -352,7 +352,7 @@ class SimMenu extends React.PureComponent<Props, State> {
             onClick={onStartChallengeClick}
             style={{ position: 'relative' }}
           >
-          <ItemIcon icon={faFlagCheckered} /> {LocalizedString.lookup(tr('Start Challenge'), locale)}
+            <ItemIcon icon={faFlagCheckered} /> {LocalizedString.lookup(tr('Start Challenge'), locale)}
              
           </Item>
 
@@ -361,7 +361,7 @@ class SimMenu extends React.PureComponent<Props, State> {
             onClick={this.onLayoutClick_} 
             style={{ position: 'relative' }}
           >
-          <ItemIcon icon={faClone} /> {LocalizedString.lookup(tr('Layout'), locale)}
+            <ItemIcon icon={faClone} /> {LocalizedString.lookup(tr('Layout'), locale)}
 
             {subMenu.type === SubMenu.Type.LayoutPicker ? (
               <LayoutPicker
