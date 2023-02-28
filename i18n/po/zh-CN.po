@@ -1,0 +1,1081 @@
+msgid ""
+msgstr "Content-Type: text/plain\n"
+
+msgid "Robot"
+msgstr ""
+
+msgid "Base Scene - Surface A"
+msgstr ""
+
+msgid ""
+"A base scene using Surface A. Intended to be augmented to create full JBC "
+"scenes"
+msgstr ""
+
+msgid "JBC Surface A"
+msgstr ""
+
+msgid "Ground"
+msgstr ""
+
+msgid "Light"
+msgstr ""
+
+msgid "Base Scene - Surface B"
+msgstr ""
+
+msgid ""
+"A base scene using Surface B. Intended to be augmented to create full JBC "
+"scenes"
+msgstr ""
+
+msgid "JBC Surface B"
+msgstr ""
+
+msgid "Can %s"
+msgstr ""
+
+msgid "JBC Sandbox A"
+msgstr ""
+
+msgid ""
+"Junior Botball Challenge Sandbox on Mat A. All cans 1-12 are available by "
+"default."
+msgstr ""
+
+msgid "Paper Ream 1"
+msgstr ""
+
+msgid "Paper Ream 2"
+msgstr ""
+
+msgid "JBC Sandbox B"
+msgstr ""
+
+msgid "Junior Botball Challenge Sandbox on Mat B."
+msgstr ""
+
+msgid "JBC 1"
+msgstr ""
+
+msgid "Junior Botball Challenge 1: Tag, You're It!"
+msgstr ""
+
+msgid "JBC 2"
+msgstr ""
+
+msgid "Junior Botball Challenge 2: Ring Around the Can"
+msgstr ""
+
+msgid "JBC 2B"
+msgstr ""
+
+msgid "Junior Botball Challenge 2B: Ring Around the Can, Sr."
+msgstr ""
+
+msgid "JBC 2C"
+msgstr ""
+
+msgid "Junior Botball Challenge 2C: Back It Up"
+msgstr ""
+
+msgid "JBC 2D"
+msgstr ""
+
+msgid "Junior Botball Challenge 2D: Ring Around the Can and Back It Up"
+msgstr ""
+
+msgid "JBC 3"
+msgstr ""
+
+msgid "Junior Botball Challenge 3: Precision Parking"
+msgstr ""
+
+msgid "JBC 3B"
+msgstr ""
+
+msgid "Junior Botball Challenge 3B: Parallel Parking"
+msgstr ""
+
+msgid "JBC 3C"
+msgstr ""
+
+msgid "Junior Botball Challenge 3C: Quick Get Away!"
+msgstr ""
+
+msgid "JBC 4"
+msgstr ""
+
+msgid "Junior Botball Challenge 4: Figure Eight"
+msgstr ""
+
+msgid "JBC 4B"
+msgstr ""
+
+msgid "Junior Botball Challenge 4B: Barrel Racing"
+msgstr ""
+
+msgid "JBC 5"
+msgstr ""
+
+msgid "Junior Botball Challenge 5: Dance Party"
+msgstr ""
+
+msgid "JBC 5B"
+msgstr ""
+
+msgid "Junior Botball Challenge 5B: Line Dance"
+msgstr ""
+
+msgid "JBC 5C"
+msgstr ""
+
+msgid "Junior Botball Challenge 5C: Synchronized Dancing"
+msgstr ""
+
+msgid "JBC 6"
+msgstr ""
+
+msgid "Junior Botball Challenge 6: Load 'Em Up"
+msgstr ""
+
+msgid "JBC 6B"
+msgstr ""
+
+msgid "Junior Botball Challenge 6B: Pick 'Em Up"
+msgstr ""
+
+msgid "JBC 6C"
+msgstr ""
+
+msgid "Junior Botball Challenge 6C: Empty the Garage"
+msgstr ""
+
+msgid "Circle 2"
+msgstr ""
+
+msgid "Circle 9"
+msgstr ""
+
+msgid "Circle 10"
+msgstr ""
+
+msgid "Mat Surface"
+msgstr ""
+
+msgid "JBC 7"
+msgstr ""
+
+msgid "Junior Botball Challenge 7: Bulldozer Mania"
+msgstr ""
+
+msgid "JBC 7B"
+msgstr ""
+
+msgid "Junior Botball Challenge 7B: Cover Your Bases"
+msgstr ""
+
+msgid "JBC 8"
+msgstr ""
+
+msgid "Junior Botball Challenge 8: Serpentine"
+msgstr ""
+
+msgid "JBC 8B"
+msgstr ""
+
+msgid "Junior Botball Challenge 8B: Serpentine Jr."
+msgstr ""
+
+msgid "JBC 9"
+msgstr ""
+
+msgid "Junior Botball Challenge 9: Add It Up"
+msgstr ""
+
+msgid "JBC 9B"
+msgstr ""
+
+msgid "Junior Botball Challenge 9B: Balancing Act"
+msgstr ""
+
+msgid "JBC 10"
+msgstr ""
+
+msgid "Junior Botball Challenge 10: Solo Joust"
+msgstr ""
+
+msgid "JBC 10B"
+msgstr ""
+
+msgid "Junior Botball Challenge 10: Solo Joust Jr."
+msgstr ""
+
+msgid "JBC 12"
+msgstr ""
+
+msgid "Junior Botball Challenge 12: Unload 'Em"
+msgstr ""
+
+msgid "JBC 13"
+msgstr ""
+
+msgid "Junior Botball Challenge 13: Clean the Mat"
+msgstr ""
+
+msgid "JBC 15B"
+msgstr ""
+
+msgid "Junior Botball Challenge 15B: Bump Bump"
+msgstr ""
+
+msgid "JBC 17"
+msgstr ""
+
+msgid "Junior Botball Challenge 17: Walk the Line"
+msgstr ""
+
+msgid "JBC 17B"
+msgstr ""
+
+msgid "Junior Botball Challenge 17: Walk the Line II"
+msgstr ""
+
+msgid "JBC 19"
+msgstr ""
+
+msgid "Junior Botball Challenge 19: Mountain Rescue"
+msgstr ""
+
+msgid "Paper Ream"
+msgstr ""
+
+msgid "JBC 20"
+msgstr ""
+
+msgid "Junior Botball Challenge 20: Rescue the Cans"
+msgstr ""
+
+msgid "JBC 21"
+msgstr ""
+
+msgid "Junior Botball Challenge 21: Foot Tall"
+msgstr ""
+
+msgid "JBC 22"
+msgstr ""
+
+msgid "Junior Botball Challenge 22: Stackerz"
+msgstr ""
+
+msgid "Script Playground"
+msgstr ""
+
+msgid "Script tests"
+msgstr ""
+
+msgid "Demobot"
+msgstr ""
+
+msgid "JBC Challenge 6C"
+msgstr ""
+
+msgid "Can A Lifted"
+msgstr ""
+
+msgid "Can A picked up"
+msgstr ""
+
+msgid "Can B Lifted"
+msgstr ""
+
+msgid "Can B picked up"
+msgstr ""
+
+msgid "Can C Lifted"
+msgstr ""
+
+msgid "Can C picked up"
+msgstr ""
+
+msgid "Can A Placed"
+msgstr ""
+
+msgid "Can A placed on circle 2"
+msgstr ""
+
+msgid "Can B Placed"
+msgstr ""
+
+msgid "Can A placed on circle 9"
+msgstr ""
+
+msgid "Can C Placed"
+msgstr ""
+
+msgid "Can A placed on circle 10"
+msgstr ""
+
+msgid "Can A Upright"
+msgstr ""
+
+msgid "Can A upright on circle 2"
+msgstr ""
+
+msgid "Can B Upright"
+msgstr ""
+
+msgid "Can B upright on circle 9"
+msgstr ""
+
+msgid "Can C Upright"
+msgstr ""
+
+msgid "Can C upright on circle 10"
+msgstr ""
+
+msgid "Loading..."
+msgstr ""
+
+msgid "Logout"
+msgstr ""
+
+msgid "Tutorials"
+msgstr ""
+
+msgid "Learn how to get started with the simulator"
+msgstr ""
+
+msgid "3D Simulator"
+msgstr ""
+
+msgid "A simulator for the Botball demobot."
+msgstr ""
+
+msgid "About"
+msgstr ""
+
+msgid ""
+"KIPR is a 501(c) 3 organization started to make the long-term educational "
+"benefits of robotics accessible to students."
+msgstr ""
+
+msgid "Quick Start"
+msgstr ""
+
+msgid "Navigating in 3D"
+msgstr ""
+
+msgid "Learn the controls for navigating in 3D in the simulator"
+msgstr ""
+
+msgid "Robot Section"
+msgstr ""
+
+msgid "How to use the robot section"
+msgstr ""
+
+msgid "World Section"
+msgstr ""
+
+msgid "Learn how to create and manipulate items and scene in the simulator"
+msgstr ""
+
+msgid "Indent"
+msgstr ""
+
+msgid "Download"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "Error(s)"
+msgstr ""
+
+msgid "Warning(s)"
+msgstr ""
+
+msgid "grams"
+msgstr ""
+
+msgid "kilograms"
+msgstr ""
+
+msgid "pounds"
+msgstr ""
+
+msgid "ounces"
+msgstr ""
+
+msgid "meters"
+msgstr ""
+
+msgid "centimeters"
+msgstr ""
+
+msgid "feet"
+msgstr ""
+
+msgid "inches"
+msgstr ""
+
+msgid "radians"
+msgstr ""
+
+msgid "degrees"
+msgstr ""
+
+msgid "Can"
+msgstr ""
+
+msgid "Box"
+msgstr ""
+
+msgid "Sphere"
+msgstr ""
+
+msgid "Cylinder"
+msgstr ""
+
+msgid "Cone"
+msgstr ""
+
+msgid "Plane"
+msgstr ""
+
+msgid "File"
+msgstr ""
+
+msgid "Euler"
+msgstr ""
+
+msgid "Axis Angle"
+msgstr ""
+
+msgid "Empty"
+msgstr ""
+
+msgid "Standard Object"
+msgstr ""
+
+msgid "Custom Object"
+msgstr ""
+
+msgid "Point Light"
+msgstr ""
+
+msgid "Unset"
+msgstr ""
+
+msgid "Basic"
+msgstr ""
+
+msgid "Texture"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+msgid "General"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "Geometry"
+msgstr ""
+
+msgid "Item"
+msgstr ""
+
+msgid "Box Options"
+msgstr ""
+
+msgid "Size X"
+msgstr ""
+
+msgid "Size Y"
+msgstr ""
+
+msgid "Size Z"
+msgstr ""
+
+msgid "Sphere Options"
+msgstr ""
+
+msgid "Radius"
+msgstr ""
+
+msgid "Cylinder Options"
+msgstr ""
+
+msgid "Height"
+msgstr ""
+
+msgid "Plane Options"
+msgstr ""
+
+msgid "File Options"
+msgstr ""
+
+msgid "URI"
+msgstr ""
+
+msgid "Material"
+msgstr ""
+
+msgid "Color Type"
+msgstr ""
+
+msgid "Color Red"
+msgstr ""
+
+msgid "Color Green"
+msgstr ""
+
+msgid "Color Blue"
+msgstr ""
+
+msgid "Color Texture URI"
+msgstr ""
+
+msgid "Albedo Type"
+msgstr ""
+
+msgid "Albedo Red"
+msgstr ""
+
+msgid "Albedo Green"
+msgstr ""
+
+msgid "Albedo Blue"
+msgstr ""
+
+msgid "Albedo Texture URI"
+msgstr ""
+
+msgid "Reflection Type"
+msgstr ""
+
+msgid "Reflection Red"
+msgstr ""
+
+msgid "Reflection Green"
+msgstr ""
+
+msgid "Reflection Blue"
+msgstr ""
+
+msgid "Reflection Texture URI"
+msgstr ""
+
+msgid "Emissive Type"
+msgstr ""
+
+msgid "Emissive Red"
+msgstr ""
+
+msgid "Emissive Green"
+msgstr ""
+
+msgid "Emissive Blue"
+msgstr ""
+
+msgid "Emissive Texture URI"
+msgstr ""
+
+msgid "Ambient Type"
+msgstr ""
+
+msgid "Ambient Red"
+msgstr ""
+
+msgid "Ambient Green"
+msgstr ""
+
+msgid "Ambient Blue"
+msgstr ""
+
+msgid "Ambient Texture URI"
+msgstr ""
+
+msgid "Metalness Type"
+msgstr ""
+
+msgid "Metalness"
+msgstr ""
+
+msgid "Metalness Texture URI"
+msgstr ""
+
+msgid "Position"
+msgstr ""
+
+msgid "X"
+msgstr ""
+
+msgid "Y"
+msgstr ""
+
+msgid "Z"
+msgstr ""
+
+msgid "Orientation"
+msgstr ""
+
+msgid "Order"
+msgstr ""
+
+msgid "Angle"
+msgstr ""
+
+msgid "Scale"
+msgstr ""
+
+msgid "Physics"
+msgstr ""
+
+msgid "Mass"
+msgstr ""
+
+msgid "Friction"
+msgstr ""
+
+msgid "Unnamed Object"
+msgstr ""
+
+msgid "Add Item"
+msgstr ""
+
+msgid "Accept"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Add Script"
+msgstr ""
+
+msgid "Select Scene"
+msgstr ""
+
+msgid "Save Scene"
+msgstr ""
+
+msgid "Copy Scene"
+msgstr ""
+
+msgid "Item(s) (%d)"
+msgstr ""
+
+msgid "Script(s) (%d)"
+msgstr ""
+
+msgid "Layouts"
+msgstr ""
+
+msgid "Overlay"
+msgstr ""
+
+msgid "Side"
+msgstr ""
+
+msgid "Options"
+msgstr ""
+
+msgid "Show All"
+msgstr ""
+
+msgid "Hide All"
+msgstr ""
+
+msgid "Clear"
+msgstr ""
+
+msgid "Rotation"
+msgstr ""
+
+msgid "Start Location"
+msgstr ""
+
+msgid "Motor Velocity Plot"
+msgstr ""
+
+msgid "Motor Position Plot"
+msgstr ""
+
+msgid "Analog Sensor Plot"
+msgstr ""
+
+msgid "Digital Sensor Plot"
+msgstr ""
+
+msgid "Analog Sensors"
+msgstr ""
+
+msgid "Digital Sensors"
+msgstr ""
+
+msgid "Servos"
+msgstr ""
+
+msgid "Motor Velocities"
+msgstr ""
+
+msgid "Motor Positions"
+msgstr ""
+
+msgid ""
+"This process is taking longer than expected...\n"
+"If you have a poor internet connection, this can take some time"
+msgstr ""
+
+msgid ""
+"The simulator may have failed to load.\n"
+"Please submit a feedback form to let us know!"
+msgstr ""
+
+msgid "Initializing Simulator..."
+msgstr ""
+
+msgid "all of"
+msgstr ""
+
+msgid "one or more of"
+msgstr ""
+
+msgid "exactly one of"
+msgstr ""
+
+msgid "once"
+msgstr ""
+
+msgid "not"
+msgstr ""
+
+msgid "Success"
+msgstr ""
+
+msgid "Failure"
+msgstr ""
+
+msgid "Editor"
+msgstr ""
+
+msgid "World"
+msgstr ""
+
+msgid "Script Editor"
+msgstr ""
+
+msgid "Console"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Save As"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Documentation"
+msgstr ""
+
+msgid "Feedback"
+msgstr ""
+
+msgid "Reset World"
+msgstr ""
+
+msgid "Layout"
+msgstr ""
+
+msgid "User Interface"
+msgstr ""
+
+msgid "Simulation"
+msgstr ""
+
+msgid "Locale"
+msgstr ""
+
+msgid "Switch languages"
+msgstr ""
+
+msgid "Sensor noise"
+msgstr ""
+
+msgid "Controls whether sensor outputs are affected by random noise"
+msgstr ""
+
+msgid "Realistic sensors"
+msgstr ""
+
+msgid ""
+"Controls whether sensors behave like real-world sensors instead of like "
+"ideal sensors. For example, real-world ET sensors are nonlinear"
+msgstr ""
+
+msgid "Autocomplete"
+msgstr ""
+
+msgid "Controls autocompletion of code, brackets, and quotes"
+msgstr ""
+
+msgid "Version %s (%s)"
+msgstr ""
+
+msgid "Copyright"
+msgstr ""
+
+msgid "This software is licensed under the terms of the"
+msgstr ""
+
+msgid "Thank you to the following contributors and testers:"
+msgstr ""
+
+msgid "Want to help improve the simulator and get your name listed here?"
+msgstr ""
+
+msgid "GitHub repository"
+msgstr ""
+
+msgid "We're happy to help you get started!"
+msgstr ""
+
+msgid ""
+"Give a helpful description of a problem you're facing, or a feature you'd "
+"like to request"
+msgstr ""
+
+msgid ""
+"Thanks for using the KIPR Simulator! Find a bug? Have a feature request? "
+"Let us know!"
+msgstr ""
+
+msgid "How has your experience using the KIPR Simulator been?"
+msgstr ""
+
+msgid "Email (optional): "
+msgstr ""
+
+msgid "Include anonymous usage data to help KIPR developers"
+msgstr ""
+
+msgid "Please try again,"
+msgstr ""
+
+msgid "open an issue on our github page"
+msgstr ""
+
+msgid ", or"
+msgstr ""
+
+msgid "email KIPR."
+msgstr ""
+
+msgid "Submit"
+msgstr ""
+
+msgid "Feedback Success"
+msgstr ""
+
+msgid "Feedback successfully submitted!"
+msgstr ""
+
+msgid "Thank you for helping improve the KIPR Simulator!"
+msgstr ""
+
+msgid "Open World"
+msgstr ""
+
+msgid "Unknown"
+msgstr ""
+
+msgid "Description: "
+msgstr ""
+
+msgid "Author: "
+msgstr ""
+
+msgid "Me"
+msgstr ""
+
+msgid "Select a scene to see more details"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "New World"
+msgstr ""
+
+msgid "Create"
+msgstr ""
+
+msgid "Delete %s?"
+msgstr ""
+
+msgid "Are you sure you want to delete %s?"
+msgstr ""
+
+msgid "Copy World"
+msgstr ""
+
+msgid "Error %d"
+msgstr ""
+
+msgid "Closing this dialog will take you back to the last well-known state."
+msgstr ""
+
+msgid "If this error persists, please submit feedback."
+msgstr ""
+
+msgid "World Settings"
+msgstr ""
+
+msgid "CHALLENGE"
+msgstr ""
+
+msgid "Start"
+msgstr ""
+
+msgid "Welcome to the KIPR Simulator!\n"
+msgstr ""
+
+msgid "Compiling...\n"
+msgstr ""
+
+msgid "Compilation succeeded with warnings.\n"
+msgstr ""
+
+msgid "Compilation succeeded.\n"
+msgstr ""
+
+msgid "Compilation failed.\n"
+msgstr ""
+
+msgid "Something went wrong during compilation.\n"
+msgstr ""
+
+msgid "Compilation succeeded with warnings\n"
+msgstr ""
+
+msgid "Compilation succeeded\n"
+msgstr ""
+
+msgid "Modules"
+msgstr ""
+
+msgid "Functions"
+msgstr ""
+
+msgid "Structures"
+msgstr ""
+
+msgid "Enumerations"
+msgstr ""
+
+msgid "Files"
+msgstr ""
+
+msgid "Search..."
+msgstr ""
+
+msgid "Detailed Description"
+msgstr ""
+
+msgid "Parameters"
+msgstr ""
+
+msgid "Return Value"
+msgstr ""
+
+msgid "Fields"
+msgstr ""
+
+msgid "Volume"
+msgstr ""
+
+msgid "RGB"
+msgstr ""
+
+msgid "Challenge"
+msgstr ""
+
+msgid "Stop"
+msgstr ""
+
+msgid "Run"
+msgstr ""
+
+msgid "and External Contributors"
+msgstr ""
+
+msgid "Visit our"
+msgstr ""
+
+msgctxt "Volume (box) in the 3D scene"
+msgid "Volume"
+msgstr ""
+
+msgctxt "Red, Green, Blue"
+msgid "RGB"
+msgstr ""
+
+msgctxt "Computer text command line (e.g., DOS)"
+msgid "Console"
+msgstr ""
+
+msgctxt "A predefined task for the user to complete"
+msgid "Challenge"
+msgstr ""
+
+msgctxt "Terminate program execution"
+msgid "Stop"
+msgstr ""
+
+msgctxt "Begin program execution"
+msgid "Run"
+msgstr ""
+
+msgctxt "Part of copyright notice, after KIPR is listed"
+msgid "and External Contributors"
+msgstr ""
+
+msgctxt "URL link to github repository follows"
+msgid "Visit our"
+msgstr ""
+
+msgctxt "Rotation order"
+msgid "XYZ"
+msgstr ""
+
+msgctxt "Rotation order"
+msgid "YZX"
+msgstr ""
+
+msgctxt "Rotation order"
+msgid "ZXY"
+msgstr ""
+
+msgctxt "Rotation order"
+msgid "XZY"
+msgstr ""
+
+msgctxt "Rotation order"
+msgid "YXZ"
+msgstr ""
+
+msgctxt "Rotation order"
+msgid "ZYX"
+msgstr ""

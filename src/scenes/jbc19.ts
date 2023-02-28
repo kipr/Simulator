@@ -5,6 +5,8 @@ import LocalizedString from '../util/LocalizedString';
 
 import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
 
+import tr from '@i18n';
+
 const baseScene = createBaseSceneSurfaceA();
 
 const REAM_ORIGIN: ReferenceFrame = {
@@ -21,8 +23,8 @@ const REAM_ORIGIN: ReferenceFrame = {
 
 export const JBC_19: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 19' },
-  description: { [LocalizedString.EN_US]: `Junior Botball Challenge 19: Mountain Rescue` },
+  name: tr('JBC 19'),
+  description: tr('Junior Botball Challenge 19: Mountain Rescue'),
   nodes: {
     ...baseScene.nodes,
     'can1': createCanNode(1, { x: Distance.centimeters(-3), y: Distance.centimeters(6), z: Distance.centimeters(98.6) }),
@@ -31,7 +33,7 @@ export const JBC_19: Scene = {
     'ream': {
       type: 'from-template',
       templateId: 'ream',
-      name: { [LocalizedString.EN_US]: 'Paper Ream' },
+      name: tr('Paper Ream'),
       startingOrigin: REAM_ORIGIN,
       origin: REAM_ORIGIN,
       visible: true,

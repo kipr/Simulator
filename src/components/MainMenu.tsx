@@ -8,16 +8,27 @@ import { DARK, ThemeProps } from './theme';
 
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
-export interface MenuProps extends StyleProps, ThemeProps {}
+import tr from '@i18n';
 
-interface MenuState {}
-  
-type Props = MenuProps;
-type State = MenuState;
-  
+import { connect } from 'react-redux';
+
+import { State as ReduxState } from '../state';
+
 import KIPR_LOGO_BLACK from '../assets/KIPR-Logo-Black-Text-Clear-Large.png';
 import KIPR_LOGO_WHITE from '../assets/KIPR-Logo-White-Text-Clear-Large.png';
 import { signOutOfApp } from '../firebase/modules/auth';
+import LocalizedString from '../util/LocalizedString';
+
+export interface MenuPublicProps extends StyleProps, ThemeProps {}
+
+interface MenuPrivateProps {
+  locale: LocalizedString.Language;
+}
+
+interface MenuState {}
+  
+type Props = MenuPublicProps & MenuPrivateProps;
+type State = MenuState;
   
 const Container = styled('div', (props: ThemeProps) => ({
   backgroundColor: props.theme.backgroundColor,
@@ -94,17 +105,19 @@ export class MainMenu extends React.Component<Props, State> {
   };
     
   render() {
-    const { className, style } = this.props;
+    const { className, style, locale } = this.props;
     const theme = DARK;
     return (
       <Container className={className} style={style} theme={theme}>
         <Logo theme={theme} src={theme.foreground === 'white' ? KIPR_LOGO_BLACK as string : KIPR_LOGO_WHITE as string} onClick={this.onDashboardClick_}/>
         <Spacer style={{ borderRight: `1px solid ${theme.borderColor}` }} />
         {/* <Item theme={theme} onClick={this.onDashboardClick_}><ItemIcon icon='compass'/> Dashboard</Item> */}
-        <Item theme={theme} onClick={this.onLogoutClick_}><ItemIcon icon={faSignOutAlt} /> Logout</Item>
+        <Item theme={theme} onClick={this.onLogoutClick_}><ItemIcon icon={faSignOutAlt} /> {LocalizedString.lookup(tr('Logout'), locale)}</Item>
       </Container>
     );
   }
 }
 
-export default MainMenu;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale
+}))(MainMenu) as React.ComponentType<MenuPublicProps>;

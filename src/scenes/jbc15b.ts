@@ -5,6 +5,8 @@ import LocalizedString from '../util/LocalizedString';
 
 import { createBaseSceneSurfaceA } from './jbcBase';
 
+import tr from '@i18n';
+
 const baseScene = createBaseSceneSurfaceA();
 
 const ROBOT_ORIGIN: ReferenceFrame = {
@@ -41,8 +43,8 @@ const REAM2_ORIGIN: ReferenceFrame = {
 
 export const JBC_15B: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 15B' },
-  description: { [LocalizedString.EN_US]: `Junior Botball Challenge 15B: Bump Bump` },
+  name: tr('JBC 15B'),
+  description: tr('Junior Botball Challenge 15B: Bump Bump'),
   nodes: {
     ...baseScene.nodes,
     // The normal starting position of the robot doesn't leave room for the paper ream in the starting box
@@ -55,7 +57,7 @@ export const JBC_15B: Scene = {
     'ream1': {
       type: 'from-template',
       templateId: 'ream',
-      name: { [LocalizedString.EN_US]: 'Paper Ream 1' },
+      name: tr('Paper Ream 1'),
       startingOrigin: REAM1_ORIGIN,
       origin: REAM1_ORIGIN,
       visible: true,
@@ -63,7 +65,7 @@ export const JBC_15B: Scene = {
     'ream2': {
       type: 'from-template',
       templateId: 'ream',
-      name: { [LocalizedString.EN_US]: 'Paper Ream 2' },
+      name: tr('Paper Ream 2'),
       startingOrigin: REAM2_ORIGIN,
       origin: REAM2_ORIGIN,
       visible: true,

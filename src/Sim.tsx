@@ -20,6 +20,7 @@ import Node from './state/State/Scene/Node';
 import { Robots } from './state/State';
 
 
+
 let Ammo: unknown;
 if (SIMULATOR_HAS_AMMO) {
   // This is on a non-standard path specified in the webpack config.
@@ -35,10 +36,7 @@ import ScriptManager from './ScriptManager';
 import Geometry from './state/State/Scene/Geometry';
 import Camera from './state/State/Scene/Camera';
 
-
 export let ACTIVE_SPACE: Space;
-
-
 
 export class Space {
   private static instance: Space;
@@ -164,7 +162,7 @@ export class Space {
       decoder: {
         wasmUrl: '/static/draco_wasm_wrapper_gltf.js',
         wasmBinaryUrl: '/static/draco_decoder_gltf.wasm',
-        fallbackUrl: '/static/draco_decoder_gltf.js'
+        fallbackUrl: '/static/draco_decoder_gltf.js',
       }
     };
   }
@@ -212,7 +210,7 @@ export class Space {
   private async createScene(): Promise<void> {
     this.bScene_.onPointerObservable.add(this.onPointerTap_, Babylon.PointerEventTypes.POINTERTAP);
 
-    const light = new Babylon.HemisphericLight('light1', new Babylon.Vector3(0, 1, 0), this.bScene_);
+    const light = new Babylon.HemisphericLight('hemispheric_light', new Babylon.Vector3(0, 1, 0), this.bScene_);
     light.intensity = 0.5;
     light.diffuse = new Babylon.Color3(1.0, 1.0, 1.0);
 
@@ -341,8 +339,10 @@ export class Space {
     } else if (bNode instanceof Babylon.ShadowLight) {
       bPosition = bNode.position;
       bRotation = Babylon.Quaternion.Identity();
-    } else {
-      throw new Error(`Unknown node type: ${bNode.constructor.name}`);
+    } else if (bNode.getClassName() === 'PointLight') {
+      const pointLight = bNode as Babylon.PointLight;
+      bPosition = pointLight.position;
+      bRotation = Babylon.Quaternion.Identity();
     }
 
     if (bPosition) {

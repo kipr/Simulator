@@ -22,16 +22,23 @@ import { Fa } from "../Fa";
 
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import LocalizedString from '../../util/LocalizedString';
+import { connect } from 'react-redux';
+import { State as ReduxState } from '../../state';
+import tr from '@i18n';
 
 export interface AddNodeAcceptance {
   node: Node;
   geometry?: Geometry;
 }
 
-export interface AddNodeDialogProps extends ThemeProps {
+export interface AddNodeDialogPublicProps extends ThemeProps {
   scene: Scene;
   onAccept: (acceptance: AddNodeAcceptance) => void;
   onClose: () => void;
+}
+
+interface AddNodeDialogPrivateProps {
+  locale: LocalizedString.Language;
 }
 
 interface AddNodeDialogState {
@@ -42,7 +49,7 @@ interface AddNodeDialogState {
   geometry: Geometry;
 }
 
-type Props = AddNodeDialogProps;
+type Props = AddNodeDialogPublicProps & AddNodeDialogPrivateProps;
 type State = AddNodeDialogState;
 
 const StyledScrollArea = styled(ScrollArea, (props: ThemeProps) => ({
@@ -73,7 +80,7 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
       node: {
         type: 'from-template',
         templateId: 'can',
-        name: { [LocalizedString.EN_US]: 'Unnamed Object' },
+        name: tr('Unnamed Object'),
         startingOrigin: origin,
         origin,
         editable: true,
@@ -131,7 +138,7 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { theme, onClose, scene } = props;
+    const { theme, onClose, scene, locale } = props;
     const { node, id } = state;
 
     // If there's a geometry in progress, create a temporary scene containing the geometry
@@ -144,7 +151,7 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
     };
 
     return (
-      <Dialog theme={theme} name='Add Item' onClose={onClose}>
+      <Dialog theme={theme} name={LocalizedString.lookup(tr('Add Item'), locale)} onClose={onClose}>
         <StyledScrollArea theme={theme}>
           <NodeSettings
             theme={theme}
@@ -159,11 +166,13 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
           />
         </StyledScrollArea>
         <DialogBar theme={theme} onAccept={this.onAccept_}>
-          <Fa icon={faCheck} /> Accept
+          <Fa icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}
         </DialogBar>
       </Dialog>
     );
   }
 }
 
-export default AddNodeDialog;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(AddNodeDialog) as React.ComponentType<AddNodeDialogPublicProps>;

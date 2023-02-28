@@ -42,7 +42,9 @@ const TabText = styled('div',  (props: { $vertical: boolean }) => ({
   transform: (props.$vertical) ? 'translate(-50%, -50%) rotate(-90deg)' : 'translate(-50%, -50%)',
   transformOrigin: 'center',
   textAlign: 'center',
-  display: 'flex'
+  display: 'flex',
+  wordBreak: 'keep-all',
+  whiteSpace: 'nowrap',
 }));
 
 export class Tab extends React.PureComponent<TabProps> {
@@ -75,6 +77,7 @@ const TabBarContainer = styled('div', (props: ThemeProps & { $vertical: boolean 
   flexDirection: (props.$vertical) ? 'column' : 'row' ,
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
+  
 }));
 
 export class TabBar extends React.PureComponent<Props> {

@@ -11,7 +11,7 @@ import World, { createWorldBarComponents } from '../World';
 
 import { Info } from '../Info';
 import { LayoutEditorTarget, LayoutProps } from './Layout';
-import { SimulatorArea } from '../SimulatorArea';
+import SimulatorArea from '../SimulatorArea';
 import { TabBar } from '../TabBar';
 import Widget, { BarComponent, Mode, Size } from '../Widget';
 import { Slider } from '../Slider';
@@ -25,6 +25,11 @@ import Async from '../../state/State/Async';
 import { EMPTY_OBJECT } from '../../util';
 import Challenge from '../Challenge';
 import { ReferenceFrame } from '../../unit-math';
+
+import tr from '@i18n';
+import LocalizedString from '../../util/LocalizedString';
+
+
 
 // 3 panes:
 // Editor / console
@@ -51,6 +56,7 @@ export interface SideLayoutProps extends LayoutProps {
 
 interface ReduxSideLayoutProps {
   robots: Dict<Node.Robot>;
+  locale: LocalizedString.Language;
 }
 
 interface SideLayoutState {
@@ -199,7 +205,9 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       onScriptRemove,
       onObjectAdd,
       challengeState,
-      worldCapabilities
+      worldCapabilities,
+      onDocumentationGoToFuzzy,
+      locale
     } = props;
 
     const {
@@ -231,6 +239,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
             onCodeChange={editorTarget.onCodeChange}
             messages={messages}
             autocomplete={settings.editorAutoComplete}
+            onDocumentationGoToFuzzy={onDocumentationGoToFuzzy}
           />
         );
         break;
@@ -240,8 +249,9 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     const editorBar = createEditorBarComponents({
       theme,
       target: editorBarTarget,
+      locale
     });
-    const consoleBar = createConsoleBarComponents(theme, onClearConsole);
+    const consoleBar = createConsoleBarComponents(theme, onClearConsole, locale);
 
     let content: JSX.Element;
     switch (activePanel) {
@@ -257,7 +267,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
             <SimultorWidgetContainer>
               <SimulatorWidget
                 theme={theme}
-                name={editorTarget.type === LayoutEditorTarget.Type.Robot ? 'Editor' : 'Script Editor'}
+                name={LocalizedString.lookup(editorTarget.type === LayoutEditorTarget.Type.Robot ? tr('Editor') : tr('Script Editor'), locale)}
                 mode={Mode.Sidebar}
                 barComponents={editorBar}
               >
@@ -268,7 +278,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
             <SimultorWidgetContainer>
               <SimulatorWidget
                 theme={theme}
-                name='Console'
+                name={LocalizedString.lookup(tr('Console'), locale)}
                 barComponents={consoleBar}
                 mode={Mode.Sidebar}
                 hideActiveSize={true}
@@ -292,7 +302,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
           content = (
             <SimulatorWidget
               theme={theme}
-              name='Robot'
+              name={LocalizedString.lookup(tr('Robot'), locale)}
               mode={Mode.Sidebar}
             >
               <Info
@@ -311,7 +321,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
         content = (
           <SimulatorWidget
             theme={theme}
-            name='World'
+            name={LocalizedString.lookup(tr('World'), locale)}
             mode={Mode.Sidebar}
           >
             <World
@@ -337,7 +347,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
         content = (
           <SimulatorWidget
             theme={theme}
-            name='Challenge'
+            name={LocalizedString.lookup(tr('Challenge', 'A predefined task for the user to complete'), locale)}
             mode={Mode.Sidebar}
           >
             <Challenge
@@ -351,19 +361,19 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     }
 
     const tabs = [{
-      name: 'Editor',
+      name: LocalizedString.lookup(tr('Editor'), locale),
       icon: faCode,
     }, {
-      name: 'Robot',
+      name: LocalizedString.lookup(tr('Robot'), locale),
       icon: faRobot,
     }, {
-      name: 'World',
+      name: LocalizedString.lookup(tr('World'), locale),
       icon: faGlobeAmericas,
     }];
 
     if (challengeState) {
       tabs.push({
-        name: 'Challenge',
+        name: LocalizedString.lookup(tr('Challenge', 'A predefined task for the user to complete'), locale),
         icon: faFlagCheckered,
       });
     }
@@ -410,6 +420,7 @@ export const SideLayoutRedux = connect((state: ReduxState, { sceneId }: LayoutPr
   
   return {
     robots,
+    locale: state.i18n.locale,
   };
 }, dispatch => ({
 

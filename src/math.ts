@@ -158,6 +158,13 @@ export namespace Vector3 {
     const length = Vector3.length(lhs) * Vector3.length(rhs);
     return Math.acos(dot / length);
   };
+
+  export const clampVec = (min: Vector3, v: Vector3, max: Vector3): Vector3 => ({
+    x: clamp(min.x, v.x, max.x),
+    y: clamp(min.y, v.y, max.y),
+    z: clamp(min.z, v.z, max.z)
+  });
+    
 }
 
 export interface Euler {

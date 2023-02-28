@@ -337,7 +337,11 @@ class ScrollArea extends React.PureComponent<Props, State> {
     return Math.max(this.state.innerSize.y - this.state.outerSize.y, 0);
   }
 
-  private slow_ = new Slow();
+  set top(top: number) {
+    this.setState({
+      action: Action.none(top)
+    });
+  }
 
   render() {
     const { state, props } = this;

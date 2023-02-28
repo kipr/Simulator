@@ -4,7 +4,7 @@
 
 ![CD prod status](https://github.com/kipr/simulator/actions/workflows/cd-prod.yml/badge.svg)
 
-A Robotics Simulator built in typescript.
+A Robotics Simulator built in TypeScript.
 Simulates a botball/JBC style demobot with a built in IDE.
 
 # Development
@@ -80,6 +80,11 @@ Navigate to the root directory of this repository, then run:
 yarn install
 ```
 
+## Build Translations
+```bash
+yarn run build-i18n
+```
+
 # Running
 
 In one terminal, build in watch mode:
@@ -118,6 +123,29 @@ API_URL=http://localhost:4000 node express.js
 The project is set up with [ESLint](https://eslint.org/) for JavaScript/TypeScript linting. You can run ESLint manually by running `yarn lint` at the root.
 
 To ease development, we highly recommend enabling ESLint within your editor so you can see issues in real time. If you're using Visual Studio Code, you can use the [VS Code ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint). For other editors, see [available ESLint integrations](https://eslint.org/docs/user-guide/integrations).
+
+## Internationalization (i18n)
+
+Simulator leverages gettext PO files to create a `i18n.json` file located in `/i18n/i18n.json`. The source files are scanned for imports of `@i18n`, and uses of the default exported function (`tr` by convention) are detected and inserted into PO files located in `/i18n/po/`. These PO files are "built" into the JSON file, which is then injected into the frontend via webpack's `DefinePlugin` (see `configs/webpack/common.js` for details). The `tr` function reads this object at runtime to make translations available.
+
+To update the PO files, run `yarn run generate-i18n`. While the generation script *should* preserve your work-in-progress, it is recommended to commit, stash, or otherwise backup the PO files prior to running this script.
+
+To build the PO files into a JSON object suitable for consumption by the frontend, run `yarn run build-i18n`.
+
+There are many editors available for PO files. We recommend [Poedit](https://poedit.net/).
+
+The format of the `i18n.json` is as follows:
+```json
+{
+  "context1": {
+    "See `src/util/LocalizedString.ts` for a list of available language identifiers": {
+      "en-US": "See `src/util/LocalizedString.ts` for a list of available language identifiers",
+      "ja-JP": "利用可能な言語識別子のリストについては、「src/util/LocalizedString.ts」を参照してください"
+    }
+  },
+  "..."
+}
+```
 
 # Building image
 

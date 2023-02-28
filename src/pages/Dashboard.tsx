@@ -8,6 +8,10 @@ import { RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 
+import tr from '@i18n';
+import LocalizedString from '../util/LocalizedString';
+import { State } from '../state';
+
 
 export interface DashboardPublicProps extends RouteComponentProps, ThemeProps, StyleProps {
 
@@ -16,6 +20,7 @@ export interface DashboardPublicProps extends RouteComponentProps, ThemeProps, S
 interface DashboardPrivateProps {
   onTutorialsClick: () => void;
   onSimulatorClick: () => void;
+  locale: LocalizedString.Language;
 }
 
 type Props = DashboardPublicProps & DashboardPrivateProps;
@@ -61,7 +66,7 @@ class Dashboard extends React.PureComponent<Props> {
 
   render() {
     const { props } = this;
-    const { className, style, onTutorialsClick, onSimulatorClick } = props;
+    const { className, style, onTutorialsClick, onSimulatorClick, locale } = props;
     const theme = DARK;
 
     return (
@@ -70,24 +75,24 @@ class Dashboard extends React.PureComponent<Props> {
         <CardContainer theme={theme}>
           <Card
             theme={theme}
-            title={'Tutorials'}
-            description={'Learn how to get started with the simulator'}
+            title={LocalizedString.lookup(tr('Tutorials'), locale)}
+            description={LocalizedString.lookup(tr('Learn how to get started with the simulator'), locale)}
             backgroundColor={'#6c6ca1'}
             backgroundImage={'url(../../static/Laptop_Icon_Sunscreen.png)'}
             onClick={onTutorialsClick}
           />
           <Card 
             theme={theme}
-            title={'3D Simulator'}
-            description={'A simulator for the Botball demobot.'}
+            title={LocalizedString.lookup(tr('3D Simulator'), locale)}
+            description={LocalizedString.lookup(tr('A simulator for the Botball demobot.'), locale)}
             backgroundImage={'url(../../static/Simulator-Robot-Closeup.png)'}
             backgroundPosition={'center top'}
             onClick={onSimulatorClick}
           />
           <Card
             theme={theme}
-            title={'About'}
-            description={'KIPR is a 501(c) 3 organization started to make the long-term educational benefits of robotics accessible to students.'}
+            title={LocalizedString.lookup(tr('About'), locale)}
+            description={LocalizedString.lookup(tr('KIPR is a 501(c) 3 organization started to make the long-term educational benefits of robotics accessible to students.'), locale)}
             backgroundImage={'linear-gradient(#3b3c3c, transparent), url(../../static/Botguy-Picture-Small.png)'}
             backgroundColor={'#3b3c3c'}
             backgroundSize={'80%'}
@@ -100,7 +105,9 @@ class Dashboard extends React.PureComponent<Props> {
   }
 }
 
-export default connect(undefined, dispatch => ({
+export default connect((state: State) => ({
+  locale: state.i18n.locale,
+}), dispatch => ({
   onTutorialsClick: () => dispatch(push('/tutorials')),
   onSimulatorClick: () => dispatch(push('/scene/jbcSandboxA')),
 }))(Dashboard) as React.ComponentType<DashboardPublicProps>;

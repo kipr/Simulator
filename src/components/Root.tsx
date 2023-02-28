@@ -10,12 +10,12 @@ import { styled } from 'styletron-react';
 import { DARK, Theme } from './theme';
 import { Layout, LayoutProps, OverlayLayout, OverlayLayoutRedux, SideLayoutRedux  } from './Layout';
 
-import { SettingsDialog } from './SettingsDialog';
-import { AboutDialog } from './AboutDialog';
+import SettingsDialog from './SettingsDialog';
+import AboutDialog from './AboutDialog';
 
-import { FeedbackDialog } from './Feedback';
+import FeedbackDialog from './Feedback';
 import { sendFeedback, FeedbackResponse } from './Feedback/SendFeedback';
-import { FeedbackSuccessDialog } from './Feedback/SuccessModal';
+import FeedbackSuccessDialog from './Feedback/SuccessModal';
 
 import compile from '../compile';
 import { SimulatorState } from './SimulatorState';
@@ -30,7 +30,7 @@ import { DEFAULT_FEEDBACK, Feedback } from '../Feedback';
 import ExceptionDialog from './ExceptionDialog';
 import OpenSceneDialog from './OpenSceneDialog';
 
-import { ChallengesAction, ScenesAction, ChallengeCompletionsAction } from '../state/reducer';
+import { ChallengesAction, DocumentationAction, ScenesAction, ChallengeCompletionsAction } from '../state/reducer';
 import { Editor } from './Editor';
 import Dict from '../Dict';
 import ProgrammingLanguage from '../ProgrammingLanguage';
@@ -69,7 +69,13 @@ import PredicateCompletion from '../state/State/ChallengeCompletion/PredicateCom
 import LoadingOverlay from './Challenge/LoadingOverlay';
 import DbError from '../db/Error';
 import { applyObjectPatch, applyPatch, createObjectPatch, createPatch, ObjectPatch, OuterObjectPatch } from 'symmetry';
+
 import { sceneFragmentDeclaration } from 'babylonjs/Shaders/ShadersInclude/sceneFragmentDeclaration';
+
+import DocumentationLocation from '../state/State/Documentation/DocumentationLocation';
+
+import tr from '@i18n';
+
 
 namespace Modal {
   export enum Type {
@@ -184,6 +190,7 @@ interface RootPrivateProps {
   scene: AsyncScene;
   challenge?: AsyncChallenge;
   challengeCompletion?: AsyncChallengeCompletion;
+  locale: LocalizedString.Language;
 
   onNodeAdd: (id: string, node: Node) => void;
   onNodeRemove: (id: string) => void;
@@ -198,6 +205,11 @@ interface RootPrivateProps {
   onSelectNodeId: (id: string) => void;
   onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => void;
   onResetScene: () => void;
+
+  onDocumentationClick: () => void;
+  onDocumentationPush: (location: DocumentationLocation) => void;
+  onDocumentationSetLanguage: (language: 'c' | 'python') => void;
+  onDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => void;
 
   onCreateScene: (id: string, scene: Scene) => void;
   onSaveScene: (id: string) => void;
@@ -284,7 +296,7 @@ class Root extends React.Component<Props, State> {
       },
       modal: Modal.NONE,
       simulatorState: SimulatorState.STOPPED,
-      console: StyledText.text({ text: 'Welcome to the KIPR Simulator!\n', style: STDOUT_STYLE(DARK) }),
+      console: StyledText.text({ text: LocalizedString.lookup(tr('Welcome to the KIPR Simulator!\n'), props.locale), style: STDOUT_STYLE(DARK) }),
       theme: DARK,
       messages: [],
       settings: DEFAULT_SETTINGS,
@@ -355,6 +367,8 @@ class Root extends React.Component<Props, State> {
   private onActiveLanguageChange_ = (language: ProgrammingLanguage) => {
     this.setState({
       activeLanguage: language
+    }, () => {
+      this.props.onDocumentationSetLanguage(language === 'python' ? 'python' : 'c');
     });
   };
 
@@ -411,7 +425,8 @@ class Root extends React.Component<Props, State> {
   };
 
   private onRunClick_ = () => {
-    const { state } = this;
+    const { props, state } = this;
+    const { locale } = props;
     const { activeLanguage, code, console, theme } = state;
 
     const activeCode = code[activeLanguage];
@@ -420,7 +435,7 @@ class Root extends React.Component<Props, State> {
       case 'c':
       case 'cpp': {
         let nextConsole: StyledText = StyledText.extend(console, StyledText.text({
-          text: `Compiling...\n`,
+          text: LocalizedString.lookup(tr('Compiling...\n'), locale),
           style: STDOUT_STYLE(this.state.theme)
         }));
     
@@ -447,7 +462,9 @@ class Root extends React.Component<Props, State> {
                 // Show success in console and start running the program
                 const haveWarnings = hasWarnings(messages);
                 nextConsole = StyledText.extend(nextConsole, StyledText.text({
-                  text: `Compilation succeeded${haveWarnings ? ' with warnings' : ''}!\n`,
+                  text: haveWarnings
+                    ? LocalizedString.lookup(tr('Compilation succeeded with warnings.\n'), locale)
+                    : LocalizedString.lookup(tr('Compilation succeeded.\n'), locale),
                   style: STDOUT_STYLE(this.state.theme)
                 }));
     
@@ -466,7 +483,7 @@ class Root extends React.Component<Props, State> {
                 }
     
                 nextConsole = StyledText.extend(nextConsole, StyledText.text({
-                  text: `Compilation failed.\n`,
+                  text: LocalizedString.lookup(tr('Compilation failed.\n'), locale),
                   style: STDERR_STYLE(this.state.theme)
                 }));
               }
@@ -480,7 +497,7 @@ class Root extends React.Component<Props, State> {
             .catch((e: unknown) => {
               window.console.error(e);
               nextConsole = StyledText.extend(nextConsole, StyledText.text({
-                text: 'Something went wrong during compilation.\n',
+                text: LocalizedString.lookup(tr('Something went wrong during compilation.\n'), locale),
                 style: STDERR_STYLE(this.state.theme)
               }));
     
@@ -672,6 +689,13 @@ class Root extends React.Component<Props, State> {
     }
 
     const {
+      selectedScript,
+      selectedScriptId,
+      onDocumentationClick,
+      onDocumentationGoToFuzzy
+    } = props;
+
+    const {
       layout,
       activeLanguage,
       code,
@@ -721,7 +745,8 @@ class Root extends React.Component<Props, State> {
       challengeState: challenge ? {
         challenge,
         challengeCompletion: challengeCompletion || Async.unloaded({ brief: {} }),
-      } : undefined
+      } : undefined,
+      onDocumentationGoToFuzzy,
     };
 
     let impl: JSX.Element;
@@ -761,7 +786,7 @@ class Root extends React.Component<Props, State> {
             onStartChallengeClick={this.onStartChallengeClick_}
             onRunClick={this.onRunClick_}
             onStopClick={this.onStopClick_}
-            onDocumentationClick={this.onDocumentationClick}
+            onDocumentationClick={onDocumentationClick}
             onDashboardClick={this.onDashboardClick}
             onLogoutClick={this.onLogoutClick}
             onFeedbackClick={this.onModalClick_(Modal.FEEDBACK)}
@@ -885,6 +910,7 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
     scene: Dict.unique(builder.scenes),
     challenge: Dict.unique(builder.challenges),
     challengeCompletion: Dict.unique(builder.challengeCompletions),
+    locale: state.i18n.locale,
   };
 }, (dispatch, { match: { params: { sceneId } } }: RootPublicProps) => ({
   onNodeAdd: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
@@ -934,6 +960,10 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
     dispatch(ScenesAction.removeScene({ sceneId: selector.id })),
     dispatch(push('/'));
   },
+  onDocumentationClick: () => dispatch(DocumentationAction.TOGGLE),
+  onDocumentationPush: (location: DocumentationLocation) => dispatch(DocumentationAction.pushLocation({ location })),
+  onDocumentationSetLanguage: (language: 'c' | 'python') => dispatch(DocumentationAction.setLanguage({ language })),
+  onDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => dispatch(DocumentationAction.goToFuzzy({ query, language })),
   onSaveScene: (sceneId: string) => dispatch(ScenesAction.saveScene({ sceneId })),
   onSetScenePartial: (partialScene: Partial<Scene>) => dispatch(ScenesAction.setScenePartial({ sceneId, partialScene })),
   unfailScene: (sceneId: string) => dispatch(ScenesAction.unfailScene({ sceneId })),

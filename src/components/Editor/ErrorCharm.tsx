@@ -7,11 +7,15 @@ import { ThemeProps } from '../theme';
 import { charmColor } from '../charm-util';
 
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import LocalizedString from '../../util/LocalizedString';
+
+import tr from '@i18n';
 
 export interface ErrorCharmProps extends StyleProps, ThemeProps {
   count: number;
 
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+  locale: LocalizedString.Language;
 }
 
 type Props = ErrorCharmProps;
@@ -30,12 +34,13 @@ class ErrorCharm extends React.PureComponent<Props> {
     const {
       theme,
       count,
-      onClick
+      onClick,
+      locale
     } = props;
     
     return (
       <Container theme={theme} onClick={onClick}>
-        <Fa icon={faTimesCircle} /> {count} Error{count === 1 ? '' : 's'}
+        <Fa icon={faTimesCircle} /> {count} {LocalizedString.lookup(tr('Error(s)'), locale)}
       </Container>
     );
   }

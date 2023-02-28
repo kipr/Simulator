@@ -15,6 +15,7 @@ namespace Node {
     Servo = 'servo',
     EtSensor = 'et-sensor',
     TouchSensor = 'touch-sensor',
+    LightSensor = 'light-sensor',
     ReflectanceSensor = 'reflectance-sensor',
     IRobotCreate = 'irobot-create',
   }
@@ -445,6 +446,12 @@ namespace Node {
       });
     };
   }
+
+  export interface LightSensor extends Base, AnalogSensor {
+    type: Type.LightSensor;
+  }
+
+  export const lightSensor = construct<LightSensor>(Type.LightSensor);
   
   export interface ReflectanceSensor extends Base, AnalogSensor {
     type: Type.ReflectanceSensor;
@@ -521,6 +528,7 @@ type Node = (
   Node.Servo |
   Node.EtSensor |
   Node.TouchSensor |
+  Node.LightSensor |
   Node.ReflectanceSensor |
   Node.IRobotCreate
 );

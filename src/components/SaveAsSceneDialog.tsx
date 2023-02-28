@@ -10,18 +10,28 @@ import DialogBar from './DialogBar';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import deepNeq from '../deepNeq';
 
-export interface CopySceneDialogProps extends ThemeProps, StyleProps {
+import tr from '@i18n';
+import LocalizedString from '../util/LocalizedString';
+import { connect } from 'react-redux';
+
+import { State as ReduxState } from '../state';
+
+export interface CopySceneDialogPublicProps extends ThemeProps, StyleProps {
   scene: Scene;
 
   onClose: () => void;
   onAccept: (scene: Scene) => void;
 }
 
+interface CopySceneDialogPrivateProps {
+  locale: LocalizedString.Language;
+}
+
 interface CopySceneDialogState {
   scene: Scene;
 }
 
-type Props = CopySceneDialogProps;
+type Props = CopySceneDialogPublicProps & CopySceneDialogPrivateProps;
 type State = CopySceneDialogState;
 
 const StyledSceneSettings = styled(SceneSettings, ({ theme }: ThemeProps) => ({
@@ -38,7 +48,7 @@ class SaveAsSceneDialog extends React.PureComponent<Props, State> {
     };
   }
 
-  componentDidUpdate(prevProps: Readonly<CopySceneDialogProps>, prevState: Readonly<CopySceneDialogState>): void {
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>): void {
     if (deepNeq(prevProps.scene.name, this.props.scene.name) || deepNeq(prevProps.scene.description, this.props.scene.description)) {
       this.setState({ scene: this.props.scene });
     }
@@ -50,20 +60,26 @@ class SaveAsSceneDialog extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { theme, onClose, onAccept } = props;
+    const { theme, onClose, onAccept, locale } = props;
     const { scene } = state;
 
     return (
-      <Dialog theme={theme} name='Copy World' onClose={onClose}>
+      <Dialog
+        theme={theme}
+        name={LocalizedString.lookup(tr('Copy World'), locale)}
+        onClose={onClose}
+      >
         <StyledSceneSettings
           scene={scene}
           onSceneChange={this.onSceneChange_}
           theme={theme}
         />
-        <DialogBar theme={theme} onAccept={this.onAccept_}><Fa icon={faPlus} /> Create</DialogBar>
+        <DialogBar theme={theme} onAccept={this.onAccept_}><Fa icon={faPlus} /> {LocalizedString.lookup(tr('Create'), locale)}</DialogBar>
       </Dialog>
     );
   }
 }
 
-export default SaveAsSceneDialog;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(SaveAsSceneDialog) as React.ComponentType<CopySceneDialogPublicProps>;

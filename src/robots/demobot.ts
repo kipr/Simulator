@@ -6,14 +6,14 @@ import { Vector3 as RawVector3 } from '../math';
 import { Rotation, Vector3 } from '../unit-math';
 import LocalizedString from '../util/LocalizedString';
 
+import tr from '@i18n';
+
 const { meters } = Distance;
 const { degrees } = Angle;
 const { grams } = Mass;
 
 export const DEMOBOT: Robot = {
-  name: {
-    [LocalizedString.EN_US]: 'Demobot',
-  },
+  name: tr('Demobot'),
   authorId: 'kipr',
   nodes: {
     chassis: Node.link({
@@ -21,6 +21,14 @@ export const DEMOBOT: Robot = {
       geometryId: 'chassis_link',
       mass: grams(1160 - 800),
       friction: 0.1,
+    }),
+    lightSensor: Node.lightSensor({
+      parentId: 'chassis',
+      origin: {
+        position: Vector3.meters(0.3, 0, 0),
+        orientation: Rotation.eulerDegrees(90, 0, 0),
+      },
+      analogPort: 3,
     }),
     wombat: Node.weight({
       parentId: 'chassis',

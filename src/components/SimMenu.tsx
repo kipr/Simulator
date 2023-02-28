@@ -8,6 +8,19 @@ import { Layout, LayoutPicker } from './Layout';
 import { SimulatorState } from './SimulatorState';
 import { GREEN, RED, ThemeProps } from './theme';
 
+import tr from '@i18n';
+
+import { connect } from 'react-redux';
+
+import { State as ReduxState } from '../state';
+
+import KIPR_LOGO_BLACK from '../assets/KIPR-Logo-Black-Text-Clear-Large.png';
+import KIPR_LOGO_WHITE from '../assets/KIPR-Logo-White-Text-Clear-Large.png';
+import { faBars, faBook, faClone, faCogs, faCommentDots, faGlobeAmericas, faPlay, faQuestion, faSignOutAlt, faStop, faSync } from '@fortawesome/free-solid-svg-icons';
+import SceneMenu from './World/SceneMenu';
+import ExtraMenu from './ExtraMenu';
+import LocalizedString from '../util/LocalizedString';
+
 namespace SubMenu {
   export enum Type {
     None,
@@ -47,7 +60,7 @@ type SubMenu =
   | SubMenu.SceneMenu
   | SubMenu.ExtraMenu;
 
-export interface MenuProps extends StyleProps, ThemeProps {
+export interface MenuPublicProps extends StyleProps, ThemeProps {
   layout: Layout;
   onLayoutChange: (layout: Layout) => void;
 
@@ -77,12 +90,17 @@ export interface MenuProps extends StyleProps, ThemeProps {
   simulatorState: SimulatorState;
 }
 
+interface MenuPrivateProps {
+  locale: LocalizedString.Language;
+}
+
 interface MenuState {
   subMenu: SubMenu;
 }
 
-type Props = MenuProps;
+type Props = MenuPublicProps & MenuPrivateProps;
 type State = MenuState;
+
 
 import KIPR_LOGO_BLACK from '../assets/KIPR-Logo-Black-Text-Clear-Large.png';
 import KIPR_LOGO_WHITE from '../assets/KIPR-Logo-White-Text-Clear-Large.png';
@@ -299,30 +317,33 @@ class SimMenu extends React.PureComponent<Props, State> {
       onStartChallengeClick,
       onDeleteSceneClick,
       simulatorState,
+      locale
+
     } = props;
 
     const { subMenu } = state;
 
-    const runOrStopItem: JSX.Element = SimulatorState.isRunning(
-      simulatorState
-    ) ? (
-      <StopItem theme={theme} onClick={onStopClick} disabled={false}>
-        <ItemIcon icon={faStop} />
-        Stop
-      </StopItem>
-    ) : (
-      <RunItem
-        theme={theme}
-        onClick={
-          SimulatorState.isStopped(simulatorState) ? onRunClick : undefined
-        }
-        disabled={!SimulatorState.isStopped(simulatorState)}
-        style={{ borderLeft: `1px solid ${theme.borderColor}` }}
-      >
-        <ItemIcon icon={faPlay} />
-        Run
-      </RunItem>
-    );
+    const runOrStopItem: JSX.Element = SimulatorState.isRunning(simulatorState)
+      ? (
+        <StopItem
+          theme={theme}
+          onClick={onStopClick}
+          disabled={false}
+        >
+          <ItemIcon icon={faStop} />
+          {LocalizedString.lookup(tr('Stop', 'Terminate program execution'), locale)}
+        </StopItem>
+      ) : (
+        <RunItem
+          theme={theme}
+          onClick={SimulatorState.isStopped(simulatorState) ? onRunClick : undefined}
+          disabled={!SimulatorState.isStopped(simulatorState)}
+          style={{ borderLeft: `1px solid ${theme.borderColor}` }}
+        >
+          <ItemIcon icon={faPlay} />
+          {LocalizedString.lookup(tr('Run', 'Begin program execution'), locale)}
+        </RunItem>
+      );
 
     return (
       <>
@@ -338,9 +359,9 @@ class SimMenu extends React.PureComponent<Props, State> {
           />
 
           {runOrStopItem}
-          <Item theme={theme} onClick={onResetWorldClick}>
-            <ItemIcon icon={faSync} />
-            Reset World
+
+          <Item theme={theme} onClick={onResetWorldClick}><ItemIcon icon={faSync} />
+            {LocalizedString.lookup(tr('Reset World'), locale)}
           </Item>
 
           <Spacer style={{ borderRight: `1px solid ${theme.borderColor}` }} />
@@ -350,15 +371,17 @@ class SimMenu extends React.PureComponent<Props, State> {
             onClick={onStartChallengeClick}
             style={{ position: 'relative' }}
           >
-            <ItemIcon icon={faFlagCheckered} /> Start Challenge
-            
+          <ItemIcon icon={faFlagCheckered} /> {LocalizedString.lookup(tr('Start Challenge'), locale)}
+             
           </Item>
-          <Item
-            theme={theme}
-            onClick={this.onLayoutClick_}
+
+          <Item 
+            theme={theme} 
+            onClick={this.onLayoutClick_} 
             style={{ position: 'relative' }}
           >
-            <ItemIcon icon={faClone} /> Layout
+          <ItemIcon icon={faClone} /> {LocalizedString.lookup(tr('Layout'), locale)}
+
             {subMenu.type === SubMenu.Type.LayoutPicker ? (
               <LayoutPicker
                 style={{ zIndex: 9 }}
@@ -370,13 +393,14 @@ class SimMenu extends React.PureComponent<Props, State> {
               />
             ) : undefined}
           </Item>
-
-          <Item
-            theme={theme}
-            onClick={this.onSceneClick_}
+          
+          <Item 
+            theme={theme} 
+            onClick={this.onSceneClick_} 
             style={{ position: 'relative' }}
           >
-            <ItemIcon icon={faGlobeAmericas} /> World
+            <ItemIcon icon={faGlobeAmericas} /> {LocalizedString.lookup(tr('World'), locale)}
+
             {subMenu.type === SubMenu.Type.SceneMenu ? (
               <SceneMenu
                 style={{ zIndex: 9 }}
@@ -415,4 +439,6 @@ class SimMenu extends React.PureComponent<Props, State> {
   }
 }
 
-export default SimMenu;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(SimMenu) as React.ComponentType<MenuPublicProps>;

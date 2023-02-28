@@ -11,6 +11,10 @@ import { Dialog } from '../Dialog';
 import { Modal } from '../Modal';
 import { DARK } from '../theme';
 
+import tr from '@i18n';
+import { connect } from 'react-redux';
+import { State as ReduxState } from '../../state';
+
 const Container = styled('div', {
   display: 'flex',
   flexDirection: 'column',
@@ -55,29 +59,34 @@ const LoadingButton = withStyleDeep(Button, {
   backgroundColor: 'grey',
 });
 
-export default ({ challenge, loading, onStartClick }: { challenge: AsyncChallenge; onStartClick: () => void; loading: boolean; }) => {
+const LoadingOverlay = ({ challenge, loading, onStartClick, locale }: { challenge: AsyncChallenge; onStartClick: () => void; loading: boolean; locale: LocalizedString.Language; }) => {
   const latestChallenge = Async.latestValue(challenge);
   if (!latestChallenge) return null;
 
   return (
     <Container>
       <TitleContainer>
-        CHALLENGE
+        {LocalizedString.lookup(tr('CHALLENGE'), locale)}
       </TitleContainer>
       <NameContainer>
-        {LocalizedString.lookup(latestChallenge.name, LocalizedString.EN_US)}
+        {LocalizedString.lookup(latestChallenge.name, locale)}
       </NameContainer>
       <DescriptionContainer>
-        {LocalizedString.lookup(latestChallenge.description, LocalizedString.EN_US)}
+        {LocalizedString.lookup(latestChallenge.description, locale)}
       </DescriptionContainer>
       <Spacer />
       <BottomBarContainer>
         <Spacer />
         {!loading
-          ? <StartButton onClick={onStartClick}><FontAwesomeIcon icon={faPlay} /> Start</StartButton>
-          : <LoadingButton>Loading...</LoadingButton>
+          ? <StartButton onClick={onStartClick}><FontAwesomeIcon icon={faPlay} /> {LocalizedString.lookup(tr('Start'), locale)}</StartButton>
+          : <LoadingButton>{LocalizedString.lookup(tr('Loading...'), locale)}</LoadingButton>
         }
       </BottomBarContainer>
     </Container>
   );
 };
+
+
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(LoadingOverlay) as React.ComponentType<{ challenge: AsyncChallenge; onStartClick: () => void; loading: boolean; }>;

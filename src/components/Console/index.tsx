@@ -12,10 +12,13 @@ import { Button } from '../Button';
 import { BarComponent } from '../Widget';
 
 import { faFile } from '@fortawesome/free-solid-svg-icons';
+import LocalizedString from '../../util/LocalizedString';
+import tr from '@i18n';
 
 export const createConsoleBarComponents = (
   theme: Theme, 
   onClearConsole: () => void,
+  locale: LocalizedString.Language
 ) => {
   // eslint-disable-next-line @typescript-eslint/ban-types
   const consoleBar: BarComponent<object>[] = [];
@@ -26,7 +29,7 @@ export const createConsoleBarComponents = (
     children:
       <>
         <Fa icon={faFile} />
-        {' Clear'}
+        {' '} {LocalizedString.lookup(tr('Clear'), locale)}
       </>,
   }));
 

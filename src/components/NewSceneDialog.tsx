@@ -9,16 +9,26 @@ import SceneSettings from './SceneSettings';
 import DialogBar from './DialogBar';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
-export interface NewSceneDialogProps extends ThemeProps, StyleProps {
+import tr from '@i18n';
+import LocalizedString from '../util/LocalizedString';
+import { connect } from 'react-redux';
+
+import { State as ReduxState } from '../state';
+
+export interface NewSceneDialogPublicProps extends ThemeProps, StyleProps {
   onClose: () => void;
   onAccept: (scene: Scene) => void;
+}
+
+interface NewSceneDialogPrivateProps {
+  locale: LocalizedString.Language;
 }
 
 interface NewSceneDialogState {
   scene: Scene;
 }
 
-type Props = NewSceneDialogProps;
+type Props = NewSceneDialogPublicProps & NewSceneDialogPrivateProps;
 type State = NewSceneDialogState;
 
 const StyledSceneSettings = styled(SceneSettings, ({ theme }: ThemeProps) => ({
@@ -41,20 +51,26 @@ class NewSceneDialog extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { theme, onClose, onAccept } = props;
+    const { theme, onClose, onAccept, locale } = props;
     const { scene } = state;
 
     return (
-      <Dialog theme={theme} name='New World' onClose={onClose}>
+      <Dialog
+        theme={theme}
+        name={LocalizedString.lookup(tr('New World'), locale)}
+        onClose={onClose}
+      >
         <StyledSceneSettings
           scene={scene}
           onSceneChange={this.onSceneChange_}
           theme={theme}
         />
-        <DialogBar theme={theme} onAccept={this.onAccept_}><Fa icon={faPlus} /> Create</DialogBar>
+        <DialogBar theme={theme} onAccept={this.onAccept_}><Fa icon={faPlus} /> {LocalizedString.lookup(tr('Create'), locale)}</DialogBar>
       </Dialog>
     );
   }
 }
 
-export default NewSceneDialog;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(NewSceneDialog) as React.ComponentType<NewSceneDialogPublicProps>;

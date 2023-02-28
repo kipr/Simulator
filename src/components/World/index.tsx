@@ -42,6 +42,9 @@ import ScriptSettingsDialog, { ScriptSettingsAcceptance } from './ScriptSettings
 import { AsyncChallenge } from '../../state/State/Challenge';
 import Builder from '../../db/Builder';
 
+import tr from '@i18n';
+import { sprintf } from 'sprintf-js';
+
 namespace SceneState {
   export enum Type {
     Clean,
@@ -70,12 +73,13 @@ namespace SceneState {
 
 export type SceneState = SceneState.Clean | SceneState.Saveable | SceneState.Copyable;
 
-export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSaveScene, onCopyScene }: {
+export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSaveScene, onCopyScene, locale }: {
   theme: Theme,
   saveable: boolean,
   onSelectScene: () => void,
   onSaveScene: () => void,
-  onCopyScene: () => void
+  onCopyScene: () => void,
+  locale: LocalizedString.Language,
 }) => {
   // eslint-disable-next-line @typescript-eslint/ban-types
   const worldBar: BarComponent<object>[] = [];
@@ -86,7 +90,7 @@ export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSav
     children:
       <>
         <Fa icon={faGlobeAmericas} />
-        {' Select Scene'}
+        {' '} {LocalizedString.lookup(tr('Select Scene'), locale)}
       </>,
   }));
 
@@ -97,7 +101,7 @@ export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSav
     children:
       <>
         <Fa icon={faSave} />
-        {' Save Scene'}
+        {' '} {LocalizedString.lookup(tr('Save Scene'), locale)}
       </>,
   }));
 
@@ -107,7 +111,7 @@ export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSav
     children:
       <>
         <Fa icon={faPlus} />
-        {' Copy Scene'}
+        {' '} {LocalizedString.lookup(tr('Copy Scene'), locale)}
       </>,
   }));
 
@@ -136,7 +140,7 @@ export const DEFAULT_CAPABILITIES: Capabilities = {
   nodeReset: true,
 };
 
-export interface WorldProps extends StyleProps, ThemeProps {
+export interface WorldPublicProps extends StyleProps, ThemeProps {
   scene: AsyncScene;
 
   onNodeAdd: (nodeId: string, node: Node) => void;
@@ -156,8 +160,9 @@ export interface WorldProps extends StyleProps, ThemeProps {
   capabilities?: Capabilities;
 }
 
-interface ReduxWorldProps {
-  
+
+interface WorldPrivateProps {
+  locale: LocalizedString.Language;
 }
 
 namespace UiState {
@@ -215,7 +220,7 @@ interface WorldState {
   modal: UiState;
 }
 
-type Props = WorldProps;
+type Props = WorldPublicProps & WorldPrivateProps;
 type State = WorldState;
 
 const Container = styled('div', (props: ThemeProps) => ({
@@ -248,8 +253,8 @@ const SectionIcon = styled(Fa, (props: ThemeProps) => ({
   transition: 'opacity 0.2s'
 }));
 
-class World extends React.PureComponent<Props & ReduxWorldProps, State> {
-  constructor(props: Props & ReduxWorldProps) {
+class World extends React.PureComponent<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -387,7 +392,8 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
       scene,
       onGeometryAdd,
       onGeometryRemove,
-      onGeometryChange
+      onGeometryChange,
+      locale
     } = props;
     const { collapsed, modal } = state;
 
@@ -410,7 +416,7 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
       const hasReset = workingScene.nodes[nodeId].startingOrigin !== undefined;
       itemList.push(EditableList.Item.standard({
         component: Item,
-        props: { name: node.name[LocalizedString.EN_US], theme },
+        props: { name: LocalizedString.lookup(node.name, locale), theme },
         onReset: hasReset && nodeReset ? this.onNodeResetClick_(nodeId) : undefined,
         onSettings: node.editable && nodeSettings ? this.onItemSettingsClick_(nodeId) : undefined,
         onVisibilityChange: nodeVisiblity ? this.onItemVisibilityChange_(nodeId) : undefined,
@@ -441,7 +447,7 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
     const itemsName = StyledText.compose({
       items: [
         StyledText.text({
-          text: `Item${itemList.length === 1 ? '' : 's'} (${itemList.length})`,
+          text: LocalizedString.lookup(Dict.map(tr('Item(s) (%d)'), (str: string) => sprintf(str, itemList.length)), locale)
         })
       ]
     });
@@ -460,7 +466,7 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
     const scriptsName = StyledText.compose({
       items: [
         StyledText.text({
-          text: `Script${itemList.length === 1 ? '' : 's'} (${scriptList.length})`,
+          text: LocalizedString.lookup(Dict.map(tr('Script(s) (%d)'), (str: string) => sprintf(str, scriptList.length)), locale)
         })
       ]
     });
@@ -547,4 +553,6 @@ class World extends React.PureComponent<Props & ReduxWorldProps, State> {
   }
 }
 
-export default World;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(World) as React.ComponentType<WorldPublicProps>;

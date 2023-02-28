@@ -4,6 +4,7 @@ const { readFileSync } = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const NpmDtsPlugin = require('npm-dts-webpack-plugin')
 const { DefinePlugin, IgnorePlugin } = require('webpack');
+const process = require('process');
 
 const commitHash = require('child_process').execSync('git rev-parse --short=8 HEAD').toString().trim();
 
@@ -17,6 +18,20 @@ try {
 const modules = ['node_modules'];
 if (dependencies.cpython) modules.push(resolve(dependencies.cpython));
 if (dependencies.ammo) modules.push(resolve(dependencies.ammo));
+
+let libkiprCDocumentation = undefined;
+if (dependencies.libkipr_c_documentation) {
+  libkiprCDocumentation = JSON.parse(readFileSync(resolve(dependencies.libkipr_c_documentation)));
+}
+
+let i18n = {};
+try {
+  i18n = JSON.parse(readFileSync(resolve(__dirname, '..', '..', 'i18n', 'i18n.json')));
+} catch (e) {
+  console.log('Failed to read i18n.json');
+  console.log(`Please run 'yarn run build-i18n'`);
+  process.exit(1);
+}
 
 
 module.exports = {
@@ -47,6 +62,9 @@ module.exports = {
     fallback: {
       fs: false,
       path: false,
+    },
+    alias: {
+      '@i18n': resolve(__dirname, '../../src/i18n'),
     },
     symlinks: false,
     modules
@@ -125,6 +143,8 @@ module.exports = {
       SIMULATOR_GIT_HASH: JSON.stringify(commitHash),
       SIMULATOR_HAS_CPYTHON: JSON.stringify(dependencies.cpython !== undefined),
       SIMULATOR_HAS_AMMO: JSON.stringify(dependencies.ammo !== undefined),
+      SIMULATOR_LIBKIPR_C_DOCUMENTATION: JSON.stringify(libkiprCDocumentation),
+      SIMULATOR_I18N: JSON.stringify(i18n),
     }),
     new NpmDtsPlugin({
       root: resolve(__dirname, '../../'),

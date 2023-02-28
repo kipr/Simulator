@@ -26,17 +26,18 @@ const Description = styled('div', {
 interface EventViewerProps extends StyleProps {
   event: Event;
   eventState?: boolean;
+  locale: LocalizedString.Language;
 }
 
-const EventViewer: React.FC<EventViewerProps> = ({ event: { name, description }, eventState, style, className }) => {
+const EventViewer: React.FC<EventViewerProps> = ({ event: { name, description }, eventState, style, className, locale }) => {
   return (
     <Container style={style} className={className}>
       <NameContainer>
-        <Name>{LocalizedString.lookup(name, LocalizedString.EN_US)}</Name>
+        <Name>{LocalizedString.lookup(name, locale)}</Name>
         <Spacer />
         {eventState !== undefined && <FontAwesomeIcon icon={eventState ? faCheck : faCross} />}
       </NameContainer>
-      {description && <Description>{LocalizedString.lookup(description, LocalizedString.EN_US)}</Description>}
+      {description && <Description>{LocalizedString.lookup(description, locale)}</Description>}
     </Container>
   );
 };

@@ -7,11 +7,15 @@ import { ThemeProps } from '../theme';
 import { charmColor } from '../charm-util';
 
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import LocalizedString from '../../util/LocalizedString';
+import tr from '@i18n';
 
 export interface WarningCharmProps extends StyleProps, ThemeProps {
   count: number;
 
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+
+  locale: LocalizedString.Language;
 }
 
 type Props = WarningCharmProps;
@@ -30,12 +34,13 @@ class WarningCharm extends React.PureComponent<Props> {
     const {
       theme,
       count,
-      onClick
+      onClick,
+      locale
     } = props;
     
     return (
       <Container theme={theme} onClick={onClick}>
-        <Fa icon={faExclamationTriangle} /> {count} Warning{count === 1 ? '' : 's'}
+        <Fa icon={faExclamationTriangle} /> {count} {LocalizedString.lookup(tr('Warning(s)'), locale)}
       </Container>
     );
   }

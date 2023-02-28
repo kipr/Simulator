@@ -8,14 +8,25 @@ import IFrame from '../components/IFrame';
 import { tutorialList } from './tutorialList';
 import { Vector2 } from '../math';
 
+import tr from '@i18n';
+import LocalizedString from '../util/LocalizedString';
+import { connect } from 'react-redux';
 
-export interface TutorialsProps extends StyleProps, ThemeProps {}
+import { State as ReduxState } from '../state';
+
+
+export interface TutorialsPublicProps extends StyleProps, ThemeProps {
+}
+
+interface TutorialsPrivateProps {
+  locale: LocalizedString.Language;
+}
 
 interface TutorialsState {
   selected: string;
 }
 
-type Props = TutorialsProps;
+type Props = TutorialsPublicProps & TutorialsPrivateProps;
 type State = TutorialsState;
 
 const Container = styled('div', (props: ThemeProps) => ({
@@ -97,7 +108,7 @@ class Tutorials extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { style } = props;
+    const { style, locale } = props;
     const { selected } = state;
     const theme = DARK;
 
@@ -114,8 +125,8 @@ class Tutorials extends React.Component<Props, State> {
             {tutorialList.map((tutorial, index) => (
               <Card
                 theme={theme}
-                title={tutorial.title}
-                description={tutorial.description}
+                title={LocalizedString.lookup(tutorial.title, locale)}
+                description={LocalizedString.lookup(tutorial.description, locale)}
                 backgroundImage={tutorial.backgroundImage}
                 backgroundColor={tutorial.backgroundColor}
                 backgroundPosition={tutorial.backgroundPosition}
@@ -132,4 +143,6 @@ class Tutorials extends React.Component<Props, State> {
   }
 }
 
-export default Tutorials;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(Tutorials) as React.ComponentType<TutorialsPublicProps>;

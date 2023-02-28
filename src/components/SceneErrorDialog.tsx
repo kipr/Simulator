@@ -5,13 +5,25 @@ import { Dialog } from './Dialog';
 import DialogBar from './DialogBar';
 import { ThemeProps } from './theme';
 
-interface SceneErrorDialogProps extends ThemeProps {
+import tr from '@i18n';
+import LocalizedString from '../util/LocalizedString';
+
+import { connect } from 'react-redux';
+import { State as ReduxState } from '../state';
+import Dict from '../Dict';
+import { sprintf } from 'sprintf-js';
+
+interface SceneErrorDialogPublicProps extends ThemeProps {
   error: Async.Error;
 
   onClose: () => void;
 }
 
-type Props = SceneErrorDialogProps;
+interface SceneErrorDialogPrivateProps {
+  locale: LocalizedString.Language;
+}
+
+type Props = SceneErrorDialogPublicProps & SceneErrorDialogPrivateProps;
 
 const Container = styled('div', (props: ThemeProps) => ({
 }));
@@ -25,17 +37,21 @@ const Message = styled('div', (props: ThemeProps) => ({
 class SceneErrorDialog extends React.Component<Props> {
   render() {
     const { props } = this;
-    const { error, onClose, theme } = props;
+    const { error, onClose, theme, locale } = props;
     return (
-      <Dialog theme={theme} name={`Error ${error.code}`} onClose={onClose}>
+      <Dialog
+        theme={theme}
+        name={LocalizedString.lookup(Dict.map(tr('Error %d'), (str: string) => sprintf(str, error.code)), locale)}
+        onClose={onClose}
+      >
         <Container theme={theme}>
           <Message theme={theme}>
             {error.message}
           </Message>
 
           <Message theme={theme}>
-            Closing this dialog will take you back to the last well-known state.
-            If this error persists, please submit feedback.
+            {LocalizedString.lookup(tr('Closing this dialog will take you back to the last well-known state.'), locale)}
+            {LocalizedString.lookup(tr('If this error persists, please submit feedback.'), locale)}
           </Message>
         </Container>
       </Dialog>
@@ -43,4 +59,6 @@ class SceneErrorDialog extends React.Component<Props> {
   }
 }
 
-export default SceneErrorDialog;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(SceneErrorDialog) as React.ComponentType<SceneErrorDialogPublicProps>;
