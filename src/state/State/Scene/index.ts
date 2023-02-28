@@ -105,8 +105,9 @@ namespace Scene {
     const queue = [...rootNodes];
     const visited = new Set<string>();
     const ret: string[] = [];
+    
 
-    while (visited.size < Object.keys(scene.nodes).length) {
+    while (queue.length > 0) {
       const next = queue.shift();
       if (visited.has(next)) continue;
       visited.add(next);
