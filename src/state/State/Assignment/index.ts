@@ -26,6 +26,22 @@ interface Assignment {
 
 export type AssignmentBrief = Pick<Assignment, 'author' | 'name' | 'gradeLevels' | 'subjects' | 'standardsConformance'>;
 
+export namespace AssignmentBrief {
+  export const fromAssignment = ({
+    author,
+    name,
+    gradeLevels,
+    subjects,
+    standardsConformance,
+  }: Assignment): AssignmentBrief => ({
+    author,
+    name,
+    gradeLevels,
+    subjects,
+    standardsConformance,
+  });
+}
+
 namespace Assignment {
   /**
    * Convert a grade level number to a string. 0 is kindergarten, 1 is first grade, etc.
