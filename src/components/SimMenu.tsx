@@ -16,7 +16,7 @@ import { State as ReduxState } from '../state';
 
 import KIPR_LOGO_BLACK from '../assets/KIPR-Logo-Black-Text-Clear-Large.png';
 import KIPR_LOGO_WHITE from '../assets/KIPR-Logo-White-Text-Clear-Large.png';
-import { faBars, faBook, faClone, faCogs, faCommentDots, faGlobeAmericas, faPlay, faQuestion, faSignOutAlt, faStop, faSync } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faBook, faClone, faCogs, faCommentDots, faFlagCheckered, faGlobeAmericas, faPlay, faQuestion, faSignOutAlt, faStop, faSync } from '@fortawesome/free-solid-svg-icons';
 import SceneMenu from './World/SceneMenu';
 import ExtraMenu from './ExtraMenu';
 import LocalizedString from '../util/LocalizedString';
@@ -70,7 +70,7 @@ export interface MenuPublicProps extends StyleProps, ThemeProps {
   onOpenSceneClick?: (event: React.MouseEvent) => void;
   onSettingsSceneClick?: (event: React.MouseEvent) => void;
   onDeleteSceneClick?: (event: React.MouseEvent) => void;
-  
+
   onStartChallengeClick: () => void;
   onShowAll: () => void;
   onHideAll: () => void;
@@ -78,7 +78,7 @@ export interface MenuPublicProps extends StyleProps, ThemeProps {
   onRunClick: () => void;
   onStopClick: () => void;
   onResetWorldClick: () => void;
- 
+
   onSettingsClick: () => void;
   onAboutClick: () => void;
   onDocumentationClick: () => void;
@@ -102,24 +102,7 @@ type Props = MenuPublicProps & MenuPrivateProps;
 type State = MenuState;
 
 
-import KIPR_LOGO_BLACK from '../assets/KIPR-Logo-Black-Text-Clear-Large.png';
-import KIPR_LOGO_WHITE from '../assets/KIPR-Logo-White-Text-Clear-Large.png';
-import {
-  faBars,
-  faBook,
-  faClone,
-  faCogs,
-  faCommentDots,
-  faGlobeAmericas,
-  faPlay,
-  faQuestion,
-  faSignOutAlt,
-  faFlagCheckered,
-  faStop,
-  faSync,
-} from '@fortawesome/free-solid-svg-icons';
-import SceneMenu from './World/SceneMenu';
-import ExtraMenu from './ExtraMenu';
+
 
 const Container = styled('div', (props: ThemeProps) => ({
   backgroundColor: props.theme.backgroundColor,
@@ -151,9 +134,9 @@ const Logo = styled('img', (props: ThemeProps & ClickProps) => ({
   ':hover':
     props.onClick && !props.disabled
       ? {
-          cursor: 'pointer',
-          backgroundColor: `rgba(255, 255, 255, 0.1)`,
-        }
+        cursor: 'pointer',
+        backgroundColor: `rgba(255, 255, 255, 0.1)`,
+      }
       : {},
   userSelect: 'none',
   transition: 'background-color 0.2s, opacity 0.2s',
@@ -175,9 +158,9 @@ const Item = styled('div', (props: ThemeProps & ClickProps) => ({
   ':hover':
     props.onClick && !props.disabled
       ? {
-          cursor: 'pointer',
-          backgroundColor: `rgba(255, 255, 255, 0.1)`,
-        }
+        cursor: 'pointer',
+        backgroundColor: `rgba(255, 255, 255, 0.1)`,
+      }
       : {},
   userSelect: 'none',
   transition: 'background-color 0.2s, opacity 0.2s',
@@ -188,8 +171,8 @@ const RunItem = withStyleDeep(Item, (props: ClickProps) => ({
   ':hover':
     props.onClick && !props.disabled
       ? {
-          backgroundColor: GREEN.hover,
-        }
+        backgroundColor: GREEN.hover,
+      }
       : {},
 }));
 
@@ -198,8 +181,8 @@ const StopItem = withStyleDeep(Item, (props: ClickProps) => ({
   ':hover':
     props.onClick && !props.disabled
       ? {
-          backgroundColor: RED.hover,
-        }
+        backgroundColor: RED.hover,
+      }
       : {},
 }));
 
@@ -238,8 +221,6 @@ class SimMenu extends React.PureComponent<Props, State> {
 
     event.stopPropagation();
   };
-
-
 
   private onSceneClick_ = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>

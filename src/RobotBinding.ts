@@ -730,7 +730,7 @@ class RobotBinding {
       const node = robot.nodes[nodeId];
       if (node.type !== Node.Type.Link) continue;
       const bNode = await this.createLink_(nodeId, node);
-      bNode.metadata = { id: this.robotSceneId_, selected: false} as SceneMeshMetadata;
+      bNode.metadata = { id: this.robotSceneId_, selected: false } as SceneMeshMetadata;
       this.links_[nodeId] = bNode;
     }
 
