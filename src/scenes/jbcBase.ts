@@ -7,14 +7,18 @@ import AbstractRobot from '../AbstractRobot';
 import LocalizedString from '../util/LocalizedString';
 import Author from '../db/Author';
 
+import tr from '@i18n';
+import { sprintf } from 'sprintf-js';
+import Dict from '../Dict';
+
 const ROBOT_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(0, 2, 0),
+  position: Vector3.centimeters(0, 5, 0),
   orientation: Rotation.eulerDegrees(0, 0, 0),
 };
 
 const ROBOT: Node.Robot = {
   type: 'robot',
-  name: { [LocalizedString.EN_US]: 'Robot' },
+  name: tr('Robot'),
   robotId: 'demobot',
   state: AbstractRobot.Stateless.NIL,
   visible: true,
@@ -59,8 +63,8 @@ const LIGHT_ORIGIN: ReferenceFrame = {
 
 export function createBaseSceneSurfaceA(): Scene {
   return {
-    name: { [LocalizedString.EN_US]: 'Base Scene - Surface A' },
-    description: { [LocalizedString.EN_US]: 'A base scene using Surface A. Intended to be augmented to create full JBC scenes' },
+    name: tr('Base Scene - Surface A'),
+    description: tr('A base scene using Surface A. Intended to be augmented to create full JBC scenes'),
     author: Author.organization('kipr'),
     geometry: {
       'ground': {
@@ -76,7 +80,7 @@ export function createBaseSceneSurfaceA(): Scene {
       'jbc_mat_a': {
         type: 'from-template',
         templateId: 'jbc_mat_a',
-        name: { [LocalizedString.EN_US]: 'JBC Surface A' },
+        name: tr('JBC Surface A'),
         startingOrigin: JBC_MAT_ORIGIN,
         origin: JBC_MAT_ORIGIN,
         visible: true,
@@ -84,7 +88,7 @@ export function createBaseSceneSurfaceA(): Scene {
       'ground': {
         type: 'object',
         geometryId: 'ground',
-        name: { [LocalizedString.EN_US]: 'Ground' },
+        name: tr('Ground'),
         startingOrigin: GROUND_ORIGIN,
         origin: GROUND_ORIGIN,
         visible: true,
@@ -97,7 +101,7 @@ export function createBaseSceneSurfaceA(): Scene {
       'light0': {
         type: 'point-light',
         intensity: 1,
-        name: { [LocalizedString.EN_US]: 'Light' },
+        name: tr('Light'),
         startingOrigin: LIGHT_ORIGIN,
         origin: LIGHT_ORIGIN,
         visible: true
@@ -128,8 +132,8 @@ export function createBaseSceneSurfaceB(): Scene {
   
 
   return {
-    name: { [LocalizedString.EN_US]: 'Base Scene - Surface B' },
-    description: { [LocalizedString.EN_US]: 'A base scene using Surface B. Intended to be augmented to create full JBC scenes' },
+    name: tr('Base Scene - Surface B'),
+    description: tr('A base scene using Surface B. Intended to be augmented to create full JBC scenes'),
     author: Author.organization('kipr'),
     geometry: {
       'ground': {
@@ -145,7 +149,7 @@ export function createBaseSceneSurfaceB(): Scene {
       'jbc_mat_b': {
         type: 'from-template',
         templateId: 'jbc_mat_b',
-        name: { [LocalizedString.EN_US]: 'JBC Surface B' },
+        name: tr('JBC Surface B'),
         startingOrigin: JBC_MAT_ORIGIN,
         origin: JBC_MAT_ORIGIN,
         visible: true,
@@ -153,7 +157,7 @@ export function createBaseSceneSurfaceB(): Scene {
       'ground': {
         type: 'object',
         geometryId: 'ground',
-        name: { [LocalizedString.EN_US]: 'Ground' },
+        name: tr('Ground'),
         startingOrigin: GROUND_ORIGIN,
         origin: GROUND_ORIGIN,
         visible: true,
@@ -166,7 +170,7 @@ export function createBaseSceneSurfaceB(): Scene {
       'light0': {
         type: 'point-light',
         intensity: 10000,
-        name: { [LocalizedString.EN_US]: 'Light' },
+        name: tr('Light'),
         startingOrigin: LIGHT_ORIGIN,
         origin: LIGHT_ORIGIN,
         visible: true
@@ -209,7 +213,7 @@ export function createCanNode(canNumber: number, canPosition?: Vector3, editable
   return {
     type: 'from-template',
     templateId: 'can',
-    name: { [LocalizedString.EN_US]: `Can ${canNumber}` },
+    name: Dict.map(tr('Can %s'), (str: string) => sprintf(str, canNumber)),
     startingOrigin: origin,
     origin,
     editable: editable ?? false,

@@ -5,6 +5,8 @@ import LocalizedString from '../util/LocalizedString';
 
 import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
 
+import tr from '@i18n';
+
 const baseScene = createBaseSceneSurfaceA();
 
 const ROBOT_ORIGIN: ReferenceFrame = {
@@ -25,8 +27,8 @@ const REAM_ORIGIN: ReferenceFrame = {
 
 export const JBC_20: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 20' },
-  description: { [LocalizedString.EN_US]: `Junior Botball Challenge 20: Rescue the Cans` },
+  name: tr('JBC 20'),
+  description: tr('Junior Botball Challenge 20: Rescue the Cans'),
   nodes: {
     ...baseScene.nodes,
     // The normal starting position of the robot doesn't leave room for the paper ream in the starting box
@@ -43,7 +45,7 @@ export const JBC_20: Scene = {
     'ream': {
       type: 'from-template',
       templateId: 'ream',
-      name: { [LocalizedString.EN_US]: 'Paper Ream' },
+      name: tr('Paper Ream'),
       startingOrigin: REAM_ORIGIN,
       origin: REAM_ORIGIN,
       visible: true,

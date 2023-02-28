@@ -74,6 +74,12 @@ class SceneBinding {
     this.bScene_.attachControl();
 
   }
+
+  /**
+   * `declineTicks` is used for a race between initial robot origin setting and tick origin updates.
+   * When this is true, the tick() method will exit immediately and return undefined.
+   */
+  private declineTicks_ = false;
   
   private materialIdIter_ = 0;
 
@@ -99,6 +105,21 @@ class SceneBinding {
 
     this.scriptManager_.onCollisionFiltersChanged = this.onCollisionFiltersChanged_;
     this.scriptManager_.onIntersectionFiltersChanged = this.onIntersectionFiltersChanged_;
+  }
+
+  private robotLinkOrigins_: Dict<Dict<ReferenceFrame>> = {};
+  set robotLinkOrigins(robotLinkOrigins: Dict<Dict<ReferenceFrame>>) {
+    this.robotLinkOrigins_ = robotLinkOrigins;
+  }
+
+  get currentRobotLinkOrigins(): Dict<Dict<ReferenceFrame>> {
+    // iterate over all robots
+    const ret: Dict<Dict<ReferenceFrame>> = {};
+    for (const robotId in this.robotBindings_) {
+      const robotBinding = this.robotBindings_[robotId];
+      ret[robotId] = robotBinding.linkOrigins;
+    }
+    return ret;
   }
 
   private static apply_ = (g: Babylon.Node, f: (m: Babylon.AbstractMesh) => void) => {
@@ -271,6 +292,7 @@ class SceneBinding {
         }
 
         if (emissive) {
+          const glow = new Babylon.GlowLayer('glow', this.bScene_);
           switch (emissive.type) {
             case 'color3': {
               pbr.emissiveColor = Color.toBabylon(emissive.color);
@@ -556,7 +578,7 @@ class SceneBinding {
     );
 
     ret.intensity = node.intensity;
-
+    
     this.shadowGenerators_[id] = SceneBinding.createShadowGenerator_(ret);
 
     ret.setEnabled(node.visible);
@@ -572,19 +594,35 @@ class SceneBinding {
     const robot = this.robots_[node.robotId];
     if (!robot) throw new Error(`Robot by id "${node.robotId}" not found`);
     await robotBinding.setRobot(node, robot);
+    robotBinding.linkOrigins = this.robotLinkOrigins_[id] || {};
+
     // FIXME: For some reason this origin isn't respected immediately. We need to look into it.
     robotBinding.visible = false;
     const observerObj: { observer: Babylon.Observer<Babylon.Scene> } = { observer: null };
     
     let count = 0;
     
+    this.declineTicks_ = true;
     observerObj.observer = this.bScene_.onAfterRenderObservable.add((data, state) => {
-      robotBinding.origin = node.origin || ReferenceFrame.IDENTITY;
+      const node = this.scene_.nodes[id];
+      if (!node) {
+        observerObj.observer.unregisterOnNextCall = true;
+        this.declineTicks_ = false;
+        return;
+      }
+
+      const { origin, visible } = node;
+
+      robotBinding.origin = origin || ReferenceFrame.IDENTITY;
+
+      const linkOrigins = this.robotLinkOrigins_[id];
+      if (linkOrigins) robotBinding.linkOrigins = linkOrigins;
       
       if (count++ < 10) return;
 
-      robotBinding.visible = node.visible ?? false;
+      robotBinding.visible = visible ?? false;
       observerObj.observer.unregisterOnNextCall = true;
+      this.declineTicks_ = false;
     });
 
     this.robotBindings_[id] = robotBinding;
@@ -1164,7 +1202,6 @@ class SceneBinding {
   readonly setScene = async (scene: Scene, robots: Dict<Robot>) => {
     this.robots_ = robots;
     const patch = Scene.diff(this.scene_, scene);
-    this.scriptManager_.scene = scene;
 
     const nodeIds = Dict.keySet(patch.nodes);
 
@@ -1312,6 +1349,8 @@ class SceneBinding {
     .map(({ min, max }) => new Babylon.BoundingBox(min, max));
 
   tick(abstractRobots: Dict<AbstractRobot.Readable>): Dict<RobotBinding.TickOut> {
+    if (this.declineTicks_) return undefined;
+
     const ret: Dict<RobotBinding.TickOut> = {};
     for (const nodeId in this.scene_.nodes) {
       const abstractRobot = abstractRobots[nodeId];

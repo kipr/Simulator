@@ -11,7 +11,7 @@ import World, { createWorldBarComponents } from '../World';
 import { Scenes } from "../../state/State";
 import { Info } from '../Info';
 import { LayoutEditorTarget, LayoutProps } from './Layout';
-import { SimulatorArea } from '../SimulatorArea';
+import SimulatorArea from '../SimulatorArea';
 import { TabBar } from '../TabBar';
 import Widget, { BarComponent, Mode, Size } from '../Widget';
 import { Slider } from '../Slider';
@@ -20,9 +20,12 @@ import { State as ReduxState } from '../../state';
 import Node from '../../state/State/Scene/Node';
 import Dict from '../../Dict';
 import Scene from '../../state/State/Scene';
-import { faCode, faGlobeAmericas, faRobot } from '@fortawesome/free-solid-svg-icons';
+import { faCode, faFlagCheckered, faGlobeAmericas, faRobot } from '@fortawesome/free-solid-svg-icons';
 import Async from '../../state/State/Async';
 import { EMPTY_OBJECT } from '../../util';
+import Challenge from '../Challenge';
+import { ReferenceFrame } from '../../unit-math';
+import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';
 
 // 3 panes:
@@ -30,16 +33,7 @@ import LocalizedString from '../../util/LocalizedString';
 // Robot Info
 // World
 
-const TABS = [{
-  name: 'Editor',
-  icon: faCode,
-}, {
-  name: 'Robot',
-  icon: faRobot,
-}, {
-  name: 'World',
-  icon: faGlobeAmericas,
-}];
+
 
 const sizeDict = (sizes: Size[]) => {
   const forward: { [type: number]: number } = {};
@@ -61,6 +55,7 @@ interface ReduxSideLayoutProps {
   robots: Dict<Node.Robot>;
   scene: Scene;
   scenes: Scenes;
+  locale: LocalizedString.Language;
 }
 
 interface SideLayoutState {
@@ -174,6 +169,22 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     // not implemented
   };
 
+  private onRobotOriginChange_ = (origin: ReferenceFrame) => {
+    const { scene, onNodeChange } = this.props;
+    
+    const latestScene = Async.latestValue(scene);
+
+    if (!latestScene) return;
+
+    const robots = Scene.robots(latestScene);
+    const robotId = Object.keys(robots)[0];
+    this.props.onNodeChange(robotId, {
+      ...robots[robotId],
+      origin
+    });
+  };
+
+
   render() {
     const { props } = this;
     const {
@@ -191,7 +202,22 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       editorRef,
       robots,
       sceneId,
-      scenes
+      scenes,
+      scene,
+      onNodeAdd,
+      onNodeChange,
+      onNodeRemove,
+      onGeometryAdd,
+      onGeometryChange,
+      onGeometryRemove,
+      onScriptAdd,
+      onScriptChange,
+      onScriptRemove,
+      onObjectAdd,
+      challengeState,
+      worldCapabilities,
+      onDocumentationGoToFuzzy,
+      locale
     } = props;
 
     const {
@@ -226,6 +252,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
             onCodeChange={editorTarget.onCodeChange}
             messages={messages}
             autocomplete={settings.editorAutoComplete}
+            onDocumentationGoToFuzzy={onDocumentationGoToFuzzy}
           />
         );
         break;
@@ -235,8 +262,9 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     const editorBar = createEditorBarComponents({
       theme,
       target: editorBarTarget,
+      locale
     });
-    const consoleBar = createConsoleBarComponents(theme, onClearConsole);
+    const consoleBar = createConsoleBarComponents(theme, onClearConsole, locale);
 
     let content: JSX.Element;
     switch (activePanel) {
@@ -252,7 +280,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
             <SimultorWidgetContainer>
               <SimulatorWidget
                 theme={theme}
-                name={editorTarget.type === LayoutEditorTarget.Type.Robot ? 'Editor' : 'Script Editor'}
+                name={LocalizedString.lookup(editorTarget.type === LayoutEditorTarget.Type.Robot ? tr('Editor') : tr('Script Editor'), locale)}
                 mode={Mode.Sidebar}
                 barComponents={editorBar}
               >
@@ -263,7 +291,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
             <SimultorWidgetContainer>
               <SimulatorWidget
                 theme={theme}
-                name='Console'
+                name={LocalizedString.lookup(tr('Console'), locale)}
                 barComponents={consoleBar}
                 mode={Mode.Sidebar}
                 hideActiveSize={true}
@@ -277,18 +305,23 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
         break;
       }
       case 1: {
-        const robotIds = Object.keys(robots);
-        if (robotIds.length === 1) {
+        const latestScene = Async.latestValue(scene);
+        let robotNode: Node.Robot;
+        if (latestScene) {
+          const robots = Scene.robots(latestScene);
+          robotNode = Dict.unique(robots);
+        }
+        if (robotNode) {
           content = (
             <SimulatorWidget
               theme={theme}
-              name='Robot'
+              name={LocalizedString.lookup(tr('Robot'), locale)}
               mode={Mode.Sidebar}
             >
               <Info
                 theme={theme}
-                nodeId={robotIds[0]}
-                sceneId={sceneId}
+                node={robotNode}
+                onOriginChange={this.onRobotOriginChange_}
               />
             </SimulatorWidget>
           );
@@ -303,17 +336,70 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
         content = (
           <SimulatorWidget
             theme={theme}
-            name='World'
+            name={LocalizedString.lookup(tr('World'), locale)}
             mode={Mode.Sidebar}
           >
-            <WorldSceneText theme={theme}>Current World Scene: {sceneId}</WorldSceneText>
-            <World theme={theme} sceneId={sceneId} />
+            <WorldSceneText 
+              theme={theme}
+              name={LocalizedString.lookup(tr('Current World Scene: {sceneId}'), locale)}
+            </WorldSceneText>
+
+            <World
+              theme={theme}
+              scene={scene}
+              onNodeAdd={onNodeAdd}
+              onNodeChange={onNodeChange}
+              onNodeRemove={onNodeRemove}
+              onGeometryAdd={onGeometryAdd}
+              onGeometryChange={onGeometryChange}
+              onGeometryRemove={onGeometryRemove}
+              onScriptAdd={onScriptAdd}
+              onScriptChange={onScriptChange}
+              onScriptRemove={onScriptRemove}
+              onObjectAdd={onObjectAdd}
+              capabilities={worldCapabilities}
+              sceneId={sceneId}
+            />
           </SimulatorWidget>
           
         );
         break;
       }
+      case 3: {
+        content = (
+          <SimulatorWidget
+            theme={theme}
+            name={LocalizedString.lookup(tr('Challenge', 'A predefined task for the user to complete'), locale)}
+            mode={Mode.Sidebar}
+          >
+            <Challenge
+              theme={theme}
+              challenge={challengeState.challenge}
+              challengeCompletion={challengeState.challengeCompletion}
+            />
+          </SimulatorWidget>
+        );
+      }
     }
+
+    const tabs = [{
+      name: LocalizedString.lookup(tr('Editor'), locale),
+      icon: faCode,
+    }, {
+      name: LocalizedString.lookup(tr('Robot'), locale),
+      icon: faRobot,
+    }, {
+      name: LocalizedString.lookup(tr('World'), locale),
+      icon: faGlobeAmericas,
+    }];
+
+    if (challengeState) {
+      tabs.push({
+        name: LocalizedString.lookup(tr('Challenge', 'A predefined task for the user to complete'), locale),
+        icon: faFlagCheckered,
+      });
+    }
+
 
     const simulator = <SimulatorAreaContainer>
       <SimulatorArea
@@ -324,27 +410,11 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       />
     </SimulatorAreaContainer>;
 
-    // const tabBar = <TabBar isVertical={true} tabs={TABS} index={activePanel} onIndexChange={this.onTabBarIndexChange_} theme={theme} />;
+    return <Container style={style} className={className}>
 
-    // switch (sidePanelSize) {
-    //   case Size.Type.MinimizedS:
-    //     return <SidePanelContainer>
-    //       {simulator}
-    //     </SidePanelContainer>;
-    //   // not yet implemented, but could be on a device with a small enough screen that a slider doesn't make sense
-    //   // case Size.Type.Maximized:
-    //   //   return <SidePanelContainer>
-    //   //     {tabBar}
-    //   //     <SidePanelContainer>
-    //   //       {sideBar}
-    //   //     </SidePanelContainer>
-    //   //   </SidePanelContainer>;
-    //   default:
-    
-    return (<Container style={style} className={className}>
       <SidePanelContainer>
         <TabBar 
-          theme={theme} isVertical={true} tabs={TABS} index={activePanel} 
+          theme={theme} isVertical={true} tabs={tabs} index={activePanel} 
           onIndexChange={sidePanelSize === Size.Type.Minimized 
             ? this.onTabBarExpand_
             : this.onTabBarIndexChange_ 
@@ -375,6 +445,7 @@ export const SideLayoutRedux = connect((state: ReduxState, { sceneId }: LayoutPr
   
   return {
     robots,
+    locale: state.i18n.locale,
   };
 }, dispatch => ({
 

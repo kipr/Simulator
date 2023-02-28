@@ -8,6 +8,19 @@ import { Layout, LayoutPicker } from './Layout';
 import { SimulatorState } from './SimulatorState';
 import { GREEN, RED, ThemeProps } from './theme';
 
+import tr from '@i18n';
+
+import { connect } from 'react-redux';
+
+import { State as ReduxState } from '../state';
+
+import KIPR_LOGO_BLACK from '../assets/KIPR-Logo-Black-Text-Clear-Large.png';
+import KIPR_LOGO_WHITE from '../assets/KIPR-Logo-White-Text-Clear-Large.png';
+import { faBars, faBook, faClone, faCogs, faCommentDots, faGlobeAmericas, faPlay, faQuestion, faSignOutAlt, faStop, faSync } from '@fortawesome/free-solid-svg-icons';
+import SceneMenu from './World/SceneMenu';
+import ExtraMenu from './ExtraMenu';
+import LocalizedString from '../util/LocalizedString';
+
 namespace SubMenu {
   export enum Type {
     None,
@@ -43,7 +56,7 @@ namespace SubMenu {
 
 type SubMenu = SubMenu.None | SubMenu.LayoutPicker | SubMenu.SceneMenu | SubMenu.ExtraMenu;
 
-export interface MenuProps extends StyleProps, ThemeProps {
+export interface MenuPublicProps extends StyleProps, ThemeProps {
   layout: Layout;
   onLayoutChange: (layout: Layout) => void;
 
@@ -72,18 +85,16 @@ export interface MenuProps extends StyleProps, ThemeProps {
   simulatorState: SimulatorState;
 }
 
+interface MenuPrivateProps {
+  locale: LocalizedString.Language;
+}
+
 interface MenuState {
   subMenu: SubMenu;
 }
 
-type Props = MenuProps;
+type Props = MenuPublicProps & MenuPrivateProps;
 type State = MenuState;
-
-import KIPR_LOGO_BLACK from '../assets/KIPR-Logo-Black-Text-Clear-Large.png';
-import KIPR_LOGO_WHITE from '../assets/KIPR-Logo-White-Text-Clear-Large.png';
-import { faBars, faBook, faClone, faCogs, faCommentDots, faGlobeAmericas, faPlay, faQuestion, faSignOutAlt, faStop, faSync } from '@fortawesome/free-solid-svg-icons';
-import SceneMenu from './World/SceneMenu';
-import ExtraMenu from './ExtraMenu';
 
 const Container = styled('div', (props: ThemeProps) => ({
   backgroundColor: props.theme.backgroundColor,
@@ -242,7 +253,8 @@ class SimMenu extends React.PureComponent<Props, State> {
       onSaveAsSceneClick: onCopySceneClick,
       onSettingsSceneClick,
       onDeleteSceneClick,
-      simulatorState
+      simulatorState,
+      locale
     } = props;
 
     const { subMenu } = state;
@@ -255,7 +267,7 @@ class SimMenu extends React.PureComponent<Props, State> {
           disabled={false}
         >
           <ItemIcon icon={faStop} />
-          Stop
+          {LocalizedString.lookup(tr('Stop', 'Terminate program execution'), locale)}
         </StopItem>
       ) : (
         <RunItem
@@ -265,7 +277,7 @@ class SimMenu extends React.PureComponent<Props, State> {
           style={{ borderLeft: `1px solid ${theme.borderColor}` }}
         >
           <ItemIcon icon={faPlay} />
-          Run
+          {LocalizedString.lookup(tr('Run', 'Begin program execution'), locale)}
         </RunItem>
       );
 
@@ -275,12 +287,14 @@ class SimMenu extends React.PureComponent<Props, State> {
           <Logo theme={theme} onClick={onDashboardClick} src={theme.foreground === 'white' ? KIPR_LOGO_BLACK as string : KIPR_LOGO_WHITE as string}/>
 
           {runOrStopItem}
-          <Item theme={theme} onClick={onResetWorldClick}><ItemIcon icon={faSync} />Reset World</Item>
+          <Item theme={theme} onClick={onResetWorldClick}><ItemIcon icon={faSync} />
+            {LocalizedString.lookup(tr('Reset World'), locale)}
+          </Item>
 
           <Spacer style={{ borderRight: `1px solid ${theme.borderColor}` }} />
 
           <Item theme={theme} onClick={this.onLayoutClick_} style={{ position: 'relative' }}>
-            <ItemIcon icon={faClone} /> Layout
+            <ItemIcon icon={faClone} /> {LocalizedString.lookup(tr('Layout'), locale)}
             {subMenu.type === SubMenu.Type.LayoutPicker ? (
               <LayoutPicker
                 style={{ zIndex: 9 }}
@@ -294,7 +308,7 @@ class SimMenu extends React.PureComponent<Props, State> {
           </Item>
 
           <Item theme={theme} onClick={this.onSceneClick_} style={{ position: 'relative' }}>
-            <ItemIcon icon={faGlobeAmericas} /> World
+            <ItemIcon icon={faGlobeAmericas} /> {LocalizedString.lookup(tr('World'), locale)}
             {subMenu.type === SubMenu.Type.SceneMenu ? (
               <SceneMenu
                 style={{ zIndex: 9 }}
@@ -330,4 +344,6 @@ class SimMenu extends React.PureComponent<Props, State> {
   }
 }
 
-export default SimMenu;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(SimMenu) as React.ComponentType<MenuPublicProps>;

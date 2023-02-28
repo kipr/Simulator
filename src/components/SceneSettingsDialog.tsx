@@ -10,18 +10,29 @@ import DialogBar from './DialogBar';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import deepNeq from '../deepNeq';
 
-export interface SceneSettingsDialogProps extends ThemeProps, StyleProps {
+import tr from '@i18n';
+
+import { connect } from 'react-redux';
+
+import { State as ReduxState } from '../state';
+import LocalizedString from '../util/LocalizedString';
+
+export interface SceneSettingsDialogPublicProps extends ThemeProps, StyleProps {
   scene: Scene;
 
   onClose: () => void;
   onAccept: (scene: Scene) => void;
 }
 
+interface SceneSettingsDialogPrivateProps {
+  locale: LocalizedString.Language;
+}
+
 interface SceneSettingsDialogState {
   scene: Scene;
 }
 
-type Props = SceneSettingsDialogProps;
+type Props = SceneSettingsDialogPublicProps & SceneSettingsDialogPrivateProps;
 type State = SceneSettingsDialogState;
 
 const StyledSceneSettings = styled(SceneSettings, ({ theme }: ThemeProps) => ({
@@ -38,7 +49,7 @@ class SceneSettingsDialog extends React.PureComponent<Props, State> {
     };
   }
 
-  componentDidUpdate(prevProps: Readonly<SceneSettingsDialogProps>, prevState: Readonly<SceneSettingsDialogState>): void {
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>): void {
     if (deepNeq(prevProps.scene.name, this.props.scene.name) || deepNeq(prevProps.scene.description, this.props.scene.description)) {
       this.setState({ scene: this.props.scene });
     }
@@ -50,20 +61,26 @@ class SceneSettingsDialog extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { theme, onClose } = props;
+    const { theme, onClose, locale } = props;
     const { scene } = state;
 
     return (
-      <Dialog theme={theme} name='World Settings' onClose={onClose}>
+      <Dialog
+        theme={theme}
+        name={LocalizedString.lookup(tr('World Settings'), locale)}
+        onClose={onClose}
+      >
         <StyledSceneSettings
           scene={scene}
           onSceneChange={this.onSceneChange_}
           theme={theme}
         />
-        <DialogBar theme={theme} onAccept={this.onAccept_}><Fa icon={faCheck} /> Accept</DialogBar>
+        <DialogBar theme={theme} onAccept={this.onAccept_}><Fa icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}</DialogBar>
       </Dialog>
     );
   }
 }
 
-export default SceneSettingsDialog;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(SceneSettingsDialog) as React.ComponentType<SceneSettingsDialogPublicProps>;

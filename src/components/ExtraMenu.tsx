@@ -6,19 +6,30 @@ import { Fa } from './Fa';
 import { ThemeProps } from './theme';
 import { faBook, faCaretSquareLeft, faClone, faCogs, faCommentDots, faCopy, faEye, faEyeSlash, faFolderOpen, faPlus, faQuestion, faSave, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
-export interface ExtraMenuProps extends StyleProps, ThemeProps {
+import tr from '@i18n';
+
+import { connect } from 'react-redux';
+
+import { State as ReduxState } from '../state';
+import LocalizedString from '../util/LocalizedString';
+
+export interface ExtraMenuPublicProps extends StyleProps, ThemeProps {
   onLogoutClick: (event: React.MouseEvent) => void;
-  onFeedbackClick: (event: React.MouseEvent) => void;
+  onFeedbackClick?: (event: React.MouseEvent) => void;
   onDocumentationClick: (event: React.MouseEvent) => void;
   onSettingsClick: (event: React.MouseEvent) => void;
   onAboutClick: (event: React.MouseEvent) => void;
+}
+
+interface ExtraMenuPrivateProps {
+  locale: LocalizedString.Language;
 }
 
 interface ExtraMenuState {
   
 }
 
-type Props = ExtraMenuProps;
+type Props = ExtraMenuPublicProps & ExtraMenuPrivateProps;
 type State = ExtraMenuState;
 
 const Container = styled('div', (props: ThemeProps) => ({
@@ -90,17 +101,20 @@ class ExtraMenu extends React.PureComponent<Props, State> {
       onDocumentationClick,
       onFeedbackClick,
       onSettingsClick,
+      locale,
     } = props;
     return (
       <Container theme={theme} style={style} className={className}>
-        <Item theme={theme} onClick={onDocumentationClick}><ItemIcon icon={faBook} /> Documentation</Item>
-        <Item theme={theme} onClick={onSettingsClick}><ItemIcon icon={faCogs} /> Settings</Item>
-        <Item theme={theme} onClick={onAboutClick}><ItemIcon icon={faQuestion} /> About</Item>
-        <Item theme={theme} onClick={onFeedbackClick}><ItemIcon icon={faCommentDots} /> Feedback</Item>
-        <Item theme={theme} onClick={onLogoutClick}><ItemIcon icon={faSignOutAlt} /> Logout</Item>
+        <Item theme={theme} onClick={onDocumentationClick}><ItemIcon icon={faBook} /> {LocalizedString.lookup(tr('Documentation'), locale)}</Item>
+        <Item theme={theme} onClick={onSettingsClick}><ItemIcon icon={faCogs} /> {LocalizedString.lookup(tr('Settings'), locale)}</Item>
+        <Item theme={theme} onClick={onAboutClick}><ItemIcon icon={faQuestion} /> {LocalizedString.lookup(tr('About'), locale)}</Item>
+        {onFeedbackClick && <Item theme={theme} onClick={onFeedbackClick}><ItemIcon icon={faCommentDots} /> {LocalizedString.lookup(tr('Feedback'), locale)}</Item>}
+        <Item theme={theme} onClick={onLogoutClick}><ItemIcon icon={faSignOutAlt} /> {LocalizedString.lookup(tr('Logout'), locale)}</Item>
       </Container>
     );
   }
 }
 
-export default ExtraMenu;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale
+}))(ExtraMenu) as React.ComponentType<ExtraMenuPublicProps>;

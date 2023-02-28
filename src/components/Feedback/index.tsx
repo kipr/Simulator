@@ -11,16 +11,26 @@ import { Fa } from '../Fa';
 
 import { faFrown, faMeh, faPaperPlane, faSmileBeam } from '@fortawesome/free-solid-svg-icons';
 
-export interface FeedbackDialogProp extends ThemeProps, StyleProps {
+import tr from '@i18n';
+
+import { connect } from 'react-redux';
+import { State as ReduxState } from '../../state';
+import LocalizedString from '../../util/LocalizedString';
+
+export interface FeedbackDialogPublicProps extends ThemeProps, StyleProps {
   onClose: () => void;
   onSubmit: () => void;
   feedback: Feedback;
   onFeedbackChange: (settings: Partial<Feedback>) => void;
 }
 
+interface FeedbackDialogPrivateProps {
+  locale: LocalizedString.Language;
+}
+
 interface FeedbackDialogState {}
 
-type Props = FeedbackDialogProp;
+type Props = FeedbackDialogPublicProps & FeedbackDialogPrivateProps;
 type State = FeedbackDialogState;
 
 export const FeedbackContainer = styled('div', (props: ThemeProps) => ({
@@ -46,7 +56,7 @@ export const FeedbackLink = styled('a', () => ({
   color: 'lightblue',
 }));
 
-export class FeedbackDialog extends React.PureComponent<Props, State> {
+class FeedbackDialog extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -83,10 +93,10 @@ export class FeedbackDialog extends React.PureComponent<Props, State> {
   };
 
   private createFeedbackTextArea = (getValue: (feedback: Feedback) => string, getUpdatedFeedback: (newValue: string) => Partial<Feedback>) => {
-    const { theme, feedback: currentFeedback, onFeedbackChange } = this.props;
+    const { theme, feedback: currentFeedback, onFeedbackChange, locale } = this.props;
 
     return (
-      <FeedbackTextArea theme={theme} placeholder="Give a helpful description of a problem you're facing, or a feature you'd like to request"
+      <FeedbackTextArea theme={theme} placeholder={LocalizedString.lookup(tr('Give a helpful description of a problem you\'re facing, or a feature you\'d like to request'), locale)}
         value={getValue(currentFeedback)} 
         onChange={(event) => {
           onFeedbackChange(getUpdatedFeedback(event.target.value));
@@ -110,23 +120,27 @@ export class FeedbackDialog extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { style, className, theme, onClose, onSubmit } = props;
+    const { style, className, theme, onClose, onSubmit, locale } = props;
 
     return (
-      <Dialog theme={theme} name='Feedback' onClose={onClose}>
+      <Dialog
+        theme={theme}
+        name={LocalizedString.lookup(tr('Feedback'), locale)}
+        onClose={onClose}
+      >
         <FeedbackContainer theme={theme}>
           <FeedbackText>
-            Thanks for using the KIPR Simulator! Find a bug? Have a feature request? Let us know!
+            {LocalizedString.lookup(tr('Thanks for using the KIPR Simulator! Find a bug? Have a feature request? Let us know!'), locale)}
           </FeedbackText>
           <br /> <br />
-          <FeedbackText>Feedback</FeedbackText>
+          <FeedbackText>{LocalizedString.lookup(tr('Feedback'), locale)}</FeedbackText>
           <br />
           {this.createFeedbackTextArea(
             (feedback: Feedback) => feedback.feedback,
             (newValue: string) => ({ feedback: newValue })
           )}
           <FeedbackText>
-            How has your experience using the KIPR Simulator been?
+            {LocalizedString.lookup(tr('How has your experience using the KIPR Simulator been?'), locale)}
           </FeedbackText>
           <br />
           <CenterContainer theme={theme}>
@@ -138,7 +152,7 @@ export class FeedbackDialog extends React.PureComponent<Props, State> {
           <FeedbackContainer theme={theme}>
             <FeedbackLabel>
               <FeedbackText>
-                Email (optional): 
+                {LocalizedString.lookup(tr('Email (optional): '), locale)}
               </FeedbackText>
             </FeedbackLabel>
             {this.createFeedbackEmailInput(
@@ -149,7 +163,7 @@ export class FeedbackDialog extends React.PureComponent<Props, State> {
           <FeedbackContainer theme={theme}>
             <FeedbackLabel>
               <FeedbackText>
-                Include anonymous usage data to help KIPR developers 
+                {LocalizedString.lookup(tr('Include anonymous usage data to help KIPR developers'), locale)}
               </FeedbackText>
             </FeedbackLabel>
             {this.createCheckbox(
@@ -165,22 +179,26 @@ export class FeedbackDialog extends React.PureComponent<Props, State> {
           {this.props.feedback.error &&
             <CenterContainer theme={theme}>
               <p>
-                <>Please try again, </>
+                <>{LocalizedString.lookup(tr('Please try again,'), locale)} </>
                 <FeedbackLink href="https://github.com/kipr/Simulator/issues" target="_blank">
-                  open an issue on our github page
+                  {LocalizedString.lookup(tr('open an issue on our github page'), locale)}
                 </FeedbackLink>
-                <>, or </>
+                <>{LocalizedString.lookup(tr(', or'), locale)}</>
                 <FeedbackLink href="mailto:info@kipr.org">
-                  email KIPR.
+                  {LocalizedString.lookup(tr('email KIPR.'), locale)}
                 </FeedbackLink>
               </p>
             </CenterContainer>
           }
         </FeedbackContainer>
         <DialogBar theme={theme} onAccept={onSubmit}>
-          <Fa icon={faPaperPlane}/> Submit
+          <Fa icon={faPaperPlane}/> {LocalizedString.lookup(tr('Submit'), props.locale)}
         </DialogBar>
       </Dialog>
     );
   }
 }
+
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(FeedbackDialog) as React.ComponentType<FeedbackDialogPublicProps>;

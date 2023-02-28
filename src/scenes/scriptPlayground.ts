@@ -7,6 +7,8 @@ import LocalizedString from '../util/LocalizedString';
 
 import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
 
+import tr from '@i18n';
+
 const baseScene = createBaseSceneSurfaceA();
 
 const intersection = `
@@ -20,9 +22,7 @@ const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
   console.log('Intersection!', type, otherNodeId);
   const visible = type === 'start';
-  setNodeVisible('can10', visible);
-  setNodeVisible('can11', visible);
-  setNodeVisible('can12', visible);
+  scene.setChallengeEventValue('a', visible);
 }, 'volume');
 `;
 
@@ -45,8 +45,8 @@ scene.addOnCollisionListener('can6', (otherNodeId) => {
 
 export const scriptPlayground: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'Script Playground' },
-  description: { [LocalizedString.EN_US]: `Script tests` },
+  name: tr('Script Playground'),
+  description: tr('Script tests'),
   scripts: {
     'intersection': Script.ecmaScript('Intersection', intersection),
     'collision': Script.ecmaScript('Collision', collision),
@@ -67,7 +67,7 @@ export const scriptPlayground: Scene = {
     'volume': {
       type: 'object',
       geometryId: 'volume_geom',
-      name: { [LocalizedString.EN_US]: 'Volume' },
+      name: tr('Volume', 'Volume (box) in the 3D scene'),
       visible: true,
       origin: {
         position: {
@@ -99,7 +99,7 @@ export const scriptPlayground: Scene = {
     'ream1': {
       type: 'from-template',
       templateId: 'ream',
-      name: { [LocalizedString.EN_US]: 'Paper Ream 1' },
+      name: tr('Paper Ream 1'),
       origin: {
         position: {
           x: Distance.centimeters(0),
@@ -117,7 +117,7 @@ export const scriptPlayground: Scene = {
     'ream2': {
       type: 'from-template',
       templateId: 'ream',
-      name: { [LocalizedString.EN_US]: 'Paper Ream 2' },
+      name: tr('Paper Ream 2'),
       origin: {
         position: {
           x: Distance.centimeters(0),

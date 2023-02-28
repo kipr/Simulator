@@ -6,7 +6,12 @@ import { Fa } from '../Fa';
 import { ThemeProps } from '../theme';
 import { faCaretSquareLeft, faClone, faCogs, faCopy, faEye, faEyeSlash, faFolderOpen, faPlus, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 
-export interface SceneMenuProps extends StyleProps, ThemeProps {
+import LocalizedString from '../../util/LocalizedString';
+import { connect } from 'react-redux';
+import { State as ReduxState } from '../../state';
+import tr from '@i18n';
+
+export interface SceneMenuPublicProps extends StyleProps, ThemeProps {
   onSaveScene?: (event: React.MouseEvent) => void;
   onNewScene?: (event: React.MouseEvent) => void;
   onSaveAsScene?: (event: React.MouseEvent) => void;
@@ -15,11 +20,15 @@ export interface SceneMenuProps extends StyleProps, ThemeProps {
   onDeleteScene?: (event: React.MouseEvent) => void;
 }
 
+interface SceneMenuPrivateProps {
+  locale: LocalizedString.Language;
+}
+
 interface SceneMenuState {
   
 }
 
-type Props = SceneMenuProps;
+type Props = SceneMenuPublicProps & SceneMenuPrivateProps;
 type State = SceneMenuState;
 
 const Container = styled('div', (props: ThemeProps) => ({
@@ -82,17 +91,19 @@ class SceneMenu extends React.PureComponent<Props, State> {
 
   render() {
     const { props } = this;
-    const { theme, onSaveAsScene, onNewScene, onSaveScene, onOpenScene, onSettingsScene, onDeleteScene } = props;
+    const { theme, onSaveAsScene, onNewScene, onSaveScene, onOpenScene, onSettingsScene, onDeleteScene, locale } = props;
     return (
       <Container theme={theme}>
-        <Item theme={theme} disabled={!onSettingsScene} onClick={onSettingsScene}><ItemIcon icon={faCogs} /> Settings</Item>
-        <Item theme={theme} disabled={!onOpenScene} onClick={onOpenScene}><ItemIcon icon={faFolderOpen} /> Open</Item>
-        <Item theme={theme} disabled={!onSaveScene} onClick={onSaveScene}><ItemIcon icon={faSave} /> Save</Item>
-        <Item theme={theme} disabled={!onSaveAsScene} onClick={onSaveAsScene}><ItemIcon icon={faCopy} /> Save As</Item>
-        <Item theme={theme} disabled={!onDeleteScene} onClick={onDeleteScene}><ItemIcon icon={faTrash} /> Delete</Item>
+        <Item theme={theme} disabled={!onSettingsScene} onClick={onSettingsScene}><ItemIcon icon={faCogs} /> {LocalizedString.lookup(tr('Settings'), locale)}</Item>
+        <Item theme={theme} disabled={!onOpenScene} onClick={onOpenScene}><ItemIcon icon={faFolderOpen} /> {LocalizedString.lookup(tr('Open'), locale)}</Item>
+        <Item theme={theme} disabled={!onSaveScene} onClick={onSaveScene}><ItemIcon icon={faSave} /> {LocalizedString.lookup(tr('Save'), locale)}</Item>
+        <Item theme={theme} disabled={!onSaveAsScene} onClick={onSaveAsScene}><ItemIcon icon={faCopy} /> {LocalizedString.lookup(tr('Save As'), locale)}</Item>
+        <Item theme={theme} disabled={!onDeleteScene} onClick={onDeleteScene}><ItemIcon icon={faTrash} /> {LocalizedString.lookup(tr('Delete'), locale)}</Item>
       </Container>
     );
   }
 }
 
-export default SceneMenu;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale
+}))(SceneMenu) as React.ComponentType<SceneMenuPublicProps>;

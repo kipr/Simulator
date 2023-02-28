@@ -39,6 +39,11 @@ import LocalizedString from '../../util/LocalizedString';
 import Script from '../../state/State/Scene/Script';
 import AddScriptDialog, { AddScriptAcceptance } from './AddScriptDialog';
 import ScriptSettingsDialog, { ScriptSettingsAcceptance } from './ScriptSettingsDialog';
+import { AsyncChallenge } from '../../state/State/Challenge';
+import Builder from '../../db/Builder';
+
+import tr from '@i18n';
+import { sprintf } from 'sprintf-js';
 
 namespace SceneState {
   export enum Type {
@@ -68,12 +73,13 @@ namespace SceneState {
 
 export type SceneState = SceneState.Clean | SceneState.Saveable | SceneState.Copyable;
 
-export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSaveScene, onCopyScene }: {
+export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSaveScene, onCopyScene, locale }: {
   theme: Theme,
   saveable: boolean,
   onSelectScene: () => void,
   onSaveScene: () => void,
-  onCopyScene: () => void
+  onCopyScene: () => void,
+  locale: LocalizedString.Language,
 }) => {
   // eslint-disable-next-line @typescript-eslint/ban-types
   const worldBar: BarComponent<object>[] = [];
@@ -84,7 +90,7 @@ export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSav
     children:
       <>
         <Fa icon={faGlobeAmericas} />
-        {' Select Scene'}
+        {' '} {LocalizedString.lookup(tr('Select Scene'), locale)}
       </>,
   }));
 
@@ -95,7 +101,7 @@ export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSav
     children:
       <>
         <Fa icon={faSave} />
-        {' Save Scene'}
+        {' '} {LocalizedString.lookup(tr('Save Scene'), locale)}
       </>,
   }));
 
@@ -105,34 +111,58 @@ export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSav
     children:
       <>
         <Fa icon={faPlus} />
-        {' Copy Scene'}
+        {' '} {LocalizedString.lookup(tr('Copy Scene'), locale)}
       </>,
   }));
 
   return worldBar;
 };
 
-export interface WorldProps extends StyleProps, ThemeProps {
-  sceneId: string;
-
+export interface Capabilities {
+  addNode?: boolean;
+  addScript?: boolean;
+  scriptSettings?: boolean;
+  removeNode?: boolean;
+  removeScript?: boolean;
+  nodeSettings?: boolean;
+  nodeVisibility?: boolean;
+  nodeReset?: boolean;
 }
 
-interface ReduxWorldProps {
+export const DEFAULT_CAPABILITIES: Capabilities = {
+  addNode: true,
+  addScript: true,
+  scriptSettings: true,
+  removeNode: true,
+  removeScript: true,
+  nodeSettings: true,
+  nodeVisibility: true,
+  nodeReset: true,
+};
+
+export interface WorldPublicProps extends StyleProps, ThemeProps {
   scene: AsyncScene;
 
-  onNodeAdd: (id: string, node: Node) => void;
-  onNodeRemove: (id: string) => void;
-  onNodeChange: (id: string, node: Node, modifyReferenceScene: boolean, modifyOrigin: boolean) => void;
+  onNodeAdd: (nodeId: string, node: Node) => void;
+  onNodeRemove: (nodeId: string) => void;
+  onNodeChange: (nodeId: string, node: Node) => void;
 
-  onObjectAdd: (id: string, object: Node.Obj, geometry: Geometry) => void;
+  onObjectAdd: (nodeId: string, object: Node.Obj, geometry: Geometry) => void;
 
-  onGeometryAdd: (id: string, geometry: Geometry) => void;
-  onGeometryRemove: (id: string) => void;
-  onGeometryChange: (id: string, geometry: Geometry) => void;
+  onGeometryAdd: (geometryId: string, geometry: Geometry) => void;
+  onGeometryRemove: (geometryId: string) => void;
+  onGeometryChange: (geometryId: string, geometry: Geometry) => void;
 
-  onScriptAdd: (id: string, script: Script) => void;
-  onScriptRemove: (id: string) => void;
-  onScriptChange: (id: string, script: Script) => void;
+  onScriptAdd: (scriptId: string, script: Script) => void;
+  onScriptRemove: (scriptId: string) => void;
+  onScriptChange: (scriptId: string, script: Script) => void;
+
+  capabilities?: Capabilities;
+}
+
+
+interface WorldPrivateProps {
+  locale: LocalizedString.Language;
 }
 
 namespace UiState {
@@ -190,7 +220,7 @@ interface WorldState {
   modal: UiState;
 }
 
-type Props = WorldProps;
+type Props = WorldPublicProps & WorldPrivateProps;
 type State = WorldState;
 
 const Container = styled('div', (props: ThemeProps) => ({
@@ -223,8 +253,8 @@ const SectionIcon = styled(Fa, (props: ThemeProps) => ({
   transition: 'opacity 0.2s'
 }));
 
-class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
-  constructor(props: Props & ReduxWorldProps) {
+class World extends React.PureComponent<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -262,7 +292,7 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
   };
 
   private onNodeSettingsAccept_ = (id: string) => (acceptance: NodeSettingsAcceptance) => {
-    this.props.onNodeChange(id, acceptance, true, false);
+    this.props.onNodeChange(id, acceptance);
   };
 
   private onScriptSettingsAccept_ = (id: string) => (acceptance: ScriptSettingsAcceptance) => {
@@ -279,7 +309,7 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
       ...originalNode,
       startingOrigin: origin,
       origin,
-    }, true, true);
+    });
   };
 
   private onAddNodeClick_ = (event: React.SyntheticEvent<MouseEvent>) => {
@@ -307,7 +337,7 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
         orientation: originalNode.startingOrigin?.orientation || Rotation.Euler.identity(Angle.Type.Degrees),
         scale: originalNode.startingOrigin?.scale || RawVector3.ONE,
       },
-    }, false, true);
+    });
   };
   private onItemSettingsClick_ = (id: string) => () => this.setState({ modal: UiState.itemSettings(id) });
   private onScriptSettingsClick_ = (id: string) => () => this.setState({ modal: UiState.scriptSettings(id) });
@@ -350,13 +380,33 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
     this.props.onNodeChange(id, {
       ...originalNode,
       visible: visibility,
-    }, true, false);
+    });
   };
 
   render() {
     const { props, state } = this;
-    const { style, className, theme, scene, onGeometryAdd, onGeometryRemove, onGeometryChange } = props;
+    const {
+      style,
+      className,
+      theme,
+      scene,
+      onGeometryAdd,
+      onGeometryRemove,
+      onGeometryChange,
+      locale
+    } = props;
     const { collapsed, modal } = state;
+
+    const capabilities = props.capabilities || DEFAULT_CAPABILITIES;
+
+    const addNode = capabilities.addNode ?? true;
+    const addScript = capabilities.addScript ?? true;
+    const removeNode = capabilities.removeNode ?? true;
+    const removeScript = capabilities.removeScript ?? true;
+    const nodeReset = capabilities.nodeReset ?? true;
+    const nodeSettings = capabilities.nodeSettings ?? true;
+    const nodeVisiblity = capabilities.nodeVisibility ?? true;
+    const scriptSettings = capabilities.scriptSettings ?? true;
 
     const itemList: EditableList.Item[] = [];
 
@@ -366,10 +416,10 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
       const hasReset = workingScene.nodes[nodeId].startingOrigin !== undefined;
       itemList.push(EditableList.Item.standard({
         component: Item,
-        props: { name: node.name[LocalizedString.EN_US], theme },
-        onReset: hasReset ? this.onNodeResetClick_(nodeId) : undefined,
-        onSettings: node.editable ? this.onItemSettingsClick_(nodeId) : undefined,
-        onVisibilityChange: this.onItemVisibilityChange_(nodeId),
+        props: { name: LocalizedString.lookup(node.name, locale), theme },
+        onReset: hasReset && nodeReset ? this.onNodeResetClick_(nodeId) : undefined,
+        onSettings: node.editable && nodeSettings ? this.onItemSettingsClick_(nodeId) : undefined,
+        onVisibilityChange: nodeVisiblity ? this.onItemVisibilityChange_(nodeId) : undefined,
         visible: node.visible,
       }, {
         removable: node.editable && node.type !== 'robot',
@@ -387,9 +437,9 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
           theme,
           selected: workingScene.selectedScriptId === scriptId
         },
-        onSettings: this.onScriptSettingsClick_(scriptId),
+        onSettings: scriptSettings ? this.onScriptSettingsClick_(scriptId) : undefined,
       }, {
-        removable: true,
+        removable: removeScript,
         userdata: scriptId,
       }));
     }
@@ -397,42 +447,45 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
     const itemsName = StyledText.compose({
       items: [
         StyledText.text({
-          text: `Item${itemList.length === 1 ? '' : 's'} (${itemList.length})`,
-        }),
-        StyledText.component({
-          component: SectionIcon,
-          props: {
-            icon: faPlus,
-            theme,
-            onClick: this.onAddNodeClick_
-          }
+          text: LocalizedString.lookup(Dict.map(tr('Item(s) (%d)'), (str: string) => sprintf(str, itemList.length)), locale)
         })
       ]
     });
+
+    if (addNode) {
+      itemsName.items.push(StyledText.component({
+        component: SectionIcon,
+        props: {
+          icon: faPlus,
+          theme,
+          onClick: this.onAddNodeClick_
+        }
+      }));
+    }
 
     const scriptsName = StyledText.compose({
       items: [
         StyledText.text({
-          text: `Script${itemList.length === 1 ? '' : 's'} (${scriptList.length})`,
-        }),
-        StyledText.component({
-          component: SectionIcon,
-          props: {
-            icon: faPlus,
-            theme,
-            onClick: this.onAddScriptClick_
-          }
+          text: LocalizedString.lookup(Dict.map(tr('Script(s) (%d)'), (str: string) => sprintf(str, scriptList.length)), locale)
         })
       ]
     });
 
+    if (addScript) {
+      scriptsName.items.push(StyledText.component({
+        component: SectionIcon,
+        props: {
+          icon: faPlus,
+          theme,
+          onClick: this.onAddScriptClick_
+        }
+      }));
+    }
     
-
     return (
       <>
         <ScrollArea theme={theme} style={{ flex: '1 1' }}>
           <Container theme={theme} style={style} className={className}>
-            
             <StyledListSection 
               name={itemsName}
               theme={theme}
@@ -440,7 +493,11 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
               collapsed={collapsed['items']}
               noBodyPadding
             >
-              <EditableList onItemRemove={this.onNodeRemove_} items={itemList} theme={theme} />
+              <EditableList
+                onItemRemove={removeNode ? this.onNodeRemove_ : undefined}
+                items={itemList}
+                theme={theme}
+              />
             </StyledListSection>
             <StyledListSection 
               name={scriptsName}
@@ -449,12 +506,29 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
               collapsed={collapsed['scripts']}
               noBodyPadding
             >
-              <EditableList onItemRemove={this.onScriptRemove_} items={scriptList} theme={theme} />
+              <EditableList
+                onItemRemove={removeScript ? this.onScriptRemove_ : undefined}
+                items={scriptList}
+                theme={theme}
+              />
             </StyledListSection>
           </Container>
         </ScrollArea>
-        {modal.type === UiState.Type.AddNode && <AddNodeDialog scene={workingScene} theme={theme} onClose={this.onModalClose_} onAccept={this.onAddNodeAccept_} />}
-        {modal.type === UiState.Type.AddScript && <AddScriptDialog theme={theme} onClose={this.onModalClose_} onAccept={this.onAddScriptAccept_} />}
+        {modal.type === UiState.Type.AddNode && (
+          <AddNodeDialog
+            scene={workingScene}
+            theme={theme}
+            onClose={this.onModalClose_}
+            onAccept={this.onAddNodeAccept_}
+          />
+        )}
+        {modal.type === UiState.Type.AddScript && (
+          <AddScriptDialog
+            theme={theme}
+            onClose={this.onModalClose_}
+            onAccept={this.onAddScriptAccept_}
+          />
+        )}
         {modal.type === UiState.Type.NodeSettings && <NodeSettingsDialog
           onGeometryAdd={onGeometryAdd}
           onGeometryRemove={onGeometryRemove}
@@ -479,39 +553,6 @@ class World_ extends React.PureComponent<Props & ReduxWorldProps, State> {
   }
 }
 
-export default connect<unknown, unknown, Props, ReduxState>((state: ReduxState, { sceneId }: WorldProps) => {
-  return {
-    scene: state.scenes[sceneId],
-  };
-}, (dispatch, { sceneId }: WorldProps) => ({
-  onNodeAdd: (nodeId: string, node: Node) => {
-    dispatch(ScenesAction.setNode({ sceneId, nodeId, node }));
-  },
-  onNodeChange: (nodeId: string, node: Node) => {
-    dispatch(ScenesAction.setNode({ sceneId, nodeId, node }));
-  },
-  onNodeRemove: (nodeId: string) => {
-    dispatch(ScenesAction.removeNode({ sceneId, nodeId }));
-  },
-  onGeometryAdd: (geometryId: string, geometry: Geometry) => {
-    dispatch(ScenesAction.addGeometry({ sceneId, geometryId, geometry }));
-  },
-  onGeometryChange: (geometryId: string, geometry: Geometry) => {
-    dispatch(ScenesAction.setGeometry({ sceneId, geometryId, geometry }));
-  },
-  onGeometryRemove: (geometryId: string) => {
-    dispatch(ScenesAction.removeGeometry({ sceneId, geometryId }));
-  },
-  onObjectAdd: (nodeId: string, object: Node.Obj, geometry: Geometry) => {
-    dispatch(ScenesAction.addObject({ sceneId, nodeId, object, geometry }));
-  },
-  onScriptAdd: (scriptId: string, script: Script) => {
-    dispatch(ScenesAction.addScript({ sceneId, scriptId, script }));
-  },
-  onScriptChange: (scriptId: string, script: Script) => {
-    dispatch(ScenesAction.setScript({ sceneId, scriptId, script }));
-  },
-  onScriptRemove: (scriptId: string) => {
-    dispatch(ScenesAction.removeScript({ sceneId, scriptId }));
-  },
-}))(World_) as React.ComponentType<Props>;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(World) as React.ComponentType<WorldPublicProps>;

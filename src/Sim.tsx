@@ -20,6 +20,7 @@ import Node from './state/State/Scene/Node';
 import { Robots } from './state/State';
 
 
+
 let Ammo: unknown;
 
 if (SIMULATOR_HAS_AMMO) {
@@ -36,10 +37,7 @@ import ScriptManager from './ScriptManager';
 import Geometry from './state/State/Scene/Geometry';
 import Camera from './state/State/Scene/Camera';
 
-
 export let ACTIVE_SPACE: Space;
-
-
 
 export class Space {
   private static instance: Space;
@@ -66,16 +64,27 @@ export class Space {
   onCameraChange?: (camera: Camera) => void;
   onGravityChange?: (gravity: UnitVector3) => void;
 
+  onChallengeSetEventValue?: (eventId: string, value: boolean) => void;
+
 
   private debounceUpdate_ = false;
   private sceneSetting_ = false;
   
   private nextScene_: Scene | undefined;
   private scene_ = Scene.EMPTY;
-  get scene() { return this.scene_; }
+
+  get sceneBinding() { return this.sceneBinding_; }
+
+  private robotLinkOrigins_: Dict<Dict<UnitReferenceFrame>> = {};
+  get robotLinkOrigins() { return this.robotLinkOrigins_; }
+  set robotLinkOrigins(robotLinkOrigins: Dict<Dict<UnitReferenceFrame>>) {
+    this.robotLinkOrigins_ = robotLinkOrigins;
+  }
   
+  get scene() { return this.scene_; }
   set scene(scene: Scene) {
     this.scene_ = scene;
+    if (this.sceneBinding_) this.sceneBinding_.scriptManager.scene = this.scene_;
     
     if (this.sceneSetting_ || this.debounceUpdate_ || !this.sceneBinding_) {
       if (this.sceneBinding_ && !this.sceneSetting_) this.sceneBinding_.scene = scene;
@@ -154,7 +163,7 @@ export class Space {
       decoder: {
         wasmUrl: '/static/draco_wasm_wrapper_gltf.js',
         wasmBinaryUrl: '/static/draco_decoder_gltf.wasm',
-        fallbackUrl: '/static/draco_decoder_gltf.js'
+        fallbackUrl: '/static/draco_decoder_gltf.js',
       }
     };
   }
@@ -202,7 +211,7 @@ export class Space {
   private async createScene(): Promise<void> {
     this.bScene_.onPointerObservable.add(this.onPointerTap_, Babylon.PointerEventTypes.POINTERTAP);
 
-    const light = new Babylon.HemisphericLight('light1', new Babylon.Vector3(0, 1, 0), this.bScene_);
+    const light = new Babylon.HemisphericLight('hemispheric_light', new Babylon.Vector3(0, 1, 0), this.bScene_);
     light.intensity = 0.5;
     light.diffuse = new Babylon.Color3(1.0, 1.0, 1.0);
 
@@ -218,6 +227,7 @@ export class Space {
     const ammo: unknown = await (Ammo as any)();
     
     this.sceneBinding_ = new SceneBinding(this.bScene_, ammo);
+    this.sceneBinding_.robotLinkOrigins = this.robotLinkOrigins_;
 
     const scriptManager = this.sceneBinding_.scriptManager;
     scriptManager.onNodeAdd = (id, node) => this.onNodeAdd?.(id, node);
@@ -228,8 +238,11 @@ export class Space {
     scriptManager.onCameraChange = camera => this.onCameraChange?.(camera);
     scriptManager.onGravityChange = gravity => this.onGravityChange?.(gravity);
     scriptManager.onSelectedNodeIdChange = id => this.onSelectNodeId?.(id);
+    scriptManager.onChallengeSetEventValue = (id, value) => this.onChallengeSetEventValue?.(id, value);
     
+    this.sceneBinding_.scriptManager.scene = this.scene_;
     await this.sceneBinding_.setScene(this.scene_, Robots.loaded(state.robots));
+    
     this.bScene_.getPhysicsEngine().setSubTimeStep(5);
 
     // (x, z) coordinates of cans around the board
@@ -243,6 +256,8 @@ export class Space {
 
     const robotWorkerInstances = Dict.map(robots, () => WorkerInstance);
     const tickOuts = this.sceneBinding_.tick(robotWorkerInstances);
+
+    if (!tickOuts) return;
 
     const setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'> = {
       nodeIds: [],
@@ -325,8 +340,10 @@ export class Space {
     } else if (bNode instanceof Babylon.ShadowLight) {
       bPosition = bNode.position;
       bRotation = Babylon.Quaternion.Identity();
-    } else {
-      throw new Error(`Unknown node type: ${bNode.constructor.name}`);
+    } else if (bNode.getClassName() === 'PointLight') {
+      const pointLight = bNode as Babylon.PointLight;
+      bPosition = pointLight.position;
+      bRotation = Babylon.Quaternion.Identity();
     }
 
     if (bPosition) {

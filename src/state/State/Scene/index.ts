@@ -57,7 +57,7 @@ export namespace AsyncScene {
   });
 }
 
-interface PatchScene {
+export interface PatchScene {
   name: Patch<LocalizedString>;
   author: Patch<Author>;
   description: Patch<LocalizedString>;
@@ -120,6 +120,79 @@ namespace Scene {
     return ret;
   };
 
+  export const setNode = (scene: Scene, nodeId: string, node: Node): Scene => ({
+    ...scene,
+    nodes: {
+      ...scene.nodes,
+      [nodeId]: node,
+    },
+  });
+
+  export const addObject = (scene: Scene, nodeId: string, obj: Node.Obj, geometry: Geometry): Scene => ({
+    ...scene,
+    nodes: {
+      ...scene.nodes,
+      [nodeId]: obj,
+    },
+    geometry: {
+      ...scene.geometry,
+      [obj.geometryId]: geometry,
+    },
+  });
+
+  export const removeNode = (scene: Scene, nodeId: string): Scene => {
+    const nodes = { ...scene.nodes };
+    delete nodes[nodeId];
+    return {
+      ...scene,
+      nodes,
+    };
+  };
+
+  export const setGravity = (scene: Scene, gravity: Vector3): Scene => ({
+    ...scene,
+    gravity,
+  });
+
+  export const setCamera = (scene: Scene, camera: Camera): Scene => ({
+    ...scene,
+    camera,
+  });
+
+  export const setGeometry = (scene: Scene, geometryId: string, geometry: Geometry): Scene => ({
+    ...scene,
+    geometry: {
+      ...scene.geometry,
+      [geometryId]: geometry,
+    },
+  });
+
+  export const removeGeometry = (scene: Scene, geometryId: string): Scene => {
+    const geometry = { ...scene.geometry };
+    delete geometry[geometryId];
+    return {
+      ...scene,
+      geometry,
+    };
+  };
+
+  export const setScript = (scene: Scene, scriptId: string, script: Script): Scene => ({
+    ...scene,
+    scripts: {
+      ...scene.scripts,
+      [scriptId]: script,
+    },
+  });
+
+  export const removeScript = (scene: Scene, scriptId: string): Scene => {
+    const scripts = { ...scene.scripts };
+    delete scripts[scriptId];
+    return {
+      ...scene,
+      scripts,
+    };
+  };
+
   export const diff = (a: Scene, b: Scene): PatchScene => ({
     name: Patch.diff(a.name, b.name),
     author: Patch.diff(a.author, b.author),
@@ -132,6 +205,20 @@ namespace Scene {
     scripts: Patch.diffDict(a.scripts, b.scripts, Patch.diff),
     camera: Camera.diff(a.camera, b.camera),
     gravity: Patch.diff(a.gravity, b.gravity),
+  });
+
+  export const apply = (scene: Scene, patch: PatchScene): Scene => ({
+    name: Patch.apply(patch.name, scene.name),
+    description: Patch.apply(patch.description, scene.description),
+    author: Patch.apply(patch.author, scene.author),
+    hdriUri: Patch.apply(patch.hdriUri, scene.hdriUri),
+    selectedNodeId: Patch.apply(patch.selectedNodeId, scene.selectedNodeId),
+    selectedScriptId: Patch.apply(patch.selectedScriptId, scene.selectedScriptId),
+    camera: Patch.apply(patch.camera, scene.camera),
+    gravity: Patch.apply(patch.gravity, scene.gravity),
+    nodes: Patch.applyDict(patch.nodes, scene.nodes),
+    geometry: Patch.applyDict(patch.geometry, scene.geometry),
+    scripts: Patch.applyDict(patch.scripts, scene.scripts),
   });
 
   export const EMPTY: Scene = {

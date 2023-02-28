@@ -7,9 +7,13 @@ import { ThemeProps } from '../theme';
 import { charmColor } from '../charm-util';
 
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import LocalizedString from '../../util/LocalizedString';
+
+import tr from '@i18n';
 
 export interface ClearCharmProps extends StyleProps, ThemeProps {
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+  locale: LocalizedString.Language;
 }
 
 type Props = ClearCharmProps;
@@ -27,12 +31,13 @@ class ClearCharm extends React.PureComponent<Props> {
     const { props } = this;
     const {
       theme,
-      onClick
+      onClick,
+      locale
     } = props;
     
     return (
       <Container theme={theme} onClick={onClick}>
-        <Fa icon={faTimes} /> Clear
+        <Fa icon={faTimes} /> {LocalizedString.lookup(tr('Clear'), locale)}
       </Container>
     );
   }

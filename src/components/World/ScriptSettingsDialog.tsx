@@ -10,9 +10,14 @@ import DialogBar from '../DialogBar';
 import { Fa } from '../Fa';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
+import LocalizedString from '../../util/LocalizedString';
+import { connect } from 'react-redux';
+import { State as ReduxState } from '../../state';
+import tr from '@i18n';
+
 export type ScriptSettingsAcceptance = Script;
 
-export interface ScriptSettingsDialogProps extends ThemeProps {
+export interface ScriptSettingsDialogPublicProps extends ThemeProps {
   script: Script;
   id: string;
 
@@ -20,11 +25,15 @@ export interface ScriptSettingsDialogProps extends ThemeProps {
   onAccept: (acceptance: ScriptSettingsAcceptance) => void;
 }
 
+interface ScriptSettingsDialogPrivateProps {
+  locale: LocalizedString.Language;
+}
+
 interface ScriptSettingsDialogState {
   workingScript: Script;
 }
 
-type Props = ScriptSettingsDialogProps;
+type Props = ScriptSettingsDialogPublicProps & ScriptSettingsDialogPrivateProps;
 type State = ScriptSettingsDialogState;
 
 const InnerContainer = styled('div', () => ({
@@ -53,10 +62,10 @@ class ScriptSettingsDialog extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { theme, onClose, script, id } = props;
+    const { theme, onClose, script, id, locale } = props;
 
     return (
-      <Dialog theme={theme} name={`${script.name || ''} Settings`} onClose={onClose}>
+      <Dialog theme={theme} name={`${script.name || ''} ${LocalizedString.lookup(tr('Settings'), locale)}`} onClose={onClose}>
         <InnerContainer>
           <ScriptSettings
             theme={theme}
@@ -66,11 +75,13 @@ class ScriptSettingsDialog extends React.PureComponent<Props, State> {
           />
         </InnerContainer>
         <DialogBar theme={theme} onAccept={this.onAccept_}>
-          <Fa icon={faCheck} /> Accept
+          <Fa icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}
         </DialogBar>
       </Dialog>
     );
   }
 }
 
-export default ScriptSettingsDialog;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(ScriptSettingsDialog) as React.ComponentType<ScriptSettingsDialogPublicProps>;

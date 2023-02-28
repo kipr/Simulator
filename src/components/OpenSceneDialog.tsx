@@ -19,20 +19,22 @@ import LocalizedString from '../util/LocalizedString';
 import Author from '../db/Author';
 import { auth } from '../firebase/firebase';
 
+import tr from '@i18n';
 
-export interface OpenSceneDialogProps extends ThemeProps {
+export interface OpenSceneDialogPublicProps extends ThemeProps {
   scene: Scene;
   onClose: () => void;
-
 }
 
-interface ReduxOpenSceneDialogProps {
+interface OpenSceneDialogPrivateProps {
   scenes: Scenes;
+  locale: LocalizedString.Language;
   onSceneChange: (sceneId: string) => void;
   listUserScenes: () => void;
 }
 
-type Props = OpenSceneDialogProps;
+
+type Props = OpenSceneDialogPublicProps & OpenSceneDialogPrivateProps;
 type State = SelectSceneDialogState;
 
 interface SelectSceneDialogState {
@@ -99,8 +101,8 @@ interface SectionProps {
   selected?: boolean;
 }
 
-class OpenSceneDialog extends React.PureComponent<Props & ReduxOpenSceneDialogProps, SelectSceneDialogState> {
-  constructor(props: Props & ReduxOpenSceneDialogProps) {
+class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState> {
+  constructor(props: Props) {
     super(props);
     this.state = {
       scene:props.scene,
@@ -112,7 +114,7 @@ class OpenSceneDialog extends React.PureComponent<Props & ReduxOpenSceneDialogPr
     this.props.listUserScenes();
   }
 
-  componentDidUpdate(prevProps: Readonly<OpenSceneDialogProps & ReduxOpenSceneDialogProps>) {
+  componentDidUpdate(prevProps: Readonly<Props>) {
     // Check if selectedSceneId is not longer one of the scenes
     if (this.props.scenes !== prevProps.scenes) {
       if (!Object.prototype.hasOwnProperty.call(this.props.scenes, this.state.selectedSceneId)) {
@@ -122,10 +124,9 @@ class OpenSceneDialog extends React.PureComponent<Props & ReduxOpenSceneDialogPr
   }
   
   render() {
-    const { props, state } = this;
-    const { theme, onClose, scenes } = props;
-    const { selectedSceneId, scene } = state;
-    
+
+    const { theme, onClose, scenes, locale } = this.props;
+    const { selectedSceneId, scene } = this.state;
 
     const loadedScenesArray: [string, Scene][] = [];
     Dict.forEach(scenes, (value, key) => {
@@ -135,7 +136,7 @@ class OpenSceneDialog extends React.PureComponent<Props & ReduxOpenSceneDialogPr
     });
 
     return (
-      <Dialog name='Open World' theme={theme} onClose={onClose}>
+      <Dialog name={LocalizedString.lookup(tr('Open World'), locale)} theme={theme} onClose={onClose}>
         <Container theme={theme}>
           <SceneColumn theme={theme}>
             {loadedScenesArray.map(s => this.createSceneName(s[0], s[1]))}
@@ -150,7 +151,7 @@ class OpenSceneDialog extends React.PureComponent<Props & ReduxOpenSceneDialogPr
           
         </Container>
         <DialogBar theme={theme} onAccept={this.onAccept}>
-          <Fa icon={faCheck} /> Accept
+          <Fa icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}
         </DialogBar>
       </Dialog>
     );
@@ -175,22 +176,20 @@ class OpenSceneDialog extends React.PureComponent<Props & ReduxOpenSceneDialogPr
     if (sceneIteration.name !== scene.name) {
       return (
         <SceneName key={sceneId} theme={theme} selected={sceneId === selectedSceneId} onClick={() => this.onSceneClick(sceneId)}>
-          {LocalizedString.lookup(sceneIteration.name, LocalizedString.EN_US)}
+          {LocalizedString.lookup(tr(sceneIteration.name), this.props.locale)}
         </SceneName>
       );
     }
     
     return (
       <CurrentSceneName theme={theme} onClick={() => this.onSceneClick(sceneId)}>
-        {scene.name[LocalizedString.EN_US]}
+       {LocalizedString.lookup(tr(scene.name), this.props.locale)}
       </CurrentSceneName>
     );
-    
-    
   };
 
-  private createSceneInfo = (currScene: AsyncScene) => {
-    const { theme } = this.props;
+  private createSceneInfo = (scene: AsyncScene) => {
+    const { theme, locale } = this.props;
     const { scene } = this.state;
 
     let name: string;
@@ -201,33 +200,31 @@ class OpenSceneDialog extends React.PureComponent<Props & ReduxOpenSceneDialogPr
 
     if (!brief) {
       const value = Async.latestValue(currScene);
-      
       if (!value) {
-        name = LocalizedString.lookup(scene.name, LocalizedString.EN_US);
-        description = LocalizedString.lookup(scene.description, LocalizedString.EN_US);
+        name = LocalizedString.lookup(tr(scene.name), this.props.locale);
+        description = LocalizedString.lookup(tr(scene.description), this.props.locale);
         author = scene.author;
       } else {
-        name = LocalizedString.lookup(value.name, LocalizedString.EN_US);
-        description = LocalizedString.lookup(value.description, LocalizedString.EN_US);
+        name = LocalizedString.lookup(tr(value.name), this.props.locale);
+        description = LocalizedString.lookup(tr(value.description), this.props.locale);
         author = value.author;
       }
-
     } else {
-      name = LocalizedString.lookup(brief.name, LocalizedString.EN_US);
-      description = LocalizedString.lookup(brief.description, LocalizedString.EN_US);
+      name = LocalizedString.lookup(tr(brief.name), this.props.locale);
+      description = LocalizedString.lookup(tr(brief.description), this.props.locale);
       author = brief.author;
     }
 
     return (
       <>
-        <InfoText theme={theme}>{`Description: ${description}`}</InfoText>
-        <InfoText theme={theme}>{`Author: ${author.id === auth.currentUser.uid ? 'Me' : author.id}`}</InfoText>
+        <InfoText theme={theme}>{LocalizedString.lookup(tr('Description: '), locale)} {description}</InfoText>
+        <InfoText theme={theme}>{LocalizedString.lookup(tr('Author: '), locale)} {author.id === auth.currentUser.uid ? LocalizedString.lookup(tr('Me'), locale) : author.id}</InfoText>
       </>
     );
   };
 
   private createNoSceneInfo = (loadedScenesArray: [string, Scene][]) => {
-    const description = LocalizedString.lookup(loadedScenesArray[0][1].description, LocalizedString.EN_US);
+    const description = LocalizedString.lookup(tr(loadedScenesArray[0][1].description), this.props.locale);
     return <InfoText theme={this.props.theme}> {description}</InfoText>;
   };
 
@@ -241,9 +238,10 @@ class OpenSceneDialog extends React.PureComponent<Props & ReduxOpenSceneDialogPr
 
 export default connect<unknown, unknown, Props>((state: ReduxState, ownProps) => ({
   scenes: state.scenes,
+  locale: state.i18n.locale,
 }), (dispatch, b) => ({
   onSceneChange: (sceneId: string) => {
     dispatch(push(`/scene/${sceneId}`));
   },
   listUserScenes: () => dispatch(ScenesAction.LIST_USER_SCENES),
-}))(OpenSceneDialog) as React.ComponentType<OpenSceneDialogProps>;
+}))(OpenSceneDialog) as React.ComponentType<OpenSceneDialogPublicProps>;

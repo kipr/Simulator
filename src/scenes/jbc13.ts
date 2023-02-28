@@ -3,12 +3,14 @@ import LocalizedString from '../util/LocalizedString';
 
 import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
 
+import tr from '@i18n';
+
 const baseScene = createBaseSceneSurfaceA();
 
 export const JBC_13: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 13' },
-  description: { [LocalizedString.EN_US]: `Junior Botball Challenge 13: Clean the Mat` },
+  name: tr('JBC 13'),
+  description: tr('Junior Botball Challenge 13: Clean the Mat'),
   nodes: {
     ...baseScene.nodes,
     'can2': createCanNode(2),
