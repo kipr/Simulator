@@ -2,7 +2,6 @@ import Scene from "../state/State/Scene";
 import { ReferenceFrame, Rotation } from "../unit-math";
 import { Distance, Mass } from "../util";
 import LocalizedString from '../util/LocalizedString';
-
 import { createBaseSceneSurfaceA } from './jbcBase';
 
 import tr from '@i18n';

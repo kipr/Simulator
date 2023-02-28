@@ -183,7 +183,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
     
     return (
       <CurrentSceneName theme={theme} onClick={() => this.onSceneClick(sceneId)}>
-       {LocalizedString.lookup(tr(scene.name), this.props.locale)}
+        {LocalizedString.lookup(tr(scene.name), this.props.locale)}
       </CurrentSceneName>
     );
   };
