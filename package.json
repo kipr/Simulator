@@ -60,6 +60,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@types/react": "^16.9.25",
+    "babylonjs-gltf2interface": "^5.22.0",
     "body-parser": "^1.19.0",
     "colorjs.io": "^0.4.2",
     "connected-react-router": "^6.9.3",
