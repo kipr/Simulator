@@ -30,6 +30,10 @@ import  { GlowLayer as BabylonGlowLayer } from '@babylonjs/core/Layers/glowLayer
 import { Observer as BabylonObserver } from '@babylonjs/core/Misc/observable';
 import { BoundingBox as BabylonBoundingBox } from '@babylonjs/core/Culling/boundingBox';
 
+// eslint-disable-next-line @typescript-eslint/no-duplicate-imports -- Required import for side effects
+import '@babylonjs/core/Engines/Extensions/engine.views';
+import '@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent';
+
 import Dict from "./Dict";
 import { Quaternion, Vector2 as RawVector2, Vector3 as RawVector3 } from "./math";
 import Scene from "./state/State/Scene";
