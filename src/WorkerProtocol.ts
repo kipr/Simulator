@@ -12,7 +12,7 @@ export namespace Protocol {
       StartRequest |
       SetSharedRegistersRequest |
       SetSharedConsoleRequest |
-      SetSharedVariables |
+      SetSharedVariablesRequest |
       ProgramOutputRequest |
       ProgramErrorRequest |
       WorkerReadyRequest |

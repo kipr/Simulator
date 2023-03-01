@@ -331,15 +331,12 @@ const startScratch = async (message: Protocol.Worker.StartRequest) => {
         },
         tick: (ctx) => {
           const now = Date.now();
-          // ~30 Hz
-          if (now - lastTick < 33) return;
+          // ~10 Hz
+          if (now - lastTick < 100) return;
           lastTick = now;
-          const ret = {};
-          for (const name of watchedVariables) ret[name] = ctx.heap.get(name);
-          const str = JSON.stringify(ret);
-          const length = str.length;
-          const finalStr = `${length};${str}`;
-          sharedVariables_.pushStringBlocking(finalStr);
+          for (const name of watchedVariables) {
+            print(`Variable ${name} = ${ctx.heap.get(name)}`);
+          }
         },
         modules: {
           control,
