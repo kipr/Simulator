@@ -18,9 +18,10 @@ import jbc2 from "../../challenges/jbc2";
 import jbc2b from "../../challenges/jbc2b";
 import jbc2c from "../../challenges/jbc2c";
 import jbc2d from "../../challenges/jbc2d";
-import jbc5 from "../../challenges/jbc5";
+import jbc3 from "../../challenges/jbc3";
 import jbc4 from "../../challenges/jbc4";
 import jbc4b from "../../challenges/jbc4b";
+import jbc5 from "../../challenges/jbc5";
 import jbc6 from "../../challenges/jbc6";
 import jbc7 from "../../challenges/jbc7";
 import jbc7b from "../../challenges/jbc7b";
@@ -166,6 +167,10 @@ const DEFAULT_CHALLENGES: Challenges = {
   'jbc2d': Async.loaded({
     value: jbc2d,
     brief: ChallengeBrief.fromChallenge(jbc2d),
+  }),
+  'jbc3': Async.loaded({
+    value: jbc3,
+    brief: ChallengeBrief.fromChallenge(jbc3),
   }),
   'jbc5': Async.loaded({
     value: jbc5,
