@@ -1,5 +1,4 @@
 import { Engine as BabylonEngine } from '@babylonjs/core/Engines/engine';
-import { EngineView as BabylonEngineView } from '@babylonjs/core/Engines/Extensions/engine.views';
 import { Scene as BabylonScene } from '@babylonjs/core/scene';
 import { Vector3 as BabylonVector3, Quaternion as BabylonQuaternion, Matrix as BabylonMatrix } from '@babylonjs/core/Maths/math.vector';
 import { Color3 as BabylonColor3 } from '@babylonjs/core/Maths/math.color';
@@ -56,8 +55,6 @@ export class Space {
   private engine: BabylonEngine;
   private workingCanvas: HTMLCanvasElement;
   private bScene_: BabylonScene;
-
-  private currentEngineView: BabylonEngineView;
 
   private storeSubscription_: Unsubscribe;
 
@@ -162,9 +159,6 @@ export class Space {
     this.bScene_ = new BabylonScene(this.engine);
     this.bScene_.useRightHandedSystem = true;
     
-
-    this.currentEngineView = null;
-
     ACTIVE_SPACE = this;
 
     // tell Babylon to load a local Draco decoder
