@@ -29,6 +29,9 @@ const OPTIONS: ComboBox.Option[] = [{
 }, {
   text: 'Python',
   data: 'python'
+}, {
+  text: 'Scratch',
+  data: 'scratch'
 }];
 
 const Label = styled('div', {

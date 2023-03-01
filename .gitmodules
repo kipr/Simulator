@@ -10,3 +10,6 @@
 [submodule "dependencies/ammo.js"]
 	path = dependencies/ammo.js
 	url = https://github.com/kipr/ammo.js
+[submodule "dependencies/kipr-scratch"]
+	path = dependencies/kipr-scratch
+	url = https://github.com/kipr/kipr-scratch

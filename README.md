@@ -25,8 +25,6 @@ sudo apt-get install nodejs cmake build-essential swig python3.8
 sudo npm install --global npm
 sudo npm install --global yarn
 yarn --version
-
-#(if yarn does not work, reboot or use "sudo yarn" on the rest of the instructions)
 ```
 
 ### macOS
@@ -70,7 +68,7 @@ git lfs pull
 
 ```bash
 # Python 3.7+ is required for the build process
-python3 dependencies/build.py
+yarn run build-deps
 ```
 
 ## Install JavaScript Dependencies
