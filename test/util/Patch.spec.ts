@@ -1,5 +1,3 @@
-import { expect, config } from 'chai';
-import { describe, it } from 'mocha';
 import Patch from '../../src/util/Patch';
 import Scene from '../../src/state/State/Scene';
 import LocalizedString from '../../src/util/LocalizedString';
@@ -55,8 +53,8 @@ const SCENE_B: Scene = {
 describe('Patch', () => {
   it('should apply an outer diff', () => {
     const diff = Patch.diff({ a: 1, b: 2, c: 3 }, { a: 1, b: 2, c: 4 });
-    expect(diff.type).to.equal(Patch.Type.OuterChange);
+    expect(diff.type).toEqual(Patch.Type.OuterChange);
     const next = Patch.apply(diff, { a: 1, b: 2, c: 3 });
-    expect(next).to.deep.equal({ a: 1, b: 2, c: 4 });
+    expect(next).toEqual({ a: 1, b: 2, c: 4 });
   });
 })

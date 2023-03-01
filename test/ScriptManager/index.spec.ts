@@ -1,5 +1,3 @@
-import { expect } from 'chai';
-import { describe, it } from 'mocha';
 import ScriptManager from '../../src/ScriptManager';
 import Script from '../../src/state/State/Scene/Script';
 import { Vector3 } from '../../src/unit-math';
@@ -23,7 +21,7 @@ describe('ScriptManager', () => {
         otherNodeId: 'otherNodeId',
         point: Vector3.ZERO_METERS
       }));
-      expect(result).to.equal('otherNodeId');
+      expect(result).toEqual('otherNodeId');
     });
 
     it(`shouldn't trigger the collision callback`, () => {
@@ -33,7 +31,7 @@ describe('ScriptManager', () => {
         otherNodeId: 'notOtherNodeId',
         point: Vector3.ZERO_METERS
       }));
-      expect(result).to.equal(undefined);
+      expect(result).toEqual(undefined);
     });
   });
   
@@ -44,26 +42,26 @@ describe('ScriptManager', () => {
     scriptManager.onCollisionFiltersChanged = (nodeId, nextFilterIds) => filterIds = nextFilterIds;
     scriptManager.set('test1', Script.ecmaScript('test1', `scene.addOnCollisionListener('0', other => {}, [ '1', '2' ]);`));
 
-    expect(filterIds).to.deep.equal(new Set([ '1', '2' ]));
+    expect(filterIds).toEqual(new Set([ '1', '2' ]));
 
     scriptManager.set('test2', Script.ecmaScript('test2', `scene.addOnCollisionListener('0', other => {}, [ '3', '4' ]);`));
 
-    expect(filterIds).to.deep.equal(new Set([ '1', '2', '3', '4' ]));
+    expect(filterIds).toEqual(new Set([ '1', '2', '3', '4' ]));
 
     scriptManager.set('test3', Script.ecmaScript('test2', `scene.addOnCollisionListener('0', other => {}, [ '3', '4' ]);`));
 
-    expect(filterIds).to.deep.equal(new Set([ '1', '2', '3', '4' ]));
+    expect(filterIds).toEqual(new Set([ '1', '2', '3', '4' ]));
 
     scriptManager.remove('test3');
 
-    expect(filterIds).to.deep.equal(new Set([ '1', '2', '3', '4' ]));
+    expect(filterIds).toEqual(new Set([ '1', '2', '3', '4' ]));
 
     scriptManager.remove('test2');
 
-    expect(filterIds).to.deep.equal(new Set([ '1', '2' ]));
+    expect(filterIds).toEqual(new Set([ '1', '2' ]));
 
     scriptManager.dispose();
 
-    expect(filterIds).to.deep.equal(new Set());
+    expect(filterIds).toEqual(new Set());
   });
 })
