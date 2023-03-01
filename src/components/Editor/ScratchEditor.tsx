@@ -141,9 +141,13 @@ class ScratchEditor extends React.Component<Props, State> {
 
   private onChange_ = () => {
     this.debounce_ = true;
-    const code = Blockly.Xml.domToPrettyText(Blockly.Xml.workspaceToDom(this.workspace_));
-    console.log(code);
-    this.props.onCodeChange(code);
+    try {
+      const code = Blockly.Xml.domToPrettyText(Blockly.Xml.workspaceToDom(this.workspace_));
+      console.log(code);
+      this.props.onCodeChange(code);
+    } catch (e) {
+      // console.error(e);
+    }
     this.debounce_ = false;
   };
 
