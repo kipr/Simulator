@@ -38,6 +38,7 @@ class RobotBinding {
   private childrenNodeIds_: Dict<string[]>;
 
   private rootId_: string;
+  private robotSceneId_: string;
 
   private links_: Dict<Babylon.Mesh> = {};
 
@@ -710,9 +711,9 @@ class RobotBinding {
     }
   }
 
-  async setRobot(sceneRobot: SceneNode.Robot, robot: Robot) {
+  async setRobot(sceneRobot: SceneNode.Robot, robot: Robot, robotSceneId: string) {
     if (this.robot_) throw new Error('Robot already set');
-
+    this.robotSceneId_ = robotSceneId;
     this.robot_ = robot;
 
     const rootIds = Robot.rootNodeIds(robot);
@@ -729,6 +730,7 @@ class RobotBinding {
       const node = robot.nodes[nodeId];
       if (node.type !== Node.Type.Link) continue;
       const bNode = await this.createLink_(nodeId, node);
+      bNode.metadata = { id: this.robotSceneId_, selected: false } as SceneMeshMetadata;
       this.links_[nodeId] = bNode;
     }
 
