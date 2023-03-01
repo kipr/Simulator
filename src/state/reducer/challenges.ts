@@ -123,7 +123,7 @@ const DEFAULT_CHALLENGES: Challenges = {
   'jbc6c': Async.loaded({
     value: jbc6c,
     brief: ChallengeBrief.fromChallenge(jbc6c),
-  })
+  }),
 };
 
 const create = async (challengeId: string, next: Async.Creating<Challenge>) => {

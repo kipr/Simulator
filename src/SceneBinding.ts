@@ -622,7 +622,7 @@ class SceneBinding {
     const robotBinding = new RobotBinding(this.bScene_, this.physicsViewer_);
     const robot = this.robots_[node.robotId];
     if (!robot) throw new Error(`Robot by id "${node.robotId}" not found`);
-    await robotBinding.setRobot(node, robot);
+    await robotBinding.setRobot(node, robot, id);
     robotBinding.linkOrigins = this.robotLinkOrigins_[id] || {};
 
     // FIXME: For some reason this origin isn't respected immediately. We need to look into it.

@@ -43,12 +43,11 @@ class App extends React.Component<Props, State> {
     this.onAuthStateChangedSubscription_ = auth.onAuthStateChanged(user => {
       if (user) {
         console.log('User detected.');
+        this.setState({ loading: false });
       } else {
         console.log('No user detected');
+        this.props.login();
       }
-      this.setState({ loading: false }, () => {
-        if (!user) this.props.login();
-      });
     });
   }
 
