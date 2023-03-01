@@ -275,6 +275,24 @@ namespace Async {
     }
   };
 
+  export const latestCommon = <B, T>(async: Async<B, T>): B | T => {
+    if (!async) return undefined;
+
+    switch (async.type) {
+      case Type.Unloaded: return async.brief;
+      case Type.Creating: return async.value;
+      case Type.CreateFailed: return async.value ;
+      case Type.Loading: return async.brief;
+      case Type.LoadFailed: return async.brief;
+      case Type.Loaded: return async.value;
+      case Type.Saveable: return async.value;
+      case Type.Saving: return async.value;
+      case Type.SaveFailed: return async.value;
+      case Type.Deleting: return async.value;
+      case Type.DeleteFailed: return async.value;
+    }
+  };
+
   export const isResident = <B, T>(async: Async<B, T>): boolean => {
     if (!async) return false;
 
