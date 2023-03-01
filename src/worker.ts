@@ -182,7 +182,7 @@ const ctx: Worker = self as unknown as Worker;
 
 let sharedRegister_: SharedRegisters;
 let sharedConsole_: SharedRingBufferUtf32;
-let sharedDebug_: SharedArrayBuffer;
+let sharedVariables_: SharedRingBufferUtf32;
 
 const print = (stdout: string) => {
   sharedConsole_.pushStringBlocking(`${stdout}\n`);
@@ -317,10 +317,30 @@ const startScratch = async (message: Protocol.Worker.StartRequest) => {
       return;
     }
 
+    let watchedVariables: Set<string> = new Set();
+
+    let lastTick = Date.now();
     try {
       const instance = new Instance({
         source: new DOMParser().parseFromString(message.code, "text/xml"),
-        show: (ctx, name) => console.log(name, ctx.heap.get(name)),
+        show: (ctx, name) => {
+          watchedVariables.add(name);
+        },
+        hide: (ctx, name) => {
+          watchedVariables.delete(name);
+        },
+        tick: (ctx) => {
+          const now = Date.now();
+          // ~30 Hz
+          if (now - lastTick < 33) return;
+          lastTick = now;
+          const ret = {};
+          for (const name of watchedVariables) ret[name] = ctx.heap.get(name);
+          const str = JSON.stringify(ret);
+          const length = str.length;
+          const finalStr = `${length};${str}`;
+          sharedVariables_.pushStringBlocking(finalStr);
+        },
         modules: {
           control,
           data,

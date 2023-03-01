@@ -33,7 +33,7 @@ export namespace Protocol {
       sharedArrayBuffer: SharedArrayBuffer;
     }
 
-    export interface SetSharedVariables {
+    export interface SetSharedVariablesRequest {
       type: 'set-shared-variables';
       sharedArrayBuffer: SharedArrayBuffer;
     }
