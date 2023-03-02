@@ -201,6 +201,11 @@ export class Space {
 
     const mesh = eventData.pickInfo.pickedMesh;
     const id = (mesh.metadata as SceneMeshMetadata).id;
+
+    this.sceneBinding_.scriptManager.trigger(ScriptManager.Event.click({
+      nodeId: id,
+    }));
+    
     const prevId = this.scene_.selectedNodeId;
     if (id !== prevId && this.scene_.nodes[id]?.editable) {
       this.onSelectNodeId?.(id);

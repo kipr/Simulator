@@ -145,6 +145,7 @@ namespace ScriptManager {
       Collision,
       IntersectionStart,
       IntersectionEnd,
+      Click
     }
 
     export interface Render {
@@ -177,13 +178,21 @@ namespace ScriptManager {
     }
 
     export const intersectionEnd = construct<IntersectionEnd>(Type.IntersectionEnd);
+    
+    export interface Click {
+      type: Type.Click;
+      nodeId: string;
+    }
+
+    export const click = construct<Click>(Type.Click);
   }
 
   export type Event = (
     Event.Render |
     Event.Collision |
     Event.IntersectionStart |
-    Event.IntersectionEnd
+    Event.IntersectionEnd |
+    Event.Click
   );
 
   export namespace Listener {
@@ -191,6 +200,7 @@ namespace ScriptManager {
       Render,
       Collision,
       Intersection,
+      Click
     }
 
     export interface Render {
@@ -217,12 +227,22 @@ namespace ScriptManager {
     }
 
     export const intersection = construct<Intersection>(Type.Intersection);
+    
+
+    export interface Click {
+      type: Type.Click;
+      filterIds: Set<string>;
+      cb: (nodeId: string) => void;
+    }
+
+    export const click = construct<Click>(Type.Click);
   }
 
   export type Listener = (
     Listener.Render |
     Listener.Collision |
-    Listener.Intersection
+    Listener.Intersection |
+    Listener.Click
   );
 
   export type CachedListener = Omit<Listener.Collision | Listener.Intersection, 'cb' | 'nodeId'>;
@@ -283,6 +303,10 @@ namespace ScriptManager {
           this.triggerIntersection_(event);
           break;
         }
+        case Event.Type.Click: {
+          this.triggerClick_(event);
+          break;
+        }
       }
     }
 
@@ -308,6 +332,14 @@ namespace ScriptManager {
         if (listener.nodeId !== event.nodeId) continue;
         if (listener.filterIds && !listener.filterIds.has(event.otherNodeId)) continue;
         listener.cb(event.type === Event.Type.IntersectionStart ? 'start' : 'end', event.otherNodeId);
+      }
+    }
+
+    private triggerClick_(event: Event.Click) {
+      for (const listener of Dict.values(this.listeners_)) {
+        if (listener.type !== Listener.Type.Click) continue;
+        if (listener.filterIds && !listener.filterIds.has(event.nodeId)) continue;
+        listener.cb(event.nodeId);
       }
     }
 
@@ -456,6 +488,12 @@ namespace ScriptManager {
       return handle;
     }
 
+    addOnClickListener(filterIds: Ids, cb: (nodeId: string) => void): string {
+      const handle = uuid();
+      this.listeners_[handle] = Listener.click({ filterIds: Ids.toSet(filterIds), cb });
+      return handle;
+    }
+    
     removeListener(handle: string): void {
       if (!(handle in this.listeners_)) return;
 
