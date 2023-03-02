@@ -90,7 +90,8 @@ namespace Modal {
     NewScene,
     CopyScene,
     SettingsScene,
-    DeleteRecord
+    DeleteRecord,
+    ResetCode
   }
 
   export interface Settings {
@@ -162,6 +163,12 @@ namespace Modal {
   }
 
   export const SETTINGS_SCENE: SettingsScene = { type: Type.SettingsScene };
+
+  export interface ResetCode {
+    type: Type.ResetCode;
+  }
+
+  export const RESET_CODE: ResetCode = { type: Type.ResetCode };
 }
 
 export type Modal = (
@@ -175,7 +182,8 @@ export type Modal = (
   Modal.NewScene |
   Modal.CopyScene |
   Modal.DeleteRecord |
-  Modal.SettingsScene
+  Modal.SettingsScene |
+  Modal.ResetCode
 );
 
 interface RootParams {
@@ -837,6 +845,12 @@ class Root extends React.Component<Props, State> {
   };
 
   private onResetCode_ = () => {
+    this.setState({
+      modal: Modal.RESET_CODE
+    })
+  };
+
+  private onResetCodeAccept_ = () => {
     const { challenge } = this.props;
     if (!challenge) return;
 
@@ -1011,6 +1025,14 @@ class Root extends React.Component<Props, State> {
         {modal.type === Modal.Type.OpenScene && (
           <OpenSceneDialog
             theme={theme}
+            onClose={this.onModalClose_}
+          />
+        )}
+        {modal.type === Modal.Type.ResetCode && (
+          <DeleteDialog
+            name={tr('your current work')}
+            theme={theme}
+            onAccept={this.onResetCodeAccept_}
             onClose={this.onModalClose_}
           />
         )}
