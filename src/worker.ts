@@ -1,7 +1,6 @@
 import Protocol from './WorkerProtocol';
 import dynRequire from './require';
 import SharedRegisters from './SharedRegisters';
-import Registers from './RegisterState';
 import python from './python';
 import SharedRingBufferUtf32 from './SharedRingBufferUtf32';
 

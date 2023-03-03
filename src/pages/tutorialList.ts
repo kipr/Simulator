@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Tutorial from './interfaces/tutorial.interface';
 
 import tr from '@i18n';

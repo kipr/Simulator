@@ -70,8 +70,6 @@ import LoadingOverlay from './Challenge/LoadingOverlay';
 import DbError from '../db/Error';
 import { applyObjectPatch, applyPatch, createObjectPatch, createPatch, ObjectPatch, OuterObjectPatch } from 'symmetry';
 
-import { sceneFragmentDeclaration } from 'babylonjs/Shaders/ShadersInclude/sceneFragmentDeclaration';
-
 import DocumentationLocation from '../state/State/Documentation/DocumentationLocation';
 
 import tr from '@i18n';

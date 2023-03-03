@@ -1,7 +1,6 @@
 import Author from '../db/Author';
 import Challenge from '../state/State/Challenge';
 import Expr from '../state/State/Challenge/Expr';
-import LocalizedString from '../util/LocalizedString';
 
 import tr from '@i18n';
 

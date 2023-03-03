@@ -6,8 +6,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
-import Protocol from '../WorkerProtocol';
-
 import registersDevice from './registersDevice';
 import SharedRegisters from '../SharedRegisters';
 

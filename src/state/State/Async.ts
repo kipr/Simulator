@@ -1,5 +1,3 @@
-import construct from '../../util/construct';
-
 import produce, {  } from 'immer';
 import { WritableDraft } from 'immer/dist/internal';
 

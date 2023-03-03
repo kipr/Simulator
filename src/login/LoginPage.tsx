@@ -8,7 +8,7 @@ import {
   createUserWithEmail, 
   forgotPassword
 } from '../firebase/modules/auth';
-import { AuthProvider, getRedirectResult, signInWithPopup, signInWithRedirect } from 'firebase/auth';
+import { AuthProvider, getRedirectResult, signInWithPopup } from 'firebase/auth';
 import Form from '../components/Form';
 import { TabBar } from '../components/TabBar';
 
@@ -16,16 +16,12 @@ import KIPR_LOGO_BLACK from '../assets/KIPR-Logo-Black-Text-Clear-Large.png';
 import KIPR_LOGO_WHITE from '../assets/KIPR-Logo-White-Text-Clear-Large.png';
 import { Fa } from '../components/Fa';
 import { Text } from '../components/Text';
-import { EMPTY_OBJECT, StyledText } from '../util';
+import { StyledText } from '../util';
 import Button from '../components/Button';
 import { Validators } from '../util/Validator';
 import { faSignInAlt, faUnlock, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
-import { RouteComponentProps } from 'react-router';
 import qs from 'qs';
-import { connect } from 'react-redux';
-import { State as ReduxState } from '../state';
-import { push } from 'connected-react-router';
 
 export interface LoginPagePublicProps extends ThemeProps, StyleProps {
   externalIndex?: number;

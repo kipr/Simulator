@@ -1,10 +1,7 @@
 import Dict from '../../../Dict';
-import Patch from '../../../util/Patch';
 import Async from '../Async';
-import Scene from '../Scene';
 import PredicateCompletion from './PredicateCompletion';
 
-import { ObjectPatch, OuterObjectPatch } from 'symmetry';
 import ProgrammingLanguage from '../../../ProgrammingLanguage';
 import { ReferenceFrame } from '../../../unit-math';
 

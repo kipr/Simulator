@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../style';
-import { Angle, Distance, EMPTY_OBJECT, Mass, Slow, Value } from '../../util';
+import { Angle, Distance, Mass, Value } from '../../util';
 import { ThemeProps } from '../theme';
 import Field from '../Field';
 import ComboBox from '../ComboBox';

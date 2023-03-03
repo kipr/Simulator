@@ -1,7 +1,4 @@
-import Robot from "../State/Robot";
-import Async from "../State/Async";
-import * as ROBOTS from '../../robots';
-import { DocumentationState, Robots } from '../State';
+import { DocumentationState } from '../State';
 import DocumentationLocation from '../State/Documentation/DocumentationLocation';
 import construct from '../../util/construct';
 import { Size } from '../../components/Widget';
