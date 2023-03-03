@@ -16,6 +16,9 @@ const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
 let chosenGarage = [];
 scene.onBind = nodeId => {
 
+  scene.addOnClickListener('greenGarage', (nodeId) => {
+    console.log('User clicked: ');
+  });
   scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
     console.log('Robot touched: ', otherNodeId);
     const visible = type === 'start';
