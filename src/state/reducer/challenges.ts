@@ -33,6 +33,7 @@ import jbc12 from "../../challenges/jbc12";
 import jbc13 from "../../challenges/jbc13";
 import jbc15b from "../../challenges/jbc15b";
 import jbc17 from "../../challenges/jbc17";
+import jbc17b from "../../challenges/jbc17b";
 import jbc19 from "../../challenges/jbc19";
 import jbc20 from "../../challenges/jbc20";
 import jbc21 from "../../challenges/jbc21";
@@ -228,6 +229,10 @@ const DEFAULT_CHALLENGES: Challenges = {
   'jbc17': Async.loaded({
     value: jbc17,
     brief: ChallengeBrief.fromChallenge(jbc17),
+  }),
+  'jbc17b': Async.loaded({
+    value: jbc17b,
+    brief: ChallengeBrief.fromChallenge(jbc17b),
   }),
   'jbc19': Async.loaded({
     value: jbc19,
