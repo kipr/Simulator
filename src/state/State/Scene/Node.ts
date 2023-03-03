@@ -1,6 +1,6 @@
 import AbstractRobot from '../../../AbstractRobot';
 import deepNeq from '../../../deepNeq';
-import { Vector2, Vector3 } from '../../../math';
+import { Vector2, Vector3, Vector4 } from '../../../math';
 import { ReferenceFrame } from '../../../unit-math';
 import { DistributiveOmit } from '../../../util/types';
 import { Angle, Mass } from '../../../util/Value';
@@ -107,7 +107,7 @@ namespace Node {
     geometryId: string;
     physics?: Physics;
     material?: Material;
-    faceUvs?: Vector2[];
+    faceUvs?: Vector4[];
   }
 
   export namespace Obj {

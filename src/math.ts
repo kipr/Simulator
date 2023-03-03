@@ -1,4 +1,4 @@
-import { Vector3 as BabylonVector3, Quaternion as BabylonQuaternion } from '@babylonjs/core/Maths/math.vector';
+import { Vector3 as BabylonVector3, Vector4 as BabylonVector4, Quaternion as BabylonQuaternion } from '@babylonjs/core/Maths/math.vector';
 import { TransformNode as BabylonTransformNode } from '@babylonjs/core/Meshes/transformNode';
 import { AbstractMesh as BabylonAbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
 
@@ -169,6 +169,54 @@ export namespace Vector3 {
     
 }
 
+export interface Vector4 {
+  x: number;
+  y: number;
+  z: number;
+  w: number;
+}
+
+export namespace Vector4 {
+  export const ZERO: Vector4 = { x: 0, y: 0, z: 0, w: 0 };
+  export const ONE: Vector4 = { x: 1, y: 1, z: 1, w: 1 };
+
+  export const X: Vector4 = { x: 1, y: 0, z: 0, w: 0 };
+  export const Y: Vector4 = { x: 0, y: 1, z: 0, w: 0 };
+  export const Z: Vector4 = { x: 0, y: 0, z: 1, w: 0 };
+  export const W: Vector4 = { x: 0, y: 0, z: 0, w: 1 };
+  export const NEG_X: Vector4 = { x: -1, y: 0, z: 0, w: 0 };
+  export const NEG_Y: Vector4 = { x: 0, y: -1, z: 0, w: 0 };
+  export const NEG_Z: Vector4 = { x: 0, y: 0, z: -1, w: 0 };
+  export const NEG_W: Vector4 = { x: 0, y: 0, z: 0, w: -1 };
+
+
+  export const create = (x: number, y: number, z: number, w: number): Vector4 => ({ x, y, z, w });
+  export const x = (vec: Vector4) => (vec ? vec.x : 0);
+  export const y = (vec: Vector4) => (vec ? vec.y : 0);
+  export const z = (vec: Vector4) => (vec ? vec.z : 0);
+  export const w = (vec: Vector4) => (vec ? vec.w : 0);
+  export const eq = (lhs: Vector4, rhs: Vector4): boolean => lhs.x === rhs.x && lhs.y === rhs.y && lhs.z === rhs.z && lhs.w === rhs.w;
+  export const neq = (lhs: Vector4, rhs: Vector4): boolean => lhs.x !== rhs.x || lhs.y !== rhs.y || lhs.z !== rhs.z || lhs.w !== rhs.w;
+
+  export const add = (lhs: Vector4, rhs: Vector4): Vector4 => ({
+    x: lhs.x + rhs.x,
+    y: lhs.y + rhs.y,
+    z: lhs.z + rhs.z,
+    w: lhs.w + rhs.w
+  });
+
+  export const subtract = (lhs: Vector4, rhs: Vector4): Vector4 => ({
+    x: lhs.x - rhs.x, 
+    y: lhs.y - rhs.y,
+    z: lhs.z - rhs.z,
+    w: lhs.w - rhs.w
+  });
+
+  export const dot = (lhs: Vector4, rhs: Vector4): number => lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
+
+  export const fromBabylon = (vec: BabylonVector4): Vector4 => ({ x: vec.x, y: vec.y, z: vec.z, w: vec.w });
+  export const toBabylon = (vec: Vector4): BabylonVector4 => new BabylonVector4(vec.x, vec.y, vec.z, vec.w);
+}
 export interface Euler {
   x: number;
   y: number;
