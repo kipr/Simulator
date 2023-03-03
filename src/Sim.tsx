@@ -199,6 +199,11 @@ export class Space {
 
     const mesh = eventData.pickInfo.pickedMesh;
     const id = (mesh.metadata as SceneMeshMetadata).id;
+
+    this.sceneBinding_.scriptManager.trigger(ScriptManager.Event.click({
+      nodeId: id,
+    }));
+
     const prevId = this.scene_.selectedNodeId;
     if (id !== prevId && this.scene_.nodes[id]?.editable) {
       this.onSelectNodeId?.(id);
@@ -218,8 +223,6 @@ export class Space {
     // Full gravity will be -9.8 * 10
     const gravityVector = new Babylon.Vector3(0, -9.8 * 50, 0);
     
-    
-
     const state = store.getState();
     
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any

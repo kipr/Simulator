@@ -35,6 +35,7 @@ export interface ScriptSceneBinding {
   addOnRenderListener(cb: () => void): string;
   addOnCollisionListener(nodeId: string, cb: (otherNodeId: string, point: Vector3) => void, filterIds: Ids): string;
   addOnIntersectionListener(nodeId: string, cb: (type: 'start' | 'end', otherNodeId: string) => void, filterIds: Ids): string;
+  addOnClickListener(filterIds: Ids, cb: (nodeId: string) => void): string;
 
   removeListener(handle: string): void;
 
