@@ -11,6 +11,26 @@ import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
+const clicked = `
+// When the robot is clicked, the cans 1-4 become visible.
+
+const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
+  ...scene.nodes[nodeId],
+  visible
+});
+
+let clicked = false;
+
+scene.addOnClickListener(['robot', 'volume'], id => {
+  clicked = !clicked;
+  console.log('Clicked!', id, clicked);
+  setNodeVisible('can1', clicked);
+  setNodeVisible('can2', clicked);
+  setNodeVisible('can3', clicked);
+  setNodeVisible('can4', clicked);
+});
+`;
+
 const intersection = `
 // While the robot is intersecting "volume", cans 10-12 are visible.
 
@@ -50,6 +70,7 @@ export const scriptPlayground: Scene = {
   scripts: {
     'intersection': Script.ecmaScript('Intersection', intersection),
     'collision': Script.ecmaScript('Collision', collision),
+    'clicked': Script.ecmaScript('Clicked', clicked),
   },
   geometry: {
     ...baseScene.geometry,
