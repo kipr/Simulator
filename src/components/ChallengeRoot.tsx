@@ -847,7 +847,7 @@ class Root extends React.Component<Props, State> {
   private onResetCode_ = () => {
     this.setState({
       modal: Modal.RESET_CODE
-    })
+    });
   };
 
   private onResetCodeAccept_ = () => {
