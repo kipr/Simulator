@@ -24,6 +24,7 @@ import tr from '@i18n';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
 import LocalizedString from '../../util/LocalizedString';
+import DeleteDialog from 'components/DeleteDialog';
 
 export enum EditorActionState {
   None,
@@ -47,7 +48,6 @@ interface EditorPrivateProps {
 }
 
 interface EditorState {
-  
 }
 
 type Props = EditorPublicProps;
@@ -251,7 +251,6 @@ class Editor extends React.PureComponent<Props, State> {
           autocomplete={autocomplete}
         />
       </Container>
-      
     );
   }
 }
