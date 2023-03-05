@@ -972,7 +972,7 @@ class Root extends React.Component<Props, State> {
             onSettingsClick={this.onModalClick_(Modal.SETTINGS)}
             onAboutClick={this.onModalClick_(Modal.ABOUT)}
             onResetChallengeClick={this.onResetChallengeClick_}
-            onRunClick={this.onRunClick_}
+            onRunClick={code.length > 0 ? this.onRunClick_ : undefined}
             onStopClick={this.onStopClick_}
             onDocumentationClick={onDocumentationClick}
             onDashboardClick={this.onDashboardClick}
