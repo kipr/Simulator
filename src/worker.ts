@@ -325,6 +325,7 @@ const startScratch = async (message: Protocol.Worker.StartRequest) => {
         source: new DOMParser().parseFromString(message.code, "text/xml"),
         show: (ctx, name) => {
           watchedVariables.add(name);
+          print(`Variable ${name} = ${ctx.heap.get(name)}`);
         },
         hide: (ctx, name) => {
           watchedVariables.delete(name);
