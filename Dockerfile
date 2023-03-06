@@ -6,7 +6,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update && apt-get install -y wget git cmake build-essential python3.8 swig zlib1g-dev doxygen
 
-RUN wget https://deb.nodesource.com/setup_17.x && chmod +x ./setup_17.x && ./setup_17.x
+RUN wget https://deb.nodesource.com/setup_18.x && chmod +x ./setup_18.x && ./setup_18.x
 RUN apt-get install -y nodejs
 
 RUN npm install -g yarn
