@@ -4,68 +4,59 @@ import { createBaseSceneSurfaceA, createCanNode } from "./jbcBase";
 import { Color } from "../state/State/Scene/Color";
 import { Distance , Angle} from "../util";
 import Script from "../state/State/Scene/Script";
-import { Euler } from "../math";
-import { Rotation } from "../unit-math";
-import {SharedRegistersRobot} from '../SharedRegistersRobot';
 
 const baseScene = createBaseSceneSurfaceA();
-
 
 const garageIntersects = `
 const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
   ...scene.nodes[nodeId],
   visible
 });
-//const sharedRegistersRobot_ = SharedRegistersRobot;
-// When the can (can2) is intersecting the green garage, the garage glows
-
-scene.addOnIntersectionListener('can2', (type, otherNodeId) => {
-  console.log('Can 2 placed!', type, otherNodeId);
-  const visible = type === 'start';
-  scene.setChallengeEventValue('can2Intersects', visible);
-  setNodeVisible('greenGarage', visible);
-}, 'greenGarage');
-
-// When the can (can9) is intersecting the blue garage, the garage glows
-
-scene.addOnIntersectionListener('can9', (type, otherNodeId) => {
-  console.log('Can 9 placed!', type, otherNodeId);
-  const visible = type === 'start';
-  scene.setChallengeEventValue('can9Intersects', visible);
-  setNodeVisible('blueGarage', visible);
-}, 'blueGarage');
 
 
-// When the can (can10) is intersecting the yellow garage, the garage glows
+scene.onBind = nodeId => {
+  scene.addOnIntersectionListener(nodeId, (type, otherNodeId) => {
 
-scene.addOnIntersectionListener('can10', (type, otherNodeId) => {
-  console.log('Can 10 placed!', type, otherNodeId);
-  const visible = type === 'start';
-  scene.setChallengeEventValue('can10Intersects', visible);
-  setNodeVisible('yellowGarage', visible);
-}, 'yellowGarage');
+    //green garage and can2 intersecting
+    if(nodeId == 'can2' && otherNodeId == 'n1'){
+      console.log('Can 2 placed!', type, otherNodeId);
+      const visible = type === 'start';
+      scene.setChallengeEventValue('can2Intersects', visible);
+      setNodeVisible('greenGarage', visible);
+    }
+    //yellow garage and can10 intersecting
+    else if(nodeId == 'can10' && otherNodeId == 'n2')
+    {
+      console.log('Can 10 placed!', type, otherNodeId);
+      const visible = type === 'start';
+      scene.setChallengeEventValue('can10Intersects', visible);
+      setNodeVisible('yellowGarage', visible);
+    }
+    //blue garage and can9 intersecting
+    else if(nodeId == 'can9' && otherNodeId == 'n3'){
+      console.log('Can 9 placed!', type, otherNodeId);
+      const visible = type === 'start';
+      scene.setChallengeEventValue('can9Intersects', visible);
+      setNodeVisible('blueGarage', visible);
+    }
+  }, ['n1','n2','n3']);
+}
+
 `;
 
 
 const uprightCans = `
 // When a can is standing upright, the upright condition is met.
 
-// let startTime = Date.now();
 const EULER_IDENTITY = Rotation.Euler.identity();
-// const startingOrientationInv = (nodeId) => Quaternion.inverse(Rotation.toRawQuaternion(scene.nodes[nodeId].startingOrigin.orientation || EULER_IDENTITY));
 const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3.dot(Vector3.applyQuaternion(Vector3.Y, Rotation.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3.Y));
 
 
 scene.addOnRenderListener(() => {
-  // const currTime = Date.now();
-  // const timeDiff = currTime - startTime;
+
   const upright2 = yAngle('can2') < 5;
   const upright9 = yAngle('can9') < 5;
   const upright10 = yAngle('can10') < 5;
-  // if(timeDiff > 1000) {
-  //   console.log('can6 angle: ', yAngle('can6'));
-  //   startTime = currTime;
-  // }
   scene.setChallengeEventValue('can2Upright', upright2);
   scene.setChallengeEventValue('can9Upright', upright9);
   scene.setChallengeEventValue('can10Upright', upright10);
@@ -91,6 +82,11 @@ export const JBC_6: Scene = {
         y: Distance.centimeters(0.1),
         z: Distance.meters(3.54),
       },
+    },
+    n_geom: {
+      type: 'cylinder',
+      radius: Distance.centimeters(2),
+      height: Distance.centimeters(0.1),
     },
     startBox_geom: {
       type: "box",
@@ -194,7 +190,7 @@ export const JBC_6: Scene = {
       type: "object",
       geometryId: "blueGarage_geom",
       name: { [LocalizedString.EN_US]: "Blue Garage" },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(-13.4),
@@ -210,9 +206,9 @@ export const JBC_6: Scene = {
         },
       },
       material: {
-        type: "basic",
-        color: {
-          type: "color3",
+        type: 'pbr',
+        emissive: {
+          type: 'color3',
           color: Color.rgb(255, 255, 255),
         },
       },
@@ -235,6 +231,66 @@ export const JBC_6: Scene = {
         type: "pbr",
         emissive: {
           type: "color3",
+          color: Color.rgb(255, 255, 255),
+        },
+      },
+    },
+    n1: {
+      type: 'object',
+      geometryId: 'n_geom',
+      name: { [LocalizedString.EN_US]: 'Green Garage node' },
+      visible: false,
+      origin: {
+        position: {
+          x: Distance.centimeters(0),
+          y: Distance.centimeters(-6.9),
+          z: Distance.centimeters(52),
+        },
+      },
+      material: {
+        type: 'pbr',
+        emissive: {
+          type: 'color3',
+          color: Color.rgb(255, 255, 255),
+        },
+      },
+    },
+    n2: {
+      type: 'object',
+      geometryId: 'n_geom',
+      name: { [LocalizedString.EN_US]: 'Yellow Garage node' },
+      visible: false,
+      origin: {
+        position: {
+          x: Distance.centimeters(18.5),
+          y: Distance.centimeters(-6),
+          z: Distance.centimeters(78.9),
+        },
+      },
+      material: {
+        type: 'pbr',
+        emissive: {
+          type: 'color3',
+          color: Color.rgb(255, 255, 255),
+        },
+      },
+    },
+    n3: {
+      type: 'object',
+      geometryId: 'n_geom',
+      name: { [LocalizedString.EN_US]: 'Blue Garage node' },
+      visible: false,
+      origin: {
+        position: {
+          x: Distance.centimeters(-13), 
+          y: Distance.centimeters(-6),
+          z: Distance.centimeters(95),
+        },
+      },
+      material: {
+        type: 'pbr',
+        emissive: {
+          type: 'color3',
           color: Color.rgb(255, 255, 255),
         },
       },
