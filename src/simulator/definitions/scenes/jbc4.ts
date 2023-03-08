@@ -291,7 +291,7 @@ export const JBC_4: Scene = {
       type: "object",
       geometryId: "middle_geom",
       name: { [LocalizedString.EN_US]: "Between cans 4 and 9" },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(0),
@@ -312,7 +312,7 @@ export const JBC_4: Scene = {
       type: "object",
       geometryId: "topCan9_geom",
       name: { [LocalizedString.EN_US]: "Top side of can 9" },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(0),
