@@ -146,6 +146,7 @@ scene.onBind = nodeId => {
     state = 0;
     selected = 0;
     scene.setChallengeEventValue('touchGarageLines', true);
+    }
     else if(declaredGarage.includes('yellowBox') && 
     (otherNodeId == 'y1' || otherNodeId == 'y2' || otherNodeId == 'y3')){
     state = 0;
@@ -400,7 +401,7 @@ export const JBC_3: Scene = {
       type: 'object',
       geometryId: 'n_geom',
       name: { [LocalizedString.EN_US]: 'Green Garage node' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(0),
@@ -420,7 +421,7 @@ export const JBC_3: Scene = {
       type: 'object',
       geometryId: 'n_geom',
       name: { [LocalizedString.EN_US]: 'Yellow Garage node' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(18.5),
@@ -440,7 +441,7 @@ export const JBC_3: Scene = {
       type: 'object',
       geometryId: 'n_geom',
       name: { [LocalizedString.EN_US]: 'Blue Garage node' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(-14), 
@@ -461,7 +462,7 @@ export const JBC_3: Scene = {
       type: 'object',
       geometryId: 'n_geom',
       name: { [LocalizedString.EN_US]: 'Green Garage Right Boundary node' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(-11.5),
@@ -481,7 +482,7 @@ export const JBC_3: Scene = {
       type: 'object',
       geometryId: 'n_geom',
       name: { [LocalizedString.EN_US]: 'Green Garage Left Boundary node' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(12),
@@ -501,7 +502,7 @@ export const JBC_3: Scene = {
       type: 'object',
       geometryId: 'n_geom',
       name: { [LocalizedString.EN_US]: 'Green Garage Top Boundary node' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(0),
@@ -546,7 +547,7 @@ export const JBC_3: Scene = {
       type: 'object',
       geometryId: 'n_geom',
       name: { [LocalizedString.EN_US]: 'Blue Garage Right Boundary node' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(-19.2),
@@ -566,7 +567,7 @@ export const JBC_3: Scene = {
       type: 'object',
       geometryId: 'n_geom',
       name: { [LocalizedString.EN_US]: 'Blue Garage Left Boundary node' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(-5),
@@ -586,7 +587,7 @@ export const JBC_3: Scene = {
       type: 'object',
       geometryId: 'n_geom',
       name: { [LocalizedString.EN_US]: 'Blue Garage Top Boundary node' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(-19.2), 
