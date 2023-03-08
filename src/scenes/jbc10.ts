@@ -124,7 +124,7 @@ export const JBC_10: Scene = {
       type: 'object',
       geometryId: 'startBox_geom',
       name: { [LocalizedString.EN_US]: 'Start Box' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(-90),
@@ -144,7 +144,7 @@ export const JBC_10: Scene = {
       type: 'object',
       geometryId: 'lineB_geom',
       name: { [LocalizedString.EN_US]: 'Line B' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(0),
