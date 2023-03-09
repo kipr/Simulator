@@ -20,6 +20,8 @@
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/plugin-syntax-import-meta": "^7.10.4",
+    "@types/chai": "^4.3.3",
+    "@types/gapi": "^0.0.44",
     "@types/gettext-parser": "^4.0.2",
     "@types/history": "^4.7.2",
     "@types/jest": "^29.4.0",

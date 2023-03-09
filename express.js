@@ -233,6 +233,11 @@ app.get('/login', (req, res) => {
   res.sendFile(`${__dirname}/${sourceDir}/login.html`);
 });
 
+
+app.get('/lms/plugin', (req, res) => {
+  res.sendFile(`${__dirname}/${sourceDir}/plugin.html`);
+});
+
 app.use('*', (req, res) => {
   setCrossOriginIsolationHeaders(res);
   res.sendFile(`${__dirname}/${sourceDir}/index.html`);
