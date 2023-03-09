@@ -38,6 +38,7 @@ module.exports = {
   entry: {
     app: './index.tsx',
     login: './login/index.tsx',
+    plugin: './lms/plugin/index.tsx',
     'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js',
     'ts.worker': 'monaco-editor/esm/vs/language/typescript/ts.worker.js',
   },
@@ -138,13 +139,14 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({ template: 'index.html.ejs', excludeChunks: ['login'] }),
     new HtmlWebpackPlugin({ template: 'login/login.html.ejs', filename: 'login.html', chunks: ['login'] }),
+    new HtmlWebpackPlugin({ template: 'lms/plugin/plugin.html.ejs', filename: 'plugin.html', chunks: ['plugin'] }),
     new DefinePlugin({
       SIMULATOR_VERSION: JSON.stringify(require('../../package.json').version),
       SIMULATOR_GIT_HASH: JSON.stringify(commitHash),
       SIMULATOR_HAS_CPYTHON: JSON.stringify(dependencies.cpython !== undefined),
       SIMULATOR_HAS_AMMO: JSON.stringify(dependencies.ammo !== undefined),
       SIMULATOR_LIBKIPR_C_DOCUMENTATION: JSON.stringify(libkiprCDocumentation),
-      SIMULATOR_I18N: JSON.stringify(i18n),
+      SIMULATOR_I18N: JSON.stringify(i18n)
     }),
     new NpmDtsPlugin({
       root: resolve(__dirname, '../../'),
