@@ -1,5 +1,5 @@
 import Dict from "../Dict";
-import { Vector2 } from "../math";
+import { Vector4 } from "../math";
 import { Color } from "../state/State/Scene/Color";
 import Geometry from "../state/State/Scene/Geometry";
 import Node from "../state/State/Scene/Node";
@@ -23,7 +23,7 @@ const canTemplate: Node.TemplatedNode<Node.Obj> = {
       uri: '/static/Can Texture.png'
     },
   },
-  faceUvs: [Vector2.ZERO, Vector2.ZERO, Vector2.create(1, 0), Vector2.create(0, 1), Vector2.ZERO, Vector2.ZERO],
+  faceUvs: [Vector4.ZERO, Vector4.create(0, 0, 1, 1), Vector4.ZERO],
 };
 
 const reamTemplate: Node.TemplatedNode<Node.Obj> = {

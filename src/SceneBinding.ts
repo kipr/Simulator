@@ -10,7 +10,7 @@ import { BoxBuilder as BabylonBoxBuilder } from '@babylonjs/core/Meshes/Builders
 import { SphereBuilder as BabylonSphereBuilder } from '@babylonjs/core/Meshes/Builders/sphereBuilder';
 import { CylinderBuilder as BabylonCylinderBuilder } from '@babylonjs/core/Meshes/Builders/cylinderBuilder';
 import { PlaneBuilder as BabylonPlaneBuilder } from '@babylonjs/core/Meshes/Builders/planeBuilder';
-import { Vector3 as BabylonVector3, Vector4 as BabylonVector4 } from '@babylonjs/core/Maths/math.vector';
+import { Vector2, Vector3 as BabylonVector3, Vector4 as BabylonVector4 } from '@babylonjs/core/Maths/math.vector';
 import { Texture as BabylonTexture } from '@babylonjs/core/Materials/Textures/texture';
 import { Material as BabylonMaterial } from '@babylonjs/core/Materials/material';
 import { StandardMaterial as BabylonStandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
@@ -35,7 +35,7 @@ import '@babylonjs/core/Engines/Extensions/engine.views';
 import '@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent';
 
 import Dict from "./Dict";
-import { Quaternion, Vector2 as RawVector2, Vector3 as RawVector3 } from "./math";
+import { Quaternion, Vector2 as RawVector2, Vector3 as RawVector3, Vector4 as RawVector4 } from "./math";
 import Scene from "./state/State/Scene";
 import Camera from "./state/State/Scene/Camera";
 import Geometry from "./state/State/Scene/Geometry";
@@ -163,7 +163,7 @@ class SceneBinding {
     }
   };
 
-  private buildGeometry_ = async (name: string, geometry: Geometry, faceUvs?: RawVector2[]): Promise<FrameLike> => {
+  private buildGeometry_ = async (name: string, geometry: Geometry, faceUvs?: RawVector4[]): Promise<FrameLike> => {
     let ret: FrameLike;
     switch (geometry.type) {
       case 'box': {
@@ -171,12 +171,12 @@ class SceneBinding {
           width: Distance.toCentimetersValue(geometry.size.x),
           height: Distance.toCentimetersValue(geometry.size.y),
           depth: Distance.toCentimetersValue(geometry.size.z),
-          faceUV: this.buildGeometryFaceUvs_(faceUvs, 12),
+          faceUV: this.buildGeometryFaceUvs_(faceUvs, 6),
         }, this.bScene_);
         break;
       }
       case 'sphere': {
-        const bFaceUvs = this.buildGeometryFaceUvs_(faceUvs, 2)?.[0];
+        const bFaceUvs = this.buildGeometryFaceUvs_(faceUvs, 1)?.[0];
         ret = BabylonSphereBuilder.CreateSphere(name, {
           // Why?? Why is a sphere defined by its diameter?
           diameter: Distance.toCentimetersValue(geometry.radius) * 2,
@@ -190,7 +190,7 @@ class SceneBinding {
           height: Distance.toCentimetersValue(geometry.height),
           diameterTop: Distance.toCentimetersValue(geometry.radius) * 2,
           diameterBottom: Distance.toCentimetersValue(geometry.radius) * 2,
-          faceUV: this.buildGeometryFaceUvs_(faceUvs, 6),
+          faceUV: this.buildGeometryFaceUvs_(faceUvs, 3),
         }, this.bScene_);
         break;
       }
@@ -199,7 +199,7 @@ class SceneBinding {
           diameterTop: 0,
           height: Distance.toCentimetersValue(geometry.height),
           diameterBottom: Distance.toCentimetersValue(geometry.radius) * 2,
-          faceUV: this.buildGeometryFaceUvs_(faceUvs, 6),
+          faceUV: this.buildGeometryFaceUvs_(faceUvs, 3),
         }, this.bScene_);
         break;
       }
@@ -207,7 +207,7 @@ class SceneBinding {
         ret = BabylonPlaneBuilder.CreatePlane(name, {
           width: Distance.toCentimetersValue(geometry.size.x),
           height: Distance.toCentimetersValue(geometry.size.y),
-          frontUVs: this.buildGeometryFaceUvs_(faceUvs, 2)?.[0],
+          frontUVs: this.buildGeometryFaceUvs_(faceUvs, 1)?.[0],
         }, this.bScene_);
         break;
       }
@@ -244,14 +244,14 @@ class SceneBinding {
     return ret;
   };
 
-  private buildGeometryFaceUvs_ = (faceUvs: RawVector2[] | undefined, expectedUvs: number): BabylonVector4[] => {
+  private buildGeometryFaceUvs_ = (faceUvs: RawVector4[] | undefined, expectedUvs: number): BabylonVector4[] => {
     if (faceUvs?.length !== expectedUvs) {
       return undefined;
     }
 
     const ret: BabylonVector4[] = [];
-    for (let i = 0; i + 1 < faceUvs.length; i += 2) {
-      ret.push(new BabylonVector4(faceUvs[i].x, faceUvs[i].y, faceUvs[i + 1].x, faceUvs[i + 1].y));
+    for (let i = 0; i < expectedUvs; i++) {
+      ret.push(RawVector4.toBabylon(faceUvs[i]));
     }
 
     return ret;
