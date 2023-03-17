@@ -8,7 +8,7 @@ import { Theme, ThemeProps } from '../components/theme';
 import { StyleProps } from '../style';
 import Async from '../state/State/Async';
 import { AddButton, AddContainer, GradesContainer, NameContainer, SubjectsContainer, UsStdContainer } from './common';
-import { faChalkboardTeacher, faGraduationCap, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faChalkboardTeacher, faCheck, faGraduationCap, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Fa } from '../components/Fa';
 import Markdown from 'react-markdown';
 import { Tab, TabBar } from '../components/TabBar';
@@ -107,7 +107,9 @@ export default ({
     >
       <Header $theme={theme} $expanded={expanded}>
         <NameContainer>{LocalizedString.lookup(common.name, locale)}</NameContainer>
-        <UsStdContainer></UsStdContainer>
+        <UsStdContainer>
+          {common.standardsAligned ? <Fa icon={faCheck} /> : null}
+        </UsStdContainer>
         <GradesContainer>
           {gradeLevelString}
         </GradesContainer>
@@ -120,7 +122,7 @@ export default ({
             e.preventDefault();
             onAddedChange(!added)
           }}>
-            <Fa icon={faPlus} /> {added ? 'Remove' : 'Add'}
+            <Fa icon={added ? faMinus : faPlus} /> {added ? 'Remove' : 'Add'}
           </AddButton>
         </AddContainer>
       </Header>

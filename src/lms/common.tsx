@@ -2,9 +2,8 @@ import { styled } from 'styletron-react';
 import { RED, Theme } from '../components/theme';
 
 const Base = styled('div', {
-  flex: 1,
+  flex: '1 1 0',
   overflow: 'hidden',
-  flexBasis: 0,
   userSelect: 'none',
 })
 

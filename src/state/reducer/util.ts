@@ -16,3 +16,29 @@ export const errorToAsyncError = (error: unknown): Async.Error => {
   };
   throw error;
 };
+
+export class AutoSaver {
+  private readonly save_: () => Promise<void>;
+  private readonly interval_: number;
+  private timer_: number | undefined = undefined;
+
+  constructor(interval: number, save: () => Promise<void>) {
+    this.save_ = save;
+    this.interval_ = interval;
+    this.timer_ = window.setInterval(this.save_, this.interval_);
+  }
+
+  touch() {
+    if (this.timer_ !== undefined) {
+      window.clearInterval(this.timer_);
+      this.timer_ = window.setInterval(this.save_, this.interval_);
+    }
+  }
+
+  destroy() {
+    if (this.timer_ !== undefined) {
+      window.clearInterval(this.timer_);
+      this.timer_ = undefined;
+    }
+  }
+}

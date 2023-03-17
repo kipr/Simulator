@@ -33,7 +33,7 @@ export interface PluginPagePrivateProps extends ThemeProps {
 
   userId: string;
   myAssignments: Set<string>;
-  onMyAssignmentsChange: (userId: string, myAssignments: Set<string>) => void;
+  onMyAssignmentsChange: (myAssignments: Set<string>) => void;
 }
 
 const Container = styled('div', ({ $theme }: { $theme: Theme }) => ({
@@ -134,8 +134,7 @@ export default connect((state: State) => {
     myAssignments
   };
 }, (dispatch, ownProps) => ({
-  onMyAssignmentsChange: (userId: string, myAssignments: Set<string>) => dispatch(UsersAction.setMyAssignments({
-    userId,
+  onMyAssignmentsChange: (myAssignments: Set<string>) => dispatch(UsersAction.setMyAssignments({
     assignmentIds: Array.from(myAssignments)
   }))
 }))(PluginPage) as React.ComponentType<PluginPagePublicProps>;

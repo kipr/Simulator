@@ -10,8 +10,15 @@ export interface CurriculumAccess {
 interface User {
   name?: string;
   cirriculumAccess?: CurriculumAccess;
-
   myAssignments?: string[];
+}
+
+namespace User {
+  export const DEFAULT: User = {
+    name: undefined,
+    cirriculumAccess: undefined,
+    myAssignments: undefined,
+  };
 }
 
 export type UserBrief = Pick<User, 'name'>;

@@ -12,6 +12,7 @@ interface Assignment {
 
   name: LocalizedString;
 
+  standardsAligned: boolean;
   standardsConformance: StandardsLocation[];
 
   gradeLevels: number[];
@@ -24,7 +25,7 @@ interface Assignment {
   assets: Dict<string>;
 }
 
-export type AssignmentBrief = Pick<Assignment, 'author' | 'name' | 'gradeLevels' | 'subjects' | 'standardsConformance'>;
+export type AssignmentBrief = Pick<Assignment, 'author' | 'name' | 'gradeLevels' | 'subjects' | 'standardsConformance' | 'standardsAligned'>;
 
 export namespace AssignmentBrief {
   export const fromAssignment = ({
@@ -33,12 +34,14 @@ export namespace AssignmentBrief {
     gradeLevels,
     subjects,
     standardsConformance,
+    standardsAligned
   }: Assignment): AssignmentBrief => ({
     author,
     name,
     gradeLevels,
     subjects,
     standardsConformance,
+    standardsAligned
   });
 }
 

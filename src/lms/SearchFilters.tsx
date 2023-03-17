@@ -32,6 +32,9 @@ export interface SearchFiltersProps extends ThemeProps, StyleProps {
   onStandardsSelectedChange: (standardsSelected: Set<StandardsLocation>) => void;
 
   assignments: Dict<AsyncAssignment>;
+
+  gradeLevels: [number, number];
+  onGradeLevelsChange: (gradeLevels: [number, number]) => void;
 }
 
 const StyledWidget = styled(Widget, ({ theme }: { theme: Theme }) => ({
@@ -52,6 +55,10 @@ const RowLabel = styled('div', ({ $theme }: { $theme: Theme }) => ({
   paddingLeft: `${$theme.itemPadding * 2}px`,
 }));
 
+const StyledDoubleSlider = styled(DoubleSlider, ({ theme }: { theme: Theme }) => ({
+  height: '50px',
+}));
+
 export default ({
   style,
   className,
@@ -63,10 +70,13 @@ export default ({
   onStandardsSelectedChange,
   onSubjectsSelectedChange,
   standardsSelected,
-  assignments
+  assignments,
+  gradeLevels,
+  onGradeLevelsChange
 }: SearchFiltersProps) => {
   const [standardsCollapsed, setStandardsCollapsed] = React.useState(false);
   const [subjectCollapsed, setSubjectCollapsed] = React.useState(false);
+  const [gradeLevelCollapsed, setGradeLevelCollapsed] = React.useState(false);
 
   const [standardsFilter, setStandardsFilter] = React.useState('');
 
@@ -153,13 +163,20 @@ export default ({
           theme={theme}
         />
       </Section>}
-      <DoubleSlider
-        options={sliderOptions}
-        startIndex={0}
-        endIndex={sliderOptions.length - 1}
-        onChange={() => {}}
+      <Section
         theme={theme}
-      />
+        name={LocalizedString.lookup(tr('Grade Level'), locale)}
+        collapsed={gradeLevelCollapsed}
+        onCollapsedChange={setGradeLevelCollapsed}
+      >
+        <StyledDoubleSlider
+          options={sliderOptions}
+          startIndex={gradeLevels[0]}
+          endIndex={gradeLevels[1]}
+          onChange={(s, e) => onGradeLevelsChange([s, e])}
+          theme={theme}
+        />
+      </Section>
     </StyledWidget>
 
   )

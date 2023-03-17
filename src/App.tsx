@@ -17,6 +17,7 @@ import DocumentationWindow from './components/documentation/DocumentationWindow'
 import { State as ReduxState } from './state';
 import { DARK } from './components/theme';
 import CurriculumPage from './lms/CurriculumPage';
+import { UsersAction } from './state/reducer';
 
 export interface AppPublicProps {
 
@@ -24,6 +25,8 @@ export interface AppPublicProps {
 
 interface AppPrivateProps {
   login: () => void;
+  setMe: (me: string) => void;
+  loadUser: (uid: string) => void;
 }
 
 interface AppState {
@@ -48,9 +51,12 @@ class App extends React.Component<Props, State> {
     this.onAuthStateChangedSubscription_ = auth.onAuthStateChanged(user => {
       if (user) {
         console.log('User detected.');
+        this.props.loadUser(user.uid);
+        this.props.setMe(user.uid);
       } else {
         console.log('No user detected');
       }
+
       this.setState({ loading: false }, () => {
         if (!user) this.props.login();
       });
@@ -92,5 +98,7 @@ export default connect((state: ReduxState) => {
   login: () => {
     console.log('Redirecting to login page', window.location.pathname);
     window.location.href = `/login${window.location.pathname === '/login' ? '' : `?from=${window.location.pathname}`}`;
-  }
+  },
+  setMe: (me: string) => dispatch(UsersAction.setMe({ me })),
+  loadUser: (uid: string) => dispatch(UsersAction.loadOrEmptyUser({ userId: uid }))
 }))(App) as React.ComponentType<AppPublicProps>;
