@@ -22,44 +22,44 @@ export default {
   events: {
     can2Intersects: {
       name: { [LocalizedString.EN_US]: 'Can 2 Intersects' },
-      description: { [LocalizedString.EN_US]: 'Can 2 intersects a garage' },
+      description: { [LocalizedString.EN_US]: 'Can 2 intersects chosen garage' },
     },
     can5Intersects: {
       name: { [LocalizedString.EN_US]: 'Can 5 Intersects' },
-      description: { [LocalizedString.EN_US]: 'Can 5 intersects a garage' },
+      description: { [LocalizedString.EN_US]: 'Can 5 intersects chosen garage' },
     },
     can8Intersects: {
       name: { [LocalizedString.EN_US]: 'Can 8 Intersects' },
-      description: { [LocalizedString.EN_US]: 'Can 8 intersects a garage' },
+      description: { [LocalizedString.EN_US]: 'Can 8 intersects chosen garage' },
     },
     can10Intersects: {
       name: { [LocalizedString.EN_US]: 'Can 10 Intersects' },
-      description: { [LocalizedString.EN_US]: 'Can 10 intersects a garage' },
+      description: { [LocalizedString.EN_US]: 'Can 10 intersects chosen garage' },
     },
     can11Intersects: {
       name: { [LocalizedString.EN_US]: 'Can 11 Intersects' },
-      description: { [LocalizedString.EN_US]: 'Can 11 intersects a garage' },
+      description: { [LocalizedString.EN_US]: 'Can 11 intersects chosen garage' },
     },
 
     can2Upright: {
       name: { [LocalizedString.EN_US]: 'Can 2 Upright' },
-      description: { [LocalizedString.EN_US]: 'Can 2 upright in a garage' },
+      description: { [LocalizedString.EN_US]: 'Can 2 upright in chosen garage' },
     },
     can5Upright: {
       name: { [LocalizedString.EN_US]: 'Can 5 Upright' },
-      description: { [LocalizedString.EN_US]: 'Can 5 upright in a garage' },
+      description: { [LocalizedString.EN_US]: 'Can 5 upright in achosen garage' },
     },
     can8Upright: {
       name: { [LocalizedString.EN_US]: 'Can 8 Upright' },
-      description: { [LocalizedString.EN_US]: 'Can 8 upright in a garage' },
+      description: { [LocalizedString.EN_US]: 'Can 8 upright in chosen garage' },
     },
     can10Upright: {
       name: { [LocalizedString.EN_US]: 'Can 10 Upright' },
-      description: { [LocalizedString.EN_US]: 'Can 10 upright in a garage' },
+      description: { [LocalizedString.EN_US]: 'Can 10 upright in chosen garage' },
     },
     can11Upright: {
       name: { [LocalizedString.EN_US]: 'Can 11 Upright' },
-      description: { [LocalizedString.EN_US]: 'Can 11 upright in a garage' },
+      description: { [LocalizedString.EN_US]: 'Can 11 upright in chosen garage' },
     },
 
 
