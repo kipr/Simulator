@@ -112,8 +112,16 @@ export default ({
     }
 
     // Connector
-    const x1 = startIndex / (options.length - 1) * (size.x - HANDLE_RADIUS * 2) + HANDLE_RADIUS;
-    const x2 = endIndex / (options.length - 1) * (size.x - HANDLE_RADIUS * 2) + HANDLE_RADIUS;
+
+    let draggedStartIndex = startIndex;
+    if (dragState.type === 'dragging-left') draggedStartIndex = dragState.nextIndex;
+    
+    const x1 = draggedStartIndex / (options.length - 1) * (size.x - HANDLE_RADIUS * 2) + HANDLE_RADIUS;
+
+    let draggedEndIndex = endIndex;
+    if (dragState.type === 'dragging-right') draggedEndIndex = dragState.nextIndex;
+
+    const x2 = draggedEndIndex / (options.length - 1) * (size.x - HANDLE_RADIUS * 2) + HANDLE_RADIUS;
 
     return (
       <>
@@ -161,10 +169,15 @@ export default ({
 
   const ref = React.createRef<SVGSVGElement>();
 
+  const svgStyle: React.CSSProperties = {
+    ...style,
+    cursor: dragState.type === 'dragging-left' || dragState.type === 'dragging-right' ? 'ew-resize' : 'default',
+  };
+
   return (
     <Svg
       className={className}
-      style={style}
+      style={svgStyle}
       draw={draw}
       svgRef={ref}
       onMouseMove={e => {
@@ -186,10 +199,12 @@ export default ({
         switch (dragState.type) {
           case 'dragging-left': {
             if (dragState.nextIndex !== dragState.prevIndex) onChange(dragState.nextIndex, endIndex);
+            break;
           }
           // eslint-disable-next-line no-fallthrough
           case 'dragging-right': {
             if (dragState.nextIndex !== dragState.prevIndex) onChange(startIndex, dragState.nextIndex);
+            break;
           }
         }
         setDragState({ type: 'idle' });

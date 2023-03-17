@@ -30,7 +30,7 @@ export interface CurriculumPagePrivateProps extends ThemeProps {
 
   userId: string;
   myAssignments: Set<string>;
-  onMyAssignmentsChange: (userId: string, myAssignments: Set<string>) => void;
+  onMyAssignmentsChange: (myAssignments: Set<string>) => void;
 }
 
 const Container = styled('div', ({ $theme }: { $theme: Theme }) => ({
@@ -68,7 +68,11 @@ const StyledTabBar = styled(TabBar, ({ theme }: ThemeProps) => ({
   borderTop: `1px solid ${theme.borderColor}`,
   borderLeft: `1px solid ${theme.borderColor}`,
   borderRight: `1px solid ${theme.borderColor}`,
-  backgroundColor: 'white'
+  backgroundColor: 'white',
+  ':last-child': {
+    marginRight: `${theme.itemPadding * 2}px`,
+  }
+  
 }));
 
 const TopFa = styled(FontAwesome, ({ $theme }: { $theme: Theme }) => ({
@@ -76,6 +80,7 @@ const TopFa = styled(FontAwesome, ({ $theme }: { $theme: Theme }) => ({
   paddingRight: `${$theme.itemPadding * 2}px`,
   fontSize: '32px',
 }));
+
 
 const AddBotballPluginButton = styled('button', ({ $theme }: { $theme: Theme }) => ({
   // Remove all button styles
@@ -102,6 +107,7 @@ const CurriculumPage = ({
   const [subjectsSelected, setSubjectsSelected] = React.useState<Set<Subject>>(new Set());
   const [standardsSelected, setStandardsSelected] = React.useState<Set<StandardsLocation>>(new Set());
   const [expandedAssignments, setExpandedAssignments] = React.useState<Set<string>>(new Set());
+  const [gradeLevels, setGradeLevels] = React.useState<[number, number]>([0, 12]);
   
   const tabs: TabBar.TabDescription[] = [{
     name: LocalizedString.lookup(tr('Curriculum'), locale),
@@ -115,7 +121,13 @@ const CurriculumPage = ({
   return (
     <Container $theme={theme}>
       <TopBar $theme={theme}>
-        <TopFa $theme={theme} icon={faHome} />
+        <TopFa
+          $theme={theme}
+          icon={faHome}
+          onClick={() => {
+            window.location.pathname = '/';
+          }}
+        />
 
         <StyledTabBar
           tabs={tabs}
@@ -123,9 +135,9 @@ const CurriculumPage = ({
           onIndexChange={setTabIndex}
           theme={theme}
         />
-        <AddBotballPluginButton $theme={theme}>
+        {/* <AddBotballPluginButton $theme={theme}>
           Add Botball Plugin
-        </AddBotballPluginButton>
+        </AddBotballPluginButton> */}
       </TopBar>
       {tabIndex === 0 ? (
         <Body>
@@ -139,6 +151,8 @@ const CurriculumPage = ({
             standardsSelected={standardsSelected}
             onStandardsSelectedChange={setStandardsSelected}
             assignments={assignments}
+            gradeLevels={gradeLevels}
+            onGradeLevelsChange={setGradeLevels}
           />
           <AssignmentsView
             theme={theme}
@@ -146,6 +160,8 @@ const CurriculumPage = ({
             assignments={assignments}
             subjectsSelected={subjectsSelected}
             standardsSelected={standardsSelected}
+            gradeLevels={gradeLevels}
+            onGradeLevelsChange={setGradeLevels}
             onRemoveStandard={standard => {
               const newStandardsSelected = new Set(standardsSelected);
               newStandardsSelected.delete(standard);
@@ -157,21 +173,40 @@ const CurriculumPage = ({
               setSubjectsSelected(newSubjectsSelected);
             }}
             added={myAssignments}
-            onAddedChange={added => onMyAssignmentsChange(userId, added)}
+            onAddedChange={added => onMyAssignmentsChange(added)}
             expanded={expandedAssignments}
             onExpandedChange={setExpandedAssignments}
+            standardsAligned={isStandardsAligned}
+            onStandardsAlignedChange={setIsStandardsAligned}
           />
         </Body>
       ) : (
         <Body>
+          <SearchFilters
+            locale={locale}
+            theme={theme}
+            isStandardsAligned={isStandardsAligned}
+            onIsStandardsAlignedChange={setIsStandardsAligned}
+            subjectsSelected={subjectsSelected}
+            onSubjectsSelectedChange={setSubjectsSelected}
+            standardsSelected={standardsSelected}
+            onStandardsSelectedChange={setStandardsSelected}
+            assignments={assignments}
+            gradeLevels={gradeLevels}
+            onGradeLevelsChange={setGradeLevels}
+          />
           <AssignmentsView
             theme={theme}
             locale={locale}
-            assignments={assignments}
+            assignments={Dict.filter(assignments, (_, id) => myAssignments.has(id))}
             added={myAssignments}
-            onAddedChange={added => onMyAssignmentsChange(userId, added)}
+            onAddedChange={added => onMyAssignmentsChange(added)}
             expanded={expandedAssignments}
             onExpandedChange={setExpandedAssignments}
+            gradeLevels={gradeLevels}
+            onGradeLevelsChange={setGradeLevels}
+            onStandardsAlignedChange={setIsStandardsAligned}
+            standardsAligned={isStandardsAligned}
           />
         </Body>
       )}
@@ -192,8 +227,7 @@ export default connect((state: State) => {
     myAssignments
   };
 }, (dispatch, ownProps) => ({
-  onMyAssignmentsChange: (userId: string, myAssignments: Set<string>) => dispatch(UsersAction.setMyAssignments({
-    userId,
+  onMyAssignmentsChange: (myAssignments: Set<string>) => dispatch(UsersAction.setMyAssignments({
     assignmentIds: Array.from(myAssignments)
   }))
 }))(CurriculumPage) as React.ComponentType<CurriculumPagePublicProps>;

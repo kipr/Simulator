@@ -1,21 +1,21 @@
-import Input from '../../components/Input';
+import Input from '../../components/interface/Input';
 import * as React from 'react';
-import { StyleProps } from 'style';
+import { StyleProps } from 'util/style';
 import { styled, StyletronComponent, withStyleDeep } from 'styletron-react';
-import { Theme, ThemeProps } from '../../components/theme';
+import { Theme, ThemeProps } from '../../components/constants/theme';
 import LocalizedString from '../../util/LocalizedString';
 
 import tr from '@i18n';
 import { AsyncAssignment } from 'state/State/Assignment';
-import Dict from '../../Dict';
+import Dict from '../../util/objectOps/Dict';
 import Async from '../../state/State/Async';
-import { Fa } from '../../components/Fa';
+import { FontAwesome } from '../../components/FontAwesome';
 import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import StandardsLocation from '../../state/State/Assignment/StandardsLocation';
 
 import Color from 'colorjs.io';
 import Subject_ from '../../state/State/Assignment/Subject';
-import construct from '../../util/construct';
+import construct from '../../util/redux/construct';
 import { sprintf } from 'sprintf-js';
 import BriefAssignmentView from './BriefAssignmentView';
 
@@ -50,6 +50,7 @@ const BriefAssignmentsView = ({
   const assignmentsList = Dict.toList(assignments).filter(([_, assignment]) => !!Async.latestCommon(assignment));
 
   const filteredAssignments = assignmentsList.filter(([_, assignment]) => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const common = Async.latestCommon(assignment)!;
     const name = LocalizedString.lookup(common.name, locale);
     if (name.toLowerCase().includes(filter.toLowerCase())) return true;

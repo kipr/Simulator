@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import Input from '../components/interface/Input';
 import * as React from 'react';
 import { StyleProps } from 'util/style';
@@ -6,7 +7,7 @@ import { Theme, ThemeProps } from '../components/constants/theme';
 import LocalizedString from '../util/LocalizedString';
 
 import tr from '@i18n';
-import { AsyncAssignment } from 'state/State/Assignment';
+import Assignment, { AsyncAssignment } from 'state/State/Assignment';
 import Dict from '../util/objectOps/Dict';
 import AssignmentView from './AssignmentView';
 import Async from '../state/State/Async';
@@ -25,8 +26,14 @@ export interface AssignmentsViewProps extends ThemeProps, StyleProps {
   locale: LocalizedString.Language;
   assignments: Dict<AsyncAssignment>;
 
+  standardsAligned: boolean;
+  onStandardsAlignedChange: (aligned: boolean) => void;
+
   subjectsSelected?: Set<Subject_>;
   standardsSelected?: Set<StandardsLocation>;
+
+  gradeLevels: [number, number];
+  onGradeLevelsChange: (gradeLevels: [number, number]) => void;
 
   onRemoveSubject?: (subject: Subject_) => void;
   onRemoveStandard?: (standard: StandardsLocation) => void;
@@ -96,11 +103,19 @@ namespace PillId {
   }
 
   export const standard = construct<Standard>('standard');
+
+  export interface GradeLevels {
+    type: 'gradeLevels';
+    gradeLevels: [number, number];
+  }
+
+  export const gradeLevels = construct<GradeLevels>('gradeLevels');
 }
 
 type PillId = (
   PillId.Subject |
-  PillId.Standard
+  PillId.Standard |
+  PillId.GradeLevels
 );
 
 const StyledPillArea = styled(PillArea, ({ theme }: { theme: Theme }) => ({
@@ -117,12 +132,16 @@ const AssignmentsView = ({
   assignments,
   subjectsSelected,
   standardsSelected,
+  onStandardsAlignedChange,
+  standardsAligned,
   onRemoveStandard,
   onRemoveSubject,
   added,
   onAddedChange,
   expanded,
-  onExpandedChange
+  onExpandedChange,
+  gradeLevels,
+  onGradeLevelsChange
 }: AssignmentsViewProps) => {
   const [filter, setFilter] = React.useState<string>('');
   const [nameSort, setNameSort] = React.useState<SortDirection>('asc');
@@ -130,7 +149,43 @@ const AssignmentsView = ({
 
   const assignmentsList = Dict.toList(assignments).filter(([_, assignment]) => !!Async.latestCommon(assignment));
 
-  const filteredAssignments = assignmentsList.filter(([_, assignment]) => {
+  // filter standards aligned
+  let filteredAssignments = standardsAligned ? assignmentsList.filter(([_, assignment]) => {
+    const latestValue = Async.latestValue(assignment);
+    if (!latestValue) return false;
+
+    return latestValue.standardsAligned;
+  }) : assignmentsList;
+
+  // filter subjects
+  if (subjectsSelected && subjectsSelected.size > 0) {
+    filteredAssignments = filteredAssignments.filter(([_, assignment]) => {
+      const latestValue = Async.latestValue(assignment);
+      if (!latestValue) return false;
+      return latestValue.subjects.some(subject => subjectsSelected.has(subject));
+    });
+  }
+
+  // filter standards
+  if (standardsSelected && standardsSelected.size > 0) {
+    filteredAssignments = filteredAssignments.filter(([_, assignment]) => {
+      const latestValue = Async.latestValue(assignment);
+      if (!latestValue) return false;
+      return latestValue.standardsConformance.some(standard => standardsSelected.has(standard));
+    });
+  }
+
+  // filter grade levels
+  if (gradeLevels[0] !== 0 || gradeLevels[1] !== 12) {
+    filteredAssignments = filteredAssignments.filter(([_, assignment]) => {
+      const latestValue = Async.latestValue(assignment);
+      if (!latestValue) return false;
+      return latestValue.gradeLevels.some(gradeLevel => gradeLevel >= gradeLevels[0] && gradeLevel <= gradeLevels[1]);
+    });
+  }
+
+  // filter search
+  filteredAssignments = filteredAssignments.filter(([_, assignment]) => {
     const common = Async.latestCommon(assignment)!;
     const name = LocalizedString.lookup(common.name, locale);
     if (name.toLowerCase().includes(filter.toLowerCase())) return true;
@@ -169,6 +224,16 @@ const AssignmentsView = ({
 
   const pillItems: PillAreaItem<PillId>[] = [];
 
+  if (gradeLevels[0] !== 0 || gradeLevels[1] !== 12) {
+    pillItems.push({
+      id: PillId.gradeLevels({ gradeLevels }),
+      label: sprintf(
+        LocalizedString.lookup(tr('Grade Levels: %s'), locale),
+        `${LocalizedString.lookup(Assignment.gradeLevelString(gradeLevels[0]), locale)} - ${LocalizedString.lookup(Assignment.gradeLevelString(gradeLevels[1]), locale)}`
+      ),
+    });
+  }
+  
   for (const standard of standardsSelected || new Set()) {
     pillItems.push({
       id: PillId.standard({ standard }),
@@ -205,6 +270,7 @@ const AssignmentsView = ({
             switch (id.type) {
               case 'subject': return onRemoveSubject(id.subject);
               case 'standard': return onRemoveStandard(id.standard);
+              case 'gradeLevels': return onGradeLevelsChange([0, 12]);
             }
           }}
         />
@@ -231,6 +297,7 @@ const AssignmentsView = ({
             const nextAdded = new Set(added);
             if (addedSingle) nextAdded.add(id);
             else nextAdded.delete(id);
+            console.log(nextAdded);
             onAddedChange(nextAdded);
           }}
           expanded={expanded.has(id)}

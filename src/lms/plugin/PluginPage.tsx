@@ -1,9 +1,9 @@
-import { TabBar } from '../../components/TabBar';
+import { TabBar } from '../../components/Layout/TabBar';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { styled } from 'styletron-react';
 import LocalizedString from '../../util/LocalizedString';
-import { DARK, LIGHT, Theme, ThemeProps } from '../../components/theme';
+import { DARK, LIGHT, Theme, ThemeProps } from '../../components/constants/theme';
 
 import tr from '@i18n';
 import { faHome, faSchool, faSchoolCircleCheck } from '@fortawesome/free-solid-svg-icons';
@@ -12,14 +12,14 @@ import { State } from '../../state';
 import SearchFilters from '../SearchFilters';
 import AssignmentsView from '../AssignmentsView';
 import { AsyncAssignment } from '../../state/State/Assignment';
-import Dict from '../../Dict';
-import { Fa } from '../../components/Fa';
+import Dict from '../../util/objectOps/Dict';
+import { FontAwesome } from '../../components/FontAwesome';
 import Async from '../../state/State/Async';
 import Subject from '../../state/State/Assignment/Subject';
 import { PillAreaItem } from '../../components/PillArea';
 import StandardsLocation from '../../state/State/Assignment/StandardsLocation';
 import { UsersAction } from '../../state/reducer';
-import Input from 'components/Input';
+import Input from 'components/interface/Input';
 import BriefAssignmentsView from './BriefAssignmentsView';
 import { courseId } from './globals';
 
@@ -33,7 +33,7 @@ export interface PluginPagePrivateProps extends ThemeProps {
 
   userId: string;
   myAssignments: Set<string>;
-  onMyAssignmentsChange: (userId: string, myAssignments: Set<string>) => void;
+  onMyAssignmentsChange: (myAssignments: Set<string>) => void;
 }
 
 const Container = styled('div', ({ $theme }: { $theme: Theme }) => ({
@@ -74,7 +74,7 @@ const StyledTabBar = styled(TabBar, ({ theme }: ThemeProps) => ({
   backgroundColor: 'white'
 }));
 
-const TopFa = styled(Fa, ({ $theme }: { $theme: Theme }) => ({
+const TopFa = styled(FontAwesome, ({ $theme }: { $theme: Theme }) => ({
   paddingLeft: `${$theme.itemPadding * 2}px`,
   paddingRight: `${$theme.itemPadding * 2}px`,
   fontSize: '32px',
@@ -110,6 +110,7 @@ const PluginPage = ({
           locale={locale}
           assignments={assignments}
           onAssignmentClick={async id => {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any
             await (gapi.client as any).classroom.courses.courseWork.create({
               courseId,
             });
@@ -118,7 +119,7 @@ const PluginPage = ({
         />
       </Body>
     </Container>
-  )
+  );
 };
 
 export default connect((state: State) => {
@@ -134,8 +135,7 @@ export default connect((state: State) => {
     myAssignments
   };
 }, (dispatch, ownProps) => ({
-  onMyAssignmentsChange: (userId: string, myAssignments: Set<string>) => dispatch(UsersAction.setMyAssignments({
-    userId,
+  onMyAssignmentsChange: (myAssignments: Set<string>) => dispatch(UsersAction.setMyAssignments({
     assignmentIds: Array.from(myAssignments)
   }))
 }))(PluginPage) as React.ComponentType<PluginPagePublicProps>;
