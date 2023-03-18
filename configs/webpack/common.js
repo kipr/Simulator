@@ -137,7 +137,7 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({ template: 'index.html.ejs', excludeChunks: ['login'] }),
+    new HtmlWebpackPlugin({ template: 'index.html.ejs', excludeChunks: ['login', 'plugin'] }),
     new HtmlWebpackPlugin({ template: 'login/login.html.ejs', filename: 'login.html', chunks: ['login'] }),
     new HtmlWebpackPlugin({ template: 'lms/plugin/plugin.html.ejs', filename: 'plugin.html', chunks: ['plugin'] }),
     new DefinePlugin({
