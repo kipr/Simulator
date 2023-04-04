@@ -13,6 +13,8 @@ export interface ModuleContext {
   readRegister8b?: (address: number) => number,
   readRegister16b?: (address: number) => number,
   readRegister32b?: (address: number) => number,
+  createWrite?: (value: number) => void,
+  createRead?: () => number,
   onStop?: () => void;
 }
 

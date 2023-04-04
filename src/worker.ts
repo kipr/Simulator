@@ -3,12 +3,15 @@ import dynRequire from './require';
 import SharedRegisters from './SharedRegisters';
 import python from './python';
 import SharedRingBufferUtf32 from './SharedRingBufferUtf32';
+import SerialU32 from './SerialU32';
+import SharedRingBufferU32 from 'SharedRingBufferU32';
 
 // Proper typing of Worker is tricky due to conflicting DOM and WebWorker types
 // See GitHub issue: https://github.com/microsoft/TypeScript/issues/20595
 const ctx: Worker = self as unknown as Worker;
 
 let sharedRegister_: SharedRegisters;
+let createSerial_: SerialU32;
 let sharedConsole_: SharedRingBufferUtf32;
 
 const print = (stdout: string) => {
@@ -48,6 +51,12 @@ const startC = (message: Protocol.Worker.StartRequest) => {
     readRegister8b: (address: number) => sharedRegister_.getRegisterValue8b(address),
     readRegister16b: (address: number) => sharedRegister_.getRegisterValue16b(address),
     readRegister32b: (address: number) => sharedRegister_.getRegisterValue32b(address),
+    createWrite: (value: number) => createSerial_.tx.push(value),
+    createRead: () => {
+      const value = createSerial_.rx.pop();
+      if (value === undefined) return -1;
+      return value;
+    },
     onStop: sendStopped
   },
   print,
@@ -89,6 +98,7 @@ const startPython = async (message: Protocol.Worker.StartRequest) => {
     print,
     printErr,
     registers: sharedRegister_,
+    createSerial: createSerial_,
   });
   
 };
@@ -130,6 +140,12 @@ ctx.onmessage = (e: MessageEvent) => {
     case 'set-shared-console': {
       sharedConsole_ = new SharedRingBufferUtf32(message.sharedArrayBuffer);
       break;
+    }
+    case 'set-create-serial': {
+      createSerial_ = {
+        tx: new SharedRingBufferU32(message.tx),
+        rx: new SharedRingBufferU32(message.rx)
+      };
     }
   } 
 };
