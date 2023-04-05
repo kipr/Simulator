@@ -1,12 +1,14 @@
+import Node from 'state/State/Scene/Node';
 import Scene from "../state/State/Scene";
 import Script from '../state/State/Scene/Script';
-import { ReferenceFrame, Rotation } from "../unit-math";
+import { ReferenceFrame, Rotation, Vector3 } from "../unit-math";
 import { Distance } from "../util";
 import LocalizedString from '../util/LocalizedString';
 
 import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
 
 import tr from '@i18n';
+import AbstractRobot from '../AbstractRobot';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -34,16 +36,29 @@ const REAM2_ORIGIN: ReferenceFrame = {
   }),
 };
 
+const ROBOT_ORIGIN: ReferenceFrame = {
+  position: Vector3.centimeters(0, 5, 0),
+  orientation: Rotation.eulerDegrees(0, 0, 0),
+};
+
+const ROBOT: Node.Robot = {
+  type: 'robot',
+  name: tr('Robot'),
+  robotId: 'createbot',
+  state: AbstractRobot.Stateless.NIL,
+  visible: true,
+  startingOrigin: ROBOT_ORIGIN,
+  origin: ROBOT_ORIGIN
+};
+
+
 export const JBC_Sandbox_A: Scene = {
   ...baseScene,
   name: tr('JBC Sandbox A'),
   description: tr('Junior Botball Challenge Sandbox on Mat A. All cans 1-12 are available by default.'),
   nodes: {
     ...baseScene.nodes,
-    'robot': {
-      ...baseScene.nodes['robot'],
-      editable: true,
-    },
+    'robot': ROBOT,
     'can1': createCanNode(1, undefined, true, false),
     'can2': createCanNode(2, undefined, true, false),
     'can3': createCanNode(3, undefined, true, false),

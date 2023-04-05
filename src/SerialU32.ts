@@ -17,6 +17,11 @@ namespace SerialU32 {
   };
 
   export const flip = ({ rx: tx, tx: rx }: SerialU32): SerialU32 => ({ tx, rx });
+
+  export const popAll = ({ tx, rx }: SerialU32): void => {
+    tx.popAll();
+    rx.popAll();
+  };
 }
 
 export default SerialU32;

@@ -6,6 +6,7 @@ import SharedRingBufferUtf32 from './SharedRingBufferUtf32';
 import SharedRegistersRobot from './SharedRegistersRobot';
 import AbstractRobot from './AbstractRobot';
 import WriteCommand from './AbstractRobot/WriteCommand';
+import SerialU32 from './SerialU32';
 
 const SHARED_CONSOLE_LENGTH = 1024;
 
@@ -14,8 +15,11 @@ class WorkerInstance implements AbstractRobot {
 
   private sharedRegisters_ = new SharedRegisters();
   private sharedConsole_ = SharedRingBufferUtf32.create(SHARED_CONSOLE_LENGTH);
+  private createSerial_ = SerialU32.create(1024);
 
   private sharedRegistersRobot_: SharedRegistersRobot;
+
+  get createSerial() { return this.createSerial_; }
 
   getMotor(port: number) {
     return this.sharedRegistersRobot_.getMotor(port);
@@ -73,6 +77,11 @@ class WorkerInstance implements AbstractRobot {
           type: 'set-shared-console',
           sharedArrayBuffer: this.sharedConsole_.sharedArrayBuffer,
         } as Protocol.Worker.SetSharedConsoleRequest);
+        this.worker_.postMessage(
+          Protocol.Worker.SetCreateSerialRequest.fromSerialU32(
+            SerialU32.flip(this.createSerial_)
+          )
+        );
         break;
       }
       case 'stopped': {
@@ -97,6 +106,7 @@ class WorkerInstance implements AbstractRobot {
     this.sharedRegisters_ = this.sharedRegisters_.clone();
     this.sharedRegistersRobot_ = new SharedRegistersRobot(this.sharedRegisters_);
     this.sharedConsole_ = SharedRingBufferUtf32.create(SHARED_CONSOLE_LENGTH);
+    SerialU32.popAll(this.createSerial_);
     this.worker_.terminate();
 
     this.onStopped_();

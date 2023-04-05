@@ -1,3 +1,4 @@
+import SerialU32 from './SerialU32';
 import ProgrammingLanguage from './ProgrammingLanguage';
 
 export namespace Protocol {
@@ -32,6 +33,14 @@ export namespace Protocol {
       type: 'set-create-serial';
       tx: SharedArrayBuffer;
       rx: SharedArrayBuffer;
+    }
+
+    export namespace SetCreateSerialRequest {
+      export const fromSerialU32 = (serial: SerialU32): SetCreateSerialRequest => ({
+        type: 'set-create-serial',
+        tx: serial.tx.sharedArrayBuffer,
+        rx: serial.rx.sharedArrayBuffer,
+      });
     }
 
     export interface SetSharedConsoleRequest {

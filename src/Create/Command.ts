@@ -37,8 +37,11 @@ export namespace Command {
   }
 
   export namespace Start {
+    export const SIZE = 1;
+
     export const serialize = (command: Start) => [command.type];
-    export const deserialize = (buffer: number[]) => {
+    export const deserialize = (buffer: number[]): Start => {
+      if (buffer.length < SIZE) return undefined;
       const [type] = buffer;
       if (type !== Type.Start) throw new Error(`Expected type ${Type.Start} but got ${type}`);
       return START;
@@ -52,8 +55,11 @@ export namespace Command {
   }
 
   export namespace Reset {
+    export const SIZE = 1;
+
     export const serialize = (command: Reset) => [command.type];
-    export const deserialize = (buffer: number[]) => {
+    export const deserialize = (buffer: number[]): Reset => {
+      if (buffer.length < SIZE) return undefined;
       const [type] = buffer;
       if (type !== Type.Reset) throw new Error(`Expected type ${Type.Reset} but got ${type}`);
       return RESET;
@@ -67,8 +73,11 @@ export namespace Command {
   }
 
   export namespace Stop {
+    export const SIZE = 1;
+
     export const serialize = (command: Stop) => [command.type];
-    export const deserialize = (buffer: number[]) => {
+    export const deserialize = (buffer: number[]): Stop => {
+      if (buffer.length < SIZE) return undefined;
       const [type] = buffer;
       if (type !== Type.Stop) throw new Error(`Expected type ${Type.Stop} but got ${type}`);
       return STOP;
@@ -98,8 +107,11 @@ export namespace Command {
       B115200 = 11,
     }
 
+    export const SIZE = 2;
+
     export const serialize = (command: Baud) => [command.type, command.code];
     export const deserialize = (buffer: number[]): Baud => {
+      if (buffer.length < SIZE) return undefined;
       const [type, code] = buffer;
       if (type !== Type.Baud) throw new Error(`Expected type ${Type.Baud} but got ${type}`);
       return { type, code };
@@ -113,8 +125,11 @@ export namespace Command {
   }
 
   export namespace Safe {
+    export const SIZE = 1;
+
     export const serialize = (command: Safe) => [command.type];
     export const deserialize = (buffer: number[]) => {
+      if (buffer.length < SIZE) return undefined;
       const [type] = buffer;
       if (type !== Type.Safe) throw new Error(`Expected type ${Type.Safe} but got ${type}`);
       return SAFE;
@@ -128,8 +143,11 @@ export namespace Command {
   }
 
   export namespace Full {
+    export const SIZE = 1;
+
     export const serialize = (command: Full) => [command.type];
-    export const deserialize = (buffer: number[]) => {
+    export const deserialize = (buffer: number[]): Full => {
+      if (buffer.length < SIZE) return undefined;
       const [type] = buffer;
       if (type !== Type.Full) throw new Error(`Expected type ${Type.Full} but got ${type}`);
       return FULL;
@@ -143,8 +161,11 @@ export namespace Command {
   }
 
   export namespace Clean {
+    export const SIZE = 1;
+
     export const serialize = (command: Clean) => [command.type];
-    export const deserialize = (buffer: number[]) => {
+    export const deserialize = (buffer: number[]): Clean => {
+      if (buffer.length < SIZE) return undefined;
       const [type] = buffer;
       if (type !== Type.Clean) throw new Error(`Expected type ${Type.Clean} but got ${type}`);
       return CLEAN;
@@ -158,8 +179,11 @@ export namespace Command {
   }
 
   export namespace Max {
+    export const SIZE = 1;
+
     export const serialize = (command: Max) => [command.type];
-    export const deserialize = (buffer: number[]) => {
+    export const deserialize = (buffer: number[]): Max => {
+      if (buffer.length < SIZE) return undefined;
       const [type] = buffer;
       if (type !== Type.Max) throw new Error(`Expected type ${Type.Max} but got ${type}`);
       return MAX;
@@ -173,8 +197,11 @@ export namespace Command {
   }
 
   export namespace Spot {
+    export const SIZE = 1;
+
     export const serialize = (command: Spot) => [command.type];
-    export const deserialize = (buffer: number[]) => {
+    export const deserialize = (buffer: number[]): Spot => {
+      if (buffer.length < SIZE) return undefined;
       const [type] = buffer;
       if (type !== Type.Spot) throw new Error(`Expected type ${Type.Spot} but got ${type}`);
       return SPOT;
@@ -188,8 +215,11 @@ export namespace Command {
   }
 
   export namespace SeekDock {
+    export const SIZE = 1;
+
     export const serialize = (command: SeekDock) => [command.type];
-    export const deserialize = (buffer: number[]) => {
+    export const deserialize = (buffer: number[]): SeekDock => {
+      if (buffer.length < SIZE) return undefined;
       const [type] = buffer;
       if (type !== Type.SeekDock) throw new Error(`Expected type ${Type.SeekDock} but got ${type}`);
       return SEEK_DOCK;
@@ -203,8 +233,11 @@ export namespace Command {
   }
 
   export namespace Power {
+    export const SIZE = 1;
+
     export const serialize = (command: Power) => [command.type];
-    export const deserialize = (buffer: number[]) => {
+    export const deserialize = (buffer: number[]): Power => {
+      if (buffer.length < SIZE) return undefined;
       const [type] = buffer;
       if (type !== Type.Power) throw new Error(`Expected type ${Type.Power} but got ${type}`);
       return POWER;
@@ -233,6 +266,8 @@ export namespace Command {
   }
 
   export namespace Schedule {
+    export const SIZE = 16;
+
     export const serialize = (command: Schedule) => [
       command.type,
       command.days,
@@ -253,6 +288,7 @@ export namespace Command {
     ];
 
     export const deserialize = (buffer: number[]): Schedule => {
+      if (buffer.length < SIZE) return undefined;
       const [
         type,
         days,
@@ -296,9 +332,12 @@ export namespace Command {
       Saturday = 6,
     }
 
+    export const SIZE = 4;
+
     export const serialize = (command: SetDayTime) => [command.type, command.day, command.hour, command.minute];
 
     export const deserialize = (buffer: number[]): SetDayTime => {
+      if (buffer.length < SIZE) return undefined;
       const [type, day, hour, minute] = buffer;
       if (type !== Type.SetDayTime) throw new Error(`Expected type ${Type.SetDayTime} but got ${type}`);
       return { type, day, hour, minute };
@@ -321,6 +360,8 @@ export namespace Command {
     export const TURN_IN_PLACE_CLOCKWISE = 0xFFFF;
     export const TURN_IN_PLACE_COUNTER_CLOCKWISE = 1;
 
+    export const SIZE = 5;
+
     export const serialize = (drive: Drive): number[] => {
       const velocity = drive.velocity < 0
         ? drive.velocity + 0x10000
@@ -340,6 +381,7 @@ export namespace Command {
     };
 
     export const deserialize = (buffer: number[]): Drive => {
+      if (buffer.length < SIZE) return undefined;
       const [type, velocityHigh, velocityLow, radiusHigh, radiusLow] = buffer;
       if (type !== Type.Drive) throw new Error(`Expected type ${Type.Drive} but got ${type}`);
       const velocity = (velocityHigh << 8) + velocityLow;
@@ -361,6 +403,8 @@ export namespace Command {
   }
 
   export namespace DriveDirect {
+    export const SIZE = 5;
+
     export const serialize = (drive: DriveDirect): number[] => {
       const leftVelocity = drive.leftVelocity < 0
         ? drive.leftVelocity + 0x10000
@@ -380,6 +424,7 @@ export namespace Command {
     }
 
     export const deserialize = (buffer: number[]): DriveDirect => {
+      if (buffer.length < SIZE) return undefined;
       const [type, rightVelocityHigh, rightVelocityLow, leftVelocityHigh, leftVelocityLow] = buffer;
       if (type !== Type.DriveDirect) throw new Error(`Expected type ${Type.DriveDirect} but got ${type}`);
       const rightVelocity = (rightVelocityHigh << 8) + rightVelocityLow;
@@ -397,6 +442,8 @@ export namespace Command {
   }
 
   export namespace DrivePwm {
+    export const SIZE = 5;
+
     export const serialize = (drive: DrivePwm): number[] => {
       const leftPwm = drive.leftPwm < 0
         ? drive.leftPwm + 0x10000
@@ -415,6 +462,7 @@ export namespace Command {
     };
 
     export const deserialize = (buffer: number[]): DrivePwm => {
+      if (buffer.length < SIZE) return undefined;
       const [type, rightPwmHigh, rightPwmLow, leftPwmHigh, leftPwmLow] = buffer;
       if (type !== Type.DrivePwm) throw new Error(`Expected type ${Type.DrivePwm} but got ${type}`);
       const rightPwm = (rightPwmHigh << 8) + rightPwmLow;
@@ -425,14 +473,64 @@ export namespace Command {
 
   export const drivePwm = construct<DrivePwm>(Type.DrivePwm);
 
+  export interface Leds {
+    type: Type.Leds;
+    checkRobot: boolean;
+    dock: boolean;
+    spot: boolean;
+    debris: boolean;
+    powerColor: number;
+    powerIntensity: number;
+  }
+
+  export namespace Leds {
+    export const SIZE = 4;
+
+    export const serialize = (leds: Leds): number[] => {
+      const ledBits = (
+        (leds.checkRobot ? 1 : 0) << 3 |
+        (leds.dock ? 1 : 0) << 2 |
+        (leds.spot ? 1 : 0) << 1 |
+        (leds.debris ? 1 : 0)
+      );
+
+      return [
+        Type.Leds,
+        ledBits,
+        leds.powerColor,
+        leds.powerIntensity,
+      ];
+    };
+
+    export const deserialize = (buffer: number[]): Leds => {
+      if (buffer.length < SIZE) return undefined;
+
+      const [type, ledBits, powerColor, powerIntensity] = buffer;
+      if (type !== Type.Leds) throw new Error(`Expected type ${Type.Leds} but got ${type}`);
+
+      return {
+        type,
+        checkRobot: !!(ledBits & (1 << 3)),
+        dock: !!(ledBits & (1 << 2)),
+        spot: !!(ledBits & (1 << 1)),
+        debris: !!(ledBits & 1),
+        powerColor,
+        powerIntensity,
+      };
+    };
+  }
+
   export interface Sensors {
     type: Type.Sensors;
     packetId: number;
   }
 
   export namespace Sensors {
+    export const SIZE = 2;
+
     export const serialize = (command: Sensors): number[] => [command.type, command.packetId];
     export const deserialize = (buffer: number[]): Sensors => {
+      if (buffer.length < SIZE) return undefined;
       const [type, packetId] = buffer;
       if (type !== Type.Sensors) throw new Error(`Expected type ${Type.Sensors} but got ${type}`);
       return { type, packetId };
@@ -457,30 +555,48 @@ export namespace Command {
       case Type.Drive: return Drive.serialize(command);
       case Type.DriveDirect: return DriveDirect.serialize(command);
       case Type.DrivePwm: return DrivePwm.serialize(command);
+      case Type.Leds: return Leds.serialize(command);
       case Type.Sensors: return Sensors.serialize(command);
     }
   };
 
-  export const deserialize = (buffer: number[]): Command => {
+  export interface DeserializeResult {
+    command: Command;
+    nextBuffer: number[];
+  }
+
+  export namespace DeserializeResult {
+    export const from = <U extends Command, T extends { SIZE: number; deserialize: (buffer: number[]) => U; }>() => {
+      return (buffer: number[], command: T): DeserializeResult => {
+        if (buffer.length < command.SIZE) return undefined;
+        return { command: command.deserialize(buffer), nextBuffer: buffer.slice(command.SIZE) };
+      };
+    }
+  }
+
+  export const deserialize = (buffer: number[]): DeserializeResult => {
+    if (buffer.length === 0) return undefined;
+    
     const [type] = buffer;
     switch (type) {
-      case Type.Start: return Start.deserialize(buffer);
-      case Type.Reset: return Reset.deserialize(buffer);
-      case Type.Stop: return Stop.deserialize(buffer);
-      case Type.Baud: return Baud.deserialize(buffer);
-      case Type.Safe: return Safe.deserialize(buffer);
-      case Type.Full: return Full.deserialize(buffer);
-      case Type.Clean: return Clean.deserialize(buffer);
-      case Type.Max: return Max.deserialize(buffer);
-      case Type.Spot: return Spot.deserialize(buffer);
-      case Type.SeekDock: return SeekDock.deserialize(buffer);
-      case Type.Power: return Power.deserialize(buffer);
-      case Type.Schedule: return Schedule.deserialize(buffer);
-      case Type.SetDayTime: return SetDayTime.deserialize(buffer);
-      case Type.Drive: return Drive.deserialize(buffer);
-      case Type.DriveDirect: return DriveDirect.deserialize(buffer);
-      case Type.DrivePwm: return DrivePwm.deserialize(buffer);
-      case Type.Sensors: return Sensors.deserialize(buffer);
+      case Type.Start: return DeserializeResult.from<Start, typeof Start>()(buffer, Start);
+      case Type.Reset: return DeserializeResult.from<Reset, typeof Reset>()(buffer, Reset);
+      case Type.Stop: return DeserializeResult.from<Stop, typeof Stop>()(buffer, Stop);
+      case Type.Baud: return DeserializeResult.from<Baud, typeof Baud>()(buffer, Baud);
+      case Type.Safe: return DeserializeResult.from<Safe, typeof Safe>()(buffer, Safe);
+      case Type.Full: return DeserializeResult.from<Full, typeof Full>()(buffer, Full);
+      case Type.Clean: return DeserializeResult.from<Clean, typeof Clean>()(buffer, Clean);
+      case Type.Max: return DeserializeResult.from<Max, typeof Max>()(buffer, Max);
+      case Type.Spot: return DeserializeResult.from<Spot, typeof Spot>()(buffer, Spot);
+      case Type.SeekDock: return DeserializeResult.from<SeekDock, typeof SeekDock>()(buffer, SeekDock);
+      case Type.Power: return DeserializeResult.from<Power, typeof Power>()(buffer, Power);
+      case Type.Schedule: return DeserializeResult.from<Schedule, typeof Schedule>()(buffer, Schedule);
+      case Type.SetDayTime: return DeserializeResult.from<SetDayTime, typeof SetDayTime>()(buffer, SetDayTime);
+      case Type.Drive: return DeserializeResult.from<Drive, typeof Drive>()(buffer, Drive);
+      case Type.DriveDirect: return DeserializeResult.from<DriveDirect, typeof DriveDirect>()(buffer, DriveDirect);
+      case Type.DrivePwm: return DeserializeResult.from<DrivePwm, typeof DrivePwm>()(buffer, DrivePwm);
+      case Type.Leds: return DeserializeResult.from<Leds, typeof Leds>()(buffer, Leds);
+      case Type.Sensors: return DeserializeResult.from<Sensors, typeof Sensors>()(buffer, Sensors);
     }
   };
 }
@@ -502,5 +618,6 @@ export type Command = (
   Command.Drive |
   Command.DriveDirect |
   Command.DrivePwm |
+  Command.Leds |
   Command.Sensors
 );

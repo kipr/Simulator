@@ -33,6 +33,9 @@ import { RENDER_SCALE, RENDER_SCALE_METERS_MULTIPLIER } from './renderConstants'
 import WriteCommand from './AbstractRobot/WriteCommand';
 import AbstractRobot from './AbstractRobot';
 import Motor from './AbstractRobot/Motor';
+import SerialU32 from './SerialU32';
+import CreateBinding from './Create/CreateBinding';
+import workerInstance from './WorkerInstance';
 
 interface BuiltGeometry {
   mesh: BabylonMesh;
@@ -80,6 +83,10 @@ class RobotBinding {
 
   private physicsViewer_: BabylonPhysicsViewer;
 
+  private createBinding_: CreateBinding;
+
+  get createBinding() { return this.createBinding_; }
+
   constructor(bScene: BabylonScene, physicsViewer?: BabylonPhysicsViewer) {
     this.bScene_ = bScene;
     this.physicsViewer_ = physicsViewer;
@@ -100,8 +107,6 @@ class RobotBinding {
         const colliders: BuiltGeometry.Collider[] = [];
 
         for (const mesh of res.meshes.slice(1) as BabylonMesh[]) {
-          
-
           if (mesh.name.startsWith('collider')) {
             const parts = mesh.name.split('-');
             if (parts.length !== 3) throw new Error(`Invalid collider name: ${mesh.name}`);
@@ -346,6 +351,33 @@ class RobotBinding {
     return ret;
   };
 
+  private createIRobotCreate_ = (id: string, iRobotCreate: Node.IRobotCreate) => {
+    if (this.createBinding_) throw new Error('Only one create per robot');
+
+    const parent = this.links_[iRobotCreate.parentId];
+    if (!parent) throw new Error(`Missing parent: "${iRobotCreate.parentId}" for iRobotCreate "${id}"`);
+
+    this.createBinding_ = new CreateBinding(workerInstance.createSerial);
+
+    const bOrigin = ReferenceFrame.toBabylon(iRobotCreate.origin, RENDER_SCALE);
+
+    if (this.createBinding_.root.physicsImpostor) {
+      const bJoint = new BabylonPhysicsJoint(BabylonPhysicsJoint.LockJoint, {
+        mainPivot: bOrigin.position,
+        mainAxis: BabylonVector3.Up(),
+        connectedPivot: BabylonVector3.Zero(),
+        connectedAxis: BabylonVector3.Up().applyRotationQuaternion(bOrigin.rotationQuaternion.invert()),
+      });
+  
+      parent.physicsImpostor.addJoint(this.createBinding_.root.physicsImpostor, bJoint);
+    } else {
+      // Just statically connect them
+      parent.addChild(this.createBinding_.root);
+      this.createBinding_.root.position = bOrigin.position;
+      this.createBinding_.root.rotationQuaternion = bOrigin.rotationQuaternion;
+    }
+  };
+
   private hingeAngle_ = (joint: BabylonMotorEnabledJoint): number => {
     let currentAngle: number;
     joint.executeNativeFunction((world, joint) => {
@@ -393,8 +425,7 @@ class RobotBinding {
     const delta = (now - this.lastTick_) / 1000;
     this.lastTick_ = now;
 
-
-    
+    if (this.createBinding_) this.createBinding_.tick();
 
     const abstractMotors: [Motor, Motor, Motor, Motor] = [
       readable.getMotor(0),
@@ -797,6 +828,10 @@ class RobotBinding {
           const sensorObject = this.createReflectanceSensor_(nodeId, node);
           this.analogSensors_[nodeId] = sensorObject;
           this.analogPorts_[node.analogPort] = nodeId;
+          break;
+        }
+        case Node.Type.IRobotCreate: {
+          this.createIRobotCreate_(nodeId, node);
           break;
         }
       }

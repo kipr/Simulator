@@ -4,7 +4,7 @@ import SharedRegisters from './SharedRegisters';
 import python from './python';
 import SharedRingBufferUtf32 from './SharedRingBufferUtf32';
 import SerialU32 from './SerialU32';
-import SharedRingBufferU32 from 'SharedRingBufferU32';
+import SharedRingBufferU32 from './SharedRingBufferU32';
 
 // Proper typing of Worker is tricky due to conflicting DOM and WebWorker types
 // See GitHub issue: https://github.com/microsoft/TypeScript/issues/20595

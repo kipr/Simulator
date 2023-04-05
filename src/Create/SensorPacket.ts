@@ -467,4 +467,28 @@ export namespace SensorPacket {
     MainBrushMotorCurrent = 56,
     SideBrushMotorCurrent = 57,
     Stasis = 58,*/
+
+  export interface OiMode {
+    type: Type.OiMode;
+    value: OiMode.Mode;
+  }
+
+  export namespace OiMode {
+    export enum Mode {
+      Off = 0,
+      Passive = 1,
+      Safe = 2,
+      Full = 3
+    }
+
+    export const serialize = (data: OiMode): number[] => [
+      data.value
+    ];
+
+    export const deserialize = (data: number[]): OiMode => ({
+      type: Type.OiMode,
+      value: data[0],
+    });
+  }
+
 }

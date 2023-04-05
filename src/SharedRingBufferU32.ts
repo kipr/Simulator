@@ -78,6 +78,12 @@ class SharedRingBufferU32 implements SharedRingBuffer {
     return true;
   }
 
+  pushAll(values: number[]) {
+    for (let i = 0; i < values.length;) {
+      if (this.push(values[i])) ++i;
+    }
+  }
+
   pop(): number {
     const begin = this.begin_;
     const end = this.end_;
