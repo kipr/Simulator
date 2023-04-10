@@ -1,22 +1,12 @@
 import { Scene as BabylonScene } from '@babylonjs/core/scene';
 import { TransformNode as BabylonTransformNode } from '@babylonjs/core/Meshes/transformNode';
-import { AbstractMesh as BabylonAbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
-import { LinesMesh as BabylonLinesMesh } from '@babylonjs/core/Meshes/linesMesh';
 import { PhysicsViewer as BabylonPhysicsViewer } from '@babylonjs/core/Debug/physicsViewer';
-import { BoxBuilder as BabylonBoxBuilder } from '@babylonjs/core/Meshes/Builders/boxBuilder';
 import { SphereBuilder as BabylonSphereBuilder } from '@babylonjs/core/Meshes/Builders/sphereBuilder';
-import { IcoSphereBuilder as BabylonIcoSphereBuilder } from '@babylonjs/core/Meshes/Builders/icoSphereBuilder'; 
-import { CreateLines as BabylonCreateLines } from '@babylonjs/core/Meshes/Builders/linesBuilder';
 import { Vector3 as BabylonVector3, Quaternion as BabylonQuaternion } from '@babylonjs/core/Maths/math.vector';
-import { StandardMaterial as BabylonStandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 import { PhysicsImpostor as BabylonPhysicsImpostor, PhysicsImpostorParameters as BabylonPhysicsImpostorParameters, IPhysicsEnabledObject as BabylonIPhysicsEnabledObject } from '@babylonjs/core/Physics/physicsImpostor';
-import { SpotLight as BabylonSpotLight } from '@babylonjs/core/Lights/spotLight';
-import { DirectionalLight as BabylonDirectionalLight } from '@babylonjs/core/Lights/directionalLight';
-import { HemisphericLight as BabylonHemisphericLight } from '@babylonjs/core/Lights/hemisphericLight';
 import { Mesh as BabylonMesh } from '@babylonjs/core/Meshes/mesh';
 import { SceneLoader as BabylonSceneLoader } from '@babylonjs/core/Loading/sceneLoader';
 import { MotorEnabledJoint as BabylonMotorEnabledJoint, PhysicsJoint as BabylonPhysicsJoint, HingeJoint as BabylonHingeJoint } from '@babylonjs/core/Physics/physicsJoint';
-import { Ray as BabylonRay } from '@babylonjs/core/Culling/ray';
 
 import '@babylonjs/core/Physics/physicsEngineComponent';
 
@@ -36,23 +26,21 @@ import Motor from './AbstractRobot/Motor';
 import SerialU32 from './SerialU32';
 import CreateBinding from './Create/CreateBinding';
 import workerInstance from './WorkerInstance';
+import Sensor from './Sensor/Sensor';
+import EtSensor from './Sensor/EtSensor';
+import TouchSensor from './Sensor/TouchSensor';
+import ReflectanceSensor from './Sensor/ReflectanceSensor';
+import SensorObject from './Sensor/SensorObject';
+import SensorParameters from './Sensor/SensorParameters';
+import LightSensor from './Sensor/LightSensor';
+import BuiltGeometry from './BuiltGeometry';
 
-interface BuiltGeometry {
-  mesh: BabylonMesh;
-  colliders?: BuiltGeometry.Collider[];
-}
 
-namespace BuiltGeometry {
-  export interface Collider {
-    name: string;
-    mesh: BabylonMesh;
-    type: number;
-    volume: number;
-  }
-}
 
 class RobotBinding {
   private bScene_: BabylonScene;
+
+  get scene() { return this.bScene_; }
 
   private robot_: Robot;
   get robot() { return this.robot_; }
@@ -73,15 +61,18 @@ class RobotBinding {
   private motorPorts_ = new Array<string>(4);
   private servoPorts_ = new Array<string>(4);
 
-  private digitalSensors_: Dict<RobotBinding.Sensor<boolean>> = {};
+  private digitalSensors_: Dict<Sensor<boolean>> = {};
   private digitalPorts_ = new Array<string>(6);
 
-  private analogSensors_: Dict<RobotBinding.Sensor<number>> = {};
+  private analogSensors_: Dict<Sensor<number>> = {};
   private analogPorts_ = new Array<string>(6);
 
   private colliders_: Set<BabylonMesh> = new Set();
 
+  get colliders() { return this.colliders_; }
+
   private physicsViewer_: BabylonPhysicsViewer;
+  get physicsViewer() { return this.physicsViewer_; }
 
   private createBinding_: CreateBinding;
 
@@ -92,7 +83,7 @@ class RobotBinding {
     this.physicsViewer_ = physicsViewer;
   }
 
-  private buildGeometry_ = async (name: string, geometry: Geometry): Promise<BuiltGeometry> => {
+  public buildGeometry_ = async (name: string, geometry: Geometry): Promise<BuiltGeometry> => {
     let ret: BuiltGeometry;
 
     switch (geometry.type) {
@@ -228,7 +219,7 @@ class RobotBinding {
     return ret;
   };
 
-  private createSensor_ = <T extends Node.FrameLike, O, S extends RobotBinding.SensorObject<T, O>>(s: { new(parameters: RobotBinding.SensorParameters<T>): S }) => (id: string, definition: T): S => {
+  private createSensor_ = <T extends Node.FrameLike, O, S extends SensorObject<T, O>>(s: { new(parameters: SensorParameters<T>): S }) => (id: string, definition: T): S => {
     const parent = this.links_[definition.parentId];
     
     return new s({
@@ -241,10 +232,10 @@ class RobotBinding {
     });
   };
 
-  private createTouchSensor_ = this.createSensor_(RobotBinding.TouchSensor);
-  private createEtSensor_ = this.createSensor_(RobotBinding.EtSensor);
-  private createLightSensor_ = this.createSensor_(RobotBinding.LightSensor);
-  private createReflectanceSensor_ = this.createSensor_(RobotBinding.ReflectanceSensor);
+  private createTouchSensor_ = this.createSensor_(TouchSensor);
+  private createEtSensor_ = this.createSensor_(EtSensor);
+  private createLightSensor_ = this.createSensor_(LightSensor);
+  private createReflectanceSensor_ = this.createSensor_(ReflectanceSensor);
 
   // Transform a vector using the child frame's orientation. This operation is invariant on a single
   // axis, so we return a new quaternion with the leftover rotation.
@@ -351,13 +342,14 @@ class RobotBinding {
     return ret;
   };
 
-  private createIRobotCreate_ = (id: string, iRobotCreate: Node.IRobotCreate) => {
+  private createIRobotCreate_ = async (id: string, iRobotCreate: Node.IRobotCreate) => {
     if (this.createBinding_) throw new Error('Only one create per robot');
 
     const parent = this.links_[iRobotCreate.parentId];
     if (!parent) throw new Error(`Missing parent: "${iRobotCreate.parentId}" for iRobotCreate "${id}"`);
 
-    this.createBinding_ = new CreateBinding(workerInstance.createSerial);
+    this.createBinding_ = new CreateBinding(workerInstance.createSerial, this);
+    await this.createBinding_.build();
 
     const bOrigin = ReferenceFrame.toBabylon(iRobotCreate.origin, RENDER_SCALE);
 
@@ -372,6 +364,7 @@ class RobotBinding {
       parent.physicsImpostor.addJoint(this.createBinding_.root.physicsImpostor, bJoint);
     } else {
       // Just statically connect them
+      console.log('awsdsad');
       parent.addChild(this.createBinding_.root);
       this.createBinding_.root.position = bOrigin.position;
       this.createBinding_.root.rotationQuaternion = bOrigin.rotationQuaternion;
@@ -425,7 +418,7 @@ class RobotBinding {
     const delta = (now - this.lastTick_) / 1000;
     this.lastTick_ = now;
 
-    if (this.createBinding_) this.createBinding_.tick();
+    if (this.createBinding_) this.createBinding_.tick(delta);
 
     const abstractMotors: [Motor, Motor, Motor, Motor] = [
       readable.getMotor(0),
@@ -831,7 +824,7 @@ class RobotBinding {
           break;
         }
         case Node.Type.IRobotCreate: {
-          this.createIRobotCreate_(nodeId, node);
+          await this.createIRobotCreate_(nodeId, node);
           break;
         }
       }
@@ -914,407 +907,7 @@ namespace RobotBinding {
     export const value = <T>(promise: OutstandingPromise<T>): T => promise.valueObj.value;
   }
 
-  export interface Sensor<T> {
-    getValue(): Promise<T>;
-    dispose(): void;
-
-    realistic: boolean;
-    noisy: boolean;
-    visible: boolean;
-  }
-
-  export interface SensorParameters<T> {
-    id: string;
-    definition: T;
-    parent: BabylonMesh;
-    scene: BabylonScene;
-    links: Set<BabylonMesh>;
-    colliders: Set<BabylonIPhysicsEnabledObject>;
-  }
-
-  export abstract class SensorObject<T, O> implements Sensor<O> {
-    private parameters_: SensorParameters<T>;
-    get parameters() { return this.parameters_; }
-
-    private realistic_ = false;
-    get realistic() { return this.realistic_; }
-    set realistic(realistic: boolean) { this.realistic_ = realistic; }
-
-    private visible_ = false;
-    get visible() { return this.visible_; }
-    set visible(visible: boolean) { this.visible_ = visible; }
-
-    private noisy_ = false;
-    get noisy() { return this.noisy_; }
-    set noisy(noisy: boolean) { this.noisy_ = noisy; }
-
-    constructor(parameters: SensorParameters<T>) {
-      this.parameters_ = parameters;
-    }
-
-    abstract getValue(): Promise<O>;
-
-    abstract dispose(): void;
-  }
-
-  export class TouchSensor extends SensorObject<Node.TouchSensor, boolean> {
-    private intersector_: BabylonMesh;
-    
-    constructor(parameters: SensorParameters<Node.TouchSensor>) {
-      super(parameters);
-
-      const { id, definition, parent, scene } = parameters;
-      const { collisionBox, origin } = definition;
-
-      // The parent already has RENDER_SCALE applied, so we don't need to apply it again.
-      const rawCollisionBox = Vector3.toRaw(collisionBox, 'meters');
-
-      this.intersector_ = BabylonBoxBuilder.CreateBox(id, {
-        depth: rawCollisionBox.z,
-        height: rawCollisionBox.y,
-        width: rawCollisionBox.x,
-      }, scene);
-
-      this.intersector_.parent = parent;
-      this.intersector_.material = new BabylonStandardMaterial('touch-sensor-material', scene);
-      this.intersector_.material.wireframe = true;
-      this.intersector_.visibility = 0;
-
-      ReferenceFrame.syncBabylon(origin, this.intersector_, 'meters');
-    }
-
-    override getValue(): Promise<boolean> {
-      const { scene, links } = this.parameters;
-
-      const meshes = scene.getActiveMeshes();
-
-      let hit = false;
-      meshes.forEach(mesh => {
-        if (hit || mesh === this.intersector_ || links.has(mesh as BabylonMesh)) return;
-        if (!mesh.physicsImpostor) return;
-        hit = this.intersector_.intersectsMesh(mesh, true);
-      });
-
-      return Promise.resolve(hit);
-    }
-
-    override dispose(): void {
-      this.intersector_.dispose();
-    }
-  }
-
-  export class EtSensor extends SensorObject<Node.EtSensor, number> {
-    private trace_: BabylonLinesMesh;
-
-    private static readonly DEFAULT_MAX_DISTANCE = Distance.centimeters(100);
-    private static readonly DEFAULT_NOISE_RADIUS = Distance.centimeters(160);
-    private static readonly FORWARD: BabylonVector3 = new BabylonVector3(0, 0, 1);
-
-    constructor(parameters: SensorParameters<Node.EtSensor>) {
-      super(parameters);
-
-      const { id, scene, definition, parent } = parameters;
-      const { origin, maxDistance } = definition;
-
-      // The trace will be parented to a link that is already scaled, so we don't need to apply
-      // RENDER_SCALE again.
-
-      const rawMaxDistance = Distance.toMetersValue(maxDistance ?? EtSensor.DEFAULT_MAX_DISTANCE);
-      
-      this.trace_ = BabylonCreateLines(id, {
-        points: [
-          BabylonVector3.Zero(),
-          EtSensor.FORWARD.multiplyByFloats(rawMaxDistance, rawMaxDistance, rawMaxDistance)
-        ],
-      }, scene);
-      this.trace_.visibility = 0;
-
-      ReferenceFrame.syncBabylon(origin, this.trace_, 'meters');
-      this.trace_.parent = parent;
-    }
-
-    override getValue(): Promise<number> {
-      const { scene, definition, links, colliders } = this.parameters;
-      const { maxDistance, noiseRadius } = definition;
-
-      const rawMaxDistance = Distance.toValue(maxDistance || EtSensor.DEFAULT_MAX_DISTANCE, RENDER_SCALE);
-      this.trace_.visibility = this.visible ? 1 : 0;
-
-      const ray = new BabylonRay(
-        this.trace_.absolutePosition,
-        EtSensor.FORWARD.applyRotationQuaternion(this.trace_.absoluteRotationQuaternion),
-        rawMaxDistance
-      );
-
-      const hit = scene.pickWithRay(ray, mesh => {
-        const metadata = mesh.metadata as SceneMeshMetadata;
-        return (
-          metadata &&
-          mesh !== this.trace_ &&
-          !links.has(mesh as BabylonMesh) &&
-          !colliders.has(mesh as BabylonMesh) &&
-          (!!mesh.physicsImpostor || metadata.selected)
-        );
-      });
-
-      const distance = hit.pickedMesh ? hit.distance : Number.POSITIVE_INFINITY;
-
-      let value: number;
-      if (!this.realistic) {
-        // ideal
-        if (distance >= rawMaxDistance) value = 0;
-        else value = 4095 - Math.floor((distance / rawMaxDistance) * 4095);
-      } else {
-        // realistic
-        if (distance >= rawMaxDistance) value = 1100;
-        // Farther than 80 cm
-        else if (distance >= 80) value = 345;
-        // Closer than 3 cm (linear from 2910 to 0)
-        else if (distance <= 3) value = Math.floor(distance * (2910 / 3));
-        // 3 - 11.2 cm
-        else if (distance <= 11.2) value = 2910;
-        // 11.2 - 80 cm (the useful range)
-        // Derived by fitting the real-world data to a power model
-        else value = Math.floor(3240.7 * Math.pow(distance - 10, -0.776));
-      }
-
-      if (this.noisy) {
-        const noise = Distance.toValue(noiseRadius || EtSensor.DEFAULT_NOISE_RADIUS, RENDER_SCALE);
-        const offset = Math.floor(noise * Math.random() * 2) - noise;
-        value -= offset;
-      }
-
-      return Promise.resolve(clamp(0, value, 4095));
-    }
-
-    override dispose(): void {
-      this.trace_.dispose();
-    }
-  }
-
-  /**
-   * A light sensor that detects the amount of light at a given point in space.
-   * 
-   * This assumes the sensor can receive light from all directions. A ray is cast
-   * to every light in the scene. If it collides with a mesh, it is considered
-   * blocked. Otherwise, the light is considered to be received.
-   * 
-   * The sensor value is the sum of the light intensities of all lights that are
-   * not blocked, normalized to a calibrated value from measurements on a Wombat.
-   */
-  export class LightSensor extends SensorObject<Node.LightSensor, number> {
-    private trace_: BabylonAbstractMesh;
-    private rayTrace_: BabylonLinesMesh;
-
-    // Calibrated value from real sensor with overhead light on
-    private static AMBIENT_LIGHT_VALUE = 4095 - 3645;
-
-    private static DEFAULT_NOISE_RADIUS = 10;
-
-    private static lightValue_ = (distance: Distance) => {
-      const cm = Distance.toCentimetersValue(distance);
-      if (cm < 0) return 0;
-      return 4095 - 19.4 + -0.678 * cm + 0.058 * cm * cm + -5.89e-04 * cm * cm * cm;
-    };
-
-    constructor(parameters: SensorParameters<Node.LightSensor>) {
-      super(parameters);
-
-      const { id, scene, definition, parent } = parameters;
-      const { origin } = definition;
-      
-
-      this.trace_ = BabylonIcoSphereBuilder.CreateIcoSphere(`${id}-light-sensor-trace`, {
-        radius: 0.01,
-        subdivisions: 1,
-      });
-
-      this.trace_.material = new BabylonStandardMaterial(`${id}-light-sensor-trace-material`, scene);
-      this.trace_.material.wireframe = true;
-
-
-      ReferenceFrame.syncBabylon(origin, this.trace_, 'meters');
-      this.trace_.parent = parameters.parent;
-
-      this.trace_.visibility = 0;
-    }
-
-    intersects(ray: BabylonRay) {
-      const { scene } = this.parameters;
-      const meshes = scene.getActiveMeshes();
-
-      let hit = false;
-      for (let i = 0; i < meshes.length; i++) {
-        const mesh = meshes.data[i];
-        if (mesh === this.trace_) continue;
-        if (!mesh.physicsImpostor) continue;
-        hit = ray.intersectsBox(mesh.getBoundingInfo().boundingBox);
-        if (hit) break;
-      }
-
-      return hit;
-    }
-
-    override getValue(): Promise<number> {
-      const { scene } = this.parameters;
-      this.trace_.visibility = this.visible ? 1 : 0;
-
-      const position = Vector3.fromRaw(RawVector3.fromBabylon(this.trace_.getAbsolutePosition()), RENDER_SCALE);
-
-      let valueSum = 0;
-      for (const light of scene.lights) {
-        if (!light.isEnabled(false)) continue;
-        if (light instanceof BabylonHemisphericLight) {
-          valueSum += light.intensity * LightSensor.AMBIENT_LIGHT_VALUE;
-          continue;
-        }
-
-        const intensity = light.getScaledIntensity();
-        const lightPosition = Vector3.fromRaw(RawVector3.fromBabylon(light.getAbsolutePosition()), RENDER_SCALE);
-        const offset = Vector3.subtract(position, lightPosition);
-        const distance = Vector3.length(offset);
-        const ray = new BabylonRay(
-          Vector3.toBabylon(position, RENDER_SCALE),
-          Vector3.toBabylon(offset, RENDER_SCALE),
-          Distance.toValue(distance, RENDER_SCALE)
-        );
-
-        if (this.intersects(ray)) continue;
-
-        // If the light is directional, determine if it is pointing towards the
-        // sensor. If not, it is not received.
-        if (light instanceof BabylonDirectionalLight) {
-          const direction = BabylonVector3.Forward(true)
-            .applyRotationQuaternion(BabylonQuaternion.FromEulerVector(light.getRotation()));
-          
-          const dot = BabylonVector3.Dot(direction, Vector3.toBabylon(offset, RENDER_SCALE));
-          const angle = Math.acos(dot / Distance.toValue(Vector3.length(offset), RENDER_SCALE));
-
-          if (angle > Math.PI / 2) continue;
-        }
-
-        // Similar for spot light
-        if (light instanceof BabylonSpotLight) {
-          const direction = BabylonVector3.Forward(true)
-            .applyRotationQuaternion(BabylonQuaternion.FromEulerVector(light.getRotation()));
-          
-          const dot = BabylonVector3.Dot(direction, Vector3.toBabylon(offset, RENDER_SCALE));
-          const angle = Math.acos(dot / Distance.toValue(Vector3.length(offset), RENDER_SCALE));
-
-          if (angle > light.angle / 2) continue;
-        }
-
-        valueSum += intensity * LightSensor.lightValue_(distance);
-      }
-
-      if (this.noisy) {
-        const offset = Math.floor(LightSensor.DEFAULT_NOISE_RADIUS * Math.random() * 2) - LightSensor.DEFAULT_NOISE_RADIUS;
-        valueSum -= offset;
-      }
-
-      return Promise.resolve(4095 - clamp(0, valueSum, 4095));
-    }
-
-    override dispose(): void {
-      this.trace_.dispose();
-    }
-  }
-
-  export class ReflectanceSensor extends SensorObject<Node.ReflectanceSensor, number> {
-    private trace_: BabylonLinesMesh;
-
-    private lastHitTextureId_: string | null = null;
-    private lastHitPixels_: ArrayBufferView | null = null;
-
-    private static readonly DEFAULT_MAX_DISTANCE = Distance.centimeters(1.5);
-    private static readonly DEFAULT_NOISE_RADIUS = Distance.centimeters(10);
-    private static readonly FORWARD: BabylonVector3 = new BabylonVector3(0, 0, 1);
-
-    constructor(parameters: SensorParameters<Node.ReflectanceSensor>) {
-      super(parameters);
-
-      const { id, scene, definition, parent } = parameters;
-      const { origin, maxDistance } = definition;
-
-      // The trace will be parented to a link that is already scaled, so we don't need to apply
-      // RENDER_SCALE again.
-
-      const rawMaxDistance = Distance.toMetersValue(maxDistance ?? ReflectanceSensor.DEFAULT_MAX_DISTANCE);
-      this.trace_ = BabylonCreateLines(id, {
-        points: [
-          BabylonVector3.Zero(),
-          ReflectanceSensor.FORWARD.multiplyByFloats(rawMaxDistance, rawMaxDistance, rawMaxDistance)
-        ],
-      }, scene);
-      this.trace_.visibility = 0;
-
-      ReferenceFrame.syncBabylon(origin, this.trace_, 'meters');
-      this.trace_.parent = parent;
-    }
-
-    override async getValue(): Promise<number> {
-      const { scene, definition, links, colliders } = this.parameters;
-      const { maxDistance, noiseRadius } = definition;
-
-      const rawMaxDistance = Distance.toValue(maxDistance || ReflectanceSensor.DEFAULT_MAX_DISTANCE, RENDER_SCALE);
-      this.trace_.visibility = this.visible ? 1 : 0;
-
-      const ray = new BabylonRay(
-        this.trace_.absolutePosition,
-        ReflectanceSensor.FORWARD.applyRotationQuaternion(this.trace_.absoluteRotationQuaternion),
-        rawMaxDistance
-      );
-
-      const hit = scene.pickWithRay(ray, mesh => {
-        return mesh !== this.trace_ && !links.has(mesh as BabylonMesh) && !colliders.has(mesh as BabylonMesh);
-      });
-
-      if (!hit.pickedMesh || !hit.pickedMesh.material || hit.pickedMesh.material.getActiveTextures().length === 0) return 0;
-      
-      let sensorValue = 0;
-      
-      const hitTexture = hit.pickedMesh.material.getActiveTextures()[0];
-
-      // Only reprocess the texture if we hit a different texture than before
-      if (this.lastHitTextureId_ === null || this.lastHitTextureId_ !== hitTexture.uid) {
-        if (hitTexture.isReady()) {
-          this.lastHitTextureId_ = hitTexture.uid;
-          this.lastHitPixels_ = await hitTexture.readPixels();
-        } else {
-          // Texture isn't ready yet, so nothing we can do
-          this.lastHitTextureId_ = null;
-          this.lastHitPixels_ = null;
-        }
-      }
-
-      if (this.lastHitPixels_ !== null) {
-        const hitTextureCoordinates = hit.getTextureCoordinates();
-        const arrayIndex = Math.floor(hitTextureCoordinates.x * (hitTexture.getSize().width - 1)) * 4 + Math.floor(hitTextureCoordinates.y * (hitTexture.getSize().height - 1)) * hitTexture.getSize().width * 4;
-
-        const r = this.lastHitPixels_[arrayIndex] as number;
-        const g = this.lastHitPixels_[arrayIndex + 1] as number;
-        const b = this.lastHitPixels_[arrayIndex + 2] as number;
-
-        // Crude conversion from RGB to grayscale
-        const colorAverage = (r + g + b) / 3;
-
-        // Value is a grayscale percentage of 4095
-        sensorValue = Math.floor(4095 * (1 - (colorAverage / 255)));
-      }
-
-      if (this.noisy) {
-        const noise = Distance.toValue(noiseRadius || ReflectanceSensor.DEFAULT_NOISE_RADIUS, RENDER_SCALE);
-        const offset = Math.floor(noise * Math.random() * 2) - noise;
-        sensorValue -= offset;
-      }
-
-      return clamp(0, sensorValue, 4095);
-    }
-
-    override dispose(): void {
-      this.trace_.dispose();
-    }
-  }
+  
 
   export const SERVO_LOGICAL_MIN_ANGLE = Angle.degrees(-90.0);
   export const SERVO_LOGICAL_MAX_ANGLE = Angle.degrees(90.0);

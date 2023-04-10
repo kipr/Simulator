@@ -123,7 +123,7 @@ class SceneBinding {
     this.bScene_.enablePhysics(new BabylonVector3(0, -9.8 * 100, 0), this.ammo_);
     this.bScene_.getPhysicsEngine().setSubTimeStep(2);
     
-    // this.physicsViewer_ = new BabylonPhysicsViewer(this.bScene_);
+    this.physicsViewer_ = new BabylonPhysicsViewer(this.bScene_);
 
     this.root_ = new BabylonTransformNode('__scene_root__', this.bScene_);
     this.gizmoManager_ = new BabylonGizmoManager(this.bScene_);

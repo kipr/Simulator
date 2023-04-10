@@ -1,3 +1,7 @@
+import SerialU32 from '../SerialU32';
+import SharedRingBufferU32 from 'SharedRingBufferU32';
+import construct from '../util/construct';
+
 export namespace SensorPacket {
   export enum Type {
     BumpsAndWheelDrops = 7,
@@ -90,6 +94,8 @@ export namespace SensorPacket {
       type: Type.Wall,
       value: data[0],
     });
+
+    export const write = SerialU32.writeConstruct<Wall, typeof Wall>(Wall, Type.Wall);
   }
 
   export interface CliffLeft {
@@ -103,6 +109,8 @@ export namespace SensorPacket {
       type: Type.CliffLeft,
       value: data[0],
     });
+
+    export const write = SerialU32.writeConstruct<CliffLeft, typeof CliffLeft>(CliffLeft, Type.CliffLeft);
   }
 
   export interface CliffFrontLeft {
@@ -116,6 +124,8 @@ export namespace SensorPacket {
       type: Type.CliffFrontLeft,
       value: data[0],
     });
+
+    export const write = SerialU32.writeConstruct<CliffFrontLeft, typeof CliffFrontLeft>(CliffFrontLeft, Type.CliffFrontLeft);
   }
 
   export interface CliffFrontRight {
@@ -129,6 +139,8 @@ export namespace SensorPacket {
       type: Type.CliffFrontRight,
       value: data[0],
     });
+
+    export const write = SerialU32.writeConstruct<CliffFrontRight, typeof CliffFrontRight>(CliffFrontRight, Type.CliffFrontRight);
   }
 
   export interface CliffRight {
@@ -142,6 +154,8 @@ export namespace SensorPacket {
       type: Type.CliffRight,
       value: data[0],
     });
+
+    export const write = SerialU32.writeConstruct<CliffRight, typeof CliffRight>(CliffRight, Type.CliffRight);
   }
 
   export interface VirtualWall {
@@ -195,6 +209,8 @@ export namespace SensorPacket {
       type: Type.DirtDetect,
       value: data[0],
     });
+
+    export const write = SerialU32.writeConstruct<DirtDetect, typeof DirtDetect>(DirtDetect, Type.DirtDetect);
   }
 
   export interface InfraredCharacterOmni {
@@ -208,6 +224,8 @@ export namespace SensorPacket {
       type: Type.InfraredCharacterOmni,
       value: data[0],
     });
+
+    export const write = SerialU32.writeConstruct<InfraredCharacterOmni, typeof InfraredCharacterOmni>(InfraredCharacterOmni, Type.InfraredCharacterOmni);
   }
 
   export interface InfraredCharacterLeft {
@@ -221,6 +239,8 @@ export namespace SensorPacket {
       type: Type.InfraredCharacterLeft,
       value: data[0],
     });
+
+    export const write = SerialU32.writeConstruct<InfraredCharacterLeft, typeof InfraredCharacterLeft>(InfraredCharacterLeft, Type.InfraredCharacterLeft);
   }
 
   export interface InfraredCharacterRight {
@@ -234,6 +254,8 @@ export namespace SensorPacket {
       type: Type.InfraredCharacterRight,
       value: data[0],
     });
+
+    export const write = SerialU32.writeConstruct<InfraredCharacterRight, typeof InfraredCharacterRight>(InfraredCharacterRight, Type.InfraredCharacterRight);
   }
 
   export interface Buttons {
@@ -291,6 +313,8 @@ export namespace SensorPacket {
       type: Type.Distance,
       value: (data[0] << 8) | data[1],
     });
+
+    export const write = SerialU32.writeConstruct<Distance, typeof Distance>(Distance, Type.Distance);
   }
 
   export interface Angle {
@@ -309,6 +333,8 @@ export namespace SensorPacket {
       type: Type.Angle,
       value: (data[0] << 8) | data[1],
     });
+
+    export const write = SerialU32.writeConstruct<Angle, typeof Angle>(Angle, Type.Angle);
   }
 
   export interface ChargingState {
@@ -489,6 +515,11 @@ export namespace SensorPacket {
       type: Type.OiMode,
       value: data[0],
     });
+
+    export const write = SerialU32.writeConstruct<OiMode, typeof OiMode>(OiMode, Type.OiMode);
   }
 
+  export const oiMode = construct<OiMode>(Type.OiMode);
+
+  
 }

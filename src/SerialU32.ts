@@ -1,3 +1,4 @@
+import construct from './util/construct';
 import SharedRingBufferU32 from './SharedRingBufferU32';
 
 interface SerialU32 {
@@ -21,6 +22,14 @@ namespace SerialU32 {
   export const popAll = ({ tx, rx }: SerialU32): void => {
     tx.popAll();
     rx.popAll();
+  };
+
+  export const write = <T, U extends { serialize: (data: T) => number[] }>(u: U) => (serial: SerialU32, data: T) => {
+    serial.tx.pushAll(u.serialize(data));
+  };
+
+  export const writeConstruct = <T extends { type: unknown }, U extends { serialize: (data: T) => number[] }>(u: U, ty: T['type']) => (serial: SerialU32, data: Omit<T, 'type'>) => {
+    serial.tx.pushAll(u.serialize(construct<T>(ty)(data)));
   };
 }
 
