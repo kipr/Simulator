@@ -21,7 +21,8 @@ Simulates a botball/JBC style demobot with a built in IDE.
 ```bash
 # to get newer versions of Node.js through apt-get, you likely need to add the correct NodeSource repositories
 # for details, see https://github.com/nodesource/distributions
-sudo apt-get install nodejs cmake build-essential swig python3.8
+sudo apt-get update
+sudo apt-get install -y wget git cmake build-essential python3.8 swig zlib1g-dev doxygen nodejs
 sudo npm install --global npm
 sudo npm install --global yarn
 yarn --version
@@ -60,7 +61,7 @@ Or, if you've already cloned the repository without `--recurse-submodules`, you 
 git submodule update --init
 ```
 
-### Pull large files
+### Optional: Pull large files
 
 ```bash
 git lfs pull
@@ -72,6 +73,8 @@ git lfs pull
 # Python 3.7+ is required for the build process
 python3 dependencies/build.py
 ```
+
+Tip: if you are experiencing issues with this step, you may try deleting the repository and follow the steps listed above again.
 
 ## Install JavaScript Dependencies
 
