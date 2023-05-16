@@ -128,6 +128,8 @@ At the highest level, the simulator is taking the state of the simulated world a
 ## State
 State is ultimately a description of things in the world. This description consists of the properties (position, weight, color, etc.), which typically have values (2in in the x direction, 3in in the y direction, 2 lbs, and green, etc.). The state includes all the objects that exist in our simulated world, including the floor mat, the objects such as a can or paper ream, and the robot, described in full detail (wheels, chassis, motors, etc.).
 
+The robot schema is defined in state/State/Robot (similar to a URDF - set of links and joints but they are all just mapped to Frames, which can be anything). 
+
 ## Nodes
 Nodes are the objects that exist in the state. All of the objects are described with a nearly complete set of physical properties, including size, position, weight, friction, etc. The nodes exist in relation to one another and can interact with one another according to the principles of the challenge and the constraints of the physics engine. Examples of nodes include objects such as a can, a cube, a light, and many others.
 
@@ -144,9 +146,16 @@ Scene functionality includes:
 * see intersections
 
 ## Redux
+
+See /state/reducer/
+
 We capture the entire state of the world with a library called redux, which creates a global json blob that can be rendered to the view. The redux library helps reduce the computation by ensuring only components that need to be updated are updated. Through the redux we can add or remove scenes or nodes.
 
-Redux allows us to make the following work: State + Action -> NewState
+The primary reason for using redux is because of the database. This will allow us to load scenes from the database.
+
+One important type is Async - this allows us to note the difference in state between the client and that database. The async type has the brief (which can be sent very cheaply - just name and description) and the type is the full record. This can be in a number of states. The Async is a state machine of the processes that can happen between the client and the database.
+
+Redux allows us to make the following work: State + Action -> NewState. This is only for global state settings, not for local state.
 
 ## Challenge
 A challenge is a set of constraints on the world. It includes a dictionary of events which have named objects and descriptions of what needs to be done with that object (e.g. pick up can A). It has encoded the logic of success inside it. There are predicates for success and failure which can use basic boolean logic. Challenges include basic metadata and default starter code in supported languages.
@@ -172,5 +181,22 @@ The user program is edited through the console, which has a std out, implemented
 ## Worker instance
 What the simulator uses to talk to the worker. Someone calls start - reset some registers and post to the worker 'start', also controls how the worker terminates.
 
+
+Worker is housed in worker.ts, the other parts of the communication layer are in workerInstance and workerProtocol. The workerProtocol defines the types that are passed back and forth, the workerInstance is the browser side of the communication system.
+
+When the user program runs, it calls workerInstance's start function. WorkerInstance is a singleton inside the system. This instance communicates with the server to compile the users program. The program runs through the actual KIPR library on the client side (dependencies/libwallaby/module/core/device -> emscripten_fs -python or emcripten_js -c/cpp), but instead of writing the register values to the motor ports, they are written to the registers in worker.ts
+
+The user's code can run completely offline on just the client, it only needs to be compiled to javascript with libwallaby on the server (or interpreted in python's case).
+
+When the code runs it creates a new shared register and shared buffer. The SharedRegistersRobot is bound to the AbstractRobot. The AbstractRobot is what the system uses to determine what the actual motor positions and velocities are.
+
+The output of the code (stdout and stderror) are written to the shared console. The shared registers and the shared console are implemented as shared buffer arrays. Both the worker and the browser can access this shared memeory simultaneously. So the client polls the ringbuffer in order to update the console.
+
+The users code is run sync, and cannot be run async. There is no way to do some processing or an event loop on the side. This is why the communication is done through the array buffers, as it does not require seperate message passing which could interrupt the users program flow. The values are written by the worker instance which runs in its own thread, and the simulator reads those updates and updates the simulator objects accordingly.
+
+
+## Sim
+
+Every render the updateStore_ function is called, and sceneBinding_ is ticked. In SceneBinding, the tick function takes a dictionary of AbstractRobots (currently there is one, but in the future there could be more), and the tick function calls tick on each robotBinding. The robotBinding is what does the update logic for each robot. The RobotBinding takes the abstract robot and reads the motors, servos, etc and then implements the update logic based on what is happening in the shared registers.
 
 
