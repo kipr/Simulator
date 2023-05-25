@@ -147,14 +147,29 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
     let transmutedNode = Node.transmute(node, selectedType);
 
-    const TEMPLATE_OPTIONS: ComboBox.Option[] = [
+    const JBC_TEMPLATE_OPTIONS: ComboBox.Option[] = [
       ComboBox.option(LocalizedString.lookup(tr('Can'), locale), 'can'),
       ComboBox.option(LocalizedString.lookup(tr('Paper Ream'), locale), 'ream'),
     ];
+    const ROCK_TEMPLATE_OPTIONS: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('Basalt Rock'), locale), 'basalt'),
+      ComboBox.option(LocalizedString.lookup(tr('Anorthosite Rock'), locale), 'anorthosite'),
+      ComboBox.option(LocalizedString.lookup(tr('Breccia Rock'), locale), 'breccia'),
+      ComboBox.option(LocalizedString.lookup(tr('Meteorite Rock'), locale), 'meteorite'),
+    ];
 
     // If the new type is from a template, set the template ID to a default value
-    if (transmutedNode.type === 'from-template') {
-      const defaultTemplateId = TEMPLATE_OPTIONS[0].data as string;
+    if (transmutedNode.type === 'from-jbc-template') {
+      const defaultTemplateId = JBC_TEMPLATE_OPTIONS[0].data as string;
+      
+      transmutedNode = {
+        ...transmutedNode,
+        templateId: defaultTemplateId,
+      };
+    }
+    // If the new type is from a template, set the template ID to a default value
+    if (transmutedNode.type === 'from-rock-template') {
+      const defaultTemplateId = ROCK_TEMPLATE_OPTIONS[0].data as string;
       
       transmutedNode = {
         ...transmutedNode,
@@ -518,11 +533,11 @@ class NodeSettings extends React.PureComponent<Props, State> {
     }
   };
 
-  private onTemplateSelect_ = (index: number, option: ComboBox.Option) => {
+  private onJBCTemplateSelect_ = (index: number, option: ComboBox.Option) => {
     const { props } = this;
     const { node } = props;
 
-    if (node.type !== 'from-template') return;
+    if (node.type !== 'from-jbc-template') return;
 
     const templateId = option.data as string;
 
@@ -532,6 +547,19 @@ class NodeSettings extends React.PureComponent<Props, State> {
     });
   };
 
+  private onRockTemplateSelect_ = (index: number, option: ComboBox.Option) => {
+    const { props } = this;
+    const { node } = props;
+
+    if (node.type !== 'from-rock-template') return;
+
+    const templateId = option.data as string;
+
+    this.props.onNodeChange({
+      ...node,
+      templateId
+    });
+  };
   private onCollapsedChange_ = (key: string) => (collapsed: boolean) => {
     this.setState({
       collapsed: {
@@ -896,12 +924,23 @@ class NodeSettings extends React.PureComponent<Props, State> {
     }, {});
     
     
-    const TEMPLATE_OPTIONS: ComboBox.Option[] = [
+    const JBC_TEMPLATE_OPTIONS: ComboBox.Option[] = [
       ComboBox.option(LocalizedString.lookup(tr('Can'), locale), 'can'),
       ComboBox.option(LocalizedString.lookup(tr('Paper Ream'), locale), 'ream'),
     ];
+    const ROCK_TEMPLATE_OPTIONS: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('Basalt Rock'), locale), 'basalt'),
+      ComboBox.option(LocalizedString.lookup(tr('Anorthosite Rock'), locale), 'anorthosite'),
+      ComboBox.option(LocalizedString.lookup(tr('Breccia Rock'), locale), 'breccia'),
+      ComboBox.option(LocalizedString.lookup(tr('Meteorite Rock'), locale), 'meteorite'),
+    ];
     
-    const TEMPLATE_REVERSE_OPTIONS: Dict<number> = TEMPLATE_OPTIONS.reduce((dict, option, i) => {
+    const JBC_TEMPLATE_REVERSE_OPTIONS: Dict<number> = JBC_TEMPLATE_OPTIONS.reduce((dict, option, i) => {
+      dict[option.data as string] = i;
+      return dict;
+    }, {});
+
+    const ROCK_TEMPLATE_REVERSE_OPTIONS: Dict<number> = ROCK_TEMPLATE_OPTIONS.reduce((dict, option, i) => {
       dict[option.data as string] = i;
       return dict;
     }, {});
@@ -922,7 +961,8 @@ class NodeSettings extends React.PureComponent<Props, State> {
     
     const NODE_TYPE_OPTIONS: ComboBox.Option[] = [
       ComboBox.option(LocalizedString.lookup(tr('Empty'), locale), 'empty'),
-      ComboBox.option(LocalizedString.lookup(tr('Standard Object'), locale), 'from-template'),
+      ComboBox.option(LocalizedString.lookup(tr('JBC Pieces'), locale), 'from-jbc-template'),
+      ComboBox.option(LocalizedString.lookup(tr('Moon Rock'), locale), 'from-rock-template'),
       ComboBox.option(LocalizedString.lookup(tr('Custom Object'), locale), 'object'),
       // ComboBox.option('Directional Light', 'directional-light'),
       ComboBox.option(LocalizedString.lookup(tr('Point Light'), locale), 'point-light'),
@@ -1026,14 +1066,23 @@ class NodeSettings extends React.PureComponent<Props, State> {
               />
             </StyledField>
           )}
-
-          {node.type === 'from-template' && (
+          {node.type === 'from-jbc-template' && (
             <StyledField name={LocalizedString.lookup(tr('Item'), locale)} theme={theme} long>
               <ComboBox
-                options={TEMPLATE_OPTIONS}
+                options={JBC_TEMPLATE_OPTIONS}
                 theme={theme}
-                index={TEMPLATE_REVERSE_OPTIONS[node.templateId]}
-                onSelect={this.onTemplateSelect_}
+                index={JBC_TEMPLATE_REVERSE_OPTIONS[node.templateId]}
+                onSelect={this.onJBCTemplateSelect_}
+              />
+            </StyledField>
+          )}
+          {node.type === 'from-rock-template' && (
+            <StyledField name={LocalizedString.lookup(tr('Item'), locale)} theme={theme} long>
+              <ComboBox
+                options={ROCK_TEMPLATE_OPTIONS}
+                theme={theme}
+                index={ROCK_TEMPLATE_REVERSE_OPTIONS[node.templateId]}
+                onSelect={this.onRockTemplateSelect_}
               />
             </StyledField>
           )}
