@@ -31,7 +31,7 @@ const reamTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'ream',
   physics: {
     type: 'box',
-    restitution: 0,
+    restitution: .9,
     friction: 1,
     mass: Mass.pounds(5),
   },
@@ -39,7 +39,83 @@ const reamTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'basic',
     color: {
       type: 'color3',
-      color: Color.Rgb.create(250, 249, 246),
+      color: Color.Rgb.create(250, 250, 250),
+    },
+  },
+};
+
+const basaltTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'basalt',
+  physics: {
+    type: 'mesh',
+    restitution: .9,
+    friction: 1,
+    mass: Mass.pounds(.8),
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'texture',
+      // uri: '/static/breccia_texture.png'
+      uri: '/static/basalt_texture_w.png'
+    },
+  },
+};
+
+const anorthositeTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'anorthosite',
+  physics: {
+    type: 'mesh',
+    restitution: .9,
+    friction: 1,
+    mass: Mass.pounds(.8),
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'texture',
+      // uri: '/static/breccia_texture.png'
+      uri: '/static/anorthosite_texture_w.png'
+    },
+  },
+};
+
+const brecciaTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'breccia',
+  physics: {
+    type: 'mesh',
+    restitution: .9,
+    friction: 1,
+    mass: Mass.pounds(.8),
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'texture',
+      uri: '/static/breccia_texture_w.png'
+      // uri: '/static/breccia_texture.png'
+    },
+  },
+};
+
+const meteoriteTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'meteorite',
+  physics: {
+    type: 'mesh',
+    restitution: .9,
+    friction: 1,
+    mass: Mass.pounds(.8),
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'texture',
+      // uri: '/static/breccia_texture.png'
+      uri: '/static/meteorite_texture_w.png'
     },
   },
 };
@@ -67,6 +143,10 @@ const jbcMatBTemplate: Node.TemplatedNode<Node.Obj> = {
 export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'can': canTemplate,
   'ream': reamTemplate,
+  'basalt': basaltTemplate,
+  'anorthosite': anorthositeTemplate,
+  'breccia': brecciaTemplate,
+  'meteorite': meteoriteTemplate,
   'jbc_mat_a': jbcMatATemplate,
   'jbc_mat_b': jbcMatBTemplate,
 });
@@ -84,6 +164,34 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
       y: Distance.centimeters(5.08),
       z: Distance.centimeters(21.59),
     },
+  },
+  'basalt': {
+    type: 'sphere',
+    radius: Distance.centimeters(5),
+    squash: .8,
+    stretch: 1.2,
+    noise: 2.5,
+  },
+  'anorthosite': {
+    type: 'sphere',
+    radius: Distance.centimeters(5),
+    squash: .5,
+    stretch: 1,
+    noise: 2,
+  },
+  'breccia': {
+    type: 'sphere',
+    radius: Distance.centimeters(5),
+    squash: 1,
+    stretch: 1.4,
+    noise: 1.5,
+  },
+  'meteorite': {
+    type: 'sphere',
+    radius: Distance.centimeters(5),
+    squash: 1,
+    stretch: 1,
+    noise: 1,
   },
   'jbc_mat_a': {
     type: 'file',
