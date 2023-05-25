@@ -31,7 +31,7 @@ export const JBC_19: Scene = {
     'can2': createCanNode(2, { x: Distance.centimeters(-10), y: Distance.centimeters(6), z: Distance.centimeters(91.6) }),
     'can3': createCanNode(3, { x: Distance.centimeters(-17), y: Distance.centimeters(6), z: Distance.centimeters(84.6) }),
     'ream': {
-      type: 'from-template',
+      type: 'from-jbc-template',
       templateId: 'ream',
       name: tr('Paper Ream'),
       startingOrigin: REAM_ORIGIN,

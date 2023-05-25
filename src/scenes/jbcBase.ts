@@ -78,7 +78,7 @@ export function createBaseSceneSurfaceA(): Scene {
     nodes: {
       'robot': ROBOT,
       'jbc_mat_a': {
-        type: 'from-template',
+        type: 'from-jbc-template',
         templateId: 'jbc_mat_a',
         name: tr('JBC Surface A'),
         startingOrigin: JBC_MAT_ORIGIN,
@@ -147,7 +147,7 @@ export function createBaseSceneSurfaceB(): Scene {
     nodes: {
       'robot': ROBOT,
       'jbc_mat_b': {
-        type: 'from-template',
+        type: 'from-jbc-template',
         templateId: 'jbc_mat_b',
         name: tr('JBC Surface B'),
         startingOrigin: JBC_MAT_ORIGIN,
@@ -211,7 +211,7 @@ export function createCanNode(canNumber: number, canPosition?: Vector3, editable
   };
 
   return {
-    type: 'from-template',
+    type: 'from-jbc-template',
     templateId: 'can',
     name: Dict.map(tr('Can %s'), (str: string) => sprintf(str, canNumber)),
     startingOrigin: origin,

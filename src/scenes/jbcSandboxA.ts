@@ -57,7 +57,7 @@ export const JBC_Sandbox_A: Scene = {
     'can11': createCanNode(11, undefined, true, false),
     'can12': createCanNode(12, undefined, true, false),
     'ream1': {
-      type: 'from-template',
+      type: 'from-jbc-template',
       templateId: 'ream',
       name: tr('Paper Ream 1'),
       startingOrigin: REAM1_ORIGIN,
@@ -66,7 +66,7 @@ export const JBC_Sandbox_A: Scene = {
       visible: false,
     },
     'ream2': {
-      type: 'from-template',
+      type: 'from-jbc-template',
       templateId: 'ream',
       name: tr('Paper Ream 2'),
       startingOrigin: REAM2_ORIGIN,

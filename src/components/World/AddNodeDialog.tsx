@@ -78,7 +78,7 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
     this.state = {
       id: uuid.v4(),
       node: {
-        type: 'from-template',
+        type: 'from-jbc-template',
         templateId: 'can',
         name: tr('Unnamed Object'),
         startingOrigin: origin,
