@@ -54,6 +54,7 @@ import WorkerInstance from "./WorkerInstance";
 import LocalizedString from './util/LocalizedString';
 import ScriptManager from './ScriptManager';
 import { RENDER_SCALE } from './renderConstants';
+import { number } from 'prop-types';
 
 export type FrameLike = BabylonTransformNode | BabylonAbstractMesh;
 
@@ -116,6 +117,8 @@ class SceneBinding {
   
   private materialIdIter_ = 0;
 
+  private seed_ = 0;
+
   constructor(bScene: BabylonScene, ammo: unknown) {
     this.bScene_ = bScene;
     this.scene_ = Scene.EMPTY;
@@ -163,6 +166,13 @@ class SceneBinding {
     }
   };
 
+  private random = (max: number, min: number) => {
+    let x = Math.sin(this.seed_++) * 10000;
+    x = x - Math.floor(x);
+    x = ((x - .5) * (max - min)) + ((max + min) / 2);
+    return x;
+  };
+
   private buildGeometry_ = async (name: string, geometry: Geometry, faceUvs?: RawVector2[]): Promise<FrameLike> => {
     let ret: FrameLike;
     switch (geometry.type) {
@@ -177,12 +187,41 @@ class SceneBinding {
       }
       case 'sphere': {
         const bFaceUvs = this.buildGeometryFaceUvs_(faceUvs, 2)?.[0];
-        ret = BabylonSphereBuilder.CreateSphere(name, {
-          // Why?? Why is a sphere defined by its diameter?
-          diameter: Distance.toCentimetersValue(geometry.radius) * 2,
+        const segments = 4;
+        const rock = BabylonSphereBuilder.CreateSphere(name, {
+          segments: segments, 
+          updatable:true, 
           frontUVs: bFaceUvs,
           sideOrientation: bFaceUvs ? BabylonMesh.DOUBLESIDE : undefined,
+          diameterX:Distance.toCentimetersValue(geometry.radius) * 2,
+          diameterY:Distance.toCentimetersValue(geometry.radius) * 2 * geometry.squash,
+          diameterZ:Distance.toCentimetersValue(geometry.radius) * 2 * geometry.stretch,
         }, this.bScene_);
+      
+        const positions = rock.getVerticesData("position");
+      
+        // when segments = 1, rings are 7 points; s=2, rings=9; s=3, r=11; s=4, r=13
+        // for a sphere, the vertices ring down in circles, starting with 7 on the top, and then 7 for each layer
+        // 0-6 controls height of top; 7-13 controls hight of top middle; 14-20...; 21-27
+        // const skip = [13,14,20];+6 // for segments = 1
+        // const skip = [17,18,26,27,34];+8 // for segments = 2
+        // const skip = [21,22,32,33,43,44]+10; // for segments = 3
+        const skip = [25,26,38,39,51,52,64,65]; // for segments = 4
+        // for (let i = 8; i < 20; i++) {
+        // for (let i = 10; i < 35; i++) {
+        // for (let i = 12; i < 54; i++) {
+        for (let i = 14; i < 65; i++) {
+          if (skip.includes(i)) { 
+            continue;
+          } else {
+            positions[3 * i] = positions[3 * i] + this.random(geometry.noise, -1 * geometry.noise);
+            positions[1 + 3 * i] = positions[1 + 3 * i] + this.random(geometry.noise, -1 * geometry.noise);
+            positions[2 + 3 * i] = positions[2 + 3 * i] + this.random(geometry.noise, -1 * geometry.noise);
+          }
+        }
+        rock.updateVerticesData("position", positions);
+
+        ret = rock;
         break;
       }
       case 'cylinder': {
@@ -282,7 +321,23 @@ class SceneBinding {
               if (!color.uri) {
                 basic.diffuseColor = new BabylonColor3(0.5, 0, 0.5);
               } else {
-                basic.diffuseTexture = new BabylonTexture(color.uri, this.bScene_);
+                if (id === 'skybox' || id === 'ground') {
+                  basic.reflectionTexture = new BabylonTexture(color.uri, this.bScene_);
+                  basic.reflectionTexture.coordinatesMode = BabylonTexture.FIXED_EQUIRECTANGULAR_MODE;
+                  basic.backFaceCulling = false;
+                  basic.disableLighting = true;
+                } else {
+                  // if (id === 'Basalt Rock') {
+                  //   // console.log("ROCK");
+                  //   // basic.diffuseTexture = new BabylonTexture(color.uri, this.bScene_);
+                  //   // basic.reflectionTexture = new BabylonTexture(color.uri, this.bScene_);
+                  // } else {
+                  basic.bumpTexture = new BabylonTexture(color.uri, this.bScene_);
+                  basic.emissiveTexture = new BabylonTexture(color.uri, this.bScene_);
+                  basic.diffuseTexture = new BabylonTexture(color.uri, this.bScene_);
+                  basic.diffuseTexture.coordinatesMode = BabylonTexture.FIXED_EQUIRECTANGULAR_MODE;
+                  
+                }
               }
               
               break;
@@ -677,7 +732,19 @@ class SceneBinding {
     let nodeToCreate: Node = node;
 
     // Resolve template nodes into non-template nodes by looking up the template by ID
-    if (node.type === 'from-template') {
+    if (node.type === 'from-jbc-template') {
+      const nodeTemplate = preBuiltTemplates[node.templateId];
+      if (!nodeTemplate) {
+        console.warn('template node has invalid template ID:', node.templateId);
+        return null;
+      }
+
+      nodeToCreate = {
+        ...node,
+        ...nodeTemplate,
+      };
+    }
+    if (node.type === 'from-rock-template') {
       const nodeTemplate = preBuiltTemplates[node.templateId];
       if (!nodeTemplate) {
         console.warn('template node has invalid template ID:', node.templateId);
@@ -884,7 +951,105 @@ class SceneBinding {
     return robotBinding;
   };
 
-  private updateFromTemplate_ = (id: string, node: Patch.InnerChange<Node.FromTemplate>, nextScene: Scene): Promise<BabylonNode> => {
+  private updateRockFromTemplate_ = (id: string, node: Patch.InnerChange<Node.FromRockTemplate>, nextScene: Scene): Promise<BabylonNode> => {
+    // If the template ID changes, recreate the node entirely
+    if (node.inner.templateId.type === Patch.Type.OuterChange) {
+      this.destroyNode_(id);
+      return this.createNode_(id, node.next, nextScene);
+    }
+
+    const bNode = this.findBNode_(id);
+
+    const nodeTemplate = preBuiltTemplates[node.next.templateId];
+    if (!nodeTemplate) {
+      console.warn('template node has invalid template ID:', node.next.templateId);
+      return Promise.resolve(bNode);
+    }
+
+    const prevBaseProps = Node.Base.upcast(node.prev);
+    const nextBaseProps = Node.Base.upcast(node.next);
+
+    // Create a Patch for the underlying node type and call its update function
+    switch (nodeTemplate.type) {
+      case 'empty': {
+        const emptyChange: Patch.InnerChange<Node.Empty> = {
+          type: Patch.Type.InnerChange,
+          prev: { ...nodeTemplate, ...prevBaseProps },
+          next: { ...nodeTemplate, ...nextBaseProps },
+          inner: {
+            ...node.inner,
+            type: Patch.none<'empty'>('empty'),
+          },
+        };
+        return Promise.resolve(this.updateEmpty_(id, emptyChange));
+      }
+      case 'object': {
+        const objectChange: Patch.InnerChange<Node.Obj> = {
+          type: Patch.Type.InnerChange,
+          prev: { ...nodeTemplate, ...prevBaseProps },
+          next: { ...nodeTemplate, ...nextBaseProps },
+          inner: {
+            ...node.inner,
+            type: Patch.none<'object'>('object'),
+            geometryId: Patch.none(nodeTemplate.geometryId),
+            physics: Patch.none(nodeTemplate.physics),
+            material: Patch.none(nodeTemplate.material),
+            faceUvs: Patch.none(nodeTemplate.faceUvs),
+          },
+        };
+        return this.updateObject_(id, objectChange, nextScene);
+      }
+      case 'directional-light': {
+        const directionalLightChange: Patch.InnerChange<Node.DirectionalLight> = {
+          type: Patch.Type.InnerChange,
+          prev: { ...nodeTemplate, ...prevBaseProps },
+          next: { ...nodeTemplate, ...nextBaseProps },
+          inner: {
+            ...node.inner,
+            type: Patch.none<'directional-light'>('directional-light'),
+            radius: Patch.none(nodeTemplate.radius),
+            range: Patch.none(nodeTemplate.range),
+            direction: Patch.none(nodeTemplate.direction),
+            intensity: Patch.none(nodeTemplate.intensity),
+          },
+        };
+        return Promise.resolve(this.updateDirectionalLight_(id, directionalLightChange));
+      }
+      case 'spot-light': {
+        const spotLightChange: Patch.InnerChange<Node.SpotLight> = {
+          type: Patch.Type.InnerChange,
+          prev: { ...nodeTemplate, ...prevBaseProps },
+          next: { ...nodeTemplate, ...nextBaseProps },
+          inner: {
+            ...node.inner,
+            type: Patch.none<'spot-light'>('spot-light'),
+            direction: Patch.none(nodeTemplate.direction),
+            angle: Patch.none(nodeTemplate.angle),
+            exponent: Patch.none(nodeTemplate.exponent),
+            intensity: Patch.none(nodeTemplate.intensity),
+          },
+        };
+        return Promise.resolve(this.updateSpotLight_(id, spotLightChange));
+      }
+      case 'point-light': {
+        const pointLightChange: Patch.InnerChange<Node.PointLight> = {
+          type: Patch.Type.InnerChange,
+          prev: { ...nodeTemplate, ...prevBaseProps },
+          next: { ...nodeTemplate, ...nextBaseProps },
+          inner: {
+            ...node.inner,
+            type: Patch.none<'point-light'>('point-light'),
+            intensity: Patch.none(nodeTemplate.intensity),
+            radius: Patch.none(nodeTemplate.radius),
+            range: Patch.none(nodeTemplate.range),
+          },
+        };
+        return Promise.resolve(this.updatePointLight_(id, pointLightChange));
+      }
+      default: return Promise.resolve(bNode);
+    }
+  };
+  private updateJBCFromTemplate_ = (id: string, node: Patch.InnerChange<Node.FromJBCTemplate>, nextScene: Scene): Promise<BabylonNode> => {
     // If the template ID changes, recreate the node entirely
     if (node.inner.templateId.type === Patch.Type.OuterChange) {
       this.destroyNode_(id);
@@ -1012,7 +1177,8 @@ class SceneBinding {
             await this.updateRobot_(id, node as Patch.InnerChange<Node.Robot>);
             return null;
           }
-          case 'from-template': return this.updateFromTemplate_(id, node as Patch.InnerChange<Node.FromTemplate>, nextScene);
+          case 'from-jbc-template': return this.updateJBCFromTemplate_(id, node as Patch.InnerChange<Node.FromJBCTemplate>, nextScene);
+          case 'from-rock-template': return this.updateRockFromTemplate_(id, node as Patch.InnerChange<Node.FromRockTemplate>, nextScene);
           default: {
             console.error('invalid node type for inner change:', (node.next as Node).type);
             return this.findBNode_(id);
@@ -1074,6 +1240,7 @@ class SceneBinding {
     ret.attachControl(this.bScene_.getEngine().getRenderingCanvas(), true);
     ret.position = Vector3.toBabylon(camera.position, 'centimeters');
     ret.panningSensibility = 100;
+    // ret.checkCollisions = true;
 
     return ret;
   };
@@ -1275,7 +1442,10 @@ class SceneBinding {
         let prevNodeObj: Node.Obj;
         const prevNode = scene.nodes[prev];
         if (prevNode.type === 'object') prevNodeObj = prevNode;
-        else if (prevNode.type === 'from-template') {
+        else if (prevNode.type === 'from-jbc-template') {
+          const nodeTemplate = preBuiltTemplates[prevNode.templateId];
+          if (nodeTemplate?.type === 'object') prevNodeObj = { ...nodeTemplate, ...Node.Base.upcast(prevNode) };
+        } else if (prevNode.type === 'from-rock-template') {
           const nodeTemplate = preBuiltTemplates[prevNode.templateId];
           if (nodeTemplate?.type === 'object') prevNodeObj = { ...nodeTemplate, ...Node.Base.upcast(prevNode) };
         }
