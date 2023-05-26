@@ -30,6 +30,7 @@ namespace ExitStatusError {
 }
 
 const startC = (message: Protocol.Worker.StartRequest) => {
+  // message.code contains the user's code compiled to javascript
   let stoppedSent = false;
 
   const sendStopped = () => {
@@ -41,6 +42,7 @@ const startC = (message: Protocol.Worker.StartRequest) => {
     stoppedSent = true;
   };
 
+  // dynRequire is a function that takes a string of javascript code and returns a module (a function that is executed when called)
   const mod = dynRequire(message.code, {
     setRegister8b: (address: number, value: number) => sharedRegister_.setRegister8b(address, value),
     setRegister16b: (address: number, value: number) => sharedRegister_.setRegister16b(address, value),
