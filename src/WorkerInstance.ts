@@ -83,12 +83,9 @@ class WorkerInstance implements AbstractRobot {
   };
   
   start(req: Omit<Protocol.Worker.StartRequest, 'type'>) {
-    // Reset specific registers to stop motors and disable servos
     this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_MODES, 0x00);
     this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_DIRS, 0x00);
     this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_SRV_ALLSTOP, 0xF0);
-
-    // Send start message to worker
     this.worker_.postMessage({
       type: 'start',
       ...req
