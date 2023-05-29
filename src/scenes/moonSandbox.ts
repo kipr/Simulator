@@ -13,7 +13,7 @@ const baseScene = createBaseSceneSurfaceA();
 const BASALT_ORIGIN: ReferenceFrame = {
   position: {
     x: Distance.centimeters(-15),
-    y: Distance.centimeters(3),
+    y: Distance.centimeters(1),
     z: Distance.centimeters(61.3),
   },
   orientation: Rotation.AxisAngle.fromRaw({
@@ -24,7 +24,7 @@ const BASALT_ORIGIN: ReferenceFrame = {
 const ANORTHOSITE_ORIGIN: ReferenceFrame = {
   position: {
     x: Distance.centimeters(0),
-    y: Distance.centimeters(3),
+    y: Distance.centimeters(1),
     z: Distance.centimeters(61.3),
   },
   orientation: Rotation.AxisAngle.fromRaw({
@@ -35,7 +35,7 @@ const ANORTHOSITE_ORIGIN: ReferenceFrame = {
 const BRECCIA_ORIGIN: ReferenceFrame = {
   position: {
     x: Distance.centimeters(15),
-    y: Distance.centimeters(3),
+    y: Distance.centimeters(1),
     z: Distance.centimeters(61.3),
   },
   orientation: Rotation.AxisAngle.fromRaw({
@@ -46,7 +46,7 @@ const BRECCIA_ORIGIN: ReferenceFrame = {
 const METEORITE_ORIGIN: ReferenceFrame = {
   position: {
     x: Distance.centimeters(30),
-    y: Distance.centimeters(3),
+    y: Distance.centimeters(1),
     z: Distance.centimeters(61.3),
   },
   orientation: Rotation.AxisAngle.fromRaw({

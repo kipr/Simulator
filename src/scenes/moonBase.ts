@@ -54,6 +54,20 @@ const GROUND_ORIGIN: ReferenceFrame = {
   }
 };
 
+const START_ORIGIN: ReferenceFrame = {
+  position: {
+    x: Distance.centimeters(0),
+    y: Distance.centimeters(-7.2 - 4.9),
+    z: Distance.centimeters(0),
+  },
+  orientation: {
+    type: 'euler',
+    x: Angle.degrees(180),
+    y: Angle.degrees(90),
+    z: Angle.degrees(180),
+  }
+};
+
 const SKY_ORIGIN: ReferenceFrame = {
   position: {
     x: Distance.centimeters(0),
@@ -98,6 +112,14 @@ export function createBaseSceneSurfaceA(): Scene {
           y: Distance.meters(60),
           z: Distance.meters(60),
         }
+      },
+      'start': {
+        type: 'box',
+        size: {
+          x: Distance.meters(.3),
+          y: Distance.meters(.1),
+          z: Distance.meters(.3),
+        }
       }
     },
     nodes: {
@@ -108,7 +130,7 @@ export function createBaseSceneSurfaceA(): Scene {
         name: tr('JBC Surface A'),
         startingOrigin: JBC_MAT_ORIGIN,
         origin: JBC_MAT_ORIGIN,
-        visible: true,
+        visible: false,
       },
       'ground': {
         type: 'object',
@@ -127,6 +149,26 @@ export function createBaseSceneSurfaceA(): Scene {
           color: {
             type: "texture",
             uri: "/static/Moon-2d-Surface.png"
+          },
+        },
+      },      
+      'start': {
+        type: 'object',
+        geometryId: 'start',
+        name: tr('Start Area'),
+        startingOrigin: START_ORIGIN,
+        origin: START_ORIGIN,
+        visible: true,
+        physics: {
+          type: 'box',
+          restitution: 1,
+          friction: 1,
+        },
+        material: {
+          type: 'basic',
+          color: {
+            type: "texture",
+            uri: "/static/pad.png"
           },
         },
       },
