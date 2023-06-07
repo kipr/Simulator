@@ -27,19 +27,6 @@ const ROBOT: Node.Robot = {
   origin: ROBOT_ORIGIN
 };
 
-const JBC_MAT_ORIGIN: ReferenceFrame = {
-  position: {
-    x: Distance.centimeters(0),
-    y: Distance.centimeters(-7.1),
-    z: Distance.centimeters(50),
-  },
-  scale: {
-    x: 100,
-    y: 100,
-    z: 100,
-  }
-};
-
 const GROUND_ORIGIN: ReferenceFrame = {
   position: {
     x: Distance.centimeters(0),
@@ -91,47 +78,39 @@ const LIGHT_ORIGIN: ReferenceFrame = {
 };
 
 
-export function createBaseSceneSurfaceA(): Scene {
+export function createBaseSceneSurface(): Scene {
   return {
-    name: tr('Base Scene - Surface A'),
-    description: tr('A base scene using Surface A. Intended to be augmented to create full JBC scenes'),
+    name: tr('Base Scene - Moon Surface'),
+    description: tr('A base scene. Intended to be augmented to create full Moon scenes'),
     author: Author.organization('kipr'),
     geometry: {
       'ground': {
         type: 'box',
         size: {
-          x: Distance.meters(20.438),
-          y: Distance.meters(20.438),
+          x: Distance.meters(5),
+          y: Distance.meters(5),
           z: Distance.meters(.2),
         },
       },
       'sky': {
         type: 'box',
         size: {
-          x: Distance.meters(60),
-          y: Distance.meters(60),
-          z: Distance.meters(60),
+          x: Distance.meters(15),
+          y: Distance.meters(15),
+          z: Distance.meters(15),
         }
       },
       'start': {
         type: 'box',
         size: {
-          x: Distance.meters(.3),
+          x: Distance.meters(.66),
           y: Distance.meters(.1),
-          z: Distance.meters(.3),
+          z: Distance.meters(.66),
         }
       }
     },
     nodes: {
       'robot': ROBOT,
-      'jbc_mat_a': {
-        type: 'from-jbc-template',
-        templateId: 'jbc_mat_a',
-        name: tr('JBC Surface A'),
-        startingOrigin: JBC_MAT_ORIGIN,
-        origin: JBC_MAT_ORIGIN,
-        visible: false,
-      },
       'ground': {
         type: 'object',
         geometryId: 'ground',
@@ -159,6 +138,7 @@ export function createBaseSceneSurfaceA(): Scene {
         startingOrigin: START_ORIGIN,
         origin: START_ORIGIN,
         visible: true,
+        editable: true,
         physics: {
           type: 'box',
           restitution: 1,
@@ -168,7 +148,7 @@ export function createBaseSceneSurfaceA(): Scene {
           type: 'basic',
           color: {
             type: "texture",
-            uri: "/static/pad.png"
+            uri: "/static/mat-with-border.png"
           },
         },
       },

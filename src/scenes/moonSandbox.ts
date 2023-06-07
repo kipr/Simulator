@@ -4,11 +4,11 @@ import { ReferenceFrame, Rotation } from "../unit-math";
 import { Distance } from "../util";
 import LocalizedString from '../util/LocalizedString';
 
-import { createBaseSceneSurfaceA } from './moonBase';
+import { createBaseSceneSurface } from './moonBase';
 
 import tr from '@i18n';
 
-const baseScene = createBaseSceneSurfaceA();
+const baseScene = createBaseSceneSurface();
 
 const BASALT_ORIGIN: ReferenceFrame = {
   position: {

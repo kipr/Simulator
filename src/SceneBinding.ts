@@ -327,11 +327,6 @@ class SceneBinding {
                   basic.backFaceCulling = false;
                   basic.disableLighting = true;
                 } else {
-                  // if (id === 'Basalt Rock') {
-                  //   // console.log("ROCK");
-                  //   // basic.diffuseTexture = new BabylonTexture(color.uri, this.bScene_);
-                  //   // basic.reflectionTexture = new BabylonTexture(color.uri, this.bScene_);
-                  // } else {
                   basic.bumpTexture = new BabylonTexture(color.uri, this.bScene_);
                   basic.emissiveTexture = new BabylonTexture(color.uri, this.bScene_);
                   basic.diffuseTexture = new BabylonTexture(color.uri, this.bScene_);

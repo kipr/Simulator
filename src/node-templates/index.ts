@@ -44,6 +44,24 @@ const reamTemplate: Node.TemplatedNode<Node.Obj> = {
   },
 };
 
+// const startTemplate: Node.TemplatedNode<Node.Obj> = {
+//   type: 'object',
+//   geometryId: 'start',
+//   physics: {
+//     type: 'box',
+//     restitution: .9,
+//     friction: 1,
+//     mass: Mass.pounds(50),
+//   },
+//   material: {
+//     type: 'basic',
+//     color: {
+//       type: 'color3',
+//       color: Color.Rgb.create(100, 100, 100),
+//     },
+//   },
+// };
+
 const basaltTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'basalt',
@@ -57,8 +75,7 @@ const basaltTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'basic',
     color: {
       type: 'texture',
-      // uri: '/static/breccia_texture.png'
-      uri: '/static/basalt_texture_w.png'
+      uri: '/static/rocks/basalt_texture_w.png'
     },
   },
 };
@@ -76,8 +93,7 @@ const anorthositeTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'basic',
     color: {
       type: 'texture',
-      // uri: '/static/breccia_texture.png'
-      uri: '/static/anorthosite_texture_w.png'
+      uri: '/static/rocks/anorthosite_texture_w.png'
     },
   },
 };
@@ -95,8 +111,7 @@ const brecciaTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'basic',
     color: {
       type: 'texture',
-      uri: '/static/breccia_texture_w.png'
-      // uri: '/static/breccia_texture.png'
+      uri: '/static/rocks/breccia_texture_w.png'
     },
   },
 };
@@ -114,8 +129,7 @@ const meteoriteTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'basic',
     color: {
       type: 'texture',
-      // uri: '/static/breccia_texture.png'
-      uri: '/static/meteorite_texture_w.png'
+      uri: '/static/rocks/meteorite_texture_w.png'
     },
   },
 };
@@ -143,6 +157,7 @@ const jbcMatBTemplate: Node.TemplatedNode<Node.Obj> = {
 export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'can': canTemplate,
   'ream': reamTemplate,
+  // 'start_mat': startTemplate,
   'basalt': basaltTemplate,
   'anorthosite': anorthositeTemplate,
   'breccia': brecciaTemplate,
@@ -165,6 +180,14 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
       z: Distance.centimeters(21.59),
     },
   },
+  // 'start': {
+  //   type: 'box',
+  //   size: {
+  //     x: Distance.centimeters(2),
+  //     y: Distance.centimeters(50),
+  //     z: Distance.centimeters(2),
+  //   },
+  // },
   'basalt': {
     type: 'sphere',
     radius: Distance.centimeters(3.5),
