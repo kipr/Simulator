@@ -26,6 +26,82 @@ const canTemplate: Node.TemplatedNode<Node.Obj> = {
   faceUvs: [Vector2.ZERO, Vector2.ZERO, Vector2.create(1, 0), Vector2.create(0, 1), Vector2.ZERO, Vector2.ZERO],
 };
 
+const lifescienceTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'can',
+  physics: {
+    type: 'cylinder',
+    mass: Mass.grams(5),
+    friction: 0.7,
+    restitution: 0.3,
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'texture',
+      uri: '/static/sciencepack/life_science_pack.png'
+    },
+  },
+  faceUvs: [Vector2.ZERO, Vector2.ZERO, Vector2.create(1, 0), Vector2.create(0, 1), Vector2.ZERO, Vector2.ZERO],
+};
+
+const radscienceTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'can',
+  physics: {
+    type: 'cylinder',
+    mass: Mass.grams(5),
+    friction: 0.7,
+    restitution: 0.3,
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'texture',
+      uri: '/static/sciencepack/rad_science_pack.png'
+    },
+  },
+  faceUvs: [Vector2.ZERO, Vector2.ZERO, Vector2.create(1, 0), Vector2.create(0, 1), Vector2.ZERO, Vector2.ZERO],
+};
+
+const towerTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'tower',
+  physics: {
+    type: 'cylinder',
+    mass: Mass.grams(5),
+    friction: 0.7,
+    restitution: 0.3,
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'texture',
+      uri: '/static/tower/tall_tower_texture.png'
+    },
+  },
+  faceUvs: [Vector2.ZERO, Vector2.ZERO, Vector2.create(1, 0), Vector2.create(0, 1), Vector2.ZERO, Vector2.ZERO],
+};
+
+const solarTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'solar',
+  physics: {
+    type: 'box',
+    mass: Mass.grams(5),
+    friction: 0.7,
+    restitution: 0.3,
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'texture',
+      uri: '/static/solar.png'
+    },
+  },
+  faceUvs: [Vector2.ZERO, Vector2.ZERO, Vector2.create(1, 0), Vector2.create(0, 1), Vector2.ZERO, Vector2.ZERO],
+};
+
 const reamTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'ream',
@@ -44,30 +120,30 @@ const reamTemplate: Node.TemplatedNode<Node.Obj> = {
   },
 };
 
-// const startTemplate: Node.TemplatedNode<Node.Obj> = {
-//   type: 'object',
-//   geometryId: 'start',
-//   physics: {
-//     type: 'box',
-//     restitution: .9,
-//     friction: 1,
-//     mass: Mass.pounds(50),
-//   },
-//   material: {
-//     type: 'basic',
-//     color: {
-//       type: 'color3',
-//       color: Color.Rgb.create(100, 100, 100),
-//     },
-//   },
-// };
+const habTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'hab',
+  physics: {
+    type: 'mesh',
+    restitution: .3,
+    friction: 1,
+    mass: Mass.pounds(.5),
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'texture',
+      uri: '/static/hab/hab5.png'
+    },
+  },
+};
 
 const basaltTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'basalt',
   physics: {
     type: 'mesh',
-    restitution: .9,
+    restitution: .3,
     friction: 1,
     mass: Mass.pounds(.5),
   },
@@ -85,7 +161,7 @@ const anorthositeTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'anorthosite',
   physics: {
     type: 'mesh',
-    restitution: .9,
+    restitution: .3,
     friction: 1,
     mass: Mass.pounds(.5),
   },
@@ -103,7 +179,7 @@ const brecciaTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'breccia',
   physics: {
     type: 'mesh',
-    restitution: .9,
+    restitution: .3,
     friction: 1,
     mass: Mass.pounds(.5),
   },
@@ -121,7 +197,7 @@ const meteoriteTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'meteorite',
   physics: {
     type: 'mesh',
-    restitution: .9,
+    restitution: .3,
     friction: 1,
     mass: Mass.pounds(.5),
   },
@@ -156,8 +232,12 @@ const jbcMatBTemplate: Node.TemplatedNode<Node.Obj> = {
 
 export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'can': canTemplate,
+  'tower': towerTemplate,
+  'solar': solarTemplate,
+  'lifescience': lifescienceTemplate,
+  'radscience': radscienceTemplate,
+  'hab': habTemplate,
   'ream': reamTemplate,
-  // 'start_mat': startTemplate,
   'basalt': basaltTemplate,
   'anorthosite': anorthositeTemplate,
   'breccia': brecciaTemplate,
@@ -166,11 +246,27 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'jbc_mat_b': jbcMatBTemplate,
 });
 
+
 export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   'can': {
     type: 'cylinder',
     height: Distance.centimeters(11.15),
     radius: Distance.centimeters(3),
+  },
+  'lifescience': {
+    type: 'cylinder',
+    height: Distance.centimeters(7),
+    radius: Distance.centimeters(3),
+  },
+  'radscience': {
+    type: 'cylinder',
+    height: Distance.centimeters(7),
+    radius: Distance.centimeters(3),
+  },
+  'tower': {
+    type: 'cylinder',
+    height: Distance.centimeters(25),
+    radius: Distance.centimeters(4),
   },
   'ream': {
     type: 'box',
@@ -180,14 +276,21 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
       z: Distance.centimeters(21.59),
     },
   },
-  // 'start': {
-  //   type: 'box',
-  //   size: {
-  //     x: Distance.centimeters(2),
-  //     y: Distance.centimeters(50),
-  //     z: Distance.centimeters(2),
-  //   },
-  // },
+  'solar': {
+    type: 'box',
+    size: {
+      x: Distance.centimeters(15),
+      y: Distance.centimeters(5),
+      z: Distance.centimeters(15),
+    },
+  },
+  'hab': {
+    type: 'sphere',
+    radius: Distance.centimeters(15),
+    squash: 1,
+    stretch: 1,
+    noise: 0,
+  },
   'basalt': {
     type: 'sphere',
     radius: Distance.centimeters(3.5),
@@ -198,9 +301,9 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   'anorthosite': {
     type: 'sphere',
     radius: Distance.centimeters(3.5),
-    squash: .5,
+    squash: .8,
     stretch: 1,
-    noise: 2,
+    noise: 1,
   },
   'breccia': {
     type: 'sphere',

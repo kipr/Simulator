@@ -177,12 +177,36 @@ class SceneBinding {
     let ret: FrameLike;
     switch (geometry.type) {
       case 'box': {
-        ret = BabylonBoxBuilder.CreateBox(name, {
+        const rect = BabylonBoxBuilder.CreateBox(name, {
+          updatable:true, 
           width: Distance.toCentimetersValue(geometry.size.x),
           height: Distance.toCentimetersValue(geometry.size.y),
           depth: Distance.toCentimetersValue(geometry.size.z),
           faceUV: this.buildGeometryFaceUvs_(faceUvs, 12),
         }, this.bScene_);
+        const verts = rect.getVerticesData("position");
+        if (name.includes('Solar')) {
+          // 20-23 are the bottom 4 verts
+          // 16-19 are the top 4 verts
+
+          for (let i = 18; i < 20; i++) {
+            verts[i * 3 + 1] = verts[i * 3 + 1] + 10;
+            verts[i * 3] = verts[i * 3] - 10;
+          }
+          for (let i = 16; i < 18; i++) {
+            verts[i * 3] = verts[i * 3] - 5;
+          }
+          for (let i = 0; i < 16; i++) {
+            verts[i * 3] = verts[i * 3] - 10;
+          }
+          for (let i = 20; i < 24; i++) {
+            verts[i * 3] = verts[i * 3] - 10;
+          }
+        }
+        console.log(name, verts);
+        // verts[7] = verts[7] * 2;
+        rect.updateVerticesData("position", verts);
+        ret = rect;
         break;
       }
       case 'sphere': {
@@ -199,24 +223,30 @@ class SceneBinding {
         }, this.bScene_);
       
         const positions = rock.getVerticesData("position");
-      
-        // when segments = 1, rings are 7 points; s=2, rings=9; s=3, r=11; s=4, r=13
-        // for a sphere, the vertices ring down in circles, starting with 7 on the top, and then 7 for each layer
-        // 0-6 controls height of top; 7-13 controls hight of top middle; 14-20...; 21-27
-        // const skip = [13,14,20];+6 // for segments = 1
-        // const skip = [17,18,26,27,34];+8 // for segments = 2
-        // const skip = [21,22,32,33,43,44]+10; // for segments = 3
-        const skip = [25,26,38,39,51,52,64,65]; // for segments = 4
-        // for (let i = 8; i < 20; i++) {
-        // for (let i = 10; i < 35; i++) {
-        // for (let i = 12; i < 54; i++) {
-        for (let i = 14; i < 65; i++) {
-          if (skip.includes(i)) { 
-            continue;
-          } else {
-            positions[3 * i] = positions[3 * i] + this.random(geometry.noise, -1 * geometry.noise);
-            positions[1 + 3 * i] = positions[1 + 3 * i] + this.random(geometry.noise, -1 * geometry.noise);
-            positions[2 + 3 * i] = positions[2 + 3 * i] + this.random(geometry.noise, -1 * geometry.noise);
+        if (name.includes('Hab')) {
+          for (let i = 51; i < positions.length; i++) {
+            positions[3 * i + 1] = 0;
+          }
+        }
+        if (name.includes('Rock')) {
+          // when segments = 1, rings are 7 points; s=2, rings=9; s=3, r=11; s=4, r=13
+          // for a sphere, the vertices ring down in circles, starting with 7 on the top, and then 7 for each layer
+          // 0-6 controls height of top; 7-13 controls hight of top middle; 14-20...; 21-27
+          // const skip = [13,14,20];+6 // for segments = 1
+          // const skip = [17,18,26,27,34];+8 // for segments = 2
+          // const skip = [21,22,32,33,43,44]+10; // for segments = 3
+          const skip = [25,26,38,39,51,52,64,65]; // for segments = 4
+          // for (let i = 8; i < 20; i++) {
+          // for (let i = 10; i < 35; i++) {
+          // for (let i = 12; i < 54; i++) {
+          for (let i = 14; i < 65; i++) {
+            if (skip.includes(i)) { 
+              continue;
+            } else {
+              positions[3 * i] = positions[3 * i] + this.random(geometry.noise, -1 * geometry.noise);
+              positions[1 + 3 * i] = positions[1 + 3 * i] + this.random(geometry.noise, -1 * geometry.noise);
+              positions[2 + 3 * i] = positions[2 + 3 * i] + this.random(geometry.noise, -1 * geometry.noise);
+            }
           }
         }
         rock.updateVerticesData("position", positions);
@@ -331,9 +361,11 @@ class SceneBinding {
                   basic.emissiveTexture = new BabylonTexture(color.uri, this.bScene_);
                   basic.diffuseTexture = new BabylonTexture(color.uri, this.bScene_);
                   basic.diffuseTexture.coordinatesMode = BabylonTexture.FIXED_EQUIRECTANGULAR_MODE;
+                  basic.backFaceCulling = false;
                   
                 }
               }
+              
               
               break;
             }

@@ -6,6 +6,7 @@ import Scene from "../state/State/Scene";
 import AbstractRobot from '../AbstractRobot';
 import LocalizedString from '../util/LocalizedString';
 import Author from '../db/Author';
+import { Color } from "../state/State/Scene/Color";
 import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 
 import tr from '@i18n';
@@ -30,7 +31,7 @@ const ROBOT: Node.Robot = {
 const GROUND_ORIGIN: ReferenceFrame = {
   position: {
     x: Distance.centimeters(0),
-    y: Distance.centimeters(-7.2 - 10),
+    y: Distance.centimeters(-.1),
     z: Distance.centimeters(50),
   },
   orientation: {
@@ -44,14 +45,42 @@ const GROUND_ORIGIN: ReferenceFrame = {
 const START_ORIGIN: ReferenceFrame = {
   position: {
     x: Distance.centimeters(0),
-    y: Distance.centimeters(-7.2 - 4.9),
+    y: Distance.centimeters(0),
     z: Distance.centimeters(0),
   },
   orientation: {
     type: 'euler',
-    x: Angle.degrees(180),
+    x: Angle.degrees(0),
     y: Angle.degrees(90),
-    z: Angle.degrees(180),
+    z: Angle.degrees(0),
+  }
+};
+
+const SCIENCEPAD_ORIGIN: ReferenceFrame = {
+  position: {
+    x: Distance.centimeters(50),
+    y: Distance.inches(.5),
+    z: Distance.centimeters(100),
+  },
+  orientation: {
+    type: 'euler',
+    x: Angle.degrees(0),
+    y: Angle.degrees(90),
+    z: Angle.degrees(0),
+  }
+};
+
+const CONTAINER_ORIGIN: ReferenceFrame = {
+  position: {
+    x: Distance.centimeters(-20),
+    y: Distance.inches(2),
+    z: Distance.centimeters(100),
+  },
+  orientation: {
+    type: 'euler',
+    x: Angle.degrees(0),
+    y: Angle.degrees(90),
+    z: Angle.degrees(0),
   }
 };
 
@@ -84,12 +113,12 @@ export function createBaseSceneSurface(): Scene {
     description: tr('A base scene. Intended to be augmented to create full Moon scenes'),
     author: Author.organization('kipr'),
     geometry: {
-      'ground': {
+      'moon ground': {
         type: 'box',
         size: {
           x: Distance.meters(5),
           y: Distance.meters(5),
-          z: Distance.meters(.2),
+          z: Distance.centimeters(.2),
         },
       },
       'sky': {
@@ -103,17 +132,41 @@ export function createBaseSceneSurface(): Scene {
       'start': {
         type: 'box',
         size: {
-          x: Distance.meters(.66),
-          y: Distance.meters(.1),
-          z: Distance.meters(.66),
+          x: Distance.feet(2),
+          y: Distance.centimeters(.21),
+          z: Distance.feet(2),
+        }
+      },
+      'science pad': {
+        type: 'box',
+        size: {
+          x: Distance.feet(1),
+          y: Distance.inches(1),
+          z: Distance.feet(1),
+        }
+      },
+      'container base': {
+        type: 'box',
+        size: {
+          x: Distance.feet(1),
+          y: Distance.inches(1),
+          z: Distance.feet(1),
+        }
+      },
+      'container wall': {
+        type: 'box',
+        size: {
+          x: Distance.feet(1),
+          y: Distance.inches(4),
+          z: Distance.inches(.5),
         }
       }
     },
     nodes: {
       'robot': ROBOT,
-      'ground': {
+      'Moon ground': {
         type: 'object',
-        geometryId: 'ground',
+        geometryId: 'moon ground',
         name: tr('Ground'),
         startingOrigin: GROUND_ORIGIN,
         origin: GROUND_ORIGIN,
@@ -152,6 +205,177 @@ export function createBaseSceneSurface(): Scene {
           },
         },
       },
+      'science pad': {
+        type: 'object',
+        geometryId: 'science pad',
+        name: tr('Science Pad'),
+        startingOrigin: SCIENCEPAD_ORIGIN,
+        origin: SCIENCEPAD_ORIGIN,
+        visible: true,
+        editable: true,
+        physics: {
+          type: 'box',
+          restitution: 1,
+          friction: 1,
+        },
+        material: {
+          type: 'basic',
+          color: {
+            type: "texture",
+            uri: "/static/science_pad.png"
+          },
+        },
+      },
+      'container_wall': {
+        type: 'object',
+        geometryId: 'container wall',
+        name: tr('Container'),
+        startingOrigin: CONTAINER_ORIGIN,
+        origin: CONTAINER_ORIGIN,
+        editable: true,
+        visible: true,
+        physics: {
+          type: 'box',
+          restitution: 1,
+          friction: 1,
+        },
+        material: {
+          type: 'basic',
+          color: {
+            type: 'color3',
+            color: Color.Rgb.create(50, 50, 50),
+          },
+        },
+      },
+      'container wall2': {
+        type: 'object',
+        geometryId: 'container wall',
+        name: tr('Container2'),
+        startingOrigin: { ...CONTAINER_ORIGIN, position: {
+          ...CONTAINER_ORIGIN.position, x: Distance.add(Distance.feet(1), CONTAINER_ORIGIN.position.x, 'centimeters') } },
+        origin: { ...CONTAINER_ORIGIN, position: {
+          ...CONTAINER_ORIGIN.position, x: Distance.add(Distance.feet(1), CONTAINER_ORIGIN.position.x, 'centimeters') } },
+        editable: true,
+        visible: true,
+        physics: {
+          type: 'box',
+          restitution: 1,
+          friction: 1,
+        },
+        material: {
+          type: 'basic',
+          color: {
+            type: 'color3',
+            color: Color.Rgb.create(50, 50, 50),
+          },
+        },
+      },
+      'container wall3': {
+        type: 'object',
+        geometryId: 'container wall',
+        name: tr('Container3'),
+        startingOrigin: { ...CONTAINER_ORIGIN, 
+          position: {
+            ...CONTAINER_ORIGIN.position, x: Distance.add(Distance.feet(.5), CONTAINER_ORIGIN.position.x, 'centimeters'), 
+            z: Distance.add(Distance.feet(.5), CONTAINER_ORIGIN.position.z, 'centimeters') },
+          orientation: { 
+            type: 'euler',
+            x: Angle.degrees(0),
+            y: Angle.degrees(180),
+            z: Angle.degrees(0),
+          }
+        },
+        origin: { ...CONTAINER_ORIGIN, 
+          position: {
+            ...CONTAINER_ORIGIN.position, x: Distance.add(Distance.feet(.5), CONTAINER_ORIGIN.position.x, 'centimeters'), 
+            z: Distance.add(Distance.feet(.5), CONTAINER_ORIGIN.position.z, 'centimeters') }, 
+          orientation: { 
+            type: 'euler',
+            x: Angle.degrees(0),
+            y: Angle.degrees(180),
+            z: Angle.degrees(0),
+          }
+        },
+        visible: true,
+        physics: {
+          type: 'box',
+          restitution: 1,
+          friction: 1,
+        },
+        material: {
+          type: 'basic',
+          color: {
+            type: 'color3',
+            color: Color.Rgb.create(50, 50, 50),
+          },
+        },
+      },
+      'container wall4': {
+        type: 'object',
+        geometryId: 'container wall',
+        name: tr('Container4'),
+        startingOrigin: { ...CONTAINER_ORIGIN, 
+          position: {
+            ...CONTAINER_ORIGIN.position, x: Distance.add(Distance.feet(.5), CONTAINER_ORIGIN.position.x, 'centimeters'), 
+            z: Distance.add(Distance.feet(-.5), CONTAINER_ORIGIN.position.z, 'centimeters') },
+          orientation: { 
+            type: 'euler',
+            x: Angle.degrees(0),
+            y: Angle.degrees(180),
+            z: Angle.degrees(0),
+          }
+        },
+        origin: { ...CONTAINER_ORIGIN, 
+          position: {
+            ...CONTAINER_ORIGIN.position, x: Distance.add(Distance.feet(.5), CONTAINER_ORIGIN.position.x, 'centimeters'), 
+            z: Distance.add(Distance.feet(-.5), CONTAINER_ORIGIN.position.z, 'centimeters') }, 
+          orientation: { 
+            type: 'euler',
+            x: Angle.degrees(0),
+            y: Angle.degrees(180),
+            z: Angle.degrees(0),
+          }
+        },
+        visible: true,
+        physics: {
+          type: 'box',
+          restitution: 1,
+          friction: 1,
+        },
+        material: {
+          type: 'basic',
+          color: {
+            type: 'color3',
+            color: Color.Rgb.create(50, 50, 50),
+          },
+        },
+      },
+      'container base': {
+        type: 'object',
+        geometryId: 'container base',
+        name: tr('Container'),
+        startingOrigin: { ...CONTAINER_ORIGIN, 
+          position: { ...CONTAINER_ORIGIN.position, x: Distance.add(Distance.feet(.5), CONTAINER_ORIGIN.position.x, 'centimeters'), 
+            y: Distance.inches(0) } },
+        origin: { ...CONTAINER_ORIGIN, 
+          position: { ...CONTAINER_ORIGIN.position, x: Distance.add(Distance.feet(.5), CONTAINER_ORIGIN.position.x, 'centimeters'), 
+            y: Distance.inches(0) }
+        },
+        visible: true,
+        physics: {
+          type: 'box',
+          restitution: 1,
+          friction: 1,
+        },
+        material: {
+          type: 'basic',
+          color: {
+            type: 'color3',
+            color: Color.Rgb.create(50, 50, 50),
+          },
+        },
+      },
+
       'light0': {
         type: 'point-light',
         intensity: .25,

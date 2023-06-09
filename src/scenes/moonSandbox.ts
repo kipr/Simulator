@@ -10,9 +10,57 @@ import tr from '@i18n';
 
 const baseScene = createBaseSceneSurface();
 
+const TOWER_ORIGIN: ReferenceFrame = {
+  position: {
+    x: Distance.centimeters(-50),
+    y: Distance.centimeters(1),
+    z: Distance.centimeters(61.3),
+  },
+};
+
+const LIFESCIENCE_ORIGIN: ReferenceFrame = {
+  position: {
+    x: Distance.centimeters(-50),
+    y: Distance.centimeters(1),
+    z: Distance.centimeters(50.3),
+  },
+};
+
+const RADSCIENCE_ORIGIN: ReferenceFrame = {
+  position: {
+    x: Distance.centimeters(-50),
+    y: Distance.centimeters(1),
+    z: Distance.centimeters(40.3),
+  },
+};
+
+const HAB_ORIGIN: ReferenceFrame = {
+  position: {
+    x: Distance.centimeters(-50),
+    y: Distance.centimeters(1),
+    z: Distance.centimeters(20.3),
+  },
+  orientation: Rotation.AxisAngle.fromRaw({
+    axis: { x: 0, y: 1, z: 0 },
+    angle: -Math.PI / 2,
+  }),
+};
+
+const SOLAR_ORIGIN: ReferenceFrame = {
+  position: {
+    x: Distance.centimeters(50),
+    y: Distance.centimeters(5),
+    z: Distance.centimeters(20.3),
+  },
+  orientation: Rotation.AxisAngle.fromRaw({
+    axis: { x: 0, y: 1, z: 0 },
+    angle: -Math.PI / 2,
+  }),
+};
+
 const BASALT_ORIGIN: ReferenceFrame = {
   position: {
-    x: Distance.centimeters(-15),
+    x: Distance.centimeters(-30),
     y: Distance.centimeters(1),
     z: Distance.centimeters(61.3),
   },
@@ -23,7 +71,7 @@ const BASALT_ORIGIN: ReferenceFrame = {
 };
 const ANORTHOSITE_ORIGIN: ReferenceFrame = {
   position: {
-    x: Distance.centimeters(0),
+    x: Distance.centimeters(-15),
     y: Distance.centimeters(1),
     z: Distance.centimeters(61.3),
   },
@@ -34,7 +82,7 @@ const ANORTHOSITE_ORIGIN: ReferenceFrame = {
 };
 const BRECCIA_ORIGIN: ReferenceFrame = {
   position: {
-    x: Distance.centimeters(15),
+    x: Distance.centimeters(0),
     y: Distance.centimeters(1),
     z: Distance.centimeters(61.3),
   },
@@ -45,7 +93,7 @@ const BRECCIA_ORIGIN: ReferenceFrame = {
 };
 const METEORITE_ORIGIN: ReferenceFrame = {
   position: {
-    x: Distance.centimeters(30),
+    x: Distance.centimeters(15),
     y: Distance.centimeters(1),
     z: Distance.centimeters(61.3),
   },
@@ -64,7 +112,25 @@ export const Moon_Sandbox: Scene = {
       ...baseScene.nodes['robot'],
       editable: true,
     },
-    'basalt1': {
+    'hab': {
+      type: 'from-rock-template',
+      templateId: 'hab',
+      name: tr('Hab'),
+      startingOrigin: HAB_ORIGIN,
+      origin: HAB_ORIGIN,
+      editable: true,
+      visible: true,
+    },
+    'solar': {
+      type: 'from-rock-template',
+      templateId: 'solar',
+      name: tr('Solar Panel'),
+      startingOrigin: SOLAR_ORIGIN,
+      origin: SOLAR_ORIGIN,
+      editable: true,
+      visible: true,
+    },
+    'basalt': {
       type: 'from-rock-template',
       templateId: 'basalt',
       name: tr('Basalt Rock'),
@@ -73,7 +139,7 @@ export const Moon_Sandbox: Scene = {
       editable: true,
       visible: true,
     },
-    'anorthosite1': {
+    'anorthosite': {
       type: 'from-rock-template',
       templateId: 'anorthosite',
       name: tr('Anorthosite Rock'),
@@ -82,7 +148,7 @@ export const Moon_Sandbox: Scene = {
       editable: true,
       visible: true,
     },
-    'breccia1': {
+    'breccia': {
       type: 'from-rock-template',
       templateId: 'breccia',
       name: tr('Breccia Rock'),
@@ -91,12 +157,39 @@ export const Moon_Sandbox: Scene = {
       editable: true,
       visible: true,
     },
-    'meteorite1': {
+    'meteorite': {
       type: 'from-rock-template',
       templateId: 'meteorite',
       name: tr('Meteorite Rock'),
       startingOrigin: METEORITE_ORIGIN,
       origin: METEORITE_ORIGIN,
+      editable: true,
+      visible: true,
+    },
+    'tower': {
+      type: 'from-rock-template',
+      templateId: 'tower',
+      name: tr('Comms Tower'),
+      startingOrigin: TOWER_ORIGIN,
+      origin: TOWER_ORIGIN,
+      editable: true,
+      visible: true,
+    },
+    'lifescience': {
+      type: 'from-rock-template',
+      templateId: 'lifescience',
+      name: tr('Life Science Pack'),
+      startingOrigin: LIFESCIENCE_ORIGIN,
+      origin: LIFESCIENCE_ORIGIN,
+      editable: true,
+      visible: true,
+    },
+    'radscience': {
+      type: 'from-rock-template',
+      templateId: 'radscience',
+      name: tr('Radiation Science Pack'),
+      startingOrigin: RADSCIENCE_ORIGIN,
+      origin: RADSCIENCE_ORIGIN,
       editable: true,
       visible: true,
     },
