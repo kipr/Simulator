@@ -20,7 +20,7 @@ const canTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'basic',
     color: {
       type: 'texture',
-      uri: '/static/Can Texture.png'
+      uri: '/static/textures/Can_Texture.png'
     },
   },
   faceUvs: [Vector2.ZERO, Vector2.ZERO, Vector2.create(1, 0), Vector2.create(0, 1), Vector2.ZERO, Vector2.ZERO],
@@ -39,7 +39,7 @@ const lifescienceTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'basic',
     color: {
       type: 'texture',
-      uri: '/static/sciencepack/life_science_pack.png'
+      uri: '/static/textures/sciencepack/life_science_pack.png'
     },
   },
   faceUvs: [Vector2.ZERO, Vector2.ZERO, Vector2.create(1, 0), Vector2.create(0, 1), Vector2.ZERO, Vector2.ZERO],
@@ -58,7 +58,26 @@ const radscienceTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'basic',
     color: {
       type: 'texture',
-      uri: '/static/sciencepack/rad_science_pack.png'
+      uri: '/static/textures/sciencepack/rad_science_pack.png'
+    },
+  },
+  faceUvs: [Vector2.ZERO, Vector2.ZERO, Vector2.create(1, 0), Vector2.create(0, 1), Vector2.ZERO, Vector2.ZERO],
+};
+
+const noradscienceTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'can',
+  physics: {
+    type: 'cylinder',
+    mass: Mass.grams(5),
+    friction: 0.7,
+    restitution: 0.3,
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'texture',
+      uri: '/static/textures/sciencepack/no_rad_science_pack.png'
     },
   },
   faceUvs: [Vector2.ZERO, Vector2.ZERO, Vector2.create(1, 0), Vector2.create(0, 1), Vector2.ZERO, Vector2.ZERO],
@@ -77,26 +96,7 @@ const towerTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'basic',
     color: {
       type: 'texture',
-      uri: '/static/tower/tall_tower_texture.png'
-    },
-  },
-  faceUvs: [Vector2.ZERO, Vector2.ZERO, Vector2.create(1, 0), Vector2.create(0, 1), Vector2.ZERO, Vector2.ZERO],
-};
-
-const solarTemplate: Node.TemplatedNode<Node.Obj> = {
-  type: 'object',
-  geometryId: 'solar',
-  physics: {
-    type: 'box',
-    mass: Mass.grams(5),
-    friction: 0.7,
-    restitution: 0.3,
-  },
-  material: {
-    type: 'basic',
-    color: {
-      type: 'texture',
-      uri: '/static/solar.png'
+      uri: '/static/textures/tower/tall_tower_texture.png'
     },
   },
   faceUvs: [Vector2.ZERO, Vector2.ZERO, Vector2.create(1, 0), Vector2.create(0, 1), Vector2.ZERO, Vector2.ZERO],
@@ -133,7 +133,7 @@ const habTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'basic',
     color: {
       type: 'texture',
-      uri: '/static/hab/hab5.png'
+      uri: '/static/textures/hab5.png'
     },
   },
 };
@@ -151,7 +151,7 @@ const basaltTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'basic',
     color: {
       type: 'texture',
-      uri: '/static/rocks/basalt_texture_w.png'
+      uri: '/static/textures/rocks/basalt_texture_w.png'
     },
   },
 };
@@ -169,7 +169,7 @@ const anorthositeTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'basic',
     color: {
       type: 'texture',
-      uri: '/static/rocks/anorthosite_texture_w.png'
+      uri: '/static/textures/rocks/anorthosite_texture_w.png'
     },
   },
 };
@@ -187,7 +187,7 @@ const brecciaTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'basic',
     color: {
       type: 'texture',
-      uri: '/static/rocks/breccia_texture_w.png'
+      uri: '/static/textures/rocks/breccia_texture_w.png'
     },
   },
 };
@@ -205,7 +205,7 @@ const meteoriteTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'basic',
     color: {
       type: 'texture',
-      uri: '/static/rocks/meteorite_texture_w.png'
+      uri: '/static/textures/rocks/meteorite_texture_w.png'
     },
   },
 };
@@ -230,12 +230,75 @@ const jbcMatBTemplate: Node.TemplatedNode<Node.Obj> = {
   },
 };
 
+const containerTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'container',
+  physics: {
+    type: 'mesh',
+    restitution: .3,
+    friction: 1,
+    // mass: Mass.pounds(20),
+  },
+};
+const botguyTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'botguy',
+  physics: {
+    type: 'mesh',
+    restitution: .3,
+    friction: 1,
+    mass: Mass.pounds(.3),
+  },
+};
+const solarpanelTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'solarpanel',
+  physics: {
+    type: 'mesh',
+    restitution: .3,
+    friction: 1,
+    mass: Mass.pounds(.3),
+  },
+};
+
+const walkwayTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'walkway',
+  physics: {
+    type: 'mesh',
+    restitution: .3,
+    friction: 1,
+    mass: Mass.pounds(.3),
+  },
+};
+const commstowerTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'commstower',
+  physics: {
+    type: 'box',
+    restitution: .3,
+    friction: 1,
+    mass: Mass.pounds(.3),
+  },
+};
+
+const habitatTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'habitat',
+  physics: {
+    type: 'mesh',
+    restitution: .3,
+    friction: 1,
+    mass: Mass.pounds(.3),
+  },
+};
+
 export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'can': canTemplate,
   'tower': towerTemplate,
-  'solar': solarTemplate,
   'lifescience': lifescienceTemplate,
   'radscience': radscienceTemplate,
+  'noradscience': noradscienceTemplate,
   'hab': habTemplate,
   'ream': reamTemplate,
   'basalt': basaltTemplate,
@@ -244,6 +307,12 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'meteorite': meteoriteTemplate,
   'jbc_mat_a': jbcMatATemplate,
   'jbc_mat_b': jbcMatBTemplate,
+  'container': containerTemplate,
+  'botguy': botguyTemplate,
+  'solarpanel': solarpanelTemplate,
+  'walkway': walkwayTemplate,
+  'commstower': commstowerTemplate,
+  'habitat': habitatTemplate,
 });
 
 
@@ -274,14 +343,6 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
       x: Distance.centimeters(27.94),
       y: Distance.centimeters(5.08),
       z: Distance.centimeters(21.59),
-    },
-  },
-  'solar': {
-    type: 'box',
-    size: {
-      x: Distance.centimeters(15),
-      y: Distance.centimeters(5),
-      z: Distance.centimeters(15),
     },
   },
   'hab': {
@@ -321,10 +382,34 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   },
   'jbc_mat_a': {
     type: 'file',
-    uri: '/static/jbcMatA.glb'
+    uri: '/static/object_binaries/jbcMatA.glb'
   },
   'jbc_mat_b': {
     type: 'file',
-    uri: '/static/jbcMatB.glb'
+    uri: '/static/object_binaries/jbcMatB.glb'
+  },
+  'container': {
+    type: 'file',
+    uri: '/static/object_binaries/box2.glb'
+  },
+  'botguy': {
+    type: 'file',
+    uri: '/static/object_binaries/botguy.glb'
+  },
+  'solarpanel': {
+    type: 'file',
+    uri: '/static/object_binaries/solar_test2.glb'
+  },
+  'walkway': {
+    type: 'file',
+    uri: '/static/object_binaries/walkway_test.glb'
+  },
+  'commstower': {
+    type: 'file',
+    uri: '/static/object_binaries/commstower2.glb'
+  },
+  'habitat': {
+    type: 'file',
+    uri: '/static/object_binaries/habitat.glb'
   },
 });

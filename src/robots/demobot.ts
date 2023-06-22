@@ -137,10 +137,10 @@ export const DEMOBOT: Robot = {
     }),
   },
   geometry: {
-    chassis_link: Geometry.remoteMesh({ uri: '/static/chassis.glb' }),
-    wheel_link: Geometry.remoteMesh({ uri: '/static/wheel.glb' }),
-    arm_link: Geometry.remoteMesh({ uri: '/static/arm.glb' }),
-    claw_link: Geometry.remoteMesh({ uri: '/static/claw.glb' }),
+    chassis_link: Geometry.remoteMesh({ uri: '/static/object_binaries/chassis.glb' }),
+    wheel_link: Geometry.remoteMesh({ uri: '/static/object_binaries/wheel.glb' }),
+    arm_link: Geometry.remoteMesh({ uri: '/static/object_binaries/arm.glb' }),
+    claw_link: Geometry.remoteMesh({ uri: '/static/object_binaries/claw.glb' }),
   },
   origin: {
     orientation: Rotation.eulerDegrees(0, -90, 0),
