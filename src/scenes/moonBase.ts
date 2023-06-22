@@ -13,99 +13,29 @@ import tr from '@i18n';
 import { sprintf } from 'sprintf-js';
 import Dict from '../Dict';
 
+
 const ROBOT_ORIGIN: ReferenceFrame = {
   position: Vector3.centimeters(0, 20, 0),
   orientation: Rotation.eulerDegrees(0, 0, 0),
 };
 
-const CONTAINER_ORIGIN: ReferenceFrame = {
-  position: {
-    x: Distance.centimeters(-20),
-    y: Distance.inches(0),
-    z: Distance.centimeters(100),
-  },
-  scale: {
-    x: 15,
-    y: 15,
-    z: 15,
-  },
-  orientation: {
-    type: 'euler',
-    x: Angle.degrees(0),
-    y: Angle.degrees(180),
-    z: Angle.degrees(0),
-  }
+const GROUND_ORIGIN: ReferenceFrame = {
+  position: Vector3.centimeters(0, -0.1, 50),
+  orientation: Rotation.eulerDegrees(90, 0, 0)
 };
 
-const BOTGUY_ORIGIN: ReferenceFrame = {
-  position: {
-    x: Distance.centimeters(-20),
-    y: Distance.inches(0),
-    z: Distance.centimeters(30),
-  },
-  scale: {
-    x: 25,
-    y: 25,
-    z: 25,
-  }
+const START_ORIGIN: ReferenceFrame = {
+  position: Vector3.centimeters(0, 0, 0),
+  orientation: Rotation.eulerDegrees(0, 90, 0)
 };
 
-const SOLARPANEL_ORIGIN: ReferenceFrame = {
-  position: {
-    x: Distance.centimeters(50),
-    y: Distance.inches(0),
-    z: Distance.centimeters(-35),
-  },
-  scale: {
-    x: 4,
-    y: 4,
-    z: 4,
-  }
+const SKY_ORIGIN: ReferenceFrame = {
+  position: Vector3.centimeters(0, -17.2, 50),
+  orientation: Rotation.eulerDegrees(90, 0, 0)
 };
 
-const WALKWAY_ORIGIN: ReferenceFrame = {
-  position: {
-    x: Distance.centimeters(50),
-    y: Distance.inches(0),
-    z: Distance.centimeters(65),
-  },
-  scale: {
-    x: 8,
-    y: 8,
-    z: 8,
-  }
-};
-
-const COMMSTOWER_ORIGIN: ReferenceFrame = {
-  position: {
-    x: Distance.centimeters(80),
-    y: Distance.inches(0),
-    z: Distance.centimeters(0),
-  },
-  scale: {
-    x: 4,
-    y: 4,
-    z: 4,
-  }
-};
-
-const HABITAT_ORIGIN: ReferenceFrame = {
-  position: {
-    x: Distance.centimeters(0),
-    y: Distance.inches(0),
-    z: Distance.centimeters(60),
-  },
-  scale: {
-    x: 4,
-    y: 4,
-    z: 4,
-  },
-  orientation: {
-    type: 'euler',
-    x: Angle.degrees(0),
-    y: Angle.degrees(90),
-    z: Angle.degrees(0),
-  }
+const LIGHT_ORIGIN: ReferenceFrame = {
+  position: Vector3.meters(0, 40.91, .5),
 };
 
 const ROBOT: Node.Robot = {
@@ -117,71 +47,6 @@ const ROBOT: Node.Robot = {
   startingOrigin: ROBOT_ORIGIN,
   origin: ROBOT_ORIGIN
 };
-
-const GROUND_ORIGIN: ReferenceFrame = {
-  position: {
-    x: Distance.centimeters(0),
-    y: Distance.centimeters(-.1),
-    z: Distance.centimeters(50),
-  },
-  orientation: {
-    type: 'euler',
-    x: Angle.degrees(90),
-    y: Angle.degrees(0),
-    z: Angle.degrees(0),
-  }
-};
-
-const START_ORIGIN: ReferenceFrame = {
-  position: {
-    x: Distance.centimeters(0),
-    y: Distance.centimeters(0),
-    z: Distance.centimeters(0),
-  },
-  orientation: {
-    type: 'euler',
-    x: Angle.degrees(0),
-    y: Angle.degrees(90),
-    z: Angle.degrees(0),
-  }
-};
-
-const SCIENCEPAD_ORIGIN: ReferenceFrame = {
-  position: {
-    x: Distance.centimeters(50),
-    y: Distance.inches(.5),
-    z: Distance.centimeters(100),
-  },
-  orientation: {
-    type: 'euler',
-    x: Angle.degrees(0),
-    y: Angle.degrees(90),
-    z: Angle.degrees(0),
-  }
-};
-
-const SKY_ORIGIN: ReferenceFrame = {
-  position: {
-    x: Distance.centimeters(0),
-    y: Distance.centimeters(-7.2 - 10),
-    z: Distance.centimeters(50),
-  },
-  orientation: {
-    type: 'euler',
-    x: Angle.degrees(90),
-    y: Angle.degrees(0),
-    z: Angle.degrees(0),
-  }
-};
-
-const LIGHT_ORIGIN: ReferenceFrame = {
-  position: {
-    x: Distance.meters(0),
-    y: Distance.meters(40.91),
-    z: Distance.meters(0.5),
-  },
-};
-
 
 export function createBaseSceneSurface(): Scene {
   return {
@@ -213,79 +78,10 @@ export function createBaseSceneSurface(): Scene {
           z: Distance.feet(2),
         }
       },
-      'science pad': {
-        type: 'box',
-        size: {
-          x: Distance.feet(1),
-          y: Distance.inches(1),
-          z: Distance.feet(1),
-        }
-      },
+
     },
     nodes: {
       'robot': ROBOT,
-      'container': {
-        type: 'from-space-template',
-        templateId: 'container',
-        name: tr('Container'),
-        startingOrigin: CONTAINER_ORIGIN,
-        origin: CONTAINER_ORIGIN,
-        editable: true,
-        visible: true,
-        material: {
-          type: 'basic',
-          color: {
-            type: "texture",
-            uri: "Moon Rock Collection"
-          },
-          // text: "This is the Container."
-        },
-      },
-      // 'botguy': {
-      //   type: 'from-space-template',
-      //   templateId: 'botguy',
-      //   name: tr('botguy'),
-      //   startingOrigin: BOTGUY_ORIGIN,
-      //   origin: BOTGUY_ORIGIN,
-      //   visible: true,
-      //   editable: true,
-      // },
-      'solarpanel': {
-        type: 'from-space-template',
-        templateId: 'solarpanel',
-        name: tr('Solar Panel'),
-        startingOrigin: SOLARPANEL_ORIGIN,
-        origin: SOLARPANEL_ORIGIN,
-        visible: true,
-        editable: true,
-      },
-      // 'walkway': {
-      //   type: 'from-space-template',
-      //   templateId: 'walkway',
-      //   name: tr('walkway'),
-      //   startingOrigin: WALKWAY_ORIGIN,
-      //   origin: WALKWAY_ORIGIN,
-      //   visible: true,
-      //   editable: true,
-      // },
-      // 'commstower': {
-      //   type: 'from-space-template',
-      //   templateId: 'commstower',
-      //   name: tr('Comms Tower'),
-      //   startingOrigin: COMMSTOWER_ORIGIN,
-      //   origin: COMMSTOWER_ORIGIN,
-      //   visible: true,
-      //   editable: true,
-      // },
-      // 'habitat': {
-      //   type: 'from-space-template',
-      //   templateId: 'habitat',
-      //   name: tr('Human Habitat'),
-      //   startingOrigin: HABITAT_ORIGIN,
-      //   origin: HABITAT_ORIGIN,
-      //   visible: true,
-      //   editable: true,
-      // },
       'Moon ground': {
         type: 'object',
         geometryId: 'moon ground',
@@ -327,28 +123,6 @@ export function createBaseSceneSurface(): Scene {
           },
         },
       },
-      // 'science pad': {
-      //   type: 'object',
-      //   geometryId: 'science pad',
-      //   name: tr('Science Pad'),
-      //   startingOrigin: SCIENCEPAD_ORIGIN,
-      //   origin: SCIENCEPAD_ORIGIN,
-      //   visible: true,
-      //   editable: true,
-      //   physics: {
-      //     type: 'box',
-      //     restitution: 1,
-      //     friction: 1,
-      //   },
-      //   material: {
-      //     type: 'basic',
-      //     color: {
-      //       type: "texture",
-      //       uri: "/static/textures/science_pad.png"
-      //     },
-      //   },
-      // },
-
       'light0': {
         type: 'point-light',
         intensity: .25,

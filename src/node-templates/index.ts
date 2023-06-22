@@ -120,6 +120,23 @@ const reamTemplate: Node.TemplatedNode<Node.Obj> = {
   },
 };
 
+const sciencePadTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'sciencepad',
+  physics: {
+    type: 'box',
+    restitution: 1,
+    friction: 1,
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: "texture",
+      uri: "/static/textures/science_pad.png"
+    },
+  },
+};
+
 const habTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'hab',
@@ -296,6 +313,7 @@ const habitatTemplate: Node.TemplatedNode<Node.Obj> = {
 export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'can': canTemplate,
   'tower': towerTemplate,
+  'sciencepad': sciencePadTemplate,
   'lifescience': lifescienceTemplate,
   'radscience': radscienceTemplate,
   'noradscience': noradscienceTemplate,
@@ -336,6 +354,14 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
     type: 'cylinder',
     height: Distance.centimeters(25),
     radius: Distance.centimeters(4),
+  },
+  'sciencepad': {
+    type: 'box',
+    size: {
+      x: Distance.feet(1),
+      y: Distance.inches(1),
+      z: Distance.feet(1),
+    }
   },
   'ream': {
     type: 'box',
@@ -390,7 +416,7 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   },
   'container': {
     type: 'file',
-    uri: '/static/object_binaries/box2.glb'
+    uri: '/static/object_binaries/container_with_lid.glb'
   },
   'botguy': {
     type: 'file',

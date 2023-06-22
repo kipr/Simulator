@@ -160,6 +160,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const SPACE_TEMPLATE_OPTIONS: ComboBox.Option[] = [
       ComboBox.option(LocalizedString.lookup(tr('Communication Tower'), locale), 'tower'),
       ComboBox.option(LocalizedString.lookup(tr('Hab'), locale), 'hab'),
+      ComboBox.option(LocalizedString.lookup(tr('Science Pad'), locale), 'sciencepad'),
       ComboBox.option(LocalizedString.lookup(tr('Life Science Pack'), locale), 'lifescience'),
       ComboBox.option(LocalizedString.lookup(tr('Radiation Science Pack'), locale), 'radscience'),
       ComboBox.option(LocalizedString.lookup(tr('Communication Tower 2'), locale), 'comstower'),
@@ -570,6 +571,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
   };
 
   private onRockTemplateSelect_ = (index: number, option: ComboBox.Option) => {
+    console.log("onRockTemplateSelect_");
     const { props } = this;
     const { node } = props;
 
@@ -584,6 +586,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
   };
 
   private onSpaceTemplateSelect_ = (index: number, option: ComboBox.Option) => {
+    console.log("onSpaceTemplateSelect_");
     const { props } = this;
     const { node } = props;
 
@@ -976,7 +979,8 @@ class NodeSettings extends React.PureComponent<Props, State> {
       ComboBox.option(LocalizedString.lookup(tr('Life Science Pack'), locale), 'lifescience'),
       ComboBox.option(LocalizedString.lookup(tr('Radiation Science Pack'), locale), 'radscience'),
       ComboBox.option(LocalizedString.lookup(tr('Radiation Science Pack'), locale), 'noradscience'),
-      ComboBox.option(LocalizedString.lookup(tr('Communication Tower 2'), locale), 'comstower'),
+      ComboBox.option(LocalizedString.lookup(tr('Communication Tower 2'), locale), 'commstower'),
+      ComboBox.option(LocalizedString.lookup(tr('Science Pad'), locale), 'sciencepad'),
       ComboBox.option(LocalizedString.lookup(tr('Hab 2'), locale), 'habitat'),
       ComboBox.option(LocalizedString.lookup(tr('Walkway'), locale), 'walkway'),
       ComboBox.option(LocalizedString.lookup(tr('Solar Panel'), locale), 'solarpanel'),
@@ -1173,7 +1177,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
         <Section name={LocalizedString.lookup(tr('Description of the object'), locale)} theme={theme}>
           {node.type === 'from-rock-template' && (
             <>
-              <text>{ROCK_DESCRIPTIONS[node.templateId]}</text>
+              <>{ROCK_DESCRIPTIONS[node.templateId]}</>
             </>
           )}
           {/* {node.material && node.material.type === 'basic' && node.material.color && node.material.color.type === 'texture' && ( */}
@@ -1187,7 +1191,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
               />
             </StyledField>
           )}
-          {node.type === 'from-space-template' && node.material.type === 'basic' && node.material.color.type === 'texture' && node.templateId === 'container' && (
+          {node.type === 'from-space-template' && node.material && node.material.type === 'basic' && node.material.color.type === 'texture' && node.templateId === 'container' && (
             <StyledField name={LocalizedString.lookup(tr('Surface Text'), locale)} long theme={theme}>
               <Input theme={theme} type='text' value={node.material.color.uri} onChange={this.onMaterialBasicColorTextureUriChange2_} />
             </StyledField>
@@ -1280,7 +1284,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
             />
           </Section>
         ) : undefined}
-        
+
         {(node.type === 'object' && geometry.type === 'file') ? (
           <Section name={LocalizedString.lookup(tr('File Options'), locale)} theme={theme} collapsed={collapsed['geometry']} onCollapsedChange={this.onCollapsedChange_('geometry')}>
             <StyledField name={LocalizedString.lookup(tr('URI'), locale)} long theme={theme}>

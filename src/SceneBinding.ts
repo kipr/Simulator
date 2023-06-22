@@ -998,19 +998,19 @@ class SceneBinding {
       this.updateNodePosition_(node.next, bNode);
     }
 
-    // if (node.inner.visible.type === Patch.Type.OuterChange) {
-    //   const nextVisible = node.inner.visible.next;
-    //   SceneBinding.apply_(bNode, m => {
-    //     m.isVisible = nextVisible;
+    if (node.inner.visible.type === Patch.Type.OuterChange) {
+      const nextVisible = node.inner.visible.next;
+      SceneBinding.apply_(bNode, m => {
+        m.isVisible = nextVisible;
 
-    //     // Create/remove physics impostor for object becoming visible/invisible
-    //     if (!nextVisible) {
-    //       this.removePhysicsImpostor(m);
-    //     } else {
-    //       this.restorePhysicsImpostor(m, node.next, id, nextScene);
-    //     }
-    //   });
-    // }
+        // Create/remove physics impostor for object becoming visible/invisible
+        if (!nextVisible) {
+          this.removePhysicsImpostor(m);
+        } else {
+          this.restorePhysicsImpostor(m, node.next, id, nextScene);
+        }
+      });
+    }
 
     return Promise.resolve(bNode);
   };
@@ -1506,7 +1506,7 @@ class SceneBinding {
     otherImpostors: BabylonPhysicsImpostor[];
   }[]> = {};
 
-  private restorePhysicsImpostor = (mesh: BabylonAbstractMesh, objectNode: Node.Obj, nodeId: string, scene: Scene): void => {
+  private restorePhysicsImpostor = (mesh: BabylonAbstractMesh, objectNode: Node.Obj | Node.FromSpaceTemplate, nodeId: string, scene: Scene): void => {
     // Physics impostors should only be added to physics-enabled, visible, non-selected objects
     if (
       !objectNode.physics ||
