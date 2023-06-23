@@ -6,11 +6,27 @@ import Scene from "../state/State/Scene";
 import Script from '../state/State/Scene/Script';
 import { ReferenceFrame, Rotation, Vector3 } from "../unit-math";
 import { Distance } from "../util";
+import { Color } from '../state/State/Scene/Color';
 import LocalizedString from '../util/LocalizedString';
 
 import { createBaseSceneSurface } from './moonBase';
 
 import tr from '@i18n';
+
+const circleIntersects = `
+const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
+  ...scene.nodes[nodeId],
+  visible: true
+});
+
+// When the pad detects life a green light glows.
+
+scene.addOnIntersectionListener('meteorite', (type, otherNodeId) => {
+  console.log('meteorite may have life!', type, otherNodeId);
+  const visible = type === 'start';
+  setNodeVisible('indicator', visible);
+}, 'indicator');
+`;
 
 const baseScene = createBaseSceneSurface();
 
@@ -87,6 +103,17 @@ export const Moon_Sandbox: Scene = {
   ...baseScene,
   name: tr('Moon Sandbox'),
   description: tr('Lunar sandbox. Currently supports 4 types of rocks.'),
+  scripts: {
+    'circleIntersects': Script.ecmaScript('Circle Intersects', circleIntersects),
+  },
+  geometry: {
+    ...baseScene.geometry,
+    'indicator': {
+      type: 'cylinder',
+      radius: Distance.centimeters(3),
+      height: Distance.centimeters(0.1),
+    },
+  },
   nodes: {
     ...baseScene.nodes,
     'robot': {
@@ -199,51 +226,67 @@ export const Moon_Sandbox: Scene = {
         },
       },
     },
-    // 'botguy': {
-    //   type: 'from-space-template',
-    //   templateId: 'botguy',
-    //   name: tr('botguy'),
-    //   startingOrigin: BOTGUY_ORIGIN,
-    //   origin: BOTGUY_ORIGIN,
-    //   visible: true,
-    //   editable: true,
-    // },
-    // 'solarpanel': {
-    //   type: 'from-space-template',
-    //   templateId: 'solarpanel',
-    //   name: tr('Solar Panel'),
-    //   startingOrigin: SOLARPANEL_ORIGIN,
-    //   origin: SOLARPANEL_ORIGIN,
-    //   visible: true,
-    //   editable: true,
-    // },
-    // 'walkway': {
-    //   type: 'from-space-template',
-    //   templateId: 'walkway',
-    //   name: tr('walkway'),
-    //   startingOrigin: WALKWAY_ORIGIN,
-    //   origin: WALKWAY_ORIGIN,
-    //   visible: true,
-    //   editable: true,
-    // },
-    // 'commstower': {
-    //   type: 'from-space-template',
-    //   templateId: 'commstower',
-    //   name: tr('Comms Tower'),
-    //   startingOrigin: COMMSTOWER_ORIGIN,
-    //   origin: COMMSTOWER_ORIGIN,
-    //   visible: true,
-    //   editable: true,
-    // },
-    // 'habitat': {
-    //   type: 'from-space-template',
-    //   templateId: 'habitat',
-    //   name: tr('Human Habitat'),
-    //   startingOrigin: HABITAT_ORIGIN,
-    //   origin: HABITAT_ORIGIN,
-    //   visible: true,
-    //   editable: true,
-    // },
+    'botguy': {
+      type: 'from-space-template',
+      templateId: 'botguy',
+      name: tr('botguy'),
+      startingOrigin: BOTGUY_ORIGIN,
+      origin: BOTGUY_ORIGIN,
+      visible: true,
+      editable: true,
+    },
+    'solarpanel': {
+      type: 'from-space-template',
+      templateId: 'solarpanel',
+      name: tr('Solar Panel'),
+      startingOrigin: SOLARPANEL_ORIGIN,
+      origin: SOLARPANEL_ORIGIN,
+      visible: true,
+      editable: true,
+    },
+    'walkway': {
+      type: 'from-space-template',
+      templateId: 'walkway',
+      name: tr('walkway'),
+      startingOrigin: WALKWAY_ORIGIN,
+      origin: WALKWAY_ORIGIN,
+      visible: true,
+      editable: true,
+    },
+    'commstower': {
+      type: 'from-space-template',
+      templateId: 'commstower',
+      name: tr('Comms Tower'),
+      startingOrigin: COMMSTOWER_ORIGIN,
+      origin: COMMSTOWER_ORIGIN,
+      visible: true,
+      editable: true,
+    },
+    'habitat': {
+      type: 'from-space-template',
+      templateId: 'habitat',
+      name: tr('Human Habitat'),
+      startingOrigin: HABITAT_ORIGIN,
+      origin: HABITAT_ORIGIN,
+      visible: true,
+      editable: true,
+    },
+    'indicator': {
+      type: 'object',
+      geometryId: 'indicator',
+      name: tr('Indicator Light'),
+      visible: false,
+      origin: {
+        position: Vector3.centimeters(50, 5, 100)
+      },
+      material: {
+        type: 'pbr',
+        emissive: {
+          type: 'color3',
+          color: Color.rgb(0, 255, 0),
+        },
+      },
+    },
   }
   
 };
