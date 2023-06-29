@@ -126,7 +126,7 @@ const METEORITE_ORIGIN: ReferenceFrame = {
 export const Moon_Sandbox: Scene = {
   ...baseScene,
   name: tr('Moon Sandbox'),
-  description: tr('Lunar sandbox. Currently supports 4 types of rocks.'),
+  description: tr('Lunar sandbox. Currently supports 4 types of rocks. Demo Ready.'),
   scripts: {
     'rockEvaluation': Script.ecmaScript('Rock Evaluation Test', rockEvaluation),
   },
