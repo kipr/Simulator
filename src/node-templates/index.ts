@@ -83,25 +83,6 @@ const noradscienceTemplate: Node.TemplatedNode<Node.Obj> = {
   faceUvs: [Vector2.ZERO, Vector2.ZERO, Vector2.create(1, 0), Vector2.create(0, 1), Vector2.ZERO, Vector2.ZERO],
 };
 
-const towerTemplate: Node.TemplatedNode<Node.Obj> = {
-  type: 'object',
-  geometryId: 'tower',
-  physics: {
-    type: 'cylinder',
-    mass: Mass.grams(5),
-    friction: 0.7,
-    restitution: 0.3,
-  },
-  material: {
-    type: 'basic',
-    color: {
-      type: 'texture',
-      uri: '/static/textures/tower/tall_tower_texture.png'
-    },
-  },
-  faceUvs: [Vector2.ZERO, Vector2.ZERO, Vector2.create(1, 0), Vector2.create(0, 1), Vector2.ZERO, Vector2.ZERO],
-};
-
 const reamTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'ream',
@@ -132,25 +113,7 @@ const sciencePadTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'basic',
     color: {
       type: "texture",
-      uri: "/static/textures/science_pad.png"
-    },
-  },
-};
-
-const habTemplate: Node.TemplatedNode<Node.Obj> = {
-  type: 'object',
-  geometryId: 'hab',
-  physics: {
-    type: 'mesh',
-    restitution: .3,
-    friction: 1,
-    mass: Mass.pounds(.5),
-  },
-  material: {
-    type: 'basic',
-    color: {
-      type: 'texture',
-      uri: '/static/textures/hab5.png'
+      uri: "/static/textures/science_pad2.png"
     },
   },
 };
@@ -168,7 +131,7 @@ const basaltTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'basic',
     color: {
       type: 'texture',
-      uri: '/static/textures/rocks/basalt_texture_w.png'
+      uri: '/static/textures/rocks/basalt_texture_m.png'
     },
   },
 };
@@ -186,7 +149,7 @@ const anorthositeTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'basic',
     color: {
       type: 'texture',
-      uri: '/static/textures/rocks/anorthosite_texture_w.png'
+      uri: '/static/textures/rocks/anorthosite_texture_m.png'
     },
   },
 };
@@ -204,7 +167,7 @@ const brecciaTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'basic',
     color: {
       type: 'texture',
-      uri: '/static/textures/rocks/breccia_texture_w.png'
+      uri: '/static/textures/rocks/breccia_texture_m.png'
     },
   },
 };
@@ -222,7 +185,7 @@ const meteoriteTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'basic',
     color: {
       type: 'texture',
-      uri: '/static/textures/rocks/meteorite_texture_w.png'
+      uri: '/static/textures/rocks/meteorite_texture_m.png'
     },
   },
 };
@@ -310,14 +273,34 @@ const habitatTemplate: Node.TemplatedNode<Node.Obj> = {
   },
 };
 
+const habitatResearchTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'research_habitat',
+  physics: {
+    type: 'mesh',
+    restitution: .3,
+    friction: 1,
+    mass: Mass.pounds(.3),
+  },
+};
+
+const habitatControlTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'control_habitat',
+  physics: {
+    type: 'mesh',
+    restitution: .3,
+    friction: 1,
+    mass: Mass.pounds(.3),
+  },
+};
+
 export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'can': canTemplate,
-  'tower': towerTemplate,
   'sciencepad': sciencePadTemplate,
   'lifescience': lifescienceTemplate,
   'radscience': radscienceTemplate,
   'noradscience': noradscienceTemplate,
-  'hab': habTemplate,
   'ream': reamTemplate,
   'basalt': basaltTemplate,
   'anorthosite': anorthositeTemplate,
@@ -331,6 +314,8 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'walkway': walkwayTemplate,
   'commstower': commstowerTemplate,
   'habitat': habitatTemplate,
+  'research_habitat': habitatResearchTemplate,
+  'control_habitat': habitatControlTemplate,
 });
 
 
@@ -350,16 +335,11 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
     height: Distance.centimeters(7),
     radius: Distance.centimeters(3),
   },
-  'tower': {
-    type: 'cylinder',
-    height: Distance.centimeters(25),
-    radius: Distance.centimeters(4),
-  },
   'sciencepad': {
     type: 'box',
     size: {
       x: Distance.feet(1),
-      y: Distance.inches(1),
+      y: Distance.centimeters(4),
       z: Distance.feet(1),
     }
   },
@@ -371,37 +351,30 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
       z: Distance.centimeters(21.59),
     },
   },
-  'hab': {
-    type: 'sphere',
-    radius: Distance.centimeters(15),
-    squash: 1,
-    stretch: 1,
-    noise: 0,
-  },
   'basalt': {
     type: 'sphere',
-    radius: Distance.centimeters(3.5),
+    radius: Distance.centimeters(5),
     squash: 1,
     stretch: 1,
     noise: .5,
   },
   'anorthosite': {
     type: 'sphere',
-    radius: Distance.centimeters(3.5),
+    radius: Distance.centimeters(5),
     squash: .8,
     stretch: 1,
     noise: 1,
   },
   'breccia': {
     type: 'sphere',
-    radius: Distance.centimeters(3.5),
+    radius: Distance.centimeters(5),
     squash: 1,
     stretch: 1,
     noise: 1,
   },
   'meteorite': {
     type: 'sphere',
-    radius: Distance.centimeters(3.5),
+    radius: Distance.centimeters(5),
     squash: 1,
     stretch: 1,
     noise: 1,
@@ -424,18 +397,26 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   },
   'solarpanel': {
     type: 'file',
-    uri: '/static/object_binaries/solar_test2.glb'
+    uri: '/static/object_binaries/solar_panel2.glb'
   },
   'walkway': {
     type: 'file',
-    uri: '/static/object_binaries/walkway_test.glb'
+    uri: '/static/object_binaries/new_walkway.glb'
   },
   'commstower': {
     type: 'file',
-    uri: '/static/object_binaries/commstower2.glb'
+    uri: '/static/object_binaries/comm_tower.glb'
   },
   'habitat': {
     type: 'file',
-    uri: '/static/object_binaries/habitat.glb'
+    uri: '/static/object_binaries/hab_living.glb'
+  },
+  'research_habitat': {
+    type: 'file',
+    uri: '/static/object_binaries/hab_research.glb'
+  },
+  'control_habitat': {
+    type: 'file',
+    uri: '/static/object_binaries/hab_comms.glb'
   },
 });

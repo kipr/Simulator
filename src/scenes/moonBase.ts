@@ -20,8 +20,8 @@ const ROBOT_ORIGIN: ReferenceFrame = {
 };
 
 const GROUND_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(0, -0.1, 50),
-  orientation: Rotation.eulerDegrees(90, 0, 0)
+  position: Vector3.centimeters(0, -0.5, 50),
+  orientation: Rotation.eulerDegrees(0, 0, 0)
 };
 
 const START_ORIGIN: ReferenceFrame = {
@@ -55,12 +55,9 @@ export function createBaseSceneSurface(): Scene {
     author: Author.organization('kipr'),
     geometry: {
       'moon ground': {
-        type: 'box',
-        size: {
-          x: Distance.meters(5),
-          y: Distance.meters(5),
-          z: Distance.centimeters(.2),
-        },
+        type: 'cylinder',
+        radius: Distance.feet(25),
+        height: Distance.centimeters(1),
       },
       'sky': {
         type: 'box',
@@ -74,7 +71,7 @@ export function createBaseSceneSurface(): Scene {
         type: 'box',
         size: {
           x: Distance.feet(2),
-          y: Distance.centimeters(.21),
+          y: Distance.centimeters(.1),
           z: Distance.feet(2),
         }
       },
@@ -85,7 +82,7 @@ export function createBaseSceneSurface(): Scene {
       'Moon ground': {
         type: 'object',
         geometryId: 'moon ground',
-        name: tr('Ground'),
+        name: tr('1.1.1 Ground'),
         startingOrigin: GROUND_ORIGIN,
         origin: GROUND_ORIGIN,
         visible: true,
@@ -105,7 +102,7 @@ export function createBaseSceneSurface(): Scene {
       'start': {
         type: 'object',
         geometryId: 'start',
-        name: tr('Start Area'),
+        name: tr('1.1.6-8 Start Area'),
         startingOrigin: START_ORIGIN,
         origin: START_ORIGIN,
         visible: true,
@@ -119,7 +116,7 @@ export function createBaseSceneSurface(): Scene {
           type: 'basic',
           color: {
             type: "texture",
-            uri: "/static/textures/mat-with-border.png"
+            uri: "/static/textures/start_texture_light.png"
           },
         },
       },
@@ -133,7 +130,7 @@ export function createBaseSceneSurface(): Scene {
       },
       'night_sky': {
         type: 'object',
-        name: tr('skybox'),
+        name: tr('1.1.2-4 Sky'),
         geometryId: 'sky',
         visible: true,
         startingOrigin: SKY_ORIGIN,

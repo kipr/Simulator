@@ -360,7 +360,8 @@ class SceneBinding {
               if (!color.uri) {
                 basic.diffuseColor = new BabylonColor3(0.5, 0, 0.5);
               } else {
-                if (id === 'skybox') {
+                if (id === '1.1.2-4 Sky') {
+                  console.log('night_sky', color.uri);
                   basic.reflectionTexture = new BabylonTexture(color.uri, this.bScene_);
                   basic.reflectionTexture.coordinatesMode = BabylonTexture.FIXED_EQUIRECTANGULAR_MODE;
                   basic.backFaceCulling = false;
@@ -481,6 +482,7 @@ class SceneBinding {
           break;
         }
         case 'texture': {
+          console.log('Updating texture', color.next.uri);
           if (!color.next.uri) {
             bMaterial.diffuseColor = new BabylonColor3(0.5, 0, 0.5);
             bMaterial.diffuseTexture = null;
