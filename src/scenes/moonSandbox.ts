@@ -25,28 +25,28 @@ scene.addOnIntersectionListener('meteorite', (type, otherNodeId) => {
   console.log('meteorite may have life!', type, otherNodeId);
   const visible = type === 'start';
   setNodeVisible('life indicator', visible);
-  if (visible) alert('You found a meteorite! It may have life!');
+  if (visible) alert('You found a meteorite rock! It may have life! Bring this to the container for further study.');
 }, 'sciencepad');
 
 scene.addOnIntersectionListener('basalt', (type, otherNodeId) => {
   console.log('basalt may have life!', type, otherNodeId);
   const visible = type === 'start';
   setNodeVisible('nolife indicator', visible);
-  if (visible) alert('You found a basalt! There does not appear to be life here.');
+  if (visible) alert('You found a basalt rock! There does not appear to be life here. Try another rock.');
 }, 'sciencepad');
 
 scene.addOnIntersectionListener('anorthosite', (type, otherNodeId) => {
   console.log('anorthosite may have life!', type, otherNodeId);
   const visible = type === 'start';
   setNodeVisible('nolife indicator', visible);
-  if (visible) alert('You found a anorthosite! There does not appear to be life here.');
+  if (visible) alert('You found a anorthosite rock! There does not appear to be life here. Try another rock.');
 }, 'sciencepad');
 
 scene.addOnIntersectionListener('breccia', (type, otherNodeId) => {
   console.log('breccia may have life!', type, otherNodeId);
   const visible = type === 'start';
   setNodeVisible('nolife indicator', visible);
-  if (visible) alert('You found a breccia! There does not appear to be life here.');
+  if (visible) alert('You found a breccia rock! There does not appear to be life here. Try another rock.');
 }, 'sciencepad');
 `;
 
@@ -77,7 +77,7 @@ const SOLARPANEL_ORIGIN: ReferenceFrame = {
 
 const WALKWAY_ORIGIN: ReferenceFrame = {
   position: Vector3.centimeters(50, 0, 65),
-  scale: { x: 8, y: 8, z: 8 }
+  scale: { x: 12, y: 12, z: 12 }
 };
 
 const COMMSTOWER_ORIGIN: ReferenceFrame = {
@@ -87,19 +87,19 @@ const COMMSTOWER_ORIGIN: ReferenceFrame = {
 
 const HABITAT_ORIGIN: ReferenceFrame = {
   position: Vector3.centimeters(50, 0, 95),
-  scale: { x: 8, y: 8, z: 8 },
+  scale: { x: 12, y: 12, z: 12 },
   orientation: Rotation.eulerDegrees(0, 180, 0)
 };
 
 const RESEARCH_HABITAT_ORIGIN: ReferenceFrame = {
   position: Vector3.centimeters(50, 0, 35),
-  scale: { x: 8, y: 8, z: 8 },
+  scale: { x: 12, y: 12, z: 12 },
   orientation: Rotation.eulerDegrees(0, 180, 0)
 };
 
 const CONTROL_HABITAT_ORIGIN: ReferenceFrame = {
   position: Vector3.centimeters(50, 0, 5),
-  scale: { x: 8, y: 8, z: 8 },
+  scale: { x: 12, y: 12, z: 12 },
   orientation: Rotation.eulerDegrees(0, 180, 0)
 };
 
@@ -183,7 +183,7 @@ export const Moon_Sandbox: Scene = {
     'lifescience': {
       type: 'from-space-template',
       templateId: 'lifescience',
-      name: tr('1.2.2.8 Life Science Pack'),
+      name: tr('Life Science Pack'),
       startingOrigin: LIFESCIENCE_ORIGIN,
       origin: LIFESCIENCE_ORIGIN,
       editable: true,
@@ -210,7 +210,7 @@ export const Moon_Sandbox: Scene = {
     'sciencepad': {
       type: 'from-space-template',
       templateId: 'sciencepad',
-      name: tr('1.2.2.6 Science Pad'),
+      name: tr('Science Pad'),
       startingOrigin: SCIENCEPAD_ORIGIN,
       origin: SCIENCEPAD_ORIGIN,
       visible: true,
@@ -234,7 +234,7 @@ export const Moon_Sandbox: Scene = {
     'botguy': {
       type: 'from-space-template',
       templateId: 'botguy',
-      name: tr('1.2.2.3 botguy'),
+      name: tr('Space Bot Guy'),
       startingOrigin: BOTGUY_ORIGIN,
       origin: BOTGUY_ORIGIN,
       visible: true,
@@ -243,7 +243,7 @@ export const Moon_Sandbox: Scene = {
     'solarpanel': {
       type: 'from-space-template',
       templateId: 'solarpanel',
-      name: tr('1.2.2.4 Solar Panel'),
+      name: tr('Solar Panel'),
       startingOrigin: SOLARPANEL_ORIGIN,
       origin: SOLARPANEL_ORIGIN,
       visible: true,
@@ -252,52 +252,52 @@ export const Moon_Sandbox: Scene = {
     'walkway': {
       type: 'from-space-template',
       templateId: 'walkway',
-      name: tr('1.2.2.2 walkway'),
+      name: tr('Walkway'),
       startingOrigin: WALKWAY_ORIGIN,
       origin: WALKWAY_ORIGIN,
-      visible: true,
+      visible: false,
       editable: true,
     },
     'commstower': {
       type: 'from-space-template',
       templateId: 'commstower',
-      name: tr('1.2.2.3 Comms Tower'),
+      name: tr('Comms Tower'),
       startingOrigin: COMMSTOWER_ORIGIN,
       origin: COMMSTOWER_ORIGIN,
-      visible: true,
+      visible: false,
       editable: true,
     },
     'habitat': {
       type: 'from-space-template',
       templateId: 'habitat',
-      name: tr('1.2.2.1 Human Habitat'),
+      name: tr('Human Living Habitat'),
       startingOrigin: HABITAT_ORIGIN,
       origin: HABITAT_ORIGIN,
-      visible: true,
+      visible: false,
       editable: true,
     },
     'research_habitat': {
       type: 'from-space-template',
       templateId: 'research_habitat',
-      name: tr('1.2.2.1 Human Research'),
+      name: tr('Human Research Habitat'),
       startingOrigin: RESEARCH_HABITAT_ORIGIN,
       origin: RESEARCH_HABITAT_ORIGIN,
-      visible: true,
+      visible: false,
       editable: true,
     },
     'control_habitat': {
       type: 'from-space-template',
       templateId: 'control_habitat',
-      name: tr('1.2.2.1 Human Control Station'),
+      name: tr('Human Control/Comms Station Habitat'),
       startingOrigin: CONTROL_HABITAT_ORIGIN,
       origin: CONTROL_HABITAT_ORIGIN,
-      visible: true,
+      visible: false,
       editable: true,
     },
     'life indicator': {
       type: 'object',
       geometryId: 'indicator',
-      name: tr('life Indicator Light'),
+      name: tr('Life Indicator Light'),
       visible: false,
       origin: {
         position: Vector3.centimeters(-10, 4, 110)
