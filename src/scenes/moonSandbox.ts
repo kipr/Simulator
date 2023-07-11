@@ -76,29 +76,29 @@ const SOLARPANEL_ORIGIN: ReferenceFrame = {
 };
 
 const WALKWAY_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(50, 0, 65),
+  position: Vector3.centimeters(50, 9, 65),
   scale: { x: 12, y: 12, z: 12 }
 };
 
 const COMMSTOWER_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(80, 0, 0),
+  position: Vector3.centimeters(80, 4, 0),
   scale: { x: 7, y: 7, z: 7 }
 };
 
 const HABITAT_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(50, 0, 95),
+  position: Vector3.centimeters(50, 3.5, 95),
   scale: { x: 12, y: 12, z: 12 },
   orientation: Rotation.eulerDegrees(0, 180, 0)
 };
 
 const RESEARCH_HABITAT_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(50, 0, 35),
+  position: Vector3.centimeters(50, 3.5, 35),
   scale: { x: 12, y: 12, z: 12 },
   orientation: Rotation.eulerDegrees(0, 180, 0)
 };
 
 const CONTROL_HABITAT_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(50, 0, 5),
+  position: Vector3.centimeters(50, 3.5, 5),
   scale: { x: 12, y: 12, z: 12 },
   orientation: Rotation.eulerDegrees(0, 180, 0)
 };
@@ -213,6 +213,7 @@ export const Moon_Sandbox: Scene = {
       name: tr('Science Pad'),
       startingOrigin: SCIENCEPAD_ORIGIN,
       origin: SCIENCEPAD_ORIGIN,
+      editable: true,
       visible: true,
     },
     'container': {
@@ -299,6 +300,7 @@ export const Moon_Sandbox: Scene = {
       geometryId: 'indicator',
       name: tr('Life Indicator Light'),
       visible: false,
+      editable: true,
       origin: {
         position: Vector3.centimeters(-10, 4, 110)
       },
@@ -315,6 +317,7 @@ export const Moon_Sandbox: Scene = {
       geometryId: 'indicator',
       name: tr('No Life Indicator Light'),
       visible: false,
+      editable: true,
       origin: {
         position: Vector3.centimeters(10, 4, 110)
       },
