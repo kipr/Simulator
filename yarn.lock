@@ -531,6 +531,13 @@
   resolved "https://registry.yarnpkg.com/@babylonjs/core/-/core-6.14.0.tgz#da90c52f75d4235b8a202e7f5852148aae09070c"
   integrity sha512-ciIfWMMtV5jsnqxqTn+v/CS65yji6CXTP2drmvLlzk+k+IZjE8RfkpMqZgZozN/KNkOmIVn2Li7qRMjg4ZUGlw==
 
+"@babylonjs/havok@^1.0.0":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@babylonjs/havok/-/havok-1.1.1.tgz#9b446105c2626826a3ee671dd7da442d6755d186"
+  integrity sha512-QIygEnKPYYPCE8QuJDxDLYPMj+W5Yha6NOdUfpvcVfZwtjVDE+eOa2Y5el7muQD563OdeJS+Kzmhyg+5qAZHBA==
+  dependencies:
+    "@types/emscripten" "^1.39.6"
+
 "@babylonjs/loaders@^6.14.0":
   version "6.14.0"
   resolved "https://registry.yarnpkg.com/@babylonjs/loaders/-/loaders-6.14.0.tgz#5e861748522dbf8da8b0b85140f64a04aa5c86ab"
@@ -1442,6 +1449,11 @@
   integrity sha512-1kbcJ40lLB7MHsj39U4Sh1uTd2E7rLEa79kmDpI6cy+XiXsteB3POdQomoq4FxszMrO3ZYchkhYJw7A2862b3w==
   dependencies:
     "@babel/types" "^7.3.0"
+
+"@types/emscripten@^1.39.6":
+  version "1.39.7"
+  resolved "https://registry.yarnpkg.com/@types/emscripten/-/emscripten-1.39.7.tgz#3025183ea56e12bf4d096aadc48ce74ca051233d"
+  integrity sha512-tLqYV94vuqDrXh515F/FOGtBcRMTPGvVV1LzLbtYDcQmmhtpf/gLYf+hikBbQk8MzOHNz37wpFfJbYAuSn8HqA==
 
 "@types/eslint-scope@^3.7.0":
   version "3.7.1"
