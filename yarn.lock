@@ -526,15 +526,15 @@
     "@babel/helper-validator-identifier" "^7.14.5"
     to-fast-properties "^2.0.0"
 
-"@babylonjs/core@^5.22.1":
-  version "5.48.0"
-  resolved "https://registry.yarnpkg.com/@babylonjs/core/-/core-5.48.0.tgz#79e7b7595620ffde86e0d064ccbc1ca50d93f656"
-  integrity sha512-97d+stKdMGGXmmCuYEo9xhz0v0q5DbWSg2GI6mfa+P1qH9YPmWN+YNxwBs0A2H3HrhBrC/PQOTHUibfA867CoQ==
+"@babylonjs/core@^6.14.0":
+  version "6.14.0"
+  resolved "https://registry.yarnpkg.com/@babylonjs/core/-/core-6.14.0.tgz#da90c52f75d4235b8a202e7f5852148aae09070c"
+  integrity sha512-ciIfWMMtV5jsnqxqTn+v/CS65yji6CXTP2drmvLlzk+k+IZjE8RfkpMqZgZozN/KNkOmIVn2Li7qRMjg4ZUGlw==
 
-"@babylonjs/loaders@^5.22.1":
-  version "5.48.0"
-  resolved "https://registry.yarnpkg.com/@babylonjs/loaders/-/loaders-5.48.0.tgz#a16f69d03770fa8132b5df1dea51667072ad5e0e"
-  integrity sha512-BbZoceGDsUYis86OeAkFq9CQN1yJ59IOL0O0AtogOt8KQ5E8b0sH4MVdOwuV6h07yLVjo9Ir5RZsWKdGyuWHOw==
+"@babylonjs/loaders@^6.14.0":
+  version "6.14.0"
+  resolved "https://registry.yarnpkg.com/@babylonjs/loaders/-/loaders-6.14.0.tgz#5e861748522dbf8da8b0b85140f64a04aa5c86ab"
+  integrity sha512-rGDMuyHEphpOHBO4JtY0vNIri2VMAmwUw3UmDJ+C00erQpiQDXyzG3IkJpXDHt7mWOJZNASRJjC76bPDu9zarg==
 
 "@bcoe/v8-coverage@^0.2.3":
   version "0.2.3"
@@ -2271,10 +2271,10 @@ babel-preset-jest@^29.4.3:
     babel-plugin-jest-hoist "^29.4.3"
     babel-preset-current-node-syntax "^1.0.0"
 
-babylonjs-gltf2interface@^5.22.0:
-  version "5.48.1"
-  resolved "https://registry.yarnpkg.com/babylonjs-gltf2interface/-/babylonjs-gltf2interface-5.48.1.tgz#8d649a46b667b6a7218a319f9b517a34b5112095"
-  integrity sha512-PfTbjyrPuosI0//ROGe3Yz4aHK+Ar7RFF8BD1+tlelV2j/mW/XPmkANG+AxchbL59dEB46hz6r8k15Aw6Ufy/A==
+babylonjs-gltf2interface@^6.14.0:
+  version "6.14.0"
+  resolved "https://registry.yarnpkg.com/babylonjs-gltf2interface/-/babylonjs-gltf2interface-6.14.0.tgz#2a1c80e40090d2deccae8c5a49509ededf098e98"
+  integrity sha512-fCv0Mc2zGblSlY7DzLPEfYDbcd1h1+wJJmF1MskMl4H30PBPl5EslYeHaHyjjRvwcOLlq4Dd+SS0in8B1nKFuA==
 
 balanced-match@^1.0.0:
   version "1.0.2"

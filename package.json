@@ -1,6 +1,6 @@
 {
   "name": "simulator",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "sideEffects": false,
   "main": "dist/index.js",
   "author": "KISS Institute for Practical Robotics",
@@ -53,14 +53,14 @@
     "webpack-merge": "^5.7.3"
   },
   "dependencies": {
-    "@babylonjs/core": "^5.22.1",
-    "@babylonjs/loaders": "^5.22.1",
+    "@babylonjs/core": "^6.14.0",
+    "@babylonjs/loaders": "^6.14.0",
     "@fortawesome/fontawesome-svg-core": "^6.2.0",
     "@fortawesome/free-brands-svg-icons": "^6.2.0",
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@types/react": "^16.9.25",
-    "babylonjs-gltf2interface": "^5.22.0",
+    "babylonjs-gltf2interface": "^6.14.0",
     "body-parser": "^1.19.0",
     "colorjs.io": "^0.4.2",
     "connected-react-router": "^6.9.3",
