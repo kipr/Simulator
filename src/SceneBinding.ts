@@ -656,8 +656,8 @@ class SceneBinding {
       SceneBinding.apply_(ret, m => m.material = material);
     }
 
-    // Create physics impostor
-    SceneBinding.apply_(ret, m => this.restorePhysicsImpostor(m, node, null, nextScene));
+    // Create physics
+    SceneBinding.apply_(ret, m => this.restorePhysicsToObject(m, node, null, nextScene));
 
     ret.setParent(parent);
 
@@ -944,8 +944,8 @@ class SceneBinding {
 
     if (node.inner.physics.type === Patch.Type.OuterChange) {
       SceneBinding.apply_(bNode, m => {
-        this.removePhysicsImpostor(m);
-        this.restorePhysicsImpostor(m, node.next, id, nextScene);
+        this.removePhysicsFromObject(m);
+        this.restorePhysicsToObject(m, node.next, id, nextScene);
       });
     }
 
@@ -954,11 +954,11 @@ class SceneBinding {
       SceneBinding.apply_(bNode, m => {
         m.isVisible = nextVisible;
 
-        // Create/remove physics impostor for object becoming visible/invisible
+        // Create/remove physics for object becoming visible/invisible
         if (!nextVisible) {
-          this.removePhysicsImpostor(m);
+          this.removePhysicsFromObject(m);
         } else {
-          this.restorePhysicsImpostor(m, node.next, id, nextScene);
+          this.restorePhysicsToObject(m, node.next, id, nextScene);
         }
       });
     }
@@ -1003,11 +1003,11 @@ class SceneBinding {
       SceneBinding.apply_(bNode, m => {
         m.isVisible = nextVisible;
 
-        // Create/remove physics impostor for object becoming visible/invisible
+        // Create/remove physics for object becoming visible/invisible
         if (!nextVisible) {
-          this.removePhysicsImpostor(m);
+          this.removePhysicsFromObject(m);
         } else {
-          this.restorePhysicsImpostor(m, node.next, id, nextScene);
+          this.restorePhysicsToObject(m, node.next, id, nextScene);
         }
       });
     }
@@ -1506,7 +1506,7 @@ class SceneBinding {
     otherImpostors: BabylonPhysicsImpostor[];
   }[]> = {};
 
-  private restorePhysicsImpostor = (mesh: BabylonAbstractMesh, objectNode: Node.Obj | Node.FromSpaceTemplate, nodeId: string, scene: Scene): void => {
+  private restorePhysicsToObject = (mesh: BabylonAbstractMesh, objectNode: Node.Obj | Node.FromSpaceTemplate, nodeId: string, scene: Scene): void => {
     // Physics impostors should only be added to physics-enabled, visible, non-selected objects
     if (
       !objectNode.physics ||
@@ -1533,7 +1533,7 @@ class SceneBinding {
   };
 
   
-  private removePhysicsImpostor = (mesh: BabylonAbstractMesh) => {
+  private removePhysicsFromObject = (mesh: BabylonAbstractMesh) => {
     if (!mesh.physicsImpostor) return;
 
     const parent = mesh.parent;
@@ -1672,7 +1672,7 @@ class SceneBinding {
         const prevBNode = this.bScene_.getNodeByID(prev);
         if (prevNodeObj && (prevBNode instanceof BabylonAbstractMesh || prevBNode instanceof BabylonTransformNode)) {
           prevBNode.metadata = { ...(prevBNode.metadata as SceneMeshMetadata), selected: false };
-          SceneBinding.apply_(prevBNode, m => this.restorePhysicsImpostor(m, prevNodeObj, prev, scene));
+          SceneBinding.apply_(prevBNode, m => this.restorePhysicsToObject(m, prevNodeObj, prev, scene));
         }
 
         this.gizmoManager_.attachToNode(null);
@@ -1682,7 +1682,7 @@ class SceneBinding {
       if (next !== undefined) {
         const node = this.bScene_.getNodeByID(next);
         if (node instanceof BabylonAbstractMesh || node instanceof BabylonTransformNode) {
-          SceneBinding.apply_(node, m => this.removePhysicsImpostor(m));
+          SceneBinding.apply_(node, m => this.removePhysicsFromObject(m));
           node.metadata = { ...(node.metadata as SceneMeshMetadata), selected: true };
           this.gizmoManager_.attachToNode(node);
         }
