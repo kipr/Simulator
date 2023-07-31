@@ -17,7 +17,6 @@ try {
 
 const modules = ['node_modules'];
 if (dependencies.cpython) modules.push(resolve(dependencies.cpython));
-// if (dependencies.ammo) modules.push(resolve(dependencies.ammo));
 
 let libkiprCDocumentation = undefined;
 if (dependencies.libkipr_c_documentation) {
@@ -142,7 +141,6 @@ module.exports = {
       SIMULATOR_VERSION: JSON.stringify(require('../../package.json').version),
       SIMULATOR_GIT_HASH: JSON.stringify(commitHash),
       SIMULATOR_HAS_CPYTHON: JSON.stringify(dependencies.cpython !== undefined),
-      // SIMULATOR_HAS_AMMO: JSON.stringify(dependencies.ammo !== undefined),
       SIMULATOR_LIBKIPR_C_DOCUMENTATION: JSON.stringify(libkiprCDocumentation),
       SIMULATOR_I18N: JSON.stringify(i18n),
     }),

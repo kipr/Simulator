@@ -11,6 +11,7 @@ import { HemisphericLight as BabylonHemisphericLight } from '@babylonjs/core/Lig
 import { EventState as BabylonEventState } from '@babylonjs/core/Misc/observable';
 import { PointerEventTypes as BabylonPointerEventTypes, PointerInfo as BabylonPointerInfo } from '@babylonjs/core/Events/pointerEvents';
 import { DracoCompression as BabylonDracoCompression } from '@babylonjs/core/Meshes/Compression/dracoCompression';
+import HavokPhysics from "@babylonjs/havok";
 
 import '@babylonjs/loaders/glTF';
 import '@babylonjs/core/Physics/physicsEngineComponent';
@@ -31,12 +32,6 @@ import { Robots } from './state/State';
 
 
 
-let Ammo: unknown;
-if (SIMULATOR_HAS_AMMO) {
-  // This is on a non-standard path specified in the webpack config.
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  Ammo = require('ammo.js');
-}
 
 import WorkerInstance from './WorkerInstance';
 import AbstractRobot from './AbstractRobot';
@@ -230,9 +225,8 @@ export class Space {
     const state = store.getState();
     
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any
-    const ammo: unknown = await (Ammo as any)();
     
-    this.sceneBinding_ = new SceneBinding(this.bScene_, ammo);
+    this.sceneBinding_ = new SceneBinding(this.bScene_);
     this.sceneBinding_.robotLinkOrigins = this.robotLinkOrigins_;
 
     const scriptManager = this.sceneBinding_.scriptManager;

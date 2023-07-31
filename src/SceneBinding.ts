@@ -5,7 +5,6 @@ import { Node as BabylonNode } from '@babylonjs/core/node';
 import { PhysicsViewer as BabylonPhysicsViewer } from '@babylonjs/core/Debug/physicsViewer';
 import { ShadowGenerator as BabylonShadowGenerator } from '@babylonjs/core/Lights/Shadows/shadowGenerator';
 import { Camera as BabylonCamera } from '@babylonjs/core/Cameras/camera';
-import { AmmoJSPlugin as BabylonAmmoJSPlugin } from '@babylonjs/core/Physics/Plugins/ammoJSPlugin';
 import { BoxBuilder as BabylonBoxBuilder } from '@babylonjs/core/Meshes/Builders/boxBuilder';
 import { SphereBuilder as BabylonSphereBuilder } from '@babylonjs/core/Meshes/Builders/sphereBuilder';
 import { CylinderBuilder as BabylonCylinderBuilder } from '@babylonjs/core/Meshes/Builders/cylinderBuilder';
@@ -83,7 +82,6 @@ class SceneBinding {
   private camera_: BabylonCamera;
 
   private engineView_: BabylonEngineView;
-  private ammo_: BabylonAmmoJSPlugin;
 
   private robots_: Dict<Robot>;
   private robotBindings_: Dict<RobotBinding> = {};
@@ -120,11 +118,11 @@ class SceneBinding {
 
   private seed_ = 0;
 
-  constructor(bScene: BabylonScene, ammo: unknown) {
+  constructor(bScene: BabylonScene) {
     this.bScene_ = bScene;
     this.scene_ = Scene.EMPTY;
-    this.ammo_ = new BabylonAmmoJSPlugin(true, ammo);
-    this.bScene_.enablePhysics(new BabylonVector3(0, -9.8 * 100, 0), this.ammo_);
+    const gravityVector = new BabylonVector3(0, -9.81, 0);
+    this.bScene_.enablePhysics(gravityVector);
     this.bScene_.getPhysicsEngine().setSubTimeStep(2);
     
     // this.physicsViewer_ = new BabylonPhysicsViewer(this.bScene_);
