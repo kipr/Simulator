@@ -94,8 +94,6 @@ module.exports = {
     "dist",
     // Ignore webpack config files
     "/configs",
-    // Ignore included ammo.js library
-    "/src/ammo.js",
     // Ignore static files
     "/static",
     // Ignore dependencies
