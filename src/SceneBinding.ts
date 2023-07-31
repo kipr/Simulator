@@ -1518,7 +1518,7 @@ class SceneBinding {
     const initialParent = mesh.parent;
     mesh.setParent(null);
 
-    const type = IMPOSTER_TYPE_MAPPINGS[objectNode.physics.type];
+    const type = IMPOSTOR_TYPE_MAPPINGS[objectNode.physics.type];
     mesh.physicsImpostor = new BabylonPhysicsImpostor(mesh, type, {
       mass: objectNode.physics.mass ? Mass.toGramsValue(objectNode.physics.mass) : 0,
       restitution: objectNode.physics.restitution ?? 0.5,
@@ -1840,7 +1840,7 @@ class SceneBinding {
   }
 }
 
-const IMPOSTER_TYPE_MAPPINGS: { [key in Node.Physics.Type]: number } = {
+const IMPOSTOR_TYPE_MAPPINGS: { [key in Node.Physics.Type]: number } = {
   'box': BabylonPhysicsImpostor.BoxImpostor,
   'sphere': BabylonPhysicsImpostor.SphereImpostor,
   'cylinder': BabylonPhysicsImpostor.CylinderImpostor,

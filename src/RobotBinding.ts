@@ -154,7 +154,7 @@ class RobotBinding {
 
     const ret = builtGeometry.mesh;
 
-    const physicsImposterParams: BabylonPhysicsImpostorParameters = {
+    const physicsImpostorParams: BabylonPhysicsImpostorParameters = {
       mass: Mass.toGramsValue(link.mass || Mass.grams(0)),
       restitution: link.restitution ?? 0,
       friction: link.friction ?? 0.5,
@@ -168,7 +168,7 @@ class RobotBinding {
         ret.physicsImpostor = new BabylonPhysicsImpostor(
           ret,
           BabylonPhysicsImpostor.BoxImpostor,
-          physicsImposterParams,
+          physicsImpostorParams,
           this.bScene_
         );
         this.colliders_.add(ret);
@@ -178,7 +178,7 @@ class RobotBinding {
         ret.physicsImpostor = new BabylonPhysicsImpostor(
           ret,
           BabylonPhysicsImpostor.CylinderImpostor,
-          physicsImposterParams,
+          physicsImpostorParams,
           this.bScene_
         );
         this.colliders_.add(ret);
@@ -193,7 +193,7 @@ class RobotBinding {
             bCollider,
             collider.type,
             {
-              ...physicsImposterParams,
+              ...physicsImpostorParams,
               mass: 0,
             },
             this.bScene_
@@ -206,7 +206,7 @@ class RobotBinding {
         ret.physicsImpostor = new BabylonPhysicsImpostor(
           ret,
           BabylonPhysicsImpostor.NoImpostor,
-          physicsImposterParams,
+          physicsImpostorParams,
           this.bScene_
         );
         this.colliders_.add(ret);
