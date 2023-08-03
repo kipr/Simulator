@@ -12,6 +12,7 @@ import { EventState as BabylonEventState } from '@babylonjs/core/Misc/observable
 import { PointerEventTypes as BabylonPointerEventTypes, PointerInfo as BabylonPointerInfo } from '@babylonjs/core/Events/pointerEvents';
 import { DracoCompression as BabylonDracoCompression } from '@babylonjs/core/Meshes/Compression/dracoCompression';
 import HavokPhysics from "@babylonjs/havok";
+import { HavokPlugin } from '@babylonjs/core';
 
 import '@babylonjs/loaders/glTF';
 import '@babylonjs/core/Physics/physicsEngineComponent';
@@ -41,6 +42,10 @@ import Geometry from './state/State/Scene/Geometry';
 import Camera from './state/State/Scene/Camera';
 
 export let ACTIVE_SPACE: Space;
+
+async function getInitializedHavok() {
+  return await HavokPhysics();
+}
 
 export class Space {
   private static instance: Space;
@@ -223,10 +228,12 @@ export class Space {
     const gravityVector = new BabylonVector3(0, -9.8 * 50, 0);
     
     const state = store.getState();
-    
+    const havokInstance = await HavokPhysics();
+    const havokPlugin = new HavokPlugin(true, havokInstance);
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any
     
-    this.sceneBinding_ = new SceneBinding(this.bScene_);
+    this.sceneBinding_ = new SceneBinding(this.bScene_, havokPlugin);
     this.sceneBinding_.robotLinkOrigins = this.robotLinkOrigins_;
 
     const scriptManager = this.sceneBinding_.scriptManager;

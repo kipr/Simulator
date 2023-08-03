@@ -9,7 +9,8 @@ import { IcoSphereBuilder as BabylonIcoSphereBuilder } from '@babylonjs/core/Mes
 import { CreateLines as BabylonCreateLines } from '@babylonjs/core/Meshes/Builders/linesBuilder';
 import { Vector3 as BabylonVector3, Quaternion as BabylonQuaternion } from '@babylonjs/core/Maths/math.vector';
 import { StandardMaterial as BabylonStandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
-import { PhysicsImpostor as BabylonPhysicsImpostor, PhysicsImpostorParameters as BabylonPhysicsImpostorParameters, IPhysicsEnabledObject as BabylonIPhysicsEnabledObject } from '@babylonjs/core/Physics/physicsImpostor';
+import { IPhysicsEnabledObject as BabylonIPhysicsEnabledObject } from '@babylonjs/core/Physics/physicsImpostor';
+import { PhysicsBody, PhysicsConstraintAxis, Physics6DoFConstraint, PhysicsMotionType, PhysicsShape, PhysicsShapeType, PhysicShapeOptions, PhysicsShapeParameters, IPhysicsCollisionEvent, LockConstraint, PhysicsShapeSphere } from '@babylonjs/core';
 import { SpotLight as BabylonSpotLight } from '@babylonjs/core/Lights/spotLight';
 import { DirectionalLight as BabylonDirectionalLight } from '@babylonjs/core/Lights/directionalLight';
 import { HemisphericLight as BabylonHemisphericLight } from '@babylonjs/core/Lights/hemisphericLight';
@@ -65,8 +66,8 @@ class RobotBinding {
 
   private weights_: Dict<BabylonMesh> = {};
   private fixed_: Dict<BabylonPhysicsJoint> = {};
-  private motors_: Dict<BabylonHingeJoint> = {};
-  private servos_: Dict<BabylonHingeJoint> = {};
+  private motors_: Dict<Physics6DoFConstraint> = {};
+  private servos_: Dict<Physics6DoFConstraint> = {};
   private motorPorts_ = new Array<string>(4);
   private servoPorts_ = new Array<string>(4);
 
@@ -113,12 +114,12 @@ class RobotBinding {
 
             let bType: number;
             switch (type) {
-              case 'box': bType = BabylonPhysicsImpostor.BoxImpostor; break;
-              case 'sphere': bType = BabylonPhysicsImpostor.SphereImpostor; break;
-              case 'cylinder': bType = BabylonPhysicsImpostor.CylinderImpostor; break;
-              case 'capsule': bType = BabylonPhysicsImpostor.CapsuleImpostor; break;
-              case 'plane': bType = BabylonPhysicsImpostor.PlaneImpostor; break;
-              case 'mesh': bType = BabylonPhysicsImpostor.MeshImpostor; break;
+              case 'box': bType = PhysicsShapeType.BOX; break;
+              case 'sphere': bType = PhysicsShapeType.SPHERE; break;
+              case 'cylinder': bType = PhysicsShapeType.CYLINDER; break;
+              case 'capsule': bType = PhysicsShapeType.CAPSULE; break;
+              case 'plane': bType = PhysicsShapeType.HEIGHTFIELD; break;
+              case 'mesh': bType = PhysicsShapeType.MESH; break;
               default: throw new Error(`Invalid collider type: ${type}`);
             }
 
@@ -152,64 +153,71 @@ class RobotBinding {
       builtGeometry = await this.buildGeometry_(id, geometry);
     }
 
-    const ret = builtGeometry.mesh;
-
-    const physicsImpostorParams: BabylonPhysicsImpostorParameters = {
-      mass: Mass.toGramsValue(link.mass || Mass.grams(0)),
-      restitution: link.restitution ?? 0,
-      friction: link.friction ?? 0.5,
-    };
+    const mesh = builtGeometry.mesh;
 
     // We assume the mesh is defined in meters. Bring it into our default scaling.
-    ret.scaling.scaleInPlace(RENDER_SCALE_METERS_MULTIPLIER);
+    mesh.scaling.scaleInPlace(RENDER_SCALE_METERS_MULTIPLIER);
+
+    const body = new PhysicsBody(mesh, PhysicsMotionType.DYNAMIC, false, this.bScene_);
+
+    const parameters: PhysicsShapeParameters = { mesh: mesh };
+
 
     switch (link.collisionBody.type) {
+
       case Node.Link.CollisionBody.Type.Box: {
-        ret.physicsImpostor = new BabylonPhysicsImpostor(
-          ret,
-          BabylonPhysicsImpostor.BoxImpostor,
-          physicsImpostorParams,
-          this.bScene_
-        );
-        this.colliders_.add(ret);
+        const type = PhysicsShapeType.BOX;
+    
+        const parameters: PhysicsShapeParameters = { mesh: mesh };
+        const options: PhysicShapeOptions = { type: type, parameters: parameters };
+        const shape = new PhysicsShape(options, this.bScene_);
+        shape.material = {
+          friction: link.friction ?? 0.5,
+          restitution: link.restitution ?? 0,
+        };
+        body.shape = shape;
+        body.setMassProperties({ mass: Mass.toGramsValue(link.mass || Mass.grams(0)) });
+
+        this.colliders_.add(mesh);
         break;
       }
       case Node.Link.CollisionBody.Type.Cylinder: {
-        ret.physicsImpostor = new BabylonPhysicsImpostor(
-          ret,
-          BabylonPhysicsImpostor.CylinderImpostor,
-          physicsImpostorParams,
-          this.bScene_
-        );
-        this.colliders_.add(ret);
+        const type = PhysicsShapeType.CYLINDER;
+    
+        const parameters: PhysicsShapeParameters = { mesh: mesh };
+        const options: PhysicShapeOptions = { type: type, parameters: parameters };
+        const shape = new PhysicsShape(options, this.bScene_);
+        shape.material = {
+          friction: link.friction ?? 0.5,
+          restitution: link.restitution ?? 0,
+        };
+        body.shape = shape;
+        body.setMassProperties({ mass: Mass.toGramsValue(link.mass || Mass.grams(0)) });
+
+        this.colliders_.add(mesh);
         break;
       }
       case Node.Link.CollisionBody.Type.Embedded: {
         for (const collider of builtGeometry.colliders ?? []) {
           const bCollider = collider.mesh;
-          bCollider.parent = ret;
+          bCollider.parent = mesh;
 
-          bCollider.physicsImpostor = new BabylonPhysicsImpostor(
-            bCollider,
-            collider.type,
-            {
-              ...physicsImpostorParams,
-              mass: 0,
-            },
-            this.bScene_
-          );
+    
+          const parameters: PhysicsShapeParameters = { mesh: bCollider };
+          const options: PhysicShapeOptions = { type: collider.type, parameters: parameters };
+          const shape = new PhysicsShape(options, this.bScene_);
+          shape.material = {
+            friction: link.friction ?? 0.5,
+            restitution: link.restitution ?? 0,
+          };
+          body.shape = shape;
+          body.setMassProperties({ mass: Mass.toGramsValue(Mass.grams(0)) });
 
           bCollider.visibility = 0;
           this.colliders_.add(bCollider);
         }
 
-        ret.physicsImpostor = new BabylonPhysicsImpostor(
-          ret,
-          BabylonPhysicsImpostor.NoImpostor,
-          physicsImpostorParams,
-          this.bScene_
-        );
-        this.colliders_.add(ret);
+        this.colliders_.add(mesh);
 
         break;
       }
@@ -218,9 +226,9 @@ class RobotBinding {
       }
     }
 
-    if (this.physicsViewer_) this.physicsViewer_.showImpostor(ret.physicsImpostor, ret);
+    if (this.physicsViewer_) this.physicsViewer_.showBody(mesh.physicsBody);
     
-    return ret;
+    return mesh;
   };
 
   private createSensor_ = <T extends Node.FrameLike, O, S extends RobotBinding.SensorObject<T, O>>(s: { new(parameters: RobotBinding.SensorParameters<T>): S }) => (id: string, definition: T): S => {
@@ -268,30 +276,24 @@ class RobotBinding {
     if (!parent) throw new Error(`Missing parent: "${weight.parentId}" for weight "${id}"`);
     if (parent.type !== Node.Type.Link) throw new Error(`Invalid parent type: "${parent.type}" for weight "${id}"`);
 
-    ret.physicsImpostor = new BabylonPhysicsImpostor(
-      ret,
-      BabylonPhysicsImpostor.NoImpostor,
-      {
-        mass: Mass.toGramsValue(weight.mass),
-        restitution: 0,
-        friction: 0,
-      },
-      this.bScene_
-    );
+    const sphereShape = new PhysicsShapeSphere(new BabylonVector3(0,0,0),.001, this.bScene_);
+    const sphereBody = new PhysicsBody(ret, PhysicsMotionType.DYNAMIC, false, this.bScene_);
+    sphereBody.shape = sphereShape;
+    sphereBody.setMassProperties({ mass: Mass.toGramsValue(weight.mass) });
 
     const bParent = this.links_[weight.parentId];
     if (!bParent) throw new Error(`Missing parent instantiation: "${weight.parentId}" for weight "${id}"`);
 
     const bOrigin = ReferenceFrame.toBabylon(weight.origin, RENDER_SCALE);
-    
-    const bJoint = new BabylonPhysicsJoint(BabylonPhysicsJoint.LockJoint, {
-      mainPivot: bOrigin.position,
-      mainAxis: BabylonVector3.Up(),
-      connectedPivot: BabylonVector3.Zero(),
-      connectedAxis: BabylonVector3.Up().applyRotationQuaternion(bOrigin.rotationQuaternion.invert()),
-    });
 
-    bParent.physicsImpostor.addJoint(ret.physicsImpostor, bJoint);
+    const constraint = new LockConstraint(
+      bOrigin.position,
+      BabylonVector3.Zero(),
+      BabylonVector3.Up(),
+      BabylonVector3.Up().applyRotationQuaternion(bOrigin.rotationQuaternion.invert()),
+      this.bScene_
+    );
+    bParent.physicsBody.addConstraint(ret.physicsBody, constraint);
 
     return ret;
   };
@@ -332,34 +334,46 @@ class RobotBinding {
       bChild.computeWorldMatrix(true);
     }
 
-    const ret = new BabylonHingeJoint({
-      mainPivot: Vector3.toBabylon(hinge.parentPivot, RENDER_SCALE),
-      mainAxis: RawVector3.toBabylon(hinge.parentAxis),
-      connectedAxis: bChildAxis,
-      connectedPivot: Vector3.toBabylon(hinge.childPivot, RENDER_SCALE)
-    });
+    const joint: Physics6DoFConstraint = new Physics6DoFConstraint({
+      pivotA: Vector3.toBabylon(hinge.parentPivot, RENDER_SCALE),
+      pivotB: Vector3.toBabylon(hinge.childPivot, RENDER_SCALE),
+      perpAxisA: RawVector3.toBabylon(hinge.parentAxis),
+      perpAxisB: bChildAxis,
+    },
+    [
+      {
+        axis: PhysicsConstraintAxis.LINEAR_DISTANCE,
+        minLimit: 0,
+        maxLimit: 0,
+      },
+    ],
+    this.bScene_
+    );
 
-    bParent.physicsImpostor.addJoint(bChild.physicsImpostor, ret);
 
-    ret.setMotor(0, 10);
+    bParent.physicsBody.addConstraint(bChild.physicsBody, joint);
 
-    return ret;
+    // ret.setMotor(0, 10);
+
+    return joint;
   };
 
-  private hingeAngle_ = (joint: BabylonMotorEnabledJoint): number => {
-    let currentAngle: number;
-    joint.executeNativeFunction((world, joint) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      currentAngle = joint.getHingeAngle();
-    });
+  private hingeAngle_ = (joint: Physics6DoFConstraint): number => {
+    
+    const currentAngle: number = joint.getAxisMotorTarget(0);
+    // joint.executeNativeFunction((world, joint) => {
+    //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    //   currentAngle = joint.getHingeAngle();
+    // });
     return currentAngle;
   };
 
-  private setMotorVelocity_ = (joint: BabylonMotorEnabledJoint, velocity: number) => {
-    joint.executeNativeFunction((world, joint) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      joint.enableAngularMotor(true, velocity, 100000);
-    });
+  private setMotorVelocity_ = (joint: Physics6DoFConstraint, velocity: number) => {
+    joint.setAxisMotorTarget(0, velocity);
+    // joint.executeNativeFunction((world, joint) => {
+    //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    //   joint.enableAngularMotor(true, velocity, 100000);
+    // });
   };
 
   
@@ -561,19 +575,19 @@ class RobotBinding {
         this.lastServoEnabledAngle_[i] = -desiredAngle + twist;
       }
 
-      bServo.executeNativeFunction((world, joint) => {
-        /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
+      bServo.setAxisMaxLimit(0, physicalMaxRads);
+      bServo.setAxisMinLimit(0, physicalMinRads);
 
-        joint.setLimit(physicalMinRads, physicalMaxRads, 0.9, 0.3, 1);
-        joint.setMaxMotorImpulse(10000);
-        const angle = this.lastServoEnabledAngle_[i];
-        if (Math.abs(angle - joint.getHingeAngle()) > Math.PI / 8) {
-          joint.setMotorTarget(angle, 0.2);
-        } else {
-          joint.setMotorTarget(angle, 0.1);
-        }
-        /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
-      });
+      bServo.setAxisMotorMaxForce(0, 10000);      
+      const angle = this.lastServoEnabledAngle_[i];
+
+      if (Math.abs(angle - bServo.getAxisMotorTarget(0)) > Math.PI / 8) {
+        bServo.setAxisMotorTarget(0, angle);
+        // bServo.setMotorTarget(angle, 0.2);
+      } else {
+        bServo.setAxisMotorTarget(0, angle);
+        // bServo.setMotorTarget(angle, 0.1);
+      }
     }
 
     // Digital Sensors
@@ -686,14 +700,14 @@ class RobotBinding {
 
     for (const link of Object.values(this.links_)) {
       link.setParent(rootTransformNode);
-      link.physicsImpostor.setAngularVelocity(BabylonVector3.Zero());
-      link.physicsImpostor.setLinearVelocity(BabylonVector3.Zero());
+      link.physicsBody.setAngularVelocity(BabylonVector3.Zero());
+      link.physicsBody.setLinearVelocity(BabylonVector3.Zero());
     }
 
     for (const weight of Object.values(this.weights_)) {
       weight.setParent(rootTransformNode);
-      weight.physicsImpostor.setAngularVelocity(BabylonVector3.Zero());
-      weight.physicsImpostor.setLinearVelocity(BabylonVector3.Zero());
+      weight.physicsBody.setAngularVelocity(BabylonVector3.Zero());
+      weight.physicsBody.setLinearVelocity(BabylonVector3.Zero());
     }
 
     rootTransformNode.position = RawVector3.toBabylon(rawOrigin.position || RawVector3.ZERO)
@@ -765,12 +779,14 @@ class RobotBinding {
         }
         case Node.Type.Motor: {
           const bJoint = this.createHinge_(nodeId, node);
+          bJoint.setAxisMotorType(0, 2); // Position control
           this.motors_[nodeId] = bJoint;
           this.motorPorts_[node.motorPort] = nodeId;
           break;
         }
         case Node.Type.Servo: {
           const bJoint = this.createHinge_(nodeId, node);
+          bJoint.setAxisMotorType(0, 1); // Velocity control
           this.servos_[nodeId] = bJoint;
           this.servoPorts_[node.servoPort] = nodeId;
           break;
@@ -956,7 +972,7 @@ namespace RobotBinding {
       let hit = false;
       meshes.forEach(mesh => {
         if (hit || mesh === this.intersector_ || links.has(mesh as BabylonMesh)) return;
-        if (!mesh.physicsImpostor) return;
+        if (!mesh.physicsBody) return;
         hit = this.intersector_.intersectsMesh(mesh, true);
       });
 
@@ -1018,7 +1034,7 @@ namespace RobotBinding {
           mesh !== this.trace_ &&
           !links.has(mesh as BabylonMesh) &&
           !colliders.has(mesh as BabylonMesh) &&
-          (!!mesh.physicsImpostor || metadata.selected)
+          (!!mesh.physicsBody || metadata.selected)
         );
       });
 
@@ -1112,7 +1128,7 @@ namespace RobotBinding {
       for (let i = 0; i < meshes.length; i++) {
         const mesh = meshes.data[i];
         if (mesh === this.trace_) continue;
-        if (!mesh.physicsImpostor) continue;
+        if (!mesh.physicsBody) continue;
         hit = ray.intersectsBox(mesh.getBoundingInfo().boundingBox);
         if (hit) break;
       }

@@ -16,7 +16,7 @@ import { Material as BabylonMaterial } from '@babylonjs/core/Materials/material'
 import { StandardMaterial as BabylonStandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 import { GizmoManager as BabylonGizmoManager } from '@babylonjs/core/Gizmos/gizmoManager';
 import { ArcRotateCamera as BabylonArcRotateCamera } from '@babylonjs/core/Cameras/arcRotateCamera';
-import { PhysicsImpostor as BabylonPhysicsImpostor } from '@babylonjs/core/Physics/physicsImpostor';
+import { PhysicsBody, PhysicsMotionType, PhysicsShape, PhysicsShapeType, PhysicShapeOptions, PhysicsShapeParameters, IPhysicsCollisionEvent, IPhysicsEnginePluginV2 } from '@babylonjs/core';
 import { IShadowLight as BabylonIShadowLight } from '@babylonjs/core/Lights/shadowLight';
 import { PointLight as BabylonPointLight } from '@babylonjs/core/Lights/pointLight';
 import { SpotLight as BabylonSpotLight } from '@babylonjs/core/Lights/spotLight';
@@ -118,11 +118,11 @@ class SceneBinding {
 
   private seed_ = 0;
 
-  constructor(bScene: BabylonScene) {
+  constructor(bScene: BabylonScene, physics: IPhysicsEnginePluginV2) {
     this.bScene_ = bScene;
     this.scene_ = Scene.EMPTY;
     const gravityVector = new BabylonVector3(0, -9.81, 0);
-    this.bScene_.enablePhysics(gravityVector);
+    this.bScene_.enablePhysics(gravityVector, physics);
     this.bScene_.getPhysicsEngine().setSubTimeStep(2);
     
     // this.physicsViewer_ = new BabylonPhysicsViewer(this.bScene_);
@@ -863,18 +863,6 @@ class SceneBinding {
 
       bNode.rotationQuaternion = Quaternion.toBabylon(Rotation.toRawQuaternion(orientation));
       bNode.scaling.set(scale.x, scale.y, scale.z);
-
-      // Physics impostor needs to be updated after scale changes
-      // TODO: Only do this if the scale actually changed in this update
-      // TODO: Need to consider the impact of this, since it may destroy joints
-      SceneBinding.apply_(bNode, m => {
-        if (m.physicsImpostor) {
-          const mParent = m.parent;
-          m.setParent(null);
-          m.physicsImpostor.setScalingUpdated();
-          m.setParent(mParent);
-        }
-      });
     }
   };
 
@@ -1502,30 +1490,41 @@ class SceneBinding {
   };
 
   private cachedCollideCallbacks_: Dict<{
-    callback: (collider: BabylonPhysicsImpostor, collidedWith: BabylonPhysicsImpostor, point: BabylonVector3) => void;
-    otherImpostors: BabylonPhysicsImpostor[];
+    callback: (collisionEvent: IPhysicsCollisionEvent) => void;
   }[]> = {};
 
   private restorePhysicsToObject = (mesh: BabylonAbstractMesh, objectNode: Node.Obj | Node.FromSpaceTemplate, nodeId: string, scene: Scene): void => {
-    // Physics impostors should only be added to physics-enabled, visible, non-selected objects
+    // Physics should only be added to physics-enabled, visible, non-selected objects
     if (
       !objectNode.physics ||
       !objectNode.visible ||
       (nodeId && scene.selectedNodeId === nodeId) ||
-      (mesh.physicsImpostor && !mesh.physicsImpostor.isDisposed)
+      (!mesh.physicsBody)
     ) return;
 
     const initialParent = mesh.parent;
     mesh.setParent(null);
+    
+    const body = new PhysicsBody(mesh, PhysicsMotionType.DYNAMIC, false, this.bScene_);
 
-    const type = IMPOSTOR_TYPE_MAPPINGS[objectNode.physics.type];
-    mesh.physicsImpostor = new BabylonPhysicsImpostor(mesh, type, {
-      mass: objectNode.physics.mass ? Mass.toGramsValue(objectNode.physics.mass) : 0,
-      restitution: objectNode.physics.restitution ?? 0.5,
+    const type = PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type];
+    
+    const parameters: PhysicsShapeParameters = { mesh: mesh as BabylonMesh };
+
+    const options: PhysicShapeOptions = { type: type, parameters: parameters };
+
+    const shape = new PhysicsShape(options, this.bScene_);
+
+    shape.material = {
       friction: objectNode.physics.friction ?? 5,
-    });
+      restitution: objectNode.physics.restitution ?? 0.5,
+    };
 
-    if (this.physicsViewer_) this.physicsViewer_.showImpostor(mesh.physicsImpostor);
+    body.shape = shape;
+
+    body.setMassProperties({ mass: objectNode.physics.mass ? Mass.toGramsValue(objectNode.physics.mass) : 0 });
+
+    if (this.physicsViewer_) this.physicsViewer_.showBody(mesh.physicsBody);
 
     mesh.setParent(initialParent);
 
@@ -1534,13 +1533,12 @@ class SceneBinding {
 
   
   private removePhysicsFromObject = (mesh: BabylonAbstractMesh) => {
-    if (!mesh.physicsImpostor) return;
+    if (!mesh.physicsBody) return;
 
     const parent = mesh.parent;
     mesh.setParent(null);
 
-    if (!mesh.physicsImpostor.isDisposed) mesh.physicsImpostor.dispose();
-    mesh.physicsImpostor = undefined;
+    mesh.physicsBody.dispose();
 
     mesh.setParent(parent);
 
@@ -1555,25 +1553,27 @@ class SceneBinding {
       const meshes = this.nodeMeshes_(nodeId);
       if (meshes.length === 0) continue;
 
-      const impostors = meshes
-        .map(mesh => mesh.physicsImpostor)
-        .filter(impostor => impostor && !impostor.isDisposed);
+      const meshcopy = meshes
+        .map(mesh => mesh.physicsBody)
+        .filter(body => !body);
 
-      if (impostors.length === 0) continue;
+      if (meshcopy.length === 0) continue;
 
       const filterIds = this.collisionFilters_[nodeId];
 
-      const otherImpostors = Array.from(filterIds)
+      const otherBodies = Array.from(filterIds)
         .map(id => this.nodeMeshes_(id))
         .reduce((acc, val) => [...acc, ...val], [])
-        .filter(mesh => mesh && mesh.physicsImpostor)
-        .map(mesh => mesh.physicsImpostor);
+        .filter(mesh => mesh && mesh.physicsBody)
+        .map(mesh => mesh.physicsBody);
 
-      for (const impostor of impostors) {
-        impostor._onPhysicsCollideCallbacks = [{
-          callback: this.onCollideEvent_,
-          otherImpostors,
-        }];
+      for (const body of meshcopy) {
+        const observable = body.getCollisionObservable();
+        observable.add(this.onCollideEvent_);
+        // body._onPhysicsCollideCallbacks = [{
+        //   callback: this.onCollideEvent_,
+        //   otherBodies,
+        // }];
       }
     }
   };
@@ -1593,15 +1593,18 @@ class SceneBinding {
   };
 
   private onCollideEvent_ = (
-    collider: BabylonPhysicsImpostor,
-    collidedWith: BabylonPhysicsImpostor,
-    point: BabylonVector3
+    collisionEvent: IPhysicsCollisionEvent,
   ) => {
-    if (!('metadata' in collider.object)) return;
-    if (!('metadata' in collidedWith.object)) return;
 
-    const colliderMetadata = collider.object['metadata'] as SceneMeshMetadata;
-    const collidedWithMetadata = collidedWith.object['metadata'] as SceneMeshMetadata;
+    const collider = collisionEvent.collider;
+    const collidedWith = collisionEvent.collidedAgainst;
+    const point = collisionEvent.point;
+
+    if (!('metadata' in collider.transformNode)) return;
+    if (!('metadata' in collidedWith.transformNode)) return;
+
+    const colliderMetadata = collider.transformNode.metadata as SceneMeshMetadata;
+    const collidedWithMetadata = collidedWith.transformNode.metadata as SceneMeshMetadata;
 
     if (!colliderMetadata) return;
     if (!collidedWithMetadata) return;
@@ -1840,12 +1843,12 @@ class SceneBinding {
   }
 }
 
-const IMPOSTOR_TYPE_MAPPINGS: { [key in Node.Physics.Type]: number } = {
-  'box': BabylonPhysicsImpostor.BoxImpostor,
-  'sphere': BabylonPhysicsImpostor.SphereImpostor,
-  'cylinder': BabylonPhysicsImpostor.CylinderImpostor,
-  'mesh': BabylonPhysicsImpostor.MeshImpostor,
-  'none': BabylonPhysicsImpostor.NoImpostor,
+const PHYSICS_SHAPE_TYPE_MAPPINGS: { [key in Node.Physics.Type]: number } = {
+  'box': PhysicsShapeType.BOX,
+  'sphere': PhysicsShapeType.SPHERE,
+  'cylinder': PhysicsShapeType.CYLINDER,
+  'mesh': PhysicsShapeType.MESH,
+  'none': PhysicsShapeType.CONVEX_HULL,
 };
 
 export default SceneBinding;
