@@ -16,7 +16,7 @@ import { Material as BabylonMaterial } from '@babylonjs/core/Materials/material'
 import { StandardMaterial as BabylonStandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 import { GizmoManager as BabylonGizmoManager } from '@babylonjs/core/Gizmos/gizmoManager';
 import { ArcRotateCamera as BabylonArcRotateCamera } from '@babylonjs/core/Cameras/arcRotateCamera';
-import { PhysicsBody, PhysicsMotionType, PhysicsShape, PhysicsShapeType, PhysicShapeOptions, PhysicsShapeParameters, IPhysicsCollisionEvent, IPhysicsEnginePluginV2 } from '@babylonjs/core';
+import { PhysicsBody, PhysicsMotionType, PhysicsShape, PhysicsShapeType, PhysicShapeOptions, PhysicsShapeParameters, IPhysicsCollisionEvent, IPhysicsEnginePluginV2, PhysicsAggregate } from '@babylonjs/core';
 import { IShadowLight as BabylonIShadowLight } from '@babylonjs/core/Lights/shadowLight';
 import { PointLight as BabylonPointLight } from '@babylonjs/core/Lights/pointLight';
 import { SpotLight as BabylonSpotLight } from '@babylonjs/core/Lights/spotLight';
@@ -119,13 +119,14 @@ class SceneBinding {
   private seed_ = 0;
 
   constructor(bScene: BabylonScene, physics: IPhysicsEnginePluginV2) {
+    console.log("Creating scene binding");
     this.bScene_ = bScene;
     this.scene_ = Scene.EMPTY;
-    const gravityVector = new BabylonVector3(0, -9.81, 0);
+    const gravityVector = new BabylonVector3(0, -9.8 * 3, 0); // -9.81
     this.bScene_.enablePhysics(gravityVector, physics);
-    this.bScene_.getPhysicsEngine().setSubTimeStep(2);
+    this.bScene_.getPhysicsEngine().setSubTimeStep(1);
     
-    // this.physicsViewer_ = new BabylonPhysicsViewer(this.bScene_);
+    this.physicsViewer_ = new BabylonPhysicsViewer(this.bScene_);
 
     this.root_ = new BabylonTransformNode('__scene_root__', this.bScene_);
     this.gizmoManager_ = new BabylonGizmoManager(this.bScene_);
@@ -140,6 +141,7 @@ class SceneBinding {
 
     this.scriptManager_.onCollisionFiltersChanged = this.onCollisionFiltersChanged_;
     this.scriptManager_.onIntersectionFiltersChanged = this.onIntersectionFiltersChanged_;
+    console.log("Scene binding created");
   }
 
   private robotLinkOrigins_: Dict<Dict<ReferenceFrame>> = {};
@@ -637,6 +639,7 @@ class SceneBinding {
   };
 
   private createObject_ = async (node: Node.Obj, nextScene: Scene): Promise<BabylonNode> => {
+    // console.log('createObject_', node);
     const parent = this.findBNode_(node.parentId, true);
 
     const geometry = nextScene.geometry[node.geometryId] ?? preBuiltGeometries[node.geometryId];
@@ -657,9 +660,10 @@ class SceneBinding {
     }
 
     // Create physics
-    SceneBinding.apply_(ret, m => this.restorePhysicsToObject(m, node, null, nextScene));
+    // SceneBinding.apply_(ret, m => this.restorePhysicsToObject(m, node, null, nextScene));
 
     ret.setParent(parent);
+    // console.log("Object created: ", ret);
 
     return ret;
   };
@@ -724,18 +728,24 @@ class SceneBinding {
   private createRobot_ = async (id: string, node: Node.Robot): Promise<RobotBinding> => {
     // This should probably be somewhere else, but it ensures this is called during
     // initial instantiation and when a new scene is loaded.
+    console.log('createRobot_', node);
     WorkerInstance.sync(node.state);
     const robotBinding = new RobotBinding(this.bScene_, this.physicsViewer_);
     const robot = this.robots_[node.robotId];
     if (!robot) throw new Error(`Robot by id "${node.robotId}" not found`);
     await robotBinding.setRobot(node, robot, id);
     robotBinding.linkOrigins = this.robotLinkOrigins_[id] || {};
+    console.log('robot linkOrigins', robotBinding.linkOrigins);
+
+    // alert("ROBOT ORIGIN NEEDS SETTING HERE");
 
     // FIXME: For some reason this origin isn't respected immediately. We need to look into it.
-    robotBinding.visible = false;
+    robotBinding.visible = true;
     const observerObj: { observer: BabylonObserver<BabylonScene> } = { observer: null };
     
     let count = 0;
+    robotBinding.origin = node.origin;
+    console.log('robotBinding origin', robotBinding.origin);
     
     this.declineTicks_ = true;
     observerObj.observer = this.bScene_.onAfterRenderObservable.add((data, state) => {
@@ -748,21 +758,25 @@ class SceneBinding {
 
       const { origin, visible } = node;
 
+      // console.log("setting robotBinding origin to ", origin);
       robotBinding.origin = origin || ReferenceFrame.IDENTITY;
 
       const linkOrigins = this.robotLinkOrigins_[id];
       if (linkOrigins) robotBinding.linkOrigins = linkOrigins;
+      // console.log('robot origin2', robotBinding.origin);
       
-      if (count++ < 10) return;
+      if (count++ < 200) return;
 
       robotBinding.visible = visible ?? false;
       observerObj.observer.unregisterOnNextCall = true;
       this.declineTicks_ = false;
     });
 
+    console.log('End of createRobot_ bindings:', robotBinding);
     this.robotBindings_[id] = robotBinding;
 
     this.syncCollisionFilters_();
+
 
     return robotBinding;
   };
@@ -842,6 +856,7 @@ class SceneBinding {
     if (ret instanceof BabylonAbstractMesh || ret instanceof BabylonTransformNode) {
       SceneBinding.apply_(ret, m => {
         m.metadata = { id } as SceneMeshMetadata;
+        this.restorePhysicsToObject(m, nodeToCreate as Node.Obj, null, nextScene);
       });
     }
 
@@ -854,6 +869,8 @@ class SceneBinding {
       const position: Vector3 = origin.position ?? Vector3.zero();
       const orientation: Rotation = origin.orientation ?? Rotation.Euler.identity();
       const scale = origin.scale ?? RawVector3.ONE;
+
+      // console.log("UpdateNodePosition_", node.name, position);
 
       bNode.position.set(
         Distance.toCentimetersValue(position.x || Distance.centimeters(0)),
@@ -950,7 +967,7 @@ class SceneBinding {
         }
       });
     }
-
+    console.log("Object updated", bNode);
     return Promise.resolve(bNode);
   };
 
@@ -1348,10 +1365,10 @@ class SceneBinding {
 
   private updateNode_ = async (id: string, node: Patch<Node>, geometryPatches: Dict<Patch<Geometry>>, nextScene: Scene): Promise<BabylonNode> => {
     
+    // console.log('updateNode_', id, node.type);
     switch (node.type) {
       // The node hasn't changed type, but some fields have been changed
       case Patch.Type.InnerChange: {
-        console.log('updateNode_ InnerChange', id, node);
         // If scriptIds changed, rebind the scripts
         if (node.inner.scriptIds.type === Patch.Type.OuterChange) {
           for (const scriptId of node.inner.scriptIds.prev || []) this.scriptManager_.unbind(scriptId, id);
@@ -1380,7 +1397,6 @@ class SceneBinding {
           case 'from-jbc-template': return this.updateJBCFromTemplate_(id, node as Patch.InnerChange<Node.FromJBCTemplate>, nextScene);
           case 'from-rock-template': return this.updateRockFromTemplate_(id, node as Patch.InnerChange<Node.FromRockTemplate>, nextScene);
           case 'from-space-template': {
-            console.log('updateNode_ from-space-template', id, node);
             return this.updateSpaceFromTemplate_(id, node as Patch.InnerChange<Node.FromSpaceTemplate>, nextScene);
           }
           default: {
@@ -1392,7 +1408,6 @@ class SceneBinding {
       // The node has been wholesale replaced by another type of node
       case Patch.Type.OuterChange: {
         this.destroyNode_(id);
-
         return this.createNode_(id, node.next, nextScene);
       }
       // The node was newly added to the scene
@@ -1440,7 +1455,7 @@ class SceneBinding {
   private gizmoManager_: BabylonGizmoManager;
 
   private createArcRotateCamera_ = (camera: Camera.ArcRotate): BabylonArcRotateCamera => {
-    const ret = new BabylonArcRotateCamera('botcam', 10, 10, 10, Vector3.toBabylon(camera.target, 'centimeters'), this.bScene_);
+    const ret = new BabylonArcRotateCamera('botcam', 0, 0, 0, Vector3.toBabylon(camera.target, 'centimeters'), this.bScene_);
     ret.attachControl(this.bScene_.getEngine().getRenderingCanvas(), true);
     ret.position = Vector3.toBabylon(camera.position, 'centimeters');
     ret.panningSensibility = 100;
@@ -1495,50 +1510,73 @@ class SceneBinding {
 
   private restorePhysicsToObject = (mesh: BabylonAbstractMesh, objectNode: Node.Obj | Node.FromSpaceTemplate, nodeId: string, scene: Scene): void => {
     // Physics should only be added to physics-enabled, visible, non-selected objects
+    // console.log("restorePhysicsToObject", objectNode, nodeId);
     if (
       !objectNode.physics ||
       !objectNode.visible ||
       (nodeId && scene.selectedNodeId === nodeId) ||
-      (!mesh.physicsBody)
-    ) return;
+      (mesh.physicsBody)
+    ) {
+      // console.log("not restoring physics");
+      // console.log(mesh);
+      return;
+    }
 
     const initialParent = mesh.parent;
     mesh.setParent(null);
-    
-    const body = new PhysicsBody(mesh, PhysicsMotionType.DYNAMIC, false, this.bScene_);
-
-    const type = PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type];
-    
-    const parameters: PhysicsShapeParameters = { mesh: mesh as BabylonMesh };
-
-    const options: PhysicShapeOptions = { type: type, parameters: parameters };
-
-    const shape = new PhysicsShape(options, this.bScene_);
-
-    shape.material = {
+    const aggregate = new PhysicsAggregate(mesh, PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type], {
+      mass: objectNode.physics.mass ? Mass.toGramsValue(objectNode.physics.mass) : 0,
       friction: objectNode.physics.friction ?? 5,
       restitution: objectNode.physics.restitution ?? 0.5,
-    };
+    }, this.bScene_);
+    // console.log("restitution", nodeId, objectNode.physics.restitution);
 
-    body.shape = shape;
+    // const body = new PhysicsBody(mesh, PhysicsMotionType.STATIC, true, this.bScene_);
 
-    body.setMassProperties({ mass: objectNode.physics.mass ? Mass.toGramsValue(objectNode.physics.mass) : 0 });
+    // const type = PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type];
+    
+    // const parameters: PhysicsShapeParameters = { mesh: mesh as BabylonMesh };
 
-    if (this.physicsViewer_) this.physicsViewer_.showBody(mesh.physicsBody);
+    // const options: PhysicShapeOptions = { type: type };
+
+    // const shape = new PhysicsShape(options, this.bScene_);
+
+    // shape.material = {
+    //   friction: objectNode.physics.friction ?? 5,
+    //   restitution: objectNode.physics.restitution ?? 0.5,
+    // };
+
+    // body.shape = shape;
+
+    // body.setMassProperties({ mass: objectNode.physics.mass ? Mass.toGramsValue(objectNode.physics.mass) : 0 });
+
+    if (this.physicsViewer_) {
+      // console.log("showbody");
+      this.physicsViewer_.showBody(mesh.physicsBody);
+    }
 
     mesh.setParent(initialParent);
 
+    // console.log("restorePhysicsToObject2", objectNode, nodeId);
     this.syncCollisionFilters_();
   };
 
   
   private removePhysicsFromObject = (mesh: BabylonAbstractMesh) => {
     if (!mesh.physicsBody) return;
+    console.log("removePhysicsFromObject", mesh);
 
     const parent = mesh.parent;
     mesh.setParent(null);
 
+    if (this.physicsViewer_) {
+      // console.log("showbody");
+      this.physicsViewer_.hideBody(mesh.physicsBody);
+    }
+    mesh.physicsBody.shape.dispose();
     mesh.physicsBody.dispose();
+    mesh.physicsBody = null;
+
 
     mesh.setParent(parent);
 
@@ -1549,6 +1587,7 @@ class SceneBinding {
   private intersectionFilters_: Dict<Set<string>> = {};
 
   private syncCollisionFilters_ = () => {
+    // console.log("syncCollisionFilters_");
     for (const nodeId in this.collisionFilters_) {
       const meshes = this.nodeMeshes_(nodeId);
       if (meshes.length === 0) continue;
@@ -1576,6 +1615,7 @@ class SceneBinding {
         // }];
       }
     }
+    // console.log("filters synced");
   };
 
   private onCollisionFiltersChanged_ = (nodeId: string, filterIds: Set<string>) => {
@@ -1596,6 +1636,7 @@ class SceneBinding {
     collisionEvent: IPhysicsCollisionEvent,
   ) => {
 
+    console.log("onCollideEvent", collisionEvent);
     const collider = collisionEvent.collider;
     const collidedWith = collisionEvent.collidedAgainst;
     const point = collisionEvent.point;
@@ -1619,6 +1660,7 @@ class SceneBinding {
     
 
   readonly setScene = async (scene: Scene, robots: Dict<Robot>) => {
+    console.log("setScene", scene, robots);
     this.robots_ = robots;
     const patch = Scene.diff(this.scene_, scene);
 
@@ -1630,7 +1672,8 @@ class SceneBinding {
     for (const nodeId of nodeIds) {
       const node = patch.nodes[nodeId];
       if (node.type !== Patch.Type.Remove) continue;
-
+      
+      console.log("removing node", nodeId);
       await this.updateNode_(nodeId, node, patch.geometry, scene);
       
       delete this.nodes_[nodeId];
@@ -1641,7 +1684,7 @@ class SceneBinding {
 
     // Now get a breadth-first sort of the remaining nodes (we need to make sure we add parents first)
     const sortedNodeIds = Scene.nodeOrdering(scene);
-  
+    console.log("creating nodes", sortedNodeIds);
     for (const nodeId of sortedNodeIds) {
       if (removedKeys.has(nodeId)) continue;
       const node = patch.nodes[nodeId];
@@ -1652,6 +1695,7 @@ class SceneBinding {
       }
     }
 
+    // console.log("patch nodes");
     if (patch.selectedNodeId.type === Patch.Type.OuterChange) {
       const { prev, next } = patch.selectedNodeId;
 
@@ -1718,9 +1762,14 @@ class SceneBinding {
     }
 
     if (patch.gravity.type === Patch.Type.OuterChange) {
-      this.bScene_.getPhysicsEngine().setGravity(Vector3.toBabylon(patch.gravity.next, 'centimeters'));
+      // console.log(this.bScene_.getPhysicsEngine().gravity);
+      // console.log("set gravity");
+      // this.bScene_.getPhysicsEngine().setGravity(new BabylonVector3(0,-9.8 * 1,0));
+      // console.log("gracity is", patch.gravity.next);
+      // console.log(this.bScene_.getPhysicsEngine().gravity);
     }
 
+    console.log("initialize scripts");
     // Scripts **must** be initialized after the scene is fully loaded
     const reinitializedScripts = new Set<string>();
     for (const scriptId in patch.scripts) {
@@ -1739,6 +1788,7 @@ class SceneBinding {
       }
     }
 
+    console.log("bind scripts");
     // Iterate through all nodes to find reinitialized binds
     for (const nodeId in scene.nodes) {
       const node = scene.nodes[nodeId];
@@ -1746,7 +1796,7 @@ class SceneBinding {
         if (reinitializedScripts.has(scriptId)) this.scriptManager_.bind(scriptId, nodeId);
       }
     }
-
+    console.log("set scene completed");
     this.scene_ = scene;
   };
 

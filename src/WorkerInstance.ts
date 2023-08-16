@@ -38,7 +38,7 @@ class WorkerInstance implements AbstractRobot {
   }
 
   sync(stateless: AbstractRobot.Stateless) {
-    console.log('stateless', stateless);
+    // console.log('stateless', stateless);
     this.sharedRegistersRobot_.sync(stateless);
   }
 

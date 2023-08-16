@@ -112,16 +112,16 @@ const RADSCIENCE_ORIGIN: ReferenceFrame = {
 };
 
 const BASALT_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(-30, 1, 61.3),
+  position: Vector3.centimeters(-30, 3.5, 61.3),
 };
 const ANORTHOSITE_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(-15, 1, 61.3),
+  position: Vector3.centimeters(-15, 3.5, 61.3),
 };
 const BRECCIA_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(0, 1, 61.3),
+  position: Vector3.centimeters(0, 3.5, 61.3),
 };
 const METEORITE_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(15, 1, 61.3),
+  position: Vector3.centimeters(15, 3.5, 61.3),
 };
 export const Moon_Sandbox: Scene = {
   ...baseScene,

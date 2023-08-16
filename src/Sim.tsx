@@ -225,7 +225,7 @@ export class Space {
 
     // At 100x scale, gravity should be -9.8 * 100, but this causes weird jitter behavior
     // Full gravity will be -9.8 * 10
-    const gravityVector = new BabylonVector3(0, -9.8 * 50, 0);
+    // const gravityVector = new BabylonVector3(0, -9.8 * 50, 0);
     
     const state = store.getState();
     const havokInstance = await HavokPhysics();
@@ -250,7 +250,7 @@ export class Space {
     this.sceneBinding_.scriptManager.scene = this.scene_;
     await this.sceneBinding_.setScene(this.scene_, Robots.loaded(state.robots));
     
-    this.bScene_.getPhysicsEngine().setSubTimeStep(5);
+    this.bScene_.getPhysicsEngine().setSubTimeStep(1);
 
     // (x, z) coordinates of cans around the board
   }
@@ -385,8 +385,11 @@ export class Space {
     this.engine.runRenderLoop(() => {
       // Post updates to the store
       this.updateStore_();
+      // console.log("store updated");
       this.sceneBinding_.scriptManager.trigger(ScriptManager.Event.RENDER);
+      // console.log("script manager triggered");
       this.bScene_.render();
+      // console.log("scene rendered");
     });
   }
 

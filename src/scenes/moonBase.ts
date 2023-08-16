@@ -15,12 +15,12 @@ import Dict from '../Dict';
 
 
 const ROBOT_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(0, 20, 0),
+  position: Vector3.centimeters(0, 10, 0),
   orientation: Rotation.eulerDegrees(0, 0, 0),
 };
 
 const GROUND_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(0, -0.5, 50),
+  position: Vector3.centimeters(0, -.5, 50),
   orientation: Rotation.eulerDegrees(0, 0, 0)
 };
 
@@ -88,7 +88,7 @@ export function createBaseSceneSurface(): Scene {
         visible: true,
         physics: {
           type: 'box',
-          restitution: 1,
+          restitution: .3,
           friction: 1,
         },
         material: {
@@ -109,7 +109,7 @@ export function createBaseSceneSurface(): Scene {
         editable: true,
         physics: {
           type: 'box',
-          restitution: 1,
+          restitution: .3,
           friction: 1,
         },
         material: {
@@ -159,7 +159,7 @@ export function createBaseSceneSurface(): Scene {
     }),
     gravity: {
       x: Distance.meters(0),
-      y: Distance.meters(-9.8 * .17),
+      y: Distance.meters(-9.8),
       z: Distance.meters(0),
     }
   };

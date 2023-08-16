@@ -88,7 +88,7 @@ const reamTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'ream',
   physics: {
     type: 'box',
-    restitution: .9,
+    restitution: .3,
     friction: 1,
     mass: Mass.pounds(5),
   },
@@ -195,8 +195,8 @@ const jbcMatATemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'jbc_mat_a',
   physics: {
     type: 'box',
-    restitution: 0,
-    friction: 1
+    restitution: .2,
+    friction: 10
   },
 };
 
@@ -205,8 +205,8 @@ const jbcMatBTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'jbc_mat_b',
   physics: {
     type: 'box',
-    restitution: 0,
-    friction: 1
+    restitution: .2,
+    friction: 10
   },
 };
 

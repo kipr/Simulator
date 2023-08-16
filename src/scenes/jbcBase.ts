@@ -12,7 +12,7 @@ import { sprintf } from 'sprintf-js';
 import Dict from '../Dict';
 
 const ROBOT_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(0, 5, 0),
+  position: Vector3.centimeters(0, 0, 0),
   orientation: Rotation.eulerDegrees(0, 0, 0),
 };
 
@@ -42,7 +42,7 @@ const JBC_MAT_ORIGIN: ReferenceFrame = {
 const GROUND_ORIGIN: ReferenceFrame = {
   position: {
     x: Distance.centimeters(0),
-    y: Distance.centimeters(-7.2),
+    y: Distance.centimeters(-7.12),
     z: Distance.centimeters(50),
   },
   orientation: {
@@ -84,6 +84,7 @@ export function createBaseSceneSurfaceA(): Scene {
         startingOrigin: JBC_MAT_ORIGIN,
         origin: JBC_MAT_ORIGIN,
         visible: true,
+        
       },
       'ground': {
         type: 'object',
@@ -94,8 +95,8 @@ export function createBaseSceneSurfaceA(): Scene {
         visible: true,
         physics: {
           type: 'box',
-          restitution: 0,
-          friction: 1,
+          restitution: .1,
+          friction: 10,
         },
       },
       'light0': {
@@ -108,21 +109,21 @@ export function createBaseSceneSurfaceA(): Scene {
       }
     },
     camera: Camera.arcRotate({
-      radius: Distance.meters(5),
+      radius: Distance.meters(1),
       target: {
         x: Distance.meters(0),
         y: Distance.meters(0),
-        z: Distance.meters(0.5),
+        z: Distance.meters(0.25),
       },
       position: {
-        x: Distance.meters(1),
-        y: Distance.meters(0.91),
-        z: Distance.meters(1.5),
+        x: Distance.meters(0.5),
+        y: Distance.meters(0.5),
+        z: Distance.meters(-.5),
       }
     }),
     gravity: {
       x: Distance.meters(0),
-      y: Distance.meters(-9.8 / 2),
+      y: Distance.meters(-9.8),
       z: Distance.meters(0),
     }
   };
@@ -163,8 +164,8 @@ export function createBaseSceneSurfaceB(): Scene {
         visible: true,
         physics: {
           type: 'box',
-          restitution: 0,
-          friction: 1,
+          restitution: 0.1,
+          friction: 10,
         },
       },
       'light0': {
@@ -177,7 +178,7 @@ export function createBaseSceneSurfaceB(): Scene {
       },
     },
     camera: Camera.arcRotate({
-      radius: Distance.meters(5),
+      radius: Distance.meters(2),
       target: {
         x: Distance.meters(0),
         y: Distance.meters(0),
@@ -191,7 +192,7 @@ export function createBaseSceneSurfaceB(): Scene {
     }),
     gravity: {
       x: Distance.meters(0),
-      y: Distance.meters(-9.8 / 2),
+      y: Distance.meters(-9.8),
       z: Distance.meters(0),
     }
   };
