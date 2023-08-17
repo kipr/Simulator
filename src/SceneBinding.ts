@@ -5,10 +5,10 @@ import { Node as BabylonNode } from '@babylonjs/core/node';
 import { PhysicsViewer as BabylonPhysicsViewer } from '@babylonjs/core/Debug/physicsViewer';
 import { ShadowGenerator as BabylonShadowGenerator } from '@babylonjs/core/Lights/Shadows/shadowGenerator';
 import { Camera as BabylonCamera } from '@babylonjs/core/Cameras/camera';
-import { BoxBuilder as BabylonBoxBuilder } from '@babylonjs/core/Meshes/Builders/boxBuilder';
-import { SphereBuilder as BabylonSphereBuilder } from '@babylonjs/core/Meshes/Builders/sphereBuilder';
-import { CylinderBuilder as BabylonCylinderBuilder } from '@babylonjs/core/Meshes/Builders/cylinderBuilder';
-import { PlaneBuilder as BabylonPlaneBuilder } from '@babylonjs/core/Meshes/Builders/planeBuilder';
+import { CreateBox as BabylonCreateBox } from '@babylonjs/core/Meshes/Builders/boxBuilder';
+import { CreateSphere as BabylonCreateSphere } from '@babylonjs/core/Meshes/Builders/sphereBuilder';
+import { CreateCylinder as BabylonCreateCylinder } from '@babylonjs/core/Meshes/Builders/cylinderBuilder';
+import { CreatePlane as BabylonCreatePlane } from '@babylonjs/core/Meshes/Builders/planeBuilder';
 import { Vector3 as BabylonVector3, Vector4 as BabylonVector4 } from '@babylonjs/core/Maths/math.vector';
 import { Texture as BabylonTexture } from '@babylonjs/core/Materials/Textures/texture';
 import { DynamicTexture as BabylonDynamicTexture } from '@babylonjs/core/Materials/Textures/dynamicTexture';
@@ -178,7 +178,7 @@ class SceneBinding {
     let ret: FrameLike;
     switch (geometry.type) {
       case 'box': {
-        const rect = BabylonBoxBuilder.CreateBox(name, {
+        const rect = BabylonCreateBox(name, {
           updatable:true, 
           width: Distance.toCentimetersValue(geometry.size.x),
           height: Distance.toCentimetersValue(geometry.size.y),
@@ -186,34 +186,13 @@ class SceneBinding {
           faceUV: this.buildGeometryFaceUvs_(faceUvs, 12),
         }, this.bScene_);
         const verts = rect.getVerticesData("position");
-        if (name.includes('Solar')) {
-          // 20-23 are the bottom 4 verts
-          // 16-19 are the top 4 verts
-
-          for (let i = 18; i < 20; i++) {
-            verts[i * 3 + 1] = verts[i * 3 + 1] + 10;
-            verts[i * 3] = verts[i * 3] - 10;
-          }
-          for (let i = 16; i < 18; i++) {
-            verts[i * 3] = verts[i * 3] - 5;
-          }
-          for (let i = 0; i < 16; i++) {
-            verts[i * 3] = verts[i * 3] - 10;
-          }
-          for (let i = 20; i < 24; i++) {
-            verts[i * 3] = verts[i * 3] - 10;
-          }
-        }
-        // console.log(name, verts);
-        // verts[7] = verts[7] * 2;
-        rect.updateVerticesData("position", verts);
         ret = rect;
         break;
       }
       case 'sphere': {
         const bFaceUvs = this.buildGeometryFaceUvs_(faceUvs, 2)?.[0];
         const segments = 4;
-        const rock = BabylonSphereBuilder.CreateSphere(name, {
+        const rock = BabylonCreateSphere(name, {
           segments: segments, 
           updatable:true, 
           frontUVs: bFaceUvs,
@@ -224,22 +203,9 @@ class SceneBinding {
         }, this.bScene_);
       
         const positions = rock.getVerticesData("position");
-        if (name.includes('Hab')) {
-          for (let i = 51; i < positions.length; i++) {
-            positions[3 * i + 1] = 0;
-          }
-        }
+        // TODO: Replace with custom rocks from blender
         if (name.includes('Rock')) {
-          // when segments = 1, rings are 7 points; s=2, rings=9; s=3, r=11; s=4, r=13
-          // for a sphere, the vertices ring down in circles, starting with 7 on the top, and then 7 for each layer
-          // 0-6 controls height of top; 7-13 controls hight of top middle; 14-20...; 21-27
-          // const skip = [13,14,20];+6 // for segments = 1
-          // const skip = [17,18,26,27,34];+8 // for segments = 2
-          // const skip = [21,22,32,33,43,44]+10; // for segments = 3
-          const skip = [25,26,38,39,51,52,64,65]; // for segments = 4
-          // for (let i = 8; i < 20; i++) {
-          // for (let i = 10; i < 35; i++) {
-          // for (let i = 12; i < 54; i++) {
+          const skip = [25,26,38,39,51,52,64,65]; 
           for (let i = 14; i < 65; i++) {
             if (skip.includes(i)) { 
               continue;
@@ -256,7 +222,7 @@ class SceneBinding {
         break;
       }
       case 'cylinder': {
-        ret = BabylonCylinderBuilder.CreateCylinder(name, {
+        ret = BabylonCreateCylinder(name, {
           height: Distance.toCentimetersValue(geometry.height),
           diameterTop: Distance.toCentimetersValue(geometry.radius) * 2,
           diameterBottom: Distance.toCentimetersValue(geometry.radius) * 2,
@@ -265,7 +231,7 @@ class SceneBinding {
         break;
       }
       case 'cone': {
-        ret = BabylonCylinderBuilder.CreateCylinder(name, {
+        ret = BabylonCreateCylinder(name, {
           diameterTop: 0,
           height: Distance.toCentimetersValue(geometry.height),
           diameterBottom: Distance.toCentimetersValue(geometry.radius) * 2,
@@ -274,7 +240,7 @@ class SceneBinding {
         break;
       }
       case 'plane': {
-        ret = BabylonPlaneBuilder.CreatePlane(name, {
+        ret = BabylonCreatePlane(name, {
           width: Distance.toCentimetersValue(geometry.size.x),
           height: Distance.toCentimetersValue(geometry.size.y),
           frontUVs: this.buildGeometryFaceUvs_(faceUvs, 2)?.[0],
@@ -1517,8 +1483,9 @@ class SceneBinding {
       (nodeId && scene.selectedNodeId === nodeId) ||
       (mesh.physicsBody)
     ) {
-      // console.log("not restoring physics");
-      // console.log(mesh);
+      console.log("not restoring physics to object", nodeId);
+      console.log(objectNode.physics);
+      console.log(mesh.physicsBody);
       return;
     }
 
