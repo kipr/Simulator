@@ -159,7 +159,7 @@ export function createBaseSceneSurface(): Scene {
     }),
     gravity: {
       x: Distance.meters(0),
-      y: Distance.meters(-9.8),
+      y: Distance.meters(-9.8 * 0.5),
       z: Distance.meters(0),
     }
   };

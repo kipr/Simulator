@@ -151,7 +151,7 @@ export const Moon_Sandbox: Scene = {
       startingOrigin: BASALT_ORIGIN,
       origin: BASALT_ORIGIN,
       editable: true,
-      visible: true,
+      visible: false,
     },
     'anorthosite': {
       type: 'from-rock-template',
@@ -160,7 +160,7 @@ export const Moon_Sandbox: Scene = {
       startingOrigin: ANORTHOSITE_ORIGIN,
       origin: ANORTHOSITE_ORIGIN,
       editable: true,
-      visible: true,
+      visible: false,
     },
     'breccia': {
       type: 'from-rock-template',
@@ -169,7 +169,7 @@ export const Moon_Sandbox: Scene = {
       startingOrigin: BRECCIA_ORIGIN,
       origin: BRECCIA_ORIGIN,
       editable: true,
-      visible: true,
+      visible: false,
     },
     'meteorite': {
       type: 'from-rock-template',
@@ -178,7 +178,7 @@ export const Moon_Sandbox: Scene = {
       startingOrigin: METEORITE_ORIGIN,
       origin: METEORITE_ORIGIN,
       editable: true,
-      visible: true,
+      visible: false,
     },
     'lifescience': {
       type: 'from-space-template',

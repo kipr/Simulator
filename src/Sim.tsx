@@ -108,9 +108,9 @@ export class Space {
         const nextScene = this.nextScene_;
         this.nextScene_ = undefined;
         await this.sceneBinding_.setScene(nextScene, Robots.loaded(store.getState().robots));
-      
       }
       this.bScene_.physicsEnabled = true;
+
     })().finally(() => {
       this.sceneSetting_ = false;
     });
@@ -181,7 +181,6 @@ export class Space {
             resolve();
           })
           .catch((e) => {
-            console.error('The simulator meshes failed to load', e);
             reject(e);
           });
       });

@@ -16,7 +16,7 @@ import { Material as BabylonMaterial } from '@babylonjs/core/Materials/material'
 import { StandardMaterial as BabylonStandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 import { GizmoManager as BabylonGizmoManager } from '@babylonjs/core/Gizmos/gizmoManager';
 import { ArcRotateCamera as BabylonArcRotateCamera } from '@babylonjs/core/Cameras/arcRotateCamera';
-import { PhysicsBody, PhysicsMotionType, PhysicsShape, PhysicsShapeType, PhysicShapeOptions, PhysicsShapeParameters, IPhysicsCollisionEvent, IPhysicsEnginePluginV2, PhysicsAggregate } from '@babylonjs/core';
+import { PhysicsShapeType, IPhysicsCollisionEvent, IPhysicsEnginePluginV2, PhysicsAggregate } from '@babylonjs/core';
 import { IShadowLight as BabylonIShadowLight } from '@babylonjs/core/Lights/shadowLight';
 import { PointLight as BabylonPointLight } from '@babylonjs/core/Lights/pointLight';
 import { SpotLight as BabylonSpotLight } from '@babylonjs/core/Lights/spotLight';
@@ -119,20 +119,25 @@ class SceneBinding {
   private seed_ = 0;
 
   constructor(bScene: BabylonScene, physics: IPhysicsEnginePluginV2) {
-    console.log("Creating scene binding");
     this.bScene_ = bScene;
     this.scene_ = Scene.EMPTY;
-    const gravityVector = new BabylonVector3(0, -9.8 * 3, 0); // -9.81
+
+    // Gravity is currently set at 5x, which seems to be a sweet spot for realism and joint performance
+    const gravityVector = new BabylonVector3(0, -9.8 * 5, 0); // -9.81
     this.bScene_.enablePhysics(gravityVector, physics);
+
+    // The sub time step is incredibly important for physics realism. 1 seems to work well.
     this.bScene_.getPhysicsEngine().setSubTimeStep(1);
     
-    this.physicsViewer_ = new BabylonPhysicsViewer(this.bScene_);
+    // Uncomment this to turn on the physics viewer for objects
+    // this.physicsViewer_ = new BabylonPhysicsViewer(this.bScene_);
 
     this.root_ = new BabylonTransformNode('__scene_root__', this.bScene_);
     this.gizmoManager_ = new BabylonGizmoManager(this.bScene_);
 
     this.camera_ = this.createNoneCamera_(Camera.NONE);
 
+    // Gizmos are the little arrows that appear when you select an object
     this.gizmoManager_.positionGizmoEnabled = true;
     this.gizmoManager_.gizmos.positionGizmo.scaleRatio = 1.25;
     this.gizmoManager_.rotationGizmoEnabled = true;
@@ -141,10 +146,10 @@ class SceneBinding {
 
     this.scriptManager_.onCollisionFiltersChanged = this.onCollisionFiltersChanged_;
     this.scriptManager_.onIntersectionFiltersChanged = this.onIntersectionFiltersChanged_;
-    console.log("Scene binding created");
   }
 
   private robotLinkOrigins_: Dict<Dict<ReferenceFrame>> = {};
+
   set robotLinkOrigins(robotLinkOrigins: Dict<Dict<ReferenceFrame>>) {
     this.robotLinkOrigins_ = robotLinkOrigins;
   }
@@ -159,6 +164,7 @@ class SceneBinding {
     return ret;
   }
 
+  // apply_ is used to propogate the function f(m) on children of the specified mesh g
   private static apply_ = (g: BabylonNode, f: (m: BabylonAbstractMesh) => void) => {
     if (g instanceof BabylonAbstractMesh) {
       f(g);
@@ -279,9 +285,6 @@ class SceneBinding {
       const mesh = BabylonMesh.MergeMeshes(children, true, true, undefined, false, true);
       mesh.visibility = 1;
       ret = mesh;
-      // for (const child of children) {
-      //   child.visibility = 1;
-      // }
     }
 
     return ret;
@@ -307,7 +310,6 @@ class SceneBinding {
   };
 
   private createMaterial_ = (id: string, material: Material) => {
-    // console.log('Creating material', id, material);
 
     let bMaterial: BabylonMaterial;
     switch (material.type) {
@@ -326,8 +328,7 @@ class SceneBinding {
               if (!color.uri) {
                 basic.diffuseColor = new BabylonColor3(0.5, 0, 0.5);
               } else {
-                if (id === '1.1.2-4 Sky') {
-                  console.log('night_sky', color.uri);
+                if (id.includes('Sky')) {
                   basic.reflectionTexture = new BabylonTexture(color.uri, this.bScene_);
                   basic.reflectionTexture.coordinatesMode = BabylonTexture.FIXED_EQUIRECTANGULAR_MODE;
                   basic.backFaceCulling = false;
@@ -345,15 +346,11 @@ class SceneBinding {
                   basic.backFaceCulling = false;
                 }
               }
-              
-              
               break;
             }
           }
         }
-
         bMaterial = basic;
-
         break;
       }
       case 'pbr': {
@@ -431,8 +428,6 @@ class SceneBinding {
       }
     }
 
-    
-
     return bMaterial;
   };
 
@@ -448,7 +443,6 @@ class SceneBinding {
           break;
         }
         case 'texture': {
-          console.log('Updating texture', color.next.uri);
           if (!color.next.uri) {
             bMaterial.diffuseColor = new BabylonColor3(0.5, 0, 0.5);
             bMaterial.diffuseTexture = null;
@@ -573,21 +567,17 @@ class SceneBinding {
   };
 
   private updateMaterial_ = (bMaterial: BabylonMaterial, material: Patch<Material>) => {
-    console.log('updateMaterial_', bMaterial, material);
     switch (material.type) {
       case Patch.Type.OuterChange: {
-        console.log('OuterChange');
         const { next } = material;
         const id = bMaterial ? `${bMaterial.id}` : `Scene Material ${this.materialIdIter_++}`;
         if (bMaterial) bMaterial.dispose();
         if (next) {
           return this.createMaterial_(id, next);
         }
-
         return null;
       }
       case Patch.Type.InnerChange: {
-        console.log('InnerChange');
         const { inner, next } = material;
         switch (next.type) {
           case 'basic': {
@@ -605,7 +595,6 @@ class SceneBinding {
   };
 
   private createObject_ = async (node: Node.Obj, nextScene: Scene): Promise<BabylonNode> => {
-    // console.log('createObject_', node);
     const parent = this.findBNode_(node.parentId, true);
 
     const geometry = nextScene.geometry[node.geometryId] ?? preBuiltGeometries[node.geometryId];
@@ -613,7 +602,6 @@ class SceneBinding {
       console.error(`node ${LocalizedString.lookup(node.name, LocalizedString.EN_US)} has invalid geometry ID: ${node.geometryId}`);
       return null;
     }
-    // console.log(node);
     const ret = await this.buildGeometry_(node.name[LocalizedString.EN_US], geometry, node.faceUvs);
 
     if (!node.visible) {
@@ -625,12 +613,7 @@ class SceneBinding {
       SceneBinding.apply_(ret, m => m.material = material);
     }
 
-    // Create physics
-    // SceneBinding.apply_(ret, m => this.restorePhysicsToObject(m, node, null, nextScene));
-
     ret.setParent(parent);
-    // console.log("Object created: ", ret);
-
     return ret;
   };
 
@@ -691,27 +674,25 @@ class SceneBinding {
     return ret;
   };
 
+  // Create Robot Binding
   private createRobot_ = async (id: string, node: Node.Robot): Promise<RobotBinding> => {
     // This should probably be somewhere else, but it ensures this is called during
     // initial instantiation and when a new scene is loaded.
-    console.log('createRobot_', node);
     WorkerInstance.sync(node.state);
+
     const robotBinding = new RobotBinding(this.bScene_, this.physicsViewer_);
     const robot = this.robots_[node.robotId];
     if (!robot) throw new Error(`Robot by id "${node.robotId}" not found`);
     await robotBinding.setRobot(node, robot, id);
     robotBinding.linkOrigins = this.robotLinkOrigins_[id] || {};
-    console.log('robot linkOrigins', robotBinding.linkOrigins);
+    // console.log('robot linkOrigins', robotBinding.linkOrigins);
+    // Here the linkOrigins are all shown as 0,0,0, this may be why the initial kinematics are messed up.
 
-    // alert("ROBOT ORIGIN NEEDS SETTING HERE");
-
-    // FIXME: For some reason this origin isn't respected immediately. We need to look into it.
     robotBinding.visible = true;
     const observerObj: { observer: BabylonObserver<BabylonScene> } = { observer: null };
     
     let count = 0;
     robotBinding.origin = node.origin;
-    console.log('robotBinding origin', robotBinding.origin);
     
     this.declineTicks_ = true;
     observerObj.observer = this.bScene_.onAfterRenderObservable.add((data, state) => {
@@ -724,25 +705,21 @@ class SceneBinding {
 
       const { origin, visible } = node;
 
-      // console.log("setting robotBinding origin to ", origin);
       robotBinding.origin = origin || ReferenceFrame.IDENTITY;
 
       const linkOrigins = this.robotLinkOrigins_[id];
       if (linkOrigins) robotBinding.linkOrigins = linkOrigins;
-      // console.log('robot origin2', robotBinding.origin);
       
-      if (count++ < 200) return;
+      if (count++ < 20) return; // FIXME: This is a hack to keep the robot stationary while the kinematics sort themselves out.
 
       robotBinding.visible = visible ?? false;
       observerObj.observer.unregisterOnNextCall = true;
       this.declineTicks_ = false;
     });
 
-    console.log('End of createRobot_ bindings:', robotBinding);
     this.robotBindings_[id] = robotBinding;
 
     this.syncCollisionFilters_();
-
 
     return robotBinding;
   };
@@ -759,31 +736,7 @@ class SceneBinding {
     let nodeToCreate: Node = node;
 
     // Resolve template nodes into non-template nodes by looking up the template by ID
-    if (node.type === 'from-jbc-template') {
-      const nodeTemplate = preBuiltTemplates[node.templateId];
-      if (!nodeTemplate) {
-        console.warn('template node has invalid template ID:', node.templateId);
-        return null;
-      }
-
-      nodeToCreate = {
-        ...node,
-        ...nodeTemplate,
-      };
-    }
-    if (node.type === 'from-rock-template') {
-      const nodeTemplate = preBuiltTemplates[node.templateId];
-      if (!nodeTemplate) {
-        console.warn('template node has invalid template ID:', node.templateId);
-        return null;
-      }
-
-      nodeToCreate = {
-        ...node,
-        ...nodeTemplate,
-      };
-    }
-    if (node.type === 'from-space-template') {
+    if (node.type === 'from-jbc-template' || node.type === 'from-rock-template' || node.type === 'from-space-template') {
       const nodeTemplate = preBuiltTemplates[node.templateId];
       if (!nodeTemplate) {
         console.warn('template node has invalid template ID:', node.templateId);
@@ -836,8 +789,6 @@ class SceneBinding {
       const orientation: Rotation = origin.orientation ?? Rotation.Euler.identity();
       const scale = origin.scale ?? RawVector3.ONE;
 
-      // console.log("UpdateNodePosition_", node.name, position);
-
       bNode.position.set(
         Distance.toCentimetersValue(position.x || Distance.centimeters(0)),
         Distance.toCentimetersValue(position.y || Distance.centimeters(0)),
@@ -881,9 +832,8 @@ class SceneBinding {
     return null;
   };
 
+  // Patch changes to an object
   private updateObject_ = async (id: string, node: Patch.InnerChange<Node.Obj>, nextScene: Scene): Promise<FrameLike> => {
-    console.log('update object:', id, node);
-
     const bNode = this.findBNode_(id) as FrameLike;
 
     // If the object's geometry ID changes, recreate the object entirely
@@ -908,7 +858,6 @@ class SceneBinding {
     });
 
     // TODO: Handle changes to faceUvs when we fully support it
-
     if (node.inner.origin.type === Patch.Type.OuterChange) {
       this.updateNodePosition_(node.next, bNode);
     }
@@ -933,56 +882,6 @@ class SceneBinding {
         }
       });
     }
-    console.log("Object updated", bNode);
-    return Promise.resolve(bNode);
-  };
-
-  private updateSpaceObject_ = async (id: string, node: Patch.InnerChange<Node.FromSpaceTemplate>, nextScene: Scene): Promise<FrameLike> => {
-    console.log('update object:', id, node);
-
-    const bNode = this.findBNode_(id) as FrameLike;
-
-    // If the object's geometry ID changes, recreate the object entirely
-    if (node.inner.geometryId.type === Patch.Type.OuterChange) {
-      this.destroyNode_(id);
-      return (await this.createNode_(id, node.next, nextScene)) as FrameLike;
-    }
-
-    if (node.inner.name.type === Patch.Type.OuterChange) {
-      bNode.name = node.inner.name.next[LocalizedString.EN_US];
-    }
-
-    if (node.inner.parentId.type === Patch.Type.OuterChange) {
-      const parent = this.findBNode_(node.inner.parentId.next, true);
-      bNode.setParent(parent);
-    }
-
-    let bMaterial = this.findMaterial_(bNode);
-    bMaterial = this.updateMaterial_(bMaterial, node.inner.material);
-    SceneBinding.apply_(bNode, m => {
-      m.material = bMaterial;
-    });
-
-    // TODO: Handle changes to faceUvs when we fully support it
-
-    if (node.inner.origin.type === Patch.Type.OuterChange) {
-      this.updateNodePosition_(node.next, bNode);
-    }
-
-    if (node.inner.visible.type === Patch.Type.OuterChange) {
-      const nextVisible = node.inner.visible.next;
-      SceneBinding.apply_(bNode, m => {
-        m.isVisible = nextVisible;
-
-        // Create/remove physics for object becoming visible/invisible
-        if (!nextVisible) {
-          this.removePhysicsFromObject(m);
-        } else {
-          this.restorePhysicsToObject(m, node.next, id, nextScene);
-        }
-      });
-    }
-
     return Promise.resolve(bNode);
   };
 
@@ -1032,211 +931,17 @@ class SceneBinding {
     return robotBinding;
   };
 
-  private updateRockFromTemplate_ = (id: string, node: Patch.InnerChange<Node.FromRockTemplate>, nextScene: Scene): Promise<BabylonNode> => {
+  private updateFromTemplate_ = (
+    id: string, 
+    node: Patch.InnerChange<Node.FromRockTemplate> | Patch.InnerChange<Node.FromSpaceTemplate> | Patch.InnerChange<Node.FromJBCTemplate>, 
+    nextScene: Scene
+  ): Promise<BabylonNode> => {
     // If the template ID changes, recreate the node entirely
     if (node.inner.templateId.type === Patch.Type.OuterChange) {
       this.destroyNode_(id);
       return this.createNode_(id, node.next, nextScene);
     }
-
-    const bNode = this.findBNode_(id);
-
-    const nodeTemplate = preBuiltTemplates[node.next.templateId];
-    if (!nodeTemplate) {
-      console.warn('template node has invalid template ID:', node.next.templateId);
-      return Promise.resolve(bNode);
-    }
-
-    const prevBaseProps = Node.Base.upcast(node.prev);
-    const nextBaseProps = Node.Base.upcast(node.next);
-
-    // Create a Patch for the underlying node type and call its update function
-    switch (nodeTemplate.type) {
-      case 'empty': {
-        const emptyChange: Patch.InnerChange<Node.Empty> = {
-          type: Patch.Type.InnerChange,
-          prev: { ...nodeTemplate, ...prevBaseProps },
-          next: { ...nodeTemplate, ...nextBaseProps },
-          inner: {
-            ...node.inner,
-            type: Patch.none<'empty'>('empty'),
-          },
-        };
-        return Promise.resolve(this.updateEmpty_(id, emptyChange));
-      }
-      case 'object': {
-        const objectChange: Patch.InnerChange<Node.Obj> = {
-          type: Patch.Type.InnerChange,
-          prev: { ...nodeTemplate, ...prevBaseProps },
-          next: { ...nodeTemplate, ...nextBaseProps },
-          inner: {
-            ...node.inner,
-            type: Patch.none<'object'>('object'),
-            geometryId: Patch.none(nodeTemplate.geometryId),
-            physics: Patch.none(nodeTemplate.physics),
-            material: Patch.none(nodeTemplate.material),
-            faceUvs: Patch.none(nodeTemplate.faceUvs),
-          },
-        };
-        return this.updateObject_(id, objectChange, nextScene);
-      }
-      case 'directional-light': {
-        const directionalLightChange: Patch.InnerChange<Node.DirectionalLight> = {
-          type: Patch.Type.InnerChange,
-          prev: { ...nodeTemplate, ...prevBaseProps },
-          next: { ...nodeTemplate, ...nextBaseProps },
-          inner: {
-            ...node.inner,
-            type: Patch.none<'directional-light'>('directional-light'),
-            radius: Patch.none(nodeTemplate.radius),
-            range: Patch.none(nodeTemplate.range),
-            direction: Patch.none(nodeTemplate.direction),
-            intensity: Patch.none(nodeTemplate.intensity),
-          },
-        };
-        return Promise.resolve(this.updateDirectionalLight_(id, directionalLightChange));
-      }
-      case 'spot-light': {
-        const spotLightChange: Patch.InnerChange<Node.SpotLight> = {
-          type: Patch.Type.InnerChange,
-          prev: { ...nodeTemplate, ...prevBaseProps },
-          next: { ...nodeTemplate, ...nextBaseProps },
-          inner: {
-            ...node.inner,
-            type: Patch.none<'spot-light'>('spot-light'),
-            direction: Patch.none(nodeTemplate.direction),
-            angle: Patch.none(nodeTemplate.angle),
-            exponent: Patch.none(nodeTemplate.exponent),
-            intensity: Patch.none(nodeTemplate.intensity),
-          },
-        };
-        return Promise.resolve(this.updateSpotLight_(id, spotLightChange));
-      }
-      case 'point-light': {
-        const pointLightChange: Patch.InnerChange<Node.PointLight> = {
-          type: Patch.Type.InnerChange,
-          prev: { ...nodeTemplate, ...prevBaseProps },
-          next: { ...nodeTemplate, ...nextBaseProps },
-          inner: {
-            ...node.inner,
-            type: Patch.none<'point-light'>('point-light'),
-            intensity: Patch.none(nodeTemplate.intensity),
-            radius: Patch.none(nodeTemplate.radius),
-            range: Patch.none(nodeTemplate.range),
-          },
-        };
-        return Promise.resolve(this.updatePointLight_(id, pointLightChange));
-      }
-      default: return Promise.resolve(bNode);
-    }
-  };
-  private updateSpaceFromTemplate_ = (id: string, node: Patch.InnerChange<Node.FromSpaceTemplate>, nextScene: Scene): Promise<BabylonNode> => {
-    // If the template ID changes, recreate the node entirely
-    console.log('IN updateSpaceFromTemplate_');
-    if (node.inner.templateId.type === Patch.Type.OuterChange) {
-      this.destroyNode_(id);
-      return this.createNode_(id, node.next, nextScene);
-    }
-
-    const bNode = this.findBNode_(id);
-
-    const nodeTemplate = preBuiltTemplates[node.next.templateId];
-    if (!nodeTemplate) {
-      console.warn('template node has invalid template ID:', node.next.templateId);
-      return Promise.resolve(bNode);
-    }
-
-    const prevBaseProps = Node.Base.upcast(node.prev);
-    const nextBaseProps = Node.Base.upcast(node.next);
-
-    // Create a Patch for the underlying node type and call its update function
-    switch (nodeTemplate.type) {
-      case 'empty': {
-        const emptyChange: Patch.InnerChange<Node.Empty> = {
-          type: Patch.Type.InnerChange,
-          prev: { ...nodeTemplate, ...prevBaseProps },
-          next: { ...nodeTemplate, ...nextBaseProps },
-          inner: {
-            ...node.inner,
-            type: Patch.none<'empty'>('empty'),
-          },
-        };
-        return Promise.resolve(this.updateEmpty_(id, emptyChange));
-      }
-      case 'object': {
-        const objectChange: Patch.InnerChange<Node.Obj> = {
-          type: Patch.Type.InnerChange,
-          prev: { ...nodeTemplate, ...prevBaseProps },
-          next: { ...nodeTemplate, ...nextBaseProps },
-          inner: {
-            ...node.inner,
-            type: Patch.none<'object'>('object'),
-            geometryId: Patch.none(nodeTemplate.geometryId),
-            physics: Patch.none(nodeTemplate.physics),
-            material: Patch.none(node.next.material),
-            faceUvs: Patch.none(nodeTemplate.faceUvs),
-          },
-        };
-        return this.updateSpaceObject_(id, node, nextScene);
-        // return this.updateObject_(id, objectChange, nextScene);
-      }
-      case 'directional-light': {
-        const directionalLightChange: Patch.InnerChange<Node.DirectionalLight> = {
-          type: Patch.Type.InnerChange,
-          prev: { ...nodeTemplate, ...prevBaseProps },
-          next: { ...nodeTemplate, ...nextBaseProps },
-          inner: {
-            ...node.inner,
-            type: Patch.none<'directional-light'>('directional-light'),
-            radius: Patch.none(nodeTemplate.radius),
-            range: Patch.none(nodeTemplate.range),
-            direction: Patch.none(nodeTemplate.direction),
-            intensity: Patch.none(nodeTemplate.intensity),
-          },
-        };
-        return Promise.resolve(this.updateDirectionalLight_(id, directionalLightChange));
-      }
-      case 'spot-light': {
-        const spotLightChange: Patch.InnerChange<Node.SpotLight> = {
-          type: Patch.Type.InnerChange,
-          prev: { ...nodeTemplate, ...prevBaseProps },
-          next: { ...nodeTemplate, ...nextBaseProps },
-          inner: {
-            ...node.inner,
-            type: Patch.none<'spot-light'>('spot-light'),
-            direction: Patch.none(nodeTemplate.direction),
-            angle: Patch.none(nodeTemplate.angle),
-            exponent: Patch.none(nodeTemplate.exponent),
-            intensity: Patch.none(nodeTemplate.intensity),
-          },
-        };
-        return Promise.resolve(this.updateSpotLight_(id, spotLightChange));
-      }
-      case 'point-light': {
-        const pointLightChange: Patch.InnerChange<Node.PointLight> = {
-          type: Patch.Type.InnerChange,
-          prev: { ...nodeTemplate, ...prevBaseProps },
-          next: { ...nodeTemplate, ...nextBaseProps },
-          inner: {
-            ...node.inner,
-            type: Patch.none<'point-light'>('point-light'),
-            intensity: Patch.none(nodeTemplate.intensity),
-            radius: Patch.none(nodeTemplate.radius),
-            range: Patch.none(nodeTemplate.range),
-          },
-        };
-        return Promise.resolve(this.updatePointLight_(id, pointLightChange));
-      }
-      default: return Promise.resolve(bNode);
-    }
-  };
-  private updateJBCFromTemplate_ = (id: string, node: Patch.InnerChange<Node.FromJBCTemplate>, nextScene: Scene): Promise<BabylonNode> => {
-    // If the template ID changes, recreate the node entirely
-    if (node.inner.templateId.type === Patch.Type.OuterChange) {
-      this.destroyNode_(id);
-      return this.createNode_(id, node.next, nextScene);
-    }
-
+    // console.log("Update rock from template");
     const bNode = this.findBNode_(id);
 
     const nodeTemplate = preBuiltTemplates[node.next.templateId];
@@ -1331,7 +1036,6 @@ class SceneBinding {
 
   private updateNode_ = async (id: string, node: Patch<Node>, geometryPatches: Dict<Patch<Geometry>>, nextScene: Scene): Promise<BabylonNode> => {
     
-    // console.log('updateNode_', id, node.type);
     switch (node.type) {
       // The node hasn't changed type, but some fields have been changed
       case Patch.Type.InnerChange: {
@@ -1360,10 +1064,10 @@ class SceneBinding {
             await this.updateRobot_(id, node as Patch.InnerChange<Node.Robot>);
             return null;
           }
-          case 'from-jbc-template': return this.updateJBCFromTemplate_(id, node as Patch.InnerChange<Node.FromJBCTemplate>, nextScene);
-          case 'from-rock-template': return this.updateRockFromTemplate_(id, node as Patch.InnerChange<Node.FromRockTemplate>, nextScene);
+          case 'from-jbc-template': return this.updateFromTemplate_(id, node as Patch.InnerChange<Node.FromJBCTemplate>, nextScene);
+          case 'from-rock-template': return this.updateFromTemplate_(id, node as Patch.InnerChange<Node.FromRockTemplate>, nextScene);
           case 'from-space-template': {
-            return this.updateSpaceFromTemplate_(id, node as Patch.InnerChange<Node.FromSpaceTemplate>, nextScene);
+            return this.updateFromTemplate_(id, node as Patch.InnerChange<Node.FromSpaceTemplate>, nextScene);
           }
           default: {
             console.error('invalid node type for inner change:', (node.next as Node).type);
@@ -1399,7 +1103,6 @@ class SceneBinding {
         }
 
         if (node.prev.type === 'robot') return null;
-
         return this.findBNode_(id);
       }
     }
@@ -1476,16 +1179,12 @@ class SceneBinding {
 
   private restorePhysicsToObject = (mesh: BabylonAbstractMesh, objectNode: Node.Obj | Node.FromSpaceTemplate, nodeId: string, scene: Scene): void => {
     // Physics should only be added to physics-enabled, visible, non-selected objects
-    // console.log("restorePhysicsToObject", objectNode, nodeId);
     if (
       !objectNode.physics ||
       !objectNode.visible ||
       (nodeId && scene.selectedNodeId === nodeId) ||
       (mesh.physicsBody)
     ) {
-      console.log("not restoring physics to object", nodeId);
-      console.log(objectNode.physics);
-      console.log(mesh.physicsBody);
       return;
     }
 
@@ -1496,48 +1195,22 @@ class SceneBinding {
       friction: objectNode.physics.friction ?? 5,
       restitution: objectNode.physics.restitution ?? 0.5,
     }, this.bScene_);
-    // console.log("restitution", nodeId, objectNode.physics.restitution);
-
-    // const body = new PhysicsBody(mesh, PhysicsMotionType.STATIC, true, this.bScene_);
-
-    // const type = PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type];
-    
-    // const parameters: PhysicsShapeParameters = { mesh: mesh as BabylonMesh };
-
-    // const options: PhysicShapeOptions = { type: type };
-
-    // const shape = new PhysicsShape(options, this.bScene_);
-
-    // shape.material = {
-    //   friction: objectNode.physics.friction ?? 5,
-    //   restitution: objectNode.physics.restitution ?? 0.5,
-    // };
-
-    // body.shape = shape;
-
-    // body.setMassProperties({ mass: objectNode.physics.mass ? Mass.toGramsValue(objectNode.physics.mass) : 0 });
 
     if (this.physicsViewer_) {
-      // console.log("showbody");
       this.physicsViewer_.showBody(mesh.physicsBody);
     }
-
     mesh.setParent(initialParent);
-
-    // console.log("restorePhysicsToObject2", objectNode, nodeId);
     this.syncCollisionFilters_();
   };
 
   
   private removePhysicsFromObject = (mesh: BabylonAbstractMesh) => {
     if (!mesh.physicsBody) return;
-    console.log("removePhysicsFromObject", mesh);
 
     const parent = mesh.parent;
     mesh.setParent(null);
 
     if (this.physicsViewer_) {
-      // console.log("showbody");
       this.physicsViewer_.hideBody(mesh.physicsBody);
     }
     mesh.physicsBody.shape.dispose();
@@ -1554,7 +1227,6 @@ class SceneBinding {
   private intersectionFilters_: Dict<Set<string>> = {};
 
   private syncCollisionFilters_ = () => {
-    // console.log("syncCollisionFilters_");
     for (const nodeId in this.collisionFilters_) {
       const meshes = this.nodeMeshes_(nodeId);
       if (meshes.length === 0) continue;
@@ -1576,13 +1248,8 @@ class SceneBinding {
       for (const body of meshcopy) {
         const observable = body.getCollisionObservable();
         observable.add(this.onCollideEvent_);
-        // body._onPhysicsCollideCallbacks = [{
-        //   callback: this.onCollideEvent_,
-        //   otherBodies,
-        // }];
       }
     }
-    // console.log("filters synced");
   };
 
   private onCollisionFiltersChanged_ = (nodeId: string, filterIds: Set<string>) => {
@@ -1603,7 +1270,6 @@ class SceneBinding {
     collisionEvent: IPhysicsCollisionEvent,
   ) => {
 
-    console.log("onCollideEvent", collisionEvent);
     const collider = collisionEvent.collider;
     const collidedWith = collisionEvent.collidedAgainst;
     const point = collisionEvent.point;
@@ -1624,34 +1290,28 @@ class SceneBinding {
     }));
   };
 
-    
-
+  
   readonly setScene = async (scene: Scene, robots: Dict<Robot>) => {
-    console.log("setScene", scene, robots);
     this.robots_ = robots;
     const patch = Scene.diff(this.scene_, scene);
-
     const nodeIds = Dict.keySet(patch.nodes);
-
     const removedKeys: Set<string> = new Set();
 
     // We need to handle removals first
     for (const nodeId of nodeIds) {
       const node = patch.nodes[nodeId];
       if (node.type !== Patch.Type.Remove) continue;
-      
-      console.log("removing node", nodeId);
       await this.updateNode_(nodeId, node, patch.geometry, scene);
       
       delete this.nodes_[nodeId];
       delete this.shadowGenerators_[nodeId];
+      delete this.intersectionFilters_[nodeId];
 
       removedKeys.add(nodeId);
     }
 
     // Now get a breadth-first sort of the remaining nodes (we need to make sure we add parents first)
     const sortedNodeIds = Scene.nodeOrdering(scene);
-    console.log("creating nodes", sortedNodeIds);
     for (const nodeId of sortedNodeIds) {
       if (removedKeys.has(nodeId)) continue;
       const node = patch.nodes[nodeId];
@@ -1662,7 +1322,6 @@ class SceneBinding {
       }
     }
 
-    // console.log("patch nodes");
     if (patch.selectedNodeId.type === Patch.Type.OuterChange) {
       const { prev, next } = patch.selectedNodeId;
 
@@ -1683,7 +1342,7 @@ class SceneBinding {
           if (nodeTemplate?.type === 'object') prevNodeObj = { ...nodeTemplate, ...Node.Base.upcast(prevNode) };
         }
         
-        const prevBNode = this.bScene_.getNodeByID(prev);
+        const prevBNode = this.bScene_.getNodeById(prev);
         if (prevNodeObj && (prevBNode instanceof BabylonAbstractMesh || prevBNode instanceof BabylonTransformNode)) {
           prevBNode.metadata = { ...(prevBNode.metadata as SceneMeshMetadata), selected: false };
           SceneBinding.apply_(prevBNode, m => this.restorePhysicsToObject(m, prevNodeObj, prev, scene));
@@ -1694,7 +1353,7 @@ class SceneBinding {
 
       // Disable physics on the now selected node
       if (next !== undefined) {
-        const node = this.bScene_.getNodeByID(next);
+        const node = this.bScene_.getNodeById(next);
         if (node instanceof BabylonAbstractMesh || node instanceof BabylonTransformNode) {
           SceneBinding.apply_(node, m => this.removePhysicsFromObject(m));
           node.metadata = { ...(node.metadata as SceneMeshMetadata), selected: true };
@@ -1729,14 +1388,10 @@ class SceneBinding {
     }
 
     if (patch.gravity.type === Patch.Type.OuterChange) {
-      // console.log(this.bScene_.getPhysicsEngine().gravity);
-      // console.log("set gravity");
-      // this.bScene_.getPhysicsEngine().setGravity(new BabylonVector3(0,-9.8 * 1,0));
-      // console.log("gracity is", patch.gravity.next);
-      // console.log(this.bScene_.getPhysicsEngine().gravity);
+      const gravity_scalar = new BabylonVector3(1,10,1); // This seems to be somewhat realistic
+      this.bScene_.getPhysicsEngine().setGravity(Vector3.toBabylon(patch.gravity.next, 'meters').multiply(gravity_scalar));
     }
 
-    console.log("initialize scripts");
     // Scripts **must** be initialized after the scene is fully loaded
     const reinitializedScripts = new Set<string>();
     for (const scriptId in patch.scripts) {
@@ -1755,7 +1410,6 @@ class SceneBinding {
       }
     }
 
-    console.log("bind scripts");
     // Iterate through all nodes to find reinitialized binds
     for (const nodeId in scene.nodes) {
       const node = scene.nodes[nodeId];
@@ -1763,7 +1417,6 @@ class SceneBinding {
         if (reinitializedScripts.has(scriptId)) this.scriptManager_.bind(scriptId, nodeId);
       }
     }
-    console.log("set scene completed");
     this.scene_ = scene;
   };
 
@@ -1771,7 +1424,6 @@ class SceneBinding {
 
   private nodeMeshes_ = (id: string): BabylonAbstractMesh[] => {
     if (id in this.robotBindings_) return Dict.values(this.robotBindings_[id].links);
-    
     const bNode = this.findBNode_(id);
     if (bNode && bNode instanceof BabylonAbstractMesh) return [bNode];
 
@@ -1807,40 +1459,44 @@ class SceneBinding {
 
     // Update intersections
     for (const nodeId in this.intersectionFilters_) {
-      const nodeBoundingBoxes = this.nodeBoundingBoxes_(nodeId);
-      const filterIds = this.intersectionFilters_[nodeId];
-      for (const filterId of filterIds) {
-        const filterMinMaxes = this.nodeMinMaxes_(filterId);
-
-        let intersection = false;
-        for (const nodeBoundingBox of nodeBoundingBoxes) {
-          for (const filterMinMax of filterMinMaxes) {
-            intersection = nodeBoundingBox.intersectsMinMax(filterMinMax.min, filterMinMax.max);
+      try {
+        const nodeBoundingBoxes = this.nodeBoundingBoxes_(nodeId); //
+        const filterIds = this.intersectionFilters_[nodeId];
+        for (const filterId of filterIds) {
+          const filterMinMaxes = this.nodeMinMaxes_(filterId);
+  
+          let intersection = false;
+          for (const nodeBoundingBox of nodeBoundingBoxes) {
+            for (const filterMinMax of filterMinMaxes) {
+              intersection = nodeBoundingBox.intersectsMinMax(filterMinMax.min, filterMinMax.max);
+              if (intersection) break;
+            }
             if (intersection) break;
           }
-          if (intersection) break;
+  
+          if (intersection) {
+            if (!this.currentIntersections_[nodeId]) this.currentIntersections_[nodeId] = new Set();
+            else if (this.currentIntersections_[nodeId].has(filterId)) continue;
+  
+            this.currentIntersections_[nodeId].add(filterId);
+  
+            this.scriptManager_.trigger(ScriptManager.Event.intersectionStart({
+              nodeId,
+              otherNodeId: filterId,
+            }));
+          } else {
+            if (!this.currentIntersections_[nodeId] || !this.currentIntersections_[nodeId].has(filterId)) continue;
+  
+            this.currentIntersections_[nodeId].delete(filterId);
+  
+            this.scriptManager_.trigger(ScriptManager.Event.intersectionEnd({
+              nodeId,
+              otherNodeId: filterId,
+            }));
+          }
         }
-
-        if (intersection) {
-          if (!this.currentIntersections_[nodeId]) this.currentIntersections_[nodeId] = new Set();
-          else if (this.currentIntersections_[nodeId].has(filterId)) continue;
-
-          this.currentIntersections_[nodeId].add(filterId);
-
-          this.scriptManager_.trigger(ScriptManager.Event.intersectionStart({
-            nodeId,
-            otherNodeId: filterId,
-          }));
-        } else {
-          if (!this.currentIntersections_[nodeId] || !this.currentIntersections_[nodeId].has(filterId)) continue;
-
-          this.currentIntersections_[nodeId].delete(filterId);
-
-          this.scriptManager_.trigger(ScriptManager.Event.intersectionEnd({
-            nodeId,
-            otherNodeId: filterId,
-          }));
-        }
+      } catch (e) {
+        delete this.intersectionFilters_[nodeId];
       }
     }
 

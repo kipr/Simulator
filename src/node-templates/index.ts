@@ -195,7 +195,7 @@ const jbcMatATemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'jbc_mat_a',
   physics: {
     type: 'box',
-    restitution: .2,
+    restitution: 0.0,
     friction: 10
   },
 };
@@ -205,7 +205,7 @@ const jbcMatBTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'jbc_mat_b',
   physics: {
     type: 'box',
-    restitution: .2,
+    restitution: 0.0,
     friction: 10
   },
 };
@@ -255,7 +255,7 @@ const commstowerTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'commstower',
   physics: {
-    type: 'box',
+    type: 'mesh',
     restitution: .3,
     friction: 1,
     mass: Mass.pounds(.3),

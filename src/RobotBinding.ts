@@ -3,20 +3,20 @@ import { TransformNode as BabylonTransformNode } from '@babylonjs/core/Meshes/tr
 import { AbstractMesh as BabylonAbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
 import { LinesMesh as BabylonLinesMesh } from '@babylonjs/core/Meshes/linesMesh';
 import { PhysicsViewer as BabylonPhysicsViewer } from '@babylonjs/core/Debug/physicsViewer';
-import { BoxBuilder as BabylonBoxBuilder } from '@babylonjs/core/Meshes/Builders/boxBuilder';
-import { SphereBuilder as BabylonSphereBuilder } from '@babylonjs/core/Meshes/Builders/sphereBuilder';
+import { CreateBox as BabylonCreateBox } from '@babylonjs/core/Meshes/Builders/boxBuilder';
+import { CreateSphere as BabylonCreateSphere } from '@babylonjs/core/Meshes/Builders/sphereBuilder';
 import { IcoSphereBuilder as BabylonIcoSphereBuilder } from '@babylonjs/core/Meshes/Builders/icoSphereBuilder'; 
 import { CreateLines as BabylonCreateLines } from '@babylonjs/core/Meshes/Builders/linesBuilder';
 import { Vector3 as BabylonVector3, Quaternion as BabylonQuaternion } from '@babylonjs/core/Maths/math.vector';
 import { StandardMaterial as BabylonStandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 import { IPhysicsEnabledObject as BabylonIPhysicsEnabledObject } from '@babylonjs/core/Physics/physicsImpostor';
-import { PhysicsBody, PhysicsConstraintAxis, Physics6DoFConstraint, PhysicsConstraintAxisLimitMode, PhysicsMotionType, PhysicsShape, PhysicsAggregate, PhysicsShapeType, PhysicsConstraintMotorType, PhysicShapeOptions, PhysicsShapeParameters, IPhysicsCollisionEvent, LockConstraint, PhysicsShapeSphere, PhysicsShapeContainer } from '@babylonjs/core';
+import { PhysicsBody, PhysicsConstraintAxis, Physics6DoFConstraint, PhysicsMotionType, PhysicsShape, PhysicsAggregate, PhysicsShapeType, PhysicsConstraintMotorType, PhysicShapeOptions, PhysicsShapeParameters, LockConstraint, PhysicsShapeContainer } from '@babylonjs/core';
 import { SpotLight as BabylonSpotLight } from '@babylonjs/core/Lights/spotLight';
 import { DirectionalLight as BabylonDirectionalLight } from '@babylonjs/core/Lights/directionalLight';
 import { HemisphericLight as BabylonHemisphericLight } from '@babylonjs/core/Lights/hemisphericLight';
 import { Mesh as BabylonMesh } from '@babylonjs/core/Meshes/mesh';
 import { SceneLoader as BabylonSceneLoader } from '@babylonjs/core/Loading/sceneLoader';
-import { MotorEnabledJoint as BabylonMotorEnabledJoint, PhysicsJoint as BabylonPhysicsJoint, HingeJoint as BabylonHingeJoint } from '@babylonjs/core/Physics/physicsJoint';
+import { PhysicsJoint as BabylonPhysicsJoint } from '@babylonjs/core/Physics/physicsJoint';
 import { Ray as BabylonRay } from '@babylonjs/core/Culling/ray';
 
 import '@babylonjs/core/Physics/physicsEngineComponent';
@@ -86,6 +86,7 @@ class RobotBinding {
     this.physicsViewer_ = physicsViewer;
   }
 
+  // Loads the geometry of a robot part and divides into the collider and noncollider pieces
   private buildGeometry_ = async (name: string, geometry: Geometry): Promise<BuiltGeometry> => {
     let ret: BuiltGeometry;
 
@@ -102,6 +103,7 @@ class RobotBinding {
 
         for (const mesh of res.meshes.slice(1) as BabylonMesh[]) {
 
+          // The robot mesh includes sub-meshes with the 'collider' name to indicate their use.
           if (mesh.name.startsWith('collider')) {
             const parts = mesh.name.split('-');
             if (parts.length !== 3) throw new Error(`Invalid collider name: ${mesh.name}`);
@@ -121,30 +123,25 @@ class RobotBinding {
               case 'mesh': bType = PhysicsShapeType.MESH; break;
               default: throw new Error(`Invalid collider type: ${type}`);
             }
-            // mesh.position.y = 10;
             colliders.push({ mesh, type: bType, name, volume });
           } else {
-            // mesh.position.y = 10;
             nonColliders.push(mesh);
           }
         }
 
-        // const meshes = [BabylonMesh.MergeMeshes(nonColliders, true, true, undefined, false, true)];
-        // meshes.visibility = 0;
         ret = { nonColliders, colliders };
         break; 
       }
-      default: {
-        throw new Error(`Unsupported geometry type: ${geometry.type}`);
-      }
+      default: { throw new Error(`Unsupported geometry type: ${geometry.type}`); }
     }
-
     return ret;
   };
 
 
+  // Creates a link and returns the root mesh. Links are wheels, chasis, arms, etc.
+  // Loads the geometry and adds the appropriate physics properties to the mesh
   private createLink_ = async (id: string, link: Node.Link) => {
-    // console.log(`Creating link: ${id}`, link);
+
     let builtGeometry: BuiltGeometry;
     if (link.geometryId === undefined) {
       builtGeometry = { nonColliders: [new BabylonMesh(id, this.bScene_)] };
@@ -160,30 +157,22 @@ class RobotBinding {
     const inertiaScale = .5;
     
     switch (link.collisionBody.type) {
+      // Notes on Links - the root link should have the highest mass and inertia and it should 
+      // scale down further out the tree to prevent wild oscillations. 
+      // body.setMassProperties can also help setting the inertia vector,
+      // body.setAngularDamping and body.setLinearDamping can help with oscillations
 
       case Node.Link.CollisionBody.Type.Box: {
-        alert("box collision body");
+        // alert("box collision body"); // Currently there are no box collision bodies in the robot model
         myMesh = BabylonMesh.MergeMeshes(meshes, true, true, undefined, false, true);
-        // We assume the mesh is defined in meters. Bring it into our default scaling.
         myMesh.scaling.scaleInPlace(RENDER_SCALE_METERS_MULTIPLIER);
-        // const body = new PhysicsBody(mesh, PhysicsMotionType.DYNAMIC, false, this.bScene_);
-        // const aggregate = new PhysicsAggregate(mesh, PhysicsShapeType.BOX, {
-        //   mass: Mass.toGramsValue(link.mass || Mass.grams(1)),
-        //   friction: link.friction ?? 0.5,
-        //   restitution: link.restitution ?? 0,
-        // }, this.bScene_);
-        // const body = new PhysicsBody(mesh, PhysicsMotionType.DYNAMIC, false, this.bScene_);
-        // const parameters: PhysicsShapeParameters = { mesh: mesh };
-        // const type = PhysicsShapeType.BOX;
-    
-        // const options: PhysicShapeOptions = { type: type, parameters: parameters };
-        // const shape = new PhysicsShape(options, this.bScene_);
-        // shape.material = {
-        //   friction: link.friction ?? 0.5,
-        //   restitution: link.restitution ?? 0,
-        // };
-        // body.shape = shape;
-        // body.setMassProperties({ mass: Mass.toGramsValue(link.mass || Mass.grams(1)) });
+
+        const aggregate = new PhysicsAggregate(myMesh, PhysicsShapeType.BOX, {
+          mass: Mass.toGramsValue(link.mass || Mass.grams(10)),
+          friction: link.friction ?? 0.5,
+          restitution: link.restitution ?? 0,
+          startAsleep: true,
+        }, this.bScene_);
 
         this.colliders_.add(myMesh);
         break;
@@ -191,49 +180,27 @@ class RobotBinding {
       case Node.Link.CollisionBody.Type.Cylinder: {
         myMesh = BabylonMesh.MergeMeshes(meshes, true, true, undefined, false, true);
         myMesh.scaling.scaleInPlace(RENDER_SCALE_METERS_MULTIPLIER);
-        // myMesh.position.y -= .1;
-
-        // const body = new PhysicsBody(mesh, PhysicsMotionType.DYNAMIC, false, this.bScene_);
 
         const aggregate = new PhysicsAggregate(myMesh, PhysicsShapeType.CYLINDER, {
           mass: Mass.toGramsValue(link.mass || Mass.grams(10)),
-          // mass: Mass.toGramsValue(link.mass || Mass.grams(10)),
-          friction: 100, // link.friction ?? 0.5,
-          restitution: 0, // link.restitution ?? 0,
+          friction: link.friction ?? 0.5,
+          restitution: link.restitution ?? 0,
           startAsleep: true,
         }, this.bScene_);
 
-        // aggregate.body.setMassProperties({
-        //   mass: Mass.toGramsValue(Mass.grams(80)), 
-        //   // inertia: new BabylonVector3(5,5,0)
-        // });
-        // aggregate.body.setLinearDamping(1);
-
-        // if (this.physicsViewer_ && myMesh.physicsBody) this.physicsViewer_.showBody(myMesh.physicsBody);
         this.colliders_.add(myMesh);
         break;
       }
       case Node.Link.CollisionBody.Type.Embedded: {
-        // if (link.geometryId.includes("chassis")) {
-        //   for (const mesh of meshes) {
-        //     mesh.position.y -= .3;
-        //   }
-        // }
         myMesh = BabylonMesh.MergeMeshes(meshes, true, true, undefined, false, true);
         myMesh.scaling.scaleInPlace(RENDER_SCALE_METERS_MULTIPLIER);
+
+        // As the embedded collision body consists of multiple meshes, we need to create a parent
+        // This mmeans we are unable to use the physics aggregate
         const parentShape = new PhysicsShapeContainer(this.bScene_);
-        // console.log("embedded body setup:", link.geometryId);
-        // if (link.geometryId.includes("chassis")) {
-        //   myMesh.position.y -= .3;
-        //   myMesh.absolutePosition.y -= .3;
-        // }
 
         for (const collider of builtGeometry.colliders ?? []) {
           const bCollider = collider.mesh;
-          // if (link.geometryId.includes("chassis")) {
-          //   bCollider.position.y -= .3;
-          // }
-
           bCollider.parent = myMesh;
 
           const parameters: PhysicsShapeParameters = { mesh: bCollider };
@@ -241,35 +208,22 @@ class RobotBinding {
           const shape = new PhysicsShape(options, this.bScene_);
           shape.material = {
             friction: link.friction ?? 0.5,
-            // restitution: link.restitution ?? 0,
-            restitution: 0.1,
+            restitution: link.restitution ?? 0.1,
           };
 
           parentShape.addChild(shape, bCollider.absolutePosition, bCollider.absoluteRotationQuaternion);
 
           bCollider.visibility = 0;
           this.colliders_.add(bCollider);
-          
         }
         
         const body = new PhysicsBody(myMesh, PhysicsMotionType.DYNAMIC, false, this.bScene_);
         body.shape = parentShape;
         if (link.geometryId.includes("chassis")) {
-          // myMesh.position.y = 10;
           body.setMassProperties({ 
             mass: Mass.toGramsValue(link.mass || Mass.grams(100)),
             inertia: new BabylonVector3(20 * inertiaScale,20 * inertiaScale,20 * inertiaScale) // (left/right, twist around, rock forward and backward)
           }); 
-          // body.setAngularDamping(.5);
-          // body.setLinearDamping(.1);
-          // myMesh.physicsBody.disablePreStep = false;
-          // myMesh.setAbsolutePosition(new BabylonVector3(
-          //   Distance.toCentimetersValue(Distance.centimeters(0)),
-          //   Distance.toCentimetersValue(Distance.centimeters(50)),
-          //   Distance.toCentimetersValue(Distance.centimeters(0)))
-          // );
-          // myMesh.setDirection(new BabylonVector3(0,0,0), 0, 0, Math.PI / 4);
-          // myMesh.rotationQuaternion = new BabylonQuaternion(0,0,0,2);
         }
         if (link.geometryId.includes("arm")) {
           body.setMassProperties({ 
@@ -284,7 +238,6 @@ class RobotBinding {
           });
         }
         
-        // if (this.physicsViewer_ && myMesh.physicsBody) this.physicsViewer_.showBody(myMesh.physicsBody);
         this.colliders_.add(myMesh);
 
         break;
@@ -293,16 +246,7 @@ class RobotBinding {
         throw new Error(`Unsupported collision body type: ${link.collisionBody.type}`);
       }
     }
-
-    // if (this.physicsViewer_ && myMesh.physicsBody) this.physicsViewer_.showBody(myMesh.physicsBody);
-
-    // myMesh.position.set(
-    //   Distance.toCentimetersValue(Distance.centimeters(0)),
-    //   Distance.toCentimetersValue(Distance.centimeters(50)),
-    //   Distance.toCentimetersValue(Distance.centimeters(0))
-    // );
-    console.log("My Mesh:", myMesh);
-    
+    if (this.physicsViewer_ && myMesh.physicsBody) this.physicsViewer_.showBody(myMesh.physicsBody);    
     return myMesh;
   };
 
@@ -343,10 +287,10 @@ class RobotBinding {
     };
   };
 
+  // Adds an invisible weight to a parent link.
   private createWeight_ = (id: string, weight: Node.Weight) => {
-    // console.log(`Creating weight: ${id}`);
-    const ret = BabylonSphereBuilder.CreateSphere(id, { diameter: 1 }, this.bScene_);
-    ret.visibility = 1;
+    const ret = BabylonCreateSphere(id, { diameter: 1 }, this.bScene_);
+    ret.visibility = 0;
 
     const parent = this.robot_.nodes[weight.parentId];
     if (!parent) throw new Error(`Missing parent: "${weight.parentId}" for weight "${id}"`);
@@ -358,20 +302,10 @@ class RobotBinding {
       restitution: 0,
     }, this.bScene_);
 
-    // const sphereShape = new PhysicsShapeSphere(new BabylonVector3(0,0,0),1, this.bScene_);
-    // const sphereBody = new PhysicsBody(ret, PhysicsMotionType.DYNAMIC, false, this.bScene_);
-    // sphereBody.shape = sphereShape;
-    // sphereBody.setMassProperties({ mass: Mass.toGramsValue(weight.mass) });
-
     const bParent = this.links_[weight.parentId];
     if (!bParent) throw new Error(`Missing parent instantiation: "${weight.parentId}" for weight "${id}"`);
 
     const bOrigin = ReferenceFrame.toBabylon(weight.origin, RENDER_SCALE);
-
-    // mainPivot: bOrigin.position,
-    // mainAxis: BabylonVector3.Up(),
-    // connectedPivot: BabylonVector3.Zero(),
-    // connectedAxis: BabylonVector3.Up().applyRotationQuaternion(bOrigin.rotationQuaternion.invert()),
 
     const constraint = new LockConstraint(
       bOrigin.position,
@@ -381,7 +315,6 @@ class RobotBinding {
       this.bScene_
     );
     bParent.physicsBody.addConstraint(ret.physicsBody, constraint);
-    // console.log(`Created weight:`, weight);
 
     return ret;
   };
@@ -411,8 +344,9 @@ class RobotBinding {
     };
   };
 
+  // Adds a physics constraint between a parent and child link.
+  // Note these are not perfectly locked, as physics acts on parent and child seperately.
   private createHinge_ = (id: string, hinge: Node.HingeJoint & { parentId: string }) => {
-    console.log(`Creating hinge:`, id, hinge.parentId);
     const { bParent, bChild } = this.bParentChild_(id, hinge.parentId);
     
     const childAxis = hinge.childAxis || hinge.parentAxis;
@@ -465,22 +399,14 @@ class RobotBinding {
     this.bScene_
     );
 
-    // console.log("Constraints enabled?", joint);
-
-    // PhysicsConstraintAxisLimitMode
-    
     bParent.physicsBody.addConstraint(bChild.physicsBody, joint);
-
     return joint;
   };
 
+  // Assumes the current hinge angle is the last target of the axis motor.
+  // TODO: implement a method using relative poses to get the actual angle.
   private hingeAngle_ = (joint: Physics6DoFConstraint): number => {
-    
     const currentAngle: number = joint.getAxisMotorTarget(0);
-    // joint.executeNativeFunction((world, joint) => {
-    //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    //   currentAngle = joint.getHingeAngle();
-    // });
     return currentAngle;
   };
 
@@ -514,9 +440,6 @@ class RobotBinding {
     const now = performance.now();
     const delta = (now - this.lastTick_) / 1000;
     this.lastTick_ = now;
-
-
-    
 
     const abstractMotors: [Motor, Motor, Motor, Motor] = [
       readable.getMotor(0),
@@ -568,8 +491,6 @@ class RobotBinding {
       // Convert to ticks
       const positionDeltaRaw = plug * deltaAngle / (2 * Math.PI) * ticksPerRevolution + this.positionDeltaFracs_[port];
 
-
-
       const positionDelta = Math.trunc(positionDeltaRaw);
       this.positionDeltaFracs_[port] = positionDeltaRaw - positionDelta;
 
@@ -579,8 +500,6 @@ class RobotBinding {
       nextPositions[port] = position + positionDelta;
 
       writeCommands.push(WriteCommand.addMotorPosition({ port, positionDelta }));
-
-      
 
       let writePwm = true;
 
@@ -649,12 +568,11 @@ class RobotBinding {
 
       const currentTarget = bMotor.getAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z);
 
-      if (currentTarget.toFixed(5) !== nextAngularVelocity.toFixed(5)) {
+      if (currentTarget.toFixed(5) !== nextAngularVelocity.toFixed(5)) { // comparison is aproximately unequal to 5 decimals
         console.log(`Setting motor ${motorId} to ${nextAngularVelocity} from (${currentTarget})`);
         bMotor.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, nextAngularVelocity);
       }
     }
-
 
     // Servos
     for (let i = 0; i < 4; i++) {
@@ -786,21 +704,17 @@ class RobotBinding {
   }
 
   set linkOrigins(newLinkOrigins: Dict<ReferenceFrame>) {
-    console.log("SET LINK POSITIONS HERE", newLinkOrigins);
     for (const [linkId, link] of Object.entries(this.links_)) {
-      // console.log("Link Positions:111", linkId, link);
       if (!(linkId in newLinkOrigins)) continue;
       const rawLinkPosition = ReferenceFrame.toRaw(newLinkOrigins[linkId], RENDER_SCALE);
       link.position = RawVector3.toBabylon(rawLinkPosition.position);
       link.rotationQuaternion = Quaternion.toBabylon(rawLinkPosition.orientation);
       link.scaling = RawVector3.toBabylon(rawLinkPosition.scale);
-      console.log("Link Positions:222", linkId, link.position.y);
     }
   }
 
   get origin(): ReferenceFrame {
     const rootLink = this.links_[this.rootId_];
-    // console.log("Root origin:", rootLink.position);
     const rawOrientation = rootLink.rotationQuaternion;
     const rawInternalOrigin = ReferenceFrame.toRaw(this.robot_.origin || ReferenceFrame.IDENTITY, RENDER_SCALE);
 
@@ -815,25 +729,21 @@ class RobotBinding {
     };
   }
 
+  // To set the origin, a root node is set, the robot is parented to the node, and then the node is moved.
   set origin(newOrigin: ReferenceFrame) {
 
-    // console.log("Internal robot newOrigin, original:", newOrigin.position.y, this.origin.position.y);
     this.lastPErrs_ = [0, 0, 0, 0];
     this.iErrs_ = [0, 0, 0, 0];
     this.brakeAt_ = [undefined, undefined, undefined, undefined];
 
     const rawOrigin = ReferenceFrame.toRaw(newOrigin, RENDER_SCALE);
     const rawInternalOrigin = ReferenceFrame.toRaw(this.robot_.origin || ReferenceFrame.IDENTITY, RENDER_SCALE);
-    // console.log("Internal robot origin2:", rawOrigin.position.y);
-    // console.log("rawInternalOrigin:", rawInternalOrigin.position);
 
     const rootLink = this.links_[this.rootId_];
 
     const rootTransformNode = new BabylonTransformNode('root-transform-node', this.bScene_);
     rootTransformNode.position = rootLink.absolutePosition;
     rootTransformNode.rotationQuaternion = rootLink.absoluteRotationQuaternion;
-
-    // rootTransformNode.position.y = 100;
 
     for (const link of Object.values(this.links_)) {
       link.physicsBody.disablePreStep = false;
@@ -848,25 +758,17 @@ class RobotBinding {
       weight.physicsBody.setAngularVelocity(BabylonVector3.Zero());
       weight.physicsBody.setLinearVelocity(BabylonVector3.Zero());
     }
-    // rootTransformNode.position.y = 200;
 
     rootTransformNode.position = RawVector3.toBabylon(rawOrigin.position || RawVector3.ZERO)
       .add(RawVector3.toBabylon(rawInternalOrigin.position || RawVector3.ZERO));
     rootTransformNode.rotationQuaternion = Quaternion.toBabylon(rawInternalOrigin.orientation || Quaternion.IDENTITY)
       .multiply(Quaternion.toBabylon(rawOrigin.orientation || Quaternion.IDENTITY));
 
-    // console.log("Internal robot origin4:", rootTransformNode.position.y);
-    // this.origin.position = newOrigin.position;
-
-
-
     for (const link of Object.values(this.links_)) {
-      // link.position.y += 50;
       link.setParent(null);
     }
 
     for (const weight of Object.values(this.weights_)) {
-      // weight.position.y += 5;
       weight.setParent(null);
     }
 
@@ -890,12 +792,11 @@ class RobotBinding {
     }
   }
 
+  // Entry point for actually setting up a robot
   async setRobot(sceneRobot: SceneNode.Robot, robot: Robot, robotSceneId: string) {
     if (this.robot_) throw new Error('Robot already set');
     this.robotSceneId_ = robotSceneId;
     robot.origin = sceneRobot.origin;
-    // console.log("THIS IS THE ROBOT", robot);
-    // console.log("THIS IS THE SCENE ROBOT", sceneRobot);
     this.robot_ = robot;
 
     const rootIds = Robot.rootNodeIds(robot);
@@ -907,8 +808,6 @@ class RobotBinding {
     this.childrenNodeIds_ = Robot.childrenNodeIds(robot);
 
     const rootNode = robot.nodes[this.rootId_];
-    console.log("Root node:", rootNode);
-
 
     if (robot.nodes[this.rootId_].type !== Node.Type.Link) throw new Error('Root node must be a link');
 
@@ -921,7 +820,6 @@ class RobotBinding {
       bNode.metadata = { id: this.robotSceneId_, selected: false } as SceneMeshMetadata;
       this.links_[nodeId] = bNode;
     }
-    console.log("Links:", this.links_);
 
     for (const nodeId of nodeIds) {
       const node = robot.nodes[nodeId];
@@ -934,22 +832,6 @@ class RobotBinding {
           break;
         }
         case Node.Type.Motor: {
-          // private createHinge_ = (id: string, hinge: Node.HingeJoint & { parentId: string }) => {
-          // console.log(`Creating hinge:`, nodeId, node);
-          // const { bParent, bChild } = this.bParentChild_(nodeId, node.parentId);
-          // bChild.setParent(bParent);
-          
-          // const childAxis = node.childAxis || node.parentAxis;
-          // const bChildAxis = RawVector3.toBabylon(childAxis);
-      
-          // if (node.childTwist) {
-          //   bChild.rotationQuaternion = BabylonQuaternion.RotationAxis(bChildAxis, Angle.toRadiansValue(node.childTwist));
-          //   bChild.computeWorldMatrix(true);
-          // }
-          
-          // bChild.setAbsolutePosition(Vector3.toBabylon(node.parentPivot, RENDER_SCALE));
-          // bChild.setDirection(Vector3.toBabylon(node.childPivot, RENDER_SCALE));
-          // bChild.setPivotPoint(Vector3.toBabylon(node.parentPivot, RENDER_SCALE));
           const bJoint = this.createHinge_(nodeId, node);
           bJoint.setAxisMaxLimit(PhysicsConstraintAxis.ANGULAR_Z, (100000000) * Math.PI); 
           bJoint.setAxisMinLimit(PhysicsConstraintAxis.ANGULAR_Z, (-100000000) * Math.PI);
@@ -961,8 +843,8 @@ class RobotBinding {
           break;
         }
         case Node.Type.Servo: {
-          const bJoint = this.createHinge_(nodeId, node); // right spots at least
-          //   minLimit: -30 * Math.PI / 180, maxLimit: -30 * Math.PI / 180,
+          const bJoint = this.createHinge_(nodeId, node);
+          // minLimit: -30 * Math.PI / 180, maxLimit: -30 * Math.PI / 180,
           // -90 is upright and closed; 0 is forward and open
           bJoint.setAxisMaxLimit(PhysicsConstraintAxis.ANGULAR_Z, Angle.toRadiansValue(Angle.degrees(0))); 
           bJoint.setAxisMinLimit(PhysicsConstraintAxis.ANGULAR_Z, Angle.toRadiansValue(Angle.degrees(-90)));
@@ -1133,7 +1015,7 @@ namespace RobotBinding {
       // The parent already has RENDER_SCALE applied, so we don't need to apply it again.
       const rawCollisionBox = Vector3.toRaw(collisionBox, 'meters');
 
-      this.intersector_ = BabylonBoxBuilder.CreateBox(id, {
+      this.intersector_ = BabylonCreateBox(id, {
         depth: rawCollisionBox.z,
         height: rawCollisionBox.y,
         width: rawCollisionBox.x,
