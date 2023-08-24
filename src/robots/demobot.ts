@@ -82,6 +82,7 @@ export const DEMOBOT: Robot = {
       geometryId: 'arm_link',
       mass: grams(14),
       friction: 50,
+      restitution: 0,
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
     }),
     claw: Node.servo({
@@ -97,6 +98,7 @@ export const DEMOBOT: Robot = {
       geometryId: 'claw_link',
       mass: grams(7),
       friction: 50,
+      restitution: 0,
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
     }),
     touch_sensor: Node.touchSensor({
@@ -147,6 +149,6 @@ export const DEMOBOT: Robot = {
     claw_link: Geometry.remoteMesh({ uri: '/static/object_binaries/claw.glb' }),
   },
   origin: {
-    orientation: Rotation.eulerDegrees(0, -90, 0),
+    orientation: Rotation.eulerDegrees(0, 0, 0),
   }
 };

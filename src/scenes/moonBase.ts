@@ -15,8 +15,8 @@ import Dict from '../Dict';
 
 
 const ROBOT_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(0, 10, 0),
-  orientation: Rotation.eulerDegrees(0, 0, 0),
+  position: Vector3.centimeters(0, 4, 0),
+  orientation: Rotation.eulerDegrees(0, -45, 0),
 };
 
 const GROUND_ORIGIN: ReferenceFrame = {

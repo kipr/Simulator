@@ -13,7 +13,7 @@ import Dict from '../Dict';
 
 const ROBOT_ORIGIN: ReferenceFrame = {
   position: Vector3.centimeters(0, 0, 0),
-  orientation: Rotation.eulerDegrees(0, 0, 0),
+  orientation: Rotation.eulerDegrees(0, -45, 0),
 };
 
 const ROBOT: Node.Robot = {
@@ -26,23 +26,20 @@ const ROBOT: Node.Robot = {
   origin: ROBOT_ORIGIN
 };
 
+
 const JBC_MAT_ORIGIN: ReferenceFrame = {
   position: {
     x: Distance.centimeters(0),
     y: Distance.centimeters(-7),
     z: Distance.centimeters(50),
   },
-  scale: {
-    x: 100,
-    y: 100,
-    z: 100,
-  }
+  orientation: Rotation.eulerDegrees(0, 0, 0)
 };
 
 const GROUND_ORIGIN: ReferenceFrame = {
   position: {
     x: Distance.centimeters(0),
-    y: Distance.centimeters(-7.12),
+    y: Distance.centimeters(-7.512),
     z: Distance.centimeters(50),
   },
   orientation: {
@@ -68,23 +65,44 @@ export function createBaseSceneSurfaceA(): Scene {
     author: Author.organization('kipr'),
     geometry: {
       'ground': {
-        type: 'plane',
+        type: 'box',
         size: {
           x: Distance.meters(3.54),
           y: Distance.meters(3.54),
+          z: Distance.meters(0.01),
         },
+      },
+      'mat': {
+        type: 'box',
+        size: {
+          x: Distance.feet(2),
+          y: Distance.centimeters(.1),
+          z: Distance.feet(4),
+        }
       },
     },
     nodes: {
       'robot': ROBOT,
-      'jbc_mat_a': {
-        type: 'from-jbc-template',
-        templateId: 'jbc_mat_a',
-        name: tr('JBC Surface A'),
+      'mat': {
+        type: 'object',
+        geometryId: 'mat',
+        name: tr('JBC Mat A'),
         startingOrigin: JBC_MAT_ORIGIN,
         origin: JBC_MAT_ORIGIN,
         visible: true,
-        
+        editable: true,
+        physics: {
+          type: 'box',
+          restitution: .3,
+          friction: 1,
+        },
+        material: {
+          type: 'basic',
+          color: {
+            type: "texture",
+            uri: "/static/textures/KIPR_Surface_A.png"
+          },
+        },
       },
       'ground': {
         type: 'object',
@@ -95,8 +113,8 @@ export function createBaseSceneSurfaceA(): Scene {
         visible: true,
         physics: {
           type: 'box',
-          restitution: .1,
-          friction: 10,
+          restitution: .3,
+          friction: 1,
         },
       },
       'light0': {
@@ -123,7 +141,7 @@ export function createBaseSceneSurfaceA(): Scene {
     }),
     gravity: {
       x: Distance.meters(0),
-      y: Distance.meters(-9.8 * 0.5),
+      y: Distance.meters(-9.8 * 0.4),
       z: Distance.meters(0),
     }
   };
@@ -138,22 +156,36 @@ export function createBaseSceneSurfaceB(): Scene {
     author: Author.organization('kipr'),
     geometry: {
       'ground': {
-        type: 'plane',
+        type: 'box',
         size: {
           x: Distance.meters(3.54),
           y: Distance.meters(3.54),
+          z: Distance.meters(0.01),
         },
       },
     },
     nodes: {
       'robot': ROBOT,
-      'jbc_mat_b': {
-        type: 'from-jbc-template',
-        templateId: 'jbc_mat_b',
-        name: tr('JBC Surface B'),
+      'mat': {
+        type: 'object',
+        geometryId: 'mat',
+        name: tr('JBC Mat B'),
         startingOrigin: JBC_MAT_ORIGIN,
         origin: JBC_MAT_ORIGIN,
         visible: true,
+        editable: true,
+        physics: {
+          type: 'box',
+          restitution: .3,
+          friction: 1,
+        },
+        material: {
+          type: 'basic',
+          color: {
+            type: "texture",
+            uri: "/static/textures/KIPR_Surface_B.png"
+          },
+        },
       },
       'ground': {
         type: 'object',
@@ -209,6 +241,7 @@ export function createBaseSceneSurfaceB(): Scene {
 export function createCanNode(canNumber: number, canPosition?: Vector3, editable?: boolean, visible?: boolean): Node {
   const origin: ReferenceFrame = {
     position: canPosition ?? canPositions[canNumber - 1],
+    orientation: Rotation.eulerDegrees(180, 0, 0),
   };
 
   return {

@@ -339,9 +339,9 @@ class SceneBinding {
                   myDynamicTexture.drawText(color.uri, 130, 600, "18px Arial", "white", "gray", true);
                   basic.diffuseTexture = myDynamicTexture;
                 } else {
-                  basic.bumpTexture = new BabylonTexture(color.uri, this.bScene_);
-                  basic.emissiveTexture = new BabylonTexture(color.uri, this.bScene_);
-                  basic.diffuseTexture = new BabylonTexture(color.uri, this.bScene_);
+                  basic.bumpTexture = new BabylonTexture(color.uri, this.bScene_, false, false);
+                  basic.emissiveTexture = new BabylonTexture(color.uri, this.bScene_, false, false);
+                  basic.diffuseTexture = new BabylonTexture(color.uri, this.bScene_, false, false);
                   basic.diffuseTexture.coordinatesMode = BabylonTexture.FIXED_EQUIRECTANGULAR_MODE;
                   basic.backFaceCulling = false;
                 }
@@ -941,7 +941,6 @@ class SceneBinding {
       this.destroyNode_(id);
       return this.createNode_(id, node.next, nextScene);
     }
-    // console.log("Update rock from template");
     const bNode = this.findBNode_(id);
 
     const nodeTemplate = preBuiltTemplates[node.next.templateId];

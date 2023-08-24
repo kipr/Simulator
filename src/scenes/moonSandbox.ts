@@ -66,7 +66,7 @@ const CONTAINER_ORIGIN: ReferenceFrame = {
 
 const BOTGUY_ORIGIN: ReferenceFrame = {
   position: Vector3.centimeters(-50, 0, 30),
-  scale: { x: 25, y: 25, z: 25 }
+  scale: { x: 70, y: 70, z: 70 }
 };
 
 const SOLARPANEL_ORIGIN: ReferenceFrame = {

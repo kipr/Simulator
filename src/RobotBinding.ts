@@ -579,8 +579,11 @@ class RobotBinding {
       if (writePwm) writeCommands.push(WriteCommand.motorPwm({ port, pwm }));
       
       const normalizedPwm = pwm / 400;
-      const nextAngularVelocity = normalizedPwm * velocityMax * 1 * Math.PI / ticksPerRevolution;
-
+      let direction_mult = 1;
+      if (motorId.includes("left")) {
+        direction_mult *= -1;
+      }
+      const nextAngularVelocity = direction_mult * normalizedPwm * velocityMax * 1 * Math.PI / ticksPerRevolution;
       const currentTarget = bMotor.getAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z);
 
       if (currentTarget.toFixed(5) !== nextAngularVelocity.toFixed(5)) { // comparison is aproximately unequal to 5 decimals
@@ -647,11 +650,11 @@ class RobotBinding {
         console.log(`Setting motor ${servoId} to ${angle * 180 / Math.PI} from (${cur_angle * 180 / Math.PI})`);
         if (cur_angle < angle) {
           bServo.setAxisMaxLimit(PhysicsConstraintAxis.ANGULAR_Z, angle); 
-          bServo.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, Math.PI * .25);
+          bServo.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, Math.PI * .4);
         }
         if (cur_angle > angle) {
           bServo.setAxisMinLimit(PhysicsConstraintAxis.ANGULAR_Z, angle);
-          bServo.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, Math.PI * -.25);
+          bServo.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, Math.PI * -.4);
         }
       }
     }
@@ -868,7 +871,7 @@ class RobotBinding {
           // -90 is upright and closed; 0 is forward and open
           const bJoint = this.createHinge_(nodeId, node);
           bJoint.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 1000000000); 
-          bJoint.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, 1);
+          bJoint.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, 2);
           bJoint.setAxisMotorType(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintMotorType.VELOCITY); // Velocity control
 
           bJoint.setAxisMaxLimit(PhysicsConstraintAxis.ANGULAR_Z, Angle.toRadiansValue(Angle.degrees(0))); 

@@ -125,7 +125,7 @@ const basaltTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'mesh',
     restitution: .3,
     friction: 1,
-    mass: Mass.pounds(.5),
+    mass: Mass.grams(20),
   },
   material: {
     type: 'basic',
@@ -143,7 +143,7 @@ const anorthositeTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'mesh',
     restitution: .3,
     friction: 1,
-    mass: Mass.pounds(.5),
+    mass: Mass.grams(20),
   },
   material: {
     type: 'basic',
@@ -161,7 +161,7 @@ const brecciaTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'mesh',
     restitution: .3,
     friction: 1,
-    mass: Mass.pounds(.5),
+    mass: Mass.grams(20),
   },
   material: {
     type: 'basic',
@@ -179,7 +179,7 @@ const meteoriteTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'mesh',
     restitution: .3,
     friction: 1,
-    mass: Mass.pounds(.5),
+    mass: Mass.grams(20),
   },
   material: {
     type: 'basic',
@@ -187,26 +187,6 @@ const meteoriteTemplate: Node.TemplatedNode<Node.Obj> = {
       type: 'texture',
       uri: '/static/textures/rocks/meteorite_texture_m.png'
     },
-  },
-};
-
-const jbcMatATemplate: Node.TemplatedNode<Node.Obj> = {
-  type: 'object',
-  geometryId: 'jbc_mat_a',
-  physics: {
-    type: 'box',
-    restitution: 0.0,
-    friction: 10
-  },
-};
-
-const jbcMatBTemplate: Node.TemplatedNode<Node.Obj> = {
-  type: 'object',
-  geometryId: 'jbc_mat_b',
-  physics: {
-    type: 'box',
-    restitution: 0.0,
-    friction: 10
   },
 };
 
@@ -227,7 +207,7 @@ const botguyTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'mesh',
     restitution: .3,
     friction: 1,
-    mass: Mass.pounds(.3),
+    mass: Mass.grams(5),
   },
 };
 const solarpanelTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -306,8 +286,6 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'anorthosite': anorthositeTemplate,
   'breccia': brecciaTemplate,
   'meteorite': meteoriteTemplate,
-  'jbc_mat_a': jbcMatATemplate,
-  'jbc_mat_b': jbcMatBTemplate,
   'container': containerTemplate,
   'botguy': botguyTemplate,
   'solarpanel': solarpanelTemplate,
@@ -379,21 +357,13 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
     stretch: 1,
     noise: 1,
   },
-  'jbc_mat_a': {
-    type: 'file',
-    uri: '/static/object_binaries/jbcMatA.glb'
-  },
-  'jbc_mat_b': {
-    type: 'file',
-    uri: '/static/object_binaries/jbcMatB.glb'
-  },
   'container': {
     type: 'file',
     uri: '/static/object_binaries/container_with_lid.glb'
   },
   'botguy': {
     type: 'file',
-    uri: '/static/object_binaries/botguy.glb'
+    uri: '/static/object_binaries/ogBotguy2.glb'
   },
   'solarpanel': {
     type: 'file',
