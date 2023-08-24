@@ -10,7 +10,9 @@ import { CreateLines as BabylonCreateLines } from '@babylonjs/core/Meshes/Builde
 import { Vector3 as BabylonVector3, Quaternion as BabylonQuaternion } from '@babylonjs/core/Maths/math.vector';
 import { StandardMaterial as BabylonStandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 import { IPhysicsEnabledObject as BabylonIPhysicsEnabledObject } from '@babylonjs/core/Physics/physicsImpostor';
-import { PhysicsBody, PhysicsConstraintAxis, Physics6DoFConstraint, PhysicsMotionType, PhysicsShape, PhysicsAggregate, PhysicsShapeType, PhysicsConstraintMotorType, PhysicShapeOptions, PhysicsShapeParameters, LockConstraint, PhysicsShapeContainer } from '@babylonjs/core';
+import { PhysicsBody, PhysicsConstraintAxis, Physics6DoFConstraint, PhysicsMotionType, PhysicsShape, PhysicsAggregate, 
+  PhysicsShapeType, PhysicsConstraintMotorType, PhysicShapeOptions, PhysicsShapeParameters, LockConstraint, PhysicsShapeContainer, 
+  HingeConstraint, PhysicsConstraintAxisLimitMode } from '@babylonjs/core';
 import { SpotLight as BabylonSpotLight } from '@babylonjs/core/Lights/spotLight';
 import { DirectionalLight as BabylonDirectionalLight } from '@babylonjs/core/Lights/directionalLight';
 import { HemisphericLight as BabylonHemisphericLight } from '@babylonjs/core/Lights/hemisphericLight';
@@ -222,7 +224,7 @@ class RobotBinding {
         if (link.geometryId.includes("chassis")) {
           body.setMassProperties({ 
             mass: Mass.toGramsValue(link.mass || Mass.grams(100)),
-            inertia: new BabylonVector3(20 * inertiaScale,20 * inertiaScale,20 * inertiaScale) // (left/right, twist around, rock forward and backward)
+            inertia: new BabylonVector3(10 * inertiaScale,10 * inertiaScale,10 * inertiaScale) // (left/right, twist around, rock forward and backward)
           }); 
         }
         if (link.geometryId.includes("arm")) {
@@ -237,6 +239,7 @@ class RobotBinding {
             inertia: new BabylonVector3(3 * inertiaScale,3 * inertiaScale,3 * inertiaScale) // (left/right, twist around, rock forward and backward)
           });
         }
+        body.setAngularDamping(.5);
         
         this.colliders_.add(myMesh);
 
@@ -345,61 +348,73 @@ class RobotBinding {
   };
 
   // Adds a physics constraint between a parent and child link.
-  // Note these are not perfectly locked, as physics acts on parent and child seperately.
   private createHinge_ = (id: string, hinge: Node.HingeJoint & { parentId: string }) => {
+
+    // Begin by moving the child in place (this prevents inertial snap as the physics engine applys the constraint)
     const { bParent, bChild } = this.bParentChild_(id, hinge.parentId);
+    bChild.setParent(bParent);
+    bChild.position.x = Vector3.toBabylon(hinge.parentPivot, 'meters')._x;
+    bChild.position.y = Vector3.toBabylon(hinge.parentPivot, 'meters')._y;
+    bChild.position.z = Vector3.toBabylon(hinge.parentPivot, 'meters')._z;
+
+    bChild.rotationQuaternion = BabylonQuaternion.FromEulerAngles(hinge.parentAxis.z * 3.1415 / 2, 0, 0);
     
-    const childAxis = hinge.childAxis || hinge.parentAxis;
-    const bChildAxis = RawVector3.toBabylon(childAxis);
-
-    if (hinge.childTwist) {
-      bChild.rotationQuaternion = BabylonQuaternion.RotationAxis(bChildAxis, Angle.toRadiansValue(hinge.childTwist));
-      bChild.computeWorldMatrix(true);
+    // The 6DoF constraint is used for motorized joints. Unforunately, it is not possible to
+    // completely lock these joints as hinges, so we also apply a hinge constraint.
+    // Order appears to matter here, the hinge should come before the 6DoF constraint.
+    if (id.includes("claw")) {
+      const hingeJoint = new HingeConstraint(
+        Vector3.toBabylon(hinge.parentPivot, RENDER_SCALE),
+        Vector3.toBabylon(hinge.childPivot, RENDER_SCALE),
+        new BabylonVector3(0,0,1), 
+        new BabylonVector3(0,1,0),
+        this.bScene_
+      );
+      bParent.physicsBody.addConstraint(bChild.physicsBody, hingeJoint);
+    } else if (id.includes("arm")) {
+      const hingeJoint = new HingeConstraint(
+        Vector3.toBabylon(hinge.parentPivot, RENDER_SCALE),
+        Vector3.toBabylon(hinge.childPivot, RENDER_SCALE),
+        new BabylonVector3(0,0,1),
+        new BabylonVector3(0,-1,0),
+        this.bScene_
+      );
+      bParent.physicsBody.addConstraint(bChild.physicsBody, hingeJoint);
+    } else if (id.includes("wheel")) {
+      const hingeJoint = new HingeConstraint(
+        Vector3.toBabylon(hinge.parentPivot, RENDER_SCALE),
+        Vector3.toBabylon(hinge.childPivot, RENDER_SCALE),
+        new BabylonVector3(0,1,0),
+        undefined, 
+        this.bScene_
+      );
+      bParent.physicsBody.addConstraint(bChild.physicsBody, hingeJoint);
     }
-
     const joint: Physics6DoFConstraint = new Physics6DoFConstraint({
       pivotA: Vector3.toBabylon(hinge.parentPivot, RENDER_SCALE),
       pivotB: Vector3.toBabylon(hinge.childPivot, RENDER_SCALE),
       axisA: new BabylonVector3(1,0,0),
       axisB: new BabylonVector3(1,0,0),
       perpAxisA: new BabylonVector3(0,-1,0), // bChildAxis, //
-      perpAxisB: RawVector3.toBabylon(hinge.parentAxis), // new BabylonVector3(0,0,-1), // RawVector3.toBabylon(hinge.parentAxis),
+      perpAxisB: RawVector3.toBabylon(hinge.parentAxis),
     },
     [
       {
-        axis: PhysicsConstraintAxis.LINEAR_X,
-        minLimit: 0, maxLimit: 0, 
-        // damping: 10000000000, stiffness: 1000000000
-      },
-      {
-        axis: PhysicsConstraintAxis.LINEAR_Y,
-        minLimit: 0, maxLimit: 0, 
-        // damping: 10000000000, stiffness: 1000000000
-      },
-      {
-        axis: PhysicsConstraintAxis.LINEAR_Z,
-        minLimit: 0, maxLimit: 0, 
-        // damping: 10000000000, stiffness: 1000000000
-      },
-      { // also important
-        axis: PhysicsConstraintAxis.ANGULAR_Y,
-        minLimit: 0, maxLimit: 0,
-      },
-      { // definitely important
-        axis: PhysicsConstraintAxis.ANGULAR_X,
-        minLimit: 0, maxLimit: 0,
-      },
-      {
         axis: PhysicsConstraintAxis.ANGULAR_Z,
         minLimit: -30 * Math.PI / 180, maxLimit: -30 * Math.PI / 180,
-        // stiffness: 0,
-        // damping: 100
       }
     ],
     this.bScene_
     );
-
+    
     bParent.physicsBody.addConstraint(bChild.physicsBody, joint);
+    joint.setAxisMode(PhysicsConstraintAxis.LINEAR_X, PhysicsConstraintAxisLimitMode.LOCKED);
+    joint.setAxisMode(PhysicsConstraintAxis.LINEAR_Y, PhysicsConstraintAxisLimitMode.LOCKED);
+    joint.setAxisMode(PhysicsConstraintAxis.LINEAR_Z, PhysicsConstraintAxisLimitMode.LOCKED);
+    joint.setAxisMode(PhysicsConstraintAxis.ANGULAR_X, PhysicsConstraintAxisLimitMode.LOCKED);
+    joint.setAxisMode(PhysicsConstraintAxis.ANGULAR_Y, PhysicsConstraintAxisLimitMode.LOCKED);
+
+
     return joint;
   };
 
@@ -564,12 +579,17 @@ class RobotBinding {
       if (writePwm) writeCommands.push(WriteCommand.motorPwm({ port, pwm }));
       
       const normalizedPwm = pwm / 400;
-      const nextAngularVelocity = normalizedPwm * velocityMax * 2 * Math.PI / ticksPerRevolution;
+      const nextAngularVelocity = normalizedPwm * velocityMax * 1 * Math.PI / ticksPerRevolution;
 
       const currentTarget = bMotor.getAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z);
 
       if (currentTarget.toFixed(5) !== nextAngularVelocity.toFixed(5)) { // comparison is aproximately unequal to 5 decimals
         console.log(`Setting motor ${motorId} to ${nextAngularVelocity} from (${currentTarget})`);
+        if (nextAngularVelocity === 0) {
+          bMotor.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.LOCKED);
+        } else {
+          bMotor.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.FREE);
+        }
         bMotor.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, nextAngularVelocity);
       }
     }
@@ -627,11 +647,11 @@ class RobotBinding {
         console.log(`Setting motor ${servoId} to ${angle * 180 / Math.PI} from (${cur_angle * 180 / Math.PI})`);
         if (cur_angle < angle) {
           bServo.setAxisMaxLimit(PhysicsConstraintAxis.ANGULAR_Z, angle); 
-          bServo.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, Math.PI * .2);
+          bServo.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, Math.PI * .25);
         }
         if (cur_angle > angle) {
           bServo.setAxisMinLimit(PhysicsConstraintAxis.ANGULAR_Z, angle);
-          bServo.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, Math.PI * -.2);
+          bServo.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, Math.PI * -.25);
         }
       }
     }
@@ -833,27 +853,30 @@ class RobotBinding {
         }
         case Node.Type.Motor: {
           const bJoint = this.createHinge_(nodeId, node);
-          bJoint.setAxisMaxLimit(PhysicsConstraintAxis.ANGULAR_Z, (100000000) * Math.PI); 
-          bJoint.setAxisMinLimit(PhysicsConstraintAxis.ANGULAR_Z, (-100000000) * Math.PI);
-          bJoint.setAxisMotorType(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintMotorType.VELOCITY); // Position control
-          bJoint.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 10000); 
+          bJoint.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 1000000000); 
           bJoint.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, 0);
+          bJoint.setAxisMotorType(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintMotorType.VELOCITY); // Position control
+          
+          bJoint.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.LOCKED);
+
           this.motors_[nodeId] = bJoint;
           this.motorPorts_[node.motorPort] = nodeId;
           break;
         }
         case Node.Type.Servo: {
-          const bJoint = this.createHinge_(nodeId, node);
           // minLimit: -30 * Math.PI / 180, maxLimit: -30 * Math.PI / 180,
           // -90 is upright and closed; 0 is forward and open
-          bJoint.setAxisMaxLimit(PhysicsConstraintAxis.ANGULAR_Z, Angle.toRadiansValue(Angle.degrees(0))); 
-          bJoint.setAxisMinLimit(PhysicsConstraintAxis.ANGULAR_Z, Angle.toRadiansValue(Angle.degrees(-90)));
+          const bJoint = this.createHinge_(nodeId, node);
+          bJoint.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 1000000000); 
+          bJoint.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, 1);
           bJoint.setAxisMotorType(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintMotorType.VELOCITY); // Velocity control
-          bJoint.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 1000); 
-          bJoint.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, 0);
+
+          bJoint.setAxisMaxLimit(PhysicsConstraintAxis.ANGULAR_Z, Angle.toRadiansValue(Angle.degrees(0))); 
+          bJoint.setAxisMinLimit(PhysicsConstraintAxis.ANGULAR_Z, Angle.toRadiansValue(Angle.degrees(-10)));
+
           this.servos_[nodeId] = bJoint;
           this.servoPorts_[node.servoPort] = nodeId;
-          this.lastServoEnabledAngle_[node.servoPort] = Angle.toRadiansValue(Angle.degrees(-90));
+          this.lastServoEnabledAngle_[node.servoPort] = Angle.toRadiansValue(Angle.degrees(-10));
           break;
         }
         case Node.Type.TouchSensor: {
