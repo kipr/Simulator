@@ -375,7 +375,7 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   },
   'commstower': {
     type: 'file',
-    uri: '/static/object_binaries/comm_tower_lowered.glb'
+    uri: '/static/object_binaries/comm_dish.glb'
   },
   'habitat': {
     type: 'file',

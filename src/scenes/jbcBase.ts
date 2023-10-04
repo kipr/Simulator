@@ -224,7 +224,7 @@ export function createBaseSceneSurfaceB(): Scene {
     }),
     gravity: {
       x: Distance.meters(0),
-      y: Distance.meters(-9.8 * 0.5),
+      y: Distance.meters(-9.8 * .4),
       z: Distance.meters(0),
     }
   };

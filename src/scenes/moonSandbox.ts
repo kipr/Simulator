@@ -82,7 +82,7 @@ const WALKWAY_ORIGIN: ReferenceFrame = {
 
 const COMMSTOWER_ORIGIN: ReferenceFrame = {
   position: Vector3.centimeters(80, 4, 0),
-  scale: { x: 7, y: 7, z: 7 }
+  scale: { x: 10, y: 10, z: 10 }
 };
 
 const HABITAT_ORIGIN: ReferenceFrame = {
@@ -112,16 +112,16 @@ const RADSCIENCE_ORIGIN: ReferenceFrame = {
 };
 
 const BASALT_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(-30, 3.5, 61.3),
+  position: Vector3.centimeters(-30, 4.5, 61.3),
 };
 const ANORTHOSITE_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(-15, 3.5, 61.3),
+  position: Vector3.centimeters(-15, 4.5, 61.3),
 };
 const BRECCIA_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(0, 3.5, 61.3),
+  position: Vector3.centimeters(0, 4.5, 61.3),
 };
 const METEORITE_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(15, 3.5, 61.3),
+  position: Vector3.centimeters(15, 4.5, 61.3),
 };
 export const Moon_Sandbox: Scene = {
   ...baseScene,
@@ -151,7 +151,7 @@ export const Moon_Sandbox: Scene = {
       startingOrigin: BASALT_ORIGIN,
       origin: BASALT_ORIGIN,
       editable: true,
-      visible: false,
+      visible: true,
     },
     'anorthosite': {
       type: 'from-rock-template',
@@ -160,7 +160,7 @@ export const Moon_Sandbox: Scene = {
       startingOrigin: ANORTHOSITE_ORIGIN,
       origin: ANORTHOSITE_ORIGIN,
       editable: true,
-      visible: false,
+      visible: true,
     },
     'breccia': {
       type: 'from-rock-template',
@@ -169,7 +169,7 @@ export const Moon_Sandbox: Scene = {
       startingOrigin: BRECCIA_ORIGIN,
       origin: BRECCIA_ORIGIN,
       editable: true,
-      visible: false,
+      visible: true,
     },
     'meteorite': {
       type: 'from-rock-template',
@@ -178,7 +178,7 @@ export const Moon_Sandbox: Scene = {
       startingOrigin: METEORITE_ORIGIN,
       origin: METEORITE_ORIGIN,
       editable: true,
-      visible: false,
+      visible: true,
     },
     'lifescience': {
       type: 'from-space-template',
@@ -205,7 +205,7 @@ export const Moon_Sandbox: Scene = {
     //   startingOrigin: RADSCIENCE_ORIGIN,
     //   origin: RADSCIENCE_ORIGIN,
     //   editable: true,
-    //   visible: false,
+    //   visible: true,
     // },
     'sciencepad': {
       type: 'from-space-template',
@@ -256,7 +256,7 @@ export const Moon_Sandbox: Scene = {
       name: tr('Walkway'),
       startingOrigin: WALKWAY_ORIGIN,
       origin: WALKWAY_ORIGIN,
-      visible: false,
+      visible: true,
       editable: true,
     },
     'commstower': {
@@ -265,7 +265,7 @@ export const Moon_Sandbox: Scene = {
       name: tr('Comms Tower'),
       startingOrigin: COMMSTOWER_ORIGIN,
       origin: COMMSTOWER_ORIGIN,
-      visible: false,
+      visible: true,
       editable: true,
     },
     'habitat': {
@@ -274,7 +274,7 @@ export const Moon_Sandbox: Scene = {
       name: tr('Human Living Habitat'),
       startingOrigin: HABITAT_ORIGIN,
       origin: HABITAT_ORIGIN,
-      visible: false,
+      visible: true,
       editable: true,
     },
     'research_habitat': {
@@ -283,7 +283,7 @@ export const Moon_Sandbox: Scene = {
       name: tr('Human Research Habitat'),
       startingOrigin: RESEARCH_HABITAT_ORIGIN,
       origin: RESEARCH_HABITAT_ORIGIN,
-      visible: false,
+      visible: true,
       editable: true,
     },
     'control_habitat': {
@@ -292,7 +292,7 @@ export const Moon_Sandbox: Scene = {
       name: tr('Human Control/Comms Station Habitat'),
       startingOrigin: CONTROL_HABITAT_ORIGIN,
       origin: CONTROL_HABITAT_ORIGIN,
-      visible: false,
+      visible: true,
       editable: true,
     },
     'life indicator': {

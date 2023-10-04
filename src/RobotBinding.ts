@@ -586,9 +586,11 @@ class RobotBinding {
       const nextAngularVelocity = direction_mult * normalizedPwm * velocityMax * 1 * Math.PI / ticksPerRevolution;
       const currentTarget = bMotor.getAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z);
 
-      if (currentTarget.toFixed(5) !== nextAngularVelocity.toFixed(5)) { // comparison is aproximately unequal to 5 decimals
+      if (currentTarget.toFixed(2) !== nextAngularVelocity.toFixed(2)) { // comparison is aproximately unequal to 5 decimals
         console.log(`Setting motor ${motorId} to ${nextAngularVelocity} from (${currentTarget})`);
         if (nextAngularVelocity === 0) {
+          console.log("Lock motor");
+          bMotor.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, 0);
           bMotor.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.LOCKED);
         } else {
           bMotor.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.FREE);
@@ -857,6 +859,8 @@ class RobotBinding {
         case Node.Type.Motor: {
           const bJoint = this.createHinge_(nodeId, node);
           bJoint.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 1000000000); 
+          bJoint.setAxisMaxLimit(PhysicsConstraintAxis.ANGULAR_Z, 1000000000000); 
+          bJoint.setAxisMinLimit(PhysicsConstraintAxis.ANGULAR_Z, -1000000000000);
           bJoint.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, 0);
           bJoint.setAxisMotorType(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintMotorType.VELOCITY); // Position control
           
@@ -870,7 +874,7 @@ class RobotBinding {
           // minLimit: -30 * Math.PI / 180, maxLimit: -30 * Math.PI / 180,
           // -90 is upright and closed; 0 is forward and open
           const bJoint = this.createHinge_(nodeId, node);
-          bJoint.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 1000000000); 
+          bJoint.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 10000000); 
           bJoint.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, 2);
           bJoint.setAxisMotorType(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintMotorType.VELOCITY); // Velocity control
 
