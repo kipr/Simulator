@@ -13,7 +13,7 @@ import Dict from '../Dict';
 
 const ROBOT_ORIGIN: ReferenceFrame = {
   position: Vector3.centimeters(0, 0, 0),
-  orientation: Rotation.eulerDegrees(0, -45, 0),
+  orientation: Rotation.eulerDegrees(0, 0, 0),
 };
 
 const ROBOT: Node.Robot = {

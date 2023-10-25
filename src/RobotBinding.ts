@@ -579,7 +579,7 @@ class RobotBinding {
       if (writePwm) writeCommands.push(WriteCommand.motorPwm({ port, pwm }));
       
       const normalizedPwm = pwm / 400;
-      let direction_mult = 1;
+      let direction_mult = 2;
       if (motorId.includes("left")) {
         direction_mult *= -1;
       }
@@ -649,7 +649,7 @@ class RobotBinding {
       }
 
       if (cur_angle.toFixed(5) !== angle.toFixed(5)) {
-        console.log(`Setting motor ${servoId} to ${angle * 180 / Math.PI} from (${cur_angle * 180 / Math.PI})`);
+        console.log(`Setting servo ${servoId} to ${angle * 180 / Math.PI} from (${cur_angle * 180 / Math.PI})`);
         if (cur_angle < angle) {
           bServo.setAxisMaxLimit(PhysicsConstraintAxis.ANGULAR_Z, angle); 
           bServo.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, Math.PI * .4);
@@ -764,6 +764,22 @@ class RobotBinding {
     const rawOrigin = ReferenceFrame.toRaw(newOrigin, RENDER_SCALE);
     const rawInternalOrigin = ReferenceFrame.toRaw(this.robot_.origin || ReferenceFrame.IDENTITY, RENDER_SCALE);
 
+    const newOriginE = Euler.fromQuaternion(rawOrigin.orientation);
+    const Robot_OriginE = Euler.fromQuaternion(rawInternalOrigin.orientation);
+
+    const default_offset = -1 * Math.PI / 2;
+
+
+    const UpdatedEulerOrigin = Euler.create(
+      newOriginE.x + Robot_OriginE.x,
+      newOriginE.y + Robot_OriginE.y + default_offset,
+      newOriginE.z + Robot_OriginE.z,
+      "xyz"
+    );
+
+    console.log("Set origin orientation to:", UpdatedEulerOrigin);
+
+
     const rootLink = this.links_[this.rootId_];
 
     const rootTransformNode = new BabylonTransformNode('root-transform-node', this.bScene_);
@@ -783,11 +799,11 @@ class RobotBinding {
       weight.physicsBody.setAngularVelocity(BabylonVector3.Zero());
       weight.physicsBody.setLinearVelocity(BabylonVector3.Zero());
     }
-
+    
     rootTransformNode.position = RawVector3.toBabylon(rawOrigin.position || RawVector3.ZERO)
       .add(RawVector3.toBabylon(rawInternalOrigin.position || RawVector3.ZERO));
-    rootTransformNode.rotationQuaternion = Quaternion.toBabylon(rawInternalOrigin.orientation || Quaternion.IDENTITY)
-      .multiply(Quaternion.toBabylon(rawOrigin.orientation || Quaternion.IDENTITY));
+    
+    rootTransformNode.rotationQuaternion = Quaternion.toBabylon(Euler.toQuaternion(UpdatedEulerOrigin));
 
     for (const link of Object.values(this.links_)) {
       link.setParent(null);
@@ -822,6 +838,7 @@ class RobotBinding {
     if (this.robot_) throw new Error('Robot already set');
     this.robotSceneId_ = robotSceneId;
     robot.origin = sceneRobot.origin;
+
     this.robot_ = robot;
 
     const rootIds = Robot.rootNodeIds(robot);

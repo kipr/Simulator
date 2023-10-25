@@ -691,7 +691,6 @@ class SceneBinding {
     robotBinding.visible = true;
     const observerObj: { observer: BabylonObserver<BabylonScene> } = { observer: null };
     
-    let count = 0;
     robotBinding.origin = node.origin;
     
     this.declineTicks_ = true;
@@ -705,13 +704,9 @@ class SceneBinding {
 
       const { origin, visible } = node;
 
-      robotBinding.origin = origin || ReferenceFrame.IDENTITY;
-
       const linkOrigins = this.robotLinkOrigins_[id];
       if (linkOrigins) robotBinding.linkOrigins = linkOrigins;
       
-      if (count++ < 20) return; // FIXME: This is a hack to keep the robot stationary while the kinematics sort themselves out.
-
       robotBinding.visible = visible ?? false;
       observerObj.observer.unregisterOnNextCall = true;
       this.declineTicks_ = false;
