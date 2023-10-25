@@ -33,6 +33,9 @@ namespace Geometry {
   export interface Sphere {
     type: 'sphere';
     radius: Distance;
+    squash?: number;
+    stretch?: number;
+    noise?: number;
   }
 
   export namespace Sphere {

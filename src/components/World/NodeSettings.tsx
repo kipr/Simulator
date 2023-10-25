@@ -147,21 +147,57 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
     let transmutedNode = Node.transmute(node, selectedType);
 
-    const TEMPLATE_OPTIONS: ComboBox.Option[] = [
+    const JBC_TEMPLATE_OPTIONS: ComboBox.Option[] = [
       ComboBox.option(LocalizedString.lookup(tr('Can'), locale), 'can'),
       ComboBox.option(LocalizedString.lookup(tr('Paper Ream'), locale), 'ream'),
     ];
+    const ROCK_TEMPLATE_OPTIONS: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('Basalt Rock'), locale), 'basalt'),
+      ComboBox.option(LocalizedString.lookup(tr('Anorthosite Rock'), locale), 'anorthosite'),
+      ComboBox.option(LocalizedString.lookup(tr('Breccia Rock'), locale), 'breccia'),
+      ComboBox.option(LocalizedString.lookup(tr('Meteorite Rock'), locale), 'meteorite'),
+    ];
+    const SPACE_TEMPLATE_OPTIONS: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('Communication Tower'), locale), 'tower'),
+      ComboBox.option(LocalizedString.lookup(tr('Hab'), locale), 'hab'),
+      ComboBox.option(LocalizedString.lookup(tr('Science Pad'), locale), 'sciencepad'),
+      ComboBox.option(LocalizedString.lookup(tr('Life Science Pack'), locale), 'lifescience'),
+      ComboBox.option(LocalizedString.lookup(tr('Radiation Science Pack'), locale), 'radscience'),
+      ComboBox.option(LocalizedString.lookup(tr('Communication Tower 2'), locale), 'comstower'),
+      ComboBox.option(LocalizedString.lookup(tr('Hab 2'), locale), 'habitat'),
+      ComboBox.option(LocalizedString.lookup(tr('Walkway'), locale), 'walkway'),
+      ComboBox.option(LocalizedString.lookup(tr('Solar Panel'), locale), 'solarpanel'),
+      ComboBox.option(LocalizedString.lookup(tr('BotGuy Astronaut'), locale), 'botguy'),
+    ];
 
     // If the new type is from a template, set the template ID to a default value
-    if (transmutedNode.type === 'from-template') {
-      const defaultTemplateId = TEMPLATE_OPTIONS[0].data as string;
+
+    // If the new type is from a template, set the template ID to a default value
+    if (transmutedNode.type === 'from-jbc-template') {
+      const defaultTemplateId = JBC_TEMPLATE_OPTIONS[0].data as string;
       
       transmutedNode = {
         ...transmutedNode,
         templateId: defaultTemplateId,
       };
     }
-
+    // If the new type is from a template, set the template ID to a default value
+    if (transmutedNode.type === 'from-rock-template') {
+      const defaultTemplateId = ROCK_TEMPLATE_OPTIONS[0].data as string;
+      
+      transmutedNode = {
+        ...transmutedNode,
+        templateId: defaultTemplateId,
+      };
+    }
+    if (transmutedNode.type === 'from-space-template') {
+      const defaultTemplateId = SPACE_TEMPLATE_OPTIONS[0].data as string;
+      
+      transmutedNode = {
+        ...transmutedNode,
+        templateId: defaultTemplateId,
+      };
+    }
     // If the new type is an object, add a new geometry and reset the physics type
     if (transmutedNode.type === 'object') {
       const defaultGeometryType: Geometry.Type = 'box';
@@ -436,9 +472,10 @@ class NodeSettings extends React.PureComponent<Props, State> {
   private onMaterialBasicFieldTextureUriChange_ = (field: keyof Omit<Material.Basic, 'type'>) => (event: React.SyntheticEvent<HTMLInputElement>) => {
     const { node, onNodeChange } = this.props;
 
-    if (node.type !== 'object') throw new Error('Node is not an object');
+    if (node.type !== 'object' && node.type !== 'from-space-template') throw new Error('Node is not an object');
 
     const material = node.material as Material.Basic;
+    console.log("prev", material);
     const nextMaterial = { ...material };
     const member = material[field];
 
@@ -448,6 +485,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
       ...member,
       uri: event.currentTarget.value
     };
+    console.log("update", nextMaterial);
 
     onNodeChange({
       ...node,
@@ -461,7 +499,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
   private onMaterialPbrAmbientTextureUriChange_ = this.onMaterialPbrFieldTextureUriChange_('ambient');
   private onMaterialPbrMetalnessTextureUriChange_ = this.onMaterialPbrFieldTextureUriChange_('metalness');
   
-  private onMaterialBasicColorTextureUriChange_ = this.onMaterialBasicFieldTextureUriChange_('color');
+  private onMaterialBasicColorTextureUriChange2_ = this.onMaterialBasicFieldTextureUriChange_('color');
   
   private static materialType = (material: Material) => {
     if (!material) return 'unset';
@@ -518,11 +556,11 @@ class NodeSettings extends React.PureComponent<Props, State> {
     }
   };
 
-  private onTemplateSelect_ = (index: number, option: ComboBox.Option) => {
+  private onJBCTemplateSelect_ = (index: number, option: ComboBox.Option) => {
     const { props } = this;
     const { node } = props;
 
-    if (node.type !== 'from-template') return;
+    if (node.type !== 'from-jbc-template') return;
 
     const templateId = option.data as string;
 
@@ -532,6 +570,35 @@ class NodeSettings extends React.PureComponent<Props, State> {
     });
   };
 
+  private onRockTemplateSelect_ = (index: number, option: ComboBox.Option) => {
+    console.log("onRockTemplateSelect_");
+    const { props } = this;
+    const { node } = props;
+
+    if (node.type !== 'from-rock-template') return;
+
+    const templateId = option.data as string;
+
+    this.props.onNodeChange({
+      ...node,
+      templateId
+    });
+  };
+
+  private onSpaceTemplateSelect_ = (index: number, option: ComboBox.Option) => {
+    console.log("onSpaceTemplateSelect_");
+    const { props } = this;
+    const { node } = props;
+
+    if (node.type !== 'from-space-template') return;
+
+    const templateId = option.data as string;
+
+    this.props.onNodeChange({
+      ...node,
+      templateId
+    });
+  };
   private onCollapsedChange_ = (key: string) => (collapsed: boolean) => {
     this.setState({
       collapsed: {
@@ -895,13 +962,55 @@ class NodeSettings extends React.PureComponent<Props, State> {
       return dict;
     }, {});
     
-    
-    const TEMPLATE_OPTIONS: ComboBox.Option[] = [
+
+    const JBC_TEMPLATE_OPTIONS: ComboBox.Option[] = [
       ComboBox.option(LocalizedString.lookup(tr('Can'), locale), 'can'),
       ComboBox.option(LocalizedString.lookup(tr('Paper Ream'), locale), 'ream'),
     ];
+    const ROCK_TEMPLATE_OPTIONS: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('Basalt Rock'), locale), 'basalt'),
+      ComboBox.option(LocalizedString.lookup(tr('Anorthosite Rock'), locale), 'anorthosite'),
+      ComboBox.option(LocalizedString.lookup(tr('Breccia Rock'), locale), 'breccia'),
+      ComboBox.option(LocalizedString.lookup(tr('Meteorite Rock'), locale), 'meteorite'),
+    ];
+    const SPACE_TEMPLATE_OPTIONS: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('Communication Tower'), locale), 'tower'),
+      ComboBox.option(LocalizedString.lookup(tr('Hab'), locale), 'hab'),
+      ComboBox.option(LocalizedString.lookup(tr('Life Science Pack'), locale), 'lifescience'),
+      ComboBox.option(LocalizedString.lookup(tr('Radiation Science Pack'), locale), 'radscience'),
+      ComboBox.option(LocalizedString.lookup(tr('Radiation Science Pack'), locale), 'noradscience'),
+      ComboBox.option(LocalizedString.lookup(tr('Communication Tower 2'), locale), 'commstower'),
+      ComboBox.option(LocalizedString.lookup(tr('Science Pad'), locale), 'sciencepad'),
+      ComboBox.option(LocalizedString.lookup(tr('Living Habitat'), locale), 'habitat'),
+      ComboBox.option(LocalizedString.lookup(tr('Research Habitat'), locale), 'research_habitat'),
+      ComboBox.option(LocalizedString.lookup(tr('Controls Habitat'), locale), 'control_habitat'),
+      ComboBox.option(LocalizedString.lookup(tr('Walkway'), locale), 'walkway'),
+      ComboBox.option(LocalizedString.lookup(tr('Solar Panel'), locale), 'solarpanel'),
+      ComboBox.option(LocalizedString.lookup(tr('BotGuy Astronaut'), locale), 'botguy'),
+      ComboBox.option(LocalizedString.lookup(tr('Moon Rock Container'), locale), 'container'),
+    ];
+
+    const RADIATION_TEMPLATE_OPTIONS: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('Radiation Science Pack - Low'), locale), 'noradscience'),
+      ComboBox.option(LocalizedString.lookup(tr('Radiation Science Pack - High'), locale), 'radscience'),
+    ];
     
-    const TEMPLATE_REVERSE_OPTIONS: Dict<number> = TEMPLATE_OPTIONS.reduce((dict, option, i) => {
+    const JBC_TEMPLATE_REVERSE_OPTIONS: Dict<number> = JBC_TEMPLATE_OPTIONS.reduce((dict, option, i) => {
+      dict[option.data as string] = i;
+      return dict;
+    }, {});
+
+    const ROCK_TEMPLATE_REVERSE_OPTIONS: Dict<number> = ROCK_TEMPLATE_OPTIONS.reduce((dict, option, i) => {
+      dict[option.data as string] = i;
+      return dict;
+    }, {});
+
+    const SPACE_TEMPLATE_REVERSE_OPTIONS: Dict<number> = SPACE_TEMPLATE_OPTIONS.reduce((dict, option, i) => {
+      dict[option.data as string] = i;
+      return dict;
+    }, {});
+
+    const RADIATION_TEMPLATE_REVERSE_OPTIONS: Dict<number> = RADIATION_TEMPLATE_OPTIONS.reduce((dict, option, i) => {
       dict[option.data as string] = i;
       return dict;
     }, {});
@@ -921,13 +1030,23 @@ class NodeSettings extends React.PureComponent<Props, State> {
     ];
     
     const NODE_TYPE_OPTIONS: ComboBox.Option[] = [
-      ComboBox.option(LocalizedString.lookup(tr('Empty'), locale), 'empty'),
-      ComboBox.option(LocalizedString.lookup(tr('Standard Object'), locale), 'from-template'),
+      ComboBox.option(LocalizedString.lookup(tr('Space Base'), locale), 'from-space-template'),
+      ComboBox.option(LocalizedString.lookup(tr('JBC Pieces'), locale), 'from-jbc-template'),
+      ComboBox.option(LocalizedString.lookup(tr('Moon Rock'), locale), 'from-rock-template'),
       ComboBox.option(LocalizedString.lookup(tr('Custom Object'), locale), 'object'),
       // ComboBox.option('Directional Light', 'directional-light'),
       ComboBox.option(LocalizedString.lookup(tr('Point Light'), locale), 'point-light'),
+      ComboBox.option(LocalizedString.lookup(tr('Empty'), locale), 'empty'),
+      ComboBox.option(LocalizedString.lookup(tr('All'), locale), 'all'),
       // ComboBox.option('Spot Light', 'spot-light'),
     ];
+
+    const ROCK_DESCRIPTIONS: Dict<string> = {
+      'basalt': LocalizedString.lookup(tr('Basalt is an aphanitic (fine-grained) extrusive igneous rock formed from the rapid cooling of low-viscosity lava rich in magnesium and iron (mafic lava) exposed at or very near the surface of a rocky planet or moon.'), locale),
+      'anorthosite': LocalizedString.lookup(tr('Anorthosite is a phaneritic, intrusive igneous rock characterized by its composition: mostly plagioclase feldspar (90–100%), with a minimal mafic component (0–10%).'), locale),
+      'breccia': LocalizedString.lookup(tr('Breccia is a rock composed of large angular broken fragments of minerals or rocks cemented together by a fine-grained matrix.'), locale),
+      'meteorite': LocalizedString.lookup(tr('Meteorite is a solid piece of debris from an object, such as a comet, asteroid, or meteoroid, that originates in outer space and survives its passage through the atmosphere to reach the surface of a planet or moon.'), locale),
+    };
     
     const NODE_TYPE_OPTIONS_REV = (() => {
       const map: Record<string, number> = {};
@@ -1026,15 +1145,57 @@ class NodeSettings extends React.PureComponent<Props, State> {
               />
             </StyledField>
           )}
-
-          {node.type === 'from-template' && (
+          {node.type === 'from-jbc-template' && (
             <StyledField name={LocalizedString.lookup(tr('Item'), locale)} theme={theme} long>
               <ComboBox
-                options={TEMPLATE_OPTIONS}
+                options={JBC_TEMPLATE_OPTIONS}
                 theme={theme}
-                index={TEMPLATE_REVERSE_OPTIONS[node.templateId]}
-                onSelect={this.onTemplateSelect_}
+                index={JBC_TEMPLATE_REVERSE_OPTIONS[node.templateId]}
+                onSelect={this.onJBCTemplateSelect_}
               />
+            </StyledField>
+          )}
+          {node.type === 'from-rock-template' && (
+            <StyledField name={LocalizedString.lookup(tr('Item'), locale)} theme={theme} long>
+              <ComboBox
+                options={ROCK_TEMPLATE_OPTIONS}
+                theme={theme}
+                index={ROCK_TEMPLATE_REVERSE_OPTIONS[node.templateId]}
+                onSelect={this.onRockTemplateSelect_}
+              />
+            </StyledField>
+          )}
+          {node.type === 'from-space-template' && (
+            <StyledField name={LocalizedString.lookup(tr('Item'), locale)} theme={theme} long>
+              <ComboBox
+                options={SPACE_TEMPLATE_OPTIONS}
+                theme={theme}
+                index={SPACE_TEMPLATE_REVERSE_OPTIONS[node.templateId]}
+                onSelect={this.onSpaceTemplateSelect_}
+              />
+            </StyledField>
+          )}
+        </Section>
+        <Section name={LocalizedString.lookup(tr('Description of the object'), locale)} theme={theme}>
+          {node.type === 'from-rock-template' && (
+            <>
+              <>{ROCK_DESCRIPTIONS[node.templateId]}</>
+            </>
+          )}
+          {/* {node.material && node.material.type === 'basic' && node.material.color && node.material.color.type === 'texture' && ( */}
+          {node.type === 'from-space-template' && (node.templateId === 'radscience' || node.templateId === 'noradscience') && (
+            <StyledField name={LocalizedString.lookup(tr('Item'), locale)} theme={theme} long>
+              <ComboBox
+                options={RADIATION_TEMPLATE_OPTIONS}
+                theme={theme}
+                index={RADIATION_TEMPLATE_REVERSE_OPTIONS[node.templateId]}
+                onSelect={this.onSpaceTemplateSelect_}
+              />
+            </StyledField>
+          )}
+          {node.type === 'from-space-template' && node.material && node.material.type === 'basic' && node.material.color.type === 'texture' && node.templateId === 'container' && (
+            <StyledField name={LocalizedString.lookup(tr('Surface Text'), locale)} long theme={theme}>
+              <Input theme={theme} type='text' value={node.material.color.uri} onChange={this.onMaterialBasicColorTextureUriChange2_} />
             </StyledField>
           )}
         </Section>
@@ -1125,7 +1286,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
             />
           </Section>
         ) : undefined}
-        
+
         {(node.type === 'object' && geometry.type === 'file') ? (
           <Section name={LocalizedString.lookup(tr('File Options'), locale)} theme={theme} collapsed={collapsed['geometry']} onCollapsedChange={this.onCollapsedChange_('geometry')}>
             <StyledField name={LocalizedString.lookup(tr('URI'), locale)} long theme={theme}>
@@ -1177,7 +1338,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
             )}
             {node.material && node.material.type === 'basic' && node.material.color && node.material.color.type === 'texture' && (
               <StyledField name={LocalizedString.lookup(tr('Color Texture URI'), locale)} long theme={theme}>
-                <Input theme={theme} type='text' value={node.material.color.uri} onChange={this.onMaterialBasicColorTextureUriChange_} />
+                <Input theme={theme} type='text' value={node.material.color.uri} onChange={this.onMaterialBasicColorTextureUriChange2_} />
               </StyledField>
             )}
 

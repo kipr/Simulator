@@ -46,7 +46,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   justifyContent: 'center',
   width: '100%',
   height: '100vh',
-  backgroundImage: 'url(../../static/Triangular_Background_Compressed.png)',
+  backgroundImage: 'url(../../static/backgrounds/Triangular_Background_Compressed.png)',
   backgroundSize: 'cover',
 }));
 

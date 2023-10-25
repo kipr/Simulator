@@ -283,7 +283,9 @@ export type ScenesAction = (
   ScenesAction.SetScript
 );
 
+
 const DEFAULT_SCENES: Scenes = {
+  moonSandbox: Async.loaded({ value: JBC_SCENES.Moon_Sandbox }),
   jbcSandboxA: Async.loaded({ value: JBC_SCENES.JBC_Sandbox_A }),
   jbcSandboxB: Async.loaded({ value: JBC_SCENES.JBC_Sandbox_B }),
   jbc1: Async.loaded({ value: JBC_SCENES.JBC_1 }),

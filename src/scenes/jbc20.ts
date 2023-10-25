@@ -43,7 +43,7 @@ export const JBC_20: Scene = {
     'can10': createCanNode(10),
     'can12': createCanNode(12),
     'ream': {
-      type: 'from-template',
+      type: 'from-jbc-template',
       templateId: 'ream',
       name: tr('Paper Ream'),
       startingOrigin: REAM_ORIGIN,

@@ -43,7 +43,7 @@ const SCENE_B: Scene = {
       name: { [LocalizedString.EN_US]: 'Node 0' },
     },
     '1': {
-      type: 'from-template',
+      type: 'from-jbc-template',
       name: { [LocalizedString.EN_US]: 'Node 1' },
       templateId: 'template',
     },

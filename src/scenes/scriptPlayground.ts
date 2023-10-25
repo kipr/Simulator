@@ -118,7 +118,7 @@ export const scriptPlayground: Scene = {
     'can11': createCanNode(11, undefined, true, false),
     'can12': createCanNode(12, undefined, true, false),
     'ream1': {
-      type: 'from-template',
+      type: 'from-jbc-template',
       templateId: 'ream',
       name: tr('Paper Ream 1'),
       origin: {
@@ -136,7 +136,7 @@ export const scriptPlayground: Scene = {
       visible: false,
     },
     'ream2': {
-      type: 'from-template',
+      type: 'from-jbc-template',
       templateId: 'ream',
       name: tr('Paper Ream 2'),
       origin: {

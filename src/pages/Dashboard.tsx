@@ -78,14 +78,14 @@ class Dashboard extends React.PureComponent<Props> {
             title={LocalizedString.lookup(tr('Tutorials'), locale)}
             description={LocalizedString.lookup(tr('Learn how to get started with the simulator'), locale)}
             backgroundColor={'#6c6ca1'}
-            backgroundImage={'url(../../static/Laptop_Icon_Sunscreen.png)'}
+            backgroundImage={'url(../../static/icons/Laptop_Icon_Sunscreen.png)'}
             onClick={onTutorialsClick}
           />
           <Card 
             theme={theme}
             title={LocalizedString.lookup(tr('3D Simulator'), locale)}
             description={LocalizedString.lookup(tr('A simulator for the Botball demobot.'), locale)}
-            backgroundImage={'url(../../static/Simulator-Robot-Closeup.png)'}
+            backgroundImage={'url(../../static/example_images/Simulator-Robot-Closeup.png)'}
             backgroundPosition={'center top'}
             onClick={onSimulatorClick}
           />
@@ -93,7 +93,7 @@ class Dashboard extends React.PureComponent<Props> {
             theme={theme}
             title={LocalizedString.lookup(tr('About'), locale)}
             description={LocalizedString.lookup(tr('KIPR is a 501(c) 3 organization started to make the long-term educational benefits of robotics accessible to students.'), locale)}
-            backgroundImage={'linear-gradient(#3b3c3c, transparent), url(../../static/Botguy-Picture-Small.png)'}
+            backgroundImage={'linear-gradient(#3b3c3c, transparent), url(../../static/icons/Botguy-Picture-Small.png)'}
             backgroundColor={'#3b3c3c'}
             backgroundSize={'80%'}
             hoverBackgroundSize={'95%'}
