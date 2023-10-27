@@ -1,6 +1,7 @@
+import { AsyncAccountAuthorization } from 'state/State/AccountAuthorization';
 import Dict from '../Dict';
 import store, { State } from '../state';
-import { ChallengeCompletionsAction, ChallengesAction, ScenesAction } from '../state/reducer';
+import { AccountAuthorizationsAction, ChallengeCompletionsAction, ChallengesAction, ScenesAction } from '../state/reducer';
 import Async from '../state/State/Async';
 import { AsyncChallenge } from '../state/State/Challenge';
 import { AsyncChallengeCompletion } from '../state/State/ChallengeCompletion';
@@ -28,7 +29,7 @@ export class ChallengeBuilder {
   scene(): SceneBuilder {
     const latest = Async.latestValue(this.challenge_);
     if (!latest) return new SceneBuilder(undefined, this.builder_);
-    
+
     return new SceneBuilder(latest.sceneId, this.builder_);
   }
 
@@ -42,11 +43,25 @@ export class ChallengeCompletionBuilder {
     if (!id) return;
 
     const challengeCompletion = builder.state.challengeCompletions[id];
-  
+
     if (!challengeCompletion || challengeCompletion.type === Async.Type.Unloaded) {
       builder.loadChallengeCompletion_(id);
     } else {
       builder.addChallengeCompletion_(id, challengeCompletion);
+    }
+  }
+}
+
+export class AccountAuthorizationBuilder {
+  constructor(id: string | undefined, builder: Builder) {
+    if (!id) return;
+
+    const accountAuthorization = builder.state.accountAuthorizations[id];
+
+    if (!accountAuthorization || accountAuthorization.type === Async.Type.Unloaded) {
+      builder.loadAccountAuthorization_(id);
+    } else {
+      builder.addAccountAuthorization_(id, accountAuthorization);
     }
   }
 }
@@ -56,7 +71,7 @@ export class SceneBuilder {
     if (!id) return;
 
     const scene = builder.state.scenes[id];
-  
+
     if (!scene || scene.type === Async.Type.Unloaded) {
       builder.loadScene_(id);
     } else {
@@ -84,6 +99,12 @@ class Builder {
 
   private challengeCompletionsToLoad_: Set<string> = new Set();
 
+  private accountAuthorizations_: Dict<AsyncAccountAuthorization> = {};
+  get accountAuthorizations() { return this.accountAuthorizations_; }
+
+  private accountAuthorizationsToLoad_: Set<string> = new Set();
+
+
   constructor(state: State) {
     this.state_ = state;
   }
@@ -96,6 +117,7 @@ class Builder {
     return new SceneBuilder(id, this);
   }
 
+
   addScene_(id: string, scene: AsyncScene) {
     this.scenes_[id] = scene;
   }
@@ -107,6 +129,11 @@ class Builder {
   addChallengeCompletion_(id: string, challengeCompletion: AsyncChallengeCompletion) {
     this.challengeCompletions_[id] = challengeCompletion;
   }
+
+  addAccountAuthorization_(id: string, accountAuthorization: AsyncAccountAuthorization) {
+    this.accountAuthorizations_[id] = accountAuthorization;
+  }
+
 
   loadScene_(id: string) {
     this.scenesToLoad_.add(id);
@@ -122,7 +149,12 @@ class Builder {
     this.challengeCompletionsToLoad_.add(id);
     this.challengeCompletions_[id] = Async.unloaded({});
   }
-  
+
+  loadAccountAuthorization_(id: string) {
+    this.accountAuthorizationsToLoad_.add(id);
+    this.accountAuthorizations_[id] = Async.unloaded({});
+  }
+
   dispatchLoads() {
     for (const sceneId of this.scenesToLoad_) {
       store.dispatch(ScenesAction.loadScene({ sceneId }));
@@ -132,6 +164,9 @@ class Builder {
     }
     for (const challengeId of this.challengeCompletionsToLoad_) {
       store.dispatch(ChallengeCompletionsAction.loadChallengeCompletion({ challengeId }));
+    }
+    for (const challengeId of this.accountAuthorizationsToLoad_) {
+      store.dispatch(AccountAuthorizationsAction.loadAccountAuthorization({ challengeId }));
     }
   }
 }
