@@ -1,10 +1,10 @@
 import { applyMiddleware, combineReducers, compose, createStore,  } from 'redux';
 
 import * as reducer from './reducer';
-import { DocumentationState, ChallengeCompletions, Challenges, I18n, Robots, Scenes } from './State';
+import { DocumentationState, ChallengeCompletions, Challenges, I18n, Robots, Scenes, AccountAuthorizations } from './State';
 import { connectRouter, RouterState, routerMiddleware } from 'connected-react-router';
 import history from './history';
-import { CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, SCENE_COLLECTION } from '../db/constants';
+import { CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, SCENE_COLLECTION, ACCOUNT_AUTHORIZATION_COLLECTION } from '../db/constants';
 import Record from '../db/Record';
 import Selector from '../db/Selector';
 
@@ -21,6 +21,7 @@ export default createStore(combineReducers<State>({
   router: connectRouter(history),
   challenges: reducer.reduceChallenges,
   challengeCompletions: reducer.reduceChallengeCompletions,
+  accountAuthorizations: reducer.reduceAccountAuthorizations,
   i18n: reducer.reduceI18n,
 }), composeEnhancers(
   applyMiddleware(
@@ -34,6 +35,7 @@ export interface State {
   scenes: Scenes;
   challenges: Challenges;
   challengeCompletions: ChallengeCompletions;
+  accountAuthorizations: AccountAuthorizations;
   robots: Robots;
   documentation: DocumentationState;
   router: RouterState;
@@ -57,6 +59,11 @@ export namespace State {
         type: Record.Type.ChallengeCompletion,
         id: selector.id,
         value: state.challengeCompletions[selector.id]
+      };
+      case ACCOUNT_AUTHORIZATION_COLLECTION: return {
+        type: Record.Type.AccountAuthorization,
+        id: selector.id,
+        value: state.accountAuthorizations[selector.id]
       };
     }
     

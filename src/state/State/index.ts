@@ -8,6 +8,7 @@ import Documentation from './Documentation';
 import DocumentationLocation from './Documentation/DocumentationLocation';
 import Robot from './Robot';
 import { AsyncScene } from './Scene';
+import { AsyncAccountAuthorization } from './AccountAuthorization';
 
 export type Scenes = Dict<AsyncScene>;
 
@@ -25,6 +26,12 @@ export type ChallengeCompletions = Dict<AsyncChallengeCompletion>;
 
 export namespace ChallengeCompletions {
   export const EMPTY: ChallengeCompletions = {};
+}
+
+export type AccountAuthorizations = Dict<AsyncAccountAuthorization>;
+
+export namespace AccountAuthorizations {
+  export const EMPTY: AccountAuthorizations = {};
 }
 
 export interface Robots {
