@@ -83,26 +83,14 @@ export function createBaseSceneSurfaceA(): Scene {
     },
     nodes: {
       'robot': ROBOT,
-      'mat': {
-        type: 'object',
-        geometryId: 'mat',
+      'matA': {
+        type: 'from-jbc-template',
+        templateId: 'matA',
         name: tr('JBC Mat A'),
         startingOrigin: JBC_MAT_ORIGIN,
         origin: JBC_MAT_ORIGIN,
         visible: true,
         editable: true,
-        physics: {
-          type: 'box',
-          restitution: .3,
-          friction: 1,
-        },
-        material: {
-          type: 'basic',
-          color: {
-            type: "texture",
-            uri: "/static/textures/KIPR_Surface_A.png"
-          },
-        },
       },
       'ground': {
         type: 'object',
@@ -166,26 +154,14 @@ export function createBaseSceneSurfaceB(): Scene {
     },
     nodes: {
       'robot': ROBOT,
-      'mat': {
-        type: 'object',
-        geometryId: 'mat',
+      'matB': {
+        type: 'from-jbc-template',
+        templateId: 'matB',
         name: tr('JBC Mat B'),
         startingOrigin: JBC_MAT_ORIGIN,
         origin: JBC_MAT_ORIGIN,
         visible: true,
         editable: true,
-        physics: {
-          type: 'box',
-          restitution: .3,
-          friction: 1,
-        },
-        material: {
-          type: 'basic',
-          color: {
-            type: "texture",
-            uri: "/static/textures/KIPR_Surface_B.png"
-          },
-        },
       },
       'ground': {
         type: 'object',

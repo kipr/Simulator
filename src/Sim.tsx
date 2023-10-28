@@ -88,13 +88,25 @@ export class Space {
   }
   
   get scene() { return this.scene_; }
+
   set scene(scene: Scene) {
     this.scene_ = scene;
-    if (this.sceneBinding_) this.sceneBinding_.scriptManager.scene = this.scene_;
-    
+    if (this.sceneBinding_) {
+      this.sceneBinding_.scriptManager.scene = this.scene_;
+    }
+
+    // this.sceneSetting_ is true if we are currently setting the scene
+    // this.debounceUpdate_ is true if we are currently updating the store
+    // console.log("Check scene status (setting, debounce, not binding", this.sceneSetting_, this.debounceUpdate_, !this.sceneBinding_);
     if (this.sceneSetting_ || this.debounceUpdate_ || !this.sceneBinding_) {
-      if (this.sceneBinding_ && !this.sceneSetting_) this.sceneBinding_.scene = scene;
-      if (this.sceneSetting_ && !this.debounceUpdate_) this.nextScene_ = scene;
+      if (this.sceneBinding_ && !this.sceneSetting_) {
+        // console.log("setting next scene in sim set scene binding", scene);
+        this.sceneBinding_.scene = scene;
+      }
+      if (this.sceneSetting_ && !this.debounceUpdate_) {
+        // console.log("setting next scene in sim set scene", scene);
+        this.nextScene_ = scene;
+      }
       return;
     }
 
@@ -328,7 +340,10 @@ export class Space {
 
     // Update state with significant changes, if needed
     this.debounceUpdate_ = true;
-    if (setNodeBatch.nodeIds.length > 0) this.onSetNodeBatch?.(setNodeBatch);
+    // if (setNodeBatch.nodeIds.length > 0) {
+    //   console.log("setting node batch in sim updateStore_", setNodeBatch);
+    //   this.onSetNodeBatch?.(setNodeBatch);
+    // }
     this.debounceUpdate_ = false;
   };
 

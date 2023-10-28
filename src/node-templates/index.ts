@@ -101,6 +101,40 @@ const reamTemplate: Node.TemplatedNode<Node.Obj> = {
   },
 };
 
+const matATemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'mat',
+  physics: {
+    type: 'box',
+    restitution: .3,
+    friction: 1,
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: "texture",
+      uri: "/static/textures/KIPR_Surface_A.png"
+    },
+  },
+};
+
+const matBTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'mat',
+  physics: {
+    type: 'box',
+    restitution: .3,
+    friction: 1,
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: "texture",
+      uri: "/static/textures/KIPR_Surface_B.png"
+    },
+  },
+};
+
 const sciencePadTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'sciencepad',
@@ -282,6 +316,8 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'radscience': radscienceTemplate,
   'noradscience': noradscienceTemplate,
   'ream': reamTemplate,
+  'matA': matATemplate,
+  'matB': matBTemplate,
   'basalt': basaltTemplate,
   'anorthosite': anorthositeTemplate,
   'breccia': brecciaTemplate,
@@ -328,6 +364,14 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
       y: Distance.centimeters(5.08),
       z: Distance.centimeters(21.59),
     },
+  },
+  'mat': {
+    type: 'box',
+    size: {
+      x: Distance.feet(2),
+      y: Distance.centimeters(.1),
+      z: Distance.feet(4),
+    }
   },
   'basalt': {
     type: 'sphere',
