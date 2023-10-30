@@ -28,7 +28,7 @@ export const DEMOBOT: Robot = {
         position: Vector3.meters(0.3, 0, 0),
         orientation: Rotation.eulerDegrees(90, 0, 0),
       },
-      analogPort: 3,
+      analogPort: 2,
     }),
     wombat: Node.weight({
       parentId: 'chassis',

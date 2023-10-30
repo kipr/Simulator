@@ -339,11 +339,12 @@ export class Space {
     }
 
     // Update state with significant changes, if needed
+    // These seems to also be necessary for sensors to update
     this.debounceUpdate_ = true;
-    // if (setNodeBatch.nodeIds.length > 0) {
-    //   console.log("setting node batch in sim updateStore_", setNodeBatch);
-    //   this.onSetNodeBatch?.(setNodeBatch);
-    // }
+    if (setNodeBatch.nodeIds.length > 0) {
+      console.log("setting node batch in sim updateStore_", setNodeBatch);
+      this.onSetNodeBatch?.(setNodeBatch);
+    }
     this.debounceUpdate_ = false;
   };
 
