@@ -36,6 +36,7 @@ import { RENDER_SCALE, RENDER_SCALE_METERS_MULTIPLIER } from './renderConstants'
 import WriteCommand from './AbstractRobot/WriteCommand';
 import AbstractRobot from './AbstractRobot';
 import Motor from './AbstractRobot/Motor';
+import { node } from 'prop-types';
 
 interface BuiltGeometry {
   nonColliders: BabylonMesh[];
@@ -584,18 +585,21 @@ class RobotBinding {
         direction_mult *= -1;
       }
       const nextAngularVelocity = direction_mult * normalizedPwm * velocityMax * 1 * Math.PI / ticksPerRevolution;
-      const currentTarget = bMotor.getAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z);
+      const currentAngularVelocity = bMotor.getAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z);
 
-      if (currentTarget.toFixed(2) !== nextAngularVelocity.toFixed(2)) { // comparison is aproximately unequal to 5 decimals
-        console.log(`Setting motor ${motorId} to ${nextAngularVelocity} from (${currentTarget})`);
-        if (nextAngularVelocity === 0) {
-          console.log("Lock motor");
+      if (currentAngularVelocity.toFixed(6) !== nextAngularVelocity.toFixed(6)) { // comparison is aproximately unequal to 5 decimals
+        const pid_aproximator = 20;
+        const intermediate_target = (nextAngularVelocity + pid_aproximator * currentAngularVelocity) / (pid_aproximator + 1);
+        console.log(`Setting motor ${motorId} to ${intermediate_target} from (${currentAngularVelocity})`);
+        const zero = 0.0;
+        if (intermediate_target.toFixed(6) === zero.toFixed(6)) {
           bMotor.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, 0);
-          bMotor.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.LOCKED);
+          bMotor.setAxisFriction(PhysicsConstraintAxis.ANGULAR_Z, 10000000);
+          // bMotor.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.LOCKED);
         } else {
           bMotor.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.FREE);
         }
-        bMotor.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, nextAngularVelocity);
+        bMotor.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, intermediate_target);
       }
     }
 
