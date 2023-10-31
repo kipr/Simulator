@@ -342,8 +342,13 @@ export class Space {
     // These seems to also be necessary for sensors to update
     this.debounceUpdate_ = true;
     if (setNodeBatch.nodeIds.length > 0) {
-      console.log("setting node batch in sim updateStore_", setNodeBatch);
-      this.onSetNodeBatch?.(setNodeBatch);
+      if (setNodeBatch.nodeIds[0].id === 'robot') {
+        this.onSetNodeBatch?.(setNodeBatch); 
+      }
+      if (setNodeBatch.nodeIds.length > 1) {
+        this.onSetNodeBatch?.(setNodeBatch); 
+        // console.log("setting node batch in sim updateStore_", setNodeBatch);
+      }
     }
     this.debounceUpdate_ = false;
   };

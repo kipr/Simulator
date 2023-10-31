@@ -590,7 +590,7 @@ class RobotBinding {
       if (currentAngularVelocity.toFixed(6) !== nextAngularVelocity.toFixed(6)) { // comparison is aproximately unequal to 5 decimals
         const pid_aproximator = 20;
         const intermediate_target = (nextAngularVelocity + pid_aproximator * currentAngularVelocity) / (pid_aproximator + 1);
-        console.log(`Setting motor ${motorId} to ${intermediate_target} from (${currentAngularVelocity})`);
+        // console.log(`Setting motor ${motorId} to ${intermediate_target} from (${currentAngularVelocity})`);
         const zero = 0.0;
         if (intermediate_target.toFixed(6) === zero.toFixed(6)) {
           bMotor.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, 0);
@@ -653,7 +653,7 @@ class RobotBinding {
       }
 
       if (cur_angle.toFixed(5) !== angle.toFixed(5)) {
-        console.log(`Setting servo ${servoId} to ${angle * 180 / Math.PI} from (${cur_angle * 180 / Math.PI})`);
+        // console.log(`Setting servo ${servoId} to ${angle * 180 / Math.PI} from (${cur_angle * 180 / Math.PI})`);
         if (cur_angle < angle) {
           bServo.setAxisMaxLimit(PhysicsConstraintAxis.ANGULAR_Z, angle); 
           bServo.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, Math.PI * .4);

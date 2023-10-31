@@ -205,6 +205,7 @@ export default connect<unknown, unknown, Props>((state: ReduxState, ownProps) =>
 }), (dispatch, b) => ({
   onSceneChange: (sceneId: string) => {
     dispatch(push(`/scene/${sceneId}`));
+    location.reload();
   },
   listUserScenes: () => dispatch(ScenesAction.LIST_USER_SCENES),
 }))(OpenSceneDialog) as React.ComponentType<OpenSceneDialogPublicProps>;
