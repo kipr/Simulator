@@ -75,10 +75,6 @@ const SOLARPANEL_ORIGIN: ReferenceFrame = {
   orientation: Rotation.eulerDegrees(0, 180, 0)
 };
 
-const WALKWAY_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(50, 9, 65),
-  scale: { x: 12, y: 12, z: 12 }
-};
 
 const COMMSTOWER_ORIGIN: ReferenceFrame = {
   position: Vector3.centimeters(80, 4, 0),
@@ -86,19 +82,24 @@ const COMMSTOWER_ORIGIN: ReferenceFrame = {
 };
 
 const HABITAT_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(50, 3.5, 95),
+  position: Vector3.centimeters(50, 17, 130),
   scale: { x: 12, y: 12, z: 12 },
   orientation: Rotation.eulerDegrees(0, 180, 0)
 };
 
+const WALKWAY_ORIGIN: ReferenceFrame = {
+  position: Vector3.centimeters(50, 17, 80),
+  scale: { x: 12, y: 12, z: 12 }
+};
+
 const RESEARCH_HABITAT_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(50, 3.5, 35),
+  position: Vector3.centimeters(50, 17, 25),
   scale: { x: 12, y: 12, z: 12 },
   orientation: Rotation.eulerDegrees(0, 180, 0)
 };
 
 const CONTROL_HABITAT_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(50, 3.5, 5),
+  position: Vector3.centimeters(50, 17, -35),
   scale: { x: 12, y: 12, z: 12 },
   orientation: Rotation.eulerDegrees(0, 180, 0)
 };

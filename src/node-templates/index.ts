@@ -411,11 +411,11 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   },
   'solarpanel': {
     type: 'file',
-    uri: '/static/object_binaries/solar_panel2.glb'
+    uri: '/static/object_binaries/basic_solar_panel.glb'
   },
   'walkway': {
     type: 'file',
-    uri: '/static/object_binaries/new_walkway.glb'
+    uri: '/static/object_binaries/basic_walkway.glb'
   },
   'commstower': {
     type: 'file',
@@ -423,14 +423,14 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   },
   'habitat': {
     type: 'file',
-    uri: '/static/object_binaries/hab_living.glb'
+    uri: '/static/object_binaries/basic_hab.glb'
   },
   'research_habitat': {
     type: 'file',
-    uri: '/static/object_binaries/hab_research.glb'
+    uri: '/static/object_binaries/manipulator_hab.glb'
   },
   'control_habitat': {
     type: 'file',
-    uri: '/static/object_binaries/hab_comms.glb'
+    uri: '/static/object_binaries/com_hab.glb'
   },
 });
