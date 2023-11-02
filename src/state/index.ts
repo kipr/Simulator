@@ -7,6 +7,7 @@ import history from './history';
 import { CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, SCENE_COLLECTION } from '../db/constants';
 import Record from '../db/Record';
 import Selector from '../db/Selector';
+import User from './State/User';
 
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
@@ -22,6 +23,7 @@ export default createStore(combineReducers<State>({
   challenges: reducer.reduceChallenges,
   challengeCompletions: reducer.reduceChallengeCompletions,
   i18n: reducer.reduceI18n,
+  user: reducer.reduceUser,
 }), composeEnhancers(
   applyMiddleware(
     routerMiddleware(history)
@@ -38,6 +40,7 @@ export interface State {
   documentation: DocumentationState;
   router: RouterState;
   i18n: I18n;
+  user: User;
 }
 
 export namespace State {

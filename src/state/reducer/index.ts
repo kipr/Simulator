@@ -4,3 +4,4 @@ export * from './challenges';
 export * from './challengeCompletions';
 export * from './documentation';
 export * from './i18n';
+export * from './user';
