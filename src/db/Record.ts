@@ -1,9 +1,9 @@
-import { AsyncAccountAuthorization } from 'state/State/AccountAuthorization';
+import { AsyncUserVerification } from 'state/State/UserVerification';
 import Async from '../state/State/Async';
 import { AsyncChallenge } from '../state/State/Challenge';
 import { AsyncChallengeCompletion } from '../state/State/ChallengeCompletion';
 import { AsyncScene } from '../state/State/Scene';
-import { ACCOUNT_AUTHORIZATION_COLLECTION, CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, SCENE_COLLECTION } from './constants';
+import {CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, SCENE_COLLECTION,USER_VERIFICATION_COLLECTION } from './constants';
 import Selector from './Selector';
 
 namespace Record {
@@ -11,7 +11,7 @@ namespace Record {
     Scene = 'scene',
     Challenge = 'challenge',
     ChallengeCompletion = 'challenge-completion',
-    AccountAuthorization = 'account-authorization',
+    UserVerification = 'user-verification',
   }
 
   interface Base<T> {
@@ -31,15 +31,15 @@ namespace Record {
     type: Type.ChallengeCompletion;
   }
 
-  export interface AccountAuthorization extends Base<AsyncAccountAuthorization> {
-    type: Type.AccountAuthorization;
+  export interface UserVerification extends Base<AsyncUserVerification> {
+    type: Type.UserVerification;
   }
   export const selector = (record: Record): Selector => {
     switch (record.type) {
       case Type.Scene: return { collection: SCENE_COLLECTION, id: record.id };
       case Type.Challenge: return { collection: CHALLENGE_COLLECTION, id: record.id };
       case Type.ChallengeCompletion: return { collection: CHALLENGE_COMPLETION_COLLECTION, id: record.id };
-      case Type.AccountAuthorization: return { collection: ACCOUNT_AUTHORIZATION_COLLECTION, id: record.id };
+      case Type.UserVerification: return { collection: USER_VERIFICATION_COLLECTION, id: record.id };
     }
   };
 
@@ -64,7 +64,7 @@ type Record = (
   Record.Scene |
   Record.Challenge |
   Record.ChallengeCompletion |
-  Record.AccountAuthorization
+  Record.UserVerification
 );
 
 export default Record;

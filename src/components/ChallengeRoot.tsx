@@ -30,7 +30,7 @@ import { DEFAULT_FEEDBACK, Feedback } from '../Feedback';
 import ExceptionDialog from './ExceptionDialog';
 import OpenSceneDialog from './OpenSceneDialog';
 
-import { ChallengesAction, ScenesAction, ChallengeCompletionsAction, DocumentationAction, AccountAuthorizationsAction } from '../state/reducer';
+import { ChallengesAction, ScenesAction, ChallengeCompletionsAction, DocumentationAction,  } from '../state/reducer';
 import { Editor } from './Editor';
 import Dict from '../Dict';
 import ProgrammingLanguage from '../ProgrammingLanguage';
@@ -77,7 +77,7 @@ import Motor from '../AbstractRobot/Motor';
 import DocumentationLocation from '../state/State/Documentation/DocumentationLocation';
 
 import tr from '@i18n';
-import AccountAuthorization, { AsyncAccountAuthorization } from '../state/State/AccountAuthorization';
+
 
 namespace Modal {
   export enum Type {
@@ -200,10 +200,9 @@ interface RootPrivateProps {
   scene: AsyncScene;
   challenge?: AsyncChallenge;
   challengeCompletion?: AsyncChallengeCompletion;
-  accountAuthorization?: AsyncAccountAuthorization;
-  locale: LocalizedString.Language;
-  onAccountAuthorizationCreate: (accountAuthorization: AccountAuthorization) => void;
 
+  locale: LocalizedString.Language;
+  
   onChallengeCompletionCreate: (challengeCompletion: ChallengeCompletion) => void;
   onChallengeCompletionSceneDiffChange: (sceneDiff: OuterObjectPatch<Scene>) => void;
   onChallengeCompletionEventStateRemove: (eventId: string) => void;
@@ -876,7 +875,7 @@ class Root extends React.Component<Props, State> {
       scene,
       challenge,
       challengeCompletion,
-      accountAuthorization,
+
       onDocumentationClick,
       onDocumentationGoToFuzzy
     } = props;
@@ -957,7 +956,7 @@ class Root extends React.Component<Props, State> {
       challengeState: challenge ? {
         challenge,
         challengeCompletion: challengeCompletion || Async.unloaded({ brief: {} }),
-        accountAuthorization: accountAuthorization || Async.unloaded({ brief: {} }),
+      
       } : undefined,
       worldCapabilities: WORLD_CAPABILITIES,
       onDocumentationGoToFuzzy,
@@ -1062,16 +1061,14 @@ export default connect((state: ReduxState, { match: { params: { challengeId } } 
     scene: Dict.unique(builder.scenes),
     challenge: Dict.unique(builder.challenges),
     challengeCompletion: Dict.unique(builder.challengeCompletions),
-    accountAuthorization: Dict.unique(builder.accountAuthorizations),
+
     locale: state.i18n.locale,
   };
 }, (dispatch, { match: { params: { challengeId } } }: RootPublicProps) => ({
   onChallengeCompletionCreate: (challengeCompletion: ChallengeCompletion) => {
     dispatch(ChallengeCompletionsAction.createChallengeCompletion({ challengeId, challengeCompletion }));
   },
-  onAccountAuthorizationCreate: ( accountAuthorization: AccountAuthorization) => {
-    dispatch(AccountAuthorizationsAction.createAccountAuthorization({ challengeId, accountAuthorization }));
-  },
+
   onChallengeCompletionSceneDiffChange: (sceneDiff: OuterObjectPatch<Scene>) => {
     dispatch(ChallengeCompletionsAction.setSceneDiff({ challengeId, sceneDiff }));
   },

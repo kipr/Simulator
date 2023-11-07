@@ -1,12 +1,14 @@
 import { applyMiddleware, combineReducers, compose, createStore,  } from 'redux';
 
 import * as reducer from './reducer';
-import { DocumentationState, ChallengeCompletions, Challenges, I18n, Robots, Scenes, AccountAuthorizations } from './State';
+import { DocumentationState, ChallengeCompletions, Challenges, I18n, Robots, Scenes, UserVerifications } from './State';
 import { connectRouter, RouterState, routerMiddleware } from 'connected-react-router';
 import history from './history';
-import { CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, SCENE_COLLECTION, ACCOUNT_AUTHORIZATION_COLLECTION } from '../db/constants';
+import { CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, SCENE_COLLECTION, USER_VERIFICATION_COLLECTION } from '../db/constants';
 import Record from '../db/Record';
 import Selector from '../db/Selector';
+import User from './State/User';
+
 
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
@@ -21,8 +23,11 @@ export default createStore(combineReducers<State>({
   router: connectRouter(history),
   challenges: reducer.reduceChallenges,
   challengeCompletions: reducer.reduceChallengeCompletions,
-  accountAuthorizations: reducer.reduceAccountAuthorizations,
   i18n: reducer.reduceI18n,
+  
+  userVerification: reducer.reduceUserVerifications,
+  user: reducer.reduceUser,
+
 }), composeEnhancers(
   applyMiddleware(
     routerMiddleware(history)
@@ -35,11 +40,12 @@ export interface State {
   scenes: Scenes;
   challenges: Challenges;
   challengeCompletions: ChallengeCompletions;
-  accountAuthorizations: AccountAuthorizations;
   robots: Robots;
   documentation: DocumentationState;
   router: RouterState;
   i18n: I18n;
+  user: User;
+  userVerification: UserVerifications;
 }
 
 export namespace State {
@@ -60,10 +66,10 @@ export namespace State {
         id: selector.id,
         value: state.challengeCompletions[selector.id]
       };
-      case ACCOUNT_AUTHORIZATION_COLLECTION: return {
-        type: Record.Type.AccountAuthorization,
+      case USER_VERIFICATION_COLLECTION: return {
+        type: Record.Type.UserVerification,
         id: selector.id,
-        value: state.accountAuthorizations[selector.id]
+        value: state.userVerification[selector.id]
       };
     }
     

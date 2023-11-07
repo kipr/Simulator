@@ -5,7 +5,7 @@ import Async from '../Async';
 import ProgrammingLanguage from '../../../ProgrammingLanguage';
 import { ReferenceFrame } from '../../../unit-math';
 
-interface AccountAuthorization {
+interface UserVerification {
   code: { [language in ProgrammingLanguage]: string };
   currentLanguage: ProgrammingLanguage;
   serializedSceneDiff: string;
@@ -14,8 +14,8 @@ interface AccountAuthorization {
   
 }
 
-namespace AccountAuthorization {
-  export const EMPTY: AccountAuthorization = {
+namespace UserVerification {
+  export const EMPTY: UserVerification = {
     code: {
       'c': '',
       'cpp': '',
@@ -28,21 +28,21 @@ namespace AccountAuthorization {
 }
 
 
-export interface AccountAuthorizationBrief {
+export interface UserVerificationBrief {
 }
 
-export namespace AccountAuthorizationBrief {
+export namespace UserVerificationBrief {
 }
 
-export type AsyncAccountAuthorization = Async<AccountAuthorizationBrief, AccountAuthorization>;
+export type AsyncUserVerification = Async<UserVerificationBrief, UserVerification>;
 
 export namespace AsyncAccount {
-  export const unloaded = (brief: AccountAuthorizationBrief): AsyncAccountAuthorization => ({
+  export const unloaded = (brief: UserVerificationBrief): AsyncUserVerification => ({
     type: Async.Type.Unloaded,
     brief,
   });
 
-  export const loaded = (account: AccountAuthorization): AsyncAccountAuthorization => ({
+  export const loaded = (account: UserVerification): AsyncUserVerification => ({
     type: Async.Type.Loaded,
     brief: {
     },
@@ -50,4 +50,4 @@ export namespace AsyncAccount {
   });
 }
 
-export default AccountAuthorization;
+export default UserVerification;

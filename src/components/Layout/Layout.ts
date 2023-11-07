@@ -13,7 +13,7 @@ import Node from '../../state/State/Scene/Node';
 import Geometry from '../../state/State/Scene/Geometry';
 import Script from '../../state/State/Scene/Script';
 import { Capabilities } from '../World';
-import { AsyncAccountAuthorization } from "state/State/AccountAuthorization";
+
 
 export namespace LayoutEditorTarget {
   export enum Type {
@@ -73,5 +73,5 @@ export enum Layout {
 export interface ChallengeState {
   challenge: AsyncChallenge;
   challengeCompletion: AsyncChallengeCompletion;
-  accountAuthorization: AsyncAccountAuthorization;
+
 }
