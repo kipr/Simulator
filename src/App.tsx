@@ -11,9 +11,7 @@ import { connect } from 'react-redux';
 import ChallengeRoot from './components/ChallengeRoot';
 import DocumentationWindow from './components/documentation/DocumentationWindow';
 import { State as ReduxState } from './state';
-import { UserAction } from './state/reducer/user';
 import { DARK } from './components/theme';
-import PrintUserId from './components/PrintUserId';
 
 export interface AppPublicProps {
 
@@ -21,7 +19,6 @@ export interface AppPublicProps {
 
 interface AppPrivateProps {
   login: () => void;
-  setUserId: (userId?: string) => void;
 }
 
 interface AppState {
@@ -47,7 +44,6 @@ class App extends React.Component<Props, State> {
       if (user) {
         console.log('User detected.');
         this.setState({ loading: false });
-        this.props.setUserId(user.uid);
       } else {
         console.log('No user detected');
         this.props.login();
@@ -74,14 +70,13 @@ class App extends React.Component<Props, State> {
           <Route path="/tutorials" exact component={Tutorials} />
           <Route path="/scene/:sceneId" component={Root} />
           <Route path="/challenge/:challengeId" component={ChallengeRoot} />
-          <Route path="/print_user_id" component={PrintUserId} />
         </Switch>
         <DocumentationWindow theme={DARK} />
       </>
     );
   }
 }
-// connect(GETS: state => props, SETS: dispatch => props)
+
 export default connect((state: ReduxState) => {
   return {
     
@@ -90,6 +85,5 @@ export default connect((state: ReduxState) => {
   login: () => {
     console.log('Redirecting to login page', window.location.pathname);
     window.location.href = `/login${window.location.pathname === '/login' ? '' : `?from=${window.location.pathname}`}`;
-  },
-  setUserId: (userId?: string) => dispatch(UserAction.setUserId(userId)),
+  }
 }))(App) as React.ComponentType<AppPublicProps>;
