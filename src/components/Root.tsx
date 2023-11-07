@@ -30,7 +30,7 @@ import { DEFAULT_FEEDBACK, Feedback } from '../Feedback';
 import ExceptionDialog from './ExceptionDialog';
 import OpenSceneDialog from './OpenSceneDialog';
 
-import { ChallengesAction, DocumentationAction, ScenesAction, ChallengeCompletionsAction,  } from '../state/reducer';
+import { ChallengesAction, DocumentationAction, ScenesAction, ChallengeCompletionsAction, UserAction,  } from '../state/reducer';
 import { Editor } from './Editor';
 import Dict from '../Dict';
 import ProgrammingLanguage from '../ProgrammingLanguage';
@@ -199,7 +199,7 @@ interface RootPrivateProps {
   challengeCompletion?: AsyncChallengeCompletion;
 
   locale: LocalizedString.Language;
-
+  userId: string;
   onNodeAdd: (id: string, node: Node) => void;
   onNodeRemove: (id: string) => void;
   onNodeChange: (id: string, node: Node) => void;
@@ -213,7 +213,7 @@ interface RootPrivateProps {
   onSelectNodeId: (id: string) => void;
   onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => void;
   onResetScene: () => void;
-
+  setUserId: (userId?: string) => void;
   onDocumentationClick: () => void;
   onDocumentationPush: (location: DocumentationLocation) => void;
   onDocumentationSetLanguage: (language: 'c' | 'python') => void;
@@ -268,6 +268,7 @@ type State = RootState;
 // but we also must use innerheight to fix mobile issues
 interface ContainerProps {
   $windowInnerHeight: number
+  userId?: string;
 }
 const Container = styled('div', (props: ContainerProps) => ({
   width: '100vw',
@@ -321,7 +322,7 @@ class Root extends React.Component<Props, State> {
 
   componentDidMount() {
     WorkerInstance.onStopped = this.onStopped_;
-
+    
     const space = Space.getInstance();
     space.onSetNodeBatch = this.props.onSetNodeBatch;
     space.onSelectNodeId = this.props.onSelectNodeId;
@@ -335,6 +336,7 @@ class Root extends React.Component<Props, State> {
 
     this.scheduleUpdateConsole_();
     window.addEventListener('resize', this.onWindowResize_);
+    this.props.setUserId(auth.currentUser.uid);
   }
 
   componentWillUnmount() {
@@ -556,6 +558,7 @@ class Root extends React.Component<Props, State> {
 
   private onStartChallengeClick_ = () => {
     window.location.href = `/challenge/${this.props.match.params.sceneId}`;
+
   };
   
   private onClearConsole_ = () => {
@@ -935,6 +938,7 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
     challenge: Dict.unique(builder.challenges),
     challengeCompletion: Dict.unique(builder.challengeCompletions),
     locale: state.i18n.locale,
+    userId: state.user.userId,
   };
 }, (dispatch, { match: { params: { sceneId } } }: RootPublicProps) => ({
   onNodeAdd: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
@@ -1000,6 +1004,11 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
   },
   onScriptRemove: (scriptId: string) => {
     dispatch(ScenesAction.removeScript({ sceneId, scriptId }));
+  },
+  setUserId: (userId?: string) => {
+   
+    dispatch(UserAction.setUserId(userId))
+    console.log("userid: " + userId);
   },
 }))(Root) as React.ComponentType<RootPublicProps>;
 
