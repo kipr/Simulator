@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Vector2 } from '../../math';
+import { RawVector2 } from '../../util/math';
 import { ThemeProps } from '../theme';
 import Widget, { Mode, Size } from '../Widget';
 import DocumentationRoot from './DocumentationRoot';
@@ -30,15 +30,15 @@ import LocalizedString from '../../util/LocalizedString';
 namespace DragState {
   export interface None {
     type: 'none';
-    position: Vector2;
+    position: RawVector2;
   }
 
   export const none = construct<None>('none');
 
   export interface Dragging {
     type: 'dragging';
-    position: Vector2;
-    offset: Vector2;
+    position: RawVector2;
+    offset: RawVector2;
   }
 
   export const dragging = construct<Dragging>('dragging');
@@ -109,7 +109,7 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
     super(props);
   
     this.state = {
-      dragState: DragState.none({ position: Vector2.create(0, 0) }),
+      dragState: DragState.none({ position: RawVector2.create(0, 0) }),
     };
   }
 
@@ -118,8 +118,8 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
     const { dragState } = state;
     if (dragState.type !== 'dragging') return false;
 
-    const client = Vector2.fromClient(e);
-    const position = Vector2.subtract(client, dragState.offset);
+    const client = RawVector2.fromClient(e);
+    const position = RawVector2.subtract(client, dragState.offset);
     this.setState({
       dragState: DragState.dragging({
         position,
@@ -150,13 +150,13 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
   private onChromeMouseDown_ = (e: React.MouseEvent) => {
     const { state } = this;
     const { dragState } = state;
-    const topLeft = Vector2.fromTopLeft(e.currentTarget.getBoundingClientRect());
-    const client = Vector2.fromClient(e);
+    const topLeft = RawVector2.fromTopLeft(e.currentTarget.getBoundingClientRect());
+    const client = RawVector2.fromClient(e);
     
     this.setState({
       dragState: DragState.dragging({
         position: dragState.position,
-        offset: Vector2.subtract(client, topLeft)
+        offset: RawVector2.subtract(client, topLeft)
       })
     });
     

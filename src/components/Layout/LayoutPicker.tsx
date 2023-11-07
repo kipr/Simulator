@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { styled } from 'styletron-react';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import { Fa } from '../Fa';
 import { Layout } from './Layout';
 import { ThemeProps } from '../theme';

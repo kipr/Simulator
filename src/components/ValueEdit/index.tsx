@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import { Angle, Distance, Mass, Value } from '../../util';
 import { ThemeProps } from '../theme';
 import Field from '../Field';

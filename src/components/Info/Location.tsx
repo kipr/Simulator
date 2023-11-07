@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import { Value, StyledText, Angle, Distance } from '../../util';
 import { ThemeProps } from '../theme';
 import ValueEdit from '../ValueEdit';
-import deepNeq from '../../deepNeq';
-import { ReferenceFrame, Rotation, Vector3 } from '../../unit-math';
+import deepNeq from '../../util/deepNeq';
+import { ReferenceFrame, Rotation, Vector3 } from '../../util/unit-math';
 import LocalizedString from '../../util/LocalizedString';
 
 import tr from '@i18n';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DARK, RED, ThemeProps } from '../components/theme';
-import { StyleProps } from '../style';
+import { StyleProps } from '../util/style';
 import { styled } from 'styletron-react';
 import { auth, Providers } from '../firebase/firebase';
 import { 

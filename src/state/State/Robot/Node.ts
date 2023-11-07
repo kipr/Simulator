@@ -1,6 +1,6 @@
-import deepNeq from '../../../deepNeq';
-import { Vector3 } from '../../../math';
-import { Vector3 as UnitVector3, ReferenceFrame } from '../../../unit-math';
+import deepNeq from '../../../util/deepNeq';
+import { RawVector3 } from '../../../util/math';
+import { Vector3 as UnitVector3, ReferenceFrame } from '../../../util/unit-math';
 import { Angle, Distance, Mass } from '../../../util';
 import construct from '../../../util/construct';
 import LocalizedString from '../../../util/LocalizedString';
@@ -222,12 +222,12 @@ namespace Node {
     /**
      * The axis of the parent
      */
-    parentAxis: Vector3;
+    parentAxis: RawVector3;
     
     /**
      * The axis of the child. If undefined, same as `parentAxis`.
      */
-    childAxis?: Vector3;
+    childAxis?: RawVector3;
 
     /**
      * The pivot point of the parent. If undefined, zero.

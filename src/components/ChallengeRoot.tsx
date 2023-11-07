@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { signOutOfApp } from '../firebase/modules/auth';
-import WorkerInstance from '../WorkerInstance';
+import WorkerInstance from '../programming/WorkerInstance';
 
 import { State as ReduxState } from '../state';
 
@@ -17,23 +17,23 @@ import FeedbackDialog from './Feedback';
 import { sendFeedback, FeedbackResponse } from './Feedback/SendFeedback';
 import FeedbackSuccessDialog from './Feedback/SuccessModal';
 
-import compile from '../compile';
+import compile from '../programming/compile';
 import { SimulatorState } from './SimulatorState';
 import { Angle, Distance, StyledText } from '../util';
 import { Message } from 'ivygate';
 import parseMessages, { hasErrors, hasWarnings, sort, toStyledText } from '../util/parse-messages';
 
 import { Space } from '../Sim';
-import { RobotPosition } from '../RobotPosition';
-import { DEFAULT_SETTINGS, Settings } from '../Settings';
+import { RobotPosition } from './RobotPosition';
+import { DEFAULT_SETTINGS, Settings } from './Settings';
 import { DEFAULT_FEEDBACK, Feedback } from '../Feedback';
 import ExceptionDialog from './ExceptionDialog';
 import OpenSceneDialog from './OpenSceneDialog';
 
 import { ChallengesAction, ScenesAction, ChallengeCompletionsAction, DocumentationAction } from '../state/reducer';
 import { Editor } from './Editor';
-import Dict from '../Dict';
-import ProgrammingLanguage from '../ProgrammingLanguage';
+import Dict from '../util/Dict';
+import ProgrammingLanguage from '../programming/ProgrammingLanguage';
 import Script from '../state/State/Scene/Script';
 
 import Scene, { AsyncScene } from '../state/State/Scene';
@@ -59,7 +59,7 @@ import LocalizedString from '../util/LocalizedString';
 import SceneSettingsDialog from './SceneSettingsDialog';
 import Geometry from '../state/State/Scene/Geometry';
 import Camera from '../state/State/Scene/Camera';
-import { ReferenceFrame, Vector3 } from '../unit-math';
+import { ReferenceFrame, Vector3 } from '../util/unit-math';
 import { LayoutEditorTarget } from './Layout/Layout';
 import { AsyncChallenge } from '../state/State/Challenge';
 import Builder from '../db/Builder';

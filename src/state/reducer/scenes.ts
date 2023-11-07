@@ -6,12 +6,12 @@ import construct from '../../util/construct';
 import Geometry from '../State/Scene/Geometry';
 import Node from '../State/Scene/Node';
 import Camera from '../State/Scene/Camera';
-import { ReferenceFrame, Vector3 } from '../../unit-math';
+import { ReferenceFrame, Vector3 } from '../../util/unit-math';
 import db from '../../db';
 import { SCENE_COLLECTION } from '../../db/constants';
 import store from '..';
 import Selector from '../../db/Selector';
-import Dict from '../../Dict';
+import Dict from '../../util/Dict';
 import Script from '../State/Scene/Script';
 import { errorToAsyncError, mutate } from './util';
 

@@ -1,15 +1,15 @@
 import { styled } from 'styletron-react';
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import { Vector2 } from '../../math';
-import { StyleProps } from '../../style';
+import { RawVector2 } from '../../util/math';
+import { StyleProps } from '../../util/style';
 import { ThemeProps } from '../theme';
 
 
 export interface ScreenGuideProps extends StyleProps, ThemeProps {
   from: HTMLElement,
-  fromOffset?: Vector2,
-  to: Vector2
+  fromOffset?: RawVector2,
+  to: RawVector2
 }
 
 interface ScreenGuideState {
@@ -53,11 +53,11 @@ class ScreenGuide extends React.PureComponent<Props, State> {
 
     const fromBounding = from.getBoundingClientRect();
 
-    const p0x = fromBounding.left + fromBounding.width / 2 + Vector2.x(fromOffset);
-    const p0y = fromBounding.top + fromBounding.height / 2 + Vector2.y(fromOffset);
+    const p0x = fromBounding.left + fromBounding.width / 2 + RawVector2.x(fromOffset);
+    const p0y = fromBounding.top + fromBounding.height / 2 + RawVector2.y(fromOffset);
     
-    const p3x = Vector2.x(to);
-    const p3y = Vector2.y(to);
+    const p3x = RawVector2.x(to);
+    const p3y = RawVector2.y(to);
 
     const p1x = (p0x + p3x) / 2;
     const p1y = p0y;

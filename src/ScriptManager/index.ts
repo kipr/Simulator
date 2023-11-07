@@ -1,15 +1,15 @@
-import Dict from '../Dict';
+import Dict from '../util/Dict';
 import Scene from '../state/State/Scene';
 import Camera from '../state/State/Scene/Camera';
 import Geometry from '../state/State/Scene/Geometry';
 import Node from '../state/State/Scene/Node';
 import Script from '../state/State/Scene/Script';
-import { Rotation, Vector3 } from '../unit-math';
+import { Rotation, Vector3 } from '../util/unit-math';
 
 import { v4 as uuid } from 'uuid';
 import construct from '../util/construct';
 import { Ids, ScriptSceneBinding } from './ScriptSceneBinding';
-import { AxisAngle, Quaternion, ReferenceFrame, Vector3 as RawVector3 } from '../math';
+import { RawAxisAngle, RawQuaternion, RawReferenceFrame, RawVector3 } from '../util/math';
 import { Angle, Mass, Distance } from '../util/Value';
 
 class ScriptManager {
@@ -288,11 +288,11 @@ namespace ScriptManager {
       this.spawnFunc_({
         scene: this,
         Rotation,
-        AxisAngle,
+        RawAxisAngle,
         Vector3: RawVector3,
         UnitVector3: Vector3,
-        Quaternion,
-        ReferenceFrame,
+        RawQuaternion,
+        RawReferenceFrame,
         Distance,
         Mass,
         Angle,

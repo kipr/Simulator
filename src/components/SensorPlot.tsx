@@ -1,6 +1,6 @@
 import { styled } from 'styletron-react';
 import * as React from 'react';
-import { StyleProps } from '../style';
+import { StyleProps } from '../util/style';
 import { ThemeProps } from './theme';
 import resizeListener, { ResizeListener } from './ResizeListener';
 

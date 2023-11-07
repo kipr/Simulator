@@ -3,7 +3,7 @@ import { styled } from 'styletron-react';
 import { Sentiment, Feedback } from '../../Feedback';
 import SentimentCharm from './SentimentCharm';
 import { FeedbackTextArea, FeedbackEmailInput, FeedbackText, FeedbackLabel } from './FeedbackInputs';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import { Dialog } from '../Dialog';
 import DialogBar from "../DialogBar";
 import { ThemeProps } from '../theme';

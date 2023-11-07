@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { styled } from 'styletron-react';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import ScrollArea from '../ScrollArea';
 import Section from '../Section';
 import { ThemeProps } from '../theme';
@@ -9,7 +9,7 @@ import SensorWidget from './SensorWidget';
 import { StyledText } from '../../util';
 import Location from './Location';
 import { Fa } from '../Fa';
-import { ReferenceFrame } from '../../unit-math';
+import { ReferenceFrame } from '../../util/unit-math';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
 import { ScenesAction } from '../../state/reducer';

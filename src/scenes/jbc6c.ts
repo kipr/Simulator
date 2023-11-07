@@ -1,6 +1,6 @@
 import Scene from "../state/State/Scene";
 import { Color } from '../state/State/Scene/Color';
-// import { Vector3, Quaternion, ReferenceFrame } from "../math";
+// import { RawVector3, RawQuaternion, RawReferenceFrame } from "../math";
 // import { Color3, StandardMaterial, GlowLayer } from 'babylonjs';
 import Script from '../state/State/Scene/Script';
 import { Distance } from "../util";

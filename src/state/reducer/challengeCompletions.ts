@@ -8,10 +8,10 @@ import { errorToAsyncError, mutate } from './util';
 import ChallengeCompletion, { AsyncChallengeCompletion, ChallengeCompletionBrief } from '../State/ChallengeCompletion';
 import PredicateCompletion from '../State/ChallengeCompletion/PredicateCompletion';
 import Scene from '../State/Scene';
-import Dict from '../../Dict';
+import Dict from '../../util/Dict';
 import { OuterObjectPatch } from 'symmetry/dist';
-import ProgrammingLanguage from '../../ProgrammingLanguage';
-import { ReferenceFrame } from '../../unit-math';
+import ProgrammingLanguage from '../../programming/ProgrammingLanguage';
+import { ReferenceFrame } from '../../util/unit-math';
 
 
 export namespace ChallengeCompletionsAction {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { styled, withStyleDeep } from 'styletron-react';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import { Switch } from '../Switch';
 import { Theme, ThemeProps } from '../theme';
 import Field from '../Field';
@@ -23,11 +23,11 @@ import { State as ReduxState } from '../../state';
 import { ScenesAction } from '../../state/reducer';
 
 import * as uuid from 'uuid';
-import { ReferenceFrame, Rotation, Vector3 } from '../../unit-math';
-import { Vector3 as RawVector3 } from '../../math';
+import { ReferenceFrame, Rotation, Vector3 } from '../../util/unit-math';
+import { RawVector3 } from '../../util/math';
 import ComboBox from '../ComboBox';
 import Node from '../../state/State/Scene/Node';
-import Dict from '../../Dict';
+import Dict from '../../util/Dict';
 import Geometry from '../../state/State/Scene/Geometry';
 
 import { Button } from '../Button';

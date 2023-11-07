@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
-import { StyleProps } from '../style';
+import { StyleProps } from '../util/style';
 import { Dialog } from './Dialog';
 import { ThemeProps } from './theme';
 import { Fa } from './Fa';
@@ -13,7 +13,7 @@ import LocalizedString from '../util/LocalizedString';
 import tr from '@i18n';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../state';
-import Dict from '../Dict';
+import Dict from '../util/Dict';
 import { sprintf } from 'sprintf-js';
 
 export interface DeleteDialogPublicProps extends ThemeProps, StyleProps {

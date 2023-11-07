@@ -3,7 +3,7 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import DocumentationLocation from '../../state/State/Documentation/DocumentationLocation';
 import FunctionDocumentationModel from '../../state/State/Documentation/FunctionDocumentation';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import Section from '../Section';
 import { ThemeProps } from '../theme';
 import { ParameterName, Type } from './common';

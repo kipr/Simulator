@@ -1,7 +1,7 @@
 import AbstractRobot from '../../../AbstractRobot';
-import deepNeq from '../../../deepNeq';
-import { Vector2, Vector3 } from '../../../math';
-import { ReferenceFrame } from '../../../unit-math';
+import deepNeq from '../../../util/deepNeq';
+import { RawVector2, RawVector3 } from '../../../util/math';
+import { ReferenceFrame } from '../../../util/unit-math';
 import { DistributiveOmit } from '../../../util/types';
 import { Angle, Mass } from '../../../util/Value';
 import LocalizedString from '../../../util/LocalizedString';
@@ -107,7 +107,7 @@ namespace Node {
     geometryId: string;
     physics?: Physics;
     material?: Material;
-    faceUvs?: Vector2[];
+    faceUvs?: RawVector2[];
   }
 
   export namespace Obj {
@@ -174,7 +174,7 @@ namespace Node {
   export interface SpotLight extends Base {
     type: 'spot-light';
     parentId?: string;
-    direction: Vector3;
+    direction: RawVector3;
     angle: Angle;
     exponent: number;
     intensity: number;
@@ -215,7 +215,7 @@ namespace Node {
     parentId?: string;
     radius?: number;
     range?: number;
-    direction: Vector3;
+    direction: RawVector3;
     intensity: number;
   }
 

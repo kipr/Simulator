@@ -3,9 +3,9 @@ import * as ReactDom from 'react-dom';
 
 import { ThemeProps } from "./theme";
 
-import { Rectangle, Vector2 } from '../math';
+import { Rectangle, RawVector2 } from '../util/math';
 import { styled } from 'styletron-react';
-import { StyleProps } from '../style';
+import { StyleProps } from '../util/style';
 import { GLOBAL_EVENTS } from '../util';
 
 export interface TooltipProps extends ThemeProps, StyleProps {
@@ -16,7 +16,7 @@ export interface TooltipProps extends ThemeProps, StyleProps {
 }
 
 interface TooltipState {
-  position: Vector2;
+  position: RawVector2;
 }
 
 type Props = TooltipProps;
@@ -45,7 +45,7 @@ class Tooltip extends React.PureComponent<Props, State> {
     super(props);
 
     this.state = {
-      position: Vector2.ZERO,
+      position: RawVector2.ZERO,
     };
   }
 
@@ -62,7 +62,7 @@ class Tooltip extends React.PureComponent<Props, State> {
 
     if (contentHint.type !== Tooltip.ContentHint.Type.Interactive) return;
 
-    const mouse = Vector2.fromClient(event);
+    const mouse = RawVector2.fromClient(event);
 
     let hit = false;
     switch (target.type) {
@@ -71,7 +71,7 @@ class Tooltip extends React.PureComponent<Props, State> {
         const selfGrown = Rectangle.grow(selfRect, 10);
         hit ||= Rectangle.contains(selfGrown, mouse);
 
-        hit ||= Vector2.distance(mouse, target.position) < 50;
+        hit ||= RawVector2.distance(mouse, target.position) < 50;
         break;
       }
       case Tooltip.Target.Type.Element: {
@@ -130,7 +130,7 @@ class Tooltip extends React.PureComponent<Props, State> {
 
     const nextPosition = Tooltip.Target.position(target);
 
-    if (Vector2.neq(position, nextPosition)) {
+    if (RawVector2.neq(position, nextPosition)) {
       this.setState({ position: nextPosition }, this.scheduleTick_);
     } else {
       this.scheduleTick_();
@@ -188,17 +188,17 @@ namespace Tooltip {
       
       export const position = (element: Element) => {
         const { left, right, top } = element.element.getBoundingClientRect();
-        return Vector2.create((left + right) / 2, top);
+        return RawVector2.create((left + right) / 2, top);
       };
     }
 
     export interface Position {
       type: Type.Position;
-      position: Vector2;
+      position: RawVector2;
     }
 
     export namespace Position {
-      export const create = (position: Vector2): Position => ({
+      export const create = (position: RawVector2): Position => ({
         type: Type.Position,
         position
       });

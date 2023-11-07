@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 
 import Scene from '../state/State/Scene';
-import { StyleProps } from '../style';
+import { StyleProps } from '../util/style';
 import LocalizedString from '../util/LocalizedString';
 import Field from './Field';
 import Input from './Input';

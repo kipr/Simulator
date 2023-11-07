@@ -1,4 +1,4 @@
-import { Angle, Distance } from "./util";
+import { Angle, Distance } from "../util";
 
 export interface RobotPosition {
   x: Distance;

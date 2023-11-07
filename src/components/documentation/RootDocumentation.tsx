@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
-import Dict from '../../Dict';
+import Dict from '../../util/Dict';
 import Documentation from '../../state/State/Documentation';
 import DocumentationLocation from '../../state/State/Documentation/DocumentationLocation';
 import FileDocumentation from '../../state/State/Documentation/FileDocumentation';

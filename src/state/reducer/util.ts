@@ -1,5 +1,5 @@
 import { WritableDraft } from 'immer/dist/internal';
-import Dict from '../../Dict';
+import Dict from '../../util/Dict';
 import Async from '../State/Async';
 import DbError from '../../db/Error';
 

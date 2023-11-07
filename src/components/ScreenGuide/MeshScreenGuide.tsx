@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { Vector2 } from '../../math';
-import { StyleProps } from '../../style';
+import { RawVector2 } from '../../util/math';
+import { StyleProps } from '../../util/style';
 import { ThemeProps } from '../theme';
 import ScreenGuide from './ScreenGuide';
 import { ACTIVE_SPACE } from '../../Sim';
 
 export interface MeshScreenGuideProps extends StyleProps, ThemeProps {
   from: HTMLElement,
-  fromOffset?: Vector2,
+  fromOffset?: RawVector2,
   to: string
 }
 
 interface MeshScreenGuideState {
-  toVec?: Vector2
+  toVec?: RawVector2
 }
 
 type Props = MeshScreenGuideProps;

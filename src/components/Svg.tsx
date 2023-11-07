@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
-import { Vector2 } from '../math';
+import { RawVector2 } from '../util/math';
 import resizeListener, { ResizeListener } from './ResizeListener';
-import { StyleProps } from '../style';
+import { StyleProps } from '../util/style';
 
-export type DrawFunction = (size: Vector2) => React.ReactNode;
+export type DrawFunction = (size: RawVector2) => React.ReactNode;
 
 export interface SvgProps extends StyleProps {
   draw: DrawFunction;
@@ -17,7 +17,7 @@ export interface SvgProps extends StyleProps {
 }
 
 interface SvgState {
-  size: Vector2;
+  size: RawVector2;
 }
 
 type Props = SvgProps;
@@ -39,7 +39,7 @@ const Container = styled('svg', (props: { $width: number, $height: number }) => 
 }));
 
 class Svg extends React.Component<Props, State> {
-  private onResize_ = (size: Vector2, element: Element) => {
+  private onResize_ = (size: RawVector2, element: Element) => {
     this.setState({
       size
     });
@@ -54,7 +54,7 @@ class Svg extends React.Component<Props, State> {
     if (!this.containerRef_) return;
     this.resizeListener_.observe(this.containerRef_);
     
-    const size = Vector2.fromWidthHeight(this.containerRef_.getBoundingClientRect());
+    const size = RawVector2.fromWidthHeight(this.containerRef_.getBoundingClientRect());
     this.setState({ size });
   };
 
@@ -70,7 +70,7 @@ class Svg extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      size: Vector2.ZERO,
+      size: RawVector2.ZERO,
     };
   }
   

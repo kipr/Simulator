@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { FeedbackText } from './FeedbackInputs';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import { Dialog } from '../Dialog';
 import { ThemeProps } from '../theme';
 import { FeedbackContainer, CenterContainer } from './index';

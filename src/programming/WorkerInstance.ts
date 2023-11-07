@@ -4,8 +4,8 @@ import Registers from './RegisterState';
 import SharedRegisters from './SharedRegisters';
 import SharedRingBufferUtf32 from './SharedRingBufferUtf32';
 import SharedRegistersRobot from './SharedRegistersRobot';
-import AbstractRobot from './AbstractRobot';
-import WriteCommand from './AbstractRobot/WriteCommand';
+import AbstractRobot from '../AbstractRobot';
+import WriteCommand from '../AbstractRobot/WriteCommand';
 
 const SHARED_CONSOLE_LENGTH = 1024;
 

@@ -1,5 +1,5 @@
 import FsDevice from './FsDevice';
-import SharedRegisters from '../SharedRegisters';
+import SharedRegisters from '../programming/SharedRegisters';
 
 interface RegistersDeviceParams {
   registers: SharedRegisters;

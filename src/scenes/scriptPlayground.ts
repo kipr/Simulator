@@ -1,7 +1,7 @@
 import Scene from "../state/State/Scene";
 import { Color } from '../state/State/Scene/Color';
 import Script from '../state/State/Scene/Script';
-import { Rotation } from "../unit-math";
+import { Rotation } from "../util/unit-math";
 import { Distance } from "../util";
 import LocalizedString from '../util/LocalizedString';
 

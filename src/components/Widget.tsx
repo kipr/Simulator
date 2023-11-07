@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { styled } from 'styletron-react';
-import { StyleProps } from '../style';
+import { StyleProps } from '../util/style';
 import { EMPTY_ARRAY } from '../util';
 import { Spacer } from './common';
 import { Fa } from './Fa';

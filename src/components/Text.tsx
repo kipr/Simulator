@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleProps } from '../style';
+import { StyleProps } from '../util/style';
 import { AnyText, EMPTY_OBJECT, StyledText } from '../util';
 
 export interface TextProps extends StyleProps {

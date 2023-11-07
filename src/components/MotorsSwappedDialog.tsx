@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { styled } from 'styletron-react';
 import { State } from '../state';
 
-import { StyleProps } from "../style";
+import { StyleProps } from "../util/style";
 import { Dialog } from './Dialog';
 import { Theme, ThemeProps } from "./theme";
 

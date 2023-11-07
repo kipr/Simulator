@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
-import Dict from '../Dict';
-import { Vector2 } from '../math';
-import { StyleProps } from '../style';
+import Dict from '../util/Dict';
+import { RawVector2 } from '../util/math';
+import { StyleProps } from '../util/style';
 import Svg, { DrawFunction } from './Svg';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -58,7 +58,7 @@ const OperandList = styled('div', {
   margin: '0.25em',
 });
 
-const drawCurly = (decorationColor?: string) => (size: Vector2) => {
+const drawCurly = (decorationColor?: string) => (size: RawVector2) => {
   // Draws a curly bracket using two bezier curves
   return (
     <>

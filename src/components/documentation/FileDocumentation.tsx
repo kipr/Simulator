@@ -4,7 +4,7 @@ import { styled } from 'styletron-react';
 import Documentation from '../../state/State/Documentation';
 import DocumentationLocation from '../../state/State/Documentation/DocumentationLocation';
 import FileDocumentationModel from '../../state/State/Documentation/FileDocumentation';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import Section from '../Section';
 import { ThemeProps } from '../theme';
 import FunctionBrief from './FunctionBrief';

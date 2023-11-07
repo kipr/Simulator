@@ -1,5 +1,5 @@
 import Scene from "../state/State/Scene";
-import { ReferenceFrame, Rotation } from "../unit-math";
+import { ReferenceFrame, Rotation } from "../util/unit-math";
 import { Distance, Mass } from "../util";
 import LocalizedString from '../util/LocalizedString';
 

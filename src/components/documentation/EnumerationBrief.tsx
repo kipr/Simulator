@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 
 import EnumerationDocumentation from '../../state/State/Documentation/EnumerationDocumentation';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import { ThemeProps } from '../theme';
 import { Decoration, Keyword, Type } from './common';
 import FileName from './FileName';

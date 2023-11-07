@@ -2,8 +2,8 @@ import Robot from "../state/State/Robot";
 import Node from "../state/State/Robot/Node";
 import Geometry from "../state/State/Robot/Geometry";
 import { Angle, Distance, Mass } from '../util';
-import { Vector3 as RawVector3 } from '../math';
-import { Rotation, Vector3 } from '../unit-math';
+import { RawVector3 } from '../util/math';
+import { Rotation, Vector3 } from '../util/unit-math';
 
 import tr from '@i18n';
 

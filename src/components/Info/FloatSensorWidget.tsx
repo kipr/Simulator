@@ -1,14 +1,14 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 
-import { Vector2 } from '../../math';
+import { RawVector2 } from '../../util/math';
 import SensorWidget, { SensorWidgetProps } from './SensorWidget';
 
 export interface FloatSensorWidgetProps extends SensorWidgetProps {
 }
 
 interface FloatSensorWidgetState {
-  topLeft: Vector2;
+  topLeft: RawVector2;
 }
 
 type Props = FloatSensorWidgetProps;
@@ -21,7 +21,7 @@ class FloatSensorWidget extends React.PureComponent<Props, State> {
     super(props);
     
     this.state = {
-      topLeft: Vector2.ZERO
+      topLeft: RawVector2.ZERO
     };
   }
 

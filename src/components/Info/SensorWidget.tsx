@@ -1,7 +1,7 @@
 import { styled } from 'styletron-react';
 import * as React from 'react';
 import { ThemeProps } from '../theme';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import SensorPlot from '../SensorPlot';
 import BooleanPlot from '../BooleanPlot';
 import { Spacer } from '../common';

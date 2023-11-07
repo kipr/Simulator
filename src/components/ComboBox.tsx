@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as ReactDom from "react-dom";
 import { styled } from "styletron-react";
-import { Rectangle } from "../math";
-import { StyleProps } from "../style";
+import { Rectangle } from "../util/math";
+import { StyleProps } from "../util/style";
 import { AnyText } from "../util";
 import { Color } from "../state/State/Scene/Color";
 import { Fa } from "./Fa";

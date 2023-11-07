@@ -1,7 +1,7 @@
-import { Vector2, Vector3 } from '../../../unit-math';
-import { Vector3 as RawVector3, Vector2 as RawVector2 } from '../../../math';
+import { Vector2, Vector3 } from '../../../util/unit-math';
+import { RawVector3, RawVector2 } from '../../../util/math';
 import { Distance } from '../../../util/Value';
-import deepNeq from '../../../deepNeq';
+import deepNeq from '../../../util/deepNeq';
 import Patch from '../../../util/Patch';
 
 namespace Geometry {

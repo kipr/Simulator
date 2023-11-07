@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { styled } from 'styletron-react';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import { Fa } from '../Fa';
 import { ThemeProps } from '../theme';
 import { faCaretSquareLeft, faClone, faCogs, faCopy, faEye, faEyeSlash, faFolderOpen, faPlus, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';

@@ -2,7 +2,7 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
 
-import { StyleProps } from '../style';
+import { StyleProps } from '../util/style';
 
 export interface FaProps extends StyleProps {
   icon: IconProp;

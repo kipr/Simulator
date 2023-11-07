@@ -1,7 +1,7 @@
 import Protocol from './WorkerProtocol';
 import dynRequire from './require';
 import SharedRegisters from './SharedRegisters';
-import python from './python';
+import python from '../python';
 import SharedRingBufferUtf32 from './SharedRingBufferUtf32';
 
 // Proper typing of Worker is tricky due to conflicting DOM and WebWorker types

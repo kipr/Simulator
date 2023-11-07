@@ -1,4 +1,4 @@
-import { ReferenceFrame, Rotation, Vector3 } from "../unit-math";
+import { ReferenceFrame, Rotation, Vector3 } from "../util/unit-math";
 import { Angle, Distance, Mass } from "../util";
 import Node from "../state/State/Scene/Node";
 import Camera from "../state/State/Scene/Camera";
@@ -9,7 +9,7 @@ import Author from '../db/Author';
 
 import tr from '@i18n';
 import { sprintf } from 'sprintf-js';
-import Dict from '../Dict';
+import Dict from '../util/Dict';
 
 const ROBOT_ORIGIN: ReferenceFrame = {
   position: Vector3.centimeters(0, 0, 0),

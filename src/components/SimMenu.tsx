@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { styled, withStyleDeep } from 'styletron-react';
-import { StyleProps } from '../style';
+import { StyleProps } from '../util/style';
 import { Spacer } from './common';
 import { Fa } from './Fa';
 import { Layout, LayoutPicker } from './Layout';

@@ -26,12 +26,12 @@ import '@babylonjs/core/Physics/physicsEngineComponent';
 import SceneNode from './state/State/Scene/Node';
 import Robot from './state/State/Robot';
 import Node from './state/State/Robot/Node';
-import { Quaternion, Vector3 as RawVector3, clamp, Euler } from './math';
-import { ReferenceFrame, Rotation, Vector3 } from './unit-math';
+import { RawQuaternion, RawVector3, clamp, RawEuler } from './util/math';
+import { ReferenceFrame, Rotation, Vector3 } from './util/unit-math';
 import { Angle, Distance, Mass } from './util/Value';
 import { SceneMeshMetadata } from './SceneBinding';
 import Geometry from './state/State/Robot/Geometry';
-import Dict from './Dict';
+import Dict from './util/Dict';
 import { RENDER_SCALE, RENDER_SCALE_METERS_MULTIPLIER } from './renderConstants';
 import WriteCommand from './AbstractRobot/WriteCommand';
 import AbstractRobot from './AbstractRobot';
@@ -720,12 +720,12 @@ class RobotBinding {
     const linkOrigins: Dict<ReferenceFrame> = {};
     for (const [linkId, link] of Object.entries(this.links_)) {
       const rawLinkPosition = RawVector3.fromBabylon(link.position);
-      const rawLinkOrientation = Quaternion.fromBabylon(link.rotationQuaternion);
+      const rawLinkOrientation = RawQuaternion.fromBabylon(link.rotationQuaternion);
       const rawLinkScale = RawVector3.fromBabylon(link.scaling);
 
       linkOrigins[linkId] = {
         position: Vector3.fromRaw(rawLinkPosition, RENDER_SCALE),
-        orientation: Rotation.Euler.fromRaw(Euler.fromQuaternion(rawLinkOrientation)),
+        orientation: Rotation.Euler.fromRaw(RawEuler.fromQuaternion(rawLinkOrientation)),
         scale: rawLinkScale
       };
     }
@@ -737,7 +737,7 @@ class RobotBinding {
       if (!(linkId in newLinkOrigins)) continue;
       const rawLinkPosition = ReferenceFrame.toRaw(newLinkOrigins[linkId], RENDER_SCALE);
       link.position = RawVector3.toBabylon(rawLinkPosition.position);
-      link.rotationQuaternion = Quaternion.toBabylon(rawLinkPosition.orientation);
+      link.rotationQuaternion = RawQuaternion.toBabylon(rawLinkPosition.orientation);
       link.scaling = RawVector3.toBabylon(rawLinkPosition.scale);
     }
   }
@@ -747,13 +747,13 @@ class RobotBinding {
     const rawOrientation = rootLink.rotationQuaternion;
     const rawInternalOrigin = ReferenceFrame.toRaw(this.robot_.origin || ReferenceFrame.IDENTITY, RENDER_SCALE);
 
-    const orientation = Quaternion.toBabylon(rawOrientation || Quaternion.IDENTITY).multiply(
-      Quaternion.toBabylon(rawInternalOrigin.orientation || Quaternion.IDENTITY).invert()
+    const orientation = RawQuaternion.toBabylon(rawOrientation || RawQuaternion.IDENTITY).multiply(
+      RawQuaternion.toBabylon(rawInternalOrigin.orientation || RawQuaternion.IDENTITY).invert()
     );
 
     return {
       position: Vector3.fromRaw(RawVector3.fromBabylon(rootLink.position), RENDER_SCALE),
-      orientation: Rotation.Euler.fromRaw(Euler.fromQuaternion(orientation)),
+      orientation: Rotation.Euler.fromRaw(RawEuler.fromQuaternion(orientation)),
       scale: RawVector3.divideScalar(RawVector3.fromBabylon(rootLink.scaling), RENDER_SCALE_METERS_MULTIPLIER),
     };
   }
@@ -768,13 +768,13 @@ class RobotBinding {
     const rawOrigin = ReferenceFrame.toRaw(newOrigin, RENDER_SCALE);
     const rawInternalOrigin = ReferenceFrame.toRaw(this.robot_.origin || ReferenceFrame.IDENTITY, RENDER_SCALE);
 
-    const newOriginE = Euler.fromQuaternion(rawOrigin.orientation);
-    const Robot_OriginE = Euler.fromQuaternion(rawInternalOrigin.orientation);
+    const newOriginE = RawEuler.fromQuaternion(rawOrigin.orientation);
+    const Robot_OriginE = RawEuler.fromQuaternion(rawInternalOrigin.orientation);
 
     const default_offset = -1 * Math.PI / 2;
 
 
-    const UpdatedEulerOrigin = Euler.create(
+    const UpdatedEulerOrigin = RawEuler.create(
       newOriginE.x + Robot_OriginE.x,
       newOriginE.y + Robot_OriginE.y + default_offset,
       newOriginE.z + Robot_OriginE.z,
@@ -807,7 +807,7 @@ class RobotBinding {
     rootTransformNode.position = RawVector3.toBabylon(rawOrigin.position || RawVector3.ZERO)
       .add(RawVector3.toBabylon(rawInternalOrigin.position || RawVector3.ZERO));
     
-    rootTransformNode.rotationQuaternion = Quaternion.toBabylon(Euler.toQuaternion(UpdatedEulerOrigin));
+    rootTransformNode.rotationQuaternion = RawQuaternion.toBabylon(RawEuler.toQuaternion(UpdatedEulerOrigin));
 
     for (const link of Object.values(this.links_)) {
       link.setParent(null);

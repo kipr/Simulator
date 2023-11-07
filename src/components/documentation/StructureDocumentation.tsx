@@ -4,7 +4,7 @@ import { styled } from 'styletron-react';
 import Documentation from '../../state/State/Documentation';
 import DocumentationLocation from '../../state/State/Documentation/DocumentationLocation';
 import StructureDocumentationModel from '../../state/State/Documentation/StructureDocumentation';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import Section from '../Section';
 import { ThemeProps } from '../theme';
 import { ParameterName, Type } from './common';

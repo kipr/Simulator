@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { styled } from 'styletron-react';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import { Theme, ThemeProps } from '../theme';
 
 import { Fa } from '../Fa';
@@ -11,11 +11,11 @@ import { WarningCharm, ErrorCharm } from './';
 
 import { Ivygate, Message } from 'ivygate';
 import LanguageSelectCharm from './LanguageSelectCharm';
-import ProgrammingLanguage from '../../ProgrammingLanguage';
+import ProgrammingLanguage from '../../programming/ProgrammingLanguage';
 
 import { faArrowsRotate, faFileDownload, faIndent } from '@fortawesome/free-solid-svg-icons';
 import Script from '../../state/State/Scene/Script';
-import Dict from '../../Dict';
+import Dict from '../../util/Dict';
 
 import * as monaco from 'monaco-editor';
 import DocumentationLocation from '../../state/State/Documentation/DocumentationLocation';

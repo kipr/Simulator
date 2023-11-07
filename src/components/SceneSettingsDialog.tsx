@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
-import { StyleProps } from '../style';
+import { StyleProps } from '../util/style';
 import { Dialog } from './Dialog';
 import { ThemeProps } from './theme';
 import { Fa } from './Fa';
@@ -8,7 +8,7 @@ import Scene from '../state/State/Scene';
 import SceneSettings from './SceneSettings';
 import DialogBar from './DialogBar';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import deepNeq from '../deepNeq';
+import deepNeq from '../util/deepNeq';
 
 import tr from '@i18n';
 

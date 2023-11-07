@@ -1,7 +1,7 @@
 import { faCog, faEye, faEyeSlash, faSync, faTimes } from "@fortawesome/free-solid-svg-icons";
 import * as React from "react";
 import { styled, withStyleDeep } from "styletron-react";
-import { StyleProps } from "../style";
+import { StyleProps } from "../util/style";
 import { Fa } from "./Fa";
 import { BLUE, BROWN, GREEN, RED, ThemeProps } from "./theme";
 

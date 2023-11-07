@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Modal } from './Modal';
 
-import { StyleProps } from '../style';
+import { StyleProps } from '../util/style';
 
 import { styled } from 'styletron-react';
 import Widget, { Mode, Size } from './Widget';

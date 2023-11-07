@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
-import { StyleProps } from '../style';
+import { StyleProps } from '../util/style';
 import { Dialog } from './Dialog';
 import { ThemeProps } from './theme';
 import { Fa } from './Fa';
@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import { State as ReduxState } from '../state';
 import LocalizedString from '../util/LocalizedString';
 import { sprintf } from 'sprintf-js';
-import Dict from '../Dict';
+import Dict from '../util/Dict';
 
 export interface AboutDialogPublicProps extends ThemeProps, StyleProps {
   onClose: () => void;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
-import { Settings } from '../Settings';
-import { StyleProps } from '../style';
+import { Settings } from './Settings';
+import { StyleProps } from '../util/style';
 import { Dialog } from './Dialog';
 import ScrollArea from './ScrollArea';
 import { Switch } from './Switch';
@@ -10,7 +10,7 @@ import { ThemeProps } from './theme';
 import tr from '@i18n';
 import LocalizedString from '../util/LocalizedString';
 import ComboBox from './ComboBox';
-import Dict from '../Dict';
+import Dict from '../util/Dict';
 
 import { State as ReduxState } from '../state';
 import { I18nAction } from '../state/reducer';

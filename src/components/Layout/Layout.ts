@@ -1,8 +1,8 @@
 import { Message } from "ivygate";
-import ProgrammingLanguage from '../../ProgrammingLanguage';
-import { RobotPosition } from "../../RobotPosition";
-import { Settings } from "../../Settings";
-import { StyleProps } from "../../style";
+import ProgrammingLanguage from '../../programming/ProgrammingLanguage';
+import { RobotPosition } from "../RobotPosition";
+import { Settings } from "../Settings";
+import { StyleProps } from "../../util/style";
 import { StyledText } from "../../util";
 import { Editor } from "../Editor";
 import { ThemeProps } from "../theme";

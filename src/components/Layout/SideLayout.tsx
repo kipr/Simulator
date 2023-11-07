@@ -18,13 +18,13 @@ import { Slider } from '../Slider';
 
 import { State as ReduxState } from '../../state';
 import Node from '../../state/State/Scene/Node';
-import Dict from '../../Dict';
+import Dict from '../../util/Dict';
 import Scene from '../../state/State/Scene';
 import { faCode, faFlagCheckered, faGlobeAmericas, faRobot } from '@fortawesome/free-solid-svg-icons';
 import Async from '../../state/State/Async';
 import { EMPTY_OBJECT } from '../../util';
 import Challenge from '../Challenge';
-import { ReferenceFrame } from '../../unit-math';
+import { ReferenceFrame } from '../../util/unit-math';
 
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';

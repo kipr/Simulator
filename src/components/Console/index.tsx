@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { styled } from 'styletron-react';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import { StyledText } from '../../util';
 import ScrollArea from '../ScrollArea';
 import { Text } from '../Text';

@@ -1,6 +1,6 @@
-import { Vector2 } from "../math";
+import { RawVector2 } from "../util/math";
 
-export type ResizeCallback = (size: Vector2, element: Element) => void;
+export type ResizeCallback = (size: RawVector2, element: Element) => void;
 
 export interface ResizeListener {
   observe(element: Element);
@@ -10,7 +10,7 @@ export interface ResizeListener {
 
 class Polled implements ResizeListener {
   private callback_: ResizeCallback;
-  private elements_ = new Map<Element, Vector2>();
+  private elements_ = new Map<Element, RawVector2>();
   private running_ = false;
 
   private tick_ = () => {
@@ -70,7 +70,7 @@ class Evented implements ResizeListener {
     }
   };
 
-  private static getResizeObserverEntrySize(entry: ResizeObserverEntry): Vector2 {
+  private static getResizeObserverEntrySize(entry: ResizeObserverEntry): RawVector2 {
     if (entry.borderBoxSize) {
       // Firefox implements borderBoxSize as an object instead of an array, so check for either
       const borderBoxSize = entry.borderBoxSize as unknown;

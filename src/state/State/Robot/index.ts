@@ -1,5 +1,5 @@
-import Dict from '../../../Dict';
-import { ReferenceFrame } from '../../../unit-math';
+import Dict from '../../../util/Dict';
+import { ReferenceFrame } from '../../../util/unit-math';
 import LocalizedString from '../../../util/LocalizedString';
 import Patch from '../../../util/Patch';
 import Geometry from './Geometry';

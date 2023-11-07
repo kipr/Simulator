@@ -7,7 +7,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
 import registersDevice from './registersDevice';
-import SharedRegisters from '../SharedRegisters';
+import SharedRegisters from '../programming/SharedRegisters';
 
 export interface PythonParams {
   code: string;

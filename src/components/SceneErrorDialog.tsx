@@ -10,7 +10,7 @@ import LocalizedString from '../util/LocalizedString';
 
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../state';
-import Dict from '../Dict';
+import Dict from '../util/Dict';
 import { sprintf } from 'sprintf-js';
 
 interface SceneErrorDialogPublicProps extends ThemeProps {

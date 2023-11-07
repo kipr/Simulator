@@ -5,7 +5,7 @@ import * as Sim from '../Sim';
 import { styled } from 'styletron-react';
 
 import resizeListener, { ResizeListener } from './ResizeListener';
-import { Vector2 } from '../math';
+import { RawVector2 } from '../util/math';
 
 import Loading from './Loading';
 import MotorsSwappedDialog from './MotorsSwappedDialog';
@@ -146,7 +146,7 @@ export class SimulatorArea extends React.Component<Props, SimulatorAreaState> {
   private lastWidth_ = 0;
   private lastHeight_ = 0;
 
-  private onSizeChange_ = (size: Vector2) => {
+  private onSizeChange_ = (size: RawVector2) => {
     if (this.lastHeight_ !== size.y || this.lastWidth_ !== size.x) {
       this.canvasRef_.style.width = `${size.x}px`;
       this.canvasRef_.style.height = `${size.y}px`;

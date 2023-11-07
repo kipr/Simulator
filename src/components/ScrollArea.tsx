@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { Vector2, clamp } from '../math';
+import { RawVector2, clamp } from '../util/math';
 
-import { StyleProps } from '../style';
+import { StyleProps } from '../util/style';
 import { styled } from 'styletron-react';
 import { Theme, ThemeProps } from './theme';
 import resizeListener, { ResizeListener } from './ResizeListener';
@@ -30,7 +30,7 @@ export namespace Action {
     type: Type.VerticalScroll;
     top: number;
     startTop: number;
-    startOffset: Vector2;
+    startOffset: RawVector2;
   }
 
   export type VerticalScrollParams = Omit<VerticalScroll, 'type'>;
@@ -43,8 +43,8 @@ export namespace Action {
 export type Action = Action.None | Action.VerticalScroll;
 
 interface ScrollAreaState {
-  outerSize: Vector2;
-  innerSize: Vector2;
+  outerSize: RawVector2;
+  innerSize: RawVector2;
 
   hover: boolean;
 
@@ -101,17 +101,17 @@ class ScrollArea extends React.PureComponent<Props, State> {
     this.listener_ = resizeListener(this.onResize_);
 
     this.state = {
-      outerSize: Vector2.ZERO,
-      innerSize: Vector2.ZERO,
+      outerSize: RawVector2.ZERO,
+      innerSize: RawVector2.ZERO,
       hover: false,
       action: Action.none(0)
     };
   }
 
-  private onResize_ = (size: Vector2, element: Element) => {
+  private onResize_ = (size: RawVector2, element: Element) => {
     switch (element) {
       case this.outerRef_: {
-        if (Vector2.eq(this.state.outerSize, size)) break;
+        if (RawVector2.eq(this.state.outerSize, size)) break;
 
         this.updateTopOnResize(this.state.innerSize, size);
         this.setState({
@@ -120,7 +120,7 @@ class ScrollArea extends React.PureComponent<Props, State> {
         break;
       }
       case this.innerRef_: {
-        if (Vector2.eq(this.state.innerSize, size)) break;
+        if (RawVector2.eq(this.state.innerSize, size)) break;
 
         this.updateTopOnResize(size, this.state.outerSize);
         this.setState({
@@ -131,7 +131,7 @@ class ScrollArea extends React.PureComponent<Props, State> {
     }
   };
 
-  private updateTopOnResize = (newInnerSize: Vector2, newOuterSize: Vector2) => {
+  private updateTopOnResize = (newInnerSize: RawVector2, newOuterSize: RawVector2) => {
     const { action } = this.state;
 
     // Reset top to the bottom if...
@@ -167,7 +167,7 @@ class ScrollArea extends React.PureComponent<Props, State> {
   private onMouseUpHandle_: GlobalEvents.Handle;
 
   private onVMouseDown_ = (event: React.MouseEvent<HTMLDivElement>) => {
-    const startOffset = Vector2.fromClient(event);
+    const startOffset = RawVector2.fromClient(event);
     this.startScrolling(startOffset);
 
     if (this.onMouseMoveHandle_ === undefined) this.onMouseMoveHandle_ = GLOBAL_EVENTS.add('onMouseMove', this.onMouseMove_);
@@ -177,7 +177,7 @@ class ScrollArea extends React.PureComponent<Props, State> {
   };
 
   private onMouseMove_ = (event: MouseEvent) => {
-    const current = Vector2.fromClient(event);
+    const current = RawVector2.fromClient(event);
     this.applyScrolling(current, true, false);
 
     return true;
@@ -228,14 +228,14 @@ class ScrollArea extends React.PureComponent<Props, State> {
     if (event.touches.length !== 1) return;
 
     const newTouch = event.changedTouches[0];
-    const newTouchOffset = Vector2.fromClient(newTouch);
+    const newTouchOffset = RawVector2.fromClient(newTouch);
 
     this.startScrolling(newTouchOffset);
   };
 
   private onTouchMove_ = (event: React.TouchEvent<HTMLDivElement>) => {
     const movedTouch = event.changedTouches[0];
-    const current = Vector2.fromClient(movedTouch);
+    const current = RawVector2.fromClient(movedTouch);
 
     this.applyScrolling(current, false, true);
   };
@@ -257,7 +257,7 @@ class ScrollArea extends React.PureComponent<Props, State> {
     event.preventDefault();
   };
 
-  private startScrolling = (startOffset: Vector2) => {
+  private startScrolling = (startOffset: RawVector2) => {
     const { action } = this.state;
     if (action.type !== Action.Type.None) return;
 
@@ -285,14 +285,14 @@ class ScrollArea extends React.PureComponent<Props, State> {
    * @param isUsingBar - Whether the scroll offset refers to the scrollbar or the actual scroll area
    * @param invert - Whether the scroll direction should be inverted (for example, when using touch)
    */
-  private applyScrolling = (newOffset: Vector2, isUsingBar: boolean, invert: boolean) => {
+  private applyScrolling = (newOffset: RawVector2, isUsingBar: boolean, invert: boolean) => {
     const { action, outerSize, innerSize } = this.state;
     if (action.type !== Action.Type.VerticalScroll) return;
 
     let top = 0;
     const maxTop = this.maxTop;
     if (maxTop > 0) {
-      const diff = Vector2.subtract(action.startOffset, newOffset);
+      const diff = RawVector2.subtract(action.startOffset, newOffset);
 
       let topDiff = diff.y;
       if (isUsingBar) {

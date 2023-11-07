@@ -1,5 +1,5 @@
-import Dict from "../Dict";
-import { Vector2 } from "../math";
+import Dict from "../util/Dict";
+import { RawVector2 } from "../util/math";
 import { Color } from "../state/State/Scene/Color";
 import Geometry from "../state/State/Scene/Geometry";
 import Node from "../state/State/Scene/Node";
@@ -23,7 +23,7 @@ const canTemplate: Node.TemplatedNode<Node.Obj> = {
       uri: '/static/textures/Can_Texture.png'
     },
   },
-  faceUvs: [Vector2.ZERO, Vector2.ZERO, Vector2.create(1, 0), Vector2.create(0, 1), Vector2.ZERO, Vector2.ZERO],
+  faceUvs: [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(1, 0), RawVector2.create(0, 1), RawVector2.ZERO, RawVector2.ZERO],
 };
 
 const lifescienceTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -42,7 +42,7 @@ const lifescienceTemplate: Node.TemplatedNode<Node.Obj> = {
       uri: '/static/textures/sciencepack/life_science_pack.png'
     },
   },
-  faceUvs: [Vector2.ZERO, Vector2.ZERO, Vector2.create(1, 0), Vector2.create(0, 1), Vector2.ZERO, Vector2.ZERO],
+  faceUvs: [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(1, 0), RawVector2.create(0, 1), RawVector2.ZERO, RawVector2.ZERO],
 };
 
 const radscienceTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -61,7 +61,7 @@ const radscienceTemplate: Node.TemplatedNode<Node.Obj> = {
       uri: '/static/textures/sciencepack/rad_science_pack.png'
     },
   },
-  faceUvs: [Vector2.ZERO, Vector2.ZERO, Vector2.create(1, 0), Vector2.create(0, 1), Vector2.ZERO, Vector2.ZERO],
+  faceUvs: [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(1, 0), RawVector2.create(0, 1), RawVector2.ZERO, RawVector2.ZERO],
 };
 
 const noradscienceTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -80,7 +80,7 @@ const noradscienceTemplate: Node.TemplatedNode<Node.Obj> = {
       uri: '/static/textures/sciencepack/no_rad_science_pack.png'
     },
   },
-  faceUvs: [Vector2.ZERO, Vector2.ZERO, Vector2.create(1, 0), Vector2.create(0, 1), Vector2.ZERO, Vector2.ZERO],
+  faceUvs: [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(1, 0), RawVector2.create(0, 1), RawVector2.ZERO, RawVector2.ZERO],
 };
 
 const reamTemplate: Node.TemplatedNode<Node.Obj> = {

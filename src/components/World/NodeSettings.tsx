@@ -1,7 +1,7 @@
 import * as React from "react";
 import { styled } from "styletron-react";
-import { Vector3 as RawVector3, AxisAngle, Euler } from "../../math";
-import { ReferenceFrame, Rotation, Vector3 } from "../../unit-math";
+import { RawVector3, RawAxisAngle, RawEuler } from "../../util/math";
+import { ReferenceFrame, Rotation, Vector3 } from "../../util/unit-math";
 
 import { Angle, Distance, Mass, UnitlessValue, Value } from "../../util";
 import ComboBox from "../ComboBox";
@@ -16,7 +16,7 @@ import ValueEdit from "../ValueEdit";
 import Geometry from '../../state/State/Scene/Geometry';
 import Node from "../../state/State/Scene/Node";
 import Scene from "../../state/State/Scene";
-import Dict from "../../Dict";
+import Dict from "../../util/Dict";
 import Material from '../../state/State/Scene/Material';
 import { Color } from '../../state/State/Scene/Color';
 import { State as ReduxState } from '../../state/index';
@@ -102,12 +102,12 @@ class NodeSettings extends React.PureComponent<Props, State> {
     switch (type) {
       case 'euler':
         this.props.onNodeOriginChange({
-          orientation: Rotation.Euler.fromRaw(Euler.fromQuaternion(Rotation.toRawQuaternion(node.startingOrigin.orientation))),
+          orientation: Rotation.Euler.fromRaw(RawEuler.fromQuaternion(Rotation.toRawQuaternion(node.startingOrigin.orientation))),
         });
         break;
       case 'axis-angle':
         this.props.onNodeOriginChange({
-          orientation: Rotation.AxisAngle.fromRaw(AxisAngle.fromQuaternion(Rotation.toRawQuaternion(node.startingOrigin.orientation))),
+          orientation: Rotation.AxisAngle.fromRaw(RawAxisAngle.fromQuaternion(Rotation.toRawQuaternion(node.startingOrigin.orientation))),
         });
         break;
     }
@@ -115,7 +115,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onEulerOrderChange_ = (index: number, option: ComboBox.Option) => {
     const { node } = this.props;
-    const order = option.data as Euler.Order;
+    const order = option.data as RawEuler.Order;
 
     this.props.onNodeOriginChange({
       orientation: {
@@ -1605,7 +1605,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
                 <ComboBox
                   options={EULER_ORDER_OPTIONS}
                   theme={theme}
-                  index={EULER_ORDER_OPTIONS.findIndex(o => (o.data as Euler.Order) === orientation.order)}
+                  index={EULER_ORDER_OPTIONS.findIndex(o => (o.data as RawEuler.Order) === orientation.order)}
                   onSelect={this.onEulerOrderChange_}
                 />
               </StyledField>

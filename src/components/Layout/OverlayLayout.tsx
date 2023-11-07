@@ -16,11 +16,11 @@ import Widget, { BarComponent, Mode, Size, WidgetProps } from '../Widget';
 import { State as ReduxState } from '../../state';
 import Scene from '../../state/State/Scene';
 import Node from '../../state/State/Scene/Node';
-import Dict from '../../Dict';
+import Dict from '../../util/Dict';
 import Async from '../../state/State/Async';
 import { EMPTY_OBJECT } from '../../util';
 import Challenge from '../Challenge';
-import { ReferenceFrame } from '../../unit-math';
+import { ReferenceFrame } from '../../util/unit-math';
 import LocalizedString from '../../util/LocalizedString';
 
 import tr from '@i18n';

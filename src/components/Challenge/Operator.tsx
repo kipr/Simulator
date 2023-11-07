@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import LocalizedString from '../../util/LocalizedString';
-import Dict from '../../Dict';
+import Dict from '../../util/Dict';
 import Expr from '../../state/State/Challenge/Expr';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import tr from '@i18n';
 
 export interface OperatorProps extends StyleProps {

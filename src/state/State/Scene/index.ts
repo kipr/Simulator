@@ -1,8 +1,8 @@
-import Dict from '../../../Dict';
+import Dict from '../../../util/Dict';
 import Geometry from './Geometry';
 import Node from './Node';
 import Script from './Script';
-import { Vector3 } from '../../../unit-math';
+import { Vector3 } from '../../../util/unit-math';
 import Camera from './Camera';
 import Patch from '../../../util/Patch';
 import Async from '../Async';

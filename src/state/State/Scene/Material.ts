@@ -1,4 +1,4 @@
-import deepNeq from '../../../deepNeq';
+import deepNeq from '../../../util/deepNeq';
 import Patch from '../../../util/Patch';
 import { Color as ColorT } from './Color';
 

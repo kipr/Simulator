@@ -34,15 +34,15 @@ import { BoundingBox as BabylonBoundingBox } from '@babylonjs/core/Culling/bound
 import '@babylonjs/core/Engines/Extensions/engine.views';
 import '@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent';
 
-import Dict from "./Dict";
-import { Quaternion, Vector2 as RawVector2, Vector3 as RawVector3 } from "./math";
+import Dict from "./util/Dict";
+import { RawQuaternion, RawVector2, RawVector3 } from "./util/math";
 import Scene from "./state/State/Scene";
 import Camera from "./state/State/Scene/Camera";
 import Geometry from "./state/State/Scene/Geometry";
 import Node from "./state/State/Scene/Node";
 import Patch from "./util/Patch";
 
-import { ReferenceFrame, Rotation, Vector3 } from "./unit-math";
+import { ReferenceFrame, Rotation, Vector3 } from "./util/unit-math";
 import { Angle, Distance, Mass, SetOps } from "./util";
 import { Color } from './state/State/Scene/Color';
 import Material from './state/State/Scene/Material';
@@ -50,7 +50,7 @@ import { preBuiltGeometries, preBuiltTemplates } from "./node-templates";
 import RobotBinding from './RobotBinding';
 import Robot from './state/State/Robot';
 import AbstractRobot from './AbstractRobot';
-import WorkerInstance from "./WorkerInstance";
+import WorkerInstance from "./programming/WorkerInstance";
 import LocalizedString from './util/LocalizedString';
 import ScriptManager from './ScriptManager';
 import { RENDER_SCALE } from './renderConstants';
@@ -790,7 +790,7 @@ class SceneBinding {
         Distance.toCentimetersValue(position.z || Distance.centimeters(0))
       );
 
-      bNode.rotationQuaternion = Quaternion.toBabylon(Rotation.toRawQuaternion(orientation));
+      bNode.rotationQuaternion = RawQuaternion.toBabylon(Rotation.toRawQuaternion(orientation));
       bNode.scaling.set(scale.x, scale.y, scale.z);
     }
   };

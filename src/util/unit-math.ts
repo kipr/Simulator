@@ -1,14 +1,14 @@
 // Contains math types that are tagged with units
 
-import { Angle, Distance, Value } from './util/Value';
+import { Angle, Distance, Value } from './Value';
 
 import {
-  Euler as RawEuler,
-  Vector2 as RawVector2,
-  Vector3 as RawVector3,
-  AxisAngle as RawAxisAngle,
-  ReferenceFrame as RawReferenceFrame,
-  Quaternion,
+  RawEuler,
+  RawVector2,
+  RawVector3,
+  RawAxisAngle,
+  RawReferenceFrame,
+  RawQuaternion,
 } from './math';
 
 import { TransformNode as BabylonTransformNode } from '@babylonjs/core/Meshes/transformNode';
@@ -264,7 +264,7 @@ export namespace Rotation {
   );
 
   export const toRawQuaternion = (rotation: Rotation) => {
-    if (!rotation) return Quaternion.IDENTITY;
+    if (!rotation) return RawQuaternion.IDENTITY;
     switch (rotation.type) {
       case 'euler': return RawEuler.toQuaternion(Euler.toRaw(rotation));
       case 'axis-angle': return RawAxisAngle.toQuaternion(AxisAngle.toRaw(rotation));
@@ -278,15 +278,15 @@ export namespace Rotation {
     }
   };
 
-  export const fromRawQuaternion = (q: Quaternion, type: Type): Rotation => {
+  export const fromRawQuaternion = (q: RawQuaternion, type: Type): Rotation => {
     switch (type) {
       case 'euler': return Euler.fromRaw(RawEuler.fromQuaternion(q));
       case 'axis-angle': return AxisAngle.fromRaw(RawAxisAngle.fromQuaternion(q));
     }
   };
 
-  export const angle = (lhs: Rotation, rhs: Rotation): Angle => Angle.radians(Quaternion.angle(toRawQuaternion(lhs), toRawQuaternion(rhs)));
-  export const slerp = (lhs: Rotation, rhs: Rotation, t: number, newType: Type = 'euler'): Rotation => fromRawQuaternion(Quaternion.slerp(toRawQuaternion(lhs), toRawQuaternion(rhs), t), newType);
+  export const angle = (lhs: Rotation, rhs: Rotation): Angle => Angle.radians(RawQuaternion.angle(toRawQuaternion(lhs), toRawQuaternion(rhs)));
+  export const slerp = (lhs: Rotation, rhs: Rotation, t: number, newType: Type = 'euler'): Rotation => fromRawQuaternion(RawQuaternion.slerp(toRawQuaternion(lhs), toRawQuaternion(rhs), t), newType);
 }
 
 export type Rotation = Rotation.Euler | Rotation.AxisAngle;

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { DARK, ThemeProps } from '../components/theme';
-import { StyleProps } from '../style';
+import { StyleProps } from '../util/style';
 import { styled } from 'styletron-react';
-import { Vector2 } from '../math';
+import { RawVector2 } from '../util/math';
 
 export interface IFrameProps extends StyleProps, ThemeProps {
   src: string;

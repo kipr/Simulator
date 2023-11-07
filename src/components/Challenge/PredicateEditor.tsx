@@ -1,12 +1,12 @@
 import * as React from 'react';
 import LocalizedString from '../../util/LocalizedString';
-import Dict from '../../Dict';
+import Dict from '../../util/Dict';
 import Event from '../../state/State/Challenge/Event';
 import Expr from '../../state/State/Challenge/Expr';
 
 import Predicate from '../../state/State/Challenge/Predicate';
 import PredicateCompletion from '../../state/State/ChallengeCompletion/PredicateCompletion';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import HTree, { HTreeNode } from '../HTree';
 import EventViewer from './EventViewer';
 import Operator from './Operator';

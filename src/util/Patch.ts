@@ -1,5 +1,5 @@
-import deepNeq from "../deepNeq";
-import Dict from "../Dict";
+import deepNeq from "./deepNeq";
+import Dict from "./Dict";
 
 namespace Patch {
   export enum Type {

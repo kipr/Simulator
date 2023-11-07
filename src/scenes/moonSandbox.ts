@@ -4,7 +4,7 @@
 
 import Scene from "../state/State/Scene";
 import Script from '../state/State/Scene/Script';
-import { ReferenceFrame, Rotation, Vector3 } from "../unit-math";
+import { ReferenceFrame, Rotation, Vector3 } from "../util/unit-math";
 import { Distance } from "../util";
 import { Color } from '../state/State/Scene/Color';
 import LocalizedString from '../util/LocalizedString';

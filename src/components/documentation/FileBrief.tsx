@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 
 import FileDocumentation from '../../state/State/Documentation/FileDocumentation';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import { ThemeProps } from '../theme';
 import FileName from './FileName';
 

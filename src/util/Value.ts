@@ -1,4 +1,6 @@
-import { TAU } from "../math";
+// Defines types of values (angle, distance, mass) and their units
+
+import { TAU } from "./math";
 
 export interface UnitlessValue {
   value: number;

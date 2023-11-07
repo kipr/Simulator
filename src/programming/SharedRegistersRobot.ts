@@ -1,8 +1,8 @@
-import AbstractRobot from './AbstractRobot';
-import Motor from './AbstractRobot/Motor';
-import Servo from './AbstractRobot/Servo';
-import WriteCommand from './AbstractRobot/WriteCommand';
-import { clamp } from './math';
+import AbstractRobot from '../AbstractRobot';
+import Motor from '../AbstractRobot/Motor';
+import Servo from '../AbstractRobot/Servo';
+import WriteCommand from '../AbstractRobot/WriteCommand';
+import { clamp } from '../util/math';
 import RegisterState from './RegisterState';
 import SharedRegisters from './SharedRegisters';
 

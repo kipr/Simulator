@@ -17,10 +17,10 @@ import { HavokPlugin } from '@babylonjs/core';
 import '@babylonjs/loaders/glTF';
 import '@babylonjs/core/Physics/physicsEngineComponent';
 
-import Dict from './Dict';
+import Dict from './util/Dict';
 
-import { Quaternion, Vector2, Vector3 } from './math';
-import { ReferenceFrame as UnitReferenceFrame, Rotation, Vector3 as UnitVector3 } from './unit-math';
+import { RawQuaternion, RawVector2, RawVector3 } from './util/math';
+import { ReferenceFrame as UnitReferenceFrame, Rotation, Vector3 as UnitVector3 } from './util/unit-math';
 import { Angle } from './util';
 
 import store from './state';
@@ -34,7 +34,7 @@ import { Robots } from './state/State';
 
 
 
-import WorkerInstance from './WorkerInstance';
+import WorkerInstance from './programming/WorkerInstance';
 import AbstractRobot from './AbstractRobot';
 import LocalizedString from './util/LocalizedString';
 import ScriptManager from './ScriptManager';
@@ -128,7 +128,7 @@ export class Space {
     });
   }
 
-  objectScreenPosition(id: string): Vector2 {
+  objectScreenPosition(id: string): RawVector2 {
     const mesh = this.bScene_.getMeshByID(id) || this.bScene_.getMeshByName(id);
     if (!mesh) return undefined;
 
@@ -357,7 +357,7 @@ export class Space {
     const change: UnitReferenceFrame = {};
 
     const position = currentOrigin?.position ?? UnitVector3.zero('meters');
-    const rotation = currentOrigin?.orientation ?? Rotation.fromRawQuaternion(Quaternion.IDENTITY, 'euler');
+    const rotation = currentOrigin?.orientation ?? Rotation.fromRawQuaternion(RawQuaternion.IDENTITY, 'euler');
 
     let bPosition: BabylonVector3;
     let bRotation: BabylonQuaternion;
@@ -374,7 +374,7 @@ export class Space {
     }
 
     if (bPosition) {
-      const bPositionConv = UnitVector3.fromRaw(Vector3.fromBabylon(bPosition), 'centimeters');
+      const bPositionConv = UnitVector3.fromRaw(RawVector3.fromBabylon(bPosition), 'centimeters');
       
       // Distance between the two positions in meters
       const distance = UnitVector3.distance(position, bPositionConv);
@@ -386,7 +386,7 @@ export class Space {
     }
 
     if (bRotation) {
-      const bOrientationConv = Rotation.fromRawQuaternion(Quaternion.fromBabylon(bRotation), 'euler');
+      const bOrientationConv = Rotation.fromRawQuaternion(RawQuaternion.fromBabylon(bRotation), 'euler');
 
       // Angle between the two rotations in radians
       const angle = Rotation.angle(rotation, bOrientationConv);

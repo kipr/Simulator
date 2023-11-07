@@ -1,5 +1,5 @@
-import deepNeq from "../../../deepNeq";
-import { Vector3 } from "../../../unit-math";
+import deepNeq from "../../../util/deepNeq";
+import { Vector3 } from "../../../util/unit-math";
 import { Distance } from "../../../util/Value";
 import Patch from '../../../util/Patch';
 

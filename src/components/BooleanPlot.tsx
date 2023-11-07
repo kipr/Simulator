@@ -1,9 +1,9 @@
 import { styled } from 'styletron-react';
 import * as React from 'react';
-import { StyleProps } from '../style';
+import { StyleProps } from '../util/style';
 import { ThemeProps } from './theme';
-import { Vector2 } from '../math';
-import { Box2 } from '../geometry';
+import { RawVector2 } from '../util/math';
+import { Box2 } from '../util/geometry';
 import resizeListener, { ResizeListener } from './ResizeListener';
 
 export interface BooleanPlotProps extends ThemeProps, StyleProps {
@@ -129,7 +129,7 @@ class BooleanPlot extends React.PureComponent<Props, State> {
     };
   }
 
-  private onResize_ = (size: Vector2, element: HTMLElement) => {
+  private onResize_ = (size: RawVector2, element: HTMLElement) => {
 
     this.setState({
       svgHeight: 0,
@@ -231,11 +231,11 @@ class BooleanPlot extends React.PureComponent<Props, State> {
     if (svgHeight === 0) return Box2.ZERO;
 
     const box = Box2.create(
-      Vector2.create(range.start * pixelsPerSecond, 0),
-      Vector2.create(range.end * pixelsPerSecond, PLOT_HEIGHT / 2)
+      RawVector2.create(range.start * pixelsPerSecond, 0),
+      RawVector2.create(range.end * pixelsPerSecond, PLOT_HEIGHT / 2)
     );
 
-    return Box2.translate(Vector2.fromY(PLOT_HEIGHT / 2), range.value ? box : Box2.translate(Vector2.fromY(PLOT_HEIGHT / 2), box));
+    return Box2.translate(RawVector2.fromY(PLOT_HEIGHT / 2), range.value ? box : Box2.translate(RawVector2.fromY(PLOT_HEIGHT / 2), box));
   };
 
   private slow_ = 0;
