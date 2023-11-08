@@ -148,6 +148,8 @@ class NodeSettings extends React.PureComponent<Props, State> {
     let transmutedNode = Node.transmute(node, selectedType);
 
     const JBC_TEMPLATE_OPTIONS: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('MatB'), locale), 'matB'),
+      ComboBox.option(LocalizedString.lookup(tr('MatA'), locale), 'matA'),
       ComboBox.option(LocalizedString.lookup(tr('Can'), locale), 'can'),
       ComboBox.option(LocalizedString.lookup(tr('Paper Ream'), locale), 'ream'),
     ];
@@ -964,6 +966,8 @@ class NodeSettings extends React.PureComponent<Props, State> {
     
 
     const JBC_TEMPLATE_OPTIONS: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('MatB'), locale), 'matB'),
+      ComboBox.option(LocalizedString.lookup(tr('MatA'), locale), 'matA'),
       ComboBox.option(LocalizedString.lookup(tr('Can'), locale), 'can'),
       ComboBox.option(LocalizedString.lookup(tr('Paper Ream'), locale), 'ream'),
     ];
