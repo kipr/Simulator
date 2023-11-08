@@ -1,18 +1,9 @@
-import { Engine as BabylonEngine } from '@babylonjs/core/Engines/engine';
-import { Scene as BabylonScene } from '@babylonjs/core/scene';
-import { Vector3 as BabylonVector3, Quaternion as BabylonQuaternion, Matrix as BabylonMatrix } from '@babylonjs/core/Maths/math.vector';
-import { Color3 as BabylonColor3 } from '@babylonjs/core/Maths/math.color';
-import { AbstractMesh as BabylonAbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
-import { Node as BabylonNode } from '@babylonjs/core/node';
-import { TransformNode as BabylonTransformNode } from '@babylonjs/core/Meshes/transformNode';
-import { ShadowLight as BabylonShadowLight } from '@babylonjs/core/Lights/shadowLight';
-import { PointLight as BabylonPointLight } from '@babylonjs/core/Lights/pointLight';
-import { HemisphericLight as BabylonHemisphericLight } from '@babylonjs/core/Lights/hemisphericLight';
-import { EventState as BabylonEventState } from '@babylonjs/core/Misc/observable';
-import { PointerEventTypes as BabylonPointerEventTypes, PointerInfo as BabylonPointerInfo } from '@babylonjs/core/Events/pointerEvents';
-import { DracoCompression as BabylonDracoCompression } from '@babylonjs/core/Meshes/Compression/dracoCompression';
+
+import { Engine, Vector3, Quaternion, Matrix, HemisphericLight, Color3, AbstractMesh, 
+  TransformNode, PointerInfo, ShadowLight, PointLight, EventState, PointerEventTypes, 
+  DracoCompression, HavokPlugin, Scene as babylScene, Node as babylNode } from "@babylonjs/core";
+
 import HavokPhysics from "@babylonjs/havok";
-import { HavokPlugin } from '@babylonjs/core';
 
 import '@babylonjs/loaders/glTF';
 import '@babylonjs/core/Physics/physicsEngineComponent';
@@ -30,9 +21,6 @@ import SceneBinding, { SceneMeshMetadata } from './SceneBinding';
 import Scene from './state/State/Scene';
 import Node from './state/State/Scene/Node';
 import { Robots } from './state/State';
-
-
-
 
 import WorkerInstance from './programming/WorkerInstance';
 import AbstractRobot from './AbstractRobot';
@@ -52,9 +40,9 @@ export class Space {
 
   private initializationPromise: Promise<void>;
 
-  private engine: BabylonEngine;
+  private engine: Engine;
   private workingCanvas: HTMLCanvasElement;
-  private bScene_: BabylonScene;
+  private bScene_: babylScene;
 
   private storeSubscription_: Unsubscribe;
 
@@ -136,9 +124,9 @@ export class Space {
 
     const position = mesh.getBoundingInfo().boundingBox.centerWorld;
 
-    const coordinates = BabylonVector3.Project(
+    const coordinates = Vector3.Project(
       position,
-      BabylonMatrix.Identity(),
+      Matrix.Identity(),
       this.bScene_.getTransformMatrix(),
       this.sceneBinding_.camera.viewport.toGlobal(
         this.engine.getRenderWidth(),
@@ -167,14 +155,14 @@ export class Space {
   private constructor() {
     this.workingCanvas = document.createElement('canvas');
 
-    this.engine = new BabylonEngine(this.workingCanvas, true, { preserveDrawingBuffer: true, stencil: true });
-    this.bScene_ = new BabylonScene(this.engine);
+    this.engine = new Engine(this.workingCanvas, true, { preserveDrawingBuffer: true, stencil: true });
+    this.bScene_ = new babylScene(this.engine);
     this.bScene_.useRightHandedSystem = true;
     
     ACTIVE_SPACE = this;
 
-    // tell Babylon to load a local Draco decoder
-    BabylonDracoCompression.Configuration = {
+    // tell  to load a local Draco decoder
+    DracoCompression.Configuration = {
       decoder: {
         wasmUrl: '/static/draco_wasm_wrapper_gltf.js',
         wasmBinaryUrl: '/static/draco_decoder_gltf.wasm',
@@ -205,7 +193,7 @@ export class Space {
     this.sceneBinding_.canvas = canvas;
   }
 
-  private onPointerTap_ = (eventData: BabylonPointerInfo, eventState: BabylonEventState) => {
+  private onPointerTap_ = (eventData: PointerInfo, eventState: EventState) => {
     if (!eventData.pickInfo.hit) {
       this.onSelectNodeId?.(undefined);
       return;
@@ -228,15 +216,15 @@ export class Space {
   };
 
   private async createScene(): Promise<void> {
-    this.bScene_.onPointerObservable.add(this.onPointerTap_, BabylonPointerEventTypes.POINTERTAP);
+    this.bScene_.onPointerObservable.add(this.onPointerTap_, PointerEventTypes.POINTERTAP);
 
-    const light = new BabylonHemisphericLight('hemispheric_light', new BabylonVector3(0, 1, 0), this.bScene_);
+    const light = new HemisphericLight('hemispheric_light', new Vector3(0, 1, 0), this.bScene_);
     light.intensity = 0.5;
-    light.diffuse = new BabylonColor3(1.0, 1.0, 1.0);
+    light.diffuse = new Color3(1.0, 1.0, 1.0);
 
     // At 100x scale, gravity should be -9.8 * 100, but this causes weird jitter behavior
     // Full gravity will be -9.8 * 10
-    // const gravityVector = new BabylonVector3(0, -9.8 * 50, 0);
+    // const gravityVector = new Vector3(0, -9.8 * 50, 0);
     
     const state = store.getState();
     const havokInstance = await HavokPhysics();
@@ -266,7 +254,7 @@ export class Space {
     // (x, z) coordinates of cans around the board
   }
 
-  // Compare Babylon positions with state positions. If they differ significantly, update state
+  // Compare  positions with state positions. If they differ significantly, update state
   private updateStore_ = () => {
     const { nodes } = this.scene_;
 
@@ -353,24 +341,24 @@ export class Space {
     this.debounceUpdate_ = false;
   };
 
-  private getSignificantOriginChange(currentOrigin: ReferenceFramewUnits, bNode: BabylonNode): ReferenceFramewUnits {
+  private getSignificantOriginChange(currentOrigin: ReferenceFramewUnits, bNode: babylNode): ReferenceFramewUnits {
     const change: ReferenceFramewUnits = {};
 
     const position = currentOrigin?.position ?? Vector3wUnits.zero('meters');
     const rotation = currentOrigin?.orientation ?? RotationwUnits.fromRawQuaternion(RawQuaternion.IDENTITY, 'euler');
 
-    let bPosition: BabylonVector3;
-    let bRotation: BabylonQuaternion;
-    if (bNode instanceof BabylonTransformNode || bNode instanceof BabylonAbstractMesh) {
+    let bPosition: Vector3;
+    let bRotation: Quaternion;
+    if (bNode instanceof TransformNode || bNode instanceof AbstractMesh) {
       bPosition = bNode.position;
       bRotation = bNode.rotationQuaternion;
-    } else if (bNode instanceof BabylonShadowLight) {
+    } else if (bNode instanceof ShadowLight) {
       bPosition = bNode.position;
-      bRotation = BabylonQuaternion.Identity();
+      bRotation = Quaternion.Identity();
     } else if (bNode.getClassName() === 'PointLight') {
-      const pointLight = bNode as BabylonPointLight;
+      const pointLight = bNode as PointLight;
       bPosition = pointLight.position;
-      bRotation = BabylonQuaternion.Identity();
+      bRotation = Quaternion.Identity();
     }
 
     if (bPosition) {

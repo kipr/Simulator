@@ -1,34 +1,10 @@
-import { Scene as BabylonScene } from '@babylonjs/core/scene';
-import { TransformNode as BabylonTransformNode } from '@babylonjs/core/Meshes/transformNode';
-import { AbstractMesh as BabylonAbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
-import { Node as BabylonNode } from '@babylonjs/core/node';
-import { PhysicsViewer as BabylonPhysicsViewer } from '@babylonjs/core/Debug/physicsViewer';
-import { ShadowGenerator as BabylonShadowGenerator } from '@babylonjs/core/Lights/Shadows/shadowGenerator';
-import { Camera as BabylonCamera } from '@babylonjs/core/Cameras/camera';
-import { CreateBox as BabylonCreateBox } from '@babylonjs/core/Meshes/Builders/boxBuilder';
-import { CreateSphere as BabylonCreateSphere } from '@babylonjs/core/Meshes/Builders/sphereBuilder';
-import { CreateCylinder as BabylonCreateCylinder } from '@babylonjs/core/Meshes/Builders/cylinderBuilder';
-import { CreatePlane as BabylonCreatePlane } from '@babylonjs/core/Meshes/Builders/planeBuilder';
-import { Vector3 as BabylonVector3, Vector4 as BabylonVector4 } from '@babylonjs/core/Maths/math.vector';
-import { Texture as BabylonTexture } from '@babylonjs/core/Materials/Textures/texture';
-import { DynamicTexture as BabylonDynamicTexture } from '@babylonjs/core/Materials/Textures/dynamicTexture';
-import { Material as BabylonMaterial } from '@babylonjs/core/Materials/material';
-import { StandardMaterial as BabylonStandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
-import { GizmoManager as BabylonGizmoManager } from '@babylonjs/core/Gizmos/gizmoManager';
-import { ArcRotateCamera as BabylonArcRotateCamera } from '@babylonjs/core/Cameras/arcRotateCamera';
-import { PhysicsShapeType, IPhysicsCollisionEvent, IPhysicsEnginePluginV2, PhysicsAggregate } from '@babylonjs/core';
-import { IShadowLight as BabylonIShadowLight } from '@babylonjs/core/Lights/shadowLight';
-import { PointLight as BabylonPointLight } from '@babylonjs/core/Lights/pointLight';
-import { SpotLight as BabylonSpotLight } from '@babylonjs/core/Lights/spotLight';
-import { DirectionalLight as BabylonDirectionalLight } from '@babylonjs/core/Lights/directionalLight';
-import { Color3 as BabylonColor3 } from '@babylonjs/core/Maths/math.color';
-import { PBRMaterial as BabylonPBRMaterial } from '@babylonjs/core/Materials/PBR/pbrMaterial';
-import { Mesh as BabylonMesh } from '@babylonjs/core/Meshes/mesh';
-import { SceneLoader as BabylonSceneLoader } from '@babylonjs/core/Loading/sceneLoader';
-import { EngineView as BabylonEngineView } from '@babylonjs/core/Engines/Extensions/engine.views';
-import  { GlowLayer as BabylonGlowLayer } from '@babylonjs/core/Layers/glowLayer';
-import { Observer as BabylonObserver } from '@babylonjs/core/Misc/observable';
-import { BoundingBox as BabylonBoundingBox } from '@babylonjs/core/Culling/boundingBox';
+
+import { PhysicsShapeType, IPhysicsCollisionEvent, IPhysicsEnginePluginV2, PhysicsAggregate, 
+  TransformNode, AbstractMesh, PhysicsViewer, ShadowGenerator, CreateBox, CreateSphere, CreateCylinder, 
+  CreatePlane, Vector4, Vector3, Texture, DynamicTexture, StandardMaterial, GizmoManager, ArcRotateCamera, 
+  IShadowLight, PointLight, SpotLight, DirectionalLight, Color3, PBRMaterial, Mesh, SceneLoader, EngineView,
+  Scene as babylScene, Node as babylNode, Camera as babylCamera, Material as babylMaterial,
+  GlowLayer, Observer, BoundingBox } from '@babylonjs/core';
 
 // eslint-disable-next-line @typescript-eslint/no-duplicate-imports -- Required import for side effects
 import '@babylonjs/core/Engines/Extensions/engine.views';
@@ -56,7 +32,7 @@ import ScriptManager from './ScriptManager';
 import { RENDER_SCALE } from './components/Constants/renderConstants';
 import { number } from 'prop-types';
 
-export type FrameLike = BabylonTransformNode | BabylonAbstractMesh;
+export type FrameLike = TransformNode | AbstractMesh;
 
 export interface SceneMeshMetadata {
   id: string;
@@ -64,24 +40,24 @@ export interface SceneMeshMetadata {
 }
 
 class SceneBinding {
-  private bScene_: BabylonScene;
+  private bScene_: babylScene;
   get bScene() { return this.bScene_; }
 
-  private root_: BabylonTransformNode;
+  private root_: TransformNode;
   get root() { return this.root_; }
 
   private scene_: Scene;
   get scene() { return this.scene_; }
   set scene(s: Scene) { this.scene_ = s; }
 
-  private nodes_: Dict<BabylonNode> = {};
+  private nodes_: Dict<babylNode> = {};
 
-  private shadowGenerators_: Dict<BabylonShadowGenerator> = {};
-  private physicsViewer_: BabylonPhysicsViewer;
+  private shadowGenerators_: Dict<ShadowGenerator> = {};
+  private physicsViewer_: PhysicsViewer;
 
-  private camera_: BabylonCamera;
+  private camera_: babylCamera;
 
-  private engineView_: BabylonEngineView;
+  private engineView_: EngineView;
 
   private robots_: Dict<Robot>;
   private robotBindings_: Dict<RobotBinding> = {};
@@ -118,22 +94,22 @@ class SceneBinding {
 
   private seed_ = 0;
 
-  constructor(bScene: BabylonScene, physics: IPhysicsEnginePluginV2) {
+  constructor(bScene: babylScene, physics: IPhysicsEnginePluginV2) {
     this.bScene_ = bScene;
     this.scene_ = Scene.EMPTY;
 
     // Gravity is currently set at 5x, which seems to be a sweet spot for realism and joint performance
-    const gravityVector = new BabylonVector3(0, -9.8 * 5, 0); // -9.81
+    const gravityVector = new Vector3(0, -9.8 * 5, 0); // -9.81
     this.bScene_.enablePhysics(gravityVector, physics);
 
     // The sub time step is incredibly important for physics realism. 1 seems to work well.
     this.bScene_.getPhysicsEngine().setSubTimeStep(1);
     
     // Uncomment this to turn on the physics viewer for objects
-    // this.physicsViewer_ = new BabylonPhysicsViewer(this.bScene_);
+    // this.physicsViewer_ = new PhysicsViewer(this.bScene_);
 
-    this.root_ = new BabylonTransformNode('__scene_root__', this.bScene_);
-    this.gizmoManager_ = new BabylonGizmoManager(this.bScene_);
+    this.root_ = new TransformNode('__scene_root__', this.bScene_);
+    this.gizmoManager_ = new GizmoManager(this.bScene_);
 
     this.camera_ = this.createNoneCamera_(Camera.NONE);
 
@@ -165,11 +141,11 @@ class SceneBinding {
   }
 
   // apply_ is used to propogate the function f(m) on children of the specified mesh g
-  private static apply_ = (g: BabylonNode, f: (m: BabylonAbstractMesh) => void) => {
-    if (g instanceof BabylonAbstractMesh) {
+  private static apply_ = (g: babylNode, f: (m: AbstractMesh) => void) => {
+    if (g instanceof AbstractMesh) {
       f(g);
     } else {
-      (g.getChildren(c => c instanceof BabylonAbstractMesh) as BabylonAbstractMesh[]).forEach(f);
+      (g.getChildren(c => c instanceof AbstractMesh) as AbstractMesh[]).forEach(f);
     }
   };
 
@@ -184,7 +160,7 @@ class SceneBinding {
     let ret: FrameLike;
     switch (geometry.type) {
       case 'box': {
-        const rect = BabylonCreateBox(name, {
+        const rect = CreateBox(name, {
           updatable:true, 
           width: Distance.toCentimetersValue(geometry.size.x),
           height: Distance.toCentimetersValue(geometry.size.y),
@@ -198,11 +174,11 @@ class SceneBinding {
       case 'sphere': {
         const bFaceUvs = this.buildGeometryFaceUvs_(faceUvs, 2)?.[0];
         const segments = 4;
-        const rock = BabylonCreateSphere(name, {
+        const rock = CreateSphere(name, {
           segments: segments, 
           updatable:true, 
           frontUVs: bFaceUvs,
-          sideOrientation: bFaceUvs ? BabylonMesh.DOUBLESIDE : undefined,
+          sideOrientation: bFaceUvs ? Mesh.DOUBLESIDE : undefined,
           diameterX:Distance.toCentimetersValue(geometry.radius) * 2,
           diameterY:Distance.toCentimetersValue(geometry.radius) * 2 * geometry.squash,
           diameterZ:Distance.toCentimetersValue(geometry.radius) * 2 * geometry.stretch,
@@ -228,7 +204,7 @@ class SceneBinding {
         break;
       }
       case 'cylinder': {
-        ret = BabylonCreateCylinder(name, {
+        ret = CreateCylinder(name, {
           height: Distance.toCentimetersValue(geometry.height),
           diameterTop: Distance.toCentimetersValue(geometry.radius) * 2,
           diameterBottom: Distance.toCentimetersValue(geometry.radius) * 2,
@@ -237,7 +213,7 @@ class SceneBinding {
         break;
       }
       case 'cone': {
-        ret = BabylonCreateCylinder(name, {
+        ret = CreateCylinder(name, {
           diameterTop: 0,
           height: Distance.toCentimetersValue(geometry.height),
           diameterBottom: Distance.toCentimetersValue(geometry.radius) * 2,
@@ -246,7 +222,7 @@ class SceneBinding {
         break;
       }
       case 'plane': {
-        ret = BabylonCreatePlane(name, {
+        ret = CreatePlane(name, {
           width: Distance.toCentimetersValue(geometry.size.x),
           height: Distance.toCentimetersValue(geometry.size.y),
           frontUVs: this.buildGeometryFaceUvs_(faceUvs, 2)?.[0],
@@ -258,19 +234,19 @@ class SceneBinding {
         const fileName = geometry.uri.substring(index + 1);
         const baseName = geometry.uri.substring(0, index + 1);
   
-        const res = await BabylonSceneLoader.ImportMeshAsync(geometry.include ?? '', baseName, fileName, this.bScene_);
+        const res = await SceneLoader.ImportMeshAsync(geometry.include ?? '', baseName, fileName, this.bScene_);
         if (res.meshes.length === 1) return res.meshes[0];
-        // const nonColliders: BabylonMesh[] = [];
+        // const nonColliders: Mesh[] = [];
 
-        ret = new BabylonTransformNode(geometry.uri, this.bScene_);
-        for (const mesh of res.meshes as BabylonMesh[]) {
+        ret = new TransformNode(geometry.uri, this.bScene_);
+        for (const mesh of res.meshes as Mesh[]) {
           // GLTF importer adds a __root__ mesh (always the first one) that we can ignore 
           if (mesh.name === '__root__') continue;
           // nonColliders.push(mesh);
 
           mesh.setParent(ret);
         }
-        // const mesh = BabylonMesh.MergeMeshes(nonColliders, true, true, undefined, false, true);
+        // const mesh = Mesh.MergeMeshes(nonColliders, true, true, undefined, false, true);
         break; 
       }
       default: {
@@ -278,11 +254,11 @@ class SceneBinding {
       }
     }
 
-    if (ret instanceof BabylonAbstractMesh) {
+    if (ret instanceof AbstractMesh) {
       ret.visibility = 1;
     } else {
-      const children = ret.getChildren(c => c instanceof BabylonAbstractMesh) as BabylonMesh[];
-      const mesh = BabylonMesh.MergeMeshes(children, true, true, undefined, false, true);
+      const children = ret.getChildren(c => c instanceof AbstractMesh) as Mesh[];
+      const mesh = Mesh.MergeMeshes(children, true, true, undefined, false, true);
       mesh.visibility = 1;
       ret = mesh;
     }
@@ -290,20 +266,20 @@ class SceneBinding {
     return ret;
   };
 
-  private buildGeometryFaceUvs_ = (faceUvs: RawVector2[] | undefined, expectedUvs: number): BabylonVector4[] => {
+  private buildGeometryFaceUvs_ = (faceUvs: RawVector2[] | undefined, expectedUvs: number): Vector4[] => {
     if (faceUvs?.length !== expectedUvs) {
       return undefined;
     }
 
-    const ret: BabylonVector4[] = [];
+    const ret: Vector4[] = [];
     for (let i = 0; i + 1 < faceUvs.length; i += 2) {
-      ret.push(new BabylonVector4(faceUvs[i].x, faceUvs[i].y, faceUvs[i + 1].x, faceUvs[i + 1].y));
+      ret.push(new Vector4(faceUvs[i].x, faceUvs[i].y, faceUvs[i + 1].x, faceUvs[i + 1].y));
     }
 
     return ret;
   };
 
-  private findBNode_ = (id?: string, defaultToRoot?: boolean): BabylonNode => {
+  private findBNode_ = (id?: string, defaultToRoot?: boolean): babylNode => {
     if (id === undefined && defaultToRoot) return this.root_;
     if (id !== undefined && !(id in this.nodes_)) throw new Error(`${id} doesn't exist`);
     return this.nodes_[id];
@@ -311,10 +287,10 @@ class SceneBinding {
 
   private createMaterial_ = (id: string, material: Material) => {
 
-    let bMaterial: BabylonMaterial;
+    let bMaterial: babylMaterial;
     switch (material.type) {
       case 'basic': {
-        const basic = new BabylonStandardMaterial(id, this.bScene_);
+        const basic = new StandardMaterial(id, this.bScene_);
         const { color } = material;
 
         if (color) {
@@ -326,23 +302,23 @@ class SceneBinding {
             }
             case 'texture': {
               if (!color.uri) {
-                basic.diffuseColor = new BabylonColor3(0.5, 0, 0.5);
+                basic.diffuseColor = new Color3(0.5, 0, 0.5);
               } else {
                 if (id.includes('Sky')) {
-                  basic.reflectionTexture = new BabylonTexture(color.uri, this.bScene_);
-                  basic.reflectionTexture.coordinatesMode = BabylonTexture.FIXED_EQUIRECTANGULAR_MODE;
+                  basic.reflectionTexture = new Texture(color.uri, this.bScene_);
+                  basic.reflectionTexture.coordinatesMode = Texture.FIXED_EQUIRECTANGULAR_MODE;
                   basic.backFaceCulling = false;
                   basic.disableLighting = true;
                 } else if (id === 'Container') {
-                  const myDynamicTexture = new BabylonDynamicTexture("dynamic texture", 1000, this.bScene_, true);
+                  const myDynamicTexture = new DynamicTexture("dynamic texture", 1000, this.bScene_, true);
                   // myDynamicTexture.drawText(material.text, 130, 600, "18px Arial", "white", "gray", true);
                   myDynamicTexture.drawText(color.uri, 130, 600, "18px Arial", "white", "gray", true);
                   basic.diffuseTexture = myDynamicTexture;
                 } else {
-                  basic.bumpTexture = new BabylonTexture(color.uri, this.bScene_, false, false);
-                  basic.emissiveTexture = new BabylonTexture(color.uri, this.bScene_, false, false);
-                  basic.diffuseTexture = new BabylonTexture(color.uri, this.bScene_, false, false);
-                  basic.diffuseTexture.coordinatesMode = BabylonTexture.FIXED_EQUIRECTANGULAR_MODE;
+                  basic.bumpTexture = new Texture(color.uri, this.bScene_, false, false);
+                  basic.emissiveTexture = new Texture(color.uri, this.bScene_, false, false);
+                  basic.diffuseTexture = new Texture(color.uri, this.bScene_, false, false);
+                  basic.diffuseTexture.coordinatesMode = Texture.FIXED_EQUIRECTANGULAR_MODE;
                   basic.backFaceCulling = false;
                 }
               }
@@ -354,7 +330,7 @@ class SceneBinding {
         break;
       }
       case 'pbr': {
-        const pbr = new BabylonPBRMaterial(id, this.bScene_);
+        const pbr = new PBRMaterial(id, this.bScene_);
         const { albedo, ambient, emissive, metalness, reflection } = material;
         if (albedo) {
           switch (albedo.type) {
@@ -363,7 +339,7 @@ class SceneBinding {
               break;
             }
             case 'texture': {
-              pbr.albedoTexture = new BabylonTexture(albedo.uri, this.bScene_);
+              pbr.albedoTexture = new Texture(albedo.uri, this.bScene_);
               break;
             }
           }
@@ -376,21 +352,21 @@ class SceneBinding {
               break;
             }
             case 'texture': {
-              pbr.ambientTexture = new BabylonTexture(ambient.uri, this.bScene_);
+              pbr.ambientTexture = new Texture(ambient.uri, this.bScene_);
               break;
             }
           }
         }
 
         if (emissive) {
-          const glow = new BabylonGlowLayer('glow', this.bScene_);
+          const glow = new GlowLayer('glow', this.bScene_);
           switch (emissive.type) {
             case 'color3': {
               pbr.emissiveColor = Color.toBabylon(emissive.color);
               break;
             }
             case 'texture': {
-              pbr.emissiveTexture = new BabylonTexture(emissive.uri, this.bScene_);
+              pbr.emissiveTexture = new Texture(emissive.uri, this.bScene_);
               break;
             }
           }
@@ -403,7 +379,7 @@ class SceneBinding {
               break;
             }
             case 'texture': {
-              pbr.metallicTexture = new BabylonTexture(metalness.uri, this.bScene_);
+              pbr.metallicTexture = new Texture(metalness.uri, this.bScene_);
               break;
             }
           }
@@ -416,7 +392,7 @@ class SceneBinding {
               break;
             }
             case 'texture': {
-              pbr.reflectivityTexture = new BabylonTexture(reflection.uri, this.bScene_);
+              pbr.reflectivityTexture = new Texture(reflection.uri, this.bScene_);
               break;
             }
           }
@@ -431,7 +407,7 @@ class SceneBinding {
     return bMaterial;
   };
 
-  private updateMaterialBasic_ = (bMaterial: BabylonStandardMaterial, material: Patch.InnerPatch<Material.Basic>) => {
+  private updateMaterialBasic_ = (bMaterial: StandardMaterial, material: Patch.InnerPatch<Material.Basic>) => {
     const { color } = material;
 
     if (color.type === Patch.Type.InnerChange || color.type === Patch.Type.OuterChange) {
@@ -444,16 +420,16 @@ class SceneBinding {
         }
         case 'texture': {
           if (!color.next.uri) {
-            bMaterial.diffuseColor = new BabylonColor3(0.5, 0, 0.5);
+            bMaterial.diffuseColor = new Color3(0.5, 0, 0.5);
             bMaterial.diffuseTexture = null;
           } else if (color.next.uri[0] !== '/') {
-            const myDynamicTexture = new BabylonDynamicTexture("dynamic texture", 1000, this.bScene_, true);
+            const myDynamicTexture = new DynamicTexture("dynamic texture", 1000, this.bScene_, true);
             // myDynamicTexture.drawText(material.text, 130, 600, "18px Arial", "white", "gray", true);
             myDynamicTexture.drawText(color.next.uri, 130, 600, "18px Arial", "white", "gray", true);
             bMaterial.diffuseTexture = myDynamicTexture;
           } else {
             bMaterial.diffuseColor = Color.toBabylon(Color.WHITE);
-            bMaterial.diffuseTexture = new BabylonTexture(color.next.uri, this.bScene_);
+            bMaterial.diffuseTexture = new Texture(color.next.uri, this.bScene_);
           }
           break;
         }
@@ -463,7 +439,7 @@ class SceneBinding {
     return bMaterial;
   };
 
-  private updateMaterialPbr_ = (bMaterial: BabylonPBRMaterial, material: Patch.InnerPatch<Material.Pbr>) => {
+  private updateMaterialPbr_ = (bMaterial: PBRMaterial, material: Patch.InnerPatch<Material.Pbr>) => {
     const { albedo, ambient, emissive, metalness, reflection } = material;
 
     if (albedo.type === Patch.Type.OuterChange) {
@@ -475,10 +451,10 @@ class SceneBinding {
         }
         case 'texture': {
           if (!albedo.next.uri) {
-            bMaterial.albedoColor = new BabylonColor3(0.5, 0, 0.5);
+            bMaterial.albedoColor = new Color3(0.5, 0, 0.5);
           } else {
             bMaterial.albedoColor = Color.toBabylon(Color.WHITE);
-            bMaterial.albedoTexture = new BabylonTexture(albedo.next.uri, this.bScene_);
+            bMaterial.albedoTexture = new Texture(albedo.next.uri, this.bScene_);
           }
           break;
         }
@@ -494,11 +470,11 @@ class SceneBinding {
         }
         case 'texture': {
           if (!ambient.next.uri) {
-            bMaterial.ambientColor = new BabylonColor3(0.5, 0, 0.5);
+            bMaterial.ambientColor = new Color3(0.5, 0, 0.5);
             bMaterial.ambientTexture = null;
           } else {
             bMaterial.ambientColor = Color.toBabylon(Color.WHITE);
-            bMaterial.ambientTexture = new BabylonTexture(ambient.next.uri, this.bScene_);
+            bMaterial.ambientTexture = new Texture(ambient.next.uri, this.bScene_);
           }
           break;
         }
@@ -514,11 +490,11 @@ class SceneBinding {
         }
         case 'texture': {
           if (!emissive.next.uri) {
-            bMaterial.emissiveColor = new BabylonColor3(0.5, 0, 0.5);
+            bMaterial.emissiveColor = new Color3(0.5, 0, 0.5);
             bMaterial.emissiveTexture = null;
           } else {
             bMaterial.emissiveColor = Color.toBabylon(Color.BLACK);
-            bMaterial.emissiveTexture = new BabylonTexture(emissive.next.uri, this.bScene_);
+            bMaterial.emissiveTexture = new Texture(emissive.next.uri, this.bScene_);
           }
           break;
         }
@@ -536,7 +512,7 @@ class SceneBinding {
           if (!metalness.next.uri) {
             bMaterial.metallic = 0;
           } else {
-            bMaterial.metallicTexture = new BabylonTexture(metalness.next.uri, this.bScene_);
+            bMaterial.metallicTexture = new Texture(metalness.next.uri, this.bScene_);
           }
           break;
         }
@@ -552,11 +528,11 @@ class SceneBinding {
         }
         case 'texture': {
           if (!reflection.next.uri) {
-            bMaterial.reflectivityColor = new BabylonColor3(0.5, 0, 0.5);
+            bMaterial.reflectivityColor = new Color3(0.5, 0, 0.5);
             bMaterial.reflectivityTexture = null;
           } else {
             bMaterial.reflectivityColor = Color.toBabylon(Color.WHITE);
-            bMaterial.reflectivityTexture = new BabylonTexture(reflection.next.uri, this.bScene_);
+            bMaterial.reflectivityTexture = new Texture(reflection.next.uri, this.bScene_);
           }
           break;
         }
@@ -566,7 +542,7 @@ class SceneBinding {
     return bMaterial;
   };
 
-  private updateMaterial_ = (bMaterial: BabylonMaterial, material: Patch<Material>) => {
+  private updateMaterial_ = (bMaterial: babylMaterial, material: Patch<Material>) => {
     switch (material.type) {
       case Patch.Type.OuterChange: {
         const { next } = material;
@@ -581,10 +557,10 @@ class SceneBinding {
         const { inner, next } = material;
         switch (next.type) {
           case 'basic': {
-            return this.updateMaterialBasic_(bMaterial as BabylonStandardMaterial, inner as Patch.InnerPatch<Material.Basic>);
+            return this.updateMaterialBasic_(bMaterial as StandardMaterial, inner as Patch.InnerPatch<Material.Basic>);
           }
           case 'pbr': {
-            return this.updateMaterialPbr_(bMaterial as BabylonPBRMaterial, inner as Patch.InnerPatch<Material.Pbr>);
+            return this.updateMaterialPbr_(bMaterial as PBRMaterial, inner as Patch.InnerPatch<Material.Pbr>);
           }
         }
         break;
@@ -594,7 +570,7 @@ class SceneBinding {
     return bMaterial;
   };
 
-  private createObject_ = async (node: Node.Obj, nextScene: Scene): Promise<BabylonNode> => {
+  private createObject_ = async (node: Node.Obj, nextScene: Scene): Promise<babylNode> => {
     const parent = this.findBNode_(node.parentId, true);
 
     const geometry = nextScene.geometry[node.geometryId] ?? preBuiltGeometries[node.geometryId];
@@ -617,16 +593,16 @@ class SceneBinding {
     return ret;
   };
 
-  private createEmpty_ = (node: Node.Empty): BabylonTransformNode => {
+  private createEmpty_ = (node: Node.Empty): TransformNode => {
     const parent = this.findBNode_(node.parentId, true);
 
-    const ret = new BabylonTransformNode(node.name[LocalizedString.EN_US], this.bScene_);
+    const ret = new TransformNode(node.name[LocalizedString.EN_US], this.bScene_);
     ret.setParent(parent);
     return ret;
   };
 
-  private createDirectionalLight_ = (id: string, node: Node.DirectionalLight): BabylonDirectionalLight => {
-    const ret = new BabylonDirectionalLight(node.name[LocalizedString.EN_US], RawVector3.toBabylon(node.direction), this.bScene_);
+  private createDirectionalLight_ = (id: string, node: Node.DirectionalLight): DirectionalLight => {
+    const ret = new DirectionalLight(node.name[LocalizedString.EN_US], RawVector3.toBabylon(node.direction), this.bScene_);
 
     ret.intensity = node.intensity;
     if (node.radius !== undefined) ret.radius = node.radius;
@@ -637,11 +613,11 @@ class SceneBinding {
     return ret;
   };
 
-  private createSpotLight_ = (id: string, node: Node.SpotLight): BabylonSpotLight => {
+  private createSpotLight_ = (id: string, node: Node.SpotLight): SpotLight => {
     const origin: ReferenceFramewUnits = node.origin ?? {};
     const position: Vector3wUnits = origin.position ?? Vector3wUnits.zero();
     
-    const ret = new BabylonSpotLight(
+    const ret = new SpotLight(
       node.name[LocalizedString.EN_US],
       RawVector3.toBabylon(Vector3wUnits.toRaw(position, 'centimeters')),
       RawVector3.toBabylon(node.direction),
@@ -655,11 +631,11 @@ class SceneBinding {
     return ret;
   };
 
-  private createPointLight_ = (id: string, node: Node.PointLight): BabylonPointLight => {
+  private createPointLight_ = (id: string, node: Node.PointLight): PointLight => {
     const origin: ReferenceFramewUnits = node.origin ?? {};
     const position: Vector3wUnits = origin.position ?? Vector3wUnits.zero();
 
-    const ret = new BabylonPointLight(
+    const ret = new PointLight(
       node.name[LocalizedString.EN_US],
       RawVector3.toBabylon(Vector3wUnits.toRaw(position, 'centimeters')),
       this.bScene_
@@ -689,7 +665,7 @@ class SceneBinding {
     // Here the linkOrigins are all shown as 0,0,0, this may be why the initial kinematics are messed up.
 
     robotBinding.visible = true;
-    const observerObj: { observer: BabylonObserver<BabylonScene> } = { observer: null };
+    const observerObj: { observer: Observer<babylScene> } = { observer: null };
     
     robotBinding.origin = node.origin;
     
@@ -719,15 +695,15 @@ class SceneBinding {
     return robotBinding;
   };
 
-  private static createShadowGenerator_ = (light: BabylonIShadowLight) => {
-    const ret = new BabylonShadowGenerator(1024, light);
+  private static createShadowGenerator_ = (light: IShadowLight) => {
+    const ret = new ShadowGenerator(1024, light);
     ret.useKernelBlur = false;
     ret.blurScale = 2;
-    ret.filter = BabylonShadowGenerator.FILTER_POISSONSAMPLING;
+    ret.filter = ShadowGenerator.FILTER_POISSONSAMPLING;
     return ret;
   };
 
-  private createNode_ = async (id: string, node: Node, nextScene: Scene): Promise<BabylonNode> => {
+  private createNode_ = async (id: string, node: Node, nextScene: Scene): Promise<babylNode> => {
     let nodeToCreate: Node = node;
 
     // Resolve template nodes into non-template nodes by looking up the template by ID
@@ -746,7 +722,7 @@ class SceneBinding {
 
     for (const scriptId of nodeToCreate.scriptIds || []) this.scriptManager_.bind(scriptId, id);
 
-    let ret: BabylonNode;
+    let ret: babylNode;
     switch (nodeToCreate.type) {
       case 'object': ret = await this.createObject_(nodeToCreate, nextScene); break;
       case 'empty': ret = this.createEmpty_(nodeToCreate); break;
@@ -767,7 +743,7 @@ class SceneBinding {
     
     ret.metadata = { id } as SceneMeshMetadata;
 
-    if (ret instanceof BabylonAbstractMesh || ret instanceof BabylonTransformNode) {
+    if (ret instanceof AbstractMesh || ret instanceof TransformNode) {
       SceneBinding.apply_(ret, m => {
         m.metadata = { id } as SceneMeshMetadata;
         this.restorePhysicsToObject(m, nodeToCreate as Node.Obj, null, nextScene);
@@ -777,8 +753,8 @@ class SceneBinding {
     return ret;
   };
 
-  private updateNodePosition_ = (node: Node, bNode: BabylonNode) => {
-    if (node.origin && bNode instanceof BabylonTransformNode || bNode instanceof BabylonAbstractMesh) {
+  private updateNodePosition_ = (node: Node, bNode: babylNode) => {
+    if (node.origin && bNode instanceof TransformNode || bNode instanceof AbstractMesh) {
       const origin = node.origin || {};
       const position: Vector3wUnits = origin.position ?? Vector3wUnits.zero();
       const orientation: RotationwUnits = origin.orientation ?? RotationwUnits.EulerwUnits.identity();
@@ -795,8 +771,8 @@ class SceneBinding {
     }
   };
 
-  private updateEmpty_ = (id: string, node: Patch.InnerChange<Node.Empty>): BabylonTransformNode => {
-    const bNode = this.findBNode_(id) as BabylonTransformNode;
+  private updateEmpty_ = (id: string, node: Patch.InnerChange<Node.Empty>): TransformNode => {
+    const bNode = this.findBNode_(id) as TransformNode;
 
     if (node.inner.name.type === Patch.Type.OuterChange) {
       bNode.name = node.inner.name.next[LocalizedString.EN_US];
@@ -815,13 +791,13 @@ class SceneBinding {
   };
 
   private findMaterial_ = (frameLike: FrameLike) => {
-    if (frameLike instanceof BabylonAbstractMesh) {
+    if (frameLike instanceof AbstractMesh) {
       return frameLike.material;
     }
 
-    const children = frameLike.getChildren(o => o instanceof BabylonAbstractMesh);
+    const children = frameLike.getChildren(o => o instanceof AbstractMesh);
     if (children && children.length > 0) {
-      return (children[0] as BabylonAbstractMesh).material;
+      return (children[0] as AbstractMesh).material;
     }
     
     return null;
@@ -880,24 +856,24 @@ class SceneBinding {
     return Promise.resolve(bNode);
   };
 
-  private updateDirectionalLight_ = (id: string, node: Patch.InnerChange<Node.DirectionalLight>): BabylonDirectionalLight => {
-    const bNode = this.findBNode_(id) as BabylonDirectionalLight;
+  private updateDirectionalLight_ = (id: string, node: Patch.InnerChange<Node.DirectionalLight>): DirectionalLight => {
+    const bNode = this.findBNode_(id) as DirectionalLight;
 
     // NYI
 
     return bNode;
   };
 
-  private updateSpotLight_ = (id: string, node: Patch.InnerChange<Node.SpotLight>): BabylonSpotLight => {
-    const bNode = this.findBNode_(id) as BabylonSpotLight;
+  private updateSpotLight_ = (id: string, node: Patch.InnerChange<Node.SpotLight>): SpotLight => {
+    const bNode = this.findBNode_(id) as SpotLight;
 
     // NYI
 
     return bNode;
   };
 
-  private updatePointLight_ = (id: string, node: Patch.InnerChange<Node.PointLight>): BabylonPointLight => {
-    const bNode = this.findBNode_(id) as BabylonPointLight;
+  private updatePointLight_ = (id: string, node: Patch.InnerChange<Node.PointLight>): PointLight => {
+    const bNode = this.findBNode_(id) as PointLight;
 
     if (node.inner.visible.type === Patch.Type.OuterChange) {
       bNode.setEnabled(node.inner.visible.next);
@@ -930,7 +906,7 @@ class SceneBinding {
     id: string, 
     node: Patch.InnerChange<Node.FromRockTemplate> | Patch.InnerChange<Node.FromSpaceTemplate> | Patch.InnerChange<Node.FromJBCTemplate>, 
     nextScene: Scene
-  ): Promise<BabylonNode> => {
+  ): Promise<babylNode> => {
     // If the template ID changes, recreate the node entirely
     if (node.inner.templateId.type === Patch.Type.OuterChange) {
       this.destroyNode_(id);
@@ -1028,7 +1004,7 @@ class SceneBinding {
     }
   };
 
-  private updateNode_ = async (id: string, node: Patch<Node>, geometryPatches: Dict<Patch<Geometry>>, nextScene: Scene): Promise<BabylonNode> => {
+  private updateNode_ = async (id: string, node: Patch<Node>, geometryPatches: Dict<Patch<Geometry>>, nextScene: Scene): Promise<babylNode> => {
     
     switch (node.type) {
       // The node hasn't changed type, but some fields have been changed
@@ -1115,10 +1091,10 @@ class SceneBinding {
     }
   };
 
-  private gizmoManager_: BabylonGizmoManager;
+  private gizmoManager_: GizmoManager;
 
-  private createArcRotateCamera_ = (camera: Camera.ArcRotate): BabylonArcRotateCamera => {
-    const ret = new BabylonArcRotateCamera('botcam', 0, 0, 0, Vector3wUnits.toBabylon(camera.target, 'centimeters'), this.bScene_);
+  private createArcRotateCamera_ = (camera: Camera.ArcRotate): ArcRotateCamera => {
+    const ret = new ArcRotateCamera('botcam', 0, 0, 0, Vector3wUnits.toBabylon(camera.target, 'centimeters'), this.bScene_);
     ret.attachControl(this.bScene_.getEngine().getRenderingCanvas(), true);
     ret.position = Vector3wUnits.toBabylon(camera.position, 'centimeters');
     ret.panningSensibility = 100;
@@ -1127,22 +1103,22 @@ class SceneBinding {
     return ret;
   };
 
-  private createNoneCamera_ = (camera: Camera.None): BabylonArcRotateCamera => {
-    const ret = new BabylonArcRotateCamera('botcam', 10, 10, 10, Vector3wUnits.toBabylon(Vector3wUnits.zero(), 'centimeters'), this.bScene_);
+  private createNoneCamera_ = (camera: Camera.None): ArcRotateCamera => {
+    const ret = new ArcRotateCamera('botcam', 10, 10, 10, Vector3wUnits.toBabylon(Vector3wUnits.zero(), 'centimeters'), this.bScene_);
     ret.attachControl(this.bScene_.getEngine().getRenderingCanvas(), true);
 
     return ret;
   };
 
-  private createCamera_ = (camera: Camera): BabylonCamera => {
+  private createCamera_ = (camera: Camera): babylCamera => {
     switch (camera.type) {
       case 'arc-rotate': return this.createArcRotateCamera_(camera);
       case 'none': return this.createNoneCamera_(camera);
     }
   };
 
-  private updateArcRotateCamera_ = (node: Patch.InnerChange<Camera.ArcRotate>): BabylonArcRotateCamera => {
-    if (!(this.camera_ instanceof BabylonArcRotateCamera)) throw new Error('Expected ArcRotateCamera');
+  private updateArcRotateCamera_ = (node: Patch.InnerChange<Camera.ArcRotate>): ArcRotateCamera => {
+    if (!(this.camera_ instanceof ArcRotateCamera)) throw new Error('Expected ArcRotateCamera');
 
     const bCamera = this.camera_;
 
@@ -1157,8 +1133,8 @@ class SceneBinding {
     return bCamera;
   };
 
-  private updateCamera_ = (node: Patch.InnerChange<Camera>): BabylonCamera => {
-    let ret: BabylonCamera;
+  private updateCamera_ = (node: Patch.InnerChange<Camera>): babylCamera => {
+    let ret: babylCamera;
     switch (node.next.type) {
       case 'arc-rotate': ret = this.updateArcRotateCamera_(node as Patch.InnerChange<Camera.ArcRotate>); break;
       case 'none': ret = this.camera_; break;
@@ -1171,7 +1147,7 @@ class SceneBinding {
     callback: (collisionEvent: IPhysicsCollisionEvent) => void;
   }[]> = {};
 
-  private restorePhysicsToObject = (mesh: BabylonAbstractMesh, objectNode: Node.Obj | Node.FromSpaceTemplate, nodeId: string, scene: Scene): void => {
+  private restorePhysicsToObject = (mesh: AbstractMesh, objectNode: Node.Obj | Node.FromSpaceTemplate, nodeId: string, scene: Scene): void => {
     // Physics should only be added to physics-enabled, visible, non-selected objects
     if (
       !objectNode.physics ||
@@ -1198,7 +1174,7 @@ class SceneBinding {
   };
 
   
-  private removePhysicsFromObject = (mesh: BabylonAbstractMesh) => {
+  private removePhysicsFromObject = (mesh: AbstractMesh) => {
     if (!mesh.physicsBody) return;
 
     const parent = mesh.parent;
@@ -1337,7 +1313,7 @@ class SceneBinding {
         }
         
         const prevBNode = this.bScene_.getNodeById(prev);
-        if (prevNodeObj && (prevBNode instanceof BabylonAbstractMesh || prevBNode instanceof BabylonTransformNode)) {
+        if (prevNodeObj && (prevBNode instanceof AbstractMesh || prevBNode instanceof TransformNode)) {
           prevBNode.metadata = { ...(prevBNode.metadata as SceneMeshMetadata), selected: false };
           SceneBinding.apply_(prevBNode, m => this.restorePhysicsToObject(m, prevNodeObj, prev, scene));
         }
@@ -1348,7 +1324,7 @@ class SceneBinding {
       // Disable physics on the now selected node
       if (next !== undefined) {
         const node = this.bScene_.getNodeById(next);
-        if (node instanceof BabylonAbstractMesh || node instanceof BabylonTransformNode) {
+        if (node instanceof AbstractMesh || node instanceof TransformNode) {
           SceneBinding.apply_(node, m => this.removePhysicsFromObject(m));
           node.metadata = { ...(node.metadata as SceneMeshMetadata), selected: true };
           this.gizmoManager_.attachToNode(node);
@@ -1374,7 +1350,7 @@ class SceneBinding {
       this.bScene_.detachControl();
       this.bScene_.removeCamera(oldCamera);
       
-      // Creating the camera already added it to the Babylon scene, so no need to call bScene_.addCamera()
+      // Creating the camera already added it to the  scene, so no need to call bScene_.addCamera()
       this.bScene_.activeCamera = this.camera_;
       if (this.engineView_) this.camera_.attachControl(this.engineView_.target, true);
       this.bScene_.attachControl();
@@ -1382,7 +1358,7 @@ class SceneBinding {
     }
 
     if (patch.gravity.type === Patch.Type.OuterChange) {
-      const gravity_scalar = new BabylonVector3(1,10,1); // This seems to be somewhat realistic
+      const gravity_scalar = new Vector3(1,10,1); // This seems to be somewhat realistic
       this.bScene_.getPhysicsEngine().setGravity(Vector3wUnits.toBabylon(patch.gravity.next, 'meters').multiply(gravity_scalar));
     }
 
@@ -1416,26 +1392,26 @@ class SceneBinding {
 
   private currentIntersections_: Dict<Set<string>> = {};
 
-  private nodeMeshes_ = (id: string): BabylonAbstractMesh[] => {
+  private nodeMeshes_ = (id: string): AbstractMesh[] => {
     if (id in this.robotBindings_) return Dict.values(this.robotBindings_[id].links);
     const bNode = this.findBNode_(id);
-    if (bNode && bNode instanceof BabylonAbstractMesh) return [bNode];
+    if (bNode && bNode instanceof AbstractMesh) return [bNode];
 
     return [];
   };
 
-  private nodeMinMaxes_ = (id: string): { min: BabylonVector3; max: BabylonVector3; }[] => {
+  private nodeMinMaxes_ = (id: string): { min: Vector3; max: Vector3; }[] => {
     const meshes = this.nodeMeshes_(id);
     if (meshes.length === 0) return [];
 
-    const ret: { min: BabylonVector3; max: BabylonVector3; }[] = [];
+    const ret: { min: Vector3; max: Vector3; }[] = [];
     for (const mesh of meshes) ret.push(mesh.getHierarchyBoundingVectors());
 
     return ret;
   };
 
-  private nodeBoundingBoxes_ = (id: string): BabylonBoundingBox[] => this.nodeMinMaxes_(id)
-    .map(({ min, max }) => new BabylonBoundingBox(min, max));
+  private nodeBoundingBoxes_ = (id: string): BoundingBox[] => this.nodeMinMaxes_(id)
+    .map(({ min, max }) => new BoundingBox(min, max));
 
   tick(abstractRobots: Dict<AbstractRobot.Readable>): Dict<RobotBinding.TickOut> {
     if (this.declineTicks_) return undefined;

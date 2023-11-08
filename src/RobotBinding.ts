@@ -1,25 +1,11 @@
-import { Scene as BabylonScene } from '@babylonjs/core/scene';
-import { TransformNode as BabylonTransformNode } from '@babylonjs/core/Meshes/transformNode';
-import { AbstractMesh as BabylonAbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
-import { LinesMesh as BabylonLinesMesh } from '@babylonjs/core/Meshes/linesMesh';
-import { PhysicsViewer as BabylonPhysicsViewer } from '@babylonjs/core/Debug/physicsViewer';
-import { CreateBox as BabylonCreateBox } from '@babylonjs/core/Meshes/Builders/boxBuilder';
-import { CreateSphere as BabylonCreateSphere } from '@babylonjs/core/Meshes/Builders/sphereBuilder';
-import { IcoSphereBuilder as BabylonIcoSphereBuilder } from '@babylonjs/core/Meshes/Builders/icoSphereBuilder'; 
-import { CreateLines as BabylonCreateLines } from '@babylonjs/core/Meshes/Builders/linesBuilder';
-import { Vector3 as BabylonVector3, Quaternion as BabylonQuaternion } from '@babylonjs/core/Maths/math.vector';
-import { StandardMaterial as BabylonStandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
-import { IPhysicsEnabledObject as BabylonIPhysicsEnabledObject } from '@babylonjs/core/Physics/physicsImpostor';
-import { PhysicsBody, PhysicsConstraintAxis, Physics6DoFConstraint, PhysicsMotionType, PhysicsShape, PhysicsAggregate, 
-  PhysicsShapeType, PhysicsConstraintMotorType, PhysicShapeOptions, PhysicsShapeParameters, LockConstraint, PhysicsShapeContainer, 
-  HingeConstraint, PhysicsConstraintAxisLimitMode } from '@babylonjs/core';
-import { SpotLight as BabylonSpotLight } from '@babylonjs/core/Lights/spotLight';
-import { DirectionalLight as BabylonDirectionalLight } from '@babylonjs/core/Lights/directionalLight';
-import { HemisphericLight as BabylonHemisphericLight } from '@babylonjs/core/Lights/hemisphericLight';
-import { Mesh as BabylonMesh } from '@babylonjs/core/Meshes/mesh';
-import { SceneLoader as BabylonSceneLoader } from '@babylonjs/core/Loading/sceneLoader';
-import { PhysicsJoint as BabylonPhysicsJoint } from '@babylonjs/core/Physics/physicsJoint';
-import { Ray as BabylonRay } from '@babylonjs/core/Culling/ray';
+
+import { Scene as babylScene, TransformNode, AbstractMesh, LinesMesh, PhysicsViewer, CreateBox, CreateSphere, 
+  IcoSphereBuilder, CreateLines, Quaternion, Vector3, StandardMaterial, IPhysicsEnabledObject, 
+  SpotLight, DirectionalLight, HemisphericLight, Mesh, SceneLoader, PhysicsJoint, Ray,
+  PhysicsBody, PhysicsConstraintAxis, Physics6DoFConstraint, PhysicsMotionType, PhysicsShape, 
+  PhysicsAggregate,   PhysicsShapeType, PhysicsConstraintMotorType, PhysicShapeOptions, 
+  PhysicsShapeParameters, LockConstraint, PhysicsShapeContainer, HingeConstraint, PhysicsConstraintAxisLimitMode 
+} from '@babylonjs/core';
 
 import '@babylonjs/core/Physics/physicsEngineComponent';
 
@@ -39,21 +25,21 @@ import Motor from './AbstractRobot/Motor';
 import { node } from 'prop-types';
 
 interface BuiltGeometry {
-  nonColliders: BabylonMesh[];
+  nonColliders: Mesh[];
   colliders?: BuiltGeometry.Collider[];
 }
 
 namespace BuiltGeometry {
   export interface Collider {
     name: string;
-    mesh: BabylonMesh;
+    mesh: Mesh;
     type: number;
     volume: number;
   }
 }
 
 class RobotBinding {
-  private bScene_: BabylonScene;
+  private bScene_: babylScene;
 
   private robot_: Robot;
   get robot() { return this.robot_; }
@@ -63,12 +49,12 @@ class RobotBinding {
   private rootId_: string;
   private robotSceneId_: string;
 
-  private links_: Dict<BabylonMesh> = {};
+  private links_: Dict<Mesh> = {};
 
   get links() { return this.links_; }
 
-  private weights_: Dict<BabylonMesh> = {};
-  private fixed_: Dict<BabylonPhysicsJoint> = {};
+  private weights_: Dict<Mesh> = {};
+  private fixed_: Dict<PhysicsJoint> = {};
   private motors_: Dict<Physics6DoFConstraint> = {};
   private servos_: Dict<Physics6DoFConstraint> = {};
   private motorPorts_ = new Array<string>(4);
@@ -80,11 +66,11 @@ class RobotBinding {
   private analogSensors_: Dict<RobotBinding.Sensor<number>> = {};
   private analogPorts_ = new Array<string>(6);
 
-  private colliders_: Set<BabylonMesh> = new Set();
+  private colliders_: Set<Mesh> = new Set();
 
-  private physicsViewer_: BabylonPhysicsViewer;
+  private physicsViewer_: PhysicsViewer;
 
-  constructor(bScene: BabylonScene, physicsViewer?: BabylonPhysicsViewer) {
+  constructor(bScene: babylScene, physicsViewer?: PhysicsViewer) {
     this.bScene_ = bScene;
     this.physicsViewer_ = physicsViewer;
   }
@@ -99,12 +85,12 @@ class RobotBinding {
         const fileName = geometry.uri.substring(index + 1);
         const baseName = geometry.uri.substring(0, index + 1);
   
-        const res = await BabylonSceneLoader.ImportMeshAsync(geometry.include ?? '', baseName, fileName, this.bScene_);
+        const res = await SceneLoader.ImportMeshAsync(geometry.include ?? '', baseName, fileName, this.bScene_);
         
-        const nonColliders: BabylonMesh[] = [];
+        const nonColliders: Mesh[] = [];
         const colliders: BuiltGeometry.Collider[] = [];
 
-        for (const mesh of res.meshes.slice(1) as BabylonMesh[]) {
+        for (const mesh of res.meshes.slice(1) as Mesh[]) {
 
           // The robot mesh includes sub-meshes with the 'collider' name to indicate their use.
           if (mesh.name.startsWith('collider')) {
@@ -147,7 +133,7 @@ class RobotBinding {
 
     let builtGeometry: BuiltGeometry;
     if (link.geometryId === undefined) {
-      builtGeometry = { nonColliders: [new BabylonMesh(id, this.bScene_)] };
+      builtGeometry = { nonColliders: [new Mesh(id, this.bScene_)] };
     } else {
       const geometry = this.robot_.geometry[link.geometryId];
       if (!geometry) throw new Error(`Missing geometry: ${link.geometryId}`);
@@ -155,7 +141,7 @@ class RobotBinding {
     }
     
     const meshes = builtGeometry.nonColliders;
-    let myMesh: BabylonMesh;
+    let myMesh: Mesh;
 
     const inertiaScale = .5;
     
@@ -167,7 +153,7 @@ class RobotBinding {
 
       case Node.Link.CollisionBody.Type.Box: {
         // alert("box collision body"); // Currently there are no box collision bodies in the robot model
-        myMesh = BabylonMesh.MergeMeshes(meshes, true, true, undefined, false, true);
+        myMesh = Mesh.MergeMeshes(meshes, true, true, undefined, false, true);
         myMesh.scaling.scaleInPlace(RENDER_SCALE_METERS_MULTIPLIER);
 
         const aggregate = new PhysicsAggregate(myMesh, PhysicsShapeType.BOX, {
@@ -181,7 +167,7 @@ class RobotBinding {
         break;
       }
       case Node.Link.CollisionBody.Type.Cylinder: {
-        myMesh = BabylonMesh.MergeMeshes(meshes, true, true, undefined, false, true);
+        myMesh = Mesh.MergeMeshes(meshes, true, true, undefined, false, true);
         myMesh.scaling.scaleInPlace(RENDER_SCALE_METERS_MULTIPLIER);
 
         const aggregate = new PhysicsAggregate(myMesh, PhysicsShapeType.CYLINDER, {
@@ -195,7 +181,7 @@ class RobotBinding {
         break;
       }
       case Node.Link.CollisionBody.Type.Embedded: {
-        myMesh = BabylonMesh.MergeMeshes(meshes, true, true, undefined, false, true);
+        myMesh = Mesh.MergeMeshes(meshes, true, true, undefined, false, true);
         myMesh.scaling.scaleInPlace(RENDER_SCALE_METERS_MULTIPLIER);
 
         // As the embedded collision body consists of multiple meshes, we need to create a parent
@@ -225,19 +211,19 @@ class RobotBinding {
         if (link.geometryId.includes("chassis")) {
           body.setMassProperties({ 
             mass: Mass.toGramsValue(link.mass || Mass.grams(100)),
-            inertia: new BabylonVector3(10 * inertiaScale,10 * inertiaScale,10 * inertiaScale) // (left/right, twist around, rock forward and backward)
+            inertia: new Vector3(10 * inertiaScale,10 * inertiaScale,10 * inertiaScale) // (left/right, twist around, rock forward and backward)
           }); 
         }
         if (link.geometryId.includes("arm")) {
           body.setMassProperties({ 
             mass: Mass.toGramsValue(link.mass || Mass.grams(80)), 
-            inertia: new BabylonVector3(6 * inertiaScale,6 * inertiaScale,6 * inertiaScale) // (left/right, twist around, rock forward and backward)
+            inertia: new Vector3(6 * inertiaScale,6 * inertiaScale,6 * inertiaScale) // (left/right, twist around, rock forward and backward)
           });
         }
         if (link.geometryId.includes("claw")) {
           body.setMassProperties({ 
             mass: Mass.toGramsValue(link.mass || Mass.grams(10)),
-            inertia: new BabylonVector3(3 * inertiaScale,3 * inertiaScale,3 * inertiaScale) // (left/right, twist around, rock forward and backward)
+            inertia: new Vector3(3 * inertiaScale,3 * inertiaScale,3 * inertiaScale) // (left/right, twist around, rock forward and backward)
           });
         }
         body.setAngularDamping(.5);
@@ -274,14 +260,14 @@ class RobotBinding {
 
   // Transform a vector using the child frame's orientation. This operation is invariant on a single
   // axis, so we return a new quaternion with the leftover rotation.
-  private static connectedAxisAngle_ = (rotationAxis: BabylonVector3, childOrientation: BabylonQuaternion): { axis: BabylonVector3, twist: BabylonQuaternion } => {
+  private static connectedAxisAngle_ = (rotationAxis: Vector3, childOrientation: Quaternion): { axis: Vector3, twist: Quaternion } => {
     const childOrientationInv = childOrientation.invert();
     const axis = rotationAxis.applyRotationQuaternion(childOrientationInv);
-    const v = new BabylonVector3(childOrientationInv.x, childOrientationInv.y, childOrientationInv.z);
+    const v = new Vector3(childOrientationInv.x, childOrientationInv.y, childOrientationInv.z);
     const s = childOrientationInv.w;
     v.multiplyInPlace(axis);
 
-    const twist = new BabylonQuaternion(v.x, v.y, v.z, s);
+    const twist = new Quaternion(v.x, v.y, v.z, s);
     twist.normalize();
 
     
@@ -293,7 +279,7 @@ class RobotBinding {
 
   // Adds an invisible weight to a parent link.
   private createWeight_ = (id: string, weight: Node.Weight) => {
-    const ret = BabylonCreateSphere(id, { diameter: 1 }, this.bScene_);
+    const ret = CreateSphere(id, { diameter: 1 }, this.bScene_);
     ret.visibility = 0;
 
     const parent = this.robot_.nodes[weight.parentId];
@@ -313,9 +299,9 @@ class RobotBinding {
 
     const constraint = new LockConstraint(
       bOrigin.position,
-      new BabylonVector3(0,0,0), // RawVector3.toBabylon(new BabylonVector3(-8,10,0)), // updown, frontback
-      BabylonVector3.Up(),
-      BabylonVector3.Up().applyRotationQuaternion(bOrigin.rotationQuaternion.invert()),
+      new Vector3(0,0,0), // RawVector3.toBabylon(new Vector3(-8,10,0)), // updown, frontback
+      Vector3.Up(),
+      Vector3.Up().applyRotationQuaternion(bOrigin.rotationQuaternion.invert()),
       this.bScene_
     );
     bParent.physicsBody.addConstraint(ret.physicsBody, constraint);
@@ -324,8 +310,8 @@ class RobotBinding {
   };
 
   private bParentChild_ = (id: string, parentId: string): {
-    bParent: BabylonMesh;
-    bChild: BabylonMesh;
+    bParent: Mesh;
+    bChild: Mesh;
     childId: string;
   } => {
     if (!parentId) throw new Error(`Missing parent: "${parentId}" for node "${id}"`);
@@ -358,7 +344,7 @@ class RobotBinding {
     bChild.position.y = Vector3wUnits.toBabylon(hinge.parentPivot, 'meters')._y;
     bChild.position.z = Vector3wUnits.toBabylon(hinge.parentPivot, 'meters')._z;
 
-    bChild.rotationQuaternion = BabylonQuaternion.FromEulerAngles(hinge.parentAxis.z * 3.1415 / 2, 0, 0);
+    bChild.rotationQuaternion = Quaternion.FromEulerAngles(hinge.parentAxis.z * 3.1415 / 2, 0, 0);
     
     // The 6DoF constraint is used for motorized joints. Unforunately, it is not possible to
     // completely lock these joints as hinges, so we also apply a hinge constraint.
@@ -367,8 +353,8 @@ class RobotBinding {
       const hingeJoint = new HingeConstraint(
         Vector3wUnits.toBabylon(hinge.parentPivot, RENDER_SCALE),
         Vector3wUnits.toBabylon(hinge.childPivot, RENDER_SCALE),
-        new BabylonVector3(0,0,1), 
-        new BabylonVector3(0,1,0),
+        new Vector3(0,0,1), 
+        new Vector3(0,1,0),
         this.bScene_
       );
       bParent.physicsBody.addConstraint(bChild.physicsBody, hingeJoint);
@@ -376,8 +362,8 @@ class RobotBinding {
       const hingeJoint = new HingeConstraint(
         Vector3wUnits.toBabylon(hinge.parentPivot, RENDER_SCALE),
         Vector3wUnits.toBabylon(hinge.childPivot, RENDER_SCALE),
-        new BabylonVector3(0,0,1),
-        new BabylonVector3(0,-1,0),
+        new Vector3(0,0,1),
+        new Vector3(0,-1,0),
         this.bScene_
       );
       bParent.physicsBody.addConstraint(bChild.physicsBody, hingeJoint);
@@ -385,7 +371,7 @@ class RobotBinding {
       const hingeJoint = new HingeConstraint(
         Vector3wUnits.toBabylon(hinge.parentPivot, RENDER_SCALE),
         Vector3wUnits.toBabylon(hinge.childPivot, RENDER_SCALE),
-        new BabylonVector3(0,1,0),
+        new Vector3(0,1,0),
         undefined, 
         this.bScene_
       );
@@ -394,9 +380,9 @@ class RobotBinding {
     const joint: Physics6DoFConstraint = new Physics6DoFConstraint({
       pivotA: Vector3wUnits.toBabylon(hinge.parentPivot, RENDER_SCALE),
       pivotB: Vector3wUnits.toBabylon(hinge.childPivot, RENDER_SCALE),
-      axisA: new BabylonVector3(1,0,0),
-      axisB: new BabylonVector3(1,0,0),
-      perpAxisA: new BabylonVector3(0,-1,0), // bChildAxis, //
+      axisA: new Vector3(1,0,0),
+      axisB: new Vector3(1,0,0),
+      perpAxisA: new Vector3(0,-1,0), // bChildAxis, //
       perpAxisB: RawVector3.toBabylon(hinge.parentAxis),
     },
     [
@@ -786,22 +772,22 @@ class RobotBinding {
 
     const rootLink = this.links_[this.rootId_];
 
-    const rootTransformNode = new BabylonTransformNode('root-transform-node', this.bScene_);
+    const rootTransformNode = new TransformNode('root-transform-node', this.bScene_);
     rootTransformNode.position = rootLink.absolutePosition;
     rootTransformNode.rotationQuaternion = rootLink.absoluteRotationQuaternion;
 
     for (const link of Object.values(this.links_)) {
       link.physicsBody.disablePreStep = false;
       link.setParent(rootTransformNode);
-      link.physicsBody.setAngularVelocity(BabylonVector3.Zero());
-      link.physicsBody.setLinearVelocity(BabylonVector3.Zero());
+      link.physicsBody.setAngularVelocity(Vector3.Zero());
+      link.physicsBody.setLinearVelocity(Vector3.Zero());
     }
 
     for (const weight of Object.values(this.weights_)) {
       weight.physicsBody.disablePreStep = false;
       weight.setParent(rootTransformNode);
-      weight.physicsBody.setAngularVelocity(BabylonVector3.Zero());
-      weight.physicsBody.setLinearVelocity(BabylonVector3.Zero());
+      weight.physicsBody.setAngularVelocity(Vector3.Zero());
+      weight.physicsBody.setLinearVelocity(Vector3.Zero());
     }
     
     rootTransformNode.position = RawVector3.toBabylon(rawOrigin.position || RawVector3.ZERO)
@@ -1023,10 +1009,10 @@ namespace RobotBinding {
   export interface SensorParameters<T> {
     id: string;
     definition: T;
-    parent: BabylonMesh;
-    scene: BabylonScene;
-    links: Set<BabylonMesh>;
-    colliders: Set<BabylonIPhysicsEnabledObject>;
+    parent: Mesh;
+    scene: babylScene;
+    links: Set<Mesh>;
+    colliders: Set<IPhysicsEnabledObject>;
   }
 
   export abstract class SensorObject<T, O> implements Sensor<O> {
@@ -1055,7 +1041,7 @@ namespace RobotBinding {
   }
 
   export class TouchSensor extends SensorObject<Node.TouchSensor, boolean> {
-    private intersector_: BabylonMesh;
+    private intersector_: Mesh;
     
     constructor(parameters: SensorParameters<Node.TouchSensor>) {
       super(parameters);
@@ -1066,14 +1052,14 @@ namespace RobotBinding {
       // The parent already has RENDER_SCALE applied, so we don't need to apply it again.
       const rawCollisionBox = Vector3wUnits.toRaw(collisionBox, 'meters');
 
-      this.intersector_ = BabylonCreateBox(id, {
+      this.intersector_ = CreateBox(id, {
         depth: rawCollisionBox.z,
         height: rawCollisionBox.y,
         width: rawCollisionBox.x,
       }, scene);
 
       this.intersector_.parent = parent;
-      this.intersector_.material = new BabylonStandardMaterial('touch-sensor-material', scene);
+      this.intersector_.material = new StandardMaterial('touch-sensor-material', scene);
       this.intersector_.material.wireframe = true;
       this.intersector_.visibility = 0;
 
@@ -1087,7 +1073,7 @@ namespace RobotBinding {
 
       let hit = false;
       meshes.forEach(mesh => {
-        if (hit || mesh === this.intersector_ || links.has(mesh as BabylonMesh)) return;
+        if (hit || mesh === this.intersector_ || links.has(mesh as Mesh)) return;
         if (!mesh.physicsBody) return;
         hit = this.intersector_.intersectsMesh(mesh, true);
       });
@@ -1101,11 +1087,11 @@ namespace RobotBinding {
   }
 
   export class EtSensor extends SensorObject<Node.EtSensor, number> {
-    private trace_: BabylonLinesMesh;
+    private trace_: LinesMesh;
 
     private static readonly DEFAULT_MAX_DISTANCE = Distance.centimeters(100);
     private static readonly DEFAULT_NOISE_RADIUS = Distance.centimeters(160);
-    private static readonly FORWARD: BabylonVector3 = new BabylonVector3(0, 0, 1);
+    private static readonly FORWARD: Vector3 = new Vector3(0, 0, 1);
 
     constructor(parameters: SensorParameters<Node.EtSensor>) {
       super(parameters);
@@ -1118,9 +1104,9 @@ namespace RobotBinding {
 
       const rawMaxDistance = Distance.toMetersValue(maxDistance ?? EtSensor.DEFAULT_MAX_DISTANCE);
       
-      this.trace_ = BabylonCreateLines(id, {
+      this.trace_ = CreateLines(id, {
         points: [
-          BabylonVector3.Zero(),
+          Vector3.Zero(),
           EtSensor.FORWARD.multiplyByFloats(rawMaxDistance, rawMaxDistance, rawMaxDistance)
         ],
       }, scene);
@@ -1137,7 +1123,7 @@ namespace RobotBinding {
       const rawMaxDistance = Distance.toValue(maxDistance || EtSensor.DEFAULT_MAX_DISTANCE, RENDER_SCALE);
       this.trace_.visibility = this.visible ? 1 : 0;
 
-      const ray = new BabylonRay(
+      const ray = new Ray(
         this.trace_.absolutePosition,
         EtSensor.FORWARD.applyRotationQuaternion(this.trace_.absoluteRotationQuaternion),
         rawMaxDistance
@@ -1148,8 +1134,8 @@ namespace RobotBinding {
         return (
           metadata &&
           mesh !== this.trace_ &&
-          !links.has(mesh as BabylonMesh) &&
-          !colliders.has(mesh as BabylonMesh) &&
+          !links.has(mesh as Mesh) &&
+          !colliders.has(mesh as Mesh) &&
           (!!mesh.physicsBody || metadata.selected)
         );
       });
@@ -1200,8 +1186,8 @@ namespace RobotBinding {
    * not blocked, normalized to a calibrated value from measurements on a Wombat.
    */
   export class LightSensor extends SensorObject<Node.LightSensor, number> {
-    private trace_: BabylonAbstractMesh;
-    private rayTrace_: BabylonLinesMesh;
+    private trace_: AbstractMesh;
+    private rayTrace_: LinesMesh;
 
     // Calibrated value from real sensor with overhead light on
     private static AMBIENT_LIGHT_VALUE = 4095 - 3645;
@@ -1221,12 +1207,12 @@ namespace RobotBinding {
       const { origin } = definition;
       
 
-      this.trace_ = BabylonIcoSphereBuilder.CreateIcoSphere(`${id}-light-sensor-trace`, {
+      this.trace_ = IcoSphereBuilder.CreateIcoSphere(`${id}-light-sensor-trace`, {
         radius: 0.01,
         subdivisions: 1,
       });
 
-      this.trace_.material = new BabylonStandardMaterial(`${id}-light-sensor-trace-material`, scene);
+      this.trace_.material = new StandardMaterial(`${id}-light-sensor-trace-material`, scene);
       this.trace_.material.wireframe = true;
 
 
@@ -1236,7 +1222,7 @@ namespace RobotBinding {
       this.trace_.visibility = 0;
     }
 
-    intersects(ray: BabylonRay) {
+    intersects(ray: Ray) {
       const { scene } = this.parameters;
       const meshes = scene.getActiveMeshes();
 
@@ -1261,7 +1247,7 @@ namespace RobotBinding {
       let valueSum = 0;
       for (const light of scene.lights) {
         if (!light.isEnabled(false)) continue;
-        if (light instanceof BabylonHemisphericLight) {
+        if (light instanceof HemisphericLight) {
           valueSum += light.intensity * LightSensor.AMBIENT_LIGHT_VALUE;
           continue;
         }
@@ -1270,7 +1256,7 @@ namespace RobotBinding {
         const lightPosition = Vector3wUnits.fromRaw(RawVector3.fromBabylon(light.getAbsolutePosition()), RENDER_SCALE);
         const offset = Vector3wUnits.subtract(position, lightPosition);
         const distance = Vector3wUnits.length(offset);
-        const ray = new BabylonRay(
+        const ray = new Ray(
           Vector3wUnits.toBabylon(position, RENDER_SCALE),
           Vector3wUnits.toBabylon(offset, RENDER_SCALE),
           Distance.toValue(distance, RENDER_SCALE)
@@ -1280,22 +1266,22 @@ namespace RobotBinding {
 
         // If the light is directional, determine if it is pointing towards the
         // sensor. If not, it is not received.
-        if (light instanceof BabylonDirectionalLight) {
-          const direction = BabylonVector3.Forward(true)
-            .applyRotationQuaternion(BabylonQuaternion.FromEulerVector(light.getRotation()));
+        if (light instanceof DirectionalLight) {
+          const direction = Vector3.Forward(true)
+            .applyRotationQuaternion(Quaternion.FromEulerVector(light.getRotation()));
           
-          const dot = BabylonVector3.Dot(direction, Vector3wUnits.toBabylon(offset, RENDER_SCALE));
+          const dot = Vector3.Dot(direction, Vector3wUnits.toBabylon(offset, RENDER_SCALE));
           const angle = Math.acos(dot / Distance.toValue(Vector3wUnits.length(offset), RENDER_SCALE));
 
           if (angle > Math.PI / 2) continue;
         }
 
         // Similar for spot light
-        if (light instanceof BabylonSpotLight) {
-          const direction = BabylonVector3.Forward(true)
-            .applyRotationQuaternion(BabylonQuaternion.FromEulerVector(light.getRotation()));
+        if (light instanceof SpotLight) {
+          const direction = Vector3.Forward(true)
+            .applyRotationQuaternion(Quaternion.FromEulerVector(light.getRotation()));
           
-          const dot = BabylonVector3.Dot(direction, Vector3wUnits.toBabylon(offset, RENDER_SCALE));
+          const dot = Vector3.Dot(direction, Vector3wUnits.toBabylon(offset, RENDER_SCALE));
           const angle = Math.acos(dot / Distance.toValue(Vector3wUnits.length(offset), RENDER_SCALE));
 
           if (angle > light.angle / 2) continue;
@@ -1318,14 +1304,14 @@ namespace RobotBinding {
   }
 
   export class ReflectanceSensor extends SensorObject<Node.ReflectanceSensor, number> {
-    private trace_: BabylonLinesMesh;
+    private trace_: LinesMesh;
 
     private lastHitTextureId_: string | null = null;
     private lastHitPixels_: ArrayBufferView | null = null;
 
     private static readonly DEFAULT_MAX_DISTANCE = Distance.centimeters(1.5);
     private static readonly DEFAULT_NOISE_RADIUS = Distance.centimeters(10);
-    private static readonly FORWARD: BabylonVector3 = new BabylonVector3(0, 0, 1);
+    private static readonly FORWARD: Vector3 = new Vector3(0, 0, 1);
 
     constructor(parameters: SensorParameters<Node.ReflectanceSensor>) {
       super(parameters);
@@ -1337,9 +1323,9 @@ namespace RobotBinding {
       // RENDER_SCALE again.
 
       const rawMaxDistance = Distance.toMetersValue(maxDistance ?? ReflectanceSensor.DEFAULT_MAX_DISTANCE);
-      this.trace_ = BabylonCreateLines(id, {
+      this.trace_ = CreateLines(id, {
         points: [
-          BabylonVector3.Zero(),
+          Vector3.Zero(),
           ReflectanceSensor.FORWARD.multiplyByFloats(rawMaxDistance, rawMaxDistance, rawMaxDistance)
         ],
       }, scene);
@@ -1356,14 +1342,14 @@ namespace RobotBinding {
       const rawMaxDistance = Distance.toValue(maxDistance || ReflectanceSensor.DEFAULT_MAX_DISTANCE, RENDER_SCALE);
       this.trace_.visibility = this.visible ? 1 : 0;
 
-      const ray = new BabylonRay(
+      const ray = new Ray(
         this.trace_.absolutePosition,
         ReflectanceSensor.FORWARD.applyRotationQuaternion(this.trace_.absoluteRotationQuaternion),
         rawMaxDistance
       );
 
       const hit = scene.pickWithRay(ray, mesh => {
-        return mesh !== this.trace_ && !links.has(mesh as BabylonMesh) && !colliders.has(mesh as BabylonMesh);
+        return mesh !== this.trace_ && !links.has(mesh as Mesh) && !colliders.has(mesh as Mesh);
       });
 
       if (!hit.pickedMesh || !hit.pickedMesh.material || hit.pickedMesh.material.getActiveTextures().length === 0) return 0;
