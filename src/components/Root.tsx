@@ -4,31 +4,31 @@ import WorkerInstance from '../programming/WorkerInstance';
 
 import { State as ReduxState } from '../state';
 
-import SimMenu from './SimMenu';
+import SimMenu from './Challenge/SimMenu';
 
 import { styled } from 'styletron-react';
-import { DARK, Theme } from './theme';
+import { DARK, Theme } from './Constants/theme';
 import { Layout, LayoutProps, OverlayLayout, OverlayLayoutRedux, SideLayoutRedux  } from './Layout';
 
-import SettingsDialog from './SettingsDialog';
-import AboutDialog from './AboutDialog';
+import SettingsDialog from './Dialog/SettingsDialog';
+import AboutDialog from './Dialog/AboutDialog';
 
 import FeedbackDialog from './Feedback';
 import { sendFeedback, FeedbackResponse } from './Feedback/SendFeedback';
 import FeedbackSuccessDialog from './Feedback/SuccessModal';
 
 import compile from '../programming/compile';
-import { SimulatorState } from './SimulatorState';
+import { SimulatorState } from './Challenge/SimulatorState';
 import { Angle, Distance, StyledText } from '../util';
 import { Message } from 'ivygate';
 import parseMessages, { hasErrors, hasWarnings, sort, toStyledText } from '../util/parse-messages';
 
 import { Space } from '../Sim';
 import { RobotPosition } from './RobotPosition';
-import { DEFAULT_SETTINGS, Settings } from './Settings';
+import { DEFAULT_SETTINGS, Settings } from './Constants/Settings';
 import { DEFAULT_FEEDBACK, Feedback } from '../Feedback';
-import ExceptionDialog from './ExceptionDialog';
-import OpenSceneDialog from './OpenSceneDialog';
+import ExceptionDialog from './Challenge/ExceptionDialog';
+import OpenSceneDialog from './Dialog/OpenSceneDialog';
 
 import { ChallengesAction, DocumentationAction, ScenesAction, ChallengeCompletionsAction } from '../state/reducer';
 import { Editor } from './Editor';
@@ -42,8 +42,8 @@ import Node from '../state/State/Scene/Node';
 import { connect } from 'react-redux';
 import Async from '../state/State/Async';
 import construct from '../util/construct';
-import NewSceneDialog from './NewSceneDialog';
-import DeleteDialog from './DeleteDialog';
+import NewSceneDialog from './Dialog/NewSceneDialog';
+import DeleteDialog from './Dialog/DeleteDialog';
 import Record from '../db/Record';
 import Selector from '../db/Selector';
 
@@ -51,12 +51,12 @@ import * as uuid from 'uuid';
 import Author from '../db/Author';
 import db from '../db';
 import { auth } from '../firebase/firebase';
-import SaveAsSceneDialog from './SaveAsSceneDialog';
-import SceneErrorDialog from './SceneErrorDialog';
+import SaveAsSceneDialog from './Dialog/SaveAsSceneDialog';
+import SceneErrorDialog from './Dialog/SceneErrorDialog';
 import { push } from 'connected-react-router';
 import Loading from './Loading';
 import LocalizedString from '../util/LocalizedString';
-import SceneSettingsDialog from './SceneSettingsDialog';
+import SceneSettingsDialog from './Dialog/SceneSettingsDialog';
 import Geometry from '../state/State/Scene/Geometry';
 import Camera from '../state/State/Scene/Camera';
 import { Vector3 } from '../util/unit-math';

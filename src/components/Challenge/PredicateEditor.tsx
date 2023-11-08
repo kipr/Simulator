@@ -7,7 +7,7 @@ import Expr from '../../state/State/Challenge/Expr';
 import Predicate from '../../state/State/Challenge/Predicate';
 import PredicateCompletion from '../../state/State/ChallengeCompletion/PredicateCompletion';
 import { StyleProps } from '../../util/style';
-import HTree, { HTreeNode } from '../HTree';
+import HTree, { HTreeNode } from './HTree';
 import EventViewer from './EventViewer';
 import Operator from './Operator';
 

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
 import { Value, StyledText, Angle, Distance } from '../../util';
-import { ThemeProps } from '../theme';
+import { ThemeProps } from '../Constants/theme';
 import ValueEdit from '../ValueEdit';
 import deepNeq from '../../util/deepNeq';
 import { ReferenceFrame, Rotation, Vector3 } from '../../util/unit-math';

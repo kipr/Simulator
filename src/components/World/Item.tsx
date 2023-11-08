@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 
 import EditableList from '../EditableList';
-import { ThemeProps } from '../theme';
+import { ThemeProps } from '../Constants/theme';
 
 export interface ItemProps extends EditableList.StandardItem.ComponentProps, ThemeProps {
   name: string;

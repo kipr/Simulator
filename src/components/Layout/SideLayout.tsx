@@ -3,17 +3,17 @@ import { connect } from 'react-redux';
 
 import { styled } from 'styletron-react';
 
-import { Button } from '../Button';
+import { Button } from '../UI/Button';
 
-import { Console, createConsoleBarComponents } from '../Console';
+import { Console, createConsoleBarComponents } from '../Editor-Console';
 import { Editor, createEditorBarComponents, EditorBarTarget } from '../Editor';
 import World, { createWorldBarComponents } from '../World';
 
 import { Info } from '../Info';
 import { LayoutEditorTarget, LayoutProps } from './Layout';
-import SimulatorArea from '../SimulatorArea';
-import { TabBar } from '../TabBar';
-import Widget, { BarComponent, Mode, Size } from '../Widget';
+import SimulatorArea from './SimulatorArea';
+import { TabBar } from './TabBar';
+import Widget, { BarComponent, Mode, Size } from '../UI/Widget';
 import { Slider } from '../Slider';
 
 import { State as ReduxState } from '../../state';

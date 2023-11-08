@@ -4,9 +4,9 @@ import { Sentiment, Feedback } from '../../Feedback';
 import SentimentCharm from './SentimentCharm';
 import { FeedbackTextArea, FeedbackEmailInput, FeedbackText, FeedbackLabel } from './FeedbackInputs';
 import { StyleProps } from '../../util/style';
-import { Dialog } from '../Dialog';
-import DialogBar from "../DialogBar";
-import { ThemeProps } from '../theme';
+import { Dialog } from '../Dialog/Dialog';
+import DialogBar from "../Dialog/DialogBar";
+import { ThemeProps } from '../Constants/theme';
 import { Fa } from '../Fa';
 
 import { faFrown, faMeh, faPaperPlane, faSmileBeam } from '@fortawesome/free-solid-svg-icons';

@@ -1,9 +1,9 @@
 import * as React from "react";
 import { styled } from "styletron-react";
 import { ReferenceFrame } from "../../util/unit-math";
-import { Dialog } from "../Dialog";
-import ScrollArea from "../ScrollArea";
-import { ThemeProps } from "../theme";
+import { Dialog } from "../Dialog/Dialog";
+import ScrollArea from "../UI/ScrollArea";
+import { ThemeProps } from "../Constants/theme";
 import NodeSettings from "./NodeSettings";
 import Node from '../../state/State/Scene/Node';
 import Scene from "../../state/State/Scene";

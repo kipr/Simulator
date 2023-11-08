@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DARK, RED, ThemeProps } from '../components/theme';
+import { DARK, RED, ThemeProps } from '../components/Constants/theme';
 import { StyleProps } from '../util/style';
 import { styled } from 'styletron-react';
 import { auth, Providers } from '../firebase/firebase';
@@ -9,15 +9,15 @@ import {
   forgotPassword
 } from '../firebase/modules/auth';
 import { AuthProvider, getRedirectResult, signInWithPopup } from 'firebase/auth';
-import Form from '../components/Form';
-import { TabBar } from '../components/TabBar';
+import Form from '../components/UI/Form';
+import { TabBar } from '../components/Layout/TabBar';
 
 import KIPR_LOGO_BLACK from '../assets/KIPR-Logo-Black-Text-Clear-Large.png';
 import KIPR_LOGO_WHITE from '../assets/KIPR-Logo-White-Text-Clear-Large.png';
 import { Fa } from '../components/Fa';
-import { Text } from '../components/Text';
+import { Text } from '../components/UI/Text';
 import { StyledText } from '../util';
-import Button from '../components/Button';
+import Button from '../components/UI/Button';
 import { Validators } from '../util/Validator';
 import { faSignInAlt, faUnlock, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';

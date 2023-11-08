@@ -8,10 +8,10 @@ import Dashboard from './pages/Dashboard';
 import Tutorials from './pages/Tutorials';
 import Root from './components/Root';
 import { connect } from 'react-redux';
-import ChallengeRoot from './components/ChallengeRoot';
+import ChallengeRoot from './components/Challenge/ChallengeRoot';
 import DocumentationWindow from './components/documentation/DocumentationWindow';
 import { State as ReduxState } from './state';
-import { DARK } from './components/theme';
+import { DARK } from './components/Constants/theme';
 
 export interface AppPublicProps {
 

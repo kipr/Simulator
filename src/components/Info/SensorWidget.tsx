@@ -1,13 +1,13 @@
 import { styled } from 'styletron-react';
 import * as React from 'react';
-import { ThemeProps } from '../theme';
+import { ThemeProps } from '../Constants/theme';
 import { StyleProps } from '../../util/style';
-import SensorPlot from '../SensorPlot';
-import BooleanPlot from '../BooleanPlot';
-import { Spacer } from '../common';
+import SensorPlot from './SensorPlot';
+import BooleanPlot from '../UI/BooleanPlot';
+import { Spacer } from '../Constants/common';
 
-import { ActionTooltip } from '../ActionTooltip';
-import Tooltip from '../Tooltip';
+import { ActionTooltip } from './ActionTooltip';
+import Tooltip from './Tooltip';
 import { StyledText } from '../../util';
 import { Fa } from '../Fa';
 

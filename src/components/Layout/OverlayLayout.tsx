@@ -2,17 +2,17 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { styled } from 'styletron-react';
-import { Button } from '../Button';
+import { Button } from '../UI/Button';
 
-import { Console, createConsoleBarComponents } from '../Console';
+import { Console, createConsoleBarComponents } from '../Editor-Console';
 import { Editor, createEditorBarComponents, EditorBarTarget } from '../Editor';
 import World, { createWorldBarComponents } from '../World';
 
 import { Info } from '../Info';
 import { LayoutEditorTarget, LayoutProps } from './Layout';
-import SimulatorArea from '../SimulatorArea';
-import { Theme, ThemeProps } from '../theme';
-import Widget, { BarComponent, Mode, Size, WidgetProps } from '../Widget';
+import SimulatorArea from './SimulatorArea';
+import { Theme, ThemeProps } from '../Constants/theme';
+import Widget, { BarComponent, Mode, Size, WidgetProps } from '../UI/Widget';
 import { State as ReduxState } from '../../state';
 import Scene from '../../state/State/Scene';
 import Node from '../../state/State/Scene/Node';

@@ -5,7 +5,7 @@ import { styled } from 'styletron-react';
 import Event from '../../state/State/Challenge/Event';
 import { StyleProps } from '../../util/style';
 import LocalizedString from '../../util/LocalizedString';
-import { Spacer } from '../common';
+import { Spacer } from '../Constants/common';
 
 const Container = styled('div', {
 });

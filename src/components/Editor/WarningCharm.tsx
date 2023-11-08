@@ -3,8 +3,8 @@ import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
 import Charm from '../Charm';
 import { Fa } from '../Fa';
-import { ThemeProps } from '../theme';
-import { charmColor } from '../charm-util';
+import { ThemeProps } from '../Constants/theme';
+import { charmColor } from '../Constants/charm-util';
 
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import LocalizedString from '../../util/LocalizedString';

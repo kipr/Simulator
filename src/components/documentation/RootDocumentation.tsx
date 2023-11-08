@@ -5,9 +5,9 @@ import Documentation from '../../state/State/Documentation';
 import DocumentationLocation from '../../state/State/Documentation/DocumentationLocation';
 import FileDocumentation from '../../state/State/Documentation/FileDocumentation';
 import FunctionDocumentation from '../../state/State/Documentation/FunctionDocumentation';
-import Input from '../Input';
-import Section from '../Section';
-import { ThemeProps } from '../theme';
+import Input from '../UI/Input';
+import Section from '../UI/Section';
+import { ThemeProps } from '../Constants/theme';
 import FileBrief from './FileBrief';
 import FunctionBrief from './FunctionBrief';
 

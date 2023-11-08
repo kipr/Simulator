@@ -1,5 +1,5 @@
 import { styled } from "styletron-react";
-import { ThemeProps } from "../theme";
+import { ThemeProps } from "../Constants/theme";
 
 const FeedbackTextArea = styled('textarea', (props: ThemeProps) => ({
   outline: 'none',

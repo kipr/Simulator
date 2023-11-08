@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { DARK, ThemeProps } from '../components/theme';
+import { DARK, ThemeProps } from '../components/Constants/theme';
 import { StyleProps } from '../util/style';
 import { styled } from 'styletron-react';
-import { Card } from '../components/Card';
+import { Card } from '../components/UI/Card';
 import MainMenu from '../components/MainMenu';
 import IFrame from '../components/IFrame';
 import { tutorialList } from './tutorialList';

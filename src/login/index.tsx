@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import { DARK } from '../components/theme';
+import { DARK } from '../components/Constants/theme';
 import LoginPage from './LoginPage';
 
 import { Provider as StyletronProvider } from "styletron-react";

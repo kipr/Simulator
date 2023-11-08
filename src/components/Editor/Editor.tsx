@@ -2,11 +2,11 @@ import * as React from 'react';
 
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
-import { Theme, ThemeProps } from '../theme';
+import { Theme, ThemeProps } from '../Constants/theme';
 
 import { Fa } from '../Fa';
-import { Button } from '../Button';
-import { BarComponent } from '../Widget';
+import { Button } from '../UI/Button';
+import { BarComponent } from '../UI/Widget';
 import { WarningCharm, ErrorCharm } from './';
 
 import { Ivygate, Message } from 'ivygate';
@@ -24,7 +24,7 @@ import tr from '@i18n';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
 import LocalizedString from '../../util/LocalizedString';
-import DeleteDialog from 'components/DeleteDialog';
+import DeleteDialog from 'components/Dialog/DeleteDialog';
 
 export enum EditorActionState {
   None,

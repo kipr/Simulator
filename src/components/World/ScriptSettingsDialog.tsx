@@ -1,12 +1,12 @@
 import * as React from "react";
 import { styled } from "styletron-react";
 import { ReferenceFrame } from "../../util/unit-math";
-import { Dialog } from "../Dialog";
-import ScrollArea from "../ScrollArea";
-import { ThemeProps } from "../theme";
+import { Dialog } from "../Dialog/Dialog";
+import ScrollArea from "../UI/ScrollArea";
+import { ThemeProps } from "../Constants/theme";
 import ScriptSettings from "./ScriptSettings";
 import Script from '../../state/State/Scene/Script';
-import DialogBar from '../DialogBar';
+import DialogBar from '../Dialog/DialogBar';
 import { Fa } from '../Fa';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 

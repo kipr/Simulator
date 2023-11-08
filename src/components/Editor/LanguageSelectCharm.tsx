@@ -2,9 +2,9 @@ import * as React from 'react';
 import { styled, withStyleDeep } from 'styletron-react';
 import { StyleProps } from '../../util/style';
 import Charm from '../Charm';
-import { ThemeProps } from '../theme';
-import { charmColor } from '../charm-util';
-import ComboBox from '../ComboBox';
+import { ThemeProps } from '../Constants/theme';
+import { charmColor } from '../Constants/charm-util';
+import ComboBox from '../UI/ComboBox';
 import ProgrammingLanguage from '../../programming/ProgrammingLanguage';
 
 export interface LanguageSelectCharmProps extends StyleProps, ThemeProps {

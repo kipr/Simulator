@@ -4,7 +4,7 @@ import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
 import { Fa } from '../Fa';
 import { Layout } from './Layout';
-import { ThemeProps } from '../theme';
+import { ThemeProps } from '../Constants/theme';
 import { faCaretSquareLeft, faClone, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import LocalizedString from '../../util/LocalizedString';
 import { connect } from 'react-redux';

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { styled } from 'styletron-react';
 import { Fa } from '../Fa';
-import { ThemeProps } from '../theme';
+import { ThemeProps } from '../Constants/theme';
 
 import { CanBeVertical, CanBeSelected } from './';
 

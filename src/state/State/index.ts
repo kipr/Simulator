@@ -1,4 +1,4 @@
-import { Size } from '../../components/Widget';
+import { Size } from '../../components/UI/Widget';
 import LocalizedString from '../../util/LocalizedString';
 import Dict from '../../util/Dict';
 import Async from "./Async";
