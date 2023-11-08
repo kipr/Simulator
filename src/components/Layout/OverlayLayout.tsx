@@ -20,7 +20,7 @@ import Dict from '../../util/Dict';
 import Async from '../../state/State/Async';
 import { EMPTY_OBJECT } from '../../util';
 import Challenge from '../Challenge';
-import { ReferenceFrame } from '../../util/unit-math';
+import { ReferenceFramewUnits } from '../../util/unit-math';
 import LocalizedString from '../../util/LocalizedString';
 
 import tr from '@i18n';
@@ -318,7 +318,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
     // not implemented
   };
 
-  private onRobotOriginChange_ = (origin: ReferenceFrame) => {
+  private onRobotOriginChange_ = (origin: ReferenceFramewUnits) => {
     const { scene, onNodeChange } = this.props;
     
     const latestScene = Async.latestValue(scene);

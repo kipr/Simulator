@@ -4,7 +4,7 @@ import Camera from '../state/State/Scene/Camera';
 import Geometry from '../state/State/Scene/Geometry';
 import Node from '../state/State/Scene/Node';
 import Script from '../state/State/Scene/Script';
-import { Rotation, Vector3 } from '../util/unit-math';
+import { RotationwUnits, Vector3wUnits } from '../util/unit-math';
 
 import { v4 as uuid } from 'uuid';
 import construct from '../util/construct';
@@ -25,7 +25,7 @@ class ScriptManager {
   onGeometryAdd?: (id: string, geometry: Geometry) => void;
   onGeometryRemove?: (id: string) => void;
 
-  onGravityChange?: (gravity: Vector3) => void;
+  onGravityChange?: (gravity: Vector3wUnits) => void;
   onCameraChange?: (camera: Camera) => void;
   onSelectedNodeIdChange?: (id: string) => void;
 
@@ -159,7 +159,7 @@ namespace ScriptManager {
       type: Type.Collision;
       nodeId: string;
       otherNodeId: string;
-      point: Vector3;
+      point: Vector3wUnits;
     }
 
     export const collision = construct<Collision>(Type.Collision);
@@ -215,7 +215,7 @@ namespace ScriptManager {
       type: Type.Collision;
       nodeId: string;
       filterIds: Set<string>;
-      cb: (otherNodeId: string, point: Vector3) => void;
+      cb: (otherNodeId: string, point: Vector3wUnits) => void;
     }
 
     export const collision = construct<Collision>(Type.Collision);
@@ -287,10 +287,10 @@ namespace ScriptManager {
       
       this.spawnFunc_({
         scene: this,
-        Rotation,
+        RotationwUnits,
         RawAxisAngle,
-        Vector3: RawVector3,
-        UnitVector3: Vector3,
+        Vector3wUnits: RawVector3,
+        UnitVector3: Vector3wUnits,
         RawQuaternion,
         RawReferenceFrame,
         Distance,
@@ -451,11 +451,11 @@ namespace ScriptManager {
       onGeometryRemove(id);
     }
     
-    get gravity(): Vector3 {
+    get gravity(): Vector3wUnits {
       return this.manager_.scene.gravity;
     }
 
-    set gravity(gravity: Vector3) {
+    set gravity(gravity: Vector3wUnits) {
       const { onGravityChange } = this.manager_;
       if (!onGravityChange) return;
       onGravityChange(gravity);
@@ -487,7 +487,7 @@ namespace ScriptManager {
       return handle;
     }
 
-    addOnCollisionListener(nodeId: string, cb: (otherNodeId: string, point: Vector3) => void, filterIds?: Ids): string {
+    addOnCollisionListener(nodeId: string, cb: (otherNodeId: string, point: Vector3wUnits) => void, filterIds?: Ids): string {
       const handle = uuid();
       const listener = Listener.collision({ nodeId, cb, filterIds: Ids.toSet(filterIds) });
       this.listeners_[handle] = listener;

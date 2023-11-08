@@ -6,7 +6,7 @@ import construct from '../../util/construct';
 import Geometry from '../State/Scene/Geometry';
 import Node from '../State/Scene/Node';
 import Camera from '../State/Scene/Camera';
-import { ReferenceFrame, Vector3 } from '../../util/unit-math';
+import { ReferenceFramewUnits, Vector3wUnits } from '../../util/unit-math';
 import db from '../../db';
 import { SCENE_COLLECTION } from '../../db/constants';
 import store from '..';
@@ -203,7 +203,7 @@ export namespace ScenesAction {
   export interface SetGravity {
     type: 'scenes/set-gravity';
     sceneId: string;
-    gravity: Vector3;
+    gravity: Vector3wUnits;
   }
 
   export const setGravity = construct<SetGravity>('scenes/set-gravity');
@@ -212,7 +212,7 @@ export namespace ScenesAction {
     type: 'scenes/set-node-origin';
     sceneId: string;
     nodeId: string;
-    origin: ReferenceFrame;
+    origin: ReferenceFramewUnits;
     updateStarting?: boolean;
   }
 

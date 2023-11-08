@@ -9,7 +9,7 @@ import SensorWidget from './SensorWidget';
 import { StyledText } from '../../util';
 import Location from './Location';
 import { Fa } from '../Fa';
-import { ReferenceFrame } from '../../util/unit-math';
+import { ReferenceFramewUnits } from '../../util/unit-math';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
 import { ScenesAction } from '../../state/reducer';
@@ -25,7 +25,7 @@ import LocalizedString from '../../util/LocalizedString';
 export interface InfoPublicProps extends StyleProps, ThemeProps {
   node: Node.Robot;
 
-  onOriginChange: (origin: ReferenceFrame) => void;
+  onOriginChange: (origin: ReferenceFramewUnits) => void;
 }
 
 interface InfoPrivateProps {

@@ -1,7 +1,7 @@
 import Scene from "../state/State/Scene";
 import { Color } from '../state/State/Scene/Color';
 import Script from '../state/State/Scene/Script';
-import { Rotation } from "../util/unit-math";
+import { RotationwUnits } from "../util/unit-math";
 import { Distance } from "../util";
 import LocalizedString from '../util/LocalizedString';
 
@@ -127,7 +127,7 @@ export const scriptPlayground: Scene = {
           y: Distance.centimeters(5),
           z: Distance.centimeters(67.5),
         },
-        orientation: Rotation.AxisAngle.fromRaw({
+        orientation: RotationwUnits.AxisAngle.fromRaw({
           axis: { x: 1, y: 0, z: 0 },
           angle: -Math.PI / 2,
         }),
@@ -145,7 +145,7 @@ export const scriptPlayground: Scene = {
           y: Distance.centimeters(5),
           z: Distance.centimeters(-6.3),
         },
-        orientation: Rotation.AxisAngle.fromRaw({
+        orientation: RotationwUnits.AxisAngle.fromRaw({
           axis: { x: 1, y: 0, z: 0 },
           angle: -Math.PI / 2,
         }),

@@ -20,7 +20,7 @@ import '@babylonjs/core/Physics/physicsEngineComponent';
 import Dict from './util/Dict';
 
 import { RawQuaternion, RawVector2, RawVector3 } from './util/math';
-import { ReferenceFrame as UnitReferenceFrame, Rotation, Vector3 as UnitVector3 } from './util/unit-math';
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from './util/unit-math';
 import { Angle } from './util';
 
 import store from './state';
@@ -68,7 +68,7 @@ export class Space {
   onGeometryAdd?: (geometryId: string, geometry: Geometry) => void;
   onGeometryRemove?: (geometryId: string) => void;
   onCameraChange?: (camera: Camera) => void;
-  onGravityChange?: (gravity: UnitVector3) => void;
+  onGravityChange?: (Vector3wUnits) => void;
 
   onChallengeSetEventValue?: (eventId: string, value: boolean) => void;
 
@@ -81,9 +81,9 @@ export class Space {
 
   get sceneBinding() { return this.sceneBinding_; }
 
-  private robotLinkOrigins_: Dict<Dict<UnitReferenceFrame>> = {};
+  private robotLinkOrigins_: Dict<Dict<ReferenceFramewUnits>> = {};
   get robotLinkOrigins() { return this.robotLinkOrigins_; }
-  set robotLinkOrigins(robotLinkOrigins: Dict<Dict<UnitReferenceFrame>>) {
+  set robotLinkOrigins(robotLinkOrigins: Dict<Dict<ReferenceFramewUnits>>) {
     this.robotLinkOrigins_ = robotLinkOrigins;
   }
   
@@ -312,7 +312,7 @@ export class Space {
       const origin = node.origin ?? {};
       const nodeOriginChange = this.getSignificantOriginChange(origin, bNode);
       if (nodeOriginChange.position || nodeOriginChange.orientation || nodeOriginChange.scale) {
-        const nextOrigin: UnitReferenceFrame = {
+        const nextOrigin: ReferenceFramewUnits = {
           ...node.origin,
           ...nodeOriginChange
         };
@@ -353,11 +353,11 @@ export class Space {
     this.debounceUpdate_ = false;
   };
 
-  private getSignificantOriginChange(currentOrigin: UnitReferenceFrame, bNode: BabylonNode): UnitReferenceFrame {
-    const change: UnitReferenceFrame = {};
+  private getSignificantOriginChange(currentOrigin: ReferenceFramewUnits, bNode: BabylonNode): ReferenceFramewUnits {
+    const change: ReferenceFramewUnits = {};
 
-    const position = currentOrigin?.position ?? UnitVector3.zero('meters');
-    const rotation = currentOrigin?.orientation ?? Rotation.fromRawQuaternion(RawQuaternion.IDENTITY, 'euler');
+    const position = currentOrigin?.position ?? Vector3wUnits.zero('meters');
+    const rotation = currentOrigin?.orientation ?? RotationwUnits.fromRawQuaternion(RawQuaternion.IDENTITY, 'euler');
 
     let bPosition: BabylonVector3;
     let bRotation: BabylonQuaternion;
@@ -374,27 +374,27 @@ export class Space {
     }
 
     if (bPosition) {
-      const bPositionConv = UnitVector3.fromRaw(RawVector3.fromBabylon(bPosition), 'centimeters');
+      const bPositionConv = Vector3wUnits.fromRaw(RawVector3.fromBabylon(bPosition), 'centimeters');
       
       // Distance between the two positions in meters
-      const distance = UnitVector3.distance(position, bPositionConv);
+      const distance = Vector3wUnits.distance(position, bPositionConv);
 
       // If varies by more than 0.5cm, consider it a change
       if (distance.value > 0.005) {
-        change.position = UnitVector3.toTypeGranular(bPositionConv, position.x.type, position.y.type, position.z.type);
+        change.position = Vector3wUnits.toTypeGranular(bPositionConv, position.x.type, position.y.type, position.z.type);
       }
     }
 
     if (bRotation) {
-      const bOrientationConv = Rotation.fromRawQuaternion(RawQuaternion.fromBabylon(bRotation), 'euler');
+      const bOrientationConv = RotationwUnits.fromRawQuaternion(RawQuaternion.fromBabylon(bRotation), 'euler');
 
       // Angle between the two rotations in radians
-      const angle = Rotation.angle(rotation, bOrientationConv);
+      const angle = RotationwUnits.angle(rotation, bOrientationConv);
       const radians = Angle.toRadians(angle);
       
       // If varies by more than 0.5deg, consider it a change
       if (radians.value > 0.00872665) {
-        change.orientation = Rotation.toType(bOrientationConv, rotation.type);
+        change.orientation = RotationwUnits.toType(bOrientationConv, rotation.type);
       }
     }
 

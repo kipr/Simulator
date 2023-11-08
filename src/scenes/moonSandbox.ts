@@ -4,7 +4,7 @@
 
 import Scene from "../state/State/Scene";
 import Script from '../state/State/Scene/Script';
-import { ReferenceFrame, Rotation, Vector3 } from "../util/unit-math";
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../util/unit-math";
 import { Distance } from "../util";
 import { Color } from '../state/State/Scene/Color';
 import LocalizedString from '../util/LocalizedString';
@@ -53,76 +53,76 @@ scene.addOnIntersectionListener('breccia', (type, otherNodeId) => {
 
 const baseScene = createBaseSceneSurface();
 
-const SCIENCEPAD_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(0, 2, 100),
-  orientation: Rotation.eulerDegrees(0, 90, 0)
+const SCIENCEPAD_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(0, 2, 100),
+  orientation: RotationwUnits.eulerDegrees(0, 90, 0)
 };
 
-const CONTAINER_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(-60, 0, 100),
+const CONTAINER_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(-60, 0, 100),
   scale: { x: 15, y: 15, z: 15 },
-  orientation: Rotation.eulerDegrees(0, 180, 0)
+  orientation: RotationwUnits.eulerDegrees(0, 180, 0)
 };
 
-const BOTGUY_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(-50, 0, 30),
+const BOTGUY_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(-50, 0, 30),
   scale: { x: 70, y: 70, z: 70 }
 };
 
-const SOLARPANEL_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(20, 0, 135),
+const SOLARPANEL_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(20, 0, 135),
   scale: { x: 4, y: 4, z: 4 },
-  orientation: Rotation.eulerDegrees(0, 180, 0)
+  orientation: RotationwUnits.eulerDegrees(0, 180, 0)
 };
 
 
-const COMMSTOWER_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(80, 4, 0),
+const COMMSTOWER_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(80, 4, 0),
   scale: { x: 10, y: 10, z: 10 }
 };
 
-const HABITAT_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(50, 17, 130),
+const HABITAT_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(50, 17, 130),
   scale: { x: 12, y: 12, z: 12 },
-  orientation: Rotation.eulerDegrees(0, 180, 0)
+  orientation: RotationwUnits.eulerDegrees(0, 180, 0)
 };
 
-const WALKWAY_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(50, 17, 80),
+const WALKWAY_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(50, 17, 80),
   scale: { x: 12, y: 12, z: 12 }
 };
 
-const RESEARCH_HABITAT_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(50, 17, 25),
+const RESEARCH_HABITAT_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(50, 17, 25),
   scale: { x: 12, y: 12, z: 12 },
-  orientation: Rotation.eulerDegrees(0, 180, 0)
+  orientation: RotationwUnits.eulerDegrees(0, 180, 0)
 };
 
-const CONTROL_HABITAT_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(50, 17, -35),
+const CONTROL_HABITAT_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(50, 17, -35),
   scale: { x: 12, y: 12, z: 12 },
-  orientation: Rotation.eulerDegrees(0, 180, 0)
+  orientation: RotationwUnits.eulerDegrees(0, 180, 0)
 };
 
-const LIFESCIENCE_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(-50, 6, 50.3),
+const LIFESCIENCE_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(-50, 6, 50.3),
 };
 
-const RADSCIENCE_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(-50, 6, 40.3),
+const RADSCIENCE_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(-50, 6, 40.3),
 };
 
-const BASALT_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(-30, 4.5, 61.3),
+const BASALT_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(-30, 4.5, 61.3),
 };
-const ANORTHOSITE_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(-15, 4.5, 61.3),
+const ANORTHOSITE_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(-15, 4.5, 61.3),
 };
-const BRECCIA_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(0, 4.5, 61.3),
+const BRECCIA_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(0, 4.5, 61.3),
 };
-const METEORITE_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(15, 4.5, 61.3),
+const METEORITE_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(15, 4.5, 61.3),
 };
 export const Moon_Sandbox: Scene = {
   ...baseScene,
@@ -303,7 +303,7 @@ export const Moon_Sandbox: Scene = {
       visible: false,
       editable: true,
       origin: {
-        position: Vector3.centimeters(-10, 4, 110)
+        position: Vector3wUnits.centimeters(-10, 4, 110)
       },
       material: {
         type: 'pbr',
@@ -320,7 +320,7 @@ export const Moon_Sandbox: Scene = {
       visible: false,
       editable: true,
       origin: {
-        position: Vector3.centimeters(10, 4, 110)
+        position: Vector3wUnits.centimeters(10, 4, 110)
       },
       material: {
         type: 'pbr',

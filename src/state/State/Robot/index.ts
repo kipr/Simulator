@@ -1,5 +1,5 @@
 import Dict from '../../../util/Dict';
-import { ReferenceFrame } from '../../../util/unit-math';
+import { ReferenceFramewUnits } from '../../../util/unit-math';
 import LocalizedString from '../../../util/LocalizedString';
 import Patch from '../../../util/Patch';
 import Geometry from './Geometry';
@@ -12,7 +12,7 @@ interface Robot {
 
   nodes: Dict<Node>;
   geometry: Dict<Geometry>;
-  origin?: ReferenceFrame;
+  origin?: ReferenceFramewUnits;
 }
 
 interface PatchRobot {

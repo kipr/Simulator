@@ -11,7 +11,7 @@ import Scene from '../State/Scene';
 import Dict from '../../util/Dict';
 import { OuterObjectPatch } from 'symmetry/dist';
 import ProgrammingLanguage from '../../programming/ProgrammingLanguage';
-import { ReferenceFrame } from '../../util/unit-math';
+import { ReferenceFramewUnits } from '../../util/unit-math';
 
 
 export namespace ChallengeCompletionsAction {
@@ -138,7 +138,7 @@ export namespace ChallengeCompletionsAction {
   export interface SetRobotLinkOrigins {
     type: 'challenge-completions/set-robot-link-origins';
     challengeId: string;
-    robotLinkOrigins: Dict<Dict<ReferenceFrame>>;
+    robotLinkOrigins: Dict<Dict<ReferenceFramewUnits>>;
   }
 
   export const setRobotLinkOrigins = construct<SetRobotLinkOrigins>('challenge-completions/set-robot-link-origins');

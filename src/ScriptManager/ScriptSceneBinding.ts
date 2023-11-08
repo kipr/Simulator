@@ -2,7 +2,7 @@ import Dict from '../util/Dict';
 import Camera from '../state/State/Scene/Camera';
 import Geometry from '../state/State/Scene/Geometry';
 import Node from '../state/State/Scene/Node';
-import { Vector3 } from '../util/unit-math';
+import { Vector3wUnits } from '../util/unit-math';
 
 export type Ids = string | string[] | Set<string>;
 
@@ -24,7 +24,7 @@ export interface ScriptSceneBinding {
   addGeometry(geometry: Geometry, id?: string): string;
   removeGeometry(id: string): void;
   
-  gravity: Vector3;
+  gravity: Vector3wUnits;
 
   camera: Camera;
 
@@ -33,7 +33,7 @@ export interface ScriptSceneBinding {
   readonly programStatus: 'running' | 'stopped';
 
   addOnRenderListener(cb: () => void): string;
-  addOnCollisionListener(nodeId: string, cb: (otherNodeId: string, point: Vector3) => void, filterIds: Ids): string;
+  addOnCollisionListener(nodeId: string, cb: (otherNodeId: string, point: Vector3wUnits) => void, filterIds: Ids): string;
   addOnIntersectionListener(nodeId: string, cb: (type: 'start' | 'end', otherNodeId: string) => void, filterIds: Ids): string;
   addOnClickListener(filterIds: Ids, cb: (nodeId: string) => void): string;
 

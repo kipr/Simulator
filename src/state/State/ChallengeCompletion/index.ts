@@ -3,13 +3,13 @@ import Async from '../Async';
 import PredicateCompletion from './PredicateCompletion';
 
 import ProgrammingLanguage from '../../../programming/ProgrammingLanguage';
-import { ReferenceFrame } from '../../../util/unit-math';
+import { ReferenceFramewUnits } from '../../../util/unit-math';
 
 interface ChallengeCompletion {
   code: { [language in ProgrammingLanguage]: string };
   currentLanguage: ProgrammingLanguage;
   serializedSceneDiff: string;
-  robotLinkOrigins?: Dict<Dict<ReferenceFrame>>;
+  robotLinkOrigins?: Dict<Dict<ReferenceFramewUnits>>;
   eventStates: Dict<boolean>;
   success?: PredicateCompletion;
   failure?: PredicateCompletion;

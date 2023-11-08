@@ -1,4 +1,4 @@
-import { ReferenceFrame, Rotation, Vector3 } from "../util/unit-math";
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../util/unit-math";
 import { Angle, Distance, Mass } from "../util";
 import Node from "../state/State/Scene/Node";
 import Camera from "../state/State/Scene/Camera";
@@ -14,28 +14,28 @@ import { sprintf } from 'sprintf-js';
 import Dict from '../util/Dict';
 
 
-const ROBOT_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(0, 4, 0),
-  orientation: Rotation.eulerDegrees(0, -45, 0),
+const ROBOT_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(0, 4, 0),
+  orientation: RotationwUnits.eulerDegrees(0, -45, 0),
 };
 
-const GROUND_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(0, -.5, 50),
-  orientation: Rotation.eulerDegrees(0, 0, 0)
+const GROUND_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(0, -.5, 50),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
-const START_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(0, 0, 0),
-  orientation: Rotation.eulerDegrees(0, 90, 0)
+const START_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(0, 0, 0),
+  orientation: RotationwUnits.eulerDegrees(0, 90, 0)
 };
 
-const SKY_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(0, -17.2, 50),
-  orientation: Rotation.eulerDegrees(90, 0, 0)
+const SKY_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(0, -17.2, 50),
+  orientation: RotationwUnits.eulerDegrees(90, 0, 0)
 };
 
-const LIGHT_ORIGIN: ReferenceFrame = {
-  position: Vector3.meters(0, 40.91, .5),
+const LIGHT_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.meters(0, 40.91, .5),
 };
 
 const ROBOT: Node.Robot = {

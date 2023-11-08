@@ -24,7 +24,7 @@ import { faCode, faFlagCheckered, faGlobeAmericas, faRobot } from '@fortawesome/
 import Async from '../../state/State/Async';
 import { EMPTY_OBJECT } from '../../util';
 import Challenge from '../Challenge';
-import { ReferenceFrame } from '../../util/unit-math';
+import { ReferenceFramewUnits } from '../../util/unit-math';
 
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';
@@ -160,7 +160,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     // not implemented
   };
 
-  private onRobotOriginChange_ = (origin: ReferenceFrame) => {
+  private onRobotOriginChange_ = (origin: ReferenceFramewUnits) => {
     const { scene, onNodeChange } = this.props;
     
     const latestScene = Async.latestValue(scene);

@@ -1,7 +1,7 @@
 import AbstractRobot from '../../../AbstractRobot';
 import deepNeq from '../../../util/deepNeq';
 import { RawVector2, RawVector3 } from '../../../util/math';
-import { ReferenceFrame } from '../../../util/unit-math';
+import { ReferenceFramewUnits } from '../../../util/unit-math';
 import { DistributiveOmit } from '../../../util/types';
 import { Angle, Mass } from '../../../util/Value';
 import LocalizedString from '../../../util/LocalizedString';
@@ -37,8 +37,8 @@ namespace Node {
 
   interface Base {
     name: LocalizedString;
-    startingOrigin?: ReferenceFrame;
-    origin?: ReferenceFrame;
+    startingOrigin?: ReferenceFramewUnits;
+    origin?: ReferenceFramewUnits;
     scriptIds?: string[];
     documentIds?: string[];
     editable?: boolean;

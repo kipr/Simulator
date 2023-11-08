@@ -1,7 +1,7 @@
 import Scene from "../state/State/Scene";
 import Node from '../state/State/Scene/Node';
 import Script from '../state/State/Scene/Script';
-import { ReferenceFrame, Rotation, Vector3 } from "../util/unit-math";
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../util/unit-math";
 import { Distance } from "../util";
 import LocalizedString from '../util/LocalizedString';
 
@@ -9,12 +9,12 @@ import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
 
 const baseScene = createBaseSceneSurfaceA();
 
-const LIGHT0_ORIGIN: ReferenceFrame = {
-  position: Vector3.meters(1, 0.5, -1),
+const LIGHT0_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.meters(1, 0.5, -1),
 };
 
-const LIGHT1_ORIGIN: ReferenceFrame = {
-  position: Vector3.meters(-1, 0.5, -1),
+const LIGHT1_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.meters(-1, 0.5, -1),
 };
 
 const script = `

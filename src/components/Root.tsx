@@ -59,7 +59,7 @@ import LocalizedString from '../util/LocalizedString';
 import SceneSettingsDialog from './Dialog/SceneSettingsDialog';
 import Geometry from '../state/State/Scene/Geometry';
 import Camera from '../state/State/Scene/Camera';
-import { Vector3 } from '../util/unit-math';
+import { Vector3wUnits } from '../util/unit-math';
 import { LayoutEditorTarget } from './Layout/Layout';
 import { AsyncChallenge } from '../state/State/Challenge';
 import Builder from '../db/Builder';
@@ -207,7 +207,7 @@ interface RootPrivateProps {
   onGeometryChange: (id: string, geometry: Geometry) => void;
   onGeometryRemove: (id: string) => void;
   onCameraChange: (camera: Camera) => void;
-  onGravityChange: (gravity: Vector3) => void;
+  onGravityChange: (gravity: Vector3wUnits) => void;
   onSelectNodeId: (id: string) => void;
   onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => void;
   onResetScene: () => void;
@@ -944,7 +944,7 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
   onGeometryChange: (geometryId: string, geometry: Geometry) => dispatch(ScenesAction.setGeometry({ sceneId, geometryId, geometry })),
   onGeometryRemove: (geometryId: string) => dispatch(ScenesAction.removeGeometry({ sceneId, geometryId })),
   onCameraChange: (camera: Camera) => dispatch(ScenesAction.setCamera({ sceneId, camera })),
-  onGravityChange: (gravity: Vector3) => dispatch(ScenesAction.setGravity({ sceneId, gravity })),
+  onGravityChange: (gravity: Vector3wUnits) => dispatch(ScenesAction.setGravity({ sceneId, gravity })),
   onSelectNodeId: (nodeId: string) => dispatch(ScenesAction.selectNode({ sceneId, nodeId })),
   onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) =>
     dispatch(ScenesAction.setNodeBatch({ sceneId, ...setNodeBatch })),

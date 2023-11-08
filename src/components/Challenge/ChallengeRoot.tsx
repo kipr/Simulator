@@ -59,7 +59,7 @@ import LocalizedString from '../../util/LocalizedString';
 import SceneSettingsDialog from '../Dialog/SceneSettingsDialog';
 import Geometry from '../../state/State/Scene/Geometry';
 import Camera from '../../state/State/Scene/Camera';
-import { ReferenceFrame, Vector3 } from '../../util/unit-math';
+import { ReferenceFramewUnits, Vector3wUnits } from '../../util/unit-math';
 import { LayoutEditorTarget } from '../Layout/Layout';
 import { AsyncChallenge } from '../../state/State/Challenge';
 import Builder from '../../db/Builder';
@@ -210,7 +210,7 @@ interface RootPrivateProps {
   onChallengeCompletionReset: () => void;
   onChallengeCompletionSetCode: (language: ProgrammingLanguage, code: string) => void;
   onChallengeCompletionSetCurrentLanguage: (language: ProgrammingLanguage) => void;
-  onChallengeCompletionSetRobotLinkOrigins: (robotLinkOrigins: Dict<Dict<ReferenceFrame>>) => void;
+  onChallengeCompletionSetRobotLinkOrigins: (robotLinkOrigins: Dict<Dict<ReferenceFramewUnits>>) => void;
   onChallengeCompletionSave: () => void;
 
   onDocumentationClick: () => void;
@@ -347,7 +347,7 @@ class Root extends React.Component<Props, State> {
     this.workingChallengeScene = Scene.setCamera(this.workingChallengeScene_, camera);
   };
 
-  private onGravityChange_ = (gravity: Vector3) => {
+  private onGravityChange_ = (gravity: Vector3wUnits) => {
     if (!this.workingChallengeScene_) return;
 
     this.workingChallengeScene = Scene.setGravity(this.workingChallengeScene_, gravity);
@@ -1087,7 +1087,7 @@ export default connect((state: ReduxState, { match: { params: { challengeId } } 
   onChallengeCompletionSetCurrentLanguage: (language: ProgrammingLanguage) => {
     dispatch(ChallengeCompletionsAction.setCurrentLanguage({ challengeId, language }));
   },
-  onChallengeCompletionSetRobotLinkOrigins: (robotLinkOrigins: Dict<Dict<ReferenceFrame>>) => {
+  onChallengeCompletionSetRobotLinkOrigins: (robotLinkOrigins: Dict<Dict<ReferenceFramewUnits>>) => {
     dispatch(ChallengeCompletionsAction.setRobotLinkOrigins({ challengeId, robotLinkOrigins }));
   },
   onChallengeCompletionSave: () => {

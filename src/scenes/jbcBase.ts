@@ -1,4 +1,4 @@
-import { ReferenceFrame, Rotation, Vector3 } from "../util/unit-math";
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../util/unit-math";
 import { Angle, Distance, Mass } from "../util";
 import Node from "../state/State/Scene/Node";
 import Camera from "../state/State/Scene/Camera";
@@ -11,9 +11,9 @@ import tr from '@i18n';
 import { sprintf } from 'sprintf-js';
 import Dict from '../util/Dict';
 
-const ROBOT_ORIGIN: ReferenceFrame = {
-  position: Vector3.centimeters(0, 0, 0),
-  orientation: Rotation.eulerDegrees(0, 0, 0),
+const ROBOT_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(0, 0, 0),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
 
 const ROBOT: Node.Robot = {
@@ -27,16 +27,16 @@ const ROBOT: Node.Robot = {
 };
 
 
-const JBC_MAT_ORIGIN: ReferenceFrame = {
+const JBC_MAT_ORIGIN: ReferenceFramewUnits = {
   position: {
     x: Distance.centimeters(0),
     y: Distance.centimeters(-7),
     z: Distance.centimeters(50),
   },
-  orientation: Rotation.eulerDegrees(0, 0, 0)
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
-const GROUND_ORIGIN: ReferenceFrame = {
+const GROUND_ORIGIN: ReferenceFramewUnits = {
   position: {
     x: Distance.centimeters(0),
     y: Distance.centimeters(-7.512),
@@ -50,7 +50,7 @@ const GROUND_ORIGIN: ReferenceFrame = {
   }
 };
 
-const LIGHT_ORIGIN: ReferenceFrame = {
+const LIGHT_ORIGIN: ReferenceFramewUnits = {
   position: {
     x: Distance.meters(0),
     y: Distance.meters(0.91),
@@ -214,10 +214,10 @@ export function createBaseSceneSurfaceB(): Scene {
  * @param visible Whether the can is visible
  * @returns A can Node that can be inserted into a Scene
  */
-export function createCanNode(canNumber: number, canPosition?: Vector3, editable?: boolean, visible?: boolean): Node {
-  const origin: ReferenceFrame = {
+export function createCanNode(canNumber: number, canPosition?: Vector3wUnits, editable?: boolean, visible?: boolean): Node {
+  const origin: ReferenceFramewUnits = {
     position: canPosition ?? canPositions[canNumber - 1],
-    orientation: Rotation.eulerDegrees(180, 0, 0),
+    orientation: RotationwUnits.eulerDegrees(180, 0, 0),
   };
 
   return {
@@ -234,7 +234,7 @@ export function createCanNode(canNumber: number, canPosition?: Vector3, editable
 /**
  * Positions of cans 1 - 12, based on the circles on JBC Surface A
  */
-const canPositions: Vector3[] = [
+const canPositions: Vector3wUnits[] = [
   {
     x: Distance.centimeters(22.7), // can 1
     y: Distance.centimeters(0),

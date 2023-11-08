@@ -2,7 +2,7 @@ import Patch from '../../src/util/Patch';
 import Scene from '../../src/state/State/Scene';
 import LocalizedString from '../../src/util/LocalizedString';
 import Author from '../../src/db/Author';
-import { Vector3 } from '../../src/unit-math';
+import { Vector3wUnits } from '../../src/util/unit-math';
 
 const SCENE_A: Scene = {
   name: { [LocalizedString.EN_US]: 'Scene A' },
@@ -12,7 +12,7 @@ const SCENE_A: Scene = {
     type: 'none'
   },
   geometry: {},
-  gravity: Vector3.meters(0, -9.8, 0),
+  gravity: Vector3wUnits.meters(0, -9.8, 0),
   nodes: {
     '0': {
       type: 'object',
@@ -35,7 +35,7 @@ const SCENE_B: Scene = {
     type: 'none'
   },
   geometry: {},
-  gravity: Vector3.meters(0, -9.8, 0),
+  gravity: Vector3wUnits.meters(0, -9.8, 0),
   nodes: {
     '0': {
       type: 'object',

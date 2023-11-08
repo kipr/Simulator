@@ -1,4 +1,4 @@
-import { Vector2, Vector3 } from '../../../util/unit-math';
+import { Vector2wUnits, Vector3wUnits } from '../../../util/unit-math';
 import { RawVector3, RawVector2 } from '../../../util/math';
 import { Distance } from '../../../util/Value';
 import deepNeq from '../../../util/deepNeq';
@@ -7,7 +7,7 @@ import Patch from '../../../util/Patch';
 namespace Geometry {
   export interface Box {
     type: 'box';
-    size: Vector3;
+    size: Vector3wUnits;
   }
 
   export namespace Box {
@@ -104,7 +104,7 @@ namespace Geometry {
 
   export interface Plane {
     type: 'plane';
-    size: Vector2;
+    size: Vector2wUnits;
   }
 
   export namespace Plane {

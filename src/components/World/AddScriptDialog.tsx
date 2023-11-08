@@ -1,6 +1,6 @@
 import * as React from "react";
 import { styled } from "styletron-react";
-import { ReferenceFrame, Rotation } from "../../util/unit-math";
+import { ReferenceFramewUnits, RotationwUnits } from "../../util/unit-math";
 import { Angle, Distance, Mass, Value } from "../../util";
 import ComboBox from "../UI/ComboBox";
 import { Dialog } from "../Dialog/Dialog";

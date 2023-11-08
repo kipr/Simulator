@@ -23,7 +23,7 @@ import { State as ReduxState } from '../../state';
 import { ScenesAction } from '../../state/reducer';
 
 import * as uuid from 'uuid';
-import { ReferenceFrame, Rotation, Vector3 } from '../../util/unit-math';
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../util/unit-math';
 import { RawVector3 } from '../../util/math';
 import ComboBox from '../UI/ComboBox';
 import Node from '../../state/State/Scene/Node';
@@ -303,7 +303,7 @@ class World extends React.PureComponent<Props, State> {
     });
   };
 
-  private onNodeOriginAccept_ = (id: string) => (origin: ReferenceFrame) => {
+  private onNodeOriginAccept_ = (id: string) => (origin: ReferenceFramewUnits) => {
     const originalNode = Async.latestValue(this.props.scene).nodes[id];
     this.props.onNodeChange(id, {
       ...originalNode,
@@ -333,8 +333,8 @@ class World extends React.PureComponent<Props, State> {
     this.props.onNodeChange(id, {
       ...originalNode,
       origin: {
-        position: originalNode.startingOrigin?.position || Vector3.zero('centimeters'),
-        orientation: originalNode.startingOrigin?.orientation || Rotation.Euler.identity(Angle.Type.Degrees),
+        position: originalNode.startingOrigin?.position || Vector3wUnits.zero('centimeters'),
+        orientation: originalNode.startingOrigin?.orientation || RotationwUnits.EulerwUnits.identity(Angle.Type.Degrees),
         scale: originalNode.startingOrigin?.scale || RawVector3.ONE,
       },
     });

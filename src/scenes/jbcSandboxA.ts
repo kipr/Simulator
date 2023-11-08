@@ -1,6 +1,6 @@
 import Scene from "../state/State/Scene";
 import Script from '../state/State/Scene/Script';
-import { ReferenceFrame, Rotation } from "../util/unit-math";
+import { ReferenceFramewUnits, RotationwUnits } from "../util/unit-math";
 import { Distance } from "../util";
 import LocalizedString from '../util/LocalizedString';
 
@@ -10,25 +10,25 @@ import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
-const REAM1_ORIGIN: ReferenceFrame = {
+const REAM1_ORIGIN: ReferenceFramewUnits = {
   position: {
     x: Distance.centimeters(0),
     y: Distance.centimeters(5),
     z: Distance.centimeters(67.5),
   },
-  orientation: Rotation.AxisAngle.fromRaw({
+  orientation: RotationwUnits.AxisAngle.fromRaw({
     axis: { x: 1, y: 0, z: 0 },
     angle: -Math.PI / 2,
   }),
 };
 
-const REAM2_ORIGIN: ReferenceFrame = {
+const REAM2_ORIGIN: ReferenceFramewUnits = {
   position: {
     x: Distance.centimeters(0),
     y: Distance.centimeters(5),
     z: Distance.centimeters(-6.3),
   },
-  orientation: Rotation.AxisAngle.fromRaw({
+  orientation: RotationwUnits.AxisAngle.fromRaw({
     axis: { x: 1, y: 0, z: 0 },
     angle: -Math.PI / 2,
   }),

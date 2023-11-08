@@ -20,7 +20,7 @@ import { State as ReduxState } from '../../state';
 import { ScenesAction } from '../../state/reducer';
 
 import * as uuid from 'uuid';
-import { ReferenceFrame, Rotation, Vector3 } from '../../util/unit-math';
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../util/unit-math';
 import { RawVector3 } from '../../util/math';
 import ComboBox from '../UI/ComboBox';
 import Node from '../../state/State/Scene/Node';

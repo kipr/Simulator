@@ -1,5 +1,5 @@
 import Scene from "../state/State/Scene";
-import { ReferenceFrame } from '../util/unit-math';
+import { ReferenceFramewUnits } from '../util/unit-math';
 import { Distance } from "../util";
 import LocalizedString from '../util/LocalizedString';
 
@@ -9,7 +9,7 @@ import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
-const ROBOT_ORIGIN: ReferenceFrame = {
+const ROBOT_ORIGIN: ReferenceFramewUnits = {
   ...baseScene.nodes['robot'].origin,
   position: {
     ...baseScene.nodes['robot'].origin.position,

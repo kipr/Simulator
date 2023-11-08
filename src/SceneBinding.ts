@@ -42,7 +42,7 @@ import Geometry from "./state/State/Scene/Geometry";
 import Node from "./state/State/Scene/Node";
 import Patch from "./util/Patch";
 
-import { ReferenceFrame, Rotation, Vector3 } from "./util/unit-math";
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "./util/unit-math";
 import { Angle, Distance, Mass, SetOps } from "./util";
 import { Color } from './state/State/Scene/Color';
 import Material from './state/State/Scene/Material';
@@ -148,15 +148,15 @@ class SceneBinding {
     this.scriptManager_.onIntersectionFiltersChanged = this.onIntersectionFiltersChanged_;
   }
 
-  private robotLinkOrigins_: Dict<Dict<ReferenceFrame>> = {};
+  private robotLinkOrigins_: Dict<Dict<ReferenceFramewUnits>> = {};
 
-  set robotLinkOrigins(robotLinkOrigins: Dict<Dict<ReferenceFrame>>) {
+  set robotLinkOrigins(robotLinkOrigins: Dict<Dict<ReferenceFramewUnits>>) {
     this.robotLinkOrigins_ = robotLinkOrigins;
   }
 
-  get currentRobotLinkOrigins(): Dict<Dict<ReferenceFrame>> {
+  get currentRobotLinkOrigins(): Dict<Dict<ReferenceFramewUnits>> {
     // iterate over all robots
-    const ret: Dict<Dict<ReferenceFrame>> = {};
+    const ret: Dict<Dict<ReferenceFramewUnits>> = {};
     for (const robotId in this.robotBindings_) {
       const robotBinding = this.robotBindings_[robotId];
       ret[robotId] = robotBinding.linkOrigins;
@@ -638,12 +638,12 @@ class SceneBinding {
   };
 
   private createSpotLight_ = (id: string, node: Node.SpotLight): BabylonSpotLight => {
-    const origin: ReferenceFrame = node.origin ?? {};
-    const position: Vector3 = origin.position ?? Vector3.zero();
+    const origin: ReferenceFramewUnits = node.origin ?? {};
+    const position: Vector3wUnits = origin.position ?? Vector3wUnits.zero();
     
     const ret = new BabylonSpotLight(
       node.name[LocalizedString.EN_US],
-      RawVector3.toBabylon(Vector3.toRaw(position, 'centimeters')),
+      RawVector3.toBabylon(Vector3wUnits.toRaw(position, 'centimeters')),
       RawVector3.toBabylon(node.direction),
       Angle.toRadiansValue(node.angle),
       node.exponent,
@@ -656,12 +656,12 @@ class SceneBinding {
   };
 
   private createPointLight_ = (id: string, node: Node.PointLight): BabylonPointLight => {
-    const origin: ReferenceFrame = node.origin ?? {};
-    const position: Vector3 = origin.position ?? Vector3.zero();
+    const origin: ReferenceFramewUnits = node.origin ?? {};
+    const position: Vector3wUnits = origin.position ?? Vector3wUnits.zero();
 
     const ret = new BabylonPointLight(
       node.name[LocalizedString.EN_US],
-      RawVector3.toBabylon(Vector3.toRaw(position, 'centimeters')),
+      RawVector3.toBabylon(Vector3wUnits.toRaw(position, 'centimeters')),
       this.bScene_
     );
 
@@ -780,8 +780,8 @@ class SceneBinding {
   private updateNodePosition_ = (node: Node, bNode: BabylonNode) => {
     if (node.origin && bNode instanceof BabylonTransformNode || bNode instanceof BabylonAbstractMesh) {
       const origin = node.origin || {};
-      const position: Vector3 = origin.position ?? Vector3.zero();
-      const orientation: Rotation = origin.orientation ?? Rotation.Euler.identity();
+      const position: Vector3wUnits = origin.position ?? Vector3wUnits.zero();
+      const orientation: RotationwUnits = origin.orientation ?? RotationwUnits.EulerwUnits.identity();
       const scale = origin.scale ?? RawVector3.ONE;
 
       bNode.position.set(
@@ -790,7 +790,7 @@ class SceneBinding {
         Distance.toCentimetersValue(position.z || Distance.centimeters(0))
       );
 
-      bNode.rotationQuaternion = RawQuaternion.toBabylon(Rotation.toRawQuaternion(orientation));
+      bNode.rotationQuaternion = RawQuaternion.toBabylon(RotationwUnits.toRawQuaternion(orientation));
       bNode.scaling.set(scale.x, scale.y, scale.z);
     }
   };
@@ -1118,9 +1118,9 @@ class SceneBinding {
   private gizmoManager_: BabylonGizmoManager;
 
   private createArcRotateCamera_ = (camera: Camera.ArcRotate): BabylonArcRotateCamera => {
-    const ret = new BabylonArcRotateCamera('botcam', 0, 0, 0, Vector3.toBabylon(camera.target, 'centimeters'), this.bScene_);
+    const ret = new BabylonArcRotateCamera('botcam', 0, 0, 0, Vector3wUnits.toBabylon(camera.target, 'centimeters'), this.bScene_);
     ret.attachControl(this.bScene_.getEngine().getRenderingCanvas(), true);
-    ret.position = Vector3.toBabylon(camera.position, 'centimeters');
+    ret.position = Vector3wUnits.toBabylon(camera.position, 'centimeters');
     ret.panningSensibility = 100;
     // ret.checkCollisions = true;
 
@@ -1128,7 +1128,7 @@ class SceneBinding {
   };
 
   private createNoneCamera_ = (camera: Camera.None): BabylonArcRotateCamera => {
-    const ret = new BabylonArcRotateCamera('botcam', 10, 10, 10, Vector3.toBabylon(Vector3.zero(), 'centimeters'), this.bScene_);
+    const ret = new BabylonArcRotateCamera('botcam', 10, 10, 10, Vector3wUnits.toBabylon(Vector3wUnits.zero(), 'centimeters'), this.bScene_);
     ret.attachControl(this.bScene_.getEngine().getRenderingCanvas(), true);
 
     return ret;
@@ -1147,11 +1147,11 @@ class SceneBinding {
     const bCamera = this.camera_;
 
     if (node.inner.target.type === Patch.Type.OuterChange) {
-      bCamera.setTarget(Vector3.toBabylon(node.inner.target.next, 'centimeters'));
+      bCamera.setTarget(Vector3wUnits.toBabylon(node.inner.target.next, 'centimeters'));
     }
 
     if (node.inner.position.type === Patch.Type.OuterChange) {
-      bCamera.setPosition(Vector3.toBabylon(node.inner.position.next, 'centimeters'));
+      bCamera.setPosition(Vector3wUnits.toBabylon(node.inner.position.next, 'centimeters'));
     }
 
     return bCamera;
@@ -1280,7 +1280,7 @@ class SceneBinding {
     this.scriptManager_.trigger(ScriptManager.Event.collision({
       nodeId: colliderMetadata.id,
       otherNodeId: collidedWithMetadata.id,
-      point: Vector3.fromRaw(RawVector3.fromBabylon(point), RENDER_SCALE),
+      point: Vector3wUnits.fromRaw(RawVector3.fromBabylon(point), RENDER_SCALE),
     }));
   };
 
@@ -1383,7 +1383,7 @@ class SceneBinding {
 
     if (patch.gravity.type === Patch.Type.OuterChange) {
       const gravity_scalar = new BabylonVector3(1,10,1); // This seems to be somewhat realistic
-      this.bScene_.getPhysicsEngine().setGravity(Vector3.toBabylon(patch.gravity.next, 'meters').multiply(gravity_scalar));
+      this.bScene_.getPhysicsEngine().setGravity(Vector3wUnits.toBabylon(patch.gravity.next, 'meters').multiply(gravity_scalar));
     }
 
     // Scripts **must** be initialized after the scene is fully loaded

@@ -27,7 +27,7 @@ import SceneNode from './state/State/Scene/Node';
 import Robot from './state/State/Robot';
 import Node from './state/State/Robot/Node';
 import { RawQuaternion, RawVector3, clamp, RawEuler } from './util/math';
-import { ReferenceFrame, Rotation, Vector3 } from './util/unit-math';
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from './util/unit-math';
 import { Angle, Distance, Mass } from './util/Value';
 import { SceneMeshMetadata } from './SceneBinding';
 import Geometry from './state/State/Robot/Geometry';
@@ -309,7 +309,7 @@ class RobotBinding {
     const bParent = this.links_[weight.parentId];
     if (!bParent) throw new Error(`Missing parent instantiation: "${weight.parentId}" for weight "${id}"`);
 
-    const bOrigin = ReferenceFrame.toBabylon(weight.origin, RENDER_SCALE);
+    const bOrigin = ReferenceFramewUnits.toBabylon(weight.origin, RENDER_SCALE);
 
     const constraint = new LockConstraint(
       bOrigin.position,
@@ -354,9 +354,9 @@ class RobotBinding {
     // Begin by moving the child in place (this prevents inertial snap as the physics engine applys the constraint)
     const { bParent, bChild } = this.bParentChild_(id, hinge.parentId);
     bChild.setParent(bParent);
-    bChild.position.x = Vector3.toBabylon(hinge.parentPivot, 'meters')._x;
-    bChild.position.y = Vector3.toBabylon(hinge.parentPivot, 'meters')._y;
-    bChild.position.z = Vector3.toBabylon(hinge.parentPivot, 'meters')._z;
+    bChild.position.x = Vector3wUnits.toBabylon(hinge.parentPivot, 'meters')._x;
+    bChild.position.y = Vector3wUnits.toBabylon(hinge.parentPivot, 'meters')._y;
+    bChild.position.z = Vector3wUnits.toBabylon(hinge.parentPivot, 'meters')._z;
 
     bChild.rotationQuaternion = BabylonQuaternion.FromEulerAngles(hinge.parentAxis.z * 3.1415 / 2, 0, 0);
     
@@ -365,8 +365,8 @@ class RobotBinding {
     // Order appears to matter here, the hinge should come before the 6DoF constraint.
     if (id.includes("claw")) {
       const hingeJoint = new HingeConstraint(
-        Vector3.toBabylon(hinge.parentPivot, RENDER_SCALE),
-        Vector3.toBabylon(hinge.childPivot, RENDER_SCALE),
+        Vector3wUnits.toBabylon(hinge.parentPivot, RENDER_SCALE),
+        Vector3wUnits.toBabylon(hinge.childPivot, RENDER_SCALE),
         new BabylonVector3(0,0,1), 
         new BabylonVector3(0,1,0),
         this.bScene_
@@ -374,8 +374,8 @@ class RobotBinding {
       bParent.physicsBody.addConstraint(bChild.physicsBody, hingeJoint);
     } else if (id.includes("arm")) {
       const hingeJoint = new HingeConstraint(
-        Vector3.toBabylon(hinge.parentPivot, RENDER_SCALE),
-        Vector3.toBabylon(hinge.childPivot, RENDER_SCALE),
+        Vector3wUnits.toBabylon(hinge.parentPivot, RENDER_SCALE),
+        Vector3wUnits.toBabylon(hinge.childPivot, RENDER_SCALE),
         new BabylonVector3(0,0,1),
         new BabylonVector3(0,-1,0),
         this.bScene_
@@ -383,8 +383,8 @@ class RobotBinding {
       bParent.physicsBody.addConstraint(bChild.physicsBody, hingeJoint);
     } else if (id.includes("wheel")) {
       const hingeJoint = new HingeConstraint(
-        Vector3.toBabylon(hinge.parentPivot, RENDER_SCALE),
-        Vector3.toBabylon(hinge.childPivot, RENDER_SCALE),
+        Vector3wUnits.toBabylon(hinge.parentPivot, RENDER_SCALE),
+        Vector3wUnits.toBabylon(hinge.childPivot, RENDER_SCALE),
         new BabylonVector3(0,1,0),
         undefined, 
         this.bScene_
@@ -392,8 +392,8 @@ class RobotBinding {
       bParent.physicsBody.addConstraint(bChild.physicsBody, hingeJoint);
     }
     const joint: Physics6DoFConstraint = new Physics6DoFConstraint({
-      pivotA: Vector3.toBabylon(hinge.parentPivot, RENDER_SCALE),
-      pivotB: Vector3.toBabylon(hinge.childPivot, RENDER_SCALE),
+      pivotA: Vector3wUnits.toBabylon(hinge.parentPivot, RENDER_SCALE),
+      pivotB: Vector3wUnits.toBabylon(hinge.childPivot, RENDER_SCALE),
       axisA: new BabylonVector3(1,0,0),
       axisB: new BabylonVector3(1,0,0),
       perpAxisA: new BabylonVector3(0,-1,0), // bChildAxis, //
@@ -716,57 +716,57 @@ class RobotBinding {
     };
   }
 
-  get linkOrigins(): Dict<ReferenceFrame> {
-    const linkOrigins: Dict<ReferenceFrame> = {};
+  get linkOrigins(): Dict<ReferenceFramewUnits> {
+    const linkOrigins: Dict<ReferenceFramewUnits> = {};
     for (const [linkId, link] of Object.entries(this.links_)) {
       const rawLinkPosition = RawVector3.fromBabylon(link.position);
       const rawLinkOrientation = RawQuaternion.fromBabylon(link.rotationQuaternion);
       const rawLinkScale = RawVector3.fromBabylon(link.scaling);
 
       linkOrigins[linkId] = {
-        position: Vector3.fromRaw(rawLinkPosition, RENDER_SCALE),
-        orientation: Rotation.Euler.fromRaw(RawEuler.fromQuaternion(rawLinkOrientation)),
+        position: Vector3wUnits.fromRaw(rawLinkPosition, RENDER_SCALE),
+        orientation: RotationwUnits.EulerwUnits.fromRaw(RawEuler.fromQuaternion(rawLinkOrientation)),
         scale: rawLinkScale
       };
     }
     return linkOrigins;
   }
 
-  set linkOrigins(newLinkOrigins: Dict<ReferenceFrame>) {
+  set linkOrigins(newLinkOrigins: Dict<ReferenceFramewUnits>) {
     for (const [linkId, link] of Object.entries(this.links_)) {
       if (!(linkId in newLinkOrigins)) continue;
-      const rawLinkPosition = ReferenceFrame.toRaw(newLinkOrigins[linkId], RENDER_SCALE);
+      const rawLinkPosition = ReferenceFramewUnits.toRaw(newLinkOrigins[linkId], RENDER_SCALE);
       link.position = RawVector3.toBabylon(rawLinkPosition.position);
       link.rotationQuaternion = RawQuaternion.toBabylon(rawLinkPosition.orientation);
       link.scaling = RawVector3.toBabylon(rawLinkPosition.scale);
     }
   }
 
-  get origin(): ReferenceFrame {
+  get origin(): ReferenceFramewUnits {
     const rootLink = this.links_[this.rootId_];
     const rawOrientation = rootLink.rotationQuaternion;
-    const rawInternalOrigin = ReferenceFrame.toRaw(this.robot_.origin || ReferenceFrame.IDENTITY, RENDER_SCALE);
+    const rawInternalOrigin = ReferenceFramewUnits.toRaw(this.robot_.origin || ReferenceFramewUnits.IDENTITY, RENDER_SCALE);
 
     const orientation = RawQuaternion.toBabylon(rawOrientation || RawQuaternion.IDENTITY).multiply(
       RawQuaternion.toBabylon(rawInternalOrigin.orientation || RawQuaternion.IDENTITY).invert()
     );
 
     return {
-      position: Vector3.fromRaw(RawVector3.fromBabylon(rootLink.position), RENDER_SCALE),
-      orientation: Rotation.Euler.fromRaw(RawEuler.fromQuaternion(orientation)),
+      position: Vector3wUnits.fromRaw(RawVector3.fromBabylon(rootLink.position), RENDER_SCALE),
+      orientation: RotationwUnits.EulerwUnits.fromRaw(RawEuler.fromQuaternion(orientation)),
       scale: RawVector3.divideScalar(RawVector3.fromBabylon(rootLink.scaling), RENDER_SCALE_METERS_MULTIPLIER),
     };
   }
 
   // To set the origin, a root node is set, the robot is parented to the node, and then the node is moved.
-  set origin(newOrigin: ReferenceFrame) {
+  set origin(newOrigin: ReferenceFramewUnits) {
 
     this.lastPErrs_ = [0, 0, 0, 0];
     this.iErrs_ = [0, 0, 0, 0];
     this.brakeAt_ = [undefined, undefined, undefined, undefined];
 
-    const rawOrigin = ReferenceFrame.toRaw(newOrigin, RENDER_SCALE);
-    const rawInternalOrigin = ReferenceFrame.toRaw(this.robot_.origin || ReferenceFrame.IDENTITY, RENDER_SCALE);
+    const rawOrigin = ReferenceFramewUnits.toRaw(newOrigin, RENDER_SCALE);
+    const rawInternalOrigin = ReferenceFramewUnits.toRaw(this.robot_.origin || ReferenceFramewUnits.IDENTITY, RENDER_SCALE);
 
     const newOriginE = RawEuler.fromQuaternion(rawOrigin.orientation);
     const Robot_OriginE = RawEuler.fromQuaternion(rawInternalOrigin.orientation);
@@ -978,14 +978,14 @@ namespace RobotBinding {
     /**
      * The new origin of the robot
      */
-    origin: ReferenceFrame;
+    origin: ReferenceFramewUnits;
 
     writeCommands: WriteCommand[];
   }
 
   export namespace TickOut {
     export const NIL: TickOut = {
-      origin: ReferenceFrame.IDENTITY,
+      origin: ReferenceFramewUnits.IDENTITY,
       writeCommands: [],
     };
   }
@@ -1064,7 +1064,7 @@ namespace RobotBinding {
       const { collisionBox, origin } = definition;
 
       // The parent already has RENDER_SCALE applied, so we don't need to apply it again.
-      const rawCollisionBox = Vector3.toRaw(collisionBox, 'meters');
+      const rawCollisionBox = Vector3wUnits.toRaw(collisionBox, 'meters');
 
       this.intersector_ = BabylonCreateBox(id, {
         depth: rawCollisionBox.z,
@@ -1077,7 +1077,7 @@ namespace RobotBinding {
       this.intersector_.material.wireframe = true;
       this.intersector_.visibility = 0;
 
-      ReferenceFrame.syncBabylon(origin, this.intersector_, 'meters');
+      ReferenceFramewUnits.syncBabylon(origin, this.intersector_, 'meters');
     }
 
     override getValue(): Promise<boolean> {
@@ -1126,7 +1126,7 @@ namespace RobotBinding {
       }, scene);
       this.trace_.visibility = 0;
 
-      ReferenceFrame.syncBabylon(origin, this.trace_, 'meters');
+      ReferenceFramewUnits.syncBabylon(origin, this.trace_, 'meters');
       this.trace_.parent = parent;
     }
 
@@ -1230,7 +1230,7 @@ namespace RobotBinding {
       this.trace_.material.wireframe = true;
 
 
-      ReferenceFrame.syncBabylon(origin, this.trace_, 'meters');
+      ReferenceFramewUnits.syncBabylon(origin, this.trace_, 'meters');
       this.trace_.parent = parameters.parent;
 
       this.trace_.visibility = 0;
@@ -1256,7 +1256,7 @@ namespace RobotBinding {
       const { scene } = this.parameters;
       this.trace_.visibility = this.visible ? 1 : 0;
 
-      const position = Vector3.fromRaw(RawVector3.fromBabylon(this.trace_.getAbsolutePosition()), RENDER_SCALE);
+      const position = Vector3wUnits.fromRaw(RawVector3.fromBabylon(this.trace_.getAbsolutePosition()), RENDER_SCALE);
 
       let valueSum = 0;
       for (const light of scene.lights) {
@@ -1267,12 +1267,12 @@ namespace RobotBinding {
         }
 
         const intensity = light.getScaledIntensity();
-        const lightPosition = Vector3.fromRaw(RawVector3.fromBabylon(light.getAbsolutePosition()), RENDER_SCALE);
-        const offset = Vector3.subtract(position, lightPosition);
-        const distance = Vector3.length(offset);
+        const lightPosition = Vector3wUnits.fromRaw(RawVector3.fromBabylon(light.getAbsolutePosition()), RENDER_SCALE);
+        const offset = Vector3wUnits.subtract(position, lightPosition);
+        const distance = Vector3wUnits.length(offset);
         const ray = new BabylonRay(
-          Vector3.toBabylon(position, RENDER_SCALE),
-          Vector3.toBabylon(offset, RENDER_SCALE),
+          Vector3wUnits.toBabylon(position, RENDER_SCALE),
+          Vector3wUnits.toBabylon(offset, RENDER_SCALE),
           Distance.toValue(distance, RENDER_SCALE)
         );
 
@@ -1284,8 +1284,8 @@ namespace RobotBinding {
           const direction = BabylonVector3.Forward(true)
             .applyRotationQuaternion(BabylonQuaternion.FromEulerVector(light.getRotation()));
           
-          const dot = BabylonVector3.Dot(direction, Vector3.toBabylon(offset, RENDER_SCALE));
-          const angle = Math.acos(dot / Distance.toValue(Vector3.length(offset), RENDER_SCALE));
+          const dot = BabylonVector3.Dot(direction, Vector3wUnits.toBabylon(offset, RENDER_SCALE));
+          const angle = Math.acos(dot / Distance.toValue(Vector3wUnits.length(offset), RENDER_SCALE));
 
           if (angle > Math.PI / 2) continue;
         }
@@ -1295,8 +1295,8 @@ namespace RobotBinding {
           const direction = BabylonVector3.Forward(true)
             .applyRotationQuaternion(BabylonQuaternion.FromEulerVector(light.getRotation()));
           
-          const dot = BabylonVector3.Dot(direction, Vector3.toBabylon(offset, RENDER_SCALE));
-          const angle = Math.acos(dot / Distance.toValue(Vector3.length(offset), RENDER_SCALE));
+          const dot = BabylonVector3.Dot(direction, Vector3wUnits.toBabylon(offset, RENDER_SCALE));
+          const angle = Math.acos(dot / Distance.toValue(Vector3wUnits.length(offset), RENDER_SCALE));
 
           if (angle > light.angle / 2) continue;
         }
@@ -1345,7 +1345,7 @@ namespace RobotBinding {
       }, scene);
       this.trace_.visibility = 0;
 
-      ReferenceFrame.syncBabylon(origin, this.trace_, 'meters');
+      ReferenceFramewUnits.syncBabylon(origin, this.trace_, 'meters');
       this.trace_.parent = parent;
     }
 
