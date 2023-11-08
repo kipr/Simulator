@@ -53,7 +53,7 @@ import AbstractRobot from './AbstractRobot';
 import WorkerInstance from "./programming/WorkerInstance";
 import LocalizedString from './util/LocalizedString';
 import ScriptManager from './ScriptManager';
-import { RENDER_SCALE } from './renderConstants';
+import { RENDER_SCALE } from './components/Constants/renderConstants';
 import { number } from 'prop-types';
 
 export type FrameLike = BabylonTransformNode | BabylonAbstractMesh;

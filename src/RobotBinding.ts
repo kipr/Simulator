@@ -32,7 +32,7 @@ import { Angle, Distance, Mass } from './util/Value';
 import { SceneMeshMetadata } from './SceneBinding';
 import Geometry from './state/State/Robot/Geometry';
 import Dict from './util/Dict';
-import { RENDER_SCALE, RENDER_SCALE_METERS_MULTIPLIER } from './renderConstants';
+import { RENDER_SCALE, RENDER_SCALE_METERS_MULTIPLIER } from './components/Constants/renderConstants';
 import WriteCommand from './AbstractRobot/WriteCommand';
 import AbstractRobot from './AbstractRobot';
 import Motor from './AbstractRobot/Motor';
