@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 
 import { StyledText } from '../../util';
-import { Text } from '../UI/Text';
+import { Text } from '../Interface/Text';
 import { ThemeProps } from '../Constants/theme';
 import Tooltip from './Tooltip';
 

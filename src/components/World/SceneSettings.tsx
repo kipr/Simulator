@@ -4,8 +4,8 @@ import { styled } from 'styletron-react';
 import Scene from '../../state/State/Scene';
 import { StyleProps } from '../../util/style';
 import LocalizedString from '../../util/LocalizedString';
-import Field from '../UI/Field';
-import Input from '../UI/Input';
+import Field from '../Interface/Field';
+import Input from '../Interface/Input';
 import { ThemeProps } from '../Constants/theme';
 
 import tr from '@i18n';

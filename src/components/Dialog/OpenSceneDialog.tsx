@@ -10,7 +10,7 @@ import { Dialog } from "./Dialog";
 import { ThemeProps } from "../Constants/theme";
 import { ScenesAction } from "../../state/reducer";
 import DialogBar from "./DialogBar";
-import ScrollArea from "../UI/ScrollArea";
+import ScrollArea from "../Interface/ScrollArea";
 import { Fa } from "../Fa";
 
 import { faCheck } from '@fortawesome/free-solid-svg-icons';

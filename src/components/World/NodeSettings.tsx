@@ -4,13 +4,13 @@ import { RawVector3, RawAxisAngle, RawEuler } from "../../util/math";
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../util/unit-math";
 
 import { Angle, Distance, Mass, UnitlessValue, Value } from "../../util";
-import ComboBox from "../UI/ComboBox";
+import ComboBox from "../Interface/ComboBox";
 import { Dialog } from "../Dialog/Dialog";
 import DialogBar from "../Dialog/DialogBar";
-import Field from "../UI/Field";
-import Input from "../UI/Input";
-import ScrollArea from "../UI/ScrollArea";
-import Section from "../UI/Section";
+import Field from "../Interface/Field";
+import Input from "../Interface/Input";
+import ScrollArea from "../Interface/ScrollArea";
+import Section from "../Interface/Section";
 import { ThemeProps } from "../Constants/theme";
 import ValueEdit from "../ValueEdit";
 import Geometry from '../../state/State/Scene/Geometry';

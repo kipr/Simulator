@@ -2,7 +2,7 @@ import { styled } from 'styletron-react';
 import * as React from 'react';
 import { StyleProps } from '../../util/style';
 import { ThemeProps } from '../Constants/theme';
-import resizeListener, { ResizeListener } from '../UI/ResizeListener';
+import resizeListener, { ResizeListener } from '../Interface/ResizeListener';
 
 export interface Vector2 {
   x: number;

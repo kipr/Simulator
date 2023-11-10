@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DARK, ThemeProps } from '../components/Constants/theme';
 import { StyleProps } from '../util/style';
 import { styled } from 'styletron-react';
-import { Card } from '../components/UI/Card';
+import { Card } from '../components/Interface/Card';
 import MainMenu from '../components/MainMenu';
 import { RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';

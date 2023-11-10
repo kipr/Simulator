@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-import { Modal } from '../UI/Modal';
+import { Modal } from '../Interface/Modal';
 
 import { StyleProps } from '../../util/style';
 
 import { styled } from 'styletron-react';
-import Widget, { Mode, Size } from '../UI/Widget';
+import Widget, { Mode, Size } from '../Interface/Widget';
 import { ThemeProps } from '../Constants/theme';
 
 export interface DialogProps extends ThemeProps, StyleProps {

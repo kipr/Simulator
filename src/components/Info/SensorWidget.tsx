@@ -3,7 +3,7 @@ import * as React from 'react';
 import { ThemeProps } from '../Constants/theme';
 import { StyleProps } from '../../util/style';
 import SensorPlot from './SensorPlot';
-import BooleanPlot from '../UI/BooleanPlot';
+import BooleanPlot from '../Interface/BooleanPlot';
 import { Spacer } from '../Constants/common';
 
 import { ActionTooltip } from './ActionTooltip';

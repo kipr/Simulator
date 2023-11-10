@@ -1,13 +1,13 @@
 import * as React from "react";
 import { styled } from "styletron-react";
 
-import Field from "../UI/Field";
+import Field from "../Interface/Field";
 import { ThemeProps } from "../Constants/theme";
 import ValueEdit from "../ValueEdit";
 import Event from '../../state/State/Challenge/Event';
 import LocalizedString from '../../util/LocalizedString';
-import Input from '../UI/Input';
-import TextArea from '../UI/TextArea';
+import Input from '../Interface/Input';
+import TextArea from '../Interface/TextArea';
 
 export interface EventSettingsProps extends ThemeProps {
   onEventChange: (event: Event) => void;

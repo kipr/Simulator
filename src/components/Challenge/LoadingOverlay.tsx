@@ -8,7 +8,7 @@ import { AsyncChallenge } from '../../state/State/Challenge';
 import LocalizedString from '../../util/LocalizedString';
 import { Spacer } from '../Constants/common';
 import { Dialog } from '../Dialog/Dialog';
-import { Modal } from '../UI/Modal';
+import { Modal } from '../Interface/Modal';
 import { DARK } from '../Constants/theme';
 
 import tr from '@i18n';

@@ -2,7 +2,7 @@ import * as React from "react";
 import { styled } from "styletron-react";
 import { ReferenceFramewUnits } from "../../util/unit-math";
 import { Dialog } from "../Dialog/Dialog";
-import ScrollArea from "../UI/ScrollArea";
+import ScrollArea from "../Interface/ScrollArea";
 import { ThemeProps } from "../Constants/theme";
 import ScriptSettings from "./ScriptSettings";
 import Script from '../../state/State/Scene/Script';

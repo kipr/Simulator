@@ -9,7 +9,6 @@ import '@babylonjs/loaders/glTF';
 import '@babylonjs/core/Physics/physicsEngineComponent';
 
 import Dict from './util/Dict';
-
 import { RawQuaternion, RawVector2, RawVector3 } from './util/math';
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from './util/unit-math';
 import { Angle } from './util';
@@ -329,15 +328,8 @@ export class Space {
     // Update state with significant changes, if needed
     // These seems to also be necessary for sensors to update
     this.debounceUpdate_ = true;
-    if (setNodeBatch.nodeIds.length > 0) {
-      if (setNodeBatch.nodeIds[0].id === 'robot') {
-        this.onSetNodeBatch?.(setNodeBatch); 
-      }
-      if (setNodeBatch.nodeIds.length > 1) {
-        this.onSetNodeBatch?.(setNodeBatch); 
-        // console.log("setting node batch in sim updateStore_", setNodeBatch);
-      }
-    }
+    if (setNodeBatch.nodeIds.length > 0) this.onSetNodeBatch?.(setNodeBatch); 
+    // console.log("setting node batch in sim updateStore_", setNodeBatch);
     this.debounceUpdate_ = false;
   };
 

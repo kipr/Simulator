@@ -3,13 +3,13 @@ import { styled } from 'styletron-react';
 import { Settings } from '../Constants/Settings';
 import { StyleProps } from '../../util/style';
 import { Dialog } from './Dialog';
-import ScrollArea from '../UI/ScrollArea';
+import ScrollArea from '../Interface/ScrollArea';
 import { Switch } from '../Switch';
 import { ThemeProps } from '../Constants/theme';
 
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';
-import ComboBox from '../UI/ComboBox';
+import ComboBox from '../Interface/ComboBox';
 import Dict from '../../util/Dict';
 
 import { State as ReduxState } from '../../state';

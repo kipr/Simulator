@@ -22,7 +22,7 @@ import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "./util/unit
 import { Angle, Distance, Mass, SetOps } from "./util";
 import { Color } from './state/State/Scene/Color';
 import Material from './state/State/Scene/Material';
-import { preBuiltGeometries, preBuiltTemplates } from "./node-templates";
+import { preBuiltGeometries, preBuiltTemplates } from "./NodeTemplates";
 import RobotBinding from './RobotBinding';
 import Robot from './state/State/Robot';
 import AbstractRobot from './AbstractRobot';

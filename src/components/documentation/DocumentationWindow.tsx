@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RawVector2 } from '../../util/math';
 import { ThemeProps } from '../Constants/theme';
-import Widget, { Mode, Size } from '../UI/Widget';
+import Widget, { Mode, Size } from '../Interface/Widget';
 import DocumentationRoot from './DocumentationRoot';
 
 import { GLOBAL_EVENTS, GlobalEvents } from '../../util/GlobalEvents';
@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import { DocumentationAction } from '../../state/reducer';
 import { Fa } from '../Fa';
 import { faBox, faChevronLeft, faFile, faFilter, faGear, faHome, faSection } from '@fortawesome/free-solid-svg-icons';
-import ScrollArea from '../UI/ScrollArea';
+import ScrollArea from '../Interface/ScrollArea';
 import DocumentationLocation from '../../state/State/Documentation/DocumentationLocation';
 import RootDocumentation from './RootDocumentation';
 import FunctionDocumentation from './FunctionDocumentation';

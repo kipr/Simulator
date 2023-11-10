@@ -1,7 +1,7 @@
 import { DocumentationState } from '../State';
 import DocumentationLocation from '../State/Documentation/DocumentationLocation';
 import construct from '../../util/construct';
-import { Size } from '../../components/UI/Widget';
+import { Size } from '../../components/Interface/Widget';
 import Documentation from '../State/Documentation';
 
 export namespace DocumentationAction {

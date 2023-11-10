@@ -5,7 +5,7 @@ import Documentation from '../../state/State/Documentation';
 import DocumentationLocation from '../../state/State/Documentation/DocumentationLocation';
 import FileDocumentationModel from '../../state/State/Documentation/FileDocumentation';
 import { StyleProps } from '../../util/style';
-import Section from '../UI/Section';
+import Section from '../Interface/Section';
 import { ThemeProps } from '../Constants/theme';
 import FunctionBrief from './FunctionBrief';
 

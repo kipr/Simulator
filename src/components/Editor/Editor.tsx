@@ -5,8 +5,8 @@ import { StyleProps } from '../../util/style';
 import { Theme, ThemeProps } from '../Constants/theme';
 
 import { Fa } from '../Fa';
-import { Button } from '../UI/Button';
-import { BarComponent } from '../UI/Widget';
+import { Button } from '../Interface/Button';
+import { BarComponent } from '../Interface/Widget';
 import { WarningCharm, ErrorCharm } from './';
 
 import { Ivygate, Message } from 'ivygate';

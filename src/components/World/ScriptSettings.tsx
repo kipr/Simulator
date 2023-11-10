@@ -1,9 +1,9 @@
 import * as React from "react";
 import { styled } from "styletron-react";
 
-import Field from "../UI/Field";
-import Input from "../UI/Input";
-import Section from "../UI/Section";
+import Field from "../Interface/Field";
+import Input from "../Interface/Input";
+import Section from "../Interface/Section";
 import { ThemeProps } from "../Constants/theme";
 import ValueEdit from "../ValueEdit";
 import Script from "../../state/State/Scene/Script";

@@ -9,15 +9,15 @@ import {
   forgotPassword
 } from '../firebase/modules/auth';
 import { AuthProvider, getRedirectResult, signInWithPopup } from 'firebase/auth';
-import Form from '../components/UI/Form';
+import Form from '../components/Interface/Form';
 import { TabBar } from '../components/Layout/TabBar';
 
 import KIPR_LOGO_BLACK from '../assets/KIPR-Logo-Black-Text-Clear-Large.png';
 import KIPR_LOGO_WHITE from '../assets/KIPR-Logo-White-Text-Clear-Large.png';
 import { Fa } from '../components/Fa';
-import { Text } from '../components/UI/Text';
+import { Text } from '../components/Interface/Text';
 import { StyledText } from '../util';
-import Button from '../components/UI/Button';
+import Button from '../components/Interface/Button';
 import { Validators } from '../util/Validator';
 import { faSignInAlt, faUnlock, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';

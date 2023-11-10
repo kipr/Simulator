@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
-import ScrollArea from '../UI/ScrollArea';
-import Section from '../UI/Section';
+import ScrollArea from '../Interface/ScrollArea';
+import Section from '../Interface/Section';
 import { ThemeProps } from '../Constants/theme';
 import SensorWidget from './SensorWidget';
 import { StyledText } from '../../util';

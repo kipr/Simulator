@@ -4,7 +4,7 @@ import { StyleProps } from '../../util/style';
 import Charm from '../Charm';
 import { ThemeProps } from '../Constants/theme';
 import { charmColor } from '../Constants/charm-util';
-import ComboBox from '../UI/ComboBox';
+import ComboBox from '../Interface/ComboBox';
 import ProgrammingLanguage from '../../programming/ProgrammingLanguage';
 
 export interface LanguageSelectCharmProps extends StyleProps, ThemeProps {

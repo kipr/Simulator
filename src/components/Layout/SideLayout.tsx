@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 
 import { styled } from 'styletron-react';
 
-import { Button } from '../UI/Button';
+import { Button } from '../Interface/Button';
 
-import { Console, createConsoleBarComponents } from '../Editor-Console';
+import { Console, createConsoleBarComponents } from '../EditorConsole';
 import { Editor, createEditorBarComponents, EditorBarTarget } from '../Editor';
 import World, { createWorldBarComponents } from '../World';
 
@@ -13,7 +13,7 @@ import { Info } from '../Info';
 import { LayoutEditorTarget, LayoutProps } from './Layout';
 import SimulatorArea from './SimulatorArea';
 import { TabBar } from './TabBar';
-import Widget, { BarComponent, Mode, Size } from '../UI/Widget';
+import Widget, { BarComponent, Mode, Size } from '../Interface/Widget';
 import { Slider } from '../Slider';
 
 import { State as ReduxState } from '../../state';
