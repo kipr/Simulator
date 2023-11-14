@@ -9,34 +9,21 @@ import { Scene as babylScene, TransformNode, AbstractMesh, LinesMesh, PhysicsVie
 
 import '@babylonjs/core/Physics/physicsEngineComponent';
 
-import SceneNode from './state/State/Scene/Node';
-import Robot from './state/State/Robot';
-import Node from './state/State/Robot/Node';
-import { RawQuaternion, RawVector3, clamp, RawEuler } from './util/math';
-import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from './util/unit-math';
-import { Angle, Distance, Mass } from './util/Value';
+import SceneNode from '../state/State/Scene/Node';
+import Robot from '../state/State/Robot';
+import Node from '../state/State/Robot/Node';
+import { RawQuaternion, RawVector3, clamp, RawEuler } from '../util/math';
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../util/unit-math';
+import { Angle, Distance, Mass } from '../util/Value';
 import { SceneMeshMetadata } from './SceneBinding';
-import Geometry from './state/State/Robot/Geometry';
-import Dict from './util/Dict';
-import { RENDER_SCALE, RENDER_SCALE_METERS_MULTIPLIER } from './components/Constants/renderConstants';
-import WriteCommand from './AbstractRobot/WriteCommand';
-import AbstractRobot from './AbstractRobot';
-import Motor from './AbstractRobot/Motor';
-import { node } from 'prop-types';
-
-interface BuiltGeometry {
-  nonColliders: Mesh[];
-  colliders?: BuiltGeometry.Collider[];
-}
-
-namespace BuiltGeometry {
-  export interface Collider {
-    name: string;
-    mesh: Mesh;
-    type: number;
-    volume: number;
-  }
-}
+import Dict from '../util/Dict';
+import { RENDER_SCALE, RENDER_SCALE_METERS_MULTIPLIER } from '../components/Constants/renderConstants';
+import WriteCommand from '../AbstractRobot/WriteCommand';
+import AbstractRobot from '../AbstractRobot';
+import Motor from '../AbstractRobot/Motor';
+import { createLink_ } from './RobotLink';
+import { createHinge_ } from './MotorBindings';
+import { createWeight_ } from './WeightBinding';
 
 class RobotBinding {
   private bScene_: babylScene;
@@ -70,175 +57,30 @@ class RobotBinding {
 
   private physicsViewer_: PhysicsViewer;
 
+
+  private lastTick_ = 0;
+  private lastMotorAngles_: [number, number, number, number] = [0, 0, 0, 0];
+
+  // Getting sensor values is async. We store the pending promises in these dictionaries.
+  private outstandingDigitalGetValues_: Dict<RobotBinding.OutstandingPromise<boolean>> = {};
+  private outstandingAnalogGetValues_: Dict<RobotBinding.OutstandingPromise<number>> = {};
+
+  private latestDigitalValues_: [boolean, boolean, boolean, boolean, boolean, boolean] = [false, false, false, false, false, false];
+  private latestAnalogValues_: [number, number, number, number, number, number] = [0, 0, 0, 0, 0, 0];
+
+  private lastPErrs_: [number, number, number, number] = [0, 0, 0, 0];
+  private iErrs_: [number, number, number, number] = [0, 0, 0, 0];
+
+  private brakeAt_: [number, number, number, number] = [undefined, undefined, undefined, undefined];
+
+  private positionDeltaFracs_: [number, number, number, number] = [0, 0, 0, 0];
+  private lastServoEnabledAngle_: [number, number, number, number] = [0, 0, 0, 0];
+
   constructor(bScene: babylScene, physicsViewer?: PhysicsViewer) {
     this.bScene_ = bScene;
     this.physicsViewer_ = physicsViewer;
   }
 
-  // Loads the geometry of a robot part and divides into the collider and noncollider pieces
-  private buildGeometry_ = async (name: string, geometry: Geometry): Promise<BuiltGeometry> => {
-    let ret: BuiltGeometry;
-
-    switch (geometry.type) {
-      case 'remote-mesh': {
-        const index = geometry.uri.lastIndexOf('/');
-        const fileName = geometry.uri.substring(index + 1);
-        const baseName = geometry.uri.substring(0, index + 1);
-  
-        const res = await SceneLoader.ImportMeshAsync(geometry.include ?? '', baseName, fileName, this.bScene_);
-        
-        const nonColliders: Mesh[] = [];
-        const colliders: BuiltGeometry.Collider[] = [];
-
-        for (const mesh of res.meshes.slice(1) as Mesh[]) {
-
-          // The robot mesh includes sub-meshes with the 'collider' name to indicate their use.
-          if (mesh.name.startsWith('collider')) {
-            const parts = mesh.name.split('-');
-            if (parts.length !== 3) throw new Error(`Invalid collider name: ${mesh.name}`);
-            const [_, type, name] = parts;
-
-            const { extendSize } = mesh.getBoundingInfo().boundingBox;
-
-            const volume = extendSize.x * extendSize.y * extendSize.z;
-
-            let bType: number;
-            switch (type) {
-              case 'box': bType = PhysicsShapeType.BOX; break;
-              case 'sphere': bType = PhysicsShapeType.SPHERE; break;
-              case 'cylinder': bType = PhysicsShapeType.CYLINDER; break;
-              case 'capsule': bType = PhysicsShapeType.CAPSULE; break;
-              case 'plane': bType = PhysicsShapeType.HEIGHTFIELD; break;
-              case 'mesh': bType = PhysicsShapeType.MESH; break;
-              default: throw new Error(`Invalid collider type: ${type}`);
-            }
-            colliders.push({ mesh, type: bType, name, volume });
-          } else {
-            nonColliders.push(mesh);
-          }
-        }
-
-        ret = { nonColliders, colliders };
-        break; 
-      }
-      default: { throw new Error(`Unsupported geometry type: ${geometry.type}`); }
-    }
-    return ret;
-  };
-
-
-  // Creates a link and returns the root mesh. Links are wheels, chasis, arms, etc.
-  // Loads the geometry and adds the appropriate physics properties to the mesh
-  private createLink_ = async (id: string, link: Node.Link) => {
-
-    let builtGeometry: BuiltGeometry;
-    if (link.geometryId === undefined) {
-      builtGeometry = { nonColliders: [new Mesh(id, this.bScene_)] };
-    } else {
-      const geometry = this.robot_.geometry[link.geometryId];
-      if (!geometry) throw new Error(`Missing geometry: ${link.geometryId}`);
-      builtGeometry = await this.buildGeometry_(id, geometry);
-    }
-    
-    const meshes = builtGeometry.nonColliders;
-    let myMesh: Mesh;
-
-    const inertiaScale = .5;
-    
-    switch (link.collisionBody.type) {
-      // Notes on Links - the root link should have the highest mass and inertia and it should 
-      // scale down further out the tree to prevent wild oscillations. 
-      // body.setMassProperties can also help setting the inertia vector,
-      // body.setAngularDamping and body.setLinearDamping can help with oscillations
-
-      case Node.Link.CollisionBody.Type.Box: {
-        // alert("box collision body"); // Currently there are no box collision bodies in the robot model
-        myMesh = Mesh.MergeMeshes(meshes, true, true, undefined, false, true);
-        myMesh.scaling.scaleInPlace(RENDER_SCALE_METERS_MULTIPLIER);
-
-        const aggregate = new PhysicsAggregate(myMesh, PhysicsShapeType.BOX, {
-          mass: Mass.toGramsValue(link.mass || Mass.grams(10)),
-          friction: link.friction ?? 0.5,
-          restitution: link.restitution ?? 0,
-          startAsleep: true,
-        }, this.bScene_);
-
-        this.colliders_.add(myMesh);
-        break;
-      }
-      case Node.Link.CollisionBody.Type.Cylinder: {
-        myMesh = Mesh.MergeMeshes(meshes, true, true, undefined, false, true);
-        myMesh.scaling.scaleInPlace(RENDER_SCALE_METERS_MULTIPLIER);
-
-        const aggregate = new PhysicsAggregate(myMesh, PhysicsShapeType.CYLINDER, {
-          mass: Mass.toGramsValue(link.mass || Mass.grams(10)),
-          friction: link.friction ?? 0.5,
-          restitution: link.restitution ?? 0,
-          startAsleep: true,
-        }, this.bScene_);
-
-        this.colliders_.add(myMesh);
-        break;
-      }
-      case Node.Link.CollisionBody.Type.Embedded: {
-        myMesh = Mesh.MergeMeshes(meshes, true, true, undefined, false, true);
-        myMesh.scaling.scaleInPlace(RENDER_SCALE_METERS_MULTIPLIER);
-
-        // As the embedded collision body consists of multiple meshes, we need to create a parent
-        // This mmeans we are unable to use the physics aggregate
-        const parentShape = new PhysicsShapeContainer(this.bScene_);
-
-        for (const collider of builtGeometry.colliders ?? []) {
-          const bCollider = collider.mesh;
-          bCollider.parent = myMesh;
-
-          const parameters: PhysicsShapeParameters = { mesh: bCollider };
-          const options: PhysicShapeOptions = { type: PhysicsShapeType.MESH, parameters: parameters };
-          const shape = new PhysicsShape(options, this.bScene_);
-          shape.material = {
-            friction: link.friction ?? 0.5,
-            restitution: link.restitution ?? 0.1,
-          };
-
-          parentShape.addChild(shape, bCollider.absolutePosition, bCollider.absoluteRotationQuaternion);
-
-          bCollider.visibility = 0;
-          this.colliders_.add(bCollider);
-        }
-        
-        const body = new PhysicsBody(myMesh, PhysicsMotionType.DYNAMIC, false, this.bScene_);
-        body.shape = parentShape;
-        if (link.geometryId.includes("chassis")) {
-          body.setMassProperties({ 
-            mass: Mass.toGramsValue(link.mass || Mass.grams(100)),
-            inertia: new Vector3(10 * inertiaScale,10 * inertiaScale,10 * inertiaScale) // (left/right, twist around, rock forward and backward)
-          }); 
-        }
-        if (link.geometryId.includes("arm")) {
-          body.setMassProperties({ 
-            mass: Mass.toGramsValue(link.mass || Mass.grams(80)), 
-            inertia: new Vector3(6 * inertiaScale,6 * inertiaScale,6 * inertiaScale) // (left/right, twist around, rock forward and backward)
-          });
-        }
-        if (link.geometryId.includes("claw")) {
-          body.setMassProperties({ 
-            mass: Mass.toGramsValue(link.mass || Mass.grams(10)),
-            inertia: new Vector3(3 * inertiaScale,3 * inertiaScale,3 * inertiaScale) // (left/right, twist around, rock forward and backward)
-          });
-        }
-        body.setAngularDamping(.5);
-        
-        this.colliders_.add(myMesh);
-
-        break;
-      }
-      default: {
-        throw new Error(`Unsupported collision body type: ${link.collisionBody.type}`);
-      }
-    }
-    if (this.physicsViewer_ && myMesh.physicsBody) this.physicsViewer_.showBody(myMesh.physicsBody);    
-    return myMesh;
-  };
 
   private createSensor_ = <T extends Node.FrameLike, O, S extends RobotBinding.SensorObject<T, O>>(s: { new(parameters: RobotBinding.SensorParameters<T>): S }) => (id: string, definition: T): S => {
     const parent = this.links_[definition.parentId];
@@ -253,67 +95,31 @@ class RobotBinding {
     });
   };
 
+  // These return functions are used to create sensors of a specific type.
   private createTouchSensor_ = this.createSensor_(RobotBinding.TouchSensor);
   private createEtSensor_ = this.createSensor_(RobotBinding.EtSensor);
   private createLightSensor_ = this.createSensor_(RobotBinding.LightSensor);
   private createReflectanceSensor_ = this.createSensor_(RobotBinding.ReflectanceSensor);
 
-  // Transform a vector using the child frame's orientation. This operation is invariant on a single
-  // axis, so we return a new quaternion with the leftover rotation.
-  private static connectedAxisAngle_ = (rotationAxis: Vector3, childOrientation: Quaternion): { axis: Vector3, twist: Quaternion } => {
-    const childOrientationInv = childOrientation.invert();
-    const axis = rotationAxis.applyRotationQuaternion(childOrientationInv);
-    const v = new Vector3(childOrientationInv.x, childOrientationInv.y, childOrientationInv.z);
-    const s = childOrientationInv.w;
-    v.multiplyInPlace(axis);
+  set realisticSensors(realisticSensors: boolean) {
+    for (const digitalSensor of Object.values(this.digitalSensors_)) {
+      digitalSensor.realistic = realisticSensors;
+    }
+    for (const analogSensor of Object.values(this.analogSensors_)) {
+      analogSensor.realistic = realisticSensors;
+    }
+  }
 
-    const twist = new Quaternion(v.x, v.y, v.z, s);
-    twist.normalize();
+  set noisySensors(noisySensors: boolean) {
+    for (const digitalSensor of Object.values(this.digitalSensors_)) {
+      digitalSensor.noisy = noisySensors;
+    }
+    for (const analogSensor of Object.values(this.analogSensors_)) {
+      analogSensor.noisy = noisySensors;
+    }
+  }
 
-    
-    return {
-      axis,
-      twist,
-    };
-  };
-
-  // Adds an invisible weight to a parent link.
-  private createWeight_ = (id: string, weight: Node.Weight) => {
-    const ret = CreateSphere(id, { diameter: 1 }, this.bScene_);
-    ret.visibility = 0;
-
-    const parent = this.robot_.nodes[weight.parentId];
-    if (!parent) throw new Error(`Missing parent: "${weight.parentId}" for weight "${id}"`);
-    if (parent.type !== Node.Type.Link) throw new Error(`Invalid parent type: "${parent.type}" for weight "${id}"`);
-
-    const aggregate = new PhysicsAggregate(ret, PhysicsShapeType.CYLINDER, {
-      mass: Mass.toGramsValue(weight.mass),
-      friction: 0,
-      restitution: 0,
-    }, this.bScene_);
-
-    const bParent = this.links_[weight.parentId];
-    if (!bParent) throw new Error(`Missing parent instantiation: "${weight.parentId}" for weight "${id}"`);
-
-    const bOrigin = ReferenceFramewUnits.toBabylon(weight.origin, RENDER_SCALE);
-
-    const constraint = new LockConstraint(
-      bOrigin.position,
-      new Vector3(0,0,0), // RawVector3.toBabylon(new Vector3(-8,10,0)), // updown, frontback
-      Vector3.Up(),
-      Vector3.Up().applyRotationQuaternion(bOrigin.rotationQuaternion.invert()),
-      this.bScene_
-    );
-    bParent.physicsBody.addConstraint(ret.physicsBody, constraint);
-
-    return ret;
-  };
-
-  private bParentChild_ = (id: string, parentId: string): {
-    bParent: Mesh;
-    bChild: Mesh;
-    childId: string;
-  } => {
+  private bParentChild_ = (id: string, parentId: string): { bParent: Mesh; bChild: Mesh; childId: string; } => {
     if (!parentId) throw new Error(`Missing parent: "${parentId}" for node "${id}"`);
     
     const children = this.childrenNodeIds_[id];
@@ -334,107 +140,25 @@ class RobotBinding {
     };
   };
 
-  // Adds a physics constraint between a parent and child link.
-  private createHinge_ = (id: string, hinge: Node.HingeJoint & { parentId: string }) => {
-
-    // Begin by moving the child in place (this prevents inertial snap as the physics engine applys the constraint)
-    const { bParent, bChild } = this.bParentChild_(id, hinge.parentId);
-    bChild.setParent(bParent);
-    bChild.position.x = Vector3wUnits.toBabylon(hinge.parentPivot, 'meters')._x;
-    bChild.position.y = Vector3wUnits.toBabylon(hinge.parentPivot, 'meters')._y;
-    bChild.position.z = Vector3wUnits.toBabylon(hinge.parentPivot, 'meters')._z;
-
-    bChild.rotationQuaternion = Quaternion.FromEulerAngles(hinge.parentAxis.z * 3.1415 / 2, 0, 0);
-    
-    // The 6DoF constraint is used for motorized joints. Unforunately, it is not possible to
-    // completely lock these joints as hinges, so we also apply a hinge constraint.
-    // Order appears to matter here, the hinge should come before the 6DoF constraint.
-    if (id.includes("claw")) {
-      const hingeJoint = new HingeConstraint(
-        Vector3wUnits.toBabylon(hinge.parentPivot, RENDER_SCALE),
-        Vector3wUnits.toBabylon(hinge.childPivot, RENDER_SCALE),
-        new Vector3(0,0,1), 
-        new Vector3(0,1,0),
-        this.bScene_
-      );
-      bParent.physicsBody.addConstraint(bChild.physicsBody, hingeJoint);
-    } else if (id.includes("arm")) {
-      const hingeJoint = new HingeConstraint(
-        Vector3wUnits.toBabylon(hinge.parentPivot, RENDER_SCALE),
-        Vector3wUnits.toBabylon(hinge.childPivot, RENDER_SCALE),
-        new Vector3(0,0,1),
-        new Vector3(0,-1,0),
-        this.bScene_
-      );
-      bParent.physicsBody.addConstraint(bChild.physicsBody, hingeJoint);
-    } else if (id.includes("wheel")) {
-      const hingeJoint = new HingeConstraint(
-        Vector3wUnits.toBabylon(hinge.parentPivot, RENDER_SCALE),
-        Vector3wUnits.toBabylon(hinge.childPivot, RENDER_SCALE),
-        new Vector3(0,1,0),
-        undefined, 
-        this.bScene_
-      );
-      bParent.physicsBody.addConstraint(bChild.physicsBody, hingeJoint);
-    }
-    const joint: Physics6DoFConstraint = new Physics6DoFConstraint({
-      pivotA: Vector3wUnits.toBabylon(hinge.parentPivot, RENDER_SCALE),
-      pivotB: Vector3wUnits.toBabylon(hinge.childPivot, RENDER_SCALE),
-      axisA: new Vector3(1,0,0),
-      axisB: new Vector3(1,0,0),
-      perpAxisA: new Vector3(0,-1,0), // bChildAxis, //
-      perpAxisB: RawVector3.toBabylon(hinge.parentAxis),
-    },
-    [
-      {
-        axis: PhysicsConstraintAxis.ANGULAR_Z,
-        minLimit: -30 * Math.PI / 180, maxLimit: -30 * Math.PI / 180,
-      }
-    ],
-    this.bScene_
-    );
-    
-    bParent.physicsBody.addConstraint(bChild.physicsBody, joint);
-    joint.setAxisMode(PhysicsConstraintAxis.LINEAR_X, PhysicsConstraintAxisLimitMode.LOCKED);
-    joint.setAxisMode(PhysicsConstraintAxis.LINEAR_Y, PhysicsConstraintAxisLimitMode.LOCKED);
-    joint.setAxisMode(PhysicsConstraintAxis.LINEAR_Z, PhysicsConstraintAxisLimitMode.LOCKED);
-    joint.setAxisMode(PhysicsConstraintAxis.ANGULAR_X, PhysicsConstraintAxisLimitMode.LOCKED);
-    joint.setAxisMode(PhysicsConstraintAxis.ANGULAR_Y, PhysicsConstraintAxisLimitMode.LOCKED);
-
-
-    return joint;
-  };
-
-  // Assumes the current hinge angle is the last target of the axis motor.
-  // TODO: implement a method using relative poses to get the actual angle.
-  private hingeAngle_ = (joint: Physics6DoFConstraint): number => {
-    const currentAngle: number = joint.getAxisMotorTarget(0);
-    return currentAngle;
-  };
-
- 
-
-  private lastTick_ = 0;
-  private lastMotorAngles_: [number, number, number, number] = [0, 0, 0, 0];
-
-  // Getting sensor values is async. We store the pending promises in these dictionaries.
-  private outstandingDigitalGetValues_: Dict<RobotBinding.OutstandingPromise<boolean>> = {};
-  private outstandingAnalogGetValues_: Dict<RobotBinding.OutstandingPromise<number>> = {};
-
-  private latestDigitalValues_: [boolean, boolean, boolean, boolean, boolean, boolean] = [false, false, false, false, false, false];
-  private latestAnalogValues_: [number, number, number, number, number, number] = [0, 0, 0, 0, 0, 0];
-
-  private lastPErrs_: [number, number, number, number] = [0, 0, 0, 0];
-  private iErrs_: [number, number, number, number] = [0, 0, 0, 0];
-
-  private brakeAt_: [number, number, number, number] = [undefined, undefined, undefined, undefined];
-
-  private positionDeltaFracs_: [number, number, number, number] = [0, 0, 0, 0];
-  private lastServoEnabledAngle_: [number, number, number, number] = [0, 0, 0, 0];
-
-  
+  // Transform a vector using the child frame's orientation. This operation is invariant on a single
+  // axis, so we return a new quaternion with the leftover rotation.
+  // private static connectedAxisAngle_ = (rotationAxis: Vector3, childOrientation: Quaternion): { axis: Vector3, twist: Quaternion } => {
+  //   const childOrientationInv = childOrientation.invert();
+  //   const axis = rotationAxis.applyRotationQuaternion(childOrientationInv);
+  //   const v = new Vector3(childOrientationInv.x, childOrientationInv.y, childOrientationInv.z);
+  //   const s = childOrientationInv.w;
+  //   v.multiplyInPlace(axis);
+  //   const twist = new Quaternion(v.x, v.y, v.z, s);
+  //   twist.normalize();
+   
+  //   return {
+  //     axis,
+  //     twist,
+  //   };
+  // };
 
   tick(readable: AbstractRobot.Readable): RobotBinding.TickOut {
+    // TODO: Motor Bindings need to be cleaned up to handle motor position explicitly.
     const motorPositionDeltas: [number, number, number, number] = [0, 0, 0, 0];
 
     const writeCommands: WriteCommand[] = [];
@@ -467,7 +191,10 @@ class RobotBinding {
       const plug = (motorNode.plug === undefined || motorNode.plug === 'normal') ? 1 : -1;
 
       // Get the delta angle of the motor since the last tick.
-      const currentAngle = this.hingeAngle_(bMotor);
+      // Assumes the current hinge angle is the last target of the axis motor.
+      // TODO: implement a method using relative poses to get the actual angle.
+      const currentAngle: number = bMotor.getAxisMotorTarget(0);
+      // const currentAngle = this.hingeAngle_(bMotor);
       const lastMotorAngle = this.lastMotorAngles_[port];
       let deltaAngle = 0;
       if (lastMotorAngle > Math.PI / 2 && currentAngle < -Math.PI / 2) {
@@ -674,6 +401,7 @@ class RobotBinding {
       writeCommands.push(WriteCommand.digitalIn({ port: i, value: digitalValues[i] }));
     }
 
+    // Analog Sensors
     const analogValues: AbstractRobot.Stateless.AnalogValues = [0, 0, 0, 0, 0, 0];
     for (let i = 0; i < 6; ++i) {
       const analogId = this.analogPorts_[i];
@@ -831,46 +559,46 @@ class RobotBinding {
 
     this.robot_ = robot;
 
+    // Set Root
     const rootIds = Robot.rootNodeIds(robot);
     if (rootIds.length !== 1) throw new Error('Only one root node is supported');
-    
     this.rootId_ = rootIds[0];
+    const rootNode = robot.nodes[this.rootId_];
+    if (robot.nodes[this.rootId_].type !== Node.Type.Link) throw new Error('Root node must be a link');
 
     const nodeIds = Robot.breadthFirstNodeIds(robot);
     this.childrenNodeIds_ = Robot.childrenNodeIds(robot);
 
-    const rootNode = robot.nodes[this.rootId_];
-
-    if (robot.nodes[this.rootId_].type !== Node.Type.Link) throw new Error('Root node must be a link');
-
-
+    // Links need to be set up before the rest of the nodes
     for (const nodeId of nodeIds) {
       const node = robot.nodes[nodeId];
       if (node.type !== Node.Type.Link) continue;
 
-      const bNode = await this.createLink_(nodeId, node);
+      const bNode = await createLink_(nodeId, node, this.bScene_, this.robot_, this.colliders_);
+      if (this.physicsViewer_ && bNode.physicsBody) this.physicsViewer_.showBody(bNode.physicsBody);    
+
       bNode.metadata = { id: this.robotSceneId_, selected: false } as SceneMeshMetadata;
       this.links_[nodeId] = bNode;
     }
 
+    // Set up all other types of nodes
     for (const nodeId of nodeIds) {
       const node = robot.nodes[nodeId];
       if (node.type === Node.Type.Link) continue;
     
       switch (node.type) {
         case Node.Type.Weight: {
-          const bNode = this.createWeight_(nodeId, node);
+          const bNode = createWeight_(nodeId, node, this.bScene_, this.robot_, this.links_);
           this.weights_[nodeId] = bNode;
           break;
         }
         case Node.Type.Motor: {
-          const bJoint = this.createHinge_(nodeId, node);
+          const { bParent, bChild } = this.bParentChild_(nodeId, node.parentId);
+          const bJoint = createHinge_(nodeId, node, this.bScene_, bParent, bChild);
+
           bJoint.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 1000000000); 
-          bJoint.setAxisMaxLimit(PhysicsConstraintAxis.ANGULAR_Z, 1000000000000); 
-          bJoint.setAxisMinLimit(PhysicsConstraintAxis.ANGULAR_Z, -1000000000000);
-          bJoint.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, 0);
-          bJoint.setAxisMotorType(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintMotorType.VELOCITY); // Position control
-          
+          bJoint.setAxisMotorType(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintMotorType.VELOCITY);
+          // Start motor in locked position so the wheels don't slide
           bJoint.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.LOCKED);
 
           this.motors_[nodeId] = bJoint;
@@ -880,17 +608,17 @@ class RobotBinding {
         case Node.Type.Servo: {
           // minLimit: -30 * Math.PI / 180, maxLimit: -30 * Math.PI / 180,
           // -90 is upright and closed; 0 is forward and open
-          const bJoint = this.createHinge_(nodeId, node);
+          const { bParent, bChild } = this.bParentChild_(nodeId, node.parentId);
+          const bJoint = createHinge_(nodeId, node, this.bScene_, bParent, bChild);
           bJoint.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 10000000); 
-          bJoint.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, 2);
-          bJoint.setAxisMotorType(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintMotorType.VELOCITY); // Velocity control
-
+          bJoint.setAxisMotorType(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintMotorType.VELOCITY); 
+          // Start the servos at 0
           bJoint.setAxisMaxLimit(PhysicsConstraintAxis.ANGULAR_Z, Angle.toRadiansValue(Angle.degrees(0))); 
-          bJoint.setAxisMinLimit(PhysicsConstraintAxis.ANGULAR_Z, Angle.toRadiansValue(Angle.degrees(-10)));
+          bJoint.setAxisMinLimit(PhysicsConstraintAxis.ANGULAR_Z, Angle.toRadiansValue(Angle.degrees(-1)));
 
           this.servos_[nodeId] = bJoint;
           this.servoPorts_[node.servoPort] = nodeId;
-          this.lastServoEnabledAngle_[node.servoPort] = Angle.toRadiansValue(Angle.degrees(-10));
+          this.lastServoEnabledAngle_[node.servoPort] = Angle.toRadiansValue(Angle.degrees(-1));
           break;
         }
         case Node.Type.TouchSensor: {
@@ -939,25 +667,10 @@ class RobotBinding {
 
     this.robot_ = null;
   }
-
-  set realisticSensors(realisticSensors: boolean) {
-    for (const digitalSensor of Object.values(this.digitalSensors_)) {
-      digitalSensor.realistic = realisticSensors;
-    }
-    for (const analogSensor of Object.values(this.analogSensors_)) {
-      analogSensor.realistic = realisticSensors;
-    }
-  }
-
-  set noisySensors(noisySensors: boolean) {
-    for (const digitalSensor of Object.values(this.digitalSensors_)) {
-      digitalSensor.noisy = noisySensors;
-    }
-    for (const analogSensor of Object.values(this.analogSensors_)) {
-      analogSensor.noisy = noisySensors;
-    }
-  }
 }
+
+
+
 
 namespace RobotBinding {
   export interface TickOut {

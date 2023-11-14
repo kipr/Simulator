@@ -10,27 +10,33 @@ import { PhysicsShapeType, IPhysicsCollisionEvent, IPhysicsEnginePluginV2, Physi
 import '@babylonjs/core/Engines/Extensions/engine.views';
 import '@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent';
 
-import Dict from "./util/Dict";
-import { RawQuaternion, RawVector2, RawVector3 } from "./util/math";
-import Scene from "./state/State/Scene";
-import Camera from "./state/State/Scene/Camera";
-import Geometry from "./state/State/Scene/Geometry";
-import Node from "./state/State/Scene/Node";
-import Patch from "./util/Patch";
+import Dict from "../util/Dict";
+import { RawQuaternion, RawVector2, RawVector3 } from "../util/math";
+import Scene from "../state/State/Scene";
+import Camera from "../state/State/Scene/Camera";
+import Geometry from "../state/State/Scene/Geometry";
+import Node from "../state/State/Scene/Node";
+import Patch from "../util/Patch";
 
-import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "./util/unit-math";
-import { Angle, Distance, Mass, SetOps } from "./util";
-import { Color } from './state/State/Scene/Color';
-import Material from './state/State/Scene/Material';
-import { preBuiltGeometries, preBuiltTemplates } from "./NodeTemplates";
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../util/unit-math";
+import { Angle, Distance, Mass, SetOps } from "../util";
+import { Color } from '../state/State/Scene/Color';
+import Material from '../state/State/Scene/Material';
+import { preBuiltGeometries, preBuiltTemplates } from "../NodeTemplates";
 import RobotBinding from './RobotBinding';
-import Robot from './state/State/Robot';
-import AbstractRobot from './AbstractRobot';
-import WorkerInstance from "./programming/WorkerInstance";
-import LocalizedString from './util/LocalizedString';
-import ScriptManager from './ScriptManager';
-import { RENDER_SCALE } from './components/Constants/renderConstants';
+import Robot from '../state/State/Robot';
+import AbstractRobot from '../AbstractRobot';
+import WorkerInstance from "../programming/WorkerInstance";
+import LocalizedString from '../util/LocalizedString';
+import ScriptManager from '../ScriptManager';
+import { RENDER_SCALE } from '../components/Constants/renderConstants';
 import { number } from 'prop-types';
+
+import { createMaterial, updateMaterialBasic, updateMaterialPbr } from './MaterialBinding';
+import { createDirectionalLight, createPointLight, createSpotLight } from './Lightbinding';
+import { createCamera } from './CameraBinding';
+import { createObject, createEmpty } from './ObjectBinding';
+import { apply } from './helpers';
 
 export type FrameLike = TransformNode | AbstractMesh;
 
@@ -92,8 +98,6 @@ class SceneBinding {
   
   private materialIdIter_ = 0;
 
-  private seed_ = 0;
-
   constructor(bScene: babylScene, physics: IPhysicsEnginePluginV2) {
     this.bScene_ = bScene;
     this.scene_ = Scene.EMPTY;
@@ -111,7 +115,7 @@ class SceneBinding {
     this.root_ = new TransformNode('__scene_root__', this.bScene_);
     this.gizmoManager_ = new GizmoManager(this.bScene_);
 
-    this.camera_ = this.createNoneCamera_(Camera.NONE);
+    this.camera_ = createCamera(Camera.NONE, this.bScene_);
 
     // Gizmos are the little arrows that appear when you select an object
     this.gizmoManager_.positionGizmoEnabled = true;
@@ -140,408 +144,13 @@ class SceneBinding {
     return ret;
   }
 
-  // apply_ is used to propogate the function f(m) on children of the specified mesh g
-  private static apply_ = (g: babylNode, f: (m: AbstractMesh) => void) => {
-    if (g instanceof AbstractMesh) {
-      f(g);
-    } else {
-      (g.getChildren(c => c instanceof AbstractMesh) as AbstractMesh[]).forEach(f);
-    }
-  };
-
-  private random = (max: number, min: number) => {
-    let x = Math.sin(this.seed_++) * 10000;
-    x = x - Math.floor(x);
-    x = ((x - .5) * (max - min)) + ((max + min) / 2);
-    return x;
-  };
-
-  private buildGeometry_ = async (name: string, geometry: Geometry, faceUvs?: RawVector2[]): Promise<FrameLike> => {
-    let ret: FrameLike;
-    switch (geometry.type) {
-      case 'box': {
-        const rect = CreateBox(name, {
-          updatable:true, 
-          width: Distance.toCentimetersValue(geometry.size.x),
-          height: Distance.toCentimetersValue(geometry.size.y),
-          depth: Distance.toCentimetersValue(geometry.size.z),
-          faceUV: this.buildGeometryFaceUvs_(faceUvs, 12),
-        }, this.bScene_);
-        const verts = rect.getVerticesData("position");
-        ret = rect;
-        break;
-      }
-      case 'sphere': {
-        const bFaceUvs = this.buildGeometryFaceUvs_(faceUvs, 2)?.[0];
-        const segments = 4;
-        const rock = CreateSphere(name, {
-          segments: segments, 
-          updatable:true, 
-          frontUVs: bFaceUvs,
-          sideOrientation: bFaceUvs ? Mesh.DOUBLESIDE : undefined,
-          diameterX:Distance.toCentimetersValue(geometry.radius) * 2,
-          diameterY:Distance.toCentimetersValue(geometry.radius) * 2 * geometry.squash,
-          diameterZ:Distance.toCentimetersValue(geometry.radius) * 2 * geometry.stretch,
-        }, this.bScene_);
-      
-        const positions = rock.getVerticesData("position");
-        // TODO: Replace with custom rocks from blender
-        if (name.includes('Rock')) {
-          const skip = [25,26,38,39,51,52,64,65]; 
-          for (let i = 14; i < 65; i++) {
-            if (skip.includes(i)) { 
-              continue;
-            } else {
-              positions[3 * i] = positions[3 * i] + this.random(geometry.noise, -1 * geometry.noise);
-              positions[1 + 3 * i] = positions[1 + 3 * i] + this.random(geometry.noise, -1 * geometry.noise);
-              positions[2 + 3 * i] = positions[2 + 3 * i] + this.random(geometry.noise, -1 * geometry.noise);
-            }
-          }
-        }
-        rock.updateVerticesData("position", positions);
-
-        ret = rock;
-        break;
-      }
-      case 'cylinder': {
-        ret = CreateCylinder(name, {
-          height: Distance.toCentimetersValue(geometry.height),
-          diameterTop: Distance.toCentimetersValue(geometry.radius) * 2,
-          diameterBottom: Distance.toCentimetersValue(geometry.radius) * 2,
-          faceUV: this.buildGeometryFaceUvs_(faceUvs, 6),
-        }, this.bScene_);
-        break;
-      }
-      case 'cone': {
-        ret = CreateCylinder(name, {
-          diameterTop: 0,
-          height: Distance.toCentimetersValue(geometry.height),
-          diameterBottom: Distance.toCentimetersValue(geometry.radius) * 2,
-          faceUV: this.buildGeometryFaceUvs_(faceUvs, 6),
-        }, this.bScene_);
-        break;
-      }
-      case 'plane': {
-        ret = CreatePlane(name, {
-          width: Distance.toCentimetersValue(geometry.size.x),
-          height: Distance.toCentimetersValue(geometry.size.y),
-          frontUVs: this.buildGeometryFaceUvs_(faceUvs, 2)?.[0],
-        }, this.bScene_);
-        break;
-      }
-      case 'file': {
-        const index = geometry.uri.lastIndexOf('/');
-        const fileName = geometry.uri.substring(index + 1);
-        const baseName = geometry.uri.substring(0, index + 1);
-  
-        const res = await SceneLoader.ImportMeshAsync(geometry.include ?? '', baseName, fileName, this.bScene_);
-        if (res.meshes.length === 1) return res.meshes[0];
-        // const nonColliders: Mesh[] = [];
-
-        ret = new TransformNode(geometry.uri, this.bScene_);
-        for (const mesh of res.meshes as Mesh[]) {
-          // GLTF importer adds a __root__ mesh (always the first one) that we can ignore 
-          if (mesh.name === '__root__') continue;
-          // nonColliders.push(mesh);
-
-          mesh.setParent(ret);
-        }
-        // const mesh = Mesh.MergeMeshes(nonColliders, true, true, undefined, false, true);
-        break; 
-      }
-      default: {
-        throw new Error(`Unsupported geometry type: ${geometry.type}`);
-      }
-    }
-
-    if (ret instanceof AbstractMesh) {
-      ret.visibility = 1;
-    } else {
-      const children = ret.getChildren(c => c instanceof AbstractMesh) as Mesh[];
-      const mesh = Mesh.MergeMeshes(children, true, true, undefined, false, true);
-      mesh.visibility = 1;
-      ret = mesh;
-    }
-
-    return ret;
-  };
-
-  private buildGeometryFaceUvs_ = (faceUvs: RawVector2[] | undefined, expectedUvs: number): Vector4[] => {
-    if (faceUvs?.length !== expectedUvs) {
-      return undefined;
-    }
-
-    const ret: Vector4[] = [];
-    for (let i = 0; i + 1 < faceUvs.length; i += 2) {
-      ret.push(new Vector4(faceUvs[i].x, faceUvs[i].y, faceUvs[i + 1].x, faceUvs[i + 1].y));
-    }
-
-    return ret;
-  };
-
   private findBNode_ = (id?: string, defaultToRoot?: boolean): babylNode => {
     if (id === undefined && defaultToRoot) return this.root_;
     if (id !== undefined && !(id in this.nodes_)) throw new Error(`${id} doesn't exist`);
     return this.nodes_[id];
   };
 
-  private createMaterial_ = (id: string, material: Material) => {
-
-    let bMaterial: babylMaterial;
-    switch (material.type) {
-      case 'basic': {
-        const basic = new StandardMaterial(id, this.bScene_);
-        const { color } = material;
-
-        if (color) {
-          switch (color.type) {
-            case 'color3': {
-              basic.diffuseColor = Color.toBabylon(color.color);
-              basic.diffuseTexture = null;
-              break;
-            }
-            case 'texture': {
-              if (!color.uri) {
-                basic.diffuseColor = new Color3(0.5, 0, 0.5);
-              } else {
-                if (id.includes('Sky')) {
-                  basic.reflectionTexture = new Texture(color.uri, this.bScene_);
-                  basic.reflectionTexture.coordinatesMode = Texture.FIXED_EQUIRECTANGULAR_MODE;
-                  basic.backFaceCulling = false;
-                  basic.disableLighting = true;
-                } else if (id === 'Container') {
-                  const myDynamicTexture = new DynamicTexture("dynamic texture", 1000, this.bScene_, true);
-                  // myDynamicTexture.drawText(material.text, 130, 600, "18px Arial", "white", "gray", true);
-                  myDynamicTexture.drawText(color.uri, 130, 600, "18px Arial", "white", "gray", true);
-                  basic.diffuseTexture = myDynamicTexture;
-                } else {
-                  basic.bumpTexture = new Texture(color.uri, this.bScene_, false, false);
-                  basic.emissiveTexture = new Texture(color.uri, this.bScene_, false, false);
-                  basic.diffuseTexture = new Texture(color.uri, this.bScene_, false, false);
-                  basic.diffuseTexture.coordinatesMode = Texture.FIXED_EQUIRECTANGULAR_MODE;
-                  basic.backFaceCulling = false;
-                }
-              }
-              break;
-            }
-          }
-        }
-        bMaterial = basic;
-        break;
-      }
-      case 'pbr': {
-        const pbr = new PBRMaterial(id, this.bScene_);
-        const { albedo, ambient, emissive, metalness, reflection } = material;
-        if (albedo) {
-          switch (albedo.type) {
-            case 'color3': {
-              pbr.albedoColor = Color.toBabylon(albedo.color);
-              break;
-            }
-            case 'texture': {
-              pbr.albedoTexture = new Texture(albedo.uri, this.bScene_);
-              break;
-            }
-          }
-        }
-
-        if (ambient) {
-          switch (ambient.type) {
-            case 'color3': {
-              pbr.ambientColor = Color.toBabylon(ambient.color);
-              break;
-            }
-            case 'texture': {
-              pbr.ambientTexture = new Texture(ambient.uri, this.bScene_);
-              break;
-            }
-          }
-        }
-
-        if (emissive) {
-          const glow = new GlowLayer('glow', this.bScene_);
-          switch (emissive.type) {
-            case 'color3': {
-              pbr.emissiveColor = Color.toBabylon(emissive.color);
-              break;
-            }
-            case 'texture': {
-              pbr.emissiveTexture = new Texture(emissive.uri, this.bScene_);
-              break;
-            }
-          }
-        }
-        
-        if (metalness) {
-          switch (metalness.type) {
-            case 'color1': {
-              pbr.metallic = metalness.color;
-              break;
-            }
-            case 'texture': {
-              pbr.metallicTexture = new Texture(metalness.uri, this.bScene_);
-              break;
-            }
-          }
-        }
-        
-        if (reflection) {
-          switch (reflection.type) {
-            case 'color3': {
-              pbr.reflectivityColor = Color.toBabylon(reflection.color);
-              break;
-            }
-            case 'texture': {
-              pbr.reflectivityTexture = new Texture(reflection.uri, this.bScene_);
-              break;
-            }
-          }
-        }
-
-        bMaterial = pbr;
-
-        break;
-      }
-    }
-
-    return bMaterial;
-  };
-
-  private updateMaterialBasic_ = (bMaterial: StandardMaterial, material: Patch.InnerPatch<Material.Basic>) => {
-    const { color } = material;
-
-    if (color.type === Patch.Type.InnerChange || color.type === Patch.Type.OuterChange) {
-      switch (color.next.type) {
-        case 'color3': {
-
-          bMaterial.diffuseColor = Color.toBabylon(color.next.color);
-          bMaterial.diffuseTexture = null;
-          break;
-        }
-        case 'texture': {
-          if (!color.next.uri) {
-            bMaterial.diffuseColor = new Color3(0.5, 0, 0.5);
-            bMaterial.diffuseTexture = null;
-          } else if (color.next.uri[0] !== '/') {
-            const myDynamicTexture = new DynamicTexture("dynamic texture", 1000, this.bScene_, true);
-            // myDynamicTexture.drawText(material.text, 130, 600, "18px Arial", "white", "gray", true);
-            myDynamicTexture.drawText(color.next.uri, 130, 600, "18px Arial", "white", "gray", true);
-            bMaterial.diffuseTexture = myDynamicTexture;
-          } else {
-            bMaterial.diffuseColor = Color.toBabylon(Color.WHITE);
-            bMaterial.diffuseTexture = new Texture(color.next.uri, this.bScene_);
-          }
-          break;
-        }
-      }
-    }
-
-    return bMaterial;
-  };
-
-  private updateMaterialPbr_ = (bMaterial: PBRMaterial, material: Patch.InnerPatch<Material.Pbr>) => {
-    const { albedo, ambient, emissive, metalness, reflection } = material;
-
-    if (albedo.type === Patch.Type.OuterChange) {
-      switch (albedo.next.type) {
-        case 'color3': {
-          bMaterial.albedoColor = Color.toBabylon(albedo.next.color);
-          bMaterial.albedoTexture = null;
-          break;
-        }
-        case 'texture': {
-          if (!albedo.next.uri) {
-            bMaterial.albedoColor = new Color3(0.5, 0, 0.5);
-          } else {
-            bMaterial.albedoColor = Color.toBabylon(Color.WHITE);
-            bMaterial.albedoTexture = new Texture(albedo.next.uri, this.bScene_);
-          }
-          break;
-        }
-      }
-    }
-
-    if (ambient.type === Patch.Type.OuterChange) {
-      switch (ambient.next.type) {
-        case 'color3': {
-          bMaterial.ambientColor = Color.toBabylon(ambient.next.color);
-          bMaterial.ambientTexture = null;
-          break;
-        }
-        case 'texture': {
-          if (!ambient.next.uri) {
-            bMaterial.ambientColor = new Color3(0.5, 0, 0.5);
-            bMaterial.ambientTexture = null;
-          } else {
-            bMaterial.ambientColor = Color.toBabylon(Color.WHITE);
-            bMaterial.ambientTexture = new Texture(ambient.next.uri, this.bScene_);
-          }
-          break;
-        }
-      }
-    }
-
-    if (emissive.type === Patch.Type.OuterChange) {
-      switch (emissive.next.type) {
-        case 'color3': {
-          bMaterial.emissiveColor = Color.toBabylon(emissive.next.color);
-          bMaterial.emissiveTexture = null;
-          break;
-        }
-        case 'texture': {
-          if (!emissive.next.uri) {
-            bMaterial.emissiveColor = new Color3(0.5, 0, 0.5);
-            bMaterial.emissiveTexture = null;
-          } else {
-            bMaterial.emissiveColor = Color.toBabylon(Color.BLACK);
-            bMaterial.emissiveTexture = new Texture(emissive.next.uri, this.bScene_);
-          }
-          break;
-        }
-      }
-    }
-
-    if (metalness.type === Patch.Type.OuterChange) {
-      switch (metalness.next.type) {
-        case 'color1': {
-          bMaterial.metallic = metalness.next.color;
-          bMaterial.metallicTexture = null;
-          break;
-        }
-        case 'texture': {
-          if (!metalness.next.uri) {
-            bMaterial.metallic = 0;
-          } else {
-            bMaterial.metallicTexture = new Texture(metalness.next.uri, this.bScene_);
-          }
-          break;
-        }
-      }
-    }
-
-    if (reflection.type === Patch.Type.OuterChange) {
-      switch (reflection.next.type) {
-        case 'color3': {
-          bMaterial.reflectivityColor = Color.toBabylon(reflection.next.color);
-          bMaterial.reflectivityTexture = null;
-          break;
-        }
-        case 'texture': {
-          if (!reflection.next.uri) {
-            bMaterial.reflectivityColor = new Color3(0.5, 0, 0.5);
-            bMaterial.reflectivityTexture = null;
-          } else {
-            bMaterial.reflectivityColor = Color.toBabylon(Color.WHITE);
-            bMaterial.reflectivityTexture = new Texture(reflection.next.uri, this.bScene_);
-          }
-          break;
-        }
-      }
-    }
-    
-    return bMaterial;
-  };
-
+ 
   private updateMaterial_ = (bMaterial: babylMaterial, material: Patch<Material>) => {
     switch (material.type) {
       case Patch.Type.OuterChange: {
@@ -549,7 +158,7 @@ class SceneBinding {
         const id = bMaterial ? `${bMaterial.id}` : `Scene Material ${this.materialIdIter_++}`;
         if (bMaterial) bMaterial.dispose();
         if (next) {
-          return this.createMaterial_(id, next);
+          return createMaterial(id, next, this.bScene_);
         }
         return null;
       }
@@ -557,10 +166,10 @@ class SceneBinding {
         const { inner, next } = material;
         switch (next.type) {
           case 'basic': {
-            return this.updateMaterialBasic_(bMaterial as StandardMaterial, inner as Patch.InnerPatch<Material.Basic>);
+            return updateMaterialBasic(bMaterial as StandardMaterial, inner as Patch.InnerPatch<Material.Basic>, this.bScene_);
           }
           case 'pbr': {
-            return this.updateMaterialPbr_(bMaterial as PBRMaterial, inner as Patch.InnerPatch<Material.Pbr>);
+            return updateMaterialPbr(bMaterial as PBRMaterial, inner as Patch.InnerPatch<Material.Pbr>, this.bScene_);
           }
         }
         break;
@@ -568,86 +177,6 @@ class SceneBinding {
     }
 
     return bMaterial;
-  };
-
-  private createObject_ = async (node: Node.Obj, nextScene: Scene): Promise<babylNode> => {
-    const parent = this.findBNode_(node.parentId, true);
-
-    const geometry = nextScene.geometry[node.geometryId] ?? preBuiltGeometries[node.geometryId];
-    if (!geometry) {
-      console.error(`node ${LocalizedString.lookup(node.name, LocalizedString.EN_US)} has invalid geometry ID: ${node.geometryId}`);
-      return null;
-    }
-    const ret = await this.buildGeometry_(node.name[LocalizedString.EN_US], geometry, node.faceUvs);
-
-    if (!node.visible) {
-      SceneBinding.apply_(ret, m => m.isVisible = false);
-    }
-
-    if (node.material) {
-      const material = this.createMaterial_(node.name[LocalizedString.EN_US], node.material);
-      SceneBinding.apply_(ret, m => m.material = material);
-    }
-
-    ret.setParent(parent);
-    return ret;
-  };
-
-  private createEmpty_ = (node: Node.Empty): TransformNode => {
-    const parent = this.findBNode_(node.parentId, true);
-
-    const ret = new TransformNode(node.name[LocalizedString.EN_US], this.bScene_);
-    ret.setParent(parent);
-    return ret;
-  };
-
-  private createDirectionalLight_ = (id: string, node: Node.DirectionalLight): DirectionalLight => {
-    const ret = new DirectionalLight(node.name[LocalizedString.EN_US], RawVector3.toBabylon(node.direction), this.bScene_);
-
-    ret.intensity = node.intensity;
-    if (node.radius !== undefined) ret.radius = node.radius;
-    if (node.range !== undefined) ret.range = node.range;
-
-    this.shadowGenerators_[id] = SceneBinding.createShadowGenerator_(ret);
-
-    return ret;
-  };
-
-  private createSpotLight_ = (id: string, node: Node.SpotLight): SpotLight => {
-    const origin: ReferenceFramewUnits = node.origin ?? {};
-    const position: Vector3wUnits = origin.position ?? Vector3wUnits.zero();
-    
-    const ret = new SpotLight(
-      node.name[LocalizedString.EN_US],
-      RawVector3.toBabylon(Vector3wUnits.toRaw(position, 'centimeters')),
-      RawVector3.toBabylon(node.direction),
-      Angle.toRadiansValue(node.angle),
-      node.exponent,
-      this.bScene_
-    );
-
-    this.shadowGenerators_[id] = SceneBinding.createShadowGenerator_(ret);
-
-    return ret;
-  };
-
-  private createPointLight_ = (id: string, node: Node.PointLight): PointLight => {
-    const origin: ReferenceFramewUnits = node.origin ?? {};
-    const position: Vector3wUnits = origin.position ?? Vector3wUnits.zero();
-
-    const ret = new PointLight(
-      node.name[LocalizedString.EN_US],
-      RawVector3.toBabylon(Vector3wUnits.toRaw(position, 'centimeters')),
-      this.bScene_
-    );
-
-    ret.intensity = node.intensity;
-    
-    this.shadowGenerators_[id] = SceneBinding.createShadowGenerator_(ret);
-
-    ret.setEnabled(node.visible);
-
-    return ret;
   };
 
   // Create Robot Binding
@@ -657,12 +186,11 @@ class SceneBinding {
     WorkerInstance.sync(node.state);
 
     const robotBinding = new RobotBinding(this.bScene_, this.physicsViewer_);
+
     const robot = this.robots_[node.robotId];
     if (!robot) throw new Error(`Robot by id "${node.robotId}" not found`);
     await robotBinding.setRobot(node, robot, id);
     robotBinding.linkOrigins = this.robotLinkOrigins_[id] || {};
-    // console.log('robot linkOrigins', robotBinding.linkOrigins);
-    // Here the linkOrigins are all shown as 0,0,0, this may be why the initial kinematics are messed up.
 
     robotBinding.visible = true;
     const observerObj: { observer: Observer<babylScene> } = { observer: null };
@@ -695,14 +223,6 @@ class SceneBinding {
     return robotBinding;
   };
 
-  private static createShadowGenerator_ = (light: IShadowLight) => {
-    const ret = new ShadowGenerator(1024, light);
-    ret.useKernelBlur = false;
-    ret.blurScale = 2;
-    ret.filter = ShadowGenerator.FILTER_POISSONSAMPLING;
-    return ret;
-  };
-
   private createNode_ = async (id: string, node: Node, nextScene: Scene): Promise<babylNode> => {
     let nodeToCreate: Node = node;
 
@@ -724,11 +244,17 @@ class SceneBinding {
 
     let ret: babylNode;
     switch (nodeToCreate.type) {
-      case 'object': ret = await this.createObject_(nodeToCreate, nextScene); break;
-      case 'empty': ret = this.createEmpty_(nodeToCreate); break;
-      case 'directional-light': ret = this.createDirectionalLight_(id, nodeToCreate); break;
-      case 'spot-light': ret = this.createSpotLight_(id, nodeToCreate); break;
-      case 'point-light': ret = this.createPointLight_(id, nodeToCreate); break;
+      case 'object': {
+        const parent = this.findBNode_(nodeToCreate.parentId, true);
+        ret = await createObject(nodeToCreate, nextScene, parent, this.bScene_); break;
+      }
+      case 'empty': {
+        const parent = this.findBNode_(nodeToCreate.parentId, true);
+        ret = createEmpty(nodeToCreate, parent, this.bScene_); break;
+      }
+      case 'directional-light': ret = createDirectionalLight(id, nodeToCreate, this.bScene_, this.shadowGenerators_); break;
+      case 'spot-light': ret = createSpotLight(id, nodeToCreate, this.bScene_, this.shadowGenerators_); break;
+      case 'point-light': ret = createPointLight(id, nodeToCreate, this.bScene_, this.shadowGenerators_); break;
       case 'robot': await this.createRobot_(id, nodeToCreate); break;
       default: {
         console.warn('invalid node type for create node:', nodeToCreate.type);
@@ -744,7 +270,7 @@ class SceneBinding {
     ret.metadata = { id } as SceneMeshMetadata;
 
     if (ret instanceof AbstractMesh || ret instanceof TransformNode) {
-      SceneBinding.apply_(ret, m => {
+      apply(ret, m => {
         m.metadata = { id } as SceneMeshMetadata;
         this.restorePhysicsToObject(m, nodeToCreate as Node.Obj, null, nextScene);
       });
@@ -824,7 +350,7 @@ class SceneBinding {
 
     let bMaterial = this.findMaterial_(bNode);
     bMaterial = this.updateMaterial_(bMaterial, node.inner.material);
-    SceneBinding.apply_(bNode, m => {
+    apply(bNode, m => {
       m.material = bMaterial;
     });
 
@@ -834,7 +360,7 @@ class SceneBinding {
     }
 
     if (node.inner.physics.type === Patch.Type.OuterChange) {
-      SceneBinding.apply_(bNode, m => {
+      apply(bNode, m => {
         this.removePhysicsFromObject(m);
         this.restorePhysicsToObject(m, node.next, id, nextScene);
       });
@@ -842,7 +368,7 @@ class SceneBinding {
 
     if (node.inner.visible.type === Patch.Type.OuterChange) {
       const nextVisible = node.inner.visible.next;
-      SceneBinding.apply_(bNode, m => {
+      apply(bNode, m => {
         m.isVisible = nextVisible;
 
         // Create/remove physics for object becoming visible/invisible
@@ -1093,29 +619,6 @@ class SceneBinding {
 
   private gizmoManager_: GizmoManager;
 
-  private createArcRotateCamera_ = (camera: Camera.ArcRotate): ArcRotateCamera => {
-    const ret = new ArcRotateCamera('botcam', 0, 0, 0, Vector3wUnits.toBabylon(camera.target, 'centimeters'), this.bScene_);
-    ret.attachControl(this.bScene_.getEngine().getRenderingCanvas(), true);
-    ret.position = Vector3wUnits.toBabylon(camera.position, 'centimeters');
-    ret.panningSensibility = 100;
-    // ret.checkCollisions = true;
-
-    return ret;
-  };
-
-  private createNoneCamera_ = (camera: Camera.None): ArcRotateCamera => {
-    const ret = new ArcRotateCamera('botcam', 10, 10, 10, Vector3wUnits.toBabylon(Vector3wUnits.zero(), 'centimeters'), this.bScene_);
-    ret.attachControl(this.bScene_.getEngine().getRenderingCanvas(), true);
-
-    return ret;
-  };
-
-  private createCamera_ = (camera: Camera): babylCamera => {
-    switch (camera.type) {
-      case 'arc-rotate': return this.createArcRotateCamera_(camera);
-      case 'none': return this.createNoneCamera_(camera);
-    }
-  };
 
   private updateArcRotateCamera_ = (node: Patch.InnerChange<Camera.ArcRotate>): ArcRotateCamera => {
     if (!(this.camera_ instanceof ArcRotateCamera)) throw new Error('Expected ArcRotateCamera');
@@ -1315,7 +818,7 @@ class SceneBinding {
         const prevBNode = this.bScene_.getNodeById(prev);
         if (prevNodeObj && (prevBNode instanceof AbstractMesh || prevBNode instanceof TransformNode)) {
           prevBNode.metadata = { ...(prevBNode.metadata as SceneMeshMetadata), selected: false };
-          SceneBinding.apply_(prevBNode, m => this.restorePhysicsToObject(m, prevNodeObj, prev, scene));
+          apply(prevBNode, m => this.restorePhysicsToObject(m, prevNodeObj, prev, scene));
         }
 
         this.gizmoManager_.attachToNode(null);
@@ -1325,7 +828,7 @@ class SceneBinding {
       if (next !== undefined) {
         const node = this.bScene_.getNodeById(next);
         if (node instanceof AbstractMesh || node instanceof TransformNode) {
-          SceneBinding.apply_(node, m => this.removePhysicsFromObject(m));
+          apply(node, m => this.removePhysicsFromObject(m));
           node.metadata = { ...(node.metadata as SceneMeshMetadata), selected: true };
           this.gizmoManager_.attachToNode(node);
         }
@@ -1335,12 +838,12 @@ class SceneBinding {
     const oldCamera = this.camera_;
     switch (patch.camera.type) {
       case Patch.Type.OuterChange: {
-        this.camera_ = this.createCamera_(patch.camera.next);
+        this.camera_ = createCamera(patch.camera.next, this.bScene_);
         break;
       }
       case Patch.Type.InnerChange: {
         if (this.camera_) this.camera_ = this.updateCamera_(patch.camera);
-        else this.camera_ = this.createCamera_(patch.camera.next);
+        else this.camera_ = createCamera(patch.camera.next, this.bScene_);
         break;
       }
     }

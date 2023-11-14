@@ -21,6 +21,7 @@ export const DEMOBOT: Robot = {
       mass: grams(400),
       restitution: 0,
       friction: 0.01,
+      inertia: [10, 10, 10]
     }),
     lightSensor: Node.lightSensor({
       parentId: 'chassis',
@@ -83,6 +84,7 @@ export const DEMOBOT: Robot = {
       mass: grams(14),
       friction: 50,
       restitution: 0,
+      inertia: [6, 6, 6],
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
     }),
     claw: Node.servo({
@@ -99,6 +101,7 @@ export const DEMOBOT: Robot = {
       mass: grams(7),
       friction: 50,
       restitution: 0,
+      inertia: [3, 3, 3],
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
     }),
     touch_sensor: Node.touchSensor({
