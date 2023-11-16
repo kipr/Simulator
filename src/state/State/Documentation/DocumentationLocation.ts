@@ -1,4 +1,4 @@
-import construct from '../../../util/construct';
+import construct from '../../../util/redux/construct';
 
 namespace DocumentationLocation {
   export enum Type {

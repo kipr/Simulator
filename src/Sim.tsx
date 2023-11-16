@@ -8,9 +8,9 @@ import HavokPhysics from "@babylonjs/havok";
 import '@babylonjs/loaders/glTF';
 import '@babylonjs/core/Physics/physicsEngineComponent';
 
-import Dict from './util/Dict';
-import { RawQuaternion, RawVector2, RawVector3 } from './util/math';
-import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from './util/unit-math';
+import Dict from './util/objectOps/Dict';
+import { RawQuaternion, RawVector2, RawVector3 } from './util/math/math';
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from './util/math/UnitMath';
 import { Angle } from './util';
 
 import store from './state';

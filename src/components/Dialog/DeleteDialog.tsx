@@ -13,7 +13,7 @@ import LocalizedString from '../../util/LocalizedString';
 import tr from '@i18n';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
-import Dict from '../../util/Dict';
+import Dict from '../../util/objectOps/Dict';
 import { sprintf } from 'sprintf-js';
 
 export interface DeleteDialogPublicProps extends ThemeProps, StyleProps {

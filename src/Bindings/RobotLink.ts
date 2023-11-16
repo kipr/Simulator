@@ -9,7 +9,7 @@ import Geometry from '../state/State/Robot/Geometry';
 import Node from '../state/State/Robot/Node';
 import { RENDER_SCALE_METERS_MULTIPLIER } from '../components/Constants/renderConstants';
 import Robot from '../state/State/Robot';
-import { Mass } from '../util/Value';
+import { Mass } from '../util/math/Value';
 
 
 interface BuiltGeometry {

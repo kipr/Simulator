@@ -1,11 +1,11 @@
 import AbstractRobot from '../../../AbstractRobot';
-import deepNeq from '../../../util/deepNeq';
-import { RawVector2, RawVector3 } from '../../../util/math';
-import { ReferenceFramewUnits } from '../../../util/unit-math';
+import deepNeq from '../../../util/redux/deepNeq';
+import { RawVector2, RawVector3 } from '../../../util/math/math';
+import { ReferenceFramewUnits } from '../../../util/math/UnitMath';
 import { DistributiveOmit } from '../../../util/types';
-import { Angle, Mass } from '../../../util/Value';
+import { Angle, Mass } from '../../../util/math/Value';
 import LocalizedString from '../../../util/LocalizedString';
-import Patch from '../../../util/Patch';
+import Patch from '../../../util/redux/Patch';
 import Material from './Material';
 
 namespace Node {
@@ -55,6 +55,7 @@ namespace Node {
       visible: true
     };
 
+    // Upcast turns a extended type T into a base type
     export const upcast = <T extends Base>(t: T): Base => ({
       name: t.name,
       origin: t.origin,
@@ -407,6 +408,10 @@ namespace Node {
     }
   };
 
+  /**
+   * TemplateNode is the type of a node that includes only the properties that go beyond the
+   * properties of base.
+   */
   export type TemplatedNode<T extends Base> = DistributiveOmit<T, keyof Base>;
 }
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
-import Dict from '../../util/Dict';
-import { RawVector2 } from '../../util/math';
+import Dict from '../../util/objectOps/Dict';
+import { RawVector2 } from '../../util/math/math';
 import { StyleProps } from '../../util/style';
 import Svg, { DrawFunction } from '../Interface/Svg';
 

@@ -5,9 +5,9 @@ import { Scene as babylScene, Quaternion, Vector3, Mesh,
 } from '@babylonjs/core';
 
 import Node from '../state/State/Robot/Node';
-import { Vector3wUnits } from '../util/unit-math';
+import { Vector3wUnits } from '../util/math/UnitMath';
 import { RENDER_SCALE } from '../components/Constants/renderConstants';
-import { RawVector3 } from '../util/math';
+import { RawVector3 } from '../util/math/math';
 
 
 

@@ -1,7 +1,7 @@
-import deepNeq from "../../../util/deepNeq";
-import { Vector3wUnits } from "../../../util/unit-math";
-import { Distance } from "../../../util/Value";
-import Patch from '../../../util/Patch';
+import deepNeq from "../../../util/redux/deepNeq";
+import { Vector3wUnits } from "../../../util/math/UnitMath";
+import { Distance } from "../../../util/math/Value";
+import Patch from '../../../util/redux/Patch';
 
 namespace Camera {
   export interface ArcRotate {

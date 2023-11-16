@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DARK, ThemeProps } from './Constants/theme';
 import { StyleProps } from '../util/style';
 import { styled } from 'styletron-react';
-import { RawVector2 } from '../util/math';
+import { RawVector2 } from '../util/math/math';
 
 export interface IFrameProps extends StyleProps, ThemeProps {
   src: string;

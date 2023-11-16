@@ -3,7 +3,7 @@ import { Texture, DynamicTexture, StandardMaterial, Color3, PBRMaterial,
 
 import Material from '../state/State/Scene/Material';
 import { Color } from '../state/State/Scene/Color';
-import Patch from "../util/Patch";
+import Patch from "../util/redux/Patch";
 
 
 

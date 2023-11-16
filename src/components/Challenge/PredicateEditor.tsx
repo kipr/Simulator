@@ -1,6 +1,6 @@
 import * as React from 'react';
 import LocalizedString from '../../util/LocalizedString';
-import Dict from '../../util/Dict';
+import Dict from '../../util/objectOps/Dict';
 import Event from '../../state/State/Challenge/Event';
 import Expr from '../../state/State/Challenge/Expr';
 

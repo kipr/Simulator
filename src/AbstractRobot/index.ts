@@ -1,5 +1,5 @@
-import deepNeq from '../util/deepNeq';
-import Patch from '../util/Patch';
+import deepNeq from '../util/redux/deepNeq';
+import Patch from '../util/redux/Patch';
 import Motor from './Motor';
 import Servo from './Servo';
 import WriteCommand from './WriteCommand';

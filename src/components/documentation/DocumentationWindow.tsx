@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { RawVector2 } from '../../util/math';
+import { RawVector2 } from '../../util/math/math';
 import { ThemeProps } from '../Constants/theme';
 import Widget, { Mode, Size } from '../Interface/Widget';
 import DocumentationRoot from './DocumentationRoot';
 
 import { GLOBAL_EVENTS, GlobalEvents } from '../../util/GlobalEvents';
-import construct from '../../util/construct';
+import construct from '../../util/redux/construct';
 import { styled } from 'styletron-react';
 import { DocumentationState } from '../../state/State';
 import { State as ReduxState } from '../../state';

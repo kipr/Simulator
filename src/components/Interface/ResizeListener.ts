@@ -1,4 +1,4 @@
-import { RawVector2 } from "../../util/math";
+import { RawVector2 } from "../../util/math/math";
 
 export type ResizeCallback = (size: RawVector2, element: Element) => void;
 

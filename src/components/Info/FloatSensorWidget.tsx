@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 
-import { RawVector2 } from '../../util/math';
+import { RawVector2 } from '../../util/math/math';
 import SensorWidget, { SensorWidgetProps } from './SensorWidget';
 
 export interface FloatSensorWidgetProps extends SensorWidgetProps {

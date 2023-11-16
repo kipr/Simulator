@@ -1,17 +1,17 @@
 import Scene, { AsyncScene, SceneBrief } from "../State/Scene";
 import { Scenes } from "../State";
 import Async from "../State/Async";
-import * as JBC_SCENES from '../../scenes';
-import construct from '../../util/construct';
+import * as JBC_SCENES from '../../SimulatorDefinitions/scenes';
+import construct from '../../util/redux/construct';
 import Geometry from '../State/Scene/Geometry';
 import Node from '../State/Scene/Node';
 import Camera from '../State/Scene/Camera';
-import { ReferenceFramewUnits, Vector3wUnits } from '../../util/unit-math';
+import { ReferenceFramewUnits, Vector3wUnits } from '../../util/math/UnitMath';
 import db from '../../db';
 import { SCENE_COLLECTION } from '../../db/constants';
 import store from '..';
 import Selector from '../../db/Selector';
-import Dict from '../../util/Dict';
+import Dict from '../../util/objectOps/Dict';
 import Script from '../State/Scene/Script';
 import { errorToAsyncError, mutate } from './util';
 
@@ -536,6 +536,7 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
       };
     }
     case 'scenes/soft-reset-scene': {
+      console.log('soft reset scene');
       const scene = state[action.sceneId];
 
       if (!scene) return state;
@@ -547,8 +548,9 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
           [action.sceneId]: Async.mutate(scene, draft => {
             for (const nodeId in draft.nodes) {
               const { origin, startingOrigin } = draft.nodes[nodeId];
-    
+              
               if (!startingOrigin) continue;
+              // console.log("nodeId", nodeId, JSON.stringify(startingOrigin));
     
               draft.nodes[nodeId].origin = {
                 position: startingOrigin.position ? startingOrigin.position : undefined,

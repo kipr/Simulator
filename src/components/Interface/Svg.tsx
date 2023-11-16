@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
-import { RawVector2 } from '../../util/math';
+import { RawVector2 } from '../../util/math/math';
 import resizeListener, { ResizeListener } from './ResizeListener';
 import { StyleProps } from '../../util/style';
 

@@ -1,10 +1,10 @@
-import Dict from '../../../util/Dict';
+import Dict from '../../../util/objectOps/Dict';
 import Geometry from './Geometry';
 import Node from './Node';
 import Script from './Script';
-import { Vector3wUnits } from '../../../util/unit-math';
+import { Vector3wUnits } from '../../../util/math/UnitMath';
 import Camera from './Camera';
-import Patch from '../../../util/Patch';
+import Patch from '../../../util/redux/Patch';
 import Async from '../Async';
 import LocalizedString from '../../../util/LocalizedString';
 import Author from '../../../db/Author';

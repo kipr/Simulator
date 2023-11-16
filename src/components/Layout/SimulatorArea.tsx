@@ -5,7 +5,7 @@ import * as Sim from '../../Sim';
 import { styled } from 'styletron-react';
 
 import resizeListener, { ResizeListener } from '../Interface/ResizeListener';
-import { RawVector2 } from '../../util/math';
+import { RawVector2 } from '../../util/math/math';
 
 import Loading from '../Loading';
 import MotorsSwappedDialog from '../Dialog/MotorsSwappedDialog';

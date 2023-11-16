@@ -1,4 +1,4 @@
-import Dict from '../../../util/Dict';
+import Dict from '../../../util/objectOps/Dict';
 import Expr from './Expr';
 
 interface Predicate {

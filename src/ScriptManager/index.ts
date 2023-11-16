@@ -1,16 +1,16 @@
-import Dict from '../util/Dict';
+import Dict from '../util/objectOps/Dict';
 import Scene from '../state/State/Scene';
 import Camera from '../state/State/Scene/Camera';
 import Geometry from '../state/State/Scene/Geometry';
 import Node from '../state/State/Scene/Node';
 import Script from '../state/State/Scene/Script';
-import { RotationwUnits, Vector3wUnits } from '../util/unit-math';
+import { RotationwUnits, Vector3wUnits } from '../util/math/UnitMath';
 
 import { v4 as uuid } from 'uuid';
-import construct from '../util/construct';
+import construct from '../util/redux/construct';
 import { Ids, ScriptSceneBinding } from './ScriptSceneBinding';
-import { RawAxisAngle, RawQuaternion, RawReferenceFrame, RawVector3 } from '../util/math';
-import { Angle, Mass, Distance } from '../util/Value';
+import { RawAxisAngle, RawQuaternion, RawReferenceFrame, RawVector3 } from '../util/math/math';
+import { Angle, Mass, Distance } from '../util/math/Value';
 
 class ScriptManager {
   private scene_: Scene;

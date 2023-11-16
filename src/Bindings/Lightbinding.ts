@@ -2,9 +2,9 @@ import { ShadowGenerator,  IShadowLight, PointLight, SpotLight, DirectionalLight
   Scene as babylScene } from '@babylonjs/core';
 
 import Node from "../state/State/Scene/Node";
-import Dict from "../util/Dict";
-import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../util/unit-math";
-import { RawQuaternion, RawVector2, RawVector3 } from "../util/math";
+import Dict from "../util/objectOps/Dict";
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../util/math/UnitMath";
+import { RawQuaternion, RawVector2, RawVector3 } from "../util/math/math";
 import LocalizedString from '../util/LocalizedString';
 import { Angle, Distance, Mass, SetOps } from "../util";
 

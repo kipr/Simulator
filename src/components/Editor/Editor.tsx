@@ -15,7 +15,7 @@ import ProgrammingLanguage from '../../programming/ProgrammingLanguage';
 
 import { faArrowsRotate, faFileDownload, faIndent } from '@fortawesome/free-solid-svg-icons';
 import Script from '../../state/State/Scene/Script';
-import Dict from '../../util/Dict';
+import Dict from '../../util/objectOps/Dict';
 
 import * as monaco from 'monaco-editor';
 import DocumentationLocation from '../../state/State/Documentation/DocumentationLocation';

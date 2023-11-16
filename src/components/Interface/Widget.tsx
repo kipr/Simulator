@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
-import { EMPTY_ARRAY } from '../../util';
 import { Spacer } from '../Constants/common';
 import { Fa } from '../Fa';
 import { ThemeProps } from '../Constants/theme';
@@ -240,7 +239,7 @@ class Widget extends React.PureComponent<Props, State> {
             return <Component key={i} {...barComponent.props} />;
           }) : undefined}
           <Spacer />
-          {(sizes || EMPTY_ARRAY)
+          {(sizes || [])
             .map((self, i) => <Icon key={`size-${i}`} icon={sizeIcon(self)} disabled={size === i} onClick={this.onSizeChange_(i)} />)
             .filter((self, i) => !hideActiveSize || i !== size)
           }

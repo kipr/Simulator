@@ -1,5 +1,5 @@
 import Author from '../../../db/Author';
-import Dict from '../../../util/Dict';
+import Dict from '../../../util/objectOps/Dict';
 import ProgrammingLanguage from '../../../programming/ProgrammingLanguage';
 import LocalizedString from '../../../util/LocalizedString';
 import Async from '../Async';

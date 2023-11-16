@@ -1,7 +1,7 @@
 import {  ArcRotateCamera, Scene as babylScene, Camera as babylCamera } from '@babylonjs/core';
 
 import Camera from "../state/State/Scene/Camera";
-import { Vector3wUnits } from "../util/unit-math";
+import { Vector3wUnits } from "../util/math/UnitMath";
 
 
 

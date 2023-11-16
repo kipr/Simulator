@@ -1,8 +1,8 @@
-import Dict from '../util/Dict';
+import Dict from '../util/objectOps/Dict';
 import Camera from '../state/State/Scene/Camera';
 import Geometry from '../state/State/Scene/Geometry';
 import Node from '../state/State/Scene/Node';
-import { Vector3wUnits } from '../util/unit-math';
+import { Vector3wUnits } from '../util/math/UnitMath';
 
 export type Ids = string | string[] | Set<string>;
 

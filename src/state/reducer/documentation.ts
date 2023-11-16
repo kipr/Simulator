@@ -1,6 +1,6 @@
 import { DocumentationState } from '../State';
 import DocumentationLocation from '../State/Documentation/DocumentationLocation';
-import construct from '../../util/construct';
+import construct from '../../util/redux/construct';
 import { Size } from '../../components/Interface/Widget';
 import Documentation from '../State/Documentation';
 

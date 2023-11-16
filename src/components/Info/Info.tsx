@@ -9,7 +9,7 @@ import SensorWidget from './SensorWidget';
 import { StyledText } from '../../util';
 import Location from './Location';
 import { Fa } from '../Fa';
-import { ReferenceFramewUnits } from '../../util/unit-math';
+import { ReferenceFramewUnits } from '../../util/math/UnitMath';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
 import { ScenesAction } from '../../state/reducer';

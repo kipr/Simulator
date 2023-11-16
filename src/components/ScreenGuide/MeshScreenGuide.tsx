@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RawVector2 } from '../../util/math';
+import { RawVector2 } from '../../util/math/math';
 import { StyleProps } from '../../util/style';
 import { ThemeProps } from '../Constants/theme';
 import ScreenGuide from './ScreenGuide';

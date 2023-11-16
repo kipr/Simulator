@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { styled } from "styletron-react";
-import Dict from "../../util/Dict";
+import Dict from "../../util/objectOps/Dict";
 import { State as ReduxState } from "../../state";
 import { Scenes } from "../../state/State";
 import Async from "../../state/State/Async";

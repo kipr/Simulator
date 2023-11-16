@@ -3,7 +3,7 @@ import * as ReactDom from 'react-dom';
 
 import { ThemeProps } from "../Constants/theme";
 
-import { Rectangle, RawVector2 } from '../../util/math';
+import { Rectangle, RawVector2 } from '../../util/math/math';
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
 import { GLOBAL_EVENTS } from '../../util';

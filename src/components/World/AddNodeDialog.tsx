@@ -1,6 +1,6 @@
 import * as React from "react";
 import { styled } from "styletron-react";
-import { ReferenceFramewUnits, RotationwUnits } from "../../util/unit-math";
+import { ReferenceFramewUnits, RotationwUnits } from "../../util/math/UnitMath";
 import { Angle, Distance, Mass, Value } from "../../util";
 import ComboBox from "../Interface/ComboBox";
 import { Dialog } from "../Dialog/Dialog";
@@ -11,7 +11,7 @@ import ScrollArea from "../Interface/ScrollArea";
 import Section from "../Interface/Section";
 import { ThemeProps } from "../Constants/theme";
 import ValueEdit from "../ValueEdit";
-import { RawAxisAngle, RawEuler } from "../../util/math";
+import { RawAxisAngle, RawEuler } from "../../util/math/math";
 import NodeSettings from "./NodeSettings";
 import Node from "../../state/State/Scene/Node";
 

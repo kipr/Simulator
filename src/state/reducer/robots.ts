@@ -1,6 +1,6 @@
 import Robot from "../State/Robot";
 import Async from "../State/Async";
-import * as ROBOTS from '../../robots';
+import * as ROBOTS from '../../SimulatorDefinitions/robots';
 import { Robots } from '../State';
 
 export namespace RobotsAction {

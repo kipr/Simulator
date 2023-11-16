@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { RawVector2, clamp } from '../../util/math';
+import { RawVector2, clamp } from '../../util/math/math';
 
 import { StyleProps } from '../../util/style';
 import { styled } from 'styletron-react';

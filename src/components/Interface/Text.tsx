@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleProps } from '../../util/style';
-import { AnyText, EMPTY_OBJECT, StyledText } from '../../util';
+import { AnyText, StyledText } from '../../util';
 
 export interface TextProps extends StyleProps {
   text: AnyText;
@@ -17,7 +17,7 @@ export class Text extends React.PureComponent<Props> {
     const elements: JSX.Element[] = [];
     switch (styledText.type) {
       case StyledText.Type.Text: {
-        elements.push(<span {...(styledText.props || EMPTY_OBJECT)} style={styledText.style || EMPTY_OBJECT} key={key}>{styledText.text}</span>);
+        elements.push(<span {...(styledText.props || {})} style={styledText.style || {}} key={key}>{styledText.text}</span>);
         break;
       }
 
@@ -27,7 +27,7 @@ export class Text extends React.PureComponent<Props> {
       }
       case StyledText.Type.Component: {
         const Component = styledText.component;
-        elements.push(<Component key={key} {...(styledText.props || EMPTY_OBJECT)} />);
+        elements.push(<Component key={key} {...(styledText.props || {})} />);
         break;
       }
 

@@ -8,7 +8,7 @@ import Scene from '../../state/State/Scene';
 import SceneSettings from '../World/SceneSettings';
 import DialogBar from './DialogBar';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import deepNeq from '../../util/deepNeq';
+import deepNeq from '../../util/redux/deepNeq';
 
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';

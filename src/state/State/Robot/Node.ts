@@ -1,10 +1,10 @@
-import deepNeq from '../../../util/deepNeq';
-import { RawVector3 } from '../../../util/math';
-import { Vector3wUnits, ReferenceFramewUnits } from '../../../util/unit-math';
+import deepNeq from '../../../util/redux/deepNeq';
+import { RawVector3 } from '../../../util/math/math';
+import { Vector3wUnits, ReferenceFramewUnits } from '../../../util/math/UnitMath';
 import { Angle, Distance, Mass } from '../../../util';
-import construct from '../../../util/construct';
+import construct from '../../../util/redux/construct';
 import LocalizedString from '../../../util/LocalizedString';
-import Patch from '../../../util/Patch';
+import Patch from '../../../util/redux/Patch';
 
 namespace Node {
   export enum Type {

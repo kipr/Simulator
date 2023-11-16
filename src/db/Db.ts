@@ -1,4 +1,4 @@
-import Dict from '../util/Dict';
+import Dict from '../util/objectOps/Dict';
 import Error from './Error';
 import Selector from './Selector';
 import TokenManager from './TokenManager';

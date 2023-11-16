@@ -4,8 +4,8 @@ import { StyleProps } from '../../util/style';
 import { Value, StyledText, Angle, Distance } from '../../util';
 import { ThemeProps } from '../Constants/theme';
 import ValueEdit from '../ValueEdit';
-import deepNeq from '../../util/deepNeq';
-import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../util/unit-math';
+import deepNeq from '../../util/redux/deepNeq';
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../util/math/UnitMath';
 import LocalizedString from '../../util/LocalizedString';
 
 import tr from '@i18n';

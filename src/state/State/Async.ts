@@ -301,6 +301,14 @@ namespace Async {
     }
   };
 
+  /**
+   * Depending on the type of the async object, the function performs different actions but follows the same 
+   *  pattern: it creates a new state using Immer's produce function based on the provided recipe.
+   * @param async represent some asynchronous state
+   * @param recipe function that dictates how to update the state
+   * @returns The produce function then returns a new, updated state that reflects the changes made in the recipe, 
+   *              while the original state remains unchanged.
+   */
   export const mutate = <B, T>(async: Async<B, T>, recipe: (draft: WritableDraft<T>) => void): Async<B, T> => {
     switch (async.type) {
       case Type.Loaded: return saveable({

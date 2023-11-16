@@ -1,7 +1,7 @@
 import * as React from "react";
 import { styled } from "styletron-react";
-import { RawVector3, RawAxisAngle, RawEuler } from "../../util/math";
-import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../util/unit-math";
+import { RawVector3, RawAxisAngle, RawEuler } from "../../util/math/math";
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../util/math/UnitMath";
 
 import { Angle, Distance, Mass, UnitlessValue, Value } from "../../util";
 import ComboBox from "../Interface/ComboBox";
@@ -16,7 +16,7 @@ import ValueEdit from "../ValueEdit";
 import Geometry from '../../state/State/Scene/Geometry';
 import Node from "../../state/State/Scene/Node";
 import Scene from "../../state/State/Scene";
-import Dict from "../../util/Dict";
+import Dict from "../../util/objectOps/Dict";
 import Material from '../../state/State/Scene/Material';
 import { Color } from '../../state/State/Scene/Color';
 import { State as ReduxState } from '../../state/index';

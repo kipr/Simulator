@@ -4,11 +4,11 @@ import { Scene as babylScene, CreateSphere, Vector3, Mesh,
 } from '@babylonjs/core';
 
 import Node from '../state/State/Robot/Node';
-import { ReferenceFramewUnits } from '../util/unit-math';
+import { ReferenceFramewUnits } from '../util/math/UnitMath';
 import { RENDER_SCALE } from '../components/Constants/renderConstants';
-import { Mass } from '../util/Value';
+import { Mass } from '../util/math/Value';
 import Robot from '../state/State/Robot';
-import Dict from '../util/Dict';
+import Dict from '../util/objectOps/Dict';
 
 // Adds an invisible weight to a parent link.
 export const createWeight_ = (id: string, weight: Node.Weight, bScene_: babylScene, robot_: Robot, links_: Dict<Mesh>) => {

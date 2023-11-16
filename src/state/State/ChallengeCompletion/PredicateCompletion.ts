@@ -1,4 +1,4 @@
-import Dict from '../../../util/Dict';
+import Dict from '../../../util/objectOps/Dict';
 import Predicate from '../Challenge/Predicate';
 
 interface PredicateCompletion {

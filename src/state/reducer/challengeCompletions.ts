@@ -1,6 +1,6 @@
 import Async from "../State/Async";
 import { ChallengeCompletions } from '../State';
-import construct from '../../util/construct';
+import construct from '../../util/redux/construct';
 import Selector from '../../db/Selector';
 import db from '../../db';
 import store from '..';
@@ -8,10 +8,10 @@ import { errorToAsyncError, mutate } from './util';
 import ChallengeCompletion, { AsyncChallengeCompletion, ChallengeCompletionBrief } from '../State/ChallengeCompletion';
 import PredicateCompletion from '../State/ChallengeCompletion/PredicateCompletion';
 import Scene from '../State/Scene';
-import Dict from '../../util/Dict';
+import Dict from '../../util/objectOps/Dict';
 import { OuterObjectPatch } from 'symmetry/dist';
 import ProgrammingLanguage from '../../programming/ProgrammingLanguage';
-import { ReferenceFramewUnits } from '../../util/unit-math';
+import { ReferenceFramewUnits } from '../../util/math/UnitMath';
 
 
 export namespace ChallengeCompletionsAction {

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/prefer-for-of */
 import * as React from 'react';
 import { styled } from 'styletron-react';
-import { RawVector2 } from '../util/math';
+import { RawVector2 } from '../util/math/math';
 import { StyleProps } from '../util/style';
 import { ThemeProps } from './Constants/theme';
 

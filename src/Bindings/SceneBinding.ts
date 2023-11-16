@@ -10,19 +10,19 @@ import { PhysicsShapeType, IPhysicsCollisionEvent, IPhysicsEnginePluginV2, Physi
 import '@babylonjs/core/Engines/Extensions/engine.views';
 import '@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent';
 
-import Dict from "../util/Dict";
-import { RawQuaternion, RawVector2, RawVector3 } from "../util/math";
+import Dict from "../util/objectOps/Dict";
+import { RawQuaternion, RawVector2, RawVector3 } from "../util/math/math";
 import Scene from "../state/State/Scene";
 import Camera from "../state/State/Scene/Camera";
 import Geometry from "../state/State/Scene/Geometry";
 import Node from "../state/State/Scene/Node";
-import Patch from "../util/Patch";
+import Patch from "../util/redux/Patch";
 
-import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../util/unit-math";
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../util/math/UnitMath";
 import { Angle, Distance, Mass, SetOps } from "../util";
 import { Color } from '../state/State/Scene/Color';
 import Material from '../state/State/Scene/Material';
-import { preBuiltGeometries, preBuiltTemplates } from "../NodeTemplates";
+import { preBuiltGeometries, preBuiltTemplates } from "../SimulatorDefinitions/NodeTemplates";
 import RobotBinding from './RobotBinding';
 import Robot from '../state/State/Robot';
 import AbstractRobot from '../AbstractRobot';
@@ -264,7 +264,10 @@ class SceneBinding {
 
     if (!ret) return null;
     
-    this.updateNodePosition_(nodeToCreate, ret);
+    if (nodeToCreate.name['en-US'] === 'Can 4') {
+      console.log('createNode_ -> updateNodePosition_', nodeToCreate.name, nodeToCreate);
+    }
+    this.updateNodePosition_(nodeToCreate, ret, id, nextScene);
     ret.id = id;
     
     ret.metadata = { id } as SceneMeshMetadata;
@@ -279,21 +282,28 @@ class SceneBinding {
     return ret;
   };
 
-  private updateNodePosition_ = (node: Node, bNode: babylNode) => {
-    if (node.origin && bNode instanceof TransformNode || bNode instanceof AbstractMesh) {
+  private updateNodePosition_ = (node: Node, bNode: babylNode, nodeId: string, scene: Scene) => {
+    // if (node.origin && bNode instanceof TransformNode || bNode instanceof AbstractMesh) {
+    if (node.origin && bNode instanceof AbstractMesh) {
+      this.removePhysicsFromObject(bNode);
       const origin = node.origin || {};
       const position: Vector3wUnits = origin.position ?? Vector3wUnits.zero();
       const orientation: RotationwUnits = origin.orientation ?? RotationwUnits.EulerwUnits.identity();
       const scale = origin.scale ?? RawVector3.ONE;
 
-      bNode.position.set(
-        Distance.toCentimetersValue(position.x || Distance.centimeters(0)),
-        Distance.toCentimetersValue(position.y || Distance.centimeters(0)),
-        Distance.toCentimetersValue(position.z || Distance.centimeters(0))
-      );
+      // bNode.position.set(
+      //   Distance.toCentimetersValue(position.x || Distance.centimeters(0)),
+      //   Distance.toCentimetersValue(position.y || Distance.centimeters(0)),
+      //   Distance.toCentimetersValue(position.z || Distance.centimeters(0))
+      // );
+      bNode.position.x = Distance.toCentimetersValue(position.x || Distance.centimeters(0));
+      bNode.position.y = Distance.toCentimetersValue(position.y || Distance.centimeters(0));
+      bNode.position.z = Distance.toCentimetersValue(position.z || Distance.centimeters(0));
 
       bNode.rotationQuaternion = RawQuaternion.toBabylon(RotationwUnits.toRawQuaternion(orientation));
       bNode.scaling.set(scale.x, scale.y, scale.z);
+
+      this.restorePhysicsToObject(bNode, node as Node.Obj, nodeId, scene);
     }
   };
 
@@ -310,7 +320,7 @@ class SceneBinding {
     }
 
     if (node.inner.origin.type === Patch.Type.OuterChange) {
-      this.updateNodePosition_(node.next, bNode);
+      this.updateNodePosition_(node.next, bNode, id, this.scene);
     }
 
     return bNode;
@@ -354,9 +364,14 @@ class SceneBinding {
       m.material = bMaterial;
     });
 
+
+    
     // TODO: Handle changes to faceUvs when we fully support it
     if (node.inner.origin.type === Patch.Type.OuterChange) {
-      this.updateNodePosition_(node.next, bNode);
+      // if (node.next.name['en-US'] === 'Can 4') {
+      //   console.log('updateObject_ -> updateNodePosition_', node.next.name, node.next);
+      // }
+      this.updateNodePosition_(node.next, bNode, id, nextScene);
     }
 
     if (node.inner.physics.type === Patch.Type.OuterChange) {
@@ -477,6 +492,9 @@ class SceneBinding {
             faceUvs: Patch.none(nodeTemplate.faceUvs),
           },
         };
+        // if (id === 'can4') {
+        //   console.log('updateFromTemplate_ -> updateObject_', id, objectChange);
+        // }
         return this.updateObject_(id, objectChange, nextScene);
       }
       case 'directional-light': {
@@ -550,7 +568,7 @@ class SceneBinding {
               this.destroyNode_(id);
               return this.createNode_(id, node.prev, nextScene);
             }
-            
+            // console.log('updateNode_ -> updateObject_', node.next.name, node.next);
             return this.updateObject_(id, node as Patch.InnerChange<Node.Obj>, nextScene);
           }
           case 'directional-light': return this.updateDirectionalLight_(id, node as Patch.InnerChange<Node.DirectionalLight>);
@@ -676,7 +694,7 @@ class SceneBinding {
     this.syncCollisionFilters_();
   };
 
-  
+
   private removePhysicsFromObject = (mesh: AbstractMesh) => {
     if (!mesh.physicsBody) return;
 

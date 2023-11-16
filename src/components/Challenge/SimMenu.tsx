@@ -14,8 +14,8 @@ import { connect } from 'react-redux';
 
 import { State as ReduxState } from '../../state';
 
-import KIPR_LOGO_BLACK from '../../assets/KIPR-Logo-Black-Text-Clear-Large.png';
-import KIPR_LOGO_WHITE from '../../assets/KIPR-Logo-White-Text-Clear-Large.png';
+import KIPR_LOGO_BLACK from '../../../static/assets/KIPR-Logo-Black-Text-Clear-Large.png';
+import KIPR_LOGO_WHITE from '../../../static/assets/KIPR-Logo-White-Text-Clear-Large.png';
 import { faBars, faBook, faClone, faCogs, faCommentDots, faFlagCheckered, faGlobeAmericas, faPlay, faQuestion, faSignOutAlt, faStop, faSync } from '@fortawesome/free-solid-svg-icons';
 import SceneMenu from '../World/SceneMenu';
 import ExtraMenu from './ExtraMenu';

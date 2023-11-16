@@ -18,13 +18,12 @@ import { Slider } from '../Slider';
 
 import { State as ReduxState } from '../../state';
 import Node from '../../state/State/Scene/Node';
-import Dict from '../../util/Dict';
+import Dict from '../../util/objectOps/Dict';
 import Scene from '../../state/State/Scene';
 import { faCode, faFlagCheckered, faGlobeAmericas, faRobot } from '@fortawesome/free-solid-svg-icons';
 import Async from '../../state/State/Async';
-import { EMPTY_OBJECT } from '../../util';
 import Challenge from '../Challenge';
-import { ReferenceFramewUnits } from '../../util/unit-math';
+import { ReferenceFramewUnits } from '../../util/math/UnitMath';
 
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';
@@ -415,7 +414,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
 export const SideLayoutRedux = connect((state: ReduxState, { sceneId }: LayoutProps) => {
   const asyncScene = state.scenes[sceneId];
   const scene = Async.latestValue(asyncScene);
-  let robots: Dict<Node.Robot> = EMPTY_OBJECT;
+  let robots: Dict<Node.Robot> = {};
   if (scene) robots = Scene.robots(scene);
   
   return {

@@ -20,11 +20,11 @@ import { State as ReduxState } from '../../state';
 import { ScenesAction } from '../../state/reducer';
 
 import * as uuid from 'uuid';
-import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../util/unit-math';
-import { RawVector3 } from '../../util/math';
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../util/math/UnitMath';
+import { RawVector3 } from '../../util/math/math';
 import ComboBox from '../Interface/ComboBox';
 import Node from '../../state/State/Scene/Node';
-import Dict from '../../util/Dict';
+import Dict from '../../util/objectOps/Dict';
 import Geometry from '../../state/State/Scene/Geometry';
 
 import { Button } from '../Interface/Button';

@@ -1,7 +1,7 @@
-import Dict from '../../../util/Dict';
-import { ReferenceFramewUnits } from '../../../util/unit-math';
+import Dict from '../../../util/objectOps/Dict';
+import { ReferenceFramewUnits } from '../../../util/math/UnitMath';
 import LocalizedString from '../../../util/LocalizedString';
-import Patch from '../../../util/Patch';
+import Patch from '../../../util/redux/Patch';
 import Geometry from './Geometry';
 import Node from './Node';
 

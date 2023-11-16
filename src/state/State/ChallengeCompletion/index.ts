@@ -1,9 +1,9 @@
-import Dict from '../../../util/Dict';
+import Dict from '../../../util/objectOps/Dict';
 import Async from '../Async';
 import PredicateCompletion from './PredicateCompletion';
 
 import ProgrammingLanguage from '../../../programming/ProgrammingLanguage';
-import { ReferenceFramewUnits } from '../../../util/unit-math';
+import { ReferenceFramewUnits } from '../../../util/math/UnitMath';
 
 interface ChallengeCompletion {
   code: { [language in ProgrammingLanguage]: string };

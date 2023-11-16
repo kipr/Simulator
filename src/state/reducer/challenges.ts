@@ -1,7 +1,7 @@
 import Async from "../State/Async";
 import { Challenges } from '../State';
 import Challenge, { AsyncChallenge, ChallengeBrief } from '../State/Challenge';
-import construct from '../../util/construct';
+import construct from '../../util/redux/construct';
 import Predicate from '../State/Challenge/Predicate';
 import Event from '../State/Challenge/Event';
 import LocalizedString from '../../util/LocalizedString';

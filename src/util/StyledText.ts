@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { EMPTY_OBJECT } from './empties';
 
 export namespace StyledText {
   export enum Type {
@@ -62,7 +61,7 @@ export namespace StyledText {
   }
 
   export type NewLineParams = Omit<NewLine, 'type'>;
-  export const newLine = (params: NewLineParams = EMPTY_OBJECT): NewLine => ({
+  export const newLine = (params: NewLineParams = {}): NewLine => ({
     type: Type.NewLine,
     ...params
   });

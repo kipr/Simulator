@@ -7,8 +7,8 @@ import { Fa } from '../Fa';
 
 import { faCopyright } from '@fortawesome/free-solid-svg-icons';
 
-import KIPR_LOGO_BLACK from '../../assets/KIPR-Logo-Black-Text-Clear-Large.png';
-import KIPR_LOGO_WHITE from '../../assets/KIPR-Logo-White-Text-Clear-Large.png';
+import KIPR_LOGO_BLACK from '../../../static/assets/KIPR-Logo-Black-Text-Clear-Large.png';
+import KIPR_LOGO_WHITE from '../../../static/assets/KIPR-Logo-White-Text-Clear-Large.png';
 
 import tr from '@i18n';
 
@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
 import LocalizedString from '../../util/LocalizedString';
 import { sprintf } from 'sprintf-js';
-import Dict from '../../util/Dict';
+import Dict from '../../util/objectOps/Dict';
 
 export interface AboutDialogPublicProps extends ThemeProps, StyleProps {
   onClose: () => void;

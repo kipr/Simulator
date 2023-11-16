@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import LocalizedString from '../../util/LocalizedString';
-import Dict from '../../util/Dict';
+import Dict from '../../util/objectOps/Dict';
 import Expr from '../../state/State/Challenge/Expr';
 import { StyleProps } from '../../util/style';
 import tr from '@i18n';

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { styled } from "styletron-react";
-import { ReferenceFramewUnits } from "../../util/unit-math";
+import { ReferenceFramewUnits } from "../../util/math/UnitMath";
 import { Dialog } from "../Dialog/Dialog";
 import ScrollArea from "../Interface/ScrollArea";
 import { ThemeProps } from "../Constants/theme";

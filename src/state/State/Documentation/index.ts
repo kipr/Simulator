@@ -1,4 +1,4 @@
-import Dict from '../../../util/Dict';
+import Dict from '../../../util/objectOps/Dict';
 import EnumerationDocumentation from './EnumerationDocumentation';
 import DocumentationLocation from './DocumentationLocation';
 import FileDocumentation from './FileDocumentation';

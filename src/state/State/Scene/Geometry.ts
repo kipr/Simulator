@@ -1,8 +1,8 @@
-import { Vector2wUnits, Vector3wUnits } from '../../../util/unit-math';
-import { RawVector3, RawVector2 } from '../../../util/math';
-import { Distance } from '../../../util/Value';
-import deepNeq from '../../../util/deepNeq';
-import Patch from '../../../util/Patch';
+import { Vector2wUnits, Vector3wUnits } from '../../../util/math/UnitMath';
+import { RawVector3, RawVector2 } from '../../../util/math/math';
+import { Distance } from '../../../util/math/Value';
+import deepNeq from '../../../util/redux/deepNeq';
+import Patch from '../../../util/redux/Patch';
 
 namespace Geometry {
   export interface Box {
