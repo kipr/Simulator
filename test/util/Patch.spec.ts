@@ -1,8 +1,8 @@
-import Patch from '../../src/util/Patch';
+import Patch from '../../src/util/redux/Patch';
 import Scene from '../../src/state/State/Scene';
 import LocalizedString from '../../src/util/LocalizedString';
 import Author from '../../src/db/Author';
-import { Vector3wUnits } from '../../src/util/unit-math';
+import { Vector3wUnits } from '../../src/util/math/UnitMath';
 
 const SCENE_A: Scene = {
   name: { [LocalizedString.EN_US]: 'Scene A' },
