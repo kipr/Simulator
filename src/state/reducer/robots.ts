@@ -81,6 +81,8 @@ export type RobotsAction = (
 const DEFAULT_ROBOTS: Robots = {
   robots: {
     'demobot': Async.loaded({ value: ROBOTS.DEMOBOT }),
+    'modbot': Async.loaded({ value: ROBOTS.MODIFIEDDEMOBOT }),
+    'createbot': Async.loaded({ value: ROBOTS.CREATEBOT }),
   },
 };
 

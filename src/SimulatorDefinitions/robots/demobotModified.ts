@@ -11,9 +11,9 @@ const { meters } = Distance;
 const { degrees } = Angle;
 const { grams } = Mass;
 
-export const DEMOBOT: Robot = {
-  name: tr('Demobot'),
-  authorId: 'kipr',
+export const MODIFIEDDEMOBOT: Robot = {
+  name: tr('modbot'),
+  authorId: 'Chris',
   nodes: {
     chassis: Node.link({
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
@@ -22,14 +22,6 @@ export const DEMOBOT: Robot = {
       restitution: 0,
       friction: 0.01,
       inertia: [10, 10, 10]
-    }),
-    lightSensor: Node.lightSensor({
-      parentId: 'chassis',
-      origin: {
-        position: Vector3wUnits.meters(0.3, 0, 0),
-        orientation: RotationwUnits.eulerDegrees(90, 0, 0),
-      },
-      analogPort: 2,
     }),
     wombat: Node.weight({
       parentId: 'chassis',
@@ -41,7 +33,7 @@ export const DEMOBOT: Robot = {
     }),
     left_wheel: Node.motor({
       parentAxis: RawVector3.NEGATIVE_Z,
-      parentPivot: Vector3wUnits.metersZ(-0.07492),
+      parentPivot: Vector3wUnits.meters(0.05,-0.01,-0.076),
       childAxis: RawVector3.Y,
       motorPort: 3,
       parentId: 'chassis',
@@ -57,7 +49,7 @@ export const DEMOBOT: Robot = {
     }),
     right_wheel: Node.motor({
       parentAxis: RawVector3.Z,
-      parentPivot: Vector3wUnits.metersZ(0.07492),
+      parentPivot: Vector3wUnits.meters(0.05,-0.01,0.076),
       childAxis: RawVector3.Y,
       motorPort: 0,
       parentId: 'chassis',
@@ -72,9 +64,9 @@ export const DEMOBOT: Robot = {
     }),
     arm: Node.servo({
       parentAxis: RawVector3.NEGATIVE_Z,
-      parentPivot: Vector3wUnits.meters(0.068099, 0.034913, -0.010805),
+      parentPivot: Vector3wUnits.meters(0.068099, 0.034913, -0.04),
       childAxis: RawVector3.Y,
-      childTwist: degrees(65),
+      childTwist:degrees(65),
       servoPort: 0,
       parentId: 'chassis',
     }),
@@ -93,7 +85,8 @@ export const DEMOBOT: Robot = {
       childTwist: degrees(0),
       servoPort: 3,
       parentId: 'arm_link',
-      parentPivot: Vector3wUnits.meters(0.097792, -0.024775, 0.026806),
+      parentPivot: Vector3wUnits.meters(0.097792, -0.024775, 0.024),
+      // parentPivot: Vector3wUnits.meters(0.097792, -0.024775, 0.026806),
     }),
     claw_link: Node.link({
       parentId: 'claw',
