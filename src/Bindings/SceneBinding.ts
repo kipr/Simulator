@@ -264,9 +264,6 @@ class SceneBinding {
 
     if (!ret) return null;
     
-    if (nodeToCreate.name['en-US'] === 'Can 4') {
-      console.log('createNode_ -> updateNodePosition_', nodeToCreate.name, nodeToCreate);
-    }
     this.updateNodePosition_(nodeToCreate, ret, id, nextScene);
     ret.id = id;
     

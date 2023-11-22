@@ -495,7 +495,7 @@ class RobotBinding {
       "xyz"
     );
 
-    console.log("Set origin orientation to:", UpdatedEulerOrigin);
+    // console.log("Set origin orientation to:", UpdatedEulerOrigin);
 
 
     const rootLink = this.links_[this.rootId_];
