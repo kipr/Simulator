@@ -536,7 +536,7 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
       };
     }
     case 'scenes/soft-reset-scene': {
-      console.log('soft reset scene');
+      // console.log('soft reset scene');
       const scene = state[action.sceneId];
 
       if (!scene) return state;

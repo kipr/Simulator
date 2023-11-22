@@ -90,6 +90,9 @@ class SharedRegistersRobot implements AbstractRobot {
   }
 
   private readonly apply_ = (writeCommand: WriteCommand) => {
+    // if (writeCommand.type.includes("motor")) {
+    //   console.log(writeCommand);
+    // }
     switch (writeCommand.type) {
       case WriteCommand.Type.MotorDone: {
         const done = this.sharedResisters_.getRegisterValue8b(RegisterState.REG_RW_MOT_DONE);

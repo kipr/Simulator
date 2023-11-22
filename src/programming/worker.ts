@@ -6,19 +6,31 @@ import SharedRingBufferUtf32 from './SharedRingBufferUtf32';
 
 // Proper typing of Worker is tricky due to conflicting DOM and WebWorker types
 // See GitHub issue: https://github.com/microsoft/TypeScript/issues/20595
+
+// Global context for the worker thread.
 const ctx: Worker = self as unknown as Worker;
 
+// Shared registers and console buffer.
 let sharedRegister_: SharedRegisters;
 let sharedConsole_: SharedRingBufferUtf32;
 
+/**
+ * Prints a string to the shared console buffer, followed by a newline.
+ * @param stdout - The string to be printed.
+ */
 const print = (stdout: string) => {
   sharedConsole_.pushStringBlocking(`${stdout}\n`);
 };
 
+/**
+ * Prints an error string to the shared console buffer, followed by a newline.
+ * @param stderror - The error string to be printed.
+ */
 const printErr = (stderror: string) => {
   sharedConsole_.pushStringBlocking(`${stderror}\n`);
 };
 
+// Define an error structure for exit status reporting.
 interface ExitStatusError {
   name: string;
   message: string;
@@ -29,6 +41,10 @@ namespace ExitStatusError {
   export const isExitStatusError = (e: unknown): e is ExitStatusError => typeof e === 'object' && e['name'] === 'ExitStatus';
 }
 
+/**
+ * Starts the execution of C/C++ code.
+ * @param message - Message containing the code and other relevant details.
+ */
 const startC = (message: Protocol.Worker.StartRequest) => {
   // message.code contains the user's code compiled to javascript
   let stoppedSent = false;
@@ -77,8 +93,16 @@ const startC = (message: Protocol.Worker.StartRequest) => {
   });
 };
 
+/**
+ * Runs the event loop for a set duration.
+ * @returns Promise that resolves after a timeout.
+ */
 const runEventLoop = (): Promise<void> => new Promise((resolve, reject) => setTimeout(resolve, 5));
 
+/**
+ * Starts the execution of Python code.
+ * @param message - Message containing the code and other relevant details.
+ */
 const startPython = async (message: Protocol.Worker.StartRequest) => {
   ctx.postMessage({
     type: 'start'
@@ -95,6 +119,10 @@ const startPython = async (message: Protocol.Worker.StartRequest) => {
   
 };
 
+/**
+ * Initiates the execution of code based on the specified language.
+ * @param message - Message containing the code, language, and other details.
+ */
 const start = async (message: Protocol.Worker.StartRequest) => {
   switch (message.language) {
     case 'c':
@@ -117,6 +145,7 @@ const start = async (message: Protocol.Worker.StartRequest) => {
   }
 };
 
+// Message event handler for the worker.
 ctx.onmessage = (e: MessageEvent) => {
   const message = e.data as Protocol.Worker.Request;
   

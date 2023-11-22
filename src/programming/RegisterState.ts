@@ -1,3 +1,8 @@
+/**
+ * @file RegisterState.ts
+ * @brief RegisterState class definition.
+ * Default export defines the RegisterState class, which names the 154 registers
+ */
 export default {
   WALLABY_SPI_VERSION: 4,
 
