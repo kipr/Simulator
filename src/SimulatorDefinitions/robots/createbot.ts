@@ -25,7 +25,7 @@ export const CREATEBOT: Robot = {
     }),
     left_wheel: Node.motor({
       parentAxis: RawVector3.create(0, 0, 1),
-      parentPivot: Vector3wUnits.meters(0,0.034,-.12),
+      parentPivot: Vector3wUnits.meters(0,0.01,-.12),
       childAxis: RawVector3.Y, 
       motorPort: 3,
       parentId: 'create',
@@ -38,10 +38,11 @@ export const CREATEBOT: Robot = {
       mass: grams(50),
       friction: 100,
       restitution: 0,
+      scale: .3,
     }),
     right_wheel: Node.motor({
       parentAxis: RawVector3.create(0, 0, -1),
-      parentPivot: Vector3wUnits.meters(0,0.034,0.12),
+      parentPivot: Vector3wUnits.meters(0,0.01,0.12),
       childAxis: RawVector3.Y,
       motorPort: 0,
       parentId: 'create',
@@ -53,6 +54,7 @@ export const CREATEBOT: Robot = {
       mass: grams(50),
       friction: 100,
       restitution: 0,
+      scale: .3,
     }),
     touch_sensor: Node.touchSensor({
       parentId: 'create',

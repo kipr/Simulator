@@ -116,6 +116,8 @@ namespace Node {
      * is displayed.
      */
     geometryId?: string;
+
+    scale?: number;
   }
 
   export const link = construct<Link>(Type.Link);

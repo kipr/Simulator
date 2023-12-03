@@ -141,16 +141,24 @@ class SharedRegistersRobot implements AbstractRobot {
         directions = directions & ~(0b11 << (writeCommand.port * 2));
         directions = directions | (Motor.Direction.toBits(writeCommand.direction) << (writeCommand.port * 2));
         this.sharedResisters_.setRegister8b(RegisterState.REG_RW_MOT_DIRS, directions);
+        break;
+      }
+      default: {
+        console.log('Unknown write command type:', writeCommand);
+        throw new Error(`Unknown write command type`);
       }
     }
   };
 
   apply(writeCommands: WriteCommand[]) {
-    for (const writeCommand of writeCommands) this.apply_(writeCommand);
+    // console.log('SharedRegistersRobot.apply');
+    for (const writeCommand of writeCommands) {
+      this.apply_(writeCommand);
+    }
   }
 
   sync(stateless: AbstractRobot.Stateless) {
-
+    // console.log('SharedRegistersRobot.sync');
     let modes = 0;
     let directions = 0;
 

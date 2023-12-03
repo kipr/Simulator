@@ -108,7 +108,8 @@ export const createLink_ = async (id: string, link: Node.Link, bScene_: babylSce
     }
     case Node.Link.CollisionBody.Type.Cylinder: {
       myMesh = Mesh.MergeMeshes(meshes, true, true, undefined, false, true);
-      myMesh.scaling.scaleInPlace(RENDER_SCALE_METERS_MULTIPLIER);
+      const scale = link.scale ?? 1;
+      myMesh.scaling.scaleInPlace(RENDER_SCALE_METERS_MULTIPLIER * scale);
       const aggregate = new PhysicsAggregate(myMesh, PhysicsShapeType.CYLINDER, {
         mass: Mass.toGramsValue(link.mass || Mass.grams(10)),
         friction: link.friction ?? 0.5,

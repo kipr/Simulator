@@ -1,6 +1,11 @@
 import SharedRingBuffer from './SharedRingBuffer';
 
 
+/**
+ * Represents a shared ring buffer that stores unsigned 32-bit integers.
+ * The buffer is implemented using a SharedArrayBuffer and supports concurrent access.
+ * Uses the Atomics API to safely read and write.
+ */
 class SharedRingBufferU32 implements SharedRingBuffer {
   private static readonly HEADER_SIZE = 8;
 
@@ -8,12 +13,14 @@ class SharedRingBufferU32 implements SharedRingBuffer {
   private static readonly END_INDEX = 1;
 
   private sab_: SharedArrayBuffer;
+  private name_: string;
 
   get sharedArrayBuffer() { return this.sab_; }
 
   private u32_: Uint32Array;
 
-  constructor(sab: SharedArrayBuffer) {
+  constructor(sab: SharedArrayBuffer, name?: string) {
+    console.log('SharedRingBufferU32 constructor. Size', sab.byteLength, 'bytes');
     if (sab.byteLength <= SharedRingBufferU32.HEADER_SIZE + 4) {
       throw new Error('SharedRingBufferU32: SharedArrayBuffer is too small');
     }
@@ -24,20 +31,21 @@ class SharedRingBufferU32 implements SharedRingBuffer {
 
     this.sab_ = sab;
     this.u32_ = new Uint32Array(sab);
+    this.name_ = name || '';
   }
 
   get maxLength() {
     return this.u32_.length - SharedRingBufferU32.HEADER_SIZE / 4;
   }
 
-  static create(maxLength: number): SharedRingBufferU32 {
+  static create(maxLength: number, name?: string): SharedRingBufferU32 {
     const sab = new SharedArrayBuffer(SharedRingBufferU32.HEADER_SIZE + maxLength * 4);
     
     const u32 = new Uint32Array(sab);
     u32[SharedRingBufferU32.BEGIN_INDEX] = 0;
     u32[SharedRingBufferU32.END_INDEX] = 0;
     
-    return new SharedRingBufferU32(sab);
+    return new SharedRingBufferU32(sab, name || '');
   }
 
   private get begin_(): number {
@@ -70,15 +78,27 @@ class SharedRingBufferU32 implements SharedRingBuffer {
 
     // If the buffer is full, return false.
     if (begin === (end + 1) % this.maxLength) return false;
-  
+
     // Write the value to the buffer.
     this.setAt_(end, value);
     ++this.end_;
-    
+
+    if (this.name_ !== '') {
+      console.log(this.name_, ' SharedRingBufferU32.push: pushing value', value);
+    }
+
     return true;
   }
 
+  pushAll(values: number[]) {
+    console.log('SharedRingBufferU32.pushAll: pushing all values');
+    for (let i = 0; i < values.length;) {
+      if (this.push(values[i])) ++i;
+    }
+  }
+  
   pop(): number {
+    console.log('popping value');
     const begin = this.begin_;
     const end = this.end_;
 

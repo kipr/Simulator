@@ -3,6 +3,8 @@ import dynRequire from './require';
 import SharedRegisters from './SharedRegisters';
 import python from '../python';
 import SharedRingBufferUtf32 from './SharedRingBufferUtf32';
+import SerialU32 from './SerialU32';
+import SharedRingBufferU32 from './SharedRingBufferU32';
 
 // Proper typing of Worker is tricky due to conflicting DOM and WebWorker types
 // See GitHub issue: https://github.com/microsoft/TypeScript/issues/20595
@@ -12,6 +14,7 @@ const ctx: Worker = self as unknown as Worker;
 
 // Shared registers and console buffer.
 let sharedRegister_: SharedRegisters;
+let createSerial_: SerialU32;
 let sharedConsole_: SharedRingBufferUtf32;
 
 /**
@@ -46,6 +49,7 @@ namespace ExitStatusError {
  * @param message - Message containing the code and other relevant details.
  */
 const startC = (message: Protocol.Worker.StartRequest) => {
+  // console.log('worker startC', message.code);
   // message.code contains the user's code compiled to javascript
   let stoppedSent = false;
 
@@ -60,12 +64,30 @@ const startC = (message: Protocol.Worker.StartRequest) => {
 
   // dynRequire is a function that takes a string of javascript code and returns a module (a function that is executed when called)
   const mod = dynRequire(message.code, {
-    setRegister8b: (address: number, value: number) => sharedRegister_.setRegister8b(address, value),
-    setRegister16b: (address: number, value: number) => sharedRegister_.setRegister16b(address, value),
-    setRegister32b: (address: number, value: number) => sharedRegister_.setRegister32b(address, value),
+    setRegister8b: (address: number, value: number) => {
+      // print("executing set register 8b");
+      sharedRegister_.setRegister8b(address, value);
+    },
+    setRegister16b: (address: number, value: number) => {
+      // print("executing set register 16b");
+      sharedRegister_.setRegister16b(address, value);
+    },
+    setRegister32b: (address: number, value: number) => {
+      // print("executing set register 32b");
+      sharedRegister_.setRegister32b(address, value);
+    },
     readRegister8b: (address: number) => sharedRegister_.getRegisterValue8b(address),
     readRegister16b: (address: number) => sharedRegister_.getRegisterValue16b(address),
     readRegister32b: (address: number) => sharedRegister_.getRegisterValue32b(address),
+    createWrite: (value: number) => {
+      print("executing create write");
+      createSerial_.tx.push(value);
+    },
+    createRead: () => {
+      const value = createSerial_.rx.pop();
+      if (value === undefined) return -1;
+      return value;
+    },
     onStop: sendStopped
   },
   print,
@@ -74,6 +96,7 @@ const startC = (message: Protocol.Worker.StartRequest) => {
 
   mod.onRuntimeInitialized = () => {
     try {
+      console.log('worker startC onRuntimeInitialized');
       mod._main();
     } catch (e: unknown) {
       if (ExitStatusError.isExitStatusError(e)) {
@@ -115,6 +138,7 @@ const startPython = async (message: Protocol.Worker.StartRequest) => {
     print,
     printErr,
     registers: sharedRegister_,
+    createSerial: createSerial_,
   });
   
 };
@@ -124,6 +148,7 @@ const startPython = async (message: Protocol.Worker.StartRequest) => {
  * @param message - Message containing the code, language, and other details.
  */
 const start = async (message: Protocol.Worker.StartRequest) => {
+  console.log('worker start');
   switch (message.language) {
     case 'c':
     case 'cpp': {
@@ -148,19 +173,29 @@ const start = async (message: Protocol.Worker.StartRequest) => {
 // Message event handler for the worker.
 ctx.onmessage = (e: MessageEvent) => {
   const message = e.data as Protocol.Worker.Request;
-  
+  console.log('worker received message', message);
   switch (message.type) {
     case 'start': {
+      console.log('worker received start message');
       void start(message);
       break;
     }
     case 'set-shared-registers': {
+      console.log('worker received set-shared-registers message');
       sharedRegister_ = new SharedRegisters(message.sharedArrayBuffer);
       break;
     }
     case 'set-shared-console': {
+      console.log('worker received set-shared-console message');
       sharedConsole_ = new SharedRingBufferUtf32(message.sharedArrayBuffer);
       break;
+    }
+    case 'set-create-serial': {
+      console.log('worker received set-create-serial message');
+      createSerial_ = {
+        tx: new SharedRingBufferU32(message.tx),
+        rx: new SharedRingBufferU32(message.rx)
+      };
     }
   } 
 };
