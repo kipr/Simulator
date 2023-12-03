@@ -1,3 +1,31 @@
+/**
+ * @description The provided TypeScript code defines an interface and a namespace, both named Motor.
+
+  The Motor interface describes the shape of an object that represents a motor in your system. This interface has several properties:
+
+  * mode: This property is of type Motor.Mode, which is an enumeration defined within the Motor namespace. 
+      The Mode enumeration defines four possible modes for the motor: Pwm, Speed, Position, and SpeedPosition.
+  * direction: This property is of type Motor.Direction, another enumeration within the Motor namespace. 
+      The Direction enumeration defines four possible directions for the motor: Idle, Forward, Backward, and Brake. 
+  * position: This is a numeric property that represents the current position of the motor.
+  * pwm: This is another numeric property, which represents the pulse-width modulation value for the motor, 
+      a common method for controlling the power delivered to an electronic device like a motor.
+  * done: This boolean property indicates whether the motor has reached its goal position or speed.
+  * positionGoal and speedGoal: These numeric properties represent the target position and speed for the motor.
+  * kP, kI, and kD: These properties are the coefficients for a PID controller, a control loop mechanism commonly used in systems like this to control the motor's position and speed.
+  
+  The Motor namespace contains two enumerations, Direction and Mode, and a constant object NIL.
+
+  The Direction enumeration defines four possible directions for the motor: Idle, Forward, Backward, and Brake. 
+
+  The Direction and Mode namespaces also contain two functions each: fromBits and toBits. 
+    These functions are used to convert between the enumeration values and their corresponding numeric representations.
+
+  The NIL constant is an object that adheres to the Motor interface and represents a motor in its default state. 
+    This could be used as a starting point when creating new Motor objects or as a reset state.
+ */
+
+
 interface Motor {
   mode: Motor.Mode;
   direction: Motor.Direction;
