@@ -118,6 +118,7 @@ if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env
                   error: `Failed to delete ${path}`
                 });
               }
+              // console.log("Result successfully sent", data.toString());
               res.status(200).json({
                 result: data.toString(),
                 stdout,
