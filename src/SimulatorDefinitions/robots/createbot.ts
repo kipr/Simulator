@@ -56,31 +56,41 @@ export const CREATEBOT: Robot = {
       restitution: 0,
       scale: .3,
     }),
-    touch_sensor: Node.touchSensor({
+    left_front_reflectance_sensor: Node.reflectanceSensor({
       parentId: 'create',
       origin: {
-        position: Vector3wUnits.meters(0.10253, -0.007715, -0.011238),
-      },
-      digitalPort: 0,
-      collisionBox: Vector3wUnits.meters(0.015, 0.015, 0.07),
-    }),
-    reflectance_sensor: Node.reflectanceSensor({
-      parentId: 'create',
-      origin: {
-        position: Vector3wUnits.meters(0.088337, -0.029257, -0.007872),
+        position: Vector3wUnits.meters(0.15113, 0.013, 0.037505),
         orientation: RotationwUnits.eulerDegrees(90, 0, 0),
       },
       analogPort: 1,
     }),
-    // et_sensor: Node.etSensor({
-    //   parentId: 'arm_link',
-    //   origin: {
-    //     position: Vector3wUnits.meters(0.137919, -0.018379, 0.004399),
-    //     orientation: RotationwUnits.eulerDegrees(0, 90, 0),
-    //   },
-    //   analogPort: 0,
-    // }),
-    left_bumper: Node.touchSensor({
+    left_side_reflectance_sensor: Node.reflectanceSensor({
+      parentId: 'create',
+      origin: {
+        position: Vector3wUnits.meters(0.05989, 0.013, 0.14174),
+        orientation: RotationwUnits.eulerDegrees(90, 0, 0),
+      },
+      analogPort: 2,
+    }),
+    right_front_reflectance_sensor: Node.reflectanceSensor({
+      parentId: 'create',
+      origin: {
+        position: Vector3wUnits.meters(0.15113, 0.013, -0.043626),
+        orientation: RotationwUnits.eulerDegrees(90, 0, 0),
+      },
+      analogPort: 3,
+    }),
+    right_side_reflectance_sensor: Node.reflectanceSensor({
+      parentId: 'create',
+      origin: {
+        position: Vector3wUnits.meters(0.05989, 0.013, -0.14174),
+        orientation: RotationwUnits.eulerDegrees(90, 0, 0),
+      },
+      analogPort: 4,
+    }),
+
+
+    left_side_bump: Node.touchSensor({
       parentId: 'create',
       origin: {
         position: Vector3wUnits.meters(-0.171735, -0.015347, -0.040404),
@@ -88,12 +98,28 @@ export const CREATEBOT: Robot = {
       digitalPort: 1,
       collisionBox: Vector3wUnits.meters(0.015, 0.015, 0.015),
     }),
-    right_bumper: Node.touchSensor({
+    right_side_bump: Node.touchSensor({
       parentId: 'create',
       origin: {
         position: Vector3wUnits.meters(-0.171735, -0.015347, 0.040404),
       },
       digitalPort: 2,
+      collisionBox: Vector3wUnits.meters(0.015, 0.015, 0.015),
+    }),
+    left_front_bump: Node.touchSensor({
+      parentId: 'create',
+      origin: {
+        position: Vector3wUnits.meters(-0.171735, -0.015347, -0.040404),
+      },
+      digitalPort: 3,
+      collisionBox: Vector3wUnits.meters(0.015, 0.015, 0.015),
+    }),
+    right_front_bump: Node.touchSensor({
+      parentId: 'create',
+      origin: {
+        position: Vector3wUnits.meters(-0.171735, -0.015347, 0.040404),
+      },
+      digitalPort: 4,
       collisionBox: Vector3wUnits.meters(0.015, 0.015, 0.015),
     }),
   },
