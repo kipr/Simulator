@@ -1,10 +1,10 @@
 
 import { Scene as babylScene, TransformNode, AbstractMesh, LinesMesh, PhysicsViewer, CreateBox, CreateSphere, 
   IcoSphereBuilder, CreateLines, Quaternion, Vector3, StandardMaterial, IPhysicsEnabledObject, 
-  SpotLight, DirectionalLight, HemisphericLight, Mesh, SceneLoader, PhysicsJoint, Ray,
+  SpotLight, DirectionalLight, HemisphericLight, Mesh, SceneLoader, PhysicsJoint, Ray, IPhysicsEnginePluginV2,
   PhysicsBody, PhysicsConstraintAxis, Physics6DoFConstraint, PhysicsMotionType, PhysicsShape, 
   PhysicsAggregate,   PhysicsShapeType, PhysicsConstraintMotorType, PhysicShapeOptions, 
-  PhysicsShapeParameters, LockConstraint, PhysicsShapeContainer, HingeConstraint, PhysicsConstraintAxisLimitMode 
+  PhysicsShapeParameters, LockConstraint, PhysicsShapeContainer, HingeConstraint, PhysicsConstraintAxisLimitMode, PhysicsEngine 
 } from '@babylonjs/core';
 
 import '@babylonjs/core/Physics/physicsEngineComponent';
@@ -56,6 +56,7 @@ class RobotBinding {
   private colliders_: Set<Mesh> = new Set();
 
   private physicsViewer_: PhysicsViewer;
+  private _physicsPlugin: IPhysicsEnginePluginV2;
 
 
   private lastTick_ = 0;
@@ -79,6 +80,7 @@ class RobotBinding {
   constructor(bScene: babylScene, physicsViewer?: PhysicsViewer) {
     this.bScene_ = bScene;
     this.physicsViewer_ = physicsViewer;
+    this._physicsPlugin = bScene.getPhysicsEngine()?.getPhysicsPlugin() as IPhysicsEnginePluginV2;
   }
 
 
@@ -140,22 +142,6 @@ class RobotBinding {
     };
   };
 
-  // Transform a vector using the child frame's orientation. This operation is invariant on a single
-  // axis, so we return a new quaternion with the leftover rotation.
-  // private static connectedAxisAngle_ = (rotationAxis: Vector3, childOrientation: Quaternion): { axis: Vector3, twist: Quaternion } => {
-  //   const childOrientationInv = childOrientation.invert();
-  //   const axis = rotationAxis.applyRotationQuaternion(childOrientationInv);
-  //   const v = new Vector3(childOrientationInv.x, childOrientationInv.y, childOrientationInv.z);
-  //   const s = childOrientationInv.w;
-  //   v.multiplyInPlace(axis);
-  //   const twist = new Quaternion(v.x, v.y, v.z, s);
-  //   twist.normalize();
-   
-  //   return {
-  //     axis,
-  //     twist,
-  //   };
-  // };
 
   tick(readable: AbstractRobot.Readable): RobotBinding.TickOut {
     // TODO: Motor Bindings need to be cleaned up to handle motor position explicitly.
@@ -182,20 +168,27 @@ class RobotBinding {
       // If no motor is bound to the port, skip it.
       if (!motorId) continue;
 
-      const abstractMotor = abstractMotors[port];
-    
-      const motorNode = this.robot_.nodes[motorId] as Node.Motor;
-      const bMotor = this.motors_[motorId];
-      const ticksPerRevolution = motorNode.ticksPerRevolution ?? 2048;
+      const abstractMotor = abstractMotors[port]; // Contains the instructions for what to do.
+      const { position, kP, kD, kI, direction } = abstractMotor;
+      let { pwm, mode, positionGoal, speedGoal, done } = abstractMotor;
 
+      const bMotor = this.motors_[motorId]; // The actual motor object. (Physics6DoFConstraint)
+      const node = this.robot_.nodes[motorId];
+      const { bParent, bChild } = this.bParentChild_(motorId, node.parentId);
+      const parentZ = bParent.rotationQuaternion.toEulerAngles().x;
+      const childZ = bChild.rotationQuaternion.toEulerAngles().x;
+      const diff = childZ - parentZ; // Between -90 and 90 degrees
+
+    
+      const motorNode = this.robot_.nodes[motorId] as Node.Motor; // Contains the physical properties of the motor.
+
+      const ticksPerRevolution = motorNode.ticksPerRevolution ?? 2048;
       const plug = (motorNode.plug === undefined || motorNode.plug === 'normal') ? 1 : -1;
 
-      // Get the delta angle of the motor since the last tick.
-      // Assumes the current hinge angle is the last target of the axis motor.
-      // TODO: implement a method using relative poses to get the actual angle.
-      const currentAngle: number = bMotor.getAxisMotorTarget(0);
-      // const currentAngle = this.hingeAngle_(bMotor);
+
+      const currentAngle = diff;
       const lastMotorAngle = this.lastMotorAngles_[port];
+
       let deltaAngle = 0;
       if (lastMotorAngle > Math.PI / 2 && currentAngle < -Math.PI / 2) {
         deltaAngle = currentAngle + 2 * Math.PI - lastMotorAngle;
@@ -207,15 +200,20 @@ class RobotBinding {
       this.lastMotorAngles_[port] = currentAngle;
 
       const angularVelocity = deltaAngle / delta;
+      // console.log("pwm: ", pwm, "mode: ", mode, "positionGoal: ", positionGoal, "speedGoal: ", speedGoal, "done: ", done);
 
-      const {
-        position,
-        kP,
-        kD,
-        kI,
-        direction
-      } = abstractMotor;
-      let { pwm, mode, positionGoal, speedGoal, done } = abstractMotor;
+      // if speedgoal is positive make deltaAngle positive
+      if (speedGoal > 0) {
+        deltaAngle = Math.abs(deltaAngle);
+      } else if (speedGoal < 0) {
+        deltaAngle = -1 * Math.abs(deltaAngle);
+      }
+
+      // if (motorId.includes("left")) {
+      //   // console.log("parentZ: ", parentZ.toFixed(4), "childZ: ", childZ.toFixed(4), "diff: ", diff.toFixed(4), "delta: ", deltaAngle.toFixed(4));
+      //   console.log("delta: ", (deltaAngle * 180 / Math.PI).toFixed(4), "speedGoal: ", speedGoal);
+      // }
+
 
       // Convert to ticks
       const positionDeltaRaw = plug * deltaAngle / (2 * Math.PI) * ticksPerRevolution + this.positionDeltaFracs_[port];
@@ -759,24 +757,40 @@ namespace RobotBinding {
     constructor(parameters: SensorParameters<Node.TouchSensor>) {
       super(parameters);
 
-      const { id, definition, parent, scene } = parameters;
+      const { id, definition, parent, scene, links, colliders } = parameters;
       const { collisionBox, origin } = definition;
 
       // The parent already has RENDER_SCALE applied, so we don't need to apply it again.
       const rawCollisionBox = Vector3wUnits.toRaw(collisionBox, 'meters');
+      // convert id from snake case to camel case
+      const idCamel = id.replace(/_([a-z])/g, g => g[1].toUpperCase());
 
-      this.intersector_ = CreateBox(id, {
-        depth: rawCollisionBox.z,
-        height: rawCollisionBox.y,
-        width: rawCollisionBox.x,
-      }, scene);
-
-      this.intersector_.parent = parent;
+      // console.log("Collider ID: ", idCamel);
+      for (const collider of colliders) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+        const collider_name = (collider as any)?.name;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+        if (collider_name.includes(idCamel)) {
+          const mesh = collider as Mesh;
+          this.intersector_ = mesh;
+        }
+      }
+      if (!this.intersector_) {
+        // console.log(`Missing collider: ${idCamel}`);
+        this.intersector_ = CreateBox(id, {
+          depth: rawCollisionBox.z,
+          height: rawCollisionBox.y,
+          width: rawCollisionBox.x,
+        }, scene);
+        this.intersector_.parent = parent;
+        ReferenceFramewUnits.syncBabylon(origin, this.intersector_, 'meters');
+      }
+      
+      
       this.intersector_.material = new StandardMaterial('touch-sensor-material', scene);
       this.intersector_.material.wireframe = true;
       this.intersector_.visibility = 0;
 
-      ReferenceFramewUnits.syncBabylon(origin, this.intersector_, 'meters');
     }
 
     override getValue(): Promise<boolean> {
@@ -1042,7 +1056,7 @@ namespace RobotBinding {
           ReflectanceSensor.FORWARD.multiplyByFloats(rawMaxDistance, rawMaxDistance, rawMaxDistance)
         ],
       }, scene);
-      this.trace_.visibility = 0;
+      this.trace_.visibility = 1;
 
       ReferenceFramewUnits.syncBabylon(origin, this.trace_, 'meters');
       this.trace_.parent = parent;
