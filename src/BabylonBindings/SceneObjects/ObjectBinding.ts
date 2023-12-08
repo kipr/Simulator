@@ -1,19 +1,15 @@
-import { PhysicsShapeType, IPhysicsCollisionEvent, IPhysicsEnginePluginV2, PhysicsAggregate, 
-  TransformNode, AbstractMesh, PhysicsViewer, ShadowGenerator, CreateBox, CreateSphere, CreateCylinder, 
-  CreatePlane, Vector4, Vector3, Texture, DynamicTexture, StandardMaterial, GizmoManager, ArcRotateCamera, 
-  IShadowLight, PointLight, SpotLight, DirectionalLight, Color3, PBRMaterial, Mesh, SceneLoader, EngineView,
-  Scene as babylScene, Node as babylNode, Camera as babylCamera, Material as babylMaterial,
-  GlowLayer, Observer, BoundingBox } from '@babylonjs/core';
+import { TransformNode, AbstractMesh, CreateBox, CreateSphere, CreateCylinder, 
+  CreatePlane, Vector4, Mesh, SceneLoader, Scene as babylScene, Node as babylNode } from '@babylonjs/core';
 
-import Geometry from "../state/State/Scene/Geometry";
-import { RawQuaternion, RawVector2, RawVector3 } from "../util/math/math";
-import { Angle, Distance, Mass, SetOps } from "../util";
-import Node from "../state/State/Scene/Node";
-import Scene from "../state/State/Scene";
-import LocalizedString from '../util/LocalizedString';
-import { apply } from './helpers';
+import Geometry from "../../state/State/Scene/Geometry";
+import { RawVector2 } from "../../util/math/math";
+import { Distance } from "../../util";
+import Node from "../../state/State/Scene/Node";
+import Scene from "../../state/State/Scene";
+import LocalizedString from '../../util/LocalizedString';
+import { apply } from '../helpers';
 import { createMaterial } from './MaterialBinding';
-import { preBuiltGeometries, preBuiltTemplates } from "../SimulatorDefinitions/NodeTemplates";
+import { preBuiltGeometries } from "../../SimulatorDefinitions/NodeTemplates";
 
 export type FrameLike = TransformNode | AbstractMesh;
 

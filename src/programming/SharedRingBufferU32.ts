@@ -98,7 +98,7 @@ class SharedRingBufferU32 implements SharedRingBuffer {
   }
   
   pop(): number {
-    console.log('popping value');
+    // console.log('popping value');
     const begin = this.begin_;
     const end = this.end_;
 

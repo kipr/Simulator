@@ -1,9 +1,9 @@
 import { Texture, DynamicTexture, StandardMaterial, Color3, PBRMaterial, 
   Scene as babylScene, Material as babylMaterial, GlowLayer } from '@babylonjs/core';
 
-import Material from '../state/State/Scene/Material';
-import { Color } from '../state/State/Scene/Color';
-import Patch from "../util/redux/Patch";
+import Material from '../../state/State/Scene/Material';
+import { Color } from '../../state/State/Scene/Color';
+import Patch from "../../util/redux/Patch";
 
 
 

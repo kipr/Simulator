@@ -1,10 +1,7 @@
 
-import { Scene as babylScene, TransformNode, AbstractMesh, LinesMesh, PhysicsViewer, CreateBox, CreateSphere, 
-  IcoSphereBuilder, CreateLines, Quaternion, Vector3, StandardMaterial, IPhysicsEnabledObject, 
-  SpotLight, DirectionalLight, HemisphericLight, Mesh, SceneLoader, PhysicsJoint, Ray, IPhysicsEnginePluginV2,
-  PhysicsBody, PhysicsConstraintAxis, Physics6DoFConstraint, PhysicsMotionType, PhysicsShape, 
-  PhysicsAggregate,   PhysicsShapeType, PhysicsConstraintMotorType, PhysicShapeOptions, 
-  PhysicsShapeParameters, LockConstraint, PhysicsShapeContainer, HingeConstraint, PhysicsConstraintAxisLimitMode, PhysicsEngine 
+import { Scene as babylScene, TransformNode, PhysicsViewer, Vector3, IPhysicsEnabledObject, 
+  Mesh, PhysicsJoint, IPhysicsEnginePluginV2, PhysicsConstraintAxis, Physics6DoFConstraint, 
+  PhysicsConstraintMotorType, PhysicsConstraintAxisLimitMode, 
 } from '@babylonjs/core';
 
 import '@babylonjs/core/Physics/physicsEngineComponent';
@@ -14,18 +11,29 @@ import Robot from '../state/State/Robot';
 import Node from '../state/State/Robot/Node';
 import { RawQuaternion, RawVector3, clamp, RawEuler } from '../util/math/math';
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../util/math/UnitMath';
-import { Angle, Distance, Mass } from '../util/math/Value';
+import { Angle } from '../util/math/Value';
 import { SceneMeshMetadata } from './SceneBinding';
 import Dict from '../util/objectOps/Dict';
 import { RENDER_SCALE, RENDER_SCALE_METERS_MULTIPLIER } from '../components/Constants/renderConstants';
 import WriteCommand from '../AbstractRobot/WriteCommand';
 import AbstractRobot from '../AbstractRobot';
 import Motor from '../AbstractRobot/Motor';
-import { createLink_ } from './RobotLink';
-import { createHinge_ } from './MotorBindings';
-import { createWeight_ } from './WeightBinding';
+import { createLink_ } from './RobotObjects/RobotLink';
+import { createHinge_ } from './RobotObjects/MotorBindings';
+import { createWeight_ } from './RobotObjects/WeightBinding';
+import CreateBinding from './RobotObjects/CreateBindings';
+import workerInstance from '../programming/WorkerInstance';
+import Sensor from './Sensors/Sensor';
+import EtSensor from './Sensors/EtSensor';
+import TouchSensor from './Sensors/TouchSensor';
+import ReflectanceSensor from './Sensors/ReflectanceSensor';
+import SensorObject from './Sensors/SensorObject';
+import SensorParameters from './Sensors/SensorParameters';
+import LightSensor from './Sensors/LightSensor';
 
 class RobotBinding {
+  /**  Type 'RobotBinding' is missing the following properties from type 
+   * 'RobotBindingLike': scene, colliders, physicsViewer,  */
   private bScene_: babylScene;
 
   private robot_: Robot;
@@ -47,10 +55,10 @@ class RobotBinding {
   private motorPorts_ = new Array<string>(4);
   private servoPorts_ = new Array<string>(4);
 
-  private digitalSensors_: Dict<RobotBinding.Sensor<boolean>> = {};
+  private digitalSensors_: Dict<Sensor<boolean>> = {};
   private digitalPorts_ = new Array<string>(6);
 
-  private analogSensors_: Dict<RobotBinding.Sensor<number>> = {};
+  private analogSensors_: Dict<Sensor<number>> = {};
   private analogPorts_ = new Array<string>(6);
 
   private colliders_: Set<Mesh> = new Set();
@@ -58,6 +66,13 @@ class RobotBinding {
   private physicsViewer_: PhysicsViewer;
   private _physicsPlugin: IPhysicsEnginePluginV2;
 
+  private createBinding_: CreateBinding;
+  private createMotors_: Dict<Physics6DoFConstraint> = {};
+  private createAnalogSensors_: Dict<Sensor<number>> = {};
+  private createDigitalSensors_: Dict<Sensor<boolean>> = {};
+
+
+  get createBinding() { return this.createBinding_; }
 
   private lastTick_ = 0;
   private lastMotorAngles_: [number, number, number, number] = [0, 0, 0, 0];
@@ -84,7 +99,7 @@ class RobotBinding {
   }
 
 
-  private createSensor_ = <T extends Node.FrameLike, O, S extends RobotBinding.SensorObject<T, O>>(s: { new(parameters: RobotBinding.SensorParameters<T>): S }) => (id: string, definition: T): S => {
+  private createSensor_ = <T extends Node.FrameLike, O, S extends SensorObject<T, O>>(s: { new(parameters: SensorParameters<T>): S }) => (id: string, definition: T): S => {
     const parent = this.links_[definition.parentId];
     
     return new s({
@@ -98,10 +113,10 @@ class RobotBinding {
   };
 
   // These return functions are used to create sensors of a specific type.
-  private createTouchSensor_ = this.createSensor_(RobotBinding.TouchSensor);
-  private createEtSensor_ = this.createSensor_(RobotBinding.EtSensor);
-  private createLightSensor_ = this.createSensor_(RobotBinding.LightSensor);
-  private createReflectanceSensor_ = this.createSensor_(RobotBinding.ReflectanceSensor);
+  private createTouchSensor_ = this.createSensor_(TouchSensor);
+  private createEtSensor_ = this.createSensor_(EtSensor);
+  private createLightSensor_ = this.createSensor_(LightSensor);
+  private createReflectanceSensor_ = this.createSensor_(ReflectanceSensor);
 
   set realisticSensors(realisticSensors: boolean) {
     for (const digitalSensor of Object.values(this.digitalSensors_)) {
@@ -142,6 +157,59 @@ class RobotBinding {
     };
   };
 
+  /**
+   * Gets the angle between the parent and child links. 
+   * Currently only supports angles between -90 and 90 degrees.
+   * TODO: Fix this to support angles between -180 and 180 degrees.
+   * @param id 
+   * @param parentId 
+   * @returns 
+   */
+  private hingeAngle_ = (id: string, parentId: string): number => {
+    const { bParent, bChild } = this.bParentChild_(id, parentId);
+    const parentZ = bParent.rotationQuaternion.toEulerAngles().x;
+    const childZ = bChild.rotationQuaternion.toEulerAngles().x;
+    const diff = childZ - parentZ; // Between -90 and 90 degrees
+    return diff;
+  };
+
+
+  /**
+   * Sets the motor to the desired velocity. 
+   * @param bMotor 
+   * @param velocity 
+   */
+  private setMotorVelocity_ = (bMotor: Physics6DoFConstraint, velocity: number) => {
+
+    // Attempt to ramp current velocity to desired velocity.
+
+    // const currentAngularVelocity = bMotor.getAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z);
+    // if (currentAngularVelocity.toFixed(6) !== velocity.toFixed(6)) { // comparison is aproximately unequal to 5 decimals
+    //   const pid_aproximator = 20;
+    //   const intermediate_target = (velocity + pid_aproximator * currentAngularVelocity) / (pid_aproximator + 1);
+    //   const zero = 0.0;
+    //   if (intermediate_target.toFixed(6) === zero.toFixed(6)) {
+    //     bMotor.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, 0);
+    //     bMotor.setAxisFriction(PhysicsConstraintAxis.ANGULAR_Z, 10000000);
+    //   } else {
+    //     bMotor.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.FREE);
+    //   }
+    //   bMotor.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, intermediate_target);
+    // }
+    const zero = 0.0;
+    const length = 0;
+    // console.log(`Setting motor velocity to ${velocity.toFixed(length)}`);
+    if (velocity.toFixed(length) === zero.toFixed(length)) {
+      bMotor.setAxisFriction(PhysicsConstraintAxis.ANGULAR_Z, 10000000);
+      bMotor.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 10000000); 
+      bMotor.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, 0);
+    } else {
+      bMotor.setAxisFriction(PhysicsConstraintAxis.ANGULAR_Z, 0);
+      bMotor.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 10000000); 
+      bMotor.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.FREE);
+      bMotor.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, velocity);
+    }
+  };
 
   tick(readable: AbstractRobot.Readable): RobotBinding.TickOut {
     // TODO: Motor Bindings need to be cleaned up to handle motor position explicitly.
@@ -149,10 +217,18 @@ class RobotBinding {
 
     const writeCommands: WriteCommand[] = [];
 
+    // Get how much time has passed since the last tick. (delta)
     const now = performance.now();
     const delta = (now - this.lastTick_) / 1000;
     this.lastTick_ = now;
 
+    if (this.createBinding_) {
+      this.createBinding_.tick(delta);
+    } else {
+      console.log("No create binding");
+    }
+
+    // Read motor registers
     const abstractMotors: [Motor, Motor, Motor, Motor] = [
       readable.getMotor(0),
       readable.getMotor(1),
@@ -162,6 +238,9 @@ class RobotBinding {
 
     // Update motor position deltas
     const nextPositions: [number, number, number, number] = [0, 0, 0, 0];
+    /** At some point this should be done with limits the way the servos are
+     * where the motor limits are set each tick to where the motor should end up.
+     */
     for (let port = 0; port < 4; ++port) {
       const motorId = this.motorPorts_[port];
       
@@ -172,21 +251,15 @@ class RobotBinding {
       const { position, kP, kD, kI, direction } = abstractMotor;
       let { pwm, mode, positionGoal, speedGoal, done } = abstractMotor;
 
-      const bMotor = this.motors_[motorId]; // The actual motor object. (Physics6DoFConstraint)
-      const node = this.robot_.nodes[motorId];
-      const { bParent, bChild } = this.bParentChild_(motorId, node.parentId);
-      const parentZ = bParent.rotationQuaternion.toEulerAngles().x;
-      const childZ = bChild.rotationQuaternion.toEulerAngles().x;
-      const diff = childZ - parentZ; // Between -90 and 90 degrees
-
-    
       const motorNode = this.robot_.nodes[motorId] as Node.Motor; // Contains the physical properties of the motor.
-
+      const bMotor = this.motors_[motorId]; // The actual motor object. (Physics6DoFConstraint)
       const ticksPerRevolution = motorNode.ticksPerRevolution ?? 2048;
-      const plug = (motorNode.plug === undefined || motorNode.plug === 'normal') ? 1 : -1;
 
+      // TODO: Fix wheel orientation in MotorBindings so plug is needed.
+      // const plug = (motorNode.plug === undefined || motorNode.plug === 'normal') ? 1 : -1;
+      const plug = 1;
 
-      const currentAngle = diff;
+      const currentAngle = this.hingeAngle_(motorId, motorNode.parentId);
       const lastMotorAngle = this.lastMotorAngles_[port];
 
       let deltaAngle = 0;
@@ -200,7 +273,10 @@ class RobotBinding {
       this.lastMotorAngles_[port] = currentAngle;
 
       const angularVelocity = deltaAngle / delta;
-      // console.log("pwm: ", pwm, "mode: ", mode, "positionGoal: ", positionGoal, "speedGoal: ", speedGoal, "done: ", done);
+      // if (motorId.includes("left")) {
+
+      //   console.log(`Angular velocity: ${angularVelocity.toFixed(2)}, speedGoal: ${speedGoal.toFixed(2)}, positionGoal: ${positionGoal.toFixed(2)}`);
+      // }
 
       // if speedgoal is positive make deltaAngle positive
       if (speedGoal > 0) {
@@ -208,12 +284,6 @@ class RobotBinding {
       } else if (speedGoal < 0) {
         deltaAngle = -1 * Math.abs(deltaAngle);
       }
-
-      // if (motorId.includes("left")) {
-      //   // console.log("parentZ: ", parentZ.toFixed(4), "childZ: ", childZ.toFixed(4), "diff: ", diff.toFixed(4), "delta: ", deltaAngle.toFixed(4));
-      //   console.log("delta: ", (deltaAngle * 180 / Math.PI).toFixed(4), "speedGoal: ", speedGoal);
-      // }
-
 
       // Convert to ticks
       const positionDeltaRaw = plug * deltaAngle / (2 * Math.PI) * ticksPerRevolution + this.positionDeltaFracs_[port];
@@ -291,27 +361,10 @@ class RobotBinding {
       if (writePwm) writeCommands.push(WriteCommand.motorPwm({ port, pwm }));
       
       const normalizedPwm = pwm / 400;
-      let direction_mult = 2;
-      if (motorId.includes("left")) {
-        direction_mult *= -1;
-      }
-      const nextAngularVelocity = direction_mult * normalizedPwm * velocityMax * 1 * Math.PI / ticksPerRevolution;
-      const currentAngularVelocity = bMotor.getAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z);
+      const nextAngularVelocity = normalizedPwm * velocityMax * 1 * Math.PI / ticksPerRevolution;
 
-      if (currentAngularVelocity.toFixed(6) !== nextAngularVelocity.toFixed(6)) { // comparison is aproximately unequal to 5 decimals
-        const pid_aproximator = 20;
-        const intermediate_target = (nextAngularVelocity + pid_aproximator * currentAngularVelocity) / (pid_aproximator + 1);
-        // console.log(`Setting motor ${motorId} to ${intermediate_target} from (${currentAngularVelocity})`);
-        const zero = 0.0;
-        if (intermediate_target.toFixed(6) === zero.toFixed(6)) {
-          bMotor.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, 0);
-          bMotor.setAxisFriction(PhysicsConstraintAxis.ANGULAR_Z, 10000000);
-          // bMotor.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.LOCKED);
-        } else {
-          bMotor.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.FREE);
-        }
-        bMotor.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, intermediate_target);
-      }
+      this.setMotorVelocity_(bMotor, nextAngularVelocity);
+
     }
 
     // Servos
@@ -343,18 +396,21 @@ class RobotBinding {
       if (abstractServo.enabled) {
         const servoPosition = clamp(0, abstractServo.position, 2048);
         const desiredAngle = (servoPosition - 1024) / 2048 * RobotBinding.SERVO_LOGICAL_RANGE_RADS;
+
+        // TODO: Fix so claw is handled correctly
         if (servoId.includes("claw")) {
           this.lastServoEnabledAngle_[i] = -desiredAngle + twist;
-
         } else {
           this.lastServoEnabledAngle_[i] = -1 * (-desiredAngle + twist);
 
         }
       }
 
-   
-      const angle = this.lastServoEnabledAngle_[i];
-
+      const currentAngle = this.hingeAngle_(servoId, servo.parentId);   
+      const targetAangle = this.lastServoEnabledAngle_[i];
+      // if (servoId.includes("claw")) {
+      //   console.log(`Servo ${servoId} current angle: ${currentAngle * 180 / Math.PI} target angle: ${targetAangle * 180 / Math.PI}`);
+      // }
       let cur_angle = 0;
       const cur_direction = bServo.getAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z) > 0;
       if (cur_direction) {
@@ -363,14 +419,14 @@ class RobotBinding {
         cur_angle = bServo.getAxisMinLimit(PhysicsConstraintAxis.ANGULAR_Z);
       }
 
-      if (cur_angle.toFixed(5) !== angle.toFixed(5)) {
-        // console.log(`Setting servo ${servoId} to ${angle * 180 / Math.PI} from (${cur_angle * 180 / Math.PI})`);
-        if (cur_angle < angle) {
-          bServo.setAxisMaxLimit(PhysicsConstraintAxis.ANGULAR_Z, angle); 
+      if (cur_angle.toFixed(5) !== targetAangle.toFixed(5)) {
+        // console.log(`Setting servo ${servoId} to ${targetAangle * 180 / Math.PI} from (${cur_angle * 180 / Math.PI})`);
+        if (cur_angle < targetAangle) {
+          bServo.setAxisMaxLimit(PhysicsConstraintAxis.ANGULAR_Z, targetAangle); 
           bServo.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, Math.PI * .4);
         }
-        if (cur_angle > angle) {
-          bServo.setAxisMinLimit(PhysicsConstraintAxis.ANGULAR_Z, angle);
+        if (cur_angle > targetAangle) {
+          bServo.setAxisMinLimit(PhysicsConstraintAxis.ANGULAR_Z, targetAangle);
           bServo.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, Math.PI * -.4);
         }
       }
@@ -567,7 +623,8 @@ class RobotBinding {
     const nodeIds = Robot.breadthFirstNodeIds(robot);
     this.childrenNodeIds_ = Robot.childrenNodeIds(robot);
 
-    // Links need to be set up before the rest of the nodes
+    // Links are the physical objects and need to be set up before the 
+    // rest of the nodes
     for (const nodeId of nodeIds) {
       const node = robot.nodes[nodeId];
       if (node.type !== Node.Type.Link) continue;
@@ -579,10 +636,10 @@ class RobotBinding {
       this.links_[nodeId] = bNode;
     }
 
-    // Set up all other types of nodes
+    // Next we set up all the objects that are attached to the links
     for (const nodeId of nodeIds) {
       const node = robot.nodes[nodeId];
-      if (node.type === Node.Type.Link) continue;
+      if (node.type === Node.Type.Link || node.type === Node.Type.IRobotCreate) continue;
     
       switch (node.type) {
         case Node.Type.Weight: {
@@ -599,8 +656,12 @@ class RobotBinding {
           // Start motor in locked position so the wheels don't slide
           bJoint.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.LOCKED);
 
-          this.motors_[nodeId] = bJoint;
-          this.motorPorts_[node.motorPort] = nodeId;
+          if (node.parentId === 'create') {
+            this.createMotors_[nodeId] = bJoint;
+          } else {
+            this.motors_[nodeId] = bJoint;
+            this.motorPorts_[node.motorPort] = nodeId;
+          }
           break;
         }
         case Node.Type.Servo: {
@@ -621,29 +682,56 @@ class RobotBinding {
         }
         case Node.Type.TouchSensor: {
           const sensorObject = this.createTouchSensor_(nodeId, node);
-          this.digitalSensors_[nodeId] = sensorObject;
-          this.digitalPorts_[node.digitalPort] = nodeId;
+          if (node.parentId === 'create') {
+            this.createDigitalSensors_[nodeId] = sensorObject;
+          } else {
+            this.digitalSensors_[nodeId] = sensorObject;
+            this.digitalPorts_[node.digitalPort] = nodeId;
+          }
           break;
         }
         case Node.Type.EtSensor: {
           const sensorObject = this.createEtSensor_(nodeId, node);
-          this.analogSensors_[nodeId] = sensorObject;
-          this.analogPorts_[node.analogPort] = nodeId;
+          if (node.parentId === 'create') {
+            this.createAnalogSensors_[nodeId] = sensorObject;
+          } else {
+            this.analogSensors_[nodeId] = sensorObject;
+            this.analogPorts_[node.analogPort] = nodeId;
+          }
           break;
         }
         case Node.Type.LightSensor: {
           const sensorObject = this.createLightSensor_(nodeId, node);
-          this.analogSensors_[nodeId] = sensorObject;
-          this.analogPorts_[node.analogPort] = nodeId;
+          if (node.parentId === 'create') {
+            this.createAnalogSensors_[nodeId] = sensorObject;
+          } else {
+            this.analogSensors_[nodeId] = sensorObject;
+            this.analogPorts_[node.analogPort] = nodeId;
+          }
           break;
         }
         case Node.Type.ReflectanceSensor: {
           const sensorObject = this.createReflectanceSensor_(nodeId, node);
-          this.analogSensors_[nodeId] = sensorObject;
-          this.analogPorts_[node.analogPort] = nodeId;
+          if (node.parentId === 'create') {
+            this.createAnalogSensors_[nodeId] = sensorObject;
+          } else {
+            this.analogSensors_[nodeId] = sensorObject;
+            this.analogPorts_[node.analogPort] = nodeId;
+          }
           break;
         }
       }
+    }
+    // If any nodes are connected to the create we add them to it here.
+    for (const nodeId of nodeIds) {
+      const node = robot.nodes[nodeId];
+      if (node.type !== Node.Type.IRobotCreate) continue;
+      this.createBinding_ = new CreateBinding(
+        workerInstance.createSerial, 
+        this.createMotors_, 
+        this.createAnalogSensors_, 
+        this.createDigitalSensors_
+      );
     }
   }
 
@@ -706,424 +794,6 @@ namespace RobotBinding {
 
     export const isDone = <T>(promise: OutstandingPromise<T>): boolean => promise.doneObj.done;
     export const value = <T>(promise: OutstandingPromise<T>): T => promise.valueObj.value;
-  }
-
-  export interface Sensor<T> {
-    getValue(): Promise<T>;
-    dispose(): void;
-
-    realistic: boolean;
-    noisy: boolean;
-    visible: boolean;
-  }
-
-  export interface SensorParameters<T> {
-    id: string;
-    definition: T;
-    parent: Mesh;
-    scene: babylScene;
-    links: Set<Mesh>;
-    colliders: Set<IPhysicsEnabledObject>;
-  }
-
-  export abstract class SensorObject<T, O> implements Sensor<O> {
-    private parameters_: SensorParameters<T>;
-    get parameters() { return this.parameters_; }
-
-    private realistic_ = false;
-    get realistic() { return this.realistic_; }
-    set realistic(realistic: boolean) { this.realistic_ = realistic; }
-
-    private visible_ = false;
-    get visible() { return this.visible_; }
-    set visible(visible: boolean) { this.visible_ = visible; }
-
-    private noisy_ = false;
-    get noisy() { return this.noisy_; }
-    set noisy(noisy: boolean) { this.noisy_ = noisy; }
-
-    constructor(parameters: SensorParameters<T>) {
-      this.parameters_ = parameters;
-    }
-
-    abstract getValue(): Promise<O>;
-
-    abstract dispose(): void;
-  }
-
-  export class TouchSensor extends SensorObject<Node.TouchSensor, boolean> {
-    private intersector_: Mesh;
-    
-    constructor(parameters: SensorParameters<Node.TouchSensor>) {
-      super(parameters);
-
-      const { id, definition, parent, scene, links, colliders } = parameters;
-      const { collisionBox, origin } = definition;
-
-      // The parent already has RENDER_SCALE applied, so we don't need to apply it again.
-      const rawCollisionBox = Vector3wUnits.toRaw(collisionBox, 'meters');
-      // convert id from snake case to camel case
-      const idCamel = id.replace(/_([a-z])/g, g => g[1].toUpperCase());
-
-      // console.log("Collider ID: ", idCamel);
-      for (const collider of colliders) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-        const collider_name = (collider as any)?.name;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        if (collider_name.includes(idCamel)) {
-          const mesh = collider as Mesh;
-          this.intersector_ = mesh;
-        }
-      }
-      if (!this.intersector_) {
-        // console.log(`Missing collider: ${idCamel}`);
-        this.intersector_ = CreateBox(id, {
-          depth: rawCollisionBox.z,
-          height: rawCollisionBox.y,
-          width: rawCollisionBox.x,
-        }, scene);
-        this.intersector_.parent = parent;
-        ReferenceFramewUnits.syncBabylon(origin, this.intersector_, 'meters');
-      }
-      
-      
-      this.intersector_.material = new StandardMaterial('touch-sensor-material', scene);
-      this.intersector_.material.wireframe = true;
-      this.intersector_.visibility = 0;
-
-    }
-
-    override getValue(): Promise<boolean> {
-      const { scene, links } = this.parameters;
-
-      const meshes = scene.getActiveMeshes();
-
-      let hit = false;
-      meshes.forEach(mesh => {
-        if (hit || mesh === this.intersector_ || links.has(mesh as Mesh)) return;
-        if (!mesh.physicsBody) return;
-        hit = this.intersector_.intersectsMesh(mesh, true);
-      });
-
-      return Promise.resolve(hit);
-    }
-
-    override dispose(): void {
-      this.intersector_.dispose();
-    }
-  }
-
-  export class EtSensor extends SensorObject<Node.EtSensor, number> {
-    private trace_: LinesMesh;
-
-    private static readonly DEFAULT_MAX_DISTANCE = Distance.centimeters(100);
-    private static readonly DEFAULT_NOISE_RADIUS = Distance.centimeters(160);
-    private static readonly FORWARD: Vector3 = new Vector3(0, 0, 1);
-
-    constructor(parameters: SensorParameters<Node.EtSensor>) {
-      super(parameters);
-
-      const { id, scene, definition, parent } = parameters;
-      const { origin, maxDistance } = definition;
-
-      // The trace will be parented to a link that is already scaled, so we don't need to apply
-      // RENDER_SCALE again.
-
-      const rawMaxDistance = Distance.toMetersValue(maxDistance ?? EtSensor.DEFAULT_MAX_DISTANCE);
-      
-      this.trace_ = CreateLines(id, {
-        points: [
-          Vector3.Zero(),
-          EtSensor.FORWARD.multiplyByFloats(rawMaxDistance, rawMaxDistance, rawMaxDistance)
-        ],
-      }, scene);
-      this.trace_.visibility = 0;
-
-      ReferenceFramewUnits.syncBabylon(origin, this.trace_, 'meters');
-      this.trace_.parent = parent;
-    }
-
-    override getValue(): Promise<number> {
-      const { scene, definition, links, colliders } = this.parameters;
-      const { maxDistance, noiseRadius } = definition;
-
-      const rawMaxDistance = Distance.toValue(maxDistance || EtSensor.DEFAULT_MAX_DISTANCE, RENDER_SCALE);
-      this.trace_.visibility = this.visible ? 1 : 0;
-
-      const ray = new Ray(
-        this.trace_.absolutePosition,
-        EtSensor.FORWARD.applyRotationQuaternion(this.trace_.absoluteRotationQuaternion),
-        rawMaxDistance
-      );
-
-      const hit = scene.pickWithRay(ray, mesh => {
-        const metadata = mesh.metadata as SceneMeshMetadata;
-        return (
-          metadata &&
-          mesh !== this.trace_ &&
-          !links.has(mesh as Mesh) &&
-          !colliders.has(mesh as Mesh) &&
-          (!!mesh.physicsBody || metadata.selected)
-        );
-      });
-
-      const distance = hit.pickedMesh ? hit.distance : Number.POSITIVE_INFINITY;
-
-      let value: number;
-      if (!this.realistic) {
-        // ideal
-        if (distance >= rawMaxDistance) value = 0;
-        else value = 4095 - Math.floor((distance / rawMaxDistance) * 4095);
-      } else {
-        // realistic
-        if (distance >= rawMaxDistance) value = 1100;
-        // Farther than 80 cm
-        else if (distance >= 80) value = 345;
-        // Closer than 3 cm (linear from 2910 to 0)
-        else if (distance <= 3) value = Math.floor(distance * (2910 / 3));
-        // 3 - 11.2 cm
-        else if (distance <= 11.2) value = 2910;
-        // 11.2 - 80 cm (the useful range)
-        // Derived by fitting the real-world data to a power model
-        else value = Math.floor(3240.7 * Math.pow(distance - 10, -0.776));
-      }
-
-      if (this.noisy) {
-        const noise = Distance.toValue(noiseRadius || EtSensor.DEFAULT_NOISE_RADIUS, RENDER_SCALE);
-        const offset = Math.floor(noise * Math.random() * 2) - noise;
-        value -= offset;
-      }
-
-      return Promise.resolve(clamp(0, value, 4095));
-    }
-
-    override dispose(): void {
-      this.trace_.dispose();
-    }
-  }
-
-  /**
-   * A light sensor that detects the amount of light at a given point in space.
-   * 
-   * This assumes the sensor can receive light from all directions. A ray is cast
-   * to every light in the scene. If it collides with a mesh, it is considered
-   * blocked. Otherwise, the light is considered to be received.
-   * 
-   * The sensor value is the sum of the light intensities of all lights that are
-   * not blocked, normalized to a calibrated value from measurements on a Wombat.
-   */
-  export class LightSensor extends SensorObject<Node.LightSensor, number> {
-    private trace_: AbstractMesh;
-    private rayTrace_: LinesMesh;
-
-    // Calibrated value from real sensor with overhead light on
-    private static AMBIENT_LIGHT_VALUE = 4095 - 3645;
-
-    private static DEFAULT_NOISE_RADIUS = 10;
-
-    private static lightValue_ = (distance: Distance) => {
-      const cm = Distance.toCentimetersValue(distance);
-      if (cm < 0) return 0;
-      return 4095 - 19.4 + -0.678 * cm + 0.058 * cm * cm + -5.89e-04 * cm * cm * cm;
-    };
-
-    constructor(parameters: SensorParameters<Node.LightSensor>) {
-      super(parameters);
-
-      const { id, scene, definition, parent } = parameters;
-      const { origin } = definition;
-      
-
-      this.trace_ = IcoSphereBuilder.CreateIcoSphere(`${id}-light-sensor-trace`, {
-        radius: 0.01,
-        subdivisions: 1,
-      });
-
-      this.trace_.material = new StandardMaterial(`${id}-light-sensor-trace-material`, scene);
-      this.trace_.material.wireframe = true;
-
-
-      ReferenceFramewUnits.syncBabylon(origin, this.trace_, 'meters');
-      this.trace_.parent = parameters.parent;
-
-      this.trace_.visibility = 0;
-    }
-
-    intersects(ray: Ray) {
-      const { scene } = this.parameters;
-      const meshes = scene.getActiveMeshes();
-
-      let hit = false;
-      for (let i = 0; i < meshes.length; i++) {
-        const mesh = meshes.data[i];
-        if (mesh === this.trace_) continue;
-        if (!mesh.physicsBody) continue;
-        hit = ray.intersectsBox(mesh.getBoundingInfo().boundingBox);
-        if (hit) break;
-      }
-
-      return hit;
-    }
-
-    override getValue(): Promise<number> {
-      const { scene } = this.parameters;
-      this.trace_.visibility = this.visible ? 1 : 0;
-
-      const position = Vector3wUnits.fromRaw(RawVector3.fromBabylon(this.trace_.getAbsolutePosition()), RENDER_SCALE);
-
-      let valueSum = 0;
-      for (const light of scene.lights) {
-        if (!light.isEnabled(false)) continue;
-        if (light instanceof HemisphericLight) {
-          valueSum += light.intensity * LightSensor.AMBIENT_LIGHT_VALUE;
-          continue;
-        }
-
-        const intensity = light.getScaledIntensity();
-        const lightPosition = Vector3wUnits.fromRaw(RawVector3.fromBabylon(light.getAbsolutePosition()), RENDER_SCALE);
-        const offset = Vector3wUnits.subtract(position, lightPosition);
-        const distance = Vector3wUnits.length(offset);
-        const ray = new Ray(
-          Vector3wUnits.toBabylon(position, RENDER_SCALE),
-          Vector3wUnits.toBabylon(offset, RENDER_SCALE),
-          Distance.toValue(distance, RENDER_SCALE)
-        );
-
-        if (this.intersects(ray)) continue;
-
-        // If the light is directional, determine if it is pointing towards the
-        // sensor. If not, it is not received.
-        if (light instanceof DirectionalLight) {
-          const direction = Vector3.Forward(true)
-            .applyRotationQuaternion(Quaternion.FromEulerVector(light.getRotation()));
-          
-          const dot = Vector3.Dot(direction, Vector3wUnits.toBabylon(offset, RENDER_SCALE));
-          const angle = Math.acos(dot / Distance.toValue(Vector3wUnits.length(offset), RENDER_SCALE));
-
-          if (angle > Math.PI / 2) continue;
-        }
-
-        // Similar for spot light
-        if (light instanceof SpotLight) {
-          const direction = Vector3.Forward(true)
-            .applyRotationQuaternion(Quaternion.FromEulerVector(light.getRotation()));
-          
-          const dot = Vector3.Dot(direction, Vector3wUnits.toBabylon(offset, RENDER_SCALE));
-          const angle = Math.acos(dot / Distance.toValue(Vector3wUnits.length(offset), RENDER_SCALE));
-
-          if (angle > light.angle / 2) continue;
-        }
-
-        valueSum += intensity * LightSensor.lightValue_(distance);
-      }
-
-      if (this.noisy) {
-        const offset = Math.floor(LightSensor.DEFAULT_NOISE_RADIUS * Math.random() * 2) - LightSensor.DEFAULT_NOISE_RADIUS;
-        valueSum -= offset;
-      }
-
-      return Promise.resolve(4095 - clamp(0, valueSum, 4095));
-    }
-
-    override dispose(): void {
-      this.trace_.dispose();
-    }
-  }
-
-  export class ReflectanceSensor extends SensorObject<Node.ReflectanceSensor, number> {
-    private trace_: LinesMesh;
-
-    private lastHitTextureId_: string | null = null;
-    private lastHitPixels_: ArrayBufferView | null = null;
-
-    private static readonly DEFAULT_MAX_DISTANCE = Distance.centimeters(1.5);
-    private static readonly DEFAULT_NOISE_RADIUS = Distance.centimeters(10);
-    private static readonly FORWARD: Vector3 = new Vector3(0, 0, 1);
-
-    constructor(parameters: SensorParameters<Node.ReflectanceSensor>) {
-      super(parameters);
-
-      const { id, scene, definition, parent } = parameters;
-      const { origin, maxDistance } = definition;
-
-      // The trace will be parented to a link that is already scaled, so we don't need to apply
-      // RENDER_SCALE again.
-
-      const rawMaxDistance = Distance.toMetersValue(maxDistance ?? ReflectanceSensor.DEFAULT_MAX_DISTANCE);
-      this.trace_ = CreateLines(id, {
-        points: [
-          Vector3.Zero(),
-          ReflectanceSensor.FORWARD.multiplyByFloats(rawMaxDistance, rawMaxDistance, rawMaxDistance)
-        ],
-      }, scene);
-      this.trace_.visibility = 1;
-
-      ReferenceFramewUnits.syncBabylon(origin, this.trace_, 'meters');
-      this.trace_.parent = parent;
-    }
-
-    override async getValue(): Promise<number> {
-      const { scene, definition, links, colliders } = this.parameters;
-      const { maxDistance, noiseRadius } = definition;
-
-      const rawMaxDistance = Distance.toValue(maxDistance || ReflectanceSensor.DEFAULT_MAX_DISTANCE, RENDER_SCALE);
-      this.trace_.visibility = this.visible ? 1 : 0;
-
-      const ray = new Ray(
-        this.trace_.absolutePosition,
-        ReflectanceSensor.FORWARD.applyRotationQuaternion(this.trace_.absoluteRotationQuaternion),
-        rawMaxDistance
-      );
-
-      const hit = scene.pickWithRay(ray, mesh => {
-        return mesh !== this.trace_ && !links.has(mesh as Mesh) && !colliders.has(mesh as Mesh);
-      });
-
-      if (!hit.pickedMesh || !hit.pickedMesh.material || hit.pickedMesh.material.getActiveTextures().length === 0) return 0;
-      
-      let sensorValue = 0;
-      
-      const hitTexture = hit.pickedMesh.material.getActiveTextures()[0];
-
-      // Only reprocess the texture if we hit a different texture than before
-      if (this.lastHitTextureId_ === null || this.lastHitTextureId_ !== hitTexture.uid) {
-        if (hitTexture.isReady()) {
-          this.lastHitTextureId_ = hitTexture.uid;
-          this.lastHitPixels_ = await hitTexture.readPixels();
-        } else {
-          // Texture isn't ready yet, so nothing we can do
-          this.lastHitTextureId_ = null;
-          this.lastHitPixels_ = null;
-        }
-      }
-
-      if (this.lastHitPixels_ !== null) {
-        const hitTextureCoordinates = hit.getTextureCoordinates();
-        const arrayIndex = Math.floor(hitTextureCoordinates.x * (hitTexture.getSize().width - 1)) * 4 + Math.floor(hitTextureCoordinates.y * (hitTexture.getSize().height - 1)) * hitTexture.getSize().width * 4;
-
-        const r = this.lastHitPixels_[arrayIndex] as number;
-        const g = this.lastHitPixels_[arrayIndex + 1] as number;
-        const b = this.lastHitPixels_[arrayIndex + 2] as number;
-
-        // Crude conversion from RGB to grayscale
-        const colorAverage = (r + g + b) / 3;
-
-        // Value is a grayscale percentage of 4095
-        sensorValue = Math.floor(4095 * (1 - (colorAverage / 255)));
-      }
-
-      if (this.noisy) {
-        const noise = Distance.toValue(noiseRadius || ReflectanceSensor.DEFAULT_NOISE_RADIUS, RENDER_SCALE);
-        const offset = Math.floor(noise * Math.random() * 2) - noise;
-        sensorValue -= offset;
-      }
-
-      return clamp(0, sensorValue, 4095);
-    }
-
-    override dispose(): void {
-      this.trace_.dispose();
-    }
   }
 
   export const SERVO_LOGICAL_MIN_ANGLE = Angle.degrees(-90.0);

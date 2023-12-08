@@ -384,8 +384,14 @@ export namespace Command {
       if (buffer.length < SIZE) return undefined;
       const [type, velocityHigh, velocityLow, radiusHigh, radiusLow] = buffer;
       if (type !== Type.Drive) throw new Error(`Expected type ${Type.Drive} but got ${type}`);
-      const velocity = (velocityHigh << 8) + velocityLow;
-      const radius = (radiusHigh << 8) + radiusLow;
+      let velocity = (velocityHigh << 8) + velocityLow;
+      if (velocity & 0x8000) {
+        velocity = velocity - 0x10000;
+      }
+      let radius = (radiusHigh << 8) + radiusLow;
+      if (radius & 0x8000) {
+        radius = radius - 0x10000;
+      }
       return { type, velocity, radius };
     };
   }
@@ -427,8 +433,16 @@ export namespace Command {
       if (buffer.length < SIZE) return undefined;
       const [type, rightVelocityHigh, rightVelocityLow, leftVelocityHigh, leftVelocityLow] = buffer;
       if (type !== Type.DriveDirect) throw new Error(`Expected type ${Type.DriveDirect} but got ${type}`);
-      const rightVelocity = (rightVelocityHigh << 8) + rightVelocityLow;
-      const leftVelocity = (leftVelocityHigh << 8) + leftVelocityLow;
+
+      let rightVelocity = (rightVelocityHigh << 8) + rightVelocityLow;
+      if (rightVelocity & 0x8000) {
+        rightVelocity = rightVelocity - 0x10000;
+      }
+      let leftVelocity = (leftVelocityHigh << 8) + leftVelocityLow;
+      if (leftVelocity & 0x8000) {
+        leftVelocity = leftVelocity - 0x10000;
+      }
+
       return { type, rightVelocity, leftVelocity };
     };
   }

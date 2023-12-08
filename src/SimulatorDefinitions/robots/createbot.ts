@@ -23,6 +23,16 @@ export const CREATEBOT: Robot = {
       friction: 0.01,
       inertia: [10, 10, 10]
     }),
+    create_node: Node.iRobotCreate({
+      parentId: 'create'
+    }),
+    wombat: Node.weight({
+      parentId: 'create',
+      mass: grams(400),
+      origin: {
+        position: Vector3wUnits.meters(0.1, 0.013, 0),
+      },
+    }),
     left_wheel: Node.motor({
       parentAxis: RawVector3.create(0, 0, 1),
       parentPivot: Vector3wUnits.meters(0,0.01,-.12),

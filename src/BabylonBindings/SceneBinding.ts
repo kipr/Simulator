@@ -1,17 +1,16 @@
 
 import { PhysicsShapeType, IPhysicsCollisionEvent, IPhysicsEnginePluginV2, PhysicsAggregate, 
-  TransformNode, AbstractMesh, PhysicsViewer, ShadowGenerator, CreateBox, CreateSphere, CreateCylinder, 
-  CreatePlane, Vector4, Vector3, Texture, DynamicTexture, StandardMaterial, GizmoManager, ArcRotateCamera, 
-  IShadowLight, PointLight, SpotLight, DirectionalLight, Color3, PBRMaterial, Mesh, SceneLoader, EngineView,
+  TransformNode, AbstractMesh, PhysicsViewer, ShadowGenerator, Vector3, StandardMaterial, GizmoManager, 
+  ArcRotateCamera, PointLight, SpotLight, DirectionalLight, PBRMaterial, EngineView,
   Scene as babylScene, Node as babylNode, Camera as babylCamera, Material as babylMaterial,
-  GlowLayer, Observer, BoundingBox } from '@babylonjs/core';
+  Observer, BoundingBox } from '@babylonjs/core';
 
 // eslint-disable-next-line @typescript-eslint/no-duplicate-imports -- Required import for side effects
 import '@babylonjs/core/Engines/Extensions/engine.views';
 import '@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent';
 
 import Dict from "../util/objectOps/Dict";
-import { RawQuaternion, RawVector2, RawVector3 } from "../util/math/math";
+import { RawQuaternion, RawVector3 } from "../util/math/math";
 import Scene from "../state/State/Scene";
 import Camera from "../state/State/Scene/Camera";
 import Geometry from "../state/State/Scene/Geometry";
@@ -19,10 +18,9 @@ import Node from "../state/State/Scene/Node";
 import Patch from "../util/redux/Patch";
 
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../util/math/UnitMath";
-import { Angle, Distance, Mass, SetOps } from "../util";
-import { Color } from '../state/State/Scene/Color';
+import { Distance, Mass, SetOps } from "../util";
 import Material from '../state/State/Scene/Material';
-import { preBuiltGeometries, preBuiltTemplates } from "../SimulatorDefinitions/NodeTemplates";
+import { preBuiltTemplates } from "../SimulatorDefinitions/NodeTemplates";
 import RobotBinding from './RobotBinding';
 import Robot from '../state/State/Robot';
 import AbstractRobot from '../AbstractRobot';
@@ -30,12 +28,11 @@ import WorkerInstance from "../programming/WorkerInstance";
 import LocalizedString from '../util/LocalizedString';
 import ScriptManager from '../ScriptManager';
 import { RENDER_SCALE } from '../components/Constants/renderConstants';
-import { number } from 'prop-types';
 
-import { createMaterial, updateMaterialBasic, updateMaterialPbr } from './MaterialBinding';
-import { createDirectionalLight, createPointLight, createSpotLight } from './Lightbinding';
-import { createCamera } from './CameraBinding';
-import { createObject, createEmpty } from './ObjectBinding';
+import { createMaterial, updateMaterialBasic, updateMaterialPbr } from './SceneObjects/MaterialBinding';
+import { createDirectionalLight, createPointLight, createSpotLight } from './SceneObjects/Lightbinding';
+import { createCamera } from './SceneObjects/CameraBinding';
+import { createObject, createEmpty } from './SceneObjects/ObjectBinding';
 import { apply } from './helpers';
 
 export type FrameLike = TransformNode | AbstractMesh;

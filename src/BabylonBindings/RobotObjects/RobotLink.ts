@@ -1,23 +1,21 @@
 
-import { Scene as babylScene, Vector3, Mesh, SceneLoader,
-  PhysicsBody, PhysicsMotionType, PhysicsShape, 
-  PhysicsAggregate, PhysicsShapeType, PhysicShapeOptions, 
-  PhysicsShapeParameters, PhysicsShapeContainer
+import { Scene as babylScene, Vector3, Mesh, SceneLoader, PhysicsBody, PhysicsMotionType, PhysicsShape, 
+  PhysicsAggregate, PhysicsShapeType, PhysicShapeOptions, PhysicsShapeParameters, PhysicsShapeContainer
 } from '@babylonjs/core';
 
-import Geometry from '../state/State/Robot/Geometry';
-import Node from '../state/State/Robot/Node';
-import { RENDER_SCALE_METERS_MULTIPLIER } from '../components/Constants/renderConstants';
-import Robot from '../state/State/Robot';
-import { Mass } from '../util/math/Value';
+import Geometry from '../../state/State/Robot/Geometry';
+import Node from '../../state/State/Robot/Node';
+import { RENDER_SCALE_METERS_MULTIPLIER } from '../../components/Constants/renderConstants';
+import Robot from '../../state/State/Robot';
+import { Mass } from '../../util/math/Value';
 
 
-interface BuiltGeometry {
+export interface BuiltGeometry {
   nonColliders: Mesh[];
   colliders?: BuiltGeometry.Collider[];
 }
 
-namespace BuiltGeometry {
+export namespace BuiltGeometry {
   export interface Collider {
     name: string;
     mesh: Mesh;

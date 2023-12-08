@@ -16,7 +16,7 @@ import { Angle } from './util';
 import store from './state';
 import { Unsubscribe } from 'redux';
 import { ScenesAction } from './state/reducer';
-import SceneBinding, { SceneMeshMetadata } from './Bindings/SceneBinding';
+import SceneBinding, { SceneMeshMetadata } from './BabylonBindings/SceneBinding';
 import Scene from './state/State/Scene';
 import Node from './state/State/Scene/Node';
 import { Robots } from './state/State';

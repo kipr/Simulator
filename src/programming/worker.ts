@@ -65,26 +65,27 @@ const startC = (message: Protocol.Worker.StartRequest) => {
   // dynRequire is a function that takes a string of javascript code and returns a module (a function that is executed when called)
   const mod = dynRequire(message.code, {
     setRegister8b: (address: number, value: number) => {
-      // print("executing set register 8b");
+      console.log("Set Registers in worker mod function");
       sharedRegister_.setRegister8b(address, value);
     },
     setRegister16b: (address: number, value: number) => {
-      // print("executing set register 16b");
+      console.log("Set Registers in worker mod function");
       sharedRegister_.setRegister16b(address, value);
     },
     setRegister32b: (address: number, value: number) => {
-      // print("executing set register 32b");
+      console.log("Set Registers in worker mod function");
       sharedRegister_.setRegister32b(address, value);
     },
     readRegister8b: (address: number) => sharedRegister_.getRegisterValue8b(address),
     readRegister16b: (address: number) => sharedRegister_.getRegisterValue16b(address),
     readRegister32b: (address: number) => sharedRegister_.getRegisterValue32b(address),
     createWrite: (value: number) => {
-      print("executing create write");
+      // console.log('!!!!!!!!!!!worker createWrite', value);
       createSerial_.tx.push(value);
     },
     createRead: () => {
       const value = createSerial_.rx.pop();
+      // console.log('!!!!!!!!!!!!!worker createRead', value);
       if (value === undefined) return -1;
       return value;
     },

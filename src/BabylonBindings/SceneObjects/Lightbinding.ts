@@ -1,12 +1,12 @@
 import { ShadowGenerator,  IShadowLight, PointLight, SpotLight, DirectionalLight,
   Scene as babylScene } from '@babylonjs/core';
 
-import Node from "../state/State/Scene/Node";
-import Dict from "../util/objectOps/Dict";
-import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../util/math/UnitMath";
-import { RawQuaternion, RawVector2, RawVector3 } from "../util/math/math";
-import LocalizedString from '../util/LocalizedString';
-import { Angle, Distance, Mass, SetOps } from "../util";
+import Node from "../../state/State/Scene/Node";
+import Dict from "../../util/objectOps/Dict";
+import { ReferenceFramewUnits, Vector3wUnits } from "../../util/math/UnitMath";
+import { RawVector3 } from "../../util/math/math";
+import LocalizedString from '../../util/LocalizedString';
+import { Angle } from "../../util";
 
 
 export const createDirectionalLight = (id: string, node: Node.DirectionalLight, bScene_: babylScene, shadowGenerators_: Dict<ShadowGenerator>): DirectionalLight => {
