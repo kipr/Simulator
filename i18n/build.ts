@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { walkDir } from './util';
 import { PO_PATH } from './po';
-import { I18n } from '../src/i18n';
+import { I18n } from '../src/util/i18n';
 import LocalizedString from '../src/util/LocalizedString';
 
 
