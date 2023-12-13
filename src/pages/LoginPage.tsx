@@ -12,8 +12,8 @@ import { AuthProvider, getRedirectResult, signInWithPopup } from 'firebase/auth'
 import Form from '../components/Interface/Form';
 import { TabBar } from '../components/Layout/TabBar';
 
-import KIPR_LOGO_BLACK from '../../../static/assets/KIPR-Logo-Black-Text-Clear-Large.png';
-import KIPR_LOGO_WHITE from '../../../static/assets/KIPR-Logo-White-Text-Clear-Large.png';
+import KIPR_LOGO_BLACK from '../../static/assets/KIPR-Logo-Black-Text-Clear-Large.png';
+import KIPR_LOGO_WHITE from '../../static/assets/KIPR-Logo-White-Text-Clear-Large.png';
 import { FontAwesome } from '../components/FontAwesome';
 import { Text } from '../components/Interface/Text';
 import { StyledText } from '../util';
