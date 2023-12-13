@@ -5,7 +5,7 @@ import { Value, StyledText, Angle, Distance } from '../../util';
 import { ThemeProps } from '../Constants/theme';
 import ValueEdit from '../ValueEdit';
 import deepNeq from '../../util/redux/deepNeq';
-import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../util/math/UnitMath';
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../util/math/unitMath';
 import LocalizedString from '../../util/LocalizedString';
 
 import tr from '@i18n';

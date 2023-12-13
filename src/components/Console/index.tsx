@@ -7,7 +7,7 @@ import ScrollArea from '../Interface/ScrollArea';
 import { Text } from '../Interface/Text';
 import { Theme, ThemeProps } from '../Constants/theme';
 
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 import { Button } from '../Interface/Button';
 import { BarComponent } from '../Interface/Widget';
 
@@ -28,7 +28,7 @@ export const createConsoleBarComponents = (
     onClick: onClearConsole,
     children:
       <>
-        <Fa icon={faFile} />
+        <FontAwesome icon={faFile} />
         {' '} {LocalizedString.lookup(tr('Clear'), locale)}
       </>,
   }));

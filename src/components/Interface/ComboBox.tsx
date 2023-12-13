@@ -5,7 +5,7 @@ import { Rectangle } from "../../util/math/math";
 import { StyleProps } from "../../util/style";
 import { AnyText } from "../../util";
 import { Color } from "../../state/State/Scene/Color";
-import { Fa } from "../Fa";
+import { FontAwesome } from "../FontAwesome";
 import { Text } from "./Text";
 import { ThemeProps } from "../Constants/theme";
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
@@ -45,7 +45,7 @@ const DropDown = styled('div', (props: ThemeProps) => ({
   zIndex: -111
 }));
 
-const DropIcon = styled(Fa, {
+const DropIcon = styled(FontAwesome, {
   position: 'absolute',
   right: '10px',
   top: '50%',

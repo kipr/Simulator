@@ -3,7 +3,7 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import { StyleProps } from '../util/style';
 import { Spacer } from './Constants/common';
-import { Fa } from './Fa';
+import { FontAwesome } from './FontAwesome';
 import { DARK, ThemeProps } from './Constants/theme';
 
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
@@ -87,7 +87,7 @@ const Item = styled('div', (props: ThemeProps & ClickProps) => ({
   transition: 'background-color 0.2s, opacity 0.2s'
 }));
 
-const ItemIcon = styled(Fa, {
+const ItemIcon = styled(FontAwesome, {
   paddingRight: '10px'
 });
 

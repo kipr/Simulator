@@ -11,7 +11,7 @@ import { ThemeProps } from "../Constants/theme";
 import { ScenesAction } from "../../state/reducer";
 import DialogBar from "./DialogBar";
 import ScrollArea from "../Interface/ScrollArea";
-import { Fa } from "../Fa";
+import { FontAwesome } from "../FontAwesome";
 
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { push } from 'connected-react-router';
@@ -130,7 +130,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
           </InfoColumn>
         </Container>
         <DialogBar theme={theme} onAccept={this.onAccept}>
-          <Fa icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}
+          <FontAwesome icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}
         </DialogBar>
       </Dialog>
     );

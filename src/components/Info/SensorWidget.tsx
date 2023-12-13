@@ -9,7 +9,7 @@ import { Spacer } from '../Constants/common';
 import { ActionTooltip } from './ActionTooltip';
 import Tooltip from './Tooltip';
 import { StyledText } from '../../util';
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
@@ -57,7 +57,7 @@ const Header = styled('div', (props: ThemeProps) => ({
   }
 }));
 
-const StyledToolIcon = styled(Fa, (props: ThemeProps & { withBorder?: boolean }) => ({
+const StyledToolIcon = styled(FontAwesome, (props: ThemeProps & { withBorder?: boolean }) => ({
   userSelect: 'none',
   paddingLeft: !props.withBorder ? `${props.theme.itemPadding}px` : undefined,
   paddingRight: props.withBorder ? `${props.theme.itemPadding}px` : undefined,

@@ -2,24 +2,23 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { styled } from 'styletron-react';
-import { Button } from '../Interface/Button';
 
 import { Console, createConsoleBarComponents } from '../EditorConsole';
 import { Editor, createEditorBarComponents, EditorBarTarget } from '../Editor';
-import World, { createWorldBarComponents } from '../World';
+import World from '../World';
 
 import { Info } from '../Info';
 import { LayoutEditorTarget, LayoutProps } from './Layout';
 import SimulatorArea from './SimulatorArea';
 import { Theme, ThemeProps } from '../Constants/theme';
-import Widget, { BarComponent, Mode, Size, WidgetProps } from '../Interface/Widget';
+import Widget, { Mode, Size, WidgetProps } from '../Interface/Widget';
 import { State as ReduxState } from '../../state';
 import Scene from '../../state/State/Scene';
 import Node from '../../state/State/Scene/Node';
 import Dict from '../../util/objectOps/Dict';
 import Async from '../../state/State/Async';
 import Challenge from '../Challenge';
-import { ReferenceFramewUnits } from '../../util/math/UnitMath';
+import { ReferenceFramewUnits } from '../../util/math/unitMath';
 import LocalizedString from '../../util/LocalizedString';
 
 import tr from '@i18n';

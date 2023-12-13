@@ -2,38 +2,18 @@ import * as React from 'react';
 
 import { styled, withStyleDeep } from 'styletron-react';
 import { StyleProps } from '../../util/style';
-import { Switch } from '../Switch';
-import { Theme, ThemeProps } from '../Constants/theme';
+import { ThemeProps } from '../Constants/theme';
 import Field from '../Interface/Field';
 import ScrollArea from '../Interface/ScrollArea';
 import Section from '../Interface/Section';
-import { Spacer } from '../Constants/common';
-import { Angle, StyledText } from '../../util';
-import { DropdownList, OptionDefinition } from '../DropdownList';
 
-import EditableList from '../EditableList';
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 import { connect } from 'react-redux';
 
 import { State as ReduxState } from '../../state';
 
-import { ScenesAction } from '../../state/reducer';
-
-import * as uuid from 'uuid';
-import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../util/math/UnitMath';
-import { RawVector3 } from '../../util/math/math';
-import ComboBox from '../Interface/ComboBox';
-import Node from '../../state/State/Scene/Node';
-import Dict from '../../util/objectOps/Dict';
-import Geometry from '../../state/State/Scene/Geometry';
-
-import { Button } from '../Interface/Button';
-import { BarComponent } from '../Interface/Widget';
-import { faGlobeAmericas, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
-import Scene, { AsyncScene } from '../../state/State/Scene';
 import Async from '../../state/State/Async';
 import LocalizedString from '../../util/LocalizedString';
-import Script from '../../state/State/Scene/Script';
 import { AsyncChallenge } from '../../state/State/Challenge';
 import { AsyncChallengeCompletion } from '../../state/State/ChallengeCompletion';
 import PredicateEditor from './PredicateEditor';
@@ -92,7 +72,7 @@ const StyledField = styled(Field, (props: ThemeProps) => ({
 
 }));
 
-const SectionIcon = styled(Fa, (props: ThemeProps) => ({
+const SectionIcon = styled(FontAwesome, (props: ThemeProps) => ({
   marginLeft: `${props.theme.itemPadding}px`,
   paddingLeft: `${props.theme.itemPadding}px`,
   borderLeft: `1px solid ${props.theme.borderColor}`,

@@ -3,13 +3,10 @@ import { styled } from "styletron-react";
 
 import Field from "../Interface/Field";
 import Input from "../Interface/Input";
-import Section from "../Interface/Section";
 import { ThemeProps } from "../Constants/theme";
 import ValueEdit from "../ValueEdit";
 import Script from "../../state/State/Scene/Script";
 import { Ivygate } from 'ivygate';
-import { Editor } from '../Editor';
-import * as monaco from 'monaco-editor';
 
 import LocalizedString from '../../util/LocalizedString';
 import { connect } from 'react-redux';

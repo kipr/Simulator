@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 import { ThemeProps } from '../Constants/theme';
-import { faBook, faCaretSquareLeft, faClone, faCogs, faCommentDots, faCopy, faEye, faEyeSlash, faFolderOpen, faPlus, faQuestion, faSave, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faCogs, faCommentDots, faQuestion, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 import tr from '@i18n';
 
@@ -76,7 +76,7 @@ const Item = styled('div', (props: ThemeProps & ClickProps) => ({
 }));
 
 
-const ItemIcon = styled(Fa, {
+const ItemIcon = styled(FontAwesome, {
   width: '20px',
   minWidth: '20px',
   maxWidth: '20px',

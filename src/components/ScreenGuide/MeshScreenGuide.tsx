@@ -3,7 +3,7 @@ import { RawVector2 } from '../../util/math/math';
 import { StyleProps } from '../../util/style';
 import { ThemeProps } from '../Constants/theme';
 import ScreenGuide from './ScreenGuide';
-import { ACTIVE_SPACE } from '../../Sim';
+import { ACTIVE_SPACE } from '../../simulator/Space';
 
 export interface MeshScreenGuideProps extends StyleProps, ThemeProps {
   from: HTMLElement,

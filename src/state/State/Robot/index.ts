@@ -1,5 +1,5 @@
 import Dict from '../../../util/objectOps/Dict';
-import { ReferenceFramewUnits } from '../../../util/math/UnitMath';
+import { ReferenceFramewUnits } from '../../../util/math/unitMath';
 import LocalizedString from '../../../util/LocalizedString';
 import Patch from '../../../util/redux/Patch';
 import Geometry from './Geometry';

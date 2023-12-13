@@ -1,13 +1,11 @@
 import * as React from "react";
 import { styled } from "styletron-react";
-import { ReferenceFramewUnits } from "../../util/math/UnitMath";
 import { Dialog } from "../Dialog/Dialog";
-import ScrollArea from "../Interface/ScrollArea";
 import { ThemeProps } from "../Constants/theme";
 import ScriptSettings from "./ScriptSettings";
 import Script from '../../state/State/Scene/Script';
 import DialogBar from '../Dialog/DialogBar';
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 import LocalizedString from '../../util/LocalizedString';
@@ -75,7 +73,7 @@ class ScriptSettingsDialog extends React.PureComponent<Props, State> {
           />
         </InnerContainer>
         <DialogBar theme={theme} onAccept={this.onAccept_}>
-          <Fa icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}
+          <FontAwesome icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}
         </DialogBar>
       </Dialog>
     );

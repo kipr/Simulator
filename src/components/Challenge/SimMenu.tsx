@@ -3,7 +3,7 @@ import * as React from 'react';
 import { styled, withStyleDeep } from 'styletron-react';
 import { StyleProps } from '../../util/style';
 import { Spacer } from '../Constants/common';
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 import { Layout, LayoutPicker } from '../Layout';
 import { SimulatorState } from './SimulatorState';
 import { GREEN, RED, ThemeProps } from '../Constants/theme';
@@ -186,7 +186,7 @@ const StopItem = withStyleDeep(Item, (props: ClickProps) => ({
       : {},
 }));
 
-const ItemIcon = styled(Fa, {
+const ItemIcon = styled(FontAwesome, {
   paddingRight: '10px',
 });
 

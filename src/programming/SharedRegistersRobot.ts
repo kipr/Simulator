@@ -1,10 +1,10 @@
-import AbstractRobot from '../AbstractRobot';
-import Motor from '../AbstractRobot/Motor';
-import Servo from '../AbstractRobot/Servo';
-import WriteCommand from '../AbstractRobot/WriteCommand';
+import AbstractRobot from './AbstractRobot';
+import Motor from './AbstractRobot/Motor';
+import Servo from './AbstractRobot/Servo';
+import WriteCommand from './AbstractRobot/WriteCommand';
 import { clamp } from '../util/math/math';
-import RegisterState from './RegisterState';
-import SharedRegisters from './SharedRegisters';
+import RegisterState from './registers/RegisterState';
+import SharedRegisters from './registers/SharedRegisters';
 
 class SharedRegistersRobot implements AbstractRobot {
   private sharedResisters_: SharedRegisters;
@@ -90,9 +90,7 @@ class SharedRegistersRobot implements AbstractRobot {
   }
 
   private readonly apply_ = (writeCommand: WriteCommand) => {
-    // if (writeCommand.type.includes("motor")) {
-    //   console.log(writeCommand);
-    // }
+
     switch (writeCommand.type) {
       case WriteCommand.Type.MotorDone: {
         const done = this.sharedResisters_.getRegisterValue8b(RegisterState.REG_RW_MOT_DONE);
@@ -151,14 +149,12 @@ class SharedRegistersRobot implements AbstractRobot {
   };
 
   apply(writeCommands: WriteCommand[]) {
-    // console.log('SharedRegistersRobot.apply');
     for (const writeCommand of writeCommands) {
       this.apply_(writeCommand);
     }
   }
 
   sync(stateless: AbstractRobot.Stateless) {
-    // console.log('SharedRegistersRobot.sync');
     let modes = 0;
     let directions = 0;
 

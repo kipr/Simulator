@@ -1,5 +1,5 @@
 import deepNeq from "../../../util/redux/deepNeq";
-import { Vector3wUnits } from "../../../util/math/UnitMath";
+import { Vector3wUnits } from "../../../util/math/unitMath";
 import { Distance } from "../../../util/math/Value";
 import Patch from '../../../util/redux/Patch';
 

@@ -2,7 +2,7 @@ import { faCog, faEye, faEyeSlash, faSync, faTimes } from "@fortawesome/free-sol
 import * as React from "react";
 import { styled, withStyleDeep } from "styletron-react";
 import { StyleProps } from "../util/style";
-import { Fa } from "./Fa";
+import { FontAwesome } from "./FontAwesome";
 import { BLUE, BROWN, GREEN, RED, ThemeProps } from "./Constants/theme";
 
 export interface EditableListProps<P> extends StyleProps, ThemeProps {
@@ -229,7 +229,7 @@ namespace EditableList {
       cursor: props.$disabled ? 'auto' : 'pointer'
     }));
 
-    export const OptionIcon = styled(Fa, {
+    export const OptionIcon = styled(FontAwesome, {
       minWidth: '35px',
       padding: '5px',
       verticalAlign: 'middle',

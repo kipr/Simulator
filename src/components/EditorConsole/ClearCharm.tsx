@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
 import Charm from '../Charm';
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 import { ThemeProps } from '../Constants/theme';
 import { charmColor } from '../Constants/charm-util';
 
@@ -37,7 +37,7 @@ class ClearCharm extends React.PureComponent<Props> {
     
     return (
       <Container theme={theme} onClick={onClick}>
-        <Fa icon={faTimes} /> {LocalizedString.lookup(tr('Clear'), locale)}
+        <FontAwesome icon={faTimes} /> {LocalizedString.lookup(tr('Clear'), locale)}
       </Container>
     );
   }

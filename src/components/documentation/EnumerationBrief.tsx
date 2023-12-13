@@ -4,7 +4,7 @@ import { styled } from 'styletron-react';
 import EnumerationDocumentation from '../../state/State/Documentation/EnumerationDocumentation';
 import { StyleProps } from '../../util/style';
 import { ThemeProps } from '../Constants/theme';
-import { Decoration, Keyword, Type } from './common';
+import { Keyword, Type } from './common';
 import FileName from './FileName';
 
 export interface EnumerationBriefProps extends StyleProps, ThemeProps {

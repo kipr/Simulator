@@ -20,6 +20,13 @@ export const hasWarnings = (messages: Message[]) => {
 };
 
 
+/**
+ * Parses the stderr output and converts it into an array of Message objects.
+ * Each Message object represents an error or warning with its severity, ranges, and message.
+ * 
+ * @param stderr The stderr output to parse.
+ * @returns An array of Message objects representing the parsed errors and warnings.
+ */
 export default (stderr: string) => {
   const lines = stderr.split('\n');
   

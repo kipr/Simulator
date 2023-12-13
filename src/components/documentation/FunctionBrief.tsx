@@ -4,7 +4,6 @@ import { styled } from 'styletron-react';
 import FunctionDocumentation from '../../state/State/Documentation/FunctionDocumentation';
 import { StyleProps } from '../../util/style';
 import { ThemeProps } from '../Constants/theme';
-import { Decoration, FunctionName, ParameterName, Type } from './common';
 import FunctionPrototype from './FunctionPrototype';
 
 const Container = styled('div', ({ onClick }: { onClick?: (event: React.MouseEvent) => void }) => ({

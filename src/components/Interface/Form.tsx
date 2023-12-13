@@ -7,7 +7,7 @@ import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
 import { StyledText } from '../../util';
 import { Validators } from '../../util/Validator';
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 import Input from './Input';
 import { Text } from './Text';
 import { GREEN, RED, ThemeProps } from '../Constants/theme';
@@ -27,7 +27,7 @@ const Label = styled('label', (theme: ThemeProps) => ({
   userSelect: 'none'
 }));
 
-const ErrorIcon = styled(Fa, (theme: ThemeProps) => ({
+const ErrorIcon = styled(FontAwesome, (theme: ThemeProps) => ({
   userSelect: 'none',
   paddingLeft: `${theme.theme.itemPadding}px`,
   paddingRight: `${theme.theme.itemPadding}px`,
@@ -135,7 +135,7 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
         <div key={`verifier-${index}`}>
           <Text text={
             StyledText.component ({
-              component: Fa,
+              component: FontAwesome,
               props: {
                 icon: valid ? faCheck : faTimes,
                 style: {
@@ -174,7 +174,7 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
             onClick={isFinalizeAllowed ? this.onFinalizeClick_ : undefined}
             disabled={!isFinalizeAllowed}
           >
-            {props.finalizeIcon ? <Fa icon={props.finalizeIcon} /> : undefined} {props.finalizeText || 'Accept'}
+            {props.finalizeIcon ? <FontAwesome icon={props.finalizeIcon} /> : undefined} {props.finalizeText || 'Accept'}
           </Finalize>
         </ButtonContainer>
       </Container>

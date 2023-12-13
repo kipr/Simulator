@@ -1,24 +1,18 @@
 import * as React from "react";
 import { styled } from "styletron-react";
-import { ReferenceFramewUnits, RotationwUnits } from "../../util/math/UnitMath";
-import { Angle, Distance, Mass, Value } from "../../util";
-import ComboBox from "../Interface/ComboBox";
+import { ReferenceFramewUnits } from "../../util/math/unitMath";
+import { Angle, Distance } from "../../util";
 import { Dialog } from "../Dialog/Dialog";
 import DialogBar from "../Dialog/DialogBar";
-import Field from "../Interface/Field";
-import Input from "../Interface/Input";
 import ScrollArea from "../Interface/ScrollArea";
-import Section from "../Interface/Section";
 import { ThemeProps } from "../Constants/theme";
-import ValueEdit from "../ValueEdit";
-import { RawAxisAngle, RawEuler } from "../../util/math/math";
 import NodeSettings from "./NodeSettings";
 import Node from "../../state/State/Scene/Node";
 
 import * as uuid from 'uuid';
 import Scene from "../../state/State/Scene";
 import Geometry from "../../state/State/Scene/Geometry";
-import { Fa } from "../Fa";
+import { FontAwesome } from "../FontAwesome";
 
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import LocalizedString from '../../util/LocalizedString';
@@ -166,7 +160,7 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
           />
         </StyledScrollArea>
         <DialogBar theme={theme} onAccept={this.onAccept_}>
-          <Fa icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}
+          <FontAwesome icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}
         </DialogBar>
       </Dialog>
     );

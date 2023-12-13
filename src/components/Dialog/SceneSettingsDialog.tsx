@@ -3,7 +3,7 @@ import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
 import { Dialog } from './Dialog';
 import { ThemeProps } from '../Constants/theme';
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 import Scene from '../../state/State/Scene';
 import SceneSettings from '../World/SceneSettings';
 import DialogBar from './DialogBar';
@@ -75,7 +75,7 @@ class SceneSettingsDialog extends React.PureComponent<Props, State> {
           onSceneChange={this.onSceneChange_}
           theme={theme}
         />
-        <DialogBar theme={theme} onAccept={this.onAccept_}><Fa icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}</DialogBar>
+        <DialogBar theme={theme} onAccept={this.onAccept_}><FontAwesome icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}</DialogBar>
       </Dialog>
     );
   }

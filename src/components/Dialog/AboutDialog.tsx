@@ -3,7 +3,7 @@ import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
 import { Dialog } from './Dialog';
 import { ThemeProps } from '../Constants/theme';
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 
 import { faCopyright } from '@fortawesome/free-solid-svg-icons';
 
@@ -87,7 +87,7 @@ class AboutDialog extends React.PureComponent<Props> {
           </LogoRow>
           {LocalizedString.lookup(Dict.map(tr('Version %s (%s)'), (str: string) => sprintf(str, SIMULATOR_VERSION, SIMULATOR_GIT_HASH)), locale)}
           <br /> <br />
-          <Bold>{LocalizedString.lookup(tr('Copyright'), locale)} <Fa icon={faCopyright} /> 2023 <Link theme={theme} href="https://kipr.org/" target="_blank">KISS Institute for Practical Robotics</Link> {LocalizedString.lookup(tr('and External Contributors', 'Part of copyright notice, after KIPR is listed'), locale)}</Bold>
+          <Bold>{LocalizedString.lookup(tr('Copyright'), locale)} <FontAwesome icon={faCopyright} /> 2023 <Link theme={theme} href="https://kipr.org/" target="_blank">KISS Institute for Practical Robotics</Link> {LocalizedString.lookup(tr('and External Contributors', 'Part of copyright notice, after KIPR is listed'), locale)}</Bold>
           <br /> <br />
           {LocalizedString.lookup(tr('This software is licensed under the terms of the'), locale)} <Link theme={theme} href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">GNU General Public License v3</Link>.
           <br /> <br />

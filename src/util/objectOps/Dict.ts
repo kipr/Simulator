@@ -34,7 +34,6 @@ namespace Dict {
     const original = { ...dict };
     const extracted = {};
     for (let it = fields.next(); !it.done; it = fields.next()) {
-      // Type assertions necessary because it.value is "any"; see https://github.com/microsoft/TypeScript/issues/33353
       extracted[it.value as string] = original[it.value as string];
       delete original[it.value as string];
     }

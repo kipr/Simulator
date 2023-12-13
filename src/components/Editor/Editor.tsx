@@ -4,27 +4,22 @@ import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
 import { Theme, ThemeProps } from '../Constants/theme';
 
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 import { Button } from '../Interface/Button';
 import { BarComponent } from '../Interface/Widget';
 import { WarningCharm, ErrorCharm } from './';
 
 import { Ivygate, Message } from 'ivygate';
 import LanguageSelectCharm from './LanguageSelectCharm';
-import ProgrammingLanguage from '../../programming/ProgrammingLanguage';
+import ProgrammingLanguage from '../../programming/compiler/ProgrammingLanguage';
 
 import { faArrowsRotate, faFileDownload, faIndent } from '@fortawesome/free-solid-svg-icons';
 import Script from '../../state/State/Scene/Script';
 import Dict from '../../util/objectOps/Dict';
 
 import * as monaco from 'monaco-editor';
-import DocumentationLocation from '../../state/State/Documentation/DocumentationLocation';
-import { DocumentationAction } from '../../state/reducer';
 import tr from '@i18n';
-import { connect } from 'react-redux';
-import { State as ReduxState } from '../../state';
 import LocalizedString from '../../util/LocalizedString';
-import DeleteDialog from 'components/Dialog/DeleteDialog';
 
 export enum EditorActionState {
   None,
@@ -114,7 +109,7 @@ export const createEditorBarComponents = ({
         onClick: target.onIndentCode,
         children:
           <>
-            <Fa icon={faIndent} />
+            <FontAwesome icon={faIndent} />
             {' '} {LocalizedString.lookup(tr('Indent'), locale)}
           </>
       }));
@@ -124,7 +119,7 @@ export const createEditorBarComponents = ({
         onClick: target.onDownloadCode,
         children:
           <>
-            <Fa icon={faFileDownload} />
+            <FontAwesome icon={faFileDownload} />
             {' '} {LocalizedString.lookup(tr('Download'), locale)}
           </>
       }));
@@ -134,7 +129,7 @@ export const createEditorBarComponents = ({
         onClick: target.onResetCode,
         children:
           <>
-            <Fa icon={faArrowsRotate} />
+            <FontAwesome icon={faArrowsRotate} />
             {' '} {LocalizedString.lookup(tr('Reset'), locale)}
           </>
       }));

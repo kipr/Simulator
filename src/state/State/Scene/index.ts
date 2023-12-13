@@ -2,7 +2,7 @@ import Dict from '../../../util/objectOps/Dict';
 import Geometry from './Geometry';
 import Node from './Node';
 import Script from './Script';
-import { Vector3wUnits } from '../../../util/math/UnitMath';
+import { Vector3wUnits } from '../../../util/math/unitMath';
 import Camera from './Camera';
 import Patch from '../../../util/redux/Patch';
 import Async from '../Async';

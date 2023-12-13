@@ -36,7 +36,7 @@ try {
 module.exports = {
   entry: {
     app: './index.tsx',
-    login: './login/index.tsx',
+    login: './components/Login/index.tsx',
     'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js',
     'ts.worker': 'monaco-editor/esm/vs/language/typescript/ts.worker.js',
   },
@@ -63,7 +63,7 @@ module.exports = {
       path: false,
     },
     alias: {
-      '@i18n': resolve(__dirname, '../../src/i18n'),
+      '@i18n': resolve(__dirname, '../../src/util/i18n'),
     },
     symlinks: false,
     modules
@@ -136,7 +136,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({ template: 'index.html.ejs', excludeChunks: ['login'] }),
-    new HtmlWebpackPlugin({ template: 'login/login.html.ejs', filename: 'login.html', chunks: ['login'] }),
+    new HtmlWebpackPlugin({ template: 'components/Login/login.html.ejs', filename: 'login.html', chunks: ['login'] }),
     new DefinePlugin({
       SIMULATOR_VERSION: JSON.stringify(require('../../package.json').version),
       SIMULATOR_GIT_HASH: JSON.stringify(commitHash),

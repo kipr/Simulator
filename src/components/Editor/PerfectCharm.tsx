@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
 import Charm from '../Charm';
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 import { ThemeProps } from '../Constants/theme';
 import { charmColor } from '../Constants/charm-util';
 
@@ -30,7 +30,7 @@ class PerfectCharm extends React.PureComponent<Props> {
     
     return (
       <Container theme={theme}>
-        <Fa icon={faCheck} /> Perfect!
+        <FontAwesome icon={faCheck} /> Perfect!
       </Container>
     );
   }

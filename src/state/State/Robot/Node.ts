@@ -1,6 +1,6 @@
 import deepNeq from '../../../util/redux/deepNeq';
 import { RawVector3 } from '../../../util/math/math';
-import { Vector3wUnits, ReferenceFramewUnits } from '../../../util/math/UnitMath';
+import { Vector3wUnits, ReferenceFramewUnits } from '../../../util/math/unitMath';
 import { Angle, Distance, Mass } from '../../../util';
 import construct from '../../../util/redux/construct';
 import LocalizedString from '../../../util/LocalizedString';

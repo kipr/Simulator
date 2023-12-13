@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import * as Sim from '../../Sim';
+import * as Sim from '../../simulator/Space';
 
 import { styled } from 'styletron-react';
 

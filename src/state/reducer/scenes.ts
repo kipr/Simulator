@@ -1,19 +1,20 @@
-import Scene, { AsyncScene, SceneBrief } from "../State/Scene";
-import { Scenes } from "../State";
+import store from '..';
 import Async from "../State/Async";
-import * as JBC_SCENES from '../../SimulatorDefinitions/scenes';
-import construct from '../../util/redux/construct';
+import Scene, { AsyncScene, SceneBrief } from "../State/Scene";
+import Camera from '../State/Scene/Camera';
 import Geometry from '../State/Scene/Geometry';
 import Node from '../State/Scene/Node';
-import Camera from '../State/Scene/Camera';
-import { ReferenceFramewUnits, Vector3wUnits } from '../../util/math/UnitMath';
+import Script from '../State/Scene/Script';
+import { Scenes } from "../State";
+import { errorToAsyncError, mutate } from './util';
 import db from '../../db';
 import { SCENE_COLLECTION } from '../../db/constants';
-import store from '..';
 import Selector from '../../db/Selector';
+import * as JBC_SCENES from '../../simulator/definitions/scenes';
+import construct from '../../util/redux/construct';
 import Dict from '../../util/objectOps/Dict';
-import Script from '../State/Scene/Script';
-import { errorToAsyncError, mutate } from './util';
+import { ReferenceFramewUnits, Vector3wUnits } from '../../util/math/unitMath';
+
 
 export namespace ScenesAction {
   export interface RemoveScene {
@@ -536,7 +537,6 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
       };
     }
     case 'scenes/soft-reset-scene': {
-      // console.log('soft reset scene');
       const scene = state[action.sceneId];
 
       if (!scene) return state;
@@ -550,7 +550,6 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
               const { origin, startingOrigin } = draft.nodes[nodeId];
               
               if (!startingOrigin) continue;
-              // console.log("nodeId", nodeId, JSON.stringify(startingOrigin));
     
               draft.nodes[nodeId].origin = {
                 position: startingOrigin.position ? startingOrigin.position : undefined,

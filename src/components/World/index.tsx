@@ -2,30 +2,25 @@ import * as React from 'react';
 
 import { styled, withStyleDeep } from 'styletron-react';
 import { StyleProps } from '../../util/style';
-import { Switch } from '../Switch';
 import { Theme, ThemeProps } from '../Constants/theme';
 import Field from '../Interface/Field';
 import ScrollArea from '../Interface/ScrollArea';
 import Section from '../Interface/Section';
-import { Spacer } from '../Constants/common';
 import { Angle, StyledText } from '../../util';
-import { DropdownList, OptionDefinition } from '../DropdownList';
 
 import EditableList from '../EditableList';
 import Item from './Item';
 import AddNodeDialog, { AddNodeAcceptance } from './AddNodeDialog';
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 import NodeSettingsDialog, { NodeSettingsAcceptance } from './NodeSettingsDialog';
 import { connect } from 'react-redux';
 
 import { State as ReduxState } from '../../state';
 
-import { ScenesAction } from '../../state/reducer';
 
 import * as uuid from 'uuid';
-import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../util/math/UnitMath';
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../util/math/unitMath';
 import { RawVector3 } from '../../util/math/math';
-import ComboBox from '../Interface/ComboBox';
 import Node from '../../state/State/Scene/Node';
 import Dict from '../../util/objectOps/Dict';
 import Geometry from '../../state/State/Scene/Geometry';
@@ -39,8 +34,6 @@ import LocalizedString from '../../util/LocalizedString';
 import Script from '../../state/State/Scene/Script';
 import AddScriptDialog, { AddScriptAcceptance } from './AddScriptDialog';
 import ScriptSettingsDialog, { ScriptSettingsAcceptance } from './ScriptSettingsDialog';
-import { AsyncChallenge } from '../../state/State/Challenge';
-import Builder from '../../db/Builder';
 
 import tr from '@i18n';
 import { sprintf } from 'sprintf-js';
@@ -89,7 +82,7 @@ export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSav
     onClick: onSelectScene,
     children:
       <>
-        <Fa icon={faGlobeAmericas} />
+        <FontAwesome icon={faGlobeAmericas} />
         {' '} {LocalizedString.lookup(tr('Select Scene'), locale)}
       </>,
   }));
@@ -100,7 +93,7 @@ export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSav
     disabled: !saveable,
     children:
       <>
-        <Fa icon={faSave} />
+        <FontAwesome icon={faSave} />
         {' '} {LocalizedString.lookup(tr('Save Scene'), locale)}
       </>,
   }));
@@ -110,7 +103,7 @@ export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSav
     onClick: onCopyScene,
     children:
       <>
-        <Fa icon={faPlus} />
+        <FontAwesome icon={faPlus} />
         {' '} {LocalizedString.lookup(tr('Copy Scene'), locale)}
       </>,
   }));
@@ -242,7 +235,7 @@ const StyledField = styled(Field, (props: ThemeProps) => ({
 
 }));
 
-const SectionIcon = styled(Fa, (props: ThemeProps) => ({
+const SectionIcon = styled(FontAwesome, (props: ThemeProps) => ({
   marginLeft: `${props.theme.itemPadding}px`,
   paddingLeft: `${props.theme.itemPadding}px`,
   borderLeft: `1px solid ${props.theme.borderColor}`,

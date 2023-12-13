@@ -1,18 +1,21 @@
-import Async from "../State/Async";
-import { ChallengeCompletions } from '../State';
-import construct from '../../util/redux/construct';
-import Selector from '../../db/Selector';
-import db from '../../db';
+import { OuterObjectPatch } from 'symmetry/dist';
+
 import store from '..';
-import { errorToAsyncError, mutate } from './util';
+import { ChallengeCompletions } from '../State';
+import Async from "../State/Async";
+import Scene from '../State/Scene';
 import ChallengeCompletion, { AsyncChallengeCompletion, ChallengeCompletionBrief } from '../State/ChallengeCompletion';
 import PredicateCompletion from '../State/ChallengeCompletion/PredicateCompletion';
-import Scene from '../State/Scene';
-import Dict from '../../util/objectOps/Dict';
-import { OuterObjectPatch } from 'symmetry/dist';
-import ProgrammingLanguage from '../../programming/ProgrammingLanguage';
-import { ReferenceFramewUnits } from '../../util/math/UnitMath';
 
+import Selector from '../../db/Selector';
+import db from '../../db';
+
+import { errorToAsyncError, mutate } from './util';
+import construct from '../../util/redux/construct';
+import Dict from '../../util/objectOps/Dict';
+import { ReferenceFramewUnits } from '../../util/math/unitMath';
+
+import ProgrammingLanguage from '../../programming/compiler/ProgrammingLanguage';
 
 export namespace ChallengeCompletionsAction {
   export interface LoadChallengeCompletion {

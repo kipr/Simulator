@@ -10,7 +10,6 @@ import { ThemeProps } from '../Constants/theme';
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';
 import ComboBox from '../Interface/ComboBox';
-import Dict from '../../util/objectOps/Dict';
 
 import { State as ReduxState } from '../../state';
 import { I18nAction } from '../../state/reducer';

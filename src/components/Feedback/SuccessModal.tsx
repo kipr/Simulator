@@ -3,7 +3,7 @@ import { FeedbackText } from './FeedbackInputs';
 import { StyleProps } from '../../util/style';
 import { Dialog } from '../Dialog/Dialog';
 import { ThemeProps } from '../Constants/theme';
-import { FeedbackContainer, CenterContainer } from './index';
+import { FeedbackContainer, CenterContainer } from './FeedbackDialog';
 
 import tr from '@i18n';
 

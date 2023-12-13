@@ -1,16 +1,20 @@
-import Async from "../State/Async";
+import store from '..';
 import { Challenges } from '../State';
 import Challenge, { AsyncChallenge, ChallengeBrief } from '../State/Challenge';
-import construct from '../../util/redux/construct';
-import Predicate from '../State/Challenge/Predicate';
 import Event from '../State/Challenge/Event';
-import LocalizedString from '../../util/LocalizedString';
-import Selector from '../../db/Selector';
-import db from '../../db';
-import store from '..';
+import Predicate from '../State/Challenge/Predicate';
+import Async from "../State/Async";
+
 import { errorToAsyncError, mutate } from './util';
-import test from '../../challenges/test';
-import jbc6c from "../../challenges/jbc6c";
+import construct from '../../util/redux/construct';
+import LocalizedString from '../../util/LocalizedString';
+
+import db from '../../db';
+import Selector from '../../db/Selector';
+
+import test from '../../simulator/definitions/challenges/test';
+import jbc6c from "../../simulator/definitions/challenges/jbc6c";
+
 
 
 export namespace ChallengesAction {

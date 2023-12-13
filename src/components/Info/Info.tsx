@@ -8,13 +8,13 @@ import { ThemeProps } from '../Constants/theme';
 import SensorWidget from './SensorWidget';
 import { StyledText } from '../../util';
 import Location from './Location';
-import { Fa } from '../Fa';
-import { ReferenceFramewUnits } from '../../util/math/UnitMath';
+import { FontAwesome } from '../FontAwesome';
+import { ReferenceFramewUnits } from '../../util/math/unitMath';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
 import { ScenesAction } from '../../state/reducer';
 import Node from '../../state/State/Scene/Node';
-import Motor from '../../AbstractRobot/Motor';
+import Motor from '../../programming/AbstractRobot/Motor';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
 import Async from '../../state/State/Async';
 
@@ -87,7 +87,7 @@ const SIMULATION_NAME = StyledText.text({
 
 
 
-const ResetIcon = styled(Fa, ({ theme }: ThemeProps) => ({
+const ResetIcon = styled(FontAwesome, ({ theme }: ThemeProps) => ({
   marginLeft: `${theme.itemPadding * 2}px`,
   opacity: 0.5,
   ':hover': {

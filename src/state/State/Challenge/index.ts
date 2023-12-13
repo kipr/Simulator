@@ -1,6 +1,6 @@
 import Author from '../../../db/Author';
 import Dict from '../../../util/objectOps/Dict';
-import ProgrammingLanguage from '../../../programming/ProgrammingLanguage';
+import ProgrammingLanguage from '../../../programming/compiler/ProgrammingLanguage';
 import LocalizedString from '../../../util/LocalizedString';
 import Async from '../Async';
 import Event from './Event';

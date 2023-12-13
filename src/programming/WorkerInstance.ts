@@ -1,11 +1,11 @@
-import Protocol from './WorkerProtocol';
-import Registers from './RegisterState';
-import SerialU32 from './SerialU32';
-import SharedRegisters from './SharedRegisters';
-import SharedRingBufferUtf32 from './SharedRingBufferUtf32';
+import Protocol from './worker/Protocol';
+import Registers from './registers/RegisterState';
+import SerialU32 from './buffers/SerialU32';
+import SharedRegisters from './registers/SharedRegisters';
+import SharedRingBufferUtf32 from './buffers/SharedRingBufferUtf32';
 import SharedRegistersRobot from './SharedRegistersRobot';
-import AbstractRobot from '../AbstractRobot';
-import WriteCommand from '../AbstractRobot/WriteCommand';
+import AbstractRobot from './AbstractRobot';
+import WriteCommand from './AbstractRobot/WriteCommand';
 
 const SHARED_CONSOLE_LENGTH = 1024;
 
@@ -33,14 +33,12 @@ class WorkerInstance implements AbstractRobot {
   // Initialize shared registers and start the worker thread.
   constructor() {
     // Set initial register values for servos
-    // console.log('WorkerInstance Constructor: initializing shared registers');
     this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_SRV_ALLSTOP, 0xF0);
     this.sharedRegisters_.setRegister16b(Registers.REG_RW_SERVO_0_H, 1500);
     this.sharedRegisters_.setRegister16b(Registers.REG_RW_SERVO_1_H, 1500);
     this.sharedRegisters_.setRegister16b(Registers.REG_RW_SERVO_2_H, 1500);
     this.sharedRegisters_.setRegister16b(Registers.REG_RW_SERVO_3_H, 2400);
 
-    // console.log('WorkerInstance Constructor: new SharedRegistersRobot');
     this.sharedRegistersRobot_ = new SharedRegistersRobot(this.sharedRegisters_);
 
     this.startWorker();
@@ -87,7 +85,6 @@ class WorkerInstance implements AbstractRobot {
    * @param writeCommands - An array of commands to be applied.
    */
   apply(writeCommands: WriteCommand[]) {
-    // console.log('applying write commands', writeCommands);
     this.sharedRegistersRobot_.apply(writeCommands);
   }
 
@@ -131,7 +128,6 @@ class WorkerInstance implements AbstractRobot {
    */
   private onMessage = (e: MessageEvent) => {
     const message = e.data as Protocol.Worker.Request;
-    console.log('WorkerInstance.onMessage - received message and posting to worker');
     switch (message.type) {
       case 'worker-ready': {
         // Once worker is ready for messages, send the shared register array buffer
@@ -162,7 +158,6 @@ class WorkerInstance implements AbstractRobot {
    * @param req - The request configuration to start the worker with, excluding the 'type' field.
    */
   start(req: Omit<Protocol.Worker.StartRequest, 'type'>) {
-    console.log('WorkerInstance.start() - resetting registers and posting code to worker');
     // Reset specific registers to stop motors and disable servos
     this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_MODES, 0x00);
     this.sharedRegisters_.setRegister8b(Registers.REG_RW_MOT_DIRS, 0x00);
@@ -197,8 +192,7 @@ class WorkerInstance implements AbstractRobot {
    * Initializes and starts the worker thread.
    */
   private startWorker() {
-    console.log('WorkerInstance.startWorker() - Initializing worker and setting up onmessage handler');
-    this.worker_ = new Worker(new URL('./worker.ts', import.meta.url));
+    this.worker_ = new Worker(new URL('./worker/worker.ts', import.meta.url));
     this.worker_.onmessage = this.onMessage;
   }
 }

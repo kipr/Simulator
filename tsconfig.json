@@ -10,7 +10,7 @@
     "esModuleInterop": true,
     "baseUrl": "src",
     "paths": {
-      "@i18n": ["i18n"],
+      "@i18n": ["util/i18n"],
     }
   },
   "types": [
@@ -19,6 +19,6 @@
     "babylonjs-gltf2interface"
   ],
   "include": [
-    "src/**/*"
+    "src/**/**/*"
   ],
 }

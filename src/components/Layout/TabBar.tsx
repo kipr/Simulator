@@ -2,7 +2,7 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 import { ThemeProps } from '../Constants/theme';
 
 export interface TabProps extends ThemeProps, StyleProps {
@@ -31,7 +31,7 @@ const TabContainer = styled('div', (props: ThemeProps & { selected: boolean, $ve
   minWidth: '45px',
 }));
 
-const TabIcon = styled(Fa, {
+const TabIcon = styled(FontAwesome, {
   paddingRight: '5px'
 });
 

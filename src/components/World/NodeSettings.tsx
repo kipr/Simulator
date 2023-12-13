@@ -1,12 +1,10 @@
 import * as React from "react";
 import { styled } from "styletron-react";
 import { RawVector3, RawAxisAngle, RawEuler } from "../../util/math/math";
-import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../util/math/UnitMath";
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../util/math/unitMath";
 
-import { Angle, Distance, Mass, UnitlessValue, Value } from "../../util";
+import { Angle, Mass, UnitlessValue, Value } from "../../util";
 import ComboBox from "../Interface/ComboBox";
-import { Dialog } from "../Dialog/Dialog";
-import DialogBar from "../Dialog/DialogBar";
 import Field from "../Interface/Field";
 import Input from "../Interface/Input";
 import ScrollArea from "../Interface/ScrollArea";
@@ -477,7 +475,6 @@ class NodeSettings extends React.PureComponent<Props, State> {
     if (node.type !== 'object' && node.type !== 'from-space-template') throw new Error('Node is not an object');
 
     const material = node.material as Material.Basic;
-    console.log("prev", material);
     const nextMaterial = { ...material };
     const member = material[field];
 
@@ -487,7 +484,6 @@ class NodeSettings extends React.PureComponent<Props, State> {
       ...member,
       uri: event.currentTarget.value
     };
-    console.log("update", nextMaterial);
 
     onNodeChange({
       ...node,
@@ -573,7 +569,6 @@ class NodeSettings extends React.PureComponent<Props, State> {
   };
 
   private onRockTemplateSelect_ = (index: number, option: ComboBox.Option) => {
-    console.log("onRockTemplateSelect_");
     const { props } = this;
     const { node } = props;
 
@@ -588,7 +583,6 @@ class NodeSettings extends React.PureComponent<Props, State> {
   };
 
   private onSpaceTemplateSelect_ = (index: number, option: ComboBox.Option) => {
-    console.log("onSpaceTemplateSelect_");
     const { props } = this;
     const { node } = props;
 

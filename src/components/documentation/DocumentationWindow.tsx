@@ -4,14 +4,14 @@ import { ThemeProps } from '../Constants/theme';
 import Widget, { Mode, Size } from '../Interface/Widget';
 import DocumentationRoot from './DocumentationRoot';
 
-import { GLOBAL_EVENTS, GlobalEvents } from '../../util/GlobalEvents';
+import { GLOBAL_EVENTS } from '../../util/GlobalEvents';
 import construct from '../../util/redux/construct';
 import { styled } from 'styletron-react';
 import { DocumentationState } from '../../state/State';
 import { State as ReduxState } from '../../state';
 import { connect } from 'react-redux';
 import { DocumentationAction } from '../../state/reducer';
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 import { faBox, faChevronLeft, faFile, faFilter, faGear, faHome, faSection } from '@fortawesome/free-solid-svg-icons';
 import ScrollArea from '../Interface/ScrollArea';
 import DocumentationLocation from '../../state/State/Documentation/DocumentationLocation';
@@ -94,7 +94,7 @@ const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
   flex: 1,
 }));
 
-const LocationIcon = styled(Fa, ({ theme }: ThemeProps) => ({
+const LocationIcon = styled(FontAwesome, ({ theme }: ThemeProps) => ({
   marginLeft: `${theme.itemPadding * 2}px`,
 }));
 
@@ -285,7 +285,7 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
               
               
               <Button theme={theme} onClick={locationStack.length > 0 ? onDocumentationPop : undefined}>
-                <Fa disabled={locationStack.length === 0} icon={faChevronLeft} />
+                <FontAwesome disabled={locationStack.length === 0} icon={faChevronLeft} />
               </Button>
               <Spacer />
               {locationStackTop === undefined && <LocationIcon theme={theme} icon={faHome} />}

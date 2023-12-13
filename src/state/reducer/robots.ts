@@ -1,7 +1,7 @@
+import { Robots } from '../State';
 import Robot from "../State/Robot";
 import Async from "../State/Async";
-import * as ROBOTS from '../../SimulatorDefinitions/robots';
-import { Robots } from '../State';
+import * as ROBOTS from '../../simulator/definitions/robots';
 
 export namespace RobotsAction {
   export interface AddRobot {
@@ -79,11 +79,10 @@ export type RobotsAction = (
 );
 
 const DEFAULT_ROBOTS: Robots = {
-  robots: {
-    'demobot': Async.loaded({ value: ROBOTS.DEMOBOT }),
-    'modbot': Async.loaded({ value: ROBOTS.MODIFIEDDEMOBOT }),
-    'createbot': Async.loaded({ value: ROBOTS.CREATEBOT }),
-  },
+  robots: Object.entries(ROBOTS).reduce((acc, [key, value]) => {
+    acc[key.toLowerCase()] = Async.loaded({ value });
+    return acc;
+  }, {})
 };
 
 export const reduceRobots = (state: Robots = DEFAULT_ROBOTS, action: RobotsAction): Robots => {

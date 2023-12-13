@@ -6,7 +6,6 @@ import { ThemeProps } from '../Constants/theme';
 import { CanBeVertical, CanBeSelected } from './';
 import { SliderBar } from './SliderBar';
 import { Actions, resizeOnPointerMove } from './Resizer';
-import { number } from 'prop-types';
 
 export interface SliderProps extends ThemeProps {
   isVertical: boolean;

@@ -1,7 +1,7 @@
-import AbstractRobot from '../../../AbstractRobot';
+import AbstractRobot from '../../../programming/AbstractRobot';
 import deepNeq from '../../../util/redux/deepNeq';
 import { RawVector2, RawVector3 } from '../../../util/math/math';
-import { ReferenceFramewUnits } from '../../../util/math/UnitMath';
+import { ReferenceFramewUnits } from '../../../util/math/unitMath';
 import { DistributiveOmit } from '../../../util/types';
 import { Angle, Mass } from '../../../util/math/Value';
 import LocalizedString from '../../../util/LocalizedString';

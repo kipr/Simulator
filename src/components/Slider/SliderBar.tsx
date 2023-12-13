@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { styled } from 'styletron-react';
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 import { ThemeProps } from '../Constants/theme';
 
 import { CanBeVertical, CanBeSelected } from './';
@@ -51,7 +51,7 @@ export const SliderBar = React.memo((props: SliderBarProps) => {
     <SliderBubbleSeperator />
     <SliderBubble $vertical={$vertical} theme={theme} selected={selected}>
       <SliderBubbleCharm $vertical={$vertical}>
-        <Fa key={'size-1'} icon={faEquals} />
+        <FontAwesome key={'size-1'} icon={faEquals} />
       </SliderBubbleCharm>
     </SliderBubble>
     <SliderBubbleSeperator />

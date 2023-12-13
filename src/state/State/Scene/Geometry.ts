@@ -1,4 +1,4 @@
-import { Vector2wUnits, Vector3wUnits } from '../../../util/math/UnitMath';
+import { Vector2wUnits, Vector3wUnits } from '../../../util/math/unitMath';
 import { RawVector3, RawVector2 } from '../../../util/math/math';
 import { Distance } from '../../../util/math/Value';
 import deepNeq from '../../../util/redux/deepNeq';

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
 import { Spacer } from '../Constants/common';
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 import { ThemeProps } from '../Constants/theme';
 
 import { faAngleDown, faAngleUp, faAngleLeft, faAngleRight, faAngleDoubleUp, faAngleDoubleDown, faAngleDoubleLeft, faAngleDoubleRight, faTimes, faExpand, faWindowRestore } from '@fortawesome/free-solid-svg-icons';
@@ -115,7 +115,7 @@ interface WidgetState {
 type Props = WidgetProps;
 type State = WidgetState;
 
-const Icon = styled(Fa, {
+const Icon = styled(FontAwesome, {
   paddingLeft: '5px',
   paddingRight: '5px',
   ':last-child': {

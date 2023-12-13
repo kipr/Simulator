@@ -1,4 +1,4 @@
-import { ReferenceFramewUnits } from "../math/UnitMath";
+import { ReferenceFramewUnits } from "../math/unitMath";
 
 interface Robotable {
   setOrigin(origin: ReferenceFramewUnits): void;

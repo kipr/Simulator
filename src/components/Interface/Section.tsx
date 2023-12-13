@@ -6,7 +6,7 @@ import { ThemeProps } from '../Constants/theme';
 import { Spacer } from '../Constants/common';
 import { AnyText } from '../../util';
 import { Text } from './Text';
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 
 import { faCaretDown, faCaretUp, faFile } from '@fortawesome/free-solid-svg-icons';
 
@@ -82,7 +82,7 @@ class Section extends React.PureComponent<Props> {
           <Name text={name} />
           <Spacer />
           {onCollapsedChange && (
-            <Fa
+            <FontAwesome
               icon={!collapsed ? faCaretUp : faCaretDown}
               onClick={this.onCollapseClick_}
             />

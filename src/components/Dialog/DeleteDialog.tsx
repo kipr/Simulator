@@ -3,7 +3,7 @@ import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
 import { Dialog } from './Dialog';
 import { ThemeProps } from '../Constants/theme';
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 import Scene from '../../state/State/Scene';
 import SceneSettings from '../World/SceneSettings';
 import DialogBar from './DialogBar';
@@ -47,7 +47,7 @@ class DeleteDialog extends React.PureComponent<Props> {
         <Container theme={theme}>
           {LocalizedString.lookup(Dict.map(tr('Are you sure you want to delete %s?'), (str: string) => sprintf(str, LocalizedString.lookup(name, locale))), locale)}
         </Container>
-        <DialogBar theme={theme} onAccept={onAccept}><Fa icon={faTrash} /> {LocalizedString.lookup(tr('Delete'), locale)}</DialogBar>
+        <DialogBar theme={theme} onAccept={onAccept}><FontAwesome icon={faTrash} /> {LocalizedString.lookup(tr('Delete'), locale)}</DialogBar>
       </Dialog>
     );
   }

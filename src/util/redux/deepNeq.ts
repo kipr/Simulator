@@ -7,13 +7,13 @@
  *  If value1 is not an array, or if they are arrays but not deeply 
  *  equal (checked by deepArrayNeq), it returns true (meaning they are not equal). 
  *  If they are both arrays and deeply equal, it returns false.
-Type Comparison: Compares the types of value0 and value1. If they are of different 
-  types, it returns true.
-Object Handling: If both values are objects (and not null), it uses deepObjectNeq 
-  to check for deep inequality. If they are deeply unequal, it returns true.
-Primitive Type Comparison: If the values are of the same type and are not objects 
-  or arrays, it directly compares them using strict inequality (!==). If they are 
-    not equal, it returns true.
+ * Type Comparison: Compares the types of value0 and value1. If they are of different 
+ *   types, it returns true.
+ * Object Handling: If both values are objects (and not null), it uses deepObjectNeq 
+ *   to check for deep inequality. If they are deeply unequal, it returns true.
+ * Primitive Type Comparison: If the values are of the same type and are not objects 
+ *   or arrays, it directly compares them using strict inequality (!==). If they are 
+ *     not equal, it returns true.
  * @param value0 One of two objects to compare
  * @param value1 The second object to compare
  * @returns  A boolean indicating whether the two objects are not deeply equal
@@ -55,9 +55,9 @@ const deepNeq = (value0: unknown, value1: unknown) => {
 
 /**
  * Purpose: Compares two arrays to determine if they are not deeply equal.
-    Length Check: First, it checks if the arrays have different lengths. If so, it returns true.
-    Element Comparison: Iterates over the array elements and uses deepNeq to compare each pair 
-    of elements. If any pair is not equal, it returns true.
+ *   Length Check: First, it checks if the arrays have different lengths. If so, it returns true.
+ *   Element Comparison: Iterates over the array elements and uses deepNeq to compare each pair 
+ *   of elements. If any pair is not equal, it returns true.
  * @param _0 
  * @param _1 
  * @returns 
@@ -75,12 +75,12 @@ const deepArrayNeq = (_0: unknown[], _1: unknown[]) => {
 
 /**
 *     Purpose: Compares two objects to determine if they are not deeply equal.
-  Key Length Check: Compares the number of keys in each object. If they have 
-    a different number of keys, it returns true.
-  Key Existence Check: Checks if both objects have the same keys. If a key exists 
-    in one object but not in the other, it returns true.
-  Key Value Comparison: Iterates over the keys and uses deepNeq to compare the value 
-    for each key in both objects. If any pair of values is not equal, it returns true.
+*  Key Length Check: Compares the number of keys in each object. If they have 
+*    a different number of keys, it returns true.
+*  Key Existence Check: Checks if both objects have the same keys. If a key exists 
+*    in one object but not in the other, it returns true.
+*  Key Value Comparison: Iterates over the keys and uses deepNeq to compare the value 
+*    for each key in both objects. If any pair of values is not equal, it returns true.
 * @param _0 Object for comparison
 * @param _1 Object for comparison
 * @returns 
