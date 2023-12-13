@@ -1,24 +1,24 @@
 import * as React from 'react';
-import { DARK, RED, ThemeProps } from '../Constants/theme';
-import { StyleProps } from '../../util/style';
+import { DARK, RED, ThemeProps } from '../components/Constants/theme';
+import { StyleProps } from '../util/style';
 import { styled } from 'styletron-react';
-import { auth, Providers } from '../../firebase/firebase';
+import { auth, Providers } from '../firebase/firebase';
 import { 
   signInWithEmail, 
   createUserWithEmail, 
   forgotPassword
-} from '../../firebase/modules/auth';
+} from '../firebase/modules/auth';
 import { AuthProvider, getRedirectResult, signInWithPopup } from 'firebase/auth';
-import Form from '../Interface/Form';
-import { TabBar } from '../Layout/TabBar';
+import Form from '../components/Interface/Form';
+import { TabBar } from '../components/Layout/TabBar';
 
 import KIPR_LOGO_BLACK from '../../../static/assets/KIPR-Logo-Black-Text-Clear-Large.png';
 import KIPR_LOGO_WHITE from '../../../static/assets/KIPR-Logo-White-Text-Clear-Large.png';
-import { FontAwesome } from '../FontAwesome';
-import { Text } from '../Interface/Text';
-import { StyledText } from '../../util';
-import Button from '../Interface/Button';
-import { Validators } from '../../util/Validator';
+import { FontAwesome } from '../components/FontAwesome';
+import { Text } from '../components/Interface/Text';
+import { StyledText } from '../util';
+import Button from '../components/Interface/Button';
+import { Validators } from '../util/Validator';
 import { faSignInAlt, faUnlock, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import qs from 'qs';
