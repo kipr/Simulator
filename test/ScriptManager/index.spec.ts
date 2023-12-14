@@ -1,6 +1,6 @@
-import ScriptManager from '../../src/ScriptManager';
+import ScriptManager from '../../src/simulator/ScriptManager';
 import Script from '../../src/state/State/Scene/Script';
-import { Vector3wUnits } from '../../src/util/math/UnitMath';
+import { Vector3wUnits } from '../../src/util/math/unitMath';
 
 describe('ScriptManager', () => {
   describe('collision', () => {
