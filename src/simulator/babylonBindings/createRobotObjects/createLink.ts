@@ -84,7 +84,6 @@ export const createLink = async (id: string, link: Node.Link, bScene_: babylonSc
   
   const meshes = builtGeometry.nonColliders;
   let myMesh: Mesh;
-  const inertiaScale = 1;
   
   switch (link.collisionBody.type) {
     // Notes on Links - the root link should have the highest mass and inertia and it should 
@@ -107,6 +106,8 @@ export const createLink = async (id: string, link: Node.Link, bScene_: babylonSc
     case Node.Link.CollisionBody.Type.Cylinder: {
       myMesh = Mesh.MergeMeshes(meshes, true, true, undefined, false, true);
       const scale = link.scale ?? 1;
+      myMesh.scaling.y *= 1 / scale;
+      myMesh.scaling.y *= 1 / scale;
       myMesh.scaling.scaleInPlace(RENDER_SCALE_METERS_MULTIPLIER * scale);
       const aggregate = new PhysicsAggregate(myMesh, PhysicsShapeType.CYLINDER, {
         mass: Mass.toGramsValue(link.mass || Mass.grams(10)),

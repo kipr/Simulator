@@ -29,6 +29,7 @@ export const createHinge = (id: string, hinge: Node.HingeJoint & { parentId: str
   bChild.position.x = Vector3wUnits.toBabylon(hinge.parentPivot, 'meters')._x;
   bChild.position.y = Vector3wUnits.toBabylon(hinge.parentPivot, 'meters')._y;
   bChild.position.z = Vector3wUnits.toBabylon(hinge.parentPivot, 'meters')._z;
+  // bChild.scaling.y = 10;
   bChild.rotationQuaternion = Quaternion.FromEulerAngles(hinge.parentAxis.z * 3.1415 / 2, 0, 0);
   
   // The 6DoF constraint is used for motorized joints. Unforunately, it is not possible to

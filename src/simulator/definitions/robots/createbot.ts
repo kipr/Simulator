@@ -30,41 +30,41 @@ export const CREATEBOT: Robot = {
       parentId: 'create',
       mass: grams(400),
       origin: {
-        position: Vector3wUnits.meters(0.1, 0.013, 0),
+        position: Vector3wUnits.meters(0.05, 0.013, 0), // forward, up, right
       },
     }),
     left_wheel: Node.motor({
       parentAxis: RawVector3.create(0, 0, 1),
-      parentPivot: Vector3wUnits.meters(0,0.01,-.12),
+      parentPivot: Vector3wUnits.meters(0,0.015,-.1191),
       childAxis: RawVector3.Y, 
-      motorPort: 3,
+      motorPort: 30,
       parentId: 'create',
       plug: Node.Motor.Plug.Inverted
     }),
     left_wheel_link: Node.link({
       parentId: 'left_wheel',
-      geometryId: 'wheel_link',
+      geometryId: 'wheel_link', // if deleted Simulator initialization failed TypeError: mesh.subMeshes is undefined
       collisionBody: Node.Link.CollisionBody.CYLINDER,
-      mass: grams(50),
+      mass: grams(20),
       friction: 100,
       restitution: 0,
-      scale: .3,
+      scale: .47,
     }),
     right_wheel: Node.motor({
       parentAxis: RawVector3.create(0, 0, -1),
-      parentPivot: Vector3wUnits.meters(0,0.01,0.12),
+      parentPivot: Vector3wUnits.meters(0,0.015,0.1255),
       childAxis: RawVector3.Y,
-      motorPort: 0,
+      motorPort: 40,
       parentId: 'create',
     }),
     right_wheel_link: Node.link({
       parentId: 'right_wheel',
       geometryId: 'wheel_link',
       collisionBody: Node.Link.CollisionBody.CYLINDER,
-      mass: grams(50),
+      mass: grams(20),
       friction: 100,
       restitution: 0,
-      scale: .3,
+      scale: .47,
     }),
     left_front_reflectance_sensor: Node.reflectanceSensor({
       parentId: 'create',
@@ -98,7 +98,6 @@ export const CREATEBOT: Robot = {
       },
       analogPort: 4,
     }),
-
 
     left_side_bump: Node.touchSensor({
       parentId: 'create',
