@@ -127,7 +127,7 @@ export default class Location extends React.PureComponent<Props> {
         <StyledValueEdit value={Value.distance(origin?.position?.x || Distance.centimeters(0))} onValueChange={this.onXChange_} theme={theme} name={LocalizedString.lookup(tr('X'), locale)} />
         <StyledValueEdit value={Value.distance(origin?.position?.y || Distance.centimeters(0))} onValueChange={this.onYChange_} theme={theme} name={LocalizedString.lookup(tr('Y'), locale)} />
         <StyledValueEdit value={Value.distance(origin?.position?.z || Distance.centimeters(0))} onValueChange={this.onZChange_} theme={theme} name={LocalizedString.lookup(tr('Z'), locale)} />
-        <StyledValueEdit value={Value.angle(euler.y)} onValueChange={this.onThetaChange_} theme={theme} name={LocalizedString.lookup(tr('RotationwUnits'), locale)} />
+        <StyledValueEdit value={Value.angle(euler.y)} onValueChange={this.onThetaChange_} theme={theme} name={LocalizedString.lookup(tr('Rotation'), locale)} />
       </Container>
     );
   }
