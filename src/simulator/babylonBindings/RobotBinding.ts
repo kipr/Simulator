@@ -219,7 +219,7 @@ class RobotBinding {
     ];
 
     // Work around for stopping movement after the Stop button is pressed.
-    if (abstractMotors[0].direction === Motor.Direction.Brake) {
+    if (abstractMotors[0].direction === Motor.Direction.Brake && this.createBinding_) {
       this.createBinding_.leftVelocity_ = 0;
       this.createBinding_.rightVelocity_ = 0;
       // console.log("brake");
