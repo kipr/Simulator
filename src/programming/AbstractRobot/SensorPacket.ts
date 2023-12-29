@@ -2,6 +2,21 @@ import SerialU32 from '../buffers/SerialU32';
 import construct from '../../util/redux/construct';
 
 export namespace SensorPacket {
+  export enum GroupType {
+    One = 1,
+    Two = 2,
+    Three = 3,
+    Four = 4,
+    Five = 5,
+    OneHundredOne = 101,
+    // The following groups are not used:
+    // Zero = 0, // Groups 1-3
+    // Six = 6, // Groups 1-5
+    // OneHundredSix = 106, // Part of group 101
+    // OneHundredSeven = 107, // Part of group 101
+    // OneHundred = 100, // All groups
+  }
+
   export enum Type {
     BumpsAndWheelDrops = 7,
     Wall = 8,
@@ -13,8 +28,6 @@ export namespace SensorPacket {
     WheelOvercurrents = 14,
     DirtDetect = 15,
     InfraredCharacterOmni = 17,
-    InfraredCharacterLeft = 52,
-    InfraredCharacterRight = 53,
     Buttons = 18,
     Distance = 19,
     Angle = 20,
@@ -47,6 +60,8 @@ export namespace SensorPacket {
     LightBumpCenterRightSignal = 49,
     LightBumpFrontRightSignal = 50,
     LightBumpRightSignal = 51,
+    InfraredCharacterLeft = 52,
+    InfraredCharacterRight = 53,
     LeftMotorCurrent = 54,
     RightMotorCurrent = 55,
     MainBrushMotorCurrent = 56,
@@ -80,6 +95,7 @@ export namespace SensorPacket {
       bumpLeft: (data[0] & (1 << 1)) !== 0,
       bumpRight: (data[0] & (1 << 0)) !== 0,
     });
+    export const write = SerialU32.writeConstruct<BumpsAndWheelDrops, typeof BumpsAndWheelDrops>(BumpsAndWheelDrops, Type.BumpsAndWheelDrops);
   }
 
   export interface Wall {
@@ -168,6 +184,7 @@ export namespace SensorPacket {
       type: Type.VirtualWall,
       value: data[0],
     });
+    export const write = SerialU32.writeConstruct<VirtualWall, typeof VirtualWall>(VirtualWall, Type.VirtualWall);
   }
 
   export interface WheelOvercurrents {
@@ -195,6 +212,7 @@ export namespace SensorPacket {
       mainBrush: (data[0] & (1 << 2)) !== 0,
       sideBrush: (data[0] & (1 << 0)) !== 0,
     });
+    export const write = SerialU32.writeConstruct<WheelOvercurrents, typeof WheelOvercurrents>(WheelOvercurrents, Type.WheelOvercurrents);
   }
 
   export interface DirtDetect {
@@ -294,6 +312,7 @@ export namespace SensorPacket {
       spot: (data[0] & (1 << 1)) !== 0,
       clean: (data[0] & (1 << 0)) !== 0,
     });
+    export const write = SerialU32.writeConstruct<Buttons, typeof Buttons>(Buttons, Type.Buttons);
   }
 
   export interface Distance {
@@ -356,6 +375,7 @@ export namespace SensorPacket {
       type: Type.ChargingState,
       value: data[0],
     });
+    export const write = SerialU32.writeConstruct<ChargingState, typeof ChargingState>(ChargingState, Type.ChargingState);
   }
 
   export interface Voltage {
@@ -374,6 +394,7 @@ export namespace SensorPacket {
       type: Type.Voltage,
       value: (data[0] << 8) | data[1],
     });
+    export const write = SerialU32.writeConstruct<Voltage, typeof Voltage>(Voltage, Type.Voltage);
   }
 
   export interface Current {
@@ -392,6 +413,7 @@ export namespace SensorPacket {
       type: Type.Current,
       value: (data[0] << 8) | data[1],
     });
+    export const write = SerialU32.writeConstruct<Current, typeof Current>(Current, Type.Current);
   }
 
   export interface Temperature {
@@ -406,6 +428,7 @@ export namespace SensorPacket {
       type: Type.Temperature,
       value: data[0],
     });
+    export const write = SerialU32.writeConstruct<Temperature, typeof Temperature>(Temperature, Type.Temperature);
   }
 
   export interface BatteryCharge {
@@ -424,6 +447,7 @@ export namespace SensorPacket {
       type: Type.BatteryCharge,
       value: (data[0] << 8) | data[1],
     });
+    export const write = SerialU32.writeConstruct<BatteryCharge, typeof BatteryCharge>(BatteryCharge, Type.BatteryCharge);
   }
 
   export interface BatteryCapacity {
@@ -442,6 +466,7 @@ export namespace SensorPacket {
       type: Type.BatteryCapacity,
       value: (data[0] << 8) | data[1],
     });
+    export const write = SerialU32.writeConstruct<BatteryCapacity, typeof BatteryCapacity>(BatteryCapacity, Type.BatteryCapacity);
   }
 
   export interface WallSignal {
@@ -460,15 +485,85 @@ export namespace SensorPacket {
       type: Type.WallSignal,
       value: (data[0] << 8) | data[1],
     });
+    export const write = SerialU32.writeConstruct<WallSignal, typeof WallSignal>(WallSignal, Type.WallSignal);
   }
 
-  /** BatteryCharge = 25,
-    BatteryCapacity = 26,
-    WallSignal = 27,
-    CliffLeftSignal = 28,
-    CliffFrontLeftSignal = 29,
-    CliffFrontRightSignal = 30,
-    CliffRightSignal = 31,
+  export interface CliffLeftSignal {
+    type: Type.CliffLeftSignal;
+    // 0 – 1023
+    value: number;
+  }
+
+  export namespace CliffLeftSignal {
+    export const serialize = (data: CliffLeftSignal): number[] => [
+      data.value >> 8,
+      data.value & 0xff,
+    ];
+
+    export const deserialize = (data: number[]): CliffLeftSignal => ({
+      type: Type.CliffLeftSignal,
+      value: (data[0] << 8) | data[1],
+    });
+    export const write = SerialU32.writeConstruct<CliffLeftSignal, typeof CliffLeftSignal>(CliffLeftSignal, Type.CliffLeftSignal);
+  }
+
+  export interface CliffFrontLeftSignal {
+    type: Type.CliffFrontLeftSignal;
+    // 0 – 1023
+    value: number;
+  }
+
+  export namespace CliffFrontLeftSignal {
+    export const serialize = (data: CliffFrontLeftSignal): number[] => [
+      data.value >> 8,
+      data.value & 0xff,
+    ];
+
+    export const deserialize = (data: number[]): CliffFrontLeftSignal => ({
+      type: Type.CliffFrontLeftSignal,
+      value: (data[0] << 8) | data[1],
+    });
+    export const write = SerialU32.writeConstruct<CliffFrontLeftSignal, typeof CliffFrontLeftSignal>(CliffFrontLeftSignal, Type.CliffFrontLeftSignal);
+  }
+
+  export interface CliffFrontRightSignal {
+    type: Type.CliffFrontRightSignal;
+    // 0 – 1023
+    value: number;
+  }
+
+  export namespace CliffFrontRightSignal {
+    export const serialize = (data: CliffFrontRightSignal): number[] => [
+      data.value >> 8,
+      data.value & 0xff,
+    ];
+
+    export const deserialize = (data: number[]): CliffFrontRightSignal => ({
+      type: Type.CliffFrontRightSignal,
+      value: (data[0] << 8) | data[1],
+    });
+    export const write = SerialU32.writeConstruct<CliffFrontRightSignal, typeof CliffFrontRightSignal>(CliffFrontRightSignal, Type.CliffFrontRightSignal);
+  }
+
+  export interface CliffRightSignal {
+    type: Type.CliffRightSignal;
+    // 0 – 1023
+    value: number;
+  }
+
+  export namespace CliffRightSignal {
+    export const serialize = (data: CliffRightSignal): number[] => [
+      data.value >> 8,
+      data.value & 0xff,
+    ];
+
+    export const deserialize = (data: number[]): CliffRightSignal => ({
+      type: Type.CliffRightSignal,
+      value: (data[0] << 8) | data[1],
+    });
+    export const write = SerialU32.writeConstruct<CliffRightSignal, typeof CliffRightSignal>(CliffRightSignal, Type.CliffRightSignal);
+  }
+  /** 
     ChargingSourcesAvailable = 34,
     OiMode = 35,
     SongNumber = 36,

@@ -38,12 +38,13 @@ class TouchSensor extends SensorObject<Node.TouchSensor, boolean> {
       this.intersector_.parent = parent;
       ReferenceFramewUnits.syncBabylon(origin, this.intersector_, 'meters');
     }
+    this.intersector_.parent = parent;
 
     this.intersector_.material = new StandardMaterial('touch-sensor-material', scene);
     this.intersector_.material.wireframe = true;
     this.intersector_.visibility = 0;
 
-    ReferenceFramewUnits.syncBabylon(origin, this.intersector_, 'meters');
+    // ReferenceFramewUnits.syncBabylon(origin, this.intersector_, 'meters');
   }
 
   override getValue(): Promise<boolean> {
@@ -53,9 +54,9 @@ class TouchSensor extends SensorObject<Node.TouchSensor, boolean> {
 
     let hit = false;
     meshes.forEach(mesh => {
-      if (hit || mesh === this.intersector_ || links.has(mesh as Mesh)) return;
-      if (!mesh.physicsImpostor) return;
-      hit = this.intersector_.intersectsMesh(mesh, true);
+      if (!hit && mesh !== this.intersector_ && !links.has(mesh as Mesh) && mesh.physicsBody) {
+        hit = this.intersector_.intersectsMesh(mesh, true);
+      }
     });
 
     return Promise.resolve(hit);
