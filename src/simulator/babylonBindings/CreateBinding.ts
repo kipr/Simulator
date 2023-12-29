@@ -43,6 +43,7 @@ class CreateBinding {
 
   private latestDigitalValues_: [boolean, boolean, boolean, boolean, boolean, boolean] = [false, false, false, false, false, false];
   private latestAnalogValues_: [number, number, number, number, number, number] = [0, 0, 0, 0, 0, 0];
+  private priorRes_: Command.DeserializeResult | null = null;
 
 
   constructor(serial: SerialU32, motors: Dict<Physics6DoFConstraint>, analogSensors: Dict<Sensor<number>>, digitalSensors: Dict<Sensor<boolean>>) {
@@ -63,23 +64,12 @@ class CreateBinding {
    */
   private setMotorVelocity_ = (bMotor: Physics6DoFConstraint, velocity: number) => {
     const adjusted_velocity = velocity / 15;
+    // const old_velocity = bMotor.getAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z);
+    // if (old_velocity === adjusted_velocity) return;
     bMotor.setAxisFriction(PhysicsConstraintAxis.ANGULAR_Z, 0);
-    bMotor.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 1000); 
+    bMotor.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 100000000); 
     bMotor.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.FREE);
     bMotor.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, adjusted_velocity);
-
-    const zero = 0.0;
-    const length = 0;
-    // if (adjusted_velocity.toFixed(length) === zero.toFixed(length)) {
-    //   bMotor.setAxisFriction(PhysicsConstraintAxis.ANGULAR_Z, 10000000);
-    //   bMotor.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 10000000); 
-    //   bMotor.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, 0);
-    // } else {
-    //   bMotor.setAxisFriction(PhysicsConstraintAxis.ANGULAR_Z, 0);
-    //   bMotor.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 10000000); 
-    //   bMotor.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.FREE);
-    //   bMotor.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, adjusted_velocity);
-    // }
   };
 
   tick(delta: number) {
@@ -157,11 +147,17 @@ class CreateBinding {
         break;
       }
       case Command.Type.DriveDirect: {
+        if (this.priorRes_ === res) {
+          return;
+        }
         this.leftVelocity_ = res.command.leftVelocity;
         this.rightVelocity_ = res.command.rightVelocity;
         break;
       }
       case Command.Type.Drive: {
+        if (this.priorRes_ === res) {
+          return;
+        }
         const { radius, velocity } = res.command;
         if (radius === 32768 || radius === 32767) {
           // Straight
@@ -290,6 +286,7 @@ class CreateBinding {
         break;
       }
     }
+    this.priorRes_ = res;
     this.setMotorVelocity_(this.leftWheelJoint_, this.leftVelocity_);
     this.setMotorVelocity_(this.rightWheelJoint_, this.rightVelocity_);
     this.pending_ = res.nextBuffer;
