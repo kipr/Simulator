@@ -218,6 +218,13 @@ class RobotBinding {
       readable.getMotor(3)
     ];
 
+    // Work around for stopping movement after the Stop button is pressed.
+    if (abstractMotors[0].direction === Motor.Direction.Brake) {
+      this.createBinding_.leftVelocity_ = 0;
+      this.createBinding_.rightVelocity_ = 0;
+      // console.log("brake");
+    }
+
     // Update motor position deltas
     const nextPositions: [number, number, number, number] = [0, 0, 0, 0];
     /** At some point this should be done with limits the way the servos are
