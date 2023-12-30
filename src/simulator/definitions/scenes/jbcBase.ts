@@ -19,7 +19,7 @@ const ROBOT_ORIGIN: ReferenceFramewUnits = {
 const ROBOT: Node.Robot = {
   type: 'robot',
   name: tr('Robot'),
-  robotId: 'createbot',
+  robotId: 'demobot',
   state: AbstractRobot.Stateless.NIL,
   visible: true,
   startingOrigin: ROBOT_ORIGIN,
