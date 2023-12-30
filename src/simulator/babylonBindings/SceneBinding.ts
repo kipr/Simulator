@@ -933,9 +933,11 @@ class SceneBinding {
       if (!abstractRobot) continue;
 
       const robotBinding = this.robotBindings_[nodeId];
-      if (!robotBinding) throw new Error(`No robot binding for node ${nodeId}`);
-
-      ret[nodeId] = robotBinding.tick(abstractRobots[nodeId]);
+      if (robotBinding) {
+        ret[nodeId] = robotBinding.tick(abstractRobots[nodeId]);
+      } else { 
+        // throw new Error(`No robot binding for node ${nodeId}`);
+      }
     }
 
     // Update intersections
