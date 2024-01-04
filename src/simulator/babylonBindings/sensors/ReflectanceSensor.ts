@@ -35,7 +35,7 @@ class ReflectanceSensor extends SensorObject<Node.ReflectanceSensor, number> {
         ReflectanceSensor.FORWARD.multiplyByFloats(rawMaxDistance, rawMaxDistance, rawMaxDistance)
       ],
     }, scene);
-    this.trace_.visibility = 0;
+    this.trace_.visibility = 1;
 
     ReferenceFramewUnits.syncBabylon(origin, this.trace_, 'meters');
     this.trace_.parent = parent;
@@ -46,7 +46,8 @@ class ReflectanceSensor extends SensorObject<Node.ReflectanceSensor, number> {
     const { maxDistance, noiseRadius } = definition;
 
     const rawMaxDistance = Distance.toValue(maxDistance || ReflectanceSensor.DEFAULT_MAX_DISTANCE, RENDER_SCALE);
-    this.trace_.visibility = this.visible ? 1 : 0;
+    // this.trace_.visibility = this.visible ? 1 : 0;
+    this.trace_.visibility = 1;
 
     const ray = new Ray(
       this.trace_.absolutePosition,
