@@ -13,7 +13,7 @@ import Dict from '../../../util/objectOps/Dict';
 // Adds an invisible weight to a parent link.
 export const createWeight = (id: string, weight: Node.Weight, bScene_: babylonScene, robot_: Robot, links_: Dict<Mesh>) => {
   const ret = CreateSphere(id, { diameter: 1 }, bScene_);
-  ret.visibility = 1;
+  ret.visibility = 0;
 
   const parent = robot_.nodes[weight.parentId];
   if (!parent) throw new Error(`Missing parent: "${weight.parentId}" for weight "${id}"`);

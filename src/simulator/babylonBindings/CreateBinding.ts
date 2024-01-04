@@ -64,8 +64,7 @@ class CreateBinding {
    */
   private setMotorVelocity_ = (bMotor: Physics6DoFConstraint, velocity: number) => {
     const adjusted_velocity = velocity / 15;
-    // const old_velocity = bMotor.getAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z);
-    // if (old_velocity === adjusted_velocity) return;
+
     bMotor.setAxisFriction(PhysicsConstraintAxis.ANGULAR_Z, 0);
     bMotor.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 100000000); 
     bMotor.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.FREE);

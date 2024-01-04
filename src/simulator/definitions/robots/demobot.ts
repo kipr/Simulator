@@ -35,7 +35,7 @@ export const DEMOBOT: Robot = {
       parentId: 'chassis',
       mass: grams(200),
       origin: {
-        position: Vector3wUnits.meters(-0.06, 0.04, 0),
+        position: Vector3wUnits.meters(-0.06, -0.019, 0),
         // position: Vector3wUnits.meters(-0.08786, 0.063695, 0),
       },
     }),

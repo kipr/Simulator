@@ -181,18 +181,13 @@ class RobotBinding {
    */
   private setMotorVelocity_ = (bMotor: Physics6DoFConstraint, velocity: number) => {
 
-    const zero = 0.0;
-    const length = 0;
-    if (velocity.toFixed(length) === zero.toFixed(length)) {
-      bMotor.setAxisFriction(PhysicsConstraintAxis.ANGULAR_Z, 10000000);
-      bMotor.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 10000000); 
-      bMotor.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, 0);
-    } else {
-      bMotor.setAxisFriction(PhysicsConstraintAxis.ANGULAR_Z, 0);
-      bMotor.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 10000000); 
-      bMotor.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.FREE);
-      bMotor.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, velocity);
-    }
+    const maxForce = 50000;
+
+    bMotor.setAxisFriction(PhysicsConstraintAxis.ANGULAR_Z, 0);
+    bMotor.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, maxForce); 
+    bMotor.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.FREE);
+    bMotor.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, velocity);
+
   };
 
   tick(readable: AbstractRobot.Readable): RobotBinding.TickOut {
@@ -238,6 +233,7 @@ class RobotBinding {
 
       const abstractMotor = abstractMotors[port]; // Contains the instructions for what to do.
       const { position, kP, kD, kI, direction } = abstractMotor;
+      // eslint-disable-next-line prefer-const
       let { pwm, mode, positionGoal, speedGoal, done } = abstractMotor;
 
       const motorNode = this.robot_.nodes[motorId] as Node.Motor; // Contains the physical properties of the motor.
@@ -283,39 +279,51 @@ class RobotBinding {
 
       writeCommands.push(WriteCommand.addMotorPosition({ port, positionDelta }));
 
-      let writePwm = true;
-
-      if (mode === Motor.Mode.Pwm && direction === Motor.Direction.Idle) {
-        bMotor.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, 0);
-        continue;
-      }
-
-      if (mode === Motor.Mode.Pwm && direction === Motor.Direction.Brake) {
-        if (this.brakeAt_[port] === undefined) {
-          this.brakeAt_[port] = position;
-          this.lastPErrs_[port] = 0;
-          this.iErrs_[port] = 0;
-        }
-
-        done = false;
-
-        if (this.brakeAt_[port] === position) {
-          mode = Motor.Mode.Pwm;
-          pwm = 0;
-        } else {
-          mode = Motor.Mode.SpeedPosition;
-          positionGoal = this.brakeAt_[port];
-          speedGoal = position > positionGoal ? -2 : 2;
-        }
-
-        writePwm = false;
-      } else {
-        this.brakeAt_[port] = undefined;
-      }
+      const writePwm = true;
 
       const velocityMax = motorNode.velocityMax || 1500;
 
+      // If the motor is in pwm mode and the direction is idle, set the motor target to 0.
+      if (mode === Motor.Mode.Pwm && (direction === Motor.Direction.Idle || direction === Motor.Direction.Brake)) {
+        this.setMotorVelocity_(bMotor, 0);
+        if (Math.abs(velocity) < 10) {
+          bMotor.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.LOCKED);
+        }
+        continue;
+      }
+
+      // If the motor is in pwm mode and the direction is brake
+      //   1. Check if we know the brake target, if not set it for the current position
+      //   2. If the motor is at the brake target, set the motor target to 0.
+      //   3. If the motor is not at the brake target, set the speed towards the brake target.
+      // if (mode === Motor.Mode.Pwm && direction === Motor.Direction.Brake) {
+      //   if (this.brakeAt_[port] === undefined) {
+      //     this.brakeAt_[port] = positionDeltaRaw;
+      //     this.lastPErrs_[port] = 0;
+      //     this.iErrs_[port] = 0;
+      //   }
+
+      //   if (this.brakeAt_[port] === position) {
+      //     mode = Motor.Mode.Pwm;
+      //     pwm = 0;
+      //   } else {
+      //     mode = Motor.Mode.SpeedPosition;
+      //     positionGoal = this.brakeAt_[port];
+      //     speedGoal = position > positionGoal ? -2 : 2;
+      //   }
+      //   done = false;
+      //   // speedGoal = 0;
+      //   writePwm = false;
+
+      // } else {
+      //   this.brakeAt_[port] = undefined;
+      // }
+
+      
+      let pwm_adj = 0;
+      // If the motor is not in pwm mode, and we are not done, calculate the pwm value.
       if (mode !== Motor.Mode.Pwm && !done) {
+        
         // This code is taken from Wombat-Firmware for parity.
         const pErr = speedGoal - velocity;
         const dErr = pErr - this.lastPErrs_[port];
@@ -325,7 +333,8 @@ class RobotBinding {
         this.iErrs_[port] = iErr;
 
         pwm = speedGoal / velocityMax * 400;
-        pwm = pwm + kP * pErr + kI * iErr + kD * dErr;
+        pwm_adj = kP * pErr + kI * iErr + kD * dErr;
+        pwm = pwm + pwm_adj;
 
         if (mode === Motor.Mode.Position || mode === Motor.Mode.SpeedPosition) {
           if (speedGoal < 0 && position < positionGoal) {
@@ -346,8 +355,8 @@ class RobotBinding {
       if (writePwm) writeCommands.push(WriteCommand.motorPwm({ port, pwm }));
       
       const normalizedPwm = pwm / 400;
-      const nextAngularVelocity = normalizedPwm * velocityMax * 1 * Math.PI / ticksPerRevolution;
-
+      const nextAngularVelocity = normalizedPwm * velocityMax * 2 * Math.PI / ticksPerRevolution;
+      console.log("nextAngularVelocity", nextAngularVelocity);
       this.setMotorVelocity_(bMotor, nextAngularVelocity);
 
     }
