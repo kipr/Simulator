@@ -161,7 +161,6 @@ class Info extends React.PureComponent<Props, State> {
 
     const motorVelocities: JSX.Element[] = [];
     const motorPositions: JSX.Element[] = [];
-
     for (let i = 0; i < 4; ++i) {
       const motor = node.state.motors[i];
       motorVelocities.push(

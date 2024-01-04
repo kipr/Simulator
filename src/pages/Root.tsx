@@ -820,6 +820,11 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
   onNodeRemove: (nodeId: string) => dispatch(ScenesAction.removeNode({ sceneId, nodeId })),
   onNodeChange: (nodeId: string, node: Node) => {
     dispatch(ScenesAction.setNode({ sceneId, nodeId, node }));
+    const origin = node.origin;
+    const updateOrigin = true;
+    if (origin) {
+      dispatch(ScenesAction.setNodeOrigin({ sceneId, nodeId, origin, updateStarting: updateOrigin }));
+    }
   },
   onObjectAdd: (nodeId: string, object: Node.Obj, geometry: Geometry) => dispatch(ScenesAction.addObject({ sceneId, nodeId, object, geometry })),
   onGeometryAdd: (geometryId: string, geometry: Geometry) => dispatch(ScenesAction.addGeometry({ sceneId, geometryId, geometry })),

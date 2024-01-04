@@ -21,7 +21,7 @@ export const CREATEBOT: Robot = {
       mass: grams(400),
       restitution: 0,
       friction: 0.01,
-      inertia: [10, 10, 10]
+      inertia: [10, 10, 10],
     }),
     create_node: Node.iRobotCreate({
       parentId: 'create'
@@ -137,6 +137,7 @@ export const CREATEBOT: Robot = {
     wheel_link: Geometry.remoteMesh({ uri: '/static/object_binaries/wheel.glb' }),
   },
   origin: {
-    orientation: RotationwUnits.eulerDegrees(0, 0, 90),
+    position: Vector3wUnits.meters(0, 0.5, 0),
+    orientation: RotationwUnits.eulerDegrees(0, 0, -90),
   }
 };
