@@ -427,7 +427,7 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   },
   'research_habitat': {
     type: 'file',
-    uri: '/static/object_binaries/manipulator_hab.glb'
+    uri: '/static/object_binaries/manipulator_hab2.glb'
   },
   'control_habitat': {
     type: 'file',
