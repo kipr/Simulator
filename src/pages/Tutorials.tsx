@@ -2,8 +2,8 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import { connect } from 'react-redux';
 
-import { DARK, ThemeProps } from '../components/Constants/theme';
-import { Card } from '../components/Interface/Card';
+import { DARK, ThemeProps } from '../components/constants/theme';
+import { Card } from '../components/interface/Card';
 import MainMenu from '../components/MainMenu';
 import IFrame from '../components/IFrame';
 

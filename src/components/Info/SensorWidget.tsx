@@ -1,10 +1,10 @@
 import { styled } from 'styletron-react';
 import * as React from 'react';
-import { ThemeProps } from '../Constants/theme';
+import { ThemeProps } from '../constants/theme';
 import { StyleProps } from '../../util/style';
 import SensorPlot from './SensorPlot';
-import BooleanPlot from '../Interface/BooleanPlot';
-import { Spacer } from '../Constants/common';
+import BooleanPlot from '../interface/BooleanPlot';
+import { Spacer } from '../constants/common';
 
 import { ActionTooltip } from './ActionTooltip';
 import Tooltip from './Tooltip';

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
-import { ThemeProps } from '../Constants/theme';
+import { ThemeProps } from '../constants/theme';
 
-import { Spacer } from '../Constants/common';
+import { Spacer } from '../constants/common';
 import { AnyText } from '../../util';
 import { Text } from './Text';
 import { FontAwesome } from '../FontAwesome';

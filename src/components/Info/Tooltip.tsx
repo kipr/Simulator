@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 
-import { ThemeProps } from "../Constants/theme";
+import { ThemeProps } from "../constants/theme";
 
 import { Rectangle, RawVector2 } from '../../util/math/math';
 import { styled } from 'styletron-react';

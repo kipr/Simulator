@@ -5,7 +5,7 @@ import { Scene as babylonScene, CreateSphere, Vector3, Mesh,
 
 import Node from '../../../state/State/Robot/Node';
 import { ReferenceFramewUnits } from '../../../util/math/unitMath';
-import { RENDER_SCALE } from '../../../components/Constants/renderConstants';
+import { RENDER_SCALE } from '../../../components/constants/renderConstants';
 import { Mass } from '../../../util/math/Value';
 import Robot from '../../../state/State/Robot';
 import Dict from '../../../util/objectOps/Dict';

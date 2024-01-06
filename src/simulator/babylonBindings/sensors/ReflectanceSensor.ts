@@ -6,7 +6,7 @@ import SensorObject from './SensorObject';
 import Node from '../../../state/State/Robot/Node';
 import { ReferenceFramewUnits } from '../../../util/math/unitMath';
 import { clamp } from '../../../util/math/math';
-import { RENDER_SCALE } from '../../../components/Constants/renderConstants';
+import { RENDER_SCALE } from '../../../components/constants/renderConstants';
 
 
 class ReflectanceSensor extends SensorObject<Node.ReflectanceSensor, number> {

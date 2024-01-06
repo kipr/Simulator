@@ -27,7 +27,7 @@ import AbstractRobot from '../../programming/AbstractRobot';
 import WorkerInstance from "../../programming/WorkerInstance";
 import LocalizedString from '../../util/LocalizedString';
 import ScriptManager from '../ScriptManager';
-import { RENDER_SCALE } from '../../components/Constants/renderConstants';
+import { RENDER_SCALE } from '../../components/constants/renderConstants';
 
 import { createMaterial, updateMaterialBasic, updateMaterialPbr } from './createSceneObjects/createMaterials';
 import { createDirectionalLight, createPointLight, createSpotLight } from './createSceneObjects/createLights';

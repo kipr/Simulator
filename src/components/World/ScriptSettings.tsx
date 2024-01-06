@@ -1,9 +1,9 @@
 import * as React from "react";
 import { styled } from "styletron-react";
 
-import Field from "../Interface/Field";
-import Input from "../Interface/Input";
-import { ThemeProps } from "../Constants/theme";
+import Field from "../interface/Field";
+import Input from "../interface/Input";
+import { ThemeProps } from "../constants/theme";
 import ValueEdit from "../ValueEdit";
 import Script from "../../state/State/Scene/Script";
 import { Ivygate } from 'ivygate';

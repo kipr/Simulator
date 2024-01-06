@@ -1,4 +1,4 @@
-import { Theme, ThemeProps } from '../Constants/theme';
+import { Theme, ThemeProps } from '../constants/theme';
 
 import * as React from 'react';
 import { styled } from 'styletron-react';

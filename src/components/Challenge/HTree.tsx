@@ -3,7 +3,7 @@ import { styled } from 'styletron-react';
 import Dict from '../../util/objectOps/Dict';
 import { RawVector2 } from '../../util/math/math';
 import { StyleProps } from '../../util/style';
-import Svg from '../Interface/Svg';
+import Svg from '../interface/Svg';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface HTreeNode<P = any> {

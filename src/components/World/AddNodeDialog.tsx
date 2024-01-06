@@ -4,8 +4,8 @@ import { ReferenceFramewUnits } from "../../util/math/unitMath";
 import { Angle, Distance } from "../../util";
 import { Dialog } from "../Dialog/Dialog";
 import DialogBar from "../Dialog/DialogBar";
-import ScrollArea from "../Interface/ScrollArea";
-import { ThemeProps } from "../Constants/theme";
+import ScrollArea from "../interface/ScrollArea";
+import { ThemeProps } from "../constants/theme";
 import NodeSettings from "./NodeSettings";
 import Node from "../../state/State/Scene/Node";
 

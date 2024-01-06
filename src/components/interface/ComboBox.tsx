@@ -7,7 +7,7 @@ import { AnyText } from "../../util";
 import { Color } from "../../state/State/Scene/Color";
 import { FontAwesome } from "../FontAwesome";
 import { Text } from "./Text";
-import { ThemeProps } from "../Constants/theme";
+import { ThemeProps } from "../constants/theme";
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 
 const Container = styled('div', (props: ThemeProps & { $focus?: boolean; $minimal?: boolean; }) => ({

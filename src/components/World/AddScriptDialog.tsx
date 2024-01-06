@@ -2,7 +2,7 @@ import * as React from "react";
 import { styled } from "styletron-react";
 import { Dialog } from "../Dialog/Dialog";
 import DialogBar from "../Dialog/DialogBar";
-import { ThemeProps } from "../Constants/theme";
+import { ThemeProps } from "../constants/theme";
 import ScriptSettings from "./ScriptSettings";
 import Script from "../../state/State/Scene/Script";
 

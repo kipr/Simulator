@@ -4,9 +4,9 @@ import { styled } from 'styletron-react';
 import Scene from '../../state/State/Scene';
 import { StyleProps } from '../../util/style';
 import LocalizedString from '../../util/LocalizedString';
-import Field from '../Interface/Field';
-import Input from '../Interface/Input';
-import { ThemeProps } from '../Constants/theme';
+import Field from '../interface/Field';
+import Input from '../interface/Input';
+import { ThemeProps } from '../constants/theme';
 
 import tr from '@i18n';
 

@@ -4,12 +4,12 @@ import * as Sim from '../../simulator/Space';
 
 import { styled } from 'styletron-react';
 
-import resizeListener, { ResizeListener } from '../Interface/ResizeListener';
+import resizeListener, { ResizeListener } from '../interface/ResizeListener';
 import { RawVector2 } from '../../util/math/math';
 
 import Loading from '../Loading';
 import MotorsSwappedDialog from '../Dialog/MotorsSwappedDialog';
-import { Theme } from '../Constants/theme';
+import { Theme } from '../constants/theme';
 
 import LocalizedString from '../../util/LocalizedString';
 import tr from '@i18n';

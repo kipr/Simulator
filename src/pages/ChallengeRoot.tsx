@@ -17,8 +17,8 @@ import { SimulatorState } from '../components/Challenge/SimulatorState';
 import ExceptionDialog from '../components/Challenge/ExceptionDialog';
 import ChallengeMenu from '../components/Challenge/ChallengeMenu';
 
-import { DEFAULT_SETTINGS, Settings } from '../components/Constants/Settings';
-import { DARK, Theme } from '../components/Constants/theme';
+import { DEFAULT_SETTINGS, Settings } from '../components/constants/Settings';
+import { DARK, Theme } from '../components/constants/theme';
 
 import SettingsDialog from '../components/Dialog/SettingsDialog';
 import AboutDialog from '../components/Dialog/AboutDialog';
@@ -56,7 +56,7 @@ import DbError from '../db/Error';
 import { StyledText } from '../util';
 import construct from '../util/redux/construct';
 import Dict from '../util/objectOps/Dict';
-import parseMessages, { hasErrors, hasWarnings, sort, toStyledText } from '../util/ParseMessages';
+import parseMessages, { hasErrors, hasWarnings, sort, toStyledText } from '../util/parseMessages';
 import { Vector3wUnits, ReferenceFramewUnits } from '../util/math/unitMath';
 import LocalizedString from '../util/LocalizedString';
 

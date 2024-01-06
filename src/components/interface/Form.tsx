@@ -10,7 +10,7 @@ import { Validators } from '../../util/Validator';
 import { FontAwesome } from '../FontAwesome';
 import Input from './Input';
 import { Text } from './Text';
-import { GREEN, RED, ThemeProps } from '../Constants/theme';
+import { GREEN, RED, ThemeProps } from '../constants/theme';
 
 const Container = styled('div', (props: ThemeProps) => ({
   color: props.theme.color,

@@ -2,11 +2,11 @@ import * as React from 'react';
 
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
-import { Theme, ThemeProps } from '../Constants/theme';
+import { Theme, ThemeProps } from '../constants/theme';
 
 import { FontAwesome } from '../FontAwesome';
-import { Button } from '../Interface/Button';
-import { BarComponent } from '../Interface/Widget';
+import { Button } from '../interface/Button';
+import { BarComponent } from '../interface/Widget';
 import { WarningCharm, ErrorCharm } from './';
 
 import { Ivygate, Message } from 'ivygate';

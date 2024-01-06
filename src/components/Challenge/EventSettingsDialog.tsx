@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Event from '../../state/State/Challenge/Event';
 import { Dialog } from '../Dialog/Dialog';
-import { ThemeProps } from '../Constants/theme';
+import { ThemeProps } from '../constants/theme';
 import EventSettings from './EventSettings';
 
 export interface EventSettingsDialogProps extends ThemeProps {

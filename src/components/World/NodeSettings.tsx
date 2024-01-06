@@ -4,12 +4,12 @@ import { RawVector3, RawAxisAngle, RawEuler } from "../../util/math/math";
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../util/math/unitMath";
 
 import { Angle, Mass, UnitlessValue, Value } from "../../util";
-import ComboBox from "../Interface/ComboBox";
-import Field from "../Interface/Field";
-import Input from "../Interface/Input";
-import ScrollArea from "../Interface/ScrollArea";
-import Section from "../Interface/Section";
-import { ThemeProps } from "../Constants/theme";
+import ComboBox from "../interface/ComboBox";
+import Field from "../interface/Field";
+import Input from "../interface/Input";
+import ScrollArea from "../interface/ScrollArea";
+import Section from "../interface/Section";
+import { ThemeProps } from "../constants/theme";
 import ValueEdit from "../ValueEdit";
 import Geometry from '../../state/State/Scene/Geometry';
 import Node from "../../state/State/Scene/Node";

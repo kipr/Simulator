@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import { styled } from 'styletron-react';
 
-import { DARK, ThemeProps } from '../components/Constants/theme';
-import { Card } from '../components/Interface/Card';
+import { DARK, ThemeProps } from '../components/constants/theme';
+import { Card } from '../components/interface/Card';
 import MainMenu from '../components/MainMenu';
 
 import { StyleProps } from '../util/style';

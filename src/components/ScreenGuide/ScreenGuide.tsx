@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { RawVector2 } from '../../util/math/math';
 import { StyleProps } from '../../util/style';
-import { ThemeProps } from '../Constants/theme';
+import { ThemeProps } from '../constants/theme';
 
 
 export interface ScreenGuideProps extends StyleProps, ThemeProps {

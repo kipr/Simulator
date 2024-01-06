@@ -3,8 +3,8 @@ import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
 import Charm from '../Charm';
 import { FontAwesome } from '../FontAwesome';
-import { ThemeProps } from '../Constants/theme';
-import { charmColor } from '../Constants/charm-util';
+import { ThemeProps } from '../constants/theme';
+import { charmColor } from '../constants/charm-util';
 
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import LocalizedString from '../../util/LocalizedString';

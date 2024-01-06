@@ -7,10 +7,10 @@ import { Scenes } from "../../state/State";
 import Async from "../../state/State/Async";
 import Scene, { AsyncScene } from "../../state/State/Scene";
 import { Dialog } from "./Dialog";
-import { ThemeProps } from "../Constants/theme";
+import { ThemeProps } from "../constants/theme";
 import { ScenesAction } from "../../state/reducer";
 import DialogBar from "./DialogBar";
-import ScrollArea from "../Interface/ScrollArea";
+import ScrollArea from "../interface/ScrollArea";
 import { FontAwesome } from "../FontAwesome";
 
 import { faCheck } from '@fortawesome/free-solid-svg-icons';

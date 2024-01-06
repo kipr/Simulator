@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RawVector2 } from '../../util/math/math';
 import { StyleProps } from '../../util/style';
-import { ThemeProps } from '../Constants/theme';
+import { ThemeProps } from '../constants/theme';
 import ScreenGuide from './ScreenGuide';
 import { ACTIVE_SPACE } from '../../simulator/Space';
 

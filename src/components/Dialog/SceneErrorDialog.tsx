@@ -3,7 +3,7 @@ import { styled } from 'styletron-react';
 import Async from '../../state/State/Async';
 import { Dialog } from './Dialog';
 import DialogBar from './DialogBar';
-import { ThemeProps } from '../Constants/theme';
+import { ThemeProps } from '../constants/theme';
 
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';

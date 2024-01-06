@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import { styled } from 'styletron-react';
 import { StyleProps } from '../util/style';
-import { Spacer } from './Constants/common';
+import { Spacer } from './constants/common';
 import { FontAwesome } from './FontAwesome';
-import { DARK, ThemeProps } from './Constants/theme';
+import { DARK, ThemeProps } from './constants/theme';
 
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 

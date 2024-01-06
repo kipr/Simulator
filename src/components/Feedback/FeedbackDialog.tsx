@@ -6,7 +6,7 @@ import { FeedbackTextArea, FeedbackEmailInput, FeedbackText, FeedbackLabel } fro
 import { StyleProps } from '../../util/style';
 import { Dialog } from '../Dialog/Dialog';
 import DialogBar from "../Dialog/DialogBar";
-import { ThemeProps } from '../Constants/theme';
+import { ThemeProps } from '../constants/theme';
 import { FontAwesome } from '../FontAwesome';
 
 import { faFrown, faMeh, faPaperPlane, faSmileBeam } from '@fortawesome/free-solid-svg-icons';

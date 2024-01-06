@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DARK, RED, ThemeProps } from '../components/Constants/theme';
+import { DARK, RED, ThemeProps } from '../components/constants/theme';
 import { StyleProps } from '../util/style';
 import { styled } from 'styletron-react';
 import { auth, Providers } from '../firebase/firebase';
@@ -9,15 +9,15 @@ import {
   forgotPassword
 } from '../firebase/modules/auth';
 import { AuthProvider, getRedirectResult, signInWithPopup } from 'firebase/auth';
-import Form from '../components/Interface/Form';
+import Form from '../components/interface/Form';
 import { TabBar } from '../components/Layout/TabBar';
 
 import KIPR_LOGO_BLACK from '../../static/assets/KIPR-Logo-Black-Text-Clear-Large.png';
 import KIPR_LOGO_WHITE from '../../static/assets/KIPR-Logo-White-Text-Clear-Large.png';
 import { FontAwesome } from '../components/FontAwesome';
-import { Text } from '../components/Interface/Text';
+import { Text } from '../components/interface/Text';
 import { StyledText } from '../util';
-import Button from '../components/Interface/Button';
+import Button from '../components/interface/Button';
 import { Validators } from '../util/Validator';
 import { faSignInAlt, faUnlock, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';

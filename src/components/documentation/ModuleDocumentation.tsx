@@ -6,8 +6,8 @@ import DocumentationLocation from '../../state/State/Documentation/Documentation
 import FunctionDocumentation from '../../state/State/Documentation/FunctionDocumentation';
 import ModuleDocumentationModel from '../../state/State/Documentation/ModuleDocumentation';
 import { StyleProps } from '../../util/style';
-import Section from '../Interface/Section';
-import { ThemeProps } from '../Constants/theme';
+import Section from '../interface/Section';
+import { ThemeProps } from '../constants/theme';
 import FunctionBrief from './FunctionBrief';
 
 import tr from '@i18n';

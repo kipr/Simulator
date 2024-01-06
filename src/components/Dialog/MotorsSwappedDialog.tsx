@@ -5,7 +5,7 @@ import { State } from '../../state';
 
 import { StyleProps } from "../../util/style";
 import { Dialog } from './Dialog';
-import { Theme, ThemeProps } from "../Constants/theme";
+import { Theme, ThemeProps } from "../constants/theme";
 
 
 export interface MotorsSwappedDialogProps extends StyleProps {

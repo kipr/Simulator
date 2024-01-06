@@ -3,7 +3,7 @@ import * as React from "react";
 import { styled, withStyleDeep } from "styletron-react";
 import { StyleProps } from "../util/style";
 import { FontAwesome } from "./FontAwesome";
-import { BLUE, BROWN, GREEN, RED, ThemeProps } from "./Constants/theme";
+import { BLUE, BROWN, GREEN, RED, ThemeProps } from "./constants/theme";
 
 export interface EditableListProps<P> extends StyleProps, ThemeProps {
   items: EditableList.Item<P>[];

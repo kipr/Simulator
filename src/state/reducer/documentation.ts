@@ -2,7 +2,7 @@ import { DocumentationState } from '../State';
 import Documentation from '../State/Documentation';
 import DocumentationLocation from '../State/Documentation/DocumentationLocation';
 import construct from '../../util/redux/construct';
-import { Size } from '../../components/Interface/Widget';
+import { Size } from '../../components/interface/Widget';
 
 export namespace DocumentationAction {
   export interface Push {

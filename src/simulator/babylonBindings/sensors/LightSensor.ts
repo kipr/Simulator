@@ -7,7 +7,7 @@ import SensorObject from './SensorObject';
 import Node from '../../../state/State/Robot/Node';
 import { ReferenceFramewUnits, Vector3wUnits } from '../../../util/math/unitMath';
 import { clamp, RawVector3 } from '../../../util/math/math';
-import { RENDER_SCALE } from '../../../components/Constants/renderConstants';
+import { RENDER_SCALE } from '../../../components/constants/renderConstants';
 
 
 /**

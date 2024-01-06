@@ -1,7 +1,7 @@
 import { styled } from 'styletron-react';
 import * as React from 'react';
 import { StyleProps } from '../../util/style';
-import { ThemeProps } from '../Constants/theme';
+import { ThemeProps } from '../constants/theme';
 import { RawVector2 } from '../../util/math/math';
 import { Box2 } from '../../util/math/geometry';
 import resizeListener, { ResizeListener } from './ResizeListener';

@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
-import { Spacer } from '../Constants/common';
+import { Spacer } from '../constants/common';
 import { FontAwesome } from '../FontAwesome';
-import { ThemeProps } from '../Constants/theme';
+import { ThemeProps } from '../constants/theme';
 
 import { faAngleDown, faAngleUp, faAngleLeft, faAngleRight, faAngleDoubleUp, faAngleDoubleDown, faAngleDoubleLeft, faAngleDoubleRight, faTimes, faExpand, faWindowRestore } from '@fortawesome/free-solid-svg-icons';
 

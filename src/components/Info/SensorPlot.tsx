@@ -1,8 +1,8 @@
 import { styled } from 'styletron-react';
 import * as React from 'react';
 import { StyleProps } from '../../util/style';
-import { ThemeProps } from '../Constants/theme';
-import resizeListener, { ResizeListener } from '../Interface/ResizeListener';
+import { ThemeProps } from '../constants/theme';
+import resizeListener, { ResizeListener } from '../interface/ResizeListener';
 
 export interface Vector2 {
   x: number;

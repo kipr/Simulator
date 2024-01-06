@@ -2,8 +2,8 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 
 import { StyledText } from '../../util';
-import { Text } from '../Interface/Text';
-import { ThemeProps } from '../Constants/theme';
+import { Text } from '../interface/Text';
+import { ThemeProps } from '../constants/theme';
 import Tooltip from './Tooltip';
 
 export interface ActionTooltipProps extends ThemeProps {

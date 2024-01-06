@@ -13,7 +13,7 @@ import Loading from './components/Loading';
 import Root from './pages/Root';
 import ChallengeRoot from './pages/ChallengeRoot';
 import DocumentationWindow from './components/documentation/DocumentationWindow';
-import { DARK } from './components/Constants/theme';
+import { DARK } from './components/constants/theme';
 
 export interface AppPublicProps {
 

@@ -2,10 +2,10 @@ import * as React from 'react';
 
 import { styled, withStyleDeep } from 'styletron-react';
 import { StyleProps } from '../../util/style';
-import { ThemeProps } from '../Constants/theme';
-import Field from '../Interface/Field';
-import ScrollArea from '../Interface/ScrollArea';
-import Section from '../Interface/Section';
+import { ThemeProps } from '../constants/theme';
+import Field from '../interface/Field';
+import ScrollArea from '../interface/ScrollArea';
+import Section from '../interface/Section';
 
 import { FontAwesome } from '../FontAwesome';
 import { connect } from 'react-redux';

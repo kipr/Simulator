@@ -1,5 +1,5 @@
 import { styled } from "styletron-react";
-import { ThemeProps } from "../Constants/theme";
+import { ThemeProps } from "../constants/theme";
 
 export default styled('input', (props: ThemeProps) => ({
   outline: 'none',

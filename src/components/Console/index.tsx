@@ -3,13 +3,13 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
 import { StyledText } from '../../util';
-import ScrollArea from '../Interface/ScrollArea';
-import { Text } from '../Interface/Text';
-import { Theme, ThemeProps } from '../Constants/theme';
+import ScrollArea from '../interface/ScrollArea';
+import { Text } from '../interface/Text';
+import { Theme, ThemeProps } from '../constants/theme';
 
 import { FontAwesome } from '../FontAwesome';
-import { Button } from '../Interface/Button';
-import { BarComponent } from '../Interface/Widget';
+import { Button } from '../interface/Button';
+import { BarComponent } from '../interface/Widget';
 
 import { faFile } from '@fortawesome/free-solid-svg-icons';
 import LocalizedString from '../../util/LocalizedString';

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
 import { FontAwesome } from '../FontAwesome';
-import { ThemeProps } from '../Constants/theme';
+import { ThemeProps } from '../constants/theme';
 import { faCogs, faCopy, faFolderOpen, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import LocalizedString from '../../util/LocalizedString';

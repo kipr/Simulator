@@ -14,7 +14,7 @@ import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../util/
 import { Angle } from '../../util/math/Value';
 import { SceneMeshMetadata } from './SceneBinding';
 import Dict from '../../util/objectOps/Dict';
-import { RENDER_SCALE, RENDER_SCALE_METERS_MULTIPLIER } from '../../components/Constants/renderConstants';
+import { RENDER_SCALE, RENDER_SCALE_METERS_MULTIPLIER } from '../../components/constants/renderConstants';
 import WriteCommand from '../../programming/AbstractRobot/WriteCommand';
 import AbstractRobot from '../../programming/AbstractRobot';
 import Motor from '../../programming/AbstractRobot/Motor';

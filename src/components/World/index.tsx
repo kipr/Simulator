@@ -2,10 +2,10 @@ import * as React from 'react';
 
 import { styled, withStyleDeep } from 'styletron-react';
 import { StyleProps } from '../../util/style';
-import { Theme, ThemeProps } from '../Constants/theme';
-import Field from '../Interface/Field';
-import ScrollArea from '../Interface/ScrollArea';
-import Section from '../Interface/Section';
+import { Theme, ThemeProps } from '../constants/theme';
+import Field from '../interface/Field';
+import ScrollArea from '../interface/ScrollArea';
+import Section from '../interface/Section';
 import { Angle, StyledText } from '../../util';
 
 import EditableList from '../EditableList';
@@ -25,8 +25,8 @@ import Node from '../../state/State/Scene/Node';
 import Dict from '../../util/objectOps/Dict';
 import Geometry from '../../state/State/Scene/Geometry';
 
-import { Button } from '../Interface/Button';
-import { BarComponent } from '../Interface/Widget';
+import { Button } from '../interface/Button';
+import { BarComponent } from '../interface/Widget';
 import { faGlobeAmericas, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
 import Scene, { AsyncScene } from '../../state/State/Scene';
 import Async from '../../state/State/Async';

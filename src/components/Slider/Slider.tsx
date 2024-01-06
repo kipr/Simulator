@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { styled } from 'styletron-react';
-import { ThemeProps } from '../Constants/theme';
+import { ThemeProps } from '../constants/theme';
 
 import { CanBeVertical, CanBeSelected } from './';
 import { SliderBar } from './SliderBar';

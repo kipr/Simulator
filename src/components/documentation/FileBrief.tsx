@@ -3,7 +3,7 @@ import { styled } from 'styletron-react';
 
 import FileDocumentation from '../../state/State/Documentation/FileDocumentation';
 import { StyleProps } from '../../util/style';
-import { ThemeProps } from '../Constants/theme';
+import { ThemeProps } from '../constants/theme';
 import FileName from './FileName';
 
 export interface FileBriefProps extends StyleProps, ThemeProps {

@@ -5,7 +5,7 @@ import { Scene as babylonScene, Vector3, Mesh, SceneLoader, PhysicsBody, Physics
 
 import Geometry from '../../../state/State/Robot/Geometry';
 import Node from '../../../state/State/Robot/Node';
-import { RENDER_SCALE_METERS_MULTIPLIER } from '../../../components/Constants/renderConstants';
+import { RENDER_SCALE_METERS_MULTIPLIER } from '../../../components/constants/renderConstants';
 import Robot from '../../../state/State/Robot';
 import { Mass } from '../../../util/math/Value';
 
@@ -25,7 +25,7 @@ export namespace BuiltGeometry {
 }
 
 // Loads the geometry of a robot part and divides into the collider and noncollider pieces
-export const buildGeometry_ = async (name: string, geometry: Geometry, bScene_: babylonScene): Promise<BuiltGeometry> => {
+const buildGeometry_ = async (name: string, geometry: Geometry, bScene_: babylonScene): Promise<BuiltGeometry> => {
   let ret: BuiltGeometry;
   switch (geometry.type) {
     case 'remote-mesh': {

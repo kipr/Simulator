@@ -2,11 +2,11 @@ import * as React from 'react';
 
 import { styled, withStyleDeep } from 'styletron-react';
 import { StyleProps } from '../../util/style';
-import { Spacer } from '../Constants/common';
+import { Spacer } from '../constants/common';
 import { FontAwesome } from '../FontAwesome';
 import { Layout, LayoutPicker } from '../Layout';
 import { SimulatorState } from './SimulatorState';
-import { GREEN, RED, ThemeProps } from '../Constants/theme';
+import { GREEN, RED, ThemeProps } from '../constants/theme';
 
 import tr from '@i18n';
 

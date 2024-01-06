@@ -3,7 +3,7 @@ import { styled } from 'styletron-react';
 
 import EnumerationDocumentation from '../../state/State/Documentation/EnumerationDocumentation';
 import { StyleProps } from '../../util/style';
-import { ThemeProps } from '../Constants/theme';
+import { ThemeProps } from '../constants/theme';
 import { Keyword, Type } from './common';
 import FileName from './FileName';
 

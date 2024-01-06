@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
-import { Settings } from '../Constants/Settings';
+import { Settings } from '../constants/Settings';
 import { StyleProps } from '../../util/style';
 import { Dialog } from './Dialog';
-import ScrollArea from '../Interface/ScrollArea';
+import ScrollArea from '../interface/ScrollArea';
 import { Switch } from '../Switch';
-import { ThemeProps } from '../Constants/theme';
+import { ThemeProps } from '../constants/theme';
 
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';
-import ComboBox from '../Interface/ComboBox';
+import ComboBox from '../interface/ComboBox';
 
 import { State as ReduxState } from '../../state';
 import { I18nAction } from '../../state/reducer';

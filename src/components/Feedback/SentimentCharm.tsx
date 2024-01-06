@@ -3,7 +3,7 @@ import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
 import Charm from '../Charm';
 import { FontAwesome } from '../FontAwesome';
-import { ThemeProps } from '../Constants/theme';
+import { ThemeProps } from '../constants/theme';
 
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 

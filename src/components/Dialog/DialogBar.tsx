@@ -1,7 +1,7 @@
 import * as React from "react";
 import { styled } from "styletron-react";
-import { Spacer } from "../Constants/common";
-import { ThemeProps, GREEN } from "../Constants/theme";
+import { Spacer } from "../constants/common";
+import { ThemeProps, GREEN } from "../constants/theme";
 
 export interface DialogBarProps extends ThemeProps {
   onAccept: () => void;

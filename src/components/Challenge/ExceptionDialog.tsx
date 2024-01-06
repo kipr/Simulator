@@ -1,7 +1,7 @@
 import * as React from "react";
 import { styled } from "styletron-react";
 import { Dialog } from "../Dialog/Dialog";
-import { ThemeProps } from "../Constants/theme";
+import { ThemeProps } from "../constants/theme";
 
 export interface ExceptionDialogProps extends ThemeProps {
   error: Error;

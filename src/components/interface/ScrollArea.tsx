@@ -4,7 +4,7 @@ import { RawVector2, clamp } from '../../util/math/math';
 
 import { StyleProps } from '../../util/style';
 import { styled } from 'styletron-react';
-import { Theme, ThemeProps } from '../Constants/theme';
+import { Theme, ThemeProps } from '../constants/theme';
 import resizeListener, { ResizeListener } from './ResizeListener';
 import { GlobalEvents, GLOBAL_EVENTS } from '../../util';
 

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { FeedbackText } from './FeedbackInputs';
 import { StyleProps } from '../../util/style';
 import { Dialog } from '../Dialog/Dialog';
-import { ThemeProps } from '../Constants/theme';
+import { ThemeProps } from '../constants/theme';
 import { FeedbackContainer, CenterContainer } from './FeedbackDialog';
 
 import tr from '@i18n';

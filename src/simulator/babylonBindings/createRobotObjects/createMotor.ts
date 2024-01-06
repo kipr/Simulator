@@ -5,7 +5,7 @@ import { Scene as babylonScene, Quaternion, Vector3, Mesh,
 
 import Node from '../../../state/State/Robot/Node';
 import { Vector3wUnits } from '../../../util/math/unitMath';
-import { RENDER_SCALE } from '../../../components/Constants/renderConstants';
+import { RENDER_SCALE } from '../../../components/constants/renderConstants';
 import { RawVector3 } from '../../../util/math/math';
 
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DARK, ThemeProps } from './Constants/theme';
+import { DARK, ThemeProps } from './constants/theme';
 import { StyleProps } from '../util/style';
 import { styled } from 'styletron-react';
 

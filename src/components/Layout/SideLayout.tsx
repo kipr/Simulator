@@ -12,7 +12,7 @@ import { Info } from '../Info';
 import { LayoutEditorTarget, LayoutProps } from './Layout';
 import SimulatorArea from './SimulatorArea';
 import { TabBar } from './TabBar';
-import Widget, { Mode, Size } from '../Interface/Widget';
+import Widget, { Mode, Size } from '../interface/Widget';
 import { Slider } from '../Slider';
 
 import { State as ReduxState } from '../../state';
