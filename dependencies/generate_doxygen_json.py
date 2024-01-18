@@ -32,7 +32,9 @@ def eprint(*args, **kwargs):
 
 
 # Get all XML files in a directory passed in as the first argument
+# add create*.xml to the list of files to parse
 xml_file_matches = [
+  'create*.xml',
   'analog*.xml',
   'botball*.xml',
   'button*.xml',

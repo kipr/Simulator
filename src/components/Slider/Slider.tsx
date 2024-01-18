@@ -1,12 +1,11 @@
 import * as React from 'react';
 
 import { styled } from 'styletron-react';
-import { ThemeProps } from '../theme';
+import { ThemeProps } from '../constants/theme';
 
 import { CanBeVertical, CanBeSelected } from './';
 import { SliderBar } from './SliderBar';
 import { Actions, resizeOnPointerMove } from './Resizer';
-import { number } from 'prop-types';
 
 export interface SliderProps extends ThemeProps {
   isVertical: boolean;

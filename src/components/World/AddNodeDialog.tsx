@@ -1,24 +1,18 @@
 import * as React from "react";
 import { styled } from "styletron-react";
-import { ReferenceFrame, Rotation } from "../../unit-math";
-import { Angle, Distance, Mass, Value } from "../../util";
-import ComboBox from "../ComboBox";
-import { Dialog } from "../Dialog";
-import DialogBar from "../DialogBar";
-import Field from "../Field";
-import Input from "../Input";
-import ScrollArea from "../ScrollArea";
-import Section from "../Section";
-import { ThemeProps } from "../theme";
-import ValueEdit from "../ValueEdit";
-import { AxisAngle, Euler } from "../../math";
+import { ReferenceFramewUnits } from "../../util/math/unitMath";
+import { Angle, Distance } from "../../util";
+import { Dialog } from "../Dialog/Dialog";
+import DialogBar from "../Dialog/DialogBar";
+import ScrollArea from "../interface/ScrollArea";
+import { ThemeProps } from "../constants/theme";
 import NodeSettings from "./NodeSettings";
 import Node from "../../state/State/Scene/Node";
 
 import * as uuid from 'uuid';
 import Scene from "../../state/State/Scene";
 import Geometry from "../../state/State/Scene/Geometry";
-import { Fa } from "../Fa";
+import { FontAwesome } from "../FontAwesome";
 
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import LocalizedString from '../../util/LocalizedString';
@@ -60,7 +54,7 @@ const StyledScrollArea = styled(ScrollArea, (props: ThemeProps) => ({
 class AddNodeDialog extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
-    const origin: ReferenceFrame = {
+    const origin: ReferenceFramewUnits = {
       position: {
         x: Distance.centimeters(0),
         y: Distance.centimeters(0),
@@ -101,7 +95,7 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
 
   private onNodeChange_ = (node: Node) => this.setState({ node });
 
-  private onNodeOriginChange_ = (origin: ReferenceFrame) => {
+  private onNodeOriginChange_ = (origin: ReferenceFramewUnits) => {
     this.setState(prevState => ({
       node: {
         ...prevState.node,
@@ -166,7 +160,7 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
           />
         </StyledScrollArea>
         <DialogBar theme={theme} onAccept={this.onAccept_}>
-          <Fa icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}
+          <FontAwesome icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}
         </DialogBar>
       </Dialog>
     );

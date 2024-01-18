@@ -1,11 +1,11 @@
 import { Message } from "ivygate";
-import ProgrammingLanguage from '../../ProgrammingLanguage';
-import { RobotPosition } from "../../RobotPosition";
-import { Settings } from "../../Settings";
-import { StyleProps } from "../../style";
+import ProgrammingLanguage from '../../programming/compiler/ProgrammingLanguage';
+import { RobotPosition } from "./RobotPosition";
+import { Settings } from "../constants/Settings";
+import { StyleProps } from "../../util/style";
 import { StyledText } from "../../util";
 import { Editor } from "../Editor";
-import { ThemeProps } from "../theme";
+import { ThemeProps } from "../constants/theme";
 import Challenge, { AsyncChallenge } from '../../state/State/Challenge';
 import ChallengeCompletion, { AsyncChallengeCompletion } from '../../state/State/ChallengeCompletion';
 import { AsyncScene } from '../../state/State/Scene';

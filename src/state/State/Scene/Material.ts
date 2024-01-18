@@ -1,5 +1,5 @@
-import deepNeq from '../../../deepNeq';
-import Patch from '../../../util/Patch';
+import deepNeq from '../../../util/redux/deepNeq';
+import Patch from '../../../util/redux/Patch';
 import { Color as ColorT } from './Color';
 
 namespace Material {

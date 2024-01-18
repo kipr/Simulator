@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import Event from '../../state/State/Challenge/Event';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import LocalizedString from '../../util/LocalizedString';
-import { Spacer } from '../common';
+import { Spacer } from '../constants/common';
 
 const Container = styled('div', {
 });

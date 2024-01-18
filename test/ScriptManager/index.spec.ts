@@ -1,6 +1,6 @@
-import ScriptManager from '../../src/ScriptManager';
+import ScriptManager from '../../src/simulator/ScriptManager';
 import Script from '../../src/state/State/Scene/Script';
-import { Vector3 } from '../../src/unit-math';
+import { Vector3wUnits } from '../../src/util/math/unitMath';
 
 describe('ScriptManager', () => {
   describe('collision', () => {
@@ -19,7 +19,7 @@ describe('ScriptManager', () => {
       scriptManager.trigger(ScriptManager.Event.collision({
         nodeId: 'nodeId',
         otherNodeId: 'otherNodeId',
-        point: Vector3.ZERO_METERS
+        point: Vector3wUnits.ZERO_METERS
       }));
       expect(result).toEqual('otherNodeId');
     });
@@ -29,7 +29,7 @@ describe('ScriptManager', () => {
       scriptManager.trigger(ScriptManager.Event.collision({
         nodeId: 'nodeId',
         otherNodeId: 'notOtherNodeId',
-        point: Vector3.ZERO_METERS
+        point: Vector3wUnits.ZERO_METERS
       }));
       expect(result).toEqual(undefined);
     });

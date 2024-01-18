@@ -1,17 +1,57 @@
 import * as React from 'react';
-import { DARK, ThemeProps } from '../components/theme';
-import { StyleProps } from '../style';
 import { styled } from 'styletron-react';
-import { Card } from '../components/Card';
-import MainMenu from '../components/MainMenu';
-import IFrame from '../components/IFrame';
-import { tutorialList } from './tutorialList';
-
-import LocalizedString from '../util/LocalizedString';
 import { connect } from 'react-redux';
 
-import { State as ReduxState } from '../state';
+import { DARK, ThemeProps } from '../components/constants/theme';
+import { Card } from '../components/interface/Card';
+import MainMenu from '../components/MainMenu';
+import IFrame from '../components/IFrame';
 
+import { StyleProps } from '../util/style';
+import LocalizedString from '../util/LocalizedString';
+
+import { State as ReduxState } from '../state';
+import tr from '@i18n';
+
+interface Tutorial {
+  title?: LocalizedString;
+  description?: LocalizedString;
+  src?: string;
+  backgroundImage?: string;
+  backgroundColor?: string;
+  backgroundPosition?: string;
+  backgroundSize?: string;
+  hoverBackgroundSize?: string;
+  index?: number;
+}
+
+const tutorialList: Tutorial [] = [
+  {
+    title: tr('Quick Start'),
+    description: tr('Learn how to get started with the simulator'),
+    backgroundColor: '#6c6ca1',
+    backgroundImage: 'url(../../static/icons/Laptop_Icon_Sunscreen.png)',
+    src: 'https://www.youtube.com/embed/7Szf-iQjNCw',
+  },
+  {
+    title: tr('Navigating in 3D'),
+    description: tr('Learn the controls for navigating in 3D in the simulator'),
+    backgroundImage: 'linear-gradient(#3b3c3c, transparent), url(../../static/example_images/Simulator_Full_View.png)',
+    src: 'https://www.youtube.com/embed/RBpWIpBlYK8',
+  },
+  {
+    title: tr('Robot Section'),
+    description: tr('How to use the robot section'),
+    backgroundImage: 'url(../../static/example_images/Simulator-Robot-Closeup.png)',
+    src: 'https://www.youtube.com/embed/SmYR1esidcc',
+  },
+  {
+    title: tr('World Section'),
+    description: tr('Learn how to create and manipulate items and scene in the simulator'),
+    backgroundImage: 'linear-gradient(#3b3c3c, transparent), url(../../static/textures/Can_Ream.png)',
+    src: 'https://www.youtube.com/embed/K7GsS8s3Rfg',
+  },
+];
 
 export interface TutorialsPublicProps extends StyleProps, ThemeProps {
 }
@@ -101,7 +141,6 @@ class Tutorials extends React.Component<Props, State> {
     this.setState({
       selected: tutorialList[index].src,
     });
-    console.log(this.state.selected);
   };
 
   render() {

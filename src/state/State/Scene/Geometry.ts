@@ -1,13 +1,13 @@
-import { Vector2, Vector3 } from '../../../unit-math';
-import { Vector3 as RawVector3, Vector2 as RawVector2 } from '../../../math';
-import { Distance } from '../../../util/Value';
-import deepNeq from '../../../deepNeq';
-import Patch from '../../../util/Patch';
+import { Vector2wUnits, Vector3wUnits } from '../../../util/math/unitMath';
+import { RawVector3, RawVector2 } from '../../../util/math/math';
+import { Distance } from '../../../util/math/Value';
+import deepNeq from '../../../util/redux/deepNeq';
+import Patch from '../../../util/redux/Patch';
 
 namespace Geometry {
   export interface Box {
     type: 'box';
-    size: Vector3;
+    size: Vector3wUnits;
   }
 
   export namespace Box {
@@ -104,7 +104,7 @@ namespace Geometry {
 
   export interface Plane {
     type: 'plane';
-    size: Vector2;
+    size: Vector2wUnits;
   }
 
   export namespace Plane {

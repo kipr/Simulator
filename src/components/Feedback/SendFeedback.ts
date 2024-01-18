@@ -1,5 +1,5 @@
-import { Sentiment } from '../../Feedback';
-import { RootState } from '../Root';
+import { Sentiment } from './Feedback';
+import { RootState } from '../../pages/Root';
 
 interface FeedbackData {
   feedback: string;

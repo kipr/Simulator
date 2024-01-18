@@ -1,19 +1,20 @@
-import Scene, { AsyncScene, SceneBrief } from "../State/Scene";
-import { Scenes } from "../State";
+import store from '..';
 import Async from "../State/Async";
-import * as JBC_SCENES from '../../scenes';
-import construct from '../../util/construct';
+import Scene, { AsyncScene, SceneBrief } from "../State/Scene";
+import Camera from '../State/Scene/Camera';
 import Geometry from '../State/Scene/Geometry';
 import Node from '../State/Scene/Node';
-import Camera from '../State/Scene/Camera';
-import { ReferenceFrame, Vector3 } from '../../unit-math';
+import Script from '../State/Scene/Script';
+import { Scenes } from "../State";
+import { errorToAsyncError, mutate } from './util';
 import db from '../../db';
 import { SCENE_COLLECTION } from '../../db/constants';
-import store from '..';
 import Selector from '../../db/Selector';
-import Dict from '../../Dict';
-import Script from '../State/Scene/Script';
-import { errorToAsyncError, mutate } from './util';
+import * as JBC_SCENES from '../../simulator/definitions/scenes';
+import construct from '../../util/redux/construct';
+import Dict from '../../util/objectOps/Dict';
+import { ReferenceFramewUnits, Vector3wUnits } from '../../util/math/unitMath';
+
 
 export namespace ScenesAction {
   export interface RemoveScene {
@@ -203,7 +204,7 @@ export namespace ScenesAction {
   export interface SetGravity {
     type: 'scenes/set-gravity';
     sceneId: string;
-    gravity: Vector3;
+    gravity: Vector3wUnits;
   }
 
   export const setGravity = construct<SetGravity>('scenes/set-gravity');
@@ -212,7 +213,7 @@ export namespace ScenesAction {
     type: 'scenes/set-node-origin';
     sceneId: string;
     nodeId: string;
-    origin: ReferenceFrame;
+    origin: ReferenceFramewUnits;
     updateStarting?: boolean;
   }
 
@@ -547,7 +548,7 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
           [action.sceneId]: Async.mutate(scene, draft => {
             for (const nodeId in draft.nodes) {
               const { origin, startingOrigin } = draft.nodes[nodeId];
-    
+              
               if (!startingOrigin) continue;
     
               draft.nodes[nodeId].origin = {

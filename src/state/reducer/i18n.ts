@@ -1,5 +1,5 @@
 import { I18n } from '../State';
-import construct from '../../util/construct';
+import construct from '../../util/redux/construct';
 import LocalizedString from '../../util/LocalizedString';
 
 export namespace I18nAction {

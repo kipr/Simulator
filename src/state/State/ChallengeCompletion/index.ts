@@ -1,15 +1,15 @@
-import Dict from '../../../Dict';
+import Dict from '../../../util/objectOps/Dict';
 import Async from '../Async';
 import PredicateCompletion from './PredicateCompletion';
 
-import ProgrammingLanguage from '../../../ProgrammingLanguage';
-import { ReferenceFrame } from '../../../unit-math';
+import ProgrammingLanguage from '../../../programming/compiler/ProgrammingLanguage';
+import { ReferenceFramewUnits } from '../../../util/math/unitMath';
 
 interface ChallengeCompletion {
   code: { [language in ProgrammingLanguage]: string };
   currentLanguage: ProgrammingLanguage;
   serializedSceneDiff: string;
-  robotLinkOrigins?: Dict<Dict<ReferenceFrame>>;
+  robotLinkOrigins?: Dict<Dict<ReferenceFramewUnits>>;
   eventStates: Dict<boolean>;
   success?: PredicateCompletion;
   failure?: PredicateCompletion;

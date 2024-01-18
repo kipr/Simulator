@@ -1,11 +1,11 @@
-import AbstractRobot from '../../../AbstractRobot';
-import deepNeq from '../../../deepNeq';
-import { Vector2, Vector3 } from '../../../math';
-import { ReferenceFrame } from '../../../unit-math';
+import AbstractRobot from '../../../programming/AbstractRobot';
+import deepNeq from '../../../util/redux/deepNeq';
+import { RawVector2, RawVector3 } from '../../../util/math/math';
+import { ReferenceFramewUnits } from '../../../util/math/unitMath';
 import { DistributiveOmit } from '../../../util/types';
-import { Angle, Mass } from '../../../util/Value';
+import { Angle, Mass } from '../../../util/math/Value';
 import LocalizedString from '../../../util/LocalizedString';
-import Patch from '../../../util/Patch';
+import Patch from '../../../util/redux/Patch';
 import Material from './Material';
 
 namespace Node {
@@ -37,8 +37,8 @@ namespace Node {
 
   interface Base {
     name: LocalizedString;
-    startingOrigin?: ReferenceFrame;
-    origin?: ReferenceFrame;
+    startingOrigin?: ReferenceFramewUnits;
+    origin?: ReferenceFramewUnits;
     scriptIds?: string[];
     documentIds?: string[];
     editable?: boolean;
@@ -55,6 +55,7 @@ namespace Node {
       visible: true
     };
 
+    // Upcast turns a extended type T into a base type
     export const upcast = <T extends Base>(t: T): Base => ({
       name: t.name,
       origin: t.origin,
@@ -107,7 +108,7 @@ namespace Node {
     geometryId: string;
     physics?: Physics;
     material?: Material;
-    faceUvs?: Vector2[];
+    faceUvs?: RawVector2[];
   }
 
   export namespace Obj {
@@ -174,7 +175,7 @@ namespace Node {
   export interface SpotLight extends Base {
     type: 'spot-light';
     parentId?: string;
-    direction: Vector3;
+    direction: RawVector3;
     angle: Angle;
     exponent: number;
     intensity: number;
@@ -215,7 +216,7 @@ namespace Node {
     parentId?: string;
     radius?: number;
     range?: number;
-    direction: Vector3;
+    direction: RawVector3;
     intensity: number;
   }
 
@@ -407,6 +408,10 @@ namespace Node {
     }
   };
 
+  /**
+   * TemplateNode is the type of a node that includes only the properties that go beyond the
+   * properties of base.
+   */
   export type TemplatedNode<T extends Base> = DistributiveOmit<T, keyof Base>;
 }
 

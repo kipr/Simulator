@@ -2,25 +2,23 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { styled } from 'styletron-react';
-import { Button } from '../Button';
 
-import { Console, createConsoleBarComponents } from '../Console';
+import { Console, createConsoleBarComponents } from '../EditorConsole';
 import { Editor, createEditorBarComponents, EditorBarTarget } from '../Editor';
-import World, { createWorldBarComponents } from '../World';
+import World from '../World';
 
 import { Info } from '../Info';
 import { LayoutEditorTarget, LayoutProps } from './Layout';
-import SimulatorArea from '../SimulatorArea';
-import { Theme, ThemeProps } from '../theme';
-import Widget, { BarComponent, Mode, Size, WidgetProps } from '../Widget';
+import SimulatorArea from './SimulatorArea';
+import { Theme, ThemeProps } from '../constants/theme';
+import Widget, { Mode, Size, WidgetProps } from '../interface/Widget';
 import { State as ReduxState } from '../../state';
 import Scene from '../../state/State/Scene';
 import Node from '../../state/State/Scene/Node';
-import Dict from '../../Dict';
+import Dict from '../../util/objectOps/Dict';
 import Async from '../../state/State/Async';
-import { EMPTY_OBJECT } from '../../util';
 import Challenge from '../Challenge';
-import { ReferenceFrame } from '../../unit-math';
+import { ReferenceFramewUnits } from '../../util/math/unitMath';
 import LocalizedString from '../../util/LocalizedString';
 
 import tr from '@i18n';
@@ -318,7 +316,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
     // not implemented
   };
 
-  private onRobotOriginChange_ = (origin: ReferenceFrame) => {
+  private onRobotOriginChange_ = (origin: ReferenceFramewUnits) => {
     const { scene, onNodeChange } = this.props;
     
     const latestScene = Async.latestValue(scene);
@@ -523,7 +521,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
 export const OverlayLayoutRedux = connect((state: ReduxState, { sceneId }: LayoutProps) => {
   const asyncScene = state.scenes[sceneId];
   const scene = Async.latestValue(asyncScene);
-  let robots: Dict<Node.Robot> = EMPTY_OBJECT;
+  let robots: Dict<Node.Robot> = {};
   if (scene) robots = Scene.robots(scene);
   
   return {

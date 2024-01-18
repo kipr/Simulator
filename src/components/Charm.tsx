@@ -1,8 +1,8 @@
-import { ThemeProps } from './theme';
+import { ThemeProps } from './constants/theme';
 
 import * as React from 'react';
 import { styled } from 'styletron-react';
-import { StyleProps } from '../style';
+import { StyleProps } from '../util/style';
 
 export interface CharmProps extends StyleProps, ThemeProps {
   children: React.ReactNode;

@@ -17,7 +17,6 @@ try {
 
 const modules = ['node_modules'];
 if (dependencies.cpython) modules.push(resolve(dependencies.cpython));
-if (dependencies.ammo) modules.push(resolve(dependencies.ammo));
 
 let libkiprCDocumentation = undefined;
 if (dependencies.libkipr_c_documentation) {
@@ -37,7 +36,7 @@ try {
 module.exports = {
   entry: {
     app: './index.tsx',
-    login: './login/index.tsx',
+    login: './components/Login/index.tsx',
     'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js',
     'ts.worker': 'monaco-editor/esm/vs/language/typescript/ts.worker.js',
   },
@@ -64,7 +63,7 @@ module.exports = {
       path: false,
     },
     alias: {
-      '@i18n': resolve(__dirname, '../../src/i18n'),
+      '@i18n': resolve(__dirname, '../../src/util/i18n'),
     },
     symlinks: false,
     modules
@@ -137,12 +136,11 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({ template: 'index.html.ejs', excludeChunks: ['login'] }),
-    new HtmlWebpackPlugin({ template: 'login/login.html.ejs', filename: 'login.html', chunks: ['login'] }),
+    new HtmlWebpackPlugin({ template: 'components/Login/login.html.ejs', filename: 'login.html', chunks: ['login'] }),
     new DefinePlugin({
       SIMULATOR_VERSION: JSON.stringify(require('../../package.json').version),
       SIMULATOR_GIT_HASH: JSON.stringify(commitHash),
       SIMULATOR_HAS_CPYTHON: JSON.stringify(dependencies.cpython !== undefined),
-      SIMULATOR_HAS_AMMO: JSON.stringify(dependencies.ammo !== undefined),
       SIMULATOR_LIBKIPR_C_DOCUMENTATION: JSON.stringify(libkiprCDocumentation),
       SIMULATOR_I18N: JSON.stringify(i18n),
     }),

@@ -34,7 +34,6 @@ app.use('/api', proxy(config.dbUrl));
 
 // If we have libkipr (C) artifacts and emsdk, we can compile.
 if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env) {
-  console.log('Compiling C programs is enabled.');
 
   app.post('/compile', (req, res) => {
     if (!('code' in req.body)) {

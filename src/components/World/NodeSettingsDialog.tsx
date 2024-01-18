@@ -1,9 +1,9 @@
 import * as React from "react";
 import { styled } from "styletron-react";
-import { ReferenceFrame } from "../../unit-math";
-import { Dialog } from "../Dialog";
-import ScrollArea from "../ScrollArea";
-import { ThemeProps } from "../theme";
+import { ReferenceFramewUnits } from "../../util/math/unitMath";
+import { Dialog } from "../Dialog/Dialog";
+import ScrollArea from "../interface/ScrollArea";
+import { ThemeProps } from "../constants/theme";
 import NodeSettings from "./NodeSettings";
 import Node from '../../state/State/Scene/Node';
 import Scene from "../../state/State/Scene";
@@ -21,7 +21,7 @@ export interface NodeSettingsDialogPublicProps extends ThemeProps {
   scene: Scene;
 
   onChange: (node: Node) => void;
-  onOriginChange: (origin: ReferenceFrame) => void;
+  onOriginChange: (origin: ReferenceFramewUnits) => void;
 
   onGeometryAdd: (id: string, geometry: Geometry) => void;
   onGeometryChange: (id: string, geometry: Geometry) => void;

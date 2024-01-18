@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 import { styled } from 'styletron-react';
-import { StyleProps } from '../style';
-import { Spacer } from './common';
-import { Fa } from './Fa';
-import { DARK, ThemeProps } from './theme';
+import { StyleProps } from '../util/style';
+import { Spacer } from './constants/common';
+import { FontAwesome } from './FontAwesome';
+import { DARK, ThemeProps } from './constants/theme';
 
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
@@ -14,8 +14,8 @@ import { connect } from 'react-redux';
 
 import { State as ReduxState } from '../state';
 
-import KIPR_LOGO_BLACK from '../assets/KIPR-Logo-Black-Text-Clear-Large.png';
-import KIPR_LOGO_WHITE from '../assets/KIPR-Logo-White-Text-Clear-Large.png';
+import KIPR_LOGO_BLACK from '../../static/assets/KIPR-Logo-Black-Text-Clear-Large.png';
+import KIPR_LOGO_WHITE from '../../static/assets/KIPR-Logo-White-Text-Clear-Large.png';
 import { signOutOfApp } from '../firebase/modules/auth';
 import LocalizedString from '../util/LocalizedString';
 
@@ -87,7 +87,7 @@ const Item = styled('div', (props: ThemeProps & ClickProps) => ({
   transition: 'background-color 0.2s, opacity 0.2s'
 }));
 
-const ItemIcon = styled(Fa, {
+const ItemIcon = styled(FontAwesome, {
   paddingRight: '10px'
 });
 

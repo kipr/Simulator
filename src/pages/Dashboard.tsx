@@ -1,20 +1,21 @@
 import * as React from 'react';
-import { DARK, ThemeProps } from '../components/theme';
-import { StyleProps } from '../style';
-import { styled } from 'styletron-react';
-import { Card } from '../components/Card';
-import MainMenu from '../components/MainMenu';
 import { RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
+import { styled } from 'styletron-react';
 
-import tr from '@i18n';
+import { DARK, ThemeProps } from '../components/constants/theme';
+import { Card } from '../components/interface/Card';
+import MainMenu from '../components/MainMenu';
+
+import { StyleProps } from '../util/style';
 import LocalizedString from '../util/LocalizedString';
 import { State } from '../state';
 
+import tr from '@i18n';
+
 
 export interface DashboardPublicProps extends RouteComponentProps, ThemeProps, StyleProps {
-
 }
 
 interface DashboardPrivateProps {

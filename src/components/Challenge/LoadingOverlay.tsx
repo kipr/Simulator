@@ -6,10 +6,10 @@ import { styled, withStyleDeep } from 'styletron-react';
 import Async from '../../state/State/Async';
 import { AsyncChallenge } from '../../state/State/Challenge';
 import LocalizedString from '../../util/LocalizedString';
-import { Spacer } from '../common';
-import { Dialog } from '../Dialog';
-import { Modal } from '../Modal';
-import { DARK } from '../theme';
+import { Spacer } from '../constants/common';
+import { Dialog } from '../Dialog/Dialog';
+import { Modal } from '../interface/Modal';
+import { DARK } from '../constants/theme';
 
 import tr from '@i18n';
 import { connect } from 'react-redux';

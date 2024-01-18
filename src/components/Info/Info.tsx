@@ -1,20 +1,20 @@
 import * as React from 'react';
 
 import { styled } from 'styletron-react';
-import { StyleProps } from '../../style';
-import ScrollArea from '../ScrollArea';
-import Section from '../Section';
-import { ThemeProps } from '../theme';
+import { StyleProps } from '../../util/style';
+import ScrollArea from '../interface/ScrollArea';
+import Section from '../interface/Section';
+import { ThemeProps } from '../constants/theme';
 import SensorWidget from './SensorWidget';
 import { StyledText } from '../../util';
 import Location from './Location';
-import { Fa } from '../Fa';
-import { ReferenceFrame } from '../../unit-math';
+import { FontAwesome } from '../FontAwesome';
+import { ReferenceFramewUnits } from '../../util/math/unitMath';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
 import { ScenesAction } from '../../state/reducer';
 import Node from '../../state/State/Scene/Node';
-import Motor from '../../AbstractRobot/Motor';
+import Motor from '../../programming/AbstractRobot/Motor';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
 import Async from '../../state/State/Async';
 
@@ -25,7 +25,7 @@ import LocalizedString from '../../util/LocalizedString';
 export interface InfoPublicProps extends StyleProps, ThemeProps {
   node: Node.Robot;
 
-  onOriginChange: (origin: ReferenceFrame) => void;
+  onOriginChange: (origin: ReferenceFramewUnits) => void;
 }
 
 interface InfoPrivateProps {
@@ -87,7 +87,7 @@ const SIMULATION_NAME = StyledText.text({
 
 
 
-const ResetIcon = styled(Fa, ({ theme }: ThemeProps) => ({
+const ResetIcon = styled(FontAwesome, ({ theme }: ThemeProps) => ({
   marginLeft: `${theme.itemPadding * 2}px`,
   opacity: 0.5,
   ':hover': {
@@ -161,7 +161,6 @@ class Info extends React.PureComponent<Props, State> {
 
     const motorVelocities: JSX.Element[] = [];
     const motorPositions: JSX.Element[] = [];
-
     for (let i = 0; i < 4; ++i) {
       const motor = node.state.motors[i];
       motorVelocities.push(

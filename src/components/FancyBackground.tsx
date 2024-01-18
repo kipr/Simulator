@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/prefer-for-of */
 import * as React from 'react';
 import { styled } from 'styletron-react';
-import { Vector2 } from '../math';
-import { StyleProps } from '../style';
-import { ThemeProps } from './theme';
+import { StyleProps } from '../util/style';
+import { ThemeProps } from './constants/theme';
 
 export interface FancyBackgroundProps extends StyleProps, ThemeProps {
 }

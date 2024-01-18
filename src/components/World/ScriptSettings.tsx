@@ -1,15 +1,12 @@
 import * as React from "react";
 import { styled } from "styletron-react";
 
-import Field from "../Field";
-import Input from "../Input";
-import Section from "../Section";
-import { ThemeProps } from "../theme";
+import Field from "../interface/Field";
+import Input from "../interface/Input";
+import { ThemeProps } from "../constants/theme";
 import ValueEdit from "../ValueEdit";
 import Script from "../../state/State/Scene/Script";
 import { Ivygate } from 'ivygate';
-import { Editor } from '../Editor';
-import * as monaco from 'monaco-editor';
 
 import LocalizedString from '../../util/LocalizedString';
 import { connect } from 'react-redux';

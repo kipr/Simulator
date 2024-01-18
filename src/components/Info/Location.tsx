@@ -1,26 +1,26 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import { Value, StyledText, Angle, Distance } from '../../util';
-import { ThemeProps } from '../theme';
+import { ThemeProps } from '../constants/theme';
 import ValueEdit from '../ValueEdit';
-import deepNeq from '../../deepNeq';
-import { ReferenceFrame, Rotation, Vector3 } from '../../unit-math';
+import deepNeq from '../../util/redux/deepNeq';
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../util/math/unitMath';
 import LocalizedString from '../../util/LocalizedString';
 
 import tr from '@i18n';
 
 export interface LocationProps extends ThemeProps, StyleProps {
-  origin?: ReferenceFrame;
-  onOriginChange: (origin: ReferenceFrame, modifyReferenceScene: boolean) => void;
+  origin?: ReferenceFramewUnits;
+  onOriginChange: (origin: ReferenceFramewUnits, modifyReferenceScene: boolean) => void;
   locale: LocalizedString.Language;
 }
 
 type Props = LocationProps;
 
-const IDENTITY_ORIGIN: ReferenceFrame = {
-  position: Vector3.zero('centimeters'),
-  orientation: Rotation.Euler.identity(Angle.Type.Degrees),
+const IDENTITY_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.zero('centimeters'),
+  orientation: RotationwUnits.EulerwUnits.identity(Angle.Type.Degrees),
 };
 
 const StyledValueEdit = styled(ValueEdit, (props: ThemeProps) => ({
@@ -49,7 +49,7 @@ export default class Location extends React.PureComponent<Props> {
     this.props.onOriginChange({
       ...origin,
       position: {
-        ...origin.position || Vector3.zero('centimeters'),
+        ...origin.position || Vector3wUnits.zero('centimeters'),
         x: xDistance
       }
     }, true);
@@ -64,7 +64,7 @@ export default class Location extends React.PureComponent<Props> {
     this.props.onOriginChange({
       ...origin,
       position: {
-        ...(origin.position || Vector3.zero('centimeters')),
+        ...(origin.position || Vector3wUnits.zero('centimeters')),
         y: yDistance
       }
     }, true);
@@ -79,7 +79,7 @@ export default class Location extends React.PureComponent<Props> {
     this.props.onOriginChange({
       ...origin,
       position: {
-        ...(origin.position || Vector3.zero('centimeters')),
+        ...(origin.position || Vector3wUnits.zero('centimeters')),
         z: zDistance
       }
     }, true);
@@ -90,7 +90,7 @@ export default class Location extends React.PureComponent<Props> {
 
     const thetaAngle = Value.toAngle(theta);
 
-    const nextOrientation: Rotation.Euler = {
+    const nextOrientation: RotationwUnits.EulerwUnits = {
       type: 'euler',
       x: Angle.degrees(0),
       z: Angle.degrees(0),
@@ -98,7 +98,7 @@ export default class Location extends React.PureComponent<Props> {
       order: 'yzx'
     };
     
-    if (origin.orientation && Rotation.angle(origin.orientation, nextOrientation).value === 0) return;
+    if (origin.orientation && RotationwUnits.angle(origin.orientation, nextOrientation).value === 0) return;
 
 
     this.props.onOriginChange({
@@ -113,12 +113,12 @@ export default class Location extends React.PureComponent<Props> {
 
     if (!origin) return null;
 
-    let euler = Rotation.Euler.identity(Angle.Type.Degrees);
+    let euler = RotationwUnits.EulerwUnits.identity(Angle.Type.Degrees);
     if (origin.orientation) {
       if (origin.orientation.type === 'euler') {
         euler = origin.orientation;
       } else {
-        euler = Rotation.toType(origin.orientation, 'euler') as Rotation.Euler;
+        euler = RotationwUnits.toType(origin.orientation, 'euler') as RotationwUnits.EulerwUnits;
       }
     }
 

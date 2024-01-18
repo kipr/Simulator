@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import Charm from '../Charm';
-import { Fa } from '../Fa';
-import { ThemeProps } from '../theme';
-import { charmColor } from '../charm-util';
+import { FontAwesome } from '../FontAwesome';
+import { ThemeProps } from '../constants/theme';
 
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
@@ -43,7 +42,7 @@ class SentimentCharm extends React.PureComponent<Props> {
     
     return (
       <Container theme={theme} onClick={onClick} selected={props.selected}>
-        <Fa icon={props.icon} />
+        <FontAwesome icon={props.icon} />
       </Container>
     );
   }

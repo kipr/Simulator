@@ -1,14 +1,12 @@
 import * as React from 'react';
 
 import { styled } from 'styletron-react';
-import Documentation from '../../state/State/Documentation';
 import DocumentationLocation from '../../state/State/Documentation/DocumentationLocation';
 import StructureDocumentationModel from '../../state/State/Documentation/StructureDocumentation';
-import { StyleProps } from '../../style';
-import Section from '../Section';
-import { ThemeProps } from '../theme';
+import { StyleProps } from '../../util/style';
+import Section from '../interface/Section';
+import { ThemeProps } from '../constants/theme';
 import { ParameterName, Type } from './common';
-import FunctionBrief from './FunctionBrief';
 import StructureBrief from './StructureBrief';
 import { toPythonType } from './util';
 

@@ -1,22 +1,20 @@
 import * as React from "react";
 import { styled } from "styletron-react";
-import { Vector3 as RawVector3, AxisAngle, Euler } from "../../math";
-import { ReferenceFrame, Rotation, Vector3 } from "../../unit-math";
+import { RawVector3, RawAxisAngle, RawEuler } from "../../util/math/math";
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../util/math/unitMath";
 
-import { Angle, Distance, Mass, UnitlessValue, Value } from "../../util";
-import ComboBox from "../ComboBox";
-import { Dialog } from "../Dialog";
-import DialogBar from "../DialogBar";
-import Field from "../Field";
-import Input from "../Input";
-import ScrollArea from "../ScrollArea";
-import Section from "../Section";
-import { ThemeProps } from "../theme";
+import { Angle, Mass, UnitlessValue, Value } from "../../util";
+import ComboBox from "../interface/ComboBox";
+import Field from "../interface/Field";
+import Input from "../interface/Input";
+import ScrollArea from "../interface/ScrollArea";
+import Section from "../interface/Section";
+import { ThemeProps } from "../constants/theme";
 import ValueEdit from "../ValueEdit";
 import Geometry from '../../state/State/Scene/Geometry';
 import Node from "../../state/State/Scene/Node";
 import Scene from "../../state/State/Scene";
-import Dict from "../../Dict";
+import Dict from "../../util/objectOps/Dict";
 import Material from '../../state/State/Scene/Material';
 import { Color } from '../../state/State/Scene/Color';
 import { State as ReduxState } from '../../state/index';
@@ -31,7 +29,7 @@ import tr from '@i18n';
 
 export interface NodeSettingsPublicProps extends ThemeProps {
   onNodeChange: (node: Node) => void;
-  onNodeOriginChange: (origin: ReferenceFrame) => void;
+  onNodeOriginChange: (origin: ReferenceFramewUnits) => void;
   node: Node;
   id: string;
 
@@ -97,17 +95,17 @@ class NodeSettings extends React.PureComponent<Props, State> {
   private onRotationTypeChange_ = (index: number, option: ComboBox.Option) => {
     const { node } = this.props;
 
-    const type = option.data as Rotation.Type;
+    const type = option.data as RotationwUnits.Type;
 
     switch (type) {
       case 'euler':
         this.props.onNodeOriginChange({
-          orientation: Rotation.Euler.fromRaw(Euler.fromQuaternion(Rotation.toRawQuaternion(node.startingOrigin.orientation))),
+          orientation: RotationwUnits.EulerwUnits.fromRaw(RawEuler.fromQuaternion(RotationwUnits.toRawQuaternion(node.startingOrigin.orientation))),
         });
         break;
       case 'axis-angle':
         this.props.onNodeOriginChange({
-          orientation: Rotation.AxisAngle.fromRaw(AxisAngle.fromQuaternion(Rotation.toRawQuaternion(node.startingOrigin.orientation))),
+          orientation: RotationwUnits.AxisAngle.fromRaw(RawAxisAngle.fromQuaternion(RotationwUnits.toRawQuaternion(node.startingOrigin.orientation))),
         });
         break;
     }
@@ -115,11 +113,11 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onEulerOrderChange_ = (index: number, option: ComboBox.Option) => {
     const { node } = this.props;
-    const order = option.data as Euler.Order;
+    const order = option.data as RawEuler.Order;
 
     this.props.onNodeOriginChange({
       orientation: {
-        ...node.startingOrigin.orientation as Rotation.Euler,
+        ...node.startingOrigin.orientation as RotationwUnits.EulerwUnits,
         order,
       },
     });
@@ -148,6 +146,8 @@ class NodeSettings extends React.PureComponent<Props, State> {
     let transmutedNode = Node.transmute(node, selectedType);
 
     const JBC_TEMPLATE_OPTIONS: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('MatB'), locale), 'matB'),
+      ComboBox.option(LocalizedString.lookup(tr('MatA'), locale), 'matA'),
       ComboBox.option(LocalizedString.lookup(tr('Can'), locale), 'can'),
       ComboBox.option(LocalizedString.lookup(tr('Paper Ream'), locale), 'ream'),
     ];
@@ -475,7 +475,6 @@ class NodeSettings extends React.PureComponent<Props, State> {
     if (node.type !== 'object' && node.type !== 'from-space-template') throw new Error('Node is not an object');
 
     const material = node.material as Material.Basic;
-    console.log("prev", material);
     const nextMaterial = { ...material };
     const member = material[field];
 
@@ -485,7 +484,6 @@ class NodeSettings extends React.PureComponent<Props, State> {
       ...member,
       uri: event.currentTarget.value
     };
-    console.log("update", nextMaterial);
 
     onNodeChange({
       ...node,
@@ -571,7 +569,6 @@ class NodeSettings extends React.PureComponent<Props, State> {
   };
 
   private onRockTemplateSelect_ = (index: number, option: ComboBox.Option) => {
-    console.log("onRockTemplateSelect_");
     const { props } = this;
     const { node } = props;
 
@@ -586,7 +583,6 @@ class NodeSettings extends React.PureComponent<Props, State> {
   };
 
   private onSpaceTemplateSelect_ = (index: number, option: ComboBox.Option) => {
-    console.log("onSpaceTemplateSelect_");
     const { props } = this;
     const { node } = props;
 
@@ -650,7 +646,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
     this.props.onNodeOriginChange({
       orientation: {
-        ...(origin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
+        ...(origin.orientation as RotationwUnits.EulerwUnits || RotationwUnits.EulerwUnits.identity(Angle.Type.Degrees)),
         x: Value.toAngle(value),
       },
     });
@@ -662,7 +658,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
     this.props.onNodeOriginChange({
       orientation: {
-        ...(origin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
+        ...(origin.orientation as RotationwUnits.EulerwUnits || RotationwUnits.EulerwUnits.identity(Angle.Type.Degrees)),
         y: Value.toAngle(value),
       },
     });
@@ -674,7 +670,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
     this.props.onNodeOriginChange({
       orientation: {
-        ...(origin.orientation as Rotation.Euler || Rotation.Euler.identity(Angle.Type.Degrees)),
+        ...(origin.orientation as RotationwUnits.EulerwUnits || RotationwUnits.EulerwUnits.identity(Angle.Type.Degrees)),
         z: Value.toAngle(value),
       },
     });
@@ -683,7 +679,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
   private onOrientationAngleAxisXChange_ = (value: Value) => {
     const { node } = this.props;
     const origin = node.startingOrigin || {};
-    const orientation: Rotation.AxisAngle = origin.orientation as Rotation.AxisAngle || Rotation.AxisAngle.identity(Angle.Type.Degrees);
+    const orientation: RotationwUnits.AxisAngle = origin.orientation as RotationwUnits.AxisAngle || RotationwUnits.AxisAngle.identity(Angle.Type.Degrees);
 
     this.props.onNodeOriginChange({
       orientation: {
@@ -699,7 +695,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
   private onOrientationAngleAxisYChange_ = (value: Value) => {
     const { node } = this.props;
     const origin = node.startingOrigin || {};
-    const orientation: Rotation.AxisAngle = origin.orientation as Rotation.AxisAngle || Rotation.AxisAngle.identity(Angle.Type.Degrees);
+    const orientation: RotationwUnits.AxisAngle = origin.orientation as RotationwUnits.AxisAngle || RotationwUnits.AxisAngle.identity(Angle.Type.Degrees);
 
     this.props.onNodeOriginChange({
       orientation: {
@@ -715,7 +711,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
   private onOrientationAngleAxisZChange_ = (value: Value) => {
     const { node } = this.props;
     const origin = node.startingOrigin || {};
-    const orientation: Rotation.AxisAngle = origin.orientation as Rotation.AxisAngle || Rotation.AxisAngle.identity(Angle.Type.Degrees);
+    const orientation: RotationwUnits.AxisAngle = origin.orientation as RotationwUnits.AxisAngle || RotationwUnits.AxisAngle.identity(Angle.Type.Degrees);
 
     this.props.onNodeOriginChange({
       orientation: {
@@ -731,7 +727,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
   private onOrientationAngleAxisAngleChange_ = (value: Value) => {
     const { node } = this.props;
     const origin = node.startingOrigin || {};
-    const orientation: Rotation.AxisAngle = origin.orientation as Rotation.AxisAngle || Rotation.AxisAngle.identity(Angle.Type.Degrees);
+    const orientation: RotationwUnits.AxisAngle = origin.orientation as RotationwUnits.AxisAngle || RotationwUnits.AxisAngle.identity(Angle.Type.Degrees);
 
     this.props.onNodeOriginChange({
       orientation: {
@@ -914,9 +910,9 @@ class NodeSettings extends React.PureComponent<Props, State> {
     // const { parentId } = node;
 
     const origin = node.startingOrigin || {};
-    const orientation = origin.orientation || Rotation.Euler.identity(Angle.Type.Degrees);
+    const orientation = origin.orientation || RotationwUnits.EulerwUnits.identity(Angle.Type.Degrees);
 
-    const position = origin.position || Vector3.zero('centimeters');
+    const position = origin.position || Vector3wUnits.zero('centimeters');
     const scale = origin.scale || RawVector3.ONE;
     
     let friction = UnitlessValue.create(5);
@@ -964,6 +960,8 @@ class NodeSettings extends React.PureComponent<Props, State> {
     
 
     const JBC_TEMPLATE_OPTIONS: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('MatB'), locale), 'matB'),
+      ComboBox.option(LocalizedString.lookup(tr('MatA'), locale), 'matA'),
       ComboBox.option(LocalizedString.lookup(tr('Can'), locale), 'can'),
       ComboBox.option(LocalizedString.lookup(tr('Paper Ream'), locale), 'ream'),
     ];
@@ -1021,12 +1019,12 @@ class NodeSettings extends React.PureComponent<Props, State> {
     ];
     
     const EULER_ORDER_OPTIONS: ComboBox.Option[] = [
-      ComboBox.option(LocalizedString.lookup(tr('XYZ', 'Rotation order'), locale), 'xyz'),
-      ComboBox.option(LocalizedString.lookup(tr('YZX', 'Rotation order'), locale), 'yzx'),
-      ComboBox.option(LocalizedString.lookup(tr('ZXY', 'Rotation order'), locale), 'zxy'),
-      ComboBox.option(LocalizedString.lookup(tr('XZY', 'Rotation order'), locale), 'xzy'),
-      ComboBox.option(LocalizedString.lookup(tr('YXZ', 'Rotation order'), locale), 'yxz'),
-      ComboBox.option(LocalizedString.lookup(tr('ZYX', 'Rotation order'), locale), 'zyx'),
+      ComboBox.option(LocalizedString.lookup(tr('XYZ', 'RotationwUnits order'), locale), 'xyz'),
+      ComboBox.option(LocalizedString.lookup(tr('YZX', 'RotationwUnits order'), locale), 'yzx'),
+      ComboBox.option(LocalizedString.lookup(tr('ZXY', 'RotationwUnits order'), locale), 'zxy'),
+      ComboBox.option(LocalizedString.lookup(tr('XZY', 'RotationwUnits order'), locale), 'xzy'),
+      ComboBox.option(LocalizedString.lookup(tr('YXZ', 'RotationwUnits order'), locale), 'yxz'),
+      ComboBox.option(LocalizedString.lookup(tr('ZYX', 'RotationwUnits order'), locale), 'zyx'),
     ];
     
     const NODE_TYPE_OPTIONS: ComboBox.Option[] = [
@@ -1605,7 +1603,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
                 <ComboBox
                   options={EULER_ORDER_OPTIONS}
                   theme={theme}
-                  index={EULER_ORDER_OPTIONS.findIndex(o => (o.data as Euler.Order) === orientation.order)}
+                  index={EULER_ORDER_OPTIONS.findIndex(o => (o.data as RawEuler.Order) === orientation.order)}
                   onSelect={this.onEulerOrderChange_}
                 />
               </StyledField>

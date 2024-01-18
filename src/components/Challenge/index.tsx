@@ -1,39 +1,19 @@
 import * as React from 'react';
 
 import { styled, withStyleDeep } from 'styletron-react';
-import { StyleProps } from '../../style';
-import { Switch } from '../Switch';
-import { Theme, ThemeProps } from '../theme';
-import Field from '../Field';
-import ScrollArea from '../ScrollArea';
-import Section from '../Section';
-import { Spacer } from '../common';
-import { Angle, StyledText } from '../../util';
-import { DropdownList, OptionDefinition } from '../DropdownList';
+import { StyleProps } from '../../util/style';
+import { ThemeProps } from '../constants/theme';
+import Field from '../interface/Field';
+import ScrollArea from '../interface/ScrollArea';
+import Section from '../interface/Section';
 
-import EditableList from '../EditableList';
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 import { connect } from 'react-redux';
 
 import { State as ReduxState } from '../../state';
 
-import { ScenesAction } from '../../state/reducer';
-
-import * as uuid from 'uuid';
-import { ReferenceFrame, Rotation, Vector3 } from '../../unit-math';
-import { Vector3 as RawVector3 } from '../../math';
-import ComboBox from '../ComboBox';
-import Node from '../../state/State/Scene/Node';
-import Dict from '../../Dict';
-import Geometry from '../../state/State/Scene/Geometry';
-
-import { Button } from '../Button';
-import { BarComponent } from '../Widget';
-import { faGlobeAmericas, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
-import Scene, { AsyncScene } from '../../state/State/Scene';
 import Async from '../../state/State/Async';
 import LocalizedString from '../../util/LocalizedString';
-import Script from '../../state/State/Scene/Script';
 import { AsyncChallenge } from '../../state/State/Challenge';
 import { AsyncChallengeCompletion } from '../../state/State/ChallengeCompletion';
 import PredicateEditor from './PredicateEditor';
@@ -92,7 +72,7 @@ const StyledField = styled(Field, (props: ThemeProps) => ({
 
 }));
 
-const SectionIcon = styled(Fa, (props: ThemeProps) => ({
+const SectionIcon = styled(FontAwesome, (props: ThemeProps) => ({
   marginLeft: `${props.theme.itemPadding}px`,
   paddingLeft: `${props.theme.itemPadding}px`,
   borderLeft: `1px solid ${props.theme.borderColor}`,

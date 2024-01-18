@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 import { styled } from 'styletron-react';
-import { StyleProps } from '../../style';
-import { Fa } from '../Fa';
+import { StyleProps } from '../../util/style';
+import { FontAwesome } from '../FontAwesome';
 import { Layout } from './Layout';
-import { ThemeProps } from '../theme';
+import { ThemeProps } from '../constants/theme';
 import { faCaretSquareLeft, faClone, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import LocalizedString from '../../util/LocalizedString';
 import { connect } from 'react-redux';
@@ -75,7 +75,7 @@ const Item = styled('div', (props: ThemeProps & ClickProps) => ({
 }));
 
 
-const ItemIcon = styled(Fa, {
+const ItemIcon = styled(FontAwesome, {
   width: '20px',
   minWidth: '20px',
   maxWidth: '20px',

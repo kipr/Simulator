@@ -1,10 +1,10 @@
-import deepNeq from '../../../deepNeq';
-import { Vector3 } from '../../../math';
-import { Vector3 as UnitVector3, ReferenceFrame } from '../../../unit-math';
+import deepNeq from '../../../util/redux/deepNeq';
+import { RawVector3 } from '../../../util/math/math';
+import { Vector3wUnits, ReferenceFramewUnits } from '../../../util/math/unitMath';
 import { Angle, Distance, Mass } from '../../../util';
-import construct from '../../../util/construct';
+import construct from '../../../util/redux/construct';
 import LocalizedString from '../../../util/LocalizedString';
-import Patch from '../../../util/Patch';
+import Patch from '../../../util/redux/Patch';
 
 namespace Node {
   export enum Type {
@@ -47,9 +47,9 @@ namespace Node {
 
     /**
      * The translation and orientation from the parentId,
-     * or ReferenceFrame.IDENTITY if undefined.
+     * or ReferenceFramewUnits.IDENTITY if undefined.
      */
-    origin?: ReferenceFrame;
+    origin?: ReferenceFramewUnits;
   }
 
   namespace FrameLike {
@@ -116,6 +116,8 @@ namespace Node {
      * is displayed.
      */
     geometryId?: string;
+
+    scale?: number;
   }
 
   export const link = construct<Link>(Type.Link);
@@ -192,9 +194,9 @@ namespace Node {
 
     /**
      * The translation and orientation from the parentId,
-     * or ReferenceFrame.IDENTITY if undefined.
+     * or ReferenceFramewUnits.IDENTITY if undefined.
      */
-    origin?: ReferenceFrame;
+    origin?: ReferenceFramewUnits;
 
     /**
      * The mass of the weight.
@@ -222,22 +224,22 @@ namespace Node {
     /**
      * The axis of the parent
      */
-    parentAxis: Vector3;
+    parentAxis: RawVector3;
     
     /**
      * The axis of the child. If undefined, same as `parentAxis`.
      */
-    childAxis?: Vector3;
+    childAxis?: RawVector3;
 
     /**
      * The pivot point of the parent. If undefined, zero.
      */
-    parentPivot?: UnitVector3;
+    parentPivot?: Vector3wUnits;
 
     /**
      * The pivot point of the child. If undefined, zero.
      */
-    childPivot?: UnitVector3;
+    childPivot?: Vector3wUnits;
 
     /**
      * The starting twist of the child relative to the parent along the main axis.
@@ -428,7 +430,7 @@ namespace Node {
   export interface TouchSensor extends Base, DigitalSensor {
     type: Type.TouchSensor;
 
-    collisionBox: UnitVector3;
+    collisionBox: Vector3wUnits;
   }
 
   export const touchSensor = construct<TouchSensor>(Type.TouchSensor);

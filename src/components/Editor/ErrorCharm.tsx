@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
-import { StyleProps } from '../../style';
+import { StyleProps } from '../../util/style';
 import Charm from '../Charm';
-import { Fa } from '../Fa';
-import { ThemeProps } from '../theme';
-import { charmColor } from '../charm-util';
+import { FontAwesome } from '../FontAwesome';
+import { ThemeProps } from '../constants/theme';
+import { charmColor } from '../constants/charm-util';
 
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import LocalizedString from '../../util/LocalizedString';
@@ -40,7 +40,7 @@ class ErrorCharm extends React.PureComponent<Props> {
     
     return (
       <Container theme={theme} onClick={onClick}>
-        <Fa icon={faTimesCircle} /> {count} {LocalizedString.lookup(tr('Error(s)'), locale)}
+        <FontAwesome icon={faTimesCircle} /> {count} {LocalizedString.lookup(tr('Error(s)'), locale)}
       </Container>
     );
   }

@@ -15,7 +15,7 @@ Base File Structure:
 	* static
 	* test
 
-The two most important folders to get familiar with are the dependencies and the src folders, but here we will cover them all in order. Let's go over these one at a time.
+The two most important folders to get familiar with are the [dependencies](#dependencies) and the [src](#src) folders, but here we will cover them all in order. Let's go over these one at a time.
 
 ## Configs
 
@@ -25,14 +25,12 @@ Configures the webpack bundling for development of production. From Webpack's do
 
 ## Dependencies
 
-Dependencies are code modules used by the simulator. They include several external repositories such as libwallaby, cpython, emsdk, and ammojs. After running build.py as part of the install process, they will also contain the build and install modules for the related dependencies.
+Dependencies are code modules used by the simulator. They include several external repositories such as libwallaby, cpython, and emsdk. After running build.py as part of the install process, they will also contain the build and install modules for the related dependencies.
 
 To purpose of the core dependencies is as follows:
 
 * libwallaby
 	* Developed by KIPR, libwallaby is a library for programming the robot.
-* ammo.js
-	* A direct port of the Bullet Physics Engine.
 * emsdk
 	* Emscripten is a complete Open Source compiler toolchain to WebAssembly. Emscripten compiles C and C++ to WebAssembly using LLVM and Binaryen. Emscripten output can run on the Web, in Node.js, and in wasm runtimes.
 * cpython
@@ -81,15 +79,11 @@ Next of course is App.tsx, which will check if you have been logged in and ask y
 * /challenge/:challengeId
 	* This displays the ChallengeRoot component, which renders a given challenge
 
-Rendered on top of the components described above is the DocumentationWindow component, however this will (may?) only show for the Root and ChallengeRoot components.
+The main pages besides the actual simulator (in Root and ChallengeRoot) are the Dashboard page, the Tutorials page, and the LoginPage.
 
-The main pages besides the actual simulator are the Dashboard page, the Tutorials page, and the LoginPage, which is located outside /pages, in /login.
+The simulator itself is rendered either through the Root or ChallengeRoot.
 
-The simulator itself is rendered either through the Root or ChallengeRoot components which are located in the /components folder.
-
-Components - where most of the UI exists:
-* root is where the logic exists for laying out the UI
-	* holds the code that exists, the simulator state, settings, current theme
+The main components - where most of the UI exists - include:
 * layouts
 	* Side layout and overlay layout
 * Editor
@@ -109,16 +103,16 @@ Static contains unchanging (static) items, including:
 	* Pictures
 * .glb files
 	* “GL Transmission Format Binary file”, is a standardized file format used to share 3D data. Precisely, it can contain information about 3D models, scenes, models, lighting, materials, node hierarchy and animations.
-* .blend files
-	* A BLEND file is a 3D image or animation project created with Blender, an open-source 3D modeling program.
 * draco_decoder files (.js/.wasm)
 	* Decompresses 3D files
 
+> Note:  
+> The blender files for the nodes and robots are stored seperately in a google drive folder. Please contact one of the maintainers for access.
 
 
 ## test
 
-Seems to be for verifying unit math?
+Primarily for verifying unit math currently, future work includes expanding these tests.
 
 
 # Key Simulator Concepts
@@ -150,8 +144,6 @@ Scene functionality includes:
 See /state/reducer/
 
 We capture the entire state of the world with a library called redux, which creates a global json blob that can be rendered to the view. The redux library helps reduce the computation by ensuring only components that need to be updated are updated. Through the redux we can add or remove scenes or nodes.
-
-The primary reason for using redux is because of the database. This will allow us to load scenes from the database.
 
 One important type is Async - this allows us to note the difference in state between the client and that database. The async type has the brief (which can be sent very cheaply - just name and description) and the type is the full record. This can be in a number of states. The Async is a state machine of the processes that can happen between the client and the database.
 

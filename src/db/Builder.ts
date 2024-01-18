@@ -1,4 +1,4 @@
-import Dict from '../Dict';
+import Dict from '../util/objectOps/Dict';
 import store, { State } from '../state';
 import { ChallengeCompletionsAction, ChallengesAction, ScenesAction } from '../state/reducer';
 import Async from '../state/State/Async';

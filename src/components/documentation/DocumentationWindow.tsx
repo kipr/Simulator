@@ -1,25 +1,25 @@
 import * as React from 'react';
-import { Vector2 } from '../../math';
-import { ThemeProps } from '../theme';
-import Widget, { Mode, Size } from '../Widget';
+import { RawVector2 } from '../../util/math/math';
+import { ThemeProps } from '../constants/theme';
+import Widget, { Mode, Size } from '../interface/Widget';
 import DocumentationRoot from './DocumentationRoot';
 
-import { GLOBAL_EVENTS, GlobalEvents } from '../../util/GlobalEvents';
-import construct from '../../util/construct';
+import { GLOBAL_EVENTS } from '../../util/GlobalEvents';
+import construct from '../../util/redux/construct';
 import { styled } from 'styletron-react';
 import { DocumentationState } from '../../state/State';
 import { State as ReduxState } from '../../state';
 import { connect } from 'react-redux';
 import { DocumentationAction } from '../../state/reducer';
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 import { faBox, faChevronLeft, faFile, faFilter, faGear, faHome, faSection } from '@fortawesome/free-solid-svg-icons';
-import ScrollArea from '../ScrollArea';
+import ScrollArea from '../interface/ScrollArea';
 import DocumentationLocation from '../../state/State/Documentation/DocumentationLocation';
 import RootDocumentation from './RootDocumentation';
 import FunctionDocumentation from './FunctionDocumentation';
 import FileDocumentation from './FileDocumentation';
 import Documentation from '../../state/State/Documentation';
-import { Spacer } from '../common';
+import { Spacer } from '../constants/common';
 import { FunctionName } from './common';
 import ModuleDocumentation from './ModuleDocumentation';
 import StructureDocumentation from './StructureDocumentation';
@@ -30,15 +30,15 @@ import LocalizedString from '../../util/LocalizedString';
 namespace DragState {
   export interface None {
     type: 'none';
-    position: Vector2;
+    position: RawVector2;
   }
 
   export const none = construct<None>('none');
 
   export interface Dragging {
     type: 'dragging';
-    position: Vector2;
-    offset: Vector2;
+    position: RawVector2;
+    offset: RawVector2;
   }
 
   export const dragging = construct<Dragging>('dragging');
@@ -94,7 +94,7 @@ const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
   flex: 1,
 }));
 
-const LocationIcon = styled(Fa, ({ theme }: ThemeProps) => ({
+const LocationIcon = styled(FontAwesome, ({ theme }: ThemeProps) => ({
   marginLeft: `${theme.itemPadding * 2}px`,
 }));
 
@@ -109,7 +109,7 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
     super(props);
   
     this.state = {
-      dragState: DragState.none({ position: Vector2.create(0, 0) }),
+      dragState: DragState.none({ position: RawVector2.create(0, 0) }),
     };
   }
 
@@ -118,8 +118,8 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
     const { dragState } = state;
     if (dragState.type !== 'dragging') return false;
 
-    const client = Vector2.fromClient(e);
-    const position = Vector2.subtract(client, dragState.offset);
+    const client = RawVector2.fromClient(e);
+    const position = RawVector2.subtract(client, dragState.offset);
     this.setState({
       dragState: DragState.dragging({
         position,
@@ -150,13 +150,13 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
   private onChromeMouseDown_ = (e: React.MouseEvent) => {
     const { state } = this;
     const { dragState } = state;
-    const topLeft = Vector2.fromTopLeft(e.currentTarget.getBoundingClientRect());
-    const client = Vector2.fromClient(e);
+    const topLeft = RawVector2.fromTopLeft(e.currentTarget.getBoundingClientRect());
+    const client = RawVector2.fromClient(e);
     
     this.setState({
       dragState: DragState.dragging({
         position: dragState.position,
-        offset: Vector2.subtract(client, topLeft)
+        offset: RawVector2.subtract(client, topLeft)
       })
     });
     
@@ -285,7 +285,7 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
               
               
               <Button theme={theme} onClick={locationStack.length > 0 ? onDocumentationPop : undefined}>
-                <Fa disabled={locationStack.length === 0} icon={faChevronLeft} />
+                <FontAwesome disabled={locationStack.length === 0} icon={faChevronLeft} />
               </Button>
               <Spacer />
               {locationStackTop === undefined && <LocationIcon theme={theme} icon={faHome} />}

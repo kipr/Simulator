@@ -1,10 +1,10 @@
-import Dict from '../../../Dict';
+import Dict from '../../../util/objectOps/Dict';
 import Geometry from './Geometry';
 import Node from './Node';
 import Script from './Script';
-import { Vector3 } from '../../../unit-math';
+import { Vector3wUnits } from '../../../util/math/unitMath';
 import Camera from './Camera';
-import Patch from '../../../util/Patch';
+import Patch from '../../../util/redux/Patch';
 import Async from '../Async';
 import LocalizedString from '../../../util/LocalizedString';
 import Author from '../../../db/Author';
@@ -24,7 +24,7 @@ interface Scene {
 
   camera: Camera;
 
-  gravity: Vector3;
+  gravity: Vector3wUnits;
 }
 
 export type SceneBrief = Pick<Scene, 'name' | 'author' | 'description'>;
@@ -71,7 +71,7 @@ export interface PatchScene {
 
   camera: Patch<Camera>;
 
-  gravity: Patch<Vector3>;
+  gravity: Patch<Vector3wUnits>;
 }
 
 namespace Scene {
@@ -148,7 +148,7 @@ namespace Scene {
     };
   };
 
-  export const setGravity = (scene: Scene, gravity: Vector3): Scene => ({
+  export const setGravity = (scene: Scene, gravity: Vector3wUnits): Scene => ({
     ...scene,
     gravity,
   });
@@ -227,7 +227,7 @@ namespace Scene {
     name: { [LocalizedString.EN_US]: '' },
     nodes: {},
     camera: Camera.NONE,
-    gravity: Vector3.zero('meters'),
+    gravity: Vector3wUnits.zero('meters'),
   };
 }
 

@@ -526,15 +526,22 @@
     "@babel/helper-validator-identifier" "^7.14.5"
     to-fast-properties "^2.0.0"
 
-"@babylonjs/core@^5.22.1":
-  version "5.48.0"
-  resolved "https://registry.yarnpkg.com/@babylonjs/core/-/core-5.48.0.tgz#79e7b7595620ffde86e0d064ccbc1ca50d93f656"
-  integrity sha512-97d+stKdMGGXmmCuYEo9xhz0v0q5DbWSg2GI6mfa+P1qH9YPmWN+YNxwBs0A2H3HrhBrC/PQOTHUibfA867CoQ==
+"@babylonjs/core@6.18.0":
+  version "6.18.0"
+  resolved "https://registry.yarnpkg.com/@babylonjs/core/-/core-6.18.0.tgz#1f4d1ed0a48ed4b2b2104ed84bd89c963cc94d89"
+  integrity sha512-Tufbl8S0aNm5Czt6J2l7kPHkU6UYcK6o7zWtS76QDwIHE1yvNq1MwounTSuLc+u9vQR7Ml0HuACmePDmUNUSfw==
 
-"@babylonjs/loaders@^5.22.1":
-  version "5.48.0"
-  resolved "https://registry.yarnpkg.com/@babylonjs/loaders/-/loaders-5.48.0.tgz#a16f69d03770fa8132b5df1dea51667072ad5e0e"
-  integrity sha512-BbZoceGDsUYis86OeAkFq9CQN1yJ59IOL0O0AtogOt8KQ5E8b0sH4MVdOwuV6h07yLVjo9Ir5RZsWKdGyuWHOw==
+"@babylonjs/havok@^1.0.0":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@babylonjs/havok/-/havok-1.1.1.tgz#9b446105c2626826a3ee671dd7da442d6755d186"
+  integrity sha512-QIygEnKPYYPCE8QuJDxDLYPMj+W5Yha6NOdUfpvcVfZwtjVDE+eOa2Y5el7muQD563OdeJS+Kzmhyg+5qAZHBA==
+  dependencies:
+    "@types/emscripten" "^1.39.6"
+
+"@babylonjs/loaders@6.18.0":
+  version "6.18.0"
+  resolved "https://registry.yarnpkg.com/@babylonjs/loaders/-/loaders-6.18.0.tgz#810df9aed5077a9b71e2053a2a52f49c1ba1d6af"
+  integrity sha512-VWENt2XvQ9uUN2DHTI/XMpQPNHl9mf9D3XAv93HesaQeNL7mZEmbA+iO0ZR5y5jNyU5n+xHNkZ37LLDbl7QhJQ==
 
 "@bcoe/v8-coverage@^0.2.3":
   version "0.2.3"
@@ -1443,6 +1450,11 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/emscripten@^1.39.6":
+  version "1.39.7"
+  resolved "https://registry.yarnpkg.com/@types/emscripten/-/emscripten-1.39.7.tgz#3025183ea56e12bf4d096aadc48ce74ca051233d"
+  integrity sha512-tLqYV94vuqDrXh515F/FOGtBcRMTPGvVV1LzLbtYDcQmmhtpf/gLYf+hikBbQk8MzOHNz37wpFfJbYAuSn8HqA==
+
 "@types/eslint-scope@^3.7.0":
   version "3.7.1"
   resolved "https://registry.yarnpkg.com/@types/eslint-scope/-/eslint-scope-3.7.1.tgz#8dc390a7b4f9dd9f1284629efce982e41612116e"
@@ -2271,10 +2283,10 @@ babel-preset-jest@^29.4.3:
     babel-plugin-jest-hoist "^29.4.3"
     babel-preset-current-node-syntax "^1.0.0"
 
-babylonjs-gltf2interface@^5.22.0:
-  version "5.48.1"
-  resolved "https://registry.yarnpkg.com/babylonjs-gltf2interface/-/babylonjs-gltf2interface-5.48.1.tgz#8d649a46b667b6a7218a319f9b517a34b5112095"
-  integrity sha512-PfTbjyrPuosI0//ROGe3Yz4aHK+Ar7RFF8BD1+tlelV2j/mW/XPmkANG+AxchbL59dEB46hz6r8k15Aw6Ufy/A==
+babylonjs-gltf2interface@6.18.0:
+  version "6.18.0"
+  resolved "https://registry.yarnpkg.com/babylonjs-gltf2interface/-/babylonjs-gltf2interface-6.18.0.tgz#a63540b5e0a2b90970177b2579cd4fc5068b3283"
+  integrity sha512-gSXoYec7BFawuvdrvsBXKqVdkpuxznlX57c0qFP+/AkeAnb5Cvo3tGLKN0Iz6w4SLBgg7Td7hvxwQTxXkL/NRA==
 
 balanced-match@^1.0.0:
   version "1.0.2"
@@ -2622,9 +2634,9 @@ camelcase@^6.2.0:
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
 caniuse-lite@^1.0.30001219, caniuse-lite@^1.0.30001449:
-  version "1.0.30001505"
-  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001505.tgz"
-  integrity sha512-jaAOR5zVtxHfL0NjZyflVTtXm3D3J9P15zSJ7HmQF8dSKGA6tqzQq+0ZI3xkjyQj46I4/M0K2GbMpcAFOcbr3A==
+  version "1.0.30001565"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001565.tgz"
+  integrity sha512-xrE//a3O7TP0vaJ8ikzkD2c2NgcVUvsEe2IvFTntV4Yd1Z9FVzh+gW+enX96L0psrbaFMcVcH2l90xNuGDWc8w==
 
 caw@^2.0.0, caw@^2.0.1:
   version "2.0.1"

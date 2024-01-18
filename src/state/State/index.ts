@@ -1,6 +1,6 @@
-import { Size } from '../../components/Widget';
+import { Size } from '../../components/interface/Widget';
 import LocalizedString from '../../util/LocalizedString';
-import Dict from '../../Dict';
+import Dict from '../../util/objectOps/Dict';
 import Async from "./Async";
 import { AsyncChallenge } from './Challenge';
 import { AsyncChallengeCompletion } from './ChallengeCompletion';

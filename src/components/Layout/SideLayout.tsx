@@ -3,39 +3,29 @@ import { connect } from 'react-redux';
 
 import { styled } from 'styletron-react';
 
-import { Button } from '../Button';
 
-import { Console, createConsoleBarComponents } from '../Console';
+import { Console, createConsoleBarComponents } from '../EditorConsole';
 import { Editor, createEditorBarComponents, EditorBarTarget } from '../Editor';
-import World, { createWorldBarComponents } from '../World';
+import World from '../World';
 
 import { Info } from '../Info';
 import { LayoutEditorTarget, LayoutProps } from './Layout';
-import SimulatorArea from '../SimulatorArea';
-import { TabBar } from '../TabBar';
-import Widget, { BarComponent, Mode, Size } from '../Widget';
+import SimulatorArea from './SimulatorArea';
+import { TabBar } from './TabBar';
+import Widget, { Mode, Size } from '../interface/Widget';
 import { Slider } from '../Slider';
 
 import { State as ReduxState } from '../../state';
 import Node from '../../state/State/Scene/Node';
-import Dict from '../../Dict';
+import Dict from '../../util/objectOps/Dict';
 import Scene from '../../state/State/Scene';
 import { faCode, faFlagCheckered, faGlobeAmericas, faRobot } from '@fortawesome/free-solid-svg-icons';
 import Async from '../../state/State/Async';
-import { EMPTY_OBJECT } from '../../util';
 import Challenge from '../Challenge';
-import { ReferenceFrame } from '../../unit-math';
+import { ReferenceFramewUnits } from '../../util/math/unitMath';
 
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';
-
-
-
-// 3 panes:
-// Editor / console
-// Robot Info
-// World
-
 
 
 const sizeDict = (sizes: Size[]) => {
@@ -160,7 +150,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     // not implemented
   };
 
-  private onRobotOriginChange_ = (origin: ReferenceFrame) => {
+  private onRobotOriginChange_ = (origin: ReferenceFramewUnits) => {
     const { scene, onNodeChange } = this.props;
     
     const latestScene = Async.latestValue(scene);
@@ -415,7 +405,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
 export const SideLayoutRedux = connect((state: ReduxState, { sceneId }: LayoutProps) => {
   const asyncScene = state.scenes[sceneId];
   const scene = Async.latestValue(asyncScene);
-  let robots: Dict<Node.Robot> = EMPTY_OBJECT;
+  let robots: Dict<Node.Robot> = {};
   if (scene) robots = Scene.robots(scene);
   
   return {

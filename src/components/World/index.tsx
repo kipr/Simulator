@@ -1,37 +1,32 @@
 import * as React from 'react';
 
 import { styled, withStyleDeep } from 'styletron-react';
-import { StyleProps } from '../../style';
-import { Switch } from '../Switch';
-import { Theme, ThemeProps } from '../theme';
-import Field from '../Field';
-import ScrollArea from '../ScrollArea';
-import Section from '../Section';
-import { Spacer } from '../common';
+import { StyleProps } from '../../util/style';
+import { Theme, ThemeProps } from '../constants/theme';
+import Field from '../interface/Field';
+import ScrollArea from '../interface/ScrollArea';
+import Section from '../interface/Section';
 import { Angle, StyledText } from '../../util';
-import { DropdownList, OptionDefinition } from '../DropdownList';
 
 import EditableList from '../EditableList';
 import Item from './Item';
 import AddNodeDialog, { AddNodeAcceptance } from './AddNodeDialog';
-import { Fa } from '../Fa';
+import { FontAwesome } from '../FontAwesome';
 import NodeSettingsDialog, { NodeSettingsAcceptance } from './NodeSettingsDialog';
 import { connect } from 'react-redux';
 
 import { State as ReduxState } from '../../state';
 
-import { ScenesAction } from '../../state/reducer';
 
 import * as uuid from 'uuid';
-import { ReferenceFrame, Rotation, Vector3 } from '../../unit-math';
-import { Vector3 as RawVector3 } from '../../math';
-import ComboBox from '../ComboBox';
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../util/math/unitMath';
+import { RawVector3 } from '../../util/math/math';
 import Node from '../../state/State/Scene/Node';
-import Dict from '../../Dict';
+import Dict from '../../util/objectOps/Dict';
 import Geometry from '../../state/State/Scene/Geometry';
 
-import { Button } from '../Button';
-import { BarComponent } from '../Widget';
+import { Button } from '../interface/Button';
+import { BarComponent } from '../interface/Widget';
 import { faGlobeAmericas, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
 import Scene, { AsyncScene } from '../../state/State/Scene';
 import Async from '../../state/State/Async';
@@ -39,8 +34,6 @@ import LocalizedString from '../../util/LocalizedString';
 import Script from '../../state/State/Scene/Script';
 import AddScriptDialog, { AddScriptAcceptance } from './AddScriptDialog';
 import ScriptSettingsDialog, { ScriptSettingsAcceptance } from './ScriptSettingsDialog';
-import { AsyncChallenge } from '../../state/State/Challenge';
-import Builder from '../../db/Builder';
 
 import tr from '@i18n';
 import { sprintf } from 'sprintf-js';
@@ -89,7 +82,7 @@ export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSav
     onClick: onSelectScene,
     children:
       <>
-        <Fa icon={faGlobeAmericas} />
+        <FontAwesome icon={faGlobeAmericas} />
         {' '} {LocalizedString.lookup(tr('Select Scene'), locale)}
       </>,
   }));
@@ -100,7 +93,7 @@ export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSav
     disabled: !saveable,
     children:
       <>
-        <Fa icon={faSave} />
+        <FontAwesome icon={faSave} />
         {' '} {LocalizedString.lookup(tr('Save Scene'), locale)}
       </>,
   }));
@@ -110,7 +103,7 @@ export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSav
     onClick: onCopyScene,
     children:
       <>
-        <Fa icon={faPlus} />
+        <FontAwesome icon={faPlus} />
         {' '} {LocalizedString.lookup(tr('Copy Scene'), locale)}
       </>,
   }));
@@ -242,7 +235,7 @@ const StyledField = styled(Field, (props: ThemeProps) => ({
 
 }));
 
-const SectionIcon = styled(Fa, (props: ThemeProps) => ({
+const SectionIcon = styled(FontAwesome, (props: ThemeProps) => ({
   marginLeft: `${props.theme.itemPadding}px`,
   paddingLeft: `${props.theme.itemPadding}px`,
   borderLeft: `1px solid ${props.theme.borderColor}`,
@@ -303,7 +296,7 @@ class World extends React.PureComponent<Props, State> {
     });
   };
 
-  private onNodeOriginAccept_ = (id: string) => (origin: ReferenceFrame) => {
+  private onNodeOriginAccept_ = (id: string) => (origin: ReferenceFramewUnits) => {
     const originalNode = Async.latestValue(this.props.scene).nodes[id];
     this.props.onNodeChange(id, {
       ...originalNode,
@@ -333,8 +326,8 @@ class World extends React.PureComponent<Props, State> {
     this.props.onNodeChange(id, {
       ...originalNode,
       origin: {
-        position: originalNode.startingOrigin?.position || Vector3.zero('centimeters'),
-        orientation: originalNode.startingOrigin?.orientation || Rotation.Euler.identity(Angle.Type.Degrees),
+        position: originalNode.startingOrigin?.position || Vector3wUnits.zero('centimeters'),
+        orientation: originalNode.startingOrigin?.orientation || RotationwUnits.EulerwUnits.identity(Angle.Type.Degrees),
         scale: originalNode.startingOrigin?.scale || RawVector3.ONE,
       },
     });

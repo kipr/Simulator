@@ -1,9 +1,9 @@
 import { faCog, faEye, faEyeSlash, faSync, faTimes } from "@fortawesome/free-solid-svg-icons";
 import * as React from "react";
 import { styled, withStyleDeep } from "styletron-react";
-import { StyleProps } from "../style";
-import { Fa } from "./Fa";
-import { BLUE, BROWN, GREEN, RED, ThemeProps } from "./theme";
+import { StyleProps } from "../util/style";
+import { FontAwesome } from "./FontAwesome";
+import { BLUE, BROWN, GREEN, RED, ThemeProps } from "./constants/theme";
 
 export interface EditableListProps<P> extends StyleProps, ThemeProps {
   items: EditableList.Item<P>[];
@@ -229,7 +229,7 @@ namespace EditableList {
       cursor: props.$disabled ? 'auto' : 'pointer'
     }));
 
-    export const OptionIcon = styled(Fa, {
+    export const OptionIcon = styled(FontAwesome, {
       minWidth: '35px',
       padding: '5px',
       verticalAlign: 'middle',

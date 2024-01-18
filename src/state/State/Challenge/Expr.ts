@@ -1,4 +1,4 @@
-import Dict from '../../../Dict';
+import Dict from '../../../util/objectOps/Dict';
 
 namespace Expr {
   export interface EvaluationContext {
