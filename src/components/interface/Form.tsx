@@ -221,6 +221,7 @@ namespace Form {
   export const IDENTITY_FINALIZER = (value: string) => value;
   export const EMAIL_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.Email); 
   export const PASSWORD_VALIDATOR = (value: string) => Validators.validatePassword(value);
+  export const DATE_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.Date);
   export const NON_EMPTY_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.Length, 1);
 
 
@@ -240,6 +241,16 @@ namespace Form {
     tooltip,
     valueHidden: true,
     validator: shouldValidate ? PASSWORD_VALIDATOR : NON_EMPTY_VALIDATOR,
+    finalizer: IDENTITY_FINALIZER,
+    assist,
+    assistText,
+  });
+
+  export const dob = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
+    id,
+    text,
+    tooltip,
+    validator: DATE_VALIDATOR,
     finalizer: IDENTITY_FINALIZER,
     assist,
     assistText,

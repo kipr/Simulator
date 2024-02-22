@@ -14,6 +14,11 @@ import Root from './pages/Root';
 import ChallengeRoot from './pages/ChallengeRoot';
 import DocumentationWindow from './components/documentation/DocumentationWindow';
 import { DARK } from './components/constants/theme';
+import db from './db';
+import Selector from './db/Selector';
+import DbError from './db/Error';
+import UserConsent from './consent/UserConsent';
+import LegalAcceptance from './consent/LegalAcceptance';
 
 export interface AppPublicProps {
 
@@ -68,7 +73,27 @@ class App extends React.Component<Props, State> {
   componentDidMount() {
     this.onAuthStateChangedSubscription_ = auth.onAuthStateChanged(user => {
       if (user) {
-        this.setState({ loading: false });
+
+        // Ensure user has obtained consent before continuing
+        db.get<UserConsent>(Selector.user(user.uid))
+          .then(userConsent => {
+            if (LegalAcceptance.isConsentObtained(userConsent?.legalAcceptance)) {
+              console.log('Consent verified');
+              this.setState({ loading: false });
+            } else {
+              console.log('Consent not obtained');
+              this.props.login();
+            }
+          })
+          .catch(error => {
+            if (DbError.is(error) && error.code === DbError.CODE_NOT_FOUND) {
+              console.log('Consent info does not exist');
+              this.props.login();
+            }
+
+            // TODO: show user an error
+            console.error('Failed to read user consent from DB');
+          });
       } else {
         this.props.login();
       }

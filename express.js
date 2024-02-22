@@ -11,6 +11,8 @@ const sourceDir = 'dist';
 const { get: getConfig } = require('./config');
 const { WebhookClient } = require('discord.js');
 const proxy = require('express-http-proxy');
+const axios = require('axios').default;
+const { initializeAuth, getCustomToken, getIdTokenFromCustomToken } = require('./firebaseAuth');
 
 
 let config;
@@ -20,6 +22,17 @@ try {
   process.exitCode = 1;
   throw e;
 }
+
+initializeAuth(config.firebase.serviceAccountKey);
+
+// TODO: acquire/refresh token as needed instead of once
+let firebaseIdToken;
+getCustomToken()
+  .then(customToken => {
+    return getIdTokenFromCustomToken(customToken);
+  }).then(idToken => {
+    firebaseIdToken = idToken;
+  });
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -200,6 +213,51 @@ app.post('/feedback', (req, res) => {
     });
 });
 
+// API TO GRANT PARENTAL CONSENT TO USER
+app.post('/parental-consent/:userId', (req, res) => {
+  const userId = req.params['userId'];
+
+  getParentalConsent(userId, firebaseIdToken)
+    .then(currentConsent => {
+      if (currentConsent?.legalAcceptance?.state !== 'awaiting-parental-consent') {
+        console.error('Current state is not awaiting parental consent');
+        res.status(400).send();
+        return;
+      }
+
+      const consentRequestSentAt = currentConsent?.legalAcceptance?.sentAt;
+      const consentRequestSentAtMs = consentRequestSentAt ? Date.parse(consentRequestSentAt) : NaN;
+      if (isNaN(consentRequestSentAtMs)) {
+        console.error('Sent at time is not valid');
+        res.status(500).send();
+        return;
+      }
+
+      const currMs = new Date().getTime();
+      if (currMs - consentRequestSentAtMs > 48 * 60 * 60 * 1000) {
+        console.error('Consent was requested too long ago');
+        res.status(400).send();
+        return;
+      }
+
+      // TODO: save parental consent PDF and get URI
+      const parentalConsentUri = '';
+
+      setParentalConsentObtained(userId, currentConsent, parentalConsentUri, firebaseIdToken)
+        .then(setConsentResult => {
+          res.status(200).send();
+        })
+        .catch(setConsentError => {
+          console.error('Failed to set consent', setConsentError);
+          res.status(400).send();
+        });
+    })
+    .catch(getConsentError => {
+      console.error('Failed to get current consent state', getConsentError);
+      res.status(400).send();
+    });
+});
+
 app.use('/static', express.static(`${__dirname}/static`, {
   maxAge: config.caching.staticMaxAge,
 }));
@@ -233,6 +291,10 @@ app.get('/login', (req, res) => {
   res.sendFile(`${__dirname}/${sourceDir}/login.html`);
 });
 
+app.get('/parental-consent/*', (req, res) => {
+  res.sendFile(`${__dirname}/${sourceDir}/parental-consent.html`);
+});
+
 app.use('*', (req, res) => {
   setCrossOriginIsolationHeaders(res);
   res.sendFile(`${__dirname}/${sourceDir}/index.html`);
@@ -249,4 +311,49 @@ app.listen(config.server.port, () => {
 function setCrossOriginIsolationHeaders(res) {
   res.header("Cross-Origin-Opener-Policy", "same-origin");
   res.header("Cross-Origin-Embedder-Policy", "require-corp");
+}
+
+function getParentalConsent(userId, token) {
+  const requestConfig = {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  };
+
+  return axios.get(`${config.dbUrl}/user/${userId}`, requestConfig)
+    .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      if (error.response && error.response.status === 404) {
+        return null;
+      }
+
+      console.error('ERROR:', error)
+      throw error;
+    });
+}
+
+function setParentalConsentObtained(userId, currUserConsent, parentalConsentUri, token) {
+  const nextUserConsent = {
+    ...currUserConsent,
+    legalAcceptance: {
+      state: 'obtained-parental-consent',
+      version: 1,
+      receivedAt: new Date().toISOString(),
+      parentEmailAddress: currUserConsent.parentEmailAddress,
+      parentalConsentUri: parentalConsentUri,
+    },
+  };
+
+  const requestConfig = {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  };
+
+  return axios.post(`${config.dbUrl}/user/${userId}`, nextUserConsent, requestConfig)
+    .then(response => {
+      return response.data;
+    });
 }

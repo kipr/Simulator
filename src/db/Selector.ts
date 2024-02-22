@@ -1,4 +1,5 @@
 import {
+  USER_COLLECTION,
   SCENE_COLLECTION,
   CHALLENGE_COLLECTION,
   CHALLENGE_COMPLETION_COLLECTION,
@@ -10,6 +11,11 @@ interface Selector {
 }
 
 namespace Selector {
+  export const user = (id: string): Selector => ({
+    collection: USER_COLLECTION,
+    id,
+  });
+  
   export const scene = (id: string): Selector => ({
     collection: SCENE_COLLECTION,
     id,
