@@ -38,6 +38,10 @@ module.exports = {
       firebase: {
         serviceAccountKey,
       },
+      mailgun: {
+        apiKey: getEnvVarOrDefault('MAILGUN_API_KEY', ''),
+        domain: getEnvVarOrDefault('MAILGUN_DOMAIN', ''),
+      },
     };
   },
 };

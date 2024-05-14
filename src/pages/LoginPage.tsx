@@ -1,32 +1,31 @@
 import * as React from 'react';
-import { DARK, RED, ThemeProps } from '../components/constants/theme';
+import { DARK, ThemeProps } from '../components/constants/theme';
 import { StyleProps } from '../util/style';
 import { styled } from 'styletron-react';
 import { auth, Providers } from '../firebase/firebase';
-import { 
-  signInWithEmail, 
-  createUserWithEmail, 
+import {
+  signInWithEmail,
+  createUserWithEmail,
   forgotPassword
 } from '../firebase/modules/auth';
-import { AuthProvider, getRedirectResult, signInWithPopup, signOut } from 'firebase/auth';
+import { AuthProvider, getAdditionalUserInfo, getRedirectResult, signInWithPopup, signOut } from 'firebase/auth';
 import Form from '../components/interface/Form';
 import { TabBar } from '../components/Layout/TabBar';
 
 import KIPR_LOGO_BLACK from '../../static/assets/KIPR-Logo-Black-Text-Clear-Large.png';
 import KIPR_LOGO_WHITE from '../../static/assets/KIPR-Logo-White-Text-Clear-Large.png';
-import { FontAwesome } from '../components/FontAwesome';
 import { Text } from '../components/interface/Text';
 import { StyledText } from '../util';
-import Button from '../components/interface/Button';
-import { Validators } from '../util/Validator';
 import { faSignInAlt, faUnlock, faUserPlus } from '@fortawesome/free-solid-svg-icons';
-import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import qs from 'qs';
 import db from '../db';
 import Selector from '../db/Selector';
 import DbError from '../db/Error';
 import UserConsent from '../consent/UserConsent';
 import LegalAcceptance from '../consent/LegalAcceptance';
+import SignInSignUpCard from '../components/Login/SignInSignUpCard';
+import AdditionalInfoCard from '../components/Login/AdditionalInfoCard';
+import UserConsentCard from '../components/Login/UserConsentCard';
 
 export interface LoginPagePublicProps extends ThemeProps, StyleProps {
   externalIndex?: number;
@@ -56,8 +55,8 @@ const Container = styled('div', (props: ThemeProps) => ({
   backgroundSize: 'cover',
 }));
 
-const Card = styled('div', (props: ThemeProps) => ({
-  width: '400px',
+const Card = styled('div', (props: ThemeProps & { width?: string }) => ({
+  width: props.width ?? '400px',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -81,25 +80,6 @@ const StyledForm = styled(Form, (props: ThemeProps) => ({
   paddingRight: `${props.theme.itemPadding * 2}px`,
 }));
 
-const StyledToolIcon = styled(FontAwesome, (props: ThemeProps & { withBorder?: boolean }) => ({
-  userSelect: 'none',
-  paddingLeft: !props.withBorder ? `${props.theme.itemPadding}px` : undefined,
-  paddingRight: props.withBorder ? `${props.theme.itemPadding}px` : undefined,
-  borderRight: props.withBorder ? `1px solid ${props.theme.borderColor}` : undefined,
-}));
-
-const ButtonContainer = styled('div', (theme: ThemeProps) => ({
-  display: 'flex',
-  flexDirection: 'row',
-  marginTop: `${theme.theme.itemPadding * 4}px`,
-  marginBottom: `${theme.theme.itemPadding * 2}px`,
-}));
-
-interface ClickProps {
-  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  disabled?: boolean;
-}
-
 const TABS: TabBar.TabDescription[] = [{
   name: 'Sign In',
   icon: faSignInAlt,
@@ -122,17 +102,6 @@ const Header = styled('div', (props: ThemeProps) => ({
   alignSelf: 'flex-start',
   marginLeft: `${props.theme.itemPadding * 2}px`,
   marginBottom: `${props.theme.itemPadding * 2}px`,
-}));
-
-const SocialContainer = styled('div', (props: ThemeProps) => ({
-  marginTop: `${props.theme.itemPadding * 2}px`,
-  marginBottom: `${props.theme.itemPadding * 2}px`,
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-around',
-  color: props.theme.color,
-  fontSize: '1.4em'
 }));
 
 type Props = LoginPagePublicProps & LoginPagePrivateProps;
@@ -171,6 +140,28 @@ class LoginPage extends React.Component<Props, State> {
             console.log('got user from db', userConsentFromDb);
             switch (userConsentFromDb.legalAcceptance.state) {
               case LegalAcceptance.State.AwaitingParentalConsent:
+                if (this.getAge(new Date(userConsentFromDb.dateOfBirth)) >= 16) {
+                  // User turned 16 while waiting for parental consent
+                  // Change their state
+                  console.log('USER TURNED 16; ALLOW SELF CONSENT');
+                  const nextUserConsent: UserConsent = {
+                    ...userConsentFromDb,
+                    legalAcceptance: {
+                      state: LegalAcceptance.State.NotStarted,
+                      version: userConsentFromDb.legalAcceptance.version,
+                      autoDelete: userConsentFromDb.legalAcceptance.autoDelete,
+                    },
+                  };
+
+                  db.set<UserConsent>(Selector.user(user.uid), nextUserConsent)
+                    .then(() => {
+                      this.setState({ loggedIn: true, initialAuthLoaded: true, authenticating: false, userConsent: nextUserConsent });
+                    });
+                  break;
+                }
+
+              // Intentionally fall through
+              case LegalAcceptance.State.NotStarted:
               case LegalAcceptance.State.ObtainedParentalConsent:
               case LegalAcceptance.State.ObtainedUserConsent:
                 this.setState({ loggedIn: true, initialAuthLoaded: true, authenticating: false, userConsent: userConsentFromDb });
@@ -203,64 +194,211 @@ class LoginPage extends React.Component<Props, State> {
     });
   };
 
-  private getAge = (dob: Date) => {
-    const today = new Date();
-    let age = today.getFullYear() - dob.getFullYear();
+  private startNewParentalConsent_ = (userId: string, dateOfBirth: string, parentEmailAddress: string, autoDelete: boolean) => {
+    const consentRequest: XMLHttpRequest = new XMLHttpRequest();
 
-    const m = today.getMonth() - dob.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-        age--;
-    }
+    return new Promise<UserConsent>((resolve, reject) => {
+      consentRequest.onload = () => {
+        if (consentRequest.status === 200) {
+          const responseJson = JSON.parse(consentRequest.responseText);
+          // TODO: validate response before casting to UserConsent?
+          resolve(responseJson);
+        } else {
+          console.error('Consent request failed with status', consentRequest.status);
+          reject(consentRequest.status);
+        }
+      };
 
-    return age;
-  };
+      consentRequest.onerror = (err) => {
+        console.error('Consent request failed with error', err);
+        reject(err);
+      };
 
-  private onFinalizeDateOfBirth_ = (values: { [id: string]: string }) => {
-    if (this.state.userConsent?.dateOfBirth) return;
+      consentRequest.open('POST', `/parental-consent-start/${userId}`);
+      consentRequest.setRequestHeader('Content-Type', 'application/json');
 
-    const [mm, dd, yyyy] = values['dob'].split('/');
-    const dob = `${yyyy}-${mm}-${dd}`;
+      const requestBody = {
+        dateOfBirth: dateOfBirth,
+        parentEmailAddress: parentEmailAddress,
+        autoDelete: autoDelete,
+      };
 
-    this.setState({
-      userConsent: {
-        ...this.state.userConsent,
-        dateOfBirth: dob,
-      },
+      try {
+        consentRequest.send(JSON.stringify(requestBody));
+      } catch (e) {
+        console.error('Consent request failed with exception', e);
+        reject(e);
+      }
     });
   };
 
-  private onFinalizeParentEmail_ = (values: { [id: string]: string }) => {
-    if (this.state.userConsent?.legalAcceptance) return;
-    
-    const parentEmailAddress = values['parentEmail'];
-    const currentTimeStr = new Date().toISOString();
+  private onSignIn_ = (email: string, password: string) => {
+    this.setState({
+      authenticating: true,
+      logInFailedMessage: null,
+    });
 
+    signInWithEmail(email, password)
+      .catch(error => {
+        this.setState({
+          authenticating: false,
+          logInFailedMessage: this.getMessageForFailedLogin_(error),
+        });
+      });
+  };
+
+  private onSignUp_ = (email: string, password: string) => {
+    console.log('onSignUp_');
+    this.setState({
+      authenticating: true,
+      logInFailedMessage: null,
+    });
+
+    // TODO: make function async to simplify logic
+    createUserWithEmail(email, password)
+      .then((newUserCredential) => {
+        this.setUserConsentForNewUser(newUserCredential.user.uid)
+          // // db.set<UserConsent>(Selector.user(newUserCredential.user.uid), nextUserConsent)
+          .then((nextUserConsent) => {
+            console.log('finished setting user context');
+            this.setState({
+              authenticating: false,
+              userConsent: nextUserConsent,
+            });
+          })
+          .catch((error) => {
+            console.error('Setting user consent failed', error);
+            // TODO: user exists but setting autoDelete=true failed, so user won't be deleted
+            this.setState({
+              authenticating: false,
+              logInFailedMessage: 'Something went wrong. Please contact KIPR for support.',
+            });
+          });
+      })
+      .catch(error => {
+        this.setState({
+          authenticating: false,
+          logInFailedMessage: this.getMessageForFailedLogin_(error),
+        });
+      });
+  };
+
+  private setUserConsentForNewUser = (userId: string): Promise<UserConsent> => {
     const nextUserConsent: UserConsent = {
       ...this.state.userConsent,
       legalAcceptance: {
-        state: LegalAcceptance.State.AwaitingParentalConsent,
+        state: LegalAcceptance.State.NotStarted,
         version: 1,
-        sentAt: currentTimeStr,
-        parentEmailAddress,
-        noAutoDelete: false,
+        // Newly signed up users can be auto-deleted
+        autoDelete: true,
       },
     };
 
-    const userId = auth.currentUser.uid;
+    return db.set<UserConsent>(Selector.user(userId), nextUserConsent)
+      .then(() => {
+        return nextUserConsent;
+      });
+  };
 
-    this.setState({ authenticating: true }, () => {
-      db.set<UserConsent>(Selector.user(userId), nextUserConsent)
-        .then(() => {
-          this.setState({ authenticating: false, userConsent: nextUserConsent });
+  private onForgotPasswordFinalize_ = (values: { [id: string]: string }) => {
+    forgotPassword(values.email);
+
+    this.setState({
+      forgotPassword: false,
+    });
+
+    return;
+  };
+
+  private getMessageForFailedLogin_ = (error: string): string => {
+    switch (error) {
+      case 'auth/wrong-password':
+      case 'auth/invalid-email':
+      case 'auth/user-not-found':
+        return 'Invalid email or password.';
+      case 'auth/email-already-in-use':
+        return 'An account with this email already exists.';
+      case 'auth/too-many-requests':
+        return 'Too many failed attempts. Please try again later.';
+      default:
+        return 'Something went wrong. Please contact KIPR for support.';
+    }
+  };
+
+  private onSignInWithSocialMedia_ = async (providerName: keyof typeof Providers) => {
+    const provider: AuthProvider = Providers[providerName];
+    this.setState({ authenticating: true });
+    const userCredential = await signInWithPopup(auth, provider);
+
+    // "Sign in" may have actually been a new user
+    const { isNewUser } = getAdditionalUserInfo(userCredential);
+
+    if (isNewUser) {
+      this.setUserConsentForNewUser(userCredential.user.uid)
+        .then((nextUserConsent) => {
+          console.log('finished setting user context');
+          this.setState({
+            authenticating: false,
+            userConsent: nextUserConsent,
+          });
         })
         .catch((error) => {
           console.error('Setting user consent failed', error);
-          this.setState({ authenticating: false });
+          // TODO: user exists but setting autoDelete=true failed, so user won't be deleted
+          this.setState({
+            authenticating: false,
+            logInFailedMessage: 'Something went wrong. Please contact KIPR for support.',
+          });
         });
+    }
+  };
+
+  private onTabIndexChange_ = (index: number) => {
+    this.setState({
+      index,
+      logInFailedMessage: null,
     });
   };
 
-  private onFinalizeTerms_ = (values: { [id: string]: string }) => {
+  private onForgotPassword_ = () => {
+    this.setState({
+      forgotPassword: true,
+    });
+  };
+
+  private onBackClick_ = () => {
+    this.setState({
+      forgotPassword: false,
+    });
+  };
+
+  private onCollectedAdditionalInfo_ = (dob: string, parentEmailAddress: string) => {
+    if (!parentEmailAddress) {
+      this.setState({
+        userConsent: {
+          ...this.state.userConsent,
+          dateOfBirth: dob,
+        },
+      });
+    } else {
+      const userId = auth.currentUser.uid;
+
+      // Start parental consent process
+      this.setState({ authenticating: true }, () => {
+        const autoDelete = LegalAcceptance.shouldAutoDelete(this.state.userConsent?.legalAcceptance);
+        this.startNewParentalConsent_(userId, dob, parentEmailAddress, autoDelete)
+          .then((nextUserConsent) => {
+            this.setState({ authenticating: false, userConsent: nextUserConsent });
+          })
+          .catch(error => {
+            console.error('Starting parental consent failed', error);
+            this.setState({ authenticating: false });
+          });
+      });
+    }
+  };
+
+  private onCollectedUserConsent_ = () => {
     const nextUserConsent: UserConsent = {
       ...this.state.userConsent,
       legalAcceptance: {
@@ -283,91 +421,16 @@ class LoginPage extends React.Component<Props, State> {
     });
   };
 
+  private getAge = (dob: Date) => {
+    const today = new Date();
+    let age = today.getFullYear() - dob.getFullYear();
 
-  private onFinalize_ = (values: { [id: string]: string }) => {
-    if (this.state.forgotPassword) {
-      forgotPassword(values.email);
-
-      this.setState({
-        forgotPassword: false,
-      });
-
-      return;
+    const m = today.getMonth() - dob.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+      age--;
     }
 
-    switch (this.state.index) {
-      case 0: {
-        this.setState({
-          authenticating: true,
-          logInFailedMessage: null,
-        });
-
-        signInWithEmail(values['email'], values['password'])
-          .catch(error => {
-            this.setState({
-              authenticating: false,
-              logInFailedMessage: this.getMessageForFailedLogin_(error),
-            });
-          });
-
-        break;
-      }
-      case 1: {
-        this.setState({
-          authenticating: true,
-          logInFailedMessage: null,
-        });
-
-        createUserWithEmail(values['email'], values['password'])
-          .catch(error => {
-            this.setState({
-              authenticating: false,
-              logInFailedMessage: this.getMessageForFailedLogin_(error),
-            });
-          });
-
-        break;
-      }
-    }
-  };
-
-  private getMessageForFailedLogin_ = (error: string): string => {
-    switch (error) {
-      case 'auth/wrong-password':
-      case 'auth/invalid-email':
-      case 'auth/user-not-found':
-        return 'Invalid email or password.';
-      case 'auth/email-already-in-use':
-        return 'An account with this email already exists.';
-      case 'auth/too-many-requests':
-        return 'Too many failed attempts. Please try again later.';
-      default:
-        return 'Something went wrong. Please contact KIPR for support.';
-    }
-  };
-
-  private signInWithSocialMedia_ = async (provider: AuthProvider) => {
-    this.setState({ authenticating: true });
-    await signInWithPopup(auth, provider);
-  };
-
-  private onTabIndexChange_ = (index: number) => {
-    this.setState({
-      index,
-      logInFailedMessage: null,
-    });
-  };
-
-  private onForgotPasswordClick_ = () => {
-    this.setState({
-      forgotPassword: true,
-    });
-  };
-
-  private onBackClick_ = () => {
-    this.setState({
-      forgotPassword: false,
-    });
+    return age;
   };
 
   render() {
@@ -395,15 +458,7 @@ class LoginPage extends React.Component<Props, State> {
 
     if (loggedIn) {
       if (!userConsent || !userConsent.dateOfBirth) {
-        // Don't know user's DoB yet. Collect it
-
-        const DOB_FORM_ITEMS: Form.Item[] = [
-          Form.dob('dob', 'Date of birth'),
-        ];
-
-        const DOB_FORM_VERIFIERS: Form.Item[] = [
-          Form.verifier('dob', 'A valid date of birth is required (MM/DD/YYYY)', Validators.Types.Date),
-        ];
+        // Don't know user's DoB yet. Collect additional info
 
         return (
           <Container theme={theme} className={className} style={style}>
@@ -412,103 +467,24 @@ class LoginPage extends React.Component<Props, State> {
 
               <Header theme={theme}>Additional info</Header>
 
-              <Text text={StyledText.text ({
-                  text: "You must provide some additional info before continuing.",
-                  style: {
-                    display: 'inline-block',
-                    color: theme.color,
-                    marginLeft: '8px',
-                    marginRight: '8px',
-                  }
-                })} />
-              
-              <StyledForm
-                finalizeIcon={faSignInAlt}
-                finalizeText={'Continue'}
-                theme={theme}
-                items={DOB_FORM_ITEMS}
-                verifiers={DOB_FORM_VERIFIERS}
-                onFinalize={this.onFinalizeDateOfBirth_}
-                finalizeDisabled={authenticating}
-              />
+              <AdditionalInfoCard theme={theme} disable={authenticating} onCollectedInfo={this.onCollectedAdditionalInfo_} />
             </Card>
           </Container>
         );
       }
 
-      if (!userConsent.legalAcceptance) {
-        const dobDate = new Date(userConsent.dateOfBirth);
-        if (this.getAge(dobDate) < 16) {
-          // Under 16, so collect parental email
-          const PARENT_EMAIL_FORM_ITEMS: Form.Item[] = [
-            Form.email('parentEmail', 'Parent email'),
-          ];
-  
-          const PARENT_EMAIL_FORM_VERIFIERS: Form.Item[] = [
-            Form.verifier('parentEmail', 'A valid parent email is required', Validators.Types.Email),
-          ];
-  
-          return (
-            <Container theme={theme} className={className} style={style}>
-              <Card theme={theme}>
-                {kiprLogo}
-  
-                <Header theme={theme}>Additional info</Header>
+      if (!userConsent.legalAcceptance || userConsent.legalAcceptance.state === LegalAcceptance.State.NotStarted) {
+        // User needs to consent
 
-                <Text text={StyledText.text ({
-                  text: "You must get your parent's permission to use this service. After you request permission, your parent will receive an email with further instructions.",
-                  style: {
-                    display: 'inline-block',
-                    color: theme.color,
-                    marginLeft: '8px',
-                    marginRight: '8px',
-                  }
-                })} />
-                
-                <StyledForm
-                  finalizeIcon={faSignInAlt}
-                  finalizeText={'Request Parental Consent'}
-                  theme={theme}
-                  items={PARENT_EMAIL_FORM_ITEMS}
-                  verifiers={PARENT_EMAIL_FORM_VERIFIERS}
-                  onFinalize={this.onFinalizeParentEmail_}
-                  finalizeDisabled={authenticating}
-                />
-              </Card>
-            </Container>
-          );
-        } else {
-          return <Container theme={theme} className={className} style={style}>
-            <Card theme={theme}>
-              {kiprLogo}
+        return <Container theme={theme} className={className} style={style}>
+          <Card theme={theme} width='800px'>
+            {kiprLogo}
 
-              <Header theme={theme}>Terms of use</Header>
+            <Header theme={theme}>Terms of use</Header>
 
-              <Text text={StyledText.text ({
-                text: "Read and accept the privacy policy and terms of use below.",
-                style: {
-                  display: 'inline-block',
-                  color: theme.color,
-                  marginLeft: '8px',
-                  marginRight: '8px',
-                }
-              })} />
-
-              {/* TODO: replace with actual PDF */}
-              <iframe src="/static/sample.pdf" />
-
-              <StyledForm
-                finalizeIcon={faSignInAlt}
-                finalizeText={'Accept'}
-                theme={theme}
-                items={[]}
-                verifiers={[]}
-                onFinalize={this.onFinalizeTerms_}
-                finalizeDisabled={authenticating}
-              />
-            </Card>
-          </Container>
-        }
+            <UserConsentCard theme={theme} disable={authenticating} onCollectedUserConsent={this.onCollectedUserConsent_} />
+          </Card>
+        </Container>
       }
 
       if (LegalAcceptance.isConsentObtained(userConsent.legalAcceptance)) {
@@ -529,16 +505,16 @@ class LoginPage extends React.Component<Props, State> {
 
               <Header theme={theme}>Waiting for parental consent</Header>
 
-              <Text text={StyledText.text ({
-                  text: "An email was sent to the provided parent email address. After your parent has provided permission, you will be able to access the service.",
-                  style: {
-                    display: 'inline-block',
-                    color: theme.color,
-                    marginLeft: '8px',
-                    marginRight: '8px',
-                    marginBottom: '8px',
-                  }
-                })} />
+              <Text text={StyledText.text({
+                text: "An email was sent to the provided parent email address. After your parent has provided permission, you will be able to access the service.",
+                style: {
+                  display: 'inline-block',
+                  color: theme.color,
+                  marginLeft: '8px',
+                  marginRight: '8px',
+                  marginBottom: '8px',
+                }
+              })} />
             </Card>
           </Container>
         );
@@ -563,7 +539,7 @@ class LoginPage extends React.Component<Props, State> {
               finalizeText='Send Recovery Email'
               theme={theme}
               items={FORGOT_PASSWORD_FORM_ITEMS}
-              onFinalize={this.onFinalize_}
+              onFinalize={this.onForgotPasswordFinalize_}
               finalizeDisabled={authenticating}
             />
           </Card>
@@ -571,85 +547,15 @@ class LoginPage extends React.Component<Props, State> {
       );
     }
 
-    const LOGIN_FORM_ITEMS: Form.Item[] = [
-      Form.email('email', 'Email'),
-      Form.password('password', 'Password', undefined, this.onForgotPasswordClick_, 'Forgot?', false),
-    ];
-
-    const SIGNUP_FORM_ITEMS: Form.Item[] = [
-      Form.email('email', 'Email'),
-      Form.password('password', 'Password'),
-    ];
-
-    const SIGNUP_FORM_VERIFIERS: Form.Item[] = [
-      Form.verifier('email', 'A valid email is required', Validators.Types.Email),
-      Form.verifier('password', 'At least one lowercase letter', Validators.Types.Lowercase),
-      Form.verifier('password', 'At least one uppercase letter', Validators.Types.Uppercase),
-      Form.verifier('password', 'At least one number', Validators.Types.Numeric),
-      Form.verifier('password', 'At least 8 characters', Validators.Types.Length),
-    ];
-    
-    const FORMS = [LOGIN_FORM_ITEMS, SIGNUP_FORM_ITEMS];
-
-    const googleButtonItems = [
-      StyledText.component ({
-        component: StyledToolIcon,
-        props: {
-          icon: faGoogle,
-          brand: true,
-          theme,
-        }
-      }),
-      StyledText.text ({
-        text: 'Continue with Google',
-        style: {
-          fontWeight: 400,
-          fontSize: '0.9em',
-          textAlign: 'center',
-          color: theme.color,
-          marginLeft: '8px',
-          marginRight: '8px',
-        }
-      })
-    ];
-
     return (
       <Container theme={theme} className={className} style={style}>
         <Card theme={theme}>
           {kiprLogo}
 
           <Header theme={theme}>{index === 0 ? 'Sign In' : 'Sign Up'}</Header>
-          
-          <StyledForm
-            finalizeIcon={index === 0 ? faSignInAlt : faUserPlus}
-            finalizeText={index === 0 ? 'Sign In' : 'Sign Up'}
-            theme={theme}
-            items={FORMS[index]}
-            verifiers={index === 0 ? undefined : SIGNUP_FORM_VERIFIERS}
-            onFinalize={this.onFinalize_}
-            finalizeDisabled={authenticating}
-          />
-          {logInFailedMessage && <Text text={
-            StyledText.text ({
-              text: logInFailedMessage,
-              style: {
-                color: RED.standard,
-                fontWeight: 400,
-                fontSize: '0.9em',
-                textAlign: 'left',
-                marginLeft: '8px',
-                marginRight: '8px',
-              }
-            })
-          }/>}
-          <SocialContainer theme={theme}>
-            <Button 
-              theme={theme} 
-              onClick={() => this.signInWithSocialMedia_(Providers.google)} 
-              children={googleButtonItems.map((item, i) => (
-                <Text key={i} text={item} />
-              ))}/>
-          </SocialContainer>
+
+          <SignInSignUpCard theme={theme} mode={index === 0 ? 'signin' : 'signup'} allowSignIn={!authenticating} logInFailedMessage={logInFailedMessage} onSignIn={this.onSignIn_} onSignUp={this.onSignUp_} onSignInWithSocialMedia={this.onSignInWithSocialMedia_} onForgotPassword={this.onForgotPassword_} />
+
           <StyledTabBar theme={theme} tabs={TABS} index={index} onIndexChange={this.onTabIndexChange_} />
         </Card>
       </Container>
