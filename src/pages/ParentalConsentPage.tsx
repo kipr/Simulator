@@ -1,4 +1,4 @@
-import { GREEN, ThemeProps } from '../components/constants/theme';
+import { GREEN, RED, ThemeProps } from '../components/constants/theme';
 import Form from '../components/interface/Form';
 import * as React from 'react';
 import { StyleProps } from '../util/style';
@@ -12,22 +12,15 @@ import { faEye, faPaperPlane, faArrowRight } from '@fortawesome/free-solid-svg-i
 import { FontAwesome } from "../components/FontAwesome";
 import Button from '../components/interface/Button';
 
-
-// FORM FIELDS PROPERTIES
-// - UI label
-// - input type
-// - validation logic
-// - corresponding PDF form field
-
-
 interface ParentalConsentPageProps extends ThemeProps, StyleProps {
   userId: string;
 }
 
 interface ParentalConsentPageState {
   submitClicked: boolean;
+  submitted: boolean;
   pdfUri: string;
-  message: string;
+  errorMessage: string;
 
   formIndex: number;
   // formValues: { [id: string]: string }[];
@@ -102,8 +95,8 @@ const Subheader = styled('div', (props: ThemeProps) => ({
   // marginBottom: `${props.theme.itemPadding * 2}px`,
 }));
 
-const PlainTextContainer = styled('div', (props: ThemeProps) => ({
-  color: props.theme.color,
+const PlainTextContainer = styled('div', (props: ThemeProps & { color?: string }) => ({
+  color: props.color ?? props.theme.color,
   // alignSelf: 'flex-start',
   // marginLeft: `${props.theme.itemPadding * 2}px`,
   // marginBottom: `${props.theme.itemPadding * 2}px`,
@@ -163,8 +156,9 @@ class ParentalConsentPage extends React.Component<Props, State> {
 
     this.state = {
       submitClicked: false,
+      submitted: false,
       pdfUri: null,
-      message: '',
+      errorMessage: null,
 
       formIndex: 0,
       formResults: [],
@@ -201,10 +195,6 @@ class ParentalConsentPage extends React.Component<Props, State> {
 
     this.setState({ pdfUri: src });
   }
-
-  // // private handleProgramChange_: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-  // //   this.setState({ program: event.target.value });
-  // // };
 
   private onAdvanceForm_ = (newFormResults: { [id: string]: FormResult }) => {
     console.log('got form values', newFormResults);
@@ -254,33 +244,26 @@ class ParentalConsentPage extends React.Component<Props, State> {
   private onSubmitClick_ = () => {
     this.pdfDoc.save()
       .then(pdf => {
-        this.setState({ submitClicked: true, message: 'Submitting...' }, () => {
+        this.setState({ submitClicked: true, errorMessage: null, }, () => {
           const consentRequest: XMLHttpRequest = new XMLHttpRequest();
           consentRequest.onload = () => {
             switch (consentRequest.status) {
               case 200:
-                this.setState({ submitClicked: false, message: 'Success!' });
+                this.setState({ submitClicked: false, submitted: true });
                 break;
               case 400:
-                this.setState({ submitClicked: false, message: 'Something went wrong. The link may be invalid or expired.' });
+                this.setState({ submitClicked: false, errorMessage: 'Something went wrong. The link may be invalid or expired.' });
                 break;
               default:
                 console.error('Consent request failed with status', consentRequest.status);
-                this.setState({ submitClicked: false, message: 'Something went wrong. Please try again later.' });
+                this.setState({ submitClicked: false, errorMessage: 'Something went wrong. Please try again later.' });
                 break;
             }
-
-            // // if (consentRequest.status === 200) {
-            // //   this.setState({ submitClicked: false, message: 'Success!' });
-            // // } else {
-            // //   console.error('Consent request failed with status', consentRequest.status);
-            // //   this.setState({ submitClicked: false, message: 'Error!' });
-            // // }
           };
 
           consentRequest.onerror = (err) => {
             console.error('Consent request failed with error', err);
-            this.setState({ submitClicked: false, message: 'Something went wrong. Please try again later.' });
+            this.setState({ submitClicked: false, errorMessage: 'Something went wrong. Please try again later.' });
           };
 
           consentRequest.open('POST', `/parental-consent/${this.props.userId}`);
@@ -290,7 +273,7 @@ class ParentalConsentPage extends React.Component<Props, State> {
             consentRequest.send(pdf);
           } catch (e) {
             console.error('Consent request failed with exception', e);
-            this.setState({ submitClicked: false, message: 'Something went wrong. Please try again later.' });
+            this.setState({ submitClicked: false, errorMessage: 'Something went wrong. Please try again later.' });
           }
         });
       });
@@ -359,11 +342,55 @@ class ParentalConsentPage extends React.Component<Props, State> {
   render() {
     const { props, state } = this;
     const { theme } = props;
-    const { formIndex, pdfUri, message, submitClicked } = state;
+    const { formIndex, pdfUri, errorMessage, submitClicked, submitted } = state;
 
     const isFirstStep = formIndex === 0;
     const isFinalStep = formIndex === this.forms.length;
     const subheaderText = isFinalStep ? 'Preview and Submit' : this.formHeaders[formIndex];
+
+    let content: JSX.Element;
+    if (submitted) {
+      content = <>
+        <PlainTextContainer theme={theme}>Consent submitted successfully. You will receive an email with a copy of the completed form.</PlainTextContainer>
+        <PlainTextContainer theme={theme}>Your child can now access the KIPR Botball Simulator.</PlainTextContainer>
+      </>;
+    } else {
+      const headerContent = <>
+        <PlainTextContainer theme={theme}>Your child has requested consent to use the KIPR Botball Simulator. Please review the notice and fill out the form using the fields below.</PlainTextContainer>
+        <ButtonContainer theme={theme}>
+          <Subheader theme={theme}>{subheaderText}</Subheader>
+          <Button theme={theme} children={'Back'} disabled={isFirstStep} onClick={this.onBackClick_}></Button>
+        </ButtonContainer>
+      </>;
+
+      if (isFinalStep) {
+        content = <>
+          {headerContent}
+          <PlainTextContainer theme={theme}>You can preview the completed form before submitting it.</PlainTextContainer>
+          <ButtonContainer theme={theme}>
+            <FinalizeButton theme={theme} onClick={this.onPreviewClick_}>
+              <FontAwesome icon={faEye} /> {'Preview'}
+            </FinalizeButton>
+          </ButtonContainer>
+          <ButtonContainer theme={theme}>
+            <FinalizeButton theme={theme} onClick={this.onSubmitClick_} disabled={submitClicked}>
+              <FontAwesome icon={faPaperPlane} /> {'Submit'}
+            </FinalizeButton>
+          </ButtonContainer>
+        </>;
+      } else {
+        content = <>
+          {headerContent}
+          <Form
+            finalizeIcon={faArrowRight}
+            finalizeText='Next'
+            theme={theme}
+            items={this.forms[formIndex]}
+            onFinalize={this.onAdvanceForm_}
+          />
+        </>;
+      }
+    }
 
     return (
       <Container theme={theme}>
@@ -373,59 +400,13 @@ class ParentalConsentPage extends React.Component<Props, State> {
         <Card theme={theme} flex="0 0 500px" /*width="45%"*/>
           <Logo src={KIPR_LOGO_WHITE as string} />
           <Header theme={theme}>Parental Consent</Header>
-          <PlainTextContainer theme={theme}>Your child has requested consent to use the KIPR Botball Simulator. Please review the notice and fill out the form using the fields below.</PlainTextContainer>
-          <ButtonContainer theme={theme}>
-            <Subheader theme={theme}>{subheaderText}</Subheader>
-            <Button theme={theme} children={'Back'} disabled={isFirstStep} onClick={this.onBackClick_}></Button>
-          </ButtonContainer>
-          {/* <div>
-            <InputLabel theme={theme} htmlFor="program">Program:</InputLabel>
-            <input type="text" id="program" value={this.state.program} onChange={this.handleProgramChange_} />
-          </div> */}
-          {!isFinalStep && <Form
-            finalizeIcon={faArrowRight}
-            finalizeText='Next'
-            theme={theme}
-            items={this.forms[formIndex]}
-            onFinalize={this.onAdvanceForm_}
-          // finalizeDisabled={!allowSignIn}
-          />}
-          {/* <Subheader theme={theme}>Parent/Legal Guardian's Information</Subheader> */}
 
-          {isFinalStep && <>
-            <PlainTextContainer theme={theme}>You can preview the completed form before submitting it.</PlainTextContainer>
-            <ButtonContainer theme={theme}>
-              <FinalizeButton theme={theme} onClick={this.onPreviewClick_}>
-                <FontAwesome icon={faEye} /> {'Preview'}
-              </FinalizeButton>
-            </ButtonContainer>
-            <ButtonContainer theme={theme}>
-              <FinalizeButton theme={theme} onClick={this.onSubmitClick_} disabled={submitClicked}>
-                <FontAwesome icon={faPaperPlane} /> {'Submit'}
-              </FinalizeButton>
-            </ButtonContainer></>}
+          {content}
 
-          {/* <Button theme={theme} children={<Text text='Preview' />} onClick={this.onPreviewClick_} /> */}
-          {/* <Button theme={theme} children={<Text text='Submit' />} onClick={this.onSubmitClick_} /> */}
-          {/* <button onClick={this.onPreviewClick_} disabled={this.state.submitClicked}>Preview</button><br /> */}
-          {/* <button onClick={this.onSubmitClick_} disabled={this.state.submitClicked}>Submit</button><br /> */}
-          {message}
+          {errorMessage && <PlainTextContainer theme={theme} color={RED.standard}>{errorMessage}</PlainTextContainer>}
         </Card>
       </Container>
     );
-    // // return (
-    // //   <>
-    // //     <h1>Parental consent</h1>
-    // //     <iframe id="pdf" src={this.state.pdfUri ?? undefined} width="1000px" height="500px"></iframe>
-    // //     <div>
-    // //       <label htmlFor="name">Name:</label>
-    // //       <input type="text" id="name" value={this.state.name} onChange={this.handleNameChange_} />
-    // //     </div>
-    // //     <button onClick={this.onPreviewClick_} disabled={this.state.submitClicked}>Preview</button><br />
-    // //     <button onClick={this.onSubmitClick_} disabled={this.state.submitClicked}>Submit</button><br />
-    // //     {this.state.message}
-    // //   </>
-    // // );
   }
 }
 
