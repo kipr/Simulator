@@ -198,18 +198,17 @@ class ParentalConsentPage extends React.Component<Props, State> {
 
   private onAdvanceForm_ = (newFormResults: { [id: string]: FormResult }) => {
     console.log('got form values', newFormResults);
+    const nextFormResults = [...this.state.formResults];
+    nextFormResults[this.state.formIndex] = newFormResults;
+
     this.setState({
-      formResults: [
-        ...this.state.formResults,
-        newFormResults,
-      ],
+      formResults: nextFormResults,
       formIndex: this.state.formIndex + 1,
     });
   };
 
   private onBackClick_ = () => {
     this.setState({
-      formResults: this.state.formResults.slice(0, -1),
       formIndex: Math.max(0, this.state.formIndex - 1),
     });
   };
@@ -279,36 +278,54 @@ class ParentalConsentPage extends React.Component<Props, State> {
       });
   };
 
-  private createFormFinalizer = (pdfField: string) => {
+  private static createFormFinalizer = (pdfField: string) => {
     return (value: string) => ({ value, pdfField });
   };
 
-  private readonly forms: Form.Item[][] = [
+  private createForms: () => Form.Item[][] = () => {
+    const forms: Form.Item[][] = [];
+    for (let formIndex = 0; formIndex < ParentalConsentPage.forms.length; ++formIndex) {
+      const form: Form.Item[] = [];
+      for (const formItem of ParentalConsentPage.forms[formIndex]) {
+        // Fill default values of form items with existing form results
+        form.push({
+          ...formItem,
+          defaultValue: this.state.formResults[formIndex]?.[formItem.id]?.value,
+        });
+      }
+
+      forms.push(form);
+    }
+
+    return forms;
+  };
+
+  private static readonly forms: Form.Item[][] = [
     // CHILD ACCOUNT INFO FORM
     [
       {
         id: 'child_program',
         text: 'Program',
         validator: Form.NON_EMPTY_VALIDATOR,
-        finalizer: this.createFormFinalizer(null),
+        finalizer: ParentalConsentPage.createFormFinalizer(null),
       },
       {
         id: 'child_full_name',
         text: `Child's Full Name`,
         validator: Form.NON_EMPTY_VALIDATOR,
-        finalizer: this.createFormFinalizer('Name of Dependent'),
+        finalizer: ParentalConsentPage.createFormFinalizer('Name of Dependent'),
       },
       {
         id: 'child_dob',
         text: 'Date of Birth',
         validator: Form.DATE_VALIDATOR,
-        finalizer: this.createFormFinalizer(null),
+        finalizer: ParentalConsentPage.createFormFinalizer(null),
       },
       {
         id: 'child_email',
         text: 'Email Used for Sign Up',
         validator: Form.EMAIL_VALIDATOR,
-        finalizer: this.createFormFinalizer(null),
+        finalizer: ParentalConsentPage.createFormFinalizer(null),
       },
     ],
     // PARENT INFO FORM
@@ -317,19 +334,19 @@ class ParentalConsentPage extends React.Component<Props, State> {
         id: 'parent_full_name',
         text: 'Full Name',
         validator: Form.NON_EMPTY_VALIDATOR,
-        finalizer: this.createFormFinalizer('Name'),
+        finalizer: ParentalConsentPage.createFormFinalizer('Name'),
       },
       {
         id: 'parent_relationship',
         text: 'Relationship to the Child',
         validator: Form.NON_EMPTY_VALIDATOR,
-        finalizer: this.createFormFinalizer(null),
+        finalizer: ParentalConsentPage.createFormFinalizer(null),
       },
       {
         id: 'parent_email',
         text: 'Email Address',
         validator: Form.EMAIL_VALIDATOR,
-        finalizer: this.createFormFinalizer(null),
+        finalizer: ParentalConsentPage.createFormFinalizer(null),
       },
     ],
   ];
@@ -345,7 +362,7 @@ class ParentalConsentPage extends React.Component<Props, State> {
     const { formIndex, pdfUri, errorMessage, submitClicked, submitted } = state;
 
     const isFirstStep = formIndex === 0;
-    const isFinalStep = formIndex === this.forms.length;
+    const isFinalStep = formIndex === ParentalConsentPage.forms.length;
     const subheaderText = isFinalStep ? 'Preview and Submit' : this.formHeaders[formIndex];
 
     let content: JSX.Element;
@@ -385,8 +402,9 @@ class ParentalConsentPage extends React.Component<Props, State> {
             finalizeIcon={faArrowRight}
             finalizeText='Next'
             theme={theme}
-            items={this.forms[formIndex]}
+            items={this.createForms()[formIndex]}
             onFinalize={this.onAdvanceForm_}
+            key={formIndex}
           />
         </>;
       }
