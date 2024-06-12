@@ -26,6 +26,7 @@ import LegalAcceptance from '../consent/LegalAcceptance';
 import SignInSignUpCard from '../components/Login/SignInSignUpCard';
 import AdditionalInfoCard from '../components/Login/AdditionalInfoCard';
 import UserConsentCard from '../components/Login/UserConsentCard';
+import MainMenu from '../components/MainMenu';
 
 export interface LoginPagePublicProps extends ThemeProps, StyleProps {
   externalIndex?: number;
@@ -103,6 +104,11 @@ const Header = styled('div', (props: ThemeProps) => ({
   marginLeft: `${props.theme.itemPadding * 2}px`,
   marginBottom: `${props.theme.itemPadding * 2}px`,
 }));
+
+const MainMenuBar = styled(MainMenu, {
+  position: 'absolute',
+  top: 0,
+});
 
 type Props = LoginPagePublicProps & LoginPagePrivateProps;
 type State = LoginPageState;
@@ -462,6 +468,7 @@ class LoginPage extends React.Component<Props, State> {
 
         return (
           <Container theme={theme} className={className} style={style}>
+            <MainMenuBar theme={theme} />
             <Card theme={theme}>
               {kiprLogo}
 
@@ -477,6 +484,7 @@ class LoginPage extends React.Component<Props, State> {
         // User needs to consent
 
         return <Container theme={theme} className={className} style={style}>
+          <MainMenuBar theme={theme} />
           <Card theme={theme} width='800px'>
             {kiprLogo}
 
@@ -500,6 +508,7 @@ class LoginPage extends React.Component<Props, State> {
         // Waiting for parental consent
         return (
           <Container theme={theme} className={className} style={style}>
+            <MainMenuBar theme={theme} />
             <Card theme={theme}>
               {kiprLogo}
 
