@@ -320,6 +320,13 @@ app.post('/parental-consent/:userId', (req, res) => {
     return;
   }
 
+  const MAX_CONTENT_LENGTH = 200 * 1000;
+  if (contentLength > MAX_CONTENT_LENGTH) {
+    console.error('Content-Length of', contentLength, 'exceeds the max of', MAX_CONTENT_LENGTH);
+    res.status(400).send();
+    return;
+  }
+
   const firebaseIdToken = firebaseTokenManager.getToken();
   getParentalConsent(userId, firebaseIdToken)
     .then(currentConsent => {
@@ -344,34 +351,48 @@ app.post('/parental-consent/:userId', (req, res) => {
         return;
       }
 
-      // Save parental consent PDF
-      storeParentalConsentPdf(req, firebaseIdToken)
-        .then(storeResponse => {
-          const parentalConsentUri = storeResponse.cloudStorageUri;
+      streamToBuffer(req)
+        .then(bodyBuffer => {
+          // Save parental consent PDF
+          storeParentalConsentPdf(bodyBuffer, firebaseIdToken)
+            .then(storeResponse => {
+              const parentalConsentUri = storeResponse.cloudStorageUri;
 
-          const nextUserConsent = {
-            ...currentConsent,
-            legalAcceptance: {
-              state: 'obtained-parental-consent',
-              version: 1,
-              receivedAt: new Date().toISOString(),
-              parentEmailAddress: currentConsent.legalAcceptance.parentEmailAddress,
-              parentalConsentUri: parentalConsentUri,
-            },
-          };
+              const nextUserConsent = {
+                ...currentConsent,
+                legalAcceptance: {
+                  state: 'obtained-parental-consent',
+                  version: 1,
+                  receivedAt: new Date().toISOString(),
+                  parentEmailAddress: currentConsent.legalAcceptance.parentEmailAddress,
+                  parentalConsentUri: parentalConsentUri,
+                },
+              };
 
-          setNextUserConsent(userId, nextUserConsent, firebaseIdToken)
-          // setParentalConsentObtained(userId, currentConsent, parentalConsentUri, firebaseIdToken)
-            .then(setConsentResult => {
-              res.status(200).send();
+              setNextUserConsent(userId, nextUserConsent, firebaseIdToken)
+              // setParentalConsentObtained(userId, currentConsent, parentalConsentUri, firebaseIdToken)
+                .then(setConsentResult => {
+                  sendParentalConsentConfirmation(currentConsent.legalAcceptance.parentEmailAddress, bodyBuffer)
+                    .then(sendConfirmationResult => {
+                      res.status(200).send();
+                    })
+                    .catch(sendConfirmationError => {
+                      console.error('Failed to send confirmation email', sendConfirmationError);
+                      res.status(500).send();
+                    });
+                })
+                .catch(setConsentError => {
+                  console.error('Failed to set consent', setConsentError);
+                  res.status(400).send();
+                });
             })
-            .catch(setConsentError => {
-              console.error('Failed to set consent', setConsentError);
-              res.status(400).send();
+            .catch(e => {
+              console.error('Failed to store parental consent PDF', e);
+              res.status(500).send();
             });
         })
-        .catch(e => {
-          console.error('Failed to store parental consent PDF', e);
+        .catch(bufferError => {
+          console.error('Failed to get buffer for stream', bufferError);
           res.status(500).send();
         });
     })
@@ -457,7 +478,7 @@ function getParentalConsent(userId, token) {
     });
 }
 
-function storeParentalConsentPdf(readableStream, token) {
+function storeParentalConsentPdf(pdfData, token) {
   const requestConfig = {
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -465,7 +486,7 @@ function storeParentalConsentPdf(readableStream, token) {
     },
   };
   
-  return axios.post(`${config.dbUrl}/v1/big_store`, readableStream, requestConfig)
+  return axios.post(`${config.dbUrl}/v1/big_store`, pdfData, requestConfig)
     .then(response => response.data);
 }
 
@@ -499,4 +520,31 @@ function sendParentalConsentEmail(userId, parentEmailAddress, baseUrl) {
   };
 
   return mg.messages.create(domain, mailgunData);
+}
+
+function sendParentalConsentConfirmation(parentEmailAddress, pdfData) {
+  const domain = config.mailgun.domain;
+
+  // TODO: compose final email
+  const mailgunData = {
+    from: `test@${domain}`,
+    to: parentEmailAddress,
+    template: 'parental consent confirmation',
+    attachment: {
+      data: pdfData,
+      filename: 'KIPR_Simulator_Consent.pdf',
+      contentType: 'application/pdf',
+    },
+  };
+
+  return mg.messages.create(domain, mailgunData);
+}
+
+async function streamToBuffer(stream) {
+  const bufs = [];
+  for await (const chunk of stream) {
+    bufs.push(chunk);
+  }
+
+  return Buffer.concat(bufs);
 }
