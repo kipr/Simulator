@@ -220,7 +220,7 @@ class LoginPage extends React.Component<Props, State> {
         reject(err);
       };
 
-      consentRequest.open('POST', `/parental-consent-start/${userId}`);
+      consentRequest.open('POST', `/api/parental-consent/${userId}`);
       consentRequest.setRequestHeader('Content-Type', 'application/json');
 
       const requestBody = {

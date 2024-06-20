@@ -11,10 +11,10 @@ const sourceDir = 'dist';
 const { get: getConfig } = require('./config');
 const { WebhookClient } = require('discord.js');
 const proxy = require('express-http-proxy');
-const axios = require('axios').default;
 const { FirebaseTokenManager } = require('./firebaseAuth');
 const formData = require('form-data');
 const Mailgun = require('mailgun.js');
+const createParentalConsentRouter = require('./parentalConsent');
 
 let config;
 try {
@@ -25,7 +25,7 @@ try {
 }
 
 const mailgun = new Mailgun(formData);
-const mg = mailgun.client({
+const mailgunClient = mailgun.client({
   username: 'api',
   key: config.mailgun.apiKey,
 });
@@ -40,6 +40,8 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 app.use(morgan('combined'));
+
+app.use('/api/parental-consent', createParentalConsentRouter(firebaseTokenManager, mailgunClient, config));
 
 app.use('/api', proxy(config.dbUrl));
 
@@ -211,197 +213,6 @@ app.post('/feedback', (req, res) => {
     });
 });
 
-// API TO START PARENTAL CONSENT FLOW, INCLUDING SENDING EMAIL TO PARENT
-// anonymous since parental consent page has no authentication
-// TODO: don't have a separate endpoint for starting the flow
-app.post('/parental-consent-start/:userId', (req, res) => {
-  const userId = req.params['userId'];
-
-  if (!('dateOfBirth' in req.body)) {
-    return res.status(400).json({
-      error: "Expected dateOfBirth key in body"
-    });
-  }
-
-  if (typeof req.body.dateOfBirth !== 'string') {
-    return res.status(400).json({
-      error: "Expected dateOfBirth key in body to be a string"
-    });
-  }
-
-  if (!('parentEmailAddress' in req.body)) {
-    return res.status(400).json({
-      error: "Expected parentEmailAddress key in body"
-    });
-  }
-
-  if (typeof req.body.parentEmailAddress !== 'string') {
-    return res.status(400).json({
-      error: "Expected parentEmailAddress key in body to be a string"
-    });
-  }
-
-  if (!('autoDelete' in req.body)) {
-    return res.status(400).json({
-      error: "Expected autoDelete key in body"
-    });
-  }
-
-  if (typeof req.body.autoDelete !== 'boolean') {
-    return res.status(400).json({
-      error: "Expected autoDelete key in body to be a boolean"
-    });
-  }
-
-  console.log('getting parental consent for user', userId);
-  const firebaseIdToken = firebaseTokenManager.getToken();
-  getParentalConsent(userId, firebaseIdToken)
-    .then(currentConsent => {
-      if (currentConsent !== null && currentConsent.legalAcceptance?.state !== 'not-started') {
-        // TODO: it's okay for "not-started" consent to exist...?
-        console.error('Consent already exists for user');
-        res.status(400).send();
-        return;
-      }
-
-      // Send email to parent
-      console.log('sending email to parent');
-      const baseUrl = `${req.protocol}://${req.get('host')}`;
-      sendParentalConsentEmail(userId, req.body.parentEmailAddress, baseUrl)
-        .then(sendEmailResult => {
-          // Update user consent in db
-          const nextUserConsent = {
-            dateOfBirth: req.body.dateOfBirth,
-            legalAcceptance: {
-              state: 'awaiting-parental-consent',
-              version: 1,
-              sentAt: new Date().toISOString(),
-              parentEmailAddress: req.body.parentEmailAddress,
-              autoDelete: req.body.autoDelete,
-            },
-          };
-
-          // setParentalConsentAwaiting(userId, req.body.dateOfBirth, req.body.parentEmailAddress, firebaseIdToken)
-          setNextUserConsent(userId, nextUserConsent, firebaseIdToken)
-            .then(setConsentResult => {
-              res.status(200).send(nextUserConsent);
-            })
-            .catch(setConsentError => {
-              console.error('Failed to set consent', setConsentError);
-              res.status(400).send();
-            });
-        })
-        .catch(sendEmailError => {
-          console.error('Failed to send parent consent email', sendEmailError);
-          res.status(500).send();
-        });
-    })
-    .catch(getConsentError => {
-      console.error('Failed to get current consent state', getConsentError);
-      res.status(400).send();
-    });
-});
-
-// API TO GRANT PARENTAL CONSENT TO USER
-// anonymous since parental consent page has no authentication
-app.post('/parental-consent/:userId', (req, res) => {
-  const userId = req.params['userId'];
-
-  if (!req.is('application/pdf')) {
-    console.error('Content-Type is not pdf');
-    res.status(400).send();
-    return;
-  }
-
-  const contentLength = Number(req.header('Content-Length'));
-  if (isNaN(contentLength) || contentLength === 0) {
-    console.error('Content-Length must be non-zero');
-    res.status(400).send();
-    return;
-  }
-
-  const MAX_CONTENT_LENGTH = 200 * 1000;
-  if (contentLength > MAX_CONTENT_LENGTH) {
-    console.error('Content-Length of', contentLength, 'exceeds the max of', MAX_CONTENT_LENGTH);
-    res.status(400).send();
-    return;
-  }
-
-  const firebaseIdToken = firebaseTokenManager.getToken();
-  getParentalConsent(userId, firebaseIdToken)
-    .then(currentConsent => {
-      if (currentConsent?.legalAcceptance?.state !== 'awaiting-parental-consent') {
-        console.error('Current state is not awaiting parental consent');
-        res.status(400).send();
-        return;
-      }
-
-      const consentRequestSentAt = currentConsent?.legalAcceptance?.sentAt;
-      const consentRequestSentAtMs = consentRequestSentAt ? Date.parse(consentRequestSentAt) : NaN;
-      if (isNaN(consentRequestSentAtMs)) {
-        console.error('Sent at time is not valid');
-        res.status(500).send();
-        return;
-      }
-
-      const currMs = new Date().getTime();
-      if (currMs - consentRequestSentAtMs > 48 * 60 * 60 * 1000) {
-        console.error('Consent was requested too long ago');
-        res.status(400).send();
-        return;
-      }
-
-      streamToBuffer(req)
-        .then(bodyBuffer => {
-          // Save parental consent PDF
-          storeParentalConsentPdf(bodyBuffer, firebaseIdToken)
-            .then(storeResponse => {
-              const parentalConsentUri = storeResponse.cloudStorageUri;
-
-              const nextUserConsent = {
-                ...currentConsent,
-                legalAcceptance: {
-                  state: 'obtained-parental-consent',
-                  version: 1,
-                  receivedAt: new Date().toISOString(),
-                  parentEmailAddress: currentConsent.legalAcceptance.parentEmailAddress,
-                  parentalConsentUri: parentalConsentUri,
-                },
-              };
-
-              setNextUserConsent(userId, nextUserConsent, firebaseIdToken)
-              // setParentalConsentObtained(userId, currentConsent, parentalConsentUri, firebaseIdToken)
-                .then(setConsentResult => {
-                  sendParentalConsentConfirmation(currentConsent.legalAcceptance.parentEmailAddress, bodyBuffer)
-                    .then(sendConfirmationResult => {
-                      res.status(200).send();
-                    })
-                    .catch(sendConfirmationError => {
-                      console.error('Failed to send confirmation email', sendConfirmationError);
-                      res.status(500).send();
-                    });
-                })
-                .catch(setConsentError => {
-                  console.error('Failed to set consent', setConsentError);
-                  res.status(400).send();
-                });
-            })
-            .catch(e => {
-              console.error('Failed to store parental consent PDF', e);
-              res.status(500).send();
-            });
-        })
-        .catch(bufferError => {
-          console.error('Failed to get buffer for stream', bufferError);
-          res.status(500).send();
-        });
-    })
-    .catch(getConsentError => {
-      console.error('Failed to get current consent state', getConsentError);
-      res.status(400).send();
-    });
-});
-
 app.use('/static', express.static(`${__dirname}/static`, {
   maxAge: config.caching.staticMaxAge,
 }));
@@ -455,96 +266,4 @@ app.listen(config.server.port, () => {
 function setCrossOriginIsolationHeaders(res) {
   res.header("Cross-Origin-Opener-Policy", "same-origin");
   res.header("Cross-Origin-Embedder-Policy", "require-corp");
-}
-
-function getParentalConsent(userId, token) {
-  const requestConfig = {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-    },
-  };
-
-  return axios.get(`${config.dbUrl}/user/${userId}`, requestConfig)
-    .then(response => {
-      return response.data;
-    })
-    .catch(error => {
-      if (error.response && error.response.status === 404) {
-        return null;
-      }
-
-      console.error('ERROR:', error)
-      throw error;
-    });
-}
-
-function storeParentalConsentPdf(pdfData, token) {
-  const requestConfig = {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/pdf',
-    },
-  };
-  
-  return axios.post(`${config.dbUrl}/v1/big_store`, pdfData, requestConfig)
-    .then(response => response.data);
-}
-
-function setNextUserConsent(userId, nextUserConsent, token) {
-  const requestConfig = {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-    },
-  };
-
-  return axios.post(`${config.dbUrl}/user/${userId}`, nextUserConsent, requestConfig)
-    .then(response => {
-      return response.data;
-    });
-}
-
-function sendParentalConsentEmail(userId, parentEmailAddress, baseUrl) {
-  const domain = config.mailgun.domain;
-  const consentLink = `${baseUrl}/parental-consent/${userId}`;
-
-  // TODO: compose final email
-  const mailgunData = {
-    from: `test@${domain}`,
-    to: parentEmailAddress,
-    subject: `Parental consent for Botball Simulator`,
-    template: 'Test template',
-    'h:X-Mailgun-Variables': JSON.stringify({
-      consentlink: consentLink
-    }),
-    // 'h:Reply-To': 'reply-to@example.com',
-  };
-
-  return mg.messages.create(domain, mailgunData);
-}
-
-function sendParentalConsentConfirmation(parentEmailAddress, pdfData) {
-  const domain = config.mailgun.domain;
-
-  // TODO: compose final email
-  const mailgunData = {
-    from: `test@${domain}`,
-    to: parentEmailAddress,
-    template: 'parental consent confirmation',
-    attachment: {
-      data: pdfData,
-      filename: 'KIPR_Simulator_Consent.pdf',
-      contentType: 'application/pdf',
-    },
-  };
-
-  return mg.messages.create(domain, mailgunData);
-}
-
-async function streamToBuffer(stream) {
-  const bufs = [];
-  for await (const chunk of stream) {
-    bufs.push(chunk);
-  }
-
-  return Buffer.concat(bufs);
 }

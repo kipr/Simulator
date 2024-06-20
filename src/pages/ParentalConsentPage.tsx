@@ -265,7 +265,7 @@ class ParentalConsentPage extends React.Component<Props, State> {
             this.setState({ submitClicked: false, errorMessage: 'Something went wrong. Please try again later.' });
           };
 
-          consentRequest.open('POST', `/parental-consent/${this.props.userId}`);
+          consentRequest.open('PATCH', `/api/parental-consent/${this.props.userId}`);
           consentRequest.setRequestHeader('Content-Type', 'application/pdf');
 
           try {
