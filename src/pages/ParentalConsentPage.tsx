@@ -204,6 +204,10 @@ class ParentalConsentPage extends React.Component<Props, State> {
     this.setState({
       formResults: nextFormResults,
       formIndex: this.state.formIndex + 1,
+    }, () => {
+      if (this.state.formIndex === ParentalConsentPage.forms.length) {
+        this.updatePdfPreview_();
+      }
     });
   };
 
@@ -213,7 +217,7 @@ class ParentalConsentPage extends React.Component<Props, State> {
     });
   };
 
-  private onPreviewClick_ = () => {
+  private updatePdfPreview_ = () => {
     console.log('form results to preview', this.state.formResults);
     const form = this.pdfDoc.getForm();
 
@@ -384,11 +388,6 @@ class ParentalConsentPage extends React.Component<Props, State> {
         content = <>
           {headerContent}
           <PlainTextContainer theme={theme}>You can preview the completed form before submitting it.</PlainTextContainer>
-          <ButtonContainer theme={theme}>
-            <FinalizeButton theme={theme} onClick={this.onPreviewClick_}>
-              <FontAwesome icon={faEye} /> {'Preview'}
-            </FinalizeButton>
-          </ButtonContainer>
           <ButtonContainer theme={theme}>
             <FinalizeButton theme={theme} onClick={this.onSubmitClick_} disabled={submitClicked}>
               <FontAwesome icon={faPaperPlane} /> {'Submit'}
