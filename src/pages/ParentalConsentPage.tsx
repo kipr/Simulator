@@ -191,9 +191,7 @@ class ParentalConsentPage extends React.Component<Props, State> {
     viewerPrefs.setHideWindowUI(true);
 
     const pdfBase64 = await this.pdfDoc.saveAsBase64();
-    const src = `data:application/pdf;base64,${pdfBase64}`;
-
-    this.setState({ pdfUri: src });
+    this.updatePdfContent_(pdfBase64);
   }
 
   private onAdvanceForm_ = (newFormResults: { [id: string]: FormResult }) => {
@@ -238,10 +236,12 @@ class ParentalConsentPage extends React.Component<Props, State> {
     }
 
     this.pdfDoc.saveAsBase64()
-      .then(pdfBase64 => {
-        const src = `data:application/pdf;base64,${pdfBase64}`;
-        this.setState({ pdfUri: src });
-      });
+      .then(this.updatePdfContent_);
+  };
+
+  private updatePdfContent_ = (pdfBase64: string) => {
+    const src = `data:application/pdf;base64,${pdfBase64}#toolbar=0&navpanes=0`;
+    this.setState({ pdfUri: src });
   };
 
   private onSubmitClick_ = () => {
