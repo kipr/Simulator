@@ -5,7 +5,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
   const router = express.Router();
 
   // API to start parental consent for the user
-  router.post('/:userId', asyncHandler(async (req, res) => {
+  router.post('/:userId', asyncExpressHandler(async (req, res) => {
     const userId = req.params['userId'];
 
     if (!('dateOfBirth' in req.body)) {
@@ -49,7 +49,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
 
     let currentConsent;
     try {
-      currentConsent = await getParentalConsent(userId, firebaseIdToken, config);
+      currentConsent = await getCurrentConsent(userId, firebaseIdToken, config);
     } catch (getConsentError) {
         console.error('Failed to get current consent state', getConsentError);
         res.status(400).send();
@@ -88,7 +88,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
     };
 
     try {
-      await setNextUserConsent(userId, nextUserConsent, firebaseIdToken, config);
+      await setConsent(userId, nextUserConsent, firebaseIdToken, config);
     } catch (setConsentError) {
         console.error('Failed to set consent', setConsentError);
         res.status(400).send();
@@ -100,7 +100,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
 
   // API to update parental consent for the user
   // Currently it only supports completing the consent flow
-  router.patch('/:userId', asyncHandler(async (req, res) => {
+  router.patch('/:userId', asyncExpressHandler(async (req, res) => {
     const userId = req.params['userId'];
 
     if (!req.is('application/pdf')) {
@@ -127,7 +127,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
 
     let currentConsent;
     try {
-      currentConsent = await getParentalConsent(userId, firebaseIdToken, config);
+      currentConsent = await getCurrentConsent(userId, firebaseIdToken, config);
     } catch (getConsentError) {
         console.error('Failed to get current consent state', getConsentError);
         res.status(400).send();
@@ -161,7 +161,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
     // Save parental consent PDF
     let storeResponse;
     try {
-      storeResponse = await storeParentalConsentPdf(bodyBuffer, firebaseIdToken, config);
+      storeResponse = await uploadParentalConsentPdf(bodyBuffer, firebaseIdToken, config);
     } catch (storeError) {
       console.error('Failed to store parental consent PDF', storeError);
       res.status(500).send();
@@ -182,7 +182,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
     };
 
     try {
-      await setNextUserConsent(userId, nextUserConsent, firebaseIdToken, config);
+      await setConsent(userId, nextUserConsent, firebaseIdToken, config);
     } catch (setConsentError) {
       console.error('Failed to set consent', setConsentError);
       res.status(400).send();
@@ -190,7 +190,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
     }
 
     try {
-      await sendParentalConsentConfirmation(currentConsent.legalAcceptance.parentEmailAddress, bodyBuffer, mailgunClient, config);
+      await sendParentalConsentConfirmationEmail(currentConsent.legalAcceptance.parentEmailAddress, bodyBuffer, mailgunClient, config);
     } catch (sendConfirmationError) {
       console.error('Failed to send confirmation email', sendConfirmationError);
       res.status(500).send();
@@ -203,7 +203,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
   return router;
 }
 
-async function getParentalConsent(userId, token, config) {
+async function getCurrentConsent(userId, token, config) {
   const requestConfig = {
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -223,7 +223,7 @@ async function getParentalConsent(userId, token, config) {
   }
 }
 
-async function storeParentalConsentPdf(pdfData, token, config) {
+async function uploadParentalConsentPdf(pdfData, token, config) {
   const requestConfig = {
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -235,7 +235,7 @@ async function storeParentalConsentPdf(pdfData, token, config) {
   return response.data;
 }
 
-async function setNextUserConsent(userId, nextUserConsent, token, config) {
+async function setConsent(userId, nextUserConsent, token, config) {
   const requestConfig = {
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -265,7 +265,7 @@ function sendParentalConsentEmail(userId, parentEmailAddress, baseUrl, mailgunCl
   return mailgunClient.messages.create(domain, mailgunData);
 }
 
-function sendParentalConsentConfirmation(parentEmailAddress, pdfData, mailgunClient, config) {
+function sendParentalConsentConfirmationEmail(parentEmailAddress, pdfData, mailgunClient, config) {
   const domain = config.mailgun.domain;
 
   // TODO: compose final email
@@ -284,7 +284,7 @@ function sendParentalConsentConfirmation(parentEmailAddress, pdfData, mailgunCli
 }
 
 // Reusable handler to ensure async errors are caught and passed onto express error handlers
-const asyncHandler = (func) => (req, res, next) => {
+const asyncExpressHandler = (func) => (req, res, next) => {
   Promise.resolve(func(req, res, next))
     .catch(next);
 }
