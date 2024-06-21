@@ -30,7 +30,7 @@ const mailgunClient = mailgun.client({
   key: config.mailgun.apiKey,
 });
 
-const firebaseTokenManager = new FirebaseTokenManager(config.firebase.serviceAccountKey);
+const firebaseTokenManager = new FirebaseTokenManager(config.firebase.serviceAccountKey, config.firebase.apiKey);
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");

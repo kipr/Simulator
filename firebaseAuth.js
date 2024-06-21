@@ -4,11 +4,14 @@ const axios = require('axios').default;
 
 class FirebaseTokenManager {
   firebaseAuth = null;
+  firebaseApiKey = null;
   idToken = null;
   idTokenExp = null;
   refreshTimerId = null;
 
-  constructor(serviceAccountKey) {
+  constructor(serviceAccountKey, firebaseApiKey) {
+    this.firebaseApiKey = firebaseApiKey;
+
     const firebaseApp = initializeApp({
       credential: cert(serviceAccountKey),
     });
@@ -84,12 +87,9 @@ class FirebaseTokenManager {
       throw new Error('Firebase auth not initizlied');
     }
 
-    // TODO: move into config somewhere
-    const apiKey = '';
-
     // Send request to auth emulator if using
     const urlPrefix = process.env.FIREBASE_AUTH_EMULATOR_HOST ? `http://${process.env.FIREBASE_AUTH_EMULATOR_HOST}/` : 'https://';
-    const url = `${urlPrefix}identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=${apiKey}`;
+    const url = `${urlPrefix}identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=${this.firebaseApiKey}`;
 
     return axios.post(url, {
       token: customToken,

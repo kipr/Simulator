@@ -36,6 +36,8 @@ module.exports = {
       },
       dbUrl: getEnvVarOrDefault('API_URL', 'https://db-prerelease.botballacademy.org'),
       firebase: {
+        // Firebase API keys are not secret, so the real value is okay to keep in code
+        apiKey: getEnvVarOrDefault('FIREBASE_API_KEY', 'AIzaSyBiVC6umtYRy-aQqDUBv8Nn1txWLssix04'),
         serviceAccountKey,
       },
       mailgun: {
