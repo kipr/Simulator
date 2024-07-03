@@ -1,5 +1,6 @@
 const express = require('express');
 const axios = require('axios').default;
+const crypto = require('crypto');
 
 function createRouter(firebaseTokenManager, mailgunClient, config) {
   const router = express.Router();
@@ -63,12 +64,18 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
       return;
     }
 
+    // Generate a random one-time token for parent to access consent page
+    // The token is sent as part of the link in the email to the parent
+    // The token hash is stored in the database for verification later
+    const parentConsentToken = crypto.randomBytes(16).toString('hex');
+    const parentConsentTokenHash = getHashForParentToken(parentConsentToken);
+
     // Send email to parent
     console.log('sending email to parent');
     const baseUrl = `${req.protocol}://${req.get('host')}`;
 
     try {
-      await sendParentalConsentEmail(userId, req.body.parentEmailAddress, baseUrl, mailgunClient, config)
+      await sendParentalConsentEmail(userId, parentConsentToken, req.body.parentEmailAddress, baseUrl, mailgunClient, config);
     } catch (sendEmailError) {
       console.error('Failed to send parent consent email', sendEmailError);
       res.status(500).send();
@@ -83,6 +90,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
         version: 1,
         sentAt: new Date().toISOString(),
         parentEmailAddress: req.body.parentEmailAddress,
+        parentConsentTokenHash: parentConsentTokenHash,
         autoDelete: req.body.autoDelete,
       },
     };
@@ -100,8 +108,41 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
 
   // API to update parental consent for the user
   // Currently it only supports completing the consent flow
+  // TODO: this API needs throttling since it requires a database read for the authorization check
   router.patch('/:userId', asyncExpressHandler(async (req, res) => {
+    const authorization = parseAuthorization(req);
+    if (!authorization || authorization.type !== 'ParentToken') {
+      res.status(401).send();
+      return;
+    }
+
     const userId = req.params['userId'];
+    const firebaseIdToken = firebaseTokenManager.getToken();
+
+    let currentConsent;
+    try {
+      currentConsent = await getCurrentConsent(userId, firebaseIdToken, config);
+    } catch (getConsentError) {
+        console.error('Failed to get current consent state', getConsentError);
+        res.status(500).send();
+        return;
+    }
+
+    if (currentConsent?.legalAcceptance?.state !== 'awaiting-parental-consent') {
+      // Send 401 to avoid leaking information about consent state
+      console.error('Current state is not awaiting parental consent');
+      res.status(401).send();
+      return;
+    }
+
+    // Ensure that parent token matches the one stored in the database
+    const parentConsentTokenHash = currentConsent?.legalAcceptance?.parentConsentTokenHash;
+    const authorizationValueHash = getHashForParentToken(authorization.value);
+    if (!parentConsentTokenHash || parentConsentTokenHash !== authorizationValueHash) {
+      console.error('Parent token is not valid for the user');
+      res.status(401).send();
+      return;
+    }
 
     if (!req.is('application/pdf')) {
       console.error('Content-Type is not pdf');
@@ -119,24 +160,6 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
     const MAX_CONTENT_LENGTH = 200 * 1000;
     if (contentLength > MAX_CONTENT_LENGTH) {
       console.error('Content-Length of', contentLength, 'exceeds the max of', MAX_CONTENT_LENGTH);
-      res.status(400).send();
-      return;
-    }
-
-    const firebaseIdToken = firebaseTokenManager.getToken();
-
-    let currentConsent;
-    try {
-      currentConsent = await getCurrentConsent(userId, firebaseIdToken, config);
-    } catch (getConsentError) {
-        console.error('Failed to get current consent state', getConsentError);
-        res.status(400).send();
-        return;
-    }
-
-
-    if (currentConsent?.legalAcceptance?.state !== 'awaiting-parental-consent') {
-      console.error('Current state is not awaiting parental consent');
       res.status(400).send();
       return;
     }
@@ -246,9 +269,9 @@ async function setConsent(userId, nextUserConsent, token, config) {
   return response.data;
 }
 
-function sendParentalConsentEmail(userId, parentEmailAddress, baseUrl, mailgunClient, config) {
+function sendParentalConsentEmail(userId, parentConsentToken, parentEmailAddress, baseUrl, mailgunClient, config) {
   const domain = config.mailgun.domain;
-  const consentLink = `${baseUrl}/parental-consent/${userId}`;
+  const consentLink = `${baseUrl}/parental-consent/${userId}?token=${parentConsentToken}`;
 
   // TODO: compose final email
   const mailgunData = {
@@ -281,6 +304,26 @@ function sendParentalConsentConfirmationEmail(parentEmailAddress, pdfData, mailg
   };
 
   return mailgunClient.messages.create(domain, mailgunData);
+}
+
+function parseAuthorization(req) {
+  const authorizationHeader = req.header('Authorization');
+  if (!authorizationHeader) {
+    console.error('Authorization header is missing');
+    return null;
+  }
+
+  const [authorizationType, authorizationValue] = authorizationHeader.split(' ');
+  if (!authorizationType || !authorizationValue) {
+    console.error('Authorization header is not valid');
+    return null;
+  }
+
+  return { type: authorizationType, value: authorizationValue };
+}
+
+function getHashForParentToken(token) {
+  return crypto.createHash('sha256').update(token).digest('hex');
 }
 
 // Reusable handler to ensure async errors are caught and passed onto express error handlers

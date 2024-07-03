@@ -14,6 +14,7 @@ import Button from '../components/interface/Button';
 
 interface ParentalConsentPageProps extends ThemeProps, StyleProps {
   userId: string;
+  token: string;
 }
 
 interface ParentalConsentPageState {
@@ -271,6 +272,7 @@ class ParentalConsentPage extends React.Component<Props, State> {
           };
 
           consentRequest.open('PATCH', `/api/parental-consent/${this.props.userId}`);
+          consentRequest.setRequestHeader('Authorization', `ParentToken ${this.props.token}`);
           consentRequest.setRequestHeader('Content-Type', 'application/pdf');
 
           try {
