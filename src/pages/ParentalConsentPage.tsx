@@ -143,6 +143,10 @@ const FinalizeButton = styled('div', (props: ThemeProps & { disabled?: boolean }
   cursor: props.disabled ? 'auto' : 'pointer',
 }));
 
+const Link = styled('a', (props: ThemeProps) => ({
+  color: props.theme.color,
+}));
+
 interface FormResult {
   value: string;
   pdfField: string;
@@ -169,13 +173,10 @@ class ParentalConsentPage extends React.Component<Props, State> {
     // const userConsent = await db.get<UserConsent>(Selector.user(this.props.userId));
     // console.log('got user consent:', userConsent);
 
-    const url = '/static/sample-form.pdf';
+    const url = '/static/eula/KIPR-Parental-Consent.pdf';
     const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer());
 
     this.pdfDoc = await PDFDocument.load(existingPdfBytes);
-
-    // // Output all form fields for debugging
-    // console.log('fields', form.getFields().map(f => f.getName()));
 
     // Make all form elements read-only
     const form = this.pdfDoc.getForm();
@@ -311,25 +312,25 @@ class ParentalConsentPage extends React.Component<Props, State> {
         id: 'child_program',
         text: 'Program',
         validator: Form.NON_EMPTY_VALIDATOR,
-        finalizer: ParentalConsentPage.createFormFinalizer(null),
+        finalizer: ParentalConsentPage.createFormFinalizer(`Program`),
       },
       {
         id: 'child_full_name',
         text: `Child's Full Name`,
         validator: Form.NON_EMPTY_VALIDATOR,
-        finalizer: ParentalConsentPage.createFormFinalizer('Name of Dependent'),
+        finalizer: ParentalConsentPage.createFormFinalizer(`Child's Full Name`),
       },
       {
         id: 'child_dob',
         text: 'Date of Birth',
         validator: Form.DATE_VALIDATOR,
-        finalizer: ParentalConsentPage.createFormFinalizer(null),
+        finalizer: ParentalConsentPage.createFormFinalizer(`Date of Birth`),
       },
       {
         id: 'child_email',
         text: 'Email Used for Sign Up',
         validator: Form.EMAIL_VALIDATOR,
-        finalizer: ParentalConsentPage.createFormFinalizer(null),
+        finalizer: ParentalConsentPage.createFormFinalizer(`Email Used for Sign Up`),
       },
     ],
     // PARENT INFO FORM
@@ -338,19 +339,35 @@ class ParentalConsentPage extends React.Component<Props, State> {
         id: 'parent_full_name',
         text: 'Full Name',
         validator: Form.NON_EMPTY_VALIDATOR,
-        finalizer: ParentalConsentPage.createFormFinalizer('Name'),
+        finalizer: ParentalConsentPage.createFormFinalizer(`Full Name`),
       },
       {
         id: 'parent_relationship',
         text: 'Relationship to the Child',
         validator: Form.NON_EMPTY_VALIDATOR,
-        finalizer: ParentalConsentPage.createFormFinalizer(null),
+        finalizer: ParentalConsentPage.createFormFinalizer(`Relationship to the Child`),
       },
       {
         id: 'parent_email',
         text: 'Email Address',
         validator: Form.EMAIL_VALIDATOR,
-        finalizer: ParentalConsentPage.createFormFinalizer(null),
+        finalizer: ParentalConsentPage.createFormFinalizer(`Email Address`),
+      },
+    ],
+    // SIGNATURE FORM
+    [
+      {
+        id: 'signature',
+        text: 'Signature of Parent/Legal Guardian',
+        validator: Form.NON_EMPTY_VALIDATOR,
+        finalizer: ParentalConsentPage.createFormFinalizer(`Parent/Legal Guardian Signature`),
+      },
+      {
+        // TODO: validate that date entered is today's date
+        id: 'date_signed',
+        text: 'Date Signed',
+        validator: Form.DATE_VALIDATOR,
+        finalizer: ParentalConsentPage.createFormFinalizer(`Date Signed`),
       },
     ],
   ];
@@ -358,6 +375,7 @@ class ParentalConsentPage extends React.Component<Props, State> {
   private readonly formHeaders: string[] = [
     'Account Information (for child)',
     `Parent/Legal Guardian's Information`,
+    'Signature',
   ];
 
   render() {
@@ -378,6 +396,8 @@ class ParentalConsentPage extends React.Component<Props, State> {
     } else {
       const headerContent = <>
         <PlainTextContainer theme={theme}>Your child has requested consent to use the KIPR Botball Simulator. Please review the notice and fill out the form using the fields below.</PlainTextContainer>
+        <PlainTextContainer theme={theme}>You can also view the <Link theme={theme} href="/static/eula/KIPR-FAQs-for-Parents.pdf" target="_blank">FAQs for Parents</Link>.</PlainTextContainer>
+        <hr />
         <ButtonContainer theme={theme}>
           <Subheader theme={theme}>{subheaderText}</Subheader>
           <Button theme={theme} children={'Back'} disabled={isFirstStep} onClick={this.onBackClick_}></Button>

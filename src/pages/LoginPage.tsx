@@ -488,7 +488,7 @@ class LoginPage extends React.Component<Props, State> {
           <Card theme={theme} width='800px'>
             {kiprLogo}
 
-            <Header theme={theme}>Terms of use</Header>
+            <Header theme={theme}>Privacy policy and terms of use</Header>
 
             <UserConsentCard theme={theme} disable={authenticating} onCollectedUserConsent={this.onCollectedUserConsent_} />
           </Card>

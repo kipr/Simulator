@@ -6,6 +6,7 @@ import { styled } from "styletron-react";
 import { StyledText } from "../../util";
 import { StyleProps } from "util/style";
 import { faSignInAlt } from "@fortawesome/free-solid-svg-icons";
+import { TabBar } from "../Layout/TabBar";
 
 export interface UserConsentCardPublicProps extends ThemeProps, StyleProps {
   disable: boolean;
@@ -17,6 +18,7 @@ interface UserConsentCardPrivateProps {
 
 interface UserConsentCardState {
   termsAccepted: boolean;
+  tabIndex: number;
 }
 
 type Props = UserConsentCardPublicProps & UserConsentCardPrivateProps;
@@ -62,19 +64,49 @@ const CheckboxLabel = styled('label', (props: ThemeProps) => ({
   marginLeft: `${props.theme.itemPadding}px`,
 }));
 
+const StyledTabBar = styled(TabBar, (props: ThemeProps) => ({
+  width: '100%',
+  borderTop: `1px solid ${props.theme.borderColor}`,
+  marginTop: `${props.theme.itemPadding * 2}px`,
+}));
+
+interface DocumentTabData {
+  tabName: string;
+  documentUrl: string;
+}
+
 class UserConsentCard extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
     this.state = {
       termsAccepted: false,
+      tabIndex: 0,
     };
   }
+
+  private static readonly documentTabData: DocumentTabData[] = [
+    {
+      tabName: 'Privacy Policy',
+      documentUrl: '/static/eula/KIPR-Privacy-Policy-US-and-EU.pdf',
+    },
+    {
+      tabName: 'Terms of Use',
+      documentUrl: '/static/eula/KIPR-Website-Terms-of-Use.pdf',
+    }
+  ];
+
+  private onTabIndexChange_ = (tabIndex: number) => {
+    this.setState({ tabIndex });
+  };
 
   render(): React.ReactNode {
     const { props, state } = this;
     const { theme, disable, onCollectedUserConsent } = props;
-    const { } = state;
+    const { tabIndex } = state;
+    
+    const tabs: TabBar.TabDescription[] = UserConsentCard.documentTabData.map(d => ({ name: d.tabName }));
+    const pdfUrl = UserConsentCard.documentTabData[tabIndex].documentUrl;
 
     return <Container theme={theme}>
       <PlainTextContainer theme={theme}>Read and accept the privacy policy and terms of use below.</PlainTextContainer>
@@ -86,8 +118,8 @@ class UserConsentCard extends React.Component<Props, State> {
         }
       })} /> */}
 
-      {/* TODO: replace with actual PDF */}
-      <PdfFrame theme={theme} src="/static/sample-form.pdf#toolbar=0&navpanes=0" />
+      <StyledTabBar theme={theme} tabs={tabs} index={tabIndex} onIndexChange={this.onTabIndexChange_}></StyledTabBar>
+      <PdfFrame theme={theme} src={`${pdfUrl}#toolbar=0&navpanes=0`} />
 
       <div>
         <input type="checkbox" id="agreedToTerms" onChange={(e) => {
