@@ -5,6 +5,49 @@ const crypto = require('crypto');
 function createRouter(firebaseTokenManager, mailgunClient, config) {
   const router = express.Router();
 
+  // API to get parental consent for the user
+  // TODO: this API needs throttling since it requires a database read for the authorization check
+  router.get('/:userId', asyncExpressHandler(async (req, res) => {
+    // TODO: centralize this authorization check logic
+    const authorization = parseAuthorization(req);
+    if (!authorization || authorization.type !== 'ParentToken') {
+      res.status(401).send();
+      return;
+    }
+
+    const userId = req.params['userId'];
+    const firebaseIdToken = firebaseTokenManager.getToken();
+
+    let currentConsent;
+    try {
+      currentConsent = await getCurrentConsent(userId, firebaseIdToken, config);
+    } catch (getConsentError) {
+        console.error('Failed to get current consent state', getConsentError);
+        res.status(500).send();
+        return;
+    }
+
+    if (currentConsent?.legalAcceptance?.state !== 'awaiting-parental-consent') {
+      // Send 401 to avoid leaking information about consent state
+      console.error('Current state is not awaiting parental consent');
+      res.status(401).send();
+      return;
+    }
+
+    // Ensure that parent token matches the one stored in the database
+    const parentConsentTokenHash = currentConsent?.legalAcceptance?.parentConsentTokenHash;
+    const authorizationValueHash = getHashForParentToken(authorization.value);
+    if (!parentConsentTokenHash || parentConsentTokenHash !== authorizationValueHash) {
+      console.error('Parent token is not valid for the user');
+      res.status(401).send();
+      return;
+    }
+
+    res.status(200).json({
+      state: currentConsent.legalAcceptance.state,
+    });
+  }));
+
   // API to start parental consent for the user
   router.post('/:userId', asyncExpressHandler(async (req, res) => {
     const userId = req.params['userId'];

@@ -2,7 +2,7 @@ import { GREEN, RED, ThemeProps } from '../components/constants/theme';
 import Form from '../components/interface/Form';
 import * as React from 'react';
 import { StyleProps } from '../util/style';
-import { PDFDocument, StandardFonts } from 'pdf-lib';
+import { PDFDocument } from 'pdf-lib';
 import { styled } from 'styletron-react';
 // import db from '../db';
 // import UserConsent from '../consent/UserConsent';
@@ -18,6 +18,7 @@ interface ParentalConsentPageProps extends ThemeProps, StyleProps {
 }
 
 interface ParentalConsentPageState {
+  pageStatus: 'loading' | 'valid' | 'invalid' | 'error';
   submitClicked: boolean;
   submitted: boolean;
   pdfUri: string;
@@ -44,7 +45,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   backgroundSize: 'cover',
 }));
 
-const Card = styled('div', (props: ThemeProps & { width?: string, flex: string }) => ({
+const Card = styled('div', (props: ThemeProps & { width?: string, flex?: string }) => ({
   // width: props.width ?? '400px',
   height: '90%',
   display: 'flex',
@@ -160,6 +161,7 @@ class ParentalConsentPage extends React.Component<Props, State> {
     super(props);
 
     this.state = {
+      pageStatus: 'loading',
       submitClicked: false,
       submitted: false,
       pdfUri: null,
@@ -171,8 +173,18 @@ class ParentalConsentPage extends React.Component<Props, State> {
   }
 
   async componentDidMount(): Promise<void> {
-    // const userConsent = await db.get<UserConsent>(Selector.user(this.props.userId));
-    // console.log('got user consent:', userConsent);
+    try {
+      const currentParentConsent = await this.getCurrentParentConsent_();
+      if (currentParentConsent === null) {
+        this.setState({ pageStatus: 'invalid' });
+        return;
+      }
+  
+      this.setState({ pageStatus: 'valid'});
+    } catch {
+      this.setState({ pageStatus: 'error' });
+      return;
+    }
 
     const url = '/static/eula/KIPR-Parental-Consent.pdf';
     const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer());
@@ -195,6 +207,29 @@ class ParentalConsentPage extends React.Component<Props, State> {
     const pdfBase64 = await this.pdfDoc.saveAsBase64();
     this.updatePdfContent_(pdfBase64);
   }
+
+  private getCurrentParentConsent_: () => Promise<{ state: string }> = async () => {
+    const response = await fetch(`/api/parental-consent/${this.props.userId}`, {
+      headers: {
+        'Authorization': `ParentToken ${this.props.token}`,
+      },
+    });
+
+    if (response.status >= 400 && response.status < 500) {
+      return null;
+    }
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch current consent status with code {response.status}`);
+    }
+
+    const json = await response.json();
+    if (typeof(json) !== 'object' || !('state' in json)) {
+      return new Error('Unexpected format of response body');
+    }
+
+    return json;
+  };
 
   private onAdvanceForm_ = (newFormResults: { [id: string]: FormResult }) => {
     console.log('got form values', newFormResults);
@@ -383,7 +418,38 @@ class ParentalConsentPage extends React.Component<Props, State> {
   render() {
     const { props, state } = this;
     const { theme } = props;
-    const { formIndex, pdfUri, errorMessage, submitClicked, submitted } = state;
+    const { pageStatus, formIndex, pdfUri, errorMessage, submitClicked, submitted } = state;
+
+    switch (pageStatus) {
+      case 'loading':
+        // TODO: Ideally show the <Loading> component. However, it currently depends on the Redux store, which is a heavy dependency for this page.
+        // After the store dependencies are removed/lightened, add the <Loading> component here.
+        return (
+          <Container theme={theme}>
+          </Container>
+        );
+      case 'invalid':
+        return (
+          <Container theme={theme}>
+            <Card theme={theme}>
+              <Logo src={KIPR_LOGO_WHITE as string} />
+              <Header theme={theme}>Parental Consent</Header>
+              <PlainTextContainer theme={theme}>This link is invalid or expired. The student can restart the process by creating a new account and requesting consent again.</PlainTextContainer>
+              <PlainTextContainer theme={theme}>See the <Link theme={theme} href="/static/eula/KIPR-FAQs-for-Parents.pdf" target="_blank">FAQs for Parents</Link> for more details.</PlainTextContainer>
+            </Card>
+          </Container>
+        );
+      case 'error':
+        return (
+          <Container theme={theme}>
+            <Card theme={theme}>
+              <Logo src={KIPR_LOGO_WHITE as string} />
+              <Header theme={theme}>Parental Consent</Header>
+              <PlainTextContainer theme={theme}>Something went wrong. Please try again later.</PlainTextContainer>
+            </Card>
+          </Container>
+        );
+    }
 
     const isFirstStep = formIndex === 0;
     const isFinalStep = formIndex === ParentalConsentPage.forms.length;
