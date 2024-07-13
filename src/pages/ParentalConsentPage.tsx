@@ -8,7 +8,7 @@ import { styled } from 'styletron-react';
 // import UserConsent from '../consent/UserConsent';
 // import Selector from '../db/Selector';
 import KIPR_LOGO_WHITE from '../../static/assets/KIPR-Logo-White-Text-Clear-Large.png';
-import { faEye, faPaperPlane, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faPaperPlane, faArrowRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesome } from "../components/FontAwesome";
 import Button from '../components/interface/Button';
 
@@ -473,12 +473,14 @@ class ParentalConsentPage extends React.Component<Props, State> {
       </>;
 
       if (isFinalStep) {
+        const submitIcon = submitClicked ? faSpinner : faPaperPlane;
+        const submitText = submitClicked ? 'Submitting...' : 'Submit';
         content = <>
           {headerContent}
           <PlainTextContainer theme={theme}>You can preview the completed form before submitting it.</PlainTextContainer>
           <ButtonContainer theme={theme}>
             <FinalizeButton theme={theme} onClick={this.onSubmitClick_} disabled={submitClicked}>
-              <FontAwesome icon={faPaperPlane} /> {'Submit'}
+              <FontAwesome icon={submitIcon} /> {submitText}
             </FinalizeButton>
           </ButtonContainer>
         </>;
