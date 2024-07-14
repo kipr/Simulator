@@ -227,7 +227,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
     // Save parental consent PDF
     let storeResponse;
     try {
-      storeResponse = await uploadParentalConsentPdf(bodyBuffer, firebaseIdToken, config);
+      storeResponse = await uploadParentalConsentPdf(bodyBuffer, userId, firebaseIdToken, config);
     } catch (storeError) {
       console.error('Failed to store parental consent PDF', storeError);
       res.status(500).send();
@@ -289,11 +289,15 @@ async function getCurrentConsent(userId, token, config) {
   }
 }
 
-async function uploadParentalConsentPdf(pdfData, token, config) {
+async function uploadParentalConsentPdf(pdfData, userId, token, config) {
   const requestConfig = {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/pdf',
+      'Big-Store-Prefix': 'parental-consent',
+      'Big-Store-Metadata': JSON.stringify({
+        userId: userId,
+      }),
     },
   };
 
