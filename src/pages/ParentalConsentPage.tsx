@@ -42,6 +42,8 @@ const Container = styled('div', (props: ThemeProps) => ({
   justifyContent: 'center',
   width: '100%',
   height: '100vh',
+  paddingLeft: `${props.theme.itemPadding * 2}px`,
+  paddingRight: `${props.theme.itemPadding * 2}px`,
   backgroundImage: 'url(../../static/backgrounds/Triangular_Background_Compressed.png)',
   backgroundSize: 'cover',
 }));
@@ -64,12 +66,6 @@ const Card = styled('div', (props: ThemeProps & { width?: string, flex?: string 
   // overflow: 'hidden',
   overflow: 'auto',
   border: `1px solid ${props.theme.borderColor}`,
-  ':first-child': {
-    marginLeft: `${props.theme.itemPadding * 2}px`,
-  },
-  ':last-child': {
-    marginRight: `${props.theme.itemPadding * 2}px`,
-  },
 }));
 
 const Logo = styled('img', {
@@ -505,10 +501,10 @@ class ParentalConsentPage extends React.Component<Props, State> {
 
     return (
       <Container theme={theme}>
-        <Card theme={theme} flex="1 1 auto" /*width="45%"*/>
+        <Card theme={theme} flex="1 1 500px">
           <PdfFrame theme={theme} id="pdf" src={pdfUri ?? undefined} onLoad={(e) => { console.log('finished loading iframe', e) }}></PdfFrame>
         </Card>
-        <Card theme={theme} flex="0 0 500px" /*width="45%"*/>
+        <Card theme={theme} flex="0 1 500px">
           <Logo src={KIPR_LOGO_WHITE as string} />
           <Header theme={theme}>Parental Consent</Header>
 
