@@ -22,6 +22,7 @@ interface ParentalConsentPageState {
   submitClicked: boolean;
   submitted: boolean;
   pdfUri: string;
+  pdfBlobUrl: string;
   errorMessage: string;
 
   formIndex: number;
@@ -165,6 +166,7 @@ class ParentalConsentPage extends React.Component<Props, State> {
       submitClicked: false,
       submitted: false,
       pdfUri: null,
+      pdfBlobUrl: null,
       errorMessage: null,
 
       formIndex: 0,
@@ -289,7 +291,9 @@ class ParentalConsentPage extends React.Component<Props, State> {
           consentRequest.onload = () => {
             switch (consentRequest.status) {
               case 200:
-                this.setState({ submitClicked: false, submitted: true });
+                const blob = new Blob([pdf], { type: 'application/pdf' });
+                const blobUrl = URL.createObjectURL(blob);
+                this.setState({ submitClicked: false, submitted: true, pdfBlobUrl: blobUrl });
                 break;
               case 400:
                 this.setState({ submitClicked: false, errorMessage: 'Something went wrong. The link may be invalid or expired.' });
@@ -418,7 +422,7 @@ class ParentalConsentPage extends React.Component<Props, State> {
   render() {
     const { props, state } = this;
     const { theme } = props;
-    const { pageStatus, formIndex, pdfUri, errorMessage, submitClicked, submitted } = state;
+    const { pageStatus, formIndex, pdfUri, pdfBlobUrl, errorMessage, submitClicked, submitted } = state;
 
     switch (pageStatus) {
       case 'loading':
@@ -458,8 +462,8 @@ class ParentalConsentPage extends React.Component<Props, State> {
     let content: JSX.Element;
     if (submitted) {
       content = <>
-        <PlainTextContainer theme={theme}>Consent submitted successfully. You will receive an email with a copy of the completed form.</PlainTextContainer>
-        <PlainTextContainer theme={theme}>Your child can now access the KIPR Botball Simulator.</PlainTextContainer>
+        <PlainTextContainer theme={theme}>Consent submitted successfully. Your child can now access the KIPR Botball Simulator.</PlainTextContainer>
+        <PlainTextContainer theme={theme}>You will receive an email with a copy of the completed form. You can also <Link theme={theme} href={pdfBlobUrl} download="ParentConsentForm.pdf">download it now</Link>.</PlainTextContainer>
       </>;
     } else {
       const headerContent = <>
