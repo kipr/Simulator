@@ -501,9 +501,6 @@ class ParentalConsentPage extends React.Component<Props, State> {
 
     return (
       <Container theme={theme}>
-        <Card theme={theme} flex="1 1 500px">
-          <PdfFrame theme={theme} id="pdf" src={pdfUri ?? undefined} onLoad={(e) => { console.log('finished loading iframe', e) }}></PdfFrame>
-        </Card>
         <Card theme={theme} flex="0 1 500px">
           <Logo src={KIPR_LOGO_WHITE as string} />
           <Header theme={theme}>Parental Consent</Header>
@@ -511,6 +508,9 @@ class ParentalConsentPage extends React.Component<Props, State> {
           {content}
 
           {errorMessage && <PlainTextContainer theme={theme} color={RED.standard}>{errorMessage}</PlainTextContainer>}
+        </Card>
+        <Card theme={theme} flex="1 1 500px">
+          <PdfFrame theme={theme} id="pdf" src={pdfUri ?? undefined} onLoad={(e) => { console.log('finished loading iframe', e) }}></PdfFrame>
         </Card>
       </Container>
     );
