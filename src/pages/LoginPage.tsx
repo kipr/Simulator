@@ -195,7 +195,7 @@ class LoginPage extends React.Component<Props, State> {
           });
       } else {
         console.log('onAuthStateChanged without user');
-        this.setState({ loggedIn: false, authenticating: false, initialAuthLoaded: true });
+        this.setState({ loggedIn: false, initialAuthLoaded: true, authenticating: false, userConsent: undefined });
       }
     });
   };
@@ -291,7 +291,7 @@ class LoginPage extends React.Component<Props, State> {
 
   private setUserConsentForNewUser = (userId: string): Promise<UserConsent> => {
     const nextUserConsent: UserConsent = {
-      ...this.state.userConsent,
+      dateOfBirth: undefined,
       legalAcceptance: {
         state: LegalAcceptance.State.NotStarted,
         version: 1,
