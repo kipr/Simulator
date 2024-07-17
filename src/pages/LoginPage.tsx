@@ -472,7 +472,7 @@ class LoginPage extends React.Component<Props, State> {
             <Card theme={theme}>
               {kiprLogo}
 
-              <Header theme={theme}>Additional info</Header>
+              <Header theme={theme}>Additional Information</Header>
 
               <AdditionalInfoCard theme={theme} disable={authenticating} onCollectedInfo={this.onCollectedAdditionalInfo_} />
             </Card>
@@ -488,7 +488,7 @@ class LoginPage extends React.Component<Props, State> {
           <Card theme={theme} width='800px'>
             {kiprLogo}
 
-            <Header theme={theme}>Privacy policy and terms of use</Header>
+            <Header theme={theme}>Privacy Policy and Terms of Use</Header>
 
             <UserConsentCard theme={theme} disable={authenticating} onCollectedUserConsent={this.onCollectedUserConsent_} />
           </Card>
@@ -512,7 +512,7 @@ class LoginPage extends React.Component<Props, State> {
             <Card theme={theme}>
               {kiprLogo}
 
-              <Header theme={theme}>Waiting for parental consent</Header>
+              <Header theme={theme}>Waiting for Parental Consent</Header>
 
               <Text text={StyledText.text({
                 text: "An email was sent to the provided parent email address. After your parent has provided permission, you will be able to access the service.",
