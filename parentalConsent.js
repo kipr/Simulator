@@ -1,9 +1,88 @@
 const express = require('express');
 const axios = require('axios').default;
 const crypto = require('crypto');
+const fsp = require('fs').promises;
+const pdfLib = require('pdf-lib');
+
+const CURRENT_PDF_VERSION = '1';
+
+const PDF_FIELD_MAP = Object.freeze({
+  'program': 'Program',
+  'childFullName': `Child's Full Name`,
+  'childDateOfBirth': 'Date of Birth',
+  'childEmail': 'Email Used for Sign Up',
+  'parentFullName': 'Full Name',
+  'parentRelationship': 'Relationship to the Child',
+  'parentEmailAddress': 'Email Address',
+  'signature': 'Parent/Legal Guardian Signature',
+  'signatureDate': 'Date Signed',
+});
+
+async function generateParentConsentForm(formValues) {
+  // TODO: validate form values
+
+  const pdfBuffer = await fsp.readFile(`${__dirname}/static/eula/KIPR-Parental-Consent.pdf`);
+  const pdfDoc = await pdfLib.PDFDocument.load(pdfBuffer);
+
+  // Fill PDF form based on values from request body
+  for (const bodyParam in PDF_FIELD_MAP) {
+    const formKey = PDF_FIELD_MAP[bodyParam];
+    pdfDoc.getForm().getTextField(formKey).setText(formValues[bodyParam]);
+    pdfDoc.getForm().getTextField(formKey).enableReadOnly();
+  }
+
+  return await pdfDoc.save();
+}
 
 function createRouter(firebaseTokenManager, mailgunClient, config) {
   const router = express.Router();
+
+  // API to generate parental consent form from form values
+  router.post('/generate-form', asyncExpressHandler(async (req, res) => {
+    // TODO: add parent token authentication
+
+    if (!('version' in req.body) || typeof req.body.version !== 'string') {
+      return res.status(400).json({
+        error: "Expected version string in body"
+      });
+    }
+
+    // TODO: ensure that requested version is the latest version
+    if (req.body.version !== CURRENT_PDF_VERSION.toString()) {
+      return res.status(400).json({
+        error: `Expected version ${CURRENT_PDF_VERSION}`
+      });
+    }
+
+    // Ensure request body has "form" key of type object
+    if (!('form' in req.body) || typeof req.body.form !== 'object') {
+      return res.status(400).json({
+        error: "Expected form object in body"
+      });
+    }
+
+    // Ensure request body has all fields in the "form" object
+    for (const bodyParam in PDF_FIELD_MAP) {
+      if (!(bodyParam in req.body.form) || typeof req.body.form[bodyParam] !== 'string') {
+        return res.status(400).json({
+          error: `Expected '${bodyParam}' in request body form object`
+        });
+      }
+    }
+
+    let pdfData = null;
+    try {
+      pdfData = await generateParentConsentForm(req.body.form);      
+    } catch (e) {
+      console.error('Failed to generate parental consent form', e);
+      res.status(400).send();
+      return;
+    }
+
+    res.type('application/pdf');
+    res.set('X-Consent-Version', CURRENT_PDF_VERSION); // TODO: unsure if custom header is the right way to version
+    res.end(pdfData);
+  }));
 
   // API to get parental consent for the user
   // TODO: this API needs throttling since it requires a database read for the authorization check
@@ -187,23 +266,9 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
       return;
     }
 
-    if (!req.is('application/pdf')) {
-      console.error('Content-Type is not pdf');
-      res.status(400).send();
-      return;
-    }
-
-    const contentLength = Number(req.header('Content-Length'));
-    if (isNaN(contentLength) || contentLength === 0) {
-      console.error('Content-Length must be non-zero');
-      res.status(400).send();
-      return;
-    }
-
-    const MAX_CONTENT_LENGTH = 200 * 1000;
-    if (contentLength > MAX_CONTENT_LENGTH) {
-      console.error('Content-Length of', contentLength, 'exceeds the max of', MAX_CONTENT_LENGTH);
-      res.status(400).send();
+    if (!req.is('application/json')) {
+      console.error('Content-Type is not json');
+      res.status(415).send();
       return;
     }
 
@@ -222,12 +287,42 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
       return;
     }
 
-    const bodyBuffer = await streamToBuffer(req);
+    if (!('version' in req.body) || typeof req.body.version !== 'string') {
+      return res.status(400).json({
+        error: "Expected version string in body"
+      });
+    }
+
+    // Ensure provided version is the latest version
+    if (req.body.version !== CURRENT_PDF_VERSION.toString()) {
+      return res.status(400).json({
+        error: `Expected version ${CURRENT_PDF_VERSION}`
+      });
+    }
+
+    // Ensure request body has "form" key of type object
+    if (!('form' in req.body) || typeof req.body.form !== 'object') {
+      return res.status(400).json({
+        error: "Expected form object in body"
+      });
+    }
+
+    // Ensure request body has all fields in the "form" object
+    for (const bodyParam in PDF_FIELD_MAP) {
+      if (!(bodyParam in req.body.form) || typeof req.body.form[bodyParam] !== 'string') {
+        return res.status(400).json({
+          error: `Expected '${bodyParam}' in request body form object`
+        });
+      }
+    }
+
+    // TODO: try-catch to handle validation errors
+    const pdfData = await generateParentConsentForm(req.body.form);
 
     // Save parental consent PDF
     let storeResponse;
     try {
-      storeResponse = await uploadParentalConsentPdf(bodyBuffer, userId, firebaseIdToken, config);
+      storeResponse = await uploadParentalConsentPdf(pdfData, userId, firebaseIdToken, config);
     } catch (storeError) {
       console.error('Failed to store parental consent PDF', storeError);
       res.status(500).send();
@@ -256,7 +351,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
     }
 
     try {
-      await sendParentalConsentConfirmationEmail(currentConsent.legalAcceptance.parentEmailAddress, bodyBuffer, mailgunClient, config);
+      await sendParentalConsentConfirmationEmail(currentConsent.legalAcceptance.parentEmailAddress, pdfData, mailgunClient, config);
     } catch (sendConfirmationError) {
       console.error('Failed to send confirmation email', sendConfirmationError);
       res.status(500).send();
@@ -338,13 +433,15 @@ function sendParentalConsentEmail(userId, parentConsentToken, parentEmailAddress
 function sendParentalConsentConfirmationEmail(parentEmailAddress, pdfData, mailgunClient, config) {
   const domain = config.mailgun.domain;
 
+  const pdfDataBuffer = Buffer.from(pdfData);
+
   // TODO: compose final email
   const mailgunData = {
     from: `test@${domain}`,
     to: parentEmailAddress,
     template: 'parental consent confirmation',
     attachment: {
-      data: pdfData,
+      data: pdfDataBuffer,
       filename: 'KIPR_Simulator_Consent.pdf',
       contentType: 'application/pdf',
     },
@@ -377,16 +474,6 @@ function getHashForParentToken(token) {
 const asyncExpressHandler = (func) => (req, res, next) => {
   Promise.resolve(func(req, res, next))
     .catch(next);
-}
-
-// Reads a stream into a buffer. Returns the buffer
-async function streamToBuffer(stream) {
-  const bufs = [];
-  for await (const chunk of stream) {
-    bufs.push(chunk);
-  }
-
-  return Buffer.concat(bufs);
 }
 
 module.exports = createRouter;
