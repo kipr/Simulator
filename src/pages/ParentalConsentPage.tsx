@@ -538,7 +538,7 @@ class ParentalConsentPage extends React.Component<Props, State> {
 
           {errorMessage && <PlainTextContainer theme={theme} color={RED.standard}>{errorMessage}</PlainTextContainer>}
         </Card>
-        <Card theme={theme} flex="1 1 500px" style={{ alignItems: 'center' }}>
+        <Card theme={theme} flex="1 1 500px" style={{ alignItems: 'center', scrollbarGutter: 'stable' }}>
           {pdfPageComponents}
         </Card>
       </Container>

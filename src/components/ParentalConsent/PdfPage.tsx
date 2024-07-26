@@ -29,6 +29,7 @@ class PdfPage extends React.Component<Props, State> {
   }
 
   private canvasRef = React.createRef<HTMLCanvasElement>();
+  private resizeObserver: ResizeObserver | null = null;
 
   private updateCanvas = (): Promise<void> => {
     const canvasRef = this.canvasRef;
@@ -38,16 +39,21 @@ class PdfPage extends React.Component<Props, State> {
     
     const pdfPage = this.props.pdfPage;
 
-    const scale = 1.5;
-    const viewport = pdfPage.getViewport({ scale: scale, });
+    const PADDING = 20;
+    const parentContainerWidth = canvasRef.current.parentElement.clientWidth - PADDING;
+    const unscaledViewport = pdfPage.getViewport({ scale: 1.0, });
+    const scaleFactorFit = parentContainerWidth / unscaledViewport.width;
+    const scaleFactorClamped = Math.max(1.0, Math.min(1.5, scaleFactorFit));
+
+    const viewport = pdfPage.getViewport({ scale: scaleFactorClamped, });
     // Support HiDPI-screens.
     const outputScale = window.devicePixelRatio || 1;
 
     const context = canvasRef.current.getContext('2d');
 
-    canvasRef.current.width = Math.floor(viewport.width * outputScale);
+    canvasRef.current.width = Math.floor((viewport.width - PADDING) * outputScale);
     canvasRef.current.height = Math.floor(viewport.height * outputScale);
-    canvasRef.current.style.width = Math.floor(viewport.width) + "px";
+    canvasRef.current.style.width = Math.floor((viewport.width - PADDING)) + "px";
     canvasRef.current.style.height = Math.floor(viewport.height) + "px";
 
     const transform = outputScale !== 1
@@ -64,7 +70,20 @@ class PdfPage extends React.Component<Props, State> {
   };
 
   async componentDidMount(): Promise<void> {
-    this.updateCanvas();
+    await this.updateCanvas();
+
+    if ('ResizeObserver' in window) {
+      this.resizeObserver = new ResizeObserver((entries) => {
+        this.updateCanvas();
+      });
+      this.resizeObserver.observe(this.canvasRef.current.parentElement);
+    }
+  }
+
+  componentWillUnmount(): void {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
   }
 
   // Does NOT re-render the PDF page from props
