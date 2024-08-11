@@ -11,9 +11,10 @@ import { faPaperPlane, faArrowRight, faSpinner } from '@fortawesome/free-solid-s
 import { FontAwesome } from "../components/FontAwesome";
 import Button from '../components/interface/Button';
 import { GlobalWorkerOptions, PDFDocumentProxy, PDFPageProxy, getDocument } from 'pdfjs-dist';
-import PdfPage from '../components/ParentalConsent/PdfPage';
+import PdfPage from '../components/PdfPage';
 
 // TODO: make this point to a local file that gets deployed
+// TODO: centralize somewhere in the app
 GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
 
 interface ParentalConsentPageProps extends ThemeProps, StyleProps {

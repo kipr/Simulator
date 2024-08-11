@@ -3,10 +3,15 @@ import Form from "../interface/Form";
 import { Text } from "../interface/Text";
 import React from "react";
 import { styled } from "styletron-react";
-import { StyledText } from "../../util";
 import { StyleProps } from "util/style";
 import { faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 import { TabBar } from "../Layout/TabBar";
+import PdfPage from "../PdfPage";
+import { GlobalWorkerOptions, PDFPageProxy, getDocument } from 'pdfjs-dist';
+
+// TODO: make this point to a local file that gets deployed
+// TODO: centralize somewhere in the app
+GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
 
 export interface UserConsentCardPublicProps extends ThemeProps, StyleProps {
   disable: boolean;
@@ -19,6 +24,7 @@ interface UserConsentCardPrivateProps {
 interface UserConsentCardState {
   termsAccepted: boolean;
   tabIndex: number;
+  pdfPagesLists: PDFPageProxy[][];
 }
 
 type Props = UserConsentCardPublicProps & UserConsentCardPrivateProps;
@@ -29,6 +35,14 @@ const Container = styled('div', (props: ThemeProps) => ({
   marginRight: `${props.theme.itemPadding * 2}px`,
   alignSelf: 'flex-start',
   width: `calc(100% - ${props.theme.itemPadding * 4}px)`,
+}));
+
+const PdfContainer = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  height: '300px',
+  overflow: 'auto',
+  marginBottom: `${props.theme.itemPadding * 2}px`,
 }));
 
 const StyledForm = styled(Form, (props: ThemeProps) => ({
@@ -48,15 +62,6 @@ const PlainTextContainer = styled('div', (props: ThemeProps) => ({
   alignSelf: 'flex-start',
   // marginLeft: `${props.theme.itemPadding * 2}px`,
   marginBottom: `${props.theme.itemPadding * 2}px`,
-}));
-
-const PdfFrame = styled('iframe', (props: ThemeProps) => ({
-  // marginLeft: `${props.theme.itemPadding * 2}px`,
-  // marginRight: `${props.theme.itemPadding * 2}px`,
-  marginBottom: `${props.theme.itemPadding * 2}px`,
-  height: '300px',
-  width: '100%',
-  // width: `calc(100% - ${props.theme.itemPadding * 4}px)`,
 }));
 
 const CheckboxLabel = styled('label', (props: ThemeProps) => ({
@@ -82,7 +87,21 @@ class UserConsentCard extends React.Component<Props, State> {
     this.state = {
       termsAccepted: false,
       tabIndex: 0,
+      pdfPagesLists: [],
     };
+  }
+
+  async componentDidMount(): Promise<void> {
+    // Get PDFs for each document tab and store the PDF pages in state
+    for (let documentTabIndex = 0; documentTabIndex < UserConsentCard.documentTabData.length; ++documentTabIndex) {
+      this.getPdfFromUrl(UserConsentCard.documentTabData[documentTabIndex].documentUrl).then(pdfPages => {
+        this.setState((prevState) => {
+          const pdfPagesLists = [...prevState.pdfPagesLists];
+          pdfPagesLists[documentTabIndex] = pdfPages;
+          return { pdfPagesLists };
+        });
+      });
+    }
   }
 
   private static readonly documentTabData: DocumentTabData[] = [
@@ -96,6 +115,28 @@ class UserConsentCard extends React.Component<Props, State> {
     }
   ];
 
+  private getPdfFromUrl = async (url: string) => {
+    const pdfResponse = await fetch(url);
+
+    if (!pdfResponse.ok) {
+      console.error('Failed to fetch PDF', pdfResponse.status);
+      return null;
+    }
+
+    const pdfResponseBody = await pdfResponse.arrayBuffer()
+
+    const pdf = await getDocument(pdfResponseBody).promise;
+
+    const pagePromises: Promise<PDFPageProxy>[] = [];
+    for (let i = 1; i <= pdf.numPages; ++i) {
+      pagePromises.push(pdf.getPage(i));
+    }
+    
+    const pages = await Promise.all(pagePromises);
+
+    return pages;
+  };
+
   private onTabIndexChange_ = (tabIndex: number) => {
     this.setState({ tabIndex });
   };
@@ -103,10 +144,14 @@ class UserConsentCard extends React.Component<Props, State> {
   render(): React.ReactNode {
     const { props, state } = this;
     const { theme, disable, onCollectedUserConsent } = props;
-    const { tabIndex } = state;
+    const { tabIndex, pdfPagesLists } = state;
     
     const tabs: TabBar.TabDescription[] = UserConsentCard.documentTabData.map(d => ({ name: d.tabName }));
-    const pdfUrl = UserConsentCard.documentTabData[tabIndex].documentUrl;
+
+    const pdfPages = pdfPagesLists[tabIndex];
+    const pdfPageComponents = pdfPages
+      ? pdfPages.map((page, index) => <PdfPage key={`${tabIndex}-${index}`} pdfPage={page} />)
+      : <PlainTextContainer theme={theme}>Loading...</PlainTextContainer>;
 
     return <Container theme={theme}>
       <PlainTextContainer theme={theme}>Read and accept the privacy policy and terms of use below.</PlainTextContainer>
@@ -119,7 +164,9 @@ class UserConsentCard extends React.Component<Props, State> {
       })} /> */}
 
       <StyledTabBar theme={theme} tabs={tabs} index={tabIndex} onIndexChange={this.onTabIndexChange_}></StyledTabBar>
-      <PdfFrame theme={theme} src={`${pdfUrl}#toolbar=0&navpanes=0`} />
+      <PdfContainer theme={theme} key={tabIndex}>
+        {pdfPageComponents}
+      </PdfContainer>
 
       <div>
         <input type="checkbox" id="agreedToTerms" onChange={(e) => {

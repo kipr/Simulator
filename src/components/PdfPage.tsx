@@ -39,8 +39,9 @@ class PdfPage extends React.Component<Props, State> {
     
     const pdfPage = this.props.pdfPage;
 
-    const PADDING = 20;
-    const parentContainerWidth = canvasRef.current.parentElement.clientWidth - PADDING;
+    const parentComputedStyle = getComputedStyle(canvasRef.current.parentElement);
+    const parentHorizontalPadding = parseFloat(parentComputedStyle.paddingLeft) + parseFloat(parentComputedStyle.paddingRight);
+    const parentContainerWidth = canvasRef.current.parentElement.clientWidth - parentHorizontalPadding;
     const unscaledViewport = pdfPage.getViewport({ scale: 1.0, });
     const scaleFactorFit = parentContainerWidth / unscaledViewport.width;
     const scaleFactorClamped = Math.max(1.0, Math.min(1.5, scaleFactorFit));
@@ -51,9 +52,9 @@ class PdfPage extends React.Component<Props, State> {
 
     const context = canvasRef.current.getContext('2d');
 
-    canvasRef.current.width = Math.floor((viewport.width - PADDING) * outputScale);
+    canvasRef.current.width = Math.floor((viewport.width - parentHorizontalPadding) * outputScale);
     canvasRef.current.height = Math.floor(viewport.height * outputScale);
-    canvasRef.current.style.width = Math.floor((viewport.width - PADDING)) + "px";
+    canvasRef.current.style.width = Math.floor((viewport.width - parentHorizontalPadding)) + "px";
     canvasRef.current.style.height = Math.floor(viewport.height) + "px";
 
     const transform = outputScale !== 1
