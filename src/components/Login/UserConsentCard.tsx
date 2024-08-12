@@ -40,9 +40,11 @@ const Container = styled('div', (props: ThemeProps) => ({
 const PdfContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'column',
+  gap: `${props.theme.itemPadding * 2}px`,
   height: '300px',
   overflow: 'auto',
   marginBottom: `${props.theme.itemPadding * 2}px`,
+  scrollbarGutter: 'stable',
 }));
 
 const StyledForm = styled(Form, (props: ThemeProps) => ({
@@ -150,7 +152,7 @@ class UserConsentCard extends React.Component<Props, State> {
 
     const pdfPages = pdfPagesLists[tabIndex];
     const pdfPageComponents = pdfPages
-      ? pdfPages.map((page, index) => <PdfPage key={`${tabIndex}-${index}`} pdfPage={page} />)
+      ? pdfPages.map((page, index) => <PdfPage key={`${tabIndex}-${index}`} pdfPage={page} pdfPageNum={index} />)
       : <PlainTextContainer theme={theme}>Loading...</PlainTextContainer>;
 
     return <Container theme={theme}>

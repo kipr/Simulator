@@ -527,7 +527,7 @@ class ParentalConsentPage extends React.Component<Props, State> {
       }
     }
 
-    const pdfPageComponents = pdfPages.map((page, index) => <PdfPage key={pdfPagesEndKey - index} pdfPage={page} />);
+    const pdfPageComponents = pdfPages.map((page, index) => <PdfPage key={pdfPagesEndKey - index} pdfPage={page} pdfPageNum={index} />);
 
     return (
       <Container theme={theme}>

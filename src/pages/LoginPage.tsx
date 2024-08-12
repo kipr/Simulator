@@ -485,7 +485,7 @@ class LoginPage extends React.Component<Props, State> {
 
         return <Container theme={theme} className={className} style={style}>
           <MainMenuBar theme={theme} />
-          <Card theme={theme} width='800px'>
+          <Card theme={theme} width='fit-content'>
             {kiprLogo}
 
             <Header theme={theme}>Privacy Policy and Terms of Use</Header>

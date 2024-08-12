@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
-import { GlobalWorkerOptions, PDFPageProxy } from 'pdfjs-dist';
+import { GlobalWorkerOptions, PDFPageProxy, PixelsPerInch } from 'pdfjs-dist';
+import { EventBus, LinkTarget, PDFPageView, SimpleLinkService } from 'pdfjs-dist/web/pdf_viewer.mjs';
 
 GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
 
 interface PdfPageProps {
   pdfPage: PDFPageProxy;
+  pdfPageNum: number;
 }
 
 interface PdfPageState {
@@ -14,7 +16,7 @@ interface PdfPageState {
 type Props = PdfPageProps;
 type State = PdfPageState;
 
-const PdfPageCanvas = styled('canvas', {
+const PdfPageContainer = styled('div', {
   // Ensures that the canvas is centered *without getting clipped when larger than the parent container*
   // Ideally we would use "justify-content: safe center" on the parent flex container, but it's not supported in Safari yet
   // See https://stackoverflow.com/questions/33454533/cant-scroll-to-top-of-flex-item-that-is-overflowing-container
@@ -28,56 +30,77 @@ class PdfPage extends React.Component<Props, State> {
     this.state = {};
   }
 
-  private canvasRef = React.createRef<HTMLCanvasElement>();
+  private divContainerRef = React.createRef<HTMLDivElement>();
+  private pdfPageView: PDFPageView = null;
   private resizeObserver: ResizeObserver | null = null;
+  private scaleFactor: number = 0;
 
-  private updateCanvas = (): Promise<void> => {
-    const canvasRef = this.canvasRef;
-    if (!canvasRef.current) {
-      return;
-    }
-    
-    const pdfPage = this.props.pdfPage;
-
-    const parentComputedStyle = getComputedStyle(canvasRef.current.parentElement);
+  private calculateScaleFactor = (): number => {    
+    const parentElement = this.divContainerRef.current.parentElement;
+    const parentComputedStyle = getComputedStyle(parentElement);
     const parentHorizontalPadding = parseFloat(parentComputedStyle.paddingLeft) + parseFloat(parentComputedStyle.paddingRight);
-    const parentContainerWidth = canvasRef.current.parentElement.clientWidth - parentHorizontalPadding;
-    const unscaledViewport = pdfPage.getViewport({ scale: 1.0, });
-    const scaleFactorFit = parentContainerWidth / unscaledViewport.width;
+    const parentContainerWidth = parentElement.clientWidth - parentHorizontalPadding;
+    const unscaledPdfViewport = this.props.pdfPage.getViewport({ scale: 1.0, });
+    const scaleFactorFit = parentContainerWidth / (unscaledPdfViewport.width * PixelsPerInch.PDF_TO_CSS_UNITS);
+
+    // Clamp the scale factor to avoid zooming in/out too much
     const scaleFactorClamped = Math.max(1.0, Math.min(1.5, scaleFactorFit));
 
-    const viewport = pdfPage.getViewport({ scale: scaleFactorClamped, });
-    // Support HiDPI-screens.
-    const outputScale = window.devicePixelRatio || 1;
+    // Round down to 2 decimal places to avoid horizontal scrollbars at some ratios
+    return Math.floor(scaleFactorClamped * 100) / 100;
+  };
 
-    const context = canvasRef.current.getContext('2d');
+  private initialRenderPdf = (): Promise<void> => {
+    const pdfPage = this.props.pdfPage;
+    const viewport = pdfPage.getViewport({ scale: 1.0, });
+    this.scaleFactor = this.calculateScaleFactor();
 
-    canvasRef.current.width = Math.floor((viewport.width - parentHorizontalPadding) * outputScale);
-    canvasRef.current.height = Math.floor(viewport.height * outputScale);
-    canvasRef.current.style.width = Math.floor((viewport.width - parentHorizontalPadding)) + "px";
-    canvasRef.current.style.height = Math.floor(viewport.height) + "px";
-
-    const transform = outputScale !== 1
-      ? [outputScale, 0, 0, outputScale, 0, 0]
-      : null;
-    
-    const renderTask = pdfPage.render({
-      canvasContext: context,
-      transform: transform,
-      viewport: viewport,
+    const eventBus = new EventBus();
+    this.pdfPageView = new PDFPageView({
+      container: this.divContainerRef.current,
+      id: this.props.pdfPageNum,
+      scale: this.scaleFactor,
+      defaultViewport: viewport,
+      eventBus,
+      layerProperties: {
+        // Ensure that links in the PDF open in a new tab
+        linkService: new SimpleLinkService({
+          eventBus,
+          externalLinkTarget: LinkTarget.BLANK,
+        }),
+      },
     });
 
-    return renderTask.promise;
+    this.pdfPageView.setPdfPage(pdfPage);
+
+    return this.pdfPageView.draw();
+  };
+
+  private rescalePdf = (): Promise<void> => {
+    if (!this.pdfPageView) {
+      console.error('rescale failed, pdfPageView not ready');
+      return;
+    }
+
+    const newScaleFactor = this.calculateScaleFactor();
+    if (newScaleFactor === this.scaleFactor) {
+      return;
+    }
+
+    this.scaleFactor = newScaleFactor;
+
+    this.pdfPageView.update({ scale: this.scaleFactor });
+    return this.pdfPageView.draw();
   };
 
   async componentDidMount(): Promise<void> {
-    await this.updateCanvas();
+    await this.initialRenderPdf();
 
     if ('ResizeObserver' in window) {
       this.resizeObserver = new ResizeObserver((entries) => {
-        this.updateCanvas();
+        this.rescalePdf();
       });
-      this.resizeObserver.observe(this.canvasRef.current.parentElement);
+      this.resizeObserver.observe(this.divContainerRef.current.parentElement);
     }
   }
 
@@ -91,7 +114,7 @@ class PdfPage extends React.Component<Props, State> {
   // Only re-renders when component is mounted
   // To re-render the PDF, use a React key to force re-mounting
   render() {
-    return <PdfPageCanvas ref={this.canvasRef} />;
+    return <PdfPageContainer ref={this.divContainerRef} className="pdfViewer singlePageView" />
   }
 }
 
