@@ -214,8 +214,27 @@ class ParentalConsentPage extends React.Component<Props, State> {
         this.setState({ pageStatus: 'invalid' });
         return;
       }
-  
-      this.setState({ pageStatus: 'valid'});
+
+      const [childDobYear, childDobMonth, childDobDay] = currentParentConsent.userDateOfBirth.split('-');
+      const childDobFormStr = ParentalConsentPage.dateToFormDateString(childDobYear, childDobMonth, childDobDay);
+
+      const today = new Date();
+      const todayFormStr = ParentalConsentPage.dateToFormDateString(today.getFullYear().toString(), (today.getMonth() + 1).toString(), today.getDate().toString());
+
+      // The form results stored in state are post-finalization, so use form finalizers to finalize the pre-filled values
+      const childDobFinalValue = ParentalConsentPage.getFormItem('child_dob').finalizer(childDobFormStr);
+      const childEmailFinalValue = ParentalConsentPage.getFormItem('child_email').finalizer(currentParentConsent.userEmail);
+      const dateSignedFinalValue = ParentalConsentPage.getFormItem('date_signed').finalizer(todayFormStr);
+
+      this.setState({
+        pageStatus: 'valid',
+        // TODO: this is a messy way to set initial form results; ideally, form results in state should be flat (independent of the form structure)
+        formResults: [
+          { child_dob: childDobFinalValue, child_email: childEmailFinalValue },
+          {},
+          { date_signed: dateSignedFinalValue },
+        ],
+      });
     } catch {
       this.setState({ pageStatus: 'error' });
       return;
@@ -224,7 +243,12 @@ class ParentalConsentPage extends React.Component<Props, State> {
     this.updatePdfPreview_();
   }
 
-  private getCurrentParentConsent_: () => Promise<{ state: string }> = async () => {
+  // Convert a date to a string in the format 'MM/DD/YYYY', as expected in the form fields
+  private static dateToFormDateString = (year: string, month: string, day: string): string => {
+    return `${month.padStart(2, '0')}/${day.padStart(2, '0')}/${year}`;
+  };
+
+  private getCurrentParentConsent_: () => Promise<{ state: string, userDateOfBirth: string, userEmail: string }> = async () => {
     const response = await fetch(`/api/parental-consent/${this.props.userId}`, {
       headers: {
         'Authorization': `ParentToken ${this.props.token}`,
@@ -240,7 +264,7 @@ class ParentalConsentPage extends React.Component<Props, State> {
     }
 
     const json = await response.json();
-    if (typeof(json) !== 'object' || !('state' in json)) {
+    if (typeof(json) !== 'object' || !('state' in json) || !('userDateOfBirth' in json) || !('userEmail' in json)) {
       return new Error('Unexpected format of response body');
     }
 
@@ -371,6 +395,17 @@ class ParentalConsentPage extends React.Component<Props, State> {
     return forms;
   };
 
+  private static getFormItem = (id: string) => {
+    for (const form of ParentalConsentPage.forms) {
+      const result = form.find(item => item.id === id);
+      if (result) {
+        return result;
+      }
+    }
+
+    return null;
+  };
+
   private static readonly forms: Form.Item[][] = [
     // CHILD ACCOUNT INFO FORM
     [
@@ -389,12 +424,14 @@ class ParentalConsentPage extends React.Component<Props, State> {
       {
         id: 'child_dob',
         text: 'Date of Birth',
+        disabled: true,
         validator: Form.DATE_VALIDATOR,
         finalizer: ParentalConsentPage.createFormFinalizer('childDateOfBirth'),
       },
       {
         id: 'child_email',
         text: 'Email Used for Sign Up',
+        disabled: true,
         validator: Form.EMAIL_VALIDATOR,
         finalizer: ParentalConsentPage.createFormFinalizer('childEmail'),
       },
@@ -431,6 +468,7 @@ class ParentalConsentPage extends React.Component<Props, State> {
       {
         id: 'date_signed',
         text: 'Date Signed',
+        disabled: true,
         validator: Form.DATE_VALIDATOR,
         finalizer: ParentalConsentPage.createFormFinalizer('signatureDate'),
       },

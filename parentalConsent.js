@@ -3,6 +3,7 @@ const axios = require('axios').default;
 const crypto = require('crypto');
 const fsp = require('fs').promises;
 const pdfLib = require('pdf-lib');
+const { getAuth } = require('firebase-admin/auth');
 
 const CURRENT_PDF_VERSION = '1';
 
@@ -122,8 +123,18 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
       return;
     }
 
+    // Send user's email in the response for the parent to verify
+    const user = await getAuth().getUser(userId);
+    if (!user || !user.email) {
+      console.error('Failed to get user email');
+      res.status(500).send();
+      return;
+    }
+
     res.status(200).json({
       state: currentConsent.legalAcceptance.state,
+      userDateOfBirth: currentConsent.dateOfBirth,
+      userEmail: user.email,
     });
   }));
 

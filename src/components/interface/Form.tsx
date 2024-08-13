@@ -124,6 +124,7 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
         <Input
           key={`input-${index}`}
           theme={theme}
+          disabled={item.disabled ?? false}
           type={item.valueHidden ? 'password' : 'text'}
           value={item.id in values ? values[item.id].text : (item.defaultValue || '')}
           autoFocus={index === 0}
@@ -217,6 +218,7 @@ namespace Form {
   export interface Item<F = any> {
     id: string;
     text: string;
+    disabled?: boolean;
     valueHidden?: boolean;
     tooltip?: string;
     defaultValue?: string;
