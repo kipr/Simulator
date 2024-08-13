@@ -178,6 +178,13 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
       });
     }
 
+    const user = await getAuth().getUser(userId);
+    if (req.body.parentEmailAddress.toLowerCase() === user.email.toLowerCase()) {
+      return res.status(400).json({
+        error: `Parent email address cannot be the same as user's email address`
+      });
+    }
+
     console.log('getting parental consent for user', userId);
     const firebaseIdToken = firebaseTokenManager.getToken();
 

@@ -1,4 +1,4 @@
-import { ThemeProps } from "../constants/theme";
+import { RED, ThemeProps } from "../constants/theme";
 import Form from "../interface/Form";
 import { Text } from "../interface/Text";
 import React from "react";
@@ -10,6 +10,7 @@ import { Validators } from "../../util/Validator";
 
 export interface AdditionalInfoCardPublicProps extends ThemeProps, StyleProps {
   disable: boolean;
+  errorMessage: string;
   onCollectedInfo: (dob: string, parentEmailAddress: string | null) => void;
 }
 
@@ -88,7 +89,7 @@ class AdditionalInfoCard extends React.Component<Props, State> {
 
   render(): React.ReactNode {
     const { props, state } = this;
-    const { theme, disable } = props;
+    const { theme, disable, errorMessage } = props;
     const { dateOfBirth, shouldPromptParentEmail } = state;
 
     if (!dateOfBirth) {
@@ -151,6 +152,22 @@ class AdditionalInfoCard extends React.Component<Props, State> {
           onFinalize={this.onContinueClicked_}
           finalizeDisabled={disable}
         />
+
+        {
+          errorMessage && <Text text={
+            StyledText.text({
+              text: errorMessage,
+              style: {
+                color: RED.standard,
+                fontWeight: 400,
+                fontSize: '0.9em',
+                textAlign: 'left',
+                marginLeft: '8px',
+                marginRight: '8px',
+              }
+            })
+          } style={{ marginBottom: `${theme.itemPadding * 2}px`}} />
+        }
       </>
     }
 

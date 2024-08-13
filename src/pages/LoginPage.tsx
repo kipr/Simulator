@@ -385,12 +385,22 @@ class LoginPage extends React.Component<Props, State> {
           ...this.state.userConsent,
           dateOfBirth: dob,
         },
+        logInFailedMessage: null,
       });
     } else {
+      // Don't allow parent email to be the same as user email
+      if (auth.currentUser.email.toLowerCase() === parentEmailAddress.toLowerCase()) {
+        this.setState({
+          logInFailedMessage: 'Parent email cannot be the same as your email.',
+        });
+
+        return;
+      }
+      
       const userId = auth.currentUser.uid;
 
       // Start parental consent process
-      this.setState({ authenticating: true }, () => {
+      this.setState({ authenticating: true, logInFailedMessage: null }, () => {
         const autoDelete = LegalAcceptance.shouldAutoDelete(this.state.userConsent?.legalAcceptance);
         this.startNewParentalConsent_(userId, dob, parentEmailAddress, autoDelete)
           .then((nextUserConsent) => {
@@ -398,7 +408,7 @@ class LoginPage extends React.Component<Props, State> {
           })
           .catch(error => {
             console.error('Starting parental consent failed', error);
-            this.setState({ authenticating: false });
+            this.setState({ authenticating: false, logInFailedMessage: 'Something went wrong. Please contact KIPR for support.' });
           });
       });
     }
@@ -474,7 +484,7 @@ class LoginPage extends React.Component<Props, State> {
 
               <Header theme={theme}>Additional Information</Header>
 
-              <AdditionalInfoCard theme={theme} disable={authenticating} onCollectedInfo={this.onCollectedAdditionalInfo_} />
+              <AdditionalInfoCard theme={theme} disable={authenticating} errorMessage={logInFailedMessage} onCollectedInfo={this.onCollectedAdditionalInfo_} />
             </Card>
           </Container>
         );
