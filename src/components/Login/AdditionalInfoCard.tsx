@@ -132,15 +132,27 @@ class AdditionalInfoCard extends React.Component<Props, State> {
         Form.verifier('parentEmail', 'A valid parent email is required', Validators.Types.Email),
       ];
 
+      const infoTextStyle: React.CSSProperties = {
+        display: 'inline-block',
+        color: theme.color,
+        marginLeft: '8px',
+        marginRight: '8px',
+      };
+
       return <>
-        <Text text={StyledText.text({
-          text: "You must get your parent's permission to use this service. After you request permission, your parent will receive an email with further instructions.",
-          style: {
-            display: 'inline-block',
-            color: theme.color,
-            marginLeft: '8px',
-            marginRight: '8px',
-          }
+        <Text text={StyledText.compose({
+          items: [
+            StyledText.text({
+              text: "You must get your parent's permission to use this service. After you request permission, your parent will receive an email with further instructions.",
+              style: infoTextStyle,
+            }),
+            StyledText.newLine(),
+            StyledText.newLine(),
+            StyledText.text({
+              text: "They will have 48 hours to provide permission before your account is deleted.",
+              style: infoTextStyle,
+            }),
+          ],
         })} />
 
         <StyledForm
