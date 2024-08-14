@@ -437,8 +437,8 @@ function sendParentalConsentEmail(userId, parentConsentToken, parentEmailAddress
   const mailgunData = {
     from: `test@${domain}`,
     to: parentEmailAddress,
-    subject: `Parental consent for Botball Simulator`,
-    template: 'Test template',
+    subject: `Parent/Guardian Consent for KIPR Simulator`,
+    template: 'consent',
     'h:X-Mailgun-Variables': JSON.stringify({
       consentlink: consentLink
     }),
@@ -457,7 +457,8 @@ function sendParentalConsentConfirmationEmail(parentEmailAddress, pdfData, mailg
   const mailgunData = {
     from: `test@${domain}`,
     to: parentEmailAddress,
-    template: 'parental consent confirmation',
+    subject: `Parent/Guardian Consent Confirmation for KIPR Simulator`,
+    template: 'consent confirmation',
     attachment: {
       data: pdfDataBuffer,
       filename: 'KIPR_Simulator_Consent.pdf',
