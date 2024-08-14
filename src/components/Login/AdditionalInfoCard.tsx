@@ -125,11 +125,11 @@ class AdditionalInfoCard extends React.Component<Props, State> {
 
     if (shouldPromptParentEmail) {
       const PARENT_EMAIL_FORM_ITEMS: Form.Item[] = [
-        Form.email('parentEmail', 'Parent email'),
+        Form.email('parentEmail', 'Parent/guardian email'),
       ];
 
       const PARENT_EMAIL_FORM_VERIFIERS: Form.Item[] = [
-        Form.verifier('parentEmail', 'A valid parent email is required', Validators.Types.Email),
+        Form.verifier('parentEmail', 'A valid parent/guardian email is required', Validators.Types.Email),
       ];
 
       const infoTextStyle: React.CSSProperties = {
@@ -143,7 +143,7 @@ class AdditionalInfoCard extends React.Component<Props, State> {
         <Text text={StyledText.compose({
           items: [
             StyledText.text({
-              text: "You must get your parent's permission to use this service. After you request permission, your parent will receive an email with further instructions.",
+              text: "You must get your parent/guardian's permission to use this service. After you request permission, your parent/guardian will receive an email with further instructions.",
               style: infoTextStyle,
             }),
             StyledText.newLine(),
@@ -157,7 +157,7 @@ class AdditionalInfoCard extends React.Component<Props, State> {
 
         <StyledForm
           finalizeIcon={faSignInAlt}
-          finalizeText={'Request Parental Consent'}
+          finalizeText={'Request Consent'}
           theme={theme}
           items={PARENT_EMAIL_FORM_ITEMS}
           verifiers={PARENT_EMAIL_FORM_VERIFIERS}

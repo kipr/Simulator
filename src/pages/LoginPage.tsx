@@ -391,7 +391,7 @@ class LoginPage extends React.Component<Props, State> {
       // Don't allow parent email to be the same as user email
       if (auth.currentUser.email.toLowerCase() === parentEmailAddress.toLowerCase()) {
         this.setState({
-          logInFailedMessage: 'Parent email cannot be the same as your email.',
+          logInFailedMessage: 'Parent/guardian email cannot be the same as your email.',
         });
 
         return;
@@ -522,10 +522,10 @@ class LoginPage extends React.Component<Props, State> {
             <Card theme={theme}>
               {kiprLogo}
 
-              <Header theme={theme}>Waiting for Parental Consent</Header>
+              <Header theme={theme}>Waiting for Parental/Guardian Consent</Header>
 
               <Text text={StyledText.text({
-                text: "An email was sent to the provided parent email address. After your parent has provided permission, you will be able to access the service.",
+                text: "An email was sent to the provided parent/guardian email address. After your parent/guardian has provided permission, you will be able to access the service.",
                 style: {
                   display: 'inline-block',
                   color: theme.color,

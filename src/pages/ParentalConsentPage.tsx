@@ -499,7 +499,7 @@ class ParentalConsentPage extends React.Component<Props, State> {
           <Container theme={theme}>
             <Card theme={theme}>
               <Logo src={KIPR_LOGO_WHITE as string} />
-              <Header theme={theme}>Parental Consent</Header>
+              <Header theme={theme}>Parental/Guardian Consent</Header>
               <PlainTextContainer theme={theme}>This link is invalid or expired. The student can restart the process by creating a new account and requesting consent again.</PlainTextContainer>
               <PlainTextContainer theme={theme}>See the <Link theme={theme} href="/static/eula/KIPR-FAQs-for-Parents.pdf" target="_blank">FAQs for Parents</Link> for more details.</PlainTextContainer>
             </Card>
@@ -510,7 +510,7 @@ class ParentalConsentPage extends React.Component<Props, State> {
           <Container theme={theme}>
             <Card theme={theme}>
               <Logo src={KIPR_LOGO_WHITE as string} />
-              <Header theme={theme}>Parental Consent</Header>
+              <Header theme={theme}>Parental/Guardian Consent</Header>
               <PlainTextContainer theme={theme}>Something went wrong. Please try again later.</PlainTextContainer>
             </Card>
           </Container>
@@ -571,7 +571,7 @@ class ParentalConsentPage extends React.Component<Props, State> {
       <Container theme={theme}>
         <Card theme={theme} flex="0 1 500px">
           <Logo src={KIPR_LOGO_WHITE as string} />
-          <Header theme={theme}>Parental Consent</Header>
+          <Header theme={theme}>Parental/Guardian Consent</Header>
 
           {content}
 
