@@ -38,6 +38,7 @@ async function generateParentConsentForm(formValues) {
 function createRouter(firebaseTokenManager, mailgunClient, config) {
   const router = express.Router();
   const validateParentToken = createValidateParentTokenMiddleware(firebaseTokenManager, config);
+  const validateUserToken = createValidateUserTokenMiddleware();
 
   // API to generate parental consent form from form values
   // Authorization: parent token
@@ -113,8 +114,8 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
   }));
 
   // API to start parental consent for the user
-  // TODO: add user token authentication
-  router.post('/:userId', asyncExpressHandler(async (req, res) => {
+  // Authorization: user token
+  router.post('/:userId', asyncExpressHandler(validateUserToken), asyncExpressHandler(async (req, res) => {
     const userId = req.params['userId'];
 
     if (!('dateOfBirth' in req.body)) {
@@ -435,7 +436,35 @@ function getHashForParentToken(token) {
   return crypto.createHash('sha256').update(token).digest('hex');
 }
 
-// Creates express middleware to perform authentication check for parent tokens
+// Creates express middleware to perform auth check for user tokens
+const createValidateUserTokenMiddleware = () => async (req, res, next) => {
+  const authorization = parseAuthorization(req);
+  if (!authorization || authorization.type !== 'Bearer') {
+    res.status(401).send();
+    return;
+  }
+
+  const userId = req.params['userId'];
+  let decodedIdToken;
+
+  try {
+    decodedIdToken = await getAuth().verifyIdToken(authorization.value, true);
+  } catch (e) {
+    console.error('ID token validation failed with error', e);
+    res.status(401).send();
+    return;
+  }
+
+  if (decodedIdToken.uid !== userId) {
+    console.error('User ID in token does not match request');
+    res.status(403).send();
+    return;
+  }
+
+  next();
+};
+
+// Creates express middleware to perform auth check for parent tokens
 const createValidateParentTokenMiddleware = (firebaseTokenManager, config) => async (req, res, next) => {
   const authorization = parseAuthorization(req);
   if (!authorization || authorization.type !== 'ParentToken') {

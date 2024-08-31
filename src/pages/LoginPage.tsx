@@ -200,7 +200,8 @@ class LoginPage extends React.Component<Props, State> {
     });
   };
 
-  private startNewParentalConsent_ = (userId: string, dateOfBirth: string, parentEmailAddress: string, autoDelete: boolean) => {
+  private startNewParentalConsent_ = async (userId: string, dateOfBirth: string, parentEmailAddress: string, autoDelete: boolean) => {
+    const userIdToken = await auth.currentUser.getIdToken();
     const consentRequest: XMLHttpRequest = new XMLHttpRequest();
 
     return new Promise<UserConsent>((resolve, reject) => {
@@ -222,6 +223,7 @@ class LoginPage extends React.Component<Props, State> {
 
       consentRequest.open('POST', `/api/parental-consent/${userId}`);
       consentRequest.setRequestHeader('Content-Type', 'application/json');
+      consentRequest.setRequestHeader('Authorization', `Bearer ${userIdToken}`);
 
       const requestBody = {
         dateOfBirth: dateOfBirth,
