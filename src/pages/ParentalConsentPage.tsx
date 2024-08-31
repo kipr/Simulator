@@ -294,10 +294,11 @@ class ParentalConsentPage extends React.Component<Props, State> {
   private updatePdfPreview_ = async () => {
     // Get new PDF from server
     const bodyForm: GenerateFormBody = createGenerateFormBodyFromFormResults(this.state.formResults);
-    const formResponse = await fetch('/api/parental-consent/generate-form', {
+    const formResponse = await fetch(`/api/parental-consent/${this.props.userId}/generate-form`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `ParentToken ${this.props.token}`,
       },
       body: JSON.stringify({
         version: '1', // TODO: fill with real version number

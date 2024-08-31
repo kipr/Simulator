@@ -37,11 +37,11 @@ async function generateParentConsentForm(formValues) {
 
 function createRouter(firebaseTokenManager, mailgunClient, config) {
   const router = express.Router();
+  const validateParentToken = createValidateParentTokenMiddleware(firebaseTokenManager, config);
 
   // API to generate parental consent form from form values
-  router.post('/generate-form', asyncExpressHandler(async (req, res) => {
-    // TODO: add parent token authentication
-
+  // Authorization: parent token
+  router.post('/:userId/generate-form', asyncExpressHandler(validateParentToken), asyncExpressHandler(async (req, res) => {
     if (!('version' in req.body) || typeof req.body.version !== 'string') {
       return res.status(400).json({
         error: "Expected version string in body"
@@ -86,40 +86,14 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
   }));
 
   // API to get parental consent for the user
+  // Authorization: parent token
   // TODO: this API needs throttling since it requires a database read for the authorization check
-  router.get('/:userId', asyncExpressHandler(async (req, res) => {
-    // TODO: centralize this authorization check logic
-    const authorization = parseAuthorization(req);
-    if (!authorization || authorization.type !== 'ParentToken') {
-      res.status(401).send();
-      return;
-    }
-
+  router.get('/:userId', asyncExpressHandler(validateParentToken), asyncExpressHandler(async (req, res) => {
     const userId = req.params['userId'];
-    const firebaseIdToken = firebaseTokenManager.getToken();
-
-    let currentConsent;
-    try {
-      currentConsent = await getCurrentConsent(userId, firebaseIdToken, config);
-    } catch (getConsentError) {
-        console.error('Failed to get current consent state', getConsentError);
-        res.status(500).send();
-        return;
-    }
-
-    if (currentConsent?.legalAcceptance?.state !== 'awaiting-parental-consent') {
-      // Send 401 to avoid leaking information about consent state
-      console.error('Current state is not awaiting parental consent');
-      res.status(401).send();
-      return;
-    }
-
-    // Ensure that parent token matches the one stored in the database
-    const parentConsentTokenHash = currentConsent?.legalAcceptance?.parentConsentTokenHash;
-    const authorizationValueHash = getHashForParentToken(authorization.value);
-    if (!parentConsentTokenHash || parentConsentTokenHash !== authorizationValueHash) {
-      console.error('Parent token is not valid for the user');
-      res.status(401).send();
+    const currentConsent = res.locals.currentConsent;
+    if (!currentConsent) {
+      console.error('Current consent not found in res.locals');
+      res.status(500).send();
       return;
     }
 
@@ -139,6 +113,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
   }));
 
   // API to start parental consent for the user
+  // TODO: add user token authentication
   router.post('/:userId', asyncExpressHandler(async (req, res) => {
     const userId = req.params['userId'];
 
@@ -248,41 +223,11 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
 
   // API to update parental consent for the user
   // Currently it only supports completing the consent flow
+  // Authorization: parent token
   // TODO: this API needs throttling since it requires a database read for the authorization check
-  router.patch('/:userId', asyncExpressHandler(async (req, res) => {
-    const authorization = parseAuthorization(req);
-    if (!authorization || authorization.type !== 'ParentToken') {
-      res.status(401).send();
-      return;
-    }
-
+  router.patch('/:userId', asyncExpressHandler(validateParentToken), asyncExpressHandler(async (req, res) => {
     const userId = req.params['userId'];
-    const firebaseIdToken = firebaseTokenManager.getToken();
-
-    let currentConsent;
-    try {
-      currentConsent = await getCurrentConsent(userId, firebaseIdToken, config);
-    } catch (getConsentError) {
-        console.error('Failed to get current consent state', getConsentError);
-        res.status(500).send();
-        return;
-    }
-
-    if (currentConsent?.legalAcceptance?.state !== 'awaiting-parental-consent') {
-      // Send 401 to avoid leaking information about consent state
-      console.error('Current state is not awaiting parental consent');
-      res.status(401).send();
-      return;
-    }
-
-    // Ensure that parent token matches the one stored in the database
-    const parentConsentTokenHash = currentConsent?.legalAcceptance?.parentConsentTokenHash;
-    const authorizationValueHash = getHashForParentToken(authorization.value);
-    if (!parentConsentTokenHash || parentConsentTokenHash !== authorizationValueHash) {
-      console.error('Parent token is not valid for the user');
-      res.status(401).send();
-      return;
-    }
+    const currentConsent = res.locals.currentConsent;
 
     if (!req.is('application/json')) {
       console.error('Content-Type is not json');
@@ -338,6 +283,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
     const pdfData = await generateParentConsentForm(req.body.form);
 
     // Save parental consent PDF
+    const firebaseIdToken = firebaseTokenManager.getToken();
     let storeResponse;
     try {
       storeResponse = await uploadParentalConsentPdf(pdfData, userId, firebaseIdToken, config);
@@ -489,10 +435,52 @@ function getHashForParentToken(token) {
   return crypto.createHash('sha256').update(token).digest('hex');
 }
 
+// Creates express middleware to perform authentication check for parent tokens
+const createValidateParentTokenMiddleware = (firebaseTokenManager, config) => async (req, res, next) => {
+  const authorization = parseAuthorization(req);
+  if (!authorization || authorization.type !== 'ParentToken') {
+    res.status(401).send();
+    return;
+  }
+
+  const userId = req.params['userId'];
+  const firebaseIdToken = firebaseTokenManager.getToken();
+
+  let currentConsent;
+  try {
+    currentConsent = await getCurrentConsent(userId, firebaseIdToken, config);
+  } catch (getConsentError) {
+    console.error('Failed to get current consent state', getConsentError);
+    res.status(500).send();
+    return;
+  }
+
+  if (currentConsent?.legalAcceptance?.state !== 'awaiting-parental-consent') {
+    // Send 401 to avoid leaking information about consent state
+    console.error('Current state is not awaiting parental consent');
+    res.status(401).send();
+    return;
+  }
+
+  // Ensure that parent token matches the one stored in the database
+  const parentConsentTokenHash = currentConsent?.legalAcceptance?.parentConsentTokenHash;
+  const authorizationValueHash = getHashForParentToken(authorization.value);
+  if (!parentConsentTokenHash || parentConsentTokenHash !== authorizationValueHash) {
+    console.error('Parent token is not valid for the user');
+    res.status(401).send();
+    return;
+  }
+
+  // Store current consent in res.locals for subsequent handlers to use without re-fetching
+  res.locals.currentConsent = currentConsent;
+
+  next();
+};
+
 // Reusable handler to ensure async errors are caught and passed onto express error handlers
 const asyncExpressHandler = (func) => (req, res, next) => {
   Promise.resolve(func(req, res, next))
     .catch(next);
-}
+};
 
 module.exports = createRouter;
