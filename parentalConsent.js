@@ -20,8 +20,6 @@ const PDF_FIELD_MAP = Object.freeze({
 });
 
 async function generateParentConsentForm(formValues) {
-  // TODO: validate form values
-
   const pdfBuffer = await fsp.readFile(`${__dirname}/static/eula/KIPR-Parental-Consent.pdf`);
   const pdfDoc = await pdfLib.PDFDocument.load(pdfBuffer);
 
@@ -273,14 +271,30 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
 
     // Ensure request body has all fields in the "form" object
     for (const bodyParam in PDF_FIELD_MAP) {
-      if (!(bodyParam in req.body.form) || typeof req.body.form[bodyParam] !== 'string') {
+      if (!(bodyParam in req.body.form) || typeof req.body.form[bodyParam] !== 'string' || req.body.form[bodyParam].length === 0) {
         return res.status(400).json({
           error: `Expected '${bodyParam}' in request body form object`
         });
       }
     }
 
-    // TODO: try-catch to handle validation errors
+    const user = await getAuth().getUser(userId);
+    if (!user || !user.email) {
+      console.error('Failed to get user email');
+      res.status(500).send();
+      return;
+    }
+
+    try {
+      const expectedChildDateOfBirth = new Date(currentConsent.dateOfBirth);
+      const expectedChildEmail = user.email;
+      validateParentConsentForm(req.body.form, expectedChildDateOfBirth, expectedChildEmail);
+    } catch (validationError) {
+      console.error('Validation of form values failed', validationError);
+      res.status(400).send();
+      return;
+    }
+
     const pdfData = await generateParentConsentForm(req.body.form);
 
     // Save parental consent PDF
@@ -327,6 +341,40 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
   }));
 
   return router;
+}
+
+// Convert a date from a string in the format 'MM/DD/YYYY' to a Date object
+function formDateStringToDate(formDateString) {
+  const regexResult = /^(0[1-9]|1[012])(?:\/|-)(0[1-9]|[12][0-9]|3[01])(?:\/|-)((?:19|20)\d{2})$/.exec(formDateString);
+  if (!regexResult) {
+    throw new Error('Invalid date format');
+  }
+
+  const [month, day, year] = regexResult.slice(1).map(Number);
+  const dateObj = new Date(Date.UTC(year, month - 1, day));
+  if (dateObj.getUTCMonth() !== month - 1) {
+    throw new Error('Invalid date');
+  }
+
+  return dateObj;
+}
+
+function validateParentConsentForm(formValues, expectedChildDateOfBirth, expectedChildEmail) {
+  const childDateOfBirth = formDateStringToDate(formValues['childDateOfBirth']);
+  if (childDateOfBirth.getTime() !== expectedChildDateOfBirth.getTime()) {
+    throw new Error('Child date of birth does not match expected value');
+  }
+
+  if (formValues['childEmail'] !== expectedChildEmail) {
+    throw new Error('Child email does not match expected value');
+  }
+
+  // Allow 2 days of leeway for signature date since we don't know the client's timezone
+  const signatureDate = formDateStringToDate(formValues['signatureDate']);
+  const twoDaysMs = 2 * 24 * 60 * 60 * 1000;
+  if (Math.abs(signatureDate.getTime() - Date.now()) > twoDaysMs) {
+    throw new Error('Signature date is too far from current date');
+  }
 }
 
 async function getCurrentConsent(userId, token, config) {
