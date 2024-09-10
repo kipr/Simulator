@@ -1,4 +1,5 @@
 const express = require('express');
+const { rateLimit } = require('express-rate-limit');
 const axios = require('axios').default;
 const crypto = require('crypto');
 const fsp = require('fs').promises;
@@ -40,7 +41,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
 
   // API to generate parental consent form from form values
   // Authorization: parent token
-  router.post('/:userId/generate-form', asyncExpressHandler(validateParentToken), asyncExpressHandler(async (req, res) => {
+  router.post('/:userId/generate-form', createGlobalRateLimiter(60, 1000), asyncExpressHandler(validateParentToken), asyncExpressHandler(async (req, res) => {
     if (!('version' in req.body) || typeof req.body.version !== 'string') {
       return res.status(400).json({
         error: "Expected version string in body"
@@ -86,8 +87,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
 
   // API to get parental consent for the user
   // Authorization: parent token
-  // TODO: this API needs throttling since it requires a database read for the authorization check
-  router.get('/:userId', asyncExpressHandler(validateParentToken), asyncExpressHandler(async (req, res) => {
+  router.get('/:userId', createGlobalRateLimiter(60, 1000), asyncExpressHandler(validateParentToken), asyncExpressHandler(async (req, res) => {
     const userId = req.params['userId'];
     const currentConsent = res.locals.currentConsent;
     if (!currentConsent) {
@@ -113,7 +113,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
 
   // API to start parental consent for the user
   // Authorization: user token
-  router.post('/:userId', asyncExpressHandler(validateUserToken), asyncExpressHandler(async (req, res) => {
+  router.post('/:userId', createGlobalRateLimiter(60, 1000), asyncExpressHandler(validateUserToken), asyncExpressHandler(async (req, res) => {
     const userId = req.params['userId'];
 
     if (!('dateOfBirth' in req.body)) {
@@ -223,8 +223,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
   // API to update parental consent for the user
   // Currently it only supports completing the consent flow
   // Authorization: parent token
-  // TODO: this API needs throttling since it requires a database read for the authorization check
-  router.patch('/:userId', asyncExpressHandler(validateParentToken), asyncExpressHandler(async (req, res) => {
+  router.patch('/:userId', createGlobalRateLimiter(60, 1000), asyncExpressHandler(validateParentToken), asyncExpressHandler(async (req, res) => {
     const userId = req.params['userId'];
     const currentConsent = res.locals.currentConsent;
 
@@ -552,6 +551,17 @@ const createValidateParentTokenMiddleware = (firebaseTokenManager, config) => as
   res.locals.currentConsent = currentConsent;
 
   next();
+};
+
+// Creates express middleware to rate limit requests globally
+const createGlobalRateLimiter = (windowSeconds, limit) => {
+  return rateLimit({
+    windowMs: windowSeconds * 1000,
+    limit: limit,
+    standardHeaders: true,
+    legacyHeaders: false,
+    keyGenerator: () => 'global',
+  });
 };
 
 // Reusable handler to ensure async errors are caught and passed onto express error handlers
