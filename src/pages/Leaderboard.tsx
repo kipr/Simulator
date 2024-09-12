@@ -23,7 +23,7 @@ interface Challenge {
 }
 
 interface Score {
-  name: LocalizedString;
+  name: LocalizedString; // Challenge name
   completed: boolean;
   score?: number;
   completionTime?: number;
@@ -33,15 +33,6 @@ interface User {
   id: string;
   name: string;
   scores: Score[];
-  src?: string;
-  backgroundColor?: string;
-}
-
-interface Leaderboard {
-  challenges: Record<string, Challenge>;
-  users: Record<string, User>;
-  title?: string;
-  description?: string;
   src?: string;
   backgroundColor?: string;
 }
@@ -57,6 +48,8 @@ interface LeaderboardPrivateProps {
 
 interface LeaderboardState {
   selected: string;
+  users: Record<string, User>;
+  challenges: Record<string, Challenge>;
 }
 
 type Props = LeaderboardPublicProps & LeaderboardPrivateProps;
@@ -110,16 +103,19 @@ const Table = styled('table', {
 const TableHeader = styled('th', {
   borderBottom: '2px solid #ddd',
   padding: '8px',
-  textAlign: 'left',
+  textAlign: 'center',
 });
-
+const StyledTableRow = styled('tr', (props: { self: boolean }) => ({
+  borderBottom: '1px solid #ddd',
+  backgroundColor: props.self ? '#555' : '#000', // Highlight the current user
+}));
 const TableRow = styled('tr', {
   borderBottom: '1px solid #ddd',
 });
 
 const TableCell = styled('td', {
-  padding: '8px',
-  textAlign: 'left',
+  padding: '6px',
+  textAlign: 'center',
 });
 
 
@@ -129,13 +125,87 @@ class Leaderboard extends React.Component<Props, State> {
 
     this.state = {
       selected: '',
+      users: {},
+      challenges: {},
     };
+
+    void this.onLog();
   }
 
   private onLog = async () => {
-    const res = await db.list('user');
-    console.log(res);
+    const res = await db.list('challenge_completion');
+    const groupData = res.groupData;
+    const userData = res.userData;
+
+    let users: Record<string, User> = {};
+    const challenges: Record<string, Challenge> = {};
+
+    for (const [_, attemptedChallenges] of Object.entries(groupData)) {
+      for (const [challengeId, challenge] of Object.entries(attemptedChallenges as ChallengeData[])) {
+        const challenge = {
+          name: tr(challengeId),
+          description: tr(challengeId),
+        };
+        if (!challenges[challengeId]) {
+          challenges[challengeId] = challenge;
+        }
+      }
+    }
+
+    interface ChallengeData {
+      success: {
+        exprStates: {
+          completion: boolean;
+        };
+      };
+    }
+
+    for (const [userId, challenges] of Object.entries(groupData)) {
+      const user: User = {
+        id: userId,
+        name: userId,
+        scores: [],
+      };
+      for (const [challengeId, challenge] of Object.entries(challenges as ChallengeData[])) {
+        
+        const challengeCompletion = challenge?.success?.exprStates?.completion ?? false;
+        const score: Score = {
+          name: tr(challengeId),
+          completed: challengeCompletion
+        };
+        user.scores.push(score);
+      }
+      if (!users[userId]) {
+        users[userId] = user;
+      }
+    }
+
+    users = this.anonomizeUsers(users);
+
+    const currentUser = userData;
+    const currentUserScores: Score[] = [];
+    for (const [challengeId, challenge] of Object.entries(currentUser as ChallengeData[])) {
+      const challengeCompletion = challenge?.success?.exprStates?.completion ?? false;
+      const score: Score = {
+        name: tr(challengeId),
+        completed: challengeCompletion
+      };
+      currentUserScores.push(score);
+    }
+    const currentUserData: User = {
+      id: 'currentUser',
+      name: 'THIS IS ME',
+      scores: currentUserScores,
+    };
+
+    users[currentUserData.id] = currentUserData;
+
+    // console.log("Queried:", users, challenges);
+    this.setState({ users, challenges });
+
+    return { users, challenges };
   };
+  
   private getDefaultChallenges = (): Record<string, Challenge> => {
     const challenges: Record<string, Challenge> = {};
     const suffixes = ['a', 'b', 'c'];
@@ -195,14 +265,32 @@ class Leaderboard extends React.Component<Props, State> {
 
       return completedChallengesB - completedChallengesA;
     });
-
+    console.log("Sorted:", userArray);
     return userArray;
+  };
+
+  private anonomizeUsers = (users: Record<string, User>): Record<string, User> => {
+    const anonomizedUsers: Record<string, User> = {};
+
+    const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'white'];
+    const elements = ['fire', 'water', 'earth', 'air', 'light', 'dark', 'metal', 'wood', 'ice', 'electricity'];
+    const animals = ['tiger', 'bear', 'wolf', 'eagle', 'shark', 'whale', 'lion', 'panther', 'cheetah', 'jaguar'];
+
+    Object.values(users).forEach((user) => {
+      anonomizedUsers[user.id] = {
+        id: user.id,
+        name: `${colors[Math.floor(Math.random() * colors.length)]}-${elements[Math.floor(Math.random() * elements.length)]}-${animals[Math.floor(Math.random() * animals.length)]}-${Math.floor(Math.random() * 100)}`,
+        scores: user.scores
+      };
+    });
+
+    return anonomizedUsers;
   };
   
   private renderLeaderboard = () => {
-    const users = this.props.users || this.getDefaultUsers();
+    const users = this.state.users || this.getDefaultUsers();
     const sortedUsers = this.orderUsersByCompletedChallenges(users);
-    const challenges = this.props.challenges || this.getDefaultChallenges();
+    const challenges = this.state.challenges || this.getDefaultChallenges();
   
     if (!sortedUsers) return null;
   
@@ -213,7 +301,7 @@ class Leaderboard extends React.Component<Props, State> {
       <Table>
         <thead>
           <tr>
-            <TableHeader>UserName</TableHeader>
+            <TableHeader>Challenges:</TableHeader>
             {challengeArray.map(([id,challenge]) => (
               <TableHeader key={id}>
                 <TableHeaderContainer>
@@ -225,13 +313,13 @@ class Leaderboard extends React.Component<Props, State> {
         </thead>
         <tbody>
           {userArray.map((user) => (
-            <TableRow key={user.id}>
+            <StyledTableRow key={user.id} self={user.name === "THIS IS ME"}>
               <TableCell>{user.name}</TableCell>
               {challengeArray.map(([id,challenge]) => {
                 const userScore = user.scores.find(score => score.name['en-US'] === challenge.name['en-US']);
                 return (
                   <TableCell key={id}>
-                    {userScore ? (
+                    {userScore?.completed ? (
                       <>
                         <img src="/static/icons/favicon-32x32.png" alt="Favicon" />
                         {/* <div>Score: {userScore.score ?? '-'}</div>
@@ -243,7 +331,7 @@ class Leaderboard extends React.Component<Props, State> {
                   </TableCell>
                 );
               })}
-            </TableRow>
+            </StyledTableRow>
           ))}
         </tbody>
       </Table>
@@ -256,6 +344,7 @@ class Leaderboard extends React.Component<Props, State> {
     const { selected } = state;
     const theme = DARK;
 
+
     return (
       <PageContainer style={style} theme={theme}>
         <MainMenu theme={theme} />
@@ -265,7 +354,6 @@ class Leaderboard extends React.Component<Props, State> {
           </LeaderboardTitleContainer>
           {this.renderLeaderboard()}
         </LeaderboardContainer>
-        {/* <button onClick={this.onLog}>Log</button> */}
       </PageContainer>
     );
   }

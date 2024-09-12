@@ -168,7 +168,6 @@ class Db {
   async list<T>(collection: string): Promise<Dict<T>> {
     const request: Request = {
       url: `${this.uri_}/${collection}`,
-      method: 'LIST',
     };
     console.log('list request', request, "from uri", this.uri_);
 
