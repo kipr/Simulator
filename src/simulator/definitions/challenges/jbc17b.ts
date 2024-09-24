@@ -12,7 +12,6 @@ export default {
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
-    //COMME
   },
   code: {
     'c': ProgrammingLanguage.DEFAULT_CODE.c,
@@ -31,7 +30,7 @@ export default {
   },
   success: {
     exprs: {
-      //Line Following Event
+      // Line Following Event
       lineFollow: {
         type: Expr.Type.Event,
         eventId: 'lineFollow',

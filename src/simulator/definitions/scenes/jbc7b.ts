@@ -318,7 +318,7 @@ export const JBC_7B: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(22.7), //can 1
+          x: Distance.centimeters(22.7), // can 1
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(35.2),
         },
@@ -338,7 +338,7 @@ export const JBC_7B: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(0), //can 2
+          x: Distance.centimeters(0), // can 2
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(28.8),
         },
@@ -358,7 +358,7 @@ export const JBC_7B: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(-16.2), //can 3
+          x: Distance.centimeters(-16.2), // can 3
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(25.7),
         },
@@ -378,7 +378,7 @@ export const JBC_7B: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(0), //can 4
+          x: Distance.centimeters(0), // can 4
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(42.7),
         },
@@ -398,7 +398,7 @@ export const JBC_7B: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(14.3), //can 5
+          x: Distance.centimeters(14.3), // can 5
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(56.9),
         },
@@ -418,7 +418,7 @@ export const JBC_7B: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(0), //can 6
+          x: Distance.centimeters(0), // can 6
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(57.2),
         },
@@ -438,7 +438,7 @@ export const JBC_7B: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(-13.8), //can 7
+          x: Distance.centimeters(-13.8), // can 7
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(56.9),
         },

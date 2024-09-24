@@ -12,7 +12,6 @@ export default {
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
-    //COMME
   },
   code: {
     'c': ProgrammingLanguage.DEFAULT_CODE.c,
@@ -60,7 +59,7 @@ export default {
   },
   success: {
     exprs: {
-      //Rescued upright can events
+      // Rescued upright can events
       can1Upright: {
         type: Expr.Type.Event,
         eventId: 'can1Upright',
@@ -86,7 +85,7 @@ export default {
         argId: 'can3Upright',
       },
 
-      //Rescued intersecting can events
+      // Rescued intersecting can events
       can1Intersects: {
         type: Expr.Type.Event,
         eventId: 'can1Intersects',
@@ -112,7 +111,7 @@ export default {
         argId: 'can3Intersects',
       },
 
-      //Intersecting and Upright
+      // Intersecting and Upright
       IntersectingUpright1: {
         type: Expr.Type.And,
         argIds: ['can1UprightOnce','can1IntersectsOnce'],

@@ -12,7 +12,6 @@ export default {
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
-    //COMME
   },
   code: {
     'c': ProgrammingLanguage.DEFAULT_CODE.c,

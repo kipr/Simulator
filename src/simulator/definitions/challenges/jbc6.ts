@@ -48,7 +48,7 @@ export default {
   },
   success: {
     exprs: {
-      //Upright Events
+      // Upright Events
       can2Upright: {
         type: Expr.Type.Event,
         eventId: "can2Upright",
@@ -67,7 +67,7 @@ export default {
       },
 
 
-      //Intersects Events
+      // Intersects Events
       can2Intersects: {
         type: Expr.Type.Event,
         eventId: "can2Intersects",

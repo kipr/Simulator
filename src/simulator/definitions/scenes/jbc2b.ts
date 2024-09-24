@@ -361,8 +361,8 @@ export const JBC_2B: Scene = {
     },
 
     ...baseScene.nodes,
-    'can10': {...createCanNode(10), scriptIds: ["robotTouches"]},
-    'can11': {...createCanNode(11), scriptIds: ["robotTouches"]},
-    'can12': {...createCanNode(12), scriptIds: ["robotTouches"]},
+    'can10': { ...createCanNode(10), scriptIds: ["robotTouches"] },
+    'can11': { ...createCanNode(11), scriptIds: ["robotTouches"] },
+    'can12': { ...createCanNode(12), scriptIds: ["robotTouches"] },
   }
 };

@@ -3,7 +3,7 @@ import LocalizedString from "../../../util/LocalizedString";
 import Script from "../../../state/State/Scene/Script";
 import { createCanNode, createBaseSceneSurfaceA } from "./jbcBase";
 import { Color } from "../../../state/State/Scene/Color";
-import { Distance , Angle} from "../../../util";
+import { Distance , Angle } from "../../../util";
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -216,10 +216,10 @@ export const JBC_13: Scene = {
         },
       },
     },
-    can2: {...createCanNode(2), scriptIds: ["garageIntersects","uprightCans"]},
-    can5: {...createCanNode(5), scriptIds: ["garageIntersects","uprightCans"]},
-    can8: {...createCanNode(8), scriptIds: ["garageIntersects","uprightCans"]},
-    can10: {...createCanNode(10), scriptIds: ["garageIntersects","uprightCans"]},
-    can11: {...createCanNode(11), scriptIds: ["garageIntersects","uprightCans"]},
+    can2: { ...createCanNode(2), scriptIds: ["garageIntersects","uprightCans"] },
+    can5: { ...createCanNode(5), scriptIds: ["garageIntersects","uprightCans"] },
+    can8: { ...createCanNode(8), scriptIds: ["garageIntersects","uprightCans"] },
+    can10: { ...createCanNode(10), scriptIds: ["garageIntersects","uprightCans"] },
+    can11: { ...createCanNode(11), scriptIds: ["garageIntersects","uprightCans"] },
   }
 };

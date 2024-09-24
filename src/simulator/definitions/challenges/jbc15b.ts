@@ -12,7 +12,6 @@ export default {
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
-    //COMME
   },
   code: {
     'c': ProgrammingLanguage.DEFAULT_CODE.c,
@@ -45,7 +44,7 @@ export default {
   },
   success: {
     exprs: {
-      //Ream Touching Events
+      // Ream Touching Events
       driveForwardTouch: {
         type: Expr.Type.Event,
         eventId: 'driveForwardTouch',

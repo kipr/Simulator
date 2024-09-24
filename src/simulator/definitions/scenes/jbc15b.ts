@@ -140,7 +140,7 @@ export const JBC_15B: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(0), //can 2
+          x: Distance.centimeters(0), // can 2
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(28.8),
         },
@@ -169,7 +169,7 @@ export const JBC_15B: Scene = {
       origin: REAM2_ORIGIN,
       visible: true,
     },
-    can12: { //Created an invisible can to attach script
+    can12: { // Created an invisible can to attach script
       ...createCanNode(
         12,
         {

@@ -12,7 +12,6 @@ export default {
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
-    //COMME
   },
   code: {
     'c': ProgrammingLanguage.DEFAULT_CODE.c,
@@ -29,11 +28,11 @@ export default {
       },
     },
     can9Upright: {
-        name: { [LocalizedString.EN_US]: 'Can 9 Upright' },
-        description: {
-          [LocalizedString.EN_US]: 'Can 9 is upright',
-        },
+      name: { [LocalizedString.EN_US]: 'Can 9 Upright' },
+      description: {
+        [LocalizedString.EN_US]: 'Can 9 is upright',
       },
+    },
     can10Upright: {
       name: { [LocalizedString.EN_US]: 'Can 10 Upright' },
       description: {
@@ -66,15 +65,15 @@ export default {
       },
     },
     can12Intersects: {
-        name: { [LocalizedString.EN_US]: 'Can 12 Intersects' },
-        description: {
-          [LocalizedString.EN_US]: 'Can 12 rescued intersecting paper ream',
-        },
+      name: { [LocalizedString.EN_US]: 'Can 12 Intersects' },
+      description: {
+        [LocalizedString.EN_US]: 'Can 12 rescued intersecting paper ream',
       },
+    },
   },
   success: {
     exprs: {
-      //Rescued upright can events
+      // Rescued upright can events
       can9Upright: {
         type: Expr.Type.Event,
         eventId: 'can9Upright',
@@ -109,7 +108,7 @@ export default {
       },
 
 
-      //Rescued intersecting can events
+      // Rescued intersecting can events
       can9Intersects: {
         type: Expr.Type.Event,
         eventId: 'can9Intersects',
@@ -144,7 +143,7 @@ export default {
       },
       
 
-      //Intersecting and Upright
+      // Intersecting and Upright
       IntersectingUpright9: {
         type: Expr.Type.And,
         argIds: ['can9Upright', 'can9Intersects'],

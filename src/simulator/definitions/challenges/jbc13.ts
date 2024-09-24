@@ -12,7 +12,6 @@ export default {
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
-    //COMME
   },
   code: {
     'c': ProgrammingLanguage.DEFAULT_CODE.c,
@@ -95,7 +94,7 @@ export default {
         argIds: ['can2Intersects', 'can5Intersects', 'can8Intersects','can10Intersects', 'can11Intersects'],
       },
 
-      //Upright Events
+      // Upright Events
       can2Upright: {
         type: Expr.Type.Event,
         eventId: 'can2Upright',
@@ -123,7 +122,7 @@ export default {
       },
 
 
-      //Success Logic = Can A upright, intersects and touched
+      // Success Logic = Can A upright, intersects and touched
       completion: {
         type: Expr.Type.And,
         argIds: [

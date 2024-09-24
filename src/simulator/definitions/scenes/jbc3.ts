@@ -169,7 +169,7 @@ export const JBC_3: Scene = {
   },
   scripts: {
     garageIntersects: Script.ecmaScript('Garage Intersects', garageIntersects),
-    //clicked: Script.ecmaScript('Garage Intersects', clicked),
+    // clicked: Script.ecmaScript('Garage Intersects', clicked),
   },
   geometry: {
     ...baseScene.geometry,
@@ -300,7 +300,7 @@ export const JBC_3: Scene = {
         RawVector2.ZERO, RawVector2.ZERO,
         RawVector2.ZERO, RawVector2.ZERO,
         RawVector2.ZERO, RawVector2.ZERO,
-        RawVector2.create(0, 1), RawVector2.create(1, 0), //TOP
+        RawVector2.create(0, 1), RawVector2.create(1, 0), // TOP
         RawVector2.ZERO, RawVector2.ZERO,
       ],
     },
@@ -336,7 +336,7 @@ export const JBC_3: Scene = {
         RawVector2.ZERO, RawVector2.ZERO,
         RawVector2.ZERO, RawVector2.ZERO,
         RawVector2.ZERO, RawVector2.ZERO,
-        RawVector2.create(0, 1), RawVector2.create(1, 0), //TOP
+        RawVector2.create(0, 1), RawVector2.create(1, 0), // TOP
         RawVector2.ZERO, RawVector2.ZERO,
       ],
     },
@@ -372,7 +372,7 @@ export const JBC_3: Scene = {
         RawVector2.ZERO, RawVector2.ZERO,
         RawVector2.ZERO, RawVector2.ZERO,
         RawVector2.ZERO, RawVector2.ZERO,
-        RawVector2.create(0, 1), RawVector2.create(1, 0), //TOP
+        RawVector2.create(0, 1), RawVector2.create(1, 0), // TOP
         RawVector2.ZERO, RawVector2.ZERO,
       ],
     },
@@ -684,7 +684,7 @@ export const JBC_3: Scene = {
       },
     },
     can12: {
-      //Created an invisible can to attach script
+      // Created an invisible can to attach script
       ...createCanNode(
         12,
         {

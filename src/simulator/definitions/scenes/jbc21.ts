@@ -47,7 +47,7 @@ export const JBC_21: Scene = {
       visible: true,
       origin: {
         position: {
-          x: Distance.centimeters(0), //circle 6
+          x: Distance.centimeters(0), // circle 6
           y: Distance.inches(11),
           z: Distance.centimeters(57.2),
         },

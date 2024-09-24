@@ -12,7 +12,6 @@ export default {
   author: {
     type: Author.Type.Organization,
     id: "kipr",
-    //COMME
   },
   code: {
     'c': ProgrammingLanguage.DEFAULT_CODE.c,
@@ -77,7 +76,7 @@ export default {
         argId: "can6Touched",
       },
 
-      //Passing side events
+      // Passing side events
       rightSide: {
         type: Expr.Type.Event,
         eventId: "rightSide",
@@ -109,13 +108,13 @@ export default {
         eventId: "can6Intersects",
       },
 
-      //Upright Events
+      // Upright Events
       can6Upright: {
         type: Expr.Type.Event,
         eventId: "can6Upright",
       },
 
-      //Start Box Events
+      // Start Box Events
       leaveStartBox: {
         type: Expr.Type.Event,
         eventId: "leaveStartBox",
@@ -138,13 +137,13 @@ export default {
         argIds: ["leaveStartBoxOnce", "returnStartBoxOnce"],
       },
 
-      //Intersects and upright logic
+      // Intersects and upright logic
       IntersectsUpright: {
         type: Expr.Type.And,
         argIds: ["can6Intersects", "can6Upright"],
       },
 
-      //Success Logic = Can A upright, intersects and touched
+      // Success Logic = Can A upright, intersects and touched
       completion: {
         type: Expr.Type.And,
         argIds: [

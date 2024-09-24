@@ -10,7 +10,7 @@ import { v4 as uuid } from 'uuid';
 import construct from '../util/redux/construct';
 import { RawAxisAngle, RawQuaternion, RawReferenceFrame, RawVector3 } from '../util/math/math';
 import { Angle, Mass, Distance } from '../util/math/Value';
-import {SharedRegistersRobot} from '../programming/SharedRegistersRobot';
+import { SharedRegistersRobot } from '../programming/SharedRegistersRobot';
 
 
 export type Ids = string | string[] | Set<string>;
@@ -362,10 +362,6 @@ namespace ScriptManager {
         case Event.Type.IntersectionStart:
         case Event.Type.IntersectionEnd: {
           this.triggerIntersection_(event);
-          break;
-        }
-        case Event.Type.Click: {
-          this.triggerClick_(event);
           break;
         }
         case Event.Type.Click: {

@@ -12,7 +12,6 @@ export default {
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
-    //COMME
   },
   code: {
     'c': ProgrammingLanguage.DEFAULT_CODE.c,
@@ -33,16 +32,16 @@ export default {
       description: { [LocalizedString.EN_US]: 'Robot left starting box' },
     },
     robotTouchingLine: {
-        name: { [LocalizedString.EN_US]: 'Robot Touching Line B' },
-        description: { [LocalizedString.EN_US]: 'Robot is touching line B' },
-      },
+      name: { [LocalizedString.EN_US]: 'Robot Touching Line B' },
+      description: { [LocalizedString.EN_US]: 'Robot is touching line B' },
+    },
 
   },
   success: {
     exprs: {
 
 
-      //Upright Events
+      // Upright Events
       can1Upright: {
         type: Expr.Type.Event,
         eventId: 'can1Upright',
@@ -52,7 +51,7 @@ export default {
         argId: 'can1Upright',
       },
       
-      //Line B Event
+      // Line B Event
       robotTouchingLine: {
         type: Expr.Type.Event,
         eventId: 'robotTouchingLine',
@@ -62,13 +61,13 @@ export default {
         argId: 'robotTouchingLine',
       },
 
-      //Can 1 Not Upright and Robot Not Touching Line B
+      // Can 1 Not Upright and Robot Not Touching Line B
       NotUprightNotTouching: {
         type: Expr.Type.And,
         argIds: ['can1NotUpright', 'robotNotTouchingLine'],
       },
 
-      //Start Box Events
+      // Start Box Events
       leaveStartBox: {
         type: Expr.Type.Event,
         eventId: 'leaveStartBox',

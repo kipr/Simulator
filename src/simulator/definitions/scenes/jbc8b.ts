@@ -180,7 +180,7 @@ export const JBC_8B: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(22.7), //can 1
+          x: Distance.centimeters(22.7), // can 1
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(35.2),
         },
@@ -200,7 +200,7 @@ export const JBC_8B: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(23.5), //can 1
+          x: Distance.centimeters(23.5), // can 1
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(32.5),
         },
@@ -220,7 +220,7 @@ export const JBC_8B: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(0), //can 2
+          x: Distance.centimeters(0), // can 2
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(28.8),
         },
@@ -240,7 +240,7 @@ export const JBC_8B: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(0), //can 2
+          x: Distance.centimeters(0), // can 2
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(26.5),
         },
@@ -260,7 +260,7 @@ export const JBC_8B: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(-16.2), //can 3
+          x: Distance.centimeters(-16.2), // can 3
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(25.7),
         },
@@ -280,7 +280,7 @@ export const JBC_8B: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(-16.2), //can 3
+          x: Distance.centimeters(-16.2), // can 3
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(22.5),
         },
@@ -300,7 +300,7 @@ export const JBC_8B: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(0), //can 4
+          x: Distance.centimeters(0), // can 4
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(42.7),
         },
@@ -320,7 +320,7 @@ export const JBC_8B: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(-3), //can 4
+          x: Distance.centimeters(-3), // can 4
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(45),
         },
@@ -340,7 +340,7 @@ export const JBC_8B: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(14.3), //can 5
+          x: Distance.centimeters(14.3), // can 5
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(56.9),
         },
@@ -360,7 +360,7 @@ export const JBC_8B: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(17), //can 5
+          x: Distance.centimeters(17), // can 5
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(59),
         },
@@ -375,7 +375,7 @@ export const JBC_8B: Scene = {
     },
     can8: {
       ...createCanNode(8, {
-        x: Distance.centimeters(-26), //can 8
+        x: Distance.centimeters(-26), // can 8
         y: Distance.centimeters(-6.9),
         z: Distance.centimeters(65.5),
       },false,false),

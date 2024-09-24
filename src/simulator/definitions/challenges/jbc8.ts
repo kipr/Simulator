@@ -59,7 +59,7 @@ export default {
   },
   success: {
     exprs: {
-      //Start Box Event
+      // Start Box Event
       start: {
         type: Expr.Type.Event,
         eventId: 'start',
@@ -69,7 +69,7 @@ export default {
         argId: 'start',
       },
 
-      //Passed Through Circles Events
+      // Passed Through Circles Events
       passed1: {
         type: Expr.Type.Event,
         eventId: 'passed1',

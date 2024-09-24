@@ -12,7 +12,6 @@ export default {
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
-    //COMME
   },
   code: {
     'c': ProgrammingLanguage.DEFAULT_CODE.c,
@@ -58,7 +57,7 @@ export default {
   },
   success: {
     exprs: {
-      //Waving Event
+      // Waving Event
       waveServo: {
         type: Expr.Type.Event,
         eventId: 'waveServo',
@@ -68,7 +67,7 @@ export default {
         argId: 'waveServo',
       },
 
-      //Turning Events
+      // Turning Events
       clockwise360: {
         type: Expr.Type.Event,
         eventId: 'clockwise360',
@@ -90,7 +89,7 @@ export default {
         argIds: ['clockwise360Once', 'counterClockwise360Once'],
       },
 
-      //Start Box Events
+      // Start Box Events
       leaveStartBox: {
         type: Expr.Type.Event,
         eventId: 'leaveStartBox',
@@ -100,7 +99,7 @@ export default {
         argId: 'leaveStartBox',
       },
 
-      //Driving Events
+      // Driving Events
       driveForward: {
         type: Expr.Type.Event,
         eventId: 'driveForward',

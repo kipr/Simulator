@@ -12,7 +12,6 @@ export default {
   author: {
     type: Author.Type.Organization,
     id: "kipr",
-    //COMME
   },
   code: {
     'c': ProgrammingLanguage.DEFAULT_CODE.c,
@@ -77,7 +76,7 @@ export default {
   },
   success: {
     exprs: {
-      //Clockwise Events
+      // Clockwise Events
       clockwise8: {
         type: Expr.Type.Event,
         eventId: "clockwise8",
@@ -87,7 +86,7 @@ export default {
         argId: "clockwise8",
       },
 
-      //Counter Clockwise Events
+      // Counter Clockwise Events
       counterClockwise5: {
         type: Expr.Type.Event,
         eventId: "counterClockwise5",
@@ -125,7 +124,7 @@ export default {
         eventId: "can9Intersects",
       },
 
-      //Upright Events
+      // Upright Events
       can5Upright: {
         type: Expr.Type.Event,
         eventId: "can5Upright",
@@ -139,7 +138,7 @@ export default {
         eventId: "can9Upright",
       },
 
-      //Start Box Events
+      // Start Box Events
       leaveStartBox: {
         type: Expr.Type.Event,
         eventId: "leaveStartBox",
@@ -162,7 +161,7 @@ export default {
         argIds: ["leaveStartBoxOnce", "returnStartBoxOnce"],
       },
 
-      //Intersects and upright logic
+      // Intersects and upright logic
       IntersectsUpright5: {
         type: Expr.Type.And,
         argIds: ["can5Intersects", "can5Upright"],
@@ -176,7 +175,7 @@ export default {
         argIds: ["can9Intersects", "can9Upright"],
       },
 
-      //Success Logic = Can A upright, intersects and touched
+      // Success Logic = Can A upright, intersects and touched
       completion: {
         type: Expr.Type.And,
         argIds: [

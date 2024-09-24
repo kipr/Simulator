@@ -176,7 +176,7 @@ export const JBC_1: Scene = {
     },
     can9: {
       ...createCanNode(9, { x: Distance.centimeters(0), y: Distance.centimeters(0), z: Distance.centimeters(85.4) }),
-      scriptIds: [ 'robotTouches' ]
+      scriptIds: ['robotTouches']
     }
     
   }

@@ -194,7 +194,7 @@ export const JBC_17B: Scene = {
       },
     },
     can12: {
-      //Created an invisible can to attach script
+      // Created an invisible can to attach script
       ...createCanNode(
         12,
         {

@@ -12,7 +12,6 @@ export default {
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
-    //COMME
   },
   code: {
     'c': ProgrammingLanguage.DEFAULT_CODE.c,
@@ -87,7 +86,7 @@ export default {
   },
   success: {
     exprs: {
-      //Touch Events
+      // Touch Events
       robotNoTouchFirst: {
         type: Expr.Type.Event,
         eventId: 'robotNoTouchFirst',
@@ -123,7 +122,7 @@ export default {
         eventId: 'canEIntersects',
       },
 
-      //Upright Events
+      // Upright Events
       canAUpright: {
         type: Expr.Type.Event,
         eventId: 'canAUpright',
@@ -145,7 +144,7 @@ export default {
         eventId: 'canEUpright',
       },
 
-      //Start Box Events
+      // Start Box Events
       leaveStartBox: {
         type: Expr.Type.Event,
         eventId: 'leaveStartBox',
@@ -159,7 +158,7 @@ export default {
         argIds: ['leaveStartBoxOnce'],
       },
 
-      //Intersects and upright logic
+      // Intersects and upright logic
       IntersectsUprightA: {
         type: Expr.Type.And,
         argIds: ['canAIntersects', 'canAUpright'],
@@ -191,7 +190,7 @@ export default {
         ],
       },
 
-      //Success Logic = Can A upright, intersects and touched
+      // Success Logic = Can A upright, intersects and touched
       completion: {
         type: Expr.Type.And,
         argIds: ['robotNoTouchFirstOnceNot','startingBox', 'AllIntersectsUpright'],

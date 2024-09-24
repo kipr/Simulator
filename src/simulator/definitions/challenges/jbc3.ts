@@ -12,7 +12,6 @@ export default {
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
-    //COMME
   },
   code: {
     'c': ProgrammingLanguage.DEFAULT_CODE.c,
@@ -47,7 +46,7 @@ export default {
   },
   success: {
     exprs: {
-      //Garage Events
+      // Garage Events
       touchGarageLines: {
         type: Expr.Type.Event,
         eventId: 'touchGarageLines',
@@ -74,7 +73,7 @@ export default {
       },
      
 
-      //Start Box Events
+      // Start Box Events
       returnStartBox: {
         type: Expr.Type.Event,
         eventId: 'returnStartBox',

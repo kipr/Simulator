@@ -12,7 +12,6 @@ export default {
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
-    //COMME
   },
   code: {
     'c': ProgrammingLanguage.DEFAULT_CODE.c,
@@ -79,7 +78,7 @@ export default {
   },
   success: {
     exprs: {
-      //Driving Backwards events
+      // Driving Backwards events
       driveBackwards: {
         type: Expr.Type.Event,
         eventId: 'driveBackwards',
@@ -101,7 +100,7 @@ export default {
         argIds: ['driveForwardsOnce', 'driveBackwardsOnce'],
       },
 
-      //Passing side events
+      // Passing side events
       rightSide: {
         type: Expr.Type.Event,
         eventId: 'rightSide',
@@ -133,13 +132,13 @@ export default {
         eventId: 'can6Intersects',
       },
 
-      //Upright Events
+      // Upright Events
       can6Upright: {
         type: Expr.Type.Event,
         eventId: 'can6Upright',
       },
 
-      //Start Box Events
+      // Start Box Events
 
       returnStartBox1: {
         type: Expr.Type.Event,
@@ -163,13 +162,13 @@ export default {
         argIds: ['returnStartBox1Once', 'returnStartBox2Once'],
       },
 
-      //Intersects and upright logic
+      // Intersects and upright logic
       IntersectsUpright: {
         type: Expr.Type.And,
         argIds: ['can6Intersects', 'can6Upright'],
       },
 
-      //Success Logic = Can A upright, intersects and touched
+      // Success Logic = Can A upright, intersects and touched
       completion: {
         type: Expr.Type.And,
         argIds: [

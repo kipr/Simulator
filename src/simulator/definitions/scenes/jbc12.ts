@@ -147,7 +147,7 @@ export const JBC_12: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(0), //can 2
+          x: Distance.centimeters(0), // can 2
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(28.8),
         },
@@ -168,7 +168,7 @@ export const JBC_12: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(0), //can 9
+          x: Distance.centimeters(0), // can 9
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(85.4),
         },
@@ -188,7 +188,7 @@ export const JBC_12: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(19.3),//can 10
+          x: Distance.centimeters(19.3),// can 10
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(96.9),
         },
@@ -205,8 +205,8 @@ export const JBC_12: Scene = {
     can2: {
       ...createCanNode(2, {
         x: Distance.centimeters(0),
-      y: Distance.centimeters(0),
-      z: Distance.centimeters(53.3),
+        y: Distance.centimeters(0),
+        z: Distance.centimeters(53.3),
       }),
       scriptIds: ["uprightCans", "circleIntersects"],
     },

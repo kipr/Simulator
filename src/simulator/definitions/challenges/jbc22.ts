@@ -12,7 +12,6 @@ export default {
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
-    //COMME
   },
   code: {
     'c': ProgrammingLanguage.DEFAULT_CODE.c,
@@ -43,7 +42,7 @@ export default {
     exprs: {
 
 
-      //Startbox Events
+      // Startbox Events
       leaveStartBox: {
         type: Expr.Type.Event,
         eventId: 'leaveStartBox',
@@ -53,7 +52,7 @@ export default {
         argId: 'leaveStartBox',
       },
 
-      //Can Events
+      // Can Events
       canStacked: {
         type: Expr.Type.Event,
         eventId: 'canStacked',
