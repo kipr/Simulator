@@ -69,6 +69,15 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
     this.state = {
       values: {},
     };
+
+    // Pre-fill values with default values of items
+    for (const item of this.props.items) {
+      if (item.defaultValue) {
+        this.state.values[item.id] = {
+          text: item.defaultValue,
+        };
+      }
+    }
   }
 
   private onValueChange_ = (item: Form.Item) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,7 +87,7 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
         [item.id]: {
           text: event.target.value,
         },
-        
+
       }
     });
   };
@@ -92,7 +101,7 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
     for (const item of items) {
       ret[item.id] = item.finalizer(values[item.id].text);
     }
-    
+
     this.props.onFinalize(ret);
   };
 
@@ -108,13 +117,14 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
     const { props, state } = this;
     const { items, verifiers, theme, className, style, finalizeDisabled } = props;
     const { values } = state;
-    
+
     const itemElements: React.ReactNode[] = items.map((item, index) => {
       return [
         <Label theme={theme} key={`label-${index}`}>{item.text} {item.assist ? <Assist theme={theme} onClick={item.assist}>{item.assistText || 'Assist'}</Assist> : undefined}</Label>,
         <Input
           key={`input-${index}`}
           theme={theme}
+          disabled={item.disabled ?? false}
           type={item.valueHidden ? 'password' : 'text'}
           value={item.id in values ? values[item.id].text : (item.defaultValue || '')}
           autoFocus={index === 0}
@@ -129,12 +139,12 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
     }).reduce((acc, item) => [...acc, ...item], []);
 
     const verifyElements: React.ReactNode[] = verifiers !== undefined ? verifiers.map((verifier, index) => {
-      const text = this.state.values[verifier.id] !== undefined ? this.state.values[verifier.id].text : ''; 
+      const text = this.state.values[verifier.id] !== undefined ? this.state.values[verifier.id].text : '';
       const valid = Validators.validate(text, verifier.validType);
       return [
         <div key={`verifier-${index}`}>
           <Text text={
-            StyledText.component ({
+            StyledText.component({
               component: FontAwesome,
               props: {
                 icon: valid ? faCheck : faTimes,
@@ -144,9 +154,9 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
                 theme,
               }
             })
-          }/>
+          } />
           <Text text={
-            StyledText.text ({
+            StyledText.text({
               text: verifier.text,
               style: {
                 color: valid ? GREEN.standard : RED.standard,
@@ -157,9 +167,9 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
                 marginRight: '8px',
               }
             })
-          }/>
+          } />
         </div>
-        
+
       ];
     }).reduce((acc, item) => [...acc, ...item], []) : undefined;
 
@@ -208,6 +218,7 @@ namespace Form {
   export interface Item<F = any> {
     id: string;
     text: string;
+    disabled?: boolean;
     valueHidden?: boolean;
     tooltip?: string;
     defaultValue?: string;
@@ -219,8 +230,9 @@ namespace Form {
   }
 
   export const IDENTITY_FINALIZER = (value: string) => value;
-  export const EMAIL_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.Email); 
+  export const EMAIL_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.Email);
   export const PASSWORD_VALIDATOR = (value: string) => Validators.validatePassword(value);
+  export const DATE_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.Date);
   export const NON_EMPTY_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.Length, 1);
 
 
@@ -240,6 +252,16 @@ namespace Form {
     tooltip,
     valueHidden: true,
     validator: shouldValidate ? PASSWORD_VALIDATOR : NON_EMPTY_VALIDATOR,
+    finalizer: IDENTITY_FINALIZER,
+    assist,
+    assistText,
+  });
+
+  export const dob = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
+    id,
+    text,
+    tooltip,
+    validator: DATE_VALIDATOR,
     finalizer: IDENTITY_FINALIZER,
     assist,
     assistText,

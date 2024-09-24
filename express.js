@@ -11,7 +11,10 @@ const sourceDir = 'dist';
 const { get: getConfig } = require('./config');
 const { WebhookClient } = require('discord.js');
 const proxy = require('express-http-proxy');
-
+const { FirebaseTokenManager } = require('./firebaseAuth');
+const formData = require('form-data');
+const Mailgun = require('mailgun.js');
+const createParentalConsentRouter = require('./parentalConsent');
 
 let config;
 try {
@@ -21,6 +24,14 @@ try {
   throw e;
 }
 
+const mailgun = new Mailgun(formData);
+const mailgunClient = mailgun.client({
+  username: 'api',
+  key: config.mailgun.apiKey,
+});
+
+const firebaseTokenManager = new FirebaseTokenManager(config.firebase.serviceAccountKey, config.firebase.apiKey);
+
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -29,6 +40,8 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 app.use(morgan('combined'));
+
+app.use('/api/parental-consent', createParentalConsentRouter(firebaseTokenManager, mailgunClient, config));
 
 app.use('/api', proxy(config.dbUrl));
 
@@ -231,6 +244,10 @@ app.use(express.static(sourceDir, {
 
 app.get('/login', (req, res) => {
   res.sendFile(`${__dirname}/${sourceDir}/login.html`);
+});
+
+app.get('/parental-consent/*', (req, res) => {
+  res.sendFile(`${__dirname}/${sourceDir}/parental-consent.html`);
 });
 
 app.use('*', (req, res) => {
