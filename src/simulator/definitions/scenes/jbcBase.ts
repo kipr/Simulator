@@ -4,7 +4,6 @@ import Node from "../../../state/State/Scene/Node";
 import Camera from "../../../state/State/Scene/Camera";
 import Scene from "../../../state/State/Scene";
 import AbstractRobot from '../../../programming/AbstractRobot';
-import LocalizedString from '../../../util/LocalizedString';
 import Author from '../../../db/Author';
 
 import tr from '@i18n';

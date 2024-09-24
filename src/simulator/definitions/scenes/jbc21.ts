@@ -5,8 +5,6 @@ import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
 import Script from '../../../state/State/Scene/Script';
 
-import tr from '@i18n';
-
 const baseScene = createBaseSceneSurfaceA();
 
 const footTallBox = `

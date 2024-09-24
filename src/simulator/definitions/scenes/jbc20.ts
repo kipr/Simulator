@@ -1,6 +1,6 @@
 import Scene from '../../../state/State/Scene';
 import { ReferenceFramewUnits } from '../../../util/math/unitMath';
-import { Distance, Mass } from '../../../util';
+import { Distance } from '../../../util';
 import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
 import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
@@ -11,8 +11,8 @@ const uprightCans = `
 
 
 scene.onBind = nodeId => {
-  const EULER_IDENTITY = Rotation.Euler.identity();
-  const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3.dot(Vector3.applyQuaternion(Vector3.Y, Rotation.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3.Y));
+  const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
+  const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
   
   scene.addOnRenderListener(() => {
    

@@ -6,8 +6,6 @@ import Script from '../../../state/State/Scene/Script';
 import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
 
-import tr from '@i18n';
-
 const baseScene = createBaseSceneSurfaceA();
 const startBoxIntersects = `
 const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
@@ -125,8 +123,8 @@ scene.onBind = nodeId => {
   
   
   scene.addOnIntersectionListener(nodeId, (type, otherNodeId) => {
-    const EULER_IDENTITY = Rotation.Euler.identity();
-    const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3.dot(Vector3.applyQuaternion(Vector3.Y, Rotation.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3.Y));
+    const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
+    const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
     const upright = yAngle(nodeId) < 5;
   
     if(count == 0){

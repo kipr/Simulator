@@ -1,6 +1,6 @@
 import Scene from '../../../state/State/Scene';
 import { RotationwUnits, ReferenceFramewUnits } from '../../../util/math/unitMath';
-import { Distance, Mass } from '../../../util';
+import { Distance } from '../../../util';
 import LocalizedString from '../../../util/LocalizedString';
 import { Color } from '../../../state/State/Scene/Color';
 import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
@@ -11,7 +11,6 @@ import tr from '@i18n';
 const baseScene = createBaseSceneSurfaceA();
 
 const startBoxIntersects = `
-
 scene.onBind = nodeId => {
   scene.addOnIntersectionListener(nodeId, (type, otherNodeId) => {
     console.log(nodeId + "entered start box!");
@@ -21,17 +20,14 @@ scene.onBind = nodeId => {
 
 };
 
-
 `;
-
-
 
 const uprightCans = `
 // When a can is standing upright on the ream, the upright condition is met.
 
 
-const EULER_IDENTITY = Rotation.Euler.identity();
-const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3.dot(Vector3.applyQuaternion(Vector3.Y, Rotation.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3.Y));
+const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
+const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
 scene.addOnRenderListener(() => {
  
   const upright1 = yAngle('can1') < 5;

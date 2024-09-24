@@ -5,10 +5,8 @@ import { createCanNode, createBaseSceneSurfaceA } from "./jbcBase";
 import { Color } from "../../../state/State/Scene/Color";
 import { Distance , Angle} from "../../../util";
 
-
-import tr from '@i18n';
-
 const baseScene = createBaseSceneSurfaceA();
+
 const garageIntersects = `
 const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
   ...scene.nodes[nodeId],
@@ -75,8 +73,8 @@ scene.onBind = nodeId => {
 `;
 const uprightCans = `
 // When a can is standing upright, the upright condition is met.
-const EULER_IDENTITY = Rotation.Euler.identity();
-const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3.dot(Vector3.applyQuaternion(Vector3.Y, Rotation.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3.Y));
+const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
+const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
 
 
 scene.addOnRenderListener(() => {

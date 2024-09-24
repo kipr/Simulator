@@ -1,13 +1,9 @@
 import Scene from "../../../state/State/Scene";
 import LocalizedString from '../../../util/LocalizedString';
-
 import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
-import { Color } from "../state/State/Scene/Color";
-import { Distance } from "../util";
-import Script from "../state/State/Scene/Script";
-
-
-import tr from '@i18n';
+import { Color } from "../../../state/State/Scene/Color";
+import { Distance } from "../../../util";
+import Script from "../../../state/State/Scene/Script";
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -103,9 +99,9 @@ const uprightCans = `
 // When a can is standing upright, the upright condition is met.
 
 // let startTime = Date.now();
-const EULER_IDENTITY = Rotation.Euler.identity();
-// const startingOrientationInv = (nodeId) => Quaternion.inverse(Rotation.toRawQuaternion(scene.nodes[nodeId].startingOrigin.orientation || EULER_IDENTITY));
-const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3.dot(Vector3.applyQuaternion(Vector3.Y, Rotation.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3.Y));
+const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
+// const startingOrientationInv = (nodeId) => Quaternion.inverse(RotationwUnits.toRawQuaternion(scene.nodes[nodeId].startingOrigin.orientation || EULER_IDENTITY));
+const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
 
 
 scene.addOnRenderListener(() => {

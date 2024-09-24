@@ -2,11 +2,9 @@ import Scene from '../../../state/State/Scene';
 import { ReferenceFramewUnits } from '../../../util/math/unitMath';
 import { Distance } from '../../../util';
 import LocalizedString from '../../../util/LocalizedString';
-import Script from '../state/State/Scene/Script';
+import Script from '../../../state/State/Scene/Script';
 import { createBaseSceneSurfaceB, createCanNode } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
-
-import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceB();
 
@@ -40,8 +38,8 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 const uprightCans = `
 // When a can is standing upright, the upright condition is met.
 
-const EULER_IDENTITY = Rotation.Euler.identity();
-const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3.dot(Vector3.applyQuaternion(Vector3.Y, Rotation.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3.Y));
+const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
+const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
 
 scene.addOnRenderListener(() => {
 
@@ -50,7 +48,7 @@ scene.addOnRenderListener(() => {
 
 });
 `;
-const ROBOT_ORIGIN: ReferenceFrame = {
+const ROBOT_ORIGIN: ReferenceFramewUnits = {
   ...baseScene.nodes['robot'].origin,
   position: {
     ...baseScene.nodes['robot'].origin.position,

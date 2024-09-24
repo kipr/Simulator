@@ -2,17 +2,14 @@ import Scene from "../../../state/State/Scene";
 import { Distance } from "../../../util";
 import LocalizedString from '../../../util/LocalizedString';
 import { Color } from '../../../state/State/Scene/Color';
-
 import { createBaseSceneSurfaceB, createCanNode } from './jbcBase';
-
-import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceB();
 
 export const JBC_10B: Scene = {
   ...baseScene,
-  name: tr('JBC 10B'),
-  description: tr('Junior Botball Challenge 10: Solo Joust Jr.'),
+  name: { [LocalizedString.EN_US]: 'JBC 10B' },
+  description: { [LocalizedString.EN_US]: 'Junior Botball Challenge 10: Solo Joust Jr.' },
   nodes: {
     ...baseScene.nodes,
     mainSurface: {

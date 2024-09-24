@@ -1,8 +1,6 @@
 import Scene from "../../../state/State/Scene";
-import Script from '../../../state/State/Scene/Script';
 import { ReferenceFramewUnits, RotationwUnits } from "../../../util/math/unitMath";
 import { Distance } from "../../../util";
-import LocalizedString from '../../../util/LocalizedString';
 
 import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
 
