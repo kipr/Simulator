@@ -101,9 +101,6 @@ interface MenuState {
 type Props = MenuPublicProps & MenuPrivateProps;
 type State = MenuState;
 
-
-
-
 const Container = styled('div', (props: ThemeProps) => ({
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,

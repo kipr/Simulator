@@ -1,5 +1,4 @@
 import Scene from "../../../state/State/Scene";
-import LocalizedString from '../../../util/LocalizedString';
 
 import { createBaseSceneSurfaceB } from './jbcBase';
 

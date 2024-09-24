@@ -10,6 +10,7 @@ import { v4 as uuid } from 'uuid';
 import construct from '../util/redux/construct';
 import { RawAxisAngle, RawQuaternion, RawReferenceFrame, RawVector3 } from '../util/math/math';
 import { Angle, Mass, Distance } from '../util/math/Value';
+import { SharedRegistersRobot } from '../programming/SharedRegistersRobot';
 
 
 export type Ids = string | string[] | Set<string>;
@@ -57,7 +58,6 @@ export interface ScriptSceneBinding {
   setChallengeEventValue: (eventId: string, value: boolean) => void;
 }
 
-
 class ScriptManager {
   private scene_: Scene;
 
@@ -76,7 +76,7 @@ class ScriptManager {
   onSelectedNodeIdChange?: (id: string) => void;
 
   onChallengeSetEventValue?: (eventId: string, value: boolean) => void;
-
+  onChallengeGetEventValue?: (eventId: string, value: boolean) => boolean;
   private programStatus_: 'running' | 'stopped' = 'stopped';
   get programStatus() { return this.programStatus_; }
   set programStatus(status: 'running' | 'stopped') {
@@ -584,8 +584,19 @@ namespace ScriptManager {
     setChallengeEventValue(eventId: string, value: boolean) {
       if (!this.manager_.onChallengeSetEventValue) return;
       this.manager_.onChallengeSetEventValue(eventId, value);
+      this.getChallengeEventValue(eventId,value);
+    }
+
+    getChallengeEventValue(eventId: string, value: boolean) {
+      if (!this.manager_.onChallengeGetEventValue) return;
+      return value;
+      this.getChallengeEventValue(eventId,value);
     }
   }
+
+
+
+
 }
 
 export default ScriptManager;

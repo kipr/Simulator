@@ -8,6 +8,12 @@ import { Layout, LayoutPicker } from '../Layout';
 import { SimulatorState } from './SimulatorState';
 import { GREEN, RED, ThemeProps } from '../constants/theme';
 
+import KIPR_LOGO_BLACK from '../../../static/assets/KIPR-Logo-Black-Text-Clear-Large.png';
+import KIPR_LOGO_WHITE from '../../../static/assets/KIPR-Logo-White-Text-Clear-Large.png';
+import { faBars, faFlagCheckered, faBook, faClone, faCogs, faCommentDots, faGlobeAmericas, faPlay, faQuestion, faSignOutAlt, faStop, faSync } from '@fortawesome/free-solid-svg-icons';
+import SceneMenu from '../World/SceneMenu';
+import ExtraMenu from './ExtraMenu';
+
 namespace SubMenu {
   export enum Type {
     None,
@@ -60,6 +66,7 @@ export interface MenuProps extends StyleProps, ThemeProps {
   onDashboardClick: () => void;
   onLogoutClick: () => void;
 
+  onEndChallengeClick: () => void;
   simulatorState: SimulatorState;
 }
 
@@ -69,12 +76,6 @@ interface MenuState {
 
 type Props = MenuProps;
 type State = MenuState;
-
-import KIPR_LOGO_BLACK from '../../../static/assets/KIPR-Logo-Black-Text-Clear-Large.png';
-import KIPR_LOGO_WHITE from '../../../static/assets/KIPR-Logo-White-Text-Clear-Large.png';
-import { faBars, faBook, faClone, faCogs, faCommentDots, faGlobeAmericas, faPlay, faQuestion, faSignOutAlt, faStop, faSync } from '@fortawesome/free-solid-svg-icons';
-import SceneMenu from '../World/SceneMenu';
-import ExtraMenu from './ExtraMenu';
 
 const Container = styled('div', (props: ThemeProps) => ({
   backgroundColor: props.theme.backgroundColor,
@@ -226,6 +227,7 @@ class ChallengeMenu extends React.PureComponent<Props, State> {
       onDocumentationClick,
       onDashboardClick,
       onLogoutClick,
+      onEndChallengeClick,
       simulatorState
     } = props;
 
@@ -262,6 +264,16 @@ class ChallengeMenu extends React.PureComponent<Props, State> {
           <Item theme={theme} onClick={onResetChallengeClick}><ItemIcon icon={faSync} />Reset Challenge</Item>
 
           <Spacer style={{ borderRight: `1px solid ${theme.borderColor}` }} />
+
+          <Item theme={theme} onClick={onEndChallengeClick} style={{ position: 'relative' }}>
+            <ItemIcon icon={faFlagCheckered} /> End Challenge
+            
+          </Item>
+
+          <Item theme={theme} onClick={onEndChallengeClick} style={{ position: 'relative' }}>
+            <ItemIcon icon={faFlagCheckered} /> End Challenge
+            
+          </Item>
 
           <Item theme={theme} onClick={this.onLayoutClick_} style={{ position: 'relative' }}>
             <ItemIcon icon={faClone} /> Layout
