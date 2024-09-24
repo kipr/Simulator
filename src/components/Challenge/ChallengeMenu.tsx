@@ -270,6 +270,11 @@ class ChallengeMenu extends React.PureComponent<Props, State> {
             
           </Item>
 
+          <Item theme={theme} onClick={onEndChallengeClick} style={{ position: 'relative' }}>
+            <ItemIcon icon={faFlagCheckered} /> End Challenge
+            
+          </Item>
+
           <Item theme={theme} onClick={this.onLayoutClick_} style={{ position: 'relative' }}>
             <ItemIcon icon={faClone} /> Layout
             {subMenu.type === SubMenu.Type.LayoutPicker ? (

@@ -368,6 +368,10 @@ namespace ScriptManager {
           this.triggerClick_(event);
           break;
         }
+        case Event.Type.Click: {
+          this.triggerClick_(event);
+          break;
+        }
       }
     }
 
@@ -590,8 +594,11 @@ namespace ScriptManager {
     getChallengeEventValue(eventId: string, value: boolean) {
       if (!this.manager_.onChallengeGetEventValue) return;
       return value;
+      this.getChallengeEventValue(eventId,value);
     }
   }
+
+
 
 
 }
