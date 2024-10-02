@@ -4,13 +4,13 @@ import { State } from 'state';
 import Assignment, { AsyncAssignment } from '../../state/State/Assignment';
 import { styled } from 'styletron-react';
 import LocalizedString from '../../util/LocalizedString';
-import { Theme, ThemeProps } from '../../components/theme';
-import { StyleProps } from '../../style';
+import { Theme, ThemeProps } from '../../components/constants/theme';
+import { StyleProps } from '../../util/style';
 import Async from '../../state/State/Async';
 import { GradesContainer, NameContainer, SubjectsContainer, UsStdContainer } from '../common';
-import { Fa } from '../../components/Fa';
+import { FontAwesome } from '../../components/FontAwesome';
 import Markdown from 'react-markdown';
-import { TabBar } from '../../components/TabBar';
+import { TabBar } from '../../components/Layout/TabBar';
 import Subject from '../../state/State/Assignment/Subject';
 
 export interface AssignmentViewProps extends StyleProps {
@@ -29,6 +29,7 @@ const Container = styled('div', ({ $theme, onClick }: { $theme: Theme; onClick: 
   ':last-child': {
     marginBottom: 0,
   },
+  // eslint-disable-next-line no-extra-boolean-cast
   cursor: !!onClick ? 'pointer' : 'default',
   backgroundColor: 'white',
   overflow: 'hidden',
