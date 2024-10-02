@@ -36,8 +36,7 @@ try {
 module.exports = {
   entry: {
     app: './index.tsx',
-    // login: './components/Login/index.tsx', // was current on main
-    login: './login/index.tsx',
+    login: './components/Login/index.tsx', 
     plugin: './lms/plugin/index.tsx',
     'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js',
     'ts.worker': 'monaco-editor/esm/vs/language/typescript/ts.worker.js',
@@ -65,10 +64,11 @@ module.exports = {
       path: false,
     },
     alias: {
+      state: resolve(__dirname, '../../src/state'),
       '@i18n': resolve(__dirname, '../../src/util/i18n'),
     },
     symlinks: false,
-    modules
+    modules //: [resolve(__dirname, '../../src'), 'node_modules']
   },
   context: resolve(__dirname, '../../src'),
   module: {
@@ -138,7 +138,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({ template: 'index.html.ejs', excludeChunks: ['login', 'plugin'] }),
-    new HtmlWebpackPlugin({ template: 'login/login.html.ejs', filename: 'login.html', chunks: ['login'] }),
+    new HtmlWebpackPlugin({ template: 'components/Login/login.html.ejs', filename: 'login.html', chunks: ['login'] }),
     new HtmlWebpackPlugin({ template: 'lms/plugin/plugin.html.ejs', filename: 'plugin.html', chunks: ['plugin'] }),
     new DefinePlugin({
       SIMULATOR_VERSION: JSON.stringify(require('../../package.json').version),

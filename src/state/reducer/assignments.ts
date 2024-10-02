@@ -1,6 +1,6 @@
 import Assignment, { AssignmentBrief, AsyncAssignment } from '../State/Assignment';
 import construct from '../../util/redux/construct';
-import db from 'db';
+import db from '../../db';
 import { ASSIGNMENT_COLLECTION } from '../../db/constants';
 import Dict from '../../util/objectOps/Dict';
 
