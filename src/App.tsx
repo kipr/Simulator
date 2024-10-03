@@ -14,6 +14,8 @@ import Root from './pages/Root';
 import ChallengeRoot from './pages/ChallengeRoot';
 import DocumentationWindow from './components/documentation/DocumentationWindow';
 import { DARK } from './components/constants/theme';
+import CurriculumPage from './lms/CurriculumPage';
+import { UsersAction } from './state/reducer';
 
 export interface AppPublicProps {
 
@@ -21,6 +23,8 @@ export interface AppPublicProps {
 
 interface AppPrivateProps {
   login: () => void;
+  setMe: (me: string) => void;
+  loadUser: (uid: string) => void;
 }
 
 interface AppState {
@@ -68,10 +72,16 @@ class App extends React.Component<Props, State> {
   componentDidMount() {
     this.onAuthStateChangedSubscription_ = auth.onAuthStateChanged(user => {
       if (user) {
-        this.setState({ loading: false });
+        console.log('User detected.');
+        this.props.loadUser(user.uid);
+        this.props.setMe(user.uid);
       } else {
         this.props.login();
       }
+
+      this.setState({ loading: false }, () => {
+        if (!user) this.props.login();
+      });
     });
   }
 
@@ -94,6 +104,7 @@ class App extends React.Component<Props, State> {
           <Route path="/tutorials" exact component={Tutorials} />
           <Route path="/scene/:sceneId" component={Root} />
           <Route path="/challenge/:challengeId" component={ChallengeRoot} />
+          <Route path="/curriculum" component={CurriculumPage} />
         </Switch>
         <DocumentationWindow theme={DARK} />
       </>
@@ -134,5 +145,7 @@ export default connect((state: ReduxState) => {
   login: () => {
     console.log('Redirecting to login page', window.location.pathname);
     window.location.href = `/login${window.location.pathname === '/login' ? '' : `?from=${window.location.pathname}`}`;
-  }
+  },
+  setMe: (me: string) => dispatch(UsersAction.setMe({ me })),
+  loadUser: (uid: string) => dispatch(UsersAction.loadOrEmptyUser({ userId: uid }))
 }))(App) as React.ComponentType<AppPublicProps>;

@@ -11,6 +11,7 @@
     "baseUrl": "src",
     "paths": {
       "@i18n": ["util/i18n"],
+      "state/*": ["state/*"]
     }
   },
   "types": [
