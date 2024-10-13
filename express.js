@@ -11,6 +11,7 @@ const sourceDir = 'dist';
 const { get: getConfig } = require('./config');
 const { WebhookClient } = require('discord.js');
 const proxy = require('express-http-proxy');
+const path = require('path');
 
 
 let config;
@@ -211,6 +212,22 @@ app.post('/feedback', (req, res) => {
 });
 
 app.use('/static', express.static(`${__dirname}/static`, {
+  maxAge: config.caching.staticMaxAge,
+}));
+
+
+if (config.server.dependencies.scratch_rt) {
+  console.log('Scratch Runtime is enabled.');
+  app.use('/scratch/rt.js', express.static(`${config.server.dependencies.scratch_rt}`, {
+    maxAge: config.caching.staticMaxAge,
+  }));
+}
+
+app.use('/scratch', express.static(path.resolve(__dirname, 'node_modules', 'kipr-scratch'), {
+  maxAge: config.caching.staticMaxAge,
+}));
+
+app.use('/media', express.static(path.resolve(__dirname, 'node_modules', 'kipr-scratch', 'media'), {
   maxAge: config.caching.staticMaxAge,
 }));
 
