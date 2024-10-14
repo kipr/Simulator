@@ -6,4 +6,4 @@ export default () => {
       <h1>Asset Viewer</h1>
     </div>
   );
-}
+};

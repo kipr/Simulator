@@ -26,7 +26,7 @@ const initializeGapiClient = async () => {
   setGapiInitialized(true);
 };
 
-gapi.load('client', initializeGapiClient);
+gapi.load('client', void initializeGapiClient);
 
 ReactDom.render(
   <StyletronProvider value={engine} debugAfterHydration>
@@ -37,7 +37,7 @@ ReactDom.render(
   reactRoot
 );
 
-window.onmessage = (e) => {
+window.onmessage = (e: MessageEvent<{ type: string; id: string }>) => {
   try {
     if (e.data.type === 'set-course-id') {
       setCourseId(e.data.id);
