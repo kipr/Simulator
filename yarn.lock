@@ -5707,9 +5707,9 @@ isurl@^1.0.0-alpha5:
     has-to-string-tag-x "^1.2.0"
     is-object "^1.0.1"
 
-"itch@https://github.com/kipr/itch#33":
+"itch@https://github.com/chrismbirmingham/itch#34":
   version "1.0.0"
-  resolved "https://github.com/kipr/itch#86af3c584894f11920bb9f13ac1cd49e9d1bf679"
+  resolved "https://github.com/chrismbirmingham/itch#6032b644d49a91632acaed1fc18b8703bd227519"
   dependencies:
     xmldom "^0.6.0"
 
