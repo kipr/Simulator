@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 declare namespace Blockly {
   interface Workspace {
     addChangeListener(listener: (event: any) => void): void;
