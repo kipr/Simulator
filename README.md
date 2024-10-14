@@ -16,6 +16,7 @@ Simulates a botball/JBC style demobot with a built in IDE.
 - [CMake](https://cmake.org/)
 - [SWIG 4+](https://swig.org/)
 - [Python 3.7 or newer](https://www.python.org/)
+- [Also python 2.7]
 
 ### Debian/Ubuntu
 ```bash
@@ -71,10 +72,51 @@ git lfs pull
 
 ```bash
 # Python 3.7+ is required for the build process
-python3 dependencies/build.py
-```
+yarn run build-deps
+# The build-deps command executes:
+"python3 dependencies/build.py && yarn add file:dependencies/kipr-scratch/kipr-scratch --cache-folder ./.yarncache",
 
+```
 Tip: if you are experiencing issues with this step, you may try deleting the repository and follow the steps listed above again.
+
+### Notes on building dependencies
+```python3 dependencies/build.py```
+
+1. Run some setup checks
+2. Build libwallaby (probably only need to do this once)
+3. Delete ''unnecessary blocks' from scratch-blocks/blocks-vertical (renames them with a .old extension)
+    - 'event.js',
+    - 'extensions.js',
+    - 'default_toolbox.js',
+    - 'looks.js',
+    - 'motion.js',
+    - 'sensing.js',
+    - 'sound.js'
+
+
+4. blockify libwallaby
+    - Input is libwallaby-build, output is in scratch-blocks/blocks_vertical
+    - Start by parsing the xml result of the libwallaby build
+      - Essentially getting all the functions from the included files and cdecl nodes
+      - Ends up with a list of modules and their functions
+    - For all functions, needs to generate a blockly block of the module_function with
+      with the correct parameters and return types.
+      - Only does it for analog, digital, wait_for, time, motor, and servo modules
+    - Patches the colors in core/colours.js for the new modules from info in module_hsl.json
+    - Writes a new default_toolbox.js - this is what we have access to pick from
+    - Modifies the category names in the vertical extensions file, removing 'sounds', 'motion', 
+      'looks', 'event', 'sensing', 'pen', but adding our modules
+    - Modifies the messages to include those from our modules and the program start
+    - Modifies the css flyout style
+    - Modifies the field variables to remove non initialization case
+  
+
+5. Patch the scratch-blocks package.json to use python2
+
+6. Install the scratch blocks
+
+
+
 
 ## Install JavaScript Dependencies
 

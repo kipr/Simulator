@@ -22,6 +22,7 @@ export namespace Protocol {
       SetSharedRegistersRequest |
       SetCreateSerialRequest |
       SetSharedConsoleRequest |
+      SetSharedVariablesRequest |
       ProgramOutputRequest |
       ProgramErrorRequest |
       WorkerReadyRequest |
@@ -47,6 +48,11 @@ export namespace Protocol {
       type: 'set-create-serial';
       tx: SharedArrayBuffer;
       rx: SharedArrayBuffer;
+    }
+
+    export interface SetSharedVariablesRequest {
+      type: 'set-shared-variables';
+      sharedArrayBuffer: SharedArrayBuffer;
     }
 
     export namespace SetCreateSerialRequest {

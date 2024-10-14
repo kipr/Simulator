@@ -11,7 +11,7 @@ interface Challenge {
   description: LocalizedString;
   author: Author;
 
-  code: { [language in ProgrammingLanguage]: string };
+  code: { [language in ProgrammingLanguage]?: string };
   defaultLanguage: ProgrammingLanguage;
 
   events: Dict<Event>;
