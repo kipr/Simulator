@@ -714,7 +714,7 @@ class SceneBinding {
 
       const meshcopy = meshes
         .map(mesh => mesh.physicsBody)
-        .filter(body => !body);
+        .filter(body => body);
 
       if (meshcopy.length === 0) continue;
 
@@ -727,6 +727,7 @@ class SceneBinding {
         .map(mesh => mesh.physicsBody);
 
       for (const body of meshcopy) {
+        body.setCollisionCallbackEnabled(true);
         const observable = body.getCollisionObservable();
         observable.add(this.onCollideEvent_);
       }
@@ -752,14 +753,17 @@ class SceneBinding {
   ) => {
 
     const collider = collisionEvent.collider;
-    const collidedWith = collisionEvent.collidedAgainst;
+    const collidedAgainst = collisionEvent.collidedAgainst;
     const point = collisionEvent.point;
+    const distance = collisionEvent.distance;
+    const impulse = collisionEvent.impulse;
+    const normal = collisionEvent.normal;
 
     if (!('metadata' in collider.transformNode)) return;
-    if (!('metadata' in collidedWith.transformNode)) return;
+    if (!('metadata' in collidedAgainst.transformNode)) return;
 
     const colliderMetadata = collider.transformNode.metadata as SceneMeshMetadata;
-    const collidedWithMetadata = collidedWith.transformNode.metadata as SceneMeshMetadata;
+    const collidedWithMetadata = collidedAgainst.transformNode.metadata as SceneMeshMetadata;
 
     if (!colliderMetadata) return;
     if (!collidedWithMetadata) return;
@@ -769,6 +773,8 @@ class SceneBinding {
       otherNodeId: collidedWithMetadata.id,
       point: Vector3wUnits.fromRaw(RawVector3.fromBabylon(point), RENDER_SCALE),
     }));
+
+    return { collider, collidedAgainst, point, distance, impulse, normal };
   };
 
   

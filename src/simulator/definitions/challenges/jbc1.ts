@@ -19,17 +19,18 @@ export default {
   defaultLanguage: 'c',
   events: {
     can9Touched: {
-      name: { [LocalizedString.EN_US]: 'Can A Touched' },
+      name: { [LocalizedString.EN_US]: 'Can 9 Touched' },
       description: { [LocalizedString.EN_US]: 'Can A touched' },
     },
-    canAIntersects: {
-      name: { [LocalizedString.EN_US]: 'Can A Intersects' },
-      description: { [LocalizedString.EN_US]: 'Can A intersects circle 9' },
+    
+    can9Intersects: {
+      name: { [LocalizedString.EN_US]: 'Can 9 Intersects' },
+      description: { [LocalizedString.EN_US]: 'Can 9 intersects circle 9' },
     },
 
-    canAUpright: {
-      name: { [LocalizedString.EN_US]: 'Can A Upright' },
-      description: { [LocalizedString.EN_US]: 'Can A upright on circle 9' },
+    can9Upright: {
+      name: { [LocalizedString.EN_US]: 'Can 9 Upright' },
+      description: { [LocalizedString.EN_US]: 'Can 9 upright on circle 9' },
     },
     
     leaveStartBox: {
@@ -50,15 +51,15 @@ export default {
       },
 
       // Intersects Events
-      canAIntersects: {
+      can9Intersects: {
         type: Expr.Type.Event,
-        eventId: 'canAIntersects',
+        eventId: 'can9Intersects',
       },
 
       // Upright Events
-      canAUpright: {
+      can9Upright: {
         type: Expr.Type.Event,
-        eventId: 'canAUpright',
+        eventId: 'can9Upright',
       },
 
       // Start Box Events
@@ -88,15 +89,15 @@ export default {
       },
 
       // Intersects and upright logic
-      aIntersectsUpright: {
+      can9IntersectsUpright: {
         type: Expr.Type.And,
-        argIds: ['canAIntersects', 'canAUpright'],
+        argIds: ['can9Intersects', 'can9Upright'],
       },
 
       // Success Logic = Can A upright, intersects and touched
       completion: {
         type: Expr.Type.And,
-        argIds: ['can9Touched', 'aIntersectsUpright', 'startingBox'],
+        argIds: ['can9Touched', 'can9IntersectsUpright', 'startingBox'],
       },
     },
     rootId: 'completion',

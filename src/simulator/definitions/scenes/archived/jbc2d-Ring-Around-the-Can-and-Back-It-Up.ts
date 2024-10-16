@@ -1,9 +1,9 @@
-import Scene from "../../../state/State/Scene";
-import LocalizedString from '../../../util/LocalizedString';
-import Script from "../../../state/State/Scene/Script";
-import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
-import { Color } from "../../../state/State/Scene/Color";
-import { Distance } from "../../../util";
+import Scene from "../../../../state/State/Scene";
+import LocalizedString from "../../../../util/LocalizedString";
+import Script from "../../../../state/State/Scene/Script";
+import { createCanNode, createBaseSceneSurfaceA } from "../jbcBase";
+import { Color } from "../../../../state/State/Scene/Color";
+import { Distance } from "../../../../util";
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -24,16 +24,6 @@ scene.addOnIntersectionListener('can6', (type, otherNodeId) => {
 
 `;
 
-const leftStartBox = `
-
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot left start box!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('leaveStartBox', type === 'end');
-  }
-  
-}, 'startBox');
-`;
 const robotTouches = `
 scene.onBind = nodeId => {
   scene.addOnCollisionListener(nodeId, (otherNodeId, point)=> {
@@ -44,12 +34,22 @@ scene.onBind = nodeId => {
 `;
 const enterStartBox = `
 
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot returned start box!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('returnStartBox', type === 'start');
-  }
-}, 'startBox');
+scene.onBind = nodeId => {
+  let count = 0;
+  scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
+    
+    if(scene.programStatus === 'running' && count == 0 && type === 'start'){
+      scene.setChallengeEventValue('returnStartBox1', type === 'start');
+      console.log('Robot returned start box the 1st time!', type, otherNodeId);
+      count = 1;
+    }
+    else if(scene.programStatus === 'running' && count == 1 && type === 'start'){
+      scene.setChallengeEventValue('returnStartBox2', type === 'start');
+      console.log('Robot returned start box the 2nd time!', type, otherNodeId);
+      count = 0;
+    }
+  }, 'startBox');
+};
 `;
 
 const passedSide = `
@@ -77,36 +77,50 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 }, ['rightSideCan', 'topSideCan', 'leftSideCan']);
 
 `;
-
 const uprightCans = `
 // When a can is standing upright, the upright condition is met.
 
-// let startTime = Date.now();
 const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
-// const startingOrientationInv = (nodeId) => Quaternion.inverse(RotationwUnits.toRawQuaternion(scene.nodes[nodeId].startingOrigin.orientation || EULER_IDENTITY));
 const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
 
-
 scene.addOnRenderListener(() => {
-  const upright6 = yAngle('can6') > 5;
-  // console.log('can6 angle: ', yAngle('can6'));
+
+  const upright6 = yAngle('can6') < 5;
   scene.setChallengeEventValue('can6Upright', upright6);
 
 });
 `;
 
-export const JBC_2: Scene = {
+const goingBackwards = `
+
+scene.addOnRenderListener(() => {
+
+  //robot going forwards
+  if(scene.nodes['robot'].state.motors[0].direction == 1 || scene.nodes['robot'].state.motors[3].direction == 1){
+    scene.setChallengeEventValue('driveForwards', true);
+  }
+
+  //robot going backwards
+  else if (scene.nodes['robot'].state.motors[0].direction === 2 && scene.nodes['robot'].state.motors[3].direction ===2){
+    scene.setChallengeEventValue('driveBackwards', true);
+  }
+
+});
+
+`;
+
+
+
+export const JBC_2D: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: "JBC 2" },
-  description: {
-    [LocalizedString.EN_US]: "Junior Botball Challenge 2: Ring Around the Can",
-  },
+  name: { [LocalizedString.EN_US]: 'JBC 2D' },
+  description: { [LocalizedString.EN_US]: 'Junior Botball Challenge 2D: Ring Around the Can and Back It Up' },
   scripts: {
     circleIntersects: Script.ecmaScript("Circle Intersects", circleIntersects),
+    goingBackwards: Script.ecmaScript("Going Backwards", goingBackwards),
     uprightCans: Script.ecmaScript("Upright Cans", uprightCans),
     robotTouches: Script.ecmaScript("Robot Touches", robotTouches),
     passedSide: Script.ecmaScript("Passed Side", passedSide),
-    leftStartBox: Script.ecmaScript("Robot Left Start", leftStartBox),
     enterStartBox: Script.ecmaScript("Robot Reentered Start", enterStartBox),
   },
 
@@ -294,7 +308,7 @@ export const JBC_2: Scene = {
         y: Distance.centimeters(0),
         z: Distance.centimeters(57),
       }),
-      scriptIds: ["robotTouches"],
+      scriptIds: ["robotTouches", "enterStartBox", "goingBackwards"],
     },
   },
 };

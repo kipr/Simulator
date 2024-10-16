@@ -18,7 +18,7 @@ const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
 scene.addOnIntersectionListener('can9', (type, otherNodeId) => {
   console.log('Can 9 placed!', type, otherNodeId);
   const visible = type === 'start';
-  scene.setChallengeEventValue('canAIntersects', visible);
+  scene.setChallengeEventValue('can9Intersects', visible);
   setNodeVisible('circle9', visible);
 }, 'circle9');
 
@@ -46,13 +46,18 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 `;
 
 const robotTouches = `
-scene.onBind = nodeId => {
-  scene.addOnCollisionListener(nodeId, (otherNodeId, point)=> {
-    console.log('Can A touched!', otherNodeId, point);
-    scene.setChallengeEventValue(nodeId + 'Touched', true);
-  }, 'robot');
-};
+// scene.onBind = nodeId => {
+//   scene.addOnCollisionListener(nodeId, (otherNodeId, point)=> {
+//     console.log('Can 9 touched!', otherNodeId, point);
+//     scene.setChallengeEventValue(nodeId + 'Touched', true);
+//   }, 'robot');
+// };
+scene.addOnCollisionListener('can9', (otherNodeId) => {
+  console.log('Robot touched Can 9!');
+  scene.setChallengeEventValue('can9Touched', true);
+}, 'robot');
 `;
+
 const uprightCans = `
 // When a can is standing upright, the upright condition is met.
 
@@ -63,14 +68,9 @@ const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3wUnits.dot(Vector3wU
 
 
 scene.addOnRenderListener(() => {
-  // const currTime = Date.now();
-  // const timeDiff = currTime - startTime;
-  const upright9 = yAngle('can9') < 5;
-  // if(timeDiff > 1000) {
-  //   console.log('can9 angle: ', yAngle('can9'));
-  //   startTime = currTime;
-  // }
-  scene.setChallengeEventValue('canAUpright', upright9);
+  const upright9 = yAngle('can9') > 5;
+  // console.log('can9 angle: ', yAngle('can9'));
+  scene.setChallengeEventValue('can9Upright', upright9);
 
 });
 `;
@@ -106,7 +106,7 @@ export const JBC_1: Scene = {
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(0.1),
-        z: Distance.centimeters(0),
+        z: Distance.inches(10),
       },
     },
   },
@@ -153,7 +153,6 @@ export const JBC_1: Scene = {
         },
       },
     },
-
     'startBox': {
       type: 'object',
       geometryId: 'startBox_geom',
@@ -163,18 +162,18 @@ export const JBC_1: Scene = {
         position: {
           x: Distance.centimeters(0),
           y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(0),
+          z: Distance.centimeters(2),
         },
       },
       material: {
         type: 'pbr',
         emissive: {
           type: 'color3',
-          color: Color.rgb(255, 255, 255),
+          color: Color.rgb(0, 255, 255),
         },
       },
     },
-    can9: {
+    'can9': {
       ...createCanNode(9, { x: Distance.centimeters(0), y: Distance.centimeters(0), z: Distance.centimeters(85.4) }),
       scriptIds: ['robotTouches']
     }

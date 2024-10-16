@@ -1,13 +1,13 @@
-import Author from "../../../db/Author";
-import Challenge from "../../../state/State/Challenge";
-import Expr from "../../../state/State/Challenge/Expr";
-import LocalizedString from "../../../util/LocalizedString";
-import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import Author from "../../../../db/Author";
+import Challenge from "../../../../state/State/Challenge";
+import Expr from "../../../../state/State/Challenge/Expr";
+import LocalizedString from "../../../../util/LocalizedString";
+import ProgrammingLanguage from "../../../../programming/compiler/ProgrammingLanguage";
 
 export default {
-  name: { [LocalizedString.EN_US]: "JBC Challenge 2" },
+  name: { [LocalizedString.EN_US]: "JBC Challenge 2C" },
   description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 2: Ring Around the Can`,
+    [LocalizedString.EN_US]: `Junior Botball Challenge 2C: Back It Up`,
   },
   author: {
     type: Author.Type.Organization,
@@ -20,10 +20,6 @@ export default {
   },
   defaultLanguage: "c",
   events: {
-    can6Touched: {
-      name: { [LocalizedString.EN_US]: "Can 6 Touched" },
-      description: { [LocalizedString.EN_US]: "Can 6 touched" },
-    },
     can6Intersects: {
       name: { [LocalizedString.EN_US]: "Can 6 Intersects" },
       description: { [LocalizedString.EN_US]: "Can 6 intersects circle 6" },
@@ -41,6 +37,11 @@ export default {
     returnStartBox: {
       name: { [LocalizedString.EN_US]: "Robot Rentered Start" },
       description: { [LocalizedString.EN_US]: "Robot reentered starting box" },
+    },
+
+    driveBackwards: {
+      name: { [LocalizedString.EN_US]: "Robot Driving Backwards" },
+      description: { [LocalizedString.EN_US]: "Robot is driving backwards" },
     },
 
     rightSide: {
@@ -66,16 +67,11 @@ export default {
   },
   success: {
     exprs: {
-      // Touch Events
-      can6Touched: {
+      // Driving Backwards events
+      driveBackwards: {
         type: Expr.Type.Event,
-        eventId: "can6Touched",
+        eventId: "driveBackwards",
       },
-      can6NotTouched: {
-        type: Expr.Type.Not,
-        argId: "can6Touched",
-      },
-
       // Passing side events
       rightSide: {
         type: Expr.Type.Event,
@@ -138,7 +134,7 @@ export default {
       },
 
       // Intersects and upright logic
-      intersectsUpright: {
+      IntersectsUpright: {
         type: Expr.Type.And,
         argIds: ["can6Intersects", "can6Upright"],
       },
@@ -147,16 +143,16 @@ export default {
       completion: {
         type: Expr.Type.And,
         argIds: [
-          "can6NotTouched",
-          "intersectsUpright",
+          "driveBackwards",
+          "IntersectsUpright",
           "startingBox",
           "rightSideOnce",
           "topSideOnce",
-          "leftSideOnce"
+          "leftSideOnce",
         ],
       },
     },
     rootId: "completion",
   },
-  sceneId: "jbc2",
+  sceneId: "jbc2c",
 } as Challenge;

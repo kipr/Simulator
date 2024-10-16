@@ -26,6 +26,19 @@ const canTemplate: Node.TemplatedNode<Node.Obj> = {
   faceUvs: [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(1, 0), RawVector2.create(0, 1), RawVector2.ZERO, RawVector2.ZERO],
 };
 
+const circleTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: "object",
+  geometryId: "circle",
+  material: {
+    type: "pbr",
+    emissive: {
+      type: "color3",
+      color: Color.rgba(255, 255, 255, 0.25),
+    },
+  },
+};
+
+
 const lifescienceTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'can',
@@ -311,6 +324,7 @@ const habitatControlTemplate: Node.TemplatedNode<Node.Obj> = {
 
 export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'can': canTemplate,
+  'circle': circleTemplate,
   'sciencepad': sciencePadTemplate,
   'lifescience': lifescienceTemplate,
   'radscience': radscienceTemplate,
@@ -337,6 +351,11 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   'can': {
     type: 'cylinder',
     height: Distance.centimeters(11.15),
+    radius: Distance.centimeters(3),
+  },
+  'circle': {
+    type: 'cylinder',
+    height: Distance.centimeters(0.1),
     radius: Distance.centimeters(3),
   },
   'lifescience': {

@@ -1,9 +1,9 @@
-import Scene from "../../../state/State/Scene";
-import LocalizedString from '../../../util/LocalizedString';
-import Script from "../../../state/State/Scene/Script";
-import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
-import { Color } from "../../../state/State/Scene/Color";
-import { Distance } from "../../../util";
+import Scene from "../../../../state/State/Scene";
+import LocalizedString from '../../../../util/LocalizedString';
+import { createCanNode, createBaseSceneSurfaceA } from '../jbcBase';
+import { Color } from "../../../../state/State/Scene/Color";
+import { Distance } from "../../../../util";
+import Script from "../../../../state/State/Scene/Script";
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -13,15 +13,33 @@ const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
   visible
 });
 
-// When the can (can6) is intersecting circle6, the circle glows
+// When the can (can10) is intersecting circle10, the circle glows
 
-scene.addOnIntersectionListener('can6', (type, otherNodeId) => {
-  console.log('Can 6 placed!', type, otherNodeId);
+scene.addOnIntersectionListener('can10', (type, otherNodeId) => {
+  console.log('Can 10 placed!', type, otherNodeId);
   const visible = type === 'start';
-  scene.setChallengeEventValue('can6Intersects', visible);
-  setNodeVisible('circle6', visible);
-}, 'circle6');
+  scene.setChallengeEventValue('can10Intersects', visible);
+  setNodeVisible('circle10', visible);
+}, 'circle10');
 
+// When the can (can11) is intersecting circle11, the circle glows
+
+scene.addOnIntersectionListener('can11', (type, otherNodeId) => {
+  console.log('Can 11 placed!', type, otherNodeId);
+  const visible = type === 'start';
+  scene.setChallengeEventValue('can11Intersects', visible);
+  setNodeVisible('circle11', visible);
+}, 'circle11');
+
+
+// When the can (can12) is intersecting circle12, the circle glows
+
+scene.addOnIntersectionListener('can12', (type, otherNodeId) => {
+  console.log('Can 12 placed!', type, otherNodeId);
+  const visible = type === 'start';
+  scene.setChallengeEventValue('can12Intersects', visible);
+  setNodeVisible('circle12', visible);
+}, 'circle12');
 `;
 
 const leftStartBox = `
@@ -37,7 +55,7 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 const robotTouches = `
 scene.onBind = nodeId => {
   scene.addOnCollisionListener(nodeId, (otherNodeId, point)=> {
-    console.log('Can 6 touched!', otherNodeId, point);
+    console.log(nodeId + 'touched!', otherNodeId, point);
     scene.setChallengeEventValue(nodeId + 'Touched', true);
   }, 'robot');
 };
@@ -77,7 +95,6 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 }, ['rightSideCan', 'topSideCan', 'leftSideCan']);
 
 `;
-
 const uprightCans = `
 // When a can is standing upright, the upright condition is met.
 
@@ -88,19 +105,25 @@ const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3wUnits.dot(Vector3wU
 
 
 scene.addOnRenderListener(() => {
-  const upright6 = yAngle('can6') > 5;
-  // console.log('can6 angle: ', yAngle('can6'));
-  scene.setChallengeEventValue('can6Upright', upright6);
-
+  // const currTime = Date.now();
+  // const timeDiff = currTime - startTime;
+  const upright10 = yAngle('can10') < 5;
+  const upright11 = yAngle('can11') < 5;
+  const upright12 = yAngle('can12') < 5;
+  // if(timeDiff > 1000) {
+  //   console.log('can6 angle: ', yAngle('can6'));
+  //   startTime = currTime;
+  // }
+  scene.setChallengeEventValue('can10Upright', upright10);
+  scene.setChallengeEventValue('can11Upright', upright11);
+  scene.setChallengeEventValue('can12Upright', upright12);
 });
 `;
 
-export const JBC_2: Scene = {
+export const JBC_2B: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: "JBC 2" },
-  description: {
-    [LocalizedString.EN_US]: "Junior Botball Challenge 2: Ring Around the Can",
-  },
+  name: { [LocalizedString.EN_US]: 'JBC 2B' },
+  description: { [LocalizedString.EN_US]: 'Junior Botball Challenge 2B: Ring Around the Can, Sr.' },
   scripts: {
     circleIntersects: Script.ecmaScript("Circle Intersects", circleIntersects),
     uprightCans: Script.ecmaScript("Upright Cans", uprightCans),
@@ -109,10 +132,19 @@ export const JBC_2: Scene = {
     leftStartBox: Script.ecmaScript("Robot Left Start", leftStartBox),
     enterStartBox: Script.ecmaScript("Robot Reentered Start", enterStartBox),
   },
-
   geometry: {
     ...baseScene.geometry,
-    circle6_geom: {
+    circle10_geom: {
+      type: "cylinder",
+      radius: Distance.centimeters(3),
+      height: Distance.centimeters(0.1),
+    },
+    circle11_geom: {
+      type: "cylinder",
+      radius: Distance.centimeters(3),
+      height: Distance.centimeters(0.1),
+    },
+    circle12_geom: {
       type: "cylinder",
       radius: Distance.centimeters(3),
       height: Distance.centimeters(0.1),
@@ -155,7 +187,7 @@ export const JBC_2: Scene = {
     leftSideCan_geom: {
       type: "box",
       size: {
-        x: Distance.centimeters(50),
+        x: Distance.centimeters(30),
         y: Distance.centimeters(0.1),
         z: Distance.meters(0.05),
       },
@@ -184,16 +216,56 @@ export const JBC_2: Scene = {
         },
       },
     },
-    circle6: {
+    circle10: {
       type: "object",
-      geometryId: "circle6_geom",
-      name: { [LocalizedString.EN_US]: "Circle 6" },
+      geometryId: "circle10_geom",
+      name: { [LocalizedString.EN_US]: "Circle 10" },
+      visible: false,
+      origin: {
+        position: {
+          x: Distance.centimeters(19.3),
+          y: Distance.centimeters(-6.9),
+          z: Distance.centimeters(96.9),
+        },
+      },
+      material: {
+        type: "pbr",
+        emissive: {
+          type: "color3",
+          color: Color.rgb(255, 255, 255),
+        },
+      },
+    },
+    circle11: {
+      type: "object",
+      geometryId: "circle11_geom",
+      name: { [LocalizedString.EN_US]: "Circle 11" },
       visible: false,
       origin: {
         position: {
           x: Distance.centimeters(0),
           y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(57.2),
+          z: Distance.centimeters(106.6),
+        },
+      },
+      material: {
+        type: "pbr",
+        emissive: {
+          type: "color3",
+          color: Color.rgb(255, 255, 255),
+        },
+      },
+    },
+    circle12: {
+      type: "object",
+      geometryId: "circle12_geom",
+      name: { [LocalizedString.EN_US]: "Circle 12" },
+      visible: false,
+      origin: {
+        position: {
+          x: Distance.centimeters(-19.2),
+          y: Distance.centimeters(-6.9),
+          z: Distance.centimeters(96.9),
         },
       },
       material: {
@@ -233,9 +305,9 @@ export const JBC_2: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(-20),
+          x: Distance.centimeters(-50),
           y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(56.9),
+          z: Distance.centimeters(96.9),
         },
       },
       material: {
@@ -274,9 +346,9 @@ export const JBC_2: Scene = {
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(52),
+          x: Distance.centimeters(50),
           y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(56.9),
+          z: Distance.centimeters(96.9),
         },
       },
       material: {
@@ -288,13 +360,9 @@ export const JBC_2: Scene = {
       },
     },
 
-    can6: {
-      ...createCanNode(6, {
-        x: Distance.centimeters(0),
-        y: Distance.centimeters(0),
-        z: Distance.centimeters(57),
-      }),
-      scriptIds: ["robotTouches"],
-    },
-  },
+    ...baseScene.nodes,
+    'can10': { ...createCanNode(10), scriptIds: ["robotTouches"] },
+    'can11': { ...createCanNode(11), scriptIds: ["robotTouches"] },
+    'can12': { ...createCanNode(12), scriptIds: ["robotTouches"] },
+  }
 };

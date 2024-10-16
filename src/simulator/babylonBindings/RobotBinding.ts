@@ -356,7 +356,7 @@ class RobotBinding {
       
       const normalizedPwm = pwm / 400;
       const nextAngularVelocity = normalizedPwm * velocityMax * 2 * Math.PI / ticksPerRevolution;
-      console.log("nextAngularVelocity", nextAngularVelocity);
+      // console.log("nextAngularVelocity", nextAngularVelocity);
       this.setMotorVelocity_(bMotor, nextAngularVelocity);
 
     }

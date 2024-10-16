@@ -1,133 +1,154 @@
-import Author from '../../../db/Author';
-import Challenge from '../../../state/State/Challenge';
-import Expr from '../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../util/LocalizedString';
+import Author from "../../../db/Author";
+import Challenge from "../../../state/State/Challenge";
+import Expr from "../../../state/State/Challenge/Expr";
+import LocalizedString from "../../../util/LocalizedString";
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 5' },
+  name: { [LocalizedString.EN_US]: "JBC Challenge 5" },
   description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 5: Dance Party`,
+    [LocalizedString.EN_US]: `Junior Botball Challenge 5: Odd Numbers`,
   },
   author: {
     type: Author.Type.Organization,
-    id: 'kipr',
+    id: "kipr",
   },
   code: {
     'c': ProgrammingLanguage.DEFAULT_CODE.c,
     'cpp': ProgrammingLanguage.DEFAULT_CODE.cpp,
     'python': ProgrammingLanguage.DEFAULT_CODE.python,
   },
-  defaultLanguage: 'c',
+  defaultLanguage: "c",
   events: {
-    leaveStartBox: {
-      name: { [LocalizedString.EN_US]: 'Robot Left Start' },
-      description: { [LocalizedString.EN_US]: 'Robot left starting box' },
+    touchedEvenCircle: {
+      name: { [LocalizedString.EN_US]: "Even Circle Touched" },
+      description: { [LocalizedString.EN_US]: "Even circle touched" },
     },
-    clockwise360: {
-      name: { [LocalizedString.EN_US]: 'Robot 360 Clockwise' },
-      description: {
-        [LocalizedString.EN_US]: 'Robot turned 360 degrees clockwise',
-      },
+    wrongOrder: {
+      name: { [LocalizedString.EN_US]: "Circle Touched Out of Order" },
+      description: { [LocalizedString.EN_US]: "Circle was touched out of order" },
     },
-    counterClockwise360: {
-      name: { [LocalizedString.EN_US]: 'Robot 360 Counter Clockwise' },
-      description: {
-        [LocalizedString.EN_US]: 'Robot turned 360 degrees counter clockwise',
-      },
+    circle1Touched: {
+      name: { [LocalizedString.EN_US]: "Circle 1 Touched" },
+      description: { [LocalizedString.EN_US]: "Circle 1 was touched" },
     },
-    driveForward: {
-      name: { [LocalizedString.EN_US]: 'Robot Drove Forward' },
-      description: {
-        [LocalizedString.EN_US]: 'Robot drove forward',
-      },
+    circle3Touched: {
+      name: { [LocalizedString.EN_US]: "Circle 3 Touched" },
+      description: { [LocalizedString.EN_US]: "Circle 3 was touched" },
     },
-    driveBackward: {
-      name: { [LocalizedString.EN_US]: 'Robot Drove Backward' },
-      description: {
-        [LocalizedString.EN_US]: 'Robot drove backward',
-      },
+    circle5Touched: {
+      name: { [LocalizedString.EN_US]: "Circle 5 Touched" },
+      description: { [LocalizedString.EN_US]: "Circle 5 was touched" },
     },
-    waveServo: {
-      name: { [LocalizedString.EN_US]: 'Robot Wave Servo' },
-      description: {
-        [LocalizedString.EN_US]: 'Robot waved servo up and down at least once',
-      },
+    circle7Touched: {
+      name: { [LocalizedString.EN_US]: "Circle 7 Touched" },
+      description: { [LocalizedString.EN_US]: "Circle 7 was touched" },
+    },
+    circle9Touched: {
+      name: { [LocalizedString.EN_US]: "Circle 9 Touched" },
+      description: { [LocalizedString.EN_US]: "Circle 9 was touched" },
+    },
+    circle11Touched: {
+      name: { [LocalizedString.EN_US]: "Circle 11 Touched" },
+      description: { [LocalizedString.EN_US]: "Circle 11 was touched" },
     },
   },
   success: {
     exprs: {
-      // Waving Event
-      waveServo: {
+      // Touch Events
+      circle1Touched: {
         type: Expr.Type.Event,
-        eventId: 'waveServo',
+        eventId: 'circle1Touched',
       },
-      waveServoOnce: {
+      circle1TouchedOnce: {
         type: Expr.Type.Once,
-        argId: 'waveServo',
+        argId: 'circle1Touched'
+      },
+      circle3Touched: {
+        type: Expr.Type.Event,
+        eventId: 'circle3Touched',
+      },
+      circle3TouchedOnce: {
+        type: Expr.Type.Once,
+        argId: 'circle3Touched'
+      },
+      circle5Touched: {
+        type: Expr.Type.Event,
+        eventId: 'circle5Touched',
+      },
+      circle5TouchedOnce: {
+        type: Expr.Type.Once,
+        argId: 'circle5Touched'
+      },
+      circle7Touched: {
+        type: Expr.Type.Event,
+        eventId: 'circle7Touched',
+      },
+      circle7TouchedOnce: {
+        type: Expr.Type.Once,
+        argId: 'circle7Touched'
+      },
+      circle9Touched: {
+        type: Expr.Type.Event,
+        eventId: 'circle9Touched',
+      },
+      circle9TouchedOnce: {
+        type: Expr.Type.Once,
+        argId: 'circle9Touched'
+      },
+      circle11Touched: {
+        type: Expr.Type.Event,
+        eventId: 'circle11Touched',
+      },
+      circle11TouchedOnce: {
+        type: Expr.Type.Once,
+        argId: 'circle11Touched'
       },
 
-      // Turning Events
-      clockwise360: {
-        type: Expr.Type.Event,
-        eventId: 'clockwise360',
-      },
-      clockwise360Once: {
-        type: Expr.Type.Once,
-        argId: 'clockwise360',
-      },
-      counterClockwise360: {
-        type: Expr.Type.Event,
-        eventId: 'counterClockwise360',
-      },
-      counterClockwise360Once: {
-        type: Expr.Type.Once,
-        argId: 'counterClockwise360',
-      },
-      turning: {
-        type: Expr.Type.And,
-        argIds: ['clockwise360Once', 'counterClockwise360Once'],
-      },
-
-      // Start Box Events
-      leaveStartBox: {
-        type: Expr.Type.Event,
-        eventId: 'leaveStartBox',
-      },
-      leaveStartBoxOnce: {
-        type: Expr.Type.Once,
-        argId: 'leaveStartBox',
-      },
-
-      // Driving Events
-      driveForward: {
-        type: Expr.Type.Event,
-        eventId: 'driveForward',
-      },
-      driveForwardOnce: {
-        type: Expr.Type.Once,
-        argId: 'driveForward',
-      },
-      driveBackward: {
-        type: Expr.Type.Event,
-        eventId: 'driveBackward',
-      },
-      driveBackwardOnce: {
-        type: Expr.Type.Once,
-        argId: 'driveBackward',
-      },
-
-      driving: {
-        type: Expr.Type.And,
-        argIds: ['driveForwardOnce', 'driveBackwardOnce'],
-      },
-
+      // Success = All Circles Touched
       completion: {
         type: Expr.Type.And,
-        argIds: ['leaveStartBoxOnce', 'turning', 'driving', 'waveServoOnce'],
+        argIds: [
+          'circle1TouchedOnce',
+          'circle3TouchedOnce',
+          'circle5TouchedOnce',
+          'circle7TouchedOnce',
+          'circle9TouchedOnce',
+          'circle11TouchedOnce',
+        ],
       },
     },
-    rootId: 'completion',
+    rootId: "completion",
   },
-  sceneId: 'jbc5',
+  failure: {
+    exprs: {
+      touchedEvenCircle: {
+        type: Expr.Type.Event,
+        eventId: 'touchedEvenCircle',
+      },
+      touchedEvenCircleOnce: {
+        type: Expr.Type.Once,
+        argId: 'touchedEvenCircle'
+      },
+      wrongOrder: {
+        type: Expr.Type.Event,
+        eventId: 'wrongOrder',
+      },
+      wrongOrderOnce: {
+        type: Expr.Type.Once,
+        argId: 'wrongOrder'
+      },
+
+      // Failure = Touched Even Circle or Touched Circle in Wrong Order
+      failure: {
+        type: Expr.Type.Or,
+        argIds: [
+          'touchedEvenCircleOnce',
+          'wrongOrderOnce',
+        ],
+      },
+    },
+    rootId: "failure"
+  },
+  sceneId: "jbc5",
 } as Challenge;
