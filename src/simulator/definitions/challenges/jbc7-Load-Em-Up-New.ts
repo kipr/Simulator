@@ -5,9 +5,9 @@ import LocalizedString from "../../../util/LocalizedString";
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
 
 export default {
-  name: { [LocalizedString.EN_US]: "JBC Challenge 6" },
+  name: { [LocalizedString.EN_US]: "JBC Challenge 7" },
   description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 6: Load 'Em Up`,
+    [LocalizedString.EN_US]: `Junior Botball Challenge 7: Load 'Em Up`,
   },
   author: {
     type: Author.Type.Organization,
@@ -94,5 +94,5 @@ export default {
     },
     rootId: "completion",
   },
-  sceneId: "jbc6",
+  sceneId: "jbc7",
 } as Challenge;

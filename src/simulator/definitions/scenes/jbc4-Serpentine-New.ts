@@ -109,12 +109,12 @@ scene.onBind = nodeId => {
 };
 
 `;
-// 'n2','n3','n4','n5','n6','n7','n8'
-export const JBC_8: Scene = {
+
+export const JBC_4: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 8' },
+  name: { [LocalizedString.EN_US]: 'JBC 4' },
   description: {
-    [LocalizedString.EN_US]: 'Junior Botball Challenge 8: Serpentine',
+    [LocalizedString.EN_US]: 'Junior Botball Challenge 4: Serpentine',
   },
   scripts: {
     passedSide: Script.ecmaScript('Passed Side', passedSide),
@@ -516,7 +516,7 @@ export const JBC_8: Scene = {
         x: Distance.centimeters(-26), // can 8
         y: Distance.centimeters(-6.9),
         z: Distance.centimeters(65.5),
-      },false,false),
+      }, false, false),
       scriptIds: ['passedSide'],
     },
   },

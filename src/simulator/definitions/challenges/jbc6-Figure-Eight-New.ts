@@ -5,9 +5,9 @@ import LocalizedString from "../../../util/LocalizedString";
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
 
 export default {
-  name: { [LocalizedString.EN_US]: "JBC Challenge 4" },
+  name: { [LocalizedString.EN_US]: "JBC Challenge 6" },
   description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 4: Figure Eight`,
+    [LocalizedString.EN_US]: `Junior Botball Challenge 6: Figure Eight`,
   },
   author: {
     type: Author.Type.Organization,
@@ -122,10 +122,10 @@ export default {
       // Success Logic = Can A upright, intersects and touched
       completion: {
         type: Expr.Type.And,
-        argIds: ["IntersectsUpright4", "IntersectsUpright9", "startingBox","figureEightOnce"],
+        argIds: ["IntersectsUpright4", "IntersectsUpright9", "startingBox", "figureEightOnce"],
       },
     },
     rootId: "completion",
   },
-  sceneId: "jbc4",
+  sceneId: "jbc6",
 } as Challenge;

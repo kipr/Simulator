@@ -117,11 +117,11 @@ scene.addOnRenderListener(() => {
 });
 `;
 
-export const JBC_4: Scene = {
+export const JBC_6: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: "JBC 4" },
+  name: { [LocalizedString.EN_US]: "JBC 6" },
   description: {
-    [LocalizedString.EN_US]: "Junior Botball Challenge 4: Figure Eight",
+    [LocalizedString.EN_US]: "Junior Botball Challenge 6: Figure Eight",
   },
   scripts: {
     circleIntersects: Script.ecmaScript("Circle Intersects", circleIntersects),
@@ -305,7 +305,7 @@ export const JBC_4: Scene = {
         },
       },
     },
-  
+
     n2: {
       type: "object",
       geometryId: "topCan9_geom",
@@ -327,7 +327,7 @@ export const JBC_4: Scene = {
       },
     },
 
-    
+
     can4: { ...createCanNode(4) },
     can9: { ...createCanNode(9), scriptIds: ["passedSide"] },
   },

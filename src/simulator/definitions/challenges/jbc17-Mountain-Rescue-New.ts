@@ -5,9 +5,9 @@ import LocalizedString from '../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 19' },
+  name: { [LocalizedString.EN_US]: 'JBC Challenge 17' },
   description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 19: Mountain Rescue`,
+    [LocalizedString.EN_US]: `Junior Botball Challenge 17: Mountain Rescue`,
   },
   author: {
     type: Author.Type.Organization,
@@ -114,24 +114,24 @@ export default {
       // Intersecting and Upright
       IntersectingUpright1: {
         type: Expr.Type.And,
-        argIds: ['can1UprightOnce','can1IntersectsOnce'],
+        argIds: ['can1UprightOnce', 'can1IntersectsOnce'],
       },
       IntersectingUpright2: {
         type: Expr.Type.And,
-        argIds: ['can2UprightOnce','can2IntersectsOnce'],
+        argIds: ['can2UprightOnce', 'can2IntersectsOnce'],
       },
       IntersectingUpright3: {
         type: Expr.Type.And,
-        argIds: ['can3UprightOnce','can3IntersectsOnce'],
+        argIds: ['can3UprightOnce', 'can3IntersectsOnce'],
       },
 
 
       completion: {
         type: Expr.Type.And,
-        argIds: ['IntersectingUpright1','IntersectingUpright2','IntersectingUpright3'],
+        argIds: ['IntersectingUpright1', 'IntersectingUpright2', 'IntersectingUpright3'],
       },
     },
     rootId: 'completion',
   },
-  sceneId: 'jbc19',
+  sceneId: 'jbc17',
 } as Challenge;

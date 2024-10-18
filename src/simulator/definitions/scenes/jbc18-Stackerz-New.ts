@@ -63,11 +63,11 @@ scene.onBind = nodeId => {
 };
 `;
 
-export const JBC_22: Scene = {
+export const JBC_18: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 22' },
+  name: { [LocalizedString.EN_US]: 'JBC 18' },
   description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 22: Stackerz`,
+    [LocalizedString.EN_US]: `Junior Botball Challenge 18: Stackerz`,
   },
   scripts: {
     leftStartBox: Script.ecmaScript('Robot Left Start', leftStartBox),

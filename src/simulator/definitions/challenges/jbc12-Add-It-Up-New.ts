@@ -5,9 +5,9 @@ import LocalizedString from '../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 5' },
+  name: { [LocalizedString.EN_US]: 'JBC Challenge 12' },
   description: {
-    [LocalizedString.EN_US]: 'Junior Botball Challenge 5: Add It Up',
+    [LocalizedString.EN_US]: 'Junior Botball Challenge 12: Add It Up',
   },
   author: {
     type: Author.Type.Organization,
@@ -135,11 +135,11 @@ export default {
         type: Expr.Type.Once,
         argId: 'passed8',
       },
-      
+
 
       passedSerpentine: {
         type: Expr.Type.And,
-        argIds: ["passed1Once", "passed2Once","passed3Once", "passed4Once", "passed5Once", "passed6Once", "passed7Once", "passed8Once"],
+        argIds: ["passed1Once", "passed2Once", "passed3Once", "passed4Once", "passed5Once", "passed6Once", "passed7Once", "passed8Once"],
       },
 
       // Success logic
@@ -150,5 +150,5 @@ export default {
     },
     rootId: 'completion',
   },
-  sceneId: 'jbc8',
+  sceneId: 'jbc12',
 } as Challenge;

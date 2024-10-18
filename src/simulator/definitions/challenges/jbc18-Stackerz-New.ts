@@ -5,9 +5,9 @@ import LocalizedString from '../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 22' },
+  name: { [LocalizedString.EN_US]: 'JBC Challenge 18' },
   description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 22: Stackerz`,
+    [LocalizedString.EN_US]: `Junior Botball Challenge 18: Stackerz`,
   },
   author: {
     type: Author.Type.Organization,
@@ -21,7 +21,7 @@ export default {
   defaultLanguage: 'c',
   events: {
 
-   
+
     leaveStartBox: {
       name: { [LocalizedString.EN_US]: 'Robot Left Start' },
       description: { [LocalizedString.EN_US]: 'Robot left starting box' },
@@ -31,7 +31,7 @@ export default {
       name: { [LocalizedString.EN_US]: 'One Can Stacked' },
       description: { [LocalizedString.EN_US]: 'One can is stacked on another' },
     },
- 
+
     robotTouchCan: {
       name: { [LocalizedString.EN_US]: 'Robot Touching Can' },
       description: { [LocalizedString.EN_US]: 'Robot is touching a can' },
@@ -66,7 +66,7 @@ export default {
         argId: 'robotTouchCan',
       },
 
-   
+
       completion: {
         type: Expr.Type.And,
         argIds: ['leaveStartBoxOnce', 'canStacked', 'robotTouchCanNot'],
@@ -74,5 +74,5 @@ export default {
     },
     rootId: 'completion',
   },
-  sceneId: 'jbc22',
+  sceneId: 'jbc18',
 } as Challenge;

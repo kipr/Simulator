@@ -5,9 +5,9 @@ import LocalizedString from '../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 17' },
+  name: { [LocalizedString.EN_US]: 'JBC Challenge 24' },
   description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 17: Walk the Line`,
+    [LocalizedString.EN_US]: `Junior Botball Challenge 24: Walk the Line`,
   },
   author: {
     type: Author.Type.Organization,
@@ -35,7 +35,7 @@ export default {
         type: Expr.Type.Event,
         eventId: 'lineFollow',
       },
-    
+
 
       completion: {
         type: Expr.Type.And,
@@ -46,5 +46,5 @@ export default {
     },
     rootId: 'completion',
   },
-  sceneId: 'jbc17',
+  sceneId: 'jbc24',
 } as Challenge;

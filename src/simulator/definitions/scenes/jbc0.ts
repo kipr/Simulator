@@ -5,6 +5,8 @@ import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
 import { createBaseSceneSurfaceB, createCanNode } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
+import Robot from 'state/State/Robot';
+import Node from 'state/State/Scene/Node';
 
 const baseScene = createBaseSceneSurfaceB();
 
@@ -95,6 +97,10 @@ const ROBOT_ORIGIN: ReferenceFramewUnits = {
     ...baseScene.nodes['robot'].origin.position,
   },
 };
+
+const robotNode: Node.Robot = baseScene.nodes['robot'] as Node.Robot;
+
+
 
 export const JBC_0: Scene = {
   ...baseScene,

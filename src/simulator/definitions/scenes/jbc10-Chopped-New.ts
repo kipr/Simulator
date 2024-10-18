@@ -1,12 +1,9 @@
 import Scene from "../../../state/State/Scene";
 import LocalizedString from "../../../util/LocalizedString";
-import { createBaseSceneSurfaceA, createCanNode, createCircleNode } from "./jbcBase";
+import { createBaseSceneSurfaceA, createCanNode } from "./jbcBase";
 import { Color } from "../../../state/State/Scene/Color";
 import { Distance } from "../../../util";
 import Script from "../../../state/State/Scene/Script";
-import Node from "state/State/Scene/Node";
-
-import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -19,19 +16,55 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 }, 'notStartBox');
 `;
 
-// const addItUp = {
-//   scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-//   }
+const waitToChop = `
+// Need to wait 5 seconds before the can can be chopped
+let currentDate;
+let stopTime = 0;
+scene.addOnRenderListener(() => {
+  const robotNode = scene.nodes['robot'];
+  if (robotNode.state.getMotor(0).speedGoal <= 15 && robotNode.state.getMotor(3).speedGoal <= 15) {
+    if (stopTime == 0) {
+      currentDate = new Date();
+      stopTime = currentDate.getTime();
+      console.log('Waiting at ', stopTime);
+    }
+    else {
+      currentDate = new Date();
+      if (currentDate.getTime() - stopTime > 5000) {
+        scene.setChallengeEventValue('waitedToChop', true);
+        console.log("Waited 5 seconds");
+      }
+    }
+  }
+  else {
+    stopTime = 0;
+  }
+});
+`;
+
+const uprightCan = `
+// When a can is standing upright, the upright condition is met.
+
+const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
+const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
 
 
+scene.addOnRenderListener(() => {
+  const upright7 = yAngle('can7') > 5;
+  scene.setChallengeEventValue('can7Upright', upright7);
+});
+`;
 
-
-export const JBC_12: Scene = {
+export const JBC_10: Scene = {
   ...baseScene,
-  name: tr('JBC 12'),
-  description: tr('Junior Botball Challenge 12: Add It Up'),
+  name: { [LocalizedString.EN_US]: "JBC 10" },
+  description: {
+    [LocalizedString.EN_US]: `Junior Botball Challenge 10: Chopped`,
+  },
   scripts: {
     inStartBox: Script.ecmaScript("In Start Box", notInStartBox),
+    waitToChop: Script.ecmaScript("Wait to Chop", waitToChop),
+    uprightCan: Script.ecmaScript("Upright Can", uprightCan),
   },
   geometry: {
     ...baseScene.geometry,
@@ -94,17 +127,7 @@ export const JBC_12: Scene = {
         },
       },
     },
-    circle1: createCircleNode(1, undefined, false, false),
-    circle2: createCircleNode(2, undefined, false, false),
-    circle3: createCircleNode(3, undefined, false, false),
-    circle4: createCircleNode(4, undefined, false, false),
-    circle5: createCircleNode(5, undefined, false, false),
-    circle6: createCircleNode(6, undefined, false, false),
-    circle7: createCircleNode(7, undefined, false, false),
-    circle8: createCircleNode(8, undefined, false, false),
-    circle9: createCircleNode(9, undefined, false, false),
-    circle10: createCircleNode(10, undefined, false, false),
-    circle11: createCircleNode(11, undefined, false, false),
-    circle12: createCircleNode(12, undefined, false, false),
+    can7: createCanNode(7),
   },
 };
+

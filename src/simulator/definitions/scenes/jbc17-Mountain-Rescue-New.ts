@@ -54,11 +54,11 @@ const REAM_ORIGIN: ReferenceFramewUnits = {
   }),
 };
 
-export const JBC_19: Scene = {
+export const JBC_17: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 19' },
+  name: { [LocalizedString.EN_US]: 'JBC 17' },
   description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 19: Mountain Rescue`,
+    [LocalizedString.EN_US]: `Junior Botball Challenge 17: Mountain Rescue`,
   },
   scripts: {
     uprightCans: Script.ecmaScript('Upright Cans', uprightCans),

@@ -68,11 +68,11 @@ scene.addOnRenderListener(() => {
 });
 `;
 
-export const JBC_6: Scene = {
+export const JBC_7: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: "JBC 6" },
+  name: { [LocalizedString.EN_US]: "JBC 7" },
   description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 6: Load 'Em Up`,
+    [LocalizedString.EN_US]: `Junior Botball Challenge 7: Load 'Em Up`,
   },
   scripts: {
     uprightCans: Script.ecmaScript("Upright Cans", uprightCans),

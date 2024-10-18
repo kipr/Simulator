@@ -52,11 +52,11 @@ const ROBOT_ORIGIN: ReferenceFramewUnits = {
     x: Distance.centimeters(-15),
   },
 };
-export const JBC_17: Scene = {
+export const JBC_24: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 17' },
+  name: { [LocalizedString.EN_US]: 'JBC 24' },
   description: {
-    [LocalizedString.EN_US]: 'Junior Botball Challenge 17: Walk the Line',
+    [LocalizedString.EN_US]: 'Junior Botball Challenge 24: Walk the Line',
   },
   scripts: {
     lineFollow: Script.ecmaScript('Line Follow', lineFollow),

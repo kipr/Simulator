@@ -1,9 +1,9 @@
-import Scene from '../../../../state/State/Scene';
-import LocalizedString from '../../../../util/LocalizedString';
-import Script from '../../../../state/State/Scene/Script';
-import { createCanNode, createBaseSceneSurfaceA } from '../jbcBase';
-import { Color } from '../../../../state/State/Scene/Color';
-import { Distance } from '../../../../util';
+import Scene from '../../../state/State/Scene';
+import LocalizedString from '../../../util/LocalizedString';
+import Script from '../../../state/State/Scene/Script';
+import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
+import { Color } from '../../../state/State/Scene/Color';
+import { Distance } from '../../../util';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -51,11 +51,11 @@ scene.addOnRenderListener(() => {
 
 `;
 
-export const JBC_5: Scene = {
+export const JBC_14: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 5' },
+  name: { [LocalizedString.EN_US]: 'JBC 14' },
   description: {
-    [LocalizedString.EN_US]: 'Junior Botball Challenge 5: Dance Party',
+    [LocalizedString.EN_US]: 'Junior Botball Challenge 14: Dance Party',
   },
   scripts: {
     goingBackwards: Script.ecmaScript('Going Backwards', goingBackwards),

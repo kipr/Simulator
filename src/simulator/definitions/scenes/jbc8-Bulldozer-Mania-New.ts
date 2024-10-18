@@ -138,11 +138,11 @@ scene.onBind = nodeId => {
 };
 `;
 
-export const JBC_7: Scene = {
+export const JBC_8: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: "JBC 7" },
+  name: { [LocalizedString.EN_US]: "JBC 8" },
   description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 7: Bulldozer Mania`,
+    [LocalizedString.EN_US]: `Junior Botball Challenge 8: Bulldozer Mania`,
   },
   scripts: {
     startBoxIntersects: Script.ecmaScript(

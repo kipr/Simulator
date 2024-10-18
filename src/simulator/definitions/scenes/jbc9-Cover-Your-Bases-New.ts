@@ -200,11 +200,11 @@ const ROBOT_ORIGIN: ReferenceFramewUnits = {
   },
 };
 
-export const JBC_7B: Scene = {
+export const JBC_9: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 7B' },
+  name: { [LocalizedString.EN_US]: 'JBC 9' },
   description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 7B: Cover Your Bases`,
+    [LocalizedString.EN_US]: `Junior Botball Challenge 9: Cover Your Bases`,
   },
   scripts: {
     startBoxIntersects: Script.ecmaScript(

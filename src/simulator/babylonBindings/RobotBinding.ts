@@ -1,7 +1,8 @@
 
-import { Scene as babylonScene, TransformNode, PhysicsViewer, Vector3, IPhysicsEnabledObject, 
-  Mesh, PhysicsJoint, IPhysicsEnginePluginV2, PhysicsConstraintAxis, Physics6DoFConstraint, 
-  PhysicsConstraintMotorType, PhysicsConstraintAxisLimitMode, 
+import {
+  Scene as babylonScene, TransformNode, PhysicsViewer, Vector3, IPhysicsEnabledObject,
+  Mesh, PhysicsJoint, IPhysicsEnginePluginV2, PhysicsConstraintAxis, Physics6DoFConstraint,
+  PhysicsConstraintMotorType, PhysicsConstraintAxisLimitMode,
 } from '@babylonjs/core';
 
 import '@babylonjs/core/Physics/physicsEngineComponent';
@@ -101,7 +102,7 @@ class RobotBinding {
 
   private createSensor_ = <T extends Node.FrameLike, O, S extends SensorObject<T, O>>(s: { new(parameters: SensorParameters<T>): S }) => (id: string, definition: T): S => {
     const parent = this.links_[definition.parentId];
-    
+
     return new s({
       id,
       definition,
@@ -138,7 +139,7 @@ class RobotBinding {
 
   private bParentChild_ = (id: string, parentId: string): { bParent: Mesh; bChild: Mesh; childId: string; } => {
     if (!parentId) throw new Error(`Missing parent: "${parentId}" for node "${id}"`);
-    
+
     const children = this.childrenNodeIds_[id];
     if (children.length !== 1) throw new Error(`"${id}" must have exactly one child`);
 
@@ -184,7 +185,7 @@ class RobotBinding {
     const maxForce = 50000;
 
     bMotor.setAxisFriction(PhysicsConstraintAxis.ANGULAR_Z, 0);
-    bMotor.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, maxForce); 
+    bMotor.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, maxForce);
     bMotor.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.FREE);
     bMotor.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, velocity);
 
@@ -227,7 +228,7 @@ class RobotBinding {
      */
     for (let port = 0; port < 4; ++port) {
       const motorId = this.motorPorts_[port];
-      
+
       // If no motor is bound to the port, skip it.
       if (!motorId) continue;
 
@@ -286,9 +287,9 @@ class RobotBinding {
       // If the motor is in pwm mode and the direction is idle, set the motor target to 0.
       if (mode === Motor.Mode.Pwm && (direction === Motor.Direction.Idle || direction === Motor.Direction.Brake)) {
         this.setMotorVelocity_(bMotor, 0);
-        if (Math.abs(velocity) < 10) {
-          bMotor.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.LOCKED);
-        }
+        // if (Math.abs(velocity) < 10) {
+        //   bMotor.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.LOCKED);
+        // }
         continue;
       }
 
@@ -319,11 +320,11 @@ class RobotBinding {
       //   this.brakeAt_[port] = undefined;
       // }
 
-      
+
       let pwm_adj = 0;
       // If the motor is not in pwm mode, and we are not done, calculate the pwm value.
       if (mode !== Motor.Mode.Pwm && !done) {
-        
+
         // This code is taken from Wombat-Firmware for parity.
         const pErr = speedGoal - velocity;
         const dErr = pErr - this.lastPErrs_[port];
@@ -353,7 +354,7 @@ class RobotBinding {
       pwm = plug * clamp(-400, pwm, 400);
 
       if (writePwm) writeCommands.push(WriteCommand.motorPwm({ port, pwm }));
-      
+
       const normalizedPwm = pwm / 400;
       const nextAngularVelocity = normalizedPwm * velocityMax * 2 * Math.PI / ticksPerRevolution;
       // console.log("nextAngularVelocity", nextAngularVelocity);
@@ -400,7 +401,7 @@ class RobotBinding {
         }
       }
 
-      const currentAngle = this.hingeAngle_(servoId, servo.parentId);   
+      const currentAngle = this.hingeAngle_(servoId, servo.parentId);
       const targetAangle = this.lastServoEnabledAngle_[i];
 
       let cur_angle = 0;
@@ -413,7 +414,7 @@ class RobotBinding {
 
       if (cur_angle.toFixed(5) !== targetAangle.toFixed(5)) {
         if (cur_angle < targetAangle) {
-          bServo.setAxisMaxLimit(PhysicsConstraintAxis.ANGULAR_Z, targetAangle); 
+          bServo.setAxisMaxLimit(PhysicsConstraintAxis.ANGULAR_Z, targetAangle);
           bServo.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, Math.PI * .4);
         }
         if (cur_angle > targetAangle) {
@@ -559,10 +560,10 @@ class RobotBinding {
       weight.physicsBody.setAngularVelocity(Vector3.Zero());
       weight.physicsBody.setLinearVelocity(Vector3.Zero());
     }
-    
+
     rootTransformNode.position = RawVector3.toBabylon(rawOrigin.position || RawVector3.ZERO)
       .add(RawVector3.toBabylon(rawInternalOrigin.position || RawVector3.ZERO));
-    
+
     rootTransformNode.rotationQuaternion = RawQuaternion.toBabylon(RawEuler.toQuaternion(UpdatedEulerOrigin));
 
     for (const link of Object.values(this.links_)) {
@@ -618,7 +619,7 @@ class RobotBinding {
       if (node.type !== Node.Type.Link) continue;
 
       const bNode = await createLink(nodeId, node, this.bScene_, this.robot_, this.colliders_);
-      if (this.physicsViewer_ && bNode.physicsBody) this.physicsViewer_.showBody(bNode.physicsBody);    
+      if (this.physicsViewer_ && bNode.physicsBody) this.physicsViewer_.showBody(bNode.physicsBody);
 
       bNode.metadata = { id: this.robotSceneId_, selected: false } as SceneMeshMetadata;
       this.links_[nodeId] = bNode;
@@ -628,7 +629,7 @@ class RobotBinding {
     for (const nodeId of nodeIds) {
       const node = robot.nodes[nodeId];
       if (node.type === Node.Type.Link || node.type === Node.Type.IRobotCreate) continue;
-    
+
       switch (node.type) {
         case Node.Type.Weight: {
           const bNode = createWeight(nodeId, node, this.bScene_, this.robot_, this.links_);
@@ -639,7 +640,7 @@ class RobotBinding {
           const { bParent, bChild } = this.bParentChild_(nodeId, node.parentId);
           const bJoint = createHinge(nodeId, node, this.bScene_, bParent, bChild);
 
-          bJoint.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 1000000000); 
+          bJoint.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 1000000000);
           bJoint.setAxisMotorType(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintMotorType.VELOCITY);
           // Start motor in locked position so the wheels don't slide
           bJoint.setAxisMode(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintAxisLimitMode.LOCKED);
@@ -657,10 +658,10 @@ class RobotBinding {
           // -90 is upright and closed; 0 is forward and open
           const { bParent, bChild } = this.bParentChild_(nodeId, node.parentId);
           const bJoint = createHinge(nodeId, node, this.bScene_, bParent, bChild);
-          bJoint.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 10000000); 
-          bJoint.setAxisMotorType(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintMotorType.VELOCITY); 
+          bJoint.setAxisMotorMaxForce(PhysicsConstraintAxis.ANGULAR_Z, 10000000);
+          bJoint.setAxisMotorType(PhysicsConstraintAxis.ANGULAR_Z, PhysicsConstraintMotorType.VELOCITY);
           // Start the servos at 0
-          bJoint.setAxisMaxLimit(PhysicsConstraintAxis.ANGULAR_Z, Angle.toRadiansValue(Angle.degrees(0))); 
+          bJoint.setAxisMaxLimit(PhysicsConstraintAxis.ANGULAR_Z, Angle.toRadiansValue(Angle.degrees(0)));
           bJoint.setAxisMinLimit(PhysicsConstraintAxis.ANGULAR_Z, Angle.toRadiansValue(Angle.degrees(-1)));
 
           this.servos_[nodeId] = bJoint;
@@ -715,9 +716,9 @@ class RobotBinding {
       const node = robot.nodes[nodeId];
       if (node.type !== Node.Type.IRobotCreate) continue;
       this.createBinding_ = new CreateBinding(
-        workerInstance.createSerial, 
-        this.createMotors_, 
-        this.createAnalogSensors_, 
+        workerInstance.createSerial,
+        this.createMotors_,
+        this.createAnalogSensors_,
         this.createDigitalSensors_
       );
     }
