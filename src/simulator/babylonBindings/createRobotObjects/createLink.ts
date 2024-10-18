@@ -1,5 +1,6 @@
 
-import { Scene as babylonScene, Vector3, Mesh, SceneLoader, PhysicsBody, PhysicsMotionType, PhysicsShape, 
+import {
+  Scene as babylonScene, Vector3, Mesh, SceneLoader, PhysicsBody, PhysicsMotionType, PhysicsShape,
   PhysicsAggregate, PhysicsShapeType, PhysicShapeOptions, PhysicsShapeParameters, PhysicsShapeContainer
 } from '@babylonjs/core';
 
@@ -34,7 +35,7 @@ const buildGeometry_ = async (name: string, geometry: Geometry, bScene_: babylon
       const baseName = geometry.uri.substring(0, index + 1);
 
       const res = await SceneLoader.ImportMeshAsync(geometry.include ?? '', baseName, fileName, bScene_);
-      
+
       const nonColliders: Mesh[] = [];
       const colliders: BuiltGeometry.Collider[] = [];
       for (const mesh of res.meshes.slice(1) as Mesh[]) {
@@ -61,7 +62,7 @@ const buildGeometry_ = async (name: string, geometry: Geometry, bScene_: babylon
         }
       }
       ret = { nonColliders, colliders };
-      break; 
+      break;
     }
     default: { throw new Error(`Unsupported geometry type: ${geometry.type}`); }
   }
@@ -81,10 +82,10 @@ export const createLink = async (id: string, link: Node.Link, bScene_: babylonSc
     if (!geometry) throw new Error(`Missing geometry: ${link.geometryId}`);
     builtGeometry = await buildGeometry_(id, geometry, bScene_);
   }
-  
+
   const meshes = builtGeometry.nonColliders;
   let myMesh: Mesh;
-  
+
   switch (link.collisionBody.type) {
     // Notes on Links - the root link should have the highest mass and inertia and it should 
     // scale down further out the tree to prevent wild oscillations. 
@@ -106,7 +107,6 @@ export const createLink = async (id: string, link: Node.Link, bScene_: babylonSc
     case Node.Link.CollisionBody.Type.Cylinder: {
       myMesh = Mesh.MergeMeshes(meshes, true, true, undefined, false, true);
       const scale = link.scale ?? 1;
-      myMesh.scaling.y *= 1 / scale;
       myMesh.scaling.y *= 1 / scale;
       myMesh.scaling.scaleInPlace(RENDER_SCALE_METERS_MULTIPLIER * scale);
       const aggregate = new PhysicsAggregate(myMesh, PhysicsShapeType.CYLINDER, {
@@ -138,17 +138,17 @@ export const createLink = async (id: string, link: Node.Link, bScene_: babylonSc
         bCollider.visibility = 0;
         colliders_.add(bCollider);
       }
-      
+
       const body = new PhysicsBody(myMesh, PhysicsMotionType.DYNAMIC, false, bScene_);
       body.shape = parentShape;
       if (link.inertia) {
-        body.setMassProperties({ 
+        body.setMassProperties({
           mass: Mass.toGramsValue(link.mass),
           inertia: new Vector3(link.inertia[0], link.inertia[1], link.inertia[2]) // (left/right, twist around, rock forward and backward)
-        }); 
+        });
       }
       body.setAngularDamping(.5);
-      
+
       colliders_.add(myMesh);
       break;
     }
