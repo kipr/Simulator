@@ -924,8 +924,14 @@ class SceneBinding {
     if (meshes.length === 0) return [];
 
     const ret: { min: Vector3; max: Vector3; }[] = [];
-    for (const mesh of meshes) ret.push(mesh.getHierarchyBoundingVectors());
-
+    // for (const mesh of meshes) ret.push(mesh.getHierarchyBoundingVectors());
+    for (const mesh of meshes) {
+      if (mesh.id.includes('Chassis')) {
+        continue;
+      } else {
+        ret.push(mesh.getHierarchyBoundingVectors());
+      }
+    }
     return ret;
   };
 
