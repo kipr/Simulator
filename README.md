@@ -60,6 +60,7 @@ Or, if you've already cloned the repository without `--recurse-submodules`, you 
 
 ```bash
 git submodule update --init
+cd dependencies/kipr-scratch/libwallaby && git submodule update --init
 ```
 
 ### Optional: Pull large files
