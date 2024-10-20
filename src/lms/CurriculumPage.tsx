@@ -31,6 +31,7 @@ export interface CurriculumPagePrivateProps extends ThemeProps {
   userId: string;
   myAssignments: Set<string>;
   onMyAssignmentsChange: (myAssignments: Set<string>) => void;
+  onAddPluginsClick: () => void;
 }
 
 const Container = styled('div', ({ $theme }: { $theme: Theme }) => ({
@@ -88,7 +89,6 @@ const AddBotballPluginButton = styled('button', ({ $theme }: { $theme: Theme }) 
   background: 'none',
   color: 'inherit',
   padding: `${$theme.itemPadding * 2}px`,
-  
   margin: `0 ${$theme.itemPadding * 2}px`,
   // Add custom styles
 }));
@@ -100,6 +100,7 @@ const CurriculumPage = ({
   assignments,
   myAssignments,
   onMyAssignmentsChange,
+  onAddPluginsClick,
   userId
 }: CurriculumPagePublicProps & CurriculumPagePrivateProps) => {
   const [tabIndex, setTabIndex] = React.useState(0);
@@ -135,9 +136,9 @@ const CurriculumPage = ({
           onIndexChange={setTabIndex}
           theme={theme}
         />
-        {/* <AddBotballPluginButton $theme={theme}>
+        <AddBotballPluginButton $theme={theme} onClick={onAddPluginsClick}>
           Add Botball Plugin
-        </AddBotballPluginButton> */}
+        </AddBotballPluginButton>
       </TopBar>
       {tabIndex === 0 ? (
         <Body>
@@ -227,6 +228,9 @@ export default connect((state: State) => {
     myAssignments
   };
 }, (dispatch, ownProps) => ({
+  onAddPluginsClick: () => {
+    window.location.href = '/lms/plugin';
+  },
   onMyAssignmentsChange: (myAssignments: Set<string>) => dispatch(UsersAction.setMyAssignments({
     assignmentIds: Array.from(myAssignments)
   }))
