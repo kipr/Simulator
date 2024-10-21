@@ -138,6 +138,7 @@ interface RootState {
 
   windowInnerHeight: number;
 
+  miniEditor: boolean;
   
 }
 
@@ -181,6 +182,7 @@ class Root extends React.Component<Props, State> {
         'c': window.localStorage.getItem('code-c') || ProgrammingLanguage.DEFAULT_CODE['c'],
         'cpp': window.localStorage.getItem('code-cpp') || ProgrammingLanguage.DEFAULT_CODE['cpp'],
         'python': window.localStorage.getItem('code-python') || ProgrammingLanguage.DEFAULT_CODE['python'],
+        'scratch': window.localStorage.getItem('code-scratch') || ProgrammingLanguage.DEFAULT_CODE['scratch'],
       },
       modal: Modal.NONE,
       simulatorState: SimulatorState.STOPPED,
@@ -190,6 +192,7 @@ class Root extends React.Component<Props, State> {
       settings: DEFAULT_SETTINGS,
       feedback: DEFAULT_FEEDBACK,
       windowInnerHeight: window.innerHeight,
+      miniEditor: true
       
     };
 
@@ -409,6 +412,17 @@ class Root extends React.Component<Props, State> {
         });
         break;
       }
+      case 'scratch': {
+        this.setState({
+          simulatorState: SimulatorState.RUNNING,
+        }, () => {
+          WorkerInstance.start({
+            language: 'scratch',
+            code: activeCode
+          });
+        });
+        break;
+      }
     }
 
     
@@ -569,6 +583,12 @@ class Root extends React.Component<Props, State> {
     this.props.onSaveScene(this.props.match.params.sceneId);
   };
 
+  private onMiniEditorToggle_ = () => {
+    this.setState({
+      miniEditor: !this.state.miniEditor
+    });
+  };
+
   render() {
     const { props, state } = this;
     
@@ -601,6 +621,7 @@ class Root extends React.Component<Props, State> {
       settings,
       feedback,
       windowInnerHeight,
+      miniEditor
       
     } = state;
 
@@ -612,6 +633,8 @@ class Root extends React.Component<Props, State> {
       language: activeLanguage,
       onCodeChange: this.onCodeChange_,
       onLanguageChange: this.onActiveLanguageChange_,
+      mini: miniEditor,
+      onMiniClick: this.onMiniEditorToggle_
     };
 
     const commonLayoutProps: LayoutProps = {
@@ -679,7 +702,7 @@ class Root extends React.Component<Props, State> {
             onAboutClick={this.onModalClick_(Modal.ABOUT)}
             onResetWorldClick={this.onResetWorldClick_}
             onStartChallengeClick={this.onStartChallengeClick_}
-            onRunClick={this.onRunClick_}
+            onRunClick={code[activeLanguage].length > 0 ? this.onRunClick_ : undefined}
             onStopClick={this.onStopClick_}
             onDocumentationClick={onDocumentationClick}
             onDashboardClick={this.onDashboardClick}

@@ -483,7 +483,7 @@ class Root extends React.Component<Props, State> {
       : latestChallenge.defaultLanguage;
   }
 
-  private get code(): { [language in ProgrammingLanguage]: string } {
+  private get code(): { [language in ProgrammingLanguage]?: string } {
     const { challenge, challengeCompletion } = this.props;
     const latestChallengeCompletion = Async.latestValue(challengeCompletion);
     const latestChallenge = Async.latestValue(challenge);

@@ -6,7 +6,7 @@ import ProgrammingLanguage from '../../../programming/compiler/ProgrammingLangua
 import { ReferenceFramewUnits } from '../../../util/math/unitMath';
 
 interface ChallengeCompletion {
-  code: { [language in ProgrammingLanguage]: string };
+  code: { [language in ProgrammingLanguage]?: string };
   currentLanguage: ProgrammingLanguage;
   serializedSceneDiff: string;
   robotLinkOrigins?: Dict<Dict<ReferenceFramewUnits>>;
@@ -18,9 +18,9 @@ interface ChallengeCompletion {
 namespace ChallengeCompletion {
   export const EMPTY: ChallengeCompletion = {
     code: {
-      'c': '',
-      'cpp': '',
-      'python': '',
+      c: '',
+      cpp: '',
+      python: '',
     },
     currentLanguage: 'c',
     serializedSceneDiff: JSON.stringify({ t: 'o' }),

@@ -75,7 +75,7 @@ export interface MenuPublicProps extends StyleProps, ThemeProps {
   onShowAll: () => void;
   onHideAll: () => void;
 
-  onRunClick: () => void;
+  onRunClick?: () => void;
   onStopClick: () => void;
   onResetWorldClick: () => void;
 
@@ -315,7 +315,7 @@ class SimMenu extends React.PureComponent<Props, State> {
         <RunItem
           theme={theme}
           onClick={SimulatorState.isStopped(simulatorState) ? onRunClick : undefined}
-          disabled={!SimulatorState.isStopped(simulatorState)}
+          disabled={!onRunClick || !SimulatorState.isStopped(simulatorState)}
           style={{ borderLeft: `1px solid ${theme.borderColor}` }}
         >
           <ItemIcon icon={faPlay} />

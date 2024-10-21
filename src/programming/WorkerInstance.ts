@@ -6,9 +6,38 @@ import SharedRingBufferUtf32 from './buffers/SharedRingBufferUtf32';
 import SharedRegistersRobot from './SharedRegistersRobot';
 import AbstractRobot from './AbstractRobot';
 import WriteCommand from './AbstractRobot/WriteCommand';
+import Dict from 'util/objectOps/Dict';
 
 const SHARED_CONSOLE_LENGTH = 1024;
 
+class SharedVariablesStateMachine {
+  constructor(private sharedVariables_: SharedRingBufferUtf32) {}
+
+  private length_: number = undefined;
+  private buffer_ = '';
+
+  private watchedVariables_: Dict<unknown> = {};
+
+  update() {
+    this.buffer_ = this.sharedVariables_.popString();
+  
+    if (this.length_ === undefined && this.buffer_.indexOf(';') >= 0) {
+      const [lengthStr, ...rest] = this.buffer_.split(';');
+      this.length_ = parseInt(lengthStr);
+      this.buffer_ = rest.join(';');
+    }
+
+    if (this.length_ !== undefined && this.buffer_.length >= this.length_) {
+      const json = this.buffer_.slice(0, this.length_);
+      this.buffer_ = this.buffer_.slice(this.length_);
+      this.length_ = undefined;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      this.watchedVariables_ = JSON.parse(json);
+    }
+  }
+
+  get watchedVariables() { return this.watchedVariables_; }
+}
 
 /**
  * Represents an instance of a worker that interfaces with the sharedRegistersRobot.
@@ -22,6 +51,8 @@ class WorkerInstance implements AbstractRobot {
   // Shared registers and console buffer.
   private sharedRegisters_ = new SharedRegisters();
   private sharedConsole_ = SharedRingBufferUtf32.create(SHARED_CONSOLE_LENGTH);
+  private sharedVariables_ = SharedRingBufferUtf32.create(2048);
+  private sharedVariablesStateMachine_ = new SharedVariablesStateMachine(this.sharedVariables_);
   private createSerial_ = SerialU32.create(1024);
   private sharedRegistersRobot_: SharedRegistersRobot;
 
@@ -102,6 +133,9 @@ class WorkerInstance implements AbstractRobot {
    */
   get sharedConsole() { return this.sharedConsole_; }
 
+  private watchedVariables_: Dict<unknown> = {};
+  get watchedVariables() { return this.watchedVariables_; }
+
   /**
    * Internal method to handle the 'stopped' event.
    * Resets specific registers and triggers the onStopped event if defined.
@@ -144,6 +178,10 @@ class WorkerInstance implements AbstractRobot {
             SerialU32.flip(this.createSerial_)
           )
         );
+        this.worker_.postMessage({
+          type: 'set-shared-variables',
+          sharedArrayBuffer: this.sharedVariables_.sharedArrayBuffer,
+        } as Protocol.Worker.SetSharedVariablesRequest);
         break;
       }
       case 'stopped': {

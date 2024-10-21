@@ -1,5 +1,5 @@
 libkipr_build_c
 libkipr_build_python
 libkipr_install_c
-ammo_build
+scratch-rt.js
 dependencies.json
