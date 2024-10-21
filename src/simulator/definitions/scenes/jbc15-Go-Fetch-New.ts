@@ -86,6 +86,7 @@ export const JBC_15: Scene = {
   },
 
   nodes: {
+    ...baseScene.nodes,
     mainSurface: {
       type: "object",
       geometryId: "mainSurface_geom",
