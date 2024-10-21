@@ -3,11 +3,10 @@ import { connectRouter, RouterState, routerMiddleware } from 'connected-react-ro
 import { createBrowserHistory } from 'history';
 
 import * as reducer from './reducer';
-import { DocumentationState, ChallengeCompletions, Challenges, I18n, 
-  Robots, Scenes } from './State';
-
-import { CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, 
-  SCENE_COLLECTION } from '../db/constants';
+import { DocumentationState, ChallengeCompletions, Challenges, I18n, Robots, Scenes, Assignments, Users } from './State';
+// import history from './history';
+import { AsyncScene } from './State/Scene';
+import { CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, SCENE_COLLECTION, ASSIGNMENT_COLLECTION, USER_COLLECTION } from '../db/constants';
 import Record from '../db/Record';
 import Selector from '../db/Selector';
 
@@ -27,6 +26,8 @@ export default createStore(combineReducers<State>({
   challenges: reducer.reduceChallenges,
   challengeCompletions: reducer.reduceChallengeCompletions,
   i18n: reducer.reduceI18n,
+  assignments: reducer.reduceAssignments,
+  users: reducer.reduceUsers
 }), composeEnhancers(
   applyMiddleware(
     routerMiddleware((history))
@@ -43,6 +44,8 @@ export interface State {
   documentation: DocumentationState;
   router: RouterState;
   i18n: I18n;
+  assignments: Assignments;
+  users: Users;
 }
 
 export namespace State {
@@ -62,6 +65,17 @@ export namespace State {
         type: Record.Type.ChallengeCompletion,
         id: selector.id,
         value: state.challengeCompletions[selector.id]
+      };
+      case USER_COLLECTION: return {
+        type: Record.Type.User,
+        id: selector.id,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        value: state.users[selector.id]
+      };
+      case ASSIGNMENT_COLLECTION: return {
+        type: Record.Type.Assignment,
+        id: selector.id,
+        value: state.assignments[selector.id]
       };
     }
     
