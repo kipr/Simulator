@@ -34,13 +34,20 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         submodules: true
-        submodules_recursive: true
-        fetch-depth: 0
         lfs: true
+    
+    - name: Change Directory to Scratch Libwallaby
+      run: cd dependencies/kipr-scratch/libwallaby
 
+    - name: Update Scratch Libwallaby
+      run: git submodule update --init
+
+    - name: Return to Main Directory
+      run: cd ../../..
+      
     - name: Pull LFS
       run: git lfs pull
     
