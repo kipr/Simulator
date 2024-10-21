@@ -10,77 +10,67 @@ import Node from 'state/State/Scene/Node';
 
 const baseScene = createBaseSceneSurfaceB();
 
-const leftStartBox = `
-
+const notInStartBox = `
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot left start box!', type, otherNodeId);
+  console.log('Robot not in start box!', type, otherNodeId);
   if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('leaveStartBox', type === 'end');
+    scene.setChallengeEventValue('notInStartBox', type === 'start');
   }
-  
+}, 'notStartBox');
+`;
+
+const inStartBox = `
+scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
+  console.log('Robot started in start box!', type, otherNodeId);
+  if(scene.programStatus === 'running'){
+    scene.setChallengeEventValue('inStartBox', type === 'start');
+  }
 }, 'startBox');
 `;
 
 const touchingLine = `
 // If the robot wheels touch Line B, it fails the challenge
 
-const getYawRotation = (nodeId)=> {
-  const node = scene.nodes[nodeId];
-
-  if (!node || !node.origin || !node.origin.orientation) {
-    // Return 0 if the node, its origin, or its orientation doesn't exist
-    return 0;
-  }
-
-  // Extract the quaternion from the node's orientation
-  const quaternion = RotationwUnits.toRawQuaternion(node.origin.orientation || EULER_IDENTITY);
-
-  // Calculate yaw (rotation around Y-axis)
-  const siny_cosp = 2 * (quaternion.w * quaternion.y + quaternion.x * quaternion.z);
-  const cosy_cosp = 1 - 2 * (quaternion.y * quaternion.y + quaternion.z * quaternion.z);
-  const yaw = 180 / Math.PI * Math.atan2(siny_cosp, cosy_cosp);
-
-  return yaw;
-};
-
-const getWheelXPosition = (nodeId, wheelXDistance) => {
-  const node = scene.nodes[nodeId];
-  const robotXOrigin = node.startingOrigin.position.x;
-  const wheelXOrigin = Distance.add(robotXOrigin, wheelXDistance, 'meters');
-
-  const robotXPosition = node.origin.position.x;
-  const yawRad = (getYawRotation(nodeId) + 45) * Math.PI / 180;
-  const wheelXPosition = Distance.add(robotXPosition, Distance.centimeters(Distance.toCentimetersValue(wheelXOrigin) * Math.cos(yawRad)), 'centimeters');
-  return wheelXPosition;
-};
-
-scene.addOnRenderListener(() => {
-  const leftWheelXPosition = getWheelXPosition('robot', Distance.centimeters(-7.492));
-  const rightWheelXPosition = getWheelXPosition('robot', Distance.centimeters(7.492));
-  console.log('Left: ', leftWheelXPosition.value, 'Right: ', rightWheelXPosition.value); 
-  const leftWheelTouching = leftWheelXPosition.value > 0.5;
-  const rightWheelTouching = rightWheelXPosition.value < -0.5;
-  const robotTouchingLine = leftWheelTouching || rightWheelTouching;
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('robotTouchingLine', robotTouchingLine);
-  }
+const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
+  ...scene.nodes[nodeId],
+  visible
 });
+
+scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
+  console.log('Robot touching line!', type, otherNodeId);
+  if(scene.programStatus === 'running'){
+    scene.setChallengeEventValue('robotTouchingLine', type === 'start');
+    setNodeVisible('lineB', true);
+  }
+}, 'lineB');
 `;
 
 const reachedEnd = `
 // If the robot reaches the end, it completes the challenge
 
+const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
+  ...scene.nodes[nodeId],
+  visible
+});
+
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
   console.log('Robot reached end!', type, otherNodeId);
+  const visible = type === 'start';
   if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('reachedEnd', type === 'start');
+    scene.setChallengeEventValue('reachedEnd', visible);
+    setNodeVisible('endBox', visible);
   }
-  
 }, 'endBox');
 `;
 
 const offMat = `
 // If the robot leaves the mat, it fails the challenge
+
+const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
+  ...scene.nodes[nodeId],
+  visible
+});
+
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
   console.log('Robot off mat!', type, otherNodeId);
   const visible = type === 'start';
@@ -98,10 +88,6 @@ const ROBOT_ORIGIN: ReferenceFramewUnits = {
   },
 };
 
-const robotNode: Node.Robot = baseScene.nodes['robot'] as Node.Robot;
-
-
-
 export const JBC_0: Scene = {
   ...baseScene,
   name: { [LocalizedString.EN_US]: 'JBC 0' },
@@ -109,7 +95,8 @@ export const JBC_0: Scene = {
     [LocalizedString.EN_US]: 'Junior Botball Challenge 0: Drive Straight',
   },
   scripts: {
-    leftStartBox: Script.ecmaScript('Robot Left Start', leftStartBox),
+    notInStartBox: Script.ecmaScript("Not In Start Box", notInStartBox),
+    inStartBox: Script.ecmaScript("In Start Box", inStartBox),
     touchingLine: Script.ecmaScript('Robot Touching Line', touchingLine),
     reachedEnd: Script.ecmaScript('Robot Reached End', reachedEnd),
     offMat: Script.ecmaScript('Robot Off Mat', offMat),
@@ -124,12 +111,28 @@ export const JBC_0: Scene = {
         z: Distance.meters(3.54),
       },
     },
+    notStartBox_geom: {
+      type: "box",
+      size: {
+        x: Distance.meters(3.54),
+        y: Distance.centimeters(10),
+        z: Distance.meters(2.13),
+      },
+    },
     startBox_geom: {
       type: 'box',
       size: {
-        x: Distance.meters(1.77),
+        x: Distance.centimeters(30),
         y: Distance.centimeters(0.1),
         z: Distance.centimeters(30),
+      },
+    },
+    lineB_geom: {
+      type: 'box',
+      size: {
+        x: Distance.centimeters(0.5),
+        y: Distance.centimeters(0.1),
+        z: Distance.inches(48),
       },
     },
     endBox_geom: {
@@ -137,14 +140,14 @@ export const JBC_0: Scene = {
       size: {
         x: Distance.inches(24),
         y: Distance.centimeters(15),
-        z: Distance.centimeters(0),
+        z: Distance.centimeters(1),
       },
     },
     endOfMat_geom: {
       type: 'box',
       size: {
         x: Distance.meters(3.54),
-        y: Distance.centimeters(0.1),
+        y: Distance.centimeters(4),
         z: Distance.inches(24),
       },
     },
@@ -176,6 +179,26 @@ export const JBC_0: Scene = {
         },
       },
     },
+    notStartBox: {
+      type: "object",
+      geometryId: "notStartBox_geom",
+      name: { [LocalizedString.EN_US]: "Not Start Box" },
+      visible: false,
+      origin: {
+        position: {
+          x: Distance.centimeters(0),
+          y: Distance.centimeters(-1.9),
+          z: Distance.meters(1.223),
+        },
+      },
+      material: {
+        type: "basic",
+        color: {
+          type: "color3",
+          color: Color.rgb(255, 0, 0),
+        },
+      },
+    },
     startBox: {
       type: 'object',
       geometryId: 'startBox_geom',
@@ -189,10 +212,30 @@ export const JBC_0: Scene = {
         },
       },
       material: {
+        type: 'basic',
+        color: {
+          type: 'color3',
+          color: Color.rgb(0, 0, 255),
+        },
+      },
+    },
+    lineB: {
+      type: 'object',
+      geometryId: 'lineB_geom',
+      name: { [LocalizedString.EN_US]: 'Line B' },
+      visible: false,
+      origin: {
+        position: {
+          x: Distance.centimeters(-0.5),
+          y: Distance.centimeters(-6.9),
+          z: Distance.inches(19.685), // 24 for half the mat and 19.685 for the mat's origin
+        },
+      },
+      material: {
         type: 'pbr',
         emissive: {
           type: 'color3',
-          color: Color.rgb(0, 0, 255),
+          color: Color.rgb(255, 0, 0),
         },
       },
     },
@@ -224,7 +267,7 @@ export const JBC_0: Scene = {
       origin: {
         position: {
           x: Distance.centimeters(0),
-          y: Distance.centimeters(-6.89),
+          y: Distance.centimeters(-4.90),
           z: Distance.inches(59.2),
         },
       },

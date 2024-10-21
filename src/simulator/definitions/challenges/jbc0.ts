@@ -20,9 +20,13 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
-    leaveStartBox: {
-      name: { [LocalizedString.EN_US]: 'Robot Left Start' },
-      description: { [LocalizedString.EN_US]: 'Robot left starting box' },
+    inStartBox: {
+      name: { [LocalizedString.EN_US]: 'In Start Box' },
+      description: { [LocalizedString.EN_US]: 'Robot is in the start box' },
+    },
+    notInStartBox: {
+      name: { [LocalizedString.EN_US]: 'Not In Start Box' },
+      description: { [LocalizedString.EN_US]: 'Robot is not in the start box' },
     },
     robotTouchingLine: {
       name: { [LocalizedString.EN_US]: 'Robot Touching Line B' },
@@ -47,19 +51,33 @@ export default {
       },
 
       // Start Box Events
-      leaveStartBox: {
+      inStartBox: {
         type: Expr.Type.Event,
-        eventId: 'leaveStartBox',
+        eventId: 'inStartBox',
       },
-      leaveStartBoxOnce: {
+      notInStartBox: {
+        type: Expr.Type.Event,
+        eventId: 'notInStartBox',
+      },
+      inStartBoxOnce: {
         type: Expr.Type.Once,
-        argId: 'leaveStartBox',
+        argId: 'inStartBox',
       },
-
-
+      notOutOfStartBox: {
+        type: Expr.Type.Not,
+        argId: 'notInStartBox',
+      },
+      notOutOfStartBoxOnce: {
+        type: Expr.Type.Once,
+        argId: 'notOutOfStartBox',
+      },
+      startedInStartBox: {
+        type: Expr.Type.And,
+        argIds: ['inStartBoxOnce', 'notOutOfStartBoxOnce'],
+      },
       completion: {
         type: Expr.Type.And,
-        argIds: ['leaveStartBoxOnce', 'reachedEnd'],
+        argIds: ['startedInStartBox', 'reachedEnd'],
       },
     },
     rootId: 'completion',

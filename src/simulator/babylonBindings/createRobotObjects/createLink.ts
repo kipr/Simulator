@@ -1,7 +1,9 @@
 
 import {
   Scene as babylonScene, Vector3, Mesh, SceneLoader, PhysicsBody, PhysicsMotionType, PhysicsShape,
-  PhysicsAggregate, PhysicsShapeType, PhysicShapeOptions, PhysicsShapeParameters, PhysicsShapeContainer
+  PhysicsAggregate, PhysicsShapeType, PhysicShapeOptions, PhysicsShapeParameters, PhysicsShapeContainer,
+  GizmoManager,
+  Color3
 } from '@babylonjs/core';
 
 import Geometry from '../../../state/State/Robot/Geometry';
@@ -38,7 +40,13 @@ const buildGeometry_ = async (name: string, geometry: Geometry, bScene_: babylon
 
       const nonColliders: Mesh[] = [];
       const colliders: BuiltGeometry.Collider[] = [];
+      const gizmoManager_ = new GizmoManager(bScene_);
+      gizmoManager_.boundingBoxGizmoEnabled = true;
+      gizmoManager_.gizmos.boundingBoxGizmo.setColor(new Color3(0, 0, 1));
       for (const mesh of res.meshes.slice(1) as Mesh[]) {
+        // gizmoManager_.gizmos.boundingBoxGizmo.attachedMesh = mesh;
+
+
         // The robot mesh includes sub-meshes with the 'collider' name to indicate their use.
         if (mesh.name.startsWith('collider')) {
           const parts = mesh.name.split('-');

@@ -4,7 +4,8 @@ import {
   TransformNode, AbstractMesh, PhysicsViewer, ShadowGenerator, Vector3, StandardMaterial, GizmoManager,
   ArcRotateCamera, PointLight, SpotLight, DirectionalLight, PBRMaterial, EngineView,
   Scene as babylonScene, Node as babylonNode, Camera as babylCamera, Material as babylMaterial,
-  Observer, BoundingBox
+  Observer, BoundingBox,
+  Color3
 } from '@babylonjs/core';
 
 // eslint-disable-next-line @typescript-eslint/no-duplicate-imports -- Required import for side effects
@@ -122,6 +123,8 @@ class SceneBinding {
     this.gizmoManager_.rotationGizmoEnabled = true;
     this.gizmoManager_.scaleGizmoEnabled = false;
     this.gizmoManager_.usePointerToAttachGizmos = false;
+    this.gizmoManager_.boundingBoxGizmoEnabled = true;
+    this.gizmoManager_.gizmos.boundingBoxGizmo.setColor(new Color3(0, 0, 1));
 
     this.scriptManager_.onCollisionFiltersChanged = this.onCollisionFiltersChanged_;
     this.scriptManager_.onIntersectionFiltersChanged = this.onIntersectionFiltersChanged_;
@@ -922,11 +925,11 @@ class SceneBinding {
   private nodeMinMaxes_ = (id: string): { min: Vector3; max: Vector3; }[] => {
     const meshes = this.nodeMeshes_(id);
     if (meshes.length === 0) return [];
-
     const ret: { min: Vector3; max: Vector3; }[] = [];
     // for (const mesh of meshes) ret.push(mesh.getHierarchyBoundingVectors());
     for (const mesh of meshes) {
-      if (mesh.id.includes('Chassis')) {
+      this.gizmoManager_.gizmos.boundingBoxGizmo.attachedMesh = mesh;
+      if (mesh.id.includes('chassis')) {
         continue;
       } else {
         ret.push(mesh.getHierarchyBoundingVectors());
@@ -957,7 +960,7 @@ class SceneBinding {
     // Update intersections
     for (const nodeId in this.intersectionFilters_) {
       try {
-        const nodeBoundingBoxes = this.nodeBoundingBoxes_(nodeId); //
+        const nodeBoundingBoxes = this.nodeBoundingBoxes_(nodeId);
         const filterIds = this.intersectionFilters_[nodeId];
         for (const filterId of filterIds) {
           const filterMinMaxes = this.nodeMinMaxes_(filterId);
