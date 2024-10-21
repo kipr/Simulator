@@ -318,6 +318,7 @@ const DEFAULT_SCENES: Scenes = {
   // jbc12: Async.loaded({ value: JBC_SCENES.JBC_12 }),
   // jbc13: Async.loaded({ value: JBC_SCENES.JBC_13 }),
   jbc14: Async.loaded({ value: JBC_SCENES.JBC_14 }),
+  jbc15: Async.loaded({ value: JBC_SCENES.JBC_15 }),
   // jbc15b: Async.loaded({ value: JBC_SCENES.JBC_15B }),
   jbc17: Async.loaded({ value: JBC_SCENES.JBC_17 }),
   // jbc17b: Async.loaded({ value: JBC_SCENES.JBC_17B }),
