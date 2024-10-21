@@ -138,7 +138,7 @@ export default {
       },
 
       // Intersects and upright logic
-      IntersectsUpright: {
+      intersectsUpright: {
         type: Expr.Type.And,
         argIds: ["can6Intersects", "can6Upright"],
       },
@@ -148,7 +148,7 @@ export default {
         type: Expr.Type.And,
         argIds: [
           "can6NotTouched",
-          "IntersectsUpright",
+          "intersectsUpright",
           "startingBox",
           "rightSideOnce",
           "topSideOnce",
