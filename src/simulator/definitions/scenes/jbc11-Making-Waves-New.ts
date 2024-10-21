@@ -27,16 +27,16 @@ const wave = `
     
     if (scene.programStatus === 'running') {
       if (robotNode.state.getMotor(0).speedGoal == 0 && robotNode.state.getMotor(3).speedGoal == 0) {
-        console.log('Robot stopped, motors at: ', robotNode.state.getMotor(0).speedGoal, ' ', robotNode.state.getMotor(3).speedGoal);
+        // console.log('Robot stopped, motors at: ', robotNode.state.getMotor(0).speedGoal, ' ', robotNode.state.getMotor(3).speedGoal);
         if (waveStart == -1) {
           waveStart = robotNode.state.getServo(0).position;
-          console.log('Wave start at ', waveStart);
+          // console.log('Wave start at ', waveStart);
         }
         else {
-          console.log('Wave diff at ', Math.abs(robotNode.state.getServo(0).position - waveStart));
-          if (Math.abs(robotNode.state.getServo(0).position - waveStart) >= waveMax) {
+          console.log('Wave diff at ', Math.abs(Math.abs(robotNode.state.getServo(0).position - waveStart) - waveMax));
+          if (Math.abs(Math.abs(robotNode.state.getServo(0).position - waveStart) - waveMax) > 1) {
             waveMax = Math.abs(robotNode.state.getServo(0).position - waveStart);
-            console.log('Wave max at ', waveMax, 'Wave start at ', waveStart);
+            // console.log('Wave max at ', waveMax, 'Wave start at ', waveStart);
           }
           else {
             if (waveMax != 0) {
@@ -66,13 +66,11 @@ const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
   visible
 });
 
-let circles = new Set(['circle3', 'circle6', 'circle9', 'circle12']);
-
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
   console.log('Robot intersects!', type, otherNodeId);
   scene.setChallengeEventValue(otherNodeId + 'Touched', true);
   setNodeVisible(otherNodeId, true);
-}, ...circles);
+}, [ 'circle3', 'circle6', 'circle9', 'circle12' ]);
 `;
 
 export const JBC_11: Scene = {
