@@ -54,9 +54,9 @@ export default {
         type: Expr.Type.Event,
         eventId: "canInStartBox",
       },
-      can7Upright: {
+      can11Upright: {
         type: Expr.Type.Event,
-        eventId: "can7Upright",
+        eventId: "can11Upright",
       },
 
       // Success Logic = Can 7 not upright, waited to chop, and began in start box
