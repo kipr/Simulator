@@ -230,13 +230,6 @@ subprocess.run(
 
 print('Building kipr-scratch...')
 kipr_scratch_path = working_dir / 'kipr-scratch'
-
-subprocess.run(
-  [ git, submodule, update, --init ],
-  cwd = kipr_scratch_path / 'libwallaby',
-  check = True
-)
-
 subprocess.run(
   [ python, kipr_scratch_path / 'build.py' ],
   cwd = kipr_scratch_path,
