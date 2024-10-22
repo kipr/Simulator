@@ -59,25 +59,29 @@ export default {
         type: Expr.Type.Event,
         eventId: 'notInStartBox',
       },
-      inStartBoxOnce: {
-        type: Expr.Type.Once,
-        argId: 'inStartBox',
-      },
+      // inStartBoxOnce: {
+      //   type: Expr.Type.Once,
+      //   argId: 'inStartBox',
+      // },
       notOutOfStartBox: {
         type: Expr.Type.Not,
         argId: 'notInStartBox',
       },
-      notOutOfStartBoxOnce: {
-        type: Expr.Type.Once,
-        argId: 'notOutOfStartBox',
-      },
+      // notOutOfStartBoxOnce: {
+      //   type: Expr.Type.Once,
+      //   argId: 'notOutOfStartBox',
+      // },
       startedInStartBox: {
         type: Expr.Type.And,
-        argIds: ['inStartBoxOnce', 'notOutOfStartBoxOnce'],
+        argIds: ['inStartBox', 'notOutOfStartBox'],
+      },
+      startedInStartBoxOnce: {
+        type: Expr.Type.Once,
+        argId: 'startedInStartBox',
       },
       completion: {
         type: Expr.Type.And,
-        argIds: ['startedInStartBox', 'reachedEnd'],
+        argIds: ['startedInStartBoxOnce', 'reachedEnd'],
       },
     },
     rootId: 'completion',

@@ -21,9 +21,9 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 
 const inStartBox = `
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot started in start box!', type, otherNodeId);
+  console.log('Robot started in start box!', type, otherNodeId, scene.programStatus);
   if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('inStartBox', type === 'start');
+    scene.setChallengeEventValue('inStartBox', true);
   }
 }, 'startBox');
 `;
@@ -122,9 +122,9 @@ export const JBC_0: Scene = {
     startBox_geom: {
       type: 'box',
       size: {
-        x: Distance.centimeters(30),
+        x: Distance.centimeters(16),
         y: Distance.centimeters(0.1),
-        z: Distance.centimeters(30),
+        z: Distance.centimeters(10),
       },
     },
     lineB_geom: {
@@ -203,12 +203,12 @@ export const JBC_0: Scene = {
       type: 'object',
       geometryId: 'startBox_geom',
       name: { [LocalizedString.EN_US]: 'Start Box' },
-      visible: false,
+      visible: true,
       origin: {
         position: {
           x: Distance.centimeters(0),
           y: Distance.centimeters(-6.89),
-          z: Distance.centimeters(0.685),
+          z: Distance.centimeters(10.685),
         },
       },
       material: {

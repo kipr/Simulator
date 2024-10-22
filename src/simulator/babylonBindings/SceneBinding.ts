@@ -123,8 +123,9 @@ class SceneBinding {
     this.gizmoManager_.rotationGizmoEnabled = true;
     this.gizmoManager_.scaleGizmoEnabled = false;
     this.gizmoManager_.usePointerToAttachGizmos = false;
-    this.gizmoManager_.boundingBoxGizmoEnabled = true;
-    this.gizmoManager_.gizmos.boundingBoxGizmo.setColor(new Color3(0, 0, 1));
+    // Un comment for boudning boxes in scene
+    // this.gizmoManager_.boundingBoxGizmoEnabled = true;
+    // this.gizmoManager_.gizmos.boundingBoxGizmo.setColor(new Color3(0, 0, 1));
 
     this.scriptManager_.onCollisionFiltersChanged = this.onCollisionFiltersChanged_;
     this.scriptManager_.onIntersectionFiltersChanged = this.onIntersectionFiltersChanged_;
@@ -928,11 +929,11 @@ class SceneBinding {
     const ret: { min: Vector3; max: Vector3; }[] = [];
     // for (const mesh of meshes) ret.push(mesh.getHierarchyBoundingVectors());
     for (const mesh of meshes) {
-      this.gizmoManager_.gizmos.boundingBoxGizmo.attachedMesh = mesh;
-      if (mesh.id.includes('chassis')) {
+      // this.gizmoManager_.gizmos.boundingBoxGizmo.attachedMesh = mesh; // For viewing meshes on robot
+      if (mesh.id.includes('Chassis')) {
         continue;
       } else {
-        ret.push(mesh.getHierarchyBoundingVectors());
+        ret.push(mesh.getHierarchyBoundingVectors(true, (mesh: AbstractMesh) => !mesh.name.includes('et_sensor')));
       }
     }
     return ret;
