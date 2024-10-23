@@ -203,7 +203,7 @@ export const JBC_0: Scene = {
       type: 'object',
       geometryId: 'startBox_geom',
       name: { [LocalizedString.EN_US]: 'Start Box' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(0),

@@ -17,6 +17,8 @@ export * from './jbc14-Dance-Party';
 export * from './jbc15-Go-Fetch-New';
 export * from './jbc17-Mountain-Rescue-New';
 export * from './jbc18-Stackerz-New';
+export * from './jbc19-Bump-New';
+export * from './jbc20-Amazing-New';
 export * from './jbc24-Walk-the-Line-New';
 export * from './moonSandbox';
 // export * from './jbc2b-Ring-Around-the-Cans-Sr';

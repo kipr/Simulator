@@ -40,7 +40,8 @@ import jbc15 from "../../simulator/definitions/challenges/jbc15-Go-Fetch-New";
 import jbc17 from "../../simulator/definitions/challenges/jbc17-Mountain-Rescue-New";
 // import jbc17b from "../../simulator/definitions/challenges/archived/jbc17b-Walk-the-Line-2";
 import jbc18 from "../../simulator/definitions/challenges/jbc18-Stackerz-New";
-// import jbc20 from "../../simulator/definitions/challenges/archived/jbc20-Rescue-the-Cans";
+import jbc19 from "../../simulator/definitions/challenges/jbc19-Bump-New";
+import jbc20 from "../../simulator/definitions/challenges/jbc20-Amazing-New";
 // import jbc21 from "../../simulator/definitions/challenges/archived/jbc21-Foot-Tall";
 import jbc24 from "../../simulator/definitions/challenges/jbc24-Walk-the-Line-New";
 // import test from '../../simulator/definitions/challenges/archived/test';
@@ -268,14 +269,14 @@ const DEFAULT_CHALLENGES: Challenges = {
     value: jbc18,
     brief: ChallengeBrief.fromChallenge(jbc18),
   }),
-  // 'jbc19': Async.loaded({
-  //   value: jbc19,
-  //   brief: ChallengeBrief.fromChallenge(jbc19),
-  // }),
-  // 'jbc20': Async.loaded({
-  //   value: jbc20,
-  //   brief: ChallengeBrief.fromChallenge(jbc20),
-  // }),
+  'jbc19': Async.loaded({
+    value: jbc19,
+    brief: ChallengeBrief.fromChallenge(jbc19),
+  }),
+  'jbc20': Async.loaded({
+    value: jbc20,
+    brief: ChallengeBrief.fromChallenge(jbc20),
+  }),
   // 'jbc21': Async.loaded({
   //   value: jbc21,
   //   brief: ChallengeBrief.fromChallenge(jbc21),

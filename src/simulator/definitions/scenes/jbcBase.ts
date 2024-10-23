@@ -90,7 +90,7 @@ export function createBaseSceneSurfaceA(): Scene {
         startingOrigin: JBC_MAT_ORIGIN,
         origin: JBC_MAT_ORIGIN,
         visible: true,
-        editable: true,
+        editable: false,
       },
       'ground': {
         type: 'object',
@@ -168,7 +168,7 @@ export function createBaseSceneSurfaceB(): Scene {
         startingOrigin: JBC_MAT_ORIGIN,
         origin: JBC_MAT_ORIGIN,
         visible: true,
-        editable: true,
+        editable: false,
       },
       'ground': {
         type: 'object',
