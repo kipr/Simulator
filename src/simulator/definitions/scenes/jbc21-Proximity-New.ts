@@ -39,10 +39,8 @@ scene.addOnCollisionListener('ream1', (otherNodeId) => {
 `;
 
 function randomCircle(): [Vector3wUnits, Vector3wUnits] {
-  console.log('Get random circle');
   const circles = [3, 5, 8, 10];
   const randomCircle = circles[Math.floor(Math.random() * circles.length)];
-  console.log('Random Circle:', randomCircle + 1);
   const circle: Vector3wUnits = {
     ...canPositions[randomCircle],
     y: Distance.centimeters(5),
@@ -52,8 +50,6 @@ function randomCircle(): [Vector3wUnits, Vector3wUnits] {
     y: Distance.centimeters(3.825),
     z: Distance.subtract(canPositions[randomCircle].z, Distance.inches(3.125), 'inches'),
   };
-  console.log('Circle Position:', circle);
-  console.log('Boundary Position:', boundary);
   return [circle, boundary];
 }
 

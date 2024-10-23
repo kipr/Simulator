@@ -31,6 +31,7 @@ import ReflectanceSensor from './sensors/ReflectanceSensor';
 import SensorObject from './sensors/SensorObject';
 import SensorParameters from './sensors/SensorParameters';
 import LightSensor from './sensors/LightSensor';
+import LocalizedString from '../../util/LocalizedString';
 
 class RobotBinding {
   /**  Type 'RobotBinding' is missing the following properties from type 
@@ -531,8 +532,7 @@ class RobotBinding {
     const newOriginE = RawEuler.fromQuaternion(rawOrigin.orientation);
     const Robot_OriginE = RawEuler.fromQuaternion(rawInternalOrigin.orientation);
 
-    const default_offset = 0; // -1 * Math.PI / 2;
-
+    const default_offset = LocalizedString.getOriginal(this.robot_.name) === 'Demobot' ? -1 * Math.PI / 2 : Math.PI / 2;
 
     const UpdatedEulerOrigin = RawEuler.create(
       newOriginE.x + Robot_OriginE.x,
