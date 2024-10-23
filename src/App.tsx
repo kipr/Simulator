@@ -77,11 +77,12 @@ class App extends React.Component<Props, State> {
         // Ensure user has obtained consent before continuing
         db.get<UserConsent>(Selector.user(user.uid))
           .then(userConsent => {
-            if (LegalAcceptance.isConsentObtained(userConsent?.legalAcceptance)) {
+            const consentStatus = LegalAcceptance.getConsentStatus(userConsent?.legalAcceptance);
+            if (consentStatus === 'valid') {
               console.log('Consent verified');
               this.setState({ loading: false });
             } else {
-              console.log('Consent not obtained');
+              console.log('Consent not verified, status is', consentStatus);
               this.props.login();
             }
           })

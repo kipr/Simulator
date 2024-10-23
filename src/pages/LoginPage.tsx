@@ -8,7 +8,7 @@ import {
   createUserWithEmail,
   forgotPassword
 } from '../firebase/modules/auth';
-import { AuthProvider, getAdditionalUserInfo, getRedirectResult, signInWithPopup, signOut } from 'firebase/auth';
+import { AuthProvider, getAdditionalUserInfo, getRedirectResult, signInWithPopup, signOut, UserCredential } from 'firebase/auth';
 import Form from '../components/interface/Form';
 import { TabBar } from '../components/Layout/TabBar';
 
@@ -24,9 +24,10 @@ import DbError from '../db/Error';
 import UserConsent from '../consent/UserConsent';
 import LegalAcceptance from '../consent/LegalAcceptance';
 import SignInSignUpCard from '../components/Login/SignInSignUpCard';
-import AdditionalInfoCard from '../components/Login/AdditionalInfoCard';
 import UserConsentCard from '../components/Login/UserConsentCard';
 import MainMenu from '../components/MainMenu';
+import DateOfBirthCard from '../components/Login/DateOfBirthCard';
+import ParentEmailCard from '../components/Login/ParentEmailCard';
 
 export interface LoginPagePublicProps extends ThemeProps, StyleProps {
   externalIndex?: number;
@@ -145,28 +146,8 @@ class LoginPage extends React.Component<Props, State> {
           .then(userConsentFromDb => {
             console.log('got user from db', userConsentFromDb);
             switch (userConsentFromDb.legalAcceptance.state) {
-              case LegalAcceptance.State.AwaitingParentalConsent:
-                if (this.getAge(new Date(userConsentFromDb.dateOfBirth)) >= 16) {
-                  // User turned 16 while waiting for parental consent
-                  // Change their state
-                  console.log('USER TURNED 16; ALLOW SELF CONSENT');
-                  const nextUserConsent: UserConsent = {
-                    ...userConsentFromDb,
-                    legalAcceptance: {
-                      state: LegalAcceptance.State.NotStarted,
-                      version: userConsentFromDb.legalAcceptance.version,
-                      autoDelete: userConsentFromDb.legalAcceptance.autoDelete,
-                    },
-                  };
-
-                  db.set<UserConsent>(Selector.user(user.uid), nextUserConsent)
-                    .then(() => {
-                      this.setState({ loggedIn: true, initialAuthLoaded: true, authenticating: false, userConsent: nextUserConsent });
-                    });
-                  break;
-                }
-
               // Intentionally fall through
+              case LegalAcceptance.State.AwaitingParentalConsent:
               case LegalAcceptance.State.NotStarted:
               case LegalAcceptance.State.ObtainedParentalConsent:
               case LegalAcceptance.State.ObtainedUserConsent:
@@ -183,10 +164,9 @@ class LoginPage extends React.Component<Props, State> {
           })
           .catch(error => {
             if (DbError.is(error) && error.code === DbError.CODE_NOT_FOUND) {
-              // Consent info doesn't exist yet for this user
+              // User existed before the consent system existed
               this.setState({ loggedIn: true, initialAuthLoaded: true, authenticating: false, userConsent: undefined });
             } else {
-              // TODO: show user an error
               console.error('failed to get user from db', error);
               signOut(auth).then(() => {
                 this.setState({ loggedIn: false, initialAuthLoaded: true, authenticating: false, userConsent: undefined, logInFailedMessage: 'Something went wrong' });
@@ -200,44 +180,30 @@ class LoginPage extends React.Component<Props, State> {
     });
   };
 
-  private startNewParentalConsent_ = async (userId: string, dateOfBirth: string, parentEmailAddress: string, autoDelete: boolean) => {
+  private startNewParentalConsent_ = async (userId: string, dateOfBirth: string, parentEmailAddress: string) => {
     const userIdToken = await auth.currentUser.getIdToken();
-    const consentRequest: XMLHttpRequest = new XMLHttpRequest();
 
-    return new Promise<UserConsent>((resolve, reject) => {
-      consentRequest.onload = () => {
-        if (consentRequest.status === 200) {
-          const responseJson = JSON.parse(consentRequest.responseText);
-          // TODO: validate response before casting to UserConsent?
-          resolve(responseJson);
-        } else {
-          console.error('Consent request failed with status', consentRequest.status);
-          reject(consentRequest.status);
-        }
-      };
+    const requestBody = {
+      dateOfBirth: dateOfBirth,
+      parentEmailAddress: parentEmailAddress,
+    };
 
-      consentRequest.onerror = (err) => {
-        console.error('Consent request failed with error', err);
-        reject(err);
-      };
-
-      consentRequest.open('POST', `/api/parental-consent/${userId}`);
-      consentRequest.setRequestHeader('Content-Type', 'application/json');
-      consentRequest.setRequestHeader('Authorization', `Bearer ${userIdToken}`);
-
-      const requestBody = {
-        dateOfBirth: dateOfBirth,
-        parentEmailAddress: parentEmailAddress,
-        autoDelete: autoDelete,
-      };
-
-      try {
-        consentRequest.send(JSON.stringify(requestBody));
-      } catch (e) {
-        console.error('Consent request failed with exception', e);
-        reject(e);
-      }
+    const response = await fetch(`/api/parental-consent/${userId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${userIdToken}`,
+      },
+      body: JSON.stringify(requestBody),
     });
+
+    if (response.status !== 200) {
+      console.error('Consent request failed with status', response.status);
+      throw response.status;
+    }
+
+    const responseJson = await response.json();
+    return responseJson;
   };
 
   private onSignIn_ = (email: string, password: string) => {
@@ -255,40 +221,42 @@ class LoginPage extends React.Component<Props, State> {
       });
   };
 
-  private onSignUp_ = (email: string, password: string) => {
+  private onSignUp_ = async (email: string, password: string) => {
     console.log('onSignUp_');
     this.setState({
       authenticating: true,
       logInFailedMessage: null,
     });
-
-    // TODO: make function async to simplify logic
-    createUserWithEmail(email, password)
-      .then((newUserCredential) => {
-        this.setUserConsentForNewUser(newUserCredential.user.uid)
-          // // db.set<UserConsent>(Selector.user(newUserCredential.user.uid), nextUserConsent)
-          .then((nextUserConsent) => {
-            console.log('finished setting user context');
-            this.setState({
-              authenticating: false,
-              userConsent: nextUserConsent,
-            });
-          })
-          .catch((error) => {
-            console.error('Setting user consent failed', error);
-            // TODO: user exists but setting autoDelete=true failed, so user won't be deleted
-            this.setState({
-              authenticating: false,
-              logInFailedMessage: 'Something went wrong. Please contact KIPR for support.',
-            });
-          });
-      })
-      .catch(error => {
-        this.setState({
-          authenticating: false,
-          logInFailedMessage: this.getMessageForFailedLogin_(error),
-        });
+    
+    let newUserCredential: UserCredential;
+    try {
+      newUserCredential = await createUserWithEmail(email, password);
+    } catch (error) {
+      this.setState({
+        authenticating: false,
+        logInFailedMessage: this.getMessageForFailedLogin_(error),
       });
+
+      return;
+    }
+
+    let nextUserConsent: UserConsent;
+    try {
+      nextUserConsent = await this.setUserConsentForNewUser(newUserCredential.user.uid);
+    } catch (error) {
+      console.error('Setting user consent failed', error);
+      this.setState({
+        authenticating: false,
+        logInFailedMessage: 'Something went wrong. Please contact KIPR for support.',
+      });
+
+      return;
+    }
+
+    this.setState({
+      authenticating: false,
+      userConsent: nextUserConsent,
+    });
   };
 
   private setUserConsentForNewUser = (userId: string): Promise<UserConsent> => {
@@ -297,15 +265,13 @@ class LoginPage extends React.Component<Props, State> {
       legalAcceptance: {
         state: LegalAcceptance.State.NotStarted,
         version: 1,
-        // Newly signed up users can be auto-deleted
-        autoDelete: true,
+        // Newly signed up users will be deleted in 2 days
+        expiresAt: Date.now() + 1000 * 60 * 60 * 24 * 2,
       },
     };
 
     return db.set<UserConsent>(Selector.user(userId), nextUserConsent)
-      .then(() => {
-        return nextUserConsent;
-      });
+      .then(() => nextUserConsent);
   };
 
   private onForgotPasswordFinalize_ = (values: { [id: string]: string }) => {
@@ -338,26 +304,23 @@ class LoginPage extends React.Component<Props, State> {
     this.setState({ authenticating: true });
     const userCredential = await signInWithPopup(auth, provider);
 
-    // "Sign in" may have actually been a new user
+    // "Sign in" via social media may have actually been a new user
     const { isNewUser } = getAdditionalUserInfo(userCredential);
 
     if (isNewUser) {
-      this.setUserConsentForNewUser(userCredential.user.uid)
-        .then((nextUserConsent) => {
-          console.log('finished setting user context');
-          this.setState({
-            authenticating: false,
-            userConsent: nextUserConsent,
-          });
-        })
-        .catch((error) => {
-          console.error('Setting user consent failed', error);
-          // TODO: user exists but setting autoDelete=true failed, so user won't be deleted
-          this.setState({
-            authenticating: false,
-            logInFailedMessage: 'Something went wrong. Please contact KIPR for support.',
-          });
+      try {
+        const nextUserConsent = await this.setUserConsentForNewUser(userCredential.user.uid);
+        this.setState({
+          authenticating: false,
+          userConsent: nextUserConsent,
         });
+      } catch (error) {
+        console.error('Setting user consent failed', error);
+        this.setState({
+          authenticating: false,
+          logInFailedMessage: 'Something went wrong. Please contact KIPR for support.',
+        });
+      }
     }
   };
 
@@ -380,40 +343,40 @@ class LoginPage extends React.Component<Props, State> {
     });
   };
 
-  private onCollectedAdditionalInfo_ = (dob: string, parentEmailAddress: string) => {
-    if (!parentEmailAddress) {
+  private onCollectedDateOfBirth_ = (dob: string) => {
+    this.setState({
+      userConsent: {
+        ...this.state.userConsent,
+        dateOfBirth: dob,
+      },
+      logInFailedMessage: null,
+    });
+  };
+
+  private onCollectedParentEmail_ = (parentEmailAddress: string) => {
+    // Don't allow parent email to be the same as user email
+    if (auth.currentUser.email.toLowerCase() === parentEmailAddress.toLowerCase()) {
       this.setState({
-        userConsent: {
-          ...this.state.userConsent,
-          dateOfBirth: dob,
-        },
-        logInFailedMessage: null,
+        logInFailedMessage: 'Parent/guardian email cannot be the same as your email.',
       });
-    } else {
-      // Don't allow parent email to be the same as user email
-      if (auth.currentUser.email.toLowerCase() === parentEmailAddress.toLowerCase()) {
-        this.setState({
-          logInFailedMessage: 'Parent/guardian email cannot be the same as your email.',
-        });
 
-        return;
-      }
-      
-      const userId = auth.currentUser.uid;
-
-      // Start parental consent process
-      this.setState({ authenticating: true, logInFailedMessage: null }, () => {
-        const autoDelete = LegalAcceptance.shouldAutoDelete(this.state.userConsent?.legalAcceptance);
-        this.startNewParentalConsent_(userId, dob, parentEmailAddress, autoDelete)
-          .then((nextUserConsent) => {
-            this.setState({ authenticating: false, userConsent: nextUserConsent });
-          })
-          .catch(error => {
-            console.error('Starting parental consent failed', error);
-            this.setState({ authenticating: false, logInFailedMessage: 'Something went wrong. Please contact KIPR for support.' });
-          });
-      });
+      return;
     }
+    
+    const userId = auth.currentUser.uid;
+    const dob = this.state.userConsent.dateOfBirth;
+
+    // Start parental consent process
+    this.setState({ authenticating: true, logInFailedMessage: null }, () => {
+      this.startNewParentalConsent_(userId, dob, parentEmailAddress)
+        .then((nextUserConsent) => {
+          this.setState({ authenticating: false, userConsent: nextUserConsent });
+        })
+        .catch(error => {
+          console.error('Starting parental consent failed', error);
+          this.setState({ authenticating: false, logInFailedMessage: 'Something went wrong. Please contact KIPR for support.' });
+        });
+    });
   };
 
   private onCollectedUserConsent_ = () => {
@@ -441,10 +404,10 @@ class LoginPage extends React.Component<Props, State> {
 
   private getAge = (dob: Date) => {
     const today = new Date();
-    let age = today.getFullYear() - dob.getFullYear();
+    let age = today.getUTCFullYear() - dob.getUTCFullYear();
 
-    const m = today.getMonth() - dob.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+    const m = today.getUTCMonth() - dob.getUTCMonth();
+    if (m < 0 || (m === 0 && today.getUTCDate() < dob.getUTCDate())) {
       age--;
     }
 
@@ -486,37 +449,13 @@ class LoginPage extends React.Component<Props, State> {
 
               <Header theme={theme}>Additional Information</Header>
 
-              <AdditionalInfoCard theme={theme} disable={authenticating} errorMessage={logInFailedMessage} onCollectedInfo={this.onCollectedAdditionalInfo_} />
+              <DateOfBirthCard theme={theme} disable={authenticating} onCollectedInfo={this.onCollectedDateOfBirth_} />
             </Card>
           </Container>
         );
       }
 
-      if (!userConsent.legalAcceptance || userConsent.legalAcceptance.state === LegalAcceptance.State.NotStarted) {
-        // User needs to consent
-
-        return <Container theme={theme} className={className} style={style}>
-          <MainMenuBar theme={theme} />
-          <Card theme={theme} width='fit-content'>
-            {kiprLogo}
-
-            <Header theme={theme}>Privacy Policy and Terms of Use</Header>
-
-            <UserConsentCard theme={theme} disable={authenticating} onCollectedUserConsent={this.onCollectedUserConsent_} />
-          </Card>
-        </Container>
-      }
-
-      if (LegalAcceptance.isConsentObtained(userConsent.legalAcceptance)) {
-        // Consent obtained, proceed!
-        setTimeout(() => {
-          const { search } = window.location;
-          const q = qs.parse(search.length > 0 ? search.substring(1) : '');
-          const { from } = q;
-          window.location.href = from ? from.toString() : '/';
-        });
-        return null;
-      } else if (userConsent.legalAcceptance.state === LegalAcceptance.State.AwaitingParentalConsent) {
+      if (userConsent.legalAcceptance.state === LegalAcceptance.State.AwaitingParentalConsent) {
         // Waiting for parental consent
         return (
           <Container theme={theme} className={className} style={style}>
@@ -541,8 +480,56 @@ class LoginPage extends React.Component<Props, State> {
         );
       }
 
-      // TODO: show user an error
-      return 'Unknown consent state';
+      const consentStatus = LegalAcceptance.getConsentStatus(userConsent.legalAcceptance);
+
+      if (consentStatus === 'valid') {
+        // Consent obtained, proceed!
+        setTimeout(() => {
+          const { search } = window.location;
+          const q = qs.parse(search.length > 0 ? search.substring(1) : '');
+          const { from } = q;
+          window.location.href = from ? from.toString() : '/';
+        });
+
+        return null;
+      }
+
+      if (consentStatus === 'invalid' || consentStatus === 'expired') {
+        const userAge = this.getAge(new Date(userConsent.dateOfBirth));
+
+        if (userAge >= 16) {
+          // User needs to self-consent
+          return (
+            <Container theme={theme} className={className} style={style}>
+              <MainMenuBar theme={theme} />
+              <Card theme={theme} width='fit-content'>
+                {kiprLogo}
+
+                <Header theme={theme}>Privacy Policy and Terms of Use</Header>
+
+                <UserConsentCard theme={theme} disable={authenticating} onCollectedUserConsent={this.onCollectedUserConsent_} />
+              </Card>
+            </Container>
+          );
+        } else {
+          // User needs parental consent
+          return (
+            <Container theme={theme} className={className} style={style}>
+              <MainMenuBar theme={theme} />
+              <Card theme={theme}>
+                {kiprLogo}
+
+                <Header theme={theme}>Additional Information</Header>
+
+                <ParentEmailCard theme={theme} disable={authenticating} errorMessage={logInFailedMessage} onCollectedInfo={this.onCollectedParentEmail_} />
+              </Card>
+            </Container>
+          );
+        }
+      }
+
+      console.error('Unknown consent state', consentStatus);
+      return null;
     }
 
     if (forgotPassword) {

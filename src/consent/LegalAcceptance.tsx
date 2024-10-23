@@ -9,23 +9,24 @@ namespace LegalAcceptance {
   export interface NotStarted {
     state: State.NotStarted;
     version: number;
-    autoDelete: boolean;
+    expiresAt: number;
   }
 
   export interface AwaitingParentalConsent {
     state: State.AwaitingParentalConsent;
     version: number;
-    sentAt: string;
+    sentAt: number;
     parentEmailAddress: string;
-    autoDelete: boolean;
+    expiresAt: number;
   }
 
   export interface ObtainedParentalConsent {
     state: State.ObtainedParentalConsent;
     version: number;
-    receivedAt: string;
+    receivedAt: number;
     parentEmailAddress: string;
     parentalConsentUri: string;
+    expiresAt: number;
   }
 
   export interface ObtainedUserConsent {
@@ -33,22 +34,18 @@ namespace LegalAcceptance {
     version: number;
   }
 
-  export const isConsentObtained = (legalAcceptance: LegalAcceptance): boolean => {
-    if (!legalAcceptance) return false;
-
-    return legalAcceptance.state === State.ObtainedUserConsent
-      || legalAcceptance.state === State.ObtainedParentalConsent;
-  };
-
-  export const shouldAutoDelete = (legalAcceptance: LegalAcceptance): boolean => {
-    if (!legalAcceptance) return false;
+  export const getConsentStatus = (legalAcceptance: LegalAcceptance): 'valid' | 'invalid' | 'expired' => {
+    if (!legalAcceptance) return 'invalid';
 
     switch (legalAcceptance.state) {
-      case LegalAcceptance.State.NotStarted:
-      case LegalAcceptance.State.AwaitingParentalConsent:
-        return legalAcceptance.autoDelete;
+      case State.ObtainedUserConsent:
+        return 'valid';
+      case State.ObtainedParentalConsent:
+        return legalAcceptance.expiresAt > Date.now() ? 'valid' : 'expired';
+      case State.NotStarted:
+      case State.AwaitingParentalConsent:
       default:
-        return false;
+        return 'invalid';
     }
   };
 }

@@ -301,7 +301,7 @@ class ParentalConsentPage extends React.Component<Props, State> {
         'Authorization': `ParentToken ${this.props.token}`,
       },
       body: JSON.stringify({
-        version: '1', // TODO: fill with real version number
+        version: '1',
         form: bodyForm,
       }),
     });

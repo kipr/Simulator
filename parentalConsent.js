@@ -48,7 +48,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
       });
     }
 
-    // TODO: ensure that requested version is the latest version
+    // Ensure that requested version is the latest version
     if (req.body.version !== CURRENT_PDF_VERSION.toString()) {
       return res.status(400).json({
         error: `Expected version ${CURRENT_PDF_VERSION}`
@@ -81,7 +81,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
     }
 
     res.type('application/pdf');
-    res.set('X-Consent-Version', CURRENT_PDF_VERSION); // TODO: unsure if custom header is the right way to version
+    res.set('X-Consent-Version', CURRENT_PDF_VERSION); // can be used in the future to ensure client has the latest version
     res.end(pdfData);
   }));
 
@@ -140,18 +140,6 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
       });
     }
 
-    if (!('autoDelete' in req.body)) {
-      return res.status(400).json({
-        error: "Expected autoDelete key in body"
-      });
-    }
-
-    if (typeof req.body.autoDelete !== 'boolean') {
-      return res.status(400).json({
-        error: "Expected autoDelete key in body to be a boolean"
-      });
-    }
-
     const user = await getAuth().getUser(userId);
     if (req.body.parentEmailAddress.toLowerCase() === user.email.toLowerCase()) {
       return res.status(400).json({
@@ -169,13 +157,6 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
         console.error('Failed to get current consent state', getConsentError);
         res.status(400).send();
         return;
-    }
-
-    if (currentConsent !== null && currentConsent.legalAcceptance?.state !== 'not-started') {
-      // TODO: it's okay for "not-started" consent to exist...?
-      console.error('Consent already exists for user');
-      res.status(400).send();
-      return;
     }
 
     // Generate a random one-time token for parent to access consent page
@@ -196,16 +177,30 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
       return;
     }
 
+    const now = Date.now();
+    let expiresAt = null;
+    if (currentConsent === null) {
+      // Existing user consenting for the first time, so give them 7 days
+      expiresAt = new Date(now);
+      expiresAt.setUTCHours(expiresAt.getUTCHours() + 7 * 24);
+    } else if (currentConsent.legalAcceptance.state === 'not-started') {
+      // New user, so give them 2 days
+      expiresAt = new Date(now);
+      expiresAt.setUTCHours(expiresAt.getUTCHours() + 2 * 24);
+    } else {
+      // Existing user re-consenting, so don't expire at all
+    }
+
     // Update user consent in db
     const nextUserConsent = {
       dateOfBirth: req.body.dateOfBirth,
       legalAcceptance: {
         state: 'awaiting-parental-consent',
         version: 1,
-        sentAt: new Date().toISOString(),
+        sentAt: now,
         parentEmailAddress: req.body.parentEmailAddress,
         parentConsentTokenHash: parentConsentTokenHash,
-        autoDelete: req.body.autoDelete,
+        expiresAt: expiresAt?.valueOf(),
       },
     };
 
@@ -233,19 +228,14 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
       return;
     }
 
-    const consentRequestSentAt = currentConsent?.legalAcceptance?.sentAt;
-    const consentRequestSentAtMs = consentRequestSentAt ? Date.parse(consentRequestSentAt) : NaN;
-    if (isNaN(consentRequestSentAtMs)) {
-      console.error('Sent at time is not valid');
-      res.status(500).send();
-      return;
-    }
-
-    const currMs = new Date().getTime();
-    if (currMs - consentRequestSentAtMs > 48 * 60 * 60 * 1000) {
-      console.error('Consent was requested too long ago');
-      res.status(400).send();
-      return;
+    const currMs = Date.now();
+    const consentRequestExpiresAt = currentConsent?.legalAcceptance?.expiresAt;
+    if (typeof(consentRequestExpiresAt) === 'number') {  
+      if (currMs >= consentRequestExpiresAt) {
+        console.error('Consent was requested too long ago');
+        res.status(400).send();
+        return;
+      }
     }
 
     if (!('version' in req.body) || typeof req.body.version !== 'string') {
@@ -309,14 +299,19 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
 
     const parentalConsentUri = storeResponse.cloudStorageUri;
 
+    // Consent is valid until the user turns 16
+    const consentExpiresAt = new Date(currentConsent.dateOfBirth);
+    consentExpiresAt.setUTCFullYear(consentExpiresAt.getUTCFullYear() + 16);
+
     const nextUserConsent = {
       ...currentConsent,
       legalAcceptance: {
         state: 'obtained-parental-consent',
         version: 1,
-        receivedAt: new Date().toISOString(),
+        receivedAt: currMs,
         parentEmailAddress: currentConsent.legalAcceptance.parentEmailAddress,
         parentalConsentUri: parentalConsentUri,
+        expiresAt: consentExpiresAt.valueOf(),
       },
     };
 
@@ -427,16 +422,14 @@ function sendParentalConsentEmail(userId, parentConsentToken, parentEmailAddress
   const domain = config.mailgun.domain;
   const consentLink = `${baseUrl}/parental-consent/${userId}?token=${parentConsentToken}`;
 
-  // TODO: compose final email
   const mailgunData = {
-    from: `test@${domain}`,
+    from: `privacy@${domain}`,
     to: parentEmailAddress,
     subject: `Parent/Guardian Consent for KIPR Simulator`,
     template: 'consent',
     'h:X-Mailgun-Variables': JSON.stringify({
       consentlink: consentLink
     }),
-    // 'h:Reply-To': 'reply-to@example.com',
   };
 
   return mailgunClient.messages.create(domain, mailgunData);
@@ -447,9 +440,8 @@ function sendParentalConsentConfirmationEmail(parentEmailAddress, pdfData, mailg
 
   const pdfDataBuffer = Buffer.from(pdfData);
 
-  // TODO: compose final email
   const mailgunData = {
-    from: `test@${domain}`,
+    from: `privacy@${domain}`,
     to: parentEmailAddress,
     subject: `Parent/Guardian Consent Confirmation for KIPR Simulator`,
     template: 'consent confirmation',
