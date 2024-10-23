@@ -77,6 +77,7 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 }, ['rightSideCan', 'topSideCan', 'leftSideCan']);
 
 `;
+
 const uprightCans = `
 // When a can is standing upright, the upright condition is met.
 
@@ -87,13 +88,8 @@ const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3wUnits.dot(Vector3wU
 
 
 scene.addOnRenderListener(() => {
-  // const currTime = Date.now();
-  // const timeDiff = currTime - startTime;
-  const upright6 = yAngle('can6') < 5;
-  // if(timeDiff > 1000) {
-  //   console.log('can6 angle: ', yAngle('can6'));
-  //   startTime = currTime;
-  // }
+  const upright6 = yAngle('can6') > 5;
+  // console.log('can6 angle: ', yAngle('can6'));
   scene.setChallengeEventValue('can6Upright', upright6);
 
 });

@@ -35,8 +35,8 @@ export const CREATEBOT: Robot = {
     }),
     left_wheel: Node.motor({
       parentAxis: RawVector3.create(0, 0, 1),
-      parentPivot: Vector3wUnits.meters(0,0.015,-.1191),
-      childAxis: RawVector3.Y, 
+      parentPivot: Vector3wUnits.meters(0, 0.015, -.1191),
+      childAxis: RawVector3.Y,
       motorPort: 30,
       parentId: 'create',
       plug: Node.Motor.Plug.Inverted
@@ -52,7 +52,7 @@ export const CREATEBOT: Robot = {
     }),
     right_wheel: Node.motor({
       parentAxis: RawVector3.create(0, 0, -1),
-      parentPivot: Vector3wUnits.meters(0,0.015,0.1255),
+      parentPivot: Vector3wUnits.meters(0, 0.015, 0.1255),
       childAxis: RawVector3.Y,
       motorPort: 40,
       parentId: 'create',
@@ -138,6 +138,6 @@ export const CREATEBOT: Robot = {
   },
   origin: {
     position: Vector3wUnits.meters(0, 0.5, 0),
-    orientation: RotationwUnits.eulerDegrees(0, 0, 45),
+    orientation: RotationwUnits.eulerDegrees(0, 0, 0),
   }
 };

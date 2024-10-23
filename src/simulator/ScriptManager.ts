@@ -32,7 +32,7 @@ export interface ScriptSceneBinding {
   readonly geometry: Dict<Geometry>;
   addGeometry(geometry: Geometry, id?: string): string;
   removeGeometry(id: string): void;
-  
+
   gravity: Vector3wUnits;
 
   camera: Camera;
@@ -148,7 +148,7 @@ class ScriptManager {
         refCounts.set(filterId, 1);
       }
     }
-    
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     if (this[onChangedKey]) this[onChangedKey](listener.nodeId, new Set(refCounts.keys()));
   };
@@ -209,7 +209,7 @@ namespace ScriptManager {
     }
 
     export const collision = construct<Collision>(Type.Collision);
-  
+
     export interface IntersectionStart {
       type: Type.IntersectionStart;
       nodeId: string;
@@ -256,7 +256,7 @@ namespace ScriptManager {
     }
 
     export const render = construct<Render>(Type.Render);
-  
+
     export interface Collision {
       type: Type.Collision;
       nodeId: string;
@@ -265,7 +265,7 @@ namespace ScriptManager {
     }
 
     export const collision = construct<Collision>(Type.Collision);
-  
+
     export interface Intersection {
       type: Type.Intersection;
       nodeId: string;
@@ -330,7 +330,7 @@ namespace ScriptManager {
     constructor(script: Script, manager: ScriptManager) {
       this.script_ = script;
       this.manager_ = manager;
-      
+
       this.spawnFunc_({
         scene: this,
         RotationwUnits,
@@ -342,6 +342,7 @@ namespace ScriptManager {
         Distance,
         Mass,
         Angle,
+        Date,
       }, this.script_.code);
     }
 
@@ -415,7 +416,7 @@ namespace ScriptManager {
       if (this.onUnbind) this.onUnbind(nodeId);
       this.boundNodeIds_.delete(nodeId);
     }
-    
+
     dispose() {
       // TODO: This code could be more efficient. We need to unregister the collision and intersection listeners
       // from the parent, but doing it as a single operation would be better.
@@ -439,7 +440,7 @@ namespace ScriptManager {
       if (resolvedId in this.manager_.scene.nodes) {
         throw new Error(`Node with id ${resolvedId} already exists`);
       }
-      
+
       onNodeAdd(resolvedId, node);
 
       return resolvedId;
@@ -455,7 +456,7 @@ namespace ScriptManager {
 
       onNodeRemove(id);
     }
-    
+
     setNode(id: string, node: Node): void {
       const { onNodeChange } = this.manager_;
       if (!onNodeChange) return;
@@ -496,7 +497,7 @@ namespace ScriptManager {
 
       onGeometryRemove(id);
     }
-    
+
     get gravity(): Vector3wUnits {
       return this.manager_.scene.gravity;
     }
@@ -568,7 +569,7 @@ namespace ScriptManager {
           this.manager_.removeIntersectionRefCounts_(listener);
           break;
       }
-      
+
       delete this.listeners_[handle];
     }
 
@@ -584,13 +585,13 @@ namespace ScriptManager {
     setChallengeEventValue(eventId: string, value: boolean) {
       if (!this.manager_.onChallengeSetEventValue) return;
       this.manager_.onChallengeSetEventValue(eventId, value);
-      this.getChallengeEventValue(eventId,value);
+      this.getChallengeEventValue(eventId, value);
     }
 
     getChallengeEventValue(eventId: string, value: boolean) {
       if (!this.manager_.onChallengeGetEventValue) return;
       return value;
-      this.getChallengeEventValue(eventId,value);
+      this.getChallengeEventValue(eventId, value);
     }
   }
 
