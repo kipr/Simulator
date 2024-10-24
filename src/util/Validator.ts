@@ -22,18 +22,9 @@ export namespace Validators {
     Special = 'special',
     Length = 'length',
     Email = 'email',
+    Date = 'date',
   }
 
-  /**
-   * Interface for the general validator.
-   */
-  export interface GeneralValidator {
-    // Add properties and methods here if needed
-  }
-
-  /**
-   * Interface for the lowercase validator.
-   */
   export interface Lowercase extends GeneralValidator {
     type: Validators.Lowercase;
   }
@@ -129,6 +120,12 @@ export namespace Validators {
     // Add properties and methods specific to the email validator here if needed
   }
 
+  export interface Date extends GeneralValidator {
+    type: Validators.Date;
+  }
+
+  export namespace Date {}
+
   /**
    * Validates the given value based on the specified validator type.
    * @param value - The value to be validated.
@@ -153,6 +150,9 @@ export namespace Validators {
         return value.length >= length;
       case Types.Email:
         return /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value);
+      case Types.Date:
+        // TODO: validate that it's a real date (e.g. 02/30/2000 should not pass)
+        return /^(0[1-9]|1[012])(\/|-)(0[1-9]|[12][0-9]|3[01])(\/|-)(19|20)\d{2}$/.test(value);
       default:
         return false;
     }
@@ -161,7 +161,7 @@ export namespace Validators {
   /**
    * Type alias for the different validator types.
    */
-  export type Validator = Lowercase | Uppercase | Alpha | Numeric | Special | Email;
+  export type Validator = Lowercase | Uppercase | Alpha | Numeric | Special | Email | Date;
 
   /**
    * Validates the given value against multiple validators.

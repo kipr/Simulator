@@ -38,6 +38,7 @@ module.exports = {
     app: './index.tsx',
     login: './components/Login/index.tsx', 
     plugin: './lms/plugin/index.tsx',
+    parentalConsent: './components/ParentalConsent/index.tsx',
     'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js',
     'ts.worker': 'monaco-editor/esm/vs/language/typescript/ts.worker.js',
   },
@@ -137,9 +138,10 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({ template: 'index.html.ejs', excludeChunks: ['login', 'plugin'] }),
+    new HtmlWebpackPlugin({ template: 'index.html.ejs', excludeChunks: ['login', 'plugin', 'parentalConsent'] }),
     new HtmlWebpackPlugin({ template: 'components/Login/login.html.ejs', filename: 'login.html', chunks: ['login'] }),
     new HtmlWebpackPlugin({ template: 'lms/plugin/plugin.html.ejs', filename: 'plugin.html', chunks: ['plugin'] }),
+    new HtmlWebpackPlugin({ template: 'components/ParentalConsent/parental-consent.html.ejs', filename: 'parental-consent.html', chunks: ['parentalConsent'] }),
     new DefinePlugin({
       SIMULATOR_VERSION: JSON.stringify(require('../../package.json').version),
       SIMULATOR_GIT_HASH: JSON.stringify(commitHash),

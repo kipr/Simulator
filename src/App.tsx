@@ -16,6 +16,11 @@ import DocumentationWindow from './components/documentation/DocumentationWindow'
 import { DARK } from './components/constants/theme';
 import CurriculumPage from './lms/CurriculumPage';
 import { UsersAction } from './state/reducer';
+import db from './db';
+import Selector from './db/Selector';
+import DbError from './db/Error';
+import UserConsent from './consent/UserConsent';
+import LegalAcceptance from './consent/LegalAcceptance';
 
 export interface AppPublicProps {
 
@@ -75,13 +80,31 @@ class App extends React.Component<Props, State> {
         console.log('User detected.');
         this.props.loadUser(user.uid);
         this.props.setMe(user.uid);
+
+        // Ensure user has obtained consent before continuing
+        db.get<UserConsent>(Selector.user(user.uid))
+          .then(userConsent => {
+            const consentStatus = LegalAcceptance.getConsentStatus(userConsent?.legalAcceptance);
+            if (consentStatus === 'valid') {
+              console.log('Consent verified');
+              this.setState({ loading: false });
+            } else {
+              console.log('Consent not verified, status is', consentStatus);
+              this.props.login();
+            }
+          })
+          .catch(error => {
+            if (DbError.is(error) && error.code === DbError.CODE_NOT_FOUND) {
+              console.log('Consent info does not exist');
+              this.props.login();
+            }
+
+            // TODO: show user an error
+            console.error('Failed to read user consent from DB');
+          });
       } else {
         this.props.login();
       }
-
-      this.setState({ loading: false }, () => {
-        if (!user) this.props.login();
-      });
     });
   }
 
