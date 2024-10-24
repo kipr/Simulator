@@ -72,7 +72,7 @@ class DateOfBirthCard extends React.Component<Props, State> {
         onFinalize={this.onContinueClicked_}
         finalizeDisabled={disable}
       />
-    </>
+    </>;
   }
 }
 

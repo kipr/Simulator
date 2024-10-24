@@ -1,3 +1,5 @@
+/* eslint-env node */
+
 const express = require('express');
 const { rateLimit } = require('express-rate-limit');
 const axios = require('axios').default;
@@ -27,8 +29,14 @@ async function generateParentConsentForm(formValues) {
   // Fill PDF form based on values from request body
   for (const bodyParam in PDF_FIELD_MAP) {
     const formKey = PDF_FIELD_MAP[bodyParam];
-    pdfDoc.getForm().getTextField(formKey).setText(formValues[bodyParam]);
-    pdfDoc.getForm().getTextField(formKey).enableReadOnly();
+    pdfDoc
+      .getForm()
+      .getTextField(formKey)
+      .setText(formValues[bodyParam]);
+    pdfDoc
+      .getForm()
+      .getTextField(formKey)
+      .enableReadOnly();
   }
 
   return await pdfDoc.save();
@@ -154,9 +162,9 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
     try {
       currentConsent = await getCurrentConsent(userId, firebaseIdToken, config);
     } catch (getConsentError) {
-        console.error('Failed to get current consent state', getConsentError);
-        res.status(400).send();
-        return;
+      console.error('Failed to get current consent state', getConsentError);
+      res.status(400).send();
+      return;
     }
 
     // Generate a random one-time token for parent to access consent page
@@ -207,9 +215,9 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
     try {
       await setConsent(userId, nextUserConsent, firebaseIdToken, config);
     } catch (setConsentError) {
-        console.error('Failed to set consent', setConsentError);
-        res.status(400).send();
-        return;
+      console.error('Failed to set consent', setConsentError);
+      res.status(400).send();
+      return;
     }
 
     res.status(200).send(nextUserConsent);
@@ -386,7 +394,7 @@ async function getCurrentConsent(userId, token, config) {
       return null;
     }
 
-    console.error('ERROR:', error)
+    console.error('ERROR:', error);
     throw error;
   }
 }
@@ -472,7 +480,10 @@ function parseAuthorization(req) {
 }
 
 function getHashForParentToken(token) {
-  return crypto.createHash('sha256').update(token).digest('hex');
+  return crypto
+    .createHash('sha256')
+    .update(token)
+    .digest('hex');
 }
 
 // Creates express middleware to perform auth check for user tokens

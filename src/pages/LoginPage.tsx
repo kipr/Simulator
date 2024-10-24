@@ -142,6 +142,15 @@ class LoginPage extends React.Component<Props, State> {
       if (user) {
         // User signed in, now check their consent state
         console.log('onAuthStateChanged with user; getting user from db');
+
+        const handleUnexpectedConsentError_ = (error: unknown) => {
+          if (typeof(error) !== 'undefined') {
+            console.log('Unknown login failure:', error);
+          }
+      
+          this.setState({ loggedIn: false, initialAuthLoaded: true, authenticating: false, userConsent: undefined, logInFailedMessage: 'Something went wrong' });
+        };
+
         db.get<UserConsent>(Selector.user(user.uid))
           .then(userConsentFromDb => {
             console.log('got user from db', userConsentFromDb);
@@ -153,13 +162,14 @@ class LoginPage extends React.Component<Props, State> {
               case LegalAcceptance.State.ObtainedUserConsent:
                 this.setState({ loggedIn: true, initialAuthLoaded: true, authenticating: false, userConsent: userConsentFromDb });
                 break;
-              default:
+              default: {
                 const exhaustive: never = userConsentFromDb.legalAcceptance;
                 console.error('Unknown acceptance state', exhaustive);
-                signOut(auth).then(() => {
-                  this.setState({ loggedIn: false, initialAuthLoaded: true, authenticating: false, userConsent: undefined, logInFailedMessage: 'Something went wrong' });
-                });
+                signOut(auth)
+                  .then(handleUnexpectedConsentError_)
+                  .catch(handleUnexpectedConsentError_);
                 break;
+              }
             }
           })
           .catch(error => {
@@ -168,9 +178,9 @@ class LoginPage extends React.Component<Props, State> {
               this.setState({ loggedIn: true, initialAuthLoaded: true, authenticating: false, userConsent: undefined });
             } else {
               console.error('failed to get user from db', error);
-              signOut(auth).then(() => {
-                this.setState({ loggedIn: false, initialAuthLoaded: true, authenticating: false, userConsent: undefined, logInFailedMessage: 'Something went wrong' });
-              });
+              signOut(auth)
+                .then(handleUnexpectedConsentError_)
+                .catch(handleUnexpectedConsentError_);
             }
           });
       } else {
@@ -180,7 +190,7 @@ class LoginPage extends React.Component<Props, State> {
     });
   };
 
-  private startNewParentalConsent_ = async (userId: string, dateOfBirth: string, parentEmailAddress: string) => {
+  private startNewParentalConsent_ = async (userId: string, dateOfBirth: string, parentEmailAddress: string): Promise<UserConsent> => {
     const userIdToken = await auth.currentUser.getIdToken();
 
     const requestBody = {
@@ -202,8 +212,9 @@ class LoginPage extends React.Component<Props, State> {
       throw response.status;
     }
 
-    const responseJson = await response.json();
-    return responseJson;
+    // TODO: validate response against UserConsent
+    const responseBody = (await response.json()) as UserConsent;
+    return responseBody;
   };
 
   private onSignIn_ = (email: string, password: string) => {
@@ -511,21 +522,21 @@ class LoginPage extends React.Component<Props, State> {
               </Card>
             </Container>
           );
-        } else {
-          // User needs parental consent
-          return (
-            <Container theme={theme} className={className} style={style}>
-              <MainMenuBar theme={theme} />
-              <Card theme={theme}>
-                {kiprLogo}
-
-                <Header theme={theme}>Additional Information</Header>
-
-                <ParentEmailCard theme={theme} disable={authenticating} errorMessage={logInFailedMessage} onCollectedInfo={this.onCollectedParentEmail_} />
-              </Card>
-            </Container>
-          );
         }
+
+        // User needs parental consent
+        return (
+          <Container theme={theme} className={className} style={style}>
+            <MainMenuBar theme={theme} />
+            <Card theme={theme}>
+              {kiprLogo}
+
+              <Header theme={theme}>Additional Information</Header>
+
+              <ParentEmailCard theme={theme} disable={authenticating} errorMessage={logInFailedMessage} onCollectedInfo={this.onCollectedParentEmail_} />
+            </Card>
+          </Container>
+        );
       }
 
       console.error('Unknown consent state', consentStatus);

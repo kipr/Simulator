@@ -100,9 +100,9 @@ class ParentEmailCard extends React.Component<Props, State> {
               marginRight: '8px',
             }
           })
-        } style={{ marginBottom: `${theme.itemPadding * 2}px`}} />
+        } style={{ marginBottom: `${theme.itemPadding * 2}px` }} />
       }
-    </>
+    </>;
   }
 }
 

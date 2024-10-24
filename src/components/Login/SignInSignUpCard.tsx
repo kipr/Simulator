@@ -67,12 +67,11 @@ class SignInSignUpCard extends React.Component<Props, State> {
 
   private onSignUpClicked_ = (values: { [id: string]: string }) => {
     this.props.onSignUp(values['email'], values['password']);
-  }
+  };
 
   render(): React.ReactNode {
-    const { props, state } = this;
+    const { props } = this;
     const { theme, mode, allowSignIn, logInFailedMessage, onSignInWithSocialMedia, onForgotPassword } = props;
-    const { } = state;
 
     const LOGIN_FORM_ITEMS: Form.Item[] = [
       Form.email('email', 'Email'),
@@ -159,7 +158,7 @@ class SignInSignUpCard extends React.Component<Props, State> {
             <Text key={i} text={item} />
           ))} />
       </SocialContainer>
-    </>
+    </>;
   }
 }
 

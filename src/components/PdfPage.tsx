@@ -33,7 +33,7 @@ class PdfPage extends React.Component<Props, State> {
   private divContainerRef = React.createRef<HTMLDivElement>();
   private pdfPageView: PDFPageView = null;
   private resizeObserver: ResizeObserver | null = null;
-  private scaleFactor: number = 0;
+  private scaleFactor = 0;
 
   private calculateScaleFactor = (): number => {    
     const parentElement = this.divContainerRef.current.parentElement;
@@ -50,7 +50,7 @@ class PdfPage extends React.Component<Props, State> {
     return Math.floor(scaleFactorClamped * 100) / 100;
   };
 
-  private initialRenderPdf = (): Promise<void> => {
+  private initialRenderPdf = (): Promise<unknown> => {
     const pdfPage = this.props.pdfPage;
     const viewport = pdfPage.getViewport({ scale: 1.0, });
     this.scaleFactor = this.calculateScaleFactor();
@@ -76,7 +76,7 @@ class PdfPage extends React.Component<Props, State> {
     return this.pdfPageView.draw();
   };
 
-  private rescalePdf = (): Promise<void> => {
+  private rescalePdf = (): Promise<unknown> => {
     if (!this.pdfPageView) {
       console.error('rescale failed, pdfPageView not ready');
       return;
@@ -98,7 +98,7 @@ class PdfPage extends React.Component<Props, State> {
 
     if ('ResizeObserver' in window) {
       this.resizeObserver = new ResizeObserver((entries) => {
-        this.rescalePdf();
+        void this.rescalePdf();
       });
       this.resizeObserver.observe(this.divContainerRef.current.parentElement);
     }
@@ -114,7 +114,7 @@ class PdfPage extends React.Component<Props, State> {
   // Only re-renders when component is mounted
   // To re-render the PDF, use a React key to force re-mounting
   render() {
-    return <PdfPageContainer ref={this.divContainerRef} className="pdfViewer singlePageView" />
+    return <PdfPageContainer ref={this.divContainerRef} className="pdfViewer singlePageView" />;
   }
 }
 

@@ -93,16 +93,21 @@ class UserConsentCard extends React.Component<Props, State> {
     };
   }
 
-  async componentDidMount(): Promise<void> {
+  componentDidMount() {
     // Get PDFs for each document tab and store the PDF pages in state
     for (let documentTabIndex = 0; documentTabIndex < UserConsentCard.documentTabData.length; ++documentTabIndex) {
-      this.getPdfFromUrl(UserConsentCard.documentTabData[documentTabIndex].documentUrl).then(pdfPages => {
-        this.setState((prevState) => {
-          const pdfPagesLists = [...prevState.pdfPagesLists];
-          pdfPagesLists[documentTabIndex] = pdfPages;
-          return { pdfPagesLists };
+      this.getPdfFromUrl(UserConsentCard.documentTabData[documentTabIndex].documentUrl)
+        .then(pdfPages => {
+          this.setState((prevState) => {
+            const pdfPagesLists = [...prevState.pdfPagesLists];
+            pdfPagesLists[documentTabIndex] = pdfPages;
+            return { pdfPagesLists };
+          });
+        })
+        .catch(err => {
+          console.error('Failed to fetch PDF', err);
+          // TODO: pdfPagesLists[x] will not be set, so it'll show a loading message forever; show an error instead
         });
-      });
     }
   }
 
@@ -125,7 +130,7 @@ class UserConsentCard extends React.Component<Props, State> {
       return null;
     }
 
-    const pdfResponseBody = await pdfResponse.arrayBuffer()
+    const pdfResponseBody = await pdfResponse.arrayBuffer();
 
     const pdf = await getDocument(pdfResponseBody).promise;
 

@@ -152,7 +152,7 @@ interface GenerateFormBody {
   parentRelationship: string;
   parentEmailAddress: string;
   signature: string;
-  signatureDate:string;
+  signatureDate: string;
 }
 
 function createGenerateFormBodyFromFormResults(formResults: { [id: string]: FormResult }[]): GenerateFormBody {
@@ -240,7 +240,7 @@ class ParentalConsentPage extends React.Component<Props, State> {
       return;
     }
 
-    this.updatePdfPreview_();
+    await this.updatePdfPreview_();
   }
 
   // Convert a date to a string in the format 'MM/DD/YYYY', as expected in the form fields
@@ -260,12 +260,21 @@ class ParentalConsentPage extends React.Component<Props, State> {
     }
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch current consent status with code {response.status}`);
+      throw new Error(`Failed to fetch current consent status with code ${response.status}`);
     }
 
-    const json = await response.json();
-    if (typeof(json) !== 'object' || !('state' in json) || !('userDateOfBirth' in json) || !('userEmail' in json)) {
-      return new Error('Unexpected format of response body');
+    const json: unknown = await response.json();
+
+    const isValidResponse = (x: unknown): x is { state: string, userDateOfBirth: string, userEmail: string } =>
+      typeof(x) === 'object' &&
+      'state' in x &&
+      typeof(x.state) === 'string' &&
+      'userDateOfBirth' in x &&
+      typeof(x.userDateOfBirth) === 'string' &&
+      'userEmail' in x &&
+      typeof(x.userEmail) === 'string';
+    if (!isValidResponse(json)) {
+      throw new Error('Unexpected format of response body');
     }
 
     return json;
@@ -280,7 +289,11 @@ class ParentalConsentPage extends React.Component<Props, State> {
       formIndex: this.state.formIndex + 1,
     }, () => {
       if (this.state.formIndex === ParentalConsentPage.forms.length) {
-        this.updatePdfPreview_();
+        this.updatePdfPreview_()
+          .catch(err => {
+            // TODO: show user an error
+            console.error('Failed to update PDF preview', err);
+          });
       }
     });
   };
@@ -307,11 +320,11 @@ class ParentalConsentPage extends React.Component<Props, State> {
     });
 
     if (!formResponse.ok) {
-      // TODO: show error
       console.error('Failed to fetch form', formResponse.status);
+      throw new Error(formResponse.status.toString());
     }
 
-    const formResponseBody = await formResponse.arrayBuffer()
+    const formResponseBody = await formResponse.arrayBuffer();
 
     const pdf = await getDocument(formResponseBody).promise;
 
@@ -342,40 +355,39 @@ class ParentalConsentPage extends React.Component<Props, State> {
           form: createGenerateFormBodyFromFormResults(this.state.formResults),
         }),
       })
-      .then(response => {
-        switch (response.status) {
-          case 200:
-            this.state.pdfDocument.saveDocument()
-              .then(pdfData => {
-                const blob = new Blob([pdfData], { type: 'application/pdf' });
-                const blobUrl = URL.createObjectURL(blob);
-                this.setState({ submitClicked: false, submitted: true, pdfBlobUrl: blobUrl });
-              })
-              .catch(e => {
-                // Allow the submission to succeed, but without a download link
-                console.warn('Failed to save PDF document', e);
-                this.setState({ submitClicked: false, submitted: true, pdfBlobUrl: null });
-              });
-            break;
-          case 400:
-            this.setState({ submitClicked: false, errorMessage: 'Something went wrong. The link may be invalid or expired.' });
-            break;
-          default:
-            console.error('Consent request failed with status', response.status);
-            this.setState({ submitClicked: false, errorMessage: 'Something went wrong. Please try again later.' });
-            break;
-        }
-      })
-      .catch(e => {
-        console.error('Consent request failed with exception', e);
-        this.setState({ submitClicked: false, errorMessage: 'Something went wrong. Please try again later.' });
-      });
-
+        .then(response => {
+          switch (response.status) {
+            case 200:
+              this.state.pdfDocument.saveDocument()
+                .then(pdfData => {
+                  const blob = new Blob([pdfData], { type: 'application/pdf' });
+                  const blobUrl = URL.createObjectURL(blob);
+                  this.setState({ submitClicked: false, submitted: true, pdfBlobUrl: blobUrl });
+                })
+                .catch(e => {
+                  // Allow the submission to succeed, but without a download link
+                  console.warn('Failed to save PDF document', e);
+                  this.setState({ submitClicked: false, submitted: true, pdfBlobUrl: null });
+                });
+              break;
+            case 400:
+              this.setState({ submitClicked: false, errorMessage: 'Something went wrong. The link may be invalid or expired.' });
+              break;
+            default:
+              console.error('Consent request failed with status', response.status);
+              this.setState({ submitClicked: false, errorMessage: 'Something went wrong. Please try again later.' });
+              break;
+          }
+        })
+        .catch(e => {
+          console.error('Consent request failed with exception', e);
+          this.setState({ submitClicked: false, errorMessage: 'Something went wrong. Please try again later.' });
+        });
     });
   };
 
   private static createFormFinalizer = (pdfField: keyof(GenerateFormBody)) => {
-    return (value: string) => ({ value, pdfField });
+    return (value: string): FormResult => ({ value, pdfField });
   };
 
   private createForms: () => Form.Item[][] = () => {
@@ -407,7 +419,7 @@ class ParentalConsentPage extends React.Component<Props, State> {
     return null;
   };
 
-  private static readonly forms: Form.Item[][] = [
+  private static readonly forms: Form.Item<FormResult>[][] = [
     // CHILD ACCOUNT INFO FORM
     [
       {

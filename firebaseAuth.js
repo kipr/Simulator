@@ -1,3 +1,5 @@
+/* eslint-env node */
+
 const { cert, initializeApp } = require('firebase-admin/app');
 const { getAuth } = require('firebase-admin/auth');
 const axios = require('axios').default;
