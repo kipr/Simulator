@@ -12,10 +12,33 @@ import LocalizedString from '../../util/LocalizedString';
 import db from '../../db';
 import Selector from '../../db/Selector';
 
-import test from '../../simulator/definitions/challenges/test';
+import jbc1 from "../../simulator/definitions/challenges/jbc1";
+import jbc2 from "../../simulator/definitions/challenges/jbc2";
+import jbc2b from "../../simulator/definitions/challenges/jbc2b";
+import jbc2c from "../../simulator/definitions/challenges/jbc2c";
+import jbc2d from "../../simulator/definitions/challenges/jbc2d";
+import jbc3 from "../../simulator/definitions/challenges/jbc3";
+import jbc4 from "../../simulator/definitions/challenges/jbc4";
+import jbc4b from "../../simulator/definitions/challenges/jbc4b";
+import jbc5 from "../../simulator/definitions/challenges/jbc5";
+import jbc6 from "../../simulator/definitions/challenges/jbc6";
 import jbc6c from "../../simulator/definitions/challenges/jbc6c";
-
-
+import jbc7 from "../../simulator/definitions/challenges/jbc7";
+import jbc7b from "../../simulator/definitions/challenges/jbc7b";
+import jbc8 from "../../simulator/definitions/challenges/jbc8";
+import jbc8b from "../../simulator/definitions/challenges/jbc8b";
+import jbc10 from "../../simulator/definitions/challenges/jbc10";
+import jbc10b from "../../simulator/definitions/challenges/jbc10b";
+import jbc12 from "../../simulator/definitions/challenges/jbc12";
+import jbc13 from "../../simulator/definitions/challenges/jbc13";
+import jbc15b from "../../simulator/definitions/challenges/jbc15b";
+import jbc17 from "../../simulator/definitions/challenges/jbc17";
+import jbc17b from "../../simulator/definitions/challenges/jbc17b";
+import jbc19 from "../../simulator/definitions/challenges/jbc19";
+import jbc20 from "../../simulator/definitions/challenges/jbc20";
+import jbc21 from "../../simulator/definitions/challenges/jbc21";
+import jbc22 from "../../simulator/definitions/challenges/jbc22";
+import test from '../../simulator/definitions/challenges/test';
 
 export namespace ChallengesAction {
   export interface LoadChallenge {
@@ -127,6 +150,106 @@ const DEFAULT_CHALLENGES: Challenges = {
   'jbc6c': Async.loaded({
     value: jbc6c,
     brief: ChallengeBrief.fromChallenge(jbc6c),
+  }),
+  'jbc1': Async.loaded({
+    value: jbc1,
+    brief: ChallengeBrief.fromChallenge(jbc1),
+  }),
+  'jbc2': Async.loaded({
+    value: jbc2,
+    brief: ChallengeBrief.fromChallenge(jbc2),
+  }),
+  'jbc2b': Async.loaded({
+    value: jbc2b,
+    brief: ChallengeBrief.fromChallenge(jbc2b),
+  }),
+  'jbc2c': Async.loaded({
+    value: jbc2c,
+    brief: ChallengeBrief.fromChallenge(jbc2c),
+  }),
+  'jbc2d': Async.loaded({
+    value: jbc2d,
+    brief: ChallengeBrief.fromChallenge(jbc2d),
+  }),
+  'jbc3': Async.loaded({
+    value: jbc3,
+    brief: ChallengeBrief.fromChallenge(jbc3),
+  }),
+  'jbc5': Async.loaded({
+    value: jbc5,
+    brief: ChallengeBrief.fromChallenge(jbc5),
+  }),
+  'jbc4': Async.loaded({
+    value: jbc4,
+    brief: ChallengeBrief.fromChallenge(jbc4),
+  }),
+  'jbc4b': Async.loaded({
+    value: jbc4b,
+    brief: ChallengeBrief.fromChallenge(jbc4b),
+  }),
+  'jbc6': Async.loaded({
+    value: jbc6,
+    brief: ChallengeBrief.fromChallenge(jbc6),
+  }),
+  'jbc7': Async.loaded({
+    value: jbc7,
+    brief: ChallengeBrief.fromChallenge(jbc7),
+  }),
+  'jbc7b': Async.loaded({
+    value: jbc7b,
+    brief: ChallengeBrief.fromChallenge(jbc7b),
+  }),
+  'jbc8': Async.loaded({
+    value: jbc8,
+    brief: ChallengeBrief.fromChallenge(jbc8),
+  }),
+  'jbc8b': Async.loaded({
+    value: jbc8b,
+    brief: ChallengeBrief.fromChallenge(jbc8b),
+  }),
+  'jbc10': Async.loaded({
+    value: jbc10,
+    brief: ChallengeBrief.fromChallenge(jbc10),
+  }),
+  'jbc10b': Async.loaded({
+    value: jbc10b,
+    brief: ChallengeBrief.fromChallenge(jbc10b),
+  }),
+  'jbc12': Async.loaded({
+    value: jbc12,
+    brief: ChallengeBrief.fromChallenge(jbc12),
+  }),
+  'jbc13': Async.loaded({
+    value: jbc13,
+    brief: ChallengeBrief.fromChallenge(jbc13),
+  }),
+  'jbc15b': Async.loaded({
+    value: jbc15b,
+    brief: ChallengeBrief.fromChallenge(jbc15b),
+  }),
+  'jbc17': Async.loaded({
+    value: jbc17,
+    brief: ChallengeBrief.fromChallenge(jbc17),
+  }),
+  'jbc17b': Async.loaded({
+    value: jbc17b,
+    brief: ChallengeBrief.fromChallenge(jbc17b),
+  }),
+  'jbc19': Async.loaded({
+    value: jbc19,
+    brief: ChallengeBrief.fromChallenge(jbc19),
+  }),
+  'jbc20': Async.loaded({
+    value: jbc20,
+    brief: ChallengeBrief.fromChallenge(jbc20),
+  }),
+  'jbc21': Async.loaded({
+    value: jbc21,
+    brief: ChallengeBrief.fromChallenge(jbc21),
+  }),
+  'jbc22': Async.loaded({
+    value: jbc22,
+    brief: ChallengeBrief.fromChallenge(jbc22),
   }),
 };
 

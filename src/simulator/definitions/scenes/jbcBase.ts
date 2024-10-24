@@ -4,7 +4,6 @@ import Node from "../../../state/State/Scene/Node";
 import Camera from "../../../state/State/Scene/Camera";
 import Scene from "../../../state/State/Scene";
 import AbstractRobot from '../../../programming/AbstractRobot';
-import LocalizedString from '../../../util/LocalizedString';
 import Author from '../../../db/Author';
 
 import tr from '@i18n';
@@ -13,7 +12,7 @@ import Dict from '../../../util/objectOps/Dict';
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(0, 0, 0),
-  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+  orientation: RotationwUnits.eulerDegrees(0, -45, 0),
 };
 
 const ROBOT: Node.Robot = {

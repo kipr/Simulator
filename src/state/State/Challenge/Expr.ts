@@ -21,7 +21,7 @@ namespace Expr {
     eventId: string;
   }
 
-  namespace Event {
+  export namespace Event {
     export const evaluate = (event: Event, context: EvaluationContext): boolean => {
       const eventState = context.eventStates[event.eventId];
       return eventState === undefined ? false : eventState;

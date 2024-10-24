@@ -1,11 +1,9 @@
 import Scene from "../../../state/State/Scene";
-import Node from '../../../state/State/Scene/Node';
 import Script from '../../../state/State/Scene/Script';
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../../util/math/unitMath";
-import { Distance } from "../../../util";
 import LocalizedString from '../../../util/LocalizedString';
 
-import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
+import { createBaseSceneSurfaceA } from './jbcBase';
 
 const baseScene = createBaseSceneSurfaceA();
 

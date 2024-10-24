@@ -363,7 +363,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       challengeState,
       worldCapabilities,
       onDocumentationGoToFuzzy,
-      locale
+      locale,
     } = props;
 
     const {
@@ -392,7 +392,9 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
           onIndentCode,
           onDownloadCode,
           onResetCode,
-          onErrorClick: this.onErrorClick_
+          onErrorClick: this.onErrorClick_,
+          mini: editorTarget.mini,
+          onMiniClick: editorTarget.onMiniClick,
         };
         editor = (
           <Editor

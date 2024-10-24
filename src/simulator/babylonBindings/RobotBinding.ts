@@ -530,7 +530,7 @@ class RobotBinding {
     const newOriginE = RawEuler.fromQuaternion(rawOrigin.orientation);
     const Robot_OriginE = RawEuler.fromQuaternion(rawInternalOrigin.orientation);
 
-    const default_offset = -1 * Math.PI / 2;
+    const default_offset = 0; // -1 * Math.PI / 2;
 
 
     const UpdatedEulerOrigin = RawEuler.create(

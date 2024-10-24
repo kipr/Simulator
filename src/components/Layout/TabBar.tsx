@@ -82,6 +82,8 @@ const TabBarContainer = styled('div', (props: ThemeProps & { $vertical: boolean 
 
 export class TabBar extends React.PureComponent<Props> {
   private onClick_ = (index: number) => (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+    event.preventDefault();
     this.props.onIndexChange(index, event);
   };
 

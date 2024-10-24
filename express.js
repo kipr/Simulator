@@ -11,6 +11,7 @@ const sourceDir = 'dist';
 const { get: getConfig } = require('./config');
 const { WebhookClient } = require('discord.js');
 const proxy = require('express-http-proxy');
+const path = require('path');
 const { FirebaseTokenManager } = require('./firebaseAuth');
 const formData = require('form-data');
 const Mailgun = require('mailgun.js');
@@ -23,6 +24,16 @@ try {
   process.exitCode = 1;
   throw e;
 }
+
+// set up rate limiter: maximum of 100 requests per 15 minute
+var RateLimit = require('express-rate-limit');
+var limiter = RateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // max 100 requests per windowMs
+});
+
+// apply rate limiter to all requests
+app.use(limiter);
 
 const mailgun = new Mailgun(formData);
 const mailgunClient = mailgun.client({
@@ -217,6 +228,22 @@ app.use('/static', express.static(`${__dirname}/static`, {
   maxAge: config.caching.staticMaxAge,
 }));
 
+
+if (config.server.dependencies.scratch_rt) {
+  console.log('Scratch Runtime is enabled.');
+  app.use('/scratch/rt.js', express.static(`${config.server.dependencies.scratch_rt}`, {
+    maxAge: config.caching.staticMaxAge,
+  }));
+}
+
+app.use('/scratch', express.static(path.resolve(__dirname, 'node_modules', 'kipr-scratch'), {
+  maxAge: config.caching.staticMaxAge,
+}));
+
+app.use('/media', express.static(path.resolve(__dirname, 'node_modules', 'kipr-scratch', 'media'), {
+  maxAge: config.caching.staticMaxAge,
+}));
+
 // Expose cpython artifacts
 if (config.server.dependencies.cpython) {
   console.log('CPython artifacts are enabled.');
@@ -244,6 +271,10 @@ app.use(express.static(sourceDir, {
 
 app.get('/login', (req, res) => {
   res.sendFile(`${__dirname}/${sourceDir}/login.html`);
+});
+
+app.get('/lms/plugin', (req, res) => {
+  res.sendFile(`${__dirname}/${sourceDir}/plugin.html`);
 });
 
 app.get('/parental-consent/*', (req, res) => {

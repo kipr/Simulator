@@ -13,13 +13,15 @@ import { Ivygate, Message } from 'ivygate';
 import LanguageSelectCharm from './LanguageSelectCharm';
 import ProgrammingLanguage from '../../programming/compiler/ProgrammingLanguage';
 
-import { faArrowsRotate, faFileDownload, faIndent } from '@fortawesome/free-solid-svg-icons';
+import { faArrowsRotate, faCompress, faExpand, faFileDownload, faIndent } from '@fortawesome/free-solid-svg-icons';
+// import { faArrowsRotate, faFileDownload, faIndent } from '@fortawesome/free-solid-svg-icons';
 import Script from '../../state/State/Scene/Script';
 import Dict from '../../util/objectOps/Dict';
 
 import * as monaco from 'monaco-editor';
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';
+import ScratchEditor from './ScratchEditor';
 
 export enum EditorActionState {
   None,
@@ -35,7 +37,9 @@ export interface EditorPublicProps extends StyleProps, ThemeProps {
   messages?: Message[];
   autocomplete: boolean;
 
-  onDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python') => void;
+  onDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python' | 'scratch') => void;
+
+  mini?: boolean;
 }
 
 interface EditorPrivateProps {
@@ -75,6 +79,8 @@ export namespace EditorBarTarget {
     onDownloadCode: () => void;
     onResetCode: () => void;
     onErrorClick: (event: React.MouseEvent<HTMLDivElement>) => void;
+    mini?: boolean;
+    onMiniClick?: () => void;
   }
 }
 
@@ -104,15 +110,27 @@ export const createEditorBarComponents = ({
         onLanguageChange: target.onLanguageChange,
       }));
 
-      editorBar.push(BarComponent.create(Button, {
-        theme,
-        onClick: target.onIndentCode,
-        children:
-          <>
-            <FontAwesome icon={faIndent} />
-            {' '} {LocalizedString.lookup(tr('Indent'), locale)}
-          </>
-      }));
+      if (target.language !== 'scratch') {
+        editorBar.push(BarComponent.create(Button, {
+          theme,
+          onClick: target.onIndentCode,
+          children:
+            <>
+              <FontAwesome icon={faIndent} />
+              {' '} {LocalizedString.lookup(tr('Indent'), locale)}
+            </>
+        }));
+      } else {
+        /* editorBar.push(BarComponent.create(Button, {
+          theme,
+          onClick: target.onMiniClick,
+          children:
+            <>
+              <Fa icon={target.mini ? faExpand : faCompress} />
+              {' '} {LocalizedString.lookup(target.mini ? tr('Show Toolbox') : tr('Hide Toolbox'), locale)}
+            </>
+        })); */
+      }
 
       editorBar.push(BarComponent.create(Button, {
         theme,
@@ -171,8 +189,7 @@ export const IVYGATE_LANGUAGE_MAPPING: Dict<string> = {
   'ecmascript': 'javascript',
 };
 
-const DOCUMENTATION_LANGUAGE_MAPPING: { [key in ProgrammingLanguage | Script.Language]: 'c' | 'python' | undefined } = {
-  'ecmascript': undefined,
+const DOCUMENTATION_LANGUAGE_MAPPING: { [key in ProgrammingLanguage | Script.Language]?: 'c' | 'python' | 'scratch' | undefined } = {
   'python': 'python',
   'c': 'c',
   'cpp': 'c',
@@ -232,11 +249,22 @@ class Editor extends React.PureComponent<Props, State> {
       onCodeChange,
       messages,
       autocomplete,
-      language
+      language,
+      mini
     } = this.props;
 
-    return (
-      <Container theme={theme} style={style} className={className}>
+    let component: JSX.Element;
+    if (language === 'scratch') {
+      component = (
+        <ScratchEditor
+          code={code}
+          onCodeChange={onCodeChange}
+          theme={theme}
+          toolboxHidden={mini}
+        />
+      );
+    } else {
+      component = (
         <Ivygate
           ref={this.bindIvygate_}
           code={code}
@@ -245,7 +273,14 @@ class Editor extends React.PureComponent<Props, State> {
           onCodeChange={onCodeChange}
           autocomplete={autocomplete}
         />
+      );
+    }
+
+    return (
+      <Container theme={theme} style={style} className={className}>
+        {component}
       </Container>
+      
     );
   }
 }

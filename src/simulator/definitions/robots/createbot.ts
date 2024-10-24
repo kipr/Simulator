@@ -138,6 +138,6 @@ export const CREATEBOT: Robot = {
   },
   origin: {
     position: Vector3wUnits.meters(0, 0.5, 0),
-    orientation: RotationwUnits.eulerDegrees(0, 0, 90),
+    orientation: RotationwUnits.eulerDegrees(0, 0, 45),
   }
 };
