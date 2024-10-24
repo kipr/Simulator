@@ -60,7 +60,7 @@ class EtSensor extends SensorObject<Node.EtSensor, number> {
         mesh !== this.trace_ &&
         !links.has(mesh as Mesh) &&
         !colliders.has(mesh as Mesh) &&
-        (!!mesh.physicsImpostor || metadata.selected)
+        (!!mesh.physicsImpostor || !metadata.selected)
       );
     });
 
