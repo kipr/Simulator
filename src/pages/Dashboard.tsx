@@ -21,6 +21,7 @@ export interface DashboardPublicProps extends RouteComponentProps, ThemeProps, S
 interface DashboardPrivateProps {
   onTutorialsClick: () => void;
   onSimulatorClick: () => void;
+  onLeaderboardClick: () => void;
   locale: LocalizedString.Language;
 }
 
@@ -67,7 +68,7 @@ class Dashboard extends React.PureComponent<Props> {
 
   render() {
     const { props } = this;
-    const { className, style, onTutorialsClick, onSimulatorClick, locale } = props;
+    const { className, style, onTutorialsClick, onSimulatorClick, onLeaderboardClick, locale } = props;
     const theme = DARK;
 
     return (
@@ -100,6 +101,16 @@ class Dashboard extends React.PureComponent<Props> {
             hoverBackgroundSize={'95%'}
             onClick={this.onAboutClick_}
           />
+          <Card
+            theme={theme}
+            title={LocalizedString.lookup(tr('Leaderboard'), locale)}
+            description={LocalizedString.lookup(tr('See the current challenge leaderboard.'), locale)}
+            backgroundImage={'linear-gradient(#3b3c3c, transparent), url(../../static/example_images/Gold_Medal_Robot.png)'}
+            backgroundColor={'#3b3c3c'}
+            backgroundSize={'80%'}
+            hoverBackgroundSize={'95%'}
+            onClick={onLeaderboardClick}
+          />
         </CardContainer>
       </Container>
     );
@@ -110,5 +121,6 @@ export default connect((state: State) => ({
   locale: state.i18n.locale,
 }), dispatch => ({
   onTutorialsClick: () => dispatch(push('/tutorials')),
+  onLeaderboardClick: () => dispatch(push('/leaderboard')),
   onSimulatorClick: () => dispatch(push('/scene/jbcSandboxA')),
 }))(Dashboard) as React.ComponentType<DashboardPublicProps>;
