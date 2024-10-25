@@ -291,8 +291,8 @@ class ParentalConsentPage extends React.Component<Props, State> {
       if (this.state.formIndex === ParentalConsentPage.forms.length) {
         this.updatePdfPreview_()
           .catch(err => {
-            // TODO: show user an error
             console.error('Failed to update PDF preview', err);
+            this.setState({ errorMessage: 'Something went wrong. Please try again later.' });
           });
       }
     });
@@ -371,6 +371,7 @@ class ParentalConsentPage extends React.Component<Props, State> {
                 });
               break;
             case 400:
+            case 401:
               this.setState({ submitClicked: false, errorMessage: 'Something went wrong. The link may be invalid or expired.' });
               break;
             default:

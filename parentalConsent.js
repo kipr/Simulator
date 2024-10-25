@@ -541,6 +541,13 @@ const createValidateParentTokenMiddleware = (firebaseTokenManager, config) => as
     return;
   }
 
+  const expiresAt = currentConsent?.legalAcceptance?.expiresAt;
+  if (typeof(expiresAt) === 'number' && Date.now() >= expiresAt) {
+    console.error('Parental consent request has expired');
+    res.status(401).send();
+    return;
+  }
+
   // Ensure that parent token matches the one stored in the database
   const parentConsentTokenHash = currentConsent?.legalAcceptance?.parentConsentTokenHash;
   const authorizationValueHash = getHashForParentToken(authorization.value);
