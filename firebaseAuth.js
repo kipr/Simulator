@@ -5,12 +5,6 @@ const { getAuth } = require('firebase-admin/auth');
 const axios = require('axios').default;
 
 class FirebaseTokenManager {
-  firebaseAuth = null;
-  firebaseApiKey = null;
-  idToken = null;
-  idTokenExp = null;
-  refreshTimerId = null;
-
   constructor(serviceAccountKey, firebaseApiKey) {
     this.firebaseApiKey = firebaseApiKey;
 
@@ -19,6 +13,9 @@ class FirebaseTokenManager {
     });
   
     this.firebaseAuth = getAuth(firebaseApp);
+
+    this.idToken = null;
+    this.idTokenExp = null;
 
     // Immediately schedule a refresh to get the initial token
     this.refreshTimerId = setTimeout(this.refreshToken.bind(this), 0);
