@@ -37,6 +37,10 @@ class FirebaseTokenManager {
       .then(idToken => {
         console.log('GOT ID TOKEN:', idToken);
 
+        if (!idToken) {
+          throw new Error('Failed to get ID token');
+        }
+
         const base64Url = idToken.split('.')[1];
         console.log('base64Url', base64Url);
 
