@@ -154,12 +154,13 @@ class LoginPage extends React.Component<Props, State> {
         db.get<UserConsent>(Selector.user(user.uid))
           .then(userConsentFromDb => {
             console.log('got user from db', userConsentFromDb);
-            switch (userConsentFromDb.legalAcceptance.state) {
+            switch (userConsentFromDb?.legalAcceptance?.state) {
               // Intentionally fall through
               case LegalAcceptance.State.AwaitingParentalConsent:
               case LegalAcceptance.State.NotStarted:
               case LegalAcceptance.State.ObtainedParentalConsent:
               case LegalAcceptance.State.ObtainedUserConsent:
+              case undefined:
                 this.setState({ loggedIn: true, initialAuthLoaded: true, authenticating: false, userConsent: userConsentFromDb });
                 break;
               default: {
@@ -281,7 +282,7 @@ class LoginPage extends React.Component<Props, State> {
       },
     };
 
-    return db.set<UserConsent>(Selector.user(userId), nextUserConsent)
+    return db.set<UserConsent>(Selector.user(userId), nextUserConsent, true)
       .then(() => nextUserConsent);
   };
 
@@ -391,8 +392,8 @@ class LoginPage extends React.Component<Props, State> {
   };
 
   private onCollectedUserConsent_ = () => {
-    const nextUserConsent: UserConsent = {
-      ...this.state.userConsent,
+    const userConsentPatch: Partial<UserConsent> = {
+      dateOfBirth: this.state.userConsent.dateOfBirth,
       legalAcceptance: {
         state: LegalAcceptance.State.ObtainedUserConsent,
         version: 1,
@@ -402,9 +403,15 @@ class LoginPage extends React.Component<Props, State> {
     const userId = auth.currentUser.uid;
 
     this.setState({ authenticating: true }, () => {
-      db.set<UserConsent>(Selector.user(userId), nextUserConsent)
+      db.set<Partial<UserConsent>>(Selector.user(userId), userConsentPatch, true)
         .then(() => {
-          this.setState({ authenticating: false, userConsent: nextUserConsent });
+          this.setState((prevState) => ({
+            authenticating: false,
+            userConsent: {
+              ...prevState.userConsent,
+              ...userConsentPatch,
+            },
+          }));
         })
         .catch((error) => {
           console.error('Setting user consent failed', error);
@@ -466,7 +473,7 @@ class LoginPage extends React.Component<Props, State> {
         );
       }
 
-      if (userConsent.legalAcceptance.state === LegalAcceptance.State.AwaitingParentalConsent) {
+      if (userConsent.legalAcceptance?.state === LegalAcceptance.State.AwaitingParentalConsent) {
         // Waiting for parental consent
         return (
           <Container theme={theme} className={className} style={style}>

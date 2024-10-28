@@ -187,7 +187,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
 
     const now = Date.now();
     let expiresAt = null;
-    if (currentConsent === null) {
+    if (currentConsent?.legalAcceptance == null) {
       // Existing user consenting for the first time, so give them 7 days
       expiresAt = new Date(now);
       expiresAt.setUTCHours(expiresAt.getUTCHours() + 7 * 24);
@@ -200,7 +200,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
     }
 
     // Update user consent in db
-    const nextUserConsent = {
+    const userConsentPatch = {
       dateOfBirth: req.body.dateOfBirth,
       legalAcceptance: {
         state: 'awaiting-parental-consent',
@@ -213,14 +213,14 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
     };
 
     try {
-      await setConsent(userId, nextUserConsent, firebaseIdToken, config);
-    } catch (setConsentError) {
-      console.error('Failed to set consent', setConsentError);
+      await patchConsent(userId, userConsentPatch, firebaseIdToken, config);
+    } catch (patchConsentError) {
+      console.error('Failed to patch consent', patchConsentError);
       res.status(400).send();
       return;
     }
 
-    res.status(200).send(nextUserConsent);
+    res.status(200).send(userConsentPatch);
   }));
 
   // API to update parental consent for the user
@@ -311,8 +311,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
     const consentExpiresAt = new Date(currentConsent.dateOfBirth);
     consentExpiresAt.setUTCFullYear(consentExpiresAt.getUTCFullYear() + 16);
 
-    const nextUserConsent = {
-      ...currentConsent,
+    const userConsentPatch = {
       legalAcceptance: {
         state: 'obtained-parental-consent',
         version: 1,
@@ -324,9 +323,9 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
     };
 
     try {
-      await setConsent(userId, nextUserConsent, firebaseIdToken, config);
-    } catch (setConsentError) {
-      console.error('Failed to set consent', setConsentError);
+      await patchConsent(userId, userConsentPatch, firebaseIdToken, config);
+    } catch (patchConsentError) {
+      console.error('Failed to patch consent', patchConsentError);
       res.status(400).send();
       return;
     }
@@ -415,14 +414,14 @@ async function uploadParentalConsentPdf(pdfData, userId, token, config) {
   return response.data;
 }
 
-async function setConsent(userId, nextUserConsent, token, config) {
+async function patchConsent(userId, userConsentPatch, token, config) {
   const requestConfig = {
     headers: {
       'Authorization': `Bearer ${token}`,
     },
   };
 
-  const response = await axios.post(`${config.dbUrl}/user/${userId}`, nextUserConsent, requestConfig);
+  const response = await axios.patch(`${config.dbUrl}/user/${userId}`, userConsentPatch, requestConfig);
   return response.data;
 }
 
