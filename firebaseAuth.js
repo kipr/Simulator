@@ -87,7 +87,7 @@ class FirebaseTokenManager {
   // Get an ID token from firebase using a previously created custom token
   getIdTokenFromCustomToken(customToken) {
     if (!this.firebaseAuth) {
-      throw new Error('Firebase auth not initizlied');
+      throw new Error('Firebase auth not initialized');
     }
 
     // Send request to auth emulator if using
