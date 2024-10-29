@@ -32,11 +32,12 @@ import jbc9 from "../../simulator/definitions/challenges/jbc9-Cover-Your-Bases-N
 import jbc10 from "../../simulator/definitions/challenges/jbc10-Chopped-New";
 // import jbc10b from "../../simulator/definitions/challenges/archived/jbc10b-Solo-Joust-Jr";
 import jbc11 from "../../simulator/definitions/challenges/jbc11-Making-Waves-New";
-// import jbc12 from "../../simulator/definitions/challenges/archived/jbc12-Unload-Em";
+import jbc12 from "../../simulator/definitions/challenges/jbc12-Add-It-Up-New";
 // import jbc13 from "../../simulator/definitions/challenges/archived/jbc13-Clean-the-Mat";
 import jbc14 from "../../simulator/definitions/challenges/jbc14-Dance-Party";
 import jbc15 from "../../simulator/definitions/challenges/jbc15-Go-Fetch-New";
 // import jbc15b from "../../simulator/definitions/challenges/archived/jbc15b-Bump-Bump";
+import jbc16 from "../../simulator/definitions/challenges/jbc16-Pick-Em-Up-New";
 import jbc17 from "../../simulator/definitions/challenges/jbc17-Mountain-Rescue-New";
 // import jbc17b from "../../simulator/definitions/challenges/archived/jbc17b-Walk-the-Line-2";
 import jbc18 from "../../simulator/definitions/challenges/jbc18-Stackerz-New";
@@ -238,10 +239,10 @@ const DEFAULT_CHALLENGES: Challenges = {
     value: jbc11,
     brief: ChallengeBrief.fromChallenge(jbc11),
   }),
-  // 'jbc12': Async.loaded({
-  //   value: jbc12,
-  //   brief: ChallengeBrief.fromChallenge(jbc12),
-  // }),
+  'jbc12': Async.loaded({
+    value: jbc12,
+    brief: ChallengeBrief.fromChallenge(jbc12),
+  }),
   // 'jbc13': Async.loaded({
   //   value: jbc13,
   //   brief: ChallengeBrief.fromChallenge(jbc13),
@@ -258,6 +259,10 @@ const DEFAULT_CHALLENGES: Challenges = {
   //   value: jbc15b,
   //   brief: ChallengeBrief.fromChallenge(jbc15b),
   // }),
+  'jbc16': Async.loaded({
+    value: jbc16,
+    brief: ChallengeBrief.fromChallenge(jbc16),
+  }),
   'jbc17': Async.loaded({
     value: jbc17,
     brief: ChallengeBrief.fromChallenge(jbc17),
