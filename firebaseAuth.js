@@ -78,7 +78,7 @@ class FirebaseTokenManager {
   // Used to exchange for an ID token from firebase
   getCustomToken() {
     if (!this.firebaseAuth) {
-      throw new Error('Firebase auth not initizlied');
+      throw new Error('Firebase auth not initialized');
     }
 
     return this.firebaseAuth.createCustomToken('simulator', { 'sim_backend': true });
