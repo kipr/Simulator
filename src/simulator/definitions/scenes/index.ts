@@ -15,6 +15,7 @@ export * from './jbc11-Making-Waves-New';
 export * from './jbc12-Add-It-Up-New';
 export * from './jbc14-Dance-Party';
 export * from './jbc15-Go-Fetch-New';
+export * from './jbc16-Pick-Em-Up-New';
 export * from './jbc17-Mountain-Rescue-New';
 export * from './jbc18-Stackerz-New';
 export * from './jbc19-Bump-New';
