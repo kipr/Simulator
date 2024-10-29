@@ -327,7 +327,7 @@ const DEFAULT_SCENES: Scenes = {
   jbc20: Async.loaded({ value: JBC_SCENES.JBC_20 }),
   jbc21: Async.loaded({ value: JBC_SCENES.JBC_21 }),
   // jbc22: Async.loaded({ value: JBC_SCENES.JBC_22 }),
-  // jbc23: Async.loaded({ value: JBC_SCENES.JBC_23 }),
+  jbc23: Async.loaded({ value: JBC_SCENES.JBC_23 }),
   jbc24: Async.loaded({ value: JBC_SCENES.JBC_24 }),
   // scriptPlayground: Async.loaded({ value: JBC_SCENES.scriptPlayground }),
   // lightSensorTest: Async.loaded({ value: JBC_SCENES.lightSensorTest }),

@@ -123,7 +123,7 @@ class SceneBinding {
     this.gizmoManager_.rotationGizmoEnabled = true;
     this.gizmoManager_.scaleGizmoEnabled = false;
     this.gizmoManager_.usePointerToAttachGizmos = false;
-    // Un comment for boudning boxes in scene
+    // Uncomment for bounding boxes in scene
     // this.gizmoManager_.boundingBoxGizmoEnabled = true;
     // this.gizmoManager_.gizmos.boundingBoxGizmo.setColor(new Color3(0, 0, 1));
 
@@ -960,6 +960,9 @@ class SceneBinding {
 
     // Update intersections
     for (const nodeId in this.intersectionFilters_) {
+      const nodeMeshes = this.nodeMeshes_(nodeId);
+      if (nodeMeshes.length === 0) continue;
+
       try {
         const nodeBoundingBoxes = this.nodeBoundingBoxes_(nodeId);
         const filterIds = this.intersectionFilters_[nodeId];

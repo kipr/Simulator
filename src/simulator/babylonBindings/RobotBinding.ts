@@ -535,9 +535,9 @@ class RobotBinding {
     const default_offset = LocalizedString.getOriginal(this.robot_.name) === 'Demobot' ? -1 * Math.PI / 2 : Math.PI / 2;
 
     const UpdatedEulerOrigin = RawEuler.create(
-      newOriginE.x + Robot_OriginE.x,
-      newOriginE.y + Robot_OriginE.y + default_offset,
-      newOriginE.z + Robot_OriginE.z,
+      newOriginE.x,
+      newOriginE.y + default_offset,
+      newOriginE.z,
       "xyz"
     );
 
@@ -561,8 +561,7 @@ class RobotBinding {
       weight.physicsBody.setLinearVelocity(Vector3.Zero());
     }
 
-    rootTransformNode.position = RawVector3.toBabylon(rawOrigin.position || RawVector3.ZERO)
-      .add(RawVector3.toBabylon(rawInternalOrigin.position || RawVector3.ZERO));
+    rootTransformNode.position = RawVector3.toBabylon(rawOrigin.position || RawVector3.ZERO);
 
     rootTransformNode.rotationQuaternion = RawQuaternion.toBabylon(RawEuler.toQuaternion(UpdatedEulerOrigin));
 
