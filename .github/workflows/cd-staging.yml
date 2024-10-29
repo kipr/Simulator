@@ -105,5 +105,13 @@ jobs:
           --namespace prerelease \
           --values ./simulator/values.prerelease.yaml \
           --set imageVersion=${{ needs.build-publish.outputs.image_version }} \
+          --set secrets.serviceAccountKeyString=$FIRESTORE_SERVICE_ACCOUNT \
+          --set secrets.mailgunApiKey=$MAILGUN_API_KEY \
+          --set secrets.mailgunDomain=$MAILGUN_DOMAIN \
           --set apiUrl=http://database.prerelease.svc.cluster.local:4000 \
           simulator-prerelease ./simulator
+      shell: bash
+      env:
+        FIRESTORE_SERVICE_ACCOUNT: ${{ secrets.FIRESTORE_SERVICE_ACCOUNT }}
+        MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
+        MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}
