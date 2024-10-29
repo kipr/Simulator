@@ -11,6 +11,18 @@ try {
   console.error(e);
 }
 
+const serviceAccountKeyString = process.env.FIREBASE_SERVICE_ACCOUNT_KEY_STRING;
+const serviceAccountKeyFile = process.env.FIREBASE_SERVICE_ACCOUNT_KEY_FILE;
+
+let serviceAccountKey;
+if (serviceAccountKeyString) {
+  serviceAccountKey = JSON.parse(serviceAccountKeyString);
+} else if (serviceAccountKeyFile) {
+  serviceAccountKey = JSON.parse(fs.readFileSync(serviceAccountKeyFile, 'utf8'));
+} else {
+  throw new Error('FIREBASE_SERVICE_ACCOUNT_KEY_STRING or FIREBASE_SERVICE_ACCOUNT_KEY_FILE must be set');
+}
+
 module.exports = {
   get: () => {
     return {
@@ -23,6 +35,15 @@ module.exports = {
         staticMaxAge: getEnvVarOrDefault('CACHING_STATIC_MAX_AGE', 60 * 60 * 1000),
       },
       dbUrl: getEnvVarOrDefault('API_URL', 'https://db-prerelease.botballacademy.org'),
+      firebase: {
+        // Firebase API keys are not secret, so the real value is okay to keep in code
+        apiKey: getEnvVarOrDefault('FIREBASE_API_KEY', 'AIzaSyBiVC6umtYRy-aQqDUBv8Nn1txWLssix04'),
+        serviceAccountKey,
+      },
+      mailgun: {
+        apiKey: getEnvVarOrDefault('MAILGUN_API_KEY', ''),
+        domain: getEnvVarOrDefault('MAILGUN_DOMAIN', ''),
+      },
     };
   },
 };

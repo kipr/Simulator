@@ -99,10 +99,10 @@ class Db {
     return [promise, ret];
   }
 
-  async set<T>({ collection, id }: Selector, value: T): Promise<void> {
+  async set<T>({ collection, id }: Selector, value: T, partialUpdate?: boolean): Promise<void> {
     const request: Request = {
       url: `${this.uri_}/${collection}/${id}`,
-      method: 'POST',
+      method: partialUpdate ? 'PATCH' : 'POST',
       body: JSON.stringify(value),
     };
 
