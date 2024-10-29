@@ -11,7 +11,7 @@ interface Selector {
   id: string;
 }
 
-namespace Selector {  
+namespace Selector {
   export const scene = (id: string): Selector => ({
     collection: SCENE_COLLECTION,
     id,
