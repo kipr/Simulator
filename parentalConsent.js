@@ -49,7 +49,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
 
   // API to generate parental consent form from form values
   // Authorization: parent token
-  router.post('/:userId/generate-form', createGlobalRateLimiter(60, 1000), asyncExpressHandler(validateParentToken), asyncExpressHandler(async (req, res) => {
+  router.post('/:userId/generate-form', createGlobalRateLimiter(60, 1000), validateUserIdMiddleware, asyncExpressHandler(validateParentToken), asyncExpressHandler(async (req, res) => {
     if (!('version' in req.body) || typeof req.body.version !== 'string') {
       return res.status(400).json({
         error: "Expected version string in body"
@@ -95,7 +95,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
 
   // API to get parental consent for the user
   // Authorization: parent token
-  router.get('/:userId', createGlobalRateLimiter(60, 1000), asyncExpressHandler(validateParentToken), asyncExpressHandler(async (req, res) => {
+  router.get('/:userId', createGlobalRateLimiter(60, 1000), validateUserIdMiddleware, asyncExpressHandler(validateParentToken), asyncExpressHandler(async (req, res) => {
     const userId = req.params['userId'];
     const currentConsent = res.locals.currentConsent;
     if (!currentConsent) {
@@ -121,7 +121,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
 
   // API to start parental consent for the user
   // Authorization: user token
-  router.post('/:userId', createGlobalRateLimiter(60, 1000), asyncExpressHandler(validateUserToken), asyncExpressHandler(async (req, res) => {
+  router.post('/:userId', createGlobalRateLimiter(60, 1000), validateUserIdMiddleware, asyncExpressHandler(validateUserToken), asyncExpressHandler(async (req, res) => {
     const userId = req.params['userId'];
 
     if (!('dateOfBirth' in req.body)) {
@@ -226,7 +226,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
   // API to update parental consent for the user
   // Currently it only supports completing the consent flow
   // Authorization: parent token
-  router.patch('/:userId', createGlobalRateLimiter(60, 1000), asyncExpressHandler(validateParentToken), asyncExpressHandler(async (req, res) => {
+  router.patch('/:userId', createGlobalRateLimiter(60, 1000), validateUserIdMiddleware, asyncExpressHandler(validateParentToken), asyncExpressHandler(async (req, res) => {
     const userId = req.params['userId'];
     const currentConsent = res.locals.currentConsent;
 
@@ -558,6 +558,19 @@ const createValidateParentTokenMiddleware = (firebaseTokenManager, config) => as
 
   // Store current consent in res.locals for subsequent handlers to use without re-fetching
   res.locals.currentConsent = currentConsent;
+
+  next();
+};
+
+// Creates express middleware to validate user ID format in the request (SSRF protection)
+const userIdRegExp = /^[a-zA-Z0-9._-]+$/;
+const validateUserIdMiddleware = (req, res, next) => {
+  const userId = req.params['userId'];
+  if (typeof userId === 'string' && !userIdRegExp.test(userId)) {
+    return res.status(400).json({
+      error: "Invalid format for user ID"
+    });
+  }
 
   next();
 };
