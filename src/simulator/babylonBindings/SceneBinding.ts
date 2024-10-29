@@ -5,7 +5,9 @@ import {
   ArcRotateCamera, PointLight, SpotLight, DirectionalLight, PBRMaterial, EngineView,
   Scene as babylonScene, Node as babylonNode, Camera as babylCamera, Material as babylMaterial,
   Observer, BoundingBox,
-  Color3
+  Color3, BoundingBoxGizmo,
+  MeshBuilder,
+  BoundingInfo
 } from '@babylonjs/core';
 
 // eslint-disable-next-line @typescript-eslint/no-duplicate-imports -- Required import for side effects
@@ -123,12 +125,15 @@ class SceneBinding {
     this.gizmoManager_.rotationGizmoEnabled = true;
     this.gizmoManager_.scaleGizmoEnabled = false;
     this.gizmoManager_.usePointerToAttachGizmos = false;
-    // Uncomment for bounding boxes in scene
-    // this.gizmoManager_.boundingBoxGizmoEnabled = true;
-    // this.gizmoManager_.gizmos.boundingBoxGizmo.setColor(new Color3(0, 0, 1));
+    this.gizmoManager_.boundingBoxGizmoEnabled = true;
+    this.gizmoManager_.gizmos.boundingBoxGizmo.setColor(new Color3(1, 0, 0));
+
 
     this.scriptManager_.onCollisionFiltersChanged = this.onCollisionFiltersChanged_;
     this.scriptManager_.onIntersectionFiltersChanged = this.onIntersectionFiltersChanged_;
+
+
+
   }
 
   private robotLinkOrigins_: Dict<Dict<ReferenceFramewUnits>> = {};
@@ -251,6 +256,7 @@ class SceneBinding {
     switch (nodeToCreate.type) {
       case 'object': {
         const parent = this.findBNode_(nodeToCreate.parentId, true);
+
         ret = await createObject(nodeToCreate, nextScene, parent, this.bScene_); break;
       }
       case 'empty': {
@@ -288,6 +294,7 @@ class SceneBinding {
     // if (node.origin && bNode instanceof TransformNode || bNode instanceof AbstractMesh) {
     if (node.origin && bNode instanceof AbstractMesh) {
       this.removePhysicsFromObject(bNode);
+
       const origin = node.origin || {};
       const position: Vector3wUnits = origin.position ?? Vector3wUnits.zero();
       const orientation: RotationwUnits = origin.orientation ?? RotationwUnits.EulerwUnits.identity();
@@ -303,11 +310,14 @@ class SceneBinding {
       bNode.position.z = Distance.toCentimetersValue(position.z || Distance.centimeters(0));
 
       bNode.rotationQuaternion = RawQuaternion.toBabylon(RotationwUnits.toRawQuaternion(orientation));
+
       bNode.scaling.set(scale.x, scale.y, scale.z);
 
       this.restorePhysicsToObject(bNode, node as Node.Obj, nodeId, scene);
     }
   };
+
+
 
   private updateEmpty_ = (id: string, node: Patch.InnerChange<Node.Empty>): TransformNode => {
     const bNode = this.findBNode_(id) as TransformNode;
@@ -964,19 +974,11 @@ class SceneBinding {
       if (nodeMeshes.length === 0) continue;
 
       try {
-        const nodeBoundingBoxes = this.nodeBoundingBoxes_(nodeId);
+
         const filterIds = this.intersectionFilters_[nodeId];
         for (const filterId of filterIds) {
-          const filterMinMaxes = this.nodeMinMaxes_(filterId);
 
-          let intersection = false;
-          for (const nodeBoundingBox of nodeBoundingBoxes) {
-            for (const filterMinMax of filterMinMaxes) {
-              intersection = nodeBoundingBox.intersectsMinMax(filterMinMax.min, filterMinMax.max);
-              if (intersection) break;
-            }
-            if (intersection) break;
-          }
+          const intersection = this.nodeMeshes_(nodeId)[0].intersectsMesh(this.nodeMeshes_(filterId)[0], true);
 
           if (intersection) {
             if (!this.currentIntersections_[nodeId]) this.currentIntersections_[nodeId] = new Set();
