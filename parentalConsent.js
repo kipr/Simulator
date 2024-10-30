@@ -187,7 +187,7 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
 
     const now = Date.now();
     let expiresAt = null;
-    if (currentConsent?.legalAcceptance === null) {
+    if (!currentConsent?.legalAcceptance) {
       // Existing user consenting for the first time, so give them 7 days
       expiresAt = new Date(now);
       expiresAt.setUTCHours(expiresAt.getUTCHours() + 7 * 24);
