@@ -12,7 +12,7 @@ const baseScene = createBaseSceneSurfaceB();
 
 const notInStartBox = `
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot not in start box!', type, otherNodeId);
+  // console.log('Robot not in start box!', type, otherNodeId);
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('notInStartBox', type === 'start');
   }
@@ -21,7 +21,7 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 
 const inStartBox = `
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot started in start box!', type, otherNodeId, scene.programStatus);
+  // console.log('Robot started in start box!', type, otherNodeId, scene.programStatus);
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('inStartBox', true);
   }
@@ -37,7 +37,7 @@ const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
 });
 
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot touching line!', type, otherNodeId);
+  // console.log('Robot touching line!', type, otherNodeId);
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('robotTouchingLine', type === 'start');
     setNodeVisible('lineB', true);
@@ -54,7 +54,7 @@ const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
 });
 
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot reached end!', type, otherNodeId);
+  // console.log('Robot reached end!', type, otherNodeId);
   const visible = type === 'start';
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('reachedEnd', visible);
@@ -72,7 +72,7 @@ const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
 });
 
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot off mat!', type, otherNodeId);
+  // console.log('Robot off mat!', type, otherNodeId);
   const visible = type === 'start';
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('offMat', visible);
@@ -80,13 +80,6 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
   }
 }, 'endOfMat');
 `;
-
-const ROBOT_ORIGIN: ReferenceFramewUnits = {
-  ...baseScene.nodes['robot'].origin,
-  position: {
-    ...baseScene.nodes['robot'].origin.position,
-  },
-};
 
 export const JBC_0: Scene = {
   ...baseScene,
@@ -103,14 +96,6 @@ export const JBC_0: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
-    mainSurface_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(0.1),
-        z: Distance.meters(3.54),
-      },
-    },
     notStartBox_geom: {
       type: "box",
       size: {
@@ -154,31 +139,6 @@ export const JBC_0: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-    robot: {
-      ...baseScene.nodes['robot'],
-      startingOrigin: ROBOT_ORIGIN,
-      origin: ROBOT_ORIGIN,
-    },
-    mainSurface: {
-      type: 'object',
-      geometryId: 'mainSurface_geom',
-      name: { [LocalizedString.EN_US]: 'Mat Surface' },
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-6.9),
-          z: Distance.inches(19.75),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(0, 0, 0),
-        },
-      },
-    },
     notStartBox: {
       type: "object",
       geometryId: "notStartBox_geom",

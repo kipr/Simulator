@@ -18,11 +18,15 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
+    notInStartBox: {
+      name: { [LocalizedString.EN_US]: 'Robot not in Start Box' },
+      description: { [LocalizedString.EN_US]: 'Robot not in start box' },
+    },
     can9Touched: {
       name: { [LocalizedString.EN_US]: 'Can 9 Touched' },
       description: { [LocalizedString.EN_US]: 'Can A touched' },
     },
-    
+
     can9Intersects: {
       name: { [LocalizedString.EN_US]: 'Can 9 Intersects' },
       description: { [LocalizedString.EN_US]: 'Can 9 intersects circle 9' },
@@ -32,11 +36,7 @@ export default {
       name: { [LocalizedString.EN_US]: 'Can 9 Upright' },
       description: { [LocalizedString.EN_US]: 'Can 9 upright on circle 9' },
     },
-    
-    leaveStartBox: {
-      name: { [LocalizedString.EN_US]: 'Robot Left Start' },
-      description: { [LocalizedString.EN_US]: 'Robot left starting box' },
-    },
+
     returnStartBox: {
       name: { [LocalizedString.EN_US]: 'Robot Rentered Start' },
       description: { [LocalizedString.EN_US]: 'Robot reentered starting box' },
@@ -50,26 +50,18 @@ export default {
         eventId: 'can9Touched',
       },
 
-      // Intersects Events
-      can9Intersects: {
-        type: Expr.Type.Event,
-        eventId: 'can9Intersects',
-      },
-
-      // Upright Events
-      can9Upright: {
-        type: Expr.Type.Event,
-        eventId: 'can9Upright',
-      },
-
       // Start Box Events
-      leaveStartBox: {
+      notInStartBox: {
         type: Expr.Type.Event,
-        eventId: 'leaveStartBox',
+        eventId: "notInStartBox",
       },
-      leaveStartBoxOnce: {
+      inStartBox: {
+        type: Expr.Type.Not,
+        argId: "notInStartBox",
+      },
+      inStartBoxOnce: {
         type: Expr.Type.Once,
-        argId: 'leaveStartBox',
+        argId: "inStartBox",
       },
 
       returnStartBox: {
@@ -81,26 +73,42 @@ export default {
         argId: 'returnStartBox',
       },
 
-
-
-      startingBox:{
-        type:Expr.Type.And,
-        argIds:['leaveStartBoxOnce', 'returnStartBoxOnce'],
-      },
-
-      // Intersects and upright logic
-      can9IntersectsUpright: {
-        type: Expr.Type.And,
-        argIds: ['can9Intersects', 'can9Upright'],
-      },
-
       // Success Logic = Can A upright, intersects and touched
       completion: {
         type: Expr.Type.And,
-        argIds: ['can9Touched', 'can9IntersectsUpright', 'startingBox'],
+        argIds: ['can9Touched', 'inStartBoxOnce', 'returnStartBoxOnce'],
       },
     },
     rootId: 'completion',
+  },
+  failure: {
+    exprs: {
+      // Intersects Events
+      can9Intersects: {
+        type: Expr.Type.Event,
+        eventId: 'can9Intersects',
+      },
+      can9NotIntersects: {
+        type: Expr.Type.Not,
+        argId: 'can9Intersects',
+      },
+
+      // Upright Events
+      can9Upright: {
+        type: Expr.Type.Event,
+        eventId: 'can9Upright',
+      },
+      can9NotUpright: {
+        type: Expr.Type.Not,
+        argId: 'can9Upright',
+      },
+
+      failure: {
+        type: Expr.Type.Or,
+        argIds: ['can9NotIntersects', 'can9NotUpright'],
+      },
+    },
+    rootId: 'failure',
   },
   sceneId: 'jbc1',
 } as Challenge;

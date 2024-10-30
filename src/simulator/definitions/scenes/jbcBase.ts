@@ -253,7 +253,7 @@ export function createCanNode(canNumber: number, canPosition?: Vector3wUnits, ed
  * @param visible Whether the circle is visible
  * @returns A circle Node that can be inserted into a Scene
  */
-export function createCircleNode(circleNumber: number, circlePosition: Vector3wUnits, editable?: boolean, visible?: boolean): Node {
+export function createCircleNode(circleNumber: number, circlePosition?: Vector3wUnits, editable?: boolean, visible?: boolean): Node {
   const position: Vector3wUnits = {
     x: canPositions[circleNumber - 1].x,
     y: Distance.centimeters(-6.9),

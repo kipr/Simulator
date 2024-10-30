@@ -12,9 +12,9 @@ import LocalizedString from '../../util/LocalizedString';
 import db from '../../db';
 import Selector from '../../db/Selector';
 
-import jbc0 from "../../simulator/definitions/challenges/jbc0";
-import jbc1 from "../../simulator/definitions/challenges/jbc1";
-import jbc2 from "../../simulator/definitions/challenges/jbc2";
+import jbc0 from "../../simulator/definitions/challenges/jbc0-Drive-Straight";
+import jbc1 from "../../simulator/definitions/challenges/jbc1-Tag-Youre-It";
+import jbc2 from "../../simulator/definitions/challenges/jbc2-Ring-Around-the-Can";
 // import jbc2b from "../../simulator/definitions/challenges/archived/jbc2b-Ring-Around-the-Cans-Sr";
 // import jbc2c from "../../simulator/definitions/challenges/archived/jbc2c-Back-It-Up";
 // import jbc2d from "../../simulator/definitions/challenges/archived/jbc2d-Ring-Around-the-Can-and-Back-It-Up";

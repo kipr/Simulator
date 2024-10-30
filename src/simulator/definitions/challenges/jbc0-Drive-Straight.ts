@@ -59,18 +59,10 @@ export default {
         type: Expr.Type.Event,
         eventId: 'notInStartBox',
       },
-      // inStartBoxOnce: {
-      //   type: Expr.Type.Once,
-      //   argId: 'inStartBox',
-      // },
       notOutOfStartBox: {
         type: Expr.Type.Not,
         argId: 'notInStartBox',
       },
-      // notOutOfStartBoxOnce: {
-      //   type: Expr.Type.Once,
-      //   argId: 'notOutOfStartBox',
-      // },
       startedInStartBox: {
         type: Expr.Type.And,
         argIds: ['inStartBox', 'notOutOfStartBox'],
