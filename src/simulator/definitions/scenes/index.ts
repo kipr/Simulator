@@ -21,6 +21,7 @@ export * from './jbc18-Stackerz-New';
 export * from './jbc19-Bump-New';
 export * from './jbc20-Amazing-New';
 export * from './jbc21-Proximity-New';
+export * from './jbc22-Search-and-Rescue-New';
 export * from './jbc23-Find-the-Black-Line-New';
 export * from './jbc24-Walk-the-Line-New';
 export * from './moonSandbox';

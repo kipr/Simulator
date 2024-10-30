@@ -44,6 +44,7 @@ import jbc18 from "../../simulator/definitions/challenges/jbc18-Stackerz-New";
 import jbc19 from "../../simulator/definitions/challenges/jbc19-Bump-New";
 import jbc20 from "../../simulator/definitions/challenges/jbc20-Amazing-New";
 import jbc21 from "../../simulator/definitions/challenges/jbc21-Proximity-New";
+import jbc22 from "../../simulator/definitions/challenges/jbc22-Search-and-Rescue-New";
 import jbc23 from "../../simulator/definitions/challenges/jbc23-Find-the-Black-Line-New";
 import jbc24 from "../../simulator/definitions/challenges/jbc24-Walk-the-Line-New";
 // import test from '../../simulator/definitions/challenges/archived/test';
@@ -287,10 +288,10 @@ const DEFAULT_CHALLENGES: Challenges = {
     value: jbc21,
     brief: ChallengeBrief.fromChallenge(jbc21),
   }),
-  // 'jbc22': Async.loaded({
-  //   value: jbc22,
-  //   brief: ChallengeBrief.fromChallenge(jbc22),
-  // }),
+  'jbc22': Async.loaded({
+    value: jbc22,
+    brief: ChallengeBrief.fromChallenge(jbc22),
+  }),
   'jbc23': Async.loaded({
     value: jbc23,
     brief: ChallengeBrief.fromChallenge(jbc23),

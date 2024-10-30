@@ -59,14 +59,6 @@ export const JBC_15: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
-    mainSurface_geom: {
-      type: "box",
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(0.1),
-        z: Distance.meters(3.54),
-      },
-    },
     startBox_geom: {
       type: "box",
       size: {
@@ -87,26 +79,6 @@ export const JBC_15: Scene = {
 
   nodes: {
     ...baseScene.nodes,
-    mainSurface: {
-      type: "object",
-      geometryId: "mainSurface_geom",
-      name: { [LocalizedString.EN_US]: "Mat Surface" },
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-6.9),
-          z: Distance.inches(19.75),
-        },
-      },
-      material: {
-        type: "basic",
-        color: {
-          type: "color3",
-          color: Color.rgb(0, 0, 0),
-        },
-      },
-    },
     startBox: {
       type: "object",
       geometryId: "startBox_geom",

@@ -54,7 +54,6 @@ scene.addOnRenderListener(() => {
 function randomCircle(): Vector3wUnits {
   const circles = [2, 4, 6, 9, 11];
   const randomCircle = circles[Math.floor(Math.random() * circles.length)];
-  console.log('randomCircle', randomCircle);
   const circle: Vector3wUnits = {
     ...canPositions[randomCircle - 1],
   };
