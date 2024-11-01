@@ -15,7 +15,6 @@ const baseScene = createBaseSceneSurfaceA();
 const leftStartBox = `
 
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot left start box!', type, otherNodeId);
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('leaveStartBox', type === 'end');
   }
@@ -33,7 +32,6 @@ const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
 
 // When the can (can2) is intersecting the green garage, the garage glows
 scene.addOnIntersectionListener('can2', (type, otherNodeId) => {
-  console.log('Can 2 placed!', type, otherNodeId);
   const visible = type === 'start';
   scene.setChallengeEventValue('can2Intersects', visible);
   setNodeVisible('greenGarage', visible);
@@ -41,7 +39,6 @@ scene.addOnIntersectionListener('can2', (type, otherNodeId) => {
 
 // When the can (can9) is intersecting the blue garage, the garage glows
 scene.addOnIntersectionListener('can9', (type, otherNodeId) => {
-  console.log('Can 9 intersects blue!', type, otherNodeId);
   const visible = type === 'start';
   scene.setChallengeEventValue('can9Intersects', visible);
   setNodeVisible('blueGarage', visible);
@@ -51,7 +48,6 @@ scene.addOnIntersectionListener('can9', (type, otherNodeId) => {
 
 
 scene.addOnIntersectionListener('can10', (type, otherNodeId) => {
-  console.log('Can 10 placed!', type, otherNodeId);
   const visible = type === 'start';
   scene.setChallengeEventValue('can10Intersects', visible);
   setNodeVisible('yellowGarage', visible);
@@ -72,22 +68,44 @@ const yAngle = (nodeId) => -180 / Math.PI * Math.asin(Vector3wUnits.dot(Vector3w
 
 scene.addOnRenderListener(() => {
   const upright2 = yAngle('can2') > 5;
-  //console.log('can2 angle: ', yAngle('can2'));
   scene.setChallengeEventValue('can2Upright', upright2);
 
 });
 scene.addOnRenderListener(() => {
   const upright9 = yAngle('can9') > 5;
-  // console.log('can9 angle: ', yAngle('can9'));
   scene.setChallengeEventValue('can9Upright', upright9);
 
 });
 scene.addOnRenderListener(() => {
   const upright10 = yAngle('can10') > 5;
-  // console.log('can10 angle: ', yAngle('can10'));
   scene.setChallengeEventValue('can10Upright', upright10);
 
 });
+`;
+
+const pickUpCan = `
+
+  // When can2 ends intersecting matA, the can is picked up
+  scene.addOnIntersectionListener('matA', (type, otherNodeId) => {
+    if(scene.programStatus === 'running'){
+      scene.setChallengeEventValue('can2PickedUp', type === 'end');
+    }
+  }, 'can2');
+
+  // When can9 ends intersecting matA, the can is picked up
+  scene.addOnIntersectionListener('matA', (type, otherNodeId) => {
+    if(scene.programStatus === 'running'){
+      scene.setChallengeEventValue('can9PickedUp', type === 'end');
+    }
+  }, 'can9');
+
+  // When can10 ends intersecting matA, the can is picked up
+  scene.addOnIntersectionListener('matA', (type, otherNodeId) => {
+    if(scene.programStatus === 'running'){
+      scene.setChallengeEventValue('can10PickedUp', type === 'end');
+    }
+  }, 'can10');
+
 `;
 
 
@@ -110,6 +128,7 @@ export const JBC_16: Scene = {
     uprightCans: Script.ecmaScript('Upright Cans', uprightCans),
     canIntersectsGarage: Script.ecmaScript('Can Intersects Garage', canIntersectsGarage),
     leftStartBox: Script.ecmaScript('Left Start Box', leftStartBox),
+    pickUpCan: Script.ecmaScript('Pick Up Can', pickUpCan),
   },
   geometry: {
     ...baseScene.geometry,

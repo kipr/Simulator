@@ -26,6 +26,19 @@ export default {
       description: { [LocalizedString.EN_US]: 'Robot left starting box' },
     },
 
+    can2PickedUp: {
+      name: { [LocalizedString.EN_US]: 'Can 2 Picked Up' },
+      description: { [LocalizedString.EN_US]: 'Can 2 picked up' },
+    },
+    can9PickedUp: {
+      name: { [LocalizedString.EN_US]: 'Can 9 Picked Up' },
+      description: { [LocalizedString.EN_US]: 'Can 9 picked up' },
+    },
+    can10PickedUp: {
+      name: { [LocalizedString.EN_US]: 'Can 10 Picked Up' },
+      description: { [LocalizedString.EN_US]: 'Can 10 picked up' },
+    },
+
     can2Upright: {
       name: { [LocalizedString.EN_US]: 'Can 2 Upright' },
       description: { [LocalizedString.EN_US]: 'Can 2 upright' },
@@ -69,6 +82,31 @@ export default {
         argId: 'leaveStartBox',
       },
 
+      // Picked Up Events
+      can2PickedUp: {
+        type: Expr.Type.Event,
+        eventId: 'can2PickedUp',
+      },
+      can2PickedUpOnce: {
+        type: Expr.Type.Once,
+        argId: 'can2PickedUp',
+      },
+      can9PickedUp: {
+        type: Expr.Type.Event,
+        eventId: 'can9PickedUp',
+      },
+      can9PickedUpOnce: {
+        type: Expr.Type.Once,
+        argId: 'can9PickedUp',
+      },
+      can10PickedUp: {
+        type: Expr.Type.Event,
+        eventId: 'can10PickedUp',
+      },
+      can10PickedUpOnce: {
+        type: Expr.Type.Once,
+        argId: 'can10PickedUp',
+      },
 
       // Upright Events
       can2Upright: {
@@ -99,23 +137,23 @@ export default {
       },
 
       // Upright and Intersects logic
-      can2UprightAndIntersects: {
+      can2UprightPickedUpIntersects: {
         type: Expr.Type.And,
-        argIds: ['can2Upright', 'can2Intersects'],
+        argIds: ['can2Upright', 'can2PickedUpOnce', 'can2Intersects'],
       },
-      can9UprightAndIntersects: {
+      can9UprightPickedUpIntersects: {
         type: Expr.Type.And,
-        argIds: ['can9Upright', 'can9Intersects'],
+        argIds: ['can9Upright', 'can9PickedUpOnce', 'can9Intersects'],
       },
-      can10UprightAndIntersects: {
+      can10UprightPickedUpIntersects: {
         type: Expr.Type.And,
-        argIds: ['can10Upright', 'can10Intersects'],
+        argIds: ['can10Upright', 'can10PickedUpOnce', 'can10Intersects'],
       },
 
       // Final And Logic
       cansUprightAndIntersects: {
         type: Expr.Type.And,
-        argIds: ['can2UprightAndIntersects', 'can9UprightAndIntersects', 'can10UprightAndIntersects',],
+        argIds: ['can2UprightPickedUpIntersects', 'can9UprightPickedUpIntersects', 'can10UprightPickedUpIntersects',],
       },
 
 
