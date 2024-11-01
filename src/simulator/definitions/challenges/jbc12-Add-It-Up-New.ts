@@ -24,6 +24,10 @@ export default {
       name: { [LocalizedString.EN_US]: 'Robot Begins In start' },
       description: { [LocalizedString.EN_US]: 'Robot begins in starting box' },
     },
+    robotTouchCircle1: {
+      name: { [LocalizedString.EN_US]: 'Robot Touch Circle 1' },
+      description: { [LocalizedString.EN_US]: 'Robot touched circle 1' },
+    },
     passed1: {
       name: { [LocalizedString.EN_US]: 'Robot Touched Circle 1' },
       description: { [LocalizedString.EN_US]: 'Robot passed through circle 1' },
@@ -67,6 +71,11 @@ export default {
       startOnce: {
         type: Expr.Type.Once,
         argId: 'start',
+      },
+
+      robotTouchCircle1: {
+        type: Expr.Type.Event,
+        eventId: 'robotTouchCircle1',
       },
 
       // Passed Through Circles Events
@@ -145,7 +154,7 @@ export default {
       // Success logic
       completion: {
         type: Expr.Type.And,
-        argIds: ['startOnce', 'passedSerpentine'],
+        argIds: ['startOnce', 'passedSerpentine', 'robotTouchCircle1'],
       },
     },
     rootId: 'completion',
