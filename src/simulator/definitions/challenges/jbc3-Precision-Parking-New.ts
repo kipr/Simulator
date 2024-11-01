@@ -47,14 +47,7 @@ export default {
   success: {
     exprs: {
       // Garage Events
-      touchGarageLines: {
-        type: Expr.Type.Event,
-        eventId: 'touchGarageLines',
-      },
-      touchGarageLinesNot: {
-        type: Expr.Type.Not,
-        argId: 'touchGarageLines',
-      },
+
       singleGarageRun1: {
         type: Expr.Type.Event,
         eventId: 'singleGarageRun1',
@@ -71,7 +64,7 @@ export default {
         type: Expr.Type.Once,
         argId: 'singleGarageRun2',
       },
-     
+
 
       // Start Box Events
       returnStartBox: {
@@ -85,10 +78,28 @@ export default {
 
       completion: {
         type: Expr.Type.And,
-        argIds: ['singleGarageRun1Once', 'returnStartBoxOnce','singleGarageRun2Once', 'touchGarageLinesNot'],
+        argIds: ['singleGarageRun1Once', 'returnStartBoxOnce', 'singleGarageRun2Once'],
       },
     },
     rootId: 'completion',
+  },
+  failure: {
+    exprs: {
+      touchGarageLines: {
+        type: Expr.Type.Event,
+        eventId: 'touchGarageLines',
+      },
+      touchGarageLinesNot: {
+        type: Expr.Type.Not,
+        argId: 'touchGarageLines',
+      },
+
+      failure: {
+        type: Expr.Type.And,
+        argIds: ['touchGarageLinesNot'],
+      },
+    },
+    rootId: 'failure',
   },
   sceneId: 'jbc3',
 } as Challenge;
