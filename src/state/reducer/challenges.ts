@@ -19,10 +19,10 @@ import jbc2 from "../../simulator/definitions/challenges/jbc2-Ring-Around-the-Ca
 // import jbc2c from "../../simulator/definitions/challenges/archived/jbc2c-Back-It-Up";
 // import jbc2d from "../../simulator/definitions/challenges/archived/jbc2d-Ring-Around-the-Can-and-Back-It-Up";
 import jbc3 from "../../simulator/definitions/challenges/jbc3-Precision-Parking-New";
-import jbc4 from "../../simulator/definitions/challenges/jbc4-Serpentine-New";
+import jbc4 from "../../simulator/definitions/challenges/jbc4-Serpentine";
 // import jbc4b from "../../simulator/definitions/challenges/archived/jbc4b-Barrel-Racing";
-import jbc5 from "../../simulator/definitions/challenges/jbc5";
-import jbc6 from "../../simulator/definitions/challenges/jbc6-Figure-Eight-New";
+import jbc5 from "../../simulator/definitions/challenges/jbc5-Odd-Numbers";
+import jbc6 from "../../simulator/definitions/challenges/jbc6-Figure-Eight";
 // import jbc6c from "../../simulator/definitions/challenges/archived/jbc6c-Empty-the-Garage";
 import jbc7 from "../../simulator/definitions/challenges/jbc7-Load-Em-Up-New";
 // import jbc7b from "../../simulator/definitions/challenges/archived/jbc7b-Cover-Your-Bases";
@@ -188,10 +188,6 @@ const DEFAULT_CHALLENGES: Challenges = {
     value: jbc3,
     brief: ChallengeBrief.fromChallenge(jbc3),
   }),
-  // 'jbc5': Async.loaded({
-  //   value: jbc5,
-  //   brief: ChallengeBrief.fromChallenge(jbc5),
-  // }),
   'jbc4': Async.loaded({
     value: jbc4,
     brief: ChallengeBrief.fromChallenge(jbc4),

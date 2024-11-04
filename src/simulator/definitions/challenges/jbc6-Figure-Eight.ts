@@ -38,9 +38,9 @@ export default {
       description: { [LocalizedString.EN_US]: "Can 9 upright on circle 9" },
     },
 
-    leaveStartBox: {
-      name: { [LocalizedString.EN_US]: "Robot Left Start" },
-      description: { [LocalizedString.EN_US]: "Robot left starting box" },
+    notInStartBox: {
+      name: { [LocalizedString.EN_US]: "Robot not in Start Box" },
+      description: { [LocalizedString.EN_US]: "Robot not in start box" },
     },
     returnStartBox: {
       name: { [LocalizedString.EN_US]: "Robot Rentered Start" },
@@ -87,15 +87,18 @@ export default {
       },
 
       // Start Box Events
-      leaveStartBox: {
+      notInStartBox: {
         type: Expr.Type.Event,
-        eventId: "leaveStartBox",
+        eventId: "notInStartBox",
       },
-      leaveStartBoxOnce: {
+      inStartBox: {
+        type: Expr.Type.Not,
+        argId: "notInStartBox",
+      },
+      inStartBoxOnce: {
         type: Expr.Type.Once,
-        argId: "leaveStartBox",
+        argId: "inStartBox",
       },
-
       returnStartBox: {
         type: Expr.Type.Event,
         eventId: "returnStartBox",
@@ -104,17 +107,13 @@ export default {
         type: Expr.Type.Once,
         argId: "returnStartBox",
       },
-      startingBox: {
-        type: Expr.Type.And,
-        argIds: ["leaveStartBoxOnce", "returnStartBoxOnce"],
-      },
 
       // Intersects and upright logic
-      IntersectsUpright4: {
+      intersectsUpright4: {
         type: Expr.Type.And,
         argIds: ["can4Intersects", "can4Upright"],
       },
-      IntersectsUpright9: {
+      intersectsUpright9: {
         type: Expr.Type.And,
         argIds: ["can9Intersects", "can9Upright"],
       },
@@ -122,7 +121,7 @@ export default {
       // Success Logic = Can A upright, intersects and touched
       completion: {
         type: Expr.Type.And,
-        argIds: ["IntersectsUpright4", "IntersectsUpright9", "startingBox", "figureEightOnce"],
+        argIds: ["intersectsUpright4", "intersectsUpright9", "figureEightOnce", "returnStartBoxOnce", "inStartBoxOnce"],
       },
     },
     rootId: "completion",
