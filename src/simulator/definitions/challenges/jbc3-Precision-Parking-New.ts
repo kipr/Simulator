@@ -89,14 +89,11 @@ export default {
         type: Expr.Type.Event,
         eventId: 'touchGarageLines',
       },
-      touchGarageLinesNot: {
-        type: Expr.Type.Not,
-        argId: 'touchGarageLines',
-      },
+
 
       failure: {
         type: Expr.Type.And,
-        argIds: ['touchGarageLinesNot'],
+        argIds: ['touchGarageLines'],
       },
     },
     rootId: 'failure',

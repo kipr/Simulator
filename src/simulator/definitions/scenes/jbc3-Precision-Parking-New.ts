@@ -12,14 +12,6 @@ import Material from 'state/State/Scene/Material';
 
 
 const baseScene = createBaseSceneSurfaceA();
-const clicked = `
-// When the garage is clicked, the console will print "Clicked!"
-
-
-
-`;
-
-
 const garageIntersects = `
 
 const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
@@ -87,6 +79,7 @@ scene.addOnRenderListener(() => {
     switch(id){
       case 'greenBox':
         if(!chosenGarage.includes('greenGarage')){
+          console.log("Green Garage Declared");
           chosenGarage.push('greenGarage');
           declaredGarage.push('greenBox');
         }
@@ -155,6 +148,7 @@ scene.addOnRenderListener(() => {
       instruction = 0;
     }
 
+
   });
 
 
@@ -182,20 +176,18 @@ scene.addOnRenderListener(() => {
     if(type == 'start' && otherNodeId != 'startBox'){
 
       if(otherNodeId == 'n1' && declaredGarage[state] == 'greenBox'){
-        parkedGarages.push('greenGarage');
+        console.log("Green Garage Parked");
         setNodeVisible('greenGarage', true);
         state = state == 1 ? state : state + 1
         selected++;
 
       }
       else if(otherNodeId == 'n2' && declaredGarage[state] == 'yellowBox') {
-        parkedGarages.push('yellowGarage');
         setNodeVisible('yellowGarage', true);
         state = state == 1 ? state : state + 1
         selected++;
       }
       else if(otherNodeId == 'n3' && declaredGarage[state] == 'blueBox') {
-        parkedGarages.push('blueGarage');
         setNodeVisible('blueGarage', true);
         state = state == 1 ? state : state + 1
         selected++;
@@ -274,7 +266,7 @@ export const JBC_3: Scene = {
   },
   scripts: {
     garageIntersects: Script.ecmaScript('Garage Intersects', garageIntersects),
-    clicked: Script.ecmaScript('Garage Intersects', clicked),
+
 
   },
   geometry: {
