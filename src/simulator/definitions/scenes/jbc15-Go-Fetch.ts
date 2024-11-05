@@ -9,7 +9,7 @@ const baseScene = createBaseSceneSurfaceA();
 
 const notInStartBox = `
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot not started in start box!', type, otherNodeId);
+  // console.log('Robot not started in start box!', type, otherNodeId);
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('notInStartBox', type === 'start');
   }
@@ -24,7 +24,7 @@ const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
 
 
 scene.addOnIntersectionListener('can11', (type, otherNodeId) => {
-  console.log('Robot returned start box!', type, otherNodeId);
+  // console.log('Robot returned start box!', type, otherNodeId);
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('canInStartBox', type === 'start');
     setNodeVisible('startBox', type == 'start');
@@ -37,7 +37,6 @@ const uprightCan = `
 
 const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
 const yAngle = (nodeId) => 180 / Math.PI * -1 * Math.asin(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
-
 
 scene.addOnRenderListener(() => {
   const upright11 = yAngle('can11') > 5;

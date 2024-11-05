@@ -9,41 +9,36 @@ import Script from '../../../state/State/Scene/Script';
 const baseScene = createBaseSceneSurfaceB();
 
 const lineFollow = `
+let count = 0;
 
-scene.onBind = nodeId => {
-  let count = 0;
- scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
+scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
+  //Reset counter if robot in start box
+  if(otherNodeId == 'startBox' && type === 'start'){
+    count = 0;
+  }
+  //1st checkpoint
+  if(otherNodeId == 'n1' && type === 'start' && count == 0){
+    count = 1;
+    // console.log("Robot passed checkpoint 1");
+  }
+  //2nd checkpoint
+  else if (otherNodeId == 'n2' && type === 'start' && count == 1){
+    count = 2;
+    // console.log("Robot passed checkpoint 2 after checkpoint 1");
+  }
+  //3rd checkpoint
+  else if(otherNodeId == 'n3' && type === 'start'&& count == 2){
+    count = 3;
+    // console.log("Robot passed checkpoint 3 after checkpoint 2");
+  }
+  //Finish line after all other checkpoints
+  else if(otherNodeId == 'finishLine' && type === 'start' && count == 3){
+    // console.log("Robot completed the course!");
+    scene.setChallengeEventValue('lineFollow', true);
+  }
 
-    //Reset counter if robot in start box
-    if(otherNodeId == 'startBox' && type === 'start'){
-      count = 0;
-    }
-    //1st checkpoint
-    if(otherNodeId == 'n1' && type === 'start' && count == 0){
-      count = 1;
-      console.log("Robot passed checkpoint 1");
-    }
-    //2nd checkpoint
-    else if (otherNodeId == 'n2' && type === 'start' && count == 1){
-      count = 2;
-      console.log("Robot passed checkpoint 2 after checkpoint 1");
-    }
-    //3rd checkpoint
-    else if(otherNodeId == 'n3' && type === 'start'&& count == 2){
-      count = 3;
-      console.log("Robot passed checkpoint 3 after checkpoint 2");
-    }
-    //Finish line after all other checkpoints
-    else if(otherNodeId == 'finishLine' && type === 'start' && count == 3){
-      console.log("Robot completed the course!");
-      scene.setChallengeEventValue('lineFollow', true);
-    }
-
-    console.log("Count: " + count);
- }, ['finishLine', 'n1', 'n2', 'n3', 'startBox']);
-
-};
-
+  // console.log("Count: " + count);
+}, ['finishLine', 'n1', 'n2', 'n3', 'startBox']);
 `;
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
   ...baseScene.nodes['robot'].origin,
@@ -194,20 +189,6 @@ export const JBC_24: Scene = {
           color: Color.rgb(255, 255, 255),
         },
       },
-    },
-    can12: {
-      // Created an invisible can to attach script
-      ...createCanNode(
-        12,
-        {
-          x: Distance.centimeters(11),
-          y: Distance.centimeters(0),
-          z: Distance.centimeters(91),
-        },
-        false,
-        false
-      ),
-      scriptIds: ['lineFollow'],
     },
   },
 };

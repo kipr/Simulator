@@ -3,17 +3,15 @@ import { ReferenceFramewUnits, RotationwUnits } from '../../../util/math/unitMat
 import { Distance } from '../../../util';
 import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
-import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
+import { createBaseSceneSurfaceA } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
-
 import tr from '@i18n';
-import Node from 'state/State/Scene/Node';
 
 const baseScene = createBaseSceneSurfaceA();
 
 const inStartBox = `
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot started in start box!', type, otherNodeId, scene.programStatus);
+  // console.log('Robot started in start box!', type, otherNodeId, scene.programStatus);
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('inStartBox', true);
   }
@@ -62,7 +60,7 @@ const ROBOT_ORIGIN: ReferenceFramewUnits = {
   ...baseScene.nodes['robot'].origin,
   position: {
     ...baseScene.nodes['robot'].origin.position,
-    x: Distance.inches(9),
+    x: Distance.inches(18),
   },
 };
 
@@ -131,14 +129,6 @@ export const JBC_20: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
-    mainSurface_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(0.1),
-        z: Distance.meters(3.54),
-      },
-    },
     startBox_geom: {
       type: 'box',
       size: {
@@ -154,26 +144,6 @@ export const JBC_20: Scene = {
       ...baseScene.nodes.robot,
       origin: ROBOT_ORIGIN,
       startingOrigin: ROBOT_ORIGIN,
-    },
-    mainSurface: {
-      type: "object",
-      geometryId: "mainSurface_geom",
-      name: { [LocalizedString.EN_US]: "Mat Surface" },
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-6.9),
-          z: Distance.inches(19.75),
-        },
-      },
-      material: {
-        type: "basic",
-        color: {
-          type: "color3",
-          color: Color.rgb(0, 0, 0),
-        },
-      },
     },
     startBox: {
       type: 'object',

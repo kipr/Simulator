@@ -9,7 +9,7 @@ const baseScene = createBaseSceneSurfaceA();
 
 const notInStartBox = `
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot not started in start box!', type, otherNodeId);
+  // console.log('Robot not started in start box!', type, otherNodeId);
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('notInStartBox', type === 'start');
   }
@@ -26,13 +26,13 @@ scene.addOnRenderListener(() => {
     if (stopTime == 0) {
       currentDate = new Date();
       stopTime = currentDate.getTime();
-      console.log('Waiting at ', stopTime);
+      // console.log('Waiting at ', stopTime);
     }
     else {
       currentDate = new Date();
       if (currentDate.getTime() - stopTime > 5000) {
         scene.setChallengeEventValue('waitedToChop', true);
-        console.log("Waited 5 seconds");
+        // console.log("Waited 5 seconds");
       }
     }
   }
@@ -46,8 +46,7 @@ const uprightCan = `
 // When a can is standing upright, the upright condition is met.
 
 const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
-const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
-
+const yAngle = (nodeId) => 180 / Math.PI * -1 * Math.asin(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
 
 scene.addOnRenderListener(() => {
   const upright7 = yAngle('can7') > 5;
@@ -68,14 +67,6 @@ export const JBC_10: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
-    mainSurface_geom: {
-      type: "box",
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(0.1),
-        z: Distance.meters(3.54),
-      },
-    },
     notStartBox_geom: {
       type: "box",
       size: {
@@ -87,26 +78,6 @@ export const JBC_10: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-    mainSurface: {
-      type: "object",
-      geometryId: "mainSurface_geom",
-      name: { [LocalizedString.EN_US]: "Mat Surface" },
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-6.9),
-          z: Distance.inches(19.75),
-        },
-      },
-      material: {
-        type: "basic",
-        color: {
-          type: "color3",
-          color: Color.rgb(0, 0, 0),
-        },
-      },
-    },
     notStartBox: {
       type: "object",
       geometryId: "notStartBox_geom",

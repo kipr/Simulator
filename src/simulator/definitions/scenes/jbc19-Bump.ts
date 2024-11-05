@@ -3,17 +3,15 @@ import { ReferenceFramewUnits, RotationwUnits } from '../../../util/math/unitMat
 import { Distance } from '../../../util';
 import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
-import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
+import { createBaseSceneSurfaceA } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
-
 import tr from '@i18n';
-import Node from 'state/State/Scene/Node';
 
 const baseScene = createBaseSceneSurfaceA();
 
 const notInStartBox = `
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot not started in start box!', type, otherNodeId);
+  // console.log('Robot not started in start box!', type, otherNodeId);
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('notInStartBox', type === 'start');
   }
@@ -21,7 +19,7 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 `;
 
 const bumpReam = `
-console.log('Bump Ream script loaded');
+// console.log('Bump Ream script loaded');
 scene.addOnCollisionListener('ream1', (otherNodeId) => {
   //If front bumper is pressed
   if(scene.nodes['robot'].state.getDigitalValue(0) == 1) {
@@ -54,14 +52,6 @@ export const JBC_19: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
-    mainSurface_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(0.1),
-        z: Distance.meters(3.54),
-      },
-    },
     notStartBox_geom: {
       type: "box",
       size: {
@@ -73,26 +63,6 @@ export const JBC_19: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-    mainSurface: {
-      type: "object",
-      geometryId: "mainSurface_geom",
-      name: { [LocalizedString.EN_US]: "Mat Surface" },
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-6.9),
-          z: Distance.inches(19.75),
-        },
-      },
-      material: {
-        type: "basic",
-        color: {
-          type: "color3",
-          color: Color.rgb(0, 0, 0),
-        },
-      },
-    },
     notStartBox: {
       type: "object",
       geometryId: "notStartBox_geom",

@@ -3,17 +3,15 @@ import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../../ut
 import { Distance } from '../../../util';
 import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
-import { createCanNode, createBaseSceneSurfaceA, canPositions } from './jbcBase';
+import { createBaseSceneSurfaceA, canPositions } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
-
 import tr from '@i18n';
-import Node from 'state/State/Scene/Node';
 
 const baseScene = createBaseSceneSurfaceA();
 
 const notInStartBox = `
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot not started in start box!', type, otherNodeId);
+  // console.log('Robot not started in start box!', type, otherNodeId);
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('notInStartBox', type === 'start');
   }
@@ -27,10 +25,15 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
     scene.setChallengeEventValue('stopAtReam', type === 'start');
   }
 }, 'reamFrontBoundary');
+// scene.addOnCollisionListener('reamFrontBoundary', (otherNodeId) => {
+//   if(scene.programStatus === 'running'){
+//     scene.setChallengeEventValue('stopAtReam', true);
+//   }
+// }, 'claw');
 `;
 
 const bumpReam = `
-console.log('Bump Ream script loaded');
+// console.log('Bump Ream script loaded');
 scene.addOnCollisionListener('ream1', (otherNodeId) => {
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('touchedReam', true);
@@ -82,14 +85,6 @@ export const JBC_21: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
-    mainSurface_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(0.1),
-        z: Distance.meters(3.54),
-      },
-    },
     notStartBox_geom: {
       type: "box",
       size: {
@@ -109,26 +104,6 @@ export const JBC_21: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-    mainSurface: {
-      type: "object",
-      geometryId: "mainSurface_geom",
-      name: { [LocalizedString.EN_US]: "Mat Surface" },
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-6.9),
-          z: Distance.inches(19.75),
-        },
-      },
-      material: {
-        type: "basic",
-        color: {
-          type: "color3",
-          color: Color.rgb(0, 0, 0),
-        },
-      },
-    },
     notStartBox: {
       type: "object",
       geometryId: "notStartBox_geom",
@@ -153,7 +128,7 @@ export const JBC_21: Scene = {
       type: 'object',
       geometryId: 'reamFrontBoundary_geom',
       name: { [LocalizedString.EN_US]: 'Ream Front Boundary' },
-      visible: false,
+      visible: true,
       origin: REAM_FRONT_BOUNDARY_ORIGIN,
       material: {
         type: 'basic',

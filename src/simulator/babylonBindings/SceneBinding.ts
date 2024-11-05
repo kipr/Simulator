@@ -974,11 +974,19 @@ class SceneBinding {
       if (nodeMeshes.length === 0) continue;
 
       try {
-
+        const nodeBoundingBoxes = this.nodeBoundingBoxes_(nodeId); //
         const filterIds = this.intersectionFilters_[nodeId];
         for (const filterId of filterIds) {
+          const filterMinMaxes = this.nodeMinMaxes_(filterId);
 
-          const intersection = this.nodeMeshes_(nodeId)[0].intersectsMesh(this.nodeMeshes_(filterId)[0], true);
+          let intersection = false;
+          for (const nodeBoundingBox of nodeBoundingBoxes) {
+            for (const filterMinMax of filterMinMaxes) {
+              intersection = this.nodeMeshes_(nodeId)[0].intersectsMesh(this.nodeMeshes_(filterId)[0], true) ? true : nodeBoundingBox.intersectsMinMax(filterMinMax.min, filterMinMax.max);
+              if (intersection) break;
+            }
+            if (intersection) break;
+          }
 
           if (intersection) {
             if (!this.currentIntersections_[nodeId]) this.currentIntersections_[nodeId] = new Set();

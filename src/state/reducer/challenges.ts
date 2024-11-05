@@ -18,35 +18,35 @@ import jbc2 from "../../simulator/definitions/challenges/jbc2-Ring-Around-the-Ca
 // import jbc2b from "../../simulator/definitions/challenges/archived/jbc2b-Ring-Around-the-Cans-Sr";
 // import jbc2c from "../../simulator/definitions/challenges/archived/jbc2c-Back-It-Up";
 // import jbc2d from "../../simulator/definitions/challenges/archived/jbc2d-Ring-Around-the-Can-and-Back-It-Up";
-import jbc3 from "../../simulator/definitions/challenges/jbc3-Precision-Parking-New";
+import jbc3 from "../../simulator/definitions/challenges/jbc3-Precision-Parking";
 import jbc4 from "../../simulator/definitions/challenges/jbc4-Serpentine";
 // import jbc4b from "../../simulator/definitions/challenges/archived/jbc4b-Barrel-Racing";
 import jbc5 from "../../simulator/definitions/challenges/jbc5-Odd-Numbers";
 import jbc6 from "../../simulator/definitions/challenges/jbc6-Figure-Eight";
 // import jbc6c from "../../simulator/definitions/challenges/archived/jbc6c-Empty-the-Garage";
-import jbc7 from "../../simulator/definitions/challenges/jbc7-Load-Em-Up-New";
+import jbc7 from "../../simulator/definitions/challenges/jbc7-Load-Em-Up";
 // import jbc7b from "../../simulator/definitions/challenges/archived/jbc7b-Cover-Your-Bases";
-import jbc8 from "../../simulator/definitions/challenges/jbc8-Bulldozer-Mania-New";
-import jbc9 from "../../simulator/definitions/challenges/jbc9-Cover-Your-Bases-New";
+import jbc8 from "../../simulator/definitions/challenges/jbc8-Bulldozer-Mania";
+import jbc9 from "../../simulator/definitions/challenges/jbc9-Cover-Your-Bases";
 // import jbc8b from "../../simulator/definitions/challenges/archived/jbc8b-Serpentine-Jr";
-import jbc10 from "../../simulator/definitions/challenges/jbc10-Chopped-New";
+import jbc10 from "../../simulator/definitions/challenges/jbc10-Chopped";
 // import jbc10b from "../../simulator/definitions/challenges/archived/jbc10b-Solo-Joust-Jr";
-import jbc11 from "../../simulator/definitions/challenges/jbc11-Making-Waves-New";
-import jbc12 from "../../simulator/definitions/challenges/jbc12-Add-It-Up-New";
+import jbc11 from "../../simulator/definitions/challenges/jbc11-Making-Waves";
+// import jbc12 from "../../simulator/definitions/challenges/jbc12-Add-It-Up-New";
 // import jbc13 from "../../simulator/definitions/challenges/archived/jbc13-Clean-the-Mat";
 import jbc14 from "../../simulator/definitions/challenges/jbc14-Dance-Party";
-import jbc15 from "../../simulator/definitions/challenges/jbc15-Go-Fetch-New";
+import jbc15 from "../../simulator/definitions/challenges/jbc15-Go-Fetch";
 // import jbc15b from "../../simulator/definitions/challenges/archived/jbc15b-Bump-Bump";
-import jbc16 from "../../simulator/definitions/challenges/jbc16-Pick-Em-Up-New";
-import jbc17 from "../../simulator/definitions/challenges/jbc17-Mountain-Rescue-New";
+import jbc16 from "../../simulator/definitions/challenges/jbc16-Pick-Em-Up";
+import jbc17 from "../../simulator/definitions/challenges/jbc17-Mountain-Rescue";
 // import jbc17b from "../../simulator/definitions/challenges/archived/jbc17b-Walk-the-Line-2";
 import jbc18 from "../../simulator/definitions/challenges/jbc18-Stackerz-New";
-import jbc19 from "../../simulator/definitions/challenges/jbc19-Bump-New";
-import jbc20 from "../../simulator/definitions/challenges/jbc20-Amazing-New";
-import jbc21 from "../../simulator/definitions/challenges/jbc21-Proximity-New";
-import jbc22 from "../../simulator/definitions/challenges/jbc22-Search-and-Rescue-New";
-import jbc23 from "../../simulator/definitions/challenges/jbc23-Find-the-Black-Line-New";
-import jbc24 from "../../simulator/definitions/challenges/jbc24-Walk-the-Line-New";
+import jbc19 from "../../simulator/definitions/challenges/jbc19-Bump";
+import jbc20 from "../../simulator/definitions/challenges/jbc20-Amazing";
+import jbc21 from "../../simulator/definitions/challenges/jbc21-Proximity";
+import jbc22 from "../../simulator/definitions/challenges/jbc22-Search-and-Rescue";
+import jbc23 from "../../simulator/definitions/challenges/jbc23-Find-the-Black-Line";
+import jbc24 from "../../simulator/definitions/challenges/jbc24-Walk-the-Line";
 // import test from '../../simulator/definitions/challenges/archived/test';
 
 export namespace ChallengesAction {
@@ -236,10 +236,10 @@ const DEFAULT_CHALLENGES: Challenges = {
     value: jbc11,
     brief: ChallengeBrief.fromChallenge(jbc11),
   }),
-  'jbc12': Async.loaded({
-    value: jbc12,
-    brief: ChallengeBrief.fromChallenge(jbc12),
-  }),
+  // 'jbc12': Async.loaded({
+  //   value: jbc12,
+  //   brief: ChallengeBrief.fromChallenge(jbc12),
+  // }),
   // 'jbc13': Async.loaded({
   //   value: jbc13,
   //   brief: ChallengeBrief.fromChallenge(jbc13),

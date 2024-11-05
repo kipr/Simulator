@@ -13,7 +13,7 @@ const foundBlack = `
 scene.addOnRenderListener(() => {
   if(scene.programStatus === 'running'){
     if(scene.nodes['robot'].state.getAnalogValue(1) > 3500) {
-      console.log('Robot crossing black line', scene.nodes['robot'].state.getAnalogValue(1));
+      // console.log('Robot crossing black line', scene.nodes['robot'].state.getAnalogValue(1));
       scene.setChallengeEventValue('stopAtBlackLine', true);
     }
   }
@@ -42,7 +42,7 @@ scene.addOnRenderListener(() => {
           Math.pow(robotPosition.z.value - circlePosition.z.value, 2)
         );
         if (distance < 1.5) {
-          console.log('Robot over selected circle', robotPosition, circlePosition, distance);
+          // console.log('Robot over selected circle', robotPosition, circlePosition, distance);
           scene.setChallengeEventValue('onCircle', true);
         }
       }
@@ -96,7 +96,7 @@ export const JBC_23: Scene = {
       type: "object",
       geometryId: "circle_geom",
       name: { [LocalizedString.EN_US]: "Circle" },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           ...selectedCircle,

@@ -61,21 +61,24 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId)  => {
   if(declaredGarage[state] == 'greenBox' && (otherNodeId == 'g1' || otherNodeId == 'g2' || otherNodeId == 'g3')){
     state = 0;
     selected = 0;
+    // console.log('Touched Green Garage Lines');
     scene.setChallengeEventValue('touchGarageLines', true);
   }
   else if(declaredGarage[state] == 'blueBox' && (otherNodeId == 'b1' || otherNodeId == 'b2' || otherNodeId == 'b3')){
-    scene.setChallengeEventValue('touchGarageLines', true);
     state = 0;
     selected = 0;
+    // console.log('Touched Blue Garage Lines');
+    scene.setChallengeEventValue('touchGarageLines', true);
   }
 
   else if(declaredGarage[state] == 'yellowBox' && (otherNodeId == 'y1' || otherNodeId == 'y2' || otherNodeId == 'y3')){
     state = 0;
     selected = 0;
+    // console.log('Touched Yellow Garage Lines');
     scene.setChallengeEventValue('touchGarageLines', true);
   } 
 
-}, ['greenBox', 'yellowBox', 'blueBox','g1', 'g2','g3', 'b1','b2','b3', 'y1', 'y2', 'y3']);
+}, ['greenBox', 'yellowBox', 'blueBox','g1', 'g2', 'g3', 'b1', 'b2', 'b3', 'y1', 'y2', 'y3']);
 
 //User declares garage
 scene.addOnClickListener(['greenBox','yellowBox','blueBox','volume'], id => {
@@ -357,12 +360,11 @@ export const JBC_3: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-
     startBox: {
       type: 'object',
       geometryId: 'startBox_geom',
       name: { [LocalizedString.EN_US]: 'Start Box' },
-      visible: true,
+      visible: false,
       origin: {
         position: {
           x: Distance.centimeters(0),

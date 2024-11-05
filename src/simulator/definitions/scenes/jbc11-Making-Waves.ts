@@ -1,16 +1,15 @@
 import Scene from "../../../state/State/Scene";
 import LocalizedString from "../../../util/LocalizedString";
-import { createBaseSceneSurfaceA, createCanNode, createCircleNode } from "./jbcBase";
+import { createBaseSceneSurfaceA, createCircleNode } from "./jbcBase";
 import { Color } from "../../../state/State/Scene/Color";
 import { Distance } from "../../../util";
 import Script from "../../../state/State/Scene/Script";
-import Node from "state/State/Scene/Node";
 
 const baseScene = createBaseSceneSurfaceA();
 
 const notInStartBox = `
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot not started in start box!', type, otherNodeId);
+  // console.log('Robot not started in start box!', type, otherNodeId);
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('notInStartBox', type === 'start');
   }
@@ -33,7 +32,7 @@ const wave = `
           // console.log('Wave start at ', waveStart);
         }
         else {
-          console.log('Wave diff at ', Math.abs(Math.abs(robotNode.state.getServo(0).position - waveStart) - waveMax));
+          // console.log('Wave diff at ', Math.abs(Math.abs(robotNode.state.getServo(0).position - waveStart) - waveMax));
           if (Math.abs(Math.abs(robotNode.state.getServo(0).position - waveStart) - waveMax) > 1) {
             waveMax = Math.abs(robotNode.state.getServo(0).position - waveStart);
             // console.log('Wave max at ', waveMax, 'Wave start at ', waveStart);
@@ -41,13 +40,13 @@ const wave = `
           else {
             if (waveMax != 0) {
               scene.setChallengeEventValue('wave', true);
-              console.log('Robot waved!');
+              // console.log('Robot waved!');
             }
           }
         }
       }
       else {
-        console.log('Robot moving, motors at: ', robotNode.state.getMotor(0).pwm, ' ', robotNode.state.getMotor(3).pwm);
+        // console.log('Robot moving, motors at: ', robotNode.state.getMotor(0).pwm, ' ', robotNode.state.getMotor(3).pwm);
         waveStart =-1;
         waveMax = 0;
         scene.setChallengeEventValue('wave', false);
@@ -67,7 +66,7 @@ const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
 });
 
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot intersects!', type, otherNodeId);
+  // console.log('Robot intersects!', type, otherNodeId);
   scene.setChallengeEventValue(otherNodeId + 'Touched', true);
   setNodeVisible(otherNodeId, true);
 }, [ 'circle3', 'circle6', 'circle9', 'circle12' ]);
@@ -86,14 +85,6 @@ export const JBC_11: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
-    mainSurface_geom: {
-      type: "box",
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(0.1),
-        z: Distance.meters(3.54),
-      },
-    },
     notStartBox_geom: {
       type: "box",
       size: {
@@ -105,26 +96,6 @@ export const JBC_11: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-    mainSurface: {
-      type: "object",
-      geometryId: "mainSurface_geom",
-      name: { [LocalizedString.EN_US]: "Mat Surface" },
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-6.9),
-          z: Distance.inches(19.75),
-        },
-      },
-      material: {
-        type: "basic",
-        color: {
-          type: "color3",
-          color: Color.rgb(0, 0, 0),
-        },
-      },
-    },
     notStartBox: {
       type: "object",
       geometryId: "notStartBox_geom",

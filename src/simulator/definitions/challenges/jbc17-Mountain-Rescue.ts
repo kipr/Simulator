@@ -20,69 +20,63 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
+    notInStartBox: {
+      name: { [LocalizedString.EN_US]: 'Robot not in Start Box' },
+      description: { [LocalizedString.EN_US]: 'Robot not in start box' },
+    },
     can1Upright: {
       name: { [LocalizedString.EN_US]: 'Can 1 Upright' },
-      description: {
-        [LocalizedString.EN_US]: 'Can 1 is upright',
-      },
+      description: { [LocalizedString.EN_US]: 'Can 1 is upright', },
     },
     can2Upright: {
       name: { [LocalizedString.EN_US]: 'Can 2 Upright' },
-      description: {
-        [LocalizedString.EN_US]: 'Can 2 is upright',
-      },
+      description: { [LocalizedString.EN_US]: 'Can 2 is upright', },
     },
     can3Upright: {
       name: { [LocalizedString.EN_US]: 'Can 3 Upright' },
-      description: {
-        [LocalizedString.EN_US]: 'Can 3 is upright',
-      },
+      description: { [LocalizedString.EN_US]: 'Can 3 is upright', },
     },
     can1Intersects: {
       name: { [LocalizedString.EN_US]: 'Can 1 Intersects' },
-      description: {
-        [LocalizedString.EN_US]: 'Can 1 rescued intersecting starting box',
-      },
+      description: { [LocalizedString.EN_US]: 'Can 1 rescued intersecting starting box', },
     },
     can2Intersects: {
       name: { [LocalizedString.EN_US]: 'Can 2 Intersects' },
-      description: {
-        [LocalizedString.EN_US]: 'Can 2 rescued intersecting starting box',
-      },
+      description: { [LocalizedString.EN_US]: 'Can 2 rescued intersecting starting box', },
     },
     can3Intersects: {
       name: { [LocalizedString.EN_US]: 'Can 3 Intersects' },
-      description: {
-        [LocalizedString.EN_US]: 'Can 3 rescued intersecting starting box',
-      },
+      description: { [LocalizedString.EN_US]: 'Can 3 rescued intersecting starting box', },
     },
   },
   success: {
     exprs: {
+      // Start Box Events
+      notInStartBox: {
+        type: Expr.Type.Event,
+        eventId: "notInStartBox",
+      },
+      inStartBox: {
+        type: Expr.Type.Not,
+        argId: "notInStartBox",
+      },
+      inStartBoxOnce: {
+        type: Expr.Type.Once,
+        argId: "inStartBox",
+      },
+
       // Rescued upright can events
       can1Upright: {
         type: Expr.Type.Event,
         eventId: 'can1Upright',
       },
-      can1UprightOnce: {
-        type: Expr.Type.Once,
-        argId: 'can1Upright',
-      },
       can2Upright: {
         type: Expr.Type.Event,
         eventId: 'can2Upright',
       },
-      can2UprightOnce: {
-        type: Expr.Type.Once,
-        argId: 'can2Upright',
-      },
       can3Upright: {
         type: Expr.Type.Event,
         eventId: 'can3Upright',
-      },
-      can3UprightOnce: {
-        type: Expr.Type.Once,
-        argId: 'can3Upright',
       },
 
       // Rescued intersecting can events
@@ -90,45 +84,44 @@ export default {
         type: Expr.Type.Event,
         eventId: 'can1Intersects',
       },
-      can1IntersectsOnce: {
-        type: Expr.Type.Once,
-        argId: 'can1Intersects',
-      },
       can2Intersects: {
         type: Expr.Type.Event,
         eventId: 'can2Intersects',
-      },
-      can2IntersectsOnce: {
-        type: Expr.Type.Once,
-        argId: 'can2Intersects',
       },
       can3Intersects: {
         type: Expr.Type.Event,
         eventId: 'can3Intersects',
       },
-      can3IntersectsOnce: {
-        type: Expr.Type.Once,
-        argId: 'can3Intersects',
-      },
 
       // Intersecting and Upright
-      IntersectingUpright1: {
+      intersectingUpright1: {
         type: Expr.Type.And,
-        argIds: ['can1UprightOnce', 'can1IntersectsOnce'],
+        argIds: ['can1Upright', 'can1Intersects'],
       },
-      IntersectingUpright2: {
+      intersectingUpright1Once: {
+        type: Expr.Type.Once,
+        argId: 'intersectingUpright1',
+      },
+      intersectingUpright2: {
         type: Expr.Type.And,
-        argIds: ['can2UprightOnce', 'can2IntersectsOnce'],
+        argIds: ['can2Upright', 'can2Intersects'],
       },
-      IntersectingUpright3: {
+      intersectingUpright2Once: {
+        type: Expr.Type.Once,
+        argId: 'intersectingUpright2',
+      },
+      intersectingUpright3: {
         type: Expr.Type.And,
-        argIds: ['can3UprightOnce', 'can3IntersectsOnce'],
+        argIds: ['can3Upright', 'can3Intersects'],
       },
-
+      intersectingUpright3Once: {
+        type: Expr.Type.Once,
+        argId: 'intersectingUpright3',
+      },
 
       completion: {
         type: Expr.Type.And,
-        argIds: ['IntersectingUpright1', 'IntersectingUpright2', 'IntersectingUpright3'],
+        argIds: ['inStartBoxOnce', 'intersectingUpright1Once', 'intersectingUpright2Once', 'intersectingUpright3Once'],
       },
     },
     rootId: 'completion',

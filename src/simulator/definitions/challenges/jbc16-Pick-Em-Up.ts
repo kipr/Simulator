@@ -20,12 +20,10 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
-
-    leaveStartBox: {
-      name: { [LocalizedString.EN_US]: 'Robot Left Start' },
-      description: { [LocalizedString.EN_US]: 'Robot left starting box' },
+    notInStartBox: {
+      name: { [LocalizedString.EN_US]: 'Robot not in Start Box' },
+      description: { [LocalizedString.EN_US]: 'Robot not in start box' },
     },
-
     can2PickedUp: {
       name: { [LocalizedString.EN_US]: 'Can 2 Picked Up' },
       description: { [LocalizedString.EN_US]: 'Can 2 picked up' },
@@ -73,15 +71,18 @@ export default {
   success: {
     exprs: {
       // Start Box Events
-      leaveStartBox: {
+      notInStartBox: {
         type: Expr.Type.Event,
-        eventId: 'leaveStartBox',
+        eventId: 'notInStartBox',
       },
-      leaveStartBoxOnce: {
+      inStartBox: {
+        type: Expr.Type.Not,
+        argId: 'notInStartBox',
+      },
+      inStartBoxOnce: {
         type: Expr.Type.Once,
-        argId: 'leaveStartBox',
+        argId: 'inStartBox',
       },
-
       // Picked Up Events
       can2PickedUp: {
         type: Expr.Type.Event,
@@ -161,7 +162,7 @@ export default {
       // Success logic
       completion: {
         type: Expr.Type.And,
-        argIds: ['leaveStartBoxOnce', 'cansUprightAndIntersects'],
+        argIds: ['inStartBoxOnce', 'cansUprightAndIntersects'],
       },
     },
     rootId: 'completion',

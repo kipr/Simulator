@@ -10,35 +10,35 @@ import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
+const notInStartBox = `
+scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
+  // console.log('Robot not started in start box!', type, otherNodeId);
+  if(scene.programStatus === 'running'){
+    scene.setChallengeEventValue('notInStartBox', type === 'start');
+  }
+}, 'notStartBox');
+`;
+
 const startBoxIntersects = `
-scene.onBind = nodeId => {
-  scene.addOnIntersectionListener(nodeId, (type, otherNodeId) => {
-    console.log(nodeId + "entered start box!");
-    const visible = type === 'start';
-    scene.setChallengeEventValue(nodeId+'Intersects', visible);
-  }, 'startBox');
-
-};
-
+scene.addOnIntersectionListener('startBox', (type, otherNodeId) => {
+  // console.log(otherNodeId + " entered start box!", type);
+  const visible = type === 'start';
+  scene.setChallengeEventValue(otherNodeId + 'Intersects', visible);
+}, ['can1', 'can2', 'can3']);
 `;
 
 const uprightCans = `
 // When a can is standing upright on the ream, the upright condition is met.
-
-
 const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
-const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
+const yAngle = (nodeId) => 180 / Math.PI * -1 * Math.asin(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
 scene.addOnRenderListener(() => {
- 
-  const upright1 = yAngle('can1') < 5;
-  const upright2 = yAngle('can2') < 5;
-  const upright3 = yAngle('can3') < 5;
+  const upright1 = yAngle('can1') > 5;
+  const upright2 = yAngle('can2') > 5;
+  const upright3 = yAngle('can3') > 5;
  
   scene.setChallengeEventValue('can1Upright', upright1);
   scene.setChallengeEventValue('can2Upright', upright2);
   scene.setChallengeEventValue('can3Upright', upright3);
-
-  
 });
   
 `;
@@ -61,19 +61,12 @@ export const JBC_17: Scene = {
     [LocalizedString.EN_US]: `Junior Botball Challenge 17: Mountain Rescue`,
   },
   scripts: {
+    notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
     uprightCans: Script.ecmaScript('Upright Cans', uprightCans),
     startBoxIntersects: Script.ecmaScript('Start Box Intersects', startBoxIntersects),
   },
   geometry: {
     ...baseScene.geometry,
-    mainSurface_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(0.1),
-        z: Distance.meters(3.54),
-      },
-    },
     startBox_geom: {
       type: 'box',
       size: {
@@ -82,39 +75,22 @@ export const JBC_17: Scene = {
         z: Distance.centimeters(25),
       },
     },
-    circle2_geom: {
-      type: 'cylinder',
-      radius: Distance.centimeters(3),
-      height: Distance.centimeters(0.1),
+    notStartBox_geom: {
+      type: "box",
+      size: {
+        x: Distance.meters(3.54),
+        y: Distance.centimeters(10),
+        z: Distance.meters(2.13),
+      },
     },
   },
   nodes: {
     ...baseScene.nodes,
-    mainSurface: {
-      type: 'object',
-      geometryId: 'mainSurface_geom',
-      name: { [LocalizedString.EN_US]: 'Mat Surface' },
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-6.9),
-          z: Distance.inches(19.75),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(0, 0, 0),
-        },
-      },
-    },
     startBox: {
       type: 'object',
       geometryId: 'startBox_geom',
       name: { [LocalizedString.EN_US]: 'Start Box' },
-      visible: false,
+      visible: true,
       origin: {
         position: {
           x: Distance.centimeters(0),
@@ -130,34 +106,47 @@ export const JBC_17: Scene = {
         },
       },
     },
-
+    notStartBox: {
+      type: "object",
+      geometryId: "notStartBox_geom",
+      name: { [LocalizedString.EN_US]: "Not Start Box" },
+      visible: false,
+      origin: {
+        position: {
+          x: Distance.centimeters(0),
+          y: Distance.centimeters(-1.9),
+          z: Distance.meters(1.208),
+        },
+      },
+      material: {
+        type: "basic",
+        color: {
+          type: "color3",
+          color: Color.rgb(255, 0, 0),
+        },
+      },
+    },
     can1: {
       ...createCanNode(1, {
         x: Distance.centimeters(-3),
         y: Distance.centimeters(6),
         z: Distance.centimeters(98.6),
       }),
-      scriptIds: ['uprightCans', 'startBoxIntersects'],
     },
-
     can2: {
-      ...createCanNode(1, {
+      ...createCanNode(2, {
         x: Distance.centimeters(-10),
         y: Distance.centimeters(6),
         z: Distance.centimeters(91.6),
       }),
-      scriptIds: ['uprightCans', 'startBoxIntersects'],
     },
-
     can3: {
-      ...createCanNode(1, {
+      ...createCanNode(3, {
         x: Distance.centimeters(-17),
         y: Distance.centimeters(6),
         z: Distance.centimeters(84.6),
       }),
-      scriptIds: ['uprightCans', 'startBoxIntersects'],
     },
-
     ream: {
       type: 'from-jbc-template',
       templateId: 'ream',

@@ -20,39 +20,33 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
+    notInStartBox: {
+      name: { [LocalizedString.EN_US]: 'Robot not in Start Box' },
+      description: { [LocalizedString.EN_US]: 'Robot not in start box' },
+    },
     leaveStartBox: {
       name: { [LocalizedString.EN_US]: 'Robot Left Start' },
       description: { [LocalizedString.EN_US]: 'Robot left starting box' },
     },
     clockwise360: {
       name: { [LocalizedString.EN_US]: 'Robot 360 Clockwise' },
-      description: {
-        [LocalizedString.EN_US]: 'Robot turned 360 degrees clockwise',
-      },
+      description: { [LocalizedString.EN_US]: 'Robot turned 360 degrees clockwise', },
     },
     counterClockwise360: {
       name: { [LocalizedString.EN_US]: 'Robot 360 Counter Clockwise' },
-      description: {
-        [LocalizedString.EN_US]: 'Robot turned 360 degrees counter clockwise',
-      },
+      description: { [LocalizedString.EN_US]: 'Robot turned 360 degrees counter clockwise', },
     },
     driveForward: {
       name: { [LocalizedString.EN_US]: 'Robot Drove Forward' },
-      description: {
-        [LocalizedString.EN_US]: 'Robot drove forward',
-      },
+      description: { [LocalizedString.EN_US]: 'Robot drove forward', },
     },
     driveBackward: {
       name: { [LocalizedString.EN_US]: 'Robot Drove Backward' },
-      description: {
-        [LocalizedString.EN_US]: 'Robot drove backward',
-      },
+      description: { [LocalizedString.EN_US]: 'Robot drove backward', },
     },
     waveServo: {
       name: { [LocalizedString.EN_US]: 'Robot Wave Servo' },
-      description: {
-        [LocalizedString.EN_US]: 'Robot waved servo up and down at least once',
-      },
+      description: { [LocalizedString.EN_US]: 'Robot waved servo up and down at least once', },
     },
   },
   success: {
@@ -90,6 +84,18 @@ export default {
       },
 
       // Start Box Events
+      notInStartBox: {
+        type: Expr.Type.Event,
+        eventId: 'notInStartBox',
+      },
+      inStartBox: {
+        type: Expr.Type.Not,
+        argId: "notInStartBox",
+      },
+      inStartBoxOnce: {
+        type: Expr.Type.Once,
+        argId: "inStartBox",
+      },
       leaveStartBox: {
         type: Expr.Type.Event,
         eventId: 'leaveStartBox',
@@ -124,7 +130,7 @@ export default {
 
       completion: {
         type: Expr.Type.And,
-        argIds: ['leaveStartBoxOnce', 'turning', 'driving', 'waveServoOnce'],
+        argIds: ['inStartBoxOnce', 'leaveStartBoxOnce', 'turning', 'driving', 'waveServoOnce'],
       },
     },
     rootId: 'completion',
