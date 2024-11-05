@@ -1,10 +1,7 @@
 import Scene from "../../../state/State/Scene";
 import { Color } from '../../../state/State/Scene/Color';
-// import { RawVector3, RawQuaternion, RawReferenceFrame } from "../math";
-// import { Color3, StandardMaterial, GlowLayer } from 'babylonjs';
 import Script from '../../../state/State/Scene/Script';
 import { Distance } from "../../../util";
-import LocalizedString from '../../../util/LocalizedString';
 
 import tr from '@i18n';
 

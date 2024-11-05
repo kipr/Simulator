@@ -37,6 +37,8 @@ jobs:
       uses: actions/checkout@v2
       with:
         submodules: true
+        submodules_recursive: true
+        fetch-depth: 0
         lfs: true
 
     - name: Pull LFS

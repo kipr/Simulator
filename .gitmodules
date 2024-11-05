@@ -7,4 +7,6 @@
 [submodule "dependencies/emsdk"]
 	path = dependencies/emsdk
 	url = https://github.com/emscripten-core/emsdk
-
+[submodule "dependencies/kipr-scratch"]
+	path = dependencies/kipr-scratch
+	url = https://github.com/kipr/kipr-scratch

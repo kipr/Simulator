@@ -5,6 +5,26 @@ import subprocess
 import pathlib
 import json
 import multiprocessing
+import hashlib
+
+def sha1OfFile(filepath):
+  sha = hashlib.sha1()
+  with open(filepath, 'rb') as f:
+    while True:
+      block = f.read(2**10) # Magic number: one-megabyte blocks.
+      if not block: break
+      sha.update(block)
+    return sha.hexdigest()
+
+def hash_dir(dir_path):
+  hashes = []
+  for path, dirs, files in os.walk(dir_path):
+    for file in sorted(files):
+      hashes.append(sha1OfFile(os.path.join(path, file)))
+    for dir in sorted(dirs):
+      hashes.append(hash_dir(os.path.join(path, dir)))
+    break
+  return str(hash(''.join(hashes)))
 
 def is_tool(name):
     """Check whether `name` is on PATH and marked as executable."""
@@ -68,6 +88,7 @@ env = {
 }
 
 libkipr_dir = working_dir / 'libwallaby'
+libkipr_hash = hash_dir(libkipr_dir)
 
 # libkipr (C)
 
@@ -86,6 +107,7 @@ subprocess.run(
     '-Dwith_python_binding=OFF',
     '-Dwith_documentation=ON',
     '-Dwith_tests=OFF',
+    '-Dwith_graphics=OFF',
     f'-DCMAKE_INSTALL_PREFIX={libkipr_install_c_dir}',
     libkipr_dir
   ],
@@ -200,12 +222,46 @@ subprocess.run(
 print('Generating JSON documentation...')
 libkipr_c_documentation_json = f'{libkipr_build_c_dir}/documentation/json.json'
 subprocess.run(
-  [ 'python3', 'generate_doxygen_json.py', f'{libkipr_build_c_dir}/documentation/xml', libkipr_c_documentation_json ],
+  [ python, 'generate_doxygen_json.py', f'{libkipr_build_c_dir}/documentation/xml', libkipr_c_documentation_json ],
+  # [ 'python3', 'generate_doxygen_json.py', f'{libkipr_build_c_dir}/documentation/xml', libkipr_c_documentation_json ],
   cwd = working_dir,
   check = True
 )
 
+print('Building kipr-scratch...')
+kipr_scratch_path = working_dir / 'kipr-scratch'
+subprocess.run(
+  [ python, kipr_scratch_path / 'build.py' ],
+  cwd = kipr_scratch_path,
+  check = True
+)
 
+print('Packaging kipr-scratch...')
+subprocess.run(
+  [ python, kipr_scratch_path / 'package.py' ],
+  cwd = kipr_scratch_path,
+  check = True
+)
+
+print('Generating scratch runtime...')
+scratch_runtime_path = working_dir / 'scratch-rt'
+# emcc -s WASM=0 -s INVOKE_RUN=0 -s ASYNCIFY -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']" -I${config.server.dependencies.libkipr_c}/include -Wl,--whole-archive -L${config.server.dependencies.libkipr_c}/lib -lkipr -o ${path}.js ${path}
+subprocess.run([
+    'emcc',
+    '-sWASM=0',
+    '-sINVOKE_RUN=0',
+    '-sEXIT_RUNTIME=0',
+    '-sERROR_ON_UNDEFINED_SYMBOLS=0',
+    '-sLINKABLE=1',
+    '-sEXPORT_ALL=1',
+    f'-L{libkipr_install_c_dir}/lib',
+    '-Wl,--whole-archive', '-lkipr', '-Wl,--no-whole-archive',
+    f'-o', f'{scratch_runtime_path}.js',
+    f'{scratch_runtime_path}.c'
+  ],
+  env = env,
+  check = True
+)
 
 print('Outputting results...')
 output = json.dumps({
@@ -216,10 +272,13 @@ output = json.dumps({
     'EMSDK': f'{emsdk_dir}',
     'EM_CONFIG': f'{emsdk_dot_emscripten}'
   },
+  'libkipr_hash': libkipr_hash,
   'libkipr_c': f'{libkipr_install_c_dir}',
   'libkipr_python': f'{libkipr_build_python_dir}',
   'cpython': f'{cpython_emscripten_build_dir}',
+  'cpython_hash': hash_dir(cpython_dir),
   "libkipr_c_documentation": libkipr_c_documentation_json,
+  'scratch_rt': f'{scratch_runtime_path}.js',
 })
 
 with open(working_dir / 'dependencies.json', 'w') as f:

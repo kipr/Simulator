@@ -1,0 +1,1069 @@
+{
+  "": {
+    "Robot": {
+      "en-US": "Robot"
+    },
+    "Base Scene - Surface A": {
+      "en-US": "Base Scene - Surface A"
+    },
+    "A base scene using Surface A. Intended to be augmented to create full JBC scenes": {
+      "en-US": "A base scene using Surface A. Intended to be augmented to create full JBC scenes"
+    },
+    "JBC Surface A": {
+      "en-US": "JBC Surface A"
+    },
+    "Ground": {
+      "en-US": "Ground"
+    },
+    "Light": {
+      "en-US": "Light"
+    },
+    "Base Scene - Surface B": {
+      "en-US": "Base Scene - Surface B"
+    },
+    "A base scene using Surface B. Intended to be augmented to create full JBC scenes": {
+      "en-US": "A base scene using Surface B. Intended to be augmented to create full JBC scenes"
+    },
+    "JBC Surface B": {
+      "en-US": "JBC Surface B"
+    },
+    "Can %s": {
+      "en-US": "Can %s"
+    },
+    "JBC Sandbox A": {
+      "en-US": "JBC Sandbox A"
+    },
+    "Junior Botball Challenge Sandbox on Mat A. All cans 1-12 are available by default.": {
+      "en-US": "Junior Botball Challenge Sandbox on Mat A. All cans 1-12 are available by default."
+    },
+    "Paper Ream 1": {
+      "en-US": "Paper Ream 1"
+    },
+    "Paper Ream 2": {
+      "en-US": "Paper Ream 2"
+    },
+    "JBC Sandbox B": {
+      "en-US": "JBC Sandbox B"
+    },
+    "Junior Botball Challenge Sandbox on Mat B.": {
+      "en-US": "Junior Botball Challenge Sandbox on Mat B."
+    },
+    "JBC 1": {
+      "en-US": "JBC 1"
+    },
+    "Junior Botball Challenge 1: Tag, You're It!": {
+      "en-US": "Junior Botball Challenge 1: Tag, You're It!"
+    },
+    "JBC 2": {
+      "en-US": "JBC 2"
+    },
+    "Junior Botball Challenge 2: Ring Around the Can": {
+      "en-US": "Junior Botball Challenge 2: Ring Around the Can"
+    },
+    "JBC 2B": {
+      "en-US": "JBC 2B"
+    },
+    "Junior Botball Challenge 2B: Ring Around the Can, Sr.": {
+      "en-US": "Junior Botball Challenge 2B: Ring Around the Can, Sr."
+    },
+    "JBC 2C": {
+      "en-US": "JBC 2C"
+    },
+    "Junior Botball Challenge 2C: Back It Up": {
+      "en-US": "Junior Botball Challenge 2C: Back It Up"
+    },
+    "JBC 2D": {
+      "en-US": "JBC 2D"
+    },
+    "Junior Botball Challenge 2D: Ring Around the Can and Back It Up": {
+      "en-US": "Junior Botball Challenge 2D: Ring Around the Can and Back It Up"
+    },
+    "JBC 3": {
+      "en-US": "JBC 3"
+    },
+    "Junior Botball Challenge 3: Precision Parking": {
+      "en-US": "Junior Botball Challenge 3: Precision Parking"
+    },
+    "JBC 3B": {
+      "en-US": "JBC 3B"
+    },
+    "Junior Botball Challenge 3B: Parallel Parking": {
+      "en-US": "Junior Botball Challenge 3B: Parallel Parking"
+    },
+    "JBC 3C": {
+      "en-US": "JBC 3C"
+    },
+    "Junior Botball Challenge 3C: Quick Get Away!": {
+      "en-US": "Junior Botball Challenge 3C: Quick Get Away!"
+    },
+    "JBC 4": {
+      "en-US": "JBC 4"
+    },
+    "Junior Botball Challenge 4: Figure Eight": {
+      "en-US": "Junior Botball Challenge 4: Figure Eight"
+    },
+    "JBC 4B": {
+      "en-US": "JBC 4B"
+    },
+    "Junior Botball Challenge 4B: Barrel Racing": {
+      "en-US": "Junior Botball Challenge 4B: Barrel Racing"
+    },
+    "JBC 5": {
+      "en-US": "JBC 5"
+    },
+    "Junior Botball Challenge 5: Dance Party": {
+      "en-US": "Junior Botball Challenge 5: Dance Party"
+    },
+    "JBC 5B": {
+      "en-US": "JBC 5B"
+    },
+    "Junior Botball Challenge 5B: Line Dance": {
+      "en-US": "Junior Botball Challenge 5B: Line Dance"
+    },
+    "JBC 5C": {
+      "en-US": "JBC 5C"
+    },
+    "Junior Botball Challenge 5C: Synchronized Dancing": {
+      "en-US": "Junior Botball Challenge 5C: Synchronized Dancing"
+    },
+    "JBC 6": {
+      "en-US": "JBC 6"
+    },
+    "Junior Botball Challenge 6: Load 'Em Up": {
+      "en-US": "Junior Botball Challenge 6: Load 'Em Up"
+    },
+    "JBC 6B": {
+      "en-US": "JBC 6B"
+    },
+    "Junior Botball Challenge 6B: Pick 'Em Up": {
+      "en-US": "Junior Botball Challenge 6B: Pick 'Em Up"
+    },
+    "JBC 6C": {
+      "en-US": "JBC 6C"
+    },
+    "Junior Botball Challenge 6C: Empty the Garage": {
+      "en-US": "Junior Botball Challenge 6C: Empty the Garage"
+    },
+    "Circle 2": {
+      "en-US": "Circle 2"
+    },
+    "Circle 9": {
+      "en-US": "Circle 9"
+    },
+    "Circle 10": {
+      "en-US": "Circle 10"
+    },
+    "Mat Surface": {
+      "en-US": "Mat Surface"
+    },
+    "JBC 7": {
+      "en-US": "JBC 7"
+    },
+    "Junior Botball Challenge 7: Bulldozer Mania": {
+      "en-US": "Junior Botball Challenge 7: Bulldozer Mania"
+    },
+    "JBC 7B": {
+      "en-US": "JBC 7B"
+    },
+    "Junior Botball Challenge 7B: Cover Your Bases": {
+      "en-US": "Junior Botball Challenge 7B: Cover Your Bases"
+    },
+    "JBC 8": {
+      "en-US": "JBC 8"
+    },
+    "Junior Botball Challenge 8: Serpentine": {
+      "en-US": "Junior Botball Challenge 8: Serpentine"
+    },
+    "JBC 8B": {
+      "en-US": "JBC 8B"
+    },
+    "Junior Botball Challenge 8B: Serpentine Jr.": {
+      "en-US": "Junior Botball Challenge 8B: Serpentine Jr."
+    },
+    "JBC 9": {
+      "en-US": "JBC 9"
+    },
+    "Junior Botball Challenge 9: Add It Up": {
+      "en-US": "Junior Botball Challenge 9: Add It Up"
+    },
+    "JBC 9B": {
+      "en-US": "JBC 9B"
+    },
+    "Junior Botball Challenge 9B: Balancing Act": {
+      "en-US": "Junior Botball Challenge 9B: Balancing Act"
+    },
+    "JBC 10": {
+      "en-US": "JBC 10"
+    },
+    "Junior Botball Challenge 10: Solo Joust": {
+      "en-US": "Junior Botball Challenge 10: Solo Joust"
+    },
+    "JBC 10B": {
+      "en-US": "JBC 10B"
+    },
+    "Junior Botball Challenge 10: Solo Joust Jr.": {
+      "en-US": "Junior Botball Challenge 10: Solo Joust Jr."
+    },
+    "JBC 12": {
+      "en-US": "JBC 12"
+    },
+    "Junior Botball Challenge 12: Unload 'Em": {
+      "en-US": "Junior Botball Challenge 12: Unload 'Em"
+    },
+    "JBC 13": {
+      "en-US": "JBC 13"
+    },
+    "Junior Botball Challenge 13: Clean the Mat": {
+      "en-US": "Junior Botball Challenge 13: Clean the Mat"
+    },
+    "JBC 15B": {
+      "en-US": "JBC 15B"
+    },
+    "Junior Botball Challenge 15B: Bump Bump": {
+      "en-US": "Junior Botball Challenge 15B: Bump Bump"
+    },
+    "JBC 17": {
+      "en-US": "JBC 17"
+    },
+    "Junior Botball Challenge 17: Walk the Line": {
+      "en-US": "Junior Botball Challenge 17: Walk the Line"
+    },
+    "JBC 17B": {
+      "en-US": "JBC 17B"
+    },
+    "Junior Botball Challenge 17: Walk the Line II": {
+      "en-US": "Junior Botball Challenge 17: Walk the Line II"
+    },
+    "JBC 19": {
+      "en-US": "JBC 19"
+    },
+    "Junior Botball Challenge 19: Mountain Rescue": {
+      "en-US": "Junior Botball Challenge 19: Mountain Rescue"
+    },
+    "Paper Ream": {
+      "en-US": "Paper Ream"
+    },
+    "JBC 20": {
+      "en-US": "JBC 20"
+    },
+    "Junior Botball Challenge 20: Rescue the Cans": {
+      "en-US": "Junior Botball Challenge 20: Rescue the Cans"
+    },
+    "JBC 21": {
+      "en-US": "JBC 21"
+    },
+    "Junior Botball Challenge 21: Foot Tall": {
+      "en-US": "Junior Botball Challenge 21: Foot Tall"
+    },
+    "JBC 22": {
+      "en-US": "JBC 22"
+    },
+    "Junior Botball Challenge 22: Stackerz": {
+      "en-US": "Junior Botball Challenge 22: Stackerz"
+    },
+    "Script Playground": {
+      "en-US": "Script Playground"
+    },
+    "Script tests": {
+      "en-US": "Script tests"
+    },
+    "Demobot": {
+      "en-US": "Demobot"
+    },
+    "JBC Challenge 6C": {
+      "en-US": "JBC Challenge 6C"
+    },
+    "Can A Lifted": {
+      "en-US": "Can A Lifted"
+    },
+    "Can A picked up": {
+      "en-US": "Can A picked up"
+    },
+    "Can B Lifted": {
+      "en-US": "Can B Lifted"
+    },
+    "Can B picked up": {
+      "en-US": "Can B picked up"
+    },
+    "Can C Lifted": {
+      "en-US": "Can C Lifted"
+    },
+    "Can C picked up": {
+      "en-US": "Can C picked up"
+    },
+    "Can A Placed": {
+      "en-US": "Can A Placed"
+    },
+    "Can A placed on circle 2": {
+      "en-US": "Can A placed on circle 2"
+    },
+    "Can B Placed": {
+      "en-US": "Can B Placed"
+    },
+    "Can A placed on circle 9": {
+      "en-US": "Can A placed on circle 9"
+    },
+    "Can C Placed": {
+      "en-US": "Can C Placed"
+    },
+    "Can A placed on circle 10": {
+      "en-US": "Can A placed on circle 10"
+    },
+    "Can A Upright": {
+      "en-US": "Can A Upright"
+    },
+    "Can A upright on circle 2": {
+      "en-US": "Can A upright on circle 2"
+    },
+    "Can B Upright": {
+      "en-US": "Can B Upright"
+    },
+    "Can B upright on circle 9": {
+      "en-US": "Can B upright on circle 9"
+    },
+    "Can C Upright": {
+      "en-US": "Can C Upright"
+    },
+    "Can C upright on circle 10": {
+      "en-US": "Can C upright on circle 10"
+    },
+    "Loading...": {
+      "en-US": "Loading..."
+    },
+    "Logout": {
+      "en-US": "Logout"
+    },
+    "Tutorials": {
+      "en-US": "Tutorials"
+    },
+    "Learn how to get started with the simulator": {
+      "en-US": "Learn how to get started with the simulator"
+    },
+    "3D Simulator": {
+      "en-US": "3D Simulator"
+    },
+    "A simulator for the Botball demobot.": {
+      "en-US": "A simulator for the Botball demobot."
+    },
+    "About": {
+      "en-US": "About"
+    },
+    "KIPR is a 501(c) 3 organization started to make the long-term educational benefits of robotics accessible to students.": {
+      "en-US": "KIPR is a 501(c) 3 organization started to make the long-term educational benefits of robotics accessible to students."
+    },
+    "Quick Start": {
+      "en-US": "Quick Start"
+    },
+    "Navigating in 3D": {
+      "en-US": "Navigating in 3D"
+    },
+    "Learn the controls for navigating in 3D in the simulator": {
+      "en-US": "Learn the controls for navigating in 3D in the simulator"
+    },
+    "Robot Section": {
+      "en-US": "Robot Section"
+    },
+    "How to use the robot section": {
+      "en-US": "How to use the robot section"
+    },
+    "World Section": {
+      "en-US": "World Section"
+    },
+    "Learn how to create and manipulate items and scene in the simulator": {
+      "en-US": "Learn how to create and manipulate items and scene in the simulator"
+    },
+    "Indent": {
+      "en-US": "Indent"
+    },
+    "Download": {
+      "en-US": "Download"
+    },
+    "Reset": {
+      "en-US": "Reset"
+    },
+    "Error(s)": {
+      "en-US": "Error(s)"
+    },
+    "Warning(s)": {
+      "en-US": "Warning(s)"
+    },
+    "grams": {
+      "en-US": "grams"
+    },
+    "kilograms": {
+      "en-US": "kilograms"
+    },
+    "pounds": {
+      "en-US": "pounds"
+    },
+    "ounces": {
+      "en-US": "ounces"
+    },
+    "meters": {
+      "en-US": "meters"
+    },
+    "centimeters": {
+      "en-US": "centimeters"
+    },
+    "feet": {
+      "en-US": "feet"
+    },
+    "inches": {
+      "en-US": "inches"
+    },
+    "radians": {
+      "en-US": "radians"
+    },
+    "degrees": {
+      "en-US": "degrees"
+    },
+    "Can": {
+      "en-US": "Can"
+    },
+    "Box": {
+      "en-US": "Box"
+    },
+    "Sphere": {
+      "en-US": "Sphere"
+    },
+    "Cylinder": {
+      "en-US": "Cylinder"
+    },
+    "Cone": {
+      "en-US": "Cone"
+    },
+    "Plane": {
+      "en-US": "Plane"
+    },
+    "File": {
+      "en-US": "File"
+    },
+    "Euler": {
+      "en-US": "Euler"
+    },
+    "Axis Angle": {
+      "en-US": "Axis Angle"
+    },
+    "Empty": {
+      "en-US": "Empty"
+    },
+    "Standard Object": {
+      "en-US": "Standard Object"
+    },
+    "Custom Object": {
+      "en-US": "Custom Object"
+    },
+    "Point Light": {
+      "en-US": "Point Light"
+    },
+    "Unset": {
+      "en-US": "Unset"
+    },
+    "Basic": {
+      "en-US": "Basic"
+    },
+    "Texture": {
+      "en-US": "Texture"
+    },
+    "Value": {
+      "en-US": "Value"
+    },
+    "General": {
+      "en-US": "General"
+    },
+    "Name": {
+      "en-US": "Name"
+    },
+    "Type": {
+      "en-US": "Type"
+    },
+    "Geometry": {
+      "en-US": "Geometry"
+    },
+    "Item": {
+      "en-US": "Item"
+    },
+    "Box Options": {
+      "en-US": "Box Options"
+    },
+    "Size X": {
+      "en-US": "Size X"
+    },
+    "Size Y": {
+      "en-US": "Size Y"
+    },
+    "Size Z": {
+      "en-US": "Size Z"
+    },
+    "Sphere Options": {
+      "en-US": "Sphere Options"
+    },
+    "Radius": {
+      "en-US": "Radius"
+    },
+    "Cylinder Options": {
+      "en-US": "Cylinder Options"
+    },
+    "Height": {
+      "en-US": "Height"
+    },
+    "Plane Options": {
+      "en-US": "Plane Options"
+    },
+    "File Options": {
+      "en-US": "File Options"
+    },
+    "URI": {
+      "en-US": "URI"
+    },
+    "Material": {
+      "en-US": "Material"
+    },
+    "Color Type": {
+      "en-US": "Color Type"
+    },
+    "Color Red": {
+      "en-US": "Color Red"
+    },
+    "Color Green": {
+      "en-US": "Color Green"
+    },
+    "Color Blue": {
+      "en-US": "Color Blue"
+    },
+    "Color Texture URI": {
+      "en-US": "Color Texture URI"
+    },
+    "Albedo Type": {
+      "en-US": "Albedo Type"
+    },
+    "Albedo Red": {
+      "en-US": "Albedo Red"
+    },
+    "Albedo Green": {
+      "en-US": "Albedo Green"
+    },
+    "Albedo Blue": {
+      "en-US": "Albedo Blue"
+    },
+    "Albedo Texture URI": {
+      "en-US": "Albedo Texture URI"
+    },
+    "Reflection Type": {
+      "en-US": "Reflection Type"
+    },
+    "Reflection Red": {
+      "en-US": "Reflection Red"
+    },
+    "Reflection Green": {
+      "en-US": "Reflection Green"
+    },
+    "Reflection Blue": {
+      "en-US": "Reflection Blue"
+    },
+    "Reflection Texture URI": {
+      "en-US": "Reflection Texture URI"
+    },
+    "Emissive Type": {
+      "en-US": "Emissive Type"
+    },
+    "Emissive Red": {
+      "en-US": "Emissive Red"
+    },
+    "Emissive Green": {
+      "en-US": "Emissive Green"
+    },
+    "Emissive Blue": {
+      "en-US": "Emissive Blue"
+    },
+    "Emissive Texture URI": {
+      "en-US": "Emissive Texture URI"
+    },
+    "Ambient Type": {
+      "en-US": "Ambient Type"
+    },
+    "Ambient Red": {
+      "en-US": "Ambient Red"
+    },
+    "Ambient Green": {
+      "en-US": "Ambient Green"
+    },
+    "Ambient Blue": {
+      "en-US": "Ambient Blue"
+    },
+    "Ambient Texture URI": {
+      "en-US": "Ambient Texture URI"
+    },
+    "Metalness Type": {
+      "en-US": "Metalness Type"
+    },
+    "Metalness": {
+      "en-US": "Metalness"
+    },
+    "Metalness Texture URI": {
+      "en-US": "Metalness Texture URI"
+    },
+    "Position": {
+      "en-US": "Position"
+    },
+    "X": {
+      "en-US": "X"
+    },
+    "Y": {
+      "en-US": "Y"
+    },
+    "Z": {
+      "en-US": "Z"
+    },
+    "Orientation": {
+      "en-US": "Orientation"
+    },
+    "Order": {
+      "en-US": "Order"
+    },
+    "Angle": {
+      "en-US": "Angle"
+    },
+    "Scale": {
+      "en-US": "Scale"
+    },
+    "Physics": {
+      "en-US": "Physics"
+    },
+    "Mass": {
+      "en-US": "Mass"
+    },
+    "Friction": {
+      "en-US": "Friction"
+    },
+    "Unnamed Object": {
+      "en-US": "Unnamed Object"
+    },
+    "Add Item": {
+      "en-US": "Add Item"
+    },
+    "Accept": {
+      "en-US": "Accept"
+    },
+    "Settings": {
+      "en-US": "Settings"
+    },
+    "Add Script": {
+      "en-US": "Add Script"
+    },
+    "Select Scene": {
+      "en-US": "Select Scene"
+    },
+    "Save Scene": {
+      "en-US": "Save Scene"
+    },
+    "Copy Scene": {
+      "en-US": "Copy Scene"
+    },
+    "Item(s) (%d)": {
+      "en-US": "Item(s) (%d)"
+    },
+    "Script(s) (%d)": {
+      "en-US": "Script(s) (%d)"
+    },
+    "Layouts": {
+      "en-US": "Layouts"
+    },
+    "Overlay": {
+      "en-US": "Overlay"
+    },
+    "Side": {
+      "en-US": "Side"
+    },
+    "Options": {
+      "en-US": "Options"
+    },
+    "Show All": {
+      "en-US": "Show All"
+    },
+    "Hide All": {
+      "en-US": "Hide All"
+    },
+    "Clear": {
+      "en-US": "Clear"
+    },
+    "Rotation": {
+      "en-US": "Rotation"
+    },
+    "Start Location": {
+      "en-US": "Start Location"
+    },
+    "Motor Velocity Plot": {
+      "en-US": "Motor Velocity Plot"
+    },
+    "Motor Position Plot": {
+      "en-US": "Motor Position Plot"
+    },
+    "Analog Sensor Plot": {
+      "en-US": "Analog Sensor Plot"
+    },
+    "Digital Sensor Plot": {
+      "en-US": "Digital Sensor Plot"
+    },
+    "Analog Sensors": {
+      "en-US": "Analog Sensors"
+    },
+    "Digital Sensors": {
+      "en-US": "Digital Sensors"
+    },
+    "Servos": {
+      "en-US": "Servos"
+    },
+    "Motor Velocities": {
+      "en-US": "Motor Velocities"
+    },
+    "Motor Positions": {
+      "en-US": "Motor Positions"
+    },
+    "This process is taking longer than expected...\nIf you have a poor internet connection, this can take some time": {
+      "en-US": "This process is taking longer than expected...\nIf you have a poor internet connection, this can take some time"
+    },
+    "The simulator may have failed to load.\nPlease submit a feedback form to let us know!": {
+      "en-US": "The simulator may have failed to load.\nPlease submit a feedback form to let us know!"
+    },
+    "Initializing Simulator...": {
+      "en-US": "Initializing Simulator..."
+    },
+    "all of": {
+      "en-US": "all of"
+    },
+    "one or more of": {
+      "en-US": "one or more of"
+    },
+    "exactly one of": {
+      "en-US": "exactly one of"
+    },
+    "once": {
+      "en-US": "once"
+    },
+    "not": {
+      "en-US": "not"
+    },
+    "Success": {
+      "en-US": "Success"
+    },
+    "Failure": {
+      "en-US": "Failure"
+    },
+    "Editor": {
+      "en-US": "Editor"
+    },
+    "World": {
+      "en-US": "World"
+    },
+    "Script Editor": {
+      "en-US": "Script Editor"
+    },
+    "Console": {
+      "en-US": "Console"
+    },
+    "Open": {
+      "en-US": "Open"
+    },
+    "Save": {
+      "en-US": "Save"
+    },
+    "Save As": {
+      "en-US": "Save As"
+    },
+    "Delete": {
+      "en-US": "Delete"
+    },
+    "Documentation": {
+      "en-US": "Documentation"
+    },
+    "Feedback": {
+      "en-US": "Feedback"
+    },
+    "Reset World": {
+      "en-US": "Reset World"
+    },
+    "Layout": {
+      "en-US": "Layout"
+    },
+    "User Interface": {
+      "en-US": "User Interface"
+    },
+    "Simulation": {
+      "en-US": "Simulation"
+    },
+    "Locale": {
+      "en-US": "Locale"
+    },
+    "Switch languages": {
+      "en-US": "Switch languages"
+    },
+    "Sensor noise": {
+      "en-US": "Sensor noise"
+    },
+    "Controls whether sensor outputs are affected by random noise": {
+      "en-US": "Controls whether sensor outputs are affected by random noise"
+    },
+    "Realistic sensors": {
+      "en-US": "Realistic sensors"
+    },
+    "Controls whether sensors behave like real-world sensors instead of like ideal sensors. For example, real-world ET sensors are nonlinear": {
+      "en-US": "Controls whether sensors behave like real-world sensors instead of like ideal sensors. For example, real-world ET sensors are nonlinear"
+    },
+    "Autocomplete": {
+      "en-US": "Autocomplete"
+    },
+    "Controls autocompletion of code, brackets, and quotes": {
+      "en-US": "Controls autocompletion of code, brackets, and quotes"
+    },
+    "Version %s (%s)": {
+      "en-US": "Version %s (%s)"
+    },
+    "Copyright": {
+      "en-US": "Copyright"
+    },
+    "This software is licensed under the terms of the": {
+      "en-US": "This software is licensed under the terms of the"
+    },
+    "Thank you to the following contributors and testers:": {
+      "en-US": "Thank you to the following contributors and testers:"
+    },
+    "Want to help improve the simulator and get your name listed here?": {
+      "en-US": "Want to help improve the simulator and get your name listed here?"
+    },
+    "GitHub repository": {
+      "en-US": "GitHub repository"
+    },
+    "We're happy to help you get started!": {
+      "en-US": "We're happy to help you get started!"
+    },
+    "Give a helpful description of a problem you're facing, or a feature you'd like to request": {
+      "en-US": "Give a helpful description of a problem you're facing, or a feature you'd like to request"
+    },
+    "Thanks for using the KIPR Simulator! Find a bug? Have a feature request? Let us know!": {
+      "en-US": "Thanks for using the KIPR Simulator! Find a bug? Have a feature request? Let us know!"
+    },
+    "How has your experience using the KIPR Simulator been?": {
+      "en-US": "How has your experience using the KIPR Simulator been?"
+    },
+    "Email (optional): ": {
+      "en-US": "Email (optional): "
+    },
+    "Include anonymous usage data to help KIPR developers": {
+      "en-US": "Include anonymous usage data to help KIPR developers"
+    },
+    "Please try again,": {
+      "en-US": "Please try again,"
+    },
+    "open an issue on our github page": {
+      "en-US": "open an issue on our github page"
+    },
+    ", or": {
+      "en-US": ", or"
+    },
+    "email KIPR.": {
+      "en-US": "email KIPR."
+    },
+    "Submit": {
+      "en-US": "Submit"
+    },
+    "Feedback Success": {
+      "en-US": "Feedback Success"
+    },
+    "Feedback successfully submitted!": {
+      "en-US": "Feedback successfully submitted!"
+    },
+    "Thank you for helping improve the KIPR Simulator!": {
+      "en-US": "Thank you for helping improve the KIPR Simulator!"
+    },
+    "Open World": {
+      "en-US": "Open World"
+    },
+    "Unknown": {
+      "en-US": "Unknown"
+    },
+    "Description: ": {
+      "en-US": "Description: "
+    },
+    "Author: ": {
+      "en-US": "Author: "
+    },
+    "Me": {
+      "en-US": "Me"
+    },
+    "Select a scene to see more details": {
+      "en-US": "Select a scene to see more details"
+    },
+    "Description": {
+      "en-US": "Description"
+    },
+    "New World": {
+      "en-US": "New World"
+    },
+    "Create": {
+      "en-US": "Create"
+    },
+    "Delete %s?": {
+      "en-US": "Delete %s?"
+    },
+    "Are you sure you want to delete %s?": {
+      "en-US": "Are you sure you want to delete %s?"
+    },
+    "Copy World": {
+      "en-US": "Copy World"
+    },
+    "Error %d": {
+      "en-US": "Error %d"
+    },
+    "Closing this dialog will take you back to the last well-known state.": {
+      "en-US": "Closing this dialog will take you back to the last well-known state."
+    },
+    "If this error persists, please submit feedback.": {
+      "en-US": "If this error persists, please submit feedback."
+    },
+    "World Settings": {
+      "en-US": "World Settings"
+    },
+    "CHALLENGE": {
+      "en-US": "CHALLENGE"
+    },
+    "Start": {
+      "en-US": "Start"
+    },
+    "Welcome to the KIPR Simulator!\n": {
+      "en-US": "Welcome to the KIPR Simulator!\n"
+    },
+    "Compiling...\n": {
+      "en-US": "Compiling...\n"
+    },
+    "Compilation succeeded with warnings.\n": {
+      "en-US": "Compilation succeeded with warnings.\n"
+    },
+    "Compilation succeeded.\n": {
+      "en-US": "Compilation succeeded.\n"
+    },
+    "Compilation failed.\n": {
+      "en-US": "Compilation failed.\n"
+    },
+    "Something went wrong during compilation.\n": {
+      "en-US": "Something went wrong during compilation.\n"
+    },
+    "Compilation succeeded with warnings\n": {
+      "en-US": "Compilation succeeded with warnings\n"
+    },
+    "Compilation succeeded\n": {
+      "en-US": "Compilation succeeded\n"
+    },
+    "Modules": {
+      "en-US": "Modules"
+    },
+    "Functions": {
+      "en-US": "Functions"
+    },
+    "Structures": {
+      "en-US": "Structures"
+    },
+    "Enumerations": {
+      "en-US": "Enumerations"
+    },
+    "Files": {
+      "en-US": "Files"
+    },
+    "Search...": {
+      "en-US": "Search..."
+    },
+    "Detailed Description": {
+      "en-US": "Detailed Description"
+    },
+    "Parameters": {
+      "en-US": "Parameters"
+    },
+    "Return Value": {
+      "en-US": "Return Value"
+    },
+    "Fields": {
+      "en-US": "Fields"
+    },
+    "Volume": {
+      "en-US": "Volume"
+    },
+    "RGB": {
+      "en-US": "RGB"
+    },
+    "Challenge": {
+      "en-US": "Challenge"
+    },
+    "Stop": {
+      "en-US": "Stop"
+    },
+    "Run": {
+      "en-US": "Run"
+    },
+    "and External Contributors": {
+      "en-US": "and External Contributors"
+    },
+    "Visit our": {
+      "en-US": "Visit our"
+    }
+  },
+  "Volume (box) in the 3D scene": {
+    "Volume": {
+      "en-US": "Volume"
+    }
+  },
+  "Red, Green, Blue": {
+    "RGB": {
+      "en-US": "RGB"
+    }
+  },
+  "Computer text command line (e.g., DOS)": {
+    "Console": {
+      "en-US": "Console"
+    }
+  },
+  "A predefined task for the user to complete": {
+    "Challenge": {
+      "en-US": "Challenge"
+    }
+  },
+  "Terminate program execution": {
+    "Stop": {
+      "en-US": "Stop"
+    }
+  },
+  "Begin program execution": {
+    "Run": {
+      "en-US": "Run"
+    }
+  },
+  "Part of copyright notice, after KIPR is listed": {
+    "and External Contributors": {
+      "en-US": "and External Contributors"
+    }
+  },
+  "URL link to github repository follows": {
+    "Visit our": {
+      "en-US": "Visit our"
+    }
+  },
+  "Rotation order": {
+    "XYZ": {
+      "en-US": "XYZ"
+    },
+    "YZX": {
+      "en-US": "YZX"
+    },
+    "ZXY": {
+      "en-US": "ZXY"
+    },
+    "XZY": {
+      "en-US": "XZY"
+    },
+    "YXZ": {
+      "en-US": "YXZ"
+    },
+    "ZYX": {
+      "en-US": "ZYX"
+    }
+  }
+}

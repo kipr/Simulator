@@ -6,7 +6,7 @@ import { clamp } from '../util/math/math';
 import RegisterState from './registers/RegisterState';
 import SharedRegisters from './registers/SharedRegisters';
 
-class SharedRegistersRobot implements AbstractRobot {
+export class SharedRegistersRobot implements AbstractRobot {
   private sharedResisters_: SharedRegisters;
 
   private static readonly POSITION_GOAL_SCALING = 250; 

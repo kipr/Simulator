@@ -1,6 +1,7 @@
 import Author from '../../../db/Author';
 import Challenge from '../../../state/State/Challenge';
 import Expr from '../../../state/State/Challenge/Expr';
+import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
 
 import tr from '@i18n';
 
@@ -12,9 +13,9 @@ export default {
     id: 'kipr'
   },
   code: {
-    'c': `#include <kipr/botball.h>`,
-    'cpp': `#include <kipr/botball.h>`,
-    'python': `from kipr import botball`,
+    'c': ProgrammingLanguage.DEFAULT_CODE.c,
+    'cpp': ProgrammingLanguage.DEFAULT_CODE.cpp,
+    'python': ProgrammingLanguage.DEFAULT_CODE.python,
   },
   defaultLanguage: 'c',
   events: {

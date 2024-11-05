@@ -483,7 +483,7 @@ class Root extends React.Component<Props, State> {
       : latestChallenge.defaultLanguage;
   }
 
-  private get code(): { [language in ProgrammingLanguage]: string } {
+  private get code(): { [language in ProgrammingLanguage]?: string } {
     const { challenge, challengeCompletion } = this.props;
     const latestChallengeCompletion = Async.latestValue(challengeCompletion);
     const latestChallenge = Async.latestValue(challenge);
@@ -726,6 +726,10 @@ class Root extends React.Component<Props, State> {
     });
   };
 
+  private onEndChallengeClick_ = () => {
+    window.location.href = `/scene/${this.props.match.params.challengeId}`;
+  };
+
   private onResetCode_ = () => {
     this.setState({
       modal: Modal.RESET_CODE
@@ -873,6 +877,7 @@ class Root extends React.Component<Props, State> {
             onDocumentationClick={onDocumentationClick}
             onDashboardClick={this.onDashboardClick}
             onLogoutClick={this.onLogoutClick}
+            onEndChallengeClick={this.onEndChallengeClick_}
             simulatorState={simulatorState}
           />
           {impl}
