@@ -8,6 +8,7 @@ import { auth } from './firebase/firebase';
 
 import Dashboard from './pages/Dashboard';
 import Tutorials from './pages/Tutorials';
+import Leaderboard from './pages/Leaderboard';
 
 import Loading from './components/Loading';
 import Root from './pages/Root';
@@ -125,6 +126,7 @@ class App extends React.Component<Props, State> {
         <Switch>
           <Route path="/" exact component={Dashboard} />
           <Route path="/tutorials" exact component={Tutorials} />
+          <Route path="/leaderboard" exact component={Leaderboard} />
           <Route path="/scene/:sceneId" component={Root} />
           <Route path="/challenge/:challengeId" component={ChallengeRoot} />
           <Route path="/curriculum" component={CurriculumPage} />
