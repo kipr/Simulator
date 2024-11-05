@@ -1,11 +1,20 @@
 import Scene from "../../../state/State/Scene";
 import LocalizedString from "../../../util/LocalizedString";
 import Script from "../../../state/State/Scene/Script";
-import { createCanNode, createBaseSceneSurfaceA, createCircleNode, canPositions } from "./jbcBase";
-import { Color } from "../../../state/State/Scene/Color";
+import { createBaseSceneSurfaceA, createCircleNode } from "./jbcBase";
 import { Distance } from "../../../util";
+import { Color } from "../../../state/State/Scene/Color";
 
 const baseScene = createBaseSceneSurfaceA();
+
+const notInStartBox = `
+scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
+  // console.log('Robot not started in start box!', type, otherNodeId);
+  if(scene.programStatus === 'running'){
+    scene.setChallengeEventValue('notInStartBox', type === 'start');
+  }
+}, 'notStartBox');
+`;
 
 const oddNumberIntersects = `
 const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
@@ -24,7 +33,6 @@ let circlesMap = new Map([
   ['circle9', false],
   ['circle11', false],
 ]);
-
 
 // When the robot is touching a circle with an odd number, the circle glows
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
@@ -104,11 +112,8 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
       default:
         console.warn('Unknown circle: ', otherNodeId);
         break;
-
     }
   }
-
-
 }, new Set([...circles, ...evenCircles]));
 `;
 
@@ -119,59 +124,53 @@ export const JBC_5: Scene = {
     [LocalizedString.EN_US]: "Junior Botball Challenge 5: Odd Numbers",
   },
   scripts: {
+    notInStartBox: Script.ecmaScript("Not In Start Box", notInStartBox),
     oddNumberIntersects: Script.ecmaScript("Odd Number Intersects", oddNumberIntersects),
   },
   geometry: {
     ...baseScene.geometry,
-    mainSurface_geom: {
+    notStartBox_geom: {
       type: "box",
       size: {
         x: Distance.meters(3.54),
-        y: Distance.centimeters(0.1),
-        z: Distance.meters(3.54),
+        y: Distance.centimeters(10),
+        z: Distance.meters(2.13),
       },
     },
-    circle_geom: {
-      type: "cylinder",
-      height: Distance.centimeters(0.1),
-      radius: Distance.centimeters(3),
-    },
-
   },
-
   nodes: {
     ...baseScene.nodes,
-    mainSurface: {
+    notStartBox: {
       type: "object",
-      geometryId: "mainSurface_geom",
-      name: { [LocalizedString.EN_US]: "Mat Surface" },
+      geometryId: "notStartBox_geom",
+      name: { [LocalizedString.EN_US]: "Not Start Box" },
       visible: false,
       origin: {
         position: {
           x: Distance.centimeters(0),
-          y: Distance.centimeters(-6.9),
-          z: Distance.inches(19.75),
+          y: Distance.centimeters(-1.9),
+          z: Distance.meters(1.208),
         },
       },
       material: {
         type: "basic",
         color: {
           type: "color3",
-          color: Color.rgb(0, 0, 0),
+          color: Color.rgb(255, 0, 0),
         },
       },
     },
-    circle1: createCircleNode(1, undefined, false, false),
-    circle2: createCircleNode(2, undefined, false, false),
-    circle3: createCircleNode(3, undefined, false, false),
-    circle4: createCircleNode(4, undefined, false, false),
-    circle5: createCircleNode(5, undefined, false, false),
-    circle6: createCircleNode(6, undefined, false, false),
-    circle7: createCircleNode(7, undefined, false, false),
-    circle8: createCircleNode(8, undefined, false, false),
-    circle9: createCircleNode(9, undefined, false, false),
-    circle10: createCircleNode(10, undefined, false, false),
-    circle11: createCircleNode(11, undefined, false, false),
-    circle12: createCircleNode(12, undefined, false, false),
+    circle1: createCircleNode(1),
+    circle2: createCircleNode(2),
+    circle3: createCircleNode(3),
+    circle4: createCircleNode(4),
+    circle5: createCircleNode(5),
+    circle6: createCircleNode(6),
+    circle7: createCircleNode(7),
+    circle8: createCircleNode(8),
+    circle9: createCircleNode(9),
+    circle10: createCircleNode(10),
+    circle11: createCircleNode(11),
+    circle12: createCircleNode(12),
   },
 };

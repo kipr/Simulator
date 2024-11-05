@@ -20,12 +20,10 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
-
-    leaveStartBox: {
-      name: { [LocalizedString.EN_US]: 'Robot Left Start' },
-      description: { [LocalizedString.EN_US]: 'Robot left starting box' },
+    notInStartBox: {
+      name: { [LocalizedString.EN_US]: 'Robot not in Start Box' },
+      description: { [LocalizedString.EN_US]: 'Robot not in start box' },
     },
-
     can2Upright: {
       name: { [LocalizedString.EN_US]: 'Can 2 Upright' },
       description: { [LocalizedString.EN_US]: 'Can 2 upright' },
@@ -55,20 +53,22 @@ export default {
       name: { [LocalizedString.EN_US]: 'Can 10 Intersects Yellow Garage' },
       description: { [LocalizedString.EN_US]: 'Can 10 intersects Yellow Garage' },
     },
-
   },
   success: {
     exprs: {
       // Start Box Events
-      leaveStartBox: {
+      notInStartBox: {
         type: Expr.Type.Event,
-        eventId: 'leaveStartBox',
+        eventId: "notInStartBox",
       },
-      leaveStartBoxOnce: {
+      inStartBox: {
+        type: Expr.Type.Not,
+        argId: "notInStartBox",
+      },
+      inStartBoxOnce: {
         type: Expr.Type.Once,
-        argId: 'leaveStartBox',
+        argId: "inStartBox",
       },
-
 
       // Upright Events
       can2Upright: {
@@ -118,12 +118,10 @@ export default {
         argIds: ['can2UprightAndIntersects', 'can9UprightAndIntersects', 'can10UprightAndIntersects',],
       },
 
-
-
       // Success logic
       completion: {
         type: Expr.Type.And,
-        argIds: ['leaveStartBoxOnce', 'cansUprightAndIntersects'],
+        argIds: ['inStartBoxOnce', 'cansUprightAndIntersects'],
       },
     },
     rootId: 'completion',

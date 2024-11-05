@@ -26,17 +26,14 @@ export default {
       name: { [LocalizedString.EN_US]: 'Can 9 Touched' },
       description: { [LocalizedString.EN_US]: 'Can A touched' },
     },
-
     can9Intersects: {
       name: { [LocalizedString.EN_US]: 'Can 9 Intersects' },
       description: { [LocalizedString.EN_US]: 'Can 9 intersects circle 9' },
     },
-
     can9Upright: {
       name: { [LocalizedString.EN_US]: 'Can 9 Upright' },
       description: { [LocalizedString.EN_US]: 'Can 9 upright on circle 9' },
     },
-
     returnStartBox: {
       name: { [LocalizedString.EN_US]: 'Robot Rentered Start' },
       description: { [LocalizedString.EN_US]: 'Robot reentered starting box' },

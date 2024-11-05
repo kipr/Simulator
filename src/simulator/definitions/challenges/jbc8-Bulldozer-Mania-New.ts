@@ -20,63 +20,33 @@ export default {
   },
   defaultLanguage: "c",
   events: {
-    canAIntersects: {
-      name: { [LocalizedString.EN_US]: "Can A Intersects" },
-      description: { [LocalizedString.EN_US]: "Can A behind start line" },
+    notInStartBox: {
+      name: { [LocalizedString.EN_US]: "Robot not in Start Box" },
+      description: { [LocalizedString.EN_US]: "Robot not in start box" },
     },
-    canBIntersects: {
-      name: { [LocalizedString.EN_US]: "Can B Intersects" },
-      description: { [LocalizedString.EN_US]: "Can B behind start line" },
-    },
-    canCIntersects: {
-      name: { [LocalizedString.EN_US]: "Can C Intersects" },
-      description: { [LocalizedString.EN_US]: "Can C behind start line" },
-    },
-
     canAUpright: {
       name: { [LocalizedString.EN_US]: "Can A Upright" },
-      description: {
-        [LocalizedString.EN_US]: "Can A upright behind start line",
-      },
+      description: { [LocalizedString.EN_US]: "Can A upright behind start line" },
     },
     canBUpright: {
       name: { [LocalizedString.EN_US]: "Can B Upright" },
-      description: {
-        [LocalizedString.EN_US]: "Can B upright behind start line",
-      },
+      description: { [LocalizedString.EN_US]: "Can B upright behind start line" },
     },
     canCUpright: {
       name: { [LocalizedString.EN_US]: "Can C Upright" },
-      description: {
-        [LocalizedString.EN_US]: "Can C upright behind start line",
-      },
+      description: { [LocalizedString.EN_US]: "Can C upright behind start line" },
     },
-
-    leaveStartBox: {
-      name: { [LocalizedString.EN_US]: "Robot Left Start" },
-      description: { [LocalizedString.EN_US]: "Robot left starting box" },
+    canDUpright: {
+      name: { [LocalizedString.EN_US]: "Can D Upright" },
+      description: { [LocalizedString.EN_US]: "Can D upright behind start line" },
     },
-    returnStartBox: {
-      name: { [LocalizedString.EN_US]: "Robot Rentered Start" },
-      description: { [LocalizedString.EN_US]: "Robot reentered starting box" },
+    canEUpright: {
+      name: { [LocalizedString.EN_US]: "Can E Upright" },
+      description: { [LocalizedString.EN_US]: "Can E upright behind start line" },
     },
   },
   success: {
     exprs: {
-      // Intersects Events
-      canAIntersects: {
-        type: Expr.Type.Event,
-        eventId: "canAIntersects",
-      },
-      canBIntersects: {
-        type: Expr.Type.Event,
-        eventId: "canBIntersects",
-      },
-      canCIntersects: {
-        type: Expr.Type.Event,
-        eventId: "canCIntersects",
-      },
-
       // Upright Events
       canAUpright: {
         type: Expr.Type.Event,
@@ -90,55 +60,37 @@ export default {
         type: Expr.Type.Event,
         eventId: "canCUpright",
       },
+      canDUpright: {
+        type: Expr.Type.Event,
+        eventId: "canDUpright",
+      },
+      canEUpright: {
+        type: Expr.Type.Event,
+        eventId: "canEUpright",
+      },
+      allUpright: {
+        type: Expr.Type.And,
+        argIds: ["canAUpright", "canBUpright", "canCUpright", "canDUpright", "canEUpright"],
+      },
 
       // Start Box Events
-      leaveStartBox: {
+      notInStartBox: {
         type: Expr.Type.Event,
-        eventId: "leaveStartBox",
+        eventId: "notInStartBox",
       },
-      leaveStartBoxOnce: {
+      inStartBox: {
+        type: Expr.Type.Not,
+        argId: "notInStartBox",
+      },
+      inStartBoxOnce: {
         type: Expr.Type.Once,
-        argId: "leaveStartBox",
-      },
-      returnStartBox: {
-        type: Expr.Type.Event,
-        eventId: "returnStartBox",
-      },
-      returnStartBoxOnce: {
-        type: Expr.Type.Once,
-        argId: "returnStartBox",
-      },
-      startingBox: {
-        type: Expr.Type.And,
-        argIds: ["leaveStartBoxOnce", "returnStartBoxOnce"],
+        argId: "inStartBox",
       },
 
-      // Intersects and upright logic
-      IntersectsUprightA: {
-        type: Expr.Type.And,
-        argIds: ["canAIntersects", "canAUpright"],
-      },
-      IntersectsUprightB: {
-        type: Expr.Type.And,
-        argIds: ["canBIntersects", "canBUpright"],
-      },
-      IntersectsUprightC: {
-        type: Expr.Type.And,
-        argIds: ["canCIntersects", "canCUpright"],
-      },
-      AllIntersectsUpright: {
-        type: Expr.Type.And,
-        argIds: [
-          "IntersectsUprightA",
-          "IntersectsUprightB",
-          "IntersectsUprightC",
-        ],
-      },
-
-      // Success Logic = Can A upright, intersects and touched
+      // Success Logic
       completion: {
         type: Expr.Type.And,
-        argIds: ["startingBox", "AllIntersectsUpright"],
+        argIds: ["inStartBoxOnce", "allUpright"],
       },
     },
     rootId: "completion",

@@ -20,6 +20,10 @@ export default {
   },
   defaultLanguage: "c",
   events: {
+    notInStartBox: {
+      name: { [LocalizedString.EN_US]: "Robot not in Start Box" },
+      description: { [LocalizedString.EN_US]: "Robot not in start box" },
+    },
     touchedEvenCircle: {
       name: { [LocalizedString.EN_US]: "Even Circle Touched" },
       description: { [LocalizedString.EN_US]: "Even circle touched" },
@@ -55,6 +59,20 @@ export default {
   },
   success: {
     exprs: {
+      // Start Box Events
+      notInStartBox: {
+        type: Expr.Type.Event,
+        eventId: "notInStartBox",
+      },
+      inStartBox: {
+        type: Expr.Type.Not,
+        argId: "notInStartBox",
+      },
+      inStartBoxOnce: {
+        type: Expr.Type.Once,
+        argId: "inStartBox",
+      },
+
       // Touch Events
       circle1Touched: {
         type: Expr.Type.Event,
@@ -109,6 +127,7 @@ export default {
       completion: {
         type: Expr.Type.And,
         argIds: [
+          'inStartBoxOnce',
           'circle1TouchedOnce',
           'circle3TouchedOnce',
           'circle5TouchedOnce',

@@ -1,7 +1,7 @@
 import Scene from '../../../state/State/Scene';
 import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
-import { createCanNode, createBaseSceneSurfaceA, createCircleNode } from './jbcBase';
+import { createBaseSceneSurfaceA, createCircleNode } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
 import { Distance } from '../../../util';
 

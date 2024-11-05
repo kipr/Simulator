@@ -2,16 +2,23 @@ import Scene from '../../../state/State/Scene';
 import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
 import { Distance, Angle } from '../../../util';
-import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
+import { createBaseSceneSurfaceA } from './jbcBase';
 import { RotationwUnits } from '../../../util/math/unitMath';
 import { Color } from '../../../state/State/Scene/Color';
 import { RawVector2 } from '../../../util/math/math';
-import { number } from 'prop-types';
 import Material from 'state/State/Scene/Material';
 
-
-
 const baseScene = createBaseSceneSurfaceA();
+
+const notInStartBox = `
+scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
+  // console.log('Robot not started in start box!', type, otherNodeId);
+  if(scene.programStatus === 'running'){
+    scene.setChallengeEventValue('notInStartBox', type === 'start');
+  }
+}, 'notStartBox');
+`;
+
 const garageIntersects = `
 
 const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
@@ -46,172 +53,165 @@ scene.addOnRenderListener(() => {
     clicked = true;
    
   }
+});
+
+scene.addOnIntersectionListener('robot', (type, otherNodeId)  => {
+  
+  
+  if(declaredGarage[state] == 'greenBox' && (otherNodeId == 'g1' || otherNodeId == 'g2' || otherNodeId == 'g3')){
+    state = 0;
+    selected = 0;
+    scene.setChallengeEventValue('touchGarageLines', true);
+  }
+  else if(declaredGarage[state] == 'blueBox' && (otherNodeId == 'b1' || otherNodeId == 'b2' || otherNodeId == 'b3')){
+    scene.setChallengeEventValue('touchGarageLines', true);
+    state = 0;
+    selected = 0;
+  }
+
+  else if(declaredGarage[state] == 'yellowBox' && (otherNodeId == 'y1' || otherNodeId == 'y2' || otherNodeId == 'y3')){
+    state = 0;
+    selected = 0;
+    scene.setChallengeEventValue('touchGarageLines', true);
+  } 
+
+}, ['greenBox', 'yellowBox', 'blueBox','g1', 'g2','g3', 'b1','b2','b3', 'y1', 'y2', 'y3']);
+
+//User declares garage
+scene.addOnClickListener(['greenBox','yellowBox','blueBox','volume'], id => {
+  
+  clicked = !clicked;
+
+  switch(id){
+    case 'greenBox':
+      if(!chosenGarage.includes('greenGarage')){
+        chosenGarage.push('greenGarage');
+        declaredGarage.push('greenBox');
+      }
+      if(instruction == 0){
+        setNodeVisible('greenBox', false);
+        setNodeVisible('greenGarageMarker1', true);
+      }
+      else if (instruction == 1 )
+      {
+        setNodeVisible('greenBox', false);
+        setNodeVisible('greenGarageMarker2', true);
+      }
+      instruction++;
+      
+      break;
+    case 'yellowBox':
+      if(!chosenGarage.includes('yellowGarage')){
+        chosenGarage.push('yellowGarage');
+        declaredGarage.push('yellowBox');
+      }
+      if(instruction == 0){
+        setNodeVisible('yellowBox', false);
+        setNodeVisible('yellowGarageMarker1', true);
+      }
+      else if (instruction == 1 )
+      {
+        setNodeVisible('yellowBox', false);
+        setNodeVisible('yellowGarageMarker2', true);
+      }
+      instruction++;
+      
+      break;
+    case 'blueBox':
+      if(!chosenGarage.includes('blueGarage')){
+        chosenGarage.push('blueGarage');
+        declaredGarage.push('blueBox');
+      }
+      if(instruction == 0){
+        setNodeVisible('blueBox', false);
+        setNodeVisible('blueGarageMarker1', true);
+      }
+      else if (instruction == 1)
+      {
+        setNodeVisible('blueBox', false);
+        setNodeVisible('blueGarageMarker2', true);
+      }
+      instruction++;
+      break;
+    default:
+      console.log("No box clicked");
+      break;
+  }
+
+  if(instruction == 1){
+    setNodeVisible('instructionBox1', false);
+    setNodeVisible('instructionBox2', true);
+  }
+  else if(instruction == 2){
+
+    setNodeVisible('instructionBox2', false);
+    setNodeVisible('instructionBox1', false);
+    setNodeVisible('mainInstructionBox', false);
+    setNodeVisible('yellowBox', false);
+    setNodeVisible('greenBox', false);
+    setNodeVisible('blueBox', false);
+    instruction = 0;
+  }
 
 });
 
-  scene.addOnIntersectionListener('robot', (type, otherNodeId)  => {
-   
-   
-    if(declaredGarage[state] == 'greenBox' && (otherNodeId == 'g1' || otherNodeId == 'g2' || otherNodeId == 'g3')){
-      state = 0;
-      selected = 0;
-      scene.setChallengeEventValue('touchGarageLines', true);
-    }
-    else if(declaredGarage[state] == 'blueBox' && (otherNodeId == 'b1' || otherNodeId == 'b2' || otherNodeId == 'b3')){
-      scene.setChallengeEventValue('touchGarageLines', true);
-      state = 0;
-      selected = 0;
-    }
-
-    else if(declaredGarage[state] == 'yellowBox' && (otherNodeId == 'y1' || otherNodeId == 'y2' || otherNodeId == 'y3')){
-      state = 0;
-      selected = 0;
-      scene.setChallengeEventValue('touchGarageLines', true);
-    } 
-
-  }, ['greenBox', 'yellowBox', 'blueBox','g1', 'g2','g3', 'b1','b2','b3', 'y1', 'y2', 'y3']);
-
-//User declares garage
-  scene.addOnClickListener(['greenBox','yellowBox','blueBox','volume'], id => {
-    
-    clicked = !clicked;
-
-    switch(id){
-      case 'greenBox':
-        if(!chosenGarage.includes('greenGarage')){
-          console.log("Green Garage Declared");
-          chosenGarage.push('greenGarage');
-          declaredGarage.push('greenBox');
-        }
-        if(instruction == 0){
-          setNodeVisible('greenBox', false);
-          setNodeVisible('greenGarageMarker1', true);
-        }
-        else if (instruction == 1 )
-        {
-          setNodeVisible('greenBox', false);
-          setNodeVisible('greenGarageMarker2', true);
-        }
-        instruction++;
-        
-        break;
-      case 'yellowBox':
-        if(!chosenGarage.includes('yellowGarage')){
-          chosenGarage.push('yellowGarage');
-          declaredGarage.push('yellowBox');
-        }
-        if(instruction == 0){
-          setNodeVisible('yellowBox', false);
-          setNodeVisible('yellowGarageMarker1', true);
-        }
-        else if (instruction == 1 )
-        {
-          setNodeVisible('yellowBox', false);
-          setNodeVisible('yellowGarageMarker2', true);
-        }
-        instruction++;
-        
-        break;
-      case 'blueBox':
-        if(!chosenGarage.includes('blueGarage')){
-          chosenGarage.push('blueGarage');
-          declaredGarage.push('blueBox');
-        }
-        if(instruction == 0){
-          setNodeVisible('blueBox', false);
-          setNodeVisible('blueGarageMarker1', true);
-        }
-        else if (instruction == 1)
-        {
-          setNodeVisible('blueBox', false);
-          setNodeVisible('blueGarageMarker2', true);
-        }
-        instruction++;
-        break;
-      default:
-        console.log("No box clicked");
-        break;
-    }
-
-    if(instruction == 1){
-      setNodeVisible('instructionBox1', false);
-      setNodeVisible('instructionBox2', true);
-    }
-    else if(instruction == 2){
-
-      setNodeVisible('instructionBox2', false);
-      setNodeVisible('instructionBox1', false);
-      setNodeVisible('mainInstructionBox', false);
-      setNodeVisible('yellowBox', false);
-      setNodeVisible('greenBox', false);
-      setNodeVisible('blueBox', false);
-      instruction = 0;
-    }
-
-
-  });
-
-
-  scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-   
-    //Entering StartBox Events
-    if(otherNodeId == 'startBox' && type == 'start'){
-
-      if(state == 0)
-      {
-        chosenGarage = [];
-        declaredGarage = [];
-      }
-
-      //Return to startbox after first garage park
-       if(state == 1 && chosenGarage.length > 0){
-        scene.setChallengeEventValue('returnStartBox', true);
-        setNodeVisible(chosenGarage[0], false);
-        clicked = true;
-      }
- 
-    }
-
-    //Entering Garage Events
-    if(type == 'start' && otherNodeId != 'startBox'){
-
-      if(otherNodeId == 'n1' && declaredGarage[state] == 'greenBox'){
-        console.log("Green Garage Parked");
-        setNodeVisible('greenGarage', true);
-        state = state == 1 ? state : state + 1
-        selected++;
-
-      }
-      else if(otherNodeId == 'n2' && declaredGarage[state] == 'yellowBox') {
-        setNodeVisible('yellowGarage', true);
-        state = state == 1 ? state : state + 1
-        selected++;
-      }
-      else if(otherNodeId == 'n3' && declaredGarage[state] == 'blueBox') {
-        setNodeVisible('blueGarage', true);
-        state = state == 1 ? state : state + 1
-        selected++;
-      }
-
-    }
+scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
   
- 
-    if(selected == 1){
-      scene.setChallengeEventValue('singleGarageRun1', true);
+  //Entering StartBox Events
+  if(otherNodeId == 'startBox' && type == 'start'){
+
+    if(state == 0)
+    {
+      chosenGarage = [];
+      declaredGarage = [];
     }
-    else if (selected == 2){
-      scene.setChallengeEventValue('singleGarageRun2', true);
+
+    //Return to startbox after first garage park
+      if(state == 1 && chosenGarage.length > 0){
+      scene.setChallengeEventValue('returnStartBox', true);
+      setNodeVisible(chosenGarage[0], false);
+      clicked = true;
     }
 
-  }, ['startBox','n1','n2','n3', 'greenGarage', 'yellowGarage', 'blueGarage']);
+  }
+
+  //Entering Garage Events
+  if(type == 'start' && otherNodeId != 'startBox'){
+
+    if(otherNodeId == 'n1' && declaredGarage[state] == 'greenBox'){
+      parkedGarages.push('greenGarage');
+      setNodeVisible('greenGarage', true);
+      state = state == 1 ? state : state + 1
+      selected++;
+
+    }
+    else if(otherNodeId == 'n2' && declaredGarage[state] == 'yellowBox') {
+      parkedGarages.push('yellowGarage');
+      setNodeVisible('yellowGarage', true);
+      state = state == 1 ? state : state + 1
+      selected++;
+    }
+    else if(otherNodeId == 'n3' && declaredGarage[state] == 'blueBox') {
+      parkedGarages.push('blueGarage');
+      setNodeVisible('blueGarage', true);
+      state = state == 1 ? state : state + 1
+      selected++;
+    }
+
+  }
 
 
+  if(selected == 1){
+    scene.setChallengeEventValue('singleGarageRun1', true);
+  }
+  else if (selected == 2){
+    scene.setChallengeEventValue('singleGarageRun2', true);
+  }
 
-  
+}, ['startBox','n1','n2','n3', 'greenGarage', 'yellowGarage', 'blueGarage']);
 `;
 
 function generateNumberMarkers(marker: number): [string, boolean, RotationwUnits, Material, RawVector2[]] {
-
   const geometryId = 'numberMarker_geom';
   const visible: boolean = false;
   let material: Material;
@@ -250,13 +250,11 @@ function generateNumberMarkers(marker: number): [string, boolean, RotationwUnits
 
   ];
 
-
   return [geometryId, visible, orientation, material, faceUvs];
 };
 
 const number1Markers = generateNumberMarkers(1);
 const number2Markers = generateNumberMarkers(2);
-
 
 export const JBC_3: Scene = {
   ...baseScene,
@@ -265,19 +263,25 @@ export const JBC_3: Scene = {
     [LocalizedString.EN_US]: 'Junior Botball Challenge 3: Precision Parking',
   },
   scripts: {
+    notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
     garageIntersects: Script.ecmaScript('Garage Intersects', garageIntersects),
-
-
   },
   geometry: {
     ...baseScene.geometry,
-
     startBox_geom: {
       type: 'box',
       size: {
         x: Distance.centimeters(70),
         y: Distance.centimeters(0.1),
         z: Distance.centimeters(70),
+      },
+    },
+    notStartBox_geom: {
+      type: "box",
+      size: {
+        x: Distance.meters(3.54),
+        y: Distance.centimeters(10),
+        z: Distance.meters(2.13),
       },
     },
     numberMarker_geom: {
@@ -374,7 +378,26 @@ export const JBC_3: Scene = {
         },
       },
     },
-
+    notStartBox: {
+      type: "object",
+      geometryId: "notStartBox_geom",
+      name: { [LocalizedString.EN_US]: "Not Start Box" },
+      visible: false,
+      origin: {
+        position: {
+          x: Distance.centimeters(0),
+          y: Distance.centimeters(-1.9),
+          z: Distance.meters(1.208),
+        },
+      },
+      material: {
+        type: "basic",
+        color: {
+          type: "color3",
+          color: Color.rgb(255, 0, 0),
+        },
+      },
+    },
     mainInstructionBox: {
       type: 'object',
       geometryId: 'instructionBox_geom',
@@ -410,8 +433,6 @@ export const JBC_3: Scene = {
         RawVector2.ZERO, RawVector2.ZERO,
       ],
     },
-
-
     instructionBox1: {
       type: 'object',
       geometryId: 'instructionNumberBox_geom',
@@ -447,8 +468,6 @@ export const JBC_3: Scene = {
         RawVector2.ZERO, RawVector2.ZERO,
       ],
     },
-
-
     instructionBox2: {
       type: 'object',
       geometryId: 'instructionNumberBox_geom',
@@ -484,7 +503,6 @@ export const JBC_3: Scene = {
         RawVector2.ZERO, RawVector2.ZERO,
       ],
     },
-
     chosenGarage1: {
       type: 'object',
       geometryId: 'chosenGarageBox_geom',
@@ -520,9 +538,6 @@ export const JBC_3: Scene = {
         RawVector2.ZERO, RawVector2.ZERO,
       ],
     },
-
-
-
     greenBox: {
       type: 'object',
       geometryId: 'designatorBox_geom',
@@ -558,7 +573,6 @@ export const JBC_3: Scene = {
         RawVector2.ZERO, RawVector2.ZERO,
       ],
     },
-
     yellowBox: {
       type: 'object',
       geometryId: 'designatorBox_geom',
@@ -594,7 +608,6 @@ export const JBC_3: Scene = {
         RawVector2.ZERO, RawVector2.ZERO,
       ],
     },
-
     blueBox: {
       type: 'object',
       geometryId: 'designatorBox_geom',
@@ -630,7 +643,6 @@ export const JBC_3: Scene = {
         RawVector2.ZERO, RawVector2.ZERO,
       ],
     },
-
     greenGarage: {
       type: 'object',
       geometryId: 'greenGarage_geom',
@@ -711,7 +723,6 @@ export const JBC_3: Scene = {
         },
       },
     },
-
     g1: {
       type: 'object',
       geometryId: 'n_geom',
@@ -772,7 +783,6 @@ export const JBC_3: Scene = {
         },
       },
     },
-
     blueGarage: {
       type: 'object',
       geometryId: 'blueGarage_geom',
@@ -954,7 +964,6 @@ export const JBC_3: Scene = {
       faceUvs: number1Markers[4],
 
     },
-
     yellowGarageMarker2: {
       type: 'object',
       geometryId: number2Markers[0],
@@ -971,8 +980,6 @@ export const JBC_3: Scene = {
       material: number2Markers[3],
       faceUvs: number2Markers[4],
     },
-
-
     blueGarageMarker1: {
 
       type: 'object',
@@ -990,7 +997,6 @@ export const JBC_3: Scene = {
       material: number1Markers[3],
       faceUvs: number1Markers[4],
     },
-
     blueGarageMarker2: {
       type: 'object',
       geometryId: number2Markers[0],
@@ -1007,7 +1013,6 @@ export const JBC_3: Scene = {
       material: number2Markers[3],
       faceUvs: number2Markers[4],
     },
-
     greenGarageMarker1: {
       type: 'object',
       geometryId: number1Markers[0],
@@ -1024,7 +1029,6 @@ export const JBC_3: Scene = {
       material: number1Markers[3],
       faceUvs: number1Markers[4],
     },
-
     greenGarageMarker2: {
       type: 'object',
       geometryId: number2Markers[0],
@@ -1041,7 +1045,5 @@ export const JBC_3: Scene = {
       material: number2Markers[3],
       faceUvs: number2Markers[4],
     },
-
-
   },
 };

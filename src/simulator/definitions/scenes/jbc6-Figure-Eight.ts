@@ -25,7 +25,7 @@ const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
 // When the can (can4) is intersecting circle4, the circle glows
 
 scene.addOnIntersectionListener('can4', (type, otherNodeId) => {
-  console.log('Can 4 placed!', type, otherNodeId);
+  // console.log('Can 4 placed!', type, otherNodeId);
   const visible = type === 'start';
   scene.setChallengeEventValue('can4Intersects', visible);
   setNodeVisible('circle4', visible);
@@ -34,7 +34,7 @@ scene.addOnIntersectionListener('can4', (type, otherNodeId) => {
 // When the can (can9) is intersecting circle9, the circle glows
 
 scene.addOnIntersectionListener('can9', (type, otherNodeId) => {
-  console.log('Can 9 placed!', type, otherNodeId);
+  // console.log('Can 9 placed!', type, otherNodeId);
   const visible = type === 'start';
   scene.setChallengeEventValue('can9Intersects', visible);
   setNodeVisible('circle9', visible);
@@ -45,7 +45,7 @@ scene.addOnIntersectionListener('can9', (type, otherNodeId) => {
 const enterStartBox = `
 
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot returned start box!', type, otherNodeId);
+  // console.log('Robot returned start box!', type, otherNodeId);
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('returnStartBox', type === 'start');
   }
@@ -66,19 +66,18 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 
   if(type === "start"){
     position++;
-    console.log(count + ":" + otherNodeId + ":" + type + ":Position:" +position );
+    // console.log(count + ":" + otherNodeId + ":" + type + ":Position:" +position );
   }
   
   //Sets values for second crossing in the middle
   if(count == 2 && (otherNodeId == "n1")){ 
     count++;
     position = 3;
-    console.log(count + ":" + otherNodeId + ":" + type);
+    // console.log(count + ":" + otherNodeId + ":" + type);
   }
   if(type==="start" && (otherNodeId == "n" +position)){
     count++;
-    console.log(count + ":" + otherNodeId + ":" + type);
-    
+    // console.log(count + ":" + otherNodeId + ":" + type);
   }
 
   //Passed three checkmarks and recently passed the middle checkmark
@@ -92,8 +91,6 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
   if(position == 0 ){
     count = 0;
   }
-  
-  
 }, ['startBox', 'n1', 'n2']);
 
 `;

@@ -93,7 +93,6 @@ export const JBC_2: Scene = {
     passedSide: Script.ecmaScript("Passed Side", passedSide),
     enterStartBox: Script.ecmaScript("Robot Reentered Start", enterStartBox),
   },
-
   geometry: {
     ...baseScene.geometry,
     startBox_geom: {
@@ -137,7 +136,6 @@ export const JBC_2: Scene = {
       },
     },
   },
-
   nodes: {
     ...baseScene.nodes,
     startBox: {

@@ -20,6 +20,10 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
+    notInStartBox: {
+      name: { [LocalizedString.EN_US]: 'Robot not in Start Box' },
+      description: { [LocalizedString.EN_US]: 'Robot not in start box' },
+    },
     touchGarageLines: {
       name: { [LocalizedString.EN_US]: 'Robot Touched Garage Lines' },
       description: {
@@ -38,7 +42,6 @@ export default {
         [LocalizedString.EN_US]: 'Robot parked in a different garage',
       },
     },
-
     returnStartBox: {
       name: { [LocalizedString.EN_US]: 'Robot Returned Start' },
       description: { [LocalizedString.EN_US]: 'Robot returned to starting box' },
@@ -47,7 +50,6 @@ export default {
   success: {
     exprs: {
       // Garage Events
-
       singleGarageRun1: {
         type: Expr.Type.Event,
         eventId: 'singleGarageRun1',
@@ -65,8 +67,19 @@ export default {
         argId: 'singleGarageRun2',
       },
 
-
       // Start Box Events
+      notInStartBox: {
+        type: Expr.Type.Event,
+        eventId: "notInStartBox",
+      },
+      inStartBox: {
+        type: Expr.Type.Not,
+        argId: "notInStartBox",
+      },
+      inStartBoxOnce: {
+        type: Expr.Type.Once,
+        argId: "inStartBox",
+      },
       returnStartBox: {
         type: Expr.Type.Event,
         eventId: 'returnStartBox',
@@ -78,7 +91,7 @@ export default {
 
       completion: {
         type: Expr.Type.And,
-        argIds: ['singleGarageRun1Once', 'returnStartBoxOnce', 'singleGarageRun2Once'],
+        argIds: ['singleGarageRun1Once', 'inStartBoxOnce', 'returnStartBoxOnce', 'singleGarageRun2Once'],
       },
     },
     rootId: 'completion',

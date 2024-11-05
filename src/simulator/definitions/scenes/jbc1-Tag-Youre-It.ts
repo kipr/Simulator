@@ -23,12 +23,10 @@ const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
 });
 
 // When the can is intersecting circle9, the circle glows
-
 scene.addOnIntersectionListener('can9', (type, otherNodeId) => {
   // console.log('Can 9 on circle!', type, otherNodeId);
   scene.setChallengeEventValue('can9Intersects', type === 'start');
 }, 'circle9');
-
 `;
 
 const enterStartBox = `
@@ -88,7 +86,6 @@ export const JBC_1: Scene = {
       },
     },
   },
-
   nodes: {
     ...baseScene.nodes,
     'startBox': {
@@ -134,5 +131,4 @@ export const JBC_1: Scene = {
     can9: createCanNode(9),
     circle9: createCircleNode(9),
   }
-
 };

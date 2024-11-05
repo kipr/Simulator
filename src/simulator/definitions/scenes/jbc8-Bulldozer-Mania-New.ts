@@ -7,97 +7,30 @@ import { Distance } from "../../../util";
 
 const baseScene = createBaseSceneSurfaceA();
 
-const startBoxIntersects = `
-const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
-  ...scene.nodes[nodeId],
-  visible
+const notInStartBox = `
+scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
+  // console.log('Robot not started in start box!', type, otherNodeId);
+  if(scene.programStatus === 'running'){
+    scene.setChallengeEventValue('notInStartBox', type === 'start');
+  }
+}, 'notStartBox');
+`;
+
+const uprightStartBoxCans = `
+let count = 0;
+const cans = ['can1', 'can2', 'can3', 'can4', 'can5', 'can6', 'can7', 'can8', 'can9', 'can10', 'can11', 'can12'];
+
+const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
+const yAngle = (nodeId) => 180 / Math.PI * -1 * Math.asin(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
+
+scene.addOnRenderListener(() => {
+  if(scene.programStatus !== 'running'){
+    count = 0;
+  }
 });
-
-let count = 0;
-scene.onBind = nodeId => {
   
-  scene.addOnIntersectionListener(nodeId, (type, otherNodeId) => {
-    //count++;
-    //console.log(count);
-    
-  
-    if(type === 'start'){
-      console.log(nodeId + " entered start box!");
-      count++; 
-    }
-  
-    else if (count != 0 && type === "end"){
-      console.log(nodeId + " left start box :(");
-      count--;
-    }
-    else if (count > 3){
-      count = 0;
-    }
-
-    switch (count){
-      case 0:
-        scene.setChallengeEventValue('canAIntersects', false);
-        scene.setChallengeEventValue('canBIntersects', false);
-        scene.setChallengeEventValue('canCIntersects', false);
-      break;
-      case 1:
-        scene.setChallengeEventValue('canAIntersects', true);
-        scene.setChallengeEventValue('canBIntersects', false);
-        scene.setChallengeEventValue('canCIntersects', false);
-      break;
-      case 2:
-        scene.setChallengeEventValue('canAIntersects', true);
-        scene.setChallengeEventValue('canBIntersects', true);
-        scene.setChallengeEventValue('canCIntersects', false);
-      break;
-      case 3:
-        scene.setChallengeEventValue('canAIntersects', true);
-        scene.setChallengeEventValue('canBIntersects', true);
-        scene.setChallengeEventValue('canCIntersects', true);
-      break;
-
-    }
-    console.log("Intersecting Count: " + count + " (" +nodeId + ")");
-  }, 'startBox');
-
-
-};
-`;
-
-const leftStartBox = `
-
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot left start box!', type, otherNodeId);
+scene.addOnIntersectionListener('startBox', (type, otherNodeId) => {
   if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('leaveStartBox', type === 'end');
-  }
-  
-}, 'startBox');
-`;
-
-const enterStartBox = `
-
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot returned start box!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('returnStartBox', type === 'start');
-  }
-}, 'startBox');
-`;
-
-const uprightCans = `
-
-let count = 0;
-console.log("Beginning Upright Count: " + count);
-scene.onBind = nodeId => {
-  
-  
-  scene.addOnIntersectionListener(nodeId, (type, otherNodeId) => {
-    const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
-  const yAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
-  const upright = yAngle(nodeId) < 5;
-  
-    
     if(upright && type === "start"){
       count++;
     }
@@ -107,35 +40,15 @@ scene.onBind = nodeId => {
     else if(!upright && (count != 0) && type === "start"){
       count--;
     }
-    switch (count){
-      case 0:
-        scene.setChallengeEventValue('canAUpright', false);
-        scene.setChallengeEventValue('canBUpright', false);
-        scene.setChallengeEventValue('canCUpright', false);
-      break;
-      case 1:
-        scene.setChallengeEventValue('canAUpright', true);
-        scene.setChallengeEventValue('canBUpright', false);
-        scene.setChallengeEventValue('canCUpright', false);
-      break;
-      case 2:
-        scene.setChallengeEventValue('canAUpright', true);
-        scene.setChallengeEventValue('canBUpright', true);
-        scene.setChallengeEventValue('canCUpright', false);
-      break;
-      case 3:
-        scene.setChallengeEventValue('canAUpright', true);
-        scene.setChallengeEventValue('canBUpright', true);
-        scene.setChallengeEventValue('canCUpright', true);
-      break;
 
-    }
-    console.log("Upright Count: " + count + " (" +nodeId + ")");
-    
-
-   
-  }, 'startBox');
-};
+    scene.setChallengeEventValue('canAUpright', count > 0);
+    scene.setChallengeEventValue('canBUpright', count > 1);
+    scene.setChallengeEventValue('canCUpright', count > 2);
+    scene.setChallengeEventValue('canDUpright', count > 3);
+    scene.setChallengeEventValue('canEUpright', count > 4);
+    // console.log("Upright Count: " + count + " (" + otherNodeId + ") " + type + " " + yAngle(otherNodeId));
+  }
+}, [...cans]);
 `;
 
 export const JBC_8: Scene = {
@@ -145,24 +58,11 @@ export const JBC_8: Scene = {
     [LocalizedString.EN_US]: `Junior Botball Challenge 8: Bulldozer Mania`,
   },
   scripts: {
-    startBoxIntersects: Script.ecmaScript(
-      "Start Box Intersects",
-      startBoxIntersects
-    ),
-    uprightCans: Script.ecmaScript("Upright Cans", uprightCans),
-    leftStartBox: Script.ecmaScript("Robot Left Start", leftStartBox),
-    enterStartBox: Script.ecmaScript("Robot Reentered Start", enterStartBox),
+    uprightStartBoxCans: Script.ecmaScript("Upright Start Box Cans", uprightStartBoxCans),
+    notInStartBox: Script.ecmaScript("Not in Start Box", notInStartBox),
   },
   geometry: {
     ...baseScene.geometry,
-    mainSurface_geom: {
-      type: "box",
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(0.1),
-        z: Distance.meters(3.54),
-      },
-    },
     startBox_geom: {
       type: "box",
       size: {
@@ -171,29 +71,17 @@ export const JBC_8: Scene = {
         z: Distance.centimeters(30),
       },
     },
-  },
-
-  nodes: {
-    mainSurface: {
-      type: "object",
-      geometryId: "mainSurface_geom",
-      name: { [LocalizedString.EN_US]: "Mat Surface" },
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-6.9),
-          z: Distance.inches(19.75),
-        },
-      },
-      material: {
-        type: "basic",
-        color: {
-          type: "color3",
-          color: Color.rgb(0, 0, 0),
-        },
+    notStartBox_geom: {
+      type: "box",
+      size: {
+        x: Distance.meters(3.54),
+        y: Distance.centimeters(10),
+        z: Distance.meters(2.13),
       },
     },
+  },
+  nodes: {
+    ...baseScene.nodes,
     startBox: {
       type: "object",
       geometryId: "startBox_geom",
@@ -214,54 +102,37 @@ export const JBC_8: Scene = {
         },
       },
     },
-    ...baseScene.nodes,
-    can1: {
-      ...createCanNode(1),
-      scriptIds: ["startBoxIntersects", "uprightCans"],
+    notStartBox: {
+      type: "object",
+      geometryId: "notStartBox_geom",
+      name: { [LocalizedString.EN_US]: "Not Start Box" },
+      visible: false,
+      origin: {
+        position: {
+          x: Distance.centimeters(0),
+          y: Distance.centimeters(-1.9),
+          z: Distance.meters(1.208),
+        },
+      },
+      material: {
+        type: "basic",
+        color: {
+          type: "color3",
+          color: Color.rgb(255, 0, 0),
+        },
+      },
     },
-    can2: {
-      ...createCanNode(2),
-      scriptIds: ["startBoxIntersects", "uprightCans"],
-    },
-    can3: {
-      ...createCanNode(3),
-      scriptIds: ["startBoxIntersects", "uprightCans"],
-    },
-    can4: {
-      ...createCanNode(4),
-      scriptIds: ["startBoxIntersects", "uprightCans"],
-    },
-    can5: {
-      ...createCanNode(5),
-      scriptIds: ["startBoxIntersects", "uprightCans"],
-    },
-    can6: {
-      ...createCanNode(6),
-      scriptIds: ["startBoxIntersects", "uprightCans"],
-    },
-    can7: {
-      ...createCanNode(7),
-      scriptIds: ["startBoxIntersects", "uprightCans"],
-    },
-    can8: {
-      ...createCanNode(8),
-      scriptIds: ["startBoxIntersects", "uprightCans"],
-    },
-    can9: {
-      ...createCanNode(9),
-      scriptIds: ["startBoxIntersects", "uprightCans"],
-    },
-    can10: {
-      ...createCanNode(10),
-      scriptIds: ["startBoxIntersects", "uprightCans"],
-    },
-    can11: {
-      ...createCanNode(11),
-      scriptIds: ["startBoxIntersects", "uprightCans"],
-    },
-    can12: {
-      ...createCanNode(12),
-      scriptIds: ["startBoxIntersects", "uprightCans"],
-    },
+    can1: createCanNode(1),
+    can2: createCanNode(2),
+    can3: createCanNode(3),
+    can4: createCanNode(4),
+    can5: createCanNode(5),
+    can6: createCanNode(6),
+    can7: createCanNode(7),
+    can8: createCanNode(8),
+    can9: createCanNode(9),
+    can10: createCanNode(10),
+    can11: createCanNode(11),
+    can12: createCanNode(12),
   },
 };

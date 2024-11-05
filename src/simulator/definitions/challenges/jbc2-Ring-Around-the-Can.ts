@@ -24,7 +24,6 @@ export default {
       name: { [LocalizedString.EN_US]: "Robot not in Start Box" },
       description: { [LocalizedString.EN_US]: "Robot not in start box" },
     },
-
     can6Intersects: {
       name: { [LocalizedString.EN_US]: "Can 6 Intersects" },
       description: { [LocalizedString.EN_US]: "Can 6 intersects circle 6" },
@@ -33,26 +32,22 @@ export default {
       name: { [LocalizedString.EN_US]: "Can 6 Upright" },
       description: { [LocalizedString.EN_US]: "Can 6 upright on circle 6" },
     },
-
     returnStartBox: {
       name: { [LocalizedString.EN_US]: "Robot Rentered Start" },
       description: { [LocalizedString.EN_US]: "Robot reentered starting box" },
     },
-
     rightSide: {
       name: { [LocalizedString.EN_US]: "Robot Passed Right Side" },
       description: {
         [LocalizedString.EN_US]: "Robot passed right side of can 6",
       },
     },
-
     topSide: {
       name: { [LocalizedString.EN_US]: "Robot Passed Top Side" },
       description: {
         [LocalizedString.EN_US]: "Robot passed top side of can 6",
       },
     },
-
     leftSide: {
       name: { [LocalizedString.EN_US]: "Robot Passed left Side" },
       description: {
