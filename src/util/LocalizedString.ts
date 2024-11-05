@@ -161,7 +161,7 @@ namespace LocalizedString {
 
   export const getOriginal = (localizedString: LocalizedString) => {
     return localizedString[EN_US];
-  }
+  };
 
   export const SUPPORTED_LANGUAGES = [
     LocalizedString.AR_SA,

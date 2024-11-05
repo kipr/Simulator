@@ -61,13 +61,13 @@ export default {
         argId: "inStartBox",
       },
 
-      //Wave Events
+      // Wave Events
       wave: {
         type: Expr.Type.Event,
         eventId: "wave",
       },
 
-      //Circle Events
+      // Circle Events
       circle3Touched: {
         type: Expr.Type.Event,
         eventId: "circle3Touched",

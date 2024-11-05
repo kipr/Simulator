@@ -137,7 +137,7 @@ scene.addOnClickListener(['greenBox','yellowBox','blueBox','volume'], id => {
       instruction++;
       break;
     default:
-      console.log("No box clicked");
+      // console.log("No box clicked");
       break;
   }
 
@@ -182,20 +182,17 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
   if(type == 'start' && otherNodeId != 'startBox'){
 
     if(otherNodeId == 'n1' && declaredGarage[state] == 'greenBox'){
-      parkedGarages.push('greenGarage');
       setNodeVisible('greenGarage', true);
       state = state == 1 ? state : state + 1
       selected++;
 
     }
     else if(otherNodeId == 'n2' && declaredGarage[state] == 'yellowBox') {
-      parkedGarages.push('yellowGarage');
       setNodeVisible('yellowGarage', true);
       state = state == 1 ? state : state + 1
       selected++;
     }
     else if(otherNodeId == 'n3' && declaredGarage[state] == 'blueBox') {
-      parkedGarages.push('blueGarage');
       setNodeVisible('blueGarage', true);
       state = state == 1 ? state : state + 1
       selected++;
@@ -216,32 +213,31 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 
 function generateNumberMarkers(marker: number): [string, boolean, RotationwUnits, Material, RawVector2[]] {
   const geometryId = 'numberMarker_geom';
-  const visible: boolean = false;
+  const visible = false;
   let material: Material;
-  if (marker == 1) {
+  if (marker === 1) {
     material = {
       type: 'basic',
       color: {
         type: 'texture',
         uri: '/static/Number 1 Marker.png',
       },
-    }
-  }
-  else {
+    };
+  } else {
     material = {
       type: 'basic',
       color: {
         type: 'texture',
         uri: '/static/Number 2 Marker.png',
       },
-    }
+    };
   }
   const orientation: RotationwUnits = {
     type: 'euler',
     x: Angle.degrees(0),
     y: Angle.degrees(-90),
     z: Angle.degrees(90),
-  }
+  };
 
   const faceUvs: RawVector2[] = [
     RawVector2.ZERO, RawVector2.ZERO,
@@ -254,7 +250,7 @@ function generateNumberMarkers(marker: number): [string, boolean, RotationwUnits
   ];
 
   return [geometryId, visible, orientation, material, faceUvs];
-};
+}
 
 const number1Markers = generateNumberMarkers(1);
 const number2Markers = generateNumberMarkers(2);

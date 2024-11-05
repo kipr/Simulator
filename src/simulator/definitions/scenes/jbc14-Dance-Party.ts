@@ -65,8 +65,7 @@ scene.addOnRenderListener(() => {
   }
 });
 `;
-const robotNode = baseScene.nodes['robot'] as Node.Robot;
-robotNode.origin.orientation
+
 // const goingBackwards = `
 // let degrees = [];
 // scene.addOnRenderListener(() => {

@@ -47,7 +47,7 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
     scene.setChallengeEventValue('wrongOrder', true);
   }
 }, [...circles]);
-`
+`;
 export const JBC_4: Scene = {
   ...baseScene,
   name: { [LocalizedString.EN_US]: 'JBC 4' },

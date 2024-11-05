@@ -21,7 +21,7 @@ class TouchSensor extends SensorObject<Node.TouchSensor, boolean> {
     const idCamel = id.replace(/_([a-z])/g, g => g[1].toUpperCase());
 
     for (const collider of colliders) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
       const collider_name = (collider as any)?.name;
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       if (collider_name.includes(idCamel)) {

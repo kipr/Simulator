@@ -49,7 +49,7 @@ export default {
         argId: "inStartBox",
       },
 
-      //Can Events
+      // Can Events
       canInStartBox: {
         type: Expr.Type.Event,
         eventId: "canInStartBox",

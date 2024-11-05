@@ -49,7 +49,7 @@ export default {
         argId: "inStartBox",
       },
 
-      //Chop Events
+      // Chop Events
       waitedToChop: {
         type: Expr.Type.Event,
         eventId: "waitedToChop",
