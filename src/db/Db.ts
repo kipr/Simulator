@@ -57,7 +57,6 @@ class Db {
   }
 
   private static async parseError_(res: Response): Promise<Error> {
-    console.log('parsing error', res);
     const text = await res.text();
     let message: string;
 
@@ -80,7 +79,6 @@ class Db {
   }
 
   private async request_(request: Request) {
-    console.log('requesting', request);
     return await fetch(request.url, {
       headers: await this.headers_(),
       method: request.method,
@@ -102,7 +100,6 @@ class Db {
   }
 
   async set<T>({ collection, id }: Selector, value: T): Promise<void> {
-    console.log('setting', collection, id, value);
     const request: Request = {
       url: `${this.uri_}/${collection}/${id}`,
       method: 'POST',
@@ -169,16 +166,13 @@ class Db {
     const request: Request = {
       url: `${this.uri_}/${collection}`,
     };
-    console.log('list request', request, "from uri", this.uri_);
 
     let promise: Promise<Response>;
     if (!this.tokenManager_) {
-      console.log('no token manager');
       const [outPromise, outstandingPromise] = Db.outstandingPromise_<Response>();
       this.pendingRequests_.push({ request, outstandingPromise });
       promise = outPromise;
     } else {
-      console.log('token manager exists');
       promise = this.request_(request);
     }
 
