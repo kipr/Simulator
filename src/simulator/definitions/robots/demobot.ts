@@ -26,7 +26,7 @@ export const DEMOBOT: Robot = {
     lightSensor: Node.lightSensor({
       parentId: 'chassis',
       origin: {
-        position: Vector3wUnits.meters(0.3, 0, 0),
+        position: Vector3wUnits.centimeters(0, 3.5, 0),
         orientation: RotationwUnits.eulerDegrees(90, 0, 0),
       },
       analogPort: 2,

@@ -161,7 +161,7 @@ export namespace ScenesAction {
     geometryId: string;
     geometry: Geometry;
   }
-  
+
   export const setGeometry = construct<SetGeometry>('scenes/set-geometry');
 
   export interface SetGeometryBatch {
@@ -289,41 +289,49 @@ const DEFAULT_SCENES: Scenes = {
   moonSandbox: Async.loaded({ value: JBC_SCENES.Moon_Sandbox }),
   jbcSandboxA: Async.loaded({ value: JBC_SCENES.JBC_Sandbox_A }),
   jbcSandboxB: Async.loaded({ value: JBC_SCENES.JBC_Sandbox_B }),
+  jbc0: Async.loaded({ value: JBC_SCENES.JBC_0 }),
   jbc1: Async.loaded({ value: JBC_SCENES.JBC_1 }),
   jbc2: Async.loaded({ value: JBC_SCENES.JBC_2 }),
-  jbc2b: Async.loaded({ value: JBC_SCENES.JBC_2B }),
-  jbc2c: Async.loaded({ value: JBC_SCENES.JBC_2C }),
-  jbc2d: Async.loaded({ value: JBC_SCENES.JBC_2D }),
+  // jbc2b: Async.loaded({ value: JBC_SCENES.JBC_2B }),
+  // jbc2c: Async.loaded({ value: JBC_SCENES.JBC_2C }),
+  // jbc2d: Async.loaded({ value: JBC_SCENES.JBC_2D }),
   jbc3: Async.loaded({ value: JBC_SCENES.JBC_3 }),
-  jbc3b: Async.loaded({ value: JBC_SCENES.JBC_3B }),
-  jbc3c: Async.loaded({ value: JBC_SCENES.JBC_3C }),
+  // jbc3b: Async.loaded({ value: JBC_SCENES.JBC_3B }),
+  // jbc3c: Async.loaded({ value: JBC_SCENES.JBC_3C }),
   jbc4: Async.loaded({ value: JBC_SCENES.JBC_4 }),
-  jbc4b: Async.loaded({ value: JBC_SCENES.JBC_4B }),
+  // jbc4b: Async.loaded({ value: JBC_SCENES.JBC_4B }),
   jbc5: Async.loaded({ value: JBC_SCENES.JBC_5 }),
-  jbc5b: Async.loaded({ value: JBC_SCENES.JBC_5B }),
-  jbc5c: Async.loaded({ value: JBC_SCENES.JBC_5C }),
+  // jbc5b: Async.loaded({ value: JBC_SCENES.JBC_5B }),
+  // jbc5c: Async.loaded({ value: JBC_SCENES.JBC_5C }),
   jbc6: Async.loaded({ value: JBC_SCENES.JBC_6 }),
-  jbc6b: Async.loaded({ value: JBC_SCENES.JBC_6B }),
-  jbc6c: Async.loaded({ value: JBC_SCENES.JBC_6C }),
+  // jbc6b: Async.loaded({ value: JBC_SCENES.JBC_6B }),
+  // jbc6c: Async.loaded({ value: JBC_SCENES.JBC_6C }),
   jbc7: Async.loaded({ value: JBC_SCENES.JBC_7 }),
-  jbc7b: Async.loaded({ value: JBC_SCENES.JBC_7B }),
+  // jbc7b: Async.loaded({ value: JBC_SCENES.JBC_7B }),
   jbc8: Async.loaded({ value: JBC_SCENES.JBC_8 }),
-  jbc8b: Async.loaded({ value: JBC_SCENES.JBC_8B }),
+  // jbc8b: Async.loaded({ value: JBC_SCENES.JBC_8B }),
   jbc9: Async.loaded({ value: JBC_SCENES.JBC_9 }),
-  jbc9b: Async.loaded({ value: JBC_SCENES.JBC_9B }),
+  // jbc9b: Async.loaded({ value: JBC_SCENES.JBC_9B }),
   jbc10: Async.loaded({ value: JBC_SCENES.JBC_10 }),
-  jbc10b: Async.loaded({ value: JBC_SCENES.JBC_10B }),
-  jbc12: Async.loaded({ value: JBC_SCENES.JBC_12 }),
-  jbc13: Async.loaded({ value: JBC_SCENES.JBC_13 }),
-  jbc15b: Async.loaded({ value: JBC_SCENES.JBC_15B }),
+  // jbc10b: Async.loaded({ value: JBC_SCENES.JBC_10B }),
+  jbc11: Async.loaded({ value: JBC_SCENES.JBC_11 }),
+  // jbc12: Async.loaded({ value: JBC_SCENES.JBC_12 }),
+  // jbc13: Async.loaded({ value: JBC_SCENES.JBC_13 }),
+  // jbc14: Async.loaded({ value: JBC_SCENES.JBC_14 }),
+  jbc15: Async.loaded({ value: JBC_SCENES.JBC_15 }),
+  // jbc15b: Async.loaded({ value: JBC_SCENES.JBC_15B }),
+  jbc16: Async.loaded({ value: JBC_SCENES.JBC_16 }),
   jbc17: Async.loaded({ value: JBC_SCENES.JBC_17 }),
-  jbc17b: Async.loaded({ value: JBC_SCENES.JBC_17B }),
+  // jbc17b: Async.loaded({ value: JBC_SCENES.JBC_17B }),
+  jbc18: Async.loaded({ value: JBC_SCENES.JBC_18 }),
   jbc19: Async.loaded({ value: JBC_SCENES.JBC_19 }),
   jbc20: Async.loaded({ value: JBC_SCENES.JBC_20 }),
   jbc21: Async.loaded({ value: JBC_SCENES.JBC_21 }),
   jbc22: Async.loaded({ value: JBC_SCENES.JBC_22 }),
-  scriptPlayground: Async.loaded({ value: JBC_SCENES.scriptPlayground }),
-  lightSensorTest: Async.loaded({ value: JBC_SCENES.lightSensorTest }),
+  jbc23: Async.loaded({ value: JBC_SCENES.JBC_23 }),
+  jbc24: Async.loaded({ value: JBC_SCENES.JBC_24 }),
+  // scriptPlayground: Async.loaded({ value: JBC_SCENES.scriptPlayground }),
+  // lightSensorTest: Async.loaded({ value: JBC_SCENES.lightSensorTest }),
 };
 
 const create = async (sceneId: string, next: Async.Creating<Scene>) => {
@@ -450,7 +458,7 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
           })
         };
       }
-      
+
       return state;
     }
     case 'scenes/set-scene-partial': {
@@ -541,16 +549,16 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
 
       if (!scene) return state;
 
-      
+
       if (scene.type === Async.Type.Loaded || scene.type === Async.Type.Saveable) {
         return {
           ...state,
           [action.sceneId]: Async.mutate(scene, draft => {
             for (const nodeId in draft.nodes) {
               const { origin, startingOrigin } = draft.nodes[nodeId];
-              
+
               if (!startingOrigin) continue;
-    
+
               draft.nodes[nodeId].origin = {
                 position: startingOrigin.position ? startingOrigin.position : undefined,
                 orientation: startingOrigin.orientation ? startingOrigin.orientation : undefined,
@@ -560,7 +568,7 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
           }),
         };
       }
-      
+
       return state;
     }
     case 'scenes/reset-scene': return {

@@ -166,11 +166,11 @@ export namespace Distance {
       case 'inches': return distance;
       case 'centimeters': return {
         type: 'inches',
-        value: distance.value * 39.3701
+        value: distance.value * 39.3701 / 100
       };
       case 'meters': return {
         type: 'inches',
-        value: distance.value * 39.3701 / 100
+        value: distance.value * 39.3701
       };
       case 'feet': return {
         type: 'inches',

@@ -1,9 +1,14 @@
 
-import { PhysicsShapeType, IPhysicsCollisionEvent, IPhysicsEnginePluginV2, PhysicsAggregate, 
-  TransformNode, AbstractMesh, PhysicsViewer, ShadowGenerator, Vector3, StandardMaterial, GizmoManager, 
+import {
+  PhysicsShapeType, IPhysicsCollisionEvent, IPhysicsEnginePluginV2, PhysicsAggregate,
+  TransformNode, AbstractMesh, PhysicsViewer, ShadowGenerator, Vector3, StandardMaterial, GizmoManager,
   ArcRotateCamera, PointLight, SpotLight, DirectionalLight, PBRMaterial, EngineView,
   Scene as babylonScene, Node as babylonNode, Camera as babylCamera, Material as babylMaterial,
-  Observer, BoundingBox } from '@babylonjs/core';
+  Observer, BoundingBox,
+  Color3, BoundingBoxGizmo,
+  MeshBuilder,
+  BoundingInfo
+} from '@babylonjs/core';
 
 // eslint-disable-next-line @typescript-eslint/no-duplicate-imports -- Required import for side effects
 import '@babylonjs/core/Engines/Extensions/engine.views';
@@ -81,7 +86,7 @@ class SceneBinding {
     this.engineView_ = engine.registerView(this.canvas_);
 
     this.bScene_.detachControl();
-    engine.inputElement = this.canvas_;
+    engine.inputElement = this.canvas_ as unknown as HTMLElement;
     this.camera_.attachControl(this.engineView_.target, true);
     this.bScene_.attachControl();
 
@@ -92,7 +97,7 @@ class SceneBinding {
    * When this is true, the tick() method will exit immediately and return undefined.
    */
   private declineTicks_ = false;
-  
+
   private materialIdIter_ = 0;
 
   constructor(bScene: babylonScene, physics: IPhysicsEnginePluginV2) {
@@ -105,7 +110,7 @@ class SceneBinding {
 
     // The sub time step is incredibly important for physics realism. 1 seems to work well.
     this.bScene_.getPhysicsEngine().setSubTimeStep(1);
-    
+
     // Uncomment this to turn on the physics viewer for objects
     // this.physicsViewer_ = new PhysicsViewer(this.bScene_);
 
@@ -120,9 +125,15 @@ class SceneBinding {
     this.gizmoManager_.rotationGizmoEnabled = true;
     this.gizmoManager_.scaleGizmoEnabled = false;
     this.gizmoManager_.usePointerToAttachGizmos = false;
+    // this.gizmoManager_.boundingBoxGizmoEnabled = true;
+    // this.gizmoManager_.gizmos.boundingBoxGizmo.setColor(new Color3(1, 0, 0));
+
 
     this.scriptManager_.onCollisionFiltersChanged = this.onCollisionFiltersChanged_;
     this.scriptManager_.onIntersectionFiltersChanged = this.onIntersectionFiltersChanged_;
+
+
+
   }
 
   private robotLinkOrigins_: Dict<Dict<ReferenceFramewUnits>> = {};
@@ -147,7 +158,7 @@ class SceneBinding {
     return this.nodes_[id];
   };
 
- 
+
   private updateMaterial_ = (bMaterial: babylMaterial, material: Patch<Material>) => {
     switch (material.type) {
       case Patch.Type.OuterChange: {
@@ -189,13 +200,13 @@ class SceneBinding {
       throw new Error(`Robot by id "${node.robotId}" not found`);
     }
     await robotBinding.setRobot(node, robot, id);
-    robotBinding.linkOrigins = this.robotLinkOrigins_[id] || {};
+    // robotBinding.linkOrigins = this.robotLinkOrigins_[id] || {};
 
     robotBinding.visible = true;
     const observerObj: { observer: Observer<babylonScene> } = { observer: null };
-    
+
     robotBinding.origin = node.origin;
-    
+
     this.declineTicks_ = true;
     observerObj.observer = this.bScene_.onAfterRenderObservable.add((data, state) => {
       const node = this.scene_.nodes[id];
@@ -208,8 +219,8 @@ class SceneBinding {
       const { origin, visible } = node;
 
       const linkOrigins = this.robotLinkOrigins_[id];
-      if (linkOrigins) robotBinding.linkOrigins = linkOrigins;
-      
+      // if (linkOrigins) robotBinding.linkOrigins = linkOrigins;
+
       robotBinding.visible = visible ?? false;
       observerObj.observer.unregisterOnNextCall = true;
       this.declineTicks_ = false;
@@ -245,6 +256,7 @@ class SceneBinding {
     switch (nodeToCreate.type) {
       case 'object': {
         const parent = this.findBNode_(nodeToCreate.parentId, true);
+
         ret = await createObject(nodeToCreate, nextScene, parent, this.bScene_); break;
       }
       case 'empty': {
@@ -262,10 +274,10 @@ class SceneBinding {
     }
 
     if (!ret) return null;
-    
+
     this.updateNodePosition_(nodeToCreate, ret, id, nextScene);
     ret.id = id;
-    
+
     ret.metadata = { id } as SceneMeshMetadata;
 
     if (ret instanceof AbstractMesh || ret instanceof TransformNode) {
@@ -282,6 +294,7 @@ class SceneBinding {
     // if (node.origin && bNode instanceof TransformNode || bNode instanceof AbstractMesh) {
     if (node.origin && bNode instanceof AbstractMesh) {
       this.removePhysicsFromObject(bNode);
+
       const origin = node.origin || {};
       const position: Vector3wUnits = origin.position ?? Vector3wUnits.zero();
       const orientation: RotationwUnits = origin.orientation ?? RotationwUnits.EulerwUnits.identity();
@@ -297,11 +310,14 @@ class SceneBinding {
       bNode.position.z = Distance.toCentimetersValue(position.z || Distance.centimeters(0));
 
       bNode.rotationQuaternion = RawQuaternion.toBabylon(RotationwUnits.toRawQuaternion(orientation));
+
       bNode.scaling.set(scale.x, scale.y, scale.z);
 
       this.restorePhysicsToObject(bNode, node as Node.Obj, nodeId, scene);
     }
   };
+
+
 
   private updateEmpty_ = (id: string, node: Patch.InnerChange<Node.Empty>): TransformNode => {
     const bNode = this.findBNode_(id) as TransformNode;
@@ -331,7 +347,7 @@ class SceneBinding {
     if (children && children.length > 0) {
       return (children[0] as AbstractMesh).material;
     }
-    
+
     return null;
   };
 
@@ -361,7 +377,7 @@ class SceneBinding {
     });
 
 
-    
+
     // TODO: Handle changes to faceUvs when we fully support it
     if (node.inner.origin.type === Patch.Type.OuterChange) {
       this.updateNodePosition_(node.next, bNode, id, nextScene);
@@ -419,7 +435,7 @@ class SceneBinding {
   private updateRobot_ = async (id: string, node: Patch.InnerChange<Node.Robot>): Promise<RobotBinding> => {
     const robotBinding = this.robotBindings_[id];
     if (!robotBinding) throw new Error(`Robot binding not found for id "${id}"`);
-    
+
     if (node.inner.robotId.type === Patch.Type.OuterChange) {
       this.destroyNode_(id);
       return this.createRobot_(id, node.next);
@@ -437,8 +453,8 @@ class SceneBinding {
   };
 
   private updateFromTemplate_ = (
-    id: string, 
-    node: Patch.InnerChange<Node.FromRockTemplate> | Patch.InnerChange<Node.FromSpaceTemplate> | Patch.InnerChange<Node.FromJBCTemplate>, 
+    id: string,
+    node: Patch.InnerChange<Node.FromRockTemplate> | Patch.InnerChange<Node.FromSpaceTemplate> | Patch.InnerChange<Node.FromJBCTemplate>,
     nextScene: Scene
   ): Promise<babylonNode> => {
     // If the template ID changes, recreate the node entirely
@@ -540,7 +556,7 @@ class SceneBinding {
   };
 
   private updateNode_ = async (id: string, node: Patch<Node>, geometryPatches: Dict<Patch<Geometry>>, nextScene: Scene): Promise<babylonNode> => {
-    
+
     switch (node.type) {
       // The node hasn't changed type, but some fields have been changed
       case Patch.Type.InnerChange: {
@@ -714,7 +730,7 @@ class SceneBinding {
 
       const meshcopy = meshes
         .map(mesh => mesh.physicsBody)
-        .filter(body => !body);
+        .filter(body => body);
 
       if (meshcopy.length === 0) continue;
 
@@ -727,6 +743,7 @@ class SceneBinding {
         .map(mesh => mesh.physicsBody);
 
       for (const body of meshcopy) {
+        body.setCollisionCallbackEnabled(true);
         const observable = body.getCollisionObservable();
         observable.add(this.onCollideEvent_);
       }
@@ -742,7 +759,7 @@ class SceneBinding {
     if (SetOps.intersection(filterIds, Dict.keySet(this.robotBindings_)).size > 0) {
       throw new Error(`Cannot add a robot to a collision's filter. Please make the robot the primary nodeId.`);
     }
-    
+
     this.intersectionFilters_[nodeId] = filterIds;
     this.syncCollisionFilters_();
   };
@@ -752,14 +769,17 @@ class SceneBinding {
   ) => {
 
     const collider = collisionEvent.collider;
-    const collidedWith = collisionEvent.collidedAgainst;
+    const collidedAgainst = collisionEvent.collidedAgainst;
     const point = collisionEvent.point;
+    const distance = collisionEvent.distance;
+    const impulse = collisionEvent.impulse;
+    const normal = collisionEvent.normal;
 
     if (!('metadata' in collider.transformNode)) return;
-    if (!('metadata' in collidedWith.transformNode)) return;
+    if (!('metadata' in collidedAgainst.transformNode)) return;
 
     const colliderMetadata = collider.transformNode.metadata as SceneMeshMetadata;
-    const collidedWithMetadata = collidedWith.transformNode.metadata as SceneMeshMetadata;
+    const collidedWithMetadata = collidedAgainst.transformNode.metadata as SceneMeshMetadata;
 
     if (!colliderMetadata) return;
     if (!collidedWithMetadata) return;
@@ -769,9 +789,11 @@ class SceneBinding {
       otherNodeId: collidedWithMetadata.id,
       point: Vector3wUnits.fromRaw(RawVector3.fromBabylon(point), RENDER_SCALE),
     }));
+
+    return { collider, collidedAgainst, point, distance, impulse, normal };
   };
 
-  
+
   readonly setScene = async (scene: Scene, robots: Dict<Robot>) => {
     this.robots_ = robots;
     const patch = Scene.diff(this.scene_, scene);
@@ -783,7 +805,7 @@ class SceneBinding {
       const node = patch.nodes[nodeId];
       if (node.type !== Patch.Type.Remove) continue;
       await this.updateNode_(nodeId, node, patch.geometry, scene);
-      
+
       delete this.nodes_[nodeId];
       delete this.shadowGenerators_[nodeId];
       delete this.intersectionFilters_[nodeId];
@@ -822,7 +844,7 @@ class SceneBinding {
           const nodeTemplate = preBuiltTemplates[prevNode.templateId];
           if (nodeTemplate?.type === 'object') prevNodeObj = { ...nodeTemplate, ...Node.Base.upcast(prevNode) };
         }
-        
+
         const prevBNode = this.bScene_.getNodeById(prev);
         if (prevNodeObj && (prevBNode instanceof AbstractMesh || prevBNode instanceof TransformNode)) {
           prevBNode.metadata = { ...(prevBNode.metadata as SceneMeshMetadata), selected: false };
@@ -860,7 +882,7 @@ class SceneBinding {
       oldCamera.detachControl(this.bScene_.getEngine().getRenderingCanvas());
       this.bScene_.detachControl();
       this.bScene_.removeCamera(oldCamera);
-      
+
       // Creating the camera already added it to the  scene, so no need to call bScene_.addCamera()
       this.bScene_.activeCamera = this.camera_;
       if (this.engineView_) this.camera_.attachControl(this.engineView_.target, true);
@@ -869,7 +891,7 @@ class SceneBinding {
     }
 
     if (patch.gravity.type === Patch.Type.OuterChange) {
-      const gravity_scalar = new Vector3(1,10,1); // This seems to be somewhat realistic
+      const gravity_scalar = new Vector3(1, 10, 1); // This seems to be somewhat realistic
       this.bScene_.getPhysicsEngine().setGravity(Vector3wUnits.toBabylon(patch.gravity.next, 'meters').multiply(gravity_scalar));
     }
 
@@ -914,10 +936,16 @@ class SceneBinding {
   private nodeMinMaxes_ = (id: string): { min: Vector3; max: Vector3; }[] => {
     const meshes = this.nodeMeshes_(id);
     if (meshes.length === 0) return [];
-
     const ret: { min: Vector3; max: Vector3; }[] = [];
-    for (const mesh of meshes) ret.push(mesh.getHierarchyBoundingVectors());
-
+    // for (const mesh of meshes) ret.push(mesh.getHierarchyBoundingVectors());
+    for (const mesh of meshes) {
+      // this.gizmoManager_.gizmos.boundingBoxGizmo.attachedMesh = mesh; // For viewing meshes on robot
+      if (mesh.id.includes('Chassis')) {
+        continue;
+      } else {
+        ret.push(mesh.getHierarchyBoundingVectors(true, (mesh: AbstractMesh) => !mesh.name.includes('et_sensor')));
+      }
+    }
     return ret;
   };
 
@@ -935,43 +963,46 @@ class SceneBinding {
       const robotBinding = this.robotBindings_[nodeId];
       if (robotBinding) {
         ret[nodeId] = robotBinding.tick(abstractRobots[nodeId]);
-      } else { 
+      } else {
         // throw new Error(`No robot binding for node ${nodeId}`);
       }
     }
 
     // Update intersections
     for (const nodeId in this.intersectionFilters_) {
+      const nodeMeshes = this.nodeMeshes_(nodeId);
+      if (nodeMeshes.length === 0) continue;
+
       try {
         const nodeBoundingBoxes = this.nodeBoundingBoxes_(nodeId); //
         const filterIds = this.intersectionFilters_[nodeId];
         for (const filterId of filterIds) {
           const filterMinMaxes = this.nodeMinMaxes_(filterId);
-  
+
           let intersection = false;
           for (const nodeBoundingBox of nodeBoundingBoxes) {
             for (const filterMinMax of filterMinMaxes) {
-              intersection = nodeBoundingBox.intersectsMinMax(filterMinMax.min, filterMinMax.max);
+              intersection = this.nodeMeshes_(nodeId)[0].intersectsMesh(this.nodeMeshes_(filterId)[0], true) ? true : nodeBoundingBox.intersectsMinMax(filterMinMax.min, filterMinMax.max);
               if (intersection) break;
             }
             if (intersection) break;
           }
-  
+
           if (intersection) {
             if (!this.currentIntersections_[nodeId]) this.currentIntersections_[nodeId] = new Set();
             else if (this.currentIntersections_[nodeId].has(filterId)) continue;
-  
+
             this.currentIntersections_[nodeId].add(filterId);
-  
+
             this.scriptManager_.trigger(ScriptManager.Event.intersectionStart({
               nodeId,
               otherNodeId: filterId,
             }));
           } else {
             if (!this.currentIntersections_[nodeId] || !this.currentIntersections_[nodeId].has(filterId)) continue;
-  
+
             this.currentIntersections_[nodeId].delete(filterId);
-  
+
             this.scriptManager_.trigger(ScriptManager.Event.intersectionEnd({
               nodeId,
               otherNodeId: filterId,

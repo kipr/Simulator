@@ -3,6 +3,7 @@ import { Angle, Distance, Mass } from "../../../util";
 import Node from "../../../state/State/Scene/Node";
 import Camera from "../../../state/State/Scene/Camera";
 import Scene from "../../../state/State/Scene";
+import { Color } from "../../../state/State/Scene/Color";
 import AbstractRobot from '../../../programming/AbstractRobot';
 import Author from '../../../db/Author';
 
@@ -12,7 +13,7 @@ import Dict from '../../../util/objectOps/Dict';
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(0, 0, 0),
-  orientation: RotationwUnits.eulerDegrees(0, -45, 0),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
 
 const ROBOT: Node.Robot = {
@@ -89,7 +90,7 @@ export function createBaseSceneSurfaceA(): Scene {
         startingOrigin: JBC_MAT_ORIGIN,
         origin: JBC_MAT_ORIGIN,
         visible: true,
-        editable: true,
+        editable: false,
       },
       'ground': {
         type: 'object',
@@ -100,18 +101,25 @@ export function createBaseSceneSurfaceA(): Scene {
         visible: true,
         physics: {
           type: 'box',
-          restitution: .3,
-          friction: 1,
+          restitution: 0.1,
+          friction: 10,
+        },
+        material: {
+          type: 'basic',
+          color: {
+            type: 'color3',
+            color: Color.rgb(192, 192, 192),
+          },
         },
       },
       'light0': {
         type: 'point-light',
-        intensity: 1,
+        intensity: 0.75,
         name: tr('Light'),
         startingOrigin: LIGHT_ORIGIN,
         origin: LIGHT_ORIGIN,
         visible: true
-      }
+      },
     },
     camera: Camera.arcRotate({
       radius: Distance.meters(1),
@@ -135,7 +143,7 @@ export function createBaseSceneSurfaceA(): Scene {
 }
 
 export function createBaseSceneSurfaceB(): Scene {
-  
+
 
   return {
     name: tr('Base Scene - Surface B'),
@@ -160,7 +168,7 @@ export function createBaseSceneSurfaceB(): Scene {
         startingOrigin: JBC_MAT_ORIGIN,
         origin: JBC_MAT_ORIGIN,
         visible: true,
-        editable: true,
+        editable: false,
       },
       'ground': {
         type: 'object',
@@ -174,10 +182,17 @@ export function createBaseSceneSurfaceB(): Scene {
           restitution: 0.1,
           friction: 10,
         },
+        material: {
+          type: 'basic',
+          color: {
+            type: 'color3',
+            color: Color.rgb(192, 192, 192),
+          },
+        },
       },
       'light0': {
         type: 'point-light',
-        intensity: 10000,
+        intensity: 0.75,
         name: tr('Light'),
         startingOrigin: LIGHT_ORIGIN,
         origin: LIGHT_ORIGIN,
@@ -231,9 +246,40 @@ export function createCanNode(canNumber: number, canPosition?: Vector3wUnits, ed
 }
 
 /**
+ * Helper function to create a Node for a circle
+ * @param circleNumber The 1-index circle number
+ * @param circlePosition The position of the circle. If not provided, the position is determined using circleNumber
+ * @param editable Whether the circle is editable
+ * @param visible Whether the circle is visible
+ * @returns A circle Node that can be inserted into a Scene
+ */
+export function createCircleNode(circleNumber: number, circlePosition?: Vector3wUnits, editable?: boolean, visible?: boolean): Node {
+  const position: Vector3wUnits = {
+    x: canPositions[circleNumber - 1].x,
+    y: Distance.centimeters(-6.9),
+    z: canPositions[circleNumber - 1].z
+  };
+
+  const origin: ReferenceFramewUnits = {
+    position: circlePosition ?? position,
+    orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+  };
+
+  return {
+    type: 'from-jbc-template',
+    templateId: 'circle',
+    name: Dict.map(tr('Circle %s'), (str: string) => sprintf(str, circleNumber)),
+    startingOrigin: origin,
+    origin,
+    editable: editable ?? false,
+    visible: visible ?? false,
+  };
+}
+
+/**
  * Positions of cans 1 - 12, based on the circles on JBC Surface A
  */
-const canPositions: Vector3wUnits[] = [
+export const canPositions: Vector3wUnits[] = [
   {
     x: Distance.centimeters(22.7), // can 1
     y: Distance.centimeters(0),

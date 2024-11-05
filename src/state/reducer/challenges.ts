@@ -12,33 +12,42 @@ import LocalizedString from '../../util/LocalizedString';
 import db from '../../db';
 import Selector from '../../db/Selector';
 
-import jbc1 from "../../simulator/definitions/challenges/jbc1";
-import jbc2 from "../../simulator/definitions/challenges/jbc2";
-import jbc2b from "../../simulator/definitions/challenges/jbc2b";
-import jbc2c from "../../simulator/definitions/challenges/jbc2c";
-import jbc2d from "../../simulator/definitions/challenges/jbc2d";
-import jbc3 from "../../simulator/definitions/challenges/jbc3";
-import jbc4 from "../../simulator/definitions/challenges/jbc4";
-import jbc4b from "../../simulator/definitions/challenges/jbc4b";
-import jbc5 from "../../simulator/definitions/challenges/jbc5";
-import jbc6 from "../../simulator/definitions/challenges/jbc6";
-import jbc6c from "../../simulator/definitions/challenges/jbc6c";
-import jbc7 from "../../simulator/definitions/challenges/jbc7";
-import jbc7b from "../../simulator/definitions/challenges/jbc7b";
-import jbc8 from "../../simulator/definitions/challenges/jbc8";
-import jbc8b from "../../simulator/definitions/challenges/jbc8b";
-import jbc10 from "../../simulator/definitions/challenges/jbc10";
-import jbc10b from "../../simulator/definitions/challenges/jbc10b";
-import jbc12 from "../../simulator/definitions/challenges/jbc12";
-import jbc13 from "../../simulator/definitions/challenges/jbc13";
-import jbc15b from "../../simulator/definitions/challenges/jbc15b";
-import jbc17 from "../../simulator/definitions/challenges/jbc17";
-import jbc17b from "../../simulator/definitions/challenges/jbc17b";
-import jbc19 from "../../simulator/definitions/challenges/jbc19";
-import jbc20 from "../../simulator/definitions/challenges/jbc20";
-import jbc21 from "../../simulator/definitions/challenges/jbc21";
-import jbc22 from "../../simulator/definitions/challenges/jbc22";
-import test from '../../simulator/definitions/challenges/test';
+import jbc0 from "../../simulator/definitions/challenges/jbc0-Drive-Straight";
+import jbc1 from "../../simulator/definitions/challenges/jbc1-Tag-Youre-It";
+import jbc2 from "../../simulator/definitions/challenges/jbc2-Ring-Around-the-Can";
+// import jbc2b from "../../simulator/definitions/challenges/archived/jbc2b-Ring-Around-the-Cans-Sr";
+// import jbc2c from "../../simulator/definitions/challenges/archived/jbc2c-Back-It-Up";
+// import jbc2d from "../../simulator/definitions/challenges/archived/jbc2d-Ring-Around-the-Can-and-Back-It-Up";
+import jbc3 from "../../simulator/definitions/challenges/jbc3-Precision-Parking";
+import jbc4 from "../../simulator/definitions/challenges/jbc4-Serpentine";
+// import jbc4b from "../../simulator/definitions/challenges/archived/jbc4b-Barrel-Racing";
+import jbc5 from "../../simulator/definitions/challenges/jbc5-Odd-Numbers";
+import jbc6 from "../../simulator/definitions/challenges/jbc6-Figure-Eight";
+// import jbc6c from "../../simulator/definitions/challenges/archived/jbc6c-Empty-the-Garage";
+import jbc7 from "../../simulator/definitions/challenges/jbc7-Load-Em-Up";
+// import jbc7b from "../../simulator/definitions/challenges/archived/jbc7b-Cover-Your-Bases";
+import jbc8 from "../../simulator/definitions/challenges/jbc8-Bulldozer-Mania";
+import jbc9 from "../../simulator/definitions/challenges/jbc9-Cover-Your-Bases";
+// import jbc8b from "../../simulator/definitions/challenges/archived/jbc8b-Serpentine-Jr";
+import jbc10 from "../../simulator/definitions/challenges/jbc10-Chopped";
+// import jbc10b from "../../simulator/definitions/challenges/archived/jbc10b-Solo-Joust-Jr";
+import jbc11 from "../../simulator/definitions/challenges/jbc11-Making-Waves";
+// import jbc12 from "../../simulator/definitions/challenges/jbc12-Add-It-Up-New";
+// import jbc13 from "../../simulator/definitions/challenges/archived/jbc13-Clean-the-Mat";
+// import jbc14 from "../../simulator/definitions/challenges/jbc14-Dance-Party";
+import jbc15 from "../../simulator/definitions/challenges/jbc15-Go-Fetch";
+// import jbc15b from "../../simulator/definitions/challenges/archived/jbc15b-Bump-Bump";
+import jbc16 from "../../simulator/definitions/challenges/jbc16-Pick-Em-Up";
+import jbc17 from "../../simulator/definitions/challenges/jbc17-Mountain-Rescue";
+// import jbc17b from "../../simulator/definitions/challenges/archived/jbc17b-Walk-the-Line-2";
+import jbc18 from "../../simulator/definitions/challenges/jbc18-Stackerz-New";
+import jbc19 from "../../simulator/definitions/challenges/jbc19-Bump";
+import jbc20 from "../../simulator/definitions/challenges/jbc20-Amazing";
+import jbc21 from "../../simulator/definitions/challenges/jbc21-Proximity";
+import jbc22 from "../../simulator/definitions/challenges/jbc22-Search-and-Rescue";
+import jbc23 from "../../simulator/definitions/challenges/jbc23-Find-the-Black-Line";
+import jbc24 from "../../simulator/definitions/challenges/jbc24-Walk-the-Line";
+// import test from '../../simulator/definitions/challenges/archived/test';
 
 export namespace ChallengesAction {
   export interface LoadChallenge {
@@ -143,13 +152,17 @@ export type ChallengesAction = (
 );
 
 const DEFAULT_CHALLENGES: Challenges = {
-  'test': Async.loaded({
-    value: test,
-    brief: ChallengeBrief.fromChallenge(test),
-  }),
-  'jbc6c': Async.loaded({
-    value: jbc6c,
-    brief: ChallengeBrief.fromChallenge(jbc6c),
+  // 'test': Async.loaded({
+  //   value: test,
+  //   brief: ChallengeBrief.fromChallenge(test),
+  // }),
+  // 'jbc6c': Async.loaded({
+  //   value: jbc6c,
+  //   brief: ChallengeBrief.fromChallenge(jbc6c),
+  // }),
+  'jbc0': Async.loaded({
+    value: jbc0,
+    brief: ChallengeBrief.fromChallenge(jbc0),
   }),
   'jbc1': Async.loaded({
     value: jbc1,
@@ -159,33 +172,33 @@ const DEFAULT_CHALLENGES: Challenges = {
     value: jbc2,
     brief: ChallengeBrief.fromChallenge(jbc2),
   }),
-  'jbc2b': Async.loaded({
-    value: jbc2b,
-    brief: ChallengeBrief.fromChallenge(jbc2b),
-  }),
-  'jbc2c': Async.loaded({
-    value: jbc2c,
-    brief: ChallengeBrief.fromChallenge(jbc2c),
-  }),
-  'jbc2d': Async.loaded({
-    value: jbc2d,
-    brief: ChallengeBrief.fromChallenge(jbc2d),
-  }),
+  // 'jbc2b': Async.loaded({
+  //   value: jbc2b,
+  //   brief: ChallengeBrief.fromChallenge(jbc2b),
+  // }),
+  // 'jbc2c': Async.loaded({
+  //   value: jbc2c,
+  //   brief: ChallengeBrief.fromChallenge(jbc2c),
+  // }),
+  // 'jbc2d': Async.loaded({
+  //   value: jbc2d,
+  //   brief: ChallengeBrief.fromChallenge(jbc2d),
+  // }),
   'jbc3': Async.loaded({
     value: jbc3,
     brief: ChallengeBrief.fromChallenge(jbc3),
-  }),
-  'jbc5': Async.loaded({
-    value: jbc5,
-    brief: ChallengeBrief.fromChallenge(jbc5),
   }),
   'jbc4': Async.loaded({
     value: jbc4,
     brief: ChallengeBrief.fromChallenge(jbc4),
   }),
-  'jbc4b': Async.loaded({
-    value: jbc4b,
-    brief: ChallengeBrief.fromChallenge(jbc4b),
+  // 'jbc4b': Async.loaded({
+  //   value: jbc4b,
+  //   brief: ChallengeBrief.fromChallenge(jbc4b),
+  // }),
+  'jbc5': Async.loaded({
+    value: jbc5,
+    brief: ChallengeBrief.fromChallenge(jbc5),
   }),
   'jbc6': Async.loaded({
     value: jbc6,
@@ -195,45 +208,69 @@ const DEFAULT_CHALLENGES: Challenges = {
     value: jbc7,
     brief: ChallengeBrief.fromChallenge(jbc7),
   }),
-  'jbc7b': Async.loaded({
-    value: jbc7b,
-    brief: ChallengeBrief.fromChallenge(jbc7b),
-  }),
+  // 'jbc7b': Async.loaded({
+  //   value: jbc7b,
+  //   brief: ChallengeBrief.fromChallenge(jbc7b),
+  // }),
   'jbc8': Async.loaded({
     value: jbc8,
     brief: ChallengeBrief.fromChallenge(jbc8),
   }),
-  'jbc8b': Async.loaded({
-    value: jbc8b,
-    brief: ChallengeBrief.fromChallenge(jbc8b),
+  // 'jbc8b': Async.loaded({
+  //   value: jbc8b,
+  //   brief: ChallengeBrief.fromChallenge(jbc8b),
+  // }),
+  'jbc9': Async.loaded({
+    value: jbc9,
+    brief: ChallengeBrief.fromChallenge(jbc9),
   }),
   'jbc10': Async.loaded({
     value: jbc10,
     brief: ChallengeBrief.fromChallenge(jbc10),
   }),
-  'jbc10b': Async.loaded({
-    value: jbc10b,
-    brief: ChallengeBrief.fromChallenge(jbc10b),
+  // 'jbc10b': Async.loaded({
+  //   value: jbc10b,
+  //   brief: ChallengeBrief.fromChallenge(jbc10b),
+  // }),
+  'jbc11': Async.loaded({
+    value: jbc11,
+    brief: ChallengeBrief.fromChallenge(jbc11),
   }),
-  'jbc12': Async.loaded({
-    value: jbc12,
-    brief: ChallengeBrief.fromChallenge(jbc12),
+  // 'jbc12': Async.loaded({
+  //   value: jbc12,
+  //   brief: ChallengeBrief.fromChallenge(jbc12),
+  // }),
+  // 'jbc13': Async.loaded({
+  //   value: jbc13,
+  //   brief: ChallengeBrief.fromChallenge(jbc13),
+  // }),
+  // 'jbc14': Async.loaded({
+  //   value: jbc14,
+  //   brief: ChallengeBrief.fromChallenge(jbc14),
+  // }),
+  'jbc15': Async.loaded({
+    value: jbc15,
+    brief: ChallengeBrief.fromChallenge(jbc15),
   }),
-  'jbc13': Async.loaded({
-    value: jbc13,
-    brief: ChallengeBrief.fromChallenge(jbc13),
-  }),
-  'jbc15b': Async.loaded({
-    value: jbc15b,
-    brief: ChallengeBrief.fromChallenge(jbc15b),
+  // 'jbc15b': Async.loaded({
+  //   value: jbc15b,
+  //   brief: ChallengeBrief.fromChallenge(jbc15b),
+  // }),
+  'jbc16': Async.loaded({
+    value: jbc16,
+    brief: ChallengeBrief.fromChallenge(jbc16),
   }),
   'jbc17': Async.loaded({
     value: jbc17,
     brief: ChallengeBrief.fromChallenge(jbc17),
   }),
-  'jbc17b': Async.loaded({
-    value: jbc17b,
-    brief: ChallengeBrief.fromChallenge(jbc17b),
+  // 'jbc17b': Async.loaded({
+  //   value: jbc17b,
+  //   brief: ChallengeBrief.fromChallenge(jbc17b),
+  // }),
+  'jbc18': Async.loaded({
+    value: jbc18,
+    brief: ChallengeBrief.fromChallenge(jbc18),
   }),
   'jbc19': Async.loaded({
     value: jbc19,
@@ -250,6 +287,14 @@ const DEFAULT_CHALLENGES: Challenges = {
   'jbc22': Async.loaded({
     value: jbc22,
     brief: ChallengeBrief.fromChallenge(jbc22),
+  }),
+  'jbc23': Async.loaded({
+    value: jbc23,
+    brief: ChallengeBrief.fromChallenge(jbc23),
+  }),
+  'jbc24': Async.loaded({
+    value: jbc24,
+    brief: ChallengeBrief.fromChallenge(jbc24),
   }),
 };
 

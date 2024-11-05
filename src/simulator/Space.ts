@@ -279,7 +279,7 @@ export class Space {
       const distance = Vector3wUnits.distance(position, bPositionConv);
 
       // If varies by more than 0.5cm, consider it a change
-      if (distance.value > 0.005) {
+      if (distance.value > 0.0025) {
         change.position = Vector3wUnits.toTypeGranular(bPositionConv, position.x.type, position.y.type, position.z.type);
       }
     }

@@ -159,6 +159,10 @@ namespace LocalizedString {
     return localizedString[currentLocale];
   };
 
+  export const getOriginal = (localizedString: LocalizedString) => {
+    return localizedString[EN_US];
+  };
+
   export const SUPPORTED_LANGUAGES = [
     LocalizedString.AR_SA,
     LocalizedString.BG_BG,
@@ -193,7 +197,7 @@ namespace LocalizedString {
     LocalizedString.TH_TH,
     LocalizedString.TR_TR,
     LocalizedString.UR_PK,
-    LocalizedString.VI_VN,  
+    LocalizedString.VI_VN,
     LocalizedString.ZH_CN,
     LocalizedString.ZH_TW,
   ];
