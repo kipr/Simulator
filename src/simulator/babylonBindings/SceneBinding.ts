@@ -125,8 +125,8 @@ class SceneBinding {
     this.gizmoManager_.rotationGizmoEnabled = true;
     this.gizmoManager_.scaleGizmoEnabled = false;
     this.gizmoManager_.usePointerToAttachGizmos = false;
-    this.gizmoManager_.boundingBoxGizmoEnabled = true;
-    this.gizmoManager_.gizmos.boundingBoxGizmo.setColor(new Color3(1, 0, 0));
+    // this.gizmoManager_.boundingBoxGizmoEnabled = true;
+    // this.gizmoManager_.gizmos.boundingBoxGizmo.setColor(new Color3(1, 0, 0));
 
 
     this.scriptManager_.onCollisionFiltersChanged = this.onCollisionFiltersChanged_;
