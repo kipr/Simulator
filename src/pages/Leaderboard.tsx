@@ -286,6 +286,33 @@ class Leaderboard extends React.Component<Props, State> {
 
     return anonomizedUsers;
   };
+
+  private customSort = (list: string[]): string[] => {
+    return list.sort((a, b) => {
+      // Regular expression to extract name, number, and subset
+      const regex = /^([a-zA-Z]+)(\d+)?([a-zA-Z]*)$/;
+
+      const matchA = regex.exec(a);
+      const matchB = regex.exec(b);
+
+      if (!matchA || !matchB) return 0;
+
+      const [, nameA, numA, subsetA] = matchA;
+      const [, nameB, numB, subsetB] = matchB;
+
+      // Compare the names alphabetically
+      if (nameA !== nameB) return nameA.localeCompare(nameB);
+
+      // Compare the numbers numerically
+      const numValueA = numA ? parseInt(numA, 10) : 0;
+      const numValueB = numB ? parseInt(numB, 10) : 0;
+
+      if (numValueA !== numValueB) return numValueA - numValueB;
+
+      // Compare the subsets alphabetically
+      return subsetA.localeCompare(subsetB);
+    });
+  };
   
   private renderLeaderboard = () => {
     const users = this.state.users || this.getDefaultUsers();
@@ -295,17 +322,17 @@ class Leaderboard extends React.Component<Props, State> {
     if (!sortedUsers) return null;
   
     const userArray = Object.values(sortedUsers);
-    const challengeArray = Object.entries(challenges);
+    const challengeArray = this.customSort(Object.keys(challenges));
   
     return (
       <Table>
         <thead>
           <tr>
             <TableHeader>Challenges:</TableHeader>
-            {challengeArray.map(([id,challenge]) => (
+            {challengeArray.map((id) => (
               <TableHeader key={id}>
                 <TableHeaderContainer>
-                  {challenge.name['en-US']}
+                  {challenges[id].name['en-US']}
                 </TableHeaderContainer>
               </TableHeader>
             ))}
@@ -315,8 +342,8 @@ class Leaderboard extends React.Component<Props, State> {
           {userArray.map((user) => (
             <StyledTableRow key={user.id} self={user.name === "THIS IS ME"}>
               <TableCell>{user.name}</TableCell>
-              {challengeArray.map(([id,challenge]) => {
-                const userScore = user.scores.find(score => score.name['en-US'] === challenge.name['en-US']);
+              {challengeArray.map((id) => {
+                const userScore = user.scores.find(score => score.name['en-US'] === challenges[id].name['en-US']);
                 return (
                   <TableCell key={id}>
                     {userScore?.completed ? (
