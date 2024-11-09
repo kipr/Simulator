@@ -14,6 +14,7 @@ import tr from '@i18n';
 
 import db from '../db';
 
+const SELFIDENTIFIER = "My Scores!" ;
 
 interface Challenge {
   name: LocalizedString;
@@ -91,6 +92,12 @@ const TableHeaderContainer = styled('div', {
   width: '50px', // Set the width of the container
 });
 
+const UserHeaderContainer = styled('div', {
+  display: 'inline-block',
+  whiteSpace: 'nowrap', // Prevent text wrapping
+  width: '100px', // Set the width of the container
+});
+
 const Table = styled('table', {
   width: '80%',
   borderCollapse: 'collapse',
@@ -104,10 +111,11 @@ const TableHeader = styled('th', {
   borderBottom: '2px solid #ddd',
   padding: '8px',
   textAlign: 'center',
+  width: '50px',
 });
-const StyledTableRow = styled('tr', (props: { self: boolean }) => ({
+const StyledTableRow = styled('tr', (props: { key: string, self: string }) => ({
   borderBottom: '1px solid #ddd',
-  backgroundColor: props.self ? '#555' : '#000', // Highlight the current user
+  backgroundColor: props.self === SELFIDENTIFIER  ? '#555' : '#000', // Highlight the current user
 }));
 const TableRow = styled('tr', {
   borderBottom: '1px solid #ddd',
@@ -160,13 +168,14 @@ class Leaderboard extends React.Component<Props, State> {
       };
     }
 
-    for (const [userId, challenges] of Object.entries(groupData)) {
+    for (const [userId, userChallenges] of Object.entries(groupData)) {
       const user: User = {
         id: userId,
         name: userId,
         scores: [],
       };
-      for (const [challengeId, challenge] of Object.entries(challenges as ChallengeData[])) {
+
+      for (const [challengeId, challenge] of Object.entries(userChallenges as ChallengeData[])) {
         
         const challengeCompletion = challenge?.success?.exprStates?.completion ?? false;
         const score: Score = {
@@ -175,6 +184,7 @@ class Leaderboard extends React.Component<Props, State> {
         };
         user.scores.push(score);
       }
+
       if (!users[userId]) {
         users[userId] = user;
       }
@@ -182,25 +192,28 @@ class Leaderboard extends React.Component<Props, State> {
 
     users = this.anonomizeUsers(users);
 
-    const currentUser = userData;
-    const currentUserScores: Score[] = [];
-    for (const [challengeId, challenge] of Object.entries(currentUser as ChallengeData[])) {
-      const challengeCompletion = challenge?.success?.exprStates?.completion ?? false;
-      const score: Score = {
-        name: tr(challengeId),
-        completed: challengeCompletion
+    for (const [userId, userChallenges] of Object.entries(userData)) {
+      const user: User = {
+        id: userId,
+        name: SELFIDENTIFIER,
+        scores: [],
       };
-      currentUserScores.push(score);
+
+      for (const [challengeId, challenge] of Object.entries(userChallenges as ChallengeData[])) {
+        const challengeCompletion = challenge?.success?.exprStates?.completion ?? false;
+        const score: Score = {
+          name: tr(challengeId),
+          completed: challengeCompletion
+        };
+        user.scores.push(score);
+      }
+
+      if (!users[userId]) {
+        users[userId] = user;
+      }
     }
-    const currentUserData: User = {
-      id: 'currentUser',
-      name: 'THIS IS ME',
-      scores: currentUserScores,
-    };
 
-    users[currentUserData.id] = currentUserData;
 
-    // console.log("Queried:", users, challenges);
     this.setState({ users, challenges });
 
     return { users, challenges };
@@ -260,31 +273,99 @@ class Leaderboard extends React.Component<Props, State> {
     const userArray = Object.values(users);
 
     userArray.sort((a, b) => {
-      const completedChallengesA = a.scores.filter(score => score.completed).length;
-      const completedChallengesB = b.scores.filter(score => score.completed).length;
+      const completedChallengesA = a.scores.filter(score => score.completed).length * 100 + a.scores.length;
+      const completedChallengesB = b.scores.filter(score => score.completed).length * 100 + b.scores.length;
 
       return completedChallengesB - completedChallengesA;
     });
-    console.log("Sorted:", userArray);
     return userArray;
   };
 
   private anonomizeUsers = (users: Record<string, User>): Record<string, User> => {
     const anonomizedUsers: Record<string, User> = {};
 
-    const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'white'];
-    const elements = ['fire', 'water', 'earth', 'air', 'light', 'dark', 'metal', 'wood', 'ice', 'electricity'];
-    const animals = ['tiger', 'bear', 'wolf', 'eagle', 'shark', 'whale', 'lion', 'panther', 'cheetah', 'jaguar'];
+    const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'white', 
+      'cyan', 'magenta', 'lime', 'teal', 'indigo', 'violet', 'gold', 'silver', 'bronze', 'maroon', 'tan', 'navy', 'aqua'];
+    const elements = ['fire', 'water', 'earth', 'air', 'light', 'dark', 'metal', 'wood', 'ice',
+      'shadow', 'spirit', 'void', 'plasma', 'gravity', 'time', 'space', 'aether', 'chaos', 'order'];
+    const animals = ['tiger', 'bear', 'wolf', 'eagle', 'shark', 'whale', 'lion', 'panther', 'jaguar', 
+      'fox', 'owl', 'hawk', 'dolphin', 'rhino', 'hippo', 'giraffe', 'zebra', 
+      'koala', 'panda', 'leopard', 'lynx', 'bison', 'buffalo', 'camel',
+      'raven', 'sparrow', 'swan', 'toucan', 'vulture', 'walrus', 'yak'];
+
+
+
+    const stringTo32BitInt = (id: string): number => {
+      const FNV_PRIME = 0x01000193; // 16777619
+      let hash = 0x811c9dc5; // FNV offset basis
+  
+      for (let i = 0; i < id.length; i++) {
+        hash ^= id.charCodeAt(i);       // XOR with byte value of character
+        hash = (hash * FNV_PRIME) >>> 0; // Multiply by FNV prime and apply unsigned right shift to keep it 32-bit
+      }
+  
+      return hash >>> 0; // Ensure the result is a positive 32-bit integer
+    };
 
     Object.values(users).forEach((user) => {
+      const hash = Math.abs(stringTo32BitInt(user.id));
+      const color = colors[hash % colors.length];
+      const element = elements[hash % elements.length];
+      const animal = animals[hash % animals.length];
+      const number = hash % 97;
+
       anonomizedUsers[user.id] = {
         id: user.id,
-        name: `${colors[Math.floor(Math.random() * colors.length)]}-${elements[Math.floor(Math.random() * elements.length)]}-${animals[Math.floor(Math.random() * animals.length)]}-${Math.floor(Math.random() * 100)}`,
+        name: `${color}-${element}-${animal}-${number}`,
         scores: user.scores
       };
     });
 
+    const nameSet = new Set<string>();
+    const duplicateNames: string[] = [];
+
+    Object.values(anonomizedUsers).forEach((user) => {
+      if (nameSet.has(user.name)) {
+        duplicateNames.push(user.name);
+      } else {
+        nameSet.add(user.name);
+      }
+    });
+
+    const duplicateIds = Object.values(anonomizedUsers).filter(u => duplicateNames.includes(u.name));
+
+    if (duplicateNames.length > 0) {
+      console.warn('Duplicate names found after anonymization:', duplicateNames, duplicateIds);
+    }
+
     return anonomizedUsers;
+  };
+
+  private customSort = (list: string[]): string[] => {
+    return list.sort((a, b) => {
+      // Regular expression to extract name, number, and subset
+      const regex = /^([a-zA-Z]+)(\d+)?([a-zA-Z]*)$/;
+
+      const matchA = regex.exec(a);
+      const matchB = regex.exec(b);
+
+      if (!matchA || !matchB) return 0;
+
+      const [, nameA, numA, subsetA] = matchA;
+      const [, nameB, numB, subsetB] = matchB;
+
+      // Compare the names alphabetically
+      if (nameA !== nameB) return nameA.localeCompare(nameB);
+
+      // Compare the numbers numerically
+      const numValueA = numA ? parseInt(numA, 10) : 0;
+      const numValueB = numB ? parseInt(numB, 10) : 0;
+
+      if (numValueA !== numValueB) return numValueA - numValueB;
+
+      // Compare the subsets alphabetically
+      return subsetA.localeCompare(subsetB);
+    });
   };
   
   private renderLeaderboard = () => {
@@ -295,17 +376,21 @@ class Leaderboard extends React.Component<Props, State> {
     if (!sortedUsers) return null;
   
     const userArray = Object.values(sortedUsers);
-    const challengeArray = Object.entries(challenges);
+    const challengeArray = this.customSort(Object.keys(challenges));
   
     return (
       <Table>
         <thead>
           <tr>
-            <TableHeader>Challenges:</TableHeader>
-            {challengeArray.map(([id,challenge]) => (
+            <TableHeader>
+              <UserHeaderContainer>
+                Users
+              </UserHeaderContainer>
+            </TableHeader>
+            {challengeArray.map((id) => (
               <TableHeader key={id}>
                 <TableHeaderContainer>
-                  {challenge.name['en-US']}
+                  {challenges[id].name['en-US']}
                 </TableHeaderContainer>
               </TableHeader>
             ))}
@@ -313,20 +398,22 @@ class Leaderboard extends React.Component<Props, State> {
         </thead>
         <tbody>
           {userArray.map((user) => (
-            <StyledTableRow key={user.id} self={user.name === "THIS IS ME"}>
+            <StyledTableRow key={user.id} self={user.name}>
               <TableCell>{user.name}</TableCell>
-              {challengeArray.map(([id,challenge]) => {
-                const userScore = user.scores.find(score => score.name['en-US'] === challenge.name['en-US']);
+              {challengeArray.map((id) => {
+                const userScore = user.scores.find(score => score.name['en-US'] === challenges[id].name['en-US']);
                 return (
                   <TableCell key={id}>
-                    {userScore?.completed ? (
+                    {!userScore && '-'}
+                    {userScore?.completed && (
                       <>
                         <img src="/static/icons/favicon-32x32.png" alt="Favicon" />
                         {/* <div>Score: {userScore.score ?? '-'}</div>
                         <div>Time: {userScore.completionTime ?? '-'}</div> */}
                       </>
-                    ) : (
-                      '-'
+                    )}
+                    {userScore && !userScore.completed && (
+                      <img src="/static/icons/botguy-bw-trans-32x32.png" alt="Favicon" />
                     )}
                   </TableCell>
                 );
