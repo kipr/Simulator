@@ -168,13 +168,14 @@ class Leaderboard extends React.Component<Props, State> {
       };
     }
 
-    for (const [userId, challenges] of Object.entries(groupData)) {
+    for (const [userId, userChallenges] of Object.entries(groupData)) {
       const user: User = {
         id: userId,
         name: userId,
         scores: [],
       };
-      for (const [challengeId, challenge] of Object.entries(challenges as ChallengeData[])) {
+
+      for (const [challengeId, challenge] of Object.entries(userChallenges as ChallengeData[])) {
         
         const challengeCompletion = challenge?.success?.exprStates?.completion ?? false;
         const score: Score = {
@@ -183,6 +184,7 @@ class Leaderboard extends React.Component<Props, State> {
         };
         user.scores.push(score);
       }
+
       if (!users[userId]) {
         users[userId] = user;
       }
@@ -190,23 +192,27 @@ class Leaderboard extends React.Component<Props, State> {
 
     users = this.anonomizeUsers(users);
 
-    const currentUser = userData;
-    const currentUserScores: Score[] = [];
-    for (const [challengeId, challenge] of Object.entries(currentUser as ChallengeData[])) {
-      const challengeCompletion = challenge?.success?.exprStates?.completion ?? false;
-      const score: Score = {
-        name: tr(challengeId),
-        completed: challengeCompletion
+    for (const [userId, userChallenges] of Object.entries(userData)) {
+      const user: User = {
+        id: userId,
+        name: SELFIDENTIFIER,
+        scores: [],
       };
-      currentUserScores.push(score);
-    }
-    const currentUserData: User = {
-      id: 'currentUser',
-      name: SELFIDENTIFIER,
-      scores: currentUserScores,
-    };
 
-    users[currentUserData.id] = currentUserData;
+      for (const [challengeId, challenge] of Object.entries(userChallenges as ChallengeData[])) {
+        const challengeCompletion = challenge?.success?.exprStates?.completion ?? false;
+        const score: Score = {
+          name: tr(challengeId),
+          completed: challengeCompletion
+        };
+        user.scores.push(score);
+      }
+
+      if (!users[userId]) {
+        users[userId] = user;
+      }
+    }
+
 
     this.setState({ users, challenges });
 
@@ -267,8 +273,8 @@ class Leaderboard extends React.Component<Props, State> {
     const userArray = Object.values(users);
 
     userArray.sort((a, b) => {
-      const completedChallengesA = a.scores.filter(score => score.completed).length;
-      const completedChallengesB = b.scores.filter(score => score.completed).length;
+      const completedChallengesA = a.scores.filter(score => score.completed).length * 100 + a.scores.length;
+      const completedChallengesB = b.scores.filter(score => score.completed).length * 100 + b.scores.length;
 
       return completedChallengesB - completedChallengesA;
     });
@@ -398,14 +404,16 @@ class Leaderboard extends React.Component<Props, State> {
                 const userScore = user.scores.find(score => score.name['en-US'] === challenges[id].name['en-US']);
                 return (
                   <TableCell key={id}>
-                    {userScore?.completed ? (
+                    {!userScore && '-'}
+                    {userScore?.completed && (
                       <>
                         <img src="/static/icons/favicon-32x32.png" alt="Favicon" />
                         {/* <div>Score: {userScore.score ?? '-'}</div>
                         <div>Time: {userScore.completionTime ?? '-'}</div> */}
                       </>
-                    ) : (
-                      '-'
+                    )}
+                    {userScore && !userScore.completed && (
+                      <img src="/static/icons/botguy-bw-trans-32x32.png" alt="Favicon" />
                     )}
                   </TableCell>
                 );
