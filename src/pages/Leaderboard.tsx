@@ -14,6 +14,7 @@ import tr from '@i18n';
 
 import db from '../db';
 
+const SELFIDENTIFIER = "My Scores!" ;
 
 interface Challenge {
   name: LocalizedString;
@@ -91,6 +92,12 @@ const TableHeaderContainer = styled('div', {
   width: '50px', // Set the width of the container
 });
 
+const UserHeaderContainer = styled('div', {
+  display: 'inline-block',
+  whiteSpace: 'nowrap', // Prevent text wrapping
+  width: '100px', // Set the width of the container
+});
+
 const Table = styled('table', {
   width: '80%',
   borderCollapse: 'collapse',
@@ -104,10 +111,11 @@ const TableHeader = styled('th', {
   borderBottom: '2px solid #ddd',
   padding: '8px',
   textAlign: 'center',
+  width: '50px',
 });
-const StyledTableRow = styled('tr', (props: { self: boolean }) => ({
+const StyledTableRow = styled('tr', (props: { key: string, self: string }) => ({
   borderBottom: '1px solid #ddd',
-  backgroundColor: props.self ? '#555' : '#000', // Highlight the current user
+  backgroundColor: props.self === SELFIDENTIFIER  ? '#555' : '#000', // Highlight the current user
 }));
 const TableRow = styled('tr', {
   borderBottom: '1px solid #ddd',
@@ -194,13 +202,12 @@ class Leaderboard extends React.Component<Props, State> {
     }
     const currentUserData: User = {
       id: 'currentUser',
-      name: 'THIS IS ME',
+      name: SELFIDENTIFIER,
       scores: currentUserScores,
     };
 
     users[currentUserData.id] = currentUserData;
 
-    // console.log("Queried:", users, challenges);
     this.setState({ users, challenges });
 
     return { users, challenges };
@@ -265,24 +272,65 @@ class Leaderboard extends React.Component<Props, State> {
 
       return completedChallengesB - completedChallengesA;
     });
-    console.log("Sorted:", userArray);
     return userArray;
   };
 
   private anonomizeUsers = (users: Record<string, User>): Record<string, User> => {
     const anonomizedUsers: Record<string, User> = {};
 
-    const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'white'];
-    const elements = ['fire', 'water', 'earth', 'air', 'light', 'dark', 'metal', 'wood', 'ice', 'electricity'];
-    const animals = ['tiger', 'bear', 'wolf', 'eagle', 'shark', 'whale', 'lion', 'panther', 'cheetah', 'jaguar'];
+    const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'white', 
+      'cyan', 'magenta', 'lime', 'teal', 'indigo', 'violet', 'gold', 'silver', 'bronze', 'maroon', 'tan', 'navy', 'aqua'];
+    const elements = ['fire', 'water', 'earth', 'air', 'light', 'dark', 'metal', 'wood', 'ice',
+      'shadow', 'spirit', 'void', 'plasma', 'gravity', 'time', 'space', 'aether', 'chaos', 'order'];
+    const animals = ['tiger', 'bear', 'wolf', 'eagle', 'shark', 'whale', 'lion', 'panther', 'jaguar', 
+      'fox', 'owl', 'hawk', 'dolphin', 'rhino', 'hippo', 'giraffe', 'zebra', 
+      'koala', 'panda', 'leopard', 'lynx', 'bison', 'buffalo', 'camel',
+      'raven', 'sparrow', 'swan', 'toucan', 'vulture', 'walrus', 'yak'];
+
+
+
+    const stringTo32BitInt = (id: string): number => {
+      const FNV_PRIME = 0x01000193; // 16777619
+      let hash = 0x811c9dc5; // FNV offset basis
+  
+      for (let i = 0; i < id.length; i++) {
+        hash ^= id.charCodeAt(i);       // XOR with byte value of character
+        hash = (hash * FNV_PRIME) >>> 0; // Multiply by FNV prime and apply unsigned right shift to keep it 32-bit
+      }
+  
+      return hash >>> 0; // Ensure the result is a positive 32-bit integer
+    };
 
     Object.values(users).forEach((user) => {
+      const hash = Math.abs(stringTo32BitInt(user.id));
+      const color = colors[hash % colors.length];
+      const element = elements[hash % elements.length];
+      const animal = animals[hash % animals.length];
+      const number = hash % 97;
+
       anonomizedUsers[user.id] = {
         id: user.id,
-        name: `${colors[Math.floor(Math.random() * colors.length)]}-${elements[Math.floor(Math.random() * elements.length)]}-${animals[Math.floor(Math.random() * animals.length)]}-${Math.floor(Math.random() * 100)}`,
+        name: `${color}-${element}-${animal}-${number}`,
         scores: user.scores
       };
     });
+
+    const nameSet = new Set<string>();
+    const duplicateNames: string[] = [];
+
+    Object.values(anonomizedUsers).forEach((user) => {
+      if (nameSet.has(user.name)) {
+        duplicateNames.push(user.name);
+      } else {
+        nameSet.add(user.name);
+      }
+    });
+
+    const duplicateIds = Object.values(anonomizedUsers).filter(u => duplicateNames.includes(u.name));
+
+    if (duplicateNames.length > 0) {
+      console.warn('Duplicate names found after anonymization:', duplicateNames, duplicateIds);
+    }
 
     return anonomizedUsers;
   };
@@ -328,7 +376,11 @@ class Leaderboard extends React.Component<Props, State> {
       <Table>
         <thead>
           <tr>
-            <TableHeader>Challenges:</TableHeader>
+            <TableHeader>
+              <UserHeaderContainer>
+                Users
+              </UserHeaderContainer>
+            </TableHeader>
             {challengeArray.map((id) => (
               <TableHeader key={id}>
                 <TableHeaderContainer>
@@ -340,7 +392,7 @@ class Leaderboard extends React.Component<Props, State> {
         </thead>
         <tbody>
           {userArray.map((user) => (
-            <StyledTableRow key={user.id} self={user.name === "THIS IS ME"}>
+            <StyledTableRow key={user.id} self={user.name}>
               <TableCell>{user.name}</TableCell>
               {challengeArray.map((id) => {
                 const userScore = user.scores.find(score => score.name['en-US'] === challenges[id].name['en-US']);
