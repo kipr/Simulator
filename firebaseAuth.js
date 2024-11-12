@@ -23,36 +23,29 @@ class FirebaseTokenManager {
 
   getToken() {
     // May return an expired token if token refresh is failing
-    console.log('using firebase token', this.idToken);
     return this.idToken;
   }
 
   refreshToken() {
-    console.log('REFRESHING FIREBASE TOKEN');
+    console.debug('Refreshing firebase token');
     return this.getCustomToken()
       .then(customToken => {
-        console.log('GOT CUSTOM TOKEN:', customToken);
+        console.debug('Got custom token');
         return this.getIdTokenFromCustomToken(customToken);
       })
       .then(idToken => {
-        console.log('GOT ID TOKEN:', idToken);
+        console.debug('Got ID token');
 
         if (!idToken) {
           throw new Error('Failed to get ID token');
         }
 
         const base64Url = idToken.split('.')[1];
-        console.log('base64Url', base64Url);
-
         const buff = Buffer.from(base64Url, 'base64url');
         const raw = buff.toString('ascii');
-        console.log('raw', raw);
-
         const parsed = JSON.parse(raw);
-        console.log('parsed', parsed);
 
         const exp = parsed['exp'];
-        console.log('exp', exp);
 
         this.idTokenExp = exp;
         this.idToken = idToken;
@@ -61,10 +54,10 @@ class FirebaseTokenManager {
         const msUntilExpiration = (exp * 1000) - Date.now();
         const refreshAt = msUntilExpiration - (5 * 60 * 1000);
         if (refreshAt > 0) {
-          console.log('scheduling refresh in', refreshAt, 'ms');
+          console.debug('Scheduling refresh in', refreshAt, 'ms');
           this.refreshTimerId = setTimeout(this.refreshToken.bind(this), refreshAt); 
         } else {
-          console.log('GOT NEGATIVE REFRESH AT TIME');
+          console.error('Got negative refresh time');
         }
       })
       .catch(e => {
@@ -103,7 +96,12 @@ class FirebaseTokenManager {
         return responseBody.idToken;
       })
       .catch(error => {
-        console.error('FAILED TO GET ID TOKEN', error?.response?.data?.error);
+        console.error('Failed to get ID token');
+        if (error?.response) {
+          console.error('Response status:', error.response.status);
+          console.error('Response data:', error.response.data);
+        }
+        
         return null;
       });
   }

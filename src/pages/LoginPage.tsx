@@ -153,7 +153,6 @@ class LoginPage extends React.Component<Props, State> {
 
         db.get<UserConsent>(Selector.user(user.uid))
           .then(userConsentFromDb => {
-            console.log('got user from db', userConsentFromDb);
             switch (userConsentFromDb?.legalAcceptance?.state) {
               // Intentionally fall through
               case LegalAcceptance.State.AwaitingParentalConsent:
@@ -234,7 +233,6 @@ class LoginPage extends React.Component<Props, State> {
   };
 
   private onSignUp_ = async (email: string, password: string) => {
-    console.log('onSignUp_');
     this.setState({
       authenticating: true,
       logInFailedMessage: null,
