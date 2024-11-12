@@ -155,7 +155,6 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
       });
     }
 
-    console.log('getting parental consent for user', userId);
     const firebaseIdToken = firebaseTokenManager.getToken();
 
     let currentConsent;
@@ -174,7 +173,6 @@ function createRouter(firebaseTokenManager, mailgunClient, config) {
     const parentConsentTokenHash = getHashForParentToken(parentConsentToken);
 
     // Send email to parent
-    console.log('sending email to parent');
     const baseUrl = `${req.protocol}://${req.get('host')}`;
 
     try {
@@ -393,7 +391,6 @@ async function getCurrentConsent(userId, token, config) {
       return null;
     }
 
-    console.error('ERROR:', error);
     throw error;
   }
 }
