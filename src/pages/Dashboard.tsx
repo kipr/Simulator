@@ -107,8 +107,6 @@ class Dashboard extends React.PureComponent<Props> {
             description={LocalizedString.lookup(tr('See the current challenge leaderboard.'), locale)}
             backgroundImage={'linear-gradient(#3b3c3c, transparent), url(../../static/example_images/Gold_Medal_Robot.png)'}
             backgroundColor={'#3b3c3c'}
-            backgroundSize={'80%'}
-            hoverBackgroundSize={'95%'}
             onClick={onLeaderboardClick}
           />
         </CardContainer>
