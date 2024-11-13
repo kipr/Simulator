@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { DARK, ThemeProps } from '../components/constants/theme';
 import { Card } from '../components/interface/Card';
 import MainMenu from '../components/MainMenu';
-import IFrame from '../components/IFrame';
 
 import { StyleProps } from '../util/style';
 import LocalizedString from '../util/LocalizedString';
@@ -31,26 +30,32 @@ const tutorialList: Tutorial [] = [
     description: tr('Learn how to get started with the simulator'),
     backgroundColor: '#6c6ca1',
     backgroundImage: 'url(../../static/icons/Laptop_Icon_Sunscreen.png)',
-    src: 'https://www.youtube.com/embed/7Szf-iQjNCw',
+    src: 'https://www.youtube.com/embed/oMK00txANhE',
   },
   {
     title: tr('Navigating in 3D'),
     description: tr('Learn the controls for navigating in 3D in the simulator'),
     backgroundImage: 'linear-gradient(#3b3c3c, transparent), url(../../static/example_images/Simulator_Full_View.png)',
-    src: 'https://www.youtube.com/embed/RBpWIpBlYK8',
+    src: 'https://www.youtube.com/embed/yqNbwaZz8J0',
   },
   {
     title: tr('Robot Section'),
     description: tr('How to use the robot section'),
     backgroundImage: 'url(../../static/example_images/Simulator-Robot-Closeup.png)',
-    src: 'https://www.youtube.com/embed/SmYR1esidcc',
+    src: 'https://www.youtube.com/embed/B464dO7G9w4',
   },
   {
     title: tr('World Section'),
     description: tr('Learn how to create and manipulate items and scene in the simulator'),
-    backgroundImage: 'linear-gradient(#3b3c3c, transparent), url(../../static/textures/Can_Ream.png)',
-    src: 'https://www.youtube.com/embed/K7GsS8s3Rfg',
+    backgroundImage: 'linear-gradient(#3b3c3c, transparent), url(../../static/example_images/Can_Ream.png)',
+    src: 'https://www.youtube.com/embed/50hXUwy74fQ',
   },
+  {
+    title: tr('The Challenge System'),
+    description: tr('Learn how to use the challenge system'),
+    backgroundImage: 'url(../../static/example_images/Gold_Medal_Robot.png)',
+    src: 'https://www.youtube.com/embed/HNKFXhdKPBY',
+  }
 ];
 
 export interface TutorialsPublicProps extends StyleProps, ThemeProps {
@@ -138,9 +143,10 @@ class Tutorials extends React.Component<Props, State> {
   }
 
   private onSelect_ = (index: number) => () => {
-    this.setState({
-      selected: tutorialList[index].src,
-    });
+    // this.setState({
+    //   selected: tutorialList[index].src,
+    // });
+    window.location.href = tutorialList[index].src;
   };
 
   render() {
@@ -153,11 +159,6 @@ class Tutorials extends React.Component<Props, State> {
       <Container style={style} theme={theme}>
         <MainMenu theme={theme} />
         <TutorialsContainer style={style} theme={theme}>
-          {this.state.selected !== '' ? (
-            <VideoContainer theme={theme}>
-              <IFrame theme={theme} src={selected} />
-            </VideoContainer>
-          ) : null}
           <CardContainer style={style} theme={theme}>
             {tutorialList.map((tutorial, index) => (
               <Card
