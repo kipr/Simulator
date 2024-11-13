@@ -41,8 +41,9 @@ module.exports = {
         serviceAccountKey,
       },
       mailgun: {
-        apiKey: getEnvVarOrDefault('MAILGUN_API_KEY', ''),
-        domain: getEnvVarOrDefault('MAILGUN_DOMAIN', ''),
+        // Provide defaults so mailgun client can be created even if not configured during local development
+        apiKey: getEnvVarOrDefault('MAILGUN_API_KEY', '<invalid>'),
+        domain: getEnvVarOrDefault('MAILGUN_DOMAIN', '<invalid>'),
       },
     };
   },
