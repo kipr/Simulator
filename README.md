@@ -145,16 +145,22 @@ In another terminal, run the server:
 node express.js
 ```
 
+See [Configuration](#configuration) for environment variables. The server will not run unless the required environment variables are set.
+
 ## Configuration
 
-The server can be configured using environment variables. Variables without default values must be provided.
+The server can be configured using environment variables. Some variables are required.
 
-| Variable | Description | Default value |
-| -------- | ----------- | ------------- |
-| `SERVER_PORT` | The port on which to listen for requests | `3000` |
-| `CACHING_STATIC_MAX_AGE` | The max duration (in ms) to allow static assets to be cached | `3600000` (1 hr) |
-| `FEEDBACK_WEBHOOK_URL` | The url for the discord webhook to send feedback to | | 
-| `API_URL` | The url for the KIPR database server | `https://db-prerelease.botballacademy.org` |
+| Variable | Description | Default value | Required |
+| -------- | ----------- | ------------- | -------- |
+| `SERVER_PORT` | The port on which to listen for requests | `3000` | no |
+| `CACHING_STATIC_MAX_AGE` | The max duration (in ms) to allow static assets to be cached | `3600000` (1 hr) | no |
+| `FEEDBACK_WEBHOOK_URL` | The url for the discord webhook to send feedback to | | no |
+| `API_URL` | The url for the KIPR database server | `https://db-prerelease.botballacademy.org` | no |
+| `FIREBASE_SERVICE_ACCOUNT_KEY_FILE` | Firebase service account key JSON (as a file path). Only used if `FIREBASE_SERVICE_ACCOUNT_KEY_STRING` is not present | | yes* |
+| `FIREBASE_SERVICE_ACCOUNT_KEY_STRING` | Firebase service account key JSON (as a string) | | yes* |
+| `MAILGUN_API_KEY` | API key for Mailgun service | | no |
+| `MAILGUN_DOMAIN` | Domain used for Mailgun emails | | no |
 
 ## Using a local `database` service
 
