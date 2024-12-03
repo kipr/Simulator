@@ -150,7 +150,7 @@ export namespace Validators {
         return value.length >= length;
       case Types.Email:
         return /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value);
-      case Types.Date:
+      case Types.Date: {
         // Ensure it matches the expected format
         const regexRes = /^(0[1-9]|1[012])(?:\/|-)(0[1-9]|[12][0-9]|3[01])(?:\/|-)((?:19|20)\d{2})$/.exec(value);
         if (regexRes === null) return false;
@@ -163,7 +163,7 @@ export namespace Validators {
           dateObj.getUTCFullYear() === y &&
           (dateObj.getUTCMonth() + 1) === m &&
           dateObj.getUTCDate() === d;
-
+      }
       default:
         return false;
     }
