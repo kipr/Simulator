@@ -151,8 +151,19 @@ export namespace Validators {
       case Types.Email:
         return /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value);
       case Types.Date:
-        // TODO: validate that it's a real date (e.g. 02/30/2000 should not pass)
-        return /^(0[1-9]|1[012])(\/|-)(0[1-9]|[12][0-9]|3[01])(\/|-)(19|20)\d{2}$/.test(value);
+        // Ensure it matches the expected format
+        const regexRes = /^(0[1-9]|1[012])(?:\/|-)(0[1-9]|[12][0-9]|3[01])(?:\/|-)((?:19|20)\d{2})$/.exec(value);
+        if (regexRes === null) return false;
+
+        // Ensure it's a valid date
+        // Date constructor will rollover invalid dates, like 2024-02-30 to 2024-03-01, so ensure the individual parts didn't change
+        const [m, d, y] = regexRes.slice(1).map(s => parseInt(s));
+        const dateObj = new Date(Date.UTC(y, m - 1, d));
+        return !isNaN(dateObj.getTime()) &&
+          dateObj.getUTCFullYear() === y &&
+          (dateObj.getUTCMonth() + 1) === m &&
+          dateObj.getUTCDate() === d;
+
       default:
         return false;
     }
