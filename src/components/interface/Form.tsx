@@ -230,12 +230,26 @@ namespace Form {
   }
 
   export const IDENTITY_FINALIZER = (value: string) => value;
+  export const DATE_FINALIZER = (value: string) => {
+    let valueParts: string[] = [];
+    const validDelimters = ['/', '-'];
+    for (const delimiter of validDelimters) {
+      valueParts = value.split(delimiter);
+      if (valueParts.length === 3) {
+        break;
+      }
+    }
+
+    const [mm, dd, yyyy] = valueParts;
+    return `${mm}/${dd}/${yyyy}`;
+  };
+
   export const EMAIL_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.Email);
   export const PASSWORD_VALIDATOR = (value: string) => Validators.validatePassword(value);
   export const DATE_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.Date);
   export const NON_EMPTY_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.Length, 1);
 
-
+  
   export const email = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
     id,
     text,
@@ -262,7 +276,7 @@ namespace Form {
     text,
     tooltip,
     validator: DATE_VALIDATOR,
-    finalizer: IDENTITY_FINALIZER,
+    finalizer: DATE_FINALIZER,
     assist,
     assistText,
   });
