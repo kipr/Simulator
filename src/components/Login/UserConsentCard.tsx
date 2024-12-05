@@ -7,11 +7,10 @@ import { StyleProps } from "util/style";
 import { faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 import { TabBar } from "../Layout/TabBar";
 import PdfPage from "../PdfPage";
-import { GlobalWorkerOptions, PDFPageProxy, getDocument } from 'pdfjs-dist';
+import { PDFPageProxy, getDocument } from 'pdfjs-dist';
 
-// TODO: make this point to a local file that gets deployed
-// TODO: centralize somewhere in the app
-GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+// Zero-configuration setup for PDF.js worker with webpack
+import 'pdfjs-dist/webpack.mjs';
 
 export interface UserConsentCardPublicProps extends ThemeProps, StyleProps {
   disable: boolean;
