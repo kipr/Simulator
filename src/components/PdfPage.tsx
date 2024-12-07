@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
-import { GlobalWorkerOptions, PDFPageProxy, PixelsPerInch } from 'pdfjs-dist';
+import { PDFPageProxy, PixelsPerInch } from 'pdfjs-dist';
 import { EventBus, LinkTarget, PDFPageView, SimpleLinkService } from 'pdfjs-dist/web/pdf_viewer.mjs';
+import 'pdfjs-dist/web/pdf_viewer.css';
 
-GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+// Zero-configuration setup for PDF.js worker with webpack
+import 'pdfjs-dist/webpack.mjs';
 
 interface PdfPageProps {
   pdfPage: PDFPageProxy;

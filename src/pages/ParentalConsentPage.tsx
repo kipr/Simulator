@@ -10,12 +10,11 @@ import KIPR_LOGO_WHITE from '../../static/assets/KIPR-Logo-White-Text-Clear-Larg
 import { faPaperPlane, faArrowRight, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesome } from "../components/FontAwesome";
 import Button from '../components/interface/Button';
-import { GlobalWorkerOptions, PDFDocumentProxy, PDFPageProxy, getDocument } from 'pdfjs-dist';
+import { PDFDocumentProxy, PDFPageProxy, getDocument } from 'pdfjs-dist';
 import PdfPage from '../components/PdfPage';
 
-// TODO: make this point to a local file that gets deployed
-// TODO: centralize somewhere in the app
-GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+// Zero-configuration setup for PDF.js worker with webpack
+import 'pdfjs-dist/webpack.mjs';
 
 interface ParentalConsentPageProps extends ThemeProps, StyleProps {
   userId: string;
