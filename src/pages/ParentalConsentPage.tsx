@@ -11,7 +11,7 @@ import { faPaperPlane, faArrowRight, faSpinner } from '@fortawesome/free-solid-s
 import { FontAwesome } from "../components/FontAwesome";
 import Button from '../components/interface/Button';
 import { PDFDocumentProxy, PDFPageProxy, getDocument } from 'pdfjs-dist';
-import PdfPage from '../components/PdfPage'
+import PdfPage from '../components/PdfPage';
 
 // Zero-configuration setup for PDF.js worker with webpack
 import 'pdfjs-dist/webpack.mjs';
