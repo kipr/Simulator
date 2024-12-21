@@ -23,7 +23,7 @@ const Description = styled('div', {
   fontSize: '0.8em',
 });
 
-interface EventViewerProps extends StyleProps {
+export interface EventViewerProps extends StyleProps {
   event: Event;
   eventState?: boolean;
   locale: LocalizedString.Language;

@@ -8,8 +8,8 @@ import Predicate from '../../state/State/Challenge/Predicate';
 import PredicateCompletion from '../../state/State/ChallengeCompletion/PredicateCompletion';
 import { StyleProps } from '../../util/style';
 import HTree, { HTreeNode } from './HTree';
-import EventViewer from './EventViewer';
-import Operator from './Operator';
+import EventViewer, { EventViewerProps } from './EventViewer';
+import Operator, { OperatorProps } from './Operator';
 
 export interface PredicateEditorProps extends StyleProps {
   predicate: Predicate;
@@ -48,42 +48,45 @@ const treeify = (exprs: Dict<Expr>, rootId: string, events: Dict<Event>, locale:
     case Expr.Type.And:
     case Expr.Type.Or:
     case Expr.Type.Xor: {
-      return {
+      const node: Node<OperatorProps> = {
         type: Node.Type.NonTerminal,
         parent: {
           component: Operator,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
-          props: { type: root.type } as any
+          props: { type: root.type, locale }
         },
         children: Dict.generate(root.argIds, id => treeify(exprs, id, events, locale, exprStates)),
         childrenOrdering: root.argIds,
         state: exprStates ? exprStates[rootId] : undefined
       };
+
+      return node;
     }
     case Expr.Type.Once:
     case Expr.Type.Not: {
-      return {
+      const node: Node<OperatorProps> = {
         type: Node.Type.NonTerminal,
         parent: {
           component: Operator,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
-          props: { type: root.type } as any
+          props: { type: root.type, locale }
         },
         children: Dict.generate([root.argId], id => treeify(exprs, id, events, locale, exprStates)),
         childrenOrdering: [root.argId],
         state: exprStates ? exprStates[rootId] : undefined
       };
+
+      return node;
     }
     case Expr.Type.Event: {
-      return {
+      const node: Node<EventViewerProps> = {
         type: Node.Type.Terminal,
         node: {
           component: EventViewer,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
-          props: { event: events[root.eventId], locale } as any
+          props: { event: events[root.eventId], locale }
         },
         state: exprStates ? exprStates[rootId] : undefined
       };
+
+      return node;
     }
   }
 };
