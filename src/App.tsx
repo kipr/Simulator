@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route, Switch } from 'react-router';
+import { Redirect, Route, Switch } from 'react-router';
 import { Unsubscribe } from 'firebase/auth';
 import { connect } from 'react-redux';
 
@@ -130,6 +130,7 @@ class App extends React.Component<Props, State> {
           <Route path="/scene/:sceneId" component={Root} />
           <Route path="/challenge/:challengeId" component={ChallengeRoot} />
           <Route path="/curriculum" component={CurriculumPage} />
+          <Redirect to="/" />
         </Switch>
         <DocumentationWindow theme={DARK} />
       </>
