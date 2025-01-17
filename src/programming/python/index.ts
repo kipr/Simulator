@@ -47,14 +47,15 @@ if (SIMULATOR_HAS_CPYTHON) {
         }));
         let create: unknown;
         if (params.createSerial) {
-          create = module.FS.makedev(64, 0);
+          // NOTE: This was initially using a major ID of 64, but that overrode the registers device.
+          // Needs to be revisited when completing create support.
+          create = module.FS.makedev(65, 0);
           module.FS.registerDevice(create, createDevice({
             serial: params.createSerial
           }));
         }
         module.FS.mkdev('/registers', registers);
         module.FS.mkdir('/kipr');
-        module.FS.mkdir('/dev');
         if (create) module.FS.mkdev('/dev/ttyUSB0', create);
         module.FS.writeFile('/kipr/_kipr.so', new Uint8Array(libkiprBuffer));
 
