@@ -60,6 +60,18 @@ const LoadingButton = withStyleDeep(Button, {
 });
 
 const LoadingOverlay = ({ challenge, loading, onStartClick, locale }: { challenge: AsyncChallenge; onStartClick: () => void; loading: boolean; locale: LocalizedString.Language; }) => {
+  const didChallengeFail: boolean = Async.isFailed(challenge);
+
+  if (didChallengeFail) {
+    return (
+      <Container>
+        <TitleContainer>
+          {LocalizedString.lookup(tr('Failed to load challenge'), locale)}
+        </TitleContainer>
+      </Container>
+    );
+  }
+
   const latestChallenge = Async.latestValue(challenge);
   if (!latestChallenge) return null;
 

@@ -347,10 +347,12 @@ class SimMenu extends React.PureComponent<Props, State> {
           <Item
             theme={theme}
             onClick={onStartChallengeClick}
+            disabled={onStartChallengeClick === undefined}
+            title={onStartChallengeClick === undefined ? LocalizedString.lookup(tr('The current scene does not have a challenge available'), locale) : undefined}
             style={{ position: 'relative' }}
           >
             <ItemIcon icon={faFlagCheckered} /> {LocalizedString.lookup(tr('Start Challenge'), locale)}
-             
+            
           </Item>
 
           <Item 
