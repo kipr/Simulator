@@ -78,6 +78,7 @@ interface RootPrivateProps {
   scene: AsyncScene;
   challenge?: AsyncChallenge;
   challengeCompletion?: AsyncChallengeCompletion;
+  sceneHasChallenge: boolean;
   locale: LocalizedString.Language;
 
   onNodeAdd: (id: string, node: Node) => void;
@@ -596,7 +597,8 @@ class Root extends React.Component<Props, State> {
       match: { params: { sceneId, challengeId } },
       scene,
       challenge,
-      challengeCompletion
+      challengeCompletion,
+      sceneHasChallenge,
     } = props;
 
     if (!scene || scene.type === Async.Type.Unloaded) {
@@ -701,7 +703,7 @@ class Root extends React.Component<Props, State> {
             onSettingsClick={this.onModalClick_(Modal.SETTINGS)}
             onAboutClick={this.onModalClick_(Modal.ABOUT)}
             onResetWorldClick={this.onResetWorldClick_}
-            onStartChallengeClick={this.onStartChallengeClick_}
+            onStartChallengeClick={sceneHasChallenge ? this.onStartChallengeClick_ : undefined}
             onRunClick={code[activeLanguage].length > 0 ? this.onRunClick_ : undefined}
             onStopClick={this.onStopClick_}
             onDocumentationClick={onDocumentationClick}
@@ -822,12 +824,15 @@ class Root extends React.Component<Props, State> {
 export default connect((state: ReduxState, { match: { params: { sceneId, challengeId } } }: RootPublicProps) => {
   const builder = new Builder(state);
 
+  let sceneHasChallenge = true;
+
   if (challengeId) {
     const challenge = builder.challenge(challengeId);
     challenge.scene();
     challenge.completion();
   } else {
     builder.scene(sceneId);
+    sceneHasChallenge = sceneId in builder.state.challenges;
   }
 
   builder.dispatchLoads();
@@ -836,6 +841,7 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
     scene: Dict.unique(builder.scenes),
     challenge: Dict.unique(builder.challenges),
     challengeCompletion: Dict.unique(builder.challengeCompletions),
+    sceneHasChallenge,
     locale: state.i18n.locale,
   };
 }, (dispatch, { match: { params: { sceneId } } }: RootPublicProps) => ({
