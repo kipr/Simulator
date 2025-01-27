@@ -16,7 +16,6 @@ Simulates a botball/JBC style demobot with a built in IDE.
 - [CMake](https://cmake.org/)
 - [SWIG 4+](https://swig.org/)
 - [Python 3.7 or newer](https://www.python.org/)
-- [Also python 2.7]
 
 ### Debian/Ubuntu
 ```bash
@@ -112,9 +111,7 @@ Tip: if you are experiencing issues with this step, you may try deleting the rep
     - Modifies the field variables to remove non initialization case
   
 
-5. Patch the scratch-blocks package.json to use python2
-
-6. Install the scratch blocks
+5. Install the scratch blocks
 
 
 
