@@ -9,7 +9,7 @@ import { Distance } from "../../../util";
 import { Color } from '../../../state/State/Scene/Color';
 //import LocalizedString from '../../../util/LocalizedString';
 
-import { createBaseSceneSurface } from './moonBase';
+import { createBaseSceneSurface } from './tableBase';
 
 import tr from '@i18n';
 
@@ -138,8 +138,10 @@ export const Table_Sandbox: Scene = {
       height: Distance.centimeters(0.1),
     },
   },
+
   nodes: {
     ...baseScene.nodes,
+    /*
     'robot': {
       ...baseScene.nodes['robot'],
       editable: true,
@@ -329,6 +331,7 @@ export const Table_Sandbox: Scene = {
         },
       },
     },
+    */
   }
   
 };

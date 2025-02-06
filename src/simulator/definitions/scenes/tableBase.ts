@@ -11,6 +11,7 @@ import Author from '../../../db/Author';
 //import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 
 import tr from '@i18n';
+import { scale } from "pdf-lib";
 //import { sprintf } from 'sprintf-js';
 //import Dict from '../../../util/objectOps/Dict';
 
@@ -22,7 +23,8 @@ const ROBOT_ORIGIN: ReferenceFramewUnits = {
 
 const GROUND_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(0, -.5, 50),
-  orientation: RotationwUnits.eulerDegrees(0, 0, 0)
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+  scale: { x: 100, y: 100, z: 100 },
 };
 
 const START_ORIGIN: ReferenceFramewUnits = {
@@ -56,9 +58,8 @@ export function createBaseSceneSurface(): Scene {
     author: Author.organization('kipr'),
     geometry: {
       'moon ground': {
-        type: 'cylinder',
-        radius: Distance.feet(25),
-        height: Distance.centimeters(1),
+        type: 'file',
+        uri: '/static/object_binaries/2025_game_table.glb'
       },
       'sky': {
         type: 'box',
@@ -109,7 +110,7 @@ export function createBaseSceneSurface(): Scene {
         visible: true,
         editable: true,
         physics: {
-          type: 'box',
+          type: 'mesh',
           restitution: .3,
           friction: 1,
         },
