@@ -11,30 +11,26 @@ import Author from '../../../db/Author';
 //import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 
 import tr from '@i18n';
-import { scale } from "pdf-lib";
+//import { scale } from "pdf-lib";
 //import { sprintf } from 'sprintf-js';
 //import Dict from '../../../util/objectOps/Dict';
 
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(0, 4, 0),
-  orientation: RotationwUnits.eulerDegrees(0, -45, 0),
+  position: Vector3wUnits.centimeters(100, 4, 100),
+  orientation: RotationwUnits.eulerDegrees(0, -90, 0),
 };
 
 const GROUND_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(0, -.5, 50),
+  position: Vector3wUnits.centimeters(0, -.5, 0),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0),
   scale: { x: 100, y: 100, z: 100 },
 };
 
-const START_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(0, 0, 0),
-  orientation: RotationwUnits.eulerDegrees(0, 90, 0)
-};
-
-const SKY_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(0, -17.2, 50),
-  orientation: RotationwUnits.eulerDegrees(90, 0, 0)
+const GAME_TABLE_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(0, -.5, 0),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+  //scale: { x: 100, y: 100, z: 100 },
 };
 
 const LIGHT_ORIGIN: ReferenceFramewUnits = {
@@ -51,77 +47,46 @@ const ROBOT: Node.Robot = {
   origin: ROBOT_ORIGIN
 };
 
+const GAME_TABLE_2025: Node.Robot = {
+  type: 'robot',
+  name: tr('2025 Game Table'),
+  robotId: 'game_table_2025',
+  state: AbstractRobot.Stateless.NIL,
+  visible: true,
+  editable: false,
+  startingOrigin: GAME_TABLE_ORIGIN,
+  origin: GAME_TABLE_ORIGIN
+};
+
 export function createBaseSceneSurface(): Scene {
   return {
     name: tr('Base Scene - 2025 Botball Game Table'),
     description: tr('A base scene. Intended to be augmented to create the full game table'),
     author: Author.organization('kipr'),
     geometry: {
-      'moon ground': {
+      'game_table_2025': {
         type: 'file',
         uri: '/static/object_binaries/2025_game_table.glb'
       },
-      'sky': {
-        type: 'box',
-        size: {
-          x: Distance.meters(15),
-          y: Distance.meters(15),
-          z: Distance.meters(15),
-        }
-      },
-      'start': {
-        type: 'box',
-        size: {
-          x: Distance.feet(2),
-          y: Distance.centimeters(.1),
-          z: Distance.feet(2),
-        }
-      },
-
     },
     nodes: {
       'robot': ROBOT,
-      'Moon ground': {
+      'game_table_2025': GAME_TABLE_2025,
+      /*
+      '2025 Game Table': {
         type: 'object',
-        geometryId: 'moon ground',
-        name: tr('1.1.1 Ground'),
+        geometryId: 'game_table_2025',
+        name: tr('2025 Botball game table'),
         startingOrigin: GROUND_ORIGIN,
         origin: GROUND_ORIGIN,
         visible: true,
         physics: {
-          type: 'box',
-          restitution: .3,
-          friction: 1,
-        },
-        material: {
-          type: 'basic',
-          color: {
-            type: "texture",
-            uri: "/static/textures/Moon-2d-Surface.png"
-          },
-        },
-      },      
-      'start': {
-        type: 'object',
-        geometryId: 'start',
-        name: tr('1.1.6-8 Start Area'),
-        startingOrigin: START_ORIGIN,
-        origin: START_ORIGIN,
-        visible: true,
-        editable: true,
-        physics: {
           type: 'mesh',
-          restitution: .3,
+          restitution: .1,
           friction: 1,
-        },
-        material: {
-          type: 'basic',
-          color: {
-            type: "texture",
-            uri: "/static/textures/start_texture_light.png"
-          },
         },
       },
+      */
       'light0': {
         type: 'point-light',
         intensity: .25,
@@ -130,21 +95,6 @@ export function createBaseSceneSurface(): Scene {
         origin: LIGHT_ORIGIN,
         visible: true
       },
-      'night_sky': {
-        type: 'object',
-        name: tr('1.1.2-4 Sky'),
-        geometryId: 'sky',
-        visible: true,
-        startingOrigin: SKY_ORIGIN,
-        origin: SKY_ORIGIN,
-        material: {
-          type: 'basic',
-          color: {
-            type: "texture",
-            uri: "/static/textures/earthrise.png"
-          },
-        },
-      }
     },
     camera: Camera.arcRotate({
       radius: Distance.meters(5),
