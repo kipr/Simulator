@@ -18,7 +18,7 @@ export const GAME_TABLE_2025: Robot = {
     chassis: Node.link({
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
       geometryId: 'game_table_2025',
-      restitution: .2,
+      restitution: .3,
       friction: 1,
       mass: Mass.grams(0),
     }),
@@ -38,13 +38,12 @@ export const HAMBURGER: Robot = {
     chassis: Node.link({
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
       geometryId: 'hamburger',
-      restitution: .5,
-      friction: 1,
-      mass: Mass.grams(0),
+      restitution: .9,
+      friction: .3,
+      mass: Mass.grams(10),
     }),
   },
   geometry: {
-    game_table_2025: Geometry.remoteMesh({ uri: '/static/object_binaries/game_table_2025.glb' }),
     hamburger: Geometry.remoteMesh({ uri: '/static/object_binaries/hamburger.glb' }),
   },
   origin: {
