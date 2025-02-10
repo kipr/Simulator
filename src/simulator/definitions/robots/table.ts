@@ -18,8 +18,8 @@ export const GAME_TABLE_2025: Robot = {
     chassis: Node.link({
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
       geometryId: 'game_table_2025',
-      restitution: .1,
-      friction: 10,
+      restitution: .2,
+      friction: 1,
       mass: Mass.grams(0),
     }),
   },

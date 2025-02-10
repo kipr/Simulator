@@ -6,11 +6,11 @@ import Scene from "../../../state/State/Scene";
 // Imports to abuse robot system for collision boxes
 import Node from "../../../state/State/Scene/Node";
 import AbstractRobot from '../../../programming/AbstractRobot';
-//import Script from '../../../state/State/Scene/Script';
+// import Script from '../../../state/State/Scene/Script';
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../../util/math/unitMath";
 import { Distance } from "../../../util";
 import { Color } from '../../../state/State/Scene/Color';
-//import LocalizedString from '../../../util/LocalizedString';
+// import LocalizedString from '../../../util/LocalizedString';
 
 import { createBaseSceneSurface } from './tableBase';
 
@@ -58,77 +58,6 @@ scene.addOnIntersectionListener('breccia', (type, otherNodeId) => {
 
 const baseScene = createBaseSceneSurface();
 
-const SCIENCEPAD_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(0, 2, 100),
-  orientation: RotationwUnits.eulerDegrees(0, 90, 0)
-};
-
-const CONTAINER_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-60, 0, 100),
-  scale: { x: 15, y: 15, z: 15 },
-  orientation: RotationwUnits.eulerDegrees(0, 180, 0)
-};
-
-const BOTGUY_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-50, 0, 30),
-  scale: { x: 70, y: 70, z: 70 }
-};
-
-const SOLARPANEL_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(20, 0, 135),
-  scale: { x: 4, y: 4, z: 4 },
-  orientation: RotationwUnits.eulerDegrees(0, 180, 0)
-};
-
-
-const COMMSTOWER_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(80, 4, 0),
-  scale: { x: 10, y: 10, z: 10 }
-};
-
-const HABITAT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(50, 17, 130),
-  scale: { x: 12, y: 12, z: 12 },
-  orientation: RotationwUnits.eulerDegrees(0, 180, 0)
-};
-
-const WALKWAY_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(50, 17, 80),
-  scale: { x: 12, y: 12, z: 12 }
-};
-
-const RESEARCH_HABITAT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(50, 17, 25),
-  scale: { x: 12, y: 12, z: 12 },
-  orientation: RotationwUnits.eulerDegrees(0, 180, 0)
-};
-
-const CONTROL_HABITAT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(50, 17, -35),
-  scale: { x: 12, y: 12, z: 12 },
-  orientation: RotationwUnits.eulerDegrees(0, 180, 0)
-};
-
-const LIFESCIENCE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-50, 6, 50.3),
-};
-
-const RADSCIENCE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-50, 6, 40.3),
-};
-
-const BASALT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-30, 4.5, 61.3),
-};
-const ANORTHOSITE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-15, 4.5, 61.3),
-};
-const BRECCIA_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(0, 4.5, 61.3),
-};
-const METEORITE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(15, 4.5, 61.3),
-};
 const HAMBURGER_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(15, 22, 114),
   orientation: RotationwUnits.eulerDegrees(0, -90, 0),
