@@ -1,16 +1,17 @@
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../../util/math/unitMath";
-//import { Angle, Distance, Mass } from "../../../util";
-import { Distance } from "../../../util";
+import { Angle, Distance, Mass } from "../../../util";
+//import { Distance } from "../../../util";
 import Node from "../../../state/State/Scene/Node";
 import Camera from "../../../state/State/Scene/Camera";
 import Scene from "../../../state/State/Scene";
 import AbstractRobot from '../../../programming/AbstractRobot';
 //import LocalizedString from '../../../util/LocalizedString';
 import Author from '../../../db/Author';
-//import { Color } from "../../../state/State/Scene/Color";
+import { Color } from "../../../state/State/Scene/Color";
 //import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 
 import tr from '@i18n';
+import { distance } from "colorjs.io/fn";
 //import { scale } from "pdf-lib";
 //import { sprintf } from 'sprintf-js';
 //import Dict from '../../../util/objectOps/Dict';
@@ -21,15 +22,31 @@ const ROBOT_ORIGIN: ReferenceFramewUnits = {
   orientation: RotationwUnits.eulerDegrees(0, -90, 0),
 };
 
+/*
 const GROUND_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(0, -.5, 0),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0),
   scale: { x: 100, y: 100, z: 100 },
 };
+*/
+
+const GROUND_ORIGIN: ReferenceFramewUnits = {
+  position: {
+    x: Distance.centimeters(0),
+    y: Distance.centimeters(-5),
+    z: Distance.centimeters(0),
+  },
+  orientation: {
+    type: 'euler',
+    x: Angle.degrees(90),
+    y: Angle.degrees(0),
+    z: Angle.degrees(0),
+  }
+};
 
 const GAME_TABLE_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(0, -.5, 0),
-  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+  orientation: RotationwUnits.eulerDegrees(0, -90, 0),
   //scale: { x: 100, y: 100, z: 100 },
 };
 
@@ -68,10 +85,38 @@ export function createBaseSceneSurface(): Scene {
         type: 'file',
         uri: '/static/object_binaries/2025_game_table.glb'
       },
+      'ground': {
+        type: 'box',
+        size: {
+          x: Distance.feet(8),
+          y: Distance.feet(8),
+          z: Distance.meters(0.01),
+        },
+      },
     },
     nodes: {
       'robot': ROBOT,
       'game_table_2025': GAME_TABLE_2025,
+      'ground': {
+        type: 'object',
+        geometryId: 'ground',
+        name: tr('Ground'),
+        startingOrigin: GROUND_ORIGIN,
+        origin: GROUND_ORIGIN,
+        visible: true,
+        physics: {
+          type: 'box',
+          restitution: 0.1,
+          friction: 10,
+        },
+        material: {
+          type: 'basic',
+          color: {
+            type: 'color3',
+            color: Color.rgb(192, 192, 192),
+          },
+        },
+      },
       /*
       '2025 Game Table': {
         type: 'object',
@@ -111,7 +156,7 @@ export function createBaseSceneSurface(): Scene {
     }),
     gravity: {
       x: Distance.meters(0),
-      y: Distance.meters(-9.8 * 0.5),
+      y: Distance.meters(-9.8),
       z: Distance.meters(0),
     }
   };

@@ -18,13 +18,34 @@ export const GAME_TABLE_2025: Robot = {
     chassis: Node.link({
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
       geometryId: 'game_table_2025',
-      restitution: .3,
-      friction: 1,
+      restitution: .1,
+      friction: 10,
       mass: Mass.grams(0),
     }),
   },
   geometry: {
     game_table_2025: Geometry.remoteMesh({ uri: '/static/object_binaries/2025_game_table.glb' }),
+  },
+  origin: {
+    orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+  }
+};
+
+export const HAMBURGER: Robot = {
+  name: tr('Hamburger'),
+  authorId: 'kipr',
+  nodes: {
+    chassis: Node.link({
+      collisionBody: Node.Link.CollisionBody.EMBEDDED,
+      geometryId: 'hamburger',
+      restitution: .5,
+      friction: 1,
+      mass: Mass.grams(0),
+    }),
+  },
+  geometry: {
+    game_table_2025: Geometry.remoteMesh({ uri: '/static/object_binaries/game_table_2025.glb' }),
+    hamburger: Geometry.remoteMesh({ uri: '/static/object_binaries/hamburger.glb' }),
   },
   origin: {
     orientation: RotationwUnits.eulerDegrees(0, 0, 0),
