@@ -20,7 +20,7 @@ export const GAME_TABLE_2025: Robot = {
       geometryId: 'game_table_2025',
       restitution: .3,
       friction: 1,
-      mass: Mass.grams(0),
+      mass: Mass.kilograms(20),
     }),
   },
   geometry: {
@@ -45,6 +45,46 @@ export const HAMBURGER: Robot = {
   },
   geometry: {
     hamburger: Geometry.remoteMesh({ uri: '/static/object_binaries/hamburger.glb' }),
+  },
+  origin: {
+    orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+  }
+};
+
+export const HOTDOG: Robot = {
+  name: tr('Hotdog'),
+  authorId: 'kipr',
+  nodes: {
+    chassis: Node.link({
+      collisionBody: Node.Link.CollisionBody.EMBEDDED,
+      geometryId: 'hotdog',
+      restitution: .9,
+      friction: .3,
+      mass: Mass.grams(10),
+    }),
+  },
+  geometry: {
+    hotdog: Geometry.remoteMesh({ uri: '/static/object_binaries/hot_dog.glb' }),
+  },
+  origin: {
+    orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+  }
+};
+
+export const TACO: Robot = {
+  name: tr('Taco'),
+  authorId: 'kipr',
+  nodes: {
+    chassis: Node.link({
+      collisionBody: Node.Link.CollisionBody.EMBEDDED,
+      geometryId: 'taco',
+      restitution: .9,
+      friction: .3,
+      mass: Mass.grams(10),
+    }),
+  },
+  geometry: {
+    taco: Geometry.remoteMesh({ uri: '/static/object_binaries/taco.glb' }),
   },
   origin: {
     orientation: RotationwUnits.eulerDegrees(0, 0, 0),

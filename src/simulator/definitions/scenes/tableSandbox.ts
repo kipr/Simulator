@@ -20,7 +20,17 @@ const baseScene = createBaseSceneSurface();
 
 const HAMBURGER_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(9, 22, 114),
-  orientation: RotationwUnits.eulerDegrees(0, -90, 0),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+};
+
+const HOTDOG_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(9, 23, 102.5),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+};
+
+const TACO_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(9, 22, 93),
+  orientation: RotationwUnits.eulerDegrees(60, 90, 0),
 };
 
 const HAMBURGER: Node.Robot = {
@@ -34,6 +44,28 @@ const HAMBURGER: Node.Robot = {
   origin: HAMBURGER_ORIGIN
 };
 
+const HOTDOG: Node.Robot = {
+  type: 'robot',
+  name: tr('Hotdog'),
+  robotId: 'hotdog',
+  state: AbstractRobot.Stateless.NIL,
+  visible: true,
+  editable: true,
+  startingOrigin: HOTDOG_ORIGIN,
+  origin: HOTDOG_ORIGIN
+};
+
+const TACO: Node.Robot = {
+  type: 'robot',
+  name: tr('Taco'),
+  robotId: 'taco',
+  state: AbstractRobot.Stateless.NIL,
+  visible: true,
+  editable: true,
+  startingOrigin: TACO_ORIGIN,
+  origin: TACO_ORIGIN
+};
+
 export const Table_Sandbox: Scene = {
   ...baseScene,
   name: tr('2025 Game Table'),
@@ -45,6 +77,8 @@ export const Table_Sandbox: Scene = {
   nodes: {
     ...baseScene.nodes,
     'hamburger': HAMBURGER,
+    'hotdog': HOTDOG,
+    'taco': TACO,
     'robot': {
       ...baseScene.nodes['robot'],
       editable: true,
