@@ -81,7 +81,7 @@ export type RobotsAction = (
 const DEFAULT_ROBOTS: Robots = {
   robots: Object.entries(ROBOTS).reduce((acc, [key, value]) => {
     acc[key.toLowerCase()] = Async.loaded({ value });
-    console.log(`default found: [${key}, ${value}]`);
+    console.log(`found default robot: ${key}`);
     return acc;
   }, {})
 };

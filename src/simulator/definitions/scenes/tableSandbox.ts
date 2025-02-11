@@ -18,19 +18,40 @@ import tr from '@i18n';
 
 const baseScene = createBaseSceneSurface();
 
+const warmingXCm = 9;
+const warmingYCm = 23;
+
 const HAMBURGER_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(9, 22, 114),
+  position: Vector3wUnits.centimeters(warmingXCm, warmingYCm, 114),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
 
 const HOTDOG_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(9, 23, 102.5),
+  position: Vector3wUnits.centimeters(warmingXCm, warmingYCm, 102.5),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
 
 const TACO_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(9, 22, 93),
+  position: Vector3wUnits.centimeters(warmingXCm, warmingYCm, 93),
   orientation: RotationwUnits.eulerDegrees(60, 90, 0),
+};
+
+const cupXCm = 8;
+const cupYCm = -1;
+
+const CUP_PINK_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(cupXCm, cupYCm, 115.9),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+};
+
+const CUP_BLUE_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(cupXCm, cupYCm, 102.5),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+};
+
+const CUP_GREEN_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(cupXCm, cupYCm, 91),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
 
 const HAMBURGER: Node.Robot = {
@@ -66,6 +87,39 @@ const TACO: Node.Robot = {
   origin: TACO_ORIGIN
 };
 
+const CUP_PINK: Node.Robot = {
+  type: 'robot',
+  name: tr('Pink Cup'),
+  robotId: 'cup_pink',
+  state: AbstractRobot.Stateless.NIL,
+  visible: true,
+  editable: true,
+  startingOrigin: CUP_PINK_ORIGIN,
+  origin: CUP_PINK_ORIGIN
+};
+
+const CUP_BLUE: Node.Robot = {
+  type: 'robot',
+  name: tr('Blue Cup'),
+  robotId: 'cup_blue',
+  state: AbstractRobot.Stateless.NIL,
+  visible: true,
+  editable: true,
+  startingOrigin: CUP_BLUE_ORIGIN,
+  origin: CUP_BLUE_ORIGIN
+};
+
+const CUP_GREEN: Node.Robot = {
+  type: 'robot',
+  name: tr('Blue Cup'),
+  robotId: 'cup_green',
+  state: AbstractRobot.Stateless.NIL,
+  visible: true,
+  editable: true,
+  startingOrigin: CUP_GREEN_ORIGIN,
+  origin: CUP_GREEN_ORIGIN
+};
+
 export const Table_Sandbox: Scene = {
   ...baseScene,
   name: tr('2025 Game Table'),
@@ -79,6 +133,9 @@ export const Table_Sandbox: Scene = {
     'hamburger': HAMBURGER,
     'hotdog': HOTDOG,
     'taco': TACO,
+    'cup_pink': CUP_PINK,
+    'cup_blue': CUP_BLUE,
+    'cup_green': CUP_GREEN,
     'robot': {
       ...baseScene.nodes['robot'],
       editable: true,
