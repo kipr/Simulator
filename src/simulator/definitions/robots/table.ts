@@ -41,6 +41,7 @@ export const HAMBURGER: Robot = {
       restitution: .9,
       friction: .3,
       mass: Mass.grams(10),
+      inertia: [10, 10, 10],
     }),
   },
   geometry: {
@@ -61,6 +62,7 @@ export const HOTDOG: Robot = {
       restitution: .9,
       friction: .3,
       mass: Mass.grams(10),
+      inertia: [10, 10, 10],
     }),
   },
   geometry: {
@@ -81,6 +83,7 @@ export const TACO: Robot = {
       restitution: .9,
       friction: .3,
       mass: Mass.grams(10),
+      inertia: [10, 10, 10],
     }),
   },
   geometry: {
