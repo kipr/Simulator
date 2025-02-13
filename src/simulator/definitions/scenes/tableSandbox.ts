@@ -40,7 +40,7 @@ const cupXCm = 8;
 const cupYCm = -1;
 
 const CUP_PINK_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(cupXCm, cupYCm, 115.9),
+  position: Vector3wUnits.centimeters(cupXCm, cupYCm, 115),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
 
@@ -51,6 +51,41 @@ const CUP_BLUE_ORIGIN: ReferenceFramewUnits = {
 
 const CUP_GREEN_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(cupXCm, cupYCm, 91),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+};
+
+const POM_BLUE_ORIGINS_BACK: ReferenceFramewUnits[] = [
+  { position: Vector3wUnits.centimeters(15, 3, 53) },
+  { position: Vector3wUnits.centimeters(15, 3, 43) },
+  { position: Vector3wUnits.centimeters(20, 3, 53) },
+  { position: Vector3wUnits.centimeters(20, 3, 43) },
+  { position: Vector3wUnits.centimeters(25, 3, 53) },
+  { position: Vector3wUnits.centimeters(25, 3, 43) },
+  { position: Vector3wUnits.centimeters(12.5, 3, 48) },
+  { position: Vector3wUnits.centimeters(17.5, 3, 48) },
+  { position: Vector3wUnits.centimeters(22.5, 3, 48) },
+  { position: Vector3wUnits.centimeters(27.5, 3, 48) },
+];
+
+const POM_BLUE_ORIGINS_FRONT = POM_BLUE_ORIGINS_BACK.map((p) => {
+  return { position: { ...p.position, z: Distance.centimeters(p.position.z.value * -1) } };
+});
+
+const BOTTLE_ORIGINS: ReferenceFramewUnits[] = [
+  { position: Vector3wUnits.centimeters(29, 2, 33.5) },
+  { position: Vector3wUnits.centimeters(29, 2, 26.9) },
+  { position: Vector3wUnits.centimeters(29, 2, 20.3) },
+  { position: Vector3wUnits.centimeters(22.4, 2, 33.5) },
+  { position: Vector3wUnits.centimeters(22.4, 2, 26.9) },
+  { position: Vector3wUnits.centimeters(22.4, 2, 20.3) },
+];
+
+const TOMATO_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(29, 2, -15),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+};
+const PICKLE_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(26, 2, -28),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
 
@@ -111,13 +146,76 @@ const CUP_BLUE: Node.Robot = {
 
 const CUP_GREEN: Node.Robot = {
   type: 'robot',
-  name: tr('Blue Cup'),
+  name: tr('Green Cup'),
   robotId: 'cup_green',
   state: AbstractRobot.Stateless.NIL,
   visible: true,
   editable: true,
   startingOrigin: CUP_GREEN_ORIGIN,
   origin: CUP_GREEN_ORIGIN
+};
+
+const POMS_BLUE: Node.Robot[] = Array(20) as Node.Robot[];
+for (const [i, pos] of POM_BLUE_ORIGINS_BACK.entries()) {
+  POMS_BLUE[i] = {
+    type: 'robot',
+    name: tr(`Blue pom back #${i}`),
+    robotId: 'pom_blue',
+    state: AbstractRobot.Stateless.NIL,
+    visible: true,
+    editable: true,
+    startingOrigin: pos,
+    origin: pos
+  };
+}
+
+for (const [i, pos] of POM_BLUE_ORIGINS_FRONT.entries()) {
+  POMS_BLUE[i + 10] = {
+    type: 'robot',
+    name: tr(`Blue pom front #${i}`),
+    robotId: 'pom_blue',
+    state: AbstractRobot.Stateless.NIL,
+    visible: true,
+    editable: true,
+    startingOrigin: pos,
+    origin: pos
+  };
+}
+
+const BOTTLES: Node.Robot[] = Array(6) as Node.Robot[];
+for (const [i, pos] of BOTTLE_ORIGINS.entries()) {
+  BOTTLES[i] = {
+    type: 'robot',
+    name: tr(`Bottle #${i}`),
+    robotId: 'bottle',
+    state: AbstractRobot.Stateless.NIL,
+    visible: true,
+    editable: true,
+    startingOrigin: pos,
+    origin: pos
+  };
+}
+
+const TOMATO: Node.Robot = {
+  type: 'robot',
+  name: tr('Tomato'),
+  robotId: 'tomato',
+  state: AbstractRobot.Stateless.NIL,
+  visible: true,
+  editable: true,
+  startingOrigin: TOMATO_ORIGIN,
+  origin: TOMATO_ORIGIN
+};
+
+const PICKLE: Node.Robot = {
+  type: 'robot',
+  name: tr('Pickle'),
+  robotId: 'pickle',
+  state: AbstractRobot.Stateless.NIL,
+  visible: true,
+  editable: true,
+  startingOrigin: PICKLE_ORIGIN,
+  origin: PICKLE_ORIGIN
 };
 
 export const Table_Sandbox: Scene = {
@@ -136,6 +234,34 @@ export const Table_Sandbox: Scene = {
     'cup_pink': CUP_PINK,
     'cup_blue': CUP_BLUE,
     'cup_green': CUP_GREEN,
+    'pom_blue0': POMS_BLUE[0],
+    'pom_blue1': POMS_BLUE[1],
+    'pom_blue2': POMS_BLUE[2],
+    'pom_blue3': POMS_BLUE[3],
+    'pom_blue4': POMS_BLUE[4],
+    'pom_blue5': POMS_BLUE[5],
+    'pom_blue6': POMS_BLUE[6],
+    'pom_blue7': POMS_BLUE[7],
+    'pom_blue8': POMS_BLUE[8],
+    'pom_blue9': POMS_BLUE[9],
+    'pom_blue10': POMS_BLUE[10],
+    'pom_blue11': POMS_BLUE[11],
+    'pom_blue12': POMS_BLUE[12],
+    'pom_blue13': POMS_BLUE[13],
+    'pom_blue14': POMS_BLUE[14],
+    'pom_blue15': POMS_BLUE[15],
+    'pom_blue16': POMS_BLUE[16],
+    'pom_blue17': POMS_BLUE[17],
+    'pom_blue18': POMS_BLUE[18],
+    'pom_blue19': POMS_BLUE[19],
+    'bottle0': BOTTLES[0],
+    'bottle1': BOTTLES[1],
+    'bottle2': BOTTLES[2],
+    'bottle3': BOTTLES[3],
+    'bottle4': BOTTLES[4],
+    'bottle5': BOTTLES[5],
+    'tomato': TOMATO,
+    'pickle': PICKLE,
     'robot': {
       ...baseScene.nodes['robot'],
       editable: true,

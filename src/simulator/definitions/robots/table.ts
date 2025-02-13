@@ -112,8 +112,8 @@ export const CUP_PINK: Robot = {
     node: Node.link({
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
       geometryId: 'model',
-      restitution: .5,
-      friction: .3,
+      restitution: .4,
+      friction: .7,
       mass: Mass.grams(cupMassGrams),
       inertia: [1, 1, 1],
     }),
@@ -133,8 +133,8 @@ export const CUP_BLUE: Robot = {
     node: Node.link({
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
       geometryId: 'model',
-      restitution: .5,
-      friction: .3,
+      restitution: .4,
+      friction: .7,
       mass: Mass.grams(cupMassGrams),
       inertia: [1, 1, 1],
     }),
@@ -154,14 +154,98 @@ export const CUP_GREEN: Robot = {
     node: Node.link({
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
       geometryId: 'model',
-      restitution: .5,
-      friction: .3,
+      restitution: .4,
+      friction: .7,
       mass: Mass.grams(cupMassGrams),
       inertia: [1, 1, 1],
     }),
   },
   geometry: {
     model: Geometry.remoteMesh({ uri: '/static/object_binaries/cup_green.glb' }),
+  },
+  origin: {
+    orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+  }
+};
+
+export const POM_BLUE: Robot = {
+  name: tr('Blue pom'),
+  authorId: 'kipr',
+  nodes: {
+    node: Node.link({
+      collisionBody: Node.Link.CollisionBody.EMBEDDED,
+      geometryId: 'model',
+      restitution: .4,
+      friction: .7,
+      mass: Mass.grams(cupMassGrams),
+      inertia: [1, 1, 1],
+    }),
+  },
+  geometry: {
+    model: Geometry.remoteMesh({ uri: '/static/object_binaries/pom_blue.glb' }),
+  },
+  origin: {
+    orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+  }
+};
+
+export const BOTTLE: Robot = {
+  name: tr('Water bottle'),
+  authorId: 'kipr',
+  nodes: {
+    node: Node.link({
+      collisionBody: Node.Link.CollisionBody.EMBEDDED,
+      geometryId: 'model',
+      restitution: .3,
+      friction: .7,
+      mass: Mass.grams(cupMassGrams),
+      inertia: [1, 1, 1],
+    }),
+  },
+  geometry: {
+    model: Geometry.remoteMesh({ uri: '/static/object_binaries/bottle2.glb' }),
+  },
+  origin: {
+    orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+  }
+};
+
+export const TOMATO: Robot = {
+  name: tr('Tomato'),
+  authorId: 'kipr',
+  nodes: {
+    node: Node.link({
+      collisionBody: Node.Link.CollisionBody.EMBEDDED,
+      geometryId: 'model',
+      restitution: .7,
+      friction: .7,
+      mass: Mass.grams(cupMassGrams),
+      inertia: [1, 1, 1],
+    }),
+  },
+  geometry: {
+    model: Geometry.remoteMesh({ uri: '/static/object_binaries/tomato.glb' }),
+  },
+  origin: {
+    orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+  }
+};
+
+export const PICKLE: Robot = {
+  name: tr('Pickle'),
+  authorId: 'kipr',
+  nodes: {
+    node: Node.link({
+      collisionBody: Node.Link.CollisionBody.EMBEDDED,
+      geometryId: 'model',
+      restitution: .7,
+      friction: .7,
+      mass: Mass.grams(cupMassGrams),
+      inertia: [1, 1, 1],
+    }),
+  },
+  geometry: {
+    model: Geometry.remoteMesh({ uri: '/static/object_binaries/pickle.glb' }),
   },
   origin: {
     orientation: RotationwUnits.eulerDegrees(0, 0, 0),
