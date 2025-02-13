@@ -203,7 +203,7 @@ export const BOTTLE: Robot = {
     }),
   },
   geometry: {
-    model: Geometry.remoteMesh({ uri: '/static/object_binaries/bottle2.glb' }),
+    model: Geometry.remoteMesh({ uri: '/static/object_binaries/bottle.glb' }),
   },
   origin: {
     orientation: RotationwUnits.eulerDegrees(0, 0, 0),

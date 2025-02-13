@@ -72,20 +72,21 @@ const POM_BLUE_ORIGINS_FRONT = POM_BLUE_ORIGINS_BACK.map((p) => {
 });
 
 const BOTTLE_ORIGINS: ReferenceFramewUnits[] = [
-  { position: Vector3wUnits.centimeters(29, 2, 33.5) },
-  { position: Vector3wUnits.centimeters(29, 2, 26.9) },
-  { position: Vector3wUnits.centimeters(29, 2, 20.3) },
-  { position: Vector3wUnits.centimeters(22.4, 2, 33.5) },
-  { position: Vector3wUnits.centimeters(22.4, 2, 26.9) },
-  { position: Vector3wUnits.centimeters(22.4, 2, 20.3) },
+  { position: Vector3wUnits.centimeters(29, 1, 33.5) },
+  { position: Vector3wUnits.centimeters(29, 1, 26.5) },
+  { position: Vector3wUnits.centimeters(29, 1, 19.5) },
+  { position: Vector3wUnits.centimeters(22, 1, 33.5) },
+  { position: Vector3wUnits.centimeters(22, 1, 26.5) },
+  { position: Vector3wUnits.centimeters(22, 1, 19.5) },
 ];
 
 const TOMATO_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(29, 2, -15),
+  position: Vector3wUnits.centimeters(29, 1, -15),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
+
 const PICKLE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(26, 2, -28),
+  position: Vector3wUnits.centimeters(26, 1, -28),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
 
