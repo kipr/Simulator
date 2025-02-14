@@ -31,17 +31,13 @@ const GROUND_ORIGIN: ReferenceFramewUnits = {
 */
 
 const GROUND_ORIGIN: ReferenceFramewUnits = {
-  position: {
-    x: Distance.centimeters(0),
-    y: Distance.centimeters(-5),
-    z: Distance.centimeters(0),
-  },
-  orientation: {
-    type: 'euler',
-    x: Angle.degrees(90),
-    y: Angle.degrees(0),
-    z: Angle.degrees(0),
-  }
+  position: Vector3wUnits.centimeters(0, -5, 0),
+  orientation: RotationwUnits.eulerDegrees(90, 0, 0),
+};
+
+const FRY_FLOOR_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(110, 12, -86),
+  orientation: RotationwUnits.eulerDegrees(90, 0, 0),
 };
 
 const GAME_TABLE_ORIGIN: ReferenceFramewUnits = {
@@ -92,6 +88,14 @@ export function createBaseSceneSurface(): Scene {
           z: Distance.meters(0.01),
         },
       },
+      'fry_floor': {
+        type: 'box',
+        size: {
+          x: Distance.inches(4),
+          y: Distance.inches(4),
+          z: Distance.meters(0.01),
+        },
+      },
     },
     nodes: {
       'robot': ROBOT,
@@ -131,6 +135,20 @@ export function createBaseSceneSurface(): Scene {
         },
       },
       */
+      'fry_floor': {
+        type: 'object',
+        geometryId: 'fry_floor',
+        name: tr('Fry floor'),
+        startingOrigin: FRY_FLOOR_ORIGIN,
+        origin: FRY_FLOOR_ORIGIN,
+        physics: {
+          type: "box",
+          restitution: .1,
+          friction: .5,
+        },
+        editable: true,
+        visible: true,
+      },
       'light0': {
         type: 'point-light',
         intensity: .25,
