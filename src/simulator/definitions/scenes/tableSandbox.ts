@@ -23,12 +23,10 @@ const warmingYCm = 23;
 
 const HAMBURGER_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(warmingXCm, warmingYCm, 114),
-  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
 
 const HOTDOG_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(warmingXCm, warmingYCm, 102.5),
-  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
 
 const TACO_ORIGIN: ReferenceFramewUnits = {
@@ -41,30 +39,28 @@ const cupYCm = -1;
 
 const CUP_PINK_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(cupXCm, cupYCm, 115),
-  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
 
 const CUP_BLUE_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(cupXCm, cupYCm, 102.5),
-  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
 
 const CUP_GREEN_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(cupXCm, cupYCm, 91),
-  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
 
+const POM_Y = 1;
 const POM_BLUE_ORIGINS_BACK: ReferenceFramewUnits[] = [
-  { position: Vector3wUnits.centimeters(15, 3, 53) },
-  { position: Vector3wUnits.centimeters(15, 3, 43) },
-  { position: Vector3wUnits.centimeters(20, 3, 53) },
-  { position: Vector3wUnits.centimeters(20, 3, 43) },
-  { position: Vector3wUnits.centimeters(25, 3, 53) },
-  { position: Vector3wUnits.centimeters(25, 3, 43) },
-  { position: Vector3wUnits.centimeters(12.5, 3, 48) },
-  { position: Vector3wUnits.centimeters(17.5, 3, 48) },
-  { position: Vector3wUnits.centimeters(22.5, 3, 48) },
-  { position: Vector3wUnits.centimeters(27.5, 3, 48) },
+  { position: Vector3wUnits.centimeters(15, POM_Y, 53) },
+  { position: Vector3wUnits.centimeters(15, POM_Y, 43) },
+  { position: Vector3wUnits.centimeters(20, POM_Y, 53) },
+  { position: Vector3wUnits.centimeters(20, POM_Y, 43) },
+  { position: Vector3wUnits.centimeters(25, POM_Y, 53) },
+  { position: Vector3wUnits.centimeters(25, POM_Y, 43) },
+  { position: Vector3wUnits.centimeters(12.5, POM_Y, 48) },
+  { position: Vector3wUnits.centimeters(17.5, POM_Y, 48) },
+  { position: Vector3wUnits.centimeters(22.5, POM_Y, 48) },
+  { position: Vector3wUnits.centimeters(27.5, POM_Y, 48) },
 ];
 
 const POM_BLUE_ORIGINS_FRONT = POM_BLUE_ORIGINS_BACK.map((p) => {
@@ -80,14 +76,62 @@ const BOTTLE_ORIGINS: ReferenceFramewUnits[] = [
   { position: Vector3wUnits.centimeters(22, 1, 19.5) },
 ];
 
+const CENTER_LINE_X = 65.5;
+const POM_RED_ORIGINS: ReferenceFramewUnits[] = [
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 0) },
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 45.72) },
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, -45.72) },
+];
+const POM_ORANGE_ORIGINS: ReferenceFramewUnits[] = [
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X - 11.43,  POM_Y, 0) },
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X,          POM_Y, -15.24) },
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X,          POM_Y, 30.48) },
+];
+const POM_YELLOW_ORIGINS: ReferenceFramewUnits[] = [
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X - (2 * 11.43),  POM_Y, 0) },
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X,                POM_Y, 15.24) },
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X,                POM_Y, -30.48) },
+];
+
+const BOTTOM_LINE_x = 91;
+const POM_RANDOM_ORIGINS = Array(9) as ReferenceFramewUnits[];
+for (let i = 0; i < POM_RANDOM_ORIGINS.length; i++) {
+  const z = -45.72 + 11.43 * i;
+  POM_RANDOM_ORIGINS[i] = { position: Vector3wUnits.centimeters(BOTTOM_LINE_x, POM_Y, z) };
+}
+
 const TOMATO_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(29, 1, -15),
-  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
 
 const PICKLE_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(26, 1, -28),
-  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+};
+
+const POTATO_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(35, 7, -85),
+  orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+};
+
+const FRY_ORIGIN0: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(115, 20, -88),
+  orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+};
+const FRY_ORIGIN1: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(115, 20, -90),
+  orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+};
+
+const TRAY_X = 107;
+const TRAY_ORIGINS = Array(6) as ReferenceFramewUnits[];
+for (let i = 0; i < TRAY_ORIGINS.length; i++) {
+  const z = 20.1 - 13.4 * i;
+  TRAY_ORIGINS[i] = { position: Vector3wUnits.centimeters(TRAY_X, 10, z) };
+}
+
+const BOTGUY_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(-4, 25, -3),
+  orientation: RotationwUnits.eulerDegrees(0, -90, 0),
 };
 
 const HAMBURGER: Node.Robot = {
@@ -197,6 +241,73 @@ for (const [i, pos] of BOTTLE_ORIGINS.entries()) {
   };
 }
 
+const POMS_RED: Node.Robot[] = Array(3) as Node.Robot[];
+for (const [i, pos] of POM_RED_ORIGINS.entries()) {
+  POMS_RED[i] = {
+    type: 'robot',
+    name: tr(`Red pom #${i}`),
+    robotId: 'pom_red',
+    state: AbstractRobot.Stateless.NIL,
+    visible: true,
+    editable: true,
+    startingOrigin: pos,
+    origin: pos
+  };
+}
+const POMS_ORANGE: Node.Robot[] = Array(3) as Node.Robot[];
+for (const [i, pos] of POM_ORANGE_ORIGINS.entries()) {
+  POMS_ORANGE[i] = {
+    type: 'robot',
+    name: tr(`Orange pom #${i}`),
+    robotId: 'pom_orange',
+    state: AbstractRobot.Stateless.NIL,
+    visible: true,
+    editable: true,
+    startingOrigin: pos,
+    origin: pos
+  };
+}
+const POMS_YELLOW: Node.Robot[] = Array(3) as Node.Robot[];
+for (const [i, pos] of POM_YELLOW_ORIGINS.entries()) {
+  POMS_YELLOW[i] = {
+    type: 'robot',
+    name: tr(`Yellow pom #${i}`),
+    robotId: 'pom_yellow',
+    state: AbstractRobot.Stateless.NIL,
+    visible: true,
+    editable: true,
+    startingOrigin: pos,
+    origin: pos
+  };
+}
+
+const POMS_RANDOM: Node.Robot[] = Array(9) as Node.Robot[];
+for (const [i, pos] of POM_RANDOM_ORIGINS.entries()) {
+  let robot: string;
+  switch (Math.floor(Math.random() * 3)) {
+    case 0:
+      robot = 'pom_red';
+      break;
+    case 1:
+      robot = 'pom_orange';
+      break;
+    case 2:
+      robot = 'pom_yellow';
+      break;
+  }
+
+  POMS_RANDOM[i] = {
+    type: 'robot',
+    name: tr(`Random pom #${i}`),
+    robotId: robot,
+    state: AbstractRobot.Stateless.NIL,
+    visible: true,
+    editable: true,
+    startingOrigin: pos,
+    origin: pos
+  };
+}
+
 const TOMATO: Node.Robot = {
   type: 'robot',
   name: tr('Tomato'),
@@ -217,6 +328,63 @@ const PICKLE: Node.Robot = {
   editable: true,
   startingOrigin: PICKLE_ORIGIN,
   origin: PICKLE_ORIGIN
+};
+
+const POTATO: Node.Robot = {
+  type: 'robot',
+  name: tr('Potato'),
+  robotId: 'potato',
+  state: AbstractRobot.Stateless.NIL,
+  visible: true,
+  editable: true,
+  startingOrigin: POTATO_ORIGIN,
+  origin: POTATO_ORIGIN
+};
+
+const FRY0: Node.Robot = {
+  type: 'robot',
+  name: tr('French fry #0'),
+  robotId: 'fry',
+  state: AbstractRobot.Stateless.NIL,
+  visible: true,
+  editable: true,
+  startingOrigin: FRY_ORIGIN0,
+  origin: FRY_ORIGIN0
+};
+const FRY1: Node.Robot = {
+  type: 'robot',
+  name: tr('French fry #1'),
+  robotId: 'fry',
+  state: AbstractRobot.Stateless.NIL,
+  visible: true,
+  editable: true,
+  startingOrigin: FRY_ORIGIN1,
+  origin: FRY_ORIGIN1
+};
+
+const TRAYS: Node.Robot[] = Array(6) as Node.Robot[];
+for (const [i, pos] of TRAY_ORIGINS.entries()) {
+  TRAYS[i] = {
+    type: 'robot',
+    name: tr(`Tray #${i}`),
+    robotId: 'tray',
+    state: AbstractRobot.Stateless.NIL,
+    visible: false,
+    editable: true,
+    startingOrigin: pos,
+    origin: pos
+  };
+}
+
+const BOTGUY: Node.Robot = {
+  type: 'robot',
+  name: tr('Botguy'),
+  robotId: 'botguy',
+  state: AbstractRobot.Stateless.NIL,
+  visible: true,
+  editable: true,
+  startingOrigin: BOTGUY_ORIGIN,
+  origin: BOTGUY_ORIGIN
 };
 
 export const Table_Sandbox: Scene = {
@@ -255,6 +423,24 @@ export const Table_Sandbox: Scene = {
     'pom_blue17': POMS_BLUE[17],
     'pom_blue18': POMS_BLUE[18],
     'pom_blue19': POMS_BLUE[19],
+    'pom_red0': POMS_RED[0],
+    'pom_red1': POMS_RED[1],
+    'pom_red2': POMS_RED[2],
+    'pom_orange0': POMS_ORANGE[0],
+    'pom_orange1': POMS_ORANGE[1],
+    'pom_orange2': POMS_ORANGE[2],
+    'pom_yellow0': POMS_YELLOW[0],
+    'pom_yellow1': POMS_YELLOW[1],
+    'pom_yellow2': POMS_YELLOW[2],
+    'pom_random0': POMS_RANDOM[0],
+    'pom_random1': POMS_RANDOM[1],
+    'pom_random2': POMS_RANDOM[2],
+    'pom_random3': POMS_RANDOM[3],
+    'pom_random4': POMS_RANDOM[4],
+    'pom_random5': POMS_RANDOM[5],
+    'pom_random6': POMS_RANDOM[6],
+    'pom_random7': POMS_RANDOM[7],
+    'pom_random8': POMS_RANDOM[8],
     'bottle0': BOTTLES[0],
     'bottle1': BOTTLES[1],
     'bottle2': BOTTLES[2],
@@ -263,6 +449,16 @@ export const Table_Sandbox: Scene = {
     'bottle5': BOTTLES[5],
     'tomato': TOMATO,
     'pickle': PICKLE,
+    'potato': POTATO,
+    'fry0': FRY0,
+    'fry1': FRY1,
+    // 'tray0': TRAYS[0],
+    // 'tray1': TRAYS[1],
+    // 'tray2': TRAYS[2],
+    // 'tray3': TRAYS[3],
+    // 'tray4': TRAYS[4],
+    // 'tray5': TRAYS[5],
+    'botguy': BOTGUY,
     'robot': {
       ...baseScene.nodes['robot'],
       editable: true,
