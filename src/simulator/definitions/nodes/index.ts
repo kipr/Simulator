@@ -322,6 +322,58 @@ const habitatControlTemplate: Node.TemplatedNode<Node.Obj> = {
   },
 };
 
+const drinkGreenTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'drink',
+  physics: {
+    type: 'mesh',
+    restitution: .2,
+    friction: 1,
+    mass: Mass.grams(10)
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'color3',
+      color: Color.rgb(65, 245, 103),
+    }
+  }
+};
+const drinkPinkTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'drink',
+  physics: {
+    type: 'mesh',
+    restitution: .2,
+    friction: 1,
+    mass: Mass.grams(10)
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'color3',
+      color: Color.rgb(255, 63, 198),
+    }
+  }
+};
+const drinkBlueTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'drink',
+  physics: {
+    type: 'mesh',
+    restitution: .2,
+    friction: 1,
+    mass: Mass.grams(10)
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'color3',
+      color: Color.rgb(93, 254, 251),
+    }
+  }
+};
+
 export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'can': canTemplate,
   'circle': circleTemplate,
@@ -344,6 +396,7 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'habitat': habitatTemplate,
   'research_habitat': habitatResearchTemplate,
   'control_habitat': habitatControlTemplate,
+  'drink_green': drinkGreenTemplate,
 });
 
 
@@ -452,4 +505,8 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
     type: 'file',
     uri: '/static/object_binaries/com_hab.glb'
   },
+  'drink': {
+    type: 'file',
+    uri: '/static/object_binaries/drink.glb'
+  }
 });
