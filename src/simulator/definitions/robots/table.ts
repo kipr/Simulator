@@ -1,15 +1,17 @@
 import Robot from "../../../state/State/Robot";
 import Node from "../../../state/State/Robot/Node";
 import Geometry from "../../../state/State/Robot/Geometry";
-import { Angle, Distance, Mass } from '../../../util';
-import { RawVector3 } from '../../../util/math/math';
-import { RotationwUnits, Vector3wUnits } from '../../../util/math/unitMath';
+// import { Angle, Distance, Mass } from '../../../util';
+import { Mass } from '../../../util';
+// import { RawVector3 } from '../../../util/math/math';
+// import { RotationwUnits, Vector3wUnits } from '../../../util/math/unitMath';
+import { RotationwUnits } from '../../../util/math/unitMath';
 
 import tr from '@i18n';
 
-const { meters } = Distance;
-const { degrees } = Angle;
-const { grams } = Mass;
+// const { meters } = Distance;
+// const { degrees } = Angle;
+// const { grams } = Mass;
 
 /**
  * I chose to use `Robot` to represent game pieces because
@@ -27,7 +29,7 @@ export const GAME_TABLE_2025: Robot = {
     node: Node.link({
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
       geometryId: 'model',
-      restitution: .3,
+      restitution: .2,
       friction: 1,
       mass: Mass.kilograms(20),
     }),
@@ -47,10 +49,10 @@ export const HAMBURGER: Robot = {
     node: Node.link({
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
       geometryId: 'model',
-      restitution: .9,
-      friction: .3,
-      mass: Mass.grams(10),
-      inertia: [10, 10, 10],
+      restitution: .8,
+      friction: 1,
+      mass: Mass.grams(5),
+      inertia: [3, 3, 3],
     }),
   },
   geometry: {
@@ -68,10 +70,10 @@ export const HOTDOG: Robot = {
     node: Node.link({
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
       geometryId: 'model',
-      restitution: .9,
-      friction: .3,
-      mass: Mass.grams(10),
-      inertia: [10, 10, 10],
+      restitution: .8,
+      friction: 1,
+      mass: Mass.grams(5),
+      inertia: [3, 3, 3],
     }),
   },
   geometry: {
@@ -89,10 +91,10 @@ export const TACO: Robot = {
     taco: Node.link({
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
       geometryId: 'taco',
-      restitution: .9,
-      friction: .3,
-      mass: Mass.grams(10),
-      inertia: [10, 10, 10],
+      restitution: .8,
+      friction: 1,
+      mass: Mass.grams(5),
+      inertia: [3, 3, 3],
     }),
   },
   geometry: {
@@ -103,8 +105,7 @@ export const TACO: Robot = {
   }
 };
 
-const cupMassGrams = 31;
-
+const CUP_MASS = 5;
 export const CUP_PINK: Robot = {
   name: tr('Pink Cup'),
   authorId: 'kipr',
@@ -114,7 +115,7 @@ export const CUP_PINK: Robot = {
       geometryId: 'model',
       restitution: .4,
       friction: .7,
-      mass: Mass.grams(cupMassGrams),
+      mass: Mass.grams(CUP_MASS),
       inertia: [1, 1, 1],
     }),
   },
@@ -135,7 +136,7 @@ export const CUP_BLUE: Robot = {
       geometryId: 'model',
       restitution: .4,
       friction: .7,
-      mass: Mass.grams(cupMassGrams),
+      mass: Mass.grams(CUP_MASS),
       inertia: [1, 1, 1],
     }),
   },
@@ -156,7 +157,7 @@ export const CUP_GREEN: Robot = {
       geometryId: 'model',
       restitution: .4,
       friction: .7,
-      mass: Mass.grams(cupMassGrams),
+      mass: Mass.grams(CUP_MASS),
       inertia: [1, 1, 1],
     }),
   },
@@ -177,7 +178,7 @@ export const POM_BLUE: Robot = {
       geometryId: 'model',
       restitution: .4,
       friction: .7,
-      mass: Mass.grams(cupMassGrams),
+      mass: Mass.grams(CUP_MASS),
       inertia: [1, 1, 1],
     }),
   },
@@ -198,7 +199,7 @@ export const POM_RED: Robot = {
       geometryId: 'model',
       restitution: .4,
       friction: .7,
-      mass: Mass.grams(cupMassGrams),
+      mass: Mass.grams(CUP_MASS),
       inertia: [1, 1, 1],
     }),
   },
@@ -219,7 +220,7 @@ export const POM_ORANGE: Robot = {
       geometryId: 'model',
       restitution: .4,
       friction: .7,
-      mass: Mass.grams(cupMassGrams),
+      mass: Mass.grams(CUP_MASS),
       inertia: [1, 1, 1],
     }),
   },
@@ -240,7 +241,7 @@ export const POM_YELLOW: Robot = {
       geometryId: 'model',
       restitution: .4,
       friction: .7,
-      mass: Mass.grams(cupMassGrams),
+      mass: Mass.grams(CUP_MASS),
       inertia: [1, 1, 1],
     }),
   },
@@ -261,7 +262,7 @@ export const BOTTLE: Robot = {
       geometryId: 'model',
       restitution: .3,
       friction: .7,
-      mass: Mass.grams(cupMassGrams),
+      mass: Mass.grams(CUP_MASS),
       inertia: [1, 1, 1],
     }),
   },
@@ -282,7 +283,7 @@ export const TOMATO: Robot = {
       geometryId: 'model',
       restitution: .7,
       friction: .7,
-      mass: Mass.grams(cupMassGrams),
+      mass: Mass.grams(CUP_MASS),
       inertia: [1, 1, 1],
     }),
   },
@@ -303,7 +304,7 @@ export const PICKLE: Robot = {
       geometryId: 'model',
       restitution: .7,
       friction: .7,
-      mass: Mass.grams(cupMassGrams),
+      mass: Mass.grams(CUP_MASS),
       inertia: [1, 1, 1],
     }),
   },
@@ -324,7 +325,7 @@ export const POTATO: Robot = {
       geometryId: 'model',
       restitution: .7,
       friction: .7,
-      mass: Mass.grams(cupMassGrams),
+      mass: Mass.grams(CUP_MASS),
       inertia: [1, 1, 1],
     }),
   },
@@ -345,7 +346,7 @@ export const FRY: Robot = {
       geometryId: 'model',
       restitution: .3,
       friction: .7,
-      mass: Mass.grams(cupMassGrams),
+      mass: Mass.grams(CUP_MASS),
       inertia: [1, 1, 1],
     }),
   },
@@ -366,7 +367,7 @@ export const TRAY: Robot = {
       geometryId: 'model',
       restitution: .1,
       friction: .7,
-      mass: Mass.grams(cupMassGrams),
+      mass: Mass.grams(CUP_MASS),
       inertia: [1, 1, 1],
     }),
   },
@@ -387,7 +388,7 @@ export const BOTGUY: Robot = {
       geometryId: 'model',
       restitution: .1,
       friction: .7,
-      mass: Mass.grams(cupMassGrams),
+      mass: Mass.grams(CUP_MASS),
       inertia: [1, 1, 1],
     }),
   },
@@ -408,7 +409,7 @@ export const DRINK_BLUE: Robot = {
       geometryId: 'model',
       restitution: .1,
       friction: .7,
-      mass: Mass.grams(cupMassGrams),
+      mass: Mass.grams(CUP_MASS),
       inertia: [1, 1, 1],
     }),
   },
@@ -428,7 +429,7 @@ export const DRINK_GREEN: Robot = {
       geometryId: 'model',
       restitution: .8,
       friction: .7,
-      mass: Mass.grams(cupMassGrams),
+      mass: Mass.grams(CUP_MASS),
       inertia: [1, 1, 1],
     }),
   },
@@ -448,7 +449,7 @@ export const DRINK_PINK: Robot = {
       geometryId: 'model',
       restitution: .1,
       friction: .7,
-      mass: Mass.grams(cupMassGrams),
+      mass: Mass.grams(CUP_MASS),
       inertia: [1, 1, 1],
     }),
   },
