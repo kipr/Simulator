@@ -387,6 +387,75 @@ const BOTGUY: Node.Robot = {
   origin: BOTGUY_ORIGIN
 };
 
+const DRINKS_BLUE_BACK = Array(6) as Node.Robot[];
+for (let i = 0; i < DRINKS_BLUE_BACK.length; i++) {
+  const pos: ReferenceFramewUnits = {
+    position: Vector3wUnits.centimeters(18.6, 0 + (5.09 * i), -102.5),
+  };
+  DRINKS_BLUE_BACK[i] = {
+    type: 'robot',
+    name: tr(`Back Blue drink #${i}`),
+    robotId: 'drink_blue',
+    state: AbstractRobot.Stateless.NIL,
+    visible: true,
+    editable: true,
+    startingOrigin: pos,
+    origin: pos
+  };
+}
+
+const DRINKS_BLUE_FRONT = Array(6) as Node.Robot[];
+for (let i = 0; i < DRINKS_BLUE_FRONT.length; i++) {
+  const pos: ReferenceFramewUnits = {
+    position: Vector3wUnits.centimeters(18.6, 0 + (5.09 * i), -102.5),
+  };
+  DRINKS_BLUE_FRONT[i] = {
+    type: 'robot',
+    name: tr(`Front Blue drink #${i}`),
+    robotId: 'drink_blue',
+    state: AbstractRobot.Stateless.NIL,
+    visible: true,
+    editable: true,
+    startingOrigin: pos,
+    origin: pos
+  };
+}
+
+const DRINKS_GREEN = Array(6) as Node.Robot[];
+for (let i = 0; i < DRINKS_GREEN.length; i++) {
+  const pos: ReferenceFramewUnits = {
+    position: Vector3wUnits.centimeters(0.15, 0 + (5.09 * i), 71.252),
+  };
+  DRINKS_GREEN[i] = {
+    type: 'robot',
+    name: tr(`Green drink #${i}`),
+    robotId: 'drink_green',
+    state: AbstractRobot.Stateless.NIL,
+    visible: true,
+    editable: true,
+    startingOrigin: pos,
+    origin: pos
+  };
+}
+
+const DRINKS_PINK = Array(6) as Node.FromJBCTemplate[];
+for (let i = 0; i < DRINKS_PINK.length; i++) {
+  const pos: ReferenceFramewUnits = {
+    position: Vector3wUnits.centimeters(0, 0 + (5.09 * i), -71.3),
+
+  };
+  DRINKS_PINK[i] = {
+    type: 'from-jbc-template',
+    name: tr(`Pink drink #${i}`),
+    templateId: 'drink_pink',
+    visible: true,
+    editable: true,
+    startingOrigin: pos,
+    origin: pos
+  };
+}
+
+
 export const Table_Sandbox: Scene = {
   ...baseScene,
   name: tr('2025 Game Table'),
@@ -397,12 +466,12 @@ export const Table_Sandbox: Scene = {
 
   nodes: {
     ...baseScene.nodes,
-    'hamburger': HAMBURGER,
-    'hotdog': HOTDOG,
-    'taco': TACO,
-    'cup_pink': CUP_PINK,
-    'cup_blue': CUP_BLUE,
-    'cup_green': CUP_GREEN,
+    // 'hamburger': HAMBURGER,
+    // 'hotdog': HOTDOG,
+    // 'taco': TACO,
+    // 'cup_pink': CUP_PINK,
+    // 'cup_blue': CUP_BLUE,
+    // 'cup_green': CUP_GREEN,
     'pom_blue0': POMS_BLUE[0],
     'pom_blue1': POMS_BLUE[1],
     'pom_blue2': POMS_BLUE[2],
@@ -441,23 +510,38 @@ export const Table_Sandbox: Scene = {
     'pom_random6': POMS_RANDOM[6],
     'pom_random7': POMS_RANDOM[7],
     'pom_random8': POMS_RANDOM[8],
-    'bottle0': BOTTLES[0],
-    'bottle1': BOTTLES[1],
-    'bottle2': BOTTLES[2],
-    'bottle3': BOTTLES[3],
-    'bottle4': BOTTLES[4],
-    'bottle5': BOTTLES[5],
+    // 'bottle0': BOTTLES[0],
+    // 'bottle1': BOTTLES[1],
+    // 'bottle2': BOTTLES[2],
+    // 'bottle3': BOTTLES[3],
+    // 'bottle4': BOTTLES[4],
+    // 'bottle5': BOTTLES[5],
     'tomato': TOMATO,
-    'pickle': PICKLE,
+    // 'pickle': PICKLE,
     'potato': POTATO,
-    'fry0': FRY0,
-    'fry1': FRY1,
+    // 'fry0': FRY0,
+    // 'fry1': FRY1,
     // 'tray0': TRAYS[0],
     // 'tray1': TRAYS[1],
     // 'tray2': TRAYS[2],
     // 'tray3': TRAYS[3],
     // 'tray4': TRAYS[4],
     // 'tray5': TRAYS[5],
+    'drink_blue_front0': DRINKS_BLUE_FRONT[0],
+    // 'drink_blue_front1': DRINKS_BLUE_FRONT[1],
+    // 'drink_blue_front2': DRINKS_BLUE_FRONT[2],
+    // 'drink_bluefront3': DRINKS_BLUE_FRONT[3],
+    // 'drink_blue_front4': DRINKS_BLUE_FRONT[4],
+    // 'drink_green0': DRINKS_GREEN[0],
+    // 'drink_green1': DRINKS_GREEN[1],
+    // 'drink_green2': DRINKS_GREEN[2],
+    // 'drink_green3': DRINKS_GREEN[3],
+    // 'drink_green4': DRINKS_GREEN[4],
+    // 'drink_pink0': DRINKS_PINK[0],
+    // 'drink_pink1': DRINKS_PINK[1],
+    // 'drink_pink2': DRINKS_PINK[2],
+    // 'drink_pink3': DRINKS_PINK[3],
+    // 'drink_pink4': DRINKS_PINK[4],
     'botguy': BOTGUY,
     'robot': {
       ...baseScene.nodes['robot'],

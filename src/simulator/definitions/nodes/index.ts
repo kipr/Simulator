@@ -322,20 +322,37 @@ const habitatControlTemplate: Node.TemplatedNode<Node.Obj> = {
   },
 };
 
-const drinkGreenTemplate: Node.TemplatedNode<Node.Obj> = {
+const drinkBlueTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'drink',
   physics: {
     type: 'mesh',
-    restitution: .2,
-    friction: 1,
-    mass: Mass.grams(10)
+    restitution: .1,
+    friction: 5,
+    mass: Mass.grams(1)
   },
   material: {
     type: 'basic',
     color: {
       type: 'color3',
-      color: Color.rgb(65, 245, 103),
+      color: Color.rgb(25, 212, 247),
+    }
+  }
+};
+const drinkGreenTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'drink',
+  physics: {
+    type: 'mesh',
+    restitution: .9,
+    friction: 5,
+    mass: Mass.grams(1)
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'color3',
+      color: Color.rgb(25, 255, 65),
     }
   }
 };
@@ -344,32 +361,15 @@ const drinkPinkTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'drink',
   physics: {
     type: 'mesh',
-    restitution: .2,
-    friction: 1,
-    mass: Mass.grams(10)
+    restitution: .1,
+    friction: 5,
+    mass: Mass.grams(1)
   },
   material: {
     type: 'basic',
     color: {
       type: 'color3',
-      color: Color.rgb(255, 63, 198),
-    }
-  }
-};
-const drinkBlueTemplate: Node.TemplatedNode<Node.Obj> = {
-  type: 'object',
-  geometryId: 'drink',
-  physics: {
-    type: 'mesh',
-    restitution: .2,
-    friction: 1,
-    mass: Mass.grams(10)
-  },
-  material: {
-    type: 'basic',
-    color: {
-      type: 'color3',
-      color: Color.rgb(93, 254, 251),
+      color: Color.rgb(255, 20, 168),
     }
   }
 };
@@ -397,6 +397,8 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'research_habitat': habitatResearchTemplate,
   'control_habitat': habitatControlTemplate,
   'drink_green': drinkGreenTemplate,
+  'drink_pink': drinkPinkTemplate,
+  'drink_blue': drinkBlueTemplate,
 });
 
 

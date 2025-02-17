@@ -398,3 +398,64 @@ export const BOTGUY: Robot = {
     orientation: RotationwUnits.eulerDegrees(0, 0, 0),
   }
 };
+
+export const DRINK_BLUE: Robot = {
+  name: tr('Blue Drink'),
+  authorId: 'kipr',
+  nodes: {
+    node: Node.link({
+      collisionBody: Node.Link.CollisionBody.EMBEDDED,
+      geometryId: 'model',
+      restitution: .1,
+      friction: .7,
+      mass: Mass.grams(cupMassGrams),
+      inertia: [1, 1, 1],
+    }),
+  },
+  geometry: {
+    model: Geometry.remoteMesh({ uri: '/static/object_binaries/drink_blue.glb' }),
+  },
+  origin: {
+    orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+  }
+};
+export const DRINK_GREEN: Robot = {
+  name: tr('Green Drink'),
+  authorId: 'kipr',
+  nodes: {
+    node: Node.link({
+      collisionBody: Node.Link.CollisionBody.EMBEDDED,
+      geometryId: 'model',
+      restitution: .8,
+      friction: .7,
+      mass: Mass.grams(cupMassGrams),
+      inertia: [1, 1, 1],
+    }),
+  },
+  geometry: {
+    model: Geometry.remoteMesh({ uri: '/static/object_binaries/drink_green.glb' }),
+  },
+  origin: {
+    orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+  }
+};
+export const DRINK_PINK: Robot = {
+  name: tr('Pink Drink'),
+  authorId: 'kipr',
+  nodes: {
+    node: Node.link({
+      collisionBody: Node.Link.CollisionBody.EMBEDDED,
+      geometryId: 'model',
+      restitution: .1,
+      friction: .7,
+      mass: Mass.grams(cupMassGrams),
+      inertia: [1, 1, 1],
+    }),
+  },
+  geometry: {
+    model: Geometry.remoteMesh({ uri: '/static/object_binaries/drink_pink.glb' }),
+  },
+  origin: {
+    orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+  }
+};

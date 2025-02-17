@@ -31,7 +31,7 @@ const GROUND_ORIGIN: ReferenceFramewUnits = {
 */
 
 const GROUND_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(0, -5, 0),
+  position: Vector3wUnits.centimeters(0, -1, 0),
   orientation: RotationwUnits.eulerDegrees(90, 0, 0),
 };
 
@@ -41,7 +41,7 @@ const FRY_FLOOR_ORIGIN: ReferenceFramewUnits = {
 };
 
 const GAME_TABLE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(0, -.75, 0),
+  position: Vector3wUnits.centimeters(0, 0, 0),
   orientation: RotationwUnits.eulerDegrees(0, -90, 0),
 };
 
