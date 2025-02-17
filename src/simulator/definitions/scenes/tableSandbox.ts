@@ -93,12 +93,6 @@ const POM_YELLOW_ORIGINS: ReferenceFramewUnits[] = [
   { position: Vector3wUnits.centimeters(CENTER_LINE_X,                POM_Y, -30.48) },
 ];
 
-const BOTTOM_LINE_x = 91;
-const POM_RANDOM_ORIGINS = Array(9) as ReferenceFramewUnits[];
-for (let i = 0; i < POM_RANDOM_ORIGINS.length; i++) {
-  const z = -45.72 + 11.43 * i;
-  POM_RANDOM_ORIGINS[i] = { position: Vector3wUnits.centimeters(BOTTOM_LINE_x, POM_Y, z) };
-}
 
 const TOMATO_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(29, 1, -15),
@@ -121,13 +115,6 @@ const FRY_ORIGIN1: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(115, 20, -90),
   orientation: RotationwUnits.eulerDegrees(0, 90, 0),
 };
-
-const TRAY_X = 107;
-const TRAY_ORIGINS = Array(6) as ReferenceFramewUnits[];
-for (let i = 0; i < TRAY_ORIGINS.length; i++) {
-  const z = 20.1 - 13.4 * i;
-  TRAY_ORIGINS[i] = { position: Vector3wUnits.centimeters(TRAY_X, 10, z) };
-}
 
 const BOTGUY_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(-4, 25, -3),
@@ -282,7 +269,7 @@ for (const [i, pos] of POM_YELLOW_ORIGINS.entries()) {
 }
 
 const POMS_RANDOM: Node.Robot[] = Array(9) as Node.Robot[];
-for (const [i, pos] of POM_RANDOM_ORIGINS.entries()) {
+for (let i = 0; i < POMS_RANDOM.length; i++) {
   let robot: string;
   switch (Math.floor(Math.random() * 3)) {
     case 0:
@@ -295,6 +282,10 @@ for (const [i, pos] of POM_RANDOM_ORIGINS.entries()) {
       robot = 'pom_yellow';
       break;
   }
+
+  const pos = {
+    position: Vector3wUnits.centimeters(91, POM_Y, (-45.72 + 11.43 * i))
+  };
 
   POMS_RANDOM[i] = {
     type: 'robot',
@@ -363,7 +354,9 @@ const FRY1: Node.Robot = {
 };
 
 const TRAYS: Node.Robot[] = Array(6) as Node.Robot[];
-for (const [i, pos] of TRAY_ORIGINS.entries()) {
+for (let i = 0; i < TRAYS.length; i++) {
+  const pos = { position: Vector3wUnits.centimeters(107, 10, (20.1 - 13.4 * i)) };
+
   TRAYS[i] = {
     type: 'robot',
     name: tr(`Tray #${i}`),
@@ -390,7 +383,7 @@ const BOTGUY: Node.Robot = {
 const DRINKS_BLUE_BACK = Array(6) as Node.Robot[];
 for (let i = 0; i < DRINKS_BLUE_BACK.length; i++) {
   const pos: ReferenceFramewUnits = {
-    position: Vector3wUnits.centimeters(18.6, 0 + (5.09 * i), -102.5),
+    position: Vector3wUnits.centimeters(-18.6, 0 + (5.09 * i), 102.5)
   };
   DRINKS_BLUE_BACK[i] = {
     type: 'robot',
@@ -407,7 +400,7 @@ for (let i = 0; i < DRINKS_BLUE_BACK.length; i++) {
 const DRINKS_BLUE_FRONT = Array(6) as Node.Robot[];
 for (let i = 0; i < DRINKS_BLUE_FRONT.length; i++) {
   const pos: ReferenceFramewUnits = {
-    position: Vector3wUnits.centimeters(18.6, 0 + (5.09 * i), -102.5),
+    position: Vector3wUnits.centimeters(18.6, 0 + (5.09 * i), -102.5)
   };
   DRINKS_BLUE_FRONT[i] = {
     type: 'robot',
@@ -424,7 +417,7 @@ for (let i = 0; i < DRINKS_BLUE_FRONT.length; i++) {
 const DRINKS_GREEN = Array(6) as Node.Robot[];
 for (let i = 0; i < DRINKS_GREEN.length; i++) {
   const pos: ReferenceFramewUnits = {
-    position: Vector3wUnits.centimeters(0.15, 0 + (5.09 * i), 71.252),
+    position: Vector3wUnits.centimeters(0.15, 0 + (5.09 * i), 71.252)
   };
   DRINKS_GREEN[i] = {
     type: 'robot',
@@ -441,8 +434,7 @@ for (let i = 0; i < DRINKS_GREEN.length; i++) {
 const DRINKS_PINK = Array(6) as Node.FromJBCTemplate[];
 for (let i = 0; i < DRINKS_PINK.length; i++) {
   const pos: ReferenceFramewUnits = {
-    position: Vector3wUnits.centimeters(0, 0 + (5.09 * i), -71.3),
-
+    position: Vector3wUnits.centimeters(0, 0 + (5.09 * i), -71.3)
   };
   DRINKS_PINK[i] = {
     type: 'from-jbc-template',
