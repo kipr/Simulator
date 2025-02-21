@@ -158,7 +158,9 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     if (!latestScene) return;
 
     const robots = Scene.robots(latestScene);
-    const robotId = Object.keys(robots)[0];
+    // const demobotOnly = Dict.filter(robots, (r) => r.robotId === 'demobot');
+    // const robotId = Dict.unique(demobotOnly).robotId;
+    const robotId = 'demobot';
     this.props.onNodeChange(robotId, {
       ...robots[robotId],
       origin
@@ -288,8 +290,8 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
         let robotNode: Node.Robot;
         if (latestScene) {
           const robots = Scene.robots(latestScene);
-          const botsOnly = Dict.filter(robots, (r) => r.robotId === 'demobot');
-          robotNode = Dict.unique(botsOnly);
+          const demobotOnly = Dict.filter(robots, (r) => r.robotId === 'demobot');
+          robotNode = Dict.unique(demobotOnly);
         }
         if (robotNode) {
           content = (
