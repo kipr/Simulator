@@ -174,7 +174,7 @@ export const POM_BLUE: Robot = {
   authorId: 'kipr',
   nodes: {
     node: Node.link({
-      collisionBody: Node.Link.CollisionBody.EMBEDDED,
+      collisionBody: Node.Link.CollisionBody.BOX,
       geometryId: 'model',
       restitution: .4,
       friction: 1,
@@ -195,7 +195,7 @@ export const POM_RED: Robot = {
   authorId: 'kipr',
   nodes: {
     node: Node.link({
-      collisionBody: Node.Link.CollisionBody.EMBEDDED,
+      collisionBody: Node.Link.CollisionBody.BOX,
       geometryId: 'model',
       restitution: .4,
       friction: .7,
@@ -216,7 +216,7 @@ export const POM_ORANGE: Robot = {
   authorId: 'kipr',
   nodes: {
     node: Node.link({
-      collisionBody: Node.Link.CollisionBody.EMBEDDED,
+      collisionBody: Node.Link.CollisionBody.BOX,
       geometryId: 'model',
       restitution: .4,
       friction: .7,
@@ -237,7 +237,7 @@ export const POM_YELLOW: Robot = {
   authorId: 'kipr',
   nodes: {
     node: Node.link({
-      collisionBody: Node.Link.CollisionBody.EMBEDDED,
+      collisionBody: Node.Link.CollisionBody.BOX,
       geometryId: 'model',
       restitution: .4,
       friction: .7,
@@ -342,7 +342,7 @@ export const FRY: Robot = {
   authorId: 'kipr',
   nodes: {
     node: Node.link({
-      collisionBody: Node.Link.CollisionBody.EMBEDDED,
+      collisionBody: Node.Link.CollisionBody.BOX,
       geometryId: 'model',
       restitution: .3,
       friction: .7,
@@ -365,8 +365,8 @@ export const TRAY: Robot = {
     node: Node.link({
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
       geometryId: 'model',
-      restitution: .3,
-      friction: 1,
+      restitution: .1,
+      friction: .7,
       mass: Mass.grams(10),
       inertia: [1, 1, 1],
     }),

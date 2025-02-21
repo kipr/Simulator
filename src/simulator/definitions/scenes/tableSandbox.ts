@@ -46,7 +46,7 @@ const CUP_GREEN_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(CUP_X, CUP_Y, 91),
 };
 
-const POM_Y = 1;
+const POM_Y = 2;
 const POM_BLUE_ORIGINS_BACK: ReferenceFramewUnits[] = [
   { position: Vector3wUnits.centimeters(15, POM_Y, 53) },
   { position: Vector3wUnits.centimeters(15, POM_Y, 43) },
@@ -64,13 +64,32 @@ const POM_BLUE_ORIGINS_FRONT = POM_BLUE_ORIGINS_BACK.map((p) => {
   return { position: { ...p.position, z: Distance.centimeters(p.position.z.value * -1) } };
 });
 
+const BOTTLE_Y = 2;
 const BOTTLE_ORIGINS: ReferenceFramewUnits[] = [
-  { position: Vector3wUnits.centimeters(29, 1, 33.5) },
-  { position: Vector3wUnits.centimeters(29, 1, 26.5) },
-  { position: Vector3wUnits.centimeters(29, 1, 19.5) },
-  { position: Vector3wUnits.centimeters(21, 1, 33.5) },
-  { position: Vector3wUnits.centimeters(21, 1, 26.5) },
-  { position: Vector3wUnits.centimeters(21, 1, 19.5) },
+  {
+    position: Vector3wUnits.centimeters(29.4, BOTTLE_Y, 33.3),
+    orientation: RotationwUnits.eulerDegrees(0, 45, 0),
+  },
+  {
+    position: Vector3wUnits.centimeters(29.4, BOTTLE_Y, 26.3),
+    orientation: RotationwUnits.eulerDegrees(0, 45, 0),
+  },
+  {
+    position: Vector3wUnits.centimeters(29.4, BOTTLE_Y, 19.3),
+    orientation: RotationwUnits.eulerDegrees(0, 45, 0),
+  },
+  {
+    position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 33.3),
+    orientation: RotationwUnits.eulerDegrees(0, 45, 0),
+  },
+  {
+    position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 26.3),
+    orientation: RotationwUnits.eulerDegrees(0, 45, 0),
+  },
+  {
+    position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 19.3),
+    orientation: RotationwUnits.eulerDegrees(0, 45, 0),
+  },
 ];
 
 const CENTER_LINE_X = 65.5;
@@ -114,7 +133,7 @@ const FRY_ORIGIN1: ReferenceFramewUnits = {
 };
 
 const BOTGUY_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-4, 25, -3),
+  position: Vector3wUnits.centimeters(-4, 26, -3),
   orientation: RotationwUnits.eulerDegrees(0, -90, 0),
 };
 
@@ -349,17 +368,10 @@ const FRY1: Node.Robot = {
   startingOrigin: FRY_ORIGIN1,
   origin: FRY_ORIGIN1
 };
-// const TRAY_ORIGINS = [
-//   { position: Vector3wUnits.centimeters(70, 10, 20.1) },
-//   { position: Vector3wUnits.centimeters(70, 10, 6.1) },
-//   { position: Vector3wUnits.centimeters(70, 10, -7.9) },
-//   { position: Vector3wUnits.centimeters(70, 10, -21.9) },
-//   { position: Vector3wUnits.centimeters(70, 10, -35.9) },
-//   { position: Vector3wUnits.centimeters(70, 10, -49.9) },
-// ];
+
 const TRAYS: Node.Robot[] = Array(6) as Node.Robot[];
 for (let i = 0; i < TRAYS.length; i++) {
-  const pos = { position: Vector3wUnits.centimeters(107, 10, (19.5 - 13.4 * i)) };
+  const pos = { position: Vector3wUnits.centimeters(107, 3, (19.5 - 13.4 * i)) };
 
   TRAYS[i] = {
     type: 'robot',
@@ -468,29 +480,29 @@ export const Table_Sandbox: Scene = {
     'cup_pink': CUP_PINK,
     'cup_blue': CUP_BLUE,
     'cup_green': CUP_GREEN,
-    // 'pom_blue0': POMS_BLUE[0],
-    // 'pom_blue1': POMS_BLUE[1],
-    // 'pom_blue2': POMS_BLUE[2],
-    // 'pom_blue3': POMS_BLUE[3],
-    // 'pom_blue4': POMS_BLUE[4],
-    // 'pom_blue5': POMS_BLUE[5],
-    // 'pom_blue6': POMS_BLUE[6],
-    // 'pom_blue7': POMS_BLUE[7],
-    // 'pom_blue8': POMS_BLUE[8],
-    // 'pom_blue9': POMS_BLUE[9],
-    // 'pom_blue10': POMS_BLUE[10],
-    // 'pom_blue11': POMS_BLUE[11],
-    // 'pom_blue12': POMS_BLUE[12],
-    // 'pom_blue13': POMS_BLUE[13],
-    // 'pom_blue14': POMS_BLUE[14],
-    // 'pom_blue15': POMS_BLUE[15],
-    // 'pom_blue16': POMS_BLUE[16],
-    // 'pom_blue17': POMS_BLUE[17],
-    // 'pom_blue18': POMS_BLUE[18],
-    // 'pom_blue19': POMS_BLUE[19],
-    // 'pom_red0': POMS_RED[0],
-    // 'pom_red1': POMS_RED[1],
-    // 'pom_red2': POMS_RED[2],
+    'pom_blue0': POMS_BLUE[0],
+    'pom_blue1': POMS_BLUE[1],
+    'pom_blue2': POMS_BLUE[2],
+    'pom_blue3': POMS_BLUE[3],
+    'pom_blue4': POMS_BLUE[4],
+    'pom_blue5': POMS_BLUE[5],
+    'pom_blue6': POMS_BLUE[6],
+    'pom_blue7': POMS_BLUE[7],
+    'pom_blue8': POMS_BLUE[8],
+    'pom_blue9': POMS_BLUE[9],
+    'pom_blue10': POMS_BLUE[10],
+    'pom_blue11': POMS_BLUE[11],
+    'pom_blue12': POMS_BLUE[12],
+    'pom_blue13': POMS_BLUE[13],
+    'pom_blue14': POMS_BLUE[14],
+    'pom_blue15': POMS_BLUE[15],
+    'pom_blue16': POMS_BLUE[16],
+    'pom_blue17': POMS_BLUE[17],
+    'pom_blue18': POMS_BLUE[18],
+    'pom_blue19': POMS_BLUE[19],
+    'pom_red0': POMS_RED[0],
+    'pom_red1': POMS_RED[1],
+    'pom_red2': POMS_RED[2],
     // 'pom_orange0': POMS_ORANGE[0],
     // 'pom_orange1': POMS_ORANGE[1],
     // 'pom_orange2': POMS_ORANGE[2],
@@ -506,23 +518,23 @@ export const Table_Sandbox: Scene = {
     // 'pom_random6': POMS_RANDOM[6],
     // 'pom_random7': POMS_RANDOM[7],
     // 'pom_random8': POMS_RANDOM[8],
-    'bottle0': BOTTLES[0],
-    'bottle1': BOTTLES[1],
-    'bottle2': BOTTLES[2],
-    'bottle3': BOTTLES[3],
-    'bottle4': BOTTLES[4],
-    'bottle5': BOTTLES[5],
+    // 'bottle0': BOTTLES[0],
+    // 'bottle1': BOTTLES[1],
+    // 'bottle2': BOTTLES[2],
+    // 'bottle3': BOTTLES[3],
+    // 'bottle4': BOTTLES[4],
+    // 'bottle5': BOTTLES[5],
     // 'tomato': TOMATO,
     // 'pickle': PICKLE,
     // 'potato': POTATO,
     // 'fry0': FRY0,
     // 'fry1': FRY1,
-    'tray0': TRAYS[0],
-    'tray1': TRAYS[1],
-    'tray2': TRAYS[2],
-    'tray3': TRAYS[3],
-    'tray4': TRAYS[4],
-    'tray5': TRAYS[5],
+    // 'tray0': TRAYS[0],
+    // 'tray1': TRAYS[1],
+    // 'tray2': TRAYS[2],
+    // 'tray3': TRAYS[3],
+    // 'tray4': TRAYS[4],
+    // 'tray5': TRAYS[5],
     // 'drink_blue_front0': DRINKS_BLUE_FRONT[0],
     // 'drink_blue_front1': DRINKS_BLUE_FRONT[1],
     // 'drink_blue_front2': DRINKS_BLUE_FRONT[2],
