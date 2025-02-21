@@ -365,9 +365,9 @@ export const TRAY: Robot = {
     node: Node.link({
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
       geometryId: 'model',
-      restitution: .1,
-      friction: .7,
-      mass: Mass.grams(CUP_MASS),
+      restitution: .3,
+      friction: 1,
+      mass: Mass.grams(10),
       inertia: [1, 1, 1],
     }),
   },

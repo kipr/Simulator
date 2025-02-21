@@ -68,9 +68,9 @@ const BOTTLE_ORIGINS: ReferenceFramewUnits[] = [
   { position: Vector3wUnits.centimeters(29, 1, 33.5) },
   { position: Vector3wUnits.centimeters(29, 1, 26.5) },
   { position: Vector3wUnits.centimeters(29, 1, 19.5) },
-  { position: Vector3wUnits.centimeters(22, 1, 33.5) },
-  { position: Vector3wUnits.centimeters(22, 1, 26.5) },
-  { position: Vector3wUnits.centimeters(22, 1, 19.5) },
+  { position: Vector3wUnits.centimeters(21, 1, 33.5) },
+  { position: Vector3wUnits.centimeters(21, 1, 26.5) },
+  { position: Vector3wUnits.centimeters(21, 1, 19.5) },
 ];
 
 const CENTER_LINE_X = 65.5;
@@ -349,17 +349,24 @@ const FRY1: Node.Robot = {
   startingOrigin: FRY_ORIGIN1,
   origin: FRY_ORIGIN1
 };
-
+// const TRAY_ORIGINS = [
+//   { position: Vector3wUnits.centimeters(70, 10, 20.1) },
+//   { position: Vector3wUnits.centimeters(70, 10, 6.1) },
+//   { position: Vector3wUnits.centimeters(70, 10, -7.9) },
+//   { position: Vector3wUnits.centimeters(70, 10, -21.9) },
+//   { position: Vector3wUnits.centimeters(70, 10, -35.9) },
+//   { position: Vector3wUnits.centimeters(70, 10, -49.9) },
+// ];
 const TRAYS: Node.Robot[] = Array(6) as Node.Robot[];
 for (let i = 0; i < TRAYS.length; i++) {
-  const pos = { position: Vector3wUnits.centimeters(107, 10, (20.1 - 13.4 * i)) };
+  const pos = { position: Vector3wUnits.centimeters(107, 10, (19.5 - 13.4 * i)) };
 
   TRAYS[i] = {
     type: 'robot',
     name: tr(`Tray #${i}`),
     robotId: 'tray',
     state: AbstractRobot.Stateless.NIL,
-    visible: false,
+    visible: true,
     editable: true,
     startingOrigin: pos,
     origin: pos
@@ -499,23 +506,23 @@ export const Table_Sandbox: Scene = {
     // 'pom_random6': POMS_RANDOM[6],
     // 'pom_random7': POMS_RANDOM[7],
     // 'pom_random8': POMS_RANDOM[8],
-    // 'bottle0': BOTTLES[0],
-    // 'bottle1': BOTTLES[1],
-    // 'bottle2': BOTTLES[2],
-    // 'bottle3': BOTTLES[3],
-    // 'bottle4': BOTTLES[4],
-    // 'bottle5': BOTTLES[5],
+    'bottle0': BOTTLES[0],
+    'bottle1': BOTTLES[1],
+    'bottle2': BOTTLES[2],
+    'bottle3': BOTTLES[3],
+    'bottle4': BOTTLES[4],
+    'bottle5': BOTTLES[5],
     // 'tomato': TOMATO,
     // 'pickle': PICKLE,
     // 'potato': POTATO,
     // 'fry0': FRY0,
     // 'fry1': FRY1,
-    // 'tray0': TRAYS[0],
-    // 'tray1': TRAYS[1],
-    // 'tray2': TRAYS[2],
-    // 'tray3': TRAYS[3],
-    // 'tray4': TRAYS[4],
-    // 'tray5': TRAYS[5],
+    'tray0': TRAYS[0],
+    'tray1': TRAYS[1],
+    'tray2': TRAYS[2],
+    'tray3': TRAYS[3],
+    'tray4': TRAYS[4],
+    'tray5': TRAYS[5],
     // 'drink_blue_front0': DRINKS_BLUE_FRONT[0],
     // 'drink_blue_front1': DRINKS_BLUE_FRONT[1],
     // 'drink_blue_front2': DRINKS_BLUE_FRONT[2],
