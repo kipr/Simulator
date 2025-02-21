@@ -28,7 +28,7 @@ const HOTDOG_ORIGIN: ReferenceFramewUnits = {
 };
 
 const TACO_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(WARMING_X, 21, 93),
+  position: Vector3wUnits.centimeters(WARMING_X, 22, 93),
   orientation: RotationwUnits.eulerDegrees(60, 90, 0),
 };
 
@@ -89,7 +89,6 @@ const POM_YELLOW_ORIGINS: ReferenceFramewUnits[] = [
   { position: Vector3wUnits.centimeters(CENTER_LINE_X,                POM_Y, 15.24) },
   { position: Vector3wUnits.centimeters(CENTER_LINE_X,                POM_Y, -30.48) },
 ];
-
 
 const TOMATO_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(29, 1, -15),
@@ -506,9 +505,9 @@ export const Table_Sandbox: Scene = {
     // 'bottle3': BOTTLES[3],
     // 'bottle4': BOTTLES[4],
     // 'bottle5': BOTTLES[5],
-    // 'tomato': TOMATO,
-    // 'pickle': PICKLE,
-    // 'potato': POTATO,
+    'tomato': TOMATO,
+    'pickle': PICKLE,
+    'potato': POTATO,
     // 'fry0': FRY0,
     // 'fry1': FRY1,
     // 'tray0': TRAYS[0],
