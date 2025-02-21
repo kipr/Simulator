@@ -89,7 +89,7 @@ const SimultorWidgetContainer = styled('div', {
   height: '100%',
   width: '100%',
   overflow: 'hidden'
-  
+
 });
 const SimulatorWidget = styled(Widget, {
   display: 'flex',
@@ -152,7 +152,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
 
   private onRobotOriginChange_ = (origin: ReferenceFramewUnits) => {
     const { scene, onNodeChange } = this.props;
-    
+
     const latestScene = Async.latestValue(scene);
 
     if (!latestScene) return;
@@ -203,7 +203,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     const {
       activePanel,
       sidePanelSize,
-      
+
     } = this.state;
 
     let editorBarTarget: EditorBarTarget;
@@ -249,8 +249,8 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     switch (activePanel) {
       case 0: {
         content = (
-          <Slider 
-            isVertical={false} 
+          <Slider
+            isVertical={false}
             theme={theme}
             minSizes={[100, 100]}
             sizes={[3, 1]}
@@ -288,7 +288,8 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
         let robotNode: Node.Robot;
         if (latestScene) {
           const robots = Scene.robots(latestScene);
-          robotNode = Dict.unique(robots);
+          const botsOnly = Dict.filter(robots, (r) => r.robotId === 'demobot');
+          robotNode = Dict.unique(botsOnly);
         }
         if (robotNode) {
           content = (
@@ -382,14 +383,14 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
 
     return <Container style={style} className={className}>
       <SidePanelContainer>
-        <TabBar 
-          theme={theme} isVertical={true} tabs={tabs} index={activePanel} 
-          onIndexChange={sidePanelSize === Size.Type.Minimized 
+        <TabBar
+          theme={theme} isVertical={true} tabs={tabs} index={activePanel}
+          onIndexChange={sidePanelSize === Size.Type.Minimized
             ? this.onTabBarExpand_
-            : this.onTabBarIndexChange_ 
-          }  
+            : this.onTabBarIndexChange_
+          }
         />
-        <Slider 
+        <Slider
           isVertical={true}
           theme={theme}
           minSizes={[50, 50]}
@@ -409,7 +410,7 @@ export const SideLayoutRedux = connect((state: ReduxState, { sceneId }: LayoutPr
   const scene = Async.latestValue(asyncScene);
   let robots: Dict<Node.Robot> = {};
   if (scene) robots = Scene.robots(scene);
-  
+
   return {
     robots,
     locale: state.i18n.locale,
