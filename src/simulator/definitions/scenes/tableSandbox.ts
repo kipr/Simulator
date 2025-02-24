@@ -353,7 +353,7 @@ const FRY1: Node.Robot = {
 
 const TRAYS: Node.Robot[] = Array(6) as Node.Robot[];
 for (let i = 0; i < TRAYS.length; i++) {
-  const pos = { position: Vector3wUnits.centimeters(107, 3, (19.5 - 13.4 * i)) };
+  const pos = { position: Vector3wUnits.centimeters(107.5, 3, (19.7 - 13.45 * i)) };
 
   TRAYS[i] = {
     type: 'robot',
@@ -511,12 +511,12 @@ export const Table_Sandbox: Scene = {
     'potato': POTATO,
     'fry0': FRY0,
     'fry1': FRY1,
-    // 'tray0': TRAYS[0],
-    // 'tray1': TRAYS[1],
-    // 'tray2': TRAYS[2],
-    // 'tray3': TRAYS[3],
-    // 'tray4': TRAYS[4],
-    // 'tray5': TRAYS[5],
+    'tray0': TRAYS[0],
+    'tray1': TRAYS[1],
+    'tray2': TRAYS[2],
+    'tray3': TRAYS[3],
+    'tray4': TRAYS[4],
+    'tray5': TRAYS[5],
     // 'drink_blue_front0': DRINKS_BLUE_FRONT[0],
     // 'drink_blue_front1': DRINKS_BLUE_FRONT[1],
     // 'drink_blue_front2': DRINKS_BLUE_FRONT[2],
