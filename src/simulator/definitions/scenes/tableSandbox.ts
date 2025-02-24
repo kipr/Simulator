@@ -67,28 +67,22 @@ const POM_BLUE_ORIGINS_FRONT = POM_BLUE_ORIGINS_BACK.map((p) => {
 const BOTTLE_Y = 2;
 const BOTTLE_ORIGINS: ReferenceFramewUnits[] = [
   {
-    position: Vector3wUnits.centimeters(29.4, BOTTLE_Y, 33.3),
-    orientation: RotationwUnits.eulerDegrees(0, 45, 0),
+    position: Vector3wUnits.centimeters(29.5, BOTTLE_Y, 33.4),
   },
   {
-    position: Vector3wUnits.centimeters(29.4, BOTTLE_Y, 26.3),
-    orientation: RotationwUnits.eulerDegrees(0, 45, 0),
+    position: Vector3wUnits.centimeters(29.5, BOTTLE_Y, 26.3),
   },
   {
-    position: Vector3wUnits.centimeters(29.4, BOTTLE_Y, 19.3),
-    orientation: RotationwUnits.eulerDegrees(0, 45, 0),
+    position: Vector3wUnits.centimeters(29.5, BOTTLE_Y, 19.2),
   },
   {
-    position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 33.3),
-    orientation: RotationwUnits.eulerDegrees(0, 45, 0),
+    position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 33.4),
   },
   {
     position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 26.3),
-    orientation: RotationwUnits.eulerDegrees(0, 45, 0),
   },
   {
-    position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 19.3),
-    orientation: RotationwUnits.eulerDegrees(0, 45, 0),
+    position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 19.2),
   },
 ];
 
@@ -99,14 +93,14 @@ const POM_RED_ORIGINS: ReferenceFramewUnits[] = [
   { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, -45.72) },
 ];
 const POM_ORANGE_ORIGINS: ReferenceFramewUnits[] = [
-  { position: Vector3wUnits.centimeters(CENTER_LINE_X - 11.43,  POM_Y, 0) },
-  { position: Vector3wUnits.centimeters(CENTER_LINE_X,          POM_Y, -15.24) },
-  { position: Vector3wUnits.centimeters(CENTER_LINE_X,          POM_Y, 30.48) },
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X - 11.43, POM_Y, 0) },
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, -15.24) },
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 30.48) },
 ];
 const POM_YELLOW_ORIGINS: ReferenceFramewUnits[] = [
-  { position: Vector3wUnits.centimeters(CENTER_LINE_X - (2 * 11.43),  POM_Y, 0) },
-  { position: Vector3wUnits.centimeters(CENTER_LINE_X,                POM_Y, 15.24) },
-  { position: Vector3wUnits.centimeters(CENTER_LINE_X,                POM_Y, -30.48) },
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X - (2 * 11.43), POM_Y, 0) },
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 15.24) },
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, -30.48) },
 ];
 
 const TOMATO_ORIGIN: ReferenceFramewUnits = {
@@ -503,27 +497,27 @@ export const Table_Sandbox: Scene = {
     'pom_red0': POMS_RED[0],
     'pom_red1': POMS_RED[1],
     'pom_red2': POMS_RED[2],
-    // 'pom_orange0': POMS_ORANGE[0],
-    // 'pom_orange1': POMS_ORANGE[1],
-    // 'pom_orange2': POMS_ORANGE[2],
-    // 'pom_yellow0': POMS_YELLOW[0],
-    // 'pom_yellow1': POMS_YELLOW[1],
-    // 'pom_yellow2': POMS_YELLOW[2],
-    // 'pom_random0': POMS_RANDOM[0],
-    // 'pom_random1': POMS_RANDOM[1],
-    // 'pom_random2': POMS_RANDOM[2],
-    // 'pom_random3': POMS_RANDOM[3],
-    // 'pom_random4': POMS_RANDOM[4],
-    // 'pom_random5': POMS_RANDOM[5],
-    // 'pom_random6': POMS_RANDOM[6],
-    // 'pom_random7': POMS_RANDOM[7],
-    // 'pom_random8': POMS_RANDOM[8],
-    // 'bottle0': BOTTLES[0],
-    // 'bottle1': BOTTLES[1],
-    // 'bottle2': BOTTLES[2],
-    // 'bottle3': BOTTLES[3],
-    // 'bottle4': BOTTLES[4],
-    // 'bottle5': BOTTLES[5],
+    'pom_orange0': POMS_ORANGE[0],
+    'pom_orange1': POMS_ORANGE[1],
+    'pom_orange2': POMS_ORANGE[2],
+    'pom_yellow0': POMS_YELLOW[0],
+    'pom_yellow1': POMS_YELLOW[1],
+    'pom_yellow2': POMS_YELLOW[2],
+    'pom_random0': POMS_RANDOM[0],
+    'pom_random1': POMS_RANDOM[1],
+    'pom_random2': POMS_RANDOM[2],
+    'pom_random3': POMS_RANDOM[3],
+    'pom_random4': POMS_RANDOM[4],
+    'pom_random5': POMS_RANDOM[5],
+    'pom_random6': POMS_RANDOM[6],
+    'pom_random7': POMS_RANDOM[7],
+    'pom_random8': POMS_RANDOM[8],
+    'bottle0': BOTTLES[0],
+    'bottle1': BOTTLES[1],
+    'bottle2': BOTTLES[2],
+    'bottle3': BOTTLES[3],
+    'bottle4': BOTTLES[4],
+    'bottle5': BOTTLES[5],
     // 'tomato': TOMATO,
     // 'pickle': PICKLE,
     // 'potato': POTATO,

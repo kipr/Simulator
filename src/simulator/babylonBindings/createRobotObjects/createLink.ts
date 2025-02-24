@@ -41,9 +41,9 @@ const buildGeometry_ = async (name: string, geometry: Geometry, bScene_: babylon
       const nonColliders: Mesh[] = [];
       const colliders: BuiltGeometry.Collider[] = [];
       // Comment in to show bounding boxes on robot
-      // const gizmoManager_ = new GizmoManager(bScene_);
-      // gizmoManager_.boundingBoxGizmoEnabled = true;
-      // gizmoManager_.gizmos.boundingBoxGizmo.setColor(new Color3(0, 0, 1));
+      const gizmoManager_ = new GizmoManager(bScene_);
+      gizmoManager_.boundingBoxGizmoEnabled = true;
+      gizmoManager_.gizmos.boundingBoxGizmo.setColor(new Color3(0, 0, 1));
       for (const mesh of res.meshes.slice(1) as Mesh[]) {
         // The robot mesh includes sub-meshes with the 'collider' name to indicate their use.
         if (mesh.name.startsWith('collider')) {
