@@ -66,24 +66,12 @@ const POM_BLUE_ORIGINS_FRONT = POM_BLUE_ORIGINS_BACK.map((p) => {
 
 const BOTTLE_Y = 2;
 const BOTTLE_ORIGINS: ReferenceFramewUnits[] = [
-  {
-    position: Vector3wUnits.centimeters(29.5, BOTTLE_Y, 33.4),
-  },
-  {
-    position: Vector3wUnits.centimeters(29.5, BOTTLE_Y, 26.3),
-  },
-  {
-    position: Vector3wUnits.centimeters(29.5, BOTTLE_Y, 19.2),
-  },
-  {
-    position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 33.4),
-  },
-  {
-    position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 26.3),
-  },
-  {
-    position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 19.2),
-  },
+  { position: Vector3wUnits.centimeters(29.5, BOTTLE_Y, 33.4) },
+  { position: Vector3wUnits.centimeters(29.5, BOTTLE_Y, 26.3) },
+  { position: Vector3wUnits.centimeters(29.5, BOTTLE_Y, 19.2) },
+  { position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 33.4) },
+  { position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 26.3) },
+  { position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 19.2) },
 ];
 
 const CENTER_LINE_X = 65.5;
@@ -108,12 +96,12 @@ const TOMATO_ORIGIN: ReferenceFramewUnits = {
 };
 
 const PICKLE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(26, 2.5, -28),
+  position: Vector3wUnits.centimeters(28, 2.5, -28),
   orientation: RotationwUnits.eulerDegrees(0, 0, 90),
 };
 
 const POTATO_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(35, 7, -85),
+  position: Vector3wUnits.centimeters(35, 7.3, -85),
   orientation: RotationwUnits.eulerDegrees(0, 90, 0),
 };
 
@@ -518,11 +506,11 @@ export const Table_Sandbox: Scene = {
     'bottle3': BOTTLES[3],
     'bottle4': BOTTLES[4],
     'bottle5': BOTTLES[5],
-    // 'tomato': TOMATO,
-    // 'pickle': PICKLE,
-    // 'potato': POTATO,
-    // 'fry0': FRY0,
-    // 'fry1': FRY1,
+    'tomato': TOMATO,
+    'pickle': PICKLE,
+    'potato': POTATO,
+    'fry0': FRY0,
+    'fry1': FRY1,
     // 'tray0': TRAYS[0],
     // 'tray1': TRAYS[1],
     // 'tray2': TRAYS[2],
