@@ -405,12 +405,12 @@ export const DRINK_BLUE: Robot = {
   authorId: 'kipr',
   nodes: {
     node: Node.link({
-      collisionBody: Node.Link.CollisionBody.EMBEDDED,
+      collisionBody: Node.Link.CollisionBody.BOX,
       geometryId: 'model',
       restitution: .1,
-      friction: .7,
-      mass: Mass.grams(CUP_MASS),
-      inertia: [1, 1, 1],
+      friction: .5,
+      mass: Mass.grams(5),
+      inertia: [2, 2, 2],
     }),
   },
   geometry: {
@@ -425,12 +425,12 @@ export const DRINK_GREEN: Robot = {
   authorId: 'kipr',
   nodes: {
     node: Node.link({
-      collisionBody: Node.Link.CollisionBody.EMBEDDED,
+      collisionBody: Node.Link.CollisionBody.BOX,
       geometryId: 'model',
-      restitution: .8,
-      friction: .7,
-      mass: Mass.grams(CUP_MASS),
-      inertia: [1, 1, 1],
+      restitution: .1,
+      friction: .5,
+      mass: Mass.grams(5),
+      inertia: [2, 2, 2],
     }),
   },
   geometry: {
@@ -445,12 +445,12 @@ export const DRINK_PINK: Robot = {
   authorId: 'kipr',
   nodes: {
     node: Node.link({
-      collisionBody: Node.Link.CollisionBody.EMBEDDED,
+      collisionBody: Node.Link.CollisionBody.BOX,
       geometryId: 'model',
       restitution: .1,
-      friction: .7,
-      mass: Mass.grams(CUP_MASS),
-      inertia: [1, 1, 1],
+      friction: .5,
+      mass: Mass.grams(5),
+      inertia: [2, 2, 2],
     }),
   },
   geometry: {
