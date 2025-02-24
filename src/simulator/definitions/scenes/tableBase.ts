@@ -41,6 +41,10 @@ const FRY_FLOOR_ORIGIN: ReferenceFramewUnits = {
   orientation: RotationwUnits.eulerDegrees(90, 0, 0),
 };
 
+const INNER_FRYER_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(113, 27, -87),
+};
+
 const GAME_TABLE_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(0, 0, 0),
   orientation: RotationwUnits.eulerDegrees(0, -90, 0),
@@ -97,6 +101,14 @@ export function createBaseSceneSurface(): Scene {
           z: Distance.inches(0.1),
         },
       },
+      'fryer_detection_box': {
+        type: 'box',
+        size: {
+          x: Distance.inches(3),
+          y: Distance.inches(3),
+          z: Distance.inches(3),
+        }
+      }
     },
     nodes: {
       'robot': ROBOT,
@@ -121,21 +133,6 @@ export function createBaseSceneSurface(): Scene {
           },
         },
       },
-      /*
-      '2025 Game Table': {
-        type: 'object',
-        geometryId: 'game_table_2025',
-        name: tr('2025 Botball game table'),
-        startingOrigin: GROUND_ORIGIN,
-        origin: GROUND_ORIGIN,
-        visible: true,
-        physics: {
-          type: 'mesh',
-          restitution: .1,
-          friction: 1,
-        },
-      },
-      */
       'fry_floor': {
         type: 'object',
         geometryId: 'fry_floor',
@@ -149,6 +146,21 @@ export function createBaseSceneSurface(): Scene {
         },
         editable: true,
         visible: true,
+      },
+      'potato_detector': {
+        type: 'object',
+        geometryId: 'fryer_detection_box',
+        name: tr('Potato detector box'),
+        startingOrigin: INNER_FRYER_ORIGIN,
+        origin: INNER_FRYER_ORIGIN,
+        visible: false,
+        material: {
+          type: 'basic',
+          color: {
+            type: 'color3',
+            color: Color.rgb(0, 255, 0),
+          },
+        },
       },
       'light0': {
         type: 'point-light',

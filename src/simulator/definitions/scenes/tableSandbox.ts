@@ -6,7 +6,7 @@ import Scene from "../../../state/State/Scene";
 // Imports to abuse robot system for collision boxes
 import Node from "../../../state/State/Scene/Node";
 import AbstractRobot from '../../../programming/AbstractRobot';
-// import Script from '../../../state/State/Scene/Script';
+import Script from '../../../state/State/Scene/Script';
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../../util/math/unitMath";
 import { Distance } from "../../../util";
 // import { Color } from '../../../state/State/Scene/Color';
@@ -422,6 +422,16 @@ for (let i = 0; i < DRINKS_PINK.length; i++) {
   };
 }
 
+const potatoInFryer = `
+const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
+  ...scene.nodes[nodeId],
+  visible
+});
+
+scene.addOnIntersectionListener('potato', (type, otherNodeId) => {
+  setNodeVisible('fry_floor', false);
+}, 'potato_detector');
+`;
 
 export const Table_Sandbox: Scene = {
   ...baseScene,
@@ -430,7 +440,9 @@ export const Table_Sandbox: Scene = {
   geometry: {
     ...baseScene.geometry,
   },
-
+  scripts: {
+    potatoInFryer: Script.ecmaScript("Potato in fryer", potatoInFryer),
+  },
   nodes: {
     ...baseScene.nodes,
     'hamburger': HAMBURGER,
