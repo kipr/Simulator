@@ -25,6 +25,7 @@ export * from './jbc22-Search-and-Rescue';
 export * from './jbc23-Find-the-Black-Line';
 export * from './jbc24-Walk-the-Line';
 export * from './moonSandbox';
+export * from './moonSandboxWithGrid';
 // export * from './jbc2b-Ring-Around-the-Cans-Sr';
 // export * from './jbc2c-Back-It-Up';
 // export * from './jbc2d-Ring-Around-the-Can-and-Back-It-Up';

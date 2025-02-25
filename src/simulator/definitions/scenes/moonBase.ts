@@ -20,7 +20,7 @@ const ROBOT_ORIGIN: ReferenceFramewUnits = {
 };
 
 const GROUND_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(0, -.5, 50),
+  position: Vector3wUnits.centimeters(0, -.5, 0),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 
@@ -30,7 +30,7 @@ const START_ORIGIN: ReferenceFramewUnits = {
 };
 
 const SKY_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(0, -17.2, 50),
+  position: Vector3wUnits.centimeters(0, -17.2, 0),
   orientation: RotationwUnits.eulerDegrees(90, 0, 0)
 };
 
@@ -98,7 +98,7 @@ export function createBaseSceneSurface(): Scene {
             uri: "/static/textures/Moon-2d-Surface.png"
           },
         },
-      },      
+      },
       'start': {
         type: 'object',
         geometryId: 'start',
