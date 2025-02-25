@@ -39,18 +39,10 @@ export const Moon_Sandbox_With_Grid: Scene = {
   description: tr('Lunar sandbox. Includes a grid of positions for you to create your own lunar challenges!'),
   geometry: {
     ...baseScene.geometry,
-    'indicator': {
-      type: 'cylinder',
-      radius: Distance.centimeters(3),
-      height: Distance.centimeters(0.1),
-    },
     'marker': {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(1),
-        y: Distance.meters(1),
-        z: Distance.centimeters(1),
-      }
+      type: 'cylinder',
+      radius: Distance.centimeters(.5),
+      height: Distance.centimeters(50),
     }
   },
   nodes: {
@@ -64,14 +56,50 @@ export const Moon_Sandbox_With_Grid: Scene = {
     'marker_01': {
       ...MARKER_TEMPLATE,
       name: tr('Marker 0,1'),
-      startingOrigin: { position: Vector3wUnits.meters(0, 0, 1) },
-      origin: { position: Vector3wUnits.meters(0, 0, 1) }
+      startingOrigin: { position: Vector3wUnits.meters(0, 0, 2) },
+      origin: { position: Vector3wUnits.meters(0, 0, 2) }
+    },
+    'marker_10': {
+      ...MARKER_TEMPLATE,
+      name: tr('Marker 1, 0'),
+      startingOrigin: { position: Vector3wUnits.meters(2, 0, 0) },
+      origin: { position: Vector3wUnits.meters(2, 0, 0) }
     },
     'marker_11': {
       ...MARKER_TEMPLATE,
-      name: tr('Marker 0,1'),
-      startingOrigin: { position: Vector3wUnits.meters(1, 0, 1) },
-      origin: { position: Vector3wUnits.meters(1, 0, 1) }
+      name: tr('Marker 1,1'),
+      startingOrigin: { position: Vector3wUnits.meters(2, 0, 2) },
+      origin: { position: Vector3wUnits.meters(2, 0, 2) }
+    },
+    'marker_1-1': {
+      ...MARKER_TEMPLATE,
+      name: tr('Marker 1,1'),
+      startingOrigin: { position: Vector3wUnits.meters(2, 0, -2) },
+      origin: { position: Vector3wUnits.meters(2, 0, -2) }
+    },
+    'marker_-11': {
+      ...MARKER_TEMPLATE,
+      name: tr('Marker 1,1'),
+      startingOrigin: { position: Vector3wUnits.meters(-2, 0, 2) },
+      origin: { position: Vector3wUnits.meters(-2, 0, 2) }
+    },
+    'marker_0-1': {
+      ...MARKER_TEMPLATE,
+      name: tr('Marker 0, -1'),
+      startingOrigin: { position: Vector3wUnits.meters(0, 0, -2) },
+      origin: { position: Vector3wUnits.meters(0, 0, -2) }
+    },
+    'marker_-10': {
+      ...MARKER_TEMPLATE,
+      name: tr('Marker -1, 0'),
+      startingOrigin: { position: Vector3wUnits.meters(-2, 0, 0) },
+      origin: { position: Vector3wUnits.meters(-2, 0, 0) }
+    },
+    'marker_-1-1': {
+      ...MARKER_TEMPLATE,
+      name: tr('Marker -1, -1'),
+      startingOrigin: { position: Vector3wUnits.meters(-2, 0, -2) },
+      origin: { position: Vector3wUnits.meters(-2, 0, -2) }
     },
   },
 };
