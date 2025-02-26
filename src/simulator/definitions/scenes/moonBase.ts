@@ -20,7 +20,7 @@ const ROBOT_ORIGIN: ReferenceFramewUnits = {
 };
 
 const GROUND_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(0, -.5, 0),
+  position: Vector3wUnits.centimeters(0, -.5, 50),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0)
 };
 

@@ -38,7 +38,7 @@ const MARKER_TEMPLATE: Node = {
  * @returns 2D Array of nodes that contains the markers
  */
 const makeMarkerGrid = (size: number, interval: number) => {
-  const start = Math.floor(size / -2) * interval;
+  const start = Math.ceil(size / -2) * interval;
   const markerGrid: Node[][] = [...Array(size) as Node[]].map(e => Array(size) as Node[]);
 
   for (let i = 0; i < markerGrid.length; i++) {
