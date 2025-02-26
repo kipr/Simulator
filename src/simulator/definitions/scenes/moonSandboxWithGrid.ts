@@ -2,6 +2,7 @@
 // The objects are set up in the node-templates index.ts file.
 // Here we add the objects and their properties to the scene.
 
+import Dict from "../../../util/objectOps/Dict";
 import Scene from "../../../state/State/Scene";
 import Script from '../../../state/State/Scene/Script';
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../../util/math/unitMath";
@@ -14,6 +15,7 @@ import LocalizedString from '../../../util/LocalizedString';
 import { createBaseSceneSurface } from './moonBase';
 
 import tr from '@i18n';
+import { distance } from "colorjs.io/fn";
 
 const MARKER_TEMPLATE: Node = {
   type: 'object',
@@ -39,15 +41,16 @@ const MARKER_TEMPLATE: Node = {
  */
 const makeMarkerGrid = (size: number, interval: number) => {
   const start = Math.ceil(size / -2) * interval;
-  const markerGrid: Node[][] = [...Array(size) as Node[]].map(e => Array(size) as Node[]);
+  // const markerGrid: Node[][] = [...Array(size) as Node[]].map(e => Array(size) as Node[]);
+  const markerGrid: Dict<Node> = {};
 
-  for (let i = 0; i < markerGrid.length; i++) {
+  for (let i = 0; i < size; i++) {
     const x = start + (interval * i);
 
-    for (let j = 0; j < markerGrid[i].length; j++) {
+    for (let j = 0; j < size; j++) {
       const z = start + (interval * j);
 
-      markerGrid[i][j] = {
+      markerGrid[`marker${x}${z}`] = {
         ...MARKER_TEMPLATE,
         // Babylonjs uses left handed coords, so multiply by -1 to make it look correct
         name: tr(`Marker (${x * -1}, ${z})`),
@@ -82,34 +85,6 @@ export const Moon_Sandbox_With_Grid: Scene = {
       ...baseScene.nodes['robot'],
       editable: true,
     },
-    'marker00': markerGrid[0][0],
-    'marker01': markerGrid[0][1],
-    'marker02': markerGrid[0][2],
-    'marker03': markerGrid[0][3],
-    'marker04': markerGrid[0][4],
-
-    'marker10': markerGrid[1][0],
-    'marker11': markerGrid[1][1],
-    'marker12': markerGrid[1][2],
-    'marker13': markerGrid[1][3],
-    'marker14': markerGrid[1][4],
-
-    'marker20': markerGrid[2][0],
-    'marker21': markerGrid[2][1],
-    'marker22': markerGrid[2][2],
-    'marker23': markerGrid[2][3],
-    'marker24': markerGrid[2][4],
-
-    'marker30': markerGrid[3][0],
-    'marker31': markerGrid[3][1],
-    'marker32': markerGrid[3][2],
-    'marker33': markerGrid[3][3],
-    'marker34': markerGrid[3][4],
-
-    'marker40': markerGrid[4][0],
-    'marker41': markerGrid[4][1],
-    'marker42': markerGrid[4][2],
-    'marker43': markerGrid[4][3],
-    'marker44': markerGrid[4][4],
+    ...markerGrid,
   },
 };

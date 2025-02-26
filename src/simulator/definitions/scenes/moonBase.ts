@@ -132,7 +132,8 @@ export function createBaseSceneSurface(): Scene {
         type: 'object',
         name: tr('1.1.2-4 Sky'),
         geometryId: 'sky',
-        visible: true,
+        // disable for debugging
+        visible: false,
         startingOrigin: SKY_ORIGIN,
         origin: SKY_ORIGIN,
         material: {
