@@ -31,6 +31,37 @@ const MARKER_TEMPLATE: Node = {
   },
 };
 
+/**
+ * 
+ * @param size The number of markers to place
+ * @param interval The interval to space the markers
+ * @returns 2D Array of nodes that contains the markers
+ */
+const makeMarkerGrid = (size: number, interval: number) => {
+  const start = Math.floor(size / -2) * interval;
+  const markerGrid: Node[][] = [...Array(size) as Node[]].map(e => Array(size) as Node[]);
+
+  for (let i = 0; i < markerGrid.length; i++) {
+    const x = start + (interval * i);
+
+    for (let j = 0; j < markerGrid[i].length; j++) {
+      const z = start + (interval * j);
+
+      markerGrid[i][j] = {
+        ...MARKER_TEMPLATE,
+        // Babylonjs uses left handed coords, so multiply by -1 to make it look correct
+        name: tr(`Marker (${x * -1}, ${z})`),
+        startingOrigin: { position: Vector3wUnits.meters(x, 0, z) },
+        origin: { position: Vector3wUnits.meters(x, 0, z) },
+      };
+    }
+  }
+
+  return markerGrid;
+};
+
+const markerGrid = makeMarkerGrid(5, 2);
+
 const baseScene = createBaseSceneSurface();
 
 export const Moon_Sandbox_With_Grid: Scene = {
@@ -51,55 +82,34 @@ export const Moon_Sandbox_With_Grid: Scene = {
       ...baseScene.nodes['robot'],
       editable: true,
     },
-    // Temporary markers for scaling
-    'marker_template': MARKER_TEMPLATE,
-    'marker_01': {
-      ...MARKER_TEMPLATE,
-      name: tr('Marker 0,1'),
-      startingOrigin: { position: Vector3wUnits.meters(0, 0, 2) },
-      origin: { position: Vector3wUnits.meters(0, 0, 2) }
-    },
-    'marker_10': {
-      ...MARKER_TEMPLATE,
-      name: tr('Marker 1, 0'),
-      startingOrigin: { position: Vector3wUnits.meters(2, 0, 0) },
-      origin: { position: Vector3wUnits.meters(2, 0, 0) }
-    },
-    'marker_11': {
-      ...MARKER_TEMPLATE,
-      name: tr('Marker 1,1'),
-      startingOrigin: { position: Vector3wUnits.meters(2, 0, 2) },
-      origin: { position: Vector3wUnits.meters(2, 0, 2) }
-    },
-    'marker_1-1': {
-      ...MARKER_TEMPLATE,
-      name: tr('Marker 1,1'),
-      startingOrigin: { position: Vector3wUnits.meters(2, 0, -2) },
-      origin: { position: Vector3wUnits.meters(2, 0, -2) }
-    },
-    'marker_-11': {
-      ...MARKER_TEMPLATE,
-      name: tr('Marker 1,1'),
-      startingOrigin: { position: Vector3wUnits.meters(-2, 0, 2) },
-      origin: { position: Vector3wUnits.meters(-2, 0, 2) }
-    },
-    'marker_0-1': {
-      ...MARKER_TEMPLATE,
-      name: tr('Marker 0, -1'),
-      startingOrigin: { position: Vector3wUnits.meters(0, 0, -2) },
-      origin: { position: Vector3wUnits.meters(0, 0, -2) }
-    },
-    'marker_-10': {
-      ...MARKER_TEMPLATE,
-      name: tr('Marker -1, 0'),
-      startingOrigin: { position: Vector3wUnits.meters(-2, 0, 0) },
-      origin: { position: Vector3wUnits.meters(-2, 0, 0) }
-    },
-    'marker_-1-1': {
-      ...MARKER_TEMPLATE,
-      name: tr('Marker -1, -1'),
-      startingOrigin: { position: Vector3wUnits.meters(-2, 0, -2) },
-      origin: { position: Vector3wUnits.meters(-2, 0, -2) }
-    },
+    'marker00': markerGrid[0][0],
+    'marker01': markerGrid[0][1],
+    'marker02': markerGrid[0][2],
+    'marker03': markerGrid[0][3],
+    'marker04': markerGrid[0][4],
+
+    'marker10': markerGrid[1][0],
+    'marker11': markerGrid[1][1],
+    'marker12': markerGrid[1][2],
+    'marker13': markerGrid[1][3],
+    'marker14': markerGrid[1][4],
+
+    'marker20': markerGrid[2][0],
+    'marker21': markerGrid[2][1],
+    'marker22': markerGrid[2][2],
+    'marker23': markerGrid[2][3],
+    'marker24': markerGrid[2][4],
+
+    'marker30': markerGrid[3][0],
+    'marker31': markerGrid[3][1],
+    'marker32': markerGrid[3][2],
+    'marker33': markerGrid[3][3],
+    'marker34': markerGrid[3][4],
+
+    'marker40': markerGrid[4][0],
+    'marker41': markerGrid[4][1],
+    'marker42': markerGrid[4][2],
+    'marker43': markerGrid[4][3],
+    'marker44': markerGrid[4][4],
   },
 };
