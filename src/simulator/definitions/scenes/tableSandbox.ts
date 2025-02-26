@@ -48,20 +48,58 @@ const CUP_GREEN_ORIGIN: ReferenceFramewUnits = {
 
 const POM_Y = 2;
 const POM_BLUE_ORIGINS_BACK: ReferenceFramewUnits[] = [
-  { position: Vector3wUnits.centimeters(18, POM_Y, 53) },
-  { position: Vector3wUnits.centimeters(18, POM_Y, 43) },
-  { position: Vector3wUnits.centimeters(23, POM_Y, 53) },
-  { position: Vector3wUnits.centimeters(23, POM_Y, 43) },
-  { position: Vector3wUnits.centimeters(28, POM_Y, 53) },
-  { position: Vector3wUnits.centimeters(28, POM_Y, 43) },
-  { position: Vector3wUnits.centimeters(15.5, POM_Y, 48) },
-  { position: Vector3wUnits.centimeters(20.5, POM_Y, 48) },
-  { position: Vector3wUnits.centimeters(25.5, POM_Y, 48) },
-  { position: Vector3wUnits.centimeters(30.5, POM_Y, 48) },
+  {
+    position: Vector3wUnits.centimeters(18, POM_Y, 53),
+    scale: { x: 100, y: 100, z: 100 },
+  },
+  {
+    position: Vector3wUnits.centimeters(18, POM_Y, 43),
+    scale: { x: 100, y: 100, z: 100 },
+
+  },
+  {
+    position: Vector3wUnits.centimeters(23, POM_Y, 53),
+    scale: { x: 100, y: 100, z: 100 },
+
+  },
+  {
+    position: Vector3wUnits.centimeters(23, POM_Y, 43),
+    scale: { x: 100, y: 100, z: 100 },
+
+  },
+  {
+    position: Vector3wUnits.centimeters(28, POM_Y, 53),
+    scale: { x: 100, y: 100, z: 100 },
+
+  },
+  {
+    position: Vector3wUnits.centimeters(28, POM_Y, 43),
+    scale: { x: 100, y: 100, z: 100 },
+  },
+  {
+    position: Vector3wUnits.centimeters(15.5, POM_Y, 48),
+    scale: { x: 100, y: 100, z: 100 },
+  },
+  {
+    position: Vector3wUnits.centimeters(20.5, POM_Y, 48),
+    scale: { x: 100, y: 100, z: 100 },
+  },
+  {
+    position: Vector3wUnits.centimeters(25.5, POM_Y, 48),
+    scale: { x: 100, y: 100, z: 100 },
+  },
+  {
+    position: Vector3wUnits.centimeters(30.5, POM_Y, 48),
+    scale: { x: 100, y: 100, z: 100 },
+
+  },
 ];
 
 const POM_BLUE_ORIGINS_FRONT = POM_BLUE_ORIGINS_BACK.map((p) => {
-  return { position: { ...p.position, z: Distance.centimeters(p.position.z.value * -1) } };
+  return {
+    position: { ...p.position, z: Distance.centimeters(p.position.z.value * -1) },
+    scale: { x: 100, y: 100, z: 100 }
+  };
 });
 
 const BOTTLE_Y = 2;
@@ -185,13 +223,12 @@ const CUP_GREEN: Node.Robot = {
   origin: CUP_GREEN_ORIGIN
 };
 
-const POMS_BLUE: Node.Robot[] = Array(20) as Node.Robot[];
+const POMS_BLUE: Node.FromSpaceTemplate[] = Array(20) as Node.FromSpaceTemplate[];
 for (const [i, pos] of POM_BLUE_ORIGINS_BACK.entries()) {
   POMS_BLUE[i] = {
-    type: 'robot',
+    type: 'from-space-template',
     name: tr(`Blue pom back #${i}`),
-    robotId: 'pom_blue',
-    state: AbstractRobot.Stateless.NIL,
+    templateId: 'pom_blue',
     visible: true,
     editable: true,
     startingOrigin: pos,
@@ -201,10 +238,9 @@ for (const [i, pos] of POM_BLUE_ORIGINS_BACK.entries()) {
 
 for (const [i, pos] of POM_BLUE_ORIGINS_FRONT.entries()) {
   POMS_BLUE[i + 10] = {
-    type: 'robot',
+    type: 'from-space-template',
     name: tr(`Blue pom front #${i}`),
-    robotId: 'pom_blue',
-    state: AbstractRobot.Stateless.NIL,
+    templateId: 'pom_blue',
     visible: true,
     editable: true,
     startingOrigin: pos,
@@ -226,13 +262,12 @@ for (const [i, pos] of BOTTLE_ORIGINS.entries()) {
   };
 }
 
-const POMS_RED: Node.Robot[] = Array(3) as Node.Robot[];
+const POMS_RED: Node.FromSpaceTemplate[] = Array(3) as Node.FromSpaceTemplate[];
 for (const [i, pos] of POM_RED_ORIGINS.entries()) {
   POMS_RED[i] = {
-    type: 'robot',
+    type: 'from-space-template',
     name: tr(`Red pom #${i}`),
-    robotId: 'pom_red',
-    state: AbstractRobot.Stateless.NIL,
+    templateId: 'pom_red',
     visible: true,
     editable: true,
     startingOrigin: pos,

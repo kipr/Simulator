@@ -168,6 +168,8 @@ class NodeSettings extends React.PureComponent<Props, State> {
       ComboBox.option(LocalizedString.lookup(tr('Walkway'), locale), 'walkway'),
       ComboBox.option(LocalizedString.lookup(tr('Solar Panel'), locale), 'solarpanel'),
       ComboBox.option(LocalizedString.lookup(tr('BotGuy Astronaut'), locale), 'botguy'),
+      ComboBox.option(LocalizedString.lookup(tr('Red pom'), locale), 'pom_red'),
+      ComboBox.option(LocalizedString.lookup(tr('Blue pom'), locale), 'pom_blue'),
     ];
 
     // If the new type is from a template, set the template ID to a default value
@@ -986,6 +988,8 @@ class NodeSettings extends React.PureComponent<Props, State> {
       ComboBox.option(LocalizedString.lookup(tr('Solar Panel'), locale), 'solarpanel'),
       ComboBox.option(LocalizedString.lookup(tr('BotGuy Astronaut'), locale), 'botguy'),
       ComboBox.option(LocalizedString.lookup(tr('Moon Rock Container'), locale), 'container'),
+      ComboBox.option(LocalizedString.lookup(tr('Red pom'), locale), 'pom_red'),
+      ComboBox.option(LocalizedString.lookup(tr('Blue pom'), locale), 'pom_blue'),
     ];
 
     const RADIATION_TEMPLATE_OPTIONS: ComboBox.Option[] = [
