@@ -63,7 +63,7 @@ const makeMarkerGrid = (size: number, interval: number) => {
   return markerGrid;
 };
 
-const markerGrid = makeMarkerGrid(5, 2);
+const markerGrid = makeMarkerGrid(12, 1);
 
 const baseScene = createBaseSceneSurface();
 
