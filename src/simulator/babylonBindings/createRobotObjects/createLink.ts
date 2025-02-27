@@ -82,17 +82,17 @@ const buildGeometry_ = async (name: string, geometry: Geometry, bScene_: babylon
 // Creates a link and returns the root mesh. Links are wheels, chasis, arms, etc.
 // Loads the geometry and adds the appropriate physics properties to the mesh
 export const createLink = async (id: string, link: Node.Link, bScene_: babylonScene, robot_: Robot, colliders_: Set<Mesh>) => {
-  if (link.meshIds) {
-    console.log(`Trying to create instanced mesh with ${link.meshIds[0]}, ${link.meshIds[1]}`);
-    const origCollider = bScene_.getMeshById(link.meshIds[0]) as Mesh;
-    const origNonCollider = bScene_.getMeshById(link.meshIds[1]) as Mesh;
-    const newCollider = origCollider.createInstance(`${origCollider.name}-next`) as AbstractMesh;
-    const newNonCollider = origNonCollider.createInstance(`${origNonCollider.name}-next}`);
-    console.log(newCollider);
-    console.log(newNonCollider);
-  } else {
-    console.log("FIRST");
-  }
+  // if (link.meshIds) {
+  //   console.log(`Trying to create instanced mesh with ${link.meshIds[0]}, ${link.meshIds[1]}`);
+  //   const origCollider = bScene_.getMeshById(link.meshIds[0]) as Mesh;
+  //   const origNonCollider = bScene_.getMeshById(link.meshIds[1]) as Mesh;
+  //   const newCollider = origCollider.createInstance(`${origCollider.name}-next`) as AbstractMesh;
+  //   const newNonCollider = origNonCollider.createInstance(`${origNonCollider.name}-next}`);
+  //   console.log(newCollider);
+  //   console.log(newNonCollider);
+  // } else {
+  //   console.log("FIRST");
+  // }
 
   let builtGeometry: BuiltGeometry;
   if (link.geometryId === undefined) {
@@ -104,11 +104,11 @@ export const createLink = async (id: string, link: Node.Link, bScene_: babylonSc
   }
 
   // Get the mesh ids from builtGeometry
-  console.log(id);
-  const ncId = `${builtGeometry.nonColliders.map((m) => m.id)[0]}_merged`;
-  const cId = builtGeometry.colliders.map((c) => c.mesh).map((m) => m.id)[0];
-  console.log(`Build geometry says: ${ncId}, ${cId}`);
-  link.meshIds = [ncId, cId];
+  // console.log(id);
+  // const ncId = `${builtGeometry.nonColliders.map((m) => m.id)[0]}_merged`;
+  // const cId = builtGeometry.colliders.map((c) => c.mesh).map((m) => m.id)[0];
+  // console.log(`Build geometry says: ${ncId}, ${cId}`);
+  // link.meshIds = [ncId, cId];
 
   const meshes = builtGeometry.nonColliders;
   let myMesh: Mesh;
