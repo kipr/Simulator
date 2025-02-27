@@ -4,6 +4,7 @@ import { Color } from "../../../state/State/Scene/Color";
 import Geometry from "../../../state/State/Scene/Geometry";
 import Node from "../../../state/State/Scene/Node";
 import { Distance, Mass } from "../../../util";
+import { POM_YELLOW } from "../robots";
 
 // TODO: Consider deep-freezing all of these objects
 
@@ -395,6 +396,28 @@ const pomRedTemplate: Node.TemplatedNode<Node.Obj> = {
     // inertia: [1, 1, 1],
   },
 };
+const pomOrangeTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'pom_orange',
+  physics: {
+    type: 'box',
+    restitution: .4,
+    friction: .7,
+    mass: Mass.grams(1),
+    // inertia: [1, 1, 1],
+  },
+};
+const pomYellowTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'pom_yellow',
+  physics: {
+    type: 'box',
+    restitution: .4,
+    friction: .7,
+    mass: Mass.grams(1),
+    // inertia: [1, 1, 1],
+  },
+};
 
 export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'can': canTemplate,
@@ -423,6 +446,8 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'drink_blue': drinkBlueTemplate,
   'pom_blue': pomBlueTemplate,
   'pom_red': pomRedTemplate,
+  'pom_orange': pomOrangeTemplate,
+  'pom_yellow': pomYellowTemplate,
 });
 
 
@@ -542,5 +567,13 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   'pom_red': {
     type: 'file',
     uri: '/static/object_binaries/pom_red.glb'
+  },
+  'pom_orange': {
+    type: 'file',
+    uri: '/static/object_binaries/pom_orange.glb'
+  },
+  'pom_yellow': {
+    type: 'file',
+    uri: '/static/object_binaries/pom_yellow.glb'
   },
 });

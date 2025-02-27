@@ -114,19 +114,47 @@ const BOTTLE_ORIGINS: ReferenceFramewUnits[] = [
 
 const CENTER_LINE_X = 65.5;
 const POM_RED_ORIGINS: ReferenceFramewUnits[] = [
-  { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 0) },
-  { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 45.72) },
-  { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, -45.72) },
+  {
+    position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 0),
+    scale: { x: 100, y: 100, z: 100 }
+  },
+  {
+    position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 45.72),
+    scale: { x: 100, y: 100, z: 100 }
+  },
+  {
+    position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, -45.72),
+    scale: { x: 100, y: 100, z: 100 }
+  },
 ];
 const POM_ORANGE_ORIGINS: ReferenceFramewUnits[] = [
-  { position: Vector3wUnits.centimeters(CENTER_LINE_X - 11.43, POM_Y, 0) },
-  { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, -15.24) },
-  { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 30.48) },
+  {
+    position: Vector3wUnits.centimeters(CENTER_LINE_X - 11.43, POM_Y, 0),
+    scale: { x: 100, y: 100, z: 100 }
+  },
+  {
+    position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, -15.24),
+    scale: { x: 100, y: 100, z: 100 }
+  },
+  {
+    position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 30.48),
+    scale: { x: 100, y: 100, z: 100 }
+  },
 ];
 const POM_YELLOW_ORIGINS: ReferenceFramewUnits[] = [
-  { position: Vector3wUnits.centimeters(CENTER_LINE_X - (2 * 11.43), POM_Y, 0) },
-  { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 15.24) },
-  { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, -30.48) },
+  {
+    position: Vector3wUnits.centimeters(CENTER_LINE_X - (2 * 11.43), POM_Y, 0),
+    scale: { x: 100, y: 100, z: 100 }
+
+  },
+  {
+    position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 15.24),
+    scale: { x: 100, y: 100, z: 100 }
+  },
+  {
+    position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, -30.48),
+    scale: { x: 100, y: 100, z: 100 }
+  },
 ];
 
 const TOMATO_ORIGIN: ReferenceFramewUnits = {
@@ -274,26 +302,24 @@ for (const [i, pos] of POM_RED_ORIGINS.entries()) {
     origin: pos
   };
 }
-const POMS_ORANGE: Node.Robot[] = Array(3) as Node.Robot[];
+const POMS_ORANGE: Node.FromSpaceTemplate[] = Array(3) as Node.FromSpaceTemplate[];
 for (const [i, pos] of POM_ORANGE_ORIGINS.entries()) {
   POMS_ORANGE[i] = {
-    type: 'robot',
+    type: 'from-space-template',
     name: tr(`Orange pom #${i}`),
-    robotId: 'pom_orange',
-    state: AbstractRobot.Stateless.NIL,
+    templateId: 'pom_orange',
     visible: true,
     editable: true,
     startingOrigin: pos,
     origin: pos
   };
 }
-const POMS_YELLOW: Node.Robot[] = Array(3) as Node.Robot[];
+const POMS_YELLOW: Node.FromSpaceTemplate[] = Array(3) as Node.FromSpaceTemplate[];
 for (const [i, pos] of POM_YELLOW_ORIGINS.entries()) {
   POMS_YELLOW[i] = {
-    type: 'robot',
+    type: 'from-space-template',
     name: tr(`Yellow pom #${i}`),
-    robotId: 'pom_yellow',
-    state: AbstractRobot.Stateless.NIL,
+    templateId: 'pom_yellow',
     visible: true,
     editable: true,
     startingOrigin: pos,
@@ -301,7 +327,7 @@ for (const [i, pos] of POM_YELLOW_ORIGINS.entries()) {
   };
 }
 
-const POMS_RANDOM: Node.Robot[] = Array(9) as Node.Robot[];
+const POMS_RANDOM: Node.FromSpaceTemplate[] = Array(9) as Node.FromSpaceTemplate[];
 const choices = ['pom_red', 'pom_red', 'pom_red', 'pom_orange', 'pom_orange', 'pom_orange', 'pom_yellow', 'pom_yellow', 'pom_yellow'];
 for (let i = 0; i < POMS_RANDOM.length; i++) {
   const n = Math.floor(Math.random() * choices.length);
@@ -309,14 +335,14 @@ for (let i = 0; i < POMS_RANDOM.length; i++) {
   choices.splice(n, 1);
 
   const pos = {
-    position: Vector3wUnits.centimeters(91, POM_Y, (-45.72 + 11.43 * i))
+    position: Vector3wUnits.centimeters(91, POM_Y, (-45.72 + 11.43 * i)),
+    scale: { x: 100, y: 100, z: 100 }
   };
 
   POMS_RANDOM[i] = {
-    type: 'robot',
+    type: 'from-space-template',
     name: tr(`Random pom #${i}`),
-    robotId: robot,
-    state: AbstractRobot.Stateless.NIL,
+    templateId: robot,
     visible: true,
     editable: true,
     startingOrigin: pos,
