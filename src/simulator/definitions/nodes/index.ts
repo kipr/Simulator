@@ -371,6 +371,7 @@ const drinkBlueTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'drink_blue',
   physics: {
+    colliderId: 'pom_blue',
     type: 'box',
     restitution: .1,
     friction: 5,
@@ -397,6 +398,17 @@ const drinkPinkTemplate: Node.TemplatedNode<Node.Obj> = {
     mass: Mass.grams(1)
   },
 };
+const hamburgerTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'hamburger',
+  physics: {
+    type: 'box',
+    restitution: .1,
+    friction: 5,
+    mass: Mass.grams(1)
+  },
+};
+
 
 export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'can': canTemplate,
@@ -427,6 +439,7 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'drink_green': drinkGreenTemplate,
   'drink_pink': drinkPinkTemplate,
   'drink_blue': drinkBlueTemplate,
+  'hamburger': hamburgerTemplate,
 });
 
 
@@ -562,5 +575,9 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   'drink_pink': {
     type: 'file',
     uri: '/static/object_binaries/drink_pink.glb'
+  },
+  'hamburger': {
+    type: 'file',
+    uri: '/static/object_binaries/hamburger.glb'
   },
 });

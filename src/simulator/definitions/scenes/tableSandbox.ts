@@ -18,6 +18,13 @@ import tr from '@i18n';
 
 const baseScene = createBaseSceneSurface();
 
+const TEST_POS: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(50, 50, 50),
+  orientation: RotationwUnits.eulerDegrees(0, 45, 0),
+  scale: { x: 100, y: 100, z: 100 }
+};
+
+
 const WARMING_X = 9;
 const HAMBURGER_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(WARMING_X, 21, 114),
@@ -508,6 +515,15 @@ export const Table_Sandbox: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
+    'test_burger': {
+      type: 'from-space-template',
+      templateId: 'hamburger',
+      name: tr('Hamburger'),
+      startingOrigin: TEST_POS,
+      origin: TEST_POS,
+      visible: true,
+      editable: true,
+    },
     'hamburger': HAMBURGER,
     'hotdog': HOTDOG,
     'taco': TACO,

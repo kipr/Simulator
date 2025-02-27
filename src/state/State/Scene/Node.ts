@@ -20,7 +20,7 @@ namespace Node {
 
   export namespace Physics {
     export type Type = 'box' | 'sphere' | 'cylinder' | 'mesh' | 'none';
-  
+
     export const diff = (prev: Physics, next: Physics): Patch<Physics> => {
       if (!deepNeq(prev, next)) return Patch.none(prev);
 
@@ -106,6 +106,7 @@ namespace Node {
     type: 'object';
     parentId?: string;
     geometryId: string;
+    colliderIds?: string[],
     physics?: Physics;
     material?: Material;
     faceUvs?: RawVector2[];
@@ -116,6 +117,7 @@ namespace Node {
       type: 'object',
       ...Base.NIL,
       geometryId: undefined,
+      colliderIds: undefined,
     };
 
     export const from = <T extends Base>(t: T): Obj => ({
@@ -133,6 +135,7 @@ namespace Node {
         physics: Patch.diff(prev.physics, next.physics),
         material: Material.diff(prev.material, next.material),
         faceUvs: Patch.diff(prev.faceUvs, next.faceUvs),
+        colliderIds: Patch.diff(prev.colliderIds, next.colliderIds),
         ...Base.partialDiff(prev, next)
       });
     };

@@ -39,6 +39,7 @@ import { createDirectionalLight, createPointLight, createSpotLight } from './cre
 import { createCamera } from './createSceneObjects/createCameras';
 import { createObject, createEmpty } from './createSceneObjects/createObjects';
 import apply from './Apply';
+import { object } from 'prop-types';
 
 export type FrameLike = TransformNode | AbstractMesh;
 
@@ -499,6 +500,7 @@ class SceneBinding {
             physics: Patch.none(nodeTemplate.physics),
             material: Patch.none(nodeTemplate.material),
             faceUvs: Patch.none(nodeTemplate.faceUvs),
+            colliderIds: Patch.none(nodeTemplate.colliderIds),
           },
         };
 

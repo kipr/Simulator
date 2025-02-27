@@ -1,5 +1,5 @@
 import {
-  TransformNode, AbstractMesh, CreateBox, CreateSphere, CreateCylinder,
+  TransformNode, AbstractMesh, CreateBox, CreateSphere, CreateCylinder, PhysicsShapeType,
   CreatePlane, Vector4, Mesh, SceneLoader, Scene as babylonScene, Node as babylonNode
 } from '@babylonjs/core';
 
@@ -12,8 +12,22 @@ import LocalizedString from '../../../util/LocalizedString';
 import apply from '../Apply';
 import { createMaterial } from './createMaterials';
 import { preBuiltGeometries } from "../../definitions/nodes";
+import Console from 'components/EditorConsole';
 
 export type FrameLike = TransformNode | AbstractMesh;
+
+export interface BuiltGeometry {
+  nonColliders: Mesh[];
+  colliders?: BuiltGeometry.Collider[];
+}
+
+export namespace BuiltGeometry {
+  export interface Collider {
+    name: string;
+    mesh: AbstractMesh;
+    type: number;
+  }
+}
 
 let seed_ = 1;
 
@@ -35,8 +49,12 @@ export const buildGeometryFaceUvs = (faceUvs: RawVector2[] | undefined, expected
   return ret;
 };
 
-export const buildGeometry = async (name: string, geometry: Geometry, bScene_: babylonScene, faceUvs?: RawVector2[]): Promise<FrameLike> => {
-  let ret: FrameLike;
+export const buildGeometry = async (name: string, geometry: Geometry, bScene_: babylonScene, faceUvs?: RawVector2[]): Promise<BuiltGeometry> => {
+  const nonColliders: Mesh[] = [];
+  const colliders: BuiltGeometry.Collider[] = [];
+  const ret = { nonColliders, colliders };
+  let parent: TransformNode;
+
   switch (geometry.type) {
     case 'box': {
       const rect = CreateBox(name, {
@@ -47,7 +65,7 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
         faceUV: buildGeometryFaceUvs(faceUvs, 12),
       }, bScene_);
       const verts = rect.getVerticesData("position");
-      ret = rect;
+      colliders.push({ name, mesh: rect, type: PhysicsShapeType.MESH });
       break;
     }
     case 'sphere': {
@@ -78,33 +96,36 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
         }
       }
       rock.updateVerticesData("position", positions);
-      ret = rock;
+      colliders.push({ name, mesh: rock, type: PhysicsShapeType.MESH });
       break;
     }
     case 'cylinder': {
-      ret = CreateCylinder(name, {
+      const cyl = CreateCylinder(name, {
         height: Distance.toCentimetersValue(geometry.height),
         diameterTop: Distance.toCentimetersValue(geometry.radius) * 2,
         diameterBottom: Distance.toCentimetersValue(geometry.radius) * 2,
         faceUV: buildGeometryFaceUvs(faceUvs, 6),
       }, bScene_);
+      colliders.push({ name, mesh: cyl, type: PhysicsShapeType.MESH });
       break;
     }
     case 'cone': {
-      ret = CreateCylinder(name, {
+      const cone = CreateCylinder(name, {
         diameterTop: 0,
         height: Distance.toCentimetersValue(geometry.height),
         diameterBottom: Distance.toCentimetersValue(geometry.radius) * 2,
         faceUV: buildGeometryFaceUvs(faceUvs, 6),
       }, bScene_);
+      colliders.push({ name, mesh: cone, type: PhysicsShapeType.MESH });
       break;
     }
     case 'plane': {
-      ret = CreatePlane(name, {
+      const plane = CreatePlane(name, {
         width: Distance.toCentimetersValue(geometry.size.x),
         height: Distance.toCentimetersValue(geometry.size.y),
         frontUVs: buildGeometryFaceUvs(faceUvs, 2)?.[0],
       }, bScene_);
+      colliders.push({ name, mesh: plane, type: PhysicsShapeType.MESH });
       break;
     }
     case 'file': {
@@ -113,14 +134,21 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
       const baseName = geometry.uri.substring(0, index + 1);
 
       const res = await SceneLoader.ImportMeshAsync(geometry.include ?? '', baseName, fileName, bScene_);
-      if (res.meshes.length === 1) return res.meshes[0];
+      if (res.meshes.length === 1) {
+        console.log(`No collider found for ${name}\nUsing only mesh as collider`);
+        colliders.push({ name, mesh: res.meshes[0], type: PhysicsShapeType.MESH });
+        break;
+      }
       // const nonColliders: Mesh[] = [];
-      ret = new TransformNode(geometry.uri, bScene_);
+      parent = new TransformNode(geometry.uri, bScene_);
       for (const mesh of res.meshes as Mesh[]) {
         // GLTF importer adds a __root__ mesh (always the first one) that we can ignore 
         if (mesh.name === '__root__') continue;
+        if (mesh.name.startsWith('collider')) {
+          console.log(`Adding collider: ${name}`);
+        }
         // nonColliders.push(mesh);
-        mesh.setParent(ret);
+        mesh.setParent(parent);
       }
       // const mesh = Mesh.MergeMeshes(nonColliders, true, true, undefined, false, true);
       break;
@@ -129,13 +157,15 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
       throw new Error(`Unsupported geometry type: ${geometry.type}`);
     }
   }
-  if (ret instanceof AbstractMesh) {
-    ret.visibility = 1;
+  if (ret.colliders.length > 0) {
+    ret.colliders[0].mesh.visibility = 1;
   } else {
-    const children = ret.getChildren(c => c instanceof AbstractMesh) as Mesh[];
+    console.log(`Getting children on ${name}`);
+
+    const children = parent.getChildren(c => c instanceof AbstractMesh) as Mesh[];
     const mesh = Mesh.MergeMeshes(children, true, true, undefined, false, true);
     mesh.visibility = 1;
-    ret = mesh;
+    colliders.push({ name, mesh: mesh, type: PhysicsShapeType.MESH });
   }
   return ret;
 };
@@ -165,7 +195,7 @@ export const createObject = async (node: Node.Obj, nextScene: Scene, parent: bab
     console.error(`node ${LocalizedString.lookup(node.name, LocalizedString.EN_US)} has invalid geometry ID: ${node.geometryId}`);
     return null;
   }
-  ret = await buildGeometry(node.name[LocalizedString.EN_US], geometry, bScene_, node.faceUvs);
+  ret = (await buildGeometry(node.name[LocalizedString.EN_US], geometry, bScene_, node.faceUvs)).colliders[0].mesh;
   if (!node.visible) {
     apply(ret, m => m.isVisible = false);
   }
