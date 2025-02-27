@@ -149,6 +149,8 @@ export const createObject = async (node: Node.Obj, nextScene: Scene, parent: bab
 
   // Use instancing on duplicate meshes
   const dups = bScene_.meshes.filter((m) => m.id.includes(node.geometryId));
+  // console.log(dups);
+  // console.log(bScene_.meshes);
   if (dups.length > 0) {
     const dup = dups[0] as Mesh;
     ret = dup.createInstance(`${dup.name}-next`);

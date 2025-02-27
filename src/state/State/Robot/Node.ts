@@ -119,6 +119,11 @@ namespace Node {
      */
     geometryId?: string;
 
+    /**
+     * EXPERIMENTAL: Track which meshes are associated with this link
+     */
+    meshIds?: string[];
+
     scale?: number;
   }
 
@@ -177,6 +182,7 @@ namespace Node {
         inertia: Patch.diff(a.inertia, b.inertia),
         collisionBody: Patch.diff(a.collisionBody, b.collisionBody),
         geometryId: Patch.diff(a.geometryId, b.geometryId),
+        meshIds: Patch.diff(a.meshIds, b.meshIds),
         ...Base.innerDiff(a, b)
       });
     };
