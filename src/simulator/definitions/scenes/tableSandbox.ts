@@ -431,17 +431,17 @@ const BOTGUY: Node.Robot = {
   origin: BOTGUY_ORIGIN
 };
 
-const DRINKS_BLUE = Array(6) as Node.Robot[];
+const DRINKS_BLUE = Array(6) as Node.FromSpaceTemplate[];
 for (let i = 0; i < DRINKS_BLUE.length; i++) {
   const pos: ReferenceFramewUnits = {
     position: Vector3wUnits.centimeters(18.6, (5.1 * i), -102.55),
     orientation: RotationwUnits.eulerDegrees(0, 45, 0),
+    scale: { x: 100, y: 100, z: 100 }
   };
   DRINKS_BLUE[i] = {
-    type: 'robot',
+    type: 'from-space-template',
     name: tr(`Blue drink #${i}`),
-    robotId: 'drink_blue',
-    state: AbstractRobot.Stateless.NIL,
+    templateId: 'drink_blue',
     visible: true,
     editable: true,
     startingOrigin: pos,
@@ -449,16 +449,17 @@ for (let i = 0; i < DRINKS_BLUE.length; i++) {
   };
 }
 
-const DRINKS_GREEN = Array(6) as Node.Robot[];
+const DRINKS_GREEN = Array(6) as Node.FromSpaceTemplate[];
 for (let i = 0; i < DRINKS_GREEN.length; i++) {
   const pos: ReferenceFramewUnits = {
-    position: Vector3wUnits.centimeters(0.4, (5.15 * i), 71.252)
+    position: Vector3wUnits.centimeters(0.4, (5.15 * i), 71.252),
+    orientation: RotationwUnits.eulerDegrees(0, 45, 0),
+    scale: { x: 100, y: 100, z: 100 }
   };
   DRINKS_GREEN[i] = {
-    type: 'robot',
+    type: 'from-space-template',
     name: tr(`Green drink #${i}`),
-    robotId: 'drink_green',
-    state: AbstractRobot.Stateless.NIL,
+    templateId: 'drink_green',
     visible: true,
     editable: true,
     startingOrigin: pos,
@@ -466,16 +467,17 @@ for (let i = 0; i < DRINKS_GREEN.length; i++) {
   };
 }
 
-const DRINKS_PINK = Array(6) as Node.Robot[];
+const DRINKS_PINK = Array(6) as Node.FromSpaceTemplate[];
 for (let i = 0; i < DRINKS_PINK.length; i++) {
   const pos: ReferenceFramewUnits = {
-    position: Vector3wUnits.centimeters(0.4, (5.15 * i), -71.4)
+    position: Vector3wUnits.centimeters(0.4, (5.15 * i), -71.4),
+    orientation: RotationwUnits.eulerDegrees(0, 45, 0),
+    scale: { x: 100, y: 100, z: 100 }
   };
   DRINKS_PINK[i] = {
-    type: 'robot',
+    type: 'from-space-template',
     name: tr(`Pink drink #${i}`),
-    robotId: 'drink_pink',
-    state: AbstractRobot.Stateless.NIL,
+    templateId: 'drink_pink',
     visible: true,
     editable: true,
     startingOrigin: pos,
