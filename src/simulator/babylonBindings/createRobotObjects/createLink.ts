@@ -1,10 +1,9 @@
 
 import {
-  Scene as babylonScene, Vector3, AbstractMesh, Mesh, SceneLoader, PhysicsBody, PhysicsMotionType, PhysicsShape,
+  Scene as babylonScene, Vector3, Mesh, SceneLoader, PhysicsBody, PhysicsMotionType, PhysicsShape,
   PhysicsAggregate, PhysicsShapeType, PhysicShapeOptions, PhysicsShapeParameters, PhysicsShapeContainer,
   GizmoManager,
-  Color3,
-  PhysicsAggregateParameters
+  Color3
 } from '@babylonjs/core';
 
 import Geometry from '../../../state/State/Robot/Geometry';
@@ -46,7 +45,6 @@ const buildGeometry_ = async (name: string, geometry: Geometry, bScene_: babylon
       // gizmoManager_.boundingBoxGizmoEnabled = true;
       // gizmoManager_.gizmos.boundingBoxGizmo.setColor(new Color3(0, 0, 1));
       for (const mesh of res.meshes.slice(1) as Mesh[]) {
-        if (mesh.name === '__root__') continue;
         // The robot mesh includes sub-meshes with the 'collider' name to indicate their use.
         if (mesh.name.startsWith('collider')) {
           const parts = mesh.name.split('-');
@@ -82,18 +80,6 @@ const buildGeometry_ = async (name: string, geometry: Geometry, bScene_: babylon
 // Creates a link and returns the root mesh. Links are wheels, chasis, arms, etc.
 // Loads the geometry and adds the appropriate physics properties to the mesh
 export const createLink = async (id: string, link: Node.Link, bScene_: babylonScene, robot_: Robot, colliders_: Set<Mesh>) => {
-  // if (link.meshIds) {
-  //   console.log(`Trying to create instanced mesh with ${link.meshIds[0]}, ${link.meshIds[1]}`);
-  //   const origCollider = bScene_.getMeshById(link.meshIds[0]) as Mesh;
-  //   const origNonCollider = bScene_.getMeshById(link.meshIds[1]) as Mesh;
-  //   const newCollider = origCollider.createInstance(`${origCollider.name}-next`) as AbstractMesh;
-  //   const newNonCollider = origNonCollider.createInstance(`${origNonCollider.name}-next}`);
-  //   console.log(newCollider);
-  //   console.log(newNonCollider);
-  // } else {
-  //   console.log("FIRST");
-  // }
-
   let builtGeometry: BuiltGeometry;
   if (link.geometryId === undefined) {
     builtGeometry = { nonColliders: [new Mesh(id, bScene_)] };
@@ -102,13 +88,6 @@ export const createLink = async (id: string, link: Node.Link, bScene_: babylonSc
     if (!geometry) throw new Error(`Missing geometry: ${link.geometryId}`);
     builtGeometry = await buildGeometry_(id, geometry, bScene_);
   }
-
-  // Get the mesh ids from builtGeometry
-  // console.log(id);
-  // const ncId = `${builtGeometry.nonColliders.map((m) => m.id)[0]}_merged`;
-  // const cId = builtGeometry.colliders.map((c) => c.mesh).map((m) => m.id)[0];
-  // console.log(`Build geometry says: ${ncId}, ${cId}`);
-  // link.meshIds = [ncId, cId];
 
   const meshes = builtGeometry.nonColliders;
   let myMesh: Mesh;
