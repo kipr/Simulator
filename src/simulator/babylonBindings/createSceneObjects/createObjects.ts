@@ -158,7 +158,7 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
     }
   }
   if (ret.colliders.length > 0) {
-    ret.colliders[0].mesh.visibility = 1;
+    ret.colliders.map(c => c.mesh.visibility = 0);
   } else {
     console.log(`Getting children on ${name}`);
 

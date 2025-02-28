@@ -258,10 +258,10 @@ const CUP_GREEN: Node.Robot = {
   origin: CUP_GREEN_ORIGIN
 };
 
-const POMS_BLUE: Node.FromSpaceTemplate[] = Array(20) as Node.FromSpaceTemplate[];
+const POMS_BLUE: Node.FromBBTemplate[] = Array(20) as Node.FromBBTemplate[];
 for (const [i, pos] of POM_BLUE_ORIGINS_BACK.entries()) {
   POMS_BLUE[i] = {
-    type: 'from-space-template',
+    type: 'from-bb-template',
     name: tr(`Blue pom back #${i}`),
     templateId: 'pom_blue',
     visible: true,
@@ -273,7 +273,7 @@ for (const [i, pos] of POM_BLUE_ORIGINS_BACK.entries()) {
 
 for (const [i, pos] of POM_BLUE_ORIGINS_FRONT.entries()) {
   POMS_BLUE[i + 10] = {
-    type: 'from-space-template',
+    type: 'from-bb-template',
     name: tr(`Blue pom front #${i}`),
     templateId: 'pom_blue',
     visible: true,
@@ -297,10 +297,10 @@ for (const [i, pos] of BOTTLE_ORIGINS.entries()) {
   };
 }
 
-const POMS_RED: Node.FromSpaceTemplate[] = Array(3) as Node.FromSpaceTemplate[];
+const POMS_RED: Node.FromBBTemplate[] = Array(3) as Node.FromBBTemplate[];
 for (const [i, pos] of POM_RED_ORIGINS.entries()) {
   POMS_RED[i] = {
-    type: 'from-space-template',
+    type: 'from-bb-template',
     name: tr(`Red pom #${i}`),
     templateId: 'pom_red',
     visible: true,
@@ -309,10 +309,10 @@ for (const [i, pos] of POM_RED_ORIGINS.entries()) {
     origin: pos
   };
 }
-const POMS_ORANGE: Node.FromSpaceTemplate[] = Array(3) as Node.FromSpaceTemplate[];
+const POMS_ORANGE: Node.FromBBTemplate[] = Array(3) as Node.FromBBTemplate[];
 for (const [i, pos] of POM_ORANGE_ORIGINS.entries()) {
   POMS_ORANGE[i] = {
-    type: 'from-space-template',
+    type: 'from-bb-template',
     name: tr(`Orange pom #${i}`),
     templateId: 'pom_orange',
     visible: true,
@@ -321,10 +321,10 @@ for (const [i, pos] of POM_ORANGE_ORIGINS.entries()) {
     origin: pos
   };
 }
-const POMS_YELLOW: Node.FromSpaceTemplate[] = Array(3) as Node.FromSpaceTemplate[];
+const POMS_YELLOW: Node.FromBBTemplate[] = Array(3) as Node.FromBBTemplate[];
 for (const [i, pos] of POM_YELLOW_ORIGINS.entries()) {
   POMS_YELLOW[i] = {
-    type: 'from-space-template',
+    type: 'from-bb-template',
     name: tr(`Yellow pom #${i}`),
     templateId: 'pom_yellow',
     visible: true,
@@ -334,7 +334,7 @@ for (const [i, pos] of POM_YELLOW_ORIGINS.entries()) {
   };
 }
 
-const POMS_RANDOM: Node.FromSpaceTemplate[] = Array(9) as Node.FromSpaceTemplate[];
+const POMS_RANDOM: Node.FromBBTemplate[] = Array(9) as Node.FromBBTemplate[];
 const choices = ['pom_red', 'pom_red', 'pom_red', 'pom_orange', 'pom_orange', 'pom_orange', 'pom_yellow', 'pom_yellow', 'pom_yellow'];
 for (let i = 0; i < POMS_RANDOM.length; i++) {
   const n = Math.floor(Math.random() * choices.length);
@@ -347,7 +347,7 @@ for (let i = 0; i < POMS_RANDOM.length; i++) {
   };
 
   POMS_RANDOM[i] = {
-    type: 'from-space-template',
+    type: 'from-bb-template',
     name: tr(`Random pom #${i}`),
     templateId: robot,
     visible: true,
@@ -438,7 +438,7 @@ const BOTGUY: Node.Robot = {
   origin: BOTGUY_ORIGIN
 };
 
-const DRINKS_BLUE = Array(6) as Node.FromSpaceTemplate[];
+const DRINKS_BLUE = Array(6) as Node.FromBBTemplate[];
 for (let i = 0; i < DRINKS_BLUE.length; i++) {
   const pos: ReferenceFramewUnits = {
     position: Vector3wUnits.centimeters(18.6, (5.1 * i), -102.55),
@@ -446,7 +446,7 @@ for (let i = 0; i < DRINKS_BLUE.length; i++) {
     scale: { x: 100, y: 100, z: 100 }
   };
   DRINKS_BLUE[i] = {
-    type: 'from-space-template',
+    type: 'from-bb-template',
     name: tr(`Blue drink #${i}`),
     templateId: 'drink_blue',
     visible: true,
@@ -456,7 +456,7 @@ for (let i = 0; i < DRINKS_BLUE.length; i++) {
   };
 }
 
-const DRINKS_GREEN = Array(6) as Node.FromSpaceTemplate[];
+const DRINKS_GREEN = Array(6) as Node.FromBBTemplate[];
 for (let i = 0; i < DRINKS_GREEN.length; i++) {
   const pos: ReferenceFramewUnits = {
     position: Vector3wUnits.centimeters(0.4, (5.15 * i), 71.252),
@@ -464,7 +464,7 @@ for (let i = 0; i < DRINKS_GREEN.length; i++) {
     scale: { x: 100, y: 100, z: 100 }
   };
   DRINKS_GREEN[i] = {
-    type: 'from-space-template',
+    type: 'from-bb-template',
     name: tr(`Green drink #${i}`),
     templateId: 'drink_green',
     visible: true,
@@ -474,7 +474,7 @@ for (let i = 0; i < DRINKS_GREEN.length; i++) {
   };
 }
 
-const DRINKS_PINK = Array(6) as Node.FromSpaceTemplate[];
+const DRINKS_PINK = Array(6) as Node.FromBBTemplate[];
 for (let i = 0; i < DRINKS_PINK.length; i++) {
   const pos: ReferenceFramewUnits = {
     position: Vector3wUnits.centimeters(0.4, (5.15 * i), -71.4),
@@ -482,7 +482,7 @@ for (let i = 0; i < DRINKS_PINK.length; i++) {
     scale: { x: 100, y: 100, z: 100 }
   };
   DRINKS_PINK[i] = {
-    type: 'from-space-template',
+    type: 'from-bb-template',
     name: tr(`Pink drink #${i}`),
     templateId: 'drink_pink',
     visible: true,
@@ -516,7 +516,7 @@ export const Table_Sandbox: Scene = {
   nodes: {
     ...baseScene.nodes,
     'test_burger': {
-      type: 'from-space-template',
+      type: 'from-bb-template',
       templateId: 'hamburger',
       name: tr('Hamburger'),
       startingOrigin: TEST_POS,

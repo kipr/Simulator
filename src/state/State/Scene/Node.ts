@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import AbstractRobot from '../../../programming/AbstractRobot';
 import deepNeq from '../../../util/redux/deepNeq';
 import { RawVector2, RawVector3 } from '../../../util/math/math';
@@ -281,6 +282,42 @@ namespace Node {
     };
   }
 
+  export interface FromBBTemplate extends Base {
+    type: 'from-bb-template';
+    templateId: string;
+    parentId?: string;
+    physics?: Physics;
+    material?: Material;
+    geometryId?: string;
+  }
+
+  export namespace FromBBTemplate {
+    export const NIL: FromBBTemplate = {
+      type: 'from-bb-template',
+      ...Base.NIL,
+      templateId: '',
+    };
+
+    export const from = <T extends Base>(t: T): FromBBTemplate => ({
+      ...NIL,
+      ...Base.upcast(t)
+    });
+
+    export const diff = (prev: FromBBTemplate, next: FromBBTemplate): Patch<FromBBTemplate> => {
+      if (!deepNeq(prev, next)) return Patch.none(prev);
+
+      return Patch.innerChange(prev, next, {
+        type: Patch.none(prev.type),
+        parentId: Patch.diff(prev.parentId, next.parentId),
+        templateId: Patch.diff(prev.templateId, next.templateId),
+        physics: Patch.diff(prev.physics, next.physics),
+        material: Material.diff(prev.material, next.material),
+        geometryId: Patch.diff(prev.geometryId, next.geometryId),
+        ...Base.partialDiff(prev, next),
+      });
+    };
+  }
+
   export interface FromRockTemplate extends Base {
     type: 'from-rock-template';
     parentId?: string;
@@ -391,11 +428,22 @@ namespace Node {
       case 'from-jbc-template': return FromJBCTemplate.diff(prev, next as FromJBCTemplate);
       case 'from-rock-template': return FromRockTemplate.diff(prev, next as FromRockTemplate);
       case 'from-space-template': return FromSpaceTemplate.diff(prev, next as FromSpaceTemplate);
+      case 'from-bb-template': return FromBBTemplate.diff(prev, next as FromBBTemplate);
       case 'robot': return Robot.diff(prev, next as Robot);
     }
   };
 
-  export type Type = 'empty' | 'object' | 'point-light' | 'spot-light' | 'directional-light' | 'from-jbc-template' | 'from-space-template' | 'from-rock-template' | 'robot' | 'all';
+  export type Type = 'empty' |
+    'object' |
+    'point-light' |
+    'spot-light' |
+    'directional-light' |
+    'from-jbc-template' |
+    'from-bb-template' |
+    'from-space-template' |
+    'from-rock-template' |
+    'robot' |
+    'all';
 
   export const transmute = (node: Node, type: Type): Node => {
     switch (type) {
@@ -405,6 +453,7 @@ namespace Node {
       case 'spot-light': return SpotLight.from(node);
       case 'directional-light': return DirectionalLight.from(node);
       case 'from-jbc-template': return FromJBCTemplate.from(node);
+      case 'from-bb-template': return FromBBTemplate.from(node);
       case 'from-rock-template': return FromRockTemplate.from(node);
       case 'from-space-template': return FromSpaceTemplate.from(node);
       case 'robot': return Robot.from(node);
@@ -425,6 +474,7 @@ type Node = (
   Node.SpotLight |
   Node.DirectionalLight |
   Node.FromJBCTemplate |
+  Node.FromBBTemplate |
   Node.FromRockTemplate |
   Node.FromSpaceTemplate |
   Node.Robot

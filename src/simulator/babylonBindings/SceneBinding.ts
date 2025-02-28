@@ -238,7 +238,10 @@ class SceneBinding {
     let nodeToCreate: Node = node;
 
     // Resolve template nodes into non-template nodes by looking up the template by ID
-    if (node.type === 'from-jbc-template' || node.type === 'from-rock-template' || node.type === 'from-space-template') {
+    if (node.type === 'from-jbc-template' ||
+      node.type === 'from-rock-template' ||
+      node.type === 'from-space-template' ||
+      node.type === 'from-bb-template') {
       const nodeTemplate = preBuiltTemplates[node.templateId];
       if (!nodeTemplate) {
         console.warn('template node has invalid template ID:', node.templateId);
@@ -455,7 +458,7 @@ class SceneBinding {
 
   private updateFromTemplate_ = (
     id: string,
-    node: Patch.InnerChange<Node.FromRockTemplate> | Patch.InnerChange<Node.FromSpaceTemplate> | Patch.InnerChange<Node.FromJBCTemplate>,
+    node: Patch.InnerChange<Node.FromRockTemplate> | Patch.InnerChange<Node.FromSpaceTemplate> | Patch.InnerChange<Node.FromJBCTemplate> | Patch.InnerChange<Node.FromBBTemplate>,
     nextScene: Scene
   ): Promise<babylonNode> => {
     // If the template ID changes, recreate the node entirely
@@ -591,6 +594,9 @@ class SceneBinding {
           case 'from-space-template': {
             return this.updateFromTemplate_(id, node as Patch.InnerChange<Node.FromSpaceTemplate>, nextScene);
           }
+          case 'from-bb-template': {
+            return this.updateFromTemplate_(id, node as Patch.InnerChange<Node.FromBBTemplate>, nextScene);
+          }
           default: {
             console.error('invalid node type for inner change:', (node.next as Node).type);
             return this.findBNode_(id);
@@ -676,7 +682,10 @@ class SceneBinding {
     callback: (collisionEvent: IPhysicsCollisionEvent) => void;
   }[]> = {};
 
-  private restorePhysicsToObject = (mesh: AbstractMesh, objectNode: Node.Obj | Node.FromSpaceTemplate, nodeId: string, scene: Scene): void => {
+  private restorePhysicsToObject = (mesh: AbstractMesh,
+    objectNode: Node.Obj | Node.FromSpaceTemplate | Node.FromBBTemplate,
+    nodeId: string,
+    scene: Scene): void => {
     // Physics should only be added to physics-enabled, visible, non-selected objects
     if (
       !objectNode.physics ||
@@ -843,6 +852,9 @@ class SceneBinding {
           const nodeTemplate = preBuiltTemplates[prevNode.templateId];
           if (nodeTemplate?.type === 'object') prevNodeObj = { ...nodeTemplate, ...Node.Base.upcast(prevNode) };
         } else if (prevNode.type === 'from-space-template') {
+          const nodeTemplate = preBuiltTemplates[prevNode.templateId];
+          if (nodeTemplate?.type === 'object') prevNodeObj = { ...nodeTemplate, ...Node.Base.upcast(prevNode) };
+        } else if (prevNode.type === 'from-bb-template') {
           const nodeTemplate = preBuiltTemplates[prevNode.templateId];
           if (nodeTemplate?.type === 'object') prevNodeObj = { ...nodeTemplate, ...Node.Base.upcast(prevNode) };
         }
