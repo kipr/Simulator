@@ -402,7 +402,7 @@ const hamburgerTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'hamburger',
   physics: {
-    type: 'box',
+    type: 'mesh',
     restitution: .1,
     friction: 5,
     mass: Mass.grams(1)

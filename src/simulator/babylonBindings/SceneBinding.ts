@@ -4,10 +4,12 @@ import {
   TransformNode, AbstractMesh, PhysicsViewer, ShadowGenerator, Vector3, StandardMaterial, GizmoManager,
   ArcRotateCamera, PointLight, SpotLight, DirectionalLight, PBRMaterial, EngineView,
   Scene as babylonScene, Node as babylonNode, Camera as babylCamera, Material as babylMaterial,
-  Observer, BoundingBox,
+  Observer, BoundingBox, Mesh, PhysicsShapeContainer, PhysicsShape, PhysicsBody, PhysicShapeOptions,
   Color3, BoundingBoxGizmo,
   MeshBuilder,
-  BoundingInfo
+  BoundingInfo,
+  PhysicsShapeParameters,
+  PhysicsMotionType
 } from '@babylonjs/core';
 
 // eslint-disable-next-line @typescript-eslint/no-duplicate-imports -- Required import for side effects
@@ -113,7 +115,7 @@ class SceneBinding {
     this.bScene_.getPhysicsEngine().setSubTimeStep(1);
 
     // Uncomment this to turn on the physics viewer for objects
-    // this.physicsViewer_ = new PhysicsViewer(this.bScene_);
+    this.physicsViewer_ = new PhysicsViewer(this.bScene_);
 
     this.root_ = new TransformNode('__scene_root__', this.bScene_);
     this.gizmoManager_ = new GizmoManager(this.bScene_);
@@ -243,6 +245,9 @@ class SceneBinding {
       node.type === 'from-space-template' ||
       node.type === 'from-bb-template') {
       const nodeTemplate = preBuiltTemplates[node.templateId];
+      // console.log(`Node ${id} has colliders:`);
+      // console.log(node.colliderIds ?? 'No colliders');
+
       if (!nodeTemplate) {
         console.warn('template node has invalid template ID:', node.templateId);
         return null;
@@ -696,8 +701,55 @@ class SceneBinding {
       return;
     }
 
+    const parentShape = new PhysicsShapeContainer(this.bScene_);
+    console.log(`Restoring physics for ${nodeId}`);
+
     const initialParent = mesh.parent;
     mesh.setParent(null);
+
+    const bound = mesh.getBoundingInfo();
+    let scale = new Vector3(1, 1, 1);
+    if (objectNode.origin.scale) {
+      scale = new Vector3(objectNode.origin.scale.x, objectNode.origin.scale.y, objectNode.origin.scale.z);
+    }
+
+    let params: PhysicsShapeParameters;
+    if (mesh instanceof Mesh) {
+      console.log(`I think this is a Mesh: ${nodeId}`);
+      params = { mesh: mesh, extents: bound.maximum.multiply(scale) };
+    } else if (mesh instanceof AbstractMesh) {
+      console.log(`I think this is an AbstractMesh: ${nodeId}`);
+    } else {
+      console.log(`I don't know what this is: ${nodeId}`);
+    }
+
+    const opts: PhysicShapeOptions = { type: PhysicsShapeType.BOX, parameters: params };
+    const shape = new PhysicsShape(opts, this.bScene_);
+    shape.material = {
+      friction: objectNode.physics.friction ?? 5,
+      restitution: objectNode.physics.restitution ?? 0.5,
+    };
+    parentShape.addChild(shape);
+
+    let body: PhysicsBody;
+    if (nodeId === 'ground') {
+      body = new PhysicsBody(mesh, PhysicsMotionType.STATIC, false, this.bScene_);
+    } else {
+      body = new PhysicsBody(mesh, PhysicsMotionType.DYNAMIC, false, this.bScene_);
+    }
+    body.shape = parentShape;
+    body.setMassProperties({
+      mass: objectNode.physics.mass ? Mass.toGramsValue(objectNode.physics.mass) : 0,
+    });
+
+    if (this.physicsViewer_) {
+      this.physicsViewer_.showBody(mesh.physicsBody);
+    }
+
+    mesh.setParent(initialParent);
+    this.syncCollisionFilters_();
+    return;
+
     const aggregate = new PhysicsAggregate(mesh, PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type], {
       mass: objectNode.physics.mass ? Mass.toGramsValue(objectNode.physics.mass) : 0,
       friction: objectNode.physics.friction ?? 5,
@@ -713,6 +765,8 @@ class SceneBinding {
 
 
   private removePhysicsFromObject = (mesh: AbstractMesh) => {
+    console.log(`Trying to remove physics from ${mesh.id}`);
+    console.log(mesh.physicsBody);
     if (!mesh.physicsBody) return;
 
     const parent = mesh.parent;

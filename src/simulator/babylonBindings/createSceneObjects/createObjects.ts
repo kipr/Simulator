@@ -175,27 +175,27 @@ export const createObject = async (node: Node.Obj, nextScene: Scene, parent: bab
   //   console.log(`src/simulator/babylonBindings/createSceneObjects/createObjects.ts: createObject: Found duplicate of ${node.geometryId}`);
   // }
 
-  let ret: FrameLike;
+  // let ret: FrameLike;
 
-  // Use instancing on duplicate meshes
-  const dups = bScene_.meshes.filter((m) => m.id.includes(node.geometryId));
-  // console.log(dups);
-  // console.log(bScene_.meshes);
-  if (dups.length > 0) {
-    const dup = dups[0] as Mesh;
-    ret = dup.createInstance(`${dup.name}-next`);
-    console.log(`Creating instanced mesh ${dup.name}-next`);
-    if (ret instanceof Mesh) {
-      ret.visibility = 1;
-    }
-    return ret;
-  }
+  // // Use instancing on duplicate meshes
+  // const dups = bScene_.meshes.filter((m) => m.id.includes(node.geometryId));
+  // // console.log(dups);
+  // // console.log(bScene_.meshes);
+  // if (dups.length > 0) {
+  //   const dup = dups[0] as Mesh;
+  //   ret = dup.createInstance(`${dup.name}-next`);
+  //   console.log(`Creating instanced mesh ${dup.name}-next`);
+  //   if (ret instanceof Mesh) {
+  //     ret.visibility = 1;
+  //   }
+  //   return ret;
+  // }
   const geometry = nextScene.geometry[node.geometryId] ?? preBuiltGeometries[node.geometryId];
   if (!geometry) {
     console.error(`node ${LocalizedString.lookup(node.name, LocalizedString.EN_US)} has invalid geometry ID: ${node.geometryId}`);
     return null;
   }
-  ret = (await buildGeometry(node.name[LocalizedString.EN_US], geometry, bScene_, node.faceUvs)).colliders[0].mesh;
+  const ret = (await buildGeometry(node.name[LocalizedString.EN_US], geometry, bScene_, node.faceUvs)).colliders[0].mesh;
   if (!node.visible) {
     apply(ret, m => m.isVisible = false);
   }
