@@ -42,12 +42,6 @@ const GROUND_ORIGIN: ReferenceFramewUnits = {
     y: Distance.centimeters(-7.512),
     z: Distance.centimeters(50),
   },
-  orientation: {
-    type: 'euler',
-    x: Angle.degrees(90),
-    y: Angle.degrees(0),
-    z: Angle.degrees(0),
-  }
 };
 
 const LIGHT_ORIGIN: ReferenceFramewUnits = {
@@ -68,8 +62,8 @@ export function createBaseSceneSurfaceA(): Scene {
         type: 'box',
         size: {
           x: Distance.meters(3.54),
-          y: Distance.meters(3.54),
-          z: Distance.meters(0.01),
+          y: Distance.meters(0.01),
+          z: Distance.meters(3.54),
         },
       },
       'mat': {

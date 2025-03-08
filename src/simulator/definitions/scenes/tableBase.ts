@@ -32,8 +32,8 @@ const GROUND_ORIGIN: ReferenceFramewUnits = {
 */
 
 const GROUND_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(0, -1, 0),
-  orientation: RotationwUnits.eulerDegrees(90, 0, 0),
+  position: Vector3wUnits.centimeters(0, -2, 0),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
 
 const FRY_FLOOR_ORIGIN: ReferenceFramewUnits = {
@@ -89,8 +89,8 @@ export function createBaseSceneSurface(): Scene {
         type: 'box',
         size: {
           x: Distance.feet(8),
-          y: Distance.feet(8),
-          z: Distance.meters(0.01),
+          y: Distance.feet(.1),
+          z: Distance.feet(8),
         },
       },
       'fry_floor': {

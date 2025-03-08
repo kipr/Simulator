@@ -1,13 +1,14 @@
 
 import {
   PhysicsShapeType, IPhysicsCollisionEvent, IPhysicsEnginePluginV2, PhysicsAggregate,
-  TransformNode, AbstractMesh, PhysicsViewer, ShadowGenerator, Vector3, StandardMaterial, GizmoManager,
+  TransformNode, AbstractMesh, Mesh, PhysicsViewer, ShadowGenerator, Vector3, StandardMaterial, GizmoManager,
   ArcRotateCamera, PointLight, SpotLight, DirectionalLight, PBRMaterial, EngineView,
   Scene as babylonScene, Node as babylonNode, Camera as babylCamera, Material as babylMaterial,
   Observer, BoundingBox,
   Color3, BoundingBoxGizmo,
   MeshBuilder,
-  BoundingInfo
+  BoundingInfo,
+  PhysicsShapeParameters, PhysicShapeOptions, PhysicsShape, PhysicsShapeContainer, PhysicsBody, PhysicsMotionType,
 } from '@babylonjs/core';
 
 // eslint-disable-next-line @typescript-eslint/no-duplicate-imports -- Required import for side effects
@@ -112,7 +113,7 @@ class SceneBinding {
     this.bScene_.getPhysicsEngine().setSubTimeStep(1);
 
     // Uncomment this to turn on the physics viewer for objects
-    // this.physicsViewer_ = new PhysicsViewer(this.bScene_);
+    this.physicsViewer_ = new PhysicsViewer(this.bScene_);
 
     this.root_ = new TransformNode('__scene_root__', this.bScene_);
     this.gizmoManager_ = new GizmoManager(this.bScene_);
@@ -687,6 +688,34 @@ class SceneBinding {
 
     const initialParent = mesh.parent;
     mesh.setParent(null);
+
+    const parentShape = new PhysicsShapeContainer(this.bScene_);
+
+    const { x, y, z } = objectNode.origin.scale ?? { x: 1, y: 1, z: 1 };
+    // Not sure why, but the final multiplication by [2, 2, 2] is required to make collision shapes scale correctly
+    const extend = mesh.getBoundingInfo().boundingBox.extendSize.multiply(new Vector3(x, y, z).multiply(new Vector3(2, 2, 2)));
+
+    const parameters: PhysicsShapeParameters = { mesh: mesh as Mesh, extents: extend };
+    const options: PhysicShapeOptions = { type: PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type], parameters };
+    const shape = new PhysicsShape(options, this.bScene_);
+    shape.material = {
+      friction: objectNode.physics.friction ?? 0.5,
+      restitution: objectNode.physics.restitution ?? 0.1,
+    };
+
+    parentShape.addChild(shape);
+
+    const body = new PhysicsBody(mesh, (mesh.id.includes('Ground') || mesh.id.includes('ground')) ? PhysicsMotionType.STATIC : PhysicsMotionType.DYNAMIC, false, this.bScene_);
+    body.shape = parentShape;
+
+    if (this.physicsViewer_) {
+      this.physicsViewer_.showBody(mesh.physicsBody);
+    }
+    mesh.setParent(initialParent);
+    this.syncCollisionFilters_();
+
+    return;
+
     const aggregate = new PhysicsAggregate(mesh, PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type], {
       mass: objectNode.physics.mass ? Mass.toGramsValue(objectNode.physics.mass) : 0,
       friction: objectNode.physics.friction ?? 5,
