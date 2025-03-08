@@ -17,12 +17,12 @@ import Console from 'components/EditorConsole';
 export type FrameLike = TransformNode | AbstractMesh;
 
 export interface BuiltGeometry {
-  nonColliders: Mesh[];
-  colliders?: BuiltGeometry.Collider[];
+  nonCollider?: BuiltGeometry.Mesher;
+  collider: BuiltGeometry.Mesher;
 }
 
 export namespace BuiltGeometry {
-  export interface Collider {
+  export interface Mesher {
     name: string;
     mesh: AbstractMesh;
     type: number;
@@ -50,10 +50,9 @@ export const buildGeometryFaceUvs = (faceUvs: RawVector2[] | undefined, expected
 };
 
 export const buildGeometry = async (name: string, geometry: Geometry, bScene_: babylonScene, faceUvs?: RawVector2[]): Promise<BuiltGeometry> => {
-  const nonColliders: Mesh[] = [];
-  const colliders: BuiltGeometry.Collider[] = [];
-  const ret = { nonColliders, colliders };
-  let parent: TransformNode;
+  const nonColliders: BuiltGeometry.Mesher[] = [];
+  const colliders: BuiltGeometry.Mesher[] = [];
+  const ret: BuiltGeometry = { nonCollider: undefined, collider: undefined };
 
   switch (geometry.type) {
     case 'box': {
@@ -66,6 +65,8 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
       }, bScene_);
       const verts = rect.getVerticesData("position");
       colliders.push({ name, mesh: rect, type: PhysicsShapeType.MESH });
+      // const visual = rect.createInstance(`${rect.name}-instanced`);
+      // nonColliders.push({ name: visual.name, mesh: visual, type: PhysicsShapeType.MESH });
       break;
     }
     case 'sphere': {
@@ -97,6 +98,7 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
       }
       rock.updateVerticesData("position", positions);
       colliders.push({ name, mesh: rock, type: PhysicsShapeType.MESH });
+      nonColliders.push({ name, mesh: rock, type: PhysicsShapeType.MESH });
       break;
     }
     case 'cylinder': {
@@ -107,6 +109,7 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
         faceUV: buildGeometryFaceUvs(faceUvs, 6),
       }, bScene_);
       colliders.push({ name, mesh: cyl, type: PhysicsShapeType.MESH });
+      nonColliders.push({ name, mesh: cyl, type: PhysicsShapeType.MESH });
       break;
     }
     case 'cone': {
@@ -117,6 +120,7 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
         faceUV: buildGeometryFaceUvs(faceUvs, 6),
       }, bScene_);
       colliders.push({ name, mesh: cone, type: PhysicsShapeType.MESH });
+      nonColliders.push({ name, mesh: cone, type: PhysicsShapeType.MESH });
       break;
     }
     case 'plane': {
@@ -126,6 +130,7 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
         frontUVs: buildGeometryFaceUvs(faceUvs, 2)?.[0],
       }, bScene_);
       colliders.push({ name, mesh: plane, type: PhysicsShapeType.MESH });
+      nonColliders.push({ name, mesh: plane, type: PhysicsShapeType.MESH });
       break;
     }
     case 'file': {
@@ -135,38 +140,55 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
 
       const res = await SceneLoader.ImportMeshAsync(geometry.include ?? '', baseName, fileName, bScene_);
       if (res.meshes.length === 1) {
-        console.log(`No collider found for ${name}\nUsing only mesh as collider`);
+        console.log(`No collider found for ${name}\nUsing only mesh as both`);
         colliders.push({ name, mesh: res.meshes[0], type: PhysicsShapeType.MESH });
+        nonColliders.push({ name: res.meshes[0].name, mesh: res.meshes[0], type: PhysicsShapeType.MESH });
         break;
       }
-      // const nonColliders: Mesh[] = [];
-      parent = new TransformNode(geometry.uri, bScene_);
+
       for (const mesh of res.meshes as Mesh[]) {
         // GLTF importer adds a __root__ mesh (always the first one) that we can ignore 
         if (mesh.name === '__root__') continue;
-        if (mesh.name.startsWith('collider')) {
-          console.log(`Adding collider: ${name}`);
-        }
         // nonColliders.push(mesh);
-        mesh.setParent(parent);
+        if (mesh.name.startsWith('collider')) {
+          console.log(`Adding collider: ${mesh.name}`);
+          colliders.push({ name: mesh.name, mesh: mesh, type: PhysicsShapeType.MESH });
+        } else {
+          nonColliders.push({ name: mesh.name, mesh: mesh, type: PhysicsShapeType.MESH });
+        }
       }
       // const mesh = Mesh.MergeMeshes(nonColliders, true, true, undefined, false, true);
+
       break;
     }
     default: {
       throw new Error(`Unsupported geometry type: ${geometry.type}`);
     }
   }
-  if (ret.colliders.length > 0) {
-    ret.colliders.map(c => c.mesh.visibility = 0);
-  } else {
-    console.log(`Getting children on ${name}`);
-
-    const children = parent.getChildren(c => c instanceof AbstractMesh) as Mesh[];
-    const mesh = Mesh.MergeMeshes(children, true, true, undefined, false, true);
+  // Check non-colliders
+  if (nonColliders.length === 1) {
+    ret.nonCollider = nonColliders[0];
+    ret.nonCollider.mesh.visibility = 1;
+  } else if (nonColliders.length > 1) {
+    console.log(`Getting children of ${name}`);
+    // const children = ncParent.getChildren(c => c instanceof AbstractMesh) as Mesh[];
+    const mesh = Mesh.MergeMeshes(nonColliders.map(nc => nc.mesh as Mesh), true, true, undefined, false, true);
+    console.log(mesh);
     mesh.visibility = 1;
-    colliders.push({ name, mesh: mesh, type: PhysicsShapeType.MESH });
+    ret.nonCollider = { name: nonColliders[0].name, mesh: mesh, type: PhysicsShapeType.MESH };
   }
+  // Check colliders
+  if (colliders.length === 1) {
+    ret.collider = colliders[0];
+    ret.collider.mesh.visibility = 0;
+  } else {
+    console.log(`Getting children of ${name}`);
+    // const children = ncParent.getChildren(c => c instanceof AbstractMesh) as Mesh[];
+    const mesh = Mesh.MergeMeshes(colliders.map(c => c.mesh as Mesh), true, true, undefined, false, true);
+    mesh.visibility = 0;
+    ret.nonCollider = { name: colliders[0].name, mesh: mesh, type: PhysicsShapeType.MESH };
+  }
+
   return ret;
 };
 
@@ -195,13 +217,25 @@ export const createObject = async (node: Node.Obj, nextScene: Scene, parent: bab
     console.error(`node ${LocalizedString.lookup(node.name, LocalizedString.EN_US)} has invalid geometry ID: ${node.geometryId}`);
     return null;
   }
-  const ret = (await buildGeometry(node.name[LocalizedString.EN_US], geometry, bScene_, node.faceUvs)).colliders[0].mesh;
+  const bg = (await buildGeometry(node.name[LocalizedString.EN_US], geometry, bScene_, node.faceUvs));
+  node.colliderId = bg.collider.name;
+  const collider = bg.collider.mesh as Mesh;
+  let ret = bg.collider.mesh;
   if (!node.visible) {
-    apply(ret, m => m.isVisible = false);
+    console.log(`Making ${node.name[LocalizedString.EN_US]} invisible`);
+    apply(collider, m => m.isVisible = false);
   }
   if (node.material) {
+    console.log(`Creating material for ${node.name[LocalizedString.EN_US]}`);
     const material = createMaterial(node.name[LocalizedString.EN_US], node.material, bScene_);
-    apply(ret, m => m.material = material);
+    apply(collider, m => m.material = material);
+  }
+  return collider;
+  if (!bg.nonCollider) {
+    console.log(`Instancing ${collider.id} for visual mesh`);
+    collider.isVisible = false;
+    ret = collider.createInstance(`${collider.id}-instance`);
+    ret.position = collider.position;
   }
   ret.setParent(parent);
   return ret;

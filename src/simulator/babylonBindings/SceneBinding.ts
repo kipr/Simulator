@@ -508,7 +508,7 @@ class SceneBinding {
             physics: Patch.none(nodeTemplate.physics),
             material: Patch.none(nodeTemplate.material),
             faceUvs: Patch.none(nodeTemplate.faceUvs),
-            colliderIds: Patch.none(nodeTemplate.colliderIds),
+            colliderId: Patch.none(nodeTemplate.colliderId),
           },
         };
 
@@ -701,54 +701,18 @@ class SceneBinding {
       return;
     }
 
-    const parentShape = new PhysicsShapeContainer(this.bScene_);
     console.log(`Restoring physics for ${nodeId}`);
 
-    const initialParent = mesh.parent;
-    mesh.setParent(null);
-
-    const bound = mesh.getBoundingInfo();
-    let scale = new Vector3(1, 1, 1);
-    if (objectNode.origin.scale) {
-      scale = new Vector3(objectNode.origin.scale.x, objectNode.origin.scale.y, objectNode.origin.scale.z);
-    }
-
-    let params: PhysicsShapeParameters;
     if (mesh instanceof Mesh) {
       console.log(`I think this is a Mesh: ${nodeId}`);
-      params = { mesh: mesh, extents: bound.maximum.multiply(scale) };
     } else if (mesh instanceof AbstractMesh) {
       console.log(`I think this is an AbstractMesh: ${nodeId}`);
     } else {
       console.log(`I don't know what this is: ${nodeId}`);
     }
 
-    const opts: PhysicShapeOptions = { type: PhysicsShapeType.BOX, parameters: params };
-    const shape = new PhysicsShape(opts, this.bScene_);
-    shape.material = {
-      friction: objectNode.physics.friction ?? 5,
-      restitution: objectNode.physics.restitution ?? 0.5,
-    };
-    parentShape.addChild(shape);
-
-    let body: PhysicsBody;
-    if (nodeId === 'ground') {
-      body = new PhysicsBody(mesh, PhysicsMotionType.STATIC, false, this.bScene_);
-    } else {
-      body = new PhysicsBody(mesh, PhysicsMotionType.DYNAMIC, false, this.bScene_);
-    }
-    body.shape = parentShape;
-    body.setMassProperties({
-      mass: objectNode.physics.mass ? Mass.toGramsValue(objectNode.physics.mass) : 0,
-    });
-
-    if (this.physicsViewer_) {
-      this.physicsViewer_.showBody(mesh.physicsBody);
-    }
-
-    mesh.setParent(initialParent);
-    this.syncCollisionFilters_();
-    return;
+    const initialParent = mesh.parent;
+    mesh.setParent(null);
 
     const aggregate = new PhysicsAggregate(mesh, PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type], {
       mass: objectNode.physics.mass ? Mass.toGramsValue(objectNode.physics.mass) : 0,
@@ -765,8 +729,8 @@ class SceneBinding {
 
 
   private removePhysicsFromObject = (mesh: AbstractMesh) => {
-    console.log(`Trying to remove physics from ${mesh.id}`);
-    console.log(mesh.physicsBody);
+    // console.log(`Trying to remove physics from ${mesh.id}`);
+    // console.log(mesh.physicsBody);
     if (!mesh.physicsBody) return;
 
     const parent = mesh.parent;

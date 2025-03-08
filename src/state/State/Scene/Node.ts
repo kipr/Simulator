@@ -8,12 +8,14 @@ import { Angle, Mass } from '../../../util/math/Value';
 import LocalizedString from '../../../util/LocalizedString';
 import Patch from '../../../util/redux/Patch';
 import Material from './Material';
+import { PhysicsMotionType } from '@babylonjs/core';
 
 namespace Node {
   export interface Physics {
     colliderId?: string;
     fixed?: boolean;
     type: Physics.Type;
+    motionType?: PhysicsMotionType;
     mass?: Mass;
     friction?: number;
     restitution?: number;
@@ -29,6 +31,7 @@ namespace Node {
         colliderId: Patch.diff(prev.colliderId, next.colliderId),
         fixed: Patch.diff(prev.fixed, next.fixed),
         type: Patch.diff(prev.type, next.type),
+        motionType: Patch.diff(prev.motionType, next.motionType),
         mass: Patch.diff(prev.mass, next.mass),
         friction: Patch.diff(prev.friction, next.friction),
         restitution: Patch.diff(prev.restitution, next.restitution)
@@ -107,7 +110,7 @@ namespace Node {
     type: 'object';
     parentId?: string;
     geometryId: string;
-    colliderIds?: string[],
+    colliderId?: string,
     physics?: Physics;
     material?: Material;
     faceUvs?: RawVector2[];
@@ -118,7 +121,7 @@ namespace Node {
       type: 'object',
       ...Base.NIL,
       geometryId: undefined,
-      colliderIds: undefined,
+      colliderId: undefined,
     };
 
     export const from = <T extends Base>(t: T): Obj => ({
@@ -136,7 +139,7 @@ namespace Node {
         physics: Patch.diff(prev.physics, next.physics),
         material: Material.diff(prev.material, next.material),
         faceUvs: Patch.diff(prev.faceUvs, next.faceUvs),
-        colliderIds: Patch.diff(prev.colliderIds, next.colliderIds),
+        colliderId: Patch.diff(prev.colliderId, next.colliderId),
         ...Base.partialDiff(prev, next)
       });
     };

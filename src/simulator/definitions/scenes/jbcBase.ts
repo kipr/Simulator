@@ -6,6 +6,7 @@ import Scene from "../../../state/State/Scene";
 import { Color } from "../../../state/State/Scene/Color";
 import AbstractRobot from '../../../programming/AbstractRobot';
 import Author from '../../../db/Author';
+import { PhysicsMotionType } from "@babylonjs/core";
 
 import tr from '@i18n';
 import { sprintf } from 'sprintf-js';
@@ -101,6 +102,7 @@ export function createBaseSceneSurfaceA(): Scene {
         visible: true,
         physics: {
           type: 'box',
+          motionType: PhysicsMotionType.STATIC,
           restitution: 0.1,
           friction: 10,
         },
@@ -179,6 +181,7 @@ export function createBaseSceneSurfaceB(): Scene {
         visible: true,
         physics: {
           type: 'box',
+          motionType: PhysicsMotionType.STATIC,
           restitution: 0.1,
           friction: 10,
         },
