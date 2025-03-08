@@ -4,8 +4,6 @@ import { Color } from "../../../state/State/Scene/Color";
 import Geometry from "../../../state/State/Scene/Geometry";
 import Node from "../../../state/State/Scene/Node";
 import { Distance, Mass } from "../../../util";
-import { POM_YELLOW } from "../robots";
-import { PhysicsMotionType } from "@babylonjs/core";
 
 // TODO: Consider deep-freezing all of these objects
 
@@ -121,7 +119,6 @@ const matATemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'mat',
   physics: {
     type: 'box',
-    motionType: PhysicsMotionType.STATIC,
     restitution: .3,
     friction: 1,
   },
@@ -139,7 +136,6 @@ const matBTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'mat',
   physics: {
     type: 'box',
-    motionType: PhysicsMotionType.STATIC,
     restitution: .3,
     friction: 1,
   },
@@ -326,92 +322,57 @@ const habitatControlTemplate: Node.TemplatedNode<Node.Obj> = {
   },
 };
 
-const pomBlueTemplate: Node.TemplatedNode<Node.Obj> = {
-  type: 'object',
-  geometryId: 'pom_blue',
-  physics: {
-    type: 'box',
-    restitution: .4,
-    friction: .7,
-    mass: Mass.grams(1),
-    // inertia: [1, 1, 1],
-  },
-};
-const pomRedTemplate: Node.TemplatedNode<Node.Obj> = {
-  type: 'object',
-  geometryId: 'pom_red',
-  physics: {
-    type: 'box',
-    restitution: .4,
-    friction: .7,
-    mass: Mass.grams(1),
-    // inertia: [1, 1, 1],
-  },
-};
-const pomOrangeTemplate: Node.TemplatedNode<Node.Obj> = {
-  type: 'object',
-  geometryId: 'pom_orange',
-  physics: {
-    type: 'box',
-    restitution: .4,
-    friction: .7,
-    mass: Mass.grams(1),
-    // inertia: [1, 1, 1],
-  },
-};
-const pomYellowTemplate: Node.TemplatedNode<Node.Obj> = {
-  type: 'object',
-  geometryId: 'pom_yellow',
-  physics: {
-    type: 'box',
-    restitution: .4,
-    friction: .7,
-    mass: Mass.grams(1),
-    // inertia: [1, 1, 1],
-  },
-};
 const drinkBlueTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
-  geometryId: 'drink_blue',
-  physics: {
-    colliderId: 'pom_blue',
-    type: 'box',
-    restitution: .1,
-    friction: 5,
-    mass: Mass.grams(1)
-  },
-};
-const drinkGreenTemplate: Node.TemplatedNode<Node.Obj> = {
-  type: 'object',
-  geometryId: 'drink_green',
-  physics: {
-    type: 'box',
-    restitution: .9,
-    friction: 5,
-    mass: Mass.grams(1)
-  },
-};
-const drinkPinkTemplate: Node.TemplatedNode<Node.Obj> = {
-  type: 'object',
-  geometryId: 'drink_pink',
-  physics: {
-    type: 'box',
-    restitution: .1,
-    friction: 5,
-    mass: Mass.grams(1)
-  },
-};
-const hamburgerTemplate: Node.TemplatedNode<Node.Obj> = {
-  type: 'object',
-  geometryId: 'hamburger',
+  geometryId: 'drink',
   physics: {
     type: 'mesh',
     restitution: .1,
     friction: 5,
     mass: Mass.grams(1)
   },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'color3',
+      color: Color.rgb(25, 212, 247),
+    }
+  }
 };
-
+const drinkGreenTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'drink',
+  physics: {
+    type: 'mesh',
+    restitution: .9,
+    friction: 5,
+    mass: Mass.grams(1)
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'color3',
+      color: Color.rgb(25, 255, 65),
+    }
+  }
+};
+const drinkPinkTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'drink',
+  physics: {
+    type: 'mesh',
+    restitution: .1,
+    friction: 5,
+    mass: Mass.grams(1)
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'color3',
+      color: Color.rgb(255, 20, 168),
+    }
+  }
+};
 
 export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'can': canTemplate,
@@ -435,14 +396,9 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'habitat': habitatTemplate,
   'research_habitat': habitatResearchTemplate,
   'control_habitat': habitatControlTemplate,
-  'pom_blue': pomBlueTemplate,
-  'pom_red': pomRedTemplate,
-  'pom_orange': pomOrangeTemplate,
-  'pom_yellow': pomYellowTemplate,
   'drink_green': drinkGreenTemplate,
   'drink_pink': drinkPinkTemplate,
   'drink_blue': drinkBlueTemplate,
-  'hamburger': hamburgerTemplate,
 });
 
 
@@ -551,36 +507,8 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
     type: 'file',
     uri: '/static/object_binaries/com_hab.glb'
   },
-  'pom_blue': {
+  'drink': {
     type: 'file',
-    uri: '/static/object_binaries/pom_blue.glb'
-  },
-  'pom_red': {
-    type: 'file',
-    uri: '/static/object_binaries/pom_red.glb'
-  },
-  'pom_orange': {
-    type: 'file',
-    uri: '/static/object_binaries/pom_orange.glb'
-  },
-  'pom_yellow': {
-    type: 'file',
-    uri: '/static/object_binaries/pom_yellow.glb'
-  },
-  'drink_blue': {
-    type: 'file',
-    uri: '/static/object_binaries/drink_blue.glb'
-  },
-  'drink_green': {
-    type: 'file',
-    uri: '/static/object_binaries/drink_green.glb'
-  },
-  'drink_pink': {
-    type: 'file',
-    uri: '/static/object_binaries/drink_pink.glb'
-  },
-  'hamburger': {
-    type: 'file',
-    uri: '/static/object_binaries/hamburger.glb'
-  },
+    uri: '/static/object_binaries/drink.glb'
+  }
 });

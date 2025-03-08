@@ -4,12 +4,10 @@ import {
   TransformNode, AbstractMesh, PhysicsViewer, ShadowGenerator, Vector3, StandardMaterial, GizmoManager,
   ArcRotateCamera, PointLight, SpotLight, DirectionalLight, PBRMaterial, EngineView,
   Scene as babylonScene, Node as babylonNode, Camera as babylCamera, Material as babylMaterial,
-  Observer, BoundingBox, Mesh, PhysicsShapeContainer, PhysicsShape, PhysicsBody, PhysicShapeOptions,
+  Observer, BoundingBox,
   Color3, BoundingBoxGizmo,
   MeshBuilder,
-  BoundingInfo,
-  PhysicsShapeParameters,
-  PhysicsMotionType
+  BoundingInfo
 } from '@babylonjs/core';
 
 // eslint-disable-next-line @typescript-eslint/no-duplicate-imports -- Required import for side effects
@@ -41,7 +39,6 @@ import { createDirectionalLight, createPointLight, createSpotLight } from './cre
 import { createCamera } from './createSceneObjects/createCameras';
 import { createObject, createEmpty } from './createSceneObjects/createObjects';
 import apply from './Apply';
-import { object } from 'prop-types';
 
 export type FrameLike = TransformNode | AbstractMesh;
 
@@ -115,7 +112,7 @@ class SceneBinding {
     this.bScene_.getPhysicsEngine().setSubTimeStep(1);
 
     // Uncomment this to turn on the physics viewer for objects
-    this.physicsViewer_ = new PhysicsViewer(this.bScene_);
+    // this.physicsViewer_ = new PhysicsViewer(this.bScene_);
 
     this.root_ = new TransformNode('__scene_root__', this.bScene_);
     this.gizmoManager_ = new GizmoManager(this.bScene_);
@@ -240,14 +237,8 @@ class SceneBinding {
     let nodeToCreate: Node = node;
 
     // Resolve template nodes into non-template nodes by looking up the template by ID
-    if (node.type === 'from-jbc-template' ||
-      node.type === 'from-rock-template' ||
-      node.type === 'from-space-template' ||
-      node.type === 'from-bb-template') {
+    if (node.type === 'from-jbc-template' || node.type === 'from-rock-template' || node.type === 'from-space-template') {
       const nodeTemplate = preBuiltTemplates[node.templateId];
-      // console.log(`Node ${id} has colliders:`);
-      // console.log(node.colliderIds ?? 'No colliders');
-
       if (!nodeTemplate) {
         console.warn('template node has invalid template ID:', node.templateId);
         return null;
@@ -463,7 +454,7 @@ class SceneBinding {
 
   private updateFromTemplate_ = (
     id: string,
-    node: Patch.InnerChange<Node.FromRockTemplate> | Patch.InnerChange<Node.FromSpaceTemplate> | Patch.InnerChange<Node.FromJBCTemplate> | Patch.InnerChange<Node.FromBBTemplate>,
+    node: Patch.InnerChange<Node.FromRockTemplate> | Patch.InnerChange<Node.FromSpaceTemplate> | Patch.InnerChange<Node.FromJBCTemplate>,
     nextScene: Scene
   ): Promise<babylonNode> => {
     // If the template ID changes, recreate the node entirely
@@ -508,7 +499,6 @@ class SceneBinding {
             physics: Patch.none(nodeTemplate.physics),
             material: Patch.none(nodeTemplate.material),
             faceUvs: Patch.none(nodeTemplate.faceUvs),
-            colliderId: Patch.none(nodeTemplate.colliderId),
           },
         };
 
@@ -599,9 +589,6 @@ class SceneBinding {
           case 'from-space-template': {
             return this.updateFromTemplate_(id, node as Patch.InnerChange<Node.FromSpaceTemplate>, nextScene);
           }
-          case 'from-bb-template': {
-            return this.updateFromTemplate_(id, node as Patch.InnerChange<Node.FromBBTemplate>, nextScene);
-          }
           default: {
             console.error('invalid node type for inner change:', (node.next as Node).type);
             return this.findBNode_(id);
@@ -687,10 +674,7 @@ class SceneBinding {
     callback: (collisionEvent: IPhysicsCollisionEvent) => void;
   }[]> = {};
 
-  private restorePhysicsToObject = (mesh: AbstractMesh,
-    objectNode: Node.Obj | Node.FromSpaceTemplate | Node.FromBBTemplate,
-    nodeId: string,
-    scene: Scene): void => {
+  private restorePhysicsToObject = (mesh: AbstractMesh, objectNode: Node.Obj | Node.FromSpaceTemplate, nodeId: string, scene: Scene): void => {
     // Physics should only be added to physics-enabled, visible, non-selected objects
     if (
       !objectNode.physics ||
@@ -701,19 +685,8 @@ class SceneBinding {
       return;
     }
 
-    console.log(`Restoring physics for ${nodeId}`);
-
-    if (mesh instanceof Mesh) {
-      console.log(`I think this is a Mesh: ${nodeId}`);
-    } else if (mesh instanceof AbstractMesh) {
-      console.log(`I think this is an AbstractMesh: ${nodeId}`);
-    } else {
-      console.log(`I don't know what this is: ${nodeId}`);
-    }
-
     const initialParent = mesh.parent;
     mesh.setParent(null);
-
     const aggregate = new PhysicsAggregate(mesh, PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type], {
       mass: objectNode.physics.mass ? Mass.toGramsValue(objectNode.physics.mass) : 0,
       friction: objectNode.physics.friction ?? 5,
@@ -729,8 +702,6 @@ class SceneBinding {
 
 
   private removePhysicsFromObject = (mesh: AbstractMesh) => {
-    // console.log(`Trying to remove physics from ${mesh.id}`);
-    // console.log(mesh.physicsBody);
     if (!mesh.physicsBody) return;
 
     const parent = mesh.parent;
@@ -870,9 +841,6 @@ class SceneBinding {
           const nodeTemplate = preBuiltTemplates[prevNode.templateId];
           if (nodeTemplate?.type === 'object') prevNodeObj = { ...nodeTemplate, ...Node.Base.upcast(prevNode) };
         } else if (prevNode.type === 'from-space-template') {
-          const nodeTemplate = preBuiltTemplates[prevNode.templateId];
-          if (nodeTemplate?.type === 'object') prevNodeObj = { ...nodeTemplate, ...Node.Base.upcast(prevNode) };
-        } else if (prevNode.type === 'from-bb-template') {
           const nodeTemplate = preBuiltTemplates[prevNode.templateId];
           if (nodeTemplate?.type === 'object') prevNodeObj = { ...nodeTemplate, ...Node.Base.upcast(prevNode) };
         }

@@ -18,13 +18,6 @@ import tr from '@i18n';
 
 const baseScene = createBaseSceneSurface();
 
-const TEST_POS: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(50, 50, 50),
-  orientation: RotationwUnits.eulerDegrees(0, 45, 0),
-  scale: { x: 100, y: 100, z: 100 }
-};
-
-
 const WARMING_X = 9;
 const HAMBURGER_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(WARMING_X, 21, 114),
@@ -55,58 +48,20 @@ const CUP_GREEN_ORIGIN: ReferenceFramewUnits = {
 
 const POM_Y = 2;
 const POM_BLUE_ORIGINS_BACK: ReferenceFramewUnits[] = [
-  {
-    position: Vector3wUnits.centimeters(18, POM_Y, 53),
-    scale: { x: 100, y: 100, z: 100 },
-  },
-  {
-    position: Vector3wUnits.centimeters(18, POM_Y, 43),
-    scale: { x: 100, y: 100, z: 100 },
-
-  },
-  {
-    position: Vector3wUnits.centimeters(23, POM_Y, 53),
-    scale: { x: 100, y: 100, z: 100 },
-
-  },
-  {
-    position: Vector3wUnits.centimeters(23, POM_Y, 43),
-    scale: { x: 100, y: 100, z: 100 },
-
-  },
-  {
-    position: Vector3wUnits.centimeters(28, POM_Y, 53),
-    scale: { x: 100, y: 100, z: 100 },
-
-  },
-  {
-    position: Vector3wUnits.centimeters(28, POM_Y, 43),
-    scale: { x: 100, y: 100, z: 100 },
-  },
-  {
-    position: Vector3wUnits.centimeters(15.5, POM_Y, 48),
-    scale: { x: 100, y: 100, z: 100 },
-  },
-  {
-    position: Vector3wUnits.centimeters(20.5, POM_Y, 48),
-    scale: { x: 100, y: 100, z: 100 },
-  },
-  {
-    position: Vector3wUnits.centimeters(25.5, POM_Y, 48),
-    scale: { x: 100, y: 100, z: 100 },
-  },
-  {
-    position: Vector3wUnits.centimeters(30.5, POM_Y, 48),
-    scale: { x: 100, y: 100, z: 100 },
-
-  },
+  { position: Vector3wUnits.centimeters(18, POM_Y, 53) },
+  { position: Vector3wUnits.centimeters(18, POM_Y, 43) },
+  { position: Vector3wUnits.centimeters(23, POM_Y, 53) },
+  { position: Vector3wUnits.centimeters(23, POM_Y, 43) },
+  { position: Vector3wUnits.centimeters(28, POM_Y, 53) },
+  { position: Vector3wUnits.centimeters(28, POM_Y, 43) },
+  { position: Vector3wUnits.centimeters(15.5, POM_Y, 48) },
+  { position: Vector3wUnits.centimeters(20.5, POM_Y, 48) },
+  { position: Vector3wUnits.centimeters(25.5, POM_Y, 48) },
+  { position: Vector3wUnits.centimeters(30.5, POM_Y, 48) },
 ];
 
 const POM_BLUE_ORIGINS_FRONT = POM_BLUE_ORIGINS_BACK.map((p) => {
-  return {
-    position: { ...p.position, z: Distance.centimeters(p.position.z.value * -1) },
-    scale: { x: 100, y: 100, z: 100 }
-  };
+  return { position: { ...p.position, z: Distance.centimeters(p.position.z.value * -1) } };
 });
 
 const BOTTLE_Y = 2;
@@ -121,47 +76,19 @@ const BOTTLE_ORIGINS: ReferenceFramewUnits[] = [
 
 const CENTER_LINE_X = 65.5;
 const POM_RED_ORIGINS: ReferenceFramewUnits[] = [
-  {
-    position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 0),
-    scale: { x: 100, y: 100, z: 100 }
-  },
-  {
-    position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 45.72),
-    scale: { x: 100, y: 100, z: 100 }
-  },
-  {
-    position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, -45.72),
-    scale: { x: 100, y: 100, z: 100 }
-  },
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 0) },
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 45.72) },
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, -45.72) },
 ];
 const POM_ORANGE_ORIGINS: ReferenceFramewUnits[] = [
-  {
-    position: Vector3wUnits.centimeters(CENTER_LINE_X - 11.43, POM_Y, 0),
-    scale: { x: 100, y: 100, z: 100 }
-  },
-  {
-    position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, -15.24),
-    scale: { x: 100, y: 100, z: 100 }
-  },
-  {
-    position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 30.48),
-    scale: { x: 100, y: 100, z: 100 }
-  },
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X - 11.43, POM_Y, 0) },
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, -15.24) },
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 30.48) },
 ];
 const POM_YELLOW_ORIGINS: ReferenceFramewUnits[] = [
-  {
-    position: Vector3wUnits.centimeters(CENTER_LINE_X - (2 * 11.43), POM_Y, 0),
-    scale: { x: 100, y: 100, z: 100 }
-
-  },
-  {
-    position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 15.24),
-    scale: { x: 100, y: 100, z: 100 }
-  },
-  {
-    position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, -30.48),
-    scale: { x: 100, y: 100, z: 100 }
-  },
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X - (2 * 11.43), POM_Y, 0) },
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 15.24) },
+  { position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, -30.48) },
 ];
 
 const TOMATO_ORIGIN: ReferenceFramewUnits = {
@@ -258,12 +185,13 @@ const CUP_GREEN: Node.Robot = {
   origin: CUP_GREEN_ORIGIN
 };
 
-const POMS_BLUE: Node.FromBBTemplate[] = Array(20) as Node.FromBBTemplate[];
+const POMS_BLUE: Node.Robot[] = Array(20) as Node.Robot[];
 for (const [i, pos] of POM_BLUE_ORIGINS_BACK.entries()) {
   POMS_BLUE[i] = {
-    type: 'from-bb-template',
+    type: 'robot',
     name: tr(`Blue pom back #${i}`),
-    templateId: 'pom_blue',
+    robotId: 'pom_blue',
+    state: AbstractRobot.Stateless.NIL,
     visible: true,
     editable: true,
     startingOrigin: pos,
@@ -273,9 +201,10 @@ for (const [i, pos] of POM_BLUE_ORIGINS_BACK.entries()) {
 
 for (const [i, pos] of POM_BLUE_ORIGINS_FRONT.entries()) {
   POMS_BLUE[i + 10] = {
-    type: 'from-bb-template',
+    type: 'robot',
     name: tr(`Blue pom front #${i}`),
-    templateId: 'pom_blue',
+    robotId: 'pom_blue',
+    state: AbstractRobot.Stateless.NIL,
     visible: true,
     editable: true,
     startingOrigin: pos,
@@ -297,36 +226,39 @@ for (const [i, pos] of BOTTLE_ORIGINS.entries()) {
   };
 }
 
-const POMS_RED: Node.FromBBTemplate[] = Array(3) as Node.FromBBTemplate[];
+const POMS_RED: Node.Robot[] = Array(3) as Node.Robot[];
 for (const [i, pos] of POM_RED_ORIGINS.entries()) {
   POMS_RED[i] = {
-    type: 'from-bb-template',
+    type: 'robot',
     name: tr(`Red pom #${i}`),
-    templateId: 'pom_red',
+    robotId: 'pom_red',
+    state: AbstractRobot.Stateless.NIL,
     visible: true,
     editable: true,
     startingOrigin: pos,
     origin: pos
   };
 }
-const POMS_ORANGE: Node.FromBBTemplate[] = Array(3) as Node.FromBBTemplate[];
+const POMS_ORANGE: Node.Robot[] = Array(3) as Node.Robot[];
 for (const [i, pos] of POM_ORANGE_ORIGINS.entries()) {
   POMS_ORANGE[i] = {
-    type: 'from-bb-template',
+    type: 'robot',
     name: tr(`Orange pom #${i}`),
-    templateId: 'pom_orange',
+    robotId: 'pom_orange',
+    state: AbstractRobot.Stateless.NIL,
     visible: true,
     editable: true,
     startingOrigin: pos,
     origin: pos
   };
 }
-const POMS_YELLOW: Node.FromBBTemplate[] = Array(3) as Node.FromBBTemplate[];
+const POMS_YELLOW: Node.Robot[] = Array(3) as Node.Robot[];
 for (const [i, pos] of POM_YELLOW_ORIGINS.entries()) {
   POMS_YELLOW[i] = {
-    type: 'from-bb-template',
+    type: 'robot',
     name: tr(`Yellow pom #${i}`),
-    templateId: 'pom_yellow',
+    robotId: 'pom_yellow',
+    state: AbstractRobot.Stateless.NIL,
     visible: true,
     editable: true,
     startingOrigin: pos,
@@ -334,7 +266,7 @@ for (const [i, pos] of POM_YELLOW_ORIGINS.entries()) {
   };
 }
 
-const POMS_RANDOM: Node.FromBBTemplate[] = Array(9) as Node.FromBBTemplate[];
+const POMS_RANDOM: Node.Robot[] = Array(9) as Node.Robot[];
 const choices = ['pom_red', 'pom_red', 'pom_red', 'pom_orange', 'pom_orange', 'pom_orange', 'pom_yellow', 'pom_yellow', 'pom_yellow'];
 for (let i = 0; i < POMS_RANDOM.length; i++) {
   const n = Math.floor(Math.random() * choices.length);
@@ -342,14 +274,14 @@ for (let i = 0; i < POMS_RANDOM.length; i++) {
   choices.splice(n, 1);
 
   const pos = {
-    position: Vector3wUnits.centimeters(91, POM_Y, (-45.72 + 11.43 * i)),
-    scale: { x: 100, y: 100, z: 100 }
+    position: Vector3wUnits.centimeters(91, POM_Y, (-45.72 + 11.43 * i))
   };
 
   POMS_RANDOM[i] = {
-    type: 'from-bb-template',
+    type: 'robot',
     name: tr(`Random pom #${i}`),
-    templateId: robot,
+    robotId: robot,
+    state: AbstractRobot.Stateless.NIL,
     visible: true,
     editable: true,
     startingOrigin: pos,
@@ -438,17 +370,17 @@ const BOTGUY: Node.Robot = {
   origin: BOTGUY_ORIGIN
 };
 
-const DRINKS_BLUE = Array(6) as Node.FromBBTemplate[];
+const DRINKS_BLUE = Array(6) as Node.Robot[];
 for (let i = 0; i < DRINKS_BLUE.length; i++) {
   const pos: ReferenceFramewUnits = {
     position: Vector3wUnits.centimeters(18.6, (5.1 * i), -102.55),
     orientation: RotationwUnits.eulerDegrees(0, 45, 0),
-    scale: { x: 100, y: 100, z: 100 }
   };
   DRINKS_BLUE[i] = {
-    type: 'from-bb-template',
+    type: 'robot',
     name: tr(`Blue drink #${i}`),
-    templateId: 'drink_blue',
+    robotId: 'drink_blue',
+    state: AbstractRobot.Stateless.NIL,
     visible: true,
     editable: true,
     startingOrigin: pos,
@@ -456,17 +388,16 @@ for (let i = 0; i < DRINKS_BLUE.length; i++) {
   };
 }
 
-const DRINKS_GREEN = Array(6) as Node.FromBBTemplate[];
+const DRINKS_GREEN = Array(6) as Node.Robot[];
 for (let i = 0; i < DRINKS_GREEN.length; i++) {
   const pos: ReferenceFramewUnits = {
-    position: Vector3wUnits.centimeters(0.4, (5.15 * i), 71.252),
-    orientation: RotationwUnits.eulerDegrees(0, 45, 0),
-    scale: { x: 100, y: 100, z: 100 }
+    position: Vector3wUnits.centimeters(0.4, (5.15 * i), 71.252)
   };
   DRINKS_GREEN[i] = {
-    type: 'from-bb-template',
+    type: 'robot',
     name: tr(`Green drink #${i}`),
-    templateId: 'drink_green',
+    robotId: 'drink_green',
+    state: AbstractRobot.Stateless.NIL,
     visible: true,
     editable: true,
     startingOrigin: pos,
@@ -474,17 +405,16 @@ for (let i = 0; i < DRINKS_GREEN.length; i++) {
   };
 }
 
-const DRINKS_PINK = Array(6) as Node.FromBBTemplate[];
+const DRINKS_PINK = Array(6) as Node.Robot[];
 for (let i = 0; i < DRINKS_PINK.length; i++) {
   const pos: ReferenceFramewUnits = {
-    position: Vector3wUnits.centimeters(0.4, (5.15 * i), -71.4),
-    orientation: RotationwUnits.eulerDegrees(0, 45, 0),
-    scale: { x: 100, y: 100, z: 100 }
+    position: Vector3wUnits.centimeters(0.4, (5.15 * i), -71.4)
   };
   DRINKS_PINK[i] = {
-    type: 'from-bb-template',
+    type: 'robot',
     name: tr(`Pink drink #${i}`),
-    templateId: 'drink_pink',
+    robotId: 'drink_pink',
+    state: AbstractRobot.Stateless.NIL,
     visible: true,
     editable: true,
     startingOrigin: pos,
@@ -515,92 +445,83 @@ export const Table_Sandbox: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-    'test_burger': {
-      type: 'from-bb-template',
-      templateId: 'hamburger',
-      name: tr('Hamburger'),
-      startingOrigin: TEST_POS,
-      origin: TEST_POS,
-      visible: true,
-      editable: true,
-    },
-    // 'hamburger': HAMBURGER,
-    // 'hotdog': HOTDOG,
-    // 'taco': TACO,
-    // 'cup_pink': CUP_PINK,
-    // 'cup_blue': CUP_BLUE,
-    // 'cup_green': CUP_GREEN,
-    // 'pom_blue0': POMS_BLUE[0],
-    // 'pom_blue1': POMS_BLUE[1],
-    // 'pom_blue2': POMS_BLUE[2],
-    // 'pom_blue3': POMS_BLUE[3],
-    // 'pom_blue4': POMS_BLUE[4],
-    // 'pom_blue5': POMS_BLUE[5],
-    // 'pom_blue6': POMS_BLUE[6],
-    // 'pom_blue7': POMS_BLUE[7],
-    // 'pom_blue8': POMS_BLUE[8],
-    // 'pom_blue9': POMS_BLUE[9],
-    // 'pom_blue10': POMS_BLUE[10],
-    // 'pom_blue11': POMS_BLUE[11],
-    // 'pom_blue12': POMS_BLUE[12],
-    // 'pom_blue13': POMS_BLUE[13],
-    // 'pom_blue14': POMS_BLUE[14],
-    // 'pom_blue15': POMS_BLUE[15],
-    // 'pom_blue16': POMS_BLUE[16],
-    // 'pom_blue17': POMS_BLUE[17],
-    // 'pom_blue18': POMS_BLUE[18],
-    // 'pom_blue19': POMS_BLUE[19],
-    // 'pom_red0': POMS_RED[0],
-    // 'pom_red1': POMS_RED[1],
-    // 'pom_red2': POMS_RED[2],
-    // 'pom_orange0': POMS_ORANGE[0],
-    // 'pom_orange1': POMS_ORANGE[1],
-    // 'pom_orange2': POMS_ORANGE[2],
-    // 'pom_yellow0': POMS_YELLOW[0],
-    // 'pom_yellow1': POMS_YELLOW[1],
-    // 'pom_yellow2': POMS_YELLOW[2],
-    // 'pom_random0': POMS_RANDOM[0],
-    // 'pom_random1': POMS_RANDOM[1],
-    // 'pom_random2': POMS_RANDOM[2],
-    // 'pom_random3': POMS_RANDOM[3],
-    // 'pom_random4': POMS_RANDOM[4],
-    // 'pom_random5': POMS_RANDOM[5],
-    // 'pom_random6': POMS_RANDOM[6],
-    // 'pom_random7': POMS_RANDOM[7],
-    // 'pom_random8': POMS_RANDOM[8],
-    // 'bottle0': BOTTLES[0],
-    // 'bottle1': BOTTLES[1],
-    // 'bottle2': BOTTLES[2],
-    // 'bottle3': BOTTLES[3],
-    // 'bottle4': BOTTLES[4],
-    // 'bottle5': BOTTLES[5],
-    // 'tomato': TOMATO,
-    // 'pickle': PICKLE,
+    'hamburger': HAMBURGER,
+    'hotdog': HOTDOG,
+    'taco': TACO,
+    'cup_pink': CUP_PINK,
+    'cup_blue': CUP_BLUE,
+    'cup_green': CUP_GREEN,
+    'pom_blue0': POMS_BLUE[0],
+    'pom_blue1': POMS_BLUE[1],
+    'pom_blue2': POMS_BLUE[2],
+    'pom_blue3': POMS_BLUE[3],
+    'pom_blue4': POMS_BLUE[4],
+    'pom_blue5': POMS_BLUE[5],
+    'pom_blue6': POMS_BLUE[6],
+    'pom_blue7': POMS_BLUE[7],
+    'pom_blue8': POMS_BLUE[8],
+    'pom_blue9': POMS_BLUE[9],
+    'pom_blue10': POMS_BLUE[10],
+    'pom_blue11': POMS_BLUE[11],
+    'pom_blue12': POMS_BLUE[12],
+    'pom_blue13': POMS_BLUE[13],
+    'pom_blue14': POMS_BLUE[14],
+    'pom_blue15': POMS_BLUE[15],
+    'pom_blue16': POMS_BLUE[16],
+    'pom_blue17': POMS_BLUE[17],
+    'pom_blue18': POMS_BLUE[18],
+    'pom_blue19': POMS_BLUE[19],
+    'pom_red0': POMS_RED[0],
+    'pom_red1': POMS_RED[1],
+    'pom_red2': POMS_RED[2],
+    'pom_orange0': POMS_ORANGE[0],
+    'pom_orange1': POMS_ORANGE[1],
+    'pom_orange2': POMS_ORANGE[2],
+    'pom_yellow0': POMS_YELLOW[0],
+    'pom_yellow1': POMS_YELLOW[1],
+    'pom_yellow2': POMS_YELLOW[2],
+    'pom_random0': POMS_RANDOM[0],
+    'pom_random1': POMS_RANDOM[1],
+    'pom_random2': POMS_RANDOM[2],
+    'pom_random3': POMS_RANDOM[3],
+    'pom_random4': POMS_RANDOM[4],
+    'pom_random5': POMS_RANDOM[5],
+    'pom_random6': POMS_RANDOM[6],
+    'pom_random7': POMS_RANDOM[7],
+    'pom_random8': POMS_RANDOM[8],
+    'bottle0': BOTTLES[0],
+    'bottle1': BOTTLES[1],
+    'bottle2': BOTTLES[2],
+    'bottle3': BOTTLES[3],
+    'bottle4': BOTTLES[4],
+    'bottle5': BOTTLES[5],
+    'tomato': TOMATO,
+    'pickle': PICKLE,
     'potato': POTATO,
-    // 'fry0': FRY0,
-    // 'fry1': FRY1,
-    // 'tray0': TRAYS[0],
-    // 'tray1': TRAYS[1],
-    // 'tray2': TRAYS[2],
-    // 'tray3': TRAYS[3],
-    // 'tray4': TRAYS[4],
-    // 'tray5': TRAYS[5],
-    // 'drink_blue0': DRINKS_BLUE[0],
-    // 'drink_blue1': DRINKS_BLUE[1],
-    // 'drink_blue2': DRINKS_BLUE[2],
-    // 'drink_blue3': DRINKS_BLUE[3],
-    // 'drink_blue4': DRINKS_BLUE[4],
-    // 'drink_green0': DRINKS_GREEN[0],
-    // 'drink_green1': DRINKS_GREEN[1],
-    // 'drink_green2': DRINKS_GREEN[2],
-    // 'drink_green3': DRINKS_GREEN[3],
-    // 'drink_green4': DRINKS_GREEN[4],
-    // 'drink_pink0': DRINKS_PINK[0],
-    // 'drink_pink1': DRINKS_PINK[1],
-    // 'drink_pink2': DRINKS_PINK[2],
-    // 'drink_pink3': DRINKS_PINK[3],
-    // 'drink_pink4': DRINKS_PINK[4],
-    // 'botguy': BOTGUY,
+    'fry0': FRY0,
+    'fry1': FRY1,
+    'tray0': TRAYS[0],
+    'tray1': TRAYS[1],
+    'tray2': TRAYS[2],
+    'tray3': TRAYS[3],
+    'tray4': TRAYS[4],
+    'tray5': TRAYS[5],
+    'drink_blue0': DRINKS_BLUE[0],
+    'drink_blue1': DRINKS_BLUE[1],
+    'drink_blue2': DRINKS_BLUE[2],
+    'drink_blue3': DRINKS_BLUE[3],
+    'drink_blue4': DRINKS_BLUE[4],
+    'drink_green0': DRINKS_GREEN[0],
+    'drink_green1': DRINKS_GREEN[1],
+    'drink_green2': DRINKS_GREEN[2],
+    'drink_green3': DRINKS_GREEN[3],
+    'drink_green4': DRINKS_GREEN[4],
+    'drink_pink0': DRINKS_PINK[0],
+    'drink_pink1': DRINKS_PINK[1],
+    'drink_pink2': DRINKS_PINK[2],
+    'drink_pink3': DRINKS_PINK[3],
+    'drink_pink4': DRINKS_PINK[4],
+    'botguy': BOTGUY,
     'robot': {
       ...baseScene.nodes['robot'],
       editable: true,
