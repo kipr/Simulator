@@ -324,54 +324,85 @@ const habitatControlTemplate: Node.TemplatedNode<Node.Obj> = {
 
 const drinkBlueTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
-  geometryId: 'drink',
+  geometryId: 'drink_blue',
   physics: {
-    type: 'mesh',
+    type: 'box',
     restitution: .1,
-    friction: 5,
-    mass: Mass.grams(1)
+    friction: .5,
+    mass: Mass.grams(5),
   },
-  material: {
-    type: 'basic',
-    color: {
-      type: 'color3',
-      color: Color.rgb(25, 212, 247),
-    }
-  }
 };
 const drinkGreenTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
-  geometryId: 'drink',
+  geometryId: 'drink_green',
   physics: {
-    type: 'mesh',
-    restitution: .9,
-    friction: 5,
-    mass: Mass.grams(1)
+    type: 'box',
+    restitution: .1,
+    friction: .5,
+    mass: Mass.grams(5),
   },
-  material: {
-    type: 'basic',
-    color: {
-      type: 'color3',
-      color: Color.rgb(25, 255, 65),
-    }
-  }
 };
 const drinkPinkTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
-  geometryId: 'drink',
+  geometryId: 'drink_pink',
   physics: {
-    type: 'mesh',
+    type: 'box',
     restitution: .1,
-    friction: 5,
-    mass: Mass.grams(1)
+    friction: .5,
+    mass: Mass.grams(5),
   },
-  material: {
-    type: 'basic',
-    color: {
-      type: 'color3',
-      color: Color.rgb(255, 20, 168),
-    }
-  }
+};
+
+const pomBlueTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'pom_blue',
+  physics: {
+    type: 'box',
+    restitution: .4,
+    friction: 1,
+    mass: Mass.grams(1),
+  },
+};
+const pomOrangeTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'pom_orange',
+  physics: {
+    type: 'box',
+    restitution: .4,
+    friction: 1,
+    mass: Mass.grams(1),
+  },
+};
+const pomRedTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'pom_red',
+  physics: {
+    type: 'box',
+    restitution: .4,
+    friction: 1,
+    mass: Mass.grams(1),
+  },
+};
+const pomYellowTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'pom_yellow',
+  physics: {
+    type: 'box',
+    restitution: .4,
+    friction: 1,
+    mass: Mass.grams(1),
+  },
+};
+
+const frenchFryTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'fry',
+  physics: {
+    type: 'box',
+    restitution: .3,
+    friction: .7,
+    mass: Mass.grams(2),
+  },
 };
 
 export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
@@ -396,9 +427,14 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'habitat': habitatTemplate,
   'research_habitat': habitatResearchTemplate,
   'control_habitat': habitatControlTemplate,
+  'drink_blue': drinkBlueTemplate,
   'drink_green': drinkGreenTemplate,
   'drink_pink': drinkPinkTemplate,
-  'drink_blue': drinkBlueTemplate,
+  'pom_blue': pomBlueTemplate,
+  'pom_orange': pomOrangeTemplate,
+  'pom_red': pomRedTemplate,
+  'pom_yellow': pomYellowTemplate,
+  'french_fry': frenchFryTemplate,
 });
 
 
@@ -507,8 +543,36 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
     type: 'file',
     uri: '/static/object_binaries/com_hab.glb'
   },
-  'drink': {
+  'drink_blue': {
     type: 'file',
-    uri: '/static/object_binaries/drink.glb'
-  }
+    uri: '/static/object_binaries/drink_blue.glb',
+  },
+  'drink_green': {
+    type: 'file',
+    uri: '/static/object_binaries/drink_green.glb',
+  },
+  'drink_pink': {
+    type: 'file',
+    uri: '/static/object_binaries/drink_pink.glb',
+  },
+  'pom_blue': {
+    type: 'file',
+    uri: '/static/object_binaries/pom_blue.glb',
+  },
+  'pom_orange': {
+    type: 'file',
+    uri: '/static/object_binaries/pom_orange.glb',
+  },
+  'pom_red': {
+    type: 'file',
+    uri: '/static/object_binaries/pom_red.glb',
+  },
+  'pom_yellow': {
+    type: 'file',
+    uri: '/static/object_binaries/pom_yellow.glb',
+  },
+  'fry': {
+    type: 'file',
+    uri: '/static/object_binaries/french_fry.glb',
+  },
 });
