@@ -26,7 +26,7 @@ import Patch from "../../util/redux/Patch";
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../util/math/unitMath";
 import { Distance, Mass, SetOps } from "../../util";
 import Material from '../../state/State/Scene/Material';
-import { preBuiltTemplates } from "../definitions/nodes";
+import { preBuiltTemplates, preBuiltGeometries } from "../definitions/nodes";
 import RobotBinding from './RobotBinding';
 import Robot from '../../state/State/Robot';
 import AbstractRobot from '../../programming/AbstractRobot';
@@ -689,24 +689,53 @@ class SceneBinding {
     const initialParent = mesh.parent;
     mesh.setParent(null);
 
-    const parentShape = new PhysicsShapeContainer(this.bScene_);
+    const parentShape = new PhysicsShapeContainer(this.bScene);
 
-    const { x, y, z } = objectNode.origin.scale ?? { x: 1, y: 1, z: 1 };
+    const scale = RawVector3.toBabylon(objectNode.origin.scale ?? { x: 1, y: 1, z: 1 });
+
     // Not sure why, but the final multiplication by [2, 2, 2] is required to make collision shapes scale correctly
-    const extend = mesh.getBoundingInfo().boundingBox.extendSize.multiply(new Vector3(x, y, z).multiply(new Vector3(2, 2, 2)));
+    const extend = mesh.getBoundingInfo().boundingBox.extendSize.multiply(scale).multiply(new Vector3(2, 2, 2));
 
-    const parameters: PhysicsShapeParameters = { mesh: mesh as Mesh, extents: extend };
+    let parameters: PhysicsShapeParameters = { mesh: mesh as Mesh, extents: extend };
+
+    // Cylinders require some extra info
+    // WARNING: These numbers are correct for the cans, but must be changed of we ever include any other cylinders
+    if (objectNode.physics.type === 'cylinder') {
+      parameters = {
+        ...parameters,
+        pointA: mesh.absolutePosition.add(new Vector3(0, -(11.15 * 0.5), 0)),
+        pointB: mesh.absolutePosition.add(new Vector3(0, (11.15 * 0.5), 0)),
+        radius: 3
+      };
+    }
+
     const options: PhysicShapeOptions = { type: PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type], parameters };
-    const shape = new PhysicsShape(options, this.bScene_);
+    const shape = new PhysicsShape(options, this.bScene);
     shape.material = {
       friction: objectNode.physics.friction ?? 0.5,
       restitution: objectNode.physics.restitution ?? 0.1,
     };
 
-    parentShape.addChild(shape);
+    // For some reason the mesh id changes when the world resets
+    if (mesh.id.includes('Can') || mesh.id.includes('can')) {
+      parentShape.addChild(shape, mesh.absolutePosition, mesh.absoluteRotationQuaternion);
+    } else {
+      parentShape.addChild(shape);
+    }
 
-    const body = new PhysicsBody(mesh, (mesh.id.includes('Ground') || mesh.id.includes('ground')) ? PhysicsMotionType.STATIC : PhysicsMotionType.DYNAMIC, false, this.bScene_);
+    // Same as above comment
+    const body = new PhysicsBody(
+      mesh,
+      (mesh.id.includes('Ground') || mesh.id.includes('ground')) ? PhysicsMotionType.STATIC : PhysicsMotionType.DYNAMIC,
+      false,
+      this.bScene);
     body.shape = parentShape;
+
+    // TODO: Mass seems too high
+    body.setMassProperties({
+      mass: objectNode.physics.mass ? Mass.toKilogramsValue(objectNode.physics.mass) : 1,
+      inertia: objectNode.physics.inertia ? Vector3.FromArray(objectNode.physics.inertia) : new Vector3(1, 1, 1),
+    });
 
     if (this.physicsViewer_) {
       this.physicsViewer_.showBody(mesh.physicsBody);
