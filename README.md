@@ -22,7 +22,7 @@ Simulates a botball/JBC style demobot with a built in IDE.
 # to get newer versions of Node.js through apt-get, you likely need to add the correct NodeSource repositories
 # for details, see https://github.com/nodesource/distributions
 sudo apt-get update
-sudo apt-get install -y wget git cmake build-essential python3.8 swig zlib1g-dev doxygen nodejs
+sudo apt-get install -y wget git cmake build-essential python3.8 swig zlib1g-dev doxygen nodejs pkg-config
 sudo npm install --global npm
 sudo npm install --global yarn
 yarn --version
