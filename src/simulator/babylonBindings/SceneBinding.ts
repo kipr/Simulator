@@ -685,6 +685,8 @@ class SceneBinding {
     ) {
       return;
     }
+    // BUG: Can collision box location scaled on X or Z axes
+    // BUG: Mat falls through ground
 
     const initialParent = mesh.parent;
     mesh.setParent(null);
@@ -731,7 +733,7 @@ class SceneBinding {
       this.bScene);
     body.shape = parentShape;
 
-    // TODO: Mass seems too high
+    // FIXME: Mass seems too high
     body.setMassProperties({
       mass: objectNode.physics.mass ? Mass.toKilogramsValue(objectNode.physics.mass) : 1,
       inertia: objectNode.physics.inertia ? Vector3.FromArray(objectNode.physics.inertia) : new Vector3(1, 1, 1),
