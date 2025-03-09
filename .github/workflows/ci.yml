@@ -7,7 +7,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout Simulator
@@ -16,7 +16,7 @@ jobs:
         path: simulator
         submodules: recursive
     - name: Install Simulator system dependencies
-      run: sudo apt-get update && sudo apt-get install -y wget git cmake build-essential swig zlib1g-dev doxygen default-jre
+      run: sudo add-apt-repository ppa:deadsnakes/ppa && sudo apt-get update && sudo apt-get install -y wget git cmake build-essential swig zlib1g-dev doxygen default-jre python3.12
     - name: Install Simulator dependencies
       run: yarn run build-deps
       working-directory: simulator
