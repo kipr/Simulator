@@ -16,11 +16,13 @@ namespace Node {
     mass?: Mass;
     friction?: number;
     restitution?: number;
+    inertia?: number[];
+
   }
 
   export namespace Physics {
     export type Type = 'box' | 'sphere' | 'cylinder' | 'mesh' | 'none';
-  
+
     export const diff = (prev: Physics, next: Physics): Patch<Physics> => {
       if (!deepNeq(prev, next)) return Patch.none(prev);
 
@@ -30,7 +32,8 @@ namespace Node {
         type: Patch.diff(prev.type, next.type),
         mass: Patch.diff(prev.mass, next.mass),
         friction: Patch.diff(prev.friction, next.friction),
-        restitution: Patch.diff(prev.restitution, next.restitution)
+        restitution: Patch.diff(prev.restitution, next.restitution),
+        inertia: Patch.diff(prev.inertia, next.inertia)
       });
     };
   }
