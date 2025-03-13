@@ -685,8 +685,6 @@ class SceneBinding {
     ) {
       return;
     }
-    // BUG: Can collision box location scaled on X or Z axes
-    // BUG: Mat falls through ground
 
     const initialParent = mesh.parent;
     mesh.setParent(null);
@@ -695,27 +693,34 @@ class SceneBinding {
 
     const scale = RawVector3.toBabylon(objectNode.origin.scale ?? { x: 1, y: 1, z: 1 });
 
-    // Not sure why, but the final multiplication by [2, 2, 2] is required to make collision shapes scale correctly
-    const extend = mesh.getBoundingInfo().boundingBox.extendSize.multiply(scale).multiply(new Vector3(2, 2, 2));
+    let parameters: PhysicsShapeParameters = { mesh: mesh as Mesh };
 
-    let parameters: PhysicsShapeParameters = { mesh: mesh as Mesh, extents: extend };
-
-    // Cylinders require some extra info
+    // Cylinders require different parameters from everything else
     // WARNING: These numbers are correct for the cans, but must be changed of we ever include any other cylinders
     if (objectNode.physics.type === 'cylinder') {
+      const p = mesh.absolutePosition;
+      // I have no idea why subtracting 2x is necessary, but the position will be wrong on the x-axis without this
       parameters = {
         ...parameters,
-        pointA: mesh.absolutePosition.add(new Vector3(0, -(11.15 * 0.5), 0)),
-        pointB: mesh.absolutePosition.add(new Vector3(0, (11.15 * 0.5), 0)),
+        pointA: p.add(new Vector3(-(p.x * 2), -(11.15 * 0.5), 0)),
+        pointB: p.add(new Vector3(-(p.x * 2), (11.15 * 0.5), 0)),
         radius: 3
+      };
+      console.log(parameters);
+    } else {
+      // Not sure why, but the final multiplication by [2, 2, 2] is required to make collision shapes scale correctly
+      const extend = mesh.getBoundingInfo().boundingBox.extendSize.multiply(scale).multiply(new Vector3(2, 2, 2));
+      parameters = {
+        ...parameters,
+        extents: extend,
       };
     }
 
     const options: PhysicShapeOptions = { type: PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type], parameters };
     const shape = new PhysicsShape(options, this.bScene);
     shape.material = {
-      friction: objectNode.physics.friction ?? 0.5,
-      restitution: objectNode.physics.restitution ?? 0.1,
+      friction: objectNode.physics.friction ?? 0.2,
+      restitution: objectNode.physics.restitution ?? 0.2,
     };
 
     // For some reason the mesh id changes when the world resets
@@ -733,10 +738,9 @@ class SceneBinding {
       this.bScene);
     body.shape = parentShape;
 
-    // FIXME: Mass seems too high
     body.setMassProperties({
-      mass: objectNode.physics.mass ? Mass.toKilogramsValue(objectNode.physics.mass) : 1,
-      inertia: objectNode.physics.inertia ? Vector3.FromArray(objectNode.physics.inertia) : new Vector3(1, 1, 1),
+      mass: objectNode.physics.mass ? Mass.toKilogramsValue(objectNode.physics.mass) : 0,
+      inertia: objectNode.physics.inertia ? Vector3.FromArray(objectNode.physics.inertia) : new Vector3(0, 0, 0),
     });
 
     if (this.physicsViewer_) {
