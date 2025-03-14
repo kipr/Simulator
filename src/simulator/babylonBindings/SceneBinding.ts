@@ -706,7 +706,6 @@ class SceneBinding {
         pointB: p.add(new Vector3(-(p.x * 2), (11.15 * 0.5), 0)),
         radius: 3
       };
-      console.log(parameters);
     } else {
       // Not sure why, but the final multiplication by [2, 2, 2] is required to make collision shapes scale correctly
       const extend = mesh.getBoundingInfo().boundingBox.extendSize.multiply(scale).multiply(new Vector3(2, 2, 2));
@@ -730,7 +729,6 @@ class SceneBinding {
       parentShape.addChild(shape);
     }
 
-    // Same as above comment
     const body = new PhysicsBody(
       mesh,
       objectNode.physics.motionType ? objectNode.physics.motionType : PhysicsMotionType.DYNAMIC,

@@ -1,5 +1,7 @@
-import { TransformNode, AbstractMesh, CreateBox, CreateSphere, CreateCylinder, 
-  CreatePlane, Vector4, Mesh, SceneLoader, Scene as babylonScene, Node as babylonNode } from '@babylonjs/core';
+import {
+  TransformNode, AbstractMesh, CreateBox, CreateSphere, CreateCylinder,
+  CreatePlane, Vector4, Mesh, SceneLoader, Scene as babylonScene, Node as babylonNode
+} from '@babylonjs/core';
 
 import Geometry from "../../../state/State/Scene/Geometry";
 import { RawVector2 } from "../../../util/math/math";
@@ -38,7 +40,7 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
   switch (geometry.type) {
     case 'box': {
       const rect = CreateBox(name, {
-        updatable:true, 
+        updatable: true,
         width: Distance.toCentimetersValue(geometry.size.x),
         height: Distance.toCentimetersValue(geometry.size.y),
         depth: Distance.toCentimetersValue(geometry.size.z),
@@ -52,21 +54,21 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
       const bFaceUvs = buildGeometryFaceUvs(faceUvs, 2)?.[0];
       const segments = 4;
       const rock = CreateSphere(name, {
-        segments: segments, 
-        updatable:true, 
+        segments: segments,
+        updatable: true,
         frontUVs: bFaceUvs,
         sideOrientation: bFaceUvs ? Mesh.DOUBLESIDE : undefined,
-        diameterX:Distance.toCentimetersValue(geometry.radius) * 2,
-        diameterY:Distance.toCentimetersValue(geometry.radius) * 2 * geometry.squash,
-        diameterZ:Distance.toCentimetersValue(geometry.radius) * 2 * geometry.stretch,
+        diameterX: Distance.toCentimetersValue(geometry.radius) * 2,
+        diameterY: Distance.toCentimetersValue(geometry.radius) * 2 * geometry.squash,
+        diameterZ: Distance.toCentimetersValue(geometry.radius) * 2 * geometry.stretch,
       }, bScene_);
-    
+
       const positions = rock.getVerticesData("position");
       // TODO: Replace with custom rocks from blender
       if (name.includes('Rock')) {
-        const skip = [25,26,38,39,51,52,64,65]; 
+        const skip = [25, 26, 38, 39, 51, 52, 64, 65];
         for (let i = 14; i < 65; i++) {
-          if (skip.includes(i)) { 
+          if (skip.includes(i)) {
             continue;
           } else {
             positions[3 * i] = positions[3 * i] + random(geometry.noise, -1 * geometry.noise);
@@ -121,7 +123,7 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
         mesh.setParent(ret);
       }
       // const mesh = Mesh.MergeMeshes(nonColliders, true, true, undefined, false, true);
-      break; 
+      break;
     }
     default: {
       throw new Error(`Unsupported geometry type: ${geometry.type}`);
@@ -139,7 +141,7 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
 };
 
 export const createObject = async (node: Node.Obj, nextScene: Scene, parent: babylonNode, bScene_: babylonScene): Promise<babylonNode> => {
-  
+
   const geometry = nextScene.geometry[node.geometryId] ?? preBuiltGeometries[node.geometryId];
   if (!geometry) {
     console.error(`node ${LocalizedString.lookup(node.name, LocalizedString.EN_US)} has invalid geometry ID: ${node.geometryId}`);
@@ -157,7 +159,7 @@ export const createObject = async (node: Node.Obj, nextScene: Scene, parent: bab
   return ret;
 };
 
-export const createEmpty = (node: Node.Empty, parent: babylonNode,bScene_: babylonScene): TransformNode => {
+export const createEmpty = (node: Node.Empty, parent: babylonNode, bScene_: babylonScene): TransformNode => {
 
   const ret = new TransformNode(node.name[LocalizedString.EN_US], bScene_);
   ret.setParent(parent);
