@@ -4,6 +4,7 @@ import { Color } from "../../../state/State/Scene/Color";
 import Geometry from "../../../state/State/Scene/Geometry";
 import Node from "../../../state/State/Scene/Node";
 import { Distance, Mass } from "../../../util";
+import { PhysicsMotionType } from "@babylonjs/core";
 
 // TODO: Consider deep-freezing all of these objects
 
@@ -119,6 +120,7 @@ const matATemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'mat',
   physics: {
     type: 'box',
+    motionType: PhysicsMotionType.STATIC,
     restitution: .3,
     friction: 1,
   },
@@ -136,6 +138,7 @@ const matBTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'mat',
   physics: {
     type: 'box',
+    motionType: PhysicsMotionType.STATIC,
     restitution: .3,
     friction: 1,
   },

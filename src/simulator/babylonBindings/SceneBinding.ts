@@ -733,7 +733,7 @@ class SceneBinding {
     // Same as above comment
     const body = new PhysicsBody(
       mesh,
-      (mesh.id.includes('Ground') || mesh.id.includes('ground')) ? PhysicsMotionType.STATIC : PhysicsMotionType.DYNAMIC,
+      objectNode.physics.motionType ? objectNode.physics.motionType : PhysicsMotionType.DYNAMIC,
       false,
       this.bScene);
     body.shape = parentShape;

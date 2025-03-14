@@ -7,15 +7,50 @@ import { Angle, Mass } from '../../../util/math/Value';
 import LocalizedString from '../../../util/LocalizedString';
 import Patch from '../../../util/redux/Patch';
 import Material from './Material';
+import { PhysicsMotionType } from '@babylonjs/core';
 
 namespace Node {
   export interface Physics {
     colliderId?: string;
     fixed?: boolean;
+
+    /**
+     * What shape will simulate the physics for the object:
+     * box, sphere, cylinder, mesh, or none. 
+     */
     type: Physics.Type;
+
+    /**
+     * Describes whether the object should move. If undefined, dynamic (does move).
+     */
+    motionType?: PhysicsMotionType;
+
+    /**
+     * The mass of the object. If undefined, zero.
+     */
     mass?: Mass;
+
+    /**
+     * Coefficient of friction. If undefined, 0.2.
+     */
     friction?: number;
+
+    /**
+     * Restitution (bounciness) of the object.
+     * Defines how much energy is retained after a collision, where zero
+     * means none is retained, one means all energy is is retained, and values
+     * greater than one mean that energy is actually gained from the collsion.
+     * Should generally be between zero and one. If undefined, 0.2.
+     */
     restitution?: number;
+
+    /**
+     * The moment of inertia of the Mesh, represented as a
+     * 3-length vector. Represents how hard to rotate left/right (x),
+     * twisting around (y), and rocking back/forward (z).
+     * WARNING: If undefined, all zeros, which babylonJS
+     * treats as infinite inertia.
+     */
     inertia?: number[];
 
   }
@@ -30,6 +65,7 @@ namespace Node {
         colliderId: Patch.diff(prev.colliderId, next.colliderId),
         fixed: Patch.diff(prev.fixed, next.fixed),
         type: Patch.diff(prev.type, next.type),
+        motionType: Patch.diff(prev.motionType, next.motionType),
         mass: Patch.diff(prev.mass, next.mass),
         friction: Patch.diff(prev.friction, next.friction),
         restitution: Patch.diff(prev.restitution, next.restitution),
@@ -39,6 +75,9 @@ namespace Node {
   }
 
   interface Base {
+    /**
+     * The name of the object which will be displayed to the user.
+     */
     name: LocalizedString;
     startingOrigin?: ReferenceFramewUnits;
     origin?: ReferenceFramewUnits;
