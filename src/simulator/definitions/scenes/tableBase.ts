@@ -12,6 +12,7 @@ import { Color } from "../../../state/State/Scene/Color";
 // import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 
 import tr from '@i18n';
+import { PhysicsMotionType } from "@babylonjs/core";
 // import { distance } from "colorjs.io/fn";
 // import { scale } from "pdf-lib";
 // import { sprintf } from 'sprintf-js';
@@ -122,6 +123,7 @@ export function createBaseSceneSurface(): Scene {
         visible: true,
         physics: {
           type: 'box',
+          motionType: PhysicsMotionType.STATIC,
           restitution: 0.1,
           friction: 10,
         },

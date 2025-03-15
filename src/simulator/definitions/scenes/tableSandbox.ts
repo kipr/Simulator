@@ -24,6 +24,11 @@ const HAMBURGER_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(WARMING_X, 24, 114),
 };
 
+const TEST_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(40, 24, 110),
+  scale: { x: 100, y: 100, z: 100 }
+};
+
 const HOTDOG_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(WARMING_X, 24, 102.5),
 };
@@ -191,6 +196,15 @@ const HAMBURGER: Node.Robot = {
   editable: true,
   startingOrigin: HAMBURGER_ORIGIN,
   origin: HAMBURGER_ORIGIN
+};
+const HAMBURGER_TEST: Node.FromSpaceTemplate = {
+  type: 'from-space-template',
+  name: tr('Hamburger'),
+  templateId: 'hamburger',
+  visible: true,
+  editable: true,
+  startingOrigin: TEST_ORIGIN,
+  origin: TEST_ORIGIN
 };
 
 const HOTDOG: Node.Robot = {
@@ -503,28 +517,29 @@ export const Table_Sandbox: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-    'hamburger': HAMBURGER,
-    'hotdog': HOTDOG,
-    'taco': TACO,
-    'cup_pink': CUP_PINK,
-    'cup_blue': CUP_BLUE,
-    'cup_green': CUP_GREEN,
+    // 'hamburger': HAMBURGER_TEST,
+    // 'hamburger': HAMBURGER,
+    // 'hotdog': HOTDOG,
+    // 'taco': TACO,
+    // 'cup_pink': CUP_PINK,
+    // 'cup_blue': CUP_BLUE,
+    // 'cup_green': CUP_GREEN,
     ...POMS_BLUE,
     ...POMS_ORANGE,
     ...POMS_RED,
     ...POMS_YELLOW,
     ...POMS_RANDOM,
-    ...BOTTLES,
-    'tomato': TOMATO,
-    'pickle': PICKLE,
+    // ...BOTTLES,
+    // 'tomato': TOMATO,
+    // 'pickle': PICKLE,
     'potato': POTATO,
-    'fry0': FRY0,
-    'fry1': FRY1,
-    ...TRAYS,
-    ...DRINKS_BLUE,
-    ...DRINKS_GREEN,
-    ...DRINKS_PINK,
-    'botguy': BOTGUY,
+    // 'fry0': FRY0,
+    // 'fry1': FRY1,
+    // ...TRAYS,
+    // ...DRINKS_BLUE,
+    // ...DRINKS_GREEN,
+    // ...DRINKS_PINK,
+    // 'botguy': BOTGUY,
     'robot': {
       ...baseScene.nodes['robot'],
       editable: true,

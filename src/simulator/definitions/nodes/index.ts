@@ -364,6 +364,7 @@ const pomBlueTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .4,
     friction: 1,
     mass: Mass.grams(1),
+    inertia: [1, 1, 1]
   },
 };
 const pomOrangeTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -374,6 +375,7 @@ const pomOrangeTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .4,
     friction: 1,
     mass: Mass.grams(1),
+    inertia: [1, 1, 1]
   },
 };
 const pomRedTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -384,6 +386,7 @@ const pomRedTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .4,
     friction: 1,
     mass: Mass.grams(1),
+    inertia: [1, 1, 1]
   },
 };
 const pomYellowTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -394,6 +397,7 @@ const pomYellowTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .4,
     friction: 1,
     mass: Mass.grams(1),
+    inertia: [1, 1, 1]
   },
 };
 
@@ -405,6 +409,17 @@ const frenchFryTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: .7,
     mass: Mass.grams(2),
+  },
+};
+const hamburgerTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'hamburger',
+  physics: {
+    type: 'mesh',
+    restitution: .8,
+    friction: 1,
+    mass: Mass.grams(5),
+    inertia: [3, 3, 3],
   },
 };
 
@@ -438,6 +453,7 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'pom_red': pomRedTemplate,
   'pom_yellow': pomYellowTemplate,
   'french_fry': frenchFryTemplate,
+  'hamburger': hamburgerTemplate,
 });
 
 
@@ -578,4 +594,8 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
     type: 'file',
     uri: '/static/object_binaries/french_fry.glb',
   },
+  'hamburger': {
+    type: 'file',
+    uri: '/static/object_binaries/hamburger.glb',
+  }
 });

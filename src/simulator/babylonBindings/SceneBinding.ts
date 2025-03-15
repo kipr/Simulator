@@ -38,7 +38,7 @@ import { RENDER_SCALE } from '../../components/constants/renderConstants';
 import { createMaterial, updateMaterialBasic, updateMaterialPbr } from './createSceneObjects/createMaterials';
 import { createDirectionalLight, createPointLight, createSpotLight } from './createSceneObjects/createLights';
 import { createCamera } from './createSceneObjects/createCameras';
-import { createObject, createEmpty } from './createSceneObjects/createObjects';
+import { createObject, createEmpty, meshPair } from './createSceneObjects/createObjects';
 import apply from './Apply';
 
 export type FrameLike = TransformNode | AbstractMesh;
@@ -258,7 +258,12 @@ class SceneBinding {
       case 'object': {
         const parent = this.findBNode_(nodeToCreate.parentId, true);
 
-        ret = await createObject(nodeToCreate, nextScene, parent, this.bScene_); break;
+        ret = await createObject(nodeToCreate, nextScene, parent, this.bScene_);
+        if (nodeToCreate.physics) {
+          console.log(`${id} has colliderId ${nodeToCreate.physics.colliderId}`);
+        }
+        break;
+
       }
       case 'empty': {
         const parent = this.findBNode_(nodeToCreate.parentId, true);
@@ -689,6 +694,27 @@ class SceneBinding {
     const initialParent = mesh.parent;
     mesh.setParent(null);
 
+    const body = new PhysicsBody(
+      mesh,
+      objectNode.physics.motionType ? objectNode.physics.motionType : PhysicsMotionType.DYNAMIC,
+      false,
+      this.bScene);
+
+    body.setMassProperties({
+      mass: objectNode.physics.mass ? Mass.toKilogramsValue(objectNode.physics.mass) : 0,
+      inertia: objectNode.physics.inertia ? Vector3.FromArray(objectNode.physics.inertia) : new Vector3(0, 0, 0),
+    });
+
+    if (objectNode.physics && objectNode.physics.colliderId) {
+      const match = this.bScene_.meshes.filter(m => m.name === mesh.name)[0];
+      console.log(match);
+      if (match && match.physicsBody && match.physicsBody.shape) {
+        console.log("Reusing collider");
+        body.shape = match.physicsBody.shape;
+        return;
+      }
+    }
+
     const parentShape = new PhysicsShapeContainer(this.bScene);
 
     const scale = RawVector3.toBabylon(objectNode.origin.scale ?? { x: 1, y: 1, z: 1 });
@@ -696,7 +722,7 @@ class SceneBinding {
     let parameters: PhysicsShapeParameters = { mesh: mesh as Mesh };
 
     // Cylinders require different parameters from everything else
-    // WARNING: These numbers are correct for the cans, but must be changed of we ever include any other cylinders
+    // WARNING: These numbers are correct for the cans, but must be changed if we ever include any other cylinders
     if (objectNode.physics.type === 'cylinder') {
       const p = mesh.absolutePosition;
       // I have no idea why subtracting 2x is necessary, but the position will be wrong on the x-axis without this
@@ -729,17 +755,7 @@ class SceneBinding {
       parentShape.addChild(shape);
     }
 
-    const body = new PhysicsBody(
-      mesh,
-      objectNode.physics.motionType ? objectNode.physics.motionType : PhysicsMotionType.DYNAMIC,
-      false,
-      this.bScene);
     body.shape = parentShape;
-
-    body.setMassProperties({
-      mass: objectNode.physics.mass ? Mass.toKilogramsValue(objectNode.physics.mass) : 0,
-      inertia: objectNode.physics.inertia ? Vector3.FromArray(objectNode.physics.inertia) : new Vector3(0, 0, 0),
-    });
 
     if (this.physicsViewer_) {
       this.physicsViewer_.showBody(mesh.physicsBody);
@@ -772,6 +788,8 @@ class SceneBinding {
     if (this.physicsViewer_) {
       this.physicsViewer_.hideBody(mesh.physicsBody);
     }
+
+    // BUG: Error here on reset
     mesh.physicsBody.shape.dispose();
     mesh.physicsBody.dispose();
     mesh.physicsBody = null;

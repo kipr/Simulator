@@ -15,6 +15,11 @@ import { preBuiltGeometries } from "../../definitions/nodes";
 
 export type FrameLike = TransformNode | AbstractMesh;
 
+export interface meshPair {
+  visual: AbstractMesh;
+  collider?: AbstractMesh;
+}
+
 let seed_ = 1;
 
 const random = (max: number, min: number) => {
@@ -35,8 +40,9 @@ export const buildGeometryFaceUvs = (faceUvs: RawVector2[] | undefined, expected
   return ret;
 };
 
-export const buildGeometry = async (name: string, geometry: Geometry, bScene_: babylonScene, faceUvs?: RawVector2[]): Promise<FrameLike> => {
-  let ret: FrameLike;
+export const buildGeometry = async (name: string, geometry: Geometry, bScene_: babylonScene, faceUvs?: RawVector2[]): Promise<meshPair> => {
+  const ret: meshPair = {} as meshPair;
+  let parentTNode: TransformNode;
   switch (geometry.type) {
     case 'box': {
       const rect = CreateBox(name, {
@@ -47,7 +53,7 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
         faceUV: buildGeometryFaceUvs(faceUvs, 12),
       }, bScene_);
       const verts = rect.getVerticesData("position");
-      ret = rect;
+      ret.visual = rect;
       break;
     }
     case 'sphere': {
@@ -78,11 +84,11 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
         }
       }
       rock.updateVerticesData("position", positions);
-      ret = rock;
+      ret.visual = rock;
       break;
     }
     case 'cylinder': {
-      ret = CreateCylinder(name, {
+      ret.visual = CreateCylinder(name, {
         height: Distance.toCentimetersValue(geometry.height),
         diameterTop: Distance.toCentimetersValue(geometry.radius) * 2,
         diameterBottom: Distance.toCentimetersValue(geometry.radius) * 2,
@@ -91,7 +97,7 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
       break;
     }
     case 'cone': {
-      ret = CreateCylinder(name, {
+      ret.visual = CreateCylinder(name, {
         diameterTop: 0,
         height: Distance.toCentimetersValue(geometry.height),
         diameterBottom: Distance.toCentimetersValue(geometry.radius) * 2,
@@ -100,7 +106,7 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
       break;
     }
     case 'plane': {
-      ret = CreatePlane(name, {
+      ret.visual = CreatePlane(name, {
         width: Distance.toCentimetersValue(geometry.size.x),
         height: Distance.toCentimetersValue(geometry.size.y),
         frontUVs: buildGeometryFaceUvs(faceUvs, 2)?.[0],
@@ -113,14 +119,18 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
       const baseName = geometry.uri.substring(0, index + 1);
 
       const res = await SceneLoader.ImportMeshAsync(geometry.include ?? '', baseName, fileName, bScene_);
-      if (res.meshes.length === 1) return res.meshes[0];
+      if (res.meshes.length === 1) return { visual: res.meshes[0] };
       // const nonColliders: Mesh[] = [];
-      ret = new TransformNode(geometry.uri, bScene_);
+      parentTNode = new TransformNode(geometry.uri, bScene_);
       for (const mesh of res.meshes as Mesh[]) {
         // GLTF importer adds a __root__ mesh (always the first one) that we can ignore 
         if (mesh.name === '__root__') continue;
+        if (mesh.name.startsWith('collider')) {
+          ret.collider = mesh;
+          continue;
+        }
         // nonColliders.push(mesh);
-        mesh.setParent(ret);
+        mesh.setParent(parentTNode);
       }
       // const mesh = Mesh.MergeMeshes(nonColliders, true, true, undefined, false, true);
       break;
@@ -129,14 +139,13 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
       throw new Error(`Unsupported geometry type: ${geometry.type}`);
     }
   }
-  if (ret instanceof AbstractMesh) {
-    ret.visibility = 1;
-  } else {
-    const children = ret.getChildren(c => c instanceof AbstractMesh) as Mesh[];
+  if (parentTNode) {
+    const children = parentTNode.getChildren(c => c instanceof AbstractMesh) as Mesh[];
     const mesh = Mesh.MergeMeshes(children, true, true, undefined, false, true);
-    mesh.visibility = 1;
-    ret = mesh;
+    ret.visual = mesh;
   }
+
+  ret.visual.visibility = 1;
   return ret;
 };
 
@@ -148,15 +157,19 @@ export const createObject = async (node: Node.Obj, nextScene: Scene, parent: bab
     return null;
   }
   const ret = await buildGeometry(node.name[LocalizedString.EN_US], geometry, bScene_, node.faceUvs);
+
+  if (node.physics && !node.physics.colliderId && ret.collider) {
+    node.physics.colliderId = ret.collider.id;
+  }
   if (!node.visible) {
-    apply(ret, m => m.isVisible = false);
+    apply(ret.visual, m => m.isVisible = false);
   }
   if (node.material) {
     const material = createMaterial(node.name[LocalizedString.EN_US], node.material, bScene_);
-    apply(ret, m => m.material = material);
+    apply(ret.visual, m => m.material = material);
   }
-  ret.setParent(parent);
-  return ret;
+  ret.visual.setParent(parent);
+  return ret.visual;
 };
 
 export const createEmpty = (node: Node.Empty, parent: babylonNode, bScene_: babylonScene): TransformNode => {
