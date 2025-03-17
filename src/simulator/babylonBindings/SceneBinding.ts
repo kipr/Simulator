@@ -696,19 +696,19 @@ class SceneBinding {
 
     const body = new PhysicsBody(
       mesh,
-      objectNode.physics.motionType ? objectNode.physics.motionType : PhysicsMotionType.DYNAMIC,
+      objectNode.physics?.motionType ?? PhysicsMotionType.DYNAMIC,
       false,
       this.bScene);
 
     body.setMassProperties({
-      mass: objectNode.physics.mass ? Mass.toKilogramsValue(objectNode.physics.mass) : 0,
-      inertia: objectNode.physics.inertia ? Vector3.FromArray(objectNode.physics.inertia) : new Vector3(0, 0, 0),
+      mass: Mass.toKilogramsValue(objectNode.physics?.mass ?? Mass.grams(0)),
+      inertia: Vector3.FromArray(objectNode.physics?.inertia ?? [0, 0, 0]),
     });
 
-    if (objectNode.physics && objectNode.physics.colliderId) {
+    if (objectNode.physics?.colliderId) {
       const match = this.bScene_.meshes.filter(m => m.name === mesh.name)[0];
       console.log(match);
-      if (match && match.physicsBody && match.physicsBody.shape) {
+      if (match?.physicsBody?.shape) {
         console.log("Reusing collider");
         body.shape = match.physicsBody.shape;
         return;
