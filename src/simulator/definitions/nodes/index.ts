@@ -403,6 +403,7 @@ const frenchFryTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: .7,
     mass: Mass.grams(2),
+    inertia: [2, 2, 2]
   },
 };
 const hamburgerTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -518,6 +519,17 @@ const trayTemplate: Node.TemplatedNode<Node.Obj> = {
     inertia: [1, 1, 1],
   }
 };
+const botguyGamepieceTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'botguy_gamepiece',
+  physics: {
+    type: 'mesh',
+    restitution: .1,
+    friction: .7,
+    mass: Mass.grams(5),
+    inertia: [2, 2, 2],
+  }
+};
 
 export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'can': canTemplate,
@@ -561,6 +573,7 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'pickle': pickleTemplate,
   'potato': potatoTemplate,
   'tray': trayTemplate,
+  'botguy_gamepiece': botguyGamepieceTemplate,
 });
 
 
@@ -748,5 +761,9 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   'tray': {
     type: 'file',
     uri: '/static/object_binaries/tray.glb',
+  },
+  'botguy_gamepiece': {
+    type: 'file',
+    uri: '/static/object_binaries/botguy.glb',
   },
 });

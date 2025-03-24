@@ -197,18 +197,16 @@ const POTATO_ORIGIN: ReferenceFramewUnits = {
 
 const FRY_ORIGIN0: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(115, 21, -87),
-  // orientation: RotationwUnits.eulerDegrees(0, 90, 0),
   scale: { x: 100, y: 100, z: 100 }
 };
 const FRY_ORIGIN1: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(115, 21, -89),
-  // orientation: RotationwUnits.eulerDegrees(0, 90, 0),
   scale: { x: 100, y: 100, z: 100 }
 };
 
 const BOTGUY_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(-4, 26, -3),
-  orientation: RotationwUnits.eulerDegrees(0, -90, 0),
+  position: Vector3wUnits.centimeters(-4, 24, -3),
+  scale: { x: 100, y: 100, z: 100 },
 };
 
 
@@ -436,11 +434,10 @@ for (let i = 0; i < 6; i++) {
   };
 }
 
-const BOTGUY: Node.Robot = {
-  type: 'robot',
+const BOTGUY: Node.FromSpaceTemplate = {
+  type: 'from-space-template',
   name: tr('Botguy'),
-  robotId: 'botguy',
-  state: AbstractRobot.Stateless.NIL,
+  templateId: 'botguy_gamepiece',
   visible: true,
   editable: true,
   startingOrigin: BOTGUY_ORIGIN,
@@ -545,7 +542,7 @@ export const Table_Sandbox: Scene = {
     ...DRINKS_BLUE,
     ...DRINKS_GREEN,
     ...DRINKS_PINK,
-    // 'botguy': BOTGUY,
+    'botguy': BOTGUY,
     'robot': {
       ...baseScene.nodes['robot'],
       editable: true,
