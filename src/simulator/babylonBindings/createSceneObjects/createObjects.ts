@@ -41,7 +41,10 @@ export const buildGeometryFaceUvs = (faceUvs: RawVector2[] | undefined, expected
 };
 
 export const buildGeometry = async (name: string, geometry: Geometry, bScene_: babylonScene, faceUvs?: RawVector2[]): Promise<meshPair> => {
-  console.log(`buildGeometry got name ${name}`);
+  const asdf = name.replace(/\d+/g, '');
+
+  // console.log(`buildGeometry got name ${asdf}`);
+  // console.log('buildGeometry got geometry', geometry);
   const ret: meshPair = {} as meshPair;
   let parentTNode: TransformNode;
   switch (geometry.type) {
@@ -157,7 +160,26 @@ export const createObject = async (node: Node.Obj, nextScene: Scene, parent: bab
     console.error(`node ${LocalizedString.lookup(node.name, LocalizedString.EN_US)} has invalid geometry ID: ${node.geometryId}`);
     return null;
   }
-  const ret = await buildGeometry(node.name[LocalizedString.EN_US], geometry, bScene_, node.faceUvs);
+
+  // console.log(bScene_.meshes);
+  console.log(node.name[LocalizedString.EN_US]);
+  console.log(node.geometryId);
+  const match = bScene_.meshes.filter(m => m.name.startsWith(node.geometryId))[0];
+
+  let ret: meshPair = { visual: null };
+  if (match && match instanceof Mesh) {
+    console.log("I'M INSTANCING!!!", match);
+    ret.visual = match.createInstance(`${match.name}-instance`);
+
+    if (!node.visible) {
+      apply(ret.visual, m => m.isVisible = false);
+    }
+
+    ret.visual.setParent(parent);
+    return ret.visual;
+  }
+
+  ret = await buildGeometry(node.name[LocalizedString.EN_US], geometry, bScene_, node.faceUvs);
 
   if (ret.collider) {
     apply(ret.collider, m => m.isVisible = false);
