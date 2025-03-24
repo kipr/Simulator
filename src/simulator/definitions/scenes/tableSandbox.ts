@@ -107,14 +107,32 @@ const POM_BLUE_ORIGINS_FRONT = POM_BLUE_ORIGINS_BACK.map((p) => {
   };
 });
 
-const BOTTLE_Y = 2;
+const BOTTLE_Y = 7;
 const BOTTLE_ORIGINS: ReferenceFramewUnits[] = [
-  { position: Vector3wUnits.centimeters(29.5, BOTTLE_Y, 33.4) },
-  { position: Vector3wUnits.centimeters(29.5, BOTTLE_Y, 26.3) },
-  { position: Vector3wUnits.centimeters(29.5, BOTTLE_Y, 19.2) },
-  { position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 33.4) },
-  { position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 26.3) },
-  { position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 19.2) },
+  {
+    position: Vector3wUnits.centimeters(29.5, BOTTLE_Y, 33.4),
+    scale: { x: 100, y: 100, z: 100 }
+  },
+  {
+    position: Vector3wUnits.centimeters(29.5, BOTTLE_Y, 26.3),
+    scale: { x: 100, y: 100, z: 100 }
+  },
+  {
+    position: Vector3wUnits.centimeters(29.5, BOTTLE_Y, 19.2),
+    scale: { x: 100, y: 100, z: 100 }
+  },
+  {
+    position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 33.4),
+    scale: { x: 100, y: 100, z: 100 }
+  },
+  {
+    position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 26.3),
+    scale: { x: 100, y: 100, z: 100 }
+  },
+  {
+    position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 19.2),
+    scale: { x: 100, y: 100, z: 100 }
+  },
 ];
 
 const CENTER_LINE_X = 65.5;
@@ -162,17 +180,20 @@ const POM_YELLOW_ORIGINS: ReferenceFramewUnits[] = [
 ];
 
 const TOMATO_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(29, 1, -14.3891),
+  position: Vector3wUnits.centimeters(29, 5, -14.3891),
+  scale: { x: 100, y: 100, z: 100 },
 };
 
 const PICKLE_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(27, 2.5, -25.8191),
   orientation: RotationwUnits.eulerDegrees(0, 0, 90),
+  scale: { x: 100, y: 100, z: 100 },
 };
 
 const POTATO_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(35, 7.3, -85),
   orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+  scale: { x: 100, y: 100, z: 100 },
 };
 
 const FRY_ORIGIN0: ReferenceFramewUnits = {
@@ -275,13 +296,12 @@ for (const [i, pos] of POM_BLUE_ORIGINS_FRONT.entries()) {
   };
 }
 
-const BOTTLES: Dict<Node.Robot> = {};
+const BOTTLES: Dict<Node.FromSpaceTemplate> = {};
 for (const [i, pos] of BOTTLE_ORIGINS.entries()) {
   BOTTLES[`bottle${i}`] = {
-    type: 'robot',
+    type: 'from-space-template',
     name: tr(`Bottle #${i}`),
-    robotId: 'bottle',
-    state: AbstractRobot.Stateless.NIL,
+    templateId: 'bottle',
     visible: true,
     editable: true,
     startingOrigin: pos,
@@ -349,33 +369,30 @@ for (let i = 0; i < 9; i++) {
   };
 }
 
-const TOMATO: Node.Robot = {
-  type: 'robot',
+const TOMATO: Node.FromSpaceTemplate = {
+  type: 'from-space-template',
   name: tr('Tomato'),
-  robotId: 'tomato',
-  state: AbstractRobot.Stateless.NIL,
+  templateId: 'tomato',
   visible: true,
   editable: true,
   startingOrigin: TOMATO_ORIGIN,
   origin: TOMATO_ORIGIN
 };
 
-const PICKLE: Node.Robot = {
-  type: 'robot',
+const PICKLE: Node.FromSpaceTemplate = {
+  type: 'from-space-template',
   name: tr('Pickle'),
-  robotId: 'pickle',
-  state: AbstractRobot.Stateless.NIL,
+  templateId: 'pickle',
   visible: true,
   editable: true,
   startingOrigin: PICKLE_ORIGIN,
   origin: PICKLE_ORIGIN
 };
 
-const POTATO: Node.Robot = {
-  type: 'robot',
+const POTATO: Node.FromSpaceTemplate = {
+  type: 'from-space-template',
   name: tr('Potato'),
-  robotId: 'potato',
-  state: AbstractRobot.Stateless.NIL,
+  templateId: 'potato',
   visible: true,
   editable: true,
   startingOrigin: POTATO_ORIGIN,
@@ -511,14 +528,14 @@ export const Table_Sandbox: Scene = {
     'cup_pink': CUP_PINK,
     'cup_blue': CUP_BLUE,
     'cup_green': CUP_GREEN,
-    // ...POMS_BLUE,
+    ...POMS_BLUE,
     ...POMS_ORANGE,
     ...POMS_RED,
     ...POMS_YELLOW,
-    // ...POMS_RANDOM,
-    // ...BOTTLES,
-    // 'tomato': TOMATO,
-    // 'pickle': PICKLE,
+    ...POMS_RANDOM,
+    ...BOTTLES,
+    'tomato': TOMATO,
+    'pickle': PICKLE,
     'potato': POTATO,
     // 'fry0': FRY0,
     // 'fry1': FRY1,

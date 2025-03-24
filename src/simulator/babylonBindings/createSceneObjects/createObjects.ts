@@ -159,8 +159,11 @@ export const createObject = async (node: Node.Obj, nextScene: Scene, parent: bab
   }
   const ret = await buildGeometry(node.name[LocalizedString.EN_US], geometry, bScene_, node.faceUvs);
 
-  if (node.physics && !node.physics.colliderId && ret.collider) {
-    node.physics.colliderId = ret.collider.id;
+  if (ret.collider) {
+    apply(ret.collider, m => m.isVisible = false);
+    if (node.physics && !node.physics.colliderId) {
+      node.physics.colliderId = ret.collider.id;
+    }
   }
   if (!node.visible) {
     apply(ret.visual, m => m.isVisible = false);

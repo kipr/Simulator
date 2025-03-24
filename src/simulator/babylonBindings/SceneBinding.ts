@@ -708,7 +708,7 @@ class SceneBinding {
     });
 
     if (objectNode.physics?.colliderId) {
-      const match = this.bScene_.getMeshByName(mesh.name);
+      const match = this.bScene_.meshes.filter(m => m.name.startsWith(mesh.name.split('-')[0]))[0];
       console.log(match);
       if (match?.physicsBody?.shape) {
         console.log("Reusing collider");
@@ -759,8 +759,6 @@ class SceneBinding {
     // For some reason the mesh id changes when the world resets
     if (physics_mesh.id.includes('Can') || physics_mesh.id.includes('can')) {
       parentShape.addChild(shape, mesh.absolutePosition, mesh.absoluteRotationQuaternion);
-    } else if (physics_mesh.id.includes('Cup') || physics_mesh.id.includes('cup')) {
-      parentShape.addChild(shape, new Vector3(0, 5, 0));
     } else {
       parentShape.addChild(shape);
     }

@@ -325,35 +325,26 @@ const habitatControlTemplate: Node.TemplatedNode<Node.Obj> = {
   },
 };
 
+const DRINK_PHYSICS: Node.Physics = {
+  type: 'box',
+  restitution: .1,
+  friction: .5,
+  mass: Mass.grams(5),
+};
 const drinkBlueTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'drink_blue',
-  physics: {
-    type: 'box',
-    restitution: .1,
-    friction: .5,
-    mass: Mass.grams(5),
-  },
+  physics: DRINK_PHYSICS
 };
 const drinkGreenTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'drink_green',
-  physics: {
-    type: 'box',
-    restitution: .1,
-    friction: .5,
-    mass: Mass.grams(5),
-  },
+  physics: DRINK_PHYSICS
 };
 const drinkPinkTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'drink_pink',
-  physics: {
-    type: 'box',
-    restitution: .1,
-    friction: .5,
-    mass: Mass.grams(5),
-  },
+  physics: DRINK_PHYSICS
 };
 
 const pomBlueTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -367,38 +358,29 @@ const pomBlueTemplate: Node.TemplatedNode<Node.Obj> = {
     inertia: [1, 1, 1]
   },
 };
+
+const BIG_POM_PHYSICS: Node.Physics = {
+  colliderId: "collider-box-pom_big",
+  type: 'box',
+  restitution: .4,
+  friction: 1,
+  mass: Mass.grams(1),
+  inertia: [1, 1, 1]
+};
 const pomOrangeTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'pom_orange',
-  physics: {
-    type: 'box',
-    restitution: .4,
-    friction: 1,
-    mass: Mass.grams(1),
-    inertia: [1, 1, 1]
-  },
+  physics: BIG_POM_PHYSICS
 };
 const pomRedTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'pom_red',
-  physics: {
-    type: 'box',
-    restitution: .4,
-    friction: 1,
-    mass: Mass.grams(1),
-    inertia: [1, 1, 1]
-  },
+  physics: BIG_POM_PHYSICS
 };
 const pomYellowTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'pom_yellow',
-  physics: {
-    type: 'box',
-    restitution: .4,
-    friction: 1,
-    mass: Mass.grams(1),
-    inertia: [1, 1, 1]
-  },
+  physics: BIG_POM_PHYSICS
 };
 
 const frenchFryTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -451,7 +433,7 @@ const CUP_PHYSICS: Node.Physics = {
   restitution: .4,
   friction: 1,
   mass: Mass.grams(5),
-  inertia: [1, 1, 1],
+  inertia: [3, 3, 3],
 };
 const cupBlueTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
@@ -467,6 +449,51 @@ const cupPinkTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'cup_pink',
   physics: CUP_PHYSICS
+};
+
+const bottleTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'bottle',
+  physics: {
+    type: 'mesh',
+    restitution: .5,
+    friction: 1,
+    mass: Mass.grams(3),
+    inertia: [3, 3, 3],
+  }
+};
+const tomatoTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'tomato',
+  physics: {
+    type: 'mesh',
+    restitution: .5,
+    friction: 1,
+    mass: Mass.grams(5),
+    inertia: [2, 2, 2],
+  }
+};
+const pickleTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'pickle',
+  physics: {
+    type: 'mesh',
+    restitution: .7,
+    friction: .7,
+    mass: Mass.grams(1),
+    inertia: [3, 3, 3],
+  }
+};
+const potatoTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'potato',
+  physics: {
+    type: 'mesh',
+    restitution: .7,
+    friction: 1,
+    mass: Mass.grams(3),
+    inertia: [2, 2, 2],
+  }
 };
 
 export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
@@ -505,6 +532,10 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'cup_blue': cupBlueTemplate,
   'cup_green': cupGreenTemplate,
   'cup_pink': cupPinkTemplate,
+  'bottle': bottleTemplate,
+  'tomato': tomatoTemplate,
+  'pickle': pickleTemplate,
+  'potato': potatoTemplate,
 });
 
 
@@ -668,5 +699,21 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   'cup_pink': {
     type: 'file',
     uri: '/static/object_binaries/cup_pink.glb',
+  },
+  'bottle': {
+    type: 'file',
+    uri: '/static/object_binaries/bottle.glb',
+  },
+  'tomato': {
+    type: 'file',
+    uri: '/static/object_binaries/tomato.glb',
+  },
+  'pickle': {
+    type: 'file',
+    uri: '/static/object_binaries/pickle.glb',
+  },
+  'potato': {
+    type: 'file',
+    uri: '/static/object_binaries/potato.glb',
   },
 });
