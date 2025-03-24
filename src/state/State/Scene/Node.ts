@@ -11,8 +11,10 @@ import { PhysicsMotionType } from '@babylonjs/core';
 
 namespace Node {
   export interface Physics {
+    /**
+     * Currently does nothing, but may be necessary in the future for minimizing the number of colliders in a scene.
+     */
     colliderId?: string;
-    fixed?: boolean;
 
     /**
      * What shape will simulate the physics for the object:
@@ -63,7 +65,6 @@ namespace Node {
 
       return Patch.innerChange(prev, next, {
         colliderId: Patch.diff(prev.colliderId, next.colliderId),
-        fixed: Patch.diff(prev.fixed, next.fixed),
         type: Patch.diff(prev.type, next.type),
         motionType: Patch.diff(prev.motionType, next.motionType),
         mass: Patch.diff(prev.mass, next.mass),
