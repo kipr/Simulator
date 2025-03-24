@@ -718,9 +718,6 @@ class SceneBinding {
 
       physics_mesh = this.bScene_.getMeshById(objectNode.physics.colliderId);
       physics_mesh.scaling = RawVector3.toBabylon(objectNode.origin.scale ?? { x: 1, y: 1, z: 1 });
-      if (nodeId === 'taco') {
-        physics_mesh.scaling = new Vector3(100, 50, 40);
-      }
     }
 
     const parentShape = new PhysicsShapeContainer(this.bScene);
