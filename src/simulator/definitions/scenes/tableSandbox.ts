@@ -186,13 +186,12 @@ const TOMATO_ORIGIN: ReferenceFramewUnits = {
 
 const PICKLE_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(27, 2.5, -25.8191),
-  orientation: RotationwUnits.eulerDegrees(0, 0, 90),
+  orientation: RotationwUnits.eulerDegrees(0, 90, 0),
   scale: { x: 100, y: 100, z: 100 },
 };
 
 const POTATO_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(35, 7.3, -85),
-  orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+  position: Vector3wUnits.centimeters(35, 11, -85),
   scale: { x: 100, y: 100, z: 100 },
 };
 
