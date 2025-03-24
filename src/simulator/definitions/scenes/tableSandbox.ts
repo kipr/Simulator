@@ -417,15 +417,18 @@ const FRY1: Node.FromSpaceTemplate = {
   origin: FRY_ORIGIN1
 };
 
-const TRAYS: Dict<Node.Robot> = {};
+const TRAYS: Dict<Node.FromSpaceTemplate> = {};
 for (let i = 0; i < 6; i++) {
-  const pos = { position: Vector3wUnits.centimeters(107.5, 3, (19.7 - 13.45 * i)) };
+  const pos = {
+    position: Vector3wUnits.centimeters(107.5, 3, (19.7 - 13.45 * i)),
+    orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+    scale: { x: 100, y: 100, z: 100 },
+  };
 
   TRAYS[`tray${i}`] = {
-    type: 'robot',
+    type: 'from-space-template',
     name: tr(`Tray #${i}`),
-    robotId: 'tray',
-    state: AbstractRobot.Stateless.NIL,
+    templateId: 'tray',
     visible: true,
     editable: true,
     startingOrigin: pos,
@@ -536,9 +539,9 @@ export const Table_Sandbox: Scene = {
     'tomato': TOMATO,
     'pickle': PICKLE,
     'potato': POTATO,
-    // 'fry0': FRY0,
-    // 'fry1': FRY1,
-    // ...TRAYS,
+    'fry0': FRY0,
+    'fry1': FRY1,
+    ...TRAYS,
     // ...DRINKS_BLUE,
     // ...DRINKS_GREEN,
     // ...DRINKS_PINK,

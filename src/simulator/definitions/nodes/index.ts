@@ -507,6 +507,17 @@ const potatoTemplate: Node.TemplatedNode<Node.Obj> = {
     inertia: [2, 2, 2],
   }
 };
+const trayTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'tray',
+  physics: {
+    type: 'mesh',
+    restitution: .1,
+    friction: .7,
+    mass: Mass.grams(10),
+    inertia: [1, 1, 1],
+  }
+};
 
 export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'can': canTemplate,
@@ -549,6 +560,7 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'tomato': tomatoTemplate,
   'pickle': pickleTemplate,
   'potato': potatoTemplate,
+  'tray': trayTemplate,
 });
 
 
@@ -732,5 +744,9 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   'potato': {
     type: 'file',
     uri: '/static/object_binaries/potato.glb',
+  },
+  'tray': {
+    type: 'file',
+    uri: '/static/object_binaries/tray.glb',
   },
 });
