@@ -48,7 +48,8 @@ const INNER_FRYER_ORIGIN: ReferenceFramewUnits = {
 
 const GAME_TABLE_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(0, 0, 0),
-  orientation: RotationwUnits.eulerDegrees(0, -90, 0),
+  // orientation: RotationwUnits.eulerDegrees(0, -90, 0),
+  scale: { x: 100, y: 100, z: 100 },
 };
 
 const LIGHT_ORIGIN: ReferenceFramewUnits = {
@@ -65,11 +66,10 @@ const ROBOT: Node.Robot = {
   origin: ROBOT_ORIGIN
 };
 
-const GAME_TABLE_2025: Node.Robot = {
-  type: 'robot',
+const GAME_TABLE_2025: Node.FromSpaceTemplate = {
+  type: 'from-space-template',
   name: tr('2025 Game Table'),
-  robotId: 'game_table_2025',
-  state: AbstractRobot.Stateless.NIL,
+  templateId: 'game_table_2025',
   visible: true,
   editable: false,
   startingOrigin: GAME_TABLE_ORIGIN,
@@ -85,14 +85,6 @@ export function createBaseSceneSurface(): Scene {
       'game_table_2025': {
         type: 'file',
         uri: '/static/object_binaries/2025_game_table.glb'
-      },
-      'ground': {
-        type: 'box',
-        size: {
-          x: Distance.feet(8),
-          y: Distance.feet(.1),
-          z: Distance.feet(8),
-        },
       },
       'fry_floor': {
         type: 'box',
@@ -114,27 +106,6 @@ export function createBaseSceneSurface(): Scene {
     nodes: {
       'robot': ROBOT,
       'game_table_2025': GAME_TABLE_2025,
-      'ground': {
-        type: 'object',
-        geometryId: 'ground',
-        name: tr('Ground'),
-        startingOrigin: GROUND_ORIGIN,
-        origin: GROUND_ORIGIN,
-        visible: true,
-        physics: {
-          type: 'box',
-          motionType: PhysicsMotionType.STATIC,
-          restitution: 0.1,
-          friction: 10,
-        },
-        material: {
-          type: 'basic',
-          color: {
-            type: 'color3',
-            color: Color.rgb(192, 192, 192),
-          },
-        },
-      },
       'fry_floor': {
         type: 'object',
         geometryId: 'fry_floor',

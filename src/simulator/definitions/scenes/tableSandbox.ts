@@ -180,18 +180,18 @@ const POM_YELLOW_ORIGINS: ReferenceFramewUnits[] = [
 ];
 
 const TOMATO_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(29, 5, -14.3891),
+  position: Vector3wUnits.centimeters(29, 4, -14.3891),
   scale: { x: 100, y: 100, z: 100 },
 };
 
 const PICKLE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(27, 2.5, -25.8191),
+  position: Vector3wUnits.centimeters(27, 2, -25.8191),
   orientation: RotationwUnits.eulerDegrees(0, 90, 0),
   scale: { x: 100, y: 100, z: 100 },
 };
 
 const POTATO_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(35, 11, -85),
+  position: Vector3wUnits.centimeters(35, 10, -85),
   scale: { x: 100, y: 100, z: 100 },
 };
 

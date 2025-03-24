@@ -325,6 +325,18 @@ const habitatControlTemplate: Node.TemplatedNode<Node.Obj> = {
   },
 };
 
+const gameTable2025Template: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'game_table_2025',
+  physics: {
+    type: 'mesh',
+    motionType: PhysicsMotionType.STATIC,
+    restitution: .2,
+    friction: 1,
+  },
+};
+
+
 const DRINK_PHYSICS: Node.Physics = {
   type: 'box',
   restitution: .1,
@@ -518,6 +530,7 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'habitat': habitatTemplate,
   'research_habitat': habitatResearchTemplate,
   'control_habitat': habitatControlTemplate,
+  'game_table_2025': gameTable2025Template,
   'drink_blue': drinkBlueTemplate,
   'drink_green': drinkGreenTemplate,
   'drink_pink': drinkPinkTemplate,
@@ -643,6 +656,10 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   'control_habitat': {
     type: 'file',
     uri: '/static/object_binaries/com_hab.glb'
+  },
+  'game_table)2025': {
+    type: 'file',
+    uri: '/static/object_binaries/2025_game_table.glb',
   },
   'drink_blue': {
     type: 'file',
