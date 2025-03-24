@@ -422,6 +422,52 @@ const hamburgerTemplate: Node.TemplatedNode<Node.Obj> = {
     inertia: [3, 3, 3],
   },
 };
+const hotdogTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'hotdog',
+  physics: {
+    type: 'mesh',
+    restitution: .8,
+    friction: 1,
+    mass: Mass.grams(5),
+    inertia: [3, 3, 3],
+  },
+};
+const tacoTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'taco',
+  physics: {
+    type: 'mesh',
+    restitution: .8,
+    friction: 1,
+    mass: Mass.grams(5),
+    inertia: [3, 3, 3],
+  },
+};
+
+const CUP_PHYSICS: Node.Physics = {
+  colliderId: "collider-box-cup",
+  type: 'mesh',
+  restitution: .4,
+  friction: 1,
+  mass: Mass.grams(5),
+  inertia: [1, 1, 1],
+};
+const cupBlueTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'cup_blue',
+  physics: CUP_PHYSICS
+};
+const cupGreenTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'cup_green',
+  physics: CUP_PHYSICS
+};
+const cupPinkTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'cup_pink',
+  physics: CUP_PHYSICS
+};
 
 export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'can': canTemplate,
@@ -454,6 +500,11 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'pom_yellow': pomYellowTemplate,
   'french_fry': frenchFryTemplate,
   'hamburger': hamburgerTemplate,
+  'hotdog': hotdogTemplate,
+  'taco': tacoTemplate,
+  'cup_blue': cupBlueTemplate,
+  'cup_green': cupGreenTemplate,
+  'cup_pink': cupPinkTemplate,
 });
 
 
@@ -597,5 +648,25 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   'hamburger': {
     type: 'file',
     uri: '/static/object_binaries/hamburger.glb',
-  }
+  },
+  'hotdog': {
+    type: 'file',
+    uri: '/static/object_binaries/hot_dog.glb',
+  },
+  'taco': {
+    type: 'file',
+    uri: '/static/object_binaries/taco.glb',
+  },
+  'cup_blue': {
+    type: 'file',
+    uri: '/static/object_binaries/cup_blue.glb',
+  },
+  'cup_green': {
+    type: 'file',
+    uri: '/static/object_binaries/cup_green.glb',
+  },
+  'cup_pink': {
+    type: 'file',
+    uri: '/static/object_binaries/cup_pink.glb',
+  },
 });

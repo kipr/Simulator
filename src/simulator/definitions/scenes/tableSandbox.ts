@@ -20,36 +20,40 @@ import tr from '@i18n';
 const baseScene = createBaseSceneSurface();
 
 const WARMING_X = 9;
+
 const HAMBURGER_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(WARMING_X, 24, 114),
-};
-
-const TEST_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(40, 24, 110),
+  orientation: RotationwUnits.eulerDegrees(0, 45, 0),
   scale: { x: 100, y: 100, z: 100 }
 };
 
 const HOTDOG_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(WARMING_X, 24, 102.5),
+  orientation: RotationwUnits.eulerDegrees(0, 90, 0),
+  scale: { x: 100, y: 100, z: 100 }
 };
 
 const TACO_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(WARMING_X, 22, 93),
-  orientation: RotationwUnits.eulerDegrees(60, 90, 0),
+  position: Vector3wUnits.centimeters(WARMING_X, 25, 93),
+  orientation: RotationwUnits.eulerDegrees(-60, 0, 0),
+  scale: { x: 100, y: 100, z: 100 }
 };
 
 const CUP_X = 8;
-const CUP_Y = 1;
+const CUP_Y = 6;
 const CUP_PINK_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(CUP_X, CUP_Y, 114.5),
+  scale: { x: 100, y: 100, z: 100 }
 };
 
 const CUP_BLUE_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(CUP_X, CUP_Y, 102.5),
+  scale: { x: 100, y: 100, z: 100 }
 };
 
 const CUP_GREEN_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(CUP_X, CUP_Y, 91),
+  scale: { x: 100, y: 100, z: 100 }
 };
 
 const POM_Y = 2;
@@ -187,75 +191,59 @@ const BOTGUY_ORIGIN: ReferenceFramewUnits = {
   orientation: RotationwUnits.eulerDegrees(0, -90, 0),
 };
 
-const HAMBURGER: Node.Robot = {
-  type: 'robot',
-  name: tr('Hamburger'),
-  robotId: 'hamburger',
-  state: AbstractRobot.Stateless.NIL,
-  visible: true,
-  editable: true,
-  startingOrigin: HAMBURGER_ORIGIN,
-  origin: HAMBURGER_ORIGIN
-};
-const HAMBURGER_TEST: Node.FromSpaceTemplate = {
+
+const HAMBURGER: Node.FromSpaceTemplate = {
   type: 'from-space-template',
   name: tr('Hamburger'),
   templateId: 'hamburger',
   visible: true,
   editable: true,
-  startingOrigin: TEST_ORIGIN,
-  origin: TEST_ORIGIN
+  startingOrigin: HAMBURGER_ORIGIN,
+  origin: HAMBURGER_ORIGIN
 };
-
-const HOTDOG: Node.Robot = {
-  type: 'robot',
+const HOTDOG: Node.FromSpaceTemplate = {
+  type: 'from-space-template',
   name: tr('Hotdog'),
-  robotId: 'hotdog',
-  state: AbstractRobot.Stateless.NIL,
+  templateId: 'hotdog',
   visible: true,
   editable: true,
   startingOrigin: HOTDOG_ORIGIN,
   origin: HOTDOG_ORIGIN
 };
-
-const TACO: Node.Robot = {
-  type: 'robot',
+const TACO: Node.FromSpaceTemplate = {
+  type: 'from-space-template',
   name: tr('Taco'),
-  robotId: 'taco',
-  state: AbstractRobot.Stateless.NIL,
+  templateId: 'taco',
   visible: true,
   editable: true,
   startingOrigin: TACO_ORIGIN,
   origin: TACO_ORIGIN
 };
 
-const CUP_PINK: Node.Robot = {
-  type: 'robot',
+const CUP_PINK: Node.FromSpaceTemplate = {
+  type: 'from-space-template',
   name: tr('Pink Cup'),
-  robotId: 'cup_pink',
-  state: AbstractRobot.Stateless.NIL,
+  templateId: 'cup_pink',
   visible: true,
   editable: true,
   startingOrigin: CUP_PINK_ORIGIN,
   origin: CUP_PINK_ORIGIN
 };
 
-const CUP_BLUE: Node.Robot = {
-  type: 'robot',
+const CUP_BLUE: Node.FromSpaceTemplate = {
+  type: 'from-space-template',
   name: tr('Blue Cup'),
-  robotId: 'cup_blue',
-  state: AbstractRobot.Stateless.NIL,
+  templateId: 'cup_blue',
   visible: true,
   editable: true,
   startingOrigin: CUP_BLUE_ORIGIN,
   origin: CUP_BLUE_ORIGIN
 };
 
-const CUP_GREEN: Node.Robot = {
-  type: 'robot',
+const CUP_GREEN: Node.FromSpaceTemplate = {
+  type: 'from-space-template',
   name: tr('Green Cup'),
-  robotId: 'cup_green',
-  state: AbstractRobot.Stateless.NIL,
+  templateId: 'cup_green',
   visible: true,
   editable: true,
   startingOrigin: CUP_GREEN_ORIGIN,
@@ -517,18 +505,17 @@ export const Table_Sandbox: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-    // 'hamburger': HAMBURGER_TEST,
-    // 'hamburger': HAMBURGER,
-    // 'hotdog': HOTDOG,
-    // 'taco': TACO,
-    // 'cup_pink': CUP_PINK,
-    // 'cup_blue': CUP_BLUE,
-    // 'cup_green': CUP_GREEN,
-    ...POMS_BLUE,
+    'hamburger': HAMBURGER,
+    'hotdog': HOTDOG,
+    'taco': TACO,
+    'cup_pink': CUP_PINK,
+    'cup_blue': CUP_BLUE,
+    'cup_green': CUP_GREEN,
+    // ...POMS_BLUE,
     ...POMS_ORANGE,
     ...POMS_RED,
     ...POMS_YELLOW,
-    ...POMS_RANDOM,
+    // ...POMS_RANDOM,
     // ...BOTTLES,
     // 'tomato': TOMATO,
     // 'pickle': PICKLE,
