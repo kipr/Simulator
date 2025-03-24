@@ -336,12 +336,12 @@ const gameTable2025Template: Node.TemplatedNode<Node.Obj> = {
   },
 };
 
-
 const DRINK_PHYSICS: Node.Physics = {
   type: 'box',
   restitution: .1,
   friction: .5,
   mass: Mass.grams(5),
+  inertia: [2, 2, 2]
 };
 const drinkBlueTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',

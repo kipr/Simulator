@@ -542,9 +542,9 @@ export const Table_Sandbox: Scene = {
     'fry0': FRY0,
     'fry1': FRY1,
     ...TRAYS,
-    // ...DRINKS_BLUE,
-    // ...DRINKS_GREEN,
-    // ...DRINKS_PINK,
+    ...DRINKS_BLUE,
+    ...DRINKS_GREEN,
+    ...DRINKS_PINK,
     // 'botguy': BOTGUY,
     'robot': {
       ...baseScene.nodes['robot'],
