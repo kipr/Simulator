@@ -41,6 +41,7 @@ export const buildGeometryFaceUvs = (faceUvs: RawVector2[] | undefined, expected
 };
 
 export const buildGeometry = async (name: string, geometry: Geometry, bScene_: babylonScene, faceUvs?: RawVector2[]): Promise<meshPair> => {
+  console.log(`buildGeometry got name ${name}`);
   const ret: meshPair = {} as meshPair;
   let parentTNode: TransformNode;
   switch (geometry.type) {

@@ -693,6 +693,8 @@ class SceneBinding {
 
     const initialParent = mesh.parent;
     mesh.setParent(null);
+    let physics_mesh = mesh;
+
 
     const body = new PhysicsBody(
       mesh,
@@ -706,12 +708,18 @@ class SceneBinding {
     });
 
     if (objectNode.physics?.colliderId) {
-      const match = this.bScene_.meshes.filter(m => m.name === mesh.name)[0];
+      const match = this.bScene_.getMeshByName(mesh.name);
       console.log(match);
       if (match?.physicsBody?.shape) {
         console.log("Reusing collider");
         body.shape = match.physicsBody.shape;
         return;
+      }
+
+      physics_mesh = this.bScene_.getMeshById(objectNode.physics.colliderId);
+      physics_mesh.scaling = RawVector3.toBabylon(objectNode.origin.scale ?? { x: 1, y: 1, z: 1 });
+      if (nodeId === 'taco') {
+        physics_mesh.scaling = new Vector3(100, 50, 40);
       }
     }
 
@@ -719,22 +727,22 @@ class SceneBinding {
 
     const scale = RawVector3.toBabylon(objectNode.origin.scale ?? { x: 1, y: 1, z: 1 });
 
-    let parameters: PhysicsShapeParameters = { mesh: mesh as Mesh };
+    let parameters: PhysicsShapeParameters = { mesh: physics_mesh as Mesh };
 
     // Cylinders require different parameters from everything else
     // WARNING: These numbers are correct for the cans, but must be changed if we ever include any other cylinders
     if (objectNode.physics.type === 'cylinder') {
-      const p = mesh.absolutePosition;
-      // I have no idea why subtracting 2x is necessary, but the position will be wrong on the x-axis without this
+      const p = physics_mesh.absolutePosition;
+      // The position on the x axis will be wrong without subtracting 2x
       parameters = {
         ...parameters,
         pointA: p.add(new Vector3(-(p.x * 2), -(11.15 * 0.5), 0)),
         pointB: p.add(new Vector3(-(p.x * 2), (11.15 * 0.5), 0)),
         radius: 3
       };
-    } else {
-      // Not sure why, but the final multiplication by [2, 2, 2] is required to make collision shapes scale correctly
-      const extend = mesh.getBoundingInfo().boundingBox.extendSize.multiply(scale).multiply(new Vector3(2, 2, 2));
+    } else if (objectNode.physics.type === 'box') {
+      // The final multiplication by [2, 2, 2] is required to make collision boxes scale correctly
+      const extend = physics_mesh.getBoundingInfo().boundingBox.extendSize.multiply(scale).multiply(new Vector3(2, 2, 2));
       parameters = {
         ...parameters,
         extents: extend,
@@ -749,8 +757,10 @@ class SceneBinding {
     };
 
     // For some reason the mesh id changes when the world resets
-    if (mesh.id.includes('Can') || mesh.id.includes('can')) {
+    if (physics_mesh.id.includes('Can') || physics_mesh.id.includes('can')) {
       parentShape.addChild(shape, mesh.absolutePosition, mesh.absoluteRotationQuaternion);
+    } else if (physics_mesh.id.includes('Cup') || physics_mesh.id.includes('cup')) {
+      parentShape.addChild(shape, new Vector3(0, 5, 0));
     } else {
       parentShape.addChild(shape);
     }
@@ -789,8 +799,8 @@ class SceneBinding {
       this.physicsViewer_.hideBody(mesh.physicsBody);
     }
 
-    // BUG: Error here on reset
-    mesh.physicsBody.shape.dispose();
+    // BUG:Objects moved by user in wrong position after reset
+    mesh.physicsBody.shape?.dispose();
     mesh.physicsBody.dispose();
     mesh.physicsBody = null;
 
