@@ -259,9 +259,6 @@ class SceneBinding {
         const parent = this.findBNode_(nodeToCreate.parentId, true);
 
         ret = await createObject(nodeToCreate, nextScene, parent, this.bScene_);
-        if (nodeToCreate.physics) {
-          console.log(`${id} has colliderId ${nodeToCreate.physics.colliderId}`);
-        }
         break;
 
       }
@@ -708,14 +705,6 @@ class SceneBinding {
     });
 
     if (objectNode.physics?.colliderId) {
-      const match = this.bScene_.meshes.filter(m => m.name.startsWith(mesh.name.split('-')[0]))[0];
-      console.log(match);
-      if (match?.physicsBody?.shape) {
-        console.log("Reusing collider");
-        body.shape = match.physicsBody.shape;
-        return;
-      }
-
       physics_mesh = this.bScene_.getMeshById(objectNode.physics.colliderId);
       physics_mesh.scaling = RawVector3.toBabylon(objectNode.origin.scale ?? { x: 1, y: 1, z: 1 });
     }

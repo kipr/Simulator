@@ -56,7 +56,7 @@ const CUP_GREEN_ORIGIN: ReferenceFramewUnits = {
   scale: { x: 100, y: 100, z: 100 }
 };
 
-const POM_Y = 2;
+const POM_Y = 4;
 const POM_BLUE_ORIGINS_BACK: ReferenceFramewUnits[] = [
   {
     position: Vector3wUnits.centimeters(18, POM_Y, 53),
