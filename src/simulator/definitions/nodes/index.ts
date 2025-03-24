@@ -375,9 +375,9 @@ const BIG_POM_PHYSICS: Node.Physics = {
   colliderId: "collider-box-pom_big",
   type: 'box',
   restitution: .4,
-  friction: 1,
+  friction: .7,
   mass: Mass.grams(1),
-  inertia: [1, 1, 1]
+  inertia: [3, 3, 3]
 };
 const pomOrangeTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',

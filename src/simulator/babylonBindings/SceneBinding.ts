@@ -113,7 +113,7 @@ class SceneBinding {
     this.bScene_.getPhysicsEngine().setSubTimeStep(1);
 
     // Uncomment this to turn on the physics viewer for objects
-    this.physicsViewer_ = new PhysicsViewer(this.bScene_);
+    // this.physicsViewer_ = new PhysicsViewer(this.bScene_);
 
     this.root_ = new TransformNode('__scene_root__', this.bScene_);
     this.gizmoManager_ = new GizmoManager(this.bScene_);
@@ -758,18 +758,6 @@ class SceneBinding {
     this.syncCollisionFilters_();
 
     return;
-
-    const aggregate = new PhysicsAggregate(mesh, PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type], {
-      mass: objectNode.physics.mass ? Mass.toGramsValue(objectNode.physics.mass) : 0,
-      friction: objectNode.physics.friction ?? 5,
-      restitution: objectNode.physics.restitution ?? 0.5,
-    }, this.bScene_);
-
-    if (this.physicsViewer_) {
-      this.physicsViewer_.showBody(mesh.physicsBody);
-    }
-    mesh.setParent(initialParent);
-    this.syncCollisionFilters_();
   };
 
 

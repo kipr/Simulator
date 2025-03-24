@@ -162,13 +162,10 @@ export const createObject = async (node: Node.Obj, nextScene: Scene, parent: bab
   }
 
   // console.log(bScene_.meshes);
-  console.log(node.name[LocalizedString.EN_US]);
-  console.log(node.geometryId);
   const match = bScene_.meshes.filter(m => m.name.startsWith(node.geometryId))[0];
 
   let ret: meshPair = { visual: null };
   if (match && match instanceof Mesh) {
-    console.log("I'M INSTANCING!!!", match);
     ret.visual = match.createInstance(`${match.name}-instance`);
 
     if (!node.visible) {
