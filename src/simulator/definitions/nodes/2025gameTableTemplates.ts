@@ -53,7 +53,6 @@ const pomBlueTemplate: Node.TemplatedNode<Node.Obj> = {
 };
 
 const BIG_POM_PHYSICS: Node.Physics = {
-  colliderId: "collider-box-pom_big",
   type: 'box',
   restitution: .4,
   friction: .7,
