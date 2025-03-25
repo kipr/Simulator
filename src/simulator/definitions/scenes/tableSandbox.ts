@@ -3,15 +3,11 @@
 // Here we add the objects and their properties to the scene.
 
 import Scene from "../../../state/State/Scene";
-// Imports to abuse robot system for collision boxes
 import Node from "../../../state/State/Scene/Node";
-import AbstractRobot from '../../../programming/AbstractRobot';
 import Script from '../../../state/State/Scene/Script';
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../../util/math/unitMath";
 import { Distance } from "../../../util";
 import Dict from "../../../util/objectOps/Dict";
-// import { Color } from '../../../state/State/Scene/Color';
-// import LocalizedString from '../../../util/LocalizedString';
 
 import { createBaseSceneSurface } from './tableBase';
 
@@ -210,8 +206,8 @@ const BOTGUY_ORIGIN: ReferenceFramewUnits = {
 };
 
 
-const HAMBURGER: Node.FromSpaceTemplate = {
-  type: 'from-space-template',
+const HAMBURGER: Node.FromBBTemplate = {
+  type: 'from-bb-template',
   name: tr('Hamburger'),
   templateId: 'hamburger',
   visible: true,
@@ -219,8 +215,8 @@ const HAMBURGER: Node.FromSpaceTemplate = {
   startingOrigin: HAMBURGER_ORIGIN,
   origin: HAMBURGER_ORIGIN
 };
-const HOTDOG: Node.FromSpaceTemplate = {
-  type: 'from-space-template',
+const HOTDOG: Node.FromBBTemplate = {
+  type: 'from-bb-template',
   name: tr('Hotdog'),
   templateId: 'hotdog',
   visible: true,
@@ -228,8 +224,8 @@ const HOTDOG: Node.FromSpaceTemplate = {
   startingOrigin: HOTDOG_ORIGIN,
   origin: HOTDOG_ORIGIN
 };
-const TACO: Node.FromSpaceTemplate = {
-  type: 'from-space-template',
+const TACO: Node.FromBBTemplate = {
+  type: 'from-bb-template',
   name: tr('Taco'),
   templateId: 'taco',
   visible: true,
@@ -238,8 +234,8 @@ const TACO: Node.FromSpaceTemplate = {
   origin: TACO_ORIGIN
 };
 
-const CUP_PINK: Node.FromSpaceTemplate = {
-  type: 'from-space-template',
+const CUP_PINK: Node.FromBBTemplate = {
+  type: 'from-bb-template',
   name: tr('Pink Cup'),
   templateId: 'cup_pink',
   visible: true,
@@ -248,8 +244,8 @@ const CUP_PINK: Node.FromSpaceTemplate = {
   origin: CUP_PINK_ORIGIN
 };
 
-const CUP_BLUE: Node.FromSpaceTemplate = {
-  type: 'from-space-template',
+const CUP_BLUE: Node.FromBBTemplate = {
+  type: 'from-bb-template',
   name: tr('Blue Cup'),
   templateId: 'cup_blue',
   visible: true,
@@ -258,8 +254,8 @@ const CUP_BLUE: Node.FromSpaceTemplate = {
   origin: CUP_BLUE_ORIGIN
 };
 
-const CUP_GREEN: Node.FromSpaceTemplate = {
-  type: 'from-space-template',
+const CUP_GREEN: Node.FromBBTemplate = {
+  type: 'from-bb-template',
   name: tr('Green Cup'),
   templateId: 'cup_green',
   visible: true,
@@ -268,10 +264,10 @@ const CUP_GREEN: Node.FromSpaceTemplate = {
   origin: CUP_GREEN_ORIGIN
 };
 
-const POMS_BLUE: Dict<Node.FromSpaceTemplate> = {};
+const POMS_BLUE: Dict<Node.FromBBTemplate> = {};
 for (const [i, pos] of POM_BLUE_ORIGINS_BACK.entries()) {
   POMS_BLUE[`pom_blue${i}`] = {
-    type: 'from-space-template',
+    type: 'from-bb-template',
     name: tr(`Blue pom back #${i}`),
     templateId: 'pom_blue',
     visible: true,
@@ -283,7 +279,7 @@ for (const [i, pos] of POM_BLUE_ORIGINS_BACK.entries()) {
 
 for (const [i, pos] of POM_BLUE_ORIGINS_FRONT.entries()) {
   POMS_BLUE[`pom_blue${i + 10}`] = {
-    type: 'from-space-template',
+    type: 'from-bb-template',
     name: tr(`Blue pom front #${i}`),
     templateId: 'pom_blue',
     visible: true,
@@ -293,10 +289,10 @@ for (const [i, pos] of POM_BLUE_ORIGINS_FRONT.entries()) {
   };
 }
 
-const BOTTLES: Dict<Node.FromSpaceTemplate> = {};
+const BOTTLES: Dict<Node.FromBBTemplate> = {};
 for (const [i, pos] of BOTTLE_ORIGINS.entries()) {
   BOTTLES[`bottle${i}`] = {
-    type: 'from-space-template',
+    type: 'from-bb-template',
     name: tr(`Bottle #${i}`),
     templateId: 'bottle',
     visible: true,
@@ -306,10 +302,10 @@ for (const [i, pos] of BOTTLE_ORIGINS.entries()) {
   };
 }
 
-const POMS_ORANGE: Dict<Node.FromSpaceTemplate> = {};
+const POMS_ORANGE: Dict<Node.FromBBTemplate> = {};
 for (const [i, pos] of POM_ORANGE_ORIGINS.entries()) {
   POMS_ORANGE[`pom_orange${i}`] = {
-    type: 'from-space-template',
+    type: 'from-bb-template',
     name: tr(`Orange pom #${i}`),
     templateId: 'pom_orange',
     visible: true,
@@ -318,10 +314,10 @@ for (const [i, pos] of POM_ORANGE_ORIGINS.entries()) {
     origin: pos
   };
 }
-const POMS_RED: Dict<Node.FromSpaceTemplate> = {};
+const POMS_RED: Dict<Node.FromBBTemplate> = {};
 for (const [i, pos] of POM_RED_ORIGINS.entries()) {
   POMS_RED[`pom_red${i}`] = {
-    type: 'from-space-template',
+    type: 'from-bb-template',
     name: tr(`Red pom #${i}`),
     templateId: 'pom_red',
     visible: true,
@@ -330,10 +326,10 @@ for (const [i, pos] of POM_RED_ORIGINS.entries()) {
     origin: pos
   };
 }
-const POMS_YELLOW: Dict<Node.FromSpaceTemplate> = {};
+const POMS_YELLOW: Dict<Node.FromBBTemplate> = {};
 for (const [i, pos] of POM_YELLOW_ORIGINS.entries()) {
   POMS_YELLOW[`pom_yellow${i}`] = {
-    type: 'from-space-template',
+    type: 'from-bb-template',
     name: tr(`Yellow pom #${i}`),
     templateId: 'pom_yellow',
     visible: true,
@@ -343,7 +339,7 @@ for (const [i, pos] of POM_YELLOW_ORIGINS.entries()) {
   };
 }
 
-const POMS_RANDOM: Dict<Node.FromSpaceTemplate> = {};
+const POMS_RANDOM: Dict<Node.FromBBTemplate> = {};
 const choices = ['pom_red', 'pom_red', 'pom_red', 'pom_orange', 'pom_orange', 'pom_orange', 'pom_yellow', 'pom_yellow', 'pom_yellow'];
 for (let i = 0; i < 9; i++) {
   const n = Math.floor(Math.random() * choices.length);
@@ -356,7 +352,7 @@ for (let i = 0; i < 9; i++) {
   };
 
   POMS_RANDOM[`pom_random${i}`] = {
-    type: 'from-space-template',
+    type: 'from-bb-template',
     name: tr(`Random pom #${i}`),
     templateId: robot,
     visible: true,
@@ -366,8 +362,8 @@ for (let i = 0; i < 9; i++) {
   };
 }
 
-const TOMATO: Node.FromSpaceTemplate = {
-  type: 'from-space-template',
+const TOMATO: Node.FromBBTemplate = {
+  type: 'from-bb-template',
   name: tr('Tomato'),
   templateId: 'tomato',
   visible: true,
@@ -376,8 +372,8 @@ const TOMATO: Node.FromSpaceTemplate = {
   origin: TOMATO_ORIGIN
 };
 
-const PICKLE: Node.FromSpaceTemplate = {
-  type: 'from-space-template',
+const PICKLE: Node.FromBBTemplate = {
+  type: 'from-bb-template',
   name: tr('Pickle'),
   templateId: 'pickle',
   visible: true,
@@ -386,8 +382,8 @@ const PICKLE: Node.FromSpaceTemplate = {
   origin: PICKLE_ORIGIN
 };
 
-const POTATO: Node.FromSpaceTemplate = {
-  type: 'from-space-template',
+const POTATO: Node.FromBBTemplate = {
+  type: 'from-bb-template',
   name: tr('Potato'),
   templateId: 'potato',
   visible: true,
@@ -396,8 +392,8 @@ const POTATO: Node.FromSpaceTemplate = {
   origin: POTATO_ORIGIN
 };
 
-const FRY0: Node.FromSpaceTemplate = {
-  type: 'from-space-template',
+const FRY0: Node.FromBBTemplate = {
+  type: 'from-bb-template',
   name: tr('French fry #0'),
   templateId: 'french_fry',
   visible: true,
@@ -405,8 +401,8 @@ const FRY0: Node.FromSpaceTemplate = {
   startingOrigin: FRY_ORIGIN0,
   origin: FRY_ORIGIN0
 };
-const FRY1: Node.FromSpaceTemplate = {
-  type: 'from-space-template',
+const FRY1: Node.FromBBTemplate = {
+  type: 'from-bb-template',
   name: tr('French fry #1'),
   templateId: 'french_fry',
   visible: true,
@@ -415,7 +411,7 @@ const FRY1: Node.FromSpaceTemplate = {
   origin: FRY_ORIGIN1
 };
 
-const TRAYS: Dict<Node.FromSpaceTemplate> = {};
+const TRAYS: Dict<Node.FromBBTemplate> = {};
 for (let i = 0; i < 6; i++) {
   const pos = {
     position: Vector3wUnits.centimeters(107.5, 3, (19.7 - 13.45 * i)),
@@ -424,7 +420,7 @@ for (let i = 0; i < 6; i++) {
   };
 
   TRAYS[`tray${i}`] = {
-    type: 'from-space-template',
+    type: 'from-bb-template',
     name: tr(`Tray #${i}`),
     templateId: 'tray',
     visible: true,
@@ -434,8 +430,8 @@ for (let i = 0; i < 6; i++) {
   };
 }
 
-const BOTGUY: Node.FromSpaceTemplate = {
-  type: 'from-space-template',
+const BOTGUY: Node.FromBBTemplate = {
+  type: 'from-bb-template',
   name: tr('Botguy'),
   templateId: 'botguy_gamepiece',
   visible: true,
@@ -444,7 +440,7 @@ const BOTGUY: Node.FromSpaceTemplate = {
   origin: BOTGUY_ORIGIN
 };
 
-const DRINKS_BLUE: Dict<Node.FromSpaceTemplate> = {};
+const DRINKS_BLUE: Dict<Node.FromBBTemplate> = {};
 for (let i = 0; i < 5; i++) {
   const pos: ReferenceFramewUnits = {
     position: Vector3wUnits.centimeters(18.6, 2.54 + (5.17 * i), -102.55),
@@ -452,7 +448,7 @@ for (let i = 0; i < 5; i++) {
     scale: { x: 100, y: 100, z: 100 }
   };
   DRINKS_BLUE[`drink_blue${i}`] = {
-    type: 'from-space-template',
+    type: 'from-bb-template',
     name: tr(`Blue drink #${i}`),
     templateId: 'drink_blue',
     visible: true,
@@ -462,7 +458,7 @@ for (let i = 0; i < 5; i++) {
   };
 }
 
-const DRINKS_GREEN: Dict<Node.FromSpaceTemplate> = {};
+const DRINKS_GREEN: Dict<Node.FromBBTemplate> = {};
 for (let i = 0; i < 5; i++) {
   const pos: ReferenceFramewUnits = {
     position: Vector3wUnits.centimeters(0.4, 2.54 + (5.17 * i), 71.252),
@@ -470,7 +466,7 @@ for (let i = 0; i < 5; i++) {
     scale: { x: 100, y: 100, z: 100 }
   };
   DRINKS_GREEN[`drink_green${i}`] = {
-    type: 'from-space-template',
+    type: 'from-bb-template',
     name: tr(`Green drink #${i}`),
     templateId: 'drink_green',
     visible: true,
@@ -480,7 +476,7 @@ for (let i = 0; i < 5; i++) {
   };
 }
 
-const DRINKS_PINK: Dict<Node.FromSpaceTemplate> = {};
+const DRINKS_PINK: Dict<Node.FromBBTemplate> = {};
 for (let i = 0; i < 5; i++) {
   const pos: ReferenceFramewUnits = {
     position: Vector3wUnits.centimeters(0.4, 2.54 + (5.17 * i), -71.4),
@@ -488,7 +484,7 @@ for (let i = 0; i < 5; i++) {
     scale: { x: 100, y: 100, z: 100 }
   };
   DRINKS_PINK[`drink_pink${i}`] = {
-    type: 'from-space-template',
+    type: 'from-bb-template',
     name: tr(`Pink drink #${i}`),
     templateId: 'drink_pink',
     visible: true,
