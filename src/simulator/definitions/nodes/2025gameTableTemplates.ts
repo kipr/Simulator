@@ -90,7 +90,7 @@ const hamburgerTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'hamburger',
   physics: {
-    type: 'mesh',
+    type: 'box',
     restitution: .8,
     friction: 1,
     mass: Mass.grams(5),
@@ -159,7 +159,7 @@ const tomatoTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'tomato',
   physics: {
-    type: 'mesh',
+    type: 'box',
     restitution: .5,
     friction: 1,
     mass: Mass.grams(5),
