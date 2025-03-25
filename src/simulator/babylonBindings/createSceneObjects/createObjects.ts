@@ -157,8 +157,8 @@ export const createObject = async (node: Node.Obj, nextScene: Scene, parent: bab
   let ret: meshPair = { visual: null };
 
   /*
-   * We search the scene to check if there is an existing node we can copy.
-   * If so, we save significant resources by using instancing and we avoid building and storing multiple versions of the same geometry.
+   * Search the scene to check if there is an existing node we can instance.
+   * If so, we save significant resources by using instancing and we avoid building and storing multiple copies of the same geometry.
    * For more on instances see: https://doc.babylonjs.com/features/featuresDeepDive/mesh/copies/instances
    */
   const match = bScene_.meshes.filter(m => m.name.startsWith(node.geometryId))[0];
