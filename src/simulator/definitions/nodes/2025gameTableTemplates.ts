@@ -80,10 +80,10 @@ const frenchFryTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'fry',
   physics: {
     type: 'box',
-    restitution: .3,
-    friction: .7,
+    restitution: .5,
+    friction: .6,
     mass: Mass.grams(2),
-    inertia: [2, 2, 2]
+    inertia: [4, 4, 4]
   },
 };
 const hamburgerTemplate: Node.TemplatedNode<Node.Obj> = {

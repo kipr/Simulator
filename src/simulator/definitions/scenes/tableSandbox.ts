@@ -12,6 +12,7 @@ import Dict from "../../../util/objectOps/Dict";
 import { createBaseSceneSurface } from './tableBase';
 
 import tr from '@i18n';
+import { Ref } from "react";
 
 const baseScene = createBaseSceneSurface();
 
@@ -191,14 +192,28 @@ const POTATO_ORIGIN: ReferenceFramewUnits = {
   scale: { x: 100, y: 100, z: 100 },
 };
 
-const FRY_ORIGIN0: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(115, 21, -87),
-  scale: { x: 100, y: 100, z: 100 }
-};
-const FRY_ORIGIN1: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(115, 21, -89),
-  scale: { x: 100, y: 100, z: 100 }
-};
+const FRY_ORIGINS: ReferenceFramewUnits[] = [
+  {
+    position: Vector3wUnits.centimeters(115, 21, -87),
+    scale: { x: 100, y: 100, z: 100 }
+  },
+  {
+    position: Vector3wUnits.centimeters(115, 21, -88),
+    scale: { x: 100, y: 100, z: 100 }
+  },
+  {
+    position: Vector3wUnits.centimeters(115, 21, -89),
+    scale: { x: 100, y: 100, z: 100 }
+  },
+  {
+    position: Vector3wUnits.centimeters(115, 22.5, -87.5),
+    scale: { x: 100, y: 100, z: 100 }
+  },
+  {
+    position: Vector3wUnits.centimeters(115, 22.5, -88.5),
+    scale: { x: 100, y: 100, z: 100 }
+  },
+];
 
 const BOTGUY_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(-4, 24, -3),
@@ -392,24 +407,18 @@ const POTATO: Node.FromBBTemplate = {
   origin: POTATO_ORIGIN
 };
 
-const FRY0: Node.FromBBTemplate = {
-  type: 'from-bb-template',
-  name: tr('French fry #0'),
-  templateId: 'french_fry',
-  visible: true,
-  editable: true,
-  startingOrigin: FRY_ORIGIN0,
-  origin: FRY_ORIGIN0
-};
-const FRY1: Node.FromBBTemplate = {
-  type: 'from-bb-template',
-  name: tr('French fry #1'),
-  templateId: 'french_fry',
-  visible: true,
-  editable: true,
-  startingOrigin: FRY_ORIGIN1,
-  origin: FRY_ORIGIN1
-};
+const FRIES: Dict<Node.FromBBTemplate> = {};
+for (const [i, pos] of FRY_ORIGINS.entries()) {
+  FRIES[`fry${i}`] = {
+    type: 'from-bb-template',
+    name: tr(`Fry #${i}`),
+    templateId: 'french_fry',
+    visible: true,
+    editable: true,
+    startingOrigin: pos,
+    origin: pos
+  };
+}
 
 const TRAYS: Dict<Node.FromBBTemplate> = {};
 for (let i = 0; i < 6; i++) {
@@ -532,8 +541,7 @@ export const Table_Sandbox: Scene = {
     'tomato': TOMATO,
     'pickle': PICKLE,
     'potato': POTATO,
-    'fry0': FRY0,
-    'fry1': FRY1,
+    ...FRIES,
     ...TRAYS,
     ...DRINKS_BLUE,
     ...DRINKS_GREEN,
