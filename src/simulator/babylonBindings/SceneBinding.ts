@@ -698,18 +698,31 @@ class SceneBinding {
     mesh.setParent(null);
     let physics_mesh = mesh;
 
+    /*
+     * There are three things you need to setup physics for an object in babylon.js
+     * - First, you need the mesh itself -- that is, the one that the user will see.
+     * - Then, you need to create a physics body for that mesh.
+     * - Finally, you need to set the physics shape -- that is, the shape the engine uses to simulate collisions.
+     */
 
+    /*
+     * This is the PhysicsBody where you set the mass and inertia for your object,
+     * as well as determine whether of not it should move.
+     */
     const body = new PhysicsBody(
       mesh,
       objectNode.physics?.motionType ?? PhysicsMotionType.DYNAMIC,
       false,
       this.bScene);
-
     body.setMassProperties({
       mass: Mass.toKilogramsValue(objectNode.physics?.mass ?? Mass.grams(0)),
       inertia: Vector3.FromArray(objectNode.physics?.inertia ?? [0, 0, 0]),
     });
 
+    /*
+     * Here, we check if the object has a seperate collision body.
+     * This should only apply to custom modeled objects.
+     */
     if (objectNode.physics?.colliderId) {
       physics_mesh = this.bScene_.getMeshById(objectNode.physics.colliderId);
       physics_mesh.scaling = RawVector3.toBabylon(objectNode.origin.scale ?? { x: 1, y: 1, z: 1 });
@@ -717,11 +730,14 @@ class SceneBinding {
 
     const parentShape = new PhysicsShapeContainer(this.bScene);
 
+    /*
+     * PhysicsShape requires some information to create the shape, depending on exactly what shape you want.
+     * Cylinders and boxes, for example require different parameters, so we handle those seperately.
+     * For more info, see: https://doc.babylonjs.com/features/featuresDeepDive/physics/shapes
+     */
     const scale = RawVector3.toBabylon(objectNode.origin.scale ?? { x: 1, y: 1, z: 1 });
-
     let parameters: PhysicsShapeParameters = { mesh: physics_mesh as Mesh };
 
-    // Cylinders require different parameters from everything else
     // WARNING: These numbers are correct for the cans, but must be changed if we ever include any other cylinders
     if (objectNode.physics.type === 'cylinder') {
       const p = physics_mesh.absolutePosition;
@@ -741,6 +757,11 @@ class SceneBinding {
       };
     }
 
+    /*
+     * Here we set the PhysicsShapeOptions, which tells the engine what kind of shape we want.
+     * It knows how to create some shapes automatically, based on the mesh that we gave it above.
+     * For example, it can automatically create a box or a cylinder around an object, or it can use the mesh itself.
+     */
     const options: PhysicShapeOptions = { type: PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type], parameters };
     const shape = new PhysicsShape(options, this.bScene);
     shape.material = {
@@ -755,6 +776,7 @@ class SceneBinding {
       parentShape.addChild(shape);
     }
 
+    // Tell the PhysicsBody we created earlier to use this shape
     body.shape = parentShape;
 
     if (this.physicsViewer_) {
@@ -777,11 +799,9 @@ class SceneBinding {
       this.physicsViewer_.hideBody(mesh.physicsBody);
     }
 
-    // BUG:Objects moved by user in wrong position after reset
     mesh.physicsBody.shape?.dispose();
     mesh.physicsBody.dispose();
     mesh.physicsBody = null;
-
 
     mesh.setParent(parent);
 

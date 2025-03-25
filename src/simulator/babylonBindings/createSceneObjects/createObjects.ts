@@ -41,10 +41,6 @@ export const buildGeometryFaceUvs = (faceUvs: RawVector2[] | undefined, expected
 };
 
 export const buildGeometry = async (name: string, geometry: Geometry, bScene_: babylonScene, faceUvs?: RawVector2[]): Promise<meshPair> => {
-  const asdf = name.replace(/\d+/g, '');
-
-  // console.log(`buildGeometry got name ${asdf}`);
-  // console.log('buildGeometry got geometry', geometry);
   const ret: meshPair = {} as meshPair;
   let parentTNode: TransformNode;
   switch (geometry.type) {
@@ -124,19 +120,16 @@ export const buildGeometry = async (name: string, geometry: Geometry, bScene_: b
 
       const res = await SceneLoader.ImportMeshAsync(geometry.include ?? '', baseName, fileName, bScene_);
       if (res.meshes.length === 1) return { visual: res.meshes[0] };
-      // const nonColliders: Mesh[] = [];
       parentTNode = new TransformNode(geometry.uri, bScene_);
       for (const mesh of res.meshes as Mesh[]) {
-        // GLTF importer adds a __root__ mesh (always the first one) that we can ignore 
+        // GLTF importer adds a __root__ mesh (always the first one) which we can ignore 
         if (mesh.name === '__root__') continue;
         if (mesh.name.startsWith('collider')) {
           ret.collider = mesh;
           continue;
         }
-        // nonColliders.push(mesh);
         mesh.setParent(parentTNode);
       }
-      // const mesh = Mesh.MergeMeshes(nonColliders, true, true, undefined, false, true);
       break;
     }
     default: {
@@ -161,10 +154,14 @@ export const createObject = async (node: Node.Obj, nextScene: Scene, parent: bab
     return null;
   }
 
-  // console.log(bScene_.meshes);
-  const match = bScene_.meshes.filter(m => m.name.startsWith(node.geometryId))[0];
-
   let ret: meshPair = { visual: null };
+
+  /*
+   * We search the scene to check if there is an existing node we can copy.
+   * If so, we save significant resources by using instancing and we avoid building and storing multiple versions of the same geometry.
+   * For more on instances see: https://doc.babylonjs.com/features/featuresDeepDive/mesh/copies/instances
+   */
+  const match = bScene_.meshes.filter(m => m.name.startsWith(node.geometryId))[0];
   if (match && match instanceof Mesh) {
     ret.visual = match.createInstance(`${match.name}-instance`);
 
@@ -177,7 +174,6 @@ export const createObject = async (node: Node.Obj, nextScene: Scene, parent: bab
   }
 
   ret = await buildGeometry(node.name[LocalizedString.EN_US], geometry, bScene_, node.faceUvs);
-
   if (ret.collider) {
     apply(ret.collider, m => m.isVisible = false);
     if (node.physics && !node.physics.colliderId) {

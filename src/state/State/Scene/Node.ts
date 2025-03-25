@@ -9,10 +9,18 @@ import Patch from '../../../util/redux/Patch';
 import Material from './Material';
 import { PhysicsMotionType } from '@babylonjs/core';
 
+/**
+ * Nodes are all of the objects in a scene.
+ * They store the physical properties of the object.
+ */
 namespace Node {
+  /**
+   * The parameters for a physics-enabled node.
+   */
   export interface Physics {
     /**
-     * Currently does nothing, but may be necessary in the future for minimizing the number of colliders in a scene.
+     * This is used to track the id of the collision mesh for an object.
+     * It is automatically assigned when an object is created, so you shouldn't need to set it manually.
      */
     colliderId?: string;
 
@@ -82,9 +90,22 @@ namespace Node {
     name: LocalizedString;
     startingOrigin?: ReferenceFramewUnits;
     origin?: ReferenceFramewUnits;
+    /**
+     * Names of any scripts that you want to include in the scene
+     */
     scriptIds?: string[];
+    /**
+     * Names of documents that you want to include in the scene
+     */
     documentIds?: string[];
+    /**
+     * Can the user edit the object?
+     */
     editable?: boolean;
+    /**
+     * Is the object visible to the user?
+     * NOTE: If an object is not visible, it cannot have physics enabled.
+     */
     visible?: boolean;
   }
 
@@ -145,12 +166,37 @@ namespace Node {
     };
   }
 
+  /**
+   * A basic Node with physics.
+   */
   export interface Obj extends Base {
+    /**
+     * What kind of thing it is.
+     */
     type: 'object';
+    /**
+     * The parent Node ID.
+     */
     parentId?: string;
+    /**
+     * The name of the Geometry of this node.
+     * The Geometry variable must be accessable to the Node somehow.
+     * See /src/simulator/definitions/scenes/tableBase.ts for an example of including it locally,
+     * or /src/simulator/definitions/nodes/2025gameTableTemplates.ts and
+     * /src/simulator/definitions/scenes/tableSandbox.ts for an example of using templates.
+     */
     geometryId: string;
+    /**
+     * The Physics of the Node.
+     */
     physics?: Physics;
+    /**
+     * The Material of the Node.
+     */
     material?: Material;
+    /**
+     * The FaceUVs of the Node.
+     */
     faceUvs?: RawVector2[];
   }
 
@@ -291,9 +337,22 @@ namespace Node {
     };
   }
 
+  /**
+   * A template representing a JBC object.
+   */
   export interface FromJBCTemplate extends Base {
+    /**
+     * What kind of thing it is.
+     */
     type: 'from-jbc-template';
+    /**
+     * The parent Node ID.
+     */
     parentId?: string;
+    /**
+     * The template to use. See /src/simulator/definitions/nodes/index.ts
+     * for examples.
+     */
     templateId: string;
   }
 
@@ -321,10 +380,25 @@ namespace Node {
     };
   }
 
+  /**
+   * A rock template Node.
+   */
   export interface FromRockTemplate extends Base {
+    /**
+     * What kind of thing it is.
+     */
     type: 'from-rock-template';
+    /**
+     * The parent Node ID.
+     */
     parentId?: string;
+    /**
+     * The object's material (surface visual)
+     */
     material?: Material;
+    /**
+     * The template to use.
+     */
     templateId: string;
   }
 
@@ -352,12 +426,34 @@ namespace Node {
     };
   }
 
+  /**
+   * A Space template Node.
+   */
   export interface FromSpaceTemplate extends Base {
+    /**
+     * What kind of thing it is.
+     */
     type: 'from-space-template';
+    /**
+     * The template to use. See /src/simulator/definitions/nodes/index.ts
+     * for examples.
+     */
     templateId: string;
+    /**
+     * The parent Node ID.
+     */
     parentId?: string;
+    /**
+     * The Physics of the Node.
+     */
     physics?: Physics;
+    /**
+     * The Material of the Node.
+     */
     material?: Material;
+    /**
+     * The geometry (shape) of the Node.
+     */
     geometryId?: string;
   }
 
@@ -388,12 +484,34 @@ namespace Node {
     };
   }
 
+  /**
+   * A Botball gamepiece template Node.
+   */
   export interface FromBBTemplate extends Base {
+    /**
+     * What kind of thing it is.
+     */
     type: 'from-bb-template';
+    /**
+     * The template to use. See /src/simulator/definitions/nodes/index.ts
+     * for examples.
+     */
     templateId: string;
+    /**
+     * The parent Node ID.
+     */
     parentId?: string;
+    /**
+     * The Physics of the Node.
+     */
     physics?: Physics;
+    /**
+     * The Material of the Node.
+     */
     material?: Material;
+    /**
+     * The geometry (shape) of the Node.
+     */
     geometryId?: string;
   }
 
