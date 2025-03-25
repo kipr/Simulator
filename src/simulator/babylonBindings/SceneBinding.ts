@@ -5,9 +5,6 @@ import {
   ArcRotateCamera, PointLight, SpotLight, DirectionalLight, PBRMaterial, EngineView,
   Scene as babylonScene, Node as babylonNode, Camera as babylCamera, Material as babylMaterial,
   Observer, BoundingBox,
-  Color3, BoundingBoxGizmo,
-  MeshBuilder,
-  BoundingInfo,
   PhysicsShapeParameters, PhysicShapeOptions, PhysicsShape, PhysicsShapeContainer, PhysicsBody, PhysicsMotionType,
 } from '@babylonjs/core';
 
@@ -26,7 +23,7 @@ import Patch from "../../util/redux/Patch";
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../util/math/unitMath";
 import { Distance, Mass, SetOps } from "../../util";
 import Material from '../../state/State/Scene/Material';
-import { preBuiltTemplates, preBuiltGeometries } from "../definitions/nodes";
+import { preBuiltTemplates } from "../definitions/nodes";
 import RobotBinding from './RobotBinding';
 import Robot from '../../state/State/Robot';
 import AbstractRobot from '../../programming/AbstractRobot';
@@ -38,7 +35,7 @@ import { RENDER_SCALE } from '../../components/constants/renderConstants';
 import { createMaterial, updateMaterialBasic, updateMaterialPbr } from './createSceneObjects/createMaterials';
 import { createDirectionalLight, createPointLight, createSpotLight } from './createSceneObjects/createLights';
 import { createCamera } from './createSceneObjects/createCameras';
-import { createObject, createEmpty, meshPair } from './createSceneObjects/createObjects';
+import { createObject, createEmpty } from './createSceneObjects/createObjects';
 import apply from './Apply';
 
 export type FrameLike = TransformNode | AbstractMesh;
