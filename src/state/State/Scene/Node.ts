@@ -7,41 +7,105 @@ import { Angle, Mass } from '../../../util/math/Value';
 import LocalizedString from '../../../util/LocalizedString';
 import Patch from '../../../util/redux/Patch';
 import Material from './Material';
+import { PhysicsMotionType } from '@babylonjs/core';
 
+/**
+ * Nodes are all of the objects in a scene.
+ * They store the physical properties of the object.
+ */
 namespace Node {
+  /**
+   * The parameters for a physics-enabled node.
+   */
   export interface Physics {
+    /**
+     * This is used to track the id of the collision mesh for an object.
+     * It is automatically assigned when an object is created, so you shouldn't need to set it manually.
+     */
     colliderId?: string;
-    fixed?: boolean;
+
+    /**
+     * What shape will simulate the physics for the object:
+     * box, sphere, cylinder, mesh, or none. 
+     */
     type: Physics.Type;
+
+    /**
+     * Describes whether the object should move. If undefined, dynamic (does move).
+     */
+    motionType?: PhysicsMotionType;
+
+    /**
+     * The mass of the object. If undefined, zero.
+     */
     mass?: Mass;
+
+    /**
+     * Coefficient of friction. If undefined, 0.2.
+     */
     friction?: number;
+
+    /**
+     * Restitution (bounciness) of the object.
+     * Defines how much energy is retained after a collision, where zero
+     * means none is retained, one means all energy is is retained, and values
+     * greater than one mean that energy is actually gained from the collsion.
+     * Should generally be between zero and one. If undefined, 0.2.
+     */
     restitution?: number;
+
+    /**
+     * The moment of inertia of the Mesh, represented as a
+     * 3-length vector. Represents how hard to rotate left/right (x),
+     * twisting around (y), and rocking back/forward (z).
+     * WARNING: If undefined, all zeros, which babylonJS
+     * treats as infinite inertia.
+     */
+    inertia?: number[];
+
   }
 
   export namespace Physics {
     export type Type = 'box' | 'sphere' | 'cylinder' | 'mesh' | 'none';
-  
+
     export const diff = (prev: Physics, next: Physics): Patch<Physics> => {
       if (!deepNeq(prev, next)) return Patch.none(prev);
 
       return Patch.innerChange(prev, next, {
         colliderId: Patch.diff(prev.colliderId, next.colliderId),
-        fixed: Patch.diff(prev.fixed, next.fixed),
         type: Patch.diff(prev.type, next.type),
+        motionType: Patch.diff(prev.motionType, next.motionType),
         mass: Patch.diff(prev.mass, next.mass),
         friction: Patch.diff(prev.friction, next.friction),
-        restitution: Patch.diff(prev.restitution, next.restitution)
+        restitution: Patch.diff(prev.restitution, next.restitution),
+        inertia: Patch.diff(prev.inertia, next.inertia)
       });
     };
   }
 
   interface Base {
+    /**
+     * The name of the object which will be displayed to the user.
+     */
     name: LocalizedString;
     startingOrigin?: ReferenceFramewUnits;
     origin?: ReferenceFramewUnits;
+    /**
+     * Names of any scripts that you want to include in the scene
+     */
     scriptIds?: string[];
+    /**
+     * Names of documents that you want to include in the scene
+     */
     documentIds?: string[];
+    /**
+     * Can the user edit the object?
+     */
     editable?: boolean;
+    /**
+     * Is the object visible to the user?
+     * NOTE: If an object is not visible, it cannot have physics enabled.
+     */
     visible?: boolean;
   }
 
@@ -102,12 +166,37 @@ namespace Node {
     };
   }
 
+  /**
+   * A basic Node with physics.
+   */
   export interface Obj extends Base {
+    /**
+     * What kind of thing it is.
+     */
     type: 'object';
+    /**
+     * The parent Node ID.
+     */
     parentId?: string;
+    /**
+     * The name of the Geometry of this node.
+     * The Geometry variable must be accessable to the Node somehow.
+     * See /src/simulator/definitions/scenes/tableBase.ts for an example of including it locally,
+     * or /src/simulator/definitions/nodes/2025gameTableTemplates.ts and
+     * /src/simulator/definitions/scenes/tableSandbox.ts for an example of using templates.
+     */
     geometryId: string;
+    /**
+     * The Physics of the Node.
+     */
     physics?: Physics;
+    /**
+     * The Material of the Node.
+     */
     material?: Material;
+    /**
+     * The FaceUVs of the Node.
+     */
     faceUvs?: RawVector2[];
   }
 
@@ -248,9 +337,22 @@ namespace Node {
     };
   }
 
+  /**
+   * A template representing a JBC object.
+   */
   export interface FromJBCTemplate extends Base {
+    /**
+     * What kind of thing it is.
+     */
     type: 'from-jbc-template';
+    /**
+     * The parent Node ID.
+     */
     parentId?: string;
+    /**
+     * The template to use. See /src/simulator/definitions/nodes/index.ts
+     * for examples.
+     */
     templateId: string;
   }
 
@@ -278,10 +380,25 @@ namespace Node {
     };
   }
 
+  /**
+   * A rock template Node.
+   */
   export interface FromRockTemplate extends Base {
+    /**
+     * What kind of thing it is.
+     */
     type: 'from-rock-template';
+    /**
+     * The parent Node ID.
+     */
     parentId?: string;
+    /**
+     * The object's material (surface visual)
+     */
     material?: Material;
+    /**
+     * The template to use.
+     */
     templateId: string;
   }
 
@@ -309,12 +426,34 @@ namespace Node {
     };
   }
 
+  /**
+   * A Space template Node.
+   */
   export interface FromSpaceTemplate extends Base {
+    /**
+     * What kind of thing it is.
+     */
     type: 'from-space-template';
+    /**
+     * The template to use. See /src/simulator/definitions/nodes/index.ts
+     * for examples.
+     */
     templateId: string;
+    /**
+     * The parent Node ID.
+     */
     parentId?: string;
+    /**
+     * The Physics of the Node.
+     */
     physics?: Physics;
+    /**
+     * The Material of the Node.
+     */
     material?: Material;
+    /**
+     * The geometry (shape) of the Node.
+     */
     geometryId?: string;
   }
 
@@ -344,6 +483,65 @@ namespace Node {
       });
     };
   }
+
+  /**
+   * A Botball gamepiece template Node.
+   */
+  export interface FromBBTemplate extends Base {
+    /**
+     * What kind of thing it is.
+     */
+    type: 'from-bb-template';
+    /**
+     * The template to use. See /src/simulator/definitions/nodes/index.ts
+     * for examples.
+     */
+    templateId: string;
+    /**
+     * The parent Node ID.
+     */
+    parentId?: string;
+    /**
+     * The Physics of the Node.
+     */
+    physics?: Physics;
+    /**
+     * The Material of the Node.
+     */
+    material?: Material;
+    /**
+     * The geometry (shape) of the Node.
+     */
+    geometryId?: string;
+  }
+
+  export namespace FromBBTemplate {
+    export const NIL: FromBBTemplate = {
+      type: 'from-bb-template',
+      ...Base.NIL,
+      templateId: '',
+    };
+
+    export const from = <T extends Base>(t: T): FromBBTemplate => ({
+      ...NIL,
+      ...Base.upcast(t)
+    });
+
+    export const diff = (prev: FromBBTemplate, next: FromBBTemplate): Patch<FromBBTemplate> => {
+      if (!deepNeq(prev, next)) return Patch.none(prev);
+
+      return Patch.innerChange(prev, next, {
+        type: Patch.none(prev.type),
+        parentId: Patch.diff(prev.parentId, next.parentId),
+        templateId: Patch.diff(prev.templateId, next.templateId),
+        physics: Patch.diff(prev.physics, next.physics),
+        material: Material.diff(prev.material, next.material),
+        geometryId: Patch.diff(prev.geometryId, next.geometryId),
+        ...Base.partialDiff(prev, next),
+      });
+    };
+  }
+
 
   export interface Robot extends Base {
     type: 'robot';
@@ -388,12 +586,12 @@ namespace Node {
       case 'from-jbc-template': return FromJBCTemplate.diff(prev, next as FromJBCTemplate);
       case 'from-rock-template': return FromRockTemplate.diff(prev, next as FromRockTemplate);
       case 'from-space-template': return FromSpaceTemplate.diff(prev, next as FromSpaceTemplate);
+      case 'from-bb-template': return FromBBTemplate.diff(prev, next as FromBBTemplate);
       case 'robot': return Robot.diff(prev, next as Robot);
     }
   };
 
-  export type Type = 'empty' | 'object' | 'point-light' | 'spot-light' | 'directional-light' | 'from-jbc-template' | 'from-space-template' | 'from-rock-template' | 'robot' | 'all';
-
+  export type Type = 'empty' | 'object' | 'point-light' | 'spot-light' | 'directional-light' | 'from-jbc-template' | 'from-space-template' | 'from-bb-template' | 'from-rock-template' | 'robot' | 'all';
   export const transmute = (node: Node, type: Type): Node => {
     switch (type) {
       case 'empty': return Empty.from(node);
@@ -424,6 +622,7 @@ type Node = (
   Node.FromJBCTemplate |
   Node.FromRockTemplate |
   Node.FromSpaceTemplate |
+  Node.FromBBTemplate |
   Node.Robot
 );
 

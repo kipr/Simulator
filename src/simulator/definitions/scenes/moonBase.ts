@@ -1,17 +1,12 @@
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../../util/math/unitMath";
-import { Angle, Distance, Mass } from "../../../util";
+import { Distance } from "../../../util";
 import Node from "../../../state/State/Scene/Node";
 import Camera from "../../../state/State/Scene/Camera";
 import Scene from "../../../state/State/Scene";
 import AbstractRobot from '../../../programming/AbstractRobot';
-import LocalizedString from '../../../util/LocalizedString';
 import Author from '../../../db/Author';
-import { Color } from "../../../state/State/Scene/Color";
-import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 
 import tr from '@i18n';
-import { sprintf } from 'sprintf-js';
-import Dict from '../../../util/objectOps/Dict';
 
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
@@ -98,7 +93,7 @@ export function createBaseSceneSurface(): Scene {
             uri: "/static/textures/Moon-2d-Surface.png"
           },
         },
-      },      
+      },
       'start': {
         type: 'object',
         geometryId: 'start',
