@@ -19,7 +19,7 @@ namespace Node {
     ReflectanceSensor = 'reflectance-sensor',
     IRobotCreate = 'irobot-create',
   }
-  
+
   interface Base {
     /**
      * A human readable name for the Node.
@@ -102,7 +102,9 @@ namespace Node {
 
     /**
      * The moment of inertia of the Mesh, represented as a
-     * column-wise 3x3 matrix of numbers. If undefined, zeros.
+     * 3-length vector. Represents how hard to rotate left/right (x),
+     * twisting around (y), and rocking back/forward (z) respectively.
+     * WARNING: If undefined, all zeros, which means infinite inertia.
      */
     inertia?: number[];
 
@@ -225,7 +227,7 @@ namespace Node {
      * The axis of the parent
      */
     parentAxis: RawVector3;
-    
+
     /**
      * The axis of the child. If undefined, same as `parentAxis`.
      */
@@ -454,7 +456,7 @@ namespace Node {
   }
 
   export const lightSensor = construct<LightSensor>(Type.LightSensor);
-  
+
   export interface ReflectanceSensor extends Base, AnalogSensor {
     type: Type.ReflectanceSensor;
 

@@ -5,7 +5,7 @@
 ![CD prod status](https://github.com/kipr/simulator/actions/workflows/cd-prod.yml/badge.svg)
 
 A Robotics Simulator built in TypeScript.
-Simulates a botball/JBC style demobot with a built in IDE.
+Simulates a botball/JBC style demobot with a built-in IDE.
 
 # Development
 
@@ -16,14 +16,15 @@ Simulates a botball/JBC style demobot with a built in IDE.
 - [CMake](https://cmake.org/)
 - [SWIG 4+](https://swig.org/)
 - [Python 3.7 or newer](https://www.python.org/)
-- [Also python 2.7]
+- Python 2.7
+- Java 11 (other versions may work)
 
 ### Debian/Ubuntu
 ```bash
 # to get newer versions of Node.js through apt-get, you likely need to add the correct NodeSource repositories
 # for details, see https://github.com/nodesource/distributions
 sudo apt-get update
-sudo apt-get install -y wget git cmake build-essential python3.8 swig zlib1g-dev doxygen nodejs
+sudo apt-get install -y wget git git-lfs cmake build-essential python2.7 python3 python3-distutils default-jre swig zlib1g-dev doxygen nodejs
 sudo npm install --global npm
 sudo npm install --global yarn
 yarn --version

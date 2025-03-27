@@ -4,6 +4,9 @@ import { Color } from "../../../state/State/Scene/Color";
 import Geometry from "../../../state/State/Scene/Geometry";
 import Node from "../../../state/State/Scene/Node";
 import { Distance, Mass } from "../../../util";
+import { PhysicsMotionType } from "@babylonjs/core";
+
+import { BB2025Templates, BB2025Geometries } from "./2025gameTableTemplates";
 
 // TODO: Consider deep-freezing all of these objects
 
@@ -119,6 +122,7 @@ const matATemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'mat',
   physics: {
     type: 'box',
+    motionType: PhysicsMotionType.STATIC,
     restitution: .3,
     friction: 1,
   },
@@ -136,6 +140,7 @@ const matBTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'mat',
   physics: {
     type: 'box',
+    motionType: PhysicsMotionType.STATIC,
     restitution: .3,
     friction: 1,
   },
@@ -344,6 +349,7 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'habitat': habitatTemplate,
   'research_habitat': habitatResearchTemplate,
   'control_habitat': habitatControlTemplate,
+  ...BB2025Templates,
 });
 
 
@@ -452,4 +458,5 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
     type: 'file',
     uri: '/static/object_binaries/com_hab.glb'
   },
+  ...BB2025Geometries,
 });

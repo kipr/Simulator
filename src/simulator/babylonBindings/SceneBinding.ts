@@ -1,13 +1,11 @@
 
 import {
   PhysicsShapeType, IPhysicsCollisionEvent, IPhysicsEnginePluginV2, PhysicsAggregate,
-  TransformNode, AbstractMesh, PhysicsViewer, ShadowGenerator, Vector3, StandardMaterial, GizmoManager,
+  TransformNode, AbstractMesh, Mesh, PhysicsViewer, ShadowGenerator, Vector3, StandardMaterial, GizmoManager,
   ArcRotateCamera, PointLight, SpotLight, DirectionalLight, PBRMaterial, EngineView,
   Scene as babylonScene, Node as babylonNode, Camera as babylCamera, Material as babylMaterial,
   Observer, BoundingBox,
-  Color3, BoundingBoxGizmo,
-  MeshBuilder,
-  BoundingInfo
+  PhysicsShapeParameters, PhysicShapeOptions, PhysicsShape, PhysicsShapeContainer, PhysicsBody, PhysicsMotionType,
 } from '@babylonjs/core';
 
 // eslint-disable-next-line @typescript-eslint/no-duplicate-imports -- Required import for side effects
@@ -237,7 +235,10 @@ class SceneBinding {
     let nodeToCreate: Node = node;
 
     // Resolve template nodes into non-template nodes by looking up the template by ID
-    if (node.type === 'from-jbc-template' || node.type === 'from-rock-template' || node.type === 'from-space-template') {
+    if (node.type === 'from-jbc-template' ||
+      node.type === 'from-rock-template' ||
+      node.type === 'from-space-template' ||
+      node.type === 'from-bb-template') {
       const nodeTemplate = preBuiltTemplates[node.templateId];
       if (!nodeTemplate) {
         console.warn('template node has invalid template ID:', node.templateId);
@@ -257,7 +258,9 @@ class SceneBinding {
       case 'object': {
         const parent = this.findBNode_(nodeToCreate.parentId, true);
 
-        ret = await createObject(nodeToCreate, nextScene, parent, this.bScene_); break;
+        ret = await createObject(nodeToCreate, nextScene, parent, this.bScene_);
+        break;
+
       }
       case 'empty': {
         const parent = this.findBNode_(nodeToCreate.parentId, true);
@@ -454,7 +457,7 @@ class SceneBinding {
 
   private updateFromTemplate_ = (
     id: string,
-    node: Patch.InnerChange<Node.FromRockTemplate> | Patch.InnerChange<Node.FromSpaceTemplate> | Patch.InnerChange<Node.FromJBCTemplate>,
+    node: Patch.InnerChange<Node.FromRockTemplate> | Patch.InnerChange<Node.FromSpaceTemplate> | Patch.InnerChange<Node.FromJBCTemplate> | Patch.InnerChange<Node.FromBBTemplate>,
     nextScene: Scene
   ): Promise<babylonNode> => {
     // If the template ID changes, recreate the node entirely
@@ -589,6 +592,9 @@ class SceneBinding {
           case 'from-space-template': {
             return this.updateFromTemplate_(id, node as Patch.InnerChange<Node.FromSpaceTemplate>, nextScene);
           }
+          case 'from-bb-template': {
+            return this.updateFromTemplate_(id, node as Patch.InnerChange<Node.FromBBTemplate>, nextScene);
+          }
           default: {
             console.error('invalid node type for inner change:', (node.next as Node).type);
             return this.findBNode_(id);
@@ -674,7 +680,10 @@ class SceneBinding {
     callback: (collisionEvent: IPhysicsCollisionEvent) => void;
   }[]> = {};
 
-  private restorePhysicsToObject = (mesh: AbstractMesh, objectNode: Node.Obj | Node.FromSpaceTemplate, nodeId: string, scene: Scene): void => {
+  private restorePhysicsToObject = (mesh: AbstractMesh,
+    objectNode: Node.Obj | Node.FromSpaceTemplate | Node.FromBBTemplate,
+    nodeId: string,
+    scene: Scene): void => {
     // Physics should only be added to physics-enabled, visible, non-selected objects
     if (
       !objectNode.physics ||
@@ -687,17 +696,96 @@ class SceneBinding {
 
     const initialParent = mesh.parent;
     mesh.setParent(null);
-    const aggregate = new PhysicsAggregate(mesh, PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type], {
-      mass: objectNode.physics.mass ? Mass.toGramsValue(objectNode.physics.mass) : 0,
-      friction: objectNode.physics.friction ?? 5,
-      restitution: objectNode.physics.restitution ?? 0.5,
-    }, this.bScene_);
+    let physics_mesh = mesh;
+
+    /*
+     * There are three things you need to setup physics for an object in babylon.js
+     * - First, you need the mesh itself -- that is, the one that the user will see.
+     * - Then, you need to create a physics body for that mesh.
+     * - Finally, you need to set the physics shape -- that is, the shape the engine uses to simulate collisions.
+     */
+
+    /*
+     * This is the PhysicsBody where you set the mass and inertia for your object,
+     * as well as determine whether of not it should move.
+     */
+    const body = new PhysicsBody(
+      mesh,
+      objectNode.physics?.motionType ?? PhysicsMotionType.DYNAMIC,
+      false,
+      this.bScene);
+    body.setMassProperties({
+      mass: Mass.toKilogramsValue(objectNode.physics?.mass ?? Mass.grams(0)),
+      inertia: Vector3.FromArray(objectNode.physics?.inertia ?? [0, 0, 0]),
+    });
+
+    /*
+     * Here, we check if the object has a seperate collision body.
+     * This should only apply to custom modeled objects.
+     */
+    if (objectNode.physics?.colliderId) {
+      physics_mesh = this.bScene_.getMeshById(objectNode.physics.colliderId);
+      physics_mesh.scaling = RawVector3.toBabylon(objectNode.origin.scale ?? { x: 1, y: 1, z: 1 });
+    }
+
+    const parentShape = new PhysicsShapeContainer(this.bScene);
+
+    /*
+     * PhysicsShape requires some information to create the shape, depending on exactly what shape you want.
+     * Cylinders and boxes, for example require different parameters, so we handle those seperately.
+     * For more info, see: https://doc.babylonjs.com/features/featuresDeepDive/physics/shapes
+     */
+    const scale = RawVector3.toBabylon(objectNode.origin.scale ?? { x: 1, y: 1, z: 1 });
+    let parameters: PhysicsShapeParameters = { mesh: physics_mesh as Mesh };
+
+    // WARNING: These numbers are correct for the cans, but must be changed if we ever include any other cylinders
+    if (objectNode.physics.type === 'cylinder') {
+      const p = physics_mesh.absolutePosition;
+      // The position on the x axis will be wrong without subtracting 2x
+      parameters = {
+        ...parameters,
+        pointA: p.add(new Vector3(-(p.x * 2), -(11.15 * 0.5), 0)),
+        pointB: p.add(new Vector3(-(p.x * 2), (11.15 * 0.5), 0)),
+        radius: 3
+      };
+    } else if (objectNode.physics.type === 'box') {
+      // The final multiplication by [2, 2, 2] is required to make collision boxes scale correctly
+      const extend = physics_mesh.getBoundingInfo().boundingBox.extendSize.multiply(scale).multiply(new Vector3(2, 2, 2));
+      parameters = {
+        ...parameters,
+        extents: extend,
+      };
+    }
+
+    /*
+     * Here we set the PhysicsShapeOptions, which tells the engine what kind of shape we want.
+     * It knows how to create some shapes automatically, based on the mesh that we gave it above.
+     * For example, it can automatically create a box or a cylinder around an object, or it can use the mesh itself.
+     */
+    const options: PhysicShapeOptions = { type: PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type], parameters };
+    const shape = new PhysicsShape(options, this.bScene);
+    shape.material = {
+      friction: objectNode.physics.friction ?? 0.2,
+      restitution: objectNode.physics.restitution ?? 0.2,
+    };
+
+    // For some reason the mesh id changes when the world resets
+    if (physics_mesh.id.includes('Can') || physics_mesh.id.includes('can')) {
+      parentShape.addChild(shape, mesh.absolutePosition, mesh.absoluteRotationQuaternion);
+    } else {
+      parentShape.addChild(shape);
+    }
+
+    // Tell the PhysicsBody we created earlier to use this shape
+    body.shape = parentShape;
 
     if (this.physicsViewer_) {
       this.physicsViewer_.showBody(mesh.physicsBody);
     }
     mesh.setParent(initialParent);
     this.syncCollisionFilters_();
+
+    return;
   };
 
 
@@ -710,10 +798,10 @@ class SceneBinding {
     if (this.physicsViewer_) {
       this.physicsViewer_.hideBody(mesh.physicsBody);
     }
-    mesh.physicsBody.shape.dispose();
+
+    mesh.physicsBody.shape?.dispose();
     mesh.physicsBody.dispose();
     mesh.physicsBody = null;
-
 
     mesh.setParent(parent);
 
@@ -841,6 +929,9 @@ class SceneBinding {
           const nodeTemplate = preBuiltTemplates[prevNode.templateId];
           if (nodeTemplate?.type === 'object') prevNodeObj = { ...nodeTemplate, ...Node.Base.upcast(prevNode) };
         } else if (prevNode.type === 'from-space-template') {
+          const nodeTemplate = preBuiltTemplates[prevNode.templateId];
+          if (nodeTemplate?.type === 'object') prevNodeObj = { ...nodeTemplate, ...Node.Base.upcast(prevNode) };
+        } else if (prevNode.type === 'from-bb-template') {
           const nodeTemplate = preBuiltTemplates[prevNode.templateId];
           if (nodeTemplate?.type === 'object') prevNodeObj = { ...nodeTemplate, ...Node.Base.upcast(prevNode) };
         }
