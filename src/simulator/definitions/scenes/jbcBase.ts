@@ -1,11 +1,12 @@
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../../util/math/unitMath";
-import { Angle, Distance, Mass } from "../../../util";
+import { Distance } from "../../../util";
 import Node from "../../../state/State/Scene/Node";
 import Camera from "../../../state/State/Scene/Camera";
 import Scene from "../../../state/State/Scene";
 import { Color } from "../../../state/State/Scene/Color";
 import AbstractRobot from '../../../programming/AbstractRobot';
 import Author from '../../../db/Author';
+import { PhysicsMotionType } from "@babylonjs/core";
 
 import tr from '@i18n';
 import { sprintf } from 'sprintf-js';
@@ -42,12 +43,6 @@ const GROUND_ORIGIN: ReferenceFramewUnits = {
     y: Distance.centimeters(-7.512),
     z: Distance.centimeters(50),
   },
-  orientation: {
-    type: 'euler',
-    x: Angle.degrees(90),
-    y: Angle.degrees(0),
-    z: Angle.degrees(0),
-  }
 };
 
 const LIGHT_ORIGIN: ReferenceFramewUnits = {
@@ -68,8 +63,8 @@ export function createBaseSceneSurfaceA(): Scene {
         type: 'box',
         size: {
           x: Distance.meters(3.54),
-          y: Distance.meters(3.54),
-          z: Distance.meters(0.01),
+          y: Distance.meters(0.01),
+          z: Distance.meters(3.54),
         },
       },
       'mat': {
@@ -101,6 +96,7 @@ export function createBaseSceneSurfaceA(): Scene {
         visible: true,
         physics: {
           type: 'box',
+          motionType: PhysicsMotionType.STATIC,
           restitution: 0.1,
           friction: 10,
         },

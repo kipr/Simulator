@@ -168,6 +168,50 @@ class NodeSettings extends React.PureComponent<Props, State> {
       ComboBox.option(LocalizedString.lookup(tr('Walkway'), locale), 'walkway'),
       ComboBox.option(LocalizedString.lookup(tr('Solar Panel'), locale), 'solarpanel'),
       ComboBox.option(LocalizedString.lookup(tr('BotGuy Astronaut'), locale), 'botguy'),
+      ComboBox.option(LocalizedString.lookup(tr('2025 Botball Game Table'), locale), 'game_table_2025'),
+      ComboBox.option(LocalizedString.lookup(tr('Blue Drink'), locale), 'drink_blue'),
+      ComboBox.option(LocalizedString.lookup(tr('Green Drink'), locale), 'drink_green'),
+      ComboBox.option(LocalizedString.lookup(tr('Pink Drink'), locale), 'drink_pink'),
+      ComboBox.option(LocalizedString.lookup(tr('Blue Pom (Ice Cube)'), locale), 'pom_blue'),
+      ComboBox.option(LocalizedString.lookup(tr('Orange Pom (Hot Sauce)'), locale), 'pom_orange'),
+      ComboBox.option(LocalizedString.lookup(tr('Red Pom (Ketchup)'), locale), 'pom_red'),
+      ComboBox.option(LocalizedString.lookup(tr('Yellow Pom (Mustard)'), locale), 'pom_yellow'),
+      ComboBox.option(LocalizedString.lookup(tr('French Fry'), locale), 'french_fry'),
+      ComboBox.option(LocalizedString.lookup(tr('Hamburger'), locale), 'hamburger'),
+      ComboBox.option(LocalizedString.lookup(tr('Hotdog'), locale), 'hotdog'),
+      ComboBox.option(LocalizedString.lookup(tr('Taco'), locale), 'taco'),
+      ComboBox.option(LocalizedString.lookup(tr('Blue Cup'), locale), 'cup_blue'),
+      ComboBox.option(LocalizedString.lookup(tr('Green Cup'), locale), 'cup_green'),
+      ComboBox.option(LocalizedString.lookup(tr('Pink Cup'), locale), 'cup_pink'),
+      ComboBox.option(LocalizedString.lookup(tr('Bottle'), locale), 'bottle'),
+      ComboBox.option(LocalizedString.lookup(tr('Pickle'), locale), 'pickle'),
+      ComboBox.option(LocalizedString.lookup(tr('Tomato'), locale), 'tomato'),
+      ComboBox.option(LocalizedString.lookup(tr('Potato'), locale), 'potato'),
+      ComboBox.option(LocalizedString.lookup(tr('Tray'), locale), 'tray'),
+      ComboBox.option(LocalizedString.lookup(tr('Botguy'), locale), 'botguy_gamepiece'),
+    ];
+    const BB_TEMPLATE_OPTIONS: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('2025 Botball Game Table'), locale), 'game_table_2025'),
+      ComboBox.option(LocalizedString.lookup(tr('Blue Drink'), locale), 'drink_blue'),
+      ComboBox.option(LocalizedString.lookup(tr('Green Drink'), locale), 'drink_green'),
+      ComboBox.option(LocalizedString.lookup(tr('Pink Drink'), locale), 'drink_pink'),
+      ComboBox.option(LocalizedString.lookup(tr('Blue Pom (Ice Cube)'), locale), 'pom_blue'),
+      ComboBox.option(LocalizedString.lookup(tr('Orange Pom (Hot Sauce)'), locale), 'pom_orange'),
+      ComboBox.option(LocalizedString.lookup(tr('Red Pom (Ketchup)'), locale), 'pom_red'),
+      ComboBox.option(LocalizedString.lookup(tr('Yellow Pom (Mustard)'), locale), 'pom_yellow'),
+      ComboBox.option(LocalizedString.lookup(tr('French Fry'), locale), 'french_fry'),
+      ComboBox.option(LocalizedString.lookup(tr('Hamburger'), locale), 'hamburger'),
+      ComboBox.option(LocalizedString.lookup(tr('Hotdog'), locale), 'hotdog'),
+      ComboBox.option(LocalizedString.lookup(tr('Taco'), locale), 'taco'),
+      ComboBox.option(LocalizedString.lookup(tr('Blue Cup'), locale), 'cup_blue'),
+      ComboBox.option(LocalizedString.lookup(tr('Green Cup'), locale), 'cup_green'),
+      ComboBox.option(LocalizedString.lookup(tr('Pink Cup'), locale), 'cup_pink'),
+      ComboBox.option(LocalizedString.lookup(tr('Bottle'), locale), 'bottle'),
+      ComboBox.option(LocalizedString.lookup(tr('Pickle'), locale), 'pickle'),
+      ComboBox.option(LocalizedString.lookup(tr('Tomato'), locale), 'tomato'),
+      ComboBox.option(LocalizedString.lookup(tr('Potato'), locale), 'potato'),
+      ComboBox.option(LocalizedString.lookup(tr('Tray'), locale), 'tray'),
+      ComboBox.option(LocalizedString.lookup(tr('Botguy'), locale), 'botguy_gamepiece'),
     ];
 
     // If the new type is from a template, set the template ID to a default value
@@ -192,6 +236,14 @@ class NodeSettings extends React.PureComponent<Props, State> {
     }
     if (transmutedNode.type === 'from-space-template') {
       const defaultTemplateId = SPACE_TEMPLATE_OPTIONS[0].data as string;
+      
+      transmutedNode = {
+        ...transmutedNode,
+        templateId: defaultTemplateId,
+      };
+    }
+    if (transmutedNode.type === 'from-bb-template') {
+      const defaultTemplateId = BB_TEMPLATE_OPTIONS[0].data as string;
       
       transmutedNode = {
         ...transmutedNode,
@@ -472,7 +524,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
   private onMaterialBasicFieldTextureUriChange_ = (field: keyof Omit<Material.Basic, 'type'>) => (event: React.SyntheticEvent<HTMLInputElement>) => {
     const { node, onNodeChange } = this.props;
 
-    if (node.type !== 'object' && node.type !== 'from-space-template') throw new Error('Node is not an object');
+    if (node.type !== 'object' && node.type !== 'from-space-template' && node.type !== 'from-bb-template') throw new Error('Node is not an object');
 
     const material = node.material as Material.Basic;
     const nextMaterial = { ...material };
@@ -587,6 +639,19 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const { node } = props;
 
     if (node.type !== 'from-space-template') return;
+
+    const templateId = option.data as string;
+
+    this.props.onNodeChange({
+      ...node,
+      templateId
+    });
+  };
+  private onBBTemplateSelect_ = (index: number, option: ComboBox.Option) => {
+    const { props } = this;
+    const { node } = props;
+
+    if (node.type !== 'from-bb-template') return;
 
     const templateId = option.data as string;
 
@@ -986,6 +1051,50 @@ class NodeSettings extends React.PureComponent<Props, State> {
       ComboBox.option(LocalizedString.lookup(tr('Solar Panel'), locale), 'solarpanel'),
       ComboBox.option(LocalizedString.lookup(tr('BotGuy Astronaut'), locale), 'botguy'),
       ComboBox.option(LocalizedString.lookup(tr('Moon Rock Container'), locale), 'container'),
+      ComboBox.option(LocalizedString.lookup(tr('2025 Botball Game Table'), locale), 'game_table_2025'),
+      ComboBox.option(LocalizedString.lookup(tr('Blue Drink'), locale), 'drink_blue'),
+      ComboBox.option(LocalizedString.lookup(tr('Green Drink'), locale), 'drink_green'),
+      ComboBox.option(LocalizedString.lookup(tr('Pink Drink'), locale), 'drink_pink'),
+      ComboBox.option(LocalizedString.lookup(tr('Blue Pom (Ice Cube)'), locale), 'pom_blue'),
+      ComboBox.option(LocalizedString.lookup(tr('Orange Pom (Hot Sauce)'), locale), 'pom_orange'),
+      ComboBox.option(LocalizedString.lookup(tr('Red Pom (Ketchup)'), locale), 'pom_red'),
+      ComboBox.option(LocalizedString.lookup(tr('Yellow Pom (Mustard)'), locale), 'pom_yellow'),
+      ComboBox.option(LocalizedString.lookup(tr('French Fry'), locale), 'french_fry'),
+      ComboBox.option(LocalizedString.lookup(tr('Hamburger'), locale), 'hamburger'),
+      ComboBox.option(LocalizedString.lookup(tr('Hotdog'), locale), 'hotdog'),
+      ComboBox.option(LocalizedString.lookup(tr('Taco'), locale), 'taco'),
+      ComboBox.option(LocalizedString.lookup(tr('Blue Cup'), locale), 'cup_blue'),
+      ComboBox.option(LocalizedString.lookup(tr('Green Cup'), locale), 'cup_green'),
+      ComboBox.option(LocalizedString.lookup(tr('Pink Cup'), locale), 'cup_pink'),
+      ComboBox.option(LocalizedString.lookup(tr('Bottle'), locale), 'bottle'),
+      ComboBox.option(LocalizedString.lookup(tr('Pickle'), locale), 'pickle'),
+      ComboBox.option(LocalizedString.lookup(tr('Tomato'), locale), 'tomato'),
+      ComboBox.option(LocalizedString.lookup(tr('Potato'), locale), 'potato'),
+      ComboBox.option(LocalizedString.lookup(tr('Tray'), locale), 'tray'),
+      ComboBox.option(LocalizedString.lookup(tr('Botguy'), locale), 'botguy_gamepiece'),
+    ];
+    const BB_TEMPLATE_OPTIONS: ComboBox.Option[] = [
+      ComboBox.option(LocalizedString.lookup(tr('2025 Botball Game Table'), locale), 'game_table_2025'),
+      ComboBox.option(LocalizedString.lookup(tr('Blue Drink'), locale), 'drink_blue'),
+      ComboBox.option(LocalizedString.lookup(tr('Green Drink'), locale), 'drink_green'),
+      ComboBox.option(LocalizedString.lookup(tr('Pink Drink'), locale), 'drink_pink'),
+      ComboBox.option(LocalizedString.lookup(tr('Blue Pom (Ice Cube)'), locale), 'pom_blue'),
+      ComboBox.option(LocalizedString.lookup(tr('Orange Pom (Hot Sauce)'), locale), 'pom_orange'),
+      ComboBox.option(LocalizedString.lookup(tr('Red Pom (Ketchup)'), locale), 'pom_red'),
+      ComboBox.option(LocalizedString.lookup(tr('Yellow Pom (Mustard)'), locale), 'pom_yellow'),
+      ComboBox.option(LocalizedString.lookup(tr('French Fry'), locale), 'french_fry'),
+      ComboBox.option(LocalizedString.lookup(tr('Hamburger'), locale), 'hamburger'),
+      ComboBox.option(LocalizedString.lookup(tr('Hotdog'), locale), 'hotdog'),
+      ComboBox.option(LocalizedString.lookup(tr('Taco'), locale), 'taco'),
+      ComboBox.option(LocalizedString.lookup(tr('Blue Cup'), locale), 'cup_blue'),
+      ComboBox.option(LocalizedString.lookup(tr('Green Cup'), locale), 'cup_green'),
+      ComboBox.option(LocalizedString.lookup(tr('Pink Cup'), locale), 'cup_pink'),
+      ComboBox.option(LocalizedString.lookup(tr('Bottle'), locale), 'bottle'),
+      ComboBox.option(LocalizedString.lookup(tr('Pickle'), locale), 'pickle'),
+      ComboBox.option(LocalizedString.lookup(tr('Tomato'), locale), 'tomato'),
+      ComboBox.option(LocalizedString.lookup(tr('Potato'), locale), 'potato'),
+      ComboBox.option(LocalizedString.lookup(tr('Tray'), locale), 'tray'),
+      ComboBox.option(LocalizedString.lookup(tr('Botguy'), locale), 'botguy_gamepiece'),
     ];
 
     const RADIATION_TEMPLATE_OPTIONS: ComboBox.Option[] = [
@@ -1004,6 +1113,10 @@ class NodeSettings extends React.PureComponent<Props, State> {
     }, {});
 
     const SPACE_TEMPLATE_REVERSE_OPTIONS: Dict<number> = SPACE_TEMPLATE_OPTIONS.reduce((dict, option, i) => {
+      dict[option.data as string] = i;
+      return dict;
+    }, {});
+    const BB_TEMPLATE_REVERSE_OPTIONS: Dict<number> = SPACE_TEMPLATE_OPTIONS.reduce((dict, option, i) => {
       dict[option.data as string] = i;
       return dict;
     }, {});
@@ -1029,6 +1142,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
     
     const NODE_TYPE_OPTIONS: ComboBox.Option[] = [
       ComboBox.option(LocalizedString.lookup(tr('Space Base'), locale), 'from-space-template'),
+      ComboBox.option(LocalizedString.lookup(tr('Botball'), locale), 'from-bb-template'),
       ComboBox.option(LocalizedString.lookup(tr('JBC Pieces'), locale), 'from-jbc-template'),
       ComboBox.option(LocalizedString.lookup(tr('Moon Rock'), locale), 'from-rock-template'),
       ComboBox.option(LocalizedString.lookup(tr('Custom Object'), locale), 'object'),
@@ -1170,6 +1284,16 @@ class NodeSettings extends React.PureComponent<Props, State> {
                 theme={theme}
                 index={SPACE_TEMPLATE_REVERSE_OPTIONS[node.templateId]}
                 onSelect={this.onSpaceTemplateSelect_}
+              />
+            </StyledField>
+          )}
+          {node.type === 'from-bb-template' && (
+            <StyledField name={LocalizedString.lookup(tr('Item'), locale)} theme={theme} long>
+              <ComboBox
+                options={BB_TEMPLATE_OPTIONS}
+                theme={theme}
+                index={BB_TEMPLATE_REVERSE_OPTIONS[node.templateId]}
+                onSelect={this.onBBTemplateSelect_}
               />
             </StyledField>
           )}

@@ -12,7 +12,7 @@ env:
 jobs:
   deploy-to-prod:
     name: Deploy to prod
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
     - name: Checkout simulator repo
