@@ -28,7 +28,7 @@ concurrency: ${{ github.workflow }}
 jobs:
   build-publish:
     name: Build and publish
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       image_version: ${{ steps.image_tag.outputs.IMAGE_TAG }}
 
@@ -80,7 +80,7 @@ jobs:
   
   deploy-to-staging:
     name: Deploy to staging
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: build-publish
 
     steps: 

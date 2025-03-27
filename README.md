@@ -16,7 +16,6 @@ Simulates a botball/JBC style demobot with a built-in IDE.
 - [CMake](https://cmake.org/)
 - [SWIG 4+](https://swig.org/)
 - [Python 3.7 or newer](https://www.python.org/)
-- Python 2.7
 - Java 11 (other versions may work)
 
 ### Debian/Ubuntu
@@ -24,7 +23,7 @@ Simulates a botball/JBC style demobot with a built-in IDE.
 # to get newer versions of Node.js through apt-get, you likely need to add the correct NodeSource repositories
 # for details, see https://github.com/nodesource/distributions
 sudo apt-get update
-sudo apt-get install -y wget git git-lfs cmake build-essential python2.7 python3 python3-distutils default-jre swig zlib1g-dev doxygen nodejs
+sudo apt-get install -y wget git git-lfs cmake build-essential python3 python3-distutils default-jre swig zlib1g-dev doxygen nodejs pkg-config
 sudo npm install --global npm
 sudo npm install --global yarn
 yarn --version
@@ -113,9 +112,7 @@ Tip: if you are experiencing issues with this step, you may try deleting the rep
     - Modifies the field variables to remove non initialization case
   
 
-5. Patch the scratch-blocks package.json to use python2
-
-6. Install the scratch blocks
+5. Install the scratch blocks
 
 
 
