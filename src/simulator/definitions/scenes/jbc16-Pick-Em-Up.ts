@@ -4,6 +4,7 @@ import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
 import { createBaseSceneSurfaceA, createCanNode, createCircleNode } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
+import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -88,10 +89,8 @@ scene.addOnIntersectionListener('matA', (type, otherNodeId) => {
 
 export const JBC_16: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 16' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 16: Pick 'Em Up`,
-  },
+  name: tr('JBC 16'),
+  description: tr('Junior Botball Challenge 16: Pick \'Em Up'),
   scripts: {
     notInStartBox: Script.ecmaScript('Not In Start Box', notInStartBox),
     uprightCans: Script.ecmaScript('Upright Cans', uprightCans),
@@ -101,7 +100,7 @@ export const JBC_16: Scene = {
   geometry: {
     ...baseScene.geometry,
     notStartBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(10),
@@ -136,9 +135,9 @@ export const JBC_16: Scene = {
   nodes: {
     ...baseScene.nodes,
     notStartBox: {
-      type: "object",
-      geometryId: "notStartBox_geom",
-      name: { [LocalizedString.EN_US]: "Not Start Box" },
+      type: 'object',
+      geometryId: 'notStartBox_geom',
+      name: tr('Not Start Box'),
       visible: false,
       origin: {
         position: {
@@ -148,9 +147,9 @@ export const JBC_16: Scene = {
         },
       },
       material: {
-        type: "basic",
+        type: 'basic',
         color: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 0, 0),
         },
       },
@@ -158,7 +157,7 @@ export const JBC_16: Scene = {
     greenGarage: {
       type: 'object',
       geometryId: 'greenGarage_geom',
-      name: { [LocalizedString.EN_US]: 'Green Garage' },
+      name: tr('Green Garage'),
       visible: false,
       origin: {
         position: {
@@ -178,7 +177,7 @@ export const JBC_16: Scene = {
     yellowGarage: {
       type: 'object',
       geometryId: 'yellowGarage_geom',
-      name: { [LocalizedString.EN_US]: 'Yellow Garage' },
+      name: tr('Yellow Garage'),
       visible: false,
       origin: {
         position: {
@@ -199,7 +198,7 @@ export const JBC_16: Scene = {
     blueGarage: {
       type: 'object',
       geometryId: 'blueGarage_geom',
-      name: { [LocalizedString.EN_US]: 'Blue Garage' },
+      name: tr('Blue Garage'),
       visible: false,
       origin: {
         position: {

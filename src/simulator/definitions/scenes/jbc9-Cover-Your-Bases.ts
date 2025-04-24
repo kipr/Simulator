@@ -5,6 +5,7 @@ import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
 import { createBaseSceneSurfaceA, createCanNode, createCircleNode } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
+import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -117,10 +118,8 @@ const ROBOT_ORIGIN: ReferenceFramewUnits = {
 
 export const JBC_9: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 9' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 9: Cover Your Bases`,
-  },
+  name: tr('JBC 9'),
+  description: tr('Junior Botball Challenge 9: Cover Your Bases'),
   scripts: {
     notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
     circleIntersectsUpright: Script.ecmaScript('Circle Intersects Upright', circleIntersectsUpright),
@@ -128,7 +127,7 @@ export const JBC_9: Scene = {
   geometry: {
     ...baseScene.geometry,
     notStartBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(10),
@@ -139,9 +138,9 @@ export const JBC_9: Scene = {
   nodes: {
     ...baseScene.nodes,
     notStartBox: {
-      type: "object",
-      geometryId: "notStartBox_geom",
-      name: { [LocalizedString.EN_US]: "Not Start Box" },
+      type: 'object',
+      geometryId: 'notStartBox_geom',
+      name: tr('Not Start Box'),
       visible: false,
       origin: {
         position: {
@@ -151,9 +150,9 @@ export const JBC_9: Scene = {
         },
       },
       material: {
-        type: "basic",
+        type: 'basic',
         color: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 0, 0),
         },
       },

@@ -4,6 +4,7 @@ import Script from '../../../state/State/Scene/Script';
 import { createBaseSceneSurfaceA, createCircleNode } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
 import { Distance } from '../../../util';
+import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -37,23 +38,21 @@ scene.addOnRenderListener(() => {
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
   if(scene.programStatus !== 'running') return;
   const circleNumber = otherNodeId.charAt(otherNodeId.length-1);
-  if(type === "start" && (currCircle == circleNumber)){
+  if(type === 'start' && (currCircle == circleNumber)){
     setNodeVisible(otherNodeId, true);
     scene.setChallengeEventValue('touched' + circleNumber, true);
     prevCircle++;
     currCircle++;
   }
-  if(type === "start" && !(currCircle == circleNumber || prevCircle == circleNumber)){
+  if(type === 'start' && !(currCircle == circleNumber || prevCircle == circleNumber)){
     scene.setChallengeEventValue('wrongOrder', true);
   }
 }, [...circles]);
 `;
 export const JBC_4: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 4' },
-  description: {
-    [LocalizedString.EN_US]: 'Junior Botball Challenge 4: Serpentine',
-  },
+  name: tr('JBC 4'),
+  description: tr('Junior Botball Challenge 4: Serpentine'),
   scripts: {
     notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
     touchedCircle: Script.ecmaScript('Touched Circle', touchedCircle),
@@ -61,7 +60,7 @@ export const JBC_4: Scene = {
   geometry: {
     ...baseScene.geometry,
     notStartBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(10),
@@ -72,9 +71,9 @@ export const JBC_4: Scene = {
   nodes: {
     ...baseScene.nodes,
     notStartBox: {
-      type: "object",
-      geometryId: "notStartBox_geom",
-      name: { [LocalizedString.EN_US]: "Not Start Box" },
+      type: 'object',
+      geometryId: 'notStartBox_geom',
+      name: tr('Not Start Box'),
       visible: false,
       origin: {
         position: {
@@ -84,9 +83,9 @@ export const JBC_4: Scene = {
         },
       },
       material: {
-        type: "basic",
+        type: 'basic',
         color: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 0, 0),
         },
       },

@@ -1,9 +1,10 @@
 import Scene from '../../../state/State/Scene';
 import LocalizedString from '../../../util/LocalizedString';
-import { Distance } from "../../../util";
+import { Distance } from '../../../util';
 import Script from '../../../state/State/Scene/Script';
 import { Color } from '../../../state/State/Scene/Color';
 import { createCanNode, createBaseSceneSurfaceA, createCircleNode } from './jbcBase';
+import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -58,8 +59,8 @@ scene.addOnRenderListener(() => {
 
 export const JBC_1: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 1' },
-  description: { [LocalizedString.EN_US]: `Junior Botball Challenge 1: Tag, You're It!` },
+  name: tr('JBC 1'),
+  description: tr('Junior Botball Challenge 1: Tag, You\'re It!'),
   scripts: {
     'notInStartBox': Script.ecmaScript('Not In Start Box', notInStartBox),
     'circleIntersects': Script.ecmaScript('Circle Intersects', circleIntersects),
@@ -78,7 +79,7 @@ export const JBC_1: Scene = {
       },
     },
     notStartBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(10),
@@ -91,7 +92,7 @@ export const JBC_1: Scene = {
     'startBox': {
       type: 'object',
       geometryId: 'startBox_geom',
-      name: { [LocalizedString.EN_US]: 'Start Box' },
+      name: tr('Start Box'),
       visible: false,
       origin: {
         position: {
@@ -109,9 +110,9 @@ export const JBC_1: Scene = {
       },
     },
     notStartBox: {
-      type: "object",
-      geometryId: "notStartBox_geom",
-      name: { [LocalizedString.EN_US]: "Not Start Box" },
+      type: 'object',
+      geometryId: 'notStartBox_geom',
+      name: tr('Not Start Box'),
       visible: false,
       origin: {
         position: {
@@ -121,9 +122,9 @@ export const JBC_1: Scene = {
         },
       },
       material: {
-        type: "basic",
+        type: 'basic',
         color: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 0, 0),
         },
       },

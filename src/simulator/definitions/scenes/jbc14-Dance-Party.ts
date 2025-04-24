@@ -6,6 +6,7 @@ import { Color } from '../../../state/State/Scene/Color';
 import { Distance } from '../../../util';
 import { Vector3wUnits } from 'util/math/unitMath';
 import Node from 'state/State/Scene/Node';
+import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -89,20 +90,18 @@ scene.addOnRenderListener(() => {
 //     degrees.pop();
 //     degrees.pop();
 //   }
-//   // console.log("0 PDM: " + scene.nodes['robot'].state.motors[0].pwm);
-//   // console.log("3 PDM: " + scene.nodes['robot'].state.motors[3].pwm);
-//   // console.log("0 direction: " + scene.nodes['robot'].state.motors[0].direction);
-//   // console.log("3 direction: " + scene.nodes['robot'].state.motors[3].direction);
+//   // console.log('0 PDM: ' + scene.nodes['robot'].state.motors[0].pwm);
+//   // console.log('3 PDM: ' + scene.nodes['robot'].state.motors[3].pwm);
+//   // console.log('0 direction: ' + scene.nodes['robot'].state.motors[0].direction);
+//   // console.log('3 direction: ' + scene.nodes['robot'].state.motors[3].direction);
 //   // console.log(degrees) ;
 // });
 // `;
 
 export const JBC_14: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 14' },
-  description: {
-    [LocalizedString.EN_US]: 'Junior Botball Challenge 14: Dance Party',
-  },
+  name: tr('JBC 14'),
+  description: tr('Junior Botball Challenge 14: Dance Party'),
   scripts: {
     notInStartBox: Script.ecmaScript('Robot not in Start Box', notInStartBox),
     dance: Script.ecmaScript('Dance Party', dance),
@@ -125,7 +124,7 @@ export const JBC_14: Scene = {
     startBox: {
       type: 'object',
       geometryId: 'startBox_geom',
-      name: { [LocalizedString.EN_US]: 'Start Box' },
+      name: tr('Start Box'),
       visible: false,
       origin: {
         position: {

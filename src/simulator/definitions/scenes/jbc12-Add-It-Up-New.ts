@@ -7,6 +7,7 @@ import { canPositions, createBaseSceneSurfaceA, createBaseSceneSurfaceB, createC
 import { Color } from '../../../state/State/Scene/Color';
 import Robot from 'state/State/Robot';
 import Node from 'state/State/Scene/Node';
+import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -99,13 +100,11 @@ const ROBOT_ORIGIN: ReferenceFramewUnits = {
 
 export const JBC_12: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 12' },
-  description: {
-    [LocalizedString.EN_US]: 'Junior Botball Challenge 12: Add it Up',
-  },
+  name: tr('JBC 12'),
+  description: tr('Junior Botball Challenge 12: Add it Up'),
   scripts: {
-    notInStartBox: Script.ecmaScript("Not In Start Box", notInStartBox),
-    inStartBox: Script.ecmaScript("In Start Box", inStartBox),
+    notInStartBox: Script.ecmaScript('Not In Start Box', notInStartBox),
+    inStartBox: Script.ecmaScript('In Start Box', inStartBox),
     touchingLine: Script.ecmaScript('Robot Touching Line', touchingLine),
     reachedEnd: Script.ecmaScript('Robot Reached End', reachedEnd),
     offMat: Script.ecmaScript('Robot Off Mat', offMat),
@@ -120,7 +119,7 @@ export const JBC_12: Scene = {
     },
 
     notStartBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(10),
@@ -169,9 +168,9 @@ export const JBC_12: Scene = {
     },
 
     notStartBox: {
-      type: "object",
-      geometryId: "notStartBox_geom",
-      name: { [LocalizedString.EN_US]: "Not Start Box" },
+      type: 'object',
+      geometryId: 'notStartBox_geom',
+      name: tr('Not Start Box'),
       visible: false,
       origin: {
         position: {
@@ -181,9 +180,9 @@ export const JBC_12: Scene = {
         },
       },
       material: {
-        type: "basic",
+        type: 'basic',
         color: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 0, 0),
         },
       },
@@ -191,7 +190,7 @@ export const JBC_12: Scene = {
     startBox: {
       type: 'object',
       geometryId: 'startBox_geom',
-      name: { [LocalizedString.EN_US]: 'Start Box' },
+      name: tr('Start Box'),
       visible: false,
       origin: {
         position: {
@@ -211,7 +210,7 @@ export const JBC_12: Scene = {
     lineB: {
       type: 'object',
       geometryId: 'lineB_geom',
-      name: { [LocalizedString.EN_US]: 'Line B' },
+      name: tr('Line B'),
       visible: false,
       origin: {
         position: {
@@ -231,7 +230,7 @@ export const JBC_12: Scene = {
     endBox: {
       type: 'object',
       geometryId: 'endBox_geom',
-      name: { [LocalizedString.EN_US]: 'End Box' },
+      name: tr('End Box'),
       visible: false,
       origin: {
         position: {
@@ -251,7 +250,7 @@ export const JBC_12: Scene = {
     endOfMat: {
       type: 'object',
       geometryId: 'endOfMat_geom',
-      name: { [LocalizedString.EN_US]: 'End of Mat' },
+      name: tr('End of Mat'),
       visible: false,
       origin: {
         position: {
@@ -271,7 +270,7 @@ export const JBC_12: Scene = {
     circle1: {
       type: 'object',
       geometryId: 'circle_geom',
-      name: { [LocalizedString.EN_US]: 'Circle 1' },
+      name: tr('Circle 1'),
       visible: true,
       origin: {
         position: {

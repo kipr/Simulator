@@ -1,9 +1,10 @@
-import Scene from "../../../state/State/Scene";
-import LocalizedString from "../../../util/LocalizedString";
-import Script from "../../../state/State/Scene/Script";
-import { createCanNode, createBaseSceneSurfaceA } from "./jbcBase";
-import { Color } from "../../../state/State/Scene/Color";
-import { Distance } from "../../../util";
+import Scene from '../../../state/State/Scene';
+import LocalizedString from '../../../util/LocalizedString';
+import Script from '../../../state/State/Scene/Script';
+import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
+import { Color } from '../../../state/State/Scene/Color';
+import { Distance } from '../../../util';
+import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -46,20 +47,18 @@ scene.addOnRenderListener(() => {
 
 export const JBC_15: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: "JBC 15" },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 15: Go Fetch`,
-  },
+  name: tr('JBC 15'),
+  description: tr('Junior Botball Challenge 15: Go Fetch'),
   scripts: {
-    notInStartBox: Script.ecmaScript("Not in Start Box", notInStartBox),
-    enterStartBox: Script.ecmaScript("Enter Start Box", enterStartBox),
-    uprightCans: Script.ecmaScript("Upright Can", uprightCan),
+    notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
+    enterStartBox: Script.ecmaScript('Enter Start Box', enterStartBox),
+    uprightCans: Script.ecmaScript('Upright Can', uprightCan),
 
   },
   geometry: {
     ...baseScene.geometry,
     startBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(0.1),
@@ -67,7 +66,7 @@ export const JBC_15: Scene = {
       },
     },
     notStartBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(10),
@@ -79,9 +78,9 @@ export const JBC_15: Scene = {
   nodes: {
     ...baseScene.nodes,
     startBox: {
-      type: "object",
-      geometryId: "startBox_geom",
-      name: { [LocalizedString.EN_US]: "Start Box" },
+      type: 'object',
+      geometryId: 'startBox_geom',
+      name: tr('Start Box'),
       visible: false,
       origin: {
         position: {
@@ -91,17 +90,17 @@ export const JBC_15: Scene = {
         },
       },
       material: {
-        type: "pbr",
+        type: 'pbr',
         emissive: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 255, 255),
         },
       },
     },
     notStartBox: {
-      type: "object",
-      geometryId: "notStartBox_geom",
-      name: { [LocalizedString.EN_US]: "Not Start Box" },
+      type: 'object',
+      geometryId: 'notStartBox_geom',
+      name: tr('Not Start Box'),
       visible: false,
       origin: {
         position: {
@@ -111,9 +110,9 @@ export const JBC_15: Scene = {
         },
       },
       material: {
-        type: "basic",
+        type: 'basic',
         color: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 0, 0),
         },
       },

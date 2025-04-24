@@ -1,9 +1,10 @@
-import Scene from "../../../state/State/Scene";
-import LocalizedString from "../../../util/LocalizedString";
-import { createBaseSceneSurfaceA, createCanNode } from "./jbcBase";
-import { Color } from "../../../state/State/Scene/Color";
-import { Distance } from "../../../util";
-import Script from "../../../state/State/Scene/Script";
+import Scene from '../../../state/State/Scene';
+import LocalizedString from '../../../util/LocalizedString';
+import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
+import { Color } from '../../../state/State/Scene/Color';
+import { Distance } from '../../../util';
+import Script from '../../../state/State/Scene/Script';
+import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -32,7 +33,7 @@ scene.addOnRenderListener(() => {
       currentDate = new Date();
       if (currentDate.getTime() - stopTime > 5000) {
         scene.setChallengeEventValue('waitedToChop', true);
-        // console.log("Waited 5 seconds");
+        // console.log('Waited 5 seconds');
       }
     }
   }
@@ -56,19 +57,17 @@ scene.addOnRenderListener(() => {
 
 export const JBC_10: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: "JBC 10" },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 10: Chopped`,
-  },
+  name: tr('JBC 10'),
+  description: tr('Junior Botball Challenge 10: Chopped'),
   scripts: {
-    inStartBox: Script.ecmaScript("In Start Box", notInStartBox),
-    waitToChop: Script.ecmaScript("Wait to Chop", waitToChop),
-    uprightCan: Script.ecmaScript("Upright Can", uprightCan),
+    inStartBox: Script.ecmaScript('In Start Box', notInStartBox),
+    waitToChop: Script.ecmaScript('Wait to Chop', waitToChop),
+    uprightCan: Script.ecmaScript('Upright Can', uprightCan),
   },
   geometry: {
     ...baseScene.geometry,
     notStartBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(10),
@@ -79,9 +78,9 @@ export const JBC_10: Scene = {
   nodes: {
     ...baseScene.nodes,
     notStartBox: {
-      type: "object",
-      geometryId: "notStartBox_geom",
-      name: { [LocalizedString.EN_US]: "Not Start Box" },
+      type: 'object',
+      geometryId: 'notStartBox_geom',
+      name: tr('Not Start Box'),
       visible: false,
       origin: {
         position: {
@@ -91,9 +90,9 @@ export const JBC_10: Scene = {
         },
       },
       material: {
-        type: "basic",
+        type: 'basic',
         color: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 0, 0),
         },
       },

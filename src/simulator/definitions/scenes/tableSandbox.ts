@@ -2,17 +2,17 @@
 // The objects are set up in the node-templates index.ts file.
 // Here we add the objects and their properties to the scene.
 
-import Scene from "../../../state/State/Scene";
-import Node from "../../../state/State/Scene/Node";
+import Scene from '../../../state/State/Scene';
+import Node from '../../../state/State/Scene/Node';
 import Script from '../../../state/State/Scene/Script';
-import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../../util/math/unitMath";
-import { Distance } from "../../../util";
-import Dict from "../../../util/objectOps/Dict";
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../../util/math/unitMath';
+import { Distance } from '../../../util';
+import Dict from '../../../util/objectOps/Dict';
 
 import { createBaseSceneSurface } from './tableBase';
 
 import tr from '@i18n';
-import { Ref } from "react";
+import { Ref } from 'react';
 
 const baseScene = createBaseSceneSurface();
 
@@ -281,9 +281,9 @@ const CUP_GREEN: Node.FromBBTemplate = {
 
 const POMS_BLUE: Dict<Node.FromBBTemplate> = {};
 for (const [i, pos] of POM_BLUE_ORIGINS_BACK.entries()) {
-  POMS_BLUE[`pom_blue${i}`] = {
+  POMS_BLUE['pom_blue${i}'] = {
     type: 'from-bb-template',
-    name: tr(`Blue pom back #${i}`),
+    name: tr('Blue pom back #${i}'),
     templateId: 'pom_blue',
     visible: true,
     editable: true,
@@ -293,9 +293,9 @@ for (const [i, pos] of POM_BLUE_ORIGINS_BACK.entries()) {
 }
 
 for (const [i, pos] of POM_BLUE_ORIGINS_FRONT.entries()) {
-  POMS_BLUE[`pom_blue${i + 10}`] = {
+  POMS_BLUE['pom_blue${i + 10}'] = {
     type: 'from-bb-template',
-    name: tr(`Blue pom front #${i}`),
+    name: tr('Blue pom front #${i}'),
     templateId: 'pom_blue',
     visible: true,
     editable: true,
@@ -306,9 +306,9 @@ for (const [i, pos] of POM_BLUE_ORIGINS_FRONT.entries()) {
 
 const BOTTLES: Dict<Node.FromBBTemplate> = {};
 for (const [i, pos] of BOTTLE_ORIGINS.entries()) {
-  BOTTLES[`bottle${i}`] = {
+  BOTTLES['bottle${i}'] = {
     type: 'from-bb-template',
-    name: tr(`Bottle #${i}`),
+    name: tr('Bottle #${i}'),
     templateId: 'bottle',
     visible: true,
     editable: true,
@@ -319,9 +319,9 @@ for (const [i, pos] of BOTTLE_ORIGINS.entries()) {
 
 const POMS_ORANGE: Dict<Node.FromBBTemplate> = {};
 for (const [i, pos] of POM_ORANGE_ORIGINS.entries()) {
-  POMS_ORANGE[`pom_orange${i}`] = {
+  POMS_ORANGE['pom_orange${i}'] = {
     type: 'from-bb-template',
-    name: tr(`Orange pom #${i}`),
+    name: tr('Orange pom #${i}'),
     templateId: 'pom_orange',
     visible: true,
     editable: true,
@@ -331,9 +331,9 @@ for (const [i, pos] of POM_ORANGE_ORIGINS.entries()) {
 }
 const POMS_RED: Dict<Node.FromBBTemplate> = {};
 for (const [i, pos] of POM_RED_ORIGINS.entries()) {
-  POMS_RED[`pom_red${i}`] = {
+  POMS_RED['pom_red${i}'] = {
     type: 'from-bb-template',
-    name: tr(`Red pom #${i}`),
+    name: tr('Red pom #${i}'),
     templateId: 'pom_red',
     visible: true,
     editable: true,
@@ -343,9 +343,9 @@ for (const [i, pos] of POM_RED_ORIGINS.entries()) {
 }
 const POMS_YELLOW: Dict<Node.FromBBTemplate> = {};
 for (const [i, pos] of POM_YELLOW_ORIGINS.entries()) {
-  POMS_YELLOW[`pom_yellow${i}`] = {
+  POMS_YELLOW['pom_yellow${i}'] = {
     type: 'from-bb-template',
-    name: tr(`Yellow pom #${i}`),
+    name: tr('Yellow pom #${i}'),
     templateId: 'pom_yellow',
     visible: true,
     editable: true,
@@ -366,9 +366,9 @@ for (let i = 0; i < 9; i++) {
     scale: { x: 100, y: 100, z: 100 },
   };
 
-  POMS_RANDOM[`pom_random${i}`] = {
+  POMS_RANDOM['pom_random${i}'] = {
     type: 'from-bb-template',
-    name: tr(`Random pom #${i}`),
+    name: tr('Random pom #${i}'),
     templateId: robot,
     visible: true,
     editable: true,
@@ -409,9 +409,9 @@ const POTATO: Node.FromBBTemplate = {
 
 const FRIES: Dict<Node.FromBBTemplate> = {};
 for (const [i, pos] of FRY_ORIGINS.entries()) {
-  FRIES[`fry${i}`] = {
+  FRIES['fry${i}'] = {
     type: 'from-bb-template',
-    name: tr(`Fry #${i}`),
+    name: tr('Fry #${i}'),
     templateId: 'french_fry',
     visible: true,
     editable: true,
@@ -428,9 +428,9 @@ for (let i = 0; i < 6; i++) {
     scale: { x: 100, y: 100, z: 100 },
   };
 
-  TRAYS[`tray${i}`] = {
+  TRAYS['tray${i}'] = {
     type: 'from-bb-template',
-    name: tr(`Tray #${i}`),
+    name: tr('Tray #${i}'),
     templateId: 'tray',
     visible: true,
     editable: true,
@@ -456,9 +456,9 @@ for (let i = 0; i < 5; i++) {
     orientation: RotationwUnits.eulerDegrees(0, 45, 0),
     scale: { x: 100, y: 100, z: 100 }
   };
-  DRINKS_BLUE[`drink_blue${i}`] = {
+  DRINKS_BLUE['drink_blue${i}'] = {
     type: 'from-bb-template',
-    name: tr(`Blue drink #${i}`),
+    name: tr('Blue drink #${i}'),
     templateId: 'drink_blue',
     visible: true,
     editable: true,
@@ -474,9 +474,9 @@ for (let i = 0; i < 5; i++) {
     orientation: RotationwUnits.eulerDegrees(0, 45, 0),
     scale: { x: 100, y: 100, z: 100 }
   };
-  DRINKS_GREEN[`drink_green${i}`] = {
+  DRINKS_GREEN['drink_green${i}'] = {
     type: 'from-bb-template',
-    name: tr(`Green drink #${i}`),
+    name: tr('Green drink #${i}'),
     templateId: 'drink_green',
     visible: true,
     editable: true,
@@ -492,9 +492,9 @@ for (let i = 0; i < 5; i++) {
     orientation: RotationwUnits.eulerDegrees(0, 45, 0),
     scale: { x: 100, y: 100, z: 100 }
   };
-  DRINKS_PINK[`drink_pink${i}`] = {
+  DRINKS_PINK['drink_pink${i}'] = {
     type: 'from-bb-template',
-    name: tr(`Pink drink #${i}`),
+    name: tr('Pink drink #${i}'),
     templateId: 'drink_pink',
     visible: true,
     editable: true,
@@ -522,7 +522,7 @@ export const Table_Sandbox: Scene = {
     ...baseScene.geometry,
   },
   scripts: {
-    potatoInFryer: Script.ecmaScript("Potato in fryer", potatoInFryer),
+    potatoInFryer: Script.ecmaScript('Potato in fryer', potatoInFryer),
   },
   nodes: {
     ...baseScene.nodes,
