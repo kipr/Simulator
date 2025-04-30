@@ -1024,6 +1024,620 @@ msgstr ""
 msgid "Visit our"
 msgstr ""
 
+msgid "Science"
+msgstr ""
+
+msgid "Technology"
+msgstr ""
+
+msgid "Engineering"
+msgstr ""
+
+msgid "Arts"
+msgstr ""
+
+msgid "Mathematics"
+msgstr ""
+
+msgid "Test Assignment"
+msgstr ""
+
+msgid "This is a test assignment."
+msgstr ""
+
+msgid "Educator notes"
+msgstr ""
+
+msgid "Student notes"
+msgstr ""
+
+msgid "JBC Mat A"
+msgstr ""
+
+msgid "JBC Mat B"
+msgstr ""
+
+msgid "Circle %s"
+msgstr ""
+
+msgid "JBC 0"
+msgstr ""
+
+msgid "Junior Botball Challenge 0: Drive Straight"
+msgstr ""
+
+msgid "Not Start Box"
+msgstr ""
+
+msgid "Start Box"
+msgstr ""
+
+msgid "Line B"
+msgstr ""
+
+msgid "End Box"
+msgstr ""
+
+msgid "End of Mat"
+msgstr ""
+
+msgid "Right Side Can"
+msgstr ""
+
+msgid "Top Side Can"
+msgstr ""
+
+msgid "Left Side Can"
+msgstr ""
+
+msgid "Click Instruction Box"
+msgstr ""
+
+msgid "Click Instruction 1 Box"
+msgstr ""
+
+msgid "Click Instruction 2 Box"
+msgstr ""
+
+msgid "Chosen Garage Box"
+msgstr ""
+
+msgid "Green Garage Designator Box"
+msgstr ""
+
+msgid "Yellow Garage Designator Box"
+msgstr ""
+
+msgid "Blue Garage Designator Box"
+msgstr ""
+
+msgid "Green Garage"
+msgstr ""
+
+msgid "Green Garage node"
+msgstr ""
+
+msgid "Yellow Garage node"
+msgstr ""
+
+msgid "Blue Garage node"
+msgstr ""
+
+msgid "Green Garage Right Boundary node"
+msgstr ""
+
+msgid "Green Garage Left Boundary node"
+msgstr ""
+
+msgid "Green Garage Top Boundary node"
+msgstr ""
+
+msgid "Blue Garage"
+msgstr ""
+
+msgid "Blue Garage Right Boundary node"
+msgstr ""
+
+msgid "Blue Garage Left Boundary node"
+msgstr ""
+
+msgid "Blue Garage Top Boundary node"
+msgstr ""
+
+msgid "Yellow Garage"
+msgstr ""
+
+msgid "Yellow Garage Right Boundary node"
+msgstr ""
+
+msgid "Yellow Garage Left Boundary node"
+msgstr ""
+
+msgid "Yellow Garage Top Boundary node"
+msgstr ""
+
+msgid "Yellow Garage Marker 1"
+msgstr ""
+
+msgid "Yellow Garage Marker 2"
+msgstr ""
+
+msgid "Blue Garage Marker 1"
+msgstr ""
+
+msgid "Blue Garage Marker 2"
+msgstr ""
+
+msgid "Green Garage Marker 1"
+msgstr ""
+
+msgid "Green Garage Marker 2"
+msgstr ""
+
+msgid "Junior Botball Challenge 4: Serpentine"
+msgstr ""
+
+msgid "Junior Botball Challenge 5: Odd Numbers"
+msgstr ""
+
+msgid "Junior Botball Challenge 6: Figure Eight"
+msgstr ""
+
+msgid "Between cans 4 and 9"
+msgstr ""
+
+msgid "Top side of can 9"
+msgstr ""
+
+msgid "Junior Botball Challenge 7: Load 'Em Up"
+msgstr ""
+
+msgid "Junior Botball Challenge 8: Bulldozer Mania"
+msgstr ""
+
+msgid "Junior Botball Challenge 9: Cover Your Bases"
+msgstr ""
+
+msgid "Junior Botball Challenge 10: Chopped"
+msgstr ""
+
+msgid "JBC 11"
+msgstr ""
+
+msgid "Junior Botball Challenge 11: Making Waves"
+msgstr ""
+
+msgid "Junior Botball Challenge 12: Add it Up"
+msgstr ""
+
+msgid "Circle 1"
+msgstr ""
+
+msgid "JBC 14"
+msgstr ""
+
+msgid "Junior Botball Challenge 14: Dance Party"
+msgstr ""
+
+msgid "JBC 15"
+msgstr ""
+
+msgid "Junior Botball Challenge 15: Go Fetch"
+msgstr ""
+
+msgid "JBC 16"
+msgstr ""
+
+msgid "Junior Botball Challenge 16: Pick 'Em Up"
+msgstr ""
+
+msgid "Junior Botball Challenge 17: Mountain Rescue"
+msgstr ""
+
+msgid "JBC 18"
+msgstr ""
+
+msgid "Junior Botball Challenge 18: Stackerz"
+msgstr ""
+
+msgid "Bottom of can5"
+msgstr ""
+
+msgid "Top of can7"
+msgstr ""
+
+msgid "Bottom of can7"
+msgstr ""
+
+msgid "Top of can5"
+msgstr ""
+
+msgid "Junior Botball Challenge 19: Bump"
+msgstr ""
+
+msgid "Junior Botball Challenge 20: A'mazing"
+msgstr ""
+
+msgid "Paper Ream 3"
+msgstr ""
+
+msgid "Paper Ream 4"
+msgstr ""
+
+msgid "Junior Botball Challenge 21: Proximity"
+msgstr ""
+
+msgid "Ream Front Boundary"
+msgstr ""
+
+msgid "Junior Botball Challenge 22: Search and Rescue"
+msgstr ""
+
+msgid "JBC 23"
+msgstr ""
+
+msgid "Junior Botball Challenge 23: Find the Black Line"
+msgstr ""
+
+msgid "Circle"
+msgstr ""
+
+msgid "JBC 24"
+msgstr ""
+
+msgid "Junior Botball Challenge 24: Walk the Line"
+msgstr ""
+
+msgid "Finish Line"
+msgstr ""
+
+msgid "Checkpoint 1"
+msgstr ""
+
+msgid "Checkpoint 3"
+msgstr ""
+
+msgid "Checkpoint 2"
+msgstr ""
+
+msgid "Base Scene - Moon Surface"
+msgstr ""
+
+msgid "A base scene. Intended to be augmented to create full Moon scenes"
+msgstr ""
+
+msgid "1.1.1 Ground"
+msgstr ""
+
+msgid "1.1.6-8 Start Area"
+msgstr ""
+
+msgid "1.1.2-4 Sky"
+msgstr ""
+
+msgid "Moon Sandbox"
+msgstr ""
+
+msgid "Lunar sandbox. Currently supports 4 types of rocks. Demo Ready."
+msgstr ""
+
+msgid "Basalt Rock"
+msgstr ""
+
+msgid "Anorthosite Rock"
+msgstr ""
+
+msgid "Breccia Rock"
+msgstr ""
+
+msgid "Meteorite Rock"
+msgstr ""
+
+msgid "Life Science Pack"
+msgstr ""
+
+msgid "Radiation Science Pack - High"
+msgstr ""
+
+msgid "Science Pad"
+msgstr ""
+
+msgid "Container"
+msgstr ""
+
+msgid "Space Bot Guy"
+msgstr ""
+
+msgid "Solar Panel"
+msgstr ""
+
+msgid "Walkway"
+msgstr ""
+
+msgid "Comms Tower"
+msgstr ""
+
+msgid "Human Living Habitat"
+msgstr ""
+
+msgid "Human Research Habitat"
+msgstr ""
+
+msgid "Human Control/Comms Station Habitat"
+msgstr ""
+
+msgid "Life Indicator Light"
+msgstr ""
+
+msgid "No Life Indicator Light"
+msgstr ""
+
+msgid "2025 Game Table"
+msgstr ""
+
+msgid "Base Scene - 2025 Botball Game Table"
+msgstr ""
+
+msgid "A base scene. Intended to be augmented to create the full game table"
+msgstr ""
+
+msgid "Fry floor"
+msgstr ""
+
+msgid "Potato detector box"
+msgstr ""
+
+msgid "Hamburger"
+msgstr ""
+
+msgid "Hotdog"
+msgstr ""
+
+msgid "Taco"
+msgstr ""
+
+msgid "Pink Cup"
+msgstr ""
+
+msgid "Blue Cup"
+msgstr ""
+
+msgid "Green Cup"
+msgstr ""
+
+msgid "Blue pom back #${i}"
+msgstr ""
+
+msgid "Blue pom front #${i}"
+msgstr ""
+
+msgid "Bottle #${i}"
+msgstr ""
+
+msgid "Orange pom #${i}"
+msgstr ""
+
+msgid "Red pom #${i}"
+msgstr ""
+
+msgid "Yellow pom #${i}"
+msgstr ""
+
+msgid "Random pom #${i}"
+msgstr ""
+
+msgid "Tomato"
+msgstr ""
+
+msgid "Pickle"
+msgstr ""
+
+msgid "Potato"
+msgstr ""
+
+msgid "Fry #${i}"
+msgstr ""
+
+msgid "Tray #${i}"
+msgstr ""
+
+msgid "Botguy"
+msgstr ""
+
+msgid "Blue drink #${i}"
+msgstr ""
+
+msgid "Green drink #${i}"
+msgstr ""
+
+msgid "Pink drink #${i}"
+msgstr ""
+
+msgid "2025 Botball game table sandbox"
+msgstr ""
+
+msgid "IRobot Create"
+msgstr ""
+
+msgid "Leaderboard"
+msgstr ""
+
+msgid "See the current challenge leaderboard."
+msgstr ""
+
+msgid "The Challenge System"
+msgstr ""
+
+msgid "Learn how to use the challenge system"
+msgstr ""
+
+msgid "MatB"
+msgstr ""
+
+msgid "MatA"
+msgstr ""
+
+msgid "Communication Tower"
+msgstr ""
+
+msgid "Hab"
+msgstr ""
+
+msgid "Radiation Science Pack"
+msgstr ""
+
+msgid "Communication Tower 2"
+msgstr ""
+
+msgid "Hab 2"
+msgstr ""
+
+msgid "BotGuy Astronaut"
+msgstr ""
+
+msgid "2025 Botball Game Table"
+msgstr ""
+
+msgid "Blue Drink"
+msgstr ""
+
+msgid "Green Drink"
+msgstr ""
+
+msgid "Pink Drink"
+msgstr ""
+
+msgid "Blue Pom (Ice Cube)"
+msgstr ""
+
+msgid "Orange Pom (Hot Sauce)"
+msgstr ""
+
+msgid "Red Pom (Ketchup)"
+msgstr ""
+
+msgid "Yellow Pom (Mustard)"
+msgstr ""
+
+msgid "French Fry"
+msgstr ""
+
+msgid "Bottle"
+msgstr ""
+
+msgid "Tray"
+msgstr ""
+
+msgid "Living Habitat"
+msgstr ""
+
+msgid "Research Habitat"
+msgstr ""
+
+msgid "Controls Habitat"
+msgstr ""
+
+msgid "Moon Rock Container"
+msgstr ""
+
+msgid "Radiation Science Pack - Low"
+msgstr ""
+
+msgid "Space Base"
+msgstr ""
+
+msgid "Botball"
+msgstr ""
+
+msgid "JBC Pieces"
+msgstr ""
+
+msgid "Moon Rock"
+msgstr ""
+
+msgid "All"
+msgstr ""
+
+msgid ""
+"Basalt is an aphanitic (fine-grained) extrusive igneous rock formed from "
+"the rapid cooling of low-viscosity lava rich in magnesium and iron (mafic "
+"lava) exposed at or very near the surface of a rocky planet or moon."
+msgstr ""
+
+msgid ""
+"Anorthosite is a phaneritic, intrusive igneous rock characterized by its "
+"composition: mostly plagioclase feldspar (90–100%), with a minimal mafic "
+"component (0–10%)."
+msgstr ""
+
+msgid ""
+"Breccia is a rock composed of large angular broken fragments of minerals or "
+"rocks cemented together by a fine-grained matrix."
+msgstr ""
+
+msgid ""
+"Meteorite is a solid piece of debris from an object, such as a comet, "
+"asteroid, or meteoroid, that originates in outer space and survives its "
+"passage through the atmosphere to reach the surface of a planet or moon."
+msgstr ""
+
+msgid "Description of the object"
+msgstr ""
+
+msgid "Surface Text"
+msgstr ""
+
+msgid "The current scene does not have a challenge available"
+msgstr ""
+
+msgid "Start Challenge"
+msgstr ""
+
+msgid "your current work"
+msgstr ""
+
+msgid "Failed to load challenge"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Search Filters"
+msgstr ""
+
+msgid "Is standards aligned"
+msgstr ""
+
+msgid "Standards"
+msgstr ""
+
+msgid "Subject"
+msgstr ""
+
+msgid "Grade Level"
+msgstr ""
+
+msgid "Grade Levels: %s"
+msgstr ""
+
+msgid "Standard: %s"
+msgstr ""
+
+msgid "Subject: %s"
+msgstr ""
+
+msgid "U.S. Std."
+msgstr ""
+
+msgid "Curriculum"
+msgstr ""
+
+msgid "My Assignments"
+msgstr ""
+
+msgid "Scratch Variables"
+msgstr ""
+
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
 msgstr ""
@@ -1077,5 +1691,133 @@ msgid "YXZ"
 msgstr ""
 
 msgctxt "Rotation order"
+msgid "ZYX"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "Kindergarten"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "1st grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "2nd grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "3rd grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "4th grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "5th grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "6th grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "7th grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "8th grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "9th grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "10th grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "11th grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "12th grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "1st"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "2nd"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "3rd"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "4th"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "5th"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "6th"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "7th"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "8th"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "9th"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "10th"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "11th"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "12th"
+msgstr ""
+
+msgctxt "Student grade level; Kingergarten"
+msgid "K"
+msgstr ""
+
+msgctxt "RotationwUnits order"
+msgid "XYZ"
+msgstr ""
+
+msgctxt "RotationwUnits order"
+msgid "YZX"
+msgstr ""
+
+msgctxt "RotationwUnits order"
+msgid "ZXY"
+msgstr ""
+
+msgctxt "RotationwUnits order"
+msgid "XZY"
+msgstr ""
+
+msgctxt "RotationwUnits order"
+msgid "YXZ"
+msgstr ""
+
+msgctxt "RotationwUnits order"
 msgid "ZYX"
 msgstr ""
