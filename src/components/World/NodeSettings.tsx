@@ -1110,9 +1110,6 @@ class NodeSettings extends React.PureComponent<Props, State> {
       // ComboBox.option('Spot Light', 'spot-light'),
     ];
 
-    const BB_DESCRIPTIONS: Dict<string> = {
-      'hamburger': LocalizedString.lookup(tr('A hamburger'), locale),
-    };
     const ROCK_DESCRIPTIONS: Dict<string> = {
       'basalt': LocalizedString.lookup(tr('Basalt is an aphanitic (fine-grained) extrusive igneous rock formed from the rapid cooling of low-viscosity lava rich in magnesium and iron (mafic lava) exposed at or very near the surface of a rocky planet or moon.'), locale),
       'anorthosite': LocalizedString.lookup(tr('Anorthosite is a phaneritic, intrusive igneous rock characterized by its composition: mostly plagioclase feldspar (90–100%), with a minimal mafic component (0–10%).'), locale),
@@ -1276,11 +1273,6 @@ class NodeSettings extends React.PureComponent<Props, State> {
             </StyledField>
           )}
           {node.type === 'from-space-template' && node.material && node.material.type === 'basic' && node.material.color.type === 'texture' && node.templateId === 'container' && (
-            <StyledField name={LocalizedString.lookup(tr('Surface Text'), locale)} long theme={theme}>
-              <Input theme={theme} type='text' value={node.material.color.uri} onChange={this.onMaterialBasicColorTextureUriChange2_} />
-            </StyledField>
-          )}
-          {node.type === 'from-bb-template' && node.material && node.material.type === 'basic' && node.material.color.type === 'texture' && node.templateId === 'container' && (
             <StyledField name={LocalizedString.lookup(tr('Surface Text'), locale)} long theme={theme}>
               <Input theme={theme} type='text' value={node.material.color.uri} onChange={this.onMaterialBasicColorTextureUriChange2_} />
             </StyledField>
