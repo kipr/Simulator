@@ -1638,6 +1638,51 @@ msgstr ""
 msgid "Scratch Variables"
 msgstr ""
 
+msgid "A hamburger"
+msgstr ""
+
+msgid "Blue pom front #$(s)"
+msgstr ""
+
+msgid "Blue pom front #$d"
+msgstr ""
+
+msgid "Blue pom front #%d"
+msgstr ""
+
+msgid "Blue pom back #%d"
+msgstr ""
+
+msgid "Bottle #%d"
+msgstr ""
+
+msgid "Orange pom #%d"
+msgstr ""
+
+msgid "Red pom #%d"
+msgstr ""
+
+msgid "Yellow pom #%d"
+msgstr ""
+
+msgid "Random pom #%d"
+msgstr ""
+
+msgid "Tray #%d"
+msgstr ""
+
+msgid "Blue drink #%d"
+msgstr ""
+
+msgid "Green drink #%d"
+msgstr ""
+
+msgid "Pink drink #%d"
+msgstr ""
+
+msgid "Fry #%d"
+msgstr ""
+
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
 msgstr ""

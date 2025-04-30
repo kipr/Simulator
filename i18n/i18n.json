@@ -1559,7 +1559,7 @@
     },
     "Circle 1": {
       "en-US": "Circle 1",
-      "ja-JP": "えん１"
+      "ja-JP": "円１"
     },
     "JBC 14": {
       "en-US": "JBC 14",
@@ -1863,7 +1863,7 @@
     },
     "Tray #${i}": {
       "en-US": "Tray #${i}",
-      "ja-JP": "トレー ${i}"
+      "ja-JP": "トレー #${i}"
     },
     "Botguy": {
       "en-US": "Botguy",
@@ -1871,11 +1871,11 @@
     },
     "Blue drink #${i}": {
       "en-US": "Blue drink #${i}",
-      "ja-JP": "青の飲み物 ${i}"
+      "ja-JP": "青の飲み物 #${i}"
     },
     "Green drink #${i}": {
       "en-US": "Green drink #${i}",
-      "ja-JP": "緑の飲み物 ${i}"
+      "ja-JP": "緑の飲み物 #${i}"
     },
     "Pink drink #${i}": {
       "en-US": "Pink drink #${i}",
@@ -2111,6 +2111,63 @@
     "Scratch Variables": {
       "en-US": "Scratch Variables",
       "ja-JP": "Scratchの変数"
+    },
+    "A hamburger": {
+      "en-US": "A hamburger"
+    },
+    "Blue pom front #$(s)": {
+      "en-US": "Blue pom front #$(s)"
+    },
+    "Blue pom front #$d": {
+      "en-US": "Blue pom front #$d"
+    },
+    "Blue pom front #%d": {
+      "en-US": "Blue pom front #%d",
+      "ja-JP": "前の青ポン #%d"
+    },
+    "Blue pom back #%d": {
+      "en-US": "Blue pom back #%d",
+      "ja-JP": "後ろの青ポン #%d"
+    },
+    "Bottle #%d": {
+      "en-US": "Bottle #%d",
+      "ja-JP": "ボトル #%d"
+    },
+    "Orange pom #%d": {
+      "en-US": "Orange pom #%d",
+      "ja-JP": "オレンジの青ポン #%d"
+    },
+    "Red pom #%d": {
+      "en-US": "Red pom #%d",
+      "ja-JP": "赤の青ポン #%d"
+    },
+    "Yellow pom #%d": {
+      "en-US": "Yellow pom #%d",
+      "ja-JP": "黄の青ポン #%d"
+    },
+    "Random pom #%d": {
+      "en-US": "Random pom #%d",
+      "ja-JP": "出鱈目の青ポン #%d"
+    },
+    "Tray #%d": {
+      "en-US": "Tray #%d",
+      "ja-JP": "トレー #%d"
+    },
+    "Blue drink #%d": {
+      "en-US": "Blue drink #%d",
+      "ja-JP": "青の飲み物 #%d"
+    },
+    "Green drink #%d": {
+      "en-US": "Green drink #%d",
+      "ja-JP": "緑の飲み物 #%d"
+    },
+    "Pink drink #%d": {
+      "en-US": "Pink drink #%d",
+      "ja-JP": "ピンクの飲み物 #%d"
+    },
+    "Fry #%d": {
+      "en-US": "Fry #%d",
+      "ja-JP": "フライドポテト #%d"
     }
   },
   "Volume (box) in the 3D scene": {

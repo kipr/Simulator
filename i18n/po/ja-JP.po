@@ -1215,7 +1215,7 @@ msgid "Junior Botball Challenge 12: Add it Up"
 msgstr "ジュニア・ボットボール・チャレンジ 12：足し算する"
 
 msgid "Circle 1"
-msgstr "えん１"
+msgstr "円１"
 
 msgid "JBC 14"
 msgstr "JBC 14"
@@ -1443,16 +1443,16 @@ msgid "Fry #${i}"
 msgstr "フライドポテト #${i}"
 
 msgid "Tray #${i}"
-msgstr "トレー ${i}"
+msgstr "トレー #${i}"
 
 msgid "Botguy"
 msgstr "Botguy"
 
 msgid "Blue drink #${i}"
-msgstr "青の飲み物 ${i}"
+msgstr "青の飲み物 #${i}"
 
 msgid "Green drink #${i}"
-msgstr "緑の飲み物 ${i}"
+msgstr "緑の飲み物 #${i}"
 
 msgid "Pink drink #${i}"
 msgstr "ピンクの飲み物 ${i}"
@@ -1641,6 +1641,51 @@ msgstr "私の宿題"
 
 msgid "Scratch Variables"
 msgstr "Scratchの変数"
+
+msgid "A hamburger"
+msgstr ""
+
+msgid "Blue pom front #$(s)"
+msgstr ""
+
+msgid "Blue pom front #$d"
+msgstr ""
+
+msgid "Blue pom front #%d"
+msgstr "前の青ポン #%d"
+
+msgid "Blue pom back #%d"
+msgstr "後ろの青ポン #%d"
+
+msgid "Bottle #%d"
+msgstr "ボトル #%d"
+
+msgid "Orange pom #%d"
+msgstr "オレンジの青ポン #%d"
+
+msgid "Red pom #%d"
+msgstr "赤の青ポン #%d"
+
+msgid "Yellow pom #%d"
+msgstr "黄の青ポン #%d"
+
+msgid "Random pom #%d"
+msgstr "出鱈目の青ポン #%d"
+
+msgid "Tray #%d"
+msgstr "トレー #%d"
+
+msgid "Blue drink #%d"
+msgstr "青の飲み物 #%d"
+
+msgid "Green drink #%d"
+msgstr "緑の飲み物 #%d"
+
+msgid "Pink drink #%d"
+msgstr "ピンクの飲み物 #%d"
+
+msgid "Fry #%d"
+msgstr "フライドポテト #%d"
 
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
