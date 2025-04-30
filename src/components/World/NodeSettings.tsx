@@ -168,27 +168,6 @@ class NodeSettings extends React.PureComponent<Props, State> {
       ComboBox.option(LocalizedString.lookup(tr('Walkway'), locale), 'walkway'),
       ComboBox.option(LocalizedString.lookup(tr('Solar Panel'), locale), 'solarpanel'),
       ComboBox.option(LocalizedString.lookup(tr('BotGuy Astronaut'), locale), 'botguy'),
-      ComboBox.option(LocalizedString.lookup(tr('2025 Botball Game Table'), locale), 'game_table_2025'),
-      ComboBox.option(LocalizedString.lookup(tr('Blue Drink'), locale), 'drink_blue'),
-      ComboBox.option(LocalizedString.lookup(tr('Green Drink'), locale), 'drink_green'),
-      ComboBox.option(LocalizedString.lookup(tr('Pink Drink'), locale), 'drink_pink'),
-      ComboBox.option(LocalizedString.lookup(tr('Blue Pom (Ice Cube)'), locale), 'pom_blue'),
-      ComboBox.option(LocalizedString.lookup(tr('Orange Pom (Hot Sauce)'), locale), 'pom_orange'),
-      ComboBox.option(LocalizedString.lookup(tr('Red Pom (Ketchup)'), locale), 'pom_red'),
-      ComboBox.option(LocalizedString.lookup(tr('Yellow Pom (Mustard)'), locale), 'pom_yellow'),
-      ComboBox.option(LocalizedString.lookup(tr('French Fry'), locale), 'french_fry'),
-      ComboBox.option(LocalizedString.lookup(tr('Hamburger'), locale), 'hamburger'),
-      ComboBox.option(LocalizedString.lookup(tr('Hotdog'), locale), 'hotdog'),
-      ComboBox.option(LocalizedString.lookup(tr('Taco'), locale), 'taco'),
-      ComboBox.option(LocalizedString.lookup(tr('Blue Cup'), locale), 'cup_blue'),
-      ComboBox.option(LocalizedString.lookup(tr('Green Cup'), locale), 'cup_green'),
-      ComboBox.option(LocalizedString.lookup(tr('Pink Cup'), locale), 'cup_pink'),
-      ComboBox.option(LocalizedString.lookup(tr('Bottle'), locale), 'bottle'),
-      ComboBox.option(LocalizedString.lookup(tr('Pickle'), locale), 'pickle'),
-      ComboBox.option(LocalizedString.lookup(tr('Tomato'), locale), 'tomato'),
-      ComboBox.option(LocalizedString.lookup(tr('Potato'), locale), 'potato'),
-      ComboBox.option(LocalizedString.lookup(tr('Tray'), locale), 'tray'),
-      ComboBox.option(LocalizedString.lookup(tr('Botguy'), locale), 'botguy_gamepiece'),
     ];
     const BB_TEMPLATE_OPTIONS: ComboBox.Option[] = [
       ComboBox.option(LocalizedString.lookup(tr('2025 Botball Game Table'), locale), 'game_table_2025'),
@@ -1051,27 +1030,6 @@ class NodeSettings extends React.PureComponent<Props, State> {
       ComboBox.option(LocalizedString.lookup(tr('Solar Panel'), locale), 'solarpanel'),
       ComboBox.option(LocalizedString.lookup(tr('BotGuy Astronaut'), locale), 'botguy'),
       ComboBox.option(LocalizedString.lookup(tr('Moon Rock Container'), locale), 'container'),
-      ComboBox.option(LocalizedString.lookup(tr('2025 Botball Game Table'), locale), 'game_table_2025'),
-      ComboBox.option(LocalizedString.lookup(tr('Blue Drink'), locale), 'drink_blue'),
-      ComboBox.option(LocalizedString.lookup(tr('Green Drink'), locale), 'drink_green'),
-      ComboBox.option(LocalizedString.lookup(tr('Pink Drink'), locale), 'drink_pink'),
-      ComboBox.option(LocalizedString.lookup(tr('Blue Pom (Ice Cube)'), locale), 'pom_blue'),
-      ComboBox.option(LocalizedString.lookup(tr('Orange Pom (Hot Sauce)'), locale), 'pom_orange'),
-      ComboBox.option(LocalizedString.lookup(tr('Red Pom (Ketchup)'), locale), 'pom_red'),
-      ComboBox.option(LocalizedString.lookup(tr('Yellow Pom (Mustard)'), locale), 'pom_yellow'),
-      ComboBox.option(LocalizedString.lookup(tr('French Fry'), locale), 'french_fry'),
-      ComboBox.option(LocalizedString.lookup(tr('Hamburger'), locale), 'hamburger'),
-      ComboBox.option(LocalizedString.lookup(tr('Hotdog'), locale), 'hotdog'),
-      ComboBox.option(LocalizedString.lookup(tr('Taco'), locale), 'taco'),
-      ComboBox.option(LocalizedString.lookup(tr('Blue Cup'), locale), 'cup_blue'),
-      ComboBox.option(LocalizedString.lookup(tr('Green Cup'), locale), 'cup_green'),
-      ComboBox.option(LocalizedString.lookup(tr('Pink Cup'), locale), 'cup_pink'),
-      ComboBox.option(LocalizedString.lookup(tr('Bottle'), locale), 'bottle'),
-      ComboBox.option(LocalizedString.lookup(tr('Pickle'), locale), 'pickle'),
-      ComboBox.option(LocalizedString.lookup(tr('Tomato'), locale), 'tomato'),
-      ComboBox.option(LocalizedString.lookup(tr('Potato'), locale), 'potato'),
-      ComboBox.option(LocalizedString.lookup(tr('Tray'), locale), 'tray'),
-      ComboBox.option(LocalizedString.lookup(tr('Botguy'), locale), 'botguy_gamepiece'),
     ];
     const BB_TEMPLATE_OPTIONS: ComboBox.Option[] = [
       ComboBox.option(LocalizedString.lookup(tr('2025 Botball Game Table'), locale), 'game_table_2025'),
@@ -1120,7 +1078,6 @@ class NodeSettings extends React.PureComponent<Props, State> {
       dict[option.data as string] = i;
       return dict;
     }, {});
-
     const RADIATION_TEMPLATE_REVERSE_OPTIONS: Dict<number> = RADIATION_TEMPLATE_OPTIONS.reduce((dict, option, i) => {
       dict[option.data as string] = i;
       return dict;
@@ -1153,6 +1110,9 @@ class NodeSettings extends React.PureComponent<Props, State> {
       // ComboBox.option('Spot Light', 'spot-light'),
     ];
 
+    const BB_DESCRIPTIONS: Dict<string> = {
+      'hamburger': LocalizedString.lookup(tr('A hamburger'), locale),
+    };
     const ROCK_DESCRIPTIONS: Dict<string> = {
       'basalt': LocalizedString.lookup(tr('Basalt is an aphanitic (fine-grained) extrusive igneous rock formed from the rapid cooling of low-viscosity lava rich in magnesium and iron (mafic lava) exposed at or very near the surface of a rocky planet or moon.'), locale),
       'anorthosite': LocalizedString.lookup(tr('Anorthosite is a phaneritic, intrusive igneous rock characterized by its composition: mostly plagioclase feldspar (90–100%), with a minimal mafic component (0–10%).'), locale),
@@ -1316,6 +1276,11 @@ class NodeSettings extends React.PureComponent<Props, State> {
             </StyledField>
           )}
           {node.type === 'from-space-template' && node.material && node.material.type === 'basic' && node.material.color.type === 'texture' && node.templateId === 'container' && (
+            <StyledField name={LocalizedString.lookup(tr('Surface Text'), locale)} long theme={theme}>
+              <Input theme={theme} type='text' value={node.material.color.uri} onChange={this.onMaterialBasicColorTextureUriChange2_} />
+            </StyledField>
+          )}
+          {node.type === 'from-bb-template' && node.material && node.material.type === 'basic' && node.material.color.type === 'texture' && node.templateId === 'container' && (
             <StyledField name={LocalizedString.lookup(tr('Surface Text'), locale)} long theme={theme}>
               <Input theme={theme} type='text' value={node.material.color.uri} onChange={this.onMaterialBasicColorTextureUriChange2_} />
             </StyledField>
