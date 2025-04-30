@@ -1,73 +1,96 @@
 {
   "": {
     "Robot": {
-      "en-US": "Robot"
+      "en-US": "Robot",
+      "ja-JP": "ロボット"
     },
     "Base Scene - Surface A": {
-      "en-US": "Base Scene - Surface A"
+      "en-US": "Base Scene - Surface A",
+      "ja-JP": "基盤シーン - 表面A"
     },
     "A base scene using Surface A. Intended to be augmented to create full JBC scenes": {
-      "en-US": "A base scene using Surface A. Intended to be augmented to create full JBC scenes"
+      "en-US": "A base scene using Surface A. Intended to be augmented to create full JBC scenes",
+      "ja-JP": "表面Aを使う基盤です。完全なJBCシーンを作るために補強されることを意図しています。"
     },
     "JBC Surface A": {
-      "en-US": "JBC Surface A"
+      "en-US": "JBC Surface A",
+      "ja-JP": "JBC表面A"
     },
     "Ground": {
-      "en-US": "Ground"
+      "en-US": "Ground",
+      "ja-JP": "地"
     },
     "Light": {
-      "en-US": "Light"
+      "en-US": "Light",
+      "ja-JP": "光"
     },
     "Base Scene - Surface B": {
-      "en-US": "Base Scene - Surface B"
+      "en-US": "Base Scene - Surface B",
+      "ja-JP": "基盤シーン - 表面A"
     },
     "A base scene using Surface B. Intended to be augmented to create full JBC scenes": {
-      "en-US": "A base scene using Surface B. Intended to be augmented to create full JBC scenes"
+      "en-US": "A base scene using Surface B. Intended to be augmented to create full JBC scenes",
+      "ja-JP": "表面Bを使う基盤です。完全なJBCシーンを作るために補強されることを意図しています。"
     },
     "JBC Surface B": {
-      "en-US": "JBC Surface B"
+      "en-US": "JBC Surface B",
+      "ja-JP": "JBC表面A"
     },
     "Can %s": {
-      "en-US": "Can %s"
+      "en-US": "Can %s",
+      "ja-JP": "缶%s"
     },
     "JBC Sandbox A": {
-      "en-US": "JBC Sandbox A"
+      "en-US": "JBC Sandbox A",
+      "ja-JP": "JBC砂場A"
     },
     "Junior Botball Challenge Sandbox on Mat A. All cans 1-12 are available by default.": {
-      "en-US": "Junior Botball Challenge Sandbox on Mat A. All cans 1-12 are available by default."
+      "en-US": "Junior Botball Challenge Sandbox on Mat A. All cans 1-12 are available by default.",
+      "ja-JP": "マットAのジュニア・ボットボール・チャレンジ砂場です。1～12缶のすべての缶が使用可能です。"
     },
     "Paper Ream 1": {
-      "en-US": "Paper Ream 1"
+      "en-US": "Paper Ream 1",
+      "ja-JP": "用紙リーム１"
     },
     "Paper Ream 2": {
-      "en-US": "Paper Ream 2"
+      "en-US": "Paper Ream 2",
+      "ja-JP": "用紙リーム２"
     },
     "JBC Sandbox B": {
-      "en-US": "JBC Sandbox B"
+      "en-US": "JBC Sandbox B",
+      "ja-JP": "JBC砂場B"
     },
     "Junior Botball Challenge Sandbox on Mat B.": {
-      "en-US": "Junior Botball Challenge Sandbox on Mat B."
+      "en-US": "Junior Botball Challenge Sandbox on Mat B.",
+      "ja-JP": "マットBのジュニア・ボットボール・チャレンジ砂場です。"
     },
     "JBC 1": {
-      "en-US": "JBC 1"
+      "en-US": "JBC 1",
+      "ja-JP": "JBC 1"
     },
     "Junior Botball Challenge 1: Tag, You're It!": {
-      "en-US": "Junior Botball Challenge 1: Tag, You're It!"
+      "en-US": "Junior Botball Challenge 1: Tag, You're It!",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 1：鬼ごっこ！"
     },
     "JBC 2": {
-      "en-US": "JBC 2"
+      "en-US": "JBC 2",
+      "ja-JP": "JBC 2"
     },
     "Junior Botball Challenge 2: Ring Around the Can": {
-      "en-US": "Junior Botball Challenge 2: Ring Around the Can"
+      "en-US": "Junior Botball Challenge 2: Ring Around the Can",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 2：缶の周りにリング"
     },
     "JBC 2B": {
-      "en-US": "JBC 2B"
+      "en-US": "JBC 2B",
+      "ja-JP": "JBC 2B"
     },
     "Junior Botball Challenge 2B: Ring Around the Can, Sr.": {
-      "en-US": "Junior Botball Challenge 2B: Ring Around the Can, Sr."
+      "en-US": "Junior Botball Challenge 2B: Ring Around the Can, Sr.",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 2：缶の周りにリング続く"
     },
     "JBC 2C": {
-      "en-US": "JBC 2C"
+      "en-US": "JBC 2C",
+      "ja-JP": "JBC 2C"
     },
     "Junior Botball Challenge 2C: Back It Up": {
       "en-US": "Junior Botball Challenge 2C: Back It Up"
@@ -79,10 +102,12 @@
       "en-US": "Junior Botball Challenge 2D: Ring Around the Can and Back It Up"
     },
     "JBC 3": {
-      "en-US": "JBC 3"
+      "en-US": "JBC 3",
+      "ja-JP": "JBC 3"
     },
     "Junior Botball Challenge 3: Precision Parking": {
-      "en-US": "Junior Botball Challenge 3: Precision Parking"
+      "en-US": "Junior Botball Challenge 3: Precision Parking",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 3：精度駐車"
     },
     "JBC 3B": {
       "en-US": "JBC 3B"
@@ -97,10 +122,12 @@
       "en-US": "Junior Botball Challenge 3C: Quick Get Away!"
     },
     "JBC 4": {
-      "en-US": "JBC 4"
+      "en-US": "JBC 4",
+      "ja-JP": "JBC 4"
     },
     "Junior Botball Challenge 4: Figure Eight": {
-      "en-US": "Junior Botball Challenge 4: Figure Eight"
+      "en-US": "Junior Botball Challenge 4: Figure Eight",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 4：８の字"
     },
     "JBC 4B": {
       "en-US": "JBC 4B"
@@ -109,10 +136,12 @@
       "en-US": "Junior Botball Challenge 4B: Barrel Racing"
     },
     "JBC 5": {
-      "en-US": "JBC 5"
+      "en-US": "JBC 5",
+      "ja-JP": "JBC 5"
     },
     "Junior Botball Challenge 5: Dance Party": {
-      "en-US": "Junior Botball Challenge 5: Dance Party"
+      "en-US": "Junior Botball Challenge 5: Dance Party",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 5：ダンスパーティー"
     },
     "JBC 5B": {
       "en-US": "JBC 5B"
@@ -127,10 +156,12 @@
       "en-US": "Junior Botball Challenge 5C: Synchronized Dancing"
     },
     "JBC 6": {
-      "en-US": "JBC 6"
+      "en-US": "JBC 6",
+      "ja-JP": "JBC 6"
     },
     "Junior Botball Challenge 6: Load 'Em Up": {
-      "en-US": "Junior Botball Challenge 6: Load 'Em Up"
+      "en-US": "Junior Botball Challenge 6: Load 'Em Up",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 6：積み込もう"
     },
     "JBC 6B": {
       "en-US": "JBC 6B"
@@ -145,22 +176,28 @@
       "en-US": "Junior Botball Challenge 6C: Empty the Garage"
     },
     "Circle 2": {
-      "en-US": "Circle 2"
+      "en-US": "Circle 2",
+      "ja-JP": "円２"
     },
     "Circle 9": {
-      "en-US": "Circle 9"
+      "en-US": "Circle 9",
+      "ja-JP": "円９"
     },
     "Circle 10": {
-      "en-US": "Circle 10"
+      "en-US": "Circle 10",
+      "ja-JP": "円10"
     },
     "Mat Surface": {
-      "en-US": "Mat Surface"
+      "en-US": "Mat Surface",
+      "ja-JP": "マットの表面"
     },
     "JBC 7": {
-      "en-US": "JBC 7"
+      "en-US": "JBC 7",
+      "ja-JP": "JBC 7"
     },
     "Junior Botball Challenge 7: Bulldozer Mania": {
-      "en-US": "Junior Botball Challenge 7: Bulldozer Mania"
+      "en-US": "Junior Botball Challenge 7: Bulldozer Mania",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 7：ブルドーザー・マニア"
     },
     "JBC 7B": {
       "en-US": "JBC 7B"
@@ -169,10 +206,12 @@
       "en-US": "Junior Botball Challenge 7B: Cover Your Bases"
     },
     "JBC 8": {
-      "en-US": "JBC 8"
+      "en-US": "JBC 8",
+      "ja-JP": "JBC 8"
     },
     "Junior Botball Challenge 8: Serpentine": {
-      "en-US": "Junior Botball Challenge 8: Serpentine"
+      "en-US": "Junior Botball Challenge 8: Serpentine",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 8：延々"
     },
     "JBC 8B": {
       "en-US": "JBC 8B"
@@ -181,10 +220,12 @@
       "en-US": "Junior Botball Challenge 8B: Serpentine Jr."
     },
     "JBC 9": {
-      "en-US": "JBC 9"
+      "en-US": "JBC 9",
+      "ja-JP": "JBC 9"
     },
     "Junior Botball Challenge 9: Add It Up": {
-      "en-US": "Junior Botball Challenge 9: Add It Up"
+      "en-US": "Junior Botball Challenge 9: Add It Up",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 9：足し算する"
     },
     "JBC 9B": {
       "en-US": "JBC 9B"
@@ -193,10 +234,12 @@
       "en-US": "Junior Botball Challenge 9B: Balancing Act"
     },
     "JBC 10": {
-      "en-US": "JBC 10"
+      "en-US": "JBC 10",
+      "ja-JP": "JBC 10"
     },
     "Junior Botball Challenge 10: Solo Joust": {
-      "en-US": "Junior Botball Challenge 10: Solo Joust"
+      "en-US": "Junior Botball Challenge 10: Solo Joust",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 10：ソロ馬上槍試合"
     },
     "JBC 10B": {
       "en-US": "JBC 10B"
@@ -205,16 +248,20 @@
       "en-US": "Junior Botball Challenge 10: Solo Joust Jr."
     },
     "JBC 12": {
-      "en-US": "JBC 12"
+      "en-US": "JBC 12",
+      "ja-JP": "JBC 12"
     },
     "Junior Botball Challenge 12: Unload 'Em": {
-      "en-US": "Junior Botball Challenge 12: Unload 'Em"
+      "en-US": "Junior Botball Challenge 12: Unload 'Em",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 12：下ろす"
     },
     "JBC 13": {
-      "en-US": "JBC 13"
+      "en-US": "JBC 13",
+      "ja-JP": "JBC 13"
     },
     "Junior Botball Challenge 13: Clean the Mat": {
-      "en-US": "Junior Botball Challenge 13: Clean the Mat"
+      "en-US": "Junior Botball Challenge 13: Clean the Mat",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 13：マット掃除する"
     },
     "JBC 15B": {
       "en-US": "JBC 15B"
@@ -223,10 +270,12 @@
       "en-US": "Junior Botball Challenge 15B: Bump Bump"
     },
     "JBC 17": {
-      "en-US": "JBC 17"
+      "en-US": "JBC 17",
+      "ja-JP": "JBC 17"
     },
     "Junior Botball Challenge 17: Walk the Line": {
-      "en-US": "Junior Botball Challenge 17: Walk the Line"
+      "en-US": "Junior Botball Challenge 17: Walk the Line",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 17：一線を歩く"
     },
     "JBC 17B": {
       "en-US": "JBC 17B"
@@ -235,835 +284,2041 @@
       "en-US": "Junior Botball Challenge 17: Walk the Line II"
     },
     "JBC 19": {
-      "en-US": "JBC 19"
+      "en-US": "JBC 19",
+      "ja-JP": "JBC 19"
     },
     "Junior Botball Challenge 19: Mountain Rescue": {
-      "en-US": "Junior Botball Challenge 19: Mountain Rescue"
+      "en-US": "Junior Botball Challenge 19: Mountain Rescue",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 19：山岳救助"
     },
     "Paper Ream": {
-      "en-US": "Paper Ream"
+      "en-US": "Paper Ream",
+      "ja-JP": "用紙リーム"
     },
     "JBC 20": {
-      "en-US": "JBC 20"
+      "en-US": "JBC 20",
+      "ja-JP": "JBC 20"
     },
     "Junior Botball Challenge 20: Rescue the Cans": {
-      "en-US": "Junior Botball Challenge 20: Rescue the Cans"
+      "en-US": "Junior Botball Challenge 20: Rescue the Cans",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 20：缶を助ける"
     },
     "JBC 21": {
-      "en-US": "JBC 21"
+      "en-US": "JBC 21",
+      "ja-JP": "JBC 21"
     },
     "Junior Botball Challenge 21: Foot Tall": {
-      "en-US": "Junior Botball Challenge 21: Foot Tall"
+      "en-US": "Junior Botball Challenge 21: Foot Tall",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 21：フィート高さ"
     },
     "JBC 22": {
-      "en-US": "JBC 22"
+      "en-US": "JBC 22",
+      "ja-JP": "JBC 22"
     },
     "Junior Botball Challenge 22: Stackerz": {
-      "en-US": "Junior Botball Challenge 22: Stackerz"
+      "en-US": "Junior Botball Challenge 22: Stackerz",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 21：積む"
     },
     "Script Playground": {
-      "en-US": "Script Playground"
+      "en-US": "Script Playground",
+      "ja-JP": "スクリプト遊び場"
     },
     "Script tests": {
-      "en-US": "Script tests"
+      "en-US": "Script tests",
+      "ja-JP": "スクリプトテスト"
     },
     "Demobot": {
-      "en-US": "Demobot"
+      "en-US": "Demobot",
+      "ja-JP": "デモボット"
     },
     "JBC Challenge 6C": {
       "en-US": "JBC Challenge 6C"
     },
     "Can A Lifted": {
-      "en-US": "Can A Lifted"
+      "en-US": "Can A Lifted",
+      "ja-JP": "缶A上げました"
     },
     "Can A picked up": {
-      "en-US": "Can A picked up"
+      "en-US": "Can A picked up",
+      "ja-JP": "缶A取りました"
     },
     "Can B Lifted": {
-      "en-US": "Can B Lifted"
+      "en-US": "Can B Lifted",
+      "ja-JP": "缶B上げました"
     },
     "Can B picked up": {
-      "en-US": "Can B picked up"
+      "en-US": "Can B picked up",
+      "ja-JP": "缶B取りました"
     },
     "Can C Lifted": {
-      "en-US": "Can C Lifted"
+      "en-US": "Can C Lifted",
+      "ja-JP": "缶C上げました"
     },
     "Can C picked up": {
-      "en-US": "Can C picked up"
+      "en-US": "Can C picked up",
+      "ja-JP": "缶C取りました"
     },
     "Can A Placed": {
-      "en-US": "Can A Placed"
+      "en-US": "Can A Placed",
+      "ja-JP": "缶A置きました"
     },
     "Can A placed on circle 2": {
-      "en-US": "Can A placed on circle 2"
+      "en-US": "Can A placed on circle 2",
+      "ja-JP": "円２に缶A置きました"
     },
     "Can B Placed": {
-      "en-US": "Can B Placed"
+      "en-US": "Can B Placed",
+      "ja-JP": "缶B置きました"
     },
     "Can A placed on circle 9": {
-      "en-US": "Can A placed on circle 9"
+      "en-US": "Can A placed on circle 9",
+      "ja-JP": "円９に缶A置きました"
     },
     "Can C Placed": {
-      "en-US": "Can C Placed"
+      "en-US": "Can C Placed",
+      "ja-JP": "缶C置きました"
     },
     "Can A placed on circle 10": {
-      "en-US": "Can A placed on circle 10"
+      "en-US": "Can A placed on circle 10",
+      "ja-JP": "円10に缶A置きました"
     },
     "Can A Upright": {
-      "en-US": "Can A Upright"
+      "en-US": "Can A Upright",
+      "ja-JP": "缶Aまっすぐ"
     },
     "Can A upright on circle 2": {
-      "en-US": "Can A upright on circle 2"
+      "en-US": "Can A upright on circle 2",
+      "ja-JP": "円２に缶Aまっすぐ"
     },
     "Can B Upright": {
-      "en-US": "Can B Upright"
+      "en-US": "Can B Upright",
+      "ja-JP": "缶Bまっすぐ"
     },
     "Can B upright on circle 9": {
-      "en-US": "Can B upright on circle 9"
+      "en-US": "Can B upright on circle 9",
+      "ja-JP": "円９に缶Bまっすぐ"
     },
     "Can C Upright": {
-      "en-US": "Can C Upright"
+      "en-US": "Can C Upright",
+      "ja-JP": "缶Cまっすぐ"
     },
     "Can C upright on circle 10": {
-      "en-US": "Can C upright on circle 10"
+      "en-US": "Can C upright on circle 10",
+      "ja-JP": "円10に缶C置きました"
     },
     "Loading...": {
-      "en-US": "Loading..."
+      "en-US": "Loading...",
+      "ja-JP": "ロード..."
     },
     "Logout": {
-      "en-US": "Logout"
+      "en-US": "Logout",
+      "ja-JP": "ログアウト"
     },
     "Tutorials": {
-      "en-US": "Tutorials"
+      "en-US": "Tutorials",
+      "ja-JP": "チュートリアル"
     },
     "Learn how to get started with the simulator": {
-      "en-US": "Learn how to get started with the simulator"
+      "en-US": "Learn how to get started with the simulator",
+      "ja-JP": "シミュレーターを使い方を習います"
     },
     "3D Simulator": {
-      "en-US": "3D Simulator"
+      "en-US": "3D Simulator",
+      "ja-JP": "３Dシミュレーター"
     },
     "A simulator for the Botball demobot.": {
-      "en-US": "A simulator for the Botball demobot."
+      "en-US": "A simulator for the Botball demobot.",
+      "ja-JP": "Botballデモボットのシミュレーター"
     },
     "About": {
-      "en-US": "About"
+      "en-US": "About",
+      "ja-JP": "ついて"
     },
     "KIPR is a 501(c) 3 organization started to make the long-term educational benefits of robotics accessible to students.": {
-      "en-US": "KIPR is a 501(c) 3 organization started to make the long-term educational benefits of robotics accessible to students."
+      "en-US": "KIPR is a 501(c) 3 organization started to make the long-term educational benefits of robotics accessible to students.",
+      "ja-JP": "KIPRは501(c) 3団体で、ロボット工学の長期的な教育効果を学生にも身近なものにするために設立されました。"
     },
     "Quick Start": {
-      "en-US": "Quick Start"
+      "en-US": "Quick Start",
+      "ja-JP": "早わかり"
     },
     "Navigating in 3D": {
-      "en-US": "Navigating in 3D"
+      "en-US": "Navigating in 3D",
+      "ja-JP": "３Dに動きます"
     },
     "Learn the controls for navigating in 3D in the simulator": {
-      "en-US": "Learn the controls for navigating in 3D in the simulator"
+      "en-US": "Learn the controls for navigating in 3D in the simulator",
+      "ja-JP": "３Dシミュレーターで動き方を習います"
     },
     "Robot Section": {
-      "en-US": "Robot Section"
+      "en-US": "Robot Section",
+      "ja-JP": "ロボットセクション"
     },
     "How to use the robot section": {
-      "en-US": "How to use the robot section"
+      "en-US": "How to use the robot section",
+      "ja-JP": "ロボットセクションの使い方です"
     },
     "World Section": {
-      "en-US": "World Section"
+      "en-US": "World Section",
+      "ja-JP": "世界セクション"
     },
     "Learn how to create and manipulate items and scene in the simulator": {
-      "en-US": "Learn how to create and manipulate items and scene in the simulator"
+      "en-US": "Learn how to create and manipulate items and scene in the simulator",
+      "ja-JP": "シミュレーターでアイテムを作る、使う方を習います。"
     },
     "Indent": {
-      "en-US": "Indent"
+      "en-US": "Indent",
+      "ja-JP": "インデント"
     },
     "Download": {
-      "en-US": "Download"
+      "en-US": "Download",
+      "ja-JP": "ダウンロード"
     },
     "Reset": {
-      "en-US": "Reset"
+      "en-US": "Reset",
+      "ja-JP": "リセット"
     },
     "Error(s)": {
-      "en-US": "Error(s)"
+      "en-US": "Error(s)",
+      "ja-JP": "エラー"
     },
     "Warning(s)": {
-      "en-US": "Warning(s)"
+      "en-US": "Warning(s)",
+      "ja-JP": "ワーニング"
     },
     "grams": {
-      "en-US": "grams"
+      "en-US": "grams",
+      "ja-JP": "グラム"
     },
     "kilograms": {
-      "en-US": "kilograms"
+      "en-US": "kilograms",
+      "ja-JP": "キロ"
     },
     "pounds": {
-      "en-US": "pounds"
+      "en-US": "pounds",
+      "ja-JP": "ポンド"
     },
     "ounces": {
-      "en-US": "ounces"
+      "en-US": "ounces",
+      "ja-JP": "オンス"
     },
     "meters": {
-      "en-US": "meters"
+      "en-US": "meters",
+      "ja-JP": "メートル"
     },
     "centimeters": {
-      "en-US": "centimeters"
+      "en-US": "centimeters",
+      "ja-JP": "センチ"
     },
     "feet": {
-      "en-US": "feet"
+      "en-US": "feet",
+      "ja-JP": "フィート"
     },
     "inches": {
-      "en-US": "inches"
+      "en-US": "inches",
+      "ja-JP": "インチ"
     },
     "radians": {
-      "en-US": "radians"
+      "en-US": "radians",
+      "ja-JP": "ラジアン"
     },
     "degrees": {
-      "en-US": "degrees"
+      "en-US": "degrees",
+      "ja-JP": "度"
     },
     "Can": {
-      "en-US": "Can"
+      "en-US": "Can",
+      "ja-JP": "缶"
     },
     "Box": {
-      "en-US": "Box"
+      "en-US": "Box",
+      "ja-JP": "箱"
     },
     "Sphere": {
-      "en-US": "Sphere"
+      "en-US": "Sphere",
+      "ja-JP": "玉"
     },
     "Cylinder": {
-      "en-US": "Cylinder"
+      "en-US": "Cylinder",
+      "ja-JP": "円筒"
     },
     "Cone": {
-      "en-US": "Cone"
+      "en-US": "Cone",
+      "ja-JP": "円錐"
     },
     "Plane": {
-      "en-US": "Plane"
+      "en-US": "Plane",
+      "ja-JP": "平面"
     },
     "File": {
-      "en-US": "File"
+      "en-US": "File",
+      "ja-JP": "ファイル"
     },
     "Euler": {
-      "en-US": "Euler"
+      "en-US": "Euler",
+      "ja-JP": "Euler"
     },
     "Axis Angle": {
-      "en-US": "Axis Angle"
+      "en-US": "Axis Angle",
+      "ja-JP": "軸角度"
     },
     "Empty": {
-      "en-US": "Empty"
+      "en-US": "Empty",
+      "ja-JP": "空"
     },
     "Standard Object": {
-      "en-US": "Standard Object"
+      "en-US": "Standard Object",
+      "ja-JP": "標準オブジェクト"
     },
     "Custom Object": {
-      "en-US": "Custom Object"
+      "en-US": "Custom Object",
+      "ja-JP": "カスタムオブジェクト"
     },
     "Point Light": {
-      "en-US": "Point Light"
+      "en-US": "Point Light",
+      "ja-JP": "点灯"
     },
     "Unset": {
-      "en-US": "Unset"
+      "en-US": "Unset",
+      "ja-JP": "アンセット"
     },
     "Basic": {
-      "en-US": "Basic"
+      "en-US": "Basic",
+      "ja-JP": "基本的"
     },
     "Texture": {
-      "en-US": "Texture"
+      "en-US": "Texture",
+      "ja-JP": "テクスチャ"
     },
     "Value": {
-      "en-US": "Value"
+      "en-US": "Value",
+      "ja-JP": "値"
     },
     "General": {
-      "en-US": "General"
+      "en-US": "General",
+      "ja-JP": "一般"
     },
     "Name": {
-      "en-US": "Name"
+      "en-US": "Name",
+      "ja-JP": "名前"
     },
     "Type": {
-      "en-US": "Type"
+      "en-US": "Type",
+      "ja-JP": "タイプ"
     },
     "Geometry": {
-      "en-US": "Geometry"
+      "en-US": "Geometry",
+      "ja-JP": "幾何"
     },
     "Item": {
-      "en-US": "Item"
+      "en-US": "Item",
+      "ja-JP": "アイテム"
     },
     "Box Options": {
-      "en-US": "Box Options"
+      "en-US": "Box Options",
+      "ja-JP": "箱の設定"
     },
     "Size X": {
-      "en-US": "Size X"
+      "en-US": "Size X",
+      "ja-JP": "X サイズ"
     },
     "Size Y": {
-      "en-US": "Size Y"
+      "en-US": "Size Y",
+      "ja-JP": "Y サイズ"
     },
     "Size Z": {
-      "en-US": "Size Z"
+      "en-US": "Size Z",
+      "ja-JP": "Z サイズ"
     },
     "Sphere Options": {
-      "en-US": "Sphere Options"
+      "en-US": "Sphere Options",
+      "ja-JP": "玉の設定"
     },
     "Radius": {
-      "en-US": "Radius"
+      "en-US": "Radius",
+      "ja-JP": "半径"
     },
     "Cylinder Options": {
-      "en-US": "Cylinder Options"
+      "en-US": "Cylinder Options",
+      "ja-JP": "円筒設定"
     },
     "Height": {
-      "en-US": "Height"
+      "en-US": "Height",
+      "ja-JP": "高さ"
     },
     "Plane Options": {
-      "en-US": "Plane Options"
+      "en-US": "Plane Options",
+      "ja-JP": "平面設定"
     },
     "File Options": {
-      "en-US": "File Options"
+      "en-US": "File Options",
+      "ja-JP": "ファイルの設定"
     },
     "URI": {
-      "en-US": "URI"
+      "en-US": "URI",
+      "ja-JP": "URI"
     },
     "Material": {
-      "en-US": "Material"
+      "en-US": "Material",
+      "ja-JP": "物質"
     },
     "Color Type": {
-      "en-US": "Color Type"
+      "en-US": "Color Type",
+      "ja-JP": "色タイプ"
     },
     "Color Red": {
-      "en-US": "Color Red"
+      "en-US": "Color Red",
+      "ja-JP": "赤"
     },
     "Color Green": {
-      "en-US": "Color Green"
+      "en-US": "Color Green",
+      "ja-JP": "緑"
     },
     "Color Blue": {
-      "en-US": "Color Blue"
+      "en-US": "Color Blue",
+      "ja-JP": "青"
     },
     "Color Texture URI": {
-      "en-US": "Color Texture URI"
+      "en-US": "Color Texture URI",
+      "ja-JP": "色テクスチャURI"
     },
     "Albedo Type": {
-      "en-US": "Albedo Type"
+      "en-US": "Albedo Type",
+      "ja-JP": "アルベドテクスチャ"
     },
     "Albedo Red": {
-      "en-US": "Albedo Red"
+      "en-US": "Albedo Red",
+      "ja-JP": "アルベド赤"
     },
     "Albedo Green": {
-      "en-US": "Albedo Green"
+      "en-US": "Albedo Green",
+      "ja-JP": "アルベド緑"
     },
     "Albedo Blue": {
-      "en-US": "Albedo Blue"
+      "en-US": "Albedo Blue",
+      "ja-JP": "アルベド青"
     },
     "Albedo Texture URI": {
-      "en-US": "Albedo Texture URI"
+      "en-US": "Albedo Texture URI",
+      "ja-JP": "アルベドテクスチャURI"
     },
     "Reflection Type": {
-      "en-US": "Reflection Type"
+      "en-US": "Reflection Type",
+      "ja-JP": "反射タイプ"
     },
     "Reflection Red": {
-      "en-US": "Reflection Red"
+      "en-US": "Reflection Red",
+      "ja-JP": "反射赤"
     },
     "Reflection Green": {
-      "en-US": "Reflection Green"
+      "en-US": "Reflection Green",
+      "ja-JP": "反射緑"
     },
     "Reflection Blue": {
-      "en-US": "Reflection Blue"
+      "en-US": "Reflection Blue",
+      "ja-JP": "反射青"
     },
     "Reflection Texture URI": {
-      "en-US": "Reflection Texture URI"
+      "en-US": "Reflection Texture URI",
+      "ja-JP": "反射テクスチャURI"
     },
     "Emissive Type": {
-      "en-US": "Emissive Type"
+      "en-US": "Emissive Type",
+      "ja-JP": "放射率タイプ"
     },
     "Emissive Red": {
-      "en-US": "Emissive Red"
+      "en-US": "Emissive Red",
+      "ja-JP": "放射率赤"
     },
     "Emissive Green": {
-      "en-US": "Emissive Green"
+      "en-US": "Emissive Green",
+      "ja-JP": "放射率緑"
     },
     "Emissive Blue": {
-      "en-US": "Emissive Blue"
+      "en-US": "Emissive Blue",
+      "ja-JP": "放射率青"
     },
     "Emissive Texture URI": {
-      "en-US": "Emissive Texture URI"
+      "en-US": "Emissive Texture URI",
+      "ja-JP": "放射率テクスチャURI"
     },
     "Ambient Type": {
-      "en-US": "Ambient Type"
+      "en-US": "Ambient Type",
+      "ja-JP": "アンビエントタイプ"
     },
     "Ambient Red": {
-      "en-US": "Ambient Red"
+      "en-US": "Ambient Red",
+      "ja-JP": "アンビエント赤"
     },
     "Ambient Green": {
-      "en-US": "Ambient Green"
+      "en-US": "Ambient Green",
+      "ja-JP": "アンビエント緑"
     },
     "Ambient Blue": {
-      "en-US": "Ambient Blue"
+      "en-US": "Ambient Blue",
+      "ja-JP": "アンビエント青"
     },
     "Ambient Texture URI": {
-      "en-US": "Ambient Texture URI"
+      "en-US": "Ambient Texture URI",
+      "ja-JP": "アンビエントテクスチャURI"
     },
     "Metalness Type": {
-      "en-US": "Metalness Type"
+      "en-US": "Metalness Type",
+      "ja-JP": "金属性タイプ"
     },
     "Metalness": {
-      "en-US": "Metalness"
+      "en-US": "Metalness",
+      "ja-JP": "金属性"
     },
     "Metalness Texture URI": {
-      "en-US": "Metalness Texture URI"
+      "en-US": "Metalness Texture URI",
+      "ja-JP": "金属性テクスチャURI"
     },
     "Position": {
-      "en-US": "Position"
+      "en-US": "Position",
+      "ja-JP": "位置"
     },
     "X": {
-      "en-US": "X"
+      "en-US": "X",
+      "ja-JP": "X"
     },
     "Y": {
-      "en-US": "Y"
+      "en-US": "Y",
+      "ja-JP": "Y"
     },
     "Z": {
-      "en-US": "Z"
+      "en-US": "Z",
+      "ja-JP": "Z"
     },
     "Orientation": {
-      "en-US": "Orientation"
+      "en-US": "Orientation",
+      "ja-JP": "方向"
     },
     "Order": {
-      "en-US": "Order"
+      "en-US": "Order",
+      "ja-JP": "順"
     },
     "Angle": {
-      "en-US": "Angle"
+      "en-US": "Angle",
+      "ja-JP": "角度"
     },
     "Scale": {
-      "en-US": "Scale"
+      "en-US": "Scale",
+      "ja-JP": "規模"
     },
     "Physics": {
-      "en-US": "Physics"
+      "en-US": "Physics",
+      "ja-JP": "物理学"
     },
     "Mass": {
-      "en-US": "Mass"
+      "en-US": "Mass",
+      "ja-JP": "質量"
     },
     "Friction": {
-      "en-US": "Friction"
+      "en-US": "Friction",
+      "ja-JP": "摩擦"
     },
     "Unnamed Object": {
-      "en-US": "Unnamed Object"
+      "en-US": "Unnamed Object",
+      "ja-JP": "無名オブジェクト"
     },
     "Add Item": {
-      "en-US": "Add Item"
+      "en-US": "Add Item",
+      "ja-JP": "アイテムを作る"
     },
     "Accept": {
-      "en-US": "Accept"
+      "en-US": "Accept",
+      "ja-JP": "はい"
     },
     "Settings": {
-      "en-US": "Settings"
+      "en-US": "Settings",
+      "ja-JP": "設定"
     },
     "Add Script": {
-      "en-US": "Add Script"
+      "en-US": "Add Script",
+      "ja-JP": "スクリプトを作る"
     },
     "Select Scene": {
-      "en-US": "Select Scene"
+      "en-US": "Select Scene",
+      "ja-JP": "シーンを選ぶ"
     },
     "Save Scene": {
-      "en-US": "Save Scene"
+      "en-US": "Save Scene",
+      "ja-JP": "シーンを保存"
     },
     "Copy Scene": {
-      "en-US": "Copy Scene"
+      "en-US": "Copy Scene",
+      "ja-JP": "シーンをコピー"
     },
     "Item(s) (%d)": {
-      "en-US": "Item(s) (%d)"
+      "en-US": "Item(s) (%d)",
+      "ja-JP": "アイテム（%d）"
     },
     "Script(s) (%d)": {
-      "en-US": "Script(s) (%d)"
+      "en-US": "Script(s) (%d)",
+      "ja-JP": "スクリプト（%d）"
     },
     "Layouts": {
-      "en-US": "Layouts"
+      "en-US": "Layouts",
+      "ja-JP": "設計"
     },
     "Overlay": {
-      "en-US": "Overlay"
+      "en-US": "Overlay",
+      "ja-JP": "オーバーレイ"
     },
     "Side": {
-      "en-US": "Side"
+      "en-US": "Side",
+      "ja-JP": "側面"
     },
     "Options": {
-      "en-US": "Options"
+      "en-US": "Options",
+      "ja-JP": "設定"
     },
     "Show All": {
-      "en-US": "Show All"
+      "en-US": "Show All",
+      "ja-JP": "すべて見せる"
     },
     "Hide All": {
-      "en-US": "Hide All"
+      "en-US": "Hide All",
+      "ja-JP": "すべて隠す"
     },
     "Clear": {
-      "en-US": "Clear"
+      "en-US": "Clear",
+      "ja-JP": "クリア"
     },
     "Rotation": {
-      "en-US": "Rotation"
+      "en-US": "Rotation",
+      "ja-JP": "回転"
     },
     "Start Location": {
-      "en-US": "Start Location"
+      "en-US": "Start Location",
+      "ja-JP": "開始場所"
     },
     "Motor Velocity Plot": {
-      "en-US": "Motor Velocity Plot"
+      "en-US": "Motor Velocity Plot",
+      "ja-JP": "モーター速度グラフ"
     },
     "Motor Position Plot": {
-      "en-US": "Motor Position Plot"
+      "en-US": "Motor Position Plot",
+      "ja-JP": "モーター位置グラフ"
     },
     "Analog Sensor Plot": {
-      "en-US": "Analog Sensor Plot"
+      "en-US": "Analog Sensor Plot",
+      "ja-JP": "アナログセンサーグラフ"
     },
     "Digital Sensor Plot": {
-      "en-US": "Digital Sensor Plot"
+      "en-US": "Digital Sensor Plot",
+      "ja-JP": "デジタルセンサーグラフ"
     },
     "Analog Sensors": {
-      "en-US": "Analog Sensors"
+      "en-US": "Analog Sensors",
+      "ja-JP": "アナログセンサー"
     },
     "Digital Sensors": {
-      "en-US": "Digital Sensors"
+      "en-US": "Digital Sensors",
+      "ja-JP": "デジタルセンサー"
     },
     "Servos": {
-      "en-US": "Servos"
+      "en-US": "Servos",
+      "ja-JP": "サーボ"
     },
     "Motor Velocities": {
-      "en-US": "Motor Velocities"
+      "en-US": "Motor Velocities",
+      "ja-JP": "モーター速度"
     },
     "Motor Positions": {
-      "en-US": "Motor Positions"
+      "en-US": "Motor Positions",
+      "ja-JP": "モーター位置グラフ"
     },
     "This process is taking longer than expected...\nIf you have a poor internet connection, this can take some time": {
-      "en-US": "This process is taking longer than expected...\nIf you have a poor internet connection, this can take some time"
+      "en-US": "This process is taking longer than expected...\nIf you have a poor internet connection, this can take some time",
+      "ja-JP": "様相以上に時間がかかっています...\nネットが遅いなら、もっと時間がかかるかもしれません。"
     },
     "The simulator may have failed to load.\nPlease submit a feedback form to let us know!": {
-      "en-US": "The simulator may have failed to load.\nPlease submit a feedback form to let us know!"
+      "en-US": "The simulator may have failed to load.\nPlease submit a feedback form to let us know!",
+      "ja-JP": "シミュレーターはロードに失敗してしまう可能性がありました。\nフィードバックを出して教えてくださいませんか。"
     },
     "Initializing Simulator...": {
-      "en-US": "Initializing Simulator..."
+      "en-US": "Initializing Simulator...",
+      "ja-JP": "シミュレーター始めて..."
     },
     "all of": {
-      "en-US": "all of"
+      "en-US": "all of",
+      "ja-JP": "すべて"
     },
     "one or more of": {
-      "en-US": "one or more of"
+      "en-US": "one or more of",
+      "ja-JP": "一つ以上"
     },
     "exactly one of": {
-      "en-US": "exactly one of"
+      "en-US": "exactly one of",
+      "ja-JP": "一つ"
     },
     "once": {
-      "en-US": "once"
+      "en-US": "once",
+      "ja-JP": "一度"
     },
     "not": {
       "en-US": "not"
     },
     "Success": {
-      "en-US": "Success"
+      "en-US": "Success",
+      "ja-JP": "成功"
     },
     "Failure": {
-      "en-US": "Failure"
+      "en-US": "Failure",
+      "ja-JP": "失敗"
     },
     "Editor": {
-      "en-US": "Editor"
+      "en-US": "Editor",
+      "ja-JP": "編集"
     },
     "World": {
-      "en-US": "World"
+      "en-US": "World",
+      "ja-JP": "世界"
     },
     "Script Editor": {
-      "en-US": "Script Editor"
+      "en-US": "Script Editor",
+      "ja-JP": "スクリプト編集"
     },
     "Console": {
-      "en-US": "Console"
+      "en-US": "Console",
+      "ja-JP": "コンソール"
     },
     "Open": {
-      "en-US": "Open"
+      "en-US": "Open",
+      "ja-JP": "開く"
     },
     "Save": {
-      "en-US": "Save"
+      "en-US": "Save",
+      "ja-JP": "保存"
     },
     "Save As": {
-      "en-US": "Save As"
+      "en-US": "Save As",
+      "ja-JP": "名前付けて保存"
     },
     "Delete": {
-      "en-US": "Delete"
+      "en-US": "Delete",
+      "ja-JP": "削除"
     },
     "Documentation": {
-      "en-US": "Documentation"
+      "en-US": "Documentation",
+      "ja-JP": "参照資料"
     },
     "Feedback": {
-      "en-US": "Feedback"
+      "en-US": "Feedback",
+      "ja-JP": "フィードバック"
     },
     "Reset World": {
-      "en-US": "Reset World"
+      "en-US": "Reset World",
+      "ja-JP": "世界をレセット"
     },
     "Layout": {
-      "en-US": "Layout"
+      "en-US": "Layout",
+      "ja-JP": "レイアウト"
     },
     "User Interface": {
-      "en-US": "User Interface"
+      "en-US": "User Interface",
+      "ja-JP": "ユーザーインターフェイス"
     },
     "Simulation": {
-      "en-US": "Simulation"
+      "en-US": "Simulation",
+      "ja-JP": "シミュレーション"
     },
     "Locale": {
-      "en-US": "Locale"
+      "en-US": "Locale",
+      "ja-JP": "言語"
     },
     "Switch languages": {
-      "en-US": "Switch languages"
+      "en-US": "Switch languages",
+      "ja-JP": "言語を選ぶ"
     },
     "Sensor noise": {
-      "en-US": "Sensor noise"
+      "en-US": "Sensor noise",
+      "ja-JP": "センサー雑音"
     },
     "Controls whether sensor outputs are affected by random noise": {
-      "en-US": "Controls whether sensor outputs are affected by random noise"
+      "en-US": "Controls whether sensor outputs are affected by random noise",
+      "ja-JP": "センサーは雑音があるかどうか"
     },
     "Realistic sensors": {
-      "en-US": "Realistic sensors"
+      "en-US": "Realistic sensors",
+      "ja-JP": "現実的なセンサー"
     },
     "Controls whether sensors behave like real-world sensors instead of like ideal sensors. For example, real-world ET sensors are nonlinear": {
-      "en-US": "Controls whether sensors behave like real-world sensors instead of like ideal sensors. For example, real-world ET sensors are nonlinear"
+      "en-US": "Controls whether sensors behave like real-world sensors instead of like ideal sensors. For example, real-world ET sensors are nonlinear",
+      "ja-JP": "センサーが理想的ではなく、現実世界のセンサーのように振る舞うかどうかを制御します。例えば現実世界のETセンサーは非線形です。"
     },
     "Autocomplete": {
-      "en-US": "Autocomplete"
+      "en-US": "Autocomplete",
+      "ja-JP": "自動補完"
     },
     "Controls autocompletion of code, brackets, and quotes": {
-      "en-US": "Controls autocompletion of code, brackets, and quotes"
+      "en-US": "Controls autocompletion of code, brackets, and quotes",
+      "ja-JP": "コードとカッコとクオートの自動補完制御します"
     },
     "Version %s (%s)": {
-      "en-US": "Version %s (%s)"
+      "en-US": "Version %s (%s)",
+      "ja-JP": "バージョン %s (%s)"
     },
     "Copyright": {
-      "en-US": "Copyright"
+      "en-US": "Copyright",
+      "ja-JP": "著作権"
     },
     "This software is licensed under the terms of the": {
-      "en-US": "This software is licensed under the terms of the"
+      "en-US": "This software is licensed under the terms of the",
+      "ja-JP": "このソフトウェアは、GNU GPL v3 の条件に基づいてライセンスされます。"
     },
     "Thank you to the following contributors and testers:": {
-      "en-US": "Thank you to the following contributors and testers:"
+      "en-US": "Thank you to the following contributors and testers:",
+      "ja-JP": "寄稿者とテスターに感謝を差しあげます："
     },
     "Want to help improve the simulator and get your name listed here?": {
-      "en-US": "Want to help improve the simulator and get your name listed here?"
+      "en-US": "Want to help improve the simulator and get your name listed here?",
+      "ja-JP": "シミュレーターの改善にご協力いただけませんか？"
     },
     "GitHub repository": {
-      "en-US": "GitHub repository"
+      "en-US": "GitHub repository",
+      "ja-JP": "Githubレポジトリ"
     },
     "We're happy to help you get started!": {
-      "en-US": "We're happy to help you get started!"
+      "en-US": "We're happy to help you get started!",
+      "ja-JP": "始まることについて助けてあげたいです！"
     },
     "Give a helpful description of a problem you're facing, or a feature you'd like to request": {
-      "en-US": "Give a helpful description of a problem you're facing, or a feature you'd like to request"
+      "en-US": "Give a helpful description of a problem you're facing, or a feature you'd like to request",
+      "ja-JP": "問題か欲しいフィーチャーの記述を書いてくださいませんか。"
     },
     "Thanks for using the KIPR Simulator! Find a bug? Have a feature request? Let us know!": {
-      "en-US": "Thanks for using the KIPR Simulator! Find a bug? Have a feature request? Let us know!"
+      "en-US": "Thanks for using the KIPR Simulator! Find a bug? Have a feature request? Let us know!",
+      "ja-JP": "KIPRシミュレーターを使ってありがとうございます！欲しいフィーチャーがありますか。教えてくださいませんか。"
     },
     "How has your experience using the KIPR Simulator been?": {
-      "en-US": "How has your experience using the KIPR Simulator been?"
+      "en-US": "How has your experience using the KIPR Simulator been?",
+      "ja-JP": "KIPRシミュレーターを使って経験はどうでしたか。"
     },
     "Email (optional): ": {
-      "en-US": "Email (optional): "
+      "en-US": "Email (optional): ",
+      "ja-JP": "メールアドレス（随意）"
     },
     "Include anonymous usage data to help KIPR developers": {
-      "en-US": "Include anonymous usage data to help KIPR developers"
+      "en-US": "Include anonymous usage data to help KIPR developers",
+      "ja-JP": "KIPRの開発者に助けるために匿名のデータを分け合てくださいませんか。"
     },
     "Please try again,": {
-      "en-US": "Please try again,"
+      "en-US": "Please try again,",
+      "ja-JP": "もう一度お願いお願い申し上げます、"
     },
     "open an issue on our github page": {
-      "en-US": "open an issue on our github page"
+      "en-US": "open an issue on our github page",
+      "ja-JP": "KIPRのGithubで課題を開く、"
     },
     ", or": {
-      "en-US": ", or"
+      "en-US": ", or",
+      "ja-JP": "か"
     },
     "email KIPR.": {
-      "en-US": "email KIPR."
+      "en-US": "email KIPR.",
+      "ja-JP": "KIPRにメールしてくださいませんか。"
     },
     "Submit": {
-      "en-US": "Submit"
+      "en-US": "Submit",
+      "ja-JP": "出す"
     },
     "Feedback Success": {
-      "en-US": "Feedback Success"
+      "en-US": "Feedback Success",
+      "ja-JP": "フィードバック成功"
     },
     "Feedback successfully submitted!": {
-      "en-US": "Feedback successfully submitted!"
+      "en-US": "Feedback successfully submitted!",
+      "ja-JP": "フィードバック成功。"
     },
     "Thank you for helping improve the KIPR Simulator!": {
-      "en-US": "Thank you for helping improve the KIPR Simulator!"
+      "en-US": "Thank you for helping improve the KIPR Simulator!",
+      "ja-JP": "KIPRシミュレーターの改善してあげてありがとうございました！"
     },
     "Open World": {
-      "en-US": "Open World"
+      "en-US": "Open World",
+      "ja-JP": "世界を開く"
     },
     "Unknown": {
-      "en-US": "Unknown"
+      "en-US": "Unknown",
+      "ja-JP": "不明"
     },
     "Description: ": {
-      "en-US": "Description: "
+      "en-US": "Description: ",
+      "ja-JP": "説明："
     },
     "Author: ": {
-      "en-US": "Author: "
+      "en-US": "Author: ",
+      "ja-JP": "作家："
     },
     "Me": {
-      "en-US": "Me"
+      "en-US": "Me",
+      "ja-JP": "私"
     },
     "Select a scene to see more details": {
-      "en-US": "Select a scene to see more details"
+      "en-US": "Select a scene to see more details",
+      "ja-JP": "もっと情報が見たいなら、シーンを選んでください"
     },
     "Description": {
-      "en-US": "Description"
+      "en-US": "Description",
+      "ja-JP": "説明"
     },
     "New World": {
-      "en-US": "New World"
+      "en-US": "New World",
+      "ja-JP": "新しい世界"
     },
     "Create": {
-      "en-US": "Create"
+      "en-US": "Create",
+      "ja-JP": "作る"
     },
     "Delete %s?": {
-      "en-US": "Delete %s?"
+      "en-US": "Delete %s?",
+      "ja-JP": "削除 %s"
     },
     "Are you sure you want to delete %s?": {
-      "en-US": "Are you sure you want to delete %s?"
+      "en-US": "Are you sure you want to delete %s?",
+      "ja-JP": "本当に「%s」が削除したいですか？"
     },
     "Copy World": {
-      "en-US": "Copy World"
+      "en-US": "Copy World",
+      "ja-JP": "世界をコピーする"
     },
     "Error %d": {
-      "en-US": "Error %d"
+      "en-US": "Error %d",
+      "ja-JP": "エラー %d"
     },
     "Closing this dialog will take you back to the last well-known state.": {
-      "en-US": "Closing this dialog will take you back to the last well-known state."
+      "en-US": "Closing this dialog will take you back to the last well-known state.",
+      "ja-JP": "このダイアログを閉じると、最後によく知られていた状態に戻ります。"
     },
     "If this error persists, please submit feedback.": {
-      "en-US": "If this error persists, please submit feedback."
+      "en-US": "If this error persists, please submit feedback.",
+      "ja-JP": "エラーが長引いてると、フィードバックを出してください。"
     },
     "World Settings": {
-      "en-US": "World Settings"
+      "en-US": "World Settings",
+      "ja-JP": "世界制御"
     },
     "CHALLENGE": {
-      "en-US": "CHALLENGE"
+      "en-US": "CHALLENGE",
+      "ja-JP": "難題"
     },
     "Start": {
-      "en-US": "Start"
+      "en-US": "Start",
+      "ja-JP": "始め"
     },
     "Welcome to the KIPR Simulator!\n": {
-      "en-US": "Welcome to the KIPR Simulator!\n"
+      "en-US": "Welcome to the KIPR Simulator!\n",
+      "ja-JP": "KIPRシミュレーターへようこそ！\n"
     },
     "Compiling...\n": {
-      "en-US": "Compiling...\n"
+      "en-US": "Compiling...\n",
+      "ja-JP": "コンパイルしている...\n"
     },
     "Compilation succeeded with warnings.\n": {
-      "en-US": "Compilation succeeded with warnings.\n"
+      "en-US": "Compilation succeeded with warnings.\n",
+      "ja-JP": "コンパイルが成功けど、ワーニングがあります。\n"
     },
     "Compilation succeeded.\n": {
-      "en-US": "Compilation succeeded.\n"
+      "en-US": "Compilation succeeded.\n",
+      "ja-JP": "コンパイルが成功。\n"
     },
     "Compilation failed.\n": {
-      "en-US": "Compilation failed.\n"
+      "en-US": "Compilation failed.\n",
+      "ja-JP": "コンパイルが失敗。\n"
     },
     "Something went wrong during compilation.\n": {
-      "en-US": "Something went wrong during compilation.\n"
+      "en-US": "Something went wrong during compilation.\n",
+      "ja-JP": "コンパイル時に何かが間違ってしまった。\n"
     },
     "Compilation succeeded with warnings\n": {
-      "en-US": "Compilation succeeded with warnings\n"
+      "en-US": "Compilation succeeded with warnings\n",
+      "ja-JP": "コンパイルが成功けど、ワーニングがあります。\n"
     },
     "Compilation succeeded\n": {
-      "en-US": "Compilation succeeded\n"
+      "en-US": "Compilation succeeded\n",
+      "ja-JP": "コンパイルが成功。\n"
     },
     "Modules": {
-      "en-US": "Modules"
+      "en-US": "Modules",
+      "ja-JP": "モジュール"
     },
     "Functions": {
-      "en-US": "Functions"
+      "en-US": "Functions",
+      "ja-JP": "関数"
     },
     "Structures": {
-      "en-US": "Structures"
+      "en-US": "Structures",
+      "ja-JP": "構造"
     },
     "Enumerations": {
-      "en-US": "Enumerations"
+      "en-US": "Enumerations",
+      "ja-JP": "列挙型"
     },
     "Files": {
-      "en-US": "Files"
+      "en-US": "Files",
+      "ja-JP": "ファイル"
     },
     "Search...": {
-      "en-US": "Search..."
+      "en-US": "Search...",
+      "ja-JP": "検索"
     },
     "Detailed Description": {
-      "en-US": "Detailed Description"
+      "en-US": "Detailed Description",
+      "ja-JP": "詳しい説明"
     },
     "Parameters": {
-      "en-US": "Parameters"
+      "en-US": "Parameters",
+      "ja-JP": "パラメーター"
     },
     "Return Value": {
-      "en-US": "Return Value"
+      "en-US": "Return Value",
+      "ja-JP": "戻り値"
     },
     "Fields": {
-      "en-US": "Fields"
+      "en-US": "Fields",
+      "ja-JP": "フィールド"
     },
     "Volume": {
-      "en-US": "Volume"
+      "en-US": "Volume",
+      "ja-JP": "体積"
     },
     "RGB": {
-      "en-US": "RGB"
+      "en-US": "RGB",
+      "ja-JP": "RGB"
     },
     "Challenge": {
-      "en-US": "Challenge"
+      "en-US": "Challenge",
+      "ja-JP": "問題"
     },
     "Stop": {
-      "en-US": "Stop"
+      "en-US": "Stop",
+      "ja-JP": "止まる"
     },
     "Run": {
-      "en-US": "Run"
+      "en-US": "Run",
+      "ja-JP": "実行"
     },
     "and External Contributors": {
-      "en-US": "and External Contributors"
+      "en-US": "and External Contributors",
+      "ja-JP": "外部の寄稿者も"
     },
     "Visit our": {
-      "en-US": "Visit our"
+      "en-US": "Visit our",
+      "ja-JP": "見る"
+    },
+    "Science": {
+      "en-US": "Science",
+      "ja-JP": "科学"
+    },
+    "Technology": {
+      "en-US": "Technology",
+      "ja-JP": "技術"
+    },
+    "Engineering": {
+      "en-US": "Engineering",
+      "ja-JP": "工学"
+    },
+    "Arts": {
+      "en-US": "Arts",
+      "ja-JP": "人文科学"
+    },
+    "Mathematics": {
+      "en-US": "Mathematics",
+      "ja-JP": "数学"
+    },
+    "Test Assignment": {
+      "en-US": "Test Assignment",
+      "ja-JP": "デモ宿題"
+    },
+    "This is a test assignment.": {
+      "en-US": "This is a test assignment.",
+      "ja-JP": "これはデモ宿題です。"
+    },
+    "Educator notes": {
+      "en-US": "Educator notes",
+      "ja-JP": "先生のノート"
+    },
+    "Student notes": {
+      "en-US": "Student notes",
+      "ja-JP": "学生のノート"
+    },
+    "JBC Mat A": {
+      "en-US": "JBC Mat A",
+      "ja-JP": "JBCマットA"
+    },
+    "JBC Mat B": {
+      "en-US": "JBC Mat B",
+      "ja-JP": "JBCマットB"
+    },
+    "Circle %s": {
+      "en-US": "Circle %s",
+      "ja-JP": "円%s"
+    },
+    "JBC 0": {
+      "en-US": "JBC 0",
+      "ja-JP": "JBC 0"
+    },
+    "Junior Botball Challenge 0: Drive Straight": {
+      "en-US": "Junior Botball Challenge 0: Drive Straight",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ0：まっすぐ運転する"
+    },
+    "Not Start Box": {
+      "en-US": "Not Start Box",
+      "ja-JP": "始まるボックスじゃない"
+    },
+    "Start Box": {
+      "en-US": "Start Box",
+      "ja-JP": "始まるボックス"
+    },
+    "Line B": {
+      "en-US": "Line B",
+      "ja-JP": "ラインB"
+    },
+    "End Box": {
+      "en-US": "End Box",
+      "ja-JP": "終わるボックス"
+    },
+    "End of Mat": {
+      "en-US": "End of Mat",
+      "ja-JP": "マットの終わり"
+    },
+    "Right Side Can": {
+      "en-US": "Right Side Can",
+      "ja-JP": "右の缶"
+    },
+    "Top Side Can": {
+      "en-US": "Top Side Can",
+      "ja-JP": "上の缶"
+    },
+    "Left Side Can": {
+      "en-US": "Left Side Can",
+      "ja-JP": "左の缶"
+    },
+    "Click Instruction Box": {
+      "en-US": "Click Instruction Box",
+      "ja-JP": "指示ボックスをクリックして"
+    },
+    "Click Instruction 1 Box": {
+      "en-US": "Click Instruction 1 Box",
+      "ja-JP": "指示１ボックスをクリックして"
+    },
+    "Click Instruction 2 Box": {
+      "en-US": "Click Instruction 2 Box",
+      "ja-JP": "指示２ボックスをクリックして"
+    },
+    "Chosen Garage Box": {
+      "en-US": "Chosen Garage Box",
+      "ja-JP": "選んだ車庫"
+    },
+    "Green Garage Designator Box": {
+      "en-US": "Green Garage Designator Box",
+      "ja-JP": "緑の車庫ボックス"
+    },
+    "Yellow Garage Designator Box": {
+      "en-US": "Yellow Garage Designator Box",
+      "ja-JP": "黄の車庫ボックス"
+    },
+    "Blue Garage Designator Box": {
+      "en-US": "Blue Garage Designator Box",
+      "ja-JP": "青の車庫ボックス"
+    },
+    "Green Garage": {
+      "en-US": "Green Garage",
+      "ja-JP": "緑の車庫"
+    },
+    "Green Garage node": {
+      "en-US": "Green Garage node",
+      "ja-JP": "緑の車庫ノード"
+    },
+    "Yellow Garage node": {
+      "en-US": "Yellow Garage node",
+      "ja-JP": "黄の車庫ノード"
+    },
+    "Blue Garage node": {
+      "en-US": "Blue Garage node",
+      "ja-JP": "青の車庫ノード"
+    },
+    "Green Garage Right Boundary node": {
+      "en-US": "Green Garage Right Boundary node",
+      "ja-JP": "緑の車庫右境ノード"
+    },
+    "Green Garage Left Boundary node": {
+      "en-US": "Green Garage Left Boundary node",
+      "ja-JP": "緑の車庫左境ノード"
+    },
+    "Green Garage Top Boundary node": {
+      "en-US": "Green Garage Top Boundary node",
+      "ja-JP": "緑の車庫上境ノード"
+    },
+    "Blue Garage": {
+      "en-US": "Blue Garage",
+      "ja-JP": "青の車庫"
+    },
+    "Blue Garage Right Boundary node": {
+      "en-US": "Blue Garage Right Boundary node",
+      "ja-JP": "青の車庫右境ノード"
+    },
+    "Blue Garage Left Boundary node": {
+      "en-US": "Blue Garage Left Boundary node",
+      "ja-JP": "青の車庫左境ノード"
+    },
+    "Blue Garage Top Boundary node": {
+      "en-US": "Blue Garage Top Boundary node",
+      "ja-JP": "青の車庫上境ノード"
+    },
+    "Yellow Garage": {
+      "en-US": "Yellow Garage",
+      "ja-JP": "黄の車庫"
+    },
+    "Yellow Garage Right Boundary node": {
+      "en-US": "Yellow Garage Right Boundary node",
+      "ja-JP": "黄の車庫右境ノード"
+    },
+    "Yellow Garage Left Boundary node": {
+      "en-US": "Yellow Garage Left Boundary node",
+      "ja-JP": "黄の車庫左境ノード"
+    },
+    "Yellow Garage Top Boundary node": {
+      "en-US": "Yellow Garage Top Boundary node",
+      "ja-JP": "黄の車庫上境ノード"
+    },
+    "Yellow Garage Marker 1": {
+      "en-US": "Yellow Garage Marker 1",
+      "ja-JP": "黄の車庫標識１"
+    },
+    "Yellow Garage Marker 2": {
+      "en-US": "Yellow Garage Marker 2",
+      "ja-JP": "黄の車庫標識２"
+    },
+    "Blue Garage Marker 1": {
+      "en-US": "Blue Garage Marker 1",
+      "ja-JP": "青の車庫標識１"
+    },
+    "Blue Garage Marker 2": {
+      "en-US": "Blue Garage Marker 2",
+      "ja-JP": "青の車庫標識２"
+    },
+    "Green Garage Marker 1": {
+      "en-US": "Green Garage Marker 1",
+      "ja-JP": "緑の車庫標識１"
+    },
+    "Green Garage Marker 2": {
+      "en-US": "Green Garage Marker 2",
+      "ja-JP": "緑の車庫標識２"
+    },
+    "Junior Botball Challenge 4: Serpentine": {
+      "en-US": "Junior Botball Challenge 4: Serpentine",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ4：延々"
+    },
+    "Junior Botball Challenge 5: Odd Numbers": {
+      "en-US": "Junior Botball Challenge 5: Odd Numbers",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ5：奇数"
+    },
+    "Junior Botball Challenge 6: Figure Eight": {
+      "en-US": "Junior Botball Challenge 6: Figure Eight",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ6：８の字"
+    },
+    "Between cans 4 and 9": {
+      "en-US": "Between cans 4 and 9",
+      "ja-JP": "缶４と缶９の間"
+    },
+    "Top side of can 9": {
+      "en-US": "Top side of can 9",
+      "ja-JP": "缶９の上"
+    },
+    "Junior Botball Challenge 7: Load 'Em Up": {
+      "en-US": "Junior Botball Challenge 7: Load 'Em Up",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 7：積み込もう"
+    },
+    "Junior Botball Challenge 8: Bulldozer Mania": {
+      "en-US": "Junior Botball Challenge 8: Bulldozer Mania",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 8：ブルドーザー・マニア"
+    },
+    "Junior Botball Challenge 9: Cover Your Bases": {
+      "en-US": "Junior Botball Challenge 9: Cover Your Bases",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 9：ベースを網羅する"
+    },
+    "Junior Botball Challenge 10: Chopped": {
+      "en-US": "Junior Botball Challenge 10: Chopped",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 10：チャップ"
+    },
+    "JBC 11": {
+      "en-US": "JBC 11",
+      "ja-JP": "JBC 11"
+    },
+    "Junior Botball Challenge 11: Making Waves": {
+      "en-US": "Junior Botball Challenge 11: Making Waves",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 11：波風を立てる"
+    },
+    "Junior Botball Challenge 12: Add it Up": {
+      "en-US": "Junior Botball Challenge 12: Add it Up",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 12：足し算する"
+    },
+    "Circle 1": {
+      "en-US": "Circle 1",
+      "ja-JP": "えん１"
+    },
+    "JBC 14": {
+      "en-US": "JBC 14",
+      "ja-JP": "JBC 14"
+    },
+    "Junior Botball Challenge 14: Dance Party": {
+      "en-US": "Junior Botball Challenge 14: Dance Party",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 14：ダンスパーティー"
+    },
+    "JBC 15": {
+      "en-US": "JBC 15",
+      "ja-JP": "JBC 15"
+    },
+    "Junior Botball Challenge 15: Go Fetch": {
+      "en-US": "Junior Botball Challenge 15: Go Fetch",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 15：ダンスパーティー"
+    },
+    "JBC 16": {
+      "en-US": "JBC 16",
+      "ja-JP": "JBC 16"
+    },
+    "Junior Botball Challenge 16: Pick 'Em Up": {
+      "en-US": "Junior Botball Challenge 16: Pick 'Em Up",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 16：拾う"
+    },
+    "Junior Botball Challenge 17: Mountain Rescue": {
+      "en-US": "Junior Botball Challenge 17: Mountain Rescue",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 17：救助"
+    },
+    "JBC 18": {
+      "en-US": "JBC 18",
+      "ja-JP": "JBC 18"
+    },
+    "Junior Botball Challenge 18: Stackerz": {
+      "en-US": "Junior Botball Challenge 18: Stackerz",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 18：積む"
+    },
+    "Bottom of can5": {
+      "en-US": "Bottom of can5",
+      "ja-JP": "缶５の下"
+    },
+    "Top of can7": {
+      "en-US": "Top of can7",
+      "ja-JP": "缶７の上"
+    },
+    "Bottom of can7": {
+      "en-US": "Bottom of can7",
+      "ja-JP": "缶７の下"
+    },
+    "Top of can5": {
+      "en-US": "Top of can5",
+      "ja-JP": "缶５の上"
+    },
+    "Junior Botball Challenge 19: Bump": {
+      "en-US": "Junior Botball Challenge 19: Bump",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 18：ドンドン"
+    },
+    "Junior Botball Challenge 20: A'mazing": {
+      "en-US": "Junior Botball Challenge 20: A'mazing",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 18：迷ろう獪"
+    },
+    "Paper Ream 3": {
+      "en-US": "Paper Ream 3",
+      "ja-JP": "用紙リーム３"
+    },
+    "Paper Ream 4": {
+      "en-US": "Paper Ream 4",
+      "ja-JP": "用紙リーム４"
+    },
+    "Junior Botball Challenge 21: Proximity": {
+      "en-US": "Junior Botball Challenge 21: Proximity",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 21：間近"
+    },
+    "Ream Front Boundary": {
+      "en-US": "Ream Front Boundary",
+      "ja-JP": "リーム前部境"
+    },
+    "Junior Botball Challenge 22: Search and Rescue": {
+      "en-US": "Junior Botball Challenge 22: Search and Rescue",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 21：捜索救難"
+    },
+    "JBC 23": {
+      "en-US": "JBC 23",
+      "ja-JP": "JBC 23"
+    },
+    "Junior Botball Challenge 23: Find the Black Line": {
+      "en-US": "Junior Botball Challenge 23: Find the Black Line",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 21：黒い一線を探す"
+    },
+    "Circle": {
+      "en-US": "Circle",
+      "ja-JP": "円"
+    },
+    "JBC 24": {
+      "en-US": "JBC 24",
+      "ja-JP": "JBC 24"
+    },
+    "Junior Botball Challenge 24: Walk the Line": {
+      "en-US": "Junior Botball Challenge 24: Walk the Line",
+      "ja-JP": "ジュニア・ボットボール・チャレンジ 21：一線を歩く"
+    },
+    "Finish Line": {
+      "en-US": "Finish Line",
+      "ja-JP": "ゴール"
+    },
+    "Checkpoint 1": {
+      "en-US": "Checkpoint 1",
+      "ja-JP": "関門１"
+    },
+    "Checkpoint 3": {
+      "en-US": "Checkpoint 3",
+      "ja-JP": "関門３"
+    },
+    "Checkpoint 2": {
+      "en-US": "Checkpoint 2",
+      "ja-JP": "関門２"
+    },
+    "Base Scene - Moon Surface": {
+      "en-US": "Base Scene - Moon Surface",
+      "ja-JP": "基盤シーン-- 月面"
+    },
+    "A base scene. Intended to be augmented to create full Moon scenes": {
+      "en-US": "A base scene. Intended to be augmented to create full Moon scenes",
+      "ja-JP": "基盤シーンです。完全な月シーンを作るために補強されることを意図しています。"
+    },
+    "1.1.1 Ground": {
+      "en-US": "1.1.1 Ground",
+      "ja-JP": "地"
+    },
+    "1.1.6-8 Start Area": {
+      "en-US": "1.1.6-8 Start Area",
+      "ja-JP": "スタート場所"
+    },
+    "1.1.2-4 Sky": {
+      "en-US": "1.1.2-4 Sky",
+      "ja-JP": "空"
+    },
+    "Moon Sandbox": {
+      "en-US": "Moon Sandbox",
+      "ja-JP": "月の砂場"
+    },
+    "Lunar sandbox. Currently supports 4 types of rocks. Demo Ready.": {
+      "en-US": "Lunar sandbox. Currently supports 4 types of rocks. Demo Ready.",
+      "ja-JP": "月の砂場です。石４型があります。"
+    },
+    "Basalt Rock": {
+      "en-US": "Basalt Rock",
+      "ja-JP": "玄武岩"
+    },
+    "Anorthosite Rock": {
+      "en-US": "Anorthosite Rock",
+      "ja-JP": "斜長岩"
+    },
+    "Breccia Rock": {
+      "en-US": "Breccia Rock",
+      "ja-JP": "角礫岩"
+    },
+    "Meteorite Rock": {
+      "en-US": "Meteorite Rock",
+      "ja-JP": "隕石"
+    },
+    "Life Science Pack": {
+      "en-US": "Life Science Pack",
+      "ja-JP": "生命科学一式"
+    },
+    "Radiation Science Pack - High": {
+      "en-US": "Radiation Science Pack - High",
+      "ja-JP": "放射一式"
+    },
+    "Science Pad": {
+      "en-US": "Science Pad",
+      "ja-JP": "科学部屋"
+    },
+    "Container": {
+      "en-US": "Container",
+      "ja-JP": "科学部屋"
+    },
+    "Space Bot Guy": {
+      "en-US": "Space Bot Guy",
+      "ja-JP": "空間Botguy"
+    },
+    "Solar Panel": {
+      "en-US": "Solar Panel",
+      "ja-JP": "ソーラーパネル"
+    },
+    "Walkway": {
+      "en-US": "Walkway",
+      "ja-JP": "歩道"
+    },
+    "Comms Tower": {
+      "en-US": "Comms Tower",
+      "ja-JP": "電波塔"
+    },
+    "Human Living Habitat": {
+      "en-US": "Human Living Habitat",
+      "ja-JP": "人間人生施設"
+    },
+    "Human Research Habitat": {
+      "en-US": "Human Research Habitat",
+      "ja-JP": "人間研究施設"
+    },
+    "Human Control/Comms Station Habitat": {
+      "en-US": "Human Control/Comms Station Habitat",
+      "ja-JP": "コミュニケーション施設"
+    },
+    "Life Indicator Light": {
+      "en-US": "Life Indicator Light",
+      "ja-JP": "生命の表示光"
+    },
+    "No Life Indicator Light": {
+      "en-US": "No Life Indicator Light",
+      "ja-JP": "不生命の表示光"
+    },
+    "2025 Game Table": {
+      "en-US": "2025 Game Table",
+      "ja-JP": "2025ゲームテーブル"
+    },
+    "Base Scene - 2025 Botball Game Table": {
+      "en-US": "Base Scene - 2025 Botball Game Table",
+      "ja-JP": "基盤シーン-- 2025 Botball ゲームテーブル"
+    },
+    "A base scene. Intended to be augmented to create the full game table": {
+      "en-US": "A base scene. Intended to be augmented to create the full game table",
+      "ja-JP": "基盤シーンです。完全なゲームテーブルシーンを作るために補強されることを意図しています。"
+    },
+    "Fry floor": {
+      "en-US": "Fry floor",
+      "ja-JP": "フライドポテト転落させるもの"
+    },
+    "Potato detector box": {
+      "en-US": "Potato detector box",
+      "ja-JP": "ポテト・デテクター・ボックス"
+    },
+    "Hamburger": {
+      "en-US": "Hamburger",
+      "ja-JP": "ハンバーガー"
+    },
+    "Hotdog": {
+      "en-US": "Hotdog",
+      "ja-JP": "ホットドッグ"
+    },
+    "Taco": {
+      "en-US": "Taco",
+      "ja-JP": "タコス"
+    },
+    "Pink Cup": {
+      "en-US": "Pink Cup",
+      "ja-JP": "ピンクカップ"
+    },
+    "Blue Cup": {
+      "en-US": "Blue Cup",
+      "ja-JP": "青カップ"
+    },
+    "Green Cup": {
+      "en-US": "Green Cup",
+      "ja-JP": "緑カップ"
+    },
+    "Blue pom back #${i}": {
+      "en-US": "Blue pom back #${i}",
+      "ja-JP": "後ろの青ポン #${i}"
+    },
+    "Blue pom front #${i}": {
+      "en-US": "Blue pom front #${i}",
+      "ja-JP": "前の青ポン #${i}"
+    },
+    "Bottle #${i}": {
+      "en-US": "Bottle #${i}",
+      "ja-JP": "ボトル #${i}"
+    },
+    "Orange pom #${i}": {
+      "en-US": "Orange pom #${i}",
+      "ja-JP": "オレンジの青ポン #${i}"
+    },
+    "Red pom #${i}": {
+      "en-US": "Red pom #${i}",
+      "ja-JP": "赤の青ポン #${i}"
+    },
+    "Yellow pom #${i}": {
+      "en-US": "Yellow pom #${i}",
+      "ja-JP": "黄の青ポン #${i}"
+    },
+    "Random pom #${i}": {
+      "en-US": "Random pom #${i}",
+      "ja-JP": "出鱈目の青ポン #${i}"
+    },
+    "Tomato": {
+      "en-US": "Tomato",
+      "ja-JP": "トマト"
+    },
+    "Pickle": {
+      "en-US": "Pickle",
+      "ja-JP": "きゅうりピクルス"
+    },
+    "Potato": {
+      "en-US": "Potato",
+      "ja-JP": "ポテト"
+    },
+    "Fry #${i}": {
+      "en-US": "Fry #${i}",
+      "ja-JP": "フライドポテト #${i}"
+    },
+    "Tray #${i}": {
+      "en-US": "Tray #${i}",
+      "ja-JP": "トレー ${i}"
+    },
+    "Botguy": {
+      "en-US": "Botguy",
+      "ja-JP": "Botguy"
+    },
+    "Blue drink #${i}": {
+      "en-US": "Blue drink #${i}",
+      "ja-JP": "青の飲み物 ${i}"
+    },
+    "Green drink #${i}": {
+      "en-US": "Green drink #${i}",
+      "ja-JP": "緑の飲み物 ${i}"
+    },
+    "Pink drink #${i}": {
+      "en-US": "Pink drink #${i}",
+      "ja-JP": "ピンクの飲み物 ${i}"
+    },
+    "2025 Botball game table sandbox": {
+      "en-US": "2025 Botball game table sandbox",
+      "ja-JP": "2025 Botball ゲームテーブル砂場"
+    },
+    "IRobot Create": {
+      "en-US": "IRobot Create"
+    },
+    "Leaderboard": {
+      "en-US": "Leaderboard",
+      "ja-JP": "ランキング"
+    },
+    "See the current challenge leaderboard.": {
+      "en-US": "See the current challenge leaderboard.",
+      "ja-JP": "問題のランキングを見ます。"
+    },
+    "The Challenge System": {
+      "en-US": "The Challenge System",
+      "ja-JP": "チャレンジのシステム"
+    },
+    "Learn how to use the challenge system": {
+      "en-US": "Learn how to use the challenge system",
+      "ja-JP": "チャレンジのシステムを習います"
+    },
+    "MatB": {
+      "en-US": "MatB",
+      "ja-JP": "マットB"
+    },
+    "MatA": {
+      "en-US": "MatA",
+      "ja-JP": "マットA"
+    },
+    "Communication Tower": {
+      "en-US": "Communication Tower",
+      "ja-JP": "コミュニケーション・タワー"
+    },
+    "Hab": {
+      "en-US": "Hab",
+      "ja-JP": "家"
+    },
+    "Radiation Science Pack": {
+      "en-US": "Radiation Science Pack",
+      "ja-JP": "放射一式"
+    },
+    "Communication Tower 2": {
+      "en-US": "Communication Tower 2",
+      "ja-JP": "コミュニケーション・タワー２"
+    },
+    "Hab 2": {
+      "en-US": "Hab 2",
+      "ja-JP": "家２"
+    },
+    "BotGuy Astronaut": {
+      "en-US": "BotGuy Astronaut",
+      "ja-JP": "Botguy宇宙飛行士"
+    },
+    "2025 Botball Game Table": {
+      "en-US": "2025 Botball Game Table",
+      "ja-JP": "2025 Botball ゲームテーブル"
+    },
+    "Blue Drink": {
+      "en-US": "Blue Drink",
+      "ja-JP": "青飲み物"
+    },
+    "Green Drink": {
+      "en-US": "Green Drink",
+      "ja-JP": "緑飲み物"
+    },
+    "Pink Drink": {
+      "en-US": "Pink Drink",
+      "ja-JP": "ピンク飲み物"
+    },
+    "Blue Pom (Ice Cube)": {
+      "en-US": "Blue Pom (Ice Cube)",
+      "ja-JP": "青ポン（角氷）"
+    },
+    "Orange Pom (Hot Sauce)": {
+      "en-US": "Orange Pom (Hot Sauce)",
+      "ja-JP": "オレンジポン（チリソース）"
+    },
+    "Red Pom (Ketchup)": {
+      "en-US": "Red Pom (Ketchup)",
+      "ja-JP": "赤ポン（ケチャップ）"
+    },
+    "Yellow Pom (Mustard)": {
+      "en-US": "Yellow Pom (Mustard)",
+      "ja-JP": "黄ポン（マスタード）"
+    },
+    "French Fry": {
+      "en-US": "French Fry",
+      "ja-JP": "フライドポテト"
+    },
+    "Bottle": {
+      "en-US": "Bottle",
+      "ja-JP": "ボトル"
+    },
+    "Tray": {
+      "en-US": "Tray",
+      "ja-JP": "トレー"
+    },
+    "Living Habitat": {
+      "en-US": "Living Habitat",
+      "ja-JP": "人生施設"
+    },
+    "Research Habitat": {
+      "en-US": "Research Habitat",
+      "ja-JP": "研究施設"
+    },
+    "Controls Habitat": {
+      "en-US": "Controls Habitat",
+      "ja-JP": "コントロールズハビタット"
+    },
+    "Moon Rock Container": {
+      "en-US": "Moon Rock Container",
+      "ja-JP": "月の石の箱"
+    },
+    "Radiation Science Pack - Low": {
+      "en-US": "Radiation Science Pack - Low",
+      "ja-JP": "放射一式"
+    },
+    "Space Base": {
+      "en-US": "Space Base",
+      "ja-JP": "月面基地"
+    },
+    "Botball": {
+      "en-US": "Botball",
+      "ja-JP": "Botball"
+    },
+    "JBC Pieces": {
+      "en-US": "JBC Pieces",
+      "ja-JP": "JBC物"
+    },
+    "Moon Rock": {
+      "en-US": "Moon Rock",
+      "ja-JP": "月の石"
+    },
+    "All": {
+      "en-US": "All",
+      "ja-JP": "全部"
+    },
+    "Basalt is an aphanitic (fine-grained) extrusive igneous rock formed from the rapid cooling of low-viscosity lava rich in magnesium and iron (mafic lava) exposed at or very near the surface of a rocky planet or moon.": {
+      "en-US": "Basalt is an aphanitic (fine-grained) extrusive igneous rock formed from the rapid cooling of low-viscosity lava rich in magnesium and iron (mafic lava) exposed at or very near the surface of a rocky planet or moon.",
+      "ja-JP": "玄武岩というのは目の細かい火成岩。惑星か衛星の表で早く冷たいになる鉄とマグネシウムが多い溶岩（マフィック溶岩）で作る物です。"
+    },
+    "Anorthosite is a phaneritic, intrusive igneous rock characterized by its composition: mostly plagioclase feldspar (90–100%), with a minimal mafic component (0–10%).": {
+      "en-US": "Anorthosite is a phaneritic, intrusive igneous rock characterized by its composition: mostly plagioclase feldspar (90–100%), with a minimal mafic component (0–10%).",
+      "ja-JP": "斜長岩というのはファネリティックと貫入と火成石です。90〜100％斜長石と０〜10％マフィック溶岩で作る物です。"
+    },
+    "Breccia is a rock composed of large angular broken fragments of minerals or rocks cemented together by a fine-grained matrix.": {
+      "en-US": "Breccia is a rock composed of large angular broken fragments of minerals or rocks cemented together by a fine-grained matrix.",
+      "ja-JP": "角礫岩というのは鉱物の角破片が細かい粒状の母岩によって固められた岩石で作る岩石です。"
+    },
+    "Meteorite is a solid piece of debris from an object, such as a comet, asteroid, or meteoroid, that originates in outer space and survives its passage through the atmosphere to reach the surface of a planet or moon.": {
+      "en-US": "Meteorite is a solid piece of debris from an object, such as a comet, asteroid, or meteoroid, that originates in outer space and survives its passage through the atmosphere to reach the surface of a planet or moon.",
+      "ja-JP": "隕石というのは宇宙空間彗星か小惑星か流星物質から来て、大気で惑星か衛星に固体の瓦礫作る物です。"
+    },
+    "Description of the object": {
+      "en-US": "Description of the object",
+      "ja-JP": "オブジェクトの説明"
+    },
+    "Surface Text": {
+      "en-US": "Surface Text",
+      "ja-JP": "表面テキスト"
+    },
+    "The current scene does not have a challenge available": {
+      "en-US": "The current scene does not have a challenge available",
+      "ja-JP": "このシーンはチャレンジがありません"
+    },
+    "Start Challenge": {
+      "en-US": "Start Challenge",
+      "ja-JP": "チャレンジを始める"
+    },
+    "your current work": {
+      "en-US": "your current work",
+      "ja-JP": "現行の作業"
+    },
+    "Failed to load challenge": {
+      "en-US": "Failed to load challenge",
+      "ja-JP": "チャレンジをロードに失敗"
+    },
+    "Search": {
+      "en-US": "Search",
+      "ja-JP": "探索"
+    },
+    "Search Filters": {
+      "en-US": "Search Filters",
+      "ja-JP": "探索フィルター"
+    },
+    "Is standards aligned": {
+      "en-US": "Is standards aligned",
+      "ja-JP": "教育の標準規格に準拠しています"
+    },
+    "Standards": {
+      "en-US": "Standards",
+      "ja-JP": "標準規格"
+    },
+    "Subject": {
+      "en-US": "Subject",
+      "ja-JP": "科目"
+    },
+    "Grade Level": {
+      "en-US": "Grade Level",
+      "ja-JP": "年生"
+    },
+    "Grade Levels: %s": {
+      "en-US": "Grade Levels: %s",
+      "ja-JP": "%s 年生"
+    },
+    "Standard: %s": {
+      "en-US": "Standard: %s",
+      "ja-JP": "標準規格：%s"
+    },
+    "Subject: %s": {
+      "en-US": "Subject: %s",
+      "ja-JP": "科目：%s"
+    },
+    "U.S. Std.": {
+      "en-US": "U.S. Std.",
+      "ja-JP": "アメリカの標準規格"
+    },
+    "Curriculum": {
+      "en-US": "Curriculum",
+      "ja-JP": "課程"
+    },
+    "My Assignments": {
+      "en-US": "My Assignments",
+      "ja-JP": "私の宿題"
+    },
+    "Scratch Variables": {
+      "en-US": "Scratch Variables",
+      "ja-JP": "Scratchの変数"
     }
   },
   "Volume (box) in the 3D scene": {
     "Volume": {
-      "en-US": "Volume"
+      "en-US": "Volume",
+      "ja-JP": "変数"
     }
   },
   "Red, Green, Blue": {
     "RGB": {
-      "en-US": "RGB"
+      "en-US": "RGB",
+      "ja-JP": "RGB"
     }
   },
   "Computer text command line (e.g., DOS)": {
     "Console": {
-      "en-US": "Console"
+      "en-US": "Console",
+      "ja-JP": "コンソール"
     }
   },
   "A predefined task for the user to complete": {
     "Challenge": {
-      "en-US": "Challenge"
+      "en-US": "Challenge",
+      "ja-JP": "チャレンジ"
     }
   },
   "Terminate program execution": {
     "Stop": {
-      "en-US": "Stop"
+      "en-US": "Stop",
+      "ja-JP": "止まる"
     }
   },
   "Begin program execution": {
     "Run": {
-      "en-US": "Run"
+      "en-US": "Run",
+      "ja-JP": "実行"
     }
   },
   "Part of copyright notice, after KIPR is listed": {
     "and External Contributors": {
-      "en-US": "and External Contributors"
+      "en-US": "and External Contributors",
+      "ja-JP": "外部の寄稿者も"
     }
   },
   "URL link to github repository follows": {
     "Visit our": {
-      "en-US": "Visit our"
+      "en-US": "Visit our",
+      "ja-JP": "見る"
     }
   },
   "Rotation order": {
     "XYZ": {
-      "en-US": "XYZ"
+      "en-US": "XYZ",
+      "ja-JP": "XYZ"
     },
     "YZX": {
-      "en-US": "YZX"
+      "en-US": "YZX",
+      "ja-JP": "YZX"
     },
     "ZXY": {
-      "en-US": "ZXY"
+      "en-US": "ZXY",
+      "ja-JP": "ZXY"
     },
     "XZY": {
-      "en-US": "XZY"
+      "en-US": "XZY",
+      "ja-JP": "XZY"
     },
     "YXZ": {
-      "en-US": "YXZ"
+      "en-US": "YXZ",
+      "ja-JP": "YXZ"
     },
     "ZYX": {
-      "en-US": "ZYX"
+      "en-US": "ZYX",
+      "ja-JP": "ZYX"
+    }
+  },
+  "Student grade level": {
+    "Kindergarten": {
+      "en-US": "Kindergarten",
+      "ja-JP": "幼稚園"
+    },
+    "1st grade": {
+      "en-US": "1st grade",
+      "ja-JP": "小学校１年生"
+    },
+    "2nd grade": {
+      "en-US": "2nd grade",
+      "ja-JP": "小学校２年生"
+    },
+    "3rd grade": {
+      "en-US": "3rd grade",
+      "ja-JP": "小学校３年生"
+    },
+    "4th grade": {
+      "en-US": "4th grade",
+      "ja-JP": "小学校４年生"
+    },
+    "5th grade": {
+      "en-US": "5th grade",
+      "ja-JP": "小学校５年生"
+    },
+    "6th grade": {
+      "en-US": "6th grade",
+      "ja-JP": "小学校６年生"
+    },
+    "7th grade": {
+      "en-US": "7th grade",
+      "ja-JP": "中学校１年生"
+    },
+    "8th grade": {
+      "en-US": "8th grade",
+      "ja-JP": "中学校２年生"
+    },
+    "9th grade": {
+      "en-US": "9th grade",
+      "ja-JP": "中学校３年生"
+    },
+    "10th grade": {
+      "en-US": "10th grade",
+      "ja-JP": "高校１年生"
+    },
+    "11th grade": {
+      "en-US": "11th grade",
+      "ja-JP": "高校２年生"
+    },
+    "12th grade": {
+      "en-US": "12th grade",
+      "ja-JP": "高校３年生"
+    },
+    "1st": {
+      "en-US": "1st",
+      "ja-JP": "小学校１年生"
+    },
+    "2nd": {
+      "en-US": "2nd",
+      "ja-JP": "小学校２年生"
+    },
+    "3rd": {
+      "en-US": "3rd",
+      "ja-JP": "小学校３年生"
+    },
+    "4th": {
+      "en-US": "4th",
+      "ja-JP": "小学校４年生"
+    },
+    "5th": {
+      "en-US": "5th",
+      "ja-JP": "小学校５年生"
+    },
+    "6th": {
+      "en-US": "6th",
+      "ja-JP": "小学校６年生"
+    },
+    "7th": {
+      "en-US": "7th",
+      "ja-JP": "中学校１年生"
+    },
+    "8th": {
+      "en-US": "8th",
+      "ja-JP": "中学校２年生"
+    },
+    "9th": {
+      "en-US": "9th",
+      "ja-JP": "中学校３年生"
+    },
+    "10th": {
+      "en-US": "10th",
+      "ja-JP": "高校１年生"
+    },
+    "11th": {
+      "en-US": "11th",
+      "ja-JP": "高校２年生"
+    },
+    "12th": {
+      "en-US": "12th",
+      "ja-JP": "高校３年生"
+    }
+  },
+  "Student grade level; Kingergarten": {
+    "K": {
+      "en-US": "K",
+      "ja-JP": "幼稚園"
+    }
+  },
+  "RotationwUnits order": {
+    "XYZ": {
+      "en-US": "XYZ",
+      "ja-JP": "XYZ"
+    },
+    "YZX": {
+      "en-US": "YZX",
+      "ja-JP": "YZX"
+    },
+    "ZXY": {
+      "en-US": "ZXY",
+      "ja-JP": "ZXY"
+    },
+    "XZY": {
+      "en-US": "XZY",
+      "ja-JP": "XZY"
+    },
+    "YXZ": {
+      "en-US": "YXZ",
+      "ja-JP": "YXZ"
+    },
+    "ZYX": {
+      "en-US": "ZYX",
+      "ja-JP": "ZYX"
     }
   }
 }

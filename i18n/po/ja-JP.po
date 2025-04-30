@@ -2,79 +2,79 @@ msgid ""
 msgstr "Content-Type: text/plain\n"
 
 msgid "Robot"
-msgstr ""
+msgstr "ロボット"
 
 msgid "Base Scene - Surface A"
-msgstr ""
+msgstr "基盤シーン - 表面A"
 
 msgid ""
 "A base scene using Surface A. Intended to be augmented to create full JBC "
 "scenes"
-msgstr ""
+msgstr "表面Aを使う基盤です。完全なJBCシーンを作るために補強されることを意図しています。"
 
 msgid "JBC Surface A"
-msgstr ""
+msgstr "JBC表面A"
 
 msgid "Ground"
-msgstr ""
+msgstr "地"
 
 msgid "Light"
-msgstr ""
+msgstr "光"
 
 msgid "Base Scene - Surface B"
-msgstr ""
+msgstr "基盤シーン - 表面A"
 
 msgid ""
 "A base scene using Surface B. Intended to be augmented to create full JBC "
 "scenes"
-msgstr ""
+msgstr "表面Bを使う基盤です。完全なJBCシーンを作るために補強されることを意図しています。"
 
 msgid "JBC Surface B"
-msgstr ""
+msgstr "JBC表面A"
 
 msgid "Can %s"
-msgstr ""
+msgstr "缶%s"
 
 msgid "JBC Sandbox A"
-msgstr ""
+msgstr "JBC砂場A"
 
 msgid ""
 "Junior Botball Challenge Sandbox on Mat A. All cans 1-12 are available by "
 "default."
-msgstr ""
+msgstr "マットAのジュニア・ボットボール・チャレンジ砂場です。1～12缶のすべての缶が使用可能です。"
 
 msgid "Paper Ream 1"
-msgstr ""
+msgstr "用紙リーム１"
 
 msgid "Paper Ream 2"
-msgstr ""
+msgstr "用紙リーム２"
 
 msgid "JBC Sandbox B"
-msgstr ""
+msgstr "JBC砂場B"
 
 msgid "Junior Botball Challenge Sandbox on Mat B."
-msgstr ""
+msgstr "マットBのジュニア・ボットボール・チャレンジ砂場です。"
 
 msgid "JBC 1"
-msgstr ""
+msgstr "JBC 1"
 
 msgid "Junior Botball Challenge 1: Tag, You're It!"
-msgstr ""
+msgstr "ジュニア・ボットボール・チャレンジ 1：鬼ごっこ！"
 
 msgid "JBC 2"
-msgstr ""
+msgstr "JBC 2"
 
 msgid "Junior Botball Challenge 2: Ring Around the Can"
-msgstr ""
+msgstr "ジュニア・ボットボール・チャレンジ 2：缶の周りにリング"
 
 msgid "JBC 2B"
-msgstr ""
+msgstr "JBC 2B"
 
 msgid "Junior Botball Challenge 2B: Ring Around the Can, Sr."
-msgstr ""
+msgstr "ジュニア・ボットボール・チャレンジ 2：缶の周りにリング続く"
 
 msgid "JBC 2C"
-msgstr ""
+msgstr "JBC 2C"
 
 msgid "Junior Botball Challenge 2C: Back It Up"
 msgstr ""
@@ -86,10 +86,10 @@ msgid "Junior Botball Challenge 2D: Ring Around the Can and Back It Up"
 msgstr ""
 
 msgid "JBC 3"
-msgstr ""
+msgstr "JBC 3"
 
 msgid "Junior Botball Challenge 3: Precision Parking"
-msgstr ""
+msgstr "ジュニア・ボットボール・チャレンジ 3：精度駐車"
 
 msgid "JBC 3B"
 msgstr ""
@@ -104,10 +104,10 @@ msgid "Junior Botball Challenge 3C: Quick Get Away!"
 msgstr ""
 
 msgid "JBC 4"
-msgstr ""
+msgstr "JBC 4"
 
 msgid "Junior Botball Challenge 4: Figure Eight"
-msgstr ""
+msgstr "ジュニア・ボットボール・チャレンジ 4：８の字"
 
 msgid "JBC 4B"
 msgstr ""
@@ -116,10 +116,10 @@ msgid "Junior Botball Challenge 4B: Barrel Racing"
 msgstr ""
 
 msgid "JBC 5"
-msgstr ""
+msgstr "JBC 5"
 
 msgid "Junior Botball Challenge 5: Dance Party"
-msgstr ""
+msgstr "ジュニア・ボットボール・チャレンジ 5：ダンスパーティー"
 
 msgid "JBC 5B"
 msgstr ""
@@ -134,10 +134,10 @@ msgid "Junior Botball Challenge 5C: Synchronized Dancing"
 msgstr ""
 
 msgid "JBC 6"
-msgstr ""
+msgstr "JBC 6"
 
 msgid "Junior Botball Challenge 6: Load 'Em Up"
-msgstr ""
+msgstr "ジュニア・ボットボール・チャレンジ 6：積み込もう"
 
 msgid "JBC 6B"
 msgstr ""
@@ -152,22 +152,22 @@ msgid "Junior Botball Challenge 6C: Empty the Garage"
 msgstr ""
 
 msgid "Circle 2"
-msgstr ""
+msgstr "円２"
 
 msgid "Circle 9"
-msgstr ""
+msgstr "円９"
 
 msgid "Circle 10"
-msgstr ""
+msgstr "円10"
 
 msgid "Mat Surface"
-msgstr ""
+msgstr "マットの表面"
 
 msgid "JBC 7"
-msgstr ""
+msgstr "JBC 7"
 
 msgid "Junior Botball Challenge 7: Bulldozer Mania"
-msgstr ""
+msgstr "ジュニア・ボットボール・チャレンジ 7：ブルドーザー・マニア"
 
 msgid "JBC 7B"
 msgstr ""
@@ -176,10 +176,10 @@ msgid "Junior Botball Challenge 7B: Cover Your Bases"
 msgstr ""
 
 msgid "JBC 8"
-msgstr ""
+msgstr "JBC 8"
 
 msgid "Junior Botball Challenge 8: Serpentine"
-msgstr ""
+msgstr "ジュニア・ボットボール・チャレンジ 8：延々"
 
 msgid "JBC 8B"
 msgstr ""
@@ -188,10 +188,10 @@ msgid "Junior Botball Challenge 8B: Serpentine Jr."
 msgstr ""
 
 msgid "JBC 9"
-msgstr ""
+msgstr "JBC 9"
 
 msgid "Junior Botball Challenge 9: Add It Up"
-msgstr ""
+msgstr "ジュニア・ボットボール・チャレンジ 9：足し算する"
 
 msgid "JBC 9B"
 msgstr ""
@@ -200,10 +200,10 @@ msgid "Junior Botball Challenge 9B: Balancing Act"
 msgstr ""
 
 msgid "JBC 10"
-msgstr ""
+msgstr "JBC 10"
 
 msgid "Junior Botball Challenge 10: Solo Joust"
-msgstr ""
+msgstr "ジュニア・ボットボール・チャレンジ 10：ソロ馬上槍試合"
 
 msgid "JBC 10B"
 msgstr ""
@@ -212,16 +212,16 @@ msgid "Junior Botball Challenge 10: Solo Joust Jr."
 msgstr ""
 
 msgid "JBC 12"
-msgstr ""
+msgstr "JBC 12"
 
 msgid "Junior Botball Challenge 12: Unload 'Em"
-msgstr ""
+msgstr "ジュニア・ボットボール・チャレンジ 12：下ろす"
 
 msgid "JBC 13"
-msgstr ""
+msgstr "JBC 13"
 
 msgid "Junior Botball Challenge 13: Clean the Mat"
-msgstr ""
+msgstr "ジュニア・ボットボール・チャレンジ 13：マット掃除する"
 
 msgid "JBC 15B"
 msgstr ""
@@ -230,10 +230,10 @@ msgid "Junior Botball Challenge 15B: Bump Bump"
 msgstr ""
 
 msgid "JBC 17"
-msgstr ""
+msgstr "JBC 17"
 
 msgid "Junior Botball Challenge 17: Walk the Line"
-msgstr ""
+msgstr "ジュニア・ボットボール・チャレンジ 17：一線を歩く"
 
 msgid "JBC 17B"
 msgstr ""
@@ -242,840 +242,1586 @@ msgid "Junior Botball Challenge 17: Walk the Line II"
 msgstr ""
 
 msgid "JBC 19"
-msgstr ""
+msgstr "JBC 19"
 
 msgid "Junior Botball Challenge 19: Mountain Rescue"
-msgstr ""
+msgstr "ジュニア・ボットボール・チャレンジ 19：山岳救助"
 
 msgid "Paper Ream"
-msgstr ""
+msgstr "用紙リーム"
 
 msgid "JBC 20"
-msgstr ""
+msgstr "JBC 20"
 
 msgid "Junior Botball Challenge 20: Rescue the Cans"
-msgstr ""
+msgstr "ジュニア・ボットボール・チャレンジ 20：缶を助ける"
 
 msgid "JBC 21"
-msgstr ""
+msgstr "JBC 21"
 
 msgid "Junior Botball Challenge 21: Foot Tall"
-msgstr ""
+msgstr "ジュニア・ボットボール・チャレンジ 21：フィート高さ"
 
 msgid "JBC 22"
-msgstr ""
+msgstr "JBC 22"
 
 msgid "Junior Botball Challenge 22: Stackerz"
-msgstr ""
+msgstr "ジュニア・ボットボール・チャレンジ 21：積む"
 
 msgid "Script Playground"
-msgstr ""
+msgstr "スクリプト遊び場"
 
 msgid "Script tests"
-msgstr ""
+msgstr "スクリプトテスト"
 
 msgid "Demobot"
-msgstr ""
+msgstr "デモボット"
 
 msgid "JBC Challenge 6C"
 msgstr ""
 
 msgid "Can A Lifted"
-msgstr ""
+msgstr "缶A上げました"
 
 msgid "Can A picked up"
-msgstr ""
+msgstr "缶A取りました"
 
 msgid "Can B Lifted"
-msgstr ""
+msgstr "缶B上げました"
 
 msgid "Can B picked up"
-msgstr ""
+msgstr "缶B取りました"
 
 msgid "Can C Lifted"
-msgstr ""
+msgstr "缶C上げました"
 
 msgid "Can C picked up"
-msgstr ""
+msgstr "缶C取りました"
 
 msgid "Can A Placed"
-msgstr ""
+msgstr "缶A置きました"
 
 msgid "Can A placed on circle 2"
-msgstr ""
+msgstr "円２に缶A置きました"
 
 msgid "Can B Placed"
-msgstr ""
+msgstr "缶B置きました"
 
 msgid "Can A placed on circle 9"
-msgstr ""
+msgstr "円９に缶A置きました"
 
 msgid "Can C Placed"
-msgstr ""
+msgstr "缶C置きました"
 
 msgid "Can A placed on circle 10"
-msgstr ""
+msgstr "円10に缶A置きました"
 
 msgid "Can A Upright"
-msgstr ""
+msgstr "缶Aまっすぐ"
 
 msgid "Can A upright on circle 2"
-msgstr ""
+msgstr "円２に缶Aまっすぐ"
 
 msgid "Can B Upright"
-msgstr ""
+msgstr "缶Bまっすぐ"
 
 msgid "Can B upright on circle 9"
-msgstr ""
+msgstr "円９に缶Bまっすぐ"
 
 msgid "Can C Upright"
-msgstr ""
+msgstr "缶Cまっすぐ"
 
 msgid "Can C upright on circle 10"
-msgstr ""
+msgstr "円10に缶C置きました"
 
 msgid "Loading..."
-msgstr ""
+msgstr "ロード..."
 
 msgid "Logout"
-msgstr ""
+msgstr "ログアウト"
 
 msgid "Tutorials"
-msgstr ""
+msgstr "チュートリアル"
 
 msgid "Learn how to get started with the simulator"
-msgstr ""
+msgstr "シミュレーターを使い方を習います"
 
 msgid "3D Simulator"
-msgstr ""
+msgstr "３Dシミュレーター"
 
 msgid "A simulator for the Botball demobot."
-msgstr ""
+msgstr "Botballデモボットのシミュレーター"
 
 msgid "About"
-msgstr ""
+msgstr "ついて"
 
 msgid ""
 "KIPR is a 501(c) 3 organization started to make the long-term educational "
 "benefits of robotics accessible to students."
-msgstr ""
+msgstr "KIPRは501(c) 3団体で、ロボット工学の長期的な教育効果を学生にも身近なものにするために設立されました。"
 
 msgid "Quick Start"
-msgstr ""
+msgstr "早わかり"
 
 msgid "Navigating in 3D"
-msgstr ""
+msgstr "３Dに動きます"
 
 msgid "Learn the controls for navigating in 3D in the simulator"
-msgstr ""
+msgstr "３Dシミュレーターで動き方を習います"
 
 msgid "Robot Section"
-msgstr ""
+msgstr "ロボットセクション"
 
 msgid "How to use the robot section"
-msgstr ""
+msgstr "ロボットセクションの使い方です"
 
 msgid "World Section"
-msgstr ""
+msgstr "世界セクション"
 
 msgid "Learn how to create and manipulate items and scene in the simulator"
-msgstr ""
+msgstr "シミュレーターでアイテムを作る、使う方を習います。"
 
 msgid "Indent"
-msgstr ""
+msgstr "インデント"
 
 msgid "Download"
-msgstr ""
+msgstr "ダウンロード"
 
 msgid "Reset"
-msgstr ""
+msgstr "リセット"
 
 msgid "Error(s)"
-msgstr ""
+msgstr "エラー"
 
 msgid "Warning(s)"
-msgstr ""
+msgstr "ワーニング"
 
 msgid "grams"
-msgstr ""
+msgstr "グラム"
 
 msgid "kilograms"
-msgstr ""
+msgstr "キロ"
 
 msgid "pounds"
-msgstr ""
+msgstr "ポンド"
 
 msgid "ounces"
-msgstr ""
+msgstr "オンス"
 
 msgid "meters"
-msgstr ""
+msgstr "メートル"
 
 msgid "centimeters"
-msgstr ""
+msgstr "センチ"
 
 msgid "feet"
-msgstr ""
+msgstr "フィート"
 
 msgid "inches"
-msgstr ""
+msgstr "インチ"
 
 msgid "radians"
-msgstr ""
+msgstr "ラジアン"
 
 msgid "degrees"
-msgstr ""
+msgstr "度"
 
 msgid "Can"
-msgstr ""
+msgstr "缶"
 
 msgid "Box"
-msgstr ""
+msgstr "箱"
 
 msgid "Sphere"
-msgstr ""
+msgstr "玉"
 
 msgid "Cylinder"
-msgstr ""
+msgstr "円筒"
 
 msgid "Cone"
-msgstr ""
+msgstr "円錐"
 
 msgid "Plane"
-msgstr ""
+msgstr "平面"
 
 msgid "File"
-msgstr ""
+msgstr "ファイル"
 
 msgid "Euler"
-msgstr ""
+msgstr "Euler"
 
 msgid "Axis Angle"
-msgstr ""
+msgstr "軸角度"
 
 msgid "Empty"
-msgstr ""
+msgstr "空"
 
 msgid "Standard Object"
-msgstr ""
+msgstr "標準オブジェクト"
 
 msgid "Custom Object"
-msgstr ""
+msgstr "カスタムオブジェクト"
 
 msgid "Point Light"
-msgstr ""
+msgstr "点灯"
 
 msgid "Unset"
-msgstr ""
+msgstr "アンセット"
 
 msgid "Basic"
-msgstr ""
+msgstr "基本的"
 
 msgid "Texture"
-msgstr ""
+msgstr "テクスチャ"
 
 msgid "Value"
-msgstr ""
+msgstr "値"
 
 msgid "General"
-msgstr ""
+msgstr "一般"
 
 msgid "Name"
-msgstr ""
+msgstr "名前"
 
 msgid "Type"
-msgstr ""
+msgstr "タイプ"
 
 msgid "Geometry"
-msgstr ""
+msgstr "幾何"
 
 msgid "Item"
-msgstr ""
+msgstr "アイテム"
 
 msgid "Box Options"
-msgstr ""
+msgstr "箱の設定"
 
 msgid "Size X"
-msgstr ""
+msgstr "X サイズ"
 
 msgid "Size Y"
-msgstr ""
+msgstr "Y サイズ"
 
 msgid "Size Z"
-msgstr ""
+msgstr "Z サイズ"
 
 msgid "Sphere Options"
-msgstr ""
+msgstr "玉の設定"
 
 msgid "Radius"
-msgstr ""
+msgstr "半径"
 
 msgid "Cylinder Options"
-msgstr ""
+msgstr "円筒設定"
 
 msgid "Height"
-msgstr ""
+msgstr "高さ"
 
 msgid "Plane Options"
-msgstr ""
+msgstr "平面設定"
 
 msgid "File Options"
-msgstr ""
+msgstr "ファイルの設定"
 
 msgid "URI"
-msgstr ""
+msgstr "URI"
 
 msgid "Material"
-msgstr ""
+msgstr "物質"
 
 msgid "Color Type"
-msgstr ""
+msgstr "色タイプ"
 
 msgid "Color Red"
-msgstr ""
+msgstr "赤"
 
 msgid "Color Green"
-msgstr ""
+msgstr "緑"
 
 msgid "Color Blue"
-msgstr ""
+msgstr "青"
 
 msgid "Color Texture URI"
-msgstr ""
+msgstr "色テクスチャURI"
 
 msgid "Albedo Type"
-msgstr ""
+msgstr "アルベドテクスチャ"
 
 msgid "Albedo Red"
-msgstr ""
+msgstr "アルベド赤"
 
 msgid "Albedo Green"
-msgstr ""
+msgstr "アルベド緑"
 
 msgid "Albedo Blue"
-msgstr ""
+msgstr "アルベド青"
 
 msgid "Albedo Texture URI"
-msgstr ""
+msgstr "アルベドテクスチャURI"
 
 msgid "Reflection Type"
-msgstr ""
+msgstr "反射タイプ"
 
 msgid "Reflection Red"
-msgstr ""
+msgstr "反射赤"
 
 msgid "Reflection Green"
-msgstr ""
+msgstr "反射緑"
 
 msgid "Reflection Blue"
-msgstr ""
+msgstr "反射青"
 
 msgid "Reflection Texture URI"
-msgstr ""
+msgstr "反射テクスチャURI"
 
 msgid "Emissive Type"
-msgstr ""
+msgstr "放射率タイプ"
 
 msgid "Emissive Red"
-msgstr ""
+msgstr "放射率赤"
 
 msgid "Emissive Green"
-msgstr ""
+msgstr "放射率緑"
 
 msgid "Emissive Blue"
-msgstr ""
+msgstr "放射率青"
 
 msgid "Emissive Texture URI"
-msgstr ""
+msgstr "放射率テクスチャURI"
 
 msgid "Ambient Type"
-msgstr ""
+msgstr "アンビエントタイプ"
 
 msgid "Ambient Red"
-msgstr ""
+msgstr "アンビエント赤"
 
 msgid "Ambient Green"
-msgstr ""
+msgstr "アンビエント緑"
 
 msgid "Ambient Blue"
-msgstr ""
+msgstr "アンビエント青"
 
 msgid "Ambient Texture URI"
-msgstr ""
+msgstr "アンビエントテクスチャURI"
 
 msgid "Metalness Type"
-msgstr ""
+msgstr "金属性タイプ"
 
 msgid "Metalness"
-msgstr ""
+msgstr "金属性"
 
 msgid "Metalness Texture URI"
-msgstr ""
+msgstr "金属性テクスチャURI"
 
 msgid "Position"
-msgstr ""
+msgstr "位置"
 
 msgid "X"
-msgstr ""
+msgstr "X"
 
 msgid "Y"
-msgstr ""
+msgstr "Y"
 
 msgid "Z"
-msgstr ""
+msgstr "Z"
 
 msgid "Orientation"
-msgstr ""
+msgstr "方向"
 
 msgid "Order"
-msgstr ""
+msgstr "順"
 
 msgid "Angle"
-msgstr ""
+msgstr "角度"
 
 msgid "Scale"
-msgstr ""
+msgstr "規模"
 
 msgid "Physics"
-msgstr ""
+msgstr "物理学"
 
 msgid "Mass"
-msgstr ""
+msgstr "質量"
 
 msgid "Friction"
-msgstr ""
+msgstr "摩擦"
 
 msgid "Unnamed Object"
-msgstr ""
+msgstr "無名オブジェクト"
 
 msgid "Add Item"
-msgstr ""
+msgstr "アイテムを作る"
 
 msgid "Accept"
-msgstr ""
+msgstr "はい"
 
 msgid "Settings"
-msgstr ""
+msgstr "設定"
 
 msgid "Add Script"
-msgstr ""
+msgstr "スクリプトを作る"
 
 msgid "Select Scene"
-msgstr ""
+msgstr "シーンを選ぶ"
 
 msgid "Save Scene"
-msgstr ""
+msgstr "シーンを保存"
 
 msgid "Copy Scene"
-msgstr ""
+msgstr "シーンをコピー"
 
 msgid "Item(s) (%d)"
-msgstr ""
+msgstr "アイテム（%d）"
 
 msgid "Script(s) (%d)"
-msgstr ""
+msgstr "スクリプト（%d）"
 
 msgid "Layouts"
-msgstr ""
+msgstr "設計"
 
 msgid "Overlay"
-msgstr ""
+msgstr "オーバーレイ"
 
 msgid "Side"
-msgstr ""
+msgstr "側面"
 
 msgid "Options"
-msgstr ""
+msgstr "設定"
 
 msgid "Show All"
-msgstr ""
+msgstr "すべて見せる"
 
 msgid "Hide All"
-msgstr ""
+msgstr "すべて隠す"
 
 msgid "Clear"
-msgstr ""
+msgstr "クリア"
 
 msgid "Rotation"
-msgstr ""
+msgstr "回転"
 
 msgid "Start Location"
-msgstr ""
+msgstr "開始場所"
 
 msgid "Motor Velocity Plot"
-msgstr ""
+msgstr "モーター速度グラフ"
 
 msgid "Motor Position Plot"
-msgstr ""
+msgstr "モーター位置グラフ"
 
 msgid "Analog Sensor Plot"
-msgstr ""
+msgstr "アナログセンサーグラフ"
 
 msgid "Digital Sensor Plot"
-msgstr ""
+msgstr "デジタルセンサーグラフ"
 
 msgid "Analog Sensors"
-msgstr ""
+msgstr "アナログセンサー"
 
 msgid "Digital Sensors"
-msgstr ""
+msgstr "デジタルセンサー"
 
 msgid "Servos"
-msgstr ""
+msgstr "サーボ"
 
 msgid "Motor Velocities"
-msgstr ""
+msgstr "モーター速度"
 
 msgid "Motor Positions"
-msgstr ""
+msgstr "モーター位置グラフ"
 
 msgid ""
 "This process is taking longer than expected...\n"
 "If you have a poor internet connection, this can take some time"
 msgstr ""
+"様相以上に時間がかかっています...\n"
+"ネットが遅いなら、もっと時間がかかるかもしれません。"
 
 msgid ""
 "The simulator may have failed to load.\n"
 "Please submit a feedback form to let us know!"
 msgstr ""
+"シミュレーターはロードに失敗してしまう可能性がありました。\n"
+"フィードバックを出して教えてくださいませんか。"
 
 msgid "Initializing Simulator..."
-msgstr ""
+msgstr "シミュレーター始めて..."
 
 msgid "all of"
-msgstr ""
+msgstr "すべて"
 
 msgid "one or more of"
-msgstr ""
+msgstr "一つ以上"
 
 msgid "exactly one of"
-msgstr ""
+msgstr "一つ"
 
 msgid "once"
-msgstr ""
+msgstr "一度"
 
 msgid "not"
 msgstr ""
 
 msgid "Success"
-msgstr ""
+msgstr "成功"
 
 msgid "Failure"
-msgstr ""
+msgstr "失敗"
 
 msgid "Editor"
-msgstr ""
+msgstr "編集"
 
 msgid "World"
-msgstr ""
+msgstr "世界"
 
 msgid "Script Editor"
-msgstr ""
+msgstr "スクリプト編集"
 
 msgid "Console"
-msgstr ""
+msgstr "コンソール"
 
 msgid "Open"
-msgstr ""
+msgstr "開く"
 
 msgid "Save"
-msgstr ""
+msgstr "保存"
 
 msgid "Save As"
-msgstr ""
+msgstr "名前付けて保存"
 
 msgid "Delete"
-msgstr ""
+msgstr "削除"
 
 msgid "Documentation"
-msgstr ""
+msgstr "参照資料"
 
 msgid "Feedback"
-msgstr ""
+msgstr "フィードバック"
 
 msgid "Reset World"
-msgstr ""
+msgstr "世界をレセット"
 
 msgid "Layout"
-msgstr ""
+msgstr "レイアウト"
 
 msgid "User Interface"
-msgstr ""
+msgstr "ユーザーインターフェイス"
 
 msgid "Simulation"
-msgstr ""
+msgstr "シミュレーション"
 
 msgid "Locale"
-msgstr ""
+msgstr "言語"
 
 msgid "Switch languages"
-msgstr ""
+msgstr "言語を選ぶ"
 
 msgid "Sensor noise"
-msgstr ""
+msgstr "センサー雑音"
 
 msgid "Controls whether sensor outputs are affected by random noise"
-msgstr ""
+msgstr "センサーは雑音があるかどうか"
 
 msgid "Realistic sensors"
-msgstr ""
+msgstr "現実的なセンサー"
 
 msgid ""
 "Controls whether sensors behave like real-world sensors instead of like "
 "ideal sensors. For example, real-world ET sensors are nonlinear"
-msgstr ""
+msgstr "センサーが理想的ではなく、現実世界のセンサーのように振る舞うかどうかを制御します。例えば現実世界のETセンサーは非線形です。"
 
 msgid "Autocomplete"
-msgstr ""
+msgstr "自動補完"
 
 msgid "Controls autocompletion of code, brackets, and quotes"
-msgstr ""
+msgstr "コードとカッコとクオートの自動補完制御します"
 
 msgid "Version %s (%s)"
-msgstr ""
+msgstr "バージョン %s (%s)"
 
 msgid "Copyright"
-msgstr ""
+msgstr "著作権"
 
 msgid "This software is licensed under the terms of the"
-msgstr ""
+msgstr "このソフトウェアは、GNU GPL v3 の条件に基づいてライセンスされます。"
 
 msgid "Thank you to the following contributors and testers:"
-msgstr ""
+msgstr "寄稿者とテスターに感謝を差しあげます："
 
 msgid "Want to help improve the simulator and get your name listed here?"
-msgstr ""
+msgstr "シミュレーターの改善にご協力いただけませんか？"
 
 msgid "GitHub repository"
-msgstr ""
+msgstr "Githubレポジトリ"
 
 msgid "We're happy to help you get started!"
-msgstr ""
+msgstr "始まることについて助けてあげたいです！"
 
 msgid ""
 "Give a helpful description of a problem you're facing, or a feature you'd "
 "like to request"
-msgstr ""
+msgstr "問題か欲しいフィーチャーの記述を書いてくださいませんか。"
 
 msgid ""
 "Thanks for using the KIPR Simulator! Find a bug? Have a feature request? "
 "Let us know!"
-msgstr ""
+msgstr "KIPRシミュレーターを使ってありがとうございます！欲しいフィーチャーがありますか。教えてくださいませんか。"
 
 msgid "How has your experience using the KIPR Simulator been?"
-msgstr ""
+msgstr "KIPRシミュレーターを使って経験はどうでしたか。"
 
 msgid "Email (optional): "
-msgstr ""
+msgstr "メールアドレス（随意）"
 
 msgid "Include anonymous usage data to help KIPR developers"
-msgstr ""
+msgstr "KIPRの開発者に助けるために匿名のデータを分け合てくださいませんか。"
 
 msgid "Please try again,"
-msgstr ""
+msgstr "もう一度お願いお願い申し上げます、"
 
 msgid "open an issue on our github page"
-msgstr ""
+msgstr "KIPRのGithubで課題を開く、"
 
 msgid ", or"
-msgstr ""
+msgstr "か"
 
 msgid "email KIPR."
-msgstr ""
+msgstr "KIPRにメールしてくださいませんか。"
 
 msgid "Submit"
-msgstr ""
+msgstr "出す"
 
 msgid "Feedback Success"
-msgstr ""
+msgstr "フィードバック成功"
 
 msgid "Feedback successfully submitted!"
-msgstr ""
+msgstr "フィードバック成功。"
 
 msgid "Thank you for helping improve the KIPR Simulator!"
-msgstr ""
+msgstr "KIPRシミュレーターの改善してあげてありがとうございました！"
 
 msgid "Open World"
-msgstr ""
+msgstr "世界を開く"
 
 msgid "Unknown"
-msgstr ""
+msgstr "不明"
 
 msgid "Description: "
-msgstr ""
+msgstr "説明："
 
 msgid "Author: "
-msgstr ""
+msgstr "作家："
 
 msgid "Me"
-msgstr ""
+msgstr "私"
 
 msgid "Select a scene to see more details"
-msgstr ""
+msgstr "もっと情報が見たいなら、シーンを選んでください"
 
 msgid "Description"
-msgstr ""
+msgstr "説明"
 
 msgid "New World"
-msgstr ""
+msgstr "新しい世界"
 
 msgid "Create"
-msgstr ""
+msgstr "作る"
 
 msgid "Delete %s?"
-msgstr ""
+msgstr "削除 %s"
 
 msgid "Are you sure you want to delete %s?"
-msgstr ""
+msgstr "本当に「%s」が削除したいですか？"
 
 msgid "Copy World"
-msgstr ""
+msgstr "世界をコピーする"
 
 msgid "Error %d"
-msgstr ""
+msgstr "エラー %d"
 
 msgid "Closing this dialog will take you back to the last well-known state."
-msgstr ""
+msgstr "このダイアログを閉じると、最後によく知られていた状態に戻ります。"
 
 msgid "If this error persists, please submit feedback."
-msgstr ""
+msgstr "エラーが長引いてると、フィードバックを出してください。"
 
 msgid "World Settings"
-msgstr ""
+msgstr "世界制御"
 
 msgid "CHALLENGE"
-msgstr ""
+msgstr "難題"
 
 msgid "Start"
-msgstr ""
+msgstr "始め"
 
 msgid "Welcome to the KIPR Simulator!\n"
-msgstr ""
+msgstr "KIPRシミュレーターへようこそ！\n"
 
 msgid "Compiling...\n"
-msgstr ""
+msgstr "コンパイルしている...\n"
 
 msgid "Compilation succeeded with warnings.\n"
-msgstr ""
+msgstr "コンパイルが成功けど、ワーニングがあります。\n"
 
 msgid "Compilation succeeded.\n"
-msgstr ""
+msgstr "コンパイルが成功。\n"
 
 msgid "Compilation failed.\n"
-msgstr ""
+msgstr "コンパイルが失敗。\n"
 
 msgid "Something went wrong during compilation.\n"
-msgstr ""
+msgstr "コンパイル時に何かが間違ってしまった。\n"
 
 msgid "Compilation succeeded with warnings\n"
-msgstr ""
+msgstr "コンパイルが成功けど、ワーニングがあります。\n"
 
 msgid "Compilation succeeded\n"
-msgstr ""
+msgstr "コンパイルが成功。\n"
 
 msgid "Modules"
-msgstr ""
+msgstr "モジュール"
 
 msgid "Functions"
-msgstr ""
+msgstr "関数"
 
 msgid "Structures"
-msgstr ""
+msgstr "構造"
 
 msgid "Enumerations"
-msgstr ""
+msgstr "列挙型"
 
 msgid "Files"
-msgstr ""
+msgstr "ファイル"
 
 msgid "Search..."
-msgstr ""
+msgstr "検索"
 
 msgid "Detailed Description"
-msgstr ""
+msgstr "詳しい説明"
 
 msgid "Parameters"
-msgstr ""
+msgstr "パラメーター"
 
 msgid "Return Value"
-msgstr ""
+msgstr "戻り値"
 
 msgid "Fields"
-msgstr ""
+msgstr "フィールド"
 
 msgid "Volume"
-msgstr ""
+msgstr "体積"
 
 msgid "RGB"
-msgstr ""
+msgstr "RGB"
 
 msgid "Challenge"
-msgstr ""
+msgstr "問題"
 
 msgid "Stop"
-msgstr ""
+msgstr "止まる"
 
 msgid "Run"
-msgstr ""
+msgstr "実行"
 
 msgid "and External Contributors"
-msgstr ""
+msgstr "外部の寄稿者も"
 
 msgid "Visit our"
+msgstr "見る"
+
+msgid "Science"
+msgstr "科学"
+
+msgid "Technology"
+msgstr "技術"
+
+msgid "Engineering"
+msgstr "工学"
+
+msgid "Arts"
+msgstr "人文科学"
+
+msgid "Mathematics"
+msgstr "数学"
+
+msgid "Test Assignment"
+msgstr "デモ宿題"
+
+msgid "This is a test assignment."
+msgstr "これはデモ宿題です。"
+
+msgid "Educator notes"
+msgstr "先生のノート"
+
+msgid "Student notes"
+msgstr "学生のノート"
+
+msgid "JBC Mat A"
+msgstr "JBCマットA"
+
+msgid "JBC Mat B"
+msgstr "JBCマットB"
+
+msgid "Circle %s"
+msgstr "円%s"
+
+msgid "JBC 0"
+msgstr "JBC 0"
+
+msgid "Junior Botball Challenge 0: Drive Straight"
+msgstr "ジュニア・ボットボール・チャレンジ0：まっすぐ運転する"
+
+msgid "Not Start Box"
+msgstr "始まるボックスじゃない"
+
+msgid "Start Box"
+msgstr "始まるボックス"
+
+msgid "Line B"
+msgstr "ラインB"
+
+msgid "End Box"
+msgstr "終わるボックス"
+
+msgid "End of Mat"
+msgstr "マットの終わり"
+
+msgid "Right Side Can"
+msgstr "右の缶"
+
+msgid "Top Side Can"
+msgstr "上の缶"
+
+msgid "Left Side Can"
+msgstr "左の缶"
+
+msgid "Click Instruction Box"
+msgstr "指示ボックスをクリックして"
+
+msgid "Click Instruction 1 Box"
+msgstr "指示１ボックスをクリックして"
+
+msgid "Click Instruction 2 Box"
+msgstr "指示２ボックスをクリックして"
+
+msgid "Chosen Garage Box"
+msgstr "選んだ車庫"
+
+msgid "Green Garage Designator Box"
+msgstr "緑の車庫ボックス"
+
+msgid "Yellow Garage Designator Box"
+msgstr "黄の車庫ボックス"
+
+msgid "Blue Garage Designator Box"
+msgstr "青の車庫ボックス"
+
+msgid "Green Garage"
+msgstr "緑の車庫"
+
+msgid "Green Garage node"
+msgstr "緑の車庫ノード"
+
+msgid "Yellow Garage node"
+msgstr "黄の車庫ノード"
+
+msgid "Blue Garage node"
+msgstr "青の車庫ノード"
+
+msgid "Green Garage Right Boundary node"
+msgstr "緑の車庫右境ノード"
+
+msgid "Green Garage Left Boundary node"
+msgstr "緑の車庫左境ノード"
+
+msgid "Green Garage Top Boundary node"
+msgstr "緑の車庫上境ノード"
+
+msgid "Blue Garage"
+msgstr "青の車庫"
+
+msgid "Blue Garage Right Boundary node"
+msgstr "青の車庫右境ノード"
+
+msgid "Blue Garage Left Boundary node"
+msgstr "青の車庫左境ノード"
+
+msgid "Blue Garage Top Boundary node"
+msgstr "青の車庫上境ノード"
+
+msgid "Yellow Garage"
+msgstr "黄の車庫"
+
+msgid "Yellow Garage Right Boundary node"
+msgstr "黄の車庫右境ノード"
+
+msgid "Yellow Garage Left Boundary node"
+msgstr "黄の車庫左境ノード"
+
+msgid "Yellow Garage Top Boundary node"
+msgstr "黄の車庫上境ノード"
+
+msgid "Yellow Garage Marker 1"
+msgstr "黄の車庫標識１"
+
+msgid "Yellow Garage Marker 2"
+msgstr "黄の車庫標識２"
+
+msgid "Blue Garage Marker 1"
+msgstr "青の車庫標識１"
+
+msgid "Blue Garage Marker 2"
+msgstr "青の車庫標識２"
+
+msgid "Green Garage Marker 1"
+msgstr "緑の車庫標識１"
+
+msgid "Green Garage Marker 2"
+msgstr "緑の車庫標識２"
+
+msgid "Junior Botball Challenge 4: Serpentine"
+msgstr "ジュニア・ボットボール・チャレンジ4：延々"
+
+msgid "Junior Botball Challenge 5: Odd Numbers"
+msgstr "ジュニア・ボットボール・チャレンジ5：奇数"
+
+msgid "Junior Botball Challenge 6: Figure Eight"
+msgstr "ジュニア・ボットボール・チャレンジ6：８の字"
+
+msgid "Between cans 4 and 9"
+msgstr "缶４と缶９の間"
+
+msgid "Top side of can 9"
+msgstr "缶９の上"
+
+msgid "Junior Botball Challenge 7: Load 'Em Up"
+msgstr "ジュニア・ボットボール・チャレンジ 7：積み込もう"
+
+msgid "Junior Botball Challenge 8: Bulldozer Mania"
+msgstr "ジュニア・ボットボール・チャレンジ 8：ブルドーザー・マニア"
+
+msgid "Junior Botball Challenge 9: Cover Your Bases"
+msgstr "ジュニア・ボットボール・チャレンジ 9：ベースを網羅する"
+
+msgid "Junior Botball Challenge 10: Chopped"
+msgstr "ジュニア・ボットボール・チャレンジ 10：チャップ"
+
+msgid "JBC 11"
+msgstr "JBC 11"
+
+msgid "Junior Botball Challenge 11: Making Waves"
+msgstr "ジュニア・ボットボール・チャレンジ 11：波風を立てる"
+
+msgid "Junior Botball Challenge 12: Add it Up"
+msgstr "ジュニア・ボットボール・チャレンジ 12：足し算する"
+
+msgid "Circle 1"
+msgstr "えん１"
+
+msgid "JBC 14"
+msgstr "JBC 14"
+
+msgid "Junior Botball Challenge 14: Dance Party"
+msgstr "ジュニア・ボットボール・チャレンジ 14：ダンスパーティー"
+
+msgid "JBC 15"
+msgstr "JBC 15"
+
+msgid "Junior Botball Challenge 15: Go Fetch"
+msgstr "ジュニア・ボットボール・チャレンジ 15：ダンスパーティー"
+
+msgid "JBC 16"
+msgstr "JBC 16"
+
+msgid "Junior Botball Challenge 16: Pick 'Em Up"
+msgstr "ジュニア・ボットボール・チャレンジ 16：拾う"
+
+msgid "Junior Botball Challenge 17: Mountain Rescue"
+msgstr "ジュニア・ボットボール・チャレンジ 17：救助"
+
+msgid "JBC 18"
+msgstr "JBC 18"
+
+msgid "Junior Botball Challenge 18: Stackerz"
+msgstr "ジュニア・ボットボール・チャレンジ 18：積む"
+
+msgid "Bottom of can5"
+msgstr "缶５の下"
+
+msgid "Top of can7"
+msgstr "缶７の上"
+
+msgid "Bottom of can7"
+msgstr "缶７の下"
+
+msgid "Top of can5"
+msgstr "缶５の上"
+
+msgid "Junior Botball Challenge 19: Bump"
+msgstr "ジュニア・ボットボール・チャレンジ 18：ドンドン"
+
+msgid "Junior Botball Challenge 20: A'mazing"
+msgstr "ジュニア・ボットボール・チャレンジ 18：迷ろう獪"
+
+msgid "Paper Ream 3"
+msgstr "用紙リーム３"
+
+msgid "Paper Ream 4"
+msgstr "用紙リーム４"
+
+msgid "Junior Botball Challenge 21: Proximity"
+msgstr "ジュニア・ボットボール・チャレンジ 21：間近"
+
+msgid "Ream Front Boundary"
+msgstr "リーム前部境"
+
+msgid "Junior Botball Challenge 22: Search and Rescue"
+msgstr "ジュニア・ボットボール・チャレンジ 21：捜索救難"
+
+msgid "JBC 23"
+msgstr "JBC 23"
+
+msgid "Junior Botball Challenge 23: Find the Black Line"
+msgstr "ジュニア・ボットボール・チャレンジ 21：黒い一線を探す"
+
+msgid "Circle"
+msgstr "円"
+
+msgid "JBC 24"
+msgstr "JBC 24"
+
+msgid "Junior Botball Challenge 24: Walk the Line"
+msgstr "ジュニア・ボットボール・チャレンジ 21：一線を歩く"
+
+msgid "Finish Line"
+msgstr "ゴール"
+
+msgid "Checkpoint 1"
+msgstr "関門１"
+
+msgid "Checkpoint 3"
+msgstr "関門３"
+
+msgid "Checkpoint 2"
+msgstr "関門２"
+
+msgid "Base Scene - Moon Surface"
+msgstr "基盤シーン-- 月面"
+
+msgid "A base scene. Intended to be augmented to create full Moon scenes"
+msgstr "基盤シーンです。完全な月シーンを作るために補強されることを意図しています。"
+
+msgid "1.1.1 Ground"
+msgstr "地"
+
+msgid "1.1.6-8 Start Area"
+msgstr "スタート場所"
+
+msgid "1.1.2-4 Sky"
+msgstr "空"
+
+msgid "Moon Sandbox"
+msgstr "月の砂場"
+
+msgid "Lunar sandbox. Currently supports 4 types of rocks. Demo Ready."
+msgstr "月の砂場です。石４型があります。"
+
+msgid "Basalt Rock"
+msgstr "玄武岩"
+
+msgid "Anorthosite Rock"
+msgstr "斜長岩"
+
+msgid "Breccia Rock"
+msgstr "角礫岩"
+
+msgid "Meteorite Rock"
+msgstr "隕石"
+
+msgid "Life Science Pack"
+msgstr "生命科学一式"
+
+msgid "Radiation Science Pack - High"
+msgstr "放射一式"
+
+msgid "Science Pad"
+msgstr "科学部屋"
+
+msgid "Container"
+msgstr "科学部屋"
+
+msgid "Space Bot Guy"
+msgstr "空間Botguy"
+
+msgid "Solar Panel"
+msgstr "ソーラーパネル"
+
+msgid "Walkway"
+msgstr "歩道"
+
+msgid "Comms Tower"
+msgstr "電波塔"
+
+msgid "Human Living Habitat"
+msgstr "人間人生施設"
+
+msgid "Human Research Habitat"
+msgstr "人間研究施設"
+
+msgid "Human Control/Comms Station Habitat"
+msgstr "コミュニケーション施設"
+
+msgid "Life Indicator Light"
+msgstr "生命の表示光"
+
+msgid "No Life Indicator Light"
+msgstr "不生命の表示光"
+
+msgid "2025 Game Table"
+msgstr "2025ゲームテーブル"
+
+msgid "Base Scene - 2025 Botball Game Table"
+msgstr "基盤シーン-- 2025 Botball ゲームテーブル"
+
+msgid "A base scene. Intended to be augmented to create the full game table"
+msgstr "基盤シーンです。完全なゲームテーブルシーンを作るために補強されることを意図しています。"
+
+msgid "Fry floor"
+msgstr "フライドポテト転落させるもの"
+
+msgid "Potato detector box"
+msgstr "ポテト・デテクター・ボックス"
+
+msgid "Hamburger"
+msgstr "ハンバーガー"
+
+msgid "Hotdog"
+msgstr "ホットドッグ"
+
+msgid "Taco"
+msgstr "タコス"
+
+msgid "Pink Cup"
+msgstr "ピンクカップ"
+
+msgid "Blue Cup"
+msgstr "青カップ"
+
+msgid "Green Cup"
+msgstr "緑カップ"
+
+msgid "Blue pom back #${i}"
+msgstr "後ろの青ポン #${i}"
+
+msgid "Blue pom front #${i}"
+msgstr "前の青ポン #${i}"
+
+msgid "Bottle #${i}"
+msgstr "ボトル #${i}"
+
+msgid "Orange pom #${i}"
+msgstr "オレンジの青ポン #${i}"
+
+msgid "Red pom #${i}"
+msgstr "赤の青ポン #${i}"
+
+msgid "Yellow pom #${i}"
+msgstr "黄の青ポン #${i}"
+
+msgid "Random pom #${i}"
+msgstr "出鱈目の青ポン #${i}"
+
+msgid "Tomato"
+msgstr "トマト"
+
+msgid "Pickle"
+msgstr "きゅうりピクルス"
+
+msgid "Potato"
+msgstr "ポテト"
+
+msgid "Fry #${i}"
+msgstr "フライドポテト #${i}"
+
+msgid "Tray #${i}"
+msgstr "トレー ${i}"
+
+msgid "Botguy"
+msgstr "Botguy"
+
+msgid "Blue drink #${i}"
+msgstr "青の飲み物 ${i}"
+
+msgid "Green drink #${i}"
+msgstr "緑の飲み物 ${i}"
+
+msgid "Pink drink #${i}"
+msgstr "ピンクの飲み物 ${i}"
+
+msgid "2025 Botball game table sandbox"
+msgstr "2025 Botball ゲームテーブル砂場"
+
+msgid "IRobot Create"
 msgstr ""
+
+msgid "Leaderboard"
+msgstr "ランキング"
+
+msgid "See the current challenge leaderboard."
+msgstr "問題のランキングを見ます。"
+
+msgid "The Challenge System"
+msgstr "チャレンジのシステム"
+
+msgid "Learn how to use the challenge system"
+msgstr "チャレンジのシステムを習います"
+
+msgid "MatB"
+msgstr "マットB"
+
+msgid "MatA"
+msgstr "マットA"
+
+msgid "Communication Tower"
+msgstr "コミュニケーション・タワー"
+
+msgid "Hab"
+msgstr "家"
+
+msgid "Radiation Science Pack"
+msgstr "放射一式"
+
+msgid "Communication Tower 2"
+msgstr "コミュニケーション・タワー２"
+
+msgid "Hab 2"
+msgstr "家２"
+
+msgid "BotGuy Astronaut"
+msgstr "Botguy宇宙飛行士"
+
+msgid "2025 Botball Game Table"
+msgstr "2025 Botball ゲームテーブル"
+
+msgid "Blue Drink"
+msgstr "青飲み物"
+
+msgid "Green Drink"
+msgstr "緑飲み物"
+
+msgid "Pink Drink"
+msgstr "ピンク飲み物"
+
+msgid "Blue Pom (Ice Cube)"
+msgstr "青ポン（角氷）"
+
+msgid "Orange Pom (Hot Sauce)"
+msgstr "オレンジポン（チリソース）"
+
+msgid "Red Pom (Ketchup)"
+msgstr "赤ポン（ケチャップ）"
+
+msgid "Yellow Pom (Mustard)"
+msgstr "黄ポン（マスタード）"
+
+msgid "French Fry"
+msgstr "フライドポテト"
+
+msgid "Bottle"
+msgstr "ボトル"
+
+msgid "Tray"
+msgstr "トレー"
+
+msgid "Living Habitat"
+msgstr "人生施設"
+
+msgid "Research Habitat"
+msgstr "研究施設"
+
+msgid "Controls Habitat"
+msgstr "コントロールズハビタット"
+
+msgid "Moon Rock Container"
+msgstr "月の石の箱"
+
+msgid "Radiation Science Pack - Low"
+msgstr "放射一式"
+
+msgid "Space Base"
+msgstr "月面基地"
+
+msgid "Botball"
+msgstr "Botball"
+
+msgid "JBC Pieces"
+msgstr "JBC物"
+
+msgid "Moon Rock"
+msgstr "月の石"
+
+msgid "All"
+msgstr "全部"
+
+msgid ""
+"Basalt is an aphanitic (fine-grained) extrusive igneous rock formed from "
+"the rapid cooling of low-viscosity lava rich in magnesium and iron (mafic "
+"lava) exposed at or very near the surface of a rocky planet or moon."
+msgstr "玄武岩というのは目の細かい火成岩。惑星か衛星の表で早く冷たいになる鉄とマグネシウムが多い溶岩（マフィック溶岩）で作る物です。"
+
+msgid ""
+"Anorthosite is a phaneritic, intrusive igneous rock characterized by its "
+"composition: mostly plagioclase feldspar (90–100%), with a minimal mafic "
+"component (0–10%)."
+msgstr "斜長岩というのはファネリティックと貫入と火成石です。90〜100％斜長石と０〜10％マフィック溶岩で作る物です。"
+
+msgid ""
+"Breccia is a rock composed of large angular broken fragments of minerals or "
+"rocks cemented together by a fine-grained matrix."
+msgstr "角礫岩というのは鉱物の角破片が細かい粒状の母岩によって固められた岩石で作る岩石です。"
+
+msgid ""
+"Meteorite is a solid piece of debris from an object, such as a comet, "
+"asteroid, or meteoroid, that originates in outer space and survives its "
+"passage through the atmosphere to reach the surface of a planet or moon."
+msgstr "隕石というのは宇宙空間彗星か小惑星か流星物質から来て、大気で惑星か衛星に固体の瓦礫作る物です。"
+
+msgid "Description of the object"
+msgstr "オブジェクトの説明"
+
+msgid "Surface Text"
+msgstr "表面テキスト"
+
+msgid "The current scene does not have a challenge available"
+msgstr "このシーンはチャレンジがありません"
+
+msgid "Start Challenge"
+msgstr "チャレンジを始める"
+
+msgid "your current work"
+msgstr "現行の作業"
+
+msgid "Failed to load challenge"
+msgstr "チャレンジをロードに失敗"
+
+msgid "Search"
+msgstr "探索"
+
+msgid "Search Filters"
+msgstr "探索フィルター"
+
+msgid "Is standards aligned"
+msgstr "教育の標準規格に準拠しています"
+
+msgid "Standards"
+msgstr "標準規格"
+
+msgid "Subject"
+msgstr "科目"
+
+msgid "Grade Level"
+msgstr "年生"
+
+msgid "Grade Levels: %s"
+msgstr "%s 年生"
+
+msgid "Standard: %s"
+msgstr "標準規格：%s"
+
+msgid "Subject: %s"
+msgstr "科目：%s"
+
+msgid "U.S. Std."
+msgstr "アメリカの標準規格"
+
+msgid "Curriculum"
+msgstr "課程"
+
+msgid "My Assignments"
+msgstr "私の宿題"
+
+msgid "Scratch Variables"
+msgstr "Scratchの変数"
 
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
-msgstr ""
+msgstr "変数"
 
 msgctxt "Red, Green, Blue"
 msgid "RGB"
-msgstr ""
+msgstr "RGB"
 
 msgctxt "Computer text command line (e.g., DOS)"
 msgid "Console"
-msgstr ""
+msgstr "コンソール"
 
 msgctxt "A predefined task for the user to complete"
 msgid "Challenge"
-msgstr ""
+msgstr "チャレンジ"
 
 msgctxt "Terminate program execution"
 msgid "Stop"
-msgstr ""
+msgstr "止まる"
 
 msgctxt "Begin program execution"
 msgid "Run"
-msgstr ""
+msgstr "実行"
 
 msgctxt "Part of copyright notice, after KIPR is listed"
 msgid "and External Contributors"
-msgstr ""
+msgstr "外部の寄稿者も"
 
 msgctxt "URL link to github repository follows"
 msgid "Visit our"
-msgstr ""
+msgstr "見る"
 
 msgctxt "Rotation order"
 msgid "XYZ"
-msgstr ""
+msgstr "XYZ"
 
 msgctxt "Rotation order"
 msgid "YZX"
-msgstr ""
+msgstr "YZX"
 
 msgctxt "Rotation order"
 msgid "ZXY"
-msgstr ""
+msgstr "ZXY"
 
 msgctxt "Rotation order"
 msgid "XZY"
-msgstr ""
+msgstr "XZY"
 
 msgctxt "Rotation order"
 msgid "YXZ"
-msgstr ""
+msgstr "YXZ"
 
 msgctxt "Rotation order"
 msgid "ZYX"
-msgstr ""
+msgstr "ZYX"
+
+msgctxt "Student grade level"
+msgid "Kindergarten"
+msgstr "幼稚園"
+
+msgctxt "Student grade level"
+msgid "1st grade"
+msgstr "小学校１年生"
+
+msgctxt "Student grade level"
+msgid "2nd grade"
+msgstr "小学校２年生"
+
+msgctxt "Student grade level"
+msgid "3rd grade"
+msgstr "小学校３年生"
+
+msgctxt "Student grade level"
+msgid "4th grade"
+msgstr "小学校４年生"
+
+msgctxt "Student grade level"
+msgid "5th grade"
+msgstr "小学校５年生"
+
+msgctxt "Student grade level"
+msgid "6th grade"
+msgstr "小学校６年生"
+
+msgctxt "Student grade level"
+msgid "7th grade"
+msgstr "中学校１年生"
+
+msgctxt "Student grade level"
+msgid "8th grade"
+msgstr "中学校２年生"
+
+msgctxt "Student grade level"
+msgid "9th grade"
+msgstr "中学校３年生"
+
+msgctxt "Student grade level"
+msgid "10th grade"
+msgstr "高校１年生"
+
+msgctxt "Student grade level"
+msgid "11th grade"
+msgstr "高校２年生"
+
+msgctxt "Student grade level"
+msgid "12th grade"
+msgstr "高校３年生"
+
+msgctxt "Student grade level"
+msgid "1st"
+msgstr "小学校１年生"
+
+msgctxt "Student grade level"
+msgid "2nd"
+msgstr "小学校２年生"
+
+msgctxt "Student grade level"
+msgid "3rd"
+msgstr "小学校３年生"
+
+msgctxt "Student grade level"
+msgid "4th"
+msgstr "小学校４年生"
+
+msgctxt "Student grade level"
+msgid "5th"
+msgstr "小学校５年生"
+
+msgctxt "Student grade level"
+msgid "6th"
+msgstr "小学校６年生"
+
+msgctxt "Student grade level"
+msgid "7th"
+msgstr "中学校１年生"
+
+msgctxt "Student grade level"
+msgid "8th"
+msgstr "中学校２年生"
+
+msgctxt "Student grade level"
+msgid "9th"
+msgstr "中学校３年生"
+
+msgctxt "Student grade level"
+msgid "10th"
+msgstr "高校１年生"
+
+msgctxt "Student grade level"
+msgid "11th"
+msgstr "高校２年生"
+
+msgctxt "Student grade level"
+msgid "12th"
+msgstr "高校３年生"
+
+msgctxt "Student grade level; Kingergarten"
+msgid "K"
+msgstr "幼稚園"
+
+msgctxt "RotationwUnits order"
+msgid "XYZ"
+msgstr "XYZ"
+
+msgctxt "RotationwUnits order"
+msgid "YZX"
+msgstr "YZX"
+
+msgctxt "RotationwUnits order"
+msgid "ZXY"
+msgstr "ZXY"
+
+msgctxt "RotationwUnits order"
+msgid "XZY"
+msgstr "XZY"
+
+msgctxt "RotationwUnits order"
+msgid "YXZ"
+msgstr "YXZ"
+
+msgctxt "RotationwUnits order"
+msgid "ZYX"
+msgstr "ZYX"
