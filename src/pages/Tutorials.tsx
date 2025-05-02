@@ -8,6 +8,7 @@ import MainMenu from '../components/MainMenu';
 
 import { StyleProps } from '../util/style';
 import LocalizedString from '../util/LocalizedString';
+import { GetBrowserLang } from '../util/GetLang';
 
 import { State as ReduxState } from '../state';
 import tr from '@i18n';
@@ -24,7 +25,7 @@ interface Tutorial {
   index?: number;
 }
 
-const tutorialList: Tutorial [] = [
+const tutorialList: Tutorial[] = [
   {
     title: tr('Quick Start'),
     description: tr('Learn how to get started with the simulator'),
@@ -78,13 +79,13 @@ const Container = styled('div', (props: ThemeProps) => ({
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
 }));
-  
+
 const cardContainerPadding = () => {
   const windowWidth = window.innerWidth;
-  
+
   const maxMargin = (windowWidth - (windowWidth * 0.9)) / 2;
   const minMargin = 40;
-  
+
   return maxMargin > minMargin ? maxMargin : minMargin;
 };
 
@@ -181,6 +182,6 @@ class Tutorials extends React.Component<Props, State> {
   }
 }
 
-export default connect((state: ReduxState) => ({
-  locale: state.i18n.locale,
+export default connect(() => ({
+  locale: GetBrowserLang(),
 }))(Tutorials) as React.ComponentType<TutorialsPublicProps>;

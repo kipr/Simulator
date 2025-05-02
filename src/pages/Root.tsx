@@ -26,7 +26,7 @@ import AboutDialog from '../components/Dialog/AboutDialog';
 import SceneSettingsDialog from '../components/Dialog/SceneSettingsDialog';
 
 import { FeedbackDialog, DEFAULT_FEEDBACK, Feedback, FeedbackSuccessDialog, sendFeedback, FeedbackResponse } from '../components/Feedback';
-import { Layout, LayoutProps, LayoutEditorTarget, OverlayLayout, OverlayLayoutRedux, SideLayoutRedux  } from '../components/Layout';
+import { Layout, LayoutProps, LayoutEditorTarget, OverlayLayout, OverlayLayoutRedux, SideLayoutRedux } from '../components/Layout';
 import { SceneErrorDialog, OpenSceneDialog, NewSceneDialog, DeleteDialog, SaveAsSceneDialog } from '../components/Dialog';
 
 import Loading from '../components/Loading';
@@ -59,6 +59,7 @@ import Dict from '../util/objectOps/Dict';
 import parseMessages, { hasErrors, hasWarnings, sort, toStyledText } from '../util/parseMessages';
 import { Vector3wUnits } from '../util/math/unitMath';
 import LocalizedString from '../util/LocalizedString';
+import { GetBrowserLang } from '../util/GetLang';
 
 import { Space } from '../simulator/Space';
 import tr from '@i18n';
@@ -140,7 +141,7 @@ interface RootState {
   windowInnerHeight: number;
 
   miniEditor: boolean;
-  
+
 }
 
 type Props = RootPublicProps & RootPrivateProps;
@@ -170,9 +171,9 @@ const STDERR_STYLE = (theme: Theme) => ({
 
 class Root extends React.Component<Props, State> {
   private editorRef: React.MutableRefObject<Editor>;
-  private overlayLayoutRef:  React.MutableRefObject<OverlayLayout>;
-  
-  
+  private overlayLayoutRef: React.MutableRefObject<OverlayLayout>;
+
+
   constructor(props: Props) {
     super(props);
 
@@ -194,7 +195,7 @@ class Root extends React.Component<Props, State> {
       feedback: DEFAULT_FEEDBACK,
       windowInnerHeight: window.innerHeight,
       miniEditor: true
-      
+
     };
 
     this.editorRef = React.createRef();
@@ -224,12 +225,12 @@ class Root extends React.Component<Props, State> {
   componentWillUnmount() {
     window.removeEventListener('resize', this.onWindowResize_);
     cancelAnimationFrame(this.updateConsoleHandle_);
-  
+
     Space.getInstance().onSelectNodeId = undefined;
     Space.getInstance().onSetNodeBatch = undefined;
   }
 
-  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>): void {    
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>): void {
     if (this.props.scene !== prevProps.scene) {
       Space.getInstance().scene = Async.latestValue(this.props.scene) || Scene.EMPTY;
     }
@@ -293,7 +294,7 @@ class Root extends React.Component<Props, State> {
   private onModalClick_ = (modal: Modal) => () => this.setState({ modal });
 
   private onModalClose_ = () => this.setState({ modal: Modal.NONE });
-  
+
   private updateConsole_ = () => {
     const text = WorkerInstance.sharedConsole.popString();
     if (text.length > 0) {
@@ -304,7 +305,7 @@ class Root extends React.Component<Props, State> {
         }), 300)
       });
     }
-    
+
 
     this.scheduleUpdateConsole_();
   };
@@ -330,7 +331,7 @@ class Root extends React.Component<Props, State> {
           text: LocalizedString.lookup(tr('Compiling...\n'), locale),
           style: STDOUT_STYLE(this.state.theme)
         }));
-    
+
         this.setState({
           simulatorState: SimulatorState.COMPILING,
           console: nextConsole
@@ -340,7 +341,7 @@ class Root extends React.Component<Props, State> {
               nextConsole = this.state.console;
               const messages = sort(parseMessages(compileResult.stderr));
               const compileSucceeded = compileResult.result && compileResult.result.length > 0;
-    
+
               // Show all errors/warnings in console
               for (const message of messages) {
                 nextConsole = StyledText.extend(nextConsole, toStyledText(message, {
@@ -349,7 +350,7 @@ class Root extends React.Component<Props, State> {
                     : undefined
                 }));
               }
-    
+
               if (compileSucceeded) {
                 // Show success in console and start running the program
                 const haveWarnings = hasWarnings(messages);
@@ -359,7 +360,7 @@ class Root extends React.Component<Props, State> {
                     : LocalizedString.lookup(tr('Compilation succeeded.\n'), locale),
                   style: STDOUT_STYLE(this.state.theme)
                 }));
-    
+
                 WorkerInstance.start({
                   language: activeLanguage,
                   code: compileResult.result
@@ -373,13 +374,13 @@ class Root extends React.Component<Props, State> {
                     style: STDERR_STYLE(this.state.theme)
                   }));
                 }
-    
+
                 nextConsole = StyledText.extend(nextConsole, StyledText.text({
                   text: LocalizedString.lookup(tr('Compilation failed.\n'), locale),
                   style: STDERR_STYLE(this.state.theme)
                 }));
               }
-    
+
               this.setState({
                 simulatorState: compileSucceeded ? SimulatorState.RUNNING : SimulatorState.STOPPED,
                 messages,
@@ -392,7 +393,7 @@ class Root extends React.Component<Props, State> {
                 text: LocalizedString.lookup(tr('Something went wrong during compilation.\n'), locale),
                 style: STDERR_STYLE(this.state.theme)
               }));
-    
+
               this.setState({
                 simulatorState: SimulatorState.STOPPED,
                 messages: [],
@@ -426,7 +427,7 @@ class Root extends React.Component<Props, State> {
       }
     }
 
-    
+
   };
 
   private onStopClick_ = () => {
@@ -452,7 +453,7 @@ class Root extends React.Component<Props, State> {
   private onStartChallengeClick_ = () => {
     window.location.href = `/challenge/${this.props.match.params.sceneId}`;
   };
-  
+
   private onClearConsole_ = () => {
     this.setState({
       console: StyledText.compose({ items: [] })
@@ -479,7 +480,7 @@ class Root extends React.Component<Props, State> {
       modal: Modal.NONE,
     });
   };
-  
+
   onDocumentationClick = () => {
     window.open("https://www.kipr.org/doc/index.html");
   };
@@ -504,7 +505,7 @@ class Root extends React.Component<Props, State> {
     if ('simulationRealisticSensors' in changedSettings) {
       Space.getInstance().realisticSensors = changedSettings.simulationRealisticSensors;
     }
-    
+
     if ('simulationSensorNoise' in changedSettings) {
       Space.getInstance().noisySensors = changedSettings.simulationSensorNoise;
     }
@@ -592,7 +593,7 @@ class Root extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-    
+
     const {
       match: { params: { sceneId, challengeId } },
       scene,
@@ -624,7 +625,7 @@ class Root extends React.Component<Props, State> {
       feedback,
       windowInnerHeight,
       miniEditor
-      
+
     } = state;
 
     const theme = DARK;
@@ -723,7 +724,7 @@ class Root extends React.Component<Props, State> {
               }
             }))}
             onSaveSceneClick={scene && !challenge && scene.type === Async.Type.Saveable && isAuthor ? this.onSaveSceneClick_ : undefined}
-            
+
           />
           {impl}
         </Container>
@@ -895,7 +896,7 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
   },
   onDeleteRecord: (selector: Selector) => {
     dispatch(ScenesAction.removeScene({ sceneId: selector.id })),
-    dispatch(push('/'));
+      dispatch(push('/'));
   },
   onDocumentationClick: () => dispatch(DocumentationAction.TOGGLE),
   onDocumentationPush: (location: DocumentationLocation) => dispatch(DocumentationAction.pushLocation({ location })),
