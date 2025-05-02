@@ -344,7 +344,7 @@ msgid "Tutorials"
 msgstr "チュートリアル"
 
 msgid "Learn how to get started with the simulator"
-msgstr "シミュレーターを使い方を習います"
+msgstr "シミュレーターの使い方を習います"
 
 msgid "3D Simulator"
 msgstr "３Dシミュレーター"
