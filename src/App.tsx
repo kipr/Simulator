@@ -23,6 +23,8 @@ import DbError from './db/Error';
 import UserConsent from './consent/UserConsent';
 import LegalAcceptance from './consent/LegalAcceptance';
 
+import LocalizedString from './util/LocalizedString';
+import { I18nAction } from './state/reducer';
 export interface AppPublicProps {
 
 }
@@ -31,6 +33,7 @@ interface AppPrivateProps {
   login: () => void;
   setMe: (me: string) => void;
   loadUser: (uid: string) => void;
+  setLocale: (locale: LocalizedString.Language) => void;
 }
 
 interface AppState {
@@ -76,6 +79,13 @@ class App extends React.Component<Props, State> {
   private onAuthStateChangedSubscription_: Unsubscribe;
 
   componentDidMount() {
+    switch (navigator.language) {
+      case 'ja':
+        this.props.setLocale('ja-JP');
+        break;
+      default: this.props.setLocale('en-US');
+    }
+
     this.onAuthStateChangedSubscription_ = auth.onAuthStateChanged(user => {
       if (user) {
         console.log('User detected.');
@@ -165,7 +175,7 @@ class App extends React.Component<Props, State> {
  */
 export default connect((state: ReduxState) => {
   return {
-    
+
   };
 }, dispatch => ({
   login: () => {
@@ -173,5 +183,6 @@ export default connect((state: ReduxState) => {
     window.location.href = `/login${window.location.pathname === '/login' ? '' : `?from=${window.location.pathname}`}`;
   },
   setMe: (me: string) => dispatch(UsersAction.setMe({ me })),
-  loadUser: (uid: string) => dispatch(UsersAction.loadOrEmptyUser({ userId: uid }))
+  loadUser: (uid: string) => dispatch(UsersAction.loadOrEmptyUser({ userId: uid })),
+  setLocale: (locale: LocalizedString.Language) => dispatch(I18nAction.setLocale({ locale })),
 }))(App) as React.ComponentType<AppPublicProps>;
