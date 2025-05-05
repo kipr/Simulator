@@ -10,7 +10,6 @@ import MainMenu from '../components/MainMenu';
 
 import { StyleProps } from '../util/style';
 import LocalizedString from '../util/LocalizedString';
-import { GetBrowserLang } from '../util/GetLang';
 import { State } from '../state';
 
 import tr from '@i18n';
@@ -74,7 +73,7 @@ class Dashboard extends React.PureComponent<Props> {
 
     return (
       <Container className={className} style={style} theme={theme}>
-        <MainMenu theme={theme} />
+        <MainMenu theme={theme}/>
         <CardContainer theme={theme}>
           <Card
             theme={theme}
@@ -84,7 +83,7 @@ class Dashboard extends React.PureComponent<Props> {
             backgroundImage={'url(../../static/icons/Laptop_Icon_Sunscreen.png)'}
             onClick={onTutorialsClick}
           />
-          <Card
+          <Card 
             theme={theme}
             title={LocalizedString.lookup(tr('3D Simulator'), locale)}
             description={LocalizedString.lookup(tr('A simulator for the Botball demobot.'), locale)}
@@ -117,7 +116,7 @@ class Dashboard extends React.PureComponent<Props> {
 }
 
 export default connect((state: State) => ({
-  locale: GetBrowserLang(),
+  locale: state.i18n.locale,
 }), dispatch => ({
   onTutorialsClick: () => dispatch(push('/tutorials')),
   onLeaderboardClick: () => dispatch(push('/leaderboard')),
