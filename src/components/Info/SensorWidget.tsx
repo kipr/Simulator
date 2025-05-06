@@ -11,9 +11,24 @@ import Tooltip from './Tooltip';
 import { StyledText } from '../../util';
 import { FontAwesome } from '../FontAwesome';
 
+import Dict from "../../util/objectOps/Dict";
+
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+
+const USED_PORTS: Dict<string> = {
+  'get_servo_position(0)': 'Arm',
+  'get_servo_position(3)': 'Claw',
+  'motor 0': 'Left wheel',
+  'motor 3': 'Right wheel',
+  'analog(0)': 'Rangefinder',
+  'analog(1)': 'Reflectance',
+  'analog(2)': 'Light',
+  'digital(0)': 'Limit switch',
+  'digital(1)': 'Left touch',
+  'digital(2)': 'Right touch'
+};
 
 export interface SensorWidgetProps extends ThemeProps, StyleProps {
   name: string;
@@ -31,11 +46,31 @@ interface SensorWidgetState {
 type Props = SensorWidgetProps;
 type State = SensorWidgetState;
 
+const Fieldset = styled('div', ({ theme }: ThemeProps) => ({
+  margin: 10,
+  paddingHorizontal: 10,
+  paddingBottom: 10,
+  borderRadius: 5,
+  borderWidth: 1,
+  borderColor: `${theme.borderColor}`,
+  width: '100%',
+}));
+
 const Container = styled('div', ({ theme }: ThemeProps) => ({
   width: '100%',
   borderRadius: `${theme.itemPadding * 2}px`,
   overflow: 'none',
-  border: `1px solid ${theme.borderColor}`
+}));
+
+const Legend = styled('div', ({ theme }: ThemeProps) => ({
+  fontSize: '11pt',
+  position: 'relative',
+  top: '0.5em',
+  left: '1em',
+  width: 'max-content',
+  paddingLeft: '0.25em',
+  paddingRight: '0.25em',
+  backgroundColor: `${theme.backgroundColor}`,
 }));
 
 const Name = styled('span', {
@@ -176,11 +211,14 @@ class SensorWidget extends React.PureComponent<Props, State> {
         break;
       }
     }
-    return (
+
+    const portName = USED_PORTS[name];
+
+    const inner: JSX.Element = (
       <>
         <Container
           ref={this.bindRef_}
-          style={style}
+          $style={{ border: portName ? '1px solid #16fc50' : `1px solid ${theme.borderColor}` }}
           className={className}
           theme={theme}
           onMouseEnter={this.onMouseEnter_}
@@ -196,6 +234,23 @@ class SensorWidget extends React.PureComponent<Props, State> {
         {/* showGuide && this.ref_ ? <MeshScreenGuide theme={theme} from={this.ref_} to={'black satin finish plastic'} /> : undefined*/}
       </>
     );
+
+    if (portName) {
+      return (
+        <>
+          <Fieldset theme={theme}>
+            <Legend theme={theme}>{portName}</Legend>
+            {inner}
+          </Fieldset>
+        </>
+      );
+    } else {
+      return (
+        <>
+          {inner}
+        </>
+      );
+    }
   }
 }
 
