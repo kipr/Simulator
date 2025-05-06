@@ -34,7 +34,7 @@ import { Editor } from '../components/Editor';
 
 
 import { State as ReduxState } from '../state';
-import { DocumentationAction, ScenesAction, ChallengeCompletionsAction } from '../state/reducer';
+import { DocumentationAction, ScenesAction, ChallengeCompletionsAction, AiAction } from '../state/reducer';
 
 import Scene, { AsyncScene } from '../state/State/Scene';
 import Script from '../state/State/Scene/Script';
@@ -114,6 +114,8 @@ interface RootPrivateProps {
 
   onScriptChange: (scriptId: string, script: Script) => void;
   onScriptRemove: (scriptId: string) => void;
+
+  onAiClick: () => void;
 }
 
 interface RootState {
@@ -484,6 +486,10 @@ class Root extends React.Component<Props, State> {
     window.open("https://www.kipr.org/doc/index.html");
   };
 
+  onAiClick = (event: React.MouseEvent) => {
+    this.props.onAiClick();
+  };
+
   onLogoutClick = () => {
     void signOutOfApp().then(() => {
       this.props.goToLogin();
@@ -707,6 +713,7 @@ class Root extends React.Component<Props, State> {
             onRunClick={code[activeLanguage].length > 0 ? this.onRunClick_ : undefined}
             onStopClick={this.onStopClick_}
             onDocumentationClick={onDocumentationClick}
+            onAiClick={this.onAiClick}
             onDashboardClick={this.onDashboardClick}
             onLogoutClick={this.onLogoutClick}
             onFeedbackClick={this.onModalClick_(Modal.FEEDBACK)}
@@ -913,6 +920,7 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
   onScriptRemove: (scriptId: string) => {
     dispatch(ScenesAction.removeScript({ sceneId, scriptId }));
   },
+  onAiClick: () => dispatch(AiAction.TOGGLE),
 }))(Root) as React.ComponentType<RootPublicProps>;
 
 export { RootState };

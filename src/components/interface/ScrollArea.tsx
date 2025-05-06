@@ -13,6 +13,10 @@ export interface ScrollAreaProps extends StyleProps, ThemeProps {
   autoscroll?: boolean;
 }
 
+export interface ScrollAreaRef {
+  getScrollContainer: () => HTMLDivElement | null;
+}
+
 export namespace Action {
   export enum Type {
     None,
@@ -325,6 +329,10 @@ class ScrollArea extends React.PureComponent<Props, State> {
     if (this.innerRef_) this.listener_.unobserve(this.innerRef_);
     this.innerRef_ = innerRef;
     if (this.innerRef_) this.listener_.observe(this.innerRef_);
+  };
+
+  getScrollContainer = () => {
+    return this.outerRef_;
   };
 
   private get vScrollHeight() {
