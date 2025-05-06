@@ -146,6 +146,20 @@ namespace LocalizedString {
     [UR_PK]: [EN_US]
   };
 
+  // Trick to validate type at runtime
+  const langs = [EN_US, EN_UK, ZH_CN, ZH_TW, JA_JP, KO_KR, HI_IN, ES_ES,
+    ES_MX, FR_FR, DE_DE, IT_IT, PT_BR, PT_PT, RU_RU, AR_SA, TR_TR, PL_PL,
+    NL_NL, SV_SE, DA_DK, NO_NO, FI_FI, HU_HU, CS_CZ, SK_SK, RO_RO, BG_BG,
+    EL_GR, HE_IL, TH_TH, VI_VN, ID_ID, MS_MY, FA_IR, UR_PK];
+
+  export const validate = (locale: string): Language => {
+    if (langs.includes(locale)) {
+      return locale as Language;
+    } else {
+      return null;
+    }
+  }
+
   export const lookup = (localizedString: LocalizedString, locale: Language) => {
     let currentLocale = locale;
     const fallbacks = FALLBACKS[locale] || [];

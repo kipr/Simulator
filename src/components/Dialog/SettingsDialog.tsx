@@ -130,6 +130,7 @@ class SettingsDialog extends React.PureComponent<Props, State> {
   };
 
   private onLocaleSelect_ = (index: number, option: ComboBox.Option) => {
+    localStorage.setItem('bblocale', option.data as string);
     this.props.onLocaleChange(option.data as LocalizedString.Language);
   };
 
