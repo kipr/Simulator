@@ -12,29 +12,19 @@ import { StyledText } from '../../util';
 import { FontAwesome } from '../FontAwesome';
 
 import Dict from "../../util/objectOps/Dict";
+import tr from '@i18n';
 
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-
-const USED_PORTS: Dict<string> = {
-  'get_servo_position(0)': 'Arm',
-  'get_servo_position(3)': 'Claw',
-  'motor 0': 'Left wheel',
-  'motor 3': 'Right wheel',
-  'analog(0)': 'Rangefinder',
-  'analog(1)': 'Reflectance',
-  'analog(2)': 'Light',
-  'digital(0)': 'Limit switch',
-  'digital(1)': 'Left touch',
-  'digital(2)': 'Right touch'
-};
+import LocalizedString from '../../util/LocalizedString';
 
 export interface SensorWidgetProps extends ThemeProps, StyleProps {
   name: string;
   value: number | boolean;
   unit?: string;
   plotTitle?: string;
+  locale: LocalizedString.Language;
 }
 
 interface SensorWidgetState {
@@ -162,7 +152,7 @@ class SensorWidget extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { style, className, theme, name, unit, value, plotTitle } = props;
+    const { style, className, theme, name, unit, value, plotTitle, locale } = props;
     const { showGuide, showActionTooltip, showPlot } = state;
 
     let plot: JSX.Element;
@@ -211,6 +201,20 @@ class SensorWidget extends React.PureComponent<Props, State> {
         break;
       }
     }
+
+    const USED_PORTS: Dict<string> = {
+      'get_servo_position(0)': LocalizedString.lookup(tr('Arm'), locale),
+      'get_servo_position(3)': LocalizedString.lookup(tr('Claw'), locale),
+      'motor 0': LocalizedString.lookup(tr('Left wheel'), locale),
+      'motor 3': LocalizedString.lookup(tr('Right wheel'), locale),
+      'analog(0)': LocalizedString.lookup(tr('Rangefinder'), locale),
+      'analog(1)': LocalizedString.lookup(tr('Reflectance'), locale),
+      'analog(2)': LocalizedString.lookup(tr('Light'), locale),
+      'digital(0)': LocalizedString.lookup(tr('Limit switch'), locale),
+      'digital(1)': LocalizedString.lookup(tr('Left touch'), locale),
+      'digital(2)': LocalizedString.lookup(tr('Right touch'), locale),
+    };
+
 
     const portName = USED_PORTS[name];
 
