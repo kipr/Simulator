@@ -1687,6 +1687,33 @@ msgstr "ピンクの飲み物 #%d"
 msgid "Fry #%d"
 msgstr "フライドポテト #%d"
 
+msgid "Arm"
+msgstr "腕"
+
+msgid "Claw"
+msgstr "手"
+
+msgid "Left wheel"
+msgstr "左の車輪"
+
+msgid "Right wheel"
+msgstr "右の車輪"
+
+msgid "Rangefinder"
+msgstr "レンジファインダー"
+
+msgid "Reflectance"
+msgstr "反射率"
+
+msgid "Limit switch"
+msgstr "リミットスイッチ"
+
+msgid "Left touch"
+msgstr "左のコンタクト"
+
+msgid "Right touch"
+msgstr "右のコンタクト"
+
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
 msgstr "変数"

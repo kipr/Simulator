@@ -2168,6 +2168,42 @@
     "Fry #%d": {
       "en-US": "Fry #%d",
       "ja-JP": "フライドポテト #%d"
+    },
+    "Arm": {
+      "en-US": "Arm",
+      "ja-JP": "腕"
+    },
+    "Claw": {
+      "en-US": "Claw",
+      "ja-JP": "手"
+    },
+    "Left wheel": {
+      "en-US": "Left wheel",
+      "ja-JP": "左の車輪"
+    },
+    "Right wheel": {
+      "en-US": "Right wheel",
+      "ja-JP": "右の車輪"
+    },
+    "Rangefinder": {
+      "en-US": "Rangefinder",
+      "ja-JP": "レンジファインダー"
+    },
+    "Reflectance": {
+      "en-US": "Reflectance",
+      "ja-JP": "反射率"
+    },
+    "Limit switch": {
+      "en-US": "Limit switch",
+      "ja-JP": "リミットスイッチ"
+    },
+    "Left touch": {
+      "en-US": "Left touch",
+      "ja-JP": "左のコンタクト"
+    },
+    "Right touch": {
+      "en-US": "Right touch",
+      "ja-JP": "右のコンタクト"
     }
   },
   "Volume (box) in the 3D scene": {

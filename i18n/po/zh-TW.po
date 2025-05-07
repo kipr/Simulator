@@ -1683,6 +1683,33 @@ msgstr ""
 msgid "Fry #%d"
 msgstr ""
 
+msgid "Arm"
+msgstr ""
+
+msgid "Claw"
+msgstr ""
+
+msgid "Left wheel"
+msgstr ""
+
+msgid "Right wheel"
+msgstr ""
+
+msgid "Rangefinder"
+msgstr ""
+
+msgid "Reflectance"
+msgstr ""
+
+msgid "Limit switch"
+msgstr ""
+
+msgid "Left touch"
+msgstr ""
+
+msgid "Right touch"
+msgstr ""
+
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
 msgstr ""
