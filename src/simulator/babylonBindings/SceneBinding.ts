@@ -694,6 +694,8 @@ class SceneBinding {
       return;
     }
 
+    // console.log(this.bScene_.meshes);
+
     const initialParent = mesh.parent;
     mesh.setParent(null);
     let physics_mesh = mesh;

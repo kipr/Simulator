@@ -5,9 +5,11 @@
  * The simulation is rendered in a loop using the Babylon engine. Each loop, the simulation
  * updates the store with the current state of the simulation. 
  */
-import { Engine, Vector3, Quaternion, Matrix, HemisphericLight, Color3, AbstractMesh, 
-  TransformNode, PointerInfo, ShadowLight, PointLight, EventState, PointerEventTypes, 
-  DracoCompression, HavokPlugin, Scene as babylonScene, Node as babylonNode } from "@babylonjs/core";
+import {
+  Engine, Vector3, Quaternion, Matrix, HemisphericLight, Color3, AbstractMesh, Mesh,
+  TransformNode, PointerInfo, ShadowLight, PointLight, EventState, PointerEventTypes, Color4,
+  DracoCompression, HavokPlugin, Scene as babylonScene, Node as babylonNode, HighlightLayer, GlowLayer, SubMesh
+} from "@babylonjs/core";
 
 import HavokPhysics from "@babylonjs/havok";
 import '@babylonjs/loaders/glTF';
@@ -48,6 +50,7 @@ export class Space {
   private engine: Engine;
   private workingCanvas: HTMLCanvasElement;
   private bScene_: babylonScene;
+  private glow: GlowLayer;
   private sceneBinding_: SceneBinding;
   private nextScene_: Scene | undefined;
 
@@ -75,7 +78,9 @@ export class Space {
     this.engine = new Engine(this.workingCanvas, true, { preserveDrawingBuffer: true, stencil: true });
     this.bScene_ = new babylonScene(this.engine);
     this.bScene_.useRightHandedSystem = true;
-    
+    this.glow = new GlowLayer('glow', this.bScene_);
+    this.glow.intensity = 1;
+
     ACTIVE_SPACE = this;
 
     DracoCompression.Configuration = {
@@ -90,6 +95,12 @@ export class Space {
   public static getInstance(): Space {
     if (!Space.instance) Space.instance = new Space();
     return Space.instance;
+  }
+
+  public static highlight(id: string) {
+  }
+
+  public static unhighlight(id: string) {
   }
 
   /**
@@ -108,7 +119,7 @@ export class Space {
   set noisySensors(noisySensors: boolean) {
     this.sceneBinding_.noisySensors = noisySensors;
   }
-  
+
   get scene() { return this.scene_; }
 
   set scene(scene: Scene) {
@@ -131,7 +142,7 @@ export class Space {
     (async () => {
       // Disable physics during scene changes to avoid objects moving before the scene is fully loaded
       this.bScene_.physicsEnabled = false;
-     
+
       await this.sceneBinding_.setScene(scene, Robots.loaded(store.getState().robots));
       while (this.nextScene_) {
         const nextScene = this.nextScene_;
@@ -176,7 +187,7 @@ export class Space {
         this.engine.getRenderWidth(),
         this.engine.getRenderHeight(),
       ));
-    
+
     // Assuming the first view is the view of interest. If we ever use multiple views, this may break
     const { top, left } = this.engine.views[0].target.getBoundingClientRect();
 
@@ -274,7 +285,7 @@ export class Space {
 
     if (bPosition) {
       const bPositionConv = Vector3wUnits.fromRaw(RawVector3.fromBabylon(bPosition), 'centimeters');
-      
+
       // Distance between the two positions in meters
       const distance = Vector3wUnits.distance(position, bPositionConv);
 
@@ -290,7 +301,7 @@ export class Space {
       // Angle between the two rotations in radians
       const angle = RotationwUnits.angle(rotation, bOrientationConv);
       const radians = Angle.toRadians(angle);
-      
+
       // If varies by more than 0.5deg, consider it a change
       if (radians.value > 0.00872665) {
         change.orientation = RotationwUnits.toType(bOrientationConv, rotation.type);
@@ -310,7 +321,7 @@ export class Space {
     const light = new HemisphericLight('hemispheric_light', new Vector3(0, 1, 0), this.bScene_);
     light.intensity = 0.5;
     light.diffuse = new Color3(1.0, 1.0, 1.0);
-    
+
     const state = store.getState();
     const havokInstance = await HavokPhysics();
     const havokPlugin = new HavokPlugin(true, havokInstance);
@@ -328,10 +339,10 @@ export class Space {
     scriptManager.onGravityChange = gravity => this.onGravityChange?.(gravity);
     scriptManager.onSelectedNodeIdChange = id => this.onSelectNodeId?.(id);
     scriptManager.onChallengeSetEventValue = (id, value) => this.onChallengeSetEventValue?.(id, value);
-    
+
     this.sceneBinding_.scriptManager.scene = this.scene_;
     await this.sceneBinding_.setScene(this.scene_, Robots.loaded(state.robots));
-    
+
     this.bScene_.getPhysicsEngine().setSubTimeStep(1);
 
   }
@@ -413,7 +424,7 @@ export class Space {
     // Update state with significant changes, if needed
     // These seems to also be necessary for sensors to update
     this.debounceUpdate_ = true;
-    if (setNodeBatch.nodeIds.length > 0) this.onSetNodeBatch?.(setNodeBatch); 
+    if (setNodeBatch.nodeIds.length > 0) this.onSetNodeBatch?.(setNodeBatch);
     this.debounceUpdate_ = false;
   };
 

@@ -18,6 +18,7 @@ import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import LocalizedString from '../../util/LocalizedString';
+import { Space } from '../../simulator/Space';
 
 export interface SensorWidgetProps extends ThemeProps, StyleProps {
   name: string;
@@ -31,6 +32,7 @@ interface SensorWidgetState {
   showGuide: boolean;
   showActionTooltip: boolean;
   showPlot: boolean;
+  handle: number | null;
 }
 
 type Props = SensorWidgetProps;
@@ -93,6 +95,22 @@ const ACTION_ITEMS = [
   StyledText.text({ text: 'asd' })
 ];
 
+const portMeshMap = new Map([
+  ['get_servo_position(0)', 'collider-box-armMotor'],
+  ['get_servo_position(3)', 'collider-box-clawMotor'],
+
+  ['motor 0', 'collider-box-leftMotor'],
+  ['motor 3', 'collider-box-rightMotor'],
+
+  ['analog(0)', 'et_sensor'],
+  ['analog(1)', 'collider-box-reflectance'],
+  ['analog(3)', 'unknown'],
+
+  ['digital(0)', 'collider-box-leverSensor'],
+  ['digital(1)', 'collider-box-leftBumper'],
+  ['digital(2)', 'collider-box-rightBumper'],
+]);
+
 class SensorWidget extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -104,20 +122,31 @@ class SensorWidget extends React.PureComponent<Props, State> {
     this.state = {
       showGuide: false,
       showActionTooltip: false,
-      showPlot: false
+      showPlot: false,
+      handle: null,
     };
   }
 
-  private onMouseEnter_ = (event: React.MouseEvent<HTMLDivElement>) => {
+
+  private onMouseEnter_ = (event: React.MouseEvent<HTMLDivElement>, props: SensorWidgetProps) => {
+    console.log("Mouse entered");
     this.setState({
       showGuide: true,
-      showActionTooltip: true
+      showActionTooltip: true,
+      handle: window.setTimeout(() => {
+        console.log(props.name);
+        console.log(portMeshMap.get(props.name));
+        Space.highlight(portMeshMap.get(props.name));
+      }, 1000),
     });
   };
 
   private onMouseLeave_ = (event: React.MouseEvent<HTMLDivElement>) => {
+    console.log("Mouse left");
+    clearTimeout(this.state.handle);
     this.setState({
-      showGuide: false
+      showGuide: false,
+      handle: null,
     });
   };
 
@@ -215,7 +244,6 @@ class SensorWidget extends React.PureComponent<Props, State> {
       'digital(2)': LocalizedString.lookup(tr('Right touch'), locale),
     };
 
-
     const portName = USED_PORTS[name];
 
     const inner: JSX.Element = (
@@ -225,7 +253,7 @@ class SensorWidget extends React.PureComponent<Props, State> {
           $style={{ border: portName ? '1px solid #16fc50' : `1px solid ${theme.borderColor}` }}
           className={className}
           theme={theme}
-          onMouseEnter={this.onMouseEnter_}
+          onMouseEnter={(e) => this.onMouseEnter_(e, props)}
           onMouseLeave={this.onMouseLeave_}
         >
           <Header theme={theme} onClick={this.onTogglePlotClick_}>
