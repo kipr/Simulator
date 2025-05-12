@@ -6,19 +6,19 @@ import SensorPlot from './SensorPlot';
 import BooleanPlot from '../interface/BooleanPlot';
 import { Spacer } from '../constants/common';
 
-import { ActionTooltip } from './ActionTooltip';
-import Tooltip from './Tooltip';
+// import { ActionTooltip } from './ActionTooltip';
+// import Tooltip from './Tooltip';
 import { StyledText } from '../../util';
 import { FontAwesome } from '../FontAwesome';
 
 import Dict from "../../util/objectOps/Dict";
 import tr from '@i18n';
 
-import { connect } from 'react-redux';
-import { State as ReduxState } from '../../state';
+// import { connect } from 'react-redux';
+// import { State as ReduxState } from '../../state';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import LocalizedString from '../../util/LocalizedString';
-import { Space } from '../../simulator/Space';
+import { ACTIVE_SPACE } from '../../simulator/Space';
 
 export interface SensorWidgetProps extends ThemeProps, StyleProps {
   name: string;
@@ -32,7 +32,7 @@ interface SensorWidgetState {
   showGuide: boolean;
   showActionTooltip: boolean;
   showPlot: boolean;
-  handle: number | null;
+  hlHandle: number | null;
 }
 
 type Props = SensorWidgetProps;
@@ -95,21 +95,12 @@ const ACTION_ITEMS = [
   StyledText.text({ text: 'asd' })
 ];
 
-const portMeshMap = new Map([
-  ['get_servo_position(0)', 'collider-box-armMotor'],
-  ['get_servo_position(3)', 'collider-box-clawMotor'],
-
-  ['motor 0', 'collider-box-leftMotor'],
-  ['motor 3', 'collider-box-rightMotor'],
-
-  ['analog(0)', 'et_sensor'],
-  ['analog(1)', 'collider-box-reflectance'],
-  ['analog(3)', 'unknown'],
-
-  ['digital(0)', 'collider-box-leverSensor'],
-  ['digital(1)', 'collider-box-leftBumper'],
-  ['digital(2)', 'collider-box-rightBumper'],
-]);
+const portMeshMap: Dict<string> = {
+  'get_servo_position(0)': 'arm_primitive0_merged',
+  'get_servo_position(3)': 'Claw_primitive0_merged',
+  'motor 0': 'Wheel_primitive0_merged',
+  'motor 3': 'Wheel_primitive0_merged',
+};
 
 class SensorWidget extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -123,31 +114,43 @@ class SensorWidget extends React.PureComponent<Props, State> {
       showGuide: false,
       showActionTooltip: false,
       showPlot: false,
-      handle: null,
+      hlHandle: null,
     };
   }
 
 
   private onMouseEnter_ = (event: React.MouseEvent<HTMLDivElement>, props: SensorWidgetProps) => {
-    console.log("Mouse entered");
     this.setState({
       showGuide: true,
       showActionTooltip: true,
-      handle: window.setTimeout(() => {
-        console.log(props.name);
-        console.log(portMeshMap.get(props.name));
-        Space.highlight(portMeshMap.get(props.name));
+
+      hlHandle: window.setTimeout(() => {
+        const mesh = portMeshMap[props.name];
+        if (mesh) {
+          // Both wheels have the mesh ID 'Wheel_primitive0_merged', so use idx
+          // to distinguish between them.
+          const idx = props.name === 'motor 3' ? 1 : 0;
+          ACTIVE_SPACE.highlight(mesh, idx);
+        }
       }, 1000),
+
     });
   };
 
-  private onMouseLeave_ = (event: React.MouseEvent<HTMLDivElement>) => {
-    console.log("Mouse left");
-    clearTimeout(this.state.handle);
+  private onMouseLeave_ = (event: React.MouseEvent<HTMLDivElement>, props: SensorWidgetProps) => {
+    clearTimeout(this.state.hlHandle);
     this.setState({
       showGuide: false,
-      handle: null,
+      hlHandle: null,
     });
+
+    const mesh = portMeshMap[props.name];
+    if (mesh) {
+      window.setTimeout(() => {
+        const idx = props.name === 'motor 3' ? 1 : 0;
+        ACTIVE_SPACE.unhighlight(mesh, idx);
+      }, 1000);
+    }
   };
 
   private onActionTooltipClose_ = () => this.setState({
@@ -254,7 +257,7 @@ class SensorWidget extends React.PureComponent<Props, State> {
           className={className}
           theme={theme}
           onMouseEnter={(e) => this.onMouseEnter_(e, props)}
-          onMouseLeave={this.onMouseLeave_}
+          onMouseLeave={(e) => this.onMouseLeave_(e, props)}
         >
           <Header theme={theme} onClick={this.onTogglePlotClick_}>
             <Name>{name}</Name>
@@ -277,11 +280,7 @@ class SensorWidget extends React.PureComponent<Props, State> {
         </>
       );
     } else {
-      return (
-        <>
-          {inner}
-        </>
-      );
+      return inner;
     }
   }
 }

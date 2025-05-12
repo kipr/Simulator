@@ -7,8 +7,8 @@
  */
 import {
   Engine, Vector3, Quaternion, Matrix, HemisphericLight, Color3, AbstractMesh, Mesh,
-  TransformNode, PointerInfo, ShadowLight, PointLight, EventState, PointerEventTypes, Color4,
-  DracoCompression, HavokPlugin, Scene as babylonScene, Node as babylonNode, HighlightLayer, GlowLayer, SubMesh
+  TransformNode, PointerInfo, ShadowLight, PointLight, EventState, PointerEventTypes,
+  DracoCompression, HavokPlugin, Scene as babylonScene, Node as babylonNode, HighlightLayer
 } from "@babylonjs/core";
 
 import HavokPhysics from "@babylonjs/havok";
@@ -50,7 +50,7 @@ export class Space {
   private engine: Engine;
   private workingCanvas: HTMLCanvasElement;
   private bScene_: babylonScene;
-  private glow: GlowLayer;
+  private hl: HighlightLayer;
   private sceneBinding_: SceneBinding;
   private nextScene_: Scene | undefined;
 
@@ -78,8 +78,7 @@ export class Space {
     this.engine = new Engine(this.workingCanvas, true, { preserveDrawingBuffer: true, stencil: true });
     this.bScene_ = new babylonScene(this.engine);
     this.bScene_.useRightHandedSystem = true;
-    this.glow = new GlowLayer('glow', this.bScene_);
-    this.glow.intensity = 1;
+    // this.hl = new HighlightLayer('highlight', this.bScene_);
 
     ACTIVE_SPACE = this;
 
@@ -97,10 +96,22 @@ export class Space {
     return Space.instance;
   }
 
-  public static highlight(id: string) {
+  public highlight(id: string, idx = 0) {
+    if (!this.hl) {
+      this.hl = new HighlightLayer('highlighter', this.bScene_);
+    }
+
+    const meshes = this.bScene_.getMeshesById(id) as Mesh[];
+    this.hl.addMesh(meshes[idx], Color3.Green());
   }
 
-  public static unhighlight(id: string) {
+  public unhighlight(id: string, idx = 0) {
+    if (!this.hl) {
+      return
+    }
+
+    const meshes = this.bScene_.getMeshesById(id) as Mesh[];
+    this.hl.removeMesh(meshes[idx]);
   }
 
   /**
