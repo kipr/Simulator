@@ -146,8 +146,6 @@ namespace LocalizedString {
     [UR_PK]: [EN_US]
   };
 
-<<<<<<< HEAD
-=======
   // Trick to validate type at runtime
   const langs = [EN_US, EN_UK, ZH_CN, ZH_TW, JA_JP, KO_KR, HI_IN, ES_ES,
     ES_MX, FR_FR, DE_DE, IT_IT, PT_BR, PT_PT, RU_RU, AR_SA, TR_TR, PL_PL,
@@ -161,7 +159,6 @@ namespace LocalizedString {
     return null;
   };
 
->>>>>>> 45bcc14 (Fix eslint issues)
   export const lookup = (localizedString: LocalizedString, locale: Language) => {
     let currentLocale = locale;
     const fallbacks = FALLBACKS[locale] || [];

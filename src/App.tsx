@@ -23,10 +23,7 @@ import DbError from './db/Error';
 import UserConsent from './consent/UserConsent';
 import LegalAcceptance from './consent/LegalAcceptance';
 
-<<<<<<< HEAD
-=======
 import LocalizedString from './util/LocalizedString';
->>>>>>> 45bcc14 (Fix eslint issues)
 export interface AppPublicProps {
 
 }
@@ -169,7 +166,7 @@ class App extends React.Component<Props, State> {
  */
 export default connect((state: ReduxState) => {
   return {
-    
+
   };
 }, dispatch => ({
   login: () => {
