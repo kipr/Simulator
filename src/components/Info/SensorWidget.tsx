@@ -279,9 +279,8 @@ class SensorWidget extends React.PureComponent<Props, State> {
           </Fieldset>
         </>
       );
-    } else {
-      return inner;
     }
+    return inner;
   }
 }
 

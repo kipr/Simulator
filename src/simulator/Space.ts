@@ -107,7 +107,7 @@ export class Space {
 
   public unhighlight(id: string, idx = 0) {
     if (!this.hl) {
-      return
+      return;
     }
 
     const meshes = this.bScene_.getMeshesById(id) as Mesh[];
