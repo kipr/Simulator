@@ -33,7 +33,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   alignItems: 'center',
   justifyContent: 'center',
   width: '100%',
-  height: '100vh',
+  minHeight: '100vh',
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
 }));
@@ -57,7 +57,7 @@ const CardContainer = styled('div', (props: ThemeProps) => ({
   paddingRight: cardContainerMargin(),
   backgroundColor: props.theme.backgroundColor,
   width: '100%',
-  height: 'calc(100vh - 48px)',
+  minHeight: 'calc(100vh - 48px)',
 }));
 
 
@@ -73,7 +73,7 @@ class Dashboard extends React.PureComponent<Props> {
 
     return (
       <Container className={className} style={style} theme={theme}>
-        <MainMenu theme={theme}/>
+        <MainMenu theme={theme} />
         <CardContainer theme={theme}>
           <Card
             theme={theme}
@@ -83,7 +83,7 @@ class Dashboard extends React.PureComponent<Props> {
             backgroundImage={'url(../../static/icons/Laptop_Icon_Sunscreen.png)'}
             onClick={onTutorialsClick}
           />
-          <Card 
+          <Card
             theme={theme}
             title={LocalizedString.lookup(tr('3D Simulator'), locale)}
             description={LocalizedString.lookup(tr('A simulator for the Botball demobot.'), locale)}
