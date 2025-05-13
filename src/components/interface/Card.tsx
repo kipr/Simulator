@@ -32,6 +32,7 @@ const Container = styled('div', (props: ThemeProps & {
   height: '100%',
   minWidth: '320px',
   maxWidth: '350px',
+  minHeight: '320px',
   maxHeight: '350px',
   display: 'flex',
   flexDirection: 'column',
@@ -98,7 +99,7 @@ export class Card extends React.Component<Props, State> {
   }
 
   render() {
-    const { 
+    const {
       backgroundImage,
       backgroundColor,
       backgroundPosition,
@@ -111,9 +112,9 @@ export class Card extends React.Component<Props, State> {
     } = this.props;
 
     return (
-      <Container 
-        theme={theme} 
-        backgroundimage={backgroundImage} 
+      <Container
+        theme={theme}
+        backgroundimage={backgroundImage}
         backgroundcolor={backgroundColor}
         backgroundposition={backgroundPosition}
         backgroundsize={backgroundSize}
