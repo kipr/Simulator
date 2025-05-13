@@ -63,7 +63,9 @@ git submodule update --init
 cd dependencies/kipr-scratch/libwallaby && git submodule update --init
 ```
 
-### Optional: Pull large files
+### Pull large files
+> [!TIP]
+> This step is optional for building the project but required for it to function properly at runtime.
 
 ```bash
 git lfs pull
