@@ -6302,9 +6302,9 @@ isurl@^1.0.0-alpha5:
   dependencies:
     xmldom "^0.6.0"
 
-"ivygate@https://github.com/kipr/ivygate#v0.1.8":
+"ivygate@https://github.com/kipr/ivygate#v0.1.9":
   version "0.1.5"
-  resolved "https://github.com/kipr/ivygate#02e367e303bce33e518b9b5e12bdc19393977fc6"
+  resolved "https://github.com/kipr/ivygate#7675b2ba89861ba0c9e6faf93d2c966d29754aa6"
   dependencies:
     monaco "^1.201704190613.0"
     monaco-editor "^0.23.0"
