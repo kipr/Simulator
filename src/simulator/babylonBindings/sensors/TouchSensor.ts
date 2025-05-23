@@ -43,6 +43,7 @@ class TouchSensor extends SensorObject<Node.TouchSensor, boolean> {
     this.intersector_.material = new StandardMaterial('touch-sensor-material', scene);
     this.intersector_.material.wireframe = true;
     this.intersector_.visibility = 0;
+    this.intersector_.isPickable = false;
 
     // ReferenceFramewUnits.syncBabylon(origin, this.intersector_, 'meters');
   }
