@@ -5,6 +5,7 @@ import sequentialize from './sequentialize';
 import store from '../state';
 import ProgrammingLanguage from 'programming/compiler/ProgrammingLanguage';
 import Robot from 'state/State/Robot';
+import { Dispatch } from 'redux';
 
 export interface SendMessageParams {
   content: string;
@@ -14,8 +15,16 @@ export interface SendMessageParams {
   robot: Robot;
 }
 
+interface ApiResponse {
+  content: Array<{ text: string }>;
+}
+
+interface ErrorResponse {
+  error?: string;
+}
+
 // Thunk action creator for sending messages
-const sendMessage_ = async (dispatch: any, { content, code, language, console, robot }: SendMessageParams) => {
+const sendMessage_ = async (dispatch: Dispatch, { content, code, language, console, robot }: SendMessageParams) => {
   try {
     dispatch(AiAction.SEND_MESSAGE_START);
 
@@ -50,11 +59,11 @@ const sendMessage_ = async (dispatch: any, { content, code, language, console, r
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
+      const errorData = await response.json() as ErrorResponse;
       throw new Error(errorData.error || 'Error calling Tutor API');
     }
 
-    const data = await response.json();
+    const data = await response.json() as ApiResponse;
     const assistantMessage = data.content[0].text;
 
     dispatch(AiAction.sendMessageSuccess({ content: assistantMessage }));

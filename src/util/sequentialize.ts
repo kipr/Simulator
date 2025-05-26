@@ -7,7 +7,7 @@
 interface QueuedCall<TArgs extends readonly unknown[], TReturn> {
   args: TArgs;
   resolve: (value: TReturn) => void;
-  reject: (reason?: any) => void;
+  reject: (reason?: unknown) => void;
 }
 
 /**
@@ -48,7 +48,10 @@ export default function sequentialize<TArgs extends readonly unknown[], TReturn>
     isProcessing = true;
 
     while (queue.length > 0) {
-      const { args, resolve, reject } = queue.shift()!;
+      const queuedCall = queue.shift();
+      if (!queuedCall) break;
+
+      const { args, resolve, reject } = queuedCall;
 
       try {
         const result = await asyncFn(...args);
@@ -64,7 +67,7 @@ export default function sequentialize<TArgs extends readonly unknown[], TReturn>
   return (...args: TArgs): Promise<TReturn> => {
     return new Promise<TReturn>((resolve, reject) => {
       queue.push({ args, resolve, reject });
-      processQueue();
+      void processQueue();
     });
   };
 }
