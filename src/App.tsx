@@ -134,7 +134,6 @@ class App extends React.Component<Props, State> {
           <Redirect to="/" />
         </Switch>
         <DocumentationWindow theme={DARK} />
-        <AiWindow theme={DARK} />
       </>
     );
   }

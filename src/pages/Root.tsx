@@ -35,6 +35,7 @@ import { Editor } from '../components/Editor';
 
 import { State as ReduxState } from '../state';
 import { DocumentationAction, ScenesAction, ChallengeCompletionsAction, AiAction } from '../state/reducer';
+import { sendMessage, SendMessageParams } from '../util/ai';
 
 import Scene, { AsyncScene } from '../state/State/Scene';
 import Script from '../state/State/Scene/Script';
@@ -63,6 +64,8 @@ import LocalizedString from '../util/LocalizedString';
 import { Space } from '../simulator/Space';
 import tr from '@i18n';
 import { Modal } from './sharedRoot/Modal';
+import Robot from '../state/State/Robot';
+import AiWindow from '../components/Ai/AiWindow';
 
 
 interface RootParams {
@@ -80,6 +83,7 @@ interface RootPrivateProps {
   challengeCompletion?: AsyncChallengeCompletion;
   sceneHasChallenge: boolean;
   locale: LocalizedString.Language;
+  robots: Dict<Robot>;
 
   onNodeAdd: (id: string, node: Node) => void;
   onNodeRemove: (id: string) => void;
@@ -116,6 +120,9 @@ interface RootPrivateProps {
   onScriptRemove: (scriptId: string) => void;
 
   onAiClick: () => void;
+  onAskTutorClick: (query: SendMessageParams) => void;
+
+  onAddUserMessage: (message: string) => void;
 }
 
 interface RootState {
@@ -461,6 +468,19 @@ class Root extends React.Component<Props, State> {
     });
   };
 
+  private onAskTutor_ = () => {
+    const { activeLanguage, code, console } = this.state;
+    const currentCode = code[activeLanguage];
+    const consoleText = StyledText.toString(console);
+    
+    // Create a message for the tutor with the code and errors
+    const message = `I'm having trouble with my ${activeLanguage} program. Here's my code:\n\n\`\`\`${activeLanguage}\n${currentCode}\n\`\`\`\n\nAnd here are the errors I'm seeing:\n\n${consoleText}`;
+    
+    // Add the message to the tutor chat
+    this.props.onAiClick();
+    this.props.onAddUserMessage(message);
+  };
+
   private onIndentCode_ = () => {
     if (this.editorRef.current) this.editorRef.current.ivygate.formatCode();
   };
@@ -486,8 +506,18 @@ class Root extends React.Component<Props, State> {
     window.open("https://www.kipr.org/doc/index.html");
   };
 
-  onAiClick = (event: React.MouseEvent) => {
+  private onAiClick_ = (event: React.MouseEvent) => {
     this.props.onAiClick();
+  };
+
+  private onAskTutorClick_ = () => {
+    this.props.onAskTutorClick({
+      code: this.state.code[this.state.activeLanguage],
+      language: this.state.activeLanguage,
+      console: StyledText.toString(this.state.console),
+      content: "Please help me understand what's wrong.",
+      robot: this.props.robots[Dict.unique(Scene.robots(Async.latestValue(this.props.scene)))?.robotId ?? "demobot"],
+    });
   };
 
   onLogoutClick = () => {
@@ -615,7 +645,7 @@ class Root extends React.Component<Props, State> {
       selectedScript,
       selectedScriptId,
       onDocumentationClick,
-      onDocumentationGoToFuzzy
+      onDocumentationGoToFuzzy,
     } = props;
 
     const {
@@ -652,6 +682,7 @@ class Root extends React.Component<Props, State> {
       settings,
       editorTarget,
       onClearConsole: this.onClearConsole_,
+      onAskTutorClick: this.onAskTutorClick_,
       onIndentCode: this.onIndentCode_,
       onDownloadCode: this.onDownloadClick_,
       onResetCode: this.onResetCode_,
@@ -701,36 +732,27 @@ class Root extends React.Component<Props, State> {
       <>
         <Container $windowInnerHeight={windowInnerHeight}>
           <SimMenu
+            theme={theme}
             layout={layout}
             onLayoutChange={this.onLayoutChange_}
-            theme={theme}
             onShowAll={this.onShowAll_}
             onHideAll={this.onHideAll_}
+            onResetWorldClick={this.onResetWorldClick_}
+            onStartChallengeClick={this.onStartChallengeClick_}
             onSettingsClick={this.onModalClick_(Modal.SETTINGS)}
             onAboutClick={this.onModalClick_(Modal.ABOUT)}
-            onResetWorldClick={this.onResetWorldClick_}
-            onStartChallengeClick={sceneHasChallenge ? this.onStartChallengeClick_ : undefined}
-            onRunClick={code[activeLanguage].length > 0 ? this.onRunClick_ : undefined}
-            onStopClick={this.onStopClick_}
-            onDocumentationClick={onDocumentationClick}
-            onAiClick={this.onAiClick}
-            onDashboardClick={this.onDashboardClick}
+            onDocumentationClick={this.onDocumentationClick}
+            onAiClick={this.onAiClick_}
             onLogoutClick={this.onLogoutClick}
+            onDashboardClick={this.onDashboardClick}
             onFeedbackClick={this.onModalClick_(Modal.FEEDBACK)}
             onOpenSceneClick={this.onOpenSceneClick_}
+            onNewSceneClick={this.onModalClick_(Modal.NEW_SCENE)}
+            onSaveSceneClick={this.onSaveSceneClick_}
+            onSettingsSceneClick={this.onSettingsSceneClick_}
+            onRunClick={this.onRunClick_}
+            onStopClick={this.onStopClick_}
             simulatorState={simulatorState}
-            onNewSceneClick={!challenge && this.onModalClick_(Modal.NEW_SCENE)}
-            onSaveAsSceneClick={!challenge && this.onModalClick_(Modal.copyScene({ scene: Async.latestValue(scene) }))}
-            onSettingsSceneClick={isAuthor && !challenge && this.onSettingsSceneClick_}
-            onDeleteSceneClick={isAuthor && !challenge && this.onModalClick_(Modal.deleteRecord({
-              record: {
-                type: Record.Type.Scene,
-                id: sceneId,
-                value: scene,
-              }
-            }))}
-            onSaveSceneClick={scene && !challenge && scene.type === Async.Type.Saveable && isAuthor ? this.onSaveSceneClick_ : undefined}
-            
           />
           {impl}
         </Container>
@@ -822,6 +844,13 @@ class Root extends React.Component<Props, State> {
             onClose={this.onModalClose_}
           />
         )}
+        <AiWindow
+          theme={DARK}
+          code={code[activeLanguage]}
+          language={activeLanguage}
+          console={StyledText.toString(console)}
+          robot={this.props.robots[Dict.unique(Scene.robots(Async.latestValue(this.props.scene)))?.robotId ?? "demobot"]}
+        />
       </>
 
     );
@@ -850,6 +879,7 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
     challengeCompletion: Dict.unique(builder.challengeCompletions),
     sceneHasChallenge,
     locale: state.i18n.locale,
+    robots: Dict.map(state.robots.robots, Async.latestValue), 
   };
 }, (dispatch, { match: { params: { sceneId } } }: RootPublicProps) => ({
   onNodeAdd: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
@@ -921,6 +951,7 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
     dispatch(ScenesAction.removeScript({ sceneId, scriptId }));
   },
   onAiClick: () => dispatch(AiAction.TOGGLE),
+  onAskTutorClick: (params: SendMessageParams) => sendMessage(dispatch, params),
 }))(Root) as React.ComponentType<RootPublicProps>;
 
 export { RootState };

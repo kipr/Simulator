@@ -3,19 +3,28 @@ import { useState, useCallback } from 'react';
 import { styled } from 'styletron-react';
 import { connect } from 'react-redux';
 
-import { ThemeProps } from '../constants/theme';
-import Widget, { Mode, Size } from '../interface/Widget';
+import { Theme, ThemeProps } from '../constants/theme';
+import Widget, { BarComponent, Mode, Size } from '../interface/Widget';
 import ChatInterface from './ChatInterface';
 import AiRoot from './AiRoot';
 
 import { State as ReduxState } from '../../state';
 import { AiAction } from '../../state/reducer';
+import { sendMessage } from '../../util/ai';
 import { Message, MessageRole } from '../../state/State/Ai';
 import { FontAwesome } from '../FontAwesome';
-import { faRobot } from '@fortawesome/free-solid-svg-icons';
+import { faFile, faRobot } from '@fortawesome/free-solid-svg-icons';
+import LocalizedString from '../../util/LocalizedString';
+import tr from '@i18n';
+import Button from '../interface/Button';
+import Robot from 'state/State/Robot';
+import ProgrammingLanguage from 'programming/compiler/ProgrammingLanguage';
 
 export interface AiWindowPublicProps extends ThemeProps {
-  
+  code: string;
+  language: ProgrammingLanguage;
+  console: string;
+  robot: Robot;
 }
 
 interface AiWindowPrivateProps {
@@ -23,29 +32,28 @@ interface AiWindowPrivateProps {
   messages: Message[];
   size: Size;
   loading: boolean;
-  error: string | null;
+
+  locale: LocalizedString.Language;
+
+  onClearChat: () => void;
 
   onSizeChange: (size: Size) => void;
   onSetVisible: (visible: boolean) => void;
-  onAddUserMessage: (content: string) => void;
-  onAddAssistantMessage: (content: string) => void;
-  onSetLoading: (loading: boolean) => void;
-  onSetError: (error: string) => void;
-  onClearError: () => void;
   onClearMessages: () => void;
+  onSendMessage: (content: string) => void;
 }
 
 type Props = AiWindowPublicProps & AiWindowPrivateProps;
 
-const Container = styled('div', ({ theme }: ThemeProps) => ({
+const Container = styled('div', ({ theme, $width, $height }: ThemeProps & { $width: string; $height: string; }) => ({
   display: 'flex',
   flexDirection: 'column',
-  minWidth: '450px',
-  width: '100%',
-  height: '100%',
+  width: $width,
+  height: $height,
   color: theme.color,
   backgroundColor: theme.backgroundColor,
   overflow: 'hidden',
+  fontSize: '12px',
 }));
 
 const AiWindow: React.FC<Props> = ({
@@ -54,23 +62,23 @@ const AiWindow: React.FC<Props> = ({
   messages,
   size,
   loading,
-  error,
+  locale,
+  onClearChat,
   onSizeChange,
   onSetVisible,
-  onAddUserMessage,
-  onAddAssistantMessage,
-  onSetLoading,
-  onSetError,
-  onClearError,
   onClearMessages,
+  onSendMessage,
 }) => {
   const [position, setPosition] = useState({ x: 100, y: 100 });
+  const [dragState, setDragState] = useState({ type: 'none' });
 
   const handleChromeMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const startX = e.clientX;
     const startY = e.clientY;
     const startPosX = position.x;
     const startPosY = position.y;
+
+    setDragState({ type: 'dragging' });
 
     const onMouseMove = (moveEvent: MouseEvent) => {
       setPosition({
@@ -82,6 +90,7 @@ const AiWindow: React.FC<Props> = ({
     const onMouseUp = () => {
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
+      setDragState({ type: 'none' });
     };
 
     document.addEventListener('mousemove', onMouseMove);
@@ -91,71 +100,22 @@ const AiWindow: React.FC<Props> = ({
   const SIZES = [Size.MAXIMIZED, Size.PARTIAL, Size.MINIMIZED];
   
   const handleSizeChange = useCallback((index: number) => {
-    onSizeChange(SIZES[index]);
-  }, [onSizeChange, SIZES]);
-
-  const handleSendMessage = useCallback(async (content: string) => {
-    // Add user message to chat
-    onAddUserMessage(content);
-    
-    // Set loading state
-    onSetLoading(true);
-    
-    try {
-      // Get auth token from localStorage (assuming it's stored there)
-      const token = localStorage.getItem('firebase-token');
-      
-      if (!token) {
-        throw new Error('Not authenticated. Please sign in.');
-      }
-      
-      // Prepare messages for API call (include only content and role)
-      const apiMessages = messages.map(message => ({
-        role: message.role,
-        content: message.content
-      }));
-      
-      // Add the new user message
-      apiMessages.push({
-        role: MessageRole.User,
-        content
-      });
-      
-      // Call Claude API
-      const response = await fetch('/api/claude/completion', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ messages: apiMessages })
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Error calling Claude API');
-      }
-      
-      const data = await response.json();
-      
-      // Add Claude's response to chat
-      const assistantMessage = data.content[0].text;
-      onAddAssistantMessage(assistantMessage);
-    } catch (error) {
-      // Handle errors
-      console.error('Error sending message to Claude API:', error);
-      let errorMessage = 'An error occurred while communicating with Claude.';
-      
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      
-      onSetError(errorMessage);
-    } finally {
-      // Clear loading state
-      onSetLoading(false);
+    const newSize = SIZES[index];
+    if (newSize.type === Size.Type.Minimized) {
+      onSetVisible(false);
+    } else {
+      onSizeChange(newSize);
     }
-  }, [messages, onAddUserMessage, onAddAssistantMessage, onSetLoading, onSetError]);
+  }, [onSizeChange, onSetVisible, SIZES]);
+
+  const handleSendMessage = useCallback((content: string) => {
+    onSendMessage(content);
+  }, [onSendMessage]);
+
+  const onClearClick = useCallback((event: React.MouseEvent) => {
+    event.stopPropagation();
+    onClearChat();
+  }, [onClearChat]);
 
   // Don't render if not visible
   if (!visible || size.type === Size.Type.Minimized) return null;
@@ -165,6 +125,7 @@ const AiWindow: React.FC<Props> = ({
   let mode = Mode.Floating;
   const style: React.CSSProperties = {
     position: 'absolute',
+    opacity: dragState.type === 'dragging' ? 0.8 : 1,
   };
 
   switch (size.type) {
@@ -186,7 +147,7 @@ const AiWindow: React.FC<Props> = ({
   return (
     <AiRoot>
       <Widget
-        name="Claude Ai Assistant"
+        name="Tutor"
         theme={theme}
         mode={mode}
         style={style}
@@ -194,18 +155,25 @@ const AiWindow: React.FC<Props> = ({
         size={sizeIndex}
         sizes={SIZES}
         onSizeChange={handleSizeChange}
-        barComponents={[
-          { component: FontAwesome, props: { icon: faRobot, style: { marginLeft: 8 } } }
-        ]}
+        barComponents={[BarComponent.create(Button, {
+          theme,
+          onClick: onClearClick,
+          children:
+            <>
+              <FontAwesome icon={faFile} />
+              {' '} {LocalizedString.lookup(tr('Clear'), locale)}
+            </>,
+        })]}
       >
-        <Container theme={theme}>
+        <Container theme={theme}
+          $width={`${size.type === Size.Type.Maximized ? '100%' : '550px'}`}
+          $height={`${size.type === Size.Type.Maximized ? '100%' : '500px'}`}
+        >
           <ChatInterface
             theme={theme}
             messages={messages}
             loading={loading}
-            error={error}
             onSendMessage={handleSendMessage}
-            onClearChat={onClearMessages}
           />
         </Container>
       </Widget>
@@ -213,21 +181,16 @@ const AiWindow: React.FC<Props> = ({
   );
 };
 
-export default connect((state: ReduxState) => {
-  return {
-    visible: state.ai.visible,
-    messages: state.ai.messages,
-    size: state.ai.size,
-    loading: state.ai.loading,
-    error: state.ai.error,
-  };
-}, dispatch => ({
+export default connect((state: ReduxState) => ({
+  visible: state.ai.visible,
+  messages: state.ai.messages,
+  size: state.ai.size,
+  loading: state.ai.loading,
+  locale: state.i18n.locale,
+}), (dispatch, { code, language, console, robot }: AiWindowPublicProps) => ({
   onSizeChange: (size: Size) => dispatch(AiAction.setSize({ size })),
   onSetVisible: (visible: boolean) => dispatch(AiAction.setVisible({ visible })),
-  onAddUserMessage: (content: string) => dispatch(AiAction.addUserMessage({ content })),
-  onAddAssistantMessage: (content: string) => dispatch(AiAction.addAssistantMessage({ content })),
-  onSetLoading: (loading: boolean) => dispatch(AiAction.setLoading({ loading })),
-  onSetError: (error: string) => dispatch(AiAction.setError({ error })),
-  onClearError: () => dispatch(AiAction.CLEAR_ERROR),
   onClearMessages: () => dispatch(AiAction.CLEAR_MESSAGES),
+  onSendMessage: (content: string) => sendMessage(dispatch, { content, code, language, console, robot }),
+  onClearChat: () => dispatch(AiAction.CLEAR_MESSAGES),
 }))(AiWindow) as React.ComponentType<AiWindowPublicProps>; 

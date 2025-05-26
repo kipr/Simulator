@@ -2,6 +2,10 @@
 
 const express = require('express');
 const RateLimit = require('express-rate-limit');
+const fs = require('fs');
+const path = require('path');
+
+
 
 /**
  * Creates a router for Ai integration
@@ -10,6 +14,15 @@ const RateLimit = require('express-rate-limit');
  * @returns {express.Router} Router for Ai endpoints
  */
 function createAiRouter(firebaseTokenManager, config) {
+  const headers = config.claude.prompt.headers.map(headerPath => {
+    const headerContent = fs.readFileSync(headerPath, 'utf8');
+    return headerContent;
+  }).join('\n');
+
+  const systemPromptPath = path.join(__dirname, 'systemPrompt.md');
+  const systemPrompt = fs.readFileSync(systemPromptPath, 'utf8')
+    .replace('{{headers}}', headers);
+
   const router = express.Router();
 
   // Rate limiter: 20 requests per minute
@@ -46,7 +59,14 @@ function createAiRouter(firebaseTokenManager, config) {
 
   // Claude completion endpoint
   router.post('/completion', async (req, res) => {
-    const { messages, model = 'claude-3-haiku-20240307' } = req.body;
+    const {
+      messages,
+      code,
+      language,
+      console: consoleText,
+      robot,
+      model = 'claude-3-haiku-20240307'
+    } = req.body;
     
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: 'Bad request: messages array is required' });
@@ -57,6 +77,14 @@ function createAiRouter(firebaseTokenManager, config) {
     }
 
     try {
+      const system = systemPrompt
+        .replace('{{code}}', code ?? 'Unknown')
+        .replace('{{language}}', language ?? 'Unknown')
+        .replace('{{console}}', consoleText ?? 'Unknown')
+        .replace('{{robot}}', JSON.stringify(robot) ?? 'Unknown');
+
+      console.log(system);
+
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
@@ -66,6 +94,7 @@ function createAiRouter(firebaseTokenManager, config) {
         },
         body: JSON.stringify({
           model,
+          system,
           messages,
           max_tokens: 1024,
         })

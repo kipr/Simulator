@@ -109,7 +109,7 @@ class ExtraMenu extends React.PureComponent<Props, State> {
     return (
       <Container theme={theme} style={style} className={className}>
         <Item theme={theme} onClick={onDocumentationClick}><ItemIcon icon={faBook} /> {LocalizedString.lookup(tr('Documentation'), locale)}</Item>
-        <Item theme={theme} onClick={onAiClick}><ItemIcon icon={faRobot} /> {LocalizedString.lookup(tr('AI Assistant'), locale)}</Item>
+        <Item theme={theme} onClick={onAiClick}><ItemIcon icon={faRobot} /> {LocalizedString.lookup(tr('Tutor'), locale)}</Item>
         <Item theme={theme} onClick={onSettingsClick}><ItemIcon icon={faCogs} /> {LocalizedString.lookup(tr('Settings'), locale)}</Item>
         <Item theme={theme} onClick={onAboutClick}><ItemIcon icon={faQuestion} /> {LocalizedString.lookup(tr('About'), locale)}</Item>
         {onFeedbackClick && <Item theme={theme} onClick={onFeedbackClick}><ItemIcon icon={faCommentDots} /> {LocalizedString.lookup(tr('Feedback'), locale)}</Item>}

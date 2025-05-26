@@ -11,6 +11,7 @@ import { GlobalEvents, GLOBAL_EVENTS } from '../../util';
 export interface ScrollAreaProps extends StyleProps, ThemeProps {
   children: React.ReactNode;
   autoscroll?: boolean;
+  innerStyle?: React.CSSProperties;
 }
 
 export interface ScrollAreaRef {
@@ -65,6 +66,7 @@ const OuterContainer = styled('div', (props: ThemeProps) => ({
   width: '100%',
   overflow: 'hidden',
   touchAction: 'pinch-zoom',
+  contain: 'layout style',
 }));
 
 const InnerContainer = styled('div', {
@@ -72,7 +74,8 @@ const InnerContainer = styled('div', {
   position: 'absolute',
   left: 0,
   width: '100%',
-  paddingRight: '14px'
+  paddingRight: '14px',
+  willChange: 'transform',
 });
 
 const VScrollBar = styled('div', {
@@ -98,6 +101,7 @@ const VScrollBorder = styled('div', ({ theme }: { theme: Theme }) => ({
 
 class ScrollArea extends React.PureComponent<Props, State> {
   private listener_: ResizeListener;
+  private timeoutIds_: Set<NodeJS.Timeout> = new Set();
 
   constructor(props: Props) {
     super(props);
@@ -153,6 +157,28 @@ class ScrollArea extends React.PureComponent<Props, State> {
 
   componentWillUnmount() {
     this.listener_.disconnect();
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    // Force resize observation when children change to ensure inner size is recalculated
+    if (prevProps.children !== this.props.children) {
+      const wasAtBottom = this.props.autoscroll && this.isAtBottom;
+      
+      // Use setTimeout to ensure DOM has been updated before measuring
+      setTimeout(() => {
+        if (this.innerRef_) {
+          this.listener_.unobserve(this.innerRef_);
+          this.listener_.observe(this.innerRef_);
+          
+          // If autoscroll was enabled and we were at the bottom, scroll to bottom after content change
+          if (wasAtBottom) {
+            setTimeout(() => {
+              this.scrollToBottom();
+            }, 0);
+          }
+        }
+      }, 0);
+    }
   }
 
   private onMouseEnter_ = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -328,7 +354,19 @@ class ScrollArea extends React.PureComponent<Props, State> {
   private bindInnerRef_ = (innerRef: HTMLDivElement) => {
     if (this.innerRef_) this.listener_.unobserve(this.innerRef_);
     this.innerRef_ = innerRef;
-    if (this.innerRef_) this.listener_.observe(this.innerRef_);
+    if (this.innerRef_) {
+      this.listener_.observe(this.innerRef_);
+      // Force an initial size check in case the observer doesn't fire immediately
+      setTimeout(() => {
+        if (this.innerRef_) {
+          const rect = this.innerRef_.getBoundingClientRect();
+          const size = RawVector2.create(rect.width, rect.height);
+          if (!RawVector2.eq(this.state.innerSize, size)) {
+            this.onResize_(size, this.innerRef_);
+          }
+        }
+      }, 0);
+    }
   };
 
   getScrollContainer = () => {
@@ -338,12 +376,25 @@ class ScrollArea extends React.PureComponent<Props, State> {
   private get vScrollHeight() {
     const { state } = this;
     const { outerSize, innerSize } = state;
-    return (innerSize.y > 0 ? outerSize.y / innerSize.y : 1) * outerSize.y;
+    return Math.min(outerSize.y, (outerSize.y / innerSize.y) * outerSize.y);
   }
 
   private get maxTop() {
     return Math.max(this.state.innerSize.y - this.state.outerSize.y, 0);
   }
+
+  private get isAtBottom() {
+    const { action } = this.state;
+    const maxTop = this.maxTop;
+    return maxTop === 0 || Action.top(action) >= maxTop - 1; // Allow 1px tolerance
+  }
+
+  private scrollToBottom = () => {
+    const maxTop = this.maxTop;
+    this.setState({
+      action: Action.none(maxTop)
+    });
+  };
 
   set top(top: number) {
     this.setState({
@@ -367,7 +418,8 @@ class ScrollArea extends React.PureComponent<Props, State> {
     };
 
     const innerStyle: React.CSSProperties = {
-      top: `-${top}px`
+      ...this.props.innerStyle,
+      transform: `translateY(-${top}px)`,
     };
 
     return (

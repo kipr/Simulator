@@ -6,7 +6,8 @@ import { Size } from '../../../components/interface/Widget';
 export enum MessageRole {
     User = 'user',
     Assistant = 'assistant',
-    System = 'system'
+    System = 'system',
+    Error = 'error'
 }
 
 /**
@@ -26,6 +27,11 @@ export interface Message {
     timestamp: number;
 }
 
+export const toApiMessage = (message: Message) => ({
+    role: message.role,
+    content: message.content,
+});
+
 /**
  * Represents the state of a Ai chat session
  */
@@ -41,9 +47,6 @@ export interface AiState {
 
     /** Whether a request is currently in progress */
     loading: boolean;
-
-    /** Last error message, if any */
-    error: string | null;
 }
 
 /**
@@ -53,6 +56,5 @@ export const DEFAULT: AiState = {
     visible: false,
     messages: [],
     size: Size.PARTIAL,
-    loading: false,
-    error: null
+    loading: false
 };

@@ -179,6 +179,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       messages,
       settings,
       onClearConsole,
+      onAskTutorClick,
       onIndentCode,
       onDownloadCode,
       onResetCode,
@@ -245,7 +246,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       target: editorBarTarget,
       locale
     });
-    const consoleBar = createConsoleBarComponents(theme, onClearConsole, locale);
+    const consoleBar = createConsoleBarComponents(theme, onClearConsole, onAskTutorClick, locale);
 
     let content: JSX.Element;
     switch (activePanel) {

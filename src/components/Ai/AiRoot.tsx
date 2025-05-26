@@ -1,44 +1,26 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import * as ReactDOM from 'react-dom';
 
 export interface AiRootProps {
   children: React.ReactNode;
 }
 
+const AI_ROOT = document.getElementById('ai-root');
+
+// Static methods
+export const isActive = () => AI_ROOT.children.length !== 0;
+export const isVisible = () => AI_ROOT.childElementCount > 0;
+
 const AiRoot: React.FC<AiRootProps> = ({ children }) => {
-  const [portalContainer, setPortalContainer] = useState<HTMLDivElement | null>(null);
-
   useEffect(() => {
-    // Create a container for the portal if one doesn't already exist
-    let container = document.getElementById('ai-root') as HTMLDivElement;
-    
-    if (!container) {
-      container = document.createElement('div');
-      container.id = 'ai-root';
-      container.style.position = 'absolute';
-      container.style.top = '0';
-      container.style.left = '0';
-      container.style.width = '100%';
-      container.style.height = '100%';
-      container.style.zIndex = '1000';
-      container.style.pointerEvents = 'none';
-      document.body.appendChild(container);
-    }
-
-    setPortalContainer(container);
-
-    // Clean up the portal container when unmounting
+    AI_ROOT.style.opacity = '1';
     return () => {
-      if (container && container.childNodes.length <= 1) {
-        document.body.removeChild(container);
-      }
+      AI_ROOT.style.opacity = '0';
     };
   }, []);
 
-  if (!portalContainer) return null;
-
-  return ReactDOM.createPortal(children, portalContainer);
+  return ReactDOM.createPortal(children, AI_ROOT);
 };
 
 export default AiRoot; 
