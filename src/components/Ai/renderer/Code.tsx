@@ -89,7 +89,7 @@ const Code: React.FC<MonacoCodeRendererProps> = ({ theme, code, language, inline
       readOnly: true,
       minimap: { enabled: false },
       scrollBeyondLastLine: false,
-      automaticLayout: true,
+      automaticLayout: false, // We'll handle layout manually
       lineNumbers: 'on',
       glyphMargin: false,
       folding: false,
@@ -119,6 +119,29 @@ const Code: React.FC<MonacoCodeRendererProps> = ({ theme, code, language, inline
       }
     };
   }, [inline]); // Only recreate if inline changes
+
+  // Add ResizeObserver to handle container size changes
+  React.useEffect(() => {
+    if (inline || !containerRef.current) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      if (editorRef.current) {
+        // Small delay to ensure DOM has updated
+        setTimeout(() => {
+          if (editorRef.current) {
+            editorRef.current.layout();
+            adjustHeight();
+          }
+        }, 0);
+      }
+    });
+
+    resizeObserver.observe(containerRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [inline, adjustHeight]);
 
   // Update editor content effect
   React.useEffect(() => {

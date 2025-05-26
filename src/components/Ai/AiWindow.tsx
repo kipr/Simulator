@@ -72,6 +72,11 @@ const AiWindow: React.FC<Props> = ({
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const [dragState, setDragState] = useState({ type: 'none' });
 
+  // Calculate container width based on size
+  const containerWidth = React.useMemo(() => {
+    return size.type === Size.Type.Maximized ? window.innerWidth : 550;
+  }, [size.type]);
+
   const handleChromeMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const startX = e.clientX;
     const startY = e.clientY;
@@ -173,6 +178,7 @@ const AiWindow: React.FC<Props> = ({
             theme={theme}
             messages={messages}
             loading={loading}
+            containerWidth={containerWidth}
             onSendMessage={handleSendMessage}
           />
         </Container>

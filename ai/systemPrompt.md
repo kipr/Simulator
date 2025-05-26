@@ -14,6 +14,8 @@ The user's current console output is:
 {{console}}
 ```
 
+Note that the console might contain "out of date" output from previous compilations/executions.
+
 The robot's kinematic description is:
 ```json
 {{robot}}

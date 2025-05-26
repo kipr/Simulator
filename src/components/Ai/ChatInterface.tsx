@@ -11,6 +11,7 @@ import ScrollArea, { ScrollAreaRef } from '../interface/ScrollArea';
 export interface ChatInterfaceProps extends ThemeProps {
   messages: Message[];
   loading: boolean;
+  containerWidth?: number;
   
   onSendMessage: (content: string) => void;
 }
@@ -105,7 +106,8 @@ const EmptyStateText = styled('p', {
 const ChatInterface: React.FC<ChatInterfaceProps> = ({ 
   theme, 
   messages, 
-  loading,  
+  loading,
+  containerWidth,
   onSendMessage,
 }) => {
   const [inputValue, setInputValue] = useState('');
@@ -153,7 +155,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         ) : (
           <>
             {messages.map(message => (
-              <ChatMessage key={message.id} theme={theme} message={message} />
+              <ChatMessage key={`${message.id}-${containerWidth}`} theme={theme} message={message} />
             ))}
             {loading && (
               <LoadingIndicator theme={theme}>Tutor is thinking...</LoadingIndicator>
