@@ -26,6 +26,7 @@ import { ReferenceFramewUnits } from '../../util/math/unitMath';
 
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';
+import { Settings } from '../constants/Settings';
 
 
 const sizeDict = (sizes: Size[]) => {
@@ -47,6 +48,7 @@ export interface SideLayoutProps extends LayoutProps {
 interface ReduxSideLayoutProps {
   robots: Dict<Node.Robot>;
   locale: LocalizedString.Language;
+  settings: Settings;
 }
 
 interface SideLayoutState {
@@ -277,7 +279,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
                 mode={Mode.Sidebar}
                 hideActiveSize={true}
               >
-                <FlexConsole theme={theme} text={console}/>
+                <FlexConsole theme={theme} text={console} />
               </SimulatorWidget>
             </SimultorWidgetContainer>
           </Slider>
@@ -416,6 +418,7 @@ export const SideLayoutRedux = connect((state: ReduxState, { sceneId }: LayoutPr
   return {
     robots,
     locale: state.i18n.locale,
+    settings: state.userSettings.settings,
   };
 }, dispatch => ({
 

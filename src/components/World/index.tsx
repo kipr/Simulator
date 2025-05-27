@@ -37,6 +37,7 @@ import ScriptSettingsDialog, { ScriptSettingsAcceptance } from './ScriptSettings
 
 import tr from '@i18n';
 import { sprintf } from 'sprintf-js';
+import { Settings } from '../constants/Settings';
 
 namespace SceneState {
   export enum Type {
@@ -156,6 +157,7 @@ export interface WorldPublicProps extends StyleProps, ThemeProps {
 
 interface WorldPrivateProps {
   locale: LocalizedString.Language;
+  settings: Settings;
 }
 
 namespace UiState {
@@ -322,7 +324,7 @@ class World extends React.PureComponent<Props, State> {
     const { scene } = props;
 
     const originalNode = Async.latestValue(scene).nodes[id];
-    
+
     this.props.onNodeChange(id, {
       ...originalNode,
       origin: {
@@ -342,7 +344,7 @@ class World extends React.PureComponent<Props, State> {
     const idStr = id as string;
 
     const workingScene = Async.latestValue(scene);
-    
+
     const node = workingScene.nodes[idStr];
     if (node.type === 'object') {
       if (node.geometryId !== undefined) {
@@ -386,7 +388,8 @@ class World extends React.PureComponent<Props, State> {
       onGeometryAdd,
       onGeometryRemove,
       onGeometryChange,
-      locale
+      locale,
+      settings
     } = props;
     const { collapsed, modal } = state;
 
@@ -474,12 +477,12 @@ class World extends React.PureComponent<Props, State> {
         }
       }));
     }
-    
+
     return (
       <>
         <ScrollArea theme={theme} style={{ flex: '1 1' }}>
           <Container theme={theme} style={style} className={className}>
-            <StyledListSection 
+            <StyledListSection
               name={itemsName}
               theme={theme}
               onCollapsedChange={this.onCollapsedChange_('items')}
@@ -492,19 +495,21 @@ class World extends React.PureComponent<Props, State> {
                 theme={theme}
               />
             </StyledListSection>
-            <StyledListSection 
-              name={scriptsName}
-              theme={theme}
-              onCollapsedChange={this.onCollapsedChange_('scripts')}
-              collapsed={collapsed['scripts']}
-              noBodyPadding
-            >
-              <EditableList
-                onItemRemove={removeScript ? this.onScriptRemove_ : undefined}
-                items={scriptList}
+            {settings.showScripts && (
+              <StyledListSection
+                name={scriptsName}
                 theme={theme}
-              />
-            </StyledListSection>
+                onCollapsedChange={this.onCollapsedChange_('scripts')}
+                collapsed={collapsed['scripts']}
+                noBodyPadding
+              >
+                <EditableList
+                  onItemRemove={removeScript ? this.onScriptRemove_ : undefined}
+                  items={scriptList}
+                  theme={theme}
+                />
+              </StyledListSection>
+            )}
           </Container>
         </ScrollArea>
         {modal.type === UiState.Type.AddNode && (
@@ -548,4 +553,5 @@ class World extends React.PureComponent<Props, State> {
 
 export default connect((state: ReduxState) => ({
   locale: state.i18n.locale,
+  settings: state.userSettings.settings,
 }))(World) as React.ComponentType<WorldPublicProps>;

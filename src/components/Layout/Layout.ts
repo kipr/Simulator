@@ -37,7 +37,6 @@ export interface LayoutProps extends StyleProps, ThemeProps {
   editorTarget: LayoutEditorTarget;
   console: StyledText;
   messages: Message[];
-  settings: Settings;
   onClearConsole: () => void;
   onIndentCode: () => void;
   onDownloadCode: () => void;

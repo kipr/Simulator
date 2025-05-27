@@ -12,20 +12,20 @@ import LocalizedString from '../../util/LocalizedString';
 import ComboBox from '../interface/ComboBox';
 
 import { State as ReduxState } from '../../state';
-import { I18nAction } from '../../state/reducer';
+import { I18nAction, SettingsAction } from '../../state/reducer';
 import { connect } from 'react-redux';
 
 type SettingsSection = 'user-interface' | 'simulation' | 'editor';
 
 export interface SettingsDialogPublicProps extends ThemeProps, StyleProps {
   onClose: () => void;
-  settings: Settings;
-  onSettingsChange: (settings: Partial<Settings>) => void;
 }
 
 interface SettingsDialogPrivateProps {
+  settings: Settings;
   locale: LocalizedString.Language;
   onLocaleChange: (locale: LocalizedString.Language) => void;
+  onSettingsChange: (settings: Partial<Settings>) => void;
 }
 
 interface SettingsDialogState {
@@ -123,7 +123,7 @@ class SettingsDialog extends React.PureComponent<Props, State> {
           <SettingInfoSubtext>{subtext}</SettingInfoSubtext>
         </SettingInfoContainer>
         <Switch theme={theme} value={getValue(currentSettings)} onValueChange={(value) => {
-          onSettingsChange(getUpdatedSettings(value));
+          this.onSettingSelect_(getUpdatedSettings(value));
         }} />
       </SettingContainer>
     );
@@ -133,6 +133,9 @@ class SettingsDialog extends React.PureComponent<Props, State> {
     this.props.onLocaleChange(option.data as LocalizedString.Language);
   };
 
+  private onSettingSelect_ = (newSetting: Partial<Settings>) => {
+    this.props.onSettingsChange(newSetting);
+  };
 
   render() {
     const { props, state } = this;
@@ -184,6 +187,12 @@ class SettingsDialog extends React.PureComponent<Props, State> {
                     theme={theme}
                   />
                 </SettingContainer>
+                {this.createBooleanSetting(
+                  LocalizedString.lookup(tr('Show scripts'), locale),
+                  LocalizedString.lookup(tr('Show scene scripting. Intended for advanced users.'), locale),
+                  (settings: Settings) => settings.showScripts,
+                  (newValue: boolean) => ({ showScripts: newValue })
+                )}
               </>
             )}
             {selectedSection === 'simulation' && (
@@ -220,7 +229,9 @@ class SettingsDialog extends React.PureComponent<Props, State> {
 }
 
 export default connect((state: ReduxState) => ({
-  locale: state.i18n.locale
+  locale: state.i18n.locale,
+  settings: state.userSettings.settings,
 }), dispatch => ({
   onLocaleChange: (locale: LocalizedString.Language) => dispatch(I18nAction.setLocale({ locale })),
+  onSettingsChange: (setting: Partial<Settings>) => dispatch(SettingsAction.updateSettings({ newVal: setting })),
 }))(SettingsDialog) as React.ComponentType<SettingsDialogPublicProps>;

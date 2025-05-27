@@ -15,6 +15,7 @@ import tr from '@i18n';
 import Author from '../../db/Author';
 import Subject from './Assignment/Subject';
 import StandardsLocation from './Assignment/StandardsLocation';
+import { Settings } from '../../components/constants/Settings';
 
 export type Assignments = Dict<AsyncAssignment>;
 
@@ -95,6 +96,10 @@ export namespace DocumentationState {
 
 export interface I18n {
   locale: LocalizedString.Language;
+}
+
+export interface UserSettings {
+  settings: Settings;
 }
 
 export interface Users {
