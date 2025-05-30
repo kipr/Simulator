@@ -163,5 +163,6 @@ export const createLink = async (id: string, link: Node.Link, bScene_: babylonSc
       throw new Error(`Unsupported collision body type: ${link.collisionBody.type}`);
     }
   }
+  myMesh.isPickable = false;
   return myMesh;
 };

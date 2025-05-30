@@ -55,6 +55,7 @@ class LightSensor extends SensorObject<Node.LightSensor, number> {
     this.trace_.parent = parameters.parent;
 
     this.trace_.visibility = 0;
+    this.trace_.isPickable = false;
   }
 
   intersects(ray: Ray) {
