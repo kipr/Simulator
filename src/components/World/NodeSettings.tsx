@@ -122,7 +122,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
       },
     });
   };
-    
+
 
   private onNameChange_ = (event: React.SyntheticEvent<HTMLInputElement>) => {
     this.props.onNodeChange({
@@ -136,7 +136,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   private onTypeSelect_ = (index: number, option: ComboBox.Option) => {
     const { node, locale } = this.props;
-    
+
     // If the type didn't change, do nothing
     const selectedType = option.data as Node.Type;
     if (node.type === selectedType) {
@@ -168,30 +168,8 @@ class NodeSettings extends React.PureComponent<Props, State> {
       ComboBox.option(LocalizedString.lookup(tr('Walkway'), locale), 'walkway'),
       ComboBox.option(LocalizedString.lookup(tr('Solar Panel'), locale), 'solarpanel'),
       ComboBox.option(LocalizedString.lookup(tr('BotGuy Astronaut'), locale), 'botguy'),
-      ComboBox.option(LocalizedString.lookup(tr('2025 Botball Game Table'), locale), 'game_table_2025'),
-      ComboBox.option(LocalizedString.lookup(tr('Blue Drink'), locale), 'drink_blue'),
-      ComboBox.option(LocalizedString.lookup(tr('Green Drink'), locale), 'drink_green'),
-      ComboBox.option(LocalizedString.lookup(tr('Pink Drink'), locale), 'drink_pink'),
-      ComboBox.option(LocalizedString.lookup(tr('Blue Pom (Ice Cube)'), locale), 'pom_blue'),
-      ComboBox.option(LocalizedString.lookup(tr('Orange Pom (Hot Sauce)'), locale), 'pom_orange'),
-      ComboBox.option(LocalizedString.lookup(tr('Red Pom (Ketchup)'), locale), 'pom_red'),
-      ComboBox.option(LocalizedString.lookup(tr('Yellow Pom (Mustard)'), locale), 'pom_yellow'),
-      ComboBox.option(LocalizedString.lookup(tr('French Fry'), locale), 'french_fry'),
-      ComboBox.option(LocalizedString.lookup(tr('Hamburger'), locale), 'hamburger'),
-      ComboBox.option(LocalizedString.lookup(tr('Hotdog'), locale), 'hotdog'),
-      ComboBox.option(LocalizedString.lookup(tr('Taco'), locale), 'taco'),
-      ComboBox.option(LocalizedString.lookup(tr('Blue Cup'), locale), 'cup_blue'),
-      ComboBox.option(LocalizedString.lookup(tr('Green Cup'), locale), 'cup_green'),
-      ComboBox.option(LocalizedString.lookup(tr('Pink Cup'), locale), 'cup_pink'),
-      ComboBox.option(LocalizedString.lookup(tr('Bottle'), locale), 'bottle'),
-      ComboBox.option(LocalizedString.lookup(tr('Pickle'), locale), 'pickle'),
-      ComboBox.option(LocalizedString.lookup(tr('Tomato'), locale), 'tomato'),
-      ComboBox.option(LocalizedString.lookup(tr('Potato'), locale), 'potato'),
-      ComboBox.option(LocalizedString.lookup(tr('Tray'), locale), 'tray'),
-      ComboBox.option(LocalizedString.lookup(tr('Botguy'), locale), 'botguy_gamepiece'),
     ];
     const BB_TEMPLATE_OPTIONS: ComboBox.Option[] = [
-      ComboBox.option(LocalizedString.lookup(tr('2025 Botball Game Table'), locale), 'game_table_2025'),
       ComboBox.option(LocalizedString.lookup(tr('Blue Drink'), locale), 'drink_blue'),
       ComboBox.option(LocalizedString.lookup(tr('Green Drink'), locale), 'drink_green'),
       ComboBox.option(LocalizedString.lookup(tr('Pink Drink'), locale), 'drink_pink'),
@@ -219,7 +197,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
     // If the new type is from a template, set the template ID to a default value
     if (transmutedNode.type === 'from-jbc-template') {
       const defaultTemplateId = JBC_TEMPLATE_OPTIONS[0].data as string;
-      
+
       transmutedNode = {
         ...transmutedNode,
         templateId: defaultTemplateId,
@@ -228,7 +206,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
     // If the new type is from a template, set the template ID to a default value
     if (transmutedNode.type === 'from-rock-template') {
       const defaultTemplateId = ROCK_TEMPLATE_OPTIONS[0].data as string;
-      
+
       transmutedNode = {
         ...transmutedNode,
         templateId: defaultTemplateId,
@@ -236,7 +214,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
     }
     if (transmutedNode.type === 'from-space-template') {
       const defaultTemplateId = SPACE_TEMPLATE_OPTIONS[0].data as string;
-      
+
       transmutedNode = {
         ...transmutedNode,
         templateId: defaultTemplateId,
@@ -244,7 +222,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
     }
     if (transmutedNode.type === 'from-bb-template') {
       const defaultTemplateId = BB_TEMPLATE_OPTIONS[0].data as string;
-      
+
       transmutedNode = {
         ...transmutedNode,
         templateId: defaultTemplateId,
@@ -307,7 +285,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const material = node.material as Material.Basic;
 
     const nextMaterial = { ...material };
-    
+
     // Some fields are Source3 (3 channel) and others are Source1 (1 channel).
     // TypeScript isn't happy assigning the union of these, so some type assertion is used.
     switch (option.data as string) {
@@ -351,7 +329,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const material = node.material as Material.Pbr;
 
     const nextMaterial = { ...material };
-    
+
     // Some fields are Source3 (3 channel) and others are Source1 (1 channel).
     // TypeScript isn't happy assigning the union of these, so some type assertion is used.
     switch (option.data as string) {
@@ -548,9 +526,9 @@ class NodeSettings extends React.PureComponent<Props, State> {
   private onMaterialPbrReflectionTextureUriChange_ = this.onMaterialPbrFieldTextureUriChange_('reflection');
   private onMaterialPbrAmbientTextureUriChange_ = this.onMaterialPbrFieldTextureUriChange_('ambient');
   private onMaterialPbrMetalnessTextureUriChange_ = this.onMaterialPbrFieldTextureUriChange_('metalness');
-  
+
   private onMaterialBasicColorTextureUriChange2_ = this.onMaterialBasicFieldTextureUriChange_('color');
-  
+
   private static materialType = (material: Material) => {
     if (!material) return 'unset';
     if (material.type === 'basic') return 'basic';
@@ -577,7 +555,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
   // private onParentSelect_ = (index: number, option: ComboBox.Option) => {
   //   const { node } = this.props;
-    
+
   //   this.props.onNodeChange({
   //     ...node,
   //     parentId: option.data as string
@@ -587,7 +565,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
   private onGeometrySelect_ = (index: number, option: ComboBox.Option) => {
     const { props } = this;
     const { node } = props;
-    
+
     if (node.type !== 'object') return;
 
     const type = option.data as Geometry.Type;
@@ -841,7 +819,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
     });
   };
 
-  
+
 
   private onMassChange_ = (value: Value) => {
     const { node } = this.props;
@@ -859,7 +837,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
   private onFrictionChange_ = (value: Value) => {
     const { node } = this.props;
     if (node.type !== 'object') return;
-    
+
     this.props.onNodeChange({
       ...node,
       physics: {
@@ -925,7 +903,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
       height: Value.toDistance(value)
     });
   };
-  
+
   private onPlaneSizeXChange_ = (geometryId: string) => (value: Value) => {
     const geometry = this.props.scene.geometry[geometryId] as Geometry.Plane;
     this.props.onGeometryChange(geometryId, {
@@ -936,7 +914,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
       }
     });
   };
-  
+
   private onPlaneSizeYChange_ = (geometryId: string) => (value: Value) => {
     const geometry = this.props.scene.geometry[geometryId] as Geometry.Plane;
     this.props.onGeometryChange(geometryId, {
@@ -979,7 +957,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
     const position = origin.position || Vector3wUnits.zero('centimeters');
     const scale = origin.scale || RawVector3.ONE;
-    
+
     let friction = UnitlessValue.create(5);
     let mass: Mass = Mass.grams(5);
 
@@ -1017,12 +995,12 @@ class NodeSettings extends React.PureComponent<Props, State> {
       ComboBox.option(LocalizedString.lookup(tr('Plane'), locale), 'plane'),
       ComboBox.option(LocalizedString.lookup(tr('File'), locale), 'file'),
     ];
-    
+
     const GEOMETRY_REVERSE_OPTIONS: Dict<number> = GEOMETRY_OPTIONS.reduce((dict, option, i) => {
       dict[option.data as string] = i;
       return dict;
     }, {});
-    
+
 
     const JBC_TEMPLATE_OPTIONS: ComboBox.Option[] = [
       ComboBox.option(LocalizedString.lookup(tr('MatB'), locale), 'matB'),
@@ -1051,30 +1029,8 @@ class NodeSettings extends React.PureComponent<Props, State> {
       ComboBox.option(LocalizedString.lookup(tr('Solar Panel'), locale), 'solarpanel'),
       ComboBox.option(LocalizedString.lookup(tr('BotGuy Astronaut'), locale), 'botguy'),
       ComboBox.option(LocalizedString.lookup(tr('Moon Rock Container'), locale), 'container'),
-      ComboBox.option(LocalizedString.lookup(tr('2025 Botball Game Table'), locale), 'game_table_2025'),
-      ComboBox.option(LocalizedString.lookup(tr('Blue Drink'), locale), 'drink_blue'),
-      ComboBox.option(LocalizedString.lookup(tr('Green Drink'), locale), 'drink_green'),
-      ComboBox.option(LocalizedString.lookup(tr('Pink Drink'), locale), 'drink_pink'),
-      ComboBox.option(LocalizedString.lookup(tr('Blue Pom (Ice Cube)'), locale), 'pom_blue'),
-      ComboBox.option(LocalizedString.lookup(tr('Orange Pom (Hot Sauce)'), locale), 'pom_orange'),
-      ComboBox.option(LocalizedString.lookup(tr('Red Pom (Ketchup)'), locale), 'pom_red'),
-      ComboBox.option(LocalizedString.lookup(tr('Yellow Pom (Mustard)'), locale), 'pom_yellow'),
-      ComboBox.option(LocalizedString.lookup(tr('French Fry'), locale), 'french_fry'),
-      ComboBox.option(LocalizedString.lookup(tr('Hamburger'), locale), 'hamburger'),
-      ComboBox.option(LocalizedString.lookup(tr('Hotdog'), locale), 'hotdog'),
-      ComboBox.option(LocalizedString.lookup(tr('Taco'), locale), 'taco'),
-      ComboBox.option(LocalizedString.lookup(tr('Blue Cup'), locale), 'cup_blue'),
-      ComboBox.option(LocalizedString.lookup(tr('Green Cup'), locale), 'cup_green'),
-      ComboBox.option(LocalizedString.lookup(tr('Pink Cup'), locale), 'cup_pink'),
-      ComboBox.option(LocalizedString.lookup(tr('Bottle'), locale), 'bottle'),
-      ComboBox.option(LocalizedString.lookup(tr('Pickle'), locale), 'pickle'),
-      ComboBox.option(LocalizedString.lookup(tr('Tomato'), locale), 'tomato'),
-      ComboBox.option(LocalizedString.lookup(tr('Potato'), locale), 'potato'),
-      ComboBox.option(LocalizedString.lookup(tr('Tray'), locale), 'tray'),
-      ComboBox.option(LocalizedString.lookup(tr('Botguy'), locale), 'botguy_gamepiece'),
     ];
     const BB_TEMPLATE_OPTIONS: ComboBox.Option[] = [
-      ComboBox.option(LocalizedString.lookup(tr('2025 Botball Game Table'), locale), 'game_table_2025'),
       ComboBox.option(LocalizedString.lookup(tr('Blue Drink'), locale), 'drink_blue'),
       ComboBox.option(LocalizedString.lookup(tr('Green Drink'), locale), 'drink_green'),
       ComboBox.option(LocalizedString.lookup(tr('Pink Drink'), locale), 'drink_pink'),
@@ -1101,7 +1057,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
       ComboBox.option(LocalizedString.lookup(tr('Radiation Science Pack - Low'), locale), 'noradscience'),
       ComboBox.option(LocalizedString.lookup(tr('Radiation Science Pack - High'), locale), 'radscience'),
     ];
-    
+
     const JBC_TEMPLATE_REVERSE_OPTIONS: Dict<number> = JBC_TEMPLATE_OPTIONS.reduce((dict, option, i) => {
       dict[option.data as string] = i;
       return dict;
@@ -1116,7 +1072,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
       dict[option.data as string] = i;
       return dict;
     }, {});
-    const BB_TEMPLATE_REVERSE_OPTIONS: Dict<number> = SPACE_TEMPLATE_OPTIONS.reduce((dict, option, i) => {
+    const BB_TEMPLATE_REVERSE_OPTIONS: Dict<number> = BB_TEMPLATE_OPTIONS.reduce((dict, option, i) => {
       dict[option.data as string] = i;
       return dict;
     }, {});
@@ -1125,12 +1081,12 @@ class NodeSettings extends React.PureComponent<Props, State> {
       dict[option.data as string] = i;
       return dict;
     }, {});
-    
+
     const ROTATION_TYPES: ComboBox.Option[] = [
       ComboBox.option(LocalizedString.lookup(tr('Euler'), locale), 'euler'),
       ComboBox.option(LocalizedString.lookup(tr('Axis Angle'), locale), 'angle-axis'),
     ];
-    
+
     const EULER_ORDER_OPTIONS: ComboBox.Option[] = [
       ComboBox.option(LocalizedString.lookup(tr('XYZ', 'RotationwUnits order'), locale), 'xyz'),
       ComboBox.option(LocalizedString.lookup(tr('YZX', 'RotationwUnits order'), locale), 'yzx'),
@@ -1139,7 +1095,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
       ComboBox.option(LocalizedString.lookup(tr('YXZ', 'RotationwUnits order'), locale), 'yxz'),
       ComboBox.option(LocalizedString.lookup(tr('ZYX', 'RotationwUnits order'), locale), 'zyx'),
     ];
-    
+
     const NODE_TYPE_OPTIONS: ComboBox.Option[] = [
       ComboBox.option(LocalizedString.lookup(tr('Space Base'), locale), 'from-space-template'),
       ComboBox.option(LocalizedString.lookup(tr('Botball'), locale), 'from-bb-template'),
@@ -1159,7 +1115,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
       'breccia': LocalizedString.lookup(tr('Breccia is a rock composed of large angular broken fragments of minerals or rocks cemented together by a fine-grained matrix.'), locale),
       'meteorite': LocalizedString.lookup(tr('Meteorite is a solid piece of debris from an object, such as a comet, asteroid, or meteoroid, that originates in outer space and survives its passage through the atmosphere to reach the surface of a planet or moon.'), locale),
     };
-    
+
     const NODE_TYPE_OPTIONS_REV = (() => {
       const map: Record<string, number> = {};
       NODE_TYPE_OPTIONS.forEach((option, i) => {
@@ -1167,13 +1123,13 @@ class NodeSettings extends React.PureComponent<Props, State> {
       });
       return map;
     })();
-    
+
     const MATERIAL_TYPE_OPTIONS: ComboBox.Option[] = [
       ComboBox.option(LocalizedString.lookup(tr('Unset'), locale), 'unset'),
       ComboBox.option(LocalizedString.lookup(tr('Basic'), locale), 'basic'),
       // ComboBox.option('PBR', 'pbr'),
     ];
-    
+
     const MATERIAL_TYPE_OPTIONS_REV = (() => {
       const map: Record<string, number> = {};
       MATERIAL_TYPE_OPTIONS.forEach((option, i) => {
@@ -1181,13 +1137,13 @@ class NodeSettings extends React.PureComponent<Props, State> {
       });
       return map;
     })();
-    
+
     const MATERIAL_SOURCE3_TYPE_OPTIONS: ComboBox.Option[] = [
       ComboBox.option(LocalizedString.lookup(tr('Unset'), locale), 'unset'),
       ComboBox.option(LocalizedString.lookup(tr('RGB', 'Red, Green, Blue'), locale), 'color3'),
       ComboBox.option(LocalizedString.lookup(tr('Texture'), locale), 'texture'),
     ];
-    
+
     const MATERIAL_SOURCE3_TYPE_OPTIONS_REV = (() => {
       const map: Record<string, number> = {};
       MATERIAL_SOURCE3_TYPE_OPTIONS.forEach((option, i) => {
@@ -1195,13 +1151,13 @@ class NodeSettings extends React.PureComponent<Props, State> {
       });
       return map;
     })();
-    
+
     const MATERIAL_SOURCE1_TYPE_OPTIONS: ComboBox.Option[] = [
       ComboBox.option(LocalizedString.lookup(tr('Unset'), locale), 'unset'),
       ComboBox.option(LocalizedString.lookup(tr('Value'), locale), 'color1'),
       ComboBox.option(LocalizedString.lookup(tr('Texture'), locale), 'texture'),
     ];
-    
+
     const MATERIAL_SOURCE1_TYPE_OPTIONS_REV = (() => {
       const map: Record<string, number> = {};
       MATERIAL_SOURCE3_TYPE_OPTIONS.forEach((option, i) => {
@@ -1224,7 +1180,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
           {/* <StyledField name='Parent' theme={theme} long>
             <ComboBox options={parentOptions} theme={theme} index={parentIndex} onSelect={this.onParentSelect_} />
           </StyledField> */}
-          
+
           {node.type !== 'robot' && (
             <StyledField name={LocalizedString.lookup(tr('Type'), locale)} theme={theme} long>
               <ComboBox
@@ -1246,7 +1202,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
               />
             </StyledField>
           )}
-          
+
           {node.type === 'object' && (
             <StyledField name={LocalizedString.lookup(tr('Geometry'), locale)} theme={theme} long>
               <ComboBox
@@ -1622,7 +1578,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
                   name={LocalizedString.lookup(tr('Ambient Blue'), locale)}
                   long
                   theme={theme}
-                  value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.ambient.color).b))} 
+                  value={Value.unitless(UnitlessValue.create(Color.toRgb(node.material.ambient.color).b))}
                   onValueChange={this.onMaterialPbrAmbientBChange_}
                 />
               </>
@@ -1804,7 +1760,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
             <StyledValueEdit name={LocalizedString.lookup(tr('Mass'), locale)} value={Value.mass(mass)} onValueChange={this.onMassChange_} theme={theme} />
             <StyledValueEdit name={LocalizedString.lookup(tr('Friction'), locale)} value={Value.unitless(friction)} onValueChange={this.onFrictionChange_} theme={theme} />
           </Section>)}
-        
+
       </Container>
     );
   }
