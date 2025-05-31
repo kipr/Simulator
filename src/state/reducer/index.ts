@@ -6,3 +6,4 @@ export * from './documentation';
 export * from './i18n';
 export * from './assignments';
 export * from './users';
+export * from './ai';

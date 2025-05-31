@@ -16,6 +16,7 @@ const { FirebaseTokenManager } = require('./firebaseAuth');
 const formData = require('form-data');
 const Mailgun = require('mailgun.js');
 const createParentalConsentRouter = require('./parentalConsent');
+const createAiRouter = require('./ai');
 
 let config;
 try {
@@ -53,6 +54,9 @@ app.use(bodyParser.json());
 app.use(morgan('combined'));
 
 app.use('/api/parental-consent', createParentalConsentRouter(firebaseTokenManager, mailgunClient, config));
+
+// Add AI router
+app.use('/api/ai', createAiRouter(firebaseTokenManager, config));
 
 app.use('/api', proxy(config.dbUrl));
 

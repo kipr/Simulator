@@ -11,13 +11,14 @@ import { FontAwesome } from '../FontAwesome';
 import { Button } from '../interface/Button';
 import { BarComponent } from '../interface/Widget';
 
-import { faFile } from '@fortawesome/free-solid-svg-icons';
+import { faFile, faRobot } from '@fortawesome/free-solid-svg-icons';
 import LocalizedString from '../../util/LocalizedString';
 import tr from '@i18n';
 
 export const createConsoleBarComponents = (
   theme: Theme, 
   onClearConsole: () => void,
+  onAskTutor: () => void,
   locale: LocalizedString.Language
 ) => {
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -30,6 +31,16 @@ export const createConsoleBarComponents = (
       <>
         <FontAwesome icon={faFile} />
         {' '} {LocalizedString.lookup(tr('Clear'), locale)}
+      </>,
+  }));
+
+  consoleBar.push(BarComponent.create(Button, {
+    theme,
+    onClick: onAskTutor,
+    children:
+      <>
+        <FontAwesome icon={faRobot} />
+        {' '} {LocalizedString.lookup(tr('Ask Tutor'), locale)}
       </>,
   }));
 

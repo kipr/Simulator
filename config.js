@@ -45,6 +45,19 @@ module.exports = {
         apiKey: getEnvVarOrDefault('MAILGUN_API_KEY', '<invalid>'),
         domain: getEnvVarOrDefault('MAILGUN_DOMAIN', '<invalid>'),
       },
+      claude: {
+        apiKey: getEnvVarOrDefault('CLAUDE_API_KEY', '<invalid>'),
+        prompt: {
+          headers: [
+            `${dependencies['libkipr_c']}/include/kipr/motor/motor.h`,
+            `${dependencies['libkipr_c']}/include/kipr/servo/servo.h`,
+            `${dependencies['libkipr_c']}/include/kipr/analog/analog.h`,
+            `${dependencies['libkipr_c']}/include/kipr/digital/digital.h`,
+            `${dependencies['libkipr_c']}/include/kipr/time/time.h`,
+            `${dependencies['libkipr_c']}/include/kipr/console/console.h`,
+          ],
+        },
+      },
     };
   },
 };

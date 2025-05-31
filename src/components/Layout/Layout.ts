@@ -39,6 +39,8 @@ export interface LayoutProps extends StyleProps, ThemeProps {
   messages: Message[];
   settings: Settings;
   onClearConsole: () => void;
+  onAskTutorClick: () => void;
+
   onIndentCode: () => void;
   onDownloadCode: () => void;
   onResetCode: () => void;
