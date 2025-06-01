@@ -21,7 +21,6 @@ const Container = styled('div', ({ theme, $inline }: StyleProps) => ({
   overflow: 'hidden',
   margin: $inline ? '0 2px' : '8px 0',
   display: $inline ? 'inline-block' : 'block',
-  minHeight: $inline ? 'auto' : '100px',
   maxHeight: $inline ? 'auto' : '400px',
 }));
 
@@ -70,7 +69,7 @@ const Code: React.FC<MonacoCodeRendererProps> = ({ theme, code, language, inline
     // Limit height to reasonable bounds
     const maxLines = 20;
     const actualLines = Math.min(lineCount, maxLines);
-    const height = Math.max(100, actualLines * lineHeight + padding);
+    const height = actualLines * lineHeight + padding;
     
     containerRef.current.style.height = `${height}px`;
     editorRef.current.layout();
