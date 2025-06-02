@@ -154,7 +154,7 @@ class Info extends React.PureComponent<Props, State> {
     for (let i = 0; i < 4; ++i) {
       servos.push(
         <Row key={`servo-pos-${i}`} theme={theme}>
-          <SensorWidget value={node.state.servos[i].position} name={`get_servo_position(${i})`} plotTitle='Servo Position Plot' theme={theme} />
+          <SensorWidget value={node.state.servos[i].position} name={`get_servo_position(${i})`} plotTitle='Servo Position Plot' theme={theme} locale={locale} />
         </Row>
       );
     }
@@ -165,13 +165,13 @@ class Info extends React.PureComponent<Props, State> {
       const motor = node.state.motors[i];
       motorVelocities.push(
         <Row key={`motor-velocity-${i}`} theme={theme}>
-          <SensorWidget value={motor.mode !== Motor.Mode.Pwm ? motor.speedGoal : 0} name={`motor ${i}`} plotTitle={LocalizedString.lookup(tr('Motor Velocity Plot'), locale)} theme={theme} />
+          <SensorWidget value={motor.mode !== Motor.Mode.Pwm ? motor.speedGoal : 0} name={`motor ${i}`} plotTitle={LocalizedString.lookup(tr('Motor Velocity Plot'), locale)} theme={theme} locale={locale} />
         </Row>
       );
 
       motorPositions.push(
         <Row key={`motor-pos-${i}`} theme={theme}>
-          <SensorWidget value={motor.position} name={`get_motor_position_counter(${i})`} plotTitle={LocalizedString.lookup(tr('Motor Position Plot'), locale)} theme={theme} />
+          <SensorWidget value={motor.position} name={`get_motor_position_counter(${i})`} plotTitle={LocalizedString.lookup(tr('Motor Position Plot'), locale)} theme={theme} locale={locale} />
         </Row>
       );
     }
@@ -180,7 +180,7 @@ class Info extends React.PureComponent<Props, State> {
     for (let i = 0; i < 6; ++i) {
       analogSensors.push(
         <Row key={`analog-${i}`} theme={theme}>
-          <SensorWidget value={node.state.analogValues[i]} name={`analog(${i})`} plotTitle={LocalizedString.lookup(tr('Analog Sensor Plot'), locale)} theme={theme} />
+          <SensorWidget value={node.state.analogValues[i]} name={`analog(${i})`} plotTitle={LocalizedString.lookup(tr('Analog Sensor Plot'), locale)} theme={theme} locale={locale} />
         </Row>
       );
     }
@@ -189,7 +189,7 @@ class Info extends React.PureComponent<Props, State> {
     for (let i = 0; i < 6; ++i) {
       digitalSensors.push(
         <Row key={`digital-${i}`} theme={theme}>
-          <SensorWidget value={node.state.digitalValues[i]} name={`digital(${i})`} plotTitle={LocalizedString.lookup(tr('Digital Sensor Plot'), locale)} theme={theme} />
+          <SensorWidget value={node.state.digitalValues[i]} name={`digital(${i})`} plotTitle={LocalizedString.lookup(tr('Digital Sensor Plot'), locale)} theme={theme} locale={locale} />
         </Row>
       );
     }
@@ -197,7 +197,7 @@ class Info extends React.PureComponent<Props, State> {
     const analogName = StyledText.text({
       text: LocalizedString.lookup(tr('Analog Sensors'), locale),
     });
-    
+
     const digitalName = StyledText.text({
       text: LocalizedString.lookup(tr('Digital Sensors'), locale),
     });
@@ -205,11 +205,11 @@ class Info extends React.PureComponent<Props, State> {
     const servosName = StyledText.text({
       text: LocalizedString.lookup(tr('Servos'), locale),
     });
-    
+
     const motorVelocitiesName = StyledText.text({
       text: LocalizedString.lookup(tr('Motor Velocities'), locale),
     });
-    
+
     const motorPositionsName = StyledText.compose({
       items: [
         StyledText.text({
@@ -217,7 +217,7 @@ class Info extends React.PureComponent<Props, State> {
         }),
       ]
     });
-    
+
     return (
       <ScrollArea theme={theme} style={{ flex: '1 1' }}>
         <Container theme={theme} style={style} className={className}>
