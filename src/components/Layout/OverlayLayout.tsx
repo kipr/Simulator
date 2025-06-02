@@ -343,6 +343,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       messages,
       settings,
       onClearConsole,
+      onAskTutorClick,
       onIndentCode,
       onDownloadCode,
       onResetCode,
@@ -417,7 +418,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       target: editorBarTarget,
       locale
     });
-    const consoleBar = createConsoleBarComponents(theme, onClearConsole, locale);
+    const consoleBar = createConsoleBarComponents(theme, onClearConsole, onAskTutorClick, locale);
 
     const latestScene = Async.latestValue(scene);
     let robotNode: Node.Robot;
