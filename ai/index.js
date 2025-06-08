@@ -26,12 +26,16 @@ function createAiRouter(firebaseTokenManager, config) {
 
   const router = express.Router();
 
-  // Rate limiter: 20 requests per minute
+  // Rate limiter: 20 requests per minute per user
   const aiRateLimiter = RateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
-    max: 20, // 20 requests per window
+    max: 20, // 20 requests per window per user
     standardHeaders: true,
-    message: { error: 'Too many requests, please try again later.' }
+    message: { error: 'Too many requests, please try again later.' },
+    keyGenerator: (req) => {
+      // Use the user's UID from the Firebase token for per-user rate limiting
+      return req.user?.uid || req.ip; // Fallback to IP if no user (shouldn't happen after auth)
+    }
   });
 
   // Apply rate limiter to all routes
