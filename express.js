@@ -26,12 +26,16 @@ try {
   throw e;
 }
 
+app.set('trust proxy', true);
+
 // set up rate limiter: maximum of 100 requests per 15 minute
 var RateLimit = require('express-rate-limit');
 var limiter = RateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 1000, // max 100 requests per windowMs
 });
+
+
 
 // apply rate limiter to all requests
 app.use(limiter);

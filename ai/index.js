@@ -84,7 +84,19 @@ function createAiRouter(firebaseTokenManager, config) {
         .replace('{{console}}', consoleText ?? 'Unknown')
         .replace('{{robot}}', JSON.stringify(robot) ?? 'Unknown');
 
-      console.log(system);
+      console.log('https://api.anthropic.com/v1/messages', {
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': config.claude.apiKey,
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+          model,
+          system,
+          messages,
+          max_tokens: 1024,
+        })
+      });
 
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
