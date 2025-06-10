@@ -20,7 +20,7 @@ interface ApiResponse {
 }
 
 interface ErrorResponse {
-  error?: string;
+  error?: string | { message: string };
 }
 
 // Thunk action creator for sending messages
@@ -60,7 +60,13 @@ const sendMessage_ = async (dispatch: Dispatch, { content, code, language, conso
 
     if (!response.ok) {
       const errorData = await response.json() as ErrorResponse;
-      throw new Error(errorData.error || 'Error calling Tutor API');
+      if (errorData.error && typeof errorData.error === 'string') {
+        throw new Error(errorData.error);
+      }
+      if (errorData.error && typeof errorData.error === 'object' && 'message' in errorData.error) {
+        throw new Error(errorData.error?.message || 'An error occurred while communicating with Tutor.');
+      }
+      throw new Error('An error occurred while communicating with Tutor.');
     }
 
     const data = await response.json() as ApiResponse;
