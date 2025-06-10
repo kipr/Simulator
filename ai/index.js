@@ -84,8 +84,11 @@ function createAiRouter(firebaseTokenManager, config) {
         .replace('{{console}}', consoleText ?? 'Unknown')
         .replace('{{robot}}', JSON.stringify(robot) ?? 'Unknown');
 
+<<<<<<< Updated upstream
       console.log(system);
 
+=======
+>>>>>>> Stashed changes
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
