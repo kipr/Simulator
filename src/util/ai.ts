@@ -23,6 +23,20 @@ interface ErrorResponse {
   error?: string | { message: string };
 }
 
+// Try to catch possible misspellings
+const includesChallenge = (s: string) => {
+  return s.includes('challenge') ||
+  s.includes('Challenge') ||
+  s.includes('chalenge') ||
+  s.includes('Chalenge') ||
+  s.includes('chelenge') ||
+  s.includes('Chelenge') ||
+  s.includes('chalenje') ||
+  s.includes('Chalenje') ||
+  s.includes('callenge') ||
+  s.includes('Callenge');
+};
+
 // Thunk action creator for sending messages
 const sendMessage_ = async (dispatch: Dispatch, { content, code, language, console, robot }: SendMessageParams) => {
   try {
@@ -40,6 +54,13 @@ const sendMessage_ = async (dispatch: Dispatch, { content, code, language, conso
     // Add the user message first
     dispatch(AiAction.addUserMessage({ content }));
 
+    const allMsgs = store.getState().ai.messages;
+    const challengeMentioned = allMsgs
+      .filter(({ role }) => role === Ai.MessageRole.User)
+      .map((msg) => msg.content)
+      .filter((el) => includesChallenge(el))
+      .length > 0;
+
     // Call Claude API
     const response = await fetch('/api/ai/completion', {
       method: 'POST',
@@ -48,13 +69,14 @@ const sendMessage_ = async (dispatch: Dispatch, { content, code, language, conso
         'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({
-        messages: store.getState().ai.messages
+        messages: allMsgs
           .filter(({ role }) => role === Ai.MessageRole.Assistant || role === Ai.MessageRole.User)
           .map(Ai.toApiMessage),
         code,
         language,
         console,
         robot,
+        challengeMentioned,
       })
     });
 

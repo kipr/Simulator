@@ -24,6 +24,9 @@ function createAiRouter(firebaseTokenManager, config) {
   const systemPrompt = fs.readFileSync(systemPromptPath, 'utf8')
     .replace('{{headers}}', headers);
 
+  const challengePromptPath = path.join(__dirname, 'challenges.md');
+  const challengePrompt = fs.readFileSync(challengePromptPath, 'utf8');
+
   const router = express.Router();
 
   // Rate limiter: 20 requests per minute per user
@@ -70,6 +73,7 @@ function createAiRouter(firebaseTokenManager, config) {
       language,
       console: consoleText,
       robot,
+      hasChallenge,
       model = 'claude-sonnet-4-20250514'
     } = req.body;
     
@@ -86,7 +90,8 @@ function createAiRouter(firebaseTokenManager, config) {
         .replace('{{code}}', code ?? 'Unknown')
         .replace('{{language}}', language ?? 'Unknown')
         .replace('{{console}}', consoleText ?? 'Unknown')
-        .replace('{{robot}}', JSON.stringify(robot) ?? 'Unknown');
+        .replace('{{robot}}', JSON.stringify(robot) ?? 'Unknown')
+        .replace('{{challenges}}', hasChallenge ? challengePrompt : '');
 
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
