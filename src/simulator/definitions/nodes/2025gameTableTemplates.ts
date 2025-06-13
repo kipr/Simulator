@@ -91,7 +91,7 @@ const hamburgerTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'hamburger',
   physics: {
     type: 'box',
-    restitution: .8,
+    restitution: .6,
     friction: 1,
     mass: Mass.grams(5),
     inertia: [3, 3, 3],
@@ -102,7 +102,7 @@ const hotdogTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'hotdog',
   physics: {
     type: 'mesh',
-    restitution: .8,
+    restitution: .6,
     friction: 1,
     mass: Mass.grams(5),
     inertia: [3, 3, 3],
@@ -113,7 +113,7 @@ const tacoTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'taco',
   physics: {
     type: 'mesh',
-    restitution: .8,
+    restitution: .6,
     friction: 1,
     mass: Mass.grams(5),
     inertia: [3, 3, 3],
