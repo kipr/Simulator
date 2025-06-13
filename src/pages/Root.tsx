@@ -857,7 +857,7 @@ class Root extends React.Component<Props, State> {
           code={code[activeLanguage]}
           language={activeLanguage}
           console={StyledText.toString(console)}
-          robot={this.props.robots[Dict.unique(Scene.robots(Async.latestValue(this.props.scene)))?.robotId ?? "demobot"]}
+          robot={this.props.robots["demobot"]}
         />
       </>
 
