@@ -738,7 +738,7 @@ class Root extends React.Component<Props, State> {
             onShowAll={this.onShowAll_}
             onHideAll={this.onHideAll_}
             onResetWorldClick={this.onResetWorldClick_}
-            onStartChallengeClick={this.onStartChallengeClick_}
+            onStartChallengeClick={sceneHasChallenge ? this.onStartChallengeClick_ : undefined}
             onSettingsClick={this.onModalClick_(Modal.SETTINGS)}
             onAboutClick={this.onModalClick_(Modal.ABOUT)}
             onDocumentationClick={this.onDocumentationClick}
