@@ -8,16 +8,11 @@ const path = require('path');
 
 // Try to catch possible misspellings
 const includesChallenge = (s) => {
-  return s.includes('challenge') ||
-  s.includes('Challenge') ||
+  return s.toLowerCase().includes('challenge') ||
   s.includes('chalenge') ||
-  s.includes('Chalenge') ||
   s.includes('chelenge') ||
-  s.includes('Chelenge') ||
   s.includes('chalenje') ||
-  s.includes('Chalenje') ||
-  s.includes('callenge') ||
-  s.includes('Callenge');
+  s.includes('callenge');
 };
 
 /**
