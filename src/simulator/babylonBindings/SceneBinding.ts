@@ -1,11 +1,10 @@
 
 import {
-  PhysicsShapeType, IPhysicsCollisionEvent, IPhysicsEnginePluginV2, PhysicsAggregate,
+  PhysicsShapeType, IPhysicsCollisionEvent, IPhysicsEnginePluginV2,
   TransformNode, AbstractMesh, Mesh, PhysicsViewer, ShadowGenerator, Vector3, StandardMaterial, GizmoManager,
   ArcRotateCamera, PointLight, SpotLight, DirectionalLight, PBRMaterial, EngineView,
   Scene as babylonScene, Node as babylonNode, Camera as babylCamera, Material as babylMaterial,
-  Observer, BoundingBox,
-  PhysicsShapeParameters, PhysicShapeOptions, PhysicsShape, PhysicsShapeContainer, PhysicsBody, PhysicsMotionType,
+  Observer, BoundingBox, PhysicsShapeParameters, PhysicShapeOptions, PhysicsShape, PhysicsBody, PhysicsMotionType,
 } from '@babylonjs/core';
 
 // eslint-disable-next-line @typescript-eslint/no-duplicate-imports -- Required import for side effects
@@ -728,8 +727,6 @@ class SceneBinding {
       physics_mesh.scaling = RawVector3.toBabylon(objectNode.origin.scale ?? { x: 1, y: 1, z: 1 });
     }
 
-    const parentShape = new PhysicsShapeContainer(this.bScene);
-
     /*
      * PhysicsShape requires some information to create the shape, depending on exactly what shape you want.
      * Cylinders and boxes, for example require different parameters, so we handle those seperately.
@@ -739,14 +736,13 @@ class SceneBinding {
     let parameters: PhysicsShapeParameters = { mesh: physics_mesh as Mesh };
 
     // WARNING: These numbers are correct for the cans, but must be changed if we ever include any other cylinders
+    // NOTE: points A and B are relative to the parent attached visual mesh
     if (objectNode.physics.type === 'cylinder') {
-      const p = physics_mesh.absolutePosition;
-      // The position on the x axis will be wrong without subtracting 2x
       parameters = {
         ...parameters,
-        pointA: p.add(new Vector3(-(p.x * 2), -(11.15 * 0.5), 0)),
-        pointB: p.add(new Vector3(-(p.x * 2), (11.15 * 0.5), 0)),
-        radius: 3
+        pointA: new Vector3(0, -(11.15 * 0.5), 0),
+        pointB: new Vector3(0, (11.15 * 0.5), 0),
+        radius: 3,
       };
     } else if (objectNode.physics.type === 'box') {
       // The final multiplication by [2, 2, 2] is required to make collision boxes scale correctly
@@ -769,15 +765,8 @@ class SceneBinding {
       restitution: objectNode.physics.restitution ?? 0.2,
     };
 
-    // For some reason the mesh id changes when the world resets
-    if (physics_mesh.id.includes('Can') || physics_mesh.id.includes('can')) {
-      parentShape.addChild(shape, mesh.absolutePosition, mesh.absoluteRotationQuaternion);
-    } else {
-      parentShape.addChild(shape);
-    }
-
     // Tell the PhysicsBody we created earlier to use this shape
-    body.shape = parentShape;
+    body.shape = shape;
 
     if (this.physicsViewer_) {
       this.physicsViewer_.showBody(mesh.physicsBody);

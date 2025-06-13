@@ -158,15 +158,12 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     if (!latestScene) return;
 
     const robots = Scene.robots(latestScene);
-    // const demobotOnly = Dict.filter(robots, (r) => r.robotId === 'demobot');
-    // const robotId = Dict.unique(demobotOnly).robotId;
-    const robotId = 'demobot';
+    const robotId = Object.keys(robots)[0];
     this.props.onNodeChange(robotId, {
       ...robots[robotId],
       origin
     });
   };
-
 
   render() {
     const { props } = this;
@@ -179,6 +176,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       messages,
       settings,
       onClearConsole,
+      onAskTutorClick,
       onIndentCode,
       onDownloadCode,
       onResetCode,
@@ -245,7 +243,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       target: editorBarTarget,
       locale
     });
-    const consoleBar = createConsoleBarComponents(theme, onClearConsole, locale);
+    const consoleBar = createConsoleBarComponents(theme, onClearConsole, onAskTutorClick, locale);
 
     let content: JSX.Element;
     switch (activePanel) {
@@ -277,7 +275,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
                 mode={Mode.Sidebar}
                 hideActiveSize={true}
               >
-                <FlexConsole theme={theme} text={console}/>
+                <FlexConsole theme={theme} text={console} />
               </SimulatorWidget>
             </SimultorWidgetContainer>
           </Slider>
@@ -290,8 +288,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
         let robotNode: Node.Robot;
         if (latestScene) {
           const robots = Scene.robots(latestScene);
-          const demobotOnly = Dict.filter(robots, (r) => r.robotId === 'demobot');
-          robotNode = Dict.unique(demobotOnly);
+          robotNode = Dict.unique(robots);
         }
         if (robotNode) {
           content = (

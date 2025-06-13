@@ -33,7 +33,8 @@ import { Capabilities } from '../components/World';
 
 
 import { State as ReduxState } from '../state';
-import { DocumentationAction, ScenesAction, ChallengeCompletionsAction } from '../state/reducer';
+import { DocumentationAction, ScenesAction, ChallengeCompletionsAction, AiAction } from '../state/reducer';
+import { sendMessage, SendMessageParams } from '../util/ai';
 
 import Scene, { AsyncScene } from '../state/State/Scene';
 import Script from '../state/State/Scene/Script';
@@ -66,6 +67,8 @@ import tr from '@i18n';
 
 import Motor from '../programming/AbstractRobot/Motor';
 import { Modal } from './sharedRoot/Modal';
+import AiWindow from '../components/Ai/AiWindow';
+import Robot from '../state/State/Robot';
 
 
 interface RootParams {
@@ -81,6 +84,8 @@ interface RootPrivateProps {
   challenge?: AsyncChallenge;
   challengeCompletion?: AsyncChallengeCompletion;
   locale: LocalizedString.Language;
+
+  robots: Dict<Robot>;
 
   onChallengeCompletionCreate: (challengeCompletion: ChallengeCompletion) => void;
   onChallengeCompletionSceneDiffChange: (sceneDiff: OuterObjectPatch<Scene>) => void;
@@ -101,6 +106,9 @@ interface RootPrivateProps {
   onDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => void;
 
   goToLogin: () => void;
+
+  onAiClick: () => void;
+  onAskTutorClick: (query: SendMessageParams) => void;
 }
 
 interface RootState {
@@ -748,6 +756,25 @@ class Root extends React.Component<Props, State> {
     this.scheduleSaveChallengeCompletion_();
   };
 
+  private onAiClick_ = () => {
+    // Dispatch AI action toggle
+    this.props.onAiClick();
+  };
+
+  private onAskTutorClick_ = () => {
+    const workingScene: AsyncScene = this.workingChallengeScene_
+      ? Async.loaded({ value: this.workingChallengeScene_ })
+      : this.props.scene;
+
+    this.props.onAskTutorClick({
+      content: "Please help me understand what's wrong.",
+      code: this.code[this.currentLanguage],
+      language: this.currentLanguage,
+      console: StyledText.toString(this.state.console),
+      robot: this.props.robots[Dict.unique(Scene.robots(Async.latestValue(workingScene)))?.robotId ?? "demobot"],
+    });
+  };
+
   render() {
     const { props, state } = this;
     
@@ -756,8 +783,10 @@ class Root extends React.Component<Props, State> {
       scene,
       challenge,
       challengeCompletion,
+      onAskTutorClick,
       onDocumentationClick,
-      onDocumentationGoToFuzzy
+      onDocumentationGoToFuzzy,
+      robots
     } = props;
 
     const {
@@ -809,6 +838,8 @@ class Root extends React.Component<Props, State> {
       ? Async.loaded({ value: this.workingChallengeScene_ })
       : scene;
 
+    const robot = robots[Dict.unique(Scene.robots(Async.latestValue(workingScene) ?? Scene.EMPTY))?.robotId ?? "demobot"];
+
     const commonLayoutProps: LayoutProps = {
       theme,
       console,
@@ -816,6 +847,7 @@ class Root extends React.Component<Props, State> {
       settings,
       editorTarget,
       onClearConsole: this.onClearConsole_,
+      onAskTutorClick: this.onAskTutorClick_,
       onIndentCode: this.onIndentCode_,
       onDownloadCode: this.onDownloadClick_,
       editorRef: this.editorRef,
@@ -878,6 +910,7 @@ class Root extends React.Component<Props, State> {
             onDashboardClick={this.onDashboardClick}
             onLogoutClick={this.onLogoutClick}
             onEndChallengeClick={this.onEndChallengeClick_}
+            onAiClick={this.onAiClick_}
             simulatorState={simulatorState}
           />
           {impl}
@@ -923,6 +956,13 @@ class Root extends React.Component<Props, State> {
             onClose={this.onModalClose_}
           />
         )}
+        <AiWindow
+          theme={DARK}
+          code={code}
+          language={language}
+          console={StyledText.toString(console)}
+          robot={robot}
+        />
       </>
     );
   }
@@ -942,6 +982,7 @@ export default connect((state: ReduxState, { match: { params: { challengeId } } 
     challenge: Dict.unique(builder.challenges),
     challengeCompletion: Dict.unique(builder.challengeCompletions),
     locale: state.i18n.locale,
+    robots: Dict.map(state.robots.robots, Async.latestValue), 
   };
 }, (dispatch, { match: { params: { challengeId } } }: RootPublicProps) => ({
   onChallengeCompletionCreate: (challengeCompletion: ChallengeCompletion) => {
@@ -991,6 +1032,8 @@ export default connect((state: ReduxState, { match: { params: { challengeId } } 
   goToLogin: () => {
     window.location.href = `/login?from=${window.location.pathname}`;
   },
+  onAiClick: () => dispatch(AiAction.TOGGLE),
+  onAskTutorClick: (params: SendMessageParams) => sendMessage(dispatch, params),
 }))(Root) as React.ComponentType<RootPublicProps>;
 
 export { RootState };

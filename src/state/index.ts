@@ -1,9 +1,10 @@
-import { applyMiddleware, combineReducers, compose, createStore,  } from 'redux';
+import { applyMiddleware, combineReducers, compose, createStore, } from 'redux';
 import { connectRouter, RouterState, routerMiddleware } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 
 import * as reducer from './reducer';
 import { DocumentationState, ChallengeCompletions, Challenges, I18n, Robots, Scenes, Assignments, Users } from './State';
+import { AiState } from './State/Ai/index';
 // import history from './history';
 import { AsyncScene } from './State/Scene';
 import { CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, SCENE_COLLECTION, ASSIGNMENT_COLLECTION, USER_COLLECTION } from '../db/constants';
@@ -27,7 +28,8 @@ export default createStore(combineReducers<State>({
   challengeCompletions: reducer.reduceChallengeCompletions,
   i18n: reducer.reduceI18n,
   assignments: reducer.reduceAssignments,
-  users: reducer.reduceUsers
+  users: reducer.reduceUsers,
+  ai: reducer.reduceAi
 }), composeEnhancers(
   applyMiddleware(
     routerMiddleware((history))
@@ -46,6 +48,7 @@ export interface State {
   i18n: I18n;
   assignments: Assignments;
   users: Users;
+  ai: AiState;
 }
 
 export namespace State {
@@ -78,7 +81,7 @@ export namespace State {
         value: state.assignments[selector.id]
       };
     }
-    
+
     return undefined;
   };
 }

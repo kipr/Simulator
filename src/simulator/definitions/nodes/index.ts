@@ -18,6 +18,7 @@ const canTemplate: Node.TemplatedNode<Node.Obj> = {
     mass: Mass.grams(5),
     friction: 0.7,
     restitution: 0.3,
+    inertia: [1, 1, 1],
   },
   material: {
     type: 'basic',
