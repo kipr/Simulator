@@ -747,12 +747,20 @@ class Root extends React.Component<Props, State> {
             onDashboardClick={this.onDashboardClick}
             onFeedbackClick={this.onModalClick_(Modal.FEEDBACK)}
             onOpenSceneClick={this.onOpenSceneClick_}
-            onNewSceneClick={this.onModalClick_(Modal.NEW_SCENE)}
-            onSaveSceneClick={this.onSaveSceneClick_}
-            onSettingsSceneClick={this.onSettingsSceneClick_}
-            onRunClick={this.onRunClick_}
+            onNewSceneClick={!challenge && this.onModalClick_(Modal.NEW_SCENE)}
+            onSaveSceneClick={scene && !challenge && scene.type === Async.Type.Saveable && isAuthor ? this.onSaveSceneClick_ : undefined}
+            onSettingsSceneClick={isAuthor && !challenge && this.onSettingsSceneClick_}
+            onRunClick={code[activeLanguage].length > 0 ? this.onRunClick_ : undefined}
             onStopClick={this.onStopClick_}
             simulatorState={simulatorState}
+            onSaveAsSceneClick={!challenge && this.onModalClick_(Modal.copyScene({ scene: Async.latestValue(scene) }))}
+            onDeleteSceneClick={isAuthor && !challenge && this.onModalClick_(Modal.deleteRecord({
+              record: {
+                type: Record.Type.Scene,
+                id: sceneId,
+                value: scene,
+              }
+            }))}
           />
           {impl}
         </Container>
