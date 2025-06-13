@@ -502,8 +502,8 @@ class Root extends React.Component<Props, State> {
     });
   };
   
-  onDocumentationClick = () => {
-    window.open("https://www.kipr.org/doc/index.html");
+  onDocumentationClick_ = () => {
+    this.props.onDocumentationClick();
   };
 
   private onAiClick_ = (event: React.MouseEvent) => {
@@ -741,7 +741,7 @@ class Root extends React.Component<Props, State> {
             onStartChallengeClick={this.onStartChallengeClick_}
             onSettingsClick={this.onModalClick_(Modal.SETTINGS)}
             onAboutClick={this.onModalClick_(Modal.ABOUT)}
-            onDocumentationClick={this.onDocumentationClick}
+            onDocumentationClick={this.onDocumentationClick_}
             onAiClick={this.onAiClick_}
             onLogoutClick={this.onLogoutClick}
             onDashboardClick={this.onDashboardClick}
