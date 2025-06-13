@@ -61,7 +61,6 @@ If the user is trying to detect how far they are from an object, suggest using `
 
 If the user is trying to line follow, suggest using the reflectance sensor to detect the line and adjust the robot's movement accordingly. For example, if the reflectance sensor detects a black line, they can turn the robot slightly to follow the line. The loop will need to have a condition to indicate when to stop following the line, such as the lever sensor being pressed, the robot reaching a certain motor position counter, or an amount of time using the `seconds()` function.
 
-The light sensor can be used to detect ambient light levels. The light sensor returns low values in light environments and high values in dark environments. 
-
-
+The light sensor can be used to detect ambient light levels. The light sensor returns low values in light environments and high values in dark environments.
+{{challenges}}
 

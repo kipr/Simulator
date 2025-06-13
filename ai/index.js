@@ -6,7 +6,14 @@ const RateLimit = require('express-rate-limit');
 const fs = require('fs');
 const path = require('path');
 
-
+// Try to catch possible misspellings
+const includesChallenge = (s) => {
+  return s.toLowerCase().includes('challenge') ||
+  s.includes('chalenge') ||
+  s.includes('chelenge') ||
+  s.includes('chalenje') ||
+  s.includes('callenge');
+};
 
 /**
  * Creates a router for Ai integration
@@ -23,6 +30,9 @@ function createAiRouter(firebaseTokenManager, config) {
   const systemPromptPath = path.join(__dirname, 'systemPrompt.md');
   const systemPrompt = fs.readFileSync(systemPromptPath, 'utf8')
     .replace('{{headers}}', headers);
+
+  const challengePromptPath = path.join(__dirname, 'challenges.md');
+  const challengePrompt = fs.readFileSync(challengePromptPath, 'utf8');
 
   const router = express.Router();
 
@@ -81,12 +91,19 @@ function createAiRouter(firebaseTokenManager, config) {
       return res.status(500).json({ error: 'Server configuration error: Claude API key not configured' });
     }
 
+    const challengeMentioned = messages
+      .filter(({ role }) => role === 'user')
+      .map((msg) => msg.content)
+      .filter((el) => includesChallenge(el))
+      .length > 0;
+
     try {
       const system = systemPrompt
         .replace('{{code}}', code ?? 'Unknown')
         .replace('{{language}}', language ?? 'Unknown')
         .replace('{{console}}', consoleText ?? 'Unknown')
-        .replace('{{robot}}', JSON.stringify(robot) ?? 'Unknown');
+        .replace('{{robot}}', JSON.stringify(robot) ?? 'Unknown')
+        .replace('{{challenges}}', challengeMentioned ? challengePrompt : '');
 
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
