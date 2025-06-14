@@ -502,8 +502,8 @@ class Root extends React.Component<Props, State> {
     });
   };
   
-  onDocumentationClick = () => {
-    window.open("https://www.kipr.org/doc/index.html");
+  onDocumentationClick_ = () => {
+    this.props.onDocumentationClick();
   };
 
   private onAiClick_ = (event: React.MouseEvent) => {
@@ -738,21 +738,29 @@ class Root extends React.Component<Props, State> {
             onShowAll={this.onShowAll_}
             onHideAll={this.onHideAll_}
             onResetWorldClick={this.onResetWorldClick_}
-            onStartChallengeClick={this.onStartChallengeClick_}
+            onStartChallengeClick={sceneHasChallenge ? this.onStartChallengeClick_ : undefined}
             onSettingsClick={this.onModalClick_(Modal.SETTINGS)}
             onAboutClick={this.onModalClick_(Modal.ABOUT)}
-            onDocumentationClick={this.onDocumentationClick}
+            onDocumentationClick={this.onDocumentationClick_}
             onAiClick={this.onAiClick_}
             onLogoutClick={this.onLogoutClick}
             onDashboardClick={this.onDashboardClick}
             onFeedbackClick={this.onModalClick_(Modal.FEEDBACK)}
             onOpenSceneClick={this.onOpenSceneClick_}
-            onNewSceneClick={this.onModalClick_(Modal.NEW_SCENE)}
-            onSaveSceneClick={this.onSaveSceneClick_}
-            onSettingsSceneClick={this.onSettingsSceneClick_}
-            onRunClick={this.onRunClick_}
+            onNewSceneClick={!challenge && this.onModalClick_(Modal.NEW_SCENE)}
+            onSaveSceneClick={scene && !challenge && scene.type === Async.Type.Saveable && isAuthor ? this.onSaveSceneClick_ : undefined}
+            onSettingsSceneClick={isAuthor && !challenge && this.onSettingsSceneClick_}
+            onRunClick={code[activeLanguage].length > 0 ? this.onRunClick_ : undefined}
             onStopClick={this.onStopClick_}
             simulatorState={simulatorState}
+            onSaveAsSceneClick={!challenge && this.onModalClick_(Modal.copyScene({ scene: Async.latestValue(scene) }))}
+            onDeleteSceneClick={isAuthor && !challenge && this.onModalClick_(Modal.deleteRecord({
+              record: {
+                type: Record.Type.Scene,
+                id: sceneId,
+                value: scene,
+              }
+            }))}
           />
           {impl}
         </Container>
@@ -849,7 +857,7 @@ class Root extends React.Component<Props, State> {
           code={code[activeLanguage]}
           language={activeLanguage}
           console={StyledText.toString(console)}
-          robot={this.props.robots[Dict.unique(Scene.robots(Async.latestValue(this.props.scene)))?.robotId ?? "demobot"]}
+          robot={this.props.robots["demobot"]}
         />
       </>
 
