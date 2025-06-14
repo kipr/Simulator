@@ -35,6 +35,7 @@ class EtSensor extends SensorObject<Node.EtSensor, number> {
       ],
     }, scene);
     this.trace_.visibility = 0;
+    this.trace_.isPickable = false;
 
     ReferenceFramewUnits.syncBabylon(origin, this.trace_, 'meters');
     this.trace_.parent = parent;

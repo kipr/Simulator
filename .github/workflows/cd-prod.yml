@@ -77,6 +77,7 @@ jobs:
           --set secrets.serviceAccountKeyString=$FIRESTORE_SERVICE_ACCOUNT \
           --set secrets.mailgunApiKey=$MAILGUN_API_KEY \
           --set secrets.mailgunDomain=$MAILGUN_DOMAIN \
+          --set secrets.claudeApiKey=$CLAUDE_API_KEY \
           --set apiUrl=http://database.prod.svc.cluster.local:4000 \
           simulator ./simulator
       shell: bash
@@ -84,3 +85,4 @@ jobs:
         FIRESTORE_SERVICE_ACCOUNT: ${{ secrets.FIRESTORE_SERVICE_ACCOUNT }}
         MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
         MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}
+        CLAUDE_API_KEY: ${{ secrets.CLAUDE_API_KEY }}

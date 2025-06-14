@@ -1,6 +1,6 @@
 {
   "name": "simulator",
-  "version": "2.1.1",
+  "version": "2.3.0",
   "sideEffects": false,
   "main": "dist/index.js",
   "author": "KISS Institute for Practical Robotics",
@@ -80,7 +80,7 @@
     "form-data": "^4.0.0",
     "history": "^4.7.2",
     "image-loader": "^0.0.1",
-    "image-webpack-loader": "^6.0.0",
+    "image-webpack-loader": "^8.1.0",
     "immer": "^9.0.15",
     "itch": "https://github.com/chrismbirmingham/itch#36",
     "ivygate": "https://github.com/kipr/ivygate#v0.1.9",

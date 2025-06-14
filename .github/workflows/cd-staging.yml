@@ -5,8 +5,9 @@
 # 1. Ensure that your repository contains the necessary configuration for your Google Kubernetes Engine cluster, including deployment.yml, kustomization.yml, service.yml, etc.
 #
 # 2. Set up secrets in your workspace: GKE_PROJECT with the name of the project and GKE_SA_KEY with the Base64 encoded JSON service account key (https://github.com/GoogleCloudPlatform/github-actions/tree/docs/service-account-key/setup-gcloud#inputs).
-#
-# 3. Change the values for the GKE_ZONE, GKE_CLUSTER, IMAGE, and DEPLOYMENT_NAME environment variables (below).
+#    Additionally setup CLAUDE_API_KEY as Base64 encoded.
+# 
+# 4. Change the values for the GKE_ZONE, GKE_CLUSTER, IMAGE, and DEPLOYMENT_NAME environment variables (below).
 #
 # For more support on how to run the workflow, please visit https://github.com/google-github-actions/setup-gcloud/tree/master/example-workflows/gke
 
@@ -108,6 +109,7 @@ jobs:
           --set secrets.serviceAccountKeyString=$FIRESTORE_SERVICE_ACCOUNT \
           --set secrets.mailgunApiKey=$MAILGUN_API_KEY \
           --set secrets.mailgunDomain=$MAILGUN_DOMAIN \
+          --set secrets.claudeApiKey=$CLAUDE_API_KEY \
           --set apiUrl=http://database.prerelease.svc.cluster.local:4000 \
           simulator-prerelease ./simulator
       shell: bash
@@ -115,3 +117,4 @@ jobs:
         FIRESTORE_SERVICE_ACCOUNT: ${{ secrets.FIRESTORE_SERVICE_ACCOUNT }}
         MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
         MAILGUN_DOMAIN: ${{ secrets.MAILGUN_DOMAIN }}
+        CLAUDE_API_KEY: ${{ secrets.CLAUDE_API_KEY }}

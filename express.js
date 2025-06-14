@@ -16,6 +16,7 @@ const { FirebaseTokenManager } = require('./firebaseAuth');
 const formData = require('form-data');
 const Mailgun = require('mailgun.js');
 const createParentalConsentRouter = require('./parentalConsent');
+const createAiRouter = require('./ai');
 
 let config;
 try {
@@ -25,12 +26,16 @@ try {
   throw e;
 }
 
+app.set('trust proxy', true);
+
 // set up rate limiter: maximum of 100 requests per 15 minute
 var RateLimit = require('express-rate-limit');
 var limiter = RateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 1000, // max 100 requests per windowMs
 });
+
+
 
 // apply rate limiter to all requests
 app.use(limiter);
@@ -53,6 +58,9 @@ app.use(bodyParser.json());
 app.use(morgan('combined'));
 
 app.use('/api/parental-consent', createParentalConsentRouter(firebaseTokenManager, mailgunClient, config));
+
+// Add AI router
+app.use('/api/ai', createAiRouter(firebaseTokenManager, config));
 
 app.use('/api', proxy(config.dbUrl));
 

@@ -21,6 +21,15 @@ class FirebaseTokenManager {
     this.refreshTimerId = setTimeout(this.refreshToken.bind(this), 0);
   }
 
+  async verifyIdToken(token) {
+    try {
+      return await this.firebaseAuth.verifyIdToken(token);
+    } catch (error) {
+      console.error('Error verifying ID token:', error);
+      throw error;
+    }
+  }
+
   getToken() {
     // May return an expired token if token refresh is failing
     return this.idToken;

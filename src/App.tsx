@@ -14,15 +14,17 @@ import Loading from './components/Loading';
 import Root from './pages/Root';
 import ChallengeRoot from './pages/ChallengeRoot';
 import DocumentationWindow from './components/documentation/DocumentationWindow';
+import AiWindow from './components/Ai/AiWindow';
 import { DARK } from './components/constants/theme';
 import CurriculumPage from './lms/CurriculumPage';
-import { UsersAction } from './state/reducer';
+import { UsersAction, I18nAction } from './state/reducer';
 import db from './db';
 import Selector from './db/Selector';
 import DbError from './db/Error';
 import UserConsent from './consent/UserConsent';
 import LegalAcceptance from './consent/LegalAcceptance';
 
+import LocalizedString from './util/LocalizedString';
 export interface AppPublicProps {
 
 }
@@ -165,7 +167,7 @@ class App extends React.Component<Props, State> {
  */
 export default connect((state: ReduxState) => {
   return {
-    
+
   };
 }, dispatch => ({
   login: () => {
