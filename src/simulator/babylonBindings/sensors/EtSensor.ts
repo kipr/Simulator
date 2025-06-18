@@ -77,14 +77,23 @@ class EtSensor extends SensorObject<Node.EtSensor, number> {
       // realistic
       if (distance >= rawMaxDistance) value = 1100;
       // Farther than 80 cm
-      else if (distance >= 80) value = 345;
+      else if (distance >= 75) value = 345;
       // Closer than 3 cm (linear from 2910 to 0)
       else if (distance <= 3) value = Math.floor(distance * (2910 / 3));
       // 3 - 11.2 cm
       else if (distance <= 11.2) value = 2910;
-      // 11.2 - 80 cm (the useful range)
-      // Derived by fitting the real-world data to a power model
-      else value = Math.floor(3240.7 * Math.pow(distance - 10, -0.776));
+      // 11.2 - 75 cm (the useful range)
+      // Derived by fitting real-world data to a degree 10 polynomial.
+      else value = 878.37682236 - 422.04721032 * (-1.14285714 + 0.02857143 * distance) +
+        368.80975082 * (-1.14285714 + 0.02857143 * distance) ** 2 -
+        2220.89903395 * (-1.14285714 + 0.02857143 * distance) ** 3 +
+        2940.20356857 * (-1.14285714 + 0.02857143 * distance) ** 4 +
+        8244.8268611 * (-1.14285714 + 0.02857143 * distance) ** 5 -
+        9848.35196182 * (-1.14285714 + 0.02857143 * distance) ** 6 -
+        16215.48716512 * (-1.14285714 + 0.02857143 * distance) ** 7 +
+        16587.93078011 * (-1.14285714 + 0.02857143 * distance) ** 8 +
+        9456.40313374 * (-1.14285714 + 0.02857143 * distance) ** 9 -
+        9181.52410745 * (-1.14285714 + 0.02857143 * distance) ** 10;
     }
 
     if (this.noisy) {
