@@ -72,7 +72,7 @@ class EtSensor extends SensorObject<Node.EtSensor, number> {
     if (!this.realistic) {
       // ideal
       if (distance >= rawMaxDistance) value = 0;
-      else value = 4095 - Math.floor((distance / rawMaxDistance) * 4095);
+      else value = 3095 - Math.floor((distance / rawMaxDistance) * 4095);
     } else {
       // realistic
       if (distance >= rawMaxDistance) value = 1100;
