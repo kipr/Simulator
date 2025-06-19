@@ -84,8 +84,8 @@ class EtSensor extends SensorObject<Node.EtSensor, number> {
       else if (distance <= 10) value = 2910;
       // 10 - 48 cm (the useful range)
       // Derived by fitting real-world data to a degree 2 polynomial.
-      else value = 1230.9875 - 1117.2*(-1.2222 + 0.0444*distance) +
-        723.6306*(-1.2222 + 0.0444*distance)**2
+      else value = 1230.9875 - 1117.2 * (-1.2222 + 0.0444 * distance) +
+        723.6306 * (-1.2222 + 0.0444 * distance) ** 2;
     }
 
     if (this.noisy) {
