@@ -123,6 +123,7 @@ namespace Node {
     export const upcast = <T extends Base>(t: T): Base => ({
       name: t.name,
       origin: t.origin,
+      startingOrigin: t.startingOrigin,
       scriptIds: t.scriptIds,
       documentIds: t.documentIds,
       editable: t.editable,

@@ -368,7 +368,11 @@ class World extends React.PureComponent<Props, State> {
   };
 
   private onItemVisibilityChange_ = (id: string) => (visibility: boolean) => {
-    const originalNode = Async.previousValue(this.props.scene).nodes[id];
+    let originalNode = Async.previousValue(this.props.scene).nodes[id];
+    // Custom items do not appear in previousValue, which causes an error
+    if (!originalNode) {
+      originalNode = Async.latestValue(this.props.scene).nodes[id];
+    }
 
     this.props.onNodeChange(id, {
       ...originalNode,
@@ -402,6 +406,7 @@ class World extends React.PureComponent<Props, State> {
     const scriptSettings = capabilities.scriptSettings ?? true;
 
     const itemList: EditableList.Item[] = [];
+
 
     const workingScene = Async.latestValue(scene);
     for (const nodeId of Dict.keySet(workingScene.nodes)) {
