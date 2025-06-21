@@ -298,10 +298,17 @@ class World extends React.PureComponent<Props, State> {
 
   private onNodeOriginAccept_ = (id: string) => (origin: ReferenceFramewUnits) => {
     const originalNode = Async.latestValue(this.props.scene).nodes[id];
+    console.log('accepted');
     this.props.onNodeChange(id, {
       ...originalNode,
-      startingOrigin: origin,
-      origin,
+      startingOrigin: {
+        ...originalNode.startingOrigin,
+        ...origin,
+      },
+      origin: {
+        ...originalNode.origin,
+        ...origin,
+      },
     });
   };
 
@@ -322,7 +329,7 @@ class World extends React.PureComponent<Props, State> {
     const { scene } = props;
 
     const originalNode = Async.latestValue(scene).nodes[id];
-    
+
     this.props.onNodeChange(id, {
       ...originalNode,
       origin: {
@@ -342,7 +349,7 @@ class World extends React.PureComponent<Props, State> {
     const idStr = id as string;
 
     const workingScene = Async.latestValue(scene);
-    
+
     const node = workingScene.nodes[idStr];
     if (node.type === 'object') {
       if (node.geometryId !== undefined) {
@@ -474,12 +481,12 @@ class World extends React.PureComponent<Props, State> {
         }
       }));
     }
-    
+
     return (
       <>
         <ScrollArea theme={theme} style={{ flex: '1 1' }}>
           <Container theme={theme} style={style} className={className}>
-            <StyledListSection 
+            <StyledListSection
               name={itemsName}
               theme={theme}
               onCollapsedChange={this.onCollapsedChange_('items')}
@@ -492,7 +499,7 @@ class World extends React.PureComponent<Props, State> {
                 theme={theme}
               />
             </StyledListSection>
-            <StyledListSection 
+            <StyledListSection
               name={scriptsName}
               theme={theme}
               onCollapsedChange={this.onCollapsedChange_('scripts')}
