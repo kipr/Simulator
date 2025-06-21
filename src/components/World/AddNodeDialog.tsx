@@ -118,7 +118,7 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
       geometry: undefined
     });
   };
-  
+
   private onGeometryChange_ = (id: string, geometry: Geometry) => {
     if (id !== this.state.geometryId) return;
 
