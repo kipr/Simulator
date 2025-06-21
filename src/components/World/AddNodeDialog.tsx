@@ -99,6 +99,10 @@ class AddNodeDialog extends React.PureComponent<Props, State> {
     this.setState(prevState => ({
       node: {
         ...prevState.node,
+        startingOrigin: {
+          ...prevState.node.startingOrigin,
+          ...origin,
+        },
         origin: {
           ...prevState.node.origin,
           ...origin,

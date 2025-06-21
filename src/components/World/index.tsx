@@ -298,7 +298,6 @@ class World extends React.PureComponent<Props, State> {
 
   private onNodeOriginAccept_ = (id: string) => (origin: ReferenceFramewUnits) => {
     const originalNode = Async.latestValue(this.props.scene).nodes[id];
-    console.log('accepted');
     this.props.onNodeChange(id, {
       ...originalNode,
       startingOrigin: {
