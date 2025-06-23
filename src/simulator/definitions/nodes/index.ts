@@ -162,6 +162,7 @@ const sciencePadTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'sciencepad',
   physics: {
+    motionType: PhysicsMotionType.STATIC,
     type: 'box',
     restitution: 1,
     friction: 1,
@@ -255,11 +256,11 @@ const containerTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'container',
   physics: {
+    motionType: PhysicsMotionType.STATIC,
     type: 'mesh',
     restitution: .3,
     friction: 1,
     // mass: Mass.pounds(20),
-    inertia: [1, 1, 1],
   },
 };
 const botguyTemplate: Node.TemplatedNode<Node.Obj> = {
