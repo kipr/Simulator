@@ -48,6 +48,7 @@ import jbc22 from "../../simulator/definitions/challenges/jbc22-Search-and-Rescu
 import jbc23 from "../../simulator/definitions/challenges/jbc23-Find-the-Black-Line";
 import jbc24 from "../../simulator/definitions/challenges/jbc24-Walk-the-Line";
 // import test from '../../simulator/definitions/challenges/archived/test';
+import Find_The_Black_Line from "../../simulator/definitions/challenges/jbcGcer25-Find-The-Black-Line";
 
 export namespace ChallengesAction {
   export interface LoadChallenge {
@@ -295,6 +296,10 @@ const DEFAULT_CHALLENGES: Challenges = {
   'jbc24': Async.loaded({
     value: jbc24,
     brief: ChallengeBrief.fromChallenge(jbc24),
+  }),
+  'Find_The_Black_Line': Async.loaded({
+    value: Find_The_Black_Line,
+    brief: ChallengeBrief.fromChallenge(Find_The_Black_Line),
   }),
 };
 
