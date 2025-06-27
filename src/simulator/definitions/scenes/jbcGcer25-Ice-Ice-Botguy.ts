@@ -23,7 +23,7 @@ for (const [i, pos] of canPositions.entries()) {
     position: pos,
     scale: { x: 100, y: 100, z: 100 },
   };
-  POM_COLLIDER_SCRIPTS[`pom_blue${i}_collision`] = Script.ecmaScript(`Pom ${i+1} Collided`, `
+  POM_COLLIDER_SCRIPTS[`pom_blue${i}_collision`] = Script.ecmaScript(`Pom ${i + 1} Collided`, `
 scene.addOnIntersectionListener('pom_blue${i}', (type, otherNodeId) => {
   // scene.setChallengeEventValue('offMat', visible);
   console.log('pom_blue${i} collided');
@@ -34,7 +34,7 @@ scene.addOnIntersectionListener('pom_blue${i}', (type, otherNodeId) => {
 `);
   POMS_BLUE[`pom_blue${i}`] = {
     type: 'from-bb-template',
-    name: tr(`Blue pom #${i+1}`),
+    name: tr(`Blue pom #${i + 1}`),
     templateId: 'pom_blue',
     visible: true,
     editable: true,

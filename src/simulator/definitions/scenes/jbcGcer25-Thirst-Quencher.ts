@@ -14,7 +14,7 @@ const cups = ['cup_blue', 'cup_pink', 'cup_green'];
 const CUPS = {};
 const CUP_SCRIPTS = {};
 for (const [i, n] of circles.entries()) {
-  CUP_SCRIPTS[`cup${i}_startbox`] = Script.ecmaScript(`Cup #${n+1} in Start Box`, `
+  CUP_SCRIPTS[`cup${i}_startbox`] = Script.ecmaScript(`Cup #${n + 1} in Start Box`, `
 scene.addOnIntersectionListener('cup${i}', (type, otherNodeId) => {
   // scene.setChallengeEventValue('offMat', visible);
   console.log('cup${i} in start box');
@@ -30,7 +30,7 @@ scene.addOnIntersectionListener('cup${i}', (type, otherNodeId) => {
   };
   CUPS[`cup${i}`] = {
     type: 'from-bb-template',
-    name: tr(`Cup #${n+1}`),
+    name: tr(`Cup #${n + 1}`),
     templateId: cups[Math.floor(Math.random() * cups.length)],
     visible: true,
     editable: true,

@@ -7,11 +7,11 @@ import tr from '@i18n';
 const POM_EVENTS = {};
 const POM_EXPRS = {};
 const POM_ONCES = {};
-let POM_ARGIDS = [];
+let POM_ARGIDS: string[] = [];
 for (let i = 0; i < 12; i++) {
   POM_EVENTS[`pom_blue${i}`] = {
-    name: tr(`Blue pom #${i+1} Collision`),
-    description: tr(`Blue pom #${i+1} hit botguy`),
+    name: tr(`Blue pom #${i + 1} Collision`),
+    description: tr(`Blue pom #${i + 1} hit botguy`),
   };
   POM_EXPRS[`pom_blue${i}_hit_botguy`] = {
     type: Expr.Type.Event,

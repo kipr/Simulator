@@ -6,7 +6,7 @@ import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../../ut
 import { canPositions } from './jbcBase';
 // import { Color } from '../../../state/State/Scene/Color';
 // import { createCamera } from 'simulator/babylonBindings/createSceneObjects/createCameras';
-import {JBC_23 } from './jbc23-Find-the-Black-Line';
+import { JBC_23 } from './jbc23-Find-the-Black-Line';
 
 import tr from '@i18n';
 
