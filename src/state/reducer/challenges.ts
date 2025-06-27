@@ -50,6 +50,7 @@ import jbc24 from "../../simulator/definitions/challenges/jbc24-Walk-the-Line";
 // import test from '../../simulator/definitions/challenges/archived/test';
 import Find_The_Black_Line from "../../simulator/definitions/challenges/jbcGcer25-Find-The-Black-Line";
 import Sense_The_Can from "../../simulator/definitions/challenges/jbcGcer25-Sense-The-Can";
+import Ice_Ice_Botguy from "../../simulator/definitions/challenges/jbcGcer25-Ice-Ice-Botguy";
 
 export namespace ChallengesAction {
   export interface LoadChallenge {
@@ -305,6 +306,10 @@ const DEFAULT_CHALLENGES: Challenges = {
   'Sense_The_Can': Async.loaded({
     value: Sense_The_Can,
     brief: ChallengeBrief.fromChallenge(Sense_The_Can),
+  }),
+  'Ice_Ice_Botguy': Async.loaded({
+    value: Ice_Ice_Botguy,
+    brief: ChallengeBrief.fromChallenge(Ice_Ice_Botguy),
   }),
 };
 

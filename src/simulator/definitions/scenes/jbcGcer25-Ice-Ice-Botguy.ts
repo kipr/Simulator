@@ -1,11 +1,9 @@
-import Scene from "../../../state/State/Scene";
-import { ReferenceFramewUnits, RotationwUnits } from "../../../util/math/unitMath";
-import { Distance } from "../../../util";
+import Scene from '../../../state/State/Scene';
+import { Distance } from '../../../util';
 import { createBaseSceneSurfaceA, canPositions, } from './jbcBase';
-
+import Script from '../../../state/State/Scene/Script';
+import { Color } from '../../../state/State/Scene/Color';
 import tr from '@i18n';
-import Script from "../../../state/State/Scene/Script";
-import { Color } from "../../../state/State/Scene/Color";
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -60,12 +58,12 @@ export const Ice_Ice_Botguy: Scene = {
   description: tr('GCER 2025 special event. Botguy is overheating! Collect the ice and dump it on Botguy to cool him off!'),
   scripts: {
     ...POM_COLLIDER_SCRIPTS,
-    notInStartBox: Script.ecmaScript("Not in Start Box", notInStartBox),
+    notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
   },
   geometry: {
     ...baseScene.geometry,
     notStartBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(10),
@@ -76,8 +74,8 @@ export const Ice_Ice_Botguy: Scene = {
   nodes: {
     ...baseScene.nodes,
     notStartBox: {
-      type: "object",
-      geometryId: "notStartBox_geom",
+      type: 'object',
+      geometryId: 'notStartBox_geom',
       name: tr('Not Start Box'),
       visible: false,
       origin: {
@@ -88,9 +86,9 @@ export const Ice_Ice_Botguy: Scene = {
         },
       },
       material: {
-        type: "basic",
+        type: 'basic',
         color: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 0, 0),
         },
       },
