@@ -291,6 +291,7 @@ const DEFAULT_SCENES: Scenes = {
   jbcSandboxA: Async.loaded({ value: JBC_SCENES.JBC_Sandbox_A }),
   jbcSandboxB: Async.loaded({ value: JBC_SCENES.JBC_Sandbox_B }),
   Find_The_Black_Line: Async.loaded({ value: JBC_SCENES.Find_The_Black_Line }),
+  Sense_The_Can: Async.loaded({ value: JBC_SCENES.Sense_The_Can }),
   jbc0: Async.loaded({ value: JBC_SCENES.JBC_0 }),
   jbc1: Async.loaded({ value: JBC_SCENES.JBC_1 }),
   jbc2: Async.loaded({ value: JBC_SCENES.JBC_2 }),
