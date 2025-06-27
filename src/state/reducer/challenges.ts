@@ -49,6 +49,7 @@ import jbc23 from "../../simulator/definitions/challenges/jbc23-Find-the-Black-L
 import jbc24 from "../../simulator/definitions/challenges/jbc24-Walk-the-Line";
 // import test from '../../simulator/definitions/challenges/archived/test';
 import Find_The_Black_Line from "../../simulator/definitions/challenges/jbcGcer25-Find-The-Black-Line";
+import Sense_The_Can from "../../simulator/definitions/challenges/jbcGcer25-Sense-The-Can";
 
 export namespace ChallengesAction {
   export interface LoadChallenge {
@@ -300,6 +301,10 @@ const DEFAULT_CHALLENGES: Challenges = {
   'Find_The_Black_Line': Async.loaded({
     value: Find_The_Black_Line,
     brief: ChallengeBrief.fromChallenge(Find_The_Black_Line),
+  }),
+  'Sense_The_Can': Async.loaded({
+    value: Sense_The_Can,
+    brief: ChallengeBrief.fromChallenge(Sense_The_Can),
   }),
 };
 

@@ -28,10 +28,10 @@ const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
 
 
 scene.addOnIntersectionListener('canRandom', (type, otherNodeId) => {
-  console.log('Robot returned start box!', type, otherNodeId);
+  // console.log('Robot returned start box!', type, otherNodeId);
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('canInStartBox', type === 'start');
-    setNodeVisible('startBox', true);
+    setNodeVisible('startBox', type == 'start');
   }
 }, 'startBox');
 `;
@@ -120,6 +120,6 @@ export const Sense_The_Can: Scene = {
         },
       },
     },
-    'canRandom': createCanNode(randomCircle, undefined, true, true),
+    'canRandom': createCanNode(randomCircle),
   },
 };
