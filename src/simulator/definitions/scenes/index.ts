@@ -28,6 +28,7 @@ export * from './moonSandbox';
 export * from './tableSandbox';
 export * from './jbcGcer25-Find-The-Black-Line';
 export * from './jbcGcer25-Sense-The-Can';
+export * from './jbcGcer25-Ice-Ice-Botguy';
 // export * from './jbc2b-Ring-Around-the-Cans-Sr';
 // export * from './jbc2c-Back-It-Up';
 // export * from './jbc2d-Ring-Around-the-Can-and-Back-It-Up';
