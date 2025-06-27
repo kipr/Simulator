@@ -4,8 +4,8 @@ import { Distance } from "../../../util";
 import { createBaseSceneSurfaceA, canPositions, } from './jbcBase';
 
 import tr from '@i18n';
-import { PhysicsMotionType } from "@babylonjs/core";
 import Script from "../../../state/State/Scene/Script";
+import { Color } from "../../../state/State/Scene/Color";
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -18,68 +18,6 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 }, 'notStartBox');
 `;
 
-const inStartBox = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  // console.log('Robot started in start box!', type, otherNodeId, scene.programStatus);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('inStartBox', true);
-  }
-}, 'startBox');
-`;
-
-const touchingLine = `
-// If the robot wheels touch Line B, it fails the challenge
-
-const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
-  ...scene.nodes[nodeId],
-  visible
-});
-
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  // console.log('Robot touching line!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('robotTouchingLine', type === 'start');
-    setNodeVisible('lineB', true);
-  }
-}, 'lineB');
-`;
-
-const reachedEnd = `
-// If the robot reaches the end, it completes the challenge
-
-const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
-  ...scene.nodes[nodeId],
-  visible
-});
-
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  // console.log('Robot reached end!', type, otherNodeId);
-  const visible = type === 'start';
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('reachedEnd', visible);
-    setNodeVisible('endBox', visible);
-  }
-}, 'endBox');
-`;
-
-const offMat = `
-// If the robot leaves the mat, it fails the challenge
-
-const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
-  ...scene.nodes[nodeId],
-  visible
-});
-
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  // console.log('Robot off mat!', type, otherNodeId);
-  const visible = type === 'start';
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('offMat', visible);
-    setNodeVisible('endOfMat', visible);
-  }
-}, 'endOfMat');
-`;
-
 const POMS_BLUE = {};
 const POM_COLLIDER_SCRIPTS = {};
 for (const [i, pos] of canPositions.entries()) {
@@ -89,10 +27,11 @@ for (const [i, pos] of canPositions.entries()) {
   };
   POM_COLLIDER_SCRIPTS[`pom_blue${i}_collision`] = Script.ecmaScript(`Pom ${i+1} Collided`, `
 scene.addOnIntersectionListener('pom_blue${i}', (type, otherNodeId) => {
-  // console.log('Robot off mat!', type, otherNodeId);
   // scene.setChallengeEventValue('offMat', visible);
   console.log('pom_blue${i} collided');
-  setNodeVisible('endOfMat', visible);
+  if(scene.programStatus === 'running'){
+    scene.setChallengeEventValue('pom_blue${i}', type === 'start');
+  }
 }, 'botguy');
 `);
   POMS_BLUE[`pom_blue${i}`] = {
@@ -121,24 +60,49 @@ export const Ice_Ice_Botguy: Scene = {
   description: tr('GCER 2025 special event. Botguy is overheating! Collect the ice and dump it on Botguy to cool him off!'),
   scripts: {
     ...POM_COLLIDER_SCRIPTS,
+    notInStartBox: Script.ecmaScript("Not in Start Box", notInStartBox),
+  },
+  geometry: {
+    ...baseScene.geometry,
+    notStartBox_geom: {
+      type: "box",
+      size: {
+        x: Distance.meters(3.54),
+        y: Distance.centimeters(10),
+        z: Distance.meters(2.13),
+      },
+    },
   },
   nodes: {
     ...baseScene.nodes,
+    notStartBox: {
+      type: "object",
+      geometryId: "notStartBox_geom",
+      name: tr('Not Start Box'),
+      visible: false,
+      origin: {
+        position: {
+          x: Distance.centimeters(0),
+          y: Distance.centimeters(-1.9),
+          z: Distance.meters(1.208),
+        },
+      },
+      material: {
+        type: "basic",
+        color: {
+          type: "color3",
+          color: Color.rgb(255, 0, 0),
+        },
+      },
+    },
     ...POMS_BLUE,
     'botguy': {
-    type: 'object',
-    name: tr('Botguy'),
-    geometryId: 'botguy_gamepiece',
-    visible: true,
-    editable: true,
-    physics: {
-      type: 'mesh',
-      restitution: .1,
-      friction: .7,
-      motionType: PhysicsMotionType.STATIC,
-    },
-    startingOrigin: BOTGUY_ORIGIN,
-    origin: BOTGUY_ORIGIN,
+      type: 'from-bb-template',
+      name: tr('Botguy'),
+      templateId: 'botguy_gamepiece_static',
+      visible: true,
+      startingOrigin: BOTGUY_ORIGIN,
+      origin: BOTGUY_ORIGIN,
     },
   }
 };
