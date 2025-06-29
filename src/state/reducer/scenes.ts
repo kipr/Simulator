@@ -338,6 +338,7 @@ const DEFAULT_SCENES: Scenes = {
   Ice_Ice_Botguy: Async.loaded({ value: JBC_SCENES.Ice_Ice_Botguy }),
   Thirst_Quencher: Async.loaded({ value: JBC_SCENES.Thirst_Quencher }),
   Entree_Express: Async.loaded({ value: JBC_SCENES.Entree_Express }),
+  Special_Sauce: Async.loaded({ value: JBC_SCENES.Special_Sauce }),
 };
 
 const create = async (sceneId: string, next: Async.Creating<Scene>) => {
@@ -561,7 +562,7 @@ export const reduceScenes = (state: Scenes = DEFAULT_SCENES, action: ScenesActio
           ...state,
           [action.sceneId]: Async.mutate(scene, draft => {
             for (const nodeId in draft.nodes) {
-              const { origin, startingOrigin } = draft.nodes[nodeId];
+              const { startingOrigin } = draft.nodes[nodeId];
 
               if (!startingOrigin) continue;
 
