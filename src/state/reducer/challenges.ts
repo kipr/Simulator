@@ -52,6 +52,7 @@ import Find_The_Black_Line from "../../simulator/definitions/challenges/jbcGcer2
 import Sense_The_Can from "../../simulator/definitions/challenges/jbcGcer25-Sense-The-Can";
 import Ice_Ice_Botguy from "../../simulator/definitions/challenges/jbcGcer25-Ice-Ice-Botguy";
 import Thirst_Quencher from "../../simulator/definitions/challenges/jbcGcer25-Thirst-Quencher";
+import Entree_Express from "../../simulator/definitions/challenges/jbcGcer25-Entree-Express";
 
 export namespace ChallengesAction {
   export interface LoadChallenge {
@@ -315,6 +316,10 @@ const DEFAULT_CHALLENGES: Challenges = {
   'Thirst_Quencher': Async.loaded({
     value: Thirst_Quencher,
     brief: ChallengeBrief.fromChallenge(Thirst_Quencher),
+  }),
+  'Entree_Express': Async.loaded({
+    value: Entree_Express,
+    brief: ChallengeBrief.fromChallenge(Entree_Express),
   }),
 };
 

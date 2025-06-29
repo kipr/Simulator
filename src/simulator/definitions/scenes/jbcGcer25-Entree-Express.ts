@@ -2,7 +2,6 @@ import Scene from '../../../state/State/Scene';
 import { ReferenceFramewUnits, RotationwUnits } from '../../../util/math/unitMath';
 import { Distance } from '../../../util';
 import Script from '../../../state/State/Scene/Script';
-import { Color } from "../../../state/State/Scene/Color";
 
 import { createBaseSceneSurfaceA } from './jbcBase';
 
@@ -71,21 +70,21 @@ scene.addOnIntersectionListener('burger', (type, otherNodeId) => {
   // scene.setChallengeEventValue('offMat', visible);
   console.log('Burger placed');
   if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('burger', type === 'start');
+    scene.setChallengeEventValue('burgerTray', type === 'start');
   }
 }, [...trays]);
 scene.addOnIntersectionListener('hotdog', (type, otherNodeId) => {
   // scene.setChallengeEventValue('offMat', visible);
   console.log('Hotdog placed');
   if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('hotdog', type === 'start');
+    scene.setChallengeEventValue('dogTray', type === 'start');
   }
 }, [...trays]);
 scene.addOnIntersectionListener('taco', (type, otherNodeId) => {
   // scene.setChallengeEventValue('offMat', visible);
   console.log('Taco placed');
   if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('taco', type === 'start');
+    scene.setChallengeEventValue('tacoTray', type === 'start');
   }
 }, [...trays]);
 `);
