@@ -337,6 +337,7 @@ const DEFAULT_SCENES: Scenes = {
   Sense_The_Can: Async.loaded({ value: JBC_SCENES.Sense_The_Can }),
   Ice_Ice_Botguy: Async.loaded({ value: JBC_SCENES.Ice_Ice_Botguy }),
   Thirst_Quencher: Async.loaded({ value: JBC_SCENES.Thirst_Quencher }),
+  Entree_Express: Async.loaded({ value: JBC_SCENES.Entree_Express }),
 };
 
 const create = async (sceneId: string, next: Async.Creating<Scene>) => {

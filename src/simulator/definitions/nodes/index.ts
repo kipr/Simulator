@@ -118,6 +118,25 @@ const reamTemplate: Node.TemplatedNode<Node.Obj> = {
   },
 };
 
+const warmingTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'ream',
+  physics: {
+    type: 'box',
+    motionType: PhysicsMotionType.STATIC,
+    restitution: .3,
+    friction: 1,
+    mass: Mass.pounds(5),
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'color3',
+      color: Color.Rgb.create(160, 95, 20),
+    },
+  },
+};
+
 const matATemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'mat',
@@ -359,6 +378,7 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'radscience': radscienceTemplate,
   'noradscience': noradscienceTemplate,
   'ream': reamTemplate,
+  'warming_station': warmingTemplate,
   'matA': matATemplate,
   'matB': matBTemplate,
   'basalt': basaltTemplate,
