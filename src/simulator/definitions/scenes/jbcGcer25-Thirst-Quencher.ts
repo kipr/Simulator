@@ -9,7 +9,7 @@ import tr from '@i18n';
 const baseScene = createBaseSceneSurfaceA();
 
 const circles = [3, 8, 10];
-const cups = ['cup_blue', 'cup_pink', 'cup_green'];
+const cups = ['jbc_cup_blue', 'jbc_cup_pink', 'jbc_cup_green'];
 
 const CUPS = {};
 const CUP_SCRIPTS = {};
@@ -26,10 +26,9 @@ scene.addOnIntersectionListener('cup${i}', (type, otherNodeId) => {
 
   const p = {
     position: canPositions[n],
-    scale: { x: 100, y: 100, z: 100 },
   };
   CUPS[`cup${i}`] = {
-    type: 'from-bb-template',
+    type: 'from-jbc-template',
     name: tr(`Cup #${n + 1}`),
     templateId: cups[Math.floor(Math.random() * cups.length)],
     visible: true,

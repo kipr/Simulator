@@ -328,6 +328,29 @@ const habitatControlTemplate: Node.TemplatedNode<Node.Obj> = {
   },
 };
 
+const JBC_CUP_PHYSICS: Node.Physics = {
+  type: 'none',
+  restitution: .20,
+  friction: 1,
+  mass: Mass.grams(300),
+  inertia: [50, 50, 50],
+};
+const jbcCupBlueTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'jbc_cup_blue',
+  physics: JBC_CUP_PHYSICS
+};
+const jbcCupGreenTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'jbc_cup_green',
+  physics: JBC_CUP_PHYSICS
+};
+const jbcCupPinkTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'jbc_cup_pink',
+  physics: JBC_CUP_PHYSICS
+};
+
 export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'can': canTemplate,
   'circle': circleTemplate,
@@ -350,6 +373,9 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'habitat': habitatTemplate,
   'research_habitat': habitatResearchTemplate,
   'control_habitat': habitatControlTemplate,
+  'jbc_cup_blue': jbcCupBlueTemplate,
+  'jbc_cup_green': jbcCupGreenTemplate,
+  'jbc_cup_pink': jbcCupPinkTemplate,
   ...BB2025Templates,
 });
 
@@ -458,6 +484,18 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   'control_habitat': {
     type: 'file',
     uri: '/static/object_binaries/com_hab.glb'
+  },
+  'jbc_cup_blue': {
+    type: 'file',
+    uri: '/static/object_binaries/jbc_cup_blue.glb'
+  },
+  'jbc_cup_green': {
+    type: 'file',
+    uri: '/static/object_binaries/jbc_cup_green.glb'
+  },
+  'jbc_cup_pink': {
+    type: 'file',
+    uri: '/static/object_binaries/jbc_cup_pink.glb'
   },
   ...BB2025Geometries,
 });

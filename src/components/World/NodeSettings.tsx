@@ -150,6 +150,9 @@ class NodeSettings extends React.PureComponent<Props, State> {
       ComboBox.option(LocalizedString.lookup(tr('MatA'), locale), 'matA'),
       ComboBox.option(LocalizedString.lookup(tr('Can'), locale), 'can'),
       ComboBox.option(LocalizedString.lookup(tr('Paper Ream'), locale), 'ream'),
+      ComboBox.option(LocalizedString.lookup(tr('Blue Cup JBC'), locale), 'jbc_cup_blue'),
+      ComboBox.option(LocalizedString.lookup(tr('Green Cup JBC'), locale), 'jbc_cup_green'),
+      ComboBox.option(LocalizedString.lookup(tr('Pink Cup JBC'), locale), 'jbc_cup_pink'),
     ];
     const ROCK_TEMPLATE_OPTIONS: ComboBox.Option[] = [
       ComboBox.option(LocalizedString.lookup(tr('Basalt Rock'), locale), 'basalt'),
@@ -1007,6 +1010,9 @@ class NodeSettings extends React.PureComponent<Props, State> {
       ComboBox.option(LocalizedString.lookup(tr('MatA'), locale), 'matA'),
       ComboBox.option(LocalizedString.lookup(tr('Can'), locale), 'can'),
       ComboBox.option(LocalizedString.lookup(tr('Paper Ream'), locale), 'ream'),
+      ComboBox.option(LocalizedString.lookup(tr('Blue Cup JBC'), locale), 'jbc_cup_blue'),
+      ComboBox.option(LocalizedString.lookup(tr('Green Cup JBC'), locale), 'jbc_cup_green'),
+      ComboBox.option(LocalizedString.lookup(tr('Pink Cup JBC'), locale), 'jbc_cup_pink'),
     ];
     const ROCK_TEMPLATE_OPTIONS: ComboBox.Option[] = [
       ComboBox.option(LocalizedString.lookup(tr('Basalt Rock'), locale), 'basalt'),
