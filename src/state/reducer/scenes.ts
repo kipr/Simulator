@@ -339,6 +339,7 @@ const DEFAULT_SCENES: Scenes = {
   Thirst_Quencher: Async.loaded({ value: JBC_SCENES.Thirst_Quencher }),
   Entree_Express: Async.loaded({ value: JBC_SCENES.Entree_Express }),
   Special_Sauce: Async.loaded({ value: JBC_SCENES.Special_Sauce }),
+  Cover_Your_Bases: Async.loaded({ value: JBC_SCENES.Cover_Your_Bases }),
 };
 
 const create = async (sceneId: string, next: Async.Creating<Scene>) => {
