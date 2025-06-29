@@ -9,19 +9,23 @@ const POM_EXPRS = {};
 const POM_ONCES = {};
 let POM_ARGIDS: string[] = [];
 for (let i = 0; i < 12; i++) {
-  POM_EVENTS[`pom_blue${i}`] = {
+  const eventId = `pom_blue${i}`;
+  const argId = `pom_blue${i}_hit_botguy`;
+  const onceId = `${i}hit_botguy_once`;
+
+  POM_EVENTS[eventId] = {
     name: tr(`Blue pom #${i + 1} Collision`),
     description: tr(`Blue pom #${i + 1} hit botguy`),
   };
-  POM_EXPRS[`pom_blue${i}_hit_botguy`] = {
+  POM_EXPRS[argId] = {
     type: Expr.Type.Event,
-    eventId: `pom_blue${i}`,
+    eventId,
   };
-  POM_ONCES[`${i}hit_botguy_once`] = {
+  POM_ONCES[onceId] = {
     type: Expr.Type.Once,
-    argId: `pom_blue${i}_hit_botguy`,
+    argId,
   };
-  POM_ARGIDS = POM_ARGIDS.concat(`${i}hit_botguy_once`);
+  POM_ARGIDS = POM_ARGIDS.concat(onceId);
 }
 
 export default {

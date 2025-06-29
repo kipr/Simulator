@@ -1,6 +1,6 @@
 import Scene from '../../../state/State/Scene';
 import Script from '../../../state/State/Scene/Script';
-import { createCanNode, createBaseSceneSurfaceA, canPositions } from './jbcBase';
+import { createBaseSceneSurfaceA, canPositions } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
 import { Distance } from '../../../util';
 
@@ -19,7 +19,7 @@ scene.addOnIntersectionListener('cup${i}', (type, otherNodeId) => {
   // scene.setChallengeEventValue('offMat', visible);
   console.log('cup${i} in start box');
   if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('cup${i}', type === 'start');
+    scene.setChallengeEventValue('cup${i}_startbox', type === 'start');
   }
 }, 'startBox');
 `);
