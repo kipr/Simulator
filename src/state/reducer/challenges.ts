@@ -53,6 +53,7 @@ import Sense_The_Can from "../../simulator/definitions/challenges/jbcGcer25-Sens
 import Ice_Ice_Botguy from "../../simulator/definitions/challenges/jbcGcer25-Ice-Ice-Botguy";
 import Thirst_Quencher from "../../simulator/definitions/challenges/jbcGcer25-Thirst-Quencher";
 import Entree_Express from "../../simulator/definitions/challenges/jbcGcer25-Entree-Express";
+import Special_Sauce from "../../simulator/definitions/challenges/jbcGcer25-Special-Sauce";
 
 export namespace ChallengesAction {
   export interface LoadChallenge {
@@ -320,6 +321,10 @@ const DEFAULT_CHALLENGES: Challenges = {
   'Entree_Express': Async.loaded({
     value: Entree_Express,
     brief: ChallengeBrief.fromChallenge(Entree_Express),
+  }),
+  'Special_Sauce': Async.loaded({
+    value: Special_Sauce,
+    brief: ChallengeBrief.fromChallenge(Special_Sauce),
   }),
 };
 

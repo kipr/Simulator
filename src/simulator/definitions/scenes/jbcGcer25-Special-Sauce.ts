@@ -26,8 +26,7 @@ for (const [circle, id] of pomPositions) {
   POM_SCRIPTS[`pom${circle}_garage`] = Script.ecmaScript(`Pom #${circle} in garage`, `
 const garages = ['garageBlue', 'garageGreen', 'garageOrange'];
 scene.addOnIntersectionListener('pom${circle}', (type, otherNodeId) => {
-  // scene.setChallengeEventValue('offMat', visible);
-  console.log('pom${circle} collided');
+  // console.log('pom${circle} in garage');
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('pom${circle}', type === 'start');
   }
