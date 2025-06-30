@@ -57,6 +57,7 @@ import Special_Sauce from "../../simulator/definitions/challenges/jbcGcer25-Spec
 import Cover_Your_Bases from "../../simulator/definitions/challenges/jbcGcer25-Cover-Your-Bases";
 import Odd_Numbers from "../../simulator/definitions/challenges/jbcGcer25-Odd-Numbers";
 import Bulldozer_Mania from "../../simulator/definitions/challenges/jbcGcer25-Bulldozer-Mania";
+import Mountain_Rescue from "../../simulator/definitions/challenges/jbcGcer25-Mountain-Rescue";
 
 export namespace ChallengesAction {
   export interface LoadChallenge {
@@ -340,6 +341,10 @@ const DEFAULT_CHALLENGES: Challenges = {
   'Bulldozer_Mania': Async.loaded({
     value: Bulldozer_Mania,
     brief: ChallengeBrief.fromChallenge(Bulldozer_Mania),
+  }),
+  'Mountain_Rescue': Async.loaded({
+    value: Mountain_Rescue,
+    brief: ChallengeBrief.fromChallenge(Mountain_Rescue),
   }),
 };
 
