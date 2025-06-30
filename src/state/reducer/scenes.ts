@@ -342,6 +342,7 @@ const DEFAULT_SCENES: Scenes = {
   Cover_Your_Bases: Async.loaded({ value: JBC_SCENES.Cover_Your_Bases }),
   Odd_Numbers: Async.loaded({ value: JBC_SCENES.Odd_Numbers }),
   Bulldozer_Mania: Async.loaded({ value: JBC_SCENES.Bulldozer_Mania }),
+  Mountain_Rescue: Async.loaded({ value: JBC_SCENES.Mountain_Rescue }),
 };
 
 const create = async (sceneId: string, next: Async.Creating<Scene>) => {
