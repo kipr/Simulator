@@ -286,6 +286,16 @@ export type ScenesAction = (
 
 
 const DEFAULT_SCENES: Scenes = {
+  Find_The_Black_Line: Async.loaded({ value: JBC_SCENES.Find_The_Black_Line }),
+  Sense_The_Can: Async.loaded({ value: JBC_SCENES.Sense_The_Can }),
+  Ice_Ice_Botguy: Async.loaded({ value: JBC_SCENES.Ice_Ice_Botguy }),
+  Thirst_Quencher: Async.loaded({ value: JBC_SCENES.Thirst_Quencher }),
+  Entree_Express: Async.loaded({ value: JBC_SCENES.Entree_Express }),
+  Special_Sauce: Async.loaded({ value: JBC_SCENES.Special_Sauce }),
+  Cover_Your_Bases: Async.loaded({ value: JBC_SCENES.Cover_Your_Bases }),
+  Odd_Numbers: Async.loaded({ value: JBC_SCENES.Odd_Numbers }),
+  Bulldozer_Mania: Async.loaded({ value: JBC_SCENES.Bulldozer_Mania }),
+  Mountain_Rescue: Async.loaded({ value: JBC_SCENES.Mountain_Rescue }),
   moonSandbox: Async.loaded({ value: JBC_SCENES.Moon_Sandbox }),
   tableSandbox: Async.loaded({ value: JBC_SCENES.Table_Sandbox }),
   jbcSandboxA: Async.loaded({ value: JBC_SCENES.JBC_Sandbox_A }),
@@ -333,16 +343,6 @@ const DEFAULT_SCENES: Scenes = {
   jbc24: Async.loaded({ value: JBC_SCENES.JBC_24 }),
   // scriptPlayground: Async.loaded({ value: JBC_SCENES.scriptPlayground }),
   // lightSensorTest: Async.loaded({ value: JBC_SCENES.lightSensorTest }),
-  Find_The_Black_Line: Async.loaded({ value: JBC_SCENES.Find_The_Black_Line }),
-  Sense_The_Can: Async.loaded({ value: JBC_SCENES.Sense_The_Can }),
-  Ice_Ice_Botguy: Async.loaded({ value: JBC_SCENES.Ice_Ice_Botguy }),
-  Thirst_Quencher: Async.loaded({ value: JBC_SCENES.Thirst_Quencher }),
-  Entree_Express: Async.loaded({ value: JBC_SCENES.Entree_Express }),
-  Special_Sauce: Async.loaded({ value: JBC_SCENES.Special_Sauce }),
-  Cover_Your_Bases: Async.loaded({ value: JBC_SCENES.Cover_Your_Bases }),
-  Odd_Numbers: Async.loaded({ value: JBC_SCENES.Odd_Numbers }),
-  Bulldozer_Mania: Async.loaded({ value: JBC_SCENES.Bulldozer_Mania }),
-  Mountain_Rescue: Async.loaded({ value: JBC_SCENES.Mountain_Rescue }),
 };
 
 const create = async (sceneId: string, next: Async.Creating<Scene>) => {
