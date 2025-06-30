@@ -5,6 +5,13 @@ import { JBC_23 } from '../jbc23-Find-the-Black-Line';
 
 import tr from '@i18n';
 
+/**
+ * This scene is copied from JBC 23, also called "Find the Black Line,"
+ * the only difference being that the robot can start on any of the circles.
+ * Although it is mentioned in the description, I did not add anything to
+ * check if the user returned to their starting position.
+ */
+
 const selectedCircle = canPositions[Math.floor(Math.random() * canPositions.length)];
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {

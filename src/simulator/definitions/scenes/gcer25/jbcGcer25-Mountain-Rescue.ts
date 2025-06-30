@@ -9,6 +9,12 @@ import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
+/**
+ * Though not explicitly imported, this scene is mostly copied from
+ * `../jbc17-Mountain-Rescue.ts`, with minor modifications to work
+ * with five cans instead of three.
+ */
+
 const notInStartBox = `
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
   // console.log('Robot not started in start box!', type, otherNodeId);

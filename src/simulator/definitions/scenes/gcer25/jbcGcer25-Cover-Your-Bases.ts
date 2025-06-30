@@ -7,6 +7,13 @@ import { Color } from '../../../../state/State/Scene/Color';
 
 import tr from '@i18n';
 
+/**
+ * This scene is very similar to JBC challenge 9, also called "Cover Your Bases".
+ * The challenge script is derived from that one, with some cleanup and
+ * a few modifications applied to enable detection on all circles.
+ * The rest of the scene is essentially identical.
+ */
+
 const baseScene = createBaseSceneSurfaceA();
 
 const notInStartBox = `
