@@ -67,21 +67,21 @@ const trays = ['tray0', 'tray1', 'tray2'];
 
 scene.addOnIntersectionListener('burger', (type, otherNodeId) => {
   // scene.setChallengeEventValue('offMat', visible);
-  console.log('Burger placed');
+  // console.log('Burger placed');
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('burgerTray', type === 'start');
   }
 }, [...trays]);
 scene.addOnIntersectionListener('hotdog', (type, otherNodeId) => {
   // scene.setChallengeEventValue('offMat', visible);
-  console.log('Hotdog placed');
+  // console.log('Hotdog placed');
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('dogTray', type === 'start');
   }
 }, [...trays]);
 scene.addOnIntersectionListener('taco', (type, otherNodeId) => {
   // scene.setChallengeEventValue('offMat', visible);
-  console.log('Taco placed');
+  // console.log('Taco placed');
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('tacoTray', type === 'start');
   }

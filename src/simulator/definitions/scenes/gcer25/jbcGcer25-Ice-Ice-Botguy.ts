@@ -26,8 +26,7 @@ for (const [i, pos] of canPositions.entries()) {
   };
   POM_COLLIDER_SCRIPTS[`pom_blue${i}_collision`] = Script.ecmaScript(`Pom ${i + 1} Collided`, `
 scene.addOnIntersectionListener('pom_blue${i}', (type, otherNodeId) => {
-  // scene.setChallengeEventValue('offMat', visible);
-  console.log('pom_blue${i} collided');
+  // console.log('pom_blue${i} collided');
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('pom_blue${i}', type === 'start');
   }

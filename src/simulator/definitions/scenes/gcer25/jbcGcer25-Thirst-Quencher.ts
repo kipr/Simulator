@@ -16,8 +16,7 @@ const CUP_SCRIPTS = {};
 for (const [i, n] of circles.entries()) {
   CUP_SCRIPTS[`cup${i}_startbox`] = Script.ecmaScript(`Cup #${n + 1} in Start Box`, `
 scene.addOnIntersectionListener('cup${i}', (type, otherNodeId) => {
-  // scene.setChallengeEventValue('offMat', visible);
-  console.log('cup${i} in start box');
+  // console.log('cup${i} in start box');
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('cup${i}_startbox', type === 'start');
   }
