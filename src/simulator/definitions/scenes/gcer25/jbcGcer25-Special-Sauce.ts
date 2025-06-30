@@ -1,9 +1,10 @@
-import Scene from '../../../state/State/Scene';
-import { Distance } from '../../../util';
-import { RotationwUnits } from '../../../util/math/unitMath';
-import Script from '../../../state/State/Scene/Script';
-import { Color } from '../../../state/State/Scene/Color';
-import { canPositions, createBaseSceneSurfaceA } from './jbcBase';
+import Scene from '../../../../state/State/Scene';
+import { Distance } from '../../../../util';
+import { RotationwUnits } from '../../../../util/math/unitMath';
+import Script from '../../../../state/State/Scene/Script';
+import { Color } from '../../../../state/State/Scene/Color';
+import { canPositions, createBaseSceneSurfaceA } from '../jbcBase';
+
 import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
@@ -37,7 +38,7 @@ scene.addOnIntersectionListener('pom${circle}', (type, otherNodeId) => {
     name: tr(`Pom #${circle}`),
     templateId: id,
     visible: true,
-    editable: true,
+    editable: false,
     startingOrigin: {
       position: canPositions[circle - 1],
       scale: { x: 100, y: 100, z: 100 },
@@ -60,7 +61,7 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 export const Special_Sauce: Scene = {
   ...baseScene,
   name: tr('GCER 2025: Special Sauce'),
-  description: tr('GCER 2025 special event. Saucy!'),
+  description: tr('GCER 2025 special event. Mix the ketchup (red), mustard (yellow), and hot sauce (orange) in the garages to create your own special blend!'),
   scripts: {
     'notInStartBox': Script.ecmaScript('Not In Start Box', notInStartBox),
     ...POM_SCRIPTS,

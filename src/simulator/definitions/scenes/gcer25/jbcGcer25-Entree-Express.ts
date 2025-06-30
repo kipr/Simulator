@@ -1,9 +1,8 @@
-import Scene from '../../../state/State/Scene';
-import { ReferenceFramewUnits, RotationwUnits } from '../../../util/math/unitMath';
-import { Distance } from '../../../util';
-import Script from '../../../state/State/Scene/Script';
-
-import { createBaseSceneSurfaceA } from './jbcBase';
+import Scene from '../../../../state/State/Scene';
+import { ReferenceFramewUnits, RotationwUnits } from '../../../../util/math/unitMath';
+import { Distance } from '../../../../util';
+import Script from '../../../../state/State/Scene/Script';
+import { createBaseSceneSurfaceA } from '../jbcBase';
 
 import tr from '@i18n';
 
@@ -57,7 +56,7 @@ for (let i = 0; i < 3; i++) {
     templateId: 'tray',
     name: tr(`Tray #${i + 1}`),
     visible: true,
-    editable: true,
+    editable: false,
     startingOrigin: tray_pos,
     origin: tray_pos,
   };
@@ -92,7 +91,7 @@ scene.addOnIntersectionListener('taco', (type, otherNodeId) => {
 export const Entree_Express: Scene = {
   ...baseScene,
   name: tr('GCER 2025: Entree Express'),
-  description: tr('GCER 2025 special event. Return the entrees to the starting box.'),
+  description: tr('GCER 2025 special event. Order up! Move the entrees to the trays.'),
   scripts: {
     tacoScript: SCRIPTS,
   },
@@ -108,7 +107,7 @@ export const Entree_Express: Scene = {
       name: tr('Warming station'),
       startingOrigin: WARMING_ORIGIN,
       origin: WARMING_ORIGIN,
-      editable: true,
+      editable: false,
       visible: true,
     },
     'burger': {
@@ -117,7 +116,7 @@ export const Entree_Express: Scene = {
       name: tr('Hamburger'),
       startingOrigin: BURGER_ORIGIN,
       origin: BURGER_ORIGIN,
-      editable: true,
+      editable: false,
       visible: true,
     },
     'hotdog': {
@@ -126,7 +125,7 @@ export const Entree_Express: Scene = {
       name: tr('Hotdog'),
       startingOrigin: DOG_ORIGIN,
       origin: DOG_ORIGIN,
-      editable: true,
+      editable: false,
       visible: true,
     },
     'taco': {
@@ -135,7 +134,7 @@ export const Entree_Express: Scene = {
       name: tr('Taco'),
       startingOrigin: TACO_ORIGIN,
       origin: TACO_ORIGIN,
-      editable: true,
+      editable: false,
       visible: true,
     },
     ...TRAYS,

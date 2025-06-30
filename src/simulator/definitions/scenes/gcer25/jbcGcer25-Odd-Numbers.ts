@@ -1,5 +1,5 @@
-import Scene from '../../../state/State/Scene';
-import { JBC_5 } from './jbc5-Odd-Numbers';
+import Scene from '../../../../state/State/Scene';
+import { JBC_5 } from '../jbc5-Odd-Numbers';
 
 import tr from '@i18n';
 

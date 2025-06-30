@@ -1,5 +1,5 @@
-import Scene from '../../../state/State/Scene';
-import { JBC_8 } from './jbc8-Bulldozer-Mania';
+import Scene from '../../../../state/State/Scene';
+import { JBC_8 } from '../jbc8-Bulldozer-Mania';
 
 import tr from '@i18n';
 

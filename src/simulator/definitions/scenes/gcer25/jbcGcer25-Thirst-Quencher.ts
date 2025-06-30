@@ -1,8 +1,8 @@
-import Scene from '../../../state/State/Scene';
-import Script from '../../../state/State/Scene/Script';
-import { createBaseSceneSurfaceA, canPositions } from './jbcBase';
-import { Color } from '../../../state/State/Scene/Color';
-import { Distance } from '../../../util';
+import Scene from '../../../../state/State/Scene';
+import Script from '../../../../state/State/Scene/Script';
+import { Color } from '../../../../state/State/Scene/Color';
+import { Distance } from '../../../../util';
+import { createBaseSceneSurfaceA, canPositions } from '../jbcBase';
 
 import tr from '@i18n';
 
@@ -32,7 +32,7 @@ scene.addOnIntersectionListener('cup${i}', (type, otherNodeId) => {
     name: tr(`Cup #${n + 1}`),
     templateId: cups[Math.floor(Math.random() * cups.length)],
     visible: true,
-    editable: true,
+    editable: false,
     startingOrigin: p,
     origin: p,
   };
@@ -50,7 +50,7 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 export const Thirst_Quencher: Scene = {
   ...baseScene,
   name: tr('GCER 2025: Thirst Quencher'),
-  description: tr('GCER 2025 special event. Dont let the summer heat get you down. Bring the cups back to the start box!'),
+  description: tr('GCER 2025 special event. Don\'t let the summer heat get you down. Bring the cups back to the start box!'),
   scripts: {
     notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
     ...CUP_SCRIPTS,

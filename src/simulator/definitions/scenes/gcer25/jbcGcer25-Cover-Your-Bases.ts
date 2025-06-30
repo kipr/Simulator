@@ -1,9 +1,9 @@
-import Scene from '../../../state/State/Scene';
-import { ReferenceFramewUnits } from '../../../util/math/unitMath';
-import { Distance } from '../../../util';
-import Script from '../../../state/State/Scene/Script';
-import { createBaseSceneSurfaceA, createCanNode, createCircleNode } from './jbcBase';
-import { Color } from '../../../state/State/Scene/Color';
+import Scene from '../../../../state/State/Scene';
+import { ReferenceFramewUnits } from '../../../../util/math/unitMath';
+import { Distance } from '../../../../util';
+import Script from '../../../../state/State/Scene/Script';
+import { createBaseSceneSurfaceA, createCanNode, createCircleNode } from '../jbcBase';
+import { Color } from '../../../../state/State/Scene/Color';
 
 import tr from '@i18n';
 
@@ -18,7 +18,7 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 }, 'notStartBox');
 `;
 
-// Required for nested string interpolation
+// Required for nested template strings
 /* eslint-disable no-useless-escape */
 const circleIntersectsUpright = `
 const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
@@ -101,7 +101,7 @@ export const Cover_Your_Bases: Scene = {
   geometry: {
     ...baseScene.geometry,
     notStartBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(10),
@@ -112,8 +112,8 @@ export const Cover_Your_Bases: Scene = {
   nodes: {
     ...baseScene.nodes,
     notStartBox: {
-      type: "object",
-      geometryId: "notStartBox_geom",
+      type: 'object',
+      geometryId: 'notStartBox_geom',
       name: tr('Not Start Box'),
       visible: false,
       origin: {
@@ -124,9 +124,9 @@ export const Cover_Your_Bases: Scene = {
         },
       },
       material: {
-        type: "basic",
+        type: 'basic',
         color: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 0, 0),
         },
       },

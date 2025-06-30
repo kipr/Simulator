@@ -1,22 +1,11 @@
-import Scene from '../../../state/State/Scene';
-import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../../util/math/unitMath';
-// import { Distance } from '../../../util';
-// import LocalizedString from '../../../util/LocalizedString';
-// import Script from '../../../state/State/Scene/Script';
-import { canPositions } from './jbcBase';
-// import { Color } from '../../../state/State/Scene/Color';
-// import { createCamera } from 'simulator/babylonBindings/createSceneObjects/createCameras';
-import { JBC_23 } from './jbc23-Find-the-Black-Line';
+import Scene from '../../../../state/State/Scene';
+import { ReferenceFramewUnits, RotationwUnits } from '../../../../util/math/unitMath';
+import { canPositions } from '../jbcBase';
+import { JBC_23 } from '../jbc23-Find-the-Black-Line';
 
 import tr from '@i18n';
 
-function randomCircle(): Vector3wUnits {
-  return {
-    ...canPositions[Math.floor(Math.random() * canPositions.length)],
-  };
-}
-
-const selectedCircle = randomCircle();
+const selectedCircle = canPositions[Math.floor(Math.random() * canPositions.length)];
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
   position: { ...selectedCircle },

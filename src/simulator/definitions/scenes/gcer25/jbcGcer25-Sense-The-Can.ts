@@ -1,8 +1,8 @@
-import Scene from '../../../state/State/Scene';
-import Script from '../../../state/State/Scene/Script';
-import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
-import { Color } from '../../../state/State/Scene/Color';
-import { Distance } from '../../../util';
+import Scene from '../../../../state/State/Scene';
+import Script from '../../../../state/State/Scene/Script';
+import { Color } from '../../../../state/State/Scene/Color';
+import { Distance } from '../../../../util';
+import { createCanNode, createBaseSceneSurfaceA } from '../jbcBase';
 
 import tr from '@i18n';
 

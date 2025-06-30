@@ -1,9 +1,9 @@
-import Scene from '../../../state/State/Scene';
-import { RotationwUnits, ReferenceFramewUnits } from '../../../util/math/unitMath';
-import { Distance } from '../../../util';
-import { Color } from '../../../state/State/Scene/Color';
-import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
-import Script from '../../../state/State/Scene/Script';
+import Scene from '../../../../state/State/Scene';
+import { RotationwUnits, ReferenceFramewUnits } from '../../../../util/math/unitMath';
+import { Distance } from '../../../../util';
+import { Color } from '../../../../state/State/Scene/Color';
+import Script from '../../../../state/State/Scene/Script';
+import { createBaseSceneSurfaceA, createCanNode } from '../jbcBase';
 
 import tr from '@i18n';
 
@@ -56,7 +56,7 @@ const REAM_ORIGIN: ReferenceFramewUnits = {
 export const Mountain_Rescue: Scene = {
   ...baseScene,
   name: tr('GCER 2025: Mountain Rescue'),
-  description: tr('GCER 2025 special event. Now with five cans to rescue!'),
+  description: tr('GCER 2025 special event. Now with three more cans to rescue!'),
   scripts: {
     notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
     uprightCans: Script.ecmaScript('Upright Cans', uprightCans),

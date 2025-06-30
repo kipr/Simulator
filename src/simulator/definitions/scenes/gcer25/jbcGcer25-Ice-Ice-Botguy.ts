@@ -1,8 +1,9 @@
-import Scene from '../../../state/State/Scene';
-import { Distance } from '../../../util';
-import { createBaseSceneSurfaceA, canPositions, } from './jbcBase';
-import Script from '../../../state/State/Scene/Script';
-import { Color } from '../../../state/State/Scene/Color';
+import Scene from '../../../../state/State/Scene';
+import { Distance } from '../../../../util';
+import Script from '../../../../state/State/Scene/Script';
+import { Color } from '../../../../state/State/Scene/Color';
+import { createBaseSceneSurfaceA, canPositions, } from '../jbcBase';
+
 import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
@@ -37,7 +38,7 @@ scene.addOnIntersectionListener('pom_blue${i}', (type, otherNodeId) => {
     name: tr(`Blue pom #${i + 1}`),
     templateId: 'pom_blue',
     visible: true,
-    editable: true,
+    editable: false,
     startingOrigin: p,
     origin: p,
   };
@@ -46,7 +47,7 @@ scene.addOnIntersectionListener('pom_blue${i}', (type, otherNodeId) => {
 const BOTGUY_ORIGIN = {
   position: {
     x: Distance.centimeters(22.7),
-    y: Distance.centimeters(-1),
+    y: Distance.centimeters(-1.25),
     z: Distance.centimeters(-7),
   },
   scale: { x: 50, y: 50, z: 50 },
@@ -99,6 +100,7 @@ export const Ice_Ice_Botguy: Scene = {
       name: tr('Botguy'),
       templateId: 'botguy_gamepiece_static',
       visible: true,
+      editable: false,
       startingOrigin: BOTGUY_ORIGIN,
       origin: BOTGUY_ORIGIN,
     },
