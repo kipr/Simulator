@@ -1,5 +1,5 @@
-import Challenge from '../../../state/State/Challenge';
-import jbc5 from './jbc5-Odd-Numbers';
+import Challenge from '../../../../state/State/Challenge';
+import jbc5 from '../jbc5-Odd-Numbers';
 import tr from '@i18n';
 
 export default {

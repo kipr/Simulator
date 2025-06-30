@@ -1,12 +1,12 @@
-import Author from '../../../db/Author';
-import Challenge from '../../../state/State/Challenge';
-import Expr from '../../../state/State/Challenge/Expr';
-import ProgrammingLanguage from '../../../programming/compiler/ProgrammingLanguage';
+import Author from '../../../../db/Author';
+import Challenge from '../../../../state/State/Challenge';
+import Expr from '../../../../state/State/Challenge/Expr';
+import ProgrammingLanguage from '../../../../programming/compiler/ProgrammingLanguage';
 import tr from '@i18n';
 
 export default {
   name: tr('GCER 2025: Mountain Rescue'),
-  description: tr('GCER 2025 special event. Now with five cans to rescue!'),
+  description: tr('GCER 2025 special event. Now with three more cans to rescue!'),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',

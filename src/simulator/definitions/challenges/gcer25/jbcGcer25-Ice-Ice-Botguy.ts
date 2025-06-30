@@ -1,7 +1,7 @@
-import Author from '../../../db/Author';
-import Challenge from '../../../state/State/Challenge';
-import Expr from '../../../state/State/Challenge/Expr';
-import ProgrammingLanguage from '../../../programming/compiler/ProgrammingLanguage';
+import Author from '../../../../db/Author';
+import Challenge from '../../../../state/State/Challenge';
+import Expr from '../../../../state/State/Challenge/Expr';
+import ProgrammingLanguage from '../../../../programming/compiler/ProgrammingLanguage';
 import tr from '@i18n';
 
 const POM_EVENTS = {};

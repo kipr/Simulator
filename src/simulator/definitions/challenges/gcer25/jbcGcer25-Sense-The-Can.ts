@@ -1,7 +1,7 @@
-import Author from "../../../db/Author";
-import Challenge from "../../../state/State/Challenge";
-import Expr from "../../../state/State/Challenge/Expr";
-import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import Author from '../../../../db/Author';
+import Challenge from '../../../../state/State/Challenge';
+import Expr from '../../../../state/State/Challenge/Expr';
+import ProgrammingLanguage from '../../../../programming/compiler/ProgrammingLanguage';
 import tr from '@i18n';
 
 export default {
@@ -9,14 +9,14 @@ export default {
   description: tr('GCER 2025 special event. A can is placed randomly in circle 2, 4, 6, 9 or 11. Find it and bring it back to the start box!'),
   author: {
     type: Author.Type.Organization,
-    id: "kipr",
+    id: 'kipr',
   },
   code: {
     'c': ProgrammingLanguage.DEFAULT_CODE.c,
     'cpp': ProgrammingLanguage.DEFAULT_CODE.cpp,
     'python': ProgrammingLanguage.DEFAULT_CODE.python,
   },
-  defaultLanguage: "c",
+  defaultLanguage: 'c',
   events: {
     notInStartBox: {
       name: tr('Robot not in Start Box'),
@@ -36,38 +36,38 @@ export default {
       // Start Box Events
       notInStartBox: {
         type: Expr.Type.Event,
-        eventId: "notInStartBox",
+        eventId: 'notInStartBox',
       },
       inStartBox: {
         type: Expr.Type.Not,
-        argId: "notInStartBox",
+        argId: 'notInStartBox',
       },
       inStartBoxOnce: {
         type: Expr.Type.Once,
-        argId: "inStartBox",
+        argId: 'inStartBox',
       },
 
       // Can Events
       canInStartBox: {
         type: Expr.Type.Event,
-        eventId: "canInStartBox",
+        eventId: 'canInStartBox',
       },
       canRandomUpright: {
         type: Expr.Type.Event,
-        eventId: "canRandomUpright",
+        eventId: 'canRandomUpright',
       },
 
-      // Success Logic = Can 7 not upright, waited to chop, and began in start box
+      // Success Logic = Can upright, in start box, and robot began in start box
       completion: {
         type: Expr.Type.And,
         argIds: [
-          "inStartBoxOnce",
-          "canInStartBox",
-          "canRandomUpright",
+          'inStartBoxOnce',
+          'canInStartBox',
+          'canRandomUpright',
         ],
       },
     },
-    rootId: "completion",
+    rootId: 'completion',
   },
-  sceneId: "Sense_The_Can",
+  sceneId: 'Sense_The_Can',
 } as Challenge;

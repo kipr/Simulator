@@ -1,7 +1,7 @@
-import Author from '../../../db/Author';
-import Challenge from '../../../state/State/Challenge';
-import Expr from '../../../state/State/Challenge/Expr';
-import ProgrammingLanguage from '../../../programming/compiler/ProgrammingLanguage';
+import Author from '../../../../db/Author';
+import Challenge from '../../../../state/State/Challenge';
+import Expr from '../../../../state/State/Challenge/Expr';
+import ProgrammingLanguage from '../../../../programming/compiler/ProgrammingLanguage';
 import tr from '@i18n';
 
 const pomPositions = [3, 5, 9, 2, 7, 11, 1, 8, 10];
@@ -26,7 +26,7 @@ for (const circle of pomPositions) {
 
 export default {
   name: tr('GCER 2025: Special Sauce'),
-  description: tr('GCER 2025 special event. Saucy!'),
+  description: tr('GCER 2025 special event. Mix the ketchup (red), mustard (yellow), and hot sauce (orange) in the garages to create your own special blend!'),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',

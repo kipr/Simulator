@@ -1,5 +1,5 @@
-import Challenge from '../../../state/State/Challenge';
-import jbc8 from './jbc8-Bulldozer-Mania';
+import Challenge from '../../../../state/State/Challenge';
+import jbc8 from '../jbc8-Bulldozer-Mania';
 import tr from '@i18n';
 
 export default {

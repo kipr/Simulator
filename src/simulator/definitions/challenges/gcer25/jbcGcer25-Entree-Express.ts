@@ -1,24 +1,23 @@
-import Author from "../../../db/Author";
-import Challenge from "../../../state/State/Challenge";
-import Expr from "../../../state/State/Challenge/Expr";
-import LocalizedString from "../../../util/LocalizedString";
-import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import Author from '../../../../db/Author';
+import Challenge from '../../../../state/State/Challenge';
+import Expr from '../../../../state/State/Challenge/Expr';
+import ProgrammingLanguage from '../../../../programming/compiler/ProgrammingLanguage';
 
 import tr from '@i18n';
 
 export default {
   name: tr('GCER 2025: Entree Express'),
-  description: tr('GCER 2025 special event. Place the entrees in the trays.'),
+  description: tr('GCER 2025 special event. Order up! Move the entrees to the trays.'),
   author: {
     type: Author.Type.Organization,
-    id: "kipr",
+    id: 'kipr',
   },
   code: {
     'c': ProgrammingLanguage.DEFAULT_CODE.c,
     'cpp': ProgrammingLanguage.DEFAULT_CODE.cpp,
     'python': ProgrammingLanguage.DEFAULT_CODE.python,
   },
-  defaultLanguage: "c",
+  defaultLanguage: 'c',
   events: {
     notInStartBox: {
       name: tr('Robot not in Start Box'),
@@ -42,41 +41,41 @@ export default {
       // Start Box Events
       notInStartBox: {
         type: Expr.Type.Event,
-        eventId: "notInStartBox",
+        eventId: 'notInStartBox',
       },
       inStartBox: {
         type: Expr.Type.Not,
-        argId: "notInStartBox",
+        argId: 'notInStartBox',
       },
       inStartBoxOnce: {
         type: Expr.Type.Once,
-        argId: "inStartBox",
+        argId: 'inStartBox',
       },
 
       // Passing side events
       burgerTray: {
         type: Expr.Type.Event,
-        eventId: "burgerTray",
+        eventId: 'burgerTray',
       },
       dogTray: {
         type: Expr.Type.Event,
-        eventId: "dogTray",
+        eventId: 'dogTray',
       },
       tacoTray: {
         type: Expr.Type.Event,
-        eventId: "tacoTray",
+        eventId: 'tacoTray',
       },
       completion: {
         type: Expr.Type.And,
         argIds: [
-          "inStartBoxOnce",
-          "burgerTray",
-          "dogTray",
-          "tacoTray",
+          'inStartBoxOnce',
+          'burgerTray',
+          'dogTray',
+          'tacoTray',
         ],
       },
     },
-    rootId: "completion",
+    rootId: 'completion',
   },
-  sceneId: "Entree_Express",
+  sceneId: 'Entree_Express',
 } as Challenge;

@@ -1,7 +1,7 @@
-import Author from "../../../db/Author";
-import Challenge from "../../../state/State/Challenge";
-import Expr from "../../../state/State/Challenge/Expr";
-import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import Author from '../../../../db/Author';
+import Challenge from '../../../../state/State/Challenge';
+import Expr from '../../../../state/State/Challenge/Expr';
+import ProgrammingLanguage from '../../../../programming/compiler/ProgrammingLanguage';
 import tr from '@i18n';
 
 const circles = [4, 9, 11];
@@ -25,17 +25,17 @@ for (const [i, n] of circles.entries()) {
 
 export default {
   name: tr('GCER 2025: Thirst Quencher'),
-  description: tr('GCER 2025 special event. Dont let the summer heat get you down. Bring the cups back to the start box!'),
+  description: tr('GCER 2025 special event. Don\'t let the summer heat get you down. Bring the cups back to the start box!'),
   author: {
     type: Author.Type.Organization,
-    id: "kipr",
+    id: 'kipr',
   },
   code: {
     'c': ProgrammingLanguage.DEFAULT_CODE.c,
     'cpp': ProgrammingLanguage.DEFAULT_CODE.cpp,
     'python': ProgrammingLanguage.DEFAULT_CODE.python,
   },
-  defaultLanguage: "c",
+  defaultLanguage: 'c',
   events: {
     notInStartBox: {
       name: tr('Robot not in Start Box'),
@@ -48,15 +48,15 @@ export default {
       // Start Box Events
       notInStartBox: {
         type: Expr.Type.Event,
-        eventId: "notInStartBox",
+        eventId: 'notInStartBox',
       },
       inStartBox: {
         type: Expr.Type.Not,
-        argId: "notInStartBox",
+        argId: 'notInStartBox',
       },
       inStartBoxOnce: {
         type: Expr.Type.Once,
-        argId: "inStartBox",
+        argId: 'inStartBox',
       },
 
       ...CUP_EXPRS,
@@ -65,12 +65,12 @@ export default {
       completion: {
         type: Expr.Type.And,
         argIds: [
-          "inStartBoxOnce",
+          'inStartBoxOnce',
           ...CUP_ARGIDS,
         ],
       },
     },
-    rootId: "completion",
+    rootId: 'completion',
   },
-  sceneId: "Thirst_Quencher",
+  sceneId: 'Thirst_Quencher',
 } as Challenge;

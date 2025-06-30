@@ -1,8 +1,7 @@
-import Author from '../../../db/Author';
-import Challenge from '../../../state/State/Challenge';
-import Expr from '../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../util/LocalizedString';
-import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import Author from '../../../../db/Author';
+import Challenge from '../../../../state/State/Challenge';
+import Expr from '../../../../state/State/Challenge/Expr';
+import ProgrammingLanguage from '../../../../programming/compiler/ProgrammingLanguage';
 
 import tr from '@i18n';
 
@@ -86,15 +85,15 @@ export default {
       // Start Box Events
       notInStartBox: {
         type: Expr.Type.Event,
-        eventId: "notInStartBox",
+        eventId: 'notInStartBox',
       },
       inStartBox: {
         type: Expr.Type.Not,
-        argId: "notInStartBox",
+        argId: 'notInStartBox',
       },
       inStartBoxOnce: {
         type: Expr.Type.Once,
-        argId: "inStartBox",
+        argId: 'inStartBox',
       },
 
       // Circles Covered Events
