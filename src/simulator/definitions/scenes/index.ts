@@ -33,6 +33,7 @@ export * from './jbcGcer25-Thirst-Quencher';
 export * from './jbcGcer25-Entree-Express';
 export * from './jbcGcer25-Special-Sauce';
 export * from './jbcGcer25-Cover-Your-Bases';
+export * from './jbcGcer25-Odd-Numbers';
 // export * from './jbc2b-Ring-Around-the-Cans-Sr';
 // export * from './jbc2c-Back-It-Up';
 // export * from './jbc2d-Ring-Around-the-Can-and-Back-It-Up';
