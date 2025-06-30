@@ -7,8 +7,8 @@ import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLangua
 import tr from '@i18n';
 
 export default {
-  name: tr('JBC Challenge 9'),
-  description: tr('Junior Botball Challenge 9: Cover Your Bases'),
+  name: tr('GCER 2025: Cover Your Bases'),
+  description: tr('GCER 2025 special edition. All circles are now open for business!'),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
