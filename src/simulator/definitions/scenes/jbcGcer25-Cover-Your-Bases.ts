@@ -28,18 +28,15 @@ const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
 const yAngle = (nodeId) => 180 / Math.PI * -1 * Math.asin(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
 
 const cans = ['can1', 'can2', 'can3', 'can4', 'can5', 'can6', 'can7'];
-let circles = [false, false, false, false, false, false, false, false, false, false, false, false];
-let uprights = [false, false, false, false, false, false, false, false, false, false, false, false];
+let circles = [];
+let uprights = [];
 
 scene.addOnRenderListener(() => {
   let circleCount = 0;
   let uprightCount = 0;
 
-  for (const circle of circles) {
-    if (circle) {
-      circleCount++;
-    }
-  }
+  circleCount = circles.reduce((sum, circle) => circle ? sum + 1 : sum, circleCount);
+
   scene.setChallengeEventValue('baseACovered', circleCount > 0);
   scene.setChallengeEventValue('baseBCovered', circleCount > 1);
   scene.setChallengeEventValue('baseCCovered', circleCount > 2);
@@ -48,101 +45,25 @@ scene.addOnRenderListener(() => {
   scene.setChallengeEventValue('baseFCovered', circleCount > 5);
   scene.setChallengeEventValue('baseGCovered', circleCount > 6);
 
-  for (const upright of uprights) {
-    if (upright) {
-      uprightCount++;
-    }
-  }
+  uprightCount = uprights.reduce((sum, upright) => upright ? sum + 1 : sum, uprightCount);
+
   scene.setChallengeEventValue('canAUpright', uprightCount > 0);
   scene.setChallengeEventValue('canBUpright', uprightCount > 1);
   scene.setChallengeEventValue('canCUpright', uprightCount > 2);
   scene.setChallengeEventValue('canDUpright', uprightCount > 3);
   scene.setChallengeEventValue('canEUpright', uprightCount > 4);
+  scene.setChallengeEventValue('canFUpright', uprightCount > 5);
+  scene.setChallengeEventValue('canGUpright', uprightCount > 6);
 });
 
-scene.addOnIntersectionListener('circle1', (type, otherNodeId) => {
-  const visible = type === 'start';
-  circles[0] = visible;
-  setNodeVisible('circle1', visible);
-  uprights[0] = yAngle(otherNodeId) > 5;
-}, [...cans]);
-
-scene.addOnIntersectionListener('circle2', (type, otherNodeId) => {
-  const visible = type === 'start';
-  circles[1] = visible;
-  setNodeVisible('circle2', visible);
-  uprights[1] = yAngle(otherNodeId) > 5;
-}, [...cans]);
-
-scene.addOnIntersectionListener('circle3', (type, otherNodeId) => {
-  const visible = type === 'start';
-  circles[2] = visible;
-  setNodeVisible('circle3', visible);
-  uprights[2] = yAngle(otherNodeId) > 5;
-}, [...cans]);
-
-scene.addOnIntersectionListener('circle4', (type, otherNodeId) => {
-  const visible = type === 'start';
-  circles[3] = visible;
-  setNodeVisible('circle4', visible);
-  uprights[3] = yAngle(otherNodeId) > 5;
-}, [...cans]);
-
-scene.addOnIntersectionListener('circle5', (type, otherNodeId) => {
-  const visible = type === 'start';
-  circles[4] = visible;
-  setNodeVisible('circle5', visible);
-  uprights[4] = yAngle(otherNodeId) > 5;
-}, [...cans]);
-
-scene.addOnIntersectionListener('circle6', (type, otherNodeId) => {
-  const visible = type === 'start';
-  circles[5] = visible;
-  setNodeVisible('circle6', visible);
-  uprights[5] = yAngle(otherNodeId) > 5;
-}, [...cans]);
-
-scene.addOnIntersectionListener('circle7', (type, otherNodeId) => {
-  const visible = type === 'start';
-  circles[6] = visible;
-  setNodeVisible('circle7', visible);
-  uprights[6] = yAngle(otherNodeId) > 5;
-}, [...cans]);
-
-scene.addOnIntersectionListener('circle8', (type, otherNodeId) => {
-  const visible = type === 'start';
-  circles[7] = visible;
-  setNodeVisible('circle8', visible);
-  uprights[7] = yAngle(otherNodeId) > 5;
-}, [...cans]);
-
-scene.addOnIntersectionListener('circle9', (type, otherNodeId) => {
-  const visible = type === 'start';
-  circles[8] = visible;
-  setNodeVisible('circle9', visible);
-  uprights[8] = yAngle(otherNodeId) > 5;
-}, [...cans]);
-
-scene.addOnIntersectionListener('circle10', (type, otherNodeId) => {
-  const visible = type === 'start';
-  circles[9] = visible;
-  setNodeVisible('circle10', visible);
-  uprights[9] = yAngle(otherNodeId) > 5;
-}, [...cans]);
-
-scene.addOnIntersectionListener('circle11', (type, otherNodeId) => {
-  const visible = type === 'start';
-  circles[10] = visible;
-  setNodeVisible('circle11', visible);
-  uprights[10] = yAngle(otherNodeId) > 5;
-}, [...cans]);
-
-scene.addOnIntersectionListener('circle12', (type, otherNodeId) => {
-  const visible = type === 'start';
-  circles[11] = visible;
-  setNodeVisible('circle12', visible);
-  uprights[11] = yAngle(otherNodeId) > 5;
-}, [...cans]);
+for (let i = 0; i < 12; i++) {
+  scene.addOnIntersectionListener(\`circle\$\{i + 1\}\`, (type, otherNodeId) => {
+    const visible = type === 'start';
+    circles[i] = visible;
+    setNodeVisible(\`circle\$\{i + 1\}\`, visible);
+    uprights[i] = yAngle(otherNodeId) > 5;
+  }, [...cans]);
+}
 `;
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
@@ -152,6 +73,19 @@ const ROBOT_ORIGIN: ReferenceFramewUnits = {
     z: Distance.centimeters(-8),
   },
 };
+
+const CANS = {};
+for (let i = 1; i < 8; i++) {
+  CANS[`can${i}`] = createCanNode(i, {
+    x: Distance.centimeters(24 - (8 * (i - 1))),
+    y: Distance.centimeters(0),
+    z: Distance.centimeters(15.5),
+  });
+}
+const CIRCLES = {};
+for (let i = 1; i < 13; i++) {
+  CIRCLES[`circle${i}`] = createCircleNode(i);
+}
 
 export const Cover_Your_Bases: Scene = {
   ...baseScene,
@@ -201,52 +135,7 @@ export const Cover_Your_Bases: Scene = {
       startingOrigin: ROBOT_ORIGIN,
       origin: ROBOT_ORIGIN,
     },
-    can1: createCanNode(1, {
-      x: Distance.centimeters(24),
-      y: Distance.centimeters(0),
-      z: Distance.centimeters(15.5),
-    }),
-    can2: createCanNode(2, {
-      x: Distance.centimeters(16),
-      y: Distance.centimeters(0),
-      z: Distance.centimeters(15.5),
-    }),
-    can3: createCanNode(3, {
-      x: Distance.centimeters(8),
-      y: Distance.centimeters(0),
-      z: Distance.centimeters(15.5),
-    }),
-    can4: createCanNode(4, {
-      x: Distance.centimeters(0),
-      y: Distance.centimeters(0),
-      z: Distance.centimeters(15.5),
-    }),
-    can5: createCanNode(5, {
-      x: Distance.centimeters(-8),
-      y: Distance.centimeters(0),
-      z: Distance.centimeters(15.5),
-    }),
-    can6: createCanNode(5, {
-      x: Distance.centimeters(-16),
-      y: Distance.centimeters(0),
-      z: Distance.centimeters(15.5),
-    }),
-    can7: createCanNode(7, {
-      x: Distance.centimeters(-24),
-      y: Distance.centimeters(0),
-      z: Distance.centimeters(15.5),
-    }),
-    circle1: createCircleNode(1),
-    circle2: createCircleNode(2),
-    circle3: createCircleNode(3),
-    circle4: createCircleNode(4),
-    circle5: createCircleNode(5),
-    circle6: createCircleNode(6),
-    circle7: createCircleNode(7),
-    circle8: createCircleNode(8),
-    circle9: createCircleNode(9),
-    circle10: createCircleNode(10),
-    circle11: createCircleNode(11),
-    circle12: createCircleNode(12),
+    ...CANS,
+    ...CIRCLES,
   },
 };
