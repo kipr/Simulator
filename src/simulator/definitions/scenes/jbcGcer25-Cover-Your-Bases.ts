@@ -18,6 +18,8 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 }, 'notStartBox');
 `;
 
+// Required for nested string interpolation
+/* eslint-disable no-useless-escape */
 const circleIntersectsUpright = `
 const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
   ...scene.nodes[nodeId],
@@ -65,6 +67,7 @@ for (let i = 0; i < 12; i++) {
   }, [...cans]);
 }
 `;
+/* eslint-enable no-useless-escape */
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
   ...baseScene.nodes['robot'].origin,
