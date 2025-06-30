@@ -6,6 +6,17 @@ import { createBaseSceneSurfaceA, canPositions } from '../jbcBase';
 
 import tr from '@i18n';
 
+/**
+ * This scene uses a modified version of the botball cups,
+ * which uses a Babylon.js builtin physics shape (convex hull).
+ * This results more consistent physics behavior and better
+ * performance, but you can no longer reach inside the cups because
+ * the top is covered by an invisible barrier.
+ * If this is not desired, you can switch the `jbc_cup_*` objects for
+ * the botball `cup_*` versions.
+ * This may also require that you adjust the scale.
+ */
+
 const baseScene = createBaseSceneSurfaceA();
 
 const circles = [3, 8, 10];
