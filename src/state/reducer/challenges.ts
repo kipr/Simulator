@@ -55,6 +55,7 @@ import Thirst_Quencher from "../../simulator/definitions/challenges/jbcGcer25-Th
 import Entree_Express from "../../simulator/definitions/challenges/jbcGcer25-Entree-Express";
 import Special_Sauce from "../../simulator/definitions/challenges/jbcGcer25-Special-Sauce";
 import Cover_Your_Bases from "../../simulator/definitions/challenges/jbcGcer25-Cover-Your-Bases";
+import Odd_Numbers from "../../simulator/definitions/challenges/jbcGcer25-Odd-Numbers";
 
 export namespace ChallengesAction {
   export interface LoadChallenge {
@@ -330,6 +331,10 @@ const DEFAULT_CHALLENGES: Challenges = {
   'Cover_Your_Bases': Async.loaded({
     value: Cover_Your_Bases,
     brief: ChallengeBrief.fromChallenge(Cover_Your_Bases),
+  }),
+  'Odd_Numbers': Async.loaded({
+    value: Odd_Numbers,
+    brief: ChallengeBrief.fromChallenge(Odd_Numbers),
   }),
 };
 
