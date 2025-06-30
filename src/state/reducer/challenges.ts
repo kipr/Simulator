@@ -54,6 +54,7 @@ import Ice_Ice_Botguy from "../../simulator/definitions/challenges/jbcGcer25-Ice
 import Thirst_Quencher from "../../simulator/definitions/challenges/jbcGcer25-Thirst-Quencher";
 import Entree_Express from "../../simulator/definitions/challenges/jbcGcer25-Entree-Express";
 import Special_Sauce from "../../simulator/definitions/challenges/jbcGcer25-Special-Sauce";
+import Cover_Your_Bases from "../../simulator/definitions/challenges/jbcGcer25-Cover-Your-Bases";
 
 export namespace ChallengesAction {
   export interface LoadChallenge {
@@ -325,6 +326,10 @@ const DEFAULT_CHALLENGES: Challenges = {
   'Special_Sauce': Async.loaded({
     value: Special_Sauce,
     brief: ChallengeBrief.fromChallenge(Special_Sauce),
+  }),
+  'Cover_Your_Bases': Async.loaded({
+    value: Cover_Your_Bases,
+    brief: ChallengeBrief.fromChallenge(Cover_Your_Bases),
   }),
 };
 
