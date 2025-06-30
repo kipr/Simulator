@@ -56,6 +56,7 @@ import Entree_Express from "../../simulator/definitions/challenges/jbcGcer25-Ent
 import Special_Sauce from "../../simulator/definitions/challenges/jbcGcer25-Special-Sauce";
 import Cover_Your_Bases from "../../simulator/definitions/challenges/jbcGcer25-Cover-Your-Bases";
 import Odd_Numbers from "../../simulator/definitions/challenges/jbcGcer25-Odd-Numbers";
+import Bulldozer_Mania from "../../simulator/definitions/challenges/jbcGcer25-Bulldozer-Mania";
 
 export namespace ChallengesAction {
   export interface LoadChallenge {
@@ -335,6 +336,10 @@ const DEFAULT_CHALLENGES: Challenges = {
   'Odd_Numbers': Async.loaded({
     value: Odd_Numbers,
     brief: ChallengeBrief.fromChallenge(Odd_Numbers),
+  }),
+  'Bulldozer_Mania': Async.loaded({
+    value: Bulldozer_Mania,
+    brief: ChallengeBrief.fromChallenge(Bulldozer_Mania),
   }),
 };
 
