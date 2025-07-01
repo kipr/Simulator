@@ -227,7 +227,6 @@ export function createBaseSceneSurfaceB(): Scene {
 export function createCanNode(canNumber: number, canPosition?: Vector3wUnits, editable?: boolean, visible?: boolean): Node {
   const origin: ReferenceFramewUnits = {
     position: canPosition ?? canPositions[canNumber - 1],
-    orientation: RotationwUnits.eulerDegrees(180, 0, 0),
   };
 
   return {
