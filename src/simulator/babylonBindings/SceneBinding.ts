@@ -731,21 +731,16 @@ class SceneBinding {
 
     /*
      * PhysicsShape requires some information to create the shape, depending on exactly what shape you want.
-     * Cylinders and boxes, for example require different parameters, so we handle those seperately.
+     * Cylinders and boxes require different parameters, so we handle those seperately.
      * For more info, see: https://doc.babylonjs.com/features/featuresDeepDive/physics/shapes
      */
     const scale = RawVector3.toBabylon(objectNode.origin.scale ?? { x: 1, y: 1, z: 1 });
     let parameters: PhysicsShapeParameters = { mesh: physics_mesh as Mesh };
+    let physicsType = objectNode.physics.type;
 
-    // WARNING: These numbers are correct for the cans, but must be changed if we ever include any other cylinders
-    // NOTE: points A and B are relative to the parent attached visual mesh
+    // The built-in PhysicsShapeCylinder cannot be distorted on x and z independently for scaling, so instead use the visual mesh
     if (objectNode.physics.type === 'cylinder') {
-      parameters = {
-        ...parameters,
-        pointA: new Vector3(0, -(11.15 * 0.5), 0),
-        pointB: new Vector3(0, (11.15 * 0.5), 0),
-        radius: 3,
-      };
+      physicsType = 'mesh';
     } else if (objectNode.physics.type === 'box') {
       // The final multiplication by [2, 2, 2] is required to make collision boxes scale correctly
       const extend = physics_mesh.getBoundingInfo().boundingBox.extendSize.multiply(scale).multiply(new Vector3(2, 2, 2));
@@ -760,7 +755,7 @@ class SceneBinding {
      * It knows how to create some shapes automatically, based on the mesh that we gave it above.
      * For example, it can automatically create a box or a cylinder around an object, or it can use the mesh itself.
      */
-    const options: PhysicShapeOptions = { type: PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type], parameters };
+    const options: PhysicShapeOptions = { type: PHYSICS_SHAPE_TYPE_MAPPINGS[physicsType], parameters };
     const shape = new PhysicsShape(options, this.bScene);
     shape.material = {
       friction: objectNode.physics.friction ?? 0.2,

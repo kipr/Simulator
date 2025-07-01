@@ -18,6 +18,8 @@ const CAN_PHYSICS: Node.Physics = {
   inertia: [20, 20, 20],
 };
 
+const DEAULT_FACEUVS = [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(0, 1), RawVector2.create(1, 0), RawVector2.ZERO, RawVector2.ZERO];
+
 const canTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'can',
@@ -29,7 +31,7 @@ const canTemplate: Node.TemplatedNode<Node.Obj> = {
       uri: '/static/textures/Can_Texture.png'
     },
   },
-  faceUvs: [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(1, 0), RawVector2.create(0, 1), RawVector2.ZERO, RawVector2.ZERO],
+  faceUvs: DEAULT_FACEUVS,
 };
 
 const circleTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -56,7 +58,7 @@ const lifescienceTemplate: Node.TemplatedNode<Node.Obj> = {
       uri: '/static/textures/sciencepack/life_science_pack.png'
     },
   },
-  faceUvs: [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(1, 0), RawVector2.create(0, 1), RawVector2.ZERO, RawVector2.ZERO],
+  faceUvs: DEAULT_FACEUVS,
 };
 
 const radscienceTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -70,7 +72,7 @@ const radscienceTemplate: Node.TemplatedNode<Node.Obj> = {
       uri: '/static/textures/sciencepack/rad_science_pack.png'
     },
   },
-  faceUvs: [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(1, 0), RawVector2.create(0, 1), RawVector2.ZERO, RawVector2.ZERO],
+  faceUvs: DEAULT_FACEUVS,
 };
 
 const noradscienceTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -84,7 +86,7 @@ const noradscienceTemplate: Node.TemplatedNode<Node.Obj> = {
       uri: '/static/textures/sciencepack/no_rad_science_pack.png'
     },
   },
-  faceUvs: [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(1, 0), RawVector2.create(0, 1), RawVector2.ZERO, RawVector2.ZERO],
+  faceUvs: DEAULT_FACEUVS,
 };
 
 const reamTemplate: Node.TemplatedNode<Node.Obj> = {

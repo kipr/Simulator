@@ -82,8 +82,8 @@ const frenchFryTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'box',
     restitution: .5,
     friction: .6,
-    mass: Mass.grams(2),
-    inertia: [4, 4, 4]
+    mass: Mass.grams(8),
+    inertia: [4, 4, 4],
   },
 };
 const hamburgerTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -184,7 +184,7 @@ const potatoTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'mesh',
     restitution: .7,
     friction: 1,
-    mass: Mass.grams(3),
+    mass: Mass.grams(8),
     inertia: [2, 2, 2],
   }
 };
