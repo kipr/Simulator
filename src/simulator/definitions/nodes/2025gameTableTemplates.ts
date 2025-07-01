@@ -210,7 +210,16 @@ const botguyGamepieceTemplate: Node.TemplatedNode<Node.Obj> = {
     inertia: [2, 2, 2],
   }
 };
-
+const staticBotguyGamepieceTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'botguy_gamepiece',
+  physics: {
+    type: 'mesh',
+    restitution: .1,
+    friction: .7,
+    motionType: PhysicsMotionType.STATIC,
+  }
+};
 export const BB2025Templates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'game_table_2025': gameTable2025Template,
   'drink_blue': drinkBlueTemplate,
@@ -233,6 +242,7 @@ export const BB2025Templates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'potato': potatoTemplate,
   'tray': trayTemplate,
   'botguy_gamepiece': botguyGamepieceTemplate,
+  'botguy_gamepiece_static': staticBotguyGamepieceTemplate,
 });
 
 
