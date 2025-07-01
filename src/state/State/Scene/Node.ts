@@ -123,6 +123,7 @@ namespace Node {
     export const upcast = <T extends Base>(t: T): Base => ({
       name: t.name,
       origin: t.origin,
+      startingOrigin: t.startingOrigin,
       scriptIds: t.scriptIds,
       documentIds: t.documentIds,
       editable: t.editable,
@@ -602,6 +603,7 @@ namespace Node {
       case 'from-jbc-template': return FromJBCTemplate.from(node);
       case 'from-rock-template': return FromRockTemplate.from(node);
       case 'from-space-template': return FromSpaceTemplate.from(node);
+      case 'from-bb-template': return FromBBTemplate.from(node);
       case 'robot': return Robot.from(node);
     }
   };
