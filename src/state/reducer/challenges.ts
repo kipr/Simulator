@@ -3,7 +3,7 @@ import { Challenges } from '../State';
 import Challenge, { AsyncChallenge, ChallengeBrief } from '../State/Challenge';
 import Event from '../State/Challenge/Event';
 import Predicate from '../State/Challenge/Predicate';
-import Async from "../State/Async";
+import Async from '../State/Async';
 
 import { errorToAsyncError, mutate } from './util';
 import construct from '../../util/redux/construct';
@@ -12,42 +12,52 @@ import LocalizedString from '../../util/LocalizedString';
 import db from '../../db';
 import Selector from '../../db/Selector';
 
-import jbc0 from "../../simulator/definitions/challenges/jbc0-Drive-Straight";
-import jbc1 from "../../simulator/definitions/challenges/jbc1-Tag-Youre-It";
-import jbc2 from "../../simulator/definitions/challenges/jbc2-Ring-Around-the-Can";
-// import jbc2b from "../../simulator/definitions/challenges/archived/jbc2b-Ring-Around-the-Cans-Sr";
-// import jbc2c from "../../simulator/definitions/challenges/archived/jbc2c-Back-It-Up";
-// import jbc2d from "../../simulator/definitions/challenges/archived/jbc2d-Ring-Around-the-Can-and-Back-It-Up";
-import jbc3 from "../../simulator/definitions/challenges/jbc3-Precision-Parking";
-import jbc4 from "../../simulator/definitions/challenges/jbc4-Serpentine";
-// import jbc4b from "../../simulator/definitions/challenges/archived/jbc4b-Barrel-Racing";
-import jbc5 from "../../simulator/definitions/challenges/jbc5-Odd-Numbers";
-import jbc6 from "../../simulator/definitions/challenges/jbc6-Figure-Eight";
-// import jbc6c from "../../simulator/definitions/challenges/archived/jbc6c-Empty-the-Garage";
-import jbc7 from "../../simulator/definitions/challenges/jbc7-Load-Em-Up";
-// import jbc7b from "../../simulator/definitions/challenges/archived/jbc7b-Cover-Your-Bases";
-import jbc8 from "../../simulator/definitions/challenges/jbc8-Bulldozer-Mania";
-import jbc9 from "../../simulator/definitions/challenges/jbc9-Cover-Your-Bases";
-// import jbc8b from "../../simulator/definitions/challenges/archived/jbc8b-Serpentine-Jr";
-import jbc10 from "../../simulator/definitions/challenges/jbc10-Chopped";
-// import jbc10b from "../../simulator/definitions/challenges/archived/jbc10b-Solo-Joust-Jr";
-import jbc11 from "../../simulator/definitions/challenges/jbc11-Making-Waves";
-// import jbc12 from "../../simulator/definitions/challenges/jbc12-Add-It-Up-New";
-// import jbc13 from "../../simulator/definitions/challenges/archived/jbc13-Clean-the-Mat";
-// import jbc14 from "../../simulator/definitions/challenges/jbc14-Dance-Party";
-import jbc15 from "../../simulator/definitions/challenges/jbc15-Go-Fetch";
-// import jbc15b from "../../simulator/definitions/challenges/archived/jbc15b-Bump-Bump";
-import jbc16 from "../../simulator/definitions/challenges/jbc16-Pick-Em-Up";
-import jbc17 from "../../simulator/definitions/challenges/jbc17-Mountain-Rescue";
-// import jbc17b from "../../simulator/definitions/challenges/archived/jbc17b-Walk-the-Line-2";
-import jbc18 from "../../simulator/definitions/challenges/jbc18-Stackerz-New";
-import jbc19 from "../../simulator/definitions/challenges/jbc19-Bump";
-import jbc20 from "../../simulator/definitions/challenges/jbc20-Amazing";
-import jbc21 from "../../simulator/definitions/challenges/jbc21-Proximity";
-import jbc22 from "../../simulator/definitions/challenges/jbc22-Search-and-Rescue";
-import jbc23 from "../../simulator/definitions/challenges/jbc23-Find-the-Black-Line";
-import jbc24 from "../../simulator/definitions/challenges/jbc24-Walk-the-Line";
+import jbc0 from '../../simulator/definitions/challenges/jbc0-Drive-Straight';
+import jbc1 from '../../simulator/definitions/challenges/jbc1-Tag-Youre-It';
+import jbc2 from '../../simulator/definitions/challenges/jbc2-Ring-Around-the-Can';
+// import jbc2b from '../../simulator/definitions/challenges/archived/jbc2b-Ring-Around-the-Cans-Sr';
+// import jbc2c from '../../simulator/definitions/challenges/archived/jbc2c-Back-It-Up';
+// import jbc2d from '../../simulator/definitions/challenges/archived/jbc2d-Ring-Around-the-Can-and-Back-It-Up';
+import jbc3 from '../../simulator/definitions/challenges/jbc3-Precision-Parking';
+import jbc4 from '../../simulator/definitions/challenges/jbc4-Serpentine';
+// import jbc4b from '../../simulator/definitions/challenges/archived/jbc4b-Barrel-Racing';
+import jbc5 from '../../simulator/definitions/challenges/jbc5-Odd-Numbers';
+import jbc6 from '../../simulator/definitions/challenges/jbc6-Figure-Eight';
+// import jbc6c from '../../simulator/definitions/challenges/archived/jbc6c-Empty-the-Garage';
+import jbc7 from '../../simulator/definitions/challenges/jbc7-Load-Em-Up';
+// import jbc7b from '../../simulator/definitions/challenges/archived/jbc7b-Cover-Your-Bases';
+import jbc8 from '../../simulator/definitions/challenges/jbc8-Bulldozer-Mania';
+import jbc9 from '../../simulator/definitions/challenges/jbc9-Cover-Your-Bases';
+// import jbc8b from '../../simulator/definitions/challenges/archived/jbc8b-Serpentine-Jr';
+import jbc10 from '../../simulator/definitions/challenges/jbc10-Chopped';
+// import jbc10b from '../../simulator/definitions/challenges/archived/jbc10b-Solo-Joust-Jr';
+import jbc11 from '../../simulator/definitions/challenges/jbc11-Making-Waves';
+// import jbc12 from '../../simulator/definitions/challenges/jbc12-Add-It-Up-New';
+// import jbc13 from '../../simulator/definitions/challenges/archived/jbc13-Clean-the-Mat';
+// import jbc14 from '../../simulator/definitions/challenges/jbc14-Dance-Party';
+import jbc15 from '../../simulator/definitions/challenges/jbc15-Go-Fetch';
+// import jbc15b from '../../simulator/definitions/challenges/archived/jbc15b-Bump-Bump';
+import jbc16 from '../../simulator/definitions/challenges/jbc16-Pick-Em-Up';
+import jbc17 from '../../simulator/definitions/challenges/jbc17-Mountain-Rescue';
+// import jbc17b from '../../simulator/definitions/challenges/archived/jbc17b-Walk-the-Line-2';
+import jbc18 from '../../simulator/definitions/challenges/jbc18-Stackerz-New';
+import jbc19 from '../../simulator/definitions/challenges/jbc19-Bump';
+import jbc20 from '../../simulator/definitions/challenges/jbc20-Amazing';
+import jbc21 from '../../simulator/definitions/challenges/jbc21-Proximity';
+import jbc22 from '../../simulator/definitions/challenges/jbc22-Search-and-Rescue';
+import jbc23 from '../../simulator/definitions/challenges/jbc23-Find-the-Black-Line';
+import jbc24 from '../../simulator/definitions/challenges/jbc24-Walk-the-Line';
 // import test from '../../simulator/definitions/challenges/archived/test';
+import Find_The_Black_Line from '../../simulator/definitions/challenges/gcer25/jbcGcer25-Find-The-Black-Line';
+import Sense_The_Can from '../../simulator/definitions/challenges/gcer25/jbcGcer25-Sense-The-Can';
+import Ice_Ice_Botguy from '../../simulator/definitions/challenges/gcer25/jbcGcer25-Ice-Ice-Botguy';
+import Thirst_Quencher from '../../simulator/definitions/challenges/gcer25/jbcGcer25-Thirst-Quencher';
+import Entree_Express from '../../simulator/definitions/challenges/gcer25/jbcGcer25-Entree-Express';
+import Special_Sauce from '../../simulator/definitions/challenges/gcer25/jbcGcer25-Special-Sauce';
+import Cover_Your_Bases from '../../simulator/definitions/challenges/gcer25/jbcGcer25-Cover-Your-Bases';
+import Odd_Numbers from '../../simulator/definitions/challenges/gcer25/jbcGcer25-Odd-Numbers';
+import Bulldozer_Mania from '../../simulator/definitions/challenges/gcer25/jbcGcer25-Bulldozer-Mania';
+import Mountain_Rescue from '../../simulator/definitions/challenges/gcer25/jbcGcer25-Mountain-Rescue';
 
 export namespace ChallengesAction {
   export interface LoadChallenge {
@@ -295,6 +305,46 @@ const DEFAULT_CHALLENGES: Challenges = {
   'jbc24': Async.loaded({
     value: jbc24,
     brief: ChallengeBrief.fromChallenge(jbc24),
+  }),
+  'Find_The_Black_Line': Async.loaded({
+    value: Find_The_Black_Line,
+    brief: ChallengeBrief.fromChallenge(Find_The_Black_Line),
+  }),
+  'Sense_The_Can': Async.loaded({
+    value: Sense_The_Can,
+    brief: ChallengeBrief.fromChallenge(Sense_The_Can),
+  }),
+  'Ice_Ice_Botguy': Async.loaded({
+    value: Ice_Ice_Botguy,
+    brief: ChallengeBrief.fromChallenge(Ice_Ice_Botguy),
+  }),
+  'Thirst_Quencher': Async.loaded({
+    value: Thirst_Quencher,
+    brief: ChallengeBrief.fromChallenge(Thirst_Quencher),
+  }),
+  'Entree_Express': Async.loaded({
+    value: Entree_Express,
+    brief: ChallengeBrief.fromChallenge(Entree_Express),
+  }),
+  'Special_Sauce': Async.loaded({
+    value: Special_Sauce,
+    brief: ChallengeBrief.fromChallenge(Special_Sauce),
+  }),
+  'Cover_Your_Bases': Async.loaded({
+    value: Cover_Your_Bases,
+    brief: ChallengeBrief.fromChallenge(Cover_Your_Bases),
+  }),
+  'Odd_Numbers': Async.loaded({
+    value: Odd_Numbers,
+    brief: ChallengeBrief.fromChallenge(Odd_Numbers),
+  }),
+  'Bulldozer_Mania': Async.loaded({
+    value: Bulldozer_Mania,
+    brief: ChallengeBrief.fromChallenge(Bulldozer_Mania),
+  }),
+  'Mountain_Rescue': Async.loaded({
+    value: Mountain_Rescue,
+    brief: ChallengeBrief.fromChallenge(Mountain_Rescue),
   }),
 };
 
