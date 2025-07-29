@@ -1461,7 +1461,7 @@ msgid "2025 Botball game table sandbox"
 msgstr "2025 Botball ゲームテーブル砂場"
 
 msgid "IRobot Create"
-msgstr ""
+msgstr "IRobot Create"
 
 msgid "Leaderboard"
 msgstr "ランキング"
@@ -1643,7 +1643,7 @@ msgid "Scratch Variables"
 msgstr "Scratchの変数"
 
 msgid "A hamburger"
-msgstr ""
+msgstr "ハンバーガー"
 
 msgid "Blue pom front #$(s)"
 msgstr ""
@@ -1686,6 +1686,324 @@ msgstr "ピンクの飲み物 #%d"
 
 msgid "Fry #%d"
 msgstr "フライドポテト #%d"
+
+msgid "GCER 2025: Find the Black Line"
+msgstr "GCER 2025: 黒ラインを探す"
+
+msgid ""
+"GCER 2025 special event. Your robot is randomly placed on one of the red "
+"circles. Find the black starting line and stop. Bonus points for returning "
+"to the original starting circle."
+msgstr "GCER 2025のことです！赤い丸にあるロボットで黒いラインを探して、やめます。"
+
+msgid "GCER 2025: Sense the Can"
+msgstr "GCER 2025：缶を見る"
+
+msgid ""
+"GCER 2025 special event. A can is placed randomly in circle 2, 4, 6, 9 or "
+"11. Find it and bring it back to the start box!"
+msgstr "GCER 2025のことです！丸２か４か６か９か１１にあります。探して、始まるところに返します。"
+
+msgid "Blue pom #%d"
+msgstr ""
+
+msgid "GCER 2025: Ice Ice Botguy"
+msgstr ""
+
+msgid ""
+"GCER 2025 special event. Botguy is overheating! Collect the ice and dump it "
+"on Botguy to cool him off!"
+msgstr ""
+
+msgid "Cup #%d"
+msgstr ""
+
+msgid "GCER 2025: Thirst Quencher"
+msgstr ""
+
+msgid ""
+"GCER 2025 special event. Don't let the summer heat get you down. Bring the "
+"cups back to the start box!"
+msgstr ""
+
+msgid "GCER 2025: Entree Express"
+msgstr ""
+
+msgid "GCER 2025 special event. Order up! Move the entrees to the trays."
+msgstr ""
+
+msgid "Warming station"
+msgstr ""
+
+msgid "Pom #%d"
+msgstr ""
+
+msgid "GCER 2025: Special Sauce"
+msgstr ""
+
+msgid ""
+"GCER 2025 special event. Mix the ketchup (red), mustard (yellow), and hot "
+"sauce (orange) in the garages to create your own special blend!"
+msgstr ""
+
+msgid "Orange Garage"
+msgstr ""
+
+msgid "GCER 2025: Cover Your Bases"
+msgstr ""
+
+msgid "GCER 2025 special edition. All circles are now open for business!"
+msgstr ""
+
+msgid "GCER 2025: Odd Numbers"
+msgstr ""
+
+msgid ""
+"GCER 2025 special event. Drive over the odd numbered circles in order, but "
+"make sure to avoid the evens!"
+msgstr ""
+
+msgid "GCER 2025: Bulldozer Mania"
+msgstr ""
+
+msgid ""
+"GCER 2025 special event. Bring as many cans behind the starting line as you "
+"can. Make sure they stay upright!"
+msgstr ""
+
+msgid "GCER 2025: Mountain Rescue"
+msgstr ""
+
+msgid "GCER 2025 special event. Now with three more cans to rescue!"
+msgstr ""
+
+msgid "Robot Stops at Black Line"
+msgstr ""
+
+msgid "Robot stops at black line"
+msgstr ""
+
+msgid "Robot Over Circle"
+msgstr ""
+
+msgid "Robot over selected circle"
+msgstr ""
+
+msgid "Robot not in Start Box"
+msgstr ""
+
+msgid "Robot not in start box"
+msgstr ""
+
+msgid "Can in Start Box"
+msgstr ""
+
+msgid "Can in start box"
+msgstr ""
+
+msgid "Can Random Upright"
+msgstr ""
+
+msgid "Can Random upright"
+msgstr ""
+
+msgid "Hamburger placed"
+msgstr ""
+
+msgid "Hamburger placed in tray"
+msgstr ""
+
+msgid "Hotdog placed"
+msgstr ""
+
+msgid "Hotdog placed in tray"
+msgstr ""
+
+msgid "Taco placed"
+msgstr ""
+
+msgid "Taco placed in tray"
+msgstr ""
+
+msgid "Can A upright in a circle"
+msgstr ""
+
+msgid "Can B upright in a circle"
+msgstr ""
+
+msgid "Can C upright in a circle"
+msgstr ""
+
+msgid "Can D Upright"
+msgstr ""
+
+msgid "Can D upright in a circle"
+msgstr ""
+
+msgid "Can E Upright"
+msgstr ""
+
+msgid "Can E upright in a circle"
+msgstr ""
+
+msgid "Can F Upright"
+msgstr ""
+
+msgid "Can F upright in a circle"
+msgstr ""
+
+msgid "Can G Upright"
+msgstr ""
+
+msgid "Can G upright in a circle"
+msgstr ""
+
+msgid "Base A Covered"
+msgstr ""
+
+msgid "Base A covered by a can"
+msgstr ""
+
+msgid "Base B Covered"
+msgstr ""
+
+msgid "Base B covered by a can"
+msgstr ""
+
+msgid "Base C Covered"
+msgstr ""
+
+msgid "Base C covered by a can"
+msgstr ""
+
+msgid "Base D Covered"
+msgstr ""
+
+msgid "Base D covered by a can"
+msgstr ""
+
+msgid "Base E Covered"
+msgstr ""
+
+msgid "Base E covered by a can"
+msgstr ""
+
+msgid "Base F Covered"
+msgstr ""
+
+msgid "Base F covered by a can"
+msgstr ""
+
+msgid "Base G Covered"
+msgstr ""
+
+msgid "Base G covered by a can"
+msgstr ""
+
+msgid "Can 1 Upright"
+msgstr ""
+
+msgid "Can 1 is upright"
+msgstr ""
+
+msgid "Can 2 Upright"
+msgstr ""
+
+msgid "Can 2 is upright"
+msgstr ""
+
+msgid "Can 3 Upright"
+msgstr ""
+
+msgid "Can 3 is upright"
+msgstr ""
+
+msgid "Can 4 Upright"
+msgstr ""
+
+msgid "Can 4 is upright"
+msgstr ""
+
+msgid "Can 5 Upright"
+msgstr ""
+
+msgid "Can 5 is upright"
+msgstr ""
+
+msgid "Can 1 Intersects"
+msgstr ""
+
+msgid "Can 1 rescued intersecting starting box"
+msgstr ""
+
+msgid "Can 2 Intersects"
+msgstr ""
+
+msgid "Can 2 rescued intersecting starting box"
+msgstr ""
+
+msgid "Can 3 Intersects"
+msgstr ""
+
+msgid "Can 3 rescued intersecting starting box"
+msgstr ""
+
+msgid "Can 4 Intersects"
+msgstr ""
+
+msgid "Can 4 rescued intersecting starting box"
+msgstr ""
+
+msgid "Can 5 Intersects"
+msgstr ""
+
+msgid "Can 5 rescued intersecting starting box"
+msgstr ""
+
+msgid "Warming Station"
+msgstr ""
+
+msgid "Blue Cup JBC"
+msgstr ""
+
+msgid "Green Cup JBC"
+msgstr ""
+
+msgid "Pink Cup JBC"
+msgstr ""
+
+msgid "Ask Tutor"
+msgstr ""
+
+msgid "Arm"
+msgstr ""
+
+msgid "Claw"
+msgstr ""
+
+msgid "Left wheel"
+msgstr ""
+
+msgid "Right wheel"
+msgstr ""
+
+msgid "Rangefinder"
+msgstr ""
+
+msgid "Reflectance"
+msgstr ""
+
+msgid "Limit switch"
+msgstr ""
+
+msgid "Left touch"
+msgstr ""
+
+msgid "Right touch"
+msgstr ""
+
+msgid "Tutor"
+msgstr ""
 
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
