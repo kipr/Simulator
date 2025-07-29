@@ -1694,7 +1694,7 @@ msgid ""
 "GCER 2025 special event. Your robot is randomly placed on one of the red "
 "circles. Find the black starting line and stop. Bonus points for returning "
 "to the original starting circle."
-msgstr "GCER 2025のことです！赤い丸にあるロボットで黒いラインを探して、やめます。"
+msgstr "GCER 2025のことだ！赤い丸にあるロボットで黒いラインを探して、やめる。"
 
 msgid "GCER 2025: Sense the Can"
 msgstr "GCER 2025：缶を見る"
@@ -1702,233 +1702,233 @@ msgstr "GCER 2025：缶を見る"
 msgid ""
 "GCER 2025 special event. A can is placed randomly in circle 2, 4, 6, 9 or "
 "11. Find it and bring it back to the start box!"
-msgstr "GCER 2025のことです！丸２か４か６か９か１１にあります。探して、始まるところに返します。"
+msgstr "GCER 2025のことだ！丸２か４か６か９か１１にある缶をスタートボックスに持って来てくれ。"
 
 msgid "Blue pom #%d"
-msgstr ""
+msgstr "青ポン #%d"
 
 msgid "GCER 2025: Ice Ice Botguy"
-msgstr ""
+msgstr "GCER 2025：ナイスアイス"
 
 msgid ""
 "GCER 2025 special event. Botguy is overheating! Collect the ice and dump it "
 "on Botguy to cool him off!"
-msgstr ""
+msgstr "GCER 2025のことだ！ボットガイドが暑すぎちゃった！アイスを持って来て、ボットガイドに置きてくれ。"
 
 msgid "Cup #%d"
-msgstr ""
+msgstr "カップ#%d"
 
 msgid "GCER 2025: Thirst Quencher"
-msgstr ""
+msgstr "GCER 2025：ナイス飲み物"
 
 msgid ""
 "GCER 2025 special event. Don't let the summer heat get you down. Bring the "
 "cups back to the start box!"
-msgstr ""
+msgstr "GCER 2025のことだ！夏の暑さをかちなさい！スタートボックスにカップを持って来てくれ。"
 
 msgid "GCER 2025: Entree Express"
-msgstr ""
+msgstr "GCER 2025：ナイス飲み物"
 
 msgid "GCER 2025 special event. Order up! Move the entrees to the trays."
-msgstr ""
+msgstr "GCER 2025のことだ！注文どうぞ！ トレー に食べ物を持って来てくれ。"
 
 msgid "Warming station"
-msgstr ""
+msgstr "温かいところ"
 
 msgid "Pom #%d"
-msgstr ""
+msgstr "ポン #%d"
 
 msgid "GCER 2025: Special Sauce"
-msgstr ""
+msgstr "GCER 2025：Show you 醤油"
 
 msgid ""
 "GCER 2025 special event. Mix the ketchup (red), mustard (yellow), and hot "
 "sauce (orange) in the garages to create your own special blend!"
-msgstr ""
+msgstr "GCER 2025のことだ！ケチャップとマスタードと醤油を混ぜれ。"
 
 msgid "Orange Garage"
-msgstr ""
+msgstr "オレンジの車庫"
 
 msgid "GCER 2025: Cover Your Bases"
-msgstr ""
+msgstr "GCER 2025：ベースを網羅する"
 
 msgid "GCER 2025 special edition. All circles are now open for business!"
-msgstr ""
+msgstr "GCER 2025のことだ！丸が全部を楽しみにしてください。"
 
 msgid "GCER 2025: Odd Numbers"
-msgstr ""
+msgstr "GCER 2025：奇数"
 
 msgid ""
 "GCER 2025 special event. Drive over the odd numbered circles in order, but "
 "make sure to avoid the evens!"
-msgstr ""
+msgstr "GCER 2025のことだ！奇数の丸運転して、偶数の丸に気をつけてくれ。"
 
 msgid "GCER 2025: Bulldozer Mania"
-msgstr ""
+msgstr "GCER 2025：ブルドーザー・マニア"
 
 msgid ""
 "GCER 2025 special event. Bring as many cans behind the starting line as you "
 "can. Make sure they stay upright!"
-msgstr ""
+msgstr "GCER 2025のことだ！スタートボックスに缶を持ってくれ！"
 
 msgid "GCER 2025: Mountain Rescue"
-msgstr ""
+msgstr "GCER 2025：山岳救助"
 
 msgid "GCER 2025 special event. Now with three more cans to rescue!"
-msgstr ""
+msgstr "GCER 2025のことだ！缶は5本がある！"
 
 msgid "Robot Stops at Black Line"
-msgstr ""
+msgstr "ロボットが黒いラインでやめる。"
 
 msgid "Robot stops at black line"
-msgstr ""
+msgstr "ロボットが黒いラインでやめる。"
 
 msgid "Robot Over Circle"
-msgstr ""
+msgstr "丸にあるロボット"
 
 msgid "Robot over selected circle"
-msgstr ""
+msgstr "選んだ丸にあるロボット"
 
 msgid "Robot not in Start Box"
-msgstr ""
+msgstr "ロボットは"
 
 msgid "Robot not in start box"
-msgstr ""
+msgstr "ロボットはスタートボックスにない"
 
 msgid "Can in Start Box"
-msgstr ""
+msgstr "缶はスタートボックスにある"
 
 msgid "Can in start box"
-msgstr ""
+msgstr "缶はスタートボックスにある"
 
 msgid "Can Random Upright"
-msgstr ""
+msgstr "缶はまっすぐ"
 
 msgid "Can Random upright"
-msgstr ""
+msgstr "缶はまっすぐ"
 
 msgid "Hamburger placed"
-msgstr ""
+msgstr "ハンバーガーを置きた"
 
 msgid "Hamburger placed in tray"
-msgstr ""
+msgstr "ハンバーガーがトレーを置きた"
 
 msgid "Hotdog placed"
-msgstr ""
+msgstr "ホットドッグを置きた"
 
 msgid "Hotdog placed in tray"
-msgstr ""
+msgstr "ホットドッグがトレーを置きた"
 
 msgid "Taco placed"
-msgstr ""
+msgstr "タコを置きた"
 
 msgid "Taco placed in tray"
-msgstr ""
+msgstr "タコがトレーを置きた"
 
 msgid "Can A upright in a circle"
-msgstr ""
+msgstr "丸の中でA缶はまっすぐ"
 
 msgid "Can B upright in a circle"
-msgstr ""
+msgstr "丸の中でB缶はまっすぐ"
 
 msgid "Can C upright in a circle"
-msgstr ""
+msgstr "丸の中でC缶はまっすぐ"
 
 msgid "Can D Upright"
-msgstr ""
+msgstr "D缶はまっすぐ"
 
 msgid "Can D upright in a circle"
-msgstr ""
+msgstr "丸の中でD缶はまっすぐ"
 
 msgid "Can E Upright"
-msgstr ""
+msgstr "E缶はまっすぐ"
 
 msgid "Can E upright in a circle"
-msgstr ""
+msgstr "丸の中でE缶はまっすぐ"
 
 msgid "Can F Upright"
-msgstr ""
+msgstr "F缶はまっすぐ"
 
 msgid "Can F upright in a circle"
-msgstr ""
+msgstr "丸の中でF缶はまっすぐ"
 
 msgid "Can G Upright"
-msgstr ""
+msgstr "G缶はまっすぐ"
 
 msgid "Can G upright in a circle"
-msgstr ""
+msgstr "丸の中でG缶はまっすぐ"
 
 msgid "Base A Covered"
-msgstr ""
+msgstr "Aベースを網羅した"
 
 msgid "Base A covered by a can"
-msgstr ""
+msgstr "缶でAベースを網羅した"
 
 msgid "Base B Covered"
-msgstr ""
+msgstr "Bベースを網羅した"
 
 msgid "Base B covered by a can"
-msgstr ""
+msgstr "缶でBベースを網羅した"
 
 msgid "Base C Covered"
-msgstr ""
+msgstr "Cベースを網羅した"
 
 msgid "Base C covered by a can"
-msgstr ""
+msgstr "缶でCベースを網羅した"
 
 msgid "Base D Covered"
-msgstr ""
+msgstr "Dベースを網羅した"
 
 msgid "Base D covered by a can"
-msgstr ""
+msgstr "缶でDベースを網羅した"
 
 msgid "Base E Covered"
-msgstr ""
+msgstr "Eベースを網羅した"
 
 msgid "Base E covered by a can"
-msgstr ""
+msgstr "缶でEベースを網羅した"
 
 msgid "Base F Covered"
-msgstr ""
+msgstr "Fベースを網羅した"
 
 msgid "Base F covered by a can"
-msgstr ""
+msgstr "缶でFベースを網羅した"
 
 msgid "Base G Covered"
-msgstr ""
+msgstr "Gベースを網羅した"
 
 msgid "Base G covered by a can"
-msgstr ""
+msgstr "缶でGベースを網羅した"
 
 msgid "Can 1 Upright"
-msgstr ""
+msgstr "1缶はまっすぐ"
 
 msgid "Can 1 is upright"
-msgstr ""
+msgstr "1缶はまっすぐ"
 
 msgid "Can 2 Upright"
-msgstr ""
+msgstr "2缶はまっすぐ"
 
 msgid "Can 2 is upright"
-msgstr ""
+msgstr "2缶はまっすぐ"
 
 msgid "Can 3 Upright"
-msgstr ""
+msgstr "3缶はまっすぐ"
 
 msgid "Can 3 is upright"
-msgstr ""
+msgstr "3缶はまっすぐ"
 
 msgid "Can 4 Upright"
-msgstr ""
+msgstr "4缶はまっすぐ"
 
 msgid "Can 4 is upright"
-msgstr ""
+msgstr "4缶はまっすぐ"
 
 msgid "Can 5 Upright"
-msgstr ""
+msgstr "5缶はまっすぐ"
 
 msgid "Can 5 is upright"
-msgstr ""
+msgstr "5缶はまっすぐ"
 
 msgid "Can 1 Intersects"
 msgstr ""
@@ -1964,46 +1964,46 @@ msgid "Warming Station"
 msgstr ""
 
 msgid "Blue Cup JBC"
-msgstr ""
+msgstr "JBC青カップ"
 
 msgid "Green Cup JBC"
-msgstr ""
+msgstr "緑カップ"
 
 msgid "Pink Cup JBC"
-msgstr ""
+msgstr "ピンクカップ"
 
 msgid "Ask Tutor"
-msgstr ""
+msgstr "助手に聞いて"
 
 msgid "Arm"
-msgstr ""
+msgstr "腕"
 
 msgid "Claw"
-msgstr ""
+msgstr "手"
 
 msgid "Left wheel"
-msgstr ""
+msgstr "左の車輪"
 
 msgid "Right wheel"
-msgstr ""
+msgstr "右の車輪"
 
 msgid "Rangefinder"
-msgstr ""
+msgstr "レンジファインダー"
 
 msgid "Reflectance"
-msgstr ""
+msgstr "反射率"
 
 msgid "Limit switch"
-msgstr ""
+msgstr "リミットスイッチ"
 
 msgid "Left touch"
-msgstr ""
+msgstr "左のボタン"
 
 msgid "Right touch"
-msgstr ""
+msgstr "右のボタン"
 
 msgid "Tutor"
-msgstr ""
+msgstr "助手"
 
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
@@ -2115,51 +2115,51 @@ msgstr "高校３年生"
 
 msgctxt "Student grade level"
 msgid "1st"
-msgstr "小学校１年生"
+msgstr "小１年"
 
 msgctxt "Student grade level"
 msgid "2nd"
-msgstr "小学校２年生"
+msgstr "小２年"
 
 msgctxt "Student grade level"
 msgid "3rd"
-msgstr "小学校３年生"
+msgstr "小３年"
 
 msgctxt "Student grade level"
 msgid "4th"
-msgstr "小学校４年生"
+msgstr "小４年"
 
 msgctxt "Student grade level"
 msgid "5th"
-msgstr "小学校５年生"
+msgstr "小５年"
 
 msgctxt "Student grade level"
 msgid "6th"
-msgstr "小学校６年生"
+msgstr "小６年"
 
 msgctxt "Student grade level"
 msgid "7th"
-msgstr "中学校１年生"
+msgstr "中１年生"
 
 msgctxt "Student grade level"
 msgid "8th"
-msgstr "中学校２年生"
+msgstr "中２年生"
 
 msgctxt "Student grade level"
 msgid "9th"
-msgstr "中学校３年生"
+msgstr "中３年生"
 
 msgctxt "Student grade level"
 msgid "10th"
-msgstr "高校１年生"
+msgstr "高１年"
 
 msgctxt "Student grade level"
 msgid "11th"
-msgstr "高校２年生"
+msgstr "高２年"
 
 msgctxt "Student grade level"
 msgid "12th"
-msgstr "高校３年生"
+msgstr "高３年"
 
 msgctxt "Student grade level; Kingergarten"
 msgid "K"

@@ -1886,7 +1886,8 @@
       "ja-JP": "2025 Botball ゲームテーブル砂場"
     },
     "IRobot Create": {
-      "en-US": "IRobot Create"
+      "en-US": "IRobot Create",
+      "ja-JP": "IRobot Create"
     },
     "Leaderboard": {
       "en-US": "Leaderboard",
@@ -2113,7 +2114,8 @@
       "ja-JP": "Scratchの変数"
     },
     "A hamburger": {
-      "en-US": "A hamburger"
+      "en-US": "A hamburger",
+      "ja-JP": "ハンバーガー"
     },
     "Blue pom front #$(s)": {
       "en-US": "Blue pom front #$(s)"
@@ -2168,6 +2170,399 @@
     "Fry #%d": {
       "en-US": "Fry #%d",
       "ja-JP": "フライドポテト #%d"
+    },
+    "GCER 2025: Find the Black Line": {
+      "en-US": "GCER 2025: Find the Black Line",
+      "ja-JP": "GCER 2025: 黒ラインを探す"
+    },
+    "GCER 2025 special event. Your robot is randomly placed on one of the red circles. Find the black starting line and stop. Bonus points for returning to the original starting circle.": {
+      "en-US": "GCER 2025 special event. Your robot is randomly placed on one of the red circles. Find the black starting line and stop. Bonus points for returning to the original starting circle.",
+      "ja-JP": "GCER 2025のことだ！赤い丸にあるロボットで黒いラインを探して、やめる。"
+    },
+    "GCER 2025: Sense the Can": {
+      "en-US": "GCER 2025: Sense the Can",
+      "ja-JP": "GCER 2025：缶を見る"
+    },
+    "GCER 2025 special event. A can is placed randomly in circle 2, 4, 6, 9 or 11. Find it and bring it back to the start box!": {
+      "en-US": "GCER 2025 special event. A can is placed randomly in circle 2, 4, 6, 9 or 11. Find it and bring it back to the start box!",
+      "ja-JP": "GCER 2025のことだ！丸２か４か６か９か１１にある缶をスタートボックスに持って来てくれ。"
+    },
+    "Blue pom #%d": {
+      "en-US": "Blue pom #%d",
+      "ja-JP": "青ポン #%d"
+    },
+    "GCER 2025: Ice Ice Botguy": {
+      "en-US": "GCER 2025: Ice Ice Botguy",
+      "ja-JP": "GCER 2025：ナイスアイス"
+    },
+    "GCER 2025 special event. Botguy is overheating! Collect the ice and dump it on Botguy to cool him off!": {
+      "en-US": "GCER 2025 special event. Botguy is overheating! Collect the ice and dump it on Botguy to cool him off!",
+      "ja-JP": "GCER 2025のことだ！ボットガイドが暑すぎちゃった！アイスを持って来て、ボットガイドに置きてくれ。"
+    },
+    "Cup #%d": {
+      "en-US": "Cup #%d",
+      "ja-JP": "カップ#%d"
+    },
+    "GCER 2025: Thirst Quencher": {
+      "en-US": "GCER 2025: Thirst Quencher",
+      "ja-JP": "GCER 2025：ナイス飲み物"
+    },
+    "GCER 2025 special event. Don't let the summer heat get you down. Bring the cups back to the start box!": {
+      "en-US": "GCER 2025 special event. Don't let the summer heat get you down. Bring the cups back to the start box!",
+      "ja-JP": "GCER 2025のことだ！夏の暑さをかちなさい！スタートボックスにカップを持って来てくれ。"
+    },
+    "GCER 2025: Entree Express": {
+      "en-US": "GCER 2025: Entree Express",
+      "ja-JP": "GCER 2025：ナイス飲み物"
+    },
+    "GCER 2025 special event. Order up! Move the entrees to the trays.": {
+      "en-US": "GCER 2025 special event. Order up! Move the entrees to the trays.",
+      "ja-JP": "GCER 2025のことだ！注文どうぞ！ トレー に食べ物を持って来てくれ。"
+    },
+    "Warming station": {
+      "en-US": "Warming station",
+      "ja-JP": "温かいところ"
+    },
+    "Pom #%d": {
+      "en-US": "Pom #%d",
+      "ja-JP": "ポン #%d"
+    },
+    "GCER 2025: Special Sauce": {
+      "en-US": "GCER 2025: Special Sauce",
+      "ja-JP": "GCER 2025：Show you 醤油"
+    },
+    "GCER 2025 special event. Mix the ketchup (red), mustard (yellow), and hot sauce (orange) in the garages to create your own special blend!": {
+      "en-US": "GCER 2025 special event. Mix the ketchup (red), mustard (yellow), and hot sauce (orange) in the garages to create your own special blend!",
+      "ja-JP": "GCER 2025のことだ！ケチャップとマスタードと醤油を混ぜれ。"
+    },
+    "Orange Garage": {
+      "en-US": "Orange Garage",
+      "ja-JP": "オレンジの車庫"
+    },
+    "GCER 2025: Cover Your Bases": {
+      "en-US": "GCER 2025: Cover Your Bases",
+      "ja-JP": "GCER 2025：ベースを網羅する"
+    },
+    "GCER 2025 special edition. All circles are now open for business!": {
+      "en-US": "GCER 2025 special edition. All circles are now open for business!",
+      "ja-JP": "GCER 2025のことだ！丸が全部を楽しみにしてください。"
+    },
+    "GCER 2025: Odd Numbers": {
+      "en-US": "GCER 2025: Odd Numbers",
+      "ja-JP": "GCER 2025：奇数"
+    },
+    "GCER 2025 special event. Drive over the odd numbered circles in order, but make sure to avoid the evens!": {
+      "en-US": "GCER 2025 special event. Drive over the odd numbered circles in order, but make sure to avoid the evens!",
+      "ja-JP": "GCER 2025のことだ！奇数の丸運転して、偶数の丸に気をつけてくれ。"
+    },
+    "GCER 2025: Bulldozer Mania": {
+      "en-US": "GCER 2025: Bulldozer Mania",
+      "ja-JP": "GCER 2025：ブルドーザー・マニア"
+    },
+    "GCER 2025 special event. Bring as many cans behind the starting line as you can. Make sure they stay upright!": {
+      "en-US": "GCER 2025 special event. Bring as many cans behind the starting line as you can. Make sure they stay upright!",
+      "ja-JP": "GCER 2025のことだ！スタートボックスに缶を持ってくれ！"
+    },
+    "GCER 2025: Mountain Rescue": {
+      "en-US": "GCER 2025: Mountain Rescue",
+      "ja-JP": "GCER 2025：山岳救助"
+    },
+    "GCER 2025 special event. Now with three more cans to rescue!": {
+      "en-US": "GCER 2025 special event. Now with three more cans to rescue!",
+      "ja-JP": "GCER 2025のことだ！缶は5本がある！"
+    },
+    "Robot Stops at Black Line": {
+      "en-US": "Robot Stops at Black Line",
+      "ja-JP": "ロボットが黒いラインでやめる。"
+    },
+    "Robot stops at black line": {
+      "en-US": "Robot stops at black line",
+      "ja-JP": "ロボットが黒いラインでやめる。"
+    },
+    "Robot Over Circle": {
+      "en-US": "Robot Over Circle",
+      "ja-JP": "丸にあるロボット"
+    },
+    "Robot over selected circle": {
+      "en-US": "Robot over selected circle",
+      "ja-JP": "選んだ丸にあるロボット"
+    },
+    "Robot not in Start Box": {
+      "en-US": "Robot not in Start Box",
+      "ja-JP": "ロボットは"
+    },
+    "Robot not in start box": {
+      "en-US": "Robot not in start box",
+      "ja-JP": "ロボットはスタートボックスにない"
+    },
+    "Can in Start Box": {
+      "en-US": "Can in Start Box",
+      "ja-JP": "缶はスタートボックスにある"
+    },
+    "Can in start box": {
+      "en-US": "Can in start box",
+      "ja-JP": "缶はスタートボックスにある"
+    },
+    "Can Random Upright": {
+      "en-US": "Can Random Upright",
+      "ja-JP": "缶はまっすぐ"
+    },
+    "Can Random upright": {
+      "en-US": "Can Random upright",
+      "ja-JP": "缶はまっすぐ"
+    },
+    "Hamburger placed": {
+      "en-US": "Hamburger placed",
+      "ja-JP": "ハンバーガーを置きた"
+    },
+    "Hamburger placed in tray": {
+      "en-US": "Hamburger placed in tray",
+      "ja-JP": "ハンバーガーがトレーを置きた"
+    },
+    "Hotdog placed": {
+      "en-US": "Hotdog placed",
+      "ja-JP": "ホットドッグを置きた"
+    },
+    "Hotdog placed in tray": {
+      "en-US": "Hotdog placed in tray",
+      "ja-JP": "ホットドッグがトレーを置きた"
+    },
+    "Taco placed": {
+      "en-US": "Taco placed",
+      "ja-JP": "タコを置きた"
+    },
+    "Taco placed in tray": {
+      "en-US": "Taco placed in tray",
+      "ja-JP": "タコがトレーを置きた"
+    },
+    "Can A upright in a circle": {
+      "en-US": "Can A upright in a circle",
+      "ja-JP": "丸の中でA缶はまっすぐ"
+    },
+    "Can B upright in a circle": {
+      "en-US": "Can B upright in a circle",
+      "ja-JP": "丸の中でB缶はまっすぐ"
+    },
+    "Can C upright in a circle": {
+      "en-US": "Can C upright in a circle",
+      "ja-JP": "丸の中でC缶はまっすぐ"
+    },
+    "Can D Upright": {
+      "en-US": "Can D Upright",
+      "ja-JP": "D缶はまっすぐ"
+    },
+    "Can D upright in a circle": {
+      "en-US": "Can D upright in a circle",
+      "ja-JP": "丸の中でD缶はまっすぐ"
+    },
+    "Can E Upright": {
+      "en-US": "Can E Upright",
+      "ja-JP": "E缶はまっすぐ"
+    },
+    "Can E upright in a circle": {
+      "en-US": "Can E upright in a circle",
+      "ja-JP": "丸の中でE缶はまっすぐ"
+    },
+    "Can F Upright": {
+      "en-US": "Can F Upright",
+      "ja-JP": "F缶はまっすぐ"
+    },
+    "Can F upright in a circle": {
+      "en-US": "Can F upright in a circle",
+      "ja-JP": "丸の中でF缶はまっすぐ"
+    },
+    "Can G Upright": {
+      "en-US": "Can G Upright",
+      "ja-JP": "G缶はまっすぐ"
+    },
+    "Can G upright in a circle": {
+      "en-US": "Can G upright in a circle",
+      "ja-JP": "丸の中でG缶はまっすぐ"
+    },
+    "Base A Covered": {
+      "en-US": "Base A Covered",
+      "ja-JP": "Aベースを網羅した"
+    },
+    "Base A covered by a can": {
+      "en-US": "Base A covered by a can",
+      "ja-JP": "缶でAベースを網羅した"
+    },
+    "Base B Covered": {
+      "en-US": "Base B Covered",
+      "ja-JP": "Bベースを網羅した"
+    },
+    "Base B covered by a can": {
+      "en-US": "Base B covered by a can",
+      "ja-JP": "缶でBベースを網羅した"
+    },
+    "Base C Covered": {
+      "en-US": "Base C Covered",
+      "ja-JP": "Cベースを網羅した"
+    },
+    "Base C covered by a can": {
+      "en-US": "Base C covered by a can",
+      "ja-JP": "缶でCベースを網羅した"
+    },
+    "Base D Covered": {
+      "en-US": "Base D Covered",
+      "ja-JP": "Dベースを網羅した"
+    },
+    "Base D covered by a can": {
+      "en-US": "Base D covered by a can",
+      "ja-JP": "缶でDベースを網羅した"
+    },
+    "Base E Covered": {
+      "en-US": "Base E Covered",
+      "ja-JP": "Eベースを網羅した"
+    },
+    "Base E covered by a can": {
+      "en-US": "Base E covered by a can",
+      "ja-JP": "缶でEベースを網羅した"
+    },
+    "Base F Covered": {
+      "en-US": "Base F Covered",
+      "ja-JP": "Fベースを網羅した"
+    },
+    "Base F covered by a can": {
+      "en-US": "Base F covered by a can",
+      "ja-JP": "缶でFベースを網羅した"
+    },
+    "Base G Covered": {
+      "en-US": "Base G Covered",
+      "ja-JP": "Gベースを網羅した"
+    },
+    "Base G covered by a can": {
+      "en-US": "Base G covered by a can",
+      "ja-JP": "缶でGベースを網羅した"
+    },
+    "Can 1 Upright": {
+      "en-US": "Can 1 Upright",
+      "ja-JP": "1缶はまっすぐ"
+    },
+    "Can 1 is upright": {
+      "en-US": "Can 1 is upright",
+      "ja-JP": "1缶はまっすぐ"
+    },
+    "Can 2 Upright": {
+      "en-US": "Can 2 Upright",
+      "ja-JP": "2缶はまっすぐ"
+    },
+    "Can 2 is upright": {
+      "en-US": "Can 2 is upright",
+      "ja-JP": "2缶はまっすぐ"
+    },
+    "Can 3 Upright": {
+      "en-US": "Can 3 Upright",
+      "ja-JP": "3缶はまっすぐ"
+    },
+    "Can 3 is upright": {
+      "en-US": "Can 3 is upright",
+      "ja-JP": "3缶はまっすぐ"
+    },
+    "Can 4 Upright": {
+      "en-US": "Can 4 Upright",
+      "ja-JP": "4缶はまっすぐ"
+    },
+    "Can 4 is upright": {
+      "en-US": "Can 4 is upright",
+      "ja-JP": "4缶はまっすぐ"
+    },
+    "Can 5 Upright": {
+      "en-US": "Can 5 Upright",
+      "ja-JP": "5缶はまっすぐ"
+    },
+    "Can 5 is upright": {
+      "en-US": "Can 5 is upright",
+      "ja-JP": "5缶はまっすぐ"
+    },
+    "Can 1 Intersects": {
+      "en-US": "Can 1 Intersects"
+    },
+    "Can 1 rescued intersecting starting box": {
+      "en-US": "Can 1 rescued intersecting starting box"
+    },
+    "Can 2 Intersects": {
+      "en-US": "Can 2 Intersects"
+    },
+    "Can 2 rescued intersecting starting box": {
+      "en-US": "Can 2 rescued intersecting starting box"
+    },
+    "Can 3 Intersects": {
+      "en-US": "Can 3 Intersects"
+    },
+    "Can 3 rescued intersecting starting box": {
+      "en-US": "Can 3 rescued intersecting starting box"
+    },
+    "Can 4 Intersects": {
+      "en-US": "Can 4 Intersects"
+    },
+    "Can 4 rescued intersecting starting box": {
+      "en-US": "Can 4 rescued intersecting starting box"
+    },
+    "Can 5 Intersects": {
+      "en-US": "Can 5 Intersects"
+    },
+    "Can 5 rescued intersecting starting box": {
+      "en-US": "Can 5 rescued intersecting starting box"
+    },
+    "Warming Station": {
+      "en-US": "Warming Station"
+    },
+    "Blue Cup JBC": {
+      "en-US": "Blue Cup JBC",
+      "ja-JP": "JBC青カップ"
+    },
+    "Green Cup JBC": {
+      "en-US": "Green Cup JBC",
+      "ja-JP": "緑カップ"
+    },
+    "Pink Cup JBC": {
+      "en-US": "Pink Cup JBC",
+      "ja-JP": "ピンクカップ"
+    },
+    "Ask Tutor": {
+      "en-US": "Ask Tutor",
+      "ja-JP": "助手に聞いて"
+    },
+    "Arm": {
+      "en-US": "Arm",
+      "ja-JP": "腕"
+    },
+    "Claw": {
+      "en-US": "Claw",
+      "ja-JP": "手"
+    },
+    "Left wheel": {
+      "en-US": "Left wheel",
+      "ja-JP": "左の車輪"
+    },
+    "Right wheel": {
+      "en-US": "Right wheel",
+      "ja-JP": "右の車輪"
+    },
+    "Rangefinder": {
+      "en-US": "Rangefinder",
+      "ja-JP": "レンジファインダー"
+    },
+    "Reflectance": {
+      "en-US": "Reflectance",
+      "ja-JP": "反射率"
+    },
+    "Limit switch": {
+      "en-US": "Limit switch",
+      "ja-JP": "リミットスイッチ"
+    },
+    "Left touch": {
+      "en-US": "Left touch",
+      "ja-JP": "左のボタン"
+    },
+    "Right touch": {
+      "en-US": "Right touch",
+      "ja-JP": "右のボタン"
+    },
+    "Tutor": {
+      "en-US": "Tutor",
+      "ja-JP": "助手"
     }
   },
   "Volume (box) in the 3D scene": {
@@ -2299,51 +2694,51 @@
     },
     "1st": {
       "en-US": "1st",
-      "ja-JP": "小学校１年生"
+      "ja-JP": "小１年"
     },
     "2nd": {
       "en-US": "2nd",
-      "ja-JP": "小学校２年生"
+      "ja-JP": "小２年"
     },
     "3rd": {
       "en-US": "3rd",
-      "ja-JP": "小学校３年生"
+      "ja-JP": "小３年"
     },
     "4th": {
       "en-US": "4th",
-      "ja-JP": "小学校４年生"
+      "ja-JP": "小４年"
     },
     "5th": {
       "en-US": "5th",
-      "ja-JP": "小学校５年生"
+      "ja-JP": "小５年"
     },
     "6th": {
       "en-US": "6th",
-      "ja-JP": "小学校６年生"
+      "ja-JP": "小６年"
     },
     "7th": {
       "en-US": "7th",
-      "ja-JP": "中学校１年生"
+      "ja-JP": "中１年生"
     },
     "8th": {
       "en-US": "8th",
-      "ja-JP": "中学校２年生"
+      "ja-JP": "中２年生"
     },
     "9th": {
       "en-US": "9th",
-      "ja-JP": "中学校３年生"
+      "ja-JP": "中３年生"
     },
     "10th": {
       "en-US": "10th",
-      "ja-JP": "高校１年生"
+      "ja-JP": "高１年"
     },
     "11th": {
       "en-US": "11th",
-      "ja-JP": "高校２年生"
+      "ja-JP": "高２年"
     },
     "12th": {
       "en-US": "12th",
-      "ja-JP": "高校３年生"
+      "ja-JP": "高３年"
     }
   },
   "Student grade level; Kingergarten": {
