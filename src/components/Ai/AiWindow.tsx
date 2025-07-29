@@ -152,7 +152,7 @@ const AiWindow: React.FC<Props> = ({
   return (
     <AiRoot>
       <Widget
-        name="Tutor"
+        name={LocalizedString.lookup(tr("Tutor"), locale)}
         theme={theme}
         mode={mode}
         style={style}

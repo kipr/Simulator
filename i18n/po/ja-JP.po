@@ -2005,6 +2005,14 @@ msgstr "右のボタン"
 msgid "Tutor"
 msgstr "助手"
 
+msgid ""
+"Ask me questions about programming, get help with your code, or discuss "
+"robotics concepts."
+msgstr "私にプログラミングについて質問して、コードを助け受けて、ロボット工学ことについて車べます。"
+
+msgid "Ask tutor a question..."
+msgstr "助手に質問する"
+
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
 msgstr "変数"

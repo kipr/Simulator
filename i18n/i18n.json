@@ -2563,6 +2563,14 @@
     "Tutor": {
       "en-US": "Tutor",
       "ja-JP": "助手"
+    },
+    "Ask me questions about programming, get help with your code, or discuss robotics concepts.": {
+      "en-US": "Ask me questions about programming, get help with your code, or discuss robotics concepts.",
+      "ja-JP": "私にプログラミングについて質問して、コードを助け受けて、ロボット工学ことについて車べます。"
+    },
+    "Ask tutor a question...": {
+      "en-US": "Ask tutor a question...",
+      "ja-JP": "助手に質問する"
     }
   },
   "Volume (box) in the 3D scene": {

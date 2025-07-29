@@ -2001,6 +2001,14 @@ msgstr ""
 msgid "Tutor"
 msgstr ""
 
+msgid ""
+"Ask me questions about programming, get help with your code, or discuss "
+"robotics concepts."
+msgstr ""
+
+msgid "Ask tutor a question..."
+msgstr ""
+
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
 msgstr ""
