@@ -10,6 +10,8 @@ import { BB2025Templates, BB2025Geometries } from "./2025gameTableTemplates";
 
 // TODO: Consider deep-freezing all of these objects
 
+const DEAULT_FACEUVS = [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(0, 1), RawVector2.create(1, 0), RawVector2.ZERO, RawVector2.ZERO];
+
 const canTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'can',
@@ -18,6 +20,7 @@ const canTemplate: Node.TemplatedNode<Node.Obj> = {
     mass: Mass.grams(5),
     friction: 0.7,
     restitution: 0.3,
+    inertia: [1, 1, 1],
   },
   material: {
     type: 'basic',
@@ -26,7 +29,7 @@ const canTemplate: Node.TemplatedNode<Node.Obj> = {
       uri: '/static/textures/Can_Texture.png'
     },
   },
-  faceUvs: [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(1, 0), RawVector2.create(0, 1), RawVector2.ZERO, RawVector2.ZERO],
+  faceUvs: DEAULT_FACEUVS,
 };
 
 const circleTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -58,7 +61,7 @@ const lifescienceTemplate: Node.TemplatedNode<Node.Obj> = {
       uri: '/static/textures/sciencepack/life_science_pack.png'
     },
   },
-  faceUvs: [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(1, 0), RawVector2.create(0, 1), RawVector2.ZERO, RawVector2.ZERO],
+  faceUvs: DEAULT_FACEUVS,
 };
 
 const radscienceTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -77,7 +80,7 @@ const radscienceTemplate: Node.TemplatedNode<Node.Obj> = {
       uri: '/static/textures/sciencepack/rad_science_pack.png'
     },
   },
-  faceUvs: [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(1, 0), RawVector2.create(0, 1), RawVector2.ZERO, RawVector2.ZERO],
+  faceUvs: DEAULT_FACEUVS,
 };
 
 const noradscienceTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -96,7 +99,7 @@ const noradscienceTemplate: Node.TemplatedNode<Node.Obj> = {
       uri: '/static/textures/sciencepack/no_rad_science_pack.png'
     },
   },
-  faceUvs: [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(1, 0), RawVector2.create(0, 1), RawVector2.ZERO, RawVector2.ZERO],
+  faceUvs: DEAULT_FACEUVS,
 };
 
 const reamTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -113,6 +116,25 @@ const reamTemplate: Node.TemplatedNode<Node.Obj> = {
     color: {
       type: 'color3',
       color: Color.Rgb.create(250, 250, 250),
+    },
+  },
+};
+
+const warmingTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'ream',
+  physics: {
+    type: 'box',
+    motionType: PhysicsMotionType.STATIC,
+    restitution: .3,
+    friction: 1,
+    mass: Mass.pounds(5),
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'color3',
+      color: Color.Rgb.create(160, 95, 20),
     },
   },
 };
@@ -327,6 +349,29 @@ const habitatControlTemplate: Node.TemplatedNode<Node.Obj> = {
   },
 };
 
+const JBC_CUP_PHYSICS: Node.Physics = {
+  type: 'none',
+  restitution: .20,
+  friction: 1,
+  mass: Mass.grams(300),
+  inertia: [50, 50, 50],
+};
+const jbcCupBlueTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'jbc_cup_blue',
+  physics: JBC_CUP_PHYSICS
+};
+const jbcCupGreenTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'jbc_cup_green',
+  physics: JBC_CUP_PHYSICS
+};
+const jbcCupPinkTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'jbc_cup_pink',
+  physics: JBC_CUP_PHYSICS
+};
+
 export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'can': canTemplate,
   'circle': circleTemplate,
@@ -335,6 +380,7 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'radscience': radscienceTemplate,
   'noradscience': noradscienceTemplate,
   'ream': reamTemplate,
+  'warming_station': warmingTemplate,
   'matA': matATemplate,
   'matB': matBTemplate,
   'basalt': basaltTemplate,
@@ -349,6 +395,9 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'habitat': habitatTemplate,
   'research_habitat': habitatResearchTemplate,
   'control_habitat': habitatControlTemplate,
+  'jbc_cup_blue': jbcCupBlueTemplate,
+  'jbc_cup_green': jbcCupGreenTemplate,
+  'jbc_cup_pink': jbcCupPinkTemplate,
   ...BB2025Templates,
 });
 
@@ -457,6 +506,18 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   'control_habitat': {
     type: 'file',
     uri: '/static/object_binaries/com_hab.glb'
+  },
+  'jbc_cup_blue': {
+    type: 'file',
+    uri: '/static/object_binaries/jbc_cup_blue.glb'
+  },
+  'jbc_cup_green': {
+    type: 'file',
+    uri: '/static/object_binaries/jbc_cup_green.glb'
+  },
+  'jbc_cup_pink': {
+    type: 'file',
+    uri: '/static/object_binaries/jbc_cup_pink.glb'
   },
   ...BB2025Geometries,
 });

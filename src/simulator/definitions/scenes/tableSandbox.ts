@@ -14,7 +14,6 @@ import { createBaseSceneSurface } from './tableBase';
 import { sprintf } from 'sprintf-js';
 
 import tr from '@i18n';
-import { Ref } from 'react';
 
 const baseScene = createBaseSceneSurface();
 
@@ -22,80 +21,63 @@ const WARMING_X = 9;
 
 const HAMBURGER_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(WARMING_X, 24, 114),
-  orientation: RotationwUnits.eulerDegrees(0, 45, 0),
-  scale: { x: 100, y: 100, z: 100 }
 };
 
 const HOTDOG_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(WARMING_X, 24, 102.5),
   orientation: RotationwUnits.eulerDegrees(0, 90, 0),
-  scale: { x: 100, y: 100, z: 100 }
 };
 
 const TACO_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(WARMING_X, 25, 93),
   orientation: RotationwUnits.eulerDegrees(-60, 0, 0),
-  scale: { x: 100, y: 100, z: 100 }
 };
 
 const CUP_X = 8;
 const CUP_Y = 6;
 const CUP_PINK_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(CUP_X, CUP_Y, 114.5),
-  scale: { x: 100, y: 100, z: 100 }
 };
 
 const CUP_BLUE_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(CUP_X, CUP_Y, 102.5),
-  scale: { x: 100, y: 100, z: 100 }
 };
 
 const CUP_GREEN_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(CUP_X, CUP_Y, 91),
-  scale: { x: 100, y: 100, z: 100 }
 };
 
 const POM_Y = 4;
 const POM_BLUE_ORIGINS_BACK: ReferenceFramewUnits[] = [
   {
     position: Vector3wUnits.centimeters(18, POM_Y, 53),
-    scale: { x: 100, y: 100, z: 100 },
   },
   {
     position: Vector3wUnits.centimeters(18, POM_Y, 43),
-    scale: { x: 100, y: 100, z: 100 },
   },
   {
     position: Vector3wUnits.centimeters(23, POM_Y, 53),
-    scale: { x: 100, y: 100, z: 100 },
   },
   {
     position: Vector3wUnits.centimeters(23, POM_Y, 43),
-    scale: { x: 100, y: 100, z: 100 },
   },
   {
     position: Vector3wUnits.centimeters(28, POM_Y, 53),
-    scale: { x: 100, y: 100, z: 100 },
   },
   {
     position: Vector3wUnits.centimeters(28, POM_Y, 43),
-    scale: { x: 100, y: 100, z: 100 },
   },
   {
     position: Vector3wUnits.centimeters(15.5, POM_Y, 48),
-    scale: { x: 100, y: 100, z: 100 },
   },
   {
     position: Vector3wUnits.centimeters(20.5, POM_Y, 48),
-    scale: { x: 100, y: 100, z: 100 },
   },
   {
     position: Vector3wUnits.centimeters(25.5, POM_Y, 48),
-    scale: { x: 100, y: 100, z: 100 },
   },
   {
     position: Vector3wUnits.centimeters(30.5, POM_Y, 48),
-    scale: { x: 100, y: 100, z: 100 },
   },
 ];
 
@@ -110,27 +92,21 @@ const BOTTLE_Y = 7;
 const BOTTLE_ORIGINS: ReferenceFramewUnits[] = [
   {
     position: Vector3wUnits.centimeters(29.5, BOTTLE_Y, 33.4),
-    scale: { x: 100, y: 100, z: 100 }
   },
   {
     position: Vector3wUnits.centimeters(29.5, BOTTLE_Y, 26.3),
-    scale: { x: 100, y: 100, z: 100 }
   },
   {
     position: Vector3wUnits.centimeters(29.5, BOTTLE_Y, 19.2),
-    scale: { x: 100, y: 100, z: 100 }
   },
   {
     position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 33.4),
-    scale: { x: 100, y: 100, z: 100 }
   },
   {
     position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 26.3),
-    scale: { x: 100, y: 100, z: 100 }
   },
   {
     position: Vector3wUnits.centimeters(22.4, BOTTLE_Y, 19.2),
-    scale: { x: 100, y: 100, z: 100 }
   },
 ];
 
@@ -138,88 +114,71 @@ const CENTER_LINE_X = 65.5;
 const POM_RED_ORIGINS: ReferenceFramewUnits[] = [
   {
     position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 0),
-    scale: { x: 100, y: 100, z: 100 },
   },
   {
     position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 45.72),
-    scale: { x: 100, y: 100, z: 100 },
   },
   {
     position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, -45.72),
-    scale: { x: 100, y: 100, z: 100 },
   },
 ];
 const POM_ORANGE_ORIGINS: ReferenceFramewUnits[] = [
   {
     position: Vector3wUnits.centimeters(CENTER_LINE_X - 11.43, POM_Y, 0),
-    scale: { x: 100, y: 100, z: 100 },
   },
   {
     position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, -15.24),
-    scale: { x: 100, y: 100, z: 100 },
   },
   {
     position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 30.48),
-    scale: { x: 100, y: 100, z: 100 },
   },
 ];
 const POM_YELLOW_ORIGINS: ReferenceFramewUnits[] = [
   {
     position: Vector3wUnits.centimeters(CENTER_LINE_X - (2 * 11.43), POM_Y, 0),
-    scale: { x: 100, y: 100, z: 100 },
   },
   {
     position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, 15.24),
-    scale: { x: 100, y: 100, z: 100 },
   },
   {
     position: Vector3wUnits.centimeters(CENTER_LINE_X, POM_Y, -30.48),
-    scale: { x: 100, y: 100, z: 100 },
   },
 ];
 
 const TOMATO_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(29, 4, -14.3891),
-  scale: { x: 100, y: 100, z: 100 },
 };
 
 const PICKLE_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(27, 2, -25.8191),
   orientation: RotationwUnits.eulerDegrees(0, 90, 0),
-  scale: { x: 100, y: 100, z: 100 },
 };
 
 const POTATO_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(35, 10, -85),
-  scale: { x: 100, y: 100, z: 100 },
+  orientation: RotationwUnits.eulerDegrees(-90, 180, 0),
 };
 
 const FRY_ORIGINS: ReferenceFramewUnits[] = [
   {
     position: Vector3wUnits.centimeters(115, 21, -87),
-    scale: { x: 100, y: 100, z: 100 }
   },
   {
     position: Vector3wUnits.centimeters(115, 21, -88),
-    scale: { x: 100, y: 100, z: 100 }
   },
   {
     position: Vector3wUnits.centimeters(115, 21, -89),
-    scale: { x: 100, y: 100, z: 100 }
   },
   {
     position: Vector3wUnits.centimeters(115, 22.5, -87.5),
-    scale: { x: 100, y: 100, z: 100 }
   },
   {
     position: Vector3wUnits.centimeters(115, 22.5, -88.5),
-    scale: { x: 100, y: 100, z: 100 }
   },
 ];
 
 const BOTGUY_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(-4, 24, -3),
-  scale: { x: 100, y: 100, z: 100 },
 };
 
 
@@ -360,18 +319,17 @@ const POMS_RANDOM: Dict<Node.FromBBTemplate> = {};
 const choices = ['pom_red', 'pom_red', 'pom_red', 'pom_orange', 'pom_orange', 'pom_orange', 'pom_yellow', 'pom_yellow', 'pom_yellow'];
 for (let i = 0; i < 9; i++) {
   const n = Math.floor(Math.random() * choices.length);
-  const robot = choices[n];
+  const choice = choices[n];
   choices.splice(n, 1);
 
   const pos = {
     position: Vector3wUnits.centimeters(91, POM_Y, (-45.72 + 11.43 * i)),
-    scale: { x: 100, y: 100, z: 100 },
   };
 
   POMS_RANDOM[`pom_random${i}`] = {
     type: 'from-bb-template',
     name: Dict.map(tr('Random pom #%d'), (str: string) => sprintf(str, i)),
-    templateId: robot,
+    templateId: choice,
     visible: true,
     editable: true,
     startingOrigin: pos,
@@ -427,7 +385,6 @@ for (let i = 0; i < 6; i++) {
   const pos = {
     position: Vector3wUnits.centimeters(107.5, 3, (19.7 - 13.45 * i)),
     orientation: RotationwUnits.eulerDegrees(0, 90, 0),
-    scale: { x: 100, y: 100, z: 100 },
   };
 
   TRAYS[`tray${i}`] = {
@@ -456,7 +413,6 @@ for (let i = 0; i < 5; i++) {
   const pos: ReferenceFramewUnits = {
     position: Vector3wUnits.centimeters(18.6, 2.54 + (5.17 * i), -102.55),
     orientation: RotationwUnits.eulerDegrees(0, 45, 0),
-    scale: { x: 100, y: 100, z: 100 }
   };
   DRINKS_BLUE[`drink_blue${i}`] = {
     type: 'from-bb-template',
@@ -474,7 +430,6 @@ for (let i = 0; i < 5; i++) {
   const pos: ReferenceFramewUnits = {
     position: Vector3wUnits.centimeters(0.4, 2.54 + (5.17 * i), 71.252),
     orientation: RotationwUnits.eulerDegrees(0, 45, 0),
-    scale: { x: 100, y: 100, z: 100 }
   };
   DRINKS_GREEN[`drink_green${i}`] = {
     type: 'from-bb-template',
@@ -492,7 +447,6 @@ for (let i = 0; i < 5; i++) {
   const pos: ReferenceFramewUnits = {
     position: Vector3wUnits.centimeters(0.4, 2.54 + (5.17 * i), -71.4),
     orientation: RotationwUnits.eulerDegrees(0, 45, 0),
-    scale: { x: 100, y: 100, z: 100 }
   };
   DRINKS_PINK[`drink_pink${i}`] = {
     type: 'from-bb-template',

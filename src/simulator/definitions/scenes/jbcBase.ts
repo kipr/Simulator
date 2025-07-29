@@ -150,8 +150,8 @@ export function createBaseSceneSurfaceB(): Scene {
         type: 'box',
         size: {
           x: Distance.meters(3.54),
-          y: Distance.meters(3.54),
-          z: Distance.meters(0.01),
+          y: Distance.meters(0.01),
+          z: Distance.meters(3.54),
         },
       },
     },
@@ -227,7 +227,6 @@ export function createBaseSceneSurfaceB(): Scene {
 export function createCanNode(canNumber: number, canPosition?: Vector3wUnits, editable?: boolean, visible?: boolean): Node {
   const origin: ReferenceFramewUnits = {
     position: canPosition ?? canPositions[canNumber - 1],
-    orientation: RotationwUnits.eulerDegrees(180, 0, 0),
   };
 
   return {

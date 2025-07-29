@@ -155,10 +155,9 @@ namespace LocalizedString {
   export const validate = (locale: string): Language => {
     if (langs.includes(locale)) {
       return locale as Language;
-    } else {
-      return null;
     }
-  }
+    return null;
+  };
 
   export const lookup = (localizedString: LocalizedString, locale: Language) => {
     let currentLocale = locale;

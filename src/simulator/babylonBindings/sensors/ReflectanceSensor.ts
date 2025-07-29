@@ -36,6 +36,7 @@ class ReflectanceSensor extends SensorObject<Node.ReflectanceSensor, number> {
       ],
     }, scene);
     this.trace_.visibility = 1;
+    this.trace_.isPickable = false;
 
     ReferenceFramewUnits.syncBabylon(origin, this.trace_, 'meters');
     this.trace_.parent = parent;
