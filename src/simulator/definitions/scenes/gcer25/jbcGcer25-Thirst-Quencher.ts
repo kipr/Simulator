@@ -3,6 +3,8 @@ import Script from '../../../../state/State/Scene/Script';
 import { Color } from '../../../../state/State/Scene/Color';
 import { Distance } from '../../../../util';
 import { createBaseSceneSurfaceA, canPositions } from '../jbcBase';
+import Dict from '../../../../util/objectOps/Dict';
+import { sprintf } from 'sprintf-js';
 
 import tr from '@i18n';
 
@@ -39,7 +41,7 @@ scene.addOnIntersectionListener('cup${i}', (type, otherNodeId) => {
   };
   CUPS[`cup${i}`] = {
     type: 'from-jbc-template',
-    name: tr(`Cup #${n + 1}`),
+    name: Dict.map(tr('Cup #%d'), (str: string) => sprintf(str, n + i)),
     templateId: cups[Math.floor(Math.random() * cups.length)],
     visible: true,
     editable: false,
