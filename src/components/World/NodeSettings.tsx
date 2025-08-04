@@ -195,8 +195,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
       ComboBox.option(LocalizedString.lookup(tr('Tray'), locale), 'tray'),
       ComboBox.option(LocalizedString.lookup(tr('Botguy'), locale), 'botguy_gamepiece'),
     ];
-
-    // If the new type is from a template, set the template ID to a default value
+    const ALL_TEMPLATE_OPTIONS = JBC_TEMPLATE_OPTIONS.concat(ROCK_TEMPLATE_OPTIONS, SPACE_TEMPLATE_OPTIONS, BB_TEMPLATE_OPTIONS);
 
     // If the new type is from a template, set the template ID to a default value
     if (transmutedNode.type === 'from-jbc-template') {
@@ -226,6 +225,14 @@ class NodeSettings extends React.PureComponent<Props, State> {
     }
     if (transmutedNode.type === 'from-bb-template') {
       const defaultTemplateId = BB_TEMPLATE_OPTIONS[0].data as string;
+
+      transmutedNode = {
+        ...transmutedNode,
+        templateId: defaultTemplateId,
+      };
+    }
+    if (transmutedNode.type === 'all') {
+      const defaultTemplateId = ALL_TEMPLATE_OPTIONS[0].data as string;
 
       transmutedNode = {
         ...transmutedNode,
@@ -634,6 +641,19 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const { node } = props;
 
     if (node.type !== 'from-bb-template') return;
+
+    const templateId = option.data as string;
+
+    this.props.onNodeChange({
+      ...node,
+      templateId
+    });
+  };
+  private onAllSelect_ = (index: number, option: ComboBox.Option) => {
+    const { props } = this;
+    const { node } = props;
+
+    if (node.type !== 'all') return;
 
     const templateId = option.data as string;
 
@@ -1066,6 +1086,8 @@ class NodeSettings extends React.PureComponent<Props, State> {
       ComboBox.option(LocalizedString.lookup(tr('Radiation Science Pack - High'), locale), 'radscience'),
     ];
 
+    const ALL_TEMPLATE_OPTIONS = JBC_TEMPLATE_OPTIONS.concat(ROCK_TEMPLATE_OPTIONS, SPACE_TEMPLATE_OPTIONS, BB_TEMPLATE_OPTIONS, RADIATION_TEMPLATE_OPTIONS);
+
     const JBC_TEMPLATE_REVERSE_OPTIONS: Dict<number> = JBC_TEMPLATE_OPTIONS.reduce((dict, option, i) => {
       dict[option.data as string] = i;
       return dict;
@@ -1086,6 +1108,10 @@ class NodeSettings extends React.PureComponent<Props, State> {
     }, {});
 
     const RADIATION_TEMPLATE_REVERSE_OPTIONS: Dict<number> = RADIATION_TEMPLATE_OPTIONS.reduce((dict, option, i) => {
+      dict[option.data as string] = i;
+      return dict;
+    }, {});
+    const ALL_TEMPLATE_REVERSE_OPTIONS: Dict<number> = ALL_TEMPLATE_OPTIONS.reduce((dict, option, i) => {
       dict[option.data as string] = i;
       return dict;
     }, {});
@@ -1258,6 +1284,16 @@ class NodeSettings extends React.PureComponent<Props, State> {
                 theme={theme}
                 index={BB_TEMPLATE_REVERSE_OPTIONS[node.templateId]}
                 onSelect={this.onBBTemplateSelect_}
+              />
+            </StyledField>
+          )}
+          {node.type === 'all' && (
+            <StyledField name={LocalizedString.lookup(tr('Item'), locale)} theme={theme} long>
+              <ComboBox
+                options={ALL_TEMPLATE_OPTIONS}
+                theme={theme}
+                index={ALL_TEMPLATE_REVERSE_OPTIONS[node.templateId]}
+                onSelect={this.onAllSelect_}
               />
             </StyledField>
           )}

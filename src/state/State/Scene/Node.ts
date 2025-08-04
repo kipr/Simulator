@@ -26,7 +26,7 @@ namespace Node {
 
     /**
      * What shape will simulate the physics for the object:
-     * box, sphere, cylinder, mesh, or none. 
+     * box, sphere, cylinder, mesh, or none.
      */
     type: Physics.Type;
 
@@ -575,6 +575,39 @@ namespace Node {
     };
   }
 
+  /**
+   * This type is only intended to be used as a generic transitory type on the
+   * way to a real type.
+   */
+  export interface All extends Base {
+    type: 'all';
+    templateId: string;
+    parentId?: string;
+  }
+
+  export namespace All {
+    export const NIL: All = {
+      type: 'all',
+      ...Base.NIL,
+      templateId: '',
+    };
+
+    export const from = <T extends Base>(t: T): All => ({
+      ...NIL,
+      ...Base.upcast(t),
+    });
+
+    export const diff = (prev: All, next: All): Patch<All> => {
+      if (deepNeq(prev, next)) return Patch.none(prev);
+
+      return Patch.innerChange(prev, next, {
+        type: Patch.none(prev.type),
+        templateId: Patch.diff(prev.templateId, next.templateId),
+        ...Base.partialDiff(prev, next),
+      });
+    };
+  }
+
   export const diff = (prev: Node, next: Node): Patch<Node> => {
     if (prev.type !== next.type) return Patch.outerChange(prev, next);
 
@@ -605,6 +638,7 @@ namespace Node {
       case 'from-space-template': return FromSpaceTemplate.from(node);
       case 'from-bb-template': return FromBBTemplate.from(node);
       case 'robot': return Robot.from(node);
+      case 'all': return All.from(node);
     }
   };
 
@@ -625,7 +659,8 @@ type Node = (
   Node.FromRockTemplate |
   Node.FromSpaceTemplate |
   Node.FromBBTemplate |
-  Node.Robot
+  Node.Robot |
+  Node.All
 );
 
 export default Node;
