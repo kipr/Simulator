@@ -42,7 +42,9 @@ const DropDown = styled('div', (props: ThemeProps) => ({
   borderRight: `1px solid ${props.theme.borderColor}`,
   borderBottom: `1px solid ${props.theme.borderColor}`,
   backgroundColor: Color.toCss(Color.Rgb.darken(Color.Rgb.fromHex(props.theme.backgroundColor), 0.1)),
-  zIndex: -111
+  zIndex: -111,
+  maxHeight: 'min(30%, 300px)',
+  overflowY: 'scroll',
 }));
 
 const DropIcon = styled(FontAwesome, {
@@ -140,10 +142,10 @@ class ComboBox extends React.PureComponent<ComboBox.Props, ComboBox.State> {
     const { options, index, style, className, theme, minimal, widthTweak } = props;
     const { focus } = state;
 
-    
+
 
     let dropDownStyle: React.CSSProperties;
-    
+
     if (this.ref_ && focus) {
       const refStyle = window.getComputedStyle(this.ref_);
       const box = Rectangle.fromBoundingRect(this.ref_.getBoundingClientRect());
@@ -179,7 +181,7 @@ class ComboBox extends React.PureComponent<ComboBox.Props, ComboBox.State> {
             ))}
           </DropDown>
           : null
-        , COMBO_BOX_ROOT)}
+          , COMBO_BOX_ROOT)}
       </Container>
     );
   }
