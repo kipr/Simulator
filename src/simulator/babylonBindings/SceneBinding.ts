@@ -248,6 +248,7 @@ class SceneBinding {
         ...node,
         ...nodeTemplate,
       };
+      console.log(nodeToCreate);
     }
 
     for (const scriptId of nodeToCreate.scriptIds || []) this.scriptManager_.bind(scriptId, id);
@@ -259,7 +260,6 @@ class SceneBinding {
 
         ret = await createObject(nodeToCreate, nextScene, parent, this.bScene_);
         break;
-
       }
       case 'empty': {
         const parent = this.findBNode_(nodeToCreate.parentId, true);

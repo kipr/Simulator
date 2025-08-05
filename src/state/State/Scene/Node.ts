@@ -621,6 +621,7 @@ namespace Node {
       case 'from-rock-template': return FromRockTemplate.diff(prev, next as FromRockTemplate);
       case 'from-space-template': return FromSpaceTemplate.diff(prev, next as FromSpaceTemplate);
       case 'from-bb-template': return FromBBTemplate.diff(prev, next as FromBBTemplate);
+      case 'all': return All.diff(prev, next as All);
       case 'robot': return Robot.diff(prev, next as Robot);
     }
   };

@@ -27,6 +27,63 @@ import Async from '../../state/State/Async';
 
 import tr from '@i18n';
 
+const TEMPLATES = {
+  JBC: [
+    ['MatB', 'matB'],
+    ['MatA', 'matA'],
+    ['Can', 'can'],
+    ['Paper Ream', 'ream'],
+    ['Warming Station', 'warming_station'],
+    ['Blue Cup JBC', 'jbc_cup_blue'],
+    ['Green Cup JBC', 'jbc_cup_green'],
+    ['Pink Cup JBC', 'jbc_cup_pink'],
+  ],
+  ROCK: [
+    ['Basalt Rock', 'basalt'],
+    ['Anorthosite Rock', 'anorthosite'],
+    ['Breccia Rock', 'breccia'],
+    ['Meteorite Rock', 'meteorite'],
+  ],
+  SPACE: [
+    ['Communication Tower', 'tower'],
+    // ['Hab', 'hab'],
+    ['Science Pad', 'sciencepad'],
+    ['Life Science Pack', 'lifescience'],
+    ['Radiation Science Pack', 'radscience'],
+    ['Communication Tower 2', 'comstower'],
+    ['Hab', 'habitat'],
+    ['Walkway', 'walkway'],
+    ['Solar Panel', 'solarpanel'],
+    ['BotGuy Astronaut', 'botguy'],
+  ],
+  BB: [
+    ['Blue Drink', 'drink_blue'],
+    ['Green Drink', 'drink_green'],
+    ['Pink Drink', 'drink_pink'],
+    ['Blue Pom (Ice Cube)', 'pom_blue'],
+    ['Orange Pom (Hot Sauce)', 'pom_orange'],
+    ['Red Pom (Ketchup)', 'pom_red'],
+    ['Yellow Pom (Mustard)', 'pom_yellow'],
+    ['French Fry', 'french_fry'],
+    ['Hamburger', 'hamburger'],
+    ['Hotdog', 'hotdog'],
+    ['Taco', 'taco'],
+    ['Blue Cup', 'cup_blue'],
+    ['Green Cup', 'cup_green'],
+    ['Pink Cup', 'cup_pink'],
+    ['Bottle', 'bottle'],
+    ['Pickle', 'pickle'],
+    ['Tomato', 'tomato'],
+    ['Potato', 'potato'],
+    ['Tray', 'tray'],
+    ['Botguy', 'botguy_gamepiece'],
+  ],
+  RADIATION: [
+    ['Radiation Science Pack - Low', 'noradscience'],
+    ['Radiation Science Pack - High', 'radscience'],
+  ],
+}
+
 export interface NodeSettingsPublicProps extends ThemeProps {
   onNodeChange: (node: Node) => void;
   onNodeOriginChange: (origin: ReferenceFramewUnits) => void;
@@ -145,56 +202,10 @@ class NodeSettings extends React.PureComponent<Props, State> {
 
     let transmutedNode = Node.transmute(node, selectedType);
 
-    const JBC_TEMPLATE_OPTIONS: ComboBox.Option[] = [
-      ComboBox.option(LocalizedString.lookup(tr('MatB'), locale), 'matB'),
-      ComboBox.option(LocalizedString.lookup(tr('MatA'), locale), 'matA'),
-      ComboBox.option(LocalizedString.lookup(tr('Can'), locale), 'can'),
-      ComboBox.option(LocalizedString.lookup(tr('Paper Ream'), locale), 'ream'),
-      ComboBox.option(LocalizedString.lookup(tr('Warming Station'), locale), 'warming_station'),
-      ComboBox.option(LocalizedString.lookup(tr('Blue Cup JBC'), locale), 'jbc_cup_blue'),
-      ComboBox.option(LocalizedString.lookup(tr('Green Cup JBC'), locale), 'jbc_cup_green'),
-      ComboBox.option(LocalizedString.lookup(tr('Pink Cup JBC'), locale), 'jbc_cup_pink'),
-    ];
-    const ROCK_TEMPLATE_OPTIONS: ComboBox.Option[] = [
-      ComboBox.option(LocalizedString.lookup(tr('Basalt Rock'), locale), 'basalt'),
-      ComboBox.option(LocalizedString.lookup(tr('Anorthosite Rock'), locale), 'anorthosite'),
-      ComboBox.option(LocalizedString.lookup(tr('Breccia Rock'), locale), 'breccia'),
-      ComboBox.option(LocalizedString.lookup(tr('Meteorite Rock'), locale), 'meteorite'),
-    ];
-    const SPACE_TEMPLATE_OPTIONS: ComboBox.Option[] = [
-      ComboBox.option(LocalizedString.lookup(tr('Communication Tower'), locale), 'tower'),
-      ComboBox.option(LocalizedString.lookup(tr('Hab'), locale), 'hab'),
-      ComboBox.option(LocalizedString.lookup(tr('Science Pad'), locale), 'sciencepad'),
-      ComboBox.option(LocalizedString.lookup(tr('Life Science Pack'), locale), 'lifescience'),
-      ComboBox.option(LocalizedString.lookup(tr('Radiation Science Pack'), locale), 'radscience'),
-      ComboBox.option(LocalizedString.lookup(tr('Communication Tower 2'), locale), 'comstower'),
-      ComboBox.option(LocalizedString.lookup(tr('Hab 2'), locale), 'habitat'),
-      ComboBox.option(LocalizedString.lookup(tr('Walkway'), locale), 'walkway'),
-      ComboBox.option(LocalizedString.lookup(tr('Solar Panel'), locale), 'solarpanel'),
-      ComboBox.option(LocalizedString.lookup(tr('BotGuy Astronaut'), locale), 'botguy'),
-    ];
-    const BB_TEMPLATE_OPTIONS: ComboBox.Option[] = [
-      ComboBox.option(LocalizedString.lookup(tr('Blue Drink'), locale), 'drink_blue'),
-      ComboBox.option(LocalizedString.lookup(tr('Green Drink'), locale), 'drink_green'),
-      ComboBox.option(LocalizedString.lookup(tr('Pink Drink'), locale), 'drink_pink'),
-      ComboBox.option(LocalizedString.lookup(tr('Blue Pom (Ice Cube)'), locale), 'pom_blue'),
-      ComboBox.option(LocalizedString.lookup(tr('Orange Pom (Hot Sauce)'), locale), 'pom_orange'),
-      ComboBox.option(LocalizedString.lookup(tr('Red Pom (Ketchup)'), locale), 'pom_red'),
-      ComboBox.option(LocalizedString.lookup(tr('Yellow Pom (Mustard)'), locale), 'pom_yellow'),
-      ComboBox.option(LocalizedString.lookup(tr('French Fry'), locale), 'french_fry'),
-      ComboBox.option(LocalizedString.lookup(tr('Hamburger'), locale), 'hamburger'),
-      ComboBox.option(LocalizedString.lookup(tr('Hotdog'), locale), 'hotdog'),
-      ComboBox.option(LocalizedString.lookup(tr('Taco'), locale), 'taco'),
-      ComboBox.option(LocalizedString.lookup(tr('Blue Cup'), locale), 'cup_blue'),
-      ComboBox.option(LocalizedString.lookup(tr('Green Cup'), locale), 'cup_green'),
-      ComboBox.option(LocalizedString.lookup(tr('Pink Cup'), locale), 'cup_pink'),
-      ComboBox.option(LocalizedString.lookup(tr('Bottle'), locale), 'bottle'),
-      ComboBox.option(LocalizedString.lookup(tr('Pickle'), locale), 'pickle'),
-      ComboBox.option(LocalizedString.lookup(tr('Tomato'), locale), 'tomato'),
-      ComboBox.option(LocalizedString.lookup(tr('Potato'), locale), 'potato'),
-      ComboBox.option(LocalizedString.lookup(tr('Tray'), locale), 'tray'),
-      ComboBox.option(LocalizedString.lookup(tr('Botguy'), locale), 'botguy_gamepiece'),
-    ];
+    const JBC_TEMPLATE_OPTIONS = TEMPLATES.JBC.map((t) => ComboBox.option(LocalizedString.lookup(tr(t[0]), locale), t[1]));
+    const ROCK_TEMPLATE_OPTIONS = TEMPLATES.ROCK.map((t) => ComboBox.option(LocalizedString.lookup(tr(t[0]), locale), t[1]));
+    const SPACE_TEMPLATE_OPTIONS = TEMPLATES.SPACE.map((t) => ComboBox.option(LocalizedString.lookup(tr(t[0]), locale), t[1]));
+    const BB_TEMPLATE_OPTIONS = TEMPLATES.BB.map((t) => ComboBox.option(LocalizedString.lookup(tr(t[0]), locale), t[1]));
     const ALL_TEMPLATE_OPTIONS = JBC_TEMPLATE_OPTIONS.concat(ROCK_TEMPLATE_OPTIONS, SPACE_TEMPLATE_OPTIONS, BB_TEMPLATE_OPTIONS);
 
     // If the new type is from a template, set the template ID to a default value
@@ -649,18 +660,50 @@ class NodeSettings extends React.PureComponent<Props, State> {
       templateId
     });
   };
+  private includes2d(array: string[][], searchElement: string) {
+    for (const e of array) {
+      if (e.includes(searchElement)) return true;
+    }
+    return false;
+  }
   private onAllSelect_ = (index: number, option: ComboBox.Option) => {
     const { props } = this;
     const { node } = props;
 
+    console.log(option);
     if (node.type !== 'all') return;
 
     const templateId = option.data as string;
-
-    this.props.onNodeChange({
-      ...node,
-      templateId
-    });
+    if (this.includes2d(TEMPLATES.JBC, templateId)) {
+      this.props.onNodeChange({
+        ...Node.transmute(node, 'from-jbc-template'),
+        type: 'from-jbc-template',
+        templateId
+      });
+    } else if (this.includes2d(TEMPLATES.ROCK, templateId)) {
+      this.props.onNodeChange({
+        ...Node.transmute(node, 'from-rock-template'),
+        type: 'from-rock-template',
+        templateId
+      });
+    } else if (this.includes2d(TEMPLATES.SPACE, templateId)) {
+      this.props.onNodeChange({
+        ...Node.transmute(node, 'from-space-template'),
+        type: 'from-space-template',
+        templateId
+      });
+    } else if (this.includes2d(TEMPLATES.BB, templateId)) {
+      this.props.onNodeChange({
+        ...Node.transmute(node, 'from-bb-template'),
+        type: 'from-bb-template',
+        templateId
+      });
+    } else {
+      this.props.onNodeChange({
+        ...node,
+        templateId
+      });
+    }
   };
   private onCollapsedChange_ = (key: string) => (collapsed: boolean) => {
     this.setState({
@@ -1026,65 +1069,11 @@ class NodeSettings extends React.PureComponent<Props, State> {
     }, {});
 
 
-    const JBC_TEMPLATE_OPTIONS: ComboBox.Option[] = [
-      ComboBox.option(LocalizedString.lookup(tr('MatB'), locale), 'matB'),
-      ComboBox.option(LocalizedString.lookup(tr('MatA'), locale), 'matA'),
-      ComboBox.option(LocalizedString.lookup(tr('Can'), locale), 'can'),
-      ComboBox.option(LocalizedString.lookup(tr('Paper Ream'), locale), 'ream'),
-      ComboBox.option(LocalizedString.lookup(tr('Warming Station'), locale), 'warming_station'),
-      ComboBox.option(LocalizedString.lookup(tr('Blue Cup JBC'), locale), 'jbc_cup_blue'),
-      ComboBox.option(LocalizedString.lookup(tr('Green Cup JBC'), locale), 'jbc_cup_green'),
-      ComboBox.option(LocalizedString.lookup(tr('Pink Cup JBC'), locale), 'jbc_cup_pink'),
-    ];
-    const ROCK_TEMPLATE_OPTIONS: ComboBox.Option[] = [
-      ComboBox.option(LocalizedString.lookup(tr('Basalt Rock'), locale), 'basalt'),
-      ComboBox.option(LocalizedString.lookup(tr('Anorthosite Rock'), locale), 'anorthosite'),
-      ComboBox.option(LocalizedString.lookup(tr('Breccia Rock'), locale), 'breccia'),
-      ComboBox.option(LocalizedString.lookup(tr('Meteorite Rock'), locale), 'meteorite'),
-    ];
-    const SPACE_TEMPLATE_OPTIONS: ComboBox.Option[] = [
-      ComboBox.option(LocalizedString.lookup(tr('Communication Tower'), locale), 'tower'),
-      ComboBox.option(LocalizedString.lookup(tr('Hab'), locale), 'hab'),
-      ComboBox.option(LocalizedString.lookup(tr('Life Science Pack'), locale), 'lifescience'),
-      ComboBox.option(LocalizedString.lookup(tr('Radiation Science Pack'), locale), 'radscience'),
-      ComboBox.option(LocalizedString.lookup(tr('Radiation Science Pack'), locale), 'noradscience'),
-      ComboBox.option(LocalizedString.lookup(tr('Communication Tower 2'), locale), 'commstower'),
-      ComboBox.option(LocalizedString.lookup(tr('Science Pad'), locale), 'sciencepad'),
-      ComboBox.option(LocalizedString.lookup(tr('Living Habitat'), locale), 'habitat'),
-      ComboBox.option(LocalizedString.lookup(tr('Research Habitat'), locale), 'research_habitat'),
-      ComboBox.option(LocalizedString.lookup(tr('Controls Habitat'), locale), 'control_habitat'),
-      ComboBox.option(LocalizedString.lookup(tr('Walkway'), locale), 'walkway'),
-      ComboBox.option(LocalizedString.lookup(tr('Solar Panel'), locale), 'solarpanel'),
-      ComboBox.option(LocalizedString.lookup(tr('BotGuy Astronaut'), locale), 'botguy'),
-      ComboBox.option(LocalizedString.lookup(tr('Moon Rock Container'), locale), 'container'),
-    ];
-    const BB_TEMPLATE_OPTIONS: ComboBox.Option[] = [
-      ComboBox.option(LocalizedString.lookup(tr('Blue Drink'), locale), 'drink_blue'),
-      ComboBox.option(LocalizedString.lookup(tr('Green Drink'), locale), 'drink_green'),
-      ComboBox.option(LocalizedString.lookup(tr('Pink Drink'), locale), 'drink_pink'),
-      ComboBox.option(LocalizedString.lookup(tr('Blue Pom (Ice Cube)'), locale), 'pom_blue'),
-      ComboBox.option(LocalizedString.lookup(tr('Orange Pom (Hot Sauce)'), locale), 'pom_orange'),
-      ComboBox.option(LocalizedString.lookup(tr('Red Pom (Ketchup)'), locale), 'pom_red'),
-      ComboBox.option(LocalizedString.lookup(tr('Yellow Pom (Mustard)'), locale), 'pom_yellow'),
-      ComboBox.option(LocalizedString.lookup(tr('French Fry'), locale), 'french_fry'),
-      ComboBox.option(LocalizedString.lookup(tr('Hamburger'), locale), 'hamburger'),
-      ComboBox.option(LocalizedString.lookup(tr('Hotdog'), locale), 'hotdog'),
-      ComboBox.option(LocalizedString.lookup(tr('Taco'), locale), 'taco'),
-      ComboBox.option(LocalizedString.lookup(tr('Blue Cup'), locale), 'cup_blue'),
-      ComboBox.option(LocalizedString.lookup(tr('Green Cup'), locale), 'cup_green'),
-      ComboBox.option(LocalizedString.lookup(tr('Pink Cup'), locale), 'cup_pink'),
-      ComboBox.option(LocalizedString.lookup(tr('Bottle'), locale), 'bottle'),
-      ComboBox.option(LocalizedString.lookup(tr('Pickle'), locale), 'pickle'),
-      ComboBox.option(LocalizedString.lookup(tr('Tomato'), locale), 'tomato'),
-      ComboBox.option(LocalizedString.lookup(tr('Potato'), locale), 'potato'),
-      ComboBox.option(LocalizedString.lookup(tr('Tray'), locale), 'tray'),
-      ComboBox.option(LocalizedString.lookup(tr('Botguy'), locale), 'botguy_gamepiece'),
-    ];
-
-    const RADIATION_TEMPLATE_OPTIONS: ComboBox.Option[] = [
-      ComboBox.option(LocalizedString.lookup(tr('Radiation Science Pack - Low'), locale), 'noradscience'),
-      ComboBox.option(LocalizedString.lookup(tr('Radiation Science Pack - High'), locale), 'radscience'),
-    ];
+    const JBC_TEMPLATE_OPTIONS = TEMPLATES.JBC.map((t) => ComboBox.option(LocalizedString.lookup(tr(t[0]), locale), t[1]));
+    const ROCK_TEMPLATE_OPTIONS = TEMPLATES.ROCK.map((t) => ComboBox.option(LocalizedString.lookup(tr(t[0]), locale), t[1]));
+    const SPACE_TEMPLATE_OPTIONS = TEMPLATES.SPACE.map((t) => ComboBox.option(LocalizedString.lookup(tr(t[0]), locale), t[1]));
+    const BB_TEMPLATE_OPTIONS = TEMPLATES.BB.map((t) => ComboBox.option(LocalizedString.lookup(tr(t[0]), locale), t[1]));
+    const RADIATION_TEMPLATE_OPTIONS = TEMPLATES.RADIATION.map((t) => ComboBox.option(LocalizedString.lookup(tr(t[0]), locale), t[1]));
 
     const ALL_TEMPLATE_OPTIONS = JBC_TEMPLATE_OPTIONS.concat(ROCK_TEMPLATE_OPTIONS, SPACE_TEMPLATE_OPTIONS, BB_TEMPLATE_OPTIONS, RADIATION_TEMPLATE_OPTIONS);
 
