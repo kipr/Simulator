@@ -181,7 +181,7 @@ class ComboBox extends React.PureComponent<ComboBox.Props, ComboBox.State> {
             ))}
           </DropDown>
           : null
-          , COMBO_BOX_ROOT)}
+        , COMBO_BOX_ROOT)}
       </Container>
     );
   }

@@ -80,7 +80,7 @@ const TEMPLATES = {
     // ['Radiation Science Pack - Low', 'noradscience'],
     ['Radiation Science Pack - High', 'radscience'],
   ],
-}
+};
 
 export interface NodeSettingsPublicProps extends ThemeProps {
   onNodeChange: (node: Node) => void;
