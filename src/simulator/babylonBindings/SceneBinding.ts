@@ -248,7 +248,6 @@ class SceneBinding {
         ...node,
         ...nodeTemplate,
       };
-      console.log(nodeToCreate);
     }
 
     for (const scriptId of nodeToCreate.scriptIds || []) this.scriptManager_.bind(scriptId, id);
