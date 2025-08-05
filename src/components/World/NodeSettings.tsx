@@ -658,6 +658,11 @@ class NodeSettings extends React.PureComponent<Props, State> {
       templateId
     });
   };
+  /**
+   * The `Node.All` type exists solely as a transititory type for the
+   * `NodeSettings` "All" option. Therefore, this function attempts to narrow
+   * the `Node` back down to a proper type.
+   */
   private onAllSelect_ = (index: number, option: ComboBox.Option) => {
     const { props } = this;
     const { node } = props;

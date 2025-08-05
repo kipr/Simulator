@@ -576,8 +576,10 @@ namespace Node {
   }
 
   /**
-   * This type is only intended to be used as a generic transitory type on the
-   * way to a real type.
+   * `All` is a transitory utility type to allow users to view a list of all
+   * templates when adding a `Node` to a scene. See
+   * `src/components/World/NodeSettings.tsx`. It is not intended to be used as
+   * an actual object in scenes.
    */
   export interface All extends Base {
     type: 'all';
