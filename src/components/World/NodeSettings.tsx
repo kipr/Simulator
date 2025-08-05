@@ -45,12 +45,10 @@ const TEMPLATES = {
     ['Meteorite Rock', 'meteorite'],
   ],
   SPACE: [
-    ['Communication Tower', 'tower'],
-    // ['Hab', 'hab'],
     ['Science Pad', 'sciencepad'],
     ['Life Science Pack', 'lifescience'],
     ['Radiation Science Pack', 'radscience'],
-    ['Communication Tower 2', 'comstower'],
+    ['Communication Tower', 'commstower'],
     ['Hab', 'habitat'],
     ['Walkway', 'walkway'],
     ['Solar Panel', 'solarpanel'],
@@ -79,7 +77,7 @@ const TEMPLATES = {
     ['Botguy', 'botguy_gamepiece'],
   ],
   RADIATION: [
-    ['Radiation Science Pack - Low', 'noradscience'],
+    // ['Radiation Science Pack - Low', 'noradscience'],
     ['Radiation Science Pack - High', 'radscience'],
   ],
 }
@@ -1093,7 +1091,7 @@ class NodeSettings extends React.PureComponent<Props, State> {
     const BB_TEMPLATE_OPTIONS = TEMPLATES.BB.map((t) => ComboBox.option(LocalizedString.lookup(tr(t[0]), locale), t[1]));
     const RADIATION_TEMPLATE_OPTIONS = TEMPLATES.RADIATION.map((t) => ComboBox.option(LocalizedString.lookup(tr(t[0]), locale), t[1]));
 
-    const ALL_TEMPLATE_OPTIONS = JBC_TEMPLATE_OPTIONS.concat(ROCK_TEMPLATE_OPTIONS, SPACE_TEMPLATE_OPTIONS, BB_TEMPLATE_OPTIONS, RADIATION_TEMPLATE_OPTIONS);
+    const ALL_TEMPLATE_OPTIONS = JBC_TEMPLATE_OPTIONS.concat(ROCK_TEMPLATE_OPTIONS, SPACE_TEMPLATE_OPTIONS, BB_TEMPLATE_OPTIONS);
 
     const JBC_TEMPLATE_REVERSE_OPTIONS: Dict<number> = JBC_TEMPLATE_OPTIONS.reduce((dict, option, i) => {
       dict[option.data as string] = i;
