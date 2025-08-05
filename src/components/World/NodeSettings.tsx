@@ -660,12 +660,6 @@ class NodeSettings extends React.PureComponent<Props, State> {
       templateId
     });
   };
-  private includes2d(array: string[][], searchElement: string) {
-    for (const e of array) {
-      if (e.includes(searchElement)) return true;
-    }
-    return false;
-  }
   private onAllSelect_ = (index: number, option: ComboBox.Option) => {
     const { props } = this;
     const { node } = props;
@@ -674,35 +668,59 @@ class NodeSettings extends React.PureComponent<Props, State> {
     if (node.type !== 'all') return;
 
     const templateId = option.data as string;
-    if (this.includes2d(TEMPLATES.JBC, templateId)) {
-      this.props.onNodeChange({
-        ...Node.transmute(node, 'from-jbc-template'),
-        type: 'from-jbc-template',
-        templateId
-      });
-    } else if (this.includes2d(TEMPLATES.ROCK, templateId)) {
-      this.props.onNodeChange({
-        ...Node.transmute(node, 'from-rock-template'),
-        type: 'from-rock-template',
-        templateId
-      });
-    } else if (this.includes2d(TEMPLATES.SPACE, templateId)) {
-      this.props.onNodeChange({
-        ...Node.transmute(node, 'from-space-template'),
-        type: 'from-space-template',
-        templateId
-      });
-    } else if (this.includes2d(TEMPLATES.BB, templateId)) {
-      this.props.onNodeChange({
-        ...Node.transmute(node, 'from-bb-template'),
-        type: 'from-bb-template',
-        templateId
-      });
-    } else {
-      this.props.onNodeChange({
-        ...node,
-        templateId
-      });
+
+    // Which (if any) Node can this be narrowed to?
+    const narrowedType = Object.entries(TEMPLATES).find(([, typedTemplates]) =>
+      typedTemplates.some(template => template[1] === templateId)
+    )?.[0];
+
+    switch (narrowedType) {
+      case 'JBC': {
+        this.props.onNodeChange({
+          ...Node.transmute(node, 'from-jbc-template'),
+          type: 'from-jbc-template',
+          templateId
+        });
+        break;
+      }
+      case 'ROCK': {
+        this.props.onNodeChange({
+          ...Node.transmute(node, 'from-rock-template'),
+          type: 'from-rock-template',
+          templateId
+        });
+        break;
+      }
+      case 'SPACE': {
+        this.props.onNodeChange({
+          ...Node.transmute(node, 'from-space-template'),
+          type: 'from-space-template',
+          templateId
+        });
+        break;
+      }
+      case 'RADIATION': {
+        this.props.onNodeChange({
+          ...Node.transmute(node, 'from-space-template'),
+          type: 'from-space-template',
+          templateId
+        });
+        break;
+      }
+      case 'BB': {
+        this.props.onNodeChange({
+          ...Node.transmute(node, 'from-bb-template'),
+          type: 'from-bb-template',
+          templateId
+        });
+        break;
+      }
+      default: {
+        this.props.onNodeChange({
+          ...node,
+          templateId
+        });
+      }
     }
   };
   private onCollapsedChange_ = (key: string) => (collapsed: boolean) => {
