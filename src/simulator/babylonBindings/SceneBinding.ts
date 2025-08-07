@@ -699,6 +699,14 @@ class SceneBinding {
     mesh.setParent(null);
     let physics_mesh = mesh;
 
+   /*
+    * Aggregate params:
+    *     const aggregate = new PhysicsAggregate(mesh, PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type], {
+    *  mass: objectNode.physics.mass ? Mass.toGramsValue(objectNode.physics.mass) : 0,
+    *  friction: objectNode.physics.friction ?? 5,
+    *  restitution: objectNode.physics.restitution ?? 0.5,
+    */
+
     /*
      * There are three things you need to setup physics for an object in babylon.js
      * - First, you need the mesh itself -- that is, the one that the user will see.
@@ -716,8 +724,8 @@ class SceneBinding {
       false,
       this.bScene);
     body.setMassProperties({
-      mass: Mass.toKilogramsValue(objectNode.physics?.mass ?? Mass.grams(0)),
-      inertia: Vector3.FromArray(objectNode.physics?.inertia ?? [0, 0, 0]),
+      mass: objectNode.physics.mass ? Mass.toGramsValue(objectNode.physics.mass) : 0,
+      // inertia: Vector3.FromArray(objectNode.physics?.inertia ?? [0, 0, 0]),
     });
 
     /*
@@ -758,8 +766,8 @@ class SceneBinding {
     const options: PhysicShapeOptions = { type: PHYSICS_SHAPE_TYPE_MAPPINGS[physicsType], parameters };
     const shape = new PhysicsShape(options, this.bScene);
     shape.material = {
-      friction: objectNode.physics.friction ?? 0.2,
-      restitution: objectNode.physics.restitution ?? 0.2,
+      friction: objectNode.physics.friction ?? 5,
+      restitution: objectNode.physics.restitution ?? 0.5,
     };
 
     // Tell the PhysicsBody we created earlier to use this shape
