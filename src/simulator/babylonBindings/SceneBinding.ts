@@ -717,8 +717,7 @@ class SceneBinding {
       case 'sphere': {
         if (Math.abs(extents.x - extents.y) <= 0.0001 && Math.abs(extents.x - extents.z) <= 0.0001) {
           parameters.radius = extents.x / 2;
-        }
-        else {
+        } else {
           parameters.radius = Math.max(extents.x, extents.y, extents.z);
         }
         break;
@@ -801,7 +800,7 @@ class SceneBinding {
      * object, including the mesh itself.
      * See: https://doc.babylonjs.com/features/featuresDeepDive/physics/shapes
      */
-    let parameters: PhysicsShapeParameters = { mesh: physics_mesh as Mesh };
+    const parameters: PhysicsShapeParameters = { mesh: physics_mesh as Mesh };
     // Notice that we are passing mesh, not physicsMesh here
     this.addShapeOptions(mesh, objectNode, parameters);
     const options: PhysicShapeOptions = { type: PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type], parameters };
