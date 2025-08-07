@@ -123,8 +123,8 @@ const tacoTemplate: Node.TemplatedNode<Node.Obj> = {
 const CUP_PHYSICS: Node.Physics = {
   colliderId: "collider-box-cup",
   type: 'mesh',
-  restitution: .4,
-  friction: 1,
+  restitution: .1,
+  friction: 0.5,
   mass: Mass.grams(5),
   inertia: [3, 3, 3],
 };
