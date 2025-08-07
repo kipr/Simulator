@@ -49,17 +49,17 @@ namespace Node {
      * Restitution (bounciness) of the object.
      * Defines how much energy is retained after a collision, where zero
      * means none is retained, one means all energy is is retained, and values
-     * greater than one mean that energy is actually gained from the collsion.
+     * greater than one mean that energy is gained from the collsion.
      * Should generally be between zero and one. If undefined, 0.2.
      */
     restitution?: number;
 
     /**
-     * The moment of inertia of the Mesh, represented as a
-     * 3-length vector. Represents how hard to rotate left/right (x),
-     * twisting around (y), and rocking back/forward (z).
-     * WARNING: If undefined, all zeros, which babylonJS
-     * treats as infinite inertia.
+     * The moment of inertia of the Mesh, represented as a 3-length vector.
+     * Represents how hard to rotate left/right (x), twisting around (y), and
+     * rocking back/forward (z). The physics engine calculates this
+     * automatically and it is difficult to get right setting it manually, so
+     * this value is currently ignored.
      */
     inertia?: number[];
 

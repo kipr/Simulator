@@ -680,7 +680,8 @@ class SceneBinding {
   }[]> = {};
 
   /**
-  * Determine the `PhysicsShapeParameters` for a `Node`. This function is adapted from `_addSizeOptions()` in the BabylonJS `PhysicsAggregate` class.
+  * Determine the `PhysicsShapeParameters` for a `Node`.
+  * This function is adapted from `_addSizeOptions()` in the BabylonJS`PhysicsAggregate` class.
   * @param mesh The `AbstractMesh` whose shape we evaluate to determine the options.
   * @param objectNode The `Node`, which determines the `PhysicsShapeType` to use.
   * @param parameters The object in which the calculated parameters are stored.
@@ -714,18 +715,27 @@ class SceneBinding {
         break;
       }
       case 'sphere': {
-        // TODO
+        if (Math.abs(extents.x - extents.y) <= 0.0001 && Math.abs(extents.x - extents.z) <= 0.0001) {
+          parameters.radius = extents.x / 2;
+        }
+        else {
+          parameters.radius = Math.max(extents.x, extents.y, extents.z);
+        }
+        break;
       }
       case 'cylinder': {
         parameters.radius = extents.x / 2;
         parameters.pointA = new Vector3(0, min.y, 0);
         parameters.pointB = new Vector3(0, min.y + extents.y, 0);
+        break;
       }
       case 'mesh': {
-        // TODO
+        // Nothing to do, we set the mesh in `restorePhysicsToObject`
+        break;
       }
       case 'none': {
-        // TODO
+        // Nothing to do
+        break;
       }
     }
 
@@ -778,7 +788,7 @@ class SceneBinding {
 
 
     /*
-     * Here, we check if the object has a seperate collision body.
+     * Check if the object has a seperate collision body.
      * This should only apply to custom modeled objects.
      */
     if (objectNode.physics?.colliderId) {
@@ -786,7 +796,7 @@ class SceneBinding {
     }
 
     /*
-     * Here we set the PhysicsShapeOptions, which tells the engine what kind of
+     * Set the PhysicsShapeOptions, which tells the engine what kind of
      * shape we want. It can automatically create a variety of shapes around an
      * object, including the mesh itself.
      * See: https://doc.babylonjs.com/features/featuresDeepDive/physics/shapes
