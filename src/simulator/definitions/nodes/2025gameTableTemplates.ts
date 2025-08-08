@@ -20,7 +20,7 @@ const gameTable2025Template: Node.TemplatedNode<Node.Obj> = {
 const DRINK_PHYSICS: Node.Physics = {
   type: 'box',
   restitution: .1,
-  friction: .5,
+  friction: .7,
   mass: Mass.grams(5),
   inertia: [2, 2, 2]
 };
@@ -45,8 +45,8 @@ const pomBlueTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'pom_blue',
   physics: {
     type: 'box',
-    restitution: .4,
-    friction: 1,
+    restitution: .3,
+    friction: 0.7,
     mass: Mass.grams(1),
     inertia: [1, 1, 1]
   },
@@ -54,7 +54,7 @@ const pomBlueTemplate: Node.TemplatedNode<Node.Obj> = {
 
 const BIG_POM_PHYSICS: Node.Physics = {
   type: 'box',
-  restitution: .4,
+  restitution: .3,
   friction: .7,
   mass: Mass.grams(1),
   inertia: [3, 3, 3]
@@ -80,9 +80,9 @@ const frenchFryTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'fry',
   physics: {
     type: 'box',
-    restitution: .5,
-    friction: .6,
-    mass: Mass.grams(8),
+    restitution: .3,
+    friction: .8,
+    mass: Mass.grams(4),
     inertia: [4, 4, 4],
   },
 };
@@ -91,9 +91,9 @@ const hamburgerTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'hamburger',
   physics: {
     type: 'box',
-    restitution: .6,
-    friction: 1,
-    mass: Mass.grams(5),
+    restitution: .5,
+    friction: 0.8,
+    mass: Mass.grams(10),
     inertia: [3, 3, 3],
   },
 };
@@ -102,9 +102,9 @@ const hotdogTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'hotdog',
   physics: {
     type: 'mesh',
-    restitution: .6,
-    friction: 1,
-    mass: Mass.grams(5),
+    restitution: .4,
+    friction: 0.8,
+    mass: Mass.grams(10),
     inertia: [3, 3, 3],
   },
 };
@@ -113,9 +113,9 @@ const tacoTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'taco',
   physics: {
     type: 'mesh',
-    restitution: .6,
-    friction: 1,
-    mass: Mass.grams(5),
+    restitution: .4,
+    friction: 0.8,
+    mass: Mass.grams(10),
     inertia: [3, 3, 3],
   },
 };
@@ -123,9 +123,9 @@ const tacoTemplate: Node.TemplatedNode<Node.Obj> = {
 const CUP_PHYSICS: Node.Physics = {
   colliderId: "collider-box-cup",
   type: 'mesh',
-  restitution: .1,
-  friction: 0.5,
-  mass: Mass.grams(5),
+  restitution: 0.1,
+  friction: 0.6,
+  mass: Mass.grams(20),
   inertia: [3, 3, 3],
 };
 const cupBlueTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -149,9 +149,9 @@ const bottleTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'bottle',
   physics: {
     type: 'mesh',
-    restitution: .5,
-    friction: 1,
-    mass: Mass.grams(3),
+    restitution: .3,
+    friction: 0.6,
+    mass: Mass.grams(5),
     inertia: [3, 3, 3],
   }
 };
@@ -160,9 +160,9 @@ const tomatoTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'tomato',
   physics: {
     type: 'box',
-    restitution: .5,
-    friction: 1,
-    mass: Mass.grams(5),
+    restitution: .4,
+    friction: 0.5,
+    mass: Mass.grams(8),
     inertia: [2, 2, 2],
   }
 };
@@ -171,9 +171,9 @@ const pickleTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'pickle',
   physics: {
     type: 'mesh',
-    restitution: .7,
-    friction: .7,
-    mass: Mass.grams(1),
+    restitution: .35,
+    friction: .5,
+    mass: Mass.grams(8),
     inertia: [3, 3, 3],
   }
 };
@@ -182,9 +182,9 @@ const potatoTemplate: Node.TemplatedNode<Node.Obj> = {
   geometryId: 'potato',
   physics: {
     type: 'mesh',
-    restitution: .7,
-    friction: 1,
-    mass: Mass.grams(8),
+    restitution: .4,
+    friction: 0.6,
+    mass: Mass.grams(10),
     inertia: [2, 2, 2],
   }
 };
