@@ -7,6 +7,7 @@ import AbstractRobot from '../../../programming/AbstractRobot';
 import Author from '../../../db/Author';
 
 import tr from '@i18n';
+import { PhysicsMotionType } from "@babylonjs/core";
 
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
@@ -83,6 +84,7 @@ export function createBaseSceneSurface(): Scene {
         visible: true,
         physics: {
           type: 'box',
+          motionType: PhysicsMotionType.STATIC,
           restitution: .3,
           friction: 1,
         },
@@ -104,6 +106,7 @@ export function createBaseSceneSurface(): Scene {
         editable: true,
         physics: {
           type: 'box',
+          motionType: PhysicsMotionType.STATIC,
           restitution: .3,
           friction: 1,
         },
