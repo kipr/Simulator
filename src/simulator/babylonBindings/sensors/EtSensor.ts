@@ -35,6 +35,7 @@ class EtSensor extends SensorObject<Node.EtSensor, number> {
       ],
     }, scene);
     this.trace_.visibility = 0;
+    this.trace_.isPickable = false;
 
     ReferenceFramewUnits.syncBabylon(origin, this.trace_, 'meters');
     this.trace_.parent = parent;
@@ -60,6 +61,7 @@ class EtSensor extends SensorObject<Node.EtSensor, number> {
         mesh !== this.trace_ &&
         !links.has(mesh as Mesh) &&
         !colliders.has(mesh as Mesh) &&
+        mesh.isVisible &&
         (!!mesh.physicsImpostor || !metadata.selected)
       );
     });
@@ -70,19 +72,20 @@ class EtSensor extends SensorObject<Node.EtSensor, number> {
     if (!this.realistic) {
       // ideal
       if (distance >= rawMaxDistance) value = 0;
-      else value = 4095 - Math.floor((distance / rawMaxDistance) * 4095);
+      else value = 3095 - Math.floor((distance / rawMaxDistance) * 4095);
     } else {
       // realistic
       if (distance >= rawMaxDistance) value = 1100;
-      // Farther than 80 cm
-      else if (distance >= 80) value = 345;
+      // Farther than 45 cm
+      else if (distance >= 45) value = 750;
       // Closer than 3 cm (linear from 2910 to 0)
       else if (distance <= 3) value = Math.floor(distance * (2910 / 3));
-      // 3 - 11.2 cm
-      else if (distance <= 11.2) value = 2910;
-      // 11.2 - 80 cm (the useful range)
-      // Derived by fitting the real-world data to a power model
-      else value = Math.floor(3240.7 * Math.pow(distance - 10, -0.776));
+      // 3 - 10 cm
+      else if (distance <= 10) value = 2910;
+      // 10 - 48 cm (the useful range)
+      // Derived by fitting real-world data to a degree 2 polynomial.
+      else value = 1230.9875 - 1117.2 * (-1.2222 + 0.0444 * distance) +
+        723.6306 * (-1.2222 + 0.0444 * distance) ** 2;
     }
 
     if (this.noisy) {
