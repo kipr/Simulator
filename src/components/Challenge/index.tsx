@@ -17,6 +17,7 @@ import LocalizedString from '../../util/LocalizedString';
 import { AsyncChallenge } from '../../state/State/Challenge';
 import { AsyncChallengeCompletion } from '../../state/State/ChallengeCompletion';
 import PredicateEditor from './PredicateEditor';
+import GoalList from './GoalList';
 
 import tr from '@i18n';
 
@@ -120,23 +121,23 @@ class Challenge extends React.PureComponent<Props, State> {
       <>
         <ScrollArea theme={theme} style={{ flex: '1 1' }}>
           <Container theme={theme} style={style} className={className}>
-            {latestChallenge.success && (
+            {latestChallenge.successGoals && latestChallenge.successGoals.length > 0 && (
               <Section name={LocalizedString.lookup(tr('Success'), locale)} theme={theme}>
-                <PredicateEditor
-                  events={latestChallenge.events}
-                  predicate={latestChallenge.success}
+                <GoalList
+                  goals={latestChallenge.successGoals}
                   predicateCompletion={latestChallengeCompletion ? latestChallengeCompletion.success : undefined}
                   locale={locale}
+                  type="success"
                 />
               </Section>
             )}
-            {latestChallenge.failure && (
+            {latestChallenge.failureGoals && latestChallenge.failureGoals.length > 0 && (
               <Section name={LocalizedString.lookup(tr('Failure'), locale)} theme={theme}>
-                <PredicateEditor
-                  events={latestChallenge.events}
-                  predicate={latestChallenge.failure}
+                <GoalList
+                  goals={latestChallenge.failureGoals}
                   predicateCompletion={latestChallengeCompletion ? latestChallengeCompletion.failure : undefined}
                   locale={locale}
+                  type="failure"
                 />
               </Section>
             )}

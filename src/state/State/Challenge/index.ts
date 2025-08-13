@@ -6,6 +6,17 @@ import Async from '../Async';
 import Event from './Event';
 import Predicate from './Predicate';
 
+export interface Goal {
+  /**
+   * Expression identifier within the predicate that this goal represents.
+   */
+  exprId: string;
+  /**
+   * Localized label shown in the goal list.
+   */
+  name: LocalizedString;
+}
+
 interface Challenge {
   name: LocalizedString;
   description: LocalizedString;
@@ -18,6 +29,18 @@ interface Challenge {
 
   success?: Predicate;
   failure?: Predicate;
+
+  /**
+   * Optional listing of high-level success goals. Each goal references an
+   * expression in the success predicate by id so that the underlying predicate
+   * tree can be simplified for display.
+   */
+  successGoals?: Goal[];
+  /**
+   * Optional listing of high-level failure goals. Each goal references an
+   * expression in the failure predicate by id.
+   */
+  failureGoals?: Goal[];
 
   sceneId: string;
 }

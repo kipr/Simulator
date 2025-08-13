@@ -86,18 +86,47 @@ export default {
         eventId: 'robotTouchingLine',
       },
 
+      robotTouchingLineOnce: {
+        type: Expr.Type.Once,
+        argId: 'robotTouchingLine',
+      },
       // Off Mat Event
       offMat: {
         type: Expr.Type.Event,
         eventId: 'offMat',
       },
 
+      offMatOnce: {
+        type: Expr.Type.Once,
+        argId: 'offMat',
+      },
+
       failure: {
         type: Expr.Type.Or,
-        argIds: ['robotTouchingLine', 'offMat'],
+        argIds: ['robotTouchingLineOnce', 'offMatOnce'],
       },
     },
     rootId: 'failure',
   },
+  successGoals: [
+    {
+      exprId: 'startedInStartBoxOnce',
+      name: { [LocalizedString.EN_US]: 'Start in the Start Box' },
+    },
+    {
+      exprId: 'reachedEnd',
+      name: { [LocalizedString.EN_US]: 'Reach the end of the mat' },
+    },
+  ],
+  failureGoals: [
+    {
+      exprId: 'robotTouchingLineOnce',
+      name: { [LocalizedString.EN_US]: 'Do not touch line B' },
+    },
+    {
+      exprId: 'offMatOnce',
+      name: { [LocalizedString.EN_US]: 'Do not drive off the mat' },
+    },
+  ],
   sceneId: 'jbc0',
 } as Challenge;
