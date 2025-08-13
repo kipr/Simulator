@@ -121,7 +121,7 @@ export default {
   failureGoals: [
     {
       exprId: 'robotTouchingLineOnce',
-      name: { [LocalizedString.EN_US]: 'Do not touch line B' },
+      name: { [LocalizedString.EN_US]: 'Wheels do not touch line B' },
     },
     {
       exprId: 'offMatOnce',
