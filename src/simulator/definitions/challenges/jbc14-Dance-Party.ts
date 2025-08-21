@@ -135,5 +135,14 @@ export default {
     },
     rootId: 'completion',
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
+    { exprId: 'leaveStartBoxOnce', name: { [LocalizedString.EN_US]: 'Leave the Start Box' } },
+    { exprId: 'clockwise360Once', name: { [LocalizedString.EN_US]: 'Turn 360° clockwise' } },
+    { exprId: 'counterClockwise360Once', name: { [LocalizedString.EN_US]: 'Turn 360° counter clockwise' } },
+    { exprId: 'driveForwardOnce', name: { [LocalizedString.EN_US]: 'Drive forward' } },
+    { exprId: 'driveBackwardOnce', name: { [LocalizedString.EN_US]: 'Drive backward' } },
+    { exprId: 'waveServoOnce', name: { [LocalizedString.EN_US]: 'Wave the servo' } },
+  ],
   sceneId: 'jbc14',
 } as Challenge;

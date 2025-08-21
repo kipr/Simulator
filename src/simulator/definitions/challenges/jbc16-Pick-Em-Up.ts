@@ -92,6 +92,10 @@ export default {
         type: Expr.Type.Once,
         argId: 'can2PickedUp',
       },
+      can2NotPickedUpOnce: {
+        type: Expr.Type.Not,
+        argId: 'can2PickedUpOnce',
+      },
       can9PickedUp: {
         type: Expr.Type.Event,
         eventId: 'can9PickedUp',
@@ -99,6 +103,10 @@ export default {
       can9PickedUpOnce: {
         type: Expr.Type.Once,
         argId: 'can9PickedUp',
+      },
+      can9NotPickedUpOnce: {
+        type: Expr.Type.Not,
+        argId: 'can9PickedUpOnce',
       },
       can10PickedUp: {
         type: Expr.Type.Event,
@@ -108,19 +116,35 @@ export default {
         type: Expr.Type.Once,
         argId: 'can10PickedUp',
       },
+      can10NotPickedUpOnce: {
+        type: Expr.Type.Not,
+        argId: 'can10PickedUpOnce',
+      },
 
       // Upright Events
       can2Upright: {
         type: Expr.Type.Event,
         eventId: 'can2Upright',
       },
+      can2NotUpright: {
+        type: Expr.Type.Not,
+        argId: 'can2Upright',
+      },
       can9Upright: {
         type: Expr.Type.Event,
         eventId: 'can9Upright',
       },
+      can9NotUpright: {
+        type: Expr.Type.Not,
+        argId: 'can9Upright',
+      },
       can10Upright: {
         type: Expr.Type.Event,
         eventId: 'can10Upright',
+      },
+      can10NotUpright: {
+        type: Expr.Type.Not,
+        argId: 'can10Upright',
       },
 
       // Intersects Events
@@ -167,6 +191,19 @@ export default {
     },
     rootId: 'completion',
   },
-
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
+    { exprId: 'can2Intersects', name: { [LocalizedString.EN_US]: 'Place can 2 in green garage' } },
+    { exprId: 'can9Intersects', name: { [LocalizedString.EN_US]: 'Place can 9 in blue garage' } },
+    { exprId: 'can10Intersects', name: { [LocalizedString.EN_US]: 'Place can 10 in yellow garage' } },
+  ],
+  failureGoals: [
+    { exprId: 'can2NotUpright', name: { [LocalizedString.EN_US]: 'Can 2 not upright' } },
+    { exprId: 'can9NotUpright', name: { [LocalizedString.EN_US]: 'Can 9 not upright' } },
+    { exprId: 'can10NotUpright', name: { [LocalizedString.EN_US]: 'Can 10 not upright' } },
+    { exprId: 'can2NotPickedUpOnce', name: { [LocalizedString.EN_US]: 'Can 2 not picked up' } },
+    { exprId: 'can9NotPickedUpOnce', name: { [LocalizedString.EN_US]: 'Can 9 not picked up' } },
+    { exprId: 'can10NotPickedUpOnce', name: { [LocalizedString.EN_US]: 'Can 10 not picked up' } },
+  ],
   sceneId: 'jbc16',
 } as Challenge;

@@ -74,5 +74,12 @@ export default {
     },
     rootId: 'completion',
   },
+  successGoals: [
+    { exprId: 'leaveStartBoxOnce', name: { [LocalizedString.EN_US]: 'Leave the Start Box' } },
+    { exprId: 'canStacked', name: { [LocalizedString.EN_US]: 'Stack one can on another' } },
+  ],
+  failureGoals: [
+    { exprId: 'robotTouchCan', name: { [LocalizedString.EN_US]: 'Robot touching can' } },
+  ],
   sceneId: 'jbc18',
 } as Challenge;

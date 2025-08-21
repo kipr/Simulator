@@ -70,13 +70,25 @@ export default {
         type: Expr.Type.Event,
         eventId: 'can1Upright',
       },
+      can1NotUpright: {
+        type: Expr.Type.Not,
+        argId: 'can1Upright',
+      },
       can2Upright: {
         type: Expr.Type.Event,
         eventId: 'can2Upright',
       },
+      can2NotUpright: {
+        type: Expr.Type.Not,
+        argId: 'can2Upright',
+      },
       can3Upright: {
         type: Expr.Type.Event,
         eventId: 'can3Upright',
+      },
+      can3NotUpright: {
+        type: Expr.Type.Not,
+        argId: 'can3Upright',
       },
 
       // Rescued intersecting can events
@@ -126,5 +138,16 @@ export default {
     },
     rootId: 'completion',
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
+    { exprId: 'can1Intersects', name: { [LocalizedString.EN_US]: 'Rescue can 1 to start box' } },
+    { exprId: 'can2Intersects', name: { [LocalizedString.EN_US]: 'Rescue can 2 to start box' } },
+    { exprId: 'can3Intersects', name: { [LocalizedString.EN_US]: 'Rescue can 3 to start box' } },
+  ],
+  failureGoals: [
+    { exprId: 'can1NotUpright', name: { [LocalizedString.EN_US]: 'Can 1 not upright' } },
+    { exprId: 'can2NotUpright', name: { [LocalizedString.EN_US]: 'Can 2 not upright' } },
+    { exprId: 'can3NotUpright', name: { [LocalizedString.EN_US]: 'Can 3 not upright' } },
+  ],
   sceneId: 'jbc17',
 } as Challenge;

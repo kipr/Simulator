@@ -58,6 +58,10 @@ export default {
         type: Expr.Type.Event,
         eventId: "canUpright",
       },
+      canNotUpright: {
+        type: Expr.Type.Not,
+        argId: "canUpright",
+      },
 
       completion: {
         type: Expr.Type.And,
@@ -70,5 +74,12 @@ export default {
     },
     rootId: 'completion',
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
+    { exprId: 'canInStartBox', name: { [LocalizedString.EN_US]: 'Bring can to Start Box' } },
+  ],
+  failureGoals: [
+    { exprId: 'canNotUpright', name: { [LocalizedString.EN_US]: 'Can not upright' } },
+  ],
   sceneId: 'jbc22',
 } as Challenge;

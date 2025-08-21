@@ -64,5 +64,9 @@ export default {
     },
     rootId: 'completion',
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
+    { exprId: 'driveForwardTouch', name: { [LocalizedString.EN_US]: 'Drive forward and touch the ream' } },
+  ],
   sceneId: 'jbc19',
 } as Challenge;

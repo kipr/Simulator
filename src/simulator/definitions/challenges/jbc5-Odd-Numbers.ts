@@ -169,5 +169,24 @@ export default {
     },
     rootId: "failure"
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
+    { exprId: 'circle1TouchedOnce', name: { [LocalizedString.EN_US]: 'Touch circle 1' } },
+    { exprId: 'circle3TouchedOnce', name: { [LocalizedString.EN_US]: 'Touch circle 3' } },
+    { exprId: 'circle5TouchedOnce', name: { [LocalizedString.EN_US]: 'Touch circle 5' } },
+    { exprId: 'circle7TouchedOnce', name: { [LocalizedString.EN_US]: 'Touch circle 7' } },
+    { exprId: 'circle9TouchedOnce', name: { [LocalizedString.EN_US]: 'Touch circle 9' } },
+    { exprId: 'circle11TouchedOnce', name: { [LocalizedString.EN_US]: 'Touch circle 11' } },
+  ],
+  failureGoals: [
+    {
+      exprId: 'touchedEvenCircleOnce',
+      name: { [LocalizedString.EN_US]: 'Touched an even circle' },
+    },
+    {
+      exprId: 'wrongOrderOnce',
+      name: { [LocalizedString.EN_US]: 'Circle touched out of order' },
+    },
+  ],
   sceneId: "jbc5",
 } as Challenge;

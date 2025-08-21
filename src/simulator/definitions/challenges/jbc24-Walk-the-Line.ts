@@ -46,5 +46,8 @@ export default {
     },
     rootId: 'completion',
   },
+  successGoals: [
+    { exprId: 'lineFollow', name: { [LocalizedString.EN_US]: 'Line follow to the finish line' } },
+  ],
   sceneId: 'jbc24',
 } as Challenge;

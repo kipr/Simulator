@@ -97,5 +97,12 @@ export default {
     },
     rootId: 'completion',
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
+    { exprId: 'ream1TouchedOnce', name: { [LocalizedString.EN_US]: 'Touch ream 1' } },
+    { exprId: 'ream2TouchedOnce', name: { [LocalizedString.EN_US]: 'Touch ream 2' } },
+    { exprId: 'ream3TouchedOnce', name: { [LocalizedString.EN_US]: 'Touch ream 3' } },
+    { exprId: 'ream4TouchedOnce', name: { [LocalizedString.EN_US]: 'Touch ream 4' } },
+  ],
   sceneId: 'jbc20',
 } as Challenge;

@@ -143,5 +143,12 @@ export default {
     },
     rootId: "completion",
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
+    { exprId: 'circle3WavedOnce', name: { [LocalizedString.EN_US]: 'Wave at circle 3' } },
+    { exprId: 'circle6WavedOnce', name: { [LocalizedString.EN_US]: 'Wave at circle 6' } },
+    { exprId: 'circle9WavedOnce', name: { [LocalizedString.EN_US]: 'Wave at circle 9' } },
+    { exprId: 'circle12WavedOnce', name: { [LocalizedString.EN_US]: 'Wave at circle 12' } },
+  ],
   sceneId: "jbc11",
 } as Challenge;

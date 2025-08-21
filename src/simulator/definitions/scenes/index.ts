@@ -12,7 +12,7 @@ export * from './jbc8-Bulldozer-Mania';
 export * from './jbc9-Cover-Your-Bases';
 export * from './jbc10-Chopped';
 export * from './jbc11-Making-Waves';
-export * from './jbc12-Add-It-Up-New';
+// export * from './jbc12-Add-It-Up-New';
 export * from './jbc14-Dance-Party';
 export * from './jbc15-Go-Fetch';
 export * from './jbc16-Pick-Em-Up';

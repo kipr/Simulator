@@ -58,6 +58,10 @@ export default {
         type: Expr.Type.Event,
         eventId: "can11Upright",
       },
+      can11NotUpright: {
+        type: Expr.Type.Event,
+        eventId: "can11NotUpright",
+      },
 
       // Success Logic = Can 7 not upright, waited to chop, and began in start box
       completion: {
@@ -71,5 +75,12 @@ export default {
     },
     rootId: "completion",
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
+    { exprId: 'canInStartBox', name: { [LocalizedString.EN_US]: 'Bring can to Start Box' } },
+  ],
+  failureGoals: [
+    { exprId: 'can11NotUpright', name: { [LocalizedString.EN_US]: 'Keep can 11 not upright' } },
+  ],
   sceneId: "jbc15",
 } as Challenge;

@@ -55,5 +55,9 @@ export default {
     },
     rootId: 'completion',
   },
+  successGoals: [
+    { exprId: 'onCircleOnce', name: { [LocalizedString.EN_US]: 'Started over the circle' } },
+    { exprId: 'stopAtBlackLine', name: { [LocalizedString.EN_US]: 'Stop at the black line' } },
+  ],
   sceneId: 'jbc23',
 } as Challenge;

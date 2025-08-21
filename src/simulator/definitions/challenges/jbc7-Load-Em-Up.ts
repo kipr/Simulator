@@ -75,13 +75,25 @@ export default {
         type: Expr.Type.Event,
         eventId: 'can2Upright',
       },
+      can2NotUpright: {
+        type: Expr.Type.Not,
+        argId: 'can2Upright',
+      },
       can9Upright: {
         type: Expr.Type.Event,
         eventId: 'can9Upright',
       },
+      can9NotUpright: {
+        type: Expr.Type.Not,
+        argId: 'can9Upright',
+      },
       can10Upright: {
         type: Expr.Type.Event,
         eventId: 'can10Upright',
+      },
+      can10NotUpright: {
+        type: Expr.Type.Not,
+        argId: 'can10Upright',
       },
 
       // Intersects Events
@@ -126,6 +138,17 @@ export default {
     },
     rootId: 'completion',
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
+    { exprId: 'can2Intersects', name: { [LocalizedString.EN_US]: 'Place can 2 in green garage' } },
+    { exprId: 'can9Intersects', name: { [LocalizedString.EN_US]: 'Place can 9 in blue garage' } },
+    { exprId: 'can10Intersects', name: { [LocalizedString.EN_US]: 'Place can 10 in yellow garage' } },
+  ],
+  failureGoals: [
+    { exprId: 'can2NotUpright', name: { [LocalizedString.EN_US]: 'Can 2 not upright in green garage' } },
+    { exprId: 'can9NotUpright', name: { [LocalizedString.EN_US]: 'Can 9 not upright in blue garage' } },
+    { exprId: 'can10NotUpright', name: { [LocalizedString.EN_US]: 'Can 10 not upright in yellow garage' } },
+  ],
 
   sceneId: 'jbc7',
 } as Challenge;

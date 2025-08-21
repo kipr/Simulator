@@ -86,5 +86,12 @@ export default {
     },
     rootId: 'failure',
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
+    { exprId: 'stopAtReam', name: { [LocalizedString.EN_US]: 'Stop at the ream' } },
+  ],
+  failureGoals: [
+    { exprId: 'touchedReamOnce', name: { [LocalizedString.EN_US]: 'Do not bump the ream' } },
+  ],
   sceneId: 'jbc21',
 } as Challenge;

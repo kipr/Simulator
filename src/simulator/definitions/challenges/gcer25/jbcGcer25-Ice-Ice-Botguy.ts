@@ -75,5 +75,9 @@ export default {
     },
     rootId: 'completion',
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
+    ...POM_ARGIDS.map(id => ({ exprId: id, name: tr(`Blue pom ${id.split('_')[1]} hit botguy`) })),
+  ],
   sceneId: 'Ice_Ice_Botguy',
 } as Challenge;

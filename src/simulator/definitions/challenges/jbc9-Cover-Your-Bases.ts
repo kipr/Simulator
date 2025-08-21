@@ -112,21 +112,41 @@ export default {
         type: Expr.Type.Event,
         eventId: 'canAUpright',
       },
+      canANotUpright: {
+        type: Expr.Type.Not,
+        argId: 'canAUpright',
+      },
       canBUpright: {
         type: Expr.Type.Event,
         eventId: 'canBUpright',
+      },
+      canBNotUpright: {
+        type: Expr.Type.Not,
+        argId: 'canBUpright',
       },
       canCUpright: {
         type: Expr.Type.Event,
         eventId: 'canCUpright',
       },
+      canCNotUpright: {
+        type: Expr.Type.Not,
+        argId: 'canCUpright',
+      },
       canDUpright: {
         type: Expr.Type.Event,
         eventId: 'canDUpright',
       },
+      canDNotUpright: {
+        type: Expr.Type.Not,
+        argId: 'canDUpright',
+      },
       canEUpright: {
         type: Expr.Type.Event,
         eventId: 'canEUpright',
+      },
+      canENotUpright: {
+        type: Expr.Type.Not,
+        argId: 'canEUpright',
       },
       allCansUpright: {
         type: Expr.Type.And,
@@ -141,5 +161,20 @@ export default {
     },
     rootId: 'completion',
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
+    { exprId: 'baseACovered', name: { [LocalizedString.EN_US]: 'Cover base A' } },
+    { exprId: 'baseBCovered', name: { [LocalizedString.EN_US]: 'Cover base B' } },
+    { exprId: 'baseCCovered', name: { [LocalizedString.EN_US]: 'Cover base C' } },
+    { exprId: 'baseDCovered', name: { [LocalizedString.EN_US]: 'Cover base D' } },
+    { exprId: 'baseECovered', name: { [LocalizedString.EN_US]: 'Cover base E' } },
+  ],
+  failureGoals: [
+    { exprId: 'canANotUpright', name: { [LocalizedString.EN_US]: 'Can A not upright' } },
+    { exprId: 'canBNotUpright', name: { [LocalizedString.EN_US]: 'Can B not upright' } },
+    { exprId: 'canCNotUpright', name: { [LocalizedString.EN_US]: 'Can C not upright' } },
+    { exprId: 'canDNotUpright', name: { [LocalizedString.EN_US]: 'Can D not upright' } },
+    { exprId: 'canENotUpright', name: { [LocalizedString.EN_US]: 'Can E not upright' } },
+  ],
   sceneId: 'jbc9',
 } as Challenge;

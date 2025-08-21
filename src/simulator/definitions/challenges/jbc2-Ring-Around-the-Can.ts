@@ -146,5 +146,37 @@ export default {
     },
     rootId: 'failure',
   },
+  successGoals: [
+    {
+      exprId: 'inStartBoxOnce',
+      name: { [LocalizedString.EN_US]: 'Start in the Start Box' },
+    },
+    {
+      exprId: 'rightSideOnce',
+      name: { [LocalizedString.EN_US]: 'Pass the right side of can 6' },
+    },
+    {
+      exprId: 'topSideOnce',
+      name: { [LocalizedString.EN_US]: 'Pass the top side of can 6' },
+    },
+    {
+      exprId: 'leftSideOnce',
+      name: { [LocalizedString.EN_US]: 'Pass the left side of can 6' },
+    },
+    {
+      exprId: 'returnStartBox',
+      name: { [LocalizedString.EN_US]: 'Return to the Start Box' },
+    },
+  ],
+  failureGoals: [
+    {
+      exprId: 'can6NotIntersects',
+      name: { [LocalizedString.EN_US]: 'Can 6 not in circle 6' },
+    },
+    {
+      exprId: 'can6NotUpright',
+      name: { [LocalizedString.EN_US]: 'Can 6 not upright' },
+    },
+  ],
   sceneId: "jbc2",
 } as Challenge;

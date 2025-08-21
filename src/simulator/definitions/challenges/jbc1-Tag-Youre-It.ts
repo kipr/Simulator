@@ -107,5 +107,29 @@ export default {
     },
     rootId: 'failure',
   },
+  successGoals: [
+    {
+      exprId: 'inStartBoxOnce',
+      name: { [LocalizedString.EN_US]: 'Start in the Start Box' },
+    },
+    {
+      exprId: 'can9Touched',
+      name: { [LocalizedString.EN_US]: 'Touch Can 9' },
+    },
+    {
+      exprId: 'returnStartBoxOnce',
+      name: { [LocalizedString.EN_US]: 'Return to the Start Box' },
+    },
+  ],
+  failureGoals: [
+    {
+      exprId: 'can9NotIntersects',
+      name: { [LocalizedString.EN_US]: 'Can 9 not in circle 9' },
+    },
+    {
+      exprId: 'can9NotUpright',
+      name: { [LocalizedString.EN_US]: 'Can 9 not upright' },
+    },
+  ],
   sceneId: 'jbc1',
 } as Challenge;

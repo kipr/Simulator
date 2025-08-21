@@ -95,5 +95,13 @@ export default {
     },
     rootId: "completion",
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
+    { exprId: 'canAUpright', name: { [LocalizedString.EN_US]: 'First can upright in start box' } },
+    { exprId: 'canBUpright', name: { [LocalizedString.EN_US]: 'Second can upright in start box' } },
+    { exprId: 'canCUpright', name: { [LocalizedString.EN_US]: 'Third can upright in start box' } },
+    { exprId: 'canDUpright', name: { [LocalizedString.EN_US]: 'Fourth can upright in start box' } },
+    { exprId: 'canEUpright', name: { [LocalizedString.EN_US]: 'Fifth can upright in start box' } },
+  ],
   sceneId: "jbc8",
 } as Challenge;

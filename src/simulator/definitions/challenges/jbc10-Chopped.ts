@@ -75,5 +75,10 @@ export default {
     },
     rootId: "completion",
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
+    { exprId: 'waitedToChop', name: { [LocalizedString.EN_US]: 'Wait before chopping' } },
+    { exprId: 'can7NotUpright', name: { [LocalizedString.EN_US]: 'Knock over can 7' } },
+  ],
   sceneId: "jbc10",
 } as Challenge;

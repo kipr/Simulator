@@ -71,9 +71,17 @@ export default {
         type: Expr.Type.Event,
         eventId: "can4Intersects",
       },
+      can4NotIntersects: {
+        type: Expr.Type.Not,
+        argId: "can4Intersects",
+      },
       can9Intersects: {
         type: Expr.Type.Event,
         eventId: "can9Intersects",
+      },
+      can9NotIntersects: {
+        type: Expr.Type.Not,
+        argId: "can9Intersects",
       },
 
       // Upright Events
@@ -81,9 +89,17 @@ export default {
         type: Expr.Type.Event,
         eventId: "can4Upright",
       },
+      can4NotUpright: {
+        type: Expr.Type.Not,
+        argId: "can4Upright",
+      },
       can9Upright: {
         type: Expr.Type.Event,
         eventId: "can9Upright",
+      },
+      can9NotUpright: {
+        type: Expr.Type.Not,
+        argId: "can9Upright",
       },
 
       // Start Box Events
@@ -126,5 +142,16 @@ export default {
     },
     rootId: "completion",
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
+    { exprId: 'figureEightOnce', name: { [LocalizedString.EN_US]: 'Complete a figure eight' } },
+    { exprId: 'returnStartBoxOnce', name: { [LocalizedString.EN_US]: 'Return to the Start Box' } },
+  ],
+  failureGoals: [
+    { exprId: 'can4NotUpright', name: { [LocalizedString.EN_US]: 'Can 4 not upright in circle 4' } },
+    { exprId: 'can9NotUpright', name: { [LocalizedString.EN_US]: 'Can 9 not upright in circle 9' } },
+    { exprId: 'can4NotIntersects', name: { [LocalizedString.EN_US]: 'Can 4 does not intersect circle 4' } },
+    { exprId: 'can9NotIntersects', name: { [LocalizedString.EN_US]: 'Can 9 does not intersect circle 9' } },
+  ],
   sceneId: "jbc6",
 } as Challenge;

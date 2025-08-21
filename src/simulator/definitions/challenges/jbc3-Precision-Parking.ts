@@ -111,5 +111,29 @@ export default {
     },
     rootId: 'failure',
   },
+  successGoals: [
+    {
+      exprId: 'inStartBoxOnce',
+      name: { [LocalizedString.EN_US]: 'Start in the Start Box' },
+    },
+    {
+      exprId: 'singleGarageRun1Once',
+      name: { [LocalizedString.EN_US]: 'Park in one garage' },
+    },
+    {
+      exprId: 'singleGarageRun2Once',
+      name: { [LocalizedString.EN_US]: 'Park in a different garage' },
+    },
+    {
+      exprId: 'returnStartBoxOnce',
+      name: { [LocalizedString.EN_US]: 'Return to the Start Box' },
+    },
+  ],
+  failureGoals: [
+    {
+      exprId: 'touchGarageLines',
+      name: { [LocalizedString.EN_US]: 'Do not touch garage boundaries' },
+    },
+  ],
   sceneId: 'jbc3',
 } as Challenge;
