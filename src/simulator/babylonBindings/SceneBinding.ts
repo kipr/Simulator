@@ -259,7 +259,6 @@ class SceneBinding {
 
         ret = await createObject(nodeToCreate, nextScene, parent, this.bScene_);
         break;
-
       }
       case 'empty': {
         const parent = this.findBNode_(nodeToCreate.parentId, true);
