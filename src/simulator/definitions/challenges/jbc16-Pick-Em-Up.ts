@@ -1,14 +1,12 @@
 import Author from '../../../db/Author';
 import Challenge from '../../../state/State/Challenge';
 import Expr from '../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 16' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 16: Pick 'Em Up`,
-  },
+  name: tr('JBC Challenge 16'),
+  description: tr(`Junior Botball Challenge 16: Pick 'Em Up`),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
@@ -21,50 +19,50 @@ export default {
   defaultLanguage: 'c',
   events: {
     notInStartBox: {
-      name: { [LocalizedString.EN_US]: 'Robot not in Start Box' },
-      description: { [LocalizedString.EN_US]: 'Robot not in start box' },
+      name: tr('Robot not in Start Box'),
+      description: tr('Robot not in start box'),
     },
     can2PickedUp: {
-      name: { [LocalizedString.EN_US]: 'Can 2 Picked Up' },
-      description: { [LocalizedString.EN_US]: 'Can 2 picked up' },
+      name: tr('Can 2 Picked Up'),
+      description: tr('Can 2 picked up'),
     },
     can9PickedUp: {
-      name: { [LocalizedString.EN_US]: 'Can 9 Picked Up' },
-      description: { [LocalizedString.EN_US]: 'Can 9 picked up' },
+      name: tr('Can 9 Picked Up'),
+      description: tr('Can 9 picked up'),
     },
     can10PickedUp: {
-      name: { [LocalizedString.EN_US]: 'Can 10 Picked Up' },
-      description: { [LocalizedString.EN_US]: 'Can 10 picked up' },
+      name: tr('Can 10 Picked Up'),
+      description: tr('Can 10 picked up'),
     },
 
     can2Upright: {
-      name: { [LocalizedString.EN_US]: 'Can 2 Upright' },
-      description: { [LocalizedString.EN_US]: 'Can 2 upright' },
+      name: tr('Can 2 Upright'),
+      description: tr('Can 2 upright'),
     },
     can9Upright: {
-      name: { [LocalizedString.EN_US]: 'Can 9 Upright' },
-      description: { [LocalizedString.EN_US]: 'Can 9 upright' },
+      name: tr('Can 9 Upright'),
+      description: tr('Can 9 upright'),
     },
     can10Upright: {
-      name: { [LocalizedString.EN_US]: 'Can 10 Upright' },
-      description: { [LocalizedString.EN_US]: 'Can 10 upright' },
+      name: tr('Can 10 Upright'),
+      description: tr('Can 10 upright'),
     },
 
     can2Intersects: {
-      name: { [LocalizedString.EN_US]: 'Can 2 Intersects Green Garage' },
-      description: { [LocalizedString.EN_US]: 'Can 2 intersects Green Garage' },
+      name: tr('Can 2 Intersects Green Garage'),
+      description: tr('Can 2 intersects Green Garage'),
     },
     can9Intersects: {
-      name: { [LocalizedString.EN_US]: 'Can 9 Intersects Blue Garage' },
-      description: { [LocalizedString.EN_US]: 'Can 9 intersects Blue Garage' },
+      name: tr('Can 9 Intersects Blue Garage'),
+      description: tr('Can 9 intersects Blue Garage'),
     },
     can9IntersectsPurple: {
-      name: { [LocalizedString.EN_US]: 'Can 9 Intersects Purple Garage' },
-      description: { [LocalizedString.EN_US]: 'Can 9 intersects Purple Garage' },
+      name: tr('Can 9 Intersects Purple Garage'),
+      description: tr('Can 9 intersects Purple Garage'),
     },
     can10Intersects: {
-      name: { [LocalizedString.EN_US]: 'Can 10 Intersects Yellow Garage' },
-      description: { [LocalizedString.EN_US]: 'Can 10 intersects Yellow Garage' },
+      name: tr('Can 10 Intersects Yellow Garage'),
+      description: tr('Can 10 intersects Yellow Garage'),
     },
 
   },
@@ -192,18 +190,18 @@ export default {
     rootId: 'completion',
   },
   successGoals: [
-    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
-    { exprId: 'can2Intersects', name: { [LocalizedString.EN_US]: 'Place can 2 in green garage' } },
-    { exprId: 'can9Intersects', name: { [LocalizedString.EN_US]: 'Place can 9 in blue garage' } },
-    { exprId: 'can10Intersects', name: { [LocalizedString.EN_US]: 'Place can 10 in yellow garage' } },
+    { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
+    { exprId: 'can2Intersects', name: tr('Place can 2 in green garage') },
+    { exprId: 'can9Intersects', name: tr('Place can 9 in blue garage') },
+    { exprId: 'can10Intersects', name: tr('Place can 10 in yellow garage') },
   ],
   failureGoals: [
-    { exprId: 'can2NotUpright', name: { [LocalizedString.EN_US]: 'Can 2 not upright' } },
-    { exprId: 'can9NotUpright', name: { [LocalizedString.EN_US]: 'Can 9 not upright' } },
-    { exprId: 'can10NotUpright', name: { [LocalizedString.EN_US]: 'Can 10 not upright' } },
-    { exprId: 'can2NotPickedUpOnce', name: { [LocalizedString.EN_US]: 'Can 2 not picked up' } },
-    { exprId: 'can9NotPickedUpOnce', name: { [LocalizedString.EN_US]: 'Can 9 not picked up' } },
-    { exprId: 'can10NotPickedUpOnce', name: { [LocalizedString.EN_US]: 'Can 10 not picked up' } },
+    { exprId: 'can2NotUpright', name: tr('Can 2 not upright') },
+    { exprId: 'can9NotUpright', name: tr('Can 9 not upright') },
+    { exprId: 'can10NotUpright', name: tr('Can 10 not upright') },
+    { exprId: 'can2NotPickedUpOnce', name: tr('Can 2 not picked up') },
+    { exprId: 'can9NotPickedUpOnce', name: tr('Can 9 not picked up') },
+    { exprId: 'can10NotPickedUpOnce', name: tr('Can 10 not picked up') },
   ],
   sceneId: 'jbc16',
 } as Challenge;

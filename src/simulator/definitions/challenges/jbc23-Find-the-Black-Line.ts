@@ -1,15 +1,13 @@
 import Author from '../../../db/Author';
 import Challenge from '../../../state/State/Challenge';
 import Expr from '../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
 import { on } from 'form-data';
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 23' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 23: Find the Black Line`,
-  },
+  name: tr('JBC Challenge 23'),
+  description: tr(`Junior Botball Challenge 23: Find the Black Line`),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
@@ -22,12 +20,12 @@ export default {
   defaultLanguage: 'c',
   events: {
     stopAtBlackLine: {
-      name: { [LocalizedString.EN_US]: "Robot Stops at Black Line" },
-      description: { [LocalizedString.EN_US]: "Robot stops at black line" },
+      name: tr("Robot Stops at Black Line"),
+      description: tr("Robot stops at black line"),
     },
     onCircle: {
-      name: { [LocalizedString.EN_US]: "Robot Over Circle" },
-      description: { [LocalizedString.EN_US]: "Robot over selected circle" },
+      name: tr("Robot Over Circle"),
+      description: tr("Robot over selected circle"),
     },
   },
   success: {
@@ -56,8 +54,8 @@ export default {
     rootId: 'completion',
   },
   successGoals: [
-    { exprId: 'onCircleOnce', name: { [LocalizedString.EN_US]: 'Started over the circle' } },
-    { exprId: 'stopAtBlackLine', name: { [LocalizedString.EN_US]: 'Stop at the black line' } },
+    { exprId: 'onCircleOnce', name: tr('Started over the circle') },
+    { exprId: 'stopAtBlackLine', name: tr('Stop at the black line') },
   ],
   sceneId: 'jbc23',
 } as Challenge;

@@ -1,14 +1,12 @@
 import Author from '../../../db/Author';
 import Challenge from '../../../state/State/Challenge';
 import Expr from '../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 3' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 3: Precision Parking`,
-  },
+  name: tr('JBC Challenge 3'),
+  description: tr(`Junior Botball Challenge 3: Precision Parking`),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
@@ -21,30 +19,24 @@ export default {
   defaultLanguage: 'c',
   events: {
     notInStartBox: {
-      name: { [LocalizedString.EN_US]: 'Robot not in Start Box' },
-      description: { [LocalizedString.EN_US]: 'Robot not in start box' },
+      name: tr('Robot not in Start Box'),
+      description: tr('Robot not in start box'),
     },
     touchGarageLines: {
-      name: { [LocalizedString.EN_US]: 'Robot Touched Garage Lines' },
-      description: {
-        [LocalizedString.EN_US]: 'Robot touched garage boundaries',
-      },
+      name: tr('Robot Touched Garage Lines'),
+      description: tr('Robot touched garage boundaries'),
     },
     singleGarageRun1: {
-      name: { [LocalizedString.EN_US]: 'Robot Parked in One Garage' },
-      description: {
-        [LocalizedString.EN_US]: 'Robot parked in only one garage',
-      },
+      name: tr('Robot Parked in One Garage'),
+      description: tr('Robot parked in only one garage'),
     },
     singleGarageRun2: {
-      name: { [LocalizedString.EN_US]: 'Robot Parked in Different Garage' },
-      description: {
-        [LocalizedString.EN_US]: 'Robot parked in a different garage',
-      },
+      name: tr('Robot Parked in Different Garage'),
+      description: tr('Robot parked in a different garage'),
     },
     returnStartBox: {
-      name: { [LocalizedString.EN_US]: 'Robot Returned Start' },
-      description: { [LocalizedString.EN_US]: 'Robot returned to starting box' },
+      name: tr('Robot Returned Start'),
+      description: tr('Robot returned to starting box'),
     },
   },
   success: {
@@ -114,25 +106,25 @@ export default {
   successGoals: [
     {
       exprId: 'inStartBoxOnce',
-      name: { [LocalizedString.EN_US]: 'Start in the Start Box' },
+      name: tr('Start in the Start Box'),
     },
     {
       exprId: 'singleGarageRun1Once',
-      name: { [LocalizedString.EN_US]: 'Park in one garage' },
+      name: tr('Park in one garage'),
     },
     {
       exprId: 'singleGarageRun2Once',
-      name: { [LocalizedString.EN_US]: 'Park in a different garage' },
+      name: tr('Park in a different garage'),
     },
     {
       exprId: 'returnStartBoxOnce',
-      name: { [LocalizedString.EN_US]: 'Return to the Start Box' },
+      name: tr('Return to the Start Box'),
     },
   ],
   failureGoals: [
     {
       exprId: 'touchGarageLines',
-      name: { [LocalizedString.EN_US]: 'Do not touch garage boundaries' },
+      name: tr('Do not touch garage boundaries'),
     },
   ],
   sceneId: 'jbc3',

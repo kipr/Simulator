@@ -1,14 +1,12 @@
 import Author from "../../../../db/Author";
 import Challenge from "../../../../state/State/Challenge";
 import Expr from "../../../../state/State/Challenge/Expr";
-import LocalizedString from "../../../../util/LocalizedString";
 import ProgrammingLanguage from "../../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: "JBC Challenge 2B" },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 2B: Ring Around the Cans, Sr.`,
-  },
+  name: tr("JBC Challenge 2B"),
+  description: tr(`Junior Botball Challenge 2B: Ring Around the Cans, Sr.`),
   author: {
     type: Author.Type.Organization,
     id: "kipr",
@@ -21,72 +19,66 @@ export default {
   defaultLanguage: "c",
   events: {
     can10Touched: {
-      name: { [LocalizedString.EN_US]: "Can 10 Touched" },
-      description: { [LocalizedString.EN_US]: "Can 10 touched" },
+      name: tr("Can 10 Touched"),
+      description: tr("Can 10 touched"),
     },
     can11Touched: {
-      name: { [LocalizedString.EN_US]: "Can 11 Touched" },
-      description: { [LocalizedString.EN_US]: "Can 11 touched" },
+      name: tr("Can 11 Touched"),
+      description: tr("Can 11 touched"),
     },
     can12Touched: {
-      name: { [LocalizedString.EN_US]: "Can 12 Touched" },
-      description: { [LocalizedString.EN_US]: "Can 12 touched" },
+      name: tr("Can 12 Touched"),
+      description: tr("Can 12 touched"),
     },
 
     can10Intersects: {
-      name: { [LocalizedString.EN_US]: "Can 10 Intersects" },
-      description: { [LocalizedString.EN_US]: "Can 10 intersects circle 10" },
+      name: tr("Can 10 Intersects"),
+      description: tr("Can 10 intersects circle 10"),
     },
     can11Intersects: {
-      name: { [LocalizedString.EN_US]: "Can 11 Intersects" },
-      description: { [LocalizedString.EN_US]: "Can 11 intersects circle 11" },
+      name: tr("Can 11 Intersects"),
+      description: tr("Can 11 intersects circle 11"),
     },
     can12Intersects: {
-      name: { [LocalizedString.EN_US]: "Can 12 Intersects" },
-      description: { [LocalizedString.EN_US]: "Can 12 intersects circle 12" },
+      name: tr("Can 12 Intersects"),
+      description: tr("Can 12 intersects circle 12"),
     },
 
     can10Upright: {
-      name: { [LocalizedString.EN_US]: "Can 10 Upright" },
-      description: { [LocalizedString.EN_US]: "Can 10 upright on circle 10" },
+      name: tr("Can 10 Upright"),
+      description: tr("Can 10 upright on circle 10"),
     },
     can11Upright: {
-      name: { [LocalizedString.EN_US]: "Can 11 Upright" },
-      description: { [LocalizedString.EN_US]: "Can 11 upright on circle 11" },
+      name: tr("Can 11 Upright"),
+      description: tr("Can 11 upright on circle 11"),
     },
     can12Upright: {
-      name: { [LocalizedString.EN_US]: "Can 12 Upright" },
-      description: { [LocalizedString.EN_US]: "Can 12 upright on circle 12" },
+      name: tr("Can 12 Upright"),
+      description: tr("Can 12 upright on circle 12"),
     },
 
     leaveStartBox: {
-      name: { [LocalizedString.EN_US]: "Robot Left Start" },
-      description: { [LocalizedString.EN_US]: "Robot left starting box" },
+      name: tr("Robot Left Start"),
+      description: tr("Robot left starting box"),
     },
     returnStartBox: {
-      name: { [LocalizedString.EN_US]: "Robot Rentered Start" },
-      description: { [LocalizedString.EN_US]: "Robot reentered starting box" },
+      name: tr("Robot Rentered Start"),
+      description: tr("Robot reentered starting box"),
     },
 
     rightSide: {
-      name: { [LocalizedString.EN_US]: "Robot Passed Right Side" },
-      description: {
-        [LocalizedString.EN_US]: "Robot passed right side of can 12",
-      },
+      name: tr("Robot Passed Right Side"),
+      description: tr("Robot passed right side of can 12"),
     },
 
     topSide: {
-      name: { [LocalizedString.EN_US]: "Robot Passed Top Side" },
-      description: {
-        [LocalizedString.EN_US]: "Robot passed top side of can 11",
-      },
+      name: tr("Robot Passed Top Side"),
+      description: tr("Robot passed top side of can 11"),
     },
 
     leftSide: {
-      name: { [LocalizedString.EN_US]: "Robot Passed left Side" },
-      description: {
-        [LocalizedString.EN_US]: "Robot passed left side of can 10",
-      },
+      name: tr("Robot Passed left Side"),
+      description: tr("Robot passed left side of can 10"),
     },
   },
   success: {

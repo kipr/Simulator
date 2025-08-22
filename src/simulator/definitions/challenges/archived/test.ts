@@ -1,12 +1,12 @@
 import Author from '../../../../db/Author';
 import Challenge from '../../../../state/State/Challenge';
 import Expr from '../../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'Test' },
-  description: { [LocalizedString.EN_US]: 'Test' },
+  name: tr('Test'),
+  description: tr('Test'),
   author: {
     type: Author.Type.Organization,
     id: 'kipr'
@@ -19,12 +19,12 @@ export default {
   defaultLanguage: 'c',
   events: {
     a: {
-      name: { [LocalizedString.EN_US]: 'A' },
-      description: { [LocalizedString.EN_US]: 'A' },
+      name: tr('A'),
+      description: tr('A'),
     },
     b: {
-      name: { [LocalizedString.EN_US]: 'B' },
-      description: { [LocalizedString.EN_US]: 'B' },
+      name: tr('B'),
+      description: tr('B'),
     }
   },
   success: {

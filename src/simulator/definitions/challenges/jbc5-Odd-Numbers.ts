@@ -1,14 +1,12 @@
 import Author from "../../../db/Author";
 import Challenge from "../../../state/State/Challenge";
 import Expr from "../../../state/State/Challenge/Expr";
-import LocalizedString from "../../../util/LocalizedString";
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: "JBC Challenge 5" },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 5: Odd Numbers`,
-  },
+  name: tr("JBC Challenge 5"),
+  description: tr(`Junior Botball Challenge 5: Odd Numbers`),
   author: {
     type: Author.Type.Organization,
     id: "kipr",
@@ -21,40 +19,40 @@ export default {
   defaultLanguage: "c",
   events: {
     notInStartBox: {
-      name: { [LocalizedString.EN_US]: "Robot not in Start Box" },
-      description: { [LocalizedString.EN_US]: "Robot not in start box" },
+      name: tr("Robot not in Start Box"),
+      description: tr("Robot not in start box"),
     },
     touchedEvenCircle: {
-      name: { [LocalizedString.EN_US]: "Even Circle Touched" },
-      description: { [LocalizedString.EN_US]: "Even circle touched" },
+      name: tr("Even Circle Touched"),
+      description: tr("Even circle touched"),
     },
     wrongOrder: {
-      name: { [LocalizedString.EN_US]: "Circle Touched Out of Order" },
-      description: { [LocalizedString.EN_US]: "Circle was touched out of order" },
+      name: tr("Circle Touched Out of Order"),
+      description: tr("Circle was touched out of order"),
     },
     circle1Touched: {
-      name: { [LocalizedString.EN_US]: "Circle 1 Touched" },
-      description: { [LocalizedString.EN_US]: "Circle 1 was touched" },
+      name: tr("Circle 1 Touched"),
+      description: tr("Circle 1 was touched"),
     },
     circle3Touched: {
-      name: { [LocalizedString.EN_US]: "Circle 3 Touched" },
-      description: { [LocalizedString.EN_US]: "Circle 3 was touched" },
+      name: tr("Circle 3 Touched"),
+      description: tr("Circle 3 was touched"),
     },
     circle5Touched: {
-      name: { [LocalizedString.EN_US]: "Circle 5 Touched" },
-      description: { [LocalizedString.EN_US]: "Circle 5 was touched" },
+      name: tr("Circle 5 Touched"),
+      description: tr("Circle 5 was touched"),
     },
     circle7Touched: {
-      name: { [LocalizedString.EN_US]: "Circle 7 Touched" },
-      description: { [LocalizedString.EN_US]: "Circle 7 was touched" },
+      name: tr("Circle 7 Touched"),
+      description: tr("Circle 7 was touched"),
     },
     circle9Touched: {
-      name: { [LocalizedString.EN_US]: "Circle 9 Touched" },
-      description: { [LocalizedString.EN_US]: "Circle 9 was touched" },
+      name: tr("Circle 9 Touched"),
+      description: tr("Circle 9 was touched"),
     },
     circle11Touched: {
-      name: { [LocalizedString.EN_US]: "Circle 11 Touched" },
-      description: { [LocalizedString.EN_US]: "Circle 11 was touched" },
+      name: tr("Circle 11 Touched"),
+      description: tr("Circle 11 was touched"),
     },
   },
   success: {
@@ -170,22 +168,22 @@ export default {
     rootId: "failure"
   },
   successGoals: [
-    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
-    { exprId: 'circle1TouchedOnce', name: { [LocalizedString.EN_US]: 'Touch circle 1' } },
-    { exprId: 'circle3TouchedOnce', name: { [LocalizedString.EN_US]: 'Touch circle 3' } },
-    { exprId: 'circle5TouchedOnce', name: { [LocalizedString.EN_US]: 'Touch circle 5' } },
-    { exprId: 'circle7TouchedOnce', name: { [LocalizedString.EN_US]: 'Touch circle 7' } },
-    { exprId: 'circle9TouchedOnce', name: { [LocalizedString.EN_US]: 'Touch circle 9' } },
-    { exprId: 'circle11TouchedOnce', name: { [LocalizedString.EN_US]: 'Touch circle 11' } },
+    { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
+    { exprId: 'circle1TouchedOnce', name: tr('Touch circle 1') },
+    { exprId: 'circle3TouchedOnce', name: tr('Touch circle 3') },
+    { exprId: 'circle5TouchedOnce', name: tr('Touch circle 5') },
+    { exprId: 'circle7TouchedOnce', name: tr('Touch circle 7') },
+    { exprId: 'circle9TouchedOnce', name: tr('Touch circle 9') },
+    { exprId: 'circle11TouchedOnce', name: tr('Touch circle 11') },
   ],
   failureGoals: [
     {
       exprId: 'touchedEvenCircleOnce',
-      name: { [LocalizedString.EN_US]: 'Touched an even circle' },
+      name: tr('Touched an even circle'),
     },
     {
       exprId: 'wrongOrderOnce',
-      name: { [LocalizedString.EN_US]: 'Circle touched out of order' },
+      name: tr('Circle touched out of order'),
     },
   ],
   sceneId: "jbc5",

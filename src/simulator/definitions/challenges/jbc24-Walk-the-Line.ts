@@ -1,14 +1,12 @@
 import Author from '../../../db/Author';
 import Challenge from '../../../state/State/Challenge';
 import Expr from '../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 24' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 24: Walk the Line`,
-  },
+  name: tr('JBC Challenge 24'),
+  description: tr(`Junior Botball Challenge 24: Walk the Line`),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
@@ -21,11 +19,8 @@ export default {
   defaultLanguage: 'c',
   events: {
     lineFollow: {
-      name: { [LocalizedString.EN_US]: 'Robot Walks the Line' },
-      description: {
-        [LocalizedString.EN_US]:
-          'Robot uses reflectance sensor to follow the black line until Finish Line ',
-      },
+      name: tr('Robot Walks the Line'),
+      description: tr('Robot uses reflectance sensor to follow the black line until Finish Line '),
     },
   },
   success: {
@@ -47,7 +42,7 @@ export default {
     rootId: 'completion',
   },
   successGoals: [
-    { exprId: 'lineFollow', name: { [LocalizedString.EN_US]: 'Line follow to the finish line' } },
+    { exprId: 'lineFollow', name: tr('Line follow to the finish line') },
   ],
   sceneId: 'jbc24',
 } as Challenge;

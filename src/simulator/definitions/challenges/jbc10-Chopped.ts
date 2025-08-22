@@ -1,14 +1,12 @@
 import Author from "../../../db/Author";
 import Challenge from "../../../state/State/Challenge";
 import Expr from "../../../state/State/Challenge/Expr";
-import LocalizedString from "../../../util/LocalizedString";
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: "JBC Challenge 10" },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 10: Chopped`,
-  },
+  name: tr("JBC Challenge 10"),
+  description: tr(`Junior Botball Challenge 10: Chopped`),
   author: {
     type: Author.Type.Organization,
     id: "kipr",
@@ -21,16 +19,16 @@ export default {
   defaultLanguage: "c",
   events: {
     notInStartBox: {
-      name: { [LocalizedString.EN_US]: "Robot not in Start Box" },
-      description: { [LocalizedString.EN_US]: "Robot not in start box" },
+      name: tr("Robot not in Start Box"),
+      description: tr("Robot not in start box"),
     },
     waitedToChop: {
-      name: { [LocalizedString.EN_US]: "Waited to Chop" },
-      description: { [LocalizedString.EN_US]: "Robot waited to chop" },
+      name: tr("Waited to Chop"),
+      description: tr("Robot waited to chop"),
     },
     can7Upright: {
-      name: { [LocalizedString.EN_US]: "Can 7 Upright" },
-      description: { [LocalizedString.EN_US]: "Can 7 upright" },
+      name: tr("Can 7 Upright"),
+      description: tr("Can 7 upright"),
     },
   },
   success: {
@@ -76,9 +74,9 @@ export default {
     rootId: "completion",
   },
   successGoals: [
-    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
-    { exprId: 'waitedToChop', name: { [LocalizedString.EN_US]: 'Wait before chopping' } },
-    { exprId: 'can7NotUpright', name: { [LocalizedString.EN_US]: 'Knock over can 7' } },
+    { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
+    { exprId: 'waitedToChop', name: tr('Wait before chopping') },
+    { exprId: 'can7NotUpright', name: tr('Knock over can 7') },
   ],
   sceneId: "jbc10",
 } as Challenge;
