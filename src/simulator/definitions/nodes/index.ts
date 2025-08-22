@@ -10,16 +10,20 @@ import { BB2025Templates, BB2025Geometries } from "./2025gameTableTemplates";
 
 // TODO: Consider deep-freezing all of these objects
 
+const CAN_PHYSICS: Node.Physics = {
+  type: 'cylinder',
+  mass: Mass.grams(5),
+  friction: 10,
+  restitution: 0.4,
+  inertia: [20, 20, 20],
+};
+
+const DEAULT_FACEUVS = [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(0, 1), RawVector2.create(1, 0), RawVector2.ZERO, RawVector2.ZERO];
+
 const canTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'can',
-  physics: {
-    type: 'cylinder',
-    mass: Mass.grams(5),
-    friction: 0.7,
-    restitution: 0.3,
-    inertia: [1, 1, 1],
-  },
+  physics: CAN_PHYSICS,
   material: {
     type: 'basic',
     color: {
@@ -27,7 +31,7 @@ const canTemplate: Node.TemplatedNode<Node.Obj> = {
       uri: '/static/textures/Can_Texture.png'
     },
   },
-  faceUvs: [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(1, 0), RawVector2.create(0, 1), RawVector2.ZERO, RawVector2.ZERO],
+  faceUvs: DEAULT_FACEUVS,
 };
 
 const circleTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -46,12 +50,7 @@ const circleTemplate: Node.TemplatedNode<Node.Obj> = {
 const lifescienceTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'can',
-  physics: {
-    type: 'cylinder',
-    mass: Mass.grams(5),
-    friction: 0.7,
-    restitution: 0.3,
-  },
+  physics: CAN_PHYSICS,
   material: {
     type: 'basic',
     color: {
@@ -59,18 +58,13 @@ const lifescienceTemplate: Node.TemplatedNode<Node.Obj> = {
       uri: '/static/textures/sciencepack/life_science_pack.png'
     },
   },
-  faceUvs: [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(1, 0), RawVector2.create(0, 1), RawVector2.ZERO, RawVector2.ZERO],
+  faceUvs: DEAULT_FACEUVS,
 };
 
 const radscienceTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'can',
-  physics: {
-    type: 'cylinder',
-    mass: Mass.grams(5),
-    friction: 0.7,
-    restitution: 0.3,
-  },
+  physics: CAN_PHYSICS,
   material: {
     type: 'basic',
     color: {
@@ -78,18 +72,13 @@ const radscienceTemplate: Node.TemplatedNode<Node.Obj> = {
       uri: '/static/textures/sciencepack/rad_science_pack.png'
     },
   },
-  faceUvs: [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(1, 0), RawVector2.create(0, 1), RawVector2.ZERO, RawVector2.ZERO],
+  faceUvs: DEAULT_FACEUVS,
 };
 
 const noradscienceTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'can',
-  physics: {
-    type: 'cylinder',
-    mass: Mass.grams(5),
-    friction: 0.7,
-    restitution: 0.3,
-  },
+  physics: CAN_PHYSICS,
   material: {
     type: 'basic',
     color: {
@@ -97,7 +86,7 @@ const noradscienceTemplate: Node.TemplatedNode<Node.Obj> = {
       uri: '/static/textures/sciencepack/no_rad_science_pack.png'
     },
   },
-  faceUvs: [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(1, 0), RawVector2.create(0, 1), RawVector2.ZERO, RawVector2.ZERO],
+  faceUvs: DEAULT_FACEUVS,
 };
 
 const reamTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -107,13 +96,33 @@ const reamTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'box',
     restitution: .3,
     friction: 1,
-    mass: Mass.pounds(5),
+    mass: Mass.pounds(10),
+    inertia: [50, 50, 50],
   },
   material: {
     type: 'basic',
     color: {
       type: 'color3',
       color: Color.Rgb.create(250, 250, 250),
+    },
+  },
+};
+
+const warmingTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'ream',
+  physics: {
+    type: 'box',
+    motionType: PhysicsMotionType.STATIC,
+    restitution: .3,
+    friction: 1,
+    mass: Mass.pounds(5),
+  },
+  material: {
+    type: 'basic',
+    color: {
+      type: 'color3',
+      color: Color.Rgb.create(160, 95, 20),
     },
   },
 };
@@ -158,6 +167,7 @@ const sciencePadTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'sciencepad',
   physics: {
+    motionType: PhysicsMotionType.STATIC,
     type: 'box',
     restitution: 1,
     friction: 1,
@@ -179,6 +189,7 @@ const basaltTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.grams(20),
+    inertia: [1, 1, 1],
   },
   material: {
     type: 'basic',
@@ -197,6 +208,7 @@ const anorthositeTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.grams(20),
+    inertia: [1, 1, 1],
   },
   material: {
     type: 'basic',
@@ -215,6 +227,7 @@ const brecciaTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.grams(20),
+    inertia: [1, 1, 1],
   },
   material: {
     type: 'basic',
@@ -233,6 +246,7 @@ const meteoriteTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.grams(20),
+    inertia: [1, 1, 1],
   },
   material: {
     type: 'basic',
@@ -247,6 +261,7 @@ const containerTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'container',
   physics: {
+    motionType: PhysicsMotionType.STATIC,
     type: 'mesh',
     restitution: .3,
     friction: 1,
@@ -261,6 +276,7 @@ const botguyTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.grams(5),
+    inertia: [1, 1, 1],
   },
 };
 const solarpanelTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -271,6 +287,7 @@ const solarpanelTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.pounds(.3),
+    inertia: [1, 1, 1],
   },
 };
 
@@ -282,6 +299,7 @@ const walkwayTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.pounds(.3),
+    inertia: [1, 1, 1],
   },
 };
 const commstowerTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -292,6 +310,7 @@ const commstowerTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.pounds(.3),
+    inertia: [1, 1, 1],
   },
 };
 
@@ -303,6 +322,7 @@ const habitatTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.pounds(.3),
+    inertia: [1, 1, 1],
   },
 };
 
@@ -314,6 +334,7 @@ const habitatResearchTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.pounds(.3),
+    inertia: [1, 1, 1],
   },
 };
 
@@ -325,7 +346,31 @@ const habitatControlTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.pounds(.3),
+    inertia: [1, 1, 1],
   },
+};
+
+const JBC_CUP_PHYSICS: Node.Physics = {
+  type: 'none',
+  restitution: .20,
+  friction: 1,
+  mass: Mass.grams(300),
+  inertia: [50, 50, 50],
+};
+const jbcCupBlueTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'jbc_cup_blue',
+  physics: JBC_CUP_PHYSICS
+};
+const jbcCupGreenTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'jbc_cup_green',
+  physics: JBC_CUP_PHYSICS
+};
+const jbcCupPinkTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'jbc_cup_pink',
+  physics: JBC_CUP_PHYSICS
 };
 
 export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
@@ -336,6 +381,7 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'radscience': radscienceTemplate,
   'noradscience': noradscienceTemplate,
   'ream': reamTemplate,
+  'warming_station': warmingTemplate,
   'matA': matATemplate,
   'matB': matBTemplate,
   'basalt': basaltTemplate,
@@ -350,6 +396,9 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'habitat': habitatTemplate,
   'research_habitat': habitatResearchTemplate,
   'control_habitat': habitatControlTemplate,
+  'jbc_cup_blue': jbcCupBlueTemplate,
+  'jbc_cup_green': jbcCupGreenTemplate,
+  'jbc_cup_pink': jbcCupPinkTemplate,
   ...BB2025Templates,
 });
 
@@ -458,6 +507,18 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
   'control_habitat': {
     type: 'file',
     uri: '/static/object_binaries/com_hab.glb'
+  },
+  'jbc_cup_blue': {
+    type: 'file',
+    uri: '/static/object_binaries/jbc_cup_blue.glb'
+  },
+  'jbc_cup_green': {
+    type: 'file',
+    uri: '/static/object_binaries/jbc_cup_green.glb'
+  },
+  'jbc_cup_pink': {
+    type: 'file',
+    uri: '/static/object_binaries/jbc_cup_pink.glb'
   },
   ...BB2025Geometries,
 });

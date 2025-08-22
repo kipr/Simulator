@@ -34,7 +34,7 @@ import LightSensor from './sensors/LightSensor';
 import LocalizedString from '../../util/LocalizedString';
 
 class RobotBinding {
-  /**  Type 'RobotBinding' is missing the following properties from type 
+  /**  Type 'RobotBinding' is missing the following properties from type
    * 'RobotBindingLike': scene, colliders, physicsViewer,  */
   private bScene_: babylonScene;
 
@@ -160,12 +160,12 @@ class RobotBinding {
   };
 
   /**
-   * Gets the angle between the parent and child links. 
+   * Gets the angle between the parent and child links.
    * Currently only supports angles between -90 and 90 degrees.
    * TODO: Fix this to support angles between -180 and 180 degrees.
-   * @param id 
-   * @param parentId 
-   * @returns 
+   * @param id
+   * @param parentId
+   * @returns
    */
   private hingeAngle_ = (id: string, parentId: string): number => {
     const { bParent, bChild } = this.bParentChild_(id, parentId);
@@ -177,9 +177,9 @@ class RobotBinding {
 
 
   /**
-   * Sets the motor to the desired velocity. 
-   * @param bMotor 
-   * @param velocity 
+   * Sets the motor to the desired velocity.
+   * @param bMotor
+   * @param velocity
    */
   private setMotorVelocity_ = (bMotor: Physics6DoFConstraint, velocity: number) => {
 
@@ -413,14 +413,16 @@ class RobotBinding {
         cur_angle = bServo.getAxisMinLimit(PhysicsConstraintAxis.ANGULAR_Z);
       }
 
+      const SERVO_VELOCITY = Math.PI * 0.75;
+
       if (cur_angle.toFixed(5) !== targetAangle.toFixed(5)) {
         if (cur_angle < targetAangle) {
           bServo.setAxisMaxLimit(PhysicsConstraintAxis.ANGULAR_Z, targetAangle);
-          bServo.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, Math.PI * .4);
+          bServo.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, SERVO_VELOCITY);
         }
         if (cur_angle > targetAangle) {
           bServo.setAxisMinLimit(PhysicsConstraintAxis.ANGULAR_Z, targetAangle);
-          bServo.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, Math.PI * -.4);
+          bServo.setAxisMotorTarget(PhysicsConstraintAxis.ANGULAR_Z, -1 * SERVO_VELOCITY);
         }
       }
     }
@@ -611,7 +613,7 @@ class RobotBinding {
     const nodeIds = Robot.breadthFirstNodeIds(robot);
     this.childrenNodeIds_ = Robot.childrenNodeIds(robot);
 
-    // Links are the physical objects and need to be set up before the 
+    // Links are the physical objects and need to be set up before the
     // rest of the nodes
     for (const nodeId of nodeIds) {
       const node = robot.nodes[nodeId];
