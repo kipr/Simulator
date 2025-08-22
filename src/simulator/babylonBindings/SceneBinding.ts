@@ -82,7 +82,7 @@ class SceneBinding {
     // Stop the context menu from opening in some web browsers
     canvas.oncontextmenu = (e) => {
       e.preventDefault();
-    }
+    };
     const engine = this.bScene_.getEngine();
     if (this.engineView_) engine.unRegisterView(this.engineView_.target);
     this.engineView_ = engine.registerView(this.canvas_);
