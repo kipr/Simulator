@@ -1,14 +1,12 @@
 import Author from '../../../../db/Author';
 import Challenge from '../../../../state/State/Challenge';
 import Expr from '../../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 2D' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 2C: Ring Around the Can and Back It Up`,
-  },
+  name: tr('JBC Challenge 2D'),
+  description: tr(`Junior Botball Challenge 2C: Ring Around the Can and Back It Up`),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
@@ -21,59 +19,47 @@ export default {
   defaultLanguage: 'c',
   events: {
     can6Intersects: {
-      name: { [LocalizedString.EN_US]: 'Can 6 Intersects' },
-      description: { [LocalizedString.EN_US]: 'Can 6 intersects circle 6' },
+      name: tr('Can 6 Intersects'),
+      description: tr('Can 6 intersects circle 6'),
     },
 
     can6Upright: {
-      name: { [LocalizedString.EN_US]: 'Can 6 Upright' },
-      description: { [LocalizedString.EN_US]: 'Can 6 upright on circle 6' },
+      name: tr('Can 6 Upright'),
+      description: tr('Can 6 upright on circle 6'),
     },
 
     returnStartBox1: {
-      name: { [LocalizedString.EN_US]: 'Robot Rentered Start 1' },
-      description: {
-        [LocalizedString.EN_US]:
-          'Robot reentered starting box after going forwards',
-      },
+      name: tr('Robot Rentered Start 1'),
+      description: tr('Robot reentered starting box after going forwards'),
     },
 
     returnStartBox2: {
-      name: { [LocalizedString.EN_US]: 'Robot Rentered Start 2' },
-      description: {
-        [LocalizedString.EN_US]:
-          'Robot reentered starting box after going backwards',
-      },
+      name: tr('Robot Rentered Start 2'),
+      description: tr('Robot reentered starting box after going backwards'),
     },
 
     driveBackwards: {
-      name: { [LocalizedString.EN_US]: 'Robot Driving Backwards' },
-      description: { [LocalizedString.EN_US]: 'Robot is driving backwards' },
+      name: tr('Robot Driving Backwards'),
+      description: tr('Robot is driving backwards'),
     },
     driveForwards: {
-      name: { [LocalizedString.EN_US]: 'Robot Driving Forwards' },
-      description: { [LocalizedString.EN_US]: 'Robot is driving forwards' },
+      name: tr('Robot Driving Forwards'),
+      description: tr('Robot is driving forwards'),
     },
 
     rightSide: {
-      name: { [LocalizedString.EN_US]: 'Robot Passed Right Side' },
-      description: {
-        [LocalizedString.EN_US]: 'Robot passed right side of can 6',
-      },
+      name: tr('Robot Passed Right Side'),
+      description: tr('Robot passed right side of can 6'),
     },
 
     topSide: {
-      name: { [LocalizedString.EN_US]: 'Robot Passed Top Side' },
-      description: {
-        [LocalizedString.EN_US]: 'Robot passed top side of can 6',
-      },
+      name: tr('Robot Passed Top Side'),
+      description: tr('Robot passed top side of can 6'),
     },
 
     leftSide: {
-      name: { [LocalizedString.EN_US]: 'Robot Passed left Side' },
-      description: {
-        [LocalizedString.EN_US]: 'Robot passed left side of can 6',
-      },
+      name: tr('Robot Passed left Side'),
+      description: tr('Robot passed left side of can 6'),
     },
   },
   success: {

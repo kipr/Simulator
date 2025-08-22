@@ -1,14 +1,12 @@
 import Author from '../../../db/Author';
 import Challenge from '../../../state/State/Challenge';
 import Expr from '../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 17' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 17: Mountain Rescue`,
-  },
+  name: tr('JBC Challenge 17'),
+  description: tr(`Junior Botball Challenge 17: Mountain Rescue`),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
@@ -21,32 +19,32 @@ export default {
   defaultLanguage: 'c',
   events: {
     notInStartBox: {
-      name: { [LocalizedString.EN_US]: 'Robot not in Start Box' },
-      description: { [LocalizedString.EN_US]: 'Robot not in start box' },
+      name: tr('Robot not in Start Box'),
+      description: tr('Robot not in start box'),
     },
     can1Upright: {
-      name: { [LocalizedString.EN_US]: 'Can 1 Upright' },
-      description: { [LocalizedString.EN_US]: 'Can 1 is upright', },
+      name: tr('Can 1 Upright'),
+      description: tr('Can 1 is upright'),
     },
     can2Upright: {
-      name: { [LocalizedString.EN_US]: 'Can 2 Upright' },
-      description: { [LocalizedString.EN_US]: 'Can 2 is upright', },
+      name: tr('Can 2 Upright'),
+      description: tr('Can 2 is upright'),
     },
     can3Upright: {
-      name: { [LocalizedString.EN_US]: 'Can 3 Upright' },
-      description: { [LocalizedString.EN_US]: 'Can 3 is upright', },
+      name: tr('Can 3 Upright'),
+      description: tr('Can 3 is upright'),
     },
     can1Intersects: {
-      name: { [LocalizedString.EN_US]: 'Can 1 Intersects' },
-      description: { [LocalizedString.EN_US]: 'Can 1 rescued intersecting starting box', },
+      name: tr('Can 1 Intersects'),
+      description: tr('Can 1 rescued intersecting starting box'),
     },
     can2Intersects: {
-      name: { [LocalizedString.EN_US]: 'Can 2 Intersects' },
-      description: { [LocalizedString.EN_US]: 'Can 2 rescued intersecting starting box', },
+      name: tr('Can 2 Intersects'),
+      description: tr('Can 2 rescued intersecting starting box'),
     },
     can3Intersects: {
-      name: { [LocalizedString.EN_US]: 'Can 3 Intersects' },
-      description: { [LocalizedString.EN_US]: 'Can 3 rescued intersecting starting box', },
+      name: tr('Can 3 Intersects'),
+      description: tr('Can 3 rescued intersecting starting box'),
     },
   },
   success: {
@@ -139,15 +137,15 @@ export default {
     rootId: 'completion',
   },
   successGoals: [
-    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
-    { exprId: 'can1Intersects', name: { [LocalizedString.EN_US]: 'Rescue can 1 to start box' } },
-    { exprId: 'can2Intersects', name: { [LocalizedString.EN_US]: 'Rescue can 2 to start box' } },
-    { exprId: 'can3Intersects', name: { [LocalizedString.EN_US]: 'Rescue can 3 to start box' } },
+    { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
+    { exprId: 'can1Intersects', name: tr('Rescue can 1 to start box') },
+    { exprId: 'can2Intersects', name: tr('Rescue can 2 to start box') },
+    { exprId: 'can3Intersects', name: tr('Rescue can 3 to start box') },
   ],
   failureGoals: [
-    { exprId: 'can1NotUpright', name: { [LocalizedString.EN_US]: 'Can 1 not upright' } },
-    { exprId: 'can2NotUpright', name: { [LocalizedString.EN_US]: 'Can 2 not upright' } },
-    { exprId: 'can3NotUpright', name: { [LocalizedString.EN_US]: 'Can 3 not upright' } },
+    { exprId: 'can1NotUpright', name: tr('Can 1 not upright') },
+    { exprId: 'can2NotUpright', name: tr('Can 2 not upright') },
+    { exprId: 'can3NotUpright', name: tr('Can 3 not upright') },
   ],
   sceneId: 'jbc17',
 } as Challenge;

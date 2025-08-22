@@ -1,14 +1,12 @@
 import Author from '../../../db/Author';
 import Challenge from '../../../state/State/Challenge';
 import Expr from '../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 22' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 22: Search and Rescue`,
-  },
+  name: tr('JBC Challenge 22'),
+  description: tr(`Junior Botball Challenge 22: Search and Rescue`),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
@@ -21,16 +19,16 @@ export default {
   defaultLanguage: 'c',
   events: {
     notInStartBox: {
-      name: { [LocalizedString.EN_US]: "Robot not in Start Box" },
-      description: { [LocalizedString.EN_US]: "Robot not in start box" },
+      name: tr("Robot not in Start Box"),
+      description: tr("Robot not in start box"),
     },
     canInStartBox: {
-      name: { [LocalizedString.EN_US]: "Can in Start Box" },
-      description: { [LocalizedString.EN_US]: "Can in start box" },
+      name: tr("Can in Start Box"),
+      description: tr("Can in start box"),
     },
     canUpright: {
-      name: { [LocalizedString.EN_US]: "Can Upright" },
-      description: { [LocalizedString.EN_US]: "Can is upright" },
+      name: tr("Can Upright"),
+      description: tr("Can is upright"),
     },
   },
   success: {
@@ -75,11 +73,11 @@ export default {
     rootId: 'completion',
   },
   successGoals: [
-    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
-    { exprId: 'canInStartBox', name: { [LocalizedString.EN_US]: 'Bring can to Start Box' } },
+    { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
+    { exprId: 'canInStartBox', name: tr('Bring can to Start Box') },
   ],
   failureGoals: [
-    { exprId: 'canNotUpright', name: { [LocalizedString.EN_US]: 'Can not upright' } },
+    { exprId: 'canNotUpright', name: tr('Can not upright') },
   ],
   sceneId: 'jbc22',
 } as Challenge;

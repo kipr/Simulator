@@ -1,14 +1,12 @@
 import Author from '../../../db/Author';
 import Challenge from '../../../state/State/Challenge';
 import Expr from '../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 9' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 9: Cover Your Bases`,
-  },
+  name: tr('JBC Challenge 9'),
+  description: tr(`Junior Botball Challenge 9: Cover Your Bases`),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
@@ -21,48 +19,48 @@ export default {
   defaultLanguage: 'c',
   events: {
     notInStartBox: {
-      name: { [LocalizedString.EN_US]: 'Robot not in Start Box' },
-      description: { [LocalizedString.EN_US]: 'Robot not in start box' },
+      name: tr('Robot not in Start Box'),
+      description: tr('Robot not in start box'),
     },
     canAUpright: {
-      name: { [LocalizedString.EN_US]: 'Can A Upright' },
-      description: { [LocalizedString.EN_US]: 'Can A upright in a circle', },
+      name: tr('Can A Upright'),
+      description: tr('Can A upright in a circle'),
     },
     canBUpright: {
-      name: { [LocalizedString.EN_US]: 'Can B Upright' },
-      description: { [LocalizedString.EN_US]: 'Can B upright in a circle', },
+      name: tr('Can B Upright'),
+      description: tr('Can B upright in a circle'),
     },
     canCUpright: {
-      name: { [LocalizedString.EN_US]: 'Can C Upright' },
-      description: { [LocalizedString.EN_US]: 'Can C upright in a circle', },
+      name: tr('Can C Upright'),
+      description: tr('Can C upright in a circle'),
     },
     canDUpright: {
-      name: { [LocalizedString.EN_US]: 'Can D Upright' },
-      description: { [LocalizedString.EN_US]: 'Can D upright in a circle', },
+      name: tr('Can D Upright'),
+      description: tr('Can D upright in a circle'),
     },
     canEUpright: {
-      name: { [LocalizedString.EN_US]: 'Can E Upright' },
-      description: { [LocalizedString.EN_US]: 'Can E upright in a circle', },
+      name: tr('Can E Upright'),
+      description: tr('Can E upright in a circle'),
     },
     baseACovered: {
-      name: { [LocalizedString.EN_US]: 'Base A Covered' },
-      description: { [LocalizedString.EN_US]: 'Base A covered by a can', },
+      name: tr('Base A Covered'),
+      description: tr('Base A covered by a can'),
     },
     baseBCovered: {
-      name: { [LocalizedString.EN_US]: 'Base B Covered' },
-      description: { [LocalizedString.EN_US]: 'Base B covered by a can', },
+      name: tr('Base B Covered'),
+      description: tr('Base B covered by a can'),
     },
     baseCCovered: {
-      name: { [LocalizedString.EN_US]: 'Base C Covered' },
-      description: { [LocalizedString.EN_US]: 'Base C covered by a can', },
+      name: tr('Base C Covered'),
+      description: tr('Base C covered by a can'),
     },
     baseDCovered: {
-      name: { [LocalizedString.EN_US]: 'Base D Covered' },
-      description: { [LocalizedString.EN_US]: 'Base D covered by a can', },
+      name: tr('Base D Covered'),
+      description: tr('Base D covered by a can'),
     },
     baseECovered: {
-      name: { [LocalizedString.EN_US]: 'Base E Covered' },
-      description: { [LocalizedString.EN_US]: 'Base E covered by a can', },
+      name: tr('Base E Covered'),
+      description: tr('Base E covered by a can'),
     },
   },
   success: {
@@ -162,19 +160,19 @@ export default {
     rootId: 'completion',
   },
   successGoals: [
-    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
-    { exprId: 'baseACovered', name: { [LocalizedString.EN_US]: 'Cover base A' } },
-    { exprId: 'baseBCovered', name: { [LocalizedString.EN_US]: 'Cover base B' } },
-    { exprId: 'baseCCovered', name: { [LocalizedString.EN_US]: 'Cover base C' } },
-    { exprId: 'baseDCovered', name: { [LocalizedString.EN_US]: 'Cover base D' } },
-    { exprId: 'baseECovered', name: { [LocalizedString.EN_US]: 'Cover base E' } },
+    { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
+    { exprId: 'baseACovered', name: tr('Cover base A') },
+    { exprId: 'baseBCovered', name: tr('Cover base B') },
+    { exprId: 'baseCCovered', name: tr('Cover base C') },
+    { exprId: 'baseDCovered', name: tr('Cover base D') },
+    { exprId: 'baseECovered', name: tr('Cover base E') },
   ],
   failureGoals: [
-    { exprId: 'canANotUpright', name: { [LocalizedString.EN_US]: 'Can A not upright' } },
-    { exprId: 'canBNotUpright', name: { [LocalizedString.EN_US]: 'Can B not upright' } },
-    { exprId: 'canCNotUpright', name: { [LocalizedString.EN_US]: 'Can C not upright' } },
-    { exprId: 'canDNotUpright', name: { [LocalizedString.EN_US]: 'Can D not upright' } },
-    { exprId: 'canENotUpright', name: { [LocalizedString.EN_US]: 'Can E not upright' } },
+    { exprId: 'canANotUpright', name: tr('Can A not upright') },
+    { exprId: 'canBNotUpright', name: tr('Can B not upright') },
+    { exprId: 'canCNotUpright', name: tr('Can C not upright') },
+    { exprId: 'canDNotUpright', name: tr('Can D not upright') },
+    { exprId: 'canENotUpright', name: tr('Can E not upright') },
   ],
   sceneId: 'jbc9',
 } as Challenge;

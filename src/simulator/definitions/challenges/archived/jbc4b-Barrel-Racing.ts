@@ -1,14 +1,12 @@
 import Author from "../../../../db/Author";
 import Challenge from "../../../../state/State/Challenge";
 import Expr from "../../../../state/State/Challenge/Expr";
-import LocalizedString from "../../../../util/LocalizedString";
 import ProgrammingLanguage from "../../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: "JBC Challenge 4B" },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 4B: Barrel Racing`,
-  },
+  name: tr("JBC Challenge 4B"),
+  description: tr(`Junior Botball Challenge 4B: Barrel Racing`),
   author: {
     type: Author.Type.Organization,
     id: "kipr",
@@ -21,57 +19,51 @@ export default {
   defaultLanguage: "c",
   events: {
     can5Intersects: {
-      name: { [LocalizedString.EN_US]: "Can 5 Intersects" },
-      description: { [LocalizedString.EN_US]: "Can 5 intersects circle 5" },
+      name: tr("Can 5 Intersects"),
+      description: tr("Can 5 intersects circle 5"),
     },
     can8Intersects: {
-      name: { [LocalizedString.EN_US]: "Can 8 Intersects" },
-      description: { [LocalizedString.EN_US]: "Can 8 intersects circle 8" },
+      name: tr("Can 8 Intersects"),
+      description: tr("Can 8 intersects circle 8"),
     },
     can9Intersects: {
-      name: { [LocalizedString.EN_US]: "Can 9 Intersects" },
-      description: { [LocalizedString.EN_US]: "Can 9 intersects circle 9" },
+      name: tr("Can 9 Intersects"),
+      description: tr("Can 9 intersects circle 9"),
     },
 
     can5Upright: {
-      name: { [LocalizedString.EN_US]: "Can 5 Upright" },
-      description: { [LocalizedString.EN_US]: "Can 5 upright on circle 5" },
+      name: tr("Can 5 Upright"),
+      description: tr("Can 5 upright on circle 5"),
     },
     can8Upright: {
-      name: { [LocalizedString.EN_US]: "Can 8 Upright" },
-      description: { [LocalizedString.EN_US]: "Can 8 upright on circle 8" },
+      name: tr("Can 8 Upright"),
+      description: tr("Can 8 upright on circle 8"),
     },
     can9Upright: {
-      name: { [LocalizedString.EN_US]: "Can 9 Upright" },
-      description: { [LocalizedString.EN_US]: "Can 9 upright on circle 9" },
+      name: tr("Can 9 Upright"),
+      description: tr("Can 9 upright on circle 9"),
     },
 
     leaveStartBox: {
-      name: { [LocalizedString.EN_US]: "Robot Left Start" },
-      description: { [LocalizedString.EN_US]: "Robot left starting box" },
+      name: tr("Robot Left Start"),
+      description: tr("Robot left starting box"),
     },
     returnStartBox: {
-      name: { [LocalizedString.EN_US]: "Robot Rentered Start" },
-      description: { [LocalizedString.EN_US]: "Robot reentered starting box" },
+      name: tr("Robot Rentered Start"),
+      description: tr("Robot reentered starting box"),
     },
 
     clockwise8: {
-      name: { [LocalizedString.EN_US]: "Can 8 Clockwise" },
-      description: {
-        [LocalizedString.EN_US]: "Robot drove clockwise around can 8",
-      },
+      name: tr("Can 8 Clockwise"),
+      description: tr("Robot drove clockwise around can 8"),
     },
     counterClockwise5: {
-      name: { [LocalizedString.EN_US]: "Can 5 Counter Clockwise" },
-      description: {
-        [LocalizedString.EN_US]: "Robot drove counter clockwise around can 5",
-      },
+      name: tr("Can 5 Counter Clockwise"),
+      description: tr("Robot drove counter clockwise around can 5"),
     },
     counterClockwise9: {
-      name: { [LocalizedString.EN_US]: "Can 9 Counter Clockwise" },
-      description: {
-        [LocalizedString.EN_US]: "Robot drove counter clockwise around can 9",
-      },
+      name: tr("Can 9 Counter Clockwise"),
+      description: tr("Robot drove counter clockwise around can 9"),
     },
   },
   success: {

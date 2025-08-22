@@ -1,14 +1,12 @@
 import Author from '../../../../db/Author';
 import Challenge from '../../../../state/State/Challenge';
 import Expr from '../../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 15B' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 15B: Bump Bump`,
-  },
+  name: tr('JBC Challenge 15B'),
+  description: tr(`Junior Botball Challenge 15B: Bump Bump`),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
@@ -21,25 +19,17 @@ export default {
   defaultLanguage: 'c',
   events: {
     driveForwardTouch: {
-      name: { [LocalizedString.EN_US]: 'Robot Forward Touch' },
-      description: {
-        [LocalizedString.EN_US]:
-          'Robot drove forward and touched ream of paper',
-      },
+      name: tr('Robot Forward Touch'),
+      description: tr('Robot drove forward and touched ream of paper'),
     },
 
     driveBackwardTouch: {
-      name: { [LocalizedString.EN_US]: 'Robot Backward Touch' },
-      description: {
-        [LocalizedString.EN_US]:
-          'Robot drove backward and touched ream of paper',
-      },
+      name: tr('Robot Backward Touch'),
+      description: tr('Robot drove backward and touched ream of paper'),
     },
     driveForward2: {
-      name: { [LocalizedString.EN_US]: 'Robot Forward Circle 2' },
-      description: {
-        [LocalizedString.EN_US]: 'Robot drove forward to circle 2',
-      },
+      name: tr('Robot Forward Circle 2'),
+      description: tr('Robot drove forward to circle 2'),
     },
   },
   success: {

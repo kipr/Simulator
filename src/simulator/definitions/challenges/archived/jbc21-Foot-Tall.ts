@@ -1,14 +1,12 @@
 import Author from '../../../../db/Author';
 import Challenge from '../../../../state/State/Challenge';
 import Expr from '../../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 21' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 21: Foot Tall`,
-  },
+  name: tr('JBC Challenge 21'),
+  description: tr(`Junior Botball Challenge 21: Foot Tall`),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
@@ -21,10 +19,8 @@ export default {
   defaultLanguage: 'c',
   events: {
     footTallMark: {
-      name: { [LocalizedString.EN_US]: 'Can 9 Lifted' },
-      description: {
-        [LocalizedString.EN_US]: 'Can 9 Lifted a Foot Tall',
-      },
+      name: tr('Can 9 Lifted'),
+      description: tr('Can 9 Lifted a Foot Tall'),
     },
   },
   success: {

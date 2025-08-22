@@ -1,14 +1,12 @@
 import Author from '../../../db/Author';
 import Challenge from '../../../state/State/Challenge';
 import Expr from '../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 19' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 19: Bump`,
-  },
+  name: tr('JBC Challenge 19'),
+  description: tr(`Junior Botball Challenge 19: Bump`),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
@@ -21,15 +19,12 @@ export default {
   defaultLanguage: 'c',
   events: {
     notInStartBox: {
-      name: { [LocalizedString.EN_US]: "Robot not in Start Box" },
-      description: { [LocalizedString.EN_US]: "Robot not in start box" },
+      name: tr("Robot not in Start Box"),
+      description: tr("Robot not in start box"),
     },
     driveForwardTouch: {
-      name: { [LocalizedString.EN_US]: 'Robot Forward Touch' },
-      description: {
-        [LocalizedString.EN_US]:
-          'Robot drove forward and touched ream of paper',
-      },
+      name: tr('Robot Forward Touch'),
+      description: tr('Robot drove forward and touched ream of paper'),
     },
   },
   success: {
@@ -65,8 +60,8 @@ export default {
     rootId: 'completion',
   },
   successGoals: [
-    { exprId: 'inStartBoxOnce', name: { [LocalizedString.EN_US]: 'Start in the Start Box' } },
-    { exprId: 'driveForwardTouch', name: { [LocalizedString.EN_US]: 'Drive forward and touch the ream' } },
+    { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
+    { exprId: 'driveForwardTouch', name: tr('Drive forward and touch the ream') },
   ],
   sceneId: 'jbc19',
 } as Challenge;
