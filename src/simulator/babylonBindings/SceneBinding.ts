@@ -79,7 +79,7 @@ class SceneBinding {
   set canvas(canvas: HTMLCanvasElement) {
     this.canvas_ = canvas;
 
-    //Stop the context menu from opening in some web browsers
+    // Stop the context menu from opening in some web browsers
     canvas.oncontextmenu = (e) => {
       e.preventDefault();
     }
