@@ -4,7 +4,7 @@ import {
   TransformNode, AbstractMesh, Mesh, PhysicsViewer, ShadowGenerator, Vector3, StandardMaterial, GizmoManager,
   ArcRotateCamera, PointLight, SpotLight, DirectionalLight, PBRMaterial, EngineView,
   Scene as babylonScene, Node as babylonNode, Camera as babylCamera, Material as babylMaterial,
-  Observer, BoundingBox, PhysicsShapeParameters, PhysicShapeOptions, PhysicsShape, PhysicsBody, PhysicsMotionType,
+  Observer, BoundingBox, PhysicsShapeParameters, PhysicShapeOptions, PhysicsShape, PhysicsBody, PhysicsMotionType, Quaternion,
 } from '@babylonjs/core';
 
 // eslint-disable-next-line @typescript-eslint/no-duplicate-imports -- Required import for side effects
@@ -678,6 +678,68 @@ class SceneBinding {
     callback: (collisionEvent: IPhysicsCollisionEvent) => void;
   }[]> = {};
 
+  /**
+  * Determine the `PhysicsShapeParameters` for a `Node`.
+  * This function is adapted from `_addSizeOptions()` in the BabylonJS`PhysicsAggregate` class.
+  * @param mesh The `AbstractMesh` whose shape we evaluate to determine the options.
+  * @param objectNode The `Node`, which determines the `PhysicsShapeType` to use.
+  * @param parameters The object in which the calculated parameters are stored.
+  */
+  private addShapeOptions(mesh: AbstractMesh, objectNode: Node.Obj | Node.FromSpaceTemplate | Node.FromBBTemplate, parameters: PhysicsShapeParameters) {
+    // const parameters = params;
+    mesh.computeWorldMatrix(true);
+    const bb = mesh.getRawBoundingInfo().boundingBox;
+    const extents = new Vector3();
+    extents.copyFrom(bb.extendSize);
+    extents.scaleInPlace(2);
+    extents.multiplyInPlace(mesh.absoluteScaling);
+    // In case we had any negative scaling, we need to take the absolute value of the extents.
+    extents.x = Math.abs(extents.x);
+    extents.y = Math.abs(extents.y);
+    extents.z = Math.abs(extents.z);
+
+    const min = new Vector3();
+    min.copyFrom(bb.minimum);
+    min.multiplyInPlace(mesh.absoluteScaling);
+
+    const center = new Vector3();
+    center.copyFrom(bb.center);
+    center.multiplyInPlace(mesh.absoluteScaling);
+    parameters.center = center;
+
+    switch (objectNode.physics?.type) {
+      case 'box': {
+        parameters.extents = extents;
+        parameters.rotation = Quaternion.Identity();
+        break;
+      }
+      case 'sphere': {
+        if (Math.abs(extents.x - extents.y) <= 0.0001 && Math.abs(extents.x - extents.z) <= 0.0001) {
+          parameters.radius = extents.x / 2;
+        } else {
+          parameters.radius = Math.max(extents.x, extents.y, extents.z);
+        }
+        break;
+      }
+      case 'cylinder': {
+        parameters.radius = extents.x / 2;
+        parameters.pointA = new Vector3(0, min.y, 0);
+        parameters.pointB = new Vector3(0, min.y + extents.y, 0);
+        break;
+      }
+      case 'mesh': {
+        // Nothing to do, we set the mesh in `restorePhysicsToObject`
+        break;
+      }
+      case 'none': {
+        // Nothing to do
+        break;
+      }
+    }
+
+    return parameters;
+  }
+
   private restorePhysicsToObject = (mesh: AbstractMesh,
     objectNode: Node.Obj | Node.FromSpaceTemplate | Node.FromBBTemplate,
     nodeId: string,
@@ -700,14 +762,17 @@ class SceneBinding {
 
     /*
      * There are three things you need to setup physics for an object in babylon.js
-     * - First, you need the mesh itself -- that is, the one that the user will see.
+     * - First, you need the mesh: the one that the user will see.
      * - Then, you need to create a physics body for that mesh.
-     * - Finally, you need to set the physics shape -- that is, the shape the engine uses to simulate collisions.
+     * - Finally, you need to set the physics shape which the engine uses to simulate collisions.
      */
 
     /*
-     * This is the PhysicsBody where you set the mass and inertia for your object,
+     * This is the PhysicsBody where you set the mass of your object,
      * as well as determine whether of not it should move.
+     * WARNING: Set inertia manually at your own risk! The physics engine will
+     * calculate it automatically. You will probably get it wrong and things
+     * will behave very strangely.
      */
     const body = new PhysicsBody(
       mesh,
@@ -715,50 +780,33 @@ class SceneBinding {
       false,
       this.bScene);
     body.setMassProperties({
-      mass: Mass.toKilogramsValue(objectNode.physics?.mass ?? Mass.grams(0)),
-      inertia: Vector3.FromArray(objectNode.physics?.inertia ?? [0, 0, 0]),
+      mass: objectNode.physics.mass ? Mass.toGramsValue(objectNode.physics.mass) : 0,
+      // inertia: Vector3.FromArray(objectNode.physics?.inertia ?? [0, 0, 0]),
     });
 
+
     /*
-     * Here, we check if the object has a seperate collision body.
+     * Check if the object has a seperate collision body.
      * This should only apply to custom modeled objects.
      */
     if (objectNode.physics?.colliderId) {
       physics_mesh = this.bScene_.getMeshById(objectNode.physics.colliderId);
-      physics_mesh.scaling = RawVector3.toBabylon(objectNode.origin.scale ?? { x: 1, y: 1, z: 1 });
     }
 
     /*
-     * PhysicsShape requires some information to create the shape, depending on exactly what shape you want.
-     * Cylinders and boxes require different parameters, so we handle those seperately.
-     * For more info, see: https://doc.babylonjs.com/features/featuresDeepDive/physics/shapes
+     * Set the PhysicsShapeOptions, which tells the engine what kind of
+     * shape we want. It can automatically create a variety of shapes around an
+     * object, including the mesh itself.
+     * See: https://doc.babylonjs.com/features/featuresDeepDive/physics/shapes
      */
-    const scale = RawVector3.toBabylon(objectNode.origin.scale ?? { x: 1, y: 1, z: 1 });
-    let parameters: PhysicsShapeParameters = { mesh: physics_mesh as Mesh };
-    let physicsType = objectNode.physics.type;
-
-    // The built-in PhysicsShapeCylinder cannot be distorted on x and z independently for scaling, so instead use the visual mesh
-    if (objectNode.physics.type === 'cylinder') {
-      physicsType = 'mesh';
-    } else if (objectNode.physics.type === 'box') {
-      // The final multiplication by [2, 2, 2] is required to make collision boxes scale correctly
-      const extend = physics_mesh.getBoundingInfo().boundingBox.extendSize.multiply(scale).multiply(new Vector3(2, 2, 2));
-      parameters = {
-        ...parameters,
-        extents: extend,
-      };
-    }
-
-    /*
-     * Here we set the PhysicsShapeOptions, which tells the engine what kind of shape we want.
-     * It knows how to create some shapes automatically, based on the mesh that we gave it above.
-     * For example, it can automatically create a box or a cylinder around an object, or it can use the mesh itself.
-     */
-    const options: PhysicShapeOptions = { type: PHYSICS_SHAPE_TYPE_MAPPINGS[physicsType], parameters };
+    const parameters: PhysicsShapeParameters = { mesh: physics_mesh as Mesh };
+    // Notice that we are passing mesh, not physicsMesh here
+    this.addShapeOptions(mesh, objectNode, parameters);
+    const options: PhysicShapeOptions = { type: PHYSICS_SHAPE_TYPE_MAPPINGS[objectNode.physics.type], parameters };
     const shape = new PhysicsShape(options, this.bScene);
     shape.material = {
-      friction: objectNode.physics.friction ?? 0.2,
-      restitution: objectNode.physics.restitution ?? 0.2,
+      friction: objectNode.physics.friction ?? 5,
+      restitution: objectNode.physics.restitution ?? 0.5,
     };
 
     // Tell the PhysicsBody we created earlier to use this shape
