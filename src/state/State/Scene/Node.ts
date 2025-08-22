@@ -26,7 +26,7 @@ namespace Node {
 
     /**
      * What shape will simulate the physics for the object:
-     * box, sphere, cylinder, mesh, or none. 
+     * box, sphere, cylinder, mesh, or none.
      */
     type: Physics.Type;
 
@@ -49,17 +49,17 @@ namespace Node {
      * Restitution (bounciness) of the object.
      * Defines how much energy is retained after a collision, where zero
      * means none is retained, one means all energy is is retained, and values
-     * greater than one mean that energy is actually gained from the collsion.
+     * greater than one mean that energy is gained from the collsion.
      * Should generally be between zero and one. If undefined, 0.2.
      */
     restitution?: number;
 
     /**
-     * The moment of inertia of the Mesh, represented as a
-     * 3-length vector. Represents how hard to rotate left/right (x),
-     * twisting around (y), and rocking back/forward (z).
-     * WARNING: If undefined, all zeros, which babylonJS
-     * treats as infinite inertia.
+     * The moment of inertia of the Mesh, represented as a 3-length vector.
+     * Represents how hard to rotate left/right (x), twisting around (y), and
+     * rocking back/forward (z). The physics engine calculates this
+     * automatically and it is difficult to get right setting it manually, so
+     * this value is currently ignored.
      */
     inertia?: number[];
 
@@ -575,6 +575,41 @@ namespace Node {
     };
   }
 
+  /**
+   * `All` is a transitory utility type to allow users to view a list of all
+   * templates when adding a `Node` to a scene. See
+   * `src/components/World/NodeSettings.tsx`. It is not intended to be used as
+   * an actual object in scenes.
+   */
+  export interface All extends Base {
+    type: 'all';
+    templateId: string;
+    parentId?: string;
+  }
+
+  export namespace All {
+    export const NIL: All = {
+      type: 'all',
+      ...Base.NIL,
+      templateId: '',
+    };
+
+    export const from = <T extends Base>(t: T): All => ({
+      ...NIL,
+      ...Base.upcast(t),
+    });
+
+    export const diff = (prev: All, next: All): Patch<All> => {
+      if (deepNeq(prev, next)) return Patch.none(prev);
+
+      return Patch.innerChange(prev, next, {
+        type: Patch.none(prev.type),
+        templateId: Patch.diff(prev.templateId, next.templateId),
+        ...Base.partialDiff(prev, next),
+      });
+    };
+  }
+
   export const diff = (prev: Node, next: Node): Patch<Node> => {
     if (prev.type !== next.type) return Patch.outerChange(prev, next);
 
@@ -588,6 +623,7 @@ namespace Node {
       case 'from-rock-template': return FromRockTemplate.diff(prev, next as FromRockTemplate);
       case 'from-space-template': return FromSpaceTemplate.diff(prev, next as FromSpaceTemplate);
       case 'from-bb-template': return FromBBTemplate.diff(prev, next as FromBBTemplate);
+      case 'all': return All.diff(prev, next as All);
       case 'robot': return Robot.diff(prev, next as Robot);
     }
   };
@@ -605,6 +641,7 @@ namespace Node {
       case 'from-space-template': return FromSpaceTemplate.from(node);
       case 'from-bb-template': return FromBBTemplate.from(node);
       case 'robot': return Robot.from(node);
+      case 'all': return All.from(node);
     }
   };
 
@@ -625,7 +662,8 @@ type Node = (
   Node.FromRockTemplate |
   Node.FromSpaceTemplate |
   Node.FromBBTemplate |
-  Node.Robot
+  Node.Robot |
+  Node.All
 );
 
 export default Node;
