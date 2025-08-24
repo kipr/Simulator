@@ -1,14 +1,12 @@
 import Author from '../../../db/Author';
 import Challenge from '../../../state/State/Challenge';
 import Expr from '../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 14' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 14: Dance Party`,
-  },
+  name: tr('JBC Challenge 14'),
+  description: tr(`Junior Botball Challenge 14: Dance Party`),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
@@ -21,32 +19,32 @@ export default {
   defaultLanguage: 'c',
   events: {
     notInStartBox: {
-      name: { [LocalizedString.EN_US]: 'Robot not in Start Box' },
-      description: { [LocalizedString.EN_US]: 'Robot not in start box' },
+      name: tr('Robot not in Start Box'),
+      description: tr('Robot not in start box'),
     },
     leaveStartBox: {
-      name: { [LocalizedString.EN_US]: 'Robot Left Start' },
-      description: { [LocalizedString.EN_US]: 'Robot left starting box' },
+      name: tr('Robot Left Start'),
+      description: tr('Robot left starting box'),
     },
     clockwise360: {
-      name: { [LocalizedString.EN_US]: 'Robot 360 Clockwise' },
-      description: { [LocalizedString.EN_US]: 'Robot turned 360 degrees clockwise', },
+      name: tr('Robot 360 Clockwise'),
+      description: tr('Robot turned 360 degrees clockwise'),
     },
     counterClockwise360: {
-      name: { [LocalizedString.EN_US]: 'Robot 360 Counter Clockwise' },
-      description: { [LocalizedString.EN_US]: 'Robot turned 360 degrees counter clockwise', },
+      name: tr('Robot 360 Counter Clockwise'),
+      description: tr('Robot turned 360 degrees counter clockwise'),
     },
     driveForward: {
-      name: { [LocalizedString.EN_US]: 'Robot Drove Forward' },
-      description: { [LocalizedString.EN_US]: 'Robot drove forward', },
+      name: tr('Robot Drove Forward'),
+      description: tr('Robot drove forward'),
     },
     driveBackward: {
-      name: { [LocalizedString.EN_US]: 'Robot Drove Backward' },
-      description: { [LocalizedString.EN_US]: 'Robot drove backward', },
+      name: tr('Robot Drove Backward'),
+      description: tr('Robot drove backward'),
     },
     waveServo: {
-      name: { [LocalizedString.EN_US]: 'Robot Wave Servo' },
-      description: { [LocalizedString.EN_US]: 'Robot waved servo up and down at least once', },
+      name: tr('Robot Wave Servo'),
+      description: tr('Robot waved servo up and down at least once'),
     },
   },
   success: {
@@ -135,5 +133,14 @@ export default {
     },
     rootId: 'completion',
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
+    { exprId: 'leaveStartBoxOnce', name: tr('Leave the Start Box') },
+    { exprId: 'clockwise360Once', name: tr('Turn 360° clockwise') },
+    { exprId: 'counterClockwise360Once', name: tr('Turn 360° counter clockwise') },
+    { exprId: 'driveForwardOnce', name: tr('Drive forward') },
+    { exprId: 'driveBackwardOnce', name: tr('Drive backward') },
+    { exprId: 'waveServoOnce', name: tr('Wave the servo') },
+  ],
   sceneId: 'jbc14',
 } as Challenge;

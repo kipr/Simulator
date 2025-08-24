@@ -1,14 +1,12 @@
 import Author from "../../../db/Author";
 import Challenge from "../../../state/State/Challenge";
 import Expr from "../../../state/State/Challenge/Expr";
-import LocalizedString from "../../../util/LocalizedString";
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: "JBC Challenge 6" },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 6: Figure Eight`,
-  },
+  name: tr("JBC Challenge 6"),
+  description: tr(`Junior Botball Challenge 6: Figure Eight`),
   author: {
     type: Author.Type.Organization,
     id: "kipr",
@@ -21,37 +19,35 @@ export default {
   defaultLanguage: "c",
   events: {
     can4Intersects: {
-      name: { [LocalizedString.EN_US]: "Can 4 Intersects" },
-      description: { [LocalizedString.EN_US]: "Can 4 intersects circle 4" },
+      name: tr("Can 4 Intersects"),
+      description: tr("Can 4 intersects circle 4"),
     },
     can9Intersects: {
-      name: { [LocalizedString.EN_US]: "Can 9 Intersects" },
-      description: { [LocalizedString.EN_US]: "Can 9 intersects circle 9" },
+      name: tr("Can 9 Intersects"),
+      description: tr("Can 9 intersects circle 9"),
     },
 
     can4Upright: {
-      name: { [LocalizedString.EN_US]: "Can 4 Upright" },
-      description: { [LocalizedString.EN_US]: "Can 4 upright on circle 4" },
+      name: tr("Can 4 Upright"),
+      description: tr("Can 4 upright on circle 4"),
     },
     can9Upright: {
-      name: { [LocalizedString.EN_US]: "Can 9 Upright" },
-      description: { [LocalizedString.EN_US]: "Can 9 upright on circle 9" },
+      name: tr("Can 9 Upright"),
+      description: tr("Can 9 upright on circle 9"),
     },
 
     notInStartBox: {
-      name: { [LocalizedString.EN_US]: "Robot not in Start Box" },
-      description: { [LocalizedString.EN_US]: "Robot not in start box" },
+      name: tr("Robot not in Start Box"),
+      description: tr("Robot not in start box"),
     },
     returnStartBox: {
-      name: { [LocalizedString.EN_US]: "Robot Rentered Start" },
-      description: { [LocalizedString.EN_US]: "Robot reentered starting box" },
+      name: tr("Robot Rentered Start"),
+      description: tr("Robot reentered starting box"),
     },
 
     figureEight: {
-      name: { [LocalizedString.EN_US]: "Robot Figure Eight" },
-      description: {
-        [LocalizedString.EN_US]: "Robot did a figure eight around cans 4 and 9",
-      },
+      name: tr("Robot Figure Eight"),
+      description: tr("Robot did a figure eight around cans 4 and 9"),
     },
   },
   success: {
@@ -71,9 +67,17 @@ export default {
         type: Expr.Type.Event,
         eventId: "can4Intersects",
       },
+      can4NotIntersects: {
+        type: Expr.Type.Not,
+        argId: "can4Intersects",
+      },
       can9Intersects: {
         type: Expr.Type.Event,
         eventId: "can9Intersects",
+      },
+      can9NotIntersects: {
+        type: Expr.Type.Not,
+        argId: "can9Intersects",
       },
 
       // Upright Events
@@ -81,9 +85,17 @@ export default {
         type: Expr.Type.Event,
         eventId: "can4Upright",
       },
+      can4NotUpright: {
+        type: Expr.Type.Not,
+        argId: "can4Upright",
+      },
       can9Upright: {
         type: Expr.Type.Event,
         eventId: "can9Upright",
+      },
+      can9NotUpright: {
+        type: Expr.Type.Not,
+        argId: "can9Upright",
       },
 
       // Start Box Events
@@ -126,5 +138,16 @@ export default {
     },
     rootId: "completion",
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
+    { exprId: 'figureEightOnce', name: tr('Complete a figure eight') },
+    { exprId: 'returnStartBoxOnce', name: tr('Return to the Start Box') },
+  ],
+  failureGoals: [
+    { exprId: 'can4NotUpright', name: tr('Can 4 not upright in circle 4') },
+    { exprId: 'can9NotUpright', name: tr('Can 9 not upright in circle 9') },
+    { exprId: 'can4NotIntersects', name: tr('Can 4 does not intersect circle 4') },
+    { exprId: 'can9NotIntersects', name: tr('Can 9 does not intersect circle 9') },
+  ],
   sceneId: "jbc6",
 } as Challenge;

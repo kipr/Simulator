@@ -1,12 +1,12 @@
 import Author from "../../../db/Author";
 import Challenge from "../../../state/State/Challenge";
 import Expr from "../../../state/State/Challenge/Expr";
-import LocalizedString from "../../../util/LocalizedString";
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 1' },
-  description: { [LocalizedString.EN_US]: `Junior Botball Challenge 1: Tag, You're it!` },
+  name: tr('JBC Challenge 1'),
+  description: tr(`Junior Botball Challenge 1: Tag, You're it!`),
   author: {
     type: Author.Type.Organization,
     id: 'kipr'
@@ -19,24 +19,24 @@ export default {
   defaultLanguage: 'c',
   events: {
     notInStartBox: {
-      name: { [LocalizedString.EN_US]: 'Robot not in Start Box' },
-      description: { [LocalizedString.EN_US]: 'Robot not in start box' },
+      name: tr('Robot not in Start Box'),
+      description: tr('Robot not in start box'),
     },
     can9Touched: {
-      name: { [LocalizedString.EN_US]: 'Can 9 Touched' },
-      description: { [LocalizedString.EN_US]: 'Can A touched' },
+      name: tr('Can 9 Touched'),
+      description: tr('Can A touched'),
     },
     can9Intersects: {
-      name: { [LocalizedString.EN_US]: 'Can 9 Intersects' },
-      description: { [LocalizedString.EN_US]: 'Can 9 intersects circle 9' },
+      name: tr('Can 9 Intersects'),
+      description: tr('Can 9 intersects circle 9'),
     },
     can9Upright: {
-      name: { [LocalizedString.EN_US]: 'Can 9 Upright' },
-      description: { [LocalizedString.EN_US]: 'Can 9 upright on circle 9' },
+      name: tr('Can 9 Upright'),
+      description: tr('Can 9 upright on circle 9'),
     },
     returnStartBox: {
-      name: { [LocalizedString.EN_US]: 'Robot Rentered Start' },
-      description: { [LocalizedString.EN_US]: 'Robot reentered starting box' },
+      name: tr('Robot Rentered Start'),
+      description: tr('Robot reentered starting box'),
     },
   },
   success: {
@@ -107,5 +107,29 @@ export default {
     },
     rootId: 'failure',
   },
+  successGoals: [
+    {
+      exprId: 'inStartBoxOnce',
+      name: tr('Start in the Start Box'),
+    },
+    {
+      exprId: 'can9Touched',
+      name: tr('Touch Can 9'),
+    },
+    {
+      exprId: 'returnStartBoxOnce',
+      name: tr('Return to the Start Box'),
+    },
+  ],
+  failureGoals: [
+    {
+      exprId: 'can9NotIntersects',
+      name: tr('Can 9 not in circle 9'),
+    },
+    {
+      exprId: 'can9NotUpright',
+      name: tr('Can 9 not upright'),
+    },
+  ],
   sceneId: 'jbc1',
 } as Challenge;

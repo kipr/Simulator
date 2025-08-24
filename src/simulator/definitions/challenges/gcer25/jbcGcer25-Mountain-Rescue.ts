@@ -84,21 +84,41 @@ export default {
         type: Expr.Type.Event,
         eventId: 'can1Upright',
       },
+      can1NotUpright: {
+        type: Expr.Type.Not,
+        argId: 'can1Upright',
+      },
       can2Upright: {
         type: Expr.Type.Event,
         eventId: 'can2Upright',
+      },
+      can2NotUpright: {
+        type: Expr.Type.Not,
+        argId: 'can2Upright',
       },
       can3Upright: {
         type: Expr.Type.Event,
         eventId: 'can3Upright',
       },
+      can3NotUpright: {
+        type: Expr.Type.Not,
+        argId: 'can3Upright',
+      },
       can4Upright: {
         type: Expr.Type.Event,
         eventId: 'can4Upright',
       },
+      can4NotUpright: {
+        type: Expr.Type.Not,
+        argId: 'can4Upright',
+      },
       can5Upright: {
         type: Expr.Type.Event,
         eventId: 'can5Upright',
+      },
+      can5NotUpright: {
+        type: Expr.Type.Not,
+        argId: 'can5Upright',
       },
 
       // Rescued intersecting can events
@@ -172,5 +192,20 @@ export default {
     },
     rootId: 'completion',
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
+    { exprId: 'can1Intersects', name: tr('Can 1 in the Start Box') },
+    { exprId: 'can2Intersects', name: tr('Can 2 in the Start Box') },
+    { exprId: 'can3Intersects', name: tr('Can 3 in the Start Box') },
+    { exprId: 'can4Intersects', name: tr('Can 4 in the Start Box') },
+    { exprId: 'can5Intersects', name: tr('Can 5 in the Start Box') },
+  ],
+  failureGoals: [
+    { exprId: 'can1NotUpright', name: tr('Can 1 Not Upright') },
+    { exprId: 'can2NotUpright', name: tr('Can 2 Not Upright') },
+    { exprId: 'can3NotUpright', name: tr('Can 3 Not Upright') },
+    { exprId: 'can4NotUpright', name: tr('Can 4 Not Upright') },
+    { exprId: 'can5NotUpright', name: tr('Can 5 Not Upright') },
+  ],
   sceneId: 'Mountain_Rescue',
 } as Challenge;

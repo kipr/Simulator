@@ -1,14 +1,12 @@
 import Author from '../../../../db/Author';
 import Challenge from '../../../../state/State/Challenge';
 import Expr from '../../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 10B' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 10B: Solo Joust Jr.`,
-  },
+  name: tr('JBC Challenge 10B'),
+  description: tr(`Junior Botball Challenge 10B: Solo Joust Jr.`),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
@@ -22,18 +20,16 @@ export default {
   events: {
    
     can1Upright: {
-      name: { [LocalizedString.EN_US]: 'Can A Upright' },
-      description: {
-        [LocalizedString.EN_US]: 'Can A upright in a circle',
-      },
+      name: tr('Can A Upright'),
+      description: tr('Can A upright in a circle'),
     },
     leaveStartBox: {
-      name: { [LocalizedString.EN_US]: 'Robot Left Start' },
-      description: { [LocalizedString.EN_US]: 'Robot left starting box' },
+      name: tr('Robot Left Start'),
+      description: tr('Robot left starting box'),
     },
     robotTouchingLine: {
-      name: { [LocalizedString.EN_US]: 'Robot Touching Line B' },
-      description: { [LocalizedString.EN_US]: 'Robot is touching line B' },
+      name: tr('Robot Touching Line B'),
+      description: tr('Robot is touching line B'),
     },
 
   },

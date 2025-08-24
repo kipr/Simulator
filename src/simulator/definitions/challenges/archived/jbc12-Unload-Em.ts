@@ -1,14 +1,12 @@
 import Author from "../../../../db/Author";
 import Challenge from "../../../../state/State/Challenge";
 import Expr from "../../../../state/State/Challenge/Expr";
-import LocalizedString from "../../../../util/LocalizedString";
 import ProgrammingLanguage from "../../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: "JBC Challenge 12" },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 12: Unload 'Em`,
-  },
+  name: tr("JBC Challenge 12"),
+  description: tr(`Junior Botball Challenge 12: Unload 'Em`),
   author: {
     type: Author.Type.Organization,
     id: "kipr",
@@ -21,29 +19,29 @@ export default {
   defaultLanguage: "c",
   events: {
     can2Upright: {
-      name: { [LocalizedString.EN_US]: "Can 2 Upright" },
-      description: { [LocalizedString.EN_US]: "Can 2 upright" },
+      name: tr("Can 2 Upright"),
+      description: tr("Can 2 upright"),
     },
     can9Upright: {
-      name: { [LocalizedString.EN_US]: "Can 9 Upright" },
-      description: { [LocalizedString.EN_US]: "Can 9 upright" },
+      name: tr("Can 9 Upright"),
+      description: tr("Can 9 upright"),
     },
     can10Upright: {
-      name: { [LocalizedString.EN_US]: "Can 10 Upright" },
-      description: { [LocalizedString.EN_US]: "Can 10 upright" },
+      name: tr("Can 10 Upright"),
+      description: tr("Can 10 upright"),
     },
 
     can2Intersects: {
-      name: { [LocalizedString.EN_US]: "Can 2 Intersects" },
-      description: { [LocalizedString.EN_US]: "Can from green garage intersects circle 2" },
+      name: tr("Can 2 Intersects"),
+      description: tr("Can from green garage intersects circle 2"),
     },
     can9Intersects: {
-      name: { [LocalizedString.EN_US]: "Can 9 Intersects" },
-      description: { [LocalizedString.EN_US]: "Can from blue garage intersects circle 9" },
+      name: tr("Can 9 Intersects"),
+      description: tr("Can from blue garage intersects circle 9"),
     },
     can10Intersects: {
-      name: { [LocalizedString.EN_US]: "Can 10 Intersects" },
-      description: { [LocalizedString.EN_US]: "Can from yellow garage intersects circle 10" },
+      name: tr("Can 10 Intersects"),
+      description: tr("Can from yellow garage intersects circle 10"),
     },
   },
   success: {

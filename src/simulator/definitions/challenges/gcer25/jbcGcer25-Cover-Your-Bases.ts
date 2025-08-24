@@ -135,29 +135,57 @@ export default {
         type: Expr.Type.Event,
         eventId: 'canAUpright',
       },
+      canANotUpright: {
+        type: Expr.Type.Not,
+        argId: 'canAUpright',
+      },
       canBUpright: {
         type: Expr.Type.Event,
         eventId: 'canBUpright',
+      },
+      canBNotUpright: {
+        type: Expr.Type.Not,
+        argId: 'canBUpright',
       },
       canCUpright: {
         type: Expr.Type.Event,
         eventId: 'canCUpright',
       },
+      canCNotUpright: {
+        type: Expr.Type.Not,
+        argId: 'canCUpright',
+      },
       canDUpright: {
         type: Expr.Type.Event,
         eventId: 'canDUpright',
+      },
+      canDNotUpright: {
+        type: Expr.Type.Not,
+        argId: 'canDUpright',
       },
       canEUpright: {
         type: Expr.Type.Event,
         eventId: 'canEUpright',
       },
+      canENotUpright: {
+        type: Expr.Type.Not,
+        argId: 'canEUpright',
+      },
       canFUpright: {
         type: Expr.Type.Event,
         eventId: 'canFUpright',
       },
+      canFNotUpright: {
+        type: Expr.Type.Not,
+        argId: 'canFUpright',
+      },
       canGUpright: {
         type: Expr.Type.Event,
         eventId: 'canGUpright',
+      },
+      canGNotUpright: {
+        type: Expr.Type.Not,
+        argId: 'canGUpright',
       },
       allCansUpright: {
         type: Expr.Type.And,
@@ -172,5 +200,24 @@ export default {
     },
     rootId: 'completion',
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
+    { exprId: 'baseACovered', name: tr('Base A Covered') },
+    { exprId: 'baseBCovered', name: tr('Base B Covered') },
+    { exprId: 'baseCCovered', name: tr('Base C Covered') },
+    { exprId: 'baseDCovered', name: tr('Base D Covered') },
+    { exprId: 'baseECovered', name: tr('Base E Covered') },
+    { exprId: 'baseFCovered', name: tr('Base F Covered') },
+    { exprId: 'baseGCovered', name: tr('Base G Covered') },
+  ],
+  failureGoals: [
+    { exprId: 'canANotUpright', name: tr('Can A Not Upright') },
+    { exprId: 'canBNotUpright', name: tr('Can B Not Upright') },
+    { exprId: 'canCNotUpright', name: tr('Can C Not Upright') },
+    { exprId: 'canDNotUpright', name: tr('Can D Not Upright') },
+    { exprId: 'canENotUpright', name: tr('Can E Not Upright') },
+    { exprId: 'canFNotUpright', name: tr('Can F Not Upright') },
+    { exprId: 'canGNotUpright', name: tr('Can G Not Upright') },
+  ],
   sceneId: 'Cover_Your_Bases',
 } as Challenge;

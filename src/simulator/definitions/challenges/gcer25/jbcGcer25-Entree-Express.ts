@@ -77,5 +77,11 @@ export default {
     },
     rootId: 'completion',
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
+    { exprId: 'burgerTray', name: tr('Place Hamburger in Tray') },
+    { exprId: 'dogTray', name: tr('Place Hotdog in Tray') },
+    { exprId: 'tacoTray', name: tr('Place Taco in Tray') },
+  ],
   sceneId: 'Entree_Express',
 } as Challenge;

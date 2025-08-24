@@ -56,6 +56,10 @@ export default {
         type: Expr.Type.Event,
         eventId: 'canRandomUpright',
       },
+      canNotUpright: {
+        type: Expr.Type.Not,
+        argId: 'canRandomUpright',
+      },
 
       // Success Logic = Can upright, in start box, and robot began in start box
       completion: {
@@ -69,5 +73,12 @@ export default {
     },
     rootId: 'completion',
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
+    { exprId: 'canInStartBox', name: tr('Can in Start Box') },
+  ],
+  failureGoals: [
+    { exprId: 'canNotUpright', name: tr('Can Not Upright') },
+  ],
   sceneId: 'Sense_The_Can',
 } as Challenge;

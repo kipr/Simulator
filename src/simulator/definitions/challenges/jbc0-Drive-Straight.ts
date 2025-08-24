@@ -1,14 +1,12 @@
 import Author from '../../../db/Author';
 import Challenge from '../../../state/State/Challenge';
 import Expr from '../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 0' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 0: Drive Straight`,
-  },
+  name: tr('JBC Challenge 0'),
+  description: tr(`Junior Botball Challenge 0: Drive Straight`),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
@@ -21,24 +19,24 @@ export default {
   defaultLanguage: 'c',
   events: {
     inStartBox: {
-      name: { [LocalizedString.EN_US]: 'In Start Box' },
-      description: { [LocalizedString.EN_US]: 'Robot is in the start box' },
+      name: tr('In Start Box'),
+      description: tr('Robot is in the start box'),
     },
     notInStartBox: {
-      name: { [LocalizedString.EN_US]: 'Not In Start Box' },
-      description: { [LocalizedString.EN_US]: 'Robot is not in the start box' },
+      name: tr('Not In Start Box'),
+      description: tr('Robot is not in the start box'),
     },
     robotTouchingLine: {
-      name: { [LocalizedString.EN_US]: 'Robot Touching Line B' },
-      description: { [LocalizedString.EN_US]: 'Robot is touching line B' },
+      name: tr('Robot Touching Line B'),
+      description: tr('Robot is touching line B'),
     },
     reachedEnd: {
-      name: { [LocalizedString.EN_US]: 'Robot Reached End' },
-      description: { [LocalizedString.EN_US]: 'Robot reached the end of the mat' },
+      name: tr('Robot Reached End'),
+      description: tr('Robot reached the end of the mat'),
     },
     offMat: {
-      name: { [LocalizedString.EN_US]: 'Robot Off Mat' },
-      description: { [LocalizedString.EN_US]: 'Robot left the mat' },
+      name: tr('Robot Off Mat'),
+      description: tr('Robot left the mat'),
     },
   },
   success: {
@@ -86,18 +84,47 @@ export default {
         eventId: 'robotTouchingLine',
       },
 
+      robotTouchingLineOnce: {
+        type: Expr.Type.Once,
+        argId: 'robotTouchingLine',
+      },
       // Off Mat Event
       offMat: {
         type: Expr.Type.Event,
         eventId: 'offMat',
       },
 
+      offMatOnce: {
+        type: Expr.Type.Once,
+        argId: 'offMat',
+      },
+
       failure: {
         type: Expr.Type.Or,
-        argIds: ['robotTouchingLine', 'offMat'],
+        argIds: ['robotTouchingLineOnce', 'offMatOnce'],
       },
     },
     rootId: 'failure',
   },
+  successGoals: [
+    {
+      exprId: 'startedInStartBoxOnce',
+      name: tr('Start in the Start Box'),
+    },
+    {
+      exprId: 'reachedEnd',
+      name: tr('Reach the end of the mat'),
+    },
+  ],
+  failureGoals: [
+    {
+      exprId: 'robotTouchingLineOnce',
+      name: tr('Wheels do not touch line B'),
+    },
+    {
+      exprId: 'offMatOnce',
+      name: tr('Do not drive off the mat'),
+    },
+  ],
   sceneId: 'jbc0',
 } as Challenge;
