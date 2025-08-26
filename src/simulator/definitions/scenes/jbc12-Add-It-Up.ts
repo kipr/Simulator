@@ -18,33 +18,51 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 `;
 
 const addItUp = `
-const circles = [
-'circle1',
-'circle2',
-'circle3',
-'circle4',
-'circle5',
-'circle6',
-'circle7',
-'circle8',
-'circle9',
-'circle10',
-'circle11',
-'circle12',
-];
+// Total needs to reset with challenge
+let total = 0;
+
+// Reset total when not running: user should complete challenge in one run
+scene.addOnRenderListener(() => {
+  if (scene.programStatus !== 'running') {
+    total = 0;
+  }
+});
+const circles = {
+  'circle1': 1,
+  'circle2': 2,
+  'circle3': 3,
+  'circle4': 4,
+  'circle5': 5,
+  'circle6': 6,
+  'circle7': 7,
+  'circle8': 8,
+  'circle9': 9,
+  'circle10': 10,
+  'circle11': 11,
+  'circle12': 12,
+};
+
+let debounce = new Array(12);
 
 scene.addOnIntersectionListener('claw_link', (type, otherNodeId) => {
-  console.log('touched');
-}, circles);
-`;
-
-const inStartBox = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot started in start box!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('inStartBox', type === 'start');
+  if (scene.programStatus === 'running') {
+    const circle = circles[otherNodeId];
+    const last = debounce[circle - 1] ? debounce[circle - 1] : 0;
+    const wait = (Date.now() - last) > 1000;
+    if (type === 'start' && wait) {
+      console.log('touched', otherNodeId);
+      total += circle;
+      console.log(total);
+    } else if (type === 'end') {
+      console.log('left', otherNodeId);
+      debounce[circle-1] = Date.now();
+    }
+    console.log(debounce);
   }
-}, 'startBox');
+  if (total === 20) {
+    scene.setChallengeEventValue('addItUp', true);
+  }
+}, Object.keys(circles));
 `;
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
@@ -61,8 +79,7 @@ export const JBC_12: Scene = {
     [LocalizedString.EN_US]: 'Junior Botball Challenge 12: Add it Up',
   },
   scripts: {
-    // notInStartBox: Script.ecmaScript("Not In Start Box", notInStartBox),
-    // inStartBox: Script.ecmaScript("In Start Box", inStartBox),
+    inStartBox: Script.ecmaScript("Not In Start Box", notInStartBox),
     addItUp: Script.ecmaScript('Add It Up', addItUp),
   },
   geometry: {
