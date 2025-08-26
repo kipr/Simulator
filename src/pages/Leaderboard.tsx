@@ -146,9 +146,6 @@ class Leaderboard extends React.Component<Props, State> {
     const groupData = res.groupData;
     const userData = res.userData;
 
-    console.log("onLog res:", res);
-    console.log("onLog groupData:", groupData);
-    console.log("onLog userData:", userData);
     let users: Record<string, User> = {};
     const challenges: Record<string, Challenge> = {};
 
@@ -193,16 +190,11 @@ class Leaderboard extends React.Component<Props, State> {
         users[userId] = user;
       }
     }
-    console.log("users before anon: ", users);
 
     users = this.anonomizeUsers(users);
 
 
     for (const [userId, userChallenges] of Object.entries(userData)) {
-
-
-      // const altId = this.anonomizeUsers(userData as Record<string, User>)[userId]?.name || userId;
-      // console.log("altId:", altId);
       let user: User = {
         id: userId,
         name: SELFIDENTIFIER,
@@ -211,15 +203,11 @@ class Leaderboard extends React.Component<Props, State> {
       };
 
       let userRecord: Record<string, User> = { [userId]: user };
-      console.log("userRecord:", userRecord);
       const altUser = this.anonomizeUsers(userRecord)[userId];
-      console.log("altUser:", altUser);
       user = {
         ...user,
         altId: altUser?.name
       };
-
-      console.log("Updated user: ", user);
 
       for (const [challengeId, challenge] of Object.entries(userChallenges as ChallengeData[])) {
         const challengeCompletion = challenge?.success?.exprStates?.completion ?? false;
@@ -344,8 +332,6 @@ class Leaderboard extends React.Component<Props, State> {
       };
     });
 
-    console.log("anonomizedUsers:", anonomizedUsers);
-
     const nameSet = new Set<string>();
     const duplicateNames: string[] = [];
 
@@ -396,22 +382,16 @@ class Leaderboard extends React.Component<Props, State> {
   private getCurrentUser = (): User => {
     const { users } = this.state;
     let currentUser: User;
-    console.log("getCurrentUser state users:", users);
     const tokenManager = db.tokenManager;
     if (tokenManager) {
-      console.log("getCurrentUser tokenManager:", tokenManager);
-      console.log("tokenManager.auth: ", tokenManager.auth());
       const auth_ = tokenManager.auth();
       const currentUserAuth_ = auth_.currentUser;
-      console.log("currentUser:", currentUserAuth_);
       currentUser = {
         id: currentUserAuth_.uid,
         name: currentUserAuth_.displayName || 'Unknown',
         scores: Object.values(users).find(u => u.id === currentUserAuth_.uid)?.scores || [],
         altId: Object.values(users).find(u => u.id === currentUserAuth_.uid)?.altId || 'Unknown'
       };
-
-      console.log("getCurrentUser currentUser:", currentUser);
 
     }
 
@@ -434,9 +414,7 @@ class Leaderboard extends React.Component<Props, State> {
   };
 
   private renderLeaderboard = () => {
-    console.log("renderLeaderboard state users:", this.state.users);
     const users = this.state.users || this.getDefaultUsers();
-    console.log("renderLeaderboard users:", users);
     const sortedUsers = this.orderUsersByCompletedChallenges(users);
     const challenges = this.state.challenges || this.getDefaultChallenges();
 
@@ -499,7 +477,6 @@ class Leaderboard extends React.Component<Props, State> {
     const { selected } = state;
     const theme = DARK;
     let currentUser = this.getCurrentUser();
-    console.log("render currentUser:", currentUser);
     let currentUserEmail = this.getCurrentUserEmail();
 
     return (
