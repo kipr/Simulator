@@ -36,6 +36,7 @@ interface User {
   scores: Score[];
   src?: string;
   backgroundColor?: string;
+  altId?: string;
 }
 
 export interface LeaderboardPublicProps extends StyleProps, ThemeProps {
@@ -146,6 +147,8 @@ class Leaderboard extends React.Component<Props, State> {
     const userData = res.userData;
 
     console.log("onLog res:", res);
+    console.log("onLog groupData:", groupData);
+    console.log("onLog userData:", userData);
     let users: Record<string, User> = {};
     const challenges: Record<string, Challenge> = {};
 
@@ -190,15 +193,33 @@ class Leaderboard extends React.Component<Props, State> {
         users[userId] = user;
       }
     }
+    console.log("users before anon: ", users);
 
     users = this.anonomizeUsers(users);
 
+
     for (const [userId, userChallenges] of Object.entries(userData)) {
-      const user: User = {
+
+
+      // const altId = this.anonomizeUsers(userData as Record<string, User>)[userId]?.name || userId;
+      // console.log("altId:", altId);
+      let user: User = {
         id: userId,
         name: SELFIDENTIFIER,
         scores: [],
+
       };
+
+      let userRecord: Record<string, User> = { [userId]: user };
+      console.log("userRecord:", userRecord);
+      const altUser = this.anonomizeUsers(userRecord)[userId];
+      console.log("altUser:", altUser);
+      user = {
+        ...user,
+        altId: altUser?.name
+      };
+
+      console.log("Updated user: ", user);
 
       for (const [challengeId, challenge] of Object.entries(userChallenges as ChallengeData[])) {
         const challengeCompletion = challenge?.success?.exprStates?.completion ?? false;
@@ -323,6 +344,8 @@ class Leaderboard extends React.Component<Props, State> {
       };
     });
 
+    console.log("anonomizedUsers:", anonomizedUsers);
+
     const nameSet = new Set<string>();
     const duplicateNames: string[] = [];
 
@@ -384,7 +407,8 @@ class Leaderboard extends React.Component<Props, State> {
       currentUser = {
         id: currentUserAuth_.uid,
         name: currentUserAuth_.displayName || 'Unknown',
-        scores: Object.values(users).find(u => u.id === currentUserAuth_.uid)?.scores || []
+        scores: Object.values(users).find(u => u.id === currentUserAuth_.uid)?.scores || [],
+        altId: Object.values(users).find(u => u.id === currentUserAuth_.uid)?.altId || 'Unknown'
       };
 
       console.log("getCurrentUser currentUser:", currentUser);
@@ -475,6 +499,7 @@ class Leaderboard extends React.Component<Props, State> {
     const { selected } = state;
     const theme = DARK;
     let currentUser = this.getCurrentUser();
+    console.log("render currentUser:", currentUser);
     let currentUserEmail = this.getCurrentUserEmail();
 
     return (
@@ -484,7 +509,7 @@ class Leaderboard extends React.Component<Props, State> {
           <LeaderboardTitleContainer>
             <h1>KIPR All Time Leaderboard</h1>
             <h2>User: {currentUser?.name || 'Unknown'}</h2>
-            <h2>Alias: {currentUser?.id || 'Unknown'}</h2>
+            <h2>Alias: {currentUser?.altId || 'Unknown'}</h2>
             <h2>Email: {currentUserEmail || 'Unknown'}</h2>
           </LeaderboardTitleContainer>
           {this.renderLeaderboard()}
