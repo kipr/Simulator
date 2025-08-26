@@ -114,7 +114,7 @@ class SceneBinding {
     this.bScene_.getPhysicsEngine().setSubTimeStep(1);
 
     // Uncomment this to turn on the physics viewer for objects
-    // this.physicsViewer_ = new PhysicsViewer(this.bScene_);
+    this.physicsViewer_ = new PhysicsViewer(this.bScene_);
 
     this.root_ = new TransformNode('__scene_root__', this.bScene_);
     this.gizmoManager_ = new GizmoManager(this.bScene_);
@@ -1055,19 +1055,13 @@ class SceneBinding {
   private currentIntersections_: Dict<Set<string>> = {};
 
   private nodeMeshes_ = (id: string): AbstractMesh[] => {
-    console.log('nodeMeshes');
-
-    console.log(Object.keys(this.robotBindings_));
     // If the node is a robot, return all the robot's links (parts)
     if (id in this.robotBindings_) {
-      console.log('robotBindings');
       return Dict.values(this.robotBindings_[id].links);
     }
     // Check if the node is an individual part of the robot
     for (const robotId of Dict.keySet(this.robotBindings_)) {
-      console.log(`checking ${robotId}`);
       if (id in this.robotBindings_[robotId].links) {
-        console.log(`found ${id}`);
         return this.robotBindings_[robotId].links[id] instanceof AbstractMesh ? [this.robotBindings_[robotId].links[id]] : [];
       }
     }
@@ -1085,6 +1079,10 @@ class SceneBinding {
     for (const mesh of meshes) {
       // this.gizmoManager_.gizmos.boundingBoxGizmo.attachedMesh = mesh; // For viewing meshes on robot
       if (mesh.id.includes('Chassis')) {
+        continue;
+      } else if (mesh.id.includes('Claw')) {
+        const c = mesh.getChildMeshes(true, (mesh) => mesh.id.includes('claw2'))[0];
+        ret.push(c.getHierarchyBoundingVectors(false));
         continue;
       } else {
         ret.push(mesh.getHierarchyBoundingVectors(true, (mesh: AbstractMesh) => !mesh.name.includes('et_sensor')));
