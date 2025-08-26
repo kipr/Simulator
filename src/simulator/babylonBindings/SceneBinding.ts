@@ -4,7 +4,7 @@ import {
   TransformNode, AbstractMesh, Mesh, PhysicsViewer, ShadowGenerator, Vector3, StandardMaterial, GizmoManager,
   ArcRotateCamera, PointLight, SpotLight, DirectionalLight, PBRMaterial, EngineView,
   Scene as babylonScene, Node as babylonNode, Camera as babylCamera, Material as babylMaterial,
-  Observer, BoundingBox, PhysicsShapeParameters, PhysicShapeOptions, PhysicsShape, PhysicsBody, PhysicsMotionType, Quaternion,
+  Observer, BoundingBox, PhysicsShapeParameters, PhysicShapeOptions, PhysicsShape, PhysicsBody, PhysicsMotionType, Quaternion, HighlightLayer, Color3,
 } from '@babylonjs/core';
 
 // eslint-disable-next-line @typescript-eslint/no-duplicate-imports -- Required import for side effects
@@ -1055,7 +1055,22 @@ class SceneBinding {
   private currentIntersections_: Dict<Set<string>> = {};
 
   private nodeMeshes_ = (id: string): AbstractMesh[] => {
-    if (id in this.robotBindings_) return Dict.values(this.robotBindings_[id].links);
+    console.log('nodeMeshes');
+
+    console.log(Object.keys(this.robotBindings_));
+    // If the node is a robot, return all the robot's links (parts)
+    if (id in this.robotBindings_) {
+      console.log('robotBindings');
+      return Dict.values(this.robotBindings_[id].links);
+    }
+    // Check if the node is an individual part of the robot
+    for (const robotId of Dict.keySet(this.robotBindings_)) {
+      console.log(`checking ${robotId}`);
+      if (id in this.robotBindings_[robotId].links) {
+        console.log(`found ${id}`);
+        return this.robotBindings_[robotId].links[id] instanceof AbstractMesh ? [this.robotBindings_[robotId].links[id]] : [];
+      }
+    }
     const bNode = this.findBNode_(id);
     if (bNode && bNode instanceof AbstractMesh) return [bNode];
 

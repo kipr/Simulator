@@ -18,69 +18,24 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 `;
 
 const addItUp = `
-const values = {
-  circle1: 1,
-  circle2: 2,
-  circle3: 3,
-  circle4: 4,
-  circle5: 5,
-  circle6: 6,
-  circle7: 7,
-  circle8: 8,
-  circle9: 9,
-  circle10: 10,
-  circle11: 11,
-  circle12: 12
-};
+const circles = [
+'circle1',
+'circle2',
+'circle3',
+'circle4',
+'circle5',
+'circle6',
+'circle7',
+'circle8',
+'circle9',
+'circle10',
+'circle11',
+'circle12',
+];
 
-let total = 0;
-const touched = new Set();
-
-Object.entries(values).forEach(([nodeId, value]) => {
-  scene.addOnIntersectionListener(nodeId, (type) => {
-    console.log('Circle touched:', nodeId);
-    if(scene.programStatus === 'running' && type === 'start' && !touched.has(nodeId)){
-      touched.add(nodeId);
-      
-      total += value;
-      if(total >= 20){
-        scene.setChallengeEventValue('addItUp', true);
-      }
-    }
-  }, 'arm_link');
-});
-
-// const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
-//   ...scene.nodes[nodeId],
-//   visible
-//   });
-
-// let circles = ['circle1','circle2','circle3','circle4','circle5','circle6','circle7','circle8', 'circle9','circle10','circle11','circle12'];
-
-// let total = 0;
-
-// scene.addOnRenderListener(() => {
-//   if(scene.programStatus !== 'running') {
-//     total = 0;
-//   }
-//   else {
-//     if(total >= 20) {
-//       scene.setChallengeEventValue('addItUp', true);
-//     }
-//   }
-// });
-
-// const arm = ...scene.nodes['robot'].
-
-// scene.addOnIntersectionListener('claw_link', (type, otherNodeId) => {
-//   if(scene.programStatus !== 'running') return;
-//   const circleNumber = otherNodeId.charAt(otherNodeId.length-1);
-//   if(scene.programStatus === 'running'){
-//     if(type === "start"){
-//       total = total + circleNumber;
-//     }
-//   }
-// }, [...circles]);
+scene.addOnIntersectionListener('claw_link', (type, otherNodeId) => {
+  console.log('touched');
+}, circles);
 `;
 
 const inStartBox = `
@@ -106,8 +61,8 @@ export const JBC_12: Scene = {
     [LocalizedString.EN_US]: 'Junior Botball Challenge 12: Add it Up',
   },
   scripts: {
-    notInStartBox: Script.ecmaScript("Not In Start Box", notInStartBox),
-    inStartBox: Script.ecmaScript("In Start Box", inStartBox),
+    // notInStartBox: Script.ecmaScript("Not In Start Box", notInStartBox),
+    // inStartBox: Script.ecmaScript("In Start Box", inStartBox),
     addItUp: Script.ecmaScript('Add It Up', addItUp),
   },
   geometry: {
