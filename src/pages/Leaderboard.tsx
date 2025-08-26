@@ -11,6 +11,7 @@ import LocalizedString from '../util/LocalizedString';
 
 import { State as ReduxState } from '../state';
 import tr from '@i18n';
+import { jsPDF } from "jspdf";
 
 import db from '../db';
 
@@ -54,6 +55,11 @@ interface LeaderboardState {
   challenges: Record<string, Challenge>;
 }
 
+interface ClickProps {
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  disabled?: boolean;
+}
+
 type Props = LeaderboardPublicProps & LeaderboardPrivateProps;
 type State = LeaderboardState;
 
@@ -84,6 +90,14 @@ const LeaderboardTitleContainer = styled('div', {
   margin: '20px',
   // border: '2px solid blue',
 });
+
+const UserInfoContainer = styled('div', {
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '10px',
+})
 
 const TableHeaderContainer = styled('div', {
   display: 'inline-block',
@@ -126,6 +140,26 @@ const TableCell = styled('td', {
   padding: '6px',
   textAlign: 'center',
 });
+
+const ExportButton = styled('div', (props: ThemeProps & ClickProps) => ({
+  display: 'flex',
+  alignItems: 'center',
+  flexDirection: 'row',
+  padding: '10px',
+  backgroundColor: '#2c2c2cff',
+  borderBottom: `1px solid ${props.theme.borderColor}`,
+  ':last-child': {
+    borderBottom: 'none'
+  },
+  opacity: props.disabled ? '0.5' : '1.0',
+  fontWeight: 400,
+  ':hover': {
+    cursor: 'pointer',
+    backgroundColor: `rgba(255, 255, 255, 0.1)`
+  },
+  userSelect: 'none',
+  transition: 'background-color 0.2s, opacity 0.2s'
+}));
 
 
 class Leaderboard extends React.Component<Props, State> {
@@ -413,6 +447,47 @@ class Leaderboard extends React.Component<Props, State> {
     return null;
   };
 
+  private exportUserScores = (user: User) => {
+    const { locale } = this.props;
+    const pdfDoc = new jsPDF();
+
+
+    //Title
+    pdfDoc.setFontSize(18);
+    pdfDoc.text('KIPR Challenge Scores', 105, 20, { align: 'center' });
+
+    //Basic Info
+    pdfDoc.setFontSize(14);
+    pdfDoc.text(`Name: ${user.name}`, 20, 40);
+    pdfDoc.text(`Alias: ${user.altId || 'Unknown'}`, 20, 50);
+    pdfDoc.text(`Email: ${this.getCurrentUserEmail() || 'Unknown'}`, 20, 60);
+
+    const sortedScores = [...user.scores].sort((a, b) => {
+      const nameA = a.name[locale] || a.name["en-US"] || "";
+      const nameB = b.name[locale] || b.name["en-US"] || "";
+
+      const numA = parseInt(nameA.match(/\d+/)?.[0] || "0", 10);
+      const numB = parseInt(nameB.match(/\d+/)?.[0] || "0", 10);
+
+      return numA - numB;
+    });
+    //Scores
+    pdfDoc.setFontSize(12);
+    pdfDoc.text('Scores:', 20, 70);
+
+    sortedScores.forEach((score, i) => {
+      pdfDoc.text(
+        `${LocalizedString.lookup(tr(`${score.name[locale]}`), locale) || "Unnamed"} - ${score.completed ? "Completed" : "Not Completed"
+        }`,
+        30,
+        80 + i * 10
+      );
+    });
+
+    pdfDoc.save(`${user.name}-scores.pdf`);
+
+  };
+
   private renderLeaderboard = () => {
     const users = this.state.users || this.getDefaultUsers();
     const sortedUsers = this.orderUsersByCompletedChallenges(users);
@@ -485,9 +560,15 @@ class Leaderboard extends React.Component<Props, State> {
         <LeaderboardContainer style={style} theme={theme}>
           <LeaderboardTitleContainer>
             <h1>KIPR All Time Leaderboard</h1>
-            <h2>User: {currentUser?.name || 'Unknown'}</h2>
-            <h2>Alias: {currentUser?.altId || 'Unknown'}</h2>
-            <h2>Email: {currentUserEmail || 'Unknown'}</h2>
+            <UserInfoContainer>
+              <h2>User: </h2>
+              <h3>{currentUser?.name || 'Unknown'}</h3>
+              <h2>Alias: </h2>
+              <h3>{currentUser?.altId || 'Unknown'}</h3>
+              <h2>Email: </h2>
+              <h3>{currentUserEmail || 'Unknown'}</h3>
+            </UserInfoContainer>
+            <ExportButton theme={DARK} onClick={() => this.exportUserScores(currentUser)}> Export My Scores!</ExportButton>
           </LeaderboardTitleContainer>
           {this.renderLeaderboard()}
         </LeaderboardContainer>
