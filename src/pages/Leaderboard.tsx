@@ -14,6 +14,7 @@ import tr from '@i18n';
 import { jsPDF } from "jspdf";
 
 import db from '../db';
+import { createRef } from 'react';
 
 const SELFIDENTIFIER = "My Scores!";
 
@@ -128,7 +129,7 @@ const TableHeader = styled('th', {
   textAlign: 'center',
   width: '50px',
 });
-const StyledTableRow = styled('tr', (props: { key: string, self: string }) => ({
+const StyledTableRow = styled('tr', (props: { key: string, self: string, ref: React.Ref<HTMLTableRowElement> }) => ({
   borderBottom: '1px solid #ddd',
   backgroundColor: props.self === SELFIDENTIFIER ? '#555' : '#000', // Highlight the current user
 }));
@@ -141,7 +142,16 @@ const TableCell = styled('td', {
   textAlign: 'center',
 });
 
-const ExportButton = styled('div', (props: ThemeProps & ClickProps) => ({
+const ButtonContainer = styled('div', {
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '10px',
+  gap: '10px',
+});
+
+const Button = styled('div', (props: ThemeProps & ClickProps) => ({
   display: 'flex',
   alignItems: 'center',
   flexDirection: 'row',
@@ -174,6 +184,14 @@ class Leaderboard extends React.Component<Props, State> {
 
     void this.onLog();
   }
+
+  private myScoresRef = createRef<HTMLTableRowElement>();
+
+  private scrollToMyScores = () => {
+    if (this.myScoresRef.current) {
+      this.myScoresRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   private onLog = async () => {
     const res = await db.list('challenge_completion');
@@ -496,6 +514,7 @@ class Leaderboard extends React.Component<Props, State> {
     if (!sortedUsers) return null;
 
     const userArray = Object.values(sortedUsers);
+
     const challengeArray = this.customSort(Object.keys(challenges));
     this.getCurrentUser();
 
@@ -519,7 +538,7 @@ class Leaderboard extends React.Component<Props, State> {
         </thead>
         <tbody>
           {userArray.map((user) => (
-            <StyledTableRow key={user.id} self={user.name}>
+            <StyledTableRow key={user.id} self={user.name} ref={user.name === SELFIDENTIFIER ? this.myScoresRef : null}>
               <TableCell>{user.name}</TableCell>
               {challengeArray.map((id) => {
                 const userScore = user.scores.find(score => score.name['en-US'] === challenges[id].name['en-US']);
@@ -568,7 +587,11 @@ class Leaderboard extends React.Component<Props, State> {
               <h2>Email: </h2>
               <h3>{currentUserEmail || 'Unknown'}</h3>
             </UserInfoContainer>
-            <ExportButton theme={DARK} onClick={() => this.exportUserScores(currentUser)}> Export My Scores!</ExportButton>
+            <ButtonContainer>
+              <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> Export My Scores!</Button>
+              <Button theme={DARK} onClick={this.scrollToMyScores}> Scroll to My Scores!</Button>
+            </ButtonContainer>
+
           </LeaderboardTitleContainer>
           {this.renderLeaderboard()}
         </LeaderboardContainer>
