@@ -175,6 +175,7 @@ export function createBaseSceneSurfaceB(): Scene {
         visible: true,
         physics: {
           type: 'box',
+          motionType: PhysicsMotionType.STATIC,
           restitution: 0.1,
           friction: 10,
         },

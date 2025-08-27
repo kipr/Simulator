@@ -53,5 +53,9 @@ export default {
     },
     rootId: 'completion',
   },
+  successGoals: [
+    { exprId: 'onCircleOnce', name: tr('Robot started on Circle') },
+    { exprId: 'stopAtBlackLine', name: tr('Robot Stops at Black Line') },
+  ],
   sceneId: 'Find_The_Black_Line',
 } as Challenge;

@@ -102,9 +102,8 @@ const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
 const yAngle = (nodeId) => 180 / Math.PI * -1 * Math.asin(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
 
 scene.addOnRenderListener(() => {
- 
-  const upright4 = yAngle('can4') > 5;
-  const upright9 = yAngle('can9') > 5;
+  const upright4 = Math.abs(yAngle('can4') + 90) < 5;
+  const upright9 = Math.abs(yAngle('can9') + 90) < 5;
   
   scene.setChallengeEventValue('can4Upright', upright4);
   scene.setChallengeEventValue('can9Upright', upright9);

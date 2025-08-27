@@ -1,14 +1,12 @@
 import Author from '../../../../db/Author';
 import Challenge from '../../../../state/State/Challenge';
 import Expr from '../../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 8B' },
-  description: {
-    [LocalizedString.EN_US]: 'Junior Botball Challenge 8B: Serpentine Jr.',
-  },
+  name: tr('JBC Challenge 8B'),
+  description: tr('Junior Botball Challenge 8B: Serpentine Jr.'),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
@@ -21,28 +19,28 @@ export default {
   defaultLanguage: 'c',
   events: {
     start: {
-      name: { [LocalizedString.EN_US]: 'Robot Begins In start' },
-      description: { [LocalizedString.EN_US]: 'Robot begins in starting box' },
+      name: tr('Robot Begins In start'),
+      description: tr('Robot begins in starting box'),
     },
     passed1: {
-      name: { [LocalizedString.EN_US]: 'Robot Touched Circle 1' },
-      description: { [LocalizedString.EN_US]: 'Robot passed through circle 1' },
+      name: tr('Robot Touched Circle 1'),
+      description: tr('Robot passed through circle 1'),
     },
     passed2: {
-      name: { [LocalizedString.EN_US]: 'Robot Touched Circle 2' },
-      description: { [LocalizedString.EN_US]: 'Robot passed through circle 2' },
+      name: tr('Robot Touched Circle 2'),
+      description: tr('Robot passed through circle 2'),
     },
     passed3: {
-      name: { [LocalizedString.EN_US]: 'Robot Touched Circle 3' },
-      description: { [LocalizedString.EN_US]: 'Robot passed through circle 3' },
+      name: tr('Robot Touched Circle 3'),
+      description: tr('Robot passed through circle 3'),
     },
     passed4: {
-      name: { [LocalizedString.EN_US]: 'Robot Touched Circle 4' },
-      description: { [LocalizedString.EN_US]: 'Robot passed through circle 4' },
+      name: tr('Robot Touched Circle 4'),
+      description: tr('Robot passed through circle 4'),
     },
     passed5: {
-      name: { [LocalizedString.EN_US]: 'Robot Touched Circle 5' },
-      description: { [LocalizedString.EN_US]: 'Robot passed through circle 5' },
+      name: tr('Robot Touched Circle 5'),
+      description: tr('Robot passed through circle 5'),
     },
   },
   success: {

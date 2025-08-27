@@ -1,14 +1,12 @@
 import Author from '../../../db/Author';
 import Challenge from '../../../state/State/Challenge';
 import Expr from '../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 4' },
-  description: {
-    [LocalizedString.EN_US]: 'Junior Botball Challenge 4: Serpentine',
-  },
+  name: tr('JBC Challenge 4'),
+  description: tr('Junior Botball Challenge 4: Serpentine'),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
@@ -21,44 +19,44 @@ export default {
   defaultLanguage: 'c',
   events: {
     notInStartBox: {
-      name: { [LocalizedString.EN_US]: 'Robot not in Start Box' },
-      description: { [LocalizedString.EN_US]: 'Robot not in start box' },
+      name: tr('Robot not in Start Box'),
+      description: tr('Robot not in start box'),
     },
     wrongOrder: {
-      name: { [LocalizedString.EN_US]: 'Circle Touched Out of Order' },
-      description: { [LocalizedString.EN_US]: 'Circle was touched out of order' },
+      name: tr('Circle Touched Out of Order'),
+      description: tr('Circle was touched out of order'),
     },
     touched1: {
-      name: { [LocalizedString.EN_US]: 'Robot Touched Circle 1' },
-      description: { [LocalizedString.EN_US]: 'Robot touched circle 1' },
+      name: tr('Robot Touched Circle 1'),
+      description: tr('Robot touched circle 1'),
     },
     touched2: {
-      name: { [LocalizedString.EN_US]: 'Robot Touched Circle 2' },
-      description: { [LocalizedString.EN_US]: 'Robot touched circle 2' },
+      name: tr('Robot Touched Circle 2'),
+      description: tr('Robot touched circle 2'),
     },
     touched3: {
-      name: { [LocalizedString.EN_US]: 'Robot Touched Circle 3' },
-      description: { [LocalizedString.EN_US]: 'Robot touched circle 3' },
+      name: tr('Robot Touched Circle 3'),
+      description: tr('Robot touched circle 3'),
     },
     touched4: {
-      name: { [LocalizedString.EN_US]: 'Robot Touched Circle 4' },
-      description: { [LocalizedString.EN_US]: 'Robot touched circle 4' },
+      name: tr('Robot Touched Circle 4'),
+      description: tr('Robot touched circle 4'),
     },
     touched5: {
-      name: { [LocalizedString.EN_US]: 'Robot Touched Circle 5' },
-      description: { [LocalizedString.EN_US]: 'Robot touched circle 5' },
+      name: tr('Robot Touched Circle 5'),
+      description: tr('Robot touched circle 5'),
     },
     touched6: {
-      name: { [LocalizedString.EN_US]: 'Robot Touched Circle 6' },
-      description: { [LocalizedString.EN_US]: 'Robot touched circle 6' },
+      name: tr('Robot Touched Circle 6'),
+      description: tr('Robot touched circle 6'),
     },
     touched7: {
-      name: { [LocalizedString.EN_US]: 'Robot Touched Circle 7' },
-      description: { [LocalizedString.EN_US]: 'Robot touched circle 7' },
+      name: tr('Robot Touched Circle 7'),
+      description: tr('Robot touched circle 7'),
     },
     touched8: {
-      name: { [LocalizedString.EN_US]: 'Robot Touched Circle 8' },
-      description: { [LocalizedString.EN_US]: 'Robot touched circle 8' },
+      name: tr('Robot Touched Circle 8'),
+      description: tr('Robot touched circle 8'),
     },
   },
   success: {
@@ -176,5 +174,25 @@ export default {
     },
     rootId: "failure"
   },
+  successGoals: [
+    {
+      exprId: 'inStartBoxOnce',
+      name: tr('Start in the Start Box'),
+    },
+    { exprId: 'touched1Once', name: tr('Touch circle 1') },
+    { exprId: 'touched2Once', name: tr('Touch circle 2') },
+    { exprId: 'touched3Once', name: tr('Touch circle 3') },
+    { exprId: 'touched4Once', name: tr('Touch circle 4') },
+    { exprId: 'touched5Once', name: tr('Touch circle 5') },
+    { exprId: 'touched6Once', name: tr('Touch circle 6') },
+    { exprId: 'touched7Once', name: tr('Touch circle 7') },
+    { exprId: 'touched8Once', name: tr('Touch circle 8') },
+  ],
+  failureGoals: [
+    {
+      exprId: 'wrongOrderOnce',
+      name: tr('Circle touched out of order'),
+    },
+  ],
   sceneId: 'jbc4',
 } as Challenge;

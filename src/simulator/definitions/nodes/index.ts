@@ -10,18 +10,20 @@ import { BB2025Templates, BB2025Geometries } from "./2025gameTableTemplates";
 
 // TODO: Consider deep-freezing all of these objects
 
+const CAN_PHYSICS: Node.Physics = {
+  type: 'cylinder',
+  mass: Mass.grams(5),
+  friction: 10,
+  restitution: 0.4,
+  inertia: [20, 20, 20],
+};
+
 const DEAULT_FACEUVS = [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(0, 1), RawVector2.create(1, 0), RawVector2.ZERO, RawVector2.ZERO];
 
 const canTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'can',
-  physics: {
-    type: 'cylinder',
-    mass: Mass.grams(5),
-    friction: 0.7,
-    restitution: 0.3,
-    inertia: [1, 1, 1],
-  },
+  physics: CAN_PHYSICS,
   material: {
     type: 'basic',
     color: {
@@ -48,12 +50,7 @@ const circleTemplate: Node.TemplatedNode<Node.Obj> = {
 const lifescienceTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'can',
-  physics: {
-    type: 'cylinder',
-    mass: Mass.grams(5),
-    friction: 0.7,
-    restitution: 0.3,
-  },
+  physics: CAN_PHYSICS,
   material: {
     type: 'basic',
     color: {
@@ -67,12 +64,7 @@ const lifescienceTemplate: Node.TemplatedNode<Node.Obj> = {
 const radscienceTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'can',
-  physics: {
-    type: 'cylinder',
-    mass: Mass.grams(5),
-    friction: 0.7,
-    restitution: 0.3,
-  },
+  physics: CAN_PHYSICS,
   material: {
     type: 'basic',
     color: {
@@ -86,12 +78,7 @@ const radscienceTemplate: Node.TemplatedNode<Node.Obj> = {
 const noradscienceTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'can',
-  physics: {
-    type: 'cylinder',
-    mass: Mass.grams(5),
-    friction: 0.7,
-    restitution: 0.3,
-  },
+  physics: CAN_PHYSICS,
   material: {
     type: 'basic',
     color: {
@@ -109,7 +96,8 @@ const reamTemplate: Node.TemplatedNode<Node.Obj> = {
     type: 'box',
     restitution: .3,
     friction: 1,
-    mass: Mass.pounds(5),
+    mass: Mass.pounds(10),
+    inertia: [50, 50, 50],
   },
   material: {
     type: 'basic',
@@ -179,6 +167,7 @@ const sciencePadTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'sciencepad',
   physics: {
+    motionType: PhysicsMotionType.STATIC,
     type: 'box',
     restitution: 1,
     friction: 1,
@@ -200,6 +189,7 @@ const basaltTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.grams(20),
+    inertia: [1, 1, 1],
   },
   material: {
     type: 'basic',
@@ -218,6 +208,7 @@ const anorthositeTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.grams(20),
+    inertia: [1, 1, 1],
   },
   material: {
     type: 'basic',
@@ -236,6 +227,7 @@ const brecciaTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.grams(20),
+    inertia: [1, 1, 1],
   },
   material: {
     type: 'basic',
@@ -254,6 +246,7 @@ const meteoriteTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.grams(20),
+    inertia: [1, 1, 1],
   },
   material: {
     type: 'basic',
@@ -268,6 +261,7 @@ const containerTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'container',
   physics: {
+    motionType: PhysicsMotionType.STATIC,
     type: 'mesh',
     restitution: .3,
     friction: 1,
@@ -282,6 +276,7 @@ const botguyTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.grams(5),
+    inertia: [1, 1, 1],
   },
 };
 const solarpanelTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -292,6 +287,7 @@ const solarpanelTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.pounds(.3),
+    inertia: [1, 1, 1],
   },
 };
 
@@ -303,6 +299,7 @@ const walkwayTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.pounds(.3),
+    inertia: [1, 1, 1],
   },
 };
 const commstowerTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -313,6 +310,7 @@ const commstowerTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.pounds(.3),
+    inertia: [1, 1, 1],
   },
 };
 
@@ -324,6 +322,7 @@ const habitatTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.pounds(.3),
+    inertia: [1, 1, 1],
   },
 };
 
@@ -335,6 +334,7 @@ const habitatResearchTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.pounds(.3),
+    inertia: [1, 1, 1],
   },
 };
 
@@ -346,6 +346,7 @@ const habitatControlTemplate: Node.TemplatedNode<Node.Obj> = {
     restitution: .3,
     friction: 1,
     mass: Mass.pounds(.3),
+    inertia: [1, 1, 1],
   },
 };
 

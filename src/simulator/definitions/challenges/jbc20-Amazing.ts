@@ -1,14 +1,12 @@
 import Author from '../../../db/Author';
 import Challenge from '../../../state/State/Challenge';
 import Expr from '../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 20' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 20: A'mazing`,
-  },
+  name: tr('JBC Challenge 20'),
+  description: tr(`Junior Botball Challenge 20: A'mazing`),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
@@ -21,24 +19,24 @@ export default {
   defaultLanguage: 'c',
   events: {
     inStartBox: {
-      name: { [LocalizedString.EN_US]: "In Start Box" },
-      description: { [LocalizedString.EN_US]: "Robot in start box" },
+      name: tr("In Start Box"),
+      description: tr("Robot in start box"),
     },
     ream1Touched: {
-      name: { [LocalizedString.EN_US]: "Ream 1 Touched" },
-      description: { [LocalizedString.EN_US]: "Robot touched ream 1" },
+      name: tr("Ream 1 Touched"),
+      description: tr("Robot touched ream 1"),
     },
     ream2Touched: {
-      name: { [LocalizedString.EN_US]: "Ream 2 Touched" },
-      description: { [LocalizedString.EN_US]: "Robot touched ream 2" },
+      name: tr("Ream 2 Touched"),
+      description: tr("Robot touched ream 2"),
     },
     ream3Touched: {
-      name: { [LocalizedString.EN_US]: "Ream 3 Touched" },
-      description: { [LocalizedString.EN_US]: "Robot touched ream 3" },
+      name: tr("Ream 3 Touched"),
+      description: tr("Robot touched ream 3"),
     },
     ream4Touched: {
-      name: { [LocalizedString.EN_US]: "Ream 4 Touched" },
-      description: { [LocalizedString.EN_US]: "Robot touched ream 4" },
+      name: tr("Ream 4 Touched"),
+      description: tr("Robot touched ream 4"),
     },
   },
   success: {
@@ -97,5 +95,12 @@ export default {
     },
     rootId: 'completion',
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
+    { exprId: 'ream1TouchedOnce', name: tr('Touch ream 1') },
+    { exprId: 'ream2TouchedOnce', name: tr('Touch ream 2') },
+    { exprId: 'ream3TouchedOnce', name: tr('Touch ream 3') },
+    { exprId: 'ream4TouchedOnce', name: tr('Touch ream 4') },
+  ],
   sceneId: 'jbc20',
 } as Challenge;

@@ -1,14 +1,12 @@
 import Author from "../../../db/Author";
 import Challenge from "../../../state/State/Challenge";
 import Expr from "../../../state/State/Challenge/Expr";
-import LocalizedString from "../../../util/LocalizedString";
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: "JBC Challenge 11" },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 11: Making Waves`,
-  },
+  name: tr("JBC Challenge 11"),
+  description: tr(`Junior Botball Challenge 11: Making Waves`),
   author: {
     type: Author.Type.Organization,
     id: "kipr",
@@ -21,28 +19,28 @@ export default {
   defaultLanguage: "c",
   events: {
     notInStartBox: {
-      name: { [LocalizedString.EN_US]: "Robot not in Start Box" },
-      description: { [LocalizedString.EN_US]: "Robot not in start box" },
+      name: tr("Robot not in Start Box"),
+      description: tr("Robot not in start box"),
     },
     wave: {
-      name: { [LocalizedString.EN_US]: "Robot Waved" },
-      description: { [LocalizedString.EN_US]: "Robot waved" },
+      name: tr("Robot Waved"),
+      description: tr("Robot waved"),
     },
     circle3Touched: {
-      name: { [LocalizedString.EN_US]: "Circle 3 Touched" },
-      description: { [LocalizedString.EN_US]: "Circle 3 touched" },
+      name: tr("Circle 3 Touched"),
+      description: tr("Circle 3 touched"),
     },
     circle6Touched: {
-      name: { [LocalizedString.EN_US]: "Circle 6 Touched" },
-      description: { [LocalizedString.EN_US]: "Circle 6 touched" },
+      name: tr("Circle 6 Touched"),
+      description: tr("Circle 6 touched"),
     },
     circle9Touched: {
-      name: { [LocalizedString.EN_US]: "Circle 9 Touched" },
-      description: { [LocalizedString.EN_US]: "Circle 9 touched" },
+      name: tr("Circle 9 Touched"),
+      description: tr("Circle 9 touched"),
     },
     circle12Touched: {
-      name: { [LocalizedString.EN_US]: "Circle 12 Touched" },
-      description: { [LocalizedString.EN_US]: "Circle 12 touched" },
+      name: tr("Circle 12 Touched"),
+      description: tr("Circle 12 touched"),
     },
   },
   success: {
@@ -143,5 +141,12 @@ export default {
     },
     rootId: "completion",
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
+    { exprId: 'circle3WavedOnce', name: tr('Wave at circle 3') },
+    { exprId: 'circle6WavedOnce', name: tr('Wave at circle 6') },
+    { exprId: 'circle9WavedOnce', name: tr('Wave at circle 9') },
+    { exprId: 'circle12WavedOnce', name: tr('Wave at circle 12') },
+  ],
   sceneId: "jbc11",
 } as Challenge;

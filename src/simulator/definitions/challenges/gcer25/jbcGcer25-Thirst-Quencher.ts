@@ -72,5 +72,9 @@ export default {
     },
     rootId: 'completion',
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
+    ...circles.map((n, i) => ({ exprId: `cup${i}_startbox_expr`, name: tr(`Cup ${n} in Start Box`) })),
+  ],
   sceneId: 'Thirst_Quencher',
 } as Challenge;

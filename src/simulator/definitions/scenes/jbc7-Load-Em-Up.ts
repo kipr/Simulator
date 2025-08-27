@@ -54,17 +54,17 @@ const yAngle = (nodeId) => 180 / Math.PI * -1 * Math.asin(Vector3wUnits.dot(Vect
 
 
 scene.addOnRenderListener(() => {
-  const upright2 = yAngle('can2') > 5;
+  const upright2 = Math.abs(yAngle('can2') + 90) < 5;
   scene.setChallengeEventValue('can2Upright', upright2);
 
 });
 scene.addOnRenderListener(() => {
-  const upright9 = yAngle('can9') > 5;
+  const upright9 = Math.abs(yAngle('can9') + 90) < 5;
   scene.setChallengeEventValue('can9Upright', upright9);
 
 });
 scene.addOnRenderListener(() => {
-  const upright10 = yAngle('can10') > 5;
+  const upright10 = Math.abs(yAngle('can10') + 90) < 5;
   scene.setChallengeEventValue('can10Upright', upright10);
 });
 `;

@@ -1,14 +1,12 @@
 import Author from '../../../db/Author';
 import Challenge from '../../../state/State/Challenge';
 import Expr from '../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 21' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 21: Proximity`,
-  },
+  name: tr('JBC Challenge 21'),
+  description: tr(`Junior Botball Challenge 21: Proximity`),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
@@ -21,16 +19,16 @@ export default {
   defaultLanguage: 'c',
   events: {
     notInStartBox: {
-      name: { [LocalizedString.EN_US]: "Robot not in Start Box" },
-      description: { [LocalizedString.EN_US]: "Robot not in start box" },
+      name: tr("Robot not in Start Box"),
+      description: tr("Robot not in start box"),
     },
     stopAtReam: {
-      name: { [LocalizedString.EN_US]: "Stop at Ream" },
-      description: { [LocalizedString.EN_US]: "Robot stops at ream" },
+      name: tr("Stop at Ream"),
+      description: tr("Robot stops at ream"),
     },
     touchedReam: {
-      name: { [LocalizedString.EN_US]: "Bump Ream" },
-      description: { [LocalizedString.EN_US]: "Robot bumps ream" },
+      name: tr("Bump Ream"),
+      description: tr("Robot bumps ream"),
     },
   },
   success: {
@@ -86,5 +84,12 @@ export default {
     },
     rootId: 'failure',
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
+    { exprId: 'stopAtReam', name: tr('Stop at the ream') },
+  ],
+  failureGoals: [
+    { exprId: 'touchedReamOnce', name: tr('Do not bump the ream') },
+  ],
   sceneId: 'jbc21',
 } as Challenge;

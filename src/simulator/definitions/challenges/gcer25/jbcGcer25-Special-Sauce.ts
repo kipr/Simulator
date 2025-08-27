@@ -70,5 +70,9 @@ export default {
     },
     rootId: 'completion',
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
+    ...pomPositions.map((n, i) => ({ exprId: `pom${n}in_garage`, name: tr(`Pom #${n} in Garage`) })),
+  ],
   sceneId: 'Special_Sauce',
 } as Challenge;

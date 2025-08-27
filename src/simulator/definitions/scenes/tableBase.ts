@@ -25,8 +25,8 @@ const INNER_FRYER_ORIGIN: ReferenceFramewUnits = {
 };
 
 const GAME_TABLE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(0, 0, 0),
-  scale: { x: 100, y: 100, z: 100 },
+  position: Vector3wUnits.centimeters(0, 13, 0),
+  // scale: { x: 100, y: 100, z: 100 },
 };
 
 const LIGHT_ORIGIN: ReferenceFramewUnits = {

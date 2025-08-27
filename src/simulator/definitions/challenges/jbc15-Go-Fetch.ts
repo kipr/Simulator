@@ -1,14 +1,12 @@
 import Author from "../../../db/Author";
 import Challenge from "../../../state/State/Challenge";
 import Expr from "../../../state/State/Challenge/Expr";
-import LocalizedString from "../../../util/LocalizedString";
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: "JBC Challenge 15" },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 15: Go Fetch`,
-  },
+  name: tr("JBC Challenge 15"),
+  description: tr(`Junior Botball Challenge 15: Go Fetch`),
   author: {
     type: Author.Type.Organization,
     id: "kipr",
@@ -21,16 +19,16 @@ export default {
   defaultLanguage: "c",
   events: {
     notInStartBox: {
-      name: { [LocalizedString.EN_US]: "Robot not in Start Box" },
-      description: { [LocalizedString.EN_US]: "Robot not in start box" },
+      name: tr("Robot not in Start Box"),
+      description: tr("Robot not in start box"),
     },
     canInStartBox: {
-      name: { [LocalizedString.EN_US]: "Can in Start Box" },
-      description: { [LocalizedString.EN_US]: "Can in start box" },
+      name: tr("Can in Start Box"),
+      description: tr("Can in start box"),
     },
     can11Upright: {
-      name: { [LocalizedString.EN_US]: "Can 11 Upright" },
-      description: { [LocalizedString.EN_US]: "Can 11 upright" },
+      name: tr("Can 11 Upright"),
+      description: tr("Can 11 upright"),
     },
   },
   success: {
@@ -58,6 +56,10 @@ export default {
         type: Expr.Type.Event,
         eventId: "can11Upright",
       },
+      can11NotUpright: {
+        type: Expr.Type.Event,
+        eventId: "can11NotUpright",
+      },
 
       // Success Logic = Can 7 not upright, waited to chop, and began in start box
       completion: {
@@ -71,5 +73,12 @@ export default {
     },
     rootId: "completion",
   },
+  successGoals: [
+    { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
+    { exprId: 'canInStartBox', name: tr('Bring can to Start Box') },
+  ],
+  failureGoals: [
+    { exprId: 'can11NotUpright', name: tr('Keep can 11 not upright') },
+  ],
   sceneId: "jbc15",
 } as Challenge;

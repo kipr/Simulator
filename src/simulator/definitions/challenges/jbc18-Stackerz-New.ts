@@ -1,14 +1,12 @@
 import Author from '../../../db/Author';
 import Challenge from '../../../state/State/Challenge';
 import Expr from '../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 18' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 18: Stackerz`,
-  },
+  name: tr('JBC Challenge 18'),
+  description: tr(`Junior Botball Challenge 18: Stackerz`),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
@@ -23,18 +21,18 @@ export default {
 
 
     leaveStartBox: {
-      name: { [LocalizedString.EN_US]: 'Robot Left Start' },
-      description: { [LocalizedString.EN_US]: 'Robot left starting box' },
+      name: tr('Robot Left Start'),
+      description: tr('Robot left starting box'),
     },
 
     canStacked: {
-      name: { [LocalizedString.EN_US]: 'One Can Stacked' },
-      description: { [LocalizedString.EN_US]: 'One can is stacked on another' },
+      name: tr('One Can Stacked'),
+      description: tr('One can is stacked on another'),
     },
 
     robotTouchCan: {
-      name: { [LocalizedString.EN_US]: 'Robot Touching Can' },
-      description: { [LocalizedString.EN_US]: 'Robot is touching a can' },
+      name: tr('Robot Touching Can'),
+      description: tr('Robot is touching a can'),
     },
 
   },
@@ -74,5 +72,12 @@ export default {
     },
     rootId: 'completion',
   },
+  successGoals: [
+    { exprId: 'leaveStartBoxOnce', name: tr('Leave the Start Box') },
+    { exprId: 'canStacked', name: tr('Stack one can on another') },
+  ],
+  failureGoals: [
+    { exprId: 'robotTouchCan', name: tr('Robot touching can') },
+  ],
   sceneId: 'jbc18',
 } as Challenge;

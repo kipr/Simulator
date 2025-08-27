@@ -1,14 +1,12 @@
 import Author from '../../../../db/Author';
 import Challenge from '../../../../state/State/Challenge';
 import Expr from '../../../../state/State/Challenge/Expr';
-import LocalizedString from '../../../../util/LocalizedString';
 import ProgrammingLanguage from "../../../../programming/compiler/ProgrammingLanguage";
+import tr from '@i18n';
 
 export default {
-  name: { [LocalizedString.EN_US]: 'JBC Challenge 20' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 20: Rescue the Cans`,
-  },
+  name: tr('JBC Challenge 20'),
+  description: tr(`Junior Botball Challenge 20: Rescue the Cans`),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
@@ -22,53 +20,37 @@ export default {
   events: {
     
     can2Upright: {
-      name: { [LocalizedString.EN_US]: 'Can 2 Upright' },
-      description: {
-        [LocalizedString.EN_US]: 'Can 2 is upright',
-      },
+      name: tr('Can 2 Upright'),
+      description: tr('Can 2 is upright'),
     },
     can9Upright: {
-      name: { [LocalizedString.EN_US]: 'Can 9 Upright' },
-      description: {
-        [LocalizedString.EN_US]: 'Can 9 is upright',
-      },
+      name: tr('Can 9 Upright'),
+      description: tr('Can 9 is upright'),
     },
     can10Upright: {
-      name: { [LocalizedString.EN_US]: 'Can 10 Upright' },
-      description: {
-        [LocalizedString.EN_US]: 'Can 10 is upright',
-      },
+      name: tr('Can 10 Upright'),
+      description: tr('Can 10 is upright'),
     },
     can12Upright: {
-      name: { [LocalizedString.EN_US]: 'Can 12 Upright' },
-      description: {
-        [LocalizedString.EN_US]: 'Can 12 is upright',
-      },
+      name: tr('Can 12 Upright'),
+      description: tr('Can 12 is upright'),
     },
 
     can9Intersects: {
-      name: { [LocalizedString.EN_US]: 'Can 9 Intersects' },
-      description: {
-        [LocalizedString.EN_US]: 'Can 9 rescued intersecting paper ream',
-      },
+      name: tr('Can 9 Intersects'),
+      description: tr('Can 9 rescued intersecting paper ream'),
     },
     can2Intersects: {
-      name: { [LocalizedString.EN_US]: 'Can 2 Intersects' },
-      description: {
-        [LocalizedString.EN_US]: 'Can 2 rescued intersecting paper ream',
-      },
+      name: tr('Can 2 Intersects'),
+      description: tr('Can 2 rescued intersecting paper ream'),
     },
     can10Intersects: {
-      name: { [LocalizedString.EN_US]: 'Can 10 Intersects' },
-      description: {
-        [LocalizedString.EN_US]: 'Can 10 rescued intersecting paper ream',
-      },
+      name: tr('Can 10 Intersects'),
+      description: tr('Can 10 rescued intersecting paper ream'),
     },
     can12Intersects: {
-      name: { [LocalizedString.EN_US]: 'Can 12 Intersects' },
-      description: {
-        [LocalizedString.EN_US]: 'Can 12 rescued intersecting paper ream',
-      },
+      name: tr('Can 12 Intersects'),
+      description: tr('Can 12 rescued intersecting paper ream'),
     },
   },
   success: {

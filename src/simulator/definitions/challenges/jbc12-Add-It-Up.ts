@@ -2,12 +2,11 @@ import Author from '../../../db/Author';
 import Challenge from '../../../state/State/Challenge';
 import Expr from '../../../state/State/Challenge/Expr';
 import ProgrammingLanguage from "../../../programming/compiler/ProgrammingLanguage";
-import { on } from 'form-data';
 import tr from '@i18n';
 
 export default {
-  name: tr('JBC Challenge 23'),
-  description: tr(`Junior Botball Challenge 23: Find the Black Line`),
+  name: tr('JBC Challenge 12'),
+  description: tr('Junior Botball Challenge 12: Add It Up'),
   author: {
     type: Author.Type.Organization,
     id: 'kipr',
@@ -19,43 +18,47 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
-    stopAtBlackLine: {
-      name: tr("Robot Stops at Black Line"),
-      description: tr("Robot stops at black line"),
+    start: {
+      name: tr('Robot Begins In start'),
+      description: tr('Robot begins in starting box'),
     },
-    onCircle: {
-      name: tr("Robot Over Circle"),
-      description: tr("Robot over selected circle"),
+    addItUp: {
+      name: tr('Robot Touched a Circle '),
+      description: tr('Robot touched a circle'),
     },
   },
   success: {
     exprs: {
-      onCircle: {
+      // Start Box Event
+      start: {
         type: Expr.Type.Event,
-        eventId: "onCircle",
+        eventId: 'start',
       },
-      onCircleOnce: {
+      startOnce: {
         type: Expr.Type.Once,
-        argId: "onCircle",
-      },
-      stopAtBlackLine: {
-        type: Expr.Type.Event,
-        eventId: 'stopAtBlackLine',
+        argId: 'start',
       },
 
+      addItUp: {
+        type: Expr.Type.Event,
+        eventId: 'addItUp',
+      },
+      addItUpOnce: {
+        type: Expr.Type.Once,
+        argId: 'addItUp',
+      },
+
+      // Success logic
       completion: {
         type: Expr.Type.And,
-        argIds: [
-          'onCircleOnce',
-          'stopAtBlackLine',
-        ],
+        argIds: ['startOnce', 'addItUpOnce'],
       },
     },
     rootId: 'completion',
   },
   successGoals: [
-    { exprId: 'onCircleOnce', name: tr('Started over the circle') },
-    { exprId: 'stopAtBlackLine', name: tr('Stop at the black line') },
+    { exprId: 'startOnce', name: tr('Start in the Start Box') },
+    { exprId: 'addItUpOnce', name: tr('Touched Circles to add up to 20') }
   ],
-  sceneId: 'jbc23',
+  sceneId: 'jbc12',
 } as Challenge;
