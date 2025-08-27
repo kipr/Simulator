@@ -2571,6 +2571,1116 @@
     "Ask tutor a question...": {
       "en-US": "Ask tutor a question...",
       "ja-JP": "助手に質問する"
+    },
+    "JBC Challenge 0": {
+      "en-US": "JBC Challenge 0"
+    },
+    "In Start Box": {
+      "en-US": "In Start Box"
+    },
+    "Robot is in the start box": {
+      "en-US": "Robot is in the start box"
+    },
+    "Not In Start Box": {
+      "en-US": "Not In Start Box"
+    },
+    "Robot is not in the start box": {
+      "en-US": "Robot is not in the start box"
+    },
+    "Robot Touching Line B": {
+      "en-US": "Robot Touching Line B"
+    },
+    "Robot is touching line B": {
+      "en-US": "Robot is touching line B"
+    },
+    "Robot Reached End": {
+      "en-US": "Robot Reached End"
+    },
+    "Robot reached the end of the mat": {
+      "en-US": "Robot reached the end of the mat"
+    },
+    "Robot Off Mat": {
+      "en-US": "Robot Off Mat"
+    },
+    "Robot left the mat": {
+      "en-US": "Robot left the mat"
+    },
+    "Start in the Start Box": {
+      "en-US": "Start in the Start Box"
+    },
+    "Reach the end of the mat": {
+      "en-US": "Reach the end of the mat"
+    },
+    "Wheels do not touch line B": {
+      "en-US": "Wheels do not touch line B"
+    },
+    "Do not drive off the mat": {
+      "en-US": "Do not drive off the mat"
+    },
+    "JBC Challenge 1": {
+      "en-US": "JBC Challenge 1"
+    },
+    "Can 9 Touched": {
+      "en-US": "Can 9 Touched"
+    },
+    "Can A touched": {
+      "en-US": "Can A touched"
+    },
+    "Can 9 Intersects": {
+      "en-US": "Can 9 Intersects"
+    },
+    "Can 9 intersects circle 9": {
+      "en-US": "Can 9 intersects circle 9"
+    },
+    "Can 9 Upright": {
+      "en-US": "Can 9 Upright"
+    },
+    "Can 9 upright on circle 9": {
+      "en-US": "Can 9 upright on circle 9"
+    },
+    "Robot Rentered Start": {
+      "en-US": "Robot Rentered Start"
+    },
+    "Robot reentered starting box": {
+      "en-US": "Robot reentered starting box"
+    },
+    "Touch Can 9": {
+      "en-US": "Touch Can 9"
+    },
+    "Return to the Start Box": {
+      "en-US": "Return to the Start Box"
+    },
+    "Can 9 not in circle 9": {
+      "en-US": "Can 9 not in circle 9"
+    },
+    "Can 9 not upright": {
+      "en-US": "Can 9 not upright"
+    },
+    "JBC Challenge 2": {
+      "en-US": "JBC Challenge 2"
+    },
+    "Can 6 Intersects": {
+      "en-US": "Can 6 Intersects"
+    },
+    "Can 6 intersects circle 6": {
+      "en-US": "Can 6 intersects circle 6"
+    },
+    "Can 6 Upright": {
+      "en-US": "Can 6 Upright"
+    },
+    "Can 6 upright on circle 6": {
+      "en-US": "Can 6 upright on circle 6"
+    },
+    "Robot Passed Right Side": {
+      "en-US": "Robot Passed Right Side"
+    },
+    "Robot passed right side of can 6": {
+      "en-US": "Robot passed right side of can 6"
+    },
+    "Robot Passed Top Side": {
+      "en-US": "Robot Passed Top Side"
+    },
+    "Robot passed top side of can 6": {
+      "en-US": "Robot passed top side of can 6"
+    },
+    "Robot Passed left Side": {
+      "en-US": "Robot Passed left Side"
+    },
+    "Robot passed left side of can 6": {
+      "en-US": "Robot passed left side of can 6"
+    },
+    "Pass the right side of can 6": {
+      "en-US": "Pass the right side of can 6"
+    },
+    "Pass the top side of can 6": {
+      "en-US": "Pass the top side of can 6"
+    },
+    "Pass the left side of can 6": {
+      "en-US": "Pass the left side of can 6"
+    },
+    "Can 6 not in circle 6": {
+      "en-US": "Can 6 not in circle 6"
+    },
+    "Can 6 not upright": {
+      "en-US": "Can 6 not upright"
+    },
+    "JBC Challenge 3": {
+      "en-US": "JBC Challenge 3"
+    },
+    "Robot Touched Garage Lines": {
+      "en-US": "Robot Touched Garage Lines"
+    },
+    "Robot touched garage boundaries": {
+      "en-US": "Robot touched garage boundaries"
+    },
+    "Robot Parked in One Garage": {
+      "en-US": "Robot Parked in One Garage"
+    },
+    "Robot parked in only one garage": {
+      "en-US": "Robot parked in only one garage"
+    },
+    "Robot Parked in Different Garage": {
+      "en-US": "Robot Parked in Different Garage"
+    },
+    "Robot parked in a different garage": {
+      "en-US": "Robot parked in a different garage"
+    },
+    "Robot Returned Start": {
+      "en-US": "Robot Returned Start"
+    },
+    "Robot returned to starting box": {
+      "en-US": "Robot returned to starting box"
+    },
+    "Park in one garage": {
+      "en-US": "Park in one garage"
+    },
+    "Park in a different garage": {
+      "en-US": "Park in a different garage"
+    },
+    "Do not touch garage boundaries": {
+      "en-US": "Do not touch garage boundaries"
+    },
+    "JBC Challenge 4": {
+      "en-US": "JBC Challenge 4"
+    },
+    "Circle Touched Out of Order": {
+      "en-US": "Circle Touched Out of Order"
+    },
+    "Circle was touched out of order": {
+      "en-US": "Circle was touched out of order"
+    },
+    "Robot Touched Circle 1": {
+      "en-US": "Robot Touched Circle 1"
+    },
+    "Robot touched circle 1": {
+      "en-US": "Robot touched circle 1"
+    },
+    "Robot Touched Circle 2": {
+      "en-US": "Robot Touched Circle 2"
+    },
+    "Robot touched circle 2": {
+      "en-US": "Robot touched circle 2"
+    },
+    "Robot Touched Circle 3": {
+      "en-US": "Robot Touched Circle 3"
+    },
+    "Robot touched circle 3": {
+      "en-US": "Robot touched circle 3"
+    },
+    "Robot Touched Circle 4": {
+      "en-US": "Robot Touched Circle 4"
+    },
+    "Robot touched circle 4": {
+      "en-US": "Robot touched circle 4"
+    },
+    "Robot Touched Circle 5": {
+      "en-US": "Robot Touched Circle 5"
+    },
+    "Robot touched circle 5": {
+      "en-US": "Robot touched circle 5"
+    },
+    "Robot Touched Circle 6": {
+      "en-US": "Robot Touched Circle 6"
+    },
+    "Robot touched circle 6": {
+      "en-US": "Robot touched circle 6"
+    },
+    "Robot Touched Circle 7": {
+      "en-US": "Robot Touched Circle 7"
+    },
+    "Robot touched circle 7": {
+      "en-US": "Robot touched circle 7"
+    },
+    "Robot Touched Circle 8": {
+      "en-US": "Robot Touched Circle 8"
+    },
+    "Robot touched circle 8": {
+      "en-US": "Robot touched circle 8"
+    },
+    "Touch circle 1": {
+      "en-US": "Touch circle 1"
+    },
+    "Touch circle 2": {
+      "en-US": "Touch circle 2"
+    },
+    "Touch circle 3": {
+      "en-US": "Touch circle 3"
+    },
+    "Touch circle 4": {
+      "en-US": "Touch circle 4"
+    },
+    "Touch circle 5": {
+      "en-US": "Touch circle 5"
+    },
+    "Touch circle 6": {
+      "en-US": "Touch circle 6"
+    },
+    "Touch circle 7": {
+      "en-US": "Touch circle 7"
+    },
+    "Touch circle 8": {
+      "en-US": "Touch circle 8"
+    },
+    "Circle touched out of order": {
+      "en-US": "Circle touched out of order"
+    },
+    "JBC Challenge 5": {
+      "en-US": "JBC Challenge 5"
+    },
+    "Even Circle Touched": {
+      "en-US": "Even Circle Touched"
+    },
+    "Even circle touched": {
+      "en-US": "Even circle touched"
+    },
+    "Circle 1 Touched": {
+      "en-US": "Circle 1 Touched"
+    },
+    "Circle 1 was touched": {
+      "en-US": "Circle 1 was touched"
+    },
+    "Circle 3 Touched": {
+      "en-US": "Circle 3 Touched"
+    },
+    "Circle 3 was touched": {
+      "en-US": "Circle 3 was touched"
+    },
+    "Circle 5 Touched": {
+      "en-US": "Circle 5 Touched"
+    },
+    "Circle 5 was touched": {
+      "en-US": "Circle 5 was touched"
+    },
+    "Circle 7 Touched": {
+      "en-US": "Circle 7 Touched"
+    },
+    "Circle 7 was touched": {
+      "en-US": "Circle 7 was touched"
+    },
+    "Circle 9 Touched": {
+      "en-US": "Circle 9 Touched"
+    },
+    "Circle 9 was touched": {
+      "en-US": "Circle 9 was touched"
+    },
+    "Circle 11 Touched": {
+      "en-US": "Circle 11 Touched"
+    },
+    "Circle 11 was touched": {
+      "en-US": "Circle 11 was touched"
+    },
+    "Touch circle 9": {
+      "en-US": "Touch circle 9"
+    },
+    "Touch circle 11": {
+      "en-US": "Touch circle 11"
+    },
+    "Touched an even circle": {
+      "en-US": "Touched an even circle"
+    },
+    "JBC Challenge 6": {
+      "en-US": "JBC Challenge 6"
+    },
+    "Can 4 intersects circle 4": {
+      "en-US": "Can 4 intersects circle 4"
+    },
+    "Can 4 upright on circle 4": {
+      "en-US": "Can 4 upright on circle 4"
+    },
+    "Robot Figure Eight": {
+      "en-US": "Robot Figure Eight"
+    },
+    "Robot did a figure eight around cans 4 and 9": {
+      "en-US": "Robot did a figure eight around cans 4 and 9"
+    },
+    "Complete a figure eight": {
+      "en-US": "Complete a figure eight"
+    },
+    "Can 4 not upright in circle 4": {
+      "en-US": "Can 4 not upright in circle 4"
+    },
+    "Can 9 not upright in circle 9": {
+      "en-US": "Can 9 not upright in circle 9"
+    },
+    "Can 4 does not intersect circle 4": {
+      "en-US": "Can 4 does not intersect circle 4"
+    },
+    "Can 9 does not intersect circle 9": {
+      "en-US": "Can 9 does not intersect circle 9"
+    },
+    "JBC Challenge 7": {
+      "en-US": "JBC Challenge 7"
+    },
+    "Can 2 upright": {
+      "en-US": "Can 2 upright"
+    },
+    "Can 9 upright": {
+      "en-US": "Can 9 upright"
+    },
+    "Can 10 Upright": {
+      "en-US": "Can 10 Upright"
+    },
+    "Can 10 upright": {
+      "en-US": "Can 10 upright"
+    },
+    "Can 2 Intersects Green Garage": {
+      "en-US": "Can 2 Intersects Green Garage"
+    },
+    "Can 2 intersects Green Garage": {
+      "en-US": "Can 2 intersects Green Garage"
+    },
+    "Can 9 Intersects Blue Garage": {
+      "en-US": "Can 9 Intersects Blue Garage"
+    },
+    "Can 9 intersects Blue Garage": {
+      "en-US": "Can 9 intersects Blue Garage"
+    },
+    "Can 9 Intersects Purple Garage": {
+      "en-US": "Can 9 Intersects Purple Garage"
+    },
+    "Can 9 intersects Purple Garage": {
+      "en-US": "Can 9 intersects Purple Garage"
+    },
+    "Can 10 Intersects Yellow Garage": {
+      "en-US": "Can 10 Intersects Yellow Garage"
+    },
+    "Can 10 intersects Yellow Garage": {
+      "en-US": "Can 10 intersects Yellow Garage"
+    },
+    "Place can 2 in green garage": {
+      "en-US": "Place can 2 in green garage"
+    },
+    "Place can 9 in blue garage": {
+      "en-US": "Place can 9 in blue garage"
+    },
+    "Place can 10 in yellow garage": {
+      "en-US": "Place can 10 in yellow garage"
+    },
+    "Can 2 not upright in green garage": {
+      "en-US": "Can 2 not upright in green garage"
+    },
+    "Can 9 not upright in blue garage": {
+      "en-US": "Can 9 not upright in blue garage"
+    },
+    "Can 10 not upright in yellow garage": {
+      "en-US": "Can 10 not upright in yellow garage"
+    },
+    "JBC Challenge 8": {
+      "en-US": "JBC Challenge 8"
+    },
+    "Can A upright behind start line": {
+      "en-US": "Can A upright behind start line"
+    },
+    "Can B upright behind start line": {
+      "en-US": "Can B upright behind start line"
+    },
+    "Can C upright behind start line": {
+      "en-US": "Can C upright behind start line"
+    },
+    "Can D upright behind start line": {
+      "en-US": "Can D upright behind start line"
+    },
+    "Can E upright behind start line": {
+      "en-US": "Can E upright behind start line"
+    },
+    "First can upright in start box": {
+      "en-US": "First can upright in start box"
+    },
+    "Second can upright in start box": {
+      "en-US": "Second can upright in start box"
+    },
+    "Third can upright in start box": {
+      "en-US": "Third can upright in start box"
+    },
+    "Fourth can upright in start box": {
+      "en-US": "Fourth can upright in start box"
+    },
+    "Fifth can upright in start box": {
+      "en-US": "Fifth can upright in start box"
+    },
+    "JBC Challenge 9": {
+      "en-US": "JBC Challenge 9"
+    },
+    "Cover base A": {
+      "en-US": "Cover base A"
+    },
+    "Cover base B": {
+      "en-US": "Cover base B"
+    },
+    "Cover base C": {
+      "en-US": "Cover base C"
+    },
+    "Cover base D": {
+      "en-US": "Cover base D"
+    },
+    "Cover base E": {
+      "en-US": "Cover base E"
+    },
+    "Can A not upright": {
+      "en-US": "Can A not upright"
+    },
+    "Can B not upright": {
+      "en-US": "Can B not upright"
+    },
+    "Can C not upright": {
+      "en-US": "Can C not upright"
+    },
+    "Can D not upright": {
+      "en-US": "Can D not upright"
+    },
+    "Can E not upright": {
+      "en-US": "Can E not upright"
+    },
+    "JBC Challenge 10": {
+      "en-US": "JBC Challenge 10"
+    },
+    "Waited to Chop": {
+      "en-US": "Waited to Chop"
+    },
+    "Robot waited to chop": {
+      "en-US": "Robot waited to chop"
+    },
+    "Can 7 Upright": {
+      "en-US": "Can 7 Upright"
+    },
+    "Can 7 upright": {
+      "en-US": "Can 7 upright"
+    },
+    "Wait before chopping": {
+      "en-US": "Wait before chopping"
+    },
+    "Knock over can 7": {
+      "en-US": "Knock over can 7"
+    },
+    "JBC Challenge 11": {
+      "en-US": "JBC Challenge 11"
+    },
+    "Robot Waved": {
+      "en-US": "Robot Waved"
+    },
+    "Robot waved": {
+      "en-US": "Robot waved"
+    },
+    "Circle 3 touched": {
+      "en-US": "Circle 3 touched"
+    },
+    "Circle 6 Touched": {
+      "en-US": "Circle 6 Touched"
+    },
+    "Circle 6 touched": {
+      "en-US": "Circle 6 touched"
+    },
+    "Circle 9 touched": {
+      "en-US": "Circle 9 touched"
+    },
+    "Circle 12 Touched": {
+      "en-US": "Circle 12 Touched"
+    },
+    "Circle 12 touched": {
+      "en-US": "Circle 12 touched"
+    },
+    "Wave at circle 3": {
+      "en-US": "Wave at circle 3"
+    },
+    "Wave at circle 6": {
+      "en-US": "Wave at circle 6"
+    },
+    "Wave at circle 9": {
+      "en-US": "Wave at circle 9"
+    },
+    "Wave at circle 12": {
+      "en-US": "Wave at circle 12"
+    },
+    "JBC Challenge 15": {
+      "en-US": "JBC Challenge 15"
+    },
+    "Can 11 Upright": {
+      "en-US": "Can 11 Upright"
+    },
+    "Can 11 upright": {
+      "en-US": "Can 11 upright"
+    },
+    "Bring can to Start Box": {
+      "en-US": "Bring can to Start Box"
+    },
+    "Keep can 11 not upright": {
+      "en-US": "Keep can 11 not upright"
+    },
+    "JBC Challenge 16": {
+      "en-US": "JBC Challenge 16"
+    },
+    "Can 2 Picked Up": {
+      "en-US": "Can 2 Picked Up"
+    },
+    "Can 2 picked up": {
+      "en-US": "Can 2 picked up"
+    },
+    "Can 9 Picked Up": {
+      "en-US": "Can 9 Picked Up"
+    },
+    "Can 9 picked up": {
+      "en-US": "Can 9 picked up"
+    },
+    "Can 10 Picked Up": {
+      "en-US": "Can 10 Picked Up"
+    },
+    "Can 10 picked up": {
+      "en-US": "Can 10 picked up"
+    },
+    "Can 2 not upright": {
+      "en-US": "Can 2 not upright"
+    },
+    "Can 10 not upright": {
+      "en-US": "Can 10 not upright"
+    },
+    "Can 2 not picked up": {
+      "en-US": "Can 2 not picked up"
+    },
+    "Can 9 not picked up": {
+      "en-US": "Can 9 not picked up"
+    },
+    "Can 10 not picked up": {
+      "en-US": "Can 10 not picked up"
+    },
+    "JBC Challenge 17": {
+      "en-US": "JBC Challenge 17"
+    },
+    "Rescue can 1 to start box": {
+      "en-US": "Rescue can 1 to start box"
+    },
+    "Rescue can 2 to start box": {
+      "en-US": "Rescue can 2 to start box"
+    },
+    "Rescue can 3 to start box": {
+      "en-US": "Rescue can 3 to start box"
+    },
+    "Can 1 not upright": {
+      "en-US": "Can 1 not upright"
+    },
+    "Can 3 not upright": {
+      "en-US": "Can 3 not upright"
+    },
+    "JBC Challenge 18": {
+      "en-US": "JBC Challenge 18"
+    },
+    "Robot Left Start": {
+      "en-US": "Robot Left Start"
+    },
+    "Robot left starting box": {
+      "en-US": "Robot left starting box"
+    },
+    "One Can Stacked": {
+      "en-US": "One Can Stacked"
+    },
+    "One can is stacked on another": {
+      "en-US": "One can is stacked on another"
+    },
+    "Robot Touching Can": {
+      "en-US": "Robot Touching Can"
+    },
+    "Robot is touching a can": {
+      "en-US": "Robot is touching a can"
+    },
+    "Leave the Start Box": {
+      "en-US": "Leave the Start Box"
+    },
+    "Stack one can on another": {
+      "en-US": "Stack one can on another"
+    },
+    "Robot touching can": {
+      "en-US": "Robot touching can"
+    },
+    "JBC Challenge 19": {
+      "en-US": "JBC Challenge 19"
+    },
+    "Robot Forward Touch": {
+      "en-US": "Robot Forward Touch"
+    },
+    "Robot drove forward and touched ream of paper": {
+      "en-US": "Robot drove forward and touched ream of paper"
+    },
+    "Drive forward and touch the ream": {
+      "en-US": "Drive forward and touch the ream"
+    },
+    "JBC Challenge 20": {
+      "en-US": "JBC Challenge 20"
+    },
+    "Robot in start box": {
+      "en-US": "Robot in start box"
+    },
+    "Ream 1 Touched": {
+      "en-US": "Ream 1 Touched"
+    },
+    "Robot touched ream 1": {
+      "en-US": "Robot touched ream 1"
+    },
+    "Ream 2 Touched": {
+      "en-US": "Ream 2 Touched"
+    },
+    "Robot touched ream 2": {
+      "en-US": "Robot touched ream 2"
+    },
+    "Ream 3 Touched": {
+      "en-US": "Ream 3 Touched"
+    },
+    "Robot touched ream 3": {
+      "en-US": "Robot touched ream 3"
+    },
+    "Ream 4 Touched": {
+      "en-US": "Ream 4 Touched"
+    },
+    "Robot touched ream 4": {
+      "en-US": "Robot touched ream 4"
+    },
+    "Touch ream 1": {
+      "en-US": "Touch ream 1"
+    },
+    "Touch ream 2": {
+      "en-US": "Touch ream 2"
+    },
+    "Touch ream 3": {
+      "en-US": "Touch ream 3"
+    },
+    "Touch ream 4": {
+      "en-US": "Touch ream 4"
+    },
+    "JBC Challenge 21": {
+      "en-US": "JBC Challenge 21"
+    },
+    "Stop at Ream": {
+      "en-US": "Stop at Ream"
+    },
+    "Robot stops at ream": {
+      "en-US": "Robot stops at ream"
+    },
+    "Bump Ream": {
+      "en-US": "Bump Ream"
+    },
+    "Robot bumps ream": {
+      "en-US": "Robot bumps ream"
+    },
+    "Stop at the ream": {
+      "en-US": "Stop at the ream"
+    },
+    "Do not bump the ream": {
+      "en-US": "Do not bump the ream"
+    },
+    "JBC Challenge 22": {
+      "en-US": "JBC Challenge 22"
+    },
+    "Can Upright": {
+      "en-US": "Can Upright"
+    },
+    "Can is upright": {
+      "en-US": "Can is upright"
+    },
+    "Can not upright": {
+      "en-US": "Can not upright"
+    },
+    "JBC Challenge 23": {
+      "en-US": "JBC Challenge 23"
+    },
+    "Started over the circle": {
+      "en-US": "Started over the circle"
+    },
+    "Stop at the black line": {
+      "en-US": "Stop at the black line"
+    },
+    "JBC Challenge 24": {
+      "en-US": "JBC Challenge 24"
+    },
+    "Robot Walks the Line": {
+      "en-US": "Robot Walks the Line"
+    },
+    "Robot uses reflectance sensor to follow the black line until Finish Line ": {
+      "en-US": "Robot uses reflectance sensor to follow the black line until Finish Line "
+    },
+    "Line follow to the finish line": {
+      "en-US": "Line follow to the finish line"
+    },
+    "Robot started on Circle": {
+      "en-US": "Robot started on Circle"
+    },
+    "Can Not Upright": {
+      "en-US": "Can Not Upright"
+    },
+    "Place Hamburger in Tray": {
+      "en-US": "Place Hamburger in Tray"
+    },
+    "Place Hotdog in Tray": {
+      "en-US": "Place Hotdog in Tray"
+    },
+    "Place Taco in Tray": {
+      "en-US": "Place Taco in Tray"
+    },
+    "Can A Not Upright": {
+      "en-US": "Can A Not Upright"
+    },
+    "Can B Not Upright": {
+      "en-US": "Can B Not Upright"
+    },
+    "Can C Not Upright": {
+      "en-US": "Can C Not Upright"
+    },
+    "Can D Not Upright": {
+      "en-US": "Can D Not Upright"
+    },
+    "Can E Not Upright": {
+      "en-US": "Can E Not Upright"
+    },
+    "Can F Not Upright": {
+      "en-US": "Can F Not Upright"
+    },
+    "Can G Not Upright": {
+      "en-US": "Can G Not Upright"
+    },
+    "Can 1 in the Start Box": {
+      "en-US": "Can 1 in the Start Box"
+    },
+    "Can 2 in the Start Box": {
+      "en-US": "Can 2 in the Start Box"
+    },
+    "Can 3 in the Start Box": {
+      "en-US": "Can 3 in the Start Box"
+    },
+    "Can 4 in the Start Box": {
+      "en-US": "Can 4 in the Start Box"
+    },
+    "Can 5 in the Start Box": {
+      "en-US": "Can 5 in the Start Box"
+    },
+    "Can 1 Not Upright": {
+      "en-US": "Can 1 Not Upright"
+    },
+    "Can 2 Not Upright": {
+      "en-US": "Can 2 Not Upright"
+    },
+    "Can 3 Not Upright": {
+      "en-US": "Can 3 Not Upright"
+    },
+    "Can 4 Not Upright": {
+      "en-US": "Can 4 Not Upright"
+    },
+    "Can 5 Not Upright": {
+      "en-US": "Can 5 Not Upright"
+    },
+    "JBC Challenge 10B": {
+      "en-US": "JBC Challenge 10B"
+    },
+    "JBC Challenge 12": {
+      "en-US": "JBC Challenge 12"
+    },
+    "Can from green garage intersects circle 2": {
+      "en-US": "Can from green garage intersects circle 2"
+    },
+    "Can from blue garage intersects circle 9": {
+      "en-US": "Can from blue garage intersects circle 9"
+    },
+    "Can 10 Intersects": {
+      "en-US": "Can 10 Intersects"
+    },
+    "Can from yellow garage intersects circle 10": {
+      "en-US": "Can from yellow garage intersects circle 10"
+    },
+    "JBC Challenge 13": {
+      "en-US": "JBC Challenge 13"
+    },
+    "Can 2 intersects chosen garage": {
+      "en-US": "Can 2 intersects chosen garage"
+    },
+    "Can 5 intersects chosen garage": {
+      "en-US": "Can 5 intersects chosen garage"
+    },
+    "Can 8 Intersects": {
+      "en-US": "Can 8 Intersects"
+    },
+    "Can 8 intersects chosen garage": {
+      "en-US": "Can 8 intersects chosen garage"
+    },
+    "Can 10 intersects chosen garage": {
+      "en-US": "Can 10 intersects chosen garage"
+    },
+    "Can 11 Intersects": {
+      "en-US": "Can 11 Intersects"
+    },
+    "Can 11 intersects chosen garage": {
+      "en-US": "Can 11 intersects chosen garage"
+    },
+    "Can 2 upright in chosen garage": {
+      "en-US": "Can 2 upright in chosen garage"
+    },
+    "Can 5 upright in achosen garage": {
+      "en-US": "Can 5 upright in achosen garage"
+    },
+    "Can 8 Upright": {
+      "en-US": "Can 8 Upright"
+    },
+    "Can 8 upright in chosen garage": {
+      "en-US": "Can 8 upright in chosen garage"
+    },
+    "Can 10 upright in chosen garage": {
+      "en-US": "Can 10 upright in chosen garage"
+    },
+    "Can 11 upright in chosen garage": {
+      "en-US": "Can 11 upright in chosen garage"
+    },
+    "JBC Challenge 15B": {
+      "en-US": "JBC Challenge 15B"
+    },
+    "Robot Backward Touch": {
+      "en-US": "Robot Backward Touch"
+    },
+    "Robot drove backward and touched ream of paper": {
+      "en-US": "Robot drove backward and touched ream of paper"
+    },
+    "Robot Forward Circle 2": {
+      "en-US": "Robot Forward Circle 2"
+    },
+    "Robot drove forward to circle 2": {
+      "en-US": "Robot drove forward to circle 2"
+    },
+    "JBC Challenge 17B": {
+      "en-US": "JBC Challenge 17B"
+    },
+    "Robot uses reflectance sensor to follow the black line until the Blue line": {
+      "en-US": "Robot uses reflectance sensor to follow the black line until the Blue line"
+    },
+    "Can 9 is upright": {
+      "en-US": "Can 9 is upright"
+    },
+    "Can 10 is upright": {
+      "en-US": "Can 10 is upright"
+    },
+    "Can 12 Upright": {
+      "en-US": "Can 12 Upright"
+    },
+    "Can 12 is upright": {
+      "en-US": "Can 12 is upright"
+    },
+    "Can 9 rescued intersecting paper ream": {
+      "en-US": "Can 9 rescued intersecting paper ream"
+    },
+    "Can 2 rescued intersecting paper ream": {
+      "en-US": "Can 2 rescued intersecting paper ream"
+    },
+    "Can 10 rescued intersecting paper ream": {
+      "en-US": "Can 10 rescued intersecting paper ream"
+    },
+    "Can 12 Intersects": {
+      "en-US": "Can 12 Intersects"
+    },
+    "Can 12 rescued intersecting paper ream": {
+      "en-US": "Can 12 rescued intersecting paper ream"
+    },
+    "Can 9 Lifted": {
+      "en-US": "Can 9 Lifted"
+    },
+    "Can 9 Lifted a Foot Tall": {
+      "en-US": "Can 9 Lifted a Foot Tall"
+    },
+    "JBC Challenge 2B": {
+      "en-US": "JBC Challenge 2B"
+    },
+    "Can 10 Touched": {
+      "en-US": "Can 10 Touched"
+    },
+    "Can 10 touched": {
+      "en-US": "Can 10 touched"
+    },
+    "Can 11 Touched": {
+      "en-US": "Can 11 Touched"
+    },
+    "Can 11 touched": {
+      "en-US": "Can 11 touched"
+    },
+    "Can 12 Touched": {
+      "en-US": "Can 12 Touched"
+    },
+    "Can 12 touched": {
+      "en-US": "Can 12 touched"
+    },
+    "Can 10 intersects circle 10": {
+      "en-US": "Can 10 intersects circle 10"
+    },
+    "Can 11 intersects circle 11": {
+      "en-US": "Can 11 intersects circle 11"
+    },
+    "Can 12 intersects circle 12": {
+      "en-US": "Can 12 intersects circle 12"
+    },
+    "Can 10 upright on circle 10": {
+      "en-US": "Can 10 upright on circle 10"
+    },
+    "Can 11 upright on circle 11": {
+      "en-US": "Can 11 upright on circle 11"
+    },
+    "Can 12 upright on circle 12": {
+      "en-US": "Can 12 upright on circle 12"
+    },
+    "Robot passed right side of can 12": {
+      "en-US": "Robot passed right side of can 12"
+    },
+    "Robot passed top side of can 11": {
+      "en-US": "Robot passed top side of can 11"
+    },
+    "Robot passed left side of can 10": {
+      "en-US": "Robot passed left side of can 10"
+    },
+    "JBC Challenge 2C": {
+      "en-US": "JBC Challenge 2C"
+    },
+    "Robot Driving Backwards": {
+      "en-US": "Robot Driving Backwards"
+    },
+    "Robot is driving backwards": {
+      "en-US": "Robot is driving backwards"
+    },
+    "JBC Challenge 2D": {
+      "en-US": "JBC Challenge 2D"
+    },
+    "Robot Rentered Start 1": {
+      "en-US": "Robot Rentered Start 1"
+    },
+    "Robot reentered starting box after going forwards": {
+      "en-US": "Robot reentered starting box after going forwards"
+    },
+    "Robot Rentered Start 2": {
+      "en-US": "Robot Rentered Start 2"
+    },
+    "Robot reentered starting box after going backwards": {
+      "en-US": "Robot reentered starting box after going backwards"
+    },
+    "Robot Driving Forwards": {
+      "en-US": "Robot Driving Forwards"
+    },
+    "Robot is driving forwards": {
+      "en-US": "Robot is driving forwards"
+    },
+    "JBC Challenge 4B": {
+      "en-US": "JBC Challenge 4B"
+    },
+    "Can 5 intersects circle 5": {
+      "en-US": "Can 5 intersects circle 5"
+    },
+    "Can 8 intersects circle 8": {
+      "en-US": "Can 8 intersects circle 8"
+    },
+    "Can 5 upright on circle 5": {
+      "en-US": "Can 5 upright on circle 5"
+    },
+    "Can 8 upright on circle 8": {
+      "en-US": "Can 8 upright on circle 8"
+    },
+    "Can 8 Clockwise": {
+      "en-US": "Can 8 Clockwise"
+    },
+    "Robot drove clockwise around can 8": {
+      "en-US": "Robot drove clockwise around can 8"
+    },
+    "Can 5 Counter Clockwise": {
+      "en-US": "Can 5 Counter Clockwise"
+    },
+    "Robot drove counter clockwise around can 5": {
+      "en-US": "Robot drove counter clockwise around can 5"
+    },
+    "Can 9 Counter Clockwise": {
+      "en-US": "Can 9 Counter Clockwise"
+    },
+    "Robot drove counter clockwise around can 9": {
+      "en-US": "Robot drove counter clockwise around can 9"
+    },
+    "JBC Challenge 8B": {
+      "en-US": "JBC Challenge 8B"
+    },
+    "Robot Begins In start": {
+      "en-US": "Robot Begins In start"
+    },
+    "Robot begins in starting box": {
+      "en-US": "Robot begins in starting box"
+    },
+    "Robot passed through circle 1": {
+      "en-US": "Robot passed through circle 1"
+    },
+    "Robot passed through circle 2": {
+      "en-US": "Robot passed through circle 2"
+    },
+    "Robot passed through circle 3": {
+      "en-US": "Robot passed through circle 3"
+    },
+    "Robot passed through circle 4": {
+      "en-US": "Robot passed through circle 4"
+    },
+    "Robot passed through circle 5": {
+      "en-US": "Robot passed through circle 5"
+    },
+    "Test": {
+      "en-US": "Test"
+    },
+    "A": {
+      "en-US": "A"
+    },
+    "B": {
+      "en-US": "B"
+    },
+    "Junior Botball Challenge 12: Add It Up": {
+      "en-US": "Junior Botball Challenge 12: Add It Up"
+    },
+    "Robot Touched a Circle ": {
+      "en-US": "Robot Touched a Circle "
+    },
+    "Robot touched a circle": {
+      "en-US": "Robot touched a circle"
+    },
+    "Touched Circles to add up to 20": {
+      "en-US": "Touched Circles to add up to 20"
+    },
+    "JBC Challenge 14": {
+      "en-US": "JBC Challenge 14"
+    },
+    "Robot 360 Clockwise": {
+      "en-US": "Robot 360 Clockwise"
+    },
+    "Robot turned 360 degrees clockwise": {
+      "en-US": "Robot turned 360 degrees clockwise"
+    },
+    "Robot 360 Counter Clockwise": {
+      "en-US": "Robot 360 Counter Clockwise"
+    },
+    "Robot turned 360 degrees counter clockwise": {
+      "en-US": "Robot turned 360 degrees counter clockwise"
+    },
+    "Robot Drove Forward": {
+      "en-US": "Robot Drove Forward"
+    },
+    "Robot drove forward": {
+      "en-US": "Robot drove forward"
+    },
+    "Robot Drove Backward": {
+      "en-US": "Robot Drove Backward"
+    },
+    "Robot drove backward": {
+      "en-US": "Robot drove backward"
+    },
+    "Robot Wave Servo": {
+      "en-US": "Robot Wave Servo"
+    },
+    "Robot waved servo up and down at least once": {
+      "en-US": "Robot waved servo up and down at least once"
+    },
+    "Turn 360° clockwise": {
+      "en-US": "Turn 360° clockwise"
+    },
+    "Turn 360° counter clockwise": {
+      "en-US": "Turn 360° counter clockwise"
+    },
+    "Drive forward": {
+      "en-US": "Drive forward"
+    },
+    "Drive backward": {
+      "en-US": "Drive backward"
+    },
+    "Wave the servo": {
+      "en-US": "Wave the servo"
     }
   },
   "Volume (box) in the 3D scene": {
