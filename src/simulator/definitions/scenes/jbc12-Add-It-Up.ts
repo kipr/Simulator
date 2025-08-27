@@ -17,7 +17,15 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 }, 'notStartBox');
 `;
 
+const setNodeVisible = `
+const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
+  ...scene.nodes[nodeId],
+  visible
+});
+`
+
 const addItUp = `
+${setNodeVisible}
 // Total needs to reset with challenge
 let total = 0;
 
@@ -50,14 +58,16 @@ scene.addOnIntersectionListener('claw_link', (type, otherNodeId) => {
     const last = debounce[circle - 1] ? debounce[circle - 1] : 0;
     const wait = (Date.now() - last) > 1000;
     if (type === 'start' && wait) {
-      console.log('touched', otherNodeId);
+      // console.log('touched', otherNodeId);
       total += circle;
-      console.log(total);
+      // console.log(total);
+      setNodeVisible(otherNodeId, true);
     } else if (type === 'end') {
-      console.log('left', otherNodeId);
+      // console.log('left', otherNodeId);
       debounce[circle-1] = Date.now();
+      setNodeVisible(otherNodeId, false);
     }
-    console.log(debounce);
+    // console.log(debounce);
   }
   if (total === 20) {
     scene.setChallengeEventValue('addItUp', true);
