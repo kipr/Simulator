@@ -1056,10 +1056,8 @@ class SceneBinding {
 
   private nodeMeshes_ = (id: string): AbstractMesh[] => {
     // If the node is a robot, return all the robot's links (parts)
-    if (id in this.robotBindings_) {
-      return Dict.values(this.robotBindings_[id].links);
-    }
-    // Check if the node is an individual part of the robot
+    if (id in this.robotBindings_) return Dict.values(this.robotBindings_[id].links);
+    // Check if the node is an individual link of the robot
     for (const robotId of Dict.keySet(this.robotBindings_)) {
       if (id in this.robotBindings_[robotId].links) {
         return this.robotBindings_[robotId].links[id] instanceof AbstractMesh ? [this.robotBindings_[robotId].links[id]] : [];
@@ -1081,6 +1079,8 @@ class SceneBinding {
       if (mesh.id.includes('Chassis')) {
         continue;
       } else if (mesh.id.includes('Claw')) {
+        // Use smaller claw component for intersection bounding box to increase
+        // intersection accuracy
         const c = mesh.getChildMeshes(true, (mesh) => mesh.id.includes('claw2'))[0];
         ret.push(c.getHierarchyBoundingVectors(false));
         continue;

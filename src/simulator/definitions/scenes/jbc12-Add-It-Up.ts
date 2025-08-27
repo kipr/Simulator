@@ -22,7 +22,7 @@ const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
   ...scene.nodes[nodeId],
   visible
 });
-`
+`;
 
 const addItUp = `
 ${setNodeVisible}
@@ -35,6 +35,7 @@ scene.addOnRenderListener(() => {
     total = 0;
   }
 });
+
 const circles = {
   'circle1': 1,
   'circle2': 2,
@@ -50,24 +51,13 @@ const circles = {
   'circle12': 12,
 };
 
-let debounce = new Array(12);
-
 scene.addOnIntersectionListener('claw_link', (type, otherNodeId) => {
   if (scene.programStatus === 'running') {
     const circle = circles[otherNodeId];
-    const last = debounce[circle - 1] ? debounce[circle - 1] : 0;
-    const wait = (Date.now() - last) > 1000;
-    if (type === 'start' && wait) {
-      // console.log('touched', otherNodeId);
-      total += circle;
-      // console.log(total);
-      setNodeVisible(otherNodeId, true);
-    } else if (type === 'end') {
-      // console.log('left', otherNodeId);
-      debounce[circle-1] = Date.now();
-      setNodeVisible(otherNodeId, false);
-    }
-    // console.log(debounce);
+    // console.log('touched', otherNodeId);
+    total += type === 'start' ? circle : 0;
+    // console.log(total);
+    setNodeVisible(otherNodeId, type === 'start');
   }
   if (total === 20) {
     scene.setChallengeEventValue('addItUp', true);
