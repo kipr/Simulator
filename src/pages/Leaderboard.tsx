@@ -254,6 +254,7 @@ class Leaderboard extends React.Component<Props, State> {
 
       };
 
+      //Get anonymous name to display
       let userRecord: Record<string, User> = { [userId]: user };
       const altUser = this.anonomizeUsers(userRecord)[userId];
       user = {
@@ -480,6 +481,7 @@ class Leaderboard extends React.Component<Props, State> {
     pdfDoc.text(`Alias: ${user.altId || 'Unknown'}`, 20, 50);
     pdfDoc.text(`Email: ${this.getCurrentUserEmail() || 'Unknown'}`, 20, 60);
 
+    //Sort scores numerically
     const sortedScores = [...user.scores].sort((a, b) => {
       const nameA = a.name[locale] || a.name["en-US"] || "";
       const nameB = b.name[locale] || b.name["en-US"] || "";
@@ -489,6 +491,7 @@ class Leaderboard extends React.Component<Props, State> {
 
       return numA - numB;
     });
+
     //Scores
     pdfDoc.setFontSize(12);
     pdfDoc.text('Scores:', 20, 70);
