@@ -1,0 +1,1071 @@
+
+Robot
+Base Scene - Surface A
+A base scene using Surface A. Intended to be augmented to create full JBC scenes
+JBC Surface A
+Ground
+Light
+Base Scene - Surface B
+A base scene using Surface B. Intended to be augmented to create full JBC scenes
+JBC Surface B
+Can %s
+JBC Sandbox A
+Junior Botball Challenge Sandbox on Mat A. All cans 1-12 are available by default.
+Paper Ream 1
+Paper Ream 2
+JBC Sandbox B
+Junior Botball Challenge Sandbox on Mat B.
+JBC 1
+Junior Botball Challenge 1: Tag, You're It!
+JBC 2
+Junior Botball Challenge 2: Ring Around the Can
+JBC 2B
+Junior Botball Challenge 2B: Ring Around the Can, Sr.
+JBC 2C
+Junior Botball Challenge 2C: Back It Up
+JBC 2D
+Junior Botball Challenge 2D: Ring Around the Can and Back It Up
+JBC 3
+Junior Botball Challenge 3: Precision Parking
+JBC 3B
+Junior Botball Challenge 3B: Parallel Parking
+JBC 3C
+Junior Botball Challenge 3C: Quick Get Away!
+JBC 4
+Junior Botball Challenge 4: Figure Eight
+JBC 4B
+Junior Botball Challenge 4B: Barrel Racing
+JBC 5
+Junior Botball Challenge 5: Dance Party
+JBC 5B
+Junior Botball Challenge 5B: Line Dance
+JBC 5C
+Junior Botball Challenge 5C: Synchronized Dancing
+JBC 6
+Junior Botball Challenge 6: Load 'Em Up
+JBC 6B
+Junior Botball Challenge 6B: Pick 'Em Up
+JBC 6C
+Junior Botball Challenge 6C: Empty the Garage
+Circle 2
+Circle 9
+Circle 10
+Mat Surface
+JBC 7
+Junior Botball Challenge 7: Bulldozer Mania
+JBC 7B
+Junior Botball Challenge 7B: Cover Your Bases
+JBC 8
+Junior Botball Challenge 8: Serpentine
+JBC 8B
+Junior Botball Challenge 8B: Serpentine Jr.
+JBC 9
+Junior Botball Challenge 9: Add It Up
+JBC 9B
+Junior Botball Challenge 9B: Balancing Act
+JBC 10
+Junior Botball Challenge 10: Solo Joust
+JBC 10B
+Junior Botball Challenge 10: Solo Joust Jr.
+JBC 12
+Junior Botball Challenge 12: Unload 'Em
+JBC 13
+Junior Botball Challenge 13: Clean the Mat
+JBC 15B
+Junior Botball Challenge 15B: Bump Bump
+JBC 17
+Junior Botball Challenge 17: Walk the Line
+JBC 17B
+Junior Botball Challenge 17: Walk the Line II
+JBC 19
+Junior Botball Challenge 19: Mountain Rescue
+Paper Ream
+JBC 20
+Junior Botball Challenge 20: Rescue the Cans
+JBC 21
+Junior Botball Challenge 21: Foot Tall
+JBC 22
+Junior Botball Challenge 22: Stackerz
+Script Playground
+Script tests
+Demobot
+JBC Challenge 6C
+Can A Lifted
+Can A picked up
+Can B Lifted
+Can B picked up
+Can C Lifted
+Can C picked up
+Can A Placed
+Can A placed on circle 2
+Can B Placed
+Can A placed on circle 9
+Can C Placed
+Can A placed on circle 10
+Can A Upright
+Can A upright on circle 2
+Can B Upright
+Can B upright on circle 9
+Can C Upright
+Can C upright on circle 10
+Loading...
+Logout
+Tutorials
+Learn how to get started with the simulator
+3D Simulator
+A simulator for the Botball demobot.
+About
+KIPR is a 501(c) 3 organization started to make the long-term educational benefits of robotics accessible to students.
+Quick Start
+Navigating in 3D
+Learn the controls for navigating in 3D in the simulator
+Robot Section
+How to use the robot section
+World Section
+Learn how to create and manipulate items and scene in the simulator
+Indent
+Download
+Reset
+Error(s)
+Warning(s)
+grams
+kilograms
+pounds
+ounces
+meters
+centimeters
+feet
+inches
+radians
+degrees
+Can
+Box
+Sphere
+Cylinder
+Cone
+Plane
+File
+Euler
+Axis Angle
+Empty
+Standard Object
+Custom Object
+Point Light
+Unset
+Basic
+Texture
+Value
+General
+Name
+Type
+Geometry
+Item
+Box Options
+Size X
+Size Y
+Size Z
+Sphere Options
+Radius
+Cylinder Options
+Height
+Plane Options
+File Options
+URI
+Material
+Color Type
+Color Red
+Color Green
+Color Blue
+Color Texture URI
+Albedo Type
+Albedo Red
+Albedo Green
+Albedo Blue
+Albedo Texture URI
+Reflection Type
+Reflection Red
+Reflection Green
+Reflection Blue
+Reflection Texture URI
+Emissive Type
+Emissive Red
+Emissive Green
+Emissive Blue
+Emissive Texture URI
+Ambient Type
+Ambient Red
+Ambient Green
+Ambient Blue
+Ambient Texture URI
+Metalness Type
+Metalness
+Metalness Texture URI
+Position
+X
+Y
+Z
+Orientation
+Order
+Angle
+Scale
+Physics
+Mass
+Friction
+Unnamed Object
+Add Item
+Accept
+Settings
+Add Script
+Select Scene
+Save Scene
+Copy Scene
+Item(s) (%d)
+Script(s) (%d)
+Layouts
+Overlay
+Side
+Options
+Show All
+Hide All
+Clear
+Rotation
+Start Location
+Motor Velocity Plot
+Motor Position Plot
+Analog Sensor Plot
+Digital Sensor Plot
+Analog Sensors
+Digital Sensors
+Servos
+Motor Velocities
+Motor Positions
+This process is taking longer than expected...\nIf you have a poor internet connection, this can take some time
+The simulator may have failed to load.\nPlease submit a feedback form to let us know!
+Initializing Simulator...
+all of
+one or more of
+exactly one of
+once
+not
+Success
+Failure
+Editor
+World
+Script Editor
+Console
+Open
+Save
+Save As
+Delete
+Documentation
+Feedback
+Reset World
+Layout
+User Interface
+Simulation
+Locale
+Switch languages
+Sensor noise
+Controls whether sensor outputs are affected by random noise
+Realistic sensors
+Controls whether sensors behave like real-world sensors instead of like ideal sensors. For example, real-world ET sensors are nonlinear
+Autocomplete
+Controls autocompletion of code, brackets, and quotes
+Version %s (%s)
+Copyright
+This software is licensed under the terms of the
+Thank you to the following contributors and testers:
+Want to help improve the simulator and get your name listed here?
+GitHub repository
+We're happy to help you get started!
+Give a helpful description of a problem you're facing, or a feature you'd like to request
+Thanks for using the KIPR Simulator! Find a bug? Have a feature request? Let us know!
+How has your experience using the KIPR Simulator been?
+Email (optional): 
+Include anonymous usage data to help KIPR developers
+Please try again,
+open an issue on our github page
+, or
+email KIPR.
+Submit
+Feedback Success
+Feedback successfully submitted!
+Thank you for helping improve the KIPR Simulator!
+Open World
+Unknown
+Description: 
+Author: 
+Me
+Select a scene to see more details
+Description
+New World
+Create
+Delete %s?
+Are you sure you want to delete %s?
+Copy World
+Error %d
+Closing this dialog will take you back to the last well-known state.
+If this error persists, please submit feedback.
+World Settings
+CHALLENGE
+Start
+Welcome to the KIPR Simulator!\n
+Compiling...\n
+Compilation succeeded with warnings.\n
+Compilation succeeded.\n
+Compilation failed.\n
+Something went wrong during compilation.\n
+Compilation succeeded with warnings\n
+Compilation succeeded\n
+Modules
+Functions
+Structures
+Enumerations
+Files
+Search...
+Detailed Description
+Parameters
+Return Value
+Fields
+Volume
+RGB
+Challenge
+Stop
+Run
+and External Contributors
+Visit our
+Science
+Technology
+Engineering
+Arts
+Mathematics
+Test Assignment
+This is a test assignment.
+Educator notes
+Student notes
+JBC Mat A
+JBC Mat B
+Circle %s
+JBC 0
+Junior Botball Challenge 0: Drive Straight
+Not Start Box
+Start Box
+Line B
+End Box
+End of Mat
+Right Side Can
+Top Side Can
+Left Side Can
+Click Instruction Box
+Click Instruction 1 Box
+Click Instruction 2 Box
+Chosen Garage Box
+Green Garage Designator Box
+Yellow Garage Designator Box
+Blue Garage Designator Box
+Green Garage
+Green Garage node
+Yellow Garage node
+Blue Garage node
+Green Garage Right Boundary node
+Green Garage Left Boundary node
+Green Garage Top Boundary node
+Blue Garage
+Blue Garage Right Boundary node
+Blue Garage Left Boundary node
+Blue Garage Top Boundary node
+Yellow Garage
+Yellow Garage Right Boundary node
+Yellow Garage Left Boundary node
+Yellow Garage Top Boundary node
+Yellow Garage Marker 1
+Yellow Garage Marker 2
+Blue Garage Marker 1
+Blue Garage Marker 2
+Green Garage Marker 1
+Green Garage Marker 2
+Junior Botball Challenge 4: Serpentine
+Junior Botball Challenge 5: Odd Numbers
+Junior Botball Challenge 6: Figure Eight
+Between cans 4 and 9
+Top side of can 9
+Junior Botball Challenge 7: Load 'Em Up
+Junior Botball Challenge 8: Bulldozer Mania
+Junior Botball Challenge 9: Cover Your Bases
+Junior Botball Challenge 10: Chopped
+JBC 11
+Junior Botball Challenge 11: Making Waves
+Junior Botball Challenge 12: Add it Up
+Circle 1
+JBC 14
+Junior Botball Challenge 14: Dance Party
+JBC 15
+Junior Botball Challenge 15: Go Fetch
+JBC 16
+Junior Botball Challenge 16: Pick 'Em Up
+Junior Botball Challenge 17: Mountain Rescue
+JBC 18
+Junior Botball Challenge 18: Stackerz
+Bottom of can5
+Top of can7
+Bottom of can7
+Top of can5
+Junior Botball Challenge 19: Bump
+Junior Botball Challenge 20: A'mazing
+Paper Ream 3
+Paper Ream 4
+Junior Botball Challenge 21: Proximity
+Ream Front Boundary
+Junior Botball Challenge 22: Search and Rescue
+JBC 23
+Junior Botball Challenge 23: Find the Black Line
+Circle
+JBC 24
+Junior Botball Challenge 24: Walk the Line
+Finish Line
+Checkpoint 1
+Checkpoint 3
+Checkpoint 2
+Base Scene - Moon Surface
+A base scene. Intended to be augmented to create full Moon scenes
+1.1.1 Ground
+1.1.6-8 Start Area
+1.1.2-4 Sky
+Moon Sandbox
+Lunar sandbox. Currently supports 4 types of rocks. Demo Ready.
+Basalt Rock
+Anorthosite Rock
+Breccia Rock
+Meteorite Rock
+Life Science Pack
+Radiation Science Pack - High
+Science Pad
+Container
+Space Bot Guy
+Solar Panel
+Walkway
+Comms Tower
+Human Living Habitat
+Human Research Habitat
+Human Control/Comms Station Habitat
+Life Indicator Light
+No Life Indicator Light
+2025 Game Table
+Base Scene - 2025 Botball Game Table
+A base scene. Intended to be augmented to create the full game table
+Fry floor
+Potato detector box
+Hamburger
+Hotdog
+Taco
+Pink Cup
+Blue Cup
+Green Cup
+Blue pom back #${i}
+Blue pom front #${i}
+Bottle #${i}
+Orange pom #${i}
+Red pom #${i}
+Yellow pom #${i}
+Random pom #${i}
+Tomato
+Pickle
+Potato
+Fry #${i}
+Tray #${i}
+Botguy
+Blue drink #${i}
+Green drink #${i}
+Pink drink #${i}
+2025 Botball game table sandbox
+IRobot Create
+Leaderboard
+See the current challenge leaderboard.
+The Challenge System
+Learn how to use the challenge system
+MatB
+MatA
+Communication Tower
+Hab
+Radiation Science Pack
+Communication Tower 2
+Hab 2
+BotGuy Astronaut
+2025 Botball Game Table
+Blue Drink
+Green Drink
+Pink Drink
+Blue Pom (Ice Cube)
+Orange Pom (Hot Sauce)
+Red Pom (Ketchup)
+Yellow Pom (Mustard)
+French Fry
+Bottle
+Tray
+Living Habitat
+Research Habitat
+Controls Habitat
+Moon Rock Container
+Radiation Science Pack - Low
+Space Base
+Botball
+JBC Pieces
+Moon Rock
+All
+Basalt is an aphanitic (fine-grained) extrusive igneous rock formed from the rapid cooling of low-viscosity lava rich in magnesium and iron (mafic lava) exposed at or very near the surface of a rocky planet or moon.
+Anorthosite is a phaneritic, intrusive igneous rock characterized by its composition: mostly plagioclase feldspar (90–100%), with a minimal mafic component (0–10%).
+Breccia is a rock composed of large angular broken fragments of minerals or rocks cemented together by a fine-grained matrix.
+Meteorite is a solid piece of debris from an object, such as a comet, asteroid, or meteoroid, that originates in outer space and survives its passage through the atmosphere to reach the surface of a planet or moon.
+Description of the object
+Surface Text
+The current scene does not have a challenge available
+Start Challenge
+your current work
+Failed to load challenge
+Search
+Search Filters
+Is standards aligned
+Standards
+Subject
+Grade Level
+Grade Levels: %s
+Standard: %s
+Subject: %s
+U.S. Std.
+Curriculum
+My Assignments
+Scratch Variables
+A hamburger
+Blue pom front #$(s)
+Blue pom front #$d
+Blue pom front #%d
+Blue pom back #%d
+Bottle #%d
+Orange pom #%d
+Red pom #%d
+Yellow pom #%d
+Random pom #%d
+Tray #%d
+Blue drink #%d
+Green drink #%d
+Pink drink #%d
+Fry #%d
+GCER 2025: Find the Black Line
+GCER 2025 special event. Your robot is randomly placed on one of the red circles. Find the black starting line and stop. Bonus points for returning to the original starting circle.
+GCER 2025: Sense the Can
+GCER 2025 special event. A can is placed randomly in circle 2, 4, 6, 9 or 11. Find it and bring it back to the start box!
+Blue pom #%d
+GCER 2025: Ice Ice Botguy
+GCER 2025 special event. Botguy is overheating! Collect the ice and dump it on Botguy to cool him off!
+Cup #%d
+GCER 2025: Thirst Quencher
+GCER 2025 special event. Don't let the summer heat get you down. Bring the cups back to the start box!
+GCER 2025: Entree Express
+GCER 2025 special event. Order up! Move the entrees to the trays.
+Warming station
+Pom #%d
+GCER 2025: Special Sauce
+GCER 2025 special event. Mix the ketchup (red), mustard (yellow), and hot sauce (orange) in the garages to create your own special blend!
+Orange Garage
+GCER 2025: Cover Your Bases
+GCER 2025 special edition. All circles are now open for business!
+GCER 2025: Odd Numbers
+GCER 2025 special event. Drive over the odd numbered circles in order, but make sure to avoid the evens!
+GCER 2025: Bulldozer Mania
+GCER 2025 special event. Bring as many cans behind the starting line as you can. Make sure they stay upright!
+GCER 2025: Mountain Rescue
+GCER 2025 special event. Now with three more cans to rescue!
+Robot Stops at Black Line
+Robot stops at black line
+Robot Over Circle
+Robot over selected circle
+Robot not in Start Box
+Robot not in start box
+Can in Start Box
+Can in start box
+Can Random Upright
+Can Random upright
+Hamburger placed
+Hamburger placed in tray
+Hotdog placed
+Hotdog placed in tray
+Taco placed
+Taco placed in tray
+Can A upright in a circle
+Can B upright in a circle
+Can C upright in a circle
+Can D Upright
+Can D upright in a circle
+Can E Upright
+Can E upright in a circle
+Can F Upright
+Can F upright in a circle
+Can G Upright
+Can G upright in a circle
+Base A Covered
+Base A covered by a can
+Base B Covered
+Base B covered by a can
+Base C Covered
+Base C covered by a can
+Base D Covered
+Base D covered by a can
+Base E Covered
+Base E covered by a can
+Base F Covered
+Base F covered by a can
+Base G Covered
+Base G covered by a can
+Can 1 Upright
+Can 1 is upright
+Can 2 Upright
+Can 2 is upright
+Can 3 Upright
+Can 3 is upright
+Can 4 Upright
+Can 4 is upright
+Can 5 Upright
+Can 5 is upright
+Can 1 Intersects
+Can 1 rescued intersecting starting box
+Can 2 Intersects
+Can 2 rescued intersecting starting box
+Can 3 Intersects
+Can 3 rescued intersecting starting box
+Can 4 Intersects
+Can 4 rescued intersecting starting box
+Can 5 Intersects
+Can 5 rescued intersecting starting box
+Warming Station
+Blue Cup JBC
+Green Cup JBC
+Pink Cup JBC
+Ask Tutor
+Arm
+Claw
+Left wheel
+Right wheel
+Rangefinder
+Reflectance
+Limit switch
+Left touch
+Right touch
+Tutor
+Ask me questions about programming, get help with your code, or discuss robotics concepts.
+Ask tutor a question...
+JBC Challenge 0
+In Start Box
+Robot is in the start box
+Not In Start Box
+Robot is not in the start box
+Robot Touching Line B
+Robot is touching line B
+Robot Reached End
+Robot reached the end of the mat
+Robot Off Mat
+Robot left the mat
+Start in the Start Box
+Reach the end of the mat
+Wheels do not touch line B
+Do not drive off the mat
+JBC Challenge 1
+Can 9 Touched
+Can A touched
+Can 9 Intersects
+Can 9 intersects circle 9
+Can 9 Upright
+Can 9 upright on circle 9
+Robot Rentered Start
+Robot reentered starting box
+Touch Can 9
+Return to the Start Box
+Can 9 not in circle 9
+Can 9 not upright
+JBC Challenge 2
+Can 6 Intersects
+Can 6 intersects circle 6
+Can 6 Upright
+Can 6 upright on circle 6
+Robot Passed Right Side
+Robot passed right side of can 6
+Robot Passed Top Side
+Robot passed top side of can 6
+Robot Passed left Side
+Robot passed left side of can 6
+Pass the right side of can 6
+Pass the top side of can 6
+Pass the left side of can 6
+Can 6 not in circle 6
+Can 6 not upright
+JBC Challenge 3
+Robot Touched Garage Lines
+Robot touched garage boundaries
+Robot Parked in One Garage
+Robot parked in only one garage
+Robot Parked in Different Garage
+Robot parked in a different garage
+Robot Returned Start
+Robot returned to starting box
+Park in one garage
+Park in a different garage
+Do not touch garage boundaries
+JBC Challenge 4
+Circle Touched Out of Order
+Circle was touched out of order
+Robot Touched Circle 1
+Robot touched circle 1
+Robot Touched Circle 2
+Robot touched circle 2
+Robot Touched Circle 3
+Robot touched circle 3
+Robot Touched Circle 4
+Robot touched circle 4
+Robot Touched Circle 5
+Robot touched circle 5
+Robot Touched Circle 6
+Robot touched circle 6
+Robot Touched Circle 7
+Robot touched circle 7
+Robot Touched Circle 8
+Robot touched circle 8
+Touch circle 1
+Touch circle 2
+Touch circle 3
+Touch circle 4
+Touch circle 5
+Touch circle 6
+Touch circle 7
+Touch circle 8
+Circle touched out of order
+JBC Challenge 5
+Even Circle Touched
+Even circle touched
+Circle 1 Touched
+Circle 1 was touched
+Circle 3 Touched
+Circle 3 was touched
+Circle 5 Touched
+Circle 5 was touched
+Circle 7 Touched
+Circle 7 was touched
+Circle 9 Touched
+Circle 9 was touched
+Circle 11 Touched
+Circle 11 was touched
+Touch circle 9
+Touch circle 11
+Touched an even circle
+JBC Challenge 6
+Can 4 intersects circle 4
+Can 4 upright on circle 4
+Robot Figure Eight
+Robot did a figure eight around cans 4 and 9
+Complete a figure eight
+Can 4 not upright in circle 4
+Can 9 not upright in circle 9
+Can 4 does not intersect circle 4
+Can 9 does not intersect circle 9
+JBC Challenge 7
+Can 2 upright
+Can 9 upright
+Can 10 Upright
+Can 10 upright
+Can 2 Intersects Green Garage
+Can 2 intersects Green Garage
+Can 9 Intersects Blue Garage
+Can 9 intersects Blue Garage
+Can 9 Intersects Purple Garage
+Can 9 intersects Purple Garage
+Can 10 Intersects Yellow Garage
+Can 10 intersects Yellow Garage
+Place can 2 in green garage
+Place can 9 in blue garage
+Place can 10 in yellow garage
+Can 2 not upright in green garage
+Can 9 not upright in blue garage
+Can 10 not upright in yellow garage
+JBC Challenge 8
+Can A upright behind start line
+Can B upright behind start line
+Can C upright behind start line
+Can D upright behind start line
+Can E upright behind start line
+First can upright in start box
+Second can upright in start box
+Third can upright in start box
+Fourth can upright in start box
+Fifth can upright in start box
+JBC Challenge 9
+Cover base A
+Cover base B
+Cover base C
+Cover base D
+Cover base E
+Can A not upright
+Can B not upright
+Can C not upright
+Can D not upright
+Can E not upright
+JBC Challenge 10
+Waited to Chop
+Robot waited to chop
+Can 7 Upright
+Can 7 upright
+Wait before chopping
+Knock over can 7
+JBC Challenge 11
+Robot Waved
+Robot waved
+Circle 3 touched
+Circle 6 Touched
+Circle 6 touched
+Circle 9 touched
+Circle 12 Touched
+Circle 12 touched
+Wave at circle 3
+Wave at circle 6
+Wave at circle 9
+Wave at circle 12
+JBC Challenge 15
+Can 11 Upright
+Can 11 upright
+Bring can to Start Box
+Keep can 11 not upright
+JBC Challenge 16
+Can 2 Picked Up
+Can 2 picked up
+Can 9 Picked Up
+Can 9 picked up
+Can 10 Picked Up
+Can 10 picked up
+Can 2 not upright
+Can 10 not upright
+Can 2 not picked up
+Can 9 not picked up
+Can 10 not picked up
+JBC Challenge 17
+Rescue can 1 to start box
+Rescue can 2 to start box
+Rescue can 3 to start box
+Can 1 not upright
+Can 3 not upright
+JBC Challenge 18
+Robot Left Start
+Robot left starting box
+One Can Stacked
+One can is stacked on another
+Robot Touching Can
+Robot is touching a can
+Leave the Start Box
+Stack one can on another
+Robot touching can
+JBC Challenge 19
+Robot Forward Touch
+Robot drove forward and touched ream of paper
+Drive forward and touch the ream
+JBC Challenge 20
+Robot in start box
+Ream 1 Touched
+Robot touched ream 1
+Ream 2 Touched
+Robot touched ream 2
+Ream 3 Touched
+Robot touched ream 3
+Ream 4 Touched
+Robot touched ream 4
+Touch ream 1
+Touch ream 2
+Touch ream 3
+Touch ream 4
+JBC Challenge 21
+Stop at Ream
+Robot stops at ream
+Bump Ream
+Robot bumps ream
+Stop at the ream
+Do not bump the ream
+JBC Challenge 22
+Can Upright
+Can is upright
+Can not upright
+JBC Challenge 23
+Started over the circle
+Stop at the black line
+JBC Challenge 24
+Robot Walks the Line
+Robot uses reflectance sensor to follow the black line until Finish Line 
+Line follow to the finish line
+Robot started on Circle
+Can Not Upright
+Place Hamburger in Tray
+Place Hotdog in Tray
+Place Taco in Tray
+Can A Not Upright
+Can B Not Upright
+Can C Not Upright
+Can D Not Upright
+Can E Not Upright
+Can F Not Upright
+Can G Not Upright
+Can 1 in the Start Box
+Can 2 in the Start Box
+Can 3 in the Start Box
+Can 4 in the Start Box
+Can 5 in the Start Box
+Can 1 Not Upright
+Can 2 Not Upright
+Can 3 Not Upright
+Can 4 Not Upright
+Can 5 Not Upright
+JBC Challenge 10B
+JBC Challenge 12
+Can from green garage intersects circle 2
+Can from blue garage intersects circle 9
+Can 10 Intersects
+Can from yellow garage intersects circle 10
+JBC Challenge 13
+Can 2 intersects chosen garage
+Can 5 intersects chosen garage
+Can 8 Intersects
+Can 8 intersects chosen garage
+Can 10 intersects chosen garage
+Can 11 Intersects
+Can 11 intersects chosen garage
+Can 2 upright in chosen garage
+Can 5 upright in achosen garage
+Can 8 Upright
+Can 8 upright in chosen garage
+Can 10 upright in chosen garage
+Can 11 upright in chosen garage
+JBC Challenge 15B
+Robot Backward Touch
+Robot drove backward and touched ream of paper
+Robot Forward Circle 2
+Robot drove forward to circle 2
+JBC Challenge 17B
+Robot uses reflectance sensor to follow the black line until the Blue line
+Can 9 is upright
+Can 10 is upright
+Can 12 Upright
+Can 12 is upright
+Can 9 rescued intersecting paper ream
+Can 2 rescued intersecting paper ream
+Can 10 rescued intersecting paper ream
+Can 12 Intersects
+Can 12 rescued intersecting paper ream
+Can 9 Lifted
+Can 9 Lifted a Foot Tall
+JBC Challenge 2B
+Can 10 Touched
+Can 10 touched
+Can 11 Touched
+Can 11 touched
+Can 12 Touched
+Can 12 touched
+Can 10 intersects circle 10
+Can 11 intersects circle 11
+Can 12 intersects circle 12
+Can 10 upright on circle 10
+Can 11 upright on circle 11
+Can 12 upright on circle 12
+Robot passed right side of can 12
+Robot passed top side of can 11
+Robot passed left side of can 10
+JBC Challenge 2C
+Robot Driving Backwards
+Robot is driving backwards
+JBC Challenge 2D
+Robot Rentered Start 1
+Robot reentered starting box after going forwards
+Robot Rentered Start 2
+Robot reentered starting box after going backwards
+Robot Driving Forwards
+Robot is driving forwards
+JBC Challenge 4B
+Can 5 intersects circle 5
+Can 8 intersects circle 8
+Can 5 upright on circle 5
+Can 8 upright on circle 8
+Can 8 Clockwise
+Robot drove clockwise around can 8
+Can 5 Counter Clockwise
+Robot drove counter clockwise around can 5
+Can 9 Counter Clockwise
+Robot drove counter clockwise around can 9
+JBC Challenge 8B
+Robot Begins In start
+Robot begins in starting box
+Robot passed through circle 1
+Robot passed through circle 2
+Robot passed through circle 3
+Robot passed through circle 4
+Robot passed through circle 5
+Test
+A
+B
+Junior Botball Challenge 12: Add It Up
+Robot Touched a Circle 
+Robot touched a circle
+Touched Circles to add up to 20
+JBC Challenge 14
+Robot 360 Clockwise
+Robot turned 360 degrees clockwise
+Robot 360 Counter Clockwise
+Robot turned 360 degrees counter clockwise
+Robot Drove Forward
+Robot drove forward
+Robot Drove Backward
+Robot drove backward
+Robot Wave Servo
+Robot waved servo up and down at least once
+Turn 360° clockwise
+Turn 360° counter clockwise
+Drive forward
+Drive backward
+Wave the servo
+Volume
+RGB
+Console
+Challenge
+Stop
+Run
+and External Contributors
+Visit our
+XYZ
+YZX
+ZXY
+XZY
+YXZ
+ZYX
+Kindergarten
+1st grade
+2nd grade
+3rd grade
+4th grade
+5th grade
+6th grade
+7th grade
+8th grade
+9th grade
+10th grade
+11th grade
+12th grade
+1st
+2nd
+3rd
+4th
+5th
+6th
+7th
+8th
+9th
+10th
+11th
+12th
+K
+XYZ
+YZX
+ZXY
+XZY
+YXZ
+ZYX

@@ -1,5 +1,5 @@
 /^msgstr ""$/ {
-    getline <"zh-CN_post.txt"
+    getline <tl
     print "msgstr \"" $0 "\""
     next
 }
