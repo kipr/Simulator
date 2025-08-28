@@ -101,6 +101,13 @@ class App extends React.Component<Props, State> {
         case 'zh-TW':
           this.props.setLocale('zh-TW');
           break;
+        case 'es':
+        case 'es-ES':
+          this.props.setLocale('es-ES');
+          break;
+        case 'es-MX':
+          this.props.setLocale('es-MX');
+          break;
         default:
           this.props.setLocale('en-US');
       }
