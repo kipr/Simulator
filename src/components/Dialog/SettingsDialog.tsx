@@ -97,6 +97,7 @@ const LOCALE_OPTIONS: ComboBox.Option[] = (() => {
     LocalizedString.ES_MX,
     LocalizedString.PT_PT,
     LocalizedString.PT_BR,
+    LocalizedString.DE_DE,
     LocalizedString.JA_JP,
     LocalizedString.ZH_CN,
     LocalizedString.ZH_TW,
