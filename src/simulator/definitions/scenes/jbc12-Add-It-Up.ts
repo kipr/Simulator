@@ -10,7 +10,7 @@ const baseScene = createBaseSceneSurfaceA();
 
 const notInStartBox = `
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot not in start box!', type, otherNodeId);
+  // console.log('Robot not in start box!', type, otherNodeId);
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('notInStartBox', type === 'start');
   }
@@ -189,7 +189,7 @@ export const JBC_12: Scene = {
     circle8: createCircleNode(8, undefined, false, false),
     circle9: createCircleNode(9, undefined, false, false),
     circle10: createCircleNode(10, undefined, false, false),
-    circle12: createCircleNode(12, undefined, false, false),
     circle11: createCircleNode(11, undefined, false, false),
+    circle12: createCircleNode(12, undefined, false, false),
   },
 };
