@@ -32,7 +32,7 @@ import jbc9 from '../../simulator/definitions/challenges/jbc9-Cover-Your-Bases';
 import jbc10 from '../../simulator/definitions/challenges/jbc10-Chopped';
 // import jbc10b from '../../simulator/definitions/challenges/archived/jbc10b-Solo-Joust-Jr';
 import jbc11 from '../../simulator/definitions/challenges/jbc11-Making-Waves';
-// import jbc12 from '../../simulator/definitions/challenges/jbc12-Add-It-Up-New';
+import jbc12 from '../../simulator/definitions/challenges/jbc12-Add-It-Up';
 // import jbc13 from '../../simulator/definitions/challenges/archived/jbc13-Clean-the-Mat';
 // import jbc14 from '../../simulator/definitions/challenges/jbc14-Dance-Party';
 import jbc15 from '../../simulator/definitions/challenges/jbc15-Go-Fetch';
@@ -246,10 +246,10 @@ const DEFAULT_CHALLENGES: Challenges = {
     value: jbc11,
     brief: ChallengeBrief.fromChallenge(jbc11),
   }),
-  // 'jbc12': Async.loaded({
-  //   value: jbc12,
-  //   brief: ChallengeBrief.fromChallenge(jbc12),
-  // }),
+  'jbc12': Async.loaded({
+    value: jbc12,
+    brief: ChallengeBrief.fromChallenge(jbc12),
+  }),
   // 'jbc13': Async.loaded({
   //   value: jbc13,
   //   brief: ChallengeBrief.fromChallenge(jbc13),
