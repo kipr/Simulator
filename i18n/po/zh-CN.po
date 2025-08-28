@@ -2328,7 +2328,7 @@ msgid "Robot Figure Eight"
 msgstr "机器人八字形"
 
 msgid "Robot did a figure eight around cans 4 and 9"
-msgstr "机器人围绕 4 号罐和 9 号罐做 "八 "字形运动"
+msgstr "机器人围绕 4 号罐和 9 号罐做 \"八 \"字形运动"
 
 msgid "Complete a figure eight"
 msgstr "完成一个八字形"
@@ -2919,7 +2919,7 @@ msgid "JBC Challenge 2B"
 msgstr "JBC 挑战 2B"
 
 msgid "Can 10 Touched"
-msgstr "能 10 "触摸"
+msgstr "能 10 触摸"
 
 msgid "Can 10 touched"
 msgstr "罐 10 触摸"

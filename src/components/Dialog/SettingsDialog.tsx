@@ -91,7 +91,7 @@ interface SectionProps {
 
 const LOCALE_OPTIONS: ComboBox.Option[] = (() => {
   const ret: ComboBox.Option[] = [];
-  for (const locale of [LocalizedString.EN_US, LocalizedString.JA_JP]) {
+  for (const locale of [LocalizedString.EN_US, LocalizedString.JA_JP, LocalizedString.ZH_CN]) {
     ret.push(ComboBox.option(LocalizedString.NATIVE_LOCALE_NAMES[locale], locale));
   }
   return ret;

@@ -84,6 +84,7 @@ class App extends React.Component<Props, State> {
     // Currently only english and japaense translations are available.
     // To add more, you must also update LocalizedString.validate function.
     const lang: LocalizedString.Language = LocalizedString.validate(localStorage.getItem('bblocale'));
+    console.log(navigator.language);
     if (lang) {
       this.props.setLocale(lang);
       console.log(`Read locale from localstorage: ${lang}`);
@@ -91,6 +92,14 @@ class App extends React.Component<Props, State> {
       switch (navigator.language) {
         case 'ja':
           this.props.setLocale('ja-JP');
+          break;
+        case 'zh':
+        case 'zh-CN':
+          this.props.setLocale('zh-CN');
+          break;
+        case 'zh-HK':
+        case 'zh-TW':
+          this.props.setLocale('zh-TW');
           break;
         default:
           this.props.setLocale('en-US');
