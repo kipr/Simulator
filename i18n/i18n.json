@@ -3,5116 +3,6186 @@
     "Robot": {
       "en-US": "Robot",
       "ja-JP": "ロボット",
-      "zh-CN": "机器人"
+      "zh-CN": "机器人",
+      "zh-TW": "機器人"
     },
     "Base Scene - Surface A": {
       "en-US": "Base Scene - Surface A",
       "ja-JP": "基盤シーン - 表面A",
-      "zh-CN": "基础场景 - A 表面"
+      "zh-CN": "基础场景 - A 表面",
+      "zh-TW": "基本場景 - 曲面 A"
     },
     "A base scene using Surface A. Intended to be augmented to create full JBC scenes": {
       "en-US": "A base scene using Surface A. Intended to be augmented to create full JBC scenes",
       "ja-JP": "表面Aを使う基盤です。完全なJBCシーンを作るために補強されることを意図しています。",
-      "zh-CN": "使用曲面 A 的基础场景。旨在进行增强，以创建完整的 JBC 场景"
+      "zh-CN": "使用曲面 A 的基础场景。旨在进行增强，以创建完整的 JBC 场景",
+      "zh-TW": "使用曲面 A 的基本場景。可擴充以建立完整的 JBC 場景。"
     },
     "JBC Surface A": {
       "en-US": "JBC Surface A",
       "ja-JP": "JBC表面A",
-      "zh-CN": "JBC A 表面"
+      "zh-CN": "JBC A 表面",
+      "zh-TW": "JBC A 表面"
     },
     "Ground": {
       "en-US": "Ground",
       "ja-JP": "地",
-      "zh-CN": "地面"
+      "zh-CN": "地面",
+      "zh-TW": "地面"
     },
     "Light": {
       "en-US": "Light",
       "ja-JP": "光",
-      "zh-CN": "灯光"
+      "zh-CN": "灯光",
+      "zh-TW": "光線"
     },
     "Base Scene - Surface B": {
       "en-US": "Base Scene - Surface B",
       "ja-JP": "基盤シーン - 表面A",
-      "zh-CN": "基础场景 - 表面 B"
+      "zh-CN": "基础场景 - 表面 B",
+      "zh-TW": "基本場景 - 曲面 B"
     },
     "A base scene using Surface B. Intended to be augmented to create full JBC scenes": {
       "en-US": "A base scene using Surface B. Intended to be augmented to create full JBC scenes",
       "ja-JP": "表面Bを使う基盤です。完全なJBCシーンを作るために補強されることを意図しています。",
-      "zh-CN": "使用曲面 B 的基础场景，用于创建完整的 JBC 场景。"
+      "zh-CN": "使用曲面 B 的基础场景，用于创建完整的 JBC 场景。",
+      "zh-TW": "使用曲面 B 的基本場景。可擴充以建立完整的 JBC 場景"
     },
     "JBC Surface B": {
       "en-US": "JBC Surface B",
       "ja-JP": "JBC表面A",
-      "zh-CN": "JBC 表面 B"
+      "zh-CN": "JBC 表面 B",
+      "zh-TW": "JBC 表面 B"
     },
     "Can %s": {
       "en-US": "Can %s",
       "ja-JP": "缶%s",
-      "zh-CN": "可以 %s"
+      "zh-CN": "可以 %s",
+      "zh-TW": "可以 %s"
     },
     "JBC Sandbox A": {
       "en-US": "JBC Sandbox A",
       "ja-JP": "JBC砂場A",
-      "zh-CN": "JBC 沙盘 A"
+      "zh-CN": "JBC 沙盘 A",
+      "zh-TW": "JBC 沙盤 A"
     },
     "Junior Botball Challenge Sandbox on Mat A. All cans 1-12 are available by default.": {
       "en-US": "Junior Botball Challenge Sandbox on Mat A. All cans 1-12 are available by default.",
       "ja-JP": "マットAのジュニア・ボットボール・チャレンジ砂場です。1～12缶のすべての缶が使用可能です。",
-      "zh-CN": "A 地垫上的青少年机器人球挑战赛沙盘。默认情况下，1-12 号罐均可用。"
+      "zh-CN": "A 地垫上的青少年机器人球挑战赛沙盘。默认情况下，1-12 号罐均可用。",
+      "zh-TW": "在墊子 A 上的 Junior Botball Challenge Sandbox（青少年籃球挑戰賽沙盤）。"
     },
     "Paper Ream 1": {
       "en-US": "Paper Ream 1",
       "ja-JP": "用紙リーム１",
-      "zh-CN": "纸卷 1"
+      "zh-CN": "纸卷 1",
+      "zh-TW": "紙卷 1"
     },
     "Paper Ream 2": {
       "en-US": "Paper Ream 2",
       "ja-JP": "用紙リーム２",
-      "zh-CN": "纸卷 2"
+      "zh-CN": "纸卷 2",
+      "zh-TW": "紙卷 2"
     },
     "JBC Sandbox B": {
       "en-US": "JBC Sandbox B",
       "ja-JP": "JBC砂場B",
-      "zh-CN": "JBC 沙盘 B"
+      "zh-CN": "JBC 沙盘 B",
+      "zh-TW": "JBC 沙盤 B"
     },
     "Junior Botball Challenge Sandbox on Mat B.": {
       "en-US": "Junior Botball Challenge Sandbox on Mat B.",
       "ja-JP": "マットBのジュニア・ボットボール・チャレンジ砂場です。",
-      "zh-CN": "垫子 B 上的青少年机器人球挑战赛沙盘。"
+      "zh-CN": "垫子 B 上的青少年机器人球挑战赛沙盘。",
+      "zh-TW": "在墊子 B 上的 Junior Botball Challenge Sandbox。"
     },
     "JBC 1": {
       "en-US": "JBC 1",
       "ja-JP": "JBC 1",
-      "zh-CN": "JBC 1"
+      "zh-CN": "JBC 1",
+      "zh-TW": "JBC 1"
     },
     "Junior Botball Challenge 1: Tag, You're It!": {
       "en-US": "Junior Botball Challenge 1: Tag, You're It!",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 1：鬼ごっこ！",
-      "zh-CN": "青少年机器人球挑战赛 1：标签，就是你了！"
+      "zh-CN": "青少年机器人球挑战赛 1：标签，就是你了！",
+      "zh-TW": "Junior Botball Challenge 1: Tag, You're It！"
     },
     "JBC 2": {
       "en-US": "JBC 2",
       "ja-JP": "JBC 2",
-      "zh-CN": "JBC 2"
+      "zh-CN": "JBC 2",
+      "zh-TW": "JBC 2"
     },
     "Junior Botball Challenge 2: Ring Around the Can": {
       "en-US": "Junior Botball Challenge 2: Ring Around the Can",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 2：缶の周りにリング",
-      "zh-CN": "青少年机器人球挑战赛 2：绕罐一周"
+      "zh-CN": "青少年机器人球挑战赛 2：绕罐一周",
+      "zh-TW": "青少年機器人球挑戰賽 2：環罐而行"
     },
     "JBC 2B": {
       "en-US": "JBC 2B",
       "ja-JP": "JBC 2B",
-      "zh-CN": "JBC 2B"
+      "zh-CN": "JBC 2B",
+      "zh-TW": "JBC 2B"
     },
     "Junior Botball Challenge 2B: Ring Around the Can, Sr.": {
       "en-US": "Junior Botball Challenge 2B: Ring Around the Can, Sr.",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 2：缶の周りにリング続く",
-      "zh-CN": "青少年机器人球挑战赛 2B：环形罐，Sr."
+      "zh-CN": "青少年机器人球挑战赛 2B：环形罐，Sr.",
+      "zh-TW": "初級機器人足球挑戰賽 2B：Ring Around the Can, Sr."
     },
     "JBC 2C": {
       "en-US": "JBC 2C",
       "ja-JP": "JBC 2C",
-      "zh-CN": "JBC 2C"
+      "zh-CN": "JBC 2C",
+      "zh-TW": "JBC 2C"
     },
     "Junior Botball Challenge 2C: Back It Up": {
       "en-US": "Junior Botball Challenge 2C: Back It Up",
-      "zh-CN": "青少年机器人球挑战赛 2C：后退"
+      "zh-CN": "青少年机器人球挑战赛 2C：后退",
+      "zh-TW": "青少年機器人足球挑戰賽 2C：退後"
     },
     "JBC 2D": {
       "en-US": "JBC 2D",
-      "zh-CN": "JBC 2D"
+      "zh-CN": "JBC 2D",
+      "zh-TW": "JBC 2D"
     },
     "Junior Botball Challenge 2D: Ring Around the Can and Back It Up": {
       "en-US": "Junior Botball Challenge 2D: Ring Around the Can and Back It Up",
-      "zh-CN": "青少年机器人球挑战赛 2D：绕罐和后退"
+      "zh-CN": "青少年机器人球挑战赛 2D：绕罐和后退",
+      "zh-TW": "青少年機器人足球挑戰賽 2D：環繞罐子和後退"
     },
     "JBC 3": {
       "en-US": "JBC 3",
       "ja-JP": "JBC 3",
-      "zh-CN": "JBC 3"
+      "zh-CN": "JBC 3",
+      "zh-TW": "JBC 3"
     },
     "Junior Botball Challenge 3: Precision Parking": {
       "en-US": "Junior Botball Challenge 3: Precision Parking",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 3：精度駐車",
-      "zh-CN": "青少年机器人足球挑战赛 3：精确停车"
+      "zh-CN": "青少年机器人足球挑战赛 3：精确停车",
+      "zh-TW": "青少年機器人足球挑戰賽 3：精準停車"
     },
     "JBC 3B": {
       "en-US": "JBC 3B",
-      "zh-CN": "JBC 3B"
+      "zh-CN": "JBC 3B",
+      "zh-TW": "JBC 3B"
     },
     "Junior Botball Challenge 3B: Parallel Parking": {
       "en-US": "Junior Botball Challenge 3B: Parallel Parking",
-      "zh-CN": "青少年机器人足球挑战赛 3B：平行停车"
+      "zh-CN": "青少年机器人足球挑战赛 3B：平行停车",
+      "zh-TW": "青少年機器人足球挑戰賽 3B：平行停車"
     },
     "JBC 3C": {
       "en-US": "JBC 3C",
-      "zh-CN": "JBC 3C"
+      "zh-CN": "JBC 3C",
+      "zh-TW": "JBC 3C"
     },
     "Junior Botball Challenge 3C: Quick Get Away!": {
       "en-US": "Junior Botball Challenge 3C: Quick Get Away!",
-      "zh-CN": "青少年机器人足球挑战赛 3C：快速离开"
+      "zh-CN": "青少年机器人足球挑战赛 3C：快速离开",
+      "zh-TW": "青少年機器人足球挑戰賽 3C：快速離開！"
     },
     "JBC 4": {
       "en-US": "JBC 4",
       "ja-JP": "JBC 4",
-      "zh-CN": "JBC 4"
+      "zh-CN": "JBC 4",
+      "zh-TW": "JBC 4"
     },
     "Junior Botball Challenge 4: Figure Eight": {
       "en-US": "Junior Botball Challenge 4: Figure Eight",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 4：８の字",
-      "zh-CN": "青少年机器人足球挑战赛 4：八字形"
+      "zh-CN": "青少年机器人足球挑战赛 4：八字形",
+      "zh-TW": "青少年機器人足球挑戰賽 4：八字形"
     },
     "JBC 4B": {
       "en-US": "JBC 4B",
-      "zh-CN": "JBC 4B"
+      "zh-CN": "JBC 4B",
+      "zh-TW": "JBC 4B"
     },
     "Junior Botball Challenge 4B: Barrel Racing": {
       "en-US": "Junior Botball Challenge 4B: Barrel Racing",
-      "zh-CN": "青少年机器人球挑战赛 4B：绕桶赛"
+      "zh-CN": "青少年机器人球挑战赛 4B：绕桶赛",
+      "zh-TW": "青少年機器人足球挑戰賽 4B：滾桶賽"
     },
     "JBC 5": {
       "en-US": "JBC 5",
       "ja-JP": "JBC 5",
-      "zh-CN": "JBC 5"
+      "zh-CN": "JBC 5",
+      "zh-TW": "JBC 5"
     },
     "Junior Botball Challenge 5: Dance Party": {
       "en-US": "Junior Botball Challenge 5: Dance Party",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 5：ダンスパーティー",
-      "zh-CN": "青少年机器人球挑战赛 5：舞会"
+      "zh-CN": "青少年机器人球挑战赛 5：舞会",
+      "zh-TW": "青少年趣味滾球挑戰賽 5：舞蹈派對"
     },
     "JBC 5B": {
       "en-US": "JBC 5B",
-      "zh-CN": "JBC 5B"
+      "zh-CN": "JBC 5B",
+      "zh-TW": "JBC 5B"
     },
     "Junior Botball Challenge 5B: Line Dance": {
       "en-US": "Junior Botball Challenge 5B: Line Dance",
-      "zh-CN": "青少年机器人球挑战赛 5B：排舞"
+      "zh-CN": "青少年机器人球挑战赛 5B：排舞",
+      "zh-TW": "青少年樽球挑戰賽 5B：排排舞"
     },
     "JBC 5C": {
       "en-US": "JBC 5C",
-      "zh-CN": "JBC 5C"
+      "zh-CN": "JBC 5C",
+      "zh-TW": "JBC 5C"
     },
     "Junior Botball Challenge 5C: Synchronized Dancing": {
       "en-US": "Junior Botball Challenge 5C: Synchronized Dancing",
-      "zh-CN": "青少年机器人足球挑战赛 5C：同步舞蹈"
+      "zh-CN": "青少年机器人足球挑战赛 5C：同步舞蹈",
+      "zh-TW": "青少年機器人足球挑戰賽 5C：韻律舞"
     },
     "JBC 6": {
       "en-US": "JBC 6",
       "ja-JP": "JBC 6",
-      "zh-CN": "JBC 6"
+      "zh-CN": "JBC 6",
+      "zh-TW": "JBC 6"
     },
     "Junior Botball Challenge 6: Load 'Em Up": {
       "en-US": "Junior Botball Challenge 6: Load 'Em Up",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 6：積み込もう",
-      "zh-CN": "青少年机器人球挑战赛 6：装弹"
+      "zh-CN": "青少年机器人球挑战赛 6：装弹",
+      "zh-TW": "青少年機器人足球挑戰賽 6：裝彈"
     },
     "JBC 6B": {
       "en-US": "JBC 6B",
-      "zh-CN": "JBC 6B"
+      "zh-CN": "JBC 6B",
+      "zh-TW": "JBC 6B"
     },
     "Junior Botball Challenge 6B: Pick 'Em Up": {
       "en-US": "Junior Botball Challenge 6B: Pick 'Em Up",
-      "zh-CN": "青少年机器人球挑战赛 6B：拾起他们"
+      "zh-CN": "青少年机器人球挑战赛 6B：拾起他们",
+      "zh-TW": "青少年機器人足球挑戰賽6B：撿起他們"
     },
     "JBC 6C": {
       "en-US": "JBC 6C",
-      "zh-CN": "JBC 6C"
+      "zh-CN": "JBC 6C",
+      "zh-TW": "JBC 6C"
     },
     "Junior Botball Challenge 6C: Empty the Garage": {
       "en-US": "Junior Botball Challenge 6C: Empty the Garage",
-      "zh-CN": "青少年机器人足球挑战赛 6C：清空车库"
+      "zh-CN": "青少年机器人足球挑战赛 6C：清空车库",
+      "zh-TW": "青少年樽球挑戰賽 6C：清空車庫"
     },
     "Circle 2": {
       "en-US": "Circle 2",
       "ja-JP": "円２",
-      "zh-CN": "第 2 圈"
+      "zh-CN": "第 2 圈",
+      "zh-TW": "圓圈 2"
     },
     "Circle 9": {
       "en-US": "Circle 9",
       "ja-JP": "円９",
-      "zh-CN": "第 9 圈"
+      "zh-CN": "第 9 圈",
+      "zh-TW": "圓圈 9"
     },
     "Circle 10": {
       "en-US": "Circle 10",
       "ja-JP": "円10",
-      "zh-CN": "第 10 圈"
+      "zh-CN": "第 10 圈",
+      "zh-TW": "圓圈 10"
     },
     "Mat Surface": {
       "en-US": "Mat Surface",
       "ja-JP": "マットの表面",
-      "zh-CN": "垫子表面"
+      "zh-CN": "垫子表面",
+      "zh-TW": "墊子表面"
     },
     "JBC 7": {
       "en-US": "JBC 7",
       "ja-JP": "JBC 7",
-      "zh-CN": "JBC 7"
+      "zh-CN": "JBC 7",
+      "zh-TW": "JBC 7"
     },
     "Junior Botball Challenge 7: Bulldozer Mania": {
       "en-US": "Junior Botball Challenge 7: Bulldozer Mania",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 7：ブルドーザー・マニア",
-      "zh-CN": "青少年机器人足球挑战赛 7：推土机狂热"
+      "zh-CN": "青少年机器人足球挑战赛 7：推土机狂热",
+      "zh-TW": "Junior Botball Challenge 7：推土機狂熱"
     },
     "JBC 7B": {
       "en-US": "JBC 7B",
-      "zh-CN": "JBC 7B"
+      "zh-CN": "JBC 7B",
+      "zh-TW": "JBC 7B"
     },
     "Junior Botball Challenge 7B: Cover Your Bases": {
       "en-US": "Junior Botball Challenge 7B: Cover Your Bases",
-      "zh-CN": "青少年机器人足球挑战赛 7B：掩护你的基地"
+      "zh-CN": "青少年机器人足球挑战赛 7B：掩护你的基地",
+      "zh-TW": "青少年機器人足球挑戰賽 7B：覆蓋你的基地"
     },
     "JBC 8": {
       "en-US": "JBC 8",
       "ja-JP": "JBC 8",
-      "zh-CN": "JBC 8"
+      "zh-CN": "JBC 8",
+      "zh-TW": "JBC 8"
     },
     "Junior Botball Challenge 8: Serpentine": {
       "en-US": "Junior Botball Challenge 8: Serpentine",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 8：延々",
-      "zh-CN": "青少年机器人球挑战赛 8：蛇形"
+      "zh-CN": "青少年机器人球挑战赛 8：蛇形",
+      "zh-TW": "青少年機器人足球挑戰賽 8：蛇形"
     },
     "JBC 8B": {
       "en-US": "JBC 8B",
-      "zh-CN": "JBC 8B"
+      "zh-CN": "JBC 8B",
+      "zh-TW": "JBC 8B"
     },
     "Junior Botball Challenge 8B: Serpentine Jr.": {
       "en-US": "Junior Botball Challenge 8B: Serpentine Jr.",
-      "zh-CN": "青少年机器人足球挑战赛 8B：小蛇形球"
+      "zh-CN": "青少年机器人足球挑战赛 8B：小蛇形球",
+      "zh-TW": "青少年植物球挑戰賽8B：蛇形Jr."
     },
     "JBC 9": {
       "en-US": "JBC 9",
       "ja-JP": "JBC 9",
-      "zh-CN": "JBC 9"
+      "zh-CN": "JBC 9",
+      "zh-TW": "JBC 9"
     },
     "Junior Botball Challenge 9: Add It Up": {
       "en-US": "Junior Botball Challenge 9: Add It Up",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 9：足し算する",
-      "zh-CN": "青少年机器人球挑战赛 9：加起来"
+      "zh-CN": "青少年机器人球挑战赛 9：加起来",
+      "zh-TW": "青少年機器人足球挑戰賽 9：加起來"
     },
     "JBC 9B": {
       "en-US": "JBC 9B",
-      "zh-CN": "JBC 9B"
+      "zh-CN": "JBC 9B",
+      "zh-TW": "JBC 9B"
     },
     "Junior Botball Challenge 9B: Balancing Act": {
       "en-US": "Junior Botball Challenge 9B: Balancing Act",
-      "zh-CN": "青少年机器人球挑战赛 9B：平衡术"
+      "zh-CN": "青少年机器人球挑战赛 9B：平衡术",
+      "zh-TW": "青少年機器人足球挑戰賽 9B：平衡法"
     },
     "JBC 10": {
       "en-US": "JBC 10",
       "ja-JP": "JBC 10",
-      "zh-CN": "JBC 10"
+      "zh-CN": "JBC 10",
+      "zh-TW": "JBC 10"
     },
     "Junior Botball Challenge 10: Solo Joust": {
       "en-US": "Junior Botball Challenge 10: Solo Joust",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 10：ソロ馬上槍試合",
-      "zh-CN": "青少年机器人足球挑战赛 10：单人比武"
+      "zh-CN": "青少年机器人足球挑战赛 10：单人比武",
+      "zh-TW": "青少年機器人足球挑戰賽 10：獨奏擂台賽"
     },
     "JBC 10B": {
       "en-US": "JBC 10B",
-      "zh-CN": "JBC 10B"
+      "zh-CN": "JBC 10B",
+      "zh-TW": "JBC 10B"
     },
     "Junior Botball Challenge 10: Solo Joust Jr.": {
       "en-US": "Junior Botball Challenge 10: Solo Joust Jr.",
-      "zh-CN": "青少年机器人足球挑战赛 10：Jr.Solo Joust."
+      "zh-CN": "青少年机器人足球挑战赛 10：Jr.Solo Joust.",
+      "zh-TW": "青少年機器人足球挑戰賽10：獨奏Joust Jr."
     },
     "JBC 12": {
       "en-US": "JBC 12",
       "ja-JP": "JBC 12",
-      "zh-CN": "JBC 12"
+      "zh-CN": "JBC 12",
+      "zh-TW": "JBC 12"
     },
     "Junior Botball Challenge 12: Unload 'Em": {
       "en-US": "Junior Botball Challenge 12: Unload 'Em",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 12：下ろす",
-      "zh-CN": "青少年机器人足球挑战赛 12：卸载它们"
+      "zh-CN": "青少年机器人足球挑战赛 12：卸载它们",
+      "zh-TW": "青少年機器人足球挑戰賽 12：卸下他們"
     },
     "JBC 13": {
       "en-US": "JBC 13",
       "ja-JP": "JBC 13",
-      "zh-CN": "JBC 13"
+      "zh-CN": "JBC 13",
+      "zh-TW": "JBC 13"
     },
     "Junior Botball Challenge 13: Clean the Mat": {
       "en-US": "Junior Botball Challenge 13: Clean the Mat",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 13：マット掃除する",
-      "zh-CN": "青少年机器人球挑战赛 13：清洁垫子"
+      "zh-CN": "青少年机器人球挑战赛 13：清洁垫子",
+      "zh-TW": "青少年機器人足球挑戰賽13：清潔墊子"
     },
     "JBC 15B": {
       "en-US": "JBC 15B",
-      "zh-CN": "JBC 15B"
+      "zh-CN": "JBC 15B",
+      "zh-TW": "JBC 15B"
     },
     "Junior Botball Challenge 15B: Bump Bump": {
       "en-US": "Junior Botball Challenge 15B: Bump Bump",
-      "zh-CN": "青少年机器人足球挑战赛 15B：颠簸颠簸"
+      "zh-CN": "青少年机器人足球挑战赛 15B：颠簸颠簸",
+      "zh-TW": "青少年機器人足球挑戰賽15B：顛顛顛"
     },
     "JBC 17": {
       "en-US": "JBC 17",
       "ja-JP": "JBC 17",
-      "zh-CN": "JBC 17"
+      "zh-CN": "JBC 17",
+      "zh-TW": "JBC 17"
     },
     "Junior Botball Challenge 17: Walk the Line": {
       "en-US": "Junior Botball Challenge 17: Walk the Line",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 17：一線を歩く",
-      "zh-CN": "青少年机器人足球挑战赛 17：走直线"
+      "zh-CN": "青少年机器人足球挑战赛 17：走直线",
+      "zh-TW": "青少年機器人足球挑戰賽17：走線"
     },
     "JBC 17B": {
       "en-US": "JBC 17B",
-      "zh-CN": "JBC 17B"
+      "zh-CN": "JBC 17B",
+      "zh-TW": "JBC 17B"
     },
     "Junior Botball Challenge 17: Walk the Line II": {
       "en-US": "Junior Botball Challenge 17: Walk the Line II",
-      "zh-CN": "青少年机器人足球挑战赛 17：走直线 II"
+      "zh-CN": "青少年机器人足球挑战赛 17：走直线 II",
+      "zh-TW": "青少年機器人足球挑戰賽17：走線II"
     },
     "JBC 19": {
       "en-US": "JBC 19",
       "ja-JP": "JBC 19",
-      "zh-CN": "JBC 19"
+      "zh-CN": "JBC 19",
+      "zh-TW": "JBC 19"
     },
     "Junior Botball Challenge 19: Mountain Rescue": {
       "en-US": "Junior Botball Challenge 19: Mountain Rescue",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 19：山岳救助",
-      "zh-CN": "青少年机器人足球挑战赛 19：山地救援"
+      "zh-CN": "青少年机器人足球挑战赛 19：山地救援",
+      "zh-TW": "青少年機器人足球挑戰賽 19：山地救援"
     },
     "Paper Ream": {
       "en-US": "Paper Ream",
       "ja-JP": "用紙リーム",
-      "zh-CN": "纸卷"
+      "zh-CN": "纸卷",
+      "zh-TW": "紙卷"
     },
     "JBC 20": {
       "en-US": "JBC 20",
       "ja-JP": "JBC 20",
-      "zh-CN": "JBC 20"
+      "zh-CN": "JBC 20",
+      "zh-TW": "JBC 20"
     },
     "Junior Botball Challenge 20: Rescue the Cans": {
       "en-US": "Junior Botball Challenge 20: Rescue the Cans",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 20：缶を助ける",
-      "zh-CN": "青少年机器人足球挑战赛 20：救援易拉罐"
+      "zh-CN": "青少年机器人足球挑战赛 20：救援易拉罐",
+      "zh-TW": "青少年玩具球挑戰賽 20：拯救罐子"
     },
     "JBC 21": {
       "en-US": "JBC 21",
       "ja-JP": "JBC 21",
-      "zh-CN": "JBC 21"
+      "zh-CN": "JBC 21",
+      "zh-TW": "JBC 21"
     },
     "Junior Botball Challenge 21: Foot Tall": {
       "en-US": "Junior Botball Challenge 21: Foot Tall",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 21：フィート高さ",
-      "zh-CN": "青少年机器人足球挑战赛 21：脚高"
+      "zh-CN": "青少年机器人足球挑战赛 21：脚高",
+      "zh-TW": "青少年樽球挑戰賽 21：高腳樽"
     },
     "JBC 22": {
       "en-US": "JBC 22",
       "ja-JP": "JBC 22",
-      "zh-CN": "JBC 22"
+      "zh-CN": "JBC 22",
+      "zh-TW": "JBC 22"
     },
     "Junior Botball Challenge 22: Stackerz": {
       "en-US": "Junior Botball Challenge 22: Stackerz",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 21：積む",
-      "zh-CN": "青少年机器人足球挑战赛 22：堆垛机"
+      "zh-CN": "青少年机器人足球挑战赛 22：堆垛机",
+      "zh-TW": "青少年機器人足球挑戰賽 22：堆疊者"
     },
     "Script Playground": {
       "en-US": "Script Playground",
       "ja-JP": "スクリプト遊び場",
-      "zh-CN": "脚本游乐场"
+      "zh-CN": "脚本游乐场",
+      "zh-TW": "腳本遊樂場"
     },
     "Script tests": {
       "en-US": "Script tests",
       "ja-JP": "スクリプトテスト",
-      "zh-CN": "脚本测试"
+      "zh-CN": "脚本测试",
+      "zh-TW": "腳本測試"
     },
     "Demobot": {
       "en-US": "Demobot",
       "ja-JP": "デモボット",
-      "zh-CN": "机器人"
+      "zh-CN": "机器人",
+      "zh-TW": "機器人"
     },
     "JBC Challenge 6C": {
       "en-US": "JBC Challenge 6C",
-      "zh-CN": "JBC 挑战赛 6C"
+      "zh-CN": "JBC 挑战赛 6C",
+      "zh-TW": "JBC 挑戰賽 6C"
     },
     "Can A Lifted": {
       "en-US": "Can A Lifted",
       "ja-JP": "缶A上げました",
-      "zh-CN": "能否举起A"
+      "zh-CN": "能否举起A",
+      "zh-TW": "A 能否舉起"
     },
     "Can A picked up": {
       "en-US": "Can A picked up",
       "ja-JP": "缶A取りました",
-      "zh-CN": "能否拾起 A"
+      "zh-CN": "能否拾起 A",
+      "zh-TW": "A 能否拾起"
     },
     "Can B Lifted": {
       "en-US": "Can B Lifted",
       "ja-JP": "缶B上げました",
-      "zh-CN": "B 能否举起"
+      "zh-CN": "B 能否举起",
+      "zh-TW": "B 能否舉起"
     },
     "Can B picked up": {
       "en-US": "Can B picked up",
       "ja-JP": "缶B取りました",
-      "zh-CN": "B 罐被拾起"
+      "zh-CN": "B 罐被拾起",
+      "zh-TW": "撿起罐子 B"
     },
     "Can C Lifted": {
       "en-US": "Can C Lifted",
       "ja-JP": "缶C上げました",
-      "zh-CN": "举起罐子 C"
+      "zh-CN": "举起罐子 C",
+      "zh-TW": "提起罐子 C"
     },
     "Can C picked up": {
       "en-US": "Can C picked up",
       "ja-JP": "缶C取りました",
-      "zh-CN": "C 罐被拾起"
+      "zh-CN": "C 罐被拾起",
+      "zh-TW": "罐 C 被拾起"
     },
     "Can A Placed": {
       "en-US": "Can A Placed",
       "ja-JP": "缶A置きました",
-      "zh-CN": "罐 A 放置"
+      "zh-CN": "罐 A 放置",
+      "zh-TW": "罐子 A 放置"
     },
     "Can A placed on circle 2": {
       "en-US": "Can A placed on circle 2",
       "ja-JP": "円２に缶A置きました",
-      "zh-CN": "罐 A 放置在圆圈 2 上"
+      "zh-CN": "罐 A 放置在圆圈 2 上",
+      "zh-TW": "罐 A 放置在圓圈 2 上"
     },
     "Can B Placed": {
       "en-US": "Can B Placed",
       "ja-JP": "缶B置きました",
-      "zh-CN": "B 放罐"
+      "zh-CN": "B 放罐",
+      "zh-TW": "罐子 B 放置"
     },
     "Can A placed on circle 9": {
       "en-US": "Can A placed on circle 9",
       "ja-JP": "円９に缶A置きました",
-      "zh-CN": "罐体 A 放置在圆圈 9 上"
+      "zh-CN": "罐体 A 放置在圆圈 9 上",
+      "zh-TW": "可以 A 放置在圓圈 9 上"
     },
     "Can C Placed": {
       "en-US": "Can C Placed",
       "ja-JP": "缶C置きました",
-      "zh-CN": "可以 C 放置"
+      "zh-CN": "可以 C 放置",
+      "zh-TW": "可以 C 放置"
     },
     "Can A placed on circle 10": {
       "en-US": "Can A placed on circle 10",
       "ja-JP": "円10に缶A置きました",
-      "zh-CN": "可以将 A 放在圆圈 10 上"
+      "zh-CN": "可以将 A 放在圆圈 10 上",
+      "zh-TW": "A 可以放置在圓圈 10 上"
     },
     "Can A Upright": {
       "en-US": "Can A Upright",
       "ja-JP": "缶A立て",
-      "zh-CN": "罐体 A 直立"
+      "zh-CN": "罐体 A 直立",
+      "zh-TW": "罐 A 直立"
     },
     "Can A upright on circle 2": {
       "en-US": "Can A upright on circle 2",
       "ja-JP": "円２に缶A立て",
-      "zh-CN": "罐 A 直立放置在圆圈 2 上"
+      "zh-CN": "罐 A 直立放置在圆圈 2 上",
+      "zh-TW": "罐 A 直立放置在圓圈 2 上"
     },
     "Can B Upright": {
       "en-US": "Can B Upright",
       "ja-JP": "缶B立て",
-      "zh-CN": "可以 B 直立"
+      "zh-CN": "可以 B 直立",
+      "zh-TW": "罐子 B 直立"
     },
     "Can B upright on circle 9": {
       "en-US": "Can B upright on circle 9",
       "ja-JP": "円９に缶B立て",
-      "zh-CN": "B 可以直立在圆 9 上"
+      "zh-CN": "B 可以直立在圆 9 上",
+      "zh-TW": "B 可以直立在圓圈 9 上"
     },
     "Can C Upright": {
       "en-US": "Can C Upright",
       "ja-JP": "缶C立て",
-      "zh-CN": "可以 C 直立"
+      "zh-CN": "可以 C 直立",
+      "zh-TW": "可以 C 直立"
     },
     "Can C upright on circle 10": {
       "en-US": "Can C upright on circle 10",
       "ja-JP": "円10に缶C置きました",
-      "zh-CN": "C 可以在圆 10 上直立"
+      "zh-CN": "C 可以在圆 10 上直立",
+      "zh-TW": "圈 10 上的 C 可以直立"
     },
     "Loading...": {
       "en-US": "Loading...",
       "ja-JP": "ロード...",
-      "zh-CN": "正在加载..."
+      "zh-CN": "正在加载...",
+      "zh-TW": "載入中..."
     },
     "Logout": {
       "en-US": "Logout",
       "ja-JP": "ログアウト",
-      "zh-CN": "注销"
+      "zh-CN": "注销",
+      "zh-TW": "登出"
     },
     "Tutorials": {
       "en-US": "Tutorials",
       "ja-JP": "チュートリアル",
-      "zh-CN": "教程"
+      "zh-CN": "教程",
+      "zh-TW": "教學"
     },
     "Learn how to get started with the simulator": {
       "en-US": "Learn how to get started with the simulator",
       "ja-JP": "シミュレーターの使い方を習います",
-      "zh-CN": "了解如何开始使用模拟器"
+      "zh-CN": "了解如何开始使用模拟器",
+      "zh-TW": "學習如何開始使用模擬器"
     },
     "3D Simulator": {
       "en-US": "3D Simulator",
       "ja-JP": "３Dシミュレーター",
-      "zh-CN": "三维模拟器"
+      "zh-CN": "三维模拟器",
+      "zh-TW": "3D 模擬器"
     },
     "A simulator for the Botball demobot.": {
       "en-US": "A simulator for the Botball demobot.",
       "ja-JP": "Botballデモボットのシミュレーター",
-      "zh-CN": "Botball 演示机器人的模拟器。"
+      "zh-CN": "Botball 演示机器人的模拟器。",
+      "zh-TW": "Botball 演示機器人的模擬器。"
     },
     "About": {
       "en-US": "About",
       "ja-JP": "ついて",
-      "zh-CN": "关于 KIPR"
+      "zh-CN": "关于 KIPR",
+      "zh-TW": "關於"
     },
     "KIPR is a 501(c) 3 organization started to make the long-term educational benefits of robotics accessible to students.": {
       "en-US": "KIPR is a 501(c) 3 organization started to make the long-term educational benefits of robotics accessible to students.",
       "ja-JP": "KIPRは501(c) 3団体で、ロボット工学の長期的な教育効果を学生にも身近なものにするために設立されました。",
-      "zh-CN": "KIPR 是一个 501(c) 3 组织，成立的目的是让学生能够长期享受机器人技术带来的教育益处。"
+      "zh-CN": "KIPR 是一个 501(c) 3 组织，成立的目的是让学生能够长期享受机器人技术带来的教育益处。",
+      "zh-TW": "KIPR 是一個 501(c) 3 組織，成立的目的是為了讓學生能長期享受機器人技術所帶來的教育效益。"
     },
     "Quick Start": {
       "en-US": "Quick Start",
       "ja-JP": "早わかり",
-      "zh-CN": "快速入门"
+      "zh-CN": "快速入门",
+      "zh-TW": "快速入門"
     },
     "Navigating in 3D": {
       "en-US": "Navigating in 3D",
       "ja-JP": "３Dに動きます",
-      "zh-CN": "三维导航"
+      "zh-CN": "三维导航",
+      "zh-TW": "3D 導航"
     },
     "Learn the controls for navigating in 3D in the simulator": {
       "en-US": "Learn the controls for navigating in 3D in the simulator",
       "ja-JP": "３Dシミュレーターで動き方を習います",
-      "zh-CN": "学习在模拟器中进行 3D 导航的控制方法"
+      "zh-CN": "学习在模拟器中进行 3D 导航的控制方法",
+      "zh-TW": "學習在模擬器中進行 3D 導航的控制方式"
     },
     "Robot Section": {
       "en-US": "Robot Section",
       "ja-JP": "ロボットセクション",
-      "zh-CN": "机器人部分"
+      "zh-CN": "机器人部分",
+      "zh-TW": "機器人部分"
     },
     "How to use the robot section": {
       "en-US": "How to use the robot section",
       "ja-JP": "ロボットセクションの使い方です",
-      "zh-CN": "如何使用机器人部分"
+      "zh-CN": "如何使用机器人部分",
+      "zh-TW": "如何使用機器人部分"
     },
     "World Section": {
       "en-US": "World Section",
       "ja-JP": "世界セクション",
-      "zh-CN": "世界部分"
+      "zh-CN": "世界部分",
+      "zh-TW": "世界部分"
     },
     "Learn how to create and manipulate items and scene in the simulator": {
       "en-US": "Learn how to create and manipulate items and scene in the simulator",
       "ja-JP": "シミュレーターでアイテムを作る、使う方を習います。",
-      "zh-CN": "学习如何在模拟器中创建和操作物品和场景"
+      "zh-CN": "学习如何在模拟器中创建和操作物品和场景",
+      "zh-TW": "學習如何在模擬器中建立和操作項目與場景"
     },
     "Indent": {
       "en-US": "Indent",
       "ja-JP": "インデント",
-      "zh-CN": "缩进"
+      "zh-CN": "缩进",
+      "zh-TW": "縮進"
     },
     "Download": {
       "en-US": "Download",
       "ja-JP": "ダウンロード",
-      "zh-CN": "下载"
+      "zh-CN": "下载",
+      "zh-TW": "下載"
     },
     "Reset": {
       "en-US": "Reset",
       "ja-JP": "リセット",
-      "zh-CN": "重置"
+      "zh-CN": "重置",
+      "zh-TW": "重設"
     },
     "Error(s)": {
       "en-US": "Error(s)",
       "ja-JP": "エラー",
-      "zh-CN": "错误"
+      "zh-CN": "错误",
+      "zh-TW": "錯誤"
     },
     "Warning(s)": {
       "en-US": "Warning(s)",
       "ja-JP": "ワーニング",
-      "zh-CN": "警告"
+      "zh-CN": "警告",
+      "zh-TW": "警告"
     },
     "grams": {
       "en-US": "grams",
       "ja-JP": "グラム",
-      "zh-CN": "克"
+      "zh-CN": "克",
+      "zh-TW": "克"
     },
     "kilograms": {
       "en-US": "kilograms",
       "ja-JP": "キロ",
-      "zh-CN": "公斤"
+      "zh-CN": "公斤",
+      "zh-TW": "公斤"
     },
     "pounds": {
       "en-US": "pounds",
       "ja-JP": "ポンド",
-      "zh-CN": "磅"
+      "zh-CN": "磅",
+      "zh-TW": "磅"
     },
     "ounces": {
       "en-US": "ounces",
       "ja-JP": "オンス",
-      "zh-CN": "盎司"
+      "zh-CN": "盎司",
+      "zh-TW": "盎司"
     },
     "meters": {
       "en-US": "meters",
       "ja-JP": "メートル",
-      "zh-CN": "米"
+      "zh-CN": "米",
+      "zh-TW": "米"
     },
     "centimeters": {
       "en-US": "centimeters",
       "ja-JP": "センチ",
-      "zh-CN": "厘米"
+      "zh-CN": "厘米",
+      "zh-TW": "公分"
     },
     "feet": {
       "en-US": "feet",
       "ja-JP": "フィート",
-      "zh-CN": "英尺"
+      "zh-CN": "英尺",
+      "zh-TW": "英尺"
     },
     "inches": {
       "en-US": "inches",
       "ja-JP": "インチ",
-      "zh-CN": "英寸"
+      "zh-CN": "英寸",
+      "zh-TW": "英吋"
     },
     "radians": {
       "en-US": "radians",
       "ja-JP": "ラジアン",
-      "zh-CN": "弧度"
+      "zh-CN": "弧度",
+      "zh-TW": "弧度"
     },
     "degrees": {
       "en-US": "degrees",
       "ja-JP": "度",
-      "zh-CN": "度"
+      "zh-CN": "度",
+      "zh-TW": "度"
     },
     "Can": {
       "en-US": "Can",
       "ja-JP": "缶",
-      "zh-CN": "罐"
+      "zh-CN": "罐",
+      "zh-TW": "罐"
     },
     "Box": {
       "en-US": "Box",
       "ja-JP": "箱",
-      "zh-CN": "盒"
+      "zh-CN": "盒",
+      "zh-TW": "盒"
     },
     "Sphere": {
       "en-US": "Sphere",
       "ja-JP": "玉",
-      "zh-CN": "球体"
+      "zh-CN": "球体",
+      "zh-TW": "球體"
     },
     "Cylinder": {
       "en-US": "Cylinder",
       "ja-JP": "円筒",
-      "zh-CN": "圆柱体"
+      "zh-CN": "圆柱体",
+      "zh-TW": "圓柱"
     },
     "Cone": {
       "en-US": "Cone",
       "ja-JP": "円錐",
-      "zh-CN": "锥体"
+      "zh-CN": "锥体",
+      "zh-TW": "圓錐"
     },
     "Plane": {
       "en-US": "Plane",
       "ja-JP": "平面",
-      "zh-CN": "平面"
+      "zh-CN": "平面",
+      "zh-TW": "平面"
     },
     "File": {
       "en-US": "File",
       "ja-JP": "ファイル",
-      "zh-CN": "文件"
+      "zh-CN": "文件",
+      "zh-TW": "檔案"
     },
     "Euler": {
       "en-US": "Euler",
       "ja-JP": "Euler",
-      "zh-CN": "欧拉"
+      "zh-CN": "欧拉",
+      "zh-TW": "歐拉"
     },
     "Axis Angle": {
       "en-US": "Axis Angle",
       "ja-JP": "軸角度",
-      "zh-CN": "轴角"
+      "zh-CN": "轴角",
+      "zh-TW": "軸角"
     },
     "Empty": {
       "en-US": "Empty",
       "ja-JP": "空",
-      "zh-CN": "空"
+      "zh-CN": "空",
+      "zh-TW": "空"
     },
     "Standard Object": {
       "en-US": "Standard Object",
       "ja-JP": "標準オブジェクト",
-      "zh-CN": "标准对象"
+      "zh-CN": "标准对象",
+      "zh-TW": "標準物件"
     },
     "Custom Object": {
       "en-US": "Custom Object",
       "ja-JP": "カスタムオブジェクト",
-      "zh-CN": "自定义对象"
+      "zh-CN": "自定义对象",
+      "zh-TW": "自訂物件"
     },
     "Point Light": {
       "en-US": "Point Light",
       "ja-JP": "点灯",
-      "zh-CN": "点光源"
+      "zh-CN": "点光源",
+      "zh-TW": "點燈"
     },
     "Unset": {
       "en-US": "Unset",
       "ja-JP": "アンセット",
-      "zh-CN": "未设置"
+      "zh-CN": "未设置",
+      "zh-TW": "未設定"
     },
     "Basic": {
       "en-US": "Basic",
       "ja-JP": "基本的",
-      "zh-CN": "基本"
+      "zh-CN": "基本",
+      "zh-TW": "基本物件"
     },
     "Texture": {
       "en-US": "Texture",
       "ja-JP": "テクスチャ",
-      "zh-CN": "纹理"
+      "zh-CN": "纹理",
+      "zh-TW": "紋理"
     },
     "Value": {
       "en-US": "Value",
       "ja-JP": "値",
-      "zh-CN": "数值"
+      "zh-CN": "数值",
+      "zh-TW": "數值"
     },
     "General": {
       "en-US": "General",
       "ja-JP": "一般",
-      "zh-CN": "常规"
+      "zh-CN": "常规",
+      "zh-TW": "一般"
     },
     "Name": {
       "en-US": "Name",
       "ja-JP": "名前",
-      "zh-CN": "名称"
+      "zh-CN": "名称",
+      "zh-TW": "名稱"
     },
     "Type": {
       "en-US": "Type",
       "ja-JP": "タイプ",
-      "zh-CN": "类型"
+      "zh-CN": "类型",
+      "zh-TW": "類型"
     },
     "Geometry": {
       "en-US": "Geometry",
       "ja-JP": "幾何",
-      "zh-CN": "几何图形"
+      "zh-CN": "几何图形",
+      "zh-TW": "幾何"
     },
     "Item": {
       "en-US": "Item",
       "ja-JP": "アイテム",
-      "zh-CN": "项目"
+      "zh-CN": "项目",
+      "zh-TW": "項目"
     },
     "Box Options": {
       "en-US": "Box Options",
       "ja-JP": "箱の設定",
-      "zh-CN": "箱体选项"
+      "zh-CN": "箱体选项",
+      "zh-TW": "方塊選項"
     },
     "Size X": {
       "en-US": "Size X",
       "ja-JP": "X サイズ",
-      "zh-CN": "尺寸 X"
+      "zh-CN": "尺寸 X",
+      "zh-TW": "尺寸 X"
     },
     "Size Y": {
       "en-US": "Size Y",
       "ja-JP": "Y サイズ",
-      "zh-CN": "尺寸 Y"
+      "zh-CN": "尺寸 Y",
+      "zh-TW": "尺寸 Y"
     },
     "Size Z": {
       "en-US": "Size Z",
       "ja-JP": "Z サイズ",
-      "zh-CN": "尺寸 Z"
+      "zh-CN": "尺寸 Z",
+      "zh-TW": "尺寸 Z"
     },
     "Sphere Options": {
       "en-US": "Sphere Options",
       "ja-JP": "玉の設定",
-      "zh-CN": "球形选项"
+      "zh-CN": "球形选项",
+      "zh-TW": "球體選項"
     },
     "Radius": {
       "en-US": "Radius",
       "ja-JP": "半径",
-      "zh-CN": "半径"
+      "zh-CN": "半径",
+      "zh-TW": "半徑"
     },
     "Cylinder Options": {
       "en-US": "Cylinder Options",
       "ja-JP": "円筒設定",
-      "zh-CN": "圆柱体选项"
+      "zh-CN": "圆柱体选项",
+      "zh-TW": "圓柱選項"
     },
     "Height": {
       "en-US": "Height",
       "ja-JP": "高さ",
-      "zh-CN": "高度"
+      "zh-CN": "高度",
+      "zh-TW": "高度"
     },
     "Plane Options": {
       "en-US": "Plane Options",
       "ja-JP": "平面設定",
-      "zh-CN": "平面选项"
+      "zh-CN": "平面选项",
+      "zh-TW": "平面選項"
     },
     "File Options": {
       "en-US": "File Options",
       "ja-JP": "ファイルの設定",
-      "zh-CN": "文件选项"
+      "zh-CN": "文件选项",
+      "zh-TW": "檔案選項"
     },
     "URI": {
       "en-US": "URI",
       "ja-JP": "URI",
-      "zh-CN": "URI"
+      "zh-CN": "URI",
+      "zh-TW": "URI"
     },
     "Material": {
       "en-US": "Material",
       "ja-JP": "物質",
-      "zh-CN": "材料"
+      "zh-CN": "材料",
+      "zh-TW": "材質"
     },
     "Color Type": {
       "en-US": "Color Type",
       "ja-JP": "色タイプ",
-      "zh-CN": "颜色类型"
+      "zh-CN": "颜色类型",
+      "zh-TW": "顏色類型"
     },
     "Color Red": {
       "en-US": "Color Red",
       "ja-JP": "赤",
-      "zh-CN": "颜色 红色"
+      "zh-CN": "颜色 红色",
+      "zh-TW": "紅色"
     },
     "Color Green": {
       "en-US": "Color Green",
       "ja-JP": "緑",
-      "zh-CN": "颜色 绿色"
+      "zh-CN": "颜色 绿色",
+      "zh-TW": "顏色 綠色"
     },
     "Color Blue": {
       "en-US": "Color Blue",
       "ja-JP": "青",
-      "zh-CN": "蓝色"
+      "zh-CN": "蓝色",
+      "zh-TW": "藍色"
     },
     "Color Texture URI": {
       "en-US": "Color Texture URI",
       "ja-JP": "色テクスチャURI",
-      "zh-CN": "颜色纹理 URI"
+      "zh-CN": "颜色纹理 URI",
+      "zh-TW": "色彩紋理 URI"
     },
     "Albedo Type": {
       "en-US": "Albedo Type",
       "ja-JP": "アルベドテクスチャ",
-      "zh-CN": "反照率类型"
+      "zh-CN": "反照率类型",
+      "zh-TW": "反照率類型"
     },
     "Albedo Red": {
       "en-US": "Albedo Red",
       "ja-JP": "アルベド赤",
-      "zh-CN": "反照率红色"
+      "zh-CN": "反照率红色",
+      "zh-TW": "反照率紅色"
     },
     "Albedo Green": {
       "en-US": "Albedo Green",
       "ja-JP": "アルベド緑",
-      "zh-CN": "反照率 绿色"
+      "zh-CN": "反照率 绿色",
+      "zh-TW": "反照率綠色"
     },
     "Albedo Blue": {
       "en-US": "Albedo Blue",
       "ja-JP": "アルベド青",
-      "zh-CN": "反照率蓝色"
+      "zh-CN": "反照率蓝色",
+      "zh-TW": "藍色反照率"
     },
     "Albedo Texture URI": {
       "en-US": "Albedo Texture URI",
       "ja-JP": "アルベドテクスチャURI",
-      "zh-CN": "反照率纹理 URI"
+      "zh-CN": "反照率纹理 URI",
+      "zh-TW": "反照率紋理 URI"
     },
     "Reflection Type": {
       "en-US": "Reflection Type",
       "ja-JP": "反射タイプ",
-      "zh-CN": "反射类型"
+      "zh-CN": "反射类型",
+      "zh-TW": "反射類型"
     },
     "Reflection Red": {
       "en-US": "Reflection Red",
       "ja-JP": "反射赤",
-      "zh-CN": "红色反射"
+      "zh-CN": "红色反射",
+      "zh-TW": "反射紅"
     },
     "Reflection Green": {
       "en-US": "Reflection Green",
       "ja-JP": "反射緑",
-      "zh-CN": "反射绿"
+      "zh-CN": "反射绿",
+      "zh-TW": "反射綠"
     },
     "Reflection Blue": {
       "en-US": "Reflection Blue",
       "ja-JP": "反射青",
-      "zh-CN": "反射蓝"
+      "zh-CN": "反射蓝",
+      "zh-TW": "反射藍"
     },
     "Reflection Texture URI": {
       "en-US": "Reflection Texture URI",
       "ja-JP": "反射テクスチャURI",
-      "zh-CN": "反射纹理 URI"
+      "zh-CN": "反射纹理 URI",
+      "zh-TW": "反射紋理 URI"
     },
     "Emissive Type": {
       "en-US": "Emissive Type",
       "ja-JP": "放射率タイプ",
-      "zh-CN": "发射类型"
+      "zh-CN": "发射类型",
+      "zh-TW": "放射類型"
     },
     "Emissive Red": {
       "en-US": "Emissive Red",
       "ja-JP": "放射率赤",
-      "zh-CN": "发射红"
+      "zh-CN": "发射红",
+      "zh-TW": "紅發射"
     },
     "Emissive Green": {
       "en-US": "Emissive Green",
       "ja-JP": "放射率緑",
-      "zh-CN": "发射绿"
+      "zh-CN": "发射绿",
+      "zh-TW": "反射綠"
     },
     "Emissive Blue": {
       "en-US": "Emissive Blue",
       "ja-JP": "放射率青",
-      "zh-CN": "发射蓝"
+      "zh-CN": "发射蓝",
+      "zh-TW": "反射藍"
     },
     "Emissive Texture URI": {
       "en-US": "Emissive Texture URI",
       "ja-JP": "放射率テクスチャURI",
-      "zh-CN": "发射纹理 URI"
+      "zh-CN": "发射纹理 URI",
+      "zh-TW": "放射狀紋理 URI"
     },
     "Ambient Type": {
       "en-US": "Ambient Type",
       "ja-JP": "アンビエントタイプ",
-      "zh-CN": "环境类型"
+      "zh-CN": "环境类型",
+      "zh-TW": "環境類型"
     },
     "Ambient Red": {
       "en-US": "Ambient Red",
       "ja-JP": "アンビエント赤",
-      "zh-CN": "环境红"
+      "zh-CN": "环境红",
+      "zh-TW": "環境紅色"
     },
     "Ambient Green": {
       "en-US": "Ambient Green",
       "ja-JP": "アンビエント緑",
-      "zh-CN": "环境绿"
+      "zh-CN": "环境绿",
+      "zh-TW": "環境綠"
     },
     "Ambient Blue": {
       "en-US": "Ambient Blue",
       "ja-JP": "アンビエント青",
-      "zh-CN": "环境蓝"
+      "zh-CN": "环境蓝",
+      "zh-TW": "環境藍"
     },
     "Ambient Texture URI": {
       "en-US": "Ambient Texture URI",
       "ja-JP": "アンビエントテクスチャURI",
-      "zh-CN": "环境纹理 URI"
+      "zh-CN": "环境纹理 URI",
+      "zh-TW": "環境紋理 URI"
     },
     "Metalness Type": {
       "en-US": "Metalness Type",
       "ja-JP": "金属性タイプ",
-      "zh-CN": "金属度类型"
+      "zh-CN": "金属度类型",
+      "zh-TW": "金屬度類型"
     },
     "Metalness": {
       "en-US": "Metalness",
       "ja-JP": "金属性",
-      "zh-CN": "金属感"
+      "zh-CN": "金属感",
+      "zh-TW": "金屬度"
     },
     "Metalness Texture URI": {
       "en-US": "Metalness Texture URI",
       "ja-JP": "金属性テクスチャURI",
-      "zh-CN": "金属度纹理 URI"
+      "zh-CN": "金属度纹理 URI",
+      "zh-TW": "金屬度紋理 URI"
     },
     "Position": {
       "en-US": "Position",
       "ja-JP": "位置",
-      "zh-CN": "位置"
+      "zh-CN": "位置",
+      "zh-TW": "位置"
     },
     "X": {
       "en-US": "X",
       "ja-JP": "X",
-      "zh-CN": "X"
+      "zh-CN": "X",
+      "zh-TW": "X"
     },
     "Y": {
       "en-US": "Y",
       "ja-JP": "Y",
-      "zh-CN": "Y"
+      "zh-CN": "Y",
+      "zh-TW": "Y"
     },
     "Z": {
       "en-US": "Z",
       "ja-JP": "Z",
-      "zh-CN": "Z"
+      "zh-CN": "Z",
+      "zh-TW": "Z"
     },
     "Orientation": {
       "en-US": "Orientation",
       "ja-JP": "方向",
-      "zh-CN": "方向"
+      "zh-CN": "方向",
+      "zh-TW": "方向"
     },
     "Order": {
       "en-US": "Order",
       "ja-JP": "順",
-      "zh-CN": "顺序"
+      "zh-CN": "顺序",
+      "zh-TW": "順序"
     },
     "Angle": {
       "en-US": "Angle",
       "ja-JP": "角度",
-      "zh-CN": "角度"
+      "zh-CN": "角度",
+      "zh-TW": "角度"
     },
     "Scale": {
       "en-US": "Scale",
       "ja-JP": "規模",
-      "zh-CN": "刻度"
+      "zh-CN": "刻度",
+      "zh-TW": "刻度"
     },
     "Physics": {
       "en-US": "Physics",
       "ja-JP": "物理学",
-      "zh-CN": "物理"
+      "zh-CN": "物理",
+      "zh-TW": "物理"
     },
     "Mass": {
       "en-US": "Mass",
       "ja-JP": "質量",
-      "zh-CN": "质量"
+      "zh-CN": "质量",
+      "zh-TW": "質量"
     },
     "Friction": {
       "en-US": "Friction",
       "ja-JP": "摩擦",
-      "zh-CN": "摩擦力"
+      "zh-CN": "摩擦力",
+      "zh-TW": "摩擦力"
     },
     "Unnamed Object": {
       "en-US": "Unnamed Object",
       "ja-JP": "無名オブジェクト",
-      "zh-CN": "无名物体"
+      "zh-CN": "无名物体",
+      "zh-TW": "未命名物件"
     },
     "Add Item": {
       "en-US": "Add Item",
       "ja-JP": "アイテムを作る",
-      "zh-CN": "添加项目"
+      "zh-CN": "添加项目",
+      "zh-TW": "新增項目"
     },
     "Accept": {
       "en-US": "Accept",
       "ja-JP": "はい",
-      "zh-CN": "接受"
+      "zh-CN": "接受",
+      "zh-TW": "接受"
     },
     "Settings": {
       "en-US": "Settings",
       "ja-JP": "設定",
-      "zh-CN": "设置"
+      "zh-CN": "设置",
+      "zh-TW": "設定"
     },
     "Add Script": {
       "en-US": "Add Script",
       "ja-JP": "スクリプトを作る",
-      "zh-CN": "添加脚本"
+      "zh-CN": "添加脚本",
+      "zh-TW": "新增腳本"
     },
     "Select Scene": {
       "en-US": "Select Scene",
       "ja-JP": "シーンを選ぶ",
-      "zh-CN": "选择场景"
+      "zh-CN": "选择场景",
+      "zh-TW": "選擇場景"
     },
     "Save Scene": {
       "en-US": "Save Scene",
       "ja-JP": "シーンを保存",
-      "zh-CN": "保存场景"
+      "zh-CN": "保存场景",
+      "zh-TW": "儲存場景"
     },
     "Copy Scene": {
       "en-US": "Copy Scene",
       "ja-JP": "シーンをコピー",
-      "zh-CN": "复制场景"
+      "zh-CN": "复制场景",
+      "zh-TW": "複製場景"
     },
     "Item(s) (%d)": {
       "en-US": "Item(s) (%d)",
       "ja-JP": "アイテム（%d）",
-      "zh-CN": "项目 (%d)"
+      "zh-CN": "项目 (%d)",
+      "zh-TW": "項目 (%d)"
     },
     "Script(s) (%d)": {
       "en-US": "Script(s) (%d)",
       "ja-JP": "スクリプト（%d）",
-      "zh-CN": "脚本 (%d)"
+      "zh-CN": "脚本 (%d)",
+      "zh-TW": "腳本 (%d)"
     },
     "Layouts": {
       "en-US": "Layouts",
       "ja-JP": "設計",
-      "zh-CN": "布局"
+      "zh-CN": "布局",
+      "zh-TW": "佈局"
     },
     "Overlay": {
       "en-US": "Overlay",
       "ja-JP": "オーバーレイ",
-      "zh-CN": "叠加"
+      "zh-CN": "叠加",
+      "zh-TW": "覆疊"
     },
     "Side": {
       "en-US": "Side",
       "ja-JP": "側面",
-      "zh-CN": "侧面"
+      "zh-CN": "侧面",
+      "zh-TW": "側邊"
     },
     "Options": {
       "en-US": "Options",
       "ja-JP": "設定",
-      "zh-CN": "选项"
+      "zh-CN": "选项",
+      "zh-TW": "選項"
     },
     "Show All": {
       "en-US": "Show All",
       "ja-JP": "すべて見せる",
-      "zh-CN": "全部显示"
+      "zh-CN": "全部显示",
+      "zh-TW": "全部顯示"
     },
     "Hide All": {
       "en-US": "Hide All",
       "ja-JP": "すべて隠す",
-      "zh-CN": "全部隐藏"
+      "zh-CN": "全部隐藏",
+      "zh-TW": "全部隱藏"
     },
     "Clear": {
       "en-US": "Clear",
       "ja-JP": "クリア",
-      "zh-CN": "清除"
+      "zh-CN": "清除",
+      "zh-TW": "清除"
     },
     "Rotation": {
       "en-US": "Rotation",
       "ja-JP": "回転",
-      "zh-CN": "旋转"
+      "zh-CN": "旋转",
+      "zh-TW": "旋轉"
     },
     "Start Location": {
       "en-US": "Start Location",
       "ja-JP": "開始場所",
-      "zh-CN": "起始位置"
+      "zh-CN": "起始位置",
+      "zh-TW": "起始位置"
     },
     "Motor Velocity Plot": {
       "en-US": "Motor Velocity Plot",
       "ja-JP": "モーター速度グラフ",
-      "zh-CN": "电机速度图"
+      "zh-CN": "电机速度图",
+      "zh-TW": "馬達速度圖"
     },
     "Motor Position Plot": {
       "en-US": "Motor Position Plot",
       "ja-JP": "モーター位置グラフ",
-      "zh-CN": "电机位置图"
+      "zh-CN": "电机位置图",
+      "zh-TW": "馬達位置圖"
     },
     "Analog Sensor Plot": {
       "en-US": "Analog Sensor Plot",
       "ja-JP": "アナログセンサーグラフ",
-      "zh-CN": "模拟传感器曲线图"
+      "zh-CN": "模拟传感器曲线图",
+      "zh-TW": "類比傳感器圖"
     },
     "Digital Sensor Plot": {
       "en-US": "Digital Sensor Plot",
       "ja-JP": "デジタルセンサーグラフ",
-      "zh-CN": "数字传感器曲线图"
+      "zh-CN": "数字传感器曲线图",
+      "zh-TW": "數位感測器圖"
     },
     "Analog Sensors": {
       "en-US": "Analog Sensors",
       "ja-JP": "アナログセンサー",
-      "zh-CN": "模拟传感器"
+      "zh-CN": "模拟传感器",
+      "zh-TW": "類比傳感器"
     },
     "Digital Sensors": {
       "en-US": "Digital Sensors",
       "ja-JP": "デジタルセンサー",
-      "zh-CN": "数字传感器"
+      "zh-CN": "数字传感器",
+      "zh-TW": "數位感測器"
     },
     "Servos": {
       "en-US": "Servos",
       "ja-JP": "サーボ",
-      "zh-CN": "伺服"
+      "zh-CN": "伺服",
+      "zh-TW": "伺服器"
     },
     "Motor Velocities": {
       "en-US": "Motor Velocities",
       "ja-JP": "モーター速度",
-      "zh-CN": "电机速度"
+      "zh-CN": "电机速度",
+      "zh-TW": "馬達速度"
     },
     "Motor Positions": {
       "en-US": "Motor Positions",
       "ja-JP": "モーター位置グラフ",
-      "zh-CN": "电机位置"
+      "zh-CN": "电机位置",
+      "zh-TW": "馬達位置"
     },
     "This process is taking longer than expected...\nIf you have a poor internet connection, this can take some time": {
       "en-US": "This process is taking longer than expected...\nIf you have a poor internet connection, this can take some time",
       "ja-JP": "様相以上に時間がかかっています...\nネットが遅いなら、もっと時間がかかるかもしれません。",
-      "zh-CN": "This process is taking longer than expected...（如果您的网络连接不佳，可能需要一些时间"
+      "zh-CN": "This process is taking longer than expected...（如果您的网络连接不佳，可能需要一些时间",
+      "zh-TW": "This process is taking longer than expected...（如果您的網路連線不佳，可能需要一些時間"
     },
     "The simulator may have failed to load.\nPlease submit a feedback form to let us know!": {
       "en-US": "The simulator may have failed to load.\nPlease submit a feedback form to let us know!",
       "ja-JP": "シミュレーターはロードに失敗してしまう可能性がありました。\nフィードバックを出して教えてくださいませんか。",
-      "zh-CN": "模拟器可能加载失败，请提交反馈表告知我们！"
+      "zh-CN": "模拟器可能加载失败，请提交反馈表告知我们！",
+      "zh-TW": "模擬器可能無法載入...（n）請提交反饋表單讓我們知道！"
     },
     "Initializing Simulator...": {
       "en-US": "Initializing Simulator...",
       "ja-JP": "シミュレーター始めて...",
-      "zh-CN": "初始化模拟器..."
+      "zh-CN": "初始化模拟器...",
+      "zh-TW": "初始化模擬器..."
     },
     "all of": {
       "en-US": "all of",
       "ja-JP": "すべて",
-      "zh-CN": "所有"
+      "zh-CN": "所有",
+      "zh-TW": "所有"
     },
     "one or more of": {
       "en-US": "one or more of",
       "ja-JP": "一つ以上",
-      "zh-CN": "一个或多个"
+      "zh-CN": "一个或多个",
+      "zh-TW": "一個或多個"
     },
     "exactly one of": {
       "en-US": "exactly one of",
       "ja-JP": "一つ",
-      "zh-CN": "一个"
+      "zh-CN": "一个",
+      "zh-TW": "其中一個"
     },
     "once": {
       "en-US": "once",
       "ja-JP": "一度",
-      "zh-CN": "一次"
+      "zh-CN": "一次",
+      "zh-TW": "一次"
     },
     "not": {
       "en-US": "not",
-      "zh-CN": "不"
+      "zh-CN": "不",
+      "zh-TW": "不是"
     },
     "Success": {
       "en-US": "Success",
       "ja-JP": "成功",
-      "zh-CN": "成功"
+      "zh-CN": "成功",
+      "zh-TW": "成功"
     },
     "Failure": {
       "en-US": "Failure",
       "ja-JP": "失敗",
-      "zh-CN": "失败"
+      "zh-CN": "失败",
+      "zh-TW": "失敗"
     },
     "Editor": {
       "en-US": "Editor",
       "ja-JP": "編集",
-      "zh-CN": "编辑器"
+      "zh-CN": "编辑器",
+      "zh-TW": "編輯"
     },
     "World": {
       "en-US": "World",
       "ja-JP": "世界",
-      "zh-CN": "世界"
+      "zh-CN": "世界",
+      "zh-TW": "世界"
     },
     "Script Editor": {
       "en-US": "Script Editor",
       "ja-JP": "スクリプト編集",
-      "zh-CN": "脚本编辑器"
+      "zh-CN": "脚本编辑器",
+      "zh-TW": "腳本編輯器"
     },
     "Console": {
       "en-US": "Console",
       "ja-JP": "コンソール",
-      "zh-CN": "控制台"
+      "zh-CN": "控制台",
+      "zh-TW": "控制台"
     },
     "Open": {
       "en-US": "Open",
       "ja-JP": "開く",
-      "zh-CN": "打开"
+      "zh-CN": "打开",
+      "zh-TW": "開啟"
     },
     "Save": {
       "en-US": "Save",
       "ja-JP": "保存",
-      "zh-CN": "保存"
+      "zh-CN": "保存",
+      "zh-TW": "儲存"
     },
     "Save As": {
       "en-US": "Save As",
       "ja-JP": "名前付けて保存",
-      "zh-CN": "另存为"
+      "zh-CN": "另存为",
+      "zh-TW": "另存新檔"
     },
     "Delete": {
       "en-US": "Delete",
       "ja-JP": "削除",
-      "zh-CN": "删除"
+      "zh-CN": "删除",
+      "zh-TW": "刪除"
     },
     "Documentation": {
       "en-US": "Documentation",
       "ja-JP": "参照資料",
-      "zh-CN": "文档"
+      "zh-CN": "文档",
+      "zh-TW": "說明文件"
     },
     "Feedback": {
       "en-US": "Feedback",
       "ja-JP": "フィードバック",
-      "zh-CN": "反馈"
+      "zh-CN": "反馈",
+      "zh-TW": "回饋"
     },
     "Reset World": {
       "en-US": "Reset World",
       "ja-JP": "世界をレセット",
-      "zh-CN": "重置世界"
+      "zh-CN": "重置世界",
+      "zh-TW": "重設世界"
     },
     "Layout": {
       "en-US": "Layout",
       "ja-JP": "レイアウト",
-      "zh-CN": "布局"
+      "zh-CN": "布局",
+      "zh-TW": "佈局"
     },
     "User Interface": {
       "en-US": "User Interface",
       "ja-JP": "ユーザーインターフェイス",
-      "zh-CN": "用户界面"
+      "zh-CN": "用户界面",
+      "zh-TW": "使用者介面"
     },
     "Simulation": {
       "en-US": "Simulation",
       "ja-JP": "シミュレーション",
-      "zh-CN": "模拟"
+      "zh-CN": "模拟",
+      "zh-TW": "模擬"
     },
     "Locale": {
       "en-US": "Locale",
       "ja-JP": "言語",
-      "zh-CN": "地点"
+      "zh-CN": "地点",
+      "zh-TW": "區域"
     },
     "Switch languages": {
       "en-US": "Switch languages",
       "ja-JP": "言語を選ぶ",
-      "zh-CN": "切换语言"
+      "zh-CN": "切换语言",
+      "zh-TW": "切換語言"
     },
     "Sensor noise": {
       "en-US": "Sensor noise",
       "ja-JP": "センサー雑音",
-      "zh-CN": "传感器噪音"
+      "zh-CN": "传感器噪音",
+      "zh-TW": "感測器雜訊"
     },
     "Controls whether sensor outputs are affected by random noise": {
       "en-US": "Controls whether sensor outputs are affected by random noise",
       "ja-JP": "センサーは雑音があるかどうか",
-      "zh-CN": "控制传感器输出是否受随机噪声影响"
+      "zh-CN": "控制传感器输出是否受随机噪声影响",
+      "zh-TW": "控制傳感器輸出是否受隨機雜訊影響"
     },
     "Realistic sensors": {
       "en-US": "Realistic sensors",
       "ja-JP": "現実的なセンサー",
-      "zh-CN": "现实传感器"
+      "zh-CN": "现实传感器",
+      "zh-TW": "真實感測器"
     },
     "Controls whether sensors behave like real-world sensors instead of like ideal sensors. For example, real-world ET sensors are nonlinear": {
       "en-US": "Controls whether sensors behave like real-world sensors instead of like ideal sensors. For example, real-world ET sensors are nonlinear",
       "ja-JP": "センサーが理想的ではなく、現実世界のセンサーのように振る舞うかどうかを制御します。例えば現実世界のETセンサーは非線形です。",
-      "zh-CN": "控制传感器是否表现得像真实世界的传感器，而不是理想传感器。例如，现实世界中的 ET 传感器是非线性的"
+      "zh-CN": "控制传感器是否表现得像真实世界的传感器，而不是理想传感器。例如，现实世界中的 ET 传感器是非线性的",
+      "zh-TW": "控制感測器是否像真實世界的感測器，而不是理想的感測器。例如，真實世界的 ET 感應器是非線性的。"
     },
     "Autocomplete": {
       "en-US": "Autocomplete",
       "ja-JP": "自動補完",
-      "zh-CN": "自动完成"
+      "zh-CN": "自动完成",
+      "zh-TW": "自動完成"
     },
     "Controls autocompletion of code, brackets, and quotes": {
       "en-US": "Controls autocompletion of code, brackets, and quotes",
       "ja-JP": "コードとカッコとクオートの自動補完制御します",
-      "zh-CN": "控制代码、括号和引号的自动完成"
+      "zh-CN": "控制代码、括号和引号的自动完成",
+      "zh-TW": "控制代碼、括號和引號的自動完成"
     },
     "Version %s (%s)": {
       "en-US": "Version %s (%s)",
       "ja-JP": "バージョン %s (%s)",
-      "zh-CN": "版本 %s (%s)"
+      "zh-CN": "版本 %s (%s)",
+      "zh-TW": "版本 %s (%s)"
     },
     "Copyright": {
       "en-US": "Copyright",
       "ja-JP": "著作権",
-      "zh-CN": "版权"
+      "zh-CN": "版权",
+      "zh-TW": "版權聲明"
     },
     "This software is licensed under the terms of the": {
       "en-US": "This software is licensed under the terms of the",
       "ja-JP": "このソフトウェアは、GNU GPL v3 の条件に基づいてライセンスされます。",
-      "zh-CN": "本软件根据《美国版权法》的条款授权使用。"
+      "zh-CN": "本软件根据《美国版权法》的条款授权使用。",
+      "zh-TW": "本軟體的授權條款為"
     },
     "Thank you to the following contributors and testers:": {
       "en-US": "Thank you to the following contributors and testers:",
       "ja-JP": "寄稿者とテスターに感謝を差しあげます：",
-      "zh-CN": "感谢以下贡献者和测试者："
+      "zh-CN": "感谢以下贡献者和测试者：",
+      "zh-TW": "感謝下列貢獻者與測試者："
     },
     "Want to help improve the simulator and get your name listed here?": {
       "en-US": "Want to help improve the simulator and get your name listed here?",
       "ja-JP": "シミュレーターの改善にご協力いただけませんか？",
-      "zh-CN": "想帮助改进模拟器并在此列出您的名字吗？"
+      "zh-CN": "想帮助改进模拟器并在此列出您的名字吗？",
+      "zh-TW": "想要幫助改善模擬器並讓您的名字列在這裡嗎？"
     },
     "GitHub repository": {
       "en-US": "GitHub repository",
       "ja-JP": "Githubレポジトリ",
-      "zh-CN": "GitHub 存储库"
+      "zh-CN": "GitHub 存储库",
+      "zh-TW": "GitHub 儲存庫"
     },
     "We're happy to help you get started!": {
       "en-US": "We're happy to help you get started!",
       "ja-JP": "始まることについて助けてあげたいです！",
-      "zh-CN": "我们很乐意帮助您开始工作！"
+      "zh-CN": "我们很乐意帮助您开始工作！",
+      "zh-TW": "我們很樂意幫助您入門！"
     },
     "Give a helpful description of a problem you're facing, or a feature you'd like to request": {
       "en-US": "Give a helpful description of a problem you're facing, or a feature you'd like to request",
       "ja-JP": "問題か欲しいフィーチャーの記述を書いてくださいませんか。",
-      "zh-CN": "请描述您遇到的问题，或您想申请的功能。"
+      "zh-CN": "请描述您遇到的问题，或您想申请的功能。",
+      "zh-TW": "對您面臨的問題，或您想要申請的功能，給予有用的描述"
     },
     "Thanks for using the KIPR Simulator! Find a bug? Have a feature request? Let us know!": {
       "en-US": "Thanks for using the KIPR Simulator! Find a bug? Have a feature request? Let us know!",
       "ja-JP": "KIPRシミュレーターを使ってありがとうございます！欲しいフィーチャーがありますか。教えてくださいませんか。",
-      "zh-CN": "感谢您使用 KIPR 模拟器！发现错误？有功能需求？请告诉我们！"
+      "zh-CN": "感谢您使用 KIPR 模拟器！发现错误？有功能需求？请告诉我们！",
+      "zh-TW": "感謝您使用 KIPR 模擬器！發現錯誤？有功能需求？讓我們知道"
     },
     "How has your experience using the KIPR Simulator been?": {
       "en-US": "How has your experience using the KIPR Simulator been?",
       "ja-JP": "KIPRシミュレーターを使って経験はどうでしたか。",
-      "zh-CN": "您使用 KIPR 模拟器的体验如何？"
+      "zh-CN": "您使用 KIPR 模拟器的体验如何？",
+      "zh-TW": "您使用 KIPR 模擬器的經驗如何？"
     },
     "Email (optional): ": {
       "en-US": "Email (optional): ",
       "ja-JP": "メールアドレス（随意）",
-      "zh-CN": "电子邮件（可选）："
+      "zh-CN": "电子邮件（可选）：",
+      "zh-TW": "電子郵件（選擇性）： "
     },
     "Include anonymous usage data to help KIPR developers": {
       "en-US": "Include anonymous usage data to help KIPR developers",
       "ja-JP": "KIPRの開発者に助けるために匿名のデータを分け合てくださいませんか。",
-      "zh-CN": "包括匿名使用数据，以帮助 KIPR 开发人员"
+      "zh-CN": "包括匿名使用数据，以帮助 KIPR 开发人员",
+      "zh-TW": "包括匿名使用資料，以幫助 KIPR 開發人員"
     },
     "Please try again,": {
       "en-US": "Please try again,",
       "ja-JP": "もう一度お願いお願い申し上げます、",
-      "zh-CN": "请再试一次、"
+      "zh-CN": "请再试一次、",
+      "zh-TW": "請再試一次"
     },
     "open an issue on our github page": {
       "en-US": "open an issue on our github page",
       "ja-JP": "KIPRのGithubで課題を開く、",
-      "zh-CN": "在我们的 github 页面上打开一个问题"
+      "zh-CN": "在我们的 github 页面上打开一个问题",
+      "zh-TW": "在我們的 github 頁面上開啟一個問題"
     },
     ", or": {
       "en-US": ", or",
       "ja-JP": "か",
-      "zh-CN": "或"
+      "zh-CN": "或",
+      "zh-TW": "或"
     },
     "email KIPR.": {
       "en-US": "email KIPR.",
       "ja-JP": "KIPRにメールしてくださいませんか。",
-      "zh-CN": "发送电子邮件至 KIPR。"
+      "zh-CN": "发送电子邮件至 KIPR。",
+      "zh-TW": "發送電子郵件給 KIPR。"
     },
     "Submit": {
       "en-US": "Submit",
       "ja-JP": "出す",
-      "zh-CN": "提交"
+      "zh-CN": "提交",
+      "zh-TW": "提交"
     },
     "Feedback Success": {
       "en-US": "Feedback Success",
       "ja-JP": "フィードバック成功",
-      "zh-CN": "反馈成功"
+      "zh-CN": "反馈成功",
+      "zh-TW": "回饋成功"
     },
     "Feedback successfully submitted!": {
       "en-US": "Feedback successfully submitted!",
       "ja-JP": "フィードバック成功。",
-      "zh-CN": "反馈已成功提交！"
+      "zh-CN": "反馈已成功提交！",
+      "zh-TW": "回饋已成功提交！"
     },
     "Thank you for helping improve the KIPR Simulator!": {
       "en-US": "Thank you for helping improve the KIPR Simulator!",
       "ja-JP": "KIPRシミュレーターの改善してあげてありがとうございました！",
-      "zh-CN": "感谢您帮助改进 KIPR 模拟器！"
+      "zh-CN": "感谢您帮助改进 KIPR 模拟器！",
+      "zh-TW": "感謝您協助改善 KIPR 模擬器！"
     },
     "Open World": {
       "en-US": "Open World",
       "ja-JP": "世界を開く",
-      "zh-CN": "开放世界"
+      "zh-CN": "开放世界",
+      "zh-TW": "開放世界"
     },
     "Unknown": {
       "en-US": "Unknown",
       "ja-JP": "不明",
-      "zh-CN": "未知"
+      "zh-CN": "未知",
+      "zh-TW": "未知"
     },
     "Description: ": {
       "en-US": "Description: ",
       "ja-JP": "説明：",
-      "zh-CN": "描述："
+      "zh-CN": "描述：",
+      "zh-TW": "說明： "
     },
     "Author: ": {
       "en-US": "Author: ",
       "ja-JP": "作家：",
-      "zh-CN": "Author："
+      "zh-CN": "Author：",
+      "zh-TW": "作者： "
     },
     "Me": {
       "en-US": "Me",
       "ja-JP": "私",
-      "zh-CN": "我"
+      "zh-CN": "我",
+      "zh-TW": "我"
     },
     "Select a scene to see more details": {
       "en-US": "Select a scene to see more details",
       "ja-JP": "もっと情報が見たいなら、シーンを選んでください",
-      "zh-CN": "选择场景查看更多详情"
+      "zh-CN": "选择场景查看更多详情",
+      "zh-TW": "選擇場景查看更多細節"
     },
     "Description": {
       "en-US": "Description",
       "ja-JP": "説明",
-      "zh-CN": "描述"
+      "zh-CN": "描述",
+      "zh-TW": "說明"
     },
     "New World": {
       "en-US": "New World",
       "ja-JP": "新しい世界",
-      "zh-CN": "新世界"
+      "zh-CN": "新世界",
+      "zh-TW": "新世界"
     },
     "Create": {
       "en-US": "Create",
       "ja-JP": "作る",
-      "zh-CN": "创建"
+      "zh-CN": "创建",
+      "zh-TW": "建立"
     },
     "Delete %s?": {
       "en-US": "Delete %s?",
       "ja-JP": "削除 %s",
-      "zh-CN": "删除 %s？"
+      "zh-CN": "删除 %s？",
+      "zh-TW": "刪除 %s？"
     },
     "Are you sure you want to delete %s?": {
       "en-US": "Are you sure you want to delete %s?",
       "ja-JP": "本当に「%s」が削除したいですか？",
-      "zh-CN": "您确定要删除 %s？"
+      "zh-CN": "您确定要删除 %s？",
+      "zh-TW": "您確定要刪除 %s？"
     },
     "Copy World": {
       "en-US": "Copy World",
       "ja-JP": "世界をコピーする",
-      "zh-CN": "复制世界"
+      "zh-CN": "复制世界",
+      "zh-TW": "複製世界"
     },
     "Error %d": {
       "en-US": "Error %d",
       "ja-JP": "エラー %d",
-      "zh-CN": "错误 %d"
+      "zh-CN": "错误 %d",
+      "zh-TW": "錯誤 %d"
     },
     "Closing this dialog will take you back to the last well-known state.": {
       "en-US": "Closing this dialog will take you back to the last well-known state.",
       "ja-JP": "このダイアログを閉じると、最後によく知られていた状態に戻ります。",
-      "zh-CN": "关闭此对话框后，您将返回到上次众所周知的状态。"
+      "zh-CN": "关闭此对话框后，您将返回到上次众所周知的状态。",
+      "zh-TW": "關閉此對話方塊將使您回到上次的知名狀態。"
     },
     "If this error persists, please submit feedback.": {
       "en-US": "If this error persists, please submit feedback.",
       "ja-JP": "エラーが長引いてると、フィードバックを出してください。",
-      "zh-CN": "如果该错误仍然存在，请提交反馈。"
+      "zh-CN": "如果该错误仍然存在，请提交反馈。",
+      "zh-TW": "如果此錯誤持續，請提交回饋。"
     },
     "World Settings": {
       "en-US": "World Settings",
       "ja-JP": "世界制御",
-      "zh-CN": "世界设置"
+      "zh-CN": "世界设置",
+      "zh-TW": "世界設定"
     },
     "CHALLENGE": {
       "en-US": "CHALLENGE",
       "ja-JP": "難題",
-      "zh-CN": "挑战"
+      "zh-CN": "挑战",
+      "zh-TW": "挑戰"
     },
     "Start": {
       "en-US": "Start",
       "ja-JP": "始め",
-      "zh-CN": "开始"
+      "zh-CN": "开始",
+      "zh-TW": "開始"
     },
     "Welcome to the KIPR Simulator!\n": {
       "en-US": "Welcome to the KIPR Simulator!\n",
       "ja-JP": "KIPRシミュレーターへようこそ！\n",
-      "zh-CN": "欢迎使用 KIPR 模拟器！ \n"
+      "zh-CN": "欢迎使用 KIPR 模拟器！ \n",
+      "zh-TW": "歡迎來到 KIPR 模擬器！ \n"
     },
     "Compiling...\n": {
       "en-US": "Compiling...\n",
       "ja-JP": "コンパイルしている...\n",
-      "zh-CN": "编译...\n"
+      "zh-CN": "编译...\n",
+      "zh-TW": "編譯...\n"
     },
     "Compilation succeeded with warnings.\n": {
       "en-US": "Compilation succeeded with warnings.\n",
       "ja-JP": "コンパイルが成功けど、ワーニングがあります。\n",
-      "zh-CN": "编译成功，有警告。"
+      "zh-CN": "编译成功，有警告。",
+      "zh-TW": "Compile succeeded with warnings.\n"
     },
     "Compilation succeeded.\n": {
       "en-US": "Compilation succeeded.\n",
       "ja-JP": "コンパイルが成功。\n",
-      "zh-CN": "编译成功"
+      "zh-CN": "编译成功",
+      "zh-TW": "編譯成功.\n"
     },
     "Compilation failed.\n": {
       "en-US": "Compilation failed.\n",
       "ja-JP": "コンパイルが失敗。\n",
-      "zh-CN": "编译失败"
+      "zh-CN": "编译失败",
+      "zh-TW": "編譯失敗"
     },
     "Something went wrong during compilation.\n": {
       "en-US": "Something went wrong during compilation.\n",
       "ja-JP": "コンパイル時に何かが間違ってしまった。\n",
-      "zh-CN": "编译过程中出了问题。"
+      "zh-CN": "编译过程中出了问题。",
+      "zh-TW": "編譯過程中出了問題。"
     },
     "Compilation succeeded with warnings\n": {
       "en-US": "Compilation succeeded with warnings\n",
       "ja-JP": "コンパイルが成功けど、ワーニングがあります。\n",
-      "zh-CN": "编译成功有警告"
+      "zh-CN": "编译成功有警告",
+      "zh-TW": "編譯成功有警告"
     },
     "Compilation succeeded\n": {
       "en-US": "Compilation succeeded\n",
       "ja-JP": "コンパイルが成功。\n",
-      "zh-CN": "编译成功"
+      "zh-CN": "编译成功",
+      "zh-TW": "編譯成功"
     },
     "Modules": {
       "en-US": "Modules",
       "ja-JP": "モジュール",
-      "zh-CN": "模块"
+      "zh-CN": "模块",
+      "zh-TW": "模組"
     },
     "Functions": {
       "en-US": "Functions",
       "ja-JP": "関数",
-      "zh-CN": "函数"
+      "zh-CN": "函数",
+      "zh-TW": "函數"
     },
     "Structures": {
       "en-US": "Structures",
       "ja-JP": "構造",
-      "zh-CN": "结构"
+      "zh-CN": "结构",
+      "zh-TW": "結構"
     },
     "Enumerations": {
       "en-US": "Enumerations",
       "ja-JP": "列挙型",
-      "zh-CN": "枚举"
+      "zh-CN": "枚举",
+      "zh-TW": "枚舉"
     },
     "Files": {
       "en-US": "Files",
       "ja-JP": "ファイル",
-      "zh-CN": "文件"
+      "zh-CN": "文件",
+      "zh-TW": "檔案"
     },
     "Search...": {
       "en-US": "Search...",
       "ja-JP": "検索",
-      "zh-CN": "搜索..."
+      "zh-CN": "搜索...",
+      "zh-TW": "搜尋..."
     },
     "Detailed Description": {
       "en-US": "Detailed Description",
       "ja-JP": "詳しい説明",
-      "zh-CN": "详细说明"
+      "zh-CN": "详细说明",
+      "zh-TW": "詳細說明"
     },
     "Parameters": {
       "en-US": "Parameters",
       "ja-JP": "パラメーター",
-      "zh-CN": "参数"
+      "zh-CN": "参数",
+      "zh-TW": "參數"
     },
     "Return Value": {
       "en-US": "Return Value",
       "ja-JP": "戻り値",
-      "zh-CN": "返回值"
+      "zh-CN": "返回值",
+      "zh-TW": "回傳值"
     },
     "Fields": {
       "en-US": "Fields",
       "ja-JP": "フィールド",
-      "zh-CN": "字段"
+      "zh-CN": "字段",
+      "zh-TW": "欄位"
     },
     "Volume": {
       "en-US": "Volume",
       "ja-JP": "体積",
-      "zh-CN": "体积"
+      "zh-CN": "体积",
+      "zh-TW": "體積"
     },
     "RGB": {
       "en-US": "RGB",
       "ja-JP": "RGB",
-      "zh-CN": "RGB"
+      "zh-CN": "RGB",
+      "zh-TW": "RGB"
     },
     "Challenge": {
       "en-US": "Challenge",
       "ja-JP": "問題",
-      "zh-CN": "挑战"
+      "zh-CN": "挑战",
+      "zh-TW": "挑戰"
     },
     "Stop": {
       "en-US": "Stop",
       "ja-JP": "止まる",
-      "zh-CN": "停止"
+      "zh-CN": "停止",
+      "zh-TW": "停止"
     },
     "Run": {
       "en-US": "Run",
       "ja-JP": "実行",
-      "zh-CN": "运行"
+      "zh-CN": "运行",
+      "zh-TW": "運行"
     },
     "and External Contributors": {
       "en-US": "and External Contributors",
       "ja-JP": "外部の寄稿者も",
-      "zh-CN": "和外部贡献者"
+      "zh-CN": "和外部贡献者",
+      "zh-TW": "和外部貢獻者"
     },
     "Visit our": {
       "en-US": "Visit our",
       "ja-JP": "見る",
-      "zh-CN": "访问我们的"
+      "zh-CN": "访问我们的",
+      "zh-TW": "訪問我們的"
     },
     "Science": {
       "en-US": "Science",
       "ja-JP": "科学",
-      "zh-CN": "科学"
+      "zh-CN": "科学",
+      "zh-TW": "科學"
     },
     "Technology": {
       "en-US": "Technology",
       "ja-JP": "技術",
-      "zh-CN": "技术"
+      "zh-CN": "技术",
+      "zh-TW": "技術"
     },
     "Engineering": {
       "en-US": "Engineering",
       "ja-JP": "工学",
-      "zh-CN": "工程学"
+      "zh-CN": "工程学",
+      "zh-TW": "工程"
     },
     "Arts": {
       "en-US": "Arts",
       "ja-JP": "人文科学",
-      "zh-CN": "艺术"
+      "zh-CN": "艺术",
+      "zh-TW": "藝術"
     },
     "Mathematics": {
       "en-US": "Mathematics",
       "ja-JP": "数学",
-      "zh-CN": "数学"
+      "zh-CN": "数学",
+      "zh-TW": "數學"
     },
     "Test Assignment": {
       "en-US": "Test Assignment",
       "ja-JP": "デモ宿題",
-      "zh-CN": "测试作业"
+      "zh-CN": "测试作业",
+      "zh-TW": "測驗作業"
     },
     "This is a test assignment.": {
       "en-US": "This is a test assignment.",
       "ja-JP": "これはデモ宿題です。",
-      "zh-CN": "这是一份测试作业。"
+      "zh-CN": "这是一份测试作业。",
+      "zh-TW": "這是一份測驗作業。"
     },
     "Educator notes": {
       "en-US": "Educator notes",
       "ja-JP": "先生のノート",
-      "zh-CN": "教师说明"
+      "zh-CN": "教师说明",
+      "zh-TW": "教育者筆記"
     },
     "Student notes": {
       "en-US": "Student notes",
       "ja-JP": "学生のノート",
-      "zh-CN": "学生笔记"
+      "zh-CN": "学生笔记",
+      "zh-TW": "學生筆記"
     },
     "JBC Mat A": {
       "en-US": "JBC Mat A",
       "ja-JP": "JBCマットA",
-      "zh-CN": "JBC Mat A"
+      "zh-CN": "JBC Mat A",
+      "zh-TW": "JBC Mat A"
     },
     "JBC Mat B": {
       "en-US": "JBC Mat B",
       "ja-JP": "JBCマットB",
-      "zh-CN": "JBC Mat B"
+      "zh-CN": "JBC Mat B",
+      "zh-TW": "JBC Mat B"
     },
     "Circle %s": {
       "en-US": "Circle %s",
       "ja-JP": "円%s",
-      "zh-CN": "圆 %s"
+      "zh-CN": "圆 %s",
+      "zh-TW": "圓 %s"
     },
     "JBC 0": {
       "en-US": "JBC 0",
       "ja-JP": "JBC 0",
-      "zh-CN": "JBC 0"
+      "zh-CN": "JBC 0",
+      "zh-TW": "JBC 0"
     },
     "Junior Botball Challenge 0: Drive Straight": {
       "en-US": "Junior Botball Challenge 0: Drive Straight",
       "ja-JP": "ジュニア・ボットボール・チャレンジ0：まっすぐ運転する",
-      "zh-CN": "青少年机器人足球挑战赛 0：直道行驶"
+      "zh-CN": "青少年机器人足球挑战赛 0：直道行驶",
+      "zh-TW": "青少年樽球挑戰賽 0：直線開球"
     },
     "Not Start Box": {
       "en-US": "Not Start Box",
       "ja-JP": "スタートボックスじゃない",
-      "zh-CN": "非起点框"
+      "zh-CN": "非起点框",
+      "zh-TW": "非起始框"
     },
     "Start Box": {
       "en-US": "Start Box",
       "ja-JP": "スタートボックス",
-      "zh-CN": "起点框"
+      "zh-CN": "起点框",
+      "zh-TW": "起始框"
     },
     "Line B": {
       "en-US": "Line B",
       "ja-JP": "ラインB",
-      "zh-CN": "B 线"
+      "zh-CN": "B 线",
+      "zh-TW": "B 線"
     },
     "End Box": {
       "en-US": "End Box",
       "ja-JP": "終わるボックス",
-      "zh-CN": "终点框"
+      "zh-CN": "终点框",
+      "zh-TW": "終點框"
     },
     "End of Mat": {
       "en-US": "End of Mat",
       "ja-JP": "マットの終わり",
-      "zh-CN": "垫子尽头"
+      "zh-CN": "垫子尽头",
+      "zh-TW": "墊子盡頭"
     },
     "Right Side Can": {
       "en-US": "Right Side Can",
       "ja-JP": "右の缶",
-      "zh-CN": "右侧罐"
+      "zh-CN": "右侧罐",
+      "zh-TW": "右側罐"
     },
     "Top Side Can": {
       "en-US": "Top Side Can",
       "ja-JP": "上の缶",
-      "zh-CN": "上侧罐"
+      "zh-CN": "上侧罐",
+      "zh-TW": "上側罐"
     },
     "Left Side Can": {
       "en-US": "Left Side Can",
       "ja-JP": "左の缶",
-      "zh-CN": "左侧罐"
+      "zh-CN": "左侧罐",
+      "zh-TW": "左側罐"
     },
     "Click Instruction Box": {
       "en-US": "Click Instruction Box",
       "ja-JP": "指示ボックスをクリックして",
-      "zh-CN": "点击说明盒"
+      "zh-CN": "点击说明盒",
+      "zh-TW": "按一下指示盒"
     },
     "Click Instruction 1 Box": {
       "en-US": "Click Instruction 1 Box",
       "ja-JP": "指示１ボックスをクリックして",
-      "zh-CN": "点击说明 1 框"
+      "zh-CN": "点击说明 1 框",
+      "zh-TW": "按一下指令 1 方塊"
     },
     "Click Instruction 2 Box": {
       "en-US": "Click Instruction 2 Box",
       "ja-JP": "指示２ボックスをクリックして",
-      "zh-CN": "点击说明 2 盒"
+      "zh-CN": "点击说明 2 盒",
+      "zh-TW": "點擊指令 2 盒"
     },
     "Chosen Garage Box": {
       "en-US": "Chosen Garage Box",
       "ja-JP": "選んだ車庫",
-      "zh-CN": "所选车库方框"
+      "zh-CN": "所选车库方框",
+      "zh-TW": "選擇車庫方塊"
     },
     "Green Garage Designator Box": {
       "en-US": "Green Garage Designator Box",
       "ja-JP": "緑の車庫ボックス",
-      "zh-CN": "绿色车库代号框"
+      "zh-CN": "绿色车库代号框",
+      "zh-TW": "綠色車庫標示方塊"
     },
     "Yellow Garage Designator Box": {
       "en-US": "Yellow Garage Designator Box",
       "ja-JP": "黄の車庫ボックス",
-      "zh-CN": "黄色车库代号框"
+      "zh-CN": "黄色车库代号框",
+      "zh-TW": "黃色車庫指定方塊"
     },
     "Blue Garage Designator Box": {
       "en-US": "Blue Garage Designator Box",
       "ja-JP": "青の車庫ボックス",
-      "zh-CN": "蓝色车库代号框"
+      "zh-CN": "蓝色车库代号框",
+      "zh-TW": "藍色車庫指定方塊"
     },
     "Green Garage": {
       "en-US": "Green Garage",
       "ja-JP": "緑の車庫",
-      "zh-CN": "绿色车库"
+      "zh-CN": "绿色车库",
+      "zh-TW": "綠色車庫"
     },
     "Green Garage node": {
       "en-US": "Green Garage node",
       "ja-JP": "緑の車庫ノード",
-      "zh-CN": "绿色车库节点"
+      "zh-CN": "绿色车库节点",
+      "zh-TW": "綠色車庫節點"
     },
     "Yellow Garage node": {
       "en-US": "Yellow Garage node",
       "ja-JP": "黄の車庫ノード",
-      "zh-CN": "黄色车库节点"
+      "zh-CN": "黄色车库节点",
+      "zh-TW": "黃色車庫節點"
     },
     "Blue Garage node": {
       "en-US": "Blue Garage node",
       "ja-JP": "青の車庫ノード",
-      "zh-CN": "蓝色车库节点"
+      "zh-CN": "蓝色车库节点",
+      "zh-TW": "藍色車庫節點"
     },
     "Green Garage Right Boundary node": {
       "en-US": "Green Garage Right Boundary node",
       "ja-JP": "緑の車庫右境ノード",
-      "zh-CN": "绿色车库右边界节点"
+      "zh-CN": "绿色车库右边界节点",
+      "zh-TW": "綠色車庫右邊界節點"
     },
     "Green Garage Left Boundary node": {
       "en-US": "Green Garage Left Boundary node",
       "ja-JP": "緑の車庫左境ノード",
-      "zh-CN": "绿色车库左边界节点"
+      "zh-CN": "绿色车库左边界节点",
+      "zh-TW": "綠色車庫左邊界節點"
     },
     "Green Garage Top Boundary node": {
       "en-US": "Green Garage Top Boundary node",
       "ja-JP": "緑の車庫上境ノード",
-      "zh-CN": "绿色车库顶部边界节点"
+      "zh-CN": "绿色车库顶部边界节点",
+      "zh-TW": "綠色車庫上邊界節點"
     },
     "Blue Garage": {
       "en-US": "Blue Garage",
       "ja-JP": "青の車庫",
-      "zh-CN": "蓝色车库"
+      "zh-CN": "蓝色车库",
+      "zh-TW": "藍色車庫"
     },
     "Blue Garage Right Boundary node": {
       "en-US": "Blue Garage Right Boundary node",
       "ja-JP": "青の車庫右境ノード",
-      "zh-CN": "蓝色车库右边界节点"
+      "zh-CN": "蓝色车库右边界节点",
+      "zh-TW": "藍色車庫右邊界節點"
     },
     "Blue Garage Left Boundary node": {
       "en-US": "Blue Garage Left Boundary node",
       "ja-JP": "青の車庫左境ノード",
-      "zh-CN": "蓝色车库左边界节点"
+      "zh-CN": "蓝色车库左边界节点",
+      "zh-TW": "藍色車庫左邊界節點"
     },
     "Blue Garage Top Boundary node": {
       "en-US": "Blue Garage Top Boundary node",
       "ja-JP": "青の車庫上境ノード",
-      "zh-CN": "蓝色车库顶部边界节点"
+      "zh-CN": "蓝色车库顶部边界节点",
+      "zh-TW": "藍色車庫頂部邊界節點"
     },
     "Yellow Garage": {
       "en-US": "Yellow Garage",
       "ja-JP": "黄の車庫",
-      "zh-CN": "黄色车库"
+      "zh-CN": "黄色车库",
+      "zh-TW": "黃色車庫"
     },
     "Yellow Garage Right Boundary node": {
       "en-US": "Yellow Garage Right Boundary node",
       "ja-JP": "黄の車庫右境ノード",
-      "zh-CN": "黄色车库右边界节点"
+      "zh-CN": "黄色车库右边界节点",
+      "zh-TW": "黃色車庫右邊界節點"
     },
     "Yellow Garage Left Boundary node": {
       "en-US": "Yellow Garage Left Boundary node",
       "ja-JP": "黄の車庫左境ノード",
-      "zh-CN": "黄色车库左边界节点"
+      "zh-CN": "黄色车库左边界节点",
+      "zh-TW": "黃色車庫左邊界節點"
     },
     "Yellow Garage Top Boundary node": {
       "en-US": "Yellow Garage Top Boundary node",
       "ja-JP": "黄の車庫上境ノード",
-      "zh-CN": "黄色车库顶部边界节点"
+      "zh-CN": "黄色车库顶部边界节点",
+      "zh-TW": "黃色車庫頂邊界節點"
     },
     "Yellow Garage Marker 1": {
       "en-US": "Yellow Garage Marker 1",
       "ja-JP": "黄の車庫標識１",
-      "zh-CN": "黄色车库标记 1"
+      "zh-CN": "黄色车库标记 1",
+      "zh-TW": "黃色車庫標記 1"
     },
     "Yellow Garage Marker 2": {
       "en-US": "Yellow Garage Marker 2",
       "ja-JP": "黄の車庫標識２",
-      "zh-CN": "黄色车库标记 2"
+      "zh-CN": "黄色车库标记 2",
+      "zh-TW": "黃色車庫標記 2"
     },
     "Blue Garage Marker 1": {
       "en-US": "Blue Garage Marker 1",
       "ja-JP": "青の車庫標識１",
-      "zh-CN": "蓝色车库标记 1"
+      "zh-CN": "蓝色车库标记 1",
+      "zh-TW": "藍色車庫標記 1"
     },
     "Blue Garage Marker 2": {
       "en-US": "Blue Garage Marker 2",
       "ja-JP": "青の車庫標識２",
-      "zh-CN": "蓝色车库标记 2"
+      "zh-CN": "蓝色车库标记 2",
+      "zh-TW": "藍色車庫標記 2"
     },
     "Green Garage Marker 1": {
       "en-US": "Green Garage Marker 1",
       "ja-JP": "緑の車庫標識１",
-      "zh-CN": "绿色车库标记 1"
+      "zh-CN": "绿色车库标记 1",
+      "zh-TW": "綠色車庫標記 1"
     },
     "Green Garage Marker 2": {
       "en-US": "Green Garage Marker 2",
       "ja-JP": "緑の車庫標識２",
-      "zh-CN": "绿色车库标记 2"
+      "zh-CN": "绿色车库标记 2",
+      "zh-TW": "綠色車庫標記 2"
     },
     "Junior Botball Challenge 4: Serpentine": {
       "en-US": "Junior Botball Challenge 4: Serpentine",
       "ja-JP": "ジュニア・ボットボール・チャレンジ4：延々",
-      "zh-CN": "青少年机器人球挑战赛 4：蛇形线"
+      "zh-CN": "青少年机器人球挑战赛 4：蛇形线",
+      "zh-TW": "青少年趣味棒球挑戰賽 4：蛇形線"
     },
     "Junior Botball Challenge 5: Odd Numbers": {
       "en-US": "Junior Botball Challenge 5: Odd Numbers",
       "ja-JP": "ジュニア・ボットボール・チャレンジ5：奇数",
-      "zh-CN": "青少年机器人球挑战赛 5：奇数"
+      "zh-CN": "青少年机器人球挑战赛 5：奇数",
+      "zh-TW": "青少年樽球挑戰賽 5：奇數"
     },
     "Junior Botball Challenge 6: Figure Eight": {
       "en-US": "Junior Botball Challenge 6: Figure Eight",
       "ja-JP": "ジュニア・ボットボール・チャレンジ6：８の字",
-      "zh-CN": "青少年机器人足球挑战赛 6：八字形"
+      "zh-CN": "青少年机器人足球挑战赛 6：八字形",
+      "zh-TW": "青少年機器人足球挑戰賽 6：八字形"
     },
     "Between cans 4 and 9": {
       "en-US": "Between cans 4 and 9",
       "ja-JP": "缶４と缶９の間",
-      "zh-CN": "4 号罐和 9 号罐之间"
+      "zh-CN": "4 号罐和 9 号罐之间",
+      "zh-TW": "4號罐和9號罐之間"
     },
     "Top side of can 9": {
       "en-US": "Top side of can 9",
       "ja-JP": "缶９の上",
-      "zh-CN": "9 号罐的顶部"
+      "zh-CN": "9 号罐的顶部",
+      "zh-TW": "9 號罐的頂端"
     },
     "Junior Botball Challenge 7: Load 'Em Up": {
       "en-US": "Junior Botball Challenge 7: Load 'Em Up",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 7：積み込もう",
-      "zh-CN": "青少年机器人球挑战 7：装填"
+      "zh-CN": "青少年机器人球挑战 7：装填",
+      "zh-TW": "青少年樽球挑戰 7：裝填"
     },
     "Junior Botball Challenge 8: Bulldozer Mania": {
       "en-US": "Junior Botball Challenge 8: Bulldozer Mania",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 8：ブルドーザー・マニア",
-      "zh-CN": "青少年机器人球挑战赛 8：推土机狂热"
+      "zh-CN": "青少年机器人球挑战赛 8：推土机狂热",
+      "zh-TW": "初級機器人球挑戰賽 8：推土機狂熱"
     },
     "Junior Botball Challenge 9: Cover Your Bases": {
       "en-US": "Junior Botball Challenge 9: Cover Your Bases",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 9：ベースを網羅する",
-      "zh-CN": "青少年机器人足球挑战赛 9：掩护你的基地"
+      "zh-CN": "青少年机器人足球挑战赛 9：掩护你的基地",
+      "zh-TW": "青少年機器人足球挑戰賽 9：掩護你的基地"
     },
     "Junior Botball Challenge 10: Chopped": {
       "en-US": "Junior Botball Challenge 10: Chopped",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 10：チャップ",
-      "zh-CN": "青少年机器人球挑战赛 10：劈斩"
+      "zh-CN": "青少年机器人球挑战赛 10：劈斩",
+      "zh-TW": "初級機器人足球挑戰賽 10：劈斷"
     },
     "JBC 11": {
       "en-US": "JBC 11",
       "ja-JP": "JBC 11",
-      "zh-CN": "JBC 11"
+      "zh-CN": "JBC 11",
+      "zh-TW": "JBC 11"
     },
     "Junior Botball Challenge 11: Making Waves": {
       "en-US": "Junior Botball Challenge 11: Making Waves",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 11：波風を立てる",
-      "zh-CN": "青少年机器人球挑战赛 11：掀起波澜"
+      "zh-CN": "青少年机器人球挑战赛 11：掀起波澜",
+      "zh-TW": "初級機器人足球挑戰賽 11：製造浪潮"
     },
     "Junior Botball Challenge 12: Add it Up": {
       "en-US": "Junior Botball Challenge 12: Add it Up",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 12：足し算する",
-      "zh-CN": "青少年机器人球挑战赛 12：加起来"
+      "zh-CN": "青少年机器人球挑战赛 12：加起来",
+      "zh-TW": "青少年機器人足球挑戰賽 12：加起來"
     },
     "Circle 1": {
       "en-US": "Circle 1",
       "ja-JP": "円１",
-      "zh-CN": "圆圈 1"
+      "zh-CN": "圆圈 1",
+      "zh-TW": "圓圈1"
     },
     "JBC 14": {
       "en-US": "JBC 14",
       "ja-JP": "JBC 14",
-      "zh-CN": "JBC 14"
+      "zh-CN": "JBC 14",
+      "zh-TW": "JBC 14"
     },
     "Junior Botball Challenge 14: Dance Party": {
       "en-US": "Junior Botball Challenge 14: Dance Party",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 14：ダンスパーティー",
-      "zh-CN": "青少年机器人足球挑战赛 14：舞会"
+      "zh-CN": "青少年机器人足球挑战赛 14：舞会",
+      "zh-TW": "青少年機器人足球挑戰賽 14：舞蹈派對"
     },
     "JBC 15": {
       "en-US": "JBC 15",
       "ja-JP": "JBC 15",
-      "zh-CN": "JBC 15"
+      "zh-CN": "JBC 15",
+      "zh-TW": "JBC 15"
     },
     "Junior Botball Challenge 15: Go Fetch": {
       "en-US": "Junior Botball Challenge 15: Go Fetch",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 15：ダンスパーティー",
-      "zh-CN": "青少年机器人足球挑战赛 15：去捡球"
+      "zh-CN": "青少年机器人足球挑战赛 15：去捡球",
+      "zh-TW": "初級機器人足球挑戰賽 15：撿球"
     },
     "JBC 16": {
       "en-US": "JBC 16",
       "ja-JP": "JBC 16",
-      "zh-CN": "JBC 16"
+      "zh-CN": "JBC 16",
+      "zh-TW": "JBC 16"
     },
     "Junior Botball Challenge 16: Pick 'Em Up": {
       "en-US": "Junior Botball Challenge 16: Pick 'Em Up",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 16：拾う",
-      "zh-CN": "青少年机器人足球挑战赛 16：捡球"
+      "zh-CN": "青少年机器人足球挑战赛 16：捡球",
+      "zh-TW": "青少年嬰兒棒球挑戰賽 16：撿起他們"
     },
     "Junior Botball Challenge 17: Mountain Rescue": {
       "en-US": "Junior Botball Challenge 17: Mountain Rescue",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 17：救助",
-      "zh-CN": "青少年机器人足球挑战赛 17：山地救援"
+      "zh-CN": "青少年机器人足球挑战赛 17：山地救援",
+      "zh-TW": "青少年趣味棒球挑戰賽 17：山地救援"
     },
     "JBC 18": {
       "en-US": "JBC 18",
       "ja-JP": "JBC 18",
-      "zh-CN": "JBC 18"
+      "zh-CN": "JBC 18",
+      "zh-TW": "JBC 18"
     },
     "Junior Botball Challenge 18: Stackerz": {
       "en-US": "Junior Botball Challenge 18: Stackerz",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 18：積む",
-      "zh-CN": "青少年机器人足球挑战赛 18：堆垛机"
+      "zh-CN": "青少年机器人足球挑战赛 18：堆垛机",
+      "zh-TW": "青少年趣味籃球挑戰賽 18：堆堆堆"
     },
     "Bottom of can5": {
       "en-US": "Bottom of can5",
       "ja-JP": "缶５の下",
-      "zh-CN": "罐底5"
+      "zh-CN": "罐底5",
+      "zh-TW": "罐子底部5"
     },
     "Top of can7": {
       "en-US": "Top of can7",
       "ja-JP": "缶７の上",
-      "zh-CN": "7号罐顶部"
+      "zh-CN": "7号罐顶部",
+      "zh-TW": "罐頂7"
     },
     "Bottom of can7": {
       "en-US": "Bottom of can7",
       "ja-JP": "缶７の下",
-      "zh-CN": "7号罐底部"
+      "zh-CN": "7号罐底部",
+      "zh-TW": "罐子底部7"
     },
     "Top of can5": {
       "en-US": "Top of can5",
       "ja-JP": "缶５の上",
-      "zh-CN": "罐顶5"
+      "zh-CN": "罐顶5",
+      "zh-TW": "罐頂5"
     },
     "Junior Botball Challenge 19: Bump": {
       "en-US": "Junior Botball Challenge 19: Bump",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 18：ドンドン",
-      "zh-CN": "青少年机器人球挑战赛 19：颠簸"
+      "zh-CN": "青少年机器人球挑战赛 19：颠簸",
+      "zh-TW": "初級機器人足球挑戰賽 19：撞球"
     },
     "Junior Botball Challenge 20: A'mazing": {
       "en-US": "Junior Botball Challenge 20: A'mazing",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 18：迷ろう獪",
-      "zh-CN": "青少年机器人球挑战赛 20：A'mazing"
+      "zh-CN": "青少年机器人球挑战赛 20：A'mazing",
+      "zh-TW": "初級機器人球挑戰賽 20：A'mazing"
     },
     "Paper Ream 3": {
       "en-US": "Paper Ream 3",
       "ja-JP": "用紙リーム３",
-      "zh-CN": "纸卷 3"
+      "zh-CN": "纸卷 3",
+      "zh-TW": "紙卷 3"
     },
     "Paper Ream 4": {
       "en-US": "Paper Ream 4",
       "ja-JP": "用紙リーム４",
-      "zh-CN": "纸卷 4"
+      "zh-CN": "纸卷 4",
+      "zh-TW": "紙卷4"
     },
     "Junior Botball Challenge 21: Proximity": {
       "en-US": "Junior Botball Challenge 21: Proximity",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 21：間近",
-      "zh-CN": "青少年机器人球挑战赛 21：接近"
+      "zh-CN": "青少年机器人球挑战赛 21：接近",
+      "zh-TW": "初級機器人足球挑戰賽 21：接近"
     },
     "Ream Front Boundary": {
       "en-US": "Ream Front Boundary",
       "ja-JP": "リーム前部境",
-      "zh-CN": "纸卷前边界"
+      "zh-CN": "纸卷前边界",
+      "zh-TW": "紙卷前邊界"
     },
     "Junior Botball Challenge 22: Search and Rescue": {
       "en-US": "Junior Botball Challenge 22: Search and Rescue",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 21：捜索救難",
-      "zh-CN": "青少年机器人球挑战赛 22：搜救"
+      "zh-CN": "青少年机器人球挑战赛 22：搜救",
+      "zh-TW": "初級機器人足球挑戰賽 22：搜救"
     },
     "JBC 23": {
       "en-US": "JBC 23",
       "ja-JP": "JBC 23",
-      "zh-CN": "JBC 23"
+      "zh-CN": "JBC 23",
+      "zh-TW": "JBC 23"
     },
     "Junior Botball Challenge 23: Find the Black Line": {
       "en-US": "Junior Botball Challenge 23: Find the Black Line",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 21：黒い一線を探す",
-      "zh-CN": "青少年机器人足球挑战赛 23：寻找黑线"
+      "zh-CN": "青少年机器人足球挑战赛 23：寻找黑线",
+      "zh-TW": "青少年趣味棒球挑戰賽23：尋找黑線"
     },
     "Circle": {
       "en-US": "Circle",
       "ja-JP": "円",
-      "zh-CN": "圆圈"
+      "zh-CN": "圆圈",
+      "zh-TW": "圓圈"
     },
     "JBC 24": {
       "en-US": "JBC 24",
       "ja-JP": "JBC 24",
-      "zh-CN": "JBC 24"
+      "zh-CN": "JBC 24",
+      "zh-TW": "JBC 24"
     },
     "Junior Botball Challenge 24: Walk the Line": {
       "en-US": "Junior Botball Challenge 24: Walk the Line",
       "ja-JP": "ジュニア・ボットボール・チャレンジ 21：一線を歩く",
-      "zh-CN": "青少年机器人足球挑战赛 24：走线"
+      "zh-CN": "青少年机器人足球挑战赛 24：走线",
+      "zh-TW": "青少年機器人足球挑戰賽 24：走線"
     },
     "Finish Line": {
       "en-US": "Finish Line",
       "ja-JP": "ゴール",
-      "zh-CN": "终点线"
+      "zh-CN": "终点线",
+      "zh-TW": "終點線"
     },
     "Checkpoint 1": {
       "en-US": "Checkpoint 1",
       "ja-JP": "関門１",
-      "zh-CN": "检查点 1"
+      "zh-CN": "检查点 1",
+      "zh-TW": "檢查點 1"
     },
     "Checkpoint 3": {
       "en-US": "Checkpoint 3",
       "ja-JP": "関門３",
-      "zh-CN": "检查点 3"
+      "zh-CN": "检查点 3",
+      "zh-TW": "檢查點 3"
     },
     "Checkpoint 2": {
       "en-US": "Checkpoint 2",
       "ja-JP": "関門２",
-      "zh-CN": "检查点 2"
+      "zh-CN": "检查点 2",
+      "zh-TW": "檢查點 2"
     },
     "Base Scene - Moon Surface": {
       "en-US": "Base Scene - Moon Surface",
       "ja-JP": "基盤シーン-- 月面",
-      "zh-CN": "基地场景 - 月球表面"
+      "zh-CN": "基地场景 - 月球表面",
+      "zh-TW": "基地場景 - 月球表面"
     },
     "A base scene. Intended to be augmented to create full Moon scenes": {
       "en-US": "A base scene. Intended to be augmented to create full Moon scenes",
       "ja-JP": "基盤シーンです。完全な月シーンを作るために補強されることを意図しています。",
-      "zh-CN": "基础场景。可通过增强来创建全月球场景"
+      "zh-CN": "基础场景。可通过增强来创建全月球场景",
+      "zh-TW": "基本場景。可擴充以建立完整的月球場景。"
     },
     "1.1.1 Ground": {
       "en-US": "1.1.1 Ground",
       "ja-JP": "地",
-      "zh-CN": "1.1.1 地面"
+      "zh-CN": "1.1.1 地面",
+      "zh-TW": "1.1.1 地面"
     },
     "1.1.6-8 Start Area": {
       "en-US": "1.1.6-8 Start Area",
       "ja-JP": "スタート場所",
-      "zh-CN": "1.1.6-8 起始区域"
+      "zh-CN": "1.1.6-8 起始区域",
+      "zh-TW": "1.1.6-8 起點區域"
     },
     "1.1.2-4 Sky": {
       "en-US": "1.1.2-4 Sky",
       "ja-JP": "空",
-      "zh-CN": "1.1.2-4 天空"
+      "zh-CN": "1.1.2-4 天空",
+      "zh-TW": "1.1.2-4 天空"
     },
     "Moon Sandbox": {
       "en-US": "Moon Sandbox",
       "ja-JP": "月の砂場",
-      "zh-CN": "月球沙盒"
+      "zh-CN": "月球沙盒",
+      "zh-TW": "月球沙盒"
     },
     "Lunar sandbox. Currently supports 4 types of rocks. Demo Ready.": {
       "en-US": "Lunar sandbox. Currently supports 4 types of rocks. Demo Ready.",
       "ja-JP": "月の砂場です。石４型があります。",
-      "zh-CN": "月球沙盒。目前支持 4 种岩石。演示版已就绪。"
+      "zh-CN": "月球沙盒。目前支持 4 种岩石。演示版已就绪。",
+      "zh-TW": "月球沙盒。目前支援 4 種岩石。示範就緒。"
     },
     "Basalt Rock": {
       "en-US": "Basalt Rock",
       "ja-JP": "玄武岩",
-      "zh-CN": "玄武岩"
+      "zh-CN": "玄武岩",
+      "zh-TW": "玄武岩"
     },
     "Anorthosite Rock": {
       "en-US": "Anorthosite Rock",
       "ja-JP": "斜長岩",
-      "zh-CN": "正长岩"
+      "zh-CN": "正长岩",
+      "zh-TW": "正長岩"
     },
     "Breccia Rock": {
       "en-US": "Breccia Rock",
       "ja-JP": "角礫岩",
-      "zh-CN": "角砾岩"
+      "zh-CN": "角砾岩",
+      "zh-TW": "角礫岩"
     },
     "Meteorite Rock": {
       "en-US": "Meteorite Rock",
       "ja-JP": "隕石",
-      "zh-CN": "陨石岩"
+      "zh-CN": "陨石岩",
+      "zh-TW": "隕石岩"
     },
     "Life Science Pack": {
       "en-US": "Life Science Pack",
       "ja-JP": "生命科学一式",
-      "zh-CN": "生命科学包"
+      "zh-CN": "生命科学包",
+      "zh-TW": "生命科學套件"
     },
     "Radiation Science Pack - High": {
       "en-US": "Radiation Science Pack - High",
       "ja-JP": "放射一式",
-      "zh-CN": "辐射科学包 - 高"
+      "zh-CN": "辐射科学包 - 高",
+      "zh-TW": "輻射科學包 - 高"
     },
     "Science Pad": {
       "en-US": "Science Pad",
       "ja-JP": "科学部屋",
-      "zh-CN": "科学垫"
+      "zh-CN": "科学垫",
+      "zh-TW": "科學墊"
     },
     "Container": {
       "en-US": "Container",
       "ja-JP": "科学部屋",
-      "zh-CN": "容器"
+      "zh-CN": "容器",
+      "zh-TW": "容器"
     },
     "Space Bot Guy": {
       "en-US": "Space Bot Guy",
       "ja-JP": "空間Botguy",
-      "zh-CN": "太空机器人"
+      "zh-CN": "太空机器人",
+      "zh-TW": "太空機器人"
     },
     "Solar Panel": {
       "en-US": "Solar Panel",
       "ja-JP": "ソーラーパネル",
-      "zh-CN": "太阳能电池板"
+      "zh-CN": "太阳能电池板",
+      "zh-TW": "太陽能電池板"
     },
     "Walkway": {
       "en-US": "Walkway",
       "ja-JP": "歩道",
-      "zh-CN": "走道"
+      "zh-CN": "走道",
+      "zh-TW": "走道"
     },
     "Comms Tower": {
       "en-US": "Comms Tower",
       "ja-JP": "電波塔",
-      "zh-CN": "通讯塔"
+      "zh-CN": "通讯塔",
+      "zh-TW": "通訊塔"
     },
     "Human Living Habitat": {
       "en-US": "Human Living Habitat",
       "ja-JP": "人間人生施設",
-      "zh-CN": "人类居住区"
+      "zh-CN": "人类居住区",
+      "zh-TW": "人類生活棲息地"
     },
     "Human Research Habitat": {
       "en-US": "Human Research Habitat",
       "ja-JP": "人間研究施設",
-      "zh-CN": "人类研究栖息地"
+      "zh-CN": "人类研究栖息地",
+      "zh-TW": "人類研究棲息地"
     },
     "Human Control/Comms Station Habitat": {
       "en-US": "Human Control/Comms Station Habitat",
       "ja-JP": "コミュニケーション施設",
-      "zh-CN": "人类控制/通信站栖息地"
+      "zh-CN": "人类控制/通信站栖息地",
+      "zh-TW": "人類控制/通訊站棲息地"
     },
     "Life Indicator Light": {
       "en-US": "Life Indicator Light",
       "ja-JP": "生命の表示光",
-      "zh-CN": "生命指示灯"
+      "zh-CN": "生命指示灯",
+      "zh-TW": "生命指示燈"
     },
     "No Life Indicator Light": {
       "en-US": "No Life Indicator Light",
       "ja-JP": "不生命の表示光",
-      "zh-CN": "无生命指示灯"
+      "zh-CN": "无生命指示灯",
+      "zh-TW": "無生命指示燈"
     },
     "2025 Game Table": {
       "en-US": "2025 Game Table",
       "ja-JP": "2025ゲームテーブル",
-      "zh-CN": "2025 游戏桌"
+      "zh-CN": "2025 游戏桌",
+      "zh-TW": "2025 遊戲桌"
     },
     "Base Scene - 2025 Botball Game Table": {
       "en-US": "Base Scene - 2025 Botball Game Table",
       "ja-JP": "基盤シーン-- 2025 Botball ゲームテーブル",
-      "zh-CN": "基地场景 - 2025 机器人球游戏桌"
+      "zh-CN": "基地场景 - 2025 机器人球游戏桌",
+      "zh-TW": "基地場景 - 2025 Botball 遊戲桌"
     },
     "A base scene. Intended to be augmented to create the full game table": {
       "en-US": "A base scene. Intended to be augmented to create the full game table",
       "ja-JP": "基盤シーンです。完全なゲームテーブルシーンを作るために補強されることを意図しています。",
-      "zh-CN": "基础场景。可通过增强功能创建完整的游戏桌"
+      "zh-CN": "基础场景。可通过增强功能创建完整的游戏桌",
+      "zh-TW": "基本場景。可擴充以建立完整的遊戲桌"
     },
     "Fry floor": {
       "en-US": "Fry floor",
       "ja-JP": "フライドポテト転落させるもの",
-      "zh-CN": "油炸地板"
+      "zh-CN": "油炸地板",
+      "zh-TW": "薯條地板"
     },
     "Potato detector box": {
       "en-US": "Potato detector box",
       "ja-JP": "ポテト・デテクター・ボックス",
-      "zh-CN": "土豆探测器箱"
+      "zh-CN": "土豆探测器箱",
+      "zh-TW": "馬鈴薯探測盒"
     },
     "Hamburger": {
       "en-US": "Hamburger",
       "ja-JP": "ハンバーガー",
-      "zh-CN": "汉堡包"
+      "zh-CN": "汉堡包",
+      "zh-TW": "漢堡"
     },
     "Hotdog": {
       "en-US": "Hotdog",
       "ja-JP": "ホットドッグ",
-      "zh-CN": "热狗"
+      "zh-CN": "热狗",
+      "zh-TW": "熱狗"
     },
     "Taco": {
       "en-US": "Taco",
       "ja-JP": "タコス",
-      "zh-CN": "玉米卷"
+      "zh-CN": "玉米卷",
+      "zh-TW": "玉米卷"
     },
     "Pink Cup": {
       "en-US": "Pink Cup",
       "ja-JP": "ピンクカップ",
-      "zh-CN": "粉红杯"
+      "zh-CN": "粉红杯",
+      "zh-TW": "粉紅杯"
     },
     "Blue Cup": {
       "en-US": "Blue Cup",
       "ja-JP": "青カップ",
-      "zh-CN": "蓝杯"
+      "zh-CN": "蓝杯",
+      "zh-TW": "藍杯"
     },
     "Green Cup": {
       "en-US": "Green Cup",
       "ja-JP": "緑カップ",
-      "zh-CN": "绿杯"
+      "zh-CN": "绿杯",
+      "zh-TW": "綠杯"
     },
     "Blue pom back #${i}": {
       "en-US": "Blue pom back #${i}",
       "ja-JP": "後ろの青ポン #${i}",
-      "zh-CN": "蓝色绒球背面 #${i｝"
+      "zh-CN": "蓝色绒球背面 #${i｝",
+      "zh-TW": "藍色絨球背面 #${i｝"
     },
     "Blue pom front #${i}": {
       "en-US": "Blue pom front #${i}",
       "ja-JP": "前の青ポン #${i}",
-      "zh-CN": "蓝色绒球前 #${i｝"
+      "zh-CN": "蓝色绒球前 #${i｝",
+      "zh-TW": "藍色絨球前 #${i｝"
     },
     "Bottle #${i}": {
       "en-US": "Bottle #${i}",
       "ja-JP": "ボトル #${i}",
-      "zh-CN": "瓶子 #${i｝"
+      "zh-CN": "瓶子 #${i｝",
+      "zh-TW": "瓶子 #${i｝"
     },
     "Orange pom #${i}": {
       "en-US": "Orange pom #${i}",
       "ja-JP": "オレンジの青ポン #${i}",
-      "zh-CN": "橙色绒球 #${i｝"
+      "zh-CN": "橙色绒球 #${i｝",
+      "zh-TW": "橙色絨球 #${i｝"
     },
     "Red pom #${i}": {
       "en-US": "Red pom #${i}",
       "ja-JP": "赤の青ポン #${i}",
-      "zh-CN": "红色绒球 #${i｝"
+      "zh-CN": "红色绒球 #${i｝",
+      "zh-TW": "紅色絨球 #${i｝"
     },
     "Yellow pom #${i}": {
       "en-US": "Yellow pom #${i}",
       "ja-JP": "黄の青ポン #${i}",
-      "zh-CN": "黄色绒球 #${i｝"
+      "zh-CN": "黄色绒球 #${i｝",
+      "zh-TW": "黃色絨球 #${i｝"
     },
     "Random pom #${i}": {
       "en-US": "Random pom #${i}",
       "ja-JP": "出鱈目の青ポン #${i}",
-      "zh-CN": "随机绒球 #${i｝"
+      "zh-CN": "随机绒球 #${i｝",
+      "zh-TW": "隨機絨球 #${i｝"
     },
     "Tomato": {
       "en-US": "Tomato",
       "ja-JP": "トマト",
-      "zh-CN": "番茄"
+      "zh-CN": "番茄",
+      "zh-TW": "番茄"
     },
     "Pickle": {
       "en-US": "Pickle",
       "ja-JP": "きゅうりピクルス",
-      "zh-CN": "泡菜"
+      "zh-CN": "泡菜",
+      "zh-TW": "泡菜"
     },
     "Potato": {
       "en-US": "Potato",
       "ja-JP": "ポテト",
-      "zh-CN": "土豆"
+      "zh-CN": "土豆",
+      "zh-TW": "馬鈴薯"
     },
     "Fry #${i}": {
       "en-US": "Fry #${i}",
       "ja-JP": "フライドポテト #${i}",
-      "zh-CN": "油炸 #${i｝"
+      "zh-CN": "油炸 #${i｝",
+      "zh-TW": "油炸 #${i｝"
     },
     "Tray #${i}": {
       "en-US": "Tray #${i}",
       "ja-JP": "トレー #${i}",
-      "zh-CN": "托盘 #${i｝"
+      "zh-CN": "托盘 #${i｝",
+      "zh-TW": "托盤 #${i｝"
     },
     "Botguy": {
       "en-US": "Botguy",
       "ja-JP": "Botguy",
-      "zh-CN": "饮料"
+      "zh-CN": "饮料",
+      "zh-TW": "燒烤"
     },
     "Blue drink #${i}": {
       "en-US": "Blue drink #${i}",
       "ja-JP": "青の飲み物 #${i}",
-      "zh-CN": "蓝色饮料 #${i｝"
+      "zh-CN": "蓝色饮料 #${i｝",
+      "zh-TW": "藍色飲料 #${i｝"
     },
     "Green drink #${i}": {
       "en-US": "Green drink #${i}",
       "ja-JP": "緑の飲み物 #${i}",
-      "zh-CN": "绿色饮料 #${i｝"
+      "zh-CN": "绿色饮料 #${i｝",
+      "zh-TW": "綠色飲料 #${i｝"
     },
     "Pink drink #${i}": {
       "en-US": "Pink drink #${i}",
       "ja-JP": "ピンクの飲み物 ${i}",
-      "zh-CN": "粉色饮料 #${i｝"
+      "zh-CN": "粉色饮料 #${i｝",
+      "zh-TW": "粉紅色飲料 #${i｝"
     },
     "2025 Botball game table sandbox": {
       "en-US": "2025 Botball game table sandbox",
       "ja-JP": "2025 Botball ゲームテーブル砂場",
-      "zh-CN": "2025 机器人球游戏桌沙盘"
+      "zh-CN": "2025 机器人球游戏桌沙盘",
+      "zh-TW": "2025 Botball 遊戲桌 沙盤"
     },
     "IRobot Create": {
       "en-US": "IRobot Create",
       "ja-JP": "IRobot Create",
-      "zh-CN": "IR 机器人创建"
+      "zh-CN": "IR 机器人创建",
+      "zh-TW": "IRobot 創建"
     },
     "Leaderboard": {
       "en-US": "Leaderboard",
       "ja-JP": "ランキング",
-      "zh-CN": "排行榜"
+      "zh-CN": "排行榜",
+      "zh-TW": "排行榜"
     },
     "See the current challenge leaderboard.": {
       "en-US": "See the current challenge leaderboard.",
       "ja-JP": "問題のランキングを見ます。",
-      "zh-CN": "查看当前挑战赛排行榜。"
+      "zh-CN": "查看当前挑战赛排行榜。",
+      "zh-TW": "查看目前的挑戰排行榜。"
     },
     "The Challenge System": {
       "en-US": "The Challenge System",
       "ja-JP": "チャレンジのシステム",
-      "zh-CN": "挑战系统"
+      "zh-CN": "挑战系统",
+      "zh-TW": "挑戰系統"
     },
     "Learn how to use the challenge system": {
       "en-US": "Learn how to use the challenge system",
       "ja-JP": "チャレンジのシステムを習います",
-      "zh-CN": "了解如何使用挑战系统"
+      "zh-CN": "了解如何使用挑战系统",
+      "zh-TW": "學習如何使用挑戰系統"
     },
     "MatB": {
       "en-US": "MatB",
       "ja-JP": "マットB",
-      "zh-CN": "MatB"
+      "zh-CN": "MatB",
+      "zh-TW": "墊B"
     },
     "MatA": {
       "en-US": "MatA",
       "ja-JP": "マットA",
-      "zh-CN": "MatA"
+      "zh-CN": "MatA",
+      "zh-TW": "墊A"
     },
     "Communication Tower": {
       "en-US": "Communication Tower",
       "ja-JP": "コミュニケーション・タワー",
-      "zh-CN": "通讯塔"
+      "zh-CN": "通讯塔",
+      "zh-TW": "通訊塔"
     },
     "Hab": {
       "en-US": "Hab",
       "ja-JP": "家",
-      "zh-CN": "舱"
+      "zh-CN": "舱",
+      "zh-TW": "實驗室"
     },
     "Radiation Science Pack": {
       "en-US": "Radiation Science Pack",
       "ja-JP": "放射一式",
-      "zh-CN": "辐射科学包"
+      "zh-CN": "辐射科学包",
+      "zh-TW": "輻射科學套件"
     },
     "Communication Tower 2": {
       "en-US": "Communication Tower 2",
       "ja-JP": "コミュニケーション・タワー２",
-      "zh-CN": "通讯塔 2"
+      "zh-CN": "通讯塔 2",
+      "zh-TW": "通訊塔 2"
     },
     "Hab 2": {
       "en-US": "Hab 2",
       "ja-JP": "家２",
-      "zh-CN": "太空舱 2"
+      "zh-CN": "太空舱 2",
+      "zh-TW": "實驗室 2"
     },
     "BotGuy Astronaut": {
       "en-US": "BotGuy Astronaut",
       "ja-JP": "Botguy宇宙飛行士",
-      "zh-CN": "机器人宇航员"
+      "zh-CN": "机器人宇航员",
+      "zh-TW": "太空人"
     },
     "2025 Botball Game Table": {
       "en-US": "2025 Botball Game Table",
       "ja-JP": "2025 Botball ゲームテーブル",
-      "zh-CN": "2025 机器人球游戏桌"
+      "zh-CN": "2025 机器人球游戏桌",
+      "zh-TW": "2025 Botball 遊戲桌"
     },
     "Blue Drink": {
       "en-US": "Blue Drink",
       "ja-JP": "青飲み物",
-      "zh-CN": "蓝色饮料"
+      "zh-CN": "蓝色饮料",
+      "zh-TW": "藍色飲料"
     },
     "Green Drink": {
       "en-US": "Green Drink",
       "ja-JP": "緑飲み物",
-      "zh-CN": "绿色饮料"
+      "zh-CN": "绿色饮料",
+      "zh-TW": "綠色飲料"
     },
     "Pink Drink": {
       "en-US": "Pink Drink",
       "ja-JP": "ピンク飲み物",
-      "zh-CN": "粉色饮料"
+      "zh-CN": "粉色饮料",
+      "zh-TW": "粉紅色飲料"
     },
     "Blue Pom (Ice Cube)": {
       "en-US": "Blue Pom (Ice Cube)",
       "ja-JP": "青ポン（角氷）",
-      "zh-CN": "蓝色 Pom（冰块）"
+      "zh-CN": "蓝色 Pom（冰块）",
+      "zh-TW": "藍色龐姆（冰塊）"
     },
     "Orange Pom (Hot Sauce)": {
       "en-US": "Orange Pom (Hot Sauce)",
       "ja-JP": "オレンジポン（チリソース）",
-      "zh-CN": "橙色绒球（辣酱）"
+      "zh-CN": "橙色绒球（辣酱）",
+      "zh-TW": "橙色龐姆（辣醬）"
     },
     "Red Pom (Ketchup)": {
       "en-US": "Red Pom (Ketchup)",
       "ja-JP": "赤ポン（ケチャップ）",
-      "zh-CN": "红番茄酱"
+      "zh-CN": "红番茄酱",
+      "zh-TW": "紅蕃茄醬"
     },
     "Yellow Pom (Mustard)": {
       "en-US": "Yellow Pom (Mustard)",
       "ja-JP": "黄ポン（マスタード）",
-      "zh-CN": "黄色丸子（芥末）"
+      "zh-CN": "黄色丸子（芥末）",
+      "zh-TW": "黃色龐姆（芥末）"
     },
     "French Fry": {
       "en-US": "French Fry",
       "ja-JP": "フライドポテト",
-      "zh-CN": "薯条"
+      "zh-CN": "薯条",
+      "zh-TW": "薯條"
     },
     "Bottle": {
       "en-US": "Bottle",
       "ja-JP": "ボトル",
-      "zh-CN": "瓶装"
+      "zh-CN": "瓶装",
+      "zh-TW": "瓶裝"
     },
     "Tray": {
       "en-US": "Tray",
       "ja-JP": "トレー",
-      "zh-CN": "托盘"
+      "zh-CN": "托盘",
+      "zh-TW": "托盤"
     },
     "Living Habitat": {
       "en-US": "Living Habitat",
       "ja-JP": "人生施設",
-      "zh-CN": "生活栖息地"
+      "zh-CN": "生活栖息地",
+      "zh-TW": "生活棲息地"
     },
     "Research Habitat": {
       "en-US": "Research Habitat",
       "ja-JP": "研究施設",
-      "zh-CN": "研究栖息地"
+      "zh-CN": "研究栖息地",
+      "zh-TW": "研究棲息地"
     },
     "Controls Habitat": {
       "en-US": "Controls Habitat",
       "ja-JP": "コントロールズハビタット",
-      "zh-CN": "控制栖息地"
+      "zh-CN": "控制栖息地",
+      "zh-TW": "控制棲息地"
     },
     "Moon Rock Container": {
       "en-US": "Moon Rock Container",
       "ja-JP": "月の石の箱",
-      "zh-CN": "月岩容器"
+      "zh-CN": "月岩容器",
+      "zh-TW": "月岩容器"
     },
     "Radiation Science Pack - Low": {
       "en-US": "Radiation Science Pack - Low",
       "ja-JP": "放射一式",
-      "zh-CN": "低辐射科学包"
+      "zh-CN": "低辐射科学包",
+      "zh-TW": "輻射科學套件 - 低"
     },
     "Space Base": {
       "en-US": "Space Base",
       "ja-JP": "月面基地",
-      "zh-CN": "太空基地"
+      "zh-CN": "太空基地",
+      "zh-TW": "太空基地"
     },
     "Botball": {
       "en-US": "Botball",
       "ja-JP": "Botball",
-      "zh-CN": "机器人球"
+      "zh-CN": "机器人球",
+      "zh-TW": "機器人球"
     },
     "JBC Pieces": {
       "en-US": "JBC Pieces",
       "ja-JP": "JBC物",
-      "zh-CN": "JBC 零件"
+      "zh-CN": "JBC 零件",
+      "zh-TW": "JBC 零件"
     },
     "Moon Rock": {
       "en-US": "Moon Rock",
       "ja-JP": "月の石",
-      "zh-CN": "月岩"
+      "zh-CN": "月岩",
+      "zh-TW": "月球石"
     },
     "All": {
       "en-US": "All",
       "ja-JP": "全部",
-      "zh-CN": "全部内容"
+      "zh-CN": "全部内容",
+      "zh-TW": "全部"
     },
     "Basalt is an aphanitic (fine-grained) extrusive igneous rock formed from the rapid cooling of low-viscosity lava rich in magnesium and iron (mafic lava) exposed at or very near the surface of a rocky planet or moon.": {
       "en-US": "Basalt is an aphanitic (fine-grained) extrusive igneous rock formed from the rapid cooling of low-viscosity lava rich in magnesium and iron (mafic lava) exposed at or very near the surface of a rocky planet or moon.",
       "ja-JP": "玄武岩というのは目の細かい火成岩。惑星か衛星の表で早く冷たいになる鉄とマグネシウムが多い溶岩（マフィック溶岩）で作る物です。",
-      "zh-CN": "玄武岩是一种闪长岩（细粒），是富含镁和铁的低粘度熔岩（黑云母熔岩）在岩石行星或月球表面或非常接近岩石行星或月球表面的地方快速冷却后形成的外生火成岩。"
+      "zh-CN": "玄武岩是一种闪长岩（细粒），是富含镁和铁的低粘度熔岩（黑云母熔岩）在岩石行星或月球表面或非常接近岩石行星或月球表面的地方快速冷却后形成的外生火成岩。",
+      "zh-TW": "玄武岩（Basalt）是由富含鎂和鐵的低黏度熔岩（岩漿熔岩）在岩質行星或月球表面或非常接近表面的位置快速冷卻所形成的矽卡岩（細粒）外露火成岩。"
     },
     "Anorthosite is a phaneritic, intrusive igneous rock characterized by its composition: mostly plagioclase feldspar (90–100%), with a minimal mafic component (0–10%).": {
       "en-US": "Anorthosite is a phaneritic, intrusive igneous rock characterized by its composition: mostly plagioclase feldspar (90–100%), with a minimal mafic component (0–10%).",
       "ja-JP": "斜長岩というのはファネリティックと貫入と火成石です。90〜100％斜長石と０〜10％マフィック溶岩で作る物です。",
-      "zh-CN": "正长岩是一种辉长岩，侵入性火成岩，其成分特点是：大部分为斜长石（90-100%），只有极少的黑云母成分（0-10%）。"
+      "zh-CN": "正长岩是一种辉长岩，侵入性火成岩，其成分特点是：大部分为斜长石（90-100%），只有极少的黑云母成分（0-10%）。",
+      "zh-TW": "閃長岩 (Anorthosite) 是一種閃長岩、侵入性火成岩，其特徵在於其成分：大部分為斜長石 (90-100%)，含極少的鐵鎂質成分 (0-10%)。"
     },
     "Breccia is a rock composed of large angular broken fragments of minerals or rocks cemented together by a fine-grained matrix.": {
       "en-US": "Breccia is a rock composed of large angular broken fragments of minerals or rocks cemented together by a fine-grained matrix.",
       "ja-JP": "角礫岩というのは鉱物の角破片が細かい粒状の母岩によって固められた岩石で作る岩石です。",
-      "zh-CN": "碎屑岩是由矿物或岩石的大块角状碎屑组成的岩石，由细粒基质胶结在一起。"
+      "zh-CN": "碎屑岩是由矿物或岩石的大块角状碎屑组成的岩石，由细粒基质胶结在一起。",
+      "zh-TW": "碎屑岩（Breccia）是由礦物或岩石的大角狀碎塊組成的岩石，並由細粒基質黏結在一起。"
     },
     "Meteorite is a solid piece of debris from an object, such as a comet, asteroid, or meteoroid, that originates in outer space and survives its passage through the atmosphere to reach the surface of a planet or moon.": {
       "en-US": "Meteorite is a solid piece of debris from an object, such as a comet, asteroid, or meteoroid, that originates in outer space and survives its passage through the atmosphere to reach the surface of a planet or moon.",
       "ja-JP": "隕石というのは宇宙空間彗星か小惑星か流星物質から来て、大気で惑星か衛星に固体の瓦礫作る物です。",
-      "zh-CN": "陨石是来自天体（如彗星、小行星或流星体）的固体碎片，它源自外太空，穿过大气层后到达行星或月球表面。"
+      "zh-CN": "陨石是来自天体（如彗星、小行星或流星体）的固体碎片，它源自外太空，穿过大气层后到达行星或月球表面。",
+      "zh-TW": "隕石是天體（如彗星、小行星或隕石）的固體碎片，源自於外太空，並在穿越大氣層後存活下來，最後抵達行星或月球表面。"
     },
     "Description of the object": {
       "en-US": "Description of the object",
       "ja-JP": "オブジェクトの説明",
-      "zh-CN": "天体描述"
+      "zh-CN": "天体描述",
+      "zh-TW": "天體描述"
     },
     "Surface Text": {
       "en-US": "Surface Text",
       "ja-JP": "表面テキスト",
-      "zh-CN": "表面文字"
+      "zh-CN": "表面文字",
+      "zh-TW": "表面文字"
     },
     "The current scene does not have a challenge available": {
       "en-US": "The current scene does not have a challenge available",
       "ja-JP": "このシーンはチャレンジがありません",
-      "zh-CN": "当前场景没有可用的挑战"
+      "zh-CN": "当前场景没有可用的挑战",
+      "zh-TW": "目前場景沒有可用的挑戰"
     },
     "Start Challenge": {
       "en-US": "Start Challenge",
       "ja-JP": "チャレンジを始める",
-      "zh-CN": "开始挑战"
+      "zh-CN": "开始挑战",
+      "zh-TW": "開始挑戰"
     },
     "your current work": {
       "en-US": "your current work",
       "ja-JP": "現行の作業",
-      "zh-CN": "您当前的工作"
+      "zh-CN": "您当前的工作",
+      "zh-TW": "您目前的工作"
     },
     "Failed to load challenge": {
       "en-US": "Failed to load challenge",
       "ja-JP": "チャレンジをロードに失敗",
-      "zh-CN": "加载挑战失败"
+      "zh-CN": "加载挑战失败",
+      "zh-TW": "載入挑戰失敗"
     },
     "Search": {
       "en-US": "Search",
       "ja-JP": "探索",
-      "zh-CN": "搜索"
+      "zh-CN": "搜索",
+      "zh-TW": "搜尋"
     },
     "Search Filters": {
       "en-US": "Search Filters",
       "ja-JP": "探索フィルター",
-      "zh-CN": "搜索过滤器"
+      "zh-CN": "搜索过滤器",
+      "zh-TW": "搜尋篩選"
     },
     "Is standards aligned": {
       "en-US": "Is standards aligned",
       "ja-JP": "教育の標準規格に準拠しています",
-      "zh-CN": "是否符合标准"
+      "zh-CN": "是否符合标准",
+      "zh-TW": "是否與標準一致"
     },
     "Standards": {
       "en-US": "Standards",
       "ja-JP": "標準規格",
-      "zh-CN": "标准"
+      "zh-CN": "标准",
+      "zh-TW": "標準"
     },
     "Subject": {
       "en-US": "Subject",
       "ja-JP": "科目",
-      "zh-CN": "科目"
+      "zh-CN": "科目",
+      "zh-TW": "科目"
     },
     "Grade Level": {
       "en-US": "Grade Level",
       "ja-JP": "年生",
-      "zh-CN": "年级"
+      "zh-CN": "年级",
+      "zh-TW": "年級"
     },
     "Grade Levels: %s": {
       "en-US": "Grade Levels: %s",
       "ja-JP": "%s 年生",
-      "zh-CN": "年级：%s"
+      "zh-CN": "年级：%s",
+      "zh-TW": "年級: %s"
     },
     "Standard: %s": {
       "en-US": "Standard: %s",
       "ja-JP": "標準規格：%s",
-      "zh-CN": "标准： %s"
+      "zh-CN": "标准： %s",
+      "zh-TW": "標準：%s"
     },
     "Subject: %s": {
       "en-US": "Subject: %s",
       "ja-JP": "科目：%s",
-      "zh-CN": "科目：%s"
+      "zh-CN": "科目：%s",
+      "zh-TW": "科目：%s"
     },
     "U.S. Std.": {
       "en-US": "U.S. Std.",
       "ja-JP": "アメリカの標準規格",
-      "zh-CN": "美国标准"
+      "zh-CN": "美国标准",
+      "zh-TW": "美國標準"
     },
     "Curriculum": {
       "en-US": "Curriculum",
       "ja-JP": "課程",
-      "zh-CN": "课程"
+      "zh-CN": "课程",
+      "zh-TW": "課程"
     },
     "My Assignments": {
       "en-US": "My Assignments",
       "ja-JP": "私の宿題",
-      "zh-CN": "我的作业"
+      "zh-CN": "我的作业",
+      "zh-TW": "我的作業"
     },
     "Scratch Variables": {
       "en-US": "Scratch Variables",
       "ja-JP": "Scratchの変数",
-      "zh-CN": "划痕变量"
+      "zh-CN": "划痕变量",
+      "zh-TW": "Scratch 變數"
     },
     "A hamburger": {
       "en-US": "A hamburger",
       "ja-JP": "ハンバーガー",
-      "zh-CN": "汉堡包"
+      "zh-CN": "汉堡包",
+      "zh-TW": "漢堡包"
     },
     "Blue pom front #$(s)": {
       "en-US": "Blue pom front #$(s)",
-      "zh-CN": "蓝色绒球 #$(s)"
+      "zh-CN": "蓝色绒球 #$(s)",
+      "zh-TW": "藍色絨球 #$(s)"
     },
     "Blue pom front #$d": {
       "en-US": "Blue pom front #$d",
-      "zh-CN": "蓝色绒球 #$d"
+      "zh-CN": "蓝色绒球 #$d",
+      "zh-TW": "藍色絨球 #$d"
     },
     "Blue pom front #%d": {
       "en-US": "Blue pom front #%d",
       "ja-JP": "前の青ポン #%d",
-      "zh-CN": "蓝色绒球前 #%d"
+      "zh-CN": "蓝色绒球前 #%d",
+      "zh-TW": "藍色絨球前 #%d"
     },
     "Blue pom back #%d": {
       "en-US": "Blue pom back #%d",
       "ja-JP": "後ろの青ポン #%d",
-      "zh-CN": "蓝色绒球背面 #%d"
+      "zh-CN": "蓝色绒球背面 #%d",
+      "zh-TW": "藍色絨球背面 #%d"
     },
     "Bottle #%d": {
       "en-US": "Bottle #%d",
       "ja-JP": "ボトル #%d",
-      "zh-CN": "瓶子 #%d"
+      "zh-CN": "瓶子 #%d",
+      "zh-TW": "瓶子 #%d"
     },
     "Orange pom #%d": {
       "en-US": "Orange pom #%d",
       "ja-JP": "オレンジの青ポン #%d",
-      "zh-CN": "橙色绒球 #%d"
+      "zh-CN": "橙色绒球 #%d",
+      "zh-TW": "橙色絨球 #%d"
     },
     "Red pom #%d": {
       "en-US": "Red pom #%d",
       "ja-JP": "赤の青ポン #%d",
-      "zh-CN": "红色绒球 #%d"
+      "zh-CN": "红色绒球 #%d",
+      "zh-TW": "紅色絨球 #%d"
     },
     "Yellow pom #%d": {
       "en-US": "Yellow pom #%d",
       "ja-JP": "黄の青ポン #%d",
-      "zh-CN": "黄色绒球 #%d"
+      "zh-CN": "黄色绒球 #%d",
+      "zh-TW": "黃色絨球 #%d"
     },
     "Random pom #%d": {
       "en-US": "Random pom #%d",
       "ja-JP": "出鱈目の青ポン #%d",
-      "zh-CN": "随机绒球 #%d"
+      "zh-CN": "随机绒球 #%d",
+      "zh-TW": "隨機絨球 #%d"
     },
     "Tray #%d": {
       "en-US": "Tray #%d",
       "ja-JP": "トレー #%d",
-      "zh-CN": "托盘 #%d"
+      "zh-CN": "托盘 #%d",
+      "zh-TW": "托盤 #%d"
     },
     "Blue drink #%d": {
       "en-US": "Blue drink #%d",
       "ja-JP": "青の飲み物 #%d",
-      "zh-CN": "蓝色饮料 #%d"
+      "zh-CN": "蓝色饮料 #%d",
+      "zh-TW": "藍色飲料 #%d"
     },
     "Green drink #%d": {
       "en-US": "Green drink #%d",
       "ja-JP": "緑の飲み物 #%d",
-      "zh-CN": "绿色饮料 #%d"
+      "zh-CN": "绿色饮料 #%d",
+      "zh-TW": "綠色飲料 #%d"
     },
     "Pink drink #%d": {
       "en-US": "Pink drink #%d",
       "ja-JP": "ピンクの飲み物 #%d",
-      "zh-CN": "粉色饮料 #%d"
+      "zh-CN": "粉色饮料 #%d",
+      "zh-TW": "粉紅色飲料 #%d"
     },
     "Fry #%d": {
       "en-US": "Fry #%d",
       "ja-JP": "フライドポテト #%d",
-      "zh-CN": "油炸 #%d"
+      "zh-CN": "油炸 #%d",
+      "zh-TW": "油炸 #%d"
     },
     "GCER 2025: Find the Black Line": {
       "en-US": "GCER 2025: Find the Black Line",
       "ja-JP": "GCER 2025: 黒一線を探す",
-      "zh-CN": "GCER 2025：寻找黑线"
+      "zh-CN": "GCER 2025：寻找黑线",
+      "zh-TW": "GCER 2025：尋找黑線"
     },
     "GCER 2025 special event. Your robot is randomly placed on one of the red circles. Find the black starting line and stop. Bonus points for returning to the original starting circle.": {
       "en-US": "GCER 2025 special event. Your robot is randomly placed on one of the red circles. Find the black starting line and stop. Bonus points for returning to the original starting circle.",
       "ja-JP": "GCER 2025のことだ！赤い丸にあるロボットで黒い一線を探して、やめる。",
-      "zh-CN": "GCER 2025 特别活动。您的机器人被随机放置在其中一个红圈上。找到黑色起点线并停止。返回原起始圆圈可获得奖励积分。"
+      "zh-CN": "GCER 2025 特别活动。您的机器人被随机放置在其中一个红圈上。找到黑色起点线并停止。返回原起始圆圈可获得奖励积分。",
+      "zh-TW": "GCER 2025 特別活動。您的機器人被隨機放置在其中一個紅色圓圈上。找到黑色起始線並停止。回到原來的起始圓圈可獲得獎分。"
     },
     "GCER 2025: Sense the Can": {
       "en-US": "GCER 2025: Sense the Can",
       "ja-JP": "GCER 2025：缶を見る",
-      "zh-CN": "GCER 2025：感知罐子"
+      "zh-CN": "GCER 2025：感知罐子",
+      "zh-TW": "GCER 2025：感知罐子"
     },
     "GCER 2025 special event. A can is placed randomly in circle 2, 4, 6, 9 or 11. Find it and bring it back to the start box!": {
       "en-US": "GCER 2025 special event. A can is placed randomly in circle 2, 4, 6, 9 or 11. Find it and bring it back to the start box!",
       "ja-JP": "GCER 2025のことだ！丸２か４か６か９か１１にある缶をスタートボックスに持って来てくれ。",
-      "zh-CN": "GCER 2025 特别活动。在 2、4、6、9 或 11 号圈中随机放置一个易拉罐。找到它并将其带回起始箱！"
+      "zh-CN": "GCER 2025 特别活动。在 2、4、6、9 或 11 号圈中随机放置一个易拉罐。找到它并将其带回起始箱！",
+      "zh-TW": "GCER 2025 特別活動。罐子會隨機放置在 2、4、6、9 或 11 圈中。找到它並將它帶回起始方塊！"
     },
     "Blue pom #%d": {
       "en-US": "Blue pom #%d",
       "ja-JP": "青ポン #%d",
-      "zh-CN": "蓝色绒球 #%d"
+      "zh-CN": "蓝色绒球 #%d",
+      "zh-TW": "藍色絨球 #%d"
     },
     "GCER 2025: Ice Ice Botguy": {
       "en-US": "GCER 2025: Ice Ice Botguy",
       "ja-JP": "GCER 2025：ナイスアイス",
-      "zh-CN": "GCER 2025：冰冰机器人"
+      "zh-CN": "GCER 2025：冰冰机器人",
+      "zh-TW": "GCER 2025：冰冰寶寶"
     },
     "GCER 2025 special event. Botguy is overheating! Collect the ice and dump it on Botguy to cool him off!": {
       "en-US": "GCER 2025 special event. Botguy is overheating! Collect the ice and dump it on Botguy to cool him off!",
       "ja-JP": "GCER 2025のことだ！ボットガイドが暑すぎちゃった！アイスを持って来て、ボットガイドに置きてくれ。",
-      "zh-CN": "GCER 2025 特别活动。机器人正在过热！收集冰块并倒在机器人身上，为他降温！"
+      "zh-CN": "GCER 2025 特别活动。机器人正在过热！收集冰块并倒在机器人身上，为他降温！",
+      "zh-TW": "GCER 2025 特別活動。Botguy 過熱了！收集冰塊並倒在 Botguy 上，為他降溫！"
     },
     "Cup #%d": {
       "en-US": "Cup #%d",
       "ja-JP": "カップ#%d",
-      "zh-CN": "杯 #%d"
+      "zh-CN": "杯 #%d",
+      "zh-TW": "杯 #%d"
     },
     "GCER 2025: Thirst Quencher": {
       "en-US": "GCER 2025: Thirst Quencher",
       "ja-JP": "GCER 2025：ナイス飲み物",
-      "zh-CN": "GCER 2025：解渴杯"
+      "zh-CN": "GCER 2025：解渴杯",
+      "zh-TW": "GCER 2025：解渴杯"
     },
     "GCER 2025 special event. Don't let the summer heat get you down. Bring the cups back to the start box!": {
       "en-US": "GCER 2025 special event. Don't let the summer heat get you down. Bring the cups back to the start box!",
       "ja-JP": "GCER 2025のことだ！夏の暑さをかちなさい！スタートボックスにカップを持って来てくれ。",
-      "zh-CN": "GCER 2025 特别活动。别让炎炎夏日把你击倒。把杯子带回起点箱！"
+      "zh-CN": "GCER 2025 特别活动。别让炎炎夏日把你击倒。把杯子带回起点箱！",
+      "zh-TW": "GCER 2025 特別活動。別讓炎炎夏日打倒你。將杯子帶回起始箱！"
     },
     "GCER 2025: Entree Express": {
       "en-US": "GCER 2025: Entree Express",
       "ja-JP": "GCER 2025：ナイス飲み物",
-      "zh-CN": "GCER 2025：快餐"
+      "zh-CN": "GCER 2025：快餐",
+      "zh-TW": "GCER 2025：主菜速遞"
     },
     "GCER 2025 special event. Order up! Move the entrees to the trays.": {
       "en-US": "GCER 2025 special event. Order up! Move the entrees to the trays.",
       "ja-JP": "GCER 2025のことだ！注文どうぞ！ トレー に食べ物を持って来てくれ。",
-      "zh-CN": "GCER 2025 特别活动。点菜！将主菜移到托盘上。"
+      "zh-CN": "GCER 2025 特别活动。点菜！将主菜移到托盘上。",
+      "zh-TW": "GCER 2025 特別活動。點餐！將主菜移到托盤上。"
     },
     "Warming station": {
       "en-US": "Warming station",
       "ja-JP": "温かいところ",
-      "zh-CN": "保温站"
+      "zh-CN": "保温站",
+      "zh-TW": "保溫站"
     },
     "Pom #%d": {
       "en-US": "Pom #%d",
       "ja-JP": "ポン #%d",
-      "zh-CN": "Pom #%d"
+      "zh-CN": "Pom #%d",
+      "zh-TW": "龐 #%d"
     },
     "GCER 2025: Special Sauce": {
       "en-US": "GCER 2025: Special Sauce",
       "ja-JP": "GCER 2025：Show you 醤油",
-      "zh-CN": "GCER 2025特制酱汁"
+      "zh-CN": "GCER 2025特制酱汁",
+      "zh-TW": "GCER 2025特別醬料"
     },
     "GCER 2025 special event. Mix the ketchup (red), mustard (yellow), and hot sauce (orange) in the garages to create your own special blend!": {
       "en-US": "GCER 2025 special event. Mix the ketchup (red), mustard (yellow), and hot sauce (orange) in the garages to create your own special blend!",
       "ja-JP": "GCER 2025のことだ！ケチャップとマスタードと醤油を混ぜれ。",
-      "zh-CN": "GCER 2025 特别活动。在车库中混合番茄酱（红色）、芥末酱（黄色）和辣酱（橙色），调制出属于自己的特制酱料！"
+      "zh-CN": "GCER 2025 特别活动。在车库中混合番茄酱（红色）、芥末酱（黄色）和辣酱（橙色），调制出属于自己的特制酱料！",
+      "zh-TW": "GCER 2025 特別活動。在車庫中混合蕃茄醬（紅色）、芥末醬（黃色）和辣醬（橙色），創造出屬於您的特殊混合醬料！"
     },
     "Orange Garage": {
       "en-US": "Orange Garage",
       "ja-JP": "オレンジの車庫",
-      "zh-CN": "橙色车库"
+      "zh-CN": "橙色车库",
+      "zh-TW": "橙色車庫"
     },
     "GCER 2025: Cover Your Bases": {
       "en-US": "GCER 2025: Cover Your Bases",
       "ja-JP": "GCER 2025：ベースを網羅する",
-      "zh-CN": "GCER 2025：掩护你的基地"
+      "zh-CN": "GCER 2025：掩护你的基地",
+      "zh-TW": "GCER 2025：覆蓋你的基地"
     },
     "GCER 2025 special edition. All circles are now open for business!": {
       "en-US": "GCER 2025 special edition. All circles are now open for business!",
       "ja-JP": "GCER 2025のことだ！丸が全部を楽しみにしてください。",
-      "zh-CN": "GCER 2025 特别版。所有圈子现在都已开始营业！"
+      "zh-CN": "GCER 2025 特别版。所有圈子现在都已开始营业！",
+      "zh-TW": "GCER 2025 特別版。所有圓圈現在都已經開放營業！"
     },
     "GCER 2025: Odd Numbers": {
       "en-US": "GCER 2025: Odd Numbers",
       "ja-JP": "GCER 2025：奇数",
-      "zh-CN": "GCER 2025：奇数"
+      "zh-CN": "GCER 2025：奇数",
+      "zh-TW": "GCER 2025：奇數"
     },
     "GCER 2025 special event. Drive over the odd numbered circles in order, but make sure to avoid the evens!": {
       "en-US": "GCER 2025 special event. Drive over the odd numbered circles in order, but make sure to avoid the evens!",
       "ja-JP": "GCER 2025のことだ！奇数の丸運転して、偶数の丸に気をつけてくれ。",
-      "zh-CN": "GCER 2025 特别活动。按顺序驶过奇数圈，但一定要避开偶数圈！"
+      "zh-CN": "GCER 2025 特别活动。按顺序驶过奇数圈，但一定要避开偶数圈！",
+      "zh-TW": "GCER 2025 特別活動。依序駛過奇數圓環，但務必避開偶數圓環！"
     },
     "GCER 2025: Bulldozer Mania": {
       "en-US": "GCER 2025: Bulldozer Mania",
       "ja-JP": "GCER 2025：ブルドーザー・マニア",
-      "zh-CN": "GCER 2025：推土机狂热"
+      "zh-CN": "GCER 2025：推土机狂热",
+      "zh-TW": "GCER 2025：推土機狂熱"
     },
     "GCER 2025 special event. Bring as many cans behind the starting line as you can. Make sure they stay upright!": {
       "en-US": "GCER 2025 special event. Bring as many cans behind the starting line as you can. Make sure they stay upright!",
       "ja-JP": "GCER 2025のことだ！スタートボックスに缶を持ってくれ！",
-      "zh-CN": "GCER 2025 特别活动。将尽可能多的易拉罐带到起点线后。确保它们保持直立！"
+      "zh-CN": "GCER 2025 特别活动。将尽可能多的易拉罐带到起点线后。确保它们保持直立！",
+      "zh-TW": "GCER 2025 特別活動。將盡可能多的罐子帶到起跑線後方。確保它們保持直立！"
     },
     "GCER 2025: Mountain Rescue": {
       "en-US": "GCER 2025: Mountain Rescue",
       "ja-JP": "GCER 2025：山岳救助",
-      "zh-CN": "GCER 2025：山地救援"
+      "zh-CN": "GCER 2025：山地救援",
+      "zh-TW": "GCER 2025：山地救援"
     },
     "GCER 2025 special event. Now with three more cans to rescue!": {
       "en-US": "GCER 2025 special event. Now with three more cans to rescue!",
       "ja-JP": "GCER 2025のことだ！缶は5本がある！",
-      "zh-CN": "GCER 2025 特别活动。现在还有三个易拉罐需要救援！"
+      "zh-CN": "GCER 2025 特别活动。现在还有三个易拉罐需要救援！",
+      "zh-TW": "GCER 2025 特別活動。現在又多了三個罐子需要救援！"
     },
     "Robot Stops at Black Line": {
       "en-US": "Robot Stops at Black Line",
       "ja-JP": "ロボットが黒い一線でやめる。",
-      "zh-CN": "机器人停在黑线上"
+      "zh-CN": "机器人停在黑线上",
+      "zh-TW": "機器人停在黑線"
     },
     "Robot stops at black line": {
       "en-US": "Robot stops at black line",
       "ja-JP": "ロボットが黒い一線でやめる。",
-      "zh-CN": "机器人停在黑线上"
+      "zh-CN": "机器人停在黑线上",
+      "zh-TW": "機器人停在黑線上"
     },
     "Robot Over Circle": {
       "en-US": "Robot Over Circle",
       "ja-JP": "丸にあるロボット",
-      "zh-CN": "机器人越过圆圈"
+      "zh-CN": "机器人越过圆圈",
+      "zh-TW": "機器人越過圓圈"
     },
     "Robot over selected circle": {
       "en-US": "Robot over selected circle",
       "ja-JP": "選んだ丸にあるロボット",
-      "zh-CN": "机器人越过选定的圆圈"
+      "zh-CN": "机器人越过选定的圆圈",
+      "zh-TW": "機器人超過選定圓圈"
     },
     "Robot not in Start Box": {
       "en-US": "Robot not in Start Box",
       "ja-JP": "ロボットは",
-      "zh-CN": "机器人不在起始框内"
+      "zh-CN": "机器人不在起始框内",
+      "zh-TW": "機器人不在起始框內"
     },
     "Robot not in start box": {
       "en-US": "Robot not in start box",
       "ja-JP": "ロボットはスタートボックスにない",
-      "zh-CN": "机器人不在起始框内"
+      "zh-CN": "机器人不在起始框内",
+      "zh-TW": "機器人不在起始框中"
     },
     "Can in Start Box": {
       "en-US": "Can in Start Box",
       "ja-JP": "缶はスタートボックスにある",
-      "zh-CN": "罐在起始框内"
+      "zh-CN": "罐在起始框内",
+      "zh-TW": "罐子在起始方塊中"
     },
     "Can in start box": {
       "en-US": "Can in start box",
       "ja-JP": "缶はスタートボックスにある",
-      "zh-CN": "罐在起始框内"
+      "zh-CN": "罐在起始框内",
+      "zh-TW": "罐子在起始方塊中"
     },
     "Can Random Upright": {
       "en-US": "Can Random Upright",
       "ja-JP": "缶は立て",
-      "zh-CN": "罐体随机直立"
+      "zh-CN": "罐体随机直立",
+      "zh-TW": "Can 隨機直立"
     },
     "Can Random upright": {
       "en-US": "Can Random upright",
       "ja-JP": "缶は立て",
-      "zh-CN": "罐头随机直立"
+      "zh-CN": "罐头随机直立",
+      "zh-TW": "罐頭隨機直立"
     },
     "Hamburger placed": {
       "en-US": "Hamburger placed",
       "ja-JP": "ハンバーガーを置きた",
-      "zh-CN": "汉堡已放置"
+      "zh-CN": "汉堡已放置",
+      "zh-TW": "漢堡已放置"
     },
     "Hamburger placed in tray": {
       "en-US": "Hamburger placed in tray",
       "ja-JP": "ハンバーガーがトレーを置きた",
-      "zh-CN": "汉堡放入托盘"
+      "zh-CN": "汉堡放入托盘",
+      "zh-TW": "漢堡放置在托盤中"
     },
     "Hotdog placed": {
       "en-US": "Hotdog placed",
       "ja-JP": "ホットドッグを置きた",
-      "zh-CN": "放置热狗"
+      "zh-CN": "放置热狗",
+      "zh-TW": "放置熱狗"
     },
     "Hotdog placed in tray": {
       "en-US": "Hotdog placed in tray",
       "ja-JP": "ホットドッグがトレーを置きた",
-      "zh-CN": "热狗放入托盘"
+      "zh-CN": "热狗放入托盘",
+      "zh-TW": "熱狗放入托盤"
     },
     "Taco placed": {
       "en-US": "Taco placed",
       "ja-JP": "タコを置きた",
-      "zh-CN": "玉米卷"
+      "zh-CN": "玉米卷",
+      "zh-TW": "捲餅放置"
     },
     "Taco placed in tray": {
       "en-US": "Taco placed in tray",
       "ja-JP": "タコがトレーを置きた",
-      "zh-CN": "玉米卷放入托盘"
+      "zh-CN": "玉米卷放入托盘",
+      "zh-TW": "玉米捲放入托盤"
     },
     "Can A upright in a circle": {
       "en-US": "Can A upright in a circle",
       "ja-JP": "丸の中でA缶は立て",
-      "zh-CN": "A 罐直立成圆形"
+      "zh-CN": "A 罐直立成圆形",
+      "zh-TW": "圓罐 A 直立放置"
     },
     "Can B upright in a circle": {
       "en-US": "Can B upright in a circle",
       "ja-JP": "丸の中でB缶は立て",
-      "zh-CN": "B 罐直立成圆形"
+      "zh-CN": "B 罐直立成圆形",
+      "zh-TW": "罐頭 B 直立成圓形"
     },
     "Can C upright in a circle": {
       "en-US": "Can C upright in a circle",
       "ja-JP": "丸の中でC缶は立て",
-      "zh-CN": "C 罐直立成圆形"
+      "zh-CN": "C 罐直立成圆形",
+      "zh-TW": "罐頭 C 直立成圓形"
     },
     "Can D Upright": {
       "en-US": "Can D Upright",
       "ja-JP": "D缶は立て",
-      "zh-CN": "罐头 D 直立"
+      "zh-CN": "罐头 D 直立",
+      "zh-TW": "罐頭 D 直立"
     },
     "Can D upright in a circle": {
       "en-US": "Can D upright in a circle",
       "ja-JP": "丸の中でD缶は立て",
-      "zh-CN": "D 罐直立成圆形"
+      "zh-CN": "D 罐直立成圆形",
+      "zh-TW": "D 可以直立在圓圈中"
     },
     "Can E Upright": {
       "en-US": "Can E Upright",
       "ja-JP": "E缶は立て",
-      "zh-CN": "可以 E 直立"
+      "zh-CN": "可以 E 直立",
+      "zh-TW": "可以 E 直立"
     },
     "Can E upright in a circle": {
       "en-US": "Can E upright in a circle",
       "ja-JP": "丸の中でE缶は立て",
-      "zh-CN": "可以 E 直立画圆"
+      "zh-CN": "可以 E 直立画圆",
+      "zh-TW": "可以 E 直立在一個圓"
     },
     "Can F Upright": {
       "en-US": "Can F Upright",
       "ja-JP": "F缶は立て",
-      "zh-CN": "F 可以直立"
+      "zh-CN": "F 可以直立",
+      "zh-TW": "F 可以直立"
     },
     "Can F upright in a circle": {
       "en-US": "Can F upright in a circle",
       "ja-JP": "丸の中でF缶は立て",
-      "zh-CN": "可以 F 直立画圆"
+      "zh-CN": "可以 F 直立画圆",
+      "zh-TW": "F 可以直立成圓形"
     },
     "Can G Upright": {
       "en-US": "Can G Upright",
       "ja-JP": "G缶は立て",
-      "zh-CN": "可以 G 直立式"
+      "zh-CN": "可以 G 直立式",
+      "zh-TW": "可以 G 直立"
     },
     "Can G upright in a circle": {
       "en-US": "Can G upright in a circle",
       "ja-JP": "丸の中でG缶は立て",
-      "zh-CN": "G 罐直立成圆形"
+      "zh-CN": "G 罐直立成圆形",
+      "zh-TW": "罐 G 直立成圓形"
     },
     "Base A Covered": {
       "en-US": "Base A Covered",
       "ja-JP": "Aベースを網羅した",
-      "zh-CN": "底座 A 有盖"
+      "zh-CN": "底座 A 有盖",
+      "zh-TW": "底座 A 覆蓋"
     },
     "Base A covered by a can": {
       "en-US": "Base A covered by a can",
       "ja-JP": "缶でAベースを網羅した",
-      "zh-CN": "底座 A 被罐头盖住"
+      "zh-CN": "底座 A 被罐头盖住",
+      "zh-TW": "底座 A 被罐子覆蓋"
     },
     "Base B Covered": {
       "en-US": "Base B Covered",
       "ja-JP": "Bベースを網羅した",
-      "zh-CN": "底座 B 有盖"
+      "zh-CN": "底座 B 有盖",
+      "zh-TW": "底座 B 覆蓋"
     },
     "Base B covered by a can": {
       "en-US": "Base B covered by a can",
       "ja-JP": "缶でBベースを網羅した",
-      "zh-CN": "罐头盖住的底座 B"
+      "zh-CN": "罐头盖住的底座 B",
+      "zh-TW": "底座 B 被罐子覆蓋"
     },
     "Base C Covered": {
       "en-US": "Base C Covered",
       "ja-JP": "Cベースを網羅した",
-      "zh-CN": "底座 C 覆盖"
+      "zh-CN": "底座 C 覆盖",
+      "zh-TW": "底座 C 已覆蓋"
     },
     "Base C covered by a can": {
       "en-US": "Base C covered by a can",
       "ja-JP": "缶でCベースを網羅した",
-      "zh-CN": "基地 C 被罐子覆盖"
+      "zh-CN": "基地 C 被罐子覆盖",
+      "zh-TW": "基底 C 由罐子覆蓋"
     },
     "Base D Covered": {
       "en-US": "Base D Covered",
       "ja-JP": "Dベースを網羅した",
-      "zh-CN": "基地 D 已覆盖"
+      "zh-CN": "基地 D 已覆盖",
+      "zh-TW": "基底 D 已覆蓋"
     },
     "Base D covered by a can": {
       "en-US": "Base D covered by a can",
       "ja-JP": "缶でDベースを網羅した",
-      "zh-CN": "基地 D 被罐子覆盖"
+      "zh-CN": "基地 D 被罐子覆盖",
+      "zh-TW": "基底 D 由罐子覆蓋"
     },
     "Base E Covered": {
       "en-US": "Base E Covered",
       "ja-JP": "Eベースを網羅した",
-      "zh-CN": "基底 E 已覆盖"
+      "zh-CN": "基底 E 已覆盖",
+      "zh-TW": "基底 E 已覆蓋"
     },
     "Base E covered by a can": {
       "en-US": "Base E covered by a can",
       "ja-JP": "缶でEベースを網羅した",
-      "zh-CN": "基地 E 被罐子覆盖"
+      "zh-CN": "基地 E 被罐子覆盖",
+      "zh-TW": "基底 E 由罐子覆蓋"
     },
     "Base F Covered": {
       "en-US": "Base F Covered",
       "ja-JP": "Fベースを網羅した",
-      "zh-CN": "基底 F 已覆盖"
+      "zh-CN": "基底 F 已覆盖",
+      "zh-TW": "基底 F 已覆蓋"
     },
     "Base F covered by a can": {
       "en-US": "Base F covered by a can",
       "ja-JP": "缶でFベースを網羅した",
-      "zh-CN": "底层 F 由罐体覆盖"
+      "zh-CN": "底层 F 由罐体覆盖",
+      "zh-TW": "基底 F 被罐子覆蓋"
     },
     "Base G Covered": {
       "en-US": "Base G Covered",
       "ja-JP": "Gベースを網羅した",
-      "zh-CN": "基底 G 已覆盖"
+      "zh-CN": "基底 G 已覆盖",
+      "zh-TW": "基底 G 已覆蓋"
     },
     "Base G covered by a can": {
       "en-US": "Base G covered by a can",
       "ja-JP": "缶でGベースを網羅した",
-      "zh-CN": "底座 G 由罐体覆盖"
+      "zh-CN": "底座 G 由罐体覆盖",
+      "zh-TW": "底座 G 由罐子覆蓋"
     },
     "Can 1 Upright": {
       "en-US": "Can 1 Upright",
       "ja-JP": "1缶は立て",
-      "zh-CN": "罐 1 直立"
+      "zh-CN": "罐 1 直立",
+      "zh-TW": "罐 1 直立"
     },
     "Can 1 is upright": {
       "en-US": "Can 1 is upright",
       "ja-JP": "1缶は立て",
-      "zh-CN": "罐 1 直立"
+      "zh-CN": "罐 1 直立",
+      "zh-TW": "罐 1 直立"
     },
     "Can 2 Upright": {
       "en-US": "Can 2 Upright",
       "ja-JP": "2缶は立て",
-      "zh-CN": "罐 2 直立"
+      "zh-CN": "罐 2 直立",
+      "zh-TW": "罐 2 直立"
     },
     "Can 2 is upright": {
       "en-US": "Can 2 is upright",
       "ja-JP": "2缶は立て",
-      "zh-CN": "罐 2 直立"
+      "zh-CN": "罐 2 直立",
+      "zh-TW": "罐 2 直立"
     },
     "Can 3 Upright": {
       "en-US": "Can 3 Upright",
       "ja-JP": "3缶は立て",
-      "zh-CN": "罐 3 直立"
+      "zh-CN": "罐 3 直立",
+      "zh-TW": "罐 3 直立"
     },
     "Can 3 is upright": {
       "en-US": "Can 3 is upright",
       "ja-JP": "3缶は立て",
-      "zh-CN": "罐 3 直立"
+      "zh-CN": "罐 3 直立",
+      "zh-TW": "罐 3 直立"
     },
     "Can 4 Upright": {
       "en-US": "Can 4 Upright",
       "ja-JP": "4缶は立て",
-      "zh-CN": "罐体 4 直立型"
+      "zh-CN": "罐体 4 直立型",
+      "zh-TW": "罐 4 直立式"
     },
     "Can 4 is upright": {
       "en-US": "Can 4 is upright",
       "ja-JP": "4缶は立て",
-      "zh-CN": "4 号罐直立"
+      "zh-CN": "4 号罐直立",
+      "zh-TW": "罐 4 直立"
     },
     "Can 5 Upright": {
       "en-US": "Can 5 Upright",
       "ja-JP": "5缶は立て",
-      "zh-CN": "罐 5 直立型"
+      "zh-CN": "罐 5 直立型",
+      "zh-TW": "罐 5 直立式"
     },
     "Can 5 is upright": {
       "en-US": "Can 5 is upright",
       "ja-JP": "5缶は立て",
-      "zh-CN": "罐 5 直立"
+      "zh-CN": "罐 5 直立",
+      "zh-TW": "罐 5 直立"
     },
     "Can 1 Intersects": {
       "en-US": "Can 1 Intersects",
       "ja-JP": "缶１が交わる",
-      "zh-CN": "罐 1 相交"
+      "zh-CN": "罐 1 相交",
+      "zh-TW": "Can 1 相交"
     },
     "Can 1 rescued intersecting starting box": {
       "en-US": "Can 1 rescued intersecting starting box",
       "ja-JP": "スタートボックスに缶１が交わる",
-      "zh-CN": "1 号罐获救后与起始箱相交"
+      "zh-CN": "1 号罐获救后与起始箱相交",
+      "zh-TW": "Can 1 獲救與起始方塊相交"
     },
     "Can 2 Intersects": {
       "en-US": "Can 2 Intersects",
       "ja-JP": "缶２が交わる",
-      "zh-CN": "罐 2 相交"
+      "zh-CN": "罐 2 相交",
+      "zh-TW": "Can 2 相交"
     },
     "Can 2 rescued intersecting starting box": {
       "en-US": "Can 2 rescued intersecting starting box",
       "ja-JP": "スタートボックスに缶２が交わる",
-      "zh-CN": "第 2 个获救的罐子与起始箱相交"
+      "zh-CN": "第 2 个获救的罐子与起始箱相交",
+      "zh-TW": "Can 2 獲救後與起始方塊相交"
     },
     "Can 3 Intersects": {
       "en-US": "Can 3 Intersects",
       "ja-JP": "缶３が交わる",
-      "zh-CN": "罐 3 相交"
+      "zh-CN": "罐 3 相交",
+      "zh-TW": "Can 3 相交"
     },
     "Can 3 rescued intersecting starting box": {
       "en-US": "Can 3 rescued intersecting starting box",
       "ja-JP": "スタートボックスに缶３が交わる",
-      "zh-CN": "第 3 个获救的起始箱相交"
+      "zh-CN": "第 3 个获救的起始箱相交",
+      "zh-TW": "Can 3 獲救後與起始方塊相交"
     },
     "Can 4 Intersects": {
       "en-US": "Can 4 Intersects",
       "ja-JP": "缶４が交わる",
-      "zh-CN": "可以 4 个相交"
+      "zh-CN": "可以 4 个相交",
+      "zh-TW": "可以 4 相交"
     },
     "Can 4 rescued intersecting starting box": {
       "en-US": "Can 4 rescued intersecting starting box",
       "ja-JP": "スタートボックスに缶４が交わる",
-      "zh-CN": "可以 4 个获救的起始箱相交"
+      "zh-CN": "可以 4 个获救的起始箱相交",
+      "zh-TW": "可以 4 次救援與起始方塊相交"
     },
     "Can 5 Intersects": {
       "en-US": "Can 5 Intersects",
       "ja-JP": "缶５が交わる",
-      "zh-CN": "可以 5 个相交"
+      "zh-CN": "可以 5 个相交",
+      "zh-TW": "可以 5 相交"
     },
     "Can 5 rescued intersecting starting box": {
       "en-US": "Can 5 rescued intersecting starting box",
       "ja-JP": "スタートボックスに缶３が交わる",
-      "zh-CN": "第 5 个获救者与起点箱相交"
+      "zh-CN": "第 5 个获救者与起点箱相交",
+      "zh-TW": "可 5 次救援與起始箱相交"
     },
     "Warming Station": {
       "en-US": "Warming Station",
       "ja-JP": "食べ物温かくところ",
-      "zh-CN": "保温站"
+      "zh-CN": "保温站",
+      "zh-TW": "加熱站"
     },
     "Blue Cup JBC": {
       "en-US": "Blue Cup JBC",
       "ja-JP": "JBC青カップ",
-      "zh-CN": "蓝杯 JBC"
+      "zh-CN": "蓝杯 JBC",
+      "zh-TW": "藍杯 JBC"
     },
     "Green Cup JBC": {
       "en-US": "Green Cup JBC",
       "ja-JP": "緑カップ",
-      "zh-CN": "绿色杯 JBC"
+      "zh-CN": "绿色杯 JBC",
+      "zh-TW": "綠杯 JBC"
     },
     "Pink Cup JBC": {
       "en-US": "Pink Cup JBC",
       "ja-JP": "ピンクカップ",
-      "zh-CN": "粉红杯 JBC"
+      "zh-CN": "粉红杯 JBC",
+      "zh-TW": "粉紅杯 JBC"
     },
     "Ask Tutor": {
       "en-US": "Ask Tutor",
       "ja-JP": "助手に聞いて",
-      "zh-CN": "询问导师"
+      "zh-CN": "询问导师",
+      "zh-TW": "詢問導師"
     },
     "Arm": {
       "en-US": "Arm",
       "ja-JP": "腕",
-      "zh-CN": "手臂"
+      "zh-CN": "手臂",
+      "zh-TW": "手臂"
     },
     "Claw": {
       "en-US": "Claw",
       "ja-JP": "手",
-      "zh-CN": "爪子"
+      "zh-CN": "爪子",
+      "zh-TW": "爪子"
     },
     "Left wheel": {
       "en-US": "Left wheel",
       "ja-JP": "左の車輪",
-      "zh-CN": "左轮"
+      "zh-CN": "左轮",
+      "zh-TW": "左輪"
     },
     "Right wheel": {
       "en-US": "Right wheel",
       "ja-JP": "右の車輪",
-      "zh-CN": "右轮"
+      "zh-CN": "右轮",
+      "zh-TW": "右輪"
     },
     "Rangefinder": {
       "en-US": "Rangefinder",
       "ja-JP": "レンジファインダー",
-      "zh-CN": "测距仪"
+      "zh-CN": "测距仪",
+      "zh-TW": "測距儀"
     },
     "Reflectance": {
       "en-US": "Reflectance",
       "ja-JP": "反射率",
-      "zh-CN": "反射器"
+      "zh-CN": "反射器",
+      "zh-TW": "反光"
     },
     "Limit switch": {
       "en-US": "Limit switch",
       "ja-JP": "リミットスイッチ",
-      "zh-CN": "限位开关"
+      "zh-CN": "限位开关",
+      "zh-TW": "限位開關"
     },
     "Left touch": {
       "en-US": "Left touch",
       "ja-JP": "左のボタン",
-      "zh-CN": "左触摸"
+      "zh-CN": "左触摸",
+      "zh-TW": "左觸控"
     },
     "Right touch": {
       "en-US": "Right touch",
       "ja-JP": "右のボタン",
-      "zh-CN": "右触摸"
+      "zh-CN": "右触摸",
+      "zh-TW": "右觸控"
     },
     "Tutor": {
       "en-US": "Tutor",
       "ja-JP": "助手",
-      "zh-CN": "辅导员"
+      "zh-CN": "辅导员",
+      "zh-TW": "導師"
     },
     "Ask me questions about programming, get help with your code, or discuss robotics concepts.": {
       "en-US": "Ask me questions about programming, get help with your code, or discuss robotics concepts.",
       "ja-JP": "私にプログラミングについて質問して、コードを助け受けて、ロボット工学ことについて車べます。",
-      "zh-CN": "向我咨询有关编程的问题，获取代码帮助，或讨论机器人概念。"
+      "zh-CN": "向我咨询有关编程的问题，获取代码帮助，或讨论机器人概念。",
+      "zh-TW": "向我提問有關程式設計的問題、獲得程式碼方面的協助或討論機器人概念。"
     },
     "Ask tutor a question...": {
       "en-US": "Ask tutor a question...",
       "ja-JP": "助手に質問する",
-      "zh-CN": "向辅导员提问..."
+      "zh-CN": "向辅导员提问...",
+      "zh-TW": "向導師提問..."
     },
     "JBC Challenge 0": {
       "en-US": "JBC Challenge 0",
       "ja-JP": "JBCチャレンジ0",
-      "zh-CN": "JBC 挑战 0"
+      "zh-CN": "JBC 挑战 0",
+      "zh-TW": "JBC 挑戰 0"
     },
     "In Start Box": {
       "en-US": "In Start Box",
       "ja-JP": "スタートボックスにある",
-      "zh-CN": "在起始框内"
+      "zh-CN": "在起始框内",
+      "zh-TW": "在起始框中"
     },
     "Robot is in the start box": {
       "en-US": "Robot is in the start box",
       "ja-JP": "ロボットはスタートボックスにある",
-      "zh-CN": "机器人在起始框内"
+      "zh-CN": "机器人在起始框内",
+      "zh-TW": "機器人在起始框中"
     },
     "Not In Start Box": {
       "en-US": "Not In Start Box",
       "ja-JP": "スタートボックスにない",
-      "zh-CN": "不在起始框内"
+      "zh-CN": "不在起始框内",
+      "zh-TW": "不在起始框中"
     },
     "Robot is not in the start box": {
       "en-US": "Robot is not in the start box",
       "ja-JP": "ロボットはスタートボックスにない",
-      "zh-CN": "机器人不在起始框内"
+      "zh-CN": "机器人不在起始框内",
+      "zh-TW": "機器人不在起始框內"
     },
     "Robot Touching Line B": {
       "en-US": "Robot Touching Line B",
       "ja-JP": "ロボットはB一線にある",
-      "zh-CN": "机器人触及 B 线"
+      "zh-CN": "机器人触及 B 线",
+      "zh-TW": "機器人觸及 B 線"
     },
     "Robot is touching line B": {
       "en-US": "Robot is touching line B",
       "ja-JP": "ロボットはB一線にある",
-      "zh-CN": "机器人正在触碰 B 线"
+      "zh-CN": "机器人正在触碰 B 线",
+      "zh-TW": "機器人觸及 B 線"
     },
     "Robot Reached End": {
       "en-US": "Robot Reached End",
       "ja-JP": "ロボットが終点に達した",
-      "zh-CN": "机器人到达终点"
+      "zh-CN": "机器人到达终点",
+      "zh-TW": "機器人到達終點"
     },
     "Robot reached the end of the mat": {
       "en-US": "Robot reached the end of the mat",
       "ja-JP": "ロボットがマットの終点に達した",
-      "zh-CN": "机器人到达终点"
+      "zh-CN": "机器人到达终点",
+      "zh-TW": "機器人到達墊子盡頭"
     },
     "Robot Off Mat": {
       "en-US": "Robot Off Mat",
       "ja-JP": "ロボットがマットにない",
-      "zh-CN": "机器人离开垫子"
+      "zh-CN": "机器人离开垫子",
+      "zh-TW": "機器人離開墊子"
     },
     "Robot left the mat": {
       "en-US": "Robot left the mat",
       "ja-JP": "ロボットがマットに出ちゃった",
-      "zh-CN": "机器人离开垫子"
+      "zh-CN": "机器人离开垫子",
+      "zh-TW": "機器人離開墊子"
     },
     "Start in the Start Box": {
       "en-US": "Start in the Start Box",
       "ja-JP": "スタートボックスに始まる",
-      "zh-CN": "从起始框开始"
+      "zh-CN": "从起始框开始",
+      "zh-TW": "從起始方塊開始"
     },
     "Reach the end of the mat": {
       "en-US": "Reach the end of the mat",
       "ja-JP": "マットの終点に達する",
-      "zh-CN": "到达终点"
+      "zh-CN": "到达终点",
+      "zh-TW": "到達墊子盡頭"
     },
     "Wheels do not touch line B": {
       "en-US": "Wheels do not touch line B",
       "ja-JP": "車輪は線Bに触れていない",
-      "zh-CN": "车轮未触及 B 线"
+      "zh-CN": "车轮未触及 B 线",
+      "zh-TW": "車輪不碰觸 B 線"
     },
     "Do not drive off the mat": {
       "en-US": "Do not drive off the mat",
       "ja-JP": "マットから離れてはいけません",
-      "zh-CN": "不要驶离垫子"
+      "zh-CN": "不要驶离垫子",
+      "zh-TW": "不要駛離墊子"
     },
     "JBC Challenge 1": {
       "en-US": "JBC Challenge 1",
       "ja-JP": "JBCチャレンジ１",
-      "zh-CN": "JBC 挑战 1"
+      "zh-CN": "JBC 挑战 1",
+      "zh-TW": "JBC 挑戰 1"
     },
     "Can 9 Touched": {
       "en-US": "Can 9 Touched",
       "ja-JP": "缶９触れた",
-      "zh-CN": "Can 9 碰触"
+      "zh-CN": "Can 9 碰触",
+      "zh-TW": "Can 9 碰觸"
     },
     "Can A touched": {
       "en-US": "Can A touched",
       "ja-JP": "缶A触れた",
-      "zh-CN": "A 罐触及"
+      "zh-CN": "A 罐触及",
+      "zh-TW": "Can A 已碰觸"
     },
     "Can 9 Intersects": {
       "en-US": "Can 9 Intersects",
       "ja-JP": "缶９が交わる",
-      "zh-CN": "Can 9 相交"
+      "zh-CN": "Can 9 相交",
+      "zh-TW": "Can 9 相交"
     },
     "Can 9 intersects circle 9": {
       "en-US": "Can 9 intersects circle 9",
       "ja-JP": "丸９に缶９が交わる",
-      "zh-CN": "9号罐与9号圆相交"
+      "zh-CN": "9号罐与9号圆相交",
+      "zh-TW": "Can 9 與圓圈 9 相交"
     },
     "Can 9 Upright": {
       "en-US": "Can 9 Upright",
       "ja-JP": "缶９は立て",
-      "zh-CN": "Can 9 直立"
+      "zh-CN": "Can 9 直立",
+      "zh-TW": "Can 9 直立"
     },
     "Can 9 upright on circle 9": {
       "en-US": "Can 9 upright on circle 9",
       "ja-JP": "丸９で缶９は立て",
-      "zh-CN": "Can 9 直立在圆 9 上"
+      "zh-CN": "Can 9 直立在圆 9 上",
+      "zh-TW": "Can 9 直立在圓圈 9 上"
     },
     "Robot Rentered Start": {
       "en-US": "Robot Rentered Start",
       "ja-JP": "再びロボットはスタートボックスに入た",
-      "zh-CN": "机器人重回起点"
+      "zh-CN": "机器人重回起点",
+      "zh-TW": "機器人重新回到起點"
     },
     "Robot reentered starting box": {
       "en-US": "Robot reentered starting box",
       "ja-JP": "ロボットはスタートボックスに帰た",
-      "zh-CN": "机器人重新进入起始框"
+      "zh-CN": "机器人重新进入起始框",
+      "zh-TW": "機器人重新進入起始框"
     },
     "Touch Can 9": {
       "en-US": "Touch Can 9",
       "ja-JP": "缶９を触れて",
-      "zh-CN": "触摸 9 号罐"
+      "zh-CN": "触摸 9 号罐",
+      "zh-TW": "觸碰 Can 9"
     },
     "Return to the Start Box": {
       "en-US": "Return to the Start Box",
       "ja-JP": "スタートボックスに帰て",
-      "zh-CN": "返回起始框"
+      "zh-CN": "返回起始框",
+      "zh-TW": "回到起始框"
     },
     "Can 9 not in circle 9": {
       "en-US": "Can 9 not in circle 9",
       "ja-JP": "缶９は丸９にない",
-      "zh-CN": "Can 9 不在 9 号圆圈内"
+      "zh-CN": "Can 9 不在 9 号圆圈内",
+      "zh-TW": "Can 9 不在圓圈 9 中"
     },
     "Can 9 not upright": {
       "en-US": "Can 9 not upright",
       "ja-JP": "缶９は立てられない",
-      "zh-CN": "9 号罐不直立"
+      "zh-CN": "9 号罐不直立",
+      "zh-TW": "Can 9 未直立"
     },
     "JBC Challenge 2": {
       "en-US": "JBC Challenge 2",
       "ja-JP": "JBCチャレンジ２",
-      "zh-CN": "JBC 挑战 2"
+      "zh-CN": "JBC 挑战 2",
+      "zh-TW": "JBC 挑戰 2"
     },
     "Can 6 Intersects": {
       "en-US": "Can 6 Intersects",
       "ja-JP": "缶６が交わる",
-      "zh-CN": "Can 6 相交"
+      "zh-CN": "Can 6 相交",
+      "zh-TW": "Can 6 相交"
     },
     "Can 6 intersects circle 6": {
       "en-US": "Can 6 intersects circle 6",
       "ja-JP": "丸６に缶６が交わる",
-      "zh-CN": "6号罐与6号圆相交"
+      "zh-CN": "6号罐与6号圆相交",
+      "zh-TW": "Can 6與圓圈6相交"
     },
     "Can 6 Upright": {
       "en-US": "Can 6 Upright",
       "ja-JP": "缶６は立て",
-      "zh-CN": "Can 6 直立"
+      "zh-CN": "Can 6 直立",
+      "zh-TW": "Can 6 直立"
     },
     "Can 6 upright on circle 6": {
       "en-US": "Can 6 upright on circle 6",
       "ja-JP": "丸６で缶６は立て",
-      "zh-CN": "Can 6 在圆 6 上直立"
+      "zh-CN": "Can 6 在圆 6 上直立",
+      "zh-TW": "Can 6 直立在圓圈 6 上"
     },
     "Robot Passed Right Side": {
       "en-US": "Robot Passed Right Side",
       "ja-JP": "ロボットが右側を通過した",
-      "zh-CN": "机器人通过右侧"
+      "zh-CN": "机器人通过右侧",
+      "zh-TW": "機器人通過右側"
     },
     "Robot passed right side of can 6": {
       "en-US": "Robot passed right side of can 6",
       "ja-JP": "ロボットが缶６の右側を通過した",
-      "zh-CN": "机器人通过 6 号罐右侧"
+      "zh-CN": "机器人通过 6 号罐右侧",
+      "zh-TW": "機器人通過 6 號罐的右側"
     },
     "Robot Passed Top Side": {
       "en-US": "Robot Passed Top Side",
       "ja-JP": "ロボットが上側を通過した",
-      "zh-CN": "机器人通过顶部"
+      "zh-CN": "机器人通过顶部",
+      "zh-TW": "機器人通過頂邊"
     },
     "Robot passed top side of can 6": {
       "en-US": "Robot passed top side of can 6",
       "ja-JP": "ロボットが缶６の上側を通過した",
-      "zh-CN": "机器人通过 6 号罐上侧"
+      "zh-CN": "机器人通过 6 号罐上侧",
+      "zh-TW": "機器人通過 6 號罐的頂邊"
     },
     "Robot Passed left Side": {
       "en-US": "Robot Passed left Side",
       "ja-JP": "ロボットが左側を通過した",
-      "zh-CN": "机器人通过左侧"
+      "zh-CN": "机器人通过左侧",
+      "zh-TW": "機器人通過左側"
     },
     "Robot passed left side of can 6": {
       "en-US": "Robot passed left side of can 6",
       "ja-JP": "ロボットが缶６の左側を通過した",
-      "zh-CN": "机器人通过 6 号罐的左侧"
+      "zh-CN": "机器人通过 6 号罐的左侧",
+      "zh-TW": "機器人通過 6 號罐的左側"
     },
     "Pass the right side of can 6": {
       "en-US": "Pass the right side of can 6",
       "ja-JP": "缶６の右側を通過して",
-      "zh-CN": "通过 6 号罐右侧"
+      "zh-CN": "通过 6 号罐右侧",
+      "zh-TW": "通過 6 號罐的右側"
     },
     "Pass the top side of can 6": {
       "en-US": "Pass the top side of can 6",
       "ja-JP": "缶６の上側を通過して",
-      "zh-CN": "通过 6 号罐上侧"
+      "zh-CN": "通过 6 号罐上侧",
+      "zh-TW": "通過 6 號罐的上側"
     },
     "Pass the left side of can 6": {
       "en-US": "Pass the left side of can 6",
       "ja-JP": "缶６の左側を通過して",
-      "zh-CN": "通过 6 号罐左侧"
+      "zh-CN": "通过 6 号罐左侧",
+      "zh-TW": "通過罐子 6 的左側"
     },
     "Can 6 not in circle 6": {
       "en-US": "Can 6 not in circle 6",
       "ja-JP": "かん６はまる６にない",
-      "zh-CN": "易拉罐 6 不在圆圈 6 中"
+      "zh-CN": "易拉罐 6 不在圆圈 6 中",
+      "zh-TW": "Can 6 不在圓圈 6 中"
     },
     "Can 6 not upright": {
       "en-US": "Can 6 not upright",
       "ja-JP": "缶６は立てられない",
-      "zh-CN": "易拉罐 6 未竖直"
+      "zh-CN": "易拉罐 6 未竖直",
+      "zh-TW": "6 號罐未直立"
     },
     "JBC Challenge 3": {
       "en-US": "JBC Challenge 3",
       "ja-JP": "JBCチャレンジ３",
-      "zh-CN": "JBC 挑战 3"
+      "zh-CN": "JBC 挑战 3",
+      "zh-TW": "JBC 挑戰三"
     },
     "Robot Touched Garage Lines": {
       "en-US": "Robot Touched Garage Lines",
       "ja-JP": "ロボットがガレージの境界に触れちゃった",
-      "zh-CN": "机器人触及车库界线"
+      "zh-CN": "机器人触及车库界线",
+      "zh-TW": "機器人觸及車庫邊線"
     },
     "Robot touched garage boundaries": {
       "en-US": "Robot touched garage boundaries",
       "ja-JP": "ロボットがガレージの境界に触れちゃった",
-      "zh-CN": "机器人触及车库边界"
+      "zh-CN": "机器人触及车库边界",
+      "zh-TW": "機器人觸及車庫邊線"
     },
     "Robot Parked in One Garage": {
       "en-US": "Robot Parked in One Garage",
       "ja-JP": "ロボットは一番目のガレージに駐車した",
-      "zh-CN": "机器人停在一个车库"
+      "zh-CN": "机器人停在一个车库",
+      "zh-TW": "機器人停在一個車庫"
     },
     "Robot parked in only one garage": {
       "en-US": "Robot parked in only one garage",
       "ja-JP": "ロボットは一つのガレージにのみ駐車された",
-      "zh-CN": "机器人只停在一个车库"
+      "zh-CN": "机器人只停在一个车库",
+      "zh-TW": "機器人只停在一個車庫"
     },
     "Robot Parked in Different Garage": {
       "en-US": "Robot Parked in Different Garage",
       "ja-JP": "ロボットは別のガレージに駐車した",
-      "zh-CN": "机器人停在不同车库"
+      "zh-CN": "机器人停在不同车库",
+      "zh-TW": "機器人停在不同車庫"
     },
     "Robot parked in a different garage": {
       "en-US": "Robot parked in a different garage",
       "ja-JP": "ロボットは別のガレージに駐車した",
-      "zh-CN": "机器人停在不同车库"
+      "zh-CN": "机器人停在不同车库",
+      "zh-TW": "機器人停在不同車庫"
     },
     "Robot Returned Start": {
       "en-US": "Robot Returned Start",
       "ja-JP": "ロボットはスタートボックスに帰た",
-      "zh-CN": "机器人返回起始位置"
+      "zh-CN": "机器人返回起始位置",
+      "zh-TW": "機器人回到起始位置"
     },
     "Robot returned to starting box": {
       "en-US": "Robot returned to starting box",
       "ja-JP": "ロボットはスタートボックスに帰た",
-      "zh-CN": "机器人返回启动箱"
+      "zh-CN": "机器人返回启动箱",
+      "zh-TW": "機器人回到起始箱"
     },
     "Park in one garage": {
       "en-US": "Park in one garage",
       "ja-JP": "一つのガレージに駐車して",
-      "zh-CN": "停放在一个车库"
+      "zh-CN": "停放在一个车库",
+      "zh-TW": "停在一個車庫"
     },
     "Park in a different garage": {
       "en-US": "Park in a different garage",
       "ja-JP": "別のガレージに駐車して",
-      "zh-CN": "停入不同车库"
+      "zh-CN": "停入不同车库",
+      "zh-TW": "停放在不同車庫"
     },
     "Do not touch garage boundaries": {
       "en-US": "Do not touch garage boundaries",
       "ja-JP": "ガレージの境界に触れないで",
-      "zh-CN": "不要触碰车库边界"
+      "zh-CN": "不要触碰车库边界",
+      "zh-TW": "請勿觸及車庫邊界"
     },
     "JBC Challenge 4": {
       "en-US": "JBC Challenge 4",
       "ja-JP": "JBCチャレンジ４",
-      "zh-CN": "JBC 挑战 4"
+      "zh-CN": "JBC 挑战 4",
+      "zh-TW": "JBC 挑戰 4"
     },
     "Circle Touched Out of Order": {
       "en-US": "Circle Touched Out of Order",
       "ja-JP": "サークルが順番通りに触れなちゃった",
-      "zh-CN": "圆圈被无序触碰"
+      "zh-CN": "圆圈被无序触碰",
+      "zh-TW": "圓圈觸碰無序"
     },
     "Circle was touched out of order": {
       "en-US": "Circle was touched out of order",
       "ja-JP": "サークルが順番通りに触れなちゃった",
-      "zh-CN": "圆圈被无序触碰"
+      "zh-CN": "圆圈被无序触碰",
+      "zh-TW": "圓圈被不按順序碰觸"
     },
     "Robot Touched Circle 1": {
       "en-US": "Robot Touched Circle 1",
       "ja-JP": "ロボットは丸１を触れた",
-      "zh-CN": "机器人触碰圆圈 1"
+      "zh-CN": "机器人触碰圆圈 1",
+      "zh-TW": "機器人觸碰圓圈 1"
     },
     "Robot touched circle 1": {
       "en-US": "Robot touched circle 1",
       "ja-JP": "ロボットは丸１を触れた",
-      "zh-CN": "机器人触碰圆圈 1"
+      "zh-CN": "机器人触碰圆圈 1",
+      "zh-TW": "機器人觸碰圓圈 1"
     },
     "Robot Touched Circle 2": {
       "en-US": "Robot Touched Circle 2",
       "ja-JP": "ロボットは丸２を触れた",
-      "zh-CN": "机器人触碰圆圈 2"
+      "zh-CN": "机器人触碰圆圈 2",
+      "zh-TW": "機器人觸碰圓 2"
     },
     "Robot touched circle 2": {
       "en-US": "Robot touched circle 2",
       "ja-JP": "ロボットは丸２を触れた",
-      "zh-CN": "机器人触碰了圆 2"
+      "zh-CN": "机器人触碰了圆 2",
+      "zh-TW": "機器人觸碰圓 2"
     },
     "Robot Touched Circle 3": {
       "en-US": "Robot Touched Circle 3",
       "ja-JP": "ロボットは丸３を触れた",
-      "zh-CN": "机器人触碰了圆圈 3"
+      "zh-CN": "机器人触碰了圆圈 3",
+      "zh-TW": "機器人觸碰圓 3"
     },
     "Robot touched circle 3": {
       "en-US": "Robot touched circle 3",
       "ja-JP": "ロボットは丸３を触れた",
-      "zh-CN": "机器人触摸圆圈 3"
+      "zh-CN": "机器人触摸圆圈 3",
+      "zh-TW": "機器人觸碰圓 3"
     },
     "Robot Touched Circle 4": {
       "en-US": "Robot Touched Circle 4",
       "ja-JP": "ロボットは丸４を触れた",
-      "zh-CN": "触碰圆圈 4 的机器人"
+      "zh-CN": "触碰圆圈 4 的机器人",
+      "zh-TW": "機器人觸碰圓 4"
     },
     "Robot touched circle 4": {
       "en-US": "Robot touched circle 4",
       "ja-JP": "ロボットは丸４を触れた",
-      "zh-CN": "机器人触摸了第 4 个圆"
+      "zh-CN": "机器人触摸了第 4 个圆",
+      "zh-TW": "機器人觸碰圓 4"
     },
     "Robot Touched Circle 5": {
       "en-US": "Robot Touched Circle 5",
       "ja-JP": "ロボットは丸５を触れた",
-      "zh-CN": "机器人触碰的圆 5"
+      "zh-CN": "机器人触碰的圆 5",
+      "zh-TW": "機器人觸碰圓 5"
     },
     "Robot touched circle 5": {
       "en-US": "Robot touched circle 5",
       "ja-JP": "ロボットは丸５を触れた",
-      "zh-CN": "机器人触摸圆 5"
+      "zh-CN": "机器人触摸圆 5",
+      "zh-TW": "機器人觸碰圓 5"
     },
     "Robot Touched Circle 6": {
       "en-US": "Robot Touched Circle 6",
       "ja-JP": "ロボットは丸６を触れた",
-      "zh-CN": "机器人触碰的圆 6"
+      "zh-CN": "机器人触碰的圆 6",
+      "zh-TW": "機器人觸碰圓 6"
     },
     "Robot touched circle 6": {
       "en-US": "Robot touched circle 6",
       "ja-JP": "ロボットは丸６を触れた",
-      "zh-CN": "机器人触摸圆 6"
+      "zh-CN": "机器人触摸圆 6",
+      "zh-TW": "機器人觸碰圓 6"
     },
     "Robot Touched Circle 7": {
       "en-US": "Robot Touched Circle 7",
       "ja-JP": "ロボットは丸７を触れた",
-      "zh-CN": "机器人触碰的圆 7"
+      "zh-CN": "机器人触碰的圆 7",
+      "zh-TW": "機器人觸碰圓 7"
     },
     "Robot touched circle 7": {
       "en-US": "Robot touched circle 7",
       "ja-JP": "ロボットは丸７を触れた",
-      "zh-CN": "机器人触摸圆 7"
+      "zh-CN": "机器人触摸圆 7",
+      "zh-TW": "機器人觸碰圓 7"
     },
     "Robot Touched Circle 8": {
       "en-US": "Robot Touched Circle 8",
       "ja-JP": "ロボットは丸８を触れた",
-      "zh-CN": "机器人触碰的圆 8"
+      "zh-CN": "机器人触碰的圆 8",
+      "zh-TW": "機器人觸碰圓 8"
     },
     "Robot touched circle 8": {
       "en-US": "Robot touched circle 8",
       "ja-JP": "ロボットは丸８を触れた",
-      "zh-CN": "机器人触碰圆圈 8"
+      "zh-CN": "机器人触碰圆圈 8",
+      "zh-TW": "機器人觸碰圓 8"
     },
     "Touch circle 1": {
       "en-US": "Touch circle 1",
       "ja-JP": "ロボットは丸１を触れて",
-      "zh-CN": "触摸圈 1"
+      "zh-CN": "触摸圈 1",
+      "zh-TW": "觸摸圓 1"
     },
     "Touch circle 2": {
       "en-US": "Touch circle 2",
       "ja-JP": "ロボットは丸２を触れて",
-      "zh-CN": "触摸圈 2"
+      "zh-CN": "触摸圈 2",
+      "zh-TW": "觸摸圓 2"
     },
     "Touch circle 3": {
       "en-US": "Touch circle 3",
       "ja-JP": "ロボットは丸３を触れて",
-      "zh-CN": "触摸圈 3"
+      "zh-CN": "触摸圈 3",
+      "zh-TW": "觸摸圓 3"
     },
     "Touch circle 4": {
       "en-US": "Touch circle 4",
       "ja-JP": "ロボットは丸４を触れて",
-      "zh-CN": "触摸圈 4"
+      "zh-CN": "触摸圈 4",
+      "zh-TW": "觸摸圓 4"
     },
     "Touch circle 5": {
       "en-US": "Touch circle 5",
       "ja-JP": "ロボットは丸５を触れて",
-      "zh-CN": "触摸圈 5"
+      "zh-CN": "触摸圈 5",
+      "zh-TW": "觸控圈 5"
     },
     "Touch circle 6": {
       "en-US": "Touch circle 6",
       "ja-JP": "ロボットは丸６を触れて",
-      "zh-CN": "触摸圈 6"
+      "zh-CN": "触摸圈 6",
+      "zh-TW": "觸控圈 6"
     },
     "Touch circle 7": {
       "en-US": "Touch circle 7",
       "ja-JP": "ロボットは丸７を触れて",
-      "zh-CN": "触摸圈 7"
+      "zh-CN": "触摸圈 7",
+      "zh-TW": "觸控圈 7"
     },
     "Touch circle 8": {
       "en-US": "Touch circle 8",
       "ja-JP": "ロボットは丸８を触れて",
-      "zh-CN": "触摸圈 8"
+      "zh-CN": "触摸圈 8",
+      "zh-TW": "觸碰圓 8"
     },
     "Circle touched out of order": {
       "en-US": "Circle touched out of order",
       "ja-JP": "サークルが順番通りに触れなちゃった",
-      "zh-CN": "触摸的圆圈不按顺序"
+      "zh-CN": "触摸的圆圈不按顺序",
+      "zh-TW": "不按順序觸摸圓"
     },
     "JBC Challenge 5": {
       "en-US": "JBC Challenge 5",
       "ja-JP": "JBCチャレンジ５",
-      "zh-CN": "JBC 挑战 5"
+      "zh-CN": "JBC 挑战 5",
+      "zh-TW": "JBC 挑戰 5"
     },
     "Even Circle Touched": {
       "en-US": "Even Circle Touched",
       "ja-JP": "偶数の丸触れた",
-      "zh-CN": "触摸偶数圆"
+      "zh-CN": "触摸偶数圆",
+      "zh-TW": "觸摸連圓"
     },
     "Even circle touched": {
       "en-US": "Even circle touched",
       "ja-JP": "偶数の丸触れた",
-      "zh-CN": "触摸偶数圈"
+      "zh-CN": "触摸偶数圈",
+      "zh-TW": "觸摸偶數圈"
     },
     "Circle 1 Touched": {
       "en-US": "Circle 1 Touched",
       "ja-JP": "丸１を触れた",
-      "zh-CN": "圆圈 1 被触碰"
+      "zh-CN": "圆圈 1 被触碰",
+      "zh-TW": "觸摸圓 1"
     },
     "Circle 1 was touched": {
       "en-US": "Circle 1 was touched",
       "ja-JP": "丸１を触れた",
-      "zh-CN": "圆圈 1 被触及"
+      "zh-CN": "圆圈 1 被触及",
+      "zh-TW": "圈 1 被碰觸"
     },
     "Circle 3 Touched": {
       "en-US": "Circle 3 Touched",
       "ja-JP": "丸３を触れた",
-      "zh-CN": "圆圈 3 被触碰"
+      "zh-CN": "圆圈 3 被触碰",
+      "zh-TW": "圓圈 3 被觸及"
     },
     "Circle 3 was touched": {
       "en-US": "Circle 3 was touched",
       "ja-JP": "丸３を触れた",
-      "zh-CN": "圆圈 3 被触及"
+      "zh-CN": "圆圈 3 被触及",
+      "zh-TW": "圓 3 被觸發"
     },
     "Circle 5 Touched": {
       "en-US": "Circle 5 Touched",
       "ja-JP": "丸５を触れた",
-      "zh-CN": "圆 5 已被触碰"
+      "zh-CN": "圆 5 已被触碰",
+      "zh-TW": "圓 5 已被觸摸"
     },
     "Circle 5 was touched": {
       "en-US": "Circle 5 was touched",
       "ja-JP": "丸５を触れた",
-      "zh-CN": "圆圈 5 被触摸"
+      "zh-CN": "圆圈 5 被触摸",
+      "zh-TW": "圓圈 5 被接觸"
     },
     "Circle 7 Touched": {
       "en-US": "Circle 7 Touched",
       "ja-JP": "丸７を触れた",
-      "zh-CN": "圈 7 已触摸"
+      "zh-CN": "圈 7 已触摸",
+      "zh-TW": "圓 7 已被觸摸"
     },
     "Circle 7 was touched": {
       "en-US": "Circle 7 was touched",
       "ja-JP": "丸７を触れた",
-      "zh-CN": "圆 7 已被触碰"
+      "zh-CN": "圆 7 已被触碰",
+      "zh-TW": "圓 7 已被觸摸"
     },
     "Circle 9 Touched": {
       "en-US": "Circle 9 Touched",
       "ja-JP": "丸９を触れた",
-      "zh-CN": "圈 9 已触摸"
+      "zh-CN": "圈 9 已触摸",
+      "zh-TW": "圓 9 已被觸摸"
     },
     "Circle 9 was touched": {
       "en-US": "Circle 9 was touched",
       "ja-JP": "丸９を触れた",
-      "zh-CN": "圆圈 9 被触摸"
+      "zh-CN": "圆圈 9 被触摸",
+      "zh-TW": "圓 9 被接觸"
     },
     "Circle 11 Touched": {
       "en-US": "Circle 11 Touched",
       "ja-JP": "丸１１を触れた",
-      "zh-CN": "圆 11 已被触碰"
+      "zh-CN": "圆 11 已被触碰",
+      "zh-TW": "圓 11 已被觸摸"
     },
     "Circle 11 was touched": {
       "en-US": "Circle 11 was touched",
       "ja-JP": "丸１１を触れた",
-      "zh-CN": "圈 11 被触摸"
+      "zh-CN": "圈 11 被触摸",
+      "zh-TW": "圓 11 被觸及"
     },
     "Touch circle 9": {
       "en-US": "Touch circle 9",
       "ja-JP": "ロボットは丸９を触れて",
-      "zh-CN": "触摸圆圈 9"
+      "zh-CN": "触摸圆圈 9",
+      "zh-TW": "觸摸圓 9"
     },
     "Touch circle 11": {
       "en-US": "Touch circle 11",
       "ja-JP": "ロボットは丸１１を触れて",
-      "zh-CN": "触摸圆 11"
+      "zh-CN": "触摸圆 11",
+      "zh-TW": "觸摸圓 11"
     },
     "Touched an even circle": {
       "en-US": "Touched an even circle",
       "ja-JP": "偶数の丸触れた",
-      "zh-CN": "触摸一个偶数圆"
+      "zh-CN": "触摸一个偶数圆",
+      "zh-TW": "觸摸偶數圓圈"
     },
     "JBC Challenge 6": {
       "en-US": "JBC Challenge 6",
       "ja-JP": "JBCチャレンジ５",
-      "zh-CN": "JBC 挑战 6"
+      "zh-CN": "JBC 挑战 6",
+      "zh-TW": "JBC 挑戰 6"
     },
     "Can 4 intersects circle 4": {
       "en-US": "Can 4 intersects circle 4",
       "ja-JP": "丸４に缶４が交わる",
-      "zh-CN": "4 与圆 4 相交"
+      "zh-CN": "4 与圆 4 相交",
+      "zh-TW": "圓4與圓圈4相交"
     },
     "Can 4 upright on circle 4": {
       "en-US": "Can 4 upright on circle 4",
       "ja-JP": "丸４で缶４は立て",
-      "zh-CN": "Can 4 在圆 4 上直立"
+      "zh-CN": "Can 4 在圆 4 上直立",
+      "zh-TW": "Can 4 在圓圈 4 上直立"
     },
     "Robot Figure Eight": {
       "en-US": "Robot Figure Eight",
       "ja-JP": "８の字",
-      "zh-CN": "机器人八字形"
+      "zh-CN": "机器人八字形",
+      "zh-TW": "機器人八字形"
     },
     "Robot did a figure eight around cans 4 and 9": {
       "en-US": "Robot did a figure eight around cans 4 and 9",
       "ja-JP": "ロボットが缶4と9の周りで8の字を描いた",
-      "zh-CN": "机器人围绕 4 号罐和 9 号罐做 \"八 \"字形运动"
+      "zh-CN": "机器人围绕 4 号罐和 9 号罐做 \"八 \"字形运动",
+      "zh-TW": "機器人繞著 4 號罐和 9 號罐做一個八字形"
     },
     "Complete a figure eight": {
       "en-US": "Complete a figure eight",
       "ja-JP": "８の字をして",
-      "zh-CN": "完成一个八字形"
+      "zh-CN": "完成一个八字形",
+      "zh-TW": "完成一個八字形"
     },
     "Can 4 not upright in circle 4": {
       "en-US": "Can 4 not upright in circle 4",
       "ja-JP": "缶４は丸４で立てられない",
-      "zh-CN": "4 号罐没有直立在圆 4 上"
+      "zh-CN": "4 号罐没有直立在圆 4 上",
+      "zh-TW": "罐子 4 沒有直立在圓圈 4 中"
     },
     "Can 9 not upright in circle 9": {
       "en-US": "Can 9 not upright in circle 9",
       "ja-JP": "缶４は丸４で立てられない",
-      "zh-CN": "易拉罐 9 没有直立在圆 9 中"
+      "zh-CN": "易拉罐 9 没有直立在圆 9 中",
+      "zh-TW": "罐子 9 沒有直立在圓圈 9 中"
     },
     "Can 4 does not intersect circle 4": {
       "en-US": "Can 4 does not intersect circle 4",
       "ja-JP": "丸４に缶４が交わらない",
-      "zh-CN": "易拉罐 4 与圆 4 不相交"
+      "zh-CN": "易拉罐 4 与圆 4 不相交",
+      "zh-TW": "罐子 4 與圓圈 4 不相交"
     },
     "Can 9 does not intersect circle 9": {
       "en-US": "Can 9 does not intersect circle 9",
       "ja-JP": "丸９に缶９が交わらない",
-      "zh-CN": "易拉罐 9 与圆圈 9 不相交"
+      "zh-CN": "易拉罐 9 与圆圈 9 不相交",
+      "zh-TW": "罐子 9 與圓圈 9 不相交"
     },
     "JBC Challenge 7": {
       "en-US": "JBC Challenge 7",
       "ja-JP": "JBCチャレンジ７",
-      "zh-CN": "JBC 挑战 7"
+      "zh-CN": "JBC 挑战 7",
+      "zh-TW": "JBC 挑戰 7"
     },
     "Can 2 upright": {
       "en-US": "Can 2 upright",
       "ja-JP": "缶２は立て",
-      "zh-CN": "2 能否直立"
+      "zh-CN": "2 能否直立",
+      "zh-TW": "2 可以直立"
     },
     "Can 9 upright": {
       "en-US": "Can 9 upright",
       "ja-JP": "缶９は立て",
-      "zh-CN": "9 可以直立"
+      "zh-CN": "9 可以直立",
+      "zh-TW": "Can 9 直立"
     },
     "Can 10 Upright": {
       "en-US": "Can 10 Upright",
       "ja-JP": "缶１０は立て",
-      "zh-CN": "可以 10 直立"
+      "zh-CN": "可以 10 直立",
+      "zh-TW": "Can 10 直立"
     },
     "Can 10 upright": {
       "en-US": "Can 10 upright",
       "ja-JP": "缶１０は立て",
-      "zh-CN": "10 号罐直立"
+      "zh-CN": "10 号罐直立",
+      "zh-TW": "Can 10 直立"
     },
     "Can 2 Intersects Green Garage": {
       "en-US": "Can 2 Intersects Green Garage",
       "ja-JP": "緑のガレージと缶２が交わる",
-      "zh-CN": "2 号罐与绿色车库相交"
+      "zh-CN": "2 号罐与绿色车库相交",
+      "zh-TW": "Can 2 與綠色車庫相交"
     },
     "Can 2 intersects Green Garage": {
       "en-US": "Can 2 intersects Green Garage",
       "ja-JP": "緑のガレージと缶２が交わる",
-      "zh-CN": "第 2 个罐体与绿色车库相交"
+      "zh-CN": "第 2 个罐体与绿色车库相交",
+      "zh-TW": "Can 2 與綠色車庫相交"
     },
     "Can 9 Intersects Blue Garage": {
       "en-US": "Can 9 Intersects Blue Garage",
       "ja-JP": "青いなガレージと缶９が交わる",
-      "zh-CN": "CAN 9 与蓝色车库相交"
+      "zh-CN": "CAN 9 与蓝色车库相交",
+      "zh-TW": "Can 9 與藍色車庫相交"
     },
     "Can 9 intersects Blue Garage": {
       "en-US": "Can 9 intersects Blue Garage",
       "ja-JP": "青いなガレージと缶９が交わる",
-      "zh-CN": "CAN 9 与蓝色车库相交"
+      "zh-CN": "CAN 9 与蓝色车库相交",
+      "zh-TW": "Can 9 與藍色車庫相交"
     },
     "Can 9 Intersects Purple Garage": {
       "en-US": "Can 9 Intersects Purple Garage",
       "ja-JP": "紫なガレージと缶９が交わる",
-      "zh-CN": "CAN 9 与紫色车库相交"
+      "zh-CN": "CAN 9 与紫色车库相交",
+      "zh-TW": "Can 9 相交紫色車庫"
     },
     "Can 9 intersects Purple Garage": {
       "en-US": "Can 9 intersects Purple Garage",
       "ja-JP": "紫なガレージと缶９が交わる",
-      "zh-CN": "CAN 9 与紫色车库相交"
+      "zh-CN": "CAN 9 与紫色车库相交",
+      "zh-TW": "Can 9 與紫色車庫相交"
     },
     "Can 10 Intersects Yellow Garage": {
       "en-US": "Can 10 Intersects Yellow Garage",
       "ja-JP": "黄色いなガレージと缶１０が交わる",
-      "zh-CN": "CAN 10 与黄色车库相交"
+      "zh-CN": "CAN 10 与黄色车库相交",
+      "zh-TW": "Can 10 與黃色車庫相交"
     },
     "Can 10 intersects Yellow Garage": {
       "en-US": "Can 10 intersects Yellow Garage",
       "ja-JP": "黄色いなガレージと缶１０が交わる",
-      "zh-CN": "10 号罐与黄色车库相交"
+      "zh-CN": "10 号罐与黄色车库相交",
+      "zh-TW": "罐子 10 與黃色車庫相交"
     },
     "Place can 2 in green garage": {
       "en-US": "Place can 2 in green garage",
       "ja-JP": "緑のガレージに缶2を置いで",
-      "zh-CN": "将 2 号罐放入绿色车库"
+      "zh-CN": "将 2 号罐放入绿色车库",
+      "zh-TW": "將罐 2 置於綠色車庫"
     },
     "Place can 9 in blue garage": {
       "en-US": "Place can 9 in blue garage",
       "ja-JP": "青いなガレージに缶９を置いで",
-      "zh-CN": "将 9 号罐放入蓝色车库"
+      "zh-CN": "将 9 号罐放入蓝色车库",
+      "zh-TW": "將 9 號罐放置在藍色車庫"
     },
     "Place can 10 in yellow garage": {
       "en-US": "Place can 10 in yellow garage",
       "ja-JP": "黄色いなガレージに缶１０を置いで",
-      "zh-CN": "将 10 号罐放入黄色车库"
+      "zh-CN": "将 10 号罐放入黄色车库",
+      "zh-TW": "將 Can 10 置於黃色車庫"
     },
     "Can 2 not upright in green garage": {
       "en-US": "Can 2 not upright in green garage",
       "ja-JP": "缶２が立てておらず緑のガレージにない",
-      "zh-CN": "2 号罐在绿色车库不直立"
+      "zh-CN": "2 号罐在绿色车库不直立",
+      "zh-TW": "罐 2 在綠色車庫中不直立"
     },
     "Can 9 not upright in blue garage": {
       "en-US": "Can 9 not upright in blue garage",
       "ja-JP": "缶９が立てておらず青いなガレージにない",
-      "zh-CN": "9 号罐在蓝色车库不直立"
+      "zh-CN": "9 号罐在蓝色车库不直立",
+      "zh-TW": "9 號罐不直立於藍色車庫"
     },
     "Can 10 not upright in yellow garage": {
       "en-US": "Can 10 not upright in yellow garage",
       "ja-JP": "缶１０が立てておらず黄色いなガレージにない",
-      "zh-CN": "10 号罐在黄色车库不直立"
+      "zh-CN": "10 号罐在黄色车库不直立",
+      "zh-TW": "10 號罐沒有直立在黃色車庫"
     },
     "JBC Challenge 8": {
       "en-US": "JBC Challenge 8",
       "ja-JP": "JBCチャレンジ８",
-      "zh-CN": "JBC 挑战赛 8"
+      "zh-CN": "JBC 挑战赛 8",
+      "zh-TW": "JBC 挑戰賽 8"
     },
     "Can A upright behind start line": {
       "en-US": "Can A upright behind start line",
       "ja-JP": "スタートボックスに缶Aは立てている",
-      "zh-CN": "A 罐在起点线后直立"
+      "zh-CN": "A 罐在起点线后直立",
+      "zh-TW": "A罐在起點線後直立"
     },
     "Can B upright behind start line": {
       "en-US": "Can B upright behind start line",
       "ja-JP": "スタートボックスに缶Bは立てている",
-      "zh-CN": "B 能否在起跑线后直立"
+      "zh-CN": "B 能否在起跑线后直立",
+      "zh-TW": "B 能否在起點線後直立"
     },
     "Can C upright behind start line": {
       "en-US": "Can C upright behind start line",
       "ja-JP": "スタートボックスに缶Cは立てている",
-      "zh-CN": "C 可以在起跑线后直立"
+      "zh-CN": "C 可以在起跑线后直立",
+      "zh-TW": "C 可以在起跑線後方直立"
     },
     "Can D upright behind start line": {
       "en-US": "Can D upright behind start line",
       "ja-JP": "スタートボックスに缶Dは立てている",
-      "zh-CN": "D 可以在起跑线后直立"
+      "zh-CN": "D 可以在起跑线后直立",
+      "zh-TW": "D 可以在起跑線後方直立"
     },
     "Can E upright behind start line": {
       "en-US": "Can E upright behind start line",
       "ja-JP": "スタートボックスに缶Eは立てている",
-      "zh-CN": "E罐在起跑线后直立"
+      "zh-CN": "E罐在起跑线后直立",
+      "zh-TW": "E 可以在起跑線後方直立"
     },
     "First can upright in start box": {
       "en-US": "First can upright in start box",
       "ja-JP": "スタートボックスに１番目缶は立てている",
-      "zh-CN": "第一罐在起跑框内直立"
+      "zh-CN": "第一罐在起跑框内直立",
+      "zh-TW": "第一罐罐身直立於起始箱"
     },
     "Second can upright in start box": {
       "en-US": "Second can upright in start box",
       "ja-JP": "スタートボックスに２番目缶は立てている",
-      "zh-CN": "第二个罐在起跑框内直立"
+      "zh-CN": "第二个罐在起跑框内直立",
+      "zh-TW": "第二罐直立於起始箱"
     },
     "Third can upright in start box": {
       "en-US": "Third can upright in start box",
       "ja-JP": "スタートボックスに３番目缶は立てている",
-      "zh-CN": "第三罐在起跑框内直立"
+      "zh-CN": "第三罐在起跑框内直立",
+      "zh-TW": "第三罐直立於起始箱"
     },
     "Fourth can upright in start box": {
       "en-US": "Fourth can upright in start box",
       "ja-JP": "スタートボックスに４番目缶は立てている",
-      "zh-CN": "第四罐在起跑框内直立"
+      "zh-CN": "第四罐在起跑框内直立",
+      "zh-TW": "第四罐直立於起始箱"
     },
     "Fifth can upright in start box": {
       "en-US": "Fifth can upright in start box",
       "ja-JP": "スタートボックスに５番目缶は立てている",
-      "zh-CN": "第五罐在起始箱内直立"
+      "zh-CN": "第五罐在起始箱内直立",
+      "zh-TW": "第五罐直立於起始箱"
     },
     "JBC Challenge 9": {
       "en-US": "JBC Challenge 9",
       "ja-JP": "JBCチャレンジ９",
-      "zh-CN": "JBC 挑战 9"
+      "zh-CN": "JBC 挑战 9",
+      "zh-TW": "JBC 挑戰 9"
     },
     "Cover base A": {
       "en-US": "Cover base A",
-      "zh-CN": "覆盖底座 A"
+      "zh-CN": "覆盖底座 A",
+      "zh-TW": "蓋上底座 A"
     },
     "Cover base B": {
       "en-US": "Cover base B",
-      "zh-CN": "覆盖底座 B"
+      "zh-CN": "覆盖底座 B",
+      "zh-TW": "蓋上底座 B"
     },
     "Cover base C": {
       "en-US": "Cover base C",
-      "zh-CN": "盖上底座 C"
+      "zh-CN": "盖上底座 C",
+      "zh-TW": "蓋上底座 C"
     },
     "Cover base D": {
       "en-US": "Cover base D",
-      "zh-CN": "盖上底座 D"
+      "zh-CN": "盖上底座 D",
+      "zh-TW": "蓋上底座 D"
     },
     "Cover base E": {
       "en-US": "Cover base E",
-      "zh-CN": "盖底座 E"
+      "zh-CN": "盖底座 E",
+      "zh-TW": "蓋上底座 E"
     },
     "Can A not upright": {
       "en-US": "Can A not upright",
-      "zh-CN": "罐 A 不直立"
+      "zh-CN": "罐 A 不直立",
+      "zh-TW": "罐 A 不直立"
     },
     "Can B not upright": {
       "en-US": "Can B not upright",
-      "zh-CN": "B 罐不直立"
+      "zh-CN": "B 罐不直立",
+      "zh-TW": "罐 B 未直立"
     },
     "Can C not upright": {
       "en-US": "Can C not upright",
-      "zh-CN": "C 不能直立"
+      "zh-CN": "C 不能直立",
+      "zh-TW": "C 不能直立"
     },
     "Can D not upright": {
       "en-US": "Can D not upright",
-      "zh-CN": "D 不能直立"
+      "zh-CN": "D 不能直立",
+      "zh-TW": "D 不能直立"
     },
     "Can E not upright": {
       "en-US": "Can E not upright",
-      "zh-CN": "E 不能直立"
+      "zh-CN": "E 不能直立",
+      "zh-TW": "E 不能直立"
     },
     "JBC Challenge 10": {
       "en-US": "JBC Challenge 10",
-      "zh-CN": "JBC 挑战 10"
+      "zh-CN": "JBC 挑战 10",
+      "zh-TW": "JBC 挑戰 10"
     },
     "Waited to Chop": {
       "en-US": "Waited to Chop",
-      "zh-CN": "等待劈砍"
+      "zh-CN": "等待劈砍",
+      "zh-TW": "等待切斷"
     },
     "Robot waited to chop": {
       "en-US": "Robot waited to chop",
-      "zh-CN": "机器人等待砍下"
+      "zh-CN": "机器人等待砍下",
+      "zh-TW": "機器人等待切斷"
     },
     "Can 7 Upright": {
       "en-US": "Can 7 Upright",
-      "zh-CN": "罐 7 直立"
+      "zh-CN": "罐 7 直立",
+      "zh-TW": "Can 7 直立"
     },
     "Can 7 upright": {
       "en-US": "Can 7 upright",
-      "zh-CN": "Can 7 直立"
+      "zh-CN": "Can 7 直立",
+      "zh-TW": "Can 7 直立"
     },
     "Wait before chopping": {
       "en-US": "Wait before chopping",
-      "zh-CN": "等待后再砍"
+      "zh-CN": "等待后再砍",
+      "zh-TW": "等待後再砍"
     },
     "Knock over can 7": {
       "en-US": "Knock over can 7",
-      "zh-CN": "撞倒 7 号罐"
+      "zh-CN": "撞倒 7 号罐",
+      "zh-TW": "打翻罐頭 7"
     },
     "JBC Challenge 11": {
       "en-US": "JBC Challenge 11",
-      "zh-CN": "JBC 挑战 11"
+      "zh-CN": "JBC 挑战 11",
+      "zh-TW": "JBC 挑戰 11"
     },
     "Robot Waved": {
       "en-US": "Robot Waved",
-      "zh-CN": "机器人挥手"
+      "zh-CN": "机器人挥手",
+      "zh-TW": "機器人揮手"
     },
     "Robot waved": {
       "en-US": "Robot waved",
-      "zh-CN": "机器人挥手"
+      "zh-CN": "机器人挥手",
+      "zh-TW": "機器人揮手"
     },
     "Circle 3 touched": {
       "en-US": "Circle 3 touched",
-      "zh-CN": "圆圈 3 已触碰"
+      "zh-CN": "圆圈 3 已触碰",
+      "zh-TW": "圓圈 3 觸碰"
     },
     "Circle 6 Touched": {
       "en-US": "Circle 6 Touched",
-      "zh-CN": "圆圈 6 已触碰"
+      "zh-CN": "圆圈 6 已触碰",
+      "zh-TW": "圓 6 已碰觸"
     },
     "Circle 6 touched": {
       "en-US": "Circle 6 touched",
-      "zh-CN": "圆圈 6 已触及"
+      "zh-CN": "圆圈 6 已触及",
+      "zh-TW": "圓 6 已碰觸"
     },
     "Circle 9 touched": {
       "en-US": "Circle 9 touched",
-      "zh-CN": "圆 9 已触及"
+      "zh-CN": "圆 9 已触及",
+      "zh-TW": "圓 9 已碰觸"
     },
     "Circle 12 Touched": {
       "en-US": "Circle 12 Touched",
-      "zh-CN": "圆 12 已触及"
+      "zh-CN": "圆 12 已触及",
+      "zh-TW": "圓 12 已碰觸"
     },
     "Circle 12 touched": {
       "en-US": "Circle 12 touched",
-      "zh-CN": "圆 12 已触及"
+      "zh-CN": "圆 12 已触及",
+      "zh-TW": "圓 12 已接觸"
     },
     "Wave at circle 3": {
       "en-US": "Wave at circle 3",
-      "zh-CN": "在圆圈 3 处挥动"
+      "zh-CN": "在圆圈 3 处挥动",
+      "zh-TW": "在圓圈 3 揮動"
     },
     "Wave at circle 6": {
       "en-US": "Wave at circle 6",
-      "zh-CN": "在圆圈 6 上挥动"
+      "zh-CN": "在圆圈 6 上挥动",
+      "zh-TW": "在圓圈 6 揮動"
     },
     "Wave at circle 9": {
       "en-US": "Wave at circle 9",
-      "zh-CN": "在圆圈 9 上挥动"
+      "zh-CN": "在圆圈 9 上挥动",
+      "zh-TW": "圓 9 觸摸"
     },
     "Wave at circle 12": {
       "en-US": "Wave at circle 12",
-      "zh-CN": "在圆圈 12 上挥动"
+      "zh-CN": "在圆圈 12 上挥动",
+      "zh-TW": "在圓圈 12 上揮動"
     },
     "JBC Challenge 15": {
       "en-US": "JBC Challenge 15",
-      "zh-CN": "JBC 挑战 15"
+      "zh-CN": "JBC 挑战 15",
+      "zh-TW": "JBC 挑戰 15"
     },
     "Can 11 Upright": {
       "en-US": "Can 11 Upright",
-      "zh-CN": "直立罐 11"
+      "zh-CN": "直立罐 11",
+      "zh-TW": "直立罐 11"
     },
     "Can 11 upright": {
       "en-US": "Can 11 upright",
-      "zh-CN": "11号罐直立"
+      "zh-CN": "11号罐直立",
+      "zh-TW": "11號罐直立"
     },
     "Bring can to Start Box": {
       "en-US": "Bring can to Start Box",
-      "zh-CN": "将罐子带到起始箱"
+      "zh-CN": "将罐子带到起始箱",
+      "zh-TW": "將罐帶到起始箱"
     },
     "Keep can 11 not upright": {
       "en-US": "Keep can 11 not upright",
-      "zh-CN": "保持 11 号罐不直立"
+      "zh-CN": "保持 11 号罐不直立",
+      "zh-TW": "保持11號罐不直立"
     },
     "JBC Challenge 16": {
       "en-US": "JBC Challenge 16",
-      "zh-CN": "JBC 挑战 16"
+      "zh-CN": "JBC 挑战 16",
+      "zh-TW": "JBC 挑戰 16"
     },
     "Can 2 Picked Up": {
       "en-US": "Can 2 Picked Up",
-      "zh-CN": "拾起2号罐"
+      "zh-CN": "拾起2号罐",
+      "zh-TW": "撿起2號罐"
     },
     "Can 2 picked up": {
       "en-US": "Can 2 picked up",
-      "zh-CN": "捡起 2 号罐"
+      "zh-CN": "捡起 2 号罐",
+      "zh-TW": "撿起2號罐"
     },
     "Can 9 Picked Up": {
       "en-US": "Can 9 Picked Up",
-      "zh-CN": "捡起易拉罐 9"
+      "zh-CN": "捡起易拉罐 9",
+      "zh-TW": "撿起9號罐"
     },
     "Can 9 picked up": {
       "en-US": "Can 9 picked up",
-      "zh-CN": "拾起 9 号罐"
+      "zh-CN": "拾起 9 号罐",
+      "zh-TW": "撿起罐頭 9"
     },
     "Can 10 Picked Up": {
       "en-US": "Can 10 Picked Up",
-      "zh-CN": "10 号罐被拾起"
+      "zh-CN": "10 号罐被拾起",
+      "zh-TW": "罐頭 10 撿起"
     },
     "Can 10 picked up": {
       "en-US": "Can 10 picked up",
-      "zh-CN": "10 号罐被拾起"
+      "zh-CN": "10 号罐被拾起",
+      "zh-TW": "Can 10 已被拾起"
     },
     "Can 2 not upright": {
       "en-US": "Can 2 not upright",
-      "zh-CN": "罐 2 不能竖立"
+      "zh-CN": "罐 2 不能竖立",
+      "zh-TW": "罐 2 未直立"
     },
     "Can 10 not upright": {
       "en-US": "Can 10 not upright",
-      "zh-CN": "10 号罐未竖直"
+      "zh-CN": "10 号罐未竖直",
+      "zh-TW": "Can 10 未直立"
     },
     "Can 2 not picked up": {
       "en-US": "Can 2 not picked up",
-      "zh-CN": "第 2 罐未捡起"
+      "zh-CN": "第 2 罐未捡起",
+      "zh-TW": "Can 2 未被拾起"
     },
     "Can 9 not picked up": {
       "en-US": "Can 9 not picked up",
-      "zh-CN": "第 9 罐未捡起"
+      "zh-CN": "第 9 罐未捡起",
+      "zh-TW": "Can 9 未被拾起"
     },
     "Can 10 not picked up": {
       "en-US": "Can 10 not picked up",
-      "zh-CN": "10 号罐未捡起"
+      "zh-CN": "10 号罐未捡起",
+      "zh-TW": "Can 10 未被拾起"
     },
     "JBC Challenge 17": {
       "en-US": "JBC Challenge 17",
-      "zh-CN": "JBC 挑战 17"
+      "zh-CN": "JBC 挑战 17",
+      "zh-TW": "JBC 挑戰 17"
     },
     "Rescue can 1 to start box": {
       "en-US": "Rescue can 1 to start box",
-      "zh-CN": "救援1号罐到起始箱"
+      "zh-CN": "救援1号罐到起始箱",
+      "zh-TW": "救援1號罐至起始箱"
     },
     "Rescue can 2 to start box": {
       "en-US": "Rescue can 2 to start box",
-      "zh-CN": "救援易拉罐 2 到起始箱"
+      "zh-CN": "救援易拉罐 2 到起始箱",
+      "zh-TW": "救援罐 2 到起始箱"
     },
     "Rescue can 3 to start box": {
       "en-US": "Rescue can 3 to start box",
-      "zh-CN": "救援易拉罐 3 到起始箱"
+      "zh-CN": "救援易拉罐 3 到起始箱",
+      "zh-TW": "救援罐 3 到起始箱"
     },
     "Can 1 not upright": {
       "en-US": "Can 1 not upright",
-      "zh-CN": "1 号罐不直立"
+      "zh-CN": "1 号罐不直立",
+      "zh-TW": "Can 1 未直立"
     },
     "Can 3 not upright": {
       "en-US": "Can 3 not upright",
-      "zh-CN": "易拉罐 3 不能直立"
+      "zh-CN": "易拉罐 3 不能直立",
+      "zh-TW": "救援罐 3 不能直立"
     },
     "JBC Challenge 18": {
       "en-US": "JBC Challenge 18",
-      "zh-CN": "JBC 挑战赛 18"
+      "zh-CN": "JBC 挑战赛 18",
+      "zh-TW": "JBC 挑戰賽 18"
     },
     "Robot Left Start": {
       "en-US": "Robot Left Start",
-      "zh-CN": "机器人左侧起点"
+      "zh-CN": "机器人左侧起点",
+      "zh-TW": "機器人左起點"
     },
     "Robot left starting box": {
       "en-US": "Robot left starting box",
-      "zh-CN": "机器人左侧启动"
+      "zh-CN": "机器人左侧启动",
+      "zh-TW": "機器人左側起始方塊"
     },
     "One Can Stacked": {
       "en-US": "One Can Stacked",
-      "zh-CN": "一个罐子叠放"
+      "zh-CN": "一个罐子叠放",
+      "zh-TW": "一罐堆疊"
     },
     "One can is stacked on another": {
       "en-US": "One can is stacked on another",
-      "zh-CN": "一个罐子叠放在另一个罐子上"
+      "zh-CN": "一个罐子叠放在另一个罐子上",
+      "zh-TW": "一個罐子疊在另一個罐子上"
     },
     "Robot Touching Can": {
       "en-US": "Robot Touching Can",
-      "zh-CN": "机器人触碰罐子"
+      "zh-CN": "机器人触碰罐子",
+      "zh-TW": "機器人觸摸罐子"
     },
     "Robot is touching a can": {
       "en-US": "Robot is touching a can",
-      "zh-CN": "机器人正在触摸一个罐子"
+      "zh-CN": "机器人正在触摸一个罐子",
+      "zh-TW": "機器人正在碰觸一個罐子"
     },
     "Leave the Start Box": {
       "en-US": "Leave the Start Box",
-      "zh-CN": "离开起始箱"
+      "zh-CN": "离开起始箱",
+      "zh-TW": "離開起始箱"
     },
     "Stack one can on another": {
       "en-US": "Stack one can on another",
-      "zh-CN": "将一个罐子堆叠在另一个罐子上"
+      "zh-CN": "将一个罐子堆叠在另一个罐子上",
+      "zh-TW": "將一個罐子堆疊在另一個罐子上"
     },
     "Robot touching can": {
       "en-US": "Robot touching can",
-      "zh-CN": "机器人触碰易拉罐"
+      "zh-CN": "机器人触碰易拉罐",
+      "zh-TW": "機器人觸摸罐子"
     },
     "JBC Challenge 19": {
       "en-US": "JBC Challenge 19",
-      "zh-CN": "JBC 挑战 19"
+      "zh-CN": "JBC 挑战 19",
+      "zh-TW": "JBC 挑戰 19"
     },
     "Robot Forward Touch": {
       "en-US": "Robot Forward Touch",
-      "zh-CN": "机器人向前触碰"
+      "zh-CN": "机器人向前触碰",
+      "zh-TW": "機器人向前觸摸"
     },
     "Robot drove forward and touched ream of paper": {
       "en-US": "Robot drove forward and touched ream of paper",
-      "zh-CN": "机器人向前行驶并触及一卷纸"
+      "zh-CN": "机器人向前行驶并触及一卷纸",
+      "zh-TW": "機器人向前驅動並觸摸一卷紙"
     },
     "Drive forward and touch the ream": {
       "en-US": "Drive forward and touch the ream",
-      "zh-CN": "向前行驶并触摸纸卷"
+      "zh-CN": "向前行驶并触摸纸卷",
+      "zh-TW": "向前驅動並觸摸紙卷"
     },
     "JBC Challenge 20": {
       "en-US": "JBC Challenge 20",
-      "zh-CN": "JBC 挑战 20"
+      "zh-CN": "JBC 挑战 20",
+      "zh-TW": "JBC 挑戰 20"
     },
     "Robot in start box": {
       "en-US": "Robot in start box",
-      "zh-CN": "机器人在启动箱中"
+      "zh-CN": "机器人在启动箱中",
+      "zh-TW": "機器人在起始箱"
     },
     "Ream 1 Touched": {
       "en-US": "Ream 1 Touched",
-      "zh-CN": "触碰卷 1"
+      "zh-CN": "触碰卷 1",
+      "zh-TW": "觸碰卷 1"
     },
     "Robot touched ream 1": {
       "en-US": "Robot touched ream 1",
-      "zh-CN": "机器人触碰卷 1"
+      "zh-CN": "机器人触碰卷 1",
+      "zh-TW": "機器人觸碰卷 1"
     },
     "Ream 2 Touched": {
       "en-US": "Ream 2 Touched",
-      "zh-CN": "触碰卷 2"
+      "zh-CN": "触碰卷 2",
+      "zh-TW": "觸摸卷軸 2"
     },
     "Robot touched ream 2": {
       "en-US": "Robot touched ream 2",
-      "zh-CN": "机器人触碰卷 2"
+      "zh-CN": "机器人触碰卷 2",
+      "zh-TW": "機器人觸摸卷 2"
     },
     "Ream 3 Touched": {
       "en-US": "Ream 3 Touched",
-      "zh-CN": "触碰卷 3"
+      "zh-CN": "触碰卷 3",
+      "zh-TW": "觸摸卷 3"
     },
     "Robot touched ream 3": {
       "en-US": "Robot touched ream 3",
-      "zh-CN": "机器人触碰了卷 3"
+      "zh-CN": "机器人触碰了卷 3",
+      "zh-TW": "機器人觸摸卷 3"
     },
     "Ream 4 Touched": {
       "en-US": "Ream 4 Touched",
-      "zh-CN": "触碰卷 4"
+      "zh-CN": "触碰卷 4",
+      "zh-TW": "觸摸卷料 4"
     },
     "Robot touched ream 4": {
       "en-US": "Robot touched ream 4",
-      "zh-CN": "机器人触碰卷 4"
+      "zh-CN": "机器人触碰卷 4",
+      "zh-TW": "機器人觸摸卷 4"
     },
     "Touch ream 1": {
       "en-US": "Touch ream 1",
-      "zh-CN": "触摸卷 1"
+      "zh-CN": "触摸卷 1",
+      "zh-TW": "觸摸卷料 1"
     },
     "Touch ream 2": {
       "en-US": "Touch ream 2",
-      "zh-CN": "触碰卷 2"
+      "zh-CN": "触碰卷 2",
+      "zh-TW": "觸摸卷料 2"
     },
     "Touch ream 3": {
       "en-US": "Touch ream 3",
-      "zh-CN": "触碰卷 3"
+      "zh-CN": "触碰卷 3",
+      "zh-TW": "觸摸卷料 3"
     },
     "Touch ream 4": {
       "en-US": "Touch ream 4",
-      "zh-CN": "触摸卷料 4"
+      "zh-CN": "触摸卷料 4",
+      "zh-TW": "觸摸卷料 4"
     },
     "JBC Challenge 21": {
       "en-US": "JBC Challenge 21",
-      "zh-CN": "JBC 挑战 21"
+      "zh-CN": "JBC 挑战 21",
+      "zh-TW": "JBC 挑戰 21"
     },
     "Stop at Ream": {
       "en-US": "Stop at Ream",
-      "zh-CN": "停在卷料处"
+      "zh-CN": "停在卷料处",
+      "zh-TW": "停在絞線上"
     },
     "Robot stops at ream": {
       "en-US": "Robot stops at ream",
-      "zh-CN": "机器人停在卷料处"
+      "zh-CN": "机器人停在卷料处",
+      "zh-TW": "機器人停在鉸孔"
     },
     "Bump Ream": {
       "en-US": "Bump Ream",
-      "zh-CN": "撞击卷料"
+      "zh-CN": "撞击卷料",
+      "zh-TW": "碰撞鉸模"
     },
     "Robot bumps ream": {
       "en-US": "Robot bumps ream",
-      "zh-CN": "机器人撞击卷料"
+      "zh-CN": "机器人撞击卷料",
+      "zh-TW": "機器人碰撞鉸模"
     },
     "Stop at the ream": {
       "en-US": "Stop at the ream",
-      "zh-CN": "停在卷边上"
+      "zh-CN": "停在卷边上",
+      "zh-TW": "停在絞線上"
     },
     "Do not bump the ream": {
       "en-US": "Do not bump the ream",
-      "zh-CN": "不碰撞卷料"
+      "zh-CN": "不碰撞卷料",
+      "zh-TW": "不要碰撞絞線"
     },
     "JBC Challenge 22": {
       "en-US": "JBC Challenge 22",
-      "zh-CN": "JBC 挑战 22"
+      "zh-CN": "JBC 挑战 22",
+      "zh-TW": "JBC 挑戰 22"
     },
     "Can Upright": {
       "en-US": "Can Upright",
-      "zh-CN": "罐头直立"
+      "zh-CN": "罐头直立",
+      "zh-TW": "罐子直立"
     },
     "Can is upright": {
       "en-US": "Can is upright",
-      "zh-CN": "罐子直立"
+      "zh-CN": "罐子直立",
+      "zh-TW": "罐子直立"
     },
     "Can not upright": {
       "en-US": "Can not upright",
-      "zh-CN": "罐不直立"
+      "zh-CN": "罐不直立",
+      "zh-TW": "罐子無法直立"
     },
     "JBC Challenge 23": {
       "en-US": "JBC Challenge 23",
-      "zh-CN": "JBC 挑战 23"
+      "zh-CN": "JBC 挑战 23",
+      "zh-TW": "JBC 挑戰 23"
     },
     "Started over the circle": {
       "en-US": "Started over the circle",
-      "zh-CN": "从圆圈上方开始"
+      "zh-CN": "从圆圈上方开始",
+      "zh-TW": "從圓圈上方開始"
     },
     "Stop at the black line": {
       "en-US": "Stop at the black line",
-      "zh-CN": "停在黑线上"
+      "zh-CN": "停在黑线上",
+      "zh-TW": "停在黑線上"
     },
     "JBC Challenge 24": {
       "en-US": "JBC Challenge 24",
-      "zh-CN": "JBC 挑战 24"
+      "zh-CN": "JBC 挑战 24",
+      "zh-TW": "JBC 挑戰 24"
     },
     "Robot Walks the Line": {
       "en-US": "Robot Walks the Line",
-      "zh-CN": "机器人走线"
+      "zh-CN": "机器人走线",
+      "zh-TW": "機器人走線"
     },
     "Robot uses reflectance sensor to follow the black line until Finish Line ": {
       "en-US": "Robot uses reflectance sensor to follow the black line until Finish Line ",
-      "zh-CN": "机器人使用反射传感器沿着黑线走，直到终点线"
+      "zh-CN": "机器人使用反射传感器沿着黑线走，直到终点线",
+      "zh-TW": "機器人使用反射感應器跟隨黑線直到終點線 "
     },
     "Line follow to the finish line": {
       "en-US": "Line follow to the finish line",
-      "zh-CN": "沿着黑线走到终点"
+      "zh-CN": "沿着黑线走到终点",
+      "zh-TW": "跟著線走到終點線"
     },
     "Robot started on Circle": {
       "en-US": "Robot started on Circle",
-      "zh-CN": "机器人从圆圈开始"
+      "zh-CN": "机器人从圆圈开始",
+      "zh-TW": "機器人從圓圈開始"
     },
     "Can Not Upright": {
       "en-US": "Can Not Upright",
-      "zh-CN": "不能直立"
+      "zh-CN": "不能直立",
+      "zh-TW": "無法直立"
     },
     "Place Hamburger in Tray": {
       "en-US": "Place Hamburger in Tray",
-      "zh-CN": "将汉堡放入托盘"
+      "zh-CN": "将汉堡放入托盘",
+      "zh-TW": "將漢堡放在托盤中"
     },
     "Place Hotdog in Tray": {
       "en-US": "Place Hotdog in Tray",
-      "zh-CN": "将热狗放入托盘"
+      "zh-CN": "将热狗放入托盘",
+      "zh-TW": "將熱狗放入托盤"
     },
     "Place Taco in Tray": {
       "en-US": "Place Taco in Tray",
-      "zh-CN": "将玉米卷放入托盘"
+      "zh-CN": "将玉米卷放入托盘",
+      "zh-TW": "將墨西哥玉米卷放入托盤"
     },
     "Can A Not Upright": {
       "en-US": "Can A Not Upright",
-      "zh-CN": "罐头 A 不能直立"
+      "zh-CN": "罐头 A 不能直立",
+      "zh-TW": "罐頭 A 不能直立"
     },
     "Can B Not Upright": {
       "en-US": "Can B Not Upright",
-      "zh-CN": "罐头 B 不直立"
+      "zh-CN": "罐头 B 不直立",
+      "zh-TW": "罐頭 B 不可直立"
     },
     "Can C Not Upright": {
       "en-US": "Can C Not Upright",
-      "zh-CN": "罐头 C 非直立式"
+      "zh-CN": "罐头 C 非直立式",
+      "zh-TW": "罐頭 C 不可直立"
     },
     "Can D Not Upright": {
       "en-US": "Can D Not Upright",
-      "zh-CN": "罐头 D 不直立"
+      "zh-CN": "罐头 D 不直立",
+      "zh-TW": "罐頭 D 不能直立"
     },
     "Can E Not Upright": {
       "en-US": "Can E Not Upright",
-      "zh-CN": "罐 E 不直立"
+      "zh-CN": "罐 E 不直立",
+      "zh-TW": "罐頭 E 不可直立"
     },
     "Can F Not Upright": {
       "en-US": "Can F Not Upright",
-      "zh-CN": "罐体 F 非直立式"
+      "zh-CN": "罐体 F 非直立式",
+      "zh-TW": "罐 F 非直立式"
     },
     "Can G Not Upright": {
       "en-US": "Can G Not Upright",
-      "zh-CN": "罐体 G 非直立式"
+      "zh-CN": "罐体 G 非直立式",
+      "zh-TW": "罐子 G 不是直立式"
     },
     "Can 1 in the Start Box": {
       "en-US": "Can 1 in the Start Box",
-      "zh-CN": "罐 1 在起始箱中"
+      "zh-CN": "罐 1 在起始箱中",
+      "zh-TW": "罐 1 在起始箱中"
     },
     "Can 2 in the Start Box": {
       "en-US": "Can 2 in the Start Box",
-      "zh-CN": "罐 2 在起始箱中"
+      "zh-CN": "罐 2 在起始箱中",
+      "zh-TW": "罐 2 在起始箱中"
     },
     "Can 3 in the Start Box": {
       "en-US": "Can 3 in the Start Box",
-      "zh-CN": "罐 3 在起始箱中"
+      "zh-CN": "罐 3 在起始箱中",
+      "zh-TW": "罐 3 在起始箱中"
     },
     "Can 4 in the Start Box": {
       "en-US": "Can 4 in the Start Box",
-      "zh-CN": "罐 4 位于起始箱中"
+      "zh-CN": "罐 4 位于起始箱中",
+      "zh-TW": "罐 4 在起始方塊中"
     },
     "Can 5 in the Start Box": {
       "en-US": "Can 5 in the Start Box",
-      "zh-CN": "罐 5 位于起始箱中"
+      "zh-CN": "罐 5 位于起始箱中",
+      "zh-TW": "罐 5 在起始箱中"
     },
     "Can 1 Not Upright": {
       "en-US": "Can 1 Not Upright",
-      "zh-CN": "罐 1 不能直立"
+      "zh-CN": "罐 1 不能直立",
+      "zh-TW": "罐 1 不能直立"
     },
     "Can 2 Not Upright": {
       "en-US": "Can 2 Not Upright",
-      "zh-CN": "罐 2 不能直立"
+      "zh-CN": "罐 2 不能直立",
+      "zh-TW": "罐 2 不能直立"
     },
     "Can 3 Not Upright": {
       "en-US": "Can 3 Not Upright",
-      "zh-CN": "罐 3 不能直立"
+      "zh-CN": "罐 3 不能直立",
+      "zh-TW": "罐 3 不能直立"
     },
     "Can 4 Not Upright": {
       "en-US": "Can 4 Not Upright",
-      "zh-CN": "罐 4 不能直立"
+      "zh-CN": "罐 4 不能直立",
+      "zh-TW": "罐 4 不直立"
     },
     "Can 5 Not Upright": {
       "en-US": "Can 5 Not Upright",
-      "zh-CN": "罐 5 不能直立"
+      "zh-CN": "罐 5 不能直立",
+      "zh-TW": "罐 5 不能直立"
     },
     "JBC Challenge 10B": {
       "en-US": "JBC Challenge 10B",
-      "zh-CN": "JBC 挑战赛 10B"
+      "zh-CN": "JBC 挑战赛 10B",
+      "zh-TW": "JBC 挑戰賽 10B"
     },
     "JBC Challenge 12": {
       "en-US": "JBC Challenge 12",
-      "zh-CN": "JBC 挑战 12"
+      "zh-CN": "JBC 挑战 12",
+      "zh-TW": "JBC 挑戰 12"
     },
     "Can from green garage intersects circle 2": {
       "en-US": "Can from green garage intersects circle 2",
-      "zh-CN": "来自绿色车库的罐子与圆圈 2 相交"
+      "zh-CN": "来自绿色车库的罐子与圆圈 2 相交",
+      "zh-TW": "來自綠色車庫的罐子與圓圈 2 相交"
     },
     "Can from blue garage intersects circle 9": {
       "en-US": "Can from blue garage intersects circle 9",
-      "zh-CN": "蓝色车库的罐子与圆圈 9 相交"
+      "zh-CN": "蓝色车库的罐子与圆圈 9 相交",
+      "zh-TW": "藍色車庫的罐子與圓圈 9 相交"
     },
     "Can 10 Intersects": {
       "en-US": "Can 10 Intersects",
-      "zh-CN": "易拉罐 10 相交"
+      "zh-CN": "易拉罐 10 相交",
+      "zh-TW": "Can 10 相交"
     },
     "Can from yellow garage intersects circle 10": {
       "en-US": "Can from yellow garage intersects circle 10",
-      "zh-CN": "黄色车库的罐子与圆圈10相交"
+      "zh-CN": "黄色车库的罐子与圆圈10相交",
+      "zh-TW": "黃色車庫的罐子與圓圈10相交"
     },
     "JBC Challenge 13": {
       "en-US": "JBC Challenge 13",
-      "zh-CN": "JBC 挑战 13"
+      "zh-CN": "JBC 挑战 13",
+      "zh-TW": "JBC 挑戰 13"
     },
     "Can 2 intersects chosen garage": {
       "en-US": "Can 2 intersects chosen garage",
-      "zh-CN": "罐 2 与所选车库相交"
+      "zh-CN": "罐 2 与所选车库相交",
+      "zh-TW": "罐子 2 與所選的車庫相交"
     },
     "Can 5 intersects chosen garage": {
       "en-US": "Can 5 intersects chosen garage",
-      "zh-CN": "Can 5 与所选车库相交"
+      "zh-CN": "Can 5 与所选车库相交",
+      "zh-TW": "Can 5 與所選的車庫相交"
     },
     "Can 8 Intersects": {
       "en-US": "Can 8 Intersects",
-      "zh-CN": "8个相交"
+      "zh-CN": "8个相交",
+      "zh-TW": "Can 8 相交"
     },
     "Can 8 intersects chosen garage": {
       "en-US": "Can 8 intersects chosen garage",
-      "zh-CN": "Can 8 与所选车库相交"
+      "zh-CN": "Can 8 与所选车库相交",
+      "zh-TW": "Can 8 與所選的車庫相交"
     },
     "Can 10 intersects chosen garage": {
       "en-US": "Can 10 intersects chosen garage",
-      "zh-CN": "与所选车库相交 10 次"
+      "zh-CN": "与所选车库相交 10 次",
+      "zh-TW": "可以 10 相交於所選的車庫"
     },
     "Can 11 Intersects": {
       "en-US": "Can 11 Intersects",
-      "zh-CN": "可以 11 相交"
+      "zh-CN": "可以 11 相交",
+      "zh-TW": "可以 11 相交"
     },
     "Can 11 intersects chosen garage": {
       "en-US": "Can 11 intersects chosen garage",
-      "zh-CN": "11 号罐与所选车库相交"
+      "zh-CN": "11 号罐与所选车库相交",
+      "zh-TW": "Can 11 與所選的車庫相交"
     },
     "Can 2 upright in chosen garage": {
       "en-US": "Can 2 upright in chosen garage",
-      "zh-CN": "可以 2 垂直于所选车库"
+      "zh-CN": "可以 2 垂直于所选车库",
+      "zh-TW": "Can 2 直立於選定車庫"
     },
     "Can 5 upright in achosen garage": {
       "en-US": "Can 5 upright in achosen garage",
-      "zh-CN": "第 5 个直立筒在所选车库中"
+      "zh-CN": "第 5 个直立筒在所选车库中",
+      "zh-TW": "Can 5 在選擇的車庫中直立"
     },
     "Can 8 Upright": {
       "en-US": "Can 8 Upright",
-      "zh-CN": "可以 8 个直立"
+      "zh-CN": "可以 8 个直立",
+      "zh-TW": "可以 8 直立"
     },
     "Can 8 upright in chosen garage": {
       "en-US": "Can 8 upright in chosen garage",
-      "zh-CN": "可在所选车库中直立 8 个"
+      "zh-CN": "可在所选车库中直立 8 个",
+      "zh-TW": "選取的車庫中有 8 個直立罐"
     },
     "Can 10 upright in chosen garage": {
       "en-US": "Can 10 upright in chosen garage",
-      "zh-CN": "10 号罐在所选车库中直立"
+      "zh-CN": "10 号罐在所选车库中直立",
+      "zh-TW": "Can 10 直立於選定的車庫"
     },
     "Can 11 upright in chosen garage": {
       "en-US": "Can 11 upright in chosen garage",
-      "zh-CN": "11号罐在所选车库直立"
+      "zh-CN": "11号罐在所选车库直立",
+      "zh-TW": "11號罐直立於所選的車庫"
     },
     "JBC Challenge 15B": {
       "en-US": "JBC Challenge 15B",
-      "zh-CN": "JBC 挑战赛 15B"
+      "zh-CN": "JBC 挑战赛 15B",
+      "zh-TW": "JBC 挑戰 15B"
     },
     "Robot Backward Touch": {
       "en-US": "Robot Backward Touch",
-      "zh-CN": "机器人向后触纸"
+      "zh-CN": "机器人向后触纸",
+      "zh-TW": "機器人向後觸摸"
     },
     "Robot drove backward and touched ream of paper": {
       "en-US": "Robot drove backward and touched ream of paper",
-      "zh-CN": "机器人向后行驶并触碰一卷纸"
+      "zh-CN": "机器人向后行驶并触碰一卷纸",
+      "zh-TW": "機器人向後驅動並觸摸一卷紙"
     },
     "Robot Forward Circle 2": {
       "en-US": "Robot Forward Circle 2",
-      "zh-CN": "机器人向前绕圈2"
+      "zh-CN": "机器人向前绕圈2",
+      "zh-TW": "機器人向前繞圈2"
     },
     "Robot drove forward to circle 2": {
       "en-US": "Robot drove forward to circle 2",
-      "zh-CN": "机器人向前开到圆圈2"
+      "zh-CN": "机器人向前开到圆圈2",
+      "zh-TW": "機器人向前駛到圓圈2"
     },
     "JBC Challenge 17B": {
       "en-US": "JBC Challenge 17B",
-      "zh-CN": "JBC 挑战赛 17B"
+      "zh-CN": "JBC 挑战赛 17B",
+      "zh-TW": "JBC 挑戰賽 17B"
     },
     "Robot uses reflectance sensor to follow the black line until the Blue line": {
       "en-US": "Robot uses reflectance sensor to follow the black line until the Blue line",
-      "zh-CN": "机器人使用反射传感器跟随黑线直到蓝线"
+      "zh-CN": "机器人使用反射传感器跟随黑线直到蓝线",
+      "zh-TW": "機器人使用反射感應器跟著黑線直到藍線"
     },
     "Can 9 is upright": {
       "en-US": "Can 9 is upright",
-      "zh-CN": "9 号罐直立"
+      "zh-CN": "9 号罐直立",
+      "zh-TW": "Can 9 直立"
     },
     "Can 10 is upright": {
       "en-US": "Can 10 is upright",
-      "zh-CN": "10 号罐直立"
+      "zh-CN": "10 号罐直立",
+      "zh-TW": "Can 10 直立"
     },
     "Can 12 Upright": {
       "en-US": "Can 12 Upright",
-      "zh-CN": "罐 12 直立"
+      "zh-CN": "罐 12 直立",
+      "zh-TW": "Can 12 直立"
     },
     "Can 12 is upright": {
       "en-US": "Can 12 is upright",
-      "zh-CN": "Can 12 直立"
+      "zh-CN": "Can 12 直立",
+      "zh-TW": "Can 12 直立"
     },
     "Can 9 rescued intersecting paper ream": {
       "en-US": "Can 9 rescued intersecting paper ream",
-      "zh-CN": "Can 9 抢救出相交的纸卷"
+      "zh-CN": "Can 9 抢救出相交的纸卷",
+      "zh-TW": "Can 9 搶救相交的紙卷"
     },
     "Can 2 rescued intersecting paper ream": {
       "en-US": "Can 2 rescued intersecting paper ream",
-      "zh-CN": "2 号罐抢救出相交的卷筒纸"
+      "zh-CN": "2 号罐抢救出相交的卷筒纸",
+      "zh-TW": "Can 2 搶救相交紙卷"
     },
     "Can 10 rescued intersecting paper ream": {
       "en-US": "Can 10 rescued intersecting paper ream",
-      "zh-CN": "10 号罐抢救出相交的卷筒纸"
+      "zh-CN": "10 号罐抢救出相交的卷筒纸",
+      "zh-TW": "Can 10 搶救相交紙卷"
     },
     "Can 12 Intersects": {
       "en-US": "Can 12 Intersects",
-      "zh-CN": "Can 12 相交"
+      "zh-CN": "Can 12 相交",
+      "zh-TW": "Can 12 相交"
     },
     "Can 12 rescued intersecting paper ream": {
       "en-US": "Can 12 rescued intersecting paper ream",
-      "zh-CN": "12 号罐抢救出相交的卷筒纸"
+      "zh-CN": "12 号罐抢救出相交的卷筒纸",
+      "zh-TW": "Can 12 搶救相交紙卷"
     },
     "Can 9 Lifted": {
       "en-US": "Can 9 Lifted",
-      "zh-CN": "罐 9 升起"
+      "zh-CN": "罐 9 升起",
+      "zh-TW": "Can 9 升起"
     },
     "Can 9 Lifted a Foot Tall": {
       "en-US": "Can 9 Lifted a Foot Tall",
-      "zh-CN": "Can 9 升起一英尺高"
+      "zh-CN": "Can 9 升起一英尺高",
+      "zh-TW": "Can 9 舉起一英尺高"
     },
     "JBC Challenge 2B": {
       "en-US": "JBC Challenge 2B",
-      "zh-CN": "JBC 挑战 2B"
+      "zh-CN": "JBC 挑战 2B",
+      "zh-TW": "JBC 挑戰 2B"
     },
     "Can 10 Touched": {
       "en-US": "Can 10 Touched",
-      "zh-CN": "能 10 触摸"
+      "zh-CN": "能 10 触摸",
+      "zh-TW": "Can 10 觸摸"
     },
     "Can 10 touched": {
       "en-US": "Can 10 touched",
-      "zh-CN": "罐 10 触摸"
+      "zh-CN": "罐 10 触摸",
+      "zh-TW": "Can 10 觸摸"
     },
     "Can 11 Touched": {
       "en-US": "Can 11 Touched",
-      "zh-CN": "可以 11 碰触"
+      "zh-CN": "可以 11 碰触",
+      "zh-TW": "罐子 11 碰觸"
     },
     "Can 11 touched": {
       "en-US": "Can 11 touched",
-      "zh-CN": "可以 11 碰触"
+      "zh-CN": "可以 11 碰触",
+      "zh-TW": "可以 11 碰觸"
     },
     "Can 12 Touched": {
       "en-US": "Can 12 Touched",
-      "zh-CN": "可以 12 触碰"
+      "zh-CN": "可以 12 触碰",
+      "zh-TW": "可以 12 點觸"
     },
     "Can 12 touched": {
       "en-US": "Can 12 touched",
-      "zh-CN": "可以 12 触碰"
+      "zh-CN": "可以 12 触碰",
+      "zh-TW": "可以 12 觸碰"
     },
     "Can 10 intersects circle 10": {
       "en-US": "Can 10 intersects circle 10",
-      "zh-CN": "可以 10 与圆圈 10 相交"
+      "zh-CN": "可以 10 与圆圈 10 相交",
+      "zh-TW": "Can 10 與圓圈 10 相交"
     },
     "Can 11 intersects circle 11": {
       "en-US": "Can 11 intersects circle 11",
-      "zh-CN": "可以 11 与圆 11 相交"
+      "zh-CN": "可以 11 与圆 11 相交",
+      "zh-TW": "可以 11 交圓 11"
     },
     "Can 12 intersects circle 12": {
       "en-US": "Can 12 intersects circle 12",
-      "zh-CN": "可以 12 相交于圆 12"
+      "zh-CN": "可以 12 相交于圆 12",
+      "zh-TW": "Can 12 與圓圈 12 相交"
     },
     "Can 10 upright on circle 10": {
       "en-US": "Can 10 upright on circle 10",
-      "zh-CN": "10 可以直立在圆 10 上"
+      "zh-CN": "10 可以直立在圆 10 上",
+      "zh-TW": "10 可以直立於圓圈 10"
     },
     "Can 11 upright on circle 11": {
       "en-US": "Can 11 upright on circle 11",
-      "zh-CN": "11 可以直立在圆 11 上"
+      "zh-CN": "11 可以直立在圆 11 上",
+      "zh-TW": "11 可以直立在圓圈 11 上"
     },
     "Can 12 upright on circle 12": {
       "en-US": "Can 12 upright on circle 12",
-      "zh-CN": "罐 12 在圆 12 上直立"
+      "zh-CN": "罐 12 在圆 12 上直立",
+      "zh-TW": "罐子 12 在圓圈 12 上直立"
     },
     "Robot passed right side of can 12": {
       "en-US": "Robot passed right side of can 12",
-      "zh-CN": "机器人通过 12 号罐右侧"
+      "zh-CN": "机器人通过 12 号罐右侧",
+      "zh-TW": "機器人通過罐子 12 的右側"
     },
     "Robot passed top side of can 11": {
       "en-US": "Robot passed top side of can 11",
-      "zh-CN": "机器人通过 11 号罐上侧"
+      "zh-CN": "机器人通过 11 号罐上侧",
+      "zh-TW": "機器人通過罐子 11 上側"
     },
     "Robot passed left side of can 10": {
       "en-US": "Robot passed left side of can 10",
-      "zh-CN": "机器人通过 10 号罐左侧"
+      "zh-CN": "机器人通过 10 号罐左侧",
+      "zh-TW": "機器人通過10號罐的左側"
     },
     "JBC Challenge 2C": {
       "en-US": "JBC Challenge 2C",
-      "zh-CN": "JBC 挑战赛 2C"
+      "zh-CN": "JBC 挑战赛 2C",
+      "zh-TW": "JBC 挑戰賽 2C"
     },
     "Robot Driving Backwards": {
       "en-US": "Robot Driving Backwards",
-      "zh-CN": "机器人向后行驶"
+      "zh-CN": "机器人向后行驶",
+      "zh-TW": "機器人倒退"
     },
     "Robot is driving backwards": {
       "en-US": "Robot is driving backwards",
-      "zh-CN": "机器人向后行驶"
+      "zh-CN": "机器人向后行驶",
+      "zh-TW": "機器人倒退"
     },
     "JBC Challenge 2D": {
       "en-US": "JBC Challenge 2D",
-      "zh-CN": "JBC 挑战赛 2D"
+      "zh-CN": "JBC 挑战赛 2D",
+      "zh-TW": "JBC 挑戰賽 2D"
     },
     "Robot Rentered Start 1": {
       "en-US": "Robot Rentered Start 1",
-      "zh-CN": "机器人重回起点 1"
+      "zh-CN": "机器人重回起点 1",
+      "zh-TW": "機器人重回起點 1"
     },
     "Robot reentered starting box after going forwards": {
       "en-US": "Robot reentered starting box after going forwards",
-      "zh-CN": "机器人向前行驶后重新进入起点框"
+      "zh-CN": "机器人向前行驶后重新进入起点框",
+      "zh-TW": "機器人前進後重新進入起點框"
     },
     "Robot Rentered Start 2": {
       "en-US": "Robot Rentered Start 2",
-      "zh-CN": "机器人更改起点 2"
+      "zh-CN": "机器人更改起点 2",
+      "zh-TW": "機器人重新開始 2"
     },
     "Robot reentered starting box after going backwards": {
       "en-US": "Robot reentered starting box after going backwards",
-      "zh-CN": "机器人后退后重新进入起始框"
+      "zh-CN": "机器人后退后重新进入起始框",
+      "zh-TW": "機器人倒退後重新進入起點框"
     },
     "Robot Driving Forwards": {
       "en-US": "Robot Driving Forwards",
-      "zh-CN": "机器人向前行驶"
+      "zh-CN": "机器人向前行驶",
+      "zh-TW": "機器人向前驅動"
     },
     "Robot is driving forwards": {
       "en-US": "Robot is driving forwards",
-      "zh-CN": "机器人向前行驶"
+      "zh-CN": "机器人向前行驶",
+      "zh-TW": "機器人向前駛"
     },
     "JBC Challenge 4B": {
       "en-US": "JBC Challenge 4B",
-      "zh-CN": "JBC 挑战赛 4B"
+      "zh-CN": "JBC 挑战赛 4B",
+      "zh-TW": "JBC 挑戰賽 4B"
     },
     "Can 5 intersects circle 5": {
       "en-US": "Can 5 intersects circle 5",
-      "zh-CN": "Can 5 与圆圈 5 相交"
+      "zh-CN": "Can 5 与圆圈 5 相交",
+      "zh-TW": "Can 5 與圓圈 5 相交"
     },
     "Can 8 intersects circle 8": {
       "en-US": "Can 8 intersects circle 8",
-      "zh-CN": "8号罐与8号圆相交"
+      "zh-CN": "8号罐与8号圆相交",
+      "zh-TW": "Can 8 與圓圈 8 相交"
     },
     "Can 5 upright on circle 5": {
       "en-US": "Can 5 upright on circle 5",
-      "zh-CN": "5 可以直立在圆 5 上"
+      "zh-CN": "5 可以直立在圆 5 上",
+      "zh-TW": "5 可以直立在圓圈 5 上"
     },
     "Can 8 upright on circle 8": {
       "en-US": "Can 8 upright on circle 8",
-      "zh-CN": "8 能在圆 8 上直立"
+      "zh-CN": "8 能在圆 8 上直立",
+      "zh-TW": "Can 8 直立在圓圈 8 上"
     },
     "Can 8 Clockwise": {
       "en-US": "Can 8 Clockwise",
-      "zh-CN": "8号罐顺时针"
+      "zh-CN": "8号罐顺时针",
+      "zh-TW": "8號罐順時針"
     },
     "Robot drove clockwise around can 8": {
       "en-US": "Robot drove clockwise around can 8",
-      "zh-CN": "机器人绕 8 号罐顺时针行驶"
+      "zh-CN": "机器人绕 8 号罐顺时针行驶",
+      "zh-TW": "機器人繞著 Can 8 順時針驅動"
     },
     "Can 5 Counter Clockwise": {
       "en-US": "Can 5 Counter Clockwise",
-      "zh-CN": "罐 5 逆时针"
+      "zh-CN": "罐 5 逆时针",
+      "zh-TW": "Can 5 逆時針"
     },
     "Robot drove counter clockwise around can 5": {
       "en-US": "Robot drove counter clockwise around can 5",
-      "zh-CN": "机器人绕 5 号罐逆时针行驶"
+      "zh-CN": "机器人绕 5 号罐逆时针行驶",
+      "zh-TW": "機器人繞著5號罐逆時針方向驅動"
     },
     "Can 9 Counter Clockwise": {
       "en-US": "Can 9 Counter Clockwise",
-      "zh-CN": "9 号罐 逆时针"
+      "zh-CN": "9 号罐 逆时针",
+      "zh-TW": "Can 9 逆時針"
     },
     "Robot drove counter clockwise around can 9": {
       "en-US": "Robot drove counter clockwise around can 9",
-      "zh-CN": "机器人绕 9 号罐逆时针行驶"
+      "zh-CN": "机器人绕 9 号罐逆时针行驶",
+      "zh-TW": "機器人繞著9號罐逆時針方向前進"
     },
     "JBC Challenge 8B": {
       "en-US": "JBC Challenge 8B",
-      "zh-CN": "JBC 挑战赛 8B"
+      "zh-CN": "JBC 挑战赛 8B",
+      "zh-TW": "JBC 挑戰賽 8B"
     },
     "Robot Begins In start": {
       "en-US": "Robot Begins In start",
-      "zh-CN": "机器人从起点开始"
+      "zh-CN": "机器人从起点开始",
+      "zh-TW": "機器人從起點開始"
     },
     "Robot begins in starting box": {
       "en-US": "Robot begins in starting box",
-      "zh-CN": "机器人从起点箱开始"
+      "zh-CN": "机器人从起点箱开始",
+      "zh-TW": "機器人從起點開始"
     },
     "Robot passed through circle 1": {
       "en-US": "Robot passed through circle 1",
-      "zh-CN": "机器人通过圆圈 1"
+      "zh-CN": "机器人通过圆圈 1",
+      "zh-TW": "機器人通過圓圈 1"
     },
     "Robot passed through circle 2": {
       "en-US": "Robot passed through circle 2",
-      "zh-CN": "机器人通过圆圈 2"
+      "zh-CN": "机器人通过圆圈 2",
+      "zh-TW": "機器人通過圓圈 2"
     },
     "Robot passed through circle 3": {
       "en-US": "Robot passed through circle 3",
-      "zh-CN": "机器人通过圆圈 3"
+      "zh-CN": "机器人通过圆圈 3",
+      "zh-TW": "機器人通過圓圈 3"
     },
     "Robot passed through circle 4": {
       "en-US": "Robot passed through circle 4",
-      "zh-CN": "机器人通过圆圈 4"
+      "zh-CN": "机器人通过圆圈 4",
+      "zh-TW": "機器人通過圓圈 4"
     },
     "Robot passed through circle 5": {
       "en-US": "Robot passed through circle 5",
-      "zh-CN": "机器人通过圆圈 5"
+      "zh-CN": "机器人通过圆圈 5",
+      "zh-TW": "機器人通過圓圈 5"
     },
     "Test": {
       "en-US": "Test",
-      "zh-CN": "测试"
+      "zh-CN": "测试",
+      "zh-TW": "測試"
     },
     "A": {
       "en-US": "A",
-      "zh-CN": "A"
+      "zh-CN": "A",
+      "zh-TW": "A"
     },
     "B": {
       "en-US": "B",
-      "zh-CN": "B"
+      "zh-CN": "B",
+      "zh-TW": "B"
     },
     "Junior Botball Challenge 12: Add It Up": {
       "en-US": "Junior Botball Challenge 12: Add It Up",
-      "zh-CN": "青少年机器人球挑战赛 12：加起来"
+      "zh-CN": "青少年机器人球挑战赛 12：加起来",
+      "zh-TW": "青少年機器人足球挑戰賽 12：加起來"
     },
     "Robot Touched a Circle ": {
       "en-US": "Robot Touched a Circle ",
-      "zh-CN": "机器人碰到圆圈"
+      "zh-CN": "机器人碰到圆圈",
+      "zh-TW": "機器人觸摸圓圈 "
     },
     "Robot touched a circle": {
       "en-US": "Robot touched a circle",
-      "zh-CN": "机器人触摸圆圈"
+      "zh-CN": "机器人触摸圆圈",
+      "zh-TW": "機器人碰了一個圓圈"
     },
     "Touched Circles to add up to 20": {
       "en-US": "Touched Circles to add up to 20",
-      "zh-CN": "触摸圆圈，加起来等于 20"
+      "zh-CN": "触摸圆圈，加起来等于 20",
+      "zh-TW": "觸碰圓圈加起來到 20"
     },
     "JBC Challenge 14": {
       "en-US": "JBC Challenge 14",
-      "zh-CN": "JBC 挑战赛 14"
+      "zh-CN": "JBC 挑战赛 14",
+      "zh-TW": "JBC 挑戰賽 14"
     },
     "Robot 360 Clockwise": {
       "en-US": "Robot 360 Clockwise",
-      "zh-CN": "机器人顺时针旋转 360 度"
+      "zh-CN": "机器人顺时针旋转 360 度",
+      "zh-TW": "機器人順時針 360 度"
     },
     "Robot turned 360 degrees clockwise": {
       "en-US": "Robot turned 360 degrees clockwise",
-      "zh-CN": "机器人顺时针旋转 360 度"
+      "zh-CN": "机器人顺时针旋转 360 度",
+      "zh-TW": "機器人順時針轉360度"
     },
     "Robot 360 Counter Clockwise": {
       "en-US": "Robot 360 Counter Clockwise",
-      "zh-CN": "机器人 360 逆时针旋转"
+      "zh-CN": "机器人 360 逆时针旋转",
+      "zh-TW": "機器人 360 逆時針"
     },
     "Robot turned 360 degrees counter clockwise": {
       "en-US": "Robot turned 360 degrees counter clockwise",
-      "zh-CN": "机器人逆时针旋转 360 度"
+      "zh-CN": "机器人逆时针旋转 360 度",
+      "zh-TW": "機器人逆時針轉動360度"
     },
     "Robot Drove Forward": {
       "en-US": "Robot Drove Forward",
-      "zh-CN": "机器人向前行驶"
+      "zh-CN": "机器人向前行驶",
+      "zh-TW": "機器人向前駛"
     },
     "Robot drove forward": {
       "en-US": "Robot drove forward",
-      "zh-CN": "机器人向前行驶"
+      "zh-CN": "机器人向前行驶",
+      "zh-TW": "機器人向前駛"
     },
     "Robot Drove Backward": {
       "en-US": "Robot Drove Backward",
-      "zh-CN": "机器人向后退"
+      "zh-CN": "机器人向后退",
+      "zh-TW": "機器人向後轉"
     },
     "Robot drove backward": {
       "en-US": "Robot drove backward",
-      "zh-CN": "机器人向后退"
+      "zh-CN": "机器人向后退",
+      "zh-TW": "機器人向後轉"
     },
     "Robot Wave Servo": {
       "en-US": "Robot Wave Servo",
-      "zh-CN": "机器人挥动伺服器"
+      "zh-CN": "机器人挥动伺服器",
+      "zh-TW": "機器人揮動伺服器"
     },
     "Robot waved servo up and down at least once": {
       "en-US": "Robot waved servo up and down at least once",
-      "zh-CN": "机器人上下挥动伺服器至少一次"
+      "zh-CN": "机器人上下挥动伺服器至少一次",
+      "zh-TW": "機器人上下揮動伺服器至少一次"
     },
     "Turn 360° clockwise": {
       "en-US": "Turn 360° clockwise",
-      "zh-CN": "顺时针旋转 360"
+      "zh-CN": "顺时针旋转 360",
+      "zh-TW": "順時針轉 360"
     },
     "Turn 360° counter clockwise": {
       "en-US": "Turn 360° counter clockwise",
-      "zh-CN": "逆时针旋转 360"
+      "zh-CN": "逆时针旋转 360",
+      "zh-TW": "逆時針 360° 轉動"
     },
     "Drive forward": {
       "en-US": "Drive forward",
-      "zh-CN": "前进"
+      "zh-CN": "前进",
+      "zh-TW": "向前驅動"
     },
     "Drive backward": {
       "en-US": "Drive backward",
-      "zh-CN": "后退"
+      "zh-CN": "后退",
+      "zh-TW": "向後驅動"
     },
     "Wave the servo": {
       "en-US": "Wave the servo",
-      "zh-CN": "挥动伺服器"
+      "zh-CN": "挥动伺服器",
+      "zh-TW": "揮動伺服器"
     }
   },
   "Volume (box) in the 3D scene": {
     "Volume": {
       "en-US": "Volume",
       "ja-JP": "変数",
-      "zh-CN": "音量"
+      "zh-CN": "音量",
+      "zh-TW": "音量"
     }
   },
   "Red, Green, Blue": {
     "RGB": {
       "en-US": "RGB",
       "ja-JP": "RGB",
-      "zh-CN": "RGB"
+      "zh-CN": "RGB",
+      "zh-TW": "RGB"
     }
   },
   "Computer text command line (e.g., DOS)": {
     "Console": {
       "en-US": "Console",
       "ja-JP": "コンソール",
-      "zh-CN": "控制台"
+      "zh-CN": "控制台",
+      "zh-TW": "控制台"
     }
   },
   "A predefined task for the user to complete": {
     "Challenge": {
       "en-US": "Challenge",
       "ja-JP": "チャレンジ",
-      "zh-CN": "挑战"
+      "zh-CN": "挑战",
+      "zh-TW": "挑戰"
     }
   },
   "Terminate program execution": {
     "Stop": {
       "en-US": "Stop",
       "ja-JP": "止まる",
-      "zh-CN": "停止"
+      "zh-CN": "停止",
+      "zh-TW": "停止"
     }
   },
   "Begin program execution": {
     "Run": {
       "en-US": "Run",
       "ja-JP": "実行",
-      "zh-CN": "运行"
+      "zh-CN": "运行",
+      "zh-TW": "執行"
     }
   },
   "Part of copyright notice, after KIPR is listed": {
     "and External Contributors": {
       "en-US": "and External Contributors",
       "ja-JP": "外部の寄稿者も",
-      "zh-CN": "和外部贡献者"
+      "zh-CN": "和外部贡献者",
+      "zh-TW": "和外部貢獻者"
     }
   },
   "URL link to github repository follows": {
     "Visit our": {
       "en-US": "Visit our",
       "ja-JP": "見る",
-      "zh-CN": "访问我们的"
+      "zh-CN": "访问我们的",
+      "zh-TW": "訪問我們的"
     }
   },
   "Rotation order": {
     "XYZ": {
       "en-US": "XYZ",
       "ja-JP": "XYZ",
-      "zh-CN": "XYZ"
+      "zh-CN": "XYZ",
+      "zh-TW": "XYZ"
     },
     "YZX": {
       "en-US": "YZX",
       "ja-JP": "YZX",
-      "zh-CN": "YZX"
+      "zh-CN": "YZX",
+      "zh-TW": "YZX"
     },
     "ZXY": {
       "en-US": "ZXY",
       "ja-JP": "ZXY",
-      "zh-CN": "ZXY"
+      "zh-CN": "ZXY",
+      "zh-TW": "ZXY"
     },
     "XZY": {
       "en-US": "XZY",
       "ja-JP": "XZY",
-      "zh-CN": "XZY"
+      "zh-CN": "XZY",
+      "zh-TW": "XZY"
     },
     "YXZ": {
       "en-US": "YXZ",
       "ja-JP": "YXZ",
-      "zh-CN": "YXZ"
+      "zh-CN": "YXZ",
+      "zh-TW": "YXZ"
     },
     "ZYX": {
       "en-US": "ZYX",
       "ja-JP": "ZYX",
-      "zh-CN": "ZYX"
+      "zh-CN": "ZYX",
+      "zh-TW": "ZYX"
     }
   },
   "Student grade level": {
     "Kindergarten": {
       "en-US": "Kindergarten",
       "ja-JP": "幼稚園",
-      "zh-CN": "幼儿园"
+      "zh-CN": "幼儿园",
+      "zh-TW": "幼稚園"
     },
     "1st grade": {
       "en-US": "1st grade",
       "ja-JP": "小学校１年生",
-      "zh-CN": "一年级"
+      "zh-CN": "一年级",
+      "zh-TW": "一年級"
     },
     "2nd grade": {
       "en-US": "2nd grade",
       "ja-JP": "小学校２年生",
-      "zh-CN": "二年级"
+      "zh-CN": "二年级",
+      "zh-TW": "二年級"
     },
     "3rd grade": {
       "en-US": "3rd grade",
       "ja-JP": "小学校３年生",
-      "zh-CN": "三年级"
+      "zh-CN": "三年级",
+      "zh-TW": "三年級"
     },
     "4th grade": {
       "en-US": "4th grade",
       "ja-JP": "小学校４年生",
-      "zh-CN": "四年级"
+      "zh-CN": "四年级",
+      "zh-TW": "四年級"
     },
     "5th grade": {
       "en-US": "5th grade",
       "ja-JP": "小学校５年生",
-      "zh-CN": "五年级"
+      "zh-CN": "五年级",
+      "zh-TW": "五年級"
     },
     "6th grade": {
       "en-US": "6th grade",
       "ja-JP": "小学校６年生",
-      "zh-CN": "六年级"
+      "zh-CN": "六年级",
+      "zh-TW": "6 年級"
     },
     "7th grade": {
       "en-US": "7th grade",
       "ja-JP": "中学校１年生",
-      "zh-CN": "七年级"
+      "zh-CN": "七年级",
+      "zh-TW": "七年級"
     },
     "8th grade": {
       "en-US": "8th grade",
       "ja-JP": "中学校２年生",
-      "zh-CN": "八年级"
+      "zh-CN": "八年级",
+      "zh-TW": "八年級"
     },
     "9th grade": {
       "en-US": "9th grade",
       "ja-JP": "中学校３年生",
-      "zh-CN": "九年级"
+      "zh-CN": "九年级",
+      "zh-TW": "九年級"
     },
     "10th grade": {
       "en-US": "10th grade",
       "ja-JP": "高校１年生",
-      "zh-CN": "十年级"
+      "zh-CN": "十年级",
+      "zh-TW": "10 年級"
     },
     "11th grade": {
       "en-US": "11th grade",
       "ja-JP": "高校２年生",
-      "zh-CN": "十一年级"
+      "zh-CN": "十一年级",
+      "zh-TW": "十一年級"
     },
     "12th grade": {
       "en-US": "12th grade",
       "ja-JP": "高校３年生",
-      "zh-CN": "十二年级"
+      "zh-CN": "十二年级",
+      "zh-TW": "十二年級"
     },
     "1st": {
       "en-US": "1st",
       "ja-JP": "小１年",
-      "zh-CN": "一年级"
+      "zh-CN": "一年级",
+      "zh-TW": "第 1 級"
     },
     "2nd": {
       "en-US": "2nd",
       "ja-JP": "小２年",
-      "zh-CN": "二年级"
+      "zh-CN": "二年级",
+      "zh-TW": "二年級"
     },
     "3rd": {
       "en-US": "3rd",
       "ja-JP": "小３年",
-      "zh-CN": "三年级"
+      "zh-CN": "三年级",
+      "zh-TW": "第 3 級"
     },
     "4th": {
       "en-US": "4th",
       "ja-JP": "小４年",
-      "zh-CN": "四年级"
+      "zh-CN": "四年级",
+      "zh-TW": "第 4 級"
     },
     "5th": {
       "en-US": "5th",
       "ja-JP": "小５年",
-      "zh-CN": "五年级"
+      "zh-CN": "五年级",
+      "zh-TW": "五年級"
     },
     "6th": {
       "en-US": "6th",
       "ja-JP": "小６年",
-      "zh-CN": "第 6 次"
+      "zh-CN": "第 6 次",
+      "zh-TW": "第六名"
     },
     "7th": {
       "en-US": "7th",
       "ja-JP": "中１年生",
-      "zh-CN": "第 7 次"
+      "zh-CN": "第 7 次",
+      "zh-TW": "第七名"
     },
     "8th": {
       "en-US": "8th",
       "ja-JP": "中２年生",
-      "zh-CN": "第 8 次"
+      "zh-CN": "第 8 次",
+      "zh-TW": "第八名"
     },
     "9th": {
       "en-US": "9th",
       "ja-JP": "中３年生",
-      "zh-CN": "第 9 次"
+      "zh-CN": "第 9 次",
+      "zh-TW": "第九名"
     },
     "10th": {
       "en-US": "10th",
       "ja-JP": "高１年",
-      "zh-CN": "第 10 次"
+      "zh-CN": "第 10 次",
+      "zh-TW": "第十名"
     },
     "11th": {
       "en-US": "11th",
       "ja-JP": "高２年",
-      "zh-CN": "第十一届"
+      "zh-CN": "第十一届",
+      "zh-TW": "第十一屆"
     },
     "12th": {
       "en-US": "12th",
       "ja-JP": "高３年",
-      "zh-CN": "第十二届"
+      "zh-CN": "第十二届",
+      "zh-TW": "第十二屆"
     }
   },
   "Student grade level; Kingergarten": {
     "K": {
       "en-US": "K",
       "ja-JP": "幼稚園",
-      "zh-CN": "K"
+      "zh-CN": "K",
+      "zh-TW": "K"
     }
   },
   "RotationwUnits order": {
     "XYZ": {
       "en-US": "XYZ",
       "ja-JP": "XYZ",
-      "zh-CN": "XYZ"
+      "zh-CN": "XYZ",
+      "zh-TW": "XYZ"
     },
     "YZX": {
       "en-US": "YZX",
       "ja-JP": "YZX",
-      "zh-CN": "YZX"
+      "zh-CN": "YZX",
+      "zh-TW": "YZX"
     },
     "ZXY": {
       "en-US": "ZXY",
       "ja-JP": "ZXY",
-      "zh-CN": "ZXY"
+      "zh-CN": "ZXY",
+      "zh-TW": "ZXY"
     },
     "XZY": {
       "en-US": "XZY",
       "ja-JP": "XZY",
-      "zh-CN": "XZY"
+      "zh-CN": "XZY",
+      "zh-TW": "XZY"
     },
     "YXZ": {
       "en-US": "YXZ",
       "ja-JP": "YXZ",
-      "zh-CN": "YXZ"
+      "zh-CN": "YXZ",
+      "zh-TW": "YXZ"
     },
     "ZYX": {
       "en-US": "ZYX",
       "ja-JP": "ZYX",
-      "zh-CN": "ZYX"
+      "zh-CN": "ZYX",
+      "zh-TW": "ZYX"
     }
   }
 }
