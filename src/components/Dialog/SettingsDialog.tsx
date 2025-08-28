@@ -93,11 +93,13 @@ const LOCALE_OPTIONS: ComboBox.Option[] = (() => {
   const ret: ComboBox.Option[] = [];
   const locales = [
     LocalizedString.EN_US,
+    LocalizedString.ES_ES,
+    LocalizedString.ES_MX,
+    LocalizedString.PT_PT,
+    LocalizedString.PT_BR,
     LocalizedString.JA_JP,
     LocalizedString.ZH_CN,
     LocalizedString.ZH_TW,
-    LocalizedString.ES_ES,
-    LocalizedString.ES_MX,
   ];
   for (const locale of locales) {
     ret.push(ComboBox.option(LocalizedString.NATIVE_LOCALE_NAMES[locale], locale));
