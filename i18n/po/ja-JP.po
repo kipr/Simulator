@@ -10,7 +10,7 @@ msgstr "基盤シーン - 表面A"
 msgid ""
 "A base scene using Surface A. Intended to be augmented to create full JBC "
 "scenes"
-msgstr "表面Aを使う基盤です。完全なJBCシーンを作るために補強されることを意図しています。"
+msgstr "表面Aを使う基盤です。完全なJBCシーンを作るために補強されることを意図している。"
 
 msgid "JBC Surface A"
 msgstr "JBC表面A"
@@ -27,7 +27,7 @@ msgstr "基盤シーン - 表面A"
 msgid ""
 "A base scene using Surface B. Intended to be augmented to create full JBC "
 "scenes"
-msgstr "表面Bを使う基盤です。完全なJBCシーンを作るために補強されることを意図しています。"
+msgstr "表面Bを使う基盤です。完全なJBCシーンを作るために補強されることを意図している。"
 
 msgid "JBC Surface B"
 msgstr "JBC表面A"
@@ -152,13 +152,13 @@ msgid "Junior Botball Challenge 6C: Empty the Garage"
 msgstr ""
 
 msgid "Circle 2"
-msgstr "円２"
+msgstr "サークル２"
 
 msgid "Circle 9"
-msgstr "円９"
+msgstr "サークル９"
 
 msgid "Circle 10"
-msgstr "円10"
+msgstr "サークル10"
 
 msgid "Mat Surface"
 msgstr "マットの表面"
@@ -281,58 +281,58 @@ msgid "JBC Challenge 6C"
 msgstr ""
 
 msgid "Can A Lifted"
-msgstr "缶A上げました"
+msgstr "缶Aを上げた"
 
 msgid "Can A picked up"
-msgstr "缶A取りました"
+msgstr "缶A取りた"
 
 msgid "Can B Lifted"
-msgstr "缶B上げました"
+msgstr "缶B上げた"
 
 msgid "Can B picked up"
-msgstr "缶B取りました"
+msgstr "缶B取りた"
 
 msgid "Can C Lifted"
-msgstr "缶C上げました"
+msgstr "缶C上げた"
 
 msgid "Can C picked up"
-msgstr "缶C取りました"
+msgstr "缶C取りた"
 
 msgid "Can A Placed"
-msgstr "缶A置きました"
+msgstr "缶A置きた"
 
 msgid "Can A placed on circle 2"
-msgstr "円２に缶A置きました"
+msgstr "サークル２に缶A置きた"
 
 msgid "Can B Placed"
-msgstr "缶B置きました"
+msgstr "缶B置きた"
 
 msgid "Can A placed on circle 9"
-msgstr "円９に缶A置きました"
+msgstr "サークル９に缶A置きた"
 
 msgid "Can C Placed"
-msgstr "缶C置きました"
+msgstr "缶C置きた"
 
 msgid "Can A placed on circle 10"
-msgstr "円10に缶A置きました"
+msgstr "サークル10に缶A置きた"
 
 msgid "Can A Upright"
-msgstr "缶A立て"
+msgstr "缶A立てている"
 
 msgid "Can A upright on circle 2"
-msgstr "円２に缶A立て"
+msgstr "サークル２で缶Aが立てている"
 
 msgid "Can B Upright"
-msgstr "缶B立て"
+msgstr "缶B立てている"
 
 msgid "Can B upright on circle 9"
-msgstr "円９に缶B立て"
+msgstr "サークル９で缶Bが立てている"
 
 msgid "Can C Upright"
-msgstr "缶C立て"
+msgstr "缶C立てている"
 
 msgid "Can C upright on circle 10"
-msgstr "円10に缶C置きました"
+msgstr "サークル１０で缶Cが立てている"
 
 msgid "Loading..."
 msgstr "ロード..."
@@ -1062,7 +1062,7 @@ msgid "JBC Mat B"
 msgstr "JBCマットB"
 
 msgid "Circle %s"
-msgstr "円%s"
+msgstr "サークル%s"
 
 msgid "JBC 0"
 msgstr "JBC 0"
@@ -1095,13 +1095,13 @@ msgid "Left Side Can"
 msgstr "左の缶"
 
 msgid "Click Instruction Box"
-msgstr "指示ボックスをクリックして"
+msgstr "指示ボックスをクリックしてください"
 
 msgid "Click Instruction 1 Box"
-msgstr "指示１ボックスをクリックして"
+msgstr "指示１ボックスをクリックしてください"
 
 msgid "Click Instruction 2 Box"
-msgstr "指示２ボックスをクリックして"
+msgstr "指示２ボックスをクリックしてください"
 
 msgid "Chosen Garage Box"
 msgstr "選んだ車庫"
@@ -1215,7 +1215,7 @@ msgid "Junior Botball Challenge 12: Add it Up"
 msgstr "ジュニア・ボットボール・チャレンジ 12：足し算する"
 
 msgid "Circle 1"
-msgstr "円１"
+msgstr "サークル１"
 
 msgid "JBC 14"
 msgstr "JBC 14"
@@ -1284,7 +1284,7 @@ msgid "Junior Botball Challenge 23: Find the Black Line"
 msgstr "ジュニア・ボットボール・チャレンジ 21：黒い一線を探す"
 
 msgid "Circle"
-msgstr "円"
+msgstr "サークル"
 
 msgid "JBC 24"
 msgstr "JBC 24"
@@ -1802,10 +1802,10 @@ msgid "Can in start box"
 msgstr "缶はスタートボックスにある"
 
 msgid "Can Random Upright"
-msgstr "缶は立て"
+msgstr "缶が立てている"
 
 msgid "Can Random upright"
-msgstr "缶は立て"
+msgstr "缶が立てている"
 
 msgid "Hamburger placed"
 msgstr "ハンバーガーを置きた"
@@ -1826,37 +1826,37 @@ msgid "Taco placed in tray"
 msgstr "タコスがトレーを置きた"
 
 msgid "Can A upright in a circle"
-msgstr "サークルの中でA缶は立て"
+msgstr "サークルで缶Aが立てている"
 
 msgid "Can B upright in a circle"
-msgstr "サークルの中でB缶は立て"
+msgstr "サークルで缶Bが立てている"
 
 msgid "Can C upright in a circle"
-msgstr "サークルの中でC缶は立て"
+msgstr "サークルで缶Cが立てている"
 
 msgid "Can D Upright"
-msgstr "D缶は立て"
+msgstr "缶Dが立てている"
 
 msgid "Can D upright in a circle"
-msgstr "サークルの中でD缶は立て"
+msgstr "サークルの中で缶Dが立てている"
 
 msgid "Can E Upright"
-msgstr "E缶は立て"
+msgstr "缶Eが立てている"
 
 msgid "Can E upright in a circle"
-msgstr "サークルの中でE缶は立て"
+msgstr "サークルの中で缶Eが立てている"
 
 msgid "Can F Upright"
-msgstr "F缶は立て"
+msgstr "缶Fが立てている"
 
 msgid "Can F upright in a circle"
-msgstr "サークルの中でF缶は立て"
+msgstr "サークルの中で缶Fが立てている"
 
 msgid "Can G Upright"
-msgstr "G缶は立て"
+msgstr "缶Gが立てている"
 
 msgid "Can G upright in a circle"
-msgstr "サークルの中でG缶は立て"
+msgstr "サークルの中で缶Gが立てている"
 
 msgid "Base A Covered"
 msgstr "Aベースを網羅した"
@@ -1901,34 +1901,34 @@ msgid "Base G covered by a can"
 msgstr "缶でGベースを網羅した"
 
 msgid "Can 1 Upright"
-msgstr "1缶は立て"
+msgstr "缶1が立てている"
 
 msgid "Can 1 is upright"
-msgstr "1缶は立て"
+msgstr "缶1が立てている"
 
 msgid "Can 2 Upright"
-msgstr "2缶は立て"
+msgstr "缶2が立てている"
 
 msgid "Can 2 is upright"
-msgstr "2缶は立て"
+msgstr "缶2が立てている"
 
 msgid "Can 3 Upright"
-msgstr "3缶は立て"
+msgstr "缶3が立てている"
 
 msgid "Can 3 is upright"
-msgstr "3缶は立て"
+msgstr "缶3が立てている"
 
 msgid "Can 4 Upright"
-msgstr "4缶は立て"
+msgstr "缶4が立てている"
 
 msgid "Can 4 is upright"
-msgstr "4缶は立て"
+msgstr "缶4が立てている"
 
 msgid "Can 5 Upright"
-msgstr "5缶は立て"
+msgstr "缶5が立てている"
 
 msgid "Can 5 is upright"
-msgstr "5缶は立て"
+msgstr "缶5が立てている"
 
 msgid "Can 1 Intersects"
 msgstr "缶１が交わる"
@@ -1973,7 +1973,7 @@ msgid "Pink Cup JBC"
 msgstr "ピンクカップ"
 
 msgid "Ask Tutor"
-msgstr "助手に聞いて"
+msgstr "先生に聞く"
 
 msgid "Arm"
 msgstr "腕"
@@ -2003,7 +2003,7 @@ msgid "Right touch"
 msgstr "右のボタン"
 
 msgid "Tutor"
-msgstr "助手"
+msgstr "先生"
 
 msgid ""
 "Ask me questions about programming, get help with your code, or discuss "
@@ -2011,7 +2011,7 @@ msgid ""
 msgstr "私にプログラミングについて質問して、コードを助け受けて、ロボット工学ことについて車べます。"
 
 msgid "Ask tutor a question..."
-msgstr "助手に質問する"
+msgstr "先生に質問する"
 
 msgid "JBC Challenge 0"
 msgstr "JBCチャレンジ0"
@@ -2074,10 +2074,10 @@ msgid "Can 9 intersects circle 9"
 msgstr "サークル９に缶９が交わる"
 
 msgid "Can 9 Upright"
-msgstr "缶９は立て"
+msgstr "缶９が立てている"
 
 msgid "Can 9 upright on circle 9"
-msgstr "サークル９で缶９は立て"
+msgstr "サークル９で缶９が立てている"
 
 msgid "Robot Rentered Start"
 msgstr "再びロボットはスタートボックスに入た"
@@ -2086,16 +2086,16 @@ msgid "Robot reentered starting box"
 msgstr "ロボットはスタートボックスに帰た"
 
 msgid "Touch Can 9"
-msgstr "缶９を触れて"
+msgstr "缶９を触れてください"
 
 msgid "Return to the Start Box"
-msgstr "スタートボックスに帰て"
+msgstr "スタートボックスに帰てください"
 
 msgid "Can 9 not in circle 9"
 msgstr "缶９はサークル９にない"
 
 msgid "Can 9 not upright"
-msgstr "缶９は立てられない"
+msgstr "缶９が立てられない"
 
 msgid "JBC Challenge 2"
 msgstr "JBCチャレンジ２"
@@ -2107,10 +2107,10 @@ msgid "Can 6 intersects circle 6"
 msgstr "サークル６に缶６が交わる"
 
 msgid "Can 6 Upright"
-msgstr "缶６は立て"
+msgstr "缶６が立てている"
 
 msgid "Can 6 upright on circle 6"
-msgstr "サークル６で缶６は立て"
+msgstr "サークル６で缶６が立てている"
 
 msgid "Robot Passed Right Side"
 msgstr "ロボットが右側を通過した"
@@ -2131,19 +2131,19 @@ msgid "Robot passed left side of can 6"
 msgstr "ロボットが缶６の左側を通過した"
 
 msgid "Pass the right side of can 6"
-msgstr "缶６の右側を通過して"
+msgstr "缶６の右側を通過してください"
 
 msgid "Pass the top side of can 6"
-msgstr "缶６の上側を通過して"
+msgstr "缶６の上側を通過してください"
 
 msgid "Pass the left side of can 6"
-msgstr "缶６の左側を通過して"
+msgstr "缶６の左側を通過してください"
 
 msgid "Can 6 not in circle 6"
 msgstr "かん６はまる６にない"
 
 msgid "Can 6 not upright"
-msgstr "缶６は立てられない"
+msgstr "缶６が立てられない"
 
 msgid "JBC Challenge 3"
 msgstr "JBCチャレンジ３"
@@ -2173,10 +2173,10 @@ msgid "Robot returned to starting box"
 msgstr "ロボットはスタートボックスに帰た"
 
 msgid "Park in one garage"
-msgstr "一つのガレージに駐車して"
+msgstr "一つのガレージに駐車してください"
 
 msgid "Park in a different garage"
-msgstr "別のガレージに駐車して"
+msgstr "別のガレージに駐車してください"
 
 msgid "Do not touch garage boundaries"
 msgstr "ガレージの境界に触れないで"
@@ -2239,28 +2239,28 @@ msgid "Robot touched circle 8"
 msgstr "ロボットはサークル８を触れた"
 
 msgid "Touch circle 1"
-msgstr "ロボットはサークル１を触れて"
+msgstr "ロボットはサークル１を触れてください"
 
 msgid "Touch circle 2"
-msgstr "ロボットはサークル２を触れて"
+msgstr "ロボットはサークル２を触れてください"
 
 msgid "Touch circle 3"
-msgstr "ロボットはサークル３を触れて"
+msgstr "ロボットはサークル３を触れてください"
 
 msgid "Touch circle 4"
-msgstr "ロボットはサークル４を触れて"
+msgstr "ロボットはサークル４を触れてください"
 
 msgid "Touch circle 5"
-msgstr "ロボットはサークル５を触れて"
+msgstr "ロボットはサークル５を触れてください"
 
 msgid "Touch circle 6"
-msgstr "ロボットはサークル６を触れて"
+msgstr "ロボットはサークル６を触れてください"
 
 msgid "Touch circle 7"
-msgstr "ロボットはサークル７を触れて"
+msgstr "ロボットはサークル７を触れてください"
 
 msgid "Touch circle 8"
-msgstr "ロボットはサークル８を触れて"
+msgstr "ロボットはサークル８を触れてください"
 
 msgid "Circle touched out of order"
 msgstr "サークルが順番通りに触れなちゃった"
@@ -2311,10 +2311,10 @@ msgid "Circle 11 was touched"
 msgstr "サークル１１を触れた"
 
 msgid "Touch circle 9"
-msgstr "ロボットはサークル９を触れて"
+msgstr "ロボットはサークル９を触れてください"
 
 msgid "Touch circle 11"
-msgstr "ロボットはサークル１１を触れて"
+msgstr "ロボットはサークル１１を触れてください"
 
 msgid "Touched an even circle"
 msgstr "偶数のサークル触れた"
@@ -2326,7 +2326,7 @@ msgid "Can 4 intersects circle 4"
 msgstr "サークル４に缶４が交わる"
 
 msgid "Can 4 upright on circle 4"
-msgstr "サークル４で缶４は立て"
+msgstr "サークル４で缶４が立てている"
 
 msgid "Robot Figure Eight"
 msgstr "８の字"
@@ -2335,7 +2335,7 @@ msgid "Robot did a figure eight around cans 4 and 9"
 msgstr "ロボットが缶4と9の周りで8の字を描いた"
 
 msgid "Complete a figure eight"
-msgstr "８の字をして"
+msgstr "８の字をしてください"
 
 msgid "Can 4 not upright in circle 4"
 msgstr "缶４はサークル４で立てられない"
@@ -2353,16 +2353,16 @@ msgid "JBC Challenge 7"
 msgstr "JBCチャレンジ７"
 
 msgid "Can 2 upright"
-msgstr "缶２は立て"
+msgstr "缶２が立てている"
 
 msgid "Can 9 upright"
-msgstr "缶９は立て"
+msgstr "缶９が立てている"
 
 msgid "Can 10 Upright"
-msgstr "缶１０は立て"
+msgstr "缶１０が立てている"
 
 msgid "Can 10 upright"
-msgstr "缶１０は立て"
+msgstr "缶１０が立てている"
 
 msgid "Can 2 Intersects Green Garage"
 msgstr "緑のガレージと缶２が交わる"
@@ -2410,67 +2410,67 @@ msgid "JBC Challenge 8"
 msgstr "JBCチャレンジ８"
 
 msgid "Can A upright behind start line"
-msgstr "スタートボックスに缶Aは立てている"
+msgstr "スタートボックスに缶Aが立てている"
 
 msgid "Can B upright behind start line"
-msgstr "スタートボックスに缶Bは立てている"
+msgstr "スタートボックスに缶Bが立てている"
 
 msgid "Can C upright behind start line"
-msgstr "スタートボックスに缶Cは立てている"
+msgstr "スタートボックスに缶Cが立てている"
 
 msgid "Can D upright behind start line"
-msgstr "スタートボックスに缶Dは立てている"
+msgstr "スタートボックスに缶Dが立てている"
 
 msgid "Can E upright behind start line"
-msgstr "スタートボックスに缶Eは立てている"
+msgstr "スタートボックスに缶Eが立てている"
 
 msgid "First can upright in start box"
-msgstr "スタートボックスに１番目缶は立てている"
+msgstr "スタートボックスに１番目缶が立てている"
 
 msgid "Second can upright in start box"
-msgstr "スタートボックスに２番目缶は立てている"
+msgstr "スタートボックスに２番目缶が立てている"
 
 msgid "Third can upright in start box"
-msgstr "スタートボックスに３番目缶は立てている"
+msgstr "スタートボックスに３番目缶が立てている"
 
 msgid "Fourth can upright in start box"
-msgstr "スタートボックスに４番目缶は立てている"
+msgstr "スタートボックスに４番目缶が立てている"
 
 msgid "Fifth can upright in start box"
-msgstr "スタートボックスに５番目缶は立てている"
+msgstr "スタートボックスに５番目缶が立てている"
 
 msgid "JBC Challenge 9"
 msgstr "JBCチャレンジ９"
 
 msgid "Cover base A"
-msgstr "サークルAをカバーして"
+msgstr "サークルAをカバーしてください"
 
 msgid "Cover base B"
-msgstr "サークルBをカバーして"
+msgstr "サークルBをカバーしてください"
 
 msgid "Cover base C"
-msgstr "サークルCをカバーして"
+msgstr "サークルCをカバーしてください"
 
 msgid "Cover base D"
-msgstr "サークルDをカバーして"
+msgstr "サークルDをカバーしてください"
 
 msgid "Cover base E"
-msgstr "サークルEをカバーして"
+msgstr "サークルEをカバーしてください"
 
 msgid "Can A not upright"
-msgstr "缶Aは立てない"
+msgstr "缶Aが立てない"
 
 msgid "Can B not upright"
-msgstr "缶Bは立てない"
+msgstr "缶Bが立てない"
 
 msgid "Can C not upright"
-msgstr "缶Cは立てない"
+msgstr "缶Cが立てない"
 
 msgid "Can D not upright"
-msgstr "缶Dは立てない"
+msgstr "缶Dが立てない"
 
 msgid "Can E not upright"
-msgstr "缶Eは立てない"
+msgstr "缶Eが立てない"
 
 msgid "JBC Challenge 10"
 msgstr "JBCチャレンジ１０"
@@ -2482,13 +2482,13 @@ msgid "Robot waited to chop"
 msgstr "ロボットは切ることを待った"
 
 msgid "Can 7 Upright"
-msgstr "缶７は立てる"
+msgstr "缶７が立てる"
 
 msgid "Can 7 upright"
-msgstr "缶７は立てる"
+msgstr "缶７が立てる"
 
 msgid "Wait before chopping"
-msgstr "切ることを待って"
+msgstr "切ることを待ってください"
 
 msgid "Knock over can 7"
 msgstr "缶７を倒す"
@@ -2521,31 +2521,31 @@ msgid "Circle 12 touched"
 msgstr "サークル１２触れた"
 
 msgid "Wave at circle 3"
-msgstr "サークル３で振って"
+msgstr "サークル３で振ってください"
 
 msgid "Wave at circle 6"
-msgstr "サークル６で振って"
+msgstr "サークル６で振ってください"
 
 msgid "Wave at circle 9"
-msgstr "サークル９で振って"
+msgstr "サークル９で振ってください"
 
 msgid "Wave at circle 12"
-msgstr "サークル１２で振って"
+msgstr "サークル１２で振ってください"
 
 msgid "JBC Challenge 15"
 msgstr "JBCチャレンジ１５"
 
 msgid "Can 11 Upright"
-msgstr "缶１１は立てる"
+msgstr "缶１１が立てる"
 
 msgid "Can 11 upright"
-msgstr "缶１１は立てる"
+msgstr "缶１１が立てる"
 
 msgid "Bring can to Start Box"
-msgstr "缶をスタートボックスに持って来て"
+msgstr "缶をスタートボックスに持って来てください"
 
 msgid "Keep can 11 not upright"
-msgstr "缶１１はもう立てさせなくて"
+msgstr "缶１１はもう立てさせなくてください"
 
 msgid "JBC Challenge 16"
 msgstr "JBCチャレンジ１６"
@@ -2569,10 +2569,10 @@ msgid "Can 10 picked up"
 msgstr "缶１０を持った"
 
 msgid "Can 2 not upright"
-msgstr "缶２は立てない"
+msgstr "缶２が立てない"
 
 msgid "Can 10 not upright"
-msgstr "缶１０は立てない"
+msgstr "缶１０が立てない"
 
 msgid "Can 2 not picked up"
 msgstr "缶２を持たない"
@@ -2587,19 +2587,19 @@ msgid "JBC Challenge 17"
 msgstr "JBCチャレンジ１７"
 
 msgid "Rescue can 1 to start box"
-msgstr "缶１をスタートボックスに持って来て"
+msgstr "缶１をスタートボックスに持って来てください"
 
 msgid "Rescue can 2 to start box"
-msgstr "缶２をスタートボックスに持って来て"
+msgstr "缶２をスタートボックスに持って来てください"
 
 msgid "Rescue can 3 to start box"
-msgstr "缶３をスタートボックスに持って来て"
+msgstr "缶３をスタートボックスに持って来てください"
 
 msgid "Can 1 not upright"
-msgstr "缶１は立てない"
+msgstr "缶１が立てない"
 
 msgid "Can 3 not upright"
-msgstr "缶３は立てない"
+msgstr "缶３が立てない"
 
 msgid "JBC Challenge 18"
 msgstr "JBCチャレンジ１６"
@@ -2623,7 +2623,7 @@ msgid "Robot is touching a can"
 msgstr "ロボットは缶を触れている"
 
 msgid "Leave the Start Box"
-msgstr "スタートボックスから出て"
+msgstr "スタートボックスから出てください"
 
 msgid "Stack one can on another"
 msgstr "缶は一本他のに積んでください"
@@ -2839,7 +2839,7 @@ msgid "Can 8 intersects chosen garage"
 msgstr "缶８は選んだガレージを交わっている"
 
 msgid "Can 10 intersects chosen garage"
-msgstr ""缶１０は選んだガレージを交わっている
+msgstr "缶１０は選んだガレージを交わっている"
 
 msgid "Can 11 Intersects"
 msgstr "缶１１が交わっている"
@@ -2848,22 +2848,22 @@ msgid "Can 11 intersects chosen garage"
 msgstr "缶１１は選んだガレージを交わっている"
 
 msgid "Can 2 upright in chosen garage"
-msgstr "選んだガレージで缶２は立てている"
+msgstr "選んだガレージで缶２が立てている"
 
 msgid "Can 5 upright in achosen garage"
-msgstr "選んだガレージで缶５は立てている"
+msgstr "選んだガレージで缶５が立てている"
 
 msgid "Can 8 Upright"
 msgstr "缶８が立てている"
 
 msgid "Can 8 upright in chosen garage"
-msgstr "選んだガレージで缶８は立てている"
+msgstr "選んだガレージで缶８が立てている"
 
 msgid "Can 10 upright in chosen garage"
-msgstr "選んだガレージで缶１０は立てている"
+msgstr "選んだガレージで缶１０が立てている"
 
 msgid "Can 11 upright in chosen garage"
-msgstr "選んだガレージで缶１１は立てている"
+msgstr "選んだガレージで缶１１が立てている"
 
 msgid "JBC Challenge 15B"
 msgstr ""
