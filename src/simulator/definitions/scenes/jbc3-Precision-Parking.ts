@@ -7,6 +7,7 @@ import { RotationwUnits } from '../../../util/math/unitMath';
 import { Color } from '../../../state/State/Scene/Color';
 import { RawVector2 } from '../../../util/math/math';
 import Material from 'state/State/Scene/Material';
+import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -137,7 +138,7 @@ scene.addOnClickListener(['greenBox','yellowBox','blueBox','volume'], id => {
       instruction++;
       break;
     default:
-      // console.log("No box clicked");
+      // console.log('No box clicked');
       break;
   }
 
@@ -257,10 +258,8 @@ const number2Markers = generateNumberMarkers(2);
 
 export const JBC_3: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 3' },
-  description: {
-    [LocalizedString.EN_US]: 'Junior Botball Challenge 3: Precision Parking',
-  },
+  name: tr('JBC 3'),
+  description: tr('Junior Botball Challenge 3: Precision Parking'),
   scripts: {
     notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
     garageIntersects: Script.ecmaScript('Garage Intersects', garageIntersects),
@@ -276,7 +275,7 @@ export const JBC_3: Scene = {
       },
     },
     notStartBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(10),
@@ -359,7 +358,7 @@ export const JBC_3: Scene = {
     startBox: {
       type: 'object',
       geometryId: 'startBox_geom',
-      name: { [LocalizedString.EN_US]: 'Start Box' },
+      name: tr('Start Box'),
       visible: false,
       origin: {
         position: {
@@ -377,9 +376,9 @@ export const JBC_3: Scene = {
       },
     },
     notStartBox: {
-      type: "object",
-      geometryId: "notStartBox_geom",
-      name: { [LocalizedString.EN_US]: "Not Start Box" },
+      type: 'object',
+      geometryId: 'notStartBox_geom',
+      name: tr('Not Start Box'),
       visible: false,
       origin: {
         position: {
@@ -389,9 +388,9 @@ export const JBC_3: Scene = {
         },
       },
       material: {
-        type: "basic",
+        type: 'basic',
         color: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 0, 0),
         },
       },
@@ -399,7 +398,7 @@ export const JBC_3: Scene = {
     mainInstructionBox: {
       type: 'object',
       geometryId: 'instructionBox_geom',
-      name: { [LocalizedString.EN_US]: 'Click Instruction Box' },
+      name: tr('Click Instruction Box'),
       visible: true,
       origin: {
         position: {
@@ -434,7 +433,7 @@ export const JBC_3: Scene = {
     instructionBox1: {
       type: 'object',
       geometryId: 'instructionNumberBox_geom',
-      name: { [LocalizedString.EN_US]: 'Click Instruction 1 Box' },
+      name: tr('Click Instruction 1 Box'),
       visible: true,
       origin: {
         position: {
@@ -469,7 +468,7 @@ export const JBC_3: Scene = {
     instructionBox2: {
       type: 'object',
       geometryId: 'instructionNumberBox_geom',
-      name: { [LocalizedString.EN_US]: 'Click Instruction 2 Box' },
+      name: tr('Click Instruction 2 Box'),
       visible: false,
       origin: {
         position: {
@@ -504,7 +503,7 @@ export const JBC_3: Scene = {
     chosenGarage1: {
       type: 'object',
       geometryId: 'chosenGarageBox_geom',
-      name: { [LocalizedString.EN_US]: 'Chosen Garage Box' },
+      name: tr('Chosen Garage Box'),
       visible: false,
       origin: {
         position: {
@@ -539,7 +538,7 @@ export const JBC_3: Scene = {
     greenBox: {
       type: 'object',
       geometryId: 'designatorBox_geom',
-      name: { [LocalizedString.EN_US]: 'Green Garage Designator Box' },
+      name: tr('Green Garage Designator Box'),
       visible: true,
       origin: {
         position: {
@@ -574,7 +573,7 @@ export const JBC_3: Scene = {
     yellowBox: {
       type: 'object',
       geometryId: 'designatorBox_geom',
-      name: { [LocalizedString.EN_US]: 'Yellow Garage Designator Box' },
+      name: tr('Yellow Garage Designator Box'),
       visible: true,
       origin: {
         position: {
@@ -609,7 +608,7 @@ export const JBC_3: Scene = {
     blueBox: {
       type: 'object',
       geometryId: 'designatorBox_geom',
-      name: { [LocalizedString.EN_US]: 'Blue Garage Designator Box' },
+      name: tr('Blue Garage Designator Box'),
       visible: true,
       origin: {
         position: {
@@ -644,7 +643,7 @@ export const JBC_3: Scene = {
     greenGarage: {
       type: 'object',
       geometryId: 'greenGarage_geom',
-      name: { [LocalizedString.EN_US]: 'Green Garage' },
+      name: tr('Green Garage'),
       visible: false,
       origin: {
         position: {
@@ -664,7 +663,7 @@ export const JBC_3: Scene = {
     n1: {
       type: 'object',
       geometryId: 'n_geom',
-      name: { [LocalizedString.EN_US]: 'Green Garage node' },
+      name: tr('Green Garage node'),
       visible: false,
       origin: {
         position: {
@@ -684,7 +683,7 @@ export const JBC_3: Scene = {
     n2: {
       type: 'object',
       geometryId: 'n_geom',
-      name: { [LocalizedString.EN_US]: 'Yellow Garage node' },
+      name: tr('Yellow Garage node'),
       visible: false,
       origin: {
         position: {
@@ -704,7 +703,7 @@ export const JBC_3: Scene = {
     n3: {
       type: 'object',
       geometryId: 'n_geom',
-      name: { [LocalizedString.EN_US]: 'Blue Garage node' },
+      name: tr('Blue Garage node'),
       visible: false,
       origin: {
         position: {
@@ -724,7 +723,7 @@ export const JBC_3: Scene = {
     g1: {
       type: 'object',
       geometryId: 'n_geom',
-      name: { [LocalizedString.EN_US]: 'Green Garage Right Boundary node' },
+      name: tr('Green Garage Right Boundary node'),
       visible: false,
       origin: {
         position: {
@@ -744,7 +743,7 @@ export const JBC_3: Scene = {
     g2: {
       type: 'object',
       geometryId: 'n_geom',
-      name: { [LocalizedString.EN_US]: 'Green Garage Left Boundary node' },
+      name: tr('Green Garage Left Boundary node'),
       visible: false,
       origin: {
         position: {
@@ -764,7 +763,7 @@ export const JBC_3: Scene = {
     g3: {
       type: 'object',
       geometryId: 'n_geom',
-      name: { [LocalizedString.EN_US]: 'Green Garage Top Boundary node' },
+      name: tr('Green Garage Top Boundary node'),
       visible: false,
       origin: {
         position: {
@@ -784,7 +783,7 @@ export const JBC_3: Scene = {
     blueGarage: {
       type: 'object',
       geometryId: 'blueGarage_geom',
-      name: { [LocalizedString.EN_US]: 'Blue Garage' },
+      name: tr('Blue Garage'),
       visible: false,
       origin: {
         position: {
@@ -808,7 +807,7 @@ export const JBC_3: Scene = {
     b1: {
       type: 'object',
       geometryId: 'n_geom',
-      name: { [LocalizedString.EN_US]: 'Blue Garage Right Boundary node' },
+      name: tr('Blue Garage Right Boundary node'),
       visible: false,
       origin: {
         position: {
@@ -828,7 +827,7 @@ export const JBC_3: Scene = {
     b2: {
       type: 'object',
       geometryId: 'n_geom',
-      name: { [LocalizedString.EN_US]: 'Blue Garage Left Boundary node' },
+      name: tr('Blue Garage Left Boundary node'),
       visible: false,
       origin: {
         position: {
@@ -848,7 +847,7 @@ export const JBC_3: Scene = {
     b3: {
       type: 'object',
       geometryId: 'n_geom',
-      name: { [LocalizedString.EN_US]: 'Blue Garage Top Boundary node' },
+      name: tr('Blue Garage Top Boundary node'),
       visible: false,
       origin: {
         position: {
@@ -868,7 +867,7 @@ export const JBC_3: Scene = {
     yellowGarage: {
       type: 'object',
       geometryId: 'yellowGarage_geom',
-      name: { [LocalizedString.EN_US]: 'Yellow Garage' },
+      name: tr('Yellow Garage'),
       visible: false,
       origin: {
         position: {
@@ -888,7 +887,7 @@ export const JBC_3: Scene = {
     y1: {
       type: 'object',
       geometryId: 'n_geom',
-      name: { [LocalizedString.EN_US]: 'Yellow Garage Right Boundary node' },
+      name: tr('Yellow Garage Right Boundary node'),
       visible: false,
       origin: {
         position: {
@@ -908,7 +907,7 @@ export const JBC_3: Scene = {
     y2: {
       type: 'object',
       geometryId: 'n_geom',
-      name: { [LocalizedString.EN_US]: 'Yellow Garage Left Boundary node' },
+      name: tr('Yellow Garage Left Boundary node'),
       visible: false,
       origin: {
         position: {
@@ -928,7 +927,7 @@ export const JBC_3: Scene = {
     y3: {
       type: 'object',
       geometryId: 'n_geom',
-      name: { [LocalizedString.EN_US]: 'Yellow Garage Top Boundary node' },
+      name: tr('Yellow Garage Top Boundary node'),
       visible: false,
       origin: {
         position: {
@@ -948,7 +947,7 @@ export const JBC_3: Scene = {
     yellowGarageMarker1: {
       type: 'object',
       geometryId: number1Markers[0],
-      name: { [LocalizedString.EN_US]: 'Yellow Garage Marker 1' },
+      name: tr('Yellow Garage Marker 1'),
       visible: number1Markers[1],
       origin: {
         position: {
@@ -965,7 +964,7 @@ export const JBC_3: Scene = {
     yellowGarageMarker2: {
       type: 'object',
       geometryId: number2Markers[0],
-      name: { [LocalizedString.EN_US]: 'Yellow Garage Marker 2' },
+      name: tr('Yellow Garage Marker 2'),
       visible: number2Markers[1],
       origin: {
         position: {
@@ -982,7 +981,7 @@ export const JBC_3: Scene = {
 
       type: 'object',
       geometryId: number1Markers[0],
-      name: { [LocalizedString.EN_US]: 'Blue Garage Marker 1' },
+      name: tr('Blue Garage Marker 1'),
       visible: number1Markers[1],
       origin: {
         position: {
@@ -998,7 +997,7 @@ export const JBC_3: Scene = {
     blueGarageMarker2: {
       type: 'object',
       geometryId: number2Markers[0],
-      name: { [LocalizedString.EN_US]: 'Blue Garage Marker 2' },
+      name: tr('Blue Garage Marker 2'),
       visible: number2Markers[1],
       origin: {
         position: {
@@ -1014,7 +1013,7 @@ export const JBC_3: Scene = {
     greenGarageMarker1: {
       type: 'object',
       geometryId: number1Markers[0],
-      name: { [LocalizedString.EN_US]: 'Green Garage Marker 1' },
+      name: tr('Green Garage Marker 1'),
       visible: number1Markers[1],
       origin: {
         position: {
@@ -1030,7 +1029,7 @@ export const JBC_3: Scene = {
     greenGarageMarker2: {
       type: 'object',
       geometryId: number2Markers[0],
-      name: { [LocalizedString.EN_US]: 'Green Garage Marker 2' },
+      name: tr('Green Garage Marker 2'),
       visible: number2Markers[1],
       origin: {
         position: {

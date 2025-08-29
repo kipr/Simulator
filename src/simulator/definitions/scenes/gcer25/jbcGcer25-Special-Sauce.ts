@@ -4,6 +4,8 @@ import { RotationwUnits } from '../../../../util/math/unitMath';
 import Script from '../../../../state/State/Scene/Script';
 import { Color } from '../../../../state/State/Scene/Color';
 import { canPositions, createBaseSceneSurfaceA } from '../jbcBase';
+import Dict from '../../../../util/objectOps/Dict';
+import { sprintf } from 'sprintf-js';
 
 import tr from '@i18n';
 
@@ -35,7 +37,8 @@ scene.addOnIntersectionListener('pom${circle}', (type, otherNodeId) => {
 `);
   POMS[`pom${circle}`] = {
     type: 'from-bb-template',
-    name: tr(`Pom #${circle}`),
+    name: Dict.map(tr('Pom #%d'), (str: string) => sprintf(str, circle)),
+
     templateId: id,
     visible: true,
     editable: false,

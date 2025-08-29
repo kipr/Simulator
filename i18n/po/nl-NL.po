@@ -1024,6 +1024,2101 @@ msgstr ""
 msgid "Visit our"
 msgstr ""
 
+msgid "Science"
+msgstr ""
+
+msgid "Technology"
+msgstr ""
+
+msgid "Engineering"
+msgstr ""
+
+msgid "Arts"
+msgstr ""
+
+msgid "Mathematics"
+msgstr ""
+
+msgid "Test Assignment"
+msgstr ""
+
+msgid "This is a test assignment."
+msgstr ""
+
+msgid "Educator notes"
+msgstr ""
+
+msgid "Student notes"
+msgstr ""
+
+msgid "JBC Mat A"
+msgstr ""
+
+msgid "JBC Mat B"
+msgstr ""
+
+msgid "Circle %s"
+msgstr ""
+
+msgid "JBC 0"
+msgstr ""
+
+msgid "Junior Botball Challenge 0: Drive Straight"
+msgstr ""
+
+msgid "Not Start Box"
+msgstr ""
+
+msgid "Start Box"
+msgstr ""
+
+msgid "Line B"
+msgstr ""
+
+msgid "End Box"
+msgstr ""
+
+msgid "End of Mat"
+msgstr ""
+
+msgid "Right Side Can"
+msgstr ""
+
+msgid "Top Side Can"
+msgstr ""
+
+msgid "Left Side Can"
+msgstr ""
+
+msgid "Click Instruction Box"
+msgstr ""
+
+msgid "Click Instruction 1 Box"
+msgstr ""
+
+msgid "Click Instruction 2 Box"
+msgstr ""
+
+msgid "Chosen Garage Box"
+msgstr ""
+
+msgid "Green Garage Designator Box"
+msgstr ""
+
+msgid "Yellow Garage Designator Box"
+msgstr ""
+
+msgid "Blue Garage Designator Box"
+msgstr ""
+
+msgid "Green Garage"
+msgstr ""
+
+msgid "Green Garage node"
+msgstr ""
+
+msgid "Yellow Garage node"
+msgstr ""
+
+msgid "Blue Garage node"
+msgstr ""
+
+msgid "Green Garage Right Boundary node"
+msgstr ""
+
+msgid "Green Garage Left Boundary node"
+msgstr ""
+
+msgid "Green Garage Top Boundary node"
+msgstr ""
+
+msgid "Blue Garage"
+msgstr ""
+
+msgid "Blue Garage Right Boundary node"
+msgstr ""
+
+msgid "Blue Garage Left Boundary node"
+msgstr ""
+
+msgid "Blue Garage Top Boundary node"
+msgstr ""
+
+msgid "Yellow Garage"
+msgstr ""
+
+msgid "Yellow Garage Right Boundary node"
+msgstr ""
+
+msgid "Yellow Garage Left Boundary node"
+msgstr ""
+
+msgid "Yellow Garage Top Boundary node"
+msgstr ""
+
+msgid "Yellow Garage Marker 1"
+msgstr ""
+
+msgid "Yellow Garage Marker 2"
+msgstr ""
+
+msgid "Blue Garage Marker 1"
+msgstr ""
+
+msgid "Blue Garage Marker 2"
+msgstr ""
+
+msgid "Green Garage Marker 1"
+msgstr ""
+
+msgid "Green Garage Marker 2"
+msgstr ""
+
+msgid "Junior Botball Challenge 4: Serpentine"
+msgstr ""
+
+msgid "Junior Botball Challenge 5: Odd Numbers"
+msgstr ""
+
+msgid "Junior Botball Challenge 6: Figure Eight"
+msgstr ""
+
+msgid "Between cans 4 and 9"
+msgstr ""
+
+msgid "Top side of can 9"
+msgstr ""
+
+msgid "Junior Botball Challenge 7: Load 'Em Up"
+msgstr ""
+
+msgid "Junior Botball Challenge 8: Bulldozer Mania"
+msgstr ""
+
+msgid "Junior Botball Challenge 9: Cover Your Bases"
+msgstr ""
+
+msgid "Junior Botball Challenge 10: Chopped"
+msgstr ""
+
+msgid "JBC 11"
+msgstr ""
+
+msgid "Junior Botball Challenge 11: Making Waves"
+msgstr ""
+
+msgid "Junior Botball Challenge 12: Add it Up"
+msgstr ""
+
+msgid "Circle 1"
+msgstr ""
+
+msgid "JBC 14"
+msgstr ""
+
+msgid "Junior Botball Challenge 14: Dance Party"
+msgstr ""
+
+msgid "JBC 15"
+msgstr ""
+
+msgid "Junior Botball Challenge 15: Go Fetch"
+msgstr ""
+
+msgid "JBC 16"
+msgstr ""
+
+msgid "Junior Botball Challenge 16: Pick 'Em Up"
+msgstr ""
+
+msgid "Junior Botball Challenge 17: Mountain Rescue"
+msgstr ""
+
+msgid "JBC 18"
+msgstr ""
+
+msgid "Junior Botball Challenge 18: Stackerz"
+msgstr ""
+
+msgid "Bottom of can5"
+msgstr ""
+
+msgid "Top of can7"
+msgstr ""
+
+msgid "Bottom of can7"
+msgstr ""
+
+msgid "Top of can5"
+msgstr ""
+
+msgid "Junior Botball Challenge 19: Bump"
+msgstr ""
+
+msgid "Junior Botball Challenge 20: A'mazing"
+msgstr ""
+
+msgid "Paper Ream 3"
+msgstr ""
+
+msgid "Paper Ream 4"
+msgstr ""
+
+msgid "Junior Botball Challenge 21: Proximity"
+msgstr ""
+
+msgid "Ream Front Boundary"
+msgstr ""
+
+msgid "Junior Botball Challenge 22: Search and Rescue"
+msgstr ""
+
+msgid "JBC 23"
+msgstr ""
+
+msgid "Junior Botball Challenge 23: Find the Black Line"
+msgstr ""
+
+msgid "Circle"
+msgstr ""
+
+msgid "JBC 24"
+msgstr ""
+
+msgid "Junior Botball Challenge 24: Walk the Line"
+msgstr ""
+
+msgid "Finish Line"
+msgstr ""
+
+msgid "Checkpoint 1"
+msgstr ""
+
+msgid "Checkpoint 3"
+msgstr ""
+
+msgid "Checkpoint 2"
+msgstr ""
+
+msgid "Base Scene - Moon Surface"
+msgstr ""
+
+msgid "A base scene. Intended to be augmented to create full Moon scenes"
+msgstr ""
+
+msgid "1.1.1 Ground"
+msgstr ""
+
+msgid "1.1.6-8 Start Area"
+msgstr ""
+
+msgid "1.1.2-4 Sky"
+msgstr ""
+
+msgid "Moon Sandbox"
+msgstr ""
+
+msgid "Lunar sandbox. Currently supports 4 types of rocks. Demo Ready."
+msgstr ""
+
+msgid "Basalt Rock"
+msgstr ""
+
+msgid "Anorthosite Rock"
+msgstr ""
+
+msgid "Breccia Rock"
+msgstr ""
+
+msgid "Meteorite Rock"
+msgstr ""
+
+msgid "Life Science Pack"
+msgstr ""
+
+msgid "Radiation Science Pack - High"
+msgstr ""
+
+msgid "Science Pad"
+msgstr ""
+
+msgid "Container"
+msgstr ""
+
+msgid "Space Bot Guy"
+msgstr ""
+
+msgid "Solar Panel"
+msgstr ""
+
+msgid "Walkway"
+msgstr ""
+
+msgid "Comms Tower"
+msgstr ""
+
+msgid "Human Living Habitat"
+msgstr ""
+
+msgid "Human Research Habitat"
+msgstr ""
+
+msgid "Human Control/Comms Station Habitat"
+msgstr ""
+
+msgid "Life Indicator Light"
+msgstr ""
+
+msgid "No Life Indicator Light"
+msgstr ""
+
+msgid "2025 Game Table"
+msgstr ""
+
+msgid "Base Scene - 2025 Botball Game Table"
+msgstr ""
+
+msgid "A base scene. Intended to be augmented to create the full game table"
+msgstr ""
+
+msgid "Fry floor"
+msgstr ""
+
+msgid "Potato detector box"
+msgstr ""
+
+msgid "Hamburger"
+msgstr ""
+
+msgid "Hotdog"
+msgstr ""
+
+msgid "Taco"
+msgstr ""
+
+msgid "Pink Cup"
+msgstr ""
+
+msgid "Blue Cup"
+msgstr ""
+
+msgid "Green Cup"
+msgstr ""
+
+msgid "Blue pom back #${i}"
+msgstr ""
+
+msgid "Blue pom front #${i}"
+msgstr ""
+
+msgid "Bottle #${i}"
+msgstr ""
+
+msgid "Orange pom #${i}"
+msgstr ""
+
+msgid "Red pom #${i}"
+msgstr ""
+
+msgid "Yellow pom #${i}"
+msgstr ""
+
+msgid "Random pom #${i}"
+msgstr ""
+
+msgid "Tomato"
+msgstr ""
+
+msgid "Pickle"
+msgstr ""
+
+msgid "Potato"
+msgstr ""
+
+msgid "Fry #${i}"
+msgstr ""
+
+msgid "Tray #${i}"
+msgstr ""
+
+msgid "Botguy"
+msgstr ""
+
+msgid "Blue drink #${i}"
+msgstr ""
+
+msgid "Green drink #${i}"
+msgstr ""
+
+msgid "Pink drink #${i}"
+msgstr ""
+
+msgid "2025 Botball game table sandbox"
+msgstr ""
+
+msgid "IRobot Create"
+msgstr ""
+
+msgid "Leaderboard"
+msgstr ""
+
+msgid "See the current challenge leaderboard."
+msgstr ""
+
+msgid "The Challenge System"
+msgstr ""
+
+msgid "Learn how to use the challenge system"
+msgstr ""
+
+msgid "MatB"
+msgstr ""
+
+msgid "MatA"
+msgstr ""
+
+msgid "Communication Tower"
+msgstr ""
+
+msgid "Hab"
+msgstr ""
+
+msgid "Radiation Science Pack"
+msgstr ""
+
+msgid "Communication Tower 2"
+msgstr ""
+
+msgid "Hab 2"
+msgstr ""
+
+msgid "BotGuy Astronaut"
+msgstr ""
+
+msgid "2025 Botball Game Table"
+msgstr ""
+
+msgid "Blue Drink"
+msgstr ""
+
+msgid "Green Drink"
+msgstr ""
+
+msgid "Pink Drink"
+msgstr ""
+
+msgid "Blue Pom (Ice Cube)"
+msgstr ""
+
+msgid "Orange Pom (Hot Sauce)"
+msgstr ""
+
+msgid "Red Pom (Ketchup)"
+msgstr ""
+
+msgid "Yellow Pom (Mustard)"
+msgstr ""
+
+msgid "French Fry"
+msgstr ""
+
+msgid "Bottle"
+msgstr ""
+
+msgid "Tray"
+msgstr ""
+
+msgid "Living Habitat"
+msgstr ""
+
+msgid "Research Habitat"
+msgstr ""
+
+msgid "Controls Habitat"
+msgstr ""
+
+msgid "Moon Rock Container"
+msgstr ""
+
+msgid "Radiation Science Pack - Low"
+msgstr ""
+
+msgid "Space Base"
+msgstr ""
+
+msgid "Botball"
+msgstr ""
+
+msgid "JBC Pieces"
+msgstr ""
+
+msgid "Moon Rock"
+msgstr ""
+
+msgid "All"
+msgstr ""
+
+msgid ""
+"Basalt is an aphanitic (fine-grained) extrusive igneous rock formed from "
+"the rapid cooling of low-viscosity lava rich in magnesium and iron (mafic "
+"lava) exposed at or very near the surface of a rocky planet or moon."
+msgstr ""
+
+msgid ""
+"Anorthosite is a phaneritic, intrusive igneous rock characterized by its "
+"composition: mostly plagioclase feldspar (90–100%), with a minimal mafic "
+"component (0–10%)."
+msgstr ""
+
+msgid ""
+"Breccia is a rock composed of large angular broken fragments of minerals or "
+"rocks cemented together by a fine-grained matrix."
+msgstr ""
+
+msgid ""
+"Meteorite is a solid piece of debris from an object, such as a comet, "
+"asteroid, or meteoroid, that originates in outer space and survives its "
+"passage through the atmosphere to reach the surface of a planet or moon."
+msgstr ""
+
+msgid "Description of the object"
+msgstr ""
+
+msgid "Surface Text"
+msgstr ""
+
+msgid "The current scene does not have a challenge available"
+msgstr ""
+
+msgid "Start Challenge"
+msgstr ""
+
+msgid "your current work"
+msgstr ""
+
+msgid "Failed to load challenge"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Search Filters"
+msgstr ""
+
+msgid "Is standards aligned"
+msgstr ""
+
+msgid "Standards"
+msgstr ""
+
+msgid "Subject"
+msgstr ""
+
+msgid "Grade Level"
+msgstr ""
+
+msgid "Grade Levels: %s"
+msgstr ""
+
+msgid "Standard: %s"
+msgstr ""
+
+msgid "Subject: %s"
+msgstr ""
+
+msgid "U.S. Std."
+msgstr ""
+
+msgid "Curriculum"
+msgstr ""
+
+msgid "My Assignments"
+msgstr ""
+
+msgid "Scratch Variables"
+msgstr ""
+
+msgid "A hamburger"
+msgstr ""
+
+msgid "Blue pom front #$(s)"
+msgstr ""
+
+msgid "Blue pom front #$d"
+msgstr ""
+
+msgid "Blue pom front #%d"
+msgstr ""
+
+msgid "Blue pom back #%d"
+msgstr ""
+
+msgid "Bottle #%d"
+msgstr ""
+
+msgid "Orange pom #%d"
+msgstr ""
+
+msgid "Red pom #%d"
+msgstr ""
+
+msgid "Yellow pom #%d"
+msgstr ""
+
+msgid "Random pom #%d"
+msgstr ""
+
+msgid "Tray #%d"
+msgstr ""
+
+msgid "Blue drink #%d"
+msgstr ""
+
+msgid "Green drink #%d"
+msgstr ""
+
+msgid "Pink drink #%d"
+msgstr ""
+
+msgid "Fry #%d"
+msgstr ""
+
+msgid "GCER 2025: Find the Black Line"
+msgstr ""
+
+msgid ""
+"GCER 2025 special event. Your robot is randomly placed on one of the red "
+"circles. Find the black starting line and stop. Bonus points for returning "
+"to the original starting circle."
+msgstr ""
+
+msgid "GCER 2025: Sense the Can"
+msgstr ""
+
+msgid ""
+"GCER 2025 special event. A can is placed randomly in circle 2, 4, 6, 9 or "
+"11. Find it and bring it back to the start box!"
+msgstr ""
+
+msgid "Blue pom #%d"
+msgstr ""
+
+msgid "GCER 2025: Ice Ice Botguy"
+msgstr ""
+
+msgid ""
+"GCER 2025 special event. Botguy is overheating! Collect the ice and dump it "
+"on Botguy to cool him off!"
+msgstr ""
+
+msgid "Cup #%d"
+msgstr ""
+
+msgid "GCER 2025: Thirst Quencher"
+msgstr ""
+
+msgid ""
+"GCER 2025 special event. Don't let the summer heat get you down. Bring the "
+"cups back to the start box!"
+msgstr ""
+
+msgid "GCER 2025: Entree Express"
+msgstr ""
+
+msgid "GCER 2025 special event. Order up! Move the entrees to the trays."
+msgstr ""
+
+msgid "Warming station"
+msgstr ""
+
+msgid "Pom #%d"
+msgstr ""
+
+msgid "GCER 2025: Special Sauce"
+msgstr ""
+
+msgid ""
+"GCER 2025 special event. Mix the ketchup (red), mustard (yellow), and hot "
+"sauce (orange) in the garages to create your own special blend!"
+msgstr ""
+
+msgid "Orange Garage"
+msgstr ""
+
+msgid "GCER 2025: Cover Your Bases"
+msgstr ""
+
+msgid "GCER 2025 special edition. All circles are now open for business!"
+msgstr ""
+
+msgid "GCER 2025: Odd Numbers"
+msgstr ""
+
+msgid ""
+"GCER 2025 special event. Drive over the odd numbered circles in order, but "
+"make sure to avoid the evens!"
+msgstr ""
+
+msgid "GCER 2025: Bulldozer Mania"
+msgstr ""
+
+msgid ""
+"GCER 2025 special event. Bring as many cans behind the starting line as you "
+"can. Make sure they stay upright!"
+msgstr ""
+
+msgid "GCER 2025: Mountain Rescue"
+msgstr ""
+
+msgid "GCER 2025 special event. Now with three more cans to rescue!"
+msgstr ""
+
+msgid "Robot Stops at Black Line"
+msgstr ""
+
+msgid "Robot stops at black line"
+msgstr ""
+
+msgid "Robot Over Circle"
+msgstr ""
+
+msgid "Robot over selected circle"
+msgstr ""
+
+msgid "Robot not in Start Box"
+msgstr ""
+
+msgid "Robot not in start box"
+msgstr ""
+
+msgid "Can in Start Box"
+msgstr ""
+
+msgid "Can in start box"
+msgstr ""
+
+msgid "Can Random Upright"
+msgstr ""
+
+msgid "Can Random upright"
+msgstr ""
+
+msgid "Hamburger placed"
+msgstr ""
+
+msgid "Hamburger placed in tray"
+msgstr ""
+
+msgid "Hotdog placed"
+msgstr ""
+
+msgid "Hotdog placed in tray"
+msgstr ""
+
+msgid "Taco placed"
+msgstr ""
+
+msgid "Taco placed in tray"
+msgstr ""
+
+msgid "Can A upright in a circle"
+msgstr ""
+
+msgid "Can B upright in a circle"
+msgstr ""
+
+msgid "Can C upright in a circle"
+msgstr ""
+
+msgid "Can D Upright"
+msgstr ""
+
+msgid "Can D upright in a circle"
+msgstr ""
+
+msgid "Can E Upright"
+msgstr ""
+
+msgid "Can E upright in a circle"
+msgstr ""
+
+msgid "Can F Upright"
+msgstr ""
+
+msgid "Can F upright in a circle"
+msgstr ""
+
+msgid "Can G Upright"
+msgstr ""
+
+msgid "Can G upright in a circle"
+msgstr ""
+
+msgid "Base A Covered"
+msgstr ""
+
+msgid "Base A covered by a can"
+msgstr ""
+
+msgid "Base B Covered"
+msgstr ""
+
+msgid "Base B covered by a can"
+msgstr ""
+
+msgid "Base C Covered"
+msgstr ""
+
+msgid "Base C covered by a can"
+msgstr ""
+
+msgid "Base D Covered"
+msgstr ""
+
+msgid "Base D covered by a can"
+msgstr ""
+
+msgid "Base E Covered"
+msgstr ""
+
+msgid "Base E covered by a can"
+msgstr ""
+
+msgid "Base F Covered"
+msgstr ""
+
+msgid "Base F covered by a can"
+msgstr ""
+
+msgid "Base G Covered"
+msgstr ""
+
+msgid "Base G covered by a can"
+msgstr ""
+
+msgid "Can 1 Upright"
+msgstr ""
+
+msgid "Can 1 is upright"
+msgstr ""
+
+msgid "Can 2 Upright"
+msgstr ""
+
+msgid "Can 2 is upright"
+msgstr ""
+
+msgid "Can 3 Upright"
+msgstr ""
+
+msgid "Can 3 is upright"
+msgstr ""
+
+msgid "Can 4 Upright"
+msgstr ""
+
+msgid "Can 4 is upright"
+msgstr ""
+
+msgid "Can 5 Upright"
+msgstr ""
+
+msgid "Can 5 is upright"
+msgstr ""
+
+msgid "Can 1 Intersects"
+msgstr ""
+
+msgid "Can 1 rescued intersecting starting box"
+msgstr ""
+
+msgid "Can 2 Intersects"
+msgstr ""
+
+msgid "Can 2 rescued intersecting starting box"
+msgstr ""
+
+msgid "Can 3 Intersects"
+msgstr ""
+
+msgid "Can 3 rescued intersecting starting box"
+msgstr ""
+
+msgid "Can 4 Intersects"
+msgstr ""
+
+msgid "Can 4 rescued intersecting starting box"
+msgstr ""
+
+msgid "Can 5 Intersects"
+msgstr ""
+
+msgid "Can 5 rescued intersecting starting box"
+msgstr ""
+
+msgid "Warming Station"
+msgstr ""
+
+msgid "Blue Cup JBC"
+msgstr ""
+
+msgid "Green Cup JBC"
+msgstr ""
+
+msgid "Pink Cup JBC"
+msgstr ""
+
+msgid "Ask Tutor"
+msgstr ""
+
+msgid "Arm"
+msgstr ""
+
+msgid "Claw"
+msgstr ""
+
+msgid "Left wheel"
+msgstr ""
+
+msgid "Right wheel"
+msgstr ""
+
+msgid "Rangefinder"
+msgstr ""
+
+msgid "Reflectance"
+msgstr ""
+
+msgid "Limit switch"
+msgstr ""
+
+msgid "Left touch"
+msgstr ""
+
+msgid "Right touch"
+msgstr ""
+
+msgid "Tutor"
+msgstr ""
+
+msgid ""
+"Ask me questions about programming, get help with your code, or discuss "
+"robotics concepts."
+msgstr ""
+
+msgid "Ask tutor a question..."
+msgstr ""
+
+msgid "JBC Challenge 0"
+msgstr ""
+
+msgid "In Start Box"
+msgstr ""
+
+msgid "Robot is in the start box"
+msgstr ""
+
+msgid "Not In Start Box"
+msgstr ""
+
+msgid "Robot is not in the start box"
+msgstr ""
+
+msgid "Robot Touching Line B"
+msgstr ""
+
+msgid "Robot is touching line B"
+msgstr ""
+
+msgid "Robot Reached End"
+msgstr ""
+
+msgid "Robot reached the end of the mat"
+msgstr ""
+
+msgid "Robot Off Mat"
+msgstr ""
+
+msgid "Robot left the mat"
+msgstr ""
+
+msgid "Start in the Start Box"
+msgstr ""
+
+msgid "Reach the end of the mat"
+msgstr ""
+
+msgid "Wheels do not touch line B"
+msgstr ""
+
+msgid "Do not drive off the mat"
+msgstr ""
+
+msgid "JBC Challenge 1"
+msgstr ""
+
+msgid "Can 9 Touched"
+msgstr ""
+
+msgid "Can A touched"
+msgstr ""
+
+msgid "Can 9 Intersects"
+msgstr ""
+
+msgid "Can 9 intersects circle 9"
+msgstr ""
+
+msgid "Can 9 Upright"
+msgstr ""
+
+msgid "Can 9 upright on circle 9"
+msgstr ""
+
+msgid "Robot Rentered Start"
+msgstr ""
+
+msgid "Robot reentered starting box"
+msgstr ""
+
+msgid "Touch Can 9"
+msgstr ""
+
+msgid "Return to the Start Box"
+msgstr ""
+
+msgid "Can 9 not in circle 9"
+msgstr ""
+
+msgid "Can 9 not upright"
+msgstr ""
+
+msgid "JBC Challenge 2"
+msgstr ""
+
+msgid "Can 6 Intersects"
+msgstr ""
+
+msgid "Can 6 intersects circle 6"
+msgstr ""
+
+msgid "Can 6 Upright"
+msgstr ""
+
+msgid "Can 6 upright on circle 6"
+msgstr ""
+
+msgid "Robot Passed Right Side"
+msgstr ""
+
+msgid "Robot passed right side of can 6"
+msgstr ""
+
+msgid "Robot Passed Top Side"
+msgstr ""
+
+msgid "Robot passed top side of can 6"
+msgstr ""
+
+msgid "Robot Passed left Side"
+msgstr ""
+
+msgid "Robot passed left side of can 6"
+msgstr ""
+
+msgid "Pass the right side of can 6"
+msgstr ""
+
+msgid "Pass the top side of can 6"
+msgstr ""
+
+msgid "Pass the left side of can 6"
+msgstr ""
+
+msgid "Can 6 not in circle 6"
+msgstr ""
+
+msgid "Can 6 not upright"
+msgstr ""
+
+msgid "JBC Challenge 3"
+msgstr ""
+
+msgid "Robot Touched Garage Lines"
+msgstr ""
+
+msgid "Robot touched garage boundaries"
+msgstr ""
+
+msgid "Robot Parked in One Garage"
+msgstr ""
+
+msgid "Robot parked in only one garage"
+msgstr ""
+
+msgid "Robot Parked in Different Garage"
+msgstr ""
+
+msgid "Robot parked in a different garage"
+msgstr ""
+
+msgid "Robot Returned Start"
+msgstr ""
+
+msgid "Robot returned to starting box"
+msgstr ""
+
+msgid "Park in one garage"
+msgstr ""
+
+msgid "Park in a different garage"
+msgstr ""
+
+msgid "Do not touch garage boundaries"
+msgstr ""
+
+msgid "JBC Challenge 4"
+msgstr ""
+
+msgid "Circle Touched Out of Order"
+msgstr ""
+
+msgid "Circle was touched out of order"
+msgstr ""
+
+msgid "Robot Touched Circle 1"
+msgstr ""
+
+msgid "Robot touched circle 1"
+msgstr ""
+
+msgid "Robot Touched Circle 2"
+msgstr ""
+
+msgid "Robot touched circle 2"
+msgstr ""
+
+msgid "Robot Touched Circle 3"
+msgstr ""
+
+msgid "Robot touched circle 3"
+msgstr ""
+
+msgid "Robot Touched Circle 4"
+msgstr ""
+
+msgid "Robot touched circle 4"
+msgstr ""
+
+msgid "Robot Touched Circle 5"
+msgstr ""
+
+msgid "Robot touched circle 5"
+msgstr ""
+
+msgid "Robot Touched Circle 6"
+msgstr ""
+
+msgid "Robot touched circle 6"
+msgstr ""
+
+msgid "Robot Touched Circle 7"
+msgstr ""
+
+msgid "Robot touched circle 7"
+msgstr ""
+
+msgid "Robot Touched Circle 8"
+msgstr ""
+
+msgid "Robot touched circle 8"
+msgstr ""
+
+msgid "Touch circle 1"
+msgstr ""
+
+msgid "Touch circle 2"
+msgstr ""
+
+msgid "Touch circle 3"
+msgstr ""
+
+msgid "Touch circle 4"
+msgstr ""
+
+msgid "Touch circle 5"
+msgstr ""
+
+msgid "Touch circle 6"
+msgstr ""
+
+msgid "Touch circle 7"
+msgstr ""
+
+msgid "Touch circle 8"
+msgstr ""
+
+msgid "Circle touched out of order"
+msgstr ""
+
+msgid "JBC Challenge 5"
+msgstr ""
+
+msgid "Even Circle Touched"
+msgstr ""
+
+msgid "Even circle touched"
+msgstr ""
+
+msgid "Circle 1 Touched"
+msgstr ""
+
+msgid "Circle 1 was touched"
+msgstr ""
+
+msgid "Circle 3 Touched"
+msgstr ""
+
+msgid "Circle 3 was touched"
+msgstr ""
+
+msgid "Circle 5 Touched"
+msgstr ""
+
+msgid "Circle 5 was touched"
+msgstr ""
+
+msgid "Circle 7 Touched"
+msgstr ""
+
+msgid "Circle 7 was touched"
+msgstr ""
+
+msgid "Circle 9 Touched"
+msgstr ""
+
+msgid "Circle 9 was touched"
+msgstr ""
+
+msgid "Circle 11 Touched"
+msgstr ""
+
+msgid "Circle 11 was touched"
+msgstr ""
+
+msgid "Touch circle 9"
+msgstr ""
+
+msgid "Touch circle 11"
+msgstr ""
+
+msgid "Touched an even circle"
+msgstr ""
+
+msgid "JBC Challenge 6"
+msgstr ""
+
+msgid "Can 4 intersects circle 4"
+msgstr ""
+
+msgid "Can 4 upright on circle 4"
+msgstr ""
+
+msgid "Robot Figure Eight"
+msgstr ""
+
+msgid "Robot did a figure eight around cans 4 and 9"
+msgstr ""
+
+msgid "Complete a figure eight"
+msgstr ""
+
+msgid "Can 4 not upright in circle 4"
+msgstr ""
+
+msgid "Can 9 not upright in circle 9"
+msgstr ""
+
+msgid "Can 4 does not intersect circle 4"
+msgstr ""
+
+msgid "Can 9 does not intersect circle 9"
+msgstr ""
+
+msgid "JBC Challenge 7"
+msgstr ""
+
+msgid "Can 2 upright"
+msgstr ""
+
+msgid "Can 9 upright"
+msgstr ""
+
+msgid "Can 10 Upright"
+msgstr ""
+
+msgid "Can 10 upright"
+msgstr ""
+
+msgid "Can 2 Intersects Green Garage"
+msgstr ""
+
+msgid "Can 2 intersects Green Garage"
+msgstr ""
+
+msgid "Can 9 Intersects Blue Garage"
+msgstr ""
+
+msgid "Can 9 intersects Blue Garage"
+msgstr ""
+
+msgid "Can 9 Intersects Purple Garage"
+msgstr ""
+
+msgid "Can 9 intersects Purple Garage"
+msgstr ""
+
+msgid "Can 10 Intersects Yellow Garage"
+msgstr ""
+
+msgid "Can 10 intersects Yellow Garage"
+msgstr ""
+
+msgid "Place can 2 in green garage"
+msgstr ""
+
+msgid "Place can 9 in blue garage"
+msgstr ""
+
+msgid "Place can 10 in yellow garage"
+msgstr ""
+
+msgid "Can 2 not upright in green garage"
+msgstr ""
+
+msgid "Can 9 not upright in blue garage"
+msgstr ""
+
+msgid "Can 10 not upright in yellow garage"
+msgstr ""
+
+msgid "JBC Challenge 8"
+msgstr ""
+
+msgid "Can A upright behind start line"
+msgstr ""
+
+msgid "Can B upright behind start line"
+msgstr ""
+
+msgid "Can C upright behind start line"
+msgstr ""
+
+msgid "Can D upright behind start line"
+msgstr ""
+
+msgid "Can E upright behind start line"
+msgstr ""
+
+msgid "First can upright in start box"
+msgstr ""
+
+msgid "Second can upright in start box"
+msgstr ""
+
+msgid "Third can upright in start box"
+msgstr ""
+
+msgid "Fourth can upright in start box"
+msgstr ""
+
+msgid "Fifth can upright in start box"
+msgstr ""
+
+msgid "JBC Challenge 9"
+msgstr ""
+
+msgid "Cover base A"
+msgstr ""
+
+msgid "Cover base B"
+msgstr ""
+
+msgid "Cover base C"
+msgstr ""
+
+msgid "Cover base D"
+msgstr ""
+
+msgid "Cover base E"
+msgstr ""
+
+msgid "Can A not upright"
+msgstr ""
+
+msgid "Can B not upright"
+msgstr ""
+
+msgid "Can C not upright"
+msgstr ""
+
+msgid "Can D not upright"
+msgstr ""
+
+msgid "Can E not upright"
+msgstr ""
+
+msgid "JBC Challenge 10"
+msgstr ""
+
+msgid "Waited to Chop"
+msgstr ""
+
+msgid "Robot waited to chop"
+msgstr ""
+
+msgid "Can 7 Upright"
+msgstr ""
+
+msgid "Can 7 upright"
+msgstr ""
+
+msgid "Wait before chopping"
+msgstr ""
+
+msgid "Knock over can 7"
+msgstr ""
+
+msgid "JBC Challenge 11"
+msgstr ""
+
+msgid "Robot Waved"
+msgstr ""
+
+msgid "Robot waved"
+msgstr ""
+
+msgid "Circle 3 touched"
+msgstr ""
+
+msgid "Circle 6 Touched"
+msgstr ""
+
+msgid "Circle 6 touched"
+msgstr ""
+
+msgid "Circle 9 touched"
+msgstr ""
+
+msgid "Circle 12 Touched"
+msgstr ""
+
+msgid "Circle 12 touched"
+msgstr ""
+
+msgid "Wave at circle 3"
+msgstr ""
+
+msgid "Wave at circle 6"
+msgstr ""
+
+msgid "Wave at circle 9"
+msgstr ""
+
+msgid "Wave at circle 12"
+msgstr ""
+
+msgid "JBC Challenge 15"
+msgstr ""
+
+msgid "Can 11 Upright"
+msgstr ""
+
+msgid "Can 11 upright"
+msgstr ""
+
+msgid "Bring can to Start Box"
+msgstr ""
+
+msgid "Keep can 11 not upright"
+msgstr ""
+
+msgid "JBC Challenge 16"
+msgstr ""
+
+msgid "Can 2 Picked Up"
+msgstr ""
+
+msgid "Can 2 picked up"
+msgstr ""
+
+msgid "Can 9 Picked Up"
+msgstr ""
+
+msgid "Can 9 picked up"
+msgstr ""
+
+msgid "Can 10 Picked Up"
+msgstr ""
+
+msgid "Can 10 picked up"
+msgstr ""
+
+msgid "Can 2 not upright"
+msgstr ""
+
+msgid "Can 10 not upright"
+msgstr ""
+
+msgid "Can 2 not picked up"
+msgstr ""
+
+msgid "Can 9 not picked up"
+msgstr ""
+
+msgid "Can 10 not picked up"
+msgstr ""
+
+msgid "JBC Challenge 17"
+msgstr ""
+
+msgid "Rescue can 1 to start box"
+msgstr ""
+
+msgid "Rescue can 2 to start box"
+msgstr ""
+
+msgid "Rescue can 3 to start box"
+msgstr ""
+
+msgid "Can 1 not upright"
+msgstr ""
+
+msgid "Can 3 not upright"
+msgstr ""
+
+msgid "JBC Challenge 18"
+msgstr ""
+
+msgid "Robot Left Start"
+msgstr ""
+
+msgid "Robot left starting box"
+msgstr ""
+
+msgid "One Can Stacked"
+msgstr ""
+
+msgid "One can is stacked on another"
+msgstr ""
+
+msgid "Robot Touching Can"
+msgstr ""
+
+msgid "Robot is touching a can"
+msgstr ""
+
+msgid "Leave the Start Box"
+msgstr ""
+
+msgid "Stack one can on another"
+msgstr ""
+
+msgid "Robot touching can"
+msgstr ""
+
+msgid "JBC Challenge 19"
+msgstr ""
+
+msgid "Robot Forward Touch"
+msgstr ""
+
+msgid "Robot drove forward and touched ream of paper"
+msgstr ""
+
+msgid "Drive forward and touch the ream"
+msgstr ""
+
+msgid "JBC Challenge 20"
+msgstr ""
+
+msgid "Robot in start box"
+msgstr ""
+
+msgid "Ream 1 Touched"
+msgstr ""
+
+msgid "Robot touched ream 1"
+msgstr ""
+
+msgid "Ream 2 Touched"
+msgstr ""
+
+msgid "Robot touched ream 2"
+msgstr ""
+
+msgid "Ream 3 Touched"
+msgstr ""
+
+msgid "Robot touched ream 3"
+msgstr ""
+
+msgid "Ream 4 Touched"
+msgstr ""
+
+msgid "Robot touched ream 4"
+msgstr ""
+
+msgid "Touch ream 1"
+msgstr ""
+
+msgid "Touch ream 2"
+msgstr ""
+
+msgid "Touch ream 3"
+msgstr ""
+
+msgid "Touch ream 4"
+msgstr ""
+
+msgid "JBC Challenge 21"
+msgstr ""
+
+msgid "Stop at Ream"
+msgstr ""
+
+msgid "Robot stops at ream"
+msgstr ""
+
+msgid "Bump Ream"
+msgstr ""
+
+msgid "Robot bumps ream"
+msgstr ""
+
+msgid "Stop at the ream"
+msgstr ""
+
+msgid "Do not bump the ream"
+msgstr ""
+
+msgid "JBC Challenge 22"
+msgstr ""
+
+msgid "Can Upright"
+msgstr ""
+
+msgid "Can is upright"
+msgstr ""
+
+msgid "Can not upright"
+msgstr ""
+
+msgid "JBC Challenge 23"
+msgstr ""
+
+msgid "Started over the circle"
+msgstr ""
+
+msgid "Stop at the black line"
+msgstr ""
+
+msgid "JBC Challenge 24"
+msgstr ""
+
+msgid "Robot Walks the Line"
+msgstr ""
+
+msgid "Robot uses reflectance sensor to follow the black line until Finish Line "
+msgstr ""
+
+msgid "Line follow to the finish line"
+msgstr ""
+
+msgid "Robot started on Circle"
+msgstr ""
+
+msgid "Can Not Upright"
+msgstr ""
+
+msgid "Place Hamburger in Tray"
+msgstr ""
+
+msgid "Place Hotdog in Tray"
+msgstr ""
+
+msgid "Place Taco in Tray"
+msgstr ""
+
+msgid "Can A Not Upright"
+msgstr ""
+
+msgid "Can B Not Upright"
+msgstr ""
+
+msgid "Can C Not Upright"
+msgstr ""
+
+msgid "Can D Not Upright"
+msgstr ""
+
+msgid "Can E Not Upright"
+msgstr ""
+
+msgid "Can F Not Upright"
+msgstr ""
+
+msgid "Can G Not Upright"
+msgstr ""
+
+msgid "Can 1 in the Start Box"
+msgstr ""
+
+msgid "Can 2 in the Start Box"
+msgstr ""
+
+msgid "Can 3 in the Start Box"
+msgstr ""
+
+msgid "Can 4 in the Start Box"
+msgstr ""
+
+msgid "Can 5 in the Start Box"
+msgstr ""
+
+msgid "Can 1 Not Upright"
+msgstr ""
+
+msgid "Can 2 Not Upright"
+msgstr ""
+
+msgid "Can 3 Not Upright"
+msgstr ""
+
+msgid "Can 4 Not Upright"
+msgstr ""
+
+msgid "Can 5 Not Upright"
+msgstr ""
+
+msgid "JBC Challenge 10B"
+msgstr ""
+
+msgid "JBC Challenge 12"
+msgstr ""
+
+msgid "Can from green garage intersects circle 2"
+msgstr ""
+
+msgid "Can from blue garage intersects circle 9"
+msgstr ""
+
+msgid "Can 10 Intersects"
+msgstr ""
+
+msgid "Can from yellow garage intersects circle 10"
+msgstr ""
+
+msgid "JBC Challenge 13"
+msgstr ""
+
+msgid "Can 2 intersects chosen garage"
+msgstr ""
+
+msgid "Can 5 intersects chosen garage"
+msgstr ""
+
+msgid "Can 8 Intersects"
+msgstr ""
+
+msgid "Can 8 intersects chosen garage"
+msgstr ""
+
+msgid "Can 10 intersects chosen garage"
+msgstr ""
+
+msgid "Can 11 Intersects"
+msgstr ""
+
+msgid "Can 11 intersects chosen garage"
+msgstr ""
+
+msgid "Can 2 upright in chosen garage"
+msgstr ""
+
+msgid "Can 5 upright in achosen garage"
+msgstr ""
+
+msgid "Can 8 Upright"
+msgstr ""
+
+msgid "Can 8 upright in chosen garage"
+msgstr ""
+
+msgid "Can 10 upright in chosen garage"
+msgstr ""
+
+msgid "Can 11 upright in chosen garage"
+msgstr ""
+
+msgid "JBC Challenge 15B"
+msgstr ""
+
+msgid "Robot Backward Touch"
+msgstr ""
+
+msgid "Robot drove backward and touched ream of paper"
+msgstr ""
+
+msgid "Robot Forward Circle 2"
+msgstr ""
+
+msgid "Robot drove forward to circle 2"
+msgstr ""
+
+msgid "JBC Challenge 17B"
+msgstr ""
+
+msgid "Robot uses reflectance sensor to follow the black line until the Blue line"
+msgstr ""
+
+msgid "Can 9 is upright"
+msgstr ""
+
+msgid "Can 10 is upright"
+msgstr ""
+
+msgid "Can 12 Upright"
+msgstr ""
+
+msgid "Can 12 is upright"
+msgstr ""
+
+msgid "Can 9 rescued intersecting paper ream"
+msgstr ""
+
+msgid "Can 2 rescued intersecting paper ream"
+msgstr ""
+
+msgid "Can 10 rescued intersecting paper ream"
+msgstr ""
+
+msgid "Can 12 Intersects"
+msgstr ""
+
+msgid "Can 12 rescued intersecting paper ream"
+msgstr ""
+
+msgid "Can 9 Lifted"
+msgstr ""
+
+msgid "Can 9 Lifted a Foot Tall"
+msgstr ""
+
+msgid "JBC Challenge 2B"
+msgstr ""
+
+msgid "Can 10 Touched"
+msgstr ""
+
+msgid "Can 10 touched"
+msgstr ""
+
+msgid "Can 11 Touched"
+msgstr ""
+
+msgid "Can 11 touched"
+msgstr ""
+
+msgid "Can 12 Touched"
+msgstr ""
+
+msgid "Can 12 touched"
+msgstr ""
+
+msgid "Can 10 intersects circle 10"
+msgstr ""
+
+msgid "Can 11 intersects circle 11"
+msgstr ""
+
+msgid "Can 12 intersects circle 12"
+msgstr ""
+
+msgid "Can 10 upright on circle 10"
+msgstr ""
+
+msgid "Can 11 upright on circle 11"
+msgstr ""
+
+msgid "Can 12 upright on circle 12"
+msgstr ""
+
+msgid "Robot passed right side of can 12"
+msgstr ""
+
+msgid "Robot passed top side of can 11"
+msgstr ""
+
+msgid "Robot passed left side of can 10"
+msgstr ""
+
+msgid "JBC Challenge 2C"
+msgstr ""
+
+msgid "Robot Driving Backwards"
+msgstr ""
+
+msgid "Robot is driving backwards"
+msgstr ""
+
+msgid "JBC Challenge 2D"
+msgstr ""
+
+msgid "Robot Rentered Start 1"
+msgstr ""
+
+msgid "Robot reentered starting box after going forwards"
+msgstr ""
+
+msgid "Robot Rentered Start 2"
+msgstr ""
+
+msgid "Robot reentered starting box after going backwards"
+msgstr ""
+
+msgid "Robot Driving Forwards"
+msgstr ""
+
+msgid "Robot is driving forwards"
+msgstr ""
+
+msgid "JBC Challenge 4B"
+msgstr ""
+
+msgid "Can 5 intersects circle 5"
+msgstr ""
+
+msgid "Can 8 intersects circle 8"
+msgstr ""
+
+msgid "Can 5 upright on circle 5"
+msgstr ""
+
+msgid "Can 8 upright on circle 8"
+msgstr ""
+
+msgid "Can 8 Clockwise"
+msgstr ""
+
+msgid "Robot drove clockwise around can 8"
+msgstr ""
+
+msgid "Can 5 Counter Clockwise"
+msgstr ""
+
+msgid "Robot drove counter clockwise around can 5"
+msgstr ""
+
+msgid "Can 9 Counter Clockwise"
+msgstr ""
+
+msgid "Robot drove counter clockwise around can 9"
+msgstr ""
+
+msgid "JBC Challenge 8B"
+msgstr ""
+
+msgid "Robot Begins In start"
+msgstr ""
+
+msgid "Robot begins in starting box"
+msgstr ""
+
+msgid "Robot passed through circle 1"
+msgstr ""
+
+msgid "Robot passed through circle 2"
+msgstr ""
+
+msgid "Robot passed through circle 3"
+msgstr ""
+
+msgid "Robot passed through circle 4"
+msgstr ""
+
+msgid "Robot passed through circle 5"
+msgstr ""
+
+msgid "Test"
+msgstr ""
+
+msgid "A"
+msgstr ""
+
+msgid "B"
+msgstr ""
+
+msgid "Junior Botball Challenge 12: Add It Up"
+msgstr ""
+
+msgid "Robot Touched a Circle "
+msgstr ""
+
+msgid "Robot touched a circle"
+msgstr ""
+
+msgid "Touched Circles to add up to 20"
+msgstr ""
+
+msgid "JBC Challenge 14"
+msgstr ""
+
+msgid "Robot 360 Clockwise"
+msgstr ""
+
+msgid "Robot turned 360 degrees clockwise"
+msgstr ""
+
+msgid "Robot 360 Counter Clockwise"
+msgstr ""
+
+msgid "Robot turned 360 degrees counter clockwise"
+msgstr ""
+
+msgid "Robot Drove Forward"
+msgstr ""
+
+msgid "Robot drove forward"
+msgstr ""
+
+msgid "Robot Drove Backward"
+msgstr ""
+
+msgid "Robot drove backward"
+msgstr ""
+
+msgid "Robot Wave Servo"
+msgstr ""
+
+msgid "Robot waved servo up and down at least once"
+msgstr ""
+
+msgid "Turn 360° clockwise"
+msgstr ""
+
+msgid "Turn 360° counter clockwise"
+msgstr ""
+
+msgid "Drive forward"
+msgstr ""
+
+msgid "Drive backward"
+msgstr ""
+
+msgid "Wave the servo"
+msgstr ""
+
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
 msgstr ""
@@ -1077,5 +3172,133 @@ msgid "YXZ"
 msgstr ""
 
 msgctxt "Rotation order"
+msgid "ZYX"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "Kindergarten"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "1st grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "2nd grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "3rd grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "4th grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "5th grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "6th grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "7th grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "8th grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "9th grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "10th grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "11th grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "12th grade"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "1st"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "2nd"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "3rd"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "4th"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "5th"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "6th"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "7th"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "8th"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "9th"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "10th"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "11th"
+msgstr ""
+
+msgctxt "Student grade level"
+msgid "12th"
+msgstr ""
+
+msgctxt "Student grade level; Kingergarten"
+msgid "K"
+msgstr ""
+
+msgctxt "RotationwUnits order"
+msgid "XYZ"
+msgstr ""
+
+msgctxt "RotationwUnits order"
+msgid "YZX"
+msgstr ""
+
+msgctxt "RotationwUnits order"
+msgid "ZXY"
+msgstr ""
+
+msgctxt "RotationwUnits order"
+msgid "XZY"
+msgstr ""
+
+msgctxt "RotationwUnits order"
+msgid "YXZ"
+msgstr ""
+
+msgctxt "RotationwUnits order"
 msgid "ZYX"
 msgstr ""

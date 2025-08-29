@@ -3,18 +3,28 @@ import { useState, useRef, useEffect } from 'react';
 import { styled } from 'styletron-react';
 import { Theme, ThemeProps } from '../constants/theme';
 import { Message, MessageRole } from '../../state/State/Ai';
+import { State as ReduxState } from '../../state';
+import { connect } from 'react-redux';
 import ChatMessage from './ChatMessage';
 import { FontAwesome } from '../FontAwesome';
 import { faPaperPlane, faTrash } from '@fortawesome/free-solid-svg-icons';
 import ScrollArea, { ScrollAreaRef } from '../interface/ScrollArea';
+import tr from '@i18n';
+import LocalizedString from '../../util/LocalizedString';
 
-export interface ChatInterfaceProps extends ThemeProps {
+export interface ChatInterfacePublicProps extends ThemeProps {
   messages: Message[];
   loading: boolean;
   containerWidth?: number;
-  
+
   onSendMessage: (content: string) => void;
 }
+
+export interface ChatInterfacePrivateProps {
+  locale: LocalizedString.Language;
+}
+
+type ChatInterfaceProps = ChatInterfacePublicProps & ChatInterfacePrivateProps;
 
 const Container = styled('div', ({ theme }: ThemeProps) => ({
   display: 'flex',
@@ -24,7 +34,7 @@ const Container = styled('div', ({ theme }: ThemeProps) => ({
   height: '100%',
   backgroundColor: theme.backgroundColor,
   overflow: 'hidden',
-  
+
 }));
 
 const InputContainer = styled('div', ({ theme }: ThemeProps) => ({
@@ -103,12 +113,13 @@ const EmptyStateText = styled('p', {
   lineHeight: '1.5',
 });
 
-const ChatInterface: React.FC<ChatInterfaceProps> = ({ 
-  theme, 
-  messages, 
+const ChatInterface: React.FC<ChatInterfaceProps> = ({
+  theme,
+  messages,
   loading,
   containerWidth,
   onSendMessage,
+  locale,
 }) => {
   const [inputValue, setInputValue] = useState('');
   const scrollAreaRef = useRef<ScrollArea>(null);
@@ -147,9 +158,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       <ScrollArea theme={theme} ref={scrollAreaRef} style={{ flex: '1 1 auto' }} autoscroll>
         {messages.length === 0 ? (
           <EmptyState theme={theme}>
-            <EmptyStateTitle>Tutor</EmptyStateTitle>
+            <EmptyStateTitle>{LocalizedString.lookup(tr("Tutor"), locale)}</EmptyStateTitle>
             <EmptyStateText>
-              Ask me questions about programming, get help with your code, or discuss robotics concepts.
+              {LocalizedString.lookup(tr("Ask me questions about programming, get help with your code, or discuss robotics concepts."), locale)}
             </EmptyStateText>
           </EmptyState>
         ) : (
@@ -169,7 +180,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           value={inputValue}
           onChange={handleInputChange}
           onKeyDown={handleInputKeyDown}
-          placeholder="Ask tutor a question..."
+          placeholder={LocalizedString.lookup(tr("Ask tutor a question..."), locale)}
           disabled={loading}
         />
         <SendButton
@@ -184,4 +195,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   );
 };
 
-export default ChatInterface;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}), dispatch => ({
+}))(ChatInterface) as React.ComponentType<ChatInterfacePublicProps>;

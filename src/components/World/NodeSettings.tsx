@@ -1116,7 +1116,6 @@ class NodeSettings extends React.PureComponent<Props, State> {
       dict[option.data as string] = i;
       return dict;
     }, {});
-
     const RADIATION_TEMPLATE_REVERSE_OPTIONS: Dict<number> = RADIATION_TEMPLATE_OPTIONS.reduce((dict, option, i) => {
       dict[option.data as string] = i;
       return dict;

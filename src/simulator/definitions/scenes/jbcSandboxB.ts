@@ -1,4 +1,4 @@
-import Scene from "../../../state/State/Scene";
+import Scene from '../../../state/State/Scene';
 
 import { createBaseSceneSurfaceB } from './jbcBase';
 

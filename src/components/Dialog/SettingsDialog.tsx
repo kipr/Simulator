@@ -91,7 +91,18 @@ interface SectionProps {
 
 const LOCALE_OPTIONS: ComboBox.Option[] = (() => {
   const ret: ComboBox.Option[] = [];
-  for (const locale of [LocalizedString.EN_US]) {
+  const locales = [
+    LocalizedString.EN_US,
+    LocalizedString.ES_ES,
+    LocalizedString.ES_MX,
+    LocalizedString.PT_PT,
+    LocalizedString.PT_BR,
+    LocalizedString.DE_DE,
+    LocalizedString.ZH_CN,
+    LocalizedString.ZH_TW,
+    LocalizedString.JA_JP,
+  ];
+  for (const locale of locales) {
     ret.push(ComboBox.option(LocalizedString.NATIVE_LOCALE_NAMES[locale], locale));
   }
   return ret;
@@ -130,6 +141,7 @@ class SettingsDialog extends React.PureComponent<Props, State> {
   };
 
   private onLocaleSelect_ = (index: number, option: ComboBox.Option) => {
+    localStorage.setItem('bblocale', option.data as string);
     this.props.onLocaleChange(option.data as LocalizedString.Language);
   };
 

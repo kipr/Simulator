@@ -4,7 +4,7 @@ import { Distance } from '../../../util';
 import LocalizedString from '../../../util/LocalizedString';
 import { Color } from '../../../state/State/Scene/Color';
 import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
-import Script from "../../../state/State/Scene/Script";
+import Script from '../../../state/State/Scene/Script';
 
 import tr from '@i18n';
 
@@ -21,7 +21,7 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 
 const startBoxIntersects = `
 scene.addOnIntersectionListener('startBox', (type, otherNodeId) => {
-  // console.log(otherNodeId + " entered start box!", type);
+  // console.log(otherNodeId + ' entered start box!', type);
   const visible = type === 'start';
   scene.setChallengeEventValue(otherNodeId + 'Intersects', visible);
 }, ['can1', 'can2', 'can3']);
@@ -56,10 +56,8 @@ const REAM_ORIGIN: ReferenceFramewUnits = {
 
 export const JBC_17: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 17' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 17: Mountain Rescue`,
-  },
+  name: tr('JBC 17'),
+  description: tr('Junior Botball Challenge 17: Mountain Rescue'),
   scripts: {
     notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
     uprightCans: Script.ecmaScript('Upright Cans', uprightCans),
@@ -76,7 +74,7 @@ export const JBC_17: Scene = {
       },
     },
     notStartBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(10),
@@ -89,7 +87,7 @@ export const JBC_17: Scene = {
     startBox: {
       type: 'object',
       geometryId: 'startBox_geom',
-      name: { [LocalizedString.EN_US]: 'Start Box' },
+      name: tr('Start Box'),
       visible: true,
       origin: {
         position: {
@@ -107,9 +105,9 @@ export const JBC_17: Scene = {
       },
     },
     notStartBox: {
-      type: "object",
-      geometryId: "notStartBox_geom",
-      name: { [LocalizedString.EN_US]: "Not Start Box" },
+      type: 'object',
+      geometryId: 'notStartBox_geom',
+      name: tr('Not Start Box'),
       visible: false,
       origin: {
         position: {
@@ -119,9 +117,9 @@ export const JBC_17: Scene = {
         },
       },
       material: {
-        type: "basic",
+        type: 'basic',
         color: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 0, 0),
         },
       },

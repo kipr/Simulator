@@ -1,9 +1,10 @@
-import Scene from "../../../state/State/Scene";
-import LocalizedString from "../../../util/LocalizedString";
-import Script from "../../../state/State/Scene/Script";
-import { createCanNode, createBaseSceneSurfaceA, createCircleNode } from "./jbcBase";
-import { Color } from "../../../state/State/Scene/Color";
-import { Distance } from "../../../util";
+import Scene from '../../../state/State/Scene';
+import LocalizedString from '../../../util/LocalizedString';
+import Script from '../../../state/State/Scene/Script';
+import { createCanNode, createBaseSceneSurfaceA, createCircleNode } from './jbcBase';
+import { Color } from '../../../state/State/Scene/Color';
+import { Distance } from '../../../util';
+import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -56,32 +57,32 @@ const passedSide = `
 
 let count = 0;
 let position = 0;
-  
+
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  
-  if(otherNodeId == "startBox"){
+
+  if(otherNodeId == 'startBox'){
     count = 0;
     position = 0;
   }
 
-  if(type === "start"){
+  if(type === 'start'){
     position++;
-    // console.log(count + ":" + otherNodeId + ":" + type + ":Position:" +position );
+    // console.log(count + ':" + otherNodeId + ":" + type + ":Position:' +position );
   }
-  
+
   //Sets values for second crossing in the middle
-  if(count == 2 && (otherNodeId == "n1")){ 
+  if(count == 2 && (otherNodeId == 'n1')){
     count++;
     position = 3;
-    // console.log(count + ":" + otherNodeId + ":" + type);
+    // console.log(count + ':" + otherNodeId + ":' + type);
   }
-  if(type==="start" && (otherNodeId == "n" +position)){
+  if(type==='start' && (otherNodeId == 'n' +position)){
     count++;
-    // console.log(count + ":" + otherNodeId + ":" + type);
+    // console.log(count + ':" + otherNodeId + ":' + type);
   }
 
   //Passed three checkmarks and recently passed the middle checkmark
-  if(count == 3 && otherNodeId == "n1"){
+  if(count == 3 && otherNodeId == 'n1'){
     scene.setChallengeEventValue('figureEight', true);
   }
   else{
@@ -103,7 +104,7 @@ const yAngle = (nodeId) => 180 / Math.PI * -1 * Math.asin(Vector3wUnits.dot(Vect
 scene.addOnRenderListener(() => {
   const upright4 = Math.abs(yAngle('can4') + 90) < 5;
   const upright9 = Math.abs(yAngle('can9') + 90) < 5;
-  
+
   scene.setChallengeEventValue('can4Upright', upright4);
   scene.setChallengeEventValue('can9Upright', upright9);
 });
@@ -111,22 +112,20 @@ scene.addOnRenderListener(() => {
 
 export const JBC_6: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: "JBC 6" },
-  description: {
-    [LocalizedString.EN_US]: "Junior Botball Challenge 6: Figure Eight",
-  },
+  name: tr('JBC 6'),
+  description: tr('Junior Botball Challenge 6: Figure Eight'),
   scripts: {
-    notInStartBox: Script.ecmaScript("Robot not in Start Box", notInStartBox),
-    circleIntersects: Script.ecmaScript("Circle Intersects", circleIntersects),
-    uprightCans: Script.ecmaScript("Upright Cans", uprightCans),
-    passedSide: Script.ecmaScript("Passed Side", passedSide),
-    enterStartBox: Script.ecmaScript("Robot Reentered Start", enterStartBox),
+    notInStartBox: Script.ecmaScript('Robot not in Start Box', notInStartBox),
+    circleIntersects: Script.ecmaScript('Circle Intersects', circleIntersects),
+    uprightCans: Script.ecmaScript('Upright Cans', uprightCans),
+    passedSide: Script.ecmaScript('Passed Side', passedSide),
+    enterStartBox: Script.ecmaScript('Robot Reentered Start', enterStartBox),
   },
 
   geometry: {
     ...baseScene.geometry,
     notStartBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(10),
@@ -134,7 +133,7 @@ export const JBC_6: Scene = {
       },
     },
     startBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(0.1),
@@ -142,7 +141,7 @@ export const JBC_6: Scene = {
       },
     },
     leftCan4_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.centimeters(150),
         y: Distance.centimeters(1),
@@ -150,7 +149,7 @@ export const JBC_6: Scene = {
       },
     },
     middle_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.centimeters(-1),
         y: Distance.centimeters(-8),
@@ -158,7 +157,7 @@ export const JBC_6: Scene = {
       },
     },
     rightCan9_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.centimeters(150),
         y: Distance.centimeters(1),
@@ -166,7 +165,7 @@ export const JBC_6: Scene = {
       },
     },
     topCan9_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.centimeters(-1),
         y: Distance.centimeters(-8),
@@ -174,7 +173,7 @@ export const JBC_6: Scene = {
       },
     },
     rightCan4_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.centimeters(150),
         y: Distance.centimeters(1),
@@ -186,9 +185,9 @@ export const JBC_6: Scene = {
   nodes: {
     ...baseScene.nodes,
     notStartBox: {
-      type: "object",
-      geometryId: "notStartBox_geom",
-      name: { [LocalizedString.EN_US]: "Not Start Box" },
+      type: 'object',
+      geometryId: 'notStartBox_geom',
+      name: tr('Not Start Box'),
       visible: false,
       origin: {
         position: {
@@ -198,17 +197,17 @@ export const JBC_6: Scene = {
         },
       },
       material: {
-        type: "basic",
+        type: 'basic',
         color: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 0, 0),
         },
       },
     },
     startBox: {
-      type: "object",
-      geometryId: "startBox_geom",
-      name: { [LocalizedString.EN_US]: "Start Box" },
+      type: 'object',
+      geometryId: 'startBox_geom',
+      name: tr('Start Box'),
       visible: false,
       origin: {
         position: {
@@ -218,17 +217,17 @@ export const JBC_6: Scene = {
         },
       },
       material: {
-        type: "pbr",
+        type: 'pbr',
         emissive: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 255, 255),
         },
       },
     },
     n1: {
-      type: "object",
-      geometryId: "middle_geom",
-      name: { [LocalizedString.EN_US]: "Between cans 4 and 9" },
+      type: 'object',
+      geometryId: 'middle_geom',
+      name: tr('Between cans 4 and 9'),
       visible: false,
       origin: {
         position: {
@@ -238,18 +237,18 @@ export const JBC_6: Scene = {
         },
       },
       material: {
-        type: "pbr",
+        type: 'pbr',
         emissive: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 255, 255),
         },
       },
     },
 
     n2: {
-      type: "object",
-      geometryId: "topCan9_geom",
-      name: { [LocalizedString.EN_US]: "Top side of can 9" },
+      type: 'object',
+      geometryId: 'topCan9_geom',
+      name: tr('Top side of can 9'),
       visible: false,
       origin: {
         position: {
@@ -259,9 +258,9 @@ export const JBC_6: Scene = {
         },
       },
       material: {
-        type: "pbr",
+        type: 'pbr',
         emissive: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 255, 255),
         },
       },

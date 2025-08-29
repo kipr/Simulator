@@ -1,9 +1,10 @@
-import Scene from "../../../state/State/Scene";
+import Scene from '../../../state/State/Scene';
 import LocalizedString from '../../../util/LocalizedString';
-import Script from "../../../state/State/Scene/Script";
+import Script from '../../../state/State/Scene/Script';
 import { createCanNode, createBaseSceneSurfaceA, createCircleNode } from './jbcBase';
-import { Color } from "../../../state/State/Scene/Color";
-import { Distance } from "../../../util";
+import { Color } from '../../../state/State/Scene/Color';
+import { Distance } from '../../../util';
+import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -82,21 +83,19 @@ scene.addOnRenderListener(() => {
 
 export const JBC_2: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: "JBC 2" },
-  description: {
-    [LocalizedString.EN_US]: "Junior Botball Challenge 2: Ring Around the Can",
-  },
+  name: tr('JBC 2'),
+  description: tr('Junior Botball Challenge 2: Ring Around the Can'),
   scripts: {
-    notInStartBox: Script.ecmaScript("Not in Start Box", notInStartBox),
-    circleIntersects: Script.ecmaScript("Circle Intersects", circleIntersects),
-    uprightCans: Script.ecmaScript("Upright Cans", uprightCans),
-    passedSide: Script.ecmaScript("Passed Side", passedSide),
-    enterStartBox: Script.ecmaScript("Robot Reentered Start", enterStartBox),
+    notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
+    circleIntersects: Script.ecmaScript('Circle Intersects', circleIntersects),
+    uprightCans: Script.ecmaScript('Upright Cans', uprightCans),
+    passedSide: Script.ecmaScript('Passed Side', passedSide),
+    enterStartBox: Script.ecmaScript('Robot Reentered Start', enterStartBox),
   },
   geometry: {
     ...baseScene.geometry,
     startBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(0.1),
@@ -104,7 +103,7 @@ export const JBC_2: Scene = {
       },
     },
     notStartBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(10),
@@ -112,7 +111,7 @@ export const JBC_2: Scene = {
       },
     },
     rightSideCan_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.centimeters(30),
         y: Distance.centimeters(0.1),
@@ -120,7 +119,7 @@ export const JBC_2: Scene = {
       },
     },
     topSideCan_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.centimeters(0.01),
         y: Distance.centimeters(0.1),
@@ -128,7 +127,7 @@ export const JBC_2: Scene = {
       },
     },
     leftSideCan_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.centimeters(50),
         y: Distance.centimeters(0.1),
@@ -139,9 +138,9 @@ export const JBC_2: Scene = {
   nodes: {
     ...baseScene.nodes,
     startBox: {
-      type: "object",
-      geometryId: "startBox_geom",
-      name: { [LocalizedString.EN_US]: "Start Box" },
+      type: 'object',
+      geometryId: 'startBox_geom',
+      name: tr('Start Box'),
       visible: false,
       origin: {
         position: {
@@ -151,17 +150,17 @@ export const JBC_2: Scene = {
         },
       },
       material: {
-        type: "pbr",
+        type: 'pbr',
         emissive: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 255, 255),
         },
       },
     },
     notStartBox: {
-      type: "object",
-      geometryId: "notStartBox_geom",
-      name: { [LocalizedString.EN_US]: "Not Start Box" },
+      type: 'object',
+      geometryId: 'notStartBox_geom',
+      name: tr('Not Start Box'),
       visible: false,
       origin: {
         position: {
@@ -171,17 +170,17 @@ export const JBC_2: Scene = {
         },
       },
       material: {
-        type: "basic",
+        type: 'basic',
         color: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 0, 0),
         },
       },
     },
     rightSideCan: {
-      type: "object",
-      geometryId: "rightSideCan_geom",
-      name: { [LocalizedString.EN_US]: "Right Side Can" },
+      type: 'object',
+      geometryId: 'rightSideCan_geom',
+      name: tr('Right Side Can'),
       visible: false,
       origin: {
         position: {
@@ -191,17 +190,17 @@ export const JBC_2: Scene = {
         },
       },
       material: {
-        type: "pbr",
+        type: 'pbr',
         emissive: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 255, 255),
         },
       },
     },
     topSideCan: {
-      type: "object",
-      geometryId: "topSideCan_geom",
-      name: { [LocalizedString.EN_US]: "Top Side Can" },
+      type: 'object',
+      geometryId: 'topSideCan_geom',
+      name: tr('Top Side Can'),
       visible: false,
       origin: {
         position: {
@@ -211,17 +210,17 @@ export const JBC_2: Scene = {
         },
       },
       material: {
-        type: "pbr",
+        type: 'pbr',
         emissive: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 255, 255),
         },
       },
     },
     leftSideCan: {
-      type: "object",
-      geometryId: "leftSideCan_geom",
-      name: { [LocalizedString.EN_US]: "Left Side Can" },
+      type: 'object',
+      geometryId: 'leftSideCan_geom',
+      name: tr('Left Side Can'),
       visible: false,
       origin: {
         position: {
@@ -231,9 +230,9 @@ export const JBC_2: Scene = {
         },
       },
       material: {
-        type: "pbr",
+        type: 'pbr',
         emissive: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 255, 255),
         },
       },

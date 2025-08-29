@@ -5,6 +5,7 @@ import { ReferenceFramewUnits } from '../../../util/math/unitMath';
 import { createCanNode, createBaseSceneSurfaceB } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
 import Script from '../../../state/State/Scene/Script';
+import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceB();
 
@@ -19,25 +20,25 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
   //1st checkpoint
   if(otherNodeId == 'n1' && type === 'start' && count == 0){
     count = 1;
-    // console.log("Robot passed checkpoint 1");
+    // console.log('Robot passed checkpoint 1');
   }
   //2nd checkpoint
   else if (otherNodeId == 'n2' && type === 'start' && count == 1){
     count = 2;
-    // console.log("Robot passed checkpoint 2 after checkpoint 1");
+    // console.log('Robot passed checkpoint 2 after checkpoint 1');
   }
   //3rd checkpoint
   else if(otherNodeId == 'n3' && type === 'start'&& count == 2){
     count = 3;
-    // console.log("Robot passed checkpoint 3 after checkpoint 2");
+    // console.log('Robot passed checkpoint 3 after checkpoint 2');
   }
   //Finish line after all other checkpoints
   else if(otherNodeId == 'finishLine' && type === 'start' && count == 3){
-    // console.log("Robot completed the course!");
+    // console.log('Robot completed the course!');
     scene.setChallengeEventValue('lineFollow', true);
   }
 
-  // console.log("Count: " + count);
+  // console.log('Count: ' + count);
 }, ['finishLine', 'n1', 'n2', 'n3', 'startBox']);
 `;
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
@@ -49,10 +50,8 @@ const ROBOT_ORIGIN: ReferenceFramewUnits = {
 };
 export const JBC_24: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 24' },
-  description: {
-    [LocalizedString.EN_US]: 'Junior Botball Challenge 24: Walk the Line',
-  },
+  name: tr('JBC 24'),
+  description: tr('Junior Botball Challenge 24: Walk the Line'),
   scripts: {
     lineFollow: Script.ecmaScript('Line Follow', lineFollow),
   },
@@ -90,7 +89,7 @@ export const JBC_24: Scene = {
     finishLine: {
       type: 'object',
       geometryId: 'finish_geom',
-      name: { [LocalizedString.EN_US]: 'Finish Line' },
+      name: tr('Finish Line'),
       visible: false,
       origin: {
         position: {
@@ -110,7 +109,7 @@ export const JBC_24: Scene = {
     startBox: {
       type: 'object',
       geometryId: 'startBox_geom',
-      name: { [LocalizedString.EN_US]: 'Finish Line' },
+      name: tr('Finish Line'),
       visible: false,
       origin: {
         position: {
@@ -131,7 +130,7 @@ export const JBC_24: Scene = {
     n1: {
       type: 'object',
       geometryId: 'n_geom',
-      name: { [LocalizedString.EN_US]: 'Checkpoint 1' },
+      name: tr('Checkpoint 1'),
       visible: false,
       origin: {
         position: {
@@ -152,7 +151,7 @@ export const JBC_24: Scene = {
     n3: {
       type: 'object',
       geometryId: 'n_geom',
-      name: { [LocalizedString.EN_US]: 'Checkpoint 3' },
+      name: tr('Checkpoint 3'),
       visible: false,
       origin: {
         position: {
@@ -173,7 +172,7 @@ export const JBC_24: Scene = {
     n2: {
       type: 'object',
       geometryId: 'n_geom',
-      name: { [LocalizedString.EN_US]: 'Checkpoint 2' },
+      name: tr('Checkpoint 2'),
       visible: false,
       origin: {
         position: {

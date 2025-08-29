@@ -42,10 +42,8 @@ const REAM1_ORIGIN: ReferenceFramewUnits = {
 
 export const JBC_19: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 19' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 19: Bump`,
-  },
+  name: tr('JBC 19'),
+  description: tr('Junior Botball Challenge 19: Bump'),
   scripts: {
     notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
     bumpReam: Script.ecmaScript('Bump Ream', bumpReam),
@@ -53,7 +51,7 @@ export const JBC_19: Scene = {
   geometry: {
     ...baseScene.geometry,
     notStartBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(10),
@@ -64,9 +62,9 @@ export const JBC_19: Scene = {
   nodes: {
     ...baseScene.nodes,
     notStartBox: {
-      type: "object",
-      geometryId: "notStartBox_geom",
-      name: { [LocalizedString.EN_US]: "Not Start Box" },
+      type: 'object',
+      geometryId: 'notStartBox_geom',
+      name: tr('Not Start Box'),
       visible: false,
       origin: {
         position: {
@@ -76,9 +74,9 @@ export const JBC_19: Scene = {
         },
       },
       material: {
-        type: "basic",
+        type: 'basic',
         color: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 0, 0),
         },
       },

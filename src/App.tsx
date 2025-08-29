@@ -33,6 +33,7 @@ interface AppPrivateProps {
   login: () => void;
   setMe: (me: string) => void;
   loadUser: (uid: string) => void;
+  setLocale: (locale: LocalizedString.Language) => void;
 }
 
 interface AppState {
@@ -54,13 +55,13 @@ type State = AppState;
  *   - `loading`: A boolean indicating whether the application is still loading the user state.
  *
  * Lifecycle Methods:
- *   - `componentDidMount`: Sets up a subscription to authentication state changes. If a user is 
+ *   - `componentDidMount`: Sets up a subscription to authentication state changes. If a user is
  *     detected, it sets `loading` to false, otherwise it triggers the `login` function from props.
  *   - `componentWillUnmount`: Cleans up the authentication state change subscription.
  *
  * Render Method:
  *   - Returns a `Loading` component if the application is still loading.
- *   - Once loading is complete, it renders the primary routes of the application and the 
+ *   - Once loading is complete, it renders the primary routes of the application and the
  *     `DocumentationWindow` component with a dark theme.
  *
  * Note: This component also maintains a private field `onAuthStateChangedSubscription_` for managing
@@ -78,6 +79,52 @@ class App extends React.Component<Props, State> {
   private onAuthStateChangedSubscription_: Unsubscribe;
 
   componentDidMount() {
+    /*
+     * If the user has previously chosen a locale through the settings menu,
+     * use it. Otherwise, guess based on their browser's langauge. To add
+     * langauges, first review the Translation section in the README. Once
+     * translated, if you wish to integrate your translations, you need to
+     * LOCALE_OPTIONS in SettingsDialog.ts.
+     */
+    const lang: LocalizedString.Language = LocalizedString.validate(localStorage.getItem('bblocale'));
+    if (lang) {
+      this.props.setLocale(lang);
+      console.log(`Read locale from localstorage: ${lang}`);
+    } else {
+      switch (navigator.language) {
+        case 'ja':
+          this.props.setLocale('ja-JP');
+          break;
+        case 'zh':
+        case 'zh-CN':
+          this.props.setLocale('zh-CN');
+          break;
+        case 'zh-HK':
+        case 'zh-TW':
+          this.props.setLocale('zh-TW');
+          break;
+        case 'es':
+        case 'es-ES':
+          this.props.setLocale('es-ES');
+          break;
+        case 'es-MX':
+          this.props.setLocale('es-MX');
+          break;
+        case 'pt':
+        case 'pt-PT':
+          this.props.setLocale('pt-PT');
+          break;
+        case 'pt-BR':
+          this.props.setLocale('pt-BR');
+          break;
+        case 'de':
+          this.props.setLocale('de-DE');
+          break;
+        default:
+          this.props.setLocale('en-US');
+      }
+    }
+
     this.onAuthStateChangedSubscription_ = auth.onAuthStateChanged(user => {
       if (user) {
         console.log('User detected.');
@@ -142,9 +189,9 @@ class App extends React.Component<Props, State> {
 
 /**
  * Connects the `App` component to the Redux store and dispatch actions.
- * 
- * The `connect` function from Redux is used to bind the Redux state and dispatch actions to the 
- * `App` component's props. This allows `App` to access and interact with the global state managed 
+ *
+ * The `connect` function from Redux is used to bind the Redux state and dispatch actions to the
+ * `App` component's props. This allows `App` to access and interact with the global state managed
  * by Redux and to trigger actions that can modify that state.
  *
  * State Mapping:
@@ -152,13 +199,13 @@ class App extends React.Component<Props, State> {
  *     This can be updated in future to pass required state properties from the Redux store.
  *
  * Dispatch Mapping:
- *   - `login`: A function that gets dispatched when the user is not authenticated. It logs the 
- *     current pathname, then redirects the user to the login page, appending the 'from' query 
+ *   - `login`: A function that gets dispatched when the user is not authenticated. It logs the
+ *     current pathname, then redirects the user to the login page, appending the 'from' query
  *     parameter with the current pathname unless the current pathname is '/login'.
  *
- * The connected `App` component is then exported as the default export of this module. The 
- * `as React.ComponentType<AppPublicProps>` part ensures that TypeScript understands the types of 
- * the props passed to `App` after it has been connected to Redux, enhancing type safety and 
+ * The connected `App` component is then exported as the default export of this module. The
+ * `as React.ComponentType<AppPublicProps>` part ensures that TypeScript understands the types of
+ * the props passed to `App` after it has been connected to Redux, enhancing type safety and
  * IntelliSense in IDEs.
  *
  * Note: This is a standard pattern for integrating React components with Redux in a TypeScript
@@ -175,5 +222,6 @@ export default connect((state: ReduxState) => {
     window.location.href = `/login${window.location.pathname === '/login' ? '' : `?from=${window.location.pathname}`}`;
   },
   setMe: (me: string) => dispatch(UsersAction.setMe({ me })),
-  loadUser: (uid: string) => dispatch(UsersAction.loadOrEmptyUser({ userId: uid }))
+  loadUser: (uid: string) => dispatch(UsersAction.loadOrEmptyUser({ userId: uid })),
+  setLocale: (locale: LocalizedString.Language) => dispatch(I18nAction.setLocale({ locale })),
 }))(App) as React.ComponentType<AppPublicProps>;

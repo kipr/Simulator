@@ -4,6 +4,7 @@ import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
 import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
+import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -50,10 +51,8 @@ function randomCan(): number {
 
 export const JBC_22: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 22' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 22: Search and Rescue`,
-  },
+  name: tr('JBC 22'),
+  description: tr('Junior Botball Challenge 22: Search and Rescue'),
   scripts: {
     notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
     enterStartBox: Script.ecmaScript('Enter Start Box', enterStartBox),
@@ -62,7 +61,7 @@ export const JBC_22: Scene = {
   geometry: {
     ...baseScene.geometry,
     notStartBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(10),
@@ -70,7 +69,7 @@ export const JBC_22: Scene = {
       },
     },
     startBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(0.1),
@@ -81,9 +80,9 @@ export const JBC_22: Scene = {
   nodes: {
     ...baseScene.nodes,
     notStartBox: {
-      type: "object",
-      geometryId: "notStartBox_geom",
-      name: { [LocalizedString.EN_US]: "Not Start Box" },
+      type: 'object',
+      geometryId: 'notStartBox_geom',
+      name: tr('Not Start Box'),
       visible: false,
       origin: {
         position: {
@@ -93,17 +92,17 @@ export const JBC_22: Scene = {
         },
       },
       material: {
-        type: "basic",
+        type: 'basic',
         color: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 0, 0),
         },
       },
     },
     startBox: {
-      type: "object",
-      geometryId: "startBox_geom",
-      name: { [LocalizedString.EN_US]: "Start Box" },
+      type: 'object',
+      geometryId: 'startBox_geom',
+      name: tr('Start Box'),
       visible: false,
       origin: {
         position: {
@@ -113,9 +112,9 @@ export const JBC_22: Scene = {
         },
       },
       material: {
-        type: "pbr",
+        type: 'pbr',
         emissive: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 255, 255),
         },
       },
