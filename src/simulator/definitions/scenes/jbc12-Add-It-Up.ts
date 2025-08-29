@@ -10,86 +10,59 @@ const baseScene = createBaseSceneSurfaceA();
 
 const notInStartBox = `
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot not in start box!', type, otherNodeId);
+  // console.log('Robot not in start box!', type, otherNodeId);
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('notInStartBox', type === 'start');
   }
 }, 'notStartBox');
 `;
 
-const addItUp = `
-const values = {
-  circle1: 1,
-  circle2: 2,
-  circle3: 3,
-  circle4: 4,
-  circle5: 5,
-  circle6: 6,
-  circle7: 7,
-  circle8: 8,
-  circle9: 9,
-  circle10: 10,
-  circle11: 11,
-  circle12: 12
-};
-
-let total = 0;
-const touched = new Set();
-
-Object.entries(values).forEach(([nodeId, value]) => {
-  scene.addOnIntersectionListener(nodeId, (type) => {
-    console.log('Circle touched:', nodeId);
-    if(scene.programStatus === 'running' && type === 'start' && !touched.has(nodeId)){
-      touched.add(nodeId);
-      
-      total += value;
-      if(total >= 20){
-        scene.setChallengeEventValue('addItUp', true);
-      }
-    }
-  }, 'arm_link');
+const setNodeVisible = `
+const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
+  ...scene.nodes[nodeId],
+  visible
 });
-
-// const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
-//   ...scene.nodes[nodeId],
-//   visible
-//   });
-
-// let circles = ['circle1','circle2','circle3','circle4','circle5','circle6','circle7','circle8', 'circle9','circle10','circle11','circle12'];
-
-// let total = 0;
-
-// scene.addOnRenderListener(() => {
-//   if(scene.programStatus !== 'running') {
-//     total = 0;
-//   }
-//   else {
-//     if(total >= 20) {
-//       scene.setChallengeEventValue('addItUp', true);
-//     }
-//   }
-// });
-
-// const arm = ...scene.nodes['robot'].
-
-// scene.addOnIntersectionListener('claw_link', (type, otherNodeId) => {
-//   if(scene.programStatus !== 'running') return;
-//   const circleNumber = otherNodeId.charAt(otherNodeId.length-1);
-//   if(scene.programStatus === 'running'){
-//     if(type === "start"){
-//       total = total + circleNumber;
-//     }
-//   }
-// }, [...circles]);
 `;
 
-const inStartBox = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot started in start box!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('inStartBox', type === 'start');
+const addItUp = `
+${setNodeVisible}
+// Total needs to reset with challenge
+let total = 0;
+
+// Reset total when not running: user should complete challenge in one run
+scene.addOnRenderListener(() => {
+  if (scene.programStatus !== 'running') {
+    total = 0;
   }
-}, 'startBox');
+});
+
+const circles = {
+  'circle1': 1,
+  'circle2': 2,
+  'circle3': 3,
+  'circle4': 4,
+  'circle5': 5,
+  'circle6': 6,
+  'circle7': 7,
+  'circle8': 8,
+  'circle9': 9,
+  'circle10': 10,
+  'circle11': 11,
+  'circle12': 12,
+};
+
+scene.addOnIntersectionListener('claw_link', (type, otherNodeId) => {
+  if (scene.programStatus === 'running') {
+    const circle = circles[otherNodeId];
+    // console.log('touched', otherNodeId);
+    total += type === 'start' ? circle : 0;
+    // console.log(total);
+    setNodeVisible(otherNodeId, type === 'start');
+  }
+  if (total === 20) {
+    scene.setChallengeEventValue('addItUp', true);
+  }
+}, Object.keys(circles));
 `;
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
@@ -106,8 +79,7 @@ export const JBC_12: Scene = {
     [LocalizedString.EN_US]: 'Junior Botball Challenge 12: Add it Up',
   },
   scripts: {
-    notInStartBox: Script.ecmaScript("Not In Start Box", notInStartBox),
-    inStartBox: Script.ecmaScript("In Start Box", inStartBox),
+    inStartBox: Script.ecmaScript("Not In Start Box", notInStartBox),
     addItUp: Script.ecmaScript('Add It Up', addItUp),
   },
   geometry: {
@@ -217,7 +189,7 @@ export const JBC_12: Scene = {
     circle8: createCircleNode(8, undefined, false, false),
     circle9: createCircleNode(9, undefined, false, false),
     circle10: createCircleNode(10, undefined, false, false),
-    circle12: createCircleNode(12, undefined, false, false),
     circle11: createCircleNode(11, undefined, false, false),
+    circle12: createCircleNode(12, undefined, false, false),
   },
 };
