@@ -1694,7 +1694,7 @@ msgid ""
 "GCER 2025 special event. Your robot is randomly placed on one of the red "
 "circles. Find the black starting line and stop. Bonus points for returning "
 "to the original starting circle."
-msgstr "GCER 2025のことだ！赤い丸にあるロボットで黒い一線を探して、やめる。"
+msgstr "GCER 2025のことだ！赤いサークルにあるロボットで黒い一線を探して、やめる。"
 
 msgid "GCER 2025: Sense the Can"
 msgstr "GCER 2025：缶を見る"
@@ -1702,7 +1702,7 @@ msgstr "GCER 2025：缶を見る"
 msgid ""
 "GCER 2025 special event. A can is placed randomly in circle 2, 4, 6, 9 or "
 "11. Find it and bring it back to the start box!"
-msgstr "GCER 2025のことだ！丸２か４か６か９か１１にある缶をスタートボックスに持って来てくれ。"
+msgstr "GCER 2025のことだ！サークル２か４か６か９か１１にある缶をスタートボックスに持って来てくれ。"
 
 msgid "Blue pom #%d"
 msgstr "青ポン #%d"
@@ -1753,7 +1753,7 @@ msgid "GCER 2025: Cover Your Bases"
 msgstr "GCER 2025：ベースを網羅する"
 
 msgid "GCER 2025 special edition. All circles are now open for business!"
-msgstr "GCER 2025のことだ！丸が全部を楽しみにしてください。"
+msgstr "GCER 2025のことだ！サークルが全部を楽しみにしてください。"
 
 msgid "GCER 2025: Odd Numbers"
 msgstr "GCER 2025：奇数"
@@ -1761,7 +1761,7 @@ msgstr "GCER 2025：奇数"
 msgid ""
 "GCER 2025 special event. Drive over the odd numbered circles in order, but "
 "make sure to avoid the evens!"
-msgstr "GCER 2025のことだ！奇数の丸運転して、偶数の丸に気をつけてくれ。"
+msgstr "GCER 2025のことだ！奇数のサークル運転して、偶数のサークルに気をつけてくれ。"
 
 msgid "GCER 2025: Bulldozer Mania"
 msgstr "GCER 2025：ブルドーザー・マニア"
@@ -1784,10 +1784,10 @@ msgid "Robot stops at black line"
 msgstr "ロボットが黒い一線でやめる。"
 
 msgid "Robot Over Circle"
-msgstr "丸にあるロボット"
+msgstr "サークルにあるロボット"
 
 msgid "Robot over selected circle"
-msgstr "選んだ丸にあるロボット"
+msgstr "選んだサークルにあるロボット"
 
 msgid "Robot not in Start Box"
 msgstr "ロボットは"
@@ -1820,43 +1820,43 @@ msgid "Hotdog placed in tray"
 msgstr "ホットドッグがトレーを置きた"
 
 msgid "Taco placed"
-msgstr "タコを置きた"
+msgstr "タコスを置きた"
 
 msgid "Taco placed in tray"
-msgstr "タコがトレーを置きた"
+msgstr "タコスがトレーを置きた"
 
 msgid "Can A upright in a circle"
-msgstr "丸の中でA缶は立て"
+msgstr "サークルの中でA缶は立て"
 
 msgid "Can B upright in a circle"
-msgstr "丸の中でB缶は立て"
+msgstr "サークルの中でB缶は立て"
 
 msgid "Can C upright in a circle"
-msgstr "丸の中でC缶は立て"
+msgstr "サークルの中でC缶は立て"
 
 msgid "Can D Upright"
 msgstr "D缶は立て"
 
 msgid "Can D upright in a circle"
-msgstr "丸の中でD缶は立て"
+msgstr "サークルの中でD缶は立て"
 
 msgid "Can E Upright"
 msgstr "E缶は立て"
 
 msgid "Can E upright in a circle"
-msgstr "丸の中でE缶は立て"
+msgstr "サークルの中でE缶は立て"
 
 msgid "Can F Upright"
 msgstr "F缶は立て"
 
 msgid "Can F upright in a circle"
-msgstr "丸の中でF缶は立て"
+msgstr "サークルの中でF缶は立て"
 
 msgid "Can G Upright"
 msgstr "G缶は立て"
 
 msgid "Can G upright in a circle"
-msgstr "丸の中でG缶は立て"
+msgstr "サークルの中でG缶は立て"
 
 msgid "Base A Covered"
 msgstr "Aベースを網羅した"
@@ -2071,13 +2071,13 @@ msgid "Can 9 Intersects"
 msgstr "缶９が交わる"
 
 msgid "Can 9 intersects circle 9"
-msgstr "丸９に缶９が交わる"
+msgstr "サークル９に缶９が交わる"
 
 msgid "Can 9 Upright"
 msgstr "缶９は立て"
 
 msgid "Can 9 upright on circle 9"
-msgstr "丸９で缶９は立て"
+msgstr "サークル９で缶９は立て"
 
 msgid "Robot Rentered Start"
 msgstr "再びロボットはスタートボックスに入た"
@@ -2092,7 +2092,7 @@ msgid "Return to the Start Box"
 msgstr "スタートボックスに帰て"
 
 msgid "Can 9 not in circle 9"
-msgstr "缶９は丸９にない"
+msgstr "缶９はサークル９にない"
 
 msgid "Can 9 not upright"
 msgstr "缶９は立てられない"
@@ -2104,13 +2104,13 @@ msgid "Can 6 Intersects"
 msgstr "缶６が交わる"
 
 msgid "Can 6 intersects circle 6"
-msgstr "丸６に缶６が交わる"
+msgstr "サークル６に缶６が交わる"
 
 msgid "Can 6 Upright"
 msgstr "缶６は立て"
 
 msgid "Can 6 upright on circle 6"
-msgstr "丸６で缶６は立て"
+msgstr "サークル６で缶６は立て"
 
 msgid "Robot Passed Right Side"
 msgstr "ロボットが右側を通過した"
@@ -2191,76 +2191,76 @@ msgid "Circle was touched out of order"
 msgstr "サークルが順番通りに触れなちゃった"
 
 msgid "Robot Touched Circle 1"
-msgstr "ロボットは丸１を触れた"
+msgstr "ロボットはサークル１を触れた"
 
 msgid "Robot touched circle 1"
-msgstr "ロボットは丸１を触れた"
+msgstr "ロボットはサークル１を触れた"
 
 msgid "Robot Touched Circle 2"
-msgstr "ロボットは丸２を触れた"
+msgstr "ロボットはサークル２を触れた"
 
 msgid "Robot touched circle 2"
-msgstr "ロボットは丸２を触れた"
+msgstr "ロボットはサークル２を触れた"
 
 msgid "Robot Touched Circle 3"
-msgstr "ロボットは丸３を触れた"
+msgstr "ロボットはサークル３を触れた"
 
 msgid "Robot touched circle 3"
-msgstr "ロボットは丸３を触れた"
+msgstr "ロボットはサークル３を触れた"
 
 msgid "Robot Touched Circle 4"
-msgstr "ロボットは丸４を触れた"
+msgstr "ロボットはサークル４を触れた"
 
 msgid "Robot touched circle 4"
-msgstr "ロボットは丸４を触れた"
+msgstr "ロボットはサークル４を触れた"
 
 msgid "Robot Touched Circle 5"
-msgstr "ロボットは丸５を触れた"
+msgstr "ロボットはサークル５を触れた"
 
 msgid "Robot touched circle 5"
-msgstr "ロボットは丸５を触れた"
+msgstr "ロボットはサークル５を触れた"
 
 msgid "Robot Touched Circle 6"
-msgstr "ロボットは丸６を触れた"
+msgstr "ロボットはサークル６を触れた"
 
 msgid "Robot touched circle 6"
-msgstr "ロボットは丸６を触れた"
+msgstr "ロボットはサークル６を触れた"
 
 msgid "Robot Touched Circle 7"
-msgstr "ロボットは丸７を触れた"
+msgstr "ロボットはサークル７を触れた"
 
 msgid "Robot touched circle 7"
-msgstr "ロボットは丸７を触れた"
+msgstr "ロボットはサークル７を触れた"
 
 msgid "Robot Touched Circle 8"
-msgstr "ロボットは丸８を触れた"
+msgstr "ロボットはサークル８を触れた"
 
 msgid "Robot touched circle 8"
-msgstr "ロボットは丸８を触れた"
+msgstr "ロボットはサークル８を触れた"
 
 msgid "Touch circle 1"
-msgstr "ロボットは丸１を触れて"
+msgstr "ロボットはサークル１を触れて"
 
 msgid "Touch circle 2"
-msgstr "ロボットは丸２を触れて"
+msgstr "ロボットはサークル２を触れて"
 
 msgid "Touch circle 3"
-msgstr "ロボットは丸３を触れて"
+msgstr "ロボットはサークル３を触れて"
 
 msgid "Touch circle 4"
-msgstr "ロボットは丸４を触れて"
+msgstr "ロボットはサークル４を触れて"
 
 msgid "Touch circle 5"
-msgstr "ロボットは丸５を触れて"
+msgstr "ロボットはサークル５を触れて"
 
 msgid "Touch circle 6"
-msgstr "ロボットは丸６を触れて"
+msgstr "ロボットはサークル６を触れて"
 
 msgid "Touch circle 7"
-msgstr "ロボットは丸７を触れて"
+msgstr "ロボットはサークル７を触れて"
 
 msgid "Touch circle 8"
-msgstr "ロボットは丸８を触れて"
+msgstr "ロボットはサークル８を触れて"
 
 msgid "Circle touched out of order"
 msgstr "サークルが順番通りに触れなちゃった"
@@ -2269,64 +2269,64 @@ msgid "JBC Challenge 5"
 msgstr "JBCチャレンジ５"
 
 msgid "Even Circle Touched"
-msgstr "偶数の丸触れた"
+msgstr "偶数のサークル触れた"
 
 msgid "Even circle touched"
-msgstr "偶数の丸触れた"
+msgstr "偶数のサークル触れた"
 
 msgid "Circle 1 Touched"
-msgstr "丸１を触れた"
+msgstr "サークル１を触れた"
 
 msgid "Circle 1 was touched"
-msgstr "丸１を触れた"
+msgstr "サークル１を触れた"
 
 msgid "Circle 3 Touched"
-msgstr "丸３を触れた"
+msgstr "サークル３を触れた"
 
 msgid "Circle 3 was touched"
-msgstr "丸３を触れた"
+msgstr "サークル３を触れた"
 
 msgid "Circle 5 Touched"
-msgstr "丸５を触れた"
+msgstr "サークル５を触れた"
 
 msgid "Circle 5 was touched"
-msgstr "丸５を触れた"
+msgstr "サークル５を触れた"
 
 msgid "Circle 7 Touched"
-msgstr "丸７を触れた"
+msgstr "サークル７を触れた"
 
 msgid "Circle 7 was touched"
-msgstr "丸７を触れた"
+msgstr "サークル７を触れた"
 
 msgid "Circle 9 Touched"
-msgstr "丸９を触れた"
+msgstr "サークル９を触れた"
 
 msgid "Circle 9 was touched"
-msgstr "丸９を触れた"
+msgstr "サークル９を触れた"
 
 msgid "Circle 11 Touched"
-msgstr "丸１１を触れた"
+msgstr "サークル１１を触れた"
 
 msgid "Circle 11 was touched"
-msgstr "丸１１を触れた"
+msgstr "サークル１１を触れた"
 
 msgid "Touch circle 9"
-msgstr "ロボットは丸９を触れて"
+msgstr "ロボットはサークル９を触れて"
 
 msgid "Touch circle 11"
-msgstr "ロボットは丸１１を触れて"
+msgstr "ロボットはサークル１１を触れて"
 
 msgid "Touched an even circle"
-msgstr "偶数の丸触れた"
+msgstr "偶数のサークル触れた"
 
 msgid "JBC Challenge 6"
 msgstr "JBCチャレンジ５"
 
 msgid "Can 4 intersects circle 4"
-msgstr "丸４に缶４が交わる"
+msgstr "サークル４に缶４が交わる"
 
 msgid "Can 4 upright on circle 4"
-msgstr "丸４で缶４は立て"
+msgstr "サークル４で缶４は立て"
 
 msgid "Robot Figure Eight"
 msgstr "８の字"
@@ -2338,16 +2338,16 @@ msgid "Complete a figure eight"
 msgstr "８の字をして"
 
 msgid "Can 4 not upright in circle 4"
-msgstr "缶４は丸４で立てられない"
+msgstr "缶４はサークル４で立てられない"
 
 msgid "Can 9 not upright in circle 9"
-msgstr "缶４は丸４で立てられない"
+msgstr "缶４はサークル４で立てられない"
 
 msgid "Can 4 does not intersect circle 4"
-msgstr "丸４に缶４が交わらない"
+msgstr "サークル４に缶４が交わらない"
 
 msgid "Can 9 does not intersect circle 9"
-msgstr "丸９に缶９が交わらない"
+msgstr "サークル９に缶９が交わらない"
 
 msgid "JBC Challenge 7"
 msgstr "JBCチャレンジ７"
@@ -2443,427 +2443,427 @@ msgid "JBC Challenge 9"
 msgstr "JBCチャレンジ９"
 
 msgid "Cover base A"
-msgstr ""
+msgstr "サークルAをカバーして"
 
 msgid "Cover base B"
-msgstr ""
+msgstr "サークルBをカバーして"
 
 msgid "Cover base C"
-msgstr ""
+msgstr "サークルCをカバーして"
 
 msgid "Cover base D"
-msgstr ""
+msgstr "サークルDをカバーして"
 
 msgid "Cover base E"
-msgstr ""
+msgstr "サークルEをカバーして"
 
 msgid "Can A not upright"
-msgstr ""
+msgstr "缶Aは立てない"
 
 msgid "Can B not upright"
-msgstr ""
+msgstr "缶Bは立てない"
 
 msgid "Can C not upright"
-msgstr ""
+msgstr "缶Cは立てない"
 
 msgid "Can D not upright"
-msgstr ""
+msgstr "缶Dは立てない"
 
 msgid "Can E not upright"
-msgstr ""
+msgstr "缶Eは立てない"
 
 msgid "JBC Challenge 10"
-msgstr ""
+msgstr "JBCチャレンジ１０"
 
 msgid "Waited to Chop"
-msgstr ""
+msgstr "切ることを待った"
 
 msgid "Robot waited to chop"
-msgstr ""
+msgstr "ロボットは切ることを待った"
 
 msgid "Can 7 Upright"
-msgstr ""
+msgstr "缶７は立てる"
 
 msgid "Can 7 upright"
-msgstr ""
+msgstr "缶７は立てる"
 
 msgid "Wait before chopping"
-msgstr ""
+msgstr "切ることを待って"
 
 msgid "Knock over can 7"
-msgstr ""
+msgstr "缶７を倒す"
 
 msgid "JBC Challenge 11"
-msgstr ""
+msgstr "JBCチャレンジ１１"
 
 msgid "Robot Waved"
-msgstr ""
+msgstr "ロボットが振った"
 
 msgid "Robot waved"
-msgstr ""
+msgstr "ロボットが振った"
 
 msgid "Circle 3 touched"
-msgstr ""
+msgstr "サークル３触れた"
 
 msgid "Circle 6 Touched"
-msgstr ""
+msgstr "サークル６触れた"
 
 msgid "Circle 6 touched"
-msgstr ""
+msgstr "サークル６触れた"
 
 msgid "Circle 9 touched"
-msgstr ""
+msgstr "サークル９触れた"
 
 msgid "Circle 12 Touched"
-msgstr ""
+msgstr "サークル１２触れた"
 
 msgid "Circle 12 touched"
-msgstr ""
+msgstr "サークル１２触れた"
 
 msgid "Wave at circle 3"
-msgstr ""
+msgstr "サークル３で振って"
 
 msgid "Wave at circle 6"
-msgstr ""
+msgstr "サークル６で振って"
 
 msgid "Wave at circle 9"
-msgstr ""
+msgstr "サークル９で振って"
 
 msgid "Wave at circle 12"
-msgstr ""
+msgstr "サークル１２で振って"
 
 msgid "JBC Challenge 15"
-msgstr ""
+msgstr "JBCチャレンジ１５"
 
 msgid "Can 11 Upright"
-msgstr ""
+msgstr "缶１１は立てる"
 
 msgid "Can 11 upright"
-msgstr ""
+msgstr "缶１１は立てる"
 
 msgid "Bring can to Start Box"
-msgstr ""
+msgstr "缶をスタートボックスに持って来て"
 
 msgid "Keep can 11 not upright"
-msgstr ""
+msgstr "缶１１はもう立てさせなくて"
 
 msgid "JBC Challenge 16"
-msgstr ""
+msgstr "JBCチャレンジ１６"
 
 msgid "Can 2 Picked Up"
-msgstr ""
+msgstr "缶２を持った"
 
 msgid "Can 2 picked up"
-msgstr ""
+msgstr "缶２を持った"
 
 msgid "Can 9 Picked Up"
-msgstr ""
+msgstr "缶９を持った"
 
 msgid "Can 9 picked up"
-msgstr ""
+msgstr "缶９を持った"
 
 msgid "Can 10 Picked Up"
-msgstr ""
+msgstr "缶１０を持った"
 
 msgid "Can 10 picked up"
-msgstr ""
+msgstr "缶１０を持った"
 
 msgid "Can 2 not upright"
-msgstr ""
+msgstr "缶２は立てない"
 
 msgid "Can 10 not upright"
-msgstr ""
+msgstr "缶１０は立てない"
 
 msgid "Can 2 not picked up"
-msgstr ""
+msgstr "缶２を持たない"
 
 msgid "Can 9 not picked up"
-msgstr ""
+msgstr "缶９を持たない"
 
 msgid "Can 10 not picked up"
-msgstr ""
+msgstr "缶１０を持たない"
 
 msgid "JBC Challenge 17"
-msgstr ""
+msgstr "JBCチャレンジ１７"
 
 msgid "Rescue can 1 to start box"
-msgstr ""
+msgstr "缶１をスタートボックスに持って来て"
 
 msgid "Rescue can 2 to start box"
-msgstr ""
+msgstr "缶２をスタートボックスに持って来て"
 
 msgid "Rescue can 3 to start box"
-msgstr ""
+msgstr "缶３をスタートボックスに持って来て"
 
 msgid "Can 1 not upright"
-msgstr ""
+msgstr "缶１は立てない"
 
 msgid "Can 3 not upright"
-msgstr ""
+msgstr "缶３は立てない"
 
 msgid "JBC Challenge 18"
-msgstr ""
+msgstr "JBCチャレンジ１６"
 
 msgid "Robot Left Start"
-msgstr ""
+msgstr "ロボットはスタートボックスから出た"
 
 msgid "Robot left starting box"
-msgstr ""
+msgstr "ロボットはスタートボックスから出た"
 
 msgid "One Can Stacked"
-msgstr ""
+msgstr "缶は一本積んだ"
 
 msgid "One can is stacked on another"
-msgstr ""
+msgstr "缶は一本他のに積んだ"
 
 msgid "Robot Touching Can"
-msgstr ""
+msgstr "ロボットは缶を触れている"
 
 msgid "Robot is touching a can"
-msgstr ""
+msgstr "ロボットは缶を触れている"
 
 msgid "Leave the Start Box"
-msgstr ""
+msgstr "スタートボックスから出て"
 
 msgid "Stack one can on another"
-msgstr ""
+msgstr "缶は一本他のに積んでください"
 
 msgid "Robot touching can"
-msgstr ""
+msgstr "ロボットは缶を触れている"
 
 msgid "JBC Challenge 19"
-msgstr ""
+msgstr "JBCチャレンジ１９"
 
 msgid "Robot Forward Touch"
-msgstr ""
+msgstr "ロボットの前の触れり"
 
 msgid "Robot drove forward and touched ream of paper"
-msgstr ""
+msgstr "ロボットは前に行って、紙を触れた"
 
 msgid "Drive forward and touch the ream"
-msgstr ""
+msgstr "前に行って、紙を触れてください"
 
 msgid "JBC Challenge 20"
-msgstr ""
+msgstr "JBCチャレンジ２０"
 
 msgid "Robot in start box"
-msgstr ""
+msgstr "ロボットはスタートボックスにある"
 
 msgid "Ream 1 Touched"
-msgstr ""
+msgstr "紙１を触れた"
 
 msgid "Robot touched ream 1"
-msgstr ""
+msgstr "ロボットのは紙１を触れた"
 
 msgid "Ream 2 Touched"
-msgstr ""
+msgstr "紙２を触れた"
 
 msgid "Robot touched ream 2"
-msgstr ""
+msgstr "ロボットのは紙２を触れた"
 
 msgid "Ream 3 Touched"
-msgstr ""
+msgstr "紙３を触れた"
 
 msgid "Robot touched ream 3"
-msgstr ""
+msgstr "ロボットのは紙３を触れた"
 
 msgid "Ream 4 Touched"
-msgstr ""
+msgstr "紙４を触れた"
 
 msgid "Robot touched ream 4"
-msgstr ""
+msgstr "ロボットのは紙４を触れた"
 
 msgid "Touch ream 1"
-msgstr ""
+msgstr "紙１を触れてください"
 
 msgid "Touch ream 2"
-msgstr ""
+msgstr "紙２を触れてください"
 
 msgid "Touch ream 3"
-msgstr ""
+msgstr "紙３を触れてください"
 
 msgid "Touch ream 4"
-msgstr ""
+msgstr "紙４を触れてください"
 
 msgid "JBC Challenge 21"
-msgstr ""
+msgstr "JBCチャレンジ２１"
 
 msgid "Stop at Ream"
-msgstr ""
+msgstr "紙で止まってください"
 
 msgid "Robot stops at ream"
-msgstr ""
+msgstr "ロボットは紙で止まる"
 
 msgid "Bump Ream"
-msgstr ""
+msgstr "紙を触れてください"
 
 msgid "Robot bumps ream"
-msgstr ""
+msgstr "ロボットは紙を触れる"
 
 msgid "Stop at the ream"
-msgstr ""
+msgstr "紙で止まってください"
 
 msgid "Do not bump the ream"
-msgstr ""
+msgstr "紙を触れなくてください"
 
 msgid "JBC Challenge 22"
-msgstr ""
+msgstr "JBCチャレンジ２２"
 
 msgid "Can Upright"
-msgstr ""
+msgstr "缶が立てている"
 
 msgid "Can is upright"
-msgstr ""
+msgstr "缶が立てている"
 
 msgid "Can not upright"
-msgstr ""
+msgstr "缶が立てていない"
 
 msgid "JBC Challenge 23"
-msgstr ""
+msgstr "JBCチャレンジ２３"
 
 msgid "Started over the circle"
-msgstr ""
+msgstr "サークルで始まった"
 
 msgid "Stop at the black line"
-msgstr ""
+msgstr "黒いな線で止まってください"
 
 msgid "JBC Challenge 24"
-msgstr ""
+msgstr "JBCチャレンジ２４"
 
 msgid "Robot Walks the Line"
-msgstr ""
+msgstr "ロボットは線を辿る"
 
 msgid "Robot uses reflectance sensor to follow the black line until Finish Line "
-msgstr ""
+msgstr "ロボットは反射率センサーでゴールまで黒いな線を辿る"
 
 msgid "Line follow to the finish line"
-msgstr ""
+msgstr "ゴールまで線を辿てください"
 
 msgid "Robot started on Circle"
-msgstr ""
+msgstr "ロボットはサークルで始まった"
 
 msgid "Can Not Upright"
-msgstr ""
+msgstr "缶が立てていない"
 
 msgid "Place Hamburger in Tray"
-msgstr ""
+msgstr "トレーにハンバーガーを入ってください"
 
 msgid "Place Hotdog in Tray"
-msgstr ""
+msgstr "トレーにホットドッグを入ってください"
 
 msgid "Place Taco in Tray"
-msgstr ""
+msgstr "トレーにタコスを入ってください"
 
 msgid "Can A Not Upright"
-msgstr ""
+msgstr "缶Aが立てていない"
 
 msgid "Can B Not Upright"
-msgstr ""
+msgstr "缶Bが立てていない"
 
 msgid "Can C Not Upright"
-msgstr ""
+msgstr "缶Cが立てていない"
 
 msgid "Can D Not Upright"
-msgstr ""
+msgstr "缶Dが立てていない"
 
 msgid "Can E Not Upright"
-msgstr ""
+msgstr "缶Eが立てていない"
 
 msgid "Can F Not Upright"
-msgstr ""
+msgstr "缶Fが立てていない"
 
 msgid "Can G Not Upright"
-msgstr ""
+msgstr "缶Gが立てていない"
 
 msgid "Can 1 in the Start Box"
-msgstr ""
+msgstr "缶１はスタートボックスにある"
 
 msgid "Can 2 in the Start Box"
-msgstr ""
+msgstr "缶２はスタートボックスにある"
 
 msgid "Can 3 in the Start Box"
-msgstr ""
+msgstr "缶３はスタートボックスにある"
 
 msgid "Can 4 in the Start Box"
-msgstr ""
+msgstr "缶４はスタートボックスにある"
 
 msgid "Can 5 in the Start Box"
-msgstr ""
+msgstr "缶５はスタートボックスにある"
 
 msgid "Can 1 Not Upright"
-msgstr ""
+msgstr "缶１が立てていない"
 
 msgid "Can 2 Not Upright"
-msgstr ""
+msgstr "缶２が立てていない"
 
 msgid "Can 3 Not Upright"
-msgstr ""
+msgstr "缶３が立てていない"
 
 msgid "Can 4 Not Upright"
-msgstr ""
+msgstr "缶４が立てていない"
 
 msgid "Can 5 Not Upright"
-msgstr ""
+msgstr "缶５が立てていない"
 
 msgid "JBC Challenge 10B"
 msgstr ""
 
 msgid "JBC Challenge 12"
-msgstr ""
+msgstr "JBCチャレンジ１２"
 
 msgid "Can from green garage intersects circle 2"
-msgstr ""
+msgstr "緑なガレージの缶とサークル２が交わっている"
 
 msgid "Can from blue garage intersects circle 9"
-msgstr ""
+msgstr "青いガレージの缶とサークル９が交わっている"
 
 msgid "Can 10 Intersects"
-msgstr ""
+msgstr "缶１０が交わっている"
 
 msgid "Can from yellow garage intersects circle 10"
-msgstr ""
+msgstr "黄色いガレージの缶とサークル１０が交わっている"
 
 msgid "JBC Challenge 13"
-msgstr ""
+msgstr "JBCチャレンジ１３"
 
 msgid "Can 2 intersects chosen garage"
-msgstr ""
+msgstr "缶２は選んだガレージを交わっている"
 
 msgid "Can 5 intersects chosen garage"
-msgstr ""
+msgstr "缶５は選んだガレージを交わっている"
 
 msgid "Can 8 Intersects"
-msgstr ""
+msgstr "缶８が交わっている"
 
 msgid "Can 8 intersects chosen garage"
-msgstr ""
+msgstr "缶８は選んだガレージを交わっている"
 
 msgid "Can 10 intersects chosen garage"
-msgstr ""
+msgstr ""缶１０は選んだガレージを交わっている
 
 msgid "Can 11 Intersects"
-msgstr ""
+msgstr "缶１１が交わっている"
 
 msgid "Can 11 intersects chosen garage"
-msgstr ""
+msgstr "缶１１は選んだガレージを交わっている"
 
 msgid "Can 2 upright in chosen garage"
-msgstr ""
+msgstr "選んだガレージで缶２は立てている"
 
 msgid "Can 5 upright in achosen garage"
-msgstr ""
+msgstr "選んだガレージで缶５は立てている"
 
 msgid "Can 8 Upright"
-msgstr ""
+msgstr "缶８が立てている"
 
 msgid "Can 8 upright in chosen garage"
-msgstr ""
+msgstr "選んだガレージで缶８は立てている"
 
 msgid "Can 10 upright in chosen garage"
-msgstr ""
+msgstr "選んだガレージで缶１０は立てている"
 
 msgid "Can 11 upright in chosen garage"
-msgstr ""
+msgstr "選んだガレージで缶１１は立てている"
 
 msgid "JBC Challenge 15B"
 msgstr ""
@@ -3064,64 +3064,64 @@ msgid "B"
 msgstr ""
 
 msgid "Junior Botball Challenge 12: Add It Up"
-msgstr ""
+msgstr "ジュニア・ボットボール・チャレンジ 12：足し算してください"
 
 msgid "Robot Touched a Circle "
-msgstr ""
+msgstr "ロボットがサークルを触れた"
 
 msgid "Robot touched a circle"
-msgstr ""
+msgstr "ロボットがサークルを触れた"
 
 msgid "Touched Circles to add up to 20"
-msgstr ""
+msgstr "触れたサークルを合計して20まで"
 
 msgid "JBC Challenge 14"
-msgstr ""
+msgstr "JBCチャレンジ１４"
 
 msgid "Robot 360 Clockwise"
-msgstr ""
+msgstr "ロボット３６０度時計回り"
 
 msgid "Robot turned 360 degrees clockwise"
-msgstr ""
+msgstr "ロボットは３６０度時計回りに向けた"
 
 msgid "Robot 360 Counter Clockwise"
-msgstr ""
+msgstr "ロボット３６０度反時計回り"
 
 msgid "Robot turned 360 degrees counter clockwise"
-msgstr ""
+msgstr "ロボットは３６０度反時計回りに向けた"
 
 msgid "Robot Drove Forward"
-msgstr ""
+msgstr "ロボットは前に行った"
 
 msgid "Robot drove forward"
-msgstr ""
+msgstr "ロボットは前に行った"
 
 msgid "Robot Drove Backward"
-msgstr ""
+msgstr "ロボットは後ろに行った"
 
 msgid "Robot drove backward"
-msgstr ""
+msgstr "ロボットは後ろに行った"
 
 msgid "Robot Wave Servo"
-msgstr ""
+msgstr "ロボットがサーボを振った"
 
 msgid "Robot waved servo up and down at least once"
-msgstr ""
+msgstr "ロボットがサーボを上も下も振った"
 
 msgid "Turn 360° clockwise"
-msgstr ""
+msgstr "３６０度反時計回りに向けてください"
 
 msgid "Turn 360° counter clockwise"
-msgstr ""
+msgstr "３６０度時計回りに向けてください"
 
 msgid "Drive forward"
-msgstr ""
+msgstr "前に行ってください"
 
 msgid "Drive backward"
-msgstr ""
+msgstr "後ろに行ってください"
 
 msgid "Wave the servo"
-msgstr ""
+msgstr "がサーボを振ってください"
 
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
