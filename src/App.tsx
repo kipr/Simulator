@@ -79,12 +79,14 @@ class App extends React.Component<Props, State> {
   private onAuthStateChangedSubscription_: Unsubscribe;
 
   componentDidMount() {
-    // If the user has previously chosen a locale through the settings menu, use that.
-    // Otherwise, guess based on their browser's langauge
-    // Currently only english and japaense translations are available.
-    // To add more, you must also update LocalizedString.validate function.
+    /*
+     * If the user has previously chosen a locale through the settings menu,
+     * use it. Otherwise, guess based on their browser's langauge. To add
+     * langauges, first review the Translation section in the README. Once
+     * translated, if you wish to integrate your translations, you need to
+     * LOCALE_OPTIONS in SettingsDialog.ts.
+     */
     const lang: LocalizedString.Language = LocalizedString.validate(localStorage.getItem('bblocale'));
-    console.log(navigator.language);
     if (lang) {
       this.props.setLocale(lang);
       console.log(`Read locale from localstorage: ${lang}`);
