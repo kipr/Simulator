@@ -57,9 +57,9 @@ const passedSide = `
 
 let count = 0;
 let position = 0;
-  
+
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  
+
   if(otherNodeId == 'startBox'){
     count = 0;
     position = 0;
@@ -69,14 +69,14 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
     position++;
     // console.log(count + ':" + otherNodeId + ":" + type + ":Position:' +position );
   }
-  
+
   //Sets values for second crossing in the middle
-  if(count == 2 && (otherNodeId == 'n1')){ 
+  if(count == 2 && (otherNodeId == 'n1')){
     count++;
     position = 3;
     // console.log(count + ':" + otherNodeId + ":' + type);
   }
-  if(type==='start" && (otherNodeId == "n' +position)){
+  if(type==='start' && (otherNodeId == 'n' +position)){
     count++;
     // console.log(count + ':" + otherNodeId + ":' + type);
   }
@@ -104,7 +104,7 @@ const yAngle = (nodeId) => 180 / Math.PI * -1 * Math.asin(Vector3wUnits.dot(Vect
 scene.addOnRenderListener(() => {
   const upright4 = Math.abs(yAngle('can4') + 90) < 5;
   const upright9 = Math.abs(yAngle('can9') + 90) < 5;
-  
+
   scene.setChallengeEventValue('can4Upright', upright4);
   scene.setChallengeEventValue('can9Upright', upright9);
 });
