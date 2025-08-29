@@ -353,7 +353,7 @@ msgid "A simulator for the Botball demobot."
 msgstr "Botballデモボットのシミュレーター"
 
 msgid "About"
-msgstr "ついて"
+msgstr "KIPRについて"
 
 msgid ""
 "KIPR is a 501(c) 3 organization started to make the long-term educational "
@@ -744,7 +744,7 @@ msgstr ""
 "フィードバックを出して教えてくださいませんか。"
 
 msgid "Initializing Simulator..."
-msgstr "シミュレーター始めて..."
+msgstr "シミュレーターを始めている..."
 
 msgid "all of"
 msgstr "すべて"
