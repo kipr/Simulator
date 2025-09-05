@@ -1,19 +1,11 @@
 import Scene from '../../../state/State/Scene';
 import { Distance } from '../../../util';
-import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
-import { createBaseSceneSurfaceB } from './jbcBase';
+import { createBaseSceneSurfaceB, setNodeVisible } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
 import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceB();
-
-const setNodeVisible = `
-const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
-  ...scene.nodes[nodeId],
-  visible
-});
-`;
 
 const notInStartBox = `
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {

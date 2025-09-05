@@ -1,9 +1,8 @@
 import Scene from '../../../state/State/Scene';
-import LocalizedString from '../../../util/LocalizedString';
 import { Distance } from '../../../util';
 import Script from '../../../state/State/Scene/Script';
 import { Color } from '../../../state/State/Scene/Color';
-import { createCanNode, createBaseSceneSurfaceA, createCircleNode } from './jbcBase';
+import { createCanNode, createBaseSceneSurfaceA, createCircleNode, setNodeVisible, getNodeYAngle } from './jbcBase';
 import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
@@ -18,11 +17,7 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 `;
 
 const circleIntersects = `
-const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
-  ...scene.nodes[nodeId],
-  visible
-});
-
+${setNodeVisible}
 // When the can is intersecting circle9, the circle glows
 scene.addOnIntersectionListener('can9', (type, otherNodeId) => {
   // console.log('Can 9 on circle!', type, otherNodeId);
@@ -47,10 +42,7 @@ scene.addOnCollisionListener('can9', (otherNodeId) => {
 `;
 
 const uprightCans = `
-// Upright Condition
-const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
-const yAngle = (nodeId) => 180 / Math.PI * -1 * Math.asin(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
-
+${getNodeYAngle}
 scene.addOnRenderListener(() => {
   const upright9 = yAngle('can9') > 5;
   scene.setChallengeEventValue('can9Upright', upright9);
