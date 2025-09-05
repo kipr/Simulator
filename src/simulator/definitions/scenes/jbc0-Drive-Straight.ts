@@ -8,6 +8,13 @@ import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceB();
 
+const setNodeVisible = `
+const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
+  ...scene.nodes[nodeId],
+  visible
+});
+`;
+
 const notInStartBox = `
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
   // console.log('Robot not in start box!', type, otherNodeId);
@@ -28,28 +35,20 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 
 const touchingLine = `
 // If the robot wheels touch Line B, it fails the challenge
+${setNodeVisible}
 
-const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
-  ...scene.nodes[nodeId],
-  visible
-});
-
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
+scene.addOnIntersectionListener('lineB', (type, otherNodeId) => {
   // console.log('Robot touching line!', type, otherNodeId);
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('robotTouchingLine', type === 'start');
     setNodeVisible('lineB', true);
   }
-}, 'lineB');
+}, ['left_wheel_link', 'right_wheel_link']);
 `;
 
 const reachedEnd = `
 // If the robot reaches the end, it completes the challenge
-
-const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
-  ...scene.nodes[nodeId],
-  visible
-});
+${setNodeVisible}
 
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
   // console.log('Robot reached end!', type, otherNodeId);
@@ -63,11 +62,7 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 
 const offMat = `
 // If the robot leaves the mat, it fails the challenge
-
-const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
-  ...scene.nodes[nodeId],
-  visible
-});
+${setNodeVisible}
 
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
   // console.log('Robot off mat!', type, otherNodeId);
