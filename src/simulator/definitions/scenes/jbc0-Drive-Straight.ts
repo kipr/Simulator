@@ -1,7 +1,8 @@
 import Scene from '../../../state/State/Scene';
 import { Distance } from '../../../util';
 import Script from '../../../state/State/Scene/Script';
-import { createBaseSceneSurfaceB, setNodeVisible } from './jbcBase';
+import { createBaseSceneSurfaceB } from './jbcBase';
+import { setNodeVisible } from './jbcCommonComponents';
 import { Color } from '../../../state/State/Scene/Color';
 import tr from '@i18n';
 

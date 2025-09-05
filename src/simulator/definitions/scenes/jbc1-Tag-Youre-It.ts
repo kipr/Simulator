@@ -1,8 +1,7 @@
 import Scene from '../../../state/State/Scene';
-import { Distance } from '../../../util';
 import Script from '../../../state/State/Scene/Script';
-import { Color } from '../../../state/State/Scene/Color';
-import { createCanNode, createBaseSceneSurfaceA, createCircleNode, setNodeVisible, getNodeYAngle } from './jbcBase';
+import { createCanNode, createBaseSceneSurfaceA, createCircleNode } from './jbcBase';
+import { setNodeVisible, getNodeYAngle, matANotStartBox, matAStartBox } from './jbcCommonComponents';
 import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
@@ -62,65 +61,13 @@ export const JBC_1: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
-    startBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(0.1),
-        z: Distance.inches(10),
-      },
-    },
-    notStartBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(10),
-        z: Distance.meters(2.13),
-      },
-    },
+    startBoxGeom: matAStartBox.geom,
+    notStartBoxGeom: matANotStartBox.geom,
   },
   nodes: {
     ...baseScene.nodes,
-    'startBox': {
-      type: 'object',
-      geometryId: 'startBox_geom',
-      name: tr('Start Box'),
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(2),
-        },
-      },
-      material: {
-        type: 'pbr',
-        emissive: {
-          type: 'color3',
-          color: Color.rgb(0, 255, 255),
-        },
-      },
-    },
-    notStartBox: {
-      type: 'object',
-      geometryId: 'notStartBox_geom',
-      name: tr('Not Start Box'),
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-1.9),
-          z: Distance.meters(1.208),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(255, 0, 0),
-        },
-      },
-    },
+    startBox: matAStartBox.node,
+    notStartBox: matANotStartBox.node,
     can9: createCanNode(9),
     circle9: createCircleNode(9),
   }

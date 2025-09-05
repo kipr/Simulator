@@ -53,27 +53,6 @@ const LIGHT_ORIGIN: ReferenceFramewUnits = {
   },
 };
 
-/**
- * @constant This is the canonical node visibility function.
- */
-export const setNodeVisible = `
-const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
-  ...scene.nodes[nodeId],
-  visible
-});
-`;
-
-/**
- * @constant This is the canonical Y angle calculation function. It calculates
- * the angle of a node relative to horizontal where 0 is horizontal, 90 is
- * upright, and -90 is upside-down.
- */
-export const getNodeYAngle = `
-// Upright Condition
-const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
-const yAngle = (nodeId) => 180 / Math.PI * Math.asin(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
-`;
-
 export function createBaseSceneSurfaceA(): Scene {
   return {
     name: tr('Base Scene - Surface A'),

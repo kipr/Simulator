@@ -1,9 +1,10 @@
 import Scene from '../../../state/State/Scene';
-import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
 import { createCanNode, createBaseSceneSurfaceA, createCircleNode } from './jbcBase';
+import { setNodeVisible, getNodeYAngle, matAStartBox, matANotStartBox } from './jbcCommonComponents';
 import { Color } from '../../../state/State/Scene/Color';
 import { Distance } from '../../../util';
+import { RotationwUnits } from '../../../util/math/unitMath';
 import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
@@ -18,11 +19,7 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 `;
 
 const circleIntersects = `
-const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
-  ...scene.nodes[nodeId],
-  visible
-});
-
+${setNodeVisible}
 // When the can (can6) is intersecting circle6, the circle glows
 
 scene.addOnIntersectionListener('can6', (type, otherNodeId) => {
@@ -71,10 +68,7 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 `;
 
 const uprightCans = `
-const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
-const yAngle = (nodeId) => 180 / Math.PI * -1 * Math.asin(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
-
-
+${getNodeYAngle}
 scene.addOnRenderListener(() => {
   const upright6 = yAngle('can6') > 5;
   scene.setChallengeEventValue('can6Upright', upright6);
@@ -94,97 +88,29 @@ export const JBC_2: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
-    startBox_geom: {
+    startBoxGeom: matAStartBox.geom,
+    notStartBoxGeom: matANotStartBox.geom,
+    sideCan_geom: {
       type: 'box',
       size: {
-        x: Distance.meters(3.54),
+        x: Distance.meters(1.77),
         y: Distance.centimeters(0.1),
-        z: Distance.centimeters(0),
-      },
-    },
-    notStartBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(10),
-        z: Distance.meters(2.13),
-      },
-    },
-    rightSideCan_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(30),
-        y: Distance.centimeters(0.1),
-        z: Distance.meters(0.05),
-      },
-    },
-    topSideCan_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(0.01),
-        y: Distance.centimeters(0.1),
-        z: Distance.meters(1.77),
-      },
-    },
-    leftSideCan_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(50),
-        y: Distance.centimeters(0.1),
-        z: Distance.meters(0.05),
+        z: Distance.centimeters(1),
       },
     },
   },
   nodes: {
     ...baseScene.nodes,
-    startBox: {
-      type: 'object',
-      geometryId: 'startBox_geom',
-      name: tr('Start Box'),
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(0),
-        },
-      },
-      material: {
-        type: 'pbr',
-        emissive: {
-          type: 'color3',
-          color: Color.rgb(255, 255, 255),
-        },
-      },
-    },
-    notStartBox: {
-      type: 'object',
-      geometryId: 'notStartBox_geom',
-      name: tr('Not Start Box'),
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-1.9),
-          z: Distance.meters(1.208),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(255, 0, 0),
-        },
-      },
-    },
+    startBox: matAStartBox.node,
+    notStartBox: matANotStartBox.node,
     rightSideCan: {
       type: 'object',
-      geometryId: 'rightSideCan_geom',
+      geometryId: 'sideCan_geom',
       name: tr('Right Side Can'),
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(-20),
+          x: Distance.centimeters(-88.5),
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(56.9),
         },
@@ -199,15 +125,16 @@ export const JBC_2: Scene = {
     },
     topSideCan: {
       type: 'object',
-      geometryId: 'topSideCan_geom',
+      geometryId: 'sideCan_geom',
       name: tr('Top Side Can'),
       visible: false,
       origin: {
         position: {
           x: Distance.centimeters(0),
           y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(85.4),
+          z: Distance.centimeters(145.7),
         },
+        orientation: RotationwUnits.eulerDegrees(0, 90, 0)
       },
       material: {
         type: 'pbr',
@@ -219,12 +146,12 @@ export const JBC_2: Scene = {
     },
     leftSideCan: {
       type: 'object',
-      geometryId: 'leftSideCan_geom',
+      geometryId: 'sideCan_geom',
       name: tr('Left Side Can'),
       visible: false,
       origin: {
         position: {
-          x: Distance.centimeters(52),
+          x: Distance.centimeters(88.5),
           y: Distance.centimeters(-6.9),
           z: Distance.centimeters(56.9),
         },
