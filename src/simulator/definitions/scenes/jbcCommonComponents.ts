@@ -34,6 +34,19 @@ const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
 const yAngle = (nodeId) => 180 / Math.PI * Math.asin(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
 `;
 
+/**
+ * @constant The canonical notInStartBox function
+ */
+export const notInStartBox = `
+scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
+  // console.log('Robot not started in start box!', type, otherNodeId);
+  if(scene.programStatus === 'running'){
+    scene.setChallengeEventValue('notInStartBox', type === 'start');
+  }
+}, 'notStartBox');
+`;
+
+
 interface ScenePair {
   geom: Geometry;
   node: Node;

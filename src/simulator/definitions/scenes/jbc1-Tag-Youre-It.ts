@@ -1,19 +1,13 @@
 import Scene from '../../../state/State/Scene';
 import Script from '../../../state/State/Scene/Script';
 import { createCanNode, createBaseSceneSurfaceA, createCircleNode } from './jbcBase';
-import { setNodeVisible, getNodeYAngle, matANotStartBox, matAStartBox } from './jbcCommonComponents';
+import {
+  setNodeVisible, getNodeYAngle, matANotStartBox, matAStartBox,
+  notInStartBox
+} from './jbcCommonComponents';
 import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
-
-const notInStartBox = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  // console.log('Robot not started in start box!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('notInStartBox', type === 'start');
-  }
-}, 'notStartBox');
-`;
 
 const circleIntersects = `
 ${setNodeVisible}
