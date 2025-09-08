@@ -1,27 +1,13 @@
 import Scene from '../../../state/State/Scene';
-import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
 import { createBaseSceneSurfaceA, createCircleNode } from './jbcBase';
-import { Distance } from '../../../util';
-import { Color } from '../../../state/State/Scene/Color';
+import { matAStartGeoms, matAStartNodes, notInStartBox, setNodeVisible } from './jbcCommonComponents';
 import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
-const notInStartBox = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  // console.log('Robot not started in start box!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('notInStartBox', type === 'start');
-  }
-}, 'notStartBox');
-`;
-
 const oddNumberIntersects = `
-const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
-  ...scene.nodes[nodeId],
-  visible
-});
+${setNodeVisible}
 
 let circles = new Set(['circle1', 'circle3', 'circle5', 'circle7', 'circle9', 'circle11']);
 const evenCircles = new Set(['circle2', 'circle4', 'circle6', 'circle8', 'circle10', 'circle12']);
@@ -128,37 +114,11 @@ export const JBC_5: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
-    notStartBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(10),
-        z: Distance.meters(2.13),
-      },
-    },
+    notStartBoxGeom: matAStartGeoms.notStartBoxGeom
   },
   nodes: {
     ...baseScene.nodes,
-    notStartBox: {
-      type: 'object',
-      geometryId: 'notStartBox_geom',
-      name: tr('Not Start Box'),
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-1.9),
-          z: Distance.meters(1.208),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(255, 0, 0),
-        },
-      },
-    },
+    notStartBox: matAStartNodes.notStartBox,
     circle1: createCircleNode(1),
     circle2: createCircleNode(2),
     circle3: createCircleNode(3),
