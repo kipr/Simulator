@@ -3,7 +3,7 @@ import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
 import { Distance, Angle } from '../../../util';
 import { createBaseSceneSurfaceA } from './jbcBase';
-import { setNodeVisible, matAStartBox, matANotStartBox, notInStartBox } from './jbcCommonComponents';
+import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox } from './jbcCommonComponents';
 import { RotationwUnits } from '../../../util/math/unitMath';
 import { Color } from '../../../state/State/Scene/Color';
 import { RawVector2 } from '../../../util/math/math';
@@ -250,8 +250,7 @@ export const JBC_3: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
-    startBoxGeom: matAStartBox.geom,
-    notStartBoxGeom: matANotStartBox.geom,
+    ...matAStartGeoms,
     numberMarker_geom: {
       type: 'box',
       size: {
@@ -325,8 +324,7 @@ export const JBC_3: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-    startBox: matAStartBox.node,
-    notStartBox: matANotStartBox.node,
+    ...matAStartNodes,
     mainInstructionBox: {
       type: 'object',
       geometryId: 'instructionBox_geom',

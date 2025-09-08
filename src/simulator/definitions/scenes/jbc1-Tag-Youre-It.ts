@@ -1,10 +1,7 @@
 import Scene from '../../../state/State/Scene';
 import Script from '../../../state/State/Scene/Script';
 import { createCanNode, createBaseSceneSurfaceA, createCircleNode } from './jbcBase';
-import {
-  setNodeVisible, getNodeYAngle, matANotStartBox, matAStartBox,
-  notInStartBox
-} from './jbcCommonComponents';
+import { setNodeVisible, getNodeYAngle, matAStartGeoms, matAStartNodes, notInStartBox } from './jbcCommonComponents';
 import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
@@ -55,13 +52,11 @@ export const JBC_1: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
-    startBoxGeom: matAStartBox.geom,
-    notStartBoxGeom: matANotStartBox.geom,
+    ...matAStartGeoms,
   },
   nodes: {
     ...baseScene.nodes,
-    startBox: matAStartBox.node,
-    notStartBox: matANotStartBox.node,
+    ...matAStartNodes,
     can9: createCanNode(9),
     circle9: createCircleNode(9),
   }

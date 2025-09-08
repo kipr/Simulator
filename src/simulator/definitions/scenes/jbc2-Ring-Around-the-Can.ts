@@ -1,7 +1,7 @@
 import Scene from '../../../state/State/Scene';
 import Script from '../../../state/State/Scene/Script';
 import { createCanNode, createBaseSceneSurfaceA, createCircleNode } from './jbcBase';
-import { setNodeVisible, getNodeYAngle, matAStartBox, matANotStartBox, notInStartBox } from './jbcCommonComponents';
+import { setNodeVisible, getNodeYAngle, matAStartGeoms, matAStartNodes, notInStartBox } from './jbcCommonComponents';
 import { Color } from '../../../state/State/Scene/Color';
 import { Distance } from '../../../util';
 import { RotationwUnits } from '../../../util/math/unitMath';
@@ -79,8 +79,7 @@ export const JBC_2: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
-    startBoxGeom: matAStartBox.geom,
-    notStartBoxGeom: matANotStartBox.geom,
+    ...matAStartGeoms,
     sideCan_geom: {
       type: 'box',
       size: {
@@ -92,8 +91,7 @@ export const JBC_2: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-    startBox: matAStartBox.node,
-    notStartBox: matANotStartBox.node,
+    ...matAStartNodes,
     rightSideCan: {
       type: 'object',
       geometryId: 'sideCan_geom',

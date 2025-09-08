@@ -46,14 +46,8 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 }, 'notStartBox');
 `;
 
-
-interface ScenePair {
-  geom: Geometry;
-  node: Node;
-};
-
-export const matAStartBox: ScenePair = {
-  geom: {
+export const matAStartGeoms: Dict<Geometry> = {
+  startBoxGeom: {
     type: 'box',
     size: {
       x: Distance.feet(2),
@@ -61,7 +55,18 @@ export const matAStartBox: ScenePair = {
       z: Distance.feet(1),
     },
   },
-  node: {
+  notStartBoxGeom: {
+    type: 'box',
+    size: {
+      x: Distance.meters(3.54),
+      y: Distance.centimeters(10),
+      z: Distance.meters(2.13),
+    },
+  },
+};
+
+export const matAStartNodes: Dict<Node> = {
+  startBox: {
     type: 'object',
     geometryId: 'startBoxGeom',
     name: tr('Start Box'),
@@ -80,19 +85,8 @@ export const matAStartBox: ScenePair = {
         color: Color.rgb(255, 255, 255),
       },
     },
-  }
-};
-
-export const matANotStartBox: ScenePair = {
-  geom: {
-    type: 'box',
-    size: {
-      x: Distance.meters(3.54),
-      y: Distance.centimeters(10),
-      z: Distance.meters(2.13),
-    },
   },
-  node: {
+  notStartBox: {
     type: 'object',
     geometryId: 'notStartBoxGeom',
     name: tr('Not Start Box'),
