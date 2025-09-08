@@ -43,7 +43,7 @@ export const DEMOBOT: Robot = {
       parentAxis: RawVector3.NEGATIVE_Z,
       parentPivot: Vector3wUnits.metersZ(-0.07492),
       childAxis: RawVector3.Y,
-      motorPort: 3,
+      motorPort: 0,
       parentId: 'chassis',
       plug: Node.Motor.Plug.Inverted
     }),
@@ -59,7 +59,7 @@ export const DEMOBOT: Robot = {
       parentAxis: RawVector3.Z,
       parentPivot: Vector3wUnits.metersZ(0.07492),
       childAxis: RawVector3.Y,
-      motorPort: 0,
+      motorPort: 3,
       parentId: 'chassis',
     }),
     right_wheel_link: Node.link({
