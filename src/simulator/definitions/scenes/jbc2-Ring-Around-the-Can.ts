@@ -1,7 +1,7 @@
 import Scene from '../../../state/State/Scene';
 import Script from '../../../state/State/Scene/Script';
 import { createCanNode, createBaseSceneSurfaceA, createCircleNode } from './jbcBase';
-import { setNodeVisible, getNodeYAngle, matAStartGeoms, matAStartNodes, notInStartBox } from './jbcCommonComponents';
+import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox, nodeUpright } from './jbcCommonComponents';
 import { Color } from '../../../state/State/Scene/Color';
 import { Distance } from '../../../util';
 import { RotationwUnits } from '../../../util/math/unitMath';
@@ -59,9 +59,9 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 `;
 
 const uprightCans = `
-${getNodeYAngle}
+${nodeUpright}
 scene.addOnRenderListener(() => {
-  const upright6 = yAngle('can6') > 5;
+  const upright6 = nodeUpright('can6');
   scene.setChallengeEventValue('can6Upright', upright6);
 });
 `;

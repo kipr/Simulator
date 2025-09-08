@@ -2,26 +2,15 @@ import Scene from '../../../state/State/Scene';
 import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
 import { createCanNode, createBaseSceneSurfaceA, createCircleNode } from './jbcBase';
+import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox, nodeUpright } from './jbcCommonComponents';
 import { Color } from '../../../state/State/Scene/Color';
 import { Distance } from '../../../util';
 import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
-const notInStartBox = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  // console.log('Robot not started in start box!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('notInStartBox', type === 'start');
-  }
-}, 'notStartBox');
-`;
-
 const circleIntersects = `
-const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
-  ...scene.nodes[nodeId],
-  visible
-});
+${setNodeVisible}
 
 // When the can (can4) is intersecting circle4, the circle glows
 
@@ -96,14 +85,10 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 
 `;
 const uprightCans = `
-// When a can is standing upright, the upright condition is met.
-
-const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
-const yAngle = (nodeId) => 180 / Math.PI * -1 * Math.asin(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
-
+${nodeUpright}
 scene.addOnRenderListener(() => {
-  const upright4 = Math.abs(yAngle('can4') + 90) < 5;
-  const upright9 = Math.abs(yAngle('can9') + 90) < 5;
+  const upright4 = nodeUpright('can4');
+  const upright9 = nodeUpright('can9');
 
   scene.setChallengeEventValue('can4Upright', upright4);
   scene.setChallengeEventValue('can9Upright', upright9);
@@ -124,22 +109,7 @@ export const JBC_6: Scene = {
 
   geometry: {
     ...baseScene.geometry,
-    notStartBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(10),
-        z: Distance.meters(2.13),
-      },
-    },
-    startBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(0.1),
-        z: Distance.centimeters(0),
-      },
-    },
+    ...matAStartGeoms,
     leftCan4_geom: {
       type: 'box',
       size: {
@@ -184,46 +154,7 @@ export const JBC_6: Scene = {
 
   nodes: {
     ...baseScene.nodes,
-    notStartBox: {
-      type: 'object',
-      geometryId: 'notStartBox_geom',
-      name: tr('Not Start Box'),
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-1.9),
-          z: Distance.meters(1.208),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(255, 0, 0),
-        },
-      },
-    },
-    startBox: {
-      type: 'object',
-      geometryId: 'startBox_geom',
-      name: tr('Start Box'),
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(0),
-        },
-      },
-      material: {
-        type: 'pbr',
-        emissive: {
-          type: 'color3',
-          color: Color.rgb(255, 255, 255),
-        },
-      },
-    },
+    ...matAStartNodes,
     n1: {
       type: 'object',
       geometryId: 'middle_geom',

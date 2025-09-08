@@ -28,10 +28,18 @@ const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
  * the angle of a node relative to horizontal where 0 is horizontal, 90 is
  * upright, and -90 is upside-down.
  */
-export const getNodeYAngle = `
+const getNodeYAngle = `
 // Upright Condition
 const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
 const yAngle = (nodeId) => 180 / Math.PI * Math.asin(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
+`;
+
+/**
+ * @constant The canonical function to check if a node is upright.
+ */
+export const nodeUpright = `
+${getNodeYAngle}
+const nodeUpright = (nodeId) => yAngle(nodeId) > 5;
 `;
 
 /**

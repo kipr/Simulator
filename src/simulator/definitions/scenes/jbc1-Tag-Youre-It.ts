@@ -1,7 +1,7 @@
 import Scene from '../../../state/State/Scene';
 import Script from '../../../state/State/Scene/Script';
 import { createCanNode, createBaseSceneSurfaceA, createCircleNode } from './jbcBase';
-import { setNodeVisible, getNodeYAngle, matAStartGeoms, matAStartNodes, notInStartBox } from './jbcCommonComponents';
+import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox, nodeUpright } from './jbcCommonComponents';
 import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
@@ -32,9 +32,9 @@ scene.addOnCollisionListener('can9', (otherNodeId) => {
 `;
 
 const uprightCans = `
-${getNodeYAngle}
+${nodeUpright}
 scene.addOnRenderListener(() => {
-  const upright9 = yAngle('can9') > 5;
+  const upright9 = nodeUpright('can9');
   scene.setChallengeEventValue('can9Upright', upright9);
 });
 `;
