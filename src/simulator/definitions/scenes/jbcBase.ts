@@ -97,8 +97,8 @@ export function createBaseSceneSurfaceA(): Scene {
         physics: {
           type: 'box',
           motionType: PhysicsMotionType.STATIC,
-          restitution: 0.1,
-          friction: 10,
+          restitution: .3,
+          friction: 1,
         },
         material: {
           type: 'basic',
@@ -176,8 +176,8 @@ export function createBaseSceneSurfaceB(): Scene {
         physics: {
           type: 'box',
           motionType: PhysicsMotionType.STATIC,
-          restitution: 0.1,
-          friction: 10,
+          restitution: .3,
+          friction: 1,
         },
         material: {
           type: 'basic',
