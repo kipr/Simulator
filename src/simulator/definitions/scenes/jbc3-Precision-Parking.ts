@@ -1,5 +1,4 @@
 import Scene from '../../../state/State/Scene';
-import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
 import { Distance, Angle } from '../../../util';
 import { createBaseSceneSurfaceA } from './jbcBase';
