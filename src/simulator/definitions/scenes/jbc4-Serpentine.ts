@@ -14,6 +14,7 @@ let circles = ['circle1','circle2','circle3','circle4','circle5','circle6','circ
 let prevCircle = 0;
 let currCircle = 1;
 
+// Reset progress when not running
 scene.addOnRenderListener(() => {
   if(scene.programStatus !== 'running') {
     prevCircle = 0;
@@ -21,7 +22,7 @@ scene.addOnRenderListener(() => {
   }
 });
 
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
+const cb = (type, otherNodeId) => {
   if(scene.programStatus !== 'running') return;
   const circleNumber = otherNodeId.charAt(otherNodeId.length-1);
   if(type === 'start' && (currCircle == circleNumber)){
@@ -30,10 +31,12 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
     prevCircle++;
     currCircle++;
   }
-  if(type === 'start' && !(currCircle == circleNumber || prevCircle == circleNumber)){
+  if(type === 'start' && circleNumber > currCircle){
     scene.setChallengeEventValue('wrongOrder', true);
   }
-}, [...circles]);
+};
+scene.addOnIntersectionListener('left_wheel_link', cb, [...circles]);
+scene.addOnIntersectionListener('right_wheel_link', cb, [...circles]);
 `;
 export const JBC_4: Scene = {
   ...baseScene,
