@@ -2,7 +2,7 @@ import Scene from '../../../state/State/Scene';
 import Script from '../../../state/State/Scene/Script';
 import { Distance, Angle } from '../../../util';
 import { createBaseSceneSurfaceA } from './jbcBase';
-import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox } from './jbcCommonComponents';
+import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox, garageGeoms, garageNodes } from './jbcCommonComponents';
 import { RotationwUnits } from '../../../util/math/unitMath';
 import { Color } from '../../../state/State/Scene/Color';
 import { RawVector2 } from '../../../util/math/math';
@@ -250,6 +250,7 @@ export const JBC_3: Scene = {
   geometry: {
     ...baseScene.geometry,
     ...matAStartGeoms,
+    ...garageGeoms,
     numberMarker_geom: {
       type: 'box',
       size: {
@@ -324,6 +325,7 @@ export const JBC_3: Scene = {
   nodes: {
     ...baseScene.nodes,
     ...matAStartNodes,
+    ...garageNodes,
     mainInstructionBox: {
       type: 'object',
       geometryId: 'instructionBox_geom',
@@ -569,26 +571,6 @@ export const JBC_3: Scene = {
         RawVector2.ZERO, RawVector2.ZERO,
       ],
     },
-    greenGarage: {
-      type: 'object',
-      geometryId: 'greenGarage_geom',
-      name: tr('Green Garage'),
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(53),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(0, 255, 0),
-        },
-      },
-    },
     n1: {
       type: 'object',
       geometryId: 'n_geom',
@@ -709,30 +691,6 @@ export const JBC_3: Scene = {
         },
       },
     },
-    blueGarage: {
-      type: 'object',
-      geometryId: 'blueGarage_geom',
-      name: tr('Blue Garage'),
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(-12.5),
-          y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(94.5),
-        },
-        orientation: RotationwUnits.AxisAngle.fromRaw({
-          axis: { x: 0, y: 1, z: 0 },
-          angle: 115.5,
-        }),
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(0, 0, 255),
-        },
-      },
-    },
     b1: {
       type: 'object',
       geometryId: 'n_geom',
@@ -790,26 +748,6 @@ export const JBC_3: Scene = {
         color: {
           type: 'color3',
           color: Color.rgb(132, 85, 206),
-        },
-      },
-    },
-    yellowGarage: {
-      type: 'object',
-      geometryId: 'yellowGarage_geom',
-      name: tr('Yellow Garage'),
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(18.8),
-          y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(78),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(255, 0, 0),
         },
       },
     },

@@ -115,3 +115,94 @@ export const matAStartNodes: Dict<Node> = {
     },
   },
 };
+
+export const garageGeoms: Dict<Geometry> = {
+  greenGarage_geom: {
+    type: 'box',
+    size: {
+      x: Distance.centimeters(18),
+      y: Distance.centimeters(0.1),
+      z: Distance.centimeters(18),
+    },
+  },
+  blueGarage_geom: {
+    type: 'box',
+    size: {
+      x: Distance.centimeters(18),
+      y: Distance.centimeters(0.1),
+      z: Distance.centimeters(18),
+    },
+  },
+  yellowGarage_geom: {
+    type: 'box',
+    size: {
+      x: Distance.centimeters(16),
+      y: Distance.centimeters(0.1),
+      z: Distance.centimeters(18),
+    },
+  },
+};
+
+export const garageNodes: Dict<Node> = {
+  greenGarage: {
+    type: 'object',
+    geometryId: 'greenGarage_geom',
+    name: tr('Green Garage'),
+    visible: false,
+    origin: {
+      position: {
+        x: Distance.centimeters(0),
+        y: Distance.centimeters(-6.9),
+        z: Distance.centimeters(53),
+      },
+    },
+    material: {
+      type: 'basic',
+      color: {
+        type: 'color3',
+        color: Color.rgb(0, 255, 0),
+      },
+    },
+  },
+  blueGarage: {
+    type: 'object',
+    geometryId: 'blueGarage_geom',
+    name: tr('Blue Garage'),
+    visible: false,
+    origin: {
+      position: {
+        x: Distance.centimeters(-12.5),
+        y: Distance.centimeters(-6.9),
+        z: Distance.centimeters(94.5),
+      },
+      orientation: RotationwUnits.eulerDegrees(0, 45, 0),
+    },
+    material: {
+      type: 'basic',
+      color: {
+        type: 'color3',
+        color: Color.rgb(0, 0, 255),
+      },
+    },
+  },
+  yellowGarage: {
+    type: 'object',
+    geometryId: 'yellowGarage_geom',
+    name: tr('Yellow Garage'),
+    visible: false,
+    origin: {
+      position: {
+        x: Distance.centimeters(18.8),
+        y: Distance.centimeters(-6.9),
+        z: Distance.centimeters(78),
+      },
+    },
+    material: {
+      type: 'basic',
+      color: {
+        type: 'color3',
+        color: Color.rgb(255, 0, 0),
+      },
+    },
+  },
+};
