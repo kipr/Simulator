@@ -143,6 +143,15 @@ export const garageGeoms: Dict<Geometry> = {
   },
 };
 
+const BLUE_GARAGE_ORIGIN = {
+  position: {
+    x: Distance.centimeters(-12.5),
+    y: Distance.centimeters(-6.9),
+    z: Distance.centimeters(94.5),
+  },
+  orientation: RotationwUnits.eulerDegrees(0, 45, 0),
+};
+
 export const garageNodes: Dict<Node> = {
   greenGarage: {
     type: 'object',
@@ -169,14 +178,8 @@ export const garageNodes: Dict<Node> = {
     geometryId: 'blueGarage_geom',
     name: tr('Blue Garage'),
     visible: false,
-    origin: {
-      position: {
-        x: Distance.centimeters(-12.5),
-        y: Distance.centimeters(-6.9),
-        z: Distance.centimeters(94.5),
-      },
-      orientation: RotationwUnits.eulerDegrees(0, 45, 0),
-    },
+    origin: BLUE_GARAGE_ORIGIN,
+    startingOrigin: BLUE_GARAGE_ORIGIN,
     material: {
       type: 'basic',
       color: {
