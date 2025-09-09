@@ -1,47 +1,46 @@
 import Scene from '../../../state/State/Scene';
-import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
 import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
-import { Color } from '../../../state/State/Scene/Color';
-import { Distance } from '../../../util';
+import { matAStartGeoms, matAStartNodes, nodeUpright, notInStartBox } from './jbcCommonComponents';
 import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
-const notInStartBox = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  // console.log('Robot not started in start box!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('notInStartBox', type === 'start');
-  }
-}, 'notStartBox');
-`;
-
 const uprightStartBoxCans = `
-let count = 0;
-const cans = ['can1', 'can2', 'can3', 'can4', 'can5', 'can6', 'can7', 'can8', 'can9', 'can10', 'can11', 'can12'];
+${nodeUpright}
 
-const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
-const yAngle = (nodeId) => 180 / Math.PI * -1 * Math.asin(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.Y, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.Y));
+const cans = new Map([
+['can1', false],
+['can2', false],
+['can3', false],
+['can4', false],
+['can5', false],
+['can6', false],
+['can7', false],
+['can8', false],
+['can9', false],
+['can10', false],
+['can11', false],
+['can12', false],
+]);
 
 scene.addOnRenderListener(() => {
   if(scene.programStatus !== 'running'){
-    count = 0;
+    for (const k of cans.keys()) {
+      cans.set(k, false);
+    }
   }
 });
-  
+
 scene.addOnIntersectionListener('startBox', (type, otherNodeId) => {
   if(scene.programStatus === 'running'){
-    if(upright && type === 'start'){
-      count++;
+  const upright = nodeUpright(otherNodeId);
+    if(type === 'start'){
+      cans.set(otherNodeId, upright);
+    } else if(type === 'end') {
+      cans.set(otherNodeId, false)
     }
-    else if(upright && (count != 0) && type === 'end'){
-      count--;
-    }
-    else if(!upright && (count != 0) && type === 'start'){
-      count--;
-    }
-
+    const count = cans.values().reduce((count, v) => v ? ++count : count, 0);
     scene.setChallengeEventValue('canAUpright', count > 0);
     scene.setChallengeEventValue('canBUpright', count > 1);
     scene.setChallengeEventValue('canCUpright', count > 2);
@@ -49,7 +48,7 @@ scene.addOnIntersectionListener('startBox', (type, otherNodeId) => {
     scene.setChallengeEventValue('canEUpright', count > 4);
     // console.log('Upright Count: " + count + " (" + otherNodeId + ") " + type + " ' + yAngle(otherNodeId));
   }
-}, [...cans]);
+}, cans.keys().toArray());
 `;
 
 export const JBC_8: Scene = {
@@ -62,65 +61,11 @@ export const JBC_8: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
-    startBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(0.1),
-        z: Distance.centimeters(30),
-      },
-    },
-    notStartBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(10),
-        z: Distance.meters(2.13),
-      },
-    },
+    ...matAStartGeoms,
   },
   nodes: {
     ...baseScene.nodes,
-    startBox: {
-      type: 'object',
-      geometryId: 'startBox_geom',
-      name: tr('Start Box'),
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(-3),
-        },
-      },
-      material: {
-        type: 'pbr',
-        emissive: {
-          type: 'color3',
-          color: Color.rgb(255, 255, 255),
-        },
-      },
-    },
-    notStartBox: {
-      type: 'object',
-      geometryId: 'notStartBox_geom',
-      name: tr('Not Start Box'),
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-1.9),
-          z: Distance.meters(1.208),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(255, 0, 0),
-        },
-      },
-    },
+    ...matAStartNodes,
     can1: createCanNode(1),
     can2: createCanNode(2),
     can3: createCanNode(3),
