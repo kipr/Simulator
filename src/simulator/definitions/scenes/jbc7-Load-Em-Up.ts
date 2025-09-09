@@ -1,5 +1,6 @@
 import Scene from '../../../state/State/Scene';
 import Script from '../../../state/State/Scene/Script';
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../../util/math/unitMath';
 import { createBaseSceneSurfaceA, createCanNode, createCircleNode } from './jbcBase';
 import { garageGeoms, garageNodes, matAStartGeoms, matAStartNodes, nodeUpright, notInStartBox, setNodeVisible } from './jbcCommonComponents';
 import tr from '@i18n';
@@ -34,18 +35,9 @@ const uprightCans = `
 ${nodeUpright}
 
 scene.addOnRenderListener(() => {
-  const upright2 = nodeUpright('can2');
-  scene.setChallengeEventValue('can2Upright', upright2);
-
-});
-scene.addOnRenderListener(() => {
-  const upright9 = nodeUpright('can9');
-  scene.setChallengeEventValue('can9Upright', upright9);
-
-});
-scene.addOnRenderListener(() => {
-  const upright10 = nodeUpright('can10');
-  scene.setChallengeEventValue('can10Upright', upright10);
+  scene.setChallengeEventValue('can2Upright', nodeUpright('can2'));
+  scene.setChallengeEventValue('can9Upright', nodeUpright('can9'));
+  scene.setChallengeEventValue('can10Upright', nodeUpright('can10'));
 });
 `;
 
