@@ -11,12 +11,13 @@ import tr from '@i18n';
 import { PhysicsMotionType } from '@babylonjs/core';
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(100, 4, 100),
-  orientation: RotationwUnits.eulerDegrees(0, -90, 0),
+  position: Vector3wUnits.centimeters(0, 0, 0),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
 
 const GAME_TABLE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(0, 13, 0),
+  position: Vector3wUnits.centimeters(15, -6, 30),
+  orientation: RotationwUnits.eulerDegrees(0, 180, 0),
   // scale: { x: 100, y: 100, z: 100 },
 };
 
@@ -70,9 +71,9 @@ export function createBaseSceneSurface(): Scene {
         z: Distance.meters(0.05),
       },
       position: {
-        x: Distance.meters(-1),
+        x: Distance.meters(1),
         y: Distance.meters(0.51),
-        z: Distance.meters(-1.5),
+        z: Distance.meters(1.5),
       }
     }),
     gravity: {

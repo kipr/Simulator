@@ -27,9 +27,5 @@ export const FALL_26_SANDBOX: Scene = {
   scripts: {},
   nodes: {
     ...baseScene.nodes,
-    'robot': {
-      ...baseScene.nodes['robot'],
-      editable: true,
-    },
   }
 };
