@@ -29,23 +29,23 @@ scene.addOnRenderListener(() => {
     for (const k of cans.keys()) {
       cans.set(k, false);
     }
-  }
-});
-
-scene.addOnIntersectionListener('startBox', (type, otherNodeId) => {
-  if(scene.programStatus === 'running'){
-  const upright = nodeUpright(otherNodeId);
-    if(type === 'start'){
-      cans.set(otherNodeId, upright);
-    } else if(type === 'end') {
-      cans.set(otherNodeId, false)
-    }
-    const count = cans.values().reduce((count, v) => v ? ++count : count, 0);
+  } else {
+    const count = cans.keys().reduce((count, k) => cans.get(k) && nodeUpright(k) ? ++count : count, 0);
     scene.setChallengeEventValue('canAUpright', count > 0);
     scene.setChallengeEventValue('canBUpright', count > 1);
     scene.setChallengeEventValue('canCUpright', count > 2);
     scene.setChallengeEventValue('canDUpright', count > 3);
     scene.setChallengeEventValue('canEUpright', count > 4);
+  }
+});
+
+scene.addOnIntersectionListener('startBox', (type, otherNodeId) => {
+  if(scene.programStatus === 'running'){
+    if(type === 'start'){
+      cans.set(otherNodeId, true);
+    } else if(type === 'end') {
+      cans.set(otherNodeId, false)
+    }
     // console.log('Upright Count: " + count + " (" + otherNodeId + ") " + type + " ' + yAngle(otherNodeId));
   }
 }, cans.keys().toArray());
