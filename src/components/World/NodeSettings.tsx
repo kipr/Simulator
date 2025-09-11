@@ -75,6 +75,17 @@ const TEMPLATES = {
     ['Potato', 'potato'],
     ['Tray', 'tray'],
     ['Botguy', 'botguy_gamepiece'],
+    ['Basket', 'basket'],
+    ['Brown Cube', 'cubeBrown4in'],
+    ['Green Cube (2 in.)', 'cubeGreen2in'],
+    ['Green Cube (4 in.)', 'cubeGreen4in'],
+    ['Red Cube (2 in.)', 'cubeRed2in'],
+    ['Red Cube (4 in.)', 'cubeRed4in'],
+    ['Yellow Cube', 'cubeYellow2in'],
+    ['Pallet', 'pallet'],
+    ['Blue Pom', 'pomBlue2in'],
+    ['Traffic Cone', 'trafficCone']
+
   ],
   RADIATION: [
     // ['Radiation Science Pack - Low', 'noradscience'],
