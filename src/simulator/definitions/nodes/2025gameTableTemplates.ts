@@ -53,12 +53,12 @@ const pomBlueTemplate: Node.TemplatedNode<Node.Obj> = {
 };
 
 const BIG_POM_PHYSICS: Node.Physics = {
-  type: 'box',
-  restitution: .3,
-  friction: .7,
-  mass: Mass.grams(1),
-  inertia: [3, 3, 3]
-};
+  type: 'mesh',
+  motionType: PhysicsMotionType.DYNAMIC,
+  mass: Mass.grams(10),
+  restitution: 0.2,
+  friction: 5
+}
 const pomOrangeTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'pom_orange',
@@ -269,7 +269,7 @@ export const BB2025Geometries = Object.freeze<Dict<Geometry>>({
   },
   'pom_orange': {
     type: 'file',
-    uri: '/static/object_binaries/pom_orange.glb',
+    uri: '/static/object_binaries/Pom_Orange_2in.glb',
   },
   'pom_red': {
     type: 'file',

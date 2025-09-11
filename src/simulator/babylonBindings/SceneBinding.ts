@@ -114,7 +114,7 @@ class SceneBinding {
     this.bScene_.getPhysicsEngine().setSubTimeStep(1);
 
     // Uncomment this to turn on the physics viewer for objects
-    // this.physicsViewer_ = new PhysicsViewer(this.bScene_);
+    this.physicsViewer_ = new PhysicsViewer(this.bScene_);
 
     this.root_ = new TransformNode('__scene_root__', this.bScene_);
     this.gizmoManager_ = new GizmoManager(this.bScene_);
@@ -722,7 +722,7 @@ class SceneBinding {
         if (Math.abs(extents.x - extents.y) <= 0.0001 && Math.abs(extents.x - extents.z) <= 0.0001) {
           parameters.radius = extents.x / 2;
         } else {
-          parameters.radius = Math.max(extents.x, extents.y, extents.z);
+          parameters.radius = Math.max(extents.x, extents.y, extents.z) / 2;
         }
         break;
       }

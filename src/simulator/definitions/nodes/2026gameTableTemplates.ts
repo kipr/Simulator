@@ -73,9 +73,9 @@ const pomBlue2inTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'pom_blue_2in',
   physics: {
-    type: 'sphere',
+    type: 'mesh',
     motionType: PhysicsMotionType.DYNAMIC,
-    mass: Mass.grams(5),
+    mass: Mass.grams(10),
     restitution: 0.2,
     friction: 5
   }
@@ -142,7 +142,7 @@ export const BB2026Geometries = Object.freeze<Dict<Geometry>>({
   },
   'pallet': {
     type: 'file',
-    uri: '/static/object_binaries/pallet.glb'
+    uri: '/static/object_binaries/Pallet.glb'
   },
   'pom_blue_2in': {
     type: 'file',
