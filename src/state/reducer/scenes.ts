@@ -286,6 +286,7 @@ export type ScenesAction = (
 
 
 const DEFAULT_SCENES: Scenes = {
+  fall26TableSandbox: Async.loaded({ value: JBC_SCENES.FALL_26_SANDBOX }),
   jbcSandboxA: Async.loaded({ value: JBC_SCENES.JBC_Sandbox_A }),
   jbcSandboxB: Async.loaded({ value: JBC_SCENES.JBC_Sandbox_B }),
   moonSandbox: Async.loaded({ value: JBC_SCENES.Moon_Sandbox }),
@@ -341,7 +342,6 @@ const DEFAULT_SCENES: Scenes = {
   Odd_Numbers: Async.loaded({ value: JBC_SCENES.Odd_Numbers }),
   Bulldozer_Mania: Async.loaded({ value: JBC_SCENES.Bulldozer_Mania }),
   Mountain_Rescue: Async.loaded({ value: JBC_SCENES.Mountain_Rescue }),
-  fall26TableSandbox: Async.loaded({ value: JBC_SCENES.FALL_26_SANDBOX }),
   // scriptPlayground: Async.loaded({ value: JBC_SCENES.scriptPlayground }),
   // lightSensorTest: Async.loaded({ value: JBC_SCENES.lightSensorTest }),
 };

@@ -67,7 +67,13 @@ const cubeYellow2inTemplate: Node.TemplatedNode<Node.Obj> = {
 const palletTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'pallet',
-  physics: CUBEPHYSICS
+  physics: {
+    type: 'mesh',
+    motionType: PhysicsMotionType.DYNAMIC,
+    mass: Mass.grams(5),
+    restitution: 0.2,
+    friction: 4
+  }
 };
 const pomBlue2inTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
