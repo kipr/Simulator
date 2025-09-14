@@ -2,10 +2,10 @@
 // The objects are set up in the node-templates index.ts file.
 // Here we add the objects and their properties to the scene.
 
-import Scene from "../../../state/State/Scene";
+import Scene from '../../../state/State/Scene';
 import Script from '../../../state/State/Scene/Script';
-import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../../util/math/unitMath";
-import { Distance } from "../../../util";
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../../util/math/unitMath';
+import { Distance } from '../../../util';
 import { Color } from '../../../state/State/Scene/Color';
 import LocalizedString from '../../../util/LocalizedString';
 
@@ -228,8 +228,8 @@ export const Moon_Sandbox: Scene = {
       material: {
         type: 'basic',
         color: {
-          type: "texture",
-          uri: "Rocks with Possible Life" // default text to display
+          type: 'texture',
+          uri: 'Rocks with Possible Life' // default text to display
         },
       },
     },

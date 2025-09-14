@@ -6,6 +6,7 @@ import Script from '../../../state/State/Scene/Script';
 import { createBaseSceneSurfaceA, canPositions, createCircleNode } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
 import { createCamera } from 'simulator/babylonBindings/createSceneObjects/createCameras';
+import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -69,10 +70,8 @@ const ROBOT_ORIGIN: ReferenceFramewUnits = {
 
 export const JBC_23: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 23' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 23: Find the Black Line`,
-  },
+  name: tr('JBC 23'),
+  description: tr('Junior Botball Challenge 23: Find the Black Line'),
   scripts: {
     foundBlack: Script.ecmaScript('Found Black Line', foundBlack),
     onCircle: Script.ecmaScript('On Circle', onCircle),
@@ -80,7 +79,7 @@ export const JBC_23: Scene = {
   geometry: {
     ...baseScene.geometry,
     circle_geom: {
-      type: "cylinder",
+      type: 'cylinder',
       radius: Distance.centimeters(3),
       height: Distance.centimeters(10),
     }
@@ -93,9 +92,9 @@ export const JBC_23: Scene = {
       startingOrigin: ROBOT_ORIGIN,
     },
     circle: {
-      type: "object",
-      geometryId: "circle_geom",
-      name: { [LocalizedString.EN_US]: "Circle" },
+      type: 'object',
+      geometryId: 'circle_geom',
+      name: tr('Circle'),
       visible: false,
       origin: {
         position: {
@@ -103,9 +102,9 @@ export const JBC_23: Scene = {
         },
       },
       material: {
-        type: "basic",
+        type: 'basic',
         color: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 255, 255),
         },
       },

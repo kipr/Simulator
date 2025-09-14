@@ -5,6 +5,8 @@ import { Color } from '../../../../state/State/Scene/Color';
 import { createBaseSceneSurfaceA, canPositions, } from '../jbcBase';
 
 import tr from '@i18n';
+import Dict from '../../../../util/objectOps/Dict';
+import { sprintf } from 'sprintf-js';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -34,7 +36,7 @@ scene.addOnIntersectionListener('pom_blue${i}', (type, otherNodeId) => {
 `);
   POMS_BLUE[`pom_blue${i}`] = {
     type: 'from-bb-template',
-    name: tr(`Blue pom #${i + 1}`),
+    name: Dict.map(tr('Blue pom #%d'), (str: string) => sprintf(str, i + 1)),
     templateId: 'pom_blue',
     visible: true,
     editable: false,

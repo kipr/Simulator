@@ -74,10 +74,8 @@ const REAM_FRONT_BOUNDARY_ORIGIN: ReferenceFramewUnits = {
 
 export const JBC_21: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 21' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 21: Proximity`,
-  },
+  name: tr('JBC 21'),
+  description: tr('Junior Botball Challenge 21: Proximity'),
   scripts: {
     notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
     stopAtReam: Script.ecmaScript('Stop at Ream', stopAtReam),
@@ -86,7 +84,7 @@ export const JBC_21: Scene = {
   geometry: {
     ...baseScene.geometry,
     notStartBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(10),
@@ -105,9 +103,9 @@ export const JBC_21: Scene = {
   nodes: {
     ...baseScene.nodes,
     notStartBox: {
-      type: "object",
-      geometryId: "notStartBox_geom",
-      name: { [LocalizedString.EN_US]: "Not Start Box" },
+      type: 'object',
+      geometryId: 'notStartBox_geom',
+      name: tr('Not Start Box'),
       visible: false,
       origin: {
         position: {
@@ -117,9 +115,9 @@ export const JBC_21: Scene = {
         },
       },
       material: {
-        type: "basic",
+        type: 'basic',
         color: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 0, 0),
         },
       },
@@ -127,7 +125,7 @@ export const JBC_21: Scene = {
     reamFrontBoundary: {
       type: 'object',
       geometryId: 'reamFrontBoundary_geom',
-      name: { [LocalizedString.EN_US]: 'Ream Front Boundary' },
+      name: tr('Ream Front Boundary'),
       visible: true,
       origin: REAM_FRONT_BOUNDARY_ORIGIN,
       material: {

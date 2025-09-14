@@ -4,6 +4,7 @@ import { Distance } from '../../../util';
 import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
 import Script from '../../../state/State/Scene/Script';
+import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -19,7 +20,7 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 const canStacked = `
 scene.addOnIntersectionListener('can5Bottom', (type, otherNodeId) => {
   if(otherNodeId == 'can7Top'){
-    console.log("Can5 stacked ontop of Can7!");
+    console.log('Can5 stacked ontop of Can7!');
   scene.setChallengeEventValue('canStacked', true);
   }
   else if (otherNodeId == 'mainSurface'){
@@ -29,7 +30,7 @@ scene.addOnIntersectionListener('can5Bottom', (type, otherNodeId) => {
 
 scene.addOnIntersectionListener('can7Bottom', (type, otherNodeId) => {
   if(otherNodeId == 'can5Top'){
-    console.log("Can7 stacked ontop of Can5!");
+    console.log('Can7 stacked ontop of Can5!');
     scene.setChallengeEventValue('canStacked', true);
   }
   else if (otherNodeId == 'mainSurface'){
@@ -39,8 +40,7 @@ scene.addOnIntersectionListener('can7Bottom', (type, otherNodeId) => {
 `;
 
 const robotTouchesCan = `
-scene.onBind = nodeId => {
-  scene.addOnCollisionListener(nodeId, (otherNodeId, point)=> {
+scene.onBind = nodeId => { scene.addOnCollisionListener(nodeId, (otherNodeId, point)=> {
     if(nodeId == 'can5' || nodeId == 'can7'){
       scene.setChallengeEventValue('robotTouchCan', true);
     }
@@ -50,10 +50,8 @@ scene.onBind = nodeId => {
 
 export const JBC_18: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 18' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 18: Stackerz`,
-  },
+  name: tr('JBC 18'),
+  description: tr('Junior Botball Challenge 18: Stackerz'),
   scripts: {
     leftStartBox: Script.ecmaScript('Robot Left Start', leftStartBox),
     canStacked: Script.ecmaScript('Cans Stacked', canStacked),
@@ -80,7 +78,7 @@ export const JBC_18: Scene = {
     startBox: {
       type: 'object',
       geometryId: 'startBox_geom',
-      name: { [LocalizedString.EN_US]: 'Start Box' },
+      name: tr('Start Box'),
 
       visible: true,
       origin: {
@@ -105,7 +103,7 @@ export const JBC_18: Scene = {
       parentId: 'can5',
       type: 'object',
       geometryId: 'canEnd_geom',
-      name: { [LocalizedString.EN_US]: 'Bottom of can5' },
+      name: tr('Bottom of can5'),
       visible: false,
       origin: {
         position: {
@@ -126,7 +124,7 @@ export const JBC_18: Scene = {
       parentId: 'can7',
       type: 'object',
       geometryId: 'canEnd_geom',
-      name: { [LocalizedString.EN_US]: 'Top of can7' },
+      name: tr('Top of can7'),
 
       visible: false,
       origin: {
@@ -148,7 +146,7 @@ export const JBC_18: Scene = {
       parentId: 'can7',
       type: 'object',
       geometryId: 'canEnd_geom',
-      name: { [LocalizedString.EN_US]: 'Bottom of can7' },
+      name: tr('Bottom of can7'),
 
       visible: false,
       origin: {
@@ -170,7 +168,7 @@ export const JBC_18: Scene = {
       parentId: 'can5',
       type: 'object',
       geometryId: 'canEnd_geom',
-      name: { [LocalizedString.EN_US]: 'Top of can5' },
+      name: tr('Top of can5'),
 
       visible: false,
       origin: {

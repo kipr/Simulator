@@ -119,13 +119,11 @@ const REAM4_ORIGIN: ReferenceFramewUnits = {
 
 export const JBC_20: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: 'JBC 20' },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 20: A'mazing`,
-  },
+  name: tr('JBC 20'),
+  description: tr('Junior Botball Challenge 20: A\'mazing'),
   scripts: {
-    inStartBox: Script.ecmaScript("In Start Box", inStartBox),
-    bumpReams: Script.ecmaScript("Bump Reams", bumpReams),
+    inStartBox: Script.ecmaScript('In Start Box', inStartBox),
+    bumpReams: Script.ecmaScript('Bump Reams', bumpReams),
   },
   geometry: {
     ...baseScene.geometry,
@@ -148,7 +146,7 @@ export const JBC_20: Scene = {
     startBox: {
       type: 'object',
       geometryId: 'startBox_geom',
-      name: { [LocalizedString.EN_US]: 'Start Box' },
+      name: tr('Start Box'),
       visible: false,
       origin: {
         position: {

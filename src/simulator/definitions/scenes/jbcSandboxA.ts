@@ -1,6 +1,6 @@
-import Scene from "../../../state/State/Scene";
-import { ReferenceFramewUnits, RotationwUnits } from "../../../util/math/unitMath";
-import { Distance } from "../../../util";
+import Scene from '../../../state/State/Scene';
+import { ReferenceFramewUnits, RotationwUnits } from '../../../util/math/unitMath';
+import { Distance } from '../../../util';
 
 import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
 

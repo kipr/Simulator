@@ -74,7 +74,7 @@ export const DEMOBOT: Robot = {
       parentAxis: RawVector3.NEGATIVE_Z,
       parentPivot: Vector3wUnits.meters(0.068099, 0.034913, -0.010805),
       childAxis: RawVector3.Y,
-      childTwist: degrees(65),
+      childTwist: degrees(63),
       servoPort: 0,
       parentId: 'chassis',
     }),

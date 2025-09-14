@@ -18,9 +18,9 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
-    start: {
-      name: tr('Robot Begins In start'),
-      description: tr('Robot begins in starting box'),
+    notInStartBox: {
+      name: tr("Robot not in Start Box"),
+      description: tr("Robot not in start box"),
     },
     addItUp: {
       name: tr('Robot Touched a Circle '),
@@ -29,14 +29,18 @@ export default {
   },
   success: {
     exprs: {
-      // Start Box Event
-      start: {
+      // Start Box Events
+      notInStartBox: {
         type: Expr.Type.Event,
-        eventId: 'start',
+        eventId: "notInStartBox",
       },
-      startOnce: {
+      inStartBox: {
+        type: Expr.Type.Not,
+        argId: "notInStartBox",
+      },
+      inStartBoxOnce: {
         type: Expr.Type.Once,
-        argId: 'start',
+        argId: "inStartBox",
       },
 
       addItUp: {
@@ -51,13 +55,13 @@ export default {
       // Success logic
       completion: {
         type: Expr.Type.And,
-        argIds: ['startOnce', 'addItUpOnce'],
+        argIds: ['inStartBoxOnce', 'addItUpOnce'],
       },
     },
     rootId: 'completion',
   },
   successGoals: [
-    { exprId: 'startOnce', name: tr('Start in the Start Box') },
+    { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
     { exprId: 'addItUpOnce', name: tr('Touched Circles to add up to 20') }
   ],
   sceneId: 'jbc12',

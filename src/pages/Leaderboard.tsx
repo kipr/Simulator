@@ -219,7 +219,17 @@ class Leaderboard extends React.Component<Props, State> {
           completion: boolean;
         };
       };
+      failure: {
+        exprStates: {
+          failure: boolean;
+        };
+      };
     }
+
+    const challengeCompletion = (challenge: ChallengeData) => (
+      (challenge?.success?.exprStates?.completion ?? false) &&
+      (!challenge?.failure?.exprStates?.failure ?? false)
+    );
 
     for (const [userId, userChallenges] of Object.entries(groupData)) {
       const user: User = {
@@ -229,11 +239,9 @@ class Leaderboard extends React.Component<Props, State> {
       };
 
       for (const [challengeId, challenge] of Object.entries(userChallenges as ChallengeData[])) {
-
-        const challengeCompletion = challenge?.success?.exprStates?.completion ?? false;
         const score: Score = {
           name: tr(challengeId),
-          completed: challengeCompletion
+          completed: challengeCompletion(challenge)
         };
         user.scores.push(score);
       }
@@ -263,10 +271,9 @@ class Leaderboard extends React.Component<Props, State> {
       };
 
       for (const [challengeId, challenge] of Object.entries(userChallenges as ChallengeData[])) {
-        const challengeCompletion = challenge?.success?.exprStates?.completion ?? false;
         const score: Score = {
           name: tr(challengeId),
-          completed: challengeCompletion
+          completed: challengeCompletion(challenge)
         };
         user.scores.push(score);
       }

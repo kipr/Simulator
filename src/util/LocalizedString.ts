@@ -152,6 +152,12 @@ namespace LocalizedString {
     NL_NL, SV_SE, DA_DK, NO_NO, FI_FI, HU_HU, CS_CZ, SK_SK, RO_RO, BG_BG,
     EL_GR, HE_IL, TH_TH, VI_VN, ID_ID, MS_MY, FA_IR, UR_PK];
 
+  /**
+   * Check if the given locale is valid.
+   * @param locale The locale code to check
+   * @returns If valid, returns the matching `LocalizedString.Langauge`.
+   * Otherwise, returns `null`.
+   */
   export const validate = (locale: string): Language => {
     if (langs.includes(locale)) {
       return locale as Language;

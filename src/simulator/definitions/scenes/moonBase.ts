@@ -1,8 +1,8 @@
-import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../../util/math/unitMath";
-import { Distance } from "../../../util";
-import Node from "../../../state/State/Scene/Node";
-import Camera from "../../../state/State/Scene/Camera";
-import Scene from "../../../state/State/Scene";
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../../util/math/unitMath';
+import { Distance } from '../../../util';
+import Node from '../../../state/State/Scene/Node';
+import Camera from '../../../state/State/Scene/Camera';
+import Scene from '../../../state/State/Scene';
 import AbstractRobot from '../../../programming/AbstractRobot';
 import Author from '../../../db/Author';
 
@@ -91,8 +91,8 @@ export function createBaseSceneSurface(): Scene {
         material: {
           type: 'basic',
           color: {
-            type: "texture",
-            uri: "/static/textures/Moon-2d-Surface.png"
+            type: 'texture',
+            uri: '/static/textures/Moon-2d-Surface.png'
           },
         },
       },
@@ -113,8 +113,8 @@ export function createBaseSceneSurface(): Scene {
         material: {
           type: 'basic',
           color: {
-            type: "texture",
-            uri: "/static/textures/start_texture_light.png"
+            type: 'texture',
+            uri: '/static/textures/start_texture_light.png'
           },
         },
       },
@@ -136,8 +136,8 @@ export function createBaseSceneSurface(): Scene {
         material: {
           type: 'basic',
           color: {
-            type: "texture",
-            uri: "/static/textures/earthrise.png"
+            type: 'texture',
+            uri: '/static/textures/earthrise.png'
           },
         },
       }

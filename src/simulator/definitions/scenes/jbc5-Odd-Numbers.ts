@@ -1,9 +1,10 @@
-import Scene from "../../../state/State/Scene";
-import LocalizedString from "../../../util/LocalizedString";
-import Script from "../../../state/State/Scene/Script";
-import { createBaseSceneSurfaceA, createCircleNode } from "./jbcBase";
-import { Distance } from "../../../util";
-import { Color } from "../../../state/State/Scene/Color";
+import Scene from '../../../state/State/Scene';
+import LocalizedString from '../../../util/LocalizedString';
+import Script from '../../../state/State/Scene/Script';
+import { createBaseSceneSurfaceA, createCircleNode } from './jbcBase';
+import { Distance } from '../../../util';
+import { Color } from '../../../state/State/Scene/Color';
+import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -119,18 +120,16 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 
 export const JBC_5: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: "JBC 5" },
-  description: {
-    [LocalizedString.EN_US]: "Junior Botball Challenge 5: Odd Numbers",
-  },
+  name: tr('JBC 5'),
+  description: tr('Junior Botball Challenge 5: Odd Numbers'),
   scripts: {
-    notInStartBox: Script.ecmaScript("Not In Start Box", notInStartBox),
-    oddNumberIntersects: Script.ecmaScript("Odd Number Intersects", oddNumberIntersects),
+    notInStartBox: Script.ecmaScript('Not In Start Box', notInStartBox),
+    oddNumberIntersects: Script.ecmaScript('Odd Number Intersects', oddNumberIntersects),
   },
   geometry: {
     ...baseScene.geometry,
     notStartBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(10),
@@ -141,9 +140,9 @@ export const JBC_5: Scene = {
   nodes: {
     ...baseScene.nodes,
     notStartBox: {
-      type: "object",
-      geometryId: "notStartBox_geom",
-      name: { [LocalizedString.EN_US]: "Not Start Box" },
+      type: 'object',
+      geometryId: 'notStartBox_geom',
+      name: tr('Not Start Box'),
       visible: false,
       origin: {
         position: {
@@ -153,9 +152,9 @@ export const JBC_5: Scene = {
         },
       },
       material: {
-        type: "basic",
+        type: 'basic',
         color: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 0, 0),
         },
       },

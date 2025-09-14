@@ -3,6 +3,8 @@ import { ReferenceFramewUnits, RotationwUnits } from '../../../../util/math/unit
 import { Distance } from '../../../../util';
 import Script from '../../../../state/State/Scene/Script';
 import { createBaseSceneSurfaceA } from '../jbcBase';
+import Dict from '../../../../util/objectOps/Dict';
+import { sprintf } from 'sprintf-js';
 
 import tr from '@i18n';
 
@@ -54,7 +56,7 @@ for (let i = 0; i < 3; i++) {
   TRAYS[`tray${i}`] = {
     type: 'from-bb-template',
     templateId: 'tray',
-    name: tr(`Tray #${i + 1}`),
+    name: Dict.map(tr('Tray #%d'), (str: string) => sprintf(str, i + 1)),
     visible: true,
     editable: false,
     startingOrigin: tray_pos,

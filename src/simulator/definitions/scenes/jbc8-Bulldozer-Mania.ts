@@ -1,9 +1,10 @@
-import Scene from "../../../state/State/Scene";
-import LocalizedString from "../../../util/LocalizedString";
-import Script from "../../../state/State/Scene/Script";
-import { createCanNode, createBaseSceneSurfaceA } from "./jbcBase";
-import { Color } from "../../../state/State/Scene/Color";
-import { Distance } from "../../../util";
+import Scene from '../../../state/State/Scene';
+import LocalizedString from '../../../util/LocalizedString';
+import Script from '../../../state/State/Scene/Script';
+import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
+import { Color } from '../../../state/State/Scene/Color';
+import { Distance } from '../../../util';
+import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -31,13 +32,13 @@ scene.addOnRenderListener(() => {
   
 scene.addOnIntersectionListener('startBox', (type, otherNodeId) => {
   if(scene.programStatus === 'running'){
-    if(upright && type === "start"){
+    if(upright && type === 'start'){
       count++;
     }
-    else if(upright && (count != 0) && type === "end"){
+    else if(upright && (count != 0) && type === 'end'){
       count--;
     }
-    else if(!upright && (count != 0) && type === "start"){
+    else if(!upright && (count != 0) && type === 'start'){
       count--;
     }
 
@@ -46,25 +47,23 @@ scene.addOnIntersectionListener('startBox', (type, otherNodeId) => {
     scene.setChallengeEventValue('canCUpright', count > 2);
     scene.setChallengeEventValue('canDUpright', count > 3);
     scene.setChallengeEventValue('canEUpright', count > 4);
-    // console.log("Upright Count: " + count + " (" + otherNodeId + ") " + type + " " + yAngle(otherNodeId));
+    // console.log('Upright Count: " + count + " (" + otherNodeId + ") " + type + " ' + yAngle(otherNodeId));
   }
 }, [...cans]);
 `;
 
 export const JBC_8: Scene = {
   ...baseScene,
-  name: { [LocalizedString.EN_US]: "JBC 8" },
-  description: {
-    [LocalizedString.EN_US]: `Junior Botball Challenge 8: Bulldozer Mania`,
-  },
+  name: tr('JBC 8'),
+  description: tr('Junior Botball Challenge 8: Bulldozer Mania'),
   scripts: {
-    uprightStartBoxCans: Script.ecmaScript("Upright Start Box Cans", uprightStartBoxCans),
-    notInStartBox: Script.ecmaScript("Not in Start Box", notInStartBox),
+    uprightStartBoxCans: Script.ecmaScript('Upright Start Box Cans', uprightStartBoxCans),
+    notInStartBox: Script.ecmaScript('Not in Start Box', notInStartBox),
   },
   geometry: {
     ...baseScene.geometry,
     startBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(0.1),
@@ -72,7 +71,7 @@ export const JBC_8: Scene = {
       },
     },
     notStartBox_geom: {
-      type: "box",
+      type: 'box',
       size: {
         x: Distance.meters(3.54),
         y: Distance.centimeters(10),
@@ -83,9 +82,9 @@ export const JBC_8: Scene = {
   nodes: {
     ...baseScene.nodes,
     startBox: {
-      type: "object",
-      geometryId: "startBox_geom",
-      name: { [LocalizedString.EN_US]: "Start Box" },
+      type: 'object',
+      geometryId: 'startBox_geom',
+      name: tr('Start Box'),
       visible: false,
       origin: {
         position: {
@@ -95,17 +94,17 @@ export const JBC_8: Scene = {
         },
       },
       material: {
-        type: "pbr",
+        type: 'pbr',
         emissive: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 255, 255),
         },
       },
     },
     notStartBox: {
-      type: "object",
-      geometryId: "notStartBox_geom",
-      name: { [LocalizedString.EN_US]: "Not Start Box" },
+      type: 'object',
+      geometryId: 'notStartBox_geom',
+      name: tr('Not Start Box'),
       visible: false,
       origin: {
         position: {
@@ -115,9 +114,9 @@ export const JBC_8: Scene = {
         },
       },
       material: {
-        type: "basic",
+        type: 'basic',
         color: {
-          type: "color3",
+          type: 'color3',
           color: Color.rgb(255, 0, 0),
         },
       },

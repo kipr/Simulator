@@ -1,14 +1,14 @@
-import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../../util/math/unitMath";
-import { Distance } from "../../../util";
-import Node from "../../../state/State/Scene/Node";
-import Camera from "../../../state/State/Scene/Camera";
-import Scene from "../../../state/State/Scene";
+import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../../util/math/unitMath';
+import { Distance } from '../../../util';
+import Node from '../../../state/State/Scene/Node';
+import Camera from '../../../state/State/Scene/Camera';
+import Scene from '../../../state/State/Scene';
 import AbstractRobot from '../../../programming/AbstractRobot';
 import Author from '../../../db/Author';
-import { Color } from "../../../state/State/Scene/Color";
+import { Color } from '../../../state/State/Scene/Color';
 
 import tr from '@i18n';
-import { PhysicsMotionType } from "@babylonjs/core";
+import { PhysicsMotionType } from '@babylonjs/core';
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(100, 4, 100),
@@ -90,7 +90,7 @@ export function createBaseSceneSurface(): Scene {
         startingOrigin: FRY_FLOOR_ORIGIN,
         origin: FRY_FLOOR_ORIGIN,
         physics: {
-          type: "box",
+          type: 'box',
           motionType: PhysicsMotionType.STATIC,
           restitution: .1,
           friction: .5,

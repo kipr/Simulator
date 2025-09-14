@@ -4,7 +4,7 @@ import {
   TransformNode, AbstractMesh, Mesh, PhysicsViewer, ShadowGenerator, Vector3, StandardMaterial, GizmoManager,
   ArcRotateCamera, PointLight, SpotLight, DirectionalLight, PBRMaterial, EngineView,
   Scene as babylonScene, Node as babylonNode, Camera as babylCamera, Material as babylMaterial,
-  Observer, BoundingBox, PhysicsShapeParameters, PhysicShapeOptions, PhysicsShape, PhysicsBody, PhysicsMotionType, Quaternion,
+  Observer, BoundingBox, PhysicsShapeParameters, PhysicShapeOptions, PhysicsShape, PhysicsBody, PhysicsMotionType, Quaternion, HighlightLayer, Color3,
 } from '@babylonjs/core';
 
 // eslint-disable-next-line @typescript-eslint/no-duplicate-imports -- Required import for side effects
@@ -1055,7 +1055,14 @@ class SceneBinding {
   private currentIntersections_: Dict<Set<string>> = {};
 
   private nodeMeshes_ = (id: string): AbstractMesh[] => {
+    // If the node is a robot, return all the robot's links (parts)
     if (id in this.robotBindings_) return Dict.values(this.robotBindings_[id].links);
+    // Check if the node is an individual link of the robot
+    for (const robotId of Dict.keySet(this.robotBindings_)) {
+      if (id in this.robotBindings_[robotId].links) {
+        return this.robotBindings_[robotId].links[id] instanceof AbstractMesh ? [this.robotBindings_[robotId].links[id]] : [];
+      }
+    }
     const bNode = this.findBNode_(id);
     if (bNode && bNode instanceof AbstractMesh) return [bNode];
 
@@ -1070,6 +1077,12 @@ class SceneBinding {
     for (const mesh of meshes) {
       // this.gizmoManager_.gizmos.boundingBoxGizmo.attachedMesh = mesh; // For viewing meshes on robot
       if (mesh.id.includes('Chassis')) {
+        continue;
+      } else if (mesh.id.includes('Claw')) {
+        // Use smaller claw component for intersection bounding box to increase
+        // intersection accuracy
+        const c = mesh.getChildMeshes(true, (mesh) => mesh.id.includes('claw2'))[0];
+        ret.push(c.getHierarchyBoundingVectors(false));
         continue;
       } else {
         ret.push(mesh.getHierarchyBoundingVectors(true, (mesh: AbstractMesh) => !mesh.name.includes('et_sensor')));
