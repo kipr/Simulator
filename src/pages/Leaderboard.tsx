@@ -98,7 +98,7 @@ const UserInfoContainer = styled('div', {
   alignItems: 'center',
   justifyContent: 'center',
   gap: '10px',
-})
+});
 
 const TableHeaderContainer = styled('div', {
   display: 'inline-block',
@@ -262,8 +262,8 @@ class Leaderboard extends React.Component<Props, State> {
 
       };
 
-      //Get anonymous name to display
-      let userRecord: Record<string, User> = { [userId]: user };
+      // Get anonymous name to display
+      const userRecord: Record<string, User> = { [userId]: user };
       const altUser = this.anonomizeUsers(userRecord)[userId];
       user = {
         ...user,
@@ -478,28 +478,28 @@ class Leaderboard extends React.Component<Props, State> {
     const pdfDoc = new jsPDF();
 
 
-    //Title
+    // Title
     pdfDoc.setFontSize(18);
     pdfDoc.text('KIPR Challenge Scores', 105, 20, { align: 'center' });
 
-    //Basic Info
+    // Basic Info
     pdfDoc.setFontSize(14);
     pdfDoc.text(`Name: ${user.name}`, 20, 40);
     pdfDoc.text(`Alias: ${user.altId || 'Unknown'}`, 20, 50);
     pdfDoc.text(`Email: ${this.getCurrentUserEmail() || 'Unknown'}`, 20, 60);
 
-    //Sort scores numerically
+    // Sort scores numerically
     const sortedScores = [...user.scores].sort((a, b) => {
       const nameA = a.name[locale] || a.name["en-US"] || "";
       const nameB = b.name[locale] || b.name["en-US"] || "";
 
-      const numA = parseInt(nameA.match(/\d+/)?.[0] || "0", 10);
-      const numB = parseInt(nameB.match(/\d+/)?.[0] || "0", 10);
+      const numA = parseInt(/\d+/.exec(nameA)?.[0] || "0", 10);
+      const numB = parseInt(/\d+/.exec(nameB)?.[0] || "0", 10);
 
       return numA - numB;
     });
 
-    //Scores
+    // Scores
     pdfDoc.setFontSize(12);
     pdfDoc.text('Scores:', 20, 70);
 
@@ -580,8 +580,8 @@ class Leaderboard extends React.Component<Props, State> {
     const { style, locale } = props;
     const { selected } = state;
     const theme = DARK;
-    let currentUser = this.getCurrentUser();
-    let currentUserEmail = this.getCurrentUserEmail();
+    const currentUser = this.getCurrentUser();
+    const currentUserEmail = this.getCurrentUserEmail();
 
     return (
       <PageContainer style={style} theme={theme}>
