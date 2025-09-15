@@ -120,5 +120,5 @@ export default connect((state: State) => ({
 }), dispatch => ({
   onTutorialsClick: () => dispatch(push('/tutorials')),
   onLeaderboardClick: () => dispatch(push('/leaderboard')),
-  onSimulatorClick: () => dispatch(push('/scene/jbcSandboxA')),
+  onSimulatorClick: () => dispatch(push('/scene/jbcSandbox')),
 }))(Dashboard) as React.ComponentType<DashboardPublicProps>;
