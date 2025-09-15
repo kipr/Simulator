@@ -21,27 +21,27 @@ import { Quaternion } from '@babylonjs/core';
 const baseScene = createBaseSceneSurface();
 
 const POM_GAP = 6.35;
-const POMS_BLUE: Dict<Node> = {};
+const pomsBlue: Dict<Node> = {};
 for (let i = 0; i < 6; i++) {
   const origin: ReferenceFramewUnits = {
     position: Vector3wUnits.centimeters(145 - POM_GAP * (i % 3), -3, 80 - Math.floor(i / 3) * 2 * POM_GAP)
   };
-  POMS_BLUE[`pom_blue${i}`] = {
+  pomsBlue[`pom_blue${i}`] = {
     type: 'from-bb-template',
     name: Dict.map(tr('Blue Pom #%d'), (str: string) => sprintf(str, i)),
-    templateId: 'pomBlue2in',
+    templateId: 'pomBlue2In',
     visible: true,
     editable: true,
     startingOrigin: origin,
     origin
   };
 }
-const POMS_ORANGE: Dict<Node> = {};
+const pomsOrange: Dict<Node> = {};
 for (let i = 0; i < 6; i++) {
   const origin: ReferenceFramewUnits = {
     position: Vector3wUnits.centimeters(145 - POM_GAP * (i % 3), -3, 73.65 - Math.floor(i / 3) * 2 * POM_GAP)
   };
-  POMS_ORANGE[`pom_orange${i}`] = {
+  pomsOrange[`pom_orange${i}`] = {
     type: 'from-bb-template',
     name: Dict.map(tr('Orange Pom #%d'), (str: string) => sprintf(str, i)),
     templateId: 'pom_orange',
@@ -51,8 +51,8 @@ for (let i = 0; i < 6; i++) {
     origin
   };
 }
-const POMS_RANDOM: Dict<Node.FromBBTemplate> = {};
-let choices = ['pomBlue2in', 'pomBlue2in', 'pomBlue2in', 'pomBlue2in', 'pomBlue2in', 'pomBlue2in',
+const pomsRandom: Dict<Node.FromBBTemplate> = {};
+let choices = ['pomBlue2In', 'pomBlue2In', 'pomBlue2In', 'pomBlue2In', 'pomBlue2In', 'pomBlue2In',
   'pom_orange', 'pom_orange', 'pom_orange', 'pom_orange', 'pom_orange', 'pom_orange'];
 for (let i = 0; i < 12; i++) {
   let rand = Math.random();
@@ -62,11 +62,11 @@ for (let i = 0; i < 12; i++) {
   rand = rand * 20 - 3;
 
   const pos = {
-    position: Vector3wUnits.centimeters(-11 + POM_GAP * (i % 4), 1 * rand, 80 - Math.floor(i / 4) * POM_GAP),
+    position: Vector3wUnits.centimeters(-11 + POM_GAP * (i % 4), 1 * rand, 80 - Math.floor(i / 4) * (POM_GAP + 2)),
     orientation: RotationwUnits.eulerRadians(rand, rand, rand)
   };
 
-  POMS_RANDOM[`pom_random${i}`] = {
+  pomsRandom[`pom_random${i}`] = {
     type: 'from-bb-template',
     name: Dict.map(tr('Random Pom #%d'), (str: string) => sprintf(str, i)),
     templateId: choice,
@@ -162,15 +162,15 @@ const LEFT_CUBE_ORIGINS: ReferenceFramewUnits[] = [
   { position: Vector3wUnits.centimeters(117.46, 2.08, -20.25) },
   { position: Vector3wUnits.centimeters(117.46, 2.08, -15.17) },
 ];
-const LEFT_CUBES: Dict<Node.FromBBTemplate> = {};
-const leftCubeChoices = ['cubeRed2in', 'cubeGreen2in', 'cubeYellow2in'];
+const leftCubes: Dict<Node.FromBBTemplate> = {};
+const leftCubeChoices = ['cubeRed2In', 'cubeGreen2In', 'cubeYellow2In'];
 for (let i = 0; i < 3; i++) {
   const n = Math.floor(Math.random() * leftCubeChoices.length);
   const choice = leftCubeChoices[n];
   leftCubeChoices.splice(n, 1);
 
   let cubeNum = 2 * i;
-  LEFT_CUBES[`left${choice}${cubeNum}`] = {
+  leftCubes[`left${choice}${cubeNum}`] = {
     type: 'from-bb-template',
     name: Dict.map(tr('Left Stack Cube #%d'), (str: string) => sprintf(str, cubeNum + 1)),
     templateId: choice,
@@ -180,7 +180,7 @@ for (let i = 0; i < 3; i++) {
     origin: LEFT_CUBE_ORIGINS[cubeNum]
   };
   cubeNum++;
-  LEFT_CUBES[`left${choice}${cubeNum}`] = {
+  leftCubes[`left${choice}${cubeNum}`] = {
     type: 'from-bb-template',
     name: Dict.map(tr('Left Stack Cube #%d'), (str: string) => sprintf(str, cubeNum + 1)),
     templateId: choice,
@@ -199,15 +199,15 @@ const RIGHT_CUBE_ORIGINS: ReferenceFramewUnits[] = [
   { position: Vector3wUnits.centimeters(24.99, 2.08, -17.71) },
   { position: Vector3wUnits.centimeters(19.91, 2.08, -17.71) },
 ];
-const RIGHT_CUBES: Dict<Node.FromBBTemplate> = {};
-const rightCubeChoices = ['cubeRed2in', 'cubeGreen2in', 'cubeYellow2in'];
+const rightCubes: Dict<Node.FromBBTemplate> = {};
+const rightCubeChoices = ['cubeRed2In', 'cubeGreen2In', 'cubeYellow2In'];
 for (let i = 0; i < 3; i++) {
   const n = Math.floor(Math.random() * rightCubeChoices.length);
   const choice = rightCubeChoices[n];
   rightCubeChoices.splice(n, 1);
 
   let cubeNum = 2 * i;
-  RIGHT_CUBES[`right${choice}${cubeNum}`] = {
+  rightCubes[`right${choice}${cubeNum}`] = {
     type: 'from-bb-template',
     name: Dict.map(tr('Right Stack Cube #%d'), (str: string) => sprintf(str, cubeNum + 1)),
     templateId: choice,
@@ -217,7 +217,7 @@ for (let i = 0; i < 3; i++) {
     origin: RIGHT_CUBE_ORIGINS[cubeNum]
   };
   cubeNum++;
-  RIGHT_CUBES[`right${choice}${cubeNum}`] = {
+  rightCubes[`right${choice}${cubeNum}`] = {
     type: 'from-bb-template',
     name: Dict.map(tr('Right Stack Cube #%d'), (str: string) => sprintf(str, cubeNum + 1)),
     templateId: choice,
@@ -236,28 +236,28 @@ const BIG_CUBE_ORIGINS: ReferenceFramewUnits[] = [
   { position: Vector3wUnits.centimeters(STORAGE_X - 50.8, UPPER_CUBE_Y, UPPER_CUBE_Z) }
 ];
 const BIG_CUBES: Dict<Node> = {
-  redCube4in: {
+  redCube4In: {
     type: 'from-bb-template',
     name: tr('Red Cube (4 inch)'),
-    templateId: 'cubeRed4in',
+    templateId: 'cubeRed4In',
     visible: true,
     editable: true,
     startingOrigin: BIG_CUBE_ORIGINS[0],
     origin: BIG_CUBE_ORIGINS[0]
   },
-  brownCube4in: {
+  brownCube4In: {
     type: 'from-bb-template',
     name: tr('Brown Cube (4 inch)'),
-    templateId: 'cubeBrown4in',
+    templateId: 'cubeBrown4In',
     visible: true,
     editable: true,
     startingOrigin: BIG_CUBE_ORIGINS[1],
     origin: BIG_CUBE_ORIGINS[1]
   },
-  greenCube4in: {
+  greenCube4In: {
     type: 'from-bb-template',
     name: tr('Green Cube (4 inch)'),
-    templateId: 'cubeGreen4in',
+    templateId: 'cubeGreen4In',
     visible: true,
     editable: true,
     startingOrigin: BIG_CUBE_ORIGINS[2],
@@ -318,7 +318,7 @@ const BASKETS: Dict<Node> = {
 };
 
 const PVC_ORIENTATION = RotationwUnits.fromRawQuaternion(RawQuaternion.create(0.6935, 0.1379, 0.1379, 0.6935), 'axis-angle')
-const LEFT_PVC: Dict<Node> = {};
+const leftPvc: Dict<Node> = {};
 for (let i = 0; i < 4; i++) {
   const origin: ReferenceFramewUnits = {
     position: Vector3wUnits.centimeters(74.4 - 4.23 * i, -3.8, 89.2),
@@ -326,10 +326,10 @@ for (let i = 0; i < 4; i++) {
     // Use quaternion here to avoid gimball locking.
     orientation: PVC_ORIENTATION
   };
-  LEFT_PVC[`left_pvc${i}`] = {
+  leftPvc[`left_pvc${i}`] = {
     type: 'from-bb-template',
     name: Dict.map(tr('Left PCV #%d'), (str: string) => sprintf(str, i + 1)),
-    templateId: 'pcv2in',
+    templateId: 'pcv2In',
     visible: true,
     editable: true,
     startingOrigin: origin,
@@ -337,7 +337,7 @@ for (let i = 0; i < 4; i++) {
   };
 }
 
-const RIGHT_PVC: Dict<Node> = {};
+const rightPvc: Dict<Node> = {};
 for (let i = 0; i < 4; i++) {
   const origin: ReferenceFramewUnits = {
     position: Vector3wUnits.centimeters(8.75 + 4.23 * i, -3.8, 89.2),
@@ -345,10 +345,10 @@ for (let i = 0; i < 4; i++) {
     // Use quaternion here to avoid gimball locking.
     orientation: PVC_ORIENTATION
   };
-  RIGHT_PVC[`right_pvc${i}`] = {
+  rightPvc[`right_pvc${i}`] = {
     type: 'from-bb-template',
     name: Dict.map(tr('Right PCV #%d'), (str: string) => sprintf(str, i + 1)),
-    templateId: 'pcv2in',
+    templateId: 'pcv2In',
     visible: true,
     editable: true,
     startingOrigin: origin,
@@ -366,18 +366,18 @@ export const FALL_26_SANDBOX: Scene = {
   scripts: {},
   nodes: {
     ...baseScene.nodes,
-    ...POMS_BLUE,
-    ...POMS_ORANGE,
-    ...POMS_RANDOM,
+    ...pomsBlue,
+    ...pomsOrange,
+    ...pomsRandom,
     ...RAISED_DOCK_PALLETS,
     ...STORAGE_PALLETS,
-    ...LEFT_CUBES,
-    ...RIGHT_CUBES,
+    ...leftCubes,
+    ...rightCubes,
     ...BIG_CUBES,
     ...CONES,
     ...BASKETS,
-    ...LEFT_PVC,
-    ...RIGHT_PVC,
+    ...leftPvc,
+    ...rightPvc,
     botguy: BOTGUY,
   }
 };

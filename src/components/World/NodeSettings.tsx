@@ -76,16 +76,16 @@ const TEMPLATES = {
     ['Tray', 'tray'],
     ['Botguy', 'botguy_gamepiece'],
     ['Basket', 'basket'],
-    ['Brown Cube', 'cubeBrown4in'],
-    ['Green Cube (2 in.)', 'cubeGreen2in'],
-    ['Green Cube (4 in.)', 'cubeGreen4in'],
-    ['Red Cube (2 in.)', 'cubeRed2in'],
-    ['Red Cube (4 in.)', 'cubeRed4in'],
-    ['Yellow Cube', 'cubeYellow2in'],
+    ['Brown Cube (4 Inch)', 'cubeBrown4In'],
+    ['Green Cube (2 Inch)', 'cubeGreen2In'],
+    ['Green Cube (4 Inch)', 'cubeGreen4In'],
+    ['Red Cube (2 Inch)', 'cubeRed2In'],
+    ['Red Cube (4 Inch)', 'cubeRed4In'],
+    ['Yellow Cube (2 Inch)', 'cubeYellow2In'],
     ['Pallet', 'pallet'],
-    ['Blue Pom', 'pomBlue2in'],
+    ['Blue Pom', 'pomBlue2In'],
     ['Traffic Cone', 'trafficCone'],
-    ['2 inch PVC', 'pcv2in']
+    ['2 Inch PVC', 'pcv2In']
 
   ],
   RADIATION: [

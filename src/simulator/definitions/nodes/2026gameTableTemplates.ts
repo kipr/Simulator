@@ -8,7 +8,7 @@ import { PhysicsMotionType } from "@babylonjs/core";
 
 const gameTable2026Template: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
-  geometryId: 'game_table_2026',
+  geometryId: 'gameTable2026',
   physics: {
     type: 'mesh',
     motionType: PhysicsMotionType.STATIC,
@@ -36,32 +36,32 @@ const CUBEPHYSICS: Node.Physics = {
 };
 const cubeBrown4inTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
-  geometryId: 'cube_brown_4in',
+  geometryId: 'cubeBrown4In',
   physics: CUBEPHYSICS
 };
 const cubeGreen2inTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
-  geometryId: 'cube_green_2in',
+  geometryId: 'cubeGreen2In',
   physics: CUBEPHYSICS
 };
 const cubeGreen4inTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
-  geometryId: 'cube_green_4in',
+  geometryId: 'cubeGreen4In',
   physics: CUBEPHYSICS
 };
 const cubeRed2inTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
-  geometryId: 'cube_red_2in',
+  geometryId: 'cubeRed2In',
   physics: CUBEPHYSICS
 };
 const cubeRed4inTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
-  geometryId: 'cube_red_4in',
+  geometryId: 'cubeRed4In',
   physics: CUBEPHYSICS
 };
 const cubeYellow2inTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
-  geometryId: 'cube_yellow_2in',
+  geometryId: 'cubeYellow2In',
   physics: CUBEPHYSICS
 };
 const palletTemplate: Node.TemplatedNode<Node.Obj> = {
@@ -77,7 +77,7 @@ const palletTemplate: Node.TemplatedNode<Node.Obj> = {
 };
 const pomBlue2inTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
-  geometryId: 'pom_blue_2in',
+  geometryId: 'pomBlue2In',
   physics: {
     type: 'mesh',
     motionType: PhysicsMotionType.DYNAMIC,
@@ -88,7 +88,7 @@ const pomBlue2inTemplate: Node.TemplatedNode<Node.Obj> = {
 };
 const trafficConeTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
-  geometryId: 'traffic_cone',
+  geometryId: 'trafficCone',
   physics: {
     type: 'mesh',
     motionType: PhysicsMotionType.DYNAMIC,
@@ -99,7 +99,7 @@ const trafficConeTemplate: Node.TemplatedNode<Node.Obj> = {
 };
 const pcv2inTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
-  geometryId: 'pvc_2in',
+  geometryId: 'pvc2In',
   physics: {
     type: 'mesh',
     motionType: PhysicsMotionType.DYNAMIC,
@@ -110,23 +110,23 @@ const pcv2inTemplate: Node.TemplatedNode<Node.Obj> = {
 };
 
 export const BB2026Templates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
-  'game_table_2026': gameTable2026Template,
+  'gameTable2026': gameTable2026Template,
   'basket': basketTemplate,
-  'cubeBrown4in': cubeBrown4inTemplate,
-  'cubeGreen2in': cubeGreen2inTemplate,
-  'cubeGreen4in': cubeGreen4inTemplate,
-  'cubeRed2in': cubeRed2inTemplate,
-  'cubeRed4in': cubeRed4inTemplate,
-  'cubeYellow2in': cubeYellow2inTemplate,
+  'cubeBrown4In': cubeBrown4inTemplate,
+  'cubeGreen2In': cubeGreen2inTemplate,
+  'cubeGreen4In': cubeGreen4inTemplate,
+  'cubeRed2In': cubeRed2inTemplate,
+  'cubeRed4In': cubeRed4inTemplate,
+  'cubeYellow2In': cubeYellow2inTemplate,
   'pallet': palletTemplate,
-  'pomBlue2in': pomBlue2inTemplate,
+  'pomBlue2In': pomBlue2inTemplate,
   'trafficCone': trafficConeTemplate,
-  'pcv2in': pcv2inTemplate
+  'pcv2In': pcv2inTemplate
 });
 
 
 export const BB2026Geometries = Object.freeze<Dict<Geometry>>({
-  'game_table_2026': {
+  'gameTable2026': {
     type: 'file',
     uri: '/static/object_binaries/2026_Fall_Table.glb',
   },
@@ -134,27 +134,27 @@ export const BB2026Geometries = Object.freeze<Dict<Geometry>>({
     type: 'file',
     uri: '/static/object_binaries/Basket.glb'
   },
-  'cube_brown_4in': {
+  'cubeBrown4In': {
     type: 'file',
     uri: '/static/object_binaries/Cube_Brown_4in.glb'
   },
-  'cube_green_2in': {
+  'cubeGreen2In': {
     type: 'file',
     uri: '/static/object_binaries/Cube_Green_2in.glb'
   },
-  'cube_green_4in': {
+  'cubeGreen4In': {
     type: 'file',
     uri: '/static/object_binaries/Cube_Green_4in.glb'
   },
-  'cube_red_2in': {
+  'cubeRed2In': {
     type: 'file',
     uri: '/static/object_binaries/Cube_Red_2in.glb'
   },
-  'cube_red_4in': {
+  'cubeRed4In': {
     type: 'file',
     uri: '/static/object_binaries/Cube_Red_4in.glb'
   },
-  'cube_yellow_2in': {
+  'cubeYellow2In': {
     type: 'file',
     uri: '/static/object_binaries/Cube_Yellow_2in.glb'
   },
@@ -162,15 +162,15 @@ export const BB2026Geometries = Object.freeze<Dict<Geometry>>({
     type: 'file',
     uri: '/static/object_binaries/Pallet.glb'
   },
-  'pom_blue_2in': {
+  'pomBlue2In': {
     type: 'file',
     uri: '/static/object_binaries/Pom_Blue_2in.glb'
   },
-  'traffic_cone': {
+  'trafficCone': {
     type: 'file',
     uri: '/static/object_binaries/Traffic_Cone.glb'
   },
-  'pvc_2in': {
+  'pvc2In': {
     type: 'file',
     uri: '/static/object_binaries/PVC2in.glb'
   }
