@@ -1,5 +1,4 @@
-export * from './jbcSandboxA';
-export * from './jbcSandboxB';
+export * from './jbcSandbox';
 export * from './jbc0-Drive-Straight';
 export * from './jbc1-Tag-Youre-It';
 export * from './jbc2-Ring-Around-the-Can';

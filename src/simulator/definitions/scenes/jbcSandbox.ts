@@ -2,7 +2,7 @@ import Scene from '../../../state/State/Scene';
 import { ReferenceFramewUnits, RotationwUnits } from '../../../util/math/unitMath';
 import { Distance } from '../../../util';
 
-import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
+import { createCanNode, createBaseSceneSurfaceA, JBC_MAT_ORIGIN } from './jbcBase';
 
 import tr from '@i18n';
 
@@ -32,15 +32,24 @@ const REAM2_ORIGIN: ReferenceFramewUnits = {
   }),
 };
 
-export const JBC_Sandbox_A: Scene = {
+export const JBC_Sandbox: Scene = {
   ...baseScene,
-  name: tr('JBC Sandbox A'),
-  description: tr('Junior Botball Challenge Sandbox on Mat A. All cans 1-12 are available by default.'),
+  name: tr('JBC Sandbox'),
+  description: tr('Junior Botball Challenge Sandbox. Starting Mat is A but B can also be shown instead. All cans 1-12 are available by default.'),
   nodes: {
     ...baseScene.nodes,
     'robot': {
       ...baseScene.nodes['robot'],
       editable: true,
+    },
+    'matB': {
+      type: 'from-jbc-template',
+      templateId: 'matB',
+      name: tr('JBC Mat B'),
+      startingOrigin: JBC_MAT_ORIGIN,
+      origin: JBC_MAT_ORIGIN,
+      visible: false,
+      editable: false,
     },
     'can1': createCanNode(1, undefined, true, false),
     'can2': createCanNode(2, undefined, true, false),
