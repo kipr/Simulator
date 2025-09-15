@@ -58,7 +58,7 @@ const BIG_POM_PHYSICS: Node.Physics = {
   mass: Mass.grams(10),
   restitution: 0.2,
   friction: 5
-}
+};
 const pomOrangeTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'pom_orange',

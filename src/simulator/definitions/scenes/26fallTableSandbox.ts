@@ -52,7 +52,7 @@ for (let i = 0; i < 6; i++) {
   };
 }
 const pomsRandom: Dict<Node.FromBBTemplate> = {};
-let choices = ['pomBlue2In', 'pomBlue2In', 'pomBlue2In', 'pomBlue2In', 'pomBlue2In', 'pomBlue2In',
+const choices = ['pomBlue2In', 'pomBlue2In', 'pomBlue2In', 'pomBlue2In', 'pomBlue2In', 'pomBlue2In',
   'pom_orange', 'pom_orange', 'pom_orange', 'pom_orange', 'pom_orange', 'pom_orange'];
 for (let i = 0; i < 12; i++) {
   let rand = Math.random();
@@ -269,7 +269,7 @@ const CONE_Z = 54.37;
 const CONE_ORIGINS: ReferenceFramewUnits[] = [
   { position: Vector3wUnits.centimeters(-20, -5, CONE_Z) },
   { position: Vector3wUnits.centimeters(126.9, -5, CONE_Z) }
-]
+];
 const CONES: Dict<Node> = {
   rightCone: {
     type: 'from-bb-template',
@@ -317,7 +317,7 @@ const BASKETS: Dict<Node> = {
   }
 };
 
-const PVC_ORIENTATION = RotationwUnits.fromRawQuaternion(RawQuaternion.create(0.6935, 0.1379, 0.1379, 0.6935), 'axis-angle')
+const PVC_ORIENTATION = RotationwUnits.fromRawQuaternion(RawQuaternion.create(0.6935, 0.1379, 0.1379, 0.6935), 'axis-angle');
 const leftPvc: Dict<Node> = {};
 for (let i = 0; i < 4; i++) {
   const origin: ReferenceFramewUnits = {
