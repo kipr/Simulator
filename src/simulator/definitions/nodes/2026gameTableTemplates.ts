@@ -97,6 +97,17 @@ const trafficConeTemplate: Node.TemplatedNode<Node.Obj> = {
     friction: 5
   }
 };
+const pcv2inTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'pvc_2in',
+  physics: {
+    type: 'mesh',
+    motionType: PhysicsMotionType.DYNAMIC,
+    mass: Mass.grams(7.5),
+    restitution: 0.2,
+    friction: 3.75
+  }
+};
 
 export const BB2026Templates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'game_table_2026': gameTable2026Template,
@@ -109,7 +120,8 @@ export const BB2026Templates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'cubeYellow2in': cubeYellow2inTemplate,
   'pallet': palletTemplate,
   'pomBlue2in': pomBlue2inTemplate,
-  'trafficCone': trafficConeTemplate
+  'trafficCone': trafficConeTemplate,
+  'pcv2in': pcv2inTemplate
 });
 
 
@@ -158,4 +170,8 @@ export const BB2026Geometries = Object.freeze<Dict<Geometry>>({
     type: 'file',
     uri: '/static/object_binaries/Traffic_Cone.glb'
   },
+  'pvc_2in': {
+    type: 'file',
+    uri: '/static/object_binaries/PVC2in.glb'
+  }
 });

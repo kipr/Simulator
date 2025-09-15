@@ -6,6 +6,7 @@ import Scene from '../../../state/State/Scene';
 import Node from '../../../state/State/Scene/Node';
 import Script from '../../../state/State/Scene/Script';
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../../util/math/unitMath';
+import { RawQuaternion } from '../../../util/math/math';
 import { Distance } from '../../../util';
 import Dict from '../../../util/objectOps/Dict';
 
@@ -15,6 +16,7 @@ import { sprintf } from 'sprintf-js';
 
 import tr from '@i18n';
 import EditableList from 'components/EditableList';
+import { Quaternion } from '@babylonjs/core';
 
 const baseScene = createBaseSceneSurface();
 
@@ -315,6 +317,45 @@ const BASKETS: Dict<Node> = {
   }
 };
 
+const PVC_ORIENTATION = RotationwUnits.fromRawQuaternion(RawQuaternion.create(0.6935, 0.1379, 0.1379, 0.6935), 'axis-angle')
+const LEFT_PVC: Dict<Node> = {};
+for (let i = 0; i < 4; i++) {
+  const origin: ReferenceFramewUnits = {
+    position: Vector3wUnits.centimeters(74.4 - 4.23 * i, -3.8, 89.2),
+    // Rotation equivalent to 90 about the X axis followed by 22.5 about the Z.
+    // Use quaternion here to avoid gimball locking.
+    orientation: PVC_ORIENTATION
+  };
+  LEFT_PVC[`left_pvc${i}`] = {
+    type: 'from-bb-template',
+    name: Dict.map(tr('Left PCV #%d'), (str: string) => sprintf(str, i + 1)),
+    templateId: 'pcv2in',
+    visible: true,
+    editable: true,
+    startingOrigin: origin,
+    origin
+  };
+}
+
+const RIGHT_PVC: Dict<Node> = {};
+for (let i = 0; i < 4; i++) {
+  const origin: ReferenceFramewUnits = {
+    position: Vector3wUnits.centimeters(8.75 + 4.23 * i, -3.8, 89.2),
+    // Rotation equivalent to 90 about the X axis followed by 22.5 about the Z.
+    // Use quaternion here to avoid gimball locking.
+    orientation: PVC_ORIENTATION
+  };
+  RIGHT_PVC[`right_pvc${i}`] = {
+    type: 'from-bb-template',
+    name: Dict.map(tr('Right PCV #%d'), (str: string) => sprintf(str, i + 1)),
+    templateId: 'pcv2in',
+    visible: true,
+    editable: true,
+    startingOrigin: origin,
+    origin
+  };
+}
+
 export const FALL_26_SANDBOX: Scene = {
   ...baseScene,
   name: tr('2026 Fall Game Table'),
@@ -335,6 +376,8 @@ export const FALL_26_SANDBOX: Scene = {
     ...BIG_CUBES,
     ...CONES,
     ...BASKETS,
+    ...LEFT_PVC,
+    ...RIGHT_PVC,
     botguy: BOTGUY,
   }
 };

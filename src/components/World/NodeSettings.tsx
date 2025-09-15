@@ -84,7 +84,8 @@ const TEMPLATES = {
     ['Yellow Cube', 'cubeYellow2in'],
     ['Pallet', 'pallet'],
     ['Blue Pom', 'pomBlue2in'],
-    ['Traffic Cone', 'trafficCone']
+    ['Traffic Cone', 'trafficCone'],
+    ['2 inch PVC', 'pcv2in']
 
   ],
   RADIATION: [
