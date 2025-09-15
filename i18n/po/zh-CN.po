@@ -3119,6 +3119,66 @@ msgstr "后退"
 msgid "Wave the servo"
 msgstr "挥动伺服器"
 
+msgid "2026 Fall Game Table"
+msgstr "2026年秋季比賽桌面配置"
+
+msgid "Blue Pom #%d"
+msgstr "藍色球體 #%d"
+
+msgid "Orange Pom #%d"
+msgstr "橙色球體 #%d"
+
+msgid "Random Pom #%d"
+msgstr "隨機球體 #%d"
+
+msgid "Raised Dock Pallet #1"
+msgstr "高架貨棧板 #1"
+
+msgid "Raised Dock Pallet #2"
+msgstr "高架貨棧板 #2"
+
+msgid "Storage Pallet #1"
+msgstr "儲物棧板 #1"
+
+msgid "Storage Pallet #2"
+msgstr "儲物棧板 #2"
+
+msgid "Left Stack Cube #%d"
+msgstr "左側堆疊方塊 #%d"
+
+msgid "Right Stack Cube #%d"
+msgstr "右側堆疊方塊 #%d"
+
+msgid "Red Cube (4 inch)"
+msgstr "紅色方塊（4英吋）"
+
+msgid "Brown Cube (4 inch)"
+msgstr "棕色方塊（4英吋）"
+
+msgid "Green Cube (4 inch)"
+msgstr "綠色方塊（4英吋）"
+
+msgid "Right Traffic Cone"
+msgstr "右側交通錐"
+
+msgid "Left Traffic Cone"
+msgstr "左側交通錐"
+
+msgid "Left Basket"
+msgstr "左側籃筐"
+
+msgid "Right Basket"
+msgstr "右側籃筐"
+
+msgid "Left PCV #%d"
+msgstr "左側PVC #%d"
+
+msgid "Right PCV #%d"
+msgstr "右側PVC #%d"
+
+msgid "2026 Fall Botball game table sandbox"
+msgstr "2026秋季機器人球賽沙盒"
+
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
 msgstr "音量"

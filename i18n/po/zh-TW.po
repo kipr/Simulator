@@ -3121,6 +3121,66 @@ msgstr "向後驅動"
 msgid "Wave the servo"
 msgstr "揮動伺服器"
 
+msgid "2026 Fall Game Table"
+msgstr "2026秋季比赛场地"
+
+msgid "Blue Pom #%d"
+msgstr "蓝色绒球 #%d"
+
+msgid "Orange Pom #%d"
+msgstr "橙色绒球 #%d"
+
+msgid "Random Pom #%d"
+msgstr "随机绒球 #%d"
+
+msgid "Raised Dock Pallet #1"
+msgstr "高架码头托盘 #1"
+
+msgid "Raised Dock Pallet #2"
+msgstr "高架码头托盘 #2"
+
+msgid "Storage Pallet #1"
+msgstr "储物托盘 #1"
+
+msgid "Storage Pallet #2"
+msgstr "储物托盘 #2"
+
+msgid "Left Stack Cube #%d"
+msgstr "左侧堆叠立方体 #%d"
+
+msgid "Right Stack Cube #%d"
+msgstr "右侧堆叠立方体 #%d"
+
+msgid "Red Cube (4 inch)"
+msgstr "红色立方体（4英寸）"
+
+msgid "Brown Cube (4 inch)"
+msgstr "棕色立方体（4英寸）"
+
+msgid "Green Cube (4 inch)"
+msgstr "绿色立方体（4英寸）"
+
+msgid "Right Traffic Cone"
+msgstr "右侧交通锥"
+
+msgid "Left Traffic Cone"
+msgstr "左侧交通锥"
+
+msgid "Left Basket"
+msgstr "左侧篮筐"
+
+msgid "Right Basket"
+msgstr "右侧篮筐"
+
+msgid "Left PCV #%d"
+msgstr "左侧PCV #%d"
+
+msgid "Right PCV #%d"
+msgstr "右侧PCV #%d"
+
+msgid "2026 Fall Botball game table sandbox"
+msgstr "2026秋季机器人球赛沙盘"
+
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
 msgstr "音量"
