@@ -313,7 +313,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
         content = (
           <SimulatorWidget
             theme={theme}
-            name={LocalizedString.lookup(tr('World'), locale)}
+            name={LocalizedString.lookup(tr('Scene'), locale)}
             mode={Mode.Sidebar}
           >
             <World
@@ -359,7 +359,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       name: LocalizedString.lookup(tr('Robot'), locale),
       icon: faRobot,
     }, {
-      name: LocalizedString.lookup(tr('World'), locale),
+      name: LocalizedString.lookup(tr('Scene'), locale),
       icon: faGlobeAmericas,
     }];
 

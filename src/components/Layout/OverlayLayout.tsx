@@ -156,7 +156,7 @@ const ChallengeWidget = styled(Widget, (props: WidgetProps) => {
   }
 });
 
-const WorldWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
+const SceneWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
@@ -491,9 +491,9 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
               />
             </ChallengeWidget>
           ) : undefined}
-          <WorldWidget
+          <SceneWidget
             {...commonProps}
-            name={LocalizedString.lookup(tr('World'), locale)}
+            name={LocalizedString.lookup(tr('Scene'), locale)}
             sizes={WORLD_SIZES}
             size={WORLD_SIZE[worldSize]}
             onSizeChange={this.onWorldSizeChange_}
@@ -514,7 +514,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
               onObjectAdd={onObjectAdd}
               capabilities={worldCapabilities}
             />
-          </WorldWidget>
+          </SceneWidget>
         </Overlay>
       </Container>
     );
