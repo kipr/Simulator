@@ -1,16 +1,10 @@
-import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../../util/math/unitMath';
+import { RotationwUnits } from '../../../util/math/unitMath';
 import { Distance } from '../../../util';
 import Node from '../../../state/State/Scene/Node';
 import Geometry from "../../../state/State/Scene/Geometry";
-import Camera from '../../../state/State/Scene/Camera';
-import Scene from '../../../state/State/Scene';
 import { Color } from '../../../state/State/Scene/Color';
-import AbstractRobot from '../../../programming/AbstractRobot';
-import Author from '../../../db/Author';
-import { PhysicsMotionType } from '@babylonjs/core';
 
 import tr from '@i18n';
-import { sprintf } from 'sprintf-js';
 import Dict from '../../../util/objectOps/Dict';
 
 /**
