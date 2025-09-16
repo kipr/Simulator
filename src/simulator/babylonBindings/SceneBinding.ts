@@ -1094,7 +1094,7 @@ class SceneBinding {
         const filterIds = this.intersectionFilters_[nodeId];
         for (const filterId of filterIds) {
           const intersection = this.nodeMeshes_(nodeId)[0].intersectsMesh(this.nodeMeshes_(filterId)[0], true);
-          ;
+
           if (intersection) {
             if (!this.currentIntersections_[nodeId]) this.currentIntersections_[nodeId] = new Set();
             else if (this.currentIntersections_[nodeId].has(filterId)) continue;
