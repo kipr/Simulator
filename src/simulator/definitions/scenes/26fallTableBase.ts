@@ -22,7 +22,7 @@ const GAME_TABLE_ORIGIN: ReferenceFramewUnits = {
 };
 
 const LIGHT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.meters(0, 40.91, .5),
+  position: Vector3wUnits.centimeters(50, 90, 50)
 };
 
 const ROBOT: Node.Robot = {
@@ -56,7 +56,7 @@ export function createBaseSceneSurface(): Scene {
       'game_table_2026': GAME_TABLE_2026,
       'light0': {
         type: 'point-light',
-        intensity: .25,
+        intensity: 0.8,
         name: tr('Light'),
         startingOrigin: LIGHT_ORIGIN,
         origin: LIGHT_ORIGIN,
