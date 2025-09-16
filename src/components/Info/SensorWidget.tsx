@@ -129,7 +129,7 @@ class SensorWidget extends React.PureComponent<Props, State> {
         if (mesh) {
           // Both wheels have the mesh ID 'Wheel_primitive0_merged', so use idx
           // to distinguish between them.
-          const idx = props.name === 'motor 3' ? 1 : 0;
+          const idx = props.name === 'motor 0' ? 1 : 0;
           ACTIVE_SPACE.highlight(mesh, idx);
         }
       }, 1000),
@@ -237,8 +237,8 @@ class SensorWidget extends React.PureComponent<Props, State> {
     const USED_PORTS: Dict<string> = {
       'get_servo_position(0)': LocalizedString.lookup(tr('Arm'), locale),
       'get_servo_position(3)': LocalizedString.lookup(tr('Claw'), locale),
-      'motor 0': LocalizedString.lookup(tr('Left wheel'), locale),
-      'motor 3': LocalizedString.lookup(tr('Right wheel'), locale),
+      'motor 0': LocalizedString.lookup(tr('Right wheel'), locale),
+      'motor 3': LocalizedString.lookup(tr('Left wheel'), locale),
       'analog(0)': LocalizedString.lookup(tr('Rangefinder'), locale),
       'analog(1)': LocalizedString.lookup(tr('Reflectance'), locale),
       'analog(2)': LocalizedString.lookup(tr('Light'), locale),
