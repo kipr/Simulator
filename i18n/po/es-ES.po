@@ -3222,7 +3222,7 @@ msgid "Right Traffic Cone"
 msgstr "Cono de tráfico derecho"
 
 msgid "Left Traffic Cone"
-msgstr Cono de tráfico izquierdo
+msgstr "Cono de tráfico izquierdo"
 
 msgid "Left Basket"
 msgstr "Cesta izquierda"

@@ -3124,64 +3124,64 @@ msgid "Wave the servo"
 msgstr "がサーボを振ってください"
 
 msgid "2026 Fall Game Table"
-msgstr ""
+msgstr "２０２６秋のゲームテーブル"
 
 msgid "Blue Pom #%d"
-msgstr ""
+msgstr "青いポム＃%d"
 
 msgid "Orange Pom #%d"
-msgstr ""
+msgstr "オレンジのポム＃%d"
 
 msgid "Random Pom #%d"
-msgstr ""
+msgstr "でたらめなポン #%d"
 
 msgid "Raised Dock Pallet #1"
-msgstr ""
+msgstr "高床式ドックパレット #1"
 
 msgid "Raised Dock Pallet #2"
-msgstr ""
+msgstr "高床式ドックパレット #2"
 
 msgid "Storage Pallet #1"
-msgstr ""
+msgstr "保管用パレット #1"
 
 msgid "Storage Pallet #2"
-msgstr ""
+msgstr "保管用パレット #2"
 
 msgid "Left Stack Cube #%d"
-msgstr ""
+msgstr "左積みキューブ #%d"
 
 msgid "Right Stack Cube #%d"
-msgstr ""
+msgstr "右積みキューブ #%d"
 
 msgid "Red Cube (4 inch)"
-msgstr ""
+msgstr "赤キューブ (4インチ)"
 
 msgid "Brown Cube (4 inch)"
-msgstr ""
+msgstr "茶キューブ (4インチ)"
 
 msgid "Green Cube (4 inch)"
-msgstr ""
+msgstr "緑キューブ (4インチ)"
 
 msgid "Right Traffic Cone"
-msgstr ""
+msgstr "右側交通コーン"
 
 msgid "Left Traffic Cone"
-msgstr ""
+msgstr "左側交通コーン"
 
 msgid "Left Basket"
-msgstr ""
+msgstr "左側バスケット"
 
 msgid "Right Basket"
-msgstr ""
+msgstr "右側バスケット"
 
 msgid "Left PCV #%d"
-msgstr ""
+msgstr "左側PCV #%d"
 
 msgid "Right PCV #%d"
-msgstr ""
+msgstr "右側PCV #%d"
 
 msgid "2026 Fall Botball game table sandbox"
-msgstr ""
+msgstr "2026年秋 ボットボール競技テーブル用サンドボックス"
 
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
