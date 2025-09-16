@@ -28,7 +28,7 @@ const ROBOT: Node.Robot = {
 };
 
 
-const JBC_MAT_ORIGIN: ReferenceFramewUnits = {
+export const JBC_MAT_ORIGIN: ReferenceFramewUnits = {
   position: {
     x: Distance.centimeters(0),
     y: Distance.centimeters(-7),
@@ -78,15 +78,6 @@ export function createBaseSceneSurfaceA(): Scene {
     },
     nodes: {
       'robot': ROBOT,
-      'matA': {
-        type: 'from-jbc-template',
-        templateId: 'matA',
-        name: tr('JBC Mat A'),
-        startingOrigin: JBC_MAT_ORIGIN,
-        origin: JBC_MAT_ORIGIN,
-        visible: true,
-        editable: false,
-      },
       'ground': {
         type: 'object',
         geometryId: 'ground',
@@ -115,6 +106,15 @@ export function createBaseSceneSurfaceA(): Scene {
         startingOrigin: LIGHT_ORIGIN,
         origin: LIGHT_ORIGIN,
         visible: true
+      },
+      'matA': {
+        type: 'from-jbc-template',
+        templateId: 'matA',
+        name: tr('JBC Mat A'),
+        startingOrigin: JBC_MAT_ORIGIN,
+        origin: JBC_MAT_ORIGIN,
+        visible: true,
+        editable: false,
       },
     },
     camera: Camera.arcRotate({

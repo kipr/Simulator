@@ -11,10 +11,12 @@ import LocalizedString from '../util/LocalizedString';
 
 import { State as ReduxState } from '../state';
 import tr from '@i18n';
+import { jsPDF } from "jspdf";
 
 import db from '../db';
+import { createRef } from 'react';
 
-const SELFIDENTIFIER = "My Scores!" ;
+const SELFIDENTIFIER = "My Scores!";
 
 interface Challenge {
   name: LocalizedString;
@@ -36,6 +38,7 @@ interface User {
   scores: Score[];
   src?: string;
   backgroundColor?: string;
+  altId?: string;
 }
 
 export interface LeaderboardPublicProps extends StyleProps, ThemeProps {
@@ -53,6 +56,11 @@ interface LeaderboardState {
   challenges: Record<string, Challenge>;
 }
 
+interface ClickProps {
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  disabled?: boolean;
+}
+
 type Props = LeaderboardPublicProps & LeaderboardPrivateProps;
 type State = LeaderboardState;
 
@@ -62,7 +70,7 @@ const PageContainer = styled('div', (props: ThemeProps) => ({
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
 }));
-  
+
 const LeaderboardContainer = styled("div", (props: ThemeProps) => ({
   backgroundColor: props.theme.backgroundColor,
   width: 'calc(100vw - 2px)',
@@ -82,6 +90,14 @@ const LeaderboardTitleContainer = styled('div', {
   flexDirection: 'column',
   margin: '20px',
   // border: '2px solid blue',
+});
+
+const UserInfoContainer = styled('div', {
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '10px',
 });
 
 const TableHeaderContainer = styled('div', {
@@ -113,9 +129,9 @@ const TableHeader = styled('th', {
   textAlign: 'center',
   width: '50px',
 });
-const StyledTableRow = styled('tr', (props: { key: string, self: string }) => ({
+const StyledTableRow = styled('tr', (props: { key: string, self: string, ref: React.Ref<HTMLTableRowElement> }) => ({
   borderBottom: '1px solid #ddd',
-  backgroundColor: props.self === SELFIDENTIFIER  ? '#555' : '#000', // Highlight the current user
+  backgroundColor: props.self === SELFIDENTIFIER ? '#555' : '#000', // Highlight the current user
 }));
 const TableRow = styled('tr', {
   borderBottom: '1px solid #ddd',
@@ -125,6 +141,35 @@ const TableCell = styled('td', {
   padding: '6px',
   textAlign: 'center',
 });
+
+const ButtonContainer = styled('div', {
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '10px',
+  gap: '10px',
+});
+
+const Button = styled('div', (props: ThemeProps & ClickProps) => ({
+  display: 'flex',
+  alignItems: 'center',
+  flexDirection: 'row',
+  padding: '10px',
+  backgroundColor: '#2c2c2cff',
+  borderBottom: `1px solid ${props.theme.borderColor}`,
+  ':last-child': {
+    borderBottom: 'none'
+  },
+  opacity: props.disabled ? '0.5' : '1.0',
+  fontWeight: 400,
+  ':hover': {
+    cursor: 'pointer',
+    backgroundColor: `rgba(255, 255, 255, 0.1)`
+  },
+  userSelect: 'none',
+  transition: 'background-color 0.2s, opacity 0.2s'
+}));
 
 
 class Leaderboard extends React.Component<Props, State> {
@@ -139,6 +184,14 @@ class Leaderboard extends React.Component<Props, State> {
 
     void this.onLog();
   }
+
+  private myScoresRef = createRef<HTMLTableRowElement>();
+
+  private scrollToMyScores = () => {
+    if (this.myScoresRef.current) {
+      this.myScoresRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   private onLog = async () => {
     const res = await db.list('challenge_completion');
@@ -200,11 +253,21 @@ class Leaderboard extends React.Component<Props, State> {
 
     users = this.anonomizeUsers(users);
 
+
     for (const [userId, userChallenges] of Object.entries(userData)) {
-      const user: User = {
+      let user: User = {
         id: userId,
         name: SELFIDENTIFIER,
         scores: [],
+
+      };
+
+      // Get anonymous name to display
+      const userRecord: Record<string, User> = { [userId]: user };
+      const altUser = this.anonomizeUsers(userRecord)[userId];
+      user = {
+        ...user,
+        altId: altUser?.name
       };
 
       for (const [challengeId, challenge] of Object.entries(userChallenges as ChallengeData[])) {
@@ -225,11 +288,11 @@ class Leaderboard extends React.Component<Props, State> {
 
     return { users, challenges };
   };
-  
+
   private getDefaultChallenges = (): Record<string, Challenge> => {
     const challenges: Record<string, Challenge> = {};
     const suffixes = ['a', 'b', 'c'];
-  
+
     for (let i = 1; i <= 12; i++) {
       suffixes.forEach((suffix) => {
         const id = `challenge${i}${suffix}`;
@@ -239,19 +302,19 @@ class Leaderboard extends React.Component<Props, State> {
         };
       });
     }
-  
+
     return challenges;
   };
 
   private getDefaultUsers = (): Record<string, User> => {
     const users: Record<string, User> = {};
     const challengeIds = Object.keys(this.getDefaultChallenges());
-  
+
     for (let i = 1; i <= 20; i++) {
       const scores: Score[] = [];
       const numChallenges = Math.floor(Math.random() * 10) + 1; // Each user will complete between 1 and 5 challenges
       const completedChallenges = new Set<string>();
-  
+
       while (completedChallenges.size < numChallenges) {
         const randomChallengeId = challengeIds[Math.floor(Math.random() * challengeIds.length)];
         if (!completedChallenges.has(randomChallengeId)) {
@@ -265,14 +328,15 @@ class Leaderboard extends React.Component<Props, State> {
           scores.push(score);
         }
       }
-  
+
       users[`user${i}`] = {
         id: `user${i}`,
         name: `User ${i}`,
         scores: scores,
       };
+
     }
-  
+
     return users;
   };
 
@@ -291,12 +355,12 @@ class Leaderboard extends React.Component<Props, State> {
   private anonomizeUsers = (users: Record<string, User>): Record<string, User> => {
     const anonomizedUsers: Record<string, User> = {};
 
-    const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'white', 
+    const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'white',
       'cyan', 'magenta', 'lime', 'teal', 'indigo', 'violet', 'gold', 'silver', 'bronze', 'maroon', 'tan', 'navy', 'aqua'];
     const elements = ['fire', 'water', 'earth', 'air', 'light', 'dark', 'metal', 'wood', 'ice',
       'shadow', 'spirit', 'void', 'plasma', 'gravity', 'time', 'space', 'aether', 'chaos', 'order'];
-    const animals = ['tiger', 'bear', 'wolf', 'eagle', 'shark', 'whale', 'lion', 'panther', 'jaguar', 
-      'fox', 'owl', 'hawk', 'dolphin', 'rhino', 'hippo', 'giraffe', 'zebra', 
+    const animals = ['tiger', 'bear', 'wolf', 'eagle', 'shark', 'whale', 'lion', 'panther', 'jaguar',
+      'fox', 'owl', 'hawk', 'dolphin', 'rhino', 'hippo', 'giraffe', 'zebra',
       'koala', 'panda', 'leopard', 'lynx', 'bison', 'buffalo', 'camel',
       'raven', 'sparrow', 'swan', 'toucan', 'vulture', 'walrus', 'yak'];
 
@@ -305,12 +369,12 @@ class Leaderboard extends React.Component<Props, State> {
     const stringTo32BitInt = (id: string): number => {
       const FNV_PRIME = 0x01000193; // 16777619
       let hash = 0x811c9dc5; // FNV offset basis
-  
+
       for (let i = 0; i < id.length; i++) {
         hash ^= id.charCodeAt(i);       // XOR with byte value of character
         hash = (hash * FNV_PRIME) >>> 0; // Multiply by FNV prime and apply unsigned right shift to keep it 32-bit
       }
-  
+
       return hash >>> 0; // Ensure the result is a positive 32-bit integer
     };
 
@@ -374,17 +438,96 @@ class Leaderboard extends React.Component<Props, State> {
       return subsetA.localeCompare(subsetB);
     });
   };
-  
+
+  private getCurrentUser = (): User => {
+    const { users } = this.state;
+    let currentUser: User;
+    const tokenManager = db.tokenManager;
+    if (tokenManager) {
+      const auth_ = tokenManager.auth();
+      const currentUserAuth_ = auth_.currentUser;
+      currentUser = {
+        id: currentUserAuth_.uid,
+        name: currentUserAuth_.displayName || 'Unknown',
+        scores: Object.values(users).find(u => u.id === currentUserAuth_.uid)?.scores || [],
+        altId: Object.values(users).find(u => u.id === currentUserAuth_.uid)?.altId || 'Unknown'
+      };
+
+    }
+
+
+    return currentUser || null;
+  };
+
+  private getCurrentUserEmail = (): string | null => {
+
+    const tokenManager = db.tokenManager;
+    if (tokenManager) {
+      const auth_ = tokenManager.auth();
+      const currentUserAuth_ = auth_.currentUser;
+      if (currentUserAuth_) {
+
+        return currentUserAuth_.email;
+      }
+    }
+    return null;
+  };
+
+  private exportUserScores = (user: User) => {
+    const { locale } = this.props;
+    const pdfDoc = new jsPDF();
+
+
+    // Title
+    pdfDoc.setFontSize(18);
+    pdfDoc.text('KIPR Challenge Scores', 105, 20, { align: 'center' });
+
+    // Basic Info
+    pdfDoc.setFontSize(14);
+    pdfDoc.text(`Name: ${user.name}`, 20, 40);
+    pdfDoc.text(`Alias: ${user.altId || 'Unknown'}`, 20, 50);
+    pdfDoc.text(`Email: ${this.getCurrentUserEmail() || 'Unknown'}`, 20, 60);
+
+    // Sort scores numerically
+    const sortedScores = [...user.scores].sort((a, b) => {
+      const nameA = a.name[locale] || a.name["en-US"] || "";
+      const nameB = b.name[locale] || b.name["en-US"] || "";
+
+      const numA = parseInt(/\d+/.exec(nameA)?.[0] || "0", 10);
+      const numB = parseInt(/\d+/.exec(nameB)?.[0] || "0", 10);
+
+      return numA - numB;
+    });
+
+    // Scores
+    pdfDoc.setFontSize(12);
+    pdfDoc.text('Scores:', 20, 70);
+
+    sortedScores.forEach((score, i) => {
+      pdfDoc.text(
+        `${LocalizedString.lookup(tr(`${score.name[locale]}`), locale) || "Unnamed"} - ${score.completed ? "Completed" : "Not Completed"
+        }`,
+        30,
+        80 + i * 10
+      );
+    });
+
+    pdfDoc.save(`${user.name}-scores.pdf`);
+
+  };
+
   private renderLeaderboard = () => {
     const users = this.state.users || this.getDefaultUsers();
     const sortedUsers = this.orderUsersByCompletedChallenges(users);
     const challenges = this.state.challenges || this.getDefaultChallenges();
-  
+
     if (!sortedUsers) return null;
-  
+
     const userArray = Object.values(sortedUsers);
+
     const challengeArray = this.customSort(Object.keys(challenges));
-  
+    this.getCurrentUser();
+
     return (
       <Table>
         <thead>
@@ -405,7 +548,7 @@ class Leaderboard extends React.Component<Props, State> {
         </thead>
         <tbody>
           {userArray.map((user) => (
-            <StyledTableRow key={user.id} self={user.name}>
+            <StyledTableRow key={user.id} self={user.name} ref={user.name === SELFIDENTIFIER ? this.myScoresRef : null}>
               <TableCell>{user.name}</TableCell>
               {challengeArray.map((id) => {
                 const userScore = user.scores.find(score => score.name['en-US'] === challenges[id].name['en-US']);
@@ -437,7 +580,8 @@ class Leaderboard extends React.Component<Props, State> {
     const { style, locale } = props;
     const { selected } = state;
     const theme = DARK;
-
+    const currentUser = this.getCurrentUser();
+    const currentUserEmail = this.getCurrentUserEmail();
 
     return (
       <PageContainer style={style} theme={theme}>
@@ -445,6 +589,19 @@ class Leaderboard extends React.Component<Props, State> {
         <LeaderboardContainer style={style} theme={theme}>
           <LeaderboardTitleContainer>
             <h1>KIPR All Time Leaderboard</h1>
+            <UserInfoContainer>
+              <h2>User: </h2>
+              <h3>{currentUser?.name || 'Unknown'}</h3>
+              <h2>Alias: </h2>
+              <h3>{currentUser?.altId || 'Unknown'}</h3>
+              <h2>Email: </h2>
+              <h3>{currentUserEmail || 'Unknown'}</h3>
+            </UserInfoContainer>
+            <ButtonContainer>
+              <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> Export My Scores!</Button>
+              <Button theme={DARK} onClick={this.scrollToMyScores}> Scroll to My Scores!</Button>
+            </ButtonContainer>
+
           </LeaderboardTitleContainer>
           {this.renderLeaderboard()}
         </LeaderboardContainer>
