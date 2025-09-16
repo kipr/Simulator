@@ -486,16 +486,7 @@ class Leaderboard extends React.Component<Props, State> {
     pdfDoc.text(`Alias: ${user.altId || 'Unknown'}`, 20, 50);
     pdfDoc.text(`Email: ${this.getCurrentUserEmail() || 'Unknown'}`, 20, 60);
 
-    // Sort scores numerically
-    const sortedScores = [...user.scores].sort((a, b) => {
-      const nameA = a.name[locale] || a.name["en-US"] || "";
-      const nameB = b.name[locale] || b.name["en-US"] || "";
-
-      const numA = parseInt(/\d+/.exec(nameA)?.[0] || "0", 10);
-      const numB = parseInt(/\d+/.exec(nameB)?.[0] || "0", 10);
-
-      return numA - numB;
-    });
+    const sortedScores = this.customSort(user.scores.map(s => s.name['en-US'])).map(name => user.scores.find(s => s.name['en-US'] === name));
 
     // Scores
     pdfDoc.setFontSize(12);
