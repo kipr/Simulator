@@ -59,7 +59,7 @@ export const matAStartGeoms: Dict<Geometry> = {
     type: 'box',
     size: {
       x: Distance.feet(2),
-      y: Distance.centimeters(0.1),
+      y: Distance.centimeters(1),
       z: Distance.feet(1),
     },
   },
