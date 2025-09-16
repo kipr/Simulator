@@ -7,6 +7,7 @@ import { Distance, Mass } from "../../../util";
 import { PhysicsMotionType } from "@babylonjs/core";
 
 import { BB2025Templates, BB2025Geometries } from "./2025gameTableTemplates";
+import { BB2026Templates, BB2026Geometries } from "./2026gameTableTemplates";
 
 // TODO: Consider deep-freezing all of these objects
 
@@ -400,6 +401,7 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'jbc_cup_green': jbcCupGreenTemplate,
   'jbc_cup_pink': jbcCupPinkTemplate,
   ...BB2025Templates,
+  ...BB2026Templates,
 });
 
 
@@ -521,4 +523,5 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
     uri: '/static/object_binaries/jbc_cup_pink.glb'
   },
   ...BB2025Geometries,
+  ...BB2026Geometries,
 });

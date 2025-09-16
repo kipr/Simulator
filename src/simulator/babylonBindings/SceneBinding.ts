@@ -722,7 +722,7 @@ class SceneBinding {
         if (Math.abs(extents.x - extents.y) <= 0.0001 && Math.abs(extents.x - extents.z) <= 0.0001) {
           parameters.radius = extents.x / 2;
         } else {
-          parameters.radius = Math.max(extents.x, extents.y, extents.z);
+          parameters.radius = Math.max(extents.x, extents.y, extents.z) / 2;
         }
         break;
       }

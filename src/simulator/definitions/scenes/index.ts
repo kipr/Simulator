@@ -25,6 +25,7 @@ export * from './jbc23-Find-the-Black-Line';
 export * from './jbc24-Walk-the-Line';
 export * from './moonSandbox';
 export * from './tableSandbox';
+export * from './26fallTableSandbox';
 export * from './gcer25';
 // export * from './jbcGcer25-Find-The-Black-Line';
 // export * from './jbcGcer25-Sense-The-Can';

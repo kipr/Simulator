@@ -288,6 +288,7 @@ export type ScenesAction = (
 const DEFAULT_SCENES: Scenes = {
   jbcSandbox: Async.loaded({ value: JBC_SCENES.JBC_Sandbox }),
   moonSandbox: Async.loaded({ value: JBC_SCENES.Moon_Sandbox }),
+  fall26TableSandbox: Async.loaded({ value: JBC_SCENES.FALL_26_SANDBOX }),
   tableSandbox: Async.loaded({ value: JBC_SCENES.Table_Sandbox }),
   jbc0: Async.loaded({ value: JBC_SCENES.JBC_0 }),
   jbc1: Async.loaded({ value: JBC_SCENES.JBC_1 }),

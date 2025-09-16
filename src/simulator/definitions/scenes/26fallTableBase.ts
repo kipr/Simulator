@@ -11,21 +11,13 @@ import tr from '@i18n';
 import { PhysicsMotionType } from '@babylonjs/core';
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(100, 4, 100),
-  orientation: RotationwUnits.eulerDegrees(0, -90, 0),
-};
-
-const FRY_FLOOR_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(113, 17, -87),
-  orientation: RotationwUnits.eulerDegrees(90, 0, 0),
-};
-
-const INNER_FRYER_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(113, 27, -87),
+  position: Vector3wUnits.centimeters(0, 0, 0),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
 
 const GAME_TABLE_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(0, 13, 0),
+  position: Vector3wUnits.centimeters(15, -6, 30),
+  orientation: RotationwUnits.eulerDegrees(0, 180, 0),
   // scale: { x: 100, y: 100, z: 100 },
 };
 
@@ -43,10 +35,10 @@ const ROBOT: Node.Robot = {
   origin: ROBOT_ORIGIN
 };
 
-const GAME_TABLE_2025: Node.FromBBTemplate = {
+const GAME_TABLE_2026: Node.FromBBTemplate = {
   type: 'from-bb-template',
-  name: tr('2025 Game Table'),
-  templateId: 'game_table_2025',
+  name: tr('2026 Fall Game Table'),
+  templateId: 'gameTable2026',
   visible: true,
   editable: false,
   startingOrigin: GAME_TABLE_ORIGIN,
@@ -58,61 +50,10 @@ export function createBaseSceneSurface(): Scene {
     name: tr('Base Scene - 2025 Botball Game Table'),
     description: tr('A base scene. Intended to be augmented to create the full game table'),
     author: Author.organization('kipr'),
-    geometry: {
-      'game_table_2025': {
-        type: 'file',
-        uri: '/static/object_binaries/2025_game_table.glb'
-      },
-      'fry_floor': {
-        type: 'box',
-        size: {
-          x: Distance.inches(2.8),
-          y: Distance.inches(2.8),
-          z: Distance.inches(0.1),
-        },
-      },
-      'fryer_detection_box': {
-        type: 'box',
-        size: {
-          x: Distance.inches(3),
-          y: Distance.inches(3),
-          z: Distance.inches(3),
-        }
-      }
-    },
+    geometry: {},
     nodes: {
       'robot': ROBOT,
-      'game_table_2025': GAME_TABLE_2025,
-      'fry_floor': {
-        type: 'object',
-        geometryId: 'fry_floor',
-        name: tr('Fry floor'),
-        startingOrigin: FRY_FLOOR_ORIGIN,
-        origin: FRY_FLOOR_ORIGIN,
-        physics: {
-          type: 'box',
-          motionType: PhysicsMotionType.STATIC,
-          restitution: .1,
-          friction: .5,
-        },
-        editable: true,
-        visible: true,
-      },
-      'potato_detector': {
-        type: 'object',
-        geometryId: 'fryer_detection_box',
-        name: tr('Potato detector box'),
-        startingOrigin: INNER_FRYER_ORIGIN,
-        origin: INNER_FRYER_ORIGIN,
-        visible: false,
-        material: {
-          type: 'basic',
-          color: {
-            type: 'color3',
-            color: Color.rgb(0, 255, 0),
-          },
-        },
-      },
+      'game_table_2026': GAME_TABLE_2026,
       'light0': {
         type: 'point-light',
         intensity: 0.8,
@@ -130,9 +71,9 @@ export function createBaseSceneSurface(): Scene {
         z: Distance.meters(0.05),
       },
       position: {
-        x: Distance.meters(-1),
+        x: Distance.meters(1),
         y: Distance.meters(0.51),
-        z: Distance.meters(-1.5),
+        z: Distance.meters(1.5),
       }
     }),
     gravity: {

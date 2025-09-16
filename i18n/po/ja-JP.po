@@ -3123,6 +3123,66 @@ msgstr "後ろに行ってください"
 msgid "Wave the servo"
 msgstr "がサーボを振ってください"
 
+msgid "2026 Fall Game Table"
+msgstr "２０２６秋のゲームテーブル"
+
+msgid "Blue Pom #%d"
+msgstr "青いポム＃%d"
+
+msgid "Orange Pom #%d"
+msgstr "オレンジのポム＃%d"
+
+msgid "Random Pom #%d"
+msgstr "でたらめなポン #%d"
+
+msgid "Raised Dock Pallet #1"
+msgstr "高床式ドックパレット #1"
+
+msgid "Raised Dock Pallet #2"
+msgstr "高床式ドックパレット #2"
+
+msgid "Storage Pallet #1"
+msgstr "保管用パレット #1"
+
+msgid "Storage Pallet #2"
+msgstr "保管用パレット #2"
+
+msgid "Left Stack Cube #%d"
+msgstr "左積みキューブ #%d"
+
+msgid "Right Stack Cube #%d"
+msgstr "右積みキューブ #%d"
+
+msgid "Red Cube (4 inch)"
+msgstr "赤キューブ (4インチ)"
+
+msgid "Brown Cube (4 inch)"
+msgstr "茶キューブ (4インチ)"
+
+msgid "Green Cube (4 inch)"
+msgstr "緑キューブ (4インチ)"
+
+msgid "Right Traffic Cone"
+msgstr "右側交通コーン"
+
+msgid "Left Traffic Cone"
+msgstr "左側交通コーン"
+
+msgid "Left Basket"
+msgstr "左側バスケット"
+
+msgid "Right Basket"
+msgstr "右側バスケット"
+
+msgid "Left PCV #%d"
+msgstr "左側PCV #%d"
+
+msgid "Right PCV #%d"
+msgstr "右側PCV #%d"
+
+msgid "2026 Fall Botball game table sandbox"
+msgstr "2026年秋 ボットボール競技テーブル用サンドボックス"
+
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
 msgstr "変数"
