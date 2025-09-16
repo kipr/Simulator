@@ -413,29 +413,27 @@ class Leaderboard extends React.Component<Props, State> {
   };
 
   private customSort = (list: string[]): string[] => {
+    const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
+
+    const isJbc = (s: string) => /^jbc\d+/i.test(s); // case-insensitive test
+
     return list.sort((a, b) => {
-      // Regular expression to extract name, number, and subset
-      const regex = /^([a-zA-Z]+)(\d+)?([a-zA-Z]*)$/;
+      const aIsJbc = isJbc(a);
+      const bIsJbc = isJbc(b);
 
-      const matchA = regex.exec(a);
-      const matchB = regex.exec(b);
+      // 1. Prioritize jbc-prefixed items
+      if (aIsJbc && !bIsJbc) return -1;
+      if (!aIsJbc && bIsJbc) return 1;
 
-      if (!matchA || !matchB) return 0;
+      // 2. If both are jbc-prefixed, sort numerically by suffix
+      if (aIsJbc && bIsJbc) {
+        const numA = parseInt(a.replace(/^jbc/i, ""), 10);
+        const numB = parseInt(b.replace(/^jbc/i, ""), 10);
+        return numA - numB;
+      }
 
-      const [, nameA, numA, subsetA] = matchA;
-      const [, nameB, numB, subsetB] = matchB;
-
-      // Compare the names alphabetically
-      if (nameA !== nameB) return nameA.localeCompare(nameB);
-
-      // Compare the numbers numerically
-      const numValueA = numA ? parseInt(numA, 10) : 0;
-      const numValueB = numB ? parseInt(numB, 10) : 0;
-
-      if (numValueA !== numValueB) return numValueA - numValueB;
-
-      // Compare the subsets alphabetically
-      return subsetA.localeCompare(subsetB);
+      // 3. Otherwise natural alphabetical sort
+      return collator.compare(a, b);
     });
   };
 
@@ -488,16 +486,7 @@ class Leaderboard extends React.Component<Props, State> {
     pdfDoc.text(`Alias: ${user.altId || 'Unknown'}`, 20, 50);
     pdfDoc.text(`Email: ${this.getCurrentUserEmail() || 'Unknown'}`, 20, 60);
 
-    // Sort scores numerically
-    const sortedScores = [...user.scores].sort((a, b) => {
-      const nameA = a.name[locale] || a.name["en-US"] || "";
-      const nameB = b.name[locale] || b.name["en-US"] || "";
-
-      const numA = parseInt(/\d+/.exec(nameA)?.[0] || "0", 10);
-      const numB = parseInt(/\d+/.exec(nameB)?.[0] || "0", 10);
-
-      return numA - numB;
-    });
+    const sortedScores = this.customSort(user.scores.map(s => s.name['en-US'])).map(name => user.scores.find(s => s.name['en-US'] === name));
 
     // Scores
     pdfDoc.setFontSize(12);
