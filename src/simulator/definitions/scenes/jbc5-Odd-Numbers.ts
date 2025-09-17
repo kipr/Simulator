@@ -22,78 +22,78 @@ let circlesMap = new Map([
 ]);
 
 // When the robot is touching a circle with an odd number, the circle glows
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
+const cb = (type, otherNodeId) => {
   console.log('Robot intersects!', type, otherNodeId);
   if (evenCircles.has(otherNodeId)) {
-    scene.setChallengeEventValue('touchedEvenCircle', true);
+    scene.setChallengeEventValue('touchedEvenCircle', false);
     return;
   }
   else {
     switch (otherNodeId) {
-      case 'circle1':
-        circlesMap.set(otherNodeId, true);
-        scene.setChallengeEventValue('circle1Touched', true);
-        setNodeVisible(otherNodeId, true);
-        circles.delete('circle1');
+      case 'circle0':
+        circlesMap.set(otherNodeId, false);
+        scene.setChallengeEventValue('circle0Touched', true);
+        setNodeVisible(otherNodeId, false);
+        circles.delete('circle0');
         break;
-      case 'circle3':
-        if (circlesMap.get('circle1')) {
-          circlesMap.set(otherNodeId, true);
-          scene.setChallengeEventValue('circle3Touched', true);
-          setNodeVisible(otherNodeId, true);
+      case 'circle2':
+        if (circlesMap.get('circle0')) {
+          circlesMap.set(otherNodeId, false);
+          scene.setChallengeEventValue('circle2Touched', true);
+          setNodeVisible(otherNodeId, false);
           circles.delete(otherNodeId);
           break;
         }
         else {
-          scene.setChallengeEventValue('wrongOrder', true);
+          scene.setChallengeEventValue('wrongOrder', false);
           break;
         }
-      case 'circle5':
-        if (circlesMap.get('circle3')) {
-          circlesMap.set(otherNodeId, true);
-          scene.setChallengeEventValue('circle5Touched', true);
-          setNodeVisible(otherNodeId, true);
+      case 'circle4':
+        if (circlesMap.get('circle2')) {
+          circlesMap.set(otherNodeId, false);
+          scene.setChallengeEventValue('circle4Touched', true);
+          setNodeVisible(otherNodeId, false);
           circles.delete(otherNodeId);
           break;
         }
         else {
-          scene.setChallengeEventValue('wrongOrder', true);
+          scene.setChallengeEventValue('wrongOrder', false);
           break;
         }
-      case 'circle7':
-        if (circlesMap.get('circle5')) {
-          circlesMap.set(otherNodeId, true);
-          scene.setChallengeEventValue('circle7Touched', true);
-          setNodeVisible(otherNodeId, true);
+      case 'circle6':
+        if (circlesMap.get('circle4')) {
+          circlesMap.set(otherNodeId, false);
+          scene.setChallengeEventValue('circle6Touched', true);
+          setNodeVisible(otherNodeId, false);
           circles.delete(otherNodeId);
           break;
         }
         else {
-          scene.setChallengeEventValue('wrongOrder', true);
+          scene.setChallengeEventValue('wrongOrder', false);
           break;
         }
-      case 'circle9':
-        if (circlesMap.get('circle7')) {
-          circlesMap.set(otherNodeId, true);
-          scene.setChallengeEventValue('circle9Touched', true);
-          setNodeVisible(otherNodeId, true);
+      case 'circle8':
+        if (circlesMap.get('circle6')) {
+          circlesMap.set(otherNodeId, false);
+          scene.setChallengeEventValue('circle8Touched', true);
+          setNodeVisible(otherNodeId, false);
           circles.delete(otherNodeId);
           break;
         }
         else {
-          scene.setChallengeEventValue('wrongOrder', true);
+          scene.setChallengeEventValue('wrongOrder', false);
           break;
         }
-      case 'circle11':
-        if (circlesMap.get('circle9')) {
-          circlesMap.set(otherNodeId, true);
-          scene.setChallengeEventValue('circle11Touched', true);
-          setNodeVisible(otherNodeId, true);
+      case 'circle10':
+        if (circlesMap.get('circle8')) {
+          circlesMap.set(otherNodeId, false);
+          scene.setChallengeEventValue('circle10Touched', true);
+          setNodeVisible(otherNodeId, false);
           circles.delete(otherNodeId);
           break;
         }
         else {
-          scene.setChallengeEventValue('wrongOrder', true);
+          scene.setChallengeEventValue('wrongOrder', false);
           break;
         }
       default:
@@ -101,7 +101,10 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
         break;
     }
   }
-}, new Set([...circles, ...evenCircles]));
+}
+scene.addOnIntersectionListener('left_wheel_link', cb, new Set([...circles, ...evenCircles]));
+scene.addOnIntersectionListener('right_wheel_link', cb, new Set([...circles, ...evenCircles]));
+
 `;
 
 export const JBC_5: Scene = {
