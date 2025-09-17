@@ -21,79 +21,78 @@ let circlesMap = new Map([
   ['circle11', false],
 ]);
 
-// When the robot is touching a circle with an odd number, the circle glows
 const cb = (type, otherNodeId) => {
   console.log('Robot intersects!', type, otherNodeId);
   if (evenCircles.has(otherNodeId)) {
-    scene.setChallengeEventValue('touchedEvenCircle', false);
+    scene.setChallengeEventValue('touchedEvenCircle', true);
     return;
   }
   else {
     switch (otherNodeId) {
-      case 'circle0':
-        circlesMap.set(otherNodeId, false);
-        scene.setChallengeEventValue('circle0Touched', true);
-        setNodeVisible(otherNodeId, false);
-        circles.delete('circle0');
+      case 'circle1':
+        circlesMap.set(otherNodeId, true);
+        scene.setChallengeEventValue('circle1Touched', true);
+        setNodeVisible(otherNodeId, true);
+        circles.delete('circle1');
         break;
-      case 'circle2':
-        if (circlesMap.get('circle0')) {
-          circlesMap.set(otherNodeId, false);
-          scene.setChallengeEventValue('circle2Touched', true);
-          setNodeVisible(otherNodeId, false);
+      case 'circle3':
+        if (circlesMap.get('circle1')) {
+          circlesMap.set(otherNodeId, true);
+          scene.setChallengeEventValue('circle3Touched', true);
+          setNodeVisible(otherNodeId, true);
           circles.delete(otherNodeId);
           break;
         }
         else {
-          scene.setChallengeEventValue('wrongOrder', false);
+          scene.setChallengeEventValue('wrongOrder', true);
           break;
         }
-      case 'circle4':
-        if (circlesMap.get('circle2')) {
-          circlesMap.set(otherNodeId, false);
-          scene.setChallengeEventValue('circle4Touched', true);
-          setNodeVisible(otherNodeId, false);
+      case 'circle5':
+        if (circlesMap.get('circle3')) {
+          circlesMap.set(otherNodeId, true);
+          scene.setChallengeEventValue('circle5Touched', true);
+          setNodeVisible(otherNodeId, true);
           circles.delete(otherNodeId);
           break;
         }
         else {
-          scene.setChallengeEventValue('wrongOrder', false);
+          scene.setChallengeEventValue('wrongOrder', true);
           break;
         }
-      case 'circle6':
-        if (circlesMap.get('circle4')) {
-          circlesMap.set(otherNodeId, false);
-          scene.setChallengeEventValue('circle6Touched', true);
-          setNodeVisible(otherNodeId, false);
+      case 'circle7':
+        if (circlesMap.get('circle5')) {
+          circlesMap.set(otherNodeId, true);
+          scene.setChallengeEventValue('circle7Touched', true);
+          setNodeVisible(otherNodeId, true);
           circles.delete(otherNodeId);
           break;
         }
         else {
-          scene.setChallengeEventValue('wrongOrder', false);
+          scene.setChallengeEventValue('wrongOrder', true);
           break;
         }
-      case 'circle8':
-        if (circlesMap.get('circle6')) {
-          circlesMap.set(otherNodeId, false);
-          scene.setChallengeEventValue('circle8Touched', true);
-          setNodeVisible(otherNodeId, false);
+      case 'circle9':
+        if (circlesMap.get('circle7')) {
+          circlesMap.set(otherNodeId, true);
+          scene.setChallengeEventValue('circle9Touched', true);
+          setNodeVisible(otherNodeId, true);
           circles.delete(otherNodeId);
           break;
         }
         else {
-          scene.setChallengeEventValue('wrongOrder', false);
+          scene.setChallengeEventValue('wrongOrder', true);
           break;
         }
-      case 'circle10':
-        if (circlesMap.get('circle8')) {
-          circlesMap.set(otherNodeId, false);
-          scene.setChallengeEventValue('circle10Touched', true);
-          setNodeVisible(otherNodeId, false);
+      case 'circle11':
+        if (circlesMap.get('circle9')) {
+          circlesMap.set(otherNodeId, true);
+          scene.setChallengeEventValue('circle11Touched', true);
+          setNodeVisible(otherNodeId, true);
           circles.delete(otherNodeId);
           break;
         }
         else {
-          scene.setChallengeEventValue('wrongOrder', false);
+          scene.setChallengeEventValue('wrongOrder', true);
           break;
         }
       default:
@@ -102,9 +101,10 @@ const cb = (type, otherNodeId) => {
     }
   }
 }
+
+// When a wheel is touching a circle with an odd number, the circle glows
 scene.addOnIntersectionListener('left_wheel_link', cb, new Set([...circles, ...evenCircles]));
 scene.addOnIntersectionListener('right_wheel_link', cb, new Set([...circles, ...evenCircles]));
-
 `;
 
 export const JBC_5: Scene = {
