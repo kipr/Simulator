@@ -24,7 +24,7 @@ import LocalizedString from '../../util/LocalizedString';
 import tr from '@i18n';
 
 export interface OverlayLayoutProps extends LayoutProps {
-  
+
 }
 
 interface ReduxOverlayLayoutProps {
@@ -76,99 +76,114 @@ const transparentStyling = (theme: Theme): React.CSSProperties => ({
   backdropFilter: 'blur(16px)'
 });
 
-const ConsoleWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
+const ConsoleWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean }) => {
   const size = props.sizes[props.size];
+  const style: Record<string, string | undefined> = {};
+
   switch (size.type) {
-    case Size.Type.Minimized: return {
-      display: 'none'
-    };
-    case Size.Type.Maximized: return {
-      gridColumn: '1 / span 3',
-      gridRow: props.$challenge ? '1 / span 3' : '1 / span 2',
-      ...transparentStyling(props.theme)
-    };
-    case Size.Type.Miniature: return {
-      gridColumn: 1,
-      gridRow: props.$challenge ? 3 : 2,
-      ...transparentStyling(props.theme)
-    };
+    case Size.Type.Minimized:
+      style.display = 'none';
+      break;
+    case Size.Type.Maximized:
+      style.gridColumn = '1 / span 3';
+      style.gridRow = props.$challenge ? '1 / span 3' : '1 / span 2';
+      Object.assign(style, transparentStyling(props.theme));
+      break;
+    case Size.Type.Miniature:
+      style.gridColumn = '1';
+      style.gridRow = props.$challenge ? '3' : '2';
+      Object.assign(style, transparentStyling(props.theme));
+      break;
     default:
-    case Size.Type.Partial: return {
-      gridColumn: '1 / span 2',
-      gridRow: props.$challenge ? 3 : 2,
-      ...transparentStyling(props.theme)
-    };
-  } 
+    case Size.Type.Partial:
+      style.gridColumn = '1 / span 2';
+      style.gridRow = props.$challenge ? '3' : '2';
+      Object.assign(style, transparentStyling(props.theme));
+      break;
+  }
+
+  return style;
 });
 
 const EditorWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
+  const style: Record<string, string | undefined> = {};
+
   switch (size.type) {
-    case Size.Type.Minimized: return {
-      display: 'none'
-    };
-    case Size.Type.Maximized: return {
-      gridColumn: '1 / span 3',
-      gridRow: props.$challenge ? '1 / span 3' : '1 / span 2',
-      ...transparentStyling(props.theme)
-    };
-    case Size.Type.Miniature: return {
-      gridColumn: 1,
-      gridRow: props.$challenge ? '1 / span 2' : 1,
-      ...transparentStyling(props.theme)
-    };
+    case Size.Type.Minimized:
+      style.display = 'none';
+      break;
+    case Size.Type.Maximized:
+      style.gridColumn = '1 / span 3';
+      style.gridRow = props.$challenge ? '1 / span 3' : '1 / span 2';
+      Object.assign(style, transparentStyling(props.theme));
+      break;
+    case Size.Type.Miniature:
+      style.gridColumn = '1';
+      style.gridRow = props.$challenge ? '1 / span 2' : '1';
+      Object.assign(style, transparentStyling(props.theme));
+      break;
     default:
-    case Size.Type.Partial: return {
-      gridColumn: '1 / span 2',
-      gridRow: props.$challenge ? '1 / span 2' : 1,
-      ...transparentStyling(props.theme)
-    };
+    case Size.Type.Partial:
+      style.gridColumn = '1 / span 2';
+      style.gridRow = props.$challenge ? '1 / span 2' : '1';
+      Object.assign(style, transparentStyling(props.theme));
+      break;
   }
+  return style;
 });
 
 const InfoWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
+  const style: Record<string, string | undefined> = {};
+
   switch (size.type) {
-    case Size.Type.Minimized: return {
-      display: 'none'
-    };
+    case Size.Type.Minimized:
+      style.display = 'none';
+      break;
     default:
-    case Size.Type.Partial: return {
-      gridColumn: 3,
-      gridRow: 1,
-      ...transparentStyling(props.theme)
-    };
+    case Size.Type.Partial:
+      style.gridColumn = '3';
+      style.gridRow = '1';
+      Object.assign(style, transparentStyling(props.theme));
+      break;
   }
+  return style;
 });
 
 const ChallengeWidget = styled(Widget, (props: WidgetProps) => {
   const size = props.sizes[props.size];
+  const style: Record<string, string | undefined> = {};
   switch (size.type) {
-    case Size.Type.Minimized: return {
-      display: 'none'
-    };
+    case Size.Type.Minimized:
+      style.display = 'none';
+      break;
     default:
-    case Size.Type.Partial: return {
-      gridColumn: 3,
-      gridRow: 2,
-      ...transparentStyling(props.theme)
-    };
+    case Size.Type.Partial:
+      style.gridColumn = '3';
+      style.gridRow = '2';
+      Object.assign(style, transparentStyling(props.theme));
+      break;
   }
+
+  return style;
 });
 
 const WorldWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
+  const style: Record<string, string | undefined> = {};
   switch (size.type) {
-    case Size.Type.Minimized: return {
-      display: 'none'
-    };
+    case Size.Type.Minimized:
+      style.display = 'none';
+      break;
     default:
-    case Size.Type.Partial: return {
-      gridColumn: 3,
-      gridRow: props.$challenge ? 3 : 2,
-      ...transparentStyling(props.theme)
-    };
+    case Size.Type.Partial:
+      style.gridColumn = '3';
+      style.gridRow = props.$challenge ? '3' : '2';
+      Object.assign(style, transparentStyling(props.theme));
+      break;
   }
+  return style;
 });
 
 const EDITOR_SIZES: Size[] = [Size.MINIATURE_LEFT, Size.PARTIAL_LEFT, Size.MAXIMIZED, Size.MINIMIZED];
@@ -179,7 +194,7 @@ const CONSOLE_SIZES: Size[] = [Size.MINIATURE_LEFT, Size.PARTIAL_DOWN, Size.MAXI
 
 const sizeDict = (sizes: Size[]) => {
   const forward: { [type: number]: number } = {};
-  
+
   for (let i = 0; i < sizes.length; ++i) {
     const size = sizes[i];
     forward[size.type] = i;
@@ -216,7 +231,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
 
     let { infoSize, consoleSize, worldSize, challengeSize } = this.state;
 
-    
+
     switch (size.type) {
       case Size.Type.Maximized: {
         infoSize = Size.Type.Minimized;
@@ -265,7 +280,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
     const size = CONSOLE_SIZES[index];
 
     let { infoSize, editorSize, worldSize, challengeSize } = this.state;
-    
+
     switch (size.type) {
       case Size.Type.Maximized: {
         infoSize = Size.Type.Minimized;
@@ -318,7 +333,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
 
   private onRobotOriginChange_ = (origin: ReferenceFramewUnits) => {
     const { scene, onNodeChange } = this.props;
-    
+
     const latestScene = Async.latestValue(scene);
 
     if (!latestScene) return;
@@ -333,7 +348,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
 
   render() {
     const { props } = this;
-    
+
     const {
       style,
       className,
@@ -526,7 +541,7 @@ export const OverlayLayoutRedux = connect((state: ReduxState, { sceneId }: Layou
   const scene = Async.latestValue(asyncScene);
   let robots: Dict<Node.Robot> = {};
   if (scene) robots = Scene.robots(scene);
-  
+
   return {
     robots,
     locale: state.i18n.locale,

@@ -8,7 +8,7 @@ export type DrawFunction = (size: RawVector2) => React.ReactNode;
 
 export interface SvgProps extends StyleProps {
   draw: DrawFunction;
-  
+
   onMouseDown?: (event: React.MouseEvent) => void;
   onMouseUp?: (event: React.MouseEvent) => void;
   onMouseEnter?: (event: React.MouseEvent) => void;
@@ -36,8 +36,8 @@ const Container = styled('svg', (props: { $width: number, $height: number }) => 
   position: 'absolute',
   top: 0,
   left: 0,
-  width: props.$width,
-  height: props.$height
+  width: `${props.$width}px`,
+  height: `${props.$height}px`,
 }));
 
 class Svg extends React.Component<Props, State> {
@@ -55,7 +55,7 @@ class Svg extends React.Component<Props, State> {
     this.containerRef_ = ref;
     if (!this.containerRef_) return;
     this.resizeListener_.observe(this.containerRef_);
-    
+
     const size = RawVector2.fromWidthHeight(this.containerRef_.getBoundingClientRect());
     this.setState({ size });
   };
@@ -75,7 +75,7 @@ class Svg extends React.Component<Props, State> {
       size: RawVector2.ZERO,
     };
   }
-  
+
   render() {
     const { props, state } = this;
     const { className, style, draw, svgRef, ...rest } = props;

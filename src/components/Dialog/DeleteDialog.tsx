@@ -30,7 +30,7 @@ type Props = DeleteDialogPublicProps & DeleteDialogPrivateProps;
 
 const Container = styled('div', (props: ThemeProps) => ({
   color: props.theme.color,
-  padding: `${props.theme.itemPadding * 2}px`, 
+  padding: `${props.theme.itemPadding * 2}px`,
 }));
 
 class DeleteDialog extends React.PureComponent<Props> {
@@ -47,7 +47,10 @@ class DeleteDialog extends React.PureComponent<Props> {
         <Container theme={theme}>
           {LocalizedString.lookup(Dict.map(tr('Are you sure you want to delete %s?'), (str: string) => sprintf(str, LocalizedString.lookup(name, locale))), locale)}
         </Container>
-        <DialogBar theme={theme} onAccept={onAccept}><FontAwesome icon={faTrash} /> {LocalizedString.lookup(tr('Delete'), locale)}</DialogBar>
+        <DialogBar theme={theme} onAccept={onAccept}>
+          <FontAwesome icon={faTrash} />
+          {LocalizedString.lookup(tr('Delete'), locale)}
+        </DialogBar>
       </Dialog>
     );
   }

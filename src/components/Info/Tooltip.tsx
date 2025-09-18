@@ -86,7 +86,7 @@ class Tooltip extends React.PureComponent<Props, State> {
       }
     }
 
-      
+
     if (!hit) contentHint.onClose();
 
     return false;
@@ -97,7 +97,7 @@ class Tooltip extends React.PureComponent<Props, State> {
 
   componentDidMount() {
     this.scheduleTick_();
-  
+
     this.onMouseMoveHandle_ = GLOBAL_EVENTS.add('onMouseMove', this.onMouseMove_);
 
     for (const activeTooltip of ACTIVE_TOOLTIPS) {
@@ -155,7 +155,7 @@ class Tooltip extends React.PureComponent<Props, State> {
         className={className}
         ref={this.bindRef_}
       >
-        {children}
+        {children as React.ReactNode}
       </Container>
     );
 
@@ -174,7 +174,7 @@ namespace Tooltip {
       Element,
       Position
     }
-    
+
     export interface Element {
       type: Type.Element;
       element: HTMLElement;
@@ -185,7 +185,7 @@ namespace Tooltip {
         type: Type.Element,
         element,
       });
-      
+
       export const position = (element: Element) => {
         const { left, right, top } = element.element.getBoundingClientRect();
         return RawVector2.create((left + right) / 2, top);
@@ -205,7 +205,7 @@ namespace Tooltip {
 
       export const position = (position: Position) => position.position;
     }
-    
+
     export const position = (target: Target) => {
       switch (target.type) {
         case Type.Element: return Element.position(target);
@@ -221,7 +221,7 @@ namespace Tooltip {
       NonInteractive,
       Interactive
     }
-    
+
     export interface NonInteractive {
       type: Type.NonInteractive;
     }
@@ -233,7 +233,7 @@ namespace Tooltip {
 
       onClose: () => void;
     }
-    
+
     export const interactive = (onClose: () => void) => ({
       type: Type.Interactive,
       onClose,

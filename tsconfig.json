@@ -12,9 +12,11 @@
     "paths": {
       "@i18n": ["util/i18n"],
       "state/*": ["state/*"]
-    }
+    },
+    "typeRoots": ["./node_modules/@types"]
   },
   "types": [
+    "node",
     "babylonjs",
     "babylonjs-loaders",
     "babylonjs-gltf2interface"

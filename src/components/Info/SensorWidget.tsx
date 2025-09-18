@@ -39,11 +39,11 @@ type Props = SensorWidgetProps;
 type State = SensorWidgetState;
 
 const Fieldset = styled('div', ({ theme }: ThemeProps) => ({
-  margin: 10,
-  paddingHorizontal: 10,
-  paddingBottom: 10,
-  borderRadius: 5,
-  borderWidth: 1,
+  margin: '10',
+  paddingHorizontal: '10',
+  paddingBottom: '10',
+  borderRadius: '5',
+  borderWidth: '1',
   borderColor: `${theme.borderColor}`,
   width: '100%',
 }));

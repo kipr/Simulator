@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Redirect, Route, Switch } from 'react-router';
 import { Unsubscribe } from 'firebase/auth';
 import { connect } from 'react-redux';
 
@@ -23,8 +22,9 @@ import Selector from './db/Selector';
 import DbError from './db/Error';
 import UserConsent from './consent/UserConsent';
 import LegalAcceptance from './consent/LegalAcceptance';
-
+import { Routes, Route, Navigate } from 'react-router-dom';
 import LocalizedString from './util/LocalizedString';
+import { from } from 'form-data';
 export interface AppPublicProps {
 
 }
@@ -172,15 +172,16 @@ class App extends React.Component<Props, State> {
 
     return (
       <>
-        <Switch>
-          <Route path="/" exact component={Dashboard} />
-          <Route path="/tutorials" exact component={Tutorials} />
-          <Route path="/leaderboard" exact component={Leaderboard} />
-          <Route path="/scene/:sceneId" component={Root} />
-          <Route path="/challenge/:challengeId" component={ChallengeRoot} />
-          <Route path="/curriculum" component={CurriculumPage} />
-          <Redirect to="/" />
-        </Switch>
+        <Routes>
+          <Route path="/" element={<Dashboard history={undefined} location={undefined} match={undefined} theme={undefined} />} />
+          <Route path="/tutorials" element={<Tutorials theme={undefined} />} />
+          <Route path="/leaderboard" element={<Leaderboard users={undefined} challenges={undefined} theme={undefined} />} />
+          <Route path="/scene/:sceneId" element={<Root history={undefined} location={undefined} match={undefined} />} />
+
+          <Route path="/challenge/:challengeId" element={<ChallengeRoot history={undefined} location={undefined} match={undefined} />} />
+          <Route path="/curriculum" element={<CurriculumPage history={undefined} location={undefined} match={undefined} />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
         <DocumentationWindow theme={DARK} />
       </>
     );

@@ -36,7 +36,7 @@ const LoadingText = styled('div', {
 });
 
 const LoadingErrorText = styled('div', (props: Props) => ({
-  paddingTop: props.height ? 2 * props.height : '100px',
+  paddingTop: props.height ? `${2 * props.height}` : '100px',
   fontSize: '20px',
   whiteSpace: 'pre-wrap'
 }));
@@ -47,7 +47,7 @@ const Loading: React.FunctionComponent<Props> = (props) => {
       <LoadingText>
         {props.message ? props.message : LocalizedString.lookup(tr('Loading...'), props.locale)}
       </LoadingText>
-      <ReactLoading 
+      <ReactLoading
         type={props.type ? props.type : 'balls'}
         width={props.width ? props.width : 150}
         height={props.height ? props.height : 50}

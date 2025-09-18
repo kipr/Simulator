@@ -91,14 +91,14 @@ export const createEditorBarComponents = ({
   target,
   locale
 }: {
-  theme: Theme, 
+  theme: Theme,
   target: EditorBarTarget,
   locale: LocalizedString.Language
 }) => {
-  
+
   // eslint-disable-next-line @typescript-eslint/ban-types
   const editorBar: BarComponent<object>[] = [];
-  
+
   switch (target.type) {
     case EditorBarTarget.Type.Robot: {
       let errors = 0;
@@ -205,7 +205,7 @@ class Editor extends React.PureComponent<Props, State> {
     const language = DOCUMENTATION_LANGUAGE_MAPPING[this.props.language];
     if (!language) return;
     this.props.onDocumentationGoToFuzzy?.(word, language);
-    
+
   };
 
   private openDocumentationAction_?: monaco.IDisposable;
@@ -272,15 +272,16 @@ class Editor extends React.PureComponent<Props, State> {
           messages={messages}
           onCodeChange={onCodeChange}
           autocomplete={autocomplete}
+          theme={theme.themeName}
         />
       );
     }
 
     return (
-      <Container theme={theme} style={style} className={className}>
+      <Container theme={theme} style={style} className={className} >
         {component}
       </Container>
-      
+
     );
   }
 }

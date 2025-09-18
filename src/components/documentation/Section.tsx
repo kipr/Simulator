@@ -21,7 +21,7 @@ export const Section = (props: SectionProps) => {
   const { name, children } = props;
   return (
     <Container>
-      <Title>{name}</Title>
+      <Title>{`${name.toString()}`}</Title>
       {children}
     </Container>
   );

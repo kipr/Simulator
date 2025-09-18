@@ -52,7 +52,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   flexDirection: 'column',
   flex: '1 1',
   paddingTop: `${props.theme.itemPadding * 2}px`,
-  
+
 }));
 
 class ScriptSettings extends React.PureComponent<Props, State> {
@@ -92,6 +92,7 @@ class ScriptSettings extends React.PureComponent<Props, State> {
           onCodeChange={this.onCodeChange_}
           autocomplete
           style={{ flex: '1 1' }}
+          theme={theme.themeName}
         />
       </Container>
     );

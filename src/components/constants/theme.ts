@@ -29,6 +29,7 @@ export const BROWN: ButtonColor = Object.freeze({
 });
 
 export interface Theme {
+  themeName: string;
   foreground: 'white' | 'black';
   backgroundColor: string;
   transparentBackgroundColor: (a: number) => string;
@@ -54,6 +55,7 @@ export interface Theme {
 }
 
 export const COMMON: Theme = {
+  themeName: 'common',
   foreground: undefined,
   backgroundColor: undefined,
   transparentBackgroundColor: undefined,
@@ -80,6 +82,7 @@ export const COMMON: Theme = {
 
 export const LIGHT: Theme = {
   ...COMMON,
+  themeName: 'LIGHT',
   foreground: 'white',
   color: '#000',
   backgroundColor: '#efefef',
@@ -101,6 +104,7 @@ export const LIGHT: Theme = {
 
 export const DARK: Theme = {
   ...COMMON,
+  themeName: 'DARK',
   foreground: 'black',
   color: '#fff',
   backgroundColor: '#212121',

@@ -5,6 +5,7 @@ import { ThemeProps, GREEN } from "../constants/theme";
 
 export interface DialogBarProps extends ThemeProps {
   onAccept: () => void;
+  children?: React.ReactNode;
 }
 
 type Props = DialogBarProps;
