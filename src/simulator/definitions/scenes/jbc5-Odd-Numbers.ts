@@ -103,8 +103,7 @@ const cb = (type, otherNodeId) => {
 }
 
 // When a wheel is touching a circle with an odd number, the circle glows
-scene.addOnIntersectionListener('left_wheel_link', cb, new Set([...circles, ...evenCircles]));
-scene.addOnIntersectionListener('right_wheel_link', cb, new Set([...circles, ...evenCircles]));
+scene.addOnIntersectionListener('robot', cb, new Set([...circles, ...evenCircles]));
 `;
 
 export const JBC_5: Scene = {
