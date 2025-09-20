@@ -88,8 +88,8 @@ export function createBaseSceneSurfaceA(): Scene {
         physics: {
           type: 'box',
           motionType: PhysicsMotionType.STATIC,
-          restitution: 0.1,
-          friction: 10,
+          restitution: .3,
+          friction: 1,
         },
         material: {
           type: 'basic',
@@ -176,8 +176,8 @@ export function createBaseSceneSurfaceB(): Scene {
         physics: {
           type: 'box',
           motionType: PhysicsMotionType.STATIC,
-          restitution: 0.1,
-          friction: 10,
+          restitution: .3,
+          friction: 1,
         },
         material: {
           type: 'basic',
@@ -312,7 +312,7 @@ export const canPositions: Vector3wUnits[] = [
     z: Distance.centimeters(56.9),
   },
   {
-    x: Distance.centimeters(-26), // can 8 
+    x: Distance.centimeters(-26), // can 8
     y: Distance.centimeters(0),
     z: Distance.centimeters(65.5),
   },

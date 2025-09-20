@@ -113,12 +113,12 @@ export default {
       name: tr('Park in one garage'),
     },
     {
-      exprId: 'singleGarageRun2Once',
-      name: tr('Park in a different garage'),
-    },
-    {
       exprId: 'returnStartBoxOnce',
       name: tr('Return to the Start Box'),
+    },
+    {
+      exprId: 'singleGarageRun2Once',
+      name: tr('Park in a different garage'),
     },
   ],
   failureGoals: [

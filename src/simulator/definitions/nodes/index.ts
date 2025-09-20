@@ -13,10 +13,9 @@ import { BB2026Templates, BB2026Geometries } from "./2026gameTableTemplates";
 
 const CAN_PHYSICS: Node.Physics = {
   type: 'cylinder',
-  mass: Mass.grams(5),
-  friction: 10,
+  mass: Mass.grams(3),
+  friction: 2,
   restitution: 0.4,
-  inertia: [20, 20, 20],
 };
 
 const DEAULT_FACEUVS = [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(0, 1), RawVector2.create(1, 0), RawVector2.ZERO, RawVector2.ZERO];
