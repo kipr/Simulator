@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import { styled } from 'styletron-react';
@@ -15,7 +14,7 @@ import { State } from '../state';
 import tr from '@i18n';
 
 
-export interface DashboardPublicProps extends RouteComponentProps, ThemeProps, StyleProps {
+export interface DashboardPublicProps extends ThemeProps, StyleProps {
 }
 
 interface DashboardPrivateProps {
