@@ -39,8 +39,6 @@ interface User {
 }
 
 export interface LeaderboardPublicProps extends StyleProps, ThemeProps {
-  users: Record<string, User>;
-  challenges: Record<string, Challenge>;
 }
 
 interface LeaderboardPrivateProps {

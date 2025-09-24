@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { push } from 'connected-react-router';
 import { styled } from 'styletron-react';
 
 import { DARK, ThemeProps } from '../components/constants/theme';
@@ -12,19 +11,17 @@ import LocalizedString from '../util/LocalizedString';
 import { State } from '../state';
 
 import tr from '@i18n';
+import { WithNavigateProps, withNavigate } from '../util/withNavigate';
 
 
 export interface DashboardPublicProps extends ThemeProps, StyleProps {
 }
 
 interface DashboardPrivateProps {
-  onTutorialsClick: () => void;
-  onSimulatorClick: () => void;
-  onLeaderboardClick: () => void;
   locale: LocalizedString.Language;
 }
 
-type Props = DashboardPublicProps & DashboardPrivateProps;
+type Props = DashboardPublicProps & DashboardPrivateProps & WithNavigateProps;
 
 const Container = styled('div', (props: ThemeProps) => ({
   display: 'flex',
@@ -67,7 +64,7 @@ class Dashboard extends React.PureComponent<Props> {
 
   render() {
     const { props } = this;
-    const { className, style, onTutorialsClick, onSimulatorClick, onLeaderboardClick, locale } = props;
+    const { className, style, locale } = props;
     const theme = DARK;
 
     return (
@@ -80,7 +77,7 @@ class Dashboard extends React.PureComponent<Props> {
             description={LocalizedString.lookup(tr('Learn how to get started with the simulator'), locale)}
             backgroundColor={'#6c6ca1'}
             backgroundImage={'url(../../static/icons/Laptop_Icon_Sunscreen.png)'}
-            onClick={onTutorialsClick}
+            onClick={() => this.props.navigate('/tutorials')}
           />
           <Card
             theme={theme}
@@ -88,7 +85,7 @@ class Dashboard extends React.PureComponent<Props> {
             description={LocalizedString.lookup(tr('A simulator for the Botball demobot.'), locale)}
             backgroundImage={'url(../../static/example_images/Simulator-Robot-Closeup.png)'}
             backgroundPosition={'center top'}
-            onClick={onSimulatorClick}
+            onClick={() => this.props.navigate('/scene/jbcSandboxA')}
           />
           <Card
             theme={theme}
@@ -106,7 +103,7 @@ class Dashboard extends React.PureComponent<Props> {
             description={LocalizedString.lookup(tr('See the current challenge leaderboard.'), locale)}
             backgroundImage={'linear-gradient(#3b3c3c, transparent), url(../../static/example_images/Gold_Medal_Robot.png)'}
             backgroundColor={'#3b3c3c'}
-            onClick={onLeaderboardClick}
+            onClick={() => this.props.navigate('/leaderboard')}
           />
         </CardContainer>
       </Container>
@@ -114,10 +111,8 @@ class Dashboard extends React.PureComponent<Props> {
   }
 }
 
-export default connect((state: State) => ({
+const Connected = connect((state: State) => ({
   locale: state.i18n.locale,
-}), dispatch => ({
-  onTutorialsClick: () => dispatch(push('/tutorials')),
-  onLeaderboardClick: () => dispatch(push('/leaderboard')),
-  onSimulatorClick: () => dispatch(push('/scene/jbcSandboxA')),
-}))(Dashboard) as React.ComponentType<DashboardPublicProps>;
+}))(withNavigate(Dashboard));
+
+export default Connected as React.ComponentType<DashboardPublicProps>;
