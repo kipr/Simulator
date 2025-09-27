@@ -85,7 +85,7 @@ class Dashboard extends React.PureComponent<Props> {
             description={LocalizedString.lookup(tr('A simulator for the Botball demobot.'), locale)}
             backgroundImage={'url(../../static/example_images/Simulator-Robot-Closeup.png)'}
             backgroundPosition={'center top'}
-            onClick={() => this.props.navigate('/scene/jbcSandboxA')}
+            onClick={() => this.props.navigate('/scene/jbcSandbox')}
           />
           <Card
             theme={theme}

@@ -68,6 +68,36 @@ export default {
         argId: "inStartBox",
       },
 
+      // Intersects Events
+      can2Intersects: {
+        type: Expr.Type.Event,
+        eventId: 'can2Intersects',
+      },
+      can9Intersects: {
+        type: Expr.Type.Event,
+        eventId: 'can9Intersects',
+      },
+      can10Intersects: {
+        type: Expr.Type.Event,
+        eventId: 'can10Intersects',
+      },
+
+      // Final And Logic
+      cansIntersect: {
+        type: Expr.Type.And,
+        argIds: ['can2Intersects', 'can9Intersects', 'can10Intersects'],
+      },
+
+      // Success logic
+      completion: {
+        type: Expr.Type.And,
+        argIds: ['inStartBoxOnce', 'cansIntersect'],
+      },
+    },
+    rootId: 'completion',
+  },
+  failure: {
+    exprs: {
       // Upright Events
       can2Upright: {
         type: Expr.Type.Event,
@@ -94,47 +124,13 @@ export default {
         argId: 'can10Upright',
       },
 
-      // Intersects Events
-      can2Intersects: {
-        type: Expr.Type.Event,
-        eventId: 'can2Intersects',
-      },
-      can9Intersects: {
-        type: Expr.Type.Event,
-        eventId: 'can9Intersects',
-      },
-      can10Intersects: {
-        type: Expr.Type.Event,
-        eventId: 'can10Intersects',
-      },
-
-      // Upright and Intersects logic
-      can2UprightAndIntersects: {
-        type: Expr.Type.And,
-        argIds: ['can2Upright', 'can2Intersects'],
-      },
-      can9UprightAndIntersects: {
-        type: Expr.Type.And,
-        argIds: ['can9Upright', 'can9Intersects'],
-      },
-      can10UprightAndIntersects: {
-        type: Expr.Type.And,
-        argIds: ['can10Upright', 'can10Intersects'],
-      },
-
-      // Final And Logic
-      cansUprightAndIntersects: {
-        type: Expr.Type.And,
-        argIds: ['can2UprightAndIntersects', 'can9UprightAndIntersects', 'can10UprightAndIntersects',],
-      },
-
-      // Success logic
-      completion: {
-        type: Expr.Type.And,
-        argIds: ['inStartBoxOnce', 'cansUprightAndIntersects'],
+      // Failure logic
+      failure: {
+        type: Expr.Type.Or,
+        argIds: ['can2NotUpright', 'can9NotUpright', 'can10NotUpright'],
       },
     },
-    rootId: 'completion',
+    rootId: 'failure',
   },
   successGoals: [
     { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
@@ -143,9 +139,9 @@ export default {
     { exprId: 'can10Intersects', name: tr('Place can 10 in yellow garage') },
   ],
   failureGoals: [
-    { exprId: 'can2NotUpright', name: tr('Can 2 not upright in green garage') },
-    { exprId: 'can9NotUpright', name: tr('Can 9 not upright in blue garage') },
-    { exprId: 'can10NotUpright', name: tr('Can 10 not upright in yellow garage') },
+    { exprId: 'can2NotUpright', name: tr('Can 2 not upright') },
+    { exprId: 'can9NotUpright', name: tr('Can 9 not upright') },
+    { exprId: 'can10NotUpright', name: tr('Can 10 not upright') },
   ],
 
   sceneId: 'jbc7',

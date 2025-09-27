@@ -722,7 +722,7 @@ class SceneBinding {
         if (Math.abs(extents.x - extents.y) <= 0.0001 && Math.abs(extents.x - extents.z) <= 0.0001) {
           parameters.radius = extents.x / 2;
         } else {
-          parameters.radius = Math.max(extents.x, extents.y, extents.z);
+          parameters.radius = Math.max(extents.x, extents.y, extents.z) / 2;
         }
         break;
       }
@@ -1069,31 +1069,6 @@ class SceneBinding {
     return [];
   };
 
-  private nodeMinMaxes_ = (id: string): { min: Vector3; max: Vector3; }[] => {
-    const meshes = this.nodeMeshes_(id);
-    if (meshes.length === 0) return [];
-    const ret: { min: Vector3; max: Vector3; }[] = [];
-    // for (const mesh of meshes) ret.push(mesh.getHierarchyBoundingVectors());
-    for (const mesh of meshes) {
-      // this.gizmoManager_.gizmos.boundingBoxGizmo.attachedMesh = mesh; // For viewing meshes on robot
-      if (mesh.id.includes('Chassis')) {
-        continue;
-      } else if (mesh.id.includes('Claw')) {
-        // Use smaller claw component for intersection bounding box to increase
-        // intersection accuracy
-        const c = mesh.getChildMeshes(true, (mesh) => mesh.id.includes('claw2'))[0];
-        ret.push(c.getHierarchyBoundingVectors(false));
-        continue;
-      } else {
-        ret.push(mesh.getHierarchyBoundingVectors(true, (mesh: AbstractMesh) => !mesh.name.includes('et_sensor')));
-      }
-    }
-    return ret;
-  };
-
-  private nodeBoundingBoxes_ = (id: string): BoundingBox[] => this.nodeMinMaxes_(id)
-    .map(({ min, max }) => new BoundingBox(min, max));
-
   tick(abstractRobots: Dict<AbstractRobot.Readable>): Dict<RobotBinding.TickOut> {
     if (this.declineTicks_) return undefined;
 
@@ -1116,19 +1091,9 @@ class SceneBinding {
       if (nodeMeshes.length === 0) continue;
 
       try {
-        const nodeBoundingBoxes = this.nodeBoundingBoxes_(nodeId); //
         const filterIds = this.intersectionFilters_[nodeId];
         for (const filterId of filterIds) {
-          const filterMinMaxes = this.nodeMinMaxes_(filterId);
-
-          let intersection = false;
-          for (const nodeBoundingBox of nodeBoundingBoxes) {
-            for (const filterMinMax of filterMinMaxes) {
-              intersection = this.nodeMeshes_(nodeId)[0].intersectsMesh(this.nodeMeshes_(filterId)[0], true) ? true : nodeBoundingBox.intersectsMinMax(filterMinMax.min, filterMinMax.max);
-              if (intersection) break;
-            }
-            if (intersection) break;
-          }
+          const intersection = this.nodeMeshes_(nodeId)[0].intersectsMesh(this.nodeMeshes_(filterId)[0], true);
 
           if (intersection) {
             if (!this.currentIntersections_[nodeId]) this.currentIntersections_[nodeId] = new Set();

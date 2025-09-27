@@ -62,6 +62,38 @@ export default {
         argId: "figureEight",
       },
 
+      // Start Box Events
+      notInStartBox: {
+        type: Expr.Type.Event,
+        eventId: "notInStartBox",
+      },
+      inStartBox: {
+        type: Expr.Type.Not,
+        argId: "notInStartBox",
+      },
+      inStartBoxOnce: {
+        type: Expr.Type.Once,
+        argId: "inStartBox",
+      },
+      returnStartBox: {
+        type: Expr.Type.Event,
+        eventId: "returnStartBox",
+      },
+      returnStartBoxOnce: {
+        type: Expr.Type.Once,
+        argId: "returnStartBox",
+      },
+
+      // Success Logic = Can A upright, intersects and touched
+      completion: {
+        type: Expr.Type.And,
+        argIds: ["figureEightOnce", "returnStartBoxOnce", "inStartBoxOnce"],
+      },
+    },
+    rootId: "completion",
+  },
+  failure: {
+    exprs: {
       // Intersects Events
       can4Intersects: {
         type: Expr.Type.Event,
@@ -97,46 +129,12 @@ export default {
         type: Expr.Type.Not,
         argId: "can9Upright",
       },
-
-      // Start Box Events
-      notInStartBox: {
-        type: Expr.Type.Event,
-        eventId: "notInStartBox",
-      },
-      inStartBox: {
-        type: Expr.Type.Not,
-        argId: "notInStartBox",
-      },
-      inStartBoxOnce: {
-        type: Expr.Type.Once,
-        argId: "inStartBox",
-      },
-      returnStartBox: {
-        type: Expr.Type.Event,
-        eventId: "returnStartBox",
-      },
-      returnStartBoxOnce: {
-        type: Expr.Type.Once,
-        argId: "returnStartBox",
-      },
-
-      // Intersects and upright logic
-      intersectsUpright4: {
-        type: Expr.Type.And,
-        argIds: ["can4Intersects", "can4Upright"],
-      },
-      intersectsUpright9: {
-        type: Expr.Type.And,
-        argIds: ["can9Intersects", "can9Upright"],
-      },
-
-      // Success Logic = Can A upright, intersects and touched
-      completion: {
-        type: Expr.Type.And,
-        argIds: ["intersectsUpright4", "intersectsUpright9", "figureEightOnce", "returnStartBoxOnce", "inStartBoxOnce"],
+      failure: {
+        type: Expr.Type.Or,
+        argIds: ['can4NotUpright', 'can4NotIntersects', 'can9NotUpright', 'can9NotIntersects'],
       },
     },
-    rootId: "completion",
+    rootId: 'failure',
   },
   successGoals: [
     { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },

@@ -7,15 +7,15 @@ import { Distance, Mass } from "../../../util";
 import { PhysicsMotionType } from "@babylonjs/core";
 
 import { BB2025Templates, BB2025Geometries } from "./2025gameTableTemplates";
+import { BB2026Templates, BB2026Geometries } from "./2026gameTableTemplates";
 
 // TODO: Consider deep-freezing all of these objects
 
 const CAN_PHYSICS: Node.Physics = {
   type: 'cylinder',
-  mass: Mass.grams(5),
-  friction: 10,
+  mass: Mass.grams(3),
+  friction: 2,
   restitution: 0.4,
-  inertia: [20, 20, 20],
 };
 
 const DEAULT_FACEUVS = [RawVector2.ZERO, RawVector2.ZERO, RawVector2.create(0, 1), RawVector2.create(1, 0), RawVector2.ZERO, RawVector2.ZERO];
@@ -400,6 +400,7 @@ export const preBuiltTemplates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'jbc_cup_green': jbcCupGreenTemplate,
   'jbc_cup_pink': jbcCupPinkTemplate,
   ...BB2025Templates,
+  ...BB2026Templates,
 });
 
 
@@ -521,4 +522,5 @@ export const preBuiltGeometries = Object.freeze<Dict<Geometry>>({
     uri: '/static/object_binaries/jbc_cup_pink.glb'
   },
   ...BB2025Geometries,
+  ...BB2026Geometries,
 });

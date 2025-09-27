@@ -28,7 +28,7 @@ const ROBOT: Node.Robot = {
 };
 
 
-const JBC_MAT_ORIGIN: ReferenceFramewUnits = {
+export const JBC_MAT_ORIGIN: ReferenceFramewUnits = {
   position: {
     x: Distance.centimeters(0),
     y: Distance.centimeters(-7),
@@ -78,15 +78,6 @@ export function createBaseSceneSurfaceA(): Scene {
     },
     nodes: {
       'robot': ROBOT,
-      'matA': {
-        type: 'from-jbc-template',
-        templateId: 'matA',
-        name: tr('JBC Mat A'),
-        startingOrigin: JBC_MAT_ORIGIN,
-        origin: JBC_MAT_ORIGIN,
-        visible: true,
-        editable: false,
-      },
       'ground': {
         type: 'object',
         geometryId: 'ground',
@@ -97,8 +88,8 @@ export function createBaseSceneSurfaceA(): Scene {
         physics: {
           type: 'box',
           motionType: PhysicsMotionType.STATIC,
-          restitution: 0.1,
-          friction: 10,
+          restitution: .3,
+          friction: 1,
         },
         material: {
           type: 'basic',
@@ -115,6 +106,15 @@ export function createBaseSceneSurfaceA(): Scene {
         startingOrigin: LIGHT_ORIGIN,
         origin: LIGHT_ORIGIN,
         visible: true
+      },
+      'matA': {
+        type: 'from-jbc-template',
+        templateId: 'matA',
+        name: tr('JBC Mat A'),
+        startingOrigin: JBC_MAT_ORIGIN,
+        origin: JBC_MAT_ORIGIN,
+        visible: true,
+        editable: false,
       },
     },
     camera: Camera.arcRotate({
@@ -176,8 +176,8 @@ export function createBaseSceneSurfaceB(): Scene {
         physics: {
           type: 'box',
           motionType: PhysicsMotionType.STATIC,
-          restitution: 0.1,
-          friction: 10,
+          restitution: .3,
+          friction: 1,
         },
         material: {
           type: 'basic',
@@ -312,7 +312,7 @@ export const canPositions: Vector3wUnits[] = [
     z: Distance.centimeters(56.9),
   },
   {
-    x: Distance.centimeters(-26), // can 8 
+    x: Distance.centimeters(-26), // can 8
     y: Distance.centimeters(0),
     z: Distance.centimeters(65.5),
   },

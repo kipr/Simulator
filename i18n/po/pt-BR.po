@@ -3179,6 +3179,66 @@ msgstr "Dirigir para trás"
 msgid "Wave the servo"
 msgstr "Agite o servo"
 
+msgid "2026 Fall Game Table"
+msgstr "Tabela do jogo do outono de 2026"
+
+msgid "Blue Pom #%d"
+msgstr "Pom azul #%d"
+
+msgid "Orange Pom #%d"
+msgstr "Pom laranja #%d"
+
+msgid "Random Pom #%d"
+msgstr "Pom aleatório #%d"
+
+msgid "Raised Dock Pallet #1"
+msgstr "Palete elevada #1"
+
+msgid "Raised Dock Pallet #2"
+msgstr "Palete elevada #2"
+
+msgid "Storage Pallet #1"
+msgstr "Palete de armazenamento #1"
+
+msgid "Storage Pallet #2"
+msgstr "Palete de armazenamento #2"
+
+msgid "Left Stack Cube #%d"
+msgstr "Cubo empilhado à esquerda #%d"
+
+msgid "Right Stack Cube #%d"
+msgstr "Cubo empilhado à direita #%d"
+
+msgid "Red Cube (4 inch)"
+msgstr "Cubo vermelho (4 polegadas)"
+
+msgid "Brown Cube (4 inch)"
+msgstr "Cubo marrom (4 polegadas)"
+
+msgid "Green Cube (4 inch)"
+msgstr "Cubo verde (4 polegadas)"
+
+msgid "Right Traffic Cone"
+msgstr "Cone de trânsito direito"
+
+msgid "Left Traffic Cone"
+msgstr "Cone de trânsito esquerdo"
+
+msgid "Left Basket"
+msgstr "Cesto esquerdo"
+
+msgid "Right Basket"
+msgstr "Cesto direito"
+
+msgid "Left PCV #%d"
+msgstr "PCV esquerdo #%d"
+
+msgid "Right PCV #%d"
+msgstr "PCV direito #%d"
+
+msgid "2026 Fall Botball game table sandbox"
+msgstr "Caixa de areia da mesa de jogo Botball 2026 Fall"
+
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
 msgstr "Volume"

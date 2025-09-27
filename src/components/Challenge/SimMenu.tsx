@@ -381,7 +381,7 @@ class SimMenu extends React.PureComponent<Props, State> {
             onClick={this.onSceneClick_} 
             style={{ position: 'relative' }}
           >
-            <ItemIcon icon={faGlobeAmericas} /> {LocalizedString.lookup(tr('World'), locale)}
+            <ItemIcon icon={faGlobeAmericas} /> {LocalizedString.lookup(tr('Scene'), locale)}
 
             {subMenu.type === SubMenu.Type.SceneMenu ? (
               <SceneMenu

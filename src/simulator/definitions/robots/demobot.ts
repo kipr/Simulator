@@ -99,7 +99,7 @@ export const DEMOBOT: Robot = {
       parentId: 'claw',
       geometryId: 'claw_link',
       mass: grams(7),
-      friction: 50,
+      friction: 100,
       restitution: 0,
       inertia: [3, 3, 3],
       collisionBody: Node.Link.CollisionBody.EMBEDDED,

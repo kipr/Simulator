@@ -1,8 +1,8 @@
 import Scene from '../../../state/State/Scene';
-import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
 import { Distance, Angle } from '../../../util';
 import { createBaseSceneSurfaceA } from './jbcBase';
+import { setNodeVisible, matAStartGeoms, matAStartNodes, notInStartBox, garageGeoms, garageNodes } from './jbcCommonComponents';
 import { RotationwUnits } from '../../../util/math/unitMath';
 import { Color } from '../../../state/State/Scene/Color';
 import { RawVector2 } from '../../../util/math/math';
@@ -11,21 +11,8 @@ import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
 
-const notInStartBox = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  // console.log('Robot not started in start box!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('notInStartBox', type === 'start');
-  }
-}, 'notStartBox');
-`;
-
 const garageIntersects = `
-
-const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
-  ...scene.nodes[nodeId],
-  visible
-});
+${setNodeVisible}
 
 let chosenGarage = [];
 let declaredGarage = [];
@@ -52,13 +39,11 @@ scene.addOnRenderListener(() => {
     state = 0;
     selected = 0;
     clicked = true;
-   
+
   }
 });
 
 scene.addOnIntersectionListener('robot', (type, otherNodeId)  => {
-  
-  
   if(declaredGarage[state] == 'greenBox' && (otherNodeId == 'g1' || otherNodeId == 'g2' || otherNodeId == 'g3')){
     state = 0;
     selected = 0;
@@ -77,13 +62,12 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId)  => {
     selected = 0;
     // console.log('Touched Yellow Garage Lines');
     scene.setChallengeEventValue('touchGarageLines', true);
-  } 
-
+  }
 }, ['greenBox', 'yellowBox', 'blueBox','g1', 'g2', 'g3', 'b1', 'b2', 'b3', 'y1', 'y2', 'y3']);
 
 //User declares garage
 scene.addOnClickListener(['greenBox','yellowBox','blueBox','volume'], id => {
-  
+
   clicked = !clicked;
 
   switch(id){
@@ -102,7 +86,7 @@ scene.addOnClickListener(['greenBox','yellowBox','blueBox','volume'], id => {
         setNodeVisible('greenGarageMarker2', true);
       }
       instruction++;
-      
+
       break;
     case 'yellowBox':
       if(!chosenGarage.includes('yellowGarage')){
@@ -119,7 +103,7 @@ scene.addOnClickListener(['greenBox','yellowBox','blueBox','volume'], id => {
         setNodeVisible('yellowGarageMarker2', true);
       }
       instruction++;
-      
+
       break;
     case 'blueBox':
       if(!chosenGarage.includes('blueGarage')){
@@ -160,7 +144,6 @@ scene.addOnClickListener(['greenBox','yellowBox','blueBox','volume'], id => {
 });
 
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  
   //Entering StartBox Events
   if(otherNodeId == 'startBox' && type == 'start'){
 
@@ -266,22 +249,8 @@ export const JBC_3: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
-    startBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.centimeters(70),
-        y: Distance.centimeters(0.1),
-        z: Distance.centimeters(70),
-      },
-    },
-    notStartBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(10),
-        z: Distance.meters(2.13),
-      },
-    },
+    ...matAStartGeoms,
+    ...garageGeoms,
     numberMarker_geom: {
       type: 'box',
       size: {
@@ -355,46 +324,8 @@ export const JBC_3: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-    startBox: {
-      type: 'object',
-      geometryId: 'startBox_geom',
-      name: tr('Start Box'),
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(-20),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(0, 255, 0),
-        },
-      },
-    },
-    notStartBox: {
-      type: 'object',
-      geometryId: 'notStartBox_geom',
-      name: tr('Not Start Box'),
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-1.9),
-          z: Distance.meters(1.208),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(255, 0, 0),
-        },
-      },
-    },
+    ...matAStartNodes,
+    ...garageNodes,
     mainInstructionBox: {
       type: 'object',
       geometryId: 'instructionBox_geom',
@@ -640,26 +571,6 @@ export const JBC_3: Scene = {
         RawVector2.ZERO, RawVector2.ZERO,
       ],
     },
-    greenGarage: {
-      type: 'object',
-      geometryId: 'greenGarage_geom',
-      name: tr('Green Garage'),
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(53),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(0, 255, 0),
-        },
-      },
-    },
     n1: {
       type: 'object',
       geometryId: 'n_geom',
@@ -780,30 +691,6 @@ export const JBC_3: Scene = {
         },
       },
     },
-    blueGarage: {
-      type: 'object',
-      geometryId: 'blueGarage_geom',
-      name: tr('Blue Garage'),
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(-12.5),
-          y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(94.5),
-        },
-        orientation: RotationwUnits.AxisAngle.fromRaw({
-          axis: { x: 0, y: 1, z: 0 },
-          angle: 115.5,
-        }),
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(0, 0, 255),
-        },
-      },
-    },
     b1: {
       type: 'object',
       geometryId: 'n_geom',
@@ -861,26 +748,6 @@ export const JBC_3: Scene = {
         color: {
           type: 'color3',
           color: Color.rgb(132, 85, 206),
-        },
-      },
-    },
-    yellowGarage: {
-      type: 'object',
-      geometryId: 'yellowGarage_geom',
-      name: tr('Yellow Garage'),
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(18.8),
-          y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(78),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(255, 0, 0),
         },
       },
     },
