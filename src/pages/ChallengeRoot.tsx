@@ -1024,9 +1024,6 @@ const ConnectedChallengeRoot = connect((state: ReduxState, { params: { challenge
   onDocumentationPush: (location: DocumentationLocation) => dispatch(DocumentationAction.pushLocation({ location })),
   onDocumentationSetLanguage: (language: 'c' | 'python') => dispatch(DocumentationAction.setLanguage({ language })),
   onDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => dispatch(DocumentationAction.goToFuzzy({ query, language })),
-  onDeleteRecord: (selector: Selector) => {
-    dispatch(ScenesAction.removeScene({ sceneId: selector.id }));
-  },
   goToLogin: () => {
     window.location.href = `/login?from=${window.location.pathname}`;
   },
