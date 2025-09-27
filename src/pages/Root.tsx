@@ -61,6 +61,7 @@ import LocalizedString from '../util/LocalizedString';
 
 import { Space } from '../simulator/Space';
 import { withNavigate, WithNavigateProps } from '../util/withNavigate';
+import { withParams } from '../util/withParams';
 import tr from '@i18n';
 import { Modal } from './sharedRoot/Modal';
 import Robot from '../state/State/Robot';
@@ -963,13 +964,6 @@ const ConnectedRoot = connect((state: ReduxState, { params: { sceneId, challenge
   onAskTutorClick: (params: SendMessageParams) => sendMessage(dispatch, params),
 }))(withNavigate(Root)) as React.ComponentType<RootPublicProps>;
 
-import { useParams } from 'react-router-dom';
-
-const RootWrapper: React.FC = () => {
-  const params = useParams();
-  return <ConnectedRoot params={params as RootRouteParams} />;
-};
-
-export default withNavigate(RootWrapper);
+export default withParams<RootRouteParams>()(ConnectedRoot);
 
 export { RootState };
