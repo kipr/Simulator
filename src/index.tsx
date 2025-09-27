@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as ReactDom from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider as ReduxProvider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -17,13 +17,17 @@ const engine = new Styletron({ prefix: 'style' });
 const debug = process.env.NODE_ENV === "production" ? void 0 : new DebugEngine();
 
 
-ReactDom.render(
+if (!reactRoot) {
+  throw new Error('Missing #reactRoot element');
+}
+
+const root = createRoot(reactRoot);
+root.render(
   <StyletronProvider value={engine} debug={debug} debugAfterHydration>
     <ReduxProvider store={store}>
       <BrowserRouter>
         <App />
       </BrowserRouter>
     </ReduxProvider>
-  </StyletronProvider>,
-  reactRoot
+  </StyletronProvider>
 );

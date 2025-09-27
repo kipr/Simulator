@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as ReactDom from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 
 import { Provider as StyletronProvider } from "styletron-react";
@@ -28,13 +28,17 @@ const initializeGapiClient = async () => {
 
 gapi.load('client', void initializeGapiClient);
 
-ReactDom.render(
+if (!reactRoot) {
+  throw new Error('Missing #reactRoot element');
+}
+
+const root = createRoot(reactRoot);
+root.render(
   <StyletronProvider value={engine} debugAfterHydration>
     <ReduxProvider store={store}>
       <PluginPage />
     </ReduxProvider>
-  </StyletronProvider>,
-  reactRoot
+  </StyletronProvider>
 );
 
 window.onmessage = (e: MessageEvent<{ type: string; id: string }>) => {
