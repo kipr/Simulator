@@ -594,7 +594,7 @@ class Root extends React.Component<Props, State> {
       const nextScene = { ...scene };
       if (!auth.currentUser) return;
       nextScene.author = Author.user(auth.currentUser.uid);
-      let newSceneId = uuid.v4();
+      const newSceneId = uuid.v4();
       this.props.onCreateScene(newSceneId, nextScene);
       this.props.navigate(`/scene/${newSceneId}`);
     });
