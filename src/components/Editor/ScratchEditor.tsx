@@ -144,6 +144,10 @@ class ScratchEditor extends React.Component<Props, State> {
     this.debounce_ = true;
     try {
       const code = Blockly.Xml.domToPrettyText(Blockly.Xml.workspaceToDom(this.workspace_));
+
+      // NOTE: flushSync() is used to opt-out of React 18 batching, so that the debounceUpdate_ flag works as intended.
+      // Without flushSync(), debounceUpdate_ will get set to false before the state update happens.
+      // This is hacky and the whole debounceUpdate_ mechanism should be refactored.
       flushSync(() => this.props.onCodeChange(code));
     } catch (e) {
       // console.error(e);
