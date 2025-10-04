@@ -33,7 +33,7 @@ const metrics = require('./metrics');
 app.use(metrics.metricsMiddleware);
 
 // Logging
-const { logCompilation, logFeedback, logRateLimit, logError } = require('./logger');
+const { logCompilation, logFeedback, logRateLimit } = require('./logger');
 
 // set up rate limiter: maximum of 100 requests per 15 minute
 var RateLimit = require('express-rate-limit');
@@ -316,9 +316,10 @@ app.post('/feedback', (req, res) => {
       });
       
       // Track feedback submission
-      const sentimentLabel = body.sentiment === 1 ? 'negative' : 
-                             body.sentiment === 2 ? 'neutral' : 
-                             body.sentiment === 3 ? 'positive' : 'unknown';
+      const sentimentLabel = body.sentiment === 1 ? 'negative'
+        : body.sentiment === 2 ? 'neutral'
+          : body.sentiment === 3 ? 'positive'
+            : 'unknown';
       metrics.feedback.counter.inc({ sentiment: sentimentLabel });
       
       res.status(200).json({

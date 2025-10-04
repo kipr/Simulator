@@ -46,7 +46,10 @@ const logger = winston.createLogger({
  */
 const hashString = (str) => {
   if (!str) return null;
-  return crypto.createHash('sha256').update(str).digest('hex').substring(0, 16);
+  return crypto.createHash('sha256')
+    .update(str)
+    .digest('hex')
+    .substring(0, 16);
 };
 
 /**
@@ -55,7 +58,7 @@ const hashString = (str) => {
 const truncate = (str, maxLength) => {
   if (!str) return null;
   if (str.length <= maxLength) return str;
-  return str.substring(0, maxLength) + '...';
+  return `${str.substring(0, maxLength)}...`;
 };
 
 /**
@@ -160,10 +163,10 @@ const logError = (error, context = {}) => {
  * Log user feedback
  */
 const logFeedback = (data) => {
-  const sentimentLabel = 
-    data.sentiment === 1 ? 'negative' :
-    data.sentiment === 2 ? 'neutral' :
-    data.sentiment === 3 ? 'positive' : 'unknown';
+  const sentimentLabel = data.sentiment === 1 ? 'negative'
+    : data.sentiment === 2 ? 'neutral'
+      : data.sentiment === 3 ? 'positive'
+        : 'unknown';
   
   logger.info('User feedback', {
     type: 'feedback',
