@@ -28,11 +28,33 @@ try {
 
 app.set('trust proxy', true);
 
+// Metrics collection
+const metrics = require('./metrics');
+app.use(metrics.metricsMiddleware);
+
+// Logging
+const { logCompilation, logFeedback, logRateLimit, logError } = require('./logger');
+
 // set up rate limiter: maximum of 100 requests per 15 minute
 var RateLimit = require('express-rate-limit');
 var limiter = RateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 1000, // max 100 requests per windowMs
+  handler: (req, res) => {
+    // Track rate limit hits
+    metrics.rateLimit.hits.inc({ endpoint: req.path });
+    
+    // Log rate limit hit
+    logRateLimit({
+      endpoint: req.path,
+      ip: req.ip,
+      userId: req.user?.uid
+    });
+    
+    res.status(429).json({
+      error: 'Too many requests, please try again later.'
+    });
+  }
 });
 
 
@@ -68,6 +90,11 @@ app.use('/api', proxy(config.dbUrl));
 if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env) {
 
   app.post('/compile', (req, res) => {
+    const startTime = Date.now();
+    const language = 'C';
+    const userId = req.user?.uid;
+    const sessionId = req.headers['x-session-id'] || req.sessionID || 'unknown';
+    
     if (!('code' in req.body)) {
       return res.status(400).json({
         error: "Expected code key in body"
@@ -79,10 +106,15 @@ if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env
         error: "Expected code key in body to be a string"
       });
     }
+    
+    const code = req.body.code;
+    
+    // Track code size
+    metrics.compilation.codeSize.observe({ language }, code.length);
   
     // Wrap user's main() in our own "main()" that exits properly
     // Required because Asyncify keeps emscripten runtime alive, which would prevent cleanup code from running
-    const augmentedCode = `${req.body.code}
+    const augmentedCode = `${code}
       #include <emscripten.h>
   
       EM_JS(void, on_stop, (), {
@@ -102,6 +134,24 @@ if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env
     const path = `/tmp/${id}.c`;
     fs.writeFile(path, augmentedCode, err => {
       if (err) {
+        const durationMs = Date.now() - startTime;
+        const duration = durationMs / 1000;
+        
+        // Log failed compilation
+        logCompilation({
+          userId,
+          sessionId,
+          language,
+          code,
+          duration: durationMs,
+          status: 'error',
+          stdout: null,
+          stderr: err.message
+        });
+        
+        metrics.compilation.counter.inc({ status: 'error', language });
+        metrics.compilation.duration.observe({ status: 'error', language }, duration);
+        
         return res.status(500).json({
           error: "Failed to write ${}"
         });
@@ -122,8 +172,27 @@ if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env
       exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -s ASYNCIFY -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']" -I${config.server.dependencies.libkipr_c}/include -L${config.server.dependencies.libkipr_c}/lib -lkipr -o ${path}.js ${path}`, {
         env
       }, (err, stdout, stderr) => {
+        const durationMs = Date.now() - startTime;
+        const duration = durationMs / 1000;
+        
         if (err) {
           console.log(stderr);
+          
+          // Log failed compilation
+          logCompilation({
+            userId,
+            sessionId,
+            language,
+            code,
+            duration: durationMs,
+            status: 'error',
+            stdout,
+            stderr
+          });
+          
+          metrics.compilation.counter.inc({ status: 'error', language });
+          metrics.compilation.duration.observe({ status: 'error', language }, duration);
+          
           return res.status(200).json({
             stdout,
             stderr
@@ -149,6 +218,23 @@ if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env
                   error: `Failed to delete ${path}`
                 });
               }
+              
+              // Log successful compilation
+              logCompilation({
+                userId,
+                sessionId,
+                language,
+                code,
+                duration: durationMs,
+                status: 'success',
+                stdout,
+                stderr: stderr || null
+              });
+              
+              // Success! Track metrics
+              metrics.compilation.counter.inc({ status: 'success', language });
+              metrics.compilation.duration.observe({ status: 'success', language }, duration);
+              
               res.status(200).json({
                 result: data.toString(),
                 stdout,
@@ -220,6 +306,21 @@ app.post('/feedback', (req, res) => {
     files: files
   })
     .then(() => {
+      // Log feedback submission
+      logFeedback({
+        userId: body.userId || 'anonymous',
+        sentiment: body.sentiment,
+        feedback: body.feedback,
+        email: body.email,
+        includeAnonData: body.includeAnonData
+      });
+      
+      // Track feedback submission
+      const sentimentLabel = body.sentiment === 1 ? 'negative' : 
+                             body.sentiment === 2 ? 'neutral' : 
+                             body.sentiment === 3 ? 'positive' : 'unknown';
+      metrics.feedback.counter.inc({ sentiment: sentimentLabel });
+      
       res.status(200).json({
         message: 'Feedback submitted! Thank you!'
       });
@@ -267,6 +368,16 @@ if (config.server.dependencies.libkipr_python) {
     maxAge: config.caching.staticMaxAge,
   }));
 }
+
+// Expose metrics endpoint
+app.get('/metrics', async (req, res) => {
+  try {
+    res.set('Content-Type', metrics.register.contentType);
+    res.end(await metrics.register.metrics());
+  } catch (err) {
+    res.status(500).end(err);
+  }
+});
 
 app.use('/dist', express.static(`${__dirname}/dist`, {
   setHeaders: setCrossOriginIsolationHeaders,
