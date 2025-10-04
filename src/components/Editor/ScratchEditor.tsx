@@ -4,6 +4,7 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 
 import resizeListener, { ResizeListener } from '../interface/ResizeListener';
+import { flushSync } from 'react-dom';
 
 export interface ScratchEditorProps extends ThemeProps {
   code: string;
@@ -143,8 +144,7 @@ class ScratchEditor extends React.Component<Props, State> {
     this.debounce_ = true;
     try {
       const code = Blockly.Xml.domToPrettyText(Blockly.Xml.workspaceToDom(this.workspace_));
-      console.log(code);
-      this.props.onCodeChange(code);
+      flushSync(() => this.props.onCodeChange(code));
     } catch (e) {
       // console.error(e);
     }
