@@ -1,6 +1,5 @@
 import { TabBar } from '../components/Layout/TabBar';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router';
 import { styled } from 'styletron-react';
 import LocalizedString from '../util/LocalizedString';
 import { DARK, LIGHT, Theme, ThemeProps } from '../components/constants/theme';
@@ -20,7 +19,7 @@ import { PillAreaItem } from '../components/PillArea';
 import StandardsLocation from '../state/State/Assignment/StandardsLocation';
 import { UsersAction } from '../state/reducer';
 
-export interface CurriculumPagePublicProps extends RouteComponentProps {
+export interface CurriculumPagePublicProps {
   
 }
 

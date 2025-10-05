@@ -3,7 +3,7 @@ import { styled } from "styletron-react";
 import { Spacer } from "../constants/common";
 import { ThemeProps, GREEN } from "../constants/theme";
 
-export interface DialogBarProps extends ThemeProps {
+export interface DialogBarProps extends ThemeProps, React.PropsWithChildren {
   onAccept: () => void;
 }
 

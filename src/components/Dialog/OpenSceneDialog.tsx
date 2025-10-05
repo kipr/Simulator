@@ -14,12 +14,12 @@ import ScrollArea from "../interface/ScrollArea";
 import { FontAwesome } from "../FontAwesome";
 
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { push } from 'connected-react-router';
 import LocalizedString from '../../util/LocalizedString';
 import Author from '../../db/Author';
 import { auth } from '../../firebase/firebase';
 
 import tr from '@i18n';
+import { withNavigate, WithNavigateProps } from '../../util/withNavigate';
 
 export interface OpenSceneDialogPublicProps extends ThemeProps {
   onClose: () => void;
@@ -28,11 +28,10 @@ export interface OpenSceneDialogPublicProps extends ThemeProps {
 interface OpenSceneDialogPrivateProps {
   scenes: Scenes;
   locale: LocalizedString.Language;
-  onSceneChange: (sceneId: string) => void;
   listUserScenes: () => void;
 }
 
-type Props = OpenSceneDialogPublicProps & OpenSceneDialogPrivateProps;
+type Props = OpenSceneDialogPublicProps & OpenSceneDialogPrivateProps & WithNavigateProps;
 
 interface SelectSceneDialogState {
   selectedSceneId: string | null;
@@ -143,7 +142,10 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
     const selectedAsyncScene = selectedSceneId !== null ? scenes[selectedSceneId] : null;
     const selectedScene = Async.latestValue(selectedAsyncScene);
     
-    if (selectedScene) this.props.onSceneChange(selectedSceneId);
+    if (selectedScene) {
+      this.props.navigate(`/scene/${selectedSceneId}`);
+      location.reload();
+    }
     this.props.onClose();
   };
 
@@ -199,13 +201,11 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
   };
 }
 
-export default connect<unknown, unknown, Props>((state: ReduxState, ownProps) => ({
+const ConnectedOpenSceneDialog = connect<unknown, unknown, Props>((state: ReduxState) => ({
   scenes: state.scenes,
   locale: state.i18n.locale,
-}), (dispatch, b) => ({
-  onSceneChange: (sceneId: string) => {
-    dispatch(push(`/scene/${sceneId}`));
-    location.reload();
-  },
+}), dispatch => ({
   listUserScenes: () => dispatch(ScenesAction.LIST_USER_SCENES),
-}))(OpenSceneDialog) as React.ComponentType<OpenSceneDialogPublicProps>;
+}))(withNavigate(OpenSceneDialog)) as React.ComponentType<OpenSceneDialogPublicProps>;
+
+export default ConnectedOpenSceneDialog;
