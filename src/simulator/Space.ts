@@ -33,6 +33,7 @@ import WorkerInstance from '../programming/WorkerInstance';
 import AbstractRobot from '../programming/AbstractRobot';
 import ScriptManager from './ScriptManager';
 import SceneBinding, { SceneMeshMetadata } from './babylonBindings/SceneBinding';
+import { flushSync } from "react-dom";
 
 export let ACTIVE_SPACE: Space;
 
@@ -434,8 +435,11 @@ export class Space {
 
     // Update state with significant changes, if needed
     // These seems to also be necessary for sensors to update
+    // NOTE: flushSync() is used to opt-out of React 18 batching, so that the debounceUpdate_ flag works as intended.
+    // Without flushSync(), debounceUpdate_ will get set to false before the state update happens.
+    // This is hacky and the whole debounceUpdate_ mechanism should be refactored.
     this.debounceUpdate_ = true;
-    if (setNodeBatch.nodeIds.length > 0) this.onSetNodeBatch?.(setNodeBatch);
+    if (setNodeBatch.nodeIds.length > 0) flushSync(() => this.onSetNodeBatch?.(setNodeBatch));
     this.debounceUpdate_ = false;
   };
 

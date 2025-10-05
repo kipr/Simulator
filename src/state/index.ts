@@ -1,6 +1,4 @@
 import { applyMiddleware, combineReducers, compose, createStore, } from 'redux';
-import { connectRouter, RouterState, routerMiddleware } from 'connected-react-router';
-import { createBrowserHistory } from 'history';
 
 import * as reducer from './reducer';
 import { DocumentationState, ChallengeCompletions, Challenges, I18n, Robots, Scenes, Assignments, Users } from './State';
@@ -11,9 +9,6 @@ import { CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, SCENE_COLLECTION
 import Record from '../db/Record';
 import Selector from '../db/Selector';
 
-
-export const history = createBrowserHistory();
-
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -23,7 +18,6 @@ export default createStore(combineReducers<State>({
   scenes: reducer.reduceScenes,
   robots: reducer.reduceRobots,
   documentation: reducer.reduceDocumentation,
-  router: connectRouter((history)),
   challenges: reducer.reduceChallenges,
   challengeCompletions: reducer.reduceChallengeCompletions,
   i18n: reducer.reduceI18n,
@@ -32,7 +26,6 @@ export default createStore(combineReducers<State>({
   ai: reducer.reduceAi
 }), composeEnhancers(
   applyMiddleware(
-    routerMiddleware((history))
   )
 ));
 /* eslint-enable @typescript-eslint/no-unsafe-call */
@@ -44,7 +37,6 @@ export interface State {
   challengeCompletions: ChallengeCompletions;
   robots: Robots;
   documentation: DocumentationState;
-  router: RouterState;
   i18n: I18n;
   assignments: Assignments;
   users: Users;

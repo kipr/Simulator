@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
-import { push } from 'connected-react-router';
 import { styled } from 'styletron-react';
 import { Message } from 'ivygate';
 import { applyObjectPatch, createObjectPatch, ObjectPatch, OuterObjectPatch } from 'symmetry';
@@ -62,6 +60,8 @@ import { Vector3wUnits, ReferenceFramewUnits } from '../util/math/unitMath';
 import LocalizedString from '../util/LocalizedString';
 
 import { Space } from '../simulator/Space';
+import { withNavigate, WithNavigateProps } from '../util/withNavigate';
+import { withParams } from '../util/withParams';
 import tr from '@i18n';
 
 
@@ -71,12 +71,12 @@ import AiWindow from '../components/Ai/AiWindow';
 import Robot from '../state/State/Robot';
 
 
-interface RootParams {
+export interface ChallengeRootRouteParams {
+  [key: string]: string | undefined;
   challengeId: string;
 }
-
-export interface RootPublicProps extends RouteComponentProps<RootParams> {
-
+export interface RootPublicProps {
+  params: ChallengeRootRouteParams;
 }
 
 interface RootPrivateProps {
@@ -134,7 +134,7 @@ interface RootState {
   nonce: number;
 }
 
-type Props = RootPublicProps & RootPrivateProps;
+type Props = RootPublicProps & RootPrivateProps & WithNavigateProps;
 type State = RootState;
 
 // We can't set innerheight statically, becasue the window can change
@@ -374,7 +374,7 @@ class Root extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>): void {
-    const { match: { params: { challengeId } }, challenge, challengeCompletion } = this.props;
+    const { params: { challengeId }, challenge, challengeCompletion } = this.props;
     
     if (challengeId && challenge && challengeCompletion && challengeCompletion.type === Async.Type.LoadFailed) {
       const latestChallenge = Async.latestValue(challenge);
@@ -392,7 +392,7 @@ class Root extends React.Component<Props, State> {
       Space.getInstance().sceneBinding.scriptManager.programStatus = this.state.simulatorState.type === SimulatorState.Type.Running ? 'running' : 'stopped';
     }
 
-    if (this.props.match.params.challengeId !== prevProps.match.params.challengeId) {
+    if (this.props.params.challengeId !== prevProps.params.challengeId) {
       this.initedChallengeCompletionScene_ = false;
     }
     
@@ -735,7 +735,7 @@ class Root extends React.Component<Props, State> {
   };
 
   private onEndChallengeClick_ = () => {
-    window.location.href = `/scene/${this.props.match.params.challengeId}`;
+    window.location.href = `/scene/${this.props.params.challengeId}`;
   };
 
   private onResetCode_ = () => {
@@ -779,7 +779,7 @@ class Root extends React.Component<Props, State> {
     const { props, state } = this;
     
     const {
-      match: { params: { challengeId } },
+      params: { challengeId },
       scene,
       challenge,
       challengeCompletion,
@@ -968,7 +968,7 @@ class Root extends React.Component<Props, State> {
   }
 }
 
-export default connect((state: ReduxState, { match: { params: { challengeId } } }: RootPublicProps) => {
+const ConnectedChallengeRoot = connect((state: ReduxState, { params: { challengeId } }: RootPublicProps) => {
   const builder = new Builder(state);
 
   const challenge = builder.challenge(challengeId);
@@ -984,7 +984,7 @@ export default connect((state: ReduxState, { match: { params: { challengeId } } 
     locale: state.i18n.locale,
     robots: Dict.map(state.robots.robots, Async.latestValue), 
   };
-}, (dispatch, { match: { params: { challengeId } } }: RootPublicProps) => ({
+}, (dispatch, { params: { challengeId } }: RootPublicProps) => ({
   onChallengeCompletionCreate: (challengeCompletion: ChallengeCompletion) => {
     dispatch(ChallengeCompletionsAction.createChallengeCompletion({ challengeId, challengeCompletion }));
   },
@@ -1025,15 +1025,13 @@ export default connect((state: ReduxState, { match: { params: { challengeId } } 
   onDocumentationPush: (location: DocumentationLocation) => dispatch(DocumentationAction.pushLocation({ location })),
   onDocumentationSetLanguage: (language: 'c' | 'python') => dispatch(DocumentationAction.setLanguage({ language })),
   onDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => dispatch(DocumentationAction.goToFuzzy({ query, language })),
-  onDeleteRecord: (selector: Selector) => {
-    dispatch(ScenesAction.removeScene({ sceneId: selector.id })),
-    dispatch(push('/'));
-  },
   goToLogin: () => {
     window.location.href = `/login?from=${window.location.pathname}`;
   },
   onAiClick: () => dispatch(AiAction.TOGGLE),
   onAskTutorClick: (params: SendMessageParams) => sendMessage(dispatch, params),
-}))(Root) as React.ComponentType<RootPublicProps>;
+}))(withNavigate(Root)) as React.ComponentType<RootPublicProps>;
+
+export default withParams<ChallengeRootRouteParams>()(ConnectedChallengeRoot);
 
 export { RootState };

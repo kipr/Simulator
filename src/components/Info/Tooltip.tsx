@@ -8,11 +8,9 @@ import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
 import { GLOBAL_EVENTS } from '../../util';
 
-export interface TooltipProps extends ThemeProps, StyleProps {
+export interface TooltipProps extends ThemeProps, StyleProps, React.PropsWithChildren {
   target: Tooltip.Target;
   contentHint: Tooltip.ContentHint;
-
-  children: unknown;
 }
 
 interface TooltipState {

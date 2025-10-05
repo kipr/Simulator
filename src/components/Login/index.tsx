@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as ReactDom from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider as ReduxProvider } from 'react-redux';
 import { DARK } from '../constants/theme';
 import LoginPage from '../../pages/LoginPage';
@@ -13,11 +13,15 @@ const reactRoot = document.getElementById('reactRoot');
 
 const engine = new Styletron({ prefix: 'style' });
 
-ReactDom.render(
+if (!reactRoot) {
+  throw new Error('Missing #reactRoot element');
+}
+
+const root = createRoot(reactRoot);
+root.render(
   <StyletronProvider value={engine} debugAfterHydration>
     <ReduxProvider store={store}>
       <LoginPage theme={DARK} />
     </ReduxProvider>
-  </StyletronProvider>,
-  reactRoot
+  </StyletronProvider>
 );

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Redirect, Route, Switch } from 'react-router';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { Unsubscribe } from 'firebase/auth';
 import { connect } from 'react-redux';
 
@@ -172,15 +172,15 @@ class App extends React.Component<Props, State> {
 
     return (
       <>
-        <Switch>
-          <Route path="/" exact component={Dashboard} />
-          <Route path="/tutorials" exact component={Tutorials} />
-          <Route path="/leaderboard" exact component={Leaderboard} />
-          <Route path="/scene/:sceneId" component={Root} />
-          <Route path="/challenge/:challengeId" component={ChallengeRoot} />
-          <Route path="/curriculum" component={CurriculumPage} />
-          <Redirect to="/" />
-        </Switch>
+        <Routes>
+          <Route path="/" element={<Dashboard theme={DARK} />} />
+          <Route path="/tutorials" element={<Tutorials theme={DARK} />} />
+          <Route path="/leaderboard" element={<Leaderboard theme={DARK} />} />
+          <Route path="/scene/:sceneId" element={<Root />} />
+          <Route path="/challenge/:challengeId" element={<ChallengeRoot />} />
+          <Route path="/curriculum" element={<CurriculumPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
         <DocumentationWindow theme={DARK} />
       </>
     );

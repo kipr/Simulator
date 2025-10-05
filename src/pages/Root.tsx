@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
-import { push } from 'connected-react-router';
 import { styled } from 'styletron-react';
 import { Message } from 'ivygate';
 import * as uuid from 'uuid';
@@ -62,19 +60,22 @@ import { Vector3wUnits } from '../util/math/unitMath';
 import LocalizedString from '../util/LocalizedString';
 
 import { Space } from '../simulator/Space';
+import { withNavigate, WithNavigateProps } from '../util/withNavigate';
+import { withParams } from '../util/withParams';
 import tr from '@i18n';
 import { Modal } from './sharedRoot/Modal';
 import Robot from '../state/State/Robot';
 import AiWindow from '../components/Ai/AiWindow';
 
 
-interface RootParams {
+export interface RootRouteParams {
+  [key: string]: string | undefined;
   sceneId?: string;
   challengeId?: string;
 }
 
-export interface RootPublicProps extends RouteComponentProps<RootParams> {
-
+export interface RootPublicProps {
+  params: RootRouteParams;
 }
 
 interface RootPrivateProps {
@@ -152,7 +153,7 @@ interface RootState {
   
 }
 
-type Props = RootPublicProps & RootPrivateProps;
+type Props = RootPublicProps & RootPrivateProps & WithNavigateProps;
 type State = RootState;
 
 // We can't set innerheight statically, becasue the window can change
@@ -459,7 +460,7 @@ class Root extends React.Component<Props, State> {
   };
 
   private onStartChallengeClick_ = () => {
-    window.location.href = `/challenge/${this.props.match.params.sceneId}`;
+    window.location.href = `/challenge/${this.props.params.sceneId}`;
   };
   
   private onClearConsole_ = () => {
@@ -593,12 +594,15 @@ class Root extends React.Component<Props, State> {
       const nextScene = { ...scene };
       if (!auth.currentUser) return;
       nextScene.author = Author.user(auth.currentUser.uid);
-      this.props.onCreateScene(uuid.v4(), nextScene);
+      const newSceneId = uuid.v4();
+      this.props.onCreateScene(newSceneId, nextScene);
+      this.props.navigate(`/scene/${newSceneId}`);
     });
   };
 
   private onDeleteRecordAccept_ = (selector: Selector) => () => {
     this.props.onDeleteRecord(selector);
+    this.props.navigate('/');
   };
 
   private onSettingsSceneAccept_ = (scene: Scene) => {
@@ -613,11 +617,11 @@ class Root extends React.Component<Props, State> {
   };
 
   private onSceneErrorResolved_ = () => {
-    this.props.unfailScene(this.props.match.params.sceneId);
+    this.props.unfailScene(this.props.params.sceneId);
   };
 
   private onSaveSceneClick_ = () => {
-    this.props.onSaveScene(this.props.match.params.sceneId);
+    this.props.onSaveScene(this.props.params.sceneId);
   };
 
   private onMiniEditorToggle_ = () => {
@@ -630,7 +634,7 @@ class Root extends React.Component<Props, State> {
     const { props, state } = this;
     
     const {
-      match: { params: { sceneId, challengeId } },
+      params: { sceneId, challengeId },
       scene,
       challenge,
       challengeCompletion,
@@ -865,7 +869,7 @@ class Root extends React.Component<Props, State> {
   }
 }
 
-export default connect((state: ReduxState, { match: { params: { sceneId, challengeId } } }: RootPublicProps) => {
+const ConnectedRoot = connect((state: ReduxState, { params: { sceneId, challengeId } }: RootPublicProps) => {
   const builder = new Builder(state);
 
   let sceneHasChallenge = true;
@@ -889,7 +893,7 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
     locale: state.i18n.locale,
     robots: Dict.map(state.robots.robots, Async.latestValue), 
   };
-}, (dispatch, { match: { params: { sceneId } } }: RootPublicProps) => ({
+}, (dispatch, { params: { sceneId } }: RootPublicProps) => ({
   onNodeAdd: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
   onNodeRemove: (nodeId: string) => dispatch(ScenesAction.removeNode({ sceneId, nodeId })),
   onNodeChange: (nodeId: string, node: Node) => {
@@ -912,7 +916,6 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
   onResetScene: () => dispatch(ScenesAction.softResetScene({ sceneId })),
   onCreateScene: (sceneId: string, scene: Scene) => {
     dispatch(ScenesAction.createScene({ sceneId, scene }));
-    dispatch(push(`/scene/${sceneId}`));
   },
   onChallengeCompletionCreate: (challengeId: string, challengeCompletion: ChallengeCompletion) => {
     dispatch(ChallengeCompletionsAction.createChallengeCompletion({ challengeId, challengeCompletion }));
@@ -939,8 +942,7 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
     dispatch(ChallengeCompletionsAction.resetChallengeCompletion({ challengeId }));
   },
   onDeleteRecord: (selector: Selector) => {
-    dispatch(ScenesAction.removeScene({ sceneId: selector.id })),
-    dispatch(push('/'));
+    dispatch(ScenesAction.removeScene({ sceneId: selector.id }));
   },
   onDocumentationClick: () => dispatch(DocumentationAction.TOGGLE),
   onDocumentationPush: (location: DocumentationLocation) => dispatch(DocumentationAction.pushLocation({ location })),
@@ -960,6 +962,8 @@ export default connect((state: ReduxState, { match: { params: { sceneId, challen
   },
   onAiClick: () => dispatch(AiAction.TOGGLE),
   onAskTutorClick: (params: SendMessageParams) => sendMessage(dispatch, params),
-}))(Root) as React.ComponentType<RootPublicProps>;
+}))(withNavigate(Root)) as React.ComponentType<RootPublicProps>;
+
+export default withParams<RootRouteParams>()(ConnectedRoot);
 
 export { RootState };
