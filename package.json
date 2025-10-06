@@ -108,7 +108,8 @@
     "url-loader": "^4.1.1",
     "uuid": "^8.3.2",
     "winston": "^3.18.3",
-    "xmldom": "^0.6.0"
+    "xmldom": "^0.6.0",
+    "lusca": "^1.7.0"
   },
   "resolutions": {
     "@types/react": "18.3.24"

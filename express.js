@@ -7,6 +7,7 @@ const fs = require('fs');
 const uuid = require('uuid');
 const { exec } = require('child_process');
 const session = require('express-session');
+const csrf = require('lusca').csrf;
 const app = express();
 const sourceDir = 'dist';
 const { get: getConfig } = require('./config');
@@ -41,6 +42,9 @@ app.use(session({
   },
   name: 'kipr_session'
 }));
+
+// CSRF protection
+app.use(csrf());
 
 // Metrics collection
 const metrics = require('./metrics');
