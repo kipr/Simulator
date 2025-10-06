@@ -136,7 +136,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum(rate(compilation_requests_total{app=\"kipr-simulator\"}[5m])) by (status)",
+          "expr": "sum(rate(simulator_compilation_requests_total{job=~\"simulator.*\", namespace=~\"$namespace\"}[5m])) by (status)",
           "legendFormat": "{{status}}",
           "refId": "A"
         }
@@ -226,7 +226,7 @@
             "type": "loki",
             "uid": "${DS_LOKI}"
           },
-          "expr": "sum by (error_type) (count_over_time({namespace=\"$namespace\", app=\"simulator\", type=\"compilation\"} | json | status=\"error\" [$__interval]))",
+          "expr": "sum by (error_type) (count_over_time({namespace=\"$namespace\", job=~\"simulator.*\", type=\"compilation\"} | json | status=\"error\" [$__interval]))",
           "refId": "A"
         }
       ],
@@ -261,7 +261,7 @@
             "type": "loki",
             "uid": "${DS_LOKI}"
           },
-          "expr": "{namespace=\"$namespace\", app=\"simulator\", type=\"compilation\"} | json | status=\"error\" | line_format \"{{.timestamp}} | Duration: {{.duration_ms}}ms | Error: {{.error_type}} | {{.stderr}}\"",
+          "expr": "{namespace=\"$namespace\", job=~\"simulator.*\", type=\"compilation\"} | json | status=\"error\" | line_format \"{{.timestamp}} | Duration: {{.duration_ms}}ms | Error: {{.error_type}} | {{.stderr}}\"",
           "refId": "A"
         }
       ],
@@ -379,7 +379,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum(rate(ai_requests_total{app=\"kipr-simulator\"}[5m])) by (status)",
+          "expr": "sum(rate(simulator_ai_requests_total{job=~\"simulator.*\", namespace=~\"$namespace\"}[5m])) by (status)",
           "legendFormat": "{{status}}",
           "refId": "A"
         }
@@ -469,7 +469,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum(rate(ai_tokens_total{app=\"kipr-simulator\"}[1h]))",
+          "expr": "sum(rate(simulator_ai_tokens_used{job=~\"simulator.*\", namespace=~\"$namespace\"}[1h]))",
           "legendFormat": "Tokens/hour",
           "refId": "A"
         }
@@ -560,7 +560,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "histogram_quantile(0.95, sum(rate(ai_response_time_seconds_bucket{app=\"kipr-simulator\"}[5m])) by (le))",
+          "expr": "histogram_quantile(0.95, sum(rate(simulator_ai_response_duration_seconds_bucket{job=~\"simulator.*\", namespace=~\"$namespace\"}[5m])) by (le))",
           "legendFormat": "p95",
           "refId": "A"
         }
@@ -643,7 +643,7 @@
             "type": "loki",
             "uid": "${DS_LOKI}"
           },
-          "expr": "topk(20, sum by (question) (count_over_time({namespace=\"$namespace\", app=\"simulator\", type=\"ai_request\"} | json [24h])))",
+          "expr": "topk(20, sum by (question) (count_over_time({namespace=\"$namespace\", job=~\"simulator.*\", type=\"ai_request\"} | json [24h])))",
           "refId": "A"
         }
       ],
@@ -692,7 +692,7 @@
             "type": "loki",
             "uid": "${DS_LOKI}"
           },
-          "expr": "{namespace=\"$namespace\", app=\"simulator\", type=\"ai_request\"} | json | line_format \"{{.timestamp}} | Status: {{.status}} | Duration: {{.duration_ms}}ms | Tokens: {{.tokens_used}} | Question: {{.question}}\"",
+          "expr": "{namespace=\"$namespace\", job=~\"simulator.*\", type=\"ai_request\"} | json | line_format \"{{.timestamp}} | Status: {{.status}} | Duration: {{.duration_ms}}ms | Tokens: {{.tokens_used}} | Question: {{.question}}\"",
           "refId": "A"
         }
       ],
@@ -799,7 +799,7 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum(rate(http_request_duration_seconds_count{app=\"kipr-simulator\", status_code=~\"5..\"}[5m])) / sum(rate(http_request_duration_seconds_count{app=\"kipr-simulator\"}[5m]))",
+          "expr": "sum(rate(http_request_duration_seconds_count{job=~\"simulator.*\", namespace=~\"$namespace\", status_code=~\"5..\"}[5m])) / sum(rate(http_request_duration_seconds_count{job=~\"simulator.*\", namespace=~\"$namespace\"}[5m]))",
           "legendFormat": "Error Rate",
           "refId": "A"
         }
@@ -889,7 +889,7 @@
             "type": "loki",
             "uid": "${DS_LOKI}"
           },
-          "expr": "sum(rate({namespace=\"$namespace\", app=\"simulator\"} | json | level=\"error\" [5m]))",
+          "expr": "sum(rate({namespace=\"$namespace\", job=~\"simulator.*\"} | json | level=\"error\" [5m]))",
           "legendFormat": "Error logs/sec",
           "refId": "A"
         }
@@ -925,7 +925,7 @@
             "type": "loki",
             "uid": "${DS_LOKI}"
           },
-          "expr": "{namespace=\"$namespace\", app=\"simulator\"} | json | level=\"error\"",
+          "expr": "{namespace=\"$namespace\", job=~\"simulator.*\"} | json | level=\"error\"",
           "refId": "A"
         }
       ],
@@ -982,19 +982,28 @@
       {
         "current": {
           "selected": true,
-          "text": "default",
-          "value": "default"
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
         "hide": 0,
-        "includeAll": false,
+        "includeAll": true,
         "label": "Namespace",
-        "multi": false,
+        "multi": true,
         "name": "namespace",
         "options": [
           {
             "selected": true,
-            "text": "default",
-            "value": "default"
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": true,
+            "text": "prod",
+            "value": "prod"
           },
           {
             "selected": false,
@@ -1002,7 +1011,7 @@
             "value": "prerelease"
           }
         ],
-        "query": "default,prerelease",
+        "query": "prod,prerelease",
         "skipUrlSync": false,
         "type": "custom"
       }

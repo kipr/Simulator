@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const fs = require('fs');
 const uuid = require('uuid');
 const { exec } = require('child_process');
+const session = require('express-session');
 const app = express();
 const sourceDir = 'dist';
 const { get: getConfig } = require('./config');
@@ -27,6 +28,19 @@ try {
 }
 
 app.set('trust proxy', true);
+
+// Session middleware for generating session IDs
+app.use(session({
+  secret: config.server.sessionSecret || 'kipr-simulator-session-secret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    httpOnly: true,
+    secure: false // Set to true if using HTTPS in production
+  },
+  name: 'kipr_session'
+}));
 
 // Metrics collection
 const metrics = require('./metrics');
@@ -94,6 +108,9 @@ if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env
     const language = 'C';
     const userId = req.user?.uid;
     const sessionId = req.headers['x-session-id'] || req.sessionID || 'unknown';
+    
+    // Track session interaction
+    metrics.trackSessionInteraction(sessionId, 'compile');
     
     if (!('code' in req.body)) {
       return res.status(400).json({
@@ -261,6 +278,10 @@ app.post('/feedback', (req, res) => {
   }
 
   const body = req.body;
+  const sessionId = req.headers['x-session-id'] || req.sessionID || 'unknown';
+  
+  // Track session interaction
+  metrics.trackSessionInteraction(sessionId, 'feedback');
 
   let content = `User Feedback Recieved:\n\`\`\`${body.feedback} \`\`\``;
   

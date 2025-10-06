@@ -128,6 +128,35 @@ const feedbackCounter = new promClient.Counter({
   registers: [register]
 });
 
+// Session Metrics
+const sessionInteractions = new promClient.Counter({
+  name: 'simulator_session_interactions_total',
+  help: 'Total interactions per session',
+  labelNames: ['session_id', 'interaction_type'],
+  registers: [register]
+});
+
+const sessionFirstInteraction = new promClient.Gauge({
+  name: 'simulator_session_first_interaction_timestamp',
+  help: 'Timestamp of first interaction in session (Unix epoch seconds)',
+  labelNames: ['session_id'],
+  registers: [register]
+});
+
+const sessionLastInteraction = new promClient.Gauge({
+  name: 'simulator_session_last_interaction_timestamp',
+  help: 'Timestamp of last interaction in session (Unix epoch seconds)',
+  labelNames: ['session_id'],
+  registers: [register]
+});
+
+const sessionInteractionSequence = new promClient.Counter({
+  name: 'simulator_session_interaction_sequence_total',
+  help: 'Count of interaction sequences (from -> to)',
+  labelNames: ['session_id', 'from_interaction', 'to_interaction'],
+  registers: [register]
+});
+
 // Build metrics object for export
 const metrics = {
   register,
@@ -157,8 +186,74 @@ const metrics = {
   
   feedback: {
     counter: feedbackCounter
+  },
+  
+  session: {
+    interactions: sessionInteractions,
+    firstInteraction: sessionFirstInteraction,
+    lastInteraction: sessionLastInteraction,
+    interactionSequence: sessionInteractionSequence
   }
 };
+
+// Helper function to track session interactions
+// Stores last interaction type per session (in-memory, stateless per pod)
+const sessionLastInteractionMap = new Map();
+
+// Clean up old sessions periodically (older than 30 minutes)
+setInterval(() => {
+  const now = Date.now();
+  const thirtyMinutes = 30 * 60 * 1000;
+  
+  for (const [sessionId, data] of sessionLastInteractionMap.entries()) {
+    if (now - data.timestamp > thirtyMinutes) {
+      sessionLastInteractionMap.delete(sessionId);
+    }
+  }
+}, 5 * 60 * 1000); // Run cleanup every 5 minutes
+
+/**
+ * Track a session interaction
+ * @param {string} sessionId - Session identifier
+ * @param {string} interactionType - Type of interaction (compile, ai_query, feedback, api_call)
+ */
+function trackSessionInteraction(sessionId, interactionType) {
+  if (!sessionId || sessionId === 'unknown') return;
+  
+  const now = Date.now() / 1000; // Convert to seconds for Prometheus
+  
+  // Track the interaction
+  metrics.session.interactions.inc({ session_id: sessionId, interaction_type: interactionType });
+  
+  // Update timestamps
+  const labels = { session_id: sessionId };
+  
+  // Check if this is the first interaction
+  const existing = sessionLastInteractionMap.get(sessionId);
+  if (!existing) {
+    metrics.session.firstInteraction.set(labels, now);
+  }
+  
+  // Always update last interaction
+  metrics.session.lastInteraction.set(labels, now);
+  
+  // Track interaction sequence (from -> to)
+  if (existing && existing.interactionType !== interactionType) {
+    metrics.session.interactionSequence.inc({
+      session_id: sessionId,
+      from_interaction: existing.interactionType,
+      to_interaction: interactionType
+    });
+  }
+  
+  // Update the last interaction tracking
+  sessionLastInteractionMap.set(sessionId, {
+    interactionType,
+    timestamp: Date.now()
+  });
+}
+
+metrics.trackSessionInteraction = trackSessionInteraction;
 
 module.exports = metrics;
 
