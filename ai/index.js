@@ -89,6 +89,9 @@ function createAiRouter(firebaseTokenManager, config) {
     const userId = req.user?.uid;
     const sessionId = req.headers['x-session-id'] || req.sessionID || 'unknown';
     
+    // Track session interaction
+    metrics.trackSessionInteraction(sessionId, 'ai_query');
+    
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: 'Bad request: messages array is required' });
     }

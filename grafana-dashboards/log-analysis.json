@@ -560,8 +560,8 @@
       {
         "current": {
           "selected": true,
-          "text": "default",
-          "value": "default"
+          "text": "prod",
+          "value": "prod"
         },
         "hide": 0,
         "includeAll": false,
@@ -571,8 +571,8 @@
         "options": [
           {
             "selected": true,
-            "text": "default",
-            "value": "default"
+            "text": "prod",
+            "value": "prod"
           },
           {
             "selected": false,
@@ -580,7 +580,7 @@
             "value": "prerelease"
           }
         ],
-        "query": "default,prerelease",
+        "query": "prod,prerelease",
         "skipUrlSync": false,
         "type": "custom"
       }
