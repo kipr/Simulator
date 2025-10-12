@@ -81,7 +81,7 @@
     "image-webpack-loader": "^8.1.0",
     "immer": "^9.0.15",
     "itch": "https://github.com/chrismbirmingham/itch#36",
-    "ivygate": "https://github.com/kipr/ivygate#v0.1.9",
+    "ivygate": "https://github.com/kipr/ivygate#47796742720abad4f00c19a3af3421bad073046d",
     "jspdf": "^3.0.2",
     "kipr-scratch": "file:dependencies/kipr-scratch/kipr-scratch",
     "mailgun.js": "^10.2.1",
