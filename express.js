@@ -44,7 +44,7 @@ app.use(session({
 }));
 
 // CSRF protection
-app.use(csrf());
+//app.use(csrf());
 
 // Metrics collection
 const metrics = require('./metrics');

@@ -37,8 +37,8 @@ const ROBOT: Node.Robot = {
 
 const GAME_TABLE_2026: Node.FromBBTemplate = {
   type: 'from-bb-template',
-  name: tr('2026 Fall Game Table'),
-  templateId: 'gameTable2026',
+  name: tr('2026 Botball Fall Game Table'),
+  templateId: 'fallTable26',
   visible: true,
   editable: false,
   startingOrigin: GAME_TABLE_ORIGIN,
