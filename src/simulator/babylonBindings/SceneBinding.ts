@@ -114,7 +114,7 @@ class SceneBinding {
     this.bScene_.getPhysicsEngine().setSubTimeStep(1);
 
     // Uncomment this to turn on the physics viewer for objects
-    // this.physicsViewer_ = new PhysicsViewer(this.bScene_);
+    this.physicsViewer_ = new PhysicsViewer(this.bScene_);
 
     this.root_ = new TransformNode('__scene_root__', this.bScene_);
     this.gizmoManager_ = new GizmoManager(this.bScene_);

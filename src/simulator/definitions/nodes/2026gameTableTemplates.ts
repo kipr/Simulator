@@ -16,6 +16,16 @@ const fallTable26Template: Node.TemplatedNode<Node.Obj> = {
     friction: 1,
   },
 };
+const springTable26Template: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'springTable26',
+  physics: {
+    type: 'mesh',
+    motionType: PhysicsMotionType.STATIC,
+    restitution: .2,
+    friction: 1,
+  },
+};
 const basketTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'basket',
@@ -111,6 +121,7 @@ const pcv2inTemplate: Node.TemplatedNode<Node.Obj> = {
 
 export const BB2026Templates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'fallTable26': fallTable26Template,
+  'springTable26': springTable26Template,
   'basket': basketTemplate,
   'cubeBrown4In': cubeBrown4inTemplate,
   'cubeGreen2In': cubeGreen2inTemplate,
@@ -129,6 +140,10 @@ export const BB2026Geometries = Object.freeze<Dict<Geometry>>({
   'fallTable26': {
     type: 'file',
     uri: '/static/object_binaries/2026_Fall_Table.glb',
+  },
+  'springTable26': {
+    type: 'file',
+    uri: '/static/object_binaries/2026_Table.glb',
   },
   'basket': {
     type: 'file',
