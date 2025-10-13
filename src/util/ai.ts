@@ -58,8 +58,18 @@ const sendMessage_ = async (dispatch: Dispatch, { content, code, language, conso
       })
     });
 
+    // Get response text first to handle both JSON and non-JSON responses
+    const responseText = await response.text();
+
     if (!response.ok) {
-      const errorData = await response.json() as ErrorResponse;
+      let errorData: ErrorResponse;
+      try {
+        errorData = JSON.parse(responseText) as ErrorResponse;
+      } catch (jsonError) {
+        // If response is not JSON, return the text content
+        throw new Error(`Server error (${response.status}): ${responseText || 'Unknown error'}`);
+      }
+
       if (errorData.error && typeof errorData.error === 'string') {
         throw new Error(errorData.error);
       }
@@ -69,7 +79,12 @@ const sendMessage_ = async (dispatch: Dispatch, { content, code, language, conso
       throw new Error('An error occurred while communicating with Tutor.');
     }
 
-    const data = await response.json() as ApiResponse;
+    let data: ApiResponse;
+    try {
+      data = JSON.parse(responseText) as ApiResponse;
+    } catch (jsonError) {
+      throw new Error('Invalid response from server: expected JSON');
+    }
     const assistantMessage = data.content[0].text;
 
     dispatch(AiAction.sendMessageSuccess({ content: assistantMessage }));
