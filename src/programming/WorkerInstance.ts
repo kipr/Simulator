@@ -11,7 +11,7 @@ import Dict from 'util/objectOps/Dict';
 const SHARED_CONSOLE_LENGTH = 1024;
 
 class SharedVariablesStateMachine {
-  constructor(private sharedVariables_: SharedRingBufferUtf32) {}
+  constructor(private sharedVariables_: SharedRingBufferUtf32) { }
 
   private length_: number = undefined;
   private buffer_ = '';
@@ -20,7 +20,7 @@ class SharedVariablesStateMachine {
 
   update() {
     this.buffer_ = this.sharedVariables_.popString();
-  
+
     if (this.length_ === undefined && this.buffer_.indexOf(';') >= 0) {
       const [lengthStr, ...rest] = this.buffer_.split(';');
       this.length_ = parseInt(lengthStr);
@@ -31,8 +31,13 @@ class SharedVariablesStateMachine {
       const json = this.buffer_.slice(0, this.length_);
       this.buffer_ = this.buffer_.slice(this.length_);
       this.length_ = undefined;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      this.watchedVariables_ = JSON.parse(json);
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        this.watchedVariables_ = JSON.parse(json);
+      } catch (parseError) {
+        window.console.error('Failed to parse watched variables JSON:', json, parseError);
+        this.watchedVariables_ = {};
+      }
     }
   }
 
