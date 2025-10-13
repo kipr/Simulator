@@ -22,7 +22,7 @@ export default (code: string, language: ProgrammingLanguage): Promise<CompileRes
         resolve(JSON.parse(req.responseText) as CompileResult);
       } catch (parseError) {
         reject({
-          error: 'Invalid response from server: expected JSON but received: ' + req.responseText.substring(0, ERROR_RESPONSE_PREVIEW_LENGTH)
+          error: `Invalid response from server: expected JSON but received: ${req.responseText.substring(0, ERROR_RESPONSE_PREVIEW_LENGTH)}`
         });
       }
     };
