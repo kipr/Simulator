@@ -21,6 +21,7 @@
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/plugin-syntax-import-meta": "^7.10.4",
+    "@babel/plugin-transform-class-static-block": "^7.28.3",
     "@types/chai": "^4.3.3",
     "@types/gapi": "^0.0.44",
     "@types/gettext-parser": "^4.0.2",
@@ -84,6 +85,7 @@
     "ivygate": "https://github.com/kipr/ivygate#47796742720abad4f00c19a3af3421bad073046d",
     "jspdf": "^3.0.2",
     "kipr-scratch": "file:dependencies/kipr-scratch/kipr-scratch",
+    "lusca": "^1.7.0",
     "mailgun.js": "^10.2.1",
     "morgan": "^1.10.0",
     "pdf-lib": "^1.17.1",
@@ -108,10 +110,10 @@
     "url-loader": "^4.1.1",
     "uuid": "^8.3.2",
     "winston": "^3.18.3",
-    "xmldom": "^0.6.0",
-    "lusca": "^1.7.0"
+    "xmldom": "^0.6.0"
   },
   "resolutions": {
-    "@types/react": "18.3.24"
+    "@types/react": "18.3.24",
+    "@types/d3-dispatch": "3.0.6"
   }
 }

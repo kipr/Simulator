@@ -74,6 +74,22 @@ module.exports = {
   context: resolve(__dirname, '../../src'),
   module: {
     rules: [
+      // Apply class static block transform to monaco-editor ESM sources inside node_modules
+      // because we normally exclude node_modules from Babel handling.
+      {
+        test: /\.js$/,
+        include: /node_modules[\/\\]monaco-editor[\/\\]esm/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              plugins: [
+                '@babel/plugin-transform-class-static-block'
+              ]
+            }
+          }
+        ]
+      },
       {
         test: /\.js$/,
         use: ['babel-loader', 'source-map-loader'],
