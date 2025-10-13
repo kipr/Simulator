@@ -163,7 +163,12 @@ module.exports = {
       SIMULATOR_GIT_HASH: JSON.stringify(commitHash),
       SIMULATOR_HAS_CPYTHON: JSON.stringify(dependencies.cpython !== undefined),
       SIMULATOR_LIBKIPR_C_DOCUMENTATION: JSON.stringify(libkiprCDocumentation),
-      SIMULATOR_I18N: JSON.stringify(i18n)
+      SIMULATOR_I18N: JSON.stringify(i18n),
+
+      // needed because ivygate relies on them being defined
+      IDE_LIBKIPR_C_DOCUMENTATION: JSON.stringify(libkiprCDocumentation),
+      IDE_LIBKIPR_C_COMMON_DOCUMENTATION: null,
+      IDE_I18N: JSON.stringify(i18n),
     }),
     new NpmDtsPlugin({
       root: resolve(__dirname, '../../'),
