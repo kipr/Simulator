@@ -92,6 +92,7 @@ class ScriptSettings extends React.PureComponent<Props, State> {
           onCodeChange={this.onCodeChange_}
           autocomplete
           style={{ flex: '1 1' }}
+          theme="DARK"
         />
       </Container>
     );
