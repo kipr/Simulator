@@ -1,5 +1,7 @@
 import ProgrammingLanguage from "./ProgrammingLanguage";
 
+const ERROR_RESPONSE_PREVIEW_LENGTH = 100;
+
 export default (code: string, language: ProgrammingLanguage): Promise<CompileResult> => {
 
   return new Promise<CompileResult>((resolve, reject) => {
@@ -20,7 +22,7 @@ export default (code: string, language: ProgrammingLanguage): Promise<CompileRes
         resolve(JSON.parse(req.responseText) as CompileResult);
       } catch (parseError) {
         reject({
-          error: 'Invalid response from server: expected JSON but received: ' + req.responseText.substring(0, 100)
+          error: 'Invalid response from server: expected JSON but received: ' + req.responseText.substring(0, ERROR_RESPONSE_PREVIEW_LENGTH)
         });
       }
     };

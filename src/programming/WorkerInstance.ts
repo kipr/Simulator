@@ -35,7 +35,7 @@ class SharedVariablesStateMachine {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         this.watchedVariables_ = JSON.parse(json);
       } catch (parseError) {
-        window.console.error('Failed to parse watched variables JSON:', json, parseError);
+        console.error('Failed to parse watched variables JSON:', json, parseError);
         this.watchedVariables_ = {};
       }
     }
