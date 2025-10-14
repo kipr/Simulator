@@ -20,9 +20,9 @@ import { Quaternion } from '@babylonjs/core';
 
 const baseScene = createBaseSceneSurface();
 
-const DOOR_X = 99;
-const DOOR_Y = 8.75;
-const DOOR1_Z = 76.5;
+const DOOR_X = 98;
+const DOOR_Y = 9;
+const DOOR1_Z = 90;
 const DOOR_ORIENTATION = RotationwUnits.eulerDegrees(0, 0, 95);
 const DOOR1_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(DOOR_X, DOOR_Y, DOOR1_Z),
