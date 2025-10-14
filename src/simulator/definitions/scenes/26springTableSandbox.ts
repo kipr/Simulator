@@ -54,6 +54,44 @@ const DOORS: Dict<Node.FromBBTemplate> = {
   }
 };
 
+const LO_1_Z = -3.25;
+const LO_BLUE_X = 65;
+const LO_Y = -1;
+
+const LO_Z_GAP = 6 * 2.54;
+
+const loBluePoms: Dict<Node> = {};
+for (let i = 0; i < 6; i++) {
+  const origin: ReferenceFramewUnits = {
+    position: Vector3wUnits.centimeters(LO_BLUE_X, LO_Y, LO_1_Z + LO_Z_GAP * i),
+  };
+  loBluePoms[`loBlue${i}`] = {
+    type: 'from-bb-template',
+    name: Dict.map(tr('Low Blue Pom #%d'), (str: string) => sprintf(str, i + 1)),
+    templateId: 'pomBlue2In',
+    visible: true,
+    editable: true,
+    startingOrigin: origin,
+    origin
+  };
+}
+const LO_ORANGE_X = 32;
+const loOrangePoms: Dict<Node> = {};
+for (let i = 0; i < 6; i++) {
+  const origin: ReferenceFramewUnits = {
+    position: Vector3wUnits.centimeters(LO_ORANGE_X, LO_Y, LO_1_Z + LO_Z_GAP * i),
+  };
+  loOrangePoms[`loOrange${i}`] = {
+    type: 'from-bb-template',
+    name: Dict.map(tr('Low Orange Pom #%d'), (str: string) => sprintf(str, i + 1)),
+    templateId: 'pom_orange',
+    visible: true,
+    editable: true,
+    startingOrigin: origin,
+    origin
+  };
+}
+
 export const SPRING_26_SANDBOX: Scene = {
   ...baseScene,
   name: tr('2026 Spring Game Table'),
@@ -64,6 +102,8 @@ export const SPRING_26_SANDBOX: Scene = {
   scripts: {},
   nodes: {
     ...baseScene.nodes,
-    ...DOORS
+    ...DOORS,
+    ...loBluePoms,
+    ...loOrangePoms
   }
 };
