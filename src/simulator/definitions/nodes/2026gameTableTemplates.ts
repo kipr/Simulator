@@ -118,6 +118,39 @@ const pcv2inTemplate: Node.TemplatedNode<Node.Obj> = {
     friction: 3.75
   }
 };
+const slidingDoorTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'slidingDoor',
+  physics: {
+    type: 'mesh',
+    motionType: PhysicsMotionType.DYNAMIC,
+    mass: Mass.grams(11),
+    restitution: 0.2,
+    friction: 0.3
+  }
+};
+const pvc2inBlueTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'pvc2inBlue',
+  physics: {
+    type: 'mesh',
+    motionType: PhysicsMotionType.DYNAMIC,
+    mass: Mass.grams(11),
+    restitution: 0.2,
+    friction: 0.3
+  }
+};
+const pvc2inPinkTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'pvc2inPink',
+  physics: {
+    type: 'mesh',
+    motionType: PhysicsMotionType.DYNAMIC,
+    mass: Mass.grams(11),
+    restitution: 0.2,
+    friction: 0.3
+  }
+};
 
 export const BB2026Templates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'fallTable26': fallTable26Template,
@@ -132,7 +165,10 @@ export const BB2026Templates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'pallet': palletTemplate,
   'pomBlue2In': pomBlue2inTemplate,
   'trafficCone': trafficConeTemplate,
-  'pcv2In': pcv2inTemplate
+  'pcv2In': pcv2inTemplate,
+  'slidingDoor': slidingDoorTemplate,
+  'pvc2inBlue': pvc2inBlueTemplate,
+  'pvc2inPink': pvc2inPinkTemplate
 });
 
 
@@ -188,5 +224,17 @@ export const BB2026Geometries = Object.freeze<Dict<Geometry>>({
   'pvc2In': {
     type: 'file',
     uri: '/static/object_binaries/PVC2in.glb'
+  },
+  'slidingDoor': {
+    type: 'file',
+    uri: '/static/object_binaries/Sliding_Door.glb'
+  },
+  'pvc2inBlue': {
+    type: 'file',
+    uri: '/static/object_binaries/PVC2in_Blue.glb'
+  },
+  'pvc2inPink': {
+    type: 'file',
+    uri: '/static/object_binaries/PVC2in_Pink.glb'
   }
 });
