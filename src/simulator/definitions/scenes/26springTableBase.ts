@@ -12,7 +12,7 @@ import { PhysicsMotionType } from '@babylonjs/core';
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(0, 0, 0),
-  orientation: RotationwUnits.eulerDegrees(0, 180, 0),
+  orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
 
 const GAME_TABLE_ORIGIN: ReferenceFramewUnits = {
@@ -25,10 +25,15 @@ const LIGHT_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(50, 90, 50)
 };
 
+/**
+ * Special demobot with no collision box over the reflectance sensor.
+ * When it has the collider, it can't drive straight up the ramp because the
+ * wheels always leave the ground.
+ */
 const ROBOT: Node.Robot = {
   type: 'robot',
   name: tr('Robot'),
-  robotId: 'demobot',
+  robotId: 'demobot_no_reflectance',
   state: AbstractRobot.Stateless.NIL,
   visible: true,
   startingOrigin: ROBOT_ORIGIN,
@@ -78,7 +83,7 @@ export function createBaseSceneSurface(): Scene {
     }),
     gravity: {
       x: Distance.meters(0),
-      y: Distance.meters(-9.8),
+      y: Distance.meters(-9.8 * 0.4),
       z: Distance.meters(0),
     }
   };
