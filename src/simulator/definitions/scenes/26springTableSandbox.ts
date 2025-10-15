@@ -18,13 +18,15 @@ import tr from '@i18n';
 import EditableList from 'components/EditableList';
 import { Quaternion } from '@babylonjs/core';
 import { Ref } from 'colorjs.io/types/src/space';
+import { RED } from 'components/constants/theme';
+import { booleanTypeAnnotation } from '@babel/types';
 
 const baseScene = createBaseSceneSurface();
 
-const DOOR_X = 98;
+const DOOR_X = 97;
 const DOOR_Y = 9;
 const DOOR1_Z = 90;
-const DOOR_ORIENTATION = RotationwUnits.eulerDegrees(0, 0, 95);
+const DOOR_ORIENTATION = RotationwUnits.eulerDegrees(0, 0, 91);
 const DOOR1_ORIGIN: ReferenceFramewUnits = {
   position: Vector3wUnits.centimeters(DOOR_X, DOOR_Y, DOOR1_Z),
   orientation: DOOR_ORIENTATION
@@ -269,6 +271,48 @@ const YELLOW_2IN_CUBES: Dict<Node> = {
   }
 };
 
+const MIDLINE_X = 106;
+const BROWN_CUBE_Y = 0;
+const BROWN_CUBE_LEFT_Z = RED_Z_1 + PIPE_2IN_CUBE_GAP + 5;
+const BROWN_CUBE_RIGHT_Z = GREEN_Z_1 - 5;
+const BROWN_CUBE_ORIGINS: ReferenceFramewUnits[] = [
+  { position: Vector3wUnits.centimeters(MIDLINE_X, BROWN_CUBE_Y, BROWN_CUBE_LEFT_Z) },
+  { position: Vector3wUnits.centimeters(MIDLINE_X, BROWN_CUBE_Y, BROWN_CUBE_RIGHT_Z) }
+];
+
+const BROWN_CUBES: Dict<Node> = {
+  left: {
+    type: 'from-bb-template',
+    name: tr('Middle Left Brown Cube'),
+    templateId: 'cubeBrown4In',
+    visible: true,
+    editable: true,
+    startingOrigin: BROWN_CUBE_ORIGINS[0],
+    origin: BROWN_CUBE_ORIGINS[0]
+  },
+  right: {
+    type: 'from-bb-template',
+    name: tr('Middle Right Brown Cube'),
+    templateId: 'cubeBrown4In',
+    visible: true,
+    editable: true,
+    startingOrigin: BROWN_CUBE_ORIGINS[1],
+    origin: BROWN_CUBE_ORIGINS[1]
+  }
+};
+
+const BOTGUY_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(MIDLINE_X, 4, (BROWN_CUBE_LEFT_Z + BROWN_CUBE_RIGHT_Z - 2) / 2)
+};
+const BOTGUY: Node = {
+  type: 'from-bb-template',
+  name: tr('Botguy'),
+  templateId: 'botguy_gamepiece',
+  visible: true,
+  editable: true,
+  startingOrigin: BOTGUY_ORIGIN,
+  origin: BOTGUY_ORIGIN
+};
 
 export const SPRING_26_SANDBOX: Scene = {
   ...baseScene,
@@ -288,6 +332,8 @@ export const SPRING_26_SANDBOX: Scene = {
     ...BASKETS,
     ...LOW_2IN_CUBES,
     ...pallets,
-    ...YELLOW_2IN_CUBES
+    ...YELLOW_2IN_CUBES,
+    ...BROWN_CUBES,
+    BOTGUY
   }
 };
