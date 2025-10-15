@@ -40,7 +40,7 @@ const basketTemplate: Node.TemplatedNode<Node.Obj> = {
 const CUBEPHYSICS: Node.Physics = {
   type: 'box',
   motionType: PhysicsMotionType.DYNAMIC,
-  mass: Mass.grams(5),
+  mass: Mass.grams(2),
   restitution: 0.4,
   friction: 4
 };
@@ -78,9 +78,9 @@ const palletTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'pallet',
   physics: {
-    type: 'mesh',
+    type: 'box',
     motionType: PhysicsMotionType.DYNAMIC,
-    mass: Mass.grams(5),
+    mass: Mass.grams(1),
     restitution: 0.2,
     friction: 4
   }

@@ -222,9 +222,10 @@ const LOW_2IN_CUBES: Dict<Node> = {
 const LM_PALLET_X = 24.5375;
 const LOW_PALLET_Y = -5;
 const LOW_PALLET_Z = 47.9;
+const PALLET_H = 1.8;
 const PALLET_ORIGINS: ReferenceFramewUnits[] = [
   { position: Vector3wUnits.centimeters(LM_PALLET_X, LOW_PALLET_Y, LOW_PALLET_Z) },
-  { position: Vector3wUnits.centimeters(LM_PALLET_X, LOW_PALLET_Y + 1.804, LOW_PALLET_Z) },
+  { position: Vector3wUnits.centimeters(LM_PALLET_X, LOW_PALLET_Y + PALLET_H, LOW_PALLET_Z) },
   { position: Vector3wUnits.centimeters(LM_PALLET_X + 0.225, 0, 61.8) },
   { position: Vector3wUnits.centimeters(22.25, 10, 106.9) }
 ];
@@ -241,6 +242,33 @@ for (const [i, origin] of PALLET_ORIGINS.entries()) {
     origin
   };
 }
+
+const YELLOW_CUBE_ORIGINS: ReferenceFramewUnits[] = [
+  { position: Vector3wUnits.add(PALLET_ORIGINS[1].position, Vector3wUnits.centimeters(0, 2.54 + PALLET_H, 0)) },
+  { position: Vector3wUnits.add(PALLET_ORIGINS[1].position, Vector3wUnits.centimeters(0, PALLET_H + 3 * 2.54, 0)) },
+];
+
+const YELLOW_2IN_CUBES: Dict<Node> = {
+  lower: {
+    type: 'from-bb-template',
+    name: tr('Lower Yellow Cube (2 inch)'),
+    templateId: 'cubeYellow2In',
+    visible: true,
+    editable: true,
+    startingOrigin: YELLOW_CUBE_ORIGINS[0],
+    origin: YELLOW_CUBE_ORIGINS[0]
+  },
+  upper: {
+    type: 'from-bb-template',
+    name: tr('Upper Yellow Cube (2 inch)'),
+    templateId: 'cubeYellow2In',
+    visible: true,
+    editable: true,
+    startingOrigin: YELLOW_CUBE_ORIGINS[1],
+    origin: YELLOW_CUBE_ORIGINS[1]
+  }
+};
+
 
 export const SPRING_26_SANDBOX: Scene = {
   ...baseScene,
@@ -259,6 +287,7 @@ export const SPRING_26_SANDBOX: Scene = {
     ...hiOrangePoms,
     ...BASKETS,
     ...LOW_2IN_CUBES,
-    ...pallets
+    ...pallets,
+    ...YELLOW_2IN_CUBES
   }
 };
