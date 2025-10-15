@@ -18,7 +18,7 @@ import tr from '@i18n';
 import EditableList from 'components/EditableList';
 import { Quaternion } from '@babylonjs/core';
 import { Ref } from 'colorjs.io/types/src/space';
-import { RED } from 'components/constants/theme';
+import { GREEN, RED } from 'components/constants/theme';
 import { booleanTypeAnnotation } from '@babel/types';
 
 const baseScene = createBaseSceneSurface();
@@ -301,8 +301,10 @@ const BROWN_CUBES: Dict<Node> = {
   }
 };
 
+const MIDLINE_Z = (BROWN_CUBE_LEFT_Z + BROWN_CUBE_RIGHT_Z - 2) / 2;
+const LOW_4IN_Y = 4;
 const BOTGUY_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(MIDLINE_X, 4, (BROWN_CUBE_LEFT_Z + BROWN_CUBE_RIGHT_Z - 2) / 2)
+  position: Vector3wUnits.centimeters(MIDLINE_X, LOW_4IN_Y, MIDLINE_Z)
 };
 const BOTGUY: Node = {
   type: 'from-bb-template',
@@ -312,6 +314,35 @@ const BOTGUY: Node = {
   editable: true,
   startingOrigin: BOTGUY_ORIGIN,
   origin: BOTGUY_ORIGIN
+};
+
+const RAND_4IN_ORIGINS: ReferenceFramewUnits[] = [
+  { position: Vector3wUnits.centimeters(PIPE_2IN_CUBE_X - 2.54, 0, MIDLINE_Z) },
+  { position: Vector3wUnits.add(PALLET_ORIGINS[3].position, Vector3wUnits.centimeters(0, PALLET_H + 2 * 2.54, 0)) }
+];
+
+const GREEN_IDX = Math.floor(2 * Math.random());
+const RED_IDX = (GREEN_IDX + 1) % 2;
+
+const RAND_4IN_CUBES: Dict<Node> = {
+  green: {
+    type: 'from-bb-template',
+    name: tr('Green Cube'),
+    templateId: 'cubeGreen4In',
+    visible: true,
+    editable: true,
+    startingOrigin: RAND_4IN_ORIGINS[GREEN_IDX],
+    origin: RAND_4IN_ORIGINS[GREEN_IDX]
+  },
+  red: {
+    type: 'from-bb-template',
+    name: tr('Red Cube'),
+    templateId: 'cubeRed4In',
+    visible: true,
+    editable: true,
+    startingOrigin: RAND_4IN_ORIGINS[RED_IDX],
+    origin: RAND_4IN_ORIGINS[RED_IDX]
+  }
 };
 
 export const SPRING_26_SANDBOX: Scene = {
@@ -334,6 +365,7 @@ export const SPRING_26_SANDBOX: Scene = {
     ...pallets,
     ...YELLOW_2IN_CUBES,
     ...BROWN_CUBES,
+    ...RAND_4IN_CUBES,
     BOTGUY
   }
 };
