@@ -17,6 +17,7 @@ import { sprintf } from 'sprintf-js';
 import tr from '@i18n';
 import EditableList from 'components/EditableList';
 import { Quaternion } from '@babylonjs/core';
+import { Ref } from 'colorjs.io/types/src/space';
 
 const baseScene = createBaseSceneSurface();
 
@@ -96,10 +97,9 @@ for (let i = 0; i < 6; i++) {
 }
 
 const HI_BLUE_X = 3.9;
-const HI_Y = 13;
+const HI_Y = 12.5;
 const HI_Z_EDGE = 204.5;
 const HI_Z_1 = HI_Z_EDGE - POM_Z_GAP;
-
 const hiBluePoms: Dict<Node> = {};
 for (let i = 0; i < 6; i++) {
   const origin: ReferenceFramewUnits = {
@@ -169,6 +169,79 @@ const BASKETS: Dict<Node> = {
   }
 };
 
+const PIPE_2IN_CUBE_X = 91;
+const PIPE_2IN_CUBE_Y = -2.8;
+const PIPE_2IN_CUBE_GAP = 8.534 + 2 * 2.54;
+const RED_Z_1 = 56.2;
+const GREEN_Z_1 = 130.1;
+const LOW_2IN_CUBE_ORIGINS: ReferenceFramewUnits[] = [
+  { position: Vector3wUnits.centimeters(PIPE_2IN_CUBE_X, PIPE_2IN_CUBE_Y, RED_Z_1) },
+  { position: Vector3wUnits.centimeters(PIPE_2IN_CUBE_X, PIPE_2IN_CUBE_Y, RED_Z_1 + PIPE_2IN_CUBE_GAP) },
+  { position: Vector3wUnits.centimeters(PIPE_2IN_CUBE_X, PIPE_2IN_CUBE_Y, GREEN_Z_1) },
+  { position: Vector3wUnits.centimeters(PIPE_2IN_CUBE_X, PIPE_2IN_CUBE_Y, GREEN_Z_1 + PIPE_2IN_CUBE_GAP) }
+];
+const LOW_2IN_CUBES: Dict<Node> = {
+  leftRed: {
+    type: 'from-bb-template',
+    name: tr('Left Red Cube (2 inch)'),
+    templateId: 'cubeRed2In',
+    visible: true,
+    editable: true,
+    startingOrigin: LOW_2IN_CUBE_ORIGINS[0],
+    origin: LOW_2IN_CUBE_ORIGINS[0]
+  },
+  rightRed: {
+    type: 'from-bb-template',
+    name: tr('Right Red Cube (2 inch)'),
+    templateId: 'cubeRed2In',
+    visible: true,
+    editable: true,
+    startingOrigin: LOW_2IN_CUBE_ORIGINS[1],
+    origin: LOW_2IN_CUBE_ORIGINS[1]
+  },
+  leftGreen: {
+    type: 'from-bb-template',
+    name: tr('Left Green Cube (2 inch)'),
+    templateId: 'cubeGreen2In',
+    visible: true,
+    editable: true,
+    startingOrigin: LOW_2IN_CUBE_ORIGINS[2],
+    origin: LOW_2IN_CUBE_ORIGINS[2]
+  },
+  rightGreen: {
+    type: 'from-bb-template',
+    name: tr('Right Green Cube (2 inch)'),
+    templateId: 'cubeGreen2In',
+    visible: true,
+    editable: true,
+    startingOrigin: LOW_2IN_CUBE_ORIGINS[3],
+    origin: LOW_2IN_CUBE_ORIGINS[3]
+  },
+};
+
+const LM_PALLET_X = 24.5375;
+const LOW_PALLET_Y = -5;
+const LOW_PALLET_Z = 47.9;
+const PALLET_ORIGINS: ReferenceFramewUnits[] = [
+  { position: Vector3wUnits.centimeters(LM_PALLET_X, LOW_PALLET_Y, LOW_PALLET_Z) },
+  { position: Vector3wUnits.centimeters(LM_PALLET_X, LOW_PALLET_Y + 1.804, LOW_PALLET_Z) },
+  { position: Vector3wUnits.centimeters(LM_PALLET_X + 0.225, 0, 61.8) },
+  { position: Vector3wUnits.centimeters(22.25, 10, 106.9) }
+];
+
+const pallets: Dict<Node> = {};
+for (const [i, origin] of PALLET_ORIGINS.entries()) {
+  pallets[`pallet${i}`] = {
+    type: 'from-bb-template',
+    name: Dict.map(tr('Pallet #%d'), (str: string) => sprintf(str, i + 1)),
+    templateId: 'pallet',
+    visible: true,
+    editable: true,
+    startingOrigin: origin,
+    origin
+  };
+}
+
 export const SPRING_26_SANDBOX: Scene = {
   ...baseScene,
   name: tr('2026 Spring Game Table'),
@@ -184,6 +257,8 @@ export const SPRING_26_SANDBOX: Scene = {
     ...loOrangePoms,
     ...hiBluePoms,
     ...hiOrangePoms,
-    ...BASKETS
+    ...BASKETS,
+    ...LOW_2IN_CUBES,
+    ...pallets
   }
 };
