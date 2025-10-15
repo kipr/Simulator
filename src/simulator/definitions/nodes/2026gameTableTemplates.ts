@@ -34,7 +34,7 @@ const basketTemplate: Node.TemplatedNode<Node.Obj> = {
     motionType: PhysicsMotionType.DYNAMIC,
     mass: Mass.grams(30),
     restitution: 0.2,
-    friction: 2
+    friction: .3
   }
 };
 const CUBEPHYSICS: Node.Physics = {
