@@ -1,13 +1,6 @@
-// In scenes we build upon the base, and add objects to the scene.
-// The objects are set up in the node-templates index.ts file.
-// Here we add the objects and their properties to the scene.
-
 import Scene from '../../../state/State/Scene';
 import Node from '../../../state/State/Scene/Node';
-import Script from '../../../state/State/Scene/Script';
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../../util/math/unitMath';
-import { RawQuaternion } from '../../../util/math/math';
-import { Distance } from '../../../util';
 import Dict from '../../../util/objectOps/Dict';
 
 import { createBaseSceneSurface } from './26springTableBase';
@@ -15,11 +8,6 @@ import { createBaseSceneSurface } from './26springTableBase';
 import { sprintf } from 'sprintf-js';
 
 import tr from '@i18n';
-import EditableList from 'components/EditableList';
-import { Quaternion } from '@babylonjs/core';
-import { Ref } from 'colorjs.io/types/src/space';
-import { GREEN, RED } from 'components/constants/theme';
-import { booleanTypeAnnotation } from '@babel/types';
 
 const baseScene = createBaseSceneSurface();
 
@@ -319,7 +307,7 @@ const BOTGUY: Node = {
 const RAND_4IN_ORIGINS: ReferenceFramewUnits[] = [
   { position: Vector3wUnits.centimeters(PIPE_2IN_CUBE_X - 2.54, 0, MIDLINE_Z) },
   { position: Vector3wUnits.add(PALLET_ORIGINS[3].position, Vector3wUnits.centimeters(0, PALLET_H + 2 * 2.54, 0)) }
-];
+].sort((a, b) => Math.random() - 0.5);
 
 const GREEN_IDX = Math.floor(2 * Math.random());
 const RED_IDX = (GREEN_IDX + 1) % 2;
@@ -331,8 +319,8 @@ const RAND_4IN_CUBES: Dict<Node> = {
     templateId: 'cubeGreen4In',
     visible: true,
     editable: true,
-    startingOrigin: RAND_4IN_ORIGINS[GREEN_IDX],
-    origin: RAND_4IN_ORIGINS[GREEN_IDX]
+    startingOrigin: RAND_4IN_ORIGINS[0],
+    origin: RAND_4IN_ORIGINS[0]
   },
   red: {
     type: 'from-bb-template',
@@ -340,10 +328,41 @@ const RAND_4IN_CUBES: Dict<Node> = {
     templateId: 'cubeRed4In',
     visible: true,
     editable: true,
-    startingOrigin: RAND_4IN_ORIGINS[RED_IDX],
-    origin: RAND_4IN_ORIGINS[RED_IDX]
+    startingOrigin: RAND_4IN_ORIGINS[1],
+    origin: RAND_4IN_ORIGINS[1]
   }
 };
+
+const STACK_HEIGHTS = [LO_Y, LO_Y + 2 * 2.54, LO_Y + 4 * 2.54].sort((a, b) => Math.random() - 0.5);
+const STACK_ORDER = ['Red', 'Yellow', 'Green'];
+const NEAR_STACK_ORIGINS: ReferenceFramewUnits[] = STACK_HEIGHTS.map((y) => ReferenceFramewUnits.create(Vector3wUnits.centimeters(-9, y, 8.645)));
+const NEAR_STACK: Dict<Node> = {};
+for (const [i, origin] of NEAR_STACK_ORIGINS.entries()) {
+  const color = STACK_ORDER[i];
+  NEAR_STACK[`near${color}`] = {
+    type: 'from-bb-template',
+    name: Dict.map(tr('Near Stack %s Cube'), (str: string) => sprintf(str, color)),
+    templateId: `cube${color}2In`,
+    visible: true,
+    editable: true,
+    startingOrigin: origin,
+    origin
+  };
+}
+const FAR_STACK_ORIGINS: ReferenceFramewUnits[] = STACK_HEIGHTS.map((y) => ReferenceFramewUnits.create(Vector3wUnits.centimeters(64.894, y, 215.135)));
+const FAR_STACK: Dict<Node> = {};
+for (const [i, origin] of FAR_STACK_ORIGINS.entries()) {
+  const color = STACK_ORDER[i];
+  FAR_STACK[`far${color}`] = {
+    type: 'from-bb-template',
+    name: Dict.map(tr('Far Stack %s Cube'), (str: string) => sprintf(str, color)),
+    templateId: `cube${color}2In`,
+    visible: true,
+    editable: true,
+    startingOrigin: origin,
+    origin
+  };
+}
 
 export const SPRING_26_SANDBOX: Scene = {
   ...baseScene,
@@ -366,6 +385,8 @@ export const SPRING_26_SANDBOX: Scene = {
     ...YELLOW_2IN_CUBES,
     ...BROWN_CUBES,
     ...RAND_4IN_CUBES,
+    ...NEAR_STACK,
+    ...FAR_STACK,
     BOTGUY
   }
 };
