@@ -2,9 +2,7 @@ import Scene from '../../../state/State/Scene';
 import Node from '../../../state/State/Scene/Node';
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../../util/math/unitMath';
 import Dict from '../../../util/objectOps/Dict';
-
 import { createBaseSceneSurface } from './26springTableBase';
-
 import { sprintf } from 'sprintf-js';
 
 import tr from '@i18n';
@@ -364,6 +362,33 @@ for (const [i, origin] of FAR_STACK_ORIGINS.entries()) {
   };
 }
 
+const CONE_X = 65;
+const CONE_ORIGINS: ReferenceFramewUnits[] = [
+  { position: Vector3wUnits.centimeters(CONE_X, -5, 100) },
+  { position: Vector3wUnits.centimeters(CONE_X, -5, 161) }
+];
+const CONES: Dict<Node> = {
+  rightCone: {
+    type: 'from-bb-template',
+    name: tr('Right Traffic Cone'),
+    templateId: 'trafficCone',
+    visible: true,
+    editable: true,
+    startingOrigin: CONE_ORIGINS[0],
+    origin: CONE_ORIGINS[0]
+  },
+  leftCone: {
+    type: 'from-bb-template',
+    name: tr('Left Traffic Cone'),
+    templateId: 'trafficCone',
+    visible: true,
+    editable: true,
+    startingOrigin: CONE_ORIGINS[1],
+    origin: CONE_ORIGINS[1]
+  }
+};
+
+
 export const SPRING_26_SANDBOX: Scene = {
   ...baseScene,
   name: tr('2026 Spring Game Table'),
@@ -387,6 +412,7 @@ export const SPRING_26_SANDBOX: Scene = {
     ...RAND_4IN_CUBES,
     ...NEAR_STACK,
     ...FAR_STACK,
+    ...CONES,
     BOTGUY
   }
 };
