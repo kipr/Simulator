@@ -197,6 +197,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       challengeState,
       worldCapabilities,
       onDocumentationGoToFuzzy,
+      onCommonDocumentationGoToFuzzy,
       locale
     } = props;
 
@@ -205,6 +206,8 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       sidePanelSize,
 
     } = this.state;
+
+    //window.console.log("Rendering SideLayout with editorTarget:", editorTarget);
 
     let editorBarTarget: EditorBarTarget;
     let editor: JSX.Element;
@@ -232,6 +235,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
             messages={messages}
             autocomplete={settings.editorAutoComplete}
             onDocumentationGoToFuzzy={onDocumentationGoToFuzzy}
+            onCommonDocumentationGoToFuzzy={onCommonDocumentationGoToFuzzy}
           />
         );
         break;
