@@ -168,7 +168,6 @@ module.exports = {
       },
       {
         test: /\.(jpe?g|png|gif|svg|PNG)$/i,
-        type: "asset/resource",
         use: [
           {
             loader: "file-loader",
@@ -179,18 +178,15 @@ module.exports = {
           {
             loader: "image-webpack-loader",
             options: {
-              // optimization options
               mozjpeg: { progressive: true },
               optipng: { optimizationLevel: 7 },
               gifsicle: { interlaced: false },
               pngquant: { quality: [0.65, 0.9], speed: 4 },
-              // disable optimization while debugging
               disable: process.env.NODE_ENV === "development",
             },
           },
         ],
       },
-
       {
         test: /\.(woff|woff2|eot|ttf)$/,
         loader: "url-loader",
