@@ -168,7 +168,6 @@ module.exports = {
       },
       {
         test: /\.(jpe?g|png|gif|svg|PNG)$/i,
-        type: "asset/resource",
         use: [
           {
             loader: "file-loader",
