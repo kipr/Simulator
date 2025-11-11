@@ -4,6 +4,7 @@ import {
   CHALLENGE_COMPLETION_COLLECTION,
   USER_COLLECTION,
   ASSIGNMENT_COLLECTION,
+  CLASSROOM_COLLECTION,
 } from './constants';
 
 interface Selector {
@@ -34,6 +35,11 @@ namespace Selector {
 
   export const assignment = (id: string): Selector => ({
     collection: ASSIGNMENT_COLLECTION,
+    id,
+  });
+
+  export const classroom = (id: string): Selector => ({
+    collection: CLASSROOM_COLLECTION,
     id,
   });
 }

@@ -1,16 +1,18 @@
 import Dict from '../util/objectOps/Dict';
 import store, { State } from '../state';
-import { ChallengeCompletionsAction, ChallengesAction, ScenesAction } from '../state/reducer';
+import { ChallengeCompletionsAction, ChallengesAction, ClassroomsAction, ScenesAction } from '../state/reducer';
 import Async from '../state/State/Async';
 import { AsyncChallenge } from '../state/State/Challenge';
 import { AsyncChallengeCompletion } from '../state/State/ChallengeCompletion';
 import { AsyncScene } from '../state/State/Scene';
+import { AsyncClassroom } from 'state/State/Classroom';
 
 export class ChallengeBuilder {
   private id_: string;
   private builder_: Builder;
 
   private challenge_: AsyncChallenge;
+
 
   constructor(id: string, builder: Builder) {
     this.id_ = id;
@@ -28,7 +30,7 @@ export class ChallengeBuilder {
   scene(): SceneBuilder {
     const latest = Async.latestValue(this.challenge_);
     if (!latest) return new SceneBuilder(undefined, this.builder_);
-    
+
     return new SceneBuilder(latest.sceneId, this.builder_);
   }
 
@@ -42,11 +44,25 @@ export class ChallengeCompletionBuilder {
     if (!id) return;
 
     const challengeCompletion = builder.state.challengeCompletions[id];
-  
+
     if (!challengeCompletion || challengeCompletion.type === Async.Type.Unloaded) {
       builder.loadChallengeCompletion_(id);
     } else {
       builder.addChallengeCompletion_(id, challengeCompletion);
+    }
+  }
+}
+
+export class ClassroomBuilder {
+  constructor(id: string | undefined, builder: Builder) {
+    if (!id) return;
+
+    const classroom = builder.state.classrooms[id];
+
+    if (!classroom || classroom.type === Async.Type.Unloaded) {
+      builder.loadClassroom_(id);
+    } else {
+      builder.addClassroom_(id, classroom);
     }
   }
 }
@@ -56,7 +72,7 @@ export class SceneBuilder {
     if (!id) return;
 
     const scene = builder.state.scenes[id];
-  
+
     if (!scene || scene.type === Async.Type.Unloaded) {
       builder.loadScene_(id);
     } else {
@@ -84,6 +100,11 @@ class Builder {
 
   private challengeCompletionsToLoad_: Set<string> = new Set();
 
+  private classrooms_: Dict<AsyncClassroom> = {};
+  get classrooms() { return this.classrooms_; }
+
+  private classroomsToLoad_: Set<string> = new Set();
+
   constructor(state: State) {
     this.state_ = state;
   }
@@ -96,6 +117,10 @@ class Builder {
     return new SceneBuilder(id, this);
   }
 
+  classroom(id: string): ClassroomBuilder {
+    return new ClassroomBuilder(id, this);
+  }
+
   addScene_(id: string, scene: AsyncScene) {
     this.scenes_[id] = scene;
   }
@@ -106,6 +131,10 @@ class Builder {
 
   addChallengeCompletion_(id: string, challengeCompletion: AsyncChallengeCompletion) {
     this.challengeCompletions_[id] = challengeCompletion;
+  }
+
+  addClassroom_(id: string, classroom: AsyncClassroom) {
+    this.classrooms_[id] = classroom;
   }
 
   loadScene_(id: string) {
@@ -122,7 +151,12 @@ class Builder {
     this.challengeCompletionsToLoad_.add(id);
     this.challengeCompletions_[id] = Async.unloaded({});
   }
-  
+
+  loadClassroom_(id: string) {
+    this.classroomsToLoad_.add(id);
+    this.classrooms_[id] = Async.unloaded({});
+  }
+
   dispatchLoads() {
     for (const sceneId of this.scenesToLoad_) {
       store.dispatch(ScenesAction.loadScene({ sceneId }));
@@ -132,6 +166,9 @@ class Builder {
     }
     for (const challengeId of this.challengeCompletionsToLoad_) {
       store.dispatch(ChallengeCompletionsAction.loadChallengeCompletion({ challengeId }));
+    }
+    for (const classroomId of this.classroomsToLoad_) {
+      store.dispatch(ClassroomsAction.loadClassroom({ classroomId }));
     }
   }
 }
