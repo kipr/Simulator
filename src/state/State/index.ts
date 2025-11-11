@@ -10,7 +10,7 @@ import Robot from './Robot';
 import Scene, { AsyncScene } from './Scene';
 import User, { AsyncUser } from './User';
 import { AsyncAssignment } from './Assignment';
-
+import { AsyncClassroom } from './Classroom';
 import tr from '@i18n';
 import Author from '../../db/Author';
 import Subject from './Assignment/Subject';
@@ -37,6 +37,12 @@ export namespace Assignments {
       }
     }),
   };
+}
+
+export type Classrooms = Dict<AsyncClassroom>;
+
+export namespace Classrooms {
+  export const EMPTY: Classrooms = {};
 }
 
 export type Scenes = Dict<AsyncScene>;

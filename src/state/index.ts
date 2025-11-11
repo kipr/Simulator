@@ -1,11 +1,11 @@
 import { applyMiddleware, combineReducers, compose, createStore, } from 'redux';
 
 import * as reducer from './reducer';
-import { DocumentationState, ChallengeCompletions, Challenges, I18n, Robots, Scenes, Assignments, Users } from './State';
+import { DocumentationState, ChallengeCompletions, Challenges, I18n, Robots, Scenes, Assignments, Users, Classrooms } from './State';
 import { AiState } from './State/Ai/index';
 // import history from './history';
 import { AsyncScene } from './State/Scene';
-import { CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, SCENE_COLLECTION, ASSIGNMENT_COLLECTION, USER_COLLECTION } from '../db/constants';
+import { CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, SCENE_COLLECTION, ASSIGNMENT_COLLECTION, USER_COLLECTION, CLASSROOM_COLLECTION } from '../db/constants';
 import Record from '../db/Record';
 import Selector from '../db/Selector';
 //import { reduceDocumentation, reduceDocumentationCommon } from 'ivygate/src/state/reducer/documentation';
@@ -25,6 +25,7 @@ export default createStore(combineReducers<State>({
   challengeCompletions: reducer.reduceChallengeCompletions,
   i18n: reducer.reduceI18n,
   assignments: reducer.reduceAssignments,
+  classrooms: reducer.reduceClassrooms,
   users: reducer.reduceUsers,
   ai: reducer.reduceAi
 }), composeEnhancers(
@@ -44,6 +45,7 @@ export interface State {
   documentationCommon: DocumentationState;
   i18n: I18n;
   assignments: Assignments;
+  classrooms: Classrooms;
   users: Users;
   ai: AiState;
 }
@@ -76,6 +78,11 @@ export namespace State {
         type: Record.Type.Assignment,
         id: selector.id,
         value: state.assignments[selector.id]
+      };
+      case CLASSROOM_COLLECTION: return {
+        type: Record.Type.Classroom,
+        id: selector.id,
+        value: state.classrooms[selector.id]
       };
     }
 
