@@ -19,6 +19,7 @@ const formData = require("form-data");
 const Mailgun = require("mailgun.js");
 const createParentalConsentRouter = require("./parentalConsent");
 const createAiRouter = require("./ai");
+const createClassroomsRouter = require("./classrooms");
 
 let config;
 try {
@@ -117,6 +118,9 @@ app.use(
 
 // Add AI router
 app.use("/api/ai", createAiRouter(firebaseTokenManager, config));
+
+//Classrooms router
+app.use("/api/classrooms", createClassroomsRouter(firebaseTokenManager));
 
 app.use("/api", proxy(config.dbUrl));
 
