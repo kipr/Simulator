@@ -48,6 +48,12 @@ const Assist = styled('span', (theme: ThemeProps) => ({
   marginLeft: `${theme.theme.itemPadding / 2}px`,
 }));
 
+const ToolTip = styled('span', (theme: ThemeProps) => ({
+  opacity: 0.55,
+  fontSize: '0.8em',
+  marginLeft: `${theme.theme.itemPadding / 2}px`,
+}));
+
 const Finalize = styled('div', (props: ThemeProps & { disabled?: boolean }) => ({
   flex: '1 1',
   borderRadius: `${props.theme.itemPadding * 2}px`,
@@ -134,7 +140,8 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
               this.onFinalizeClick_();
             }
           }}
-        />
+        />,
+        <Label theme={theme} key={`label-${index}-input`}>{item.tooltip ? <ToolTip theme={theme}>{item.tooltip}</ToolTip> : undefined}</Label>,
       ];
     }).reduce((acc, item) => [...acc, ...item], []);
 
@@ -249,7 +256,7 @@ namespace Form {
   export const DATE_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.Date);
   export const NON_EMPTY_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.Length, 1);
 
-  
+
   export const email = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
     id,
     text,
@@ -286,6 +293,32 @@ namespace Form {
     text,
     validType,
     tooltip,
+  });
+
+  export const classroomName = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
+    id,
+    text,
+    tooltip,
+    validator: NON_EMPTY_VALIDATOR,
+    finalizer: IDENTITY_FINALIZER,
+    assist,
+    assistText,
+  });
+
+  export const classroomInviteCode = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
+    id,
+    text,
+    tooltip,
+    validator: NON_EMPTY_VALIDATOR,
+    finalizer: IDENTITY_FINALIZER,
+    assist,
+    assistText,
+  });
+
+  export const username = (id: string, text: string): Item<string> => ({
+    id,
+    text,
+    finalizer: IDENTITY_FINALIZER
   });
 }
 
