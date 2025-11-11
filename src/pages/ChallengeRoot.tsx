@@ -22,7 +22,7 @@ import SettingsDialog from '../components/Dialog/SettingsDialog';
 import AboutDialog from '../components/Dialog/AboutDialog';
 
 import { DEFAULT_FEEDBACK, Feedback, FeedbackSuccessDialog, } from '../components/Feedback';
-import { Layout, LayoutProps, LayoutEditorTarget, OverlayLayout, OverlayLayoutRedux, SideLayoutRedux  } from '../components/Layout';
+import { Layout, LayoutProps, LayoutEditorTarget, OverlayLayout, OverlayLayoutRedux, SideLayoutRedux } from '../components/Layout';
 import { OpenSceneDialog, DeleteDialog } from '../components/Dialog';
 
 import Loading from '../components/Loading';
@@ -31,7 +31,8 @@ import { Capabilities } from '../components/World';
 
 
 import { State as ReduxState } from '../state';
-import { DocumentationAction, ScenesAction, ChallengeCompletionsAction, AiAction } from '../state/reducer';
+import { ScenesAction, ChallengeCompletionsAction, AiAction } from '../state/reducer';
+import { DocumentationAction } from 'ivygate/dist/state/reducer/documentation';
 import { sendMessage, SendMessageParams } from '../util/ai';
 
 import Scene, { AsyncScene } from '../state/State/Scene';
@@ -172,7 +173,7 @@ const WORLD_CAPABILITIES: Capabilities = {
 
 class Root extends React.Component<Props, State> {
   private editorRef: React.MutableRefObject<Editor>;
-  private overlayLayoutRef:  React.MutableRefObject<OverlayLayout>;
+  private overlayLayoutRef: React.MutableRefObject<OverlayLayout>;
 
   private workingChallengeScene_: Scene;
 
@@ -288,10 +289,10 @@ class Root extends React.Component<Props, State> {
     if (!challengeCompletion) return;
 
 
-    
+
     this.onStopClick_();
     this.workingChallengeScene = Async.latestValue(scene);
-    
+
     const latestChallenge = Async.latestValue(challenge);
     const latestChallengeCompletion = Async.latestValue(challengeCompletion);
     if (latestChallengeCompletion && latestChallenge) {
@@ -302,13 +303,13 @@ class Root extends React.Component<Props, State> {
         latestChallenge.failure ? PredicateCompletion.update(PredicateCompletion.EMPTY, latestChallenge.failure, eventStates) : undefined,
       );
     }
-    
+
     this.syncChallengeCompletion_();
   };
 
   private onSetEventValue_ = (eventId: string, value: boolean) => {
     const { challenge, challengeCompletion } = this.props;
-    
+
     const latestChallenge = Async.latestValue(challenge);
     if (!latestChallenge) return;
 
@@ -358,7 +359,7 @@ class Root extends React.Component<Props, State> {
   componentWillUnmount() {
     window.removeEventListener('resize', this.onWindowResize_);
     cancelAnimationFrame(this.updateConsoleHandle_);
-  
+
     Space.getInstance().onSelectNodeId = undefined;
     Space.getInstance().onSetNodeBatch = undefined;
     Space.getInstance().onNodeAdd = undefined;
@@ -375,7 +376,7 @@ class Root extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>): void {
     const { params: { challengeId }, challenge, challengeCompletion } = this.props;
-    
+
     if (challengeId && challenge && challengeCompletion && challengeCompletion.type === Async.Type.LoadFailed) {
       const latestChallenge = Async.latestValue(challenge);
       if (challengeCompletion.error.code === DbError.CODE_NOT_FOUND && latestChallenge) {
@@ -395,7 +396,7 @@ class Root extends React.Component<Props, State> {
     if (this.props.params.challengeId !== prevProps.params.challengeId) {
       this.initedChallengeCompletionScene_ = false;
     }
-    
+
     if (this.props.scene !== prevProps.scene || this.props.challengeCompletion !== prevProps.challengeCompletion) {
       const latestScene = Async.latestValue(this.props.scene);
       const latestChallengeCompletion = Async.latestValue(this.props.challengeCompletion);
@@ -523,7 +524,7 @@ class Root extends React.Component<Props, State> {
   private onModalClick_ = (modal: Modal) => () => this.setState({ modal });
 
   private onModalClose_ = () => this.setState({ modal: Modal.NONE });
-  
+
   private updateConsole_ = () => {
     const text = WorkerInstance.sharedConsole.popString();
     if (text.length > 0) {
@@ -534,7 +535,7 @@ class Root extends React.Component<Props, State> {
         }), 300)
       });
     }
-    
+
 
     this.scheduleUpdateConsole_();
   };
@@ -561,7 +562,7 @@ class Root extends React.Component<Props, State> {
           text: LocalizedString.lookup(tr('Compiling...\n'), locale),
           style: STDOUT_STYLE(this.state.theme)
         }));
-    
+
         this.setState({
           simulatorState: SimulatorState.COMPILING,
           console: nextConsole
@@ -571,7 +572,7 @@ class Root extends React.Component<Props, State> {
               nextConsole = this.state.console;
               const messages = sort(parseMessages(compileResult.stderr));
               const compileSucceeded = compileResult.result && compileResult.result.length > 0;
-    
+
               // Show all errors/warnings in console
               for (const message of messages) {
                 nextConsole = StyledText.extend(nextConsole, toStyledText(message, {
@@ -580,7 +581,7 @@ class Root extends React.Component<Props, State> {
                     : undefined
                 }));
               }
-    
+
               if (compileSucceeded) {
                 // Show success in console and start running the program
                 const haveWarnings = hasWarnings(messages);
@@ -590,7 +591,7 @@ class Root extends React.Component<Props, State> {
                     : LocalizedString.lookup(tr('Compilation succeeded\n'), locale),
                   style: STDOUT_STYLE(this.state.theme)
                 }));
-    
+
                 WorkerInstance.start({
                   language: language,
                   code: compileResult.result
@@ -604,13 +605,13 @@ class Root extends React.Component<Props, State> {
                     style: STDERR_STYLE(this.state.theme)
                   }));
                 }
-    
+
                 nextConsole = StyledText.extend(nextConsole, StyledText.text({
                   text: LocalizedString.lookup(tr('Compilation failed.\n'), locale),
                   style: STDERR_STYLE(this.state.theme)
                 }));
               }
-    
+
               this.setState({
                 simulatorState: compileSucceeded ? SimulatorState.RUNNING : SimulatorState.STOPPED,
                 messages,
@@ -623,7 +624,7 @@ class Root extends React.Component<Props, State> {
                 text: LocalizedString.lookup(tr('Something went wrong during compilation.\n'), locale),
                 style: STDERR_STYLE(this.state.theme)
               }));
-    
+
               this.setState({
                 simulatorState: SimulatorState.STOPPED,
                 messages: [],
@@ -646,7 +647,7 @@ class Root extends React.Component<Props, State> {
       }
     }
 
-    
+
   };
 
   private onStopClick_ = () => {
@@ -679,7 +680,7 @@ class Root extends React.Component<Props, State> {
   private onIndentCode_ = () => {
     if (this.editorRef.current) this.editorRef.current.ivygate.formatCode();
   };
-  
+
   onDocumentationClick = () => {
     window.open("https://www.kipr.org/doc/index.html");
   };
@@ -704,7 +705,7 @@ class Root extends React.Component<Props, State> {
     if ('simulationRealisticSensors' in changedSettings) {
       Space.getInstance().realisticSensors = changedSettings.simulationRealisticSensors;
     }
-    
+
     if ('simulationSensorNoise' in changedSettings) {
       Space.getInstance().noisySensors = changedSettings.simulationSensorNoise;
     }
@@ -751,7 +752,7 @@ class Root extends React.Component<Props, State> {
     const latestChallenge = Async.latestValue(challenge);
 
     const language = this.currentLanguage;
-    
+
     this.props.onChallengeCompletionSetCode(language, latestChallenge.code[language]);
     this.scheduleSaveChallengeCompletion_();
   };
@@ -777,7 +778,7 @@ class Root extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-    
+
     const {
       params: { challengeId },
       scene,
@@ -824,7 +825,7 @@ class Root extends React.Component<Props, State> {
 
     const theme = DARK;
 
-    
+
 
     const editorTarget: LayoutEditorTarget = {
       type: LayoutEditorTarget.Type.Robot,
@@ -864,7 +865,7 @@ class Root extends React.Component<Props, State> {
       onScriptRemove: this.onScriptRemove_,
       onObjectAdd: this.onObjectAdd_,
       onResetCode: this.onResetCode_,
-      
+
       challengeState: challenge ? {
         challenge,
         challengeCompletion: challengeCompletion || Async.unloaded({ brief: {} }),
@@ -982,7 +983,7 @@ const ConnectedChallengeRoot = connect((state: ReduxState, { params: { challenge
     challenge: Dict.unique(builder.challenges),
     challengeCompletion: Dict.unique(builder.challengeCompletions),
     locale: state.i18n.locale,
-    robots: Dict.map(state.robots.robots, Async.latestValue), 
+    robots: Dict.map(state.robots.robots, Async.latestValue),
   };
 }, (dispatch, { params: { challengeId } }: RootPublicProps) => ({
   onChallengeCompletionCreate: (challengeCompletion: ChallengeCompletion) => {
