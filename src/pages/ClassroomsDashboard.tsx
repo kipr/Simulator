@@ -27,6 +27,10 @@ import { auth } from '../firebase/firebase';
 import { getAuth } from 'firebase/auth';
 import { default as IvygateClassroomType } from 'ivygate/dist/types/classroomTypes';
 import Async from 'state/State/Async';
+import { studentInClassroom } from 'state/reducer/classrooms';
+import Input from '../components/interface/Input';
+import JoinClassDialog from '../components/Dialog/JoinClassDialog';
+import { InterfaceMode } from 'ivygate/dist/types/interface';
 
 export interface ClassroomsDashboardRootRouteParams {
   classroomId: string;
@@ -63,6 +67,8 @@ export interface ClassroomsDashboardPublicProps extends StyleProps, ThemeProps {
   classrooms: Dict<AsyncClassroom>;
   onCreateClassroom: (classroom: Classroom) => void;
   onListOwnedClassrooms: (teacherId: string) => void;
+  onStudentInClassroom: (studentId: LocalizedString) => void;
+  onAddStudentToClassroom: (classroomId: string, studentId: LocalizedString) => void;
 }
 
 interface ClassroomsDashboardPrivateProps {
@@ -74,6 +80,8 @@ interface ClassroomsDashboardState {
   users: Record<string, User>;
   challenges: Record<string, Challenge>;
   showCreateClassroomDialog: boolean;
+  showJoinClassroomDialog: boolean;
+  isStudentInClassroom?: boolean;
 }
 
 interface ClickProps {
@@ -215,10 +223,19 @@ class ClassroomsDashboard extends React.Component<Props, State> {
       users: {},
       challenges: {},
       showCreateClassroomDialog: false,
+      isStudentInClassroom: null as boolean | null,
+      showJoinClassroomDialog: false
     };
 
     void this.onLog();
     this.props.onListOwnedClassrooms(auth.currentUser?.uid || '');
+  }
+
+  async componentDidMount() {
+    const currentUserId = tr(auth.currentUser?.uid || '');
+    const isInClassroom = await studentInClassroom(currentUserId);
+    this.setState({ isStudentInClassroom: isInClassroom });
+    console.log("Is current user in any classroom?:", isInClassroom);
   }
 
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ClassroomsDashboardState>, snapshot?: any): void {
@@ -520,6 +537,11 @@ class ClassroomsDashboard extends React.Component<Props, State> {
     this.setState({ showCreateClassroomDialog: true });
   }
 
+  private onJoinClassroomDialog_ = () => {
+    console.log('Join classroom dialog called!');
+    this.setState({ showJoinClassroomDialog: true });
+  }
+
   private onCloseClassroomDialog_ = async (classroomName: string, classroomInviteCode: string) => {
     console.log('Close classroom dialog called with name:', classroomName, 'and invite code:', classroomInviteCode);
     this.props.onCreateClassroom({
@@ -536,12 +558,21 @@ class ClassroomsDashboard extends React.Component<Props, State> {
     this.setState({ showCreateClassroomDialog: false });
   }
 
+  private onCloseJoinClassroomDialog_ = async (joinedClassroom: Classroom) => {
+    console.log('Close join classroom dialog called with classroom:', joinedClassroom);
+    await this.props.onAddStudentToClassroom(
+      joinedClassroom.classroomId,
+      tr(auth.currentUser?.uid || '')
+    );
+
+    this.setState({ showJoinClassroomDialog: false, isStudentInClassroom: true });
+  }
   private createIvygateClassrooms = (): IvygateClassroomType[] => {
 
     const { classrooms } = this.props;
     console.log("createIvygateClassrooms() Current classrooms:", classrooms);
     const ivygateClassrooms = [];
-    // IvygateClassroom = { name: string; users: User[], classroomInvitationCode?: string }
+
     for (const [id, asyncClassroom] of Object.entries(classrooms)) {
       if (asyncClassroom.type === Async.Type.Loaded) {
         const classroom = asyncClassroom.value;
@@ -559,11 +590,38 @@ class ClassroomsDashboard extends React.Component<Props, State> {
 
 
   private renderMyClassroom = () => {
+    const { isStudentInClassroom } = this.state;
+
 
     return (
 
       <div>
         <h2>My Classroom</h2>
+
+        {isStudentInClassroom ? (
+          <p>You are enrolled in a classroom.</p>
+        ) : (
+          <div>
+            <p>You are not enrolled in any classroom.</p>
+
+            <Button theme={DARK} onClick={this.onJoinClassroomDialog_}>
+              Join Class
+            </Button>
+            {this.state.showJoinClassroomDialog && (
+              <JoinClassDialog
+                onClose={function (): void {
+                  throw new Error('Function not implemented.');
+                }}
+                locale={'en-US'}
+                onJoinClassDialogClose={this.onCloseJoinClassroomDialog_}
+                theme={DARK}
+
+              />
+            )}
+          </div>
+        )}
+
+
       </div>
     )
 
@@ -597,7 +655,6 @@ class ClassroomsDashboard extends React.Component<Props, State> {
           theme={DARK}
           locale={'en-US'}
         />
-        {/* {classroomList.length > 0 ? classroomList : <p>No classrooms yet.</p>} */}
         {
           showCreateClassroomDialog && (
             <CreateClassroomDialog
@@ -613,6 +670,7 @@ class ClassroomsDashboard extends React.Component<Props, State> {
               }}
             />
           )}
+
       </ManageClassroomsContainer>
 
     )
@@ -711,14 +769,20 @@ export default connect(
     classrooms: state.classrooms,
   }),
   (dispatch) => ({
+    onStudentInClassroom: (studentId: LocalizedString) =>
+      dispatch(ClassroomsAction.studentInClassroom({ studentId })),
+    onAddStudentToClassroom: (classroomId: string, studentId: LocalizedString) => {
+      console.log('Dispatching addStudentToClassroom', { classroomId, studentId });
+      dispatch(ClassroomsAction.addStudentToClassroom({ classroomId, studentId }))
+    },
     onListOwnedClassrooms: (teacherId: string) =>
       dispatch(ClassroomsAction.listOwnedClassrooms({ teacherId })),
     onCreateClassroom: (classroom: Classroom) =>
-      dispatch(
-        ClassroomsAction.createClassroom({
-          classroomId: crypto.randomUUID(),
-          classroom,
-        })
-      ),
+      dispatch(ClassroomsAction.createClassroom({
+        classroomId: crypto.randomUUID(), // will be replaced by backend
+        classroom,
+      })),
+
+
   })
 )(ClassroomsDashboard);

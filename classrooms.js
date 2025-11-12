@@ -39,26 +39,26 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
 
   const colPath = () => admin.firestore().collection("classrooms");
 
-  // CREATE / UPSERT classroom
+  // CREATE classroom
   router.post("/:id", async (req, res) => {
     try {
       const { uid } = req.user;
       const { id } = req.params;
       const data = req.body || {};
-      await colPath(uid)
-        .doc(id)
-        .set(
-          {
-            ...data,
-            teacherId: uid, // optional convenience field
-            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-            createdAt: admin.firestore.FieldValue.serverTimestamp(),
-          },
-          { merge: true }
-        );
-      return res.sendStatus(204);
+      const firestore = admin.firestore();
+      const classroomData = {
+        ...data,
+        teacherId: uid,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      };
+
+      await firestore.collection("classrooms").doc(id).set(classroomData);
+
+      console.log("Created classroom:", id, classroomData);
+      return res.status(204).json({ id, ...classroomData });
     } catch (err) {
-      console.error("POST /classrooms error:", err);
+      console.error("POST /classrooms/ error:", err);
       return res.status(500).json({ message: err.message });
     }
   });

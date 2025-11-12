@@ -8,6 +8,8 @@ import { errorToAsyncError } from "./util";
 import construct from "../../util/redux/construct";
 import { Classroom, Classrooms } from "../State/Classroom";
 import LocalizedString from "util/LocalizedString";
+import { auth } from "../../firebase/firebase";
+
 
 
 export namespace ClassroomsAction {
@@ -48,6 +50,28 @@ export namespace ClassroomsAction {
 
   export const listOwnedClassrooms = construct<ListOwnedClassrooms>("classrooms/list-owned-classrooms");
 
+  export interface AddStudentToClassroom {
+    type: "classrooms/add-student-to-classroom";
+    classroomId: string;
+    studentId: LocalizedString;
+  }
+
+  export const addStudentToClassroom = construct<AddStudentToClassroom>("classrooms/add-student-to-classroom");
+
+  export interface StudentInClassroom {
+    type: "classrooms/student-in-classroom";
+    studentId: LocalizedString;
+  }
+
+  export const studentInClassroom = construct<StudentInClassroom>("classrooms/student-in-classroom");
+
+  export interface FindClassroomByInviteCode {
+    type: "classrooms/find-classroom-by-invite-code";
+    inviteCode: LocalizedString;
+  }
+
+  export const findClassroomByInviteCode = construct<FindClassroomByInviteCode>("classrooms/find-classroom-by-invite-code");
+
 
 }
 
@@ -56,9 +80,10 @@ export type ClassroomsAction =
   | ClassroomsAction.CreateClassroom
   | ClassroomsAction.SetClassroom
   | ClassroomsAction.SetClassrooms
+  | ClassroomsAction.AddStudentToClassroom
+  | ClassroomsAction.StudentInClassroom
+  | ClassroomsAction.FindClassroomByInviteCode
   | ClassroomsAction.ListOwnedClassrooms;
-
-// --- Async Operations --- //
 
 const load = async (
   classroomId: string,
@@ -83,22 +108,68 @@ const load = async (
   }
 };
 
+const generateUniqueClassroomId = async (): Promise<string> => {
+  let uniqueId: string;
+  let shortenedId: string;
+  let exists = true;
+
+  while (exists) {
+    const uuid = crypto.randomUUID();
+    shortenedId = uuid.replace(/-/g, "").slice(-7);
+
+    try {
+      const classroom = await db.get<Classroom>(Selector.classroom(shortenedId));
+      exists = !!classroom; // if we got data, it exists
+    } catch (err: any) {
+      if (err.code === 404 || err.message?.includes("Not found")) {
+        exists = false; // 404 means safe to use this ID
+      } else {
+        console.error("Unexpected DB error while checking ID:", err);
+        throw err; // rethrow other errors
+      }
+    }
+  }
+
+  return shortenedId;
+}
 const create = async (classroomId: string, next: Async.Creating<Classroom>) => {
   try {
-    await db.set(Selector.classroom(classroomId), next.value);
+    // Write directly to your database (Firestore or local DB)
+    console.log("Creating classroom in DB:", next.value);
+    console.log("Classroom ID:", classroomId);
+    console.log('Token manager:', (db as any).tokenManager_);
 
-    // ✅ Add to Redux immediately
+    const generatedId = await generateUniqueClassroomId();
+    console.log("Generated unique classroom ID:", generatedId);
+    const created = await db.set(Selector.classroom(generatedId), next.value);
+    console.log("create() created classroom:", created);
+    // Update Redux or local store
     store.dispatch(
       ClassroomsAction.setClassrooms({
         classrooms: {
-          [classroomId]: Async.loaded({ brief: {}, value: next.value }),
+          [generatedId]: Async.loaded({
+            brief: {},
+            value: next.value,
+          }),
         },
       })
     );
   } catch (error) {
     console.error("Error creating classroom:", error);
+    // Optionally dispatch a failed state
+    store.dispatch(
+      ClassroomsAction.setClassrooms({
+        classrooms: {
+          [classroomId]: Async.createFailed({
+            value: next.value,
+            error,
+          }),
+        },
+      })
+    );
   }
 };
+
 
 
 const listOwned = async (teacherId: string) => {
@@ -116,7 +187,101 @@ const listOwned = async (teacherId: string) => {
   } catch (error) {
     console.error("Failed to list classrooms", error);
   }
-};//
+};
+
+export const findClassroomDocByReadableId = async (
+  classroomId: string
+): Promise<{ docId: string; classroom: Classroom } | null> => {
+  const classrooms = await db.list<Classroom>('classrooms');
+  const entry = Object.entries(classrooms).find(
+    ([, classroom]) => classroom.classroomId === classroomId
+  );
+  if (!entry) return null;
+
+  const [docId, classroom] = entry;
+  return { docId, classroom };
+};
+
+
+export const addStudentToClassroom = async (
+  classroomId: string,
+  studentId: LocalizedString
+) => {
+  const result = await findClassroomDocByReadableId(classroomId);
+  if (!result) {
+    console.warn('Classroom not found:', classroomId);
+    return;
+  }
+
+  const { docId, classroom } = result;
+  console.log("addStudentToClassroom docId:", docId);
+  console.log("addStudentToClassroom classroom:", classroom);
+  const normalized = typeof studentId === "string" ? studentId : studentId["en-US"];
+
+  // Convert all stored IDs to strings for comparison
+  const existingIds = classroom.studentIds.map(id =>
+    typeof id === "string" ? id : id["en-US"]
+  );
+
+  if (!existingIds.includes(normalized)) {
+    classroom.studentIds.push({ "en-US": normalized }); // keep same structure
+    await db.set({ collection: "classrooms", id: docId }, classroom);
+
+    store.dispatch(
+      ClassroomsAction.setClassroom({
+        classroomId: docId,
+        classroom: Async.loaded({ brief: {}, value: classroom }),
+      })
+    );
+  }
+};
+
+
+export const studentInClassroom = async (studentId: LocalizedString): Promise<boolean> => {
+  try {
+    const result = await db.list<Classroom>("classrooms");
+    console.log("StudentInClassroom studentId:", studentId);
+    console.log("StudentInClassroom classrooms:", result);
+    for (const classroom of Object.values(result)) {
+      if (classroom.studentIds.includes(studentId)) {
+        return true;
+      }
+    }
+    return false;
+  } catch (error) {
+    console.error("Error checking if student has classroom:", error);
+    return false;
+  }
+};
+
+export const findClassroomByInviteCode = async (inviteCode: LocalizedString): Promise<Classroom | null> => {
+  try {
+    const result = await db.list<Classroom>("classrooms");
+    console.log("findClassroomByInviteCode inviteCode:", inviteCode);
+    console.log("findClassroomByInviteCode classrooms:", result);
+    for (const classroom of Object.values(result)) {
+      const classroomCode =
+        typeof classroom.code === 'string'
+          ? classroom.code
+          : classroom.code?.en ?? Object.values(classroom.code ?? {})[0] ?? '';
+
+      const inviteCodeStr =
+        typeof inviteCode === 'string'
+          ? inviteCode
+          : inviteCode?.en ?? Object.values(inviteCode ?? {})[0] ?? '';
+
+      if (
+        classroomCode.localeCompare(inviteCodeStr, undefined, { sensitivity: "base" }) === 0
+      ) {
+        return classroom;
+      }
+    }
+    return null;
+  } catch (error) {
+    console.error("Error finding classroom by invite code:", error);
+    return null;
+  }
+};
 
 
 
@@ -157,7 +322,7 @@ export const reduceClassrooms = (
 
       const merged = {
         ...state,
-        ...action.classrooms, // ✅ merge by key, don't replace
+        ...action.classrooms,
       };
       console.log("After merge:", Object.keys(merged));
       return merged;
@@ -165,6 +330,23 @@ export const reduceClassrooms = (
 
     case "classrooms/list-owned-classrooms": {
       void listOwned(action.teacherId);
+      return state;
+    }
+
+    case "classrooms/add-student-to-classroom": {
+      console.log("Reducer received addStudentToClassroom action:", action);
+      void addStudentToClassroom(action.classroomId, action.studentId);
+      return state;
+    }
+
+    case "classrooms/student-in-classroom": {
+
+      void studentInClassroom(action.studentId);
+      return state;
+    }
+
+    case "classrooms/find-classroom-by-invite-code": {
+      void findClassroomByInviteCode(action.inviteCode);
       return state;
     }
 
