@@ -109,7 +109,7 @@ class Dashboard extends React.PureComponent<Props> {
             theme={theme}
             title={LocalizedString.lookup(tr('Classrooms'), locale)}
             description={LocalizedString.lookup(tr('See the current classrooms.'), locale)}
-            backgroundImage={'linear-gradient(#3b3c3c, transparent), url(../../static/example_images/Gold_Medal_Robot.png)'}
+            backgroundImage={'linear-gradient(#3b3c3c, transparent), url(../../static/example_images/classroom-botguy.png)'}
             backgroundColor={'#3b3c3c'}
             onClick={() => this.props.navigate('/classrooms')}
           />
