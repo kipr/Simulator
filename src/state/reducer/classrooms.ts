@@ -137,7 +137,7 @@ const create = async (classroomId: string, next: Async.Creating<Classroom>) => {
     // Write directly to your database (Firestore or local DB)
     console.log("Creating classroom in DB:", next.value);
     console.log("Classroom ID:", classroomId);
-    console.log('Token manager:', (db as any).tokenManager_);
+
 
     const generatedId = await generateUniqueClassroomId();
     console.log("Generated unique classroom ID:", generatedId);
@@ -242,8 +242,15 @@ export const studentInClassroom = async (studentId: LocalizedString): Promise<bo
     const result = await db.list<Classroom>("classrooms");
     console.log("StudentInClassroom studentId:", studentId);
     console.log("StudentInClassroom classrooms:", result);
+    const normalized = typeof studentId === "string" ? studentId : studentId["en-US"];
+
+
     for (const classroom of Object.values(result)) {
-      if (classroom.studentIds.includes(studentId)) {
+      const existingIds = classroom.studentIds.map(id =>
+        typeof id === "string" ? id : id["en-US"]
+      );
+
+      if (existingIds.includes(normalized)) {
         return true;
       }
     }
@@ -299,14 +306,10 @@ export const reduceClassrooms = (
         }),
       };
     }
-
     case "classrooms/create-classroom": {
       const creating = Async.creating({ value: action.classroom });
       void create(action.classroomId, creating);
-      return {
-        ...state,
-        [action.classroomId]: creating,
-      };
+      return state;
     }
 
     case "classrooms/set-classroom": {
