@@ -26,12 +26,16 @@ import { current } from 'immer';
 import { auth } from '../firebase/firebase';
 import { getAuth } from 'firebase/auth';
 import { default as IvygateClassroomType } from 'ivygate/dist/types/classroomTypes';
+import { User } from 'ivygate/dist/types/user';
 import Async from 'state/State/Async';
 import { studentInClassroom } from 'state/reducer/classrooms';
 import Input from '../components/interface/Input';
 import JoinClassDialog from '../components/Dialog/JoinClassDialog';
 import { InterfaceMode } from 'ivygate/dist/types/interface';
-
+import { SimClassroomProject } from 'ivygate/dist/types/project';
+import ProgrammingLanguage from '../programming/compiler/ProgrammingLanguage';
+import { CHALLENGE_LIST, ChallengeName } from '../simulator/definitions/challenges/challengeList';
+import config from '../../config.client';
 export interface ClassroomsDashboardRootRouteParams {
   classroomId: string;
   [key: string]: string;
@@ -51,9 +55,11 @@ interface Score {
   completed: boolean;
   score?: number;
   completionTime?: number;
+  code?: string;
+  language?: ProgrammingLanguage;
 }
 
-interface User {
+interface LeaderboardUser {
   id: string;
   name: string;
   scores: Score[];
@@ -61,6 +67,7 @@ interface User {
   backgroundColor?: string;
   altId?: string;
 }
+
 
 export interface ClassroomsDashboardPublicProps extends StyleProps, ThemeProps {
   params: ClassroomsDashboardRootRouteParams;
@@ -77,7 +84,7 @@ interface ClassroomsDashboardPrivateProps {
 
 interface ClassroomsDashboardState {
   selected: string;
-  users: Record<string, User>;
+  users: Record<string, LeaderboardUser>;
   challenges: Record<string, Challenge>;
   showCreateClassroomDialog: boolean;
   showJoinClassroomDialog: boolean;
@@ -173,7 +180,7 @@ const TableHeader = styled('th', {
 });
 const StyledTableRow = styled('tr', (props: { key: string, self: string, ref: React.Ref<HTMLTableRowElement> }) => ({
   borderBottom: '1px solid #ddd',
-  backgroundColor: props.self === SELFIDENTIFIER ? '#555' : '#000', // Highlight the current user
+  backgroundColor: props.self === SELFIDENTIFIER ? '#555' : '#000', // Highlight the current LeaderboardUser
 }));
 const TableRow = styled('tr', {
   borderBottom: '1px solid #ddd',
@@ -235,13 +242,13 @@ class ClassroomsDashboard extends React.Component<Props, State> {
     const currentUserId = tr(auth.currentUser?.uid || '');
     const isInClassroom = await studentInClassroom(currentUserId);
     this.setState({ isStudentInClassroom: isInClassroom });
-    console.log("Is current user in any classroom?:", isInClassroom);
+    console.log("Is current LeaderboardUser in any classroom?:", isInClassroom);
   }
 
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ClassroomsDashboardState>, snapshot?: any): void {
     if (prevProps.classrooms !== this.props.classrooms) {
-      console.log("Classrooms updated:", this.props.classrooms);
-      const ivygateClasses = this.createIvygateClassrooms();
+      console.log("compDidUpdate Classrooms updated from:", prevProps.classrooms, "to: ", this.props.classrooms);
+      const ivygateClasses = this.updateIvygateClassrooms();
       console.log("Converted Ivygate Classrooms:", ivygateClasses);
     }
   }
@@ -256,10 +263,11 @@ class ClassroomsDashboard extends React.Component<Props, State> {
 
   private onLog = async () => {
     const res = await db.list('challenge_completion');
+    console.log("Challenge completion data:", res);
     const groupData = res.groupData;
     const userData = res.userData;
 
-    let users: Record<string, User> = {};
+    let users: Record<string, LeaderboardUser> = {};
     const challenges: Record<string, Challenge> = {};
 
     for (const [_, attemptedChallenges] of Object.entries(groupData)) {
@@ -285,6 +293,7 @@ class ClassroomsDashboard extends React.Component<Props, State> {
           failure: boolean;
         };
       };
+
     }
 
     const challengeCompletion = (challenge: ChallengeData) => (
@@ -293,7 +302,7 @@ class ClassroomsDashboard extends React.Component<Props, State> {
     );
 
     for (const [userId, userChallenges] of Object.entries(groupData)) {
-      const user: User = {
+      const LeaderboardUser: LeaderboardUser = {
         id: userId,
         name: userId,
         scores: [],
@@ -304,11 +313,11 @@ class ClassroomsDashboard extends React.Component<Props, State> {
           name: tr(challengeId),
           completed: challengeCompletion(challenge)
         };
-        user.scores.push(score);
+        LeaderboardUser.scores.push(score);
       }
 
       if (!users[userId]) {
-        users[userId] = user;
+        users[userId] = LeaderboardUser;
       }
     }
 
@@ -316,7 +325,7 @@ class ClassroomsDashboard extends React.Component<Props, State> {
 
 
     for (const [userId, userChallenges] of Object.entries(userData)) {
-      let user: User = {
+      let LeaderboardUser: LeaderboardUser = {
         id: userId,
         name: SELFIDENTIFIER,
         scores: [],
@@ -324,10 +333,10 @@ class ClassroomsDashboard extends React.Component<Props, State> {
       };
 
       // Get anonymous name to display
-      const userRecord: Record<string, User> = { [userId]: user };
+      const userRecord: Record<string, LeaderboardUser> = { [userId]: LeaderboardUser };
       const altUser = this.anonomizeUsers(userRecord)[userId];
-      user = {
-        ...user,
+      LeaderboardUser = {
+        ...LeaderboardUser,
         altId: altUser?.name
       };
 
@@ -336,11 +345,11 @@ class ClassroomsDashboard extends React.Component<Props, State> {
           name: tr(challengeId),
           completed: challengeCompletion(challenge)
         };
-        user.scores.push(score);
+        LeaderboardUser.scores.push(score);
       }
 
       if (!users[userId]) {
-        users[userId] = user;
+        users[userId] = LeaderboardUser;
       }
     }
 
@@ -349,7 +358,13 @@ class ClassroomsDashboard extends React.Component<Props, State> {
 
     return { users, challenges };
   };
+  private getUserChallengeInfo = (user: LocalizedString, classroom: Classroom): Record<string, Score[]> => {
+    const scores: Record<string, Score[]> = {};
 
+    console.log("getUserChallengeInfo() for classroom:", classroom.classroomId, "with user:", user);
+
+    return scores;
+  }
   private getDefaultChallenges = (): Record<string, Challenge> => {
     const challenges: Record<string, Challenge> = {};
     const suffixes = ['a', 'b', 'c'];
@@ -367,13 +382,13 @@ class ClassroomsDashboard extends React.Component<Props, State> {
     return challenges;
   };
 
-  private getDefaultUsers = (): Record<string, User> => {
-    const users: Record<string, User> = {};
+  private getDefaultUsers = (): Record<string, LeaderboardUser> => {
+    const users: Record<string, LeaderboardUser> = {};
     const challengeIds = Object.keys(this.getDefaultChallenges());
 
     for (let i = 1; i <= 20; i++) {
       const scores: Score[] = [];
-      const numChallenges = Math.floor(Math.random() * 10) + 1; // Each user will complete between 1 and 5 challenges
+      const numChallenges = Math.floor(Math.random() * 10) + 1; // Each LeaderboardUser will complete between 1 and 5 challenges
       const completedChallenges = new Set<string>();
 
       while (completedChallenges.size < numChallenges) {
@@ -390,9 +405,9 @@ class ClassroomsDashboard extends React.Component<Props, State> {
         }
       }
 
-      users[`user${i}`] = {
-        id: `user${i}`,
-        name: `User ${i}`,
+      users[`LeaderboardUser${i}`] = {
+        id: `LeaderboardUser${i}`,
+        name: `LeaderboardUser ${i}`,
         scores: scores,
       };
 
@@ -401,7 +416,7 @@ class ClassroomsDashboard extends React.Component<Props, State> {
     return users;
   };
 
-  private orderUsersByCompletedChallenges = (users: Record<string, User>): User[] => {
+  private orderUsersByCompletedChallenges = (users: Record<string, LeaderboardUser>): LeaderboardUser[] => {
     const userArray = Object.values(users);
 
     userArray.sort((a, b) => {
@@ -413,8 +428,8 @@ class ClassroomsDashboard extends React.Component<Props, State> {
     return userArray;
   };
 
-  private anonomizeUsers = (users: Record<string, User>): Record<string, User> => {
-    const anonomizedUsers: Record<string, User> = {};
+  private anonomizeUsers = (users: Record<string, LeaderboardUser>): Record<string, LeaderboardUser> => {
+    const anonomizedUsers: Record<string, LeaderboardUser> = {};
 
     const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'white',
       'cyan', 'magenta', 'lime', 'teal', 'indigo', 'violet', 'gold', 'silver', 'bronze', 'maroon', 'tan', 'navy', 'aqua'];
@@ -439,28 +454,28 @@ class ClassroomsDashboard extends React.Component<Props, State> {
       return hash >>> 0; // Ensure the result is a positive 32-bit integer
     };
 
-    Object.values(users).forEach((user) => {
-      const hash = Math.abs(stringTo32BitInt(user.id));
+    Object.values(users).forEach((LeaderboardUser) => {
+      const hash = Math.abs(stringTo32BitInt(LeaderboardUser.id));
       const color = colors[hash % colors.length];
       const element = elements[hash % elements.length];
       const animal = animals[hash % animals.length];
       const number = hash % 97;
 
-      anonomizedUsers[user.id] = {
-        id: user.id,
+      anonomizedUsers[LeaderboardUser.id] = {
+        id: LeaderboardUser.id,
         name: `${color}-${element}-${animal}-${number}`,
-        scores: user.scores
+        scores: LeaderboardUser.scores
       };
     });
 
     const nameSet = new Set<string>();
     const duplicateNames: string[] = [];
 
-    Object.values(anonomizedUsers).forEach((user) => {
-      if (nameSet.has(user.name)) {
-        duplicateNames.push(user.name);
+    Object.values(anonomizedUsers).forEach((LeaderboardUser) => {
+      if (nameSet.has(LeaderboardUser.name)) {
+        duplicateNames.push(LeaderboardUser.name);
       } else {
-        nameSet.add(user.name);
+        nameSet.add(LeaderboardUser.name);
       }
     });
 
@@ -498,9 +513,9 @@ class ClassroomsDashboard extends React.Component<Props, State> {
     });
   };
 
-  private getCurrentUser = (): User => {
+  private getCurrentUser = (): LeaderboardUser => {
     const { users } = this.state;
-    let currentUser: User;
+    let currentUser: LeaderboardUser;
     const tokenManager = db.tokenManager;
     if (tokenManager) {
       const auth_ = tokenManager.auth();
@@ -532,6 +547,26 @@ class ClassroomsDashboard extends React.Component<Props, State> {
     return null;
   };
 
+  // Get the names of all challenges (projects for IvygateFileExplorer) a user has saved
+  private getClassroomUsersChallenges = (user: string): Score[] => {
+    console.log("getClassroomUsersChallenges() for user:", user);
+    const { users } = this.state;
+    const userProjects: Score[] = [];
+    const leaderboardUser = users[user];
+
+    if (leaderboardUser) {
+      console.log("Found leaderboardUser:", leaderboardUser);
+      for (const score of leaderboardUser.scores) {
+        userProjects.push(score);
+      }
+    } else {
+      console.warn("No leaderboardUser found for user:", user);
+    }
+
+
+    return userProjects;
+  }
+
   private onAddNewClassroom_ = (classroom: IvyGateClassroom) => {
     console.log('Add new classroom clicked!', classroom);
     this.setState({ showCreateClassroomDialog: true });
@@ -551,9 +586,9 @@ class ClassroomsDashboard extends React.Component<Props, State> {
       studentIds: []
     });
 
-    await this.props.onListOwnedClassrooms(auth.currentUser?.uid || '');
-    console.log("Current User Name:", auth.currentUser?.uid);
-    console.log("Owned Classrooms:", this.props.classrooms);
+    //await this.props.onListOwnedClassrooms(auth.currentUser?.uid || '');
+    console.log("Current LeaderboardUser Name:", auth.currentUser?.uid);
+    console.log("this.props.classrooms:", this.props.classrooms);
 
     this.setState({ showCreateClassroomDialog: false });
   }
@@ -567,18 +602,54 @@ class ClassroomsDashboard extends React.Component<Props, State> {
 
     this.setState({ showJoinClassroomDialog: false, isStudentInClassroom: true });
   }
-  private createIvygateClassrooms = (): IvygateClassroomType[] => {
 
+  private updateIvygateClassrooms = (): IvygateClassroomType[] => {
     const { classrooms } = this.props;
-    console.log("createIvygateClassrooms() Current classrooms:", classrooms);
+    console.log("updateIvygateClassrooms() Current classrooms:", classrooms);
     const ivygateClassrooms = [];
 
     for (const [id, asyncClassroom] of Object.entries(classrooms)) {
-      if (asyncClassroom.type === Async.Type.Loaded) {
+
+      if (asyncClassroom.type === Async.Type.Loaded && classrooms != null) {
+
         const classroom = asyncClassroom.value;
+        console.log("Current students in classroom", classroom.classroomId, "(", id, ")", ":", classroom.studentIds);
+
+        // map studentIds to match IvygateFileExplorer's User objects
+        const classroomUsers: User[] = classroom.studentIds.map(studentId => {
+
+          const normalizedId = studentId["en-US"] || 'Unknown';
+          const userChallenges = this.getClassroomUsersChallenges(normalizedId) || [];
+          console.log("userChallenges for studentId'", normalizedId, ":", userChallenges);
+          const userProjects: SimClassroomProject[] = userChallenges.map(score => {
+            console.log("Mapping user project for score:", score);
+            const userChallengeInfo = this.getUserChallengeInfo(studentId, classroom);
+            const projectName = LocalizedString.lookup(score.name, this.props.locale);
+            const challengeType = this.getChallengeType(score);
+
+            console.log("Resolved projectName:", projectName);
+            console.log("Resolved challengeType:", challengeType);
+
+            return {
+              projectName,
+              projectLanguage: ProgrammingLanguage['c'],
+              type: challengeType,
+              code: ''
+            };
+          });
+
+          console.log("Mapped userProjects for studentId", studentId, ":", userProjects);
+          return {
+            userName: studentId["en-US"] || 'Unknown',
+            interfaceMode: InterfaceMode.SIMPLE,
+            projects: [],
+            classroomName: classroom.classroomId
+          };
+        });
+
         const ivygateClassroom: IvygateClassroomType = {
           name: classroom.classroomId,
-          users: [], // Populate with actual users if available
+          users: classroomUsers,
           classroomInvitationCode: classroom.code?.["en-US"] || ''
         };
 
@@ -627,6 +698,14 @@ class ClassroomsDashboard extends React.Component<Props, State> {
 
   }
 
+  private getChallengeType(score: Score): ChallengeName | 'default' {
+    const name = LocalizedString.lookup(score.name, this.props.locale);
+    if (name in CHALLENGE_LIST) {
+      return name as ChallengeName;
+    }
+    return 'default';
+  }
+
 
   private renderManageClassrooms = () => {
     const { showCreateClassroomDialog } = this.state;
@@ -648,8 +727,9 @@ class ClassroomsDashboard extends React.Component<Props, State> {
       <ManageClassroomsContainer theme={theme} style={style}>
         <h2>Manage Classrooms</h2>
         <IvygateFileExplorer
+          config={config}
           propUsers={[]}
-          propClassrooms={this.createIvygateClassrooms()}
+          propClassrooms={this.updateIvygateClassrooms()}
           propSettings={{ ...DEFAULT_SETTINGS, classroomView: true }}
           onAddNewClassroom={this.onAddNewClassroom_}
           theme={DARK}
@@ -708,11 +788,11 @@ class ClassroomsDashboard extends React.Component<Props, State> {
           </tr>
         </thead>
         <tbody>
-          {userArray.map((user) => (
-            <StyledTableRow key={user.id} self={user.name} ref={user.name === SELFIDENTIFIER ? this.myScoresRef : null}>
-              <TableCell>{user.name}</TableCell>
+          {userArray.map((LeaderboardUser) => (
+            <StyledTableRow key={LeaderboardUser.id} self={LeaderboardUser.name} ref={LeaderboardUser.name === SELFIDENTIFIER ? this.myScoresRef : null}>
+              <TableCell>{LeaderboardUser.name}</TableCell>
               {challengeArray.map((id) => {
-                const userScore = user.scores.find(score => score.name['en-US'] === challenges[id].name['en-US']);
+                const userScore = LeaderboardUser.scores.find(score => score.name['en-US'] === challenges[id].name['en-US']);
                 return (
                   <TableCell key={id}>
                     {!userScore && '-'}
