@@ -9,6 +9,7 @@ import construct from "../../util/redux/construct";
 import { Classroom, Classrooms } from "../State/Classroom";
 import LocalizedString from "util/LocalizedString";
 import { auth } from "../../firebase/firebase";
+import ChallengeCompletion from "state/State/ChallengeCompletion";
 
 
 
@@ -50,6 +51,13 @@ export namespace ClassroomsAction {
 
   export const listOwnedClassrooms = construct<ListOwnedClassrooms>("classrooms/list-owned-classrooms");
 
+  export interface ListChallengesByStudentId {
+    type: "classrooms/list-challenges-by-student-id";
+    studentId: string;
+  }
+
+  export const listChallengesByStudentId = construct<ListChallengesByStudentId>("classrooms/list-challenges-by-student-id");
+
   export interface AddStudentToClassroom {
     type: "classrooms/add-student-to-classroom";
     classroomId: string;
@@ -83,7 +91,8 @@ export type ClassroomsAction =
   | ClassroomsAction.AddStudentToClassroom
   | ClassroomsAction.StudentInClassroom
   | ClassroomsAction.FindClassroomByInviteCode
-  | ClassroomsAction.ListOwnedClassrooms;
+  | ClassroomsAction.ListOwnedClassrooms
+  | ClassroomsAction.ListChallengesByStudentId;
 
 const load = async (
   classroomId: string,
@@ -175,7 +184,8 @@ const create = async (classroomId: string, next: Async.Creating<Classroom>) => {
 const listOwned = async (teacherId: string) => {
   try {
     console.log("Listing classrooms for teacherId:", teacherId);
-    const result = await db.list<Classroom>("classrooms");
+    const result = await db.list<Classroom>("classrooms/" + teacherId);
+
     const classrooms: Dict<AsyncClassroom> = {};
     Object.entries(result).forEach(([id, classroom]) => {
       classrooms[id] = Async.loaded({ brief: {}, value: classroom });
@@ -187,6 +197,19 @@ const listOwned = async (teacherId: string) => {
   } catch (error) {
     console.error("Failed to list classrooms", error);
   }
+};
+
+export const listChallengesByStudentId = async (studentId: string) => {
+  try {
+    console.log("Listing challenge completions for studentId:", studentId);
+    const result = await db.list<ChallengeCompletion>("classrooms/" + studentId + "/challenges");
+    console.log("Challenge completions for studentId", studentId, ":", result);
+    return result;
+  } catch (error) {
+    console.error("Failed to list challenge completions", error);
+    return {};
+  }
+
 };
 
 export const findClassroomDocByReadableId = async (
@@ -264,8 +287,12 @@ export const studentInClassroom = async (studentId: LocalizedString): Promise<bo
 export const findClassroomByInviteCode = async (inviteCode: LocalizedString): Promise<Classroom | null> => {
   try {
     const result = await db.list<Classroom>("classrooms");
-    console.log("findClassroomByInviteCode inviteCode:", inviteCode);
-    console.log("findClassroomByInviteCode classrooms:", result);
+
+    console.log("Raw object:", result);
+    console.log("All classrooms:");
+    for (const [id, data] of Object.entries(result)) {
+      console.log(id, data);
+    }
     for (const classroom of Object.values(result)) {
       const classroomCode =
         typeof classroom.code === 'string'
@@ -335,7 +362,10 @@ export const reduceClassrooms = (
       void listOwned(action.teacherId);
       return state;
     }
-
+    case "classrooms/list-challenges-by-student-id": {
+      void listChallengesByStudentId(action.studentId);
+      return state;
+    }
     case "classrooms/add-student-to-classroom": {
       console.log("Reducer received addStudentToClassroom action:", action);
       void addStudentToClassroom(action.classroomId, action.studentId);

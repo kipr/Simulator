@@ -63,16 +63,45 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     }
   });
 
+  // GET student in classroom challenges
+  router.get("/:id/challenges", async (req, res) => {
+    try {
+      console.log("GET /:id/challenges called");
+      const { id } = req.params;
+      const qsnap = await admin
+        .firestore()
+        .collection("user")
+        .doc(id)
+        .collection("challenge_completion")
+        .get();
+      const result = {};
+      qsnap.forEach((doc) => {
+        result[doc.id] = doc.data();
+      });
+      return res.status(200).json(result);
+    } catch (err) {
+      console.error("GET /classrooms list error:", err);
+      return res.status(500).json({ message: err.message });
+    }
+  });
+
   // READ one classroom
   router.get("/:id", async (req, res) => {
     try {
-      const { uid } = req.user;
+      console.log("GET /classrooms/:id called");
       const { id } = req.params;
-      const snap = await colPath(uid).doc(id).get();
-      if (!snap.exists) return res.status(404).json({ message: "Not found" });
-      return res.status(200).json(snap.data());
+      const qsnap = await admin
+        .firestore()
+        .collection("classrooms")
+        .where("teacherId", "==", id)
+        .get();
+      const result = {};
+      qsnap.forEach((doc) => {
+        result[doc.id] = doc.data();
+      });
+      return res.status(200).json(result);
     } catch (err) {
-      console.error("GET /classrooms error:", err);
+      console.error("GET /classrooms list error:", err);
       return res.status(500).json({ message: err.message });
     }
   });
@@ -81,11 +110,7 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
   router.get("/", async (req, res) => {
     try {
       const { uid } = req.user;
-      const qsnap = await admin
-        .firestore()
-        .collection("classrooms")
-        .where("teacherId", "==", uid)
-        .get();
+      const qsnap = await admin.firestore().collection("classrooms").get();
       const result = {};
       qsnap.forEach((doc) => {
         result[doc.id] = doc.data();

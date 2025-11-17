@@ -21,9 +21,10 @@ import { AsyncClassroom, Classroom } from '../state/State/Classroom';
 import { CreateClassroomDialog } from '../components/Dialog/CreateClassroomDialog';
 import Builder from '../db/Builder';
 import Dict from '../util/objectOps/Dict';
-import { ClassroomsAction } from 'state/reducer/classrooms';
+import { ClassroomsAction, listChallengesByStudentId } from 'state/reducer/classrooms';
 import { current } from 'immer';
 import { auth } from '../firebase/firebase';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { default as IvygateClassroomType } from 'ivygate/dist/types/classroomTypes';
 import { User } from 'ivygate/dist/types/user';
@@ -36,6 +37,8 @@ import { SimClassroomProject } from 'ivygate/dist/types/project';
 import ProgrammingLanguage from '../programming/compiler/ProgrammingLanguage';
 import { CHALLENGE_LIST, ChallengeName } from '../simulator/definitions/challenges/challengeList';
 import config from '../../config.client';
+import ChallengeCompletion from 'state/State/ChallengeCompletion';
+import ClassroomLeaderboardsDialog from '../components/Dialog/ClassroomLeaderboardsDialog';
 export interface ClassroomsDashboardRootRouteParams {
   classroomId: string;
   [key: string]: string;
@@ -74,6 +77,7 @@ export interface ClassroomsDashboardPublicProps extends StyleProps, ThemeProps {
   classrooms: Dict<AsyncClassroom>;
   onCreateClassroom: (classroom: Classroom) => void;
   onListOwnedClassrooms: (teacherId: string) => void;
+  onListChallengesByStudentId: (studentId: string) => void;
   onStudentInClassroom: (studentId: LocalizedString) => void;
   onAddStudentToClassroom: (classroomId: string, studentId: LocalizedString) => void;
 }
@@ -83,11 +87,12 @@ interface ClassroomsDashboardPrivateProps {
 }
 
 interface ClassroomsDashboardState {
-  selected: string;
+  selectedStudentId: string;
   users: Record<string, LeaderboardUser>;
   challenges: Record<string, Challenge>;
   showCreateClassroomDialog: boolean;
   showJoinClassroomDialog: boolean;
+  showClassroomLeaderboards: boolean;
   isStudentInClassroom?: boolean;
 }
 
@@ -98,6 +103,18 @@ interface ClickProps {
 
 type Props = ClassroomsDashboardPublicProps & ClassroomsDashboardPrivateProps;
 type State = ClassroomsDashboardState;
+
+const TitleContainer = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: '0.5px',
+  fontSize: '1.2em',
+  overflow: 'hidden',
+  flexWrap: 'nowrap',
+
+}));
 
 const PageContainer = styled('div', (props: ThemeProps) => ({
   width: '100%',
@@ -220,21 +237,31 @@ const Button = styled('div', (props: ThemeProps & ClickProps) => ({
   transition: 'background-color 0.2s, opacity 0.2s'
 }));
 
+export const IVYGATE_LANGUAGE_MAPPING: Dict<string> = {
+  'ecmascript': 'javascript',
+  'python': 'customPython',
+  'c': 'customCpp',
+  'cpp': 'customCpp',
+  'plaintext': 'plaintext',
+};
 
 class ClassroomsDashboard extends React.Component<Props, State> {
+  private challengeCache: Record<string, Dict<ChallengeCompletion>> = {};
+  private unsubscribeChallenges: (() => void) | null = null;
   constructor(props: Props) {
     super(props);
 
     this.state = {
-      selected: '',
+      selectedStudentId: '',
       users: {},
       challenges: {},
       showCreateClassroomDialog: false,
       isStudentInClassroom: null as boolean | null,
-      showJoinClassroomDialog: false
+      showJoinClassroomDialog: false,
+      showClassroomLeaderboards: false,
     };
 
-    void this.onLog();
+    //void this.onLog();
     this.props.onListOwnedClassrooms(auth.currentUser?.uid || '');
   }
 
@@ -250,6 +277,12 @@ class ClassroomsDashboard extends React.Component<Props, State> {
       console.log("compDidUpdate Classrooms updated from:", prevProps.classrooms, "to: ", this.props.classrooms);
       const ivygateClasses = this.updateIvygateClassrooms();
       console.log("Converted Ivygate Classrooms:", ivygateClasses);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.unsubscribeChallenges) {
+      this.unsubscribeChallenges();
     }
   }
 
@@ -547,25 +580,6 @@ class ClassroomsDashboard extends React.Component<Props, State> {
     return null;
   };
 
-  // Get the names of all challenges (projects for IvygateFileExplorer) a user has saved
-  private getClassroomUsersChallenges = (user: string): Score[] => {
-    console.log("getClassroomUsersChallenges() for user:", user);
-    const { users } = this.state;
-    const userProjects: Score[] = [];
-    const leaderboardUser = users[user];
-
-    if (leaderboardUser) {
-      console.log("Found leaderboardUser:", leaderboardUser);
-      for (const score of leaderboardUser.scores) {
-        userProjects.push(score);
-      }
-    } else {
-      console.warn("No leaderboardUser found for user:", user);
-    }
-
-
-    return userProjects;
-  }
 
   private onAddNewClassroom_ = (classroom: IvyGateClassroom) => {
     console.log('Add new classroom clicked!', classroom);
@@ -577,6 +591,12 @@ class ClassroomsDashboard extends React.Component<Props, State> {
     this.setState({ showJoinClassroomDialog: true });
   }
 
+  private onSeeLeaderboards = () => {
+    console.log('See Leaderboards clicked!');
+    this.setState({
+      showClassroomLeaderboards: true
+    })
+  }
   private onCloseClassroomDialog_ = async (classroomName: string, classroomInviteCode: string) => {
     console.log('Close classroom dialog called with name:', classroomName, 'and invite code:', classroomInviteCode);
     this.props.onCreateClassroom({
@@ -603,9 +623,32 @@ class ClassroomsDashboard extends React.Component<Props, State> {
     this.setState({ showJoinClassroomDialog: false, isStudentInClassroom: true });
   }
 
+  private onSelectStudent = async (student: User) => {
+    if (this.challengeCache[student.userName]) {
+      console.log("Using cached challenges for student:", student.userName, ":", this.challengeCache[student.userName]);
+      this.setState({
+        selectedStudentId: student.userName
+      });
+      return;
+    }
+
+
+    const challenges = await listChallengesByStudentId(student.userName);
+    console.log("onSelectStudent() state:", this.state, "challenges:", challenges);
+    this.challengeCache[student.userName] = challenges;
+    this.setState({
+      selectedStudentId: student.userName
+    });
+    console.log("onSelectStudent challengeCache:", this.challengeCache);
+  }
+
+  private onProjectSelected = (student: User, project: SimClassroomProject) => {
+    console.log("onProjectSelected() student:", student, "project:", project);
+  }
+
   private updateIvygateClassrooms = (): IvygateClassroomType[] => {
     const { classrooms } = this.props;
-    console.log("updateIvygateClassrooms() Current classrooms:", classrooms);
+    const { selectedStudentId } = this.state;
     const ivygateClassrooms = [];
 
     for (const [id, asyncClassroom] of Object.entries(classrooms)) {
@@ -613,36 +656,28 @@ class ClassroomsDashboard extends React.Component<Props, State> {
       if (asyncClassroom.type === Async.Type.Loaded && classrooms != null) {
 
         const classroom = asyncClassroom.value;
-        console.log("Current students in classroom", classroom.classroomId, "(", id, ")", ":", classroom.studentIds);
-
         // map studentIds to match IvygateFileExplorer's User objects
         const classroomUsers: User[] = classroom.studentIds.map(studentId => {
+          const studentChallenges = this.challengeCache[selectedStudentId];
+          const userProjects: SimClassroomProject[] = studentChallenges
+            ? Object.entries(studentChallenges).map(([challengeId, score]) => {
+              console.log("Mapping user project for challenge:", challengeId, score);
+              return {
+                projectName: challengeId,
+                projectLanguage: `${score.currentLanguage}` as ProgrammingLanguage,
+                type: challengeId,
+                code: score.code[`${score.currentLanguage}`] || ''
+              };
+            })
+            : [];
 
-          const normalizedId = studentId["en-US"] || 'Unknown';
-          const userChallenges = this.getClassroomUsersChallenges(normalizedId) || [];
-          console.log("userChallenges for studentId'", normalizedId, ":", userChallenges);
-          const userProjects: SimClassroomProject[] = userChallenges.map(score => {
-            console.log("Mapping user project for score:", score);
-            const userChallengeInfo = this.getUserChallengeInfo(studentId, classroom);
-            const projectName = LocalizedString.lookup(score.name, this.props.locale);
-            const challengeType = this.getChallengeType(score);
-
-            console.log("Resolved projectName:", projectName);
-            console.log("Resolved challengeType:", challengeType);
-
-            return {
-              projectName,
-              projectLanguage: ProgrammingLanguage['c'],
-              type: challengeType,
-              code: ''
-            };
-          });
 
           console.log("Mapped userProjects for studentId", studentId, ":", userProjects);
+
           return {
             userName: studentId["en-US"] || 'Unknown',
             interfaceMode: InterfaceMode.SIMPLE,
-            projects: [],
+            projects: userProjects,
             classroomName: classroom.classroomId
           };
         });
@@ -708,8 +743,8 @@ class ClassroomsDashboard extends React.Component<Props, State> {
 
 
   private renderManageClassrooms = () => {
-    const { showCreateClassroomDialog } = this.state;
-    const { classrooms, style, theme } = this.props;
+    const { showCreateClassroomDialog, showClassroomLeaderboards } = this.state;
+    const { classrooms, style, theme, locale } = this.props;
     const classroomList = Object.entries(classrooms).map(([id, asyncClassroom]) => {
       const value = asyncClassroom?.type === Async.Type.Loaded ? asyncClassroom.value : null;
       if (!value) return null; // skip unloaded ones
@@ -725,15 +760,24 @@ class ClassroomsDashboard extends React.Component<Props, State> {
 
     return (
       <ManageClassroomsContainer theme={theme} style={style}>
-        <h2>Manage Classrooms</h2>
+        <TitleContainer theme={theme} style={style}>
+          <h2>Manage Classrooms</h2>
+          <Button theme={theme} onClick={this.onSeeLeaderboards}>
+            See Classroom Leaderboards
+          </Button>
+        </TitleContainer>
         <IvygateFileExplorer
           config={config}
           propUsers={[]}
           propClassrooms={this.updateIvygateClassrooms()}
           propSettings={{ ...DEFAULT_SETTINGS, classroomView: true }}
+          onUserSelected={this.onSelectStudent}
+          onProjectSelected={this.onProjectSelected}
           onAddNewClassroom={this.onAddNewClassroom_}
           theme={DARK}
+          style={style}
           locale={'en-US'}
+          ivygateLanguageMapping={IVYGATE_LANGUAGE_MAPPING}
         />
         {
           showCreateClassroomDialog && (
@@ -750,6 +794,15 @@ class ClassroomsDashboard extends React.Component<Props, State> {
               }}
             />
           )}
+        {showClassroomLeaderboards &&
+          (<ClassroomLeaderboardsDialog
+            classrooms={classrooms}
+            onClose={function (): void {
+              throw new Error('Function not implemented.');
+            }} theme={theme}
+            locale={locale}>
+
+          </ClassroomLeaderboardsDialog>)}
 
       </ManageClassroomsContainer>
 
@@ -819,7 +872,6 @@ class ClassroomsDashboard extends React.Component<Props, State> {
   render() {
     const { props, state } = this;
     const { style, locale } = props;
-    const { selected } = state;
     const theme = DARK;
     const currentUser = this.getCurrentUser();
     const currentUserEmail = this.getCurrentUserEmail();
@@ -857,6 +909,8 @@ export default connect(
     },
     onListOwnedClassrooms: (teacherId: string) =>
       dispatch(ClassroomsAction.listOwnedClassrooms({ teacherId })),
+    onListChallengesByStudentId: (studentId: string) =>
+      dispatch(ClassroomsAction.listChallengesByStudentId({ studentId })),
     onCreateClassroom: (classroom: Classroom) =>
       dispatch(ClassroomsAction.createClassroom({
         classroomId: crypto.randomUUID(), // will be replaced by backend
