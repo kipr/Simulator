@@ -30,7 +30,7 @@ const OPTIONS: ComboBox.Option[] = [{
   text: 'Python',
   data: 'python'
 }, {
-  text: 'Scratch',
+  text: 'Graphical',
   data: 'scratch'
 }];
 
