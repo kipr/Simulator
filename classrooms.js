@@ -85,23 +85,53 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     }
   });
 
-  // READ one classroom
-  router.get("/:id", async (req, res) => {
+  // GET all students in classroom challenges
+  router.get("/challenges", async (req, res) => {
     try {
-      console.log("GET /classrooms/:id called");
-      const { id } = req.params;
-      const qsnap = await admin
-        .firestore()
-        .collection("classrooms")
-        .where("teacherId", "==", id)
-        .get();
+      const studentIds = req.query.studentId || [];
+      console.log("studentIds:", studentIds);
       const result = {};
-      qsnap.forEach((doc) => {
-        result[doc.id] = doc.data();
-      });
+      console.log("GET /classroom/challenges called");
+
+      for (const studentId of studentIds) {
+        const qsnap = await admin
+          .firestore()
+          .collection("user")
+          .doc(studentId)
+          .collection("challenge_completion")
+          .get();
+
+        result[studentId] = qsnap.docs.map((doc) => ({
+          id: doc.id,
+          data: doc.data(),
+        }));
+      }
+
+      console.log("GET /classroom/challenges result:", result);
       return res.status(200).json(result);
     } catch (err) {
       console.error("GET /classrooms list error:", err);
+      return res.status(500).json({ message: err.message });
+    }
+  });
+
+  // READ one classroom
+  router.get("/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const doc = await admin
+        .firestore()
+        .collection("classrooms")
+        .doc(id)
+        .get();
+
+      if (!doc.exists) {
+        return res.status(404).json({});
+      }
+
+      return res.status(200).json({ [id]: doc.data() });
+    } catch (err) {
+      console.error("GET /classrooms/:id error:", err);
       return res.status(500).json({ message: err.message });
     }
   });
@@ -110,7 +140,12 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
   router.get("/", async (req, res) => {
     try {
       const { uid } = req.user;
-      const qsnap = await admin.firestore().collection("classrooms").get();
+      const qsnap = await admin
+        .firestore()
+        .collection("classrooms")
+        .where("teacherId", "==", uid)
+        .get();
+
       const result = {};
       qsnap.forEach((doc) => {
         result[doc.id] = doc.data();
@@ -146,6 +181,7 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
 
   // DELETE
   router.delete("/:id", async (req, res) => {
+    console.log("DELETE /:id called");
     try {
       const { uid } = req.user;
       const { id } = req.params;
