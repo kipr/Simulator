@@ -28,6 +28,9 @@ import LegalAcceptance from './consent/LegalAcceptance';
 import LocalizedString from './util/LocalizedString';
 import Classrooms from './pages/Classrooms';
 import ClassroomsDashboard from './pages/ClassroomsDashboard';
+import ClassroomLeaderboard from './pages/ClassroomLeaderboard';
+import ClassroomTeacherView from './pages/ClassroomTeacherView';
+import ClassroomStudentView from './pages/ClassroomStudentView';
 export interface AppPublicProps {
 
 }
@@ -183,10 +186,10 @@ class App extends React.Component<Props, State> {
           <Route path="/scene/:sceneId" element={<Root />} />
           <Route path="/challenge/:challengeId" element={<ChallengeRoot />} />
           <Route path="/curriculum" element={<CurriculumPage />} />
-          <Route path="/classrooms" element={<ClassroomsDashboard
-            params={undefined}
-            theme={DARK}
-            locale={'en-US'} />} />
+          <Route path="/classrooms" element={<ClassroomsDashboard theme={DARK} />} />
+          <Route path="/classrooms/:classroomId" element={<ClassroomLeaderboard theme={DARK} />} />
+          <Route path="/classrooms/:teacherId/teacherView" element={<ClassroomTeacherView theme={DARK} locale={'en-US'} />} />
+          <Route path="/classrooms/:studentId/studentView" element={<ClassroomStudentView theme={DARK} locale={'en-US'} />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <DocumentationWindow theme={LIGHT} documentationType={'default'} />
