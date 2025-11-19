@@ -21,7 +21,7 @@ import Dict from '../../util/objectOps/Dict';
 import * as monaco from 'monaco-editor';
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';
-import ScratchEditor from './ScratchEditor';
+import GraphicalEditor from './GraphicalEditor';
 
 export enum EditorActionState {
   None,
@@ -37,7 +37,7 @@ export interface EditorPublicProps extends StyleProps, ThemeProps {
   messages?: Message[];
   autocomplete: boolean;
 
-  onDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python' | 'scratch') => void;
+  onDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python' | 'graphical') => void;
 
   mini?: boolean;
 }
@@ -110,7 +110,7 @@ export const createEditorBarComponents = ({
         onLanguageChange: target.onLanguageChange,
       }));
 
-      if (target.language !== 'scratch') {
+      if (target.language !== 'graphical') {
         editorBar.push(BarComponent.create(Button, {
           theme,
           onClick: target.onIndentCode,
@@ -189,7 +189,7 @@ export const IVYGATE_LANGUAGE_MAPPING: Dict<string> = {
   'ecmascript': 'javascript',
 };
 
-const DOCUMENTATION_LANGUAGE_MAPPING: { [key in ProgrammingLanguage | Script.Language]?: 'c' | 'python' | 'scratch' | undefined } = {
+const DOCUMENTATION_LANGUAGE_MAPPING: { [key in ProgrammingLanguage | Script.Language]?: 'c' | 'python' | 'graphical' | undefined } = {
   'python': 'python',
   'c': 'c',
   'cpp': 'c',
@@ -254,9 +254,9 @@ class Editor extends React.PureComponent<Props, State> {
     } = this.props;
 
     let component: JSX.Element;
-    if (language === 'scratch') {
+    if (language === 'graphical') {
       component = (
-        <ScratchEditor
+        <GraphicalEditor
           code={code}
           onCodeChange={onCodeChange}
           theme={theme}
