@@ -15,6 +15,7 @@ import tr from '@i18n';
 import Author from '../../db/Author';
 import Subject from './Assignment/Subject';
 import StandardsLocation from './Assignment/StandardsLocation';
+import { ClassroomsState } from 'state/reducer/classrooms';
 
 export type Assignments = Dict<AsyncAssignment>;
 
@@ -39,10 +40,10 @@ export namespace Assignments {
   };
 }
 
-export type Classrooms = Dict<AsyncClassroom>;
+export type Classrooms = ClassroomsState;
 
 export namespace Classrooms {
-  export const EMPTY: Classrooms = {};
+  export const EMPTY: Classrooms = { entities: {}, selectedClassroom: null };
 }
 
 export type Scenes = Dict<AsyncScene>;
