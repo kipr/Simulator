@@ -17,11 +17,14 @@ import { AsyncClassroom, Classroom } from 'state/State/Classroom';
 import Dict from 'util/objectOps/Dict';
 import Button from '../../components/interface/Button';
 import ComboBox from '../../components/interface/ComboBox';
+import ClassroomLeaderboard from '../../pages/ClassroomLeaderboard';
+import Async from 'state/State/Async';
 
 export interface ClassroomLeaderboardsDialogPublicProps extends ThemeProps, StyleProps {
 
   classrooms: Dict<AsyncClassroom>;
   onClose: () => void;
+  onCloseClassroomLeaderboardDialog: (classroomId: string) => void;
 
 }
 
@@ -41,6 +44,7 @@ interface ClassroomLeaderboardsDialogState {
   classroomOptions: ComboBox.Option[];
   selectedClassroom: AsyncClassroom;
   errorMessage: string;
+  showLeaderboard: boolean;
 }
 
 type Props = ClassroomLeaderboardsDialogPublicProps & ClassroomLeaderboardsDialogPrivateProps;
@@ -70,16 +74,15 @@ const ComboBoxContainer = styled('div', (props: ThemeProps) => ({
   color: props.theme.color,
   spacing: '10px',
   minHeight: '30px',
-  marginLeft: '8px',
-  marginRight: '8px',
-  marginBottom: '8px',
+  margin: '8px',
 }));
 
-const NewProjectContainer = styled('div', (props: ThemeProps) => ({
+const ChooseLeaderboardContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'column',
   color: props.theme.color,
   backgroundColor: props.theme.backgroundColor,
+  alignItems: 'center',
   minHeight: '200px',
   paddingLeft: `${props.theme.itemPadding * 2}px`,
   paddingRight: `${props.theme.itemPadding * 2}px`,
@@ -97,7 +100,13 @@ const StyledForm = styled(Form, (props: ThemeProps) => ({
 
 
 
-const InterfaceChangeButton = styled(Button, (props: ThemeProps & ClickProps) => ({
+const ConfirmButton = styled(Button, (props: ThemeProps & ClickProps) => ({
+  display: 'flex',
+  width: '7em',
+  height: '2em',
+  alignItems: 'center',
+  justifyContent: 'center',
+  justifyItems: 'center',
   backgroundColor: props.theme.yesButtonColor.standard,
   border: `1px solid ${props.theme.yesButtonColor.border}`,
   ':hover':
@@ -145,7 +154,8 @@ export class ClassroomLeaderboardsDialog extends React.PureComponent<Props, Stat
       language: 'c',
       errorMessage: '',
       selectedClassroom: initialClassroom,
-      classroomOptions: this.CLASSROOM_OPTIONS
+      classroomOptions: this.CLASSROOM_OPTIONS,
+      showLeaderboard: false,
 
     }
   }
@@ -161,42 +171,6 @@ export class ClassroomLeaderboardsDialog extends React.PureComponent<Props, Stat
   }
 
 
-  onFinalize_ = async (values: { [id: string]: string }) => {
-
-    const projectName = values.projectName;
-
-    const specialCharRegex = /[^a-zA-Z0-9 _-]/;
-    const isOnlySpaces = !projectName.trim(); // Check if the name is empty or only spaces
-    // Check if project name exceeds 50 characters
-    if (projectName.length > 50) {
-      this.setState({ errorMessage: 'Project name cannot exceed 50 characters.' });
-      return;
-    }
-    if (specialCharRegex.test(projectName)) {
-      this.setState({ errorMessage: 'Project name contains special characters. Please use only letters, numbers, underscores, and hyphens.' });
-      return;
-    }
-    if (isOnlySpaces) {
-      this.setState({ errorMessage: "Project name cannot be empty or just spaces!" });
-      return;
-    }
-    this.setState({ errorMessage: "" }); // Clear error message if input is valid
-    try {
-
-      console.log("ClassroomLeaderboardsDialog props: ", this.props);
-
-
-
-    }
-    catch (error) {
-      console.error('Error adding user to database:', error);
-      if (error.response.status === 409) {
-        this.setState({ errorMessage: 'Project name already exists. Please choose a different name.' });
-      }
-    }
-
-  };
-
   private onSelectClassroomLeaderboard_ = (index: number, option: ComboBox.Option) => {
     console.log('Selected classroom leaderboard classroom:', option.data);
     this.setState({ selectedClassroom: option.data as AsyncClassroom }, () => {
@@ -206,8 +180,10 @@ export class ClassroomLeaderboardsDialog extends React.PureComponent<Props, Stat
   }
 
   private onConfirmClick_ = () => {
-    console.log("Confirmed selection of classroom leaderboard");
-
+    const { theme } = this.props;
+    console.log("Confirmed selection of classroom leaderboard with selectedClassroom:", this.state.selectedClassroom);
+    this.setState({ showLeaderboard: true });
+    this.props.onCloseClassroomLeaderboardDialog((this.state.selectedClassroom.type === Async.Type.Loaded) ? this.state.selectedClassroom.value.classroomId : '');
   }
 
   CLASSROOM_OPTIONS: ComboBox.Option[] = (() => {
@@ -244,10 +220,10 @@ export class ClassroomLeaderboardsDialog extends React.PureComponent<Props, Stat
       <div>
         <Dialog
           theme={theme}
-          name={LocalizedString.lookup(tr('Create New Project'), locale)}
+          name={LocalizedString.lookup(tr('Choose Class Leaderboard'), locale)}
           onClose={onClose}
         >
-          <NewProjectContainer theme={theme} style={style} className={className}>
+          <ChooseLeaderboardContainer theme={theme} style={style} className={className}>
             <ComboBoxContainer theme={theme} style={style} className={className}>
               <ComboBoxLabel theme={theme}>Choose Classroom to See Leaderboard:</ComboBoxLabel>
               <StyledComboBox
@@ -258,18 +234,19 @@ export class ClassroomLeaderboardsDialog extends React.PureComponent<Props, Stat
               />
             </ComboBoxContainer>
 
-            <InterfaceChangeButton
+            <ConfirmButton
               theme={theme}
               onClick={this.onConfirmClick_}
             >
               Confirm
-            </InterfaceChangeButton>
+            </ConfirmButton>
 
 
 
-          </NewProjectContainer>
+          </ChooseLeaderboardContainer>
 
         </Dialog>
+
 
       </div>
 
