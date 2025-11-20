@@ -692,6 +692,7 @@ class Root extends React.Component<Props, State> {
       onResetCode: this.onResetCode_,
       editorRef: this.editorRef,
       sceneId,
+      layout,
       scene,
       onNodeAdd: this.props.onNodeAdd,
       onNodeChange: this.props.onNodeChange,
