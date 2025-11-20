@@ -206,8 +206,8 @@ namespace Scene {
   export const diff = (a: Scene, b: Scene): PatchScene => {
     const predefinedLocationsDiff = (a.predefinedLocations || b.predefinedLocations) 
       ? Patch.diffDict(a.predefinedLocations || {}, b.predefinedLocations || {}, (prev, next) => 
-          Patch.diff(prev, next)
-        )
+        Patch.diff(prev, next)
+      )
       : undefined;
 
     return {
