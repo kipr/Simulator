@@ -9,7 +9,7 @@ import { Editor, createEditorBarComponents, EditorBarTarget } from '../Editor';
 import World from '../World';
 
 import { Info } from '../Info';
-import { LayoutEditorTarget, LayoutProps } from './Layout';
+import { Layout, LayoutEditorTarget, LayoutProps } from './Layout';
 import SimulatorArea from './SimulatorArea';
 import { TabBar } from './TabBar';
 import Widget, { Mode, Size } from '../interface/Widget';
@@ -26,6 +26,7 @@ import { ReferenceFramewUnits } from '../../util/math/unitMath';
 
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';
+import { ThemeProps } from '../constants/theme';
 
 
 const sizeDict = (sizes: Size[]) => {
@@ -82,6 +83,7 @@ const SideBar = styled('div', {
 const SimulatorAreaContainer = styled('div', {
   display: 'flex',
   flex: '1 1',
+  position: 'relative',
 });
 const SimultorWidgetContainer = styled('div', {
   display: 'flex',
@@ -102,6 +104,24 @@ const SimulatorWidget = styled(Widget, {
 const FlexConsole = styled(Console, {
   flex: '1 1',
 });
+
+const SceneNameOverlay = styled('div', (props: ThemeProps) => ({
+  position: 'absolute',
+  top: `${props.theme.widget.padding}px`,
+  left: '50%',
+  transform: 'translateX(-50%)',
+  pointerEvents: 'none',
+  zIndex: 1,
+  padding: `${props.theme.itemPadding}px ${props.theme.itemPadding * 2}px`,
+  borderRadius: `${props.theme.borderRadius}px`,
+  backgroundColor: props.theme.transparentBackgroundColor(0.95),
+  backdropFilter: 'blur(16px)',
+  color: props.theme.color,
+  fontSize: '1.2em',
+  fontWeight: 600,
+  whiteSpace: 'nowrap',
+  border: `1px solid ${props.theme.borderColor}`,
+}));
 
 const SideBarMinimizedTab = -1;
 
@@ -183,6 +203,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       editorRef,
       robots,
       sceneId,
+      layout,
       scene,
       onNodeAdd,
       onNodeChange,
@@ -371,7 +392,15 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     }
 
 
+    const latestScene = Async.latestValue(scene);
+    const sceneName = latestScene ? LocalizedString.lookup(latestScene.name, locale) : '';
+
     const simulator = <SimulatorAreaContainer>
+      {sceneName && (
+        <SceneNameOverlay theme={theme}>
+          {sceneName}
+        </SceneNameOverlay>
+      )}
       <SimulatorArea
         theme={theme}
         key='simulator'
