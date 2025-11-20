@@ -6618,6 +6618,13 @@ lru-memoizer@^2.2.0:
     lodash.clonedeep "^4.5.0"
     lru-cache "~4.0.0"
 
+lusca@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/lusca/-/lusca-1.7.0.tgz#a5d979f1b51776e60d41e0ca98f886f1b8b95502"
+  integrity sha512-msnrplCfY7zaqlZBDEloCIKld+RUeMZVeWzSPaGUKeRXFlruNSdKg2XxCyR+zj6BqzcXhXlRnvcvx6rAGgsvMA==
+  dependencies:
+    tsscmp "^1.0.5"
+
 mailgun.js@^10.2.1:
   version "10.2.1"
   resolved "https://registry.yarnpkg.com/mailgun.js/-/mailgun.js-10.2.1.tgz#411fc39c9d2bd26fcb2445416deab81ebd87044f"
@@ -9302,6 +9309,11 @@ tslib@^2.1.0, tslib@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
   integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
+
+tsscmp@^1.0.5:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/tsscmp/-/tsscmp-1.0.6.tgz#85b99583ac3589ec4bfef825b5000aa911d605eb"
+  integrity sha512-LxhtAkPDTkVCMQjt2h6eBVY28KCjikZqZfMcC15YBeNjkgUpdCfBu5HoiOTDu86v6smE8yOjyEktJ8hlbANHQA==
 
 tsutils@^3.21.0:
   version "3.21.0"
