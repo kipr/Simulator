@@ -3,7 +3,7 @@ import { styled } from "styletron-react";
 import { RawVector3, RawAxisAngle, RawEuler } from "../../util/math/math";
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from "../../util/math/unitMath";
 
-import { Angle, Mass, UnitlessValue, Value } from "../../util";
+import { Angle, Distance, Mass, UnitlessValue, Value } from "../../util";
 import ComboBox from "../interface/ComboBox";
 import Field from "../interface/Field";
 import Input from "../interface/Input";
@@ -745,6 +745,18 @@ class NodeSettings extends React.PureComponent<Props, State> {
         [key]: collapsed
       }
     });
+  };
+
+  private onPredefinedLocationSelect_ = (index: number, option: ComboBox.Option) => {
+    const { scene } = this.props;
+    const locationId = option.data as string;
+
+    if (!locationId || !scene.predefinedLocations || !scene.predefinedLocations[locationId]) {
+      return;
+    }
+
+    const location = scene.predefinedLocations[locationId];
+    this.props.onNodeOriginChange(location.origin);
   };
 
   private onPositionXChange_ = (value: Value) => {
@@ -1690,6 +1702,52 @@ class NodeSettings extends React.PureComponent<Props, State> {
           collapsed={collapsed['position']}
           onCollapsedChange={this.onCollapsedChange_('position')}
         >
+          {scene.predefinedLocations && Object.keys(scene.predefinedLocations).length > 0 && (
+            <StyledField name={LocalizedString.lookup(tr('Predefined Location'), locale)} theme={theme} long>
+              <ComboBox
+                options={[
+                  ComboBox.option(LocalizedString.lookup(tr('None'), locale), ''),
+                  ...Object.keys(scene.predefinedLocations).map(locationId => {
+                    const location = scene.predefinedLocations[locationId];
+                    return ComboBox.option(
+                      LocalizedString.lookup(location.name, locale),
+                      locationId
+                    );
+                  })
+                ]}
+                theme={theme}
+                index={(() => {
+                  // Find the predefined location that matches the current position
+                  // Convert positions to meters for comparison to handle different unit types
+                  const currentPosMeters = {
+                    x: Distance.toMeters(position.x),
+                    y: Distance.toMeters(position.y),
+                    z: Distance.toMeters(position.z),
+                  };
+
+                  for (const locationId of Object.keys(scene.predefinedLocations)) {
+                    const location = scene.predefinedLocations[locationId];
+                    if (location.origin.position) {
+                      const locationPosMeters = {
+                        x: Distance.toMeters(location.origin.position.x),
+                        y: Distance.toMeters(location.origin.position.y),
+                        z: Distance.toMeters(location.origin.position.z),
+                      };
+                      
+                      const threshold = 0.001; // 1mm tolerance
+                      if (Math.abs(locationPosMeters.x.value - currentPosMeters.x.value) < threshold &&
+                          Math.abs(locationPosMeters.y.value - currentPosMeters.y.value) < threshold &&
+                          Math.abs(locationPosMeters.z.value - currentPosMeters.z.value) < threshold) {
+                        return Object.keys(scene.predefinedLocations).indexOf(locationId) + 1;
+                      }
+                    }
+                  }
+                  return 0;
+                })()}
+                onSelect={this.onPredefinedLocationSelect_}
+              />
+            </StyledField>
+          )}
           <StyledValueEdit
             name={LocalizedString.lookup(tr('X'), locale)}
             long

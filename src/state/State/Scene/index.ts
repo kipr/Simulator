@@ -2,12 +2,18 @@ import Dict from '../../../util/objectOps/Dict';
 import Geometry from './Geometry';
 import Node from './Node';
 import Script from './Script';
-import { Vector3wUnits } from '../../../util/math/unitMath';
+import { ReferenceFramewUnits, Vector3wUnits } from '../../../util/math/unitMath';
 import Camera from './Camera';
 import Patch from '../../../util/redux/Patch';
 import Async from '../Async';
 import LocalizedString from '../../../util/LocalizedString';
 import Author from '../../../db/Author';
+
+export interface PredefinedLocation {
+  id: string;
+  name: LocalizedString;
+  origin: ReferenceFramewUnits;
+}
 
 interface Scene {
   name: LocalizedString;
@@ -25,6 +31,8 @@ interface Scene {
   camera: Camera;
 
   gravity: Vector3wUnits;
+
+  predefinedLocations?: Dict<PredefinedLocation>;
 }
 
 export type SceneBrief = Pick<Scene, 'name' | 'author' | 'description'>;
@@ -72,6 +80,8 @@ export interface PatchScene {
   camera: Patch<Camera>;
 
   gravity: Patch<Vector3wUnits>;
+
+  predefinedLocations?: Dict<Patch<PredefinedLocation>>;
 }
 
 namespace Scene {
@@ -193,19 +203,28 @@ namespace Scene {
     };
   };
 
-  export const diff = (a: Scene, b: Scene): PatchScene => ({
-    name: Patch.diff(a.name, b.name),
-    author: Patch.diff(a.author, b.author),
-    description: Patch.diff(a.description, b.description),
-    hdriUri: Patch.diff(a.hdriUri, b.hdriUri),
-    selectedNodeId: Patch.diff(a.selectedNodeId, b.selectedNodeId),
-    selectedScriptId: Patch.diff(a.selectedScriptId, b.selectedScriptId),
-    geometry: Patch.diffDict(a.geometry, b.geometry, Geometry.diff),
-    nodes: Patch.diffDict(a.nodes, b.nodes, Node.diff),
-    scripts: Patch.diffDict(a.scripts, b.scripts, Patch.diff),
-    camera: Camera.diff(a.camera, b.camera),
-    gravity: Patch.diff(a.gravity, b.gravity),
-  });
+  export const diff = (a: Scene, b: Scene): PatchScene => {
+    const predefinedLocationsDiff = (a.predefinedLocations || b.predefinedLocations) 
+      ? Patch.diffDict(a.predefinedLocations || {}, b.predefinedLocations || {}, (prev, next) => 
+          Patch.diff(prev, next)
+        )
+      : undefined;
+
+    return {
+      name: Patch.diff(a.name, b.name),
+      author: Patch.diff(a.author, b.author),
+      description: Patch.diff(a.description, b.description),
+      hdriUri: Patch.diff(a.hdriUri, b.hdriUri),
+      selectedNodeId: Patch.diff(a.selectedNodeId, b.selectedNodeId),
+      selectedScriptId: Patch.diff(a.selectedScriptId, b.selectedScriptId),
+      geometry: Patch.diffDict(a.geometry, b.geometry, Geometry.diff),
+      nodes: Patch.diffDict(a.nodes, b.nodes, Node.diff),
+      scripts: Patch.diffDict(a.scripts || {}, b.scripts || {}, Patch.diff),
+      camera: Camera.diff(a.camera, b.camera),
+      gravity: Patch.diff(a.gravity, b.gravity),
+      predefinedLocations: predefinedLocationsDiff,
+    };
+  };
 
   export const apply = (scene: Scene, patch: PatchScene): Scene => ({
     name: Patch.apply(patch.name, scene.name),
@@ -218,7 +237,10 @@ namespace Scene {
     gravity: Patch.apply(patch.gravity, scene.gravity),
     nodes: Patch.applyDict(patch.nodes, scene.nodes),
     geometry: Patch.applyDict(patch.geometry, scene.geometry),
-    scripts: Patch.applyDict(patch.scripts, scene.scripts),
+    scripts: Patch.applyDict(patch.scripts, scene.scripts || {}),
+    predefinedLocations: patch.predefinedLocations 
+      ? Patch.applyDict(patch.predefinedLocations, scene.predefinedLocations || {})
+      : scene.predefinedLocations,
   });
 
   export const EMPTY: Scene = {
