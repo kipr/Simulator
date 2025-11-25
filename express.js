@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const fs = require('fs');
 const uuid = require('uuid');
-const { exec } = require('child_process');
+const { execFile } = require('child_process');
 const session = require('express-session');
 const csrf = require('lusca').csrf;
 const app = express();
@@ -112,14 +112,69 @@ app.use('/api/ai', createAiRouter(firebaseTokenManager, config));
 
 app.use('/api', proxy(config.dbUrl));
 
+console.warn('compiling...');
 // If we have libkipr (C) artifacts and emsdk, we can compile.
 if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env) {
 
   app.post('/compile', (req, res) => {
     const startTime = Date.now();
-    const language = 'C';
+    const language = req.body.language;
     const userId = req.user?.uid;
     const sessionId = req.headers['x-session-id'] || req.sessionID || 'unknown';
+    let ext;
+    let cc;
+    let augmentation;
+
+    switch (language) {
+      case 'c':
+        ext = 'c';
+        cc = 'emcc';
+
+        // Wrap user's main() in our own "main()" that exits properly
+        // Required because Asyncify keeps emscripten runtime alive, which would prevent cleanup code from running
+        augmentation = `
+          #include <emscripten.h>
+      
+          EM_JS(void, on_stop, (), {
+            if (Module.context.onStop) Module.context.onStop();
+          })
+        
+          void simMainWrapper()
+          {
+            main();
+            on_stop();
+            emscripten_force_exit(0);
+          }
+        `;
+        break;
+      case 'cpp':
+        ext = 'cpp';
+        cc = 'em++';
+        augmentation = `
+        #include <emscripten.h>
+
+        EM_JS(void, on_stop, (), {
+          if (Module.context.onStop) Module.context.onStop();
+        })
+    
+        extern "C" void simMainWrapper()
+        {
+          main();
+          on_stop();
+          emscripten_force_exit(0);
+        }
+        `;
+        break;
+      case 'python':
+        ext = 'py'; break;
+      case 'graphical':
+        ext = 'graphical'; break;
+      default:
+        return res.status(400).json({
+          error: "Expected language"
+        });
+
+    }
     
     // Track session interaction
     metrics.trackSessionInteraction(sessionId, 'compile');
@@ -141,26 +196,13 @@ if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env
     // Track code size
     metrics.compilation.codeSize.observe({ language }, code.length);
   
-    // Wrap user's main() in our own "main()" that exits properly
-    // Required because Asyncify keeps emscripten runtime alive, which would prevent cleanup code from running
     const augmentedCode = `${code}
-      #include <emscripten.h>
-  
-      EM_JS(void, on_stop, (), {
-        if (Module.context.onStop) Module.context.onStop();
-      })
-    
-      void simMainWrapper()
-      {
-        main();
-        on_stop();
-        emscripten_force_exit(0);
-      }
+    ${augmentation}
     `;
   
     
     const id = uuid.v4();
-    const path = `/tmp/${id}.c`;
+    const path = `/tmp/${id}.${ext}`;
     fs.writeFile(path, augmentedCode, err => {
       if (err) {
         const durationMs = Date.now() - startTime;
@@ -197,8 +239,19 @@ if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env
       env['PATH'] = `${config.server.dependencies.emsdk_env.PATH}:${process.env.PATH}`;
       env['EMSDK'] = config.server.dependencies.emsdk_env.EMSDK;
       env['EM_CONFIG'] = config.server.dependencies.emsdk_env.EM_CONFIG;
-  
-      exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -s ASYNCIFY -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']" -I${config.server.dependencies.libkipr_c}/include -L${config.server.dependencies.libkipr_c}/lib -lkipr -o ${path}.js ${path}`, {
+      const args = [
+        '-s', 'WASM=0',
+        '-s', 'INVOKE_RUN=0',
+        '-s', 'ASYNCIFY',
+        '-s', 'EXIT_RUNTIME=1',
+        '-s', "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']",
+        `-I${config.server.dependencies.libkipr_c}/include`,
+        `-L${config.server.dependencies.libkipr_c}/lib`,
+        '-lkipr',
+        '-o', `${path}.js`,
+        path
+      ];
+      execFile(cc, args, {
         env
       }, (err, stdout, stderr) => {
         const durationMs = Date.now() - startTime;
