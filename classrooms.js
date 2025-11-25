@@ -88,8 +88,11 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
   // GET all students in classroom challenges
   router.get("/challenges", async (req, res) => {
     try {
-      const studentIds = req.query.studentId || [];
+      let studentIds = req.query.studentId || [];
       console.log("studentIds:", studentIds);
+      if (!Array.isArray(studentIds)) {
+        studentIds = [studentIds];
+      }
       const result = {};
       console.log("GET /classroom/challenges called");
 
@@ -114,7 +117,26 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
       return res.status(500).json({ message: err.message });
     }
   });
+  router.get("/myClassroom", async (req, res) => {
+    try {
+      console.log("GET /classrooms/myClassroom called");
+      const { uid } = req.user;
 
+      const qsnap = await admin
+        .firestore()
+        .collection("classrooms")
+        .where(`studentIds.${uid}`, "!=", null)
+        .get();
+
+      const result = {};
+      qsnap.forEach((doc) => (result[doc.id] = doc.data()));
+
+      return res.status(200).json(result);
+    } catch (err) {
+      console.error("GET /classrooms/myClassroom error:", err);
+      return res.status(500).json({ message: err.message });
+    }
+  });
   // READ one classroom
   router.get("/:id", async (req, res) => {
     try {
@@ -139,6 +161,28 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
   // LIST classrooms (owned by this user)
   router.get("/", async (req, res) => {
     try {
+      const inviteCode = req.query.inviteCode;
+      if (inviteCode) {
+        console.log("GET /classrooms called with inviteCode:", inviteCode);
+
+        const qsnap = await admin.firestore().collection("classrooms").get();
+        for (const doc of qsnap.docs) {
+          const classroom = doc.data();
+          const codeValue =
+            typeof classroom.code === "string"
+              ? classroom.code
+              : classroom.code?.["en-US"];
+
+          if (codeValue === inviteCode) {
+            // return in db.list format:  { docId: classroomData }
+            return res.status(200).json({
+              [doc.id]: classroom,
+            });
+          }
+        }
+
+        return res.status(404).json({});
+      }
       const { uid } = req.user;
       const qsnap = await admin
         .firestore()
@@ -153,6 +197,36 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
       return res.status(200).json(result);
     } catch (err) {
       console.error("GET /classrooms list error:", err);
+      return res.status(500).json({ message: err.message });
+    }
+  });
+
+  // FIND classroom by invite code
+  router.get("/byInviteCode", async (req, res) => {
+    try {
+      console.log("GET /byInviteCode called with code:", req.query.code);
+      const inviteCode = req.query.code;
+      if (!inviteCode) {
+        return res.status(400).json({ message: "Missing invite code" });
+      }
+
+      const qsnap = await admin.firestore().collection("classrooms").get();
+
+      for (const doc of qsnap.docs) {
+        const classroom = doc.data();
+
+        const codeValue =
+          typeof classroom.code === "string"
+            ? classroom.code
+            : classroom.code?.["en-US"];
+
+        if (codeValue === inviteCode) {
+          return res.status(200).json({ id: doc.id, ...classroom });
+        }
+      }
+
+      return res.status(404).json({ message: "Invalid invite code" });
+    } catch (err) {
       return res.status(500).json({ message: err.message });
     }
   });
