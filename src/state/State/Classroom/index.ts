@@ -5,9 +5,10 @@ import Dict from '../../../util/objectOps/Dict';
 
 export interface Classroom {
   classroomId: string; // classroom ID
-  code: LocalizedString; // invitation code
-  studentIds: LocalizedString[];  // IDs of students in the classroom
+  code: string; // invitation code
+  studentIds: Dict<{ id: string, displayName: string }>;  // IDs of students in the classroom
   teacherId: string;  // ID of the teacher
+  docId?: string; // document ID in the database
 
 }
 
@@ -16,9 +17,10 @@ export namespace Classroom {
     type: Async.Type.Loaded,
     value: {
       classroomId: '',
-      code: tr(''),
+      code: '',
       teacherId: '',
-      studentIds: []
+      studentIds: {},
+      docId: ''
     }
   };
 
