@@ -189,7 +189,8 @@ class App extends React.Component<Props, State> {
           <Route path="/classrooms" element={<ClassroomsDashboard theme={DARK} />} />
           <Route path="/classrooms/:classroomId" element={<ClassroomLeaderboard theme={DARK} />} />
           <Route path="/classrooms/:teacherId/teacherView" element={<ClassroomTeacherView theme={DARK} locale={'en-US'} />} />
-          <Route path="/classrooms/:studentId/studentView" element={<ClassroomStudentView theme={DARK} locale={'en-US'} />} />
+          <Route path="/classrooms/:studentId/studentView/" element={<ClassroomStudentView theme={DARK} locale={'en-US'} />} />
+          <Route path="/classrooms/:studentId/studentView/:classroomId" element={<ClassroomStudentView theme={DARK} locale={'en-US'} />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <DocumentationWindow theme={LIGHT} documentationType={'default'} />
