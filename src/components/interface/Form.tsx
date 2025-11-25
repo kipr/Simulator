@@ -320,6 +320,16 @@ namespace Form {
     text,
     finalizer: IDENTITY_FINALIZER
   });
+
+  export const displayName = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
+    id,
+    text,
+    tooltip,
+    validator: NON_EMPTY_VALIDATOR,
+    finalizer: IDENTITY_FINALIZER,
+    assist,
+    assistText,
+  });
 }
 
 export default Form;
