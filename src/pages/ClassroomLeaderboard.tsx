@@ -1,23 +1,19 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { connect } from 'react-redux';
-
 import { DARK, ThemeProps } from '../components/constants/theme';
-import { Card } from '../components/interface/Card';
 import MainMenu from '../components/MainMenu';
-
 import { StyleProps } from '../util/style';
 import LocalizedString from '../util/LocalizedString';
-
 import { State as ReduxState } from '../state';
 import tr from '@i18n';
 import { jsPDF } from "jspdf";
-
 import db from '../db';
 import { createRef } from 'react';
-import { AsyncClassroom } from 'state/State/Classroom';
-import Async from 'state/State/Async';
-import { ClassroomsAction, getAllStudentsClassroomChallenges } from 'state/reducer/classrooms';
+import { AsyncClassroom, Classroom } from 'state/State/Classroom';
+import { ClassroomsAction, findClassroomDocByReadableId, getAllStudentsClassroomChallenges } from 'state/reducer/classrooms';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+
 
 const SELFIDENTIFIER = "My Scores!";
 
@@ -46,8 +42,14 @@ interface User {
 
 export interface ClassroomLeaderboardPublicProps extends StyleProps, ThemeProps {
   onClearSelectedClassroom: () => void;
+  view?: string;
 }
 
+interface RouterProps {
+  params: {
+    classroomId?: string;
+  }
+}
 interface ClassroomLeaderboardPrivateProps {
   locale: LocalizedString.Language;
   classroom: AsyncClassroom;
@@ -57,6 +59,7 @@ interface ClassroomLeaderboardState {
   selected: string;
   users: Record<string, User>;
   challenges: Record<string, Challenge>;
+  shownClassroom: { docId: string, classroom: Classroom };
 }
 
 interface ClickProps {
@@ -64,7 +67,7 @@ interface ClickProps {
   disabled?: boolean;
 }
 
-type Props = ClassroomLeaderboardPublicProps & ClassroomLeaderboardPrivateProps;
+type Props = ClassroomLeaderboardPublicProps & ClassroomLeaderboardPrivateProps & RouterProps;
 type State = ClassroomLeaderboardState;
 
 const PageContainer = styled('div', (props: ThemeProps) => ({
@@ -80,10 +83,8 @@ const ClassroomLeaderboardContainer = styled("div", (props: ThemeProps) => ({
   height: 'calc(100vh - 48px)',
   display: 'flex',
   flexDirection: 'column',
-  // alignItems: 'center',
-  // justifyContent: 'center',
   overflow: 'auto',
-  // border: '2px solid red',
+
 }));
 
 const ClassroomLeaderboardTitleContainer = styled('div', {
@@ -92,7 +93,6 @@ const ClassroomLeaderboardTitleContainer = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   margin: '20px',
-  // border: '2px solid blue',
 });
 
 const UserInfoContainer = styled('div', {
@@ -105,16 +105,16 @@ const UserInfoContainer = styled('div', {
 
 const TableHeaderContainer = styled('div', {
   display: 'inline-block',
-  transform: 'rotate(-45deg)', // Rotate the text by -45 degrees
-  transformOrigin: 'bottom left', // Set the origin for the rotation
-  whiteSpace: 'nowrap', // Prevent text wrapping
-  width: '50px', // Set the width of the container
+  transform: 'rotate(-45deg)',
+  transformOrigin: 'bottom left',
+  whiteSpace: 'nowrap',
+  width: '50px',
 });
 
 const UserHeaderContainer = styled('div', {
   display: 'inline-block',
-  whiteSpace: 'nowrap', // Prevent text wrapping
-  width: '100px', // Set the width of the container
+  whiteSpace: 'nowrap',
+  width: '100px',
 });
 
 const Table = styled('table', {
@@ -136,10 +136,6 @@ const StyledTableRow = styled('tr', (props: { key: string, self: string, ref: Re
   borderBottom: '1px solid #ddd',
   backgroundColor: props.self === SELFIDENTIFIER ? '#555' : '#000', // Highlight the current user
 }));
-const TableRow = styled('tr', {
-  borderBottom: '1px solid #ddd',
-});
-
 const TableCell = styled('td', {
   padding: '6px',
   textAlign: 'center',
@@ -174,6 +170,22 @@ const Button = styled('div', (props: ThemeProps & ClickProps) => ({
   transition: 'background-color 0.2s, opacity 0.2s'
 }));
 
+// Higher-order component to inject router props for classroomId to support refreshing/back button
+function CompWithRouter(props) {
+  let params = useParams();
+  let navigate = useNavigate();
+  let location = useLocation();
+
+  return (
+    <ClassroomLeaderboard
+      {...props}
+      params={params}
+      navigate={navigate}
+      location={location}
+    />
+  );
+}
+
 
 class ClassroomLeaderboard extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -183,14 +195,42 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       selected: '',
       users: {},
       challenges: {},
+      shownClassroom: null,
     };
 
     void this.onLog();
   }
+  async componentDidMount() {
+    const { classroomId } = this.props.params;
+    console.log("Loaded classroomId:", classroomId);
+    let currentUserId = '';
+    const tokenManager = db.tokenManager;
+    if (tokenManager) {
+      const auth_ = tokenManager.auth();
+      const currentUserAuth_ = auth_.currentUser;
+      console.log("Current user auth:", currentUserAuth_);
+      currentUserId = currentUserAuth_.uid;
+    }
+    const classroom = await findClassroomDocByReadableId(classroomId, currentUserId);
 
-  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ClassroomLeaderboardState>, snapshot?: any): void {
-    if (prevProps.classroom !== this.props.classroom) {
-      console.log("Classroom updated! New classroom:", this.props.classroom);
+    console.log("Found classroom document:", classroom);
+    this.setState({ shownClassroom: classroom });
+  }
+  async componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ClassroomLeaderboardState>, snapshot?: any): Promise<void> {
+    if (prevProps.params.classroomId !== this.props.params.classroomId) {
+      console.log("Classroom updated! New classroom:", this.props.params.classroomId);
+      let currentUserId = '';
+      const tokenManager = db.tokenManager;
+      if (tokenManager) {
+        const auth_ = tokenManager.auth();
+        const currentUserAuth_ = auth_.currentUser;
+        console.log("Current user auth:", currentUserAuth_);
+        currentUserId = currentUserAuth_.uid;
+      }
+      const classroom = await findClassroomDocByReadableId(this.props.params.classroomId, currentUserId);
+
+      console.log("Found classroom document compdidupdate:", classroom);
+      this.setState({ shownClassroom: classroom });
     }
   }
 
@@ -205,15 +245,16 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
     }
   };
 
-  private onLog = async () => {
-    const { locale } = this.props;
-    const res = await db.list('challenge_completion');
-    // const groupData = res.groupData;
-    // const userData = res.userData;
 
-    const normalizedStudentIdList = this.props.classroom.type === Async.Type.Loaded ? this.props.classroom.value.studentIds.map(id => LocalizedString.lookup(id, locale)) : [];
-    console.log("Fetching classroom challenges for student IDs:", normalizedStudentIdList);
-    const result = await getAllStudentsClassroomChallenges(normalizedStudentIdList);
+  // Logs classroom users and their challenge completions
+  private onLog = async () => {
+    const { locale, classroom } = this.props;
+    const res = await db.list('challenge_completion');
+
+    // const { classroomId } = useParams();
+    console.log("onLog this.state.shownClassroom: ", this.state.shownClassroom);
+    const result = await getAllStudentsClassroomChallenges(this.state.shownClassroom?.classroom);
+    console.log("Classroom challenges result:", result);
 
     let users: Record<string, User> = {};
     const challenges: Record<string, Challenge> = {};
@@ -248,9 +289,6 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       (!challenge?.failure?.exprStates?.failure ?? false)
     );
 
-    const classroomUsers = this.props.classroom.type === Async.Type.Loaded ? this.props.classroom.value.studentIds : [];
-    const normalizedClassroomUsers = classroomUsers.map(id => id.toString());
-
     for (const [userId, userChallenges] of Object.entries(result)) {
       const user: User = {
         id: userId,
@@ -270,73 +308,11 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
         users[userId] = user;
       }
     }
-
-
-    users = this.anonomizeUsers(users);
-
     console.log("Processed users and challenges for leaderboard:", { users, challenges });
-
-
-    // for (const [userId, userChallenges] of Object.entries(userData)) {
-    //   let user: User = {
-    //     id: userId,
-    //     name: SELFIDENTIFIER,
-    //     scores: [],
-
-    //   };
-
-    //   // Get anonymous name to display
-    //   const userRecord: Record<string, User> = { [userId]: user };
-    //   const altUser = this.anonomizeUsers(userRecord)[userId];
-    //   user = {
-    //     ...user,
-    //     altId: altUser?.name
-    //   };
-
-    //   for (const [challengeId, challenge] of Object.entries(userChallenges as ChallengeData[])) {
-    //     const score: Score = {
-    //       name: tr(challengeId),
-    //       completed: challengeCompletion(challenge)
-    //     };
-    //     user.scores.push(score);
-    //   }
-
-    //   if (!users[userId]) {
-    //     users[userId] = user;
-    //   }
-    // }
-
 
     this.setState({ users, challenges });
 
     return { users, challenges };
-  };
-
-  private onLog2 = async () => {
-    const { locale } = this.props;
-    console.log("this.props.classroom: ", this.props.classroom);
-    const normalizedStudentIdList = this.props.classroom.type === Async.Type.Loaded ? this.props.classroom.value.studentIds.map(id => LocalizedString.lookup(id, locale)) : [];
-    console.log("Fetching classroom challenges for student IDs:", normalizedStudentIdList);
-    const result = await getAllStudentsClassroomChallenges(normalizedStudentIdList);
-    return result;
-
-  };
-
-  private getDefaultChallenges = (): Record<string, Challenge> => {
-    const challenges: Record<string, Challenge> = {};
-    const suffixes = ['a', 'b', 'c'];
-
-    for (let i = 1; i <= 12; i++) {
-      suffixes.forEach((suffix) => {
-        const id = `challenge${i}${suffix}`;
-        challenges[id] = {
-          name: tr(`JBC Challenge ${i}${suffix.toUpperCase()}`),
-          description: tr(`Junior Botball Challenge ${i}${suffix.toUpperCase()}: Description for Challenge ${i}${suffix.toUpperCase()}`),
-        };
-      });
-    }
-
-    return challenges;
   };
 
   private getDefaultUsers = (): Record<string, User> => {
@@ -383,66 +359,6 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       return completedChallengesB - completedChallengesA;
     });
     return userArray;
-  };
-
-  private anonomizeUsers = (users: Record<string, User>): Record<string, User> => {
-    const anonomizedUsers: Record<string, User> = {};
-
-    const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'white',
-      'cyan', 'magenta', 'lime', 'teal', 'indigo', 'violet', 'gold', 'silver', 'bronze', 'maroon', 'tan', 'navy', 'aqua'];
-    const elements = ['fire', 'water', 'earth', 'air', 'light', 'dark', 'metal', 'wood', 'ice',
-      'shadow', 'spirit', 'void', 'plasma', 'gravity', 'time', 'space', 'aether', 'chaos', 'order'];
-    const animals = ['tiger', 'bear', 'wolf', 'eagle', 'shark', 'whale', 'lion', 'panther', 'jaguar',
-      'fox', 'owl', 'hawk', 'dolphin', 'rhino', 'hippo', 'giraffe', 'zebra',
-      'koala', 'panda', 'leopard', 'lynx', 'bison', 'buffalo', 'camel',
-      'raven', 'sparrow', 'swan', 'toucan', 'vulture', 'walrus', 'yak'];
-
-
-
-    const stringTo32BitInt = (id: string): number => {
-      const FNV_PRIME = 0x01000193; // 16777619
-      let hash = 0x811c9dc5; // FNV offset basis
-
-      for (let i = 0; i < id.length; i++) {
-        hash ^= id.charCodeAt(i);       // XOR with byte value of character
-        hash = (hash * FNV_PRIME) >>> 0; // Multiply by FNV prime and apply unsigned right shift to keep it 32-bit
-      }
-
-      return hash >>> 0; // Ensure the result is a positive 32-bit integer
-    };
-
-    Object.values(users).forEach((user) => {
-      const hash = Math.abs(stringTo32BitInt(user.id));
-      const color = colors[hash % colors.length];
-      const element = elements[hash % elements.length];
-      const animal = animals[hash % animals.length];
-      const number = hash % 97;
-
-      anonomizedUsers[user.id] = {
-        id: user.id,
-        name: `${color}-${element}-${animal}-${number}`,
-        scores: user.scores
-      };
-    });
-
-    const nameSet = new Set<string>();
-    const duplicateNames: string[] = [];
-
-    Object.values(anonomizedUsers).forEach((user) => {
-      if (nameSet.has(user.name)) {
-        duplicateNames.push(user.name);
-      } else {
-        nameSet.add(user.name);
-      }
-    });
-
-    const duplicateIds = Object.values(anonomizedUsers).filter(u => duplicateNames.includes(u.name));
-
-    if (duplicateNames.length > 0) {
-      console.warn('Duplicate names found after anonymization:', duplicateNames, duplicateIds);
-    }
-
-    return anonomizedUsers;
   };
 
   private customSort = (list: string[]): string[] => {
@@ -599,18 +515,16 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { style, locale } = props;
+    const { style, locale, view } = props;
     const { selected } = state;
     const theme = DARK;
     const currentUser = this.getCurrentUser();
     const currentUserEmail = this.getCurrentUserEmail();
 
-    console.log("Rendering ClassroomLeaderboard for classroom:", this.props.classroom);
-
+    // Render the Classroom Leaderboard dependent on what view you're using: studentView vs teacherView
     return (
-      <PageContainer style={style} theme={theme}>
-        <MainMenu theme={theme} />
-        <ClassroomLeaderboardContainer style={style} theme={theme}>
+      <>
+        {view === 'studentView' ? <div style={{ width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
           <ClassroomLeaderboardTitleContainer>
             <h1>Classroom Leaderboard</h1>
             <UserInfoContainer>
@@ -628,8 +542,33 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 
           </ClassroomLeaderboardTitleContainer>
           {this.renderClassroomLeaderboard()}
-        </ClassroomLeaderboardContainer>
-      </PageContainer>
+        </div>
+          :
+          <PageContainer style={style} theme={theme}>
+            <MainMenu theme={theme} />
+            <ClassroomLeaderboardContainer style={style} theme={theme}>
+              <ClassroomLeaderboardTitleContainer>
+                <h1>Classroom Leaderboard</h1>
+                <UserInfoContainer>
+                  <h2>User: </h2>
+                  <h3>{currentUser?.name || 'Unknown'}</h3>
+                  <h2>Alias: </h2>
+                  <h3>{currentUser?.altId || 'Unknown'}</h3>
+                  <h2>Email: </h2>
+                  <h3>{currentUserEmail || 'Unknown'}</h3>
+                </UserInfoContainer>
+                <ButtonContainer>
+                  <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> Export All Scores</Button>
+                </ButtonContainer>
+
+              </ClassroomLeaderboardTitleContainer>
+              {this.renderClassroomLeaderboard()}
+            </ClassroomLeaderboardContainer>
+          </PageContainer>
+        }
+
+
+      </>
     );
   }
 }
@@ -644,4 +583,4 @@ export default connect((state: ReduxState) => ({
   })
 
 
-)(ClassroomLeaderboard) as React.ComponentType<ClassroomLeaderboardPublicProps>;
+)(CompWithRouter) as React.ComponentType<ClassroomLeaderboardPublicProps>;
