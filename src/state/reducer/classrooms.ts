@@ -10,7 +10,7 @@ import { Classroom, Classrooms } from "../State/Classroom";
 import LocalizedString from "util/LocalizedString";
 import { auth } from "../../firebase/firebase";
 import ChallengeCompletion from "state/State/ChallengeCompletion";
-
+import tr from "@i18n";
 
 
 export namespace ClassroomsAction {
@@ -80,24 +80,34 @@ export namespace ClassroomsAction {
 
   export const listChallengesByStudentId = construct<ListChallengesByStudentId>("classrooms/list-challenges-by-student-id");
 
-  export interface AddStudentToClassroom {
-    type: "classrooms/add-student-to-classroom";
+  export interface StudentAdded {
+    type: "classrooms/student-added";
     classroomId: string;
-    studentId: LocalizedString;
+    studentId: string;
+    displayName: string;
   }
 
-  export const addStudentToClassroom = construct<AddStudentToClassroom>("classrooms/add-student-to-classroom");
+  export const studentAdded = construct<StudentAdded>("classrooms/student-added");
+
+  export interface RemoveStudentFromClassroom {
+    type: "classrooms/remove-student-from-classroom";
+    studentId: string;
+    currentClassroom: Classroom;
+
+  }
+
+  export const removeStudentFromClassroom = construct<RemoveStudentFromClassroom>("classrooms/remove-student-from-classroom");
 
   export interface StudentInClassroom {
     type: "classrooms/student-in-classroom";
-    studentId: LocalizedString;
+    studentId: string;
   }
 
   export const studentInClassroom = construct<StudentInClassroom>("classrooms/student-in-classroom");
 
   export interface FindClassroomByInviteCode {
     type: "classrooms/find-classroom-by-invite-code";
-    inviteCode: LocalizedString;
+    inviteCode: string;
   }
 
   export const findClassroomByInviteCode = construct<FindClassroomByInviteCode>("classrooms/find-classroom-by-invite-code");
@@ -115,7 +125,8 @@ export type ClassroomsAction =
   | ClassroomsAction.CreateClassroom
   | ClassroomsAction.SetClassroom
   | ClassroomsAction.SetClassrooms
-  | ClassroomsAction.AddStudentToClassroom
+  | ClassroomsAction.StudentAdded
+  | ClassroomsAction.RemoveStudentFromClassroom
   | ClassroomsAction.StudentInClassroom
   | ClassroomsAction.FindClassroomByInviteCode
   | ClassroomsAction.ListOwnedClassrooms
@@ -148,6 +159,7 @@ const load = async (
   }
 };
 
+// 6 character unique ID generator
 const generateUniqueClassroomId = async (): Promise<string> => {
   let uniqueId: string;
   let shortenedId: string;
@@ -173,6 +185,8 @@ const generateUniqueClassroomId = async (): Promise<string> => {
   return shortenedId;
 }
 
+
+//Create classroom in database and update store
 const create = async (classroomId: string, next: Async.Creating<Classroom>) => {
   const generatedId = await generateUniqueClassroomId();
   console.log("Write path:", Selector.classroom(generatedId));
@@ -181,10 +195,8 @@ const create = async (classroomId: string, next: Async.Creating<Classroom>) => {
     // Write directly to your database (Firestore or local DB)
     console.log("Creating classroom in DB:", next.value);
     console.log("Classroom ID:", classroomId);
-
-
-
     console.log("Generated unique classroom ID:", generatedId);
+    next.value.docId = generatedId;
     await db.set(Selector.classroom(generatedId), next.value);
     // Update Redux or local store
     store.dispatch(
@@ -200,20 +212,10 @@ const create = async (classroomId: string, next: Async.Creating<Classroom>) => {
 
   } catch (error) {
     console.error("Error creating classroom:", error);
-    // Optionally dispatch a failed state
-    // store.dispatch(
-    //   ClassroomsAction.setClassroomInternal({
-    //     classroomId: generatedId,
-    //     classroom: Async.loaded({
-    //       brief: {},
-    //       value: next.value,
-    //     }),
-    //   })
-    // );
-
   }
 };
 
+//Delete classroom from database and update store
 const deleteClassroom = async (classroomId: string, next: Async.Deleting<ClassroomBrief, Classroom>) => {
   try {
     console.log("classrooms.ts deleteClassroom called with classroomId:", classroomId);
@@ -225,7 +227,7 @@ const deleteClassroom = async (classroomId: string, next: Async.Deleting<Classro
 };
 
 
-
+//List classrooms owned by logged-in user and update store
 const listOwned = async () => {
   try {
     console.log("Listing classrooms (owned by logged-in user)");
@@ -249,7 +251,7 @@ const listOwned = async () => {
 };
 
 
-
+//List challenge completions for a specific student ID
 export const listChallengesByStudentId = async (studentId: string) => {
   try {
     console.log("Listing challenge completions for studentId:", studentId);
@@ -263,15 +265,34 @@ export const listChallengesByStudentId = async (studentId: string) => {
 
 };
 
-export const getAllStudentsClassroomChallenges = async (studentIds: string[]) => {
+//Get all challenges by all students in a classroom
+export const getAllStudentsClassroomChallenges = async (classroom: Classroom) => {
   try {
-    console.log("Listing all challenges by all students in a classroom: ", studentIds);
+    console.log("Listing all challenges by all students for classroom:", classroom);
     const params = new URLSearchParams();
-    studentIds.forEach(id => params.append("studentId", id));
+    let mappedStudentChallenge = {};
+    //classroom.studentIds.forEach(id => params.append("studentId", id));
+    for (const student of Object.values(classroom.studentIds)) {
+      console.log("Listing student:", student);
+      const normalizedId = typeof student.id === "string" ? student.id : student.id["en-US"];
+      params.append("studentId", normalizedId);
+    }
+    console.log("Constructed query params:", params.toString());
     const result = await db.list("classrooms/challenges?" + params.toString());
 
     console.log("All students' challenges in classroom:", result);
-    return result;
+
+    for (const student of Object.values(classroom.studentIds)) {
+      for (const entry of Object.keys(result)) {
+        if (entry === student.id) {
+          mappedStudentChallenge[student.displayName] = result[entry];
+        }
+      }
+    }
+
+    console.log("Mapped student challenges:", mappedStudentChallenge);
+    return mappedStudentChallenge;
+
   }
   catch (error) {
     console.error("Failed to get all challenges by all students in classroom");
@@ -279,68 +300,104 @@ export const getAllStudentsClassroomChallenges = async (studentIds: string[]) =>
   }
 }
 
-export const findClassroomDocByReadableId = async (
-  classroomId: string
-): Promise<{ docId: string; classroom: Classroom } | null> => {
-  const classrooms = await db.list<Classroom>('classrooms');
-  const entry = Object.entries(classrooms).find(
-    ([, classroom]) => classroom.classroomId === classroomId
+
+//Add student to classroom in database and update store (internal)
+export async function addStudentToClassroomAsyncRaw(
+  returnedClassroom: Classroom,
+  inviteCode: string,
+  studentId: string,
+  displayName: string
+): Promise<Classroom | null> {
+
+  const foundClassroom = returnedClassroom;
+  if (!foundClassroom) return null;
+
+  console.log("addStudentToClassroomAsyncRaw foundClassroom:", foundClassroom);
+
+  const normalized = studentId;
+
+  const studentEntry = {
+    id: studentId,
+    displayName: displayName
+  };
+  const docId = foundClassroom.docId;
+
+  const updatedStudentIds = {
+    ...foundClassroom.studentIds,
+    [normalized]: studentEntry
+  };
+
+  await db.set(
+    { collection: "classrooms", id: docId },
+    { ...foundClassroom, studentIds: updatedStudentIds },
+    true
   );
-  if (!entry) return null;
 
-  const [docId, classroom] = entry;
-  return { docId, classroom };
-};
+  return { ...foundClassroom, studentIds: updatedStudentIds };
+}
 
-
-export const addStudentToClassroom = async (
+//Add student to classroom in database and update store (action)
+export const studentAdded = (
   classroomId: string,
-  studentId: LocalizedString
+  studentId: string,
+  studentEntry: any
+) => ({
+  type: "classrooms/student-added",
+  classroomId,
+  studentId,
+  studentEntry
+});
+
+// Remove student from classroom in database and update store
+export const removeStudentFromClassroom = async (
+  studentId: string,
+  currentClassroom: Classroom
 ) => {
-  const result = await findClassroomDocByReadableId(classroomId);
-  if (!result) {
-    console.warn('Classroom not found:', classroomId);
-    return;
-  }
+  console.log("removeStudentFromClassroom called with studentId:", studentId, "currentClassroom:", currentClassroom);
 
-  const { docId, classroom } = result;
-  console.log("addStudentToClassroom docId:", docId);
-  console.log("addStudentToClassroom classroom:", classroom);
-  const normalized = typeof studentId === "string" ? studentId : studentId["en-US"];
+  const exisitingStudentIds = Object.keys(currentClassroom.studentIds);
+  console.log("Existing student IDs in classroom:", exisitingStudentIds);
+  if (exisitingStudentIds.includes(studentId)) {
+    console.log("Student ID found in classroom, proceeding to remove.");
+    const updatedStudentIds = { ...currentClassroom.studentIds };
+    delete updatedStudentIds[studentId];
 
-  // Convert all stored IDs to strings for comparison
-  const existingIds = classroom.studentIds.map(id =>
-    typeof id === "string" ? id : id["en-US"]
-  );
+    console.log("Updated student IDs after removal:", updatedStudentIds);
 
-  if (!existingIds.includes(normalized)) {
-    classroom.studentIds.push({ "en-US": normalized }); // keep same structure
-    await db.set({ collection: "classrooms", id: docId }, classroom);
+    const docId = currentClassroom.docId;
+
+    await db.set(
+      { collection: "classrooms", id: docId },
+      { ...currentClassroom, studentIds: updatedStudentIds },
+      false
+    );
 
     store.dispatch(
       ClassroomsAction.setClassroom({
-        classroomId: docId,
-        classroom: Async.loaded({ brief: {}, value: classroom }),
+        classroomId: docId!,
+        classroom: Async.loaded({
+          brief: {},
+          value: { ...currentClassroom, studentIds: updatedStudentIds }
+        })
       })
     );
   }
-};
 
+}
 
-export const studentInClassroom = async (studentId: LocalizedString): Promise<{ inClassroom: boolean, classroom: Classroom | null }> => {
+// Check if student is in any classroom
+export const studentInClassroom = async (studentId: string): Promise<{ inClassroom: boolean, classroom: Classroom | null }> => {
   try {
-    const result = await db.list<Classroom>("classrooms");
+    const result = await db.get<Classroom>(Selector.classroom("myClassroom"));
     console.log("StudentInClassroom studentId:", studentId);
     console.log("StudentInClassroom classrooms:", result);
     const normalized = typeof studentId === "string" ? studentId : studentId["en-US"];
 
 
     for (const classroom of Object.values(result)) {
-      const existingIds = classroom.studentIds.map(id =>
-        typeof id === "string" ? id : id["en-US"]
-      );
+      console.log("Checking classroom:", classroom.classroomId, classroom.studentIds);
 
-      if (existingIds.includes(normalized)) {
+      if (classroom.studentIds[normalized]) {
         return { inClassroom: true, classroom };
       }
     }
@@ -351,28 +408,36 @@ export const studentInClassroom = async (studentId: LocalizedString): Promise<{ 
   }
 };
 
-export const findClassroomByInviteCode = async (inviteCode: LocalizedString): Promise<Classroom | null> => {
-  try {
-    const result = await db.list<Classroom>("classrooms");
+// Find classroom by readable classroom ID and teacher ID
+export const findClassroomDocByReadableId = async (
+  classroomId: string, teacherId: string
+): Promise<{ docId: string; classroom: Classroom } | null> => {
+  const classrooms = await db.list<Classroom>('classrooms');
+  const entry = Object.entries(classrooms).find(
+    ([, classroom]) => classroom.classroomId === classroomId && classroom.teacherId === teacherId
+  );
 
+  if (!entry) return null;
+
+  const [docId, classroom] = entry;
+  return { docId, classroom };
+};
+
+// Find classroom by invite code
+export const findClassroomByInviteCode = async (inviteCode: string): Promise<Classroom | null> => {
+  try {
+    const result = await db.list<Classroom>(`classrooms?inviteCode=${inviteCode}`);
+
+    console.log("Invite code to find:", inviteCode);
+    console.log("Current uid:", auth.currentUser?.uid || '');
     console.log("Raw object:", result);
-    console.log("All classrooms:");
     for (const [id, data] of Object.entries(result)) {
       console.log(id, data);
     }
     for (const classroom of Object.values(result)) {
-      const classroomCode =
-        typeof classroom.code === 'string'
-          ? classroom.code
-          : classroom.code?.en ?? Object.values(classroom.code ?? {})[0] ?? '';
-
-      const inviteCodeStr =
-        typeof inviteCode === 'string'
-          ? inviteCode
-          : inviteCode?.en ?? Object.values(inviteCode ?? {})[0] ?? '';
-
+      const classroomCode = typeof classroom.code === "string" ? classroom.code : classroom.code["en-US"];
       if (
-        classroomCode.localeCompare(inviteCodeStr, undefined, { sensitivity: "base" }) === 0
+        classroomCode.localeCompare(inviteCode, undefined, { sensitivity: "base" }) === 0
       ) {
         return classroom;
       }
@@ -469,9 +534,33 @@ export const reduceClassrooms = (
       void listChallengesByStudentId(action.studentId);
       return state;
     }
-    case "classrooms/add-student-to-classroom": {
-      console.log("Reducer received addStudentToClassroom action:", action);
-      void addStudentToClassroom(action.classroomId, action.studentId);
+    case "classrooms/student-added": {
+      const asyncClassroom = state.entities[action.classroomId];
+      if (!asyncClassroom || asyncClassroom.type !== Async.Type.Loaded) return state;
+
+      const classroom = asyncClassroom.value;
+
+      const updated = {
+        ...classroom,
+        studentIds: {
+          ...classroom.studentIds,
+          [action.studentId]: { id: action.studentId, displayName: action.displayName }
+        }
+      };
+
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          [action.classroomId]: Async.loaded({
+            brief: asyncClassroom.brief,
+            value: updated
+          })
+        }
+      };
+    }
+    case "classrooms/remove-student-from-classroom": {
+      void removeStudentFromClassroom(action.studentId, action.currentClassroom);
       return state;
     }
 
