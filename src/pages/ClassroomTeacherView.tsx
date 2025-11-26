@@ -76,6 +76,7 @@ export interface ClassroomTeacherViewPublicProps extends StyleProps, ThemeProps 
   onStudentInClassroom: (studentId: LocalizedString) => void;
   onShowClassroomLeaderboard: (classroom: AsyncClassroom) => void;
   onAddStudentToClassroom: (classroomId: string, studentId: LocalizedString) => void;
+  onRemoveStudentFromClassroom: (studentId: string, currentClassroom: Classroom) => void;
 }
 
 interface ClassroomTeacherViewPrivateProps {
@@ -93,7 +94,7 @@ interface ClassroomTeacherViewState {
   showSelectedClassroomLeaderboard: boolean;
   showAreYouSureDialog: boolean;
   isStudentInClassroom?: boolean;
-  deleteClassroomId?: string;
+  deleteObject?: IvygateClassroomType | User | null;
 }
 
 interface ClickProps {
@@ -149,10 +150,10 @@ const ManageClassroomsContainer = styled('div', (props: ThemeProps) => ({
 }));
 const TableHeaderContainer = styled('div', {
   display: 'inline-block',
-  transform: 'rotate(-45deg)', 
-  transformOrigin: 'bottom left', 
+  transform: 'rotate(-45deg)',
+  transformOrigin: 'bottom left',
   whiteSpace: 'nowrap',
-  width: '50px', 
+  width: '50px',
 });
 
 const UserHeaderContainer = styled('div', {
@@ -177,7 +178,7 @@ const TableHeader = styled('th', {
 });
 const StyledTableRow = styled('tr', (props: { key: string, self: string, ref: React.Ref<HTMLTableRowElement> }) => ({
   borderBottom: '1px solid #ddd',
-  backgroundColor: props.self === SELFIDENTIFIER ? '#555' : '#000', 
+  backgroundColor: props.self === SELFIDENTIFIER ? '#555' : '#000',
 }));
 
 const TableCell = styled('td', {
@@ -232,14 +233,18 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       leaderboardClassroom: null
     };
 
-       this.props.onListOwnedClassrooms();
+    this.props.onListOwnedClassrooms();
   }
 
 
   componentDidUpdate(prevProps) {
+    console.log("ClassroomTeacherView componentDidUpdate prevProps: ", prevProps);
+    console.log("ClassroomTeacherView componentDidUpdate props: ", this.props);
+
     if (prevProps.classroomList !== this.props.classroomList) {
       console.log("Classrooms updated → recalculating once");
-      this.getIvygateClassrooms();      }
+      this.getIvygateClassrooms();
+    }
   }
 
   componentWillUnmount() {
@@ -257,8 +262,13 @@ class ClassroomTeacherView extends React.Component<Props, State> {
   private onDeleteClassroom_ = (classroom: IvygateClassroomType) => {
     console.log('Delete classroom clicked for classroom:', classroom);
     console.log("this.props.selectedClassroom:", this.props.selectedClassroom);
-    this.setState({ showAreYouSureDialog: true, deleteClassroomId: classroom.name });
+    this.setState({ showAreYouSureDialog: true, deleteObject: classroom });
 
+  }
+
+  private onDeleteUser_ = (user: User) => {
+    console.log('Delete user clicked for user:', user);
+    this.setState({ showAreYouSureDialog: true, deleteObject: user });
   }
 
   private onSeeLeaderboards = () => {
@@ -273,6 +283,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       code: classroomInviteCode,
       studentIds: {},
       docId: '',
+      type: 'classroom'
     });
     await this.props.onListOwnedClassrooms();
     this.setState({ showCreateClassroomDialog: false });
@@ -296,13 +307,39 @@ class ClassroomTeacherView extends React.Component<Props, State> {
   }
 
   private onCloseDeleteDialog_ = () => {
-    for (const [classroomKey, asyncClassroom] of Object.entries(this.props.classroomList)) {
-      if (asyncClassroom.type === Async.Type.Loaded && asyncClassroom.value.classroomId === this.state.deleteClassroomId) {
-        this.props.onDeleteClassroom(classroomKey, asyncClassroom.value);
+    const { deleteObject } = this.state;
+    console.log("onCloseDeleteDialog_ state:", this.state);
+    console.log("onCloseDeleteDialog_ props.classroomList:", this.props.classroomList);
+    console.log("onCloseDeleteDialog_ state.deleteObject:", this.state.deleteObject);
+    if (deleteObject.type === "classroom") {
+      for (const [classroomKey, asyncClassroom] of Object.entries(this.props.classroomList)) {
+        if (asyncClassroom.type === Async.Type.Loaded && asyncClassroom.value.classroomId === `${deleteObject.name}`) {
+          this.props.onDeleteClassroom(classroomKey, asyncClassroom.value);
+        }
       }
     }
+    else if (deleteObject.type === "user") {
+      // Deleting a user from a classroom is not implemented in this snippet.
+      const userClassroom = Object.values(this.props.classroomList).find((asyncClassroom) => {
+        if (asyncClassroom.type === Async.Type.Loaded) {
+          const classroom = asyncClassroom.value;
+          return Object.values(classroom.studentIds).some(student => student.id === `${deleteObject.userName}`);
+        }
+        return false;
+      });
+
+      if (userClassroom && userClassroom.type === Async.Type.Loaded) {
+        const classroom = userClassroom.value;
+        this.props.onRemoveStudentFromClassroom(`${deleteObject.userName}`, classroom);
+      } else {
+        console.log(`User ${deleteObject.userName} not found in any classroom.`);
+      }
+
+      //this.props.onRemoveStudentFromClassroom(`${deleteObject.userName}`,);
+
+    }
     this.props.onListOwnedClassrooms();
-    this.setState({ showAreYouSureDialog: false, deleteClassroomId: null });
+    this.setState({ showAreYouSureDialog: false, deleteObject: null });
   }
 
   private onExitDeleteDialog_ = () => {
@@ -344,7 +381,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
   }
 
 
- 
+
   private memoIvygateClassrooms: IvygateClassroomType[] | null = null;
   private memoSource: any = null;
 
@@ -399,7 +436,8 @@ class ClassroomTeacherView extends React.Component<Props, State> {
             interfaceMode: InterfaceMode.SIMPLE,
             projects: userProjects,
             classroomName: classroom.classroomId,
-            displayName: studentId.displayName ? studentId.displayName : 'Unknown'
+            displayName: studentId.displayName ? studentId.displayName : 'Unknown',
+            type: 'user'
           };
 
         });
@@ -407,7 +445,8 @@ class ClassroomTeacherView extends React.Component<Props, State> {
         const ivygateClassroom: IvygateClassroomType = {
           name: classroom.classroomId,
           users: classroomUsers,
-          classroomInvitationCode: classroom.code?.["en-US"] || ''
+          classroomInvitationCode: classroom.code,
+          type: 'classroom'
         };
 
         ivygateClassrooms.push(ivygateClassroom);
@@ -443,6 +482,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
           onProjectSelected={this.onProjectSelected}
           onAddNewClassroom={this.onAddNewClassroom_}
           onDeleteClassroom={this.onDeleteClassroom_}
+          onDeleteUser={this.onDeleteUser_}
           onClassroomSelected={this.onClassroomSelected_}
           theme={DARK}
           style={style}
@@ -478,15 +518,26 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
   }
 
-  
+
 
   render() {
     const { props, state } = this;
     const { style, locale } = props;
-    const { showAreYouSureDialog, deleteClassroomId } = state;
+    const { showAreYouSureDialog, deleteObject } = state;
     const theme = DARK;
     console.log("Rendering ClassroomTeacherView classroomList:", this.props.classroomList);
 
+    // if (deleteObject) {
+    //   let deleteName = '';
+    //   console.log("deleteObject is:", deleteObject);
+    //   if (deleteObject.type === "classroom") {
+    //     deleteName = deleteObject.name;
+    //   } else if (deleteObject.type === "user") {
+    //     deleteName = deleteObject.displayName || '';
+    //   }
+
+    // }
+    console.log("Delete object in state:", deleteObject);
     return (
       <PageContainer style={style} theme={theme}>
         <MainMenu theme={theme} />
@@ -501,7 +552,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
               {this.renderManageClassrooms()}
               {showAreYouSureDialog && (
                 <DeleteDialog
-                  name={tr(deleteClassroomId)}
+                  name={tr(deleteObject && deleteObject.type === "classroom" ? `${deleteObject.name}` : deleteObject && deleteObject.type === "user" ? `${deleteObject.displayName}` : '')}
                   onClose={this.onExitDeleteDialog_}
                   onAccept={this.onCloseDeleteDialog_}
                   theme={theme}>
@@ -536,5 +587,8 @@ export default connect(
       dispatch(ClassroomsAction.showClassroomLeaderboard({ classroom })),
     onDeleteClassroom: (classroomId: string, classroom) =>
       dispatch(ClassroomsAction.deleteClassroom({ classroomId, classroom })),
+
+    onRemoveStudentFromClassroom: (studentId: string, currentClassroom: Classroom) =>
+      dispatch(ClassroomsAction.removeStudentFromClassroom({ studentId, currentClassroom })),
   })
 )(DashboardWithNavigate);
