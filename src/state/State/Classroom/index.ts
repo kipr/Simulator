@@ -8,7 +8,10 @@ export interface Classroom {
   code: string; // invitation code
   studentIds: Dict<{ id: string, displayName: string }>;  // IDs of students in the classroom
   teacherId: string;  // ID of the teacher
+  teacherDisplayName: string; // Display name of the teacher
   docId?: string; // document ID in the database
+  type: 'classroom';
+
 
 }
 
@@ -19,8 +22,10 @@ export namespace Classroom {
       classroomId: '',
       code: '',
       teacherId: '',
+      teacherDisplayName: '',
       studentIds: {},
-      docId: ''
+      docId: '',
+      type: 'classroom',
     }
   };
 
