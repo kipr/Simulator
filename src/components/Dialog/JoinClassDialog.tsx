@@ -111,7 +111,7 @@ export class CreateUserDialog extends React.PureComponent<Props, State> {
 
     const { showRepeatUserDialog } = state;
     const JOINCLASS_FORM_ITEMS: Form.Item[] = [
-      Form.classroomInviteCode('classroomInviteCode', 'Classroom Invite Code', 'Enter the invite code provided by your teacher to join a classroom'),
+      Form.joinClassInviteCode('classroomInviteCode', 'Classroom Invite Code', 'Enter the invite code provided by your teacher to join a classroom'),
       Form.displayName('displayName', 'Display Name', 'The name that will be shown to your teacher and classmates', undefined, 'This can be changed later in your profile settings'),
     ];
 
