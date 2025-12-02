@@ -69,6 +69,7 @@ import Motor from '../programming/AbstractRobot/Motor';
 import { Modal } from './sharedRoot/Modal';
 import AiWindow from '../components/Ai/AiWindow';
 import Robot from '../state/State/Robot';
+import { flushSync } from 'react-dom';
 
 
 export interface ChallengeRootRouteParams {
@@ -986,26 +987,40 @@ const ConnectedChallengeRoot = connect((state: ReduxState, { params: { challenge
     robots: Dict.map(state.robots.robots, Async.latestValue), 
   };
 }, (dispatch, { params: { challengeId } }: RootPublicProps) => ({
+  // Flush sync prevents bugs related to React 18 event batching
   onChallengeCompletionCreate: (challengeCompletion: ChallengeCompletion) => {
-    dispatch(ChallengeCompletionsAction.createChallengeCompletion({ challengeId, challengeCompletion }));
+    flushSync(() => {
+      dispatch(ChallengeCompletionsAction.createChallengeCompletion({ challengeId, challengeCompletion }));
+    });
   },
+  // Flush sync on this one results in an error
   onChallengeCompletionSceneDiffChange: (sceneDiff: OuterObjectPatch<Scene>) => {
     dispatch(ChallengeCompletionsAction.setSceneDiff({ challengeId, sceneDiff }));
   },
   onChallengeCompletionEventStateRemove: (eventId: string) => {
-    dispatch(ChallengeCompletionsAction.removeEventState({ challengeId, eventId }));
+    flushSync(() => {
+      dispatch(ChallengeCompletionsAction.removeEventState({ challengeId, eventId }));
+    });
   },
   onChallengeCompletionEventStateChange: (eventId: string, eventState: boolean) => {
-    dispatch(ChallengeCompletionsAction.setEventState({ challengeId, eventId, eventState }));
+    flushSync(() => {
+      dispatch(ChallengeCompletionsAction.setEventState({ challengeId, eventId, eventState }));
+    });
   },
   onChallengeCompletionEventStatesAndPredicateCompletionsChange: (eventStates: Dict<boolean>, success: PredicateCompletion, failure: PredicateCompletion) => {
-    dispatch(ChallengeCompletionsAction.setEventStatesAndPredicateCompletions({ challengeId, eventStates, success, failure }));
+    flushSync(() => {
+      dispatch(ChallengeCompletionsAction.setEventStatesAndPredicateCompletions({ challengeId, eventStates, success, failure }));
+    });
   },
   onChallengeCompletionSuccessPredicateCompletionChange: (success?: PredicateCompletion) => {
-    dispatch(ChallengeCompletionsAction.setSuccessPredicateCompletion({ challengeId, success }));
+    flushSync(() => {
+      dispatch(ChallengeCompletionsAction.setSuccessPredicateCompletion({ challengeId, success }));
+    });
   },
   onChallengeCompletionFailurePredicateCompletionChange: (failure?: PredicateCompletion) => {
-    dispatch(ChallengeCompletionsAction.setFailurePredicateCompletion({ challengeId, failure }));
+    flushSync(() => {
+      dispatch(ChallengeCompletionsAction.setFailurePredicateCompletion({ challengeId, failure }));
+    });
   },
   onChallengeCompletionReset: () => {
     dispatch(ChallengeCompletionsAction.resetChallengeCompletion({ challengeId }));
