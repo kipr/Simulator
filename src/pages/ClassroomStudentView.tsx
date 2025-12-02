@@ -287,7 +287,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
     return (
 
       <MyClassroomContainer theme={theme}>
-        <h2>My Classroom</h2>
+        <h2>{currentClassroom ? `${currentClassroom.teacherDisplayName}\'s Classroom` : ""}</h2>
 
         {isStudentInClassroom ? (
           <>
@@ -320,7 +320,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
   render() {
     const { props, state } = this;
     const { style, locale } = props;
-    const { showLeaveClassroomDialog, showJoinClassroomDialog } = state;
+    const { showLeaveClassroomDialog, showJoinClassroomDialog, currentClassroom } = state;
     const theme = DARK;
 
     return (
@@ -334,6 +334,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
               {showLeaveClassroomDialog && (
                 <LeaveClassDialog
                   onClose={this.onExitLeaveClassroomDialog_}
+                  currentClassroom={currentClassroom}
                   locale={locale}
                   onLeaveClassDialogClose={this.onCloseLeaveClassroomDialog_}
                   theme={DARK}
