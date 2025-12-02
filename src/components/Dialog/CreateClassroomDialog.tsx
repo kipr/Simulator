@@ -19,7 +19,7 @@ import { InterfaceMode } from 'ivygate/dist/types/interface';
 export interface CreateClassroomDialogPublicProps extends ThemeProps, StyleProps {
   userName: string;
   onClose: () => void;
-  onCloseClassroomDialog: (classroomName: string, classroomInviteCode: string) => void;
+  onCloseClassroomDialog: (teacherDisplayName: string, classroomName: string, classroomInviteCode: string) => void;
 }
 
 interface CreateClassroomDialogPrivateProps {
@@ -30,6 +30,7 @@ interface CreateClassroomDialogPrivateProps {
 interface CreateClassroomDialogState {
   userName: string;
   errorMessage: string;
+  invitationCode: string;
   interfaceMode: InterfaceMode;
 }
 
@@ -42,7 +43,17 @@ const Container = styled('div', (props: ThemeProps) => ({
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
   minHeight: '15em',
-  height: 'auto'
+  height: 'auto',
+  alignItems: 'center',
+}));
+
+const InvitationCodeContainer = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  color: props.theme.color,
+  alignItems: 'center',
+  justifyContent: 'center',
+
 }));
 
 const StyledForm = styled(Form, (props: ThemeProps) => ({
@@ -75,6 +86,17 @@ const StyledComboBox = styled(ComboBox, {
   flex: '1 0',
 });
 
+const Label = styled('label', (theme: ThemeProps) => ({
+  display: 'block',
+  color: theme.theme.color,
+  fontSize: '1.1em',
+  fontWeight: 'normal',
+  marginTop: `${theme.theme.itemPadding * 2}px`,
+  marginBottom: `${theme.theme.itemPadding}px`,
+  userSelect: 'none',
+  marginLeft: `${theme.theme.itemPadding / 2}px`,
+}));
+
 const ItemIcon = styled(FontAwesome, {
   paddingLeft: '10px',
   paddingRight: '10px',
@@ -106,9 +128,15 @@ export class CreateClassroomDialog extends React.PureComponent<Props, State> {
     this.state = {
       userName: '',
       errorMessage: '',
-      interfaceMode: InterfaceMode.SIMPLE
+      interfaceMode: InterfaceMode.SIMPLE,
+      invitationCode: ''
     }
   }
+
+  componentDidMount() {
+    this.generateInviteCode_();
+  }
+
   private onInterfaceChange = (interfaceMode: InterfaceMode) => {
     this.setState({
       interfaceMode: interfaceMode
@@ -117,6 +145,16 @@ export class CreateClassroomDialog extends React.PureComponent<Props, State> {
   private onSelectInterface_ = (interfaceIndex: number, option: ComboBox.Option) => {
     this.onInterfaceChange(option.data as InterfaceMode);
   };
+
+  private generateInviteCode_ = async () => {
+    const longCode = crypto.randomUUID();
+    const invitationCode = longCode.slice(0, 5);
+    console.log("Generated invitation code:", invitationCode);
+    this.setState({
+      invitationCode: invitationCode
+    })
+  };
+
   onFinalize_ = async (values: { [id: string]: string }) => {
     const classroomName = values.classroomName;
 
@@ -139,7 +177,7 @@ export class CreateClassroomDialog extends React.PureComponent<Props, State> {
     this.setState({ errorMessage: '' }); // Clear error message if input is valid
 
     try {
-      this.props.onCloseClassroomDialog(classroomName, values.inviteCode);
+      this.props.onCloseClassroomDialog(values.displayName, classroomName, values.inviteCode);
     } catch (error) {
       console.error('Error creating classroom:', error);
     }
@@ -156,12 +194,13 @@ export class CreateClassroomDialog extends React.PureComponent<Props, State> {
     const { errorMessage } = state;
 
 
-    const CREATEUSER_FORM_ITEMS: Form.Item[] = [
+    const CREATECLASSROOM_FORM_ITEMS: Form.Item[] = [
+      Form.displayName('displayName', 'Your Display Name', 'The teacher\'s name that will be shown to your students'),
       Form.classroomName('classroomName', 'Classroom Name'),
-      Form.classroomInviteCode('inviteCode', 'Invite Code', 'Code students can use to join the classroom')
+      Form.createClassInviteCode('inviteCode', 'Invite Code', 'Code students can use to join the classroom'),
+
     ];
 
-    console.log("Rendering CreateClassroomDialog with userName:", props.userName);
     return (
       <Dialog
         theme={theme}
@@ -179,11 +218,10 @@ export class CreateClassroomDialog extends React.PureComponent<Props, State> {
 
             </ErrorMessageContainer>
           )}
-
           <StyledForm
             theme={theme}
             onFinalize={this.onFinalize_}
-            items={CREATEUSER_FORM_ITEMS}
+            items={CREATECLASSROOM_FORM_ITEMS}
             finalizeText="Create"
             finalizeDisabled={false}
           />
