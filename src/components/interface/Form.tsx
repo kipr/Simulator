@@ -305,7 +305,19 @@ namespace Form {
     assistText,
   });
 
-  export const classroomInviteCode = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
+  export const createClassInviteCode = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
+    id,
+    text,
+    disabled: true,
+    defaultValue: crypto.randomUUID().slice(0, 5),
+    tooltip,
+    validator: NON_EMPTY_VALIDATOR,
+    finalizer: IDENTITY_FINALIZER,
+    assist,
+    assistText,
+  });
+
+  export const joinClassInviteCode = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
     id,
     text,
     tooltip,
@@ -322,6 +334,16 @@ namespace Form {
   });
 
   export const displayName = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
+    id,
+    text,
+    tooltip,
+    validator: NON_EMPTY_VALIDATOR,
+    finalizer: IDENTITY_FINALIZER,
+    assist,
+    assistText,
+  });
+
+  export const leaveClass = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
     id,
     text,
     tooltip,
