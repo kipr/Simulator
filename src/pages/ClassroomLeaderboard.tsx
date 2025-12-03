@@ -13,6 +13,9 @@ import { createRef } from 'react';
 import { AsyncClassroom, Classroom } from 'state/State/Classroom';
 import { ClassroomsAction, findClassroomDocByReadableId, getAllStudentsClassroomChallenges } from 'state/reducer/classrooms';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import ChallengeCompletion, { AsyncChallengeCompletion } from 'state/State/ChallengeCompletion';
+import { ChallengeCompletions, Challenges } from '../state/State';
+import Async from '../state/State/Async';
 
 
 const SELFIDENTIFIER = "My Scores!";
@@ -29,6 +32,7 @@ interface Score {
   completed: boolean;
   score?: number;
   completionTime?: number;
+  challengeCompletion?: ChallengeCompletion;
 }
 
 interface User {
@@ -38,6 +42,11 @@ interface User {
   src?: string;
   backgroundColor?: string;
   altId?: string;
+}
+
+interface ChallengeProps {
+  challenges: Challenges;
+  challengeCompletions: ChallengeCompletions;
 }
 
 export interface ClassroomLeaderboardPublicProps extends StyleProps, ThemeProps {
@@ -67,7 +76,7 @@ interface ClickProps {
   disabled?: boolean;
 }
 
-type Props = ClassroomLeaderboardPublicProps & ClassroomLeaderboardPrivateProps & RouterProps;
+type Props = ClassroomLeaderboardPublicProps & ClassroomLeaderboardPrivateProps & ChallengeProps & RouterProps;
 type State = ClassroomLeaderboardState;
 
 const PageContainer = styled('div', (props: ThemeProps) => ({
@@ -261,6 +270,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 
     for (const [_, attemptedChallenges] of Object.entries(result)) {
       for (const [challengeId, challenge] of Object.entries(attemptedChallenges as ChallengeData[])) {
+        console.log("Processing challengeId:", challengeId);
         const challenge = {
           name: tr(challengeId),
           description: tr(challengeId),
@@ -284,6 +294,8 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       };
     }
 
+    console.log("THIS.props.challenges:", this.props.challenges);
+
     const challengeCompletion = (challenge: ChallengeData) => (
       (challenge?.success?.exprStates?.completion ?? false) &&
       (!challenge?.failure?.exprStates?.failure ?? false)
@@ -295,11 +307,15 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
         name: userId,
         scores: [],
       };
+      console.log("processing userChallenges:", userChallenges);
+
 
       for (const [challengeId, challenge] of Object.entries(userChallenges as ChallengeData[])) {
         const score: Score = {
           name: tr(challengeId),
-          completed: challengeCompletion(challenge)
+          completed: challengeCompletion(challenge),
+          challengeCompletion: userChallenges[challengeId] as ChallengeCompletion,
+
         };
         user.scores.push(score);
       }
@@ -454,6 +470,195 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 
   };
 
+  private exportClassroomScores() {
+    const { users, shownClassroom } = this.state;
+    const { locale } = this.props;
+    const pdfDoc = new jsPDF();
+
+
+
+    const date = new Date();
+
+
+    Object.values(users).forEach((user, userIndex) => {
+      // Title
+      pdfDoc.setFontSize(18);
+      pdfDoc.text(`${shownClassroom.classroom.classroomId} General Challenge Scores`, 105, 20, { align: 'center' });
+
+      //Date
+      pdfDoc.setFontSize(16);
+      pdfDoc.text(`Date: ${date.toLocaleDateString()}`, 95, 30, { align: 'right' });
+      //Time
+      pdfDoc.text(`Time: ${date.toLocaleTimeString()}`, 105, 30, { align: 'left' });
+
+      pdfDoc.setFontSize(14);
+      pdfDoc.text(`Name: ${user.name}`, 20, 40);
+      const sortedScores = this.customSort(user.scores.map(s => s.name['en-US'])).map(name => user.scores.find(s => s.name['en-US'] === name));
+
+      // Scores
+      pdfDoc.setFontSize(12);
+      pdfDoc.text('Scores:', 20, 50);
+
+      sortedScores.forEach((score, i) => {
+        pdfDoc.text(
+          `${LocalizedString.lookup(tr(`${score.name[locale]}`), locale) || "Unnamed"} - ${score.completed ? "Completed" : "Not Completed"
+          }`,
+          30,
+          60 + i * 10
+        );
+      });
+      if (userIndex < Object.values(users).length - 1) {
+        pdfDoc.addPage();
+      }
+    });
+
+    pdfDoc.save(`${shownClassroom.classroom.classroomId}-scores.pdf`);
+  }
+
+
+  private exportDetailedClassroomScores() {
+    const { users, shownClassroom } = this.state;
+    const { locale, challenges } = this.props;
+
+    const pdf = new jsPDF();
+    const date = new Date();
+
+    let y = 50;
+
+    const writeLine = (
+      text: string,
+      x: number,
+      increment = 10,
+      font: string = "helvetica",
+      style: string = "normal",
+      color: string = "black"
+    ): number => {
+      pdf.setFont(font, style);
+      pdf.setTextColor(color);
+
+      y += increment;
+      if (y > 280) {
+        pdf.addPage();
+        y = 20;
+      }
+
+      pdf.text(text, x, y);
+      return y;
+    };
+
+    Object.values(users).forEach((user, userIndex) => {
+
+      // Header
+      pdf.setFontSize(18);
+      pdf.setTextColor('black');
+      pdf.text(
+        `${shownClassroom.classroom.classroomId} Detailed Challenge Scores`,
+        105, 20,
+        { align: 'center' }
+      );
+
+      pdf.setFontSize(16);
+      pdf.text(`Date: ${date.toLocaleDateString()}`, 95, 30, { align: 'right' });
+      pdf.text(`Time: ${date.toLocaleTimeString()}`, 105, 30, { align: 'left' });
+
+      // User name
+      pdf.setFontSize(14);
+      pdf.text(`Name: ${user.name}`, 20, 40);
+
+      pdf.setFontSize(12);
+      pdf.text("Scores:", 20, 50);
+
+      const sortedScores = this.customSort(
+        user.scores.map(s => s.name["en-US"])
+      ).map(name => user.scores.find(s => s.name["en-US"] === name));
+
+      sortedScores.forEach(score => {
+
+        Object.values(challenges).forEach(challenge => {
+
+          const latest = Async.latestValue(challenge);
+          if (!latest) return;
+
+          const sceneId = latest.sceneId;
+          if (sceneId !== score.name[locale]) return;
+
+          const successGoals = Object.values(latest.successGoals || {});
+          const failureGoals = Object.values(latest.failureGoals || {});
+
+          // Challenge Title
+          y = writeLine(
+            `${LocalizedString.lookup(tr(latest.name[locale] + ":"), locale) || "Unnamed"}`,
+            30, 10, "helvetica", "bold"
+          );
+
+          // Success Section
+          if (successGoals.length > 0) {
+            y = writeLine("Success", 55, 10, "helvetica", "normal");
+          }
+
+          successGoals.forEach(goal => {
+            const completion = score.challengeCompletion;
+            const isCompleted = completion?.success?.exprStates?.[goal.exprId];
+
+            if (isCompleted) {
+              // Checkbox ✓
+              y = writeLine("3", 65, 10, "ZapfDingbats", "normal", "green");
+
+              // Goal text also green
+              pdf.setFont("helvetica", "normal");
+              pdf.setTextColor("green");
+              pdf.text(
+                LocalizedString.lookup(tr(goal.name[locale]), locale),
+                72,
+                y
+              );
+            } else {
+              y = writeLine(
+                LocalizedString.lookup(tr(goal.name[locale]), locale),
+                72, 10, "helvetica", "normal", "black"
+              );
+            }
+          });
+
+          if (failureGoals.length > 0) {
+            y = writeLine("Failure", 55, 10);
+          }
+
+          failureGoals.forEach(goal => {
+            const completion = score.challengeCompletion;
+            const isFailed = completion?.failure?.exprStates?.[goal.exprId];
+
+            if (isFailed) {
+              // Checkbox X in red
+              y = writeLine("3", 65, 10, "ZapfDingbats", "normal", "red");
+              pdf.setFont("helvetica", "normal");
+              pdf.setTextColor("red");
+              pdf.text(
+                LocalizedString.lookup(tr(goal.name[locale]), locale),
+                72,
+                y
+              );
+            } else {
+              y = writeLine(
+                LocalizedString.lookup(tr(goal.name[locale]), locale),
+                72, 10, "helvetica", "normal", "black"
+              );
+            }
+          });
+
+        });
+
+      });
+
+      // Add new page between users
+      if (userIndex < Object.values(users).length - 1) {
+        pdf.addPage();
+        y = 50;
+      }
+    });
+
+    pdf.save(`${shownClassroom.classroom.classroomId}-scores.pdf`);
+  }
   private renderClassroomLeaderboard = () => {
     const users = this.state.users || this.getDefaultUsers();
     const sortedUsers = this.orderUsersByCompletedChallenges(users);
@@ -465,7 +670,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 
     const challengeArray = this.customSort(Object.keys(challenges));
     this.getCurrentUser();
-
+    console.log("Rendering Classroom Leaderboard with users and challenges:", { users: sortedUsers, challenges });
     return (
       <Table>
         <thead>
@@ -558,7 +763,8 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
                   <h3>{currentUserEmail || 'Unknown'}</h3>
                 </UserInfoContainer>
                 <ButtonContainer>
-                  <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> Export All Scores</Button>
+                  <Button theme={DARK} onClick={() => this.exportClassroomScores()}> Export All General Scores</Button>
+                  <Button theme={DARK} onClick={() => this.exportDetailedClassroomScores()}> Export All Detailed Scores</Button>
                 </ButtonContainer>
 
               </ClassroomLeaderboardTitleContainer>
@@ -576,6 +782,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 export default connect((state: ReduxState) => ({
   locale: state.i18n.locale,
   classroom: state.classrooms.selectedClassroom,
+  challenges: state.challenges,
 }),
   (dispatch) => ({
     onClearSelectedClassroom: () =>

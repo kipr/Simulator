@@ -435,6 +435,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
               const asyncChallengeFromStore = this.props.challenges[challengeId] as AsyncChallenge;
               const asyncChallenge: AsyncChallenge = asyncChallengeFromStore;
+              console.log("asyncChallengeFromStore:", asyncChallengeFromStore);
               const asyncCompletion: AsyncChallengeCompletion = {
                 type: Async.Type.Loaded,
                 brief: {},
@@ -449,6 +450,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
                 }
               }
+              console.log("asyncChallengeCompletion:", asyncCompletion);
               return {
                 projectName: challengeId,
                 projectLanguage: `${score.currentLanguage}` as ProgrammingLanguage,
