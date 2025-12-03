@@ -264,6 +264,7 @@ export const listChallengesByStudentId = async (studentId: string) => {
   }
 
 };
+type ChallengeEntry = { id: string; data: any };
 
 //Get all challenges by all students in a classroom
 export const getAllStudentsClassroomChallenges = async (classroom: Classroom) => {
@@ -283,12 +284,28 @@ export const getAllStudentsClassroomChallenges = async (classroom: Classroom) =>
     console.log("All students' challenges in classroom:", result);
 
     for (const student of Object.values(classroom.studentIds)) {
-      for (const entry of Object.keys(result)) {
-        if (entry === student.id) {
-          mappedStudentChallenge[student.displayName] = result[entry];
-        }
+      const studentId =
+        typeof student.id === "string" ? student.id : student.id["en-US"];
+
+      const displayName =
+        typeof student.displayName === "string"
+          ? student.displayName
+          : student.displayName["en-US"];
+
+      const entries = result[studentId];
+      if (!entries) continue;
+
+      const mappedByEntryId: Record<string, any> = {};
+
+      for (const challenge of entries as ChallengeEntry[]) {
+        mappedByEntryId[challenge.id] = challenge.data;
       }
+
+      // Use DISPLAY NAME as the key
+      mappedStudentChallenge[displayName] = mappedByEntryId;
     }
+
+
 
     console.log("Mapped student challenges:", mappedStudentChallenge);
     return mappedStudentChallenge;
