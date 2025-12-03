@@ -49,9 +49,12 @@ app.use(
 // CSRF protection - skip for API routes that use Bearer token authentication
 app.use((req, res, next) => {
   // Skip CSRF for API routes that use Bearer tokens (CSRF-safe by design)
-  if (req.path.startsWith("/api/")) {
   // Also skip for compile and feedback endpoints (no auth, CSRF-safe)
-  if (req.path.startsWith('/api/') || req.path === '/compile' || req.path === '/feedback') {
+  if (
+    req.path.startsWith("/api/") ||
+    req.path === "/compile" ||
+    req.path === "/feedback"
+  ) {
     return next();
   }
   // Apply CSRF protection to other routes
