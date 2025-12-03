@@ -853,6 +853,7 @@ class Root extends React.Component<Props, State> {
       onDownloadCode: this.onDownloadClick_,
       editorRef: this.editorRef,
       sceneId: undefined,
+      layout,
       scene: workingScene,
       onNodeAdd: this.onNodeAdd_,
       onNodeChange: this.onNodeChange_,

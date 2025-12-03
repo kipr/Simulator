@@ -34,6 +34,7 @@ export type LayoutEditorTarget = LayoutEditorTarget.Robot;
 
 export interface LayoutProps extends StyleProps, ThemeProps {
   sceneId: string;
+  layout: Layout;
   editorTarget: LayoutEditorTarget;
   console: StyledText;
   messages: Message[];
