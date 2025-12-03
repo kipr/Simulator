@@ -372,14 +372,14 @@ app.use('/static', express.static(`${__dirname}/static`, {
 }));
 
 
-if (config.server.dependencies.scratch_rt) {
-  console.log('Scratch Runtime is enabled.');
-  app.use('/scratch/rt.js', express.static(`${config.server.dependencies.scratch_rt}`, {
+if (config.server.dependencies.graphical_rt) {
+  console.log('Graphical Runtime is enabled.');
+  app.use('/graphical/rt.js', express.static(`${config.server.dependencies.graphical_rt}`, {
     maxAge: config.caching.staticMaxAge,
   }));
 }
 
-app.use('/scratch', express.static(path.resolve(__dirname, 'node_modules', 'kipr-scratch'), {
+app.use('/graphical', express.static(path.resolve(__dirname, 'node_modules', 'kipr-scratch'), {
   maxAge: config.caching.staticMaxAge,
 }));
 
