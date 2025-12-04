@@ -3,9 +3,11 @@ import Node from '../../../state/State/Scene/Node';
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../../util/math/unitMath';
 import Dict from '../../../util/objectOps/Dict';
 import { createBaseSceneSurface } from './26springTableBase';
+import Script from '../../../state/State/Scene/Script';
 import { sprintf } from 'sprintf-js';
 
 import tr from '@i18n';
+import { setNodeVisible } from './jbcCommonComponents';
 
 const baseScene = createBaseSceneSurface();
 
@@ -305,7 +307,8 @@ const BOTGUY: Node = {
 const RAND_4IN_ORIGINS: ReferenceFramewUnits[] = [
   { position: Vector3wUnits.centimeters(PIPE_2IN_CUBE_X - 2.54, 0, MIDLINE_Z) },
   { position: Vector3wUnits.add(PALLET_ORIGINS[3].position, Vector3wUnits.centimeters(0, PALLET_H + 2 * 2.54, 0)) }
-].sort((a, b) => Math.random() - 0.5);
+  // Prefix with _ to silence unused warnings
+].sort((_a, _b) => Math.random() - 0.5);
 
 const GREEN_IDX = Math.floor(2 * Math.random());
 const RED_IDX = (GREEN_IDX + 1) % 2;
@@ -387,7 +390,257 @@ const CONES: Dict<Node> = {
     origin: CONE_ORIGINS[1]
   }
 };
+const DROPPER_X = 106;
+const DROPPER_Y = 4;
+const DROPPER1_Z = -16.8;
+const DROPPER1_ORIENTATION = RotationwUnits.eulerDegrees(0, 0, 0);
+const DROPPER2_ORIENTATION = RotationwUnits.eulerDegrees(0, 180, 0);
+const DROPPER1_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(DROPPER_X, DROPPER_Y, DROPPER1_Z),
+  orientation: DROPPER1_ORIENTATION
+};
+const DROPPER2_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(DROPPER_X, DROPPER_Y, DROPPER1_Z + 233.7),
+  orientation: DROPPER2_ORIENTATION
+};
+const DROPPERS: Dict<Node.FromBBTemplate> = {
+  dropper1: {
+    type: 'from-bb-template',
+    name: tr('Dropper #1'),
+    templateId: 'dropper26',
+    visible: true,
+    editable: true,
+    origin: DROPPER1_ORIGIN,
+    startingOrigin: DROPPER1_ORIGIN
+  },
+  dropper2: {
+    type: 'from-bb-template',
+    name: tr('Dropper #2'),
+    templateId: 'dropper26',
+    visible: true,
+    editable: true,
+    origin: DROPPER2_ORIGIN,
+    startingOrigin: DROPPER2_ORIGIN
+  }
+};
 
+const PVC_LEFT_X = 108;
+const PVC_LEFT_Y = -0.5;
+const PVC_LEFT_Z = -14;
+const PVC1_ORIENTATION = RotationwUnits.eulerDegrees(0, 0, 90);
+const PVC_LEFT_1_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(PVC_LEFT_X, PVC_LEFT_Y, PVC_LEFT_Z),
+  orientation: PVC1_ORIENTATION
+};
+const PVC_OFFSET_CM_VALUES: [number, number, number][] = [
+  [0, 0, -1.8],
+  [0, 1.5, -4.75],
+  [0, 3.5, -7.5],
+  [0, 7, -7.75],
+  [0, 10, -7.75],
+  [0, 12.5, -5.25],
+  [0, 12.75, -1.5],
+  [0, 13.5, 3]
+];
+const PVC_LEFT_ORIGINS: ReferenceFramewUnits[] = PVC_OFFSET_CM_VALUES.map(
+  ([x, y, z]) => ({
+    position: Vector3wUnits.add(
+      PVC_LEFT_1_ORIGIN.position,
+      Vector3wUnits.centimeters(x, y, z)
+    ),
+    orientation: PVC1_ORIENTATION
+  })
+).sort((_a, _b) => Math.random() - 0.5);
+
+const PVC_TEMPLATES = ['pvc2inBlue', 'pvc2inPink'];
+const PVCS_LEFT: Dict<Node> = {};
+for (const [i, origin] of PVC_LEFT_ORIGINS.entries()) {
+  PVCS_LEFT[`pvc${i}_left`] = {
+    type: 'from-bb-template',
+    name: tr('PVC'),
+    templateId: PVC_TEMPLATES[i % 2],
+    visible: true,
+    editable: true,
+    origin,
+    startingOrigin: origin
+  };
+}
+const PVC_RIGHT_X = 108;
+const PVC_RIGHT_Y = -0.5;
+const PVC_RIGHT_Z = 214;
+const PVC_RIGHT_1_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(PVC_RIGHT_X, PVC_RIGHT_Y, PVC_RIGHT_Z),
+  orientation: PVC1_ORIENTATION
+};
+const PVC_RIGHT_ORIGINS: ReferenceFramewUnits[] = PVC_OFFSET_CM_VALUES.map(
+  ([x, y, z]) => ({
+    position: Vector3wUnits.add(
+      PVC_RIGHT_1_ORIGIN.position,
+      Vector3wUnits.centimeters(x, y, -1 * z)
+    ),
+    orientation: PVC1_ORIENTATION
+  })
+).sort((_a, _b) => Math.random() - 0.5);
+const PVCS_RIGHT: Dict<Node> = {};
+for (const [i, origin] of PVC_RIGHT_ORIGINS.entries()) {
+  PVCS_RIGHT[`pvc${i}_right`] = {
+    type: 'from-bb-template',
+    name: tr('PVC'),
+    templateId: PVC_TEMPLATES[i % 2],
+    visible: true,
+    editable: true,
+    origin,
+    startingOrigin: origin
+  };
+}
+
+const GATE_LEFT_X = 106;
+const GATE_LEFT_Y = -2;
+const GATE_LEFT_Z = -13;
+const GATE1_ORIENTATION = RotationwUnits.eulerDegrees(120, 0, 0);
+const GATE_LEFT_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(GATE_LEFT_X, GATE_LEFT_Y, GATE_LEFT_Z),
+  orientation: GATE1_ORIENTATION
+};
+const GATE_OFFSET_CM_VALUES: [number, number, number][] = [
+  [0, 1, -1.5],
+  [0, 2, -4.75],
+  [0, 3.25, -8],
+  [0, 6.5, -8.5],
+  [0, 9.75, -8.5],
+  [0, 12.5, -7.25],
+  [0, 13, -4.3],
+  [0, 14, -0.5]
+];
+const GATE_ORIENTATIONS: number[] = [
+  120,
+  120,
+  135,
+  0,
+  0,
+  45,
+  90,
+  90,
+];
+const GATE_LEFT_ORIGINS: ReferenceFramewUnits[] = GATE_OFFSET_CM_VALUES.map(
+  ([x, y, z], i) => ({
+    position: Vector3wUnits.add(
+      GATE_LEFT_ORIGIN.position,
+      Vector3wUnits.centimeters(x, y, z)
+    ),
+    orientation: RotationwUnits.eulerDegrees(GATE_ORIENTATIONS[i], 0, 0)
+  })
+);
+
+const GATES_LEFT: Dict<Node> = {};
+for (const [i, origin] of GATE_LEFT_ORIGINS.entries()) {
+  GATES_LEFT[`gate_left${i}`] = {
+    type: 'from-bb-template',
+    name: tr('Gate'),
+    templateId: 'gate',
+    visible: true,
+    editable: true,
+    origin,
+    startingOrigin: origin
+  };
+}
+
+const GATE_RIGHT_X = 106;
+const GATE_RIGHT_Y = -2;
+const GATE_RIGHT_Z = 213;
+const GATE_RIGHT_ORIGIN: ReferenceFramewUnits = {
+  position: Vector3wUnits.centimeters(GATE_RIGHT_X, GATE_RIGHT_Y, GATE_RIGHT_Z),
+  orientation: GATE1_ORIENTATION
+};
+const GATE_RIGHT_ORIGINS: ReferenceFramewUnits[] = GATE_OFFSET_CM_VALUES.map(
+  ([x, y, z], i) => ({
+    position: Vector3wUnits.add(
+      GATE_RIGHT_ORIGIN.position,
+      Vector3wUnits.centimeters(x, y, -1 * z)
+    ),
+    orientation: RotationwUnits.eulerDegrees(180 - GATE_ORIENTATIONS[i], 0, 0)
+  })
+);
+const GATES_RIGHT: Dict<Node> = {};
+for (const [i, origin] of GATE_RIGHT_ORIGINS.entries()) {
+  GATES_RIGHT[`gate${i}_right`] = {
+    type: 'from-bb-template',
+    name: tr('Gate'),
+    templateId: 'gate',
+    visible: true,
+    editable: true,
+    origin,
+    startingOrigin: origin
+  };
+}
+
+const DROPPER = `
+${setNodeVisible}
+
+// After ten seconds, hide each left/right gate pair for one second every seven seconds (one pair at a time)
+const intervalMs = 7000;
+const hiddenDurationMs = 1100;
+const gateDurationsMs = [
+  900, // gate0
+  1000, // gate1
+  600,  // gate2 (shortened)
+  400,  // gate3 (shortened)
+  400,  // gate4 (shortened)
+  hiddenDurationMs, // gate5
+  hiddenDurationMs, // gate6
+  hiddenDurationMs, // gate7
+];
+const gatePairs = gateDurationsMs.map((_duration, index) => [
+  'gate_left' + index,
+  'gate' + index + '_right',
+]);
+const setGatePairVisible = (gateIndex, visible) => {
+  gatePairs[gateIndex].forEach((nodeId) => setNodeVisible(nodeId, visible));
+};
+
+let startTimeMs = Date.now();
+let currentGateIndex = null;
+let hideStartMs = null;
+let waitingComplete = false;
+let inCycle = false;
+let nextGate0Time = null;
+
+scene.addOnRenderListener(() => {
+  let now = Date.now();
+
+  if (!waitingComplete) {
+    if (now - startTimeMs >= 10000) {
+      waitingComplete = true;
+      nextGate0Time = now;
+    }
+    return;
+  }
+
+  if (!inCycle && nextGate0Time !== null && now >= nextGate0Time) {
+    inCycle = true;
+    currentGateIndex = 0;
+    hideStartMs = now;
+    setGatePairVisible(currentGateIndex, false);
+    nextGate0Time += intervalMs;
+  }
+
+  while (inCycle && currentGateIndex !== null && hideStartMs !== null && now - hideStartMs >= gateDurationsMs[currentGateIndex]) {
+    setGatePairVisible(currentGateIndex, true);
+    currentGateIndex++;
+
+    if (currentGateIndex >= gatePairs.length) {
+      inCycle = false;
+      currentGateIndex = null;
+      hideStartMs = null;
+      break;
+    }
+
+    // Immediately hide the next gate
+    hideStartMs = now = Date.now();
+    setGatePairVisible(currentGateIndex, false);
+  }
+});
+`;
 
 export const SPRING_26_SANDBOX: Scene = {
   ...baseScene,
@@ -396,7 +649,9 @@ export const SPRING_26_SANDBOX: Scene = {
   geometry: {
     ...baseScene.geometry,
   },
-  scripts: {},
+  scripts: {
+    dropper: Script.ecmaScript('Dropper Script', DROPPER)
+  },
   nodes: {
     ...baseScene.nodes,
     ...DOORS,
@@ -413,6 +668,11 @@ export const SPRING_26_SANDBOX: Scene = {
     ...NEAR_STACK,
     ...FAR_STACK,
     ...CONES,
+    ...DROPPERS,
+    ...PVCS_LEFT,
+    ...PVCS_RIGHT,
+    ...GATES_LEFT,
+    ...GATES_RIGHT,
     BOTGUY
   }
 };

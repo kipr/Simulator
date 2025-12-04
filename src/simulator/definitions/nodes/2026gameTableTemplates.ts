@@ -133,7 +133,7 @@ const pvc2inBlueTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'pvc2inBlue',
   physics: {
-    type: 'mesh',
+    type: 'cylinder',
     motionType: PhysicsMotionType.DYNAMIC,
     mass: Mass.grams(11),
     restitution: 0.2,
@@ -144,11 +144,33 @@ const pvc2inPinkTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'pvc2inPink',
   physics: {
-    type: 'mesh',
+    type: 'cylinder',
     motionType: PhysicsMotionType.DYNAMIC,
     mass: Mass.grams(11),
     restitution: 0.2,
     friction: 0.3
+  }
+};
+const dropper26Template: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'dropper',
+  physics: {
+    type: 'mesh',
+    motionType: PhysicsMotionType.STATIC,
+    mass: Mass.grams(11),
+    restitution: 0.3,
+    friction: 0.2
+  }
+};
+const gateTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'gate',
+  physics: {
+    type: 'mesh',
+    motionType: PhysicsMotionType.STATIC,
+    mass: Mass.grams(11),
+    restitution: 0,
+    friction: 1
   }
 };
 
@@ -168,7 +190,9 @@ export const BB2026Templates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'pcv2In': pcv2inTemplate,
   'slidingDoor': slidingDoorTemplate,
   'pvc2inBlue': pvc2inBlueTemplate,
-  'pvc2inPink': pvc2inPinkTemplate
+  'pvc2inPink': pvc2inPinkTemplate,
+  'dropper26': dropper26Template,
+  'gate': gateTemplate
 });
 
 
@@ -236,5 +260,13 @@ export const BB2026Geometries = Object.freeze<Dict<Geometry>>({
   'pvc2inPink': {
     type: 'file',
     uri: '/static/object_binaries/PVC2in_Pink.glb'
-  }
+  },
+  'dropper': {
+    type: 'file',
+    uri: '/static/object_binaries/2026_Dropper.glb'
+  },
+  'gate': {
+    type: 'file',
+    uri: '/static/object_binaries/gate.glb'
+  },
 });
