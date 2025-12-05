@@ -43,7 +43,7 @@ export namespace Assignments {
 export type Classrooms = ClassroomsState;
 
 export namespace Classrooms {
-  export const EMPTY: Classrooms = { entities: {}, selectedClassroom: null };
+  export const EMPTY: Classrooms = { entities: {}, selectedClassroom: null, currentStudentClassroom: null };
 }
 
 export type Scenes = Dict<AsyncScene>;
