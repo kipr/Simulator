@@ -31,6 +31,7 @@ import ClassroomsDashboard from './pages/ClassroomsDashboard';
 import ClassroomLeaderboard from './pages/ClassroomLeaderboard';
 import ClassroomTeacherView from './pages/ClassroomTeacherView';
 import ClassroomStudentView from './pages/ClassroomStudentView';
+import { Classroom } from 'state/State/Classroom';
 export interface AppPublicProps {
 
 }
