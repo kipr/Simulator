@@ -31,8 +31,8 @@ const DOORS: Dict<Node.FromBBTemplate> = {
     templateId: 'slidingDoor',
     visible: true,
     editable: true,
-    origin: DOOR1_ORIGIN,
-    startingOrigin: DOOR1_ORIGIN
+    startingOrigin: DOOR1_ORIGIN,
+    origin: DOOR1_ORIGIN
   },
   dock_pallet_2: {
     type: 'from-bb-template',
@@ -40,25 +40,23 @@ const DOORS: Dict<Node.FromBBTemplate> = {
     templateId: 'slidingDoor',
     visible: true,
     editable: true,
-    origin: DOOR2_ORIGIN,
-    startingOrigin: DOOR2_ORIGIN
+    startingOrigin: DOOR2_ORIGIN,
+    origin: DOOR2_ORIGIN
   }
 };
 // This rotation prevents clipping into the pipe
 const POM_ORIENTATION: RotationwUnits = RotationwUnits.eulerDegrees(0, 90, 0);
-const LO_BLUE_X = 65;
 const LO_Y = -3;
-const LO_Z_EDGE = -17.4;
 const POM_Z_GAP = 6 * 2.54;
-const LO_Z_1 = LO_Z_EDGE + POM_Z_GAP;
+const LO_Z_1 = -17.4 + POM_Z_GAP;
 
-const loBluePoms: Dict<Node> = {};
+const LO_BLUE_POMS: Dict<Node> = {};
 for (let i = 0; i < 6; i++) {
   const origin: ReferenceFramewUnits = {
-    position: Vector3wUnits.centimeters(LO_BLUE_X, LO_Y, LO_Z_1 + POM_Z_GAP * i),
+    position: Vector3wUnits.centimeters(65, LO_Y, LO_Z_1 + POM_Z_GAP * i),
     orientation: POM_ORIENTATION
   };
-  loBluePoms[`loBlue${i}`] = {
+  LO_BLUE_POMS[`loBlue${i}`] = {
     type: 'from-bb-template',
     name: Dict.map(tr('Low Blue Pom #%d'), (str: string) => sprintf(str, i + 1)),
     templateId: 'pomBlue2In',
@@ -68,14 +66,13 @@ for (let i = 0; i < 6; i++) {
     origin
   };
 }
-const LO_ORANGE_X = 32;
-const loOrangePoms: Dict<Node> = {};
+const LO_ORANGE_POMS: Dict<Node> = {};
 for (let i = 0; i < 6; i++) {
   const origin: ReferenceFramewUnits = {
-    position: Vector3wUnits.centimeters(LO_ORANGE_X, LO_Y, LO_Z_1 + POM_Z_GAP * i),
+    position: Vector3wUnits.centimeters(32, LO_Y, LO_Z_1 + POM_Z_GAP * i),
     orientation: POM_ORIENTATION
   };
-  loOrangePoms[`loOrange${i}`] = {
+  LO_ORANGE_POMS[`loOrange${i}`] = {
     type: 'from-bb-template',
     name: Dict.map(tr('Low Orange Pom #%d'), (str: string) => sprintf(str, i + 1)),
     templateId: 'pom_orange',
@@ -88,15 +85,14 @@ for (let i = 0; i < 6; i++) {
 
 const HI_BLUE_X = 3.9;
 const HI_Y = 12.5;
-const HI_Z_EDGE = 204.5;
-const HI_Z_1 = HI_Z_EDGE - POM_Z_GAP;
-const hiBluePoms: Dict<Node> = {};
+const HI_Z_1 = 204.5 - POM_Z_GAP;
+const HI_BLUE_POMS: Dict<Node> = {};
 for (let i = 0; i < 6; i++) {
   const origin: ReferenceFramewUnits = {
     position: Vector3wUnits.centimeters(HI_BLUE_X, HI_Y, HI_Z_1 - POM_Z_GAP * i),
     orientation: POM_ORIENTATION
   };
-  hiBluePoms[`hiBlue${i}`] = {
+  HI_BLUE_POMS[`hiBlue${i}`] = {
     type: 'from-bb-template',
     name: Dict.map(tr('High Blue Pom #%d'), (str: string) => sprintf(str, i + 1)),
     templateId: 'pomBlue2In',
@@ -107,13 +103,13 @@ for (let i = 0; i < 6; i++) {
   };
 }
 const HI_ORANGE_X = HI_BLUE_X - 2 * 2.54;
-const hiOrangePoms: Dict<Node> = {};
+const HI_ORANGE_POMS: Dict<Node> = {};
 for (let i = 0; i < 6; i++) {
   const origin: ReferenceFramewUnits = {
     position: Vector3wUnits.centimeters(HI_ORANGE_X, HI_Y, HI_Z_1 - POM_Z_GAP * i),
     orientation: POM_ORIENTATION
   };
-  hiOrangePoms[`hiOrange${i}`] = {
+  HI_ORANGE_POMS[`hiOrange${i}`] = {
     type: 'from-bb-template',
     name: Dict.map(tr('High Orange Pom #%d'), (str: string) => sprintf(str, i + 1)),
     templateId: 'pom_orange',
@@ -206,7 +202,7 @@ const LOW_2IN_CUBES: Dict<Node> = {
     editable: true,
     startingOrigin: LOW_2IN_CUBE_ORIGINS[3],
     origin: LOW_2IN_CUBE_ORIGINS[3]
-  },
+  }
 };
 
 const LM_PALLET_X = 24.5375;
@@ -220,9 +216,9 @@ const PALLET_ORIGINS: ReferenceFramewUnits[] = [
   { position: Vector3wUnits.centimeters(22.25, 10, 106.9) }
 ];
 
-const pallets: Dict<Node> = {};
+const PALLETS: Dict<Node> = {};
 for (const [i, origin] of PALLET_ORIGINS.entries()) {
-  pallets[`pallet${i}`] = {
+  PALLETS[`pallet${i}`] = {
     type: 'from-bb-template',
     name: Dict.map(tr('Pallet #%d'), (str: string) => sprintf(str, i + 1)),
     templateId: 'pallet',
@@ -235,7 +231,7 @@ for (const [i, origin] of PALLET_ORIGINS.entries()) {
 
 const YELLOW_CUBE_ORIGINS: ReferenceFramewUnits[] = [
   { position: Vector3wUnits.add(PALLET_ORIGINS[1].position, Vector3wUnits.centimeters(0, 2.54 + PALLET_H, 0)) },
-  { position: Vector3wUnits.add(PALLET_ORIGINS[1].position, Vector3wUnits.centimeters(0, PALLET_H + 3 * 2.54, 0)) },
+  { position: Vector3wUnits.add(PALLET_ORIGINS[1].position, Vector3wUnits.centimeters(0, PALLET_H + 3 * 2.54, 0)) }
 ];
 
 const YELLOW_2IN_CUBES: Dict<Node> = {
@@ -290,9 +286,9 @@ const BROWN_CUBES: Dict<Node> = {
 };
 
 const MIDLINE_Z = (BROWN_CUBE_LEFT_Z + BROWN_CUBE_RIGHT_Z - 2) / 2;
-const LOW_4IN_Y = 4;
 const BOTGUY_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(MIDLINE_X, LOW_4IN_Y, MIDLINE_Z)
+  position: Vector3wUnits.centimeters(MIDLINE_X, 4, MIDLINE_Z),
+  orientation: RotationwUnits.eulerDegrees(0, 90, 0)
 };
 const BOTGUY: Node = {
   type: 'from-bb-template',
@@ -307,11 +303,7 @@ const BOTGUY: Node = {
 const RAND_4IN_ORIGINS: ReferenceFramewUnits[] = [
   { position: Vector3wUnits.centimeters(PIPE_2IN_CUBE_X - 2.54, 0, MIDLINE_Z) },
   { position: Vector3wUnits.add(PALLET_ORIGINS[3].position, Vector3wUnits.centimeters(0, PALLET_H + 2 * 2.54, 0)) }
-  // Prefix with _ to silence unused warnings
 ].sort((_a, _b) => Math.random() - 0.5);
-
-const GREEN_IDX = Math.floor(2 * Math.random());
-const RED_IDX = (GREEN_IDX + 1) % 2;
 
 const RAND_4IN_CUBES: Dict<Node> = {
   green: {
@@ -410,8 +402,8 @@ const DROPPERS: Dict<Node.FromBBTemplate> = {
     templateId: 'dropper26',
     visible: true,
     editable: true,
-    origin: DROPPER1_ORIGIN,
-    startingOrigin: DROPPER1_ORIGIN
+    startingOrigin: DROPPER1_ORIGIN,
+    origin: DROPPER1_ORIGIN
   },
   dropper2: {
     type: 'from-bb-template',
@@ -419,17 +411,14 @@ const DROPPERS: Dict<Node.FromBBTemplate> = {
     templateId: 'dropper26',
     visible: true,
     editable: true,
-    origin: DROPPER2_ORIGIN,
-    startingOrigin: DROPPER2_ORIGIN
+    startingOrigin: DROPPER2_ORIGIN,
+    origin: DROPPER2_ORIGIN
   }
 };
 
-const PVC_LEFT_X = 108;
-const PVC_LEFT_Y = -0.5;
-const PVC_LEFT_Z = -14;
 const PVC1_ORIENTATION = RotationwUnits.eulerDegrees(0, 0, 90);
 const PVC_LEFT_1_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(PVC_LEFT_X, PVC_LEFT_Y, PVC_LEFT_Z),
+  position: Vector3wUnits.centimeters(108, -0.5, -14),
   orientation: PVC1_ORIENTATION
 };
 const PVC_OFFSET_CM_VALUES: [number, number, number][] = [
@@ -457,7 +446,7 @@ const PVCS_LEFT: Dict<Node> = {};
 for (const [i, origin] of PVC_LEFT_ORIGINS.entries()) {
   PVCS_LEFT[`pvc${i}_left`] = {
     type: 'from-bb-template',
-    name: tr('PVC'),
+    name: tr('Barrel (2in PVC)'),
     templateId: PVC_TEMPLATES[i % 2],
     visible: true,
     editable: true,
@@ -465,11 +454,8 @@ for (const [i, origin] of PVC_LEFT_ORIGINS.entries()) {
     startingOrigin: origin
   };
 }
-const PVC_RIGHT_X = 108;
-const PVC_RIGHT_Y = -0.5;
-const PVC_RIGHT_Z = 214;
 const PVC_RIGHT_1_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(PVC_RIGHT_X, PVC_RIGHT_Y, PVC_RIGHT_Z),
+  position: Vector3wUnits.centimeters(108, -0.5, 214),
   orientation: PVC1_ORIENTATION
 };
 const PVC_RIGHT_ORIGINS: ReferenceFramewUnits[] = PVC_OFFSET_CM_VALUES.map(
@@ -485,7 +471,7 @@ const PVCS_RIGHT: Dict<Node> = {};
 for (const [i, origin] of PVC_RIGHT_ORIGINS.entries()) {
   PVCS_RIGHT[`pvc${i}_right`] = {
     type: 'from-bb-template',
-    name: tr('PVC'),
+    name: tr('Barrel (2in PVC)'),
     templateId: PVC_TEMPLATES[i % 2],
     visible: true,
     editable: true,
@@ -494,12 +480,9 @@ for (const [i, origin] of PVC_RIGHT_ORIGINS.entries()) {
   };
 }
 
-const GATE_LEFT_X = 106;
-const GATE_LEFT_Y = -2;
-const GATE_LEFT_Z = -13;
 const GATE1_ORIENTATION = RotationwUnits.eulerDegrees(120, 0, 0);
 const GATE_LEFT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(GATE_LEFT_X, GATE_LEFT_Y, GATE_LEFT_Z),
+  position: Vector3wUnits.centimeters(106, -2, -13),
   orientation: GATE1_ORIENTATION
 };
 const GATE_OFFSET_CM_VALUES: [number, number, number][] = [
@@ -520,7 +503,7 @@ const GATE_ORIENTATIONS: number[] = [
   0,
   45,
   90,
-  90,
+  90
 ];
 const GATE_LEFT_ORIGINS: ReferenceFramewUnits[] = GATE_OFFSET_CM_VALUES.map(
   ([x, y, z], i) => ({
@@ -536,7 +519,7 @@ const GATES_LEFT: Dict<Node> = {};
 for (const [i, origin] of GATE_LEFT_ORIGINS.entries()) {
   GATES_LEFT[`gate_left${i}`] = {
     type: 'from-bb-template',
-    name: tr('Gate'),
+    name: tr('Dropper Gate'),
     templateId: 'gate',
     visible: true,
     editable: true,
@@ -545,11 +528,8 @@ for (const [i, origin] of GATE_LEFT_ORIGINS.entries()) {
   };
 }
 
-const GATE_RIGHT_X = 106;
-const GATE_RIGHT_Y = -2;
-const GATE_RIGHT_Z = 213;
 const GATE_RIGHT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(GATE_RIGHT_X, GATE_RIGHT_Y, GATE_RIGHT_Z),
+  position: Vector3wUnits.centimeters(106, -2, 213),
   orientation: GATE1_ORIENTATION
 };
 const GATE_RIGHT_ORIGINS: ReferenceFramewUnits[] = GATE_OFFSET_CM_VALUES.map(
@@ -565,7 +545,7 @@ const GATES_RIGHT: Dict<Node> = {};
 for (const [i, origin] of GATE_RIGHT_ORIGINS.entries()) {
   GATES_RIGHT[`gate${i}_right`] = {
     type: 'from-bb-template',
-    name: tr('Gate'),
+    name: tr('Dropper Gate'),
     templateId: 'gate',
     visible: true,
     editable: true,
@@ -644,8 +624,8 @@ scene.addOnRenderListener(() => {
 
 export const SPRING_26_SANDBOX: Scene = {
   ...baseScene,
-  name: tr('2026 Spring Game Table'),
-  description: tr('2026 Spring Botball game table sandbox'),
+  name: tr('2026 Botball Game Table Sandbox'),
+  description: tr('2026 Botball game table sandbox. One robot and one side of the table are available. Barrels (2in PVC) drop every 7 seconds, starting 10 seconds after the scene is loaded.'),
   geometry: {
     ...baseScene.geometry,
   },
@@ -655,24 +635,24 @@ export const SPRING_26_SANDBOX: Scene = {
   nodes: {
     ...baseScene.nodes,
     ...DOORS,
-    ...loBluePoms,
-    ...loOrangePoms,
-    ...hiBluePoms,
-    ...hiOrangePoms,
+    ...LO_BLUE_POMS,
+    ...LO_ORANGE_POMS,
+    ...HI_BLUE_POMS,
+    ...HI_ORANGE_POMS,
     ...BASKETS,
     ...LOW_2IN_CUBES,
-    ...pallets,
+    ...PALLETS,
     ...YELLOW_2IN_CUBES,
     ...BROWN_CUBES,
     ...RAND_4IN_CUBES,
     ...NEAR_STACK,
     ...FAR_STACK,
     ...CONES,
+    BOTGUY,
     ...DROPPERS,
     ...PVCS_LEFT,
     ...PVCS_RIGHT,
     ...GATES_LEFT,
-    ...GATES_RIGHT,
-    BOTGUY
+    ...GATES_RIGHT
   }
 };

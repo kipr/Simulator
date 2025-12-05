@@ -5,13 +5,11 @@ import Camera from '../../../state/State/Scene/Camera';
 import Scene from '../../../state/State/Scene';
 import AbstractRobot from '../../../programming/AbstractRobot';
 import Author from '../../../db/Author';
-import { Color } from '../../../state/State/Scene/Color';
 
 import tr from '@i18n';
-import { PhysicsMotionType } from '@babylonjs/core';
 
 const ROBOT_ORIGIN: ReferenceFramewUnits = {
-  position: Vector3wUnits.centimeters(0, 0, 0),
+  position: Vector3wUnits.centimeters(3, 0, 0),
   // position: Vector3wUnits.centimeters(80, 0, 62.5),
   orientation: RotationwUnits.eulerDegrees(0, 0, 0),
 };
@@ -53,7 +51,7 @@ const GAME_TABLE_2026: Node.FromBBTemplate = {
 
 export function createBaseSceneSurface(): Scene {
   return {
-    name: tr('Base Scene - 2025 Botball Game Table'),
+    name: tr('Base Scene - 2026 Botball Game Table'),
     description: tr('A base scene. Intended to be augmented to create the full game table'),
     author: Author.organization('kipr'),
     geometry: {},
@@ -73,13 +71,13 @@ export function createBaseSceneSurface(): Scene {
       radius: Distance.meters(5),
       target: {
         x: Distance.meters(0),
-        y: Distance.meters(0),
-        z: Distance.meters(0.05),
+        y: Distance.meters(0.05),
+        z: Distance.meters(0),
       },
       position: {
-        x: Distance.meters(1),
-        y: Distance.meters(0.51),
-        z: Distance.meters(1.5),
+        x: Distance.meters(-0.75),
+        y: Distance.meters(0.75),
+        z: Distance.meters(-1.25),
       }
     }),
     gravity: {
