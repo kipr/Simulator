@@ -1,23 +1,15 @@
 import * as React from 'react';
-import axios from 'axios';
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';
-
 import Form from '../interface/Form';
 import { ThemeProps } from '../constants/theme';
 import { StyleProps } from '../../util/style';
 import { styled } from 'styletron-react';
 import { Dialog } from './Dialog';
-//import { Modal } from '../pages/Modal';
-
-import { FontAwesome } from '../FontAwesome';
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { Settings } from '../constants/Settings';
 import { AsyncClassroom, Classroom } from 'state/State/Classroom';
 import Dict from 'util/objectOps/Dict';
 import Button from '../../components/interface/Button';
 import ComboBox from '../../components/interface/ComboBox';
-import ClassroomLeaderboard from '../../pages/ClassroomLeaderboard';
 import Async from 'state/State/Async';
 
 export interface ClassroomLeaderboardsDialogPublicProps extends ThemeProps, StyleProps {
@@ -49,13 +41,6 @@ interface ClassroomLeaderboardsDialogState {
 
 type Props = ClassroomLeaderboardsDialogPublicProps & ClassroomLeaderboardsDialogPrivateProps;
 type State = ClassroomLeaderboardsDialogState;
-
-const Container = styled('div', (props: ThemeProps) => ({
-  display: 'flex',
-  flexDirection: 'row',
-  color: props.theme.color,
-  minHeight: '200px',
-}));
 
 const ComboBoxLabel = styled('label', (theme: ThemeProps) => ({
   display: 'block',
@@ -93,13 +78,6 @@ const StyledComboBox = styled(ComboBox, {
   flex: '1 0',
 });
 
-const StyledForm = styled(Form, (props: ThemeProps) => ({
-  paddingLeft: `${props.theme.itemPadding * 2}px`,
-  paddingRight: `${props.theme.itemPadding * 2}px`,
-}));
-
-
-
 const ConfirmButton = styled(Button, (props: ThemeProps & ClickProps) => ({
   display: 'flex',
   width: '7em',
@@ -127,28 +105,11 @@ const ConfirmButton = styled(Button, (props: ThemeProps & ClickProps) => ({
 }));
 
 
-const ErrorMessageContainer = styled('div', (props: ThemeProps) => ({
-  display: 'flex',
-  flexDirection: 'row',
-  backgroundColor: 'red',
-  color: 'white',
-  height: '40px',
-  alignItems: 'center',
-  marginTop: '10px',
-}));
-
-const ItemIcon = styled(FontAwesome, {
-  paddingLeft: '10px',
-  paddingRight: '10px',
-  alignItems: 'center',
-  height: '30px'
-});
 
 export class ClassroomLeaderboardsDialog extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     const initialClassroom = Object.keys(this.props.classrooms).length > 0 ? Object.values(this.props.classrooms)[0] : null;
-    console.log("initialClassroom: ", initialClassroom);
     this.state = {
       showRepeatProjectDialog: false,
       language: 'c',
@@ -160,39 +121,22 @@ export class ClassroomLeaderboardsDialog extends React.PureComponent<Props, Stat
     }
   }
 
-  componentDidMount = () => {
-    console.log("ClassroomLeaderboardsDialog componentDidMount props: ", this.props);
-    console.log("ClassroomLeaderboardsDialog componentDidMount state: ", this.state);
-  }
-
-  componentDidUpdate = (prevProps: Props, prevState: State) => {
-    console.log("ClassroomLeaderboardsDialog componentDidUpdate props: ", this.props);
-    console.log("ClassroomLeaderboardsDialog componentDidUpdate state: ", this.state);
-  }
-
-
   private onSelectClassroomLeaderboard_ = (index: number, option: ComboBox.Option) => {
-    console.log('Selected classroom leaderboard classroom:', option.data);
     this.setState({ selectedClassroom: option.data as AsyncClassroom }, () => {
-      console.log("Updated selectedClassroom state:", this.state.selectedClassroom);
     });
 
   }
 
   private onConfirmClick_ = () => {
     const { theme } = this.props;
-    console.log("Confirmed selection of classroom leaderboard with selectedClassroom:", this.state.selectedClassroom);
     this.setState({ showLeaderboard: true });
     this.props.onCloseClassroomLeaderboardDialog((this.state.selectedClassroom.type === Async.Type.Loaded) ? this.state.selectedClassroom.value.classroomId : '');
   }
 
   CLASSROOM_OPTIONS: ComboBox.Option[] = (() => {
     const ret: ComboBox.Option[] = [];
-    console.log("ClassroomLeaderboardsDialog CLASSROOM_OPTIONS props: ", this.props);
     const classroomsArray = Object.values(this.props.classrooms);
-    console.log("ClassroomLeaderboardsDialog CLASSROOM_OPTIONS classroomsArray: ", classroomsArray);
     for (const classroom of classroomsArray) {
-      console.log("Processing classroom for CLASSROOM_OPTIONS: ", classroom.valueOf());
       const classroomName = LocalizedString.lookup(tr(`${classroom.value.classroomId}`), this.props.locale);
       if (classroomName) {
         ret.push({
@@ -209,13 +153,8 @@ export class ClassroomLeaderboardsDialog extends React.PureComponent<Props, Stat
   render() {
     const { props, state } = this;
     const { style, className, theme, onClose, locale } = props;
-    const { errorMessage } = state;
-    const CREATEPROJECT_FORM_ITEMS: Form.Item[] = [
-      Form.classroomName('classroomName', 'Classroom Name')
-    ];
 
     const classroomIndex = this.CLASSROOM_OPTIONS.findIndex(option => option.data === this.state.selectedClassroom);
-    console.log("Rendering ClassroomLeaderboardsDialog with classroomIndex:", classroomIndex);
     return (
       <div>
         <Dialog

@@ -205,33 +205,24 @@ class Editor extends React.PureComponent<Props, State> {
   }
 
   private openDocumentation_ = () => {
-    console.log("Opening documentation from Editor");
     const { word } = this.ivygate_.editor.getModel().getWordAtPosition(this.ivygate_.editor.getPosition());
     const language = DOCUMENTATION_LANGUAGE_MAPPING[this.props.language];
     if (!language) return;
-    console.log("word:", word, "language:", language);
     this.props.onDocumentationGoToFuzzy?.(word, language);
 
   };
 
   private openCommonDocumentation_ = () => {
-    console.log("Opening common documentation from Editor");
     const { word } = this.ivygate_.editor.getModel().getWordAtPosition(this.ivygate_.editor.getPosition());
     const language = DOCUMENTATION_LANGUAGE_MAPPING[this.props.language];
     if (!language) return;
-    console.log("word:", word, "language:", language);
     this.props.onCommonDocumentationGoToFuzzy?.(word, language);
   };
 
-  componentDidUpdate(prevProps: Readonly<EditorPublicProps>, prevState: Readonly<EditorState>, snapshot?: any): void {
-    console.log("Editor componentDidUpdate - props:", this.props, "prevProps:", prevProps);
 
-  }
   private openDocumentationAction_?: monaco.IDisposable;
   private openCommonDocumentationAction_?: monaco.IDisposable;
   private setupCodeEditor_ = (editor: monaco.editor.IStandaloneCodeEditor) => {
-    console.log("Setting up code editor actions in Editor");
-    console.log("this.props.onDocumentationGoToFuzzy:", this.props.onDocumentationGoToFuzzy);
     if (this.props.onDocumentationGoToFuzzy) this.openDocumentationAction_ = editor.addAction({
       id: 'open-documentation',
       label: 'Open Documentation',
@@ -240,10 +231,7 @@ class Editor extends React.PureComponent<Props, State> {
       keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
       run: this.openDocumentation_,
     });
-
-    console.log("this.props.onCommonDocumentationGoToFuzzy:", this.props.onCommonDocumentationGoToFuzzy);
     if (this.props.onCommonDocumentationGoToFuzzy) {
-      console.log("Setting up openCommonDocumentationAction_");
       this.openCommonDocumentationAction_ = editor.addAction({
         id: 'open-common-documentation',
         label: 'Open Common Documentation',
@@ -300,9 +288,6 @@ class Editor extends React.PureComponent<Props, State> {
         />
       );
     } else {
-      window.console.log("Rendering Ivygate with code:", code);
-      window.console.log("Rendering Ivygate with language:", language);
-      window.console.log("IVYGATE_LANGUAGE_MAPPING[language]:", IVYGATE_LANGUAGE_MAPPING[language]);
       component = (
         <Ivygate
           ref={this.bindIvygate_}

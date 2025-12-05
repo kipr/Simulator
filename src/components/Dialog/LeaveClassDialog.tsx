@@ -8,8 +8,6 @@ import { Dialog } from './Dialog';
 import { State as ReduxState } from '../../state';
 import { I18nAction } from '../../state/reducer';
 import { connect } from 'react-redux';
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesome } from '../FontAwesome';
 import Form from '../interface/Form';
 import { Classroom } from 'state/State/Classroom';
 
@@ -31,10 +29,7 @@ interface LeaveClassDialogState {
 
 type Props = LeaveClassDialogPublicProps & LeaveClassDialogPrivateProps;
 type State = LeaveClassDialogState;
-interface ClickProps {
-  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  disabled?: boolean;
-}
+
 const Container = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -51,35 +46,6 @@ const StyledForm = styled(Form, (props: ThemeProps) => ({
   paddingRight: `${props.theme.itemPadding * 2}px`,
 }));
 
-
-const Button = styled('div', (props: ThemeProps & ClickProps) => ({
-  display: 'flex',
-  alignItems: 'center',
-  flexDirection: 'row',
-  padding: '10px',
-  backgroundColor: '#2c2c2cff',
-  borderBottom: `1px solid ${props.theme.borderColor}`,
-  ':last-child': {
-    borderBottom: 'none'
-  },
-  opacity: props.disabled ? '0.5' : '1.0',
-  fontWeight: 400,
-  ':hover': {
-    cursor: 'pointer',
-    backgroundColor: `rgba(255, 255, 255, 0.1)`
-  },
-  userSelect: 'none',
-  transition: 'background-color 0.2s, opacity 0.2s'
-}));
-
-const ItemIcon = styled(FontAwesome, {
-  paddingLeft: '10px',
-  paddingRight: '10px',
-  alignItems: 'center',
-  height: '30px'
-});
-
-
 export class CreateUserDialog extends React.PureComponent<Props, State> {
 
   constructor(props: Props) {
@@ -89,11 +55,8 @@ export class CreateUserDialog extends React.PureComponent<Props, State> {
   onFinalize_ = async (values: { [id: string]: string }) => {
     const { leaveClassName } = values;
     const { currentClassroom } = this.props;
-    console.log("LeaveClassDialog onFinalize_ called with leaveClassName:", leaveClassName);
-    console.log("Current classroom:", currentClassroom);
     try {
       if (leaveClassName === currentClassroom.classroomId) {
-        console.log("Leaving classroom:", currentClassroom);
         this.props.onLeaveClassDialogClose();
       }
       else {
@@ -103,17 +66,6 @@ export class CreateUserDialog extends React.PureComponent<Props, State> {
     catch (error) {
       console.error('Error leaving classroom:', error);
     }
-
-    // try {
-    //   const returnedClassroom = await findClassroomByInviteCode(classroomInviteCode);
-    //   console.log("Returned classroom from invite code:", returnedClassroom);
-
-    //   returnedClassroom ? this.props.onJoinClassDialogClose(returnedClassroom, classroomInviteCode, values.displayName) : this.setState({ errorMessage: 'Invalid invite code. Please check and try again.' });
-
-    // } catch (error) {
-    //   console.error('Error joining classroom:', error);
-    // }
-
 
 
   };
@@ -133,11 +85,6 @@ export class CreateUserDialog extends React.PureComponent<Props, State> {
       >
         <Container theme={theme} style={style} className={className}>
           {LocalizedString.lookup(tr(`Are you sure you want to leave ${currentClassroom.classroomId}?`), locale)}
-
-          {/* <Button theme={theme} onClick={() => this.props.onLeaveClassDialogClose()}>
-            <ItemIcon icon={faExclamationTriangle} />
-            {LocalizedString.lookup(tr('Leave Classroom'), locale)}
-          </Button> */}
           <StyledForm
             theme={theme}
             onFinalize={this.onFinalize_}

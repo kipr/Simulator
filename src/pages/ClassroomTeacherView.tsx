@@ -10,15 +10,11 @@ import LocalizedString from '../util/LocalizedString';
 import { IvygateFileExplorer } from 'ivygate';
 import { State as ReduxState } from '../state';
 import tr from '@i18n';
-import { jsPDF } from "jspdf";
 import { withNavigate, WithNavigateProps } from '../util/withNavigate';
-import { withParams } from '../util/withParams';
-import db from '../db';
-import { createRef } from 'react';
 import { AsyncClassroom, Classroom } from '../state/State/Classroom';
 import { CreateClassroomDialog } from '../components/Dialog/CreateClassroomDialog';
 import Dict from '../util/objectOps/Dict';
-import { ClassroomsAction, listChallengesByStudentId } from 'state/reducer/classrooms';
+import { ClassroomsAction, listChallengesByStudentId, deleteClassroom } from 'state/reducer/classrooms';
 import { auth } from '../firebase/firebase';
 import { default as IvygateClassroomType } from 'ivygate/dist/types/classroomTypes';
 import { User } from 'ivygate/dist/types/user';
@@ -26,7 +22,6 @@ import Async from 'state/State/Async';
 import { InterfaceMode } from 'ivygate/dist/types/interface';
 import { SimClassroomProject } from 'ivygate/dist/types/project';
 import ProgrammingLanguage from '../programming/compiler/ProgrammingLanguage';
-import { CHALLENGE_LIST, ChallengeName } from '../simulator/definitions/challenges/challengeList';
 import config from '../../config.client';
 import ChallengeCompletion, { AsyncChallengeCompletion } from 'state/State/ChallengeCompletion';
 import { DeleteDialog } from '../components/Dialog';
@@ -34,15 +29,13 @@ import ClassroomLeaderboardsDialog from '../components/Dialog/ClassroomLeaderboa
 import Challenge from '../components/Challenge';
 import store from '../state';
 import { AsyncChallenge } from '../state/State/Challenge';
-import { ChallengeBrief } from '../state/State/Challenge';
-import rawChallenge from '../simulator/definitions/challenges/jbc0-Drive-Straight';
 import { Challenges, ChallengeCompletions } from '../state/State';
+
 export interface ClassroomTeacherViewRootRouteParams {
   classroomId: string;
   [key: string]: string;
 
 }
-const SELFIDENTIFIER = "My Scores!";
 
 interface Challenge {
   name: LocalizedString;
@@ -78,19 +71,19 @@ interface ChallengeProps {
 export interface ClassroomTeacherViewPublicProps extends StyleProps, ThemeProps {
   classroomList: Dict<AsyncClassroom>;
   challenge?: AsyncChallenge;
-  selectedClassroom: AsyncClassroom | null;
   onCreateClassroom: (classroom: Classroom) => void;
-  onDeleteClassroom: (classroomId: string, classroom: Classroom) => void;
   onListOwnedClassrooms: () => void;
   onListChallengesByStudentId: (studentId: string) => void;
-  onStudentInClassroom: (studentId: LocalizedString) => void;
   onShowClassroomLeaderboard: (classroom: AsyncClassroom) => void;
-  onAddStudentToClassroom: (classroomId: string, studentId: LocalizedString) => void;
   onRemoveStudentFromClassroom: (studentId: string, currentClassroom: Classroom) => void;
 }
 
 interface ClassroomTeacherViewPrivateProps {
   locale: LocalizedString.Language;
+  selectedClassroom?: AsyncClassroom | null;
+  onStudentInClassroom?: (studentId: LocalizedString) => void;
+  onAddStudentToClassroom?: (classroomId: string, studentId: LocalizedString) => void;
+  deleteClassroom?: (classroomId: string, classroom: Classroom) => void;
 }
 
 interface ClassroomTeacherViewState {
@@ -144,7 +137,6 @@ const ClassroomHeaderContainer = styled('div', (props: ThemeProps) => ({
   flexDirection: 'row',
   justifyContent: 'center',
   gap: '3em',
-  backgroundColor: 'darkred',
   width: '90vw'
 
 }));
@@ -157,46 +149,7 @@ const ManageClassroomsContainer = styled('div', (props: ThemeProps) => ({
   width: '100%',
   flex: 1,
   height: '100%',
-  backgroundColor: 'darkorchid',
-
 }));
-const TableHeaderContainer = styled('div', {
-  display: 'inline-block',
-  transform: 'rotate(-45deg)',
-  transformOrigin: 'bottom left',
-  whiteSpace: 'nowrap',
-  width: '50px',
-});
-
-const UserHeaderContainer = styled('div', {
-  display: 'inline-block',
-  whiteSpace: 'nowrap',
-  width: '100px',
-});
-
-const Table = styled('table', {
-  width: '80%',
-  borderCollapse: 'collapse',
-  marginTop: '50px',
-  marginLeft: '20px',
-  padding: '8px',
-});
-
-const TableHeader = styled('th', {
-  borderBottom: '2px solid #ddd',
-  padding: '8px',
-  textAlign: 'center',
-  width: '50px',
-});
-const StyledTableRow = styled('tr', (props: { key: string, self: string, ref: React.Ref<HTMLTableRowElement> }) => ({
-  borderBottom: '1px solid #ddd',
-  backgroundColor: props.self === SELFIDENTIFIER ? '#555' : '#000',
-}));
-
-const TableCell = styled('td', {
-  padding: '6px',
-  textAlign: 'center',
-});
 
 const Button = styled('div', (props: ThemeProps & ClickProps) => ({
   display: 'flex',
@@ -250,11 +203,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
 
   componentDidUpdate(prevProps) {
-    console.log("ClassroomTeacherView componentDidUpdate prevProps: ", prevProps);
-    console.log("ClassroomTeacherView componentDidUpdate props: ", this.props);
-
     if (prevProps.classroomList !== this.props.classroomList) {
-      console.log("Classrooms updated → recalculating once");
       this.getIvygateClassrooms();
     }
   }
@@ -267,19 +216,14 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
 
   private onAddNewClassroom_ = (classroom: IvyGateClassroom) => {
-    console.log('Add new classroom clicked!', classroom);
     this.setState({ showCreateClassroomDialog: true });
   }
 
   private onDeleteClassroom_ = (classroom: IvygateClassroomType) => {
-    console.log('Delete classroom clicked for classroom:', classroom);
-    console.log("this.props.selectedClassroom:", this.props.selectedClassroom);
     this.setState({ showAreYouSureDialog: true, deleteObject: classroom });
-
   }
 
   private onDeleteUser_ = (user: User) => {
-    console.log('Delete user clicked for user:', user);
     this.setState({ showAreYouSureDialog: true, deleteObject: user });
   }
 
@@ -307,7 +251,6 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       if (asyncClassroom.type === Async.Type.Loaded) {
         const classroom = asyncClassroom.value;
         if (classroom.classroomId === classroomId) {
-          //this.props.onShowClassroomLeaderboard(asyncClassroom);
           this.props.navigate(`/classrooms/${classroomId}`);
           this.setState({
             leaderboardClassroom: asyncClassroom, showSelectedClassroomLeaderboard: true,
@@ -319,15 +262,12 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
   }
 
-  private onCloseDeleteDialog_ = () => {
+  private onCloseDeleteDialog_ = async () => {
     const { deleteObject } = this.state;
-    console.log("onCloseDeleteDialog_ state:", this.state);
-    console.log("onCloseDeleteDialog_ props.classroomList:", this.props.classroomList);
-    console.log("onCloseDeleteDialog_ state.deleteObject:", this.state.deleteObject);
     if (deleteObject.type === "classroom") {
       for (const [classroomKey, asyncClassroom] of Object.entries(this.props.classroomList)) {
         if (asyncClassroom.type === Async.Type.Loaded && asyncClassroom.value.classroomId === `${deleteObject.name}`) {
-          this.props.onDeleteClassroom(classroomKey, asyncClassroom.value);
+          await deleteClassroom(classroomKey, Async.deleting(asyncClassroom));
         }
       }
     }
@@ -347,8 +287,6 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       } else {
         console.log(`User ${deleteObject.userName} not found in any classroom.`);
       }
-
-      //this.props.onRemoveStudentFromClassroom(`${deleteObject.userName}`,);
 
     }
     this.props.onListOwnedClassrooms();
@@ -374,26 +312,13 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       });
       return;
     }
-
-
     const challenges = await listChallengesByStudentId(student.userName);
-    console.log("onSelectStudent() fetched challenges for student:", student, "challenges:", challenges);
     this.challengeCache[student.userName] = challenges;
     this.getIvygateClassrooms();
     this.setState({
       selectedStudentId: student.userName
     });
   }
-
-  private onProjectSelected = (student: User, project: SimClassroomProject) => {
-    console.log("onProjectSelected() student:", student, "project:", project);
-  }
-
-  private onClassroomSelected_ = (classroom: IvygateClassroomType) => {
-    console.log("onClassroomSelected_() classroom:", classroom);
-  }
-
-
 
   private memoIvygateClassrooms: IvygateClassroomType[] | null = null;
   private memoSource: any = null;
@@ -402,7 +327,6 @@ class ClassroomTeacherView extends React.Component<Props, State> {
     const { classroomList } = this.props;
 
     if (this.memoSource === classroomList && this.memoIvygateClassrooms !== null) {
-      console.log("Returning memoized Ivygate classrooms:", this.memoIvygateClassrooms);
       return this.memoIvygateClassrooms;
     }
 
@@ -417,8 +341,6 @@ class ClassroomTeacherView extends React.Component<Props, State> {
     const { selectedStudentId } = this.state;
     const ivygateClassrooms = [];
 
-    console.log("updateIvygateClassrooms this.props.classroomList:", classroomList);
-
     for (const [id, asyncClassroom] of Object.entries(classroomList)) {
 
       if (asyncClassroom.type === Async.Type.Loaded && classroomList != null) {
@@ -426,16 +348,11 @@ class ClassroomTeacherView extends React.Component<Props, State> {
         const classroom = asyncClassroom.value;
         // map studentIds to match IvygateFileExplorer's User objects
         const classroomUsers: User[] = Object.values(classroom.studentIds).map((studentId) => {
-          console.log("updateIvygateClassrooms mapping studentId:", studentId);
           const studentChallenges = this.challengeCache[selectedStudentId];
-          console.log("updateIvygateClassrooms for studentId:", studentId, "challenges:", studentChallenges);
           const userProjects: SimClassroomProject[] = studentChallenges
             ? Object.entries(studentChallenges).map(([challengeId, score]) => {
-              console.log("Mapping challengeId:", challengeId, "with score:", score);
-
               const asyncChallengeFromStore = this.props.challenges[challengeId] as AsyncChallenge;
               const asyncChallenge: AsyncChallenge = asyncChallengeFromStore;
-              console.log("asyncChallengeFromStore:", asyncChallengeFromStore);
               const asyncCompletion: AsyncChallengeCompletion = {
                 type: Async.Type.Loaded,
                 brief: {},
@@ -450,7 +367,6 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
                 }
               }
-              console.log("asyncChallengeCompletion:", asyncCompletion);
               return {
                 projectName: challengeId,
                 projectLanguage: `${score.currentLanguage}` as ProgrammingLanguage,
@@ -462,9 +378,6 @@ class ClassroomTeacherView extends React.Component<Props, State> {
               };
             })
             : [];
-
-
-          console.log("Mapped userProjects for studentId", studentId, ":", userProjects);
 
           return {
             userName: studentId.id || 'Unknown',
@@ -506,11 +419,10 @@ class ClassroomTeacherView extends React.Component<Props, State> {
             propClassrooms={this.updateIvygateClassrooms()}
             propSettings={{ ...DEFAULT_SETTINGS, classroomView: true }}
             onUserSelected={this.onSelectStudent}
-            onProjectSelected={this.onProjectSelected}
             onAddNewClassroom={this.onAddNewClassroom_}
             onDeleteClassroom={this.onDeleteClassroom_}
+            onProjectSelected={() => { }}
             onDeleteUser={this.onDeleteUser_}
-            onClassroomSelected={this.onClassroomSelected_}
             theme={DARK}
             style={style}
             locale={'en-US'}
@@ -520,14 +432,10 @@ class ClassroomTeacherView extends React.Component<Props, State> {
         {
           showCreateClassroomDialog && (
             <CreateClassroomDialog
-              userName={''}
               onClose={this.onExitCreateClassroomDialog_}
               onCloseClassroomDialog={this.onCloseClassroomDialog_}
               theme={DARK}
-              locale={'en-US'}
-              onLocaleChange={function (locale: LocalizedString.Language): void {
-                throw new Error('Function not implemented.');
-              }}
+              locale={locale}
             />
           )}
         {showClassroomLeaderboardSelector &&
@@ -550,12 +458,9 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { style, locale } = props;
+    const { style } = props;
     const { showAreYouSureDialog, deleteObject } = state;
     const theme = DARK;
-    console.log("Rendering ClassroomTeacherView classroomList:", this.props.classroomList);
-
-    console.log("Delete object in state:", deleteObject);
     return (
       <PageContainer style={style} theme={theme}>
         <MainMenu theme={theme} />
@@ -598,7 +503,7 @@ export default connect(
   }),
   (dispatch) => ({
     onCreateClassroom: (classroom) =>
-      dispatch(ClassroomsAction.createClassroom({ classroomId: crypto.randomUUID(), classroom })),
+      dispatch(ClassroomsAction.createClassroom({ classroom })),
     onListOwnedClassrooms: () =>
       dispatch(ClassroomsAction.listOwnedClassrooms({})),
     onListChallengesByStudentId: (studentId: string) =>

@@ -16,6 +16,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import ChallengeCompletion, { AsyncChallengeCompletion } from 'state/State/ChallengeCompletion';
 import { ChallengeCompletions, Challenges } from '../state/State';
 import Async from '../state/State/Async';
+import MyBadgesDialog from '../components/Dialog/MyBadgesDialog';
 
 
 const SELFIDENTIFIER = "My Scores!";
@@ -50,8 +51,10 @@ interface ChallengeProps {
 }
 
 export interface ClassroomLeaderboardPublicProps extends StyleProps, ThemeProps {
-  onClearSelectedClassroom: () => void;
+
   view?: string;
+  currentStudentDisplayName?: string;
+  currentClassroom?: Classroom;
 }
 
 interface RouterProps {
@@ -60,6 +63,7 @@ interface RouterProps {
   }
 }
 interface ClassroomLeaderboardPrivateProps {
+  onClearSelectedClassroom: () => void;
   locale: LocalizedString.Language;
   classroom: AsyncClassroom;
 }
@@ -69,6 +73,7 @@ interface ClassroomLeaderboardState {
   users: Record<string, User>;
   challenges: Record<string, Challenge>;
   shownClassroom: { docId: string, classroom: Classroom };
+  showBadgeDialog?: boolean;
 }
 
 interface ClickProps {
@@ -104,14 +109,6 @@ const ClassroomLeaderboardTitleContainer = styled('div', {
   margin: '20px',
 });
 
-const UserInfoContainer = styled('div', {
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: '10px',
-});
-
 const TableHeaderContainer = styled('div', {
   display: 'inline-block',
   transform: 'rotate(-45deg)',
@@ -143,7 +140,7 @@ const TableHeader = styled('th', {
 });
 const StyledTableRow = styled('tr', (props: { key: string, self: string, ref: React.Ref<HTMLTableRowElement> }) => ({
   borderBottom: '1px solid #ddd',
-  backgroundColor: props.self === SELFIDENTIFIER ? '#555' : '#000', // Highlight the current user
+  backgroundColor: props.self === SELFIDENTIFIER ? '#555' : '#000',
 }));
 const TableCell = styled('td', {
   padding: '6px',
@@ -207,38 +204,38 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       shownClassroom: null,
     };
 
-    void this.onLog();
+
   }
   async componentDidMount() {
     const { classroomId } = this.props.params;
-    console.log("Loaded classroomId:", classroomId);
-    let currentUserId = '';
-    const tokenManager = db.tokenManager;
-    if (tokenManager) {
-      const auth_ = tokenManager.auth();
-      const currentUserAuth_ = auth_.currentUser;
-      console.log("Current user auth:", currentUserAuth_);
-      currentUserId = currentUserAuth_.uid;
-    }
-    const classroom = await findClassroomDocByReadableId(classroomId, currentUserId);
-
-    console.log("Found classroom document:", classroom);
-    this.setState({ shownClassroom: classroom });
-  }
-  async componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ClassroomLeaderboardState>, snapshot?: any): Promise<void> {
-    if (prevProps.params.classroomId !== this.props.params.classroomId) {
-      console.log("Classroom updated! New classroom:", this.props.params.classroomId);
+    if (this.props.view !== 'studentView') {
       let currentUserId = '';
       const tokenManager = db.tokenManager;
       if (tokenManager) {
         const auth_ = tokenManager.auth();
         const currentUserAuth_ = auth_.currentUser;
-        console.log("Current user auth:", currentUserAuth_);
+        currentUserId = currentUserAuth_.uid;
+      }
+      const classroom = await findClassroomDocByReadableId(classroomId, currentUserId);
+      this.setState({ shownClassroom: classroom }, () => { void this.onLog(); });
+    }
+    else {
+      if (this.props.currentClassroom) {
+        this.setState({ shownClassroom: { docId: this.props.currentClassroom.docId, classroom: this.props.currentClassroom } }, () => { void this.onLog(); });
+      }
+    }
+  }
+  async componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ClassroomLeaderboardState>, snapshot?: any): Promise<void> {
+    if (prevProps.params.classroomId !== this.props.params.classroomId) {
+      let currentUserId = '';
+      const tokenManager = db.tokenManager;
+      if (tokenManager) {
+        const auth_ = tokenManager.auth();
+        const currentUserAuth_ = auth_.currentUser;
         currentUserId = currentUserAuth_.uid;
       }
       const classroom = await findClassroomDocByReadableId(this.props.params.classroomId, currentUserId);
 
-      console.log("Found classroom document compdidupdate:", classroom);
       this.setState({ shownClassroom: classroom });
     }
   }
@@ -257,20 +254,12 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 
   // Logs classroom users and their challenge completions
   private onLog = async () => {
-    const { locale, classroom } = this.props;
-    const res = await db.list('challenge_completion');
-
-    // const { classroomId } = useParams();
-    console.log("onLog this.state.shownClassroom: ", this.state.shownClassroom);
     const result = await getAllStudentsClassroomChallenges(this.state.shownClassroom?.classroom);
-    console.log("Classroom challenges result:", result);
-
     let users: Record<string, User> = {};
     const challenges: Record<string, Challenge> = {};
 
     for (const [_, attemptedChallenges] of Object.entries(result)) {
       for (const [challengeId, challenge] of Object.entries(attemptedChallenges as ChallengeData[])) {
-        console.log("Processing challengeId:", challengeId);
         const challenge = {
           name: tr(challengeId),
           description: tr(challengeId),
@@ -294,8 +283,6 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       };
     }
 
-    console.log("THIS.props.challenges:", this.props.challenges);
-
     const challengeCompletion = (challenge: ChallengeData) => (
       (challenge?.success?.exprStates?.completion ?? false) &&
       (!challenge?.failure?.exprStates?.failure ?? false)
@@ -307,9 +294,6 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
         name: userId,
         scores: [],
       };
-      console.log("processing userChallenges:", userChallenges);
-
-
       for (const [challengeId, challenge] of Object.entries(userChallenges as ChallengeData[])) {
         const score: Score = {
           name: tr(challengeId),
@@ -324,45 +308,9 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
         users[userId] = user;
       }
     }
-    console.log("Processed users and challenges for leaderboard:", { users, challenges });
-
     this.setState({ users, challenges });
 
     return { users, challenges };
-  };
-
-  private getDefaultUsers = (): Record<string, User> => {
-    const users: Record<string, User> = {};
-    const challengeIds = Object.keys(this.getDefaultChallenges());
-
-    for (let i = 1; i <= 20; i++) {
-      const scores: Score[] = [];
-      const numChallenges = Math.floor(Math.random() * 10) + 1; // Each user will complete between 1 and 5 challenges
-      const completedChallenges = new Set<string>();
-
-      while (completedChallenges.size < numChallenges) {
-        const randomChallengeId = challengeIds[Math.floor(Math.random() * challengeIds.length)];
-        if (!completedChallenges.has(randomChallengeId)) {
-          completedChallenges.add(randomChallengeId);
-          const score: Score = {
-            name: this.getDefaultChallenges()[randomChallengeId].name,
-            completed: true,
-            score: Math.floor(Math.random() * 101), // Random score between 0 and 100
-            completionTime: Math.floor(Math.random() * 301) + 100, // Random time between 100 and 400
-          };
-          scores.push(score);
-        }
-      }
-
-      users[`user${i}`] = {
-        id: `user${i}`,
-        name: `User ${i}`,
-        scores: scores,
-      };
-
-    }
-
-    return users;
   };
 
   private orderUsersByCompletedChallenges = (users: Record<string, User>): User[] => {
@@ -404,6 +352,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 
   private getCurrentUser = (): User => {
     const { users } = this.state;
+    const { currentStudentDisplayName } = this.props;
     let currentUser: User;
     const tokenManager = db.tokenManager;
     if (tokenManager) {
@@ -411,13 +360,11 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       const currentUserAuth_ = auth_.currentUser;
       currentUser = {
         id: currentUserAuth_.uid,
-        name: currentUserAuth_.displayName || 'Unknown',
-        scores: Object.values(users).find(u => u.id === currentUserAuth_.uid)?.scores || [],
-        altId: Object.values(users).find(u => u.id === currentUserAuth_.uid)?.altId || 'Unknown'
+        name: currentStudentDisplayName || currentUserAuth_.displayName || 'Unknown',
+        scores: Object.values(users).find(u => u.id === currentStudentDisplayName)?.scores || [],
+        altId: Object.values(users).find(u => u.id === currentStudentDisplayName)?.altId || 'Unknown'
       };
-
     }
-
 
     return currentUser || null;
   };
@@ -439,30 +386,34 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
   private exportUserScores = (user: User) => {
     const { locale } = this.props;
     const pdfDoc = new jsPDF();
-
+    const date = new Date();
 
     // Title
     pdfDoc.setFontSize(18);
     pdfDoc.text('KIPR Challenge Scores', 105, 20, { align: 'center' });
 
+
+    pdfDoc.setFontSize(16);
+    pdfDoc.text(`Date: ${date.toLocaleDateString()}`, 95, 30, { align: 'right' });
+    pdfDoc.text(`Time: ${date.toLocaleTimeString()}`, 105, 30, { align: 'left' });
+
     // Basic Info
     pdfDoc.setFontSize(14);
     pdfDoc.text(`Name: ${user.name}`, 20, 40);
-    pdfDoc.text(`Alias: ${user.altId || 'Unknown'}`, 20, 50);
-    pdfDoc.text(`Email: ${this.getCurrentUserEmail() || 'Unknown'}`, 20, 60);
+    pdfDoc.text(`Email: ${this.getCurrentUserEmail() || 'Unknown'}`, 20, 50);
 
     const sortedScores = this.customSort(user.scores.map(s => s.name['en-US'])).map(name => user.scores.find(s => s.name['en-US'] === name));
 
     // Scores
     pdfDoc.setFontSize(12);
-    pdfDoc.text('Scores:', 20, 70);
+    pdfDoc.text('Scores:', 20, 60);
 
     sortedScores.forEach((score, i) => {
       pdfDoc.text(
         `${LocalizedString.lookup(tr(`${score.name[locale]}`), locale) || "Unnamed"} - ${score.completed ? "Completed" : "Not Completed"
         }`,
         30,
-        80 + i * 10
+        70 + i * 10
       );
     });
 
@@ -659,10 +610,14 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 
     pdf.save(`${shownClassroom.classroom.classroomId}-scores.pdf`);
   }
+
+  private onSeeMyBadges() {
+    this.setState({ showBadgeDialog: true });
+  }
   private renderClassroomLeaderboard = () => {
-    const users = this.state.users || this.getDefaultUsers();
+    const users = this.state.users;
     const sortedUsers = this.orderUsersByCompletedChallenges(users);
-    const challenges = this.state.challenges || this.getDefaultChallenges();
+    const challenges = this.state.challenges;
 
     if (!sortedUsers) return null;
 
@@ -670,7 +625,6 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 
     const challengeArray = this.customSort(Object.keys(challenges));
     this.getCurrentUser();
-    console.log("Rendering Classroom Leaderboard with users and challenges:", { users: sortedUsers, challenges });
     return (
       <Table>
         <thead>
@@ -720,8 +674,8 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { style, locale, view } = props;
-    const { selected } = state;
+    const { style, locale, view, currentStudentDisplayName } = props;
+    const { selected, showBadgeDialog, users } = state;
     const theme = DARK;
     const currentUser = this.getCurrentUser();
     const currentUserEmail = this.getCurrentUserEmail();
@@ -732,21 +686,21 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
         {view === 'studentView' ? <div style={{ width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
           <ClassroomLeaderboardTitleContainer>
             <h1>Classroom Leaderboard</h1>
-            <UserInfoContainer>
-              <h2>User: </h2>
-              <h3>{currentUser?.name || 'Unknown'}</h3>
-              <h2>Alias: </h2>
-              <h3>{currentUser?.altId || 'Unknown'}</h3>
-              <h2>Email: </h2>
-              <h3>{currentUserEmail || 'Unknown'}</h3>
-            </UserInfoContainer>
             <ButtonContainer>
               <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> Export My Scores!</Button>
               <Button theme={DARK} onClick={this.scrollToMyScores}> Scroll to My Scores!</Button>
+              <Button theme={DARK} onClick={() => this.onSeeMyBadges()}> See My Badges </Button>
             </ButtonContainer>
 
           </ClassroomLeaderboardTitleContainer>
           {this.renderClassroomLeaderboard()}
+          {showBadgeDialog && <MyBadgesDialog
+            locale={locale}
+            onClose={() => this.setState({ showBadgeDialog: false })}
+            currentStudentDisplayName={currentStudentDisplayName}
+            currentUserScores={users[currentStudentDisplayName]?.scores || []}
+            theme={theme} />}
+
         </div>
           :
           <PageContainer style={style} theme={theme}>
@@ -754,14 +708,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
             <ClassroomLeaderboardContainer style={style} theme={theme}>
               <ClassroomLeaderboardTitleContainer>
                 <h1>Classroom Leaderboard</h1>
-                <UserInfoContainer>
-                  <h2>User: </h2>
-                  <h3>{currentUser?.name || 'Unknown'}</h3>
-                  <h2>Alias: </h2>
-                  <h3>{currentUser?.altId || 'Unknown'}</h3>
-                  <h2>Email: </h2>
-                  <h3>{currentUserEmail || 'Unknown'}</h3>
-                </UserInfoContainer>
+
                 <ButtonContainer>
                   <Button theme={DARK} onClick={() => this.exportClassroomScores()}> Export All General Scores</Button>
                   <Button theme={DARK} onClick={() => this.exportDetailedClassroomScores()}> Export All Detailed Scores</Button>

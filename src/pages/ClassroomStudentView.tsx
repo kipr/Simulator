@@ -2,15 +2,11 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import { connect } from 'react-redux';
 import { DARK, Theme, ThemeProps } from '../components/constants/theme';
-import MainMenu from '../components/MainMenu';
+import ClassroomMenu from '../components/ClassroomMenu';
 import { StyleProps } from '../util/style';
 import LocalizedString from '../util/LocalizedString';
 import { State as ReduxState } from '../state';
-import tr from '@i18n';
-import { jsPDF } from "jspdf";
 import { withNavigate, WithNavigateProps } from '../util/withNavigate';
-import db from '../db';
-import { createRef } from 'react';
 import { AsyncClassroom, Classroom } from '../state/State/Classroom';
 import Dict from '../util/objectOps/Dict';
 import { addStudentToClassroomAsyncRaw, ClassroomsAction, listChallengesByStudentId } from 'state/reducer/classrooms';
@@ -28,7 +24,6 @@ export interface ClassroomStudentViewRootRouteParams {
   [key: string]: string;
 
 }
-const SELFIDENTIFIER = "My Scores!";
 
 interface Challenge {
   name: LocalizedString;
@@ -58,13 +53,13 @@ interface LeaderboardUser {
 
 export interface ClassroomStudentViewPublicProps extends StyleProps, ThemeProps {
   onStudentAdded: (classroomId: string, studentId: string, displayName: string) => void;
+  onJoinClassroom: (classroom: Classroom) => void;
   onRemoveStudentFromClassroom: (studentId: string, currentClassroom: Classroom) => void;
-  classrooms: Dict<AsyncClassroom>;
-
 }
 
 interface ClassroomStudentViewPrivateProps {
   locale: LocalizedString.Language;
+  currentStudentClassroom: AsyncClassroom | null;
 }
 
 interface ClassroomStudentViewState {
@@ -78,6 +73,7 @@ interface ClassroomStudentViewState {
   showClassroomLeaderboardSelector: boolean;
   showSelectedClassroomLeaderboard: boolean;
   showLeaveClassroomDialog: boolean;
+  currentStudentDisplayName?: string;
 
   isStudentInClassroom?: boolean;
 }
@@ -98,7 +94,6 @@ const ClassroomInfoContainer = styled('div', (props: ThemeProps) => ({
   fontSize: '1.2em',
   overflow: 'hidden',
   flexWrap: 'nowrap',
-  backgroundColor: 'darkblue',
 }));
 
 const PageContainer = styled('div', (props: ThemeProps) => ({
@@ -125,7 +120,6 @@ const ClassroomsClassroomInfoContainer = styled('div', (props: ThemeProps) => ({
   flexDirection: 'column',
   alignContent: 'center',
   margin: '20px',
-  backgroundColor: 'lightgray',
 }));
 
 const ClassroomHeaderContainer = styled('div', (props: ThemeProps) => ({
@@ -133,7 +127,6 @@ const ClassroomHeaderContainer = styled('div', (props: ThemeProps) => ({
   flexDirection: 'row',
   gap: '3em',
   height: 'auto',
-  backgroundColor: 'darkred',
   width: '90vw'
 }));
 
@@ -142,7 +135,6 @@ const MyClassroomContainer = styled('div', (props: ThemeProps) => ({
   flexDirection: 'column',
   alignItems: 'center',
   flex: 1,
-  backgroundColor: 'darkgreen',
 
 }));
 
@@ -201,19 +193,19 @@ class ClassroomStudentView extends React.Component<Props, State> {
   async componentDidMount() {
     const currentUserId = auth.currentUser?.uid || ''
     const isInClassroom = await studentInClassroom(currentUserId);
-    console.log("studentInClassroom result:", isInClassroom);
     const currentUser = auth.currentUser.uid;
+    let studentDisplayName: string;
     if (isInClassroom.classroom) {
+      studentDisplayName = isInClassroom.classroom.studentIds[currentUserId].displayName;
       this.props.navigate(`/classrooms/${currentUser}/studentView/${isInClassroom.classroom.classroomId}`)
+      this.props.onJoinClassroom(isInClassroom.classroom);
     }
-    this.setState({ isStudentInClassroom: isInClassroom.inClassroom, currentClassroom: isInClassroom.classroom });
+    this.setState({ isStudentInClassroom: isInClassroom.inClassroom, currentClassroom: isInClassroom.classroom, currentStudentDisplayName: studentDisplayName });
   }
 
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ClassroomStudentViewState>, snapshot?: any): void {
-    console.log("ClassroomStudentView componentDidUpdate prevState:", prevState, "currentState:", this.state);
     if (prevState.currentClassroom !== this.state.currentClassroom && this.state.currentClassroom) {
       const currentUser = auth.currentUser.uid;
-      console.log('Current classroom updated:', this.state.currentClassroom);
       this.props.navigate(`/classrooms/${currentUser}/studentView/${this.state.currentClassroom.classroomId}`)
 
     };
@@ -226,7 +218,6 @@ class ClassroomStudentView extends React.Component<Props, State> {
   }
 
   private onJoinClassroomDialog_ = () => {
-    console.log('Join classroom dialog called!');
     this.setState({ showJoinClassroomDialog: true });
   }
 
@@ -235,7 +226,6 @@ class ClassroomStudentView extends React.Component<Props, State> {
   }
 
   private onCloseJoinClassroomDialog_ = async (returnedClassroom: Classroom, inviteCode: string, displayName: string) => {
-    console.log('Close join classroom dialog called with inviteCode:', inviteCode);
     const classroom = await addStudentToClassroomAsyncRaw(
       returnedClassroom,
       inviteCode,
@@ -243,10 +233,10 @@ class ClassroomStudentView extends React.Component<Props, State> {
       displayName
     );
 
-    console.log("Add student to classroom result:", classroom);
     if (classroom) {
       this.props.onStudentAdded(inviteCode, auth.currentUser?.uid || '', displayName);
-      this.setState({ showJoinClassroomDialog: false, isStudentInClassroom: true, currentClassroom: classroom });
+      this.props.onJoinClassroom(classroom);
+      this.setState({ showJoinClassroomDialog: false, isStudentInClassroom: true, currentClassroom: classroom, currentStudentDisplayName: displayName });
     }
 
 
@@ -254,15 +244,12 @@ class ClassroomStudentView extends React.Component<Props, State> {
 
   private onCloseLeaveClassroomDialog_ = async () => {
     const { currentClassroom } = this.state;
-    console.log('Close leave classroom dialog called for classroom:', currentClassroom);
-    console.log("current user:", auth.currentUser?.uid || '');
-
     await this.props.onRemoveStudentFromClassroom(
       auth.currentUser?.uid || '',
       currentClassroom
     );
     this.props.navigate(`/classrooms/${auth.currentUser?.uid || ''}/studentView/`);
-    this.setState({ showLeaveClassroomDialog: false, isStudentInClassroom: false, currentClassroom: null });
+    this.setState({ showLeaveClassroomDialog: false, isStudentInClassroom: false, currentClassroom: null, currentStudentDisplayName: undefined });
   }
 
   private onExitJoinClassroomDialog_ = () => {
@@ -274,29 +261,23 @@ class ClassroomStudentView extends React.Component<Props, State> {
   }
   private renderClassroomLeaderboard = () => {
     const { theme } = this.props;
-
+    const { currentClassroom } = this.state;
     return (
-      <ClassroomLeaderboard theme={theme} view={"studentView"} />
+      <ClassroomLeaderboard
+        theme={theme}
+        view={"studentView"}
+        currentStudentDisplayName={this.state.currentStudentDisplayName}
+        currentClassroom={currentClassroom} />
     );
   };
 
   private renderMyClassroom = () => {
     const { isStudentInClassroom, currentClassroom, showJoinClassroomDialog, showLeaveClassroomDialog } = this.state;
     const { theme, locale } = this.props;
-    console.log("Rendering My Classroom, isStudentInClassroom:", isStudentInClassroom, "currentClassroom:", currentClassroom);
     return (
-
       <MyClassroomContainer theme={theme}>
-        <h2>{currentClassroom ? `${currentClassroom.teacherDisplayName}\'s Classroom` : ""}</h2>
-
         {isStudentInClassroom ? (
           <>
-            <ClassroomInfoContainer theme={theme}>
-              <p>Classroom Name: {currentClassroom.classroomId}</p>
-              <Button style={{ marginLeft: '1em' }} theme={DARK} onClick={this.onLeaveClassroomDialog_}>
-                Leave Class
-              </Button>
-            </ClassroomInfoContainer>
             {this.renderClassroomLeaderboard()}
           </>
         ) : (
@@ -306,12 +287,8 @@ class ClassroomStudentView extends React.Component<Props, State> {
             <Button style={{ marginLeft: '1em' }} theme={DARK} onClick={this.onJoinClassroomDialog_}>
               Join Class
             </Button>
-
-
           </ClassroomInfoContainer>
         )}
-
-
       </MyClassroomContainer>
     )
 
@@ -322,10 +299,9 @@ class ClassroomStudentView extends React.Component<Props, State> {
     const { style, locale } = props;
     const { showLeaveClassroomDialog, showJoinClassroomDialog, currentClassroom } = state;
     const theme = DARK;
-
     return (
       <PageContainer style={style} theme={theme}>
-        <MainMenu theme={theme} />
+        <ClassroomMenu theme={theme} onLeaveClass={this.onLeaveClassroomDialog_} />
         <ClassroomsContainer style={style} theme={theme}>
           <ClassroomsClassroomInfoContainer style={style} theme={theme}>
             <h1>Classrooms - Student View</h1>
@@ -365,10 +341,14 @@ const DashboardWithNavigate = withNavigate(ClassroomStudentView);
 export default connect(
   (state: ReduxState) => ({
     classroomList: state.classrooms.entities,
+    currentStudentClassroom: state.classrooms.currentStudentClassroom,
   }),
   (dispatch) => ({
     onStudentAdded: (inviteCode, studentId, displayName) => {
       dispatch(ClassroomsAction.studentAdded({ classroomId: inviteCode, studentId, displayName }));
+    },
+    onJoinClassroom: (classroom) => {
+      dispatch(ClassroomsAction.joinClassroom({ classroom }));
     },
 
     onRemoveStudentFromClassroom: (studentId: string, currentClassroom: Classroom) =>

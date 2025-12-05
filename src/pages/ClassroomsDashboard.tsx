@@ -1,14 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { styled } from 'styletron-react';
-
 import { DARK, ThemeProps } from '../components/constants/theme';
 import { Card } from '../components/interface/Card';
 import MainMenu from '../components/MainMenu';
-
 import { StyleProps } from '../util/style';
 import LocalizedString from '../util/LocalizedString';
-import { State as ReduxState } from '../state';
 import tr from '@i18n';
 import { WithNavigateProps, withNavigate } from '../util/withNavigate';
 import db from '../db';
@@ -75,9 +72,7 @@ class ClassroomsDashboard extends React.PureComponent<Props, State> {
       i18n: null,
     };
   }
-  private onAboutClick_ = (event: React.MouseEvent) => {
-    window.location.href = 'https://www.kipr.org/kipr/about-kipr';
-  };
+
   async componentDidMount() {
     await this.getCurrentUser();
   }
@@ -88,7 +83,6 @@ class ClassroomsDashboard extends React.PureComponent<Props, State> {
       const auth_ = tokenManager.auth();
       const currentUserAuth_ = auth_.currentUser;
       currentUser = { id: currentUserAuth_.uid };
-      console.log("ClassroomsDashboard currentUser:", currentUser);
 
       this.setState({ userId: currentUser['id'] });
 
@@ -102,7 +96,6 @@ class ClassroomsDashboard extends React.PureComponent<Props, State> {
     const { userId } = this.state;
     const { className, style, locale } = props;
     const theme = DARK;
-    console.log("ClassroomsDashboard render with userId:", userId);
     return (
       <Container className={className} style={style} theme={theme}>
         <MainMenu theme={theme} />
