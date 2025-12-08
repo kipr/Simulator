@@ -147,7 +147,7 @@ class SensorWidget extends React.PureComponent<Props, State> {
     const mesh = portMeshMap[props.name];
     if (mesh) {
       window.setTimeout(() => {
-        const idx = props.name === 'motor 3' ? 1 : 0;
+        const idx = props.name === 'motor 0' ? 1 : 0;
         ACTIVE_SPACE.unhighlight(mesh, idx);
       }, 1000);
     }
