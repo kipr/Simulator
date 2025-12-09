@@ -7,7 +7,7 @@ import { styled } from 'styletron-react';
 import { Console, createConsoleBarComponents } from '../EditorConsole';
 import { Editor, createEditorBarComponents, EditorBarTarget } from '../Editor';
 import World from '../World';
-
+import config from '../../../config.client';
 import { Info } from '../Info';
 import { Layout, LayoutEditorTarget, LayoutProps } from './Layout';
 import SimulatorArea from './SimulatorArea';
@@ -27,6 +27,10 @@ import { ReferenceFramewUnits } from '../../util/math/unitMath';
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';
 import { ThemeProps } from '../constants/theme';
+import { IvygateFileExplorer } from 'ivygate';
+import db from '../../db';
+import { AsyncProject } from 'state/State/Project';
+import { createFileExplorerBarComponents } from '../../components/FileExplorer';
 
 
 const sizeDict = (sizes: Size[]) => {
@@ -48,12 +52,14 @@ export interface SideLayoutProps extends LayoutProps {
 interface ReduxSideLayoutProps {
   robots: Dict<Node.Robot>;
   locale: LocalizedString.Language;
+  projects: Dict<AsyncProject>;
 }
 
 interface SideLayoutState {
   activePanel: number;
   sidePanelSize: Size.Type;
   workingScriptCode?: string;
+  fileSelected?: boolean;
 }
 
 type Props = SideLayoutProps;
@@ -85,7 +91,7 @@ const SimulatorAreaContainer = styled('div', {
   flex: '1 1',
   position: 'relative',
 });
-const SimultorWidgetContainer = styled('div', {
+const SimulatorWidgetContainer = styled('div', {
   display: 'flex',
   flex: '1 0 0',
   height: '100%',
@@ -132,6 +138,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     this.state = {
       sidePanelSize: Size.Type.Miniature,
       activePanel: 0,
+      fileSelected: false
     };
 
     // TODO: this isn't working yet. Needs more tinkering
@@ -185,6 +192,9 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     });
   };
 
+  private onBackClick = () => {
+    this.setState({ fileSelected: false });
+  };
   render() {
     const { props } = this;
     const {
@@ -219,19 +229,28 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       worldCapabilities,
       onDocumentationGoToFuzzy,
       onCommonDocumentationGoToFuzzy,
+      onProjectAdd,
+      onSimFileSelected,
+      projects,
       locale
     } = props;
 
     const {
       activePanel,
       sidePanelSize,
-
+      fileSelected
     } = this.state;
 
     //window.console.log("Rendering SideLayout with editorTarget:", editorTarget);
 
     let editorBarTarget: EditorBarTarget;
     let editor: JSX.Element;
+    let fileExplorer: JSX.Element;
+
+
+
+
+    //window.console.log("SideLayout props:", props);
     switch (editorTarget.type) {
       case LayoutEditorTarget.Type.Robot: {
         editorBarTarget = {
@@ -259,10 +278,24 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
             onCommonDocumentationGoToFuzzy={onCommonDocumentationGoToFuzzy}
           />
         );
+        fileExplorer = (
+          <IvygateFileExplorer
+            propSettings={{ ...settings, classroomView: false }}
+            theme={theme}
+            locale={locale}
+            config={{ appName: config.appName, component: "SimEditor" }}
+            simEditorProjects={projects}
+            onAddNewProject={onProjectAdd}
+            onSimFileSelected={(project, fileName, fileType) => {
+              this.setState({ fileSelected: !fileSelected });
+              onSimFileSelected(project, fileName, fileType);
+            }}
+          >
+          </IvygateFileExplorer>)
         break;
       }
     }
-
+    const fileExplorerBar = createFileExplorerBarComponents(theme, this.onBackClick, locale);
     const editorBar = createEditorBarComponents({
       theme,
       target: editorBarTarget,
@@ -270,40 +303,51 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     });
     const consoleBar = createConsoleBarComponents(theme, onClearConsole, onAskTutorClick, locale);
 
+    let editorAndConsole: JSX.Element;
+
+    editorAndConsole = (
+      <Slider
+        isVertical={false}
+        theme={theme}
+        minSizes={[100, 100]}
+        sizes={[3, 1]}
+        visible={[true, true]}
+      >
+        <SimulatorWidgetContainer>
+          <SimulatorWidget
+            theme={theme}
+            name={LocalizedString.lookup(editorTarget.type === LayoutEditorTarget.Type.Robot ? tr('Editor') : tr('Script Editor'), locale)}
+            mode={Mode.Sidebar}
+            barComponents={editorBar}
+          >
+            {editor}
+
+          </SimulatorWidget>
+        </SimulatorWidgetContainer>
+
+        <SimulatorWidgetContainer>
+          <SimulatorWidget
+            theme={theme}
+            name={LocalizedString.lookup(tr('Console'), locale)}
+            barComponents={consoleBar}
+            mode={Mode.Sidebar}
+            hideActiveSize={true}
+          >
+            <FlexConsole theme={theme} text={console} />
+          </SimulatorWidget>
+        </SimulatorWidgetContainer>
+      </Slider>
+    );
+
     let content: JSX.Element;
     switch (activePanel) {
       case 0: {
         content = (
-          <Slider
-            isVertical={false}
-            theme={theme}
-            minSizes={[100, 100]}
-            sizes={[3, 1]}
-            visible={[true, true]}
-          >
-            <SimultorWidgetContainer>
-              <SimulatorWidget
-                theme={theme}
-                name={LocalizedString.lookup(editorTarget.type === LayoutEditorTarget.Type.Robot ? tr('Editor') : tr('Script Editor'), locale)}
-                mode={Mode.Sidebar}
-                barComponents={editorBar}
-              >
-                {editor}
-              </SimulatorWidget>
-            </SimultorWidgetContainer>
-
-            <SimultorWidgetContainer>
-              <SimulatorWidget
-                theme={theme}
-                name={LocalizedString.lookup(tr('Console'), locale)}
-                barComponents={consoleBar}
-                mode={Mode.Sidebar}
-                hideActiveSize={true}
-              >
-                <FlexConsole theme={theme} text={console} />
-              </SimulatorWidget>
-            </SimultorWidgetContainer>
-          </Slider>
+          <SimulatorWidgetContainer>
+            <SimulatorWidget theme={theme} name={LocalizedString.lookup(tr('File Explorer'), locale)} mode={Mode.Sidebar} barComponents={fileSelected ? fileExplorerBar : undefined}>
+              {fileSelected ? editorAndConsole : fileExplorer}
+            </SimulatorWidget>
+          </SimulatorWidgetContainer>
 
         );
         break;
@@ -443,9 +487,20 @@ export const SideLayoutRedux = connect((state: ReduxState, { sceneId }: LayoutPr
   let robots: Dict<Node.Robot> = {};
   if (scene) robots = Scene.robots(scene);
 
+  const asyncProjects = state.projects.entities;
+  let currentProjects = {};
+  asyncProjects && Object.values(asyncProjects).forEach(asyncProject => {
+    const project = Async.latestValue(asyncProject);
+    if (project) {
+      currentProjects[project.projectName] = project;
+    }
+  });
+
+
   return {
     robots,
     locale: state.i18n.locale,
+    projects: currentProjects
   };
 }, dispatch => ({
 

@@ -14,8 +14,7 @@ import { Challenges } from '../../state/State';
 import { AsyncChallenge } from '../../state/State/Challenge';
 import Async from 'state/State/Async';
 import ScrollArea from '../../components/interface/ScrollArea';
-import { CHALLENGE_BADGES } from '../../components/constants/challenge-badges';
-import DOTTED from '../../../static/assets/challenge-24-dotted.png';
+import { CHALLENGE_BADGES, DOTTED_CHALLENGE_BADGES } from '../../components/constants/challenge-badges';
 
 interface Score {
   name: LocalizedString; // Challenge name
@@ -117,6 +116,7 @@ export class MyBadgesDialog extends React.PureComponent<Props, State> {
   render() {
     const { props, state } = this;
     const { style, className, theme, onClose, locale, challenges, currentUserScores } = props;
+    console.log("Rendering MyBadgesDialog with challenges:", challenges);
     return (
       <div>
         <Dialog
@@ -131,7 +131,7 @@ export class MyBadgesDialog extends React.PureComponent<Props, State> {
                 return (
                   <BadgeContainer theme={theme} key={LocalizedString.lookup(currentChallenge.name, locale)}>
                     {currentUserScores.find(score => LocalizedString.lookup(score.name, locale) === currentChallenge.sceneId)?.completed ?
-                      <BadgeIcon src={CHALLENGE_BADGES[index] as string} theme={theme} /> : currentUserScores.find(score => LocalizedString.lookup(score.name, locale) === currentChallenge.sceneId) ? <BadgeIconGrey src={CHALLENGE_BADGES[index] as string} theme={theme} /> : <BadgeIcon src={DOTTED as string} theme={theme} />}
+                      <BadgeIcon src={CHALLENGE_BADGES[index] as string} theme={theme} /> : currentUserScores.find(score => LocalizedString.lookup(score.name, locale) === currentChallenge.sceneId) ? <BadgeIconGrey src={CHALLENGE_BADGES[index] as string} theme={theme} /> : <BadgeIcon src={DOTTED_CHALLENGE_BADGES[index] as string} theme={theme} />}
                     {/* <BadgeIcon src={CHALLENGE_BADGES[index] as string} theme={theme} /> */}
                   </BadgeContainer>
                 );
