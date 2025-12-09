@@ -16,6 +16,7 @@ import Author from '../../db/Author';
 import Subject from './Assignment/Subject';
 import StandardsLocation from './Assignment/StandardsLocation';
 import { ClassroomsState } from 'state/reducer/classrooms';
+import { ProjectsState } from './Project';
 
 export type Assignments = Dict<AsyncAssignment>;
 
@@ -38,6 +39,12 @@ export namespace Assignments {
       }
     }),
   };
+}
+
+export type Projects = ProjectsState;
+
+export namespace Projects {
+  export const EMPTY: Projects = { entities: {}, selectedProject: null };
 }
 
 export type Classrooms = ClassroomsState;

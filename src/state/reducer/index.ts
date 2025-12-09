@@ -6,5 +6,6 @@ export * from './challengeCompletions';
 export * from './i18n';
 export * from './assignments';
 export * from './classrooms';
+export * from './projects';
 export * from './users';
 export * from './ai';

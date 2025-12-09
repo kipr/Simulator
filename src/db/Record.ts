@@ -4,10 +4,11 @@ import Async from '../state/State/Async';
 import { AsyncChallenge } from '../state/State/Challenge';
 import { AsyncChallengeCompletion } from '../state/State/ChallengeCompletion';
 import { AsyncScene } from '../state/State/Scene';
-import { CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, CLASSROOM_COLLECTION, SCENE_COLLECTION } from './constants';
+import { CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, CLASSROOM_COLLECTION, SCENE_COLLECTION, PROJECT_COLLECTION } from './constants';
 import Selector from './Selector';
 import LocalizedString from '../util/LocalizedString';
 import { AsyncClassroom } from 'state/State/Classroom';
+import { AsyncProject } from '../state/State/Project';
 
 namespace Record {
   export enum Type {
@@ -16,7 +17,8 @@ namespace Record {
     ChallengeCompletion = 'challenge-completion',
     User = 'user',
     Assignment = 'assignment',
-    Classroom = 'classroom'
+    Classroom = 'classroom',
+    Project = 'project',
   }
 
   interface Base<T> {
@@ -48,6 +50,10 @@ namespace Record {
     type: Type.Classroom;
   }
 
+  export interface Project extends Base<AsyncProject> {
+    type: Type.Project;
+  }
+
   export const selector = (record: Record): Selector => {
     switch (record.type) {
       case Type.Scene: return { collection: SCENE_COLLECTION, id: record.id };
@@ -56,6 +62,7 @@ namespace Record {
       case Type.User: return { collection: 'users', id: record.id };
       case Type.Assignment: return { collection: 'assignments', id: record.id };
       case Type.Classroom: return { collection: CLASSROOM_COLLECTION, id: record.id };
+      case Type.Project: return { collection: PROJECT_COLLECTION, id: record.id };
     }
   };
 
@@ -66,7 +73,8 @@ namespace Record {
       case Type.ChallengeCompletion: return undefined;
       case Type.User: return { [LocalizedString.EN_US]: Async.latestValue(record.value).name };
       case Type.Assignment: return Async.latestValue(record.value).name;
-      case Type.Classroom: return { [LocalizedString.EN_US]: Async.latestValue(record.value).name };
+      case Type.Classroom: return { [LocalizedString.EN_US]: Async.latestValue(record.value).classroomId };
+      case Type.Project: return { [LocalizedString.EN_US]: Async.latestValue(record.value).projectId };
     }
   };
 
@@ -88,7 +96,8 @@ type Record = (
   Record.ChallengeCompletion |
   Record.User |
   Record.Assignment |
-  Record.Classroom
+  Record.Classroom |
+  Record.Project
 );
 
 export default Record;
