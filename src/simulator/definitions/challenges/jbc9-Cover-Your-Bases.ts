@@ -22,25 +22,25 @@ export default {
       name: tr('Robot not in Start Box'),
       description: tr('Robot not in start box'),
     },
-    canAUpright: {
-      name: tr('Can A Upright'),
-      description: tr('Can A upright in a circle'),
+    canANotUpright: {
+      name: tr('Can A Not Upright'),
+      description: tr('Can A not upright in a circle'),
     },
-    canBUpright: {
-      name: tr('Can B Upright'),
-      description: tr('Can B upright in a circle'),
+    canBNotUpright: {
+      name: tr('Can B Not Upright'),
+      description: tr('Can B not upright in a circle'),
     },
-    canCUpright: {
-      name: tr('Can C Upright'),
-      description: tr('Can C upright in a circle'),
+    canCNotUpright: {
+      name: tr('Can C Not Upright'),
+      description: tr('Can C not upright in a circle'),
     },
-    canDUpright: {
-      name: tr('Can D Upright'),
-      description: tr('Can D upright in a circle'),
+    canDNotUpright: {
+      name: tr('Can D Not Upright'),
+      description: tr('Can D not upright in a circle'),
     },
-    canEUpright: {
-      name: tr('Can E Upright'),
-      description: tr('Can E upright in a circle'),
+    canENotUpright: {
+      name: tr('Can E Not Upright'),
+      description: tr('Can E not upright in a circle'),
     },
     baseACovered: {
       name: tr('Base A Covered'),
@@ -105,59 +105,48 @@ export default {
         argIds: ['baseACovered', 'baseBCovered', 'baseCCovered', 'baseDCovered', 'baseECovered'],
       },
 
-      // Upright Events
-      canAUpright: {
-        type: Expr.Type.Event,
-        eventId: 'canAUpright',
-      },
-      canANotUpright: {
-        type: Expr.Type.Not,
-        argId: 'canAUpright',
-      },
-      canBUpright: {
-        type: Expr.Type.Event,
-        eventId: 'canBUpright',
-      },
-      canBNotUpright: {
-        type: Expr.Type.Not,
-        argId: 'canBUpright',
-      },
-      canCUpright: {
-        type: Expr.Type.Event,
-        eventId: 'canCUpright',
-      },
-      canCNotUpright: {
-        type: Expr.Type.Not,
-        argId: 'canCUpright',
-      },
-      canDUpright: {
-        type: Expr.Type.Event,
-        eventId: 'canDUpright',
-      },
-      canDNotUpright: {
-        type: Expr.Type.Not,
-        argId: 'canDUpright',
-      },
-      canEUpright: {
-        type: Expr.Type.Event,
-        eventId: 'canEUpright',
-      },
-      canENotUpright: {
-        type: Expr.Type.Not,
-        argId: 'canEUpright',
-      },
-      allCansUpright: {
-        type: Expr.Type.And,
-        argIds: ['canAUpright', 'canBUpright', 'canCUpright', 'canDUpright', 'canEUpright'],
-      },
-
-      // Success Logic = Can A upright, intersects and touched
+      // Success logic: stared in start box and five bases covered
       completion: {
         type: Expr.Type.And,
-        argIds: ['inStartBoxOnce', 'allBasesCovered', 'allCansUpright'],
+        argIds: ['inStartBoxOnce', 'allBasesCovered'],
       },
     },
     rootId: 'completion',
+  },
+  failure: {
+    exprs: {
+      canANotUpright: {
+        type: Expr.Type.Event,
+        eventId: 'canANotUpright',
+      },
+      canBNotUpright: {
+        type: Expr.Type.Event,
+        eventId: 'canBNotUpright',
+      },
+      canCNotUpright: {
+        type: Expr.Type.Event,
+        eventId: 'canCNotUpright',
+      },
+      canDNotUpright: {
+        type: Expr.Type.Event,
+        eventId: 'canDNotUpright',
+      },
+      canENotUpright: {
+        type: Expr.Type.Event,
+        eventId: 'canENotUpright',
+      },
+      allCansNotUpright: {
+        type: Expr.Type.And,
+        argIds: ['canANotUpright', 'canBNotUpright', 'canCNotUpright', 'canDNotUpright', 'canENotUpright'],
+      },
+
+      // Failure logic based on can uprightness thresholds
+      failure: {
+        type: Expr.Type.And,
+        argIds: ['canANotUpright', 'canBNotUpright', 'canCNotUpright', 'canDNotUpright', 'canENotUpright'],
+      },
+    },
+    rootId: 'failure',
   },
   successGoals: [
     { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
