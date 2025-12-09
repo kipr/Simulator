@@ -333,7 +333,7 @@ namespace Form {
     finalizer: IDENTITY_FINALIZER
   });
 
-  export const displayName = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
+  export const displayNameField = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
     id,
     text,
     tooltip,
@@ -351,6 +351,11 @@ namespace Form {
     finalizer: IDENTITY_FINALIZER,
     assist,
     assistText,
+  });
+  export const projectName = (id: string, text: string): Item<string> => ({
+    id,
+    text,
+    finalizer: IDENTITY_FINALIZER
   });
 }
 

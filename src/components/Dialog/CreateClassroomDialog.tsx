@@ -121,7 +121,7 @@ export class CreateClassroomDialog extends React.PureComponent<Props, State> {
 
 
     const CREATECLASSROOM_FORM_ITEMS: Form.Item[] = [
-      Form.displayName('displayName', 'Your Display Name', 'The teacher\'s name that will be shown to your students'),
+      Form.displayNameField('displayName', 'Your Display Name', 'The teacher\'s name that will be shown to your students'),
       Form.classroomName('classroomName', 'Classroom Name'),
       Form.createClassInviteCode('inviteCode', 'Invite Code', 'Code students can use to join the classroom'),
 
