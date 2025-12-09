@@ -414,7 +414,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
         <Provider store={store}>
           <IvygateFileExplorer
             ChallengeComponent={Challenge}
-            config={config}
+            config={{ appName: config.appName, component: "SimClassrooms" }}
             propUsers={[]}
             propClassrooms={this.updateIvygateClassrooms()}
             propSettings={{ ...DEFAULT_SETTINGS, classroomView: true }}
