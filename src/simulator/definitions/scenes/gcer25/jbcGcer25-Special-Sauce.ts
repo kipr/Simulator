@@ -44,11 +44,9 @@ scene.addOnIntersectionListener('pom${circle}', (type, otherNodeId) => {
     editable: false,
     startingOrigin: {
       position: canPositions[circle - 1],
-      scale: { x: 100, y: 100, z: 100 },
     },
     origin: {
       position: canPositions[circle - 1],
-      scale: { x: 100, y: 100, z: 100 },
     },
   };
 }
