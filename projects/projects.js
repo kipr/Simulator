@@ -86,5 +86,25 @@ module.exports = function createProjectsRouter(firebaseTokenManager) {
     }
   });
 
+  // DELETE
+  router.delete("/:id", async (req, res) => {
+    console.log("DELETE /:id called");
+    try {
+      const { uid } = req.user;
+      const { id } = req.params;
+      const firestore = admin.firestore();
+      await firestore
+        .collection("user")
+        .doc(uid)
+        .collection("projects")
+        .doc(id)
+        .delete();
+      return res.sendStatus(204);
+    } catch (err) {
+      console.error("DELETE /classrooms error:", err);
+      return res.status(500).json({ message: err.message });
+    }
+  });
+
   return router;
 };
