@@ -16,8 +16,10 @@ export namespace Modal {
     CopyScene,
     SettingsScene,
     DeleteRecord,
+    DeleteProject,
     ResetCode,
-    NewProject
+    NewProject,
+    NewFile
   }
 
   export interface Settings {
@@ -101,6 +103,18 @@ export namespace Modal {
   }
 
   export const NEW_PROJECT: NewProject = { type: Type.NewProject };
+
+  export interface NewFile {
+    type: Type.NewFile;
+  }
+
+  export const NEW_FILE: NewFile = { type: Type.NewFile };
+
+  export interface DeleteProject {
+    type: Type.DeleteProject;
+  }
+
+  export const DELETE_PROJECT: DeleteProject = { type: Type.DeleteProject };
 }
 
 export type Modal = (
@@ -114,7 +128,9 @@ export type Modal = (
   Modal.NewScene |
   Modal.CopyScene |
   Modal.DeleteRecord |
+  Modal.DeleteProject |
   Modal.SettingsScene |
   Modal.ResetCode |
-  Modal.NewProject
+  Modal.NewProject |
+  Modal.NewFile
 );
