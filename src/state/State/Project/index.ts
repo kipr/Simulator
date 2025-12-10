@@ -50,5 +50,5 @@ export namespace AsyncProject {
 
 export interface ProjectsState {
   entities: Dict<AsyncProject>;
-  selectedProject: string | null;
+  selectedProject: Project | null;
 }
