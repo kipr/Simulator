@@ -1,7 +1,6 @@
 import * as React from 'react';
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';
-import Form from '../interface/Form';
 import { ThemeProps } from '../constants/theme';
 import { StyleProps } from '../../util/style';
 import { styled } from 'styletron-react';
