@@ -151,6 +151,13 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     // // this is not deprecated, but not supported in safari iOS
     // window.addEventListener('orientationchange', () => { console.log('deprecated orientation change'); this.render(); });
   }
+
+  componentDidUpdate(prevProps: Readonly<SideLayoutProps & ReduxSideLayoutProps>, prevState: Readonly<SideLayoutState>, snapshot?: any): void {
+    if (this.props.fileSelected !== prevProps.fileSelected) {
+      console.log("SideLayout detected fileSelected change:", this.props.fileSelected);
+      this.setState({ fileSelected: this.props.fileSelected });
+    }
+  }
   private onSideBarSizeChange_ = (index: number) => {
     if (SIDEBAR_SIZES[index].type === Size.Type.Minimized) {
       // unset active tab if minimizing
@@ -231,6 +238,9 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       onCommonDocumentationGoToFuzzy,
       onProjectAdd,
       onSimFileSelected,
+      onSimProjectSelected,
+      onDeleteSimProject,
+      onAddNewSimFile,
       projects,
       locale
     } = props;
@@ -290,6 +300,9 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
               this.setState({ fileSelected: !fileSelected });
               onSimFileSelected(project, fileName, fileType);
             }}
+            onSimProjectSelected={onSimProjectSelected}
+            onDeleteSimProject={onDeleteSimProject}
+            onAddNewSimFile={onAddNewSimFile}
           >
           </IvygateFileExplorer>)
         break;
