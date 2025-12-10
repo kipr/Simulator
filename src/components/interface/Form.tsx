@@ -357,6 +357,11 @@ namespace Form {
     text,
     finalizer: IDENTITY_FINALIZER
   });
+  export const fileName = (id: string, text: string): Item<string> => ({
+    id,
+    text,
+    finalizer: IDENTITY_FINALIZER
+  });
 }
 
 export default Form;
