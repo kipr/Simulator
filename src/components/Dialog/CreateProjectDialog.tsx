@@ -11,10 +11,11 @@ import { ThemeProps } from '../constants/theme';
 import { StyleProps } from '../../util/style';
 import { styled } from 'styletron-react';
 import { Dialog } from './Dialog';
-import { Modal } from '../../pages/sharedRoot/Modal';
 import { FontAwesome } from '../FontAwesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { Settings } from '../constants/Settings';
+import Async from 'state/State/Async';
+import { AsyncProject, Project } from 'state/State/Project';
+import Dict from '../../util/objectOps/Dict';
 
 export interface CreateProjectDialogPublicProps extends ThemeProps, StyleProps {
   onClose: () => void;
@@ -23,12 +24,13 @@ export interface CreateProjectDialogPublicProps extends ThemeProps, StyleProps {
 
 interface CreateProjectDialogPrivateProps {
   locale: LocalizedString.Language;
+  projects: Dict<Project>
+  interfaceMode: InterfaceMode;
 }
 
 interface CreateProjectDialogState {
   showRepeatProjectDialog: boolean;
   language: string;
-  interfaceMode: InterfaceMode;
   errorMessage: string;
 }
 
@@ -124,7 +126,6 @@ export class CreateProjectDialog extends React.PureComponent<Props, State> {
       showRepeatProjectDialog: false,
       language: 'c',
       errorMessage: '',
-      interfaceMode: InterfaceMode.SIMPLE
     }
   }
 
@@ -139,11 +140,20 @@ export class CreateProjectDialog extends React.PureComponent<Props, State> {
   };
 
   onFinalize_ = async (values: { [id: string]: string }) => {
-
+    const { projects, interfaceMode } = this.props;
     const projectName = values.projectName;
 
     const specialCharRegex = /[^a-zA-Z0-9 _-]/;
     const isOnlySpaces = !projectName.trim(); // Check if the name is empty or only spaces
+
+    //Check if project already exists in database
+    if (projects) {
+      const projectExists = Object.values(projects).some(project => project.projectName === projectName);
+      if (projectExists) {
+        this.setState({ errorMessage: 'A project with this name already exists. Please choose a different name.' });
+        return;
+      }
+    }
     // Check if project name exceeds 50 characters
     if (projectName.length > 50) {
       this.setState({ errorMessage: 'Project name cannot exceed 50 characters.' });
@@ -162,7 +172,7 @@ export class CreateProjectDialog extends React.PureComponent<Props, State> {
       this.props.onCreateProject(
         projectName,
         this.state.language as ProgrammingLanguage,
-        this.state.interfaceMode
+        interfaceMode
       );
     }
     catch (error) {
@@ -183,7 +193,6 @@ export class CreateProjectDialog extends React.PureComponent<Props, State> {
     ];
 
     const languageIndex = LANGUAGE_OPTIONS.findIndex(option => option.data === this.state.language);
-
     return (
       <div>
         <Dialog
@@ -231,6 +240,19 @@ export class CreateProjectDialog extends React.PureComponent<Props, State> {
   }
 }
 
-export default connect((state: ReduxState) => ({
-  locale: state.i18n.locale,
-}))(CreateProjectDialog) as React.ComponentType<CreateProjectDialogPublicProps>;
+export default connect((state: ReduxState) => {
+
+  const asyncProjects = state.projects.entities;
+  let currentProjects = {};
+  asyncProjects && Object.values(asyncProjects).forEach(asyncProject => {
+    const project = Async.latestValue(asyncProject);
+    if (project) {
+      currentProjects[project.projectName] = project;
+    }
+  });
+  return {
+    locale: state.i18n.locale,
+    projects: currentProjects,
+    interfaceMode: state.projects.interfaceMode,
+  };
+})(CreateProjectDialog) as React.ComponentType<CreateProjectDialogPublicProps>;
