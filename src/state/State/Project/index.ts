@@ -51,4 +51,5 @@ export namespace AsyncProject {
 export interface ProjectsState {
   entities: Dict<AsyncProject>;
   selectedProject: Project | null;
+  interfaceMode: InterfaceMode.SIMPLE | InterfaceMode.ADVANCED;
 }

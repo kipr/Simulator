@@ -6,6 +6,7 @@ import Selector from '../../db/Selector';
 import Dict from "../../util/objectOps/Dict";
 import store from "..";
 import ProgrammingLanguage from "../../programming/compiler/ProgrammingLanguage";
+import { InterfaceMode } from "../../types/interfaceModes";
 
 export namespace ProjectsAction {
   export const addProject = construct<AddProject>("projects/add-project");
@@ -60,6 +61,13 @@ export namespace ProjectsAction {
     type: "projects/delete-project";
     project: Project;
   }
+
+  export const changeInterfaceMode = construct<ChangeInterfaceMode>("projects/change-interface-mode");
+
+  export interface ChangeInterfaceMode {
+    type: "projects/change-interface-mode";
+    interfaceMode: InterfaceMode.SIMPLE | InterfaceMode.ADVANCED;
+  }
 }
 
 export type ProjectsAction =
@@ -69,6 +77,7 @@ export type ProjectsAction =
   | ProjectsAction.SetCode
   | ProjectsAction.SelectProject
   | ProjectsAction.DeleteProject
+  | ProjectsAction.ChangeInterfaceMode
   | ProjectsAction.SetProjects;
 
 
@@ -125,7 +134,7 @@ const createFile = async (project: Project, fileName: string, fileType: 'src' | 
         ...project[`${fileType}Files`],
         [fileName]: {
           fileName,
-          fileContent: `${ProgrammingLanguage.DEFAULT_CODE[project.projectLanguage]}`
+          fileContent: `${ProgrammingLanguage.BLANK_CODE[project.projectLanguage]}`
         }
       }
     };
@@ -187,26 +196,53 @@ const save = async (project: Project, fileName: string, fileType: 'src' | 'inclu
   }
 }
 
+const changeInterfaceMode = async (state: ProjectsState, interfaceMode: InterfaceMode.SIMPLE | InterfaceMode.ADVANCED) => {
+  try {
+    const projects = state.entities;
+    const updatedProjects: Dict<AsyncProject> = {};
 
+    for (const projectName in projects) {
+      const asyncProject = projects[projectName];
+      if (asyncProject.type === Async.Type.Loaded) {
+        const updatedProject: Project = {
+          ...asyncProject.value,
+          interfaceMode: interfaceMode === InterfaceMode.SIMPLE ? InterfaceMode.SIMPLE : InterfaceMode.ADVANCED
+        };
+        await db.set(Selector.project(projectName), updatedProject);
+        updatedProjects[projectName] = Async.loaded({
+          brief: {},
+          value: updatedProject
+        });
+      }
+
+      store.dispatch(ProjectsAction.setProjects({
+        projects: updatedProjects
+      }));
+    }
+
+    console.log("Dispatching interface mode change:", updatedProjects);
+  }
+  catch (error) {
+    console.log("Error changing interface mode:", error);
+  }
+
+}
 
 export const reduceProjects = (
-  state: ProjectsState = { entities: {}, selectedProject: null },
+  state: ProjectsState = { entities: {}, selectedProject: null, interfaceMode: InterfaceMode.SIMPLE },
   action: ProjectsAction
 ): ProjectsState => {
   switch (action.type) {
     case "projects/load-projects": {
-      console.log("Loading projects");
       void load();
       return state;
     }
     case "projects/set-code": {
-      console.log("projects/set-code");
       void save(action.project, action.fileName, action.fileType, action.fileContent);
       return state;
 
     }
     case "projects/add-project": {
-      console.log("Adding project", action.project.projectName, action.project);
       const creating = Async.creating({ value: action.project });
       void createProject(action.project.projectName, creating);
       return state;
@@ -225,6 +261,10 @@ export const reduceProjects = (
       }
       return { ...state, selectedProject: action.project };
     }
+    case "projects/change-interface-mode": {
+      void changeInterfaceMode(state, action.interfaceMode);
+      return { ...state, interfaceMode: action.interfaceMode };
+    }
     case "projects/delete-project": {
       const entities = { ...state.entities };
       delete entities[action.project.projectName];
@@ -232,6 +272,7 @@ export const reduceProjects = (
         return { ...state, entities, selectedProject: null };
       }
     }
+
     default:
       return state;
   }

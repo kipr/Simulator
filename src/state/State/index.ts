@@ -17,6 +17,7 @@ import Subject from './Assignment/Subject';
 import StandardsLocation from './Assignment/StandardsLocation';
 import { ClassroomsState } from 'state/reducer/classrooms';
 import { ProjectsState } from './Project';
+import { InterfaceMode } from '../../types/interfaceModes';
 
 export type Assignments = Dict<AsyncAssignment>;
 
@@ -44,7 +45,7 @@ export namespace Assignments {
 export type Projects = ProjectsState;
 
 export namespace Projects {
-  export const EMPTY: Projects = { entities: {}, selectedProject: null };
+  export const EMPTY: Projects = { entities: {}, selectedProject: null, interfaceMode: InterfaceMode.SIMPLE };
 }
 
 export type Classrooms = ClassroomsState;
