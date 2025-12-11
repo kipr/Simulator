@@ -14,6 +14,7 @@ import ComboBox from '../interface/ComboBox';
 import { State as ReduxState } from '../../state';
 import { I18nAction } from '../../state/reducer';
 import { connect } from 'react-redux';
+import { InterfaceMode } from '../../types/interfaceModes';
 
 type SettingsSection = 'user-interface' | 'simulation' | 'editor';
 
@@ -25,6 +26,7 @@ export interface SettingsDialogPublicProps extends ThemeProps, StyleProps {
 
 interface SettingsDialogPrivateProps {
   locale: LocalizedString.Language;
+  interfaceMode: InterfaceMode.SIMPLE | InterfaceMode.ADVANCED;
   onLocaleChange: (locale: LocalizedString.Language) => void;
 }
 
@@ -148,8 +150,10 @@ class SettingsDialog extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { style, className, theme, onClose, locale } = props;
+    const { style, className, theme, onClose, locale, interfaceMode } = props;
     const { selectedSection } = state;
+
+    console.log("Rendering SettingsDialog with interfaceMode:", interfaceMode);
 
     return (
       <Dialog
@@ -196,6 +200,18 @@ class SettingsDialog extends React.PureComponent<Props, State> {
                     theme={theme}
                   />
                 </SettingContainer>
+                {this.createBooleanSetting(
+                  LocalizedString.lookup(tr('KISS IDE Theme'), locale),
+                  LocalizedString.lookup(tr('Toggle IDE theme to dark mode'), locale),
+                  (settings: Settings) => settings.ideEditorDarkMode,
+                  (newValue: boolean) => ({ ideEditorDarkMode: newValue })
+                )}
+                {this.createBooleanSetting(
+                  LocalizedString.lookup(tr('User Interface Mode'), locale),
+                  LocalizedString.lookup(tr(`Change the user's interface mode to Advanced`), locale),
+                  (settings: Settings) => interfaceMode === InterfaceMode.ADVANCED,
+                  (newValue: boolean) => ({ interfaceMode: newValue })
+                )}
               </>
             )}
             {selectedSection === 'simulation' && (
@@ -232,7 +248,9 @@ class SettingsDialog extends React.PureComponent<Props, State> {
 }
 
 export default connect((state: ReduxState) => ({
-  locale: state.i18n.locale
+  locale: state.i18n.locale,
+  interfaceMode: state.projects.interfaceMode,
+
 }), dispatch => ({
   onLocaleChange: (locale: LocalizedString.Language) => dispatch(I18nAction.setLocale({ locale })),
 }))(SettingsDialog) as React.ComponentType<SettingsDialogPublicProps>;
