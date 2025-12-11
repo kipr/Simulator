@@ -90,7 +90,7 @@ export class CreateNewFileDialog extends React.PureComponent<Props, State> {
     const [name, extension] = fileName.split('.');
     //Check if file already exists
     if (selectedProject) {
-      console.log("Object.values(selectedProject[`${fileType}Files`]):", Object.values(selectedProject[`${fileType}Files`]));
+
       const fileExists = Object.values(selectedProject[`${fileType}Files`])
         .some(file => {
           const [name] = file.fileName.split('.');
