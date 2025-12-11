@@ -104,11 +104,6 @@ export const createEditorBarComponents = ({
       let errors = 0;
       let warnings = 0;
 
-      editorBar.push(BarComponent.create(LanguageSelectCharm, {
-        theme,
-        language: target.language,
-        onLanguageChange: target.onLanguageChange,
-      }));
 
       if (target.language !== 'graphical') {
         editorBar.push(BarComponent.create(Button, {
