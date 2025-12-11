@@ -68,7 +68,7 @@ import { Modal } from './sharedRoot/Modal';
 import Robot from '../state/State/Robot';
 import AiWindow from '../components/Ai/AiWindow';
 import CreateProjectDialog from '../components/Dialog/CreateProjectDialog';
-import { InterfaceMode } from 'types/interfaceModes';
+import { InterfaceMode } from '../types/interfaceModes';
 import { AsyncProject, Project } from '../state/State/Project';
 import CreateNewFileDialog from '../components/Dialog/CreateNewFileDialog';
 import DeleteProjectDialog from '../components/Dialog/DeleteProjectDialog';
@@ -141,6 +141,7 @@ interface RootPrivateProps {
   onSetProjectCode: (project: Project, fileName: string, fileType: 'src' | 'include' | 'userData', fileContent: string) => void;
   onSelectProject: (project: Project) => void;
   onDeleteProject: (project: Project) => void;
+  onChangeInterfaceMode: (interfaceMode: InterfaceMode.SIMPLE | InterfaceMode.ADVANCED) => void;
 }
 
 interface RootState {
@@ -580,6 +581,12 @@ class Root extends React.Component<Props, State> {
       Space.getInstance().noisySensors = changedSettings.simulationSensorNoise;
     }
 
+    if ('interfaceMode' in changedSettings) {
+      console.log("Interface mode changed to:", changedSettings.interfaceMode);
+      localStorage.setItem('interfaceMode', changedSettings.interfaceMode ? 'Advanced' : 'Simple');
+      this.props.onChangeInterfaceMode(changedSettings.interfaceMode ? InterfaceMode.ADVANCED : InterfaceMode.SIMPLE);
+    }
+
     this.setState({ settings: nextSettings });
   };
 
@@ -713,6 +720,12 @@ class Root extends React.Component<Props, State> {
       case 'graphical':
         fileT = 'src';
         break;
+      case 'h':
+        fileT = 'include';
+        break;
+      case 'txt':
+        fileT = 'userData';
+        break;
       default:
         console.error("Invalid file type for new file:", fileType);
         return;
@@ -790,7 +803,7 @@ class Root extends React.Component<Props, State> {
       },
       code: {
         ...this.state.code,
-        [activeLanguage]: ProgrammingLanguage.DEFAULT_CODE[activeLanguage],
+        [activeLanguage]: ProgrammingLanguage.BLANK_CODE[activeLanguage],
       }
     }, () => {
       this.props.onAddFile(projectDetails ? projectDetails.project : null, fileName, projectDetails ? projectDetails.fileType : 'src');
@@ -1195,6 +1208,9 @@ const ConnectedRoot = connect((state: ReduxState, { params: { sceneId, challenge
   },
   onDeleteProject: (project: Project) => {
     dispatch(ProjectsAction.deleteProject({ project }));
+  },
+  onChangeInterfaceMode: (interfaceMode: InterfaceMode) => {
+    dispatch(ProjectsAction.changeInterfaceMode({ interfaceMode }));
   }
 }))(withNavigate(Root)) as React.ComponentType<RootPublicProps>;
 
