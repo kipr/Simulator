@@ -18,7 +18,7 @@ import { DocumentationWindow } from 'ivygate';
 import AiWindow from './components/Ai/AiWindow';
 import { DARK, LIGHT } from './components/constants/theme';
 import CurriculumPage from './lms/CurriculumPage';
-import { UsersAction, I18nAction } from './state/reducer';
+import { UsersAction, I18nAction, ProjectsAction } from './state/reducer';
 import db from './db';
 import Selector from './db/Selector';
 import DbError from './db/Error';
@@ -26,12 +26,11 @@ import UserConsent from './consent/UserConsent';
 import LegalAcceptance from './consent/LegalAcceptance';
 
 import LocalizedString from './util/LocalizedString';
-import Classrooms from './pages/Classrooms';
 import ClassroomsDashboard from './pages/ClassroomsDashboard';
 import ClassroomLeaderboard from './pages/ClassroomLeaderboard';
 import ClassroomTeacherView from './pages/ClassroomTeacherView';
 import ClassroomStudentView from './pages/ClassroomStudentView';
-import { Classroom } from 'state/State/Classroom';
+import { InterfaceMode } from './types/interfaceModes';
 export interface AppPublicProps {
 
 }
@@ -41,6 +40,7 @@ interface AppPrivateProps {
   setMe: (me: string) => void;
   loadUser: (uid: string) => void;
   setLocale: (locale: LocalizedString.Language) => void;
+  setInterfaceMode: (interfaceMode: InterfaceMode) => void;
 }
 
 interface AppState {
@@ -131,6 +131,12 @@ class App extends React.Component<Props, State> {
         default:
           this.props.setLocale('en-US');
       }
+    }
+
+    const interfaceMode = localStorage.getItem('interfaceMode');
+    if (interfaceMode) {
+      console.log("Read interfaceMode from localstorage:", interfaceMode);
+      this.props.setInterfaceMode(interfaceMode === 'Advanced' ? InterfaceMode.ADVANCED : InterfaceMode.SIMPLE);
     }
 
     this.onAuthStateChangedSubscription_ = auth.onAuthStateChanged(user => {
@@ -239,4 +245,5 @@ export default connect((state: ReduxState) => {
   setMe: (me: string) => dispatch(UsersAction.setMe({ me })),
   loadUser: (uid: string) => dispatch(UsersAction.loadOrEmptyUser({ userId: uid })),
   setLocale: (locale: LocalizedString.Language) => dispatch(I18nAction.setLocale({ locale })),
+  setInterfaceMode: (interfaceMode: InterfaceMode) => dispatch(ProjectsAction.changeInterfaceMode({ interfaceMode })),
 }))(App) as React.ComponentType<AppPublicProps>;
