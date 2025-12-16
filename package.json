@@ -80,7 +80,7 @@
     "image-loader": "^0.0.1",
     "image-webpack-loader": "^8.1.0",
     "immer": "^9.0.15",
-    "itch": "https://github.com/chrismbirmingham/itch#36",
+    "itch": "https://github.com/kipr/itch#36",
     "ivygate": "https://github.com/kipr/ivygate#v0.1.9",
     "jspdf": "^3.0.2",
     "kipr-scratch": "file:dependencies/kipr-scratch/kipr-scratch",
