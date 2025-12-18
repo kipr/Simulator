@@ -77,12 +77,16 @@ export const DEMOBOT: Robot = {
       friction: 100,
       restitution: 0,
     }),
-    /*
     arm: Node.servo({
-      parentAxis: RawVector3.NEGATIVE_Z,
-      parentPivot: Vector3wUnits.meters(0.068099, 0.034913, -0.010805),
-      childAxis: RawVector3.Y,
-      childTwist: degrees(63),
+      //parentPivot: Vector3wUnits.meters(0.068099, 0.034913, -0.010805),
+      //parentPivot: Vector3wUnits.meters(-0.010805, 0.034913, 0.068099),
+      parentPivot: Vector3wUnits.centimeters(1.0805, 3.4913, 8.05),
+      parentAxis: RawVector3.Y,
+      childAxis: RawVector3.Z,
+      parentPerpAxis: RawVector3.Z,
+      childPerpAxis: RawVector3.X,
+      //childRotationQuaternion: Quaternion.FromEulerAngles(Math.PI / 2, Math.PI / 2, 0),
+      //childTwist: degrees(63),
       servoPort: 0,
       parentId: 'chassis',
     }),
@@ -96,9 +100,11 @@ export const DEMOBOT: Robot = {
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
     }),
     claw: Node.servo({
-      parentAxis: RawVector3.Z,
-      childAxis: RawVector3.Y,
-      childTwist: degrees(0),
+      parentAxis: RawVector3.X,
+      childAxis: RawVector3.NEGATIVE_Z,
+      parentPerpAxis: RawVector3.NEGATIVE_Y,
+      childPerpAxis: RawVector3.X,
+      //childTwist: degrees(270),
       servoPort: 3,
       parentId: 'arm_link',
       parentPivot: Vector3wUnits.meters(0.097792, -0.024775, 0.026806),
@@ -112,6 +118,7 @@ export const DEMOBOT: Robot = {
       inertia: [3, 3, 3],
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
     }),
+    /*
     touch_sensor: Node.touchSensor({
       parentId: 'chassis',
       origin: {
