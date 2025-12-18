@@ -6,6 +6,7 @@ import { RawVector3 } from '../../../util/math/math';
 import { RotationwUnits, Vector3wUnits } from '../../../util/math/unitMath';
 
 import tr from '@i18n';
+import { Quaternion } from "@babylonjs/core";
 
 const { meters } = Distance;
 const { degrees } = Angle;
@@ -40,9 +41,12 @@ export const DEMOBOT: Robot = {
       },
     }),
     left_wheel: Node.motor({
-      parentAxis: RawVector3.NEGATIVE_Z,
       parentPivot: Vector3wUnits.metersZ(-0.07492),
-      childAxis: RawVector3.Y,
+      parentAxis: RawVector3.NEGATIVE_Y,
+      childAxis: RawVector3.NEGATIVE_Z,
+      parentPerpAxis: RawVector3.NEGATIVE_X,
+      childPerpAxis: RawVector3.NEGATIVE_X,
+      childRotationQuaternion: Quaternion.FromEulerAngles(Math.PI / -2, 0, 0),
       motorPort: 3,
       parentId: 'chassis',
       plug: Node.Motor.Plug.Inverted
@@ -56,9 +60,12 @@ export const DEMOBOT: Robot = {
       restitution: 0,
     }),
     right_wheel: Node.motor({
-      parentAxis: RawVector3.Z,
       parentPivot: Vector3wUnits.metersZ(0.07492),
-      childAxis: RawVector3.Y,
+      parentAxis: RawVector3.NEGATIVE_Y,
+      childAxis: RawVector3.NEGATIVE_Z,
+      parentPerpAxis: RawVector3.NEGATIVE_X,
+      childPerpAxis: RawVector3.NEGATIVE_X,
+      childRotationQuaternion: Quaternion.FromEulerAngles(Math.PI / -2, 0, 0),
       motorPort: 0,
       parentId: 'chassis',
     }),
@@ -70,6 +77,7 @@ export const DEMOBOT: Robot = {
       friction: 100,
       restitution: 0,
     }),
+    /*
     arm: Node.servo({
       parentAxis: RawVector3.NEGATIVE_Z,
       parentPivot: Vector3wUnits.meters(0.068099, 0.034913, -0.010805),
@@ -144,6 +152,7 @@ export const DEMOBOT: Robot = {
       digitalPort: 2,
       collisionBox: Vector3wUnits.meters(0.015, 0.015, 0.015),
     }),
+    */
   },
   geometry: {
     chassis_link: Geometry.remoteMesh({ uri: '/static/object_binaries/chassis.glb' }),
