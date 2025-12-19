@@ -398,7 +398,6 @@ class RobotBinding {
           this.lastServoEnabledAngle_[i] = -desiredAngle + twist;
         } else {
           this.lastServoEnabledAngle_[i] = -1 * (-desiredAngle + twist);
-
         }
       }
 
@@ -534,7 +533,7 @@ class RobotBinding {
     const newOriginE = RawEuler.fromQuaternion(rawOrigin.orientation);
     const Robot_OriginE = RawEuler.fromQuaternion(rawInternalOrigin.orientation);
 
-    //const default_offset = LocalizedString.getOriginal(this.robot_.name) === 'Demobot' ? -1 * Math.PI / 2 : Math.PI / 2;
+    // const default_offset = LocalizedString.getOriginal(this.robot_.name) === 'Demobot' ? -1 * Math.PI / 2 : Math.PI / 2;
 
     const UpdatedEulerOrigin = RawEuler.create(
       newOriginE.x,

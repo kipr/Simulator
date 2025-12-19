@@ -1,6 +1,7 @@
 import { Scene as babylonScene, Quaternion, Vector3, Mesh,
   PhysicsConstraintAxis, Physics6DoFConstraint,
-  HingeConstraint, PhysicsConstraintAxisLimitMode
+  HingeConstraint, PhysicsConstraintAxisLimitMode,
+  GizmoManager
 } from '@babylonjs/core';
 
 import Node from '../../../state/State/Robot/Node';
@@ -30,6 +31,17 @@ export const createHinge = (id: string, hinge: Node.HingeJoint & { parentId: str
   bChild.position.y = Vector3wUnits.toBabylon(hinge.parentPivot, 'meters')._y;
   bChild.position.z = Vector3wUnits.toBabylon(hinge.parentPivot, 'meters')._z;
   bChild.rotationQuaternion = hinge.childRotationQuaternion ?? Quaternion.FromEulerAngles(0, 0, 0);
+
+  if (id === 'claw') {
+    const gizmoManager = new GizmoManager(bScene_);
+    gizmoManager.positionGizmoEnabled = true;
+    gizmoManager.rotationGizmoEnabled = true;
+    gizmoManager.scaleGizmoEnabled = false;
+    gizmoManager.boundingBoxGizmoEnabled = false;
+    gizmoManager.usePointerToAttachGizmos = false;
+    gizmoManager.attachToMesh(bChild);
+    gizmoManager.attachToMesh(bParent);
+  }
 
   const joint: Physics6DoFConstraint = new Physics6DoFConstraint({
     pivotA: Vector3wUnits.toBabylon(hinge.parentPivot, RENDER_SCALE),

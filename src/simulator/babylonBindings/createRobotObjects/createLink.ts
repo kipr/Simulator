@@ -163,6 +163,17 @@ export const createLink = async (id: string, link: Node.Link, bScene_: babylonSc
       throw new Error(`Unsupported collision body type: ${link.collisionBody.type}`);
     }
   }
+  console.log(id);
+  if (id === 'arm_link') {
+    const gizmoManager = new GizmoManager(bScene_);
+    gizmoManager.positionGizmoEnabled = true;
+    gizmoManager.rotationGizmoEnabled = true;
+    gizmoManager.scaleGizmoEnabled = false;
+    gizmoManager.boundingBoxGizmoEnabled = false;
+    gizmoManager.usePointerToAttachGizmos = false;
+    gizmoManager.attachToMesh(myMesh);
+  }
+
   myMesh.isPickable = false;
   return myMesh;
 };

@@ -267,13 +267,15 @@ namespace Node {
     childPivot?: Vector3wUnits;
 
     /**
-    * The child's rotation. Used to compensate for the various orientations of link meshes.
-    * If undefined, no rotation.
+    * The child's rotation in the local space of the parent. Use to orient
+    * meshes to match the constraints so they don't snap into place after
+    * the scene is created. If undefined, no rotation.
     */
     childRotationQuaternion?: Quaternion;
 
     /**
-     * The starting twist of the child relative to the parent along the main axis.
+     * The starting twist of the child relative to the parent along the main axis of rotation.
+     * Use to adjust the range of servos.
      * If undefined, zero.
      */
     childTwist?: Angle;
