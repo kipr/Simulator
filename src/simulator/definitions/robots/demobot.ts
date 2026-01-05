@@ -1,14 +1,13 @@
 import Robot from "../../../state/State/Robot";
 import Node from "../../../state/State/Robot/Node";
 import Geometry from "../../../state/State/Robot/Geometry";
-import { Angle, Distance, Mass } from '../../../util';
+import { Angle, Mass } from '../../../util';
 import { RawVector3 } from '../../../util/math/math';
 import { RotationwUnits, Vector3wUnits } from '../../../util/math/unitMath';
 
 import tr from '@i18n';
 import { Quaternion } from "@babylonjs/core";
 
-const { meters } = Distance;
 const { degrees } = Angle;
 const { grams } = Mass;
 
@@ -27,8 +26,7 @@ export const DEMOBOT: Robot = {
     lightSensor: Node.lightSensor({
       parentId: 'chassis',
       origin: {
-        position: Vector3wUnits.centimeters(0, 3.5, 0),
-        orientation: RotationwUnits.eulerDegrees(90, 0, 0),
+        position: Vector3wUnits.centimeters(0, 3.5, 1),
       },
       analogPort: 2,
     }),
@@ -37,7 +35,6 @@ export const DEMOBOT: Robot = {
       mass: grams(300),
       origin: {
         position: Vector3wUnits.meters(-0.06, -0.019, 0),
-        // position: Vector3wUnits.meters(-0.08786, 0.063695, 0),
       },
     }),
     left_wheel: Node.motor({
@@ -78,14 +75,11 @@ export const DEMOBOT: Robot = {
       restitution: 0,
     }),
     arm: Node.servo({
-      // parentPivot: Vector3wUnits.meters(0.068099, 0.034913, -0.010805),
-      // parentPivot: Vector3wUnits.meters(-0.010805, 0.034913, 0.068099),
       parentPivot: Vector3wUnits.centimeters(1.0805, 3.4913, 8.05),
       parentAxis: RawVector3.Y,
       childAxis: RawVector3.Z,
       parentPerpAxis: RawVector3.Z,
       childPerpAxis: RawVector3.X,
-      // childRotationQuaternion: Quaternion.FromEulerAngles(Math.PI / 2, Math.PI / 2, 0),
       childRotationQuaternion: Quaternion.FromEulerAngles(-Math.PI / 2, -Math.PI / 2, 0),
       childTwist: degrees(63),
       servoPort: 0,
@@ -120,11 +114,10 @@ export const DEMOBOT: Robot = {
       inertia: [3, 3, 3],
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
     }),
-    /*
     touch_sensor: Node.touchSensor({
       parentId: 'chassis',
       origin: {
-        position: Vector3wUnits.meters(0.10253, -0.007715, -0.011238),
+        position: Vector3wUnits.centimeters(-1.1238, -0.7715, 9.253),
       },
       digitalPort: 0,
       collisionBox: Vector3wUnits.meters(0.015, 0.015, 0.07),
@@ -132,7 +125,7 @@ export const DEMOBOT: Robot = {
     reflectance_sensor: Node.reflectanceSensor({
       parentId: 'chassis',
       origin: {
-        position: Vector3wUnits.meters(0.088337, -0.029257, -0.007872),
+        position: Vector3wUnits.centimeters(0.7872, -2.9257, 9.8337),
         orientation: RotationwUnits.eulerDegrees(90, 0, 0),
       },
       analogPort: 1,
@@ -148,20 +141,19 @@ export const DEMOBOT: Robot = {
     left_bumper: Node.touchSensor({
       parentId: 'chassis',
       origin: {
-        position: Vector3wUnits.meters(-0.171735, -0.015347, -0.040404),
+        position: Vector3wUnits.centimeters(-17.1735, -1.5347, -4.0404),
       },
-      digitalPort: 1,
+      digitalPort: 2,
       collisionBox: Vector3wUnits.meters(0.015, 0.015, 0.015),
     }),
     right_bumper: Node.touchSensor({
       parentId: 'chassis',
       origin: {
-        position: Vector3wUnits.meters(-0.171735, -0.015347, 0.040404),
+        position: Vector3wUnits.centimeters(-17.1735, -1.5347, 4.0404),
       },
-      digitalPort: 2,
+      digitalPort: 1,
       collisionBox: Vector3wUnits.meters(0.015, 0.015, 0.015),
     }),
-    */
   },
   geometry: {
     chassis_link: Geometry.remoteMesh({ uri: '/static/object_binaries/chassis.glb' }),
