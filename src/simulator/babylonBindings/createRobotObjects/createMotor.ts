@@ -39,6 +39,25 @@ export const createHinge = (
   bChild.position.z = Vector3wUnits.toBabylon(hinge.parentPivot, 'meters')._z;
   bChild.rotationQuaternion = hinge.childRotationQuaternion ?? Quaternion.FromEulerAngles(0, 0, 0);
 
+  // The 6DoF constraint is used for motorized joints. Unforunately, it is not possible to
+  // completely lock these joints as hinges, so we also apply a hinge constraint.
+  // Order appears to matter here, the hinge should come before the 6DoF constraint.
+  // The 6DoF constraint uses ANGULAR_Z as the rotation axis, which is the cross
+  // product of axisA (X) and perpAxisA (Y). We need to pass this computed hinge
+  // axis to the HingeConstraint for rigidity.
+  const hingeAxisParent = RawVector3.cross(hinge.parentAxis, hinge.parentPerpAxis);
+  const hingeAxisChild = RawVector3.cross(hinge.childAxis, hinge.childPerpAxis);
+
+  // Add HingeConstraint for rigidity (prevents rotation around non-hinge axes)
+  const hingeJoint = new HingeConstraint(
+    Vector3wUnits.toBabylon(hinge.parentPivot, RENDER_SCALE),
+    Vector3wUnits.toBabylon(hinge.childPivot, RENDER_SCALE),
+    RawVector3.toBabylon(hingeAxisParent),
+    RawVector3.toBabylon(hingeAxisChild),
+    bScene_
+  );
+  bParent.physicsBody.addConstraint(bChild.physicsBody, hingeJoint);
+    
   const joint: Physics6DoFConstraint = new Physics6DoFConstraint({
     pivotA: Vector3wUnits.toBabylon(hinge.parentPivot, RENDER_SCALE),
     pivotB: Vector3wUnits.toBabylon(hinge.childPivot, RENDER_SCALE),
