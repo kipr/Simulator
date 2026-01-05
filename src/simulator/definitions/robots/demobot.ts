@@ -106,7 +106,7 @@ export const DEMOBOT: Robot = {
       parentPerpAxis: RawVector3.NEGATIVE_Y,
       childPerpAxis: RawVector3.X,
       childRotationQuaternion: Quaternion.FromEulerAngles(0, -Math.PI / 2, -Math.PI / 2),
-      // childTwist: degrees(270),
+      childTwist: degrees(-90),
       servoPort: 3,
       parentId: 'arm_link',
       parentPivot: Vector3wUnits.meters(0.097792, -0.024775, 0.026806),

@@ -164,7 +164,7 @@ export const createLink = async (id: string, link: Node.Link, bScene_: babylonSc
     }
   }
   console.log(id);
-  if (id === 'arm_link') {
+  if (id === 'claw_link') {
     const gizmoManager = new GizmoManager(bScene_);
     gizmoManager.positionGizmoEnabled = true;
     gizmoManager.rotationGizmoEnabled = true;

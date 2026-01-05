@@ -1,4 +1,5 @@
-import { Scene as babylonScene, Quaternion, Vector3, Mesh,
+import {
+  Scene as babylonScene, Quaternion, Vector3, Mesh,
   PhysicsConstraintAxis, Physics6DoFConstraint,
   HingeConstraint, PhysicsConstraintAxisLimitMode,
   GizmoManager
@@ -24,15 +25,22 @@ import { RawVector3 } from '../../../util/math/math';
  * @param bChild - The child mesh.
  * @returns The created 6DoF constraint.
  */
-export const createHinge = (id: string, hinge: Node.HingeJoint & { parentId: string }, bScene_: babylonScene, bParent: Mesh, bChild: Mesh) => {
-  // Begin by moving the child in place (this prevents inertial snap as the physics engine applys the constraint)
+export const createHinge = (
+  id: string,
+  hinge: Node.HingeJoint & { parentId: string },
+  bScene_: babylonScene,
+  bParent: Mesh,
+  bChild: Mesh) => {
+  // Begin by moving the child in place (this prevents inertial snap as the
+  // physics engine applys the constraint).
   bChild.setParent(bParent);
   bChild.position.x = Vector3wUnits.toBabylon(hinge.parentPivot, 'meters')._x;
   bChild.position.y = Vector3wUnits.toBabylon(hinge.parentPivot, 'meters')._y;
   bChild.position.z = Vector3wUnits.toBabylon(hinge.parentPivot, 'meters')._z;
   bChild.rotationQuaternion = hinge.childRotationQuaternion ?? Quaternion.FromEulerAngles(0, 0, 0);
 
-  if (id === 'claw') {
+  /*
+  if (id === 'arm') {
     const gizmoManager = new GizmoManager(bScene_);
     gizmoManager.positionGizmoEnabled = true;
     gizmoManager.rotationGizmoEnabled = true;
@@ -42,6 +50,7 @@ export const createHinge = (id: string, hinge: Node.HingeJoint & { parentId: str
     gizmoManager.attachToMesh(bChild);
     gizmoManager.attachToMesh(bParent);
   }
+  */
 
   const joint: Physics6DoFConstraint = new Physics6DoFConstraint({
     pivotA: Vector3wUnits.toBabylon(hinge.parentPivot, RENDER_SCALE),
