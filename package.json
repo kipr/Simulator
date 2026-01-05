@@ -82,7 +82,7 @@
     "immer": "^9.0.15",
     "itch": "https://github.com/chrismbirmingham/itch#36",
     "ivygate": "https://github.com/kipr/ivygate#v0.1.9",
-    "jspdf": "^3.0.2",
+    "jspdf": "^4.0.0",
     "kipr-scratch": "file:dependencies/kipr-scratch/kipr-scratch",
     "lusca": "^1.7.0",
     "mailgun.js": "^10.2.1",
