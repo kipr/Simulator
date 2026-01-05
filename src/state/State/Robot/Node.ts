@@ -290,6 +290,7 @@ namespace Node {
         childPerpAxis: Patch.diff(a.childPerpAxis, b.childPerpAxis),
         parentPivot: Patch.diff(a.parentPivot, b.parentPivot),
         childPivot: Patch.diff(a.childPivot, b.childPivot),
+        childRotationQuaternion: Patch.diff(a.childRotationQuaternion, b.childRotationQuaternion),
         childTwist: Patch.diff(a.childTwist, b.childTwist)
       };
     };
