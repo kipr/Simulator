@@ -39,19 +39,6 @@ export const createHinge = (
   bChild.position.z = Vector3wUnits.toBabylon(hinge.parentPivot, 'meters')._z;
   bChild.rotationQuaternion = hinge.childRotationQuaternion ?? Quaternion.FromEulerAngles(0, 0, 0);
 
-  /*
-  if (id === 'arm') {
-    const gizmoManager = new GizmoManager(bScene_);
-    gizmoManager.positionGizmoEnabled = true;
-    gizmoManager.rotationGizmoEnabled = true;
-    gizmoManager.scaleGizmoEnabled = false;
-    gizmoManager.boundingBoxGizmoEnabled = false;
-    gizmoManager.usePointerToAttachGizmos = false;
-    gizmoManager.attachToMesh(bChild);
-    gizmoManager.attachToMesh(bParent);
-  }
-  */
-
   const joint: Physics6DoFConstraint = new Physics6DoFConstraint({
     pivotA: Vector3wUnits.toBabylon(hinge.parentPivot, RENDER_SCALE),
     pivotB: Vector3wUnits.toBabylon(hinge.childPivot, RENDER_SCALE),
