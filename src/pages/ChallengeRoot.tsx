@@ -349,6 +349,18 @@ class Root extends React.Component<Props, State> {
     space.onCameraChange = this.onCameraChange_;
     space.onChallengeSetEventValue = this.onSetEventValue_;
 
+    // Initialize code for current language if it doesn't exist
+    const language = this.currentLanguage;
+    if (language) {
+      const code = this.code[language];
+      const latestChallengeCompletion = Async.latestValue(this.props.challengeCompletion);
+      if (!code && latestChallengeCompletion) {
+        // Code is missing for current language, initialize it with default code
+        const defaultCode = ProgrammingLanguage.DEFAULT_CODE[language];
+        this.props.onChallengeCompletionSetCode(language, defaultCode);
+      }
+    }
+
     this.scheduleUpdateConsole_();
     window.addEventListener('resize', this.onWindowResize_);
   }
@@ -385,6 +397,18 @@ class Root extends React.Component<Props, State> {
           code: latestChallenge.code,
           currentLanguage: latestChallenge.defaultLanguage,
         });
+      }
+    }
+
+    // Initialize code for current language if it doesn't exist
+    const language = this.currentLanguage;
+    if (language) {
+      const code = this.code[language];
+      const latestChallengeCompletion = Async.latestValue(challengeCompletion);
+      if (!code && latestChallengeCompletion) {
+        // Code is missing for current language, initialize it with default code
+        const defaultCode = ProgrammingLanguage.DEFAULT_CODE[language];
+        this.props.onChallengeCompletionSetCode(language, defaultCode);
       }
     }
 
@@ -807,19 +831,10 @@ class Root extends React.Component<Props, State> {
     const language = this.currentLanguage;
     let code = language ? this.code[language] : undefined;
 
-    // If code doesn't exist for the current language, initialize it with the default code
+    // If code doesn't exist for the current language, use default code as fallback
+    // (actual initialization happens in componentDidUpdate to avoid setState during render)
     if (language && !code) {
-      const latestChallengeCompletion = Async.latestValue(challengeCompletion);
-      if (latestChallengeCompletion) {
-        // Only initialize if we have a challengeCompletion (not just challenge)
-        // This ensures we can save the initialized code
-        const defaultCode = ProgrammingLanguage.DEFAULT_CODE[language];
-        this.props.onChallengeCompletionSetCode(language, defaultCode);
-        code = defaultCode;
-      } else {
-        // If we don't have a challengeCompletion yet, use the default code temporarily
-        code = ProgrammingLanguage.DEFAULT_CODE[language];
-      }
+      code = ProgrammingLanguage.DEFAULT_CODE[language];
     }
 
     if (!scene || scene.type === Async.Type.Unloaded || !language || !code) {
