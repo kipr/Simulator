@@ -132,7 +132,6 @@ const Container = styled('div', (props: ThemeProps & ModeProps) => ({
   borderRadius: props.mode === Mode.Floating ? `${props.theme.borderRadius}px` : undefined,
   border: `1px solid ${props.theme.borderColor}`,
   overflow: 'hidden',
-  flexBasis: '0',
   flex: 1,
   minHeight: 0,
   pointerEvents: 'auto',
