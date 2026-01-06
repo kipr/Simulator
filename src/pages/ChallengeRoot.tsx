@@ -351,13 +351,14 @@ class Root extends React.Component<Props, State> {
 
     // Initialize code for current language if it doesn't exist
     const language = this.currentLanguage;
-    if (language) {
+    if (language && !this.initializedLanguages_.has(language)) {
       const code = this.code[language];
       const latestChallengeCompletion = Async.latestValue(this.props.challengeCompletion);
       if (!code && latestChallengeCompletion) {
         // Code is missing for current language, initialize it with default code
         const defaultCode = ProgrammingLanguage.DEFAULT_CODE[language];
         this.props.onChallengeCompletionSetCode(language, defaultCode);
+        this.initializedLanguages_.add(language);
       }
     }
 
@@ -366,6 +367,7 @@ class Root extends React.Component<Props, State> {
   }
 
   private initedChallengeCompletionScene_ = false;
+  private initializedLanguages_ = new Set<ProgrammingLanguage>();
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.onWindowResize_);
@@ -401,15 +403,31 @@ class Root extends React.Component<Props, State> {
     }
 
     // Initialize code for current language if it doesn't exist
+    // Only check when language actually changes or challengeCompletion first loads to avoid infinite loops
+    const prevLanguage = prevProps.challengeCompletion 
+      ? Async.latestValue(prevProps.challengeCompletion)?.currentLanguage 
+      : Async.latestValue(prevProps.challenge)?.defaultLanguage;
     const language = this.currentLanguage;
-    if (language) {
+    const prevLatestChallengeCompletion = Async.latestValue(prevProps.challengeCompletion);
+    const latestChallengeCompletion = Async.latestValue(challengeCompletion);
+    
+    // Check if we should initialize: language changed OR challengeCompletion first loaded
+    const languageChanged = language && language !== prevLanguage;
+    const challengeCompletionLoaded = !prevLatestChallengeCompletion && latestChallengeCompletion;
+    
+    if (language && (languageChanged || challengeCompletionLoaded) && latestChallengeCompletion && !this.initializedLanguages_.has(language)) {
       const code = this.code[language];
-      const latestChallengeCompletion = Async.latestValue(challengeCompletion);
-      if (!code && latestChallengeCompletion) {
+      if (!code) {
         // Code is missing for current language, initialize it with default code
         const defaultCode = ProgrammingLanguage.DEFAULT_CODE[language];
         this.props.onChallengeCompletionSetCode(language, defaultCode);
+        this.initializedLanguages_.add(language);
       }
+    }
+    
+    // Clear initialized languages when challenge changes
+    if (this.props.params.challengeId !== prevProps.params.challengeId) {
+      this.initializedLanguages_.clear();
     }
 
     if (this.state.simulatorState.type !== prevState.simulatorState.type) {
