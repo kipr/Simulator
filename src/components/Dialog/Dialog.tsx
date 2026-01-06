@@ -21,6 +21,8 @@ const Container = styled('div', (props: ThemeProps) => ({
   width: '90%',
   maxWidth: '800px',
   maxHeight: '90vh',
+  display: 'flex',
+  flexDirection: 'column',
   color: props.theme.color,
 }));
 
