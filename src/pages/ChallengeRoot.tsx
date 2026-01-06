@@ -805,7 +805,22 @@ class Root extends React.Component<Props, State> {
     }
 
     const language = this.currentLanguage;
-    const code = language ? this.code[language] : undefined;
+    let code = language ? this.code[language] : undefined;
+
+    // If code doesn't exist for the current language, initialize it with the default code
+    if (language && !code) {
+      const latestChallengeCompletion = Async.latestValue(challengeCompletion);
+      if (latestChallengeCompletion) {
+        // Only initialize if we have a challengeCompletion (not just challenge)
+        // This ensures we can save the initialized code
+        const defaultCode = ProgrammingLanguage.DEFAULT_CODE[language];
+        this.props.onChallengeCompletionSetCode(language, defaultCode);
+        code = defaultCode;
+      } else {
+        // If we don't have a challengeCompletion yet, use the default code temporarily
+        code = ProgrammingLanguage.DEFAULT_CODE[language];
+      }
+    }
 
     if (!scene || scene.type === Async.Type.Unloaded || !language || !code) {
       return <Loading />;
