@@ -336,6 +336,7 @@ class Root extends React.Component<Props, State> {
 
   componentDidMount() {
     WorkerInstance.onStopped = this.onStopped_;
+    WorkerInstance.onStarted = this.onStarted_;
 
     const space = Space.getInstance();
     space.onSetNodeBatch = this.onSetNodeBatch_;
@@ -471,6 +472,12 @@ class Root extends React.Component<Props, State> {
       simulatorState: SimulatorState.STOPPED
     }, () => {
       this.syncChallengeCompletion_();
+    });
+  };
+
+  private onStarted_ = () => {
+    this.setState({
+      simulatorState: SimulatorState.RUNNING
     });
   };
 
@@ -634,8 +641,14 @@ class Root extends React.Component<Props, State> {
         break;
       }
       case 'python': {
+        const nextConsole = StyledText.extend(console, StyledText.text({
+          text: LocalizedString.lookup(tr('Loading Python...\n'), locale),
+          style: STDOUT_STYLE(this.state.theme)
+        }));
+
         this.setState({
-          simulatorState: SimulatorState.RUNNING,
+          simulatorState: SimulatorState.COMPILING,
+          console: nextConsole,
         }, () => {
           WorkerInstance.start({
             language: 'python',

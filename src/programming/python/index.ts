@@ -18,6 +18,8 @@ export interface PythonParams {
 
   registers: SharedRegisters;
   createSerial?: SerialU32;
+  // Callback fired after Python files are downloaded, before code execution.
+  onStart?: () => void;
 }
 
 let python: (params: PythonParams) => Promise<void>;
@@ -35,6 +37,11 @@ if (SIMULATOR_HAS_CPYTHON) {
 
     const kiprPy = await fetch('/libkipr/python/binding/python/package/src/kipr/kipr.py');
     const kiprPyBuffer = await kiprPy.text();
+
+    // Signal that Python resources are loaded and execution is about to begin
+    if (params.onStart) {
+      params.onStart();
+    }
 
     await PythonEmscripten.default({
       locateFile: (path: string, prefix: string) => {
