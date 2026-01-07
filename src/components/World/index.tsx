@@ -505,11 +505,12 @@ class World extends React.PureComponent<Props, State> {
                 theme={theme}
               />
             </StyledListSection>
+            {props.settings?.showScripts && (
             <StyledListSection
               name={scriptsName}
               theme={theme}
               onCollapsedChange={this.onCollapsedChange_('scripts')}
-              collapsed={!props.settings?.showScripts || collapsed['scripts']}
+              collapsed={collapsed['scripts']}
               noBodyPadding
             >
               <EditableList
@@ -518,6 +519,7 @@ class World extends React.PureComponent<Props, State> {
                 theme={theme}
               />
             </StyledListSection>
+            )}
           </Container>
         </ScrollArea>
         {modal.type === UiState.Type.AddNode && (
