@@ -548,6 +548,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
               onScriptRemove={onScriptRemove}
               onObjectAdd={onObjectAdd}
               capabilities={worldCapabilities}
+              settings={settings}
             />
           </WorldWidget>
         </Overlay>

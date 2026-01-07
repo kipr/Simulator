@@ -34,6 +34,7 @@ import LocalizedString from '../../util/LocalizedString';
 import Script from '../../state/State/Scene/Script';
 import AddScriptDialog, { AddScriptAcceptance } from './AddScriptDialog';
 import ScriptSettingsDialog, { ScriptSettingsAcceptance } from './ScriptSettingsDialog';
+import { Settings } from '../constants/Settings';
 
 import tr from '@i18n';
 import { sprintf } from 'sprintf-js';
@@ -151,6 +152,7 @@ export interface WorldPublicProps extends StyleProps, ThemeProps {
   onScriptChange: (scriptId: string, script: Script) => void;
 
   capabilities?: Capabilities;
+  settings?: Settings;
 }
 
 
@@ -507,7 +509,7 @@ class World extends React.PureComponent<Props, State> {
               name={scriptsName}
               theme={theme}
               onCollapsedChange={this.onCollapsedChange_('scripts')}
-              collapsed={collapsed['scripts']}
+              collapsed={!props.settings?.showScripts || collapsed['scripts']}
               noBodyPadding
             >
               <EditableList
