@@ -507,7 +507,7 @@ class World extends React.PureComponent<Props, State> {
               name={scriptsName}
               theme={theme}
               onCollapsedChange={this.onCollapsedChange_('scripts')}
-              collapsed={collapsed['scripts']}
+              collapsed={collapsed['scripts'] ?? false}
               noBodyPadding
             >
               <EditableList
