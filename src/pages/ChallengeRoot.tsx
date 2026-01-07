@@ -645,6 +645,17 @@ class Root extends React.Component<Props, State> {
         });
         break;
       }
+      case 'graphical': {
+        this.setState({
+          simulatorState: SimulatorState.RUNNING,
+        }, () => {
+          WorkerInstance.start({
+            language: 'graphical',
+            code: activeCode
+          });
+        });
+        break;
+      }
     }
 
     
