@@ -506,19 +506,19 @@ class World extends React.PureComponent<Props, State> {
               />
             </StyledListSection>
             {props.settings?.showScripts && (
-            <StyledListSection
-              name={scriptsName}
-              theme={theme}
-              onCollapsedChange={this.onCollapsedChange_('scripts')}
-              collapsed={collapsed['scripts']}
-              noBodyPadding
-            >
-              <EditableList
-                onItemRemove={removeScript ? this.onScriptRemove_ : undefined}
-                items={scriptList}
+              <StyledListSection
+                name={scriptsName}
                 theme={theme}
-              />
-            </StyledListSection>
+                onCollapsedChange={this.onCollapsedChange_('scripts')}
+                collapsed={collapsed['scripts']}
+                noBodyPadding
+              >
+                <EditableList
+                  onItemRemove={removeScript ? this.onScriptRemove_ : undefined}
+                  items={scriptList}
+                  theme={theme}
+                />
+              </StyledListSection>
             )}
           </Container>
         </ScrollArea>
