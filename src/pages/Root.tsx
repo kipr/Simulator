@@ -112,8 +112,6 @@ interface RootPrivateProps {
 
   unfailScene: (id: string) => void;
 
-  goToLogin: () => void;
-
   selectedScriptId?: string;
   selectedScript?: Script;
 
@@ -460,7 +458,7 @@ class Root extends React.Component<Props, State> {
   };
 
   private onStartChallengeClick_ = () => {
-    window.location.href = `/challenge/${this.props.params.sceneId}`;
+    this.props.navigate(`/challenge/${this.props.params.sceneId}`);
   };
   
   private onClearConsole_ = () => {
@@ -523,12 +521,12 @@ class Root extends React.Component<Props, State> {
 
   onLogoutClick = () => {
     void signOutOfApp().then(() => {
-      this.props.goToLogin();
+      window.location.href = `/login?from=${window.location.pathname}`;
     });
   };
 
   onDashboardClick = () => {
-    window.location.href = '/';
+    this.props.navigate('/');
   };
 
 
@@ -952,9 +950,6 @@ const ConnectedRoot = connect((state: ReduxState, { params: { sceneId, challenge
   onSaveScene: (sceneId: string) => dispatch(ScenesAction.saveScene({ sceneId })),
   onSetScenePartial: (partialScene: Partial<Scene>) => dispatch(ScenesAction.setScenePartial({ sceneId, partialScene })),
   unfailScene: (sceneId: string) => dispatch(ScenesAction.unfailScene({ sceneId })),
-  goToLogin: () => {
-    window.location.href = `/login?from=${window.location.pathname}`;
-  },
   onScriptChange: (scriptId: string, script: Script) => {
     dispatch(ScenesAction.setScript({ sceneId, scriptId, script }));
   },

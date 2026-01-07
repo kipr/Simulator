@@ -144,7 +144,6 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
     
     if (selectedScene) {
       this.props.navigate(`/scene/${selectedSceneId}`);
-      location.reload();
     }
     this.props.onClose();
   };

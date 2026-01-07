@@ -105,8 +105,6 @@ interface RootPrivateProps {
   onDocumentationSetLanguage: (language: 'c' | 'python') => void;
   onDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => void;
 
-  goToLogin: () => void;
-
   onAiClick: () => void;
   onAskTutorClick: (query: SendMessageParams) => void;
 }
@@ -686,12 +684,12 @@ class Root extends React.Component<Props, State> {
 
   onLogoutClick = () => {
     void signOutOfApp().then(() => {
-      this.props.goToLogin();
+      window.location.href = `/login?from=${window.location.pathname}`;
     });
   };
 
   onDashboardClick = () => {
-    window.location.href = '/';
+    this.props.navigate('/');
   };
 
 
@@ -735,7 +733,7 @@ class Root extends React.Component<Props, State> {
   };
 
   private onEndChallengeClick_ = () => {
-    window.location.href = `/scene/${this.props.params.challengeId}`;
+    this.props.navigate(`/scene/${this.props.params.challengeId}`);
   };
 
   private onResetCode_ = () => {
@@ -1026,9 +1024,6 @@ const ConnectedChallengeRoot = connect((state: ReduxState, { params: { challenge
   onDocumentationPush: (location: DocumentationLocation) => dispatch(DocumentationAction.pushLocation({ location })),
   onDocumentationSetLanguage: (language: 'c' | 'python') => dispatch(DocumentationAction.setLanguage({ language })),
   onDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => dispatch(DocumentationAction.goToFuzzy({ query, language })),
-  goToLogin: () => {
-    window.location.href = `/login?from=${window.location.pathname}`;
-  },
   onAiClick: () => dispatch(AiAction.TOGGLE),
   onAskTutorClick: (params: SendMessageParams) => sendMessage(dispatch, params),
 }))(withNavigate(Root)) as React.ComponentType<RootPublicProps>;

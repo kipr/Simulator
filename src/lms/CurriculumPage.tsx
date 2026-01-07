@@ -3,6 +3,7 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import LocalizedString from '../util/LocalizedString';
 import { DARK, LIGHT, Theme, ThemeProps } from '../components/constants/theme';
+import { withNavigate, WithNavigateProps } from '../util/withNavigate';
 
 import tr from '@i18n';
 import { faHome, faSchool, faSchoolCircleCheck } from '@fortawesome/free-solid-svg-icons';
@@ -30,7 +31,6 @@ export interface CurriculumPagePrivateProps extends ThemeProps {
   userId: string;
   myAssignments: Set<string>;
   onMyAssignmentsChange: (myAssignments: Set<string>) => void;
-  onAddPluginsClick: () => void;
 }
 
 const Container = styled('div', ({ $theme }: { $theme: Theme }) => ({
@@ -99,9 +99,9 @@ const CurriculumPage = ({
   assignments,
   myAssignments,
   onMyAssignmentsChange,
-  onAddPluginsClick,
+  navigate,
   userId
-}: CurriculumPagePublicProps & CurriculumPagePrivateProps) => {
+}: CurriculumPagePublicProps & CurriculumPagePrivateProps & WithNavigateProps) => {
   const [tabIndex, setTabIndex] = React.useState(0);
   const [isStandardsAligned, setIsStandardsAligned] = React.useState(false);
   const [subjectsSelected, setSubjectsSelected] = React.useState<Set<Subject>>(new Set());
@@ -125,7 +125,7 @@ const CurriculumPage = ({
           $theme={theme}
           icon={faHome}
           onClick={() => {
-            window.location.pathname = '/';
+            navigate('/');
           }}
         />
 
@@ -135,7 +135,7 @@ const CurriculumPage = ({
           onIndexChange={setTabIndex}
           theme={theme}
         />
-        <AddBotballPluginButton $theme={theme} onClick={onAddPluginsClick}>
+        <AddBotballPluginButton $theme={theme} onClick={() => window.location.href = '/lms/plugin'}>
           Add Botball Plugin
         </AddBotballPluginButton>
       </TopBar>
@@ -227,10 +227,7 @@ export default connect((state: State) => {
     myAssignments
   };
 }, (dispatch, ownProps) => ({
-  onAddPluginsClick: () => {
-    window.location.href = '/lms/plugin';
-  },
   onMyAssignmentsChange: (myAssignments: Set<string>) => dispatch(UsersAction.setMyAssignments({
     assignmentIds: Array.from(myAssignments)
   }))
-}))(CurriculumPage) as React.ComponentType<CurriculumPagePublicProps>;
+}))(withNavigate(CurriculumPage)) as React.ComponentType<CurriculumPagePublicProps>;
