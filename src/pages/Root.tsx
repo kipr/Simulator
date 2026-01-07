@@ -18,6 +18,7 @@ import ExceptionDialog from '../components/Challenge/ExceptionDialog';
 
 import { DEFAULT_SETTINGS, Settings } from '../components/constants/Settings';
 import { DARK, Theme } from '../components/constants/theme';
+import { DEFAULT_SCENE } from '../components/constants/defaultScene';
 
 import SettingsDialog from '../components/Dialog/SettingsDialog';
 import AboutDialog from '../components/Dialog/AboutDialog';
@@ -602,7 +603,12 @@ class Root extends React.Component<Props, State> {
 
   private onDeleteRecordAccept_ = (selector: Selector) => () => {
     this.props.onDeleteRecord(selector);
-    this.props.navigate('/');
+    this.setState({
+      modal: Modal.NONE,
+    }, () => {
+      this.props.navigate(DEFAULT_SCENE);
+      location.reload();
+    });
   };
 
   private onSettingsSceneAccept_ = (scene: Scene) => {
