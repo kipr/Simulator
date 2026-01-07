@@ -252,7 +252,9 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
         challengeSize = Size.Type.Minimized;
         break;
       }
-      case Size.Type.Partial: {
+      case Size.Type.Partial:
+      case Size.Type.Miniature:
+      case Size.Type.Minimized: {
         if (infoSize === Size.Type.Minimized) infoSize = Size.Type.Partial;
         if (worldSize === Size.Type.Minimized) worldSize = Size.Type.Partial;
         if (consoleSize === Size.Type.Minimized) consoleSize = Size.Type.Miniature;
@@ -301,7 +303,9 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
         challengeSize = Size.Type.Minimized;
         break;
       }
-      case Size.Type.Partial: {
+      case Size.Type.Partial:
+      case Size.Type.Miniature:
+      case Size.Type.Minimized: {
         if (infoSize === Size.Type.Minimized) infoSize = Size.Type.Partial;
         if (worldSize === Size.Type.Minimized) worldSize = Size.Type.Partial;
         if (editorSize === Size.Type.Minimized) editorSize = Size.Type.Partial;
