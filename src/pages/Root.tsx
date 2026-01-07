@@ -607,6 +607,7 @@ class Root extends React.Component<Props, State> {
       modal: Modal.NONE,
     }, () => {
       this.props.navigate(DEFAULT_SCENE);
+      location.reload();
     });
   };
 
