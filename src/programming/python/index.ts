@@ -38,11 +38,6 @@ if (SIMULATOR_HAS_CPYTHON) {
     const kiprPy = await fetch('/libkipr/python/binding/python/package/src/kipr/kipr.py');
     const kiprPyBuffer = await kiprPy.text();
 
-    // Signal that Python resources are loaded and execution is about to begin
-    if (params.onStart) {
-      params.onStart();
-    }
-
     await PythonEmscripten.default({
       locateFile: (path: string, prefix: string) => {
         return `/cpython/${path}`;
@@ -76,6 +71,12 @@ del sys
 ${params.code}
   `);
 
+        // Signal that all Python resources are loaded and execution is about to begin.
+        // This is called inside preRun (after all /cpython/ assets are downloaded)
+        // but before the Python interpreter starts running the user's code.
+        if (params.onStart) {
+          params.onStart();
+        }
       }],
       arguments: ['main.py'],
       ...params
