@@ -251,7 +251,7 @@ class World extends React.PureComponent<Props, State> {
     super(props);
 
     this.state = {
-      collapsed: { scripts: false },
+      collapsed: { scripts: true },
       modal: UiState.NONE
     };
   }
