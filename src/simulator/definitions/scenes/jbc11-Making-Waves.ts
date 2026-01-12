@@ -13,18 +13,20 @@ const wave = `
 
   scene.addOnRenderListener(() => {
     const robotNode = scene.nodes['robot'];
-    
     if (scene.programStatus === 'running') {
-      if (robotNode.state.getMotor(0).speedGoal == 0 && robotNode.state.getMotor(3).speedGoal == 0) {
-        // console.log('Robot stopped, motors at: ', robotNode.state.getMotor(0).speedGoal, ' ', robotNode.state.getMotor(3).speedGoal);
+      if (
+      robotNode.state.motors[0].speedGoal == 0 &&
+      robotNode.state.motors[3].speedGoal == 0
+      ) {
+        // console.log('Robot stopped, motors at: ', robotNode.state.motors[0].speedGoal, ' ', robotNode.state.motors[3].speedGoal);
         if (waveStart == -1) {
-          waveStart = robotNode.state.getServo(0).position;
+          waveStart = robotNode.state.servos[0].position;
           // console.log('Wave start at ', waveStart);
         }
         else {
-          // console.log('Wave diff at ', Math.abs(Math.abs(robotNode.state.getServo(0).position - waveStart) - waveMax));
-          if (Math.abs(Math.abs(robotNode.state.getServo(0).position - waveStart) - waveMax) > 1) {
-            waveMax = Math.abs(robotNode.state.getServo(0).position - waveStart);
+          // console.log('Wave diff at ', Math.abs(Math.abs(robotNode.state.servos[0].position - waveStart) - waveMax));
+          if (Math.abs(Math.abs(robotNode.state.servos[0].position - waveStart) - waveMax) > 1) {
+            waveMax = Math.abs(robotNode.state.servos[0].position - waveStart);
             // console.log('Wave max at ', waveMax, 'Wave start at ', waveStart);
           }
           else {
@@ -36,14 +38,15 @@ const wave = `
         }
       }
       else {
-        // console.log('Robot moving, motors at: ', robotNode.state.getMotor(0).pwm, ' ', robotNode.state.getMotor(3).pwm);
+        // console.log('Robot moving, motors at: ', robotNode.state.motors[0].pwm, ' ', robotNode.state.motors[3].pwm);
         waveStart =-1;
         waveMax = 0;
         scene.setChallengeEventValue('wave', false);
       }
     }
-    else { 
-      waveStart =-1;
+    else {
+      // Reset wave detection state when not running
+      waveStart = -1;
       waveMax = 0;
     }
   });
