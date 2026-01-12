@@ -1,5 +1,4 @@
 import Scene from '../../../state/State/Scene';
-import LocalizedString from '../../../util/LocalizedString';
 import { Distance } from '../../../util';
 import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';

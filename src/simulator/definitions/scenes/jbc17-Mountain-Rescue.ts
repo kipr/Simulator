@@ -1,23 +1,13 @@
 import Scene from '../../../state/State/Scene';
 import { RotationwUnits, ReferenceFramewUnits } from '../../../util/math/unitMath';
 import { Distance } from '../../../util';
-import LocalizedString from '../../../util/LocalizedString';
 import { Color } from '../../../state/State/Scene/Color';
 import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
 import Script from '../../../state/State/Scene/Script';
-
 import tr from '@i18n';
+import { matAStartGeoms, matAStartNodes, notInStartBox } from './jbcCommonComponents';
 
 const baseScene = createBaseSceneSurfaceA();
-
-const notInStartBox = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  // console.log('Robot not started in start box!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('notInStartBox', type === 'start');
-  }
-}, 'notStartBox');
-`;
 
 const startBoxIntersects = `
 scene.addOnIntersectionListener('startBox', (type, otherNodeId) => {
@@ -65,6 +55,7 @@ export const JBC_17: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
+    ...matAStartGeoms,
     startBox_geom: {
       type: 'box',
       size: {
@@ -73,17 +64,10 @@ export const JBC_17: Scene = {
         z: Distance.centimeters(25),
       },
     },
-    notStartBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(10),
-        z: Distance.meters(2.13),
-      },
-    },
   },
   nodes: {
     ...baseScene.nodes,
+    ...matAStartNodes,
     startBox: {
       type: 'object',
       geometryId: 'startBox_geom',
@@ -101,26 +85,6 @@ export const JBC_17: Scene = {
         emissive: {
           type: 'color3',
           color: Color.rgb(255, 255, 255),
-        },
-      },
-    },
-    notStartBox: {
-      type: 'object',
-      geometryId: 'notStartBox_geom',
-      name: tr('Not Start Box'),
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-1.9),
-          z: Distance.meters(1.208),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(255, 0, 0),
         },
       },
     },

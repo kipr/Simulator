@@ -1,22 +1,13 @@
 import Scene from '../../../state/State/Scene';
 import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../../util/math/unitMath';
 import { Distance } from '../../../util';
-import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
 import { createBaseSceneSurfaceA, canPositions } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
 import tr from '@i18n';
+import { matAStartGeoms, matAStartNodes, notInStartBox } from './jbcCommonComponents';
 
 const baseScene = createBaseSceneSurfaceA();
-
-const notInStartBox = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  // console.log('Robot not started in start box!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('notInStartBox', type === 'start');
-  }
-}, 'notStartBox');
-`;
 
 const stopAtReam = `
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
@@ -83,14 +74,7 @@ export const JBC_21: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
-    notStartBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(10),
-        z: Distance.meters(2.13),
-      },
-    },
+    ...matAStartGeoms,
     reamFrontBoundary_geom: {
       type: 'box',
       size: {
@@ -102,26 +86,7 @@ export const JBC_21: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-    notStartBox: {
-      type: 'object',
-      geometryId: 'notStartBox_geom',
-      name: tr('Not Start Box'),
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-1.9),
-          z: Distance.meters(1.208),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(255, 0, 0),
-        },
-      },
-    },
+    ...matAStartNodes,
     reamFrontBoundary: {
       type: 'object',
       geometryId: 'reamFrontBoundary_geom',

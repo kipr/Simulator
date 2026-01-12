@@ -1,27 +1,15 @@
 import Scene from '../../../state/State/Scene';
 import { Distance } from '../../../util';
-import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
 import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
 import tr from '@i18n';
+import { matAStartGeoms, matAStartNodes, setNodeVisible, notInStartBox } from './jbcCommonComponents';
 
 const baseScene = createBaseSceneSurfaceA();
 
-const notInStartBox = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  // console.log('Robot not started in start box!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('notInStartBox', type === 'start');
-  }
-}, 'notStartBox');
-`;
-
 const enterStartBox = `
-const setNodeVisible = (nodeId, visible) => scene.setNode(nodeId, {
-  ...scene.nodes[nodeId],
-  visible
-});
+${setNodeVisible}
 
 scene.addOnIntersectionListener('can', (type, otherNodeId) => {
   // console.log('Robot returned start box!', type, otherNodeId);
@@ -60,14 +48,7 @@ export const JBC_22: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
-    notStartBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(3.54),
-        y: Distance.centimeters(10),
-        z: Distance.meters(2.13),
-      },
-    },
+    ...matAStartGeoms,
     startBox_geom: {
       type: 'box',
       size: {
@@ -79,26 +60,7 @@ export const JBC_22: Scene = {
   },
   nodes: {
     ...baseScene.nodes,
-    notStartBox: {
-      type: 'object',
-      geometryId: 'notStartBox_geom',
-      name: tr('Not Start Box'),
-      visible: false,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-1.9),
-          z: Distance.meters(1.208),
-        },
-      },
-      material: {
-        type: 'basic',
-        color: {
-          type: 'color3',
-          color: Color.rgb(255, 0, 0),
-        },
-      },
-    },
+    ...matAStartNodes,
     startBox: {
       type: 'object',
       geometryId: 'startBox_geom',
