@@ -4,13 +4,13 @@ import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
 import Script from '../../../state/State/Scene/Script';
 import tr from '@i18n';
-
+import { matAStartGeoms, matAStartNodes } from './jbcCommonComponents';
 const baseScene = createBaseSceneSurfaceA();
 
 const leftStartBox = `
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  console.log('Robot left start box!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
+  // console.log('Robot left start box!', type, otherNodeId);
+  if (scene.programStatus === 'running') {
     scene.setChallengeEventValue('leaveStartBox', type === 'end');
   }
 }, 'startBox');
@@ -18,33 +18,24 @@ scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
 
 const canStacked = `
 scene.addOnIntersectionListener('can5Bottom', (type, otherNodeId) => {
-  if(otherNodeId == 'can7Top'){
-    console.log('Can5 stacked ontop of Can7!');
-  scene.setChallengeEventValue('canStacked', true);
-  }
-  else if (otherNodeId == 'mainSurface'){
-    scene.setChallengeEventValue('canStacked', false);
-  }
-}, ['can7Top', 'mainSurface']);
+  // console.log('Can5 stacked ontop of Can7!');
+  scene.setChallengeEventValue('canStacked', type === 'start');
+}, ['can7Top']);
 
 scene.addOnIntersectionListener('can7Bottom', (type, otherNodeId) => {
-  if(otherNodeId == 'can5Top'){
-    console.log('Can7 stacked ontop of Can5!');
-    scene.setChallengeEventValue('canStacked', true);
-  }
-  else if (otherNodeId == 'mainSurface'){
-    scene.setChallengeEventValue('canStacked', false);
-  }
-}, ['can5Top', 'mainSurface']);
+  // console.log('Can7 stacked ontop of Can5!');
+  scene.setChallengeEventValue('canStacked', type === 'start');
+}, ['can5Top']);
 `;
 
+// TODO: For some reason this doesn't work with 'robot' as the nodeId, but works with 'claw_link'
 const robotTouchesCan = `
-scene.onBind = nodeId => { scene.addOnCollisionListener(nodeId, (otherNodeId, point)=> {
-    if(nodeId == 'can5' || nodeId == 'can7'){
-      scene.setChallengeEventValue('robotTouchCan', true);
-    }
-  }, ['robot']);
-};
+scene.addOnIntersectionListener('claw_link', (type, otherNodeId) => {
+  // console.log('Robot touched can!', type, otherNodeId);
+  if (scene.programStatus === 'running') {
+    scene.setChallengeEventValue('robotTouchCan', type === 'start');
+  }
+}, ['can5Proximity', 'can7Proximity']);
 `;
 
 export const JBC_18: Scene = {
@@ -58,46 +49,23 @@ export const JBC_18: Scene = {
   },
   geometry: {
     ...baseScene.geometry,
-    startBox_geom: {
-      type: 'box',
-      size: {
-        x: Distance.meters(1.77),
-        y: Distance.centimeters(0.1),
-        z: Distance.centimeters(30),
-      },
-    },
+    ...matAStartGeoms,
     canEnd_geom: {
       type: 'cylinder',
       radius: Distance.centimeters(3),
       height: Distance.centimeters(0.1),
     },
+    canProximity_geom: {
+      type: 'cylinder',
+      radius: Distance.centimeters(3.1),
+      height: Distance.centimeters(12),
+    },
   },
   nodes: {
     ...baseScene.nodes,
-    startBox: {
-      type: 'object',
-      geometryId: 'startBox_geom',
-      name: tr('Start Box'),
-
-      visible: true,
-      origin: {
-        position: {
-          x: Distance.centimeters(0),
-          y: Distance.centimeters(-6.9),
-          z: Distance.centimeters(0),
-        },
-      },
-      material: {
-        type: 'pbr',
-        emissive: {
-          type: 'color3',
-          color: Color.rgb(255, 255, 255),
-        },
-      },
-    },
-
-    can5: { ...createCanNode(5), scriptIds: ['canStacked', 'robotTouchesCan'] },
-    can7: { ...createCanNode(7), scriptIds: ['canStacked', 'robotTouchesCan'] },
+    ...matAStartNodes,
+    can5: createCanNode(5),
+    can7: createCanNode(7),
     can5Bottom: {
       parentId: 'can5',
       type: 'object',
@@ -107,7 +75,7 @@ export const JBC_18: Scene = {
       origin: {
         position: {
           x: Distance.centimeters(0),
-          y: Distance.centimeters(-5.8),
+          y: Distance.centimeters(-5.6),
           z: Distance.centimeters(0),
         },
       },
@@ -115,7 +83,7 @@ export const JBC_18: Scene = {
         type: 'pbr',
         emissive: {
           type: 'color3',
-          color: Color.rgb(255, 255, 255),
+          color: Color.rgb(255, 115, 0),
         },
       },
     },
@@ -124,12 +92,11 @@ export const JBC_18: Scene = {
       type: 'object',
       geometryId: 'canEnd_geom',
       name: tr('Top of can7'),
-
       visible: false,
       origin: {
         position: {
           x: Distance.centimeters(0),
-          y: Distance.centimeters(5.75),
+          y: Distance.centimeters(5.6),
           z: Distance.centimeters(0),
         },
       },
@@ -137,7 +104,7 @@ export const JBC_18: Scene = {
         type: 'pbr',
         emissive: {
           type: 'color3',
-          color: Color.rgb(255, 255, 255),
+          color: Color.rgb(13, 255, 0),
         },
       },
     },
@@ -151,7 +118,7 @@ export const JBC_18: Scene = {
       origin: {
         position: {
           x: Distance.centimeters(0),
-          y: Distance.centimeters(-5.8),
+          y: Distance.centimeters(-5.6),
           z: Distance.centimeters(0),
         },
       },
@@ -159,7 +126,7 @@ export const JBC_18: Scene = {
         type: 'pbr',
         emissive: {
           type: 'color3',
-          color: Color.rgb(255, 255, 255),
+          color: Color.rgb(0, 81, 255),
         },
       },
     },
@@ -173,7 +140,7 @@ export const JBC_18: Scene = {
       origin: {
         position: {
           x: Distance.centimeters(0),
-          y: Distance.centimeters(5.75),
+          y: Distance.centimeters(5.6),
           z: Distance.centimeters(0),
         },
       },
@@ -181,7 +148,49 @@ export const JBC_18: Scene = {
         type: 'pbr',
         emissive: {
           type: 'color3',
-          color: Color.rgb(255, 255, 255),
+          color: Color.rgb(255, 0, 0),
+        },
+      },
+    },
+    can5Proximity: {
+      parentId: 'can5',
+      type: 'object',
+      geometryId: 'canProximity_geom',
+      name: tr('Proximity of can5'),
+      visible: false,
+      origin: {
+        position: {
+          x: Distance.centimeters(0),
+          y: Distance.centimeters(0),
+          z: Distance.centimeters(0),
+        },
+      },
+      material: {
+        type: 'basic',
+        color: {
+          type: 'color3',
+          color: Color.rgb(255, 0, 0),
+        },
+      },
+    },
+    can7Proximity: {
+      parentId: 'can7',
+      type: 'object',
+      geometryId: 'canProximity_geom',
+      name: tr('Proximity of can7'),
+      visible: false,
+      origin: {
+        position: {
+          x: Distance.centimeters(0),
+          y: Distance.centimeters(0),
+          z: Distance.centimeters(0),
+        },
+      },
+      material: {
+        type: 'basic',
+        color: {
+          type: 'color3',
+          color: Color.rgb(255, 0, 0),
         },
       },
     },
