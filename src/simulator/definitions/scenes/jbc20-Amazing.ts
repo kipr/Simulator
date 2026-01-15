@@ -23,32 +23,27 @@ const bumpReams = `
 let reamTouchedList = [false, false, false, false];
 
 scene.addOnCollisionListener('ream1', (otherNodeId) => {
-  //If front bumper is pressed
-  if(scene.nodes['robot'].state.getDigitalValue(0) == 1) {
-    scene.setChallengeEventValue('ream1Touched', true);
-    reamTouchedList[0] = true;
-  }
+  scene.setChallengeEventValue('ream1Touched', true);
+  reamTouchedList[0] = true;
 }, 'robot');
 
 scene.addOnCollisionListener('ream2', (otherNodeId) => {
-  //If front bumper is pressed
-  if(scene.nodes['robot'].state.getDigitalValue(0) == 1 && reamTouchedList[0]) {
+  // Only check if ream 1 has been touched before ream 2
+  if (reamTouchedList[0]) {
     scene.setChallengeEventValue('ream2Touched', true);
     reamTouchedList[1] = true;
   }
 }, 'robot');
 
 scene.addOnCollisionListener('ream3', (otherNodeId) => {
-  //If front bumper is pressed
-  if(scene.nodes['robot'].state.getDigitalValue(0) == 1 && reamTouchedList[1]) {
+  if (reamTouchedList[1]) {
     scene.setChallengeEventValue('ream3Touched', true);
     reamTouchedList[2] = true;
   }
 }, 'robot');
 
 scene.addOnCollisionListener('ream4', (otherNodeId) => {
-  //If front bumper is pressed
-  if(scene.nodes['robot'].state.getDigitalValue(0) == 1 && reamTouchedList[2]) {
+  if (reamTouchedList[2]) {
     scene.setChallengeEventValue('ream4Touched', true);
     reamTouchedList[3] = true;
   }
