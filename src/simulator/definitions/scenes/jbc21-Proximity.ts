@@ -10,17 +10,12 @@ import { matAStartGeoms, matAStartNodes, notInStartBox } from './jbcCommonCompon
 const baseScene = createBaseSceneSurfaceA();
 
 const stopAtReam = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
+scene.addOnIntersectionListener('claw_link', (type, otherNodeId) => {
   console.log('Robot close enough to ream', type, otherNodeId);
   if(scene.programStatus === 'running'){
     scene.setChallengeEventValue('stopAtReam', type === 'start');
   }
 }, 'reamFrontBoundary');
-// scene.addOnCollisionListener('reamFrontBoundary', (otherNodeId) => {
-//   if(scene.programStatus === 'running'){
-//     scene.setChallengeEventValue('stopAtReam', true);
-//   }
-// }, 'claw');
 `;
 
 const bumpReam = `
