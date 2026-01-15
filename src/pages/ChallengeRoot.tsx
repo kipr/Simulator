@@ -471,6 +471,9 @@ class Root extends React.Component<Props, State> {
       simulatorState: SimulatorState.STOPPED
     }, () => {
       this.syncChallengeCompletion_();
+      // Force save on program stop to ensure any events that fired at the end
+      // get recorded, bypassing the throttle in scheduleSaveChallengeCompletion_
+      this.saveChallengeCompletion_();
     });
   };
 
