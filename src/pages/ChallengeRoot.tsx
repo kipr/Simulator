@@ -418,18 +418,41 @@ class Root extends React.Component<Props, State> {
   };
 
   private lastSaveChallengeCompletionTime_ = 0;
+  private pendingSaveChallengeCompletionHandle_: number | undefined = undefined;
+
+  private clearPendingSaveChallengeCompletion_ = () => {
+    if (this.pendingSaveChallengeCompletionHandle_ !== undefined) {
+      window.clearTimeout(this.pendingSaveChallengeCompletionHandle_);
+      this.pendingSaveChallengeCompletionHandle_ = undefined;
+    }
+  };
 
   private saveChallengeCompletion_ = () => {
+    this.clearPendingSaveChallengeCompletion_();
     this.props.onChallengeCompletionSetRobotLinkOrigins(Space.getInstance().sceneBinding.currentRobotLinkOrigins);
     this.props.onChallengeCompletionSave();
 
     this.lastSaveChallengeCompletionTime_ = Date.now();
   };
 
-  private scheduleSaveChallengeCompletion_ = () => {
-    if (Date.now() - this.lastSaveChallengeCompletionTime_ < 1000) return;
+  private scheduleSaveChallengeCompletion_ = (force = false) => {
+    if (force) {
+      this.saveChallengeCompletion_();
+      return;
+    }
 
-    this.saveChallengeCompletion_();
+    const elapsed = Date.now() - this.lastSaveChallengeCompletionTime_;
+    if (elapsed >= 1000) {
+      this.saveChallengeCompletion_();
+      return;
+    }
+
+    if (this.pendingSaveChallengeCompletionHandle_ !== undefined) return;
+    const delay = 1000 - elapsed;
+    this.pendingSaveChallengeCompletionHandle_ = window.setTimeout(() => {
+      this.pendingSaveChallengeCompletionHandle_ = undefined;
+      this.saveChallengeCompletion_();
+    }, delay);
   };
 
 
