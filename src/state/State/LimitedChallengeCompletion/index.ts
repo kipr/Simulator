@@ -23,6 +23,12 @@ interface LimitedChallengeCompletion {
    * Wall-clock milliseconds from when the user clicked Run to when the success condition was met.
    */
   bestRuntimeMs?: number;
+
+  /**
+   * User's display name (denormalized for leaderboard display).
+   * This is automatically set by the backend from the Firebase token.
+   */
+  displayName?: string;
 }
 
 namespace LimitedChallengeCompletion {

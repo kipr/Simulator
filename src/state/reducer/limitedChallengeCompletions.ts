@@ -10,6 +10,7 @@ import PredicateCompletion from '../State/ChallengeCompletion/PredicateCompletio
 import Selector from '../../db/Selector';
 import db from '../../db';
 import DbError from '../../db/Error';
+import { auth } from '../../firebase/firebase';
 
 import { errorToAsyncError, mutate } from './util';
 import construct from '../../util/redux/construct';
@@ -182,7 +183,10 @@ const DEFAULT_LIMITED_CHALLENGE_COMPLETIONS: LimitedChallengeCompletions = {
 
 const create = async (challengeId: string, next: Async.Creating<LimitedChallengeCompletion>) => {
   try {
-    await db.set(Selector.limitedChallengeCompletion(challengeId), next.value);
+    // Include displayName from current user for leaderboard
+    const displayName = auth.currentUser?.displayName || auth.currentUser?.email || 'Anonymous';
+    const valueWithDisplayName = { ...next.value, displayName };
+    await db.set(Selector.limitedChallengeCompletion(challengeId), valueWithDisplayName);
     store.dispatch(LimitedChallengeCompletionsAction.setLimitedChallengeCompletionInternal({
       challengeCompletion: Async.loaded({
         brief: LimitedChallengeCompletionBrief.fromCompletion(next.value),
@@ -203,7 +207,10 @@ const create = async (challengeId: string, next: Async.Creating<LimitedChallenge
 
 const save = async (challengeId: string, current: Async.Saveable<LimitedChallengeCompletionBrief, LimitedChallengeCompletion>) => {
   try {
-    await db.set(Selector.limitedChallengeCompletion(challengeId), current.value);
+    // Include displayName from current user for leaderboard
+    const displayName = auth.currentUser?.displayName || auth.currentUser?.email || 'Anonymous';
+    const valueWithDisplayName = { ...current.value, displayName };
+    await db.set(Selector.limitedChallengeCompletion(challengeId), valueWithDisplayName);
 
     const latest = Async.latestValue(store.getState().limitedChallengeCompletions[challengeId]);
 

@@ -19,6 +19,7 @@ const formData = require('form-data');
 const Mailgun = require('mailgun.js');
 const createParentalConsentRouter = require('./parentalConsent');
 const createAiRouter = require('./ai');
+const createLimitedChallengeCompletionsRouter = require('./limitedChallengeCompletions');
 
 let config;
 try {
@@ -109,6 +110,9 @@ app.use('/api/parental-consent', createParentalConsentRouter(firebaseTokenManage
 
 // Add AI router
 app.use('/api/ai', createAiRouter(firebaseTokenManager, config));
+
+// Add Limited Challenge Completions router
+app.use('/api/limited_challenge_completion', createLimitedChallengeCompletionsRouter(firebaseTokenManager));
 
 app.use('/api', proxy(config.dbUrl));
 
