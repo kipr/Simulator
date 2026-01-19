@@ -49,6 +49,7 @@ import Predicate from '../state/State/Challenge/Predicate';
 import DocumentationLocation from '../state/State/Documentation/DocumentationLocation';
 
 import DbError from '../db/Error';
+import Builder from '../db/Builder';
 
 import { StyledText } from '../util';
 import Dict from '../util/objectOps/Dict';
@@ -1018,19 +1019,19 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
 }
 
 const ConnectedLimitedChallengeRoot = connect((state: ReduxState, { params: { challengeId } }: RootPublicProps) => {
-  // Get limited challenge
-  const limitedChallenge = state.limitedChallenges[challengeId];
-  const limitedChallengeCompletion = state.limitedChallengeCompletions[challengeId];
+  const builder = new Builder(state);
 
-  // Get scene from the challenge's sceneId
-  const latestChallenge = Async.latestValue(limitedChallenge);
-  const sceneId = latestChallenge?.sceneId;
-  const scene = sceneId ? state.scenes[sceneId] : undefined;
+  // Use the builder pattern to load the limited challenge, scene, and completion
+  const limitedChallenge = builder.limitedChallenge(challengeId);
+  limitedChallenge.scene();
+  limitedChallenge.completion();
+
+  builder.dispatchLoads();
 
   return {
-    scene,
-    challenge: limitedChallenge,
-    challengeCompletion: limitedChallengeCompletion,
+    scene: Dict.unique(builder.scenes),
+    challenge: Dict.unique(builder.limitedChallenges),
+    challengeCompletion: Dict.unique(builder.limitedChallengeCompletions),
     locale: state.i18n.locale,
     robots: Dict.map(state.robots.robots, Async.latestValue),
   };

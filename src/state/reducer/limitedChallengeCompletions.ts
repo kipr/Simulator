@@ -9,6 +9,7 @@ import PredicateCompletion from '../State/ChallengeCompletion/PredicateCompletio
 
 import Selector from '../../db/Selector';
 import db from '../../db';
+import DbError from '../../db/Error';
 
 import { errorToAsyncError, mutate } from './util';
 import construct from '../../util/redux/construct';
@@ -245,6 +246,31 @@ const load = async (challengeId: string, current: AsyncLimitedChallengeCompletio
       challengeId,
     }));
   } catch (error) {
+    // If not found (404), create a new completion with default values from the challenge
+    if (DbError.is(error) && error.code === DbError.CODE_NOT_FOUND) {
+      // Get the challenge to use its default code
+      const challenge = Async.latestValue(store.getState().limitedChallenges[challengeId]);
+      
+      const newCompletion: LimitedChallengeCompletion = challenge
+        ? {
+          ...LimitedChallengeCompletion.EMPTY,
+          code: challenge.code,
+          currentLanguage: challenge.defaultLanguage,
+        }
+        : LimitedChallengeCompletion.EMPTY;
+      
+      // Create the completion (this will save it to the database)
+      const creating = Async.creating({ value: newCompletion });
+      void create(challengeId, creating);
+      
+      store.dispatch(LimitedChallengeCompletionsAction.setLimitedChallengeCompletionInternal({
+        challengeCompletion: creating,
+        challengeId,
+      }));
+      return;
+    }
+
+    // For other errors, set to loadFailed
     store.dispatch(LimitedChallengeCompletionsAction.setLimitedChallengeCompletionInternal({
       challengeCompletion: Async.loadFailed({ brief, error: errorToAsyncError(error) }),
       challengeId,
