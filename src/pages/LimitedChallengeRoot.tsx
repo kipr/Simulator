@@ -774,7 +774,8 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
   };
 
   private onEndChallengeClick_ = () => {
-    this.props.navigate('/limited-challenges');
+    // Use full page refresh to ensure clean state
+    window.location.href = '/limited-challenges';
   };
 
   private onResetCode_ = () => {
