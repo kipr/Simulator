@@ -1,11 +1,11 @@
 import { applyMiddleware, combineReducers, compose, createStore, } from 'redux';
 
 import * as reducer from './reducer';
-import { DocumentationState, ChallengeCompletions, Challenges, I18n, Robots, Scenes, Assignments, Users } from './State';
+import { DocumentationState, ChallengeCompletions, Challenges, I18n, Robots, Scenes, Assignments, Users, LimitedChallenges, LimitedChallengeCompletions } from './State';
 import { AiState } from './State/Ai/index';
 // import history from './history';
 import { AsyncScene } from './State/Scene';
-import { CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, SCENE_COLLECTION, ASSIGNMENT_COLLECTION, USER_COLLECTION } from '../db/constants';
+import { CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, SCENE_COLLECTION, ASSIGNMENT_COLLECTION, USER_COLLECTION, LIMITED_CHALLENGE_COLLECTION, LIMITED_CHALLENGE_COMPLETION_COLLECTION } from '../db/constants';
 import Record from '../db/Record';
 import Selector from '../db/Selector';
 
@@ -20,6 +20,8 @@ export default createStore(combineReducers<State>({
   documentation: reducer.reduceDocumentation,
   challenges: reducer.reduceChallenges,
   challengeCompletions: reducer.reduceChallengeCompletions,
+  limitedChallenges: reducer.reduceLimitedChallenges,
+  limitedChallengeCompletions: reducer.reduceLimitedChallengeCompletions,
   i18n: reducer.reduceI18n,
   assignments: reducer.reduceAssignments,
   users: reducer.reduceUsers,
@@ -35,6 +37,8 @@ export interface State {
   scenes: Scenes;
   challenges: Challenges;
   challengeCompletions: ChallengeCompletions;
+  limitedChallenges: LimitedChallenges;
+  limitedChallengeCompletions: LimitedChallengeCompletions;
   robots: Robots;
   documentation: DocumentationState;
   i18n: I18n;
@@ -60,6 +64,16 @@ export namespace State {
         type: Record.Type.ChallengeCompletion,
         id: selector.id,
         value: state.challengeCompletions[selector.id]
+      };
+      case LIMITED_CHALLENGE_COLLECTION: return {
+        type: Record.Type.LimitedChallenge,
+        id: selector.id,
+        value: state.limitedChallenges[selector.id]
+      };
+      case LIMITED_CHALLENGE_COMPLETION_COLLECTION: return {
+        type: Record.Type.LimitedChallengeCompletion,
+        id: selector.id,
+        value: state.limitedChallengeCompletions[selector.id]
       };
       case USER_COLLECTION: return {
         type: Record.Type.User,
