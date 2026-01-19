@@ -148,6 +148,7 @@ module.exports = function createLimitedChallengeCompletionsRouter(firebaseTokenM
   router.get('/:challengeId/leaderboard', async (req, res) => {
     try {
       const { challengeId } = req.params;
+      console.log('get leaderboard for challenge', challengeId);
 
       const completionsRef = db
         .collection('limited_challenge_completions')

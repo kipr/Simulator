@@ -95,8 +95,8 @@ class LimitedChallenges extends React.Component<Props> {
   }
 
   private handleChallengeClick = (challengeId: string) => {
-    // Use full page refresh to ensure clean scene loading
-    window.location.href = `/limited-challenge/${challengeId}`;
+    // Navigate to the leaderboard page for this challenge
+    window.location.href = `/limited-challenge/${challengeId}/leaderboard`;
   };
 
   private getChallengeBrief = (challenge: AsyncLimitedChallenge): LimitedChallengeBrief | undefined => {

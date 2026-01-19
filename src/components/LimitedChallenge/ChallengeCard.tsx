@@ -31,12 +31,12 @@ const Container = styled('div', (props: ThemeProps & { status: LimitedChallengeS
   overflow: 'hidden',
   margin: '10px',
   transition: 'all 0.3s ease',
-  cursor: props.status === 'open' ? 'pointer' : 'default',
+  cursor: 'pointer',
   opacity: props.status === 'closed' ? 0.7 : 1,
-  ':hover': props.status === 'open' ? {
+  ':hover': {
     transform: 'translateY(-2px)',
     boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-  } : {},
+  },
 }));
 
 const StatusBadge = styled('div', (props: ThemeProps & { status: LimitedChallengeStatus }) => ({
@@ -149,12 +149,10 @@ class ChallengeCard extends React.Component<ChallengeCardProps, ChallengeCardSta
   }
 
   private handleClick = () => {
-    const { status } = this.state;
     const { challengeId, onClick } = this.props;
-
-    if (status === 'open') {
-      onClick(challengeId);
-    }
+    // Allow click on all statuses - the leaderboard page will handle
+    // showing the appropriate disabled state for non-open challenges
+    onClick(challengeId);
   };
 
   private getStatusText(): string {
