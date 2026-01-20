@@ -9,12 +9,9 @@ import speedRunDriveStraight from './speed-run-drive-straight';
 /**
  * Pre-built limited challenges ready for use in the reducer's default state.
  * Add new limited challenges here by importing them and adding an entry to this object.
+ * Their order listed here is the order in which they will be displayed in the UI.
  */
 export const DEFAULT_LIMITED_CHALLENGES: LimitedChallenges = {
-  'limited-speed-run-3': Async.loaded({
-    value: speedRunDriveStraight,
-    brief: LimitedChallengeBrief.fromChallenge(speedRunDriveStraight),
-  }),
   'limited-speed-run-1': Async.loaded({
     value: speedRunRingAroundTheCan,
     brief: LimitedChallengeBrief.fromChallenge(speedRunRingAroundTheCan),
@@ -22,5 +19,9 @@ export const DEFAULT_LIMITED_CHALLENGES: LimitedChallenges = {
   'limited-speed-run-2': Async.loaded({
     value: speedRunTagYoureIt,
     brief: LimitedChallengeBrief.fromChallenge(speedRunTagYoureIt),
+  }),
+  'limited-speed-run-3': Async.loaded({
+    value: speedRunDriveStraight,
+    brief: LimitedChallengeBrief.fromChallenge(speedRunDriveStraight),
   }),
 };

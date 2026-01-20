@@ -45,8 +45,11 @@ const StatusBadge = styled('div', (props: ThemeProps & { status: LimitedChalleng
   fontWeight: 'bold',
   textTransform: 'uppercase',
   color: '#fff',
-  backgroundColor: props.status === 'open' ? '#4caf50' :
-    props.status === 'upcoming' ? '#ff9800' : '#9e9e9e',
+  backgroundColor: props.status === 'open'
+    ? '#4caf50'
+    : props.status === 'upcoming'
+      ? '#ff9800'
+      : '#9e9e9e',
 }));
 
 const Content = styled('div', (props: ThemeProps) => ({
@@ -142,10 +145,15 @@ class ChallengeCard extends React.Component<ChallengeCardProps, ChallengeCardSta
     const remainingSeconds = seconds % 60;
     const remainingMs = ms % 1000;
 
+    const secondsStr = remainingSeconds.toString()
+      .padStart(2, '0');
+    const msStr = Math.floor(remainingMs / 10).toString()
+      .padStart(2, '0');
+
     if (minutes > 0) {
-      return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}.${Math.floor(remainingMs / 10).toString().padStart(2, '0')}`;
+      return `${minutes}:${secondsStr}.${msStr}`;
     }
-    return `${remainingSeconds}.${Math.floor(remainingMs / 10).toString().padStart(2, '0')}s`;
+    return `${remainingSeconds}.${msStr}s`;
   }
 
   private handleClick = () => {

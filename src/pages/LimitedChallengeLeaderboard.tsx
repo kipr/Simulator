@@ -111,8 +111,11 @@ const StatusBadge = styled('div', (props: ThemeProps & { status: LimitedChalleng
   color: '#fff',
   borderRadius: '4px',
   marginBottom: '16px',
-  backgroundColor: props.status === 'open' ? '#4caf50' :
-    props.status === 'upcoming' ? '#ff9800' : '#9e9e9e',
+  backgroundColor: props.status === 'open'
+    ? '#4caf50'
+    : props.status === 'upcoming'
+      ? '#ff9800'
+      : '#9e9e9e',
 }));
 
 const ButtonContainer = styled('div', () => ({
@@ -231,10 +234,13 @@ const TableCell = styled('td', (props: ThemeProps) => ({
 
 const RankCell = styled(TableCell, (props: ThemeProps & { rank: number }) => ({
   fontWeight: 'bold',
-  color: props.rank === 1 ? '#ffd700' :
-    props.rank === 2 ? '#c0c0c0' :
-      props.rank === 3 ? '#cd7f32' :
-        props.theme.color,
+  color: props.rank === 1
+    ? '#ffd700'
+    : props.rank === 2
+      ? '#c0c0c0'
+      : props.rank === 3
+        ? '#cd7f32'
+        : props.theme.color,
 }));
 
 const EmptyState = styled('div', (props: ThemeProps) => ({
@@ -386,10 +392,15 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
     const remainingSeconds = seconds % 60;
     const remainingMs = ms % 1000;
 
+    const secondsStr = remainingSeconds.toString()
+      .padStart(2, '0');
+    const msStr = Math.floor(remainingMs / 10).toString()
+      .padStart(2, '0');
+
     if (minutes > 0) {
-      return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}.${Math.floor(remainingMs / 10).toString().padStart(2, '0')}`;
+      return `${minutes}:${secondsStr}.${msStr}`;
     }
-    return `${remainingSeconds}.${Math.floor(remainingMs / 10).toString().padStart(2, '0')}s`;
+    return `${remainingSeconds}.${msStr}s`;
   };
 
   private formatDate = (isoDate: string): string => {
