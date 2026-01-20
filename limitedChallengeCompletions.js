@@ -10,6 +10,32 @@ const admin = require('firebase-admin');
  * 
  * This structure enables efficient leaderboard queries by fetching all completions
  * for a specific challenge.
+ * 
+ * Required Firestore indexes:
+ *   Collection group: completions (under limited_challenge_completions/{challengeId})
+ *   
+ *   1. Single-field index (auto-created by Firestore):
+ *      - bestRuntimeMs ASC
+ *   
+ *   2. Composite index (optional, for tie-breaking):
+ *      - bestRuntimeMs ASC, bestCompletionTime ASC
+ *      
+ *   To create the composite index via Firebase Console:
+ *   1. Go to Firestore > Indexes
+ *   2. Add composite index for collection "completions"
+ *   3. Fields: bestRuntimeMs (Ascending), bestCompletionTime (Ascending)
+ *   
+ *   Or create firestore.indexes.json:
+ *   {
+ *     "indexes": [{
+ *       "collectionGroup": "completions",
+ *       "queryScope": "COLLECTION",
+ *       "fields": [
+ *         { "fieldPath": "bestRuntimeMs", "order": "ASCENDING" },
+ *         { "fieldPath": "bestCompletionTime", "order": "ASCENDING" }
+ *       ]
+ *     }]
+ *   }
  */
 module.exports = function createLimitedChallengeCompletionsRouter(firebaseTokenManager) {
   const router = express.Router();
@@ -140,6 +166,154 @@ module.exports = function createLimitedChallengeCompletionsRouter(firebaseTokenM
   });
 
   /**
+   * Helper to get the completions collection for a challenge.
+   */
+  const getCompletionsCollection = (challengeId) => {
+    return db
+      .collection('limited_challenge_completions')
+      .doc(challengeId)
+      .collection('completions');
+  };
+
+  /**
+   * Helper to format a completion document for leaderboard display.
+   */
+  const formatLeaderboardEntry = (data) => ({
+    uid: data.uid,
+    displayName: data.displayName || 'Anonymous',
+    bestRuntimeMs: data.bestRuntimeMs,
+    bestCompletionTime: data.bestCompletionTime,
+  });
+
+  /**
+   * GET /:challengeId/leaderboard/around-me
+   * 
+   * Get leaderboard with top N entries plus context around the current user.
+   * Query params:
+   *   - top (default: 10): Number of top entries to always include
+   *   - range (default: 5): Number of entries above/below user to include
+   * 
+   * Response shape:
+   * {
+   *   topEntries: LeaderboardEntry[],
+   *   userContext?: {
+   *     rank: number,
+   *     entriesAbove: LeaderboardEntry[],
+   *     userEntry: LeaderboardEntry,
+   *     entriesBelow: LeaderboardEntry[]
+   *   },
+   *   totalParticipants: number
+   * }
+   */
+  router.get('/:challengeId/leaderboard/around-me', async (req, res) => {
+    try {
+      const { challengeId } = req.params;
+      const { uid } = req.user;
+      
+      // Parse and validate query params
+      const top = Math.min(Math.max(parseInt(req.query.top, 10) || 10, 1), 100);
+      const range = Math.min(Math.max(parseInt(req.query.range, 10) || 5, 1), 50);
+      
+      const completionsCollection = getCompletionsCollection(challengeId);
+      
+      // Run queries in parallel where possible
+      const [userDoc, totalSnapshot, topSnapshot] = await Promise.all([
+        // 1. Get user's completion
+        getCompletionRef(challengeId, uid).get(),
+        // 2. Get total count of participants
+        completionsCollection
+          .where('bestRuntimeMs', '>', 0)
+          .count()
+          .get(),
+        // 3. Get top N entries
+        completionsCollection
+          .where('bestRuntimeMs', '>', 0)
+          .orderBy('bestRuntimeMs', 'asc')
+          .limit(top)
+          .get(),
+      ]);
+      
+      const totalParticipants = totalSnapshot.data().count;
+      
+      // Format top entries
+      const topEntries = [];
+      topSnapshot.forEach(doc => {
+        topEntries.push(formatLeaderboardEntry(doc.data()));
+      });
+      
+      // If user has no completion or no bestRuntimeMs, return top entries only
+      if (!userDoc.exists || !userDoc.data().bestRuntimeMs) {
+        return res.status(200).json({
+          topEntries,
+          userContext: undefined,
+          totalParticipants,
+        });
+      }
+      
+      const userData = userDoc.data();
+      const userRuntime = userData.bestRuntimeMs;
+      const userEntry = formatLeaderboardEntry(userData);
+      
+      // Get user's rank via count() aggregation
+      const rankSnapshot = await completionsCollection
+        .where('bestRuntimeMs', '>', 0)
+        .where('bestRuntimeMs', '<', userRuntime)
+        .count()
+        .get();
+      const rank = rankSnapshot.data().count + 1;
+      
+      // Check if user is already in top N
+      const userInTopN = rank <= top;
+      
+      let entriesAbove = [];
+      let entriesBelow = [];
+      
+      if (!userInTopN) {
+        // Fetch context around the user
+        const [aboveSnapshot, belowSnapshot] = await Promise.all([
+          // Entries above (faster than user) - order descending to get closest first
+          completionsCollection
+            .where('bestRuntimeMs', '>', 0)
+            .where('bestRuntimeMs', '<', userRuntime)
+            .orderBy('bestRuntimeMs', 'desc')
+            .limit(range)
+            .get(),
+          // Entries below (slower than user)
+          completionsCollection
+            .where('bestRuntimeMs', '>', 0)
+            .where('bestRuntimeMs', '>', userRuntime)
+            .orderBy('bestRuntimeMs', 'asc')
+            .limit(range)
+            .get(),
+        ]);
+        
+        // Reverse entriesAbove so they're in ascending order (fastest first)
+        aboveSnapshot.forEach(doc => {
+          entriesAbove.unshift(formatLeaderboardEntry(doc.data()));
+        });
+        
+        belowSnapshot.forEach(doc => {
+          entriesBelow.push(formatLeaderboardEntry(doc.data()));
+        });
+      }
+      
+      return res.status(200).json({
+        topEntries,
+        userContext: {
+          rank,
+          entriesAbove,
+          userEntry,
+          entriesBelow,
+        },
+        totalParticipants,
+      });
+    } catch (error) {
+      console.error('Error fetching leaderboard around user:', error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  /**
    * GET /:challengeId/leaderboard
    * 
    * Get all completions for a challenge, ordered by best runtime.
@@ -148,27 +322,16 @@ module.exports = function createLimitedChallengeCompletionsRouter(firebaseTokenM
   router.get('/:challengeId/leaderboard', async (req, res) => {
     try {
       const { challengeId } = req.params;
-      console.log('get leaderboard for challenge', challengeId);
 
-      const completionsRef = db
-        .collection('limited_challenge_completions')
-        .doc(challengeId)
-        .collection('completions')
+      const snapshot = await getCompletionsCollection(challengeId)
         .where('bestRuntimeMs', '>', 0)
         .orderBy('bestRuntimeMs', 'asc')
-        .limit(100); // Limit to top 100 for performance
-
-      const snapshot = await completionsRef.get();
+        .limit(100)
+        .get();
 
       const leaderboard = [];
       snapshot.forEach(doc => {
-        const data = doc.data();
-        leaderboard.push({
-          uid: data.uid,
-          displayName: data.displayName || 'Anonymous',
-          bestRuntimeMs: data.bestRuntimeMs,
-          bestCompletionTime: data.bestCompletionTime,
-        });
+        leaderboard.push(formatLeaderboardEntry(doc.data()));
       });
 
       return res.status(200).json(leaderboard);

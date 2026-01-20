@@ -12,7 +12,7 @@ import LocalizedString from '../util/LocalizedString';
 import { State as ReduxState } from '../state';
 import { LimitedChallengeBrief, AsyncLimitedChallenge, LimitedChallengeStatus } from '../state/State/LimitedChallenge';
 import Async from '../state/State/Async';
-import { LeaderboardEntry, LeaderboardSortField } from '../state/State/LimitedChallengeLeaderboard';
+import { LeaderboardEntry, LeaderboardSortField, LeaderboardAroundMeResponse, LeaderboardUserContext } from '../state/State/LimitedChallengeLeaderboard';
 
 import { withParams } from '../util/withParams';
 import { withNavigate, WithNavigateProps } from '../util/withNavigate';
@@ -35,7 +35,9 @@ interface LimitedChallengeLeaderboardPrivateProps {
 }
 
 interface LimitedChallengeLeaderboardState {
-  leaderboard: LeaderboardEntry[];
+  topEntries: LeaderboardEntry[];
+  userContext?: LeaderboardUserContext;
+  totalParticipants: number;
   loading: boolean;
   error?: string;
   sortField: LeaderboardSortField;
@@ -292,6 +294,42 @@ const YourNameValue = styled('span', (props: ThemeProps) => ({
   color: '#4caf50',
 }));
 
+const UserRankBanner = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '16px',
+  padding: '16px 20px',
+  backgroundColor: 'rgba(33, 150, 243, 0.15)',
+  borderBottom: `1px solid ${props.theme.borderColor}`,
+}));
+
+const UserRankText = styled('span', () => ({
+  fontSize: '1.1em',
+  fontWeight: 'bold',
+  color: '#2196f3',
+}));
+
+const UserRankDetail = styled('span', (props: ThemeProps) => ({
+  fontSize: '0.9em',
+  color: props.theme.color,
+  opacity: 0.8,
+}));
+
+const SectionSeparator = styled('tr', (props: ThemeProps) => ({
+  backgroundColor: 'rgba(255,255,255,0.02)',
+}));
+
+const SeparatorCell = styled('td', (props: ThemeProps) => ({
+  padding: '8px 16px',
+  textAlign: 'center',
+  fontSize: '0.85em',
+  color: props.theme.color,
+  opacity: 0.5,
+  fontStyle: 'italic',
+  borderBottom: `1px solid ${props.theme.borderColor}`,
+}));
+
 class LimitedChallengeLeaderboard extends React.Component<Props, State> {
   private statusIntervalId: NodeJS.Timeout | null = null;
 
@@ -301,9 +339,11 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
     const challengeBrief = this.getChallengeBrief();
     
     this.state = {
-      leaderboard: [],
+      topEntries: [],
+      userContext: undefined,
+      totalParticipants: 0,
       loading: true,
-      sortField: 'completionTime',
+      sortField: 'runtime',
       status: challengeBrief ? LimitedChallengeStatus.fromBrief(challengeBrief) : 'closed',
     };
   }
@@ -347,7 +387,7 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
     
     try {
       const token = await db.tokenManager?.token();
-      const response = await fetch(`/api/limited_challenge_completion/${challengeId}/leaderboard`, {
+      const response = await fetch(`/api/limited_challenge_completion/${challengeId}/leaderboard/around-me?top=10&range=10`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -358,10 +398,12 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
         throw new Error(`Failed to fetch leaderboard: ${response.statusText}`);
       }
       
-      const data = await response.json() as LeaderboardEntry[];
+      const data = await response.json() as LeaderboardAroundMeResponse;
       
       this.setState({
-        leaderboard: data,
+        topEntries: data.topEntries,
+        userContext: data.userContext,
+        totalParticipants: data.totalParticipants,
         loading: false,
       });
     } catch (error) {
@@ -475,9 +517,24 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
     }
   };
 
+  private renderLeaderboardRow = (entry: LeaderboardEntry, rank: number, isCurrentUser: boolean) => {
+    const theme = DARK;
+    return (
+      <TableRow key={`${entry.uid}-${rank}`} theme={theme} $highlight={isCurrentUser}>
+        <RankCell theme={theme} rank={rank}>#{rank}</RankCell>
+        <TableCell theme={theme}>
+          {this.anonymizeUserId(entry.uid)}
+          {isCurrentUser && ' (You)'}
+        </TableCell>
+        <TableCell theme={theme}>{this.formatRuntime(entry.bestRuntimeMs)}</TableCell>
+        <TableCell theme={theme}>{this.formatDate(entry.bestCompletionTime)}</TableCell>
+      </TableRow>
+    );
+  };
+
   private renderLeaderboard = () => {
     const { locale, currentUserUid } = this.props;
-    const { leaderboard, loading, error, sortField } = this.state;
+    const { topEntries, userContext, totalParticipants, loading, error, sortField } = this.state;
     const theme = DARK;
 
     if (loading) {
@@ -497,7 +554,7 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
       );
     }
 
-    if (leaderboard.length === 0) {
+    if (topEntries.length === 0 && !userContext) {
       return (
         <EmptyState theme={theme}>
           {LocalizedString.lookup(tr('No completions yet. Be the first to complete this challenge!'), locale)}
@@ -505,7 +562,14 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
       );
     }
 
-    const sortedLeaderboard = LeaderboardEntry.sort(leaderboard, sortField);
+    // Sort top entries based on selected sort field
+    const sortedTopEntries = LeaderboardEntry.sort(topEntries, sortField);
+
+    // Check if user is in top entries (to avoid duplicate display)
+    const userInTopEntries = userContext && sortedTopEntries.some(e => e.uid === userContext.userEntry.uid);
+
+    // For user context section, we need to sort and calculate ranks appropriately
+    const showUserContextSection = userContext && !userInTopEntries;
 
     return (
       <Table>
@@ -518,17 +582,42 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
           </tr>
         </thead>
         <tbody>
-          {sortedLeaderboard.map((entry, index) => (
-            <TableRow key={entry.uid} theme={theme} $highlight={entry.uid === currentUserUid}>
-              <RankCell theme={theme} rank={index + 1}>#{index + 1}</RankCell>
-              <TableCell theme={theme}>
-                {this.anonymizeUserId(entry.uid)}
-                {entry.uid === currentUserUid && ' (You)'}
-              </TableCell>
-              <TableCell theme={theme}>{this.formatRuntime(entry.bestRuntimeMs)}</TableCell>
-              <TableCell theme={theme}>{this.formatDate(entry.bestCompletionTime)}</TableCell>
-            </TableRow>
-          ))}
+          {/* Top entries */}
+          {sortedTopEntries.map((entry, index) => {
+            // When sorted by runtime, index+1 is the rank
+            // When sorted by completion time, we still show runtime-based rank for consistency
+            const rank = sortField === 'runtime'
+              ? index + 1
+              : topEntries.findIndex(e => e.uid === entry.uid) + 1;
+            const isCurrentUser = currentUserUid === entry.uid;
+            return this.renderLeaderboardRow(entry, rank, isCurrentUser);
+          })}
+
+          {/* Separator and user context section */}
+          {showUserContextSection && (
+            <>
+              <SectionSeparator theme={theme}>
+                <SeparatorCell theme={theme} colSpan={4}>
+                  ··· {LocalizedString.lookup(tr('Your position'), locale)} ···
+                </SeparatorCell>
+              </SectionSeparator>
+
+              {/* Entries above user */}
+              {userContext.entriesAbove.map((entry, index) => {
+                const rank = userContext.rank - userContext.entriesAbove.length + index;
+                return this.renderLeaderboardRow(entry, rank, false);
+              })}
+
+              {/* User's entry */}
+              {this.renderLeaderboardRow(userContext.userEntry, userContext.rank, true)}
+
+              {/* Entries below user */}
+              {userContext.entriesBelow.map((entry, index) => {
+                const rank = userContext.rank + index + 1;
+                return this.renderLeaderboardRow(entry, rank, false);
+              })}
+            </>
+          )}
         </tbody>
       </Table>
     );
@@ -603,6 +692,11 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
             <LeaderboardHeader theme={theme}>
               <LeaderboardTitle theme={theme}>
                 {LocalizedString.lookup(tr('Leaderboard'), locale)}
+                {this.state.totalParticipants > 0 && (
+                  <span style={{ fontSize: '0.7em', fontWeight: 'normal', opacity: 0.7, marginLeft: '8px' }}>
+                    ({this.state.totalParticipants} {LocalizedString.lookup(tr('participants'), locale)})
+                  </span>
+                )}
               </LeaderboardTitle>
               <SortToggle theme={theme}>
                 <span>{LocalizedString.lookup(tr('Sort by:'), locale)}</span>

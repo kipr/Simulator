@@ -56,3 +56,51 @@ export namespace LeaderboardEntry {
     }
   };
 }
+
+/**
+ * Context about the current user's position in the leaderboard.
+ */
+export interface LeaderboardUserContext {
+  /**
+   * User's 1-based position in the leaderboard.
+   */
+  rank: number;
+
+  /**
+   * Entries immediately above the user (faster times), ordered fastest to slowest.
+   * Empty if user is in the top N.
+   */
+  entriesAbove: LeaderboardEntry[];
+
+  /**
+   * The current user's leaderboard entry.
+   */
+  userEntry: LeaderboardEntry;
+
+  /**
+   * Entries immediately below the user (slower times), ordered fastest to slowest.
+   */
+  entriesBelow: LeaderboardEntry[];
+}
+
+/**
+ * Response shape for the /leaderboard/around-me endpoint.
+ * Provides top entries plus context around the current user's position.
+ */
+export interface LeaderboardAroundMeResponse {
+  /**
+   * Top N entries in the leaderboard (always included).
+   */
+  topEntries: LeaderboardEntry[];
+
+  /**
+   * Context about the current user's position.
+   * Undefined if the user has no completion for this challenge.
+   */
+  userContext?: LeaderboardUserContext;
+
+  /**
+   * Total number of participants with valid completions.
+   */
+  totalParticipants: number;
+}
