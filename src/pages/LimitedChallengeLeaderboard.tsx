@@ -73,7 +73,6 @@ const ContentContainer = styled('div', (props: ThemeProps) => ({
   flexDirection: 'column',
   alignItems: 'center',
   padding: '20px',
-  overflow: 'auto',
 }));
 
 const Header = styled('div', () => ({
