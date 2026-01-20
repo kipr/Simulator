@@ -15,7 +15,8 @@ interface LimitedChallengeCompletion {
   failure?: PredicateCompletion;
 
   /**
-   * ISO 8601 timestamp when the best completion was achieved.
+   * ISO 8601 timestamp when the user first successfully completed the challenge.
+   * This is only set once and used for tie-breaking on the leaderboard.
    */
   bestCompletionTime?: string;
 

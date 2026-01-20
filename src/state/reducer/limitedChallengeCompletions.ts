@@ -384,9 +384,12 @@ export const reduceLimitedChallengeCompletions = (state: LimitedChallengeComplet
       completion.robotLinkOrigins = action.robotLinkOrigins;
     });
     case 'limited-challenge-completions/record-best-completion': return mutate(state, action.challengeId, completion => {
-      // Only update if this is a better time (or first completion)
+      // Only update best runtime if this is a better time (or first completion)
       if (completion.bestRuntimeMs === undefined || action.runtimeMs < completion.bestRuntimeMs) {
         completion.bestRuntimeMs = action.runtimeMs;
+      }
+      // Only record completion time the first time the user successfully completes
+      if (completion.bestCompletionTime === undefined) {
         completion.bestCompletionTime = new Date().toISOString();
       }
     });
