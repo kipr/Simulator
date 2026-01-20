@@ -19,17 +19,17 @@ import { LimitedChallengeCompletionsAction } from '../state/reducer/limitedChall
 import { withNavigate, WithNavigateProps } from '../util/withNavigate';
 import tr from '@i18n';
 
-export interface LimitedChallengesPublicProps extends StyleProps, ThemeProps {
+export interface ClosedChallengesPublicProps extends StyleProps, ThemeProps {
 }
 
-interface LimitedChallengesPrivateProps {
+interface ClosedChallengesPrivateProps {
   locale: LocalizedString.Language;
   limitedChallenges: LimitedChallengesState;
   limitedChallengeCompletions: LimitedChallengeCompletions;
   loadCompletion: (challengeId: string) => void;
 }
 
-type Props = LimitedChallengesPublicProps & LimitedChallengesPrivateProps & WithNavigateProps;
+type Props = ClosedChallengesPublicProps & ClosedChallengesPrivateProps & WithNavigateProps;
 
 const Container = styled('div', (props: ThemeProps) => ({
   width: '100%',
@@ -84,48 +84,41 @@ const EmptyState = styled('div', (props: ThemeProps) => ({
   opacity: 0.6,
 }));
 
-const ClosedChallengesButton = styled('button', (props: ThemeProps) => ({
-  backgroundColor: props.theme.borderColor,
+const BackButton = styled('button', (props: ThemeProps) => ({
+  backgroundColor: 'transparent',
   border: `1px solid ${props.theme.borderColor}`,
   borderRadius: '4px',
   color: props.theme.color,
-  padding: '12px 24px',
-  fontSize: '1em',
+  padding: '8px 16px',
+  fontSize: '0.9em',
   cursor: 'pointer',
-  marginTop: '32px',
+  marginBottom: '16px',
   transition: 'all 0.2s ease',
   ':hover': {
-    backgroundColor: props.theme.color,
-    color: props.theme.backgroundColor,
+    backgroundColor: props.theme.borderColor,
   },
 }));
 
-class LimitedChallenges extends React.Component<Props> {
+class ClosedChallenges extends React.Component<Props> {
   componentDidMount() {
-    // Load completions for challenges within one week of opening
+    // Load completions for all closed challenges
     const { limitedChallenges, loadCompletion } = this.props;
     Object.keys(limitedChallenges).forEach(challengeId => {
       const challenge = limitedChallenges[challengeId];
       const brief = Async.brief(challenge);
-      if (brief && this.isWithinOneWeek(brief.openDate)) {
+      if (brief && LimitedChallengeStatus.fromBrief(brief) === 'closed') {
         loadCompletion(challengeId);
       }
     });
   }
 
-  private isWithinOneWeek = (openDate: string): boolean => {
-    const oneWeekFromNow = Date.now() + 7 * 24 * 60 * 60 * 1000;
-    const openTime = new Date(openDate).getTime();
-    return openTime <= oneWeekFromNow;
+  private handleBackClick = () => {
+    this.props.navigate('/limited-challenges');
   };
 
   private handleChallengeClick = (challengeId: string) => {
     // Navigate to the leaderboard page for this challenge
     this.props.navigate(`/limited-challenge/${challengeId}/leaderboard`);
-  };
-
-  private handleClosedChallengesClick = () => {
-    this.props.navigate('/closed-challenges');
   };
 
   private getChallengeBrief = (challenge: AsyncLimitedChallenge): LimitedChallengeBrief | undefined => {
@@ -142,30 +135,31 @@ class LimitedChallenges extends React.Component<Props> {
     const { style, locale, limitedChallenges, limitedChallengeCompletions } = props;
     const theme = DARK;
 
-    // Filter out challenges that are more than a week in the future and exclude closed challenges
+    // Filter to only show closed challenges
     const challengeIds = Object.keys(limitedChallenges).filter(challengeId => {
       const challenge = limitedChallenges[challengeId];
       const brief = Async.brief(challenge);
       if (!brief) return false;
-      const status = LimitedChallengeStatus.fromBrief(brief);
-      // Only show upcoming and open challenges, not closed ones
-      return this.isWithinOneWeek(brief.openDate) && status !== 'closed';
+      return LimitedChallengeStatus.fromBrief(brief) === 'closed';
     });
 
     return (
       <Container style={style} theme={theme}>
         <MainMenu theme={theme} />
         <ContentContainer theme={theme}>
+          <BackButton theme={theme} onClick={this.handleBackClick}>
+            {LocalizedString.lookup(tr('Back to Limited Challenges'), locale)}
+          </BackButton>
           <PageTitle theme={theme}>
-            {LocalizedString.lookup(tr('Limited Challenges'), locale)}
+            {LocalizedString.lookup(tr('Closed Challenges'), locale)}
           </PageTitle>
           <PageDescription theme={theme}>
-            {LocalizedString.lookup(tr('Complete these time-limited challenges as fast as possible! Your best time will be recorded.'), locale)}
+            {LocalizedString.lookup(tr('View past limited challenges and their leaderboards.'), locale)}
           </PageDescription>
 
           {challengeIds.length === 0 ? (
             <EmptyState theme={theme}>
-              {LocalizedString.lookup(tr('No limited challenges available at this time.'), locale)}
+              {LocalizedString.lookup(tr('No closed challenges yet.'), locale)}
             </EmptyState>
           ) : (
             <ChallengeGrid>
@@ -190,10 +184,6 @@ class LimitedChallenges extends React.Component<Props> {
               })}
             </ChallengeGrid>
           )}
-
-          <ClosedChallengesButton theme={theme} onClick={this.handleClosedChallengesClick}>
-            {LocalizedString.lookup(tr('View Closed Challenges'), locale)}
-          </ClosedChallengesButton>
         </ContentContainer>
       </Container>
     );
@@ -211,4 +201,4 @@ export default connect(
       dispatch(LimitedChallengeCompletionsAction.loadLimitedChallengeCompletion({ challengeId }));
     },
   })
-)(withNavigate(LimitedChallenges)) as React.ComponentType<LimitedChallengesPublicProps>;
+)(withNavigate(ClosedChallenges)) as React.ComponentType<ClosedChallengesPublicProps>;
