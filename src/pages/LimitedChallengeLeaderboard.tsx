@@ -474,7 +474,7 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
 
     const secondsStr = remainingSeconds.toString()
       .padStart(2, '0');
-    const msStr = Math.floor(remainingMs / 10).toString()
+    const msStr = Math.round(remainingMs / 10).toString()
       .padStart(2, '0');
 
     if (minutes > 0) {
