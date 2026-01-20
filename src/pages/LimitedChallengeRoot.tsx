@@ -124,6 +124,8 @@ interface RootState {
   nonce: number;
   // Timing for limited challenges
   runStartTime?: number;
+  // Tentative success: captured when success conditions met, finalized after program stops
+  tentativeSuccessRuntimeMs?: number;
 }
 
 type Props = RootPublicProps & RootPrivateProps & WithNavigateProps;
@@ -307,8 +309,8 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
       );
     }
 
-    // Reset timing
-    this.setState({ runStartTime: undefined });
+    // Reset timing and tentative success
+    this.setState({ runStartTime: undefined, tentativeSuccessRuntimeMs: undefined });
 
     this.syncChallengeCompletion_();
   };
@@ -341,26 +343,33 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
       newFailureCompletion
     );
 
-    // Check if success was just achieved and record completion time
-    // Only record completion if success is true AND failure is not true
-    if (success && newSuccessCompletion && this.state.runStartTime) {
-      const isSuccess = newSuccessCompletion.exprStates[success.rootId];
-      const wasSuccess = successCompletion?.exprStates[success.rootId];
-      const isFailure = failure && newFailureCompletion?.exprStates[failure.rootId];
+    // Track tentative success and handle failure invalidation
+    const isSuccess = success && newSuccessCompletion?.exprStates[success.rootId];
+    const wasSuccess = success && successCompletion?.exprStates[success.rootId];
+    const isFailure = failure && newFailureCompletion?.exprStates[failure.rootId];
+    const wasFailure = failure && failureCompletion?.exprStates[failure.rootId];
 
-      if (isSuccess && !wasSuccess && !isFailure) {
-        const runtimeMs = Date.now() - this.state.runStartTime;
-        this.props.onRecordBestCompletion(runtimeMs);
-        
-        // Show success message in console
-        this.setState(prev => ({
-          console: StyledText.extend(prev.console, StyledText.text({
-            text: LocalizedString.lookup(tr(`Challenge completed in ${(runtimeMs / 1000).toFixed(2)} seconds!\n`), this.props.locale),
-            style: { color: '#4caf50', fontWeight: 'bold' }
-          })),
-          runStartTime: undefined,
-        }));
-      }
+    // When success becomes true (and failure is not true), capture tentative success
+    if (isSuccess && !wasSuccess && !isFailure && this.state.runStartTime && !this.state.tentativeSuccessRuntimeMs) {
+      const runtimeMs = Date.now() - this.state.runStartTime;
+      this.setState(prev => ({
+        tentativeSuccessRuntimeMs: runtimeMs,
+        console: StyledText.extend(prev.console, StyledText.text({
+          text: LocalizedString.lookup(tr('Success conditions met - verifying...\n'), this.props.locale),
+          style: { color: '#ffc107', fontWeight: 'bold' }
+        })),
+      }));
+    }
+
+    // When failure becomes true, invalidate any tentative success
+    if (isFailure && !wasFailure && this.state.tentativeSuccessRuntimeMs) {
+      this.setState(prev => ({
+        tentativeSuccessRuntimeMs: undefined,
+        console: StyledText.extend(prev.console, StyledText.text({
+          text: LocalizedString.lookup(tr('Completion invalidated - failure condition triggered\n'), this.props.locale),
+          style: { color: '#f44336', fontWeight: 'bold' }
+        })),
+      }));
     }
 
     this.scheduleSaveChallengeCompletion_();
@@ -497,7 +506,52 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
       simulatorState: SimulatorState.STOPPED
     }, () => {
       this.syncChallengeCompletion_();
+
+      // Finalize completion after 1 second delay to allow physics to settle
+      setTimeout(() => {
+        this.finalizeCompletion_();
+      }, 1000);
     });
+  };
+
+  private finalizeCompletion_ = () => {
+    const { challenge, challengeCompletion } = this.props;
+    const { tentativeSuccessRuntimeMs } = this.state;
+
+    // No tentative success to finalize
+    if (!tentativeSuccessRuntimeMs) return;
+
+    const latestChallenge = Async.latestValue(challenge);
+    const latestChallengeCompletion = Async.latestValue(challengeCompletion);
+
+    if (!latestChallenge || !latestChallengeCompletion) return;
+
+    const { failure } = latestChallenge;
+    const { failure: failureCompletion } = latestChallengeCompletion;
+
+    // Check if failure occurred at any point
+    const isFailure = failure && failureCompletion?.exprStates[failure.rootId];
+
+    if (!isFailure) {
+      // Success is valid - record the completion and save to backend
+      this.props.onRecordBestCompletion(tentativeSuccessRuntimeMs);
+      this.saveChallengeCompletion_();
+
+      this.setState(prev => ({
+        tentativeSuccessRuntimeMs: undefined,
+        runStartTime: undefined,
+        console: StyledText.extend(prev.console, StyledText.text({
+          text: LocalizedString.lookup(tr(`Challenge completed in ${(tentativeSuccessRuntimeMs / 1000).toFixed(2)} seconds!\n`), this.props.locale),
+          style: { color: '#4caf50', fontWeight: 'bold' }
+        })),
+      }));
+    } else {
+      // Failure occurred - clear tentative success without recording
+      this.setState({
+        tentativeSuccessRuntimeMs: undefined,
+        runStartTime: undefined,
+      });
+    }
   };
 
   private onActiveLanguageChange_ = (language: ProgrammingLanguage) => {
