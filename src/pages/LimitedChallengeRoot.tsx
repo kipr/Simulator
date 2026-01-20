@@ -342,11 +342,13 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
     );
 
     // Check if success was just achieved and record completion time
+    // Only record completion if success is true AND failure is not true
     if (success && newSuccessCompletion && this.state.runStartTime) {
       const isSuccess = newSuccessCompletion.exprStates[success.rootId];
       const wasSuccess = successCompletion?.exprStates[success.rootId];
+      const isFailure = failure && newFailureCompletion?.exprStates[failure.rootId];
 
-      if (isSuccess && !wasSuccess) {
+      if (isSuccess && !wasSuccess && !isFailure) {
         const runtimeMs = Date.now() - this.state.runStartTime;
         this.props.onRecordBestCompletion(runtimeMs);
         
