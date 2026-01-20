@@ -87,12 +87,22 @@ const EmptyState = styled('div', (props: ThemeProps) => ({
 
 class LimitedChallenges extends React.Component<Props> {
   componentDidMount() {
-    // Load completions for all challenges
+    // Load completions for challenges within one week of opening
     const { limitedChallenges, loadCompletion } = this.props;
     Object.keys(limitedChallenges).forEach(challengeId => {
-      loadCompletion(challengeId);
+      const challenge = limitedChallenges[challengeId];
+      const brief = Async.brief(challenge);
+      if (brief && this.isWithinOneWeek(brief.openDate)) {
+        loadCompletion(challengeId);
+      }
     });
   }
+
+  private isWithinOneWeek = (openDate: string): boolean => {
+    const oneWeekFromNow = Date.now() + 7 * 24 * 60 * 60 * 1000;
+    const openTime = new Date(openDate).getTime();
+    return openTime <= oneWeekFromNow;
+  };
 
   private handleChallengeClick = (challengeId: string) => {
     // Navigate to the leaderboard page for this challenge
@@ -113,7 +123,13 @@ class LimitedChallenges extends React.Component<Props> {
     const { style, locale, limitedChallenges, limitedChallengeCompletions } = props;
     const theme = DARK;
 
-    const challengeIds = Object.keys(limitedChallenges);
+    // Filter out challenges that are more than a week in the future
+    const challengeIds = Object.keys(limitedChallenges).filter(challengeId => {
+      const challenge = limitedChallenges[challengeId];
+      const brief = Async.brief(challenge);
+      if (!brief) return false;
+      return this.isWithinOneWeek(brief.openDate);
+    });
 
     return (
       <Container style={style} theme={theme}>

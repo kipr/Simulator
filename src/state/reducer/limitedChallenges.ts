@@ -276,8 +276,8 @@ const sampleLimitedChallenge: LimitedChallenge = {
   ],
   sceneId: "jbc2",
   // Time window: Open from Feb 1, 2026 to Feb 7, 2026
-  openDate: '2026-01-19T00:00:00Z',
-  closeDate: '2026-01-26T23:59:59Z',
+  openDate: '2026-01-26T00:00:00Z',
+  closeDate: '2026-01-31T23:59:59Z',
 };
 
 const DEFAULT_LIMITED_CHALLENGES: LimitedChallenges = {
