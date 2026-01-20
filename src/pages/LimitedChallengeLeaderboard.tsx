@@ -34,6 +34,12 @@ interface LimitedChallengeLeaderboardPrivateProps {
   currentUserUid?: string;
 }
 
+interface CachedLeaderboardResponse {
+  topEntries: LeaderboardEntry[];
+  userContext?: LeaderboardUserContext;
+  totalParticipants: number;
+}
+
 interface LimitedChallengeLeaderboardState {
   topEntries: LeaderboardEntry[];
   userContext?: LeaderboardUserContext;
@@ -42,6 +48,7 @@ interface LimitedChallengeLeaderboardState {
   error?: string;
   sortField: LeaderboardSortField;
   status: LimitedChallengeStatus;
+  cache: Partial<Record<LeaderboardSortField, CachedLeaderboardResponse>>;
 }
 
 type Props = LimitedChallengeLeaderboardPublicProps & LimitedChallengeLeaderboardPrivateProps & WithNavigateProps;
@@ -345,6 +352,7 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
       loading: true,
       sortField: 'runtime',
       status: challengeBrief ? LimitedChallengeStatus.fromBrief(challengeBrief) : 'closed',
+      cache: {},
     };
   }
 
@@ -371,7 +379,10 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps: Props) {
     if (prevProps.params.challengeId !== this.props.params.challengeId) {
-      void this.fetchLeaderboard();
+      // Clear cache when switching challenges
+      this.setState({ cache: {} }, () => {
+        void this.fetchLeaderboard();
+      });
     }
   }
 
@@ -401,12 +412,23 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
       
       const data = await response.json() as LeaderboardAroundMeResponse;
       
-      this.setState({
+      // Cache the response
+      const cachedResponse: CachedLeaderboardResponse = {
+        topEntries: data.topEntries,
+        userContext: data.userContext,
+        totalParticipants: data.totalParticipants,
+      };
+      
+      this.setState(prevState => ({
         topEntries: data.topEntries,
         userContext: data.userContext,
         totalParticipants: data.totalParticipants,
         loading: false,
-      });
+        cache: {
+          ...prevState.cache,
+          [sortBy]: cachedResponse,
+        },
+      }));
     } catch (error) {
       console.error('Error fetching leaderboard:', error);
       this.setState({
@@ -426,7 +448,20 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
   };
 
   private handleSortChange = (field: LeaderboardSortField) => {
-    if (field !== this.state.sortField) {
+    if (field === this.state.sortField) return;
+    
+    // Check cache first
+    const cached = this.state.cache[field];
+    if (cached) {
+      // Use cached data immediately
+      this.setState({
+        sortField: field,
+        topEntries: cached.topEntries,
+        userContext: cached.userContext,
+        totalParticipants: cached.totalParticipants,
+      });
+    } else {
+      // Fetch fresh data
       void this.fetchLeaderboard(field);
     }
   };
