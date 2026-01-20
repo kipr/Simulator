@@ -3,6 +3,44 @@ const express = require('express');
 const admin = require('firebase-admin');
 
 /**
+ * Generate a deterministic pseudonym from a user ID for privacy.
+ * Uses FNV-1a hash to convert the UID to a consistent pseudonym.
+ * @param {string} uid - The user's unique identifier
+ * @returns {string} A pseudonym like "cyan-plasma-dolphin-42"
+ */
+function anonymizeUserId(uid) {
+  const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'white',
+    'cyan', 'magenta', 'lime', 'teal', 'indigo', 'violet', 'gold', 'silver', 'bronze', 'maroon', 'tan', 'navy', 'aqua'];
+  const elements = ['fire', 'water', 'earth', 'air', 'light', 'dark', 'metal', 'wood', 'ice',
+    'shadow', 'spirit', 'void', 'plasma', 'gravity', 'time', 'space', 'aether', 'chaos', 'order'];
+  const animals = ['tiger', 'bear', 'wolf', 'eagle', 'shark', 'whale', 'lion', 'panther', 'jaguar',
+    'fox', 'owl', 'hawk', 'dolphin', 'rhino', 'hippo', 'giraffe', 'zebra',
+    'koala', 'panda', 'leopard', 'lynx', 'bison', 'buffalo', 'camel',
+    'raven', 'sparrow', 'swan', 'toucan', 'vulture', 'walrus', 'yak'];
+
+  // FNV-1a hash function to convert string to 32-bit integer
+  const stringTo32BitInt = (id) => {
+    const FNV_PRIME = 0x01000193; // 16777619
+    let hash = 0x811c9dc5; // FNV offset basis
+
+    for (let i = 0; i < id.length; i++) {
+      hash ^= id.charCodeAt(i);
+      hash = (hash * FNV_PRIME) >>> 0;
+    }
+
+    return hash >>> 0;
+  };
+
+  const hash = Math.abs(stringTo32BitInt(uid));
+  const color = colors[hash % colors.length];
+  const element = elements[hash % elements.length];
+  const animal = animals[hash % animals.length];
+  const number = hash % 97;
+
+  return `${color}-${element}-${animal}-${number}`;
+}
+
+/**
  * Creates an Express router for handling limited challenge completion CRUD operations.
  * 
  * Firestore structure:
@@ -73,8 +111,6 @@ module.exports = function createLimitedChallengeCompletionsRouter(firebaseTokenM
       const decoded = await firebaseTokenManager.verifyIdToken(token);
       req.user = {
         uid: decoded.uid,
-        displayName: decoded.name || decoded.email || 'Anonymous',
-        email: decoded.email,
       };
       next();
     } catch (error) {
@@ -133,16 +169,17 @@ module.exports = function createLimitedChallengeCompletionsRouter(firebaseTokenM
   router.post('/:challengeId', async (req, res) => {
     try {
       const { challengeId } = req.params;
-      const { uid, displayName } = req.user;
+      const { uid } = req.user;
       const data = req.body || {};
 
       const docRef = getCompletionRef(challengeId, uid);
 
       // Merge with existing data and add metadata
+      // Use anonymized UID as displayName for privacy
       const completionData = {
         ...data,
         uid,
-        displayName,
+        displayName: anonymizeUserId(uid),
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       };
 

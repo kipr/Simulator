@@ -494,42 +494,6 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
     });
   };
 
-  /**
-   * Generate a deterministic pseudonym from a user ID for privacy.
-   * Uses the same algorithm as the main Leaderboard component.
-   */
-  private anonymizeUserId = (uid: string): string => {
-    const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'white',
-      'cyan', 'magenta', 'lime', 'teal', 'indigo', 'violet', 'gold', 'silver', 'bronze', 'maroon', 'tan', 'navy', 'aqua'];
-    const elements = ['fire', 'water', 'earth', 'air', 'light', 'dark', 'metal', 'wood', 'ice',
-      'shadow', 'spirit', 'void', 'plasma', 'gravity', 'time', 'space', 'aether', 'chaos', 'order'];
-    const animals = ['tiger', 'bear', 'wolf', 'eagle', 'shark', 'whale', 'lion', 'panther', 'jaguar',
-      'fox', 'owl', 'hawk', 'dolphin', 'rhino', 'hippo', 'giraffe', 'zebra',
-      'koala', 'panda', 'leopard', 'lynx', 'bison', 'buffalo', 'camel',
-      'raven', 'sparrow', 'swan', 'toucan', 'vulture', 'walrus', 'yak'];
-
-    // FNV-1a hash function to convert string to 32-bit integer
-    const stringTo32BitInt = (id: string): number => {
-      const FNV_PRIME = 0x01000193; // 16777619
-      let hash = 0x811c9dc5; // FNV offset basis
-
-      for (let i = 0; i < id.length; i++) {
-        hash ^= id.charCodeAt(i);
-        hash = (hash * FNV_PRIME) >>> 0;
-      }
-
-      return hash >>> 0;
-    };
-
-    const hash = Math.abs(stringTo32BitInt(uid));
-    const color = colors[hash % colors.length];
-    const element = elements[hash % elements.length];
-    const animal = animals[hash % animals.length];
-    const number = hash % 97;
-
-    return `${color}-${element}-${animal}-${number}`;
-  };
-
   private getStatusText = (): string => {
     const { locale } = this.props;
     const { status } = this.state;
@@ -561,7 +525,7 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
       <TableRow key={`${entry.uid}-${rank}`} theme={theme} $highlight={isCurrentUser}>
         <RankCell theme={theme} rank={rank}>#{rank}</RankCell>
         <TableCell theme={theme}>
-          {this.anonymizeUserId(entry.uid)}
+          {entry.displayName}
           {isCurrentUser && ' (You)'}
         </TableCell>
         <TableCell theme={theme}>{this.formatRuntime(entry.bestRuntimeMs)}</TableCell>
@@ -666,7 +630,8 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
 
     const isOpen = status === 'open';
     const disabledMessage = this.getDisabledMessage();
-    const currentUserName = currentUserUid ? this.anonymizeUserId(currentUserUid) : undefined;
+    // Get the current user's display name from their leaderboard entry (if they have one)
+    const currentUserName = state.userContext?.userEntry.displayName;
 
     return (
       <Container style={style} theme={theme}>
