@@ -379,10 +379,12 @@ module.exports = function createLimitedChallengeCompletionsRouter(firebaseTokenM
     try {
       const { challengeId } = req.params;
 
+      const sortBy = req.query.sortBy === 'completionTime' ? 'completionTime' : 'runtime';
+      const sortField = sortBy === 'completionTime' ? 'bestCompletionTime' : 'bestRuntimeMs';
+
       const snapshot = await getCompletionsCollection(challengeId)
-        .where('bestRuntimeMs', '>', 0)
-        .orderBy('bestRuntimeMs', 'asc')
-        .limit(100)
+        .orderBy(sortField, 'asc')
+        .limit(1000)
         .get();
 
       const leaderboard = [];

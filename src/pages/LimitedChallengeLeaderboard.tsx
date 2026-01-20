@@ -38,17 +38,21 @@ interface CachedLeaderboardResponse {
   topEntries: LeaderboardEntry[];
   userContext?: LeaderboardUserContext;
   totalParticipants: number;
+  showFullLeaderboard: boolean;
+  currentUserEntry?: LeaderboardEntry;
 }
 
 interface LimitedChallengeLeaderboardState {
   topEntries: LeaderboardEntry[];
   userContext?: LeaderboardUserContext;
+  currentUserEntry?: LeaderboardEntry;
   totalParticipants: number;
   loading: boolean;
   error?: string;
   sortField: LeaderboardSortField;
   status: LimitedChallengeStatus;
-  cache: Partial<Record<LeaderboardSortField, CachedLeaderboardResponse>>;
+  cache: Partial<Record<string, CachedLeaderboardResponse>>;
+  showFullLeaderboard: boolean;
 }
 
 type Props = LimitedChallengeLeaderboardPublicProps & LimitedChallengeLeaderboardPrivateProps & WithNavigateProps;
@@ -353,6 +357,7 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
       sortField: 'runtime',
       status: challengeBrief ? LimitedChallengeStatus.fromBrief(challengeBrief) : 'closed',
       cache: {},
+      showFullLeaderboard: false,
     };
   }
 
@@ -393,13 +398,20 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
 
   private fetchLeaderboard = async (sortField?: LeaderboardSortField) => {
     const { params: { challengeId } } = this.props;
+    const { showFullLeaderboard } = this.state;
     const sortBy = sortField ?? this.state.sortField;
+    const cacheKey = `${sortBy}-${showFullLeaderboard ? 'full' : 'around'}`;
     
     this.setState({ loading: true, error: undefined, sortField: sortBy });
     
     try {
       const token = await db.tokenManager?.token();
-      const response = await fetch(`/api/limited_challenge_completion/${challengeId}/leaderboard/around-me?top=3&range=3&sortBy=${sortBy}`, {
+      let url = `/api/limited_challenge_completion/${challengeId}/leaderboard/around-me?top=3&range=3&sortBy=${sortBy}`;
+      if (showFullLeaderboard) {
+        url = `/api/limited_challenge_completion/${challengeId}/leaderboard?sortBy=${sortBy}`;
+      }
+
+      const response = await fetch(url, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -410,23 +422,43 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
         throw new Error(`Failed to fetch leaderboard: ${response.statusText}`);
       }
       
-      const data = await response.json() as LeaderboardAroundMeResponse;
+      let topEntries: LeaderboardEntry[];
+      let userContext: LeaderboardUserContext | undefined;
+      let totalParticipants: number;
+      let currentUserEntry: LeaderboardEntry | undefined = this.state.currentUserEntry;
+
+      if (showFullLeaderboard) {
+        topEntries = await response.json() as LeaderboardEntry[];
+        totalParticipants = topEntries.length;
+        userContext = undefined;
+      } else {
+        const data = await response.json() as LeaderboardAroundMeResponse;
+        topEntries = data.topEntries;
+        userContext = data.userContext;
+        totalParticipants = data.totalParticipants;
+        if (userContext?.userEntry) {
+          currentUserEntry = userContext.userEntry;
+        }
+      }
       
       // Cache the response
       const cachedResponse: CachedLeaderboardResponse = {
-        topEntries: data.topEntries,
-        userContext: data.userContext,
-        totalParticipants: data.totalParticipants,
+        topEntries,
+        userContext,
+        totalParticipants,
+        showFullLeaderboard,
+        currentUserEntry,
       };
       
       this.setState(prevState => ({
-        topEntries: data.topEntries,
-        userContext: data.userContext,
-        totalParticipants: data.totalParticipants,
+        topEntries,
+        userContext,
+        currentUserEntry,
+        totalParticipants,
         loading: false,
         cache: {
           ...prevState.cache,
-          [sortBy]: cachedResponse,
+          [cacheKey]: cachedResponse,
         },
       }));
     } catch (error) {
@@ -448,22 +480,39 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
   };
 
   private handleSortChange = (field: LeaderboardSortField) => {
+    const { showFullLeaderboard } = this.state;
     if (field === this.state.sortField) return;
     
     // Check cache first
-    const cached = this.state.cache[field];
+    const cacheKey = `${field}-${showFullLeaderboard ? 'full' : 'around'}`;
+    const cached = this.state.cache[cacheKey];
     if (cached) {
       // Use cached data immediately
       this.setState({
         sortField: field,
         topEntries: cached.topEntries,
         userContext: cached.userContext,
+        currentUserEntry: cached.currentUserEntry,
         totalParticipants: cached.totalParticipants,
       });
     } else {
       // Fetch fresh data
       void this.fetchLeaderboard(field);
     }
+  };
+
+  private handleToggleView = () => {
+    this.setState(
+      prevState => ({ 
+        showFullLeaderboard: !prevState.showFullLeaderboard,
+        loading: true, // Show loading immediately
+        cache: {} // Clear cache to avoid stale data (optional, but safer)
+      }),
+      () => {
+        // Fetch new data
+        void this.fetchLeaderboard();
+      }
+    );
   };
 
   private formatRuntime = (ms: number): string => {
@@ -631,7 +680,7 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
     const isOpen = status === 'open';
     const disabledMessage = this.getDisabledMessage();
     // Get the current user's display name from their leaderboard entry (if they have one)
-    const currentUserName = state.userContext?.userEntry.displayName;
+    const currentUserName = state.currentUserEntry?.displayName || state.userContext?.userEntry.displayName;
 
     return (
       <Container style={style} theme={theme}>
@@ -695,6 +744,15 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
                 )}
               </LeaderboardTitle>
               <SortToggle theme={theme}>
+                <SortButton
+                  theme={theme}
+                  onClick={this.handleToggleView}
+                  style={{ marginRight: '16px' }}
+                >
+                  {this.state.showFullLeaderboard 
+                    ? LocalizedString.lookup(tr('Show Around Me'), locale)
+                    : LocalizedString.lookup(tr('Show Full Board'), locale)}
+                </SortButton>
                 <span>{LocalizedString.lookup(tr('Sort by:'), locale)}</span>
                 <SortButton
                   theme={theme}
