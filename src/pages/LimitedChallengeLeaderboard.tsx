@@ -755,17 +755,17 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
                 <span>{LocalizedString.lookup(tr('Sort by:'), locale)}</span>
                 <SortButton
                   theme={theme}
-                  $active={sortField === 'completionTime'}
-                  onClick={() => this.handleSortChange('completionTime')}
-                >
-                  {LocalizedString.lookup(tr('First to Complete'), locale)}
-                </SortButton>
-                <SortButton
-                  theme={theme}
                   $active={sortField === 'runtime'}
                   onClick={() => this.handleSortChange('runtime')}
                 >
                   {LocalizedString.lookup(tr('Fastest Runtime'), locale)}
+                </SortButton>
+                <SortButton
+                  theme={theme}
+                  $active={sortField === 'completionTime'}
+                  onClick={() => this.handleSortChange('completionTime')}
+                >
+                  {LocalizedString.lookup(tr('First to Complete'), locale)}
                 </SortButton>
               </SortToggle>
             </LeaderboardHeader>
