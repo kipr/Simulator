@@ -103,4 +103,9 @@ export interface LeaderboardAroundMeResponse {
    * Total number of participants with valid completions.
    */
   totalParticipants: number;
+
+  /**
+   * The sort field used for this response.
+   */
+  sortBy: LeaderboardSortField;
 }

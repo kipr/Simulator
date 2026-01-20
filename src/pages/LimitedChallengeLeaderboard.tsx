@@ -380,14 +380,15 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
     return challenge ? Async.brief(challenge) : undefined;
   };
 
-  private fetchLeaderboard = async () => {
+  private fetchLeaderboard = async (sortField?: LeaderboardSortField) => {
     const { params: { challengeId } } = this.props;
+    const sortBy = sortField ?? this.state.sortField;
     
-    this.setState({ loading: true, error: undefined });
+    this.setState({ loading: true, error: undefined, sortField: sortBy });
     
     try {
       const token = await db.tokenManager?.token();
-      const response = await fetch(`/api/limited_challenge_completion/${challengeId}/leaderboard/around-me?top=10&range=10`, {
+      const response = await fetch(`/api/limited_challenge_completion/${challengeId}/leaderboard/around-me?top=3&range=3&sortBy=${sortBy}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -425,7 +426,9 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
   };
 
   private handleSortChange = (field: LeaderboardSortField) => {
-    this.setState({ sortField: field });
+    if (field !== this.state.sortField) {
+      void this.fetchLeaderboard(field);
+    }
   };
 
   private formatRuntime = (ms: number): string => {
@@ -534,7 +537,7 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
 
   private renderLeaderboard = () => {
     const { locale, currentUserUid } = this.props;
-    const { topEntries, userContext, totalParticipants, loading, error, sortField } = this.state;
+    const { topEntries, userContext, loading, error } = this.state;
     const theme = DARK;
 
     if (loading) {
@@ -562,13 +565,10 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
       );
     }
 
-    // Sort top entries based on selected sort field
-    const sortedTopEntries = LeaderboardEntry.sort(topEntries, sortField);
-
     // Check if user is in top entries (to avoid duplicate display)
-    const userInTopEntries = userContext && sortedTopEntries.some(e => e.uid === userContext.userEntry.uid);
+    const userInTopEntries = userContext && topEntries.some(e => e.uid === userContext.userEntry.uid);
 
-    // For user context section, we need to sort and calculate ranks appropriately
+    // Show user context section only if user has a completion and is not in top N
     const showUserContextSection = userContext && !userInTopEntries;
 
     return (
@@ -582,13 +582,9 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
           </tr>
         </thead>
         <tbody>
-          {/* Top entries */}
-          {sortedTopEntries.map((entry, index) => {
-            // When sorted by runtime, index+1 is the rank
-            // When sorted by completion time, we still show runtime-based rank for consistency
-            const rank = sortField === 'runtime'
-              ? index + 1
-              : topEntries.findIndex(e => e.uid === entry.uid) + 1;
+          {/* Top entries - already sorted by server */}
+          {topEntries.map((entry, index) => {
+            const rank = index + 1;
             const isCurrentUser = currentUserUid === entry.uid;
             return this.renderLeaderboardRow(entry, rank, isCurrentUser);
           })}

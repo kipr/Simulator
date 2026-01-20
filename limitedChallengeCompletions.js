@@ -12,29 +12,40 @@ const admin = require('firebase-admin');
  * for a specific challenge.
  * 
  * Required Firestore indexes:
- *   Collection group: completions (under limited_challenge_completions/{challengeId})
+ *   Collection: completions (under limited_challenge_completions/{challengeId})
  *   
- *   1. Single-field index (auto-created by Firestore):
- *      - bestRuntimeMs ASC
+ *   1. Single-field indexes (auto-created by Firestore):
+ *      - bestRuntimeMs ASC/DESC
+ *      - bestCompletionTime ASC/DESC
  *   
- *   2. Composite index (optional, for tie-breaking):
+ *   2. Composite indexes (required for sortBy=completionTime with range filters):
  *      - bestRuntimeMs ASC, bestCompletionTime ASC
+ *      - bestRuntimeMs ASC, bestCompletionTime DESC
  *      
- *   To create the composite index via Firebase Console:
+ *   To create via Firebase Console:
  *   1. Go to Firestore > Indexes
- *   2. Add composite index for collection "completions"
- *   3. Fields: bestRuntimeMs (Ascending), bestCompletionTime (Ascending)
+ *   2. Add composite indexes for collection "completions"
  *   
  *   Or create firestore.indexes.json:
  *   {
- *     "indexes": [{
- *       "collectionGroup": "completions",
- *       "queryScope": "COLLECTION",
- *       "fields": [
- *         { "fieldPath": "bestRuntimeMs", "order": "ASCENDING" },
- *         { "fieldPath": "bestCompletionTime", "order": "ASCENDING" }
- *       ]
- *     }]
+ *     "indexes": [
+ *       {
+ *         "collectionGroup": "completions",
+ *         "queryScope": "COLLECTION",
+ *         "fields": [
+ *           { "fieldPath": "bestRuntimeMs", "order": "ASCENDING" },
+ *           { "fieldPath": "bestCompletionTime", "order": "ASCENDING" }
+ *         ]
+ *       },
+ *       {
+ *         "collectionGroup": "completions",
+ *         "queryScope": "COLLECTION",
+ *         "fields": [
+ *           { "fieldPath": "bestRuntimeMs", "order": "ASCENDING" },
+ *           { "fieldPath": "bestCompletionTime", "order": "DESCENDING" }
+ *         ]
+ *       }
+ *     ]
  *   }
  */
 module.exports = function createLimitedChallengeCompletionsRouter(firebaseTokenManager) {
@@ -192,6 +203,7 @@ module.exports = function createLimitedChallengeCompletionsRouter(firebaseTokenM
    * Query params:
    *   - top (default: 10): Number of top entries to always include
    *   - range (default: 5): Number of entries above/below user to include
+   *   - sortBy (default: 'runtime'): Sort field - 'runtime' or 'completionTime'
    * 
    * Response shape:
    * {
@@ -202,7 +214,8 @@ module.exports = function createLimitedChallengeCompletionsRouter(firebaseTokenM
    *     userEntry: LeaderboardEntry,
    *     entriesBelow: LeaderboardEntry[]
    *   },
-   *   totalParticipants: number
+   *   totalParticipants: number,
+   *   sortBy: 'runtime' | 'completionTime'
    * }
    */
   router.get('/:challengeId/leaderboard/around-me', async (req, res) => {
@@ -213,22 +226,29 @@ module.exports = function createLimitedChallengeCompletionsRouter(firebaseTokenM
       // Parse and validate query params
       const top = Math.min(Math.max(parseInt(req.query.top, 10) || 10, 1), 100);
       const range = Math.min(Math.max(parseInt(req.query.range, 10) || 5, 1), 50);
+      const sortBy = req.query.sortBy === 'completionTime' ? 'completionTime' : 'runtime';
+      
+      // Determine sort field based on sortBy parameter
+      const sortField = sortBy === 'completionTime' ? 'bestCompletionTime' : 'bestRuntimeMs';
       
       const completionsCollection = getCompletionsCollection(challengeId);
+      
+      // Helper to create base query - uses sort field for filtering to avoid
+      // Firestore's limitation on inequality filters across multiple fields.
+      // orderBy implicitly filters out documents where the field doesn't exist.
+      const baseQuery = () => completionsCollection.orderBy(sortField, 'asc');
       
       // Run queries in parallel where possible
       const [userDoc, totalSnapshot, topSnapshot] = await Promise.all([
         // 1. Get user's completion
         getCompletionRef(challengeId, uid).get(),
-        // 2. Get total count of participants
+        // 2. Get total count of participants (use bestRuntimeMs as canonical "has completion" check)
         completionsCollection
           .where('bestRuntimeMs', '>', 0)
           .count()
           .get(),
-        // 3. Get top N entries
-        completionsCollection
-          .where('bestRuntimeMs', '>', 0)
-          .orderBy('bestRuntimeMs', 'asc')
+        // 3. Get top N entries (sorted by the selected field)
+        baseQuery()
           .limit(top)
           .get(),
       ]);
@@ -247,17 +267,17 @@ module.exports = function createLimitedChallengeCompletionsRouter(firebaseTokenM
           topEntries,
           userContext: undefined,
           totalParticipants,
+          sortBy,
         });
       }
       
       const userData = userDoc.data();
-      const userRuntime = userData.bestRuntimeMs;
+      const userSortValue = userData[sortField];
       const userEntry = formatLeaderboardEntry(userData);
       
-      // Get user's rank via count() aggregation
+      // Get user's rank via count() aggregation (count entries with better sort value)
       const rankSnapshot = await completionsCollection
-        .where('bestRuntimeMs', '>', 0)
-        .where('bestRuntimeMs', '<', userRuntime)
+        .where(sortField, '<', userSortValue)
         .count()
         .get();
       const rank = rankSnapshot.data().count + 1;
@@ -271,23 +291,21 @@ module.exports = function createLimitedChallengeCompletionsRouter(firebaseTokenM
       if (!userInTopN) {
         // Fetch context around the user
         const [aboveSnapshot, belowSnapshot] = await Promise.all([
-          // Entries above (faster than user) - order descending to get closest first
+          // Entries above (better sort value) - order descending to get closest first
           completionsCollection
-            .where('bestRuntimeMs', '>', 0)
-            .where('bestRuntimeMs', '<', userRuntime)
-            .orderBy('bestRuntimeMs', 'desc')
+            .where(sortField, '<', userSortValue)
+            .orderBy(sortField, 'desc')
             .limit(range)
             .get(),
-          // Entries below (slower than user)
+          // Entries below (worse sort value)
           completionsCollection
-            .where('bestRuntimeMs', '>', 0)
-            .where('bestRuntimeMs', '>', userRuntime)
-            .orderBy('bestRuntimeMs', 'asc')
+            .where(sortField, '>', userSortValue)
+            .orderBy(sortField, 'asc')
             .limit(range)
             .get(),
         ]);
         
-        // Reverse entriesAbove so they're in ascending order (fastest first)
+        // Reverse entriesAbove so they're in ascending order (best first)
         aboveSnapshot.forEach(doc => {
           entriesAbove.unshift(formatLeaderboardEntry(doc.data()));
         });
@@ -306,6 +324,7 @@ module.exports = function createLimitedChallengeCompletionsRouter(firebaseTokenM
           entriesBelow,
         },
         totalParticipants,
+        sortBy,
       });
     } catch (error) {
       console.error('Error fetching leaderboard around user:', error);
