@@ -15,6 +15,7 @@ import Async from '../state/State/Async';
 import { LeaderboardEntry, LeaderboardSortField } from '../state/State/LimitedChallengeLeaderboard';
 
 import { withParams } from '../util/withParams';
+import { withNavigate, WithNavigateProps } from '../util/withNavigate';
 import tr from '@i18n';
 import db from '../db';
 
@@ -41,7 +42,7 @@ interface LimitedChallengeLeaderboardState {
   status: LimitedChallengeStatus;
 }
 
-type Props = LimitedChallengeLeaderboardPublicProps & LimitedChallengeLeaderboardPrivateProps;
+type Props = LimitedChallengeLeaderboardPublicProps & LimitedChallengeLeaderboardPrivateProps & WithNavigateProps;
 type State = LimitedChallengeLeaderboardState;
 
 const Container = styled('div', (props: ThemeProps) => ({
@@ -367,7 +368,7 @@ class LimitedChallengeLeaderboard extends React.Component<Props, State> {
   };
 
   private handleBackClick = () => {
-    window.location.href = '/limited-challenges';
+    this.props.navigate('/limited-challenges');
   };
 
   private handleEnterChallenge = () => {
@@ -634,6 +635,6 @@ const ConnectedLimitedChallengeLeaderboard = connect(
     challenge: state.limitedChallenges[challengeId],
     currentUserUid: state.users.me,
   })
-)(LimitedChallengeLeaderboard);
+)(withNavigate(LimitedChallengeLeaderboard));
 
 export default withParams<LimitedChallengeLeaderboardRouteParams>()(ConnectedLimitedChallengeLeaderboard);
