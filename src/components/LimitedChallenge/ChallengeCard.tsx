@@ -31,9 +31,9 @@ const Container = styled('div', (props: ThemeProps & { status: LimitedChallengeS
   overflow: 'hidden',
   margin: '10px',
   transition: 'all 0.3s ease',
-  cursor: 'pointer',
+  cursor: props.status === 'upcoming' ? 'default' : 'pointer',
   opacity: props.status === 'closed' ? 0.7 : 1,
-  ':hover': {
+  ':hover': props.status === 'upcoming' ? {} : {
     transform: 'translateY(-2px)',
     boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
   },
@@ -150,8 +150,11 @@ class ChallengeCard extends React.Component<ChallengeCardProps, ChallengeCardSta
 
   private handleClick = () => {
     const { challengeId, onClick } = this.props;
-    // Allow click on all statuses - the leaderboard page will handle
-    // showing the appropriate disabled state for non-open challenges
+    const { status } = this.state;
+
+    // Don't allow clicking on upcoming challenges
+    if (status === 'upcoming') return;
+
     onClick(challengeId);
   };
 
@@ -170,8 +173,14 @@ class ChallengeCard extends React.Component<ChallengeCardProps, ChallengeCardSta
     const { challenge, completion, theme, locale } = this.props;
     const { status } = this.state;
 
-    const name = LocalizedString.lookup(challenge.name, locale);
-    const description = LocalizedString.lookup(challenge.description, locale);
+    // Hide name and description for upcoming challenges
+    const isUpcoming = status === 'upcoming';
+    const name = isUpcoming
+      ? LocalizedString.lookup(tr('Mystery Challenge'), locale)
+      : LocalizedString.lookup(challenge.name, locale);
+    const description = isUpcoming
+      ? LocalizedString.lookup(tr('Check back when this challenge opens to see what awaits!'), locale)
+      : LocalizedString.lookup(challenge.description, locale);
 
     return (
       <Container theme={theme} status={status} onClick={this.handleClick}>
