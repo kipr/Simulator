@@ -4,6 +4,8 @@ import Dict from '../../util/objectOps/Dict';
 import Async from "./Async";
 import { AsyncChallenge } from './Challenge';
 import { AsyncChallengeCompletion } from './ChallengeCompletion';
+import { AsyncLimitedChallenge } from './LimitedChallenge';
+import { AsyncLimitedChallengeCompletion } from './LimitedChallengeCompletion';
 import Documentation from './Documentation';
 import DocumentationLocation from './Documentation/DocumentationLocation';
 import Robot from './Robot';
@@ -70,6 +72,18 @@ export type ChallengeCompletions = Dict<AsyncChallengeCompletion>;
 
 export namespace ChallengeCompletions {
   export const EMPTY: ChallengeCompletions = {};
+}
+
+export type LimitedChallenges = Dict<AsyncLimitedChallenge>;
+
+export namespace LimitedChallenges {
+  export const EMPTY: LimitedChallenges = {};
+}
+
+export type LimitedChallengeCompletions = Dict<AsyncLimitedChallengeCompletion>;
+
+export namespace LimitedChallengeCompletions {
+  export const EMPTY: LimitedChallengeCompletions = {};
 }
 
 export interface Robots {

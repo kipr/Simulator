@@ -9,6 +9,10 @@ import { auth } from './firebase/firebase';
 import Dashboard from './pages/Dashboard';
 import Tutorials from './pages/Tutorials';
 import Leaderboard from './pages/Leaderboard';
+import LimitedChallenges from './pages/LimitedChallenges';
+import ClosedChallenges from './pages/ClosedChallenges';
+import LimitedChallengeRoot from './pages/LimitedChallengeRoot';
+import LimitedChallengeLeaderboard from './pages/LimitedChallengeLeaderboard';
 
 import Loading from './components/Loading';
 import Root from './pages/Root';
@@ -190,6 +194,10 @@ class App extends React.Component<Props, State> {
           <Route path="/" element={<Dashboard theme={DARK} />} />
           <Route path="/tutorials" element={<Tutorials theme={DARK} />} />
           <Route path="/leaderboard" element={<Leaderboard theme={DARK} />} />
+          <Route path="/limited-challenges" element={<LimitedChallenges theme={DARK} />} />
+          <Route path="/closed-challenges" element={<ClosedChallenges theme={DARK} />} />
+          <Route path="/limited-challenge/:challengeId/leaderboard" element={<LimitedChallengeLeaderboard theme={DARK} />} />
+          <Route path="/limited-challenge/:challengeId" element={<LimitedChallengeRoot />} />
           <Route path="/scene/:sceneId" element={<Root />} />
           <Route path="/challenge/:challengeId" element={<ChallengeRoot />} />
           <Route path="/curriculum" element={<CurriculumPage />} />

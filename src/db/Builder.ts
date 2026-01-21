@@ -1,9 +1,12 @@
 import Dict from '../util/objectOps/Dict';
 import store, { State } from '../state';
 import { ChallengeCompletionsAction, ChallengesAction, ClassroomsAction, ScenesAction } from '../state/reducer';
+import { LimitedChallengeCompletionsAction } from '../state/reducer/limitedChallengeCompletions';
 import Async from '../state/State/Async';
 import { AsyncChallenge } from '../state/State/Challenge';
+import { AsyncLimitedChallenge } from '../state/State/LimitedChallenge';
 import { AsyncChallengeCompletion } from '../state/State/ChallengeCompletion';
+import { AsyncLimitedChallengeCompletion } from '../state/State/LimitedChallengeCompletion';
 import { AsyncScene } from '../state/State/Scene';
 import { AsyncClassroom } from 'state/State/Classroom';
 
@@ -67,6 +70,50 @@ export class ClassroomBuilder {
   }
 }
 
+export class LimitedChallengeBuilder {
+  private id_: string;
+  private builder_: Builder;
+
+  private challenge_: AsyncLimitedChallenge;
+
+  constructor(id: string, builder: Builder) {
+    this.id_ = id;
+    this.builder_ = builder;
+
+    this.challenge_ = builder.state.limitedChallenges[id];
+
+    // Limited challenges are defined statically, so they should always be loaded
+    if (this.challenge_) {
+      builder.addLimitedChallenge_(id, this.challenge_);
+    }
+  }
+
+  scene(): SceneBuilder {
+    const latest = Async.latestValue(this.challenge_);
+    if (!latest) return new SceneBuilder(undefined, this.builder_);
+
+    return new SceneBuilder(latest.sceneId, this.builder_);
+  }
+
+  completion(): LimitedChallengeCompletionBuilder {
+    return new LimitedChallengeCompletionBuilder(this.id_, this.builder_);
+  }
+}
+
+export class LimitedChallengeCompletionBuilder {
+  constructor(id: string | undefined, builder: Builder) {
+    if (!id) return;
+
+    const challengeCompletion = builder.state.limitedChallengeCompletions[id];
+
+    if (!challengeCompletion || challengeCompletion.type === Async.Type.Unloaded) {
+      builder.loadLimitedChallengeCompletion_(id);
+    } else {
+      builder.addLimitedChallengeCompletion_(id, challengeCompletion);
+    }
+  }
+}
+
 export class SceneBuilder {
   constructor(id: string | undefined, builder: Builder) {
     if (!id) return;
@@ -105,12 +152,24 @@ class Builder {
 
   private classroomsToLoad_: Set<string> = new Set();
 
+  private limitedChallenges_: Dict<AsyncLimitedChallenge> = {};
+  get limitedChallenges() { return this.limitedChallenges_; }
+
+  private limitedChallengeCompletions_: Dict<AsyncLimitedChallengeCompletion> = {};
+  get limitedChallengeCompletions() { return this.limitedChallengeCompletions_; }
+
+  private limitedChallengeCompletionsToLoad_: Set<string> = new Set();
+
   constructor(state: State) {
     this.state_ = state;
   }
 
   challenge(id: string): ChallengeBuilder {
     return new ChallengeBuilder(id, this);
+  }
+
+  limitedChallenge(id: string): LimitedChallengeBuilder {
+    return new LimitedChallengeBuilder(id, this);
   }
 
   scene(id: string): SceneBuilder {
@@ -137,6 +196,14 @@ class Builder {
     this.classrooms_[id] = classroom;
   }
 
+  addLimitedChallenge_(id: string, challenge: AsyncLimitedChallenge) {
+    this.limitedChallenges_[id] = challenge;
+  }
+
+  addLimitedChallengeCompletion_(id: string, challengeCompletion: AsyncLimitedChallengeCompletion) {
+    this.limitedChallengeCompletions_[id] = challengeCompletion;
+  }
+
   loadScene_(id: string) {
     this.scenesToLoad_.add(id);
     this.scenes_[id] = Async.unloaded({});
@@ -157,6 +224,12 @@ class Builder {
     this.classrooms_[id] = Async.unloaded({});
   }
 
+
+  loadLimitedChallengeCompletion_(id: string) {
+    this.limitedChallengeCompletionsToLoad_.add(id);
+    this.limitedChallengeCompletions_[id] = Async.unloaded({});
+  }
+
   dispatchLoads() {
     for (const sceneId of this.scenesToLoad_) {
       store.dispatch(ScenesAction.loadScene({ sceneId }));
@@ -169,6 +242,9 @@ class Builder {
     }
     for (const classroomId of this.classroomsToLoad_) {
       store.dispatch(ClassroomsAction.loadClassroom({ classroomId }));
+    }
+    for (const challengeId of this.limitedChallengeCompletionsToLoad_) {
+      store.dispatch(LimitedChallengeCompletionsAction.loadLimitedChallengeCompletion({ challengeId }));
     }
   }
 }
