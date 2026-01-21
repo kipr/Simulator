@@ -20,6 +20,9 @@ import Async from '../../state/State/Async';
 
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';
+import { Effect } from '@babylonjs/core';
+import EffectorControl from './EffectorControl';
+
 
 
 export interface InfoPublicProps extends StyleProps, ThemeProps {
@@ -34,6 +37,7 @@ interface InfoPrivateProps {
 
 interface InfoState {
   collapsed: { [section: string]: boolean }
+  shownServo?: number;
 }
 
 type Props = InfoPublicProps & InfoPrivateProps;
@@ -96,12 +100,16 @@ const ResetIcon = styled(FontAwesome, ({ theme }: ThemeProps) => ({
   transition: 'opacity 0.2s'
 }));
 
+
+
+
 class Info extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
 
     this.state = {
-      collapsed: {}
+      collapsed: {},
+      shownServo: 0
     };
   }
 
@@ -119,6 +127,7 @@ class Info extends React.PureComponent<Props, State> {
     event.stopPropagation();
     this.props.onOriginChange(this.props.node.startingOrigin);
   };
+
 
   render() {
     const { props, state } = this;
@@ -240,6 +249,7 @@ class Info extends React.PureComponent<Props, State> {
             onCollapsedChange={this.onCollapsedChange_('servo_pos')}
             collapsed={collapsed['servo_pos']}
           >
+            <EffectorControl theme={theme} shownComponent="servo" node={node} />
             {servos}
           </StyledSection>
           <StyledSection
@@ -248,6 +258,7 @@ class Info extends React.PureComponent<Props, State> {
             onCollapsedChange={this.onCollapsedChange_('motor_vel')}
             collapsed={collapsed['motor_vel']}
           >
+            <EffectorControl theme={theme} shownComponent="motor" node={node} />
             {motorVelocities}
           </StyledSection>
           <StyledSection
