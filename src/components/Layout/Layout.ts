@@ -1,4 +1,4 @@
-import { Message } from "ivygate";
+import { Message } from "ivygate/dist/src";
 import ProgrammingLanguage from '../../programming/compiler/ProgrammingLanguage';
 import { RobotPosition } from "./RobotPosition";
 import { Settings } from "../constants/Settings";

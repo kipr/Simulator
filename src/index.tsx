@@ -23,7 +23,7 @@ if (!reactRoot) {
 }
 
 const root = createRoot(reactRoot);
-console.log("IvyGate path:", require.resolve("ivygate"));
+
 
 root.render(
   <StyletronProvider value={engine} debug={debug} debugAfterHydration>

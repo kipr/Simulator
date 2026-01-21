@@ -11,8 +11,8 @@ import { findClassroomByInviteCode, I18nAction } from '../../state/reducer';
 import { connect } from 'react-redux';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesome } from '../FontAwesome';
-import { InterfaceMode } from 'ivygate/dist/types/interface';
-import { default as IvygateClassroomType } from 'ivygate/dist/types/classroomTypes';
+import { InterfaceMode } from 'ivygate/dist/src/types/interface';
+import { default as IvygateClassroomType } from 'ivygate/dist/src/types/classroomTypes';
 import { Classroom } from 'state/State/Classroom';
 
 

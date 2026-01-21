@@ -27,7 +27,7 @@ import { ReferenceFramewUnits } from '../../util/math/unitMath';
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';
 import { ThemeProps } from '../constants/theme';
-import { IvygateFileExplorer } from 'ivygate';
+import { IvygateFileExplorer } from 'ivygate/dist/src';
 import db from '../../db';
 import { AsyncProject } from 'state/State/Project';
 import { createFileExplorerBarComponents } from '../../components/FileExplorer';

@@ -33,7 +33,7 @@ import { Editor } from '../components/Editor';
 
 import { State as ReduxState } from '../state';
 import { ScenesAction, ChallengeCompletionsAction, AiAction, ProjectsAction } from '../state/reducer';
-import { DocumentationAction } from 'ivygate/dist/state/reducer/documentation';
+import { DocumentationAction } from 'ivygate/dist/src/state/reducer/documentation';
 import { sendMessage, SendMessageParams } from '../util/ai';
 
 import Scene, { AsyncScene } from '../state/State/Scene';

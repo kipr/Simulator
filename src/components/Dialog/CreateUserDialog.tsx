@@ -13,11 +13,11 @@ import { I18nAction } from '../../state/reducer';
 import { connect } from 'react-redux';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesome } from '../FontAwesome';
-import { User } from 'ivygate/dist/types/user';
+import { User } from 'ivygate/dist/src/types/user';
 import ComboBox from '../interface/ComboBox';
-import { InterfaceMode } from 'ivygate/dist/types/interface';
+import { InterfaceMode } from 'ivygate/dist/src/types/interface';
 import { Settings } from '../constants/Settings';
-import { default as IvygateClassroomType } from 'ivygate/dist/types/classroomTypes';
+import { default as IvygateClassroomType } from 'ivygate/dist/src/types/classroomTypes';
 
 
 

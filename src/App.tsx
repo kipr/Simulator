@@ -14,7 +14,7 @@ import Loading from './components/Loading';
 import Root from './pages/Root';
 import ChallengeRoot from './pages/ChallengeRoot';
 //import DocumentationWindow from './components/documentation/DocumentationWindow';
-import { DocumentationWindow } from 'ivygate';
+import { DocumentationWindow } from 'ivygate/dist/src';
 import AiWindow from './components/Ai/AiWindow';
 import { DARK, LIGHT } from './components/constants/theme';
 import CurriculumPage from './lms/CurriculumPage';
