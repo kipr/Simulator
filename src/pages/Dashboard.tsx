@@ -89,9 +89,9 @@ class Dashboard extends React.PureComponent<Props> {
           />
           <Card
             theme={theme}
-            title={LocalizedString.lookup(tr('Limited Challenges'), locale)}
-            description={LocalizedString.lookup(tr('Challenges with time limits and attempt restrictions.'), locale)}
-            backgroundImage={'url(../../static/example_images/Simulator-Robot-Closeup.png)'}
+            title={LocalizedString.lookup(tr('Competition Mode'), locale)}
+            description={LocalizedString.lookup(tr('Compete globally for the fastest time!'), locale)}
+            backgroundImage={'url(../../static/icons/stopwatch-svgrepo-com.svg)'}
             backgroundPosition={'center top'}
             onClick={() => this.props.navigate('/limited-challenges')}
           />
