@@ -354,7 +354,8 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
     const robotId = Object.keys(robots)[0];
     this.props.onNodeChange(robotId, {
       ...robots[robotId],
-      origin
+      origin,
+      startingOrigin: origin
     });
   };
 
