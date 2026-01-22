@@ -18,6 +18,7 @@ import { ChallengeCompletions, Challenges } from '../state/State';
 import Async from '../state/State/Async';
 import MyBadgesDialog from '../components/Dialog/MyBadgesDialog';
 import CountdownTimer from '../components/LimitedChallenge/CountdownTimer';
+import { auth } from '../firebase/firebase';
 
 
 const SELFIDENTIFIER = "My Scores!";
@@ -458,6 +459,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
   }
   async componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ClassroomLeaderboardState>, snapshot?: any): Promise<void> {
     console.log("leaderboard compdidupdate prevProps: ", prevProps, " this.props: ", this.props);
+    console.log("leadeboard compdidupdate prevState: ", prevState, " this.state: ", this.state);
 
     if (prevProps.params.classroomId !== this.props.params.classroomId) {
       let currentUserId = '';
@@ -484,89 +486,104 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
   private myScoresRef = createRef<HTMLTableRowElement>();
 
 
-  // private renderLeaderboard = () => {
-  //   const { locale, currentUserUid } = this.props;
-  //   const { topEntries, userContext, loading, error } = this.state;
-  //   const theme = DARK;
+  private renderLeaderboard = () => {
+    const { locale, currentUserUid, theme } = this.props;
+    const { topEntries, userContext, loading, error, users } = this.state;
 
-  //   if (loading) {
-  //     return (
-  //       <LoadingState theme={theme}>
-  //         {LocalizedString.lookup(tr('Loading leaderboard...'), locale)}
-  //       </LoadingState>
-  //     );
-  //   }
 
-  //   if (error) {
-  //     return (
-  //       <ErrorState theme={theme}>
-  //         <div>{LocalizedString.lookup(tr('Error loading leaderboard'), locale)}</div>
-  //         <div style={{ fontSize: '0.85em', marginTop: '8px' }}>{error}</div>
-  //       </ErrorState>
-  //     );
-  //   }
+    if (loading) {
+      return (
+        <LoadingState theme={theme}>
+          {LocalizedString.lookup(tr('Loading leaderboard...'), locale)}
+        </LoadingState>
+      );
+    }
 
-  //   if (topEntries.length === 0 && !userContext) {
-  //     return (
-  //       <EmptyState theme={theme}>
-  //         {LocalizedString.lookup(tr('No completions yet. Be the first to complete this challenge!'), locale)}
-  //       </EmptyState>
-  //     );
-  //   }
+    if (error) {
+      return (
+        <ErrorState theme={theme}>
+          <div>{LocalizedString.lookup(tr('Error loading leaderboard'), locale)}</div>
+          <div style={{ fontSize: '0.85em', marginTop: '8px' }}>{error}</div>
+        </ErrorState>
+      );
+    }
 
-  //   // Check if user is in top entries (to avoid duplicate display)
-  //   const userInTopEntries = userContext && topEntries.some(e => e.uid === userContext.userEntry.uid);
+    if (topEntries.length === 0 && !userContext) {
+      return (
+        <EmptyState theme={theme}>
+          {LocalizedString.lookup(tr('No completions yet. Be the first to complete this challenge!'), locale)}
+        </EmptyState>
+      );
+    }
 
-  //   // Show user context section only if user has a completion and is not in top N
-  //   const showUserContextSection = userContext && !userInTopEntries;
+    // Check if user is in top entries (to avoid duplicate display)
+    const userInTopEntries = userContext && topEntries.some(e => e.uid === userContext.userEntry.uid);
 
-  //   return (
-  //     <Table>
-  //       <thead>
-  //         <tr>
-  //           <TableHeader theme={theme}>{LocalizedString.lookup(tr('Rank'), locale)}</TableHeader>
-  //           <TableHeader theme={theme}>{LocalizedString.lookup(tr('Name'), locale)}</TableHeader>
-  //           <TableHeader theme={theme}>{LocalizedString.lookup(tr('Runtime'), locale)}</TableHeader>
-  //           <TableHeader theme={theme}>{LocalizedString.lookup(tr('Completed'), locale)}</TableHeader>
-  //         </tr>
-  //       </thead>
-  //       <tbody>
-  //         {/* Top entries - already sorted by server */}
-  //         {topEntries.map((entry, index) => {
-  //           const rank = index + 1;
-  //           const isCurrentUser = currentUserUid === entry.uid;
-  //           return this.renderLeaderboardRow(entry, rank, isCurrentUser);
-  //         })}
+    // Show user context section only if user has a completion and is not in top N
+    const showUserContextSection = userContext && !userInTopEntries;
 
-  //         {/* Separator and user context section */}
-  //         {showUserContextSection && (
-  //           <>
-  //             <SectionSeparator theme={theme}>
-  //               <SeparatorCell theme={theme} colSpan={4}>
-  //                 ··· {LocalizedString.lookup(tr('Your position'), locale)} ···
-  //               </SeparatorCell>
-  //             </SectionSeparator>
+    return (
+      <Table>
+        <thead>
+          <tr>
+            <TableHeader theme={theme}>{LocalizedString.lookup(tr('Rank'), locale)}</TableHeader>
+            <TableHeader theme={theme}>{LocalizedString.lookup(tr('Name'), locale)}</TableHeader>
+            <TableHeader theme={theme}>{LocalizedString.lookup(tr('Runtime'), locale)}</TableHeader>
+            <TableHeader theme={theme}>{LocalizedString.lookup(tr('Completed'), locale)}</TableHeader>
+          </tr>
+        </thead>
+        <tbody>
+          {/* Top entries - already sorted by server */}
+          {topEntries.map((entry, index) => {
+            const rank = index + 1;
+            const isCurrentUser = currentUserUid === entry.uid;
+            return this.renderLeaderboardRow(entry, rank, isCurrentUser);
+          })}
 
-  //             {/* Entries above user */}
-  //             {userContext.entriesAbove.map((entry, index) => {
-  //               const rank = userContext.rank - userContext.entriesAbove.length + index;
-  //               return this.renderLeaderboardRow(entry, rank, false);
-  //             })}
+          {/* Separator and user context section */}
+          {showUserContextSection && (
+            <>
+              <SectionSeparator theme={theme}>
+                <SeparatorCell theme={theme} colSpan={4}>
+                  ··· {LocalizedString.lookup(tr('Your position'), locale)} ···
+                </SeparatorCell>
+              </SectionSeparator>
 
-  //             {/* User's entry */}
-  //             {this.renderLeaderboardRow(userContext.userEntry, userContext.rank, true)}
+              {/* Entries above user */}
+              {userContext.entriesAbove.map((entry, index) => {
+                const rank = userContext.rank - userContext.entriesAbove.length + index;
+                return this.renderLeaderboardRow(entry, rank, false);
+              })}
 
-  //             {/* Entries below user */}
-  //             {userContext.entriesBelow.map((entry, index) => {
-  //               const rank = userContext.rank + index + 1;
-  //               return this.renderLeaderboardRow(entry, rank, false);
-  //             })}
-  //           </>
-  //         )}
-  //       </tbody>
-  //     </Table>
-  //   );
-  // };
+              {/* User's entry */}
+              {this.renderLeaderboardRow(userContext.userEntry, userContext.rank, true)}
+
+              {/* Entries below user */}
+              {userContext.entriesBelow.map((entry, index) => {
+                const rank = userContext.rank + index + 1;
+                return this.renderLeaderboardRow(entry, rank, false);
+              })}
+            </>
+          )}
+        </tbody>
+      </Table>
+    );
+  };
+
+  private renderLeaderboardRow = (entry: LeaderboardEntry, rank: number, isCurrentUser: boolean) => {
+    const theme = DARK;
+    return (
+      <TableRow key={`${entry.uid}-${rank}`} theme={theme} $highlight={isCurrentUser}>
+        <RankCell theme={theme} rank={rank}>#{rank}</RankCell>
+        <TableCell theme={theme}>
+          {entry.displayName}
+          {isCurrentUser && ' (You)'}
+        </TableCell>
+        <TableCell theme={theme}>{this.formatRuntime(entry.bestRuntimeMs)}</TableCell>
+        <TableCell theme={theme}>{this.formatDate(entry.bestCompletionTime)}</TableCell>
+      </TableRow>
+    );
+  };
 
   private scrollToMyScores = () => {
     if (this.myScoresRef.current) {
@@ -1001,7 +1018,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
   };
 
   private renderClassroomLeaderboardNew = () => {
-    const { theme, locale } = this.props;
+    const { theme, locale, currentStudentDisplayName } = this.props;
     return (
       <ContentContainer theme={theme}>
         <Header>
@@ -1049,16 +1066,16 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
               </SortButton>
             </SortToggle> */}
           </LeaderboardHeader>
-          {/* {currentUserName && (
+          {currentStudentDisplayName && (
             <YourNameContainer theme={theme}>
               <YourNameLabel theme={theme}>
                 {LocalizedString.lookup(tr('Your name on the leaderboard:'), locale)}
               </YourNameLabel>
               <YourNameValue theme={theme}>
-                {currentUserName}
+                {currentStudentDisplayName}
               </YourNameValue>
             </YourNameContainer>
-          )} */}
+          )}
           {/* {this.renderLeaderboard()} */}
         </LeaderboardContainer>
       </ContentContainer>
@@ -1119,11 +1136,16 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
   }
 }
 
-export default connect((state: ReduxState) => ({
-  locale: state.i18n.locale,
-  classroom: state.classrooms.selectedClassroom,
-  challenges: state.challenges,
-}),
+export default connect((state: ReduxState) => {
+  console.log("Classroomleaderboard redux state: ", state);
+  return ({
+    locale: state.i18n.locale,
+    classroom: state.classrooms.selectedClassroom,
+    challenges: state.challenges,
+    currentStudentDisplayName: Async.latestValue(state.classrooms.currentStudentClassroom) ? Async.latestValue(state.classrooms.currentStudentClassroom).studentIds[auth.currentUser.uid].displayName : null,
+
+  })
+},
   (dispatch) => ({
     onClearSelectedClassroom: () =>
       dispatch(ClassroomsAction.clearSelectedClassroom({})),
