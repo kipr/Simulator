@@ -126,6 +126,9 @@ interface RootState {
   runStartTime?: number;
   // Tentative success: captured when success conditions met, finalized after program stops
   tentativeSuccessRuntimeMs?: number;
+  // The code that was actually executed, captured at run time
+  runningCode?: string;
+  runningLanguage?: ProgrammingLanguage;
 }
 
 type Props = RootPublicProps & RootPrivateProps & WithNavigateProps;
@@ -310,7 +313,12 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
     }
 
     // Reset timing and tentative success
-    this.setState({ runStartTime: undefined, tentativeSuccessRuntimeMs: undefined });
+    this.setState({
+      runStartTime: undefined,
+      tentativeSuccessRuntimeMs: undefined,
+      runningCode: undefined,
+      runningLanguage: undefined,
+    });
 
     this.syncChallengeCompletion_();
   };
@@ -534,14 +542,16 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
 
     if (!isFailure) {
       // Success is valid - record the completion and save to backend
-      const language = this.currentLanguage;
-      const program = this.code[language] || '';
+      const language = this.state.runningLanguage || this.currentLanguage;
+      const program = this.state.runningCode || this.code[language] || '';
       this.props.onRecordBestCompletion(tentativeSuccessRuntimeMs, program, language);
       this.saveChallengeCompletion_();
 
       this.setState(prev => ({
         tentativeSuccessRuntimeMs: undefined,
         runStartTime: undefined,
+        runningCode: undefined,
+        runningLanguage: undefined,
         console: StyledText.extend(prev.console, StyledText.text({
           text: LocalizedString.lookup(tr(`Challenge completed in ${(tentativeSuccessRuntimeMs / 1000).toFixed(2)} seconds!\n`), this.props.locale),
           style: { color: '#4caf50', fontWeight: 'bold' }
@@ -552,6 +562,8 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
       this.setState({
         tentativeSuccessRuntimeMs: undefined,
         runStartTime: undefined,
+        runningCode: undefined,
+        runningLanguage: undefined,
       });
     }
   };
@@ -669,7 +681,9 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
 
         this.setState({
           simulatorState: SimulatorState.COMPILING,
-          console: nextConsole
+          console: nextConsole,
+          runningCode: activeCode,
+          runningLanguage: language,
         }, () => {
           compile(activeCode, language)
             .then(compileResult => {
@@ -742,6 +756,8 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
         this.setState({
           simulatorState: SimulatorState.RUNNING,
           runStartTime: Date.now(),
+          runningCode: activeCode,
+          runningLanguage: language,
         }, () => {
           WorkerInstance.start({
             language: 'python',
