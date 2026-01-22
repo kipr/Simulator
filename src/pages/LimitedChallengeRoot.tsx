@@ -684,6 +684,7 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
           console: nextConsole,
           runningCode: activeCode,
           runningLanguage: language,
+          tentativeSuccessRuntimeMs: undefined,
         }, () => {
           compile(activeCode, language)
             .then(compileResult => {
@@ -758,6 +759,7 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
           runStartTime: Date.now(),
           runningCode: activeCode,
           runningLanguage: language,
+          tentativeSuccessRuntimeMs: undefined,
         }, () => {
           WorkerInstance.start({
             language: 'python',
