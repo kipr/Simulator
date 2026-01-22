@@ -1,0 +1,48 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "webpack: watch (dev)",
+      "type": "shell",
+      "command": "podman",
+      "args": [
+        "exec",
+        "-e",
+        "NODE_OPTIONS=--openssl-legacy-provider",
+        "-it",
+        "simulator_frontend",
+        "yarn",
+        "watch"
+      ],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": false
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "node express.js",
+      "type": "shell",
+      "command": "podman",
+      "args": [
+        "exec",
+        "-it",
+        "simulator_frontend",
+        "node",
+        "express.js"
+      ],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": false
+      },
+      "problemMatcher": []
+    }
+  ]
+}
