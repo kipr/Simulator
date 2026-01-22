@@ -1,0 +1,92 @@
+---
+name: simulator-setup
+description: This rule describes the standard build procedure for the KIPR Simulator.
+alwaysApply: false
+---
+
+# Building
+
+Run this command to get the development dependencies:
+
+```bash
+sudo apt-get update && sudo apt-get install -y wget git git-lfs cmake build-essential python3 python3-distutils swig zlib1g-dev doxygen default-jre pkg-config curl redis-server
+```
+You also need to install Node from Nodesource:
+
+```bash
+curl -fsSL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh
+sudo -E bash nodesource_setup.sh
+sudo apt install -y nodejs
+sudo npm install --global npm
+sudo npm install --global yarn
+```
+
+Make sure to clone with `--recurse-submodules`:
+```bash
+git clone --recurse-submodules https://github.com/kipr/Simulator
+```
+
+Or, if you've already cloned the repository without --recurse-submodules, you can initialize the submodules separately:
+```bash
+git submodule update --init --recursive
+```
+
+Make sure to pull large files:
+```bash
+git lfs install
+git lfs pull
+```
+
+Now, in the Simulator root, run:
+```bash
+yarn run build-deps
+yarn install
+yarn run build-i18n
+```
+
+## Build Database
+
+The simulator requires a running database backend.
+Clone the project and build:
+
+```bash
+git clone https://github.com/kipr/database.git
+cd database
+yarn install
+yarn build
+```
+
+# Running
+
+First, start redis: 
+```bash
+redis-server
+```
+In the root of `database` in another terminal run:
+```bash
+yarn start
+```
+
+Now, in the root of `Simulator`.
+Compile with:
+```bash
+yarn build
+```
+If you see OpenSSL/crypto errors during build, rerun with: `NODE_OPTIONS=--openssl-legacy-provider`.
+
+Or, for continuous feedback, you can run:
+```bash
+yarn watch
+```
+
+To serve the app:
+```bash
+export API_URL=http://localhost:4000
+node express.js
+```
+
+In the end, you should have:
+
+- Database API: http://localhost:4000
+- Redis: http://localhost:6379
+- Simulator web: http://localhost:3000

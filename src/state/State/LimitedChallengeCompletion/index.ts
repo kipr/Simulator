@@ -26,6 +26,16 @@ interface LimitedChallengeCompletion {
   bestRuntimeMs?: number;
 
   /**
+   * The program code that achieved the best runtime.
+   */
+  bestProgram?: string;
+
+  /**
+   * The programming language of the best program.
+   */
+  bestProgramLanguage?: ProgrammingLanguage;
+
+  /**
    * User's display name (denormalized for leaderboard display).
    * This is automatically set by the backend from the Firebase token.
    */

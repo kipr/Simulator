@@ -153,6 +153,8 @@ export namespace LimitedChallengeCompletionsAction {
     type: 'limited-challenge-completions/record-best-completion';
     challengeId: string;
     runtimeMs: number;
+    program: string;
+    language: ProgrammingLanguage;
   }
 
   export const recordBestCompletion = construct<RecordBestCompletion>('limited-challenge-completions/record-best-completion');
@@ -387,6 +389,9 @@ export const reduceLimitedChallengeCompletions = (state: LimitedChallengeComplet
       // Only update best runtime if this is a better time (or first completion)
       if (completion.bestRuntimeMs === undefined || action.runtimeMs < completion.bestRuntimeMs) {
         completion.bestRuntimeMs = action.runtimeMs;
+        // Store the program and language that achieved this best time
+        completion.bestProgram = action.program;
+        completion.bestProgramLanguage = action.language;
       }
       // Only record completion time the first time the user successfully completes
       if (completion.bestCompletionTime === undefined) {

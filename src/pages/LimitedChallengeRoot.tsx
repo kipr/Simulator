@@ -97,7 +97,7 @@ interface RootPrivateProps {
   onChallengeCompletionSetCurrentLanguage: (language: ProgrammingLanguage) => void;
   onChallengeCompletionSetRobotLinkOrigins: (robotLinkOrigins: Dict<Dict<ReferenceFramewUnits>>) => void;
   onChallengeCompletionSave: () => void;
-  onRecordBestCompletion: (runtimeMs: number) => void;
+  onRecordBestCompletion: (runtimeMs: number, program: string, language: ProgrammingLanguage) => void;
 
   onDocumentationClick: () => void;
   onDocumentationPush: (location: DocumentationLocation) => void;
@@ -126,6 +126,9 @@ interface RootState {
   runStartTime?: number;
   // Tentative success: captured when success conditions met, finalized after program stops
   tentativeSuccessRuntimeMs?: number;
+  // The code that was actually executed, captured at run time
+  runningCode?: string;
+  runningLanguage?: ProgrammingLanguage;
 }
 
 type Props = RootPublicProps & RootPrivateProps & WithNavigateProps;
@@ -310,7 +313,12 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
     }
 
     // Reset timing and tentative success
-    this.setState({ runStartTime: undefined, tentativeSuccessRuntimeMs: undefined });
+    this.setState({
+      runStartTime: undefined,
+      tentativeSuccessRuntimeMs: undefined,
+      runningCode: undefined,
+      runningLanguage: undefined,
+    });
 
     this.syncChallengeCompletion_();
   };
@@ -534,12 +542,16 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
 
     if (!isFailure) {
       // Success is valid - record the completion and save to backend
-      this.props.onRecordBestCompletion(tentativeSuccessRuntimeMs);
+      const language = this.state.runningLanguage || this.currentLanguage;
+      const program = this.state.runningCode || this.code[language] || '';
+      this.props.onRecordBestCompletion(tentativeSuccessRuntimeMs, program, language);
       this.saveChallengeCompletion_();
 
       this.setState(prev => ({
         tentativeSuccessRuntimeMs: undefined,
         runStartTime: undefined,
+        runningCode: undefined,
+        runningLanguage: undefined,
         console: StyledText.extend(prev.console, StyledText.text({
           text: LocalizedString.lookup(tr(`Challenge completed in ${(tentativeSuccessRuntimeMs / 1000).toFixed(2)} seconds!\n`), this.props.locale),
           style: { color: '#4caf50', fontWeight: 'bold' }
@@ -550,6 +562,8 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
       this.setState({
         tentativeSuccessRuntimeMs: undefined,
         runStartTime: undefined,
+        runningCode: undefined,
+        runningLanguage: undefined,
       });
     }
   };
@@ -667,7 +681,10 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
 
         this.setState({
           simulatorState: SimulatorState.COMPILING,
-          console: nextConsole
+          console: nextConsole,
+          runningCode: activeCode,
+          runningLanguage: language,
+          tentativeSuccessRuntimeMs: undefined,
         }, () => {
           compile(activeCode, language)
             .then(compileResult => {
@@ -740,6 +757,9 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
         this.setState({
           simulatorState: SimulatorState.RUNNING,
           runStartTime: Date.now(),
+          runningCode: activeCode,
+          runningLanguage: language,
+          tentativeSuccessRuntimeMs: undefined,
         }, () => {
           WorkerInstance.start({
             language: 'python',
@@ -1130,8 +1150,8 @@ const ConnectedLimitedChallengeRoot = connect((state: ReduxState, { params: { ch
   onChallengeCompletionSave: () => {
     dispatch(LimitedChallengeCompletionsAction.saveLimitedChallengeCompletion({ challengeId }));
   },
-  onRecordBestCompletion: (runtimeMs: number) => {
-    dispatch(LimitedChallengeCompletionsAction.recordBestCompletion({ challengeId, runtimeMs }));
+  onRecordBestCompletion: (runtimeMs: number, program: string, language: ProgrammingLanguage) => {
+    dispatch(LimitedChallengeCompletionsAction.recordBestCompletion({ challengeId, runtimeMs, program, language }));
   },
   onDocumentationClick: () => dispatch(DocumentationAction.TOGGLE),
   onDocumentationPush: (location: DocumentationLocation) => dispatch(DocumentationAction.pushLocation({ location })),
