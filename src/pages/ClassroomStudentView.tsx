@@ -17,6 +17,7 @@ import LeaveClassDialog from '../components/Dialog/LeaveClassDialog';
 import ProgrammingLanguage from '../programming/compiler/ProgrammingLanguage';
 import ChallengeCompletion from 'state/State/ChallengeCompletion';
 import ClassroomLeaderboard from './ClassroomLeaderboard';
+import ChallengeTabView from '../components/Classrooms/ChallengeTabView';
 
 
 export interface ClassroomStudentViewRootRouteParams {
@@ -135,6 +136,8 @@ const MyClassroomContainer = styled('div', (props: ThemeProps) => ({
   flexDirection: 'column',
   alignItems: 'center',
   flex: 1,
+  height: '80vh',
+  width: '90vw'
 
 }));
 
@@ -195,12 +198,21 @@ class ClassroomStudentView extends React.Component<Props, State> {
     const isInClassroom = await studentInClassroom(currentUserId);
     const currentUser = auth.currentUser.uid;
     let studentDisplayName: string;
+    console.log("ClassroomStudentView isInClassroom: ", isInClassroom);
     if (isInClassroom.classroom) {
-      studentDisplayName = isInClassroom.classroom.studentIds[currentUserId].displayName;
-      this.props.navigate(`/classrooms/${currentUser}/studentView/${isInClassroom.classroom.classroomId}`)
-      this.props.onJoinClassroom(isInClassroom.classroom);
+
+      this.setState({
+        isStudentInClassroom: isInClassroom.inClassroom,
+        currentClassroom: isInClassroom.classroom,
+        currentStudentDisplayName: isInClassroom.classroom.studentIds[currentUserId].displayName
+      }, () => {
+        this.props.navigate(`/classrooms/${currentUser}/studentView/${isInClassroom.classroom.classroomId}`)
+        this.props.onJoinClassroom(isInClassroom.classroom);
+      });
+
+
     }
-    this.setState({ isStudentInClassroom: isInClassroom.inClassroom, currentClassroom: isInClassroom.classroom, currentStudentDisplayName: studentDisplayName });
+
   }
 
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ClassroomStudentViewState>, snapshot?: any): void {
@@ -274,12 +286,18 @@ class ClassroomStudentView extends React.Component<Props, State> {
   private renderMyClassroom = () => {
     const { isStudentInClassroom, currentClassroom, showJoinClassroomDialog, showLeaveClassroomDialog } = this.state;
     const { theme, locale } = this.props;
+    console.log("renderMyClassroom props: ", this.props);
+    console.log("rendermyclassroom state: ", this.state);
     return (
       <MyClassroomContainer theme={theme}>
         {isStudentInClassroom ? (
-          <>
-            {this.renderClassroomLeaderboard()}
-          </>
+          // <>
+          //   {this.renderClassroomLeaderboard()}
+          // </>
+
+
+          < ChallengeTabView theme={theme} locale={locale} />
+
         ) : (
           <ClassroomInfoContainer theme={theme}>
             <p>You are not enrolled in any classroom.</p>

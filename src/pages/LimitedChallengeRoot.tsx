@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { styled } from 'styletron-react';
-import { Message } from 'ivygate';
+import { Message } from 'ivygate/dist/src';
 import { applyObjectPatch, createObjectPatch, ObjectPatch, OuterObjectPatch } from 'symmetry';
 
 import { signOutOfApp } from '../firebase/modules/auth';
