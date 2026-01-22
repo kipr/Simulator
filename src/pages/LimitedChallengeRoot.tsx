@@ -97,7 +97,7 @@ interface RootPrivateProps {
   onChallengeCompletionSetCurrentLanguage: (language: ProgrammingLanguage) => void;
   onChallengeCompletionSetRobotLinkOrigins: (robotLinkOrigins: Dict<Dict<ReferenceFramewUnits>>) => void;
   onChallengeCompletionSave: () => void;
-  onRecordBestCompletion: (runtimeMs: number) => void;
+  onRecordBestCompletion: (runtimeMs: number, program: string, language: ProgrammingLanguage) => void;
 
   onDocumentationClick: () => void;
   onDocumentationPush: (location: DocumentationLocation) => void;
@@ -534,7 +534,9 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
 
     if (!isFailure) {
       // Success is valid - record the completion and save to backend
-      this.props.onRecordBestCompletion(tentativeSuccessRuntimeMs);
+      const language = this.currentLanguage;
+      const program = this.code[language] || '';
+      this.props.onRecordBestCompletion(tentativeSuccessRuntimeMs, program, language);
       this.saveChallengeCompletion_();
 
       this.setState(prev => ({
@@ -1130,8 +1132,8 @@ const ConnectedLimitedChallengeRoot = connect((state: ReduxState, { params: { ch
   onChallengeCompletionSave: () => {
     dispatch(LimitedChallengeCompletionsAction.saveLimitedChallengeCompletion({ challengeId }));
   },
-  onRecordBestCompletion: (runtimeMs: number) => {
-    dispatch(LimitedChallengeCompletionsAction.recordBestCompletion({ challengeId, runtimeMs }));
+  onRecordBestCompletion: (runtimeMs: number, program: string, language: ProgrammingLanguage) => {
+    dispatch(LimitedChallengeCompletionsAction.recordBestCompletion({ challengeId, runtimeMs, program, language }));
   },
   onDocumentationClick: () => dispatch(DocumentationAction.TOGGLE),
   onDocumentationPush: (location: DocumentationLocation) => dispatch(DocumentationAction.pushLocation({ location })),
