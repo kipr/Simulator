@@ -384,6 +384,26 @@ class World extends React.PureComponent<Props, State> {
       ...originalNode,
       visible: visibility,
     });
+
+    // Make matA and matB visibility mutually exclusive
+    // When one becomes visible, hide the other
+    if (visibility && (id === 'matA' || id === 'matB')) {
+      const otherMatId = id === 'matA' ? 'matB' : 'matA';
+      const workingScene = Async.latestValue(this.props.scene);
+      const otherMatNode = workingScene.nodes[otherMatId];
+      
+      if (otherMatNode && otherMatNode.visible) {
+        let otherOriginalNode = Async.previousValue(this.props.scene).nodes[otherMatId];
+        if (!otherOriginalNode) {
+          otherOriginalNode = Async.latestValue(this.props.scene).nodes[otherMatId];
+        }
+        
+        this.props.onNodeChange(otherMatId, {
+          ...otherOriginalNode,
+          visible: false,
+        });
+      }
+    }
   };
 
   render() {
