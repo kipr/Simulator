@@ -289,7 +289,7 @@ export const getAllStudentsClassroomChallenges = async (classroom: Classroom) =>
       for (const challenge of entries as ChallengeEntry[]) {
         mappedByEntryId[challenge.id] = challenge.data;
       }
-      mappedStudentChallenge[displayName] = mappedByEntryId;
+      mappedStudentChallenge[displayName] = { displayName: displayName, uid: studentId, challenges: mappedByEntryId };
     }
 
     return mappedStudentChallenge;
