@@ -19,6 +19,8 @@ import Async from '../state/State/Async';
 import MyBadgesDialog from '../components/Dialog/MyBadgesDialog';
 import CountdownTimer from '../components/LimitedChallenge/CountdownTimer';
 import { auth } from '../firebase/firebase';
+import { LeaderboardEntry, LeaderboardUserContext } from 'state/State/LimitedChallengeLeaderboard';
+import { string } from 'prop-types';
 
 
 const SELFIDENTIFIER = "My Scores!";
@@ -62,6 +64,7 @@ export interface ClassroomLeaderboardPublicProps extends StyleProps, ThemeProps 
 interface RouterProps {
   params: {
     classroomId?: string;
+    studentId?: string;
   }
 }
 interface ClassroomLeaderboardPrivateProps {
@@ -71,6 +74,13 @@ interface ClassroomLeaderboardPrivateProps {
 }
 
 interface ClassroomLeaderboardState {
+  topEntries: User[];
+  userContext?: User;
+  sortedUsers?: User[];
+  currentUserEntry?: LeaderboardEntry;
+  loading: boolean;
+  error?: string;
+  totalParticipants: number;
   selected: string;
   users: Record<string, User>;
   challenges: Record<string, Challenge>;
@@ -372,7 +382,7 @@ const Table = styled('table', () => ({
 
 const TableHeader = styled('th', (props: ThemeProps) => ({
   padding: '12px 16px',
-  textAlign: 'left',
+  textAlign: 'center',
   fontSize: '0.85em',
   fontWeight: 'bold',
   color: props.theme.color,
@@ -393,6 +403,7 @@ const TableCell = styled('td', (props: ThemeProps) => ({
   fontSize: '0.95em',
   color: props.theme.color,
   borderBottom: `1px solid ${props.theme.borderColor}`,
+  textAlign: 'center'
 }));
 
 const RankCell = styled(TableCell, (props: ThemeProps & { rank: number }) => ({
@@ -428,6 +439,10 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
     super(props);
 
     this.state = {
+      topEntries: [],
+      userContext: undefined,
+      totalParticipants: 0,
+      loading: true,
       selected: '',
       users: {},
       challenges: {},
@@ -487,9 +502,15 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 
 
   private renderLeaderboard = () => {
-    const { locale, currentUserUid, theme } = this.props;
-    const { topEntries, userContext, loading, error, users } = this.state;
 
+
+    const { locale, params, theme } = this.props;
+    const { topEntries, userContext, loading, error, users, challenges } = this.state;
+
+    const sortedUsers = this.orderUsersByCompletedChallenges(users);
+    console.log("sortedUsers: ", sortedUsers);
+    const challengeArray = this.customSort(Object.keys(challenges));
+    console.log("challengeArray: ", challengeArray);
 
     if (loading) {
       return (
@@ -517,10 +538,12 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
     }
 
     // Check if user is in top entries (to avoid duplicate display)
-    const userInTopEntries = userContext && topEntries.some(e => e.uid === userContext.userEntry.uid);
+    const userInTopEntries = userContext && topEntries.some(e => e.id === userContext.id);
 
     // Show user context section only if user has a completion and is not in top N
     const showUserContextSection = userContext && !userInTopEntries;
+
+
 
     return (
       <Table>
@@ -528,17 +551,21 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
           <tr>
             <TableHeader theme={theme}>{LocalizedString.lookup(tr('Rank'), locale)}</TableHeader>
             <TableHeader theme={theme}>{LocalizedString.lookup(tr('Name'), locale)}</TableHeader>
-            <TableHeader theme={theme}>{LocalizedString.lookup(tr('Runtime'), locale)}</TableHeader>
-            <TableHeader theme={theme}>{LocalizedString.lookup(tr('Completed'), locale)}</TableHeader>
+            {challengeArray.map((entry, index) => {
+              return this.renderTableHeader(entry);
+            })}
+
           </tr>
         </thead>
         <tbody>
           {/* Top entries - already sorted by server */}
           {topEntries.map((entry, index) => {
             const rank = index + 1;
-            const isCurrentUser = currentUserUid === entry.uid;
-            return this.renderLeaderboardRow(entry, rank, isCurrentUser);
+            const isCurrentUser = params.studentId === entry.id;
+            return this.renderLeaderboardRow(entry, rank, isCurrentUser, challengeArray);
           })}
+
+
 
           {/* Separator and user context section */}
           {showUserContextSection && (
@@ -550,40 +577,80 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
               </SectionSeparator>
 
               {/* Entries above user */}
-              {userContext.entriesAbove.map((entry, index) => {
+              {/* {userContext.entriesAbove.map((entry, index) => {
                 const rank = userContext.rank - userContext.entriesAbove.length + index;
                 return this.renderLeaderboardRow(entry, rank, false);
-              })}
+              })} */}
 
               {/* User's entry */}
-              {this.renderLeaderboardRow(userContext.userEntry, userContext.rank, true)}
+              {this.renderLeaderboardRow(userContext, sortedUsers.findIndex(user => user.id === params.studentId), true, challengeArray)}
 
               {/* Entries below user */}
-              {userContext.entriesBelow.map((entry, index) => {
+              {/* {userContext.entriesBelow.map((entry, index) => {
                 const rank = userContext.rank + index + 1;
                 return this.renderLeaderboardRow(entry, rank, false);
-              })}
+              })} */}
             </>
           )}
         </tbody>
       </Table>
     );
   };
+  private getDefaultChallenges = (): Record<string, Challenge> => {
+    const challenges: Record<string, Challenge> = {};
+    const suffixes = ['a', 'b', 'c'];
 
-  private renderLeaderboardRow = (entry: LeaderboardEntry, rank: number, isCurrentUser: boolean) => {
+    for (let i = 1; i <= 12; i++) {
+      suffixes.forEach((suffix) => {
+        const id = `challenge${i}${suffix}`;
+        challenges[id] = {
+          name: tr(`JBC Challenge ${i}${suffix.toUpperCase()}`),
+          description: tr(`Junior Botball Challenge ${i}${suffix.toUpperCase()}: Description for Challenge ${i}${suffix.toUpperCase()}`),
+        };
+      });
+    }
+
+    return challenges;
+  };
+  private renderLeaderboardRow = (entry: User, rank: number, isCurrentUser: boolean, challengeArray: string[]) => {
+    console.log("renderleaderboard row entry:", entry);
     const theme = DARK;
+    const { challenges } = this.state;
     return (
-      <TableRow key={`${entry.uid}-${rank}`} theme={theme} $highlight={isCurrentUser}>
+      <TableRow key={`${entry.id}-${rank}`} theme={theme} $highlight={isCurrentUser}>
         <RankCell theme={theme} rank={rank}>#{rank}</RankCell>
         <TableCell theme={theme}>
-          {entry.displayName}
+          {entry.name}
           {isCurrentUser && ' (You)'}
         </TableCell>
-        <TableCell theme={theme}>{this.formatRuntime(entry.bestRuntimeMs)}</TableCell>
-        <TableCell theme={theme}>{this.formatDate(entry.bestCompletionTime)}</TableCell>
+        {challengeArray.map((id) => {
+          const userScore = entry.scores.find(score => score.name['en-US'] === challenges[id].name['en-US']);
+          return (
+            <TableCell key={id} theme={theme}>
+              {!userScore && '-'}
+              {userScore?.completed && (
+                <>
+                  <img src="/static/icons/favicon-32x32.png" alt="Favicon" />
+                  {/* <div>Score: {userScore.score ?? '-'}</div>
+                        <div>Time: {userScore.completionTime ?? '-'}</div> */}
+                </>
+              )}
+              {userScore && !userScore.completed && (
+                <img src="/static/icons/botguy-bw-trans-32x32.png" alt="Favicon" />
+              )}
+            </TableCell>
+          );
+        })}
       </TableRow>
     );
   };
+
+  private renderTableHeader = (challengeName: string) => {
+    const { theme, locale } = this.props;
+    return (
+      <TableHeader key={`${challengeName}-key`} theme={theme}>{LocalizedString.lookup(tr(`${challengeName}`), locale)}</TableHeader>
+    );
+  }
 
   private scrollToMyScores = () => {
     if (this.myScoresRef.current) {
@@ -594,13 +661,22 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 
   // Logs classroom users and their challenge completions
   private onLog = async () => {
+
+    const { params } = this.props;
     console.log("On Log triggered");
     const result = await getAllStudentsClassroomChallenges(this.state.shownClassroom?.classroom);
+    console.log("onLog Result: ", result);
     let users: Record<string, User> = {};
     const challenges: Record<string, Challenge> = {};
-
+    console.log("Object.entries(result): ", Object.entries(result));
     for (const [_, attemptedChallenges] of Object.entries(result)) {
-      for (const [challengeId, challenge] of Object.entries(attemptedChallenges as ChallengeData[])) {
+      console.log("attemptedChallenges: ", attemptedChallenges);
+      console.log("Object.entries(attemptedChallenges): ", Object.entries(attemptedChallenges));
+
+      const challengeNames = Object.keys(Object.entries(attemptedChallenges)[2][1]);
+
+      console.log("challengeNames: ", challengeNames);
+      challengeNames.forEach(challengeId => {
         const challenge = {
           name: tr(challengeId),
           description: tr(challengeId),
@@ -608,7 +684,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
         if (!challenges[challengeId]) {
           challenges[challengeId] = challenge;
         }
-      }
+      });
     }
 
     interface ChallengeData {
@@ -629,17 +705,26 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       (!challenge?.failure?.exprStates?.failure ?? false)
     );
 
-    for (const [userId, userChallenges] of Object.entries(result)) {
+    interface UserData {
+      uid: string;
+      displayName: string;
+      challenges: ChallengeData
+    }
+    const entries = Object.entries(result as Record<string, UserData>);
+
+    for (const [userId, userData] of entries) {
       const user: User = {
-        id: userId,
+        id: userData.uid,
         name: userId,
         scores: [],
       };
-      for (const [challengeId, challenge] of Object.entries(userChallenges as ChallengeData[])) {
+
+
+      for (const [challengeId, challenge] of Object.entries(userData.challenges)) {
         const score: Score = {
           name: tr(challengeId),
           completed: challengeCompletion(challenge),
-          challengeCompletion: userChallenges[challengeId] as ChallengeCompletion,
+          challengeCompletion: userData.challenges[challengeId] as ChallengeCompletion,
 
         };
         user.scores.push(score);
@@ -649,7 +734,24 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
         users[userId] = user;
       }
     }
-    this.setState({ users, challenges });
+
+
+    console.log("users: ", users);
+    console.log("challenges: ", challenges);
+
+    const sortedUsers = this.orderUsersByCompletedChallenges(users);
+    const topThree = sortedUsers.slice(0, 3);
+
+    const me = sortedUsers.find(user => user.id === params.studentId);
+
+    this.setState({
+      users,
+      topEntries: topThree,
+      sortedUsers,
+      userContext: me ? me : undefined,
+      challenges,
+      loading: false
+    });
 
     return { users, challenges };
   };
@@ -1021,19 +1123,6 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
     const { theme, locale, currentStudentDisplayName } = this.props;
     return (
       <ContentContainer theme={theme}>
-        <Header>
-
-          <ButtonContainer>
-            <Button
-              theme={theme}
-              $primary
-              onClick={this.handleEnterChallenge}
-            >
-              {LocalizedString.lookup(tr('Enter Challenge'), locale)}
-            </Button>
-          </ButtonContainer>
-        </Header>
-
         <LeaderboardContainer theme={theme}>
           <LeaderboardHeader theme={theme}>
             <LeaderboardTitle theme={theme}>
@@ -1076,7 +1165,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
               </YourNameValue>
             </YourNameContainer>
           )}
-          {/* {this.renderLeaderboard()} */}
+          {this.renderLeaderboard()}
         </LeaderboardContainer>
       </ContentContainer>
     )

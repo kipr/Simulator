@@ -19,9 +19,10 @@ import ProgrammingLanguage from '../../programming/compiler/ProgrammingLanguage'
 import ChallengeCompletion from 'state/State/ChallengeCompletion';
 import ClassroomLeaderboard from '../../pages/ClassroomLeaderboard';
 import ScrollArea from '../../components/interface/ScrollArea';
-import LimitedChallengeLeaderboard from '../../pages/LimitedChallengeLeaderboard';
+import ClassroomLimitedChallengeLeaderboard from './ClassroomLimitedChallengeLeaderboard';
 import Async from 'state/State/Async';
-
+import LimitedChallenges from '../../pages/LimitedChallenges';
+import ClassroomLimitedChallenges from './ClassroomLimitedChallenges';
 
 export interface ChallengeTabViewRootRouteParams {
   classroomId: string;
@@ -341,7 +342,7 @@ class ChallengeTabView extends React.Component<Props, State> {
     const LimitedChallengesSection = () => {
       return (
         <SectionsColumn theme={theme}>
-          <LimitedChallengeLeaderboard theme={theme} />
+          <ClassroomLimitedChallenges theme={theme} />
         </SectionsColumn>
       )
     }
@@ -359,9 +360,6 @@ class ChallengeTabView extends React.Component<Props, State> {
               {LocalizedString.lookup(tr('Limited Challenges'), locale)}
             </SectionName>
             {selectedSection === 'Default JBC Challenges' && DefaultJBCChallengeSection()}
-
-
-
             {selectedSection === 'Limited Challenges' && LimitedChallengesSection()}
           </ChallengeViewContainer>
         </StyledScrollArea>

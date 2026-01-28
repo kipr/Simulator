@@ -20,6 +20,7 @@ const Mailgun = require("mailgun.js");
 const createParentalConsentRouter = require("./parentalConsent");
 const createAiRouter = require("./ai");
 const createLimitedChallengeCompletionsRouter = require("./limitedChallengeCompletions");
+const createClassroomsRouter = require("./classrooms");
 
 let config;
 try {
@@ -121,6 +122,8 @@ app.use(
   createParentalConsentRouter(firebaseTokenManager, mailgunClient, config)
 );
 
+//Classrooms router
+app.use("/api/classrooms", createClassroomsRouter(firebaseTokenManager));
 // Add AI router
 app.use("/api/ai", createAiRouter(firebaseTokenManager, config));
 

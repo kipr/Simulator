@@ -291,10 +291,6 @@ class ClassroomStudentView extends React.Component<Props, State> {
     return (
       <MyClassroomContainer theme={theme}>
         {isStudentInClassroom ? (
-          // <>
-          //   {this.renderClassroomLeaderboard()}
-          // </>
-
 
           < ChallengeTabView theme={theme} locale={locale} />
 
