@@ -2,7 +2,6 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import { connect } from 'react-redux';
 import { DARK, Theme, ThemeProps } from '../components/constants/theme';
-import ClassroomMenu from '../components/ClassroomMenu';
 import { StyleProps } from '../util/style';
 import LocalizedString from '../util/LocalizedString';
 import { State as ReduxState } from '../state';
@@ -18,7 +17,33 @@ import ProgrammingLanguage from '../programming/compiler/ProgrammingLanguage';
 import ChallengeCompletion from 'state/State/ChallengeCompletion';
 import ClassroomLeaderboard from './ClassroomLeaderboard';
 import ChallengeTabView from '../components/Classrooms/ChallengeTabView';
+import MainMenu from '../components/MainMenu';
+import { FontAwesome } from '../components/FontAwesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import ClassroomExtraMenu from '../components/ClassroomExtraMenu';
 
+namespace SubMenu {
+  export enum Type {
+    None,
+    ExtraMenu,
+  }
+
+  export interface None {
+    type: Type.None;
+  }
+
+  export const NONE: None = { type: Type.None };
+
+  export interface ExtraMenu {
+    type: Type.ExtraMenu;
+  }
+
+  export const EXTRA_MENU: ExtraMenu = { type: Type.ExtraMenu };
+}
+
+type SubMenu =
+  | SubMenu.None
+  | SubMenu.ExtraMenu;
 
 export interface ClassroomStudentViewRootRouteParams {
   classroomId: string;
@@ -75,7 +100,7 @@ interface ClassroomStudentViewState {
   showSelectedClassroomLeaderboard: boolean;
   showLeaveClassroomDialog: boolean;
   currentStudentDisplayName?: string;
-
+  subMenu: SubMenu;
   isStudentInClassroom?: boolean;
 }
 
@@ -98,20 +123,21 @@ const ClassroomInfoContainer = styled('div', (props: ThemeProps) => ({
 }));
 
 const PageContainer = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  flexDirection: 'column',
   width: '100%',
-  height: '100%',
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
+  height: 'calc(100vh - 1px)',
+  zIndex: 35
 }));
 
 const ClassroomsContainer = styled("div", (props: ThemeProps) => ({
   backgroundColor: props.theme.backgroundColor,
-
-  width: 'calc(100vw - 2px)',
-  height: 'calc(100vh - 48px)',
+  height: '100%',
+  width: '100%',
   display: 'flex',
   flexDirection: 'column',
-  overflow: 'auto',
 }));
 
 const ClassroomsClassroomInfoContainer = styled('div', (props: ThemeProps) => ({
@@ -120,7 +146,7 @@ const ClassroomsClassroomInfoContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'column',
   alignContent: 'center',
-  margin: '20px',
+
 }));
 
 const ClassroomHeaderContainer = styled('div', (props: ThemeProps) => ({
@@ -136,7 +162,7 @@ const MyClassroomContainer = styled('div', (props: ThemeProps) => ({
   flexDirection: 'column',
   alignItems: 'center',
   flex: 1,
-  height: '80vh',
+  height: '100%',
   width: '90vw'
 
 }));
@@ -161,6 +187,31 @@ const Button = styled('div', (props: ThemeProps & ClickProps) => ({
   userSelect: 'none',
   transition: 'background-color 0.2s, opacity 0.2s'
 }));
+const Item = styled('div', (props: ThemeProps & ClickProps) => ({
+  display: 'flex',
+  width: '3em',
+  alignItems: 'center',
+  flexDirection: 'row',
+  borderRight: `1px solid ${props.theme.borderColor}`,
+  paddingLeft: '20px',
+  paddingRight: '20px',
+  height: '3em',
+  opacity: props.disabled ? '0.5' : '1.0',
+  ':last-child': {
+    borderRight: 'none'
+  },
+  fontWeight: 400,
+  ':hover': props.onClick && !props.disabled ? {
+    cursor: 'pointer',
+    backgroundColor: `rgba(255, 255, 255, 0.1)`
+  } : {},
+  userSelect: 'none',
+  transition: 'background-color 0.2s, opacity 0.2s'
+}));
+
+const ItemIcon = styled(FontAwesome, {
+  paddingRight: '10px'
+});
 
 export const IVYGATE_LANGUAGE_MAPPING: Dict<string> = {
   'ecmascript': 'javascript',
@@ -171,7 +222,6 @@ export const IVYGATE_LANGUAGE_MAPPING: Dict<string> = {
 };
 
 class ClassroomStudentView extends React.Component<Props, State> {
-  private challengeCache: Record<string, Dict<ChallengeCompletion>> = {};
   private unsubscribeChallenges: (() => void) | null = null;
   constructor(props: Props) {
     super(props);
@@ -187,7 +237,8 @@ class ClassroomStudentView extends React.Component<Props, State> {
       showClassroomLeaderboardSelector: false,
       showSelectedClassroomLeaderboard: false,
       showLeaveClassroomDialog: false,
-      leaderboardClassroom: null
+      leaderboardClassroom: null,
+      subMenu: SubMenu.NONE,
     };
 
 
@@ -197,10 +248,8 @@ class ClassroomStudentView extends React.Component<Props, State> {
     const currentUserId = auth.currentUser?.uid || ''
     const isInClassroom = await studentInClassroom(currentUserId);
     const currentUser = auth.currentUser.uid;
-    let studentDisplayName: string;
-    console.log("ClassroomStudentView isInClassroom: ", isInClassroom);
-    if (isInClassroom.classroom) {
 
+    if (isInClassroom.classroom) {
       this.setState({
         isStudentInClassroom: isInClassroom.inClassroom,
         currentClassroom: isInClassroom.classroom,
@@ -284,15 +333,13 @@ class ClassroomStudentView extends React.Component<Props, State> {
   };
 
   private renderMyClassroom = () => {
-    const { isStudentInClassroom, currentClassroom, showJoinClassroomDialog, showLeaveClassroomDialog } = this.state;
+    const { isStudentInClassroom } = this.state;
     const { theme, locale } = this.props;
-    console.log("renderMyClassroom props: ", this.props);
-    console.log("rendermyclassroom state: ", this.state);
     return (
       <MyClassroomContainer theme={theme}>
         {isStudentInClassroom ? (
 
-          < ChallengeTabView theme={theme} locale={locale} />
+          <ChallengeTabView theme={theme} locale={locale} />
 
         ) : (
           <ClassroomInfoContainer theme={theme}>
@@ -308,14 +355,57 @@ class ClassroomStudentView extends React.Component<Props, State> {
 
   }
 
+  private onExtraClick_ = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    const currentType = this.state.subMenu.type;
+    this.setState(
+      {
+        subMenu:
+          currentType === SubMenu.Type.ExtraMenu
+            ? SubMenu.NONE
+            : SubMenu.EXTRA_MENU,
+      },
+      () => {
+        if (currentType !== SubMenu.Type.ExtraMenu) {
+          window.addEventListener('click', this.onClickOutside_);
+        } else {
+          window.removeEventListener('click', this.onClickOutside_);
+        }
+      }
+    );
+
+    event.stopPropagation();
+  };
+
+  private onClickOutside_ = (event: MouseEvent) => {
+    this.setState({ subMenu: SubMenu.NONE });
+    window.removeEventListener('click', this.onClickOutside_);
+  };
+
   render() {
     const { props, state } = this;
     const { style, locale } = props;
-    const { showLeaveClassroomDialog, showJoinClassroomDialog, currentClassroom } = state;
+    const { showLeaveClassroomDialog, showJoinClassroomDialog, currentClassroom, subMenu } = state;
     const theme = DARK;
     return (
       <PageContainer style={style} theme={theme}>
-        <ClassroomMenu theme={theme} onLeaveClass={this.onLeaveClassroomDialog_} />
+        <MainMenu theme={theme} />
+        <div style={{ width: '100%', alignItems: 'flex-end', display: 'flex', flexDirection: 'column' }}>
+          <Item
+            theme={theme}
+            onClick={this.onExtraClick_}
+            style={{ position: 'relative' }}
+          >
+            <ItemIcon icon={faBars} style={{ padding: 0 }} />
+            {subMenu.type === SubMenu.Type.ExtraMenu ? (
+              <ClassroomExtraMenu theme={theme}
+                onLeaveClass={this.onLeaveClassroomDialog_}
+              />
+            ) : undefined}
+          </Item>
+        </div>
+
         <ClassroomsContainer style={style} theme={theme}>
           <ClassroomsClassroomInfoContainer style={style} theme={theme}>
             <h1>Classrooms - Student View</h1>
