@@ -1,20 +1,16 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { connect } from 'react-redux';
-
 import { DARK, ThemeProps } from '../constants/theme';
 import { ChallengeCard } from '../LimitedChallenge';
-
 import { StyleProps } from '../../util/style';
 import LocalizedString from '../../util/LocalizedString';
 import Async from 'state/State/Async';
-
 import { State as ReduxState } from '../../state';
 import { LimitedChallenges as ClassroomLimitedChallengesState, LimitedChallengeCompletions } from '../../state/State';
 import { LimitedChallengeBrief, LimitedChallengeStatus, AsyncLimitedChallenge } from '../../state/State/LimitedChallenge';
 import { LimitedChallengeCompletionBrief, AsyncLimitedChallengeCompletion } from '../../state/State/LimitedChallengeCompletion';
 import { LimitedChallengeCompletionsAction } from '../../state/reducer/limitedChallengeCompletions';
-
 import { withNavigate, WithNavigateProps } from '../../util/withNavigate';
 import tr from '@i18n';
 import ClassroomLimitedChallengeLeaderboard from './ClassroomLimitedChallengeLeaderboard';
@@ -38,7 +34,7 @@ type Props = ClassroomLimitedChallengesPublicProps & ClassroomLimitedChallengesP
 type State = ClassroomChallengesState;
 const Container = styled('div', (props: ThemeProps) => ({
   width: '100%',
-  minHeight: '100vh',
+  height: '100%',
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
 }));
@@ -46,7 +42,7 @@ const Container = styled('div', (props: ThemeProps) => ({
 const ContentContainer = styled('div', (props: ThemeProps) => ({
   backgroundColor: props.theme.backgroundColor,
   width: '100%',
-  minHeight: 'calc(100vh - 48px)',
+  height: '100%',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -133,7 +129,6 @@ class ClassroomLimitedChallenges extends React.Component<Props, State> {
   };
 
   private handleChallengeClick = (challengeId: string) => {
-    // Navigate to the leaderboard page for this challenge
     this.setState({
       limitedChallenge: challengeId
     })
