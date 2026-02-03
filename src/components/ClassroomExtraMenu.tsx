@@ -34,7 +34,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   minWidth: 'fit-content',
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
-
+  zIndex: 999,
   display: 'flex',
   flexDirection: 'column',
   borderBottomLeftRadius: `${props.theme.borderRadius}px`,
