@@ -17,11 +17,8 @@ import ChallengeCompletion, { AsyncChallengeCompletion } from 'state/State/Chall
 import { ChallengeCompletions, Challenges } from '../state/State';
 import Async from '../state/State/Async';
 import MyBadgesDialog from '../components/Dialog/MyBadgesDialog';
-import CountdownTimer from '../components/LimitedChallenge/CountdownTimer';
 import { auth } from '../firebase/firebase';
 import { LeaderboardEntry, LeaderboardUserContext } from 'state/State/LimitedChallengeLeaderboard';
-import { string } from 'prop-types';
-
 
 const SELFIDENTIFIER = "My Scores!";
 
@@ -88,10 +85,6 @@ interface ClassroomLeaderboardState {
   showBadgeDialog?: boolean;
 }
 
-interface ClickProps {
-  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  disabled?: boolean;
-}
 
 type Props = ClassroomLeaderboardPublicProps & ClassroomLeaderboardPrivateProps & ChallengeProps & RouterProps;
 type State = ClassroomLeaderboardState;
@@ -135,38 +128,35 @@ const UserHeaderContainer = styled('div', {
   width: '100px',
 });
 
-// const Table = styled('table', {
-//   width: '80%',
-//   borderCollapse: 'collapse',
-//   marginTop: '50px',
-//   marginLeft: '20px',
-//   padding: '8px',
-//   // border: '2px solid green',
-// });
 
-// const TableHeader = styled('th', {
-//   borderBottom: '2px solid #ddd',
-//   padding: '8px',
-//   textAlign: 'center',
-//   width: '50px',
-// });
 const StyledTableRow = styled('tr', (props: { key: string, self: string, ref: React.Ref<HTMLTableRowElement> }) => ({
   borderBottom: '1px solid #ddd',
   backgroundColor: props.self === SELFIDENTIFIER ? '#555' : '#000',
 }));
-// const TableCell = styled('td', {
-//   padding: '6px',
-//   textAlign: 'center',
-// });
+const LeaderboardScrollContainer = styled('div', {
+  width: '100%',
+  overflow: 'auto',
+  WebkitOverflowScrolling: 'touch',
+  height: '85%',
 
-// const ButtonContainer = styled('div', {
-//   display: 'flex',
-//   flexDirection: 'row',
-//   alignItems: 'center',
-//   justifyContent: 'center',
-//   padding: '10px',
-//   gap: '10px',
-// });
+  scrollbarWidth: 'thin',
+  scrollbarColor: 'rgba(121,121,121,0.6) transparent',
+
+  '::-webkit-scrollbar': {
+    width: '14px',
+    height: '14px',
+  },
+  '::-webkit-scrollbar-track': {
+    background: 'transparent',
+  },
+  '::-webkit-scrollbar-thumb': {
+    backgroundColor: 'rgba(121,121,121,0.4)',
+    borderRadius: '8px',
+  },
+  '::-webkit-scrollbar-thumb:hover': {
+    backgroundColor: 'rgba(121,121,121,0.7)',
+  },
+});
 
 const Button = styled('button', (props: ThemeProps & ButtonProps) => ({
   padding: '12px 24px',
@@ -183,70 +173,6 @@ const Button = styled('button', (props: ThemeProps & ButtonProps) => ({
     transform: 'translateY(-1px)',
   },
 }));
-const ContentContainer = styled('div', (props: ThemeProps) => ({
-  backgroundColor: props.theme.backgroundColor,
-  width: '100%',
-  minHeight: 'calc(100vh - 48px)',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  padding: '20px',
-}));
-
-const Header = styled('div', () => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  marginBottom: '24px',
-  width: '100%',
-  maxWidth: '900px',
-}));
-
-const BackButton = styled('div', (props: ThemeProps) => ({
-  alignSelf: 'flex-start',
-  padding: '8px 16px',
-  backgroundColor: 'transparent',
-  border: `1px solid ${props.theme.borderColor}`,
-  borderRadius: '4px',
-  color: props.theme.color,
-  cursor: 'pointer',
-  marginBottom: '16px',
-  ':hover': {
-    backgroundColor: 'rgba(255,255,255,0.1)',
-  },
-}));
-
-const ChallengeName = styled('h1', (props: ThemeProps) => ({
-  fontSize: '2em',
-  fontWeight: 'bold',
-  color: props.theme.color,
-  marginBottom: '8px',
-  textAlign: 'center',
-}));
-
-const ChallengeDescription = styled('p', (props: ThemeProps) => ({
-  fontSize: '1em',
-  color: props.theme.color,
-  opacity: 0.8,
-  marginBottom: '16px',
-  textAlign: 'center',
-  maxWidth: '600px',
-}));
-
-// const StatusBadge = styled('div', (props: ThemeProps & { status: LimitedChallengeStatus }) => ({
-//   padding: '6px 16px',
-//   fontSize: '0.85em',
-//   fontWeight: 'bold',
-//   textTransform: 'uppercase',
-//   color: '#fff',
-//   borderRadius: '4px',
-//   marginBottom: '16px',
-//   backgroundColor: props.status === 'open'
-//     ? '#4caf50'
-//     : props.status === 'upcoming'
-//       ? '#ff9800'
-//       : '#9e9e9e',
-// }));
 
 const ButtonContainer = styled('div', () => ({
   display: 'flex',
@@ -256,14 +182,27 @@ const ButtonContainer = styled('div', () => ({
   justifyContent: 'center',
 }));
 
-const DisabledMessage = styled('div', (props: ThemeProps) => ({
-  fontSize: '0.85em',
-  color: props.theme.color,
-  opacity: 0.6,
-  marginBottom: '16px',
-  textAlign: 'center',
-}));
+const StickyRankTh = styled('th', (props: ThemeProps) => ({
+  position: 'sticky',
+  top: 0,
+  left: 0,
+  width: '80px',
+  minWidth: '80px',
+  backgroundColor: props.theme.backgroundColor,
+  zIndex: 7,
+  whiteSpace: 'nowrap',
 
+}));
+const StickyNameTh = styled('th', (props: ThemeProps) => ({
+  position: 'sticky',
+  top: 0,
+  left: '80px',
+  width: '200px',
+  minWidth: '200px',
+  backgroundColor: props.theme.backgroundColor,
+  zIndex: 7,
+  whiteSpace: 'nowrap',
+}));
 const LeaderboardContainer = styled('div', (props: ThemeProps) => ({
   width: '100%',
   maxWidth: '900px',
@@ -287,28 +226,6 @@ const LeaderboardTitle = styled('h2', (props: ThemeProps) => ({
   fontWeight: 'bold',
   color: props.theme.color,
   margin: 0,
-}));
-
-const SortToggle = styled('div', (props: ThemeProps) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '8px',
-  color: props.theme.color,
-  fontSize: '0.9em',
-}));
-
-const SortButton = styled('button', (props: ThemeProps & { $active?: boolean }) => ({
-  padding: '6px 12px',
-  fontSize: '0.85em',
-  color: props.$active ? '#fff' : props.theme.color,
-  backgroundColor: props.$active ? '#2196f3' : 'transparent',
-  border: `1px solid ${props.$active ? '#2196f3' : props.theme.borderColor}`,
-  borderRadius: '4px',
-  cursor: 'pointer',
-  transition: 'all 0.2s',
-  ':hover': {
-    backgroundColor: props.$active ? '#2196f3' : 'rgba(255,255,255,0.1)',
-  },
 }));
 
 const YourNameContainer = styled('div', (props: ThemeProps) => ({
@@ -382,11 +299,12 @@ const Table = styled('table', () => ({
 
 const TableHeader = styled('th', (props: ThemeProps) => ({
   padding: '12px 16px',
+  position: 'sticky',
+  top: 0,
   textAlign: 'center',
   fontSize: '0.85em',
   fontWeight: 'bold',
   color: props.theme.color,
-  opacity: 0.8,
   borderBottom: `1px solid ${props.theme.borderColor}`,
   backgroundColor: 'rgba(255,255,255,0.02)',
 }));
@@ -453,7 +371,6 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
   }
   async componentDidMount() {
     const { classroomId } = this.props.params;
-    console.log("ClassroomLeaderboard this.props: ", this.props);
     if (this.props.view !== 'studentView') {
       let currentUserId = '';
       const tokenManager = db.tokenManager;
@@ -466,16 +383,12 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       this.setState({ shownClassroom: classroom }, () => { void this.onLog(); });
     }
     else {
-      console.log("leaderboard mount props: ", this.props);
       if (this.props.currentClassroom) {
         this.setState({ shownClassroom: { docId: this.props.currentClassroom.docId, classroom: this.props.currentClassroom } }, () => { void this.onLog(); });
       }
     }
   }
   async componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ClassroomLeaderboardState>, snapshot?: any): Promise<void> {
-    console.log("leaderboard compdidupdate prevProps: ", prevProps, " this.props: ", this.props);
-    console.log("leadeboard compdidupdate prevState: ", prevState, " this.state: ", this.state);
-
     if (prevProps.params.classroomId !== this.props.params.classroomId) {
       let currentUserId = '';
       const tokenManager = db.tokenManager;
@@ -502,15 +415,11 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 
 
   private renderLeaderboard = () => {
-
-
     const { locale, params, theme } = this.props;
     const { topEntries, userContext, loading, error, users, challenges } = this.state;
 
     const sortedUsers = this.orderUsersByCompletedChallenges(users);
-    console.log("sortedUsers: ", sortedUsers);
     const challengeArray = this.customSort(Object.keys(challenges));
-    console.log("challengeArray: ", challengeArray);
 
     if (loading) {
       return (
@@ -546,75 +455,55 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 
 
     return (
-      <Table>
-        <thead>
-          <tr>
-            <TableHeader theme={theme}>{LocalizedString.lookup(tr('Rank'), locale)}</TableHeader>
-            <TableHeader theme={theme}>{LocalizedString.lookup(tr('Name'), locale)}</TableHeader>
-            {challengeArray.map((entry, index) => {
-              return this.renderTableHeader(entry);
+      <LeaderboardScrollContainer>
+        <Table>
+          <thead>
+            <tr>
+              <StickyRankTh theme={theme}>
+                {LocalizedString.lookup(tr('Rank'), locale)}
+              </StickyRankTh>
+
+              <StickyNameTh theme={theme}>
+                {LocalizedString.lookup(tr('Name'), locale)}
+              </StickyNameTh>
+              {challengeArray.map((entry, index) => {
+                return this.renderTableHeader(entry);
+              })}
+
+            </tr>
+          </thead>
+          <tbody>
+            {/* Top entries - already sorted by server */}
+            {topEntries.map((entry, index) => {
+              const rank = index + 1;
+              const isCurrentUser = params.studentId === entry.id;
+              return this.renderLeaderboardRow(entry, rank, isCurrentUser, challengeArray);
             })}
 
-          </tr>
-        </thead>
-        <tbody>
-          {/* Top entries - already sorted by server */}
-          {topEntries.map((entry, index) => {
-            const rank = index + 1;
-            const isCurrentUser = params.studentId === entry.id;
-            return this.renderLeaderboardRow(entry, rank, isCurrentUser, challengeArray);
-          })}
 
 
+            {/* Separator and user context section */}
+            {showUserContextSection && (
+              <>
+                <SectionSeparator theme={theme}>
+                  <SeparatorCell theme={theme} colSpan={4}>
+                    ··· {LocalizedString.lookup(tr('Your position'), locale)} ···
+                  </SeparatorCell>
+                </SectionSeparator>
 
-          {/* Separator and user context section */}
-          {showUserContextSection && (
-            <>
-              <SectionSeparator theme={theme}>
-                <SeparatorCell theme={theme} colSpan={4}>
-                  ··· {LocalizedString.lookup(tr('Your position'), locale)} ···
-                </SeparatorCell>
-              </SectionSeparator>
+                {/* User's entry */}
+                {this.renderLeaderboardRow(userContext, sortedUsers.findIndex(user => user.id === params.studentId), true, challengeArray)}
 
-              {/* Entries above user */}
-              {/* {userContext.entriesAbove.map((entry, index) => {
-                const rank = userContext.rank - userContext.entriesAbove.length + index;
-                return this.renderLeaderboardRow(entry, rank, false);
-              })} */}
-
-              {/* User's entry */}
-              {this.renderLeaderboardRow(userContext, sortedUsers.findIndex(user => user.id === params.studentId), true, challengeArray)}
-
-              {/* Entries below user */}
-              {/* {userContext.entriesBelow.map((entry, index) => {
-                const rank = userContext.rank + index + 1;
-                return this.renderLeaderboardRow(entry, rank, false);
-              })} */}
-            </>
-          )}
-        </tbody>
-      </Table>
+              </>
+            )}
+          </tbody>
+        </Table>
+      </LeaderboardScrollContainer>
     );
   };
-  private getDefaultChallenges = (): Record<string, Challenge> => {
-    const challenges: Record<string, Challenge> = {};
-    const suffixes = ['a', 'b', 'c'];
 
-    for (let i = 1; i <= 12; i++) {
-      suffixes.forEach((suffix) => {
-        const id = `challenge${i}${suffix}`;
-        challenges[id] = {
-          name: tr(`JBC Challenge ${i}${suffix.toUpperCase()}`),
-          description: tr(`Junior Botball Challenge ${i}${suffix.toUpperCase()}: Description for Challenge ${i}${suffix.toUpperCase()}`),
-        };
-      });
-    }
-
-    return challenges;
-  };
   private renderLeaderboardRow = (entry: User, rank: number, isCurrentUser: boolean, challengeArray: string[]) => {
-    console.log("renderleaderboard row entry:", entry);
-    const theme = DARK;
+    const { theme } = this.props;
     const { challenges } = this.state;
     return (
       <TableRow key={`${entry.id}-${rank}`} theme={theme} $highlight={isCurrentUser}>
@@ -631,8 +520,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
               {userScore?.completed && (
                 <>
                   <img src="/static/icons/favicon-32x32.png" alt="Favicon" />
-                  {/* <div>Score: {userScore.score ?? '-'}</div>
-                        <div>Time: {userScore.completionTime ?? '-'}</div> */}
+
                 </>
               )}
               {userScore && !userScore.completed && (
@@ -663,19 +551,14 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
   private onLog = async () => {
 
     const { params } = this.props;
-    console.log("On Log triggered");
     const result = await getAllStudentsClassroomChallenges(this.state.shownClassroom?.classroom);
-    console.log("onLog Result: ", result);
+
     let users: Record<string, User> = {};
     const challenges: Record<string, Challenge> = {};
-    console.log("Object.entries(result): ", Object.entries(result));
-    for (const [_, attemptedChallenges] of Object.entries(result)) {
-      console.log("attemptedChallenges: ", attemptedChallenges);
-      console.log("Object.entries(attemptedChallenges): ", Object.entries(attemptedChallenges));
 
+    for (const [_, attemptedChallenges] of Object.entries(result)) {
       const challengeNames = Object.keys(Object.entries(attemptedChallenges)[2][1]);
 
-      console.log("challengeNames: ", challengeNames);
       challengeNames.forEach(challengeId => {
         const challenge = {
           name: tr(challengeId),
@@ -734,11 +617,6 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
         users[userId] = user;
       }
     }
-
-
-    console.log("users: ", users);
-    console.log("challenges: ", challenges);
-
     const sortedUsers = this.orderUsersByCompletedChallenges(users);
     const topThree = sortedUsers.slice(0, 3);
 
@@ -864,12 +742,11 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 
   };
 
+  // Export current user's JBC scores to PDF - very simple, completed or not completed with timestamp
   private exportClassroomScores() {
     const { users, shownClassroom } = this.state;
     const { locale } = this.props;
     const pdfDoc = new jsPDF();
-
-
 
     const date = new Date();
 
@@ -909,9 +786,6 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
     pdfDoc.save(`${shownClassroom.classroom.classroomId}-scores.pdf`);
   }
 
-  private handleEnterChallenge() {
-    console.log("Enter challenge!");
-  }
 
   private exportDetailedClassroomScores() {
     const { users, shownClassroom } = this.state;
@@ -1060,114 +934,28 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
   private onSeeMyBadges() {
     this.setState({ showBadgeDialog: true });
   }
-  private renderClassroomLeaderboard = () => {
-    const users = this.state.users;
-    const sortedUsers = this.orderUsersByCompletedChallenges(users);
-    const challenges = this.state.challenges;
-    const { theme } = this.props;
-
-    if (!sortedUsers) return null;
-
-    const userArray = Object.values(sortedUsers);
-
-    const challengeArray = this.customSort(Object.keys(challenges));
-    this.getCurrentUser();
-    return (
-      <Table>
-        <thead>
-          <tr>
-            <TableHeader theme={theme}>
-              <UserHeaderContainer>
-                Users
-              </UserHeaderContainer>
-            </TableHeader>
-            {challengeArray.map((id) => (
-              <TableHeader key={id} theme={theme}>
-                <TableHeaderContainer>
-                  {challenges[id].name['en-US']}
-                </TableHeaderContainer>
-              </TableHeader>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {userArray.map((user) => (
-            <StyledTableRow key={user.id} self={user.name} ref={user.name === SELFIDENTIFIER ? this.myScoresRef : null}>
-              <TableCell theme={theme}>{user.name}</TableCell>
-              {challengeArray.map((id) => {
-                const userScore = user.scores.find(score => score.name['en-US'] === challenges[id].name['en-US']);
-                return (
-                  <TableCell key={id} theme={theme}>
-                    {!userScore && '-'}
-                    {userScore?.completed && (
-                      <>
-                        <img src="/static/icons/favicon-32x32.png" alt="Favicon" />
-                        {/* <div>Score: {userScore.score ?? '-'}</div>
-                        <div>Time: {userScore.completionTime ?? '-'}</div> */}
-                      </>
-                    )}
-                    {userScore && !userScore.completed && (
-                      <img src="/static/icons/botguy-bw-trans-32x32.png" alt="Favicon" />
-                    )}
-                  </TableCell>
-                );
-              })}
-            </StyledTableRow>
-          ))}
-        </tbody>
-      </Table>
-    );
-  };
 
   private renderClassroomLeaderboardNew = () => {
     const { theme, locale, currentStudentDisplayName } = this.props;
     return (
-      <ContentContainer theme={theme}>
-        <LeaderboardContainer theme={theme}>
-          <LeaderboardHeader theme={theme}>
-            <LeaderboardTitle theme={theme}>
-              {LocalizedString.lookup(tr('Leaderboard'), locale)}
-            </LeaderboardTitle>
-            {/* <SortToggle theme={theme}>
-              <SortButton
-                theme={theme}
-                onClick={this.handleToggleView}
-                style={{ marginRight: '16px' }}
-              >
-                {this.state.showFullLeaderboard
-                  ? LocalizedString.lookup(tr('Show Around Me'), locale)
-                  : LocalizedString.lookup(tr('Show Full Board'), locale)}
-              </SortButton>
-              <span>{LocalizedString.lookup(tr('Sort by:'), locale)}</span>
-              <SortButton
-                theme={theme}
-                $active={sortField === 'runtime'}
-                onClick={() => this.handleSortChange('runtime')}
-              >
-                {LocalizedString.lookup(tr('Fastest Runtime'), locale)}
-              </SortButton>
-              <SortButton
-                theme={theme}
-                $active={sortField === 'completionTime'}
-                onClick={() => this.handleSortChange('completionTime')}
-              >
-                {LocalizedString.lookup(tr('First to Complete'), locale)}
-              </SortButton>
-            </SortToggle> */}
-          </LeaderboardHeader>
-          {currentStudentDisplayName && (
-            <YourNameContainer theme={theme}>
-              <YourNameLabel theme={theme}>
-                {LocalizedString.lookup(tr('Your name on the leaderboard:'), locale)}
-              </YourNameLabel>
-              <YourNameValue theme={theme}>
-                {currentStudentDisplayName}
-              </YourNameValue>
-            </YourNameContainer>
-          )}
-          {this.renderLeaderboard()}
-        </LeaderboardContainer>
-      </ContentContainer>
+      <LeaderboardContainer theme={theme}>
+        <LeaderboardHeader theme={theme}>
+          <LeaderboardTitle theme={theme}>
+            {LocalizedString.lookup(tr('Leaderboard'), locale)}
+          </LeaderboardTitle>
+        </LeaderboardHeader>
+        {currentStudentDisplayName && (
+          <YourNameContainer theme={theme}>
+            <YourNameLabel theme={theme}>
+              {LocalizedString.lookup(tr('Your name on the leaderboard:'), locale)}
+            </YourNameLabel>
+            <YourNameValue theme={theme}>
+              {currentStudentDisplayName}
+            </YourNameValue>
+          </YourNameContainer>
+        )}
+        {this.renderLeaderboard()}
+      </LeaderboardContainer>
     )
   }
 
@@ -1182,39 +970,42 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
     // Render the Classroom Leaderboard dependent on what view you're using: studentView vs teacherView
     return (
       <>
-        {view === 'studentView' ? <div style={{ width: '100%', alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
-          <ClassroomLeaderboardTitleContainer>
-            <h1>Classroom Leaderboard</h1>
-            <ButtonContainer>
-              <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> Export My Scores!</Button>
-              <Button theme={DARK} onClick={this.scrollToMyScores}> Scroll to My Scores!</Button>
-              <Button theme={DARK} onClick={() => this.onSeeMyBadges()}> See My Badges </Button>
-            </ButtonContainer>
+        {view === 'studentView' ?
+          < div style={{ width: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+            <ClassroomLeaderboardTitleContainer>
+              <h1>Classroom Leaderboard</h1>
+              <ButtonContainer>
+                <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> Export My Scores!</Button>
+                <Button theme={DARK} onClick={this.scrollToMyScores}> Scroll to My Scores!</Button>
+                <Button theme={DARK} onClick={() => this.onSeeMyBadges()}> See My Badges! </Button>
+              </ButtonContainer>
 
-          </ClassroomLeaderboardTitleContainer>
-          {this.renderClassroomLeaderboardNew()}
-          {showBadgeDialog && <MyBadgesDialog
-            locale={locale}
-            onClose={() => this.setState({ showBadgeDialog: false })}
-            currentStudentDisplayName={currentStudentDisplayName}
-            currentUserScores={users[currentStudentDisplayName]?.scores || []}
-            theme={theme} />}
+            </ClassroomLeaderboardTitleContainer>
+            {this.renderClassroomLeaderboardNew()}
+            {showBadgeDialog && <MyBadgesDialog
+              locale={locale}
+              onClose={() => this.setState({ showBadgeDialog: false })}
+              currentStudentDisplayName={currentStudentDisplayName}
+              currentUserScores={users[currentStudentDisplayName]?.scores || []}
+              theme={theme} />}
 
-        </div>
+          </div >
           :
           <PageContainer style={style} theme={theme}>
             <MainMenu theme={theme} />
             <ClassroomLeaderboardContainer style={style} theme={theme}>
-              <ClassroomLeaderboardTitleContainer>
-                <h1>Classroom Leaderboard</h1>
+              < div style={{ width: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+                <ClassroomLeaderboardTitleContainer>
+                  <h1>Classroom Leaderboard</h1>
 
-                <ButtonContainer>
-                  <Button theme={DARK} onClick={() => this.exportClassroomScores()}> Export All General Scores</Button>
-                  <Button theme={DARK} onClick={() => this.exportDetailedClassroomScores()}> Export All Detailed Scores</Button>
-                </ButtonContainer>
+                  <ButtonContainer>
+                    <Button theme={DARK} onClick={() => this.exportClassroomScores()}> Export All General Scores</Button>
+                    <Button theme={DARK} onClick={() => this.exportDetailedClassroomScores()}> Export All Detailed Scores</Button>
+                  </ButtonContainer>
 
-              </ClassroomLeaderboardTitleContainer>
-              {this.renderClassroomLeaderboardNew()}
+                </ClassroomLeaderboardTitleContainer>
+                {this.renderClassroomLeaderboardNew()}
+              </div>
             </ClassroomLeaderboardContainer>
           </PageContainer>
         }
@@ -1226,7 +1017,6 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 }
 
 export default connect((state: ReduxState) => {
-  console.log("Classroomleaderboard redux state: ", state);
   return ({
     locale: state.i18n.locale,
     classroom: state.classrooms.selectedClassroom,
