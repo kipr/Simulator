@@ -89,21 +89,19 @@ class Dashboard extends React.PureComponent<Props> {
           />
           <Card
             theme={theme}
+            title={LocalizedString.lookup(tr('Classrooms'), locale)}
+            description={LocalizedString.lookup(tr('See the current classrooms.'), locale)}
+            backgroundImage={'linear-gradient(#3b3c3c, transparent), url(../../static/example_images/classroom-botguy.png)'}
+            backgroundColor={'#3b3c3c'}
+            onClick={() => this.props.navigate('/classrooms')}
+          />
+          <Card
+            theme={theme}
             title={LocalizedString.lookup(tr('Limited Challenges'), locale)}
             description={LocalizedString.lookup(tr('Challenges with time limits and attempt restrictions.'), locale)}
             backgroundImage={'url(../../static/example_images/Simulator-Robot-Closeup.png)'}
             backgroundPosition={'center top'}
             onClick={() => this.props.navigate('/limited-challenges')}
-          />
-          <Card
-            theme={theme}
-            title={LocalizedString.lookup(tr('About'), locale)}
-            description={LocalizedString.lookup(tr('KIPR is a 501(c) 3 organization started to make the long-term educational benefits of robotics accessible to students.'), locale)}
-            backgroundImage={'linear-gradient(#3b3c3c, transparent), url(../../static/icons/Botguy-Picture-Small.png)'}
-            backgroundColor={'#3b3c3c'}
-            backgroundSize={'80%'}
-            hoverBackgroundSize={'95%'}
-            onClick={this.onAboutClick_}
           />
           <Card
             theme={theme}
@@ -115,12 +113,16 @@ class Dashboard extends React.PureComponent<Props> {
           />
           <Card
             theme={theme}
-            title={LocalizedString.lookup(tr('Classrooms'), locale)}
-            description={LocalizedString.lookup(tr('See the current classrooms.'), locale)}
-            backgroundImage={'linear-gradient(#3b3c3c, transparent), url(../../static/example_images/classroom-botguy.png)'}
+            title={LocalizedString.lookup(tr('About'), locale)}
+            description={LocalizedString.lookup(tr('KIPR is a 501(c) 3 organization started to make the long-term educational benefits of robotics accessible to students.'), locale)}
+            backgroundImage={'linear-gradient(#3b3c3c, transparent), url(../../static/icons/Botguy-Picture-Small.png)'}
             backgroundColor={'#3b3c3c'}
-            onClick={() => this.props.navigate('/classrooms')}
+            backgroundSize={'80%'}
+            hoverBackgroundSize={'95%'}
+            onClick={this.onAboutClick_}
           />
+
+
         </CardContainer>
       </Container>
     );
