@@ -392,7 +392,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       challengeState,
       worldCapabilities,
       onDocumentationGoToFuzzy,
-      onCommonDocumentationGoToFuzzy,
+
       locale,
     } = props;
 
