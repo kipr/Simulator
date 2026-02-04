@@ -7183,9 +7183,9 @@ isurl@^1.0.0-alpha5:
   dependencies:
     xmldom "^0.6.0"
 
-"ivygate@https://github.com/kipr/ivygate#9e490b5b8289f84e2ea78894e084beeb364e938c":
+"ivygate@https://github.com/kipr/ivygate#32adc3ed9bbd7302b81358314f9c49680c8b9989":
   version "0.1.5"
-  resolved "https://github.com/kipr/ivygate#9e490b5b8289f84e2ea78894e084beeb364e938c"
+  resolved "https://github.com/kipr/ivygate#32adc3ed9bbd7302b81358314f9c49680c8b9989"
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^6.7.2"
     "@fortawesome/free-solid-svg-icons" "^6.7.2"
