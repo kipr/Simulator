@@ -534,7 +534,7 @@ Subject: %s
 U.S. Std.
 Curriculum
 My Assignments
-Scratch Variables
+Graphical Variables
 A hamburger
 Blue pom front #$(s)
 Blue pom front #$d

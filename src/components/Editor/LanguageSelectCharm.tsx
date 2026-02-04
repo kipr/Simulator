@@ -30,8 +30,8 @@ const OPTIONS: ComboBox.Option[] = [{
   text: 'Python',
   data: 'python'
 }, {
-  text: 'Scratch',
-  data: 'scratch'
+  text: 'Graphical',
+  data: 'graphical'
 }];
 
 const Label = styled('div', {

@@ -8,7 +8,7 @@ import { Editor, createEditorBarComponents, EditorBarTarget } from '../Editor';
 import World from '../World';
 
 import { Info } from '../Info';
-import { LayoutEditorTarget, LayoutProps } from './Layout';
+import { Layout, LayoutEditorTarget, LayoutProps } from './Layout';
 import SimulatorArea from './SimulatorArea';
 import { Theme, ThemeProps } from '../constants/theme';
 import Widget, { Mode, Size, WidgetProps } from '../interface/Widget';
@@ -76,7 +76,34 @@ const transparentStyling = (theme: Theme): React.CSSProperties => ({
   backdropFilter: 'blur(16px)'
 });
 
-const ConsoleWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }): any => {
+// Overlay positioned centered in column 2 (the space that appears when Editor is miniature)
+// The grid is: [padding] [4fr] [gap] [5fr] [gap] [350px] [padding]
+// Column 2 is 5fr wide. When Editor is miniature, it only takes column 1, leaving column 2 visible.
+// We place the overlay as a grid item in column 2 and center it horizontally, with width fit-content
+const SceneNameOverlay = styled('div', (props: ThemeProps) => ({
+  gridColumn: '2',
+  gridRow: '1',
+  display: 'flex',
+  alignItems: 'flex-start',
+  justifyContent: 'center',
+  paddingTop: `${props.theme.widget.padding}px`,
+  pointerEvents: 'none',
+  padding: `${props.theme.itemPadding}px ${props.theme.itemPadding * 2}px`,
+  borderRadius: `${props.theme.borderRadius}px`,
+  backgroundColor: props.theme.transparentBackgroundColor(0.95),
+  backdropFilter: 'blur(16px)',
+  color: props.theme.color,
+  fontSize: '1.2em',
+  fontWeight: 600,
+  whiteSpace: 'nowrap',
+  border: `1px solid ${props.theme.borderColor}`,
+  alignSelf: 'start',
+  justifySelf: 'center',
+  width: 'fit-content',
+  zIndex: 0,
+}));
+
+const ConsoleWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
@@ -350,6 +377,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       editorRef,
       robots,
       sceneId,
+      layout,
       scene,
       onNodeAdd,
       onNodeChange,
@@ -431,6 +459,8 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       robotNode = Dict.unique(robots);
     }
 
+    const sceneName = latestScene ? LocalizedString.lookup(latestScene.name, locale) : '';
+
     return (
       <Container style={style} className={className}>
         <SimulatorAreaContainer>
@@ -442,6 +472,11 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
           />
         </SimulatorAreaContainer>
         <Overlay theme={theme} $challenge={!!challengeState}>
+          {sceneName && (
+            <SceneNameOverlay theme={theme}>
+              {sceneName}
+            </SceneNameOverlay>
+          )}
           <EditorWidget
             {...commonProps}
             name={LocalizedString.lookup(tr('Editor'), locale)}

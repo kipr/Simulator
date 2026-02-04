@@ -1672,8 +1672,8 @@ msgstr "Plan de estudios"
 msgid "My Assignments"
 msgstr "Tus tareas"
 
-msgid "Scratch Variables"
-msgstr "Variables de Scratch"
+msgid "Graphical Variables"
+msgstr "Variables de Graphical"
 
 msgid "A hamburger"
 msgstr "Una hamburguesa"

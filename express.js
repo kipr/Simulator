@@ -48,7 +48,8 @@ app.use(
 // CSRF protection - skip for API routes that use Bearer token authentication
 app.use((req, res, next) => {
   // Skip CSRF for API routes that use Bearer tokens (CSRF-safe by design)
-  if (req.path.startsWith("/api/")) {
+  // Also skip for compile and feedback endpoints (no auth, CSRF-safe)
+  if (req.path.startsWith('/api/') || req.path === '/compile' || req.path === '/feedback') {
     return next();
   }
   // Apply CSRF protection to other routes
@@ -423,32 +424,20 @@ app.use(
   })
 );
 
-if (config.server.dependencies.scratch_rt) {
-  console.log("Scratch Runtime is enabled.");
-  app.use(
-    "/scratch/rt.js",
-    express.static(`${config.server.dependencies.scratch_rt}`, {
-      maxAge: config.caching.staticMaxAge,
-    })
-  );
+if (config.server.dependencies.graphical_rt) {
+  console.log('Graphical Runtime is enabled.');
+  app.use('/graphical/rt.js', express.static(`${config.server.dependencies.graphical_rt}`, {
+    maxAge: config.caching.staticMaxAge,
+  }));
 }
 
-app.use(
-  "/scratch",
-  express.static(path.resolve(__dirname, "node_modules", "kipr-scratch"), {
-    maxAge: config.caching.staticMaxAge,
-  })
-);
+app.use('/graphical', express.static(path.resolve(__dirname, 'node_modules', 'kipr-scratch'), {
+  maxAge: config.caching.staticMaxAge,
+}));
 
-app.use(
-  "/media",
-  express.static(
-    path.resolve(__dirname, "node_modules", "kipr-scratch", "media"),
-    {
-      maxAge: config.caching.staticMaxAge,
-    }
-  )
-);
+app.use('/media', express.static(path.resolve(__dirname, 'node_modules', 'kipr-scratch', 'media'), {
+  maxAge: config.caching.staticMaxAge,
+}));
 
 // Expose cpython artifacts
 if (config.server.dependencies.cpython) {

@@ -56,8 +56,9 @@ class ReflectanceSensor extends SensorObject<Node.ReflectanceSensor, number> {
       rawMaxDistance
     );
 
+    // Make sure mesh is visible before picking
     const hit = scene.pickWithRay(ray, mesh => {
-      return mesh !== this.trace_ && !links.has(mesh as Mesh) && !colliders.has(mesh as Mesh);
+      return mesh !== this.trace_ && !links.has(mesh as Mesh) && !colliders.has(mesh as Mesh) && mesh.isVisible;
     });
 
     if (!hit.pickedMesh || !hit.pickedMesh.material || hit.pickedMesh.material.getActiveTextures().length === 0) return 0;
