@@ -477,6 +477,9 @@ class Root extends React.Component<Props, State> {
   private onActiveLanguageChange_ = (language: ProgrammingLanguage) => {
     this.props.onChallengeCompletionSetCurrentLanguage(language);
 
+    // Clear compilation messages when switching languages to prevent stale error highlights
+    this.setState({ messages: [] });
+
     this.scheduleSaveChallengeCompletion_();
   };
 
