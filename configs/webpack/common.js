@@ -15,8 +15,8 @@ let dependencies = {};
 try {
   dependencies = JSON.parse(
     readFileSync(
-      resolve(__dirname, "..", "..", "dependencies", "dependencies.json")
-    )
+      resolve(__dirname, "..", "..", "dependencies", "dependencies.json"),
+    ),
   );
 } catch (e) {
   console.log("Failed to read dependencies.json");
@@ -29,19 +29,19 @@ let libkiprCDocumentation = undefined;
 let libkiprCCCommonDocumentation = undefined;
 if (dependencies.libkipr_c_documentation) {
   libkiprCDocumentation = JSON.parse(
-    readFileSync(resolve(dependencies.libkipr_c_documentation))
+    readFileSync(resolve(dependencies.libkipr_c_documentation)),
   );
 }
 if (dependencies.libkipr_c_common_documentation) {
   libkiprCCCommonDocumentation = JSON.parse(
-    readFileSync(resolve(dependencies.libkipr_c_common_documentation))
+    readFileSync(resolve(dependencies.libkipr_c_common_documentation)),
   );
 }
 
 let i18n = {};
 try {
   i18n = JSON.parse(
-    readFileSync(resolve(__dirname, "..", "..", "i18n", "i18n.json"))
+    readFileSync(resolve(__dirname, "..", "..", "i18n", "i18n.json")),
   );
 } catch (e) {
   console.log("Failed to read i18n.json");
@@ -226,7 +226,7 @@ module.exports = {
       // needed because ivygate relies on them being defined
       IDE_LIBKIPR_C_DOCUMENTATION: JSON.stringify(libkiprCDocumentation),
       IDE_LIBKIPR_C_COMMON_DOCUMENTATION: JSON.stringify(
-        libkiprCCCommonDocumentation
+        libkiprCCCommonDocumentation,
       ),
       IDE_I18N: JSON.stringify(i18n),
     }),
