@@ -91,7 +91,7 @@ class App extends React.Component<Props, State> {
     const lang: LocalizedString.Language = LocalizedString.validate(localStorage.getItem('bblocale'));
     if (lang) {
       this.props.setLocale(lang);
-      console.log(`Read locale from localstorage: ${lang}`);
+
     } else {
       switch (navigator.language) {
         case 'ja':
