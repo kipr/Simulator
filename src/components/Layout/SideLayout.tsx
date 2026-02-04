@@ -351,6 +351,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
               onScriptRemove={onScriptRemove}
               onObjectAdd={onObjectAdd}
               capabilities={worldCapabilities}
+              settings={settings}
             />
           </SimulatorWidget>
         );

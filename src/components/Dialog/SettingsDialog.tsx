@@ -196,6 +196,12 @@ class SettingsDialog extends React.PureComponent<Props, State> {
                     theme={theme}
                   />
                 </SettingContainer>
+                {this.createBooleanSetting(
+                  LocalizedString.lookup(tr('Show Scripts'), locale),
+                  LocalizedString.lookup(tr('Show scripts in the World section'), locale),
+                  (settings: Settings) => settings.showScripts,
+                  (newValue: boolean) => ({ showScripts: newValue })
+                )}
               </>
             )}
             {selectedSection === 'simulation' && (
