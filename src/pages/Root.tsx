@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { styled } from 'styletron-react';
-import { Message } from 'ivygate';
+import { Message } from 'ivygate/dist/src';
 import * as uuid from 'uuid';
 import { OuterObjectPatch } from 'symmetry';
 
@@ -33,7 +33,7 @@ import { Editor } from '../components/Editor';
 
 import { State as ReduxState } from '../state';
 import { ScenesAction, ChallengeCompletionsAction, AiAction } from '../state/reducer';
-import { DocumentationAction } from 'ivygate/dist/state/reducer/documentation';
+import { DocumentationAction } from 'ivygate/dist/src/state/reducer/documentation';
 import { sendMessage, SendMessageParams } from '../util/ai';
 
 import Scene, { AsyncScene } from '../state/State/Scene';

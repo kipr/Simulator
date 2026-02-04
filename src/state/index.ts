@@ -9,7 +9,7 @@ import { CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, SCENE_COLLECTION
 import Record from '../db/Record';
 import Selector from '../db/Selector';
 //import { reduceDocumentation, reduceDocumentationCommon } from 'ivygate/src/state/reducer/documentation';
-import { reduceDocumentation, reduceDocumentationCommon } from 'ivygate/dist/state/reducer/documentation';
+import { reduceDocumentation, reduceDocumentationCommon } from 'ivygate/dist/src/state/reducer/documentation';
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 

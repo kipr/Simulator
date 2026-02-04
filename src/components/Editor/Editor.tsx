@@ -8,8 +8,8 @@ import { FontAwesome } from '../FontAwesome';
 import { Button } from '../interface/Button';
 import { BarComponent } from '../interface/Widget';
 import { WarningCharm, ErrorCharm } from './';
-import type { Ivygate as IvygateType } from 'ivygate';
-import { Ivygate, Message } from 'ivygate';
+import type { Ivygate as IvygateType } from 'ivygate/dist/src';
+import { Ivygate, Message } from 'ivygate/dist/src';
 import LanguageSelectCharm from './LanguageSelectCharm';
 import ProgrammingLanguage from '../../programming/compiler/ProgrammingLanguage';
 
