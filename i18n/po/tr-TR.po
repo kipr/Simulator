@@ -1635,7 +1635,7 @@ msgstr ""
 msgid "My Assignments"
 msgstr ""
 
-msgid "Scratch Variables"
+msgid "Graphical Variables"
 msgstr ""
 
 msgid "A hamburger"

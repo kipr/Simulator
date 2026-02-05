@@ -5854,16 +5854,16 @@
       "zh-CN": "我的作业",
       "zh-TW": "我的作業"
     },
-    "Scratch Variables": {
-      "de-DE": "Scratch-Variablen",
-      "en-US": "Scratch Variables",
-      "es-ES": "Variables Scratch",
-      "es-MX": "Variables de Scratch",
-      "ja-JP": "Scratchの変数",
-      "pt-BR": "Variáveis do Scratch",
-      "pt-PT": "Variáveis do Scratch",
-      "zh-CN": "划痕变量",
-      "zh-TW": "Scratch 變數"
+    "Graphical Variables": {
+      "de-DE": "Graphical-Variablen",
+      "en-US": "Graphical Variables",
+      "es-ES": "Variables Graphical",
+      "es-MX": "Variables de Graphical",
+      "ja-JP": "Graphicalの変数",
+      "pt-BR": "Variáveis do Graphical",
+      "pt-PT": "Variáveis do Graphical",
+      "zh-CN": "圖形變數",
+      "zh-TW": "Graphical 變數"
     },
     "A hamburger": {
       "de-DE": "Ein Hamburger",

@@ -8,7 +8,7 @@ import { Editor, createEditorBarComponents, EditorBarTarget } from '../Editor';
 import World from '../World';
 
 import { Info } from '../Info';
-import { LayoutEditorTarget, LayoutProps } from './Layout';
+import { Layout, LayoutEditorTarget, LayoutProps } from './Layout';
 import SimulatorArea from './SimulatorArea';
 import { Theme, ThemeProps } from '../constants/theme';
 import Widget, { Mode, Size, WidgetProps } from '../interface/Widget';
@@ -24,7 +24,7 @@ import LocalizedString from '../../util/LocalizedString';
 import tr from '@i18n';
 
 export interface OverlayLayoutProps extends LayoutProps {
-  
+
 }
 
 interface ReduxOverlayLayoutProps {
@@ -71,10 +71,37 @@ const Overlay = styled('div', (props: ThemeProps & { $challenge?: boolean; }) =>
   padding: `${props.theme.widget.padding}px`
 }));
 
-const transparentStyling = (theme: Theme): React.CSSProperties => ({
+const transparentStyling = (theme: Theme) => ({
   backgroundColor: theme.transparentBackgroundColor(0.95),
   backdropFilter: 'blur(16px)'
 });
+
+// Overlay positioned centered in column 2 (the space that appears when Editor is miniature)
+// The grid is: [padding] [4fr] [gap] [5fr] [gap] [350px] [padding]
+// Column 2 is 5fr wide. When Editor is miniature, it only takes column 1, leaving column 2 visible.
+// We place the overlay as a grid item in column 2 and center it horizontally, with width fit-content
+const SceneNameOverlay = styled('div', (props: ThemeProps) => ({
+  gridColumn: '2',
+  gridRow: '1',
+  display: 'flex',
+  alignItems: 'flex-start',
+  justifyContent: 'center',
+  paddingTop: `${props.theme.widget.padding}px`,
+  pointerEvents: 'none',
+  padding: `${props.theme.itemPadding}px ${props.theme.itemPadding * 2}px`,
+  borderRadius: `${props.theme.borderRadius}px`,
+  backgroundColor: props.theme.transparentBackgroundColor(0.95),
+  backdropFilter: 'blur(16px)',
+  color: props.theme.color,
+  fontSize: '1.2em',
+  fontWeight: 600,
+  whiteSpace: 'nowrap',
+  border: `1px solid ${props.theme.borderColor}`,
+  alignSelf: 'start',
+  justifySelf: 'center',
+  width: 'fit-content',
+  zIndex: 0,
+}));
 
 const ConsoleWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
@@ -98,7 +125,7 @@ const ConsoleWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolea
       gridRow: props.$challenge ? 3 : 2,
       ...transparentStyling(props.theme)
     };
-  } 
+  }
 });
 
 const EditorWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
@@ -113,14 +140,14 @@ const EditorWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean
       ...transparentStyling(props.theme)
     };
     case Size.Type.Miniature: return {
-      gridColumn: 1,
-      gridRow: props.$challenge ? '1 / span 2' : 1,
+      gridColumn: '1',
+      gridRow: props.$challenge ? '1 / span 2' : '1',
       ...transparentStyling(props.theme)
     };
     default:
     case Size.Type.Partial: return {
       gridColumn: '1 / span 2',
-      gridRow: props.$challenge ? '1 / span 2' : 1,
+      gridRow: props.$challenge ? '1 / span 2' : '1',
       ...transparentStyling(props.theme)
     };
   }
@@ -141,7 +168,7 @@ const InfoWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; 
   }
 });
 
-const ChallengeWidget = styled(Widget, (props: WidgetProps) => {
+const ChallengeWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
@@ -179,7 +206,7 @@ const CONSOLE_SIZES: Size[] = [Size.MINIATURE_LEFT, Size.PARTIAL_DOWN, Size.MAXI
 
 const sizeDict = (sizes: Size[]) => {
   const forward: { [type: number]: number } = {};
-  
+
   for (let i = 0; i < sizes.length; ++i) {
     const size = sizes[i];
     forward[size.type] = i;
@@ -216,7 +243,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
 
     let { infoSize, consoleSize, worldSize, challengeSize } = this.state;
 
-    
+
     switch (size.type) {
       case Size.Type.Maximized: {
         infoSize = Size.Type.Minimized;
@@ -265,7 +292,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
     const size = CONSOLE_SIZES[index];
 
     let { infoSize, editorSize, worldSize, challengeSize } = this.state;
-    
+
     switch (size.type) {
       case Size.Type.Maximized: {
         infoSize = Size.Type.Minimized;
@@ -318,7 +345,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
 
   private onRobotOriginChange_ = (origin: ReferenceFramewUnits) => {
     const { scene, onNodeChange } = this.props;
-    
+
     const latestScene = Async.latestValue(scene);
 
     if (!latestScene) return;
@@ -333,7 +360,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
 
   render() {
     const { props } = this;
-    
+
     const {
       style,
       className,
@@ -350,6 +377,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       editorRef,
       robots,
       sceneId,
+      layout,
       scene,
       onNodeAdd,
       onNodeChange,
@@ -364,6 +392,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       challengeState,
       worldCapabilities,
       onDocumentationGoToFuzzy,
+
       locale,
     } = props;
 
@@ -383,6 +412,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
 
     let editorBarTarget: EditorBarTarget;
     let editor: JSX.Element;
+    window.console.log("Rendering Editor with code:", editorTarget.code);
     switch (editorTarget.type) {
       case LayoutEditorTarget.Type.Robot: {
         editorBarTarget = {
@@ -398,6 +428,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
           onMiniClick: editorTarget.onMiniClick,
         };
         editor = (
+
           <Editor
             theme={theme}
             ref={editorRef}
@@ -407,6 +438,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
             messages={messages}
             autocomplete={settings.editorAutoComplete}
             onDocumentationGoToFuzzy={onDocumentationGoToFuzzy}
+            onCommonDocumentationGoToFuzzy={props.onCommonDocumentationGoToFuzzy}
           />
         );
         break;
@@ -427,6 +459,8 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       robotNode = Dict.unique(robots);
     }
 
+    const sceneName = latestScene ? LocalizedString.lookup(latestScene.name, locale) : '';
+
     return (
       <Container style={style} className={className}>
         <SimulatorAreaContainer>
@@ -438,6 +472,11 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
           />
         </SimulatorAreaContainer>
         <Overlay theme={theme} $challenge={!!challengeState}>
+          {sceneName && (
+            <SceneNameOverlay theme={theme}>
+              {sceneName}
+            </SceneNameOverlay>
+          )}
           <EditorWidget
             {...commonProps}
             name={LocalizedString.lookup(tr('Editor'), locale)}
@@ -526,7 +565,7 @@ export const OverlayLayoutRedux = connect((state: ReduxState, { sceneId }: Layou
   const scene = Async.latestValue(asyncScene);
   let robots: Dict<Node.Robot> = {};
   if (scene) robots = Scene.robots(scene);
-  
+
   return {
     robots,
     locale: state.i18n.locale,

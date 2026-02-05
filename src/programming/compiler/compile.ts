@@ -1,15 +1,30 @@
 import ProgrammingLanguage from "./ProgrammingLanguage";
 
+const ERROR_RESPONSE_PREVIEW_LENGTH = 100;
+
 export default (code: string, language: ProgrammingLanguage): Promise<CompileResult> => {
 
   return new Promise<CompileResult>((resolve, reject) => {
     const req = new XMLHttpRequest();
     req.onload = () => {
       if (req.status !== 200) {
-        reject(JSON.parse(req.responseText));
+        try {
+          reject(JSON.parse(req.responseText));
+        } catch (parseError) {
+          reject({
+            error: `Server error (${req.status}): ${req.responseText || 'Unable to compile. The compiler may not be available.'}`
+          });
+        }
         return;
       }
-      resolve(JSON.parse(req.responseText) as CompileResult);
+
+      try {
+        resolve(JSON.parse(req.responseText) as CompileResult);
+      } catch (parseError) {
+        reject({
+          error: `Invalid response from server: expected JSON but received: ${req.responseText.substring(0, ERROR_RESPONSE_PREVIEW_LENGTH)}`
+        });
+      }
     };
 
     req.onerror = (err) => {
@@ -25,7 +40,7 @@ export default (code: string, language: ProgrammingLanguage): Promise<CompileRes
       language,
     }));
   });
-  
+
 };
 
 export interface CompileResult {

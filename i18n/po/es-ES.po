@@ -1670,8 +1670,8 @@ msgstr "Curriculum"
 msgid "My Assignments"
 msgstr "Mis Tareas"
 
-msgid "Scratch Variables"
-msgstr "Variables Scratch"
+msgid "Graphical Variables"
+msgstr "Variables Graphical"
 
 msgid "A hamburger"
 msgstr "Una hamburguesa"

@@ -312,9 +312,9 @@ const startPython = async (message: Protocol.Worker.StartRequest) => {
 
 let cachedRt: string;
 
-const startScratch = async (message: Protocol.Worker.StartRequest) => {
+const startGraphical = async (message: Protocol.Worker.StartRequest) => {
   if (cachedRt === undefined) {
-    const res = await fetch('/scratch/rt.js', {
+    const res = await fetch('/graphical/rt.js', {
 
     });
     cachedRt = await res.text();
@@ -441,8 +441,8 @@ const start = async (message: Protocol.Worker.StartRequest) => {
       }
       break;
     }
-    case 'scratch': {
-      void startScratch(message);
+    case 'graphical': {
+      void startGraphical(message);
       break;
     }
   }

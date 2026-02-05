@@ -8,8 +8,8 @@ import { FontAwesome } from '../FontAwesome';
 import { Button } from '../interface/Button';
 import { BarComponent } from '../interface/Widget';
 import { WarningCharm, ErrorCharm } from './';
-
-import { Ivygate, Message } from 'ivygate';
+import type { Ivygate as IvygateType } from 'ivygate/dist/src';
+import { Ivygate, Message } from 'ivygate/dist/src';
 import LanguageSelectCharm from './LanguageSelectCharm';
 import ProgrammingLanguage from '../../programming/compiler/ProgrammingLanguage';
 
@@ -21,7 +21,7 @@ import Dict from '../../util/objectOps/Dict';
 import * as monaco from 'monaco-editor';
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';
-import ScratchEditor from './ScratchEditor';
+import GraphicalEditor from './GraphicalEditor';
 
 export enum EditorActionState {
   None,
@@ -37,8 +37,8 @@ export interface EditorPublicProps extends StyleProps, ThemeProps {
   messages?: Message[];
   autocomplete: boolean;
 
-  onDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python' | 'scratch') => void;
-
+  onDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python' | 'graphical') => void;
+  onCommonDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python' | 'graphical') => void;
   mini?: boolean;
 }
 
@@ -91,14 +91,14 @@ export const createEditorBarComponents = ({
   target,
   locale
 }: {
-  theme: Theme, 
+  theme: Theme,
   target: EditorBarTarget,
   locale: LocalizedString.Language
 }) => {
-  
+
   // eslint-disable-next-line @typescript-eslint/ban-types
   const editorBar: BarComponent<object>[] = [];
-  
+
   switch (target.type) {
     case EditorBarTarget.Type.Robot: {
       let errors = 0;
@@ -110,7 +110,7 @@ export const createEditorBarComponents = ({
         onLanguageChange: target.onLanguageChange,
       }));
 
-      if (target.language !== 'scratch') {
+      if (target.language !== 'graphical') {
         editorBar.push(BarComponent.create(Button, {
           theme,
           onClick: target.onIndentCode,
@@ -187,9 +187,13 @@ export const createEditorBarComponents = ({
 
 export const IVYGATE_LANGUAGE_MAPPING: Dict<string> = {
   'ecmascript': 'javascript',
+  'python': 'customPython',
+  'c': 'customCpp',
+  'cpp': 'customCpp',
+  'plaintext': 'plaintext',
 };
 
-const DOCUMENTATION_LANGUAGE_MAPPING: { [key in ProgrammingLanguage | Script.Language]?: 'c' | 'python' | 'scratch' | undefined } = {
+const DOCUMENTATION_LANGUAGE_MAPPING: { [key in ProgrammingLanguage | Script.Language]?: 'c' | 'python' | 'graphical' | undefined } = {
   'python': 'python',
   'c': 'c',
   'cpp': 'c',
@@ -201,15 +205,29 @@ class Editor extends React.PureComponent<Props, State> {
   }
 
   private openDocumentation_ = () => {
+
     const { word } = this.ivygate_.editor.getModel().getWordAtPosition(this.ivygate_.editor.getPosition());
     const language = DOCUMENTATION_LANGUAGE_MAPPING[this.props.language];
     if (!language) return;
+
     this.props.onDocumentationGoToFuzzy?.(word, language);
-    
+
   };
 
+  private openCommonDocumentation_ = () => {
+
+    const { word } = this.ivygate_.editor.getModel().getWordAtPosition(this.ivygate_.editor.getPosition());
+    const language = DOCUMENTATION_LANGUAGE_MAPPING[this.props.language];
+    if (!language) return;
+
+    this.props.onCommonDocumentationGoToFuzzy?.(word, language);
+  };
+
+
   private openDocumentationAction_?: monaco.IDisposable;
+  private openCommonDocumentationAction_?: monaco.IDisposable;
   private setupCodeEditor_ = (editor: monaco.editor.IStandaloneCodeEditor) => {
+
     if (this.props.onDocumentationGoToFuzzy) this.openDocumentationAction_ = editor.addAction({
       id: 'open-documentation',
       label: 'Open Documentation',
@@ -218,21 +236,34 @@ class Editor extends React.PureComponent<Props, State> {
       keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
       run: this.openDocumentation_,
     });
+
+
+    if (this.props.onCommonDocumentationGoToFuzzy) {
+      this.openCommonDocumentationAction_ = editor.addAction({
+        id: 'open-common-documentation',
+        label: 'Open Common Documentation',
+        contextMenuOrder: 1,
+        contextMenuGroupId: "operation",
+        keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
+        run: this.openCommonDocumentation_,
+      });
+    }
   };
 
   private disposeCodeEditor_ = (editor: monaco.editor.IStandaloneCodeEditor) => {
     if (this.openDocumentationAction_) this.openDocumentationAction_.dispose();
+    if (this.openCommonDocumentationAction_) this.openCommonDocumentationAction_.dispose();
   };
 
-  private ivygate_: Ivygate;
-  private bindIvygate_ = (ivygate: Ivygate) => {
+  private ivygate_: IvygateType | null = null;
+  private bindIvygate_ = (ivygate: IvygateType) => {
     if (this.ivygate_ === ivygate) return;
     const old = this.ivygate_;
     this.ivygate_ = ivygate;
     if (this.ivygate_ && this.ivygate_.editor) {
-      this.setupCodeEditor_(this.ivygate_.editor as monaco.editor.IStandaloneCodeEditor);
+      this.setupCodeEditor_(this.ivygate_.editor as unknown as monaco.editor.IStandaloneCodeEditor);
     } else {
-      this.disposeCodeEditor_(old.editor as monaco.editor.IStandaloneCodeEditor);
+      this.disposeCodeEditor_(old.editor as unknown as monaco.editor.IStandaloneCodeEditor);
     }
   };
 
@@ -254,9 +285,9 @@ class Editor extends React.PureComponent<Props, State> {
     } = this.props;
 
     let component: JSX.Element;
-    if (language === 'scratch') {
+    if (language === 'graphical') {
       component = (
-        <ScratchEditor
+        <GraphicalEditor
           code={code}
           onCodeChange={onCodeChange}
           theme={theme}
@@ -264,15 +295,17 @@ class Editor extends React.PureComponent<Props, State> {
         />
       );
     } else {
+
       component = (
         <Ivygate
           ref={this.bindIvygate_}
           code={code}
-          language={IVYGATE_LANGUAGE_MAPPING[language] || language}
+          language={IVYGATE_LANGUAGE_MAPPING[language]}
           messages={messages}
           onCodeChange={onCodeChange}
           autocomplete={autocomplete}
           theme="DARK"
+          editable={true}
         />
       );
     }
@@ -281,7 +314,7 @@ class Editor extends React.PureComponent<Props, State> {
       <Container theme={theme} style={style} className={className}>
         {component}
       </Container>
-      
+
     );
   }
 }

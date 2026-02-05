@@ -6,9 +6,19 @@ import { PhysicsMotionType } from "@babylonjs/core";
 
 // TODO: Consider deep-freezing all of these objects
 
-const gameTable2026Template: Node.TemplatedNode<Node.Obj> = {
+const fallTable26Template: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
-  geometryId: 'gameTable2026',
+  geometryId: 'fallTable26',
+  physics: {
+    type: 'mesh',
+    motionType: PhysicsMotionType.STATIC,
+    restitution: .2,
+    friction: 1,
+  },
+};
+const springTable26Template: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'springTable26',
   physics: {
     type: 'mesh',
     motionType: PhysicsMotionType.STATIC,
@@ -24,13 +34,13 @@ const basketTemplate: Node.TemplatedNode<Node.Obj> = {
     motionType: PhysicsMotionType.DYNAMIC,
     mass: Mass.grams(30),
     restitution: 0.2,
-    friction: 2
+    friction: .3
   }
 };
 const CUBEPHYSICS: Node.Physics = {
   type: 'box',
   motionType: PhysicsMotionType.DYNAMIC,
-  mass: Mass.grams(5),
+  mass: Mass.grams(2),
   restitution: 0.4,
   friction: 4
 };
@@ -68,9 +78,9 @@ const palletTemplate: Node.TemplatedNode<Node.Obj> = {
   type: 'object',
   geometryId: 'pallet',
   physics: {
-    type: 'mesh',
+    type: 'box',
     motionType: PhysicsMotionType.DYNAMIC,
-    mass: Mass.grams(5),
+    mass: Mass.grams(1),
     restitution: 0.2,
     friction: 4
   }
@@ -108,9 +118,65 @@ const pcv2inTemplate: Node.TemplatedNode<Node.Obj> = {
     friction: 3.75
   }
 };
+const slidingDoorTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'slidingDoor',
+  physics: {
+    type: 'mesh',
+    motionType: PhysicsMotionType.DYNAMIC,
+    mass: Mass.grams(11),
+    restitution: 0.2,
+    friction: 0.3
+  }
+};
+const pvc2inBlueTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'pvc2inBlue',
+  physics: {
+    type: 'cylinder',
+    motionType: PhysicsMotionType.DYNAMIC,
+    mass: Mass.grams(11),
+    restitution: 0.2,
+    friction: 0.3
+  }
+};
+const pvc2inPinkTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'pvc2inPink',
+  physics: {
+    type: 'cylinder',
+    motionType: PhysicsMotionType.DYNAMIC,
+    mass: Mass.grams(11),
+    restitution: 0.2,
+    friction: 0.3
+  }
+};
+const dropper26Template: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'dropper',
+  physics: {
+    type: 'mesh',
+    motionType: PhysicsMotionType.STATIC,
+    mass: Mass.grams(11),
+    restitution: 0.3,
+    friction: 0.2
+  }
+};
+const gateTemplate: Node.TemplatedNode<Node.Obj> = {
+  type: 'object',
+  geometryId: 'gate',
+  physics: {
+    type: 'mesh',
+    motionType: PhysicsMotionType.STATIC,
+    mass: Mass.grams(11),
+    restitution: 0,
+    friction: 1
+  }
+};
 
 export const BB2026Templates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
-  'gameTable2026': gameTable2026Template,
+  'fallTable26': fallTable26Template,
+  'springTable26': springTable26Template,
   'basket': basketTemplate,
   'cubeBrown4In': cubeBrown4inTemplate,
   'cubeGreen2In': cubeGreen2inTemplate,
@@ -121,14 +187,23 @@ export const BB2026Templates = Object.freeze<Dict<Node.TemplatedNode<Node>>>({
   'pallet': palletTemplate,
   'pomBlue2In': pomBlue2inTemplate,
   'trafficCone': trafficConeTemplate,
-  'pcv2In': pcv2inTemplate
+  'pcv2In': pcv2inTemplate,
+  'slidingDoor': slidingDoorTemplate,
+  'pvc2inBlue': pvc2inBlueTemplate,
+  'pvc2inPink': pvc2inPinkTemplate,
+  'dropper26': dropper26Template,
+  'gate': gateTemplate
 });
 
 
 export const BB2026Geometries = Object.freeze<Dict<Geometry>>({
-  'gameTable2026': {
+  'fallTable26': {
     type: 'file',
     uri: '/static/object_binaries/2026_Fall_Table.glb',
+  },
+  'springTable26': {
+    type: 'file',
+    uri: '/static/object_binaries/2026_Table.glb',
   },
   'basket': {
     type: 'file',
@@ -173,5 +248,25 @@ export const BB2026Geometries = Object.freeze<Dict<Geometry>>({
   'pvc2In': {
     type: 'file',
     uri: '/static/object_binaries/PVC2in.glb'
-  }
+  },
+  'slidingDoor': {
+    type: 'file',
+    uri: '/static/object_binaries/Sliding_Door.glb'
+  },
+  'pvc2inBlue': {
+    type: 'file',
+    uri: '/static/object_binaries/PVC2in_Blue.glb'
+  },
+  'pvc2inPink': {
+    type: 'file',
+    uri: '/static/object_binaries/PVC2in_Pink.glb'
+  },
+  'dropper': {
+    type: 'file',
+    uri: '/static/object_binaries/2026_Dropper.glb'
+  },
+  'gate': {
+    type: 'file',
+    uri: '/static/object_binaries/gate.glb'
+  },
 });

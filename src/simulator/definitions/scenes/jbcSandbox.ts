@@ -1,10 +1,12 @@
-import Scene from '../../../state/State/Scene';
+import Scene, { PredefinedLocation } from '../../../state/State/Scene';
 import { ReferenceFramewUnits, RotationwUnits } from '../../../util/math/unitMath';
 import { Distance } from '../../../util';
+import Dict from '../../../util/objectOps/Dict';
 
-import { createCanNode, createBaseSceneSurfaceA, JBC_MAT_ORIGIN } from './jbcBase';
+import { createCanNode, createBaseSceneSurfaceA, JBC_MAT_ORIGIN, canPositions } from './jbcBase';
 
 import tr from '@i18n';
+import { sprintf } from 'sprintf-js';
 
 const baseScene = createBaseSceneSurfaceA();
 
@@ -32,10 +34,25 @@ const REAM2_ORIGIN: ReferenceFramewUnits = {
   }),
 };
 
+// Create predefined locations for circles 1-12 on JBC Mat A
+const predefinedLocations: Dict<PredefinedLocation> = {};
+for (let i = 1; i <= 12; i++) {
+  const position = canPositions[i - 1];
+  predefinedLocations[`circle${i}`] = {
+    id: `circle${i}`,
+    name: Dict.map(tr('Circle %s'), (str: string) => sprintf(str, i)),
+    origin: {
+      position,
+      orientation: RotationwUnits.eulerDegrees(0, 0, 0),
+    },
+  };
+}
+
 export const JBC_Sandbox: Scene = {
   ...baseScene,
   name: tr('JBC Sandbox'),
   description: tr('Junior Botball Challenge Sandbox. Starting Mat is A but B can also be shown instead. All cans 1-12 are available by default.'),
+  predefinedLocations,
   nodes: {
     ...baseScene.nodes,
     'robot': {

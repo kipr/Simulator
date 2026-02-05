@@ -28,7 +28,7 @@ interface FeedbackDialogPrivateProps {
   locale: LocalizedString.Language;
 }
 
-interface FeedbackDialogState {}
+interface FeedbackDialogState { }
 
 type Props = FeedbackDialogPublicProps & FeedbackDialogPrivateProps;
 type State = FeedbackDialogState;
@@ -63,7 +63,7 @@ class FeedbackDialog extends React.PureComponent<Props, State> {
       selectedSection: 'simulation',
     };
   }
-  
+
   private createSentimentInput = (getValue: (feedback: Feedback) => Sentiment, getUpdatedFeedback: (newValue: Sentiment) => Partial<Feedback>) => {
     const { theme, feedback: currentFeedback, onFeedbackChange } = this.props;
 
@@ -71,13 +71,13 @@ class FeedbackDialog extends React.PureComponent<Props, State> {
       <FeedbackRowContainer theme={theme}>
         <SentimentCharm theme={theme} icon={faFrown} selected={getValue(currentFeedback) === Sentiment.Sad} onClick={
           () => onFeedbackChange(getUpdatedFeedback(Sentiment.Sad))
-        }/>
+        } />
         <SentimentCharm theme={theme} icon={faMeh} selected={getValue(currentFeedback) === Sentiment.Okay} onClick={
           () => onFeedbackChange(getUpdatedFeedback(Sentiment.Okay))
-        }/>
+        } />
         <SentimentCharm theme={theme} icon={faSmileBeam} selected={getValue(currentFeedback) === Sentiment.Happy} onClick={
           () => onFeedbackChange(getUpdatedFeedback(Sentiment.Happy))
-        }/>
+        } />
       </FeedbackRowContainer>
     );
   };
@@ -86,9 +86,9 @@ class FeedbackDialog extends React.PureComponent<Props, State> {
     const { theme, feedback: currentFeedback, onFeedbackChange } = this.props;
 
     return (
-      <input type="checkbox" checked={getValue(currentFeedback)} onChange={() => { 
-        onFeedbackChange(getUpdatedFeedback(!getValue(currentFeedback))); 
-      }}/>
+      <input type="checkbox" checked={getValue(currentFeedback)} onChange={() => {
+        onFeedbackChange(getUpdatedFeedback(!getValue(currentFeedback)));
+      }} />
     );
   };
 
@@ -97,8 +97,8 @@ class FeedbackDialog extends React.PureComponent<Props, State> {
 
     return (
       <FeedbackTextArea theme={theme} placeholder={LocalizedString.lookup(tr('Give a helpful description of a problem you\'re facing, or a feature you\'d like to request'), locale)}
-        value={getValue(currentFeedback)} 
-        onChange={(event) => {
+        value={getValue(currentFeedback)}
+        onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
           onFeedbackChange(getUpdatedFeedback(event.target.value));
         }}
       />
@@ -109,9 +109,9 @@ class FeedbackDialog extends React.PureComponent<Props, State> {
     const { theme, feedback: currentFeedback, onFeedbackChange } = this.props;
 
     return (
-      <FeedbackEmailInput theme={theme} 
-        value={getValue(currentFeedback)} 
-        onChange={(event) => {
+      <FeedbackEmailInput theme={theme}
+        value={getValue(currentFeedback)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
           onFeedbackChange(getUpdatedFeedback(event.target.value));
         }}
       />
@@ -192,7 +192,7 @@ class FeedbackDialog extends React.PureComponent<Props, State> {
           }
         </FeedbackContainer>
         <DialogBar theme={theme} onAccept={onSubmit}>
-          <FontAwesome icon={faPaperPlane}/> {LocalizedString.lookup(tr('Submit'), props.locale)}
+          <FontAwesome icon={faPaperPlane} /> {LocalizedString.lookup(tr('Submit'), props.locale)}
         </DialogBar>
       </Dialog>
     );

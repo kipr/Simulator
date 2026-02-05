@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider as ReduxProvider } from 'react-redux';
+import { SimReduxContext } from './state/context';
 import { BrowserRouter } from 'react-router-dom';
 
 import { Provider as StyletronProvider, DebugEngine } from "styletron-react";
@@ -22,9 +23,11 @@ if (!reactRoot) {
 }
 
 const root = createRoot(reactRoot);
+
+
 root.render(
   <StyletronProvider value={engine} debug={debug} debugAfterHydration>
-    <ReduxProvider store={store}>
+    <ReduxProvider store={store} context={SimReduxContext}>
       <BrowserRouter>
         <App />
       </BrowserRouter>

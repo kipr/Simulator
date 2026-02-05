@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RawVector2 } from '../../util/math/math';
 import { ThemeProps } from '../constants/theme';
 import Widget, { Mode, Size } from '../interface/Widget';
-import ScratchVariablesRoot from './ScratchVariablesRoot';
+import GraphicalVariablesRoot from './GraphicalVariablesRoot';
 
 import { GLOBAL_EVENTS } from '../../util/GlobalEvents';
 import construct from '../../util/redux/construct';
@@ -33,20 +33,20 @@ namespace DragState {
 
 type DragState = DragState.None | DragState.Dragging;
 
-export interface ScratchVariablesWindowPublicProps extends ThemeProps {
+export interface GraphicalVariablesWindowPublicProps extends ThemeProps {
   
 }
 
-interface ScratchVariablesWindowPrivateProps {
+interface GraphicalVariablesWindowPrivateProps {
   locale: LocalizedString.Language;
 }
 
-interface ScratchVariablesWindowState {
+interface GraphicalVariablesWindowState {
   dragState: DragState;
 }
 
-type Props = ScratchVariablesWindowPublicProps & ScratchVariablesWindowPrivateProps;
-type State = ScratchVariablesWindowState;
+type Props = GraphicalVariablesWindowPublicProps & GraphicalVariablesWindowPrivateProps;
+type State = GraphicalVariablesWindowState;
 
 const Container = styled('div', ({ theme }: ThemeProps) => ({
   display: 'flex',
@@ -68,7 +68,7 @@ const SIZES: Size[] = [
   Size.PARTIAL,
 ];
 
-class ScratchVariablesWindow extends React.PureComponent<Props, State> {
+class GraphicalVariablesWindow extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
   
@@ -151,9 +151,9 @@ class ScratchVariablesWindow extends React.PureComponent<Props, State> {
     style.top = `${dragState.position.y}px`;
 
     return (
-      <ScratchVariablesRoot>
+      <GraphicalVariablesRoot>
         <Widget
-          name={LocalizedString.lookup(tr('Scratch Variables'), locale)}
+          name={LocalizedString.lookup(tr('Graphical Variables'), locale)}
           theme={theme}
           mode={mode}
           style={style}
@@ -168,7 +168,7 @@ class ScratchVariablesWindow extends React.PureComponent<Props, State> {
             </StyledScrollArea>
           </Container>
         </Widget>
-      </ScratchVariablesRoot>
+      </GraphicalVariablesRoot>
     );
   }
 }
@@ -176,4 +176,4 @@ class ScratchVariablesWindow extends React.PureComponent<Props, State> {
 export default connect((state: ReduxState) => ({
   locale: state.i18n.locale,
 }), dispatch => ({
-}))(ScratchVariablesWindow) as React.ComponentType<ScratchVariablesWindowPublicProps>;
+}))(GraphicalVariablesWindow) as React.ComponentType<GraphicalVariablesWindowPublicProps>;
