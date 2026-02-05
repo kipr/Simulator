@@ -71,7 +71,7 @@ const Overlay = styled('div', (props: ThemeProps & { $challenge?: boolean; }) =>
   padding: `${props.theme.widget.padding}px`
 }));
 
-const transparentStyling = (theme: Theme): React.CSSProperties => ({
+const transparentStyling = (theme: Theme) => ({
   backgroundColor: theme.transparentBackgroundColor(0.95),
   backdropFilter: 'blur(16px)'
 });
@@ -128,7 +128,7 @@ const ConsoleWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolea
   }
 });
 
-const EditorWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }): any => {
+const EditorWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
@@ -140,20 +140,20 @@ const EditorWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean
       ...transparentStyling(props.theme)
     };
     case Size.Type.Miniature: return {
-      gridColumn: 1,
-      gridRow: props.$challenge ? '1 / span 2' : 1,
+      gridColumn: '1',
+      gridRow: props.$challenge ? '1 / span 2' : '1',
       ...transparentStyling(props.theme)
     };
     default:
     case Size.Type.Partial: return {
       gridColumn: '1 / span 2',
-      gridRow: props.$challenge ? '1 / span 2' : 1,
+      gridRow: props.$challenge ? '1 / span 2' : '1',
       ...transparentStyling(props.theme)
     };
   }
 });
 
-const InfoWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }): any => {
+const InfoWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
@@ -168,22 +168,22 @@ const InfoWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; 
   }
 });
 
-const ChallengeWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }): any => {
+const ChallengeWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
       display: 'none'
-    } as any;
+    };
     default:
     case Size.Type.Partial: return {
       gridColumn: 3,
       gridRow: 2,
       ...transparentStyling(props.theme)
-    } as any;
+    };
   }
 });
 
-const WorldWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }): any => {
+const WorldWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {

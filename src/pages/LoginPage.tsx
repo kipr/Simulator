@@ -460,7 +460,7 @@ class LoginPage extends React.Component<Props, State> {
           this.setState({ authenticating: false });
         });
     });
-  }
+  };
 
   private getAge = (dob: Date) => {
     const today = new Date();
