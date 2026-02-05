@@ -75,12 +75,12 @@ export default ({
   onChange
 }: DoubleSliderProps) => {
   const [dragState, setDragState] = React.useState<DragState>({ type: 'idle' });
-  
+
   const draw = (size: RawVector2) => {
     const texts: JSX.Element[] = [];
     for (const [index, option] of options.entries()) {
       const x = index / (options.length - 1) * (size.x - HANDLE_RADIUS * 2) + HANDLE_RADIUS;
-      const y = size.y / 2 + HANDLE_RADIUS  * 2;
+      const y = size.y / 2 + HANDLE_RADIUS * 2;
       texts.push(
         <Text
           key={index}
@@ -115,7 +115,7 @@ export default ({
 
     let draggedStartIndex = startIndex;
     if (dragState.type === 'dragging-left') draggedStartIndex = dragState.nextIndex;
-    
+
     const x1 = draggedStartIndex / (options.length - 1) * (size.x - HANDLE_RADIUS * 2) + HANDLE_RADIUS;
 
     let draggedEndIndex = endIndex;
@@ -146,7 +146,7 @@ export default ({
           cx={x1}
           cy={size.y / 2}
           r={HANDLE_RADIUS}
-          onMouseDown={e => {
+          onMouseDown={(e: React.MouseEvent<SVGCircleElement>) => {
             e.stopPropagation();
             setDragState({ type: 'dragging-left', prevIndex: startIndex, nextIndex: startIndex });
           }}
@@ -157,7 +157,7 @@ export default ({
           cx={x2}
           cy={size.y / 2}
           r={HANDLE_RADIUS}
-          onMouseDown={e => {
+          onMouseDown={(e: React.MouseEvent<SVGCircleElement>) => {
             e.stopPropagation();
             setDragState({ type: 'dragging-right', prevIndex: endIndex, nextIndex: endIndex });
           }}
