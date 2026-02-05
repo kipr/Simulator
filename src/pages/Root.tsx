@@ -680,8 +680,6 @@ class Root extends React.Component<Props, State> {
 
     const theme = DARK;
 
-    //window.console.log("code[activelanguage]:", state.code[state.activeLanguage]);
-
     const editorTarget: LayoutEditorTarget = {
       type: LayoutEditorTarget.Type.Robot,
       code: code[activeLanguage],

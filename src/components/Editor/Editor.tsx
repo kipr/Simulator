@@ -223,10 +223,7 @@ class Editor extends React.PureComponent<Props, State> {
     this.props.onCommonDocumentationGoToFuzzy?.(word, language);
   };
 
-  componentDidUpdate(prevProps: Readonly<EditorPublicProps>, prevState: Readonly<EditorState>, snapshot?: any): void {
 
-
-  }
   private openDocumentationAction_?: monaco.IDisposable;
   private openCommonDocumentationAction_?: monaco.IDisposable;
   private setupCodeEditor_ = (editor: monaco.editor.IStandaloneCodeEditor) => {

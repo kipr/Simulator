@@ -228,8 +228,6 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
 
     } = this.state;
 
-    //window.console.log("Rendering SideLayout with editorTarget:", editorTarget);
-
     let editorBarTarget: EditorBarTarget;
     let editor: JSX.Element;
     switch (editorTarget.type) {
