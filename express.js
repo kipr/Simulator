@@ -1,24 +1,24 @@
 /* eslint-env node */
 
-const express = require("express");
-const bodyParser = require("body-parser");
-const morgan = require("morgan");
-const fs = require("fs");
-const uuid = require("uuid");
-const { exec } = require("child_process");
-const session = require("express-session");
-const csrf = require("lusca").csrf;
+const express = require('express');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const fs = require('fs');
+const uuid = require('uuid');
+const { exec } = require('child_process');
+const session = require('express-session');
+const csrf = require('lusca').csrf;
 const app = express();
-const sourceDir = "dist";
-const { get: getConfig } = require("./config");
-const { WebhookClient } = require("discord.js");
-const proxy = require("express-http-proxy");
-const path = require("path");
-const { FirebaseTokenManager } = require("./firebaseAuth");
-const formData = require("form-data");
-const Mailgun = require("mailgun.js");
-const createParentalConsentRouter = require("./parentalConsent");
-const createAiRouter = require("./ai");
+const sourceDir = 'dist';
+const { get: getConfig } = require('./config');
+const { WebhookClient } = require('discord.js');
+const proxy = require('express-http-proxy');
+const path = require('path');
+const { FirebaseTokenManager } = require('./firebaseAuth');
+const formData = require('form-data');
+const Mailgun = require('mailgun.js');
+const createParentalConsentRouter = require('./parentalConsent');
+const createAiRouter = require('./ai');
 
 let config;
 try {
@@ -28,28 +28,32 @@ try {
   throw e;
 }
 
-app.set("trust proxy", false);
+app.set('trust proxy', false);
 
 // Session middleware for generating session IDs
 app.use(
   session({
-    secret: config.server.sessionSecret || "kipr-simulator-session-secret",
+    secret: config.server.sessionSecret || 'kipr-simulator-session-secret',
     resave: false,
     saveUninitialized: true,
     cookie: {
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production" ? true : false, // Enforce secure cookies in production
+      secure: process.env.NODE_ENV === 'production' ? true : false, // Enforce secure cookies in production
     },
-    name: "kipr_session",
-  })
+    name: 'kipr_session',
+  }),
 );
 
 // CSRF protection - skip for API routes that use Bearer token authentication
 app.use((req, res, next) => {
   // Skip CSRF for API routes that use Bearer tokens (CSRF-safe by design)
   // Also skip for compile and feedback endpoints (no auth, CSRF-safe)
-  if (req.path.startsWith('/api/') || req.path === '/compile' || req.path === '/feedback') {
+  if (
+    req.path.startsWith('/api/') ||
+    req.path === '/compile' ||
+    req.path === '/feedback'
+  ) {
     return next();
   }
   // Apply CSRF protection to other routes
@@ -57,14 +61,14 @@ app.use((req, res, next) => {
 });
 
 // Metrics collection
-const metrics = require("./metrics");
+const metrics = require('./metrics');
 app.use(metrics.metricsMiddleware);
 
 // Logging
-const { logCompilation, logFeedback, logRateLimit } = require("./logger");
+const { logCompilation, logFeedback, logRateLimit } = require('./logger');
 
 // set up rate limiter: maximum of 100 requests per 15 minute
-var RateLimit = require("express-rate-limit");
+var RateLimit = require('express-rate-limit');
 var limiter = RateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 1000, // max 100 requests per windowMs
@@ -80,7 +84,7 @@ var limiter = RateLimit({
     });
 
     res.status(429).json({
-      error: "Too many requests, please try again later.",
+      error: 'Too many requests, please try again later.',
     });
   },
 });
@@ -90,60 +94,60 @@ app.use(limiter);
 
 const mailgun = new Mailgun(formData);
 const mailgunClient = mailgun.client({
-  username: "api",
+  username: 'api',
   key: config.mailgun.apiKey,
 });
 
 const firebaseTokenManager = new FirebaseTokenManager(
   config.firebase.serviceAccountKey,
-  config.firebase.apiKey
+  config.firebase.apiKey,
 );
 
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header('Access-Control-Allow-Origin', '*');
   res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept',
   );
   next();
 });
 
 app.use(bodyParser.json());
-app.use(morgan("combined"));
+app.use(morgan('combined'));
 
 app.use(
-  "/api/parental-consent",
-  createParentalConsentRouter(firebaseTokenManager, mailgunClient, config)
+  '/api/parental-consent',
+  createParentalConsentRouter(firebaseTokenManager, mailgunClient, config),
 );
 
 // Add AI router
-app.use("/api/ai", createAiRouter(firebaseTokenManager, config));
+app.use('/api/ai', createAiRouter(firebaseTokenManager, config));
 
-app.use("/api", proxy(config.dbUrl));
+app.use('/api', proxy(config.dbUrl));
 
 // If we have libkipr (C) artifacts and emsdk, we can compile.
 if (
   config.server.dependencies.libkipr_c &&
   config.server.dependencies.emsdk_env
 ) {
-  app.post("/compile", (req, res) => {
+  app.post('/compile', (req, res) => {
     const startTime = Date.now();
-    const language = "C";
+    const language = 'C';
     const userId = req.user?.uid;
-    const sessionId = req.headers["x-session-id"] || req.sessionID || "unknown";
+    const sessionId = req.headers['x-session-id'] || req.sessionID || 'unknown';
 
     // Track session interaction
-    metrics.trackSessionInteraction(sessionId, "compile");
+    metrics.trackSessionInteraction(sessionId, 'compile');
 
-    if (!("code" in req.body)) {
+    if (!('code' in req.body)) {
       return res.status(400).json({
-        error: "Expected code key in body",
+        error: 'Expected code key in body',
       });
     }
 
-    if (typeof req.body.code !== "string") {
+    if (typeof req.body.code !== 'string') {
       return res.status(400).json({
-        error: "Expected code key in body to be a string",
+        error: 'Expected code key in body to be a string',
       });
     }
 
@@ -183,19 +187,19 @@ if (
           language,
           code,
           duration: durationMs,
-          status: "error",
+          status: 'error',
           stdout: null,
           stderr: err.message,
         });
 
-        metrics.compilation.counter.inc({ status: "error", language });
+        metrics.compilation.counter.inc({ status: 'error', language });
         metrics.compilation.duration.observe(
-          { status: "error", language },
-          duration
+          { status: 'error', language },
+          duration,
         );
 
         return res.status(500).json({
-          error: "Failed to write ${}",
+          error: 'Failed to write ${}',
         });
       }
 
@@ -207,11 +211,10 @@ if (
         env[key] = process.env[key];
       }
 
-      env[
-        "PATH"
-      ] = `${config.server.dependencies.emsdk_env.PATH}:${process.env.PATH}`;
-      env["EMSDK"] = config.server.dependencies.emsdk_env.EMSDK;
-      env["EM_CONFIG"] = config.server.dependencies.emsdk_env.EM_CONFIG;
+      env['PATH'] =
+        `${config.server.dependencies.emsdk_env.PATH}:${process.env.PATH}`;
+      env['EMSDK'] = config.server.dependencies.emsdk_env.EMSDK;
+      env['EM_CONFIG'] = config.server.dependencies.emsdk_env.EM_CONFIG;
 
       exec(
         `emcc -s WASM=0 -s INVOKE_RUN=0 -s ASYNCIFY -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']" -I${config.server.dependencies.libkipr_c}/include -L${config.server.dependencies.libkipr_c}/lib -lkipr -o ${path}.js ${path}`,
@@ -232,15 +235,15 @@ if (
               language,
               code,
               duration: durationMs,
-              status: "error",
+              status: 'error',
               stdout,
               stderr,
             });
 
-            metrics.compilation.counter.inc({ status: "error", language });
+            metrics.compilation.counter.inc({ status: 'error', language });
             metrics.compilation.duration.observe(
-              { status: "error", language },
-              duration
+              { status: 'error', language },
+              duration,
             );
 
             return res.status(200).json({
@@ -276,19 +279,19 @@ if (
                   language,
                   code,
                   duration: durationMs,
-                  status: "success",
+                  status: 'success',
                   stdout,
                   stderr: stderr || null,
                 });
 
                 // Success! Track metrics
                 metrics.compilation.counter.inc({
-                  status: "success",
+                  status: 'success',
                   language,
                 });
                 metrics.compilation.duration.observe(
-                  { status: "success", language },
-                  duration
+                  { status: 'success', language },
+                  duration,
                 );
 
                 res.status(200).json({
@@ -299,48 +302,48 @@ if (
               });
             });
           });
-        }
+        },
       );
     });
   });
 }
 
-app.post("/feedback", (req, res) => {
+app.post('/feedback', (req, res) => {
   const hookURL = config.server.feedbackWebhookURL;
   if (!hookURL) {
     res.status(500).json({
       message:
-        "The feedback URL is not set on the server. If this is a developoment environment, make sure the feedback URL environment variable is set.",
+        'The feedback URL is not set on the server. If this is a developoment environment, make sure the feedback URL environment variable is set.',
     });
     return;
   }
 
   const body = req.body;
-  const sessionId = req.headers["x-session-id"] || req.sessionID || "unknown";
+  const sessionId = req.headers['x-session-id'] || req.sessionID || 'unknown';
 
   // Track session interaction
-  metrics.trackSessionInteraction(sessionId, "feedback");
+  metrics.trackSessionInteraction(sessionId, 'feedback');
 
   let content = `User Feedback Recieved:\n\`\`\`${body.feedback} \`\`\``;
 
   content += `Sentiment: `;
   switch (body.sentiment) {
     case 0:
-      content += "No sentiment! This is probably a bug";
+      content += 'No sentiment! This is probably a bug';
       break;
     case 1:
-      content += ":frowning2:";
+      content += ':frowning2:';
       break;
     case 2:
-      content += ":expressionless:";
+      content += ':expressionless:';
       break;
     case 3:
-      content += ":smile:";
+      content += ':smile:';
       break;
   }
-  content += "\n";
+  content += '\n';
 
-  if (body.email !== null && body.email !== "") {
+  if (body.email !== null && body.email !== '') {
     content += `User Email: ${body.email}\n`;
   }
 
@@ -351,7 +354,7 @@ app.post("/feedback", (req, res) => {
     files = [
       {
         attachment: Buffer.from(JSON.stringify(body.state, undefined, 2)),
-        name: "userdata.json",
+        name: 'userdata.json',
       },
     ];
   }
@@ -363,7 +366,7 @@ app.post("/feedback", (req, res) => {
     console.log(error);
     res.status(500).json({
       message:
-        "An error occured on the server. If you are a developer, your webhook url is likely wrong.",
+        'An error occured on the server. If you are a developer, your webhook url is likely wrong.',
     });
     // TODO: write the feedback to a file if an error occurs?
     return;
@@ -372,15 +375,15 @@ app.post("/feedback", (req, res) => {
   webhook
     .send({
       content: content,
-      username: "KIPR Simulator Feedback",
+      username: 'KIPR Simulator Feedback',
       avatarURL:
-        "https://www.kipr.org/wp-content/uploads/2018/08/botguy-copy.jpg",
+        'https://www.kipr.org/wp-content/uploads/2018/08/botguy-copy.jpg',
       files: files,
     })
     .then(() => {
       // Log feedback submission
       logFeedback({
-        userId: body.userId || "anonymous",
+        userId: body.userId || 'anonymous',
         sentiment: body.sentiment,
         feedback: body.feedback,
         email: body.email,
@@ -390,21 +393,21 @@ app.post("/feedback", (req, res) => {
       // Track feedback submission
       const sentimentLabel =
         body.sentiment === 1
-          ? "negative"
+          ? 'negative'
           : body.sentiment === 2
-          ? "neutral"
-          : body.sentiment === 3
-          ? "positive"
-          : "unknown";
+            ? 'neutral'
+            : body.sentiment === 3
+              ? 'positive'
+              : 'unknown';
       metrics.feedback.counter.inc({ sentiment: sentimentLabel });
 
       res.status(200).json({
-        message: "Feedback submitted! Thank you!",
+        message: 'Feedback submitted! Thank you!',
       });
     })
     .catch(() => {
       res.status(500).json({
-        message: "An error occured on the server while sending feedback.",
+        message: 'An error occured on the server while sending feedback.',
       });
       // TODO: write the feedback to a file if an error occurs?
     });
@@ -412,85 +415,97 @@ app.post("/feedback", (req, res) => {
 
 // ✅ Add this line
 app.use((req, res, next) => {
-  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+  res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
   next();
 });
 
 app.use(
-  "/static",
+  '/static',
   express.static(`${__dirname}/static`, {
     maxAge: config.caching.staticMaxAge,
-  })
+  }),
 );
 
 if (config.server.dependencies.graphical_rt) {
   console.log('Graphical Runtime is enabled.');
-  app.use('/graphical/rt.js', express.static(`${config.server.dependencies.graphical_rt}`, {
-    maxAge: config.caching.staticMaxAge,
-  }));
+  app.use(
+    '/graphical/rt.js',
+    express.static(`${config.server.dependencies.graphical_rt}`, {
+      maxAge: config.caching.staticMaxAge,
+    }),
+  );
 }
 
-app.use('/graphical', express.static(path.resolve(__dirname, 'node_modules', 'kipr-scratch'), {
-  maxAge: config.caching.staticMaxAge,
-}));
+app.use(
+  '/graphical',
+  express.static(path.resolve(__dirname, 'node_modules', 'kipr-scratch'), {
+    maxAge: config.caching.staticMaxAge,
+  }),
+);
 
-app.use('/media', express.static(path.resolve(__dirname, 'node_modules', 'kipr-scratch', 'media'), {
-  maxAge: config.caching.staticMaxAge,
-}));
+app.use(
+  '/media',
+  express.static(
+    path.resolve(__dirname, 'node_modules', 'kipr-scratch', 'media'),
+    {
+      maxAge: config.caching.staticMaxAge,
+    },
+  ),
+);
 
 // Expose cpython artifacts
 if (config.server.dependencies.cpython) {
-  console.log("CPython artifacts are enabled.");
+  console.log('CPython artifacts are enabled.');
   app.use(
-    "/cpython",
+    '/cpython',
     express.static(`${config.server.dependencies.cpython}`, {
       maxAge: config.caching.staticMaxAge,
-    })
+    }),
   );
 }
 
 // Expose libkipr (Python) artifacts
 if (config.server.dependencies.libkipr_python) {
-  console.log("libkipr (Python) artifacts are enabled.");
+  console.log('libkipr (Python) artifacts are enabled.');
   app.use(
-    "/libkipr/python",
+    '/libkipr/python',
     express.static(`${config.server.dependencies.libkipr_python}`, {
       maxAge: config.caching.staticMaxAge,
-    })
+    }),
   );
 }
 
 // Expose metrics endpoint
-app.get("/metrics", async (req, res) => {
+app.get('/metrics', async (req, res) => {
   try {
-    res.set("Content-Type", metrics.register.contentType);
+    res.set('Content-Type', metrics.register.contentType);
     res.end(await metrics.register.metrics());
   } catch (err) {
-    console.error("Error in /metrics endpoint:", err);
-    res.status(500).end("Internal Server Error");
+    console.error('Error in /metrics endpoint:', err);
+    res.status(500).end('Internal Server Error');
   }
 });
 
 app.use(
-  "/dist",
+  '/dist',
   express.static(`${__dirname}/dist`, {
     setHeaders: setCrossOriginIsolationHeaders,
-  })
+  }),
 );
 
 app.use(
   express.static(sourceDir, {
     maxAge: config.caching.staticMaxAge,
     setHeaders: setCrossOriginIsolationHeaders,
-  })
+  }),
 );
 
-app.get("/login", (req, res) => {
+app.get('/login', (req, res) => {
   res.sendFile(`${__dirname}/${sourceDir}/login.html`);
 });
 
-app.get("/lms/plugin", (req, res) => {
+app.get('/lms/plugin', (req, res) => {
   res.sendFile(`${__dirname}/${sourceDir}/plugin.html`);
 });
 
@@ -504,13 +519,13 @@ app.use(/.*/, (req, res) => {
 
 app.listen(config.server.port, () => {
   console.log(
-    `Express web server started: http://localhost:${config.server.port}`
+    `Express web server started: http://localhost:${config.server.port}`,
   );
   console.log(`Serving content from /${sourceDir}/`);
 });
 
 // Cross-origin isolation required for using features like SharedArrayBuffer
 function setCrossOriginIsolationHeaders(res) {
-  res.header("Cross-Origin-Opener-Policy", "same-origin");
-  res.header("Cross-Origin-Embedder-Policy", "require-corp");
+  res.header('Cross-Origin-Opener-Policy', 'same-origin');
+  res.header('Cross-Origin-Embedder-Policy', 'require-corp');
 }
