@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from 'styletron-react';
+import { withStyleDeep } from 'styletron-react';
 
 import StructureDocumentation from '../../state/State/Documentation/StructureDocumentation';
 import { StyleProps } from '../../util/style';
@@ -15,7 +15,7 @@ export interface StructureBriefProps extends StyleProps, ThemeProps {
 
 type Props = StructureBriefProps;
 
-const StyledStructureName = styled(FileName, ({ theme }: ThemeProps) => ({
+const StyledStructureName = withStyleDeep(FileName, ({ theme }: ThemeProps) => ({
   display: 'block',
   marginBottom: `${theme.itemPadding}px`,
   ':last-child': {
