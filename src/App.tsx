@@ -13,7 +13,7 @@ import Leaderboard from './pages/Leaderboard';
 import Loading from './components/Loading';
 import Root from './pages/Root';
 import ChallengeRoot from './pages/ChallengeRoot';
-import { DocumentationWindow } from 'ivygate/dist/src';
+import DocumentationWindow from './components/documentation/DocumentationWindow';
 import AiWindow from './components/Ai/AiWindow';
 import { DARK } from './components/constants/theme';
 import CurriculumPage from './lms/CurriculumPage';
@@ -67,7 +67,6 @@ type State = AppState;
  * Note: This component also maintains a private field `onAuthStateChangedSubscription_` for managing
  * the subscription to the authentication state changes.
  */
-
 class App extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -90,7 +89,7 @@ class App extends React.Component<Props, State> {
     const lang: LocalizedString.Language = LocalizedString.validate(localStorage.getItem('bblocale'));
     if (lang) {
       this.props.setLocale(lang);
-
+      console.log(`Read locale from localstorage: ${lang}`);
     } else {
       switch (navigator.language) {
         case 'ja':
@@ -182,9 +181,7 @@ class App extends React.Component<Props, State> {
           <Route path="/curriculum" element={<CurriculumPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-        <DocumentationWindow theme={DARK} documentationType={'default'} />
-        <DocumentationWindow theme={DARK} documentationType={'common'} />
-        {/* <DocumentationWindow theme={DARK} /> */}
+        <DocumentationWindow theme={DARK} />
       </>
     );
   }

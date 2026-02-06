@@ -1,5 +1,4 @@
-export { Layout, LayoutEditorTarget } from './Layout';
-export type { LayoutProps } from './Layout';
+export { Layout, LayoutProps, LayoutEditorTarget } from './Layout';
 
 export * from './LayoutPicker';
 export { default as LayoutPicker } from './LayoutPicker';

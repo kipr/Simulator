@@ -129,7 +129,7 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
           value={item.id in values ? values[item.id].text : (item.defaultValue || '')}
           autoFocus={index === 0}
           onChange={this.onValueChange_(item)}
-          onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+          onKeyDown={(event) => {
             if (event.key === 'Enter' && this.isFinalizeAllowed_()) {
               this.onFinalizeClick_();
             }
@@ -249,7 +249,7 @@ namespace Form {
   export const DATE_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.Date);
   export const NON_EMPTY_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.Length, 1);
 
-
+  
   export const email = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
     id,
     text,

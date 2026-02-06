@@ -218,7 +218,6 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       challengeState,
       worldCapabilities,
       onDocumentationGoToFuzzy,
-      onCommonDocumentationGoToFuzzy,
       locale
     } = props;
 
@@ -254,7 +253,6 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
             messages={messages}
             autocomplete={settings.editorAutoComplete}
             onDocumentationGoToFuzzy={onDocumentationGoToFuzzy}
-            onCommonDocumentationGoToFuzzy={onCommonDocumentationGoToFuzzy}
           />
         );
         break;

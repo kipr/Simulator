@@ -2,7 +2,7 @@
  * Parses clang error messages
  */
 
-import { Message } from 'ivygate/dist/src';
+import { Message } from 'ivygate';
 import { StyledText } from './StyledText';
 
 export const hasErrors = (messages: Message[]) => {
@@ -29,12 +29,12 @@ export const hasWarnings = (messages: Message[]) => {
  */
 export default (stderr: string) => {
   const lines = stderr.split('\n');
-
+  
   const ret: Message[] = [];
   for (let i = 0; i < lines.length; ++i) {
     const line = lines[i];
     const parts = line.split(':');
-
+    
     if (parts.length < 5) continue;
 
     const lineNumber = +parts[1];
@@ -42,7 +42,7 @@ export default (stderr: string) => {
     const type = parts[3].trim();
     const message = parts[4].trim();
 
-
+    
     const end: Message.Index = {
       line: lineNumber,
       col: column
@@ -57,7 +57,7 @@ export default (stderr: string) => {
       case 'fatal error':
       case 'error': {
         ret.push({
-          severity: 'error',
+          severity: 'error', 
           ranges: [{
             start: {
               line: lineNumber,
@@ -71,7 +71,7 @@ export default (stderr: string) => {
       }
       case 'warning': {
         ret.push({
-          severity: 'warning',
+          severity: 'warning', 
           ranges: [{
             start: {
               line: lineNumber,

@@ -10,7 +10,7 @@ import { styled } from 'styletron-react';
 import { DocumentationState } from '../../state/State';
 import { State as ReduxState } from '../../state';
 import { connect } from 'react-redux';
-import { DocumentationAction } from 'ivygate/dist/src/state/reducer/documentation';
+import { DocumentationAction } from '../../state/reducer';
 import { FontAwesome } from '../FontAwesome';
 import { faBox, faChevronLeft, faFile, faFilter, faGear, faHome, faSection } from '@fortawesome/free-solid-svg-icons';
 import ScrollArea from '../interface/ScrollArea';
@@ -47,7 +47,7 @@ namespace DragState {
 type DragState = DragState.None | DragState.Dragging;
 
 export interface DocumentationWindowPublicProps extends ThemeProps {
-
+  
 }
 
 interface DocumentationWindowPrivateProps {
@@ -87,7 +87,7 @@ const LowerBar = styled('div', ({ theme }: ThemeProps) => ({
 }));
 
 const Button = styled('div', ({ theme }: ThemeProps) => ({
-
+  
 }));
 
 const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
@@ -107,7 +107,7 @@ const SIZES: Size[] = [
 class DocumentationWindow extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
-
+  
     this.state = {
       dragState: DragState.none({ position: RawVector2.create(0, 0) }),
     };
@@ -152,14 +152,14 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
     const { dragState } = state;
     const topLeft = RawVector2.fromTopLeft(e.currentTarget.getBoundingClientRect());
     const client = RawVector2.fromClient(e);
-
+    
     this.setState({
       dragState: DragState.dragging({
         position: dragState.position,
         offset: RawVector2.subtract(client, topLeft)
       })
     });
-
+    
     this.onMouseMoveHandle_ = GLOBAL_EVENTS.add('onMouseMove', this.onWindowMouseMove_);
     this.onMouseUpHandle_ = GLOBAL_EVENTS.add('onMouseUp', this.onWindowMouseUp_);
   };
@@ -282,8 +282,8 @@ class DocumentationWindow extends React.PureComponent<Props, State> {
               )}
             </StyledScrollArea>
             <LowerBar theme={theme}>
-
-
+              
+              
               <Button theme={theme} onClick={locationStack.length > 0 ? onDocumentationPop : undefined}>
                 <FontAwesome disabled={locationStack.length === 0} icon={faChevronLeft} />
               </Button>

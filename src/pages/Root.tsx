@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { styled } from 'styletron-react';
-import { Message } from 'ivygate/dist/src';
+import { Message } from 'ivygate';
 import * as uuid from 'uuid';
 import { OuterObjectPatch } from 'symmetry';
 
@@ -24,7 +24,7 @@ import AboutDialog from '../components/Dialog/AboutDialog';
 import SceneSettingsDialog from '../components/Dialog/SceneSettingsDialog';
 
 import { FeedbackDialog, DEFAULT_FEEDBACK, Feedback, FeedbackSuccessDialog, sendFeedback, FeedbackResponse } from '../components/Feedback';
-import { Layout, LayoutProps, LayoutEditorTarget, OverlayLayout, OverlayLayoutRedux, SideLayoutRedux } from '../components/Layout';
+import { Layout, LayoutProps, LayoutEditorTarget, OverlayLayout, OverlayLayoutRedux, SideLayoutRedux  } from '../components/Layout';
 import { SceneErrorDialog, OpenSceneDialog, NewSceneDialog, DeleteDialog, SaveAsSceneDialog } from '../components/Dialog';
 
 import Loading from '../components/Loading';
@@ -32,8 +32,7 @@ import { Editor } from '../components/Editor';
 
 
 import { State as ReduxState } from '../state';
-import { ScenesAction, ChallengeCompletionsAction, AiAction } from '../state/reducer';
-import { DocumentationAction } from 'ivygate/dist/src/state/reducer/documentation';
+import { DocumentationAction, ScenesAction, ChallengeCompletionsAction, AiAction } from '../state/reducer';
 import { sendMessage, SendMessageParams } from '../util/ai';
 
 import Scene, { AsyncScene } from '../state/State/Scene';
@@ -105,7 +104,6 @@ interface RootPrivateProps {
   onDocumentationPush: (location: DocumentationLocation) => void;
   onDocumentationSetLanguage: (language: 'c' | 'python') => void;
   onDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => void;
-  onCommonDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => void;
 
   onCreateScene: (id: string, scene: Scene) => void;
   onSaveScene: (id: string) => void;
@@ -152,7 +150,7 @@ interface RootState {
   windowInnerHeight: number;
 
   miniEditor: boolean;
-
+  
 }
 
 type Props = RootPublicProps & RootPrivateProps & WithNavigateProps;
@@ -182,9 +180,9 @@ const STDERR_STYLE = (theme: Theme) => ({
 
 class Root extends React.Component<Props, State> {
   private editorRef: React.MutableRefObject<Editor>;
-  private overlayLayoutRef: React.MutableRefObject<OverlayLayout>;
-
-
+  private overlayLayoutRef:  React.MutableRefObject<OverlayLayout>;
+  
+  
   constructor(props: Props) {
     super(props);
 
@@ -206,12 +204,12 @@ class Root extends React.Component<Props, State> {
       feedback: DEFAULT_FEEDBACK,
       windowInnerHeight: window.innerHeight,
       miniEditor: true
-
+      
     };
 
     this.editorRef = React.createRef();
     this.overlayLayoutRef = React.createRef();
-    console.log("Initial state:", this.state);
+
     Space.getInstance().scene = Async.latestValue(props.scene) || Scene.EMPTY;
   }
 
@@ -236,12 +234,12 @@ class Root extends React.Component<Props, State> {
   componentWillUnmount() {
     window.removeEventListener('resize', this.onWindowResize_);
     cancelAnimationFrame(this.updateConsoleHandle_);
-
+  
     Space.getInstance().onSelectNodeId = undefined;
     Space.getInstance().onSetNodeBatch = undefined;
   }
 
-  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>): void {
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>): void {    
     if (this.props.scene !== prevProps.scene) {
       Space.getInstance().scene = Async.latestValue(this.props.scene) || Scene.EMPTY;
     }
@@ -269,20 +267,14 @@ class Root extends React.Component<Props, State> {
   };
 
   private onActiveLanguageChange_ = (language: ProgrammingLanguage) => {
-
-    console.log("Changing active language to:", language);
-    console.log("State before language change:", this.state);
     this.setState({
       activeLanguage: language
     }, () => {
-      console.log("State after language change:", this.state);
       this.props.onDocumentationSetLanguage(language === 'python' ? 'python' : 'c');
     });
   };
 
   private onCodeChange_ = (code: string) => {
-
-    console.log("Code changed in editor:", code);
     const { activeLanguage } = this.state;
     this.setState({
       code: {
@@ -290,7 +282,6 @@ class Root extends React.Component<Props, State> {
         [activeLanguage]: code,
       }
     }, () => {
-      console.log("Updated code state:", this.state.code);
       window.localStorage.setItem(`code-${activeLanguage}`, code);
     });
   };
@@ -312,7 +303,7 @@ class Root extends React.Component<Props, State> {
   private onModalClick_ = (modal: Modal) => () => this.setState({ modal });
 
   private onModalClose_ = () => this.setState({ modal: Modal.NONE });
-
+  
   private updateConsole_ = () => {
     const text = WorkerInstance.sharedConsole.popString();
     if (text.length > 0) {
@@ -323,7 +314,7 @@ class Root extends React.Component<Props, State> {
         }), 300)
       });
     }
-
+    
 
     this.scheduleUpdateConsole_();
   };
@@ -349,7 +340,7 @@ class Root extends React.Component<Props, State> {
           text: LocalizedString.lookup(tr('Compiling...\n'), locale),
           style: STDOUT_STYLE(this.state.theme)
         }));
-
+    
         this.setState({
           simulatorState: SimulatorState.COMPILING,
           console: nextConsole
@@ -359,7 +350,7 @@ class Root extends React.Component<Props, State> {
               nextConsole = this.state.console;
               const messages = sort(parseMessages(compileResult.stderr));
               const compileSucceeded = compileResult.result && compileResult.result.length > 0;
-
+    
               // Show all errors/warnings in console
               for (const message of messages) {
                 nextConsole = StyledText.extend(nextConsole, toStyledText(message, {
@@ -368,7 +359,7 @@ class Root extends React.Component<Props, State> {
                     : undefined
                 }));
               }
-
+    
               if (compileSucceeded) {
                 // Show success in console and start running the program
                 const haveWarnings = hasWarnings(messages);
@@ -378,7 +369,7 @@ class Root extends React.Component<Props, State> {
                     : LocalizedString.lookup(tr('Compilation succeeded.\n'), locale),
                   style: STDOUT_STYLE(this.state.theme)
                 }));
-
+    
                 WorkerInstance.start({
                   language: activeLanguage,
                   code: compileResult.result
@@ -392,13 +383,13 @@ class Root extends React.Component<Props, State> {
                     style: STDERR_STYLE(this.state.theme)
                   }));
                 }
-
+    
                 nextConsole = StyledText.extend(nextConsole, StyledText.text({
                   text: LocalizedString.lookup(tr('Compilation failed.\n'), locale),
                   style: STDERR_STYLE(this.state.theme)
                 }));
               }
-
+    
               this.setState({
                 simulatorState: compileSucceeded ? SimulatorState.RUNNING : SimulatorState.STOPPED,
                 messages,
@@ -411,7 +402,7 @@ class Root extends React.Component<Props, State> {
                 text: LocalizedString.lookup(tr('Something went wrong during compilation.\n'), locale),
                 style: STDERR_STYLE(this.state.theme)
               }));
-
+    
               this.setState({
                 simulatorState: SimulatorState.STOPPED,
                 messages: [],
@@ -445,7 +436,7 @@ class Root extends React.Component<Props, State> {
       }
     }
 
-
+    
   };
 
   private onStopClick_ = () => {
@@ -471,7 +462,7 @@ class Root extends React.Component<Props, State> {
   private onStartChallengeClick_ = () => {
     window.location.href = `/challenge/${this.props.params.sceneId}`;
   };
-
+  
   private onClearConsole_ = () => {
     this.setState({
       console: StyledText.compose({ items: [] })
@@ -482,17 +473,16 @@ class Root extends React.Component<Props, State> {
     const { activeLanguage, code, console } = this.state;
     const currentCode = code[activeLanguage];
     const consoleText = StyledText.toString(console);
-
+    
     // Create a message for the tutor with the code and errors
     const message = `I'm having trouble with my ${activeLanguage} program. Here's my code:\n\n\`\`\`${activeLanguage}\n${currentCode}\n\`\`\`\n\nAnd here are the errors I'm seeing:\n\n${consoleText}`;
-
+    
     // Add the message to the tutor chat
     this.props.onAiClick();
     this.props.onAddUserMessage(message);
   };
 
   private onIndentCode_ = () => {
-    console.log("Indenting code in editor");
     if (this.editorRef.current) this.editorRef.current.ivygate.formatCode();
   };
 
@@ -512,7 +502,7 @@ class Root extends React.Component<Props, State> {
       modal: Modal.NONE,
     });
   };
-
+  
   onDocumentationClick_ = () => {
     this.props.onDocumentationClick();
   };
@@ -551,7 +541,7 @@ class Root extends React.Component<Props, State> {
     if ('simulationRealisticSensors' in changedSettings) {
       Space.getInstance().realisticSensors = changedSettings.simulationRealisticSensors;
     }
-
+    
     if ('simulationSensorNoise' in changedSettings) {
       Space.getInstance().noisySensors = changedSettings.simulationSensorNoise;
     }
@@ -642,7 +632,7 @@ class Root extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-
+    
     const {
       params: { sceneId, challengeId },
       scene,
@@ -660,7 +650,6 @@ class Root extends React.Component<Props, State> {
       selectedScriptId,
       onDocumentationClick,
       onDocumentationGoToFuzzy,
-      onCommonDocumentationGoToFuzzy,
     } = props;
 
     const {
@@ -675,7 +664,7 @@ class Root extends React.Component<Props, State> {
       feedback,
       windowInnerHeight,
       miniEditor
-
+      
     } = state;
 
     const theme = DARK;
@@ -720,7 +709,6 @@ class Root extends React.Component<Props, State> {
         challengeCompletion: challengeCompletion || Async.unloaded({ brief: {} }),
       } : undefined,
       onDocumentationGoToFuzzy,
-      onCommonDocumentationGoToFuzzy,
     };
 
     let impl: JSX.Element;
@@ -904,7 +892,7 @@ const ConnectedRoot = connect((state: ReduxState, { params: { sceneId, challenge
     challengeCompletion: Dict.unique(builder.challengeCompletions),
     sceneHasChallenge,
     locale: state.i18n.locale,
-    robots: Dict.map(state.robots.robots, Async.latestValue),
+    robots: Dict.map(state.robots.robots, Async.latestValue), 
   };
 }, (dispatch, { params: { sceneId } }: RootPublicProps) => ({
   onNodeAdd: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
@@ -961,7 +949,6 @@ const ConnectedRoot = connect((state: ReduxState, { params: { sceneId, challenge
   onDocumentationPush: (location: DocumentationLocation) => dispatch(DocumentationAction.pushLocation({ location })),
   onDocumentationSetLanguage: (language: 'c' | 'python') => dispatch(DocumentationAction.setLanguage({ language })),
   onDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => dispatch(DocumentationAction.goToFuzzy({ query, language })),
-  onCommonDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => dispatch(DocumentationAction.goToFuzzyCommon({ query, language })),
   onSaveScene: (sceneId: string) => dispatch(ScenesAction.saveScene({ sceneId })),
   onSetScenePartial: (partialScene: Partial<Scene>) => dispatch(ScenesAction.setScenePartial({ sceneId, partialScene })),
   unfailScene: (sceneId: string) => dispatch(ScenesAction.unfailScene({ sceneId })),

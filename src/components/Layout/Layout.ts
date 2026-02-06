@@ -1,4 +1,4 @@
-import { Message } from "ivygate/dist/src";
+import { Message } from "ivygate";
 import ProgrammingLanguage from '../../programming/compiler/ProgrammingLanguage';
 import { RobotPosition } from "./RobotPosition";
 import { Settings } from "../constants/Settings";
@@ -66,7 +66,6 @@ export interface LayoutProps extends StyleProps, ThemeProps {
   challengeState?: ChallengeState;
   worldCapabilities?: Capabilities;
   onDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python') => void;
-  onCommonDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python') => void;
 }
 
 export enum Layout {
