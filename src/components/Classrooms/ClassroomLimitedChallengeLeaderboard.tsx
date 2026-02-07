@@ -1,0 +1,801 @@
+import * as React from 'react';
+import { styled } from 'styletron-react';
+import { connect } from 'react-redux';
+
+import { DARK, ThemeProps } from '../constants/theme';
+import { CountdownTimer } from '../../components/LimitedChallenge';
+
+import { StyleProps } from '../../util/style';
+import LocalizedString from '../../util/LocalizedString';
+
+import { State as ReduxState } from '../../state';
+import { LimitedChallengeBrief, AsyncLimitedChallenge, LimitedChallengeStatus } from '../../state/State/LimitedChallenge';
+import Async from '../../state/State/Async';
+import { LeaderboardEntry, LeaderboardSortField, LeaderboardAroundMeResponse, LeaderboardUserContext } from '../../state/State/LimitedChallengeLeaderboard';
+
+import { withParams } from '../../util/withParams';
+import { withNavigate, WithNavigateProps } from '../../util/withNavigate';
+import tr from '@i18n';
+import db from '../../db';
+
+export interface ClassroomLimitedChallengeLeaderboardRouteParams {
+  [key: string]: string | undefined;
+  challengeId: string;
+}
+
+export interface ClassroomLimitedChallengeLeaderboardPublicProps extends StyleProps, ThemeProps {
+  params: ClassroomLimitedChallengeLeaderboardRouteParams;
+  challengeId: string;
+  onBackToChallenges?: () => void;
+}
+
+interface ClassroomLimitedChallengeLeaderboardPrivateProps {
+  locale: LocalizedString.Language;
+  challenge?: AsyncLimitedChallenge;
+  currentUserUid?: string;
+}
+
+interface CachedLeaderboardResponse {
+  topEntries: LeaderboardEntry[];
+  userContext?: LeaderboardUserContext;
+  totalParticipants: number;
+  showFullLeaderboard: boolean;
+  currentUserEntry?: LeaderboardEntry;
+}
+
+interface ClassroomLimitedChallengeLeaderboardState {
+  topEntries: LeaderboardEntry[];
+  userContext?: LeaderboardUserContext;
+  currentUserEntry?: LeaderboardEntry;
+  totalParticipants: number;
+  loading: boolean;
+  error?: string;
+  sortField: LeaderboardSortField;
+  status: LimitedChallengeStatus;
+  cache: Partial<Record<string, CachedLeaderboardResponse>>;
+  showFullLeaderboard: boolean;
+}
+
+type Props = ClassroomLimitedChallengeLeaderboardPublicProps & ClassroomLimitedChallengeLeaderboardPrivateProps & WithNavigateProps;
+type State = ClassroomLimitedChallengeLeaderboardState;
+
+const Container = styled('div', (props: ThemeProps) => ({
+  width: '100%',
+  minHeight: '100vh',
+  backgroundColor: props.theme.backgroundColor,
+  color: props.theme.color,
+}));
+
+const ContentContainer = styled('div', (props: ThemeProps) => ({
+  backgroundColor: props.theme.backgroundColor,
+  width: '100%',
+  minHeight: 'calc(100vh - 48px)',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  padding: '20px',
+}));
+
+const Header = styled('div', () => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  marginBottom: '24px',
+  width: '100%',
+  maxWidth: '900px',
+}));
+
+const BackButton = styled('div', (props: ThemeProps) => ({
+  alignSelf: 'flex-start',
+  padding: '8px 16px',
+  backgroundColor: 'transparent',
+  border: `1px solid ${props.theme.borderColor}`,
+  borderRadius: '4px',
+  color: props.theme.color,
+  cursor: 'pointer',
+  marginBottom: '16px',
+  ':hover': {
+    backgroundColor: 'rgba(255,255,255,0.1)',
+  },
+}));
+
+const ChallengeName = styled('h1', (props: ThemeProps) => ({
+  fontSize: '2em',
+  fontWeight: 'bold',
+  color: props.theme.color,
+  marginBottom: '8px',
+  textAlign: 'center',
+}));
+
+const ChallengeDescription = styled('p', (props: ThemeProps) => ({
+  fontSize: '1em',
+  color: props.theme.color,
+  opacity: 0.8,
+  marginBottom: '16px',
+  textAlign: 'center',
+  maxWidth: '600px',
+}));
+
+const StatusBadge = styled('div', (props: ThemeProps & { status: LimitedChallengeStatus }) => ({
+  padding: '6px 16px',
+  fontSize: '0.85em',
+  fontWeight: 'bold',
+  textTransform: 'uppercase',
+  color: '#fff',
+  borderRadius: '4px',
+  marginBottom: '16px',
+  backgroundColor: props.status === 'open'
+    ? '#4caf50'
+    : props.status === 'upcoming'
+      ? '#ff9800'
+      : '#9e9e9e',
+}));
+
+const ButtonContainer = styled('div', () => ({
+  display: 'flex',
+  gap: '12px',
+  marginBottom: '24px',
+  flexWrap: 'wrap',
+  justifyContent: 'center',
+}));
+
+interface ButtonProps {
+  $disabled?: boolean;
+  $primary?: boolean;
+}
+
+const Button = styled('button', (props: ThemeProps & ButtonProps) => ({
+  padding: '12px 24px',
+  fontSize: '1em',
+  fontWeight: 'bold',
+  color: props.$disabled ? '#888' : '#fff',
+  backgroundColor: props.$disabled ? '#444' : (props.$primary ? '#4caf50' : '#2196f3'),
+  border: 'none',
+  borderRadius: '4px',
+  cursor: props.$disabled ? 'not-allowed' : 'pointer',
+  transition: 'all 0.2s',
+  ':hover': props.$disabled ? {} : {
+    opacity: 0.9,
+    transform: 'translateY(-1px)',
+  },
+}));
+
+const DisabledMessage = styled('div', (props: ThemeProps) => ({
+  fontSize: '0.85em',
+  color: props.theme.color,
+  opacity: 0.6,
+  marginBottom: '16px',
+  textAlign: 'center',
+}));
+
+const LeaderboardContainer = styled('div', (props: ThemeProps) => ({
+  width: '100%',
+  maxWidth: '900px',
+  backgroundColor: props.theme.backgroundColor,
+  border: `1px solid ${props.theme.borderColor}`,
+  borderRadius: '8px',
+  overflow: 'hidden',
+}));
+
+const LeaderboardHeader = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: '16px 20px',
+  borderBottom: `1px solid ${props.theme.borderColor}`,
+  backgroundColor: 'rgba(255,255,255,0.05)',
+}));
+
+const LeaderboardTitle = styled('h2', (props: ThemeProps) => ({
+  fontSize: '1.25em',
+  fontWeight: 'bold',
+  color: props.theme.color,
+  margin: 0,
+}));
+
+const SortToggle = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '8px',
+  color: props.theme.color,
+  fontSize: '0.9em',
+}));
+
+const SortButton = styled('button', (props: ThemeProps & { $active?: boolean }) => ({
+  padding: '6px 12px',
+  fontSize: '0.85em',
+  color: props.$active ? '#fff' : props.theme.color,
+  backgroundColor: props.$active ? '#2196f3' : 'transparent',
+  border: `1px solid ${props.$active ? '#2196f3' : props.theme.borderColor}`,
+  borderRadius: '4px',
+  cursor: 'pointer',
+  transition: 'all 0.2s',
+  ':hover': {
+    backgroundColor: props.$active ? '#2196f3' : 'rgba(255,255,255,0.1)',
+  },
+}));
+
+const Table = styled('table', () => ({
+  width: '100%',
+  borderCollapse: 'collapse',
+}));
+
+const TableHeader = styled('th', (props: ThemeProps) => ({
+  padding: '12px 16px',
+  textAlign: 'left',
+  fontSize: '0.85em',
+  fontWeight: 'bold',
+  color: props.theme.color,
+  opacity: 0.8,
+  borderBottom: `1px solid ${props.theme.borderColor}`,
+  backgroundColor: 'rgba(255,255,255,0.02)',
+}));
+
+const TableRow = styled('tr', (props: ThemeProps & { $highlight?: boolean }) => ({
+  backgroundColor: props.$highlight ? 'rgba(76, 175, 80, 0.15)' : 'transparent',
+  ':hover': {
+    backgroundColor: props.$highlight ? 'rgba(76, 175, 80, 0.2)' : 'rgba(255,255,255,0.05)',
+  },
+}));
+
+const TableCell = styled('td', (props: ThemeProps) => ({
+  padding: '12px 16px',
+  fontSize: '0.95em',
+  color: props.theme.color,
+  borderBottom: `1px solid ${props.theme.borderColor}`,
+}));
+
+const RankCell = styled(TableCell, (props: ThemeProps & { rank: number }) => ({
+  fontWeight: 'bold',
+  color: props.rank === 1
+    ? '#ffd700'
+    : props.rank === 2
+      ? '#c0c0c0'
+      : props.rank === 3
+        ? '#cd7f32'
+        : props.theme.color,
+}));
+
+const EmptyState = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '48px',
+  color: props.theme.color,
+  opacity: 0.6,
+}));
+
+const LoadingState = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '48px',
+  color: props.theme.color,
+}));
+
+const ErrorState = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '48px',
+  color: '#f44336',
+}));
+
+const YourNameContainer = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '8px',
+  padding: '12px 20px',
+  backgroundColor: 'rgba(76, 175, 80, 0.1)',
+  borderBottom: `1px solid ${props.theme.borderColor}`,
+}));
+
+const YourNameLabel = styled('span', (props: ThemeProps) => ({
+  fontSize: '0.9em',
+  color: props.theme.color,
+  opacity: 0.8,
+}));
+
+const YourNameValue = styled('span', (props: ThemeProps) => ({
+  fontSize: '0.95em',
+  fontWeight: 'bold',
+  color: '#4caf50',
+}));
+
+const UserRankBanner = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '16px',
+  padding: '16px 20px',
+  backgroundColor: 'rgba(33, 150, 243, 0.15)',
+  borderBottom: `1px solid ${props.theme.borderColor}`,
+}));
+
+const UserRankText = styled('span', () => ({
+  fontSize: '1.1em',
+  fontWeight: 'bold',
+  color: '#2196f3',
+}));
+
+const UserRankDetail = styled('span', (props: ThemeProps) => ({
+  fontSize: '0.9em',
+  color: props.theme.color,
+  opacity: 0.8,
+}));
+
+const SectionSeparator = styled('tr', (props: ThemeProps) => ({
+  backgroundColor: 'rgba(255,255,255,0.02)',
+}));
+
+const SeparatorCell = styled('td', (props: ThemeProps) => ({
+  padding: '8px 16px',
+  textAlign: 'center',
+  fontSize: '0.85em',
+  color: props.theme.color,
+  opacity: 0.5,
+  fontStyle: 'italic',
+  borderBottom: `1px solid ${props.theme.borderColor}`,
+}));
+
+class ClassroomLimitedChallengeLeaderboard extends React.Component<Props, State> {
+  private statusIntervalId: NodeJS.Timeout | null = null;
+
+  constructor(props: Props) {
+    super(props);
+
+    const challengeBrief = this.getChallengeBrief();
+
+    this.state = {
+      topEntries: [],
+      userContext: undefined,
+      totalParticipants: 0,
+      loading: true,
+      sortField: 'runtime',
+      status: challengeBrief ? LimitedChallengeStatus.fromBrief(challengeBrief) : 'closed',
+      cache: {},
+      showFullLeaderboard: false,
+    };
+  }
+
+  componentDidMount() {
+    void this.fetchLeaderboard();
+
+    // Update status periodically
+    this.statusIntervalId = setInterval(() => {
+      const challengeBrief = this.getChallengeBrief();
+      if (challengeBrief) {
+        const newStatus = LimitedChallengeStatus.fromBrief(challengeBrief);
+        if (newStatus !== this.state.status) {
+          this.setState({ status: newStatus });
+        }
+      }
+    }, 1000);
+  }
+
+  componentWillUnmount() {
+    if (this.statusIntervalId) {
+      clearInterval(this.statusIntervalId);
+    }
+  }
+
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    console.log("prevState: ", prevState, " currentState: ", this.state);
+    if (prevProps.params.challengeId !== this.props.params.challengeId) {
+      // Clear cache when switching challenges
+      this.setState({ cache: {} }, () => {
+        void this.fetchLeaderboard();
+      });
+    }
+  }
+
+  private getChallengeBrief = (): LimitedChallengeBrief | undefined => {
+    const { challenge } = this.props;
+    return challenge ? Async.brief(challenge) : undefined;
+  };
+
+  private fetchLeaderboard = async (sortField?: LeaderboardSortField) => {
+    const { challengeId } = this.props;
+    const { showFullLeaderboard } = this.state;
+    const sortBy = sortField ?? this.state.sortField;
+    const cacheKey = `${sortBy}-${showFullLeaderboard ? 'full' : 'around'}`;
+
+    this.setState({ loading: true, error: undefined, sortField: sortBy });
+
+    try {
+      const token = await db.tokenManager?.token();
+      let url = `/api/limited_challenge_completion/${challengeId}/leaderboard/around-me?top=3&range=3&sortBy=${sortBy}`;
+      if (showFullLeaderboard) {
+        url = `/api/limited_challenge_completion/${challengeId}/leaderboard?sortBy=${sortBy}`;
+      }
+
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log("response:", response);
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch leaderboard: ${response.statusText}`);
+      }
+
+      let topEntries: LeaderboardEntry[];
+      let userContext: LeaderboardUserContext | undefined;
+      let totalParticipants: number;
+      let currentUserEntry: LeaderboardEntry | undefined = this.state.currentUserEntry;
+
+      if (showFullLeaderboard) {
+        topEntries = await response.json() as LeaderboardEntry[];
+        totalParticipants = topEntries.length;
+        userContext = undefined;
+      } else {
+        const data = await response.json() as LeaderboardAroundMeResponse;
+        topEntries = data.topEntries;
+        userContext = data.userContext;
+        totalParticipants = data.totalParticipants;
+        if (userContext?.userEntry) {
+          currentUserEntry = userContext.userEntry;
+        }
+      }
+
+      // Cache the response
+      const cachedResponse: CachedLeaderboardResponse = {
+        topEntries,
+        userContext,
+        totalParticipants,
+        showFullLeaderboard,
+        currentUserEntry,
+      };
+
+      this.setState(prevState => ({
+        topEntries,
+        userContext,
+        currentUserEntry,
+        totalParticipants,
+        loading: false,
+        cache: {
+          ...prevState.cache,
+          [cacheKey]: cachedResponse,
+        },
+      }));
+    } catch (error) {
+      console.error('Error fetching leaderboard:', error);
+      this.setState({
+        loading: false,
+        error: error instanceof Error ? error.message : 'Failed to load leaderboard',
+      });
+    }
+  };
+
+  private handleBackClick = () => {
+    this.props.onBackToChallenges?.();
+  };
+
+  private handleEnterChallenge = () => {
+    const { challengeId } = this.props;
+    window.location.href = `/limited-challenge/${challengeId}`;
+  };
+
+  private handleSortChange = (field: LeaderboardSortField) => {
+    const { showFullLeaderboard } = this.state;
+    if (field === this.state.sortField) return;
+
+    // Check cache first
+    const cacheKey = `${field}-${showFullLeaderboard ? 'full' : 'around'}`;
+    const cached = this.state.cache[cacheKey];
+    if (cached) {
+      // Use cached data immediately
+      this.setState({
+        sortField: field,
+        topEntries: cached.topEntries,
+        userContext: cached.userContext,
+        currentUserEntry: cached.currentUserEntry,
+        totalParticipants: cached.totalParticipants,
+      });
+    } else {
+      // Fetch fresh data
+      void this.fetchLeaderboard(field);
+    }
+  };
+
+  private handleToggleView = () => {
+    this.setState(
+      prevState => ({
+        showFullLeaderboard: !prevState.showFullLeaderboard,
+        loading: true, // Show loading immediately
+        cache: {} // Clear cache to avoid stale data (optional, but safer)
+      }),
+      () => {
+        // Fetch new data
+        void this.fetchLeaderboard();
+      }
+    );
+  };
+
+  private formatRuntime = (ms: number): string => {
+    const seconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    const remainingMs = ms % 1000;
+
+    const secondsStr = remainingSeconds.toString()
+      .padStart(2, '0');
+    const msStr = Math.round(remainingMs / 10).toString()
+      .padStart(2, '0');
+
+    if (minutes > 0) {
+      return `${minutes}:${secondsStr}.${msStr}`;
+    }
+    return `${remainingSeconds}.${msStr}s`;
+  };
+
+  private formatDate = (isoDate: string): string => {
+    const date = new Date(isoDate);
+    return date.toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  private getStatusText = (): string => {
+    const { locale } = this.props;
+    const { status } = this.state;
+
+    switch (status) {
+      case 'upcoming': return LocalizedString.lookup(tr('Upcoming'), locale);
+      case 'open': return LocalizedString.lookup(tr('Open'), locale);
+      case 'closed': return LocalizedString.lookup(tr('Closed'), locale);
+    }
+  };
+
+  private getDisabledMessage = (): string | null => {
+    const { locale } = this.props;
+    const { status } = this.state;
+
+    switch (status) {
+      case 'upcoming':
+        return LocalizedString.lookup(tr('This challenge has not opened yet.'), locale);
+      case 'closed':
+        return LocalizedString.lookup(tr('This challenge is closed and no longer accepting submissions.'), locale);
+      default:
+        return null;
+    }
+  };
+
+  private renderLeaderboardRow = (entry: LeaderboardEntry, rank: number, isCurrentUser: boolean) => {
+    const theme = DARK;
+    return (
+      <TableRow key={`${entry.uid}-${rank}`} theme={theme} $highlight={isCurrentUser}>
+        <RankCell theme={theme} rank={rank}>#{rank}</RankCell>
+        <TableCell theme={theme}>
+          {entry.displayName}
+          {isCurrentUser && ' (You)'}
+        </TableCell>
+        <TableCell theme={theme}>{this.formatRuntime(entry.bestRuntimeMs)}</TableCell>
+        <TableCell theme={theme}>{this.formatDate(entry.bestCompletionTime)}</TableCell>
+      </TableRow>
+    );
+  };
+
+  private renderLeaderboard = () => {
+    const { locale, currentUserUid } = this.props;
+    const { topEntries, userContext, loading, error } = this.state;
+    const theme = DARK;
+
+    if (loading) {
+      return (
+        <LoadingState theme={theme}>
+          {LocalizedString.lookup(tr('Loading leaderboard...'), locale)}
+        </LoadingState>
+      );
+    }
+
+    if (error) {
+      return (
+        <ErrorState theme={theme}>
+          <div>{LocalizedString.lookup(tr('Error loading leaderboard'), locale)}</div>
+          <div style={{ fontSize: '0.85em', marginTop: '8px' }}>{error}</div>
+        </ErrorState>
+      );
+    }
+
+    if (topEntries.length === 0 && !userContext) {
+      return (
+        <EmptyState theme={theme}>
+          {LocalizedString.lookup(tr('No completions yet. Be the first to complete this challenge!'), locale)}
+        </EmptyState>
+      );
+    }
+
+    // Check if user is in top entries (to avoid duplicate display)
+    const userInTopEntries = userContext && topEntries.some(e => e.uid === userContext.userEntry.uid);
+
+    // Show user context section only if user has a completion and is not in top N
+    const showUserContextSection = userContext && !userInTopEntries;
+
+    return (
+      <Table>
+        <thead>
+          <tr>
+            <TableHeader theme={theme}>{LocalizedString.lookup(tr('Rank'), locale)}</TableHeader>
+            <TableHeader theme={theme}>{LocalizedString.lookup(tr('Name'), locale)}</TableHeader>
+            <TableHeader theme={theme}>{LocalizedString.lookup(tr('Runtime'), locale)}</TableHeader>
+            <TableHeader theme={theme}>{LocalizedString.lookup(tr('Completed'), locale)}</TableHeader>
+          </tr>
+        </thead>
+        <tbody>
+          {/* Top entries - already sorted by server */}
+          {topEntries.map((entry, index) => {
+            const rank = index + 1;
+            const isCurrentUser = currentUserUid === entry.uid;
+            return this.renderLeaderboardRow(entry, rank, isCurrentUser);
+          })}
+
+          {/* Separator and user context section */}
+          {showUserContextSection && (
+            <>
+              <SectionSeparator theme={theme}>
+                <SeparatorCell theme={theme} colSpan={4}>
+                  ··· {LocalizedString.lookup(tr('Your position'), locale)} ···
+                </SeparatorCell>
+              </SectionSeparator>
+
+              {/* Entries above user */}
+              {userContext.entriesAbove.map((entry, index) => {
+                const rank = userContext.rank - userContext.entriesAbove.length + index;
+                return this.renderLeaderboardRow(entry, rank, false);
+              })}
+
+              {/* User's entry */}
+              {this.renderLeaderboardRow(userContext.userEntry, userContext.rank, true)}
+
+              {/* Entries below user */}
+              {userContext.entriesBelow.map((entry, index) => {
+                const rank = userContext.rank + index + 1;
+                return this.renderLeaderboardRow(entry, rank, false);
+              })}
+            </>
+          )}
+        </tbody>
+      </Table>
+    );
+  };
+
+  render() {
+    const { props, state } = this;
+    const { style, locale, currentUserUid } = props;
+    const { sortField, status } = state;
+    const theme = DARK;
+
+    const challengeBrief = this.getChallengeBrief();
+    const name = challengeBrief ? LocalizedString.lookup(challengeBrief.name, locale) : '';
+    const description = challengeBrief ? LocalizedString.lookup(challengeBrief.description, locale) : '';
+
+    const isOpen = status === 'open';
+    const disabledMessage = this.getDisabledMessage();
+    // Get the current user's display name from their leaderboard entry (if they have one)
+    const currentUserName = state.currentUserEntry?.displayName || state.userContext?.userEntry.displayName;
+
+    return (
+      <Container style={style} theme={theme}>
+        <ContentContainer theme={theme}>
+          <Header>
+            <BackButton theme={theme} onClick={this.handleBackClick}>
+              {LocalizedString.lookup(tr('Back to Challenges'), locale)}
+            </BackButton>
+
+            <ChallengeName theme={theme}>{name}</ChallengeName>
+            <ChallengeDescription theme={theme}>{description}</ChallengeDescription>
+
+            <StatusBadge theme={theme} status={status}>
+              {this.getStatusText()}
+            </StatusBadge>
+
+            {status === 'upcoming' && challengeBrief && (
+              <CountdownTimer
+                theme={theme}
+                targetDate={challengeBrief.openDate}
+                locale={locale}
+                label={LocalizedString.lookup(tr('Opens in'), locale)}
+              />
+            )}
+
+            {status === 'open' && challengeBrief && (
+              <CountdownTimer
+                theme={theme}
+                targetDate={challengeBrief.closeDate}
+                locale={locale}
+                label={LocalizedString.lookup(tr('Closes in'), locale)}
+              />
+            )}
+
+            {disabledMessage && (
+              <DisabledMessage theme={theme}>{disabledMessage}</DisabledMessage>
+            )}
+
+            <ButtonContainer>
+              <Button
+                theme={theme}
+                $primary
+                $disabled={!isOpen}
+                disabled={!isOpen}
+                onClick={isOpen ? this.handleEnterChallenge : undefined}
+              >
+                {LocalizedString.lookup(tr('Enter Challenge'), locale)}
+              </Button>
+            </ButtonContainer>
+          </Header>
+
+          <LeaderboardContainer theme={theme}>
+            <LeaderboardHeader theme={theme}>
+              <LeaderboardTitle theme={theme}>
+                {LocalizedString.lookup(tr('Leaderboard'), locale)}
+                {this.state.totalParticipants > 0 && (
+                  <span style={{ fontSize: '0.7em', fontWeight: 'normal', opacity: 0.7, marginLeft: '8px' }}>
+                    ({this.state.totalParticipants} {LocalizedString.lookup(tr('participants'), locale)})
+                  </span>
+                )}
+              </LeaderboardTitle>
+              <SortToggle theme={theme}>
+                <SortButton
+                  theme={theme}
+                  onClick={this.handleToggleView}
+                  style={{ marginRight: '16px' }}
+                >
+                  {this.state.showFullLeaderboard
+                    ? LocalizedString.lookup(tr('Show Around Me'), locale)
+                    : LocalizedString.lookup(tr('Show Full Board'), locale)}
+                </SortButton>
+                <span>{LocalizedString.lookup(tr('Sort by:'), locale)}</span>
+                <SortButton
+                  theme={theme}
+                  $active={sortField === 'runtime'}
+                  onClick={() => this.handleSortChange('runtime')}
+                >
+                  {LocalizedString.lookup(tr('Fastest Runtime'), locale)}
+                </SortButton>
+                <SortButton
+                  theme={theme}
+                  $active={sortField === 'completionTime'}
+                  onClick={() => this.handleSortChange('completionTime')}
+                >
+                  {LocalizedString.lookup(tr('First to Complete'), locale)}
+                </SortButton>
+              </SortToggle>
+            </LeaderboardHeader>
+            {currentUserName && (
+              <YourNameContainer theme={theme}>
+                <YourNameLabel theme={theme}>
+                  {LocalizedString.lookup(tr('Your name on the leaderboard:'), locale)}
+                </YourNameLabel>
+                <YourNameValue theme={theme}>
+                  {currentUserName}
+                </YourNameValue>
+              </YourNameContainer>
+            )}
+            {this.renderLeaderboard()}
+          </LeaderboardContainer>
+        </ContentContainer>
+      </Container>
+    );
+  }
+}
+
+const ConnectedClassroomLimitedChallengeLeaderboard = connect(
+  (state: ReduxState, { challengeId }: ClassroomLimitedChallengeLeaderboardPublicProps) => ({
+    locale: state.i18n.locale,
+    challenge: state.limitedChallenges[challengeId],
+    currentUserUid: state.users.me,
+  })
+)(withNavigate(ClassroomLimitedChallengeLeaderboard));
+
+export default withParams<ClassroomLimitedChallengeLeaderboardRouteParams>()(ConnectedClassroomLimitedChallengeLeaderboard);

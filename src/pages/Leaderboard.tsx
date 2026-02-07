@@ -1,22 +1,19 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { connect } from 'react-redux';
-
 import { DARK, ThemeProps } from '../components/constants/theme';
-import { Card } from '../components/interface/Card';
 import MainMenu from '../components/MainMenu';
-
 import { StyleProps } from '../util/style';
 import LocalizedString from '../util/LocalizedString';
-
 import { State as ReduxState } from '../state';
 import tr from '@i18n';
 import { jsPDF } from "jspdf";
-
 import db from '../db';
 import { createRef } from 'react';
+import { LeaderboardEntry } from 'state/State/LimitedChallengeLeaderboard';
 
 const SELFIDENTIFIER = "My Scores!";
+let currentUser;
 
 interface Challenge {
   name: LocalizedString;
@@ -49,9 +46,18 @@ interface LeaderboardPrivateProps {
 }
 
 interface LeaderboardState {
+  topEntries: User[];
+  userContext?: User;
+  sortedUsers?: User[];
+  topTen?: User[];
+  currentUserEntry?: LeaderboardEntry;
+  loading: boolean;
+  error?: string;
+  totalParticipants: number;
   selected: string;
   users: Record<string, User>;
   challenges: Record<string, Challenge>;
+  showFullLeaderboard: boolean;
 }
 
 interface ClickProps {
@@ -64,21 +70,22 @@ type State = LeaderboardState;
 
 const PageContainer = styled('div', (props: ThemeProps) => ({
   width: '100%',
-  height: '100%',
+  height: '100vh',
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
+  overflow: 'hidden'
 }));
 
 const LeaderboardContainer = styled("div", (props: ThemeProps) => ({
   backgroundColor: props.theme.backgroundColor,
-  width: 'calc(100vw - 2px)',
-  height: 'calc(100vh - 48px)',
+
+  width: 'calc(100vw - 50px)',
+  marginBottom: '0.1em',
+  height: '85%',
   display: 'flex',
   flexDirection: 'column',
-  // alignItems: 'center',
-  // justifyContent: 'center',
-  overflow: 'auto',
-  // border: '2px solid red',
+  alignContent: 'center',
+  overflowX: 'visible',
 }));
 
 const LeaderboardTitleContainer = styled('div', {
@@ -86,59 +93,167 @@ const LeaderboardTitleContainer = styled('div', {
   justifyContent: 'center',
   display: 'flex',
   flexDirection: 'column',
-  margin: '20px',
-  // border: '2px solid blue',
+  margin: '0.5em 0 0.1em 0',
+  zIndex: 1,
 });
 
-const UserInfoContainer = styled('div', {
+const StickyRankTh = styled('th', (props: ThemeProps) => ({
+  position: 'sticky',
+  top: 0,
+  left: 0,
+  width: '80px',
+  minWidth: '80px',
+  backgroundColor: props.theme.backgroundColor,
+  zIndex: 7,
+  whiteSpace: 'nowrap',
+
+}));
+
+const StickyRankTd = styled('td', (props: ThemeProps & { rank: number, $highlight: boolean }) => ({
+  position: 'sticky',
+  left: 0,
+  width: '80px',
+  minWidth: '80px',
+  textAlign: 'center',
+  backgroundColor: props.$highlight ? '#2c482f' : props.theme.backgroundColor,
+  ':hover': {
+    backgroundColor: props.$highlight ? 'rgba(76, 175, 80, 0.2)' : props.theme.backgroundColor,
+  },
+  zIndex: 6,
+  whiteSpace: 'nowrap',
+  fontWeight: 'bold',
+  color: props.rank === 1
+    ? '#ffd700'
+    : props.rank === 2
+      ? '#c0c0c0'
+      : props.rank === 3
+        ? '#cd7f32'
+        : props.theme.color,
+}));
+
+const StickyNameTh = styled('th', (props: ThemeProps) => ({
+  position: 'sticky',
+  top: 0,
+  left: '80px',
+  width: '200px',
+  minWidth: '200px',
+  backgroundColor: props.theme.backgroundColor,
+  zIndex: 7,
+  whiteSpace: 'nowrap',
+}));
+
+const StickyNameTd = styled('td', (props: ThemeProps & { $highlight: boolean }) => ({
+  position: 'sticky',
+  left: '80px',
+  width: '200px',
+  minWidth: '200px',
+  backgroundColor: props.$highlight ? '#2c482f' : props.theme.backgroundColor,
+  ':hover': {
+    backgroundColor: props.$highlight ? 'rgba(76, 175, 80, 0.2)' : props.theme.backgroundColor,
+  },
+  textAlign: 'center',
+  zIndex: 6,
+  whiteSpace: 'nowrap',
+}));
+
+
+const Table = styled('table', () => ({
+  width: '100%',
+  borderCollapse: 'collapse',
+  height: '100%',
+  overflow: 'visible'
+
+}));
+const LeaderboardScrollContainer = styled('div', {
+  width: '100%',
+  overflow: 'auto',
+  WebkitOverflowScrolling: 'touch',
+  height: '85%',
+
+  scrollbarWidth: 'thin',
+  scrollbarColor: 'rgba(121,121,121,0.6) transparent',
+
+  '::-webkit-scrollbar': {
+    width: '14px',
+    height: '14px',
+  },
+  '::-webkit-scrollbar-track': {
+    background: 'transparent',
+  },
+  '::-webkit-scrollbar-thumb': {
+    backgroundColor: 'rgba(121,121,121,0.4)',
+    borderRadius: '8px',
+  },
+  '::-webkit-scrollbar-thumb:hover': {
+    backgroundColor: 'rgba(121,121,121,0.7)',
+  },
+});
+
+const TableHeader = styled('th', (props: ThemeProps) => ({
+  padding: '12px 16px',
+  position: 'sticky',
+  top: 0,
+  textAlign: 'center',
+  fontSize: '0.85em',
+  fontWeight: 'bold',
+  color: props.theme.color,
+  borderBottom: `1px solid ${props.theme.borderColor}`,
+  backgroundColor: props.theme.backgroundColor,
+}));
+
+const TableRow = styled('tr', (props: ThemeProps & { $highlight?: boolean }) => ({
+  backgroundColor: props.$highlight ? 'rgba(76, 175, 80, 0.15)' : 'transparent',
+  ':hover': {
+    backgroundColor: props.$highlight ? 'rgba(76, 175, 80, 0.2)' : 'rgba(255,255,255,0.05)',
+  },
+}));
+
+const TableCell = styled('td', (props: ThemeProps) => ({
+  padding: '12px 16px',
+  fontSize: '0.95em',
+  color: props.theme.color,
+  borderBottom: `1px solid ${props.theme.borderColor}`,
+  textAlign: 'center'
+}));
+
+
+const YourNameContainer = styled('div', (props: ThemeProps) => ({
   display: 'flex',
-  flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'center',
-  gap: '10px',
-});
-
-const TableHeaderContainer = styled('div', {
-  display: 'inline-block',
-  transform: 'rotate(-45deg)', // Rotate the text by -45 degrees
-  transformOrigin: 'bottom left', // Set the origin for the rotation
-  whiteSpace: 'nowrap', // Prevent text wrapping
-  width: '50px', // Set the width of the container
-});
-
-const UserHeaderContainer = styled('div', {
-  display: 'inline-block',
-  whiteSpace: 'nowrap', // Prevent text wrapping
-  width: '100px', // Set the width of the container
-});
-
-const Table = styled('table', {
-  width: '80%',
-  borderCollapse: 'collapse',
-  marginTop: '50px',
-  marginLeft: '20px',
-  padding: '8px',
-  // border: '2px solid green',
-});
-
-const TableHeader = styled('th', {
-  borderBottom: '2px solid #ddd',
-  padding: '8px',
-  textAlign: 'center',
-  width: '50px',
-});
-const StyledTableRow = styled('tr', (props: { key: string, self: string, ref: React.Ref<HTMLTableRowElement> }) => ({
-  borderBottom: '1px solid #ddd',
-  backgroundColor: props.self === SELFIDENTIFIER ? '#555' : '#000', // Highlight the current user
+  gap: '8px',
+  padding: '12px 20px',
+  backgroundColor: 'rgba(76, 175, 80, 0.1)',
+  borderBottom: `1px solid ${props.theme.borderColor}`,
 }));
-const TableRow = styled('tr', {
-  borderBottom: '1px solid #ddd',
-});
 
-const TableCell = styled('td', {
-  padding: '6px',
-  textAlign: 'center',
-});
+const YourNameLabel = styled('span', (props: ThemeProps) => ({
+  fontSize: '0.9em',
+  color: props.theme.color,
+  opacity: 0.8,
+}));
+
+const YourNameValue = styled('span', (props: ThemeProps) => ({
+  fontSize: '0.95em',
+  fontWeight: 'bold',
+  color: '#4caf50',
+}));
+
+const LoadingState = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '48px',
+  color: props.theme.color,
+}));
+const ErrorState = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '48px',
+  color: '#f44336',
+}));
 
 const ButtonContainer = styled('div', {
   display: 'flex',
@@ -169,27 +284,108 @@ const Button = styled('div', (props: ThemeProps & ClickProps) => ({
   transition: 'background-color 0.2s, opacity 0.2s'
 }));
 
+const LeaderboardHeader = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: '16px 20px',
+  borderBottom: `1px solid ${props.theme.borderColor}`,
+  backgroundColor: 'rgba(255,255,255,0.05)',
+}));
+
+const LeaderboardTitle = styled('h2', (props: ThemeProps) => ({
+  fontSize: '1.25em',
+  fontWeight: 'bold',
+  color: props.theme.color,
+  margin: 0,
+}));
+
+const ContentContainer = styled('div', (props: ThemeProps) => ({
+  backgroundColor: props.theme.backgroundColor,
+  width: '95%',
+  height: '95%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  padding: '20px',
+}));
+const SectionSeparator = styled('tr', (props: ThemeProps) => ({
+  position: 'sticky',
+  left: '80px',
+}));
+
+const LeaderboardViewToggle = styled('div', (props: ThemeProps) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '8px',
+  color: props.theme.color,
+  fontSize: '0.9em',
+}));
+
+const LeaderboardViewToggleButton = styled('button', (props: ThemeProps & { $active?: boolean }) => ({
+  padding: '6px 12px',
+  fontSize: '0.85em',
+  color: props.$active ? '#fff' : props.theme.color,
+  backgroundColor: props.$active ? '#2196f3' : 'transparent',
+  border: `1px solid ${props.$active ? '#2196f3' : props.theme.borderColor}`,
+  borderRadius: '4px',
+  cursor: 'pointer',
+  transition: 'all 0.2s',
+  ':hover': {
+    backgroundColor: props.$active ? '#2196f3' : 'rgba(255,255,255,0.1)',
+  },
+}));
+
+const SeparatorCell = styled('td', (props: ThemeProps) => ({
+  position: 'sticky',
+  left: '80px',
+  padding: '8px 16px',
+  textAlign: 'center',
+  backgroundColor: 'rgba(255,255,255,0.02)',
+  fontSize: '0.85em',
+  color: props.theme.color,
+  opacity: 0.5,
+  fontStyle: 'italic',
+  borderBottom: `1px solid ${props.theme.borderColor}`,
+}));
 
 class Leaderboard extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
     this.state = {
+      topEntries: [],
+      userContext: undefined,
+      totalParticipants: 0,
+      loading: true,
       selected: '',
       users: {},
       challenges: {},
+      showFullLeaderboard: false
     };
 
     void this.onLog();
   }
 
   private myScoresRef = createRef<HTMLTableRowElement>();
+  private leaderboardScrollRef = createRef<HTMLDivElement>();
 
   private scrollToMyScores = () => {
-    if (this.myScoresRef.current) {
-      this.myScoresRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
+    const container = this.leaderboardScrollRef.current;
+    const row = this.myScoresRef.current;
+    if (!container || !row) return;
+
+    // row position relative to the scroll container
+    const containerRect = container.getBoundingClientRect();
+    const rowRect = row.getBoundingClientRect();
+
+    const currentScrollTop = container.scrollTop;
+    const targetTop = currentScrollTop + (rowRect.top - containerRect.top) - 30;
+
+    container.scrollTo({ top: targetTop, behavior: 'smooth' });
   };
+
+  // Get all challenge_completion collection
 
   private onLog = async () => {
     const res = await db.list('challenge_completion');
@@ -281,62 +477,30 @@ class Leaderboard extends React.Component<Props, State> {
       }
     }
 
-
-    this.setState({ users, challenges });
+    const sortedUsers = this.orderUsersByCompletedChallenges(users);
+    const topTen = sortedUsers.slice(0, 10);
+    currentUser = this.getCurrentUser();
+    const me = sortedUsers.find(user => user.id === currentUser.id);
+    const usersById: Record<string, User> = sortedUsers.reduce(
+      (acc, user) => {
+        acc[user.id] = user;
+        return acc;
+      },
+      {} as Record<string, User>
+    );
+    this.setState({
+      users: usersById,
+      challenges,
+      topTen,
+      userContext: me ? me : undefined,
+      sortedUsers,
+      loading: false,
+      totalParticipants: sortedUsers.length
+    });
 
     return { users, challenges };
   };
 
-  private getDefaultChallenges = (): Record<string, Challenge> => {
-    const challenges: Record<string, Challenge> = {};
-    const suffixes = ['a', 'b', 'c'];
-
-    for (let i = 1; i <= 12; i++) {
-      suffixes.forEach((suffix) => {
-        const id = `challenge${i}${suffix}`;
-        challenges[id] = {
-          name: tr(`JBC Challenge ${i}${suffix.toUpperCase()}`),
-          description: tr(`Junior Botball Challenge ${i}${suffix.toUpperCase()}: Description for Challenge ${i}${suffix.toUpperCase()}`),
-        };
-      });
-    }
-
-    return challenges;
-  };
-
-  private getDefaultUsers = (): Record<string, User> => {
-    const users: Record<string, User> = {};
-    const challengeIds = Object.keys(this.getDefaultChallenges());
-
-    for (let i = 1; i <= 20; i++) {
-      const scores: Score[] = [];
-      const numChallenges = Math.floor(Math.random() * 10) + 1; // Each user will complete between 1 and 5 challenges
-      const completedChallenges = new Set<string>();
-
-      while (completedChallenges.size < numChallenges) {
-        const randomChallengeId = challengeIds[Math.floor(Math.random() * challengeIds.length)];
-        if (!completedChallenges.has(randomChallengeId)) {
-          completedChallenges.add(randomChallengeId);
-          const score: Score = {
-            name: this.getDefaultChallenges()[randomChallengeId].name,
-            completed: true,
-            score: Math.floor(Math.random() * 101), // Random score between 0 and 100
-            completionTime: Math.floor(Math.random() * 301) + 100, // Random time between 100 and 400
-          };
-          scores.push(score);
-        }
-      }
-
-      users[`user${i}`] = {
-        id: `user${i}`,
-        name: `User ${i}`,
-        scores: scores,
-      };
-
-    }
-
-    return users;
-  };
 
   private orderUsersByCompletedChallenges = (users: Record<string, User>): User[] => {
     const userArray = Object.values(users);
@@ -469,6 +633,8 @@ class Leaderboard extends React.Component<Props, State> {
     return null;
   };
 
+  // Export current user's JBC scores to PDF - very simple, completed or not completed with timestamp
+
   private exportUserScores = (user: User) => {
     const { locale } = this.props;
     const pdfDoc = new jsPDF();
@@ -480,7 +646,6 @@ class Leaderboard extends React.Component<Props, State> {
 
     // Basic Info
     pdfDoc.setFontSize(14);
-    pdfDoc.text(`Name: ${user.name}`, 20, 40);
     pdfDoc.text(`Alias: ${user.altId || 'Unknown'}`, 20, 50);
     pdfDoc.text(`Email: ${this.getCurrentUserEmail() || 'Unknown'}`, 20, 60);
 
@@ -499,99 +664,207 @@ class Leaderboard extends React.Component<Props, State> {
       );
     });
 
-    pdfDoc.save(`${user.name}-scores.pdf`);
+    pdfDoc.save(`${user.altId}-scores.pdf`);
 
   };
 
-  private renderLeaderboard = () => {
-    const users = this.state.users || this.getDefaultUsers();
-    const sortedUsers = this.orderUsersByCompletedChallenges(users);
-    const challenges = this.state.challenges || this.getDefaultChallenges();
+  private handleToggleView = () => {
+    this.setState(
+      prevState => ({
+        showFullLeaderboard: !prevState.showFullLeaderboard,
+        loading: false, // Show loading immediately
+      }),
+      () => {
+        // Fetch new data
 
-    if (!sortedUsers) return null;
-
-    const userArray = Object.values(sortedUsers);
-
-    const challengeArray = this.customSort(Object.keys(challenges));
-    this.getCurrentUser();
-
-    return (
-      <Table>
-        <thead>
-          <tr>
-            <TableHeader>
-              <UserHeaderContainer>
-                Users
-              </UserHeaderContainer>
-            </TableHeader>
-            {challengeArray.map((id) => (
-              <TableHeader key={id}>
-                <TableHeaderContainer>
-                  {challenges[id].name['en-US']}
-                </TableHeaderContainer>
-              </TableHeader>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {userArray.map((user) => (
-            <StyledTableRow key={user.id} self={user.name} ref={user.name === SELFIDENTIFIER ? this.myScoresRef : null}>
-              <TableCell>{user.name}</TableCell>
-              {challengeArray.map((id) => {
-                const userScore = user.scores.find(score => score.name['en-US'] === challenges[id].name['en-US']);
-                return (
-                  <TableCell key={id}>
-                    {!userScore && '-'}
-                    {userScore?.completed && (
-                      <>
-                        <img src="/static/icons/favicon-32x32.png" alt="Favicon" />
-                        {/* <div>Score: {userScore.score ?? '-'}</div>
-                        <div>Time: {userScore.completionTime ?? '-'}</div> */}
-                      </>
-                    )}
-                    {userScore && !userScore.completed && (
-                      <img src="/static/icons/botguy-bw-trans-32x32.png" alt="Favicon" />
-                    )}
-                  </TableCell>
-                );
-              })}
-            </StyledTableRow>
-          ))}
-        </tbody>
-      </Table>
+      }
     );
   };
 
-  render() {
-    const { props, state } = this;
-    const { style, locale } = props;
-    const { selected } = state;
-    const theme = DARK;
+  private renderLeaderboard = () => {
+
+    const { locale, theme } = this.props;
+    const { topEntries, userContext, loading, error, users, challenges, topTen, sortedUsers } = this.state;
+    const challengeArray = this.customSort(Object.keys(challenges));
+
+    if (loading) {
+      return (
+        <LoadingState theme={theme}>
+          {LocalizedString.lookup(tr('Loading leaderboard...'), locale)}
+        </LoadingState>
+      );
+    }
+
+    if (error) {
+      return (
+        <ErrorState theme={theme}>
+          <div>{LocalizedString.lookup(tr('Error loading leaderboard'), locale)}</div>
+          <div style={{ fontSize: '0.85em', marginTop: '8px' }}>{error}</div>
+        </ErrorState>
+      );
+    }
+
+    // Check if user is in top entries (to avoid duplicate display)
+    const userInTopEntries = userContext && topEntries.some(e => e.id === userContext.id);
+
+    // Show user context section only if user has a completion and is not in top N
+    const showUserContextSection = userContext && !userInTopEntries;
+    return (
+      <LeaderboardScrollContainer ref={this.leaderboardScrollRef}>
+        <Table>
+          <thead>
+            <tr>
+              <StickyRankTh theme={theme}>
+                {LocalizedString.lookup(tr('Rank'), locale)}
+              </StickyRankTh>
+
+              <StickyNameTh theme={theme}>
+                {LocalizedString.lookup(tr('Name'), locale)}
+              </StickyNameTh>
+              {challengeArray.map((entry, index) => {
+                return this.renderTableHeader(entry);
+              })}
+
+            </tr>
+          </thead>
+          {this.state.showFullLeaderboard ?
+            <tbody>
+              {sortedUsers.map((entry, index) => {
+                const rank = index + 1;
+                const isCurrentUser = currentUser.id === entry.id;
+                return this.renderLeaderboardRow(entry, rank, isCurrentUser, challengeArray)
+              })}
+            </tbody>
+            :
+            <tbody>
+              {/* Top ten entries */}
+              {topTen.map((entry, index) => {
+                const rank = index + 1;
+                const isCurrentUser = currentUser.id === entry.id;
+                return this.renderLeaderboardRow(entry, rank, isCurrentUser, challengeArray);
+              })}
+
+              {/* Separator and user context section */}
+              {showUserContextSection && (
+                <>
+                  <SectionSeparator theme={theme}>
+                    <SeparatorCell theme={theme} colSpan={4}>
+                      ··· {LocalizedString.lookup(tr('Your position'), locale)} ···
+                    </SeparatorCell>
+                  </SectionSeparator>
+                  {/* User's entry */}
+                  {this.renderLeaderboardRow(userContext, sortedUsers.findIndex(user => user.id === currentUser.id), true, challengeArray)}
+
+                </>
+              )}
+            </tbody>
+          }
+        </Table>
+      </LeaderboardScrollContainer>
+
+
+    );
+  };
+  private renderTableHeader = (challengeName: string) => {
+    const { theme, locale } = this.props;
+    return (
+      <TableHeader key={`${challengeName}-key`} theme={theme}>{LocalizedString.lookup(tr(`${challengeName}`), locale)}</TableHeader>
+    );
+  }
+  private renderLeaderboardRow = (entry: User, rank: number, isCurrentUser: boolean, challengeArray: string[]) => {
+    const { theme } = this.props;
+    const { challenges } = this.state;
+    return (
+      <TableRow key={`${entry.id}-${rank}`} theme={theme} $highlight={isCurrentUser} ref={entry.name === SELFIDENTIFIER ? this.myScoresRef : null}>
+
+        <StickyRankTd theme={theme} rank={rank} $highlight={isCurrentUser} >#{rank}</StickyRankTd>
+        <StickyNameTd theme={theme} $highlight={isCurrentUser}>
+          {entry.name}
+          {isCurrentUser && ' (You)'}
+        </StickyNameTd>
+        {challengeArray.map((id) => {
+          const userScore = entry.scores.find(score => score.name['en-US'] === challenges[id].name['en-US']);
+          return (
+            <TableCell key={id} theme={theme}>
+              {!userScore && '-'}
+              {userScore?.completed && (
+                <>
+                  <img src="/static/icons/favicon-32x32.png" alt="Favicon" />
+                </>
+              )}
+              {userScore && !userScore.completed && (
+                <img src="/static/icons/botguy-bw-trans-32x32.png" alt="Favicon" />
+              )}
+            </TableCell>
+          );
+        })}
+      </TableRow>
+    );
+  };
+
+  private renderClassroomLeaderboardNew = () => {
+    const { theme, locale } = this.props;
     const currentUser = this.getCurrentUser();
-    const currentUserEmail = this.getCurrentUserEmail();
+    return (
+      <ContentContainer theme={theme}>
+        <LeaderboardContainer theme={theme}>
+          <LeaderboardHeader theme={theme}>
+            <LeaderboardTitle theme={theme}>
+              {LocalizedString.lookup(tr('Leaderboard'), locale)}
+              {this.state.totalParticipants > 0 && (
+                <span style={{ fontSize: '0.7em', fontWeight: 'normal', opacity: 0.7, marginLeft: '8px' }}>
+                  ({this.state.totalParticipants} {LocalizedString.lookup(tr('participants'), locale)})
+                </span>
+              )}
+            </LeaderboardTitle>
+            <LeaderboardViewToggle theme={theme}>
+              <LeaderboardViewToggleButton
+                theme={theme}
+                onClick={this.handleToggleView}
+                style={{ marginRight: '16px' }}
+              >
+                {this.state.showFullLeaderboard
+                  ? LocalizedString.lookup(tr('Show Top Users'), locale)
+                  : LocalizedString.lookup(tr('Show Full Board'), locale)}
+              </LeaderboardViewToggleButton>
+            </LeaderboardViewToggle>
+          </LeaderboardHeader>
+          {currentUser && (
+            <YourNameContainer theme={theme}>
+              <YourNameLabel theme={theme}>
+                {LocalizedString.lookup(tr('Your name on the leaderboard:'), locale)}
+              </YourNameLabel>
+              <YourNameValue theme={theme}>
+                {currentUser.altId}
+              </YourNameValue>
+            </YourNameContainer>
+          )}
+          {this.renderLeaderboard()}
+        </LeaderboardContainer>
+      </ContentContainer>
+    )
+  }
+  render() {
+    const { props, } = this;
+    const { style, theme } = props;
+    currentUser = this.getCurrentUser();
 
     return (
       <PageContainer style={style} theme={theme}>
         <MainMenu theme={theme} />
-        <LeaderboardContainer style={style} theme={theme}>
+        <div style={{ zIndex: 1, width: '100%', height: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
           <LeaderboardTitleContainer>
             <h1>KIPR All Time Leaderboard</h1>
-            <UserInfoContainer>
-              <h2>User: </h2>
-              <h3>{currentUser?.name || 'Unknown'}</h3>
-              <h2>Alias: </h2>
-              <h3>{currentUser?.altId || 'Unknown'}</h3>
-              <h2>Email: </h2>
-              <h3>{currentUserEmail || 'Unknown'}</h3>
-            </UserInfoContainer>
+
             <ButtonContainer>
               <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> Export My Scores!</Button>
               <Button theme={DARK} onClick={this.scrollToMyScores}> Scroll to My Scores!</Button>
             </ButtonContainer>
 
           </LeaderboardTitleContainer>
-          {this.renderLeaderboard()}
-        </LeaderboardContainer>
+          {this.renderClassroomLeaderboardNew()}
+        </div>
+
       </PageContainer>
     );
   }

@@ -1,14 +1,15 @@
 import { applyMiddleware, combineReducers, compose, createStore, } from 'redux';
 
 import * as reducer from './reducer';
-import { DocumentationState, ChallengeCompletions, Challenges, I18n, Robots, Scenes, Assignments, Users } from './State';
+import { DocumentationState, ChallengeCompletions, Challenges, I18n, Robots, Scenes, Assignments, Users, LimitedChallenges, LimitedChallengeCompletions, Classrooms, Projects } from './State';
 import { AiState } from './State/Ai/index';
 // import history from './history';
 import { AsyncScene } from './State/Scene';
-import { CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, SCENE_COLLECTION, ASSIGNMENT_COLLECTION, USER_COLLECTION } from '../db/constants';
+import { CHALLENGE_COLLECTION, CHALLENGE_COMPLETION_COLLECTION, SCENE_COLLECTION, ASSIGNMENT_COLLECTION, USER_COLLECTION, LIMITED_CHALLENGE_COLLECTION, LIMITED_CHALLENGE_COMPLETION_COLLECTION, CLASSROOM_COLLECTION, PROJECT_COLLECTION } from '../db/constants';
 import Record from '../db/Record';
 import Selector from '../db/Selector';
-
+//import { reduceDocumentation, reduceDocumentationCommon } from 'ivygate/src/state/reducer/documentation';
+import { reduceDocumentation, reduceDocumentationCommon } from 'ivygate/dist/src/state/reducer/documentation';
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -17,11 +18,17 @@ const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ||
 export default createStore(combineReducers<State>({
   scenes: reducer.reduceScenes,
   robots: reducer.reduceRobots,
-  documentation: reducer.reduceDocumentation,
+  documentation: reduceDocumentation,
+  documentationDefault: reduceDocumentation,
+  documentationCommon: reduceDocumentationCommon,
   challenges: reducer.reduceChallenges,
   challengeCompletions: reducer.reduceChallengeCompletions,
+  limitedChallenges: reducer.reduceLimitedChallenges,
+  limitedChallengeCompletions: reducer.reduceLimitedChallengeCompletions,
   i18n: reducer.reduceI18n,
   assignments: reducer.reduceAssignments,
+  classrooms: reducer.reduceClassrooms,
+  projects: reducer.reduceProjects,
   users: reducer.reduceUsers,
   ai: reducer.reduceAi
 }), composeEnhancers(
@@ -35,10 +42,16 @@ export interface State {
   scenes: Scenes;
   challenges: Challenges;
   challengeCompletions: ChallengeCompletions;
+  limitedChallenges: LimitedChallenges;
+  limitedChallengeCompletions: LimitedChallengeCompletions;
   robots: Robots;
   documentation: DocumentationState;
+  documentationDefault: DocumentationState;
+  documentationCommon: DocumentationState;
   i18n: I18n;
   assignments: Assignments;
+  classrooms: Classrooms;
+  projects: Projects;
   users: Users;
   ai: AiState;
 }
@@ -61,6 +74,16 @@ export namespace State {
         id: selector.id,
         value: state.challengeCompletions[selector.id]
       };
+      case LIMITED_CHALLENGE_COLLECTION: return {
+        type: Record.Type.LimitedChallenge,
+        id: selector.id,
+        value: state.limitedChallenges[selector.id]
+      };
+      case LIMITED_CHALLENGE_COMPLETION_COLLECTION: return {
+        type: Record.Type.LimitedChallengeCompletion,
+        id: selector.id,
+        value: state.limitedChallengeCompletions[selector.id]
+      };
       case USER_COLLECTION: return {
         type: Record.Type.User,
         id: selector.id,
@@ -71,6 +94,16 @@ export namespace State {
         type: Record.Type.Assignment,
         id: selector.id,
         value: state.assignments[selector.id]
+      };
+      case CLASSROOM_COLLECTION: return {
+        type: Record.Type.Classroom,
+        id: selector.id,
+        value: state.classrooms[selector.id]
+      };
+      case PROJECT_COLLECTION: return {
+        type: Record.Type.Project,
+        id: selector.id,
+        value: state.projects.entities[selector.id]
       };
     }
 

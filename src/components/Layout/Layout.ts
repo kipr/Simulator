@@ -1,4 +1,4 @@
-import { Message } from "ivygate";
+import { Message } from "ivygate/dist/src";
 import ProgrammingLanguage from '../../programming/compiler/ProgrammingLanguage';
 import { RobotPosition } from "./RobotPosition";
 import { Settings } from "../constants/Settings";
@@ -13,6 +13,7 @@ import Node from '../../state/State/Scene/Node';
 import Geometry from '../../state/State/Scene/Geometry';
 import Script from '../../state/State/Scene/Script';
 import { Capabilities } from '../World';
+import { Project } from '../../state/State/Project';
 
 export namespace LayoutEditorTarget {
   export enum Type {
@@ -66,6 +67,14 @@ export interface LayoutProps extends StyleProps, ThemeProps {
   challengeState?: ChallengeState;
   worldCapabilities?: Capabilities;
   onDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python') => void;
+  onCommonDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python') => void;
+
+  onProjectAdd: () => void;
+  onSimFileSelected: (project: Project, fileName: string, fileType: string) => void;
+  onSimProjectSelected: (project: Project) => void;
+  onAddNewSimFile: (project: Project, fileType: string) => void;
+  onDeleteSimProject: (project: Project) => void;
+  fileSelected?: boolean;
 }
 
 export enum Layout {

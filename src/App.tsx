@@ -9,15 +9,20 @@ import { auth } from './firebase/firebase';
 import Dashboard from './pages/Dashboard';
 import Tutorials from './pages/Tutorials';
 import Leaderboard from './pages/Leaderboard';
+import LimitedChallenges from './pages/LimitedChallenges';
+import ClosedChallenges from './pages/ClosedChallenges';
+import LimitedChallengeRoot from './pages/LimitedChallengeRoot';
+import LimitedChallengeLeaderboard from './pages/LimitedChallengeLeaderboard';
 
 import Loading from './components/Loading';
 import Root from './pages/Root';
 import ChallengeRoot from './pages/ChallengeRoot';
-import DocumentationWindow from './components/documentation/DocumentationWindow';
+//import DocumentationWindow from './components/documentation/DocumentationWindow';
+import { DocumentationWindow } from 'ivygate/dist/src';
 import AiWindow from './components/Ai/AiWindow';
-import { DARK } from './components/constants/theme';
+import { DARK, LIGHT } from './components/constants/theme';
 import CurriculumPage from './lms/CurriculumPage';
-import { UsersAction, I18nAction } from './state/reducer';
+import { UsersAction, I18nAction, ProjectsAction } from './state/reducer';
 import db from './db';
 import Selector from './db/Selector';
 import DbError from './db/Error';
@@ -25,6 +30,11 @@ import UserConsent from './consent/UserConsent';
 import LegalAcceptance from './consent/LegalAcceptance';
 
 import LocalizedString from './util/LocalizedString';
+import ClassroomsDashboard from './pages/ClassroomsDashboard';
+import ClassroomLeaderboard from './pages/ClassroomLeaderboard';
+import ClassroomTeacherView from './pages/ClassroomTeacherView';
+import ClassroomStudentView from './pages/ClassroomStudentView';
+import { InterfaceMode } from './types/interfaceModes';
 export interface AppPublicProps {
 
 }
@@ -34,6 +44,7 @@ interface AppPrivateProps {
   setMe: (me: string) => void;
   loadUser: (uid: string) => void;
   setLocale: (locale: LocalizedString.Language) => void;
+  setInterfaceMode: (interfaceMode: InterfaceMode) => void;
 }
 
 interface AppState {
@@ -67,6 +78,7 @@ type State = AppState;
  * Note: This component also maintains a private field `onAuthStateChangedSubscription_` for managing
  * the subscription to the authentication state changes.
  */
+
 class App extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -125,6 +137,12 @@ class App extends React.Component<Props, State> {
       }
     }
 
+    const interfaceMode = localStorage.getItem('interfaceMode');
+    if (interfaceMode) {
+      console.log("Read interfaceMode from localstorage:", interfaceMode);
+      this.props.setInterfaceMode(interfaceMode === 'Advanced' ? InterfaceMode.ADVANCED : InterfaceMode.SIMPLE);
+    }
+
     this.onAuthStateChangedSubscription_ = auth.onAuthStateChanged(user => {
       if (user) {
         console.log('User detected.');
@@ -176,12 +194,23 @@ class App extends React.Component<Props, State> {
           <Route path="/" element={<Dashboard theme={DARK} />} />
           <Route path="/tutorials" element={<Tutorials theme={DARK} />} />
           <Route path="/leaderboard" element={<Leaderboard theme={DARK} />} />
+          <Route path="/limited-challenges" element={<LimitedChallenges theme={DARK} />} />
+          <Route path="/closed-challenges" element={<ClosedChallenges theme={DARK} />} />
+          <Route path="/limited-challenge/:challengeId/leaderboard" element={<LimitedChallengeLeaderboard theme={DARK} />} />
+          <Route path="/limited-challenge/:challengeId" element={<LimitedChallengeRoot />} />
           <Route path="/scene/:sceneId" element={<Root />} />
           <Route path="/challenge/:challengeId" element={<ChallengeRoot />} />
           <Route path="/curriculum" element={<CurriculumPage />} />
+          <Route path="/classrooms" element={<ClassroomsDashboard theme={DARK} />} />
+          <Route path="/classrooms/:classroomId" element={<ClassroomLeaderboard theme={DARK} />} />
+          <Route path="/classrooms/:teacherId/teacherView" element={<ClassroomTeacherView theme={DARK} locale={'en-US'} />} />
+          <Route path="/classrooms/:studentId/studentView/" element={<ClassroomStudentView theme={DARK} locale={'en-US'} />} />
+          <Route path="/classrooms/:studentId/studentView/:classroomId" element={<ClassroomStudentView theme={DARK} locale={'en-US'} />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-        <DocumentationWindow theme={DARK} />
+        <DocumentationWindow theme={LIGHT} documentationType={'default'} />
+        <DocumentationWindow theme={DARK} documentationType={'common'} />
+        {/* <DocumentationWindow theme={DARK} /> */}
       </>
     );
   }
@@ -224,4 +253,5 @@ export default connect((state: ReduxState) => {
   setMe: (me: string) => dispatch(UsersAction.setMe({ me })),
   loadUser: (uid: string) => dispatch(UsersAction.loadOrEmptyUser({ userId: uid })),
   setLocale: (locale: LocalizedString.Language) => dispatch(I18nAction.setLocale({ locale })),
+  setInterfaceMode: (interfaceMode: InterfaceMode) => dispatch(ProjectsAction.changeInterfaceMode({ interfaceMode })),
 }))(App) as React.ComponentType<AppPublicProps>;

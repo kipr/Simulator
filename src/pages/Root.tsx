@@ -24,7 +24,7 @@ import AboutDialog from '../components/Dialog/AboutDialog';
 import SceneSettingsDialog from '../components/Dialog/SceneSettingsDialog';
 
 import { FeedbackDialog, DEFAULT_FEEDBACK, Feedback, FeedbackSuccessDialog, sendFeedback, FeedbackResponse } from '../components/Feedback';
-import { Layout, LayoutProps, LayoutEditorTarget, OverlayLayout, OverlayLayoutRedux, SideLayoutRedux  } from '../components/Layout';
+import { Layout, LayoutProps, LayoutEditorTarget, OverlayLayout, OverlayLayoutRedux, SideLayoutRedux } from '../components/Layout';
 import { SceneErrorDialog, OpenSceneDialog, NewSceneDialog, DeleteDialog, SaveAsSceneDialog } from '../components/Dialog';
 
 import Loading from '../components/Loading';
@@ -32,7 +32,8 @@ import { Editor } from '../components/Editor';
 
 
 import { State as ReduxState } from '../state';
-import { DocumentationAction, ScenesAction, ChallengeCompletionsAction, AiAction } from '../state/reducer';
+import { ScenesAction, ChallengeCompletionsAction, AiAction, ProjectsAction } from '../state/reducer';
+import { DocumentationAction } from 'ivygate/dist/src/state/reducer/documentation';
 import { sendMessage, SendMessageParams } from '../util/ai';
 
 import Scene, { AsyncScene } from '../state/State/Scene';
@@ -66,6 +67,12 @@ import tr from '@i18n';
 import { Modal } from './sharedRoot/Modal';
 import Robot from '../state/State/Robot';
 import AiWindow from '../components/Ai/AiWindow';
+import CreateProjectDialog from '../components/Dialog/CreateProjectDialog';
+import { InterfaceMode } from '../types/interfaceModes';
+import { AsyncProject, Project } from '../state/State/Project';
+import CreateNewFileDialog from '../components/Dialog/CreateNewFileDialog';
+import DeleteProjectDialog from '../components/Dialog/DeleteProjectDialog';
+import { deleteProject } from '../state/reducer';
 
 
 export interface RootRouteParams {
@@ -85,6 +92,8 @@ interface RootPrivateProps {
   sceneHasChallenge: boolean;
   locale: LocalizedString.Language;
   robots: Dict<Robot>;
+  projects: Dict<AsyncProject>;
+  selectedProject: Project;
 
   onNodeAdd: (id: string, node: Node) => void;
   onNodeRemove: (id: string) => void;
@@ -104,6 +113,7 @@ interface RootPrivateProps {
   onDocumentationPush: (location: DocumentationLocation) => void;
   onDocumentationSetLanguage: (language: 'c' | 'python') => void;
   onDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => void;
+  onCommonDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => void;
 
   onCreateScene: (id: string, scene: Scene) => void;
   onSaveScene: (id: string) => void;
@@ -124,6 +134,14 @@ interface RootPrivateProps {
   onAskTutorClick: (query: SendMessageParams) => void;
 
   onAddUserMessage: (message: string) => void;
+
+  onAddProject: (project: Project) => void;
+  onAddFile: (project: Project, fileName: string, fileType: 'src' | 'include' | 'userData') => void;
+  onLoadProjects: () => void;
+  onSetProjectCode: (project: Project, fileName: string, fileType: 'src' | 'include' | 'userData', fileContent: string) => void;
+  onSelectProject: (project: Project) => void;
+  onDeleteProject: (project: Project) => void;
+  onChangeInterfaceMode: (interfaceMode: InterfaceMode.SIMPLE | InterfaceMode.ADVANCED) => void;
 }
 
 interface RootState {
@@ -150,7 +168,9 @@ interface RootState {
   windowInnerHeight: number;
 
   miniEditor: boolean;
-  
+
+  projectDetails: { project: Project, fileType: 'src' | 'include' | 'userData', fileName: string } | null;
+
 }
 
 type Props = RootPublicProps & RootPrivateProps & WithNavigateProps;
@@ -180,9 +200,9 @@ const STDERR_STYLE = (theme: Theme) => ({
 
 class Root extends React.Component<Props, State> {
   private editorRef: React.MutableRefObject<Editor>;
-  private overlayLayoutRef:  React.MutableRefObject<OverlayLayout>;
-  
-  
+  private overlayLayoutRef: React.MutableRefObject<OverlayLayout>;
+
+
   constructor(props: Props) {
     super(props);
 
@@ -203,13 +223,14 @@ class Root extends React.Component<Props, State> {
       settings: DEFAULT_SETTINGS,
       feedback: DEFAULT_FEEDBACK,
       windowInnerHeight: window.innerHeight,
-      miniEditor: true
-      
+      miniEditor: true,
+      projectDetails: { project: null, fileType: 'src', fileName: '' },
+
     };
 
     this.editorRef = React.createRef();
     this.overlayLayoutRef = React.createRef();
-
+    console.log("Initial state:", this.state);
     Space.getInstance().scene = Async.latestValue(props.scene) || Scene.EMPTY;
   }
 
@@ -229,17 +250,18 @@ class Root extends React.Component<Props, State> {
 
     this.scheduleUpdateConsole_();
     window.addEventListener('resize', this.onWindowResize_);
+    this.props.onLoadProjects();
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.onWindowResize_);
     cancelAnimationFrame(this.updateConsoleHandle_);
-  
+
     Space.getInstance().onSelectNodeId = undefined;
     Space.getInstance().onSetNodeBatch = undefined;
   }
 
-  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>): void {    
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>): void {
     if (this.props.scene !== prevProps.scene) {
       Space.getInstance().scene = Async.latestValue(this.props.scene) || Scene.EMPTY;
     }
@@ -254,6 +276,10 @@ class Root extends React.Component<Props, State> {
     if (this.state.simulatorState.type !== prevState.simulatorState.type) {
       Space.getInstance().sceneBinding.scriptManager.programStatus = this.state.simulatorState.type === SimulatorState.Type.Running ? 'running' : 'stopped';
     }
+
+    if (this.props.projects !== prevProps.projects) {
+      console.log("Projects prop changed:", this.props.projects);
+    }
   }
 
   private onWindowResize_ = () => {
@@ -267,22 +293,30 @@ class Root extends React.Component<Props, State> {
   };
 
   private onActiveLanguageChange_ = (language: ProgrammingLanguage) => {
+
+    console.log("Changing active language to:", language);
+    console.log("State before language change:", this.state);
     this.setState({
       activeLanguage: language
     }, () => {
+      console.log("State after language change:", this.state);
       this.props.onDocumentationSetLanguage(language === 'python' ? 'python' : 'c');
     });
   };
 
   private onCodeChange_ = (code: string) => {
-    const { activeLanguage } = this.state;
+
+    console.log("Code changed in editor:", code);
+    const { activeLanguage, projectDetails } = this.state;
     this.setState({
       code: {
         ...this.state.code,
         [activeLanguage]: code,
       }
     }, () => {
+      console.log("Updated code state:", this.state.code);
       window.localStorage.setItem(`code-${activeLanguage}`, code);
+      this.props.onSetProjectCode(projectDetails ? projectDetails.project : null, projectDetails ? projectDetails.fileName : '', projectDetails ? projectDetails.fileType : 'src', code);
     });
   };
 
@@ -303,7 +337,7 @@ class Root extends React.Component<Props, State> {
   private onModalClick_ = (modal: Modal) => () => this.setState({ modal });
 
   private onModalClose_ = () => this.setState({ modal: Modal.NONE });
-  
+
   private updateConsole_ = () => {
     const text = WorkerInstance.sharedConsole.popString();
     if (text.length > 0) {
@@ -314,7 +348,7 @@ class Root extends React.Component<Props, State> {
         }), 300)
       });
     }
-    
+
 
     this.scheduleUpdateConsole_();
   };
@@ -340,7 +374,7 @@ class Root extends React.Component<Props, State> {
           text: LocalizedString.lookup(tr('Compiling...\n'), locale),
           style: STDOUT_STYLE(this.state.theme)
         }));
-    
+
         this.setState({
           simulatorState: SimulatorState.COMPILING,
           console: nextConsole
@@ -350,7 +384,7 @@ class Root extends React.Component<Props, State> {
               nextConsole = this.state.console;
               const messages = sort(parseMessages(compileResult.stderr));
               const compileSucceeded = compileResult.result && compileResult.result.length > 0;
-    
+
               // Show all errors/warnings in console
               for (const message of messages) {
                 nextConsole = StyledText.extend(nextConsole, toStyledText(message, {
@@ -359,7 +393,7 @@ class Root extends React.Component<Props, State> {
                     : undefined
                 }));
               }
-    
+
               if (compileSucceeded) {
                 // Show success in console and start running the program
                 const haveWarnings = hasWarnings(messages);
@@ -369,7 +403,7 @@ class Root extends React.Component<Props, State> {
                     : LocalizedString.lookup(tr('Compilation succeeded.\n'), locale),
                   style: STDOUT_STYLE(this.state.theme)
                 }));
-    
+
                 WorkerInstance.start({
                   language: activeLanguage,
                   code: compileResult.result
@@ -383,13 +417,13 @@ class Root extends React.Component<Props, State> {
                     style: STDERR_STYLE(this.state.theme)
                   }));
                 }
-    
+
                 nextConsole = StyledText.extend(nextConsole, StyledText.text({
                   text: LocalizedString.lookup(tr('Compilation failed.\n'), locale),
                   style: STDERR_STYLE(this.state.theme)
                 }));
               }
-    
+
               this.setState({
                 simulatorState: compileSucceeded ? SimulatorState.RUNNING : SimulatorState.STOPPED,
                 messages,
@@ -402,7 +436,7 @@ class Root extends React.Component<Props, State> {
                 text: LocalizedString.lookup(tr('Something went wrong during compilation.\n'), locale),
                 style: STDERR_STYLE(this.state.theme)
               }));
-    
+
               this.setState({
                 simulatorState: SimulatorState.STOPPED,
                 messages: [],
@@ -436,7 +470,7 @@ class Root extends React.Component<Props, State> {
       }
     }
 
-    
+
   };
 
   private onStopClick_ = () => {
@@ -462,7 +496,7 @@ class Root extends React.Component<Props, State> {
   private onStartChallengeClick_ = () => {
     window.location.href = `/challenge/${this.props.params.sceneId}`;
   };
-  
+
   private onClearConsole_ = () => {
     this.setState({
       console: StyledText.compose({ items: [] })
@@ -473,16 +507,17 @@ class Root extends React.Component<Props, State> {
     const { activeLanguage, code, console } = this.state;
     const currentCode = code[activeLanguage];
     const consoleText = StyledText.toString(console);
-    
+
     // Create a message for the tutor with the code and errors
     const message = `I'm having trouble with my ${activeLanguage} program. Here's my code:\n\n\`\`\`${activeLanguage}\n${currentCode}\n\`\`\`\n\nAnd here are the errors I'm seeing:\n\n${consoleText}`;
-    
+
     // Add the message to the tutor chat
     this.props.onAiClick();
     this.props.onAddUserMessage(message);
   };
 
   private onIndentCode_ = () => {
+    console.log("Indenting code in editor");
     if (this.editorRef.current) this.editorRef.current.ivygate.formatCode();
   };
 
@@ -502,7 +537,7 @@ class Root extends React.Component<Props, State> {
       modal: Modal.NONE,
     });
   };
-  
+
   onDocumentationClick_ = () => {
     this.props.onDocumentationClick();
   };
@@ -541,9 +576,15 @@ class Root extends React.Component<Props, State> {
     if ('simulationRealisticSensors' in changedSettings) {
       Space.getInstance().realisticSensors = changedSettings.simulationRealisticSensors;
     }
-    
+
     if ('simulationSensorNoise' in changedSettings) {
       Space.getInstance().noisySensors = changedSettings.simulationSensorNoise;
+    }
+
+    if ('interfaceMode' in changedSettings) {
+      console.log("Interface mode changed to:", changedSettings.interfaceMode);
+      localStorage.setItem('interfaceMode', changedSettings.interfaceMode ? 'Advanced' : 'Simple');
+      this.props.onChangeInterfaceMode(changedSettings.interfaceMode ? InterfaceMode.ADVANCED : InterfaceMode.SIMPLE);
     }
 
     this.setState({ settings: nextSettings });
@@ -630,9 +671,157 @@ class Root extends React.Component<Props, State> {
     });
   };
 
+  private onNewProject_ = () => {
+    this.setState({
+      modal: Modal.NEW_PROJECT
+    })
+
+  }
+
+  private onFileSelected_ = (selectedProject: Project, fileName: string, fileType: string) => {
+    console.log("File selected in file explorer with selectedProject:", selectedProject, "fileName:", fileName, "fileType:", fileType);
+    const { props } = this;
+    const { projects } = props;
+
+    const fileContent = selectedProject[`${fileType}Files`][fileName]?.fileContent || '';
+    this.setState({
+      code: {
+        ...this.state.code,
+        [selectedProject.projectLanguage]: fileContent,
+      },
+      activeLanguage: selectedProject.projectLanguage,
+      projectDetails: {
+        project: selectedProject,
+        fileType: fileType as 'src' | 'include' | 'userData',
+        fileName: fileName
+      }
+    }, () => {
+      console.log("Updated code state after file selection:", this.state.code);
+      window.localStorage.setItem(`code-${selectedProject.projectLanguage}`, fileContent);
+    });
+
+  };
+
+  private onProjectDelete_ = (selectedProject: Project) => {
+    this.setState({
+      modal: Modal.DELETE_PROJECT,
+    }, () => {
+      this.props.onSelectProject(selectedProject);
+    })
+  }
+
+  private onNewFile_ = (selectedProject: Project, fileType: string) => {
+    console.log("New file requested in file explorer with selectedProject:", selectedProject, "fileType:", fileType);
+    let fileT;
+    switch (fileType) {
+      case 'c':
+      case 'cpp':
+      case 'python':
+      case 'graphical':
+        fileT = 'src';
+        break;
+      case 'h':
+        fileT = 'include';
+        break;
+      case 'txt':
+        fileT = 'userData';
+        break;
+      default:
+        console.error("Invalid file type for new file:", fileType);
+        return;
+    }
+    this.setState({
+      modal: Modal.NEW_FILE,
+      projectDetails: {
+        project: selectedProject,
+        fileType: fileT,
+        fileName: ''
+      }
+    })
+
+  }
+
+  private onProjectCreate_ = (projectName: string, language: ProgrammingLanguage, interfaceMode: InterfaceMode) => {
+
+    const project: Project = {
+      projectName: projectName,
+      projectLanguage: language,
+      interfaceMode: interfaceMode,
+      srcFiles: {
+        [`main.${ProgrammingLanguage.FILE_EXTENSION[language]}`]: { fileName: `main.${ProgrammingLanguage.FILE_EXTENSION[language]}`, fileContent: ProgrammingLanguage.DEFAULT_CODE[language] }
+      },
+      includeFiles: {},
+      userDataFiles: {},
+      type: 'project'
+    }
+    console.log("onProjectCreate_: ", project);
+    this.props.onAddProject(project);
+
+    this.setState({
+      modal: Modal.NONE
+    })
+  }
+
+  private onFileCreate_ = (fileName: string) => {
+    console.log("onFileCreate_ state: ", this.state);
+    const { projectDetails, activeLanguage } = this.state;
+    switch (projectDetails.fileType) {
+      case 'src':
+        switch (activeLanguage) {
+          case 'c':
+            fileName += '.c';
+            break;
+          case 'cpp':
+            fileName += '.cpp';
+            break;
+          case 'python':
+            fileName += '.py';
+            break;
+          case 'graphical':
+            fileName += '.graphical';
+            break;
+          default:
+            console.error("Invalid active language for new file creation:", activeLanguage);
+            return;
+        }
+        break;
+      case 'include':
+        fileName += '.h';
+        break;
+      case 'userData':
+        fileName += '.txt';
+        break;
+      default:
+        console.error("Invalid file type for new file creation:", projectDetails.fileType);
+        return;
+    }
+    this.setState({
+      modal: Modal.NONE,
+      projectDetails: {
+        ...projectDetails,
+        fileName: fileName
+      },
+      code: {
+        ...this.state.code,
+        [activeLanguage]: ProgrammingLanguage.BLANK_CODE[activeLanguage],
+      }
+    }, () => {
+      this.props.onAddFile(projectDetails ? projectDetails.project : null, fileName, projectDetails ? projectDetails.fileType : 'src');
+    })
+
+  }
+
+  private onDeleteProject_ = (answer: boolean) => {
+    answer ? deleteProject(this.props.selectedProject) : null;
+    this.setState({
+      modal: Modal.NONE
+    })
+  }
+
+
   render() {
     const { props, state } = this;
-    
+
     const {
       params: { sceneId, challengeId },
       scene,
@@ -646,10 +835,12 @@ class Root extends React.Component<Props, State> {
     }
 
     const {
+      selectedProject,
       selectedScript,
       selectedScriptId,
       onDocumentationClick,
       onDocumentationGoToFuzzy,
+      onCommonDocumentationGoToFuzzy,
     } = props;
 
     const {
@@ -663,11 +854,13 @@ class Root extends React.Component<Props, State> {
       settings,
       feedback,
       windowInnerHeight,
-      miniEditor
-      
+      miniEditor,
+      projectDetails
     } = state;
 
     const theme = DARK;
+
+    //window.console.log("code[activelanguage]:", state.code[state.activeLanguage]);
 
     const editorTarget: LayoutEditorTarget = {
       type: LayoutEditorTarget.Type.Robot,
@@ -709,6 +902,13 @@ class Root extends React.Component<Props, State> {
         challengeCompletion: challengeCompletion || Async.unloaded({ brief: {} }),
       } : undefined,
       onDocumentationGoToFuzzy,
+      onCommonDocumentationGoToFuzzy,
+      onProjectAdd: this.onNewProject_,
+      onSimFileSelected: this.onFileSelected_,
+      onSimProjectSelected: this.props.onSelectProject,
+      onDeleteSimProject: this.onProjectDelete_,
+      onAddNewSimFile: this.onNewFile_,
+      fileSelected: projectDetails.fileName ? true : false,
     };
 
     let impl: JSX.Element;
@@ -857,6 +1057,30 @@ class Root extends React.Component<Props, State> {
             onClose={this.onModalClose_}
           />
         )}
+        {modal.type === Modal.Type.NewProject && (
+          <CreateProjectDialog
+            theme={theme}
+            onClose={this.onModalClose_}
+            onCreateProject={this.onProjectCreate_}
+          />
+        )}
+        {modal.type === Modal.Type.NewFile && (
+          <CreateNewFileDialog
+            theme={theme}
+            onClose={this.onModalClose_}
+            onCloseCreateNewFileDialog={this.onFileCreate_}
+            fileType={projectDetails.fileType}
+          />
+
+        )}
+        {modal.type === Modal.Type.DeleteProject && (
+          <DeleteProjectDialog
+            theme={theme}
+            name={selectedProject ? selectedProject.projectName : ''}
+            onClose={this.onModalClose_}
+            onDeleteProject={this.onDeleteProject_}
+          />
+        )}
         <AiWindow
           theme={DARK}
           code={code[activeLanguage]}
@@ -886,13 +1110,16 @@ const ConnectedRoot = connect((state: ReduxState, { params: { sceneId, challenge
 
   builder.dispatchLoads();
 
+
   return {
     scene: Dict.unique(builder.scenes),
     challenge: Dict.unique(builder.challenges),
     challengeCompletion: Dict.unique(builder.challengeCompletions),
     sceneHasChallenge,
     locale: state.i18n.locale,
-    robots: Dict.map(state.robots.robots, Async.latestValue), 
+    robots: Dict.map(state.robots.robots, Async.latestValue),
+    projects: state.projects.entities,
+    selectedProject: state.projects.selectedProject,
   };
 }, (dispatch, { params: { sceneId } }: RootPublicProps) => ({
   onNodeAdd: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
@@ -949,6 +1176,7 @@ const ConnectedRoot = connect((state: ReduxState, { params: { sceneId, challenge
   onDocumentationPush: (location: DocumentationLocation) => dispatch(DocumentationAction.pushLocation({ location })),
   onDocumentationSetLanguage: (language: 'c' | 'python') => dispatch(DocumentationAction.setLanguage({ language })),
   onDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => dispatch(DocumentationAction.goToFuzzy({ query, language })),
+  onCommonDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => dispatch(DocumentationAction.goToFuzzyCommon({ query, language })),
   onSaveScene: (sceneId: string) => dispatch(ScenesAction.saveScene({ sceneId })),
   onSetScenePartial: (partialScene: Partial<Scene>) => dispatch(ScenesAction.setScenePartial({ sceneId, partialScene })),
   unfailScene: (sceneId: string) => dispatch(ScenesAction.unfailScene({ sceneId })),
@@ -963,6 +1191,27 @@ const ConnectedRoot = connect((state: ReduxState, { params: { sceneId, challenge
   },
   onAiClick: () => dispatch(AiAction.TOGGLE),
   onAskTutorClick: (params: SendMessageParams) => sendMessage(dispatch, params),
+  onAddProject: (project: Project) => {
+    dispatch(ProjectsAction.addProject({ project }));
+  },
+  onLoadProjects: () => {
+    dispatch(ProjectsAction.loadProjects({}));
+  },
+  onSetProjectCode: (project: Project, fileName: string, fileType: 'src' | 'include' | 'userData', fileContent: string) => {
+    dispatch(ProjectsAction.setCode({ project, fileName, fileType, fileContent }));
+  },
+  onAddFile: (project: Project, fileName: string, fileType: 'src' | 'include' | 'userData') => {
+    dispatch(ProjectsAction.addFile({ project, fileName, fileType }));
+  },
+  onSelectProject: (project: Project) => {
+    dispatch(ProjectsAction.selectProject({ project }));
+  },
+  onDeleteProject: (project: Project) => {
+    dispatch(ProjectsAction.deleteProject({ project }));
+  },
+  onChangeInterfaceMode: (interfaceMode: InterfaceMode) => {
+    dispatch(ProjectsAction.changeInterfaceMode({ interfaceMode }));
+  }
 }))(withNavigate(Root)) as React.ComponentType<RootPublicProps>;
 
 export default withParams<RootRouteParams>()(ConnectedRoot);

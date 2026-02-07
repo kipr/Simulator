@@ -24,7 +24,7 @@ import LocalizedString from '../../util/LocalizedString';
 import tr from '@i18n';
 
 export interface OverlayLayoutProps extends LayoutProps {
-  
+
 }
 
 interface ReduxOverlayLayoutProps {
@@ -103,7 +103,7 @@ const SceneNameOverlay = styled('div', (props: ThemeProps) => ({
   zIndex: 0,
 }));
 
-const ConsoleWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
+const ConsoleWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }): any => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
@@ -125,10 +125,10 @@ const ConsoleWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolea
       gridRow: props.$challenge ? 3 : 2,
       ...transparentStyling(props.theme)
     };
-  } 
+  }
 });
 
-const EditorWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
+const EditorWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }): any => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
@@ -153,7 +153,7 @@ const EditorWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean
   }
 });
 
-const InfoWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
+const InfoWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }): any => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
@@ -168,22 +168,22 @@ const InfoWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; 
   }
 });
 
-const ChallengeWidget = styled(Widget, (props: WidgetProps) => {
+const ChallengeWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }): any => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
       display: 'none'
-    };
+    } as any;
     default:
     case Size.Type.Partial: return {
       gridColumn: 3,
       gridRow: 2,
       ...transparentStyling(props.theme)
-    };
+    } as any;
   }
 });
 
-const WorldWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
+const WorldWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }): any => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
@@ -206,7 +206,7 @@ const CONSOLE_SIZES: Size[] = [Size.MINIATURE_LEFT, Size.PARTIAL_DOWN, Size.MAXI
 
 const sizeDict = (sizes: Size[]) => {
   const forward: { [type: number]: number } = {};
-  
+
   for (let i = 0; i < sizes.length; ++i) {
     const size = sizes[i];
     forward[size.type] = i;
@@ -243,7 +243,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
 
     let { infoSize, consoleSize, worldSize, challengeSize } = this.state;
 
-    
+
     switch (size.type) {
       case Size.Type.Maximized: {
         infoSize = Size.Type.Minimized;
@@ -292,7 +292,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
     const size = CONSOLE_SIZES[index];
 
     let { infoSize, editorSize, worldSize, challengeSize } = this.state;
-    
+
     switch (size.type) {
       case Size.Type.Maximized: {
         infoSize = Size.Type.Minimized;
@@ -345,7 +345,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
 
   private onRobotOriginChange_ = (origin: ReferenceFramewUnits) => {
     const { scene, onNodeChange } = this.props;
-    
+
     const latestScene = Async.latestValue(scene);
 
     if (!latestScene) return;
@@ -360,7 +360,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
 
   render() {
     const { props } = this;
-    
+
     const {
       style,
       className,
@@ -392,6 +392,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       challengeState,
       worldCapabilities,
       onDocumentationGoToFuzzy,
+      onCommonDocumentationGoToFuzzy,
       locale,
     } = props;
 
@@ -411,6 +412,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
 
     let editorBarTarget: EditorBarTarget;
     let editor: JSX.Element;
+    window.console.log("Rendering Editor with code:", editorTarget.code);
     switch (editorTarget.type) {
       case LayoutEditorTarget.Type.Robot: {
         editorBarTarget = {
@@ -426,6 +428,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
           onMiniClick: editorTarget.onMiniClick,
         };
         editor = (
+
           <Editor
             theme={theme}
             ref={editorRef}
@@ -435,6 +438,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
             messages={messages}
             autocomplete={settings.editorAutoComplete}
             onDocumentationGoToFuzzy={onDocumentationGoToFuzzy}
+            onCommonDocumentationGoToFuzzy={props.onCommonDocumentationGoToFuzzy}
           />
         );
         break;
@@ -561,7 +565,7 @@ export const OverlayLayoutRedux = connect((state: ReduxState, { sceneId }: Layou
   const scene = Async.latestValue(asyncScene);
   let robots: Dict<Node.Robot> = {};
   if (scene) robots = Scene.robots(scene);
-  
+
   return {
     robots,
     locale: state.i18n.locale,

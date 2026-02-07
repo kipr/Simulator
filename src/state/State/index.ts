@@ -4,17 +4,22 @@ import Dict from '../../util/objectOps/Dict';
 import Async from "./Async";
 import { AsyncChallenge } from './Challenge';
 import { AsyncChallengeCompletion } from './ChallengeCompletion';
+import { AsyncLimitedChallenge } from './LimitedChallenge';
+import { AsyncLimitedChallengeCompletion } from './LimitedChallengeCompletion';
 import Documentation from './Documentation';
 import DocumentationLocation from './Documentation/DocumentationLocation';
 import Robot from './Robot';
 import Scene, { AsyncScene } from './Scene';
 import User, { AsyncUser } from './User';
 import { AsyncAssignment } from './Assignment';
-
+import { AsyncClassroom } from './Classroom';
 import tr from '@i18n';
 import Author from '../../db/Author';
 import Subject from './Assignment/Subject';
 import StandardsLocation from './Assignment/StandardsLocation';
+import { ClassroomsState } from 'state/reducer/classrooms';
+import { ProjectsState } from './Project';
+import { InterfaceMode } from '../../types/interfaceModes';
 
 export type Assignments = Dict<AsyncAssignment>;
 
@@ -39,6 +44,18 @@ export namespace Assignments {
   };
 }
 
+export type Projects = ProjectsState;
+
+export namespace Projects {
+  export const EMPTY: Projects = { entities: {}, selectedProject: null, interfaceMode: InterfaceMode.SIMPLE };
+}
+
+export type Classrooms = ClassroomsState;
+
+export namespace Classrooms {
+  export const EMPTY: Classrooms = { entities: {}, selectedClassroom: null, currentStudentClassroom: null };
+}
+
 export type Scenes = Dict<AsyncScene>;
 
 export namespace Scenes {
@@ -55,6 +72,18 @@ export type ChallengeCompletions = Dict<AsyncChallengeCompletion>;
 
 export namespace ChallengeCompletions {
   export const EMPTY: ChallengeCompletions = {};
+}
+
+export type LimitedChallenges = Dict<AsyncLimitedChallenge>;
+
+export namespace LimitedChallenges {
+  export const EMPTY: LimitedChallenges = {};
+}
+
+export type LimitedChallengeCompletions = Dict<AsyncLimitedChallengeCompletion>;
+
+export namespace LimitedChallengeCompletions {
+  export const EMPTY: LimitedChallengeCompletions = {};
 }
 
 export interface Robots {
