@@ -391,10 +391,10 @@ app.post("/feedback", (req, res) => {
         body.sentiment === 1
           ? "negative"
           : body.sentiment === 2
-          ? "neutral"
-          : body.sentiment === 3
-          ? "positive"
-          : "unknown";
+            ? "neutral"
+            : body.sentiment === 3
+              ? "positive"
+              : "unknown";
       metrics.feedback.counter.inc({ sentiment: sentimentLabel });
 
       res.status(200).json({

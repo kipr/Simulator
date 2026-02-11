@@ -195,7 +195,7 @@ export const GRAPHICAL_LIGHT = {
   toolboxHover: '#4C97FF',
   flyout: '#fbfbfb',
   workspace: '#fbfbfb',
-}
+};
 export const LIGHT: Theme = {
   ...COMMON,
   themeName: 'LIGHT',
@@ -261,7 +261,7 @@ export const GRAPHICAL_DARK = {
   workspace: '#212121',
 
 
-}
+};
 
 export const DARK: Theme = {
   ...COMMON,

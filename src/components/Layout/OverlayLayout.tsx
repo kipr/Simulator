@@ -76,7 +76,7 @@ const transparentStyling = (theme: Theme): React.CSSProperties => ({
   backdropFilter: 'blur(16px)'
 });
 
-const ConsoleWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }): any => {
+const ConsoleWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
@@ -101,7 +101,7 @@ const ConsoleWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolea
   }
 });
 
-const EditorWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }): any => {
+const EditorWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
@@ -126,7 +126,7 @@ const EditorWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean
   }
 });
 
-const InfoWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }): any => {
+const InfoWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
@@ -141,22 +141,22 @@ const InfoWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; 
   }
 });
 
-const ChallengeWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }): any => {
+const ChallengeWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
       display: 'none'
-    } as any;
+    };
     default:
     case Size.Type.Partial: return {
       gridColumn: 3,
       gridRow: 2,
       ...transparentStyling(props.theme)
-    } as any;
+    };
   }
 });
 
-const WorldWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }): any => {
+const WorldWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
@@ -364,7 +364,6 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       challengeState,
       worldCapabilities,
       onDocumentationGoToFuzzy,
-      onCommonDocumentationGoToFuzzy,
       locale,
     } = props;
 
