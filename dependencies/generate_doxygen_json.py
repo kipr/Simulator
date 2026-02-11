@@ -100,7 +100,7 @@ commonFunctionNames = [
   "move_at_velocity",
   "mav",
   "motor",
-  "alloff"
+  "alloff",
   "ao",
   "enable_servo",
   "disable_servo",
