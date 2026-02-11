@@ -18,7 +18,7 @@ export interface SearchableSwitchListItem {
 
 export interface SearchableSwitchListProps extends ThemeProps, StyleProps {
   items: SearchableSwitchListItem[];
-  
+
   selectedItems: Set<string>;
   onSelectionChange: (selectedItems: Set<string>) => void;
 
@@ -70,7 +70,7 @@ export default ({
       <Input
         theme={theme}
         value={filter}
-        onChange={event => onFilterChange(event.currentTarget.value)}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => onFilterChange(event.currentTarget.value)}
         placeholder={LocalizedString.lookup(tr('Search'), locale)}
       />
       <List theme={theme}>
