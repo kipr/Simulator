@@ -1637,8 +1637,8 @@ msgstr "課程"
 msgid "My Assignments"
 msgstr "我的作業"
 
-msgid "Scratch Variables"
-msgstr "Scratch 變數"
+msgid "Graphical Variables"
+msgstr "Graphical 變數"
 
 msgid "A hamburger"
 msgstr "漢堡包"

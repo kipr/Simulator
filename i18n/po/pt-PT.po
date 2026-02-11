@@ -1669,8 +1669,8 @@ msgstr "Currículo"
 msgid "My Assignments"
 msgstr "Os meus trabalhos"
 
-msgid "Scratch Variables"
-msgstr "Variáveis do Scratch"
+msgid "Graphical Variables"
+msgstr "Variáveis do Graphical"
 
 msgid "A hamburger"
 msgstr "Um hambúrguer"

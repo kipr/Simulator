@@ -6,19 +6,19 @@ import { styled } from 'styletron-react';
 import resizeListener, { ResizeListener } from '../interface/ResizeListener';
 import { flushSync } from 'react-dom';
 
-export interface ScratchEditorProps extends ThemeProps {
+export interface GraphicalEditorProps extends ThemeProps {
   code: string;
   onCodeChange: (code: string) => void;
 
   toolboxHidden?: boolean;
 }
 
-interface ScratchEditorState {
+interface GraphicalEditorState {
   size: RawVector2;
 }
 
-type Props = ScratchEditorProps;
-type State = ScratchEditorState;
+type Props = GraphicalEditorProps;
+type State = GraphicalEditorState;
 
 const OuterContainer = styled('div', (props: ThemeProps) => ({
   position: 'relative',
@@ -34,7 +34,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   backgroundColor: '#212121'
 }));
 
-class ScratchEditor extends React.Component<Props, State> {
+class GraphicalEditor extends React.Component<Props, State> {
   private resizeListener_ = resizeListener(size => this.setState({ size }));
 
   constructor(props: Props) {
@@ -46,7 +46,7 @@ class ScratchEditor extends React.Component<Props, State> {
   }
 
   private debounce_: boolean;
-  componentDidUpdate(prevProps: Readonly<ScratchEditorProps>, prevState: Readonly<ScratchEditorState>) {
+  componentDidUpdate(prevProps: Readonly<GraphicalEditorProps>, prevState: Readonly<GraphicalEditorState>) {
     const { props: nextProps, state: nextState } = this;
 
     if (this.workspace_) {
@@ -172,4 +172,4 @@ class ScratchEditor extends React.Component<Props, State> {
   }
 }
 
-export default ScratchEditor;
+export default GraphicalEditor;

@@ -288,8 +288,7 @@ export type ScenesAction = (
 const DEFAULT_SCENES: Scenes = {
   jbcSandbox: Async.loaded({ value: JBC_SCENES.JBC_Sandbox }),
   moonSandbox: Async.loaded({ value: JBC_SCENES.Moon_Sandbox }),
-  fall26TableSandbox: Async.loaded({ value: JBC_SCENES.FALL_26_SANDBOX }),
-  tableSandbox: Async.loaded({ value: JBC_SCENES.Table_Sandbox }),
+  spring26TableSandbox: Async.loaded({ value: JBC_SCENES.SPRING_26_SANDBOX }),
   jbc0: Async.loaded({ value: JBC_SCENES.JBC_0 }),
   jbc1: Async.loaded({ value: JBC_SCENES.JBC_1 }),
   jbc2: Async.loaded({ value: JBC_SCENES.JBC_2 }),
@@ -331,6 +330,8 @@ const DEFAULT_SCENES: Scenes = {
   jbc22: Async.loaded({ value: JBC_SCENES.JBC_22 }),
   jbc23: Async.loaded({ value: JBC_SCENES.JBC_23 }),
   jbc24: Async.loaded({ value: JBC_SCENES.JBC_24 }),
+  fall26TableSandbox: Async.loaded({ value: JBC_SCENES.FALL_26_SANDBOX }),
+  tableSandbox: Async.loaded({ value: JBC_SCENES.Table_Sandbox }),
   Find_The_Black_Line: Async.loaded({ value: JBC_SCENES.Find_The_Black_Line }),
   Sense_The_Can: Async.loaded({ value: JBC_SCENES.Sense_The_Can }),
   Ice_Ice_Botguy: Async.loaded({ value: JBC_SCENES.Ice_Ice_Botguy }),

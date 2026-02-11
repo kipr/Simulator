@@ -1,6 +1,6 @@
 {
   "name": "simulator",
-  "version": "3.4.0",
+  "version": "3.4.1",
   "sideEffects": false,
   "main": "dist/index.js",
   "author": "KISS Institute for Practical Robotics",
@@ -19,12 +19,8 @@
     "build-i18n": "ts-node i18n/build.ts"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.5",
+    "@babel/core": "^7.9.0",
     "@babel/plugin-syntax-import-meta": "^7.10.4",
-    "@babel/plugin-transform-class-static-block": "^7.28.3",
-    "@babel/preset-env": "^7.28.5",
-    "@babel/preset-react": "^7.28.5",
-    "@babel/preset-typescript": "^7.28.5",
     "@types/chai": "^4.3.3",
     "@types/gapi": "^0.0.44",
     "@types/gettext-parser": "^4.0.2",
@@ -41,7 +37,7 @@
     "@types/xmldom": "^0.1.31",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",
-    "babel-loader": "^10.0.0",
+    "babel-loader": "^8.1.0",
     "eslint": "^7.22.0",
     "file-loader": "^6.0.0",
     "gettext-parser": "^6.0.0",
@@ -90,8 +86,6 @@
     "kipr-scratch": "file:dependencies/kipr-scratch/kipr-scratch",
     "lusca": "^1.7.0",
     "mailgun.js": "^10.2.1",
-    "minimatch": "^10.1.1",
-    "monaco-editor": "^0.54.0",
     "morgan": "^1.10.0",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^4.4.168",
@@ -102,7 +96,7 @@
     "react-dom": "^18.3.1",
     "react-loading": "^2.0.3",
     "react-markdown": "^8.0.1",
-    "react-redux": "9.2.0",
+    "react-redux": "^7.2.9",
     "react-reverse-portal": "^2.0.1",
     "react-router-dom": "^6.26.2",
     "redux": "^4.1.0",
@@ -118,9 +112,6 @@
     "xmldom": "^0.6.0"
   },
   "resolutions": {
-    "@types/react": "18.3.24",
-    "@types/d3-dispatch": "3.0.6",
-    "styletron-react": "6.1.1",
-    "styletron-engine-atomic": "1.5.0"
+    "@types/react": "18.3.24"
   }
 }

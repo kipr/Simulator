@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DARK, GREEN, ThemeProps } from '../components/constants/theme';
+import { DARK, ThemeProps } from '../components/constants/theme';
 import { StyleProps } from '../util/style';
 import { styled } from 'styletron-react';
 import { auth, Providers } from '../firebase/firebase';
@@ -80,21 +80,6 @@ const StyledTabBar = styled(TabBar, (props: ThemeProps) => ({
 const StyledForm = styled(Form, (props: ThemeProps) => ({
   paddingLeft: `${props.theme.itemPadding * 2}px`,
   paddingRight: `${props.theme.itemPadding * 2}px`,
-}));
-
-const ResetInfoButton = styled('div', (props: ThemeProps & { disabled?: boolean }) => ({
-  flex: '1 1',
-  borderRadius: `${props.theme.itemPadding * 2}px`,
-  padding: `${props.theme.itemPadding * 2}px`,
-  backgroundColor: props.disabled ? GREEN.disabled : GREEN.standard,
-  ':hover': props.disabled ? {} : {
-    backgroundColor: GREEN.hover,
-  },
-  marginBottom: `${props.theme.itemPadding * 2}px`,
-  fontWeight: 400,
-  fontSize: '1.1em',
-  textAlign: 'center',
-  cursor: props.disabled ? 'auto' : 'pointer',
 }));
 
 const TABS: TabBar.TabDescription[] = [{
@@ -535,28 +520,6 @@ class LoginPage extends React.Component<Props, State> {
                   marginBottom: '8px',
                 }
               })} />
-
-              <Text
-                text={StyledText.text({
-                  text: `The parent/guardian email used was:\n${userConsent.legalAcceptance.parentEmailAddress}\nIf this is incorrect, please click the button below to reset your parental/guardian consent information.`,
-                  style: {
-                    display: 'block',
-                    color: theme.color,
-                    marginLeft: '8px',
-                    marginRight: '8px',
-                    marginBottom: '8px',
-                  },
-                })}
-              />
-
-
-              <ResetInfoButton
-                theme={theme}
-                onClick={() => this.resetParentalConsentInfo_()}
-              >
-                Reset Parental/Guardian Consent Information
-              </ResetInfoButton>
-
             </Card>
           </Container>
         );

@@ -68,7 +68,6 @@ type State = AppState;
  * Note: This component also maintains a private field `onAuthStateChangedSubscription_` for managing
  * the subscription to the authentication state changes.
  */
-
 class App extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -91,7 +90,7 @@ class App extends React.Component<Props, State> {
     const lang: LocalizedString.Language = LocalizedString.validate(localStorage.getItem('bblocale'));
     if (lang) {
       this.props.setLocale(lang);
-
+      console.log(`Read locale from localstorage: ${lang}`);
     } else {
       switch (navigator.language) {
         case 'ja':
@@ -184,8 +183,6 @@ class App extends React.Component<Props, State> {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <DocumentationWindow theme={DARK} documentationType={'default'} />
-        <DocumentationWindow theme={DARK} documentationType={'common'} />
-        {/* <DocumentationWindow theme={DARK} /> */}
       </>
     );
   }

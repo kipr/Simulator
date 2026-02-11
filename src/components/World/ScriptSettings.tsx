@@ -6,7 +6,7 @@ import Input from "../interface/Input";
 import { ThemeProps } from "../constants/theme";
 import ValueEdit from "../ValueEdit";
 import Script from "../../state/State/Scene/Script";
-import { Ivygate } from 'ivygate/dist/src';
+import { Ivygate } from 'ivygate';
 
 import LocalizedString from '../../util/LocalizedString';
 import { connect } from 'react-redux';
@@ -52,7 +52,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   flexDirection: 'column',
   flex: '1 1',
   paddingTop: `${props.theme.itemPadding * 2}px`,
-
+  
 }));
 
 class ScriptSettings extends React.PureComponent<Props, State> {
@@ -92,7 +92,6 @@ class ScriptSettings extends React.PureComponent<Props, State> {
           onCodeChange={this.onCodeChange_}
           autocomplete
           style={{ flex: '1 1' }}
-          theme="DARK"
         />
       </Container>
     );

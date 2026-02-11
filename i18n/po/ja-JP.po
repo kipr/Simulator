@@ -1639,8 +1639,8 @@ msgstr "課程"
 msgid "My Assignments"
 msgstr "私の宿題"
 
-msgid "Scratch Variables"
-msgstr "Scratchの変数"
+msgid "Graphical Variables"
+msgstr "Graphicalの変数"
 
 msgid "A hamburger"
 msgstr "ハンバーガー"

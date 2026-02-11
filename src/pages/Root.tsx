@@ -425,12 +425,12 @@ class Root extends React.Component<Props, State> {
         });
         break;
       }
-      case 'scratch': {
+      case 'graphical': {
         this.setState({
           simulatorState: SimulatorState.RUNNING,
         }, () => {
           WorkerInstance.start({
-            language: 'scratch',
+            language: 'graphical',
             code: activeCode
           });
         });
@@ -712,6 +712,7 @@ class Root extends React.Component<Props, State> {
       } : undefined,
       onDocumentationGoToFuzzy,
       onCommonDocumentationGoToFuzzy,
+      layout: Layout.Overlay
     };
 
     let impl: JSX.Element;

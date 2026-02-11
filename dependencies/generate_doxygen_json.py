@@ -28,7 +28,6 @@ parser.add_argument(
   'common_output_file',
   help = 'Output file to write common JSON to'
 )
-
 args = parser.parse_args()
 
 def eprint(*args, **kwargs):
@@ -37,7 +36,9 @@ def eprint(*args, **kwargs):
 
 
 # Get all XML files in a directory passed in as the first argument
+# add create*.xml to the list of files to parse
 xml_file_matches = [
+  'create*.xml',
   'analog*.xml',
   'botball*.xml',
   'button*.xml',
@@ -120,7 +121,6 @@ xml_files = []
 for match in xml_file_matches:
   xml_files += glob.glob(args.input_dir + '/' + match)
 
-
 @dataclass
 class File:
   id: str
@@ -192,11 +192,6 @@ structures: List[Structure] = []
 enumerations: List[Enumeration] = []
 types: List[Type] = []
 files: List[File] = []
-
-
-commonFiles: List[File] = []
-commonFunctions: List[Function] = []
-commonModules: List[Module] = []
 
 def parse_text(node):
   if node is None: return None
@@ -290,12 +285,11 @@ def parse_file(node):
 
   for section in sections:
     if section.get('kind') == 'func':
-      for memberdef in section.findall('memberdef'):
-        if memberdef.get('kind') == 'function':
-          functions.append(memberdef.get('id'))
-          parse_function(memberdef)
+      for member in section.findall('memberdef'):
+        if member.get('kind') == 'function':
+          functions.append(member.get('id'))
+          parse_function(member)
 
-      
   files.append(File(id, name, functions, [], []))
 
 def parse_struct(node):
@@ -363,9 +357,9 @@ def parse_group(node):
   for member in node.findall('sectiondef/memberdef'):
     if member.get('kind') == 'function':
       functions.append(member.get('id'))
-      parse_function(member)
 
   modules.append(Module(id, name, functions, []))
+
 
 def parse_compounddef(node):
   # Determine kind
@@ -385,27 +379,9 @@ def parse_xml(tree):
     if child.tag == 'compounddef':
       parse_compounddef(child)
 
-def parse_common():
-  for f in files:
-    if f.name in commonFileNames:
-      commonFiles.append(f)
-  for func in functions:
-    if func.name in commonFunctionNames:
-      commonFunctions.append(func)
-  for mod in modules:
-    if mod.name in commonModuleNames:
-      #commonModules.append(mod)
-      # Filter mod functions to only those in commonFunctions
-      common_func_ids = {func.id for func in commonFunctions}
-      filtered_functions = [func_id for func_id in mod.functions if func_id in common_func_ids]
-      commonModules.append(Module(mod.id, mod.name, filtered_functions, []))
-        
-        
-
 for xml_file in xml_files:
   tree = ET.parse(xml_file)
   parse_xml(tree)
-parse_common()
 
 # Convert lists to dictionaries by ID
 files_dict = {file.id: asdict(file) for file in files}
@@ -415,11 +391,8 @@ structures_dict = {structure.name: asdict(structure) for structure in structures
 enumerations_dict = {enumeration.name: asdict(enumeration) for enumeration in enumerations}
 types_dict = {type.id: asdict(type) for type in types}
 
-common_files_dict = {file.id: asdict(file) for file in commonFiles}
-common_functions_dict = {function.id: asdict(function) for function in commonFunctions}
-common_modules_dict = {module.id: asdict(module) for module in commonModules}
 
-with open(args.default_output_file, 'w') as f:
+with open(args.output_file, 'w') as f:
   f.write(json.dumps({
     'files': files_dict,
     'functions': functions_dict,
@@ -428,12 +401,3 @@ with open(args.default_output_file, 'w') as f:
     'enumerations': enumerations_dict,
     'types': types_dict
   }, indent = 2))
-  
- 
-with open(args.common_output_file, 'w') as f:
-  f.write(json.dumps({
-    'title': 'common',
-    'files': common_files_dict,
-    'functions': common_functions_dict,
-    'modules': common_modules_dict
-    }, indent = 2))
