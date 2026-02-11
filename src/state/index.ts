@@ -18,7 +18,9 @@ const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ||
 export default createStore(combineReducers<State>({
   scenes: reducer.reduceScenes,
   robots: reducer.reduceRobots,
-  documentation: reducer.reduceDocumentation,
+  documentation: reduceDocumentation,
+  documentationDefault: reduceDocumentation,
+  documentationCommon: reduceDocumentationCommon,
   challenges: reducer.reduceChallenges,
   challengeCompletions: reducer.reduceChallengeCompletions,
   i18n: reducer.reduceI18n,
@@ -38,6 +40,8 @@ export interface State {
   challengeCompletions: ChallengeCompletions;
   robots: Robots;
   documentation: DocumentationState;
+  documentationDefault: DocumentationState;
+  documentationCommon: DocumentationState;
   i18n: I18n;
   assignments: Assignments;
   users: Users;
