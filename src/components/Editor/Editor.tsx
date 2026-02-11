@@ -214,7 +214,7 @@ class Editor extends React.PureComponent<Props, State> {
     const language = DOCUMENTATION_LANGUAGE_MAPPING[this.props.language];
     if (!language) return;
 
-    //this.props.onCommonDocumentationGoToFuzzy?.(word, language);
+    // this.props.onCommonDocumentationGoToFuzzy?.(word, language);
   };
 
   private openDocumentationAction_?: monaco.IDisposable;
@@ -239,9 +239,9 @@ class Editor extends React.PureComponent<Props, State> {
     const old = this.ivygate_;
     this.ivygate_ = ivygate;
     if (this.ivygate_ && this.ivygate_.editor) {
-      this.setupCodeEditor_(this.ivygate_.editor as monaco.editor.IStandaloneCodeEditor);
+      this.setupCodeEditor_(this.ivygate_.editor);
     } else {
-      this.disposeCodeEditor_(old.editor as monaco.editor.IStandaloneCodeEditor);
+      this.disposeCodeEditor_(old.editor);
     }
   };
 
