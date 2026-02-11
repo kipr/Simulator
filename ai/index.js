@@ -1,5 +1,5 @@
 /* eslint-env node */
-
+/* global fetch */
 const express = require('express');
 const RateLimit = require('express-rate-limit');
 const fs = require('fs');
@@ -105,11 +105,9 @@ function createAiRouter(firebaseTokenManager, config) {
     }
 
     if (!config.claude || !config.claude.apiKey) {
-      return res
-        .status(500)
-        .json({
-          error: 'Server configuration error: Claude API key not configured',
-        });
+      return res.status(500).json({
+        error: 'Server configuration error: Claude API key not configured',
+      });
     }
 
     const challengeMentioned =
