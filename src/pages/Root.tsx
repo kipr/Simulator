@@ -211,7 +211,6 @@ class Root extends React.Component<Props, State> {
 
     this.editorRef = React.createRef();
     this.overlayLayoutRef = React.createRef();
-    console.log("Initial state:", this.state);
     Space.getInstance().scene = Async.latestValue(props.scene) || Scene.EMPTY;
   }
 
@@ -269,20 +268,15 @@ class Root extends React.Component<Props, State> {
   };
 
   private onActiveLanguageChange_ = (language: ProgrammingLanguage) => {
-
-    console.log("Changing active language to:", language);
-    console.log("State before language change:", this.state);
     this.setState({
       activeLanguage: language
     }, () => {
-      console.log("State after language change:", this.state);
+
       this.props.onDocumentationSetLanguage(language === 'python' ? 'python' : 'c');
     });
   };
 
   private onCodeChange_ = (code: string) => {
-
-    console.log("Code changed in editor:", code);
     const { activeLanguage } = this.state;
     this.setState({
       code: {
@@ -290,7 +284,6 @@ class Root extends React.Component<Props, State> {
         [activeLanguage]: code,
       }
     }, () => {
-      console.log("Updated code state:", this.state.code);
       window.localStorage.setItem(`code-${activeLanguage}`, code);
     });
   };
@@ -492,7 +485,6 @@ class Root extends React.Component<Props, State> {
   };
 
   private onIndentCode_ = () => {
-    console.log("Indenting code in editor");
     if (this.editorRef.current) this.editorRef.current.ivygate.formatCode();
   };
 
@@ -679,8 +671,6 @@ class Root extends React.Component<Props, State> {
     } = state;
 
     const theme = DARK;
-
-    //window.console.log("code[activelanguage]:", state.code[state.activeLanguage]);
 
     const editorTarget: LayoutEditorTarget = {
       type: LayoutEditorTarget.Type.Robot,
