@@ -195,7 +195,7 @@ class Root extends React.Component<Props, State> {
         'c': window.localStorage.getItem('code-c') || ProgrammingLanguage.DEFAULT_CODE['c'],
         'cpp': window.localStorage.getItem('code-cpp') || ProgrammingLanguage.DEFAULT_CODE['cpp'],
         'python': window.localStorage.getItem('code-python') || ProgrammingLanguage.DEFAULT_CODE['python'],
-        'scratch': window.localStorage.getItem('code-scratch') || ProgrammingLanguage.DEFAULT_CODE['scratch'],
+        'graphical': window.localStorage.getItem('code-graphical') || ProgrammingLanguage.DEFAULT_CODE['graphical'],
       },
       modal: Modal.NONE,
       simulatorState: SimulatorState.STOPPED,
