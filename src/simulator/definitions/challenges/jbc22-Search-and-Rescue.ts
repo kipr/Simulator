@@ -52,6 +52,18 @@ export default {
         type: Expr.Type.Event,
         eventId: "canInStartBox",
       },
+      completion: {
+        type: Expr.Type.And,
+        argIds: [
+          'inStartBoxOnce',
+          'canInStartBox',
+        ],
+      },
+    },
+    rootId: 'completion',
+  },
+  failure: {
+    exprs: {
       canUpright: {
         type: Expr.Type.Event,
         eventId: "canUpright",
@@ -61,16 +73,14 @@ export default {
         argId: "canUpright",
       },
 
-      completion: {
+      failure: {
         type: Expr.Type.And,
         argIds: [
-          'inStartBoxOnce',
-          'canInStartBox',
-          'canUpright',
+          'canNotUpright',
         ],
       },
     },
-    rootId: 'completion',
+    rootId: 'failure',
   },
   successGoals: [
     { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },

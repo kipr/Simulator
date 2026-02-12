@@ -18,28 +18,21 @@ export default {
   },
   defaultLanguage: 'c',
   events: {
-
-
     leaveStartBox: {
       name: tr('Robot Left Start'),
       description: tr('Robot left starting box'),
     },
-
     canStacked: {
       name: tr('One Can Stacked'),
       description: tr('One can is stacked on another'),
     },
-
     robotTouchCan: {
       name: tr('Robot Touching Can'),
       description: tr('Robot is touching a can'),
     },
-
   },
   success: {
     exprs: {
-
-
       // Startbox Events
       leaveStartBox: {
         type: Expr.Type.Event,
@@ -55,22 +48,26 @@ export default {
         type: Expr.Type.Event,
         eventId: 'canStacked',
       },
+
+      completion: {
+        type: Expr.Type.And,
+        argIds: ['leaveStartBoxOnce', 'canStacked'],
+      },
+    },
+    rootId: 'completion',
+  },
+  failure: {
+    exprs: {
       robotTouchCan: {
         type: Expr.Type.Event,
         eventId: 'robotTouchCan',
       },
-      robotTouchCanNot: {
-        type: Expr.Type.Not,
-        argId: 'robotTouchCan',
-      },
-
-
-      completion: {
-        type: Expr.Type.And,
-        argIds: ['leaveStartBoxOnce', 'canStacked', 'robotTouchCanNot'],
+      failure: {
+        type: Expr.Type.Or,
+        argIds: ['robotTouchCan'],
       },
     },
-    rootId: 'completion',
+    rootId: 'failure',
   },
   successGoals: [
     { exprId: 'leaveStartBoxOnce', name: tr('Leave the Start Box') },
