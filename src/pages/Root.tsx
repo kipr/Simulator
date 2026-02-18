@@ -269,7 +269,8 @@ class Root extends React.Component<Props, State> {
 
   private onActiveLanguageChange_ = (language: ProgrammingLanguage) => {
     this.setState({
-      activeLanguage: language
+      activeLanguage: language,
+      messages: [],
     }, () => {
 
       this.props.onDocumentationSetLanguage(language === 'python' ? 'python' : 'c');
