@@ -1,7 +1,10 @@
 {
   "name": "simulator",
   "version": "3.4.1",
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.css",
+    "**/monaco-editor/**"
+  ],
   "main": "dist/index.js",
   "author": "KISS Institute for Practical Robotics",
   "license": "GPL-3.0-only",
@@ -83,11 +86,13 @@
     "image-webpack-loader": "^8.1.0",
     "immer": "^9.0.15",
     "itch": "https://github.com/chrismbirmingham/itch#36",
-    "ivygate": "https://github.com/kipr/ivygate#d48e4a0e9e33edb32cb6661b884146af94948066",
+    "ivygate": "https://github.com/kipr/ivygate#e85fddceadd83e5a2c2fcc0c0bc8951b5bae6894",
     "jspdf": "^3.0.2",
     "kipr-scratch": "file:dependencies/kipr-scratch/kipr-scratch",
     "lusca": "^1.7.0",
     "mailgun.js": "^10.2.1",
+    "monaco-editor": "^0.52.2",
+    "monaco-editor-webpack-plugin": "^7.1.1",
     "morgan": "^1.10.0",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^4.4.168",
