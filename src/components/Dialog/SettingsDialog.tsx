@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from 'styletron-react';
+import { styled, withStyleDeep } from 'styletron-react';
 import { Settings } from '../constants/Settings';
 import { StyleProps } from '../../util/style';
 import { Dialog } from './Dialog';
@@ -81,7 +81,7 @@ const SettingInfoText = styled('span', {
   userSelect: 'none',
 });
 
-const SettingInfoSubtext = styled(SettingInfoText, {
+const SettingInfoSubtext = withStyleDeep(SettingInfoText, {
   fontSize: '10pt',
 });
 
