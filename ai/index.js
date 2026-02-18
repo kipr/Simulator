@@ -1,5 +1,5 @@
 /* eslint-env node */
-/* global fetch */
+
 const express = require('express');
 const RateLimit = require('express-rate-limit');
 const fs = require('fs');

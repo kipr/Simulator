@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const NpmDtsPlugin = require('npm-dts-webpack-plugin');
 const { DefinePlugin, IgnorePlugin } = require('webpack');
 const process = require('process');
+const MonacoEditorWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 const commitHash = require('child_process')
   .execSync('git rev-parse --short=8 HEAD')
@@ -87,6 +88,7 @@ module.exports = {
       state: resolve(__dirname, '../../src/state'),
       '@i18n': resolve(__dirname, '../../src/util/i18n'),
       '@ivygate': resolve(__dirname, '../../node_modules/ivygate'),
+      'monaco-editor': resolve(__dirname, '../../node_modules/monaco-editor'),
     },
     symlinks: false,
     modules, //: [resolve(__dirname, '../../src'), 'node_modules']
@@ -101,15 +103,19 @@ module.exports = {
       // because we normally exclude node_modules from Babel handling.
       {
         test: /\.js$/,
+        include: /node_modules\/monaco-editor\/esm/,
         use: [
           {
             loader: 'babel-loader',
             options: {
               plugins: ['@babel/plugin-transform-class-static-block'],
+              babelrc: false,
+              configFile: false,
             },
           },
         ],
       },
+
       {
         test: /\.js$/,
         use: ['babel-loader', 'source-map-loader'],
@@ -235,6 +241,9 @@ module.exports = {
       logLevel: 'error',
       force: true,
       output: resolve(__dirname, '../../dist/simulator.d.ts'),
+    }),
+    new MonacoEditorWebpackPlugin({
+      languages: ['javascript', 'typescript', 'json', 'html', 'css'],
     }),
   ],
   performance: {
