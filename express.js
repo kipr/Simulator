@@ -181,16 +181,17 @@ if (
         `;
         break;
       case 'python':
-        ext = 'py'; break;
+        ext = 'py';
+        break;
       case 'graphical':
-        ext = 'graphical'; break;
+        ext = 'graphical';
+        break;
       default:
         return res.status(400).json({
-          error: "Expected language"
+          error: 'Expected language',
         });
-
     }
-    
+
     // Track session interaction
     metrics.trackSessionInteraction(sessionId, 'compile');
 
@@ -211,16 +212,13 @@ if (
     // Track code size
     metrics.compilation.codeSize.observe({ language }, code.length);
   
-
-    // Wrap user's main() in our own "main()" that exits properly
-    // Required because Asyncify keeps emscripten runtime alive, which would prevent cleanup code from running
     const augmentedCode = `${code}
     ${augmentation}
     `;
 
     const id = uuid.v4();
     const path = `/tmp/${id}.${ext}`;
-    fs.writeFile(path, augmentedCode, err => {
+    fs.writeFile(path, augmentedCode, (err) => {
       if (err) {
         const durationMs = Date.now() - startTime;
         const duration = durationMs / 1000;
@@ -261,16 +259,22 @@ if (
       env['EMSDK'] = config.server.dependencies.emsdk_env.EMSDK;
       env['EM_CONFIG'] = config.server.dependencies.emsdk_env.EM_CONFIG;
       const args = [
-        '-s', 'WASM=0',
-        '-s', 'INVOKE_RUN=0',
-        '-s', 'ASYNCIFY',
-        '-s', 'EXIT_RUNTIME=1',
-        '-s', "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']",
+        '-s',
+        'WASM=0',
+        '-s',
+        'INVOKE_RUN=0',
+        '-s',
+        'ASYNCIFY',
+        '-s',
+        'EXIT_RUNTIME=1',
+        '-s',
+        "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']",
         `-I${config.server.dependencies.libkipr_c}/include`,
         `-L${config.server.dependencies.libkipr_c}/lib`,
         '-lkipr',
-        '-o', `${path}.js`,
-        path
+        '-o',
+        `${path}.js`,
+        path,
       ];
       execFile(cc, args, {
         env
@@ -304,84 +308,49 @@ if (
     
         fs.readFile(`${path}.js`, (err, data) => {
           if (err) {
-            console.log(stderr);
-
-            // Log failed compilation
-            logCompilation({
-              userId,
-              sessionId,
-              language,
-              code,
-              duration: durationMs,
-              status: 'error',
-              stdout,
-              stderr,
-            });
-
-            metrics.compilation.counter.inc({ status: 'error', language });
-            metrics.compilation.duration.observe(
-              { status: 'error', language },
-              duration,
-            );
-
-            return res.status(200).json({
-              stdout,
-              stderr,
+            return res.status(400).json({
+              error: `Failed to open ${path}.js for reading`
             });
           }
-
-          fs.readFile(`${path}.js`, (err, data) => {
+  
+          fs.unlink(`${path}.js`, err => {
             if (err) {
-              return res.status(400).json({
-                error: `Failed to open ${path}.js for reading`,
+              return res.status(500).json({
+                error: `Failed to delete ${path}.js`
               });
             }
-
-            fs.unlink(`${path}.js`, (err) => {
+            fs.unlink(`${path}`, err => {
               if (err) {
                 return res.status(500).json({
-                  error: `Failed to delete ${path}.js`,
+                  error: `Failed to delete ${path}`
                 });
               }
-              fs.unlink(`${path}`, (err) => {
-                if (err) {
-                  return res.status(500).json({
-                    error: `Failed to delete ${path}`,
-                  });
-                }
-
-                // Log successful compilation
-                logCompilation({
-                  userId,
-                  sessionId,
-                  language,
-                  code,
-                  duration: durationMs,
-                  status: 'success',
-                  stdout,
-                  stderr: stderr || null,
-                });
-
-                // Success! Track metrics
-                metrics.compilation.counter.inc({
-                  status: 'success',
-                  language,
-                });
-                metrics.compilation.duration.observe(
-                  { status: 'success', language },
-                  duration,
-                );
-
-                res.status(200).json({
-                  result: data.toString(),
-                  stdout,
-                  stderr,
-                });
+              
+              // Log successful compilation
+              logCompilation({
+                userId,
+                sessionId,
+                language,
+                code,
+                duration: durationMs,
+                status: 'success',
+                stdout,
+                stderr: stderr || null
+              });
+              
+              // Success! Track metrics
+              metrics.compilation.counter.inc({ status: 'success', language });
+              metrics.compilation.duration.observe({ status: 'success', language }, duration);
+              
+              res.status(200).json({
+                result: data.toString(),
+                stdout,
+                stderr,
               });
             });
           });
-        },
-      );
+        });
+      });
     });
   });
 }
@@ -598,6 +567,6 @@ app.listen(config.server.port, () => {
 
 // Cross-origin isolation required for using features like SharedArrayBuffer
 function setCrossOriginIsolationHeaders(res) {
-  res.header("Cross-Origin-Opener-Policy", "same-origin");
-  res.header("Cross-Origin-Embedder-Policy", "require-corp");
+  res.header('Cross-Origin-Opener-Policy', 'same-origin');
+  res.header('Cross-Origin-Embedder-Policy', 'require-corp');
 }
