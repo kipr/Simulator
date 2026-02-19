@@ -1,5 +1,4 @@
 /* eslint-env node */
-/* global fetch */
 
 const express = require('express');
 const RateLimit = require('express-rate-limit');
@@ -10,11 +9,13 @@ const { logAiRequest, logError } = require('../logger');
 
 // Try to catch possible misspellings
 const includesChallenge = (s) => {
-  return s.toLowerCase().includes('challenge') ||
-  s.includes('chalenge') ||
-  s.includes('chelenge') ||
-  s.includes('chalenje') ||
-  s.includes('callenge');
+  return (
+    s.toLowerCase().includes('challenge') ||
+    s.includes('chalenge') ||
+    s.includes('chelenge') ||
+    s.includes('chalenje') ||
+    s.includes('callenge')
+  );
 };
 
 /**
@@ -24,13 +25,16 @@ const includesChallenge = (s) => {
  * @returns {express.Router} Router for Ai endpoints
  */
 function createAiRouter(firebaseTokenManager, config) {
-  const headers = config.claude.prompt.headers.map(headerPath => {
-    const headerContent = fs.readFileSync(headerPath, 'utf8');
-    return headerContent;
-  }).join('\n');
+  const headers = config.claude.prompt.headers
+    .map((headerPath) => {
+      const headerContent = fs.readFileSync(headerPath, 'utf8');
+      return headerContent;
+    })
+    .join('\n');
 
   const systemPromptPath = path.join(__dirname, 'systemPrompt.md');
-  const systemPrompt = fs.readFileSync(systemPromptPath, 'utf8')
+  const systemPrompt = fs
+    .readFileSync(systemPromptPath, 'utf8')
     .replace('{{headers}}', headers);
 
   const challengePromptPath = path.join(__dirname, 'challenges.md');
@@ -47,7 +51,7 @@ function createAiRouter(firebaseTokenManager, config) {
     keyGenerator: (req) => {
       // Use the user's UID from the Firebase token for per-user rate limiting
       return req.user?.uid || req.ip; // Fallback to IP if no user (shouldn't happen after auth)
-    }
+    },
   });
 
   // Apply rate limiter to all routes
@@ -56,13 +60,15 @@ function createAiRouter(firebaseTokenManager, config) {
   // Authentication middleware
   router.use(async (req, res, next) => {
     const authHeader = req.headers.authorization;
-    
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Unauthorized: Missing or invalid token' });
+      return res
+        .status(401)
+        .json({ error: 'Unauthorized: Missing or invalid token' });
     }
 
     const token = authHeader.split(' ')[1];
-    
+
     try {
       // Verify the Firebase token
       const decodedToken = await firebaseTokenManager.verifyIdToken(token);
@@ -83,33 +89,36 @@ function createAiRouter(firebaseTokenManager, config) {
       language,
       console: consoleText,
       robot,
-      model = 'claude-sonnet-4-20250514'
+      model = 'claude-sonnet-4-20250514',
     } = req.body;
-    
+
     const userId = req.user?.uid;
     const sessionId = req.headers['x-session-id'] || req.sessionID || 'unknown';
-    
+
     // Track session interaction
     metrics.trackSessionInteraction(sessionId, 'ai_query');
-    
+
     if (!messages || !Array.isArray(messages)) {
-      return res.status(400).json({ error: 'Bad request: messages array is required' });
+      return res
+        .status(400)
+        .json({ error: 'Bad request: messages array is required' });
     }
 
     if (!config.claude || !config.claude.apiKey) {
-      return res.status(500).json({ error: 'Server configuration error: Claude API key not configured' });
+      return res.status(500).json({
+        error: 'Server configuration error: Claude API key not configured',
+      });
     }
 
-    const challengeMentioned = messages
-      .filter(({ role }) => role === 'user')
-      .map((msg) => msg.content)
-      .filter((el) => includesChallenge(el))
-      .length > 0;
-    
+    const challengeMentioned =
+      messages
+        .filter(({ role }) => role === 'user')
+        .map((msg) => msg.content)
+        .filter((el) => includesChallenge(el)).length > 0;
+
     // Extract the last user message for logging
-    const lastUserMessage = messages
-      .filter(m => m.role === 'user')
-      .slice(-1)[0]?.content || '';
+    const lastUserMessage =
+      messages.filter((m) => m.role === 'user').slice(-1)[0]?.content || '';
 
     try {
       const system = systemPrompt
@@ -124,20 +133,20 @@ function createAiRouter(firebaseTokenManager, config) {
         headers: {
           'Content-Type': 'application/json',
           'x-api-key': config.claude.apiKey,
-          'anthropic-version': '2023-06-01'
+          'anthropic-version': '2023-06-01',
         },
         body: JSON.stringify({
           model,
           system,
           messages,
           max_tokens: 1024,
-        })
+        }),
       });
-      
+
       const data = await response.json();
       const duration = (Date.now() - startTime) / 1000;
       const durationMs = Date.now() - startTime;
-      
+
       if (!response.ok) {
         // Log failed request
         logAiRequest({
@@ -151,12 +160,16 @@ function createAiRouter(firebaseTokenManager, config) {
           duration: durationMs,
           status: 'error',
           tokens: null,
-          challengeMentioned
+          challengeMentioned,
         });
-        
-        metrics.ai.counter.inc({ model, status: 'error', language: language || 'unknown' });
+
+        metrics.ai.counter.inc({
+          model,
+          status: 'error',
+          language: language || 'unknown',
+        });
         metrics.ai.duration.observe({ model, status: 'error' }, duration);
-        
+
         throw { status: response.status, data };
       }
 
@@ -172,17 +185,21 @@ function createAiRouter(firebaseTokenManager, config) {
         duration: durationMs,
         status: 'success',
         tokens: data.usage?.total_tokens,
-        challengeMentioned
+        challengeMentioned,
       });
 
       // Success metrics
-      metrics.ai.counter.inc({ model, status: 'success', language: language || 'unknown' });
+      metrics.ai.counter.inc({
+        model,
+        status: 'success',
+        language: language || 'unknown',
+      });
       metrics.ai.duration.observe({ model, status: 'success' }, duration);
-      
+
       if (data.usage?.total_tokens) {
         metrics.ai.tokens.observe({ model }, data.usage.total_tokens);
       }
-      
+
       if (challengeMentioned) {
         metrics.ai.challengeMentions.inc({ model });
       }
@@ -191,7 +208,7 @@ function createAiRouter(firebaseTokenManager, config) {
     } catch (error) {
       const duration = (Date.now() - startTime) / 1000;
       const durationMs = Date.now() - startTime;
-      
+
       // Log error
       logAiRequest({
         userId,
@@ -204,27 +221,31 @@ function createAiRouter(firebaseTokenManager, config) {
         duration: durationMs,
         status: 'error',
         tokens: null,
-        challengeMentioned
+        challengeMentioned,
       });
-      
+
       logError(error, {
         component: 'ai',
         severity: 'error',
         userId,
         path: '/api/ai/completion',
-        method: 'POST'
+        method: 'POST',
       });
-      
-      metrics.ai.counter.inc({ model, status: 'error', language: language || 'unknown' });
+
+      metrics.ai.counter.inc({
+        model,
+        status: 'error',
+        language: language || 'unknown',
+      });
       metrics.ai.duration.observe({ model, status: 'error' }, duration);
-      
+
       console.error('Error calling Claude API:', error.data || error.message);
-      
+
       // Forward Claude API errors, or return generic error
       if (error.status && error.data) {
         return res.status(error.status).json(error.data);
       }
-      
+
       return res.status(500).json({ error: 'Error calling Claude API' });
     }
   });
@@ -232,4 +253,4 @@ function createAiRouter(firebaseTokenManager, config) {
   return router;
 }
 
-module.exports = createAiRouter; 
+module.exports = createAiRouter;
