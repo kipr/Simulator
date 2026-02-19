@@ -221,9 +221,9 @@ subprocess.run(
 
 print('Generating JSON documentation...')
 libkipr_c_documentation_json = f'{libkipr_build_c_dir}/documentation/json.json'
+libkipr_c_common_documentation = f'{libkipr_build_c_dir}/documentation/json_common.json'
 subprocess.run(
-  [ python, 'generate_doxygen_json.py', f'{libkipr_build_c_dir}/documentation/xml', libkipr_c_documentation_json ],
-  # [ 'python3', 'generate_doxygen_json.py', f'{libkipr_build_c_dir}/documentation/xml', libkipr_c_documentation_json ],
+  [ python, 'generate_doxygen_json.py', f'{libkipr_build_c_dir}/documentation/xml', libkipr_c_documentation_json, libkipr_c_common_documentation],
   cwd = working_dir,
   check = True
 )

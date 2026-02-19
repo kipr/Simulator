@@ -91,14 +91,14 @@ export const createEditorBarComponents = ({
   target,
   locale
 }: {
-  theme: Theme, 
+  theme: Theme,
   target: EditorBarTarget,
   locale: LocalizedString.Language
 }) => {
-  
+
   // eslint-disable-next-line @typescript-eslint/ban-types
   const editorBar: BarComponent<object>[] = [];
-  
+
   switch (target.type) {
     case EditorBarTarget.Type.Robot: {
       let errors = 0;
@@ -205,7 +205,16 @@ class Editor extends React.PureComponent<Props, State> {
     const language = DOCUMENTATION_LANGUAGE_MAPPING[this.props.language];
     if (!language) return;
     this.props.onDocumentationGoToFuzzy?.(word, language);
-    
+
+  };
+
+  private openCommonDocumentation_ = () => {
+
+    const { word } = this.ivygate_.editor.getModel().getWordAtPosition(this.ivygate_.editor.getPosition());
+    const language = DOCUMENTATION_LANGUAGE_MAPPING[this.props.language];
+    if (!language) return;
+
+    // this.props.onCommonDocumentationGoToFuzzy?.(word, language);
   };
 
   private openDocumentationAction_?: monaco.IDisposable;
@@ -230,9 +239,9 @@ class Editor extends React.PureComponent<Props, State> {
     const old = this.ivygate_;
     this.ivygate_ = ivygate;
     if (this.ivygate_ && this.ivygate_.editor) {
-      this.setupCodeEditor_(this.ivygate_.editor as monaco.editor.IStandaloneCodeEditor);
+      this.setupCodeEditor_(this.ivygate_.editor);
     } else {
-      this.disposeCodeEditor_(old.editor as monaco.editor.IStandaloneCodeEditor);
+      this.disposeCodeEditor_(old.editor);
     }
   };
 
@@ -272,6 +281,8 @@ class Editor extends React.PureComponent<Props, State> {
           messages={messages}
           onCodeChange={onCodeChange}
           autocomplete={autocomplete}
+          theme="DARK"
+          editable={true}
         />
       );
     }
@@ -280,7 +291,7 @@ class Editor extends React.PureComponent<Props, State> {
       <Container theme={theme} style={style} className={className}>
         {component}
       </Container>
-      
+
     );
   }
 }
