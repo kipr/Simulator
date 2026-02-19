@@ -1,13 +1,13 @@
 import Robot from "../../../state/State/Robot";
 import Node from "../../../state/State/Robot/Node";
 import Geometry from "../../../state/State/Robot/Geometry";
-import { Angle, Distance, Mass } from '../../../util';
+import { Angle, Mass } from '../../../util';
 import { RawVector3 } from '../../../util/math/math';
 import { RotationwUnits, Vector3wUnits } from '../../../util/math/unitMath';
 
 import tr from '@i18n';
+import { Quaternion } from "@babylonjs/core";
 
-const { meters } = Distance;
 const { degrees } = Angle;
 const { grams } = Mass;
 
@@ -26,8 +26,7 @@ export const DEMOBOT: Robot = {
     lightSensor: Node.lightSensor({
       parentId: 'chassis',
       origin: {
-        position: Vector3wUnits.centimeters(0, 3.5, 0),
-        orientation: RotationwUnits.eulerDegrees(90, 0, 0),
+        position: Vector3wUnits.centimeters(0, 3.5, 1),
       },
       analogPort: 2,
     }),
@@ -36,13 +35,15 @@ export const DEMOBOT: Robot = {
       mass: grams(300),
       origin: {
         position: Vector3wUnits.meters(-0.06, -0.019, 0),
-        // position: Vector3wUnits.meters(-0.08786, 0.063695, 0),
       },
     }),
     left_wheel: Node.motor({
-      parentAxis: RawVector3.NEGATIVE_Z,
-      parentPivot: Vector3wUnits.metersZ(-0.07492),
-      childAxis: RawVector3.Y,
+      parentPivot: Vector3wUnits.metersX(-0.07492),
+      parentAxis: RawVector3.NEGATIVE_Y,
+      childAxis: RawVector3.NEGATIVE_Z,
+      parentPerpAxis: RawVector3.NEGATIVE_Z,
+      childPerpAxis: RawVector3.NEGATIVE_X,
+      childRotationQuaternion: Quaternion.FromEulerAngles(0, 0, Math.PI / -2),
       motorPort: 3,
       parentId: 'chassis',
       plug: Node.Motor.Plug.Inverted
@@ -56,9 +57,12 @@ export const DEMOBOT: Robot = {
       restitution: 0,
     }),
     right_wheel: Node.motor({
-      parentAxis: RawVector3.Z,
-      parentPivot: Vector3wUnits.metersZ(0.07492),
-      childAxis: RawVector3.Y,
+      parentPivot: Vector3wUnits.metersX(0.07492),
+      parentAxis: RawVector3.NEGATIVE_Y,
+      childAxis: RawVector3.NEGATIVE_Z,
+      parentPerpAxis: RawVector3.NEGATIVE_Z,
+      childPerpAxis: RawVector3.NEGATIVE_X,
+      childRotationQuaternion: Quaternion.FromEulerAngles(0, 0, Math.PI / -2),
       motorPort: 0,
       parentId: 'chassis',
     }),
@@ -71,9 +75,12 @@ export const DEMOBOT: Robot = {
       restitution: 0,
     }),
     arm: Node.servo({
-      parentAxis: RawVector3.NEGATIVE_Z,
-      parentPivot: Vector3wUnits.meters(0.068099, 0.034913, -0.010805),
-      childAxis: RawVector3.Y,
+      parentPivot: Vector3wUnits.centimeters(1.0805, 3.4913, 8.05),
+      parentAxis: RawVector3.Y,
+      childAxis: RawVector3.Z,
+      parentPerpAxis: RawVector3.Z,
+      childPerpAxis: RawVector3.X,
+      childRotationQuaternion: Quaternion.FromEulerAngles(-Math.PI / 2, -Math.PI / 2, 0),
       childTwist: degrees(63),
       servoPort: 0,
       parentId: 'chassis',
@@ -88,9 +95,12 @@ export const DEMOBOT: Robot = {
       collisionBody: Node.Link.CollisionBody.EMBEDDED,
     }),
     claw: Node.servo({
-      parentAxis: RawVector3.Z,
-      childAxis: RawVector3.Y,
-      childTwist: degrees(0),
+      parentAxis: RawVector3.X,
+      childAxis: RawVector3.NEGATIVE_Z,
+      parentPerpAxis: RawVector3.NEGATIVE_Y,
+      childPerpAxis: RawVector3.X,
+      childRotationQuaternion: Quaternion.FromEulerAngles(0, -Math.PI / 2, -Math.PI / 2),
+      childTwist: degrees(-90),
       servoPort: 3,
       parentId: 'arm_link',
       parentPivot: Vector3wUnits.meters(0.097792, -0.024775, 0.026806),
@@ -107,7 +117,7 @@ export const DEMOBOT: Robot = {
     touch_sensor: Node.touchSensor({
       parentId: 'chassis',
       origin: {
-        position: Vector3wUnits.meters(0.10253, -0.007715, -0.011238),
+        position: Vector3wUnits.centimeters(-1.1238, -0.7715, 9.253),
       },
       digitalPort: 0,
       collisionBox: Vector3wUnits.meters(0.015, 0.015, 0.07),
@@ -115,7 +125,7 @@ export const DEMOBOT: Robot = {
     reflectance_sensor: Node.reflectanceSensor({
       parentId: 'chassis',
       origin: {
-        position: Vector3wUnits.meters(0.088337, -0.029257, -0.007872),
+        position: Vector3wUnits.centimeters(0.7872, -2.9257, 9.8337),
         orientation: RotationwUnits.eulerDegrees(90, 0, 0),
       },
       analogPort: 1,
@@ -131,17 +141,17 @@ export const DEMOBOT: Robot = {
     left_bumper: Node.touchSensor({
       parentId: 'chassis',
       origin: {
-        position: Vector3wUnits.meters(-0.171735, -0.015347, -0.040404),
+        position: Vector3wUnits.centimeters(-17.1735, -1.5347, -4.0404),
       },
-      digitalPort: 1,
+      digitalPort: 2,
       collisionBox: Vector3wUnits.meters(0.015, 0.015, 0.015),
     }),
     right_bumper: Node.touchSensor({
       parentId: 'chassis',
       origin: {
-        position: Vector3wUnits.meters(-0.171735, -0.015347, 0.040404),
+        position: Vector3wUnits.centimeters(-17.1735, -1.5347, 4.0404),
       },
-      digitalPort: 2,
+      digitalPort: 1,
       collisionBox: Vector3wUnits.meters(0.015, 0.015, 0.015),
     }),
   },
