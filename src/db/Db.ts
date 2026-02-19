@@ -7,6 +7,7 @@ interface Request {
   url: string;
   method?: string;
   body?: string;
+  keepalive?: boolean;
 }
 
 interface OutstandingPromise<T = unknown> {
@@ -83,6 +84,7 @@ class Db {
       headers: await this.headers_(),
       method: request.method,
       body: request.body,
+      keepalive: request.keepalive,
     });
   }
 
@@ -123,7 +125,8 @@ class Db {
   async delete({ collection, id }: Selector): Promise<void> {
     const request: Request = {
       url: `${this.uri_}/${collection}/${id}`,
-      method: 'DELETE'
+      method: 'DELETE',
+      keepalive: true,
     };
 
     let promise: Promise<Response>;

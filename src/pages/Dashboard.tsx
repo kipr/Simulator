@@ -12,6 +12,7 @@ import { State } from '../state';
 
 import tr from '@i18n';
 import { WithNavigateProps, withNavigate } from '../util/withNavigate';
+import { DEFAULT_SCENE } from '../components/constants/defaultScene';
 
 
 export interface DashboardPublicProps extends ThemeProps, StyleProps {
@@ -85,7 +86,7 @@ class Dashboard extends React.PureComponent<Props> {
             description={LocalizedString.lookup(tr('A simulator for the Botball demobot.'), locale)}
             backgroundImage={'url(../../static/example_images/Simulator-Robot-Closeup.png)'}
             backgroundPosition={'center top'}
-            onClick={() => this.props.navigate('/scene/jbcSandbox')}
+            onClick={() => this.props.navigate(DEFAULT_SCENE)}
           />
           <Card
             theme={theme}
