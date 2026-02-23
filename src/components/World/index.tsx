@@ -34,6 +34,7 @@ import LocalizedString from '../../util/LocalizedString';
 import Script from '../../state/State/Scene/Script';
 import AddScriptDialog, { AddScriptAcceptance } from './AddScriptDialog';
 import ScriptSettingsDialog, { ScriptSettingsAcceptance } from './ScriptSettingsDialog';
+import { Settings } from '../constants/Settings';
 
 import tr from '@i18n';
 import { sprintf } from 'sprintf-js';
@@ -151,6 +152,7 @@ export interface WorldPublicProps extends StyleProps, ThemeProps {
   onScriptChange: (scriptId: string, script: Script) => void;
 
   capabilities?: Capabilities;
+  settings?: Settings;
 }
 
 
@@ -503,19 +505,21 @@ class World extends React.PureComponent<Props, State> {
                 theme={theme}
               />
             </StyledListSection>
-            <StyledListSection
-              name={scriptsName}
-              theme={theme}
-              onCollapsedChange={this.onCollapsedChange_('scripts')}
-              collapsed={collapsed['scripts']}
-              noBodyPadding
-            >
-              <EditableList
-                onItemRemove={removeScript ? this.onScriptRemove_ : undefined}
-                items={scriptList}
+            {props.settings?.showScripts && (
+              <StyledListSection
+                name={scriptsName}
                 theme={theme}
-              />
-            </StyledListSection>
+                onCollapsedChange={this.onCollapsedChange_('scripts')}
+                collapsed={collapsed['scripts']}
+                noBodyPadding
+              >
+                <EditableList
+                  onItemRemove={removeScript ? this.onScriptRemove_ : undefined}
+                  items={scriptList}
+                  theme={theme}
+                />
+              </StyledListSection>
+            )}
           </Container>
         </ScrollArea>
         {modal.type === UiState.Type.AddNode && (
