@@ -5,7 +5,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const NpmDtsPlugin = require('npm-dts-webpack-plugin');
 const { DefinePlugin, IgnorePlugin } = require('webpack');
 const process = require('process');
-const MonacoEditorWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 const commitHash = require('child_process')
   .execSync('git rev-parse --short=8 HEAD')
@@ -241,9 +240,6 @@ module.exports = {
       logLevel: 'error',
       force: true,
       output: resolve(__dirname, '../../dist/simulator.d.ts'),
-    }),
-    new MonacoEditorWebpackPlugin({
-      languages: ['javascript', 'typescript', 'json', 'html', 'css'],
     }),
   ],
   performance: {
