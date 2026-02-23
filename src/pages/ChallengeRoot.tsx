@@ -359,6 +359,11 @@ class Root extends React.Component<Props, State> {
   componentWillUnmount() {
     window.removeEventListener('resize', this.onWindowResize_);
     cancelAnimationFrame(this.updateConsoleHandle_);
+
+    if (this.saveTimeout_ !== undefined) {
+      window.clearTimeout(this.saveTimeout_);
+      this.saveChallengeCompletion_();
+    }
   
     Space.getInstance().onSelectNodeId = undefined;
     Space.getInstance().onSetNodeBatch = undefined;
@@ -419,6 +424,7 @@ class Root extends React.Component<Props, State> {
   };
 
   private lastSaveChallengeCompletionTime_ = 0;
+  private saveTimeout_: number | undefined = undefined;
 
   private saveChallengeCompletion_ = () => {
     this.props.onChallengeCompletionSetRobotLinkOrigins(Space.getInstance().sceneBinding.currentRobotLinkOrigins);
@@ -428,7 +434,23 @@ class Root extends React.Component<Props, State> {
   };
 
   private scheduleSaveChallengeCompletion_ = () => {
-    if (Date.now() - this.lastSaveChallengeCompletionTime_ < 1000) return;
+    const now = Date.now();
+    const timeSinceLastSave = now - this.lastSaveChallengeCompletionTime_;
+
+    if (timeSinceLastSave < 1000) {
+      if (this.saveTimeout_ === undefined) {
+        this.saveTimeout_ = window.setTimeout(() => {
+          this.saveTimeout_ = undefined;
+          this.saveChallengeCompletion_();
+        }, 1000 - timeSinceLastSave);
+      }
+      return;
+    }
+
+    if (this.saveTimeout_ !== undefined) {
+      window.clearTimeout(this.saveTimeout_);
+      this.saveTimeout_ = undefined;
+    }
 
     this.saveChallengeCompletion_();
   };
