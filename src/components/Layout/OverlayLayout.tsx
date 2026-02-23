@@ -24,7 +24,7 @@ import LocalizedString from '../../util/LocalizedString';
 import tr from '@i18n';
 
 export interface OverlayLayoutProps extends LayoutProps {
-  
+
 }
 
 interface ReduxOverlayLayoutProps {
@@ -125,7 +125,7 @@ const ConsoleWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolea
       gridRow: props.$challenge ? 3 : 2,
       ...transparentStyling(props.theme)
     };
-  } 
+  }
 });
 
 const EditorWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
@@ -206,7 +206,7 @@ const CONSOLE_SIZES: Size[] = [Size.MINIATURE_LEFT, Size.PARTIAL_DOWN, Size.MAXI
 
 const sizeDict = (sizes: Size[]) => {
   const forward: { [type: number]: number } = {};
-  
+
   for (let i = 0; i < sizes.length; ++i) {
     const size = sizes[i];
     forward[size.type] = i;
@@ -243,7 +243,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
 
     let { infoSize, consoleSize, worldSize, challengeSize } = this.state;
 
-    
+
     switch (size.type) {
       case Size.Type.Maximized: {
         infoSize = Size.Type.Minimized;
@@ -292,7 +292,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
     const size = CONSOLE_SIZES[index];
 
     let { infoSize, editorSize, worldSize, challengeSize } = this.state;
-    
+
     switch (size.type) {
       case Size.Type.Maximized: {
         infoSize = Size.Type.Minimized;
@@ -345,7 +345,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
 
   private onRobotOriginChange_ = (origin: ReferenceFramewUnits) => {
     const { scene, onNodeChange } = this.props;
-    
+
     const latestScene = Async.latestValue(scene);
 
     if (!latestScene) return;
@@ -360,7 +360,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
 
   render() {
     const { props } = this;
-    
+
     const {
       style,
       className,
@@ -561,7 +561,7 @@ export const OverlayLayoutRedux = connect((state: ReduxState, { sceneId }: Layou
   const scene = Async.latestValue(asyncScene);
   let robots: Dict<Node.Robot> = {};
   if (scene) robots = Scene.robots(scene);
-  
+
   return {
     robots,
     locale: state.i18n.locale,

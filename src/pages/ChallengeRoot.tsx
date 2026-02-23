@@ -31,9 +31,9 @@ import { Capabilities } from '../components/World';
 
 
 import { State as ReduxState } from '../state';
-import { DocumentationAction, ScenesAction, ChallengeCompletionsAction, AiAction } from '../state/reducer';
+import { ScenesAction, ChallengeCompletionsAction, AiAction } from '../state/reducer';
 import { sendMessage, SendMessageParams } from '../util/ai';
-
+import { DocumentationAction } from 'ivygate/dist/src/state/reducer/documentation';
 import Scene, { AsyncScene } from '../state/State/Scene';
 import Script from '../state/State/Scene/Script';
 import Node from '../state/State/Scene/Node';
@@ -476,6 +476,9 @@ class Root extends React.Component<Props, State> {
 
   private onActiveLanguageChange_ = (language: ProgrammingLanguage) => {
     this.props.onChallengeCompletionSetCurrentLanguage(language);
+
+    // Clear compilation messages when switching languages to prevent stale error highlights
+    this.setState({ messages: [] });
 
     this.scheduleSaveChallengeCompletion_();
   };

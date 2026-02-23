@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const fs = require('fs');
 const uuid = require('uuid');
-const { exec } = require('child_process');
+const { execFile } = require('child_process');
 const session = require('express-session');
 const csrf = require('lusca').csrf;
 const app = express();
@@ -31,23 +31,29 @@ try {
 app.set('trust proxy', true);
 
 // Session middleware for generating session IDs
-app.use(session({
-  secret: config.server.sessionSecret || 'kipr-simulator-session-secret',
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production' ? true : false // Enforce secure cookies in production
-  },
-  name: 'kipr_session'
-}));
+app.use(
+  session({
+    secret: config.server.sessionSecret || 'kipr-simulator-session-secret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production' ? true : false, // Enforce secure cookies in production
+    },
+    name: 'kipr_session',
+  }),
+);
 
 // CSRF protection - skip for API routes that use Bearer token authentication
 app.use((req, res, next) => {
   // Skip CSRF for API routes that use Bearer tokens (CSRF-safe by design)
   // Also skip for compile and feedback endpoints (no auth, CSRF-safe)
-  if (req.path.startsWith('/api/') || req.path === '/compile' || req.path === '/feedback') {
+  if (
+    req.path.startsWith('/api/') ||
+    req.path === '/compile' ||
+    req.path === '/feedback'
+  ) {
     return next();
   }
   // Apply CSRF protection to other routes
@@ -69,21 +75,19 @@ var limiter = RateLimit({
   handler: (req, res) => {
     // Track rate limit hits
     metrics.rateLimit.hits.inc({ endpoint: req.path });
-    
+
     // Log rate limit hit
     logRateLimit({
       endpoint: req.path,
       ip: req.ip,
-      userId: req.user?.uid
+      userId: req.user?.uid,
     });
-    
+
     res.status(429).json({
-      error: 'Too many requests, please try again later.'
+      error: 'Too many requests, please try again later.',
     });
-  }
+  },
 });
-
-
 
 // apply rate limiter to all requests
 app.use(limiter);
@@ -94,78 +98,131 @@ const mailgunClient = mailgun.client({
   key: config.mailgun.apiKey,
 });
 
-const firebaseTokenManager = new FirebaseTokenManager(config.firebase.serviceAccountKey, config.firebase.apiKey);
+const firebaseTokenManager = new FirebaseTokenManager(
+  config.firebase.serviceAccountKey,
+  config.firebase.apiKey,
+);
 
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept',
+  );
   next();
 });
 
 app.use(bodyParser.json());
 app.use(morgan('combined'));
 
-app.use('/api/parental-consent', createParentalConsentRouter(firebaseTokenManager, mailgunClient, config));
+app.use(
+  '/api/parental-consent',
+  createParentalConsentRouter(firebaseTokenManager, mailgunClient, config),
+);
 
 // Add AI router
 app.use('/api/ai', createAiRouter(firebaseTokenManager, config));
 
 app.use('/api', proxy(config.dbUrl));
 
+console.warn('compiling...');
 // If we have libkipr (C) artifacts and emsdk, we can compile.
-if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env) {
-
+if (
+  config.server.dependencies.libkipr_c &&
+  config.server.dependencies.emsdk_env
+) {
   app.post('/compile', (req, res) => {
     const startTime = Date.now();
-    const language = 'C';
+    const language = req.body.language;
     const userId = req.user?.uid;
     const sessionId = req.headers['x-session-id'] || req.sessionID || 'unknown';
+    let ext;
+    let cc;
+    let augmentation;
+
+    switch (language) {
+      case 'c':
+        ext = 'c';
+        cc = 'emcc';
+
+        // Wrap user's main() in our own "main()" that exits properly
+        // Required because Asyncify keeps emscripten runtime alive, which would prevent cleanup code from running
+        augmentation = `
+          #include <emscripten.h>
+      
+          EM_JS(void, on_stop, (), {
+            if (Module.context.onStop) Module.context.onStop();
+          })
+        
+          void simMainWrapper()
+          {
+            main();
+            on_stop();
+            emscripten_force_exit(0);
+          }
+        `;
+        break;
+      case 'cpp':
+        ext = 'cpp';
+        cc = 'em++';
+        augmentation = `
+        #include <emscripten.h>
+
+        EM_JS(void, on_stop, (), {
+          if (Module.context.onStop) Module.context.onStop();
+        })
     
+        extern "C" void simMainWrapper()
+        {
+          main();
+          on_stop();
+          emscripten_force_exit(0);
+        }
+        `;
+        break;
+      case 'python':
+        ext = 'py';
+        break;
+      case 'graphical':
+        ext = 'graphical';
+        break;
+      default:
+        return res.status(400).json({
+          error: 'Expected language',
+        });
+    }
+
     // Track session interaction
     metrics.trackSessionInteraction(sessionId, 'compile');
-    
+
     if (!('code' in req.body)) {
       return res.status(400).json({
-        error: "Expected code key in body"
+        error: 'Expected code key in body',
       });
     }
-  
+
     if (typeof req.body.code !== 'string') {
       return res.status(400).json({
-        error: "Expected code key in body to be a string"
+        error: 'Expected code key in body to be a string',
       });
     }
-    
+
     const code = req.body.code;
-    
+
     // Track code size
     metrics.compilation.codeSize.observe({ language }, code.length);
   
-    // Wrap user's main() in our own "main()" that exits properly
-    // Required because Asyncify keeps emscripten runtime alive, which would prevent cleanup code from running
     const augmentedCode = `${code}
-      #include <emscripten.h>
-  
-      EM_JS(void, on_stop, (), {
-        if (Module.context.onStop) Module.context.onStop();
-      })
-    
-      void simMainWrapper()
-      {
-        main();
-        on_stop();
-        emscripten_force_exit(0);
-      }
+    ${augmentation}
     `;
-  
-    
+
     const id = uuid.v4();
-    const path = `/tmp/${id}.c`;
-    fs.writeFile(path, augmentedCode, err => {
+    const path = `/tmp/${id}.${ext}`;
+    fs.writeFile(path, augmentedCode, (err) => {
       if (err) {
         const durationMs = Date.now() - startTime;
         const duration = durationMs / 1000;
-        
+
         // Log failed compilation
         logCompilation({
           userId,
@@ -175,30 +232,51 @@ if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env
           duration: durationMs,
           status: 'error',
           stdout: null,
-          stderr: err.message
+          stderr: err.message,
         });
-        
+
         metrics.compilation.counter.inc({ status: 'error', language });
-        metrics.compilation.duration.observe({ status: 'error', language }, duration);
-        
+        metrics.compilation.duration.observe(
+          { status: 'error', language },
+          duration,
+        );
+
         return res.status(500).json({
-          error: "Failed to write ${}"
+          error: 'Failed to write ${}',
         });
       }
 
       // ...process.env causes a linter error for some reason.
       // We work around this by doing it manually.
-      
+
       const env = {};
       for (const key of Object.keys(process.env)) {
         env[key] = process.env[key];
       }
-      
-      env['PATH'] = `${config.server.dependencies.emsdk_env.PATH}:${process.env.PATH}`;
+
+      env['PATH'] =
+        `${config.server.dependencies.emsdk_env.PATH}:${process.env.PATH}`;
       env['EMSDK'] = config.server.dependencies.emsdk_env.EMSDK;
       env['EM_CONFIG'] = config.server.dependencies.emsdk_env.EM_CONFIG;
-  
-      exec(`emcc -s WASM=0 -s INVOKE_RUN=0 -s ASYNCIFY -s EXIT_RUNTIME=1 -s "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']" -I${config.server.dependencies.libkipr_c}/include -L${config.server.dependencies.libkipr_c}/lib -lkipr -o ${path}.js ${path}`, {
+      const args = [
+        '-s',
+        'WASM=0',
+        '-s',
+        'INVOKE_RUN=0',
+        '-s',
+        'ASYNCIFY',
+        '-s',
+        'EXIT_RUNTIME=1',
+        '-s',
+        "EXPORTED_FUNCTIONS=['_main', '_simMainWrapper']",
+        `-I${config.server.dependencies.libkipr_c}/include`,
+        `-L${config.server.dependencies.libkipr_c}/lib`,
+        '-lkipr',
+        '-o',
+        `${path}.js`,
+        path,
+      ];
+      execFile(cc, args, {
         env
       }, (err, stdout, stderr) => {
         const durationMs = Date.now() - startTime;
@@ -274,35 +352,41 @@ if (config.server.dependencies.libkipr_c && config.server.dependencies.emsdk_env
         });
       });
     });
-    
-    
   });
 }
-
 
 app.post('/feedback', (req, res) => {
   const hookURL = config.server.feedbackWebhookURL;
   if (!hookURL) {
     res.status(500).json({
-      message: 'The feedback URL is not set on the server. If this is a developoment environment, make sure the feedback URL environment variable is set.'
+      message:
+        'The feedback URL is not set on the server. If this is a developoment environment, make sure the feedback URL environment variable is set.',
     });
     return;
   }
 
   const body = req.body;
   const sessionId = req.headers['x-session-id'] || req.sessionID || 'unknown';
-  
+
   // Track session interaction
   metrics.trackSessionInteraction(sessionId, 'feedback');
 
   let content = `User Feedback Recieved:\n\`\`\`${body.feedback} \`\`\``;
-  
+
   content += `Sentiment: `;
   switch (body.sentiment) {
-    case 0: content += 'No sentiment! This is probably a bug'; break;
-    case 1: content += ':frowning2:'; break;
-    case 2: content += ':expressionless:'; break;
-    case 3: content += ':smile:'; break;
+    case 0:
+      content += 'No sentiment! This is probably a bug';
+      break;
+    case 1:
+      content += ':frowning2:';
+      break;
+    case 2:
+      content += ':expressionless:';
+      break;
+    case 3:
+      content += ':smile:';
+      break;
   }
   content += '\n';
 
@@ -314,10 +398,12 @@ app.post('/feedback', (req, res) => {
 
   if (body.includeAnonData) {
     content += `Browser User-Agent: ${body.userAgent}\n`;
-    files = [{
-      attachment: Buffer.from(JSON.stringify(body.state, undefined, 2)),
-      name: 'userdata.json'
-    }];
+    files = [
+      {
+        attachment: Buffer.from(JSON.stringify(body.state, undefined, 2)),
+        name: 'userdata.json',
+      },
+    ];
   }
 
   let webhook;
@@ -326,18 +412,21 @@ app.post('/feedback', (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      message: 'An error occured on the server. If you are a developer, your webhook url is likely wrong.'
+      message:
+        'An error occured on the server. If you are a developer, your webhook url is likely wrong.',
     });
     // TODO: write the feedback to a file if an error occurs?
     return;
   }
 
-  webhook.send({
-    content: content,
-    username: 'KIPR Simulator Feedback',
-    avatarURL: 'https://www.kipr.org/wp-content/uploads/2018/08/botguy-copy.jpg',
-    files: files
-  })
+  webhook
+    .send({
+      content: content,
+      username: 'KIPR Simulator Feedback',
+      avatarURL:
+        'https://www.kipr.org/wp-content/uploads/2018/08/botguy-copy.jpg',
+      files: files,
+    })
     .then(() => {
       // Log feedback submission
       logFeedback({
@@ -345,62 +434,86 @@ app.post('/feedback', (req, res) => {
         sentiment: body.sentiment,
         feedback: body.feedback,
         email: body.email,
-        includeAnonData: body.includeAnonData
+        includeAnonData: body.includeAnonData,
       });
-      
+
       // Track feedback submission
-      const sentimentLabel = body.sentiment === 1 ? 'negative'
-        : body.sentiment === 2 ? 'neutral'
-          : body.sentiment === 3 ? 'positive'
-            : 'unknown';
+      const sentimentLabel =
+        body.sentiment === 1
+          ? 'negative'
+          : body.sentiment === 2
+            ? 'neutral'
+            : body.sentiment === 3
+              ? 'positive'
+              : 'unknown';
       metrics.feedback.counter.inc({ sentiment: sentimentLabel });
-      
+
       res.status(200).json({
-        message: 'Feedback submitted! Thank you!'
+        message: 'Feedback submitted! Thank you!',
       });
     })
     .catch(() => {
       res.status(500).json({
-        message: 'An error occured on the server while sending feedback.'
+        message: 'An error occured on the server while sending feedback.',
       });
       // TODO: write the feedback to a file if an error occurs?
     });
 });
 
-app.use('/static', express.static(`${__dirname}/static`, {
-  maxAge: config.caching.staticMaxAge,
-}));
-
+app.use(
+  '/static',
+  express.static(`${__dirname}/static`, {
+    maxAge: config.caching.staticMaxAge,
+  }),
+);
 
 if (config.server.dependencies.graphical_rt) {
   console.log('Graphical Runtime is enabled.');
-  app.use('/graphical/rt.js', express.static(`${config.server.dependencies.graphical_rt}`, {
-    maxAge: config.caching.staticMaxAge,
-  }));
+  app.use(
+    '/graphical/rt.js',
+    express.static(`${config.server.dependencies.graphical_rt}`, {
+      maxAge: config.caching.staticMaxAge,
+    }),
+  );
 }
 
-app.use('/graphical', express.static(path.resolve(__dirname, 'node_modules', 'kipr-scratch'), {
-  maxAge: config.caching.staticMaxAge,
-}));
+app.use(
+  '/graphical',
+  express.static(path.resolve(__dirname, 'node_modules', 'kipr-scratch'), {
+    maxAge: config.caching.staticMaxAge,
+  }),
+);
 
-app.use('/media', express.static(path.resolve(__dirname, 'node_modules', 'kipr-scratch', 'media'), {
-  maxAge: config.caching.staticMaxAge,
-}));
+app.use(
+  '/media',
+  express.static(
+    path.resolve(__dirname, 'node_modules', 'kipr-scratch', 'media'),
+    {
+      maxAge: config.caching.staticMaxAge,
+    },
+  ),
+);
 
 // Expose cpython artifacts
 if (config.server.dependencies.cpython) {
   console.log('CPython artifacts are enabled.');
-  app.use('/cpython', express.static(`${config.server.dependencies.cpython}`, {
-    maxAge: config.caching.staticMaxAge,
-  }));
+  app.use(
+    '/cpython',
+    express.static(`${config.server.dependencies.cpython}`, {
+      maxAge: config.caching.staticMaxAge,
+    }),
+  );
 }
 
 // Expose libkipr (Python) artifacts
 if (config.server.dependencies.libkipr_python) {
   console.log('libkipr (Python) artifacts are enabled.');
-  app.use('/libkipr/python', express.static(`${config.server.dependencies.libkipr_python}`, {
-    maxAge: config.caching.staticMaxAge,
-  }));
+  app.use(
+    '/libkipr/python',
+    express.static(`${config.server.dependencies.libkipr_python}`, {
+      maxAge: config.caching.staticMaxAge,
+    }),
+  );
 }
 
 // Expose metrics endpoint
@@ -409,19 +522,24 @@ app.get('/metrics', async (req, res) => {
     res.set('Content-Type', metrics.register.contentType);
     res.end(await metrics.register.metrics());
   } catch (err) {
-    console.error("Error in /metrics endpoint:", err);
-    res.status(500).end("Internal Server Error");
+    console.error('Error in /metrics endpoint:', err);
+    res.status(500).end('Internal Server Error');
   }
 });
 
-app.use('/dist', express.static(`${__dirname}/dist`, {
-  setHeaders: setCrossOriginIsolationHeaders,
-}));
+app.use(
+  '/dist',
+  express.static(`${__dirname}/dist`, {
+    setHeaders: setCrossOriginIsolationHeaders,
+  }),
+);
 
-app.use(express.static(sourceDir, {
-  maxAge: config.caching.staticMaxAge,
-  setHeaders: setCrossOriginIsolationHeaders,
-}));
+app.use(
+  express.static(sourceDir, {
+    maxAge: config.caching.staticMaxAge,
+    setHeaders: setCrossOriginIsolationHeaders,
+  }),
+);
 
 app.get('/login', (req, res) => {
   res.sendFile(`${__dirname}/${sourceDir}/login.html`);
@@ -440,15 +558,15 @@ app.use('*', (req, res) => {
   res.sendFile(`${__dirname}/${sourceDir}/index.html`);
 });
 
-
-
 app.listen(config.server.port, () => {
-  console.log(`Express web server started: http://localhost:${config.server.port}`);
+  console.log(
+    `Express web server started: http://localhost:${config.server.port}`,
+  );
   console.log(`Serving content from /${sourceDir}/`);
 });
 
 // Cross-origin isolation required for using features like SharedArrayBuffer
 function setCrossOriginIsolationHeaders(res) {
-  res.header("Cross-Origin-Opener-Policy", "same-origin");
-  res.header("Cross-Origin-Embedder-Policy", "require-corp");
+  res.header('Cross-Origin-Opener-Policy', 'same-origin');
+  res.header('Cross-Origin-Embedder-Policy', 'require-corp');
 }
