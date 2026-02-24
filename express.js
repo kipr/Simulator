@@ -19,6 +19,8 @@ const formData = require('form-data');
 const Mailgun = require('mailgun.js');
 const createParentalConsentRouter = require('./parentalConsent');
 const createAiRouter = require('./ai');
+const createLimitedChallengeCompletionsRouter = require('./limitedChallengeCompletions');
+const createClassroomsRouter = require('./classrooms');
 
 let config;
 try {
@@ -120,8 +122,16 @@ app.use(
   createParentalConsentRouter(firebaseTokenManager, mailgunClient, config),
 );
 
+// Classrooms router
+app.use('/api/classrooms', createClassroomsRouter(firebaseTokenManager));
 // Add AI router
 app.use('/api/ai', createAiRouter(firebaseTokenManager, config));
+
+// Add Limited Challenge Completions router
+app.use(
+  '/api/limited_challenge_completion',
+  createLimitedChallengeCompletionsRouter(firebaseTokenManager),
+);
 
 app.use('/api', proxy(config.dbUrl));
 
@@ -211,7 +221,7 @@ if (
 
     // Track code size
     metrics.compilation.codeSize.observe({ language }, code.length);
-  
+
     const augmentedCode = `${code}
     ${augmentation}
     `;
@@ -276,81 +286,95 @@ if (
         `${path}.js`,
         path,
       ];
-      execFile(cc, args, {
-        env
-      }, (err, stdout, stderr) => {
-        const durationMs = Date.now() - startTime;
-        const duration = durationMs / 1000;
-        
-        if (err) {
-          console.log(stderr);
-          
-          // Log failed compilation
-          logCompilation({
-            userId,
-            sessionId,
-            language,
-            code,
-            duration: durationMs,
-            status: 'error',
-            stdout,
-            stderr
-          });
-          
-          metrics.compilation.counter.inc({ status: 'error', language });
-          metrics.compilation.duration.observe({ status: 'error', language }, duration);
-          
-          return res.status(200).json({
-            stdout,
-            stderr
-          });
-        }
-    
-        fs.readFile(`${path}.js`, (err, data) => {
+      execFile(
+        cc,
+        args,
+        {
+          env,
+        },
+        (err, stdout, stderr) => {
+          const durationMs = Date.now() - startTime;
+          const duration = durationMs / 1000;
+
           if (err) {
-            return res.status(400).json({
-              error: `Failed to open ${path}.js for reading`
+            console.log(stderr);
+
+            // Log failed compilation
+            logCompilation({
+              userId,
+              sessionId,
+              language,
+              code,
+              duration: durationMs,
+              status: 'error',
+              stdout,
+              stderr,
+            });
+
+            metrics.compilation.counter.inc({ status: 'error', language });
+            metrics.compilation.duration.observe(
+              { status: 'error', language },
+              duration,
+            );
+
+            return res.status(200).json({
+              stdout,
+              stderr,
             });
           }
-  
-          fs.unlink(`${path}.js`, err => {
+
+          fs.readFile(`${path}.js`, (err, data) => {
             if (err) {
-              return res.status(500).json({
-                error: `Failed to delete ${path}.js`
+              return res.status(400).json({
+                error: `Failed to open ${path}.js for reading`,
               });
             }
-            fs.unlink(`${path}`, err => {
+
+            fs.unlink(`${path}.js`, (err) => {
               if (err) {
                 return res.status(500).json({
-                  error: `Failed to delete ${path}`
+                  error: `Failed to delete ${path}.js`,
                 });
               }
-              
-              // Log successful compilation
-              logCompilation({
-                userId,
-                sessionId,
-                language,
-                code,
-                duration: durationMs,
-                status: 'success',
-                stdout,
-                stderr: stderr || null
-              });
-              
-              // Success! Track metrics
-              metrics.compilation.counter.inc({ status: 'success', language });
-              metrics.compilation.duration.observe({ status: 'success', language }, duration);
-              
-              res.status(200).json({
-                result: data.toString(),
-                stdout,
-                stderr,
+              fs.unlink(`${path}`, (err) => {
+                if (err) {
+                  return res.status(500).json({
+                    error: `Failed to delete ${path}`,
+                  });
+                }
+
+                // Log successful compilation
+                logCompilation({
+                  userId,
+                  sessionId,
+                  language,
+                  code,
+                  duration: durationMs,
+                  status: 'success',
+                  stdout,
+                  stderr: stderr || null,
+                });
+
+                // Success! Track metrics
+                metrics.compilation.counter.inc({
+                  status: 'success',
+                  language,
+                });
+                metrics.compilation.duration.observe(
+                  { status: 'success', language },
+                  duration,
+                );
+
+                res.status(200).json({
+                  result: data.toString(),
+                  stdout,
+                  stderr,
+                });
               });
             });
           });
-        });
-      });
+        },
+      );
     });
   });
 }
@@ -463,6 +487,33 @@ app.post('/feedback', (req, res) => {
 app.use(
   '/static',
   express.static(`${__dirname}/static`, {
+    maxAge: config.caching.staticMaxAge,
+  }),
+);
+
+if (config.server.dependencies.graphical_rt) {
+  console.log('Graphical Runtime is enabled.');
+  app.use(
+    '/graphical/rt.js',
+    express.static(`${config.server.dependencies.graphical_rt}`, {
+      maxAge: config.caching.staticMaxAge,
+    }),
+  );
+}
+
+if (config.server.dependencies.graphical_rt) {
+  console.log('Graphical Runtime is enabled.');
+  app.use(
+    '/graphical/rt.js',
+    express.static(`${config.server.dependencies.graphical_rt}`, {
+      maxAge: config.caching.staticMaxAge,
+    }),
+  );
+}
+
+app.use(
+  '/graphical',
+  express.static(path.resolve(__dirname, 'node_modules', 'kipr-scratch'), {
     maxAge: config.caching.staticMaxAge,
   }),
 );

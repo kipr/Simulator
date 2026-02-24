@@ -278,6 +278,7 @@ output = json.dumps({
   'cpython': f'{cpython_emscripten_build_dir}',
   'cpython_hash': hash_dir(cpython_dir),
   "libkipr_c_documentation": libkipr_c_documentation_json,
+  "libkipr_c_common_documentation": libkipr_c_common_documentation,
   'graphical_rt': f'{scratch_runtime_path}.js',
 })
 

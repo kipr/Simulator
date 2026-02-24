@@ -87,7 +87,6 @@ module.exports = {
       state: resolve(__dirname, '../../src/state'),
       '@i18n': resolve(__dirname, '../../src/util/i18n'),
       '@ivygate': resolve(__dirname, '../../node_modules/ivygate'),
-      'monaco-editor': resolve(__dirname, '../../node_modules/monaco-editor'),
     },
     symlinks: false,
     modules, //: [resolve(__dirname, '../../src'), 'node_modules']
@@ -108,8 +107,6 @@ module.exports = {
             loader: 'babel-loader',
             options: {
               plugins: ['@babel/plugin-transform-class-static-block'],
-              babelrc: false,
-              configFile: false,
             },
           },
         ],
@@ -187,6 +184,7 @@ module.exports = {
               optipng: { optimizationLevel: 7 },
               gifsicle: { interlaced: false },
               pngquant: { quality: [0.65, 0.9], speed: 4 },
+              // disable optimization while debugging
               disable: process.env.NODE_ENV === 'development',
             },
           },

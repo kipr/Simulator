@@ -8,8 +8,8 @@ import { FontAwesome } from '../FontAwesome';
 import { Button } from '../interface/Button';
 import { BarComponent } from '../interface/Widget';
 import { WarningCharm, ErrorCharm } from './';
-
-import { Ivygate, Message } from 'ivygate';
+import type { Ivygate as IvygateType } from 'ivygate/dist/src';
+import { Ivygate, Message } from 'ivygate/dist/src';
 import LanguageSelectCharm from './LanguageSelectCharm';
 import ProgrammingLanguage from '../../programming/compiler/ProgrammingLanguage';
 
@@ -37,7 +37,9 @@ export interface EditorPublicProps extends StyleProps, ThemeProps {
   messages?: Message[];
   autocomplete: boolean;
 
+
   onDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python' | 'graphical') => void;
+  onCommonDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python' | 'graphical') => void;
 
   mini?: boolean;
 }
@@ -104,11 +106,6 @@ export const createEditorBarComponents = ({
       let errors = 0;
       let warnings = 0;
 
-      editorBar.push(BarComponent.create(LanguageSelectCharm, {
-        theme,
-        language: target.language,
-        onLanguageChange: target.onLanguageChange,
-      }));
 
       if (target.language !== 'graphical') {
         editorBar.push(BarComponent.create(Button, {
@@ -209,15 +206,16 @@ class Editor extends React.PureComponent<Props, State> {
   };
 
   private openCommonDocumentation_ = () => {
-
+    console.log("Opening common documentation from Editor");
     const { word } = this.ivygate_.editor.getModel().getWordAtPosition(this.ivygate_.editor.getPosition());
     const language = DOCUMENTATION_LANGUAGE_MAPPING[this.props.language];
     if (!language) return;
-
-    // this.props.onCommonDocumentationGoToFuzzy?.(word, language);
+    this.props.onCommonDocumentationGoToFuzzy?.(word, language);
   };
 
+
   private openDocumentationAction_?: monaco.IDisposable;
+  private openCommonDocumentationAction_?: monaco.IDisposable;
   private setupCodeEditor_ = (editor: monaco.editor.IStandaloneCodeEditor) => {
     if (this.props.onDocumentationGoToFuzzy) this.openDocumentationAction_ = editor.addAction({
       id: 'open-documentation',
@@ -227,6 +225,16 @@ class Editor extends React.PureComponent<Props, State> {
       keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
       run: this.openDocumentation_,
     });
+    if (this.props.onCommonDocumentationGoToFuzzy) {
+      this.openCommonDocumentationAction_ = editor.addAction({
+        id: 'open-common-documentation',
+        label: 'Open Common Documentation',
+        contextMenuOrder: 1,
+        contextMenuGroupId: "operation",
+        keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
+        run: this.openCommonDocumentation_,
+      });
+    }
   };
 
   private disposeCodeEditor_ = (editor: monaco.editor.IStandaloneCodeEditor) => {
