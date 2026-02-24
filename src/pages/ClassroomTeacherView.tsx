@@ -27,6 +27,7 @@ import ClassroomLeaderboardsDialog from '../components/Dialog/ClassroomLeaderboa
 import Challenge from '../components/Challenge';
 import { AsyncChallenge } from '../state/State/Challenge';
 import { Challenges, ChallengeCompletions } from '../state/State';
+import { Project } from 'state/State/Project';
 
 export interface ClassroomTeacherViewRootRouteParams {
   classroomId: string;
@@ -85,6 +86,7 @@ interface ClassroomTeacherViewPrivateProps {
 
 interface ClassroomTeacherViewState {
   selectedStudentId: string;
+  selectedProject?: Project | SimClassroomProject;
   leaderboardClassroom: AsyncClassroom | null;
   users: Record<string, LeaderboardUser>;
   challenges: Record<string, Challenge>;
@@ -318,6 +320,9 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       selectedStudentId: student.userName
     });
   };
+  private onProjectSelected = (user: User, project: SimClassroomProject, fileName: string, activeLanguage: ProgrammingLanguage) => {
+    this.setState({ selectedProject: project  });
+  };
 
   private memoIvygateClassrooms: IvyGateClassroom[] | null = null;
   private memoSource: Props['classroomList'] | undefined;
@@ -371,7 +376,12 @@ class ClassroomTeacherView extends React.Component<Props, State> {
                 projectLanguage: `${score.currentLanguage}`,
                 type: challengeId,
                 code: score.code[`${score.currentLanguage}`] || '',
-                eventStates: score.eventStates,
+                eventStates: Object.fromEntries(
+                  Object.entries(score.eventStates ?? {}).map(([eventName, completed]) => [
+                    eventName,
+                    { eventName, completed },
+                  ])
+                ),
                 challenge: asyncChallenge,
                 challengeCompletion: asyncCompletion,
               };
@@ -417,6 +427,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
             propUsers={[]}
             propClassrooms={this.updateIvygateClassrooms()}
             propSettings={{ ...DEFAULT_SETTINGS, classroomView: true }}
+            onProjectSelected={this.onProjectSelected}
             onUserSelected={this.onSelectStudent}
             onAddNewClassroom={this.onAddNewClassroom_}
             onDeleteClassroom={this.onDeleteClassroom_}
