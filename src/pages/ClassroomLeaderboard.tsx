@@ -402,7 +402,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       this.setState({ shownClassroom: classroom });
     }
 
-    if (prevProps.currentClassroom !== this.props.currentClassroom) {
+    if (prevProps.currentClassroom !== this.props.currentClassroom && this.props.currentClassroom) {
       this.setState({ shownClassroom: { docId: this.props.currentClassroom.docId, classroom: this.props.currentClassroom } }, () => { void this.onLog(); });
 
     }
