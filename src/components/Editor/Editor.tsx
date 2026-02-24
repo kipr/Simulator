@@ -37,13 +37,10 @@ export interface EditorPublicProps extends StyleProps, ThemeProps {
   messages?: Message[];
   autocomplete: boolean;
 
-<<<<<<<< < Temporary merge branch 1
-onDocumentationGoToFuzzy ?: (query: string, language: 'c' | 'python' | 'scratch') => void;
-onCommonDocumentationGoToFuzzy ?: (query: string, language: 'c' | 'python' | 'scratch') => void;
-=========
-  onDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python' | 'graphical') => void;
 
->>>>>>>>> Temporary merge branch 2
+  onDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python' | 'graphical') => void;
+  onCommonDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python' | 'graphical') => void;
+
   mini?: boolean;
 }
 
@@ -218,6 +215,7 @@ class Editor extends React.PureComponent<Props, State> {
 
 
   private openDocumentationAction_?: monaco.IDisposable;
+  private openCommonDocumentationAction_?: monaco.IDisposable;
   private setupCodeEditor_ = (editor: monaco.editor.IStandaloneCodeEditor) => {
     if (this.props.onDocumentationGoToFuzzy) this.openDocumentationAction_ = editor.addAction({
       id: 'open-documentation',
