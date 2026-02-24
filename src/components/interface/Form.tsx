@@ -135,7 +135,7 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
           value={item.id in values ? values[item.id].text : (item.defaultValue || '')}
           autoFocus={index === 0}
           onChange={this.onValueChange_(item)}
-          onKeyDown={(event) => {
+          onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
             if (event.key === 'Enter' && this.isFinalizeAllowed_()) {
               this.onFinalizeClick_();
             }

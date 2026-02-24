@@ -32,9 +32,9 @@ import { Capabilities } from '../components/World';
 
 import { State as ReduxState } from '../state';
 import { ScenesAction, ChallengeCompletionsAction, AiAction } from '../state/reducer';
-import { DocumentationAction } from 'ivygate/dist/src/state/reducer/documentation';
-import { sendMessage, SendMessageParams } from '../util/ai';
 
+import { sendMessage, SendMessageParams } from '../util/ai';
+import { DocumentationAction } from 'ivygate/dist/src/state/reducer/documentation';
 import Scene, { AsyncScene } from '../state/State/Scene';
 import Script from '../state/State/Scene/Script';
 import Node from '../state/State/Scene/Node';
@@ -337,6 +337,7 @@ class Root extends React.Component<Props, State> {
 
   componentDidMount() {
     WorkerInstance.onStopped = this.onStopped_;
+    WorkerInstance.onStarted = this.onStarted_;
 
     const space = Space.getInstance();
     space.onSetNodeBatch = this.onSetNodeBatch_;
@@ -475,8 +476,17 @@ class Root extends React.Component<Props, State> {
     });
   };
 
+  private onStarted_ = () => {
+    this.setState({
+      simulatorState: SimulatorState.RUNNING
+    });
+  };
+
   private onActiveLanguageChange_ = (language: ProgrammingLanguage) => {
     this.props.onChallengeCompletionSetCurrentLanguage(language);
+
+    // Clear compilation messages when switching languages to prevent stale error highlights
+    this.setState({ messages: [] });
 
     this.scheduleSaveChallengeCompletion_();
   };
@@ -553,7 +563,8 @@ class Root extends React.Component<Props, State> {
     const { console, theme } = state;
 
     const language = this.currentLanguage;
-    const activeCode = this.code[language];
+    const storedCode = this.code[language];
+    const activeCode = storedCode !== undefined ? storedCode : ProgrammingLanguage.DEFAULT_CODE[language];
 
     switch (this.currentLanguage) {
       case 'c':
@@ -635,11 +646,28 @@ class Root extends React.Component<Props, State> {
         break;
       }
       case 'python': {
+        const nextConsole = StyledText.extend(console, StyledText.text({
+          text: LocalizedString.lookup(tr('Loading Python...\n'), locale),
+          style: STDOUT_STYLE(this.state.theme)
+        }));
+
+        this.setState({
+          simulatorState: SimulatorState.COMPILING,
+          console: nextConsole,
+        }, () => {
+          WorkerInstance.start({
+            language: 'python',
+            code: activeCode
+          });
+        });
+        break;
+      }
+      case 'graphical': {
         this.setState({
           simulatorState: SimulatorState.RUNNING,
         }, () => {
           WorkerInstance.start({
-            language: 'python',
+            language: 'graphical',
             code: activeCode
           });
         });
@@ -656,7 +684,8 @@ class Root extends React.Component<Props, State> {
 
   private onDownloadClick_ = () => {
     const language = this.currentLanguage;
-    const code = this.code[language];
+    const storedCode = this.code[language];
+    const code = storedCode !== undefined ? storedCode : ProgrammingLanguage.DEFAULT_CODE[language];
 
     const element = document.createElement('a');
     element.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(code)}`);
@@ -767,9 +796,10 @@ class Root extends React.Component<Props, State> {
       ? Async.loaded({ value: this.workingChallengeScene_ })
       : this.props.scene;
 
+    const tutorCode = this.code[this.currentLanguage];
     this.props.onAskTutorClick({
       content: "Please help me understand what's wrong.",
-      code: this.code[this.currentLanguage],
+      code: tutorCode !== undefined ? tutorCode : ProgrammingLanguage.DEFAULT_CODE[this.currentLanguage],
       language: this.currentLanguage,
       console: StyledText.toString(this.state.console),
       robot: this.props.robots[Dict.unique(Scene.robots(Async.latestValue(workingScene)))?.robotId ?? "demobot"],
@@ -806,9 +836,12 @@ class Root extends React.Component<Props, State> {
     }
 
     const language = this.currentLanguage;
-    const code = language ? this.code[language] : undefined;
+    // Get code for current language, falling back to default code if not defined
+    // (e.g., graphical may not be defined in challenges that only have C/C++/Python)
+    const storedCode = language ? this.code[language] : undefined;
+    const code = storedCode !== undefined ? storedCode : ProgrammingLanguage.DEFAULT_CODE[language];
 
-    if (!scene || scene.type === Async.Type.Unloaded || !language || !code) {
+    if (!scene || scene.type === Async.Type.Unloaded || !language || code === undefined) {
       return <Loading />;
     }
 

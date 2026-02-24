@@ -103,7 +103,7 @@ const SceneNameOverlay = styled('div', (props: ThemeProps) => ({
   zIndex: 0,
 }));
 
-const ConsoleWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }): any => {
+const ConsoleWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
@@ -128,7 +128,7 @@ const ConsoleWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolea
   }
 });
 
-const EditorWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }): any => {
+const EditorWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
@@ -153,7 +153,7 @@ const EditorWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean
   }
 });
 
-const InfoWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }): any => {
+const InfoWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
@@ -168,22 +168,22 @@ const InfoWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; 
   }
 });
 
-const ChallengeWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }): any => {
+const ChallengeWidget = styled(Widget, (props: WidgetProps) => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
       display: 'none'
-    } as any;
+    };
     default:
     case Size.Type.Partial: return {
       gridColumn: 3,
       gridRow: 2,
       ...transparentStyling(props.theme)
-    } as any;
+    };
   }
 });
 
-const WorldWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }): any => {
+const WorldWidget = styled(Widget, (props: WidgetProps & { $challenge?: boolean; }) => {
   const size = props.sizes[props.size];
   switch (size.type) {
     case Size.Type.Minimized: return {
@@ -252,7 +252,9 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
         challengeSize = Size.Type.Minimized;
         break;
       }
-      case Size.Type.Partial: {
+      case Size.Type.Partial:
+      case Size.Type.Miniature:
+      case Size.Type.Minimized: {
         if (infoSize === Size.Type.Minimized) infoSize = Size.Type.Partial;
         if (worldSize === Size.Type.Minimized) worldSize = Size.Type.Partial;
         if (consoleSize === Size.Type.Minimized) consoleSize = Size.Type.Miniature;
@@ -301,10 +303,12 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
         challengeSize = Size.Type.Minimized;
         break;
       }
-      case Size.Type.Partial: {
+      case Size.Type.Partial:
+      case Size.Type.Miniature:
+      case Size.Type.Minimized: {
         if (infoSize === Size.Type.Minimized) infoSize = Size.Type.Partial;
         if (worldSize === Size.Type.Minimized) worldSize = Size.Type.Partial;
-        if (editorSize === Size.Type.Minimized) editorSize = Size.Type.Partial;
+        if (editorSize === Size.Type.Minimized) editorSize = Size.Type.Miniature;
         if (challengeSize === Size.Type.Minimized) challengeSize = Size.Type.Partial;
         break;
       }
@@ -392,7 +396,6 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
       challengeState,
       worldCapabilities,
       onDocumentationGoToFuzzy,
-      onCommonDocumentationGoToFuzzy,
       locale,
     } = props;
 
@@ -412,7 +415,6 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
 
     let editorBarTarget: EditorBarTarget;
     let editor: JSX.Element;
-    window.console.log("Rendering Editor with code:", editorTarget.code);
     switch (editorTarget.type) {
       case LayoutEditorTarget.Type.Robot: {
         editorBarTarget = {
@@ -428,7 +430,6 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
           onMiniClick: editorTarget.onMiniClick,
         };
         editor = (
-
           <Editor
             theme={theme}
             ref={editorRef}
@@ -438,7 +439,6 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
             messages={messages}
             autocomplete={settings.editorAutoComplete}
             onDocumentationGoToFuzzy={onDocumentationGoToFuzzy}
-            onCommonDocumentationGoToFuzzy={props.onCommonDocumentationGoToFuzzy}
           />
         );
         break;
@@ -552,6 +552,7 @@ export class OverlayLayout extends React.PureComponent<Props & ReduxOverlayLayou
               onScriptRemove={onScriptRemove}
               onObjectAdd={onObjectAdd}
               capabilities={worldCapabilities}
+              settings={settings}
             />
           </WorldWidget>
         </Overlay>

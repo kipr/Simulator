@@ -201,6 +201,12 @@ class SettingsDialog extends React.PureComponent<Props, State> {
                   />
                 </SettingContainer>
                 {this.createBooleanSetting(
+                  LocalizedString.lookup(tr('Show Scripts'), locale),
+                  LocalizedString.lookup(tr('Show scripts in the World section'), locale),
+                  (settings: Settings) => settings.showScripts,
+                  (newValue: boolean) => ({ showScripts: newValue })
+                )}
+                {this.createBooleanSetting(
                   LocalizedString.lookup(tr('KISS IDE Theme'), locale),
                   LocalizedString.lookup(tr('Toggle IDE theme to dark mode'), locale),
                   (settings: Settings) => settings.ideEditorDarkMode,

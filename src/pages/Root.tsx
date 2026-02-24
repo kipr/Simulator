@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { styled } from 'styletron-react';
-import { Message } from 'ivygate';
+import { Message } from 'ivygate/dist/src';
 import * as uuid from 'uuid';
 import { OuterObjectPatch } from 'symmetry';
 
@@ -18,6 +18,7 @@ import ExceptionDialog from '../components/Challenge/ExceptionDialog';
 
 import { DEFAULT_SETTINGS, Settings } from '../components/constants/Settings';
 import { DARK, Theme } from '../components/constants/theme';
+import { DEFAULT_SCENE } from '../components/constants/defaultScene';
 
 import SettingsDialog from '../components/Dialog/SettingsDialog';
 import AboutDialog from '../components/Dialog/AboutDialog';
@@ -230,12 +231,12 @@ class Root extends React.Component<Props, State> {
 
     this.editorRef = React.createRef();
     this.overlayLayoutRef = React.createRef();
-    console.log("Initial state:", this.state);
     Space.getInstance().scene = Async.latestValue(props.scene) || Scene.EMPTY;
   }
 
   componentDidMount() {
     WorkerInstance.onStopped = this.onStopped_;
+    WorkerInstance.onStarted = this.onStarted_;
 
     const space = Space.getInstance();
     space.onSetNodeBatch = this.props.onSetNodeBatch;
@@ -292,21 +293,23 @@ class Root extends React.Component<Props, State> {
     });
   };
 
-  private onActiveLanguageChange_ = (language: ProgrammingLanguage) => {
-
-    console.log("Changing active language to:", language);
-    console.log("State before language change:", this.state);
+  private onStarted_ = () => {
     this.setState({
-      activeLanguage: language
+      simulatorState: SimulatorState.RUNNING
+    });
+  };
+
+  private onActiveLanguageChange_ = (language: ProgrammingLanguage) => {
+    this.setState({
+      activeLanguage: language,
+      messages: [],
     }, () => {
-      console.log("State after language change:", this.state);
+
       this.props.onDocumentationSetLanguage(language === 'python' ? 'python' : 'c');
     });
   };
 
   private onCodeChange_ = (code: string) => {
-
-    console.log("Code changed in editor:", code);
     const { activeLanguage, projectDetails } = this.state;
     this.setState({
       code: {
@@ -314,7 +317,6 @@ class Root extends React.Component<Props, State> {
         [activeLanguage]: code,
       }
     }, () => {
-      console.log("Updated code state:", this.state.code);
       window.localStorage.setItem(`code-${activeLanguage}`, code);
       this.props.onSetProjectCode(projectDetails ? projectDetails.project : null, projectDetails ? projectDetails.fileName : '', projectDetails ? projectDetails.fileType : 'src', code);
     });
@@ -447,8 +449,14 @@ class Root extends React.Component<Props, State> {
         break;
       }
       case 'python': {
+        const nextConsole = StyledText.extend(console, StyledText.text({
+          text: LocalizedString.lookup(tr('Loading Python...\n'), locale),
+          style: STDOUT_STYLE(this.state.theme)
+        }));
+
         this.setState({
-          simulatorState: SimulatorState.RUNNING,
+          simulatorState: SimulatorState.COMPILING,
+          console: nextConsole,
         }, () => {
           WorkerInstance.start({
             language: 'python',
@@ -517,7 +525,6 @@ class Root extends React.Component<Props, State> {
   };
 
   private onIndentCode_ = () => {
-    console.log("Indenting code in editor");
     if (this.editorRef.current) this.editorRef.current.ivygate.formatCode();
   };
 
@@ -643,7 +650,12 @@ class Root extends React.Component<Props, State> {
 
   private onDeleteRecordAccept_ = (selector: Selector) => () => {
     this.props.onDeleteRecord(selector);
-    this.props.navigate('/');
+    this.setState({
+      modal: Modal.NONE,
+    }, () => {
+      this.props.navigate(DEFAULT_SCENE);
+      location.reload();
+    });
   };
 
   private onSettingsSceneAccept_ = (scene: Scene) => {
@@ -860,8 +872,6 @@ class Root extends React.Component<Props, State> {
 
     const theme = DARK;
 
-    //window.console.log("code[activelanguage]:", state.code[state.activeLanguage]);
-
     const editorTarget: LayoutEditorTarget = {
       type: LayoutEditorTarget.Type.Robot,
       code: code[activeLanguage],
@@ -885,7 +895,6 @@ class Root extends React.Component<Props, State> {
       onResetCode: this.onResetCode_,
       editorRef: this.editorRef,
       sceneId,
-      layout,
       scene,
       onNodeAdd: this.props.onNodeAdd,
       onNodeChange: this.props.onNodeChange,
@@ -903,6 +912,7 @@ class Root extends React.Component<Props, State> {
       } : undefined,
       onDocumentationGoToFuzzy,
       onCommonDocumentationGoToFuzzy,
+      layout: Layout.Overlay
       onProjectAdd: this.onNewProject_,
       onSimFileSelected: this.onFileSelected_,
       onSimProjectSelected: this.props.onSelectProject,

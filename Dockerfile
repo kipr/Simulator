@@ -6,7 +6,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update && apt-get install -y wget git cmake build-essential python3 python3-distutils swig zlib1g-dev doxygen default-jre pkg-config
 
-RUN wget https://deb.nodesource.com/setup_18.x && chmod +x ./setup_18.x && ./setup_18.x
+RUN wget https://deb.nodesource.com/setup_20.x && chmod +x ./setup_20.x && ./setup_20.x
 RUN apt-get install -y nodejs
 
 RUN npm install -g yarn

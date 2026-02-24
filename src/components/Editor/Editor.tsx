@@ -37,8 +37,13 @@ export interface EditorPublicProps extends StyleProps, ThemeProps {
   messages?: Message[];
   autocomplete: boolean;
 
-  onDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python' | 'scratch') => void;
-  onCommonDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python' | 'scratch') => void;
+<<<<<<<< < Temporary merge branch 1
+onDocumentationGoToFuzzy ?: (query: string, language: 'c' | 'python' | 'scratch') => void;
+onCommonDocumentationGoToFuzzy ?: (query: string, language: 'c' | 'python' | 'scratch') => void;
+=========
+  onDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python' | 'graphical') => void;
+
+>>>>>>>>> Temporary merge branch 2
   mini?: boolean;
 }
 
@@ -182,10 +187,6 @@ export const createEditorBarComponents = ({
 
 export const IVYGATE_LANGUAGE_MAPPING: Dict<string> = {
   'ecmascript': 'javascript',
-  'python': 'customPython',
-  'c': 'customCpp',
-  'cpp': 'customCpp',
-  'plaintext': 'plaintext',
 };
 
 const DOCUMENTATION_LANGUAGE_MAPPING: { [key in ProgrammingLanguage | Script.Language]?: 'c' | 'python' | 'graphical' | undefined } = {
@@ -208,6 +209,7 @@ class Editor extends React.PureComponent<Props, State> {
   };
 
   private openCommonDocumentation_ = () => {
+    console.log("Opening common documentation from Editor");
     const { word } = this.ivygate_.editor.getModel().getWordAtPosition(this.ivygate_.editor.getPosition());
     const language = DOCUMENTATION_LANGUAGE_MAPPING[this.props.language];
     if (!language) return;
@@ -216,7 +218,6 @@ class Editor extends React.PureComponent<Props, State> {
 
 
   private openDocumentationAction_?: monaco.IDisposable;
-  private openCommonDocumentationAction_?: monaco.IDisposable;
   private setupCodeEditor_ = (editor: monaco.editor.IStandaloneCodeEditor) => {
     if (this.props.onDocumentationGoToFuzzy) this.openDocumentationAction_ = editor.addAction({
       id: 'open-documentation',
@@ -240,18 +241,17 @@ class Editor extends React.PureComponent<Props, State> {
 
   private disposeCodeEditor_ = (editor: monaco.editor.IStandaloneCodeEditor) => {
     if (this.openDocumentationAction_) this.openDocumentationAction_.dispose();
-    if (this.openCommonDocumentationAction_) this.openCommonDocumentationAction_.dispose();
   };
 
-  private ivygate_: IvygateType | null = null;
-  private bindIvygate_ = (ivygate: IvygateType) => {
+  private ivygate_: Ivygate;
+  private bindIvygate_ = (ivygate: Ivygate) => {
     if (this.ivygate_ === ivygate) return;
     const old = this.ivygate_;
     this.ivygate_ = ivygate;
     if (this.ivygate_ && this.ivygate_.editor) {
-      this.setupCodeEditor_(this.ivygate_.editor as unknown as monaco.editor.IStandaloneCodeEditor);
+      this.setupCodeEditor_(this.ivygate_.editor);
     } else {
-      this.disposeCodeEditor_(old.editor as unknown as monaco.editor.IStandaloneCodeEditor);
+      this.disposeCodeEditor_(old.editor);
     }
   };
 
@@ -287,7 +287,7 @@ class Editor extends React.PureComponent<Props, State> {
         <Ivygate
           ref={this.bindIvygate_}
           code={code}
-          language={IVYGATE_LANGUAGE_MAPPING[language]}
+          language={IVYGATE_LANGUAGE_MAPPING[language] || language}
           messages={messages}
           onCodeChange={onCodeChange}
           autocomplete={autocomplete}

@@ -101,6 +101,7 @@ module.exports = {
       // because we normally exclude node_modules from Babel handling.
       {
         test: /\.js$/,
+        include: /node_modules\/monaco-editor\/esm/,
         use: [
           {
             loader: 'babel-loader',
@@ -110,6 +111,7 @@ module.exports = {
           },
         ],
       },
+
       {
         test: /\.js$/,
         use: ['babel-loader', 'source-map-loader'],
@@ -178,7 +180,6 @@ module.exports = {
           {
             loader: 'image-webpack-loader',
             options: {
-              // optimization options
               mozjpeg: { progressive: true },
               optipng: { optimizationLevel: 7 },
               gifsicle: { interlaced: false },
@@ -189,7 +190,6 @@ module.exports = {
           },
         ],
       },
-
       {
         test: /\.(woff|woff2|eot|ttf)$/,
         loader: 'url-loader',
