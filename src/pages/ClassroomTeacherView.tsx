@@ -321,7 +321,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
     });
   };
   private onProjectSelected = (user: User, project: SimClassroomProject, fileName: string, activeLanguage: ProgrammingLanguage) => {
-    this.setState({ selectedProject: project as SimClassroomProject });
+    this.setState({ selectedProject: project  });
   };
 
   private memoIvygateClassrooms: IvyGateClassroom[] | null = null;
