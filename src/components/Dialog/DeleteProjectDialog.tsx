@@ -147,7 +147,7 @@ class DeleteProjectDialog extends React.PureComponent<Props> {
   constructor(props: Props) {
     super(props);
     this.state = {
-    }
+    };
   }
 
   render() {

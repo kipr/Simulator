@@ -34,4 +34,4 @@ export const createFileExplorerBarComponents = (
 
   return fileExplorerBar;
 
-}
+};

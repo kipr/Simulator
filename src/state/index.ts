@@ -87,8 +87,7 @@ export namespace State {
       case USER_COLLECTION: return {
         type: Record.Type.User,
         id: selector.id,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        value: state.users[selector.id]
+        value: state.users.users[selector.id]
       };
       case ASSIGNMENT_COLLECTION: return {
         type: Record.Type.Assignment,
@@ -98,7 +97,7 @@ export namespace State {
       case CLASSROOM_COLLECTION: return {
         type: Record.Type.Classroom,
         id: selector.id,
-        value: state.classrooms[selector.id]
+        value: state.classrooms.entities[selector.id]
       };
       case PROJECT_COLLECTION: return {
         type: Record.Type.Project,

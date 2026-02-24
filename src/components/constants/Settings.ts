@@ -16,5 +16,5 @@ export const DEFAULT_SETTINGS: Settings = {
   ideEditorDarkMode: true,
   classroomView: false,
   consoleLayout: "horizontal",
-  interfaceMode: false //false = simple, true = advanced
+  interfaceMode: false // false = simple, true = advanced
 };

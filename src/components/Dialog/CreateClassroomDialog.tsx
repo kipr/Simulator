@@ -71,22 +71,22 @@ export class CreateClassroomDialog extends React.PureComponent<Props, State> {
       userName: '',
       errorMessage: '',
       invitationCode: ''
-    }
+    };
   }
 
   componentDidMount() {
     this.generateInviteCode_();
   }
 
-  private generateInviteCode_ = async () => {
+  private generateInviteCode_() {
     const longCode = crypto.randomUUID();
     const invitationCode = longCode.slice(0, 5);
     this.setState({
       invitationCode: invitationCode
-    })
-  };
+    });
+  }
 
-  onFinalize_ = async (values: { [id: string]: string }) => {
+  onFinalize_ = (values: { [id: string]: string }) => {
     const classroomName = values.classroomName;
 
     const specialCharRegex = /[^a-zA-Z0-9 _-]/; // Removed space from allowed chars
@@ -152,7 +152,7 @@ export class CreateClassroomDialog extends React.PureComponent<Props, State> {
           />
         </Container>
 
-      </Dialog>)
+      </Dialog>);
 
 
   }

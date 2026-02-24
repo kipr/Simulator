@@ -122,7 +122,7 @@ app.use(
   createParentalConsentRouter(firebaseTokenManager, mailgunClient, config),
 );
 
-//Classrooms router
+// Classrooms router
 app.use('/api/classrooms', createClassroomsRouter(firebaseTokenManager));
 // Add AI router
 app.use('/api/ai', createAiRouter(firebaseTokenManager, config));

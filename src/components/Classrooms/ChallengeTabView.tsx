@@ -160,12 +160,12 @@ class ChallengeTabView extends React.Component<Props, State> {
 
   }
 
-  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ChallengeTabViewState>, snapshot?: any): void {
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ChallengeTabViewState>): void {
     if (prevState.currentClassroom !== this.state.currentClassroom && this.state.currentClassroom) {
       const currentUser = auth.currentUser.uid;
-      this.props.navigate(`/classrooms/${currentUser}/studentView/${this.state.currentClassroom.classroomId}`)
+      this.props.navigate(`/classrooms/${currentUser}/studentView/${this.state.currentClassroom.classroomId}`);
 
-    };
+    }
   }
 
   componentWillUnmount() {
@@ -178,7 +178,7 @@ class ChallengeTabView extends React.Component<Props, State> {
   private onSectionSelect_ = (section: "Default JBC Challenges" | "Limited Challenges") => {
     this.setState({
       selectedSection: section,
-    })
+    });
   };
 
 
@@ -206,8 +206,8 @@ class ChallengeTabView extends React.Component<Props, State> {
         <SectionsColumn theme={theme}>
           <ClassroomLimitedChallenges theme={theme} />
         </SectionsColumn>
-      )
-    }
+      );
+    };
 
 
     return (
@@ -237,7 +237,7 @@ export default connect(
     return ({
       classroomList: state.classrooms.entities,
       currentStudentClassroom: state.classrooms.currentStudentClassroom,
-    })
+    });
 
   },
   (dispatch) => ({

@@ -117,33 +117,32 @@ export class ClassroomLeaderboardsDialog extends React.PureComponent<Props, Stat
       classroomOptions: this.CLASSROOM_OPTIONS,
       showLeaderboard: false,
 
-    }
+    };
   }
 
   private onSelectClassroomLeaderboard_ = (index: number, option: ComboBox.Option) => {
-    this.setState({ selectedClassroom: option.data as AsyncClassroom }, () => {
-    });
+    this.setState({ selectedClassroom: option.data as AsyncClassroom });
 
-  }
+  };
 
   private onConfirmClick_ = () => {
     const { theme } = this.props;
     this.setState({ showLeaderboard: true });
     this.props.onCloseClassroomLeaderboardDialog((this.state.selectedClassroom.type === Async.Type.Loaded) ? this.state.selectedClassroom.value.classroomId : '');
-  }
+  };
 
   CLASSROOM_OPTIONS: ComboBox.Option[] = (() => {
     const ret: ComboBox.Option[] = [];
     const classroomsArray = Object.values(this.props.classrooms);
     for (const classroom of classroomsArray) {
-      const classroomName = LocalizedString.lookup(tr(`${classroom.value.classroomId}`), this.props.locale);
+      const classroomName = LocalizedString.lookup(tr(`${Async.latestValue(classroom).classroomId}`), this.props.locale);
       if (classroomName) {
         ret.push({
           data: classroom,
           text: classroomName
         });
       } else {
-        console.error(`Classroom ${classroom} has an invalid localized name.`);
+        console.error(`Classroom ${Async.latestValue(classroom).classroomId} has an invalid localized name.`);
       }
     }
     return ret;

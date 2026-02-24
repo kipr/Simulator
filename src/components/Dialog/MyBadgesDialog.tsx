@@ -108,7 +108,7 @@ export class MyBadgesDialog extends React.PureComponent<Props, State> {
       errorMessage: '',
       interfaceMode: InterfaceMode.SIMPLE,
 
-    }
+    };
   }
 
 
@@ -130,8 +130,8 @@ export class MyBadgesDialog extends React.PureComponent<Props, State> {
                 const currentChallenge = Async.latestValue(challenge);
                 return (
                   <BadgeContainer theme={theme} key={LocalizedString.lookup(currentChallenge.name, locale)}>
-                    {currentUserScores.find(score => LocalizedString.lookup(score.name, locale) === currentChallenge.sceneId)?.completed ?
-                      <BadgeIcon src={CHALLENGE_BADGES[index] as string} theme={theme} /> : currentUserScores.find(score => LocalizedString.lookup(score.name, locale) === currentChallenge.sceneId) ? <BadgeIconGrey src={CHALLENGE_BADGES[index] as string} theme={theme} /> : <BadgeIcon src={DOTTED_CHALLENGE_BADGES[index] as string} theme={theme} />}
+                    {currentUserScores.find(score => LocalizedString.lookup(score.name, locale) === currentChallenge.sceneId)?.completed
+                      ? <BadgeIcon src={CHALLENGE_BADGES[index] as string} theme={theme} /> : currentUserScores.find(score => LocalizedString.lookup(score.name, locale) === currentChallenge.sceneId) ? <BadgeIconGrey src={CHALLENGE_BADGES[index] as string} theme={theme} /> : <BadgeIcon src={DOTTED_CHALLENGE_BADGES[index] as string} theme={theme} />}
                     {/* <BadgeIcon src={CHALLENGE_BADGES[index] as string} theme={theme} /> */}
                   </BadgeContainer>
                 );

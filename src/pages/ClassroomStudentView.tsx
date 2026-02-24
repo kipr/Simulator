@@ -8,9 +8,8 @@ import { State as ReduxState } from '../state';
 import { withNavigate, WithNavigateProps } from '../util/withNavigate';
 import { AsyncClassroom, Classroom } from '../state/State/Classroom';
 import Dict from '../util/objectOps/Dict';
-import { addStudentToClassroomAsyncRaw, ClassroomsAction, listChallengesByStudentId } from 'state/reducer/classrooms';
+import { addStudentToClassroomAsyncRaw, ClassroomsAction, studentInClassroom } from 'state/reducer/classrooms';
 import { auth } from '../firebase/firebase';
-import { studentInClassroom } from 'state/reducer/classrooms';
 import JoinClassDialog from '../components/Dialog/JoinClassDialog';
 import LeaveClassDialog from '../components/Dialog/LeaveClassDialog';
 import ProgrammingLanguage from '../programming/compiler/ProgrammingLanguage';
@@ -245,7 +244,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
   }
 
   async componentDidMount() {
-    const currentUserId = auth.currentUser?.uid || ''
+    const currentUserId = auth.currentUser?.uid || '';
     const isInClassroom = await studentInClassroom(currentUserId);
     const currentUser = auth.currentUser.uid;
 
@@ -255,7 +254,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
         currentClassroom: isInClassroom.classroom,
         currentStudentDisplayName: isInClassroom.classroom.studentIds[currentUserId].displayName
       }, () => {
-        this.props.navigate(`/classrooms/${currentUser}/studentView/${isInClassroom.classroom.classroomId}`)
+        this.props.navigate(`/classrooms/${currentUser}/studentView/${isInClassroom.classroom.classroomId}`);
         this.props.onJoinClassroom(isInClassroom.classroom);
       });
 
@@ -264,12 +263,12 @@ class ClassroomStudentView extends React.Component<Props, State> {
 
   }
 
-  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ClassroomStudentViewState>, snapshot?: any): void {
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ClassroomStudentViewState>): void {
     if (prevState.currentClassroom !== this.state.currentClassroom && this.state.currentClassroom) {
       const currentUser = auth.currentUser.uid;
-      this.props.navigate(`/classrooms/${currentUser}/studentView/${this.state.currentClassroom.classroomId}`)
+      this.props.navigate(`/classrooms/${currentUser}/studentView/${this.state.currentClassroom.classroomId}`);
 
-    };
+    }
   }
 
   componentWillUnmount() {
@@ -280,11 +279,11 @@ class ClassroomStudentView extends React.Component<Props, State> {
 
   private onJoinClassroomDialog_ = () => {
     this.setState({ showJoinClassroomDialog: true });
-  }
+  };
 
   private onLeaveClassroomDialog_ = () => {
     this.setState({ showLeaveClassroomDialog: true });
-  }
+  };
 
   private onCloseJoinClassroomDialog_ = async (returnedClassroom: Classroom, inviteCode: string, displayName: string) => {
     const classroom = await addStudentToClassroomAsyncRaw(
@@ -301,25 +300,25 @@ class ClassroomStudentView extends React.Component<Props, State> {
     }
 
 
-  }
+  };
 
-  private onCloseLeaveClassroomDialog_ = async () => {
+  private onCloseLeaveClassroomDialog_ = () => {
     const { currentClassroom } = this.state;
-    await this.props.onRemoveStudentFromClassroom(
+    this.props.onRemoveStudentFromClassroom(
       auth.currentUser?.uid || '',
       currentClassroom
     );
     this.props.navigate(`/classrooms/${auth.currentUser?.uid || ''}/studentView/`);
     this.setState({ showLeaveClassroomDialog: false, isStudentInClassroom: false, currentClassroom: null, currentStudentDisplayName: undefined });
-  }
+  };
 
   private onExitJoinClassroomDialog_ = () => {
     this.setState({ showJoinClassroomDialog: false });
-  }
+  };
 
   private onExitLeaveClassroomDialog_ = () => {
     this.setState({ showLeaveClassroomDialog: false });
-  }
+  };
   private renderClassroomLeaderboard = () => {
     const { theme } = this.props;
     const { currentClassroom } = this.state;
@@ -351,9 +350,9 @@ class ClassroomStudentView extends React.Component<Props, State> {
           </ClassroomInfoContainer>
         )}
       </MyClassroomContainer>
-    )
+    );
 
-  }
+  };
 
   private onExtraClick_ = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -448,10 +447,10 @@ export default connect(
     currentStudentClassroom: state.classrooms.currentStudentClassroom,
   }),
   (dispatch) => ({
-    onStudentAdded: (inviteCode, studentId, displayName) => {
+    onStudentAdded: (inviteCode: string, studentId: string, displayName: string) => {
       dispatch(ClassroomsAction.studentAdded({ classroomId: inviteCode, studentId, displayName }));
     },
-    onJoinClassroom: (classroom) => {
+    onJoinClassroom: (classroom: Classroom) => {
       dispatch(ClassroomsAction.joinClassroom({ classroom }));
     },
 

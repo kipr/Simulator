@@ -1,124 +1,122 @@
-import store from "..";
-import { AsyncClassroom, ClassroomBrief } from "../State/Classroom";
-import Async from "../State/Async";
-import Dict from "../../util/objectOps/Dict";
-import Selector from "../../db/Selector";
-import db from "../../db";
-import { errorToAsyncError } from "./util";
-import construct from "../../util/redux/construct";
-import { Classroom, } from "../State/Classroom";
-import { auth } from "../../firebase/firebase";
-import ChallengeCompletion from "state/State/ChallengeCompletion";
+import store from '..';
+import { AsyncClassroom, ClassroomBrief, Classroom } from '../State/Classroom';
+import Async from '../State/Async';
+import Dict from '../../util/objectOps/Dict';
+import Selector from '../../db/Selector';
+import db from '../../db';
+import { errorToAsyncError } from './util';
+import construct from '../../util/redux/construct';
+import ChallengeCompletion from 'state/State/ChallengeCompletion';
 
 export namespace ClassroomsAction {
 
-  export const setClassroomInternal = construct<SetClassroomInternal>("classrooms/set-classroom-internal");
+  export const setClassroomInternal = construct<SetClassroomInternal>('classrooms/set-classroom-internal');
 
   export interface SetClassroomInternal {
-    type: "classrooms/set-classroom-internal";
+    type: 'classrooms/set-classroom-internal';
     classroomId: string;
     classroom: AsyncClassroom;
   }
 
   export interface LoadClassroom {
-    type: "classrooms/load-classroom";
+    type: 'classrooms/load-classroom';
     classroomId: string;
   }
 
-  export const loadClassroom = construct<LoadClassroom>("classrooms/load-classroom");
+  export const loadClassroom = construct<LoadClassroom>('classrooms/load-classroom');
 
   export interface ShowClassroomLeaderboard {
-    type: "classrooms/show-classroom-leaderboard";
+    type: 'classrooms/show-classroom-leaderboard';
     classroom: AsyncClassroom;
   }
-  export const showClassroomLeaderboard = construct<ShowClassroomLeaderboard>("classrooms/show-classroom-leaderboard");
+  export const showClassroomLeaderboard = construct<ShowClassroomLeaderboard>('classrooms/show-classroom-leaderboard');
 
   export interface SetClassroom {
-    type: "classrooms/set-classroom";
+    type: 'classrooms/set-classroom';
     classroomId: string;
     classroom: AsyncClassroom;
   }
 
-  export const setClassroom = construct<SetClassroom>("classrooms/set-classroom");
+  export const setClassroom = construct<SetClassroom>('classrooms/set-classroom');
 
   export interface SetClassrooms {
-    type: "classrooms/set-classrooms";
+    type: 'classrooms/set-classrooms';
     classrooms: Dict<AsyncClassroom>;
   }
 
-  export const setClassrooms = construct<SetClassrooms>("classrooms/set-classrooms");
+  export const setClassrooms = construct<SetClassrooms>('classrooms/set-classrooms');
 
   export interface CreateClassroom {
-    type: "classrooms/create-classroom";
+    type: 'classrooms/create-classroom';
     classroom: Classroom;
   }
 
-  export const createClassroom = construct<CreateClassroom>("classrooms/create-classroom");
+  export const createClassroom = construct<CreateClassroom>('classrooms/create-classroom');
 
   export interface ListOwnedClassrooms {
-    type: "classrooms/list-owned-classrooms";
+    type: 'classrooms/list-owned-classrooms';
 
   }
 
-  export const deleteClassroom = construct<DeleteClassroom>("classrooms/delete-classroom");
+  export const deleteClassroom = construct<DeleteClassroom>('classrooms/delete-classroom');
   export interface DeleteClassroom {
-    type: "classrooms/delete-classroom";
+    type: 'classrooms/delete-classroom';
     classroomId: string;
     classroom: Classroom;
   }
 
-  export const listOwnedClassrooms = construct<ListOwnedClassrooms>("classrooms/list-owned-classrooms");
+  export const listOwnedClassrooms = construct<ListOwnedClassrooms>('classrooms/list-owned-classrooms');
 
   export interface ListChallengesByStudentId {
-    type: "classrooms/list-challenges-by-student-id";
+    type: 'classrooms/list-challenges-by-student-id';
     studentId: string;
   }
 
-  export const listChallengesByStudentId = construct<ListChallengesByStudentId>("classrooms/list-challenges-by-student-id");
+  export const listChallengesByStudentId = construct<ListChallengesByStudentId>('classrooms/list-challenges-by-student-id');
 
   export interface StudentAdded {
-    type: "classrooms/student-added";
+    type: 'classrooms/student-added';
     classroomId: string;
     studentId: string;
     displayName: string;
   }
 
-  export const studentAdded = construct<StudentAdded>("classrooms/student-added");
+  export const studentAdded = construct<StudentAdded>('classrooms/student-added');
 
   export interface JoinClassroom {
-    type: "classrooms/join-classroom";
+    type: 'classrooms/join-classroom';
     classroom: Classroom;
   }
 
-  export const joinClassroom = construct<JoinClassroom>("classrooms/join-classroom");
+  export const joinClassroom = construct<JoinClassroom>('classrooms/join-classroom');
   export interface RemoveStudentFromClassroom {
-    type: "classrooms/remove-student-from-classroom";
+    type: 'classrooms/remove-student-from-classroom';
     studentId: string;
     currentClassroom: Classroom;
 
   }
 
-  export const removeStudentFromClassroom = construct<RemoveStudentFromClassroom>("classrooms/remove-student-from-classroom");
+  export const removeStudentFromClassroom = construct<RemoveStudentFromClassroom>('classrooms/remove-student-from-classroom');
 
   export interface StudentInClassroom {
-    type: "classrooms/student-in-classroom";
+    type: 'classrooms/student-in-classroom';
     studentId: string;
   }
 
-  export const studentInClassroom = construct<StudentInClassroom>("classrooms/student-in-classroom");
+  export const studentInClassroom = construct<StudentInClassroom>('classrooms/student-in-classroom');
 
   export interface FindClassroomByInviteCode {
-    type: "classrooms/find-classroom-by-invite-code";
+    type: 'classrooms/find-classroom-by-invite-code';
     inviteCode: string;
   }
 
-  export const findClassroomByInviteCode = construct<FindClassroomByInviteCode>("classrooms/find-classroom-by-invite-code");
+  export const findClassroomByInviteCode = construct<FindClassroomByInviteCode>('classrooms/find-classroom-by-invite-code');
 
   export interface ClearSelectedClassroom {
-    type: "classrooms/clear-selected-classroom";
+    type: 'classrooms/clear-selected-classroom';
   }
 
-  export const clearSelectedClassroom = construct<ClearSelectedClassroom>("classrooms/clear-selected-classroom");
+  export const clearSelectedClassroom = construct<ClearSelectedClassroom>('classrooms/clear-selected-classroom');
 
 }
 
@@ -170,26 +168,34 @@ const generateUniqueClassroomId = async (): Promise<string> => {
 
   while (exists) {
     const uuid = crypto.randomUUID();
-    shortenedId = uuid.replace(/-/g, "").slice(-7);
+    shortenedId = uuid.replace(/-/g, '').slice(-7);
 
     try {
       const classroom = await db.get<Classroom>(Selector.classroom(shortenedId));
       exists = !!classroom; // if we got data, it exists
-    } catch (err: any) {
-      if (err.code === 404 || err.message?.includes("Not found")) {
-        exists = false; // 404 means safe to use this ID
-      } else {
-        console.error("Unexpected DB error while checking ID:", err);
-        throw err; // rethrow other errors
+    } catch (err: unknown) {
+      if (typeof err === "object" && err !== null) {
+        const e = err as { code?: unknown; message?: unknown };
+
+        const code = typeof e.code === "number" ? e.code : undefined;
+        const message = typeof e.message === "string" ? e.message : undefined;
+
+        if (code === 404 || (message?.includes("Not found") ?? false)) {
+          exists = false;
+          continue;
+        }
       }
+
+      console.error("Unexpected DB error while checking ID:", err);
+      throw err;
     }
   }
 
   return shortenedId;
-}
+};
 
 
-//Create classroom in database and update store
+// Create classroom in database and update store
 const create = async (next: Async.Creating<Classroom>) => {
   const generatedId = await generateUniqueClassroomId();
   try {
@@ -209,11 +215,11 @@ const create = async (next: Async.Creating<Classroom>) => {
     );
 
   } catch (error) {
-    console.error("Error creating classroom:", error);
+    console.error('Error creating classroom:', error);
   }
 };
 
-//Delete classroom from database and update store
+// Delete classroom from database and update store
 export const deleteClassroom = async (classroomId: string, next: Async.Deleting<ClassroomBrief, Classroom>) => {
   try {
     await db.delete(Selector.classroom(classroomId));
@@ -226,15 +232,15 @@ export const deleteClassroom = async (classroomId: string, next: Async.Deleting<
     );
 
   } catch (error) {
-    console.error("Error deleting classroom:", error);
+    console.error('Error deleting classroom:', error);
   }
 };
 
 
-//List classrooms owned by logged-in user and update store
+// List classrooms owned by logged-in user and update store
 const listOwned = async () => {
   try {
-    const result = await db.list<Classroom>("classrooms");
+    const result = await db.list<Classroom>('classrooms');
 
     const classrooms: Dict<AsyncClassroom> = {};
     Object.entries(result).forEach(([id, classroom]) => {
@@ -243,48 +249,48 @@ const listOwned = async () => {
     store.dispatch(ClassroomsAction.setClassrooms({ classrooms }));
 
   } catch (error) {
-    console.error("Failed to list classrooms", error);
+    console.error('Failed to list classrooms', error);
   }
 };
 
 
-//List challenge completions for a specific student ID
+// List challenge completions for a specific student ID
 export const listChallengesByStudentId = async (studentId: string) => {
   try {
-    const result = await db.list<ChallengeCompletion>("classrooms/" + studentId + "/challenges");
+    const result = await db.list<ChallengeCompletion>(`classrooms/${studentId}/challenges`);
     return result;
   } catch (error) {
-    console.error("Failed to list challenge completions", error);
+    console.error('Failed to list challenge completions', error);
     return {};
   }
 
 };
-type ChallengeEntry = { id: string; data: any };
+type ChallengeEntry = { id: string; data: Record<string, unknown> };
 
-//Get all challenges by all students in a classroom
+// Get all challenges by all students in a classroom
 export const getAllStudentsClassroomChallenges = async (classroom: Classroom) => {
   try {
     const params = new URLSearchParams();
-    let mappedStudentChallenge = {};
+    const mappedStudentChallenge = {};
     for (const student of Object.values(classroom.studentIds)) {
-      const normalizedId = typeof student.id === "string" ? student.id : student.id["en-US"];
-      params.append("studentId", normalizedId);
+      const normalizedId = typeof student.id === 'string' ? student.id : student.id['en-US'];
+      params.append('studentId', normalizedId);
     }
-    const result = await db.list("classrooms/challenges?" + params.toString());
+    const result = await db.list(`classrooms/challenges?${params.toString()}`);
 
     for (const student of Object.values(classroom.studentIds)) {
       const studentId =
-        typeof student.id === "string" ? student.id : student.id["en-US"];
+        typeof student.id === 'string' ? student.id : student.id['en-US'];
 
       const displayName =
-        typeof student.displayName === "string"
+        typeof student.displayName === 'string'
           ? student.displayName
-          : student.displayName["en-US"];
+          : student.displayName['en-US'];
 
       const entries = result[studentId];
       if (!entries) continue;
 
-      const mappedByEntryId: Record<string, any> = {};
+      const mappedByEntryId: Record<string, unknown> = {};
 
       for (const challenge of entries as ChallengeEntry[]) {
         mappedByEntryId[challenge.id] = challenge.data;
@@ -294,15 +300,14 @@ export const getAllStudentsClassroomChallenges = async (classroom: Classroom) =>
 
     return mappedStudentChallenge;
 
-  }
-  catch (error) {
-    console.error("Failed to get all challenges by all students in classroom");
+  } catch (error) {
+    console.error('Failed to get all challenges by all students in classroom');
     return {};
   }
-}
+};
 
 
-//Add student to classroom in database and update store (internal)
+// Add student to classroom in database and update store (internal)
 export async function addStudentToClassroomAsyncRaw(
   returnedClassroom: Classroom,
   inviteCode: string,
@@ -327,7 +332,7 @@ export async function addStudentToClassroomAsyncRaw(
   };
 
   await db.set(
-    { collection: "classrooms", id: docId },
+    { collection: 'classrooms', id: docId },
     { ...foundClassroom, studentIds: updatedStudentIds },
     true
   );
@@ -335,13 +340,13 @@ export async function addStudentToClassroomAsyncRaw(
   return { ...foundClassroom, studentIds: updatedStudentIds };
 }
 
-//Add student to classroom in database and update store (action)
+// Add student to classroom in database and update store (action)
 export const studentAdded = (
   classroomId: string,
   studentId: string,
-  studentEntry: any
+  studentEntry: Record<string, unknown>
 ) => ({
-  type: "classrooms/student-added",
+  type: 'classrooms/student-added',
   classroomId,
   studentId,
   studentEntry
@@ -359,14 +364,14 @@ export const removeStudentFromClassroom = async (
     const docId = currentClassroom.docId;
 
     await db.set(
-      { collection: "classrooms", id: docId },
+      { collection: 'classrooms', id: docId },
       { ...currentClassroom, studentIds: updatedStudentIds },
       false
     );
 
     store.dispatch(
       ClassroomsAction.setClassroom({
-        classroomId: docId!,
+        classroomId: docId,
         classroom: Async.loaded({
           brief: {},
           value: { ...currentClassroom, studentIds: updatedStudentIds }
@@ -375,7 +380,7 @@ export const removeStudentFromClassroom = async (
     );
   }
 
-}
+};
 
 // Check if student is in any classroom
 export const studentInClassroom = async (
@@ -383,10 +388,10 @@ export const studentInClassroom = async (
 ): Promise<{ inClassroom: boolean; classroom: Classroom | null }> => {
   try {
     const result = await db.get<Record<string, Classroom>>(
-      Selector.classroom("myClassroom")
+      Selector.classroom('myClassroom')
     );
     const normalized =
-      typeof studentId === "string" ? studentId : studentId["en-US"];
+      typeof studentId === 'string' ? studentId : studentId['en-US'];
 
     // Extract the real Classroom object
     const classroom = result ? Object.values(result)[0] : null;
@@ -399,7 +404,7 @@ export const studentInClassroom = async (
 
     return { inClassroom: inClass, classroom: inClass ? classroom : null };
   } catch (error) {
-    console.error("Error checking if student has classroom:", error);
+    console.error('Error checking if student has classroom:', error);
     return { inClassroom: false, classroom: null };
   }
 };
@@ -425,16 +430,16 @@ export const findClassroomByInviteCode = async (inviteCode: string): Promise<Cla
     const result = await db.list<Classroom>(`classrooms?inviteCode=${inviteCode}`);
 
     for (const classroom of Object.values(result)) {
-      const classroomCode = typeof classroom.code === "string" ? classroom.code : classroom.code["en-US"];
+      const classroomCode = typeof classroom.code === 'string' ? classroom.code : classroom.code['en-US'];
       if (
-        classroomCode.localeCompare(inviteCode, undefined, { sensitivity: "base" }) === 0
+        classroomCode.localeCompare(inviteCode, undefined, { sensitivity: 'base' }) === 0
       ) {
         return classroom;
       }
     }
     return null;
   } catch (error) {
-    console.error("Error finding classroom by invite code:", error);
+    console.error('Error finding classroom by invite code:', error);
     return null;
   }
 };
@@ -451,7 +456,7 @@ export const reduceClassrooms = (
   action: ClassroomsAction
 ): ClassroomsState => {
   switch (action.type) {
-    case "classrooms/load-classroom": {
+    case 'classrooms/load-classroom': {
       void load(action.classroomId, state.entities[action.classroomId]);
       return {
         ...state,
@@ -464,19 +469,19 @@ export const reduceClassrooms = (
       };
     }
 
-    case "classrooms/show-classroom-leaderboard": {
+    case 'classrooms/show-classroom-leaderboard': {
       return {
         ...state,
         selectedClassroom: action.classroom,
-      }
+      };
     }
-    case "classrooms/create-classroom": {
+    case 'classrooms/create-classroom': {
       const creating = Async.creating({ value: action.classroom });
       void create(creating);
       return state;
     }
 
-    case "classrooms/delete-classroom": {
+    case 'classrooms/delete-classroom': {
       const { classroomId } = action;
       const entities = { ...state.entities };
       delete entities[classroomId];
@@ -487,27 +492,27 @@ export const reduceClassrooms = (
     }
 
 
-    case "classrooms/set-classroom": {
+    case 'classrooms/set-classroom': {
       return {
         ...state,
         [action.classroomId]: action.classroom,
       };
     }
 
-    case "classrooms/set-classrooms": {
+    case 'classrooms/set-classrooms': {
       const merged = { ...state.entities, ...action.classrooms, };
       return { ...state, entities: merged, };
     }
 
-    case "classrooms/list-owned-classrooms": {
+    case 'classrooms/list-owned-classrooms': {
       void listOwned();
       return state;
     }
-    case "classrooms/list-challenges-by-student-id": {
+    case 'classrooms/list-challenges-by-student-id': {
       void listChallengesByStudentId(action.studentId);
       return state;
     }
-    case "classrooms/student-added": {
+    case 'classrooms/student-added': {
       const asyncClassroom = state.entities[action.classroomId];
       if (!asyncClassroom || asyncClassroom.type !== Async.Type.Loaded) return state;
 
@@ -533,7 +538,7 @@ export const reduceClassrooms = (
       };
     }
 
-    case "classrooms/join-classroom": {
+    case 'classrooms/join-classroom': {
       return {
         ...state,
         currentStudentClassroom: Async.loaded({
@@ -544,7 +549,7 @@ export const reduceClassrooms = (
       };
 
     }
-    case "classrooms/remove-student-from-classroom": {
+    case 'classrooms/remove-student-from-classroom': {
       void removeStudentFromClassroom(action.studentId, action.currentClassroom);
 
       return {
@@ -553,7 +558,7 @@ export const reduceClassrooms = (
       };
     }
 
-    case "classrooms/student-in-classroom": {
+    case 'classrooms/student-in-classroom': {
 
       void studentInClassroom(action.studentId);
       return state;
@@ -561,19 +566,19 @@ export const reduceClassrooms = (
 
 
 
-    case "classrooms/find-classroom-by-invite-code": {
+    case 'classrooms/find-classroom-by-invite-code': {
       void findClassroomByInviteCode(action.inviteCode);
       return state;
     }
 
-    case "classrooms/clear-selected-classroom": {
+    case 'classrooms/clear-selected-classroom': {
       return {
         ...state,
         selectedClassroom: null
       };
     }
 
-    case "classrooms/set-classroom-internal": {
+    case 'classrooms/set-classroom-internal': {
       const { classroomId, classroom } = action;
       return {
         ...state,

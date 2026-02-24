@@ -69,12 +69,12 @@ export interface LayoutProps extends StyleProps, ThemeProps {
   onDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python') => void;
   onCommonDocumentationGoToFuzzy?: (query: string, language: 'c' | 'python') => void;
 
-  onProjectAdd: () => void;
-  onSimFileSelected: (project: Project, fileName: string, fileType: string) => void;
-  onSimProjectSelected: (project: Project) => void;
-  onAddNewSimFile: (project: Project, fileType: string) => void;
-  onDeleteSimProject: (project: Project) => void;
-  fileSelected?: boolean;
+  // onProjectAdd: () => void;
+  // onSimFileSelected: (project: Project, fileName: string, fileType: string) => void;
+  // onSimProjectSelected: (project: Project) => void;
+  // onAddNewSimFile: (project: Project, fileType: string) => void;
+  // onDeleteSimProject: (project: Project) => void;
+  // fileSelected?: boolean;
 }
 
 export enum Layout {

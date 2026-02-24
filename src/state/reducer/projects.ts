@@ -83,25 +83,24 @@ export type ProjectsAction =
 
 const load = async () => {
   try {
-    const projectEntries = await db.get<{}>(Selector.project(''));
+    const projectEntries = await db.get<Record<string, unknown>>(Selector.project(''));
     console.log("Loaded projects from db:", projectEntries);
     console.log("Projects: ", Object.values(projectEntries));
     const asyncProjects: Dict<AsyncProject> = {};
-    Object.values(projectEntries).forEach((projectData: any) => {
+    Object.values(projectEntries).forEach((projectData: Project) => {
       asyncProjects[projectData.projectName] = Async.loaded({
         brief: {},
-        value: projectData as Project
+        value: projectData
       });
     });
     console.log("Dispatching loaded projects:", asyncProjects);
     store.dispatch(ProjectsAction.setProjects({
       projects: asyncProjects
     }));
-  }
-  catch (error) {
+  } catch (error) {
     console.log("Error loading projects:", error);
   }
-}
+};
 
 const createProject = async (projectName: string, next: Async.Creating<Project>) => {
   try {
@@ -118,11 +117,10 @@ const createProject = async (projectName: string, next: Async.Creating<Project>)
       }
     }));
 
-  }
-  catch (error) {
+  } catch (error) {
     console.log("Error creating project:", error);
   }
-}
+};
 
 
 const createFile = async (project: Project, fileName: string, fileType: 'src' | 'include' | 'userData') => {
@@ -149,11 +147,10 @@ const createFile = async (project: Project, fileName: string, fileType: 'src' | 
         [project.projectName]: asyncProject
       }
     }));
-  }
-  catch (error) {
+  } catch (error) {
     console.log("Error creating new file:", error);
   }
-}
+};
 
 export const deleteProject = async (project: Project) => {
   try {
@@ -162,11 +159,10 @@ export const deleteProject = async (project: Project) => {
     store.dispatch(ProjectsAction.deleteProject({
       project
     }));
-  }
-  catch (error) {
+  } catch (error) {
     console.log("Error deleting project:", error);
   }
-}
+};
 const save = async (project: Project, fileName: string, fileType: 'src' | 'include' | 'userData', fileContent: string) => {
   try {
     const updatedProject: Project = {
@@ -190,11 +186,10 @@ const save = async (project: Project, fileName: string, fileType: 'src' | 'inclu
         [project.projectName]: asyncProject
       }
     }));
-  }
-  catch (error) {
+  } catch (error) {
     console.log("Error saving project code:", error);
   }
-}
+};
 
 const changeInterfaceMode = async (state: ProjectsState, interfaceMode: InterfaceMode.SIMPLE | InterfaceMode.ADVANCED) => {
   try {
@@ -221,12 +216,11 @@ const changeInterfaceMode = async (state: ProjectsState, interfaceMode: Interfac
     }
 
     console.log("Dispatching interface mode change:", updatedProjects);
-  }
-  catch (error) {
+  } catch (error) {
     console.log("Error changing interface mode:", error);
   }
 
-}
+};
 
 export const reduceProjects = (
   state: ProjectsState = { entities: {}, selectedProject: null, interfaceMode: InterfaceMode.SIMPLE },
@@ -271,6 +265,7 @@ export const reduceProjects = (
       if (state.selectedProject && state.selectedProject.projectName === action.project.projectName) {
         return { ...state, entities, selectedProject: null };
       }
+      break;
     }
 
     default:

@@ -36,8 +36,7 @@ module.exports = function createProjectsRouter(firebaseTokenManager) {
     try {
       const auth = req.headers.authorization || '';
       const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
-      if (!token)
-        return res.status(401).json({ message: 'Missing bearer token' });
+      if (!token) return res.status(401).json({ message: 'Missing bearer token' });
 
       const decoded = await firebaseTokenManager.verifyIdToken(token);
       req.user = { uid: decoded.uid };
@@ -46,8 +45,6 @@ module.exports = function createProjectsRouter(firebaseTokenManager) {
       res.status(401).json({ message: 'Invalid token' });
     }
   });
-
-  const colPath = () => admin.firestore().collection('projects');
 
   router.get('/', async (req, res) => {
     console.log('GET /projects called');

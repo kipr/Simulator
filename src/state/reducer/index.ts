@@ -4,7 +4,7 @@ export * from './challenges';
 export * from './challengeCompletions';
 export * from './limitedChallenges';
 export * from './limitedChallengeCompletions';
-//export * from './documentation';
+// export * from './documentation';
 export * from './i18n';
 export * from './assignments';
 export * from './classrooms';

@@ -126,13 +126,13 @@ export interface I18n {
   locale: LocalizedString.Language;
 }
 
+// export type Users = Dict<AsyncUser>;
+
 export interface Users {
   me?: string;
   users: Dict<AsyncUser>;
 }
 
 export namespace Users {
-  export const EMPTY: Users = {
-    users: {},
-  };
+  export const EMPTY: Users = { me: undefined, users: {} };
 }

@@ -46,24 +46,22 @@ const StyledForm = styled(Form, (props: ThemeProps) => ({
   paddingRight: `${props.theme.itemPadding * 2}px`,
 }));
 
-export class CreateUserDialog extends React.PureComponent<Props, State> {
+export class LeaveClassDialog extends React.PureComponent<Props, State> {
 
   constructor(props: Props) {
     super(props);
   }
 
-  onFinalize_ = async (values: { [id: string]: string }) => {
+  onFinalize_ = (values: { [id: string]: string }) => {
     const { leaveClassName } = values;
     const { currentClassroom } = this.props;
     try {
       if (leaveClassName === currentClassroom.classroomId) {
         this.props.onLeaveClassDialogClose();
-      }
-      else {
+      } else {
         return;
       }
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Error leaving classroom:', error);
     }
 
@@ -105,6 +103,6 @@ export default connect((state: ReduxState) => ({
 }), dispatch => ({
   onLocaleChange: (locale: LocalizedString.Language) => dispatch(I18nAction.setLocale({ locale })),
 
-}))(CreateUserDialog) as React.ComponentType<LeaveClassDialogPublicProps>;
+}))(LeaveClassDialog) as React.ComponentType<LeaveClassDialogPublicProps>;
 
 

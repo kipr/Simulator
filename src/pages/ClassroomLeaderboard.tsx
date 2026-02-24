@@ -337,9 +337,9 @@ const RankCell = styled(TableCell, (props: ThemeProps & { rank: number }) => ({
 
 // Higher-order component to inject router props for classroomId to support refreshing/back button
 function CompWithRouter(props) {
-  let params = useParams();
-  let navigate = useNavigate();
-  let location = useLocation();
+  const params = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <ClassroomLeaderboard
@@ -381,14 +381,13 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       }
       const classroom = await findClassroomDocByReadableId(classroomId, currentUserId);
       this.setState({ shownClassroom: classroom }, () => { void this.onLog(); });
-    }
-    else {
+    } else {
       if (this.props.currentClassroom) {
         this.setState({ shownClassroom: { docId: this.props.currentClassroom.docId, classroom: this.props.currentClassroom } }, () => { void this.onLog(); });
       }
     }
   }
-  async componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ClassroomLeaderboardState>, snapshot?: any): Promise<void> {
+  async componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ClassroomLeaderboardState>): Promise<void> {
     if (prevProps.params.classroomId !== this.props.params.classroomId) {
       let currentUserId = '';
       const tokenManager = db.tokenManager;
@@ -538,7 +537,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
     return (
       <TableHeader key={`${challengeName}-key`} theme={theme}>{LocalizedString.lookup(tr(`${challengeName}`), locale)}</TableHeader>
     );
-  }
+  };
 
   private scrollToMyScores = () => {
     if (this.myScoresRef.current) {
@@ -553,7 +552,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
     const { params } = this.props;
     const result = await getAllStudentsClassroomChallenges(this.state.shownClassroom?.classroom);
 
-    let users: Record<string, User> = {};
+    const users: Record<string, User> = {};
     const challenges: Record<string, Challenge> = {};
 
     for (const [_, attemptedChallenges] of Object.entries(result)) {
@@ -756,10 +755,10 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       pdfDoc.setFontSize(18);
       pdfDoc.text(`${shownClassroom.classroom.classroomId} General Challenge Scores`, 105, 20, { align: 'center' });
 
-      //Date
+      // Date
       pdfDoc.setFontSize(16);
       pdfDoc.text(`Date: ${date.toLocaleDateString()}`, 95, 30, { align: 'right' });
-      //Time
+      // Time
       pdfDoc.text(`Time: ${date.toLocaleTimeString()}`, 105, 30, { align: 'left' });
 
       pdfDoc.setFontSize(14);
@@ -800,9 +799,9 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
       text: string,
       x: number,
       increment = 10,
-      font: string = "helvetica",
-      style: string = "normal",
-      color: string = "black"
+      font = "helvetica",
+      style = "normal",
+      color = "black"
     ): number => {
       pdf.setFont(font, style);
       pdf.setTextColor(color);
@@ -858,7 +857,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
 
           // Challenge Title
           y = writeLine(
-            `${LocalizedString.lookup(tr(latest.name[locale] + ":"), locale) || "Unnamed"}`,
+            `${LocalizedString.lookup(tr(`${latest.name[locale]}:`), locale) || "Unnamed"}`,
             30, 10, "helvetica", "bold"
           );
 
@@ -956,8 +955,8 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
         )}
         {this.renderLeaderboard()}
       </LeaderboardContainer>
-    )
-  }
+    );
+  };
 
   render() {
     const { props, state } = this;
@@ -970,8 +969,8 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
     // Render the Classroom Leaderboard dependent on what view you're using: studentView vs teacherView
     return (
       <>
-        {view === 'studentView' ?
-          < div style={{ width: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+        {view === 'studentView'
+          ? < div style={{ width: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
             <ClassroomLeaderboardTitleContainer>
               <h1>Classroom Leaderboard</h1>
               <ButtonContainer>
@@ -990,8 +989,7 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
               theme={theme} />}
 
           </div >
-          :
-          <PageContainer style={style} theme={theme}>
+          : <PageContainer style={style} theme={theme}>
             <MainMenu theme={theme} />
             <ClassroomLeaderboardContainer style={style} theme={theme}>
               < div style={{ width: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
@@ -1023,12 +1021,12 @@ export default connect((state: ReduxState) => {
     challenges: state.challenges,
     currentStudentDisplayName: Async.latestValue(state.classrooms.currentStudentClassroom) ? Async.latestValue(state.classrooms.currentStudentClassroom).studentIds[auth.currentUser.uid].displayName : null,
 
-  })
+  });
 },
-  (dispatch) => ({
-    onClearSelectedClassroom: () =>
-      dispatch(ClassroomsAction.clearSelectedClassroom({})),
-  })
+(dispatch) => ({
+  onClearSelectedClassroom: () =>
+    dispatch(ClassroomsAction.clearSelectedClassroom({})),
+})
 
 
 )(CompWithRouter) as React.ComponentType<ClassroomLeaderboardPublicProps>;

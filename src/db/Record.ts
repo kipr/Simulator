@@ -90,7 +90,7 @@ namespace Record {
       case Type.LimitedChallenge: return Async.latestValue(record.value).name;
       case Type.LimitedChallengeCompletion: return undefined;
       case Type.Classroom: return { [LocalizedString.EN_US]: Async.latestValue(record.value).classroomId };
-      case Type.Project: return { [LocalizedString.EN_US]: Async.latestValue(record.value).projectId };
+      case Type.Project: return { [LocalizedString.EN_US]: Async.latestValue(record.value).projectName };
     }
   };
 

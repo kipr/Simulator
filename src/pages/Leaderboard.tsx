@@ -13,7 +13,7 @@ import { createRef } from 'react';
 import { LeaderboardEntry } from 'state/State/LimitedChallengeLeaderboard';
 
 const SELFIDENTIFIER = "My Scores!";
-let currentUser;
+let currentUser: User;
 
 interface Challenge {
   name: LocalizedString;
@@ -727,16 +727,15 @@ class Leaderboard extends React.Component<Props, State> {
 
             </tr>
           </thead>
-          {this.state.showFullLeaderboard ?
-            <tbody>
+          {this.state.showFullLeaderboard
+            ? <tbody>
               {sortedUsers.map((entry, index) => {
                 const rank = index + 1;
                 const isCurrentUser = currentUser.id === entry.id;
-                return this.renderLeaderboardRow(entry, rank, isCurrentUser, challengeArray)
+                return this.renderLeaderboardRow(entry, rank, isCurrentUser, challengeArray);
               })}
             </tbody>
-            :
-            <tbody>
+            : <tbody>
               {/* Top ten entries */}
               {topTen.map((entry, index) => {
                 const rank = index + 1;
@@ -770,7 +769,7 @@ class Leaderboard extends React.Component<Props, State> {
     return (
       <TableHeader key={`${challengeName}-key`} theme={theme}>{LocalizedString.lookup(tr(`${challengeName}`), locale)}</TableHeader>
     );
-  }
+  };
   private renderLeaderboardRow = (entry: User, rank: number, isCurrentUser: boolean, challengeArray: string[]) => {
     const { theme } = this.props;
     const { challenges } = this.state;
@@ -842,8 +841,8 @@ class Leaderboard extends React.Component<Props, State> {
           {this.renderLeaderboard()}
         </LeaderboardContainer>
       </ContentContainer>
-    )
-  }
+    );
+  };
   render() {
     const { props, } = this;
     const { style, theme } = props;

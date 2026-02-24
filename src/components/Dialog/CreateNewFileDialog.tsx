@@ -79,16 +79,16 @@ export class CreateNewFileDialog extends React.PureComponent<Props, State> {
     super(props);
     this.state = {
       errorMessage: ''
-    }
+    };
   }
 
-  private onFinalize_ = async (values: { [id: string]: string }) => {
+  private onFinalize_ = (values: { [id: string]: string }) => {
     const { selectedProject, fileType } = this.props;
     const { fileName } = values;
     const specialCharRegex = /[^a-zA-Z0-9 _-]/;
     const isOnlySpaces = !fileName.trim(); // Check if the name is empty or only spaces
     const [name, extension] = fileName.split('.');
-    //Check if file already exists
+    // Check if file already exists
     if (selectedProject) {
 
       const fileExists = Object.values(selectedProject[`${fileType}Files`])
@@ -122,8 +122,7 @@ export class CreateNewFileDialog extends React.PureComponent<Props, State> {
 
       this.props.onCloseCreateNewFileDialog(values.fileName);
 
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Error creating new file:', error);
     }
 

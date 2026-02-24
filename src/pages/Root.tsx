@@ -33,7 +33,7 @@ import { Editor } from '../components/Editor';
 
 
 import { State as ReduxState } from '../state';
-import { ScenesAction, ChallengeCompletionsAction, AiAction, ProjectsAction } from '../state/reducer';
+import { ScenesAction, ChallengeCompletionsAction, AiAction, ProjectsAction, deleteProject } from '../state/reducer';
 import { DocumentationAction } from 'ivygate/dist/src/state/reducer/documentation';
 import { sendMessage, SendMessageParams } from '../util/ai';
 
@@ -73,7 +73,6 @@ import { InterfaceMode } from '../types/interfaceModes';
 import { AsyncProject, Project } from '../state/State/Project';
 import CreateNewFileDialog from '../components/Dialog/CreateNewFileDialog';
 import DeleteProjectDialog from '../components/Dialog/DeleteProjectDialog';
-import { deleteProject } from '../state/reducer';
 
 
 export interface RootRouteParams {
@@ -686,16 +685,15 @@ class Root extends React.Component<Props, State> {
   private onNewProject_ = () => {
     this.setState({
       modal: Modal.NEW_PROJECT
-    })
+    });
 
-  }
+  };
 
-  private onFileSelected_ = (selectedProject: Project, fileName: string, fileType: string) => {
-    console.log("File selected in file explorer with selectedProject:", selectedProject, "fileName:", fileName, "fileType:", fileType);
+  private onFileSelected_ = (selectedProject: Project, fileName: string, fileType: "srcFiles" | "includeFiles" | "userDataFiles") => {
     const { props } = this;
     const { projects } = props;
-
-    const fileContent = selectedProject[`${fileType}Files`][fileName]?.fileContent || '';
+    const filesDict = selectedProject[fileType];
+    const fileContent = filesDict?.[fileName]?.fileContent ?? "";
     this.setState({
       code: {
         ...this.state.code,
@@ -704,7 +702,7 @@ class Root extends React.Component<Props, State> {
       activeLanguage: selectedProject.projectLanguage,
       projectDetails: {
         project: selectedProject,
-        fileType: fileType as 'src' | 'include' | 'userData',
+        fileType: fileType === 'srcFiles' ? 'src' : fileType === 'includeFiles' ? 'include' : 'userData',
         fileName: fileName
       }
     }, () => {
@@ -719,12 +717,11 @@ class Root extends React.Component<Props, State> {
       modal: Modal.DELETE_PROJECT,
     }, () => {
       this.props.onSelectProject(selectedProject);
-    })
-  }
+    });
+  };
 
   private onNewFile_ = (selectedProject: Project, fileType: string) => {
-    console.log("New file requested in file explorer with selectedProject:", selectedProject, "fileType:", fileType);
-    let fileT;
+    let fileT: 'src' | 'include' | 'userData';
     switch (fileType) {
       case 'c':
       case 'cpp':
@@ -749,9 +746,9 @@ class Root extends React.Component<Props, State> {
         fileType: fileT,
         fileName: ''
       }
-    })
+    });
 
-  }
+  };
 
   private onProjectCreate_ = (projectName: string, language: ProgrammingLanguage, interfaceMode: InterfaceMode) => {
 
@@ -765,32 +762,33 @@ class Root extends React.Component<Props, State> {
       includeFiles: {},
       userDataFiles: {},
       type: 'project'
-    }
+    };
     console.log("onProjectCreate_: ", project);
     this.props.onAddProject(project);
 
     this.setState({
       modal: Modal.NONE
-    })
-  }
+    });
+  };
 
   private onFileCreate_ = (fileName: string) => {
     console.log("onFileCreate_ state: ", this.state);
+    let fileN = fileName;
     const { projectDetails, activeLanguage } = this.state;
     switch (projectDetails.fileType) {
       case 'src':
         switch (activeLanguage) {
           case 'c':
-            fileName += '.c';
+            fileN += '.c';
             break;
           case 'cpp':
-            fileName += '.cpp';
+            fileN += '.cpp';
             break;
           case 'python':
-            fileName += '.py';
+            fileN += '.py';
             break;
           case 'graphical':
-            fileName += '.graphical';
+            fileN += '.graphical';
             break;
           default:
             console.error("Invalid active language for new file creation:", activeLanguage);
@@ -798,10 +796,10 @@ class Root extends React.Component<Props, State> {
         }
         break;
       case 'include':
-        fileName += '.h';
+        fileN += '.h';
         break;
       case 'userData':
-        fileName += '.txt';
+        fileN += '.txt';
         break;
       default:
         console.error("Invalid file type for new file creation:", projectDetails.fileType);
@@ -811,24 +809,24 @@ class Root extends React.Component<Props, State> {
       modal: Modal.NONE,
       projectDetails: {
         ...projectDetails,
-        fileName: fileName
+        fileName: fileN
       },
       code: {
         ...this.state.code,
         [activeLanguage]: ProgrammingLanguage.BLANK_CODE[activeLanguage],
       }
     }, () => {
-      this.props.onAddFile(projectDetails ? projectDetails.project : null, fileName, projectDetails ? projectDetails.fileType : 'src');
-    })
+      this.props.onAddFile(projectDetails ? projectDetails.project : null, fileN, projectDetails ? projectDetails.fileType : 'src');
+    });
 
-  }
+  };
 
-  private onDeleteProject_ = (answer: boolean) => {
-    answer ? deleteProject(this.props.selectedProject) : null;
+  private onDeleteProject_ = async (answer: boolean) => {
+    answer ? await deleteProject(this.props.selectedProject) : null;
     this.setState({
       modal: Modal.NONE
-    })
-  }
+    });
+  };
 
 
   render() {
@@ -913,12 +911,12 @@ class Root extends React.Component<Props, State> {
       onDocumentationGoToFuzzy,
       onCommonDocumentationGoToFuzzy,
       layout: Layout.Overlay,
-      onProjectAdd: this.onNewProject_,
-      onSimFileSelected: this.onFileSelected_,
-      onSimProjectSelected: this.props.onSelectProject,
-      onDeleteSimProject: this.onProjectDelete_,
-      onAddNewSimFile: this.onNewFile_,
-      fileSelected: projectDetails.fileName ? true : false,
+      // onProjectAdd: this.onNewProject_,
+      // onSimFileSelected: this.onFileSelected_,
+      // onSimProjectSelected: this.props.onSelectProject,
+      // onDeleteSimProject: this.onProjectDelete_,
+      // onAddNewSimFile: this.onNewFile_,
+      // fileSelected: projectDetails.fileName ? true : false,
     };
 
     let impl: JSX.Element;

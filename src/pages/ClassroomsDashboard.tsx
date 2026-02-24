@@ -9,7 +9,8 @@ import LocalizedString from '../util/LocalizedString';
 import tr from '@i18n';
 import { WithNavigateProps, withNavigate } from '../util/withNavigate';
 import db from '../db';
-
+import { State as ReduxState } from '../state';
+import User from 'state/State/User';
 
 export interface ClassroomsDashboardPublicProps extends ThemeProps, StyleProps {
 }
@@ -19,7 +20,6 @@ interface ClassroomsDashboardPrivateProps {
 }
 
 interface ClassroomsDashboardState {
-  i18n: any;
   userId: string;
 }
 
@@ -69,27 +69,26 @@ class ClassroomsDashboard extends React.PureComponent<Props, State> {
 
     this.state = {
       userId: '',
-      i18n: null,
     };
   }
 
-  async componentDidMount() {
-    await this.getCurrentUser();
+  componentDidMount() {
+    this.getCurrentUser();
   }
-  private getCurrentUser = () => {
-    let currentUser: {};
+  private getCurrentUser() {
+    let currentUser: User;
     const tokenManager = db.tokenManager;
     if (tokenManager) {
       const auth_ = tokenManager.auth();
       const currentUserAuth_ = auth_.currentUser;
-      currentUser = { id: currentUserAuth_.uid };
+      currentUser = { name: currentUserAuth_.uid };
 
-      this.setState({ userId: currentUser['id'] });
+      this.setState({ userId: currentUser['name'] });
 
     }
 
     return currentUser || null;
-  };
+  }
 
   render() {
     const { props } = this;
@@ -123,7 +122,7 @@ class ClassroomsDashboard extends React.PureComponent<Props, State> {
   }
 }
 
-const Connected = connect((state: State) => ({
+const Connected = connect((state: ReduxState) => ({
   locale: state.i18n.locale,
 }))(withNavigate(ClassroomsDashboard));
 

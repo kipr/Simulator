@@ -60,7 +60,7 @@ export class ClassroomBuilder {
   constructor(id: string | undefined, builder: Builder) {
     if (!id) return;
 
-    const classroom = builder.state.classrooms[id];
+    const classroom = builder.state.classrooms.entities[id];
 
     if (!classroom || classroom.type === Async.Type.Unloaded) {
       builder.loadClassroom_(id);

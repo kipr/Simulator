@@ -126,7 +126,7 @@ export class CreateProjectDialog extends React.PureComponent<Props, State> {
       showRepeatProjectDialog: false,
       language: 'c',
       errorMessage: '',
-    }
+    };
   }
 
   private onSelectLanguage_ = (languageIndex: number, option: ComboBox.Option) => {
@@ -139,14 +139,14 @@ export class CreateProjectDialog extends React.PureComponent<Props, State> {
     });
   };
 
-  onFinalize_ = async (values: { [id: string]: string }) => {
+  onFinalize_ = (values: { [id: string]: string }) => {
     const { projects, interfaceMode } = this.props;
     const projectName = values.projectName;
 
     const specialCharRegex = /[^a-zA-Z0-9 _-]/;
     const isOnlySpaces = !projectName.trim(); // Check if the name is empty or only spaces
 
-    //Check if project already exists in database
+    // Check if project already exists in database
     if (projects) {
       const projectExists = Object.values(projects).some(project => project.projectName === projectName);
       if (projectExists) {
@@ -174,11 +174,16 @@ export class CreateProjectDialog extends React.PureComponent<Props, State> {
         this.state.language as ProgrammingLanguage,
         interfaceMode
       );
-    }
-    catch (error) {
+    } catch (error: unknown) {
       console.error('Error adding user to database:', error);
-      if (error.response.status === 409) {
-        this.setState({ errorMessage: 'Project name already exists. Please choose a different name.' });
+
+      if (typeof error === "object" && error !== null && "response" in error) {
+        const e = error as { response?: { status?: unknown } };
+        if (e.response?.status === 409) {
+          this.setState({
+            errorMessage: 'Project name already exists. Please choose a different name.',
+          });
+        }
       }
     }
 
@@ -243,7 +248,7 @@ export class CreateProjectDialog extends React.PureComponent<Props, State> {
 export default connect((state: ReduxState) => {
 
   const asyncProjects = state.projects.entities;
-  let currentProjects = {};
+  const currentProjects = {};
   asyncProjects && Object.values(asyncProjects).forEach(asyncProject => {
     const project = Async.latestValue(asyncProject);
     if (project) {

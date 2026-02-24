@@ -108,7 +108,7 @@ class ClassroomLimitedChallenges extends React.Component<Props, State> {
     super(props);
     this.state = {
       limitedChallenge: ''
-    }
+    };
   }
   componentDidMount() {
     // Load completions for challenges within one week of opening
@@ -131,7 +131,7 @@ class ClassroomLimitedChallenges extends React.Component<Props, State> {
   private handleChallengeClick = (challengeId: string) => {
     this.setState({
       limitedChallenge: challengeId
-    })
+    });
   };
 
   private handleClosedChallengesClick = () => {
@@ -141,7 +141,7 @@ class ClassroomLimitedChallenges extends React.Component<Props, State> {
   private onBackToChallenges_ = () => {
     this.setState({
       limitedChallenge: ''
-    })
+    });
   };
   private getChallengeBrief = (challenge: AsyncLimitedChallenge): LimitedChallengeBrief | undefined => {
     return Async.brief(challenge);

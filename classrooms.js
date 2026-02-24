@@ -26,8 +26,7 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     try {
       const auth = req.headers.authorization || "";
       const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
-      if (!token)
-        return res.status(401).json({ message: "Missing bearer token" });
+      if (!token) return res.status(401).json({ message: "Missing bearer token" });
 
       const decoded = await firebaseTokenManager.verifyIdToken(token);
       req.user = { uid: decoded.uid };
@@ -53,7 +52,8 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       };
 
-      await firestore.collection("classrooms").doc(id).set(classroomData);
+      await firestore.collection("classrooms").doc(id)
+        .set(classroomData);
 
       console.log("Created classroom:", id, classroomData);
       return res.status(204).json({ id, ...classroomData });
@@ -165,7 +165,8 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
       if (inviteCode) {
         console.log("GET /classrooms called with inviteCode:", inviteCode);
 
-        const qsnap = await admin.firestore().collection("classrooms").get();
+        const qsnap = await admin.firestore().collection("classrooms")
+          .get();
         for (const doc of qsnap.docs) {
           const classroom = doc.data();
           const codeValue =
@@ -210,7 +211,8 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
         return res.status(400).json({ message: "Missing invite code" });
       }
 
-      const qsnap = await admin.firestore().collection("classrooms").get();
+      const qsnap = await admin.firestore().collection("classrooms")
+        .get();
 
       for (const doc of qsnap.docs) {
         const classroom = doc.data();
@@ -259,7 +261,8 @@ module.exports = function createClassroomsRouter(firebaseTokenManager) {
     try {
       const { uid } = req.user;
       const { id } = req.params;
-      await colPath(uid).doc(id).delete();
+      await colPath(uid).doc(id)
+        .delete();
       return res.sendStatus(204);
     } catch (err) {
       console.error("DELETE /classrooms error:", err);

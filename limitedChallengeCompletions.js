@@ -322,8 +322,8 @@ module.exports = function createLimitedChallengeCompletionsRouter(firebaseTokenM
       // Check if user is already in top N
       const userInTopN = rank <= top;
       
-      let entriesAbove = [];
-      let entriesBelow = [];
+      const entriesAbove = [];
+      const entriesBelow = [];
       
       if (!userInTopN) {
         // Fetch context around the user

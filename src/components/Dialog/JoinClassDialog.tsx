@@ -73,7 +73,7 @@ const ItemIcon = styled(FontAwesome, {
 });
 
 
-export class CreateUserDialog extends React.PureComponent<Props, State> {
+export class JoinClassDialog extends React.PureComponent<Props, State> {
 
   constructor(props: Props) {
     super(props);
@@ -84,7 +84,7 @@ export class CreateUserDialog extends React.PureComponent<Props, State> {
       errorMessage: '',
       interfaceMode: InterfaceMode.SIMPLE,
 
-    }
+    };
   }
 
   onFinalize_ = async (values: { [id: string]: string }) => {
@@ -156,6 +156,6 @@ export default connect((state: ReduxState) => ({
 }), dispatch => ({
   onLocaleChange: (locale: LocalizedString.Language) => dispatch(I18nAction.setLocale({ locale })),
 
-}))(CreateUserDialog) as React.ComponentType<JoinClassDialogPublicProps>;
+}))(JoinClassDialog) as React.ComponentType<JoinClassDialogPublicProps>;
 
 

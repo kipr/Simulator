@@ -123,7 +123,7 @@ export class CreateUserDialog extends React.PureComponent<Props, State> {
       errorMessage: '',
       interfaceMode: InterfaceMode.SIMPLE,
       IvygateClassroomType: this.props.propClassroom ? this.props.propClassroom : this.props.classrooms?.[0] || IvygateClassroomType.NO_CLASSROOM
-    }
+    };
   }
 
   componentDidMount() {
@@ -134,7 +134,7 @@ export class CreateUserDialog extends React.PureComponent<Props, State> {
   componentDidUpdate = (prevProps: Props, prevState: State) => {
     console.log("CreateUserDialog componentDidUpdate props: ", this.props);
     console.log("CreateUserDialog componentDidUpdate state: ", this.state);
-  }
+  };
   private closeRepeatUserDialog_ = () => {
 
     this.setState({ showRepeatUserDialog: false });
@@ -156,7 +156,7 @@ export class CreateUserDialog extends React.PureComponent<Props, State> {
       }
     }, () => {
       console.log("Updated IvygateClassroomType state: ", this.state);
-    })
+    });
   };
   onFinalize_ = async (values: { [id: string]: string }) => {
     const userName = values.userName;
@@ -181,13 +181,13 @@ export class CreateUserDialog extends React.PureComponent<Props, State> {
     this.setState({ errorMessage: '' }); // Clear error message if input is valid
 
     try {
-      const response = await axios.get('/get-users', { params: { filePath: '/home/kipr/Documents/KISS' } });
+      const response = await axios.get<User[]>('/get-users', { params: { filePath: '/home/kipr/Documents/KISS' } });
       console.log("CreateUserDialog response: ", response.data);
-      if (response.data.users.some(user => user.userName === userName)) {
+      if (response.data.some((user: User) => user.userName === userName)) {
         this.setState({ showRepeatUserDialog: true });
       } else {
         this.props.onClose();
-        this.props.onCreateProjectDialog(userName as User['userName'], this.state.interfaceMode, this.state.IvygateClassroomType ? this.state.IvygateClassroomType.name === 'No IvygateClassroomType' ? { name: "", users: [] } : this.state.IvygateClassroomType : null);
+        this.props.onCreateProjectDialog(userName, this.state.interfaceMode, this.state.IvygateClassroomType ? this.state.IvygateClassroomType.name === 'No IvygateClassroomType' ? { name: "", users: [] } : this.state.IvygateClassroomType : null);
       }
     } catch (error) {
       console.error('Error adding user to database:', error);
@@ -215,7 +215,7 @@ export class CreateUserDialog extends React.PureComponent<Props, State> {
     ret.push({
       data: [],
       text: LocalizedString.lookup(tr('No IvygateClassroomType'), this.props.locale)
-    })
+    });
     return ret;
   })();
 
