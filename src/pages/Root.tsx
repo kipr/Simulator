@@ -912,7 +912,7 @@ class Root extends React.Component<Props, State> {
       } : undefined,
       onDocumentationGoToFuzzy,
       onCommonDocumentationGoToFuzzy,
-      layout: Layout.Overlay
+      layout: Layout.Overlay,
       onProjectAdd: this.onNewProject_,
       onSimFileSelected: this.onFileSelected_,
       onSimProjectSelected: this.props.onSelectProject,
