@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { styled } from 'styletron-react';
-import { Message } from 'ivygate';
+import { Message } from 'ivygate/dist/src';
 import { applyObjectPatch, createObjectPatch, ObjectPatch, OuterObjectPatch } from 'symmetry';
 
 import { signOutOfApp } from '../firebase/modules/auth';
@@ -70,6 +70,7 @@ import Motor from '../programming/AbstractRobot/Motor';
 import { Modal } from './sharedRoot/Modal';
 import AiWindow from '../components/Ai/AiWindow';
 import Robot from '../state/State/Robot';
+import { Project } from 'state/State/Project';
 
 
 export interface ChallengeRootRouteParams {
@@ -906,6 +907,21 @@ class Root extends React.Component<Props, State> {
       } : undefined,
       worldCapabilities: WORLD_CAPABILITIES,
       onDocumentationGoToFuzzy,
+      onProjectAdd: function (): void {
+        throw new Error('Function not implemented.');
+      },
+      onSimFileSelected: function (project: Project, fileName: string, fileType: string): void {
+        throw new Error('Function not implemented.');
+      },
+      onSimProjectSelected: function (project: Project): void {
+        throw new Error('Function not implemented.');
+      },
+      onAddNewSimFile: function (project: Project, fileType: string): void {
+        throw new Error('Function not implemented.');
+      },
+      onDeleteSimProject: function (project: Project): void {
+        throw new Error('Function not implemented.');
+      }
     };
 
     let impl: JSX.Element;
