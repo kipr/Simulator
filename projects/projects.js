@@ -1,6 +1,7 @@
 /* eslint-env node */
-const express = require("express");
-const admin = require("firebase-admin");
+const express = require('express');
+const admin = require('firebase-admin');
+const rateLimit = require('express-rate-limit');
 
 module.exports = function createProjectsRouter(firebaseTokenManager) {
   const router = express.Router();
@@ -9,58 +10,69 @@ module.exports = function createProjectsRouter(firebaseTokenManager) {
   if (!admin.apps.length) {
     admin.initializeApp({
       credential: admin.credential.cert(
-        firebaseTokenManager.serviceAccountKey || {}
+        firebaseTokenManager.serviceAccountKey || {},
       ),
     });
   }
 
+  // Rate limiter to protect authorization and Firestore access
+  const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+
+  // Apply limiter to all routes in this router
+  router.use(authLimiter);
+
   router.use((req, res, next) => {
-    console.log("Incoming Authorization header:", req.headers.authorization);
+    console.log('Incoming Authorization header:', req.headers.authorization);
     next();
   });
 
   // Auth middleware: decode Firebase token into req.user
   router.use(async (req, res, next) => {
     try {
-      const auth = req.headers.authorization || "";
-      const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
+      const auth = req.headers.authorization || '';
+      const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
       if (!token)
-        return res.status(401).json({ message: "Missing bearer token" });
+        return res.status(401).json({ message: 'Missing bearer token' });
 
       const decoded = await firebaseTokenManager.verifyIdToken(token);
       req.user = { uid: decoded.uid };
       next();
     } catch (e) {
-      res.status(401).json({ message: "Invalid token" });
+      res.status(401).json({ message: 'Invalid token' });
     }
   });
 
-  const colPath = () => admin.firestore().collection("projects");
+  const colPath = () => admin.firestore().collection('projects');
 
-  router.get("/", async (req, res) => {
-    console.log("GET /projects called");
+  router.get('/', async (req, res) => {
+    console.log('GET /projects called');
     try {
       const { uid } = req.user;
-      console.log("router user uid:", uid);
+      console.log('router user uid:', uid);
       const doc = await admin
         .firestore()
-        .collection("user")
+        .collection('user')
         .doc(uid)
-        .collection("projects")
+        .collection('projects')
         .get();
       const projects = {};
       doc.forEach((d) => {
         projects[d.id] = d.data();
       });
-      console.log("fetched projects:", doc.size);
+      console.log('fetched projects:', doc.size);
       return res.status(200).json(projects);
     } catch (err) {
-      console.error("Error fetching projects:", err);
-      return res.status(500).json({ message: "Internal server error" });
+      console.error('Error fetching projects:', err);
+      return res.status(500).json({ message: 'Internal server error' });
     }
   });
 
-  router.post("/:id", async (req, res) => {
+  router.post('/:id', async (req, res) => {
     try {
       const { uid } = req.user;
       const { id } = req.params;
@@ -72,36 +84,36 @@ module.exports = function createProjectsRouter(firebaseTokenManager) {
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       };
       await firestore
-        .collection("user")
+        .collection('user')
         .doc(uid)
-        .collection("projects")
+        .collection('projects')
         .doc(id)
         .set(projectData);
 
-      console.log("Created project:", id, projectData);
+      console.log('Created project:', id, projectData);
       return res.status(204).json({ id, ...projectData });
     } catch (err) {
-      console.error("Error creating project:", err);
-      return res.status(500).json({ message: "Internal server error" });
+      console.error('Error creating project:', err);
+      return res.status(500).json({ message: 'Internal server error' });
     }
   });
 
   // DELETE
-  router.delete("/:id", async (req, res) => {
-    console.log("DELETE /:id called");
+  router.delete('/:id', async (req, res) => {
+    console.log('DELETE /:id called');
     try {
       const { uid } = req.user;
       const { id } = req.params;
       const firestore = admin.firestore();
       await firestore
-        .collection("user")
+        .collection('user')
         .doc(uid)
-        .collection("projects")
+        .collection('projects')
         .doc(id)
         .delete();
       return res.sendStatus(204);
     } catch (err) {
-      console.error("DELETE /classrooms error:", err);
+      console.error('DELETE /classrooms error:', err);
       return res.status(500).json({ message: err.message });
     }
   });
