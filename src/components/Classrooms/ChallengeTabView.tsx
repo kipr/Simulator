@@ -88,7 +88,7 @@ const SidePanel = styled('div', (props: ThemeProps) => ({
   flexWrap: 'wrap',
   left: '3.5%',
   top: '6%',
-  zIndex: 23,
+  zIndex: 1,
   backgroundColor: props.theme.backgroundColor,
   width: '100%',
   height: '95%'
