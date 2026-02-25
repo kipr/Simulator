@@ -11,3 +11,4 @@ export * from './classrooms';
 export * from './projects';
 export * from './users';
 export * from './ai';
+export * from './settings';

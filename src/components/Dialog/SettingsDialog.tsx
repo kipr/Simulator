@@ -12,7 +12,7 @@ import LocalizedString from '../../util/LocalizedString';
 import ComboBox from '../interface/ComboBox';
 
 import { State as ReduxState } from '../../state';
-import { I18nAction } from '../../state/reducer';
+import { I18nAction, SettingsAction } from '../../state/reducer';
 import { connect } from 'react-redux';
 import { InterfaceMode } from '../../types/interfaceModes';
 
@@ -20,14 +20,15 @@ type SettingsSection = 'user-interface' | 'simulation' | 'editor';
 
 export interface SettingsDialogPublicProps extends ThemeProps, StyleProps {
   onClose: () => void;
-  settings: Settings;
   onSettingsChange: (settings: Partial<Settings>) => void;
 }
 
 interface SettingsDialogPrivateProps {
   locale: LocalizedString.Language;
+  settings: Settings;
   interfaceMode: InterfaceMode.SIMPLE | InterfaceMode.ADVANCED;
   onLocaleChange: (locale: LocalizedString.Language) => void;
+  onSettingsChange: (settings: Partial<Settings>) => void;
 }
 
 interface SettingsDialogState {
@@ -136,7 +137,11 @@ class SettingsDialog extends React.PureComponent<Props, State> {
           <SettingInfoSubtext>{subtext}</SettingInfoSubtext>
         </SettingInfoContainer>
         <Switch theme={theme} value={getValue(currentSettings)} onValueChange={(value) => {
-          onSettingsChange(getUpdatedSettings(value));
+          this.props.onSettingsChange(getUpdatedSettings(value));
+          localStorage.setItem('bbSettings', JSON.stringify({
+            ...currentSettings,
+            ...getUpdatedSettings(value),
+          }));
         }} />
       </SettingContainer>
     );
@@ -150,10 +155,8 @@ class SettingsDialog extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const { style, className, theme, onClose, locale, interfaceMode } = props;
+    const { style, className, theme, onClose, locale, interfaceMode, settings } = props;
     const { selectedSection } = state;
-
-    console.log("Rendering SettingsDialog with interfaceMode:", interfaceMode);
 
     return (
       <Dialog
@@ -256,7 +259,9 @@ class SettingsDialog extends React.PureComponent<Props, State> {
 export default connect((state: ReduxState) => ({
   locale: state.i18n.locale,
   interfaceMode: state.projects.interfaceMode,
+  settings: state.settings,
 
 }), dispatch => ({
   onLocaleChange: (locale: LocalizedString.Language) => dispatch(I18nAction.setLocale({ locale })),
+  onSettingsChange: (settings: Partial<Settings>) => dispatch(SettingsAction.updateSettings({ settings })),
 }))(SettingsDialog) as React.ComponentType<SettingsDialogPublicProps>;

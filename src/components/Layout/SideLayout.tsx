@@ -443,6 +443,7 @@ export const SideLayoutRedux = connect((state: ReduxState, { sceneId }: LayoutPr
   return {
     robots,
     locale: state.i18n.locale,
+    settings: state.settings,
   };
 }, dispatch => ({
 

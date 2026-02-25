@@ -22,7 +22,7 @@ import { DocumentationWindow } from 'ivygate/dist/src';
 import AiWindow from './components/Ai/AiWindow';
 import { DARK } from './components/constants/theme';
 import CurriculumPage from './lms/CurriculumPage';
-import { UsersAction, I18nAction, ProjectsAction } from './state/reducer';
+import { UsersAction, I18nAction, ProjectsAction, SettingsAction } from './state/reducer';
 import db from './db';
 import Selector from './db/Selector';
 import DbError from './db/Error';
@@ -35,6 +35,7 @@ import ClassroomLeaderboard from './pages/ClassroomLeaderboard';
 import ClassroomTeacherView from './pages/ClassroomTeacherView';
 import ClassroomStudentView from './pages/ClassroomStudentView';
 import { InterfaceMode } from './types/interfaceModes';
+import { Settings } from 'components/constants/Settings';
 export interface AppPublicProps {
 
 }
@@ -45,6 +46,7 @@ interface AppPrivateProps {
   loadUser: (uid: string) => void;
   setLocale: (locale: LocalizedString.Language) => void;
   setInterfaceMode: (interfaceMode: InterfaceMode) => void;
+  setSettings: (settings: Partial<Settings>) => void;
 }
 
 interface AppState {
@@ -97,6 +99,14 @@ class App extends React.Component<Props, State> {
      * translated, if you wish to integrate your translations, you need to
      * LOCALE_OPTIONS in SettingsDialog.ts.
      */
+
+    const storedSettings = localStorage.getItem('bbSettings');
+    console.log("App componentDidMount called with bbSettings:", localStorage.getItem('bbSettings'));
+    if (storedSettings) {
+
+      const parsedSettings: Partial<Settings> = JSON.parse(storedSettings) as Partial<Settings>;
+      this.props.setSettings(parsedSettings);
+    }
     const lang: LocalizedString.Language = LocalizedString.validate(localStorage.getItem('bblocale'));
     if (lang) {
       this.props.setLocale(lang);
@@ -251,4 +261,6 @@ export default connect((state: ReduxState) => {
   loadUser: (uid: string) => dispatch(UsersAction.loadOrEmptyUser({ userId: uid })),
   setLocale: (locale: LocalizedString.Language) => dispatch(I18nAction.setLocale({ locale })),
   setInterfaceMode: (interfaceMode: InterfaceMode) => dispatch(ProjectsAction.changeInterfaceMode({ interfaceMode })),
+  setSettings: (settings: Partial<Settings>) => dispatch(SettingsAction.updateSettings({ settings })),
+
 }))(App) as React.ComponentType<AppPublicProps>;

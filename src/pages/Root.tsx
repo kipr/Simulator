@@ -94,6 +94,7 @@ interface RootPrivateProps {
   robots: Dict<Robot>;
   projects: Dict<AsyncProject>;
   selectedProject: Project;
+  settings: Settings;
 
   onNodeAdd: (id: string, node: Node) => void;
   onNodeRemove: (id: string) => void;
@@ -251,6 +252,7 @@ class Root extends React.Component<Props, State> {
     this.scheduleUpdateConsole_();
     window.addEventListener('resize', this.onWindowResize_);
     this.props.onLoadProjects();
+    console.log("Root componentDidMount settings:", this.props.settings);
   }
 
   componentWillUnmount() {
@@ -851,6 +853,7 @@ class Root extends React.Component<Props, State> {
       onDocumentationClick,
       onDocumentationGoToFuzzy,
       onCommonDocumentationGoToFuzzy,
+      settings
     } = props;
 
     const {
@@ -861,7 +864,6 @@ class Root extends React.Component<Props, State> {
       simulatorState,
       console,
       messages,
-      settings,
       feedback,
       windowInnerHeight,
       miniEditor,
@@ -987,7 +989,6 @@ class Root extends React.Component<Props, State> {
         {modal.type === Modal.Type.Settings && (
           <SettingsDialog
             theme={theme}
-            settings={settings}
             onSettingsChange={this.onSettingsChange_}
             onClose={this.onModalClose_}
           />
@@ -1118,7 +1119,6 @@ const ConnectedRoot = connect((state: ReduxState, { params: { sceneId, challenge
 
   builder.dispatchLoads();
 
-
   return {
     scene: Dict.unique(builder.scenes),
     challenge: Dict.unique(builder.challenges),
@@ -1128,6 +1128,7 @@ const ConnectedRoot = connect((state: ReduxState, { params: { sceneId, challenge
     robots: Dict.map(state.robots.robots, Async.latestValue),
     projects: state.projects.entities,
     selectedProject: state.projects.selectedProject,
+    settings: state.settings,
   };
 }, (dispatch, { params: { sceneId } }: RootPublicProps) => ({
   onNodeAdd: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
