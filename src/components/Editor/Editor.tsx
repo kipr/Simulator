@@ -189,8 +189,11 @@ export const createEditorBarComponents = ({
 
 export const IVYGATE_LANGUAGE_MAPPING: Dict<string> = {
   'ecmascript': 'javascript',
+  'python': 'customPython',
+  'c': 'customCpp',
+  'cpp': 'customCpp',
+  'plaintext': 'plaintext',
 };
-
 const DOCUMENTATION_LANGUAGE_MAPPING: { [key in ProgrammingLanguage | Script.Language]?: 'c' | 'python' | 'graphical' | undefined } = {
   'python': 'python',
   'c': 'c',
