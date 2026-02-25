@@ -86,7 +86,7 @@
     "image-webpack-loader": "^8.1.0",
     "immer": "^9.0.15",
     "itch": "https://github.com/kipr/itch#36",
-    "ivygate": "https://github.com/kipr/ivygate#feb0f94111dd460ccc76467a74008143026f721f",
+   "ivygate": "https://github.com/kipr/ivygate#98a85b2c7a41a739760e6bdff26e9d558aae7197",
     "jspdf": "^3.0.2",
     "kipr-scratch": "file:dependencies/kipr-scratch/kipr-scratch",
     "lusca": "^1.7.0",
