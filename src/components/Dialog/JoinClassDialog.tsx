@@ -111,8 +111,8 @@ export class JoinClassDialog extends React.PureComponent<Props, State> {
 
     const { showRepeatUserDialog } = state;
     const JOINCLASS_FORM_ITEMS: Form.Item[] = [
-      Form.joinClassInviteCode('classroomInviteCode', 'Classroom Invite Code', 'Enter the invite code provided by your teacher to join a classroom'),
-      Form.displayNameField('displayName', 'Display Name', 'The name that will be shown to your teacher and classmates', undefined, 'This can be changed later in your profile settings'),
+      Form.joinClassInviteCode('classroomInviteCode', LocalizedString.lookup(tr('Classroom Invite Code'), locale), LocalizedString.lookup(tr('Enter the invite code provided by your teacher to join a classroom'), locale)),
+      Form.displayNameField('displayName', LocalizedString.lookup(tr('Display Name'), locale), LocalizedString.lookup(tr('The name that will be shown to your teacher and classmates. Be sure to only use your first name.'), locale)),
     ];
 
     return (
