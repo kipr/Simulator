@@ -33,7 +33,7 @@ import { Editor } from '../components/Editor';
 
 
 import { State as ReduxState } from '../state';
-import { ScenesAction, ChallengeCompletionsAction, AiAction, ProjectsAction, deleteProject } from '../state/reducer';
+import { ScenesAction, ChallengeCompletionsAction, AiAction } from '../state/reducer';
 import { DocumentationAction } from 'ivygate/dist/src/state/reducer/documentation';
 import { sendMessage, SendMessageParams } from '../util/ai';
 
@@ -68,12 +68,6 @@ import tr from '@i18n';
 import { Modal } from './sharedRoot/Modal';
 import Robot from '../state/State/Robot';
 import AiWindow from '../components/Ai/AiWindow';
-import CreateProjectDialog from '../components/Dialog/CreateProjectDialog';
-import { InterfaceMode } from '../types/interfaceModes';
-import { AsyncProject, Project } from '../state/State/Project';
-import CreateNewFileDialog from '../components/Dialog/CreateNewFileDialog';
-import DeleteProjectDialog from '../components/Dialog/DeleteProjectDialog';
-
 
 export interface RootRouteParams {
   [key: string]: string | undefined;
@@ -92,8 +86,6 @@ interface RootPrivateProps {
   sceneHasChallenge: boolean;
   locale: LocalizedString.Language;
   robots: Dict<Robot>;
-  projects: Dict<AsyncProject>;
-  selectedProject: Project;
 
   onNodeAdd: (id: string, node: Node) => void;
   onNodeRemove: (id: string) => void;
@@ -135,13 +127,6 @@ interface RootPrivateProps {
 
   onAddUserMessage: (message: string) => void;
 
-  onAddProject: (project: Project) => void;
-  onAddFile: (project: Project, fileName: string, fileType: 'src' | 'include' | 'userData') => void;
-  onLoadProjects: () => void;
-  onSetProjectCode: (project: Project, fileName: string, fileType: 'src' | 'include' | 'userData', fileContent: string) => void;
-  onSelectProject: (project: Project) => void;
-  onDeleteProject: (project: Project) => void;
-  onChangeInterfaceMode: (interfaceMode: InterfaceMode.SIMPLE | InterfaceMode.ADVANCED) => void;
 }
 
 interface RootState {
@@ -168,9 +153,6 @@ interface RootState {
   windowInnerHeight: number;
 
   miniEditor: boolean;
-
-  projectDetails: { project: Project, fileType: 'src' | 'include' | 'userData', fileName: string } | null;
-
 }
 
 type Props = RootPublicProps & RootPrivateProps & WithNavigateProps;
@@ -224,7 +206,6 @@ class Root extends React.Component<Props, State> {
       feedback: DEFAULT_FEEDBACK,
       windowInnerHeight: window.innerHeight,
       miniEditor: true,
-      projectDetails: { project: null, fileType: 'src', fileName: '' },
 
     };
 
@@ -250,7 +231,6 @@ class Root extends React.Component<Props, State> {
 
     this.scheduleUpdateConsole_();
     window.addEventListener('resize', this.onWindowResize_);
-    this.props.onLoadProjects();
   }
 
   componentWillUnmount() {
@@ -275,10 +255,6 @@ class Root extends React.Component<Props, State> {
     if (this.props.onCameraChange !== prevProps.onCameraChange) Space.getInstance().onCameraChange = this.props.onCameraChange;
     if (this.state.simulatorState.type !== prevState.simulatorState.type) {
       Space.getInstance().sceneBinding.scriptManager.programStatus = this.state.simulatorState.type === SimulatorState.Type.Running ? 'running' : 'stopped';
-    }
-
-    if (this.props.projects !== prevProps.projects) {
-      console.log("Projects prop changed:", this.props.projects);
     }
   }
 
@@ -309,7 +285,7 @@ class Root extends React.Component<Props, State> {
   };
 
   private onCodeChange_ = (code: string) => {
-    const { activeLanguage, projectDetails } = this.state;
+    const { activeLanguage } = this.state;
     this.setState({
       code: {
         ...this.state.code,
@@ -317,7 +293,6 @@ class Root extends React.Component<Props, State> {
       }
     }, () => {
       window.localStorage.setItem(`code-${activeLanguage}`, code);
-      this.props.onSetProjectCode(projectDetails ? projectDetails.project : null, projectDetails ? projectDetails.fileName : '', projectDetails ? projectDetails.fileType : 'src', code);
     });
   };
 
@@ -586,13 +561,6 @@ class Root extends React.Component<Props, State> {
     if ('simulationSensorNoise' in changedSettings) {
       Space.getInstance().noisySensors = changedSettings.simulationSensorNoise;
     }
-
-    if ('interfaceMode' in changedSettings) {
-      console.log("Interface mode changed to:", changedSettings.interfaceMode);
-      localStorage.setItem('interfaceMode', changedSettings.interfaceMode ? 'Advanced' : 'Simple');
-      this.props.onChangeInterfaceMode(changedSettings.interfaceMode ? InterfaceMode.ADVANCED : InterfaceMode.SIMPLE);
-    }
-
     this.setState({ settings: nextSettings });
   };
 
@@ -682,153 +650,6 @@ class Root extends React.Component<Props, State> {
     });
   };
 
-  private onNewProject_ = () => {
-    this.setState({
-      modal: Modal.NEW_PROJECT
-    });
-
-  };
-
-  private onFileSelected_ = (selectedProject: Project, fileName: string, fileType: "srcFiles" | "includeFiles" | "userDataFiles") => {
-    const { props } = this;
-    const { projects } = props;
-    const filesDict = selectedProject[fileType];
-    const fileContent = filesDict?.[fileName]?.fileContent ?? "";
-    this.setState({
-      code: {
-        ...this.state.code,
-        [selectedProject.projectLanguage]: fileContent,
-      },
-      activeLanguage: selectedProject.projectLanguage,
-      projectDetails: {
-        project: selectedProject,
-        fileType: fileType === 'srcFiles' ? 'src' : fileType === 'includeFiles' ? 'include' : 'userData',
-        fileName: fileName
-      }
-    }, () => {
-      console.log("Updated code state after file selection:", this.state.code);
-      window.localStorage.setItem(`code-${selectedProject.projectLanguage}`, fileContent);
-    });
-
-  };
-
-  private onProjectDelete_ = (selectedProject: Project) => {
-    this.setState({
-      modal: Modal.DELETE_PROJECT,
-    }, () => {
-      this.props.onSelectProject(selectedProject);
-    });
-  };
-
-  private onNewFile_ = (selectedProject: Project, fileType: string) => {
-    let fileT: 'src' | 'include' | 'userData';
-    switch (fileType) {
-      case 'c':
-      case 'cpp':
-      case 'python':
-      case 'graphical':
-        fileT = 'src';
-        break;
-      case 'h':
-        fileT = 'include';
-        break;
-      case 'txt':
-        fileT = 'userData';
-        break;
-      default:
-        console.error("Invalid file type for new file:", fileType);
-        return;
-    }
-    this.setState({
-      modal: Modal.NEW_FILE,
-      projectDetails: {
-        project: selectedProject,
-        fileType: fileT,
-        fileName: ''
-      }
-    });
-
-  };
-
-  private onProjectCreate_ = (projectName: string, language: ProgrammingLanguage, interfaceMode: InterfaceMode) => {
-
-    const project: Project = {
-      projectName: projectName,
-      projectLanguage: language,
-      interfaceMode: interfaceMode,
-      srcFiles: {
-        [`main.${ProgrammingLanguage.FILE_EXTENSION[language]}`]: { fileName: `main.${ProgrammingLanguage.FILE_EXTENSION[language]}`, fileContent: ProgrammingLanguage.DEFAULT_CODE[language] }
-      },
-      includeFiles: {},
-      userDataFiles: {},
-      type: 'project'
-    };
-    console.log("onProjectCreate_: ", project);
-    this.props.onAddProject(project);
-
-    this.setState({
-      modal: Modal.NONE
-    });
-  };
-
-  private onFileCreate_ = (fileName: string) => {
-    console.log("onFileCreate_ state: ", this.state);
-    let fileN = fileName;
-    const { projectDetails, activeLanguage } = this.state;
-    switch (projectDetails.fileType) {
-      case 'src':
-        switch (activeLanguage) {
-          case 'c':
-            fileN += '.c';
-            break;
-          case 'cpp':
-            fileN += '.cpp';
-            break;
-          case 'python':
-            fileN += '.py';
-            break;
-          case 'graphical':
-            fileN += '.graphical';
-            break;
-          default:
-            console.error("Invalid active language for new file creation:", activeLanguage);
-            return;
-        }
-        break;
-      case 'include':
-        fileN += '.h';
-        break;
-      case 'userData':
-        fileN += '.txt';
-        break;
-      default:
-        console.error("Invalid file type for new file creation:", projectDetails.fileType);
-        return;
-    }
-    this.setState({
-      modal: Modal.NONE,
-      projectDetails: {
-        ...projectDetails,
-        fileName: fileN
-      },
-      code: {
-        ...this.state.code,
-        [activeLanguage]: ProgrammingLanguage.BLANK_CODE[activeLanguage],
-      }
-    }, () => {
-      this.props.onAddFile(projectDetails ? projectDetails.project : null, fileN, projectDetails ? projectDetails.fileType : 'src');
-    });
-
-  };
-
-  private onDeleteProject_ = async (answer: boolean) => {
-    answer ? await deleteProject(this.props.selectedProject) : null;
-    this.setState({
-      modal: Modal.NONE
-    });
-  };
-
-
   render() {
     const { props, state } = this;
 
@@ -845,7 +666,6 @@ class Root extends React.Component<Props, State> {
     }
 
     const {
-      selectedProject,
       selectedScript,
       selectedScriptId,
       onDocumentationClick,
@@ -865,7 +685,6 @@ class Root extends React.Component<Props, State> {
       feedback,
       windowInnerHeight,
       miniEditor,
-      projectDetails
     } = state;
 
     const theme = DARK;
@@ -911,12 +730,6 @@ class Root extends React.Component<Props, State> {
       onDocumentationGoToFuzzy,
       onCommonDocumentationGoToFuzzy,
       layout: Layout.Overlay,
-      // onProjectAdd: this.onNewProject_,
-      // onSimFileSelected: this.onFileSelected_,
-      // onSimProjectSelected: this.props.onSelectProject,
-      // onDeleteSimProject: this.onProjectDelete_,
-      // onAddNewSimFile: this.onNewFile_,
-      // fileSelected: projectDetails.fileName ? true : false,
     };
 
     let impl: JSX.Element;
@@ -1065,30 +878,6 @@ class Root extends React.Component<Props, State> {
             onClose={this.onModalClose_}
           />
         )}
-        {modal.type === Modal.Type.NewProject && (
-          <CreateProjectDialog
-            theme={theme}
-            onClose={this.onModalClose_}
-            onCreateProject={this.onProjectCreate_}
-          />
-        )}
-        {modal.type === Modal.Type.NewFile && (
-          <CreateNewFileDialog
-            theme={theme}
-            onClose={this.onModalClose_}
-            onCloseCreateNewFileDialog={this.onFileCreate_}
-            fileType={projectDetails.fileType}
-          />
-
-        )}
-        {modal.type === Modal.Type.DeleteProject && (
-          <DeleteProjectDialog
-            theme={theme}
-            name={selectedProject ? selectedProject.projectName : ''}
-            onClose={this.onModalClose_}
-            onDeleteProject={this.onDeleteProject_}
-          />
-        )}
         <AiWindow
           theme={DARK}
           code={code[activeLanguage]}
@@ -1126,8 +915,6 @@ const ConnectedRoot = connect((state: ReduxState, { params: { sceneId, challenge
     sceneHasChallenge,
     locale: state.i18n.locale,
     robots: Dict.map(state.robots.robots, Async.latestValue),
-    projects: state.projects.entities,
-    selectedProject: state.projects.selectedProject,
   };
 }, (dispatch, { params: { sceneId } }: RootPublicProps) => ({
   onNodeAdd: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
@@ -1199,27 +986,7 @@ const ConnectedRoot = connect((state: ReduxState, { params: { sceneId, challenge
   },
   onAiClick: () => dispatch(AiAction.TOGGLE),
   onAskTutorClick: (params: SendMessageParams) => sendMessage(dispatch, params),
-  onAddProject: (project: Project) => {
-    dispatch(ProjectsAction.addProject({ project }));
-  },
-  onLoadProjects: () => {
-    dispatch(ProjectsAction.loadProjects({}));
-  },
-  onSetProjectCode: (project: Project, fileName: string, fileType: 'src' | 'include' | 'userData', fileContent: string) => {
-    dispatch(ProjectsAction.setCode({ project, fileName, fileType, fileContent }));
-  },
-  onAddFile: (project: Project, fileName: string, fileType: 'src' | 'include' | 'userData') => {
-    dispatch(ProjectsAction.addFile({ project, fileName, fileType }));
-  },
-  onSelectProject: (project: Project) => {
-    dispatch(ProjectsAction.selectProject({ project }));
-  },
-  onDeleteProject: (project: Project) => {
-    dispatch(ProjectsAction.deleteProject({ project }));
-  },
-  onChangeInterfaceMode: (interfaceMode: InterfaceMode) => {
-    dispatch(ProjectsAction.changeInterfaceMode({ interfaceMode }));
-  }
+
 }))(withNavigate(Root)) as React.ComponentType<RootPublicProps>;
 
 export default withParams<RootRouteParams>()(ConnectedRoot);

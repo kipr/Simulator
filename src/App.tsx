@@ -136,12 +136,6 @@ class App extends React.Component<Props, State> {
       }
     }
 
-    const interfaceMode = localStorage.getItem('interfaceMode');
-    if (interfaceMode) {
-      console.log("Read interfaceMode from localstorage:", interfaceMode);
-      this.props.setInterfaceMode(interfaceMode === 'Advanced' ? InterfaceMode.ADVANCED : InterfaceMode.SIMPLE);
-    }
-
     this.onAuthStateChangedSubscription_ = auth.onAuthStateChanged(user => {
       if (user) {
         console.log('User detected.');
