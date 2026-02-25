@@ -136,3 +136,14 @@ export interface Users {
 export namespace Users {
   export const EMPTY: Users = { me: undefined, users: {} };
 }
+
+export interface Settings {
+  simulationSensorNoise: boolean;
+  simulationRealisticSensors: boolean;
+  editorAutoComplete: boolean;
+  showScripts: boolean;
+  ideEditorDarkMode: boolean;
+  classroomView: boolean;
+  consoleLayout: "horizontal" | "vertical";
+  interfaceMode: boolean; // false = simple, true = advanced
+}

@@ -1,7 +1,7 @@
 import { applyMiddleware, combineReducers, compose, createStore, } from 'redux';
 
 import * as reducer from './reducer';
-import { DocumentationState, ChallengeCompletions, Challenges, I18n, Robots, Scenes, Assignments, Users, LimitedChallenges, LimitedChallengeCompletions, Classrooms, Projects } from './State';
+import { DocumentationState, ChallengeCompletions, Challenges, I18n, Robots, Scenes, Assignments, Users, LimitedChallenges, LimitedChallengeCompletions, Classrooms, Projects, Settings } from './State';
 import { AiState } from './State/Ai/index';
 // import history from './history';
 import { AsyncScene } from './State/Scene';
@@ -30,7 +30,8 @@ export default createStore(combineReducers<State>({
   classrooms: reducer.reduceClassrooms,
   projects: reducer.reduceProjects,
   users: reducer.reduceUsers,
-  ai: reducer.reduceAi
+  ai: reducer.reduceAi,
+  settings: reducer.reduceSettings,
 }), composeEnhancers(
   applyMiddleware(
   )
@@ -54,6 +55,7 @@ export interface State {
   projects: Projects;
   users: Users;
   ai: AiState;
+  settings: Settings;
 }
 
 export namespace State {
