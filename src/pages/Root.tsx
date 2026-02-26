@@ -667,6 +667,7 @@ class Root extends React.Component<Props, State> {
         name: scene.name,
         description: scene.description,
       });
+      this.props.onSaveScene(this.props.params.sceneId);
     });
   };
 
