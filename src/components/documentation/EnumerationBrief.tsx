@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from 'styletron-react';
+import { withStyleDeep } from 'styletron-react';
 
 import EnumerationDocumentation from '../../state/State/Documentation/EnumerationDocumentation';
 import { StyleProps } from '../../util/style';
@@ -15,7 +15,7 @@ export interface EnumerationBriefProps extends StyleProps, ThemeProps {
 
 type Props = EnumerationBriefProps;
 
-const StyledEnumerationName = styled(FileName, ({ theme }: ThemeProps) => ({
+const StyledEnumerationName = withStyleDeep(FileName, ({ theme }: ThemeProps) => ({
   display: 'block',
   marginBottom: `${theme.itemPadding}px`,
   ':last-child': {
