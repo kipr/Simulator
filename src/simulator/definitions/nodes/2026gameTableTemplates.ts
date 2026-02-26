@@ -203,7 +203,7 @@ export const BB2026Geometries = Object.freeze<Dict<Geometry>>({
   },
   'springTable26': {
     type: 'file',
-    uri: '/static/object_binaries/2026_Table.glb',
+    uri: '/static/object_binaries/2026_game_table_babylonjs.glb',
   },
   'basket': {
     type: 'file',
