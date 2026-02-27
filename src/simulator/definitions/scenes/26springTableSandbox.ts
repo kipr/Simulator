@@ -446,7 +446,7 @@ const PVCS_LEFT: Dict<Node> = {};
 for (const [i, origin] of PVC_LEFT_ORIGINS.entries()) {
   PVCS_LEFT[`pvc${i}_left`] = {
     type: 'from-bb-template',
-    name: tr('Barrel (2in PVC)'),
+    name: tr('Drum (2in PVC)'),
     templateId: PVC_TEMPLATES[i % 2],
     visible: true,
     editable: true,
@@ -471,7 +471,7 @@ const PVCS_RIGHT: Dict<Node> = {};
 for (const [i, origin] of PVC_RIGHT_ORIGINS.entries()) {
   PVCS_RIGHT[`pvc${i}_right`] = {
     type: 'from-bb-template',
-    name: tr('Barrel (2in PVC)'),
+    name: tr('Drum (2in PVC)'),
     templateId: PVC_TEMPLATES[i % 2],
     visible: true,
     editable: true,
