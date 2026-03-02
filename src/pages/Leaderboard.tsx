@@ -706,7 +706,6 @@ class Leaderboard extends React.Component<Props, State> {
 
     // Check if user is in top entries (to avoid duplicate display)
     const userInTopEntries = userContext && topEntries.some(e => e.id === userContext.id);
-
     // Show user context section only if user has a completion and is not in top N
     const showUserContextSection = userContext && !userInTopEntries;
     return (
@@ -752,7 +751,7 @@ class Leaderboard extends React.Component<Props, State> {
                     </SeparatorCell>
                   </SectionSeparator>
                   {/* User's entry */}
-                  {this.renderLeaderboardRow(userContext, sortedUsers.findIndex(user => user.id === currentUser.id), true, challengeArray)}
+                  {this.renderLeaderboardRow(userContext, sortedUsers.findIndex(user => user.id === currentUser.id) + 1, true, challengeArray)}
 
                 </>
               )}
