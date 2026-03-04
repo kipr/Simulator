@@ -3181,6 +3181,350 @@ msgstr "右侧PCV #%d"
 msgid "2026 Fall Botball game table sandbox"
 msgstr "2026秋季机器人球赛沙盘"
 
+msgid "JBC Sandbox"
+msgstr ""
+
+msgid ""
+"Junior Botball Challenge Sandbox. Starting Mat is A but B can also be shown "
+"instead. All cans 1-12 are available by default."
+msgstr ""
+
+msgid "2026 Botball Fall Game Table"
+msgstr ""
+
+msgid "2026 Botball Spring Game Table"
+msgstr ""
+
+msgid "Base Scene - 2026 Botball Game Table"
+msgstr ""
+
+msgid "Sliding Door #1"
+msgstr ""
+
+msgid "Sliding Door #2"
+msgstr ""
+
+msgid "Low Blue Pom #%d"
+msgstr ""
+
+msgid "Low Orange Pom #%d"
+msgstr ""
+
+msgid "High Blue Pom #%d"
+msgstr ""
+
+msgid "High Orange Pom #%d"
+msgstr ""
+
+msgid "Left Red Cube (2 inch)"
+msgstr ""
+
+msgid "Right Red Cube (2 inch)"
+msgstr ""
+
+msgid "Left Green Cube (2 inch)"
+msgstr ""
+
+msgid "Right Green Cube (2 inch)"
+msgstr ""
+
+msgid "Pallet #%d"
+msgstr ""
+
+msgid "Lower Yellow Cube (2 inch)"
+msgstr ""
+
+msgid "Upper Yellow Cube (2 inch)"
+msgstr ""
+
+msgid "Middle Left Brown Cube"
+msgstr ""
+
+msgid "Middle Right Brown Cube"
+msgstr ""
+
+msgid "Green Cube"
+msgstr ""
+
+msgid "Red Cube"
+msgstr ""
+
+msgid "Near Stack %s Cube"
+msgstr ""
+
+msgid "Far Stack %s Cube"
+msgstr ""
+
+msgid "Dropper #1"
+msgstr ""
+
+msgid "Dropper #2"
+msgstr ""
+
+msgid "Drum (2in PVC)"
+msgstr ""
+
+msgid "Dropper Gate"
+msgstr ""
+
+msgid "2026 Botball Game Table Sandbox"
+msgstr ""
+
+msgid ""
+"2026 Botball game table sandbox. One robot and one side of the table are "
+"available. Barrels (2in PVC) drop every 7 seconds, starting 10 seconds "
+"after the scene is loaded."
+msgstr ""
+
+msgid "Speed Run: Ring Around the Can"
+msgstr ""
+
+msgid ""
+"Complete the Ring Around the Can challenge as fast as possible! Limited "
+"time event."
+msgstr ""
+
+msgid "Robot Reentered Start"
+msgstr ""
+
+msgid "Robot Passed Left Side"
+msgstr ""
+
+msgid "Speed Run: Tag, You're it!"
+msgstr ""
+
+msgid ""
+"Complete the Tag, You're it! challenge as fast as possible! Limited time "
+"event."
+msgstr ""
+
+msgid "Classrooms"
+msgstr ""
+
+msgid "See the current classrooms."
+msgstr ""
+
+msgid "Limited Challenges"
+msgstr ""
+
+msgid "Challenges with time limits and attempt restrictions."
+msgstr ""
+
+msgid "Loading leaderboard..."
+msgstr ""
+
+msgid "Error loading leaderboard"
+msgstr ""
+
+msgid "Rank"
+msgstr ""
+
+msgid "Your position"
+msgstr ""
+
+msgid "participants"
+msgstr ""
+
+msgid "Show Top Users"
+msgstr ""
+
+msgid "Show Full Board"
+msgstr ""
+
+msgid "Your name on the leaderboard:"
+msgstr ""
+
+msgid "days"
+msgstr ""
+
+msgid "hrs"
+msgstr ""
+
+msgid "min"
+msgstr ""
+
+msgid "sec"
+msgstr ""
+
+msgid "Upcoming"
+msgstr ""
+
+msgid "Closed"
+msgstr ""
+
+msgid "Mystery Challenge"
+msgstr ""
+
+msgid "Check back when this challenge opens to see what awaits!"
+msgstr ""
+
+msgid "Opens in"
+msgstr ""
+
+msgid "Closes in"
+msgstr ""
+
+msgid "Best Time"
+msgstr ""
+
+msgid ""
+"Complete these time-limited challenges as fast as possible! Your best time "
+"will be recorded."
+msgstr ""
+
+msgid "No limited challenges available at this time."
+msgstr ""
+
+msgid "View Closed Challenges"
+msgstr ""
+
+msgid "Back to Limited Challenges"
+msgstr ""
+
+msgid "Closed Challenges"
+msgstr ""
+
+msgid "View past limited challenges and their leaderboards."
+msgstr ""
+
+msgid "No closed challenges yet."
+msgstr ""
+
+msgid "Predefined Location"
+msgstr ""
+
+msgid "None"
+msgstr ""
+
+msgid "Show Scripts"
+msgstr ""
+
+msgid "Show scripts in the World section"
+msgstr ""
+
+msgid "Scene"
+msgstr ""
+
+msgid "Tutor is thinking..."
+msgstr "導師正在思考..."
+
+msgid "Create New Project"
+msgstr ""
+
+msgid "Create New File"
+msgstr ""
+
+msgid "Are You Sure?"
+msgstr ""
+
+msgid "Loading Python...\n"
+msgstr ""
+
+msgid "Please help me understand what's wrong."
+msgstr "請幫我理解哪裡出了問題。"
+
+msgid "Success conditions met - verifying...\n"
+msgstr ""
+
+msgid "Completion invalidated - failure condition triggered\n"
+msgstr ""
+
+msgid "This challenge is closed and no longer accepting submissions.\n"
+msgstr ""
+
+msgid "This challenge has not opened yet.\n"
+msgstr ""
+
+msgid "Challenge Closed"
+msgstr ""
+
+msgid "This challenge is no longer accepting submissions."
+msgstr ""
+
+msgid "Your best time: "
+msgstr ""
+
+msgid "This challenge has not opened yet."
+msgstr ""
+
+msgid "This challenge is closed and no longer accepting submissions."
+msgstr ""
+
+msgid "No completions yet. Be the first to complete this challenge!"
+msgstr ""
+
+msgid "Runtime"
+msgstr ""
+
+msgid "Completed"
+msgstr ""
+
+msgid "Back to Challenges"
+msgstr ""
+
+msgid "Enter Challenge"
+msgstr ""
+
+msgid "Show Around Me"
+msgstr ""
+
+msgid "Sort by:"
+msgstr ""
+
+msgid "Fastest Runtime"
+msgstr ""
+
+msgid "First to Complete"
+msgstr ""
+
+msgid "Student View"
+msgstr ""
+
+msgid "See the classroom you are in."
+msgstr ""
+
+msgid "Teacher View"
+msgstr ""
+
+msgid "See and manage all the classrooms you own."
+msgstr ""
+
+msgid "My Badges"
+msgstr ""
+
+msgid "Create New Classroom"
+msgstr ""
+
+msgid "Choose Class Leaderboard"
+msgstr ""
+
+msgid "Join Classroom"
+msgstr ""
+
+msgid "Leave Classroom"
+msgstr ""
+
+msgid "Default JBC Challenges"
+msgstr ""
+
+msgid "User Already Exists"
+msgstr ""
+
+msgid "UH OH!"
+msgstr ""
+
+msgid "This user already exists."
+msgstr ""
+
+msgid "No IvygateClassroomType"
+msgstr ""
+
+msgid "Create New User"
+msgstr ""
+
+msgid "Back to File Explorer"
+msgstr ""
+
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
 msgstr "音量"
