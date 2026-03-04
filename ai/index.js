@@ -90,8 +90,8 @@ function createAiRouter(firebaseTokenManager, config) {
       console: consoleText,
       robot,
       model = 'claude-sonnet-4-20250514',
+      locale,
     } = req.body;
-
     const userId = req.user?.uid;
     const sessionId = req.headers['x-session-id'] || req.sessionID || 'unknown';
 
@@ -121,13 +121,21 @@ function createAiRouter(firebaseTokenManager, config) {
       messages.filter((m) => m.role === 'user').slice(-1)[0]?.content || '';
 
     try {
-      const system = systemPrompt
+      const systemBase = systemPrompt
         .replace('{{code}}', code ?? 'Unknown')
         .replace('{{language}}', language ?? 'Unknown')
         .replace('{{console}}', consoleText ?? 'Unknown')
         .replace('{{robot}}', JSON.stringify(robot) ?? 'Unknown')
         .replace('{{challenges}}', challengeMentioned ? challengePrompt : '');
 
+      const localizationSystem =
+        `\n\nLOCALIZATION RULES (for chat/explanations):\n` +
+        `- Write your entire response in locale ${locale}.\n` +
+        `- Use local number/date formats and punctuation conventions.\n` +
+        `- Keep technical identifiers (code, variable names, error messages) unchanged.\n` +
+        `- Do NOT call tr() or output translation keys.\n`;
+
+      const system = systemBase + localizationSystem;
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {

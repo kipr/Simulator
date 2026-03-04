@@ -3239,6 +3239,350 @@ msgstr "PCV derecho #%d"
 msgid "2026 Fall Botball game table sandbox"
 msgstr "2026 Sandbox de la mesa de juego Botball de otoño"
 
+msgid "JBC Sandbox"
+msgstr ""
+
+msgid ""
+"Junior Botball Challenge Sandbox. Starting Mat is A but B can also be shown "
+"instead. All cans 1-12 are available by default."
+msgstr ""
+
+msgid "2026 Botball Fall Game Table"
+msgstr "Mesa del juego Botball Fall 2026"
+
+msgid "2026 Botball Spring Game Table"
+msgstr "Mesa del juego Botball Spring 2026"
+
+msgid "Base Scene - 2026 Botball Game Table"
+msgstr "Escena base - Mesa del juego Botball 2026"
+
+msgid "Sliding Door #1"
+msgstr "Puerta corredera n.º 1"
+
+msgid "Sliding Door #2"
+msgstr "Puerta corredera n.º 2"
+
+msgid "Low Blue Pom #%d"
+msgstr "Bajo Azul Pom #%d"
+
+msgid "Low Orange Pom #%d"
+msgstr "Naranja Bajo Pom #%d"
+
+msgid "High Blue Pom #%d"
+msgstr "Alto Azul Pom #%d"
+
+msgid "High Orange Pom #%d"
+msgstr "Naranja alto Pom #%d"
+
+msgid "Left Red Cube (2 inch)"
+msgstr "Cubo rojo izquierdo (2 pulgadas)"
+
+msgid "Right Red Cube (2 inch)"
+msgstr "Cubo rojo derecho (2 pulgadas)"
+
+msgid "Left Green Cube (2 inch)"
+msgstr "Cubo verde izquierdo (2 pulgadas)"
+
+msgid "Right Green Cube (2 inch)"
+msgstr "Cubo verde derecho (2 pulgadas)"
+
+msgid "Pallet #%d"
+msgstr "Palé n.º %d"
+
+msgid "Lower Yellow Cube (2 inch)"
+msgstr "Cubo amarillo inferior (2 pulgadas)"
+
+msgid "Upper Yellow Cube (2 inch)"
+msgstr "Cubo amarillo superior (2 pulgadas)"
+
+msgid "Middle Left Brown Cube"
+msgstr "Cubo marrón central izquierdo"
+
+msgid "Middle Right Brown Cube"
+msgstr "Cubo marrón central derecho"
+
+msgid "Green Cube"
+msgstr "Cubo verde"
+
+msgid "Red Cube"
+msgstr "Cubo rojo"
+
+msgid "Near Stack %s Cube"
+msgstr "Cerca de la pila %s Cubo"
+
+msgid "Far Stack %s Cube"
+msgstr "Pila lejana %s Cubo"
+
+msgid "Dropper #1"
+msgstr "Cuentagotas n.º 1"
+
+msgid "Dropper #2"
+msgstr "Cuentagotas n.º 2"
+
+msgid "Drum (2in PVC)"
+msgstr "Tambor (PVC de 2 pulgadas)"
+
+msgid "Dropper Gate"
+msgstr "Puerta con gotero"
+
+msgid "2026 Botball Game Table Sandbox"
+msgstr "2026 Mesa de juego Botball Sandbox"
+
+msgid ""
+"2026 Botball game table sandbox. One robot and one side of the table are "
+"available. Barrels (2in PVC) drop every 7 seconds, starting 10 seconds "
+"after the scene is loaded."
+msgstr ""
+
+msgid "Speed Run: Ring Around the Can"
+msgstr "Carrera de velocidad: Rodea la lata"
+
+msgid ""
+"Complete the Ring Around the Can challenge as fast as possible! Limited "
+"time event."
+msgstr ""
+
+msgid "Robot Reentered Start"
+msgstr "El robot volvió a entrar en la salida."
+
+msgid "Robot Passed Left Side"
+msgstr "El robot pasó por el lado izquierdo."
+
+msgid "Speed Run: Tag, You're it!"
+msgstr "Carrera de velocidad: ¡Te toca!"
+
+msgid ""
+"Complete the Tag, You're it! challenge as fast as possible! Limited time "
+"event."
+msgstr ""
+
+msgid "Classrooms"
+msgstr "Aulas"
+
+msgid "See the current classrooms."
+msgstr "Vea las aulas actuales."
+
+msgid "Limited Challenges"
+msgstr "Desafíos limitados"
+
+msgid "Challenges with time limits and attempt restrictions."
+msgstr "Desafíos con límites de tiempo y restricciones de intentos."
+
+msgid "Loading leaderboard..."
+msgstr "Cargando la tabla de clasificación..."
+
+msgid "Error loading leaderboard"
+msgstr "Error al cargar la tabla de clasificación"
+
+msgid "Rank"
+msgstr "Rango"
+
+msgid "Your position"
+msgstr "Tu posición"
+
+msgid "participants"
+msgstr "participantes"
+
+msgid "Show Top Users"
+msgstr "Mostrar usuarios principales"
+
+msgid "Show Full Board"
+msgstr "Mostrar pensión completa"
+
+msgid "Your name on the leaderboard:"
+msgstr "Tu nombre en la tabla de clasificación:"
+
+msgid "days"
+msgstr "días"
+
+msgid "hrs"
+msgstr "hrs"
+
+msgid "min"
+msgstr "min"
+
+msgid "sec"
+msgstr "sec"
+
+msgid "Upcoming"
+msgstr "Próximamente"
+
+msgid "Closed"
+msgstr "Cerrado"
+
+msgid "Mystery Challenge"
+msgstr "Desafío misterioso"
+
+msgid "Check back when this challenge opens to see what awaits!"
+msgstr "¡Vuelve cuando se abra este desafío para ver lo que te espera!"
+
+msgid "Opens in"
+msgstr "Se abre en"
+
+msgid "Closes in"
+msgstr "Se cierra en"
+
+msgid "Best Time"
+msgstr "Mejor momento"
+
+msgid ""
+"Complete these time-limited challenges as fast as possible! Your best time "
+"will be recorded."
+msgstr ""
+
+msgid "No limited challenges available at this time."
+msgstr "No hay desafíos limitados disponibles en este momento."
+
+msgid "View Closed Challenges"
+msgstr "Ver desafíos cerrados"
+
+msgid "Back to Limited Challenges"
+msgstr "Volver a Desafíos limitados"
+
+msgid "Closed Challenges"
+msgstr "Desafíos cerrados"
+
+msgid "View past limited challenges and their leaderboards."
+msgstr "Ver los desafíos limitados anteriores y sus tablas de clasificación."
+
+msgid "No closed challenges yet."
+msgstr "Aún no hay retos cerrados."
+
+msgid "Predefined Location"
+msgstr "Ubicación predefinida"
+
+msgid "None"
+msgstr "Ninguno"
+
+msgid "Show Scripts"
+msgstr "Mostrar guiones"
+
+msgid "Show scripts in the World section"
+msgstr "Mostrar guiones en la sección Mundo"
+
+msgid "Scene"
+msgstr "Escena"
+
+msgid "Tutor is thinking..."
+msgstr "El tutor está pensando..."
+
+msgid "Create New Project"
+msgstr "Crear nuevo proyecto"
+
+msgid "Create New File"
+msgstr "Crear nuevo archivo"
+
+msgid "Are You Sure?"
+msgstr "¿Estás seguro?"
+
+msgid "Loading Python...\n"
+msgstr "Cargando Python...\n"
+
+msgid "Please help me understand what's wrong."
+msgstr "Por favor, ayúdame a entender qué es lo que está mal."
+
+msgid "Success conditions met - verifying...\n"
+msgstr "Condiciones de éxito cumplidas - verificando...\n"
+
+msgid "Completion invalidated - failure condition triggered\n"
+msgstr "Finalización invalidada: condición de fallo activada\n"
+
+msgid "This challenge is closed and no longer accepting submissions.\n"
+msgstr "Este desafío está cerrado y ya no se aceptan inscripciones."
+
+msgid "This challenge has not opened yet.\n"
+msgstr "Este desafío aún no se ha abierto."
+
+msgid "Challenge Closed"
+msgstr "Desafío cerrado"
+
+msgid "This challenge is no longer accepting submissions."
+msgstr "Este desafío ya no acepta inscripciones."
+
+msgid "Your best time: "
+msgstr "Tu mejor tiempo: "
+
+msgid "This challenge has not opened yet."
+msgstr "Este desafío aún no se ha abierto."
+
+msgid "This challenge is closed and no longer accepting submissions."
+msgstr "Este desafío está cerrado y ya no se aceptan inscripciones."
+
+msgid "No completions yet. Be the first to complete this challenge!"
+msgstr "Aún no hay completaciones. ¡Sé el primero en completar este desafío!"
+
+msgid "Runtime"
+msgstr "Tiempo de ejecución"
+
+msgid "Completed"
+msgstr "Completado"
+
+msgid "Back to Challenges"
+msgstr "Volver a Desafíos"
+
+msgid "Enter Challenge"
+msgstr "Entrar en el desafío"
+
+msgid "Show Around Me"
+msgstr "Mostrar cerca de mí"
+
+msgid "Sort by:"
+msgstr "Ordenar por:"
+
+msgid "Fastest Runtime"
+msgstr "Tiempo de ejecución más rápido"
+
+msgid "First to Complete"
+msgstr "El primero en completar"
+
+msgid "Student View"
+msgstr "Opinión de los estudiantes"
+
+msgid "See the classroom you are in."
+msgstr "Mira el aula en la que estás."
+
+msgid "Teacher View"
+msgstr "Vista del profesor"
+
+msgid "See and manage all the classrooms you own."
+msgstr "Vea y gestione todas las aulas que posee."
+
+msgid "My Badges"
+msgstr "Mis insignias"
+
+msgid "Create New Classroom"
+msgstr "Crear nueva clase"
+
+msgid "Choose Class Leaderboard"
+msgstr "Elegir clasificación de la clase"
+
+msgid "Join Classroom"
+msgstr "Únete al aula"
+
+msgid "Leave Classroom"
+msgstr "Salir del aula"
+
+msgid "Default JBC Challenges"
+msgstr "Desafíos predeterminados de JBC"
+
+msgid "User Already Exists"
+msgstr "El usuario ya existe"
+
+msgid "UH OH!"
+msgstr "¡OH, NO!"
+
+msgid "This user already exists."
+msgstr "Este usuario ya existe."
+
+msgid "No IvygateClassroomType"
+msgstr "Sin IvygateTipo de aula"
+
+msgid "Create New User"
+msgstr "Crear nuevo usuario"
+
+msgid "Back to File Explorer"
+msgstr "Volver al Explorador de archivos"
+
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
 msgstr "Volumen"

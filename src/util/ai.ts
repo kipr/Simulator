@@ -6,6 +6,7 @@ import store from '../state';
 import ProgrammingLanguage from 'programming/compiler/ProgrammingLanguage';
 import Robot from 'state/State/Robot';
 import { Dispatch } from 'redux';
+import LocalizedString from './LocalizedString';
 
 export interface SendMessageParams {
   content: string;
@@ -13,6 +14,7 @@ export interface SendMessageParams {
   language: ProgrammingLanguage;
   console: string;
   robot: Robot;
+  locale: LocalizedString.Language;
 }
 
 interface ApiResponse {
@@ -24,7 +26,7 @@ interface ErrorResponse {
 }
 
 // Thunk action creator for sending messages
-const sendMessage_ = async (dispatch: Dispatch, { content, code, language, console, robot }: SendMessageParams) => {
+const sendMessage_ = async (dispatch: Dispatch, { content, code, language, console, robot, locale }: SendMessageParams) => {
   try {
     dispatch(AiAction.SEND_MESSAGE_START);
 
@@ -39,7 +41,6 @@ const sendMessage_ = async (dispatch: Dispatch, { content, code, language, conso
 
     // Add the user message first
     dispatch(AiAction.addUserMessage({ content }));
-
     // Call Claude API
     const response = await fetch('/api/ai/completion', {
       method: 'POST',
@@ -55,6 +56,7 @@ const sendMessage_ = async (dispatch: Dispatch, { content, code, language, conso
         language,
         console,
         robot,
+        locale
       })
     });
 
