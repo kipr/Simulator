@@ -8,6 +8,7 @@ import {
   LIMITED_CHALLENGE_COMPLETION_COLLECTION,
   CLASSROOM_COLLECTION,
   PROJECT_COLLECTION,
+  TOUR_COLLECTION
 } from './constants';
 
 interface Selector {
@@ -58,6 +59,11 @@ namespace Selector {
 
   export const project = (id: string): Selector => ({
     collection: PROJECT_COLLECTION,
+    id,
+  });
+
+  export const tours = (id: string): Selector => ({
+    collection: TOUR_COLLECTION,
     id,
   });
 }

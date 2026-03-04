@@ -36,11 +36,15 @@ import ClassroomTeacherView from './pages/ClassroomTeacherView';
 import ClassroomStudentView from './pages/ClassroomStudentView';
 import { InterfaceMode } from './types/interfaceModes';
 import { Settings } from 'components/constants/Settings';
+import User, { AsyncUser } from 'state/State/User';
+import Dict from 'util/objectOps/Dict';
+import { Users } from 'state/State';
 export interface AppPublicProps {
 
 }
 
 interface AppPrivateProps {
+  users: Users;
   login: () => void;
   setMe: (me: string) => void;
   loadUser: (uid: string) => void;
@@ -157,7 +161,6 @@ class App extends React.Component<Props, State> {
         console.log('User detected.');
         this.props.loadUser(user.uid);
         this.props.setMe(user.uid);
-
         // Ensure user has obtained consent before continuing
         db.get<UserConsent>(Selector.user(user.uid))
           .then(userConsent => {
@@ -179,10 +182,35 @@ class App extends React.Component<Props, State> {
             // TODO: show user an error
             console.error('Failed to read user consent from DB');
           });
+
+        db.get<Tours>(Selector.tours(user.uid))
+          .then(tours => {
+            console.log('Tours info:', tours);
+          })
+          .catch(error => {
+            if (DbError.is(error) && error.code === DbError.CODE_NOT_FOUND) {
+              console.log('Tours info does not exist');
+            } else {
+              console.error('Failed to read tours info from DB', error);
+            }
+          });
       } else {
         this.props.login();
       }
     });
+  }
+
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    console.log("compDidUpdate prevProps:", prevProps, " this.props:", this.props);
+    const uid = auth.currentUser?.uid;
+    if (!uid) return;
+
+    const prev = prevProps.users.users?.[uid];
+    const next = this.props.users.users?.[uid];
+
+    if (prev !== next && next?.type === 5) {
+      console.log("User state changed:", next);
+    }
   }
 
   componentWillUnmount(): void {
@@ -250,7 +278,7 @@ class App extends React.Component<Props, State> {
  */
 export default connect((state: ReduxState) => {
   return {
-
+    users: state.users,
   };
 }, dispatch => ({
   login: () => {

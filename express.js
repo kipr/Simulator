@@ -21,7 +21,7 @@ const createParentalConsentRouter = require('./parentalConsent');
 const createAiRouter = require('./ai');
 const createLimitedChallengeCompletionsRouter = require('./limitedChallengeCompletions');
 const createClassroomsRouter = require('./classrooms');
-
+const createGuidedTourRouter = require('./guidedTour');
 let config;
 try {
   config = getConfig();
@@ -71,6 +71,7 @@ const { logCompilation, logFeedback, logRateLimit } = require('./logger');
 
 // set up rate limiter: maximum of 100 requests per 15 minute
 var RateLimit = require('express-rate-limit');
+const { create } = require('domain');
 var limiter = RateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 1000, // max 100 requests per windowMs
@@ -121,7 +122,7 @@ app.use(
   '/api/parental-consent',
   createParentalConsentRouter(firebaseTokenManager, mailgunClient, config),
 );
-
+app.use('/api/tours', createGuidedTourRouter(firebaseTokenManager));
 // Classrooms router
 app.use('/api/classrooms', createClassroomsRouter(firebaseTokenManager));
 // Add AI router

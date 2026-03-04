@@ -7,3 +7,4 @@ export const LIMITED_CHALLENGE_COLLECTION = 'limited_challenge';
 export const LIMITED_CHALLENGE_COMPLETION_COLLECTION = 'limited_challenge_completion';
 export const CLASSROOM_COLLECTION = 'classrooms';
 export const PROJECT_COLLECTION = 'projects';
+export const TOUR_COLLECTION = 'tours';
