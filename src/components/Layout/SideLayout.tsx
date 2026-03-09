@@ -181,7 +181,8 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
     const robotId = Object.keys(robots)[0];
     this.props.onNodeChange(robotId, {
       ...robots[robotId],
-      origin
+      origin,
+      startingOrigin: origin
     });
   };
 
