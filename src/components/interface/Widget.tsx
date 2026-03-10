@@ -132,7 +132,8 @@ const Container = styled('div', (props: ThemeProps & ModeProps) => ({
   borderRadius: props.mode === Mode.Floating ? `${props.theme.borderRadius}px` : undefined,
   border: `1px solid ${props.theme.borderColor}`,
   overflow: 'hidden',
-  flexBasis: '0',
+  flex: 1,
+  minHeight: 0,
   pointerEvents: 'auto',
   backgroundColor: props.theme.backgroundColor,
   borderTop: props.mode === Mode.Sidebar ? 'none' : undefined,
@@ -162,6 +163,13 @@ const Title = styled('span', (props: ThemeProps & { $hasComponents: boolean }) =
   wordBreak: 'keep-all',
   whiteSpace: 'nowrap',
 }));
+
+const Content = styled('div', {
+  flex: 1,
+  overflowY: 'auto',
+  overflowX: 'hidden',
+  minHeight: 0,
+});
 
 const sizeIcon = (size: Size): IconProp => {
   switch (size.type) {
@@ -244,7 +252,9 @@ class Widget extends React.PureComponent<Props, State> {
             .filter((self, i) => !hideActiveSize || i !== size)
           }
         </Chrome>
-        {children}
+        <Content>
+          {children}
+        </Content>
       </Container>
     );
   }
