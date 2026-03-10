@@ -25,7 +25,7 @@ const root = createRoot(reactRoot);
 root.render(
   <StyletronProvider value={engine} debug={debug} debugAfterHydration>
     <ReduxProvider store={store}>
-      <BrowserRouter>
+      <BrowserRouter future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
         <App />
       </BrowserRouter>
     </ReduxProvider>
