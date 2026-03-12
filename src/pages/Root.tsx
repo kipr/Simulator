@@ -559,8 +559,9 @@ class Root extends React.Component<Props, State> {
       code: this.state.code[this.state.activeLanguage],
       language: this.state.activeLanguage,
       console: StyledText.toString(this.state.console),
-      content: "Please help me understand what's wrong.",
+      content: LocalizedString.lookup(tr("Please help me understand what's wrong."), this.props.locale),
       robot: this.props.robots[Dict.unique(Scene.robots(Async.latestValue(this.props.scene)))?.robotId ?? "demobot"],
+      locale: this.props.locale,
     });
   };
 

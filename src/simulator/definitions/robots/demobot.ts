@@ -44,7 +44,7 @@ export const DEMOBOT: Robot = {
       parentPerpAxis: RawVector3.NEGATIVE_Z,
       childPerpAxis: RawVector3.NEGATIVE_X,
       childRotationQuaternion: Quaternion.FromEulerAngles(0, 0, Math.PI / -2),
-      motorPort: 3,
+      motorPort: 0,
       parentId: 'chassis',
       plug: Node.Motor.Plug.Inverted
     }),
@@ -63,7 +63,7 @@ export const DEMOBOT: Robot = {
       parentPerpAxis: RawVector3.NEGATIVE_Z,
       childPerpAxis: RawVector3.NEGATIVE_X,
       childRotationQuaternion: Quaternion.FromEulerAngles(0, 0, Math.PI / -2),
-      motorPort: 0,
+      motorPort: 3,
       parentId: 'chassis',
     }),
     right_wheel_link: Node.link({
