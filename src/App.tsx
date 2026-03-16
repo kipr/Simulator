@@ -17,7 +17,6 @@ import LimitedChallengeLeaderboard from './pages/LimitedChallengeLeaderboard';
 import Loading from './components/Loading';
 import Root from './pages/Root';
 import ChallengeRoot from './pages/ChallengeRoot';
-// import DocumentationWindow from './components/documentation/DocumentationWindow';
 import { DocumentationWindow } from 'ivygate/dist/src';
 import AiWindow from './components/Ai/AiWindow';
 import { DARK } from './components/constants/theme';
@@ -183,17 +182,17 @@ class App extends React.Component<Props, State> {
             console.error('Failed to read user consent from DB');
           });
 
-        db.get<Tours>(Selector.tours(user.uid))
-          .then(tours => {
-            console.log('Tours info:', tours);
-          })
-          .catch(error => {
-            if (DbError.is(error) && error.code === DbError.CODE_NOT_FOUND) {
-              console.log('Tours info does not exist');
-            } else {
-              console.error('Failed to read tours info from DB', error);
-            }
-          });
+        // db.get<Tours>(Selector.tours(user.uid))
+        //   .then(tours => {
+        //     console.log('Tours info:', tours);
+        //   })
+        //   .catch(error => {
+        //     if (DbError.is(error) && error.code === DbError.CODE_NOT_FOUND) {
+        //       console.log('Tours info does not exist');
+        //     } else {
+        //       console.error('Failed to read tours info from DB', error);
+        //     }
+        //   });
       } else {
         this.props.login();
       }
@@ -201,7 +200,7 @@ class App extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
-    console.log("compDidUpdate prevProps:", prevProps, " this.props:", this.props);
+
     const uid = auth.currentUser?.uid;
     if (!uid) return;
 
@@ -240,9 +239,9 @@ class App extends React.Component<Props, State> {
           <Route path="/curriculum" element={<CurriculumPage />} />
           <Route path="/classrooms" element={<ClassroomsDashboard theme={DARK} />} />
           <Route path="/classrooms/:classroomId" element={<ClassroomLeaderboard theme={DARK} />} />
-          <Route path="/classrooms/:teacherId/teacherView" element={<ClassroomTeacherView theme={DARK} locale={'en-US'} />} />
-          <Route path="/classrooms/:studentId/studentView/" element={<ClassroomStudentView theme={DARK} locale={'en-US'} />} />
-          <Route path="/classrooms/:studentId/studentView/:classroomId" element={<ClassroomStudentView theme={DARK} locale={'en-US'} />} />
+          <Route path="/classrooms/:teacherId/teacherView" element={<ClassroomTeacherView theme={DARK} />} />
+          <Route path="/classrooms/:studentId/studentView/" element={<ClassroomStudentView theme={DARK} />} />
+          <Route path="/classrooms/:studentId/studentView/:classroomId" element={<ClassroomStudentView theme={DARK} />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <DocumentationWindow theme={DARK} documentationType={'default'} />

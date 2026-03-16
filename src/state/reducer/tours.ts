@@ -47,7 +47,6 @@ export type ToursAction =
 export async function fetchTourIfNeeded(uid: string, tourId: string): Promise<TourDoc> {
 
   const state: any = store.getState();
-  console.log('Checking if tour needs to be fetched state:', state, 'uid:', uid, 'tourId:', tourId);
   if (state.tours.loaded[tourId] || state.tours.loading[tourId]) {
     return state.tours.byId[tourId] ?? TourDoc.DEFAULT;
   }
@@ -56,16 +55,9 @@ export async function fetchTourIfNeeded(uid: string, tourId: string): Promise<To
 
   try {
     const raw = await db.get<TourDoc>(Selector.userTour(tourId));
-    console.log("raw:", raw);
     const tour = TourDoc.withDefaults(raw);
-    //store.dispatch(ToursAction.tourLoaded({ tourId, tour }));
     const action = ToursAction.tourLoaded({ tourId, tour });
-    console.log('dispatching:', action);
     store.dispatch(action);
-
-    console.log('after dispatch -> tours slice:', store.getState().tours);
-    console.log('after dispatch -> byId[tourId]:', store.getState().tours.byId?.[tourId]);
-    console.log('after dispatch -> loaded[tourId]:', store.getState().tours.loaded?.[tourId]);
     return tour;
   } catch (error: any) {
     if (DbError.is(error) && error.code === DbError.CODE_NOT_FOUND) {
@@ -80,8 +72,14 @@ export async function fetchTourIfNeeded(uid: string, tourId: string): Promise<To
 };
 
 export async function completeTour(storedTour: TourDoc, uid: string, tourId: string, patch?: Partial<TourDoc>): Promise<void> {
-  console.log('Completing tour with storedTour:', storedTour, 'uid:', uid, 'tourId:', tourId);
-  const patchData: Partial<TourDoc> = { ...storedTour, completed: true, step: undefined, updatedAt: new Date().toISOString(), ...patch };
+  const patchData: Partial<TourDoc> = { ...storedTour, completed: true, step: patch ? patch.step : undefined, updatedAt: new Date().toISOString(), ...patch };
+  await db.set(Selector.userTour(tourId), patchData, true);
+  store.dispatch(ToursAction.tourPatch({ tourId, patch: patchData }));
+}
+
+export async function retakeTour(storedTour: TourDoc, uid: string, tourId: string): Promise<void> {
+  console.log("retaking tour with id", tourId);
+  const patchData: Partial<TourDoc> = { ...storedTour, completed: false, step: 0, updatedAt: new Date().toISOString() };
   await db.set(Selector.userTour(tourId), patchData, true);
   store.dispatch(ToursAction.tourPatch({ tourId, patch: patchData }));
 }
@@ -147,6 +145,18 @@ export const reduceTours = (state: ToursState = initialToursState, action: Tours
         byId: {
           ...state.byId,
           [action.tourId]: TourDoc.withDefaults({ ...current, ...action.patch }),
+        },
+        loaded: {
+          ...state.loaded,
+          [action.tourId]: true,
+        },
+        loading: {
+          ...state.loading,
+          [action.tourId]: false,
+        },
+        error: {
+          ...state.error,
+          [action.tourId]: undefined,
         },
       };
     default:
