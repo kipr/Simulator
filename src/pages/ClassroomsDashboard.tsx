@@ -11,7 +11,7 @@ import { WithNavigateProps, withNavigate } from '../util/withNavigate';
 import db from '../db';
 import { State as ReduxState } from '../state';
 import User from 'state/State/User';
-import { TourTarget } from '../components/Tours/TourTarget';
+import TourTarget from '../components/Tours/TourTarget';
 import { TourRegistry } from '../tours/TourRegistry';
 import { completeTour, fetchTourIfNeeded, retakeTour } from '../state/reducer/tours';
 import TourDoc, { getTourSteps, TourStep } from '../tours/Tours';
@@ -31,7 +31,6 @@ interface ClassroomsDashboardPrivateProps {
 
 interface ClassroomsDashboardState {
   userId: string;
-  showTour: boolean;
 }
 
 type Props = ClassroomsDashboardPublicProps & ClassroomsDashboardPrivateProps & WithNavigateProps;
@@ -41,7 +40,6 @@ const Container = styled('div', (props: ThemeProps) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  //justifyContent: 'center',
   width: '100%',
   minHeight: '100vh',
   backgroundColor: props.theme.backgroundColor,
@@ -68,7 +66,6 @@ const CardContainer = styled('div', (props: ThemeProps) => ({
   paddingBottom: `calc(${cardContainerMargin()} + 50px)`,
   backgroundColor: props.theme.backgroundColor,
   width: `calc(100vw - 210px)`,
-  //minHeight: 'calc(100vh - 210px)',
   marginTop: '5em',
 }));
 
@@ -79,8 +76,7 @@ class ClassroomsDashboard extends React.PureComponent<Props, State> {
     super(props);
 
     this.state = {
-      userId: '',
-      showTour: false,
+      userId: ''
     };
   }
   private registry = new TourRegistry();
@@ -109,27 +105,22 @@ class ClassroomsDashboard extends React.PureComponent<Props, State> {
   }
 
   private onCloseTour_ = () => {
-    completeTour(this.props.tour, this.props.uid, TourDoc.IDS.CLASSROOM);
-    this.setState({ showTour: false });
-  }
+    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.CLASSROOM);
+  };
 
   private onSkipTour_ = () => {
-    completeTour(this.props.tour, this.props.uid, TourDoc.IDS.CLASSROOM, { dismissed: true });
-    this.setState({ showTour: false });
-  }
+    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.CLASSROOM, { dismissed: true });
+  };
 
   private onRetakeTour_ = () => {
-    console.log("triggered retake classroom tour");
-    retakeTour(this.props.tour, this.props.uid, TourDoc.IDS.CLASSROOM);
-    this.setState({ showTour: true });
-  }
+    void retakeTour(this.props.tour, this.props.uid, TourDoc.IDS.CLASSROOM);
+  };
   render() {
     const { props } = this;
     const { userId } = this.state;
     const { className, style, locale } = props;
     const theme = DARK;
     const showTour = props.tourLoaded && !props.tour.completed;
-    //const showTour = false;
     const classroomTourSteps: TourStep[] = getTourSteps(TourDoc.IDS.CLASSROOM);
     return (
       <Container className={className} style={style} theme={theme}>

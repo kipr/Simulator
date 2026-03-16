@@ -46,7 +46,7 @@ export type ToursAction =
 
 export async function fetchTourIfNeeded(uid: string, tourId: string): Promise<TourDoc> {
 
-  const state: any = store.getState();
+  const state = store.getState();
   if (state.tours.loaded[tourId] || state.tours.loading[tourId]) {
     return state.tours.byId[tourId] ?? TourDoc.DEFAULT;
   }
@@ -59,17 +59,17 @@ export async function fetchTourIfNeeded(uid: string, tourId: string): Promise<To
     const action = ToursAction.tourLoaded({ tourId, tour });
     store.dispatch(action);
     return tour;
-  } catch (error: any) {
+  } catch (error) {
     if (DbError.is(error) && error.code === DbError.CODE_NOT_FOUND) {
       console.log(`Tour with id ${tourId} not found for user ${uid}, loading default tour.`);
       store.dispatch(ToursAction.tourLoaded({ tourId, tour: TourDoc.DEFAULT }));
       return TourDoc.DEFAULT;
     }
 
-    store.dispatch(ToursAction.tourError({ tourId, error: error?.message ?? String(error) }));
+    store.dispatch(ToursAction.tourError({ tourId, error: String(error) }));
     throw error;
   }
-};
+}
 
 export async function completeTour(storedTour: TourDoc, uid: string, tourId: string, patch?: Partial<TourDoc>): Promise<void> {
   const patchData: Partial<TourDoc> = { ...storedTour, completed: true, step: patch ? patch.step : undefined, updatedAt: new Date().toISOString(), ...patch };
@@ -138,7 +138,7 @@ export const reduceTours = (state: ToursState = initialToursState, action: Tours
           [action.tourId]: action.error,
         },
       };
-    case 'tours/TOUR_PATCH':
+    case 'tours/TOUR_PATCH': {
       const current = state.byId[action.tourId] ?? TourDoc.DEFAULT;
       return {
         ...state,
@@ -159,6 +159,7 @@ export const reduceTours = (state: ToursState = initialToursState, action: Tours
           [action.tourId]: undefined,
         },
       };
+    }
     default:
       return state;
   }

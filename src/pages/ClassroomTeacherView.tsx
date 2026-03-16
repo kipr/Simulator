@@ -28,7 +28,7 @@ import Challenge from '../components/Challenge';
 import { AsyncChallenge } from '../state/State/Challenge';
 import { Challenges, ChallengeCompletions } from '../state/State';
 import { Project } from 'state/State/Project';
-import { TourTarget } from '../components/Tours/TourTarget';
+import TourTarget from '../components/Tours/TourTarget';
 import { TourRegistry } from '../tours/TourRegistry';
 import { GuidedTour } from '../components/Tours/GuidedTour';
 import TourDoc, { getTourSteps, TourStep } from '../tours/Tours';
@@ -256,7 +256,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       showClassroomLeaderboardSelector: true
     });
   };
-  private onCloseClassroomDialog_ = async (teacherDisplayName: string, classroomName: string, classroomInviteCode: string) => {
+  private onCloseClassroomDialog_ = (teacherDisplayName: string, classroomName: string, classroomInviteCode: string) => {
     this.props.onCreateClassroom({
       teacherId: auth.currentUser?.uid || '',
       classroomId: classroomName,
@@ -266,7 +266,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       type: 'classroom',
       teacherDisplayName: teacherDisplayName
     });
-    await this.props.onListOwnedClassrooms();
+    this.props.onListOwnedClassrooms();
     this.setState({ showCreateClassroomDialog: false });
   };
 
@@ -500,12 +500,12 @@ class ClassroomTeacherView extends React.Component<Props, State> {
   };
 
   private onCloseTour_ = () => {
-    completeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW, { step: this.state.currentTourStepIndex });
-  }
+    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW, { step: this.state.currentTourStepIndex });
+  };
 
   private onSkipTour_ = () => {
-    completeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW, { dismissed: true });
-  }
+    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW, { dismissed: true });
+  };
 
   private onBackClick_ = (stepIndex: number) => {
 
@@ -513,21 +513,21 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       this.setState({ showCreateClassroomDialog: false, currentTourStepIndex: stepIndex });
     }
     this.setState({ currentTourStepIndex: stepIndex });
-  }
+  };
 
   private onNextClick_ = (stepIndex: number) => {
     this.setState({ currentTourStepIndex: stepIndex });
-  }
+  };
 
   private onContinueTour_ = () => {
     this.setState({ continueTour: true }, () => {
       this.setState({ continueTour: false });
     });
-  }
+  };
 
   private onRetakeTour_ = () => {
-    retakeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW);
-  }
+    void retakeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW);
+  };
 
   render() {
     const { props, state } = this;

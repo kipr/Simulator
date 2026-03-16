@@ -1,15 +1,21 @@
-import React from "react";
+import * as React from 'react';
 import { TourRegistry } from "../../tours/TourRegistry";
 
-type Props = {
+interface TourTargetProps {
   registry: TourRegistry;
   targetKey: string;
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
-};
+}
 
-export class TourTarget extends React.PureComponent<Props> {
+type Props = TourTargetProps;
+
+class TourTarget extends React.Component<Props> {
+
+  constructor(props: Props) {
+    super(props);
+  }
   private wrapperEl: HTMLDivElement | null = null;
 
   private setRef = (node: HTMLDivElement | null) => {
@@ -31,7 +37,7 @@ export class TourTarget extends React.PureComponent<Props> {
     this.props.registry.register(this.props.targetKey, this.getMeasuredElement());
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: TourTargetProps) {
     if (prevProps.targetKey !== this.props.targetKey) {
       this.props.registry.register(prevProps.targetKey, null);
     }
@@ -54,3 +60,5 @@ export class TourTarget extends React.PureComponent<Props> {
     );
   }
 }
+
+export default TourTarget;

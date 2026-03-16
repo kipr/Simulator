@@ -11,7 +11,7 @@ import { I18nAction } from '../../state/reducer';
 import { connect } from 'react-redux';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesome } from '../FontAwesome';
-import { TourTarget } from '../Tours/TourTarget';
+import TourTarget from '../Tours/TourTarget';
 import { TourRegistry } from '../../tours/TourRegistry';
 import ReactDOM from 'react-dom';
 

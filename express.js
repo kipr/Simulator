@@ -71,7 +71,6 @@ const { logCompilation, logFeedback, logRateLimit } = require('./logger');
 
 // set up rate limiter: maximum of 100 requests per 15 minute
 var RateLimit = require('express-rate-limit');
-const { create } = require('domain');
 var limiter = RateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 1000, // max 100 requests per windowMs

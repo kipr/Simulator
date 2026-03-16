@@ -35,7 +35,7 @@ interface GuidedTourState {
   rect: Rect | null;
 }
 
-type Props = GuidedTourProps
+type Props = GuidedTourProps;
 type State = GuidedTourState;
 
 function clamp(n: number, min: number, max: number) {
@@ -250,7 +250,7 @@ export class GuidedTour extends React.PureComponent<Props, State> {
     if (this.scrollEl === el) return;
     if (this.scrollEl) this.scrollEl.removeEventListener("scroll", this.onWindowChange);
     this.scrollEl = el;
-    if (this.scrollEl) this.scrollEl.addEventListener("scroll", this.onWindowChange, { passive: true } as any);
+    if (this.scrollEl) this.scrollEl.addEventListener("scroll", this.onWindowChange, { passive: true });
   }
 
   private detachScrollListener() {
@@ -325,7 +325,7 @@ export class GuidedTour extends React.PureComponent<Props, State> {
         }
 
         if (Date.now() - start > timeout) {
-          this.waitForTarget(targetKey, timeout).then(resolve); // try again after timeout
+          void this.waitForTarget(targetKey, timeout).then(resolve); // try again after timeout
           return;
         }
 
@@ -360,11 +360,13 @@ export class GuidedTour extends React.PureComponent<Props, State> {
       }
 
       requestAnimationFrame(() => {
-        requestAnimationFrame(async () => {
-          const nextEl = await this.waitForTarget(nextStep.targetKey, 3000);
-          if (nextEl) {
-            this.next();
-          }
+        requestAnimationFrame(() => {
+          void (async () => {
+            const nextEl = await this.waitForTarget(nextStep.targetKey, 3000);
+            if (nextEl) {
+              this.next();
+            }
+          })();
         });
       });
     };
@@ -389,45 +391,48 @@ export class GuidedTour extends React.PureComponent<Props, State> {
   private measure(scrollIntoView: boolean) {
     this.cancelMeasure();
 
-    this.rafMeasure = requestAnimationFrame(async () => {
-      const step = this.currentStep();
-      if (!step) {
-        this.setState({ rect: null });
-        return;
-      }
-
-      const el = await this.waitForTarget(step.targetKey, 3000);
-      if (!el) {
-        this.setState({ rect: null });
-        return;
-      }
-
-      if (scrollIntoView) {
-        try {
-          if (this.props.scrollContainer) {
-            this.centerInContainer(el, this.props.scrollContainer);
-          } else {
-            el.scrollIntoView({ block: "center", inline: "nearest" });
+    this.rafMeasure =
+      requestAnimationFrame(() => {
+        void (async () => {
+          const step = this.currentStep();
+          if (!step) {
+            this.setState({ rect: null });
+            return;
           }
-        } catch {
-          // ignore
-        }
-      }
 
-      const r = el.getBoundingClientRect();
-      const pad = step.padding ?? 10;
+          const el = await this.waitForTarget(step.targetKey, 3000);
+          if (!el) {
+            this.setState({ rect: null });
+            return;
+          }
 
-      this.setState({
-        rect: {
-          top: r.top - pad,
-          left: r.left - pad,
-          width: r.width + pad * 2,
-          height: r.height + pad * 2,
-        },
+          if (scrollIntoView) {
+            try {
+              if (this.props.scrollContainer) {
+                this.centerInContainer(el, this.props.scrollContainer);
+              } else {
+                el.scrollIntoView({ block: "center", inline: "nearest" });
+              }
+            } catch {
+              // ignore
+            }
+          }
+
+          const r = el.getBoundingClientRect();
+          const pad = step.padding ?? 10;
+
+          this.setState({
+            rect: {
+              top: r.top - pad,
+              left: r.left - pad,
+              width: r.width + pad * 2,
+              height: r.height + pad * 2,
+            },
+          });
+
+          this.bindAdvanceOnTargetClick();
+        })();
       });
-
-      this.bindAdvanceOnTargetClick();
-    });
   }
 
   private next = () => {
@@ -470,7 +475,7 @@ export class GuidedTour extends React.PureComponent<Props, State> {
     const allowTargetInteraction = step.allowTargetInteraction !== false;
 
     const tooltipStyle =
-      rect != null ? toolTipPos(rect, step.placement ?? "auto") : { top: 24, left: 24, width: 360, height: 170 };
+      rect !== null ? toolTipPos(rect, step.placement ?? "auto") : { top: 24, left: 24, width: 360, height: 170 };
 
     const overlay = (
       <div
@@ -552,7 +557,7 @@ export class GuidedTour extends React.PureComponent<Props, State> {
 
         <Spotlight theme={theme} rect={rect} dimopacity={dimopacity} />
 
-        {allowTargetInteraction && rect != null && (
+        {allowTargetInteraction && rect !== null && (
           <PassthroughHole rect={rect} theme={theme} />
         )}
 
@@ -561,7 +566,7 @@ export class GuidedTour extends React.PureComponent<Props, State> {
             ...tooltipStyle,
             pointerEvents: "auto",
           }}
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
           theme={theme}
           rect={{ ...tooltipStyle }}
           placement={"auto"}

@@ -20,10 +20,10 @@ import { FontAwesome } from '../components/FontAwesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import ClassroomExtraMenu from '../components/ClassroomExtraMenu';
 import TourDoc, { getTourSteps, TourStep } from '../tours/Tours';
-import { TourTarget } from '../components/Tours/TourTarget';
+import TourTarget from '../components/Tours/TourTarget';
 import { TourRegistry } from '../tours/TourRegistry';
 import { GuidedTour } from '../components/Tours/GuidedTour';
-import { completeTour, fetchTourIfNeeded, retakeTour } from '../state/reducer/tours'
+import { completeTour, fetchTourIfNeeded, retakeTour } from '../state/reducer/tours';
 
 namespace SubMenu {
   export enum Type {
@@ -276,8 +276,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
         this.props.onJoinClassroom(isInClassroom.classroom);
         this.props.navigate(`/classrooms/${currentUser}/studentView/${isInClassroom.classroom.classroomId}`);
       });
-    }
-    else {
+    } else {
       if (uid) {
         await fetchTourIfNeeded(this.props.uid, TourDoc.IDS.STUDENT_VIEW);
       }
@@ -286,15 +285,14 @@ class ClassroomStudentView extends React.Component<Props, State> {
 
   }
 
-  async componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ClassroomStudentViewState>): Promise<void> {
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ClassroomStudentViewState>) {
 
-    if (prevState.currentClassroom != this.state.currentClassroom) {
+    if (prevState.currentClassroom !== this.state.currentClassroom) {
       if (this.state.currentClassroom) {
         const currentUser = auth.currentUser.uid;
         this.props.navigate(`/classrooms/${currentUser}/studentView/${this.state.currentClassroom.classroomId}`);
         this.setState({ studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM), tourId: TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM });
-      }
-      else {
+      } else {
         this.setState({ studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW), tourId: TourDoc.IDS.STUDENT_VIEW });
       }
     }
@@ -416,19 +414,17 @@ class ClassroomStudentView extends React.Component<Props, State> {
     window.removeEventListener('click', this.onClickOutside_);
   };
   private onCloseTour_ = () => {
-    //completeTour(this.props.tour, this.props.uid, this.state.tourId);
-    completeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId);
-  }
+    void completeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId);
+  };
 
   private onSkipTour_ = () => {
-    completeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId, { dismissed: true });
+    void completeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId, { dismissed: true });
 
-  }
+  };
 
   private onNextClick_ = (stepIndex: number) => {
-    const { studentViewTourSteps } = this.state;
     this.setState({ currentTourStepIndex: stepIndex });
-  }
+  };
   private onBackClick_ = (stepIndex: number) => {
     const { studentViewTourSteps } = this.state;
 
@@ -443,17 +439,17 @@ class ClassroomStudentView extends React.Component<Props, State> {
     if (studentViewTourSteps[stepIndex].targetKey === 'join-classroom-button') {
       this.setState({ showJoinClassroomDialog: false, currentTourStepIndex: stepIndex });
     }
-  }
+  };
 
   private onContinueTour_ = () => {
     this.setState({ continueTour: true }, () => {
       this.setState({ continueTour: false });
     });
-  }
+  };
 
   private onRetakeTour_ = () => {
-    retakeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId);
-  }
+    void retakeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId);
+  };
 
   render() {
     const { props, state } = this;

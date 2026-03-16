@@ -14,7 +14,7 @@ import { FontAwesome } from '../FontAwesome';
 import { InterfaceMode } from 'ivygate/dist/src/types/interface';
 import { default as IvygateClassroomType } from 'ivygate/dist/src/types/classroomTypes';
 import { Classroom } from 'state/State/Classroom';
-import { TourTarget } from '../Tours/TourTarget';
+import TourTarget from '../Tours/TourTarget';
 import { TourRegistry } from '../../tours/TourRegistry';
 
 

@@ -134,7 +134,7 @@ export class MainMenu extends React.Component<Props, State> {
 
     this.state = {
       subMenu: SubMenu.NONE,
-    }
+    };
   }
 
   private onLogoutClick_ = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -174,7 +174,7 @@ export class MainMenu extends React.Component<Props, State> {
   private onRetakeTour_ = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     this.props.onRetakeTour ? this.props.onRetakeTour(event) : null;
     this.setState({ subMenu: SubMenu.NONE });
-  }
+  };
 
   render() {
     const { className, style, locale } = this.props;

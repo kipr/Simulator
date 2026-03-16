@@ -19,7 +19,7 @@ import Async from '../state/State/Async';
 import MyBadgesDialog from '../components/Dialog/MyBadgesDialog';
 import { auth } from '../firebase/firebase';
 import { LeaderboardEntry, LeaderboardUserContext } from 'state/State/LimitedChallengeLeaderboard';
-import { TourTarget } from '../components/Tours/TourTarget';
+import TourTarget from '../components/Tours/TourTarget';
 import { TourRegistry } from '../tours/TourRegistry';
 
 const SELFIDENTIFIER = "My Scores!";
@@ -1032,10 +1032,10 @@ export default connect((state: ReduxState) => {
 
   });
 },
-  (dispatch) => ({
-    onClearSelectedClassroom: () =>
-      dispatch(ClassroomsAction.clearSelectedClassroom({})),
-  })
+(dispatch) => ({
+  onClearSelectedClassroom: () =>
+    dispatch(ClassroomsAction.clearSelectedClassroom({})),
+})
 
 
 )(CompWithRouter) as React.ComponentType<ClassroomLeaderboardPublicProps>;

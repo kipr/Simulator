@@ -14,11 +14,10 @@ import tr from '@i18n';
 import { WithNavigateProps, withNavigate } from '../util/withNavigate';
 import { DEFAULT_SCENE } from '../components/constants/defaultScene';
 import TourDoc, { getTourSteps, TourStep } from '../tours/Tours';
-import { ToursAction } from '../state/reducer/tours';
-import { fetchTourIfNeeded, completeTour } from '../state/reducer/tours';
+import { fetchTourIfNeeded, completeTour, retakeTour } from '../state/reducer/tours';
 import { TourRegistry } from '../tours/TourRegistry';
 import { GuidedTour } from '../components/Tours/GuidedTour';
-import { TourTarget } from '../components/Tours/TourTarget';
+import TourTarget from '../components/Tours/TourTarget';
 
 export interface DashboardPublicProps extends ThemeProps, StyleProps {
 }
@@ -88,14 +87,15 @@ class Dashboard extends React.PureComponent<Props> {
   }
 
   private onCloseTour_ = () => {
-    completeTour(this.props.tour, this.props.uid, TourDoc.IDS.DASHBOARD);
-    this.setState({ showTour: false });
-  }
+    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.DASHBOARD);
+  };
 
   private onSkipTour_ = () => {
-    completeTour(this.props.tour, this.props.uid, TourDoc.IDS.DASHBOARD, { dismissed: true });
-    this.setState({ showTour: false });
-  }
+    void completeTour(this.props.tour, this.props.uid, TourDoc.IDS.DASHBOARD, { dismissed: true });
+  };
+  private onRetakeTour_ = () => {
+    void retakeTour(this.props.tour, this.props.uid, TourDoc.IDS.DASHBOARD);
+  };
   render() {
     const { props } = this;
     const { className, style, locale, tour } = props;
@@ -105,8 +105,8 @@ class Dashboard extends React.PureComponent<Props> {
 
     return (
       <Container className={className} style={style} theme={theme}>
-        <MainMenu theme={theme} />
-        <CardContainer theme={theme} ref={(n) => (this.scrollRef = n)}>
+        <MainMenu theme={theme} onRetakeTour={this.onRetakeTour_} />
+        <CardContainer theme={theme} ref={(n: HTMLDivElement | null) => { this.scrollRef = n; }}>
 
           <TourTarget registry={this.registry} targetKey='tutorial-card' style={style}>
             <Card

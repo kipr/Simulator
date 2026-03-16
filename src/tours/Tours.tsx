@@ -24,7 +24,7 @@ namespace TourDoc {
     TEACHER_VIEW: 'teacher-view-tour',
     STUDENT_VIEW: 'student-view-tour',
     STUDENT_VIEW_IN_CLASSROOM: 'student-view-in-classroom-tour',
-  } as const;
+  };
 
   export const ALL = [
     IDS.DASHBOARD,
@@ -79,7 +79,7 @@ export type TourStep = {
 };
 
 const DashboardTourSteps: TourStep[] = [
-  //Tutorial Card Step
+  // Tutorial Card Step
   {
     id: "tutorials",
     targetKey: "tutorial-card",
@@ -88,7 +88,7 @@ const DashboardTourSteps: TourStep[] = [
     placement: "bottom",
     padding: 20
   },
-  //Simulator Card Step
+  // Simulator Card Step
   {
     id: "simulator",
     targetKey: "simulator-card",
@@ -96,7 +96,7 @@ const DashboardTourSteps: TourStep[] = [
     content: "A simulator for the Botball demobot.",
     placement: "bottom",
   },
-  //Classrooms Card Step
+  // Classrooms Card Step
   {
     id: "classrooms",
     targetKey: "classrooms-card",
@@ -104,7 +104,7 @@ const DashboardTourSteps: TourStep[] = [
     content: "See the current classrooms.",
     placement: "bottom",
   },
-  //Limited Challenges Card Step
+  // Limited Challenges Card Step
   {
     id: "limited-challenges",
     targetKey: "limited-challenges-card",
@@ -112,7 +112,7 @@ const DashboardTourSteps: TourStep[] = [
     content: "Challenges with time limits and attempt restrictions.",
     placement: "bottom",
   },
-  //Leaderboard Card Step
+  // Leaderboard Card Step
   {
     id: "leaderboard",
     targetKey: "leaderboard-card",
@@ -120,7 +120,7 @@ const DashboardTourSteps: TourStep[] = [
     content: "See the current challenge leaderboard.",
     placement: "bottom",
   },
-  //About Card Step
+  // About Card Step
   {
     id: "about",
     targetKey: "about-card",
@@ -128,10 +128,10 @@ const DashboardTourSteps: TourStep[] = [
     content: "KIPR is a 501(c) 3 organization started to make the long-term educational benefits of robotics accessible to students.",
     placement: "bottom",
   }
-]
+];
 
 const ClassroomTourSteps: TourStep[] = [
-  //Classroom Dashboard Step
+  // Classroom Dashboard Step
   {
     id: "classroom-overview",
     targetKey: "classroom-overview",
@@ -140,7 +140,7 @@ const ClassroomTourSteps: TourStep[] = [
     placement: "left",
     allowTargetInteraction: false
   },
-  //Student View Card Step
+  // Student View Card Step
   {
     id: "student-card",
     targetKey: "student-card",
@@ -149,7 +149,7 @@ const ClassroomTourSteps: TourStep[] = [
     placement: "bottom",
     allowTargetInteraction: false
   },
-  //Teacher View Card Step
+  // Teacher View Card Step
   {
     id: "teacher-card",
     targetKey: "teacher-card",
@@ -158,10 +158,10 @@ const ClassroomTourSteps: TourStep[] = [
     placement: "bottom",
     allowTargetInteraction: false
   }
-]
+];
 
 const TeacherViewTourSteps: TourStep[] = [
-  //Teacher Dashboard Step
+  // Teacher Dashboard Step
   {
     id: 'teacher-dashboard',
     targetKey: 'teacher-dashboard',
@@ -170,7 +170,7 @@ const TeacherViewTourSteps: TourStep[] = [
     placement: 'top',
     allowTargetInteraction: true
   },
-  //Select "+" Drop Down Step
+  // Select "+" Drop Down Step
   {
     id: 'create-classroom',
     targetKey: 'create-classroom-dropdown',
@@ -191,7 +191,7 @@ const TeacherViewTourSteps: TourStep[] = [
     noNextButton: true,
     advanceOnTargetClick: true,
   },
-  //Create Classroom Dialog Step
+  // Create Classroom Dialog Step
   {
     id: 'create-classroom-dialog',
     targetKey: 'create-classroom-dialog',
@@ -201,7 +201,7 @@ const TeacherViewTourSteps: TourStep[] = [
     allowTargetInteraction: true,
     noNextButton: true,
   },
-  //See Created Classroom Step
+  // See Created Classroom Step
   {
     id: 'see-created-classroom',
     targetKey: 'see-created-classroom',
@@ -212,7 +212,7 @@ const TeacherViewTourSteps: TourStep[] = [
     noBackButton: true,
     allowTargetInteraction: false,
   },
-  //See Classroom Users Step
+  // See Classroom Users Step
   {
     id: 'classroom-users',
     targetKey: 'classroom-users',
@@ -223,7 +223,7 @@ const TeacherViewTourSteps: TourStep[] = [
     noNextButton: true,
     advanceOnTargetClick: true,
   },
-  //See Invite Code Step
+  // See Invite Code Step
   {
     id: 'invite-code',
     targetKey: 'invite-code',
@@ -236,7 +236,7 @@ const TeacherViewTourSteps: TourStep[] = [
 ];
 
 const StudentViewTourSteps: TourStep[] = [
-  //Student Dashboard Step
+  // Student Dashboard Step
   {
     id: 'student-dashboard',
     targetKey: 'student-dashboard',
@@ -245,7 +245,7 @@ const StudentViewTourSteps: TourStep[] = [
     placement: 'top',
     allowTargetInteraction: false
   },
-  //Select "Join Class" Button Step
+  // Select "Join Class" Button Step
   {
     id: 'join-classroom',
     targetKey: 'join-classroom-button',
@@ -255,7 +255,7 @@ const StudentViewTourSteps: TourStep[] = [
     noNextButton: true,
     advanceOnTargetClick: true,
   },
-  //Join Classroom Dialog Step
+  // Join Classroom Dialog Step
   {
     id: 'join-classroom-dialog',
     targetKey: 'join-classroom-dialog',
@@ -265,7 +265,7 @@ const StudentViewTourSteps: TourStep[] = [
     allowTargetInteraction: true,
     noNextButton: true,
   },
-  //See Challenge Tab View (After Joining Classroom) Step
+  // See Challenge Tab View (After Joining Classroom) Step
   {
     id: 'challenge-tab-view',
     targetKey: 'challenge-tab-view',
@@ -276,7 +276,7 @@ const StudentViewTourSteps: TourStep[] = [
     noBackButton: true,
     allowTargetInteraction: false,
   },
-  //Default JBC Challenges Tab Step
+  // Default JBC Challenges Tab Step
   {
     id: 'default-jbc-challenges-leaderboard-tab',
     targetKey: 'default-jbc-challenges-leaderboard-tab',
@@ -309,7 +309,7 @@ const StudentViewTourSteps: TourStep[] = [
     noNextButton: false,
     advanceOnTargetClick: false,
   },
-  //See My Badges Button Step
+  // See My Badges Button Step
   {
     id: 'see-my-badges-button',
     targetKey: 'see-my-badges-button',
@@ -320,7 +320,7 @@ const StudentViewTourSteps: TourStep[] = [
     noNextButton: false,
     advanceOnTargetClick: false,
   },
-  //Limited Challenges Tab Click Step
+  // Limited Challenges Tab Click Step
   {
     id: 'challenge-tab-view-limited-challenges-click',
     targetKey: 'challenge-tab-view-limited-challenges-click',
@@ -355,7 +355,7 @@ const StudentViewTourSteps: TourStep[] = [
     advanceOnTargetClick: true,
   },
 
-  //Classroom Extra Options Drop Down Step
+  // Classroom Extra Options Drop Down Step
   {
     id: 'classroom-extra-options-dropdown',
     targetKey: 'classroom-extra-options-dropdown',

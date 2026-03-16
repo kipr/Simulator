@@ -15,7 +15,7 @@ import ChallengeCompletion from 'state/State/ChallengeCompletion';
 import ClassroomLeaderboard from '../../pages/ClassroomLeaderboard';
 import Async from 'state/State/Async';
 import ClassroomLimitedChallenges from './ClassroomLimitedChallenges';
-import { TourTarget } from '../Tours/TourTarget';
+import TourTarget from '../Tours/TourTarget';
 import { TourRegistry } from '../../tours/TourRegistry';
 
 export interface ChallengeTabViewRootRouteParams {

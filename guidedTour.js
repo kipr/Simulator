@@ -1,6 +1,7 @@
+/* eslint-env node */
 const express = require('express');
 const admin = require('firebase-admin');
-//import TourDoc from '/tours/Tours';
+// import TourDoc from '/tours/Tours';
 
 module.exports = function createGuidedTourRouter(firebaseTokenManager) {
   const router = express.Router();
@@ -8,8 +9,7 @@ module.exports = function createGuidedTourRouter(firebaseTokenManager) {
     try {
       const auth = req.headers.authorization || '';
       const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
-      if (!token)
-        return res.status(401).json({ message: 'Missing bearer token' });
+      if (!token) return res.status(401).json({ message: 'Missing bearer token' });
 
       const decoded = await firebaseTokenManager.verifyIdToken(token);
       req.user = { uid: decoded.uid };
