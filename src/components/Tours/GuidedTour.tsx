@@ -5,17 +5,21 @@ import { Rect, TourPlacement, TourStep } from "../../tours/Tours";
 import { DARK, ThemeProps } from "../constants/theme";
 import { StyleProps } from "../../util/style";
 import { styled } from "styletron-react";
-import { to } from "colorjs.io/fn";
 
 
 export interface GuidedTourProps extends ThemeProps, StyleProps {
   isOpen: boolean;
   steps: TourStep[];
   registry: TourRegistry;
+  continueTourFlag?: boolean;
 
   onClose: () => void;
   onFinish?: () => void;
   onSkip?: () => void;
+
+  onBackClick?: (stepIndex: number) => void;
+  onNextClick?: (stepIndex: number) => void;
+
 
   initialStepIndex?: number;
   lockScroll?: boolean;
@@ -90,23 +94,34 @@ const PassthroughHole = styled('div', (props: ThemeProps & { rect: Rect }) => ({
   width: `${props.rect.width}px`,
   height: `${props.rect.height}px`,
   borderRadius: "16px",
-  background: 'transparent', // for debugging
-  pointerEvents: "none", // key: let events reach the 
+  background: 'transparent',
+  pointerEvents: "none",
   display: !props.rect ? "none" : "block",
 }));
 
+const ButtonNavContainer = styled('div', {
+  display: "flex",
+  gap: '8px',
 
+});
 
+const StepIndicatorContainer = styled('div', (props: ThemeProps) => ({
+  fontSize: '12px',
+  opacity: '0.7',
+}));
 
-
-
+const TitleContainer = styled('div', (props: ThemeProps) => ({
+  fontSize: '16px',
+  fontWeight: 800,
+  marginBottom: '6px',
+}));
 
 function toolTipPos(rect: Rect, placement: TourPlacement) {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
 
   const w = 360;
-  const h = 170;
+  const h = 190;
   const gap = 14;
 
   const candidates = {
@@ -123,15 +138,15 @@ function toolTipPos(rect: Rect, placement: TourPlacement) {
   else if (placement === "right") pos = candidates.right;
   else if (placement === "auto") {
     // bottom -> top -> right -> left
-    if (candidates.bottom.top + h <= vh - 12) pos = candidates.bottom;
-    else if (candidates.top.top >= 12) pos = candidates.top;
-    else if (candidates.right.left + w <= vw - 12) pos = candidates.right;
+    if (candidates.bottom.top + h <= vh - 22) pos = candidates.bottom;
+    else if (candidates.top.top >= 22) pos = candidates.top;
+    else if (candidates.right.left + w <= vw - 22) pos = candidates.right;
     else pos = candidates.left;
   }
 
   return {
-    top: clamp(pos.top, 12, vh - h - 12),
-    left: clamp(pos.left, 12, vw - w - 12),
+    top: clamp(pos.top, 22, vh - h - 22),
+    left: clamp(pos.left, 22, vw - w - 22),
     width: w,
     height: h,
   };
@@ -162,6 +177,24 @@ export class GuidedTour extends React.PureComponent<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
+
+    /*
+      Continue tour flag needed because some tour steps trigger dialogs or other
+      UI that require waiting for a target to appear before advancing the tour.
+    */
+    if (prevProps.continueTourFlag !== this.props.continueTourFlag && this.props.continueTourFlag) {
+      const nextStepIndex = this.state.stepIndex + 1;
+      if (nextStepIndex < this.props.steps.length) {
+        this.setState({ stepIndex: nextStepIndex },
+          () => {
+            this.measure(true);
+            this.props.onNextClick(nextStepIndex);
+
+          });
+
+      }
+    }
+
     // open/close
     if (prevProps.scrollContainer !== this.props.scrollContainer) {
       this.attachScrollListener(this.props.scrollContainer ?? null);
@@ -279,19 +312,20 @@ export class GuidedTour extends React.PureComponent<Props, State> {
   private currentStep(): TourStep | undefined {
     return this.props.steps[this.state.stepIndex];
   }
-  private waitForTarget = (targetKey: string, timeout = 1000): Promise<HTMLElement | null> => {
+  private waitForTarget = (targetKey: string, timeout: number): Promise<HTMLElement | null> => {
     return new Promise((resolve) => {
       const start = Date.now();
 
       const check = () => {
         const el = this.props.registry.get(targetKey);
+
         if (el) {
           resolve(el);
           return;
         }
 
         if (Date.now() - start > timeout) {
-          resolve(null);
+          this.waitForTarget(targetKey, timeout).then(resolve); // try again after timeout
           return;
         }
 
@@ -301,6 +335,14 @@ export class GuidedTour extends React.PureComponent<Props, State> {
       check();
     });
   };
+
+  public advanceWhenTargetReady = async (targetKey: string, timeout = 1000) => {
+    const el = await this.waitForTarget(targetKey, timeout);
+    if (el) {
+      this.next();
+    }
+  };
+
   private bindAdvanceOnTargetClick() {
     this.unbindAdvanceOnTargetClick();
     const step = this.currentStep();
@@ -310,7 +352,6 @@ export class GuidedTour extends React.PureComponent<Props, State> {
     if (!el) return;
 
     const handler = (e: Event) => {
-      //e.stopPropagation();
 
       const nextStep = this.props.steps[this.state.stepIndex + 1];
       if (!nextStep) {
@@ -320,8 +361,10 @@ export class GuidedTour extends React.PureComponent<Props, State> {
 
       requestAnimationFrame(() => {
         requestAnimationFrame(async () => {
-          await this.waitForTarget(nextStep.targetKey, 1000);
-          this.next();
+          const nextEl = await this.waitForTarget(nextStep.targetKey, 3000);
+          if (nextEl) {
+            this.next();
+          }
         });
       });
     };
@@ -338,8 +381,6 @@ export class GuidedTour extends React.PureComponent<Props, State> {
   private centerInContainer(targetEl: HTMLElement, container: HTMLElement) {
     const c = container.getBoundingClientRect();
     const r = targetEl.getBoundingClientRect();
-
-    // target center relative to container scroll space
     const targetCenterY = (r.top - c.top) + container.scrollTop + r.height / 2;
     const nextScrollTop = targetCenterY - container.clientHeight / 2;
 
@@ -348,14 +389,14 @@ export class GuidedTour extends React.PureComponent<Props, State> {
   private measure(scrollIntoView: boolean) {
     this.cancelMeasure();
 
-    this.rafMeasure = requestAnimationFrame(() => {
+    this.rafMeasure = requestAnimationFrame(async () => {
       const step = this.currentStep();
       if (!step) {
         this.setState({ rect: null });
         return;
       }
 
-      const el = this.props.registry.get(step.targetKey);
+      const el = await this.waitForTarget(step.targetKey, 3000);
       if (!el) {
         this.setState({ rect: null });
         return;
@@ -363,7 +404,11 @@ export class GuidedTour extends React.PureComponent<Props, State> {
 
       if (scrollIntoView) {
         try {
-          this.centerInContainer(el, this.props.scrollContainer!);
+          if (this.props.scrollContainer) {
+            this.centerInContainer(el, this.props.scrollContainer);
+          } else {
+            el.scrollIntoView({ block: "center", inline: "nearest" });
+          }
         } catch {
           // ignore
         }
@@ -391,10 +436,12 @@ export class GuidedTour extends React.PureComponent<Props, State> {
       this.finish();
       return;
     }
+    this.props.onNextClick?.(this.state.stepIndex + 1);
     this.setState((s) => ({ stepIndex: s.stepIndex + 1 }));
   };
 
   private back = () => {
+    this.props.onBackClick?.(Math.max(0, this.state.stepIndex - 1));
     this.setState((s) => ({ stepIndex: Math.max(0, s.stepIndex - 1) }));
   };
 
@@ -522,9 +569,9 @@ export class GuidedTour extends React.PureComponent<Props, State> {
           <div style={{ display: "flex", gap: 12, alignItems: "start" }}>
             <div style={{ flex: 1 }}>
               {step.title && (
-                <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 6 }}>
+                <TitleContainer theme={theme}>
                   {step.title}
-                </div>
+                </TitleContainer>
               )}
               <div style={{ fontSize: 14, lineHeight: 1.35 }}>{step.content}</div>
             </div>
@@ -553,29 +600,30 @@ export class GuidedTour extends React.PureComponent<Props, State> {
               gap: 10,
             }}
           >
-            <div style={{ fontSize: 12, opacity: 0.7 }}>
+            <StepIndicatorContainer theme={theme}>
               Step {this.state.stepIndex + 1} of {this.props.steps.length}
-            </div>
+            </StepIndicatorContainer>
 
-            <div style={{ display: "flex", gap: 8 }}>
-              <button
+            <ButtonNavContainer>
+              {step.noBackButton ? null : (<button
                 onClick={this.back}
                 disabled={this.state.stepIndex === 0}
                 style={btnStyle(this.state.stepIndex === 0, false)}
               >
                 {step.backLabel ?? "Back"}
-              </button>
+              </button>)}
 
-              <button onClick={this.next} style={btnStyle(false, true)}>
+              {step.noNextButton ? null : (<button onClick={this.next} style={btnStyle(false, true)}>
                 {this.state.stepIndex === this.props.steps.length - 1
                   ? step.doneLabel ?? "Done"
                   : step.nextLabel ?? "Next"}
-              </button>
+              </button>)}
 
               <button onClick={this.skip} style={btnStyle(false, false)}>
                 {step.skipLabel ?? "Skip"}
               </button>
-            </div>
+            </ButtonNavContainer>
+
           </div>
         </ToolTip>
       </div>
