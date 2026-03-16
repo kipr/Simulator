@@ -126,11 +126,13 @@ export namespace Validators {
   }
 
   export namespace Date { }
+
   export interface OneWord extends GeneralValidator {
     type: Validators.OneWord;
   }
 
   export namespace OneWord { }
+
   /**
    * Validates the given value based on the specified validator type.
    * @param value - The value to be validated.
