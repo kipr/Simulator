@@ -62,10 +62,12 @@ namespace Selector {
     id,
   });
 
-  export const tours = (id: string): Selector => ({
+  export const userTour = (id: string): Selector => ({
     collection: TOUR_COLLECTION,
     id,
   });
+
+
 }
 
 export default Selector;
