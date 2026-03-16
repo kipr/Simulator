@@ -14,14 +14,17 @@ import { FontAwesome } from '../FontAwesome';
 import { InterfaceMode } from 'ivygate/dist/src/types/interface';
 import { default as IvygateClassroomType } from 'ivygate/dist/src/types/classroomTypes';
 import { Classroom } from 'state/State/Classroom';
+import TourTarget from '../Tours/TourTarget';
+import { TourRegistry } from '../../tours/TourRegistry';
 
 
 
 export interface JoinClassDialogPublicProps extends ThemeProps, StyleProps {
-
+  tourRegistry?: TourRegistry;
   locale: LocalizedString.Language;
   onClose: () => void;
   onJoinClassDialogClose: (foundClassroom: Classroom, classroomInviteCode: string, displayName: string) => void;
+  onContinueTour?: () => void;
 }
 
 interface JoinClassDialogPrivateProps {
@@ -95,7 +98,9 @@ export class JoinClassDialog extends React.PureComponent<Props, State> {
       console.log("Returned classroom from invite code:", returnedClassroom);
 
       returnedClassroom ? this.props.onJoinClassDialogClose(returnedClassroom, classroomInviteCode, values.displayName) : this.setState({ errorMessage: 'Invalid invite code. Please check and try again.' });
-
+      if (this.props.onContinueTour) {
+        this.props.onContinueTour();
+      }
     } catch (error) {
       console.error('Error joining classroom:', error);
     }
@@ -123,25 +128,27 @@ export class JoinClassDialog extends React.PureComponent<Props, State> {
             name={LocalizedString.lookup(tr('Join Classroom'), locale)}
             onClose={onClose}
           >
-            <Container theme={theme} style={style} className={className}>
-              {/* Show error message if it exists */}
-              {errorMessage && (
-                <ErrorMessageContainer theme={theme}>
-                  <ItemIcon icon={faExclamationTriangle} />
-                  <div style={{ fontWeight: 450 }}>
-                    {state.errorMessage}
-                  </div>
+            <TourTarget registry={this.props.tourRegistry} targetKey='join-classroom-dialog' style={style}>
+              <Container theme={theme} style={style} className={className}>
+                {/* Show error message if it exists */}
+                {errorMessage && (
+                  <ErrorMessageContainer theme={theme}>
+                    <ItemIcon icon={faExclamationTriangle} />
+                    <div style={{ fontWeight: 450 }}>
+                      {state.errorMessage}
+                    </div>
 
-                </ErrorMessageContainer>
-              )}
-              <StyledForm
-                theme={theme}
-                onFinalize={this.onFinalize_}
-                items={JOINCLASS_FORM_ITEMS}
-                finalizeText="Join"
-                finalizeDisabled={false}
-              />
-            </Container>
+                  </ErrorMessageContainer>
+                )}
+                <StyledForm
+                  theme={theme}
+                  onFinalize={this.onFinalize_}
+                  items={JOINCLASS_FORM_ITEMS}
+                  finalizeText="Join"
+                  finalizeDisabled={false}
+                />
+              </Container>
+            </TourTarget>
 
           </Dialog>)}
 

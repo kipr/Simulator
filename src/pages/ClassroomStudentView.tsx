@@ -8,18 +8,22 @@ import { State as ReduxState } from '../state';
 import { withNavigate, WithNavigateProps } from '../util/withNavigate';
 import { AsyncClassroom, Classroom } from '../state/State/Classroom';
 import Dict from '../util/objectOps/Dict';
-import { addStudentToClassroomAsyncRaw, ClassroomsAction, studentInClassroom } from 'state/reducer/classrooms';
+import { addStudentToClassroomAsyncRaw, ClassroomsAction, removeStudentFromClassroom, studentInClassroom } from 'state/reducer/classrooms';
 import { auth } from '../firebase/firebase';
 import JoinClassDialog from '../components/Dialog/JoinClassDialog';
 import LeaveClassDialog from '../components/Dialog/LeaveClassDialog';
 import ProgrammingLanguage from '../programming/compiler/ProgrammingLanguage';
-import ChallengeCompletion from 'state/State/ChallengeCompletion';
 import ClassroomLeaderboard from './ClassroomLeaderboard';
 import ChallengeTabView from '../components/Classrooms/ChallengeTabView';
 import MainMenu from '../components/MainMenu';
 import { FontAwesome } from '../components/FontAwesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import ClassroomExtraMenu from '../components/ClassroomExtraMenu';
+import TourDoc, { getTourSteps, TourStep } from '../tours/Tours';
+import TourTarget from '../components/Tours/TourTarget';
+import { TourRegistry } from '../tours/TourRegistry';
+import { GuidedTour } from '../components/Tours/GuidedTour';
+import { completeTour, fetchTourIfNeeded, retakeTour } from '../state/reducer/tours';
 
 namespace SubMenu {
   export enum Type {
@@ -79,12 +83,15 @@ interface LeaderboardUser {
 export interface ClassroomStudentViewPublicProps extends StyleProps, ThemeProps {
   onStudentAdded: (classroomId: string, studentId: string, displayName: string) => void;
   onJoinClassroom: (classroom: Classroom) => void;
-  onRemoveStudentFromClassroom: (studentId: string, currentClassroom: Classroom) => void;
+  onRemoveStudentFromClassroom: (studentId: string, currentClassroom: Classroom) => Promise<void>;
 }
 
 interface ClassroomStudentViewPrivateProps {
   locale: LocalizedString.Language;
   currentStudentClassroom: AsyncClassroom | null;
+  uid: string;
+  toursById: Record<string, TourDoc>;
+  toursLoaded: Record<string, boolean>;
 }
 
 interface ClassroomStudentViewState {
@@ -93,7 +100,6 @@ interface ClassroomStudentViewState {
   leaderboardClassroom: AsyncClassroom | null;
   users: Record<string, LeaderboardUser>;
   challenges: Record<string, Challenge>;
-  showCreateClassroomDialog: boolean;
   showJoinClassroomDialog: boolean;
   showClassroomLeaderboardSelector: boolean;
   showSelectedClassroomLeaderboard: boolean;
@@ -101,6 +107,11 @@ interface ClassroomStudentViewState {
   currentStudentDisplayName?: string;
   subMenu: SubMenu;
   isStudentInClassroom?: boolean;
+  currentTourStepIndex?: number;
+  continueTour?: boolean;
+  currentTab?: "Default JBC Challenges" | "Limited Challenges";
+  studentViewTourSteps: TourStep[];
+  tourId?: string;
 }
 
 interface ClickProps {
@@ -222,6 +233,8 @@ export const IVYGATE_LANGUAGE_MAPPING: Dict<string> = {
 
 class ClassroomStudentView extends React.Component<Props, State> {
   private unsubscribeChallenges: (() => void) | null = null;
+  private registry = new TourRegistry();
+  private scrollRef: HTMLDivElement | null = null;
   constructor(props: Props) {
     super(props);
 
@@ -230,14 +243,13 @@ class ClassroomStudentView extends React.Component<Props, State> {
       selectedStudentId: '',
       users: {},
       challenges: {},
-      showCreateClassroomDialog: false,
-      isStudentInClassroom: false,
       showJoinClassroomDialog: false,
       showClassroomLeaderboardSelector: false,
       showSelectedClassroomLeaderboard: false,
       showLeaveClassroomDialog: false,
       leaderboardClassroom: null,
       subMenu: SubMenu.NONE,
+      studentViewTourSteps: []
     };
 
 
@@ -247,27 +259,42 @@ class ClassroomStudentView extends React.Component<Props, State> {
     const currentUserId = auth.currentUser?.uid || '';
     const isInClassroom = await studentInClassroom(currentUserId);
     const currentUser = auth.currentUser.uid;
+    const { uid } = this.props;
 
     if (isInClassroom.classroom) {
+      if (uid) {
+        await fetchTourIfNeeded(uid, TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM);
+      }
+
       this.setState({
         isStudentInClassroom: isInClassroom.inClassroom,
         currentClassroom: isInClassroom.classroom,
-        currentStudentDisplayName: isInClassroom.classroom.studentIds[currentUserId].displayName
+        currentStudentDisplayName: isInClassroom.classroom.studentIds[currentUserId].displayName,
+        studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM),
+        tourId: TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM,
       }, () => {
-        this.props.navigate(`/classrooms/${currentUser}/studentView/${isInClassroom.classroom.classroomId}`);
         this.props.onJoinClassroom(isInClassroom.classroom);
+        this.props.navigate(`/classrooms/${currentUser}/studentView/${isInClassroom.classroom.classroomId}`);
       });
-
-
+    } else {
+      if (uid) {
+        await fetchTourIfNeeded(this.props.uid, TourDoc.IDS.STUDENT_VIEW);
+      }
+      this.setState({ studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW), tourId: TourDoc.IDS.STUDENT_VIEW });
     }
 
   }
 
-  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ClassroomStudentViewState>): void {
-    if (prevState.currentClassroom !== this.state.currentClassroom && this.state.currentClassroom) {
-      const currentUser = auth.currentUser.uid;
-      this.props.navigate(`/classrooms/${currentUser}/studentView/${this.state.currentClassroom.classroomId}`);
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<ClassroomStudentViewState>) {
 
+    if (prevState.currentClassroom !== this.state.currentClassroom) {
+      if (this.state.currentClassroom) {
+        const currentUser = auth.currentUser.uid;
+        this.props.navigate(`/classrooms/${currentUser}/studentView/${this.state.currentClassroom.classroomId}`);
+        this.setState({ studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM), tourId: TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM });
+      } else {
+        this.setState({ studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW), tourId: TourDoc.IDS.STUDENT_VIEW });
+      }
     }
   }
 
@@ -302,9 +329,9 @@ class ClassroomStudentView extends React.Component<Props, State> {
 
   };
 
-  private onCloseLeaveClassroomDialog_ = () => {
+  private onCloseLeaveClassroomDialog_ = async () => {
     const { currentClassroom } = this.state;
-    this.props.onRemoveStudentFromClassroom(
+    await this.props.onRemoveStudentFromClassroom(
       auth.currentUser?.uid || '',
       currentClassroom
     );
@@ -332,24 +359,29 @@ class ClassroomStudentView extends React.Component<Props, State> {
   };
 
   private renderMyClassroom = () => {
-    const { isStudentInClassroom } = this.state;
-    const { theme, locale } = this.props;
+    const { isStudentInClassroom, currentTab } = this.state;
+    const { theme, locale, style } = this.props;
     return (
+
       <MyClassroomContainer theme={theme}>
         {isStudentInClassroom ? (
 
-          <ChallengeTabView theme={theme} locale={locale} />
+          <ChallengeTabView theme={theme} locale={locale} tourRegistry={this.registry} showTab={currentTab ? currentTab : undefined} />
 
         ) : (
           <ClassroomInfoContainer theme={theme}>
             <p>You are not enrolled in any classroom.</p>
 
-            <Button style={{ marginLeft: '1em' }} theme={DARK} onClick={this.onJoinClassroomDialog_}>
-              Join Class
-            </Button>
+            <TourTarget registry={this.registry} targetKey='join-classroom-button' style={{ marginLeft: '1em' }}>
+              <Button style={{ marginLeft: '1em' }} theme={DARK} onClick={this.onJoinClassroomDialog_}>
+                Join Class
+              </Button>
+            </TourTarget>
           </ClassroomInfoContainer>
         )}
       </MyClassroomContainer>
+
+
     );
 
   };
@@ -381,70 +413,139 @@ class ClassroomStudentView extends React.Component<Props, State> {
     this.setState({ subMenu: SubMenu.NONE });
     window.removeEventListener('click', this.onClickOutside_);
   };
+  private onCloseTour_ = () => {
+    void completeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId);
+  };
+
+  private onSkipTour_ = () => {
+    void completeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId, { dismissed: true });
+
+  };
+
+  private onNextClick_ = (stepIndex: number) => {
+    this.setState({ currentTourStepIndex: stepIndex });
+  };
+  private onBackClick_ = (stepIndex: number) => {
+    const { studentViewTourSteps } = this.state;
+
+    if (studentViewTourSteps[stepIndex].targetKey === 'classroom-extra-options-click') {
+      this.setState({ subMenu: SubMenu.NONE, currentTourStepIndex: stepIndex });
+    }
+    if (studentViewTourSteps[stepIndex].targetKey === 'challenge-tab-view-limited-challenges-click') {
+      this.setState({ currentTab: 'Default JBC Challenges', currentTourStepIndex: stepIndex }, () => {
+        this.setState({ currentTab: undefined });
+      });
+    }
+    if (studentViewTourSteps[stepIndex].targetKey === 'join-classroom-button') {
+      this.setState({ showJoinClassroomDialog: false, currentTourStepIndex: stepIndex });
+    }
+  };
+
+  private onContinueTour_ = () => {
+    this.setState({ continueTour: true }, () => {
+      this.setState({ continueTour: false });
+    });
+  };
+
+  private onRetakeTour_ = () => {
+    void retakeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, this.props.uid, this.state.tourId);
+  };
 
   render() {
     const { props, state } = this;
-    const { style, locale } = props;
-    const { showLeaveClassroomDialog, showJoinClassroomDialog, currentClassroom, subMenu } = state;
+    const { style, locale, toursById, toursLoaded } = props;
+    const { tourId, showLeaveClassroomDialog, showJoinClassroomDialog, currentClassroom, subMenu, studentViewTourSteps } = state;
     const theme = DARK;
+    const activeTour = tourId ? (toursById[tourId] ?? TourDoc.DEFAULT) : TourDoc.DEFAULT;
+    const activeTourLoaded = !!(tourId && toursLoaded[tourId]);
+
+    const showTour = !!tourId && activeTourLoaded && !activeTour.completed;
     return (
       <PageContainer style={style} theme={theme}>
-        <MainMenu theme={theme} />
+        <MainMenu theme={theme} onRetakeTour={this.onRetakeTour_} />
+
         <div style={{ width: '100%', alignItems: 'flex-end', display: 'flex', flexDirection: 'column' }}>
-          <Item
-            theme={theme}
-            onClick={this.onExtraClick_}
-            style={{ position: 'relative' }}
-          >
-            <ItemIcon icon={faBars} style={{ padding: 0 }} />
-            {subMenu.type === SubMenu.Type.ExtraMenu ? (
-              <ClassroomExtraMenu theme={theme}
-                onLeaveClass={this.onLeaveClassroomDialog_}
-              />
-            ) : undefined}
-          </Item>
+          <TourTarget registry={this.registry} targetKey='classroom-extra-options-click'>
+            <Item
+              theme={theme}
+              onClick={this.onExtraClick_}
+              style={{ position: 'relative' }}
+            >
+
+              <ItemIcon icon={faBars} style={{ padding: 0 }} />
+              {subMenu.type === SubMenu.Type.ExtraMenu ? (
+                <ClassroomExtraMenu theme={theme}
+                  tourRegistry={this.registry}
+                  onLeaveClass={this.onLeaveClassroomDialog_}
+                />
+              ) : undefined}
+
+            </Item>
+          </TourTarget>
         </div>
 
-        <ClassroomsContainer style={style} theme={theme}>
-          <ClassroomsClassroomInfoContainer style={style} theme={theme}>
-            <h1>Classrooms - Student View</h1>
-            <ClassroomHeaderContainer style={style} theme={theme}>
-              {this.renderMyClassroom()}
-              {showLeaveClassroomDialog && (
-                <LeaveClassDialog
-                  onClose={this.onExitLeaveClassroomDialog_}
-                  currentClassroom={currentClassroom}
-                  locale={locale}
-                  onLeaveClassDialogClose={this.onCloseLeaveClassroomDialog_}
-                  theme={DARK}
+        <TourTarget registry={this.registry} targetKey='student-dashboard' style={style}>
+          <ClassroomsContainer style={style} theme={theme}>
+            <ClassroomsClassroomInfoContainer style={style} theme={theme}>
+              <h1>Classrooms - Student View</h1>
+              <ClassroomHeaderContainer style={style} theme={theme}>
+                {this.renderMyClassroom()}
+                {showLeaveClassroomDialog && (
+                  <LeaveClassDialog
+                    onClose={this.onExitLeaveClassroomDialog_}
+                    currentClassroom={currentClassroom}
+                    locale={locale}
+                    onLeaveClassDialogClose={this.onCloseLeaveClassroomDialog_}
+                    theme={DARK}
 
-                />
-              )}
-              {showJoinClassroomDialog && (
-                <JoinClassDialog
-                  onClose={this.onExitJoinClassroomDialog_}
-                  locale={locale}
-                  onJoinClassDialogClose={this.onCloseJoinClassroomDialog_}
-                  theme={DARK}
+                  />
+                )}
+                {showJoinClassroomDialog && (
+                  <JoinClassDialog
+                    onClose={this.onExitJoinClassroomDialog_}
+                    onContinueTour={this.onContinueTour_}
+                    locale={locale}
+                    onJoinClassDialogClose={this.onCloseJoinClassroomDialog_}
+                    theme={DARK}
+                    tourRegistry={this.registry}
 
-                />
-              )}
-            </ClassroomHeaderContainer>
+                  />
+                )}
+              </ClassroomHeaderContainer>
 
-          </ClassroomsClassroomInfoContainer>
+            </ClassroomsClassroomInfoContainer>
 
-        </ClassroomsContainer>
+          </ClassroomsContainer>
+        </TourTarget>
+        {showTour && (
+          <GuidedTour
+            continueTourFlag={this.state.continueTour}
+            // ref={this.guidedTourRef}
+            isOpen={showTour}
+            steps={studentViewTourSteps}
+            registry={this.registry}
+            scrollContainer={this.scrollRef}
+            onClose={this.onCloseTour_}
+            onSkip={this.onSkipTour_}
+            onBackClick={this.onBackClick_}
+            onNextClick={this.onNextClick_}
+            theme={theme} />
+        )}
       </PageContainer>
     );
   }
 }
 
-const DashboardWithNavigate = withNavigate(ClassroomStudentView);
-
 export default connect(
   (state: ReduxState) => ({
+    toursById: state.tours.byId,
+    toursLoaded: state.tours.loaded,
+    toursLoading: state.tours.loading,
+    toursError: state.tours.error,
     classroomList: state.classrooms.entities,
     currentStudentClassroom: state.classrooms.currentStudentClassroom,
+    locale: state.i18n.locale,
+    uid: state.users.me,
   }),
   (dispatch) => ({
     onStudentAdded: (inviteCode: string, studentId: string, displayName: string) => {
@@ -455,5 +556,5 @@ export default connect(
     },
 
     onRemoveStudentFromClassroom: (studentId: string, currentClassroom: Classroom) =>
-      dispatch(ClassroomsAction.removeStudentFromClassroom({ studentId, currentClassroom })),
-  }))(DashboardWithNavigate);
+      removeStudentFromClassroom(studentId, currentClassroom),
+  }))(withNavigate(ClassroomStudentView));

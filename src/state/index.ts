@@ -10,6 +10,7 @@ import Record from '../db/Record';
 import Selector from '../db/Selector';
 // import { reduceDocumentation, reduceDocumentationCommon } from 'ivygate/src/state/reducer/documentation';
 import { reduceDocumentation, reduceDocumentationCommon } from 'ivygate/dist/src/state/reducer/documentation';
+import { ToursState } from './reducer';
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -32,6 +33,7 @@ export default createStore(combineReducers<State>({
   users: reducer.reduceUsers,
   ai: reducer.reduceAi,
   settings: reducer.reduceSettings,
+  tours: reducer.reduceTours,
 }), composeEnhancers(
   applyMiddleware(
   )
@@ -56,6 +58,7 @@ export interface State {
   users: Users;
   ai: AiState;
   settings: Settings;
+  tours: ToursState;
 }
 
 export namespace State {

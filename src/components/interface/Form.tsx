@@ -333,6 +333,7 @@ namespace Form {
     finalizer: IDENTITY_FINALIZER
   });
 
+
   export const displayNameField = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
     id,
     text,
@@ -342,6 +343,7 @@ namespace Form {
     assist,
     assistText,
   });
+
 
   export const leaveClass = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
     id,

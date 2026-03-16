@@ -15,6 +15,8 @@ import ChallengeCompletion from 'state/State/ChallengeCompletion';
 import ClassroomLeaderboard from '../../pages/ClassroomLeaderboard';
 import Async from 'state/State/Async';
 import ClassroomLimitedChallenges from './ClassroomLimitedChallenges';
+import TourTarget from '../Tours/TourTarget';
+import { TourRegistry } from '../../tours/TourRegistry';
 
 export interface ChallengeTabViewRootRouteParams {
   classroomId: string;
@@ -49,6 +51,8 @@ interface LeaderboardUser {
 
 
 export interface ChallengeTabViewPublicProps extends StyleProps, ThemeProps {
+  tourRegistry?: TourRegistry;
+  showTab?: "Default JBC Challenges" | "Limited Challenges";
 
 }
 
@@ -91,7 +95,8 @@ const SidePanel = styled('div', (props: ThemeProps) => ({
   zIndex: 1,
   backgroundColor: props.theme.backgroundColor,
   width: '100%',
-  height: '95%'
+  height: '95%',
+  gap: '10px',
 }));
 
 const ChallengeViewContainer = styled('div', (props: ThemeProps) => ({
@@ -166,6 +171,11 @@ class ChallengeTabView extends React.Component<Props, State> {
       this.props.navigate(`/classrooms/${currentUser}/studentView/${this.state.currentClassroom.classroomId}`);
 
     }
+    if (prevProps.showTab !== this.props.showTab && this.props.showTab) {
+      this.setState({
+        selectedSection: this.props.showTab,
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -192,11 +202,14 @@ class ChallengeTabView extends React.Component<Props, State> {
       const { theme, currentStudentClassroom } = this.props;
       return (
         <SectionsColumn theme={theme}>
-          <ClassroomLeaderboard
-            theme={theme}
-            view={"studentView"}
-            currentStudentDisplayName={currentStudentDisplayName}
-            currentClassroom={Async.latestValue(currentStudentClassroom)} />
+          <TourTarget registry={this.props.tourRegistry} targetKey='default-jbc-challenges-leaderboard-tab'>
+            <ClassroomLeaderboard
+              theme={theme}
+              view={"studentView"}
+              currentStudentDisplayName={currentStudentDisplayName}
+              currentClassroom={Async.latestValue(currentStudentClassroom)}
+              tourRegistry={this.props.tourRegistry} />
+          </TourTarget>
         </SectionsColumn>
       );
     };
@@ -204,7 +217,9 @@ class ChallengeTabView extends React.Component<Props, State> {
     const LimitedChallengesSection = () => {
       return (
         <SectionsColumn theme={theme}>
-          <ClassroomLimitedChallenges theme={theme} />
+          <TourTarget registry={this.props.tourRegistry} targetKey='challenge-tab-view-limited-challenges'>
+            <ClassroomLimitedChallenges theme={theme} />
+          </TourTarget>
         </SectionsColumn>
       );
     };
@@ -212,18 +227,32 @@ class ChallengeTabView extends React.Component<Props, State> {
 
     return (
 
+
       <SidePanel style={style} theme={theme}>
-        <ChallengeViewContainer theme={theme}>
-          <SectionName theme={theme} selected={selectedSection === "Default JBC Challenges"} onClick={() => this.onSectionSelect_("Default JBC Challenges")}>
-            {LocalizedString.lookup(tr('Default JBC Challenges'), locale)}
-          </SectionName>
-          <SectionName theme={theme} selected={selectedSection === "Limited Challenges"} onClick={() => this.onSectionSelect_("Limited Challenges")}>
-            {LocalizedString.lookup(tr('Limited Challenges'), locale)}
-          </SectionName>
-          {selectedSection === 'Default JBC Challenges' && DefaultJBCChallengeSection()}
-          {selectedSection === 'Limited Challenges' && LimitedChallengesSection()}
-        </ChallengeViewContainer>
+        <TourTarget registry={this.props.tourRegistry} targetKey='challenge-tab-view' style={style}>
+          <ChallengeViewContainer theme={theme}>
+
+            <SectionName theme={theme} selected={selectedSection === "Default JBC Challenges"} onClick={() => this.onSectionSelect_("Default JBC Challenges")}>
+              {LocalizedString.lookup(tr('Default JBC Challenges'), locale)}
+            </SectionName>
+
+            <SectionName
+              theme={theme}
+              selected={selectedSection === "Limited Challenges"}
+              onClick={() => this.onSectionSelect_("Limited Challenges")}
+            >
+              <TourTarget registry={this.props.tourRegistry} targetKey='challenge-tab-view-limited-challenges-click' style={{ display: 'inline-block' }}>
+                {LocalizedString.lookup(tr('Limited Challenges'), locale)}
+              </TourTarget>
+            </SectionName>
+
+            {selectedSection === 'Default JBC Challenges' && DefaultJBCChallengeSection()}
+            {selectedSection === 'Limited Challenges' && LimitedChallengesSection()}
+
+          </ChallengeViewContainer>
+        </TourTarget>
       </SidePanel>
+
     );
   }
 }

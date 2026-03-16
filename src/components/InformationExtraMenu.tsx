@@ -3,41 +3,38 @@ import { styled } from 'styletron-react';
 import { StyleProps } from '../util/style';
 import { FontAwesome } from './FontAwesome';
 import { ThemeProps } from './constants/theme';
-import { faUsersRectangle, faPersonWalkingDashedLineArrowRight, faPersonChalkboard } from '@fortawesome/free-solid-svg-icons';
+import { faUsersRectangle, faPersonWalkingDashedLineArrowRight, faPersonChalkboard, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import tr from '@i18n';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../state';
 import LocalizedString from '../util/LocalizedString';
 import { AsyncClassroom } from '../state/State/Classroom';
 import Async from 'state/State/Async';
-import TourTarget from './Tours/TourTarget';
-import { TourRegistry } from '../tours/TourRegistry';
 
-export interface ClassroomExtraMenuPublicProps extends StyleProps, ThemeProps {
-  tourRegistry?: TourRegistry;
-  onLeaveClass?: (event: React.MouseEvent) => void;
+export interface InformationExtraMenuPublicProps extends StyleProps, ThemeProps {
+  onRetakeTour?: (event: React.MouseEvent) => void;
 }
 
-interface ClassroomExtraMenuPrivateProps {
+interface InformationExtraMenuPrivateProps {
   locale: LocalizedString.Language;
   currentStudentClassroom: AsyncClassroom | null;
 }
 
-interface ClassroomExtraMenuState {
+interface InformationExtraMenuState {
 
 }
 
-type Props = ClassroomExtraMenuPublicProps & ClassroomExtraMenuPrivateProps;
-type State = ClassroomExtraMenuState;
+type Props = InformationExtraMenuPublicProps & InformationExtraMenuPrivateProps;
+type State = InformationExtraMenuState;
 
 const Container = styled('div', (props: ThemeProps) => ({
   position: 'absolute',
-  top: '100%',
+  top: '48px',
   right: `0px`,
   minWidth: 'fit-content',
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
-  zIndex: 999,
+  zIndex: 1000,
   display: 'flex',
   flexDirection: 'column',
   borderBottomLeftRadius: `${props.theme.borderRadius}px`,
@@ -102,7 +99,7 @@ const ItemIcon = styled(FontAwesome, {
   marginRight: '10px'
 });
 
-class ClassroomExtraMenu extends React.PureComponent<Props, State> {
+class InformationExtraMenu extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
   }
@@ -114,27 +111,18 @@ class ClassroomExtraMenu extends React.PureComponent<Props, State> {
       style,
       theme,
       locale,
-      onLeaveClass
+      onRetakeTour
     } = props;
 
-    const latestClassroom = Async.latestValue(props.currentStudentClassroom);
+
     return (
-      <TourTarget registry={this.props.tourRegistry} targetKey='classroom-extra-options-dropdown'>
-        <Container theme={theme} style={style} className={className}>
-          <ItemLabel theme={theme}><ItemIcon icon={faUsersRectangle} /> {LocalizedString.lookup(tr(`Current Classroom: ${latestClassroom?.classroomId || 'None'}`), locale)}</ItemLabel>
-          <ItemLabel theme={theme}><ItemIcon icon={faPersonChalkboard} /> {LocalizedString.lookup(tr(`Classroom Teacher: ${latestClassroom?.teacherDisplayName || 'None'}`), locale)}</ItemLabel>
-          {latestClassroom
-            ? (<TourTarget registry={this.props.tourRegistry} targetKey='leave-classroom'>
-              <Item theme={theme} onClick={onLeaveClass}><ItemIcon icon={faPersonWalkingDashedLineArrowRight} /> {LocalizedString.lookup(tr(`Leave Classroom`), locale)}</Item>
-            </TourTarget>)
-            : null}
-        </Container>
-      </TourTarget>
+      <Container theme={theme} style={style} className={className}>
+        <Item theme={theme} onClick={onRetakeTour}><ItemIcon icon={faCircleInfo} /> {LocalizedString.lookup(tr(`Retake Tour`), locale)}</Item>
+      </Container>
     );
   }
 }
 
 export default connect((state: ReduxState) => ({
   locale: state.i18n.locale,
-  currentStudentClassroom: state.classrooms.currentStudentClassroom,
-}))(ClassroomExtraMenu) as React.ComponentType<ClassroomExtraMenuPublicProps>;
+}))(InformationExtraMenu) as React.ComponentType<InformationExtraMenuPublicProps>;
