@@ -28,6 +28,11 @@ import Challenge from '../components/Challenge';
 import { AsyncChallenge } from '../state/State/Challenge';
 import { Challenges, ChallengeCompletions } from '../state/State';
 import { Project } from 'state/State/Project';
+import { TourTarget } from '../components/Tours/TourTarget';
+import { TourRegistry } from '../tours/TourRegistry';
+import { GuidedTour } from '../components/Tours/GuidedTour';
+import TourDoc, { getTourSteps, TourStep } from '../tours/Tours';
+import { completeTour, fetchTourIfNeeded, retakeTour } from '../state/reducer/tours';
 
 export interface ClassroomTeacherViewRootRouteParams {
   classroomId: string;
@@ -69,6 +74,7 @@ interface ChallengeProps {
 export interface ClassroomTeacherViewPublicProps extends StyleProps, ThemeProps {
   classroomList: Dict<AsyncClassroom>;
   challenge?: AsyncChallenge;
+
   onCreateClassroom: (classroom: Classroom) => void;
   onListOwnedClassrooms: () => void;
   onListChallengesByStudentId: (studentId: string) => void;
@@ -78,6 +84,11 @@ export interface ClassroomTeacherViewPublicProps extends StyleProps, ThemeProps 
 
 interface ClassroomTeacherViewPrivateProps {
   locale: LocalizedString.Language;
+  tour: TourDoc;
+  tourLoaded: boolean;
+  tourLoading: boolean;
+  tourError: string | null;
+  uid: string;
   selectedClassroom?: AsyncClassroom | null;
   onStudentInClassroom?: (studentId: LocalizedString) => void;
   onAddStudentToClassroom?: (classroomId: string, studentId: LocalizedString) => void;
@@ -97,6 +108,8 @@ interface ClassroomTeacherViewState {
   showAreYouSureDialog: boolean;
   isStudentInClassroom?: boolean;
   deleteObject?: IvyGateClassroom | User | null;
+  currentTourStepIndex?: number;
+  continueTour?: boolean;
 }
 
 interface ClickProps {
@@ -177,10 +190,15 @@ export const IVYGATE_LANGUAGE_MAPPING: Dict<string> = {
   'cpp': 'customCpp',
   'plaintext': 'plaintext',
 };
+const teacherViewTourSteps: TourStep[] = getTourSteps(TourDoc.IDS.TEACHER_VIEW);
 
 class ClassroomTeacherView extends React.Component<Props, State> {
   private challengeCache: Record<string, Dict<ChallengeCompletion>> = {};
   private unsubscribeChallenges: (() => void) | null = null;
+
+  private registry = new TourRegistry();
+  private scrollRef: HTMLDivElement | null = null;
+  private guidedTourRef: React.MutableRefObject<GuidedTour>;
   constructor(props: Props) {
     super(props);
 
@@ -197,14 +215,18 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       leaderboardClassroom: null
     };
 
-
+    this.guidedTourRef = React.createRef();
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.props.onListOwnedClassrooms();
+    const { uid } = this.props;
+    if (uid) {
+      await fetchTourIfNeeded(this.props.uid, TourDoc.IDS.TEACHER_VIEW);
+    }
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: Props, prevState: State) {
     if (prevProps.classroomList !== this.props.classroomList) {
       this.getIvygateClassrooms();
     }
@@ -234,7 +256,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       showClassroomLeaderboardSelector: true
     });
   };
-  private onCloseClassroomDialog_ = (teacherDisplayName: string, classroomName: string, classroomInviteCode: string) => {
+  private onCloseClassroomDialog_ = async (teacherDisplayName: string, classroomName: string, classroomInviteCode: string) => {
     this.props.onCreateClassroom({
       teacherId: auth.currentUser?.uid || '',
       classroomId: classroomName,
@@ -244,7 +266,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       type: 'classroom',
       teacherDisplayName: teacherDisplayName
     });
-    this.props.onListOwnedClassrooms();
+    await this.props.onListOwnedClassrooms();
     this.setState({ showCreateClassroomDialog: false });
   };
 
@@ -321,7 +343,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
     });
   };
   private onProjectSelected = (user: User, project: SimClassroomProject, fileName: string, activeLanguage: ProgrammingLanguage) => {
-    this.setState({ selectedProject: project  });
+    this.setState({ selectedProject: project });
   };
 
   private memoIvygateClassrooms: IvyGateClassroom[] | null = null;
@@ -436,15 +458,29 @@ class ClassroomTeacherView extends React.Component<Props, State> {
             style={style}
             locale={'en-US'}
             ivygateLanguageMapping={IVYGATE_LANGUAGE_MAPPING}
+            activeTourStepId={teacherViewTourSteps[this.state.currentTourStepIndex || 0]?.id}
+            tour={{
+              registry: this.registry,
+              targets: {
+                createClassroomDropdown: 'create-classroom-dropdown',
+                createClassroomDropdownMenu: 'create-classroom-dropdown-menu',
+                seeCreatedClassroom: 'see-created-classroom',
+                classroomUsers: 'classroom-users',
+                inviteCode: 'invite-code',
+              },
+            }}
+            onContinueTour={this.onContinueTour_}
           />
         </Provider>
         {
           showCreateClassroomDialog && (
             <CreateClassroomDialog
               onClose={this.onExitCreateClassroomDialog_}
+              onContinueTour={this.onContinueTour_}
               onCloseClassroomDialog={this.onCloseClassroomDialog_}
               theme={DARK}
               locale={locale}
+              tourRegistry={this.registry}
             />
           )}
         {showClassroomLeaderboardSelector &&
@@ -463,39 +499,85 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
   };
 
+  private onCloseTour_ = () => {
+    completeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW, { step: this.state.currentTourStepIndex });
+  }
 
+  private onSkipTour_ = () => {
+    completeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW, { dismissed: true });
+  }
+
+  private onBackClick_ = (stepIndex: number) => {
+
+    if (teacherViewTourSteps[stepIndex].targetKey === 'create-classroom-dropdown-menu') {
+      this.setState({ showCreateClassroomDialog: false, currentTourStepIndex: stepIndex });
+    }
+    this.setState({ currentTourStepIndex: stepIndex });
+  }
+
+  private onNextClick_ = (stepIndex: number) => {
+    this.setState({ currentTourStepIndex: stepIndex });
+  }
+
+  private onContinueTour_ = () => {
+    this.setState({ continueTour: true }, () => {
+      this.setState({ continueTour: false });
+    });
+  }
+
+  private onRetakeTour_ = () => {
+    retakeTour(this.props.tour, this.props.uid, TourDoc.IDS.TEACHER_VIEW);
+  }
 
   render() {
     const { props, state } = this;
     const { style } = props;
     const { showAreYouSureDialog, deleteObject } = state;
     const theme = DARK;
+    const showTour = props.tourLoaded && !props.tour.completed;
     return (
       <PageContainer style={style} theme={theme}>
-        <MainMenu theme={theme} />
-        <ClassroomsContainer style={style} theme={theme}>
-          <ClassroomsTitleContainer style={style} theme={theme}>
-            <h1>Classrooms - Teacher View</h1>
-            {this.props.classroomList && Object.keys(this.props.classroomList).length > 0 && (
-              <Button theme={theme} onClick={this.onSeeLeaderboards}>
-                See Classroom Leaderboards
-              </Button>)}
-            <ClassroomHeaderContainer style={style} theme={theme}>
-              {this.renderManageClassrooms()}
-              {showAreYouSureDialog && (
-                <DeleteDialog
-                  name={tr(deleteObject && deleteObject.type === "classroom" ? `${deleteObject.name}` : deleteObject && deleteObject.type === "user" ? `${deleteObject.displayName}` : '')}
-                  onClose={this.onExitDeleteDialog_}
-                  onAccept={this.onCloseDeleteDialog_}
-                  theme={theme}>
+        <MainMenu theme={theme} onRetakeTour={this.onRetakeTour_} />
+        <TourTarget registry={this.registry} targetKey='teacher-dashboard' style={style}>
+          <ClassroomsContainer style={style} theme={theme}>
+            <ClassroomsTitleContainer style={style} theme={theme}>
+              <h1>Classrooms - Teacher View</h1>
+              {this.props.classroomList && Object.keys(this.props.classroomList).length > 0 && (
+                <Button theme={theme} onClick={this.onSeeLeaderboards}>
+                  See Classroom Leaderboards
+                </Button>)}
+              <ClassroomHeaderContainer style={style} theme={theme}>
+                {this.renderManageClassrooms()}
+                {showAreYouSureDialog && (
+                  <DeleteDialog
+                    name={tr(deleteObject && deleteObject.type === "classroom" ? `${deleteObject.name}` : deleteObject && deleteObject.type === "user" ? `${deleteObject.displayName}` : '')}
+                    onClose={this.onExitDeleteDialog_}
+                    onAccept={this.onCloseDeleteDialog_}
+                    theme={theme}>
 
-                </DeleteDialog>)}
+                  </DeleteDialog>)}
 
-            </ClassroomHeaderContainer>
+              </ClassroomHeaderContainer>
 
-          </ClassroomsTitleContainer>
+            </ClassroomsTitleContainer>
 
-        </ClassroomsContainer>
+          </ClassroomsContainer>
+
+        </TourTarget>
+        {showTour && (
+          <GuidedTour
+            continueTourFlag={this.state.continueTour}
+            ref={this.guidedTourRef}
+            isOpen={showTour}
+            steps={teacherViewTourSteps}
+            registry={this.registry}
+            scrollContainer={this.scrollRef}
+            onClose={this.onCloseTour_}
+            onSkip={this.onSkipTour_}
+            onBackClick={this.onBackClick_}
+            onNextClick={this.onNextClick_}
+            theme={theme} />
+        )}
       </PageContainer>
     );
   }
@@ -505,9 +587,15 @@ const DashboardWithNavigate = withNavigate(ClassroomTeacherView);
 
 export default connect(
   (state: ReduxState) => ({
+    locale: state.i18n.locale,
+    uid: state.users.me,
     classroomList: state.classrooms.entities,
     challenges: state.challenges,
     challengeCompletions: state.challengeCompletions,
+    tour: state.tours.byId[TourDoc.IDS.TEACHER_VIEW] ?? TourDoc.DEFAULT,
+    tourLoaded: !!state.tours.loaded[TourDoc.IDS.TEACHER_VIEW],
+    tourLoading: !!state.tours.loading[TourDoc.IDS.TEACHER_VIEW],
+    tourError: state.tours.error[TourDoc.IDS.TEACHER_VIEW],
 
   }),
   (dispatch) => ({

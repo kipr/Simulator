@@ -14,14 +14,17 @@ import { FontAwesome } from '../FontAwesome';
 import { InterfaceMode } from 'ivygate/dist/src/types/interface';
 import { default as IvygateClassroomType } from 'ivygate/dist/src/types/classroomTypes';
 import { Classroom } from 'state/State/Classroom';
+import { TourTarget } from '../Tours/TourTarget';
+import { TourRegistry } from '../../tours/TourRegistry';
 
 
 
 export interface JoinClassDialogPublicProps extends ThemeProps, StyleProps {
-
+  tourRegistry?: TourRegistry;
   locale: LocalizedString.Language;
   onClose: () => void;
   onJoinClassDialogClose: (foundClassroom: Classroom, classroomInviteCode: string, displayName: string) => void;
+  onContinueTour?: () => void;
 }
 
 interface JoinClassDialogPrivateProps {
@@ -95,7 +98,9 @@ export class JoinClassDialog extends React.PureComponent<Props, State> {
       console.log("Returned classroom from invite code:", returnedClassroom);
 
       returnedClassroom ? this.props.onJoinClassDialogClose(returnedClassroom, classroomInviteCode, values.displayName) : this.setState({ errorMessage: 'Invalid invite code. Please check and try again.' });
-
+      if (this.props.onContinueTour) {
+        this.props.onContinueTour();
+      }
     } catch (error) {
       console.error('Error joining classroom:', error);
     }
@@ -111,8 +116,8 @@ export class JoinClassDialog extends React.PureComponent<Props, State> {
 
     const { showRepeatUserDialog } = state;
     const JOINCLASS_FORM_ITEMS: Form.Item[] = [
-      Form.joinClassInviteCode('classroomInviteCode', 'Classroom Invite Code', 'Enter the invite code provided by your teacher to join a classroom'),
-      Form.displayNameField('displayName', 'Display Name', 'The name that will be shown to your teacher and classmates', undefined, 'This can be changed later in your profile settings'),
+      Form.joinClassInviteCode('classroomInviteCode', LocalizedString.lookup(tr('Classroom Invite Code'), locale), LocalizedString.lookup(tr('Enter the invite code provided by your teacher to join a classroom'), locale)),
+      Form.displayNameField('displayName', LocalizedString.lookup(tr('Display Name'), locale), LocalizedString.lookup(tr('The name that will be shown to your teacher and classmates. Be sure to only use your first name.'), locale)),
     ];
 
     return (
@@ -123,25 +128,27 @@ export class JoinClassDialog extends React.PureComponent<Props, State> {
             name={LocalizedString.lookup(tr('Join Classroom'), locale)}
             onClose={onClose}
           >
-            <Container theme={theme} style={style} className={className}>
-              {/* Show error message if it exists */}
-              {errorMessage && (
-                <ErrorMessageContainer theme={theme}>
-                  <ItemIcon icon={faExclamationTriangle} />
-                  <div style={{ fontWeight: 450 }}>
-                    {state.errorMessage}
-                  </div>
+            <TourTarget registry={this.props.tourRegistry} targetKey='join-classroom-dialog' style={style}>
+              <Container theme={theme} style={style} className={className}>
+                {/* Show error message if it exists */}
+                {errorMessage && (
+                  <ErrorMessageContainer theme={theme}>
+                    <ItemIcon icon={faExclamationTriangle} />
+                    <div style={{ fontWeight: 450 }}>
+                      {state.errorMessage}
+                    </div>
 
-                </ErrorMessageContainer>
-              )}
-              <StyledForm
-                theme={theme}
-                onFinalize={this.onFinalize_}
-                items={JOINCLASS_FORM_ITEMS}
-                finalizeText="Join"
-                finalizeDisabled={false}
-              />
-            </Container>
+                  </ErrorMessageContainer>
+                )}
+                <StyledForm
+                  theme={theme}
+                  onFinalize={this.onFinalize_}
+                  items={JOINCLASS_FORM_ITEMS}
+                  finalizeText="Join"
+                  finalizeDisabled={false}
+                />
+              </Container>
+            </TourTarget>
 
           </Dialog>)}
 

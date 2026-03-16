@@ -23,6 +23,7 @@ export namespace Validators {
     Length = 'length',
     Email = 'email',
     Date = 'date',
+    OneWord = 'oneword',
   }
 
   export interface Lowercase extends GeneralValidator {
@@ -70,7 +71,7 @@ export namespace Validators {
   export interface Numeric extends GeneralValidator {
     type: Validators.Numeric;
   }
-  
+
   /**
    * Namespace for the numeric validator.
    */
@@ -83,7 +84,7 @@ export namespace Validators {
    */
   export interface Special extends GeneralValidator {
     type: Validators.Special;
-  } 
+  }
 
   /**
    * Namespace for the special character validator.
@@ -124,8 +125,12 @@ export namespace Validators {
     type: Validators.Date;
   }
 
-  export namespace Date {}
+  export namespace Date { }
+  export interface OneWord extends GeneralValidator {
+    type: Validators.OneWord;
+  }
 
+  export namespace OneWord { }
   /**
    * Validates the given value based on the specified validator type.
    * @param value - The value to be validated.
@@ -164,6 +169,8 @@ export namespace Validators {
           (dateObj.getUTCMonth() + 1) === m &&
           dateObj.getUTCDate() === d;
       }
+      case Types.OneWord:
+        return /^\p{L}+$/u.test(value);
       default:
         return false;
     }

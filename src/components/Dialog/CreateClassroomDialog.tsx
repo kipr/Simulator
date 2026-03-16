@@ -11,10 +11,15 @@ import { I18nAction } from '../../state/reducer';
 import { connect } from 'react-redux';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesome } from '../FontAwesome';
+import { TourTarget } from '../Tours/TourTarget';
+import { TourRegistry } from '../../tours/TourRegistry';
+import ReactDOM from 'react-dom';
 
 export interface CreateClassroomDialogPublicProps extends ThemeProps, StyleProps {
+  tourRegistry?: TourRegistry;
   onClose: () => void;
   onCloseClassroomDialog: (teacherDisplayName: string, classroomName: string, classroomInviteCode: string) => void;
+  onContinueTour?: () => void;
 }
 
 interface CreateClassroomDialogPrivateProps {
@@ -64,7 +69,6 @@ const ItemIcon = styled(FontAwesome, {
   height: '30px'
 });
 export class CreateClassroomDialog extends React.PureComponent<Props, State> {
-
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -109,6 +113,9 @@ export class CreateClassroomDialog extends React.PureComponent<Props, State> {
 
     try {
       this.props.onCloseClassroomDialog(values.displayName, classroomName, values.inviteCode);
+      if (this.props.onContinueTour) {
+        this.props.onContinueTour();
+      }
     } catch (error) {
       console.error('Error creating classroom:', error);
     }
@@ -127,32 +134,38 @@ export class CreateClassroomDialog extends React.PureComponent<Props, State> {
 
     ];
 
+
     return (
       <Dialog
         theme={theme}
         name={LocalizedString.lookup(tr('Create New Classroom'), locale)}
         onClose={onClose}
       >
-        <Container theme={theme} style={style} className={className}>
-          {errorMessage && (
-            <ErrorMessageContainer theme={theme}>
-              <ItemIcon icon={faExclamationTriangle} />
-              <div style={{ fontWeight: 450 }}>
-                {state.errorMessage}
-              </div>
+        <TourTarget registry={this.props.tourRegistry} targetKey='create-classroom-dialog' style={style}>
+          <Container theme={theme} style={style} className={className}>
+            {errorMessage && (
+              <ErrorMessageContainer theme={theme}>
+                <ItemIcon icon={faExclamationTriangle} />
+                <div style={{ fontWeight: 450 }}>
+                  {state.errorMessage}
+                </div>
 
-            </ErrorMessageContainer>
-          )}
-          <StyledForm
-            theme={theme}
-            onFinalize={this.onFinalize_}
-            items={CREATECLASSROOM_FORM_ITEMS}
-            finalizeText="Create"
-            finalizeDisabled={false}
-          />
-        </Container>
+              </ErrorMessageContainer>
+            )}
+            <StyledForm
+              theme={theme}
+              onFinalize={this.onFinalize_}
+              items={CREATECLASSROOM_FORM_ITEMS}
+              finalizeText="Create"
+              finalizeDisabled={false}
+            />
+          </Container>
 
-      </Dialog>);
+        </TourTarget>
+
+      </Dialog>
+
+    );
 
 
   }

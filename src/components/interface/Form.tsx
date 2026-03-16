@@ -255,7 +255,7 @@ namespace Form {
   export const PASSWORD_VALIDATOR = (value: string) => Validators.validatePassword(value);
   export const DATE_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.Date);
   export const NON_EMPTY_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.Length, 1);
-
+  export const ONE_WORD_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.OneWord);
 
   export const email = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
     id,
@@ -333,15 +333,17 @@ namespace Form {
     finalizer: IDENTITY_FINALIZER
   });
 
+
   export const displayNameField = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
     id,
     text,
     tooltip,
-    validator: NON_EMPTY_VALIDATOR,
+    validator: ONE_WORD_VALIDATOR,
     finalizer: IDENTITY_FINALIZER,
     assist,
     assistText,
   });
+
 
   export const leaveClass = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
     id,
