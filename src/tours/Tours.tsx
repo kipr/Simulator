@@ -1,3 +1,5 @@
+import Dict from "util/objectOps/Dict";
+
 interface TourDoc {
   completed: boolean;
   step?: number;       // resume point
@@ -24,6 +26,7 @@ namespace TourDoc {
     TEACHER_VIEW: 'teacher-view-tour',
     STUDENT_VIEW: 'student-view-tour',
     STUDENT_VIEW_IN_CLASSROOM: 'student-view-in-classroom-tour',
+    SIMULATOR: 'simulator-tour'
   };
 
   export const ALL = [
@@ -33,6 +36,7 @@ namespace TourDoc {
     IDS.TEACHER_VIEW,
     IDS.STUDENT_VIEW,
     IDS.STUDENT_VIEW_IN_CLASSROOM,
+    IDS.SIMULATOR
   ];
 
   export function withDefaults(doc?: Partial<TourDoc>): TourDoc {
@@ -42,7 +46,7 @@ namespace TourDoc {
     };
   }
 }
-export type Rect = { top: number; left: number; width: number; height: number };
+export type Rect = { top: number; left: number; width: number; height?: number };
 export type TourPlacement = "top" | "bottom" | "left" | "right" | "auto";
 
 export type TourStep = {
@@ -76,6 +80,8 @@ export type TourStep = {
   /** Use interactive step instead of next button */
   noNextButton?: boolean;
   noBackButton?: boolean;
+
+  subTourSteps?: Dict<TourStep[]>; // if set, shows a mini combo box to select sub-steps
 };
 
 const DashboardTourSteps: TourStep[] = [
@@ -126,6 +132,14 @@ const DashboardTourSteps: TourStep[] = [
     targetKey: "about-card",
     title: "About KIPR",
     content: "KIPR is a 501(c) 3 organization started to make the long-term educational benefits of robotics accessible to students.",
+    placement: "bottom",
+  },
+  // Retake Tour Step
+  {
+    id: "retake-tour",
+    targetKey: "retake-tour-button",
+    title: "Retake Tour",
+    content: "Click here to retake the tour at any time.",
     placement: "bottom",
   }
 ];
@@ -198,6 +212,16 @@ const TeacherViewTourSteps: TourStep[] = [
     title: 'How To: Create a Classroom Continued',
     content: 'This is the dialog box where you can enter the details for your new classroom.',
     placement: 'top',
+    allowTargetInteraction: false,
+    noNextButton: false,
+  },
+  // Point Out Invite Code Step
+  {
+    id: 'create-classroom-invite-code',
+    targetKey: 'create-classroom-invite-code',
+    title: 'How To: Create a Classroom Continued',
+    content: 'Share the Invite Code with your students! Don\'t worry, it\'ll be visible later on too. \n \n Fill out the rest of the info and click "Create" to create your classroom.',
+    placement: 'right',
     allowTargetInteraction: true,
     noNextButton: true,
   },
@@ -380,6 +404,457 @@ const StudentViewTourSteps: TourStep[] = [
 
 
 ];
+const SimEditorConsoleSteps: TourStep[] = [
+  // Editor Tab Step
+  {
+    id: 'tab-editor',
+    targetKey: 'tab-Editor',
+    title: 'Editor Tab',
+    content: 'This is the Editor tab where you can write, edit, and debug your code.',
+    placement: 'bottom',
+    allowTargetInteraction: false
+  },
+  // Editor and Console Overview Step
+  {
+    id: 'simulator-editor-console-overview',
+    targetKey: 'simulator-editor-console-overview',
+    title: 'Editor and Console Overview',
+    content: 'The Editor tab contains 2 main sections: the code editor on top and the console on bottom.',
+    placement: 'right',
+    allowTargetInteraction: false
+  },
+  // Code Editor Step
+  {
+    id: 'code-editor',
+    targetKey: 'code-editor',
+    title: 'Code Editor',
+    content: 'This is the code editor, where you can write and edit your code.',
+    placement: 'right',
+    allowTargetInteraction: false
+  },
+  // Code Editor Language Dropdown Step
+  {
+    id: 'code-editor-language-charm',
+    targetKey: 'LanguageSelectCharm-key-0',
+    title: 'Code Editor Language Dropdown',
+    content: 'Click this dropdown to select the programming language for your code.',
+    placement: 'bottom',
+    allowTargetInteraction: false,
+  },
+  // Indent Button Step
+  {
+    id: 'code-editor-indent',
+    targetKey: 'Button-key-1',
+    title: 'Code Editor Indent Button',
+    content: 'Click this button to auto-indent your code.',
+    placement: 'bottom',
+    allowTargetInteraction: false,
+  },
+  // Download Button Step 
+  {
+    id: 'code-editor-download',
+    targetKey: 'Button-key-2',
+    title: 'Code Editor Download Button',
+    content: 'Click this button to download your code as a file.',
+    placement: 'bottom',
+    allowTargetInteraction: false,
+  },
+  // Reset Code Button Step
+  {
+    id: 'code-editor-reset',
+    targetKey: 'Button-key-3',
+    title: 'Code Editor Reset Button',
+    content: 'Click this button to reset the code in the editor to the default code for the current language.',
+    placement: 'bottom',
+    allowTargetInteraction: false,
+  },
+  // Console Step
+  {
+    id: 'console',
+    targetKey: 'console',
+    title: 'Console',
+    content: 'This is the console, where you can see the output of your code and any error messages.',
+    placement: 'right',
+    allowTargetInteraction: false
+  },
+  // Console Clear Button Step
+  {
+    id: 'console-clear-button',
+    targetKey: 'console-clear-button',
+    title: 'Console Clear Button',
+    content: 'Click this button to clear the console.',
+    placement: 'top',
+    allowTargetInteraction: false,
+  },
+  // Ask Tutor Button Step
+  {
+    id: 'ask-tutor-button',
+    targetKey: 'ask-tutor-button',
+    title: 'Ask Tutor Button',
+    content: 'Click this button to ask the KIPR Tutor for help with your code.',
+    placement: 'top',
+    allowTargetInteraction: false,
+  }
+];
+
+const SimMainMenuSteps: TourStep[] = [
+  // Main Menu Overview Step
+  {
+    id: 'simulator-main-menu-overview',
+    targetKey: 'simulator-main-menu-overview',
+    title: 'Main Menu Overview',
+    content: 'This is the main menu, where you can access different pages and features of the simulator.',
+    placement: 'bottom',
+    allowTargetInteraction: false
+  },
+  // Return to Dashboard Button Step
+  {
+    id: 'return-to-dashboard-button',
+    targetKey: 'return-to-dashboard-button',
+    title: 'Return to Dashboard Button',
+    content: 'Click the KIPR logo to return to the dashboard.',
+    placement: 'bottom',
+    allowTargetInteraction: true,
+  },
+  // Run/Stop Button Step
+  {
+    id: 'run-stop-button',
+    targetKey: 'run-stop-button',
+    title: 'Run/Stop Button',
+    content: 'Use this button to run or stop your code in the simulator.',
+    placement: 'bottom',
+    allowTargetInteraction: false,
+  },
+  // Reset World Button Step
+  {
+    id: 'reset-world-button',
+    targetKey: 'reset-world-button',
+    title: 'Reset World Button',
+    content: 'Click this button to reset the world in the simulator.',
+    placement: 'bottom',
+    allowTargetInteraction: false,
+  },
+  // Start Challenge Button Step
+  {
+    id: 'start-challenge-button',
+    targetKey: 'start-challenge-button',
+    title: 'Start Challenge Button',
+    content: 'After opening a challenge scene, click this button to start the challenge.',
+    placement: 'bottom',
+    allowTargetInteraction: false,
+  },
+  // Layout Button Step
+  {
+    id: 'layout-button',
+    targetKey: 'layout-button',
+    title: 'Layout Button',
+    content: 'Click this button to see options to change the layout of the simulator interface. Try it now!',
+    placement: 'bottom',
+    allowTargetInteraction: true,
+    noNextButton: true,
+  },
+  // Layout Options Step
+  {
+    id: 'layout-options',
+    targetKey: 'layout-options',
+    title: 'Layout Options',
+    content: 'These are the different layout options. Select one to change the layout of the simulator interface.',
+    placement: 'bottom',
+    allowTargetInteraction: false
+  },
+  // Scene Button Step
+  {
+    id: 'scene-button',
+    targetKey: 'scene-button',
+    title: 'Scene Button',
+    content: 'Click this button to see options to change the scene in the simulator. Try it now!',
+    placement: 'bottom',
+    allowTargetInteraction: true,
+    noNextButton: true,
+  },
+  // Scene Options Step
+  {
+    id: 'scene-options',
+    targetKey: 'scene-options',
+    title: 'Scene Options',
+    content: 'These are the different scene options. Select one to change the scene in the simulator.',
+    placement: 'bottom',
+    allowTargetInteraction: false
+  },
+  // Scene Options Info Step
+  {
+    id: 'scene-options-info',
+    targetKey: 'scene-options',
+    title: 'Scene Options Info',
+    content: 'Currently, we\'re in the JBC Sandbox so some options are locked. Select "Open" to continue.',
+    placement: 'left',
+    noNextButton: true
+  },
+  // Scene Open Step
+  {
+    id: 'open-scene-dialog',
+    targetKey: 'open-scene-dialog',
+    title: 'Scene Open',
+    content: 'This is the open scene option, which allows you to open different scenes in the simulator.',
+    placement: 'bottom',
+    allowTargetInteraction: false,
+  },
+  // Open Scene Dialog List Step
+  {
+    id: 'open-scene-list',
+    targetKey: 'open-scene-list',
+    title: 'Scene Open Continued',
+    content: 'This is the list of scenes that you can open. Select one to see more info and open it in the Simulator.',
+    placement: 'right',
+    allowTargetInteraction: true,
+    noNextButton: true,
+  },
+  // Open Scene Dialog Info Step
+  {
+    id: 'open-scene-info',
+    targetKey: 'open-scene-info',
+    title: 'Scene Open Continued',
+    content: 'This is the info page for the scene. Click "Accept" at the bottom to open the scene in the simulator.',
+    placement: 'right',
+  },
+  // Close Scene Dialog Step
+  {
+    id: 'close-scene-dialog',
+    targetKey: 'Open World-dialog',
+    title: 'Scene Open Continued',
+    content: 'For now, let\'s close the dialog to continue exploring the simulator interface.',
+    placement: 'top',
+    allowTargetInteraction: true,
+    noNextButton: true,
+  },
+  // Extra Menu Button Step
+  {
+    id: 'extra-menu-button',
+    targetKey: 'extra-menu-button',
+    title: 'Extra Menu Button',
+    content: 'Click this button to see extra options such as the simulator settings and the option to report a bug.',
+    placement: 'left',
+    allowTargetInteraction: true,
+    noNextButton: true,
+  },
+  // Extra Menu Options Step
+  {
+    id: 'extra-menu-options',
+    targetKey: 'extra-menu-options',
+    title: 'Extra Menu Options',
+    content: 'These are the extra options you can access from this menu.',
+    placement: 'left',
+    allowTargetInteraction: false,
+  },
+  // Extra Menu Documentation Button Step
+  {
+    id: 'extra-menu-documentation-button',
+    targetKey: 'extra-menu-documentation-button',
+    title: 'Documentation Button',
+    content: 'Click the documentation button to access the KIPR library.',
+    placement: 'left',
+    allowTargetInteraction: false,
+  },
+  // Extra Menu Ask Tutor Button Step
+  {
+    id: 'extra-menu-ask-tutor-button',
+    targetKey: 'extra-menu-ask-tutor-button',
+    title: 'Tutor Button',
+    content: 'Click the ask tutor button to ask the KIPR Tutor for help with the simulator.',
+    placement: 'left',
+    allowTargetInteraction: false,
+  },
+  // Extra Menu Settings Button Step
+  {
+    id: 'extra-menu-settings-button',
+    targetKey: 'extra-menu-settings-button',
+    title: 'Settings Button',
+    content: 'Click the settings button to see options such as User Interface and Editor settings.',
+    placement: 'left',
+    allowTargetInteraction: false,
+  },
+  // Extra Menu About Button Step
+  {
+    id: 'extra-menu-about-button',
+    targetKey: 'extra-menu-about-button',
+    title: 'About Button',
+    content: 'Click the about button to see information about KIPR and the simulator.',
+    placement: 'left',
+    allowTargetInteraction: false,
+  },
+  // Extra Menu Feedback Button Step
+  {
+    id: 'extra-menu-feedback-button',
+    targetKey: 'extra-menu-feedback-button',
+    title: 'Feedback Button',
+    content: 'Click the feedback button to report a bug or send feedback about the Simulator to KIPR.',
+    placement: 'left',
+    allowTargetInteraction: false,
+  },
+  // Extra Menu Logout Button Step
+  {
+    id: 'extra-menu-logout-button',
+    targetKey: 'extra-menu-logout-button',
+    title: 'Logout Button',
+    content: 'Click the logout button to log out of your account.',
+    placement: 'left',
+    allowTargetInteraction: false,
+  },
+];
+
+const SimLeftTabSteps: TourStep[] = [
+  // Overlay Tab Bar Overview Step
+  {
+    id: 'simulator-left-tab-overview',
+    targetKey: 'simulator-left-tab-overview',
+    title: 'Overlay Tab Bar Overview',
+    content: 'This is the Overlay Tab Bar, where you can access different tools and features to use while testing your code in the simulator.',
+    placement: 'right',
+    allowTargetInteraction: false,
+  },
+  // Overlay Tab Bar Overview Continued Step
+  {
+    id: 'simulator-left-tab-overview-continued',
+    targetKey: 'tab-Robot',
+    title: 'Overlay Tab Bar Overview Continued',
+    content: 'We\'ve already introduced the Editor Tab, we\'ll now explore the other tabs available: Robot and World. Click the "Robot" tab to continue the tour!',
+    placement: 'right',
+    allowTargetInteraction: true,
+    noNextButton: true,
+  },
+  // Overlay Tab Bar Robot Info Step
+  {
+    id: 'overlay-tab-robot',
+    targetKey: 'robot-overview',
+    title: 'Overlay Tab Bar Robot Tab',
+    content: 'This is the Robot tab, where you can see information about the robot such as its position and sensor readings.',
+    placement: 'right',
+  },
+  // Overlay Tab Bar Robot Starting Location Step
+  {
+    id: 'robot-starting-location',
+    targetKey: 'robot-starting-location',
+    title: 'Robot Starting Location',
+    content: 'The robot starts at the origin point in the simulator, which is why the position readings are all 0. You can change the robot\'s starting location by entering different values for x, y, z, and rotation.',
+    placement: 'right',
+    allowTargetInteraction: false,
+  },
+  // Robot Servo Section Step
+  {
+    id: 'robot-servos',
+    targetKey: 'robot-servos',
+    title: 'Robot Servos',
+    content: 'This is the servo section, where you can see the current positions of the robot\'s servos. You can also click get_servo_position() row to see a graph.',
+    placement: 'right',
+    allowTargetInteraction: false,
+  },
+  // Robot Motor Velocities Section Step
+  {
+    id: 'robot-motor-velocities',
+    targetKey: 'robot-motor-velocities',
+    title: 'Robot Motor Velocities',
+    content: 'This is the motor velocities section, where you can see the current velocities of the robot\'s motors. You can also click each motor row to see a graph.',
+    placement: 'right',
+    allowTargetInteraction: false,
+  },
+  // Robot Motor Positions Section Step
+  {
+    id: 'robot-motor-positions',
+    targetKey: 'robot-motor-positions',
+    title: 'Robot Motor Positions',
+    content: 'This is the motor positions section, where you can see the current positions of the robot\'s motors. You can also click each get_motor_position_counter() row to see a graph.',
+    placement: 'right',
+    allowTargetInteraction: false,
+  },
+  // Robot Analog Sensors Section Step
+  {
+    id: 'robot-analog-sensors',
+    targetKey: 'robot-analog-sensors',
+    title: 'Robot Analog Sensors',
+    content: 'This is the analog sensors section, where you can see the current readings of the robot\'s analog sensors. You can also click each analog() row to see a graph.',
+    placement: 'right',
+    allowTargetInteraction: false,
+  },
+  // Robot Digital Sensors Section Step
+  {
+    id: 'robot-digital-sensors',
+    targetKey: 'robot-digital-sensors',
+    title: 'Robot Digital Sensors',
+    content: 'This is the digital sensors section, where you can see the current readings of the robot\'s digital sensors. You can also click each digital() row to see a graph.',
+    placement: 'right',
+    allowTargetInteraction: false,
+  },
+
+  // World Tab Step
+  {
+    id: 'overlay-tab-world',
+    targetKey: 'tab-World',
+    title: 'Overlay Tab Bar World Tab',
+    content: 'This is the World tab, where you can see information about the world such as the positions of objects and the light level. Select the "World" tab to continue the tour!',
+    placement: 'right',
+    allowTargetInteraction: true,
+    noNextButton: true,
+  },
+  // World Objects Section Step
+  {
+    id: 'world-objects',
+    targetKey: 'world-objects',
+    title: 'World Tab Objects Section',
+    content: 'This is the world\'s objects section where you can customize the JBC Sandbox to add/remove/edit objects in the 3D simulation.',
+    placement: 'right',
+    allowTargetInteraction: false,
+  },
+  // World Can 1 Target Step
+  {
+    id: 'can1',
+    targetKey: 'can1',
+    title: 'World Tab Can Object',
+    content: 'This is the can object, which is a common object used in challenges. Hover over this row to see object options.',
+    placement: 'right',
+    allowTargetInteraction: true,
+    noNextButton: true,
+  },
+  // World Can 1 Visibility Step
+  {
+    id: 'can1-visibility',
+    targetKey: 'can1-visibility',
+    title: 'World Tab Object Visibility Option',
+    content: 'Click this option to toggle the visibility of the highlighted object in the simulator.',
+    placement: 'right',
+  }
+];
+
+const SimulatorTourSteps: TourStep[] = [
+  // Sim Overview Step
+  {
+    id: 'simulator-overview',
+    targetKey: 'simulator-overview',
+    title: '3D Simulator Overview',
+    content: 'Welcome to KIPR\'s 3D Simulator, where you can test your code in a virtual environment.',
+    placement: 'top',
+    allowTargetInteraction: false,
+  },
+  {
+    id: 'choose-tour',
+    targetKey: 'choose-tour',
+    title: 'Choose Your Tour',
+    placement: 'top',
+    content: 'Use this dropdown to select different tours of the simulator interface or just click Next to take the full tour!',
+    allowTargetInteraction: false,
+    subTourSteps: {
+      'Editor and Console Tour': SimEditorConsoleSteps,
+      'Main Menu Tour': SimMainMenuSteps,
+      'Overlay Tab Bar Tour': SimLeftTabSteps,
+    }
+  }
+
+
+];
+
+SimulatorTourSteps.push(...SimEditorConsoleSteps);
+SimulatorTourSteps.push(...SimMainMenuSteps);
+SimulatorTourSteps.push(...SimLeftTabSteps);
+
 const TourStepsById: Record<string, TourStep> = {};
 DashboardTourSteps.forEach(step => {
   TourStepsById[step.id] = step;
@@ -393,12 +868,17 @@ TeacherViewTourSteps.forEach(step => {
 StudentViewTourSteps.forEach(step => {
   TourStepsById[step.id] = step;
 });
+SimulatorTourSteps.forEach(step => {
+  TourStepsById[step.id] = step;
+});
+
 const StudentViewInClassroomTourStep: TourStep[] =
   StudentViewTourSteps.filter(
     step =>
       step.id !== 'join-classroom-dialog' &&
       step.id !== 'join-classroom'
   );
+
 export function getTourSteps(tourId: string): TourStep[] {
   switch (tourId) {
     case TourDoc.IDS.DASHBOARD:
@@ -411,6 +891,8 @@ export function getTourSteps(tourId: string): TourStep[] {
       return StudentViewTourSteps;
     case TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM:
       return StudentViewInClassroomTourStep;
+    case TourDoc.IDS.SIMULATOR:
+      return SimulatorTourSteps;
     default:
       return [];
   }
