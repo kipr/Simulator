@@ -10,6 +10,8 @@ import LocalizedString from '../../util/LocalizedString';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
 import tr from '@i18n';
+import TourTarget from '../Tours/TourTarget';
+import { TourRegistry } from '../../tours/TourRegistry';
 
 export interface LayoutPickerPublicProps extends StyleProps, ThemeProps {
   layout: Layout,
@@ -18,6 +20,7 @@ export interface LayoutPickerPublicProps extends StyleProps, ThemeProps {
 
   onShowAll: () => void;
   onHideAll: () => void;
+  tourRegistry?: TourRegistry;
 }
 
 interface LayoutPickerPrivateProps {
@@ -25,7 +28,7 @@ interface LayoutPickerPrivateProps {
 }
 
 interface LayoutPickerState {
-  
+
 }
 
 type Props = LayoutPickerPublicProps & LayoutPickerPrivateProps;
@@ -38,7 +41,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   right: '-1px',
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
-  
+  zIndex: 9999,
   display: 'flex',
   flexDirection: 'column',
   borderBottomLeftRadius: `${props.theme.borderRadius}px`,
@@ -113,21 +116,24 @@ class LayoutPicker extends React.PureComponent<Props, State> {
   render() {
     const { props } = this;
     const { theme, layout, onHideAll, onShowAll, locale } = props;
+    //console.log("rendering layoutpicker with layout:", layout);
     return (
-      <Container theme={theme}>
-        <Item theme={theme} style={{ fontWeight: 500, backgroundColor: theme.borderColor }}>{LocalizedString.lookup(tr('Layouts'), locale)}</Item>
-        <Item theme={theme} disabled={layout === Layout.Overlay} onClick={layout !== Layout.Overlay ? this.onOverlayClick_ : undefined}><ItemIcon icon={faClone} /> {LocalizedString.lookup(tr('Overlay'), locale)}</Item>
-        <Item theme={theme} disabled={layout === Layout.Side} onClick={layout !== Layout.Side ? this.onSideClick_ : undefined}><ItemIcon icon={faCaretSquareLeft} /> {LocalizedString.lookup(tr('Side'), locale)}</Item>
-        {/* <Item theme={theme} disabled={layout === Layout.Bottom} onClick={layout !== Layout.Bottom ? this.onBottomClick_ : undefined}><ItemIcon icon={faCaretSquareDown} /> Bottom</Item> */}
-        
-        {layout === Layout.Overlay ? (
-          <>
-            <Item theme={theme} style={{ fontWeight: 500, backgroundColor: theme.borderColor }}>{LocalizedString.lookup(tr('Options'), locale)}</Item>
-            <Item theme={theme} onClick={onShowAll}><ItemIcon icon={faEye} /> {LocalizedString.lookup(tr('Show All'), locale)}</Item>
-            <Item theme={theme} onClick={onHideAll}><ItemIcon icon={faEyeSlash} /> {LocalizedString.lookup(tr('Hide All'), locale)}</Item>
-          </>
-        ) : undefined}
-      </Container>
+      <TourTarget registry={this.props.tourRegistry} targetKey={'layout-options'}>
+        <Container theme={theme}>
+          <Item theme={theme} style={{ fontWeight: 500, backgroundColor: theme.borderColor }}>{LocalizedString.lookup(tr('Layouts'), locale)}</Item>
+          <Item theme={theme} disabled={layout === Layout.Overlay} onClick={layout !== Layout.Overlay ? this.onOverlayClick_ : undefined}><ItemIcon icon={faClone} /> {LocalizedString.lookup(tr('Overlay'), locale)}</Item>
+          <Item theme={theme} disabled={layout === Layout.Side} onClick={layout !== Layout.Side ? this.onSideClick_ : undefined}><ItemIcon icon={faCaretSquareLeft} /> {LocalizedString.lookup(tr('Side'), locale)}</Item>
+          {/* <Item theme={theme} disabled={layout === Layout.Bottom} onClick={layout !== Layout.Bottom ? this.onBottomClick_ : undefined}><ItemIcon icon={faCaretSquareDown} /> Bottom</Item> */}
+
+          {layout === Layout.Overlay ? (
+            <>
+              <Item theme={theme} style={{ fontWeight: 500, backgroundColor: theme.borderColor }}>{LocalizedString.lookup(tr('Options'), locale)}</Item>
+              <Item theme={theme} onClick={onShowAll}><ItemIcon icon={faEye} /> {LocalizedString.lookup(tr('Show All'), locale)}</Item>
+              <Item theme={theme} onClick={onHideAll}><ItemIcon icon={faEyeSlash} /> {LocalizedString.lookup(tr('Hide All'), locale)}</Item>
+            </>
+          ) : undefined}
+        </Container>
+      </TourTarget>
     );
   }
 }

@@ -256,6 +256,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
   }
 
   async componentDidMount() {
+    console.log("ClassroomStudentView componentDidMount props:", this.props);
     const currentUserId = auth.currentUser?.uid || '';
     const isInClassroom = await studentInClassroom(currentUserId);
     const currentUser = auth.currentUser.uid;
@@ -462,7 +463,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
     const showTour = !!tourId && activeTourLoaded && !activeTour.completed;
     return (
       <PageContainer style={style} theme={theme}>
-        <MainMenu theme={theme} onRetakeTour={this.onRetakeTour_} />
+        <MainMenu theme={theme} tourRegistry={this.registry} onRetakeTour={this.onRetakeTour_} />
 
         <div style={{ width: '100%', alignItems: 'flex-end', display: 'flex', flexDirection: 'column' }}>
           <TourTarget registry={this.registry} targetKey='classroom-extra-options-click'>

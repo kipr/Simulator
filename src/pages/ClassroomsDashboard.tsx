@@ -124,7 +124,7 @@ class ClassroomsDashboard extends React.PureComponent<Props, State> {
     const classroomTourSteps: TourStep[] = getTourSteps(TourDoc.IDS.CLASSROOM);
     return (
       <Container className={className} style={style} theme={theme}>
-        <MainMenu theme={theme} onRetakeTour={this.onRetakeTour_} />
+        <MainMenu theme={theme} tourRegistry={this.registry} onRetakeTour={this.onRetakeTour_} />
         <TourTarget registry={this.registry} targetKey='classroom-overview' style={style}>
           <CardContainer theme={theme}>
 

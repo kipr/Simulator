@@ -4,12 +4,15 @@ import { styled, withStyleDeep } from "styletron-react";
 import { StyleProps } from "../util/style";
 import { FontAwesome } from "./FontAwesome";
 import { BLUE, BROWN, GREEN, RED, ThemeProps } from "./constants/theme";
+import TourTarget from "./Tours/TourTarget";
+import { TourRegistry } from "../tours/TourRegistry";
 
 export interface EditableListProps<P> extends StyleProps, ThemeProps {
   items: EditableList.Item<P>[];
 
   onItemRemove?: (index: number, userdata?: unknown) => void;
   onItemReorder?: (fromIndex: number, toIndex: number) => void;
+  tourRegistry?: TourRegistry;
 }
 
 interface EditableListState {
@@ -32,7 +35,7 @@ const ItemWrapper = styled('div', {
 class EditableList extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
-  
+
     this.state = {};
   }
 
@@ -45,20 +48,32 @@ class EditableList extends React.PureComponent<Props, State> {
     const { items, style, className, onItemRemove } = props;
 
 
-
     return (
       <Container style={style} className={className}>
         {items.map((item, index) => {
           const Component = item.component;
-          return (
-            <Component
-              {...item.props}
-              onRemove={item.removable ? this.onRemove_(index, item.userdata) : undefined}
+          const row = (
+            <div key={index} style={{ display: 'flex', width: '100%' }}>
+              <Component
+                {...item.props}
+                onRemove={item.removable ? () => this.onRemove_(index, item.userdata) : undefined}
+              />
+            </div>
+          );
+
+          return item.userdata === 'can1' ? (
+            <TourTarget
               key={index}
-            />
+              registry={this.props.tourRegistry}
+              targetKey="can1"
+            >
+              {row}
+            </TourTarget>
+          ) : (
+            row
           );
         })}
-      </Container >
+      </Container>
     );
   }
 }
@@ -91,7 +106,7 @@ namespace EditableList {
       };
     };
   }
-  
+
   export class StandardItem<P extends StyleProps> extends React.PureComponent<StandardItem.Props<P>, StandardItem.State> {
     constructor(props: StandardItem.Props<P>) {
       super(props);
@@ -101,7 +116,7 @@ namespace EditableList {
         initialTouch: false,
       };
     }
-  
+
     private onMouseEnter_ = (e: React.MouseEvent<HTMLDivElement>) => {
       this.setState({
         hover: true,
@@ -137,7 +152,7 @@ namespace EditableList {
       const { visible, onVisibilityChange } = this.props;
       onVisibilityChange(!visible);
     };
-      
+
 
     render() {
       const { props, state } = this;
@@ -157,9 +172,11 @@ namespace EditableList {
           {(hover && !initialTouch) ? (
             <StandardItem.OptionsContainer>
               {onVisibilityChange && (
-                <StandardItem.VisibilityIconContainer onClick={this.onVisibilityChange_}>
-                  <StandardItem.OptionIcon icon={visible ? faEye : faEyeSlash} />
-                </StandardItem.VisibilityIconContainer>
+                <TourTarget registry={this.props.tourRegistry} targetKey={'can1-visibility'} style={{ display: 'flex', flex: 1, minWidth: 0, minHeight: 0 }}>
+                  <StandardItem.VisibilityIconContainer onClick={this.onVisibilityChange_}>
+                    <StandardItem.OptionIcon icon={visible ? faEye : faEyeSlash} />
+                  </StandardItem.VisibilityIconContainer>
+                </TourTarget>
               )}
               {onReset && (
                 <StandardItem.ResetIconContainer onClick={visible ? onReset : undefined} $disabled={!visible}>
@@ -176,7 +193,7 @@ namespace EditableList {
                   <StandardItem.OptionIcon icon={faTimes} />
                 </StandardItem.RemoveIconContainer>
               )}
-              
+
             </StandardItem.OptionsContainer>
           ) : undefined}
         </StandardItem.Container>
@@ -187,7 +204,7 @@ namespace EditableList {
   export namespace StandardItem {
     export interface ComponentProps extends StyleProps {
     }
-    
+
     export interface Props<P extends ComponentProps> extends ItemProps {
       component: React.ComponentType<P>;
       props: ComponentRawProps<P>;
@@ -195,6 +212,7 @@ namespace EditableList {
       onReset?: () => void;
       onSettings?: () => void;
       onVisibilityChange?: (visiblity: boolean) => void;
+      tourRegistry?: TourRegistry;
     }
 
     export type ComponentRawProps<P extends ComponentProps> = P;

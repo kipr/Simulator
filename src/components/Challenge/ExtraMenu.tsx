@@ -13,6 +13,8 @@ import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
 import LocalizedString from '../../util/LocalizedString';
 import { AiAction } from '../../state/reducer';
+import TourTarget from '../Tours/TourTarget';
+import { TourRegistry } from '../../tours/TourRegistry';
 
 export interface ExtraMenuPublicProps extends StyleProps, ThemeProps {
   onLogoutClick: (event: React.MouseEvent) => void;
@@ -21,6 +23,7 @@ export interface ExtraMenuPublicProps extends StyleProps, ThemeProps {
   onSettingsClick: (event: React.MouseEvent) => void;
   onAboutClick: (event: React.MouseEvent) => void;
   onAiClick: (event: React.MouseEvent) => void;
+  tourRegistry?: TourRegistry;
 }
 
 interface ExtraMenuPrivateProps {
@@ -28,7 +31,7 @@ interface ExtraMenuPrivateProps {
 }
 
 interface ExtraMenuState {
-  
+
 }
 
 type Props = ExtraMenuPublicProps & ExtraMenuPrivateProps;
@@ -41,7 +44,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   width: '200px',
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
-  
+
   display: 'flex',
   flexDirection: 'column',
   borderBottomLeftRadius: `${props.theme.borderRadius}px`,
@@ -108,12 +111,25 @@ class ExtraMenu extends React.PureComponent<Props, State> {
     } = props;
     return (
       <Container theme={theme} style={style} className={className}>
-        <Item theme={theme} onClick={onDocumentationClick}><ItemIcon icon={faBook} /> {LocalizedString.lookup(tr('Documentation'), locale)}</Item>
-        <Item theme={theme} onClick={onAiClick}><ItemIcon icon={faRobot} /> {LocalizedString.lookup(tr('Tutor'), locale)}</Item>
-        <Item theme={theme} onClick={onSettingsClick}><ItemIcon icon={faCogs} /> {LocalizedString.lookup(tr('Settings'), locale)}</Item>
-        <Item theme={theme} onClick={onAboutClick}><ItemIcon icon={faQuestion} /> {LocalizedString.lookup(tr('About'), locale)}</Item>
-        {onFeedbackClick && <Item theme={theme} onClick={onFeedbackClick}><ItemIcon icon={faCommentDots} /> {LocalizedString.lookup(tr('Feedback'), locale)}</Item>}
-        <Item theme={theme} onClick={onLogoutClick}><ItemIcon icon={faSignOutAlt} /> {LocalizedString.lookup(tr('Logout'), locale)}</Item>
+        <TourTarget registry={this.props.tourRegistry} targetKey={'extra-menu-documentation-button'} style={{ display: 'flex', height: '100%' }}>
+          <Item theme={theme} onClick={onDocumentationClick}><ItemIcon icon={faBook} /> {LocalizedString.lookup(tr('Documentation'), locale)}</Item>
+        </TourTarget>
+        <TourTarget registry={this.props.tourRegistry} targetKey={'extra-menu-ask-tutor-button'} style={{ display: 'flex', height: '100%' }}>
+          <Item theme={theme} onClick={onAiClick}><ItemIcon icon={faRobot} /> {LocalizedString.lookup(tr('Tutor'), locale)}</Item>
+        </TourTarget>
+        <TourTarget registry={this.props.tourRegistry} targetKey={'extra-menu-settings-button'} style={{ display: 'flex', height: '100%' }}>
+          <Item theme={theme} onClick={onSettingsClick}><ItemIcon icon={faCogs} /> {LocalizedString.lookup(tr('Settings'), locale)}</Item>
+        </TourTarget>
+        <TourTarget registry={this.props.tourRegistry} targetKey={'extra-menu-about-button'} style={{ display: 'flex', height: '100%' }}>
+          <Item theme={theme} onClick={onAboutClick}><ItemIcon icon={faQuestion} /> {LocalizedString.lookup(tr('About'), locale)}</Item>
+        </TourTarget>
+        {onFeedbackClick &&
+          <TourTarget registry={this.props.tourRegistry} targetKey={'extra-menu-feedback-button'} style={{ display: 'flex', height: '100%' }}>
+            <Item theme={theme} onClick={onFeedbackClick}><ItemIcon icon={faCommentDots} /> {LocalizedString.lookup(tr('Feedback'), locale)}</Item>
+          </TourTarget>}
+        <TourTarget registry={this.props.tourRegistry} targetKey={'extra-menu-logout-button'} style={{ display: 'flex', height: '100%' }}>
+          <Item theme={theme} onClick={onLogoutClick}><ItemIcon icon={faSignOutAlt} /> {LocalizedString.lookup(tr('Logout'), locale)}</Item>
+        </TourTarget>
       </Container>
     );
   }

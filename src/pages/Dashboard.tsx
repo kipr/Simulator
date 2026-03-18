@@ -105,7 +105,7 @@ class Dashboard extends React.PureComponent<Props> {
 
     return (
       <Container className={className} style={style} theme={theme}>
-        <MainMenu theme={theme} onRetakeTour={this.onRetakeTour_} />
+        <MainMenu theme={theme} style={style} tourRegistry={this.registry} onRetakeTour={this.onRetakeTour_} />
         <CardContainer theme={theme} ref={(n: HTMLDivElement | null) => { this.scrollRef = n; }}>
 
           <TourTarget registry={this.registry} targetKey='tutorial-card' style={style}>

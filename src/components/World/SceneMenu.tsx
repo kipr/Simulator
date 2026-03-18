@@ -25,7 +25,7 @@ interface SceneMenuPrivateProps {
 }
 
 interface SceneMenuState {
-  
+
 }
 
 type Props = SceneMenuPublicProps & SceneMenuPrivateProps;
@@ -38,7 +38,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   right: '-1px',
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
-  
+  zIndex: 9999,
   display: 'flex',
   flexDirection: 'column',
   borderBottomLeftRadius: `${props.theme.borderRadius}px`,
@@ -94,24 +94,24 @@ class SceneMenu extends React.PureComponent<Props, State> {
     const { theme, onSaveAsScene, onNewScene, onSaveScene, onOpenScene, onSettingsScene, onDeleteScene, locale } = props;
     return (
       <Container theme={theme}>
-        <Item theme={theme} disabled={!onSettingsScene} onClick={onSettingsScene ? onSettingsScene : () => {console.log("empty");}}>
-          <ItemIcon icon={faCogs} /> 
+        <Item theme={theme} disabled={!onSettingsScene} onClick={onSettingsScene ? onSettingsScene : () => { console.log("empty"); }}>
+          <ItemIcon icon={faCogs} />
           {LocalizedString.lookup(tr('Settings'), locale)}
         </Item>
-        <Item theme={theme} disabled={!onOpenScene} onClick={onOpenScene ? onOpenScene : () => {console.log("empty");}}>
-          <ItemIcon icon={faFolderOpen} /> 
+        <Item theme={theme} disabled={!onOpenScene} onClick={onOpenScene ? onOpenScene : () => { console.log("empty"); }}>
+          <ItemIcon icon={faFolderOpen} />
           {LocalizedString.lookup(tr('Open'), locale)}
         </Item>
-        <Item theme={theme} disabled={!onSaveScene} onClick={onSaveScene ? onSaveScene : () => {console.log("empty");}}>
-          <ItemIcon icon={faSave} /> 
+        <Item theme={theme} disabled={!onSaveScene} onClick={onSaveScene ? onSaveScene : () => { console.log("empty"); }}>
+          <ItemIcon icon={faSave} />
           {LocalizedString.lookup(tr('Save'), locale)}
         </Item>
-        <Item theme={theme} disabled={!onSaveAsScene} onClick={onSaveAsScene ? onSaveAsScene : () => {console.log("empty");}}>
-          <ItemIcon icon={faCopy} /> 
+        <Item theme={theme} disabled={!onSaveAsScene} onClick={onSaveAsScene ? onSaveAsScene : () => { console.log("empty"); }}>
+          <ItemIcon icon={faCopy} />
           {LocalizedString.lookup(tr('Save As'), locale)}
         </Item>
-        <Item theme={theme} disabled={!onDeleteScene} onClick={onDeleteScene ? onDeleteScene : () => {console.log("empty");}}>
-          <ItemIcon icon={faTrash} /> 
+        <Item theme={theme} disabled={!onDeleteScene} onClick={onDeleteScene ? onDeleteScene : () => { console.log("empty"); }}>
+          <ItemIcon icon={faTrash} />
           {LocalizedString.lookup(tr('Delete'), locale)}
         </Item>
       </Container>

@@ -20,6 +20,8 @@ import { faBars, faBook, faClone, faCogs, faCommentDots, faFlagCheckered, faGlob
 import SceneMenu from '../World/SceneMenu';
 import ExtraMenu from './ExtraMenu';
 import LocalizedString from '../../util/LocalizedString';
+import TourTarget from '../Tours/TourTarget';
+import { TourRegistry } from '../../tours/TourRegistry';
 
 namespace SubMenu {
   export enum Type {
@@ -89,6 +91,9 @@ export interface MenuPublicProps extends StyleProps, ThemeProps {
   onFeedbackClick: () => void;
 
   simulatorState: SimulatorState;
+
+  tourRegistry?: TourRegistry;
+  continueTour?: () => void;
 }
 
 interface MenuPrivateProps {
@@ -201,6 +206,7 @@ class SimMenu extends React.PureComponent<Props, State> {
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     const currentType = this.state.subMenu.type;
+    console.log("Layout click. Current submenu:", currentType);
     this.setState(
       {
         subMenu:
@@ -214,6 +220,7 @@ class SimMenu extends React.PureComponent<Props, State> {
         } else {
           window.removeEventListener('click', this.onClickOutside_);
         }
+        this.props.continueTour();
       }
     );
 
@@ -237,6 +244,7 @@ class SimMenu extends React.PureComponent<Props, State> {
         } else {
           window.removeEventListener('click', this.onClickOutside_);
         }
+        this.props.continueTour();
       }
     );
 
@@ -260,6 +268,7 @@ class SimMenu extends React.PureComponent<Props, State> {
         } else {
           window.removeEventListener('click', this.onClickOutside_);
         }
+        this.props.continueTour();
       }
     );
 
@@ -325,98 +334,123 @@ class SimMenu extends React.PureComponent<Props, State> {
         </RunItem>
       );
 
+    // console.log("rendering submenu. Current submenu:", subMenu.type);
+
     return (
       <>
         <Container theme={theme}>
-          <Logo
-            theme={theme}
-            onClick={onDashboardClick}
-            src={
-              theme.foreground === 'white'
-                ? (KIPR_LOGO_BLACK as string)
-                : (KIPR_LOGO_WHITE as string)
-            }
-          />
 
-          {runOrStopItem}
+          <TourTarget registry={this.props.tourRegistry} targetKey={'return-to-dashboard-button'}>
+            <Logo
+              theme={theme}
+              onClick={onDashboardClick}
+              src={
+                theme.foreground === 'white'
+                  ? (KIPR_LOGO_BLACK as string)
+                  : (KIPR_LOGO_WHITE as string)
+              }
+            />
+          </TourTarget>
+          <TourTarget registry={this.props.tourRegistry} targetKey={'run-stop-button'} style={{ display: 'flex', height: '100%' }}>
+            {runOrStopItem}
+          </TourTarget>
 
-          <Item theme={theme} onClick={onResetWorldClick}><ItemIcon icon={faSync} />
-            {LocalizedString.lookup(tr('Reset World'), locale)}
-          </Item>
+          <TourTarget registry={this.props.tourRegistry} targetKey={'reset-world-button'} style={{ display: 'flex', height: '100%' }}>
+            <Item theme={theme} onClick={onResetWorldClick}><ItemIcon icon={faSync} />
+              {LocalizedString.lookup(tr('Reset World'), locale)}
+            </Item>
+          </TourTarget>
 
           <Spacer style={{ borderRight: `1px solid ${theme.borderColor}` }} />
 
-          <Item
-            theme={theme}
-            onClick={onStartChallengeClick}
-            disabled={onStartChallengeClick === undefined}
-            title={onStartChallengeClick === undefined ? LocalizedString.lookup(tr('The current scene does not have a challenge available'), locale) : undefined}
-            style={{ position: 'relative' }}
-          >
-            <ItemIcon icon={faFlagCheckered} /> {LocalizedString.lookup(tr('Start Challenge'), locale)}
-            
-          </Item>
 
-          <Item 
-            theme={theme} 
-            onClick={this.onLayoutClick_} 
-            style={{ position: 'relative' }}
-          >
-            <ItemIcon icon={faClone} /> {LocalizedString.lookup(tr('Layout'), locale)}
+          <TourTarget registry={this.props.tourRegistry} targetKey={'start-challenge-button'} style={{ display: 'flex', height: '100%' }}>
+            <Item
+              theme={theme}
+              onClick={onStartChallengeClick}
+              disabled={onStartChallengeClick === undefined}
+              title={onStartChallengeClick === undefined ? LocalizedString.lookup(tr('The current scene does not have a challenge available'), locale) : undefined}
+              style={{ position: 'relative' }}
+            >
+              <ItemIcon icon={faFlagCheckered} /> {LocalizedString.lookup(tr('Start Challenge'), locale)}
 
-            {subMenu.type === SubMenu.Type.LayoutPicker ? (
-              <LayoutPicker
-                style={{ zIndex: 9 }}
-                onLayoutChange={onLayoutChange}
-                onShowAll={onShowAll}
-                onHideAll={onHideAll}
-                layout={layout}
-                theme={theme}
-              />
-            ) : undefined}
-          </Item>
-          
-          <Item 
-            theme={theme} 
-            onClick={this.onSceneClick_} 
-            style={{ position: 'relative' }}
-          >
-            <ItemIcon icon={faGlobeAmericas} /> {LocalizedString.lookup(tr('Scene'), locale)}
+            </Item>
+          </TourTarget>
 
-            {subMenu.type === SubMenu.Type.SceneMenu ? (
-              <SceneMenu
-                style={{ zIndex: 9 }}
-                theme={theme}
-                onSaveAsScene={onCopySceneClick}
-                onNewScene={onNewSceneClick}
-                onSaveScene={onSaveSceneClick}
-                onOpenScene={onOpenSceneClick}
-                onSettingsScene={onSettingsSceneClick}
-                onDeleteScene={onDeleteSceneClick}
-              />
-            ) : undefined}
-          </Item>
 
-          <Item
-            theme={theme}
-            onClick={this.onExtraClick_}
-            style={{ position: 'relative' }}
-          >
-            <ItemIcon icon={faBars} style={{ padding: 0 }} />
-            {subMenu.type === SubMenu.Type.ExtraMenu ? (
-              <ExtraMenu
-                style={{ zIndex: 9 }}
-                theme={theme}
-                onLogoutClick={onLogoutClick}
-                onDocumentationClick={onDocumentationClick}
-                onAboutClick={onAboutClick}
-                onFeedbackClick={onFeedbackClick}
-                onSettingsClick={onSettingsClick}
-                onAiClick={onAiClick}
-              />
-            ) : undefined}
-          </Item>
-        </Container>
+          <TourTarget registry={this.props.tourRegistry} targetKey={'layout-button'} style={{ display: 'flex', height: '100%' }}>
+            <Item
+              theme={theme}
+              onClick={this.onLayoutClick_}
+              style={{ position: 'relative' }}
+            >
+              <ItemIcon icon={faClone} /> {LocalizedString.lookup(tr('Layout'), locale)}
+
+              {subMenu.type === SubMenu.Type.LayoutPicker ? (
+
+                <LayoutPicker
+                  style={{ zIndex: 9 }}
+                  onLayoutChange={onLayoutChange}
+                  onShowAll={onShowAll}
+                  onHideAll={onHideAll}
+                  layout={layout}
+                  theme={theme}
+                  tourRegistry={this.props.tourRegistry}
+                />
+              ) : undefined}
+            </Item>
+          </TourTarget >
+
+          <TourTarget registry={this.props.tourRegistry} targetKey={'scene-button'} style={{ display: 'flex', height: '100%' }}>
+            <Item
+              theme={theme}
+              onClick={this.onSceneClick_}
+              style={{ position: 'relative' }}
+            >
+              <ItemIcon icon={faGlobeAmericas} /> {LocalizedString.lookup(tr('Scene'), locale)}
+
+              {subMenu.type === SubMenu.Type.SceneMenu ? (
+                <TourTarget registry={this.props.tourRegistry} targetKey={'scene-options'} style={{ position: 'absolute', top: '100%', left: 0, right: 0 }}>
+                  <SceneMenu
+                    style={{ zIndex: 9 }}
+                    theme={theme}
+                    onSaveAsScene={onCopySceneClick}
+                    onNewScene={onNewSceneClick}
+                    onSaveScene={onSaveSceneClick}
+                    onOpenScene={onOpenSceneClick}
+                    onSettingsScene={onSettingsSceneClick}
+                    onDeleteScene={onDeleteSceneClick}
+                  />
+                </TourTarget>
+              ) : undefined}
+            </Item>
+          </TourTarget>
+
+          <TourTarget registry={this.props.tourRegistry} targetKey={'extra-menu-button'} style={{ display: 'flex', height: '100%' }}>
+            <Item
+              theme={theme}
+              onClick={this.onExtraClick_}
+              style={{ position: 'relative' }}
+            >
+              <ItemIcon icon={faBars} style={{ padding: 0 }} />
+              {subMenu.type === SubMenu.Type.ExtraMenu ? (
+                <TourTarget registry={this.props.tourRegistry} targetKey={'extra-menu-options'} style={{ position: 'absolute', top: '100%', left: 0, right: 0 }}>
+                  <ExtraMenu
+                    style={{ zIndex: 9 }}
+                    theme={theme}
+                    onLogoutClick={onLogoutClick}
+                    onDocumentationClick={onDocumentationClick}
+                    onAboutClick={onAboutClick}
+                    onFeedbackClick={onFeedbackClick}
+                    onSettingsClick={onSettingsClick}
+                    onAiClick={onAiClick}
+                    tourRegistry={this.props.tourRegistry}
+                  />
+                </TourTarget>
+              ) : undefined}
+            </Item>
+          </TourTarget>
+        </Container >
       </>
     );
   }

@@ -14,12 +14,15 @@ import { BarComponent } from '../interface/Widget';
 import { faFile, faRobot } from '@fortawesome/free-solid-svg-icons';
 import LocalizedString from '../../util/LocalizedString';
 import tr from '@i18n';
+import { TourRegistry } from '../../tours/TourRegistry';
+import TourTarget from '../Tours/TourTarget';
 
 export const createConsoleBarComponents = (
-  theme: Theme, 
+  theme: Theme,
   onClearConsole: () => void,
   onAskTutor: () => void,
-  locale: LocalizedString.Language
+  locale: LocalizedString.Language,
+  tourRegistry?: TourRegistry,
 ) => {
   // eslint-disable-next-line @typescript-eslint/ban-types
   const consoleBar: BarComponent<object>[] = [];
@@ -29,8 +32,10 @@ export const createConsoleBarComponents = (
     onClick: onClearConsole,
     children:
       <>
-        <FontAwesome icon={faFile} />
-        {' '} {LocalizedString.lookup(tr('Clear'), locale)}
+        <TourTarget registry={tourRegistry} targetKey={'console-clear-button'}>
+          <FontAwesome icon={faFile} />
+          {' '} {LocalizedString.lookup(tr('Clear'), locale)}
+        </TourTarget>
       </>,
   }));
 
@@ -39,8 +44,10 @@ export const createConsoleBarComponents = (
     onClick: onAskTutor,
     children:
       <>
-        <FontAwesome icon={faRobot} />
-        {' '} {LocalizedString.lookup(tr('Ask Tutor'), locale)}
+        <TourTarget registry={tourRegistry} targetKey={'ask-tutor-button'}>
+          <FontAwesome icon={faRobot} />
+          {' '} {LocalizedString.lookup(tr('Ask Tutor'), locale)}
+        </TourTarget>
       </>,
   }));
 
@@ -52,7 +59,7 @@ export interface ConsoleProps extends StyleProps, ThemeProps {
 }
 
 interface ConsoleState {
-  
+
 }
 
 type Props = ConsoleProps;

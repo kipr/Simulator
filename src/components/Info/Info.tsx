@@ -20,12 +20,15 @@ import Async from '../../state/State/Async';
 
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';
+import TourTarget from '../Tours/TourTarget';
+import { TourRegistry } from '../../tours/TourRegistry';
 
 
 export interface InfoPublicProps extends StyleProps, ThemeProps {
   node: Node.Robot;
 
   onOriginChange: (origin: ReferenceFramewUnits) => void;
+  tourRegistry?: TourRegistry;
 }
 
 interface InfoPrivateProps {
@@ -221,59 +224,71 @@ class Info extends React.PureComponent<Props, State> {
     return (
       <ScrollArea theme={theme} style={{ flex: '1 1' }}>
         <Container theme={theme} style={style} className={className}>
-          <StyledSection
-            name={locationName}
-            theme={theme}
-            onCollapsedChange={this.onCollapsedChange_('location')}
-            collapsed={collapsed['location']}
-          >
-            <Location
+          <TourTarget registry={this.props.tourRegistry} targetKey='robot-starting-location' style={style}>
+            <StyledSection
+              name={locationName}
               theme={theme}
-              origin={node.startingOrigin}
-              onOriginChange={props.onOriginChange}
-              locale={locale}
-            />
-          </StyledSection>
-          <StyledSection
-            name={servosName}
-            theme={theme}
-            onCollapsedChange={this.onCollapsedChange_('servo_pos')}
-            collapsed={collapsed['servo_pos']}
-          >
-            {servos}
-          </StyledSection>
-          <StyledSection
-            name={motorVelocitiesName}
-            theme={theme}
-            onCollapsedChange={this.onCollapsedChange_('motor_vel')}
-            collapsed={collapsed['motor_vel']}
-          >
-            {motorVelocities}
-          </StyledSection>
-          <StyledSection
-            name={motorPositionsName}
-            theme={theme}
-            onCollapsedChange={this.onCollapsedChange_('motor_pos')}
-            collapsed={collapsed['motor_pos']}
-          >
-            {motorPositions}
-          </StyledSection>
-          <StyledSection
-            name={analogName}
-            theme={theme}
-            onCollapsedChange={this.onCollapsedChange_('analog')}
-            collapsed={collapsed['analog']}
-          >
-            {analogSensors}
-          </StyledSection>
-          <StyledSection
-            name={digitalName}
-            theme={theme}
-            onCollapsedChange={this.onCollapsedChange_('digital')}
-            collapsed={collapsed['digital']}
-          >
-            {digitalSensors}
-          </StyledSection>
+              onCollapsedChange={this.onCollapsedChange_('location')}
+              collapsed={collapsed['location']}
+            >
+              <Location
+                theme={theme}
+                origin={node.startingOrigin}
+                onOriginChange={props.onOriginChange}
+                locale={locale}
+              />
+            </StyledSection>
+          </TourTarget>
+          <TourTarget registry={this.props.tourRegistry} targetKey='robot-servos' style={style}>
+            <StyledSection
+              name={servosName}
+              theme={theme}
+              onCollapsedChange={this.onCollapsedChange_('servo_pos')}
+              collapsed={collapsed['servo_pos']}
+            >
+              {servos}
+            </StyledSection>
+          </TourTarget>
+          <TourTarget registry={this.props.tourRegistry} targetKey='robot-motor-velocities' style={style}>
+            <StyledSection
+              name={motorVelocitiesName}
+              theme={theme}
+              onCollapsedChange={this.onCollapsedChange_('motor_vel')}
+              collapsed={collapsed['motor_vel']}
+            >
+              {motorVelocities}
+            </StyledSection>
+          </TourTarget>
+          <TourTarget registry={this.props.tourRegistry} targetKey='robot-motor-positions' style={style}>
+            <StyledSection
+              name={motorPositionsName}
+              theme={theme}
+              onCollapsedChange={this.onCollapsedChange_('motor_pos')}
+              collapsed={collapsed['motor_pos']}
+            >
+              {motorPositions}
+            </StyledSection>
+          </TourTarget>
+          <TourTarget registry={this.props.tourRegistry} targetKey='robot-analog-sensors' style={style}>
+            <StyledSection
+              name={analogName}
+              theme={theme}
+              onCollapsedChange={this.onCollapsedChange_('analog')}
+              collapsed={collapsed['analog']}
+            >
+              {analogSensors}
+            </StyledSection>
+          </TourTarget>
+          <TourTarget registry={this.props.tourRegistry} targetKey='robot-digital-sensors' style={style}>
+            <StyledSection
+              name={digitalName}
+              theme={theme}
+              onCollapsedChange={this.onCollapsedChange_('digital')}
+              collapsed={collapsed['digital']}
+            >
+              {digitalSensors}
+            </StyledSection>
+          </TourTarget>
         </Container>
       </ScrollArea>
     );

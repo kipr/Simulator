@@ -38,6 +38,8 @@ import { Settings } from '../constants/Settings';
 
 import tr from '@i18n';
 import { sprintf } from 'sprintf-js';
+import TourTarget from '../Tours/TourTarget';
+import { TourRegistry } from '../../tours/TourRegistry';
 
 namespace SceneState {
   export enum Type {
@@ -153,6 +155,7 @@ export interface WorldPublicProps extends StyleProps, ThemeProps {
 
   capabilities?: Capabilities;
   settings?: Settings;
+  tourRegistry?: TourRegistry;
 }
 
 
@@ -393,13 +396,13 @@ class World extends React.PureComponent<Props, State> {
       const otherMatId = id === 'matA' ? 'matB' : 'matA';
       const workingScene = Async.latestValue(this.props.scene);
       const otherMatNode = workingScene.nodes[otherMatId];
-      
+
       if (otherMatNode && otherMatNode.visible) {
         let otherOriginalNode = Async.previousValue(this.props.scene).nodes[otherMatId];
         if (!otherOriginalNode) {
           otherOriginalNode = Async.latestValue(this.props.scene).nodes[otherMatId];
         }
-        
+
         this.props.onNodeChange(otherMatId, {
           ...otherOriginalNode,
           visible: false,
@@ -447,6 +450,7 @@ class World extends React.PureComponent<Props, State> {
         onSettings: node.editable && nodeSettings ? this.onItemSettingsClick_(nodeId) : undefined,
         onVisibilityChange: nodeVisiblity ? this.onItemVisibilityChange_(nodeId) : undefined,
         visible: node.visible,
+        tourRegistry: this.props.tourRegistry,
       }, {
         removable: node.editable && node.type !== 'robot',
         userdata: nodeId,
@@ -512,19 +516,22 @@ class World extends React.PureComponent<Props, State> {
       <>
         <ScrollArea theme={theme} style={{ flex: '1 1' }}>
           <Container theme={theme} style={style} className={className}>
-            <StyledListSection
-              name={itemsName}
-              theme={theme}
-              onCollapsedChange={this.onCollapsedChange_('items')}
-              collapsed={collapsed['items']}
-              noBodyPadding
-            >
-              <EditableList
-                onItemRemove={removeNode ? this.onNodeRemove_ : undefined}
-                items={itemList}
+            <TourTarget registry={this.props.tourRegistry} targetKey='world-objects' style={style}>
+              <StyledListSection
+                name={itemsName}
                 theme={theme}
-              />
-            </StyledListSection>
+                onCollapsedChange={this.onCollapsedChange_('items')}
+                collapsed={collapsed['items']}
+                noBodyPadding
+              >
+                <EditableList
+                  onItemRemove={removeNode ? this.onNodeRemove_ : undefined}
+                  items={itemList}
+                  theme={theme}
+                  tourRegistry={this.props.tourRegistry}
+                />
+              </StyledListSection>
+            </TourTarget>
             {props.settings?.showScripts && (
               <StyledListSection
                 name={scriptsName}

@@ -73,6 +73,11 @@ import { InterfaceMode } from '../types/interfaceModes';
 import { AsyncProject, Project } from '../state/State/Project';
 import CreateNewFileDialog from '../components/Dialog/CreateNewFileDialog';
 import DeleteProjectDialog from '../components/Dialog/DeleteProjectDialog';
+import TourDoc, { getTourSteps, TourStep } from '../tours/Tours';
+import TourTarget from '../components/Tours/TourTarget';
+import { TourRegistry } from '../tours/TourRegistry';
+import { GuidedTour } from '../components/Tours/GuidedTour';
+import { completeTour, fetchTourIfNeeded, retakeTour } from '../state/reducer/tours';
 
 
 export interface RootRouteParams {
@@ -95,6 +100,8 @@ interface RootPrivateProps {
   projects: Dict<AsyncProject>;
   selectedProject: Project;
   settings: Settings;
+  toursById: Dict<TourDoc>;
+  toursLoaded: Dict<boolean>;
 
   onNodeAdd: (id: string, node: Node) => void;
   onNodeRemove: (id: string) => void;
@@ -143,6 +150,8 @@ interface RootPrivateProps {
   onSelectProject: (project: Project) => void;
   onDeleteProject: (project: Project) => void;
   onChangeInterfaceMode: (interfaceMode: InterfaceMode.SIMPLE | InterfaceMode.ADVANCED) => void;
+
+
 }
 
 interface RootState {
@@ -172,6 +181,10 @@ interface RootState {
 
   projectDetails: { project: Project, fileType: 'src' | 'include' | 'userData', fileName: string } | null;
 
+  tourId?: string;
+  simulatorRootTourSteps: TourStep[];
+  currentTourStepIndex?: number;
+  continueTour?: boolean;
 }
 
 type Props = RootPublicProps & RootPrivateProps & WithNavigateProps;
@@ -202,7 +215,8 @@ const STDERR_STYLE = (theme: Theme) => ({
 class Root extends React.Component<Props, State> {
   private editorRef: React.MutableRefObject<Editor>;
   private overlayLayoutRef: React.MutableRefObject<OverlayLayout>;
-
+  private registry = new TourRegistry();
+  private scrollRef: HTMLDivElement | null = null;
 
   constructor(props: Props) {
     super(props);
@@ -226,6 +240,8 @@ class Root extends React.Component<Props, State> {
       windowInnerHeight: window.innerHeight,
       miniEditor: true,
       projectDetails: { project: null, fileType: 'src', fileName: '' },
+      tourId: TourDoc.IDS.SIMULATOR,
+      simulatorRootTourSteps: getTourSteps(TourDoc.IDS.SIMULATOR)
 
     };
 
@@ -234,7 +250,8 @@ class Root extends React.Component<Props, State> {
     Space.getInstance().scene = Async.latestValue(props.scene) || Scene.EMPTY;
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    const currentUser = auth.currentUser.uid;
     WorkerInstance.onStopped = this.onStopped_;
     WorkerInstance.onStarted = this.onStarted_;
 
@@ -251,8 +268,9 @@ class Root extends React.Component<Props, State> {
 
     this.scheduleUpdateConsole_();
     window.addEventListener('resize', this.onWindowResize_);
-    this.props.onLoadProjects();
-    console.log("Root componentDidMount settings:", this.props.settings);
+    //this.props.onLoadProjects();
+    console.log("Root compDidMount props:", this.props);
+    await fetchTourIfNeeded(currentUser, TourDoc.IDS.SIMULATOR);
   }
 
   componentWillUnmount() {
@@ -339,7 +357,9 @@ class Root extends React.Component<Props, State> {
 
   private onModalClick_ = (modal: Modal) => () => this.setState({ modal });
 
-  private onModalClose_ = () => this.setState({ modal: Modal.NONE });
+  private onModalClose_ = () => this.setState({ modal: Modal.NONE }, () => {
+    this.onContinueTour_ ? this.onContinueTour_() : null;
+  });
 
   private updateConsole_ = () => {
     const text = WorkerInstance.sharedConsole.popString();
@@ -622,6 +642,8 @@ class Root extends React.Component<Props, State> {
   private onOpenSceneClick_ = () => {
     this.setState({
       modal: Modal.SELECT_SCENE
+    }, () => {
+      this.onContinueTour_();
     });
   };
 
@@ -831,6 +853,35 @@ class Root extends React.Component<Props, State> {
     });
   };
 
+  private onCloseTour_ = () => {
+    const currentUser = auth.currentUser.uid;
+    void completeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, currentUser, this.state.tourId);
+  };
+
+  private onSkipTour_ = () => {
+    const currentUser = auth.currentUser.uid;
+    void completeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, currentUser, this.state.tourId, { dismissed: true });
+
+  };
+
+  private onNextClick_ = (stepIndex: number) => {
+    this.setState({ currentTourStepIndex: stepIndex });
+  };
+  private onBackClick_ = (stepIndex: number) => {
+
+  };
+
+  private onContinueTour_ = () => {
+    console.log("Continuing tour, current tour steps:", this.state.simulatorRootTourSteps);
+    this.setState({ continueTour: true }, () => {
+      this.setState({ continueTour: false });
+    });
+  };
+
+  private onRetakeTour_ = () => {
+    const currentUser = auth.currentUser.uid;
+    void retakeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, currentUser, this.state.tourId);
+  };
 
   render() {
     const { props, state } = this;
@@ -841,6 +892,8 @@ class Root extends React.Component<Props, State> {
       challenge,
       challengeCompletion,
       sceneHasChallenge,
+      toursById,
+      toursLoaded,
     } = props;
 
     if (!scene || scene.type === Async.Type.Unloaded) {
@@ -868,7 +921,9 @@ class Root extends React.Component<Props, State> {
       feedback,
       windowInnerHeight,
       miniEditor,
-      projectDetails
+      projectDetails,
+      tourId,
+      simulatorRootTourSteps
     } = state;
 
     const theme = DARK;
@@ -932,7 +987,7 @@ class Root extends React.Component<Props, State> {
       }
       case Layout.Side: {
         impl = (
-          <SideLayoutRedux {...commonLayoutProps} />
+          <SideLayoutRedux tourRegistry={this.registry} continueTour={this.onContinueTour_} {...commonLayoutProps} />
         );
         break;
       }
@@ -944,42 +999,69 @@ class Root extends React.Component<Props, State> {
     const latestScene = Async.latestValue(scene);
     const isAuthor = latestScene && latestScene.author.id === auth.currentUser.uid;
 
+    const activeTour = tourId ? (toursById[tourId] ?? TourDoc.DEFAULT) : TourDoc.DEFAULT;
+    const activeTourLoaded = !!(tourId && toursLoaded[tourId]);
+
+    //const showTour = !!tourId && activeTourLoaded && !activeTour.completed;
+    //window.console.log("Root render showTour:", showTour, "activeTour:", activeTour);
+    const showTour = true;
     return (
       <>
-        <Container $windowInnerHeight={windowInnerHeight}>
-          <SimMenu
-            theme={theme}
-            layout={layout}
-            onLayoutChange={this.onLayoutChange_}
-            onShowAll={this.onShowAll_}
-            onHideAll={this.onHideAll_}
-            onResetWorldClick={this.onResetWorldClick_}
-            onStartChallengeClick={sceneHasChallenge ? this.onStartChallengeClick_ : undefined}
-            onSettingsClick={this.onModalClick_(Modal.SETTINGS)}
-            onAboutClick={this.onModalClick_(Modal.ABOUT)}
-            onDocumentationClick={this.onDocumentationClick_}
-            onAiClick={this.onAiClick_}
-            onLogoutClick={this.onLogoutClick}
-            onDashboardClick={this.onDashboardClick}
-            onFeedbackClick={this.onModalClick_(Modal.FEEDBACK)}
-            onOpenSceneClick={this.onOpenSceneClick_}
-            onNewSceneClick={!challenge && this.onModalClick_(Modal.NEW_SCENE)}
-            onSaveSceneClick={scene && !challenge && scene.type === Async.Type.Saveable && isAuthor ? this.onSaveSceneClick_ : undefined}
-            onSettingsSceneClick={isAuthor && !challenge && this.onSettingsSceneClick_}
-            onRunClick={code[activeLanguage].length > 0 ? this.onRunClick_ : undefined}
-            onStopClick={this.onStopClick_}
-            simulatorState={simulatorState}
-            onSaveAsSceneClick={!challenge && this.onModalClick_(Modal.copyScene({ scene: Async.latestValue(scene) }))}
-            onDeleteSceneClick={isAuthor && !challenge && this.onModalClick_(Modal.deleteRecord({
-              record: {
-                type: Record.Type.Scene,
-                id: sceneId,
-                value: scene,
-              }
-            }))}
-          />
-          {impl}
-        </Container>
+        <TourTarget registry={this.registry} targetKey={'simulator-overview'} >
+          <Container $windowInnerHeight={windowInnerHeight}>
+            <TourTarget registry={this.registry} targetKey={'simulator-main-menu-overview'} >
+              <SimMenu
+                theme={theme}
+                layout={layout}
+                onLayoutChange={this.onLayoutChange_}
+                onShowAll={this.onShowAll_}
+                onHideAll={this.onHideAll_}
+                onResetWorldClick={this.onResetWorldClick_}
+                onStartChallengeClick={sceneHasChallenge ? this.onStartChallengeClick_ : undefined}
+                onSettingsClick={this.onModalClick_(Modal.SETTINGS)}
+                onAboutClick={this.onModalClick_(Modal.ABOUT)}
+                onDocumentationClick={this.onDocumentationClick_}
+                onAiClick={this.onAiClick_}
+                onLogoutClick={this.onLogoutClick}
+                onDashboardClick={this.onDashboardClick}
+                onFeedbackClick={this.onModalClick_(Modal.FEEDBACK)}
+                onOpenSceneClick={this.onOpenSceneClick_}
+                onNewSceneClick={!challenge && this.onModalClick_(Modal.NEW_SCENE)}
+                onSaveSceneClick={scene && !challenge && scene.type === Async.Type.Saveable && isAuthor ? this.onSaveSceneClick_ : undefined}
+                onSettingsSceneClick={isAuthor && !challenge && this.onSettingsSceneClick_}
+                onRunClick={code[activeLanguage].length > 0 ? this.onRunClick_ : undefined}
+                onStopClick={this.onStopClick_}
+                simulatorState={simulatorState}
+                onSaveAsSceneClick={!challenge && this.onModalClick_(Modal.copyScene({ scene: Async.latestValue(scene) }))}
+                onDeleteSceneClick={isAuthor && !challenge && this.onModalClick_(Modal.deleteRecord({
+                  record: {
+                    type: Record.Type.Scene,
+                    id: sceneId,
+                    value: scene,
+                  }
+                }))}
+                tourRegistry={this.registry}
+                continueTour={this.onContinueTour_}
+              />
+            </TourTarget>
+            {impl}
+          </Container>
+        </TourTarget>
+        {showTour && (
+          <GuidedTour
+            continueTourFlag={this.state.continueTour}
+            // ref={this.guidedTourRef}
+            isOpen={showTour}
+            steps={simulatorRootTourSteps}
+            registry={this.registry}
+            scrollContainer={this.scrollRef}
+            onClose={this.onCloseTour_}
+            onSkip={this.onSkipTour_}
+            onBackClick={this.onBackClick_}
+            onNextClick={this.onNextClick_}
+
+            theme={theme} />
+        )}
         {modal.type === Modal.Type.None && Async.isFailed(scene) && (
           <SceneErrorDialog
             error={scene.error}
@@ -1023,10 +1105,14 @@ class Root extends React.Component<Props, State> {
           />
         )}
         {modal.type === Modal.Type.OpenScene && (
-          <OpenSceneDialog
-            theme={theme}
-            onClose={this.onModalClose_}
-          />
+          <TourTarget registry={this.registry} targetKey={'open-scene-dialog'}>
+            <OpenSceneDialog
+              theme={theme}
+              onClose={this.onModalClose_}
+              tourRegistry={this.registry}
+              continueTour={this.onContinueTour_}
+            />
+          </TourTarget>
         )}
         {modal.type === Modal.Type.NewScene && (
           <NewSceneDialog
@@ -1130,6 +1216,10 @@ const ConnectedRoot = connect((state: ReduxState, { params: { sceneId, challenge
     projects: state.projects.entities,
     selectedProject: state.projects.selectedProject,
     settings: state.settings,
+    toursById: state.tours.byId,
+    toursLoaded: state.tours.loaded,
+    toursLoading: state.tours.loading,
+    toursError: state.tours.error,
   };
 }, (dispatch, { params: { sceneId } }: RootPublicProps) => ({
   onNodeAdd: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),

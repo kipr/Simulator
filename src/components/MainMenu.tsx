@@ -6,7 +6,7 @@ import { Spacer } from './constants/common';
 import { FontAwesome } from './FontAwesome';
 import { DARK, ThemeProps } from './constants/theme';
 
-import { faSignOutAlt, faBars } from '@fortawesome/free-solid-svg-icons';
+import { faSignOutAlt, faBars, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 
 import tr from '@i18n';
 
@@ -20,6 +20,8 @@ import { signOutOfApp } from '../firebase/modules/auth';
 import LocalizedString from '../util/LocalizedString';
 import ClassroomExtraMenu from './ClassroomExtraMenu';
 import InformationExtraMenu from './InformationExtraMenu';
+import TourTarget from './Tours/TourTarget';
+import { TourRegistry } from './../tours/TourRegistry';
 
 
 namespace SubMenu {
@@ -48,7 +50,7 @@ type SubMenu =
 
 
 export interface MenuPublicProps extends StyleProps, ThemeProps {
-
+  tourRegistry?: TourRegistry;
   onRetakeTour?: (event: React.MouseEvent) => void;
 }
 
@@ -177,7 +179,7 @@ export class MainMenu extends React.Component<Props, State> {
   };
 
   render() {
-    const { className, style, locale } = this.props;
+    const { className, style, locale, tourRegistry } = this.props;
     const { subMenu } = this.state;
     const theme = DARK;
     return (
@@ -185,18 +187,9 @@ export class MainMenu extends React.Component<Props, State> {
         <Logo theme={theme} src={theme.foreground === 'white' ? KIPR_LOGO_BLACK as string : KIPR_LOGO_WHITE as string} onClick={this.onDashboardClick_} />
         <Spacer style={{ borderRight: `1px solid ${theme.borderColor}` }} />
         {/* <Item theme={theme} onClick={this.onDashboardClick_}><ItemIcon icon='compass'/> Dashboard</Item> */}
-        <MenuTrigger>
-          <Item theme={theme} onClick={this.onExtraClick_}>
-            <ItemIcon icon={faBars} />
-          </Item>
-
-          {subMenu.type === SubMenu.Type.ExtraMenu ? (
-            <InformationExtraMenu
-              theme={theme}
-              onRetakeTour={this.onRetakeTour_}
-            />
-          ) : null}
-        </MenuTrigger>
+        <TourTarget style={style} registry={tourRegistry} targetKey={'retake-tour-button'}>
+          <Item theme={theme} onClick={this.onRetakeTour_}><ItemIcon icon={faCircleInfo} /> {LocalizedString.lookup(tr(`Retake Tour`), locale)}</Item>
+        </TourTarget>
         <Item theme={theme} onClick={this.onLogoutClick_}><ItemIcon icon={faSignOutAlt} /> {LocalizedString.lookup(tr('Logout'), locale)}</Item>
 
       </Container>

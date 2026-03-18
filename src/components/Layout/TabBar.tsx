@@ -4,9 +4,12 @@ import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
 import { FontAwesome } from '../FontAwesome';
 import { ThemeProps } from '../constants/theme';
+import TourTarget from '../Tours/TourTarget';
+import { TourRegistry } from '../../tours/TourRegistry';
 
 export interface TabProps extends ThemeProps, StyleProps {
   description: TabBar.TabDescription;
+  tourRegistry?: TourRegistry;
   selected?: boolean;
   vertical?: boolean;
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -35,9 +38,9 @@ const TabIcon = styled(FontAwesome, {
   paddingRight: '5px'
 });
 
-const TabText = styled('div',  (props: { $vertical: boolean }) => ({
-  position: 'absolute', 
-  left: '50%', 
+const TabText = styled('div', (props: { $vertical: boolean }) => ({
+  position: 'absolute',
+  left: '50%',
   top: '50%',
   transform: (props.$vertical) ? 'translate(-50%, -50%) rotate(-90deg)' : 'translate(-50%, -50%)',
   transformOrigin: 'center',
@@ -50,14 +53,16 @@ const TabText = styled('div',  (props: { $vertical: boolean }) => ({
 export class Tab extends React.PureComponent<TabProps> {
   render() {
     const { props } = this;
-    const { description, theme, onClick, selected, vertical } = props;
+    const { description, theme, onClick, selected, vertical, tourRegistry } = props;
     return (
+
       <TabContainer theme={theme} onClick={onClick} selected={selected} $vertical={vertical}>
         <TabText $vertical={vertical}>
           {description.icon ? <TabIcon icon={description.icon} /> : undefined}
           {description.name}
         </TabText>
       </TabContainer>
+
     );
   }
 }
@@ -66,6 +71,7 @@ export interface TabBarProps extends ThemeProps, StyleProps {
   tabs: TabBar.TabDescription[];
   index: number;
   isVertical?: boolean;
+  tourRegistry?: TourRegistry;
   onIndexChange: (index: number, event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
@@ -74,10 +80,10 @@ type Props = TabBarProps;
 
 const TabBarContainer = styled('div', (props: ThemeProps & { $vertical: boolean }) => ({
   display: 'flex',
-  flexDirection: (props.$vertical) ? 'column' : 'row' ,
+  flexDirection: (props.$vertical) ? 'column' : 'row',
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
-  
+
 }));
 
 export class TabBar extends React.PureComponent<Props> {
@@ -89,12 +95,14 @@ export class TabBar extends React.PureComponent<Props> {
 
   render() {
     const { props } = this;
-    const { tabs, index, theme, style, className, isVertical } = props;
+    const { tabs, index, theme, style, className, isVertical, tourRegistry } = props;
 
     return (
-      <TabBarContainer theme={theme} style={style} className={className} $vertical={isVertical}>
+      <TabBarContainer theme={theme} style={style} className={className} $vertical={isVertical} >
         {tabs.map((tab, i) => (
-          <Tab key={i} selected={i === index} theme={theme} description={tab} onClick={this.onClick_(i)} vertical={isVertical} />
+          <TourTarget registry={props.tourRegistry} targetKey={`tab-${tab.name}`} key={i} style={{ flex: '1 1', display: 'flex', minHeight: 0, minWidth: 0 }} >
+            <Tab selected={i === index} theme={theme} description={tab} onClick={this.onClick_(i)} vertical={isVertical} tourRegistry={tourRegistry} />
+          </TourTarget>
         ))}
       </TabBarContainer>
     );

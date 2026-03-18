@@ -27,6 +27,8 @@ import { ReferenceFramewUnits } from '../../util/math/unitMath';
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';
 import { ThemeProps } from '../constants/theme';
+import TourTarget from '../Tours/TourTarget';
+import { TourRegistry } from '../../tours/TourRegistry';
 
 
 const sizeDict = (sizes: Size[]) => {
@@ -43,6 +45,8 @@ const SIDEBAR_SIZES: Size[] = [Size.MINIMIZED, Size.PARTIAL_RIGHT, Size.MAXIMIZE
 const SIDEBAR_SIZE = sizeDict(SIDEBAR_SIZES);
 
 export interface SideLayoutProps extends LayoutProps {
+  tourRegistry?: TourRegistry;
+  continueTour?: () => void;
 }
 
 interface ReduxSideLayoutProps {
@@ -158,12 +162,16 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       // collapse instead
       this.onSideBarSizeChange_(SIDEBAR_SIZE[Size.Type.Minimized]);
     } else {
-      this.setState({ activePanel: index });
+      this.setState({ activePanel: index }, () => {
+        this.props.continueTour?.();
+      });
     }
   };
   private onTabBarExpand_ = (index: number) => {
     this.onSideBarSizeChange_(Size.Type.Miniature);
-    this.setState({ activePanel: index });
+    this.setState({ activePanel: index }, () => {
+      this.props.continueTour?.();
+    });
   };
 
   private onErrorClick_ = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -242,8 +250,10 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
           onErrorClick: this.onErrorClick_,
           mini: editorTarget.mini,
           onMiniClick: editorTarget.onMiniClick,
+          tourRegistry: this.props.tourRegistry,
         };
         editor = (
+
           <Editor
             theme={theme}
             ref={editorRef}
@@ -254,6 +264,7 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
             autocomplete={settings.editorAutoComplete}
             onDocumentationGoToFuzzy={onDocumentationGoToFuzzy}
           />
+
         );
         break;
       }
@@ -264,42 +275,48 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       target: editorBarTarget,
       locale
     });
-    const consoleBar = createConsoleBarComponents(theme, onClearConsole, onAskTutorClick, locale);
+    const consoleBar = createConsoleBarComponents(theme, onClearConsole, onAskTutorClick, locale, this.props.tourRegistry);
 
     let content: JSX.Element;
     switch (activePanel) {
       case 0: {
         content = (
-          <Slider
-            isVertical={false}
-            theme={theme}
-            minSizes={[100, 100]}
-            sizes={[3, 1]}
-            visible={[true, true]}
-          >
-            <SimultorWidgetContainer>
-              <SimulatorWidget
-                theme={theme}
-                name={LocalizedString.lookup(editorTarget.type === LayoutEditorTarget.Type.Robot ? tr('Editor') : tr('Script Editor'), locale)}
-                mode={Mode.Sidebar}
-                barComponents={editorBar}
-              >
-                {editor}
-              </SimulatorWidget>
-            </SimultorWidgetContainer>
+          <TourTarget registry={this.props.tourRegistry} targetKey={'simulator-editor-console-overview'} style={{ display: 'flex', flex: 1, minWidth: 0, minHeight: 0 }}>
+            <Slider
+              isVertical={false}
+              theme={theme}
+              minSizes={[100, 100]}
+              sizes={[3, 1]}
+              visible={[true, true]}
+            >
+              <TourTarget registry={this.props.tourRegistry} targetKey={'code-editor'} style={{ display: 'flex', flex: '1 1', minWidth: 0, minHeight: 0 }} >
+                <SimultorWidgetContainer>
+                  <SimulatorWidget
+                    theme={theme}
+                    name={LocalizedString.lookup(editorTarget.type === LayoutEditorTarget.Type.Robot ? tr('Editor') : tr('Script Editor'), locale)}
+                    mode={Mode.Sidebar}
+                    barComponents={editorBar}
+                  >
+                    {editor}
+                  </SimulatorWidget>
+                </SimultorWidgetContainer>
 
-            <SimultorWidgetContainer>
-              <SimulatorWidget
-                theme={theme}
-                name={LocalizedString.lookup(tr('Console'), locale)}
-                barComponents={consoleBar}
-                mode={Mode.Sidebar}
-                hideActiveSize={true}
-              >
-                <FlexConsole theme={theme} text={console} />
-              </SimulatorWidget>
-            </SimultorWidgetContainer>
-          </Slider>
+              </TourTarget>
+              <TourTarget registry={this.props.tourRegistry} targetKey={'console'} style={{ display: 'flex', flex: 1, minWidth: 0, minHeight: 0 }}>
+                <SimultorWidgetContainer>
+                  <SimulatorWidget
+                    theme={theme}
+                    name={LocalizedString.lookup(tr('Console'), locale)}
+                    barComponents={consoleBar}
+                    mode={Mode.Sidebar}
+                    hideActiveSize={true}
+                  >
+                    <FlexConsole theme={theme} text={console} />
+                  </SimulatorWidget>
+                </SimultorWidgetContainer>
+              </TourTarget>
+            </Slider >
+          </TourTarget>
 
         );
         break;
@@ -313,17 +330,22 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
         }
         if (robotNode) {
           content = (
-            <SimulatorWidget
-              theme={theme}
-              name={LocalizedString.lookup(tr('Robot'), locale)}
-              mode={Mode.Sidebar}
-            >
-              <Info
+            <TourTarget registry={this.props.tourRegistry} targetKey={'tab-Robot'} style={{ display: 'flex', flex: 1, minWidth: 0, minHeight: 0 }}>
+              <SimulatorWidget
                 theme={theme}
-                node={robotNode}
-                onOriginChange={this.onRobotOriginChange_}
-              />
-            </SimulatorWidget>
+                name={LocalizedString.lookup(tr('Robot'), locale)}
+                mode={Mode.Sidebar}
+              >
+                <TourTarget registry={this.props.tourRegistry} targetKey={'robot-overview'} style={{ display: 'flex', flex: 1, minWidth: 0, minHeight: 0 }}>
+                  <Info
+                    theme={theme}
+                    node={robotNode}
+                    onOriginChange={this.onRobotOriginChange_}
+                    tourRegistry={this.props.tourRegistry}
+                  />
+                </TourTarget>
+              </SimulatorWidget>
+            </TourTarget>
           );
         } else {
           content = null;
@@ -332,28 +354,31 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
       }
       case 2: {
         content = (
-          <SimulatorWidget
-            theme={theme}
-            name={LocalizedString.lookup(tr('World'), locale)}
-            mode={Mode.Sidebar}
-          >
-            <World
+          <TourTarget registry={this.props.tourRegistry} targetKey={'tab-World'} style={{ display: 'flex', flex: 1, minWidth: 0, minHeight: 0 }}>
+            <SimulatorWidget
               theme={theme}
-              scene={scene}
-              onNodeAdd={onNodeAdd}
-              onNodeChange={onNodeChange}
-              onNodeRemove={onNodeRemove}
-              onGeometryAdd={onGeometryAdd}
-              onGeometryChange={onGeometryChange}
-              onGeometryRemove={onGeometryRemove}
-              onScriptAdd={onScriptAdd}
-              onScriptChange={onScriptChange}
-              onScriptRemove={onScriptRemove}
-              onObjectAdd={onObjectAdd}
-              capabilities={worldCapabilities}
-              settings={settings}
-            />
-          </SimulatorWidget>
+              name={LocalizedString.lookup(tr('World'), locale)}
+              mode={Mode.Sidebar}
+            >
+              <World
+                theme={theme}
+                scene={scene}
+                onNodeAdd={onNodeAdd}
+                onNodeChange={onNodeChange}
+                onNodeRemove={onNodeRemove}
+                onGeometryAdd={onGeometryAdd}
+                onGeometryChange={onGeometryChange}
+                onGeometryRemove={onGeometryRemove}
+                onScriptAdd={onScriptAdd}
+                onScriptChange={onScriptChange}
+                onScriptRemove={onScriptRemove}
+                onObjectAdd={onObjectAdd}
+                capabilities={worldCapabilities}
+                settings={settings}
+                tourRegistry={this.props.tourRegistry}
+              />
+            </SimulatorWidget>
+          </TourTarget>
         );
         break;
       }
@@ -412,13 +437,16 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
 
     return <Container style={style} className={className}>
       <SidePanelContainer>
-        <TabBar
-          theme={theme} isVertical={true} tabs={tabs} index={activePanel}
-          onIndexChange={sidePanelSize === Size.Type.Minimized
-            ? this.onTabBarExpand_
-            : this.onTabBarIndexChange_
-          }
-        />
+        <TourTarget registry={this.props.tourRegistry} targetKey={'simulator-left-tab-overview'} style={{ display: 'flex', height: '100%' }}>
+          <TabBar
+            theme={theme} isVertical={true} tabs={tabs} index={activePanel} tourRegistry={this.props.tourRegistry}
+            onIndexChange={sidePanelSize === Size.Type.Minimized
+              ? this.onTabBarExpand_
+              : this.onTabBarIndexChange_
+            }
+          />
+        </TourTarget>
+
         <Slider
           isVertical={true}
           theme={theme}
@@ -426,9 +454,12 @@ export class SideLayout extends React.PureComponent<Props & ReduxSideLayoutProps
           sizes={[2, 3]}
           visible={[sidePanelSize !== Size.Type.Minimized, true]}
         >
+
           {content}
+
           {simulator}
         </Slider>
+
       </SidePanelContainer>
     </Container>;
   }

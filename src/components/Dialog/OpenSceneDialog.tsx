@@ -20,15 +20,20 @@ import { auth } from '../../firebase/firebase';
 
 import tr from '@i18n';
 import { withNavigate, WithNavigateProps } from '../../util/withNavigate';
+import TourTarget from "../Tours/TourTarget";
+import { TourRegistry } from "../../tours/TourRegistry";
 
 export interface OpenSceneDialogPublicProps extends ThemeProps {
   onClose: () => void;
+  tourRegistry?: TourRegistry;
+  continueTour?: () => void;
 }
 
 interface OpenSceneDialogPrivateProps {
   scenes: Scenes;
   locale: LocalizedString.Language;
   listUserScenes: () => void;
+
 }
 
 type Props = OpenSceneDialogPublicProps & OpenSceneDialogPrivateProps & WithNavigateProps;
@@ -102,7 +107,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
       }
     }
   }
-  
+
   render() {
     const { theme, onClose, scenes, locale } = this.props;
     const { selectedSceneId } = this.state;
@@ -115,23 +120,30 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
     });
 
     return (
-      <Dialog name={LocalizedString.lookup(tr('Open World'), locale)} theme={theme} onClose={onClose}>
-        <Container theme={theme}>
-          <SceneColumn theme={theme}>
-            {loadedScenesArray.map(s => this.createSceneName(s[0], s[1]))}
-          </SceneColumn>
-          <InfoColumn>
-            <InfoContainer theme={theme}>
-              {selectedSceneId === null
-                ? this.createNoSceneInfo()
-                : this.createSceneInfo(scenes[selectedSceneId])}
-            </InfoContainer>
-          </InfoColumn>
-        </Container>
-        <DialogBar theme={theme} onAccept={this.onAccept}>
-          <FontAwesome icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}
-        </DialogBar>
-      </Dialog>
+      <Dialog name={LocalizedString.lookup(tr('Open World'), locale)} theme={theme} onClose={onClose} tourRegistry={this.props.tourRegistry}>
+        <TourTarget registry={this.props.tourRegistry} targetKey={'open-scene-dialog'} style={{ position: 'relative' }}>
+          <Container theme={theme}>
+
+            <SceneColumn theme={theme} data-tour-clamp>
+              <TourTarget registry={this.props.tourRegistry} targetKey="open-scene-list">
+                <div>{loadedScenesArray.map(s => this.createSceneName(s[0], s[1]))}</div>
+              </TourTarget>
+            </SceneColumn>
+            <InfoColumn>
+              <TourTarget registry={this.props.tourRegistry} targetKey="open-scene-info">
+                <InfoContainer theme={theme}>
+                  {selectedSceneId === null
+                    ? this.createNoSceneInfo()
+                    : this.createSceneInfo(scenes[selectedSceneId])}
+                </InfoContainer>
+              </TourTarget>
+            </InfoColumn>
+          </Container>
+          <DialogBar theme={theme} onAccept={this.onAccept}>
+            <FontAwesome icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}
+          </DialogBar>
+        </TourTarget>
+      </Dialog >
     );
   }
 
@@ -141,7 +153,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
 
     const selectedAsyncScene = selectedSceneId !== null ? scenes[selectedSceneId] : null;
     const selectedScene = Async.latestValue(selectedAsyncScene);
-    
+
     if (selectedScene) {
       this.props.navigate(`/scene/${selectedSceneId}`);
       location.reload();
@@ -152,7 +164,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
   private createSceneName = (sceneId: string, scene: Scene) => {
     const { theme, locale } = this.props;
     const { selectedSceneId } = this.state;
-    
+
     return (
       <SceneName key={sceneId} theme={theme} selected={sceneId === selectedSceneId} onClick={() => this.onSceneClick(sceneId)}>
         {LocalizedString.lookup(scene.name, locale)}
@@ -197,6 +209,8 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
   private onSceneClick = (sceneId: string) => {
     this.setState({
       selectedSceneId: sceneId,
+    }, () => {
+      this.props.continueTour();
     });
   };
 }

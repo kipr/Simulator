@@ -11,6 +11,8 @@ import { faAngleDown, faAngleUp, faAngleLeft, faAngleRight, faAngleDoubleUp, faA
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import TourTarget from '../Tours/TourTarget';
+import { TourRegistry } from '../../tours/TourRegistry';
 
 export namespace Size {
   export enum Type {
@@ -56,7 +58,7 @@ export namespace Size {
   export const MINIATURE_LEFT: Miniature = { type: Type.Miniature, direction: Direction.Left };
   export const MINIATURE_RIGHT: Miniature = { type: Type.Miniature, direction: Direction.Right };
 
-  
+
 
   export interface Minimized {
     type: Type.Minimized;
@@ -188,7 +190,11 @@ const sizeIcon = (size: Size): IconProp => {
     case Size.Type.Maximized: return faExpand;
   }
 };
-
+function hasTourRegistry(
+  props: object
+): props is { tourRegistry?: TourRegistry } {
+  return 'tourRegistry' in props;
+}
 class Widget extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -196,13 +202,15 @@ class Widget extends React.PureComponent<Props, State> {
 
   private onSizeChange_ = (index: number) => (event: React.MouseEvent<SVGSVGElement>) => {
     const { onSizeChange } = this.props;
-    
+
     if (!onSizeChange) return;
 
     event.stopPropagation();
     event.preventDefault();
     onSizeChange(index);
   };
+
+
 
   render() {
     const { props } = this;
@@ -221,8 +229,6 @@ class Widget extends React.PureComponent<Props, State> {
       onChromeMouseDown,
       onChromeMouseUp
     } = props;
-    
-    
     return (
       <Container style={style} className={className} theme={theme} mode={mode}>
         <Chrome
@@ -236,7 +242,17 @@ class Widget extends React.PureComponent<Props, State> {
           <Title theme={theme} $hasComponents={barComponents && barComponents.length > 0}>{name}</Title>
           {barComponents ? barComponents.map((barComponent, i) => {
             const Component = barComponent.component;
-            return <Component key={i} {...barComponent.props} />;
+            const Props = barComponent.props;
+            if (hasTourRegistry(Props)) {
+              return (
+                <TourTarget registry={Props.tourRegistry} targetKey={`${Component.name}-key-${i}`} key={i} style={{ padding: `${props.theme.itemPadding * 1}px` }} >
+                  <Component {...barComponent.props} />
+                </TourTarget>
+              )
+            }
+            else {
+              return <Component key={i} {...barComponent.props} />
+            }
           }) : undefined}
           <Spacer />
           {(sizes || [])

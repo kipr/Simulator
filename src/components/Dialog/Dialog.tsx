@@ -7,12 +7,15 @@ import { StyleProps } from '../../util/style';
 import { styled } from 'styletron-react';
 import Widget, { Mode, Size } from '../interface/Widget';
 import { ThemeProps } from '../constants/theme';
+import TourTarget from '../Tours/TourTarget';
+import { TourRegistry } from '../../tours/TourRegistry';
 
 export interface DialogProps extends ThemeProps, StyleProps {
   name: string;
   children: React.ReactNode;
 
   onClose: () => void;
+  tourRegistry?: TourRegistry;
 }
 
 type Props = DialogProps;
@@ -34,11 +37,13 @@ class Dialog_ extends React.PureComponent<Props> {
     const { className, style, children, theme, name } = props;
     return (
       <Modal>
-        <Container theme={theme}>
-          <Widget theme={theme} size={0} sizes={[Size.MAXIMIZED, Size.MINIMIZED]} onSizeChange={this.onSizeChange_} mode={Mode.Floating} name={name}>
-            {children}
-          </Widget>
-        </Container>
+        <TourTarget registry={props.tourRegistry!} targetKey={`${name}-dialog`}>
+          <Container theme={theme}>
+            <Widget theme={theme} size={0} sizes={[Size.MAXIMIZED, Size.MINIMIZED]} onSizeChange={this.onSizeChange_} mode={Mode.Floating} name={name}>
+              {children}
+            </Widget>
+          </Container>
+        </TourTarget>
       </Modal>
     );
   }
