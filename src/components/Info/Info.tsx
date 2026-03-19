@@ -1,28 +1,27 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { styled } from 'styletron-react';
-import { StyleProps } from '../../util/style';
-import ScrollArea from '../interface/ScrollArea';
-import Section from '../interface/Section';
-import { ThemeProps } from '../constants/theme';
-import SensorWidget from './SensorWidget';
-import { StyledText } from '../../util';
-import Location from './Location';
-import { FontAwesome } from '../FontAwesome';
-import { ReferenceFramewUnits } from '../../util/math/unitMath';
-import { connect } from 'react-redux';
-import { State as ReduxState } from '../../state';
-import { ScenesAction } from '../../state/reducer';
-import Node from '../../state/State/Scene/Node';
-import Motor from '../../programming/AbstractRobot/Motor';
-import { faSync } from '@fortawesome/free-solid-svg-icons';
-import Async from '../../state/State/Async';
+import { styled } from "styletron-react";
+import { StyleProps } from "../../util/style";
+import ScrollArea from "../interface/ScrollArea";
+import Section from "../interface/Section";
+import { ThemeProps } from "../constants/theme";
+import SensorWidget from "./SensorWidget";
+import { StyledText } from "../../util";
+import Location from "./Location";
+import { FontAwesome } from "../FontAwesome";
+import { ReferenceFramewUnits } from "../../util/math/unitMath";
+import { connect } from "react-redux";
+import { State as ReduxState } from "../../state";
+import { ScenesAction } from "../../state/reducer";
+import Node from "../../state/State/Scene/Node";
+import Motor from "../../programming/AbstractRobot/Motor";
+import { faSync } from "@fortawesome/free-solid-svg-icons";
+import Async from "../../state/State/Async";
 
-import tr from '@i18n';
-import LocalizedString from '../../util/LocalizedString';
-import TourTarget from '../Tours/TourTarget';
-import { TourRegistry } from '../../tours/TourRegistry';
-
+import tr from "@i18n";
+import LocalizedString from "../../util/LocalizedString";
+import TourTarget from "../Tours/TourTarget";
+import { TourRegistry } from "../../tours/TourRegistry";
 
 export interface InfoPublicProps extends StyleProps, ThemeProps {
   node: Node.Robot;
@@ -36,67 +35,63 @@ interface InfoPrivateProps {
 }
 
 interface InfoState {
-  collapsed: { [section: string]: boolean }
+  collapsed: { [section: string]: boolean };
 }
 
 type Props = InfoPublicProps & InfoPrivateProps;
 type State = InfoState;
 
-const Row = styled('div', (props: ThemeProps) => ({
-  display: 'flex',
-  flexDirection: 'row',
+const Row = styled("div", (props: ThemeProps) => ({
+  display: "flex",
+  flexDirection: "row",
   flexBasis: 0,
-  alignItems: 'center',
+  alignItems: "center",
   marginBottom: `${props.theme.itemPadding * 2}px`,
-  ':last-child': {
-    marginBottom: 0
-  }
+  ":last-child": {
+    marginBottom: 0,
+  },
 }));
 
-const Container = styled('div', (props: ThemeProps) => ({
-  flex: '1 1',
+const Container = styled("div", (props: ThemeProps) => ({
+  flex: "1 1",
   color: props.theme.color,
-  overflow: 'hidden'
+  overflow: "hidden",
 }));
 
-const StyledSection = styled(Section, {
-});
+const StyledSection = styled(Section, {});
 
-const ItemName = styled('label', (props: ThemeProps) => ({
-  flex: '1 1 0',
-  borderRight: `1px solid ${props.theme.borderColor}`
+const ItemName = styled("label", (props: ThemeProps) => ({
+  flex: "1 1 0",
+  borderRight: `1px solid ${props.theme.borderColor}`,
 }));
 
-const Input = styled('input', (props: ThemeProps) => ({
-  flex: '1 1 0',
+const Input = styled("input", (props: ThemeProps) => ({
+  flex: "1 1 0",
   borderRadius: `${props.theme.itemPadding}px`,
-  font: 'inherit',
-  border: 'none',
-  backgroundColor: 'transparent',
+  font: "inherit",
+  border: "none",
+  backgroundColor: "transparent",
   color: props.theme.color,
-  ':focus': {
-    outline: 'none'
-  }
+  ":focus": {
+    outline: "none",
+  },
 }));
-
 
 const ICON_STYLE: React.CSSProperties = {
-  marginRight: '5px'
+  marginRight: "5px",
 };
 
 const SIMULATION_NAME = StyledText.text({
-  text: 'Simulation',
+  text: "Simulation",
 });
-
-
 
 const ResetIcon = styled(FontAwesome, ({ theme }: ThemeProps) => ({
   marginLeft: `${theme.itemPadding * 2}px`,
   opacity: 0.5,
-  ':hover': {
-    opacity: 1.0
+  ":hover": {
+    opacity: 1.0,
   },
-  transition: 'opacity 0.2s'
+  transition: "opacity 0.2s",
 }));
 
 class Info extends React.PureComponent<Props, State> {
@@ -104,7 +99,7 @@ class Info extends React.PureComponent<Props, State> {
     super(props);
 
     this.state = {
-      collapsed: {}
+      collapsed: {},
     };
   }
 
@@ -112,12 +107,14 @@ class Info extends React.PureComponent<Props, State> {
     this.setState({
       collapsed: {
         ...this.state.collapsed,
-        [section]: collapsed
-      }
+        [section]: collapsed,
+      },
     });
   };
 
-  private onResetLocationClick_ = (event: React.MouseEvent<HTMLSpanElement>) => {
+  private onResetLocationClick_ = (
+    event: React.MouseEvent<HTMLSpanElement>
+  ) => {
     event.preventDefault();
     event.stopPropagation();
     this.props.onOriginChange(this.props.node.startingOrigin);
@@ -125,39 +122,39 @@ class Info extends React.PureComponent<Props, State> {
 
   render() {
     const { props, state } = this;
-    const {
-      style,
-      className,
-      theme,
-      node,
-      locale
-    } = props;
+    const { style, className, theme, node, locale, tourRegistry } = props;
 
-    if (!node || node.type !== 'robot') return null;
+    if (!node || node.type !== "robot") return null;
 
     const { collapsed } = state;
 
     const locationName = StyledText.compose({
       items: [
         StyledText.text({
-          text: LocalizedString.lookup(tr('Start Location'), locale),
+          text: LocalizedString.lookup(tr("Start Location"), locale),
         }),
         StyledText.component({
           component: ResetIcon,
           props: {
             icon: faSync,
             onClick: this.onResetLocationClick_,
-            theme
-          }
-        })
-      ]
+            theme,
+          },
+        }),
+      ],
     });
 
     const servos: JSX.Element[] = [];
     for (let i = 0; i < 4; ++i) {
       servos.push(
         <Row key={`servo-pos-${i}`} theme={theme}>
-          <SensorWidget value={node.state.servos[i].position} name={`get_servo_position(${i})`} plotTitle='Servo Position Plot' theme={theme} locale={locale} />
+          <SensorWidget
+            value={node.state.servos[i].position}
+            name={`get_servo_position(${i})`}
+            plotTitle="Servo Position Plot"
+            theme={theme}
+            locale={locale}
+          />
         </Row>
       );
     }
@@ -168,13 +165,31 @@ class Info extends React.PureComponent<Props, State> {
       const motor = node.state.motors[i];
       motorVelocities.push(
         <Row key={`motor-velocity-${i}`} theme={theme}>
-          <SensorWidget value={motor.mode !== Motor.Mode.Pwm ? motor.speedGoal : 0} name={`motor ${i}`} plotTitle={LocalizedString.lookup(tr('Motor Velocity Plot'), locale)} theme={theme} locale={locale} />
+          <SensorWidget
+            value={motor.mode !== Motor.Mode.Pwm ? motor.speedGoal : 0}
+            name={`motor ${i}`}
+            plotTitle={LocalizedString.lookup(
+              tr("Motor Velocity Plot"),
+              locale
+            )}
+            theme={theme}
+            locale={locale}
+          />
         </Row>
       );
 
       motorPositions.push(
         <Row key={`motor-pos-${i}`} theme={theme}>
-          <SensorWidget value={motor.position} name={`get_motor_position_counter(${i})`} plotTitle={LocalizedString.lookup(tr('Motor Position Plot'), locale)} theme={theme} locale={locale} />
+          <SensorWidget
+            value={motor.position}
+            name={`get_motor_position_counter(${i})`}
+            plotTitle={LocalizedString.lookup(
+              tr("Motor Position Plot"),
+              locale
+            )}
+            theme={theme}
+            locale={locale}
+          />
         </Row>
       );
     }
@@ -183,7 +198,13 @@ class Info extends React.PureComponent<Props, State> {
     for (let i = 0; i < 6; ++i) {
       analogSensors.push(
         <Row key={`analog-${i}`} theme={theme}>
-          <SensorWidget value={node.state.analogValues[i]} name={`analog(${i})`} plotTitle={LocalizedString.lookup(tr('Analog Sensor Plot'), locale)} theme={theme} locale={locale} />
+          <SensorWidget
+            value={node.state.analogValues[i]}
+            name={`analog(${i})`}
+            plotTitle={LocalizedString.lookup(tr("Analog Sensor Plot"), locale)}
+            theme={theme}
+            locale={locale}
+          />
         </Row>
       );
     }
@@ -192,103 +213,185 @@ class Info extends React.PureComponent<Props, State> {
     for (let i = 0; i < 6; ++i) {
       digitalSensors.push(
         <Row key={`digital-${i}`} theme={theme}>
-          <SensorWidget value={node.state.digitalValues[i]} name={`digital(${i})`} plotTitle={LocalizedString.lookup(tr('Digital Sensor Plot'), locale)} theme={theme} locale={locale} />
+          <SensorWidget
+            value={node.state.digitalValues[i]}
+            name={`digital(${i})`}
+            plotTitle={LocalizedString.lookup(
+              tr("Digital Sensor Plot"),
+              locale
+            )}
+            theme={theme}
+            locale={locale}
+          />
         </Row>
       );
     }
 
     const analogName = StyledText.text({
-      text: LocalizedString.lookup(tr('Analog Sensors'), locale),
+      text: LocalizedString.lookup(tr("Analog Sensors"), locale),
     });
 
     const digitalName = StyledText.text({
-      text: LocalizedString.lookup(tr('Digital Sensors'), locale),
+      text: LocalizedString.lookup(tr("Digital Sensors"), locale),
     });
 
     const servosName = StyledText.text({
-      text: LocalizedString.lookup(tr('Servos'), locale),
+      text: LocalizedString.lookup(tr("Servos"), locale),
     });
 
     const motorVelocitiesName = StyledText.text({
-      text: LocalizedString.lookup(tr('Motor Velocities'), locale),
+      text: LocalizedString.lookup(tr("Motor Velocities"), locale),
     });
 
     const motorPositionsName = StyledText.compose({
       items: [
         StyledText.text({
-          text: LocalizedString.lookup(tr('Motor Positions'), locale),
+          text: LocalizedString.lookup(tr("Motor Positions"), locale),
         }),
-      ]
+      ],
     });
 
+    const locationWidget_ = (
+      <StyledSection
+        name={locationName}
+        theme={theme}
+        onCollapsedChange={this.onCollapsedChange_("location")}
+        collapsed={collapsed["location"]}
+      >
+        <Location
+          theme={theme}
+          origin={node.startingOrigin}
+          onOriginChange={props.onOriginChange}
+          locale={locale}
+        />
+      </StyledSection>
+    );
+
+    const servoSection_ = (
+      <StyledSection
+        name={servosName}
+        theme={theme}
+        onCollapsedChange={this.onCollapsedChange_("servo_pos")}
+        collapsed={collapsed["servo_pos"]}
+      >
+        {servos}
+      </StyledSection>
+    );
+
+    const motorVelSection_ = (
+      <StyledSection
+        name={motorVelocitiesName}
+        theme={theme}
+        onCollapsedChange={this.onCollapsedChange_("motor_vel")}
+        collapsed={collapsed["motor_vel"]}
+      >
+        {motorVelocities}
+      </StyledSection>
+    );
+
+    const motorPosSection_ = (
+      <StyledSection
+        name={motorPositionsName}
+        theme={theme}
+        onCollapsedChange={this.onCollapsedChange_("motor_pos")}
+        collapsed={collapsed["motor_pos"]}
+      >
+        {motorPositions}
+      </StyledSection>
+    );
+
+    const analogSection_ = (
+      <StyledSection
+        name={analogName}
+        theme={theme}
+        onCollapsedChange={this.onCollapsedChange_("analog")}
+        collapsed={collapsed["analog"]}
+      >
+        {analogSensors}
+      </StyledSection>
+    );
+
+    const digitalSection_ = (
+      <StyledSection
+        name={digitalName}
+        theme={theme}
+        onCollapsedChange={this.onCollapsedChange_("digital")}
+        collapsed={collapsed["digital"]}
+      >
+        {digitalSensors}
+      </StyledSection>
+    );
+
     return (
-      <ScrollArea theme={theme} style={{ flex: '1 1' }}>
+      <ScrollArea theme={theme} style={{ flex: "1 1" }}>
         <Container theme={theme} style={style} className={className}>
-          <TourTarget registry={this.props.tourRegistry} targetKey='robot-starting-location' style={style}>
-            <StyledSection
-              name={locationName}
-              theme={theme}
-              onCollapsedChange={this.onCollapsedChange_('location')}
-              collapsed={collapsed['location']}
+          {tourRegistry ? (
+            <TourTarget
+              registry={tourRegistry}
+              targetKey="robot-starting-location"
+              style={style}
             >
-              <Location
-                theme={theme}
-                origin={node.startingOrigin}
-                onOriginChange={props.onOriginChange}
-                locale={locale}
-              />
-            </StyledSection>
-          </TourTarget>
-          <TourTarget registry={this.props.tourRegistry} targetKey='robot-servos' style={style}>
-            <StyledSection
-              name={servosName}
-              theme={theme}
-              onCollapsedChange={this.onCollapsedChange_('servo_pos')}
-              collapsed={collapsed['servo_pos']}
+              {locationWidget_}
+            </TourTarget>
+          ) : (
+            locationWidget_
+          )}
+          {tourRegistry ? (
+            <TourTarget
+              registry={this.props.tourRegistry}
+              targetKey="robot-servos"
+              style={style}
             >
-              {servos}
-            </StyledSection>
-          </TourTarget>
-          <TourTarget registry={this.props.tourRegistry} targetKey='robot-motor-velocities' style={style}>
-            <StyledSection
-              name={motorVelocitiesName}
-              theme={theme}
-              onCollapsedChange={this.onCollapsedChange_('motor_vel')}
-              collapsed={collapsed['motor_vel']}
+              {servoSection_}
+            </TourTarget>
+          ) : (
+            servoSection_
+          )}
+          {tourRegistry ? (
+            <TourTarget
+              registry={this.props.tourRegistry}
+              targetKey="robot-motor-velocities"
+              style={style}
             >
-              {motorVelocities}
-            </StyledSection>
-          </TourTarget>
-          <TourTarget registry={this.props.tourRegistry} targetKey='robot-motor-positions' style={style}>
-            <StyledSection
-              name={motorPositionsName}
-              theme={theme}
-              onCollapsedChange={this.onCollapsedChange_('motor_pos')}
-              collapsed={collapsed['motor_pos']}
+              {motorVelSection_}
+            </TourTarget>
+          ) : (
+            motorVelSection_
+          )}
+          {tourRegistry ? (
+            <TourTarget
+              registry={this.props.tourRegistry}
+              targetKey="robot-motor-positions"
+              style={style}
             >
-              {motorPositions}
-            </StyledSection>
-          </TourTarget>
-          <TourTarget registry={this.props.tourRegistry} targetKey='robot-analog-sensors' style={style}>
-            <StyledSection
-              name={analogName}
-              theme={theme}
-              onCollapsedChange={this.onCollapsedChange_('analog')}
-              collapsed={collapsed['analog']}
+              {motorPosSection_}
+            </TourTarget>
+          ) : (
+            motorPosSection_
+          )}
+
+          {tourRegistry ? (
+            <TourTarget
+              registry={this.props.tourRegistry}
+              targetKey="robot-analog-sensors"
+              style={style}
             >
-              {analogSensors}
-            </StyledSection>
-          </TourTarget>
-          <TourTarget registry={this.props.tourRegistry} targetKey='robot-digital-sensors' style={style}>
-            <StyledSection
-              name={digitalName}
-              theme={theme}
-              onCollapsedChange={this.onCollapsedChange_('digital')}
-              collapsed={collapsed['digital']}
+              {analogSection_}
+            </TourTarget>
+          ) : (
+            analogSection_
+          )}
+          {tourRegistry ? (
+            <TourTarget
+              registry={this.props.tourRegistry}
+              targetKey="robot-digital-sensors"
+              style={style}
             >
-              {digitalSensors}
-            </StyledSection>
-          </TourTarget>
+              {digitalSection_}
+            </TourTarget>
+          ) : (
+            digitalSection_
+          )}
         </Container>
       </ScrollArea>
     );
@@ -296,5 +399,5 @@ class Info extends React.PureComponent<Props, State> {
 }
 
 export default connect((state: ReduxState) => ({
-  locale: state.i18n.locale
+  locale: state.i18n.locale,
 }))(Info) as React.ComponentType<InfoPublicProps>;

@@ -1,84 +1,119 @@
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { styled } from 'styletron-react';
-import { Message } from 'ivygate/dist/src';
-import * as uuid from 'uuid';
-import { OuterObjectPatch } from 'symmetry';
+import * as React from "react";
+import { connect } from "react-redux";
+import { styled } from "styletron-react";
+import { Message } from "ivygate/dist/src";
+import * as uuid from "uuid";
+import { OuterObjectPatch } from "symmetry";
 
-import { auth } from '../firebase/firebase';
-import { signOutOfApp } from '../firebase/modules/auth';
+import { auth } from "../firebase/firebase";
+import { signOutOfApp } from "../firebase/modules/auth";
 
-import WorkerInstance from '../programming/WorkerInstance';
-import compile from '../programming/compiler/compile';
-import ProgrammingLanguage from '../programming/compiler/ProgrammingLanguage';
+import WorkerInstance from "../programming/WorkerInstance";
+import compile from "../programming/compiler/compile";
+import ProgrammingLanguage from "../programming/compiler/ProgrammingLanguage";
 
-import SimMenu from '../components/Challenge/SimMenu';
-import { SimulatorState } from '../components/Challenge/SimulatorState';
-import ExceptionDialog from '../components/Challenge/ExceptionDialog';
+import SimMenu from "../components/Challenge/SimMenu";
+import { SimulatorState } from "../components/Challenge/SimulatorState";
+import ExceptionDialog from "../components/Challenge/ExceptionDialog";
 
-import { DEFAULT_SETTINGS, Settings } from '../components/constants/Settings';
-import { DARK, Theme } from '../components/constants/theme';
-import { DEFAULT_SCENE } from '../components/constants/defaultScene';
+import { DEFAULT_SETTINGS, Settings } from "../components/constants/Settings";
+import { DARK, Theme } from "../components/constants/theme";
+import { DEFAULT_SCENE } from "../components/constants/defaultScene";
 
-import SettingsDialog from '../components/Dialog/SettingsDialog';
-import AboutDialog from '../components/Dialog/AboutDialog';
-import SceneSettingsDialog from '../components/Dialog/SceneSettingsDialog';
+import SettingsDialog from "../components/Dialog/SettingsDialog";
+import AboutDialog from "../components/Dialog/AboutDialog";
+import SceneSettingsDialog from "../components/Dialog/SceneSettingsDialog";
 
-import { FeedbackDialog, DEFAULT_FEEDBACK, Feedback, FeedbackSuccessDialog, sendFeedback, FeedbackResponse } from '../components/Feedback';
-import { Layout, LayoutProps, LayoutEditorTarget, OverlayLayout, OverlayLayoutRedux, SideLayoutRedux } from '../components/Layout';
-import { SceneErrorDialog, OpenSceneDialog, NewSceneDialog, DeleteDialog, SaveAsSceneDialog } from '../components/Dialog';
+import {
+  FeedbackDialog,
+  DEFAULT_FEEDBACK,
+  Feedback,
+  FeedbackSuccessDialog,
+  sendFeedback,
+  FeedbackResponse,
+} from "../components/Feedback";
+import {
+  Layout,
+  LayoutProps,
+  LayoutEditorTarget,
+  OverlayLayout,
+  OverlayLayoutRedux,
+  SideLayoutRedux,
+} from "../components/Layout";
+import {
+  SceneErrorDialog,
+  OpenSceneDialog,
+  NewSceneDialog,
+  DeleteDialog,
+  SaveAsSceneDialog,
+} from "../components/Dialog";
 
-import Loading from '../components/Loading';
-import { Editor } from '../components/Editor';
+import Loading from "../components/Loading";
+import { Editor } from "../components/Editor";
 
+import { State as ReduxState } from "../state";
+import {
+  ScenesAction,
+  ChallengeCompletionsAction,
+  AiAction,
+  ProjectsAction,
+  deleteProject,
+} from "../state/reducer";
+import { DocumentationAction } from "ivygate/dist/src/state/reducer/documentation";
+import { sendMessage, SendMessageParams } from "../util/ai";
 
-import { State as ReduxState } from '../state';
-import { ScenesAction, ChallengeCompletionsAction, AiAction, ProjectsAction, deleteProject } from '../state/reducer';
-import { DocumentationAction } from 'ivygate/dist/src/state/reducer/documentation';
-import { sendMessage, SendMessageParams } from '../util/ai';
+import Scene, { AsyncScene } from "../state/State/Scene";
+import Script from "../state/State/Scene/Script";
+import Node from "../state/State/Scene/Node";
+import Geometry from "../state/State/Scene/Geometry";
+import Camera from "../state/State/Scene/Camera";
 
-import Scene, { AsyncScene } from '../state/State/Scene';
-import Script from '../state/State/Scene/Script';
-import Node from '../state/State/Scene/Node';
-import Geometry from '../state/State/Scene/Geometry';
-import Camera from '../state/State/Scene/Camera';
+import Async from "../state/State/Async";
+import { AsyncChallenge } from "../state/State/Challenge";
+import ChallengeCompletion, {
+  AsyncChallengeCompletion,
+} from "../state/State/ChallengeCompletion";
+import PredicateCompletion from "../state/State/ChallengeCompletion/PredicateCompletion";
 
-import Async from '../state/State/Async';
-import { AsyncChallenge } from '../state/State/Challenge';
-import ChallengeCompletion, { AsyncChallengeCompletion } from '../state/State/ChallengeCompletion';
-import PredicateCompletion from '../state/State/ChallengeCompletion/PredicateCompletion';
+import DocumentationLocation from "../state/State/Documentation/DocumentationLocation";
 
-import DocumentationLocation from '../state/State/Documentation/DocumentationLocation';
+import Record from "../db/Record";
+import Selector from "../db/Selector";
+import Builder from "../db/Builder";
+import Author from "../db/Author";
 
-import Record from '../db/Record';
-import Selector from '../db/Selector';
-import Builder from '../db/Builder';
-import Author from '../db/Author';
+import { StyledText } from "../util";
+import Dict from "../util/objectOps/Dict";
+import parseMessages, {
+  hasErrors,
+  hasWarnings,
+  sort,
+  toStyledText,
+} from "../util/parseMessages";
+import { Vector3wUnits } from "../util/math/unitMath";
+import LocalizedString from "../util/LocalizedString";
 
-import { StyledText } from '../util';
-import Dict from '../util/objectOps/Dict';
-import parseMessages, { hasErrors, hasWarnings, sort, toStyledText } from '../util/parseMessages';
-import { Vector3wUnits } from '../util/math/unitMath';
-import LocalizedString from '../util/LocalizedString';
-
-import { Space } from '../simulator/Space';
-import { withNavigate, WithNavigateProps } from '../util/withNavigate';
-import { withParams } from '../util/withParams';
-import tr from '@i18n';
-import { Modal } from './sharedRoot/Modal';
-import Robot from '../state/State/Robot';
-import AiWindow from '../components/Ai/AiWindow';
-import CreateProjectDialog from '../components/Dialog/CreateProjectDialog';
-import { InterfaceMode } from '../types/interfaceModes';
-import { AsyncProject, Project } from '../state/State/Project';
-import CreateNewFileDialog from '../components/Dialog/CreateNewFileDialog';
-import DeleteProjectDialog from '../components/Dialog/DeleteProjectDialog';
-import TourDoc, { getTourSteps, TourStep } from '../tours/Tours';
-import TourTarget from '../components/Tours/TourTarget';
-import { TourRegistry } from '../tours/TourRegistry';
-import { GuidedTour } from '../components/Tours/GuidedTour';
-import { completeTour, fetchTourIfNeeded, retakeTour } from '../state/reducer/tours';
-
+import { Space } from "../simulator/Space";
+import { withNavigate, WithNavigateProps } from "../util/withNavigate";
+import { withParams } from "../util/withParams";
+import tr from "@i18n";
+import { Modal } from "./sharedRoot/Modal";
+import Robot from "../state/State/Robot";
+import AiWindow from "../components/Ai/AiWindow";
+import CreateProjectDialog from "../components/Dialog/CreateProjectDialog";
+import { InterfaceMode } from "../types/interfaceModes";
+import { AsyncProject, Project } from "../state/State/Project";
+import CreateNewFileDialog from "../components/Dialog/CreateNewFileDialog";
+import DeleteProjectDialog from "../components/Dialog/DeleteProjectDialog";
+import TourDoc, { getTourSteps, TourStep } from "../tours/Tours";
+import TourTarget from "../components/Tours/TourTarget";
+import { TourRegistry } from "../tours/TourRegistry";
+import { GuidedTour } from "../components/Tours/GuidedTour";
+import {
+  completeTour,
+  fetchTourIfNeeded,
+  retakeTour,
+} from "../state/reducer/tours";
 
 export interface RootRouteParams {
   [key: string]: string | undefined;
@@ -114,14 +149,19 @@ interface RootPrivateProps {
   onCameraChange: (camera: Camera) => void;
   onGravityChange: (gravity: Vector3wUnits) => void;
   onSelectNodeId: (id: string) => void;
-  onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) => void;
+  onSetNodeBatch: (
+    setNodeBatch: Omit<ScenesAction.SetNodeBatch, "type" | "sceneId">
+  ) => void;
   onResetScene: () => void;
 
   onDocumentationClick: () => void;
   onDocumentationPush: (location: DocumentationLocation) => void;
-  onDocumentationSetLanguage: (language: 'c' | 'python') => void;
-  onDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => void;
-  onCommonDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => void;
+  onDocumentationSetLanguage: (language: "c" | "python") => void;
+  onDocumentationGoToFuzzy: (query: string, language: "c" | "python") => void;
+  onCommonDocumentationGoToFuzzy: (
+    query: string,
+    language: "c" | "python"
+  ) => void;
 
   onCreateScene: (id: string, scene: Scene) => void;
   onSaveScene: (id: string) => void;
@@ -144,14 +184,23 @@ interface RootPrivateProps {
   onAddUserMessage: (message: string) => void;
 
   onAddProject: (project: Project) => void;
-  onAddFile: (project: Project, fileName: string, fileType: 'src' | 'include' | 'userData') => void;
+  onAddFile: (
+    project: Project,
+    fileName: string,
+    fileType: "src" | "include" | "userData"
+  ) => void;
   onLoadProjects: () => void;
-  onSetProjectCode: (project: Project, fileName: string, fileType: 'src' | 'include' | 'userData', fileContent: string) => void;
+  onSetProjectCode: (
+    project: Project,
+    fileName: string,
+    fileType: "src" | "include" | "userData",
+    fileContent: string
+  ) => void;
   onSelectProject: (project: Project) => void;
   onDeleteProject: (project: Project) => void;
-  onChangeInterfaceMode: (interfaceMode: InterfaceMode.SIMPLE | InterfaceMode.ADVANCED) => void;
-
-
+  onChangeInterfaceMode: (
+    interfaceMode: InterfaceMode.SIMPLE | InterfaceMode.ADVANCED
+  ) => void;
 }
 
 interface RootState {
@@ -179,7 +228,11 @@ interface RootState {
 
   miniEditor: boolean;
 
-  projectDetails: { project: Project, fileType: 'src' | 'include' | 'userData', fileName: string } | null;
+  projectDetails: {
+    project: Project;
+    fileType: "src" | "include" | "userData";
+    fileName: string;
+  } | null;
 
   tourId?: string;
   simulatorRootTourSteps: TourStep[];
@@ -193,29 +246,29 @@ type State = RootState;
 // We can't set innerheight statically, becasue the window can change
 // but we also must use innerheight to fix mobile issues
 interface ContainerProps {
-  $windowInnerHeight: number
+  $windowInnerHeight: number;
 }
-const Container = styled('div', (props: ContainerProps) => ({
-  width: '100vw',
+const Container = styled("div", (props: ContainerProps) => ({
+  width: "100vw",
   height: `${props.$windowInnerHeight}px`, // fix for mobile, see https://chanind.github.io/javascript/2019/09/28/avoid-100vh-on-mobile-web.html
-  display: 'flex',
-  flexDirection: 'column',
-  overflow: 'hidden',
-  position: 'fixed'
+  display: "flex",
+  flexDirection: "column",
+  overflow: "hidden",
+  position: "fixed",
 }));
 
 const STDOUT_STYLE = (theme: Theme) => ({
-  color: theme.color
+  color: theme.color,
 });
 
 const STDERR_STYLE = (theme: Theme) => ({
-  color: 'red'
+  color: "red",
 });
 
 class Root extends React.Component<Props, State> {
   private editorRef: React.MutableRefObject<Editor>;
   private overlayLayoutRef: React.MutableRefObject<OverlayLayout>;
-  private registry = new TourRegistry();
+  private registry?: TourRegistry;
   private scrollRef: HTMLDivElement | null = null;
 
   constructor(props: Props) {
@@ -223,26 +276,39 @@ class Root extends React.Component<Props, State> {
 
     this.state = {
       layout: Layout.Side,
-      activeLanguage: 'c',
+      activeLanguage: "c",
       code: {
-        'c': window.localStorage.getItem('code-c') || ProgrammingLanguage.DEFAULT_CODE['c'],
-        'cpp': window.localStorage.getItem('code-cpp') || ProgrammingLanguage.DEFAULT_CODE['cpp'],
-        'python': window.localStorage.getItem('code-python') || ProgrammingLanguage.DEFAULT_CODE['python'],
-        'graphical': window.localStorage.getItem('code-graphical') || ProgrammingLanguage.DEFAULT_CODE['graphical'],
+        c:
+          window.localStorage.getItem("code-c") ||
+          ProgrammingLanguage.DEFAULT_CODE["c"],
+        cpp:
+          window.localStorage.getItem("code-cpp") ||
+          ProgrammingLanguage.DEFAULT_CODE["cpp"],
+        python:
+          window.localStorage.getItem("code-python") ||
+          ProgrammingLanguage.DEFAULT_CODE["python"],
+        graphical:
+          window.localStorage.getItem("code-graphical") ||
+          ProgrammingLanguage.DEFAULT_CODE["graphical"],
       },
       modal: Modal.NONE,
       simulatorState: SimulatorState.STOPPED,
-      console: StyledText.text({ text: LocalizedString.lookup(tr('Welcome to the KIPR Simulator!\n'), props.locale), style: STDOUT_STYLE(DARK) }),
+      console: StyledText.text({
+        text: LocalizedString.lookup(
+          tr("Welcome to the KIPR Simulator!\n"),
+          props.locale
+        ),
+        style: STDOUT_STYLE(DARK),
+      }),
       theme: DARK,
       messages: [],
       settings: DEFAULT_SETTINGS,
       feedback: DEFAULT_FEEDBACK,
       windowInnerHeight: window.innerHeight,
       miniEditor: true,
-      projectDetails: { project: null, fileType: 'src', fileName: '' },
+      projectDetails: { project: null, fileType: "src", fileName: "" },
       tourId: TourDoc.IDS.SIMULATOR,
-      simulatorRootTourSteps: getTourSteps(TourDoc.IDS.SIMULATOR)
-
+      simulatorRootTourSteps: getTourSteps(TourDoc.IDS.SIMULATOR),
     };
 
     this.editorRef = React.createRef();
@@ -267,34 +333,48 @@ class Root extends React.Component<Props, State> {
     space.onCameraChange = this.props.onCameraChange;
 
     this.scheduleUpdateConsole_();
-    window.addEventListener('resize', this.onWindowResize_);
+    window.addEventListener("resize", this.onWindowResize_);
     //this.props.onLoadProjects();
     console.log("Root compDidMount props:", this.props);
     await fetchTourIfNeeded(currentUser, TourDoc.IDS.SIMULATOR);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.onWindowResize_);
+    window.removeEventListener("resize", this.onWindowResize_);
     cancelAnimationFrame(this.updateConsoleHandle_);
 
     Space.getInstance().onSelectNodeId = undefined;
     Space.getInstance().onSetNodeBatch = undefined;
   }
 
-  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>): void {
+  componentDidUpdate(
+    prevProps: Readonly<Props>,
+    prevState: Readonly<RootState>
+  ): void {
     if (this.props.scene !== prevProps.scene) {
-      Space.getInstance().scene = Async.latestValue(this.props.scene) || Scene.EMPTY;
+      Space.getInstance().scene =
+        Async.latestValue(this.props.scene) || Scene.EMPTY;
     }
 
-    if (this.props.onNodeAdd !== prevProps.onNodeAdd) Space.getInstance().onNodeAdd = this.props.onNodeAdd;
-    if (this.props.onNodeRemove !== prevProps.onNodeRemove) Space.getInstance().onNodeRemove = this.props.onNodeRemove;
-    if (this.props.onNodeChange !== prevProps.onNodeChange) Space.getInstance().onNodeChange = this.props.onNodeChange;
-    if (this.props.onGeometryAdd !== prevProps.onGeometryAdd) Space.getInstance().onGeometryAdd = this.props.onGeometryAdd;
-    if (this.props.onGeometryRemove !== prevProps.onGeometryRemove) Space.getInstance().onGeometryRemove = this.props.onGeometryRemove;
-    if (this.props.onGravityChange !== prevProps.onGravityChange) Space.getInstance().onGravityChange = this.props.onGravityChange;
-    if (this.props.onCameraChange !== prevProps.onCameraChange) Space.getInstance().onCameraChange = this.props.onCameraChange;
+    if (this.props.onNodeAdd !== prevProps.onNodeAdd)
+      Space.getInstance().onNodeAdd = this.props.onNodeAdd;
+    if (this.props.onNodeRemove !== prevProps.onNodeRemove)
+      Space.getInstance().onNodeRemove = this.props.onNodeRemove;
+    if (this.props.onNodeChange !== prevProps.onNodeChange)
+      Space.getInstance().onNodeChange = this.props.onNodeChange;
+    if (this.props.onGeometryAdd !== prevProps.onGeometryAdd)
+      Space.getInstance().onGeometryAdd = this.props.onGeometryAdd;
+    if (this.props.onGeometryRemove !== prevProps.onGeometryRemove)
+      Space.getInstance().onGeometryRemove = this.props.onGeometryRemove;
+    if (this.props.onGravityChange !== prevProps.onGravityChange)
+      Space.getInstance().onGravityChange = this.props.onGravityChange;
+    if (this.props.onCameraChange !== prevProps.onCameraChange)
+      Space.getInstance().onCameraChange = this.props.onCameraChange;
     if (this.state.simulatorState.type !== prevState.simulatorState.type) {
-      Space.getInstance().sceneBinding.scriptManager.programStatus = this.state.simulatorState.type === SimulatorState.Type.Running ? 'running' : 'stopped';
+      Space.getInstance().sceneBinding.scriptManager.programStatus =
+        this.state.simulatorState.type === SimulatorState.Type.Running
+          ? "running"
+          : "stopped";
     }
 
     if (this.props.projects !== prevProps.projects) {
@@ -308,37 +388,49 @@ class Root extends React.Component<Props, State> {
 
   private onStopped_ = () => {
     this.setState({
-      simulatorState: SimulatorState.STOPPED
+      simulatorState: SimulatorState.STOPPED,
     });
   };
 
   private onStarted_ = () => {
     this.setState({
-      simulatorState: SimulatorState.RUNNING
+      simulatorState: SimulatorState.RUNNING,
     });
   };
 
   private onActiveLanguageChange_ = (language: ProgrammingLanguage) => {
-    this.setState({
-      activeLanguage: language,
-      messages: [],
-    }, () => {
-
-      this.props.onDocumentationSetLanguage(language === 'python' ? 'python' : 'c');
-    });
+    this.setState(
+      {
+        activeLanguage: language,
+        messages: [],
+      },
+      () => {
+        this.props.onDocumentationSetLanguage(
+          language === "python" ? "python" : "c"
+        );
+      }
+    );
   };
 
   private onCodeChange_ = (code: string) => {
     const { activeLanguage, projectDetails } = this.state;
-    this.setState({
-      code: {
-        ...this.state.code,
-        [activeLanguage]: code,
+    this.setState(
+      {
+        code: {
+          ...this.state.code,
+          [activeLanguage]: code,
+        },
+      },
+      () => {
+        window.localStorage.setItem(`code-${activeLanguage}`, code);
+        this.props.onSetProjectCode(
+          projectDetails ? projectDetails.project : null,
+          projectDetails ? projectDetails.fileName : "",
+          projectDetails ? projectDetails.fileType : "src",
+          code
+        );
       }
-    }, () => {
-      window.localStorage.setItem(`code-${activeLanguage}`, code);
-      this.props.onSetProjectCode(projectDetails ? projectDetails.project : null, projectDetails ? projectDetails.fileName : '', projectDetails ? projectDetails.fileType : 'src', code);
-    });
+    );
   };
 
   private onShowAll_ = () => {
@@ -351,36 +443,42 @@ class Root extends React.Component<Props, State> {
 
   private onLayoutChange_ = (layout: Layout) => {
     this.setState({
-      layout
+      layout,
     });
   };
 
   private onModalClick_ = (modal: Modal) => () => this.setState({ modal });
 
-  private onModalClose_ = () => this.setState({ modal: Modal.NONE }, () => {
-    this.onContinueTour_ ? this.onContinueTour_() : null;
-  });
+  private onModalClose_ = () =>
+    this.setState({ modal: Modal.NONE }, () => {
+      this.onContinueTour_ ? this.onContinueTour_() : null;
+    });
 
   private updateConsole_ = () => {
     const text = WorkerInstance.sharedConsole.popString();
     if (text.length > 0) {
       this.setState({
-        console: StyledText.extend(this.state.console, StyledText.text({
-          text,
-          style: STDOUT_STYLE(this.state.theme)
-        }), 300)
+        console: StyledText.extend(
+          this.state.console,
+          StyledText.text({
+            text,
+            style: STDOUT_STYLE(this.state.theme),
+          }),
+          300
+        ),
       });
     }
-
 
     this.scheduleUpdateConsole_();
   };
 
   private updateConsoleHandle_: number | undefined = undefined;
-  private scheduleUpdateConsole_ = () => this.updateConsoleHandle_ = requestAnimationFrame(this.updateConsole_);
+  private scheduleUpdateConsole_ = () =>
+    (this.updateConsoleHandle_ = requestAnimationFrame(this.updateConsole_));
 
   private onErrorMessageClick_ = (line: number) => () => {
-    if (this.editorRef.current) this.editorRef.current.ivygate.revealLineInCenter(line);
+    if (this.editorRef.current)
+      this.editorRef.current.ivygate.revealLineInCenter(line);
   };
 
   private onRunClick_ = () => {
@@ -391,115 +489,161 @@ class Root extends React.Component<Props, State> {
     const activeCode = code[activeLanguage];
 
     switch (activeLanguage) {
-      case 'c':
-      case 'cpp': {
-        let nextConsole: StyledText = StyledText.extend(console, StyledText.text({
-          text: LocalizedString.lookup(tr('Compiling...\n'), locale),
-          style: STDOUT_STYLE(this.state.theme)
-        }));
+      case "c":
+      case "cpp": {
+        let nextConsole: StyledText = StyledText.extend(
+          console,
+          StyledText.text({
+            text: LocalizedString.lookup(tr("Compiling...\n"), locale),
+            style: STDOUT_STYLE(this.state.theme),
+          })
+        );
 
-        this.setState({
-          simulatorState: SimulatorState.COMPILING,
-          console: nextConsole
-        }, () => {
-          compile(activeCode, activeLanguage)
-            .then(compileResult => {
-              nextConsole = this.state.console;
-              const messages = sort(parseMessages(compileResult.stderr));
-              const compileSucceeded = compileResult.result && compileResult.result.length > 0;
+        this.setState(
+          {
+            simulatorState: SimulatorState.COMPILING,
+            console: nextConsole,
+          },
+          () => {
+            compile(activeCode, activeLanguage)
+              .then((compileResult) => {
+                nextConsole = this.state.console;
+                const messages = sort(parseMessages(compileResult.stderr));
+                const compileSucceeded =
+                  compileResult.result && compileResult.result.length > 0;
 
-              // Show all errors/warnings in console
-              for (const message of messages) {
-                nextConsole = StyledText.extend(nextConsole, toStyledText(message, {
-                  onClick: message.ranges.length > 0
-                    ? this.onErrorMessageClick_(message.ranges[0].start.line)
-                    : undefined
-                }));
-              }
-
-              if (compileSucceeded) {
-                // Show success in console and start running the program
-                const haveWarnings = hasWarnings(messages);
-                nextConsole = StyledText.extend(nextConsole, StyledText.text({
-                  text: haveWarnings
-                    ? LocalizedString.lookup(tr('Compilation succeeded with warnings.\n'), locale)
-                    : LocalizedString.lookup(tr('Compilation succeeded.\n'), locale),
-                  style: STDOUT_STYLE(this.state.theme)
-                }));
-
-                WorkerInstance.start({
-                  language: activeLanguage,
-                  code: compileResult.result
-                });
-              } else {
-                if (!hasErrors(messages)) {
-                  // Compile failed and there are no error messages; some weird underlying error occurred
-                  // We print the entire stderr to the console
-                  nextConsole = StyledText.extend(nextConsole, StyledText.text({
-                    text: `${compileResult.stderr}\n`,
-                    style: STDERR_STYLE(this.state.theme)
-                  }));
+                // Show all errors/warnings in console
+                for (const message of messages) {
+                  nextConsole = StyledText.extend(
+                    nextConsole,
+                    toStyledText(message, {
+                      onClick:
+                        message.ranges.length > 0
+                          ? this.onErrorMessageClick_(
+                              message.ranges[0].start.line
+                            )
+                          : undefined,
+                    })
+                  );
                 }
 
-                nextConsole = StyledText.extend(nextConsole, StyledText.text({
-                  text: LocalizedString.lookup(tr('Compilation failed.\n'), locale),
-                  style: STDERR_STYLE(this.state.theme)
-                }));
-              }
+                if (compileSucceeded) {
+                  // Show success in console and start running the program
+                  const haveWarnings = hasWarnings(messages);
+                  nextConsole = StyledText.extend(
+                    nextConsole,
+                    StyledText.text({
+                      text: haveWarnings
+                        ? LocalizedString.lookup(
+                            tr("Compilation succeeded with warnings.\n"),
+                            locale
+                          )
+                        : LocalizedString.lookup(
+                            tr("Compilation succeeded.\n"),
+                            locale
+                          ),
+                      style: STDOUT_STYLE(this.state.theme),
+                    })
+                  );
 
-              this.setState({
-                simulatorState: compileSucceeded ? SimulatorState.RUNNING : SimulatorState.STOPPED,
-                messages,
-                console: nextConsole
-              });
-            })
-            .catch((e: unknown) => {
-              window.console.error(e);
-              nextConsole = StyledText.extend(nextConsole, StyledText.text({
-                text: LocalizedString.lookup(tr('Something went wrong during compilation.\n'), locale),
-                style: STDERR_STYLE(this.state.theme)
-              }));
+                  WorkerInstance.start({
+                    language: activeLanguage,
+                    code: compileResult.result,
+                  });
+                } else {
+                  if (!hasErrors(messages)) {
+                    // Compile failed and there are no error messages; some weird underlying error occurred
+                    // We print the entire stderr to the console
+                    nextConsole = StyledText.extend(
+                      nextConsole,
+                      StyledText.text({
+                        text: `${compileResult.stderr}\n`,
+                        style: STDERR_STYLE(this.state.theme),
+                      })
+                    );
+                  }
 
-              this.setState({
-                simulatorState: SimulatorState.STOPPED,
-                messages: [],
-                console: nextConsole
+                  nextConsole = StyledText.extend(
+                    nextConsole,
+                    StyledText.text({
+                      text: LocalizedString.lookup(
+                        tr("Compilation failed.\n"),
+                        locale
+                      ),
+                      style: STDERR_STYLE(this.state.theme),
+                    })
+                  );
+                }
+
+                this.setState({
+                  simulatorState: compileSucceeded
+                    ? SimulatorState.RUNNING
+                    : SimulatorState.STOPPED,
+                  messages,
+                  console: nextConsole,
+                });
+              })
+              .catch((e: unknown) => {
+                window.console.error(e);
+                nextConsole = StyledText.extend(
+                  nextConsole,
+                  StyledText.text({
+                    text: LocalizedString.lookup(
+                      tr("Something went wrong during compilation.\n"),
+                      locale
+                    ),
+                    style: STDERR_STYLE(this.state.theme),
+                  })
+                );
+
+                this.setState({
+                  simulatorState: SimulatorState.STOPPED,
+                  messages: [],
+                  console: nextConsole,
+                });
               });
+          }
+        );
+        break;
+      }
+      case "python": {
+        const nextConsole = StyledText.extend(
+          console,
+          StyledText.text({
+            text: LocalizedString.lookup(tr("Loading Python...\n"), locale),
+            style: STDOUT_STYLE(this.state.theme),
+          })
+        );
+
+        this.setState(
+          {
+            simulatorState: SimulatorState.COMPILING,
+            console: nextConsole,
+          },
+          () => {
+            WorkerInstance.start({
+              language: "python",
+              code: activeCode,
             });
-        });
+          }
+        );
         break;
       }
-      case 'python': {
-        const nextConsole = StyledText.extend(console, StyledText.text({
-          text: LocalizedString.lookup(tr('Loading Python...\n'), locale),
-          style: STDOUT_STYLE(this.state.theme)
-        }));
-
-        this.setState({
-          simulatorState: SimulatorState.COMPILING,
-          console: nextConsole,
-        }, () => {
-          WorkerInstance.start({
-            language: 'python',
-            code: activeCode
-          });
-        });
-        break;
-      }
-      case 'graphical': {
-        this.setState({
-          simulatorState: SimulatorState.RUNNING,
-        }, () => {
-          WorkerInstance.start({
-            language: 'graphical',
-            code: activeCode
-          });
-        });
+      case "graphical": {
+        this.setState(
+          {
+            simulatorState: SimulatorState.RUNNING,
+          },
+          () => {
+            WorkerInstance.start({
+              language: "graphical",
+              code: activeCode,
+            });
+          }
+        );
         break;
       }
     }
-
-
   };
 
   private onStopClick_ = () => {
@@ -509,10 +653,18 @@ class Root extends React.Component<Props, State> {
   private onDownloadClick_ = () => {
     const { activeLanguage } = this.state;
 
-    const element = document.createElement('a');
-    element.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(this.state.code[activeLanguage])}`);
-    element.setAttribute('download', `program.${ProgrammingLanguage.FILE_EXTENSION[activeLanguage]}`);
-    element.style.display = 'none';
+    const element = document.createElement("a");
+    element.setAttribute(
+      "href",
+      `data:text/plain;charset=utf-8,${encodeURIComponent(
+        this.state.code[activeLanguage]
+      )}`
+    );
+    element.setAttribute(
+      "download",
+      `program.${ProgrammingLanguage.FILE_EXTENSION[activeLanguage]}`
+    );
+    element.style.display = "none";
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
@@ -528,7 +680,7 @@ class Root extends React.Component<Props, State> {
 
   private onClearConsole_ = () => {
     this.setState({
-      console: StyledText.compose({ items: [] })
+      console: StyledText.compose({ items: [] }),
     });
   };
 
@@ -551,7 +703,7 @@ class Root extends React.Component<Props, State> {
 
   private onResetCode_ = () => {
     this.setState({
-      modal: Modal.RESET_CODE
+      modal: Modal.RESET_CODE,
     });
   };
 
@@ -560,7 +712,7 @@ class Root extends React.Component<Props, State> {
     this.setState({
       code: {
         ...this.state.code,
-        [activeLanguage]: ProgrammingLanguage.DEFAULT_CODE[activeLanguage]
+        [activeLanguage]: ProgrammingLanguage.DEFAULT_CODE[activeLanguage],
       },
       modal: Modal.NONE,
     });
@@ -579,8 +731,15 @@ class Root extends React.Component<Props, State> {
       code: this.state.code[this.state.activeLanguage],
       language: this.state.activeLanguage,
       console: StyledText.toString(this.state.console),
-      content: LocalizedString.lookup(tr("Please help me understand what's wrong."), this.props.locale),
-      robot: this.props.robots[Dict.unique(Scene.robots(Async.latestValue(this.props.scene)))?.robotId ?? "demobot"],
+      content: LocalizedString.lookup(
+        tr("Please help me understand what's wrong."),
+        this.props.locale
+      ),
+      robot:
+        this.props.robots[
+          Dict.unique(Scene.robots(Async.latestValue(this.props.scene)))
+            ?.robotId ?? "demobot"
+        ],
       locale: this.props.locale,
     });
   };
@@ -592,28 +751,35 @@ class Root extends React.Component<Props, State> {
   };
 
   onDashboardClick = () => {
-    window.location.href = '/';
+    window.location.href = "/";
   };
-
 
   private onSettingsChange_ = (changedSettings: Partial<Settings>) => {
     const nextSettings: Settings = {
       ...this.state.settings,
-      ...changedSettings
+      ...changedSettings,
     };
 
-    if ('simulationRealisticSensors' in changedSettings) {
-      Space.getInstance().realisticSensors = changedSettings.simulationRealisticSensors;
+    if ("simulationRealisticSensors" in changedSettings) {
+      Space.getInstance().realisticSensors =
+        changedSettings.simulationRealisticSensors;
     }
 
-    if ('simulationSensorNoise' in changedSettings) {
+    if ("simulationSensorNoise" in changedSettings) {
       Space.getInstance().noisySensors = changedSettings.simulationSensorNoise;
     }
 
-    if ('interfaceMode' in changedSettings) {
+    if ("interfaceMode" in changedSettings) {
       console.log("Interface mode changed to:", changedSettings.interfaceMode);
-      localStorage.setItem('interfaceMode', changedSettings.interfaceMode ? 'Advanced' : 'Simple');
-      this.props.onChangeInterfaceMode(changedSettings.interfaceMode ? InterfaceMode.ADVANCED : InterfaceMode.SIMPLE);
+      localStorage.setItem(
+        "interfaceMode",
+        changedSettings.interfaceMode ? "Advanced" : "Simple"
+      );
+      this.props.onChangeInterfaceMode(
+        changedSettings.interfaceMode
+          ? InterfaceMode.ADVANCED
+          : InterfaceMode.SIMPLE
+      );
     }
 
     this.setState({ settings: nextSettings });
@@ -626,71 +792,83 @@ class Root extends React.Component<Props, State> {
   private onFeedbackSubmit_ = () => {
     sendFeedback(this.state)
       .then((resp: FeedbackResponse) => {
-        this.onFeedbackChange_(({ message: resp.message }));
-        this.onFeedbackChange_(({ error: resp.networkError }));
+        this.onFeedbackChange_({ message: resp.message });
+        this.onFeedbackChange_({ error: resp.networkError });
 
         this.onFeedbackChange_(DEFAULT_FEEDBACK);
 
         this.onModalClick_(Modal.FEEDBACKSUCCESS)();
       })
       .catch((resp: FeedbackResponse) => {
-        this.onFeedbackChange_(({ message: resp.message }));
-        this.onFeedbackChange_(({ error: resp.networkError }));
+        this.onFeedbackChange_({ message: resp.message });
+        this.onFeedbackChange_({ error: resp.networkError });
       });
   };
 
   private onOpenSceneClick_ = () => {
-    this.setState({
-      modal: Modal.SELECT_SCENE
-    }, () => {
-      this.onContinueTour_();
-    });
+    this.setState(
+      {
+        modal: Modal.SELECT_SCENE,
+      },
+      () => {
+        this.onContinueTour_();
+      }
+    );
   };
 
   private onSettingsSceneClick_ = () => {
     this.setState({
-      modal: Modal.SETTINGS_SCENE
+      modal: Modal.SETTINGS_SCENE,
     });
   };
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
     this.setState({
-      modal: Modal.exception(error, info)
+      modal: Modal.exception(error, info),
     });
   }
 
   private onNewSceneAccept_ = (scene: Scene) => {
-    this.setState({
-      modal: Modal.NONE,
-    }, () => {
-      const nextScene = { ...scene };
-      if (!auth.currentUser) return;
-      nextScene.author = Author.user(auth.currentUser.uid);
-      const newSceneId = uuid.v4();
-      this.props.onCreateScene(newSceneId, nextScene);
-      this.props.navigate(`/scene/${newSceneId}`);
-    });
+    this.setState(
+      {
+        modal: Modal.NONE,
+      },
+      () => {
+        const nextScene = { ...scene };
+        if (!auth.currentUser) return;
+        nextScene.author = Author.user(auth.currentUser.uid);
+        const newSceneId = uuid.v4();
+        this.props.onCreateScene(newSceneId, nextScene);
+        this.props.navigate(`/scene/${newSceneId}`);
+      }
+    );
   };
 
   private onDeleteRecordAccept_ = (selector: Selector) => () => {
     this.props.onDeleteRecord(selector);
-    this.setState({
-      modal: Modal.NONE,
-    }, () => {
-      this.props.navigate(DEFAULT_SCENE);
-      location.reload();
-    });
+    this.setState(
+      {
+        modal: Modal.NONE,
+      },
+      () => {
+        this.props.navigate(DEFAULT_SCENE);
+        location.reload();
+      }
+    );
   };
 
   private onSettingsSceneAccept_ = (scene: Scene) => {
-    this.setState({
-      modal: Modal.NONE,
-    }, () => {
-      this.props.onSetScenePartial({
-        name: scene.name,
-        description: scene.description,
-      });
-    });
+    this.setState(
+      {
+        modal: Modal.NONE,
+      },
+      () => {
+        this.props.onSetScenePartial({
+          name: scene.name,
+          description: scene.description,
+        });
+      }
+    );
   };
 
   private onSceneErrorResolved_ = () => {
@@ -703,62 +881,81 @@ class Root extends React.Component<Props, State> {
 
   private onMiniEditorToggle_ = () => {
     this.setState({
-      miniEditor: !this.state.miniEditor
+      miniEditor: !this.state.miniEditor,
     });
   };
 
   private onNewProject_ = () => {
     this.setState({
-      modal: Modal.NEW_PROJECT
+      modal: Modal.NEW_PROJECT,
     });
-
   };
 
-  private onFileSelected_ = (selectedProject: Project, fileName: string, fileType: "srcFiles" | "includeFiles" | "userDataFiles") => {
+  private onFileSelected_ = (
+    selectedProject: Project,
+    fileName: string,
+    fileType: "srcFiles" | "includeFiles" | "userDataFiles"
+  ) => {
     const { props } = this;
     const { projects } = props;
     const filesDict = selectedProject[fileType];
     const fileContent = filesDict?.[fileName]?.fileContent ?? "";
-    this.setState({
-      code: {
-        ...this.state.code,
-        [selectedProject.projectLanguage]: fileContent,
+    this.setState(
+      {
+        code: {
+          ...this.state.code,
+          [selectedProject.projectLanguage]: fileContent,
+        },
+        activeLanguage: selectedProject.projectLanguage,
+        projectDetails: {
+          project: selectedProject,
+          fileType:
+            fileType === "srcFiles"
+              ? "src"
+              : fileType === "includeFiles"
+              ? "include"
+              : "userData",
+          fileName: fileName,
+        },
       },
-      activeLanguage: selectedProject.projectLanguage,
-      projectDetails: {
-        project: selectedProject,
-        fileType: fileType === 'srcFiles' ? 'src' : fileType === 'includeFiles' ? 'include' : 'userData',
-        fileName: fileName
+      () => {
+        console.log(
+          "Updated code state after file selection:",
+          this.state.code
+        );
+        window.localStorage.setItem(
+          `code-${selectedProject.projectLanguage}`,
+          fileContent
+        );
       }
-    }, () => {
-      console.log("Updated code state after file selection:", this.state.code);
-      window.localStorage.setItem(`code-${selectedProject.projectLanguage}`, fileContent);
-    });
-
+    );
   };
 
   private onProjectDelete_ = (selectedProject: Project) => {
-    this.setState({
-      modal: Modal.DELETE_PROJECT,
-    }, () => {
-      this.props.onSelectProject(selectedProject);
-    });
+    this.setState(
+      {
+        modal: Modal.DELETE_PROJECT,
+      },
+      () => {
+        this.props.onSelectProject(selectedProject);
+      }
+    );
   };
 
   private onNewFile_ = (selectedProject: Project, fileType: string) => {
-    let fileT: 'src' | 'include' | 'userData';
+    let fileT: "src" | "include" | "userData";
     switch (fileType) {
-      case 'c':
-      case 'cpp':
-      case 'python':
-      case 'graphical':
-        fileT = 'src';
+      case "c":
+      case "cpp":
+      case "python":
+      case "graphical":
+        fileT = "src";
         break;
-      case 'h':
-        fileT = 'include';
+      case "h":
+        fileT = "include";
         break;
-      case 'txt':
-        fileT = 'userData';
+      case "txt":
+        fileT = "userData";
         break;
       default:
         console.error("Invalid file type for new file:", fileType);
@@ -769,30 +966,35 @@ class Root extends React.Component<Props, State> {
       projectDetails: {
         project: selectedProject,
         fileType: fileT,
-        fileName: ''
-      }
+        fileName: "",
+      },
     });
-
   };
 
-  private onProjectCreate_ = (projectName: string, language: ProgrammingLanguage, interfaceMode: InterfaceMode) => {
-
+  private onProjectCreate_ = (
+    projectName: string,
+    language: ProgrammingLanguage,
+    interfaceMode: InterfaceMode
+  ) => {
     const project: Project = {
       projectName: projectName,
       projectLanguage: language,
       interfaceMode: interfaceMode,
       srcFiles: {
-        [`main.${ProgrammingLanguage.FILE_EXTENSION[language]}`]: { fileName: `main.${ProgrammingLanguage.FILE_EXTENSION[language]}`, fileContent: ProgrammingLanguage.DEFAULT_CODE[language] }
+        [`main.${ProgrammingLanguage.FILE_EXTENSION[language]}`]: {
+          fileName: `main.${ProgrammingLanguage.FILE_EXTENSION[language]}`,
+          fileContent: ProgrammingLanguage.DEFAULT_CODE[language],
+        },
       },
       includeFiles: {},
       userDataFiles: {},
-      type: 'project'
+      type: "project",
     };
     console.log("onProjectCreate_: ", project);
     this.props.onAddProject(project);
 
     this.setState({
-      modal: Modal.NONE
+      modal: Modal.NONE,
     });
   };
 
@@ -801,78 +1003,99 @@ class Root extends React.Component<Props, State> {
     let fileN = fileName;
     const { projectDetails, activeLanguage } = this.state;
     switch (projectDetails.fileType) {
-      case 'src':
+      case "src":
         switch (activeLanguage) {
-          case 'c':
-            fileN += '.c';
+          case "c":
+            fileN += ".c";
             break;
-          case 'cpp':
-            fileN += '.cpp';
+          case "cpp":
+            fileN += ".cpp";
             break;
-          case 'python':
-            fileN += '.py';
+          case "python":
+            fileN += ".py";
             break;
-          case 'graphical':
-            fileN += '.graphical';
+          case "graphical":
+            fileN += ".graphical";
             break;
           default:
-            console.error("Invalid active language for new file creation:", activeLanguage);
+            console.error(
+              "Invalid active language for new file creation:",
+              activeLanguage
+            );
             return;
         }
         break;
-      case 'include':
-        fileN += '.h';
+      case "include":
+        fileN += ".h";
         break;
-      case 'userData':
-        fileN += '.txt';
+      case "userData":
+        fileN += ".txt";
         break;
       default:
-        console.error("Invalid file type for new file creation:", projectDetails.fileType);
+        console.error(
+          "Invalid file type for new file creation:",
+          projectDetails.fileType
+        );
         return;
     }
-    this.setState({
-      modal: Modal.NONE,
-      projectDetails: {
-        ...projectDetails,
-        fileName: fileN
+    this.setState(
+      {
+        modal: Modal.NONE,
+        projectDetails: {
+          ...projectDetails,
+          fileName: fileN,
+        },
+        code: {
+          ...this.state.code,
+          [activeLanguage]: ProgrammingLanguage.BLANK_CODE[activeLanguage],
+        },
       },
-      code: {
-        ...this.state.code,
-        [activeLanguage]: ProgrammingLanguage.BLANK_CODE[activeLanguage],
+      () => {
+        this.props.onAddFile(
+          projectDetails ? projectDetails.project : null,
+          fileN,
+          projectDetails ? projectDetails.fileType : "src"
+        );
       }
-    }, () => {
-      this.props.onAddFile(projectDetails ? projectDetails.project : null, fileN, projectDetails ? projectDetails.fileType : 'src');
-    });
-
+    );
   };
 
   private onDeleteProject_ = async (answer: boolean) => {
     answer ? await deleteProject(this.props.selectedProject) : null;
     this.setState({
-      modal: Modal.NONE
+      modal: Modal.NONE,
     });
   };
 
   private onCloseTour_ = () => {
     const currentUser = auth.currentUser.uid;
-    void completeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, currentUser, this.state.tourId);
+    void completeTour(
+      this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT,
+      currentUser,
+      this.state.tourId
+    );
   };
 
   private onSkipTour_ = () => {
     const currentUser = auth.currentUser.uid;
-    void completeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, currentUser, this.state.tourId, { dismissed: true });
-
+    void completeTour(
+      this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT,
+      currentUser,
+      this.state.tourId,
+      { dismissed: true }
+    );
   };
 
   private onNextClick_ = (stepIndex: number) => {
     this.setState({ currentTourStepIndex: stepIndex });
   };
-  private onBackClick_ = (stepIndex: number) => {
-
-  };
+  private onBackClick_ = (stepIndex: number) => {};
 
   private onContinueTour_ = () => {
-    console.log("Continuing tour, current tour steps:", this.state.simulatorRootTourSteps);
+    console.log(
+      "Continuing tour, current tour steps:",
+      this.state.simulatorRootTourSteps
+    );
     this.setState({ continueTour: true }, () => {
       this.setState({ continueTour: false });
     });
@@ -880,7 +1103,11 @@ class Root extends React.Component<Props, State> {
 
   private onRetakeTour_ = () => {
     const currentUser = auth.currentUser.uid;
-    void retakeTour(this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT, currentUser, this.state.tourId);
+    void retakeTour(
+      this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT,
+      currentUser,
+      this.state.tourId
+    );
   };
 
   render() {
@@ -907,7 +1134,7 @@ class Root extends React.Component<Props, State> {
       onDocumentationClick,
       onDocumentationGoToFuzzy,
       onCommonDocumentationGoToFuzzy,
-      settings
+      settings,
     } = props;
 
     const {
@@ -923,7 +1150,7 @@ class Root extends React.Component<Props, State> {
       miniEditor,
       projectDetails,
       tourId,
-      simulatorRootTourSteps
+      simulatorRootTourSteps,
     } = state;
 
     const theme = DARK;
@@ -935,7 +1162,7 @@ class Root extends React.Component<Props, State> {
       onCodeChange: this.onCodeChange_,
       onLanguageChange: this.onActiveLanguageChange_,
       mini: miniEditor,
-      onMiniClick: this.onMiniEditorToggle_
+      onMiniClick: this.onMiniEditorToggle_,
     };
 
     const commonLayoutProps: LayoutProps = {
@@ -962,10 +1189,13 @@ class Root extends React.Component<Props, State> {
       onScriptChange: this.props.onScriptChange,
       onScriptRemove: this.props.onScriptRemove,
       onObjectAdd: this.props.onObjectAdd,
-      challengeState: challenge ? {
-        challenge,
-        challengeCompletion: challengeCompletion || Async.unloaded({ brief: {} }),
-      } : undefined,
+      challengeState: challenge
+        ? {
+            challenge,
+            challengeCompletion:
+              challengeCompletion || Async.unloaded({ brief: {} }),
+          }
+        : undefined,
       onDocumentationGoToFuzzy,
       onCommonDocumentationGoToFuzzy,
       layout: Layout.Overlay,
@@ -977,17 +1207,43 @@ class Root extends React.Component<Props, State> {
       // fileSelected: projectDetails.fileName ? true : false,
     };
 
+    const activeTour = tourId
+      ? toursById[tourId] ?? TourDoc.DEFAULT
+      : TourDoc.DEFAULT;
+    const activeTourLoaded = !!(tourId && toursLoaded[tourId]);
+
+    //const showTour = !!tourId && activeTourLoaded && !activeTour.completed;
+    //window.console.log("Root render showTour:", showTour, "activeTour:", activeTour);
+    const showTour = false;
+
+    if (showTour && !this.registry) {
+      this.registry = new TourRegistry();
+    }
+    if (!showTour && this.registry) {
+      this.registry = undefined;
+    }
+    const tourRegistry = this.registry;
+
     let impl: JSX.Element;
     switch (layout) {
       case Layout.Overlay: {
         impl = (
-          <OverlayLayoutRedux ref={this.overlayLayoutRef} {...commonLayoutProps} />
+          <OverlayLayoutRedux
+            ref={this.overlayLayoutRef}
+            {...commonLayoutProps}
+          />
         );
         break;
       }
       case Layout.Side: {
-        impl = (
-          <SideLayoutRedux tourRegistry={this.registry} continueTour={this.onContinueTour_} {...commonLayoutProps} />
+        impl = tourRegistry ? (
+          <SideLayoutRedux
+            tourRegistry={tourRegistry}
+            continueTour={this.onContinueTour_}
+            {...commonLayoutProps}
+          />
+        ) : (
+          <SideLayoutRedux {...commonLayoutProps} />
         );
         break;
       }
@@ -997,70 +1253,101 @@ class Root extends React.Component<Props, State> {
     }
 
     const latestScene = Async.latestValue(scene);
-    const isAuthor = latestScene && latestScene.author.id === auth.currentUser.uid;
+    const isAuthor =
+      latestScene && latestScene.author.id === auth.currentUser.uid;
+    const simMenu_ = (
+      <SimMenu
+        theme={theme}
+        layout={layout}
+        onLayoutChange={this.onLayoutChange_}
+        onShowAll={this.onShowAll_}
+        onHideAll={this.onHideAll_}
+        onResetWorldClick={this.onResetWorldClick_}
+        onStartChallengeClick={
+          sceneHasChallenge ? this.onStartChallengeClick_ : undefined
+        }
+        onSettingsClick={this.onModalClick_(Modal.SETTINGS)}
+        onAboutClick={this.onModalClick_(Modal.ABOUT)}
+        onDocumentationClick={this.onDocumentationClick_}
+        onAiClick={this.onAiClick_}
+        onLogoutClick={this.onLogoutClick}
+        onDashboardClick={this.onDashboardClick}
+        onFeedbackClick={this.onModalClick_(Modal.FEEDBACK)}
+        onOpenSceneClick={this.onOpenSceneClick_}
+        onNewSceneClick={!challenge && this.onModalClick_(Modal.NEW_SCENE)}
+        onSaveSceneClick={
+          scene && !challenge && scene.type === Async.Type.Saveable && isAuthor
+            ? this.onSaveSceneClick_
+            : undefined
+        }
+        onSettingsSceneClick={
+          isAuthor && !challenge && this.onSettingsSceneClick_
+        }
+        onRunClick={
+          code[activeLanguage].length > 0 ? this.onRunClick_ : undefined
+        }
+        onStopClick={this.onStopClick_}
+        simulatorState={simulatorState}
+        onSaveAsSceneClick={
+          !challenge &&
+          this.onModalClick_(
+            Modal.copyScene({ scene: Async.latestValue(scene) })
+          )
+        }
+        onDeleteSceneClick={
+          isAuthor &&
+          !challenge &&
+          this.onModalClick_(
+            Modal.deleteRecord({
+              record: {
+                type: Record.Type.Scene,
+                id: sceneId,
+                value: scene,
+              },
+            })
+          )
+        }
+        tourRegistry={tourRegistry}
+        continueTour={this.onContinueTour_}
+      />
+    );
+    const tourContent_ = (
+      <TourTarget registry={tourRegistry} targetKey={"simulator-overview"}>
+        <Container $windowInnerHeight={windowInnerHeight}>
+          <TourTarget
+            registry={tourRegistry}
+            targetKey={"simulator-main-menu-overview"}
+          >
+            {simMenu_}
+          </TourTarget>
+          {impl}
+        </Container>
+      </TourTarget>
+    );
+    const normalContent_ = (
+      <Container $windowInnerHeight={windowInnerHeight}>
+        {simMenu_}
 
-    const activeTour = tourId ? (toursById[tourId] ?? TourDoc.DEFAULT) : TourDoc.DEFAULT;
-    const activeTourLoaded = !!(tourId && toursLoaded[tourId]);
-
-    //const showTour = !!tourId && activeTourLoaded && !activeTour.completed;
-    //window.console.log("Root render showTour:", showTour, "activeTour:", activeTour);
-    const showTour = true;
+        {impl}
+      </Container>
+    );
     return (
       <>
-        <TourTarget registry={this.registry} targetKey={'simulator-overview'} >
-          <Container $windowInnerHeight={windowInnerHeight}>
-            <TourTarget registry={this.registry} targetKey={'simulator-main-menu-overview'} >
-              <SimMenu
-                theme={theme}
-                layout={layout}
-                onLayoutChange={this.onLayoutChange_}
-                onShowAll={this.onShowAll_}
-                onHideAll={this.onHideAll_}
-                onResetWorldClick={this.onResetWorldClick_}
-                onStartChallengeClick={sceneHasChallenge ? this.onStartChallengeClick_ : undefined}
-                onSettingsClick={this.onModalClick_(Modal.SETTINGS)}
-                onAboutClick={this.onModalClick_(Modal.ABOUT)}
-                onDocumentationClick={this.onDocumentationClick_}
-                onAiClick={this.onAiClick_}
-                onLogoutClick={this.onLogoutClick}
-                onDashboardClick={this.onDashboardClick}
-                onFeedbackClick={this.onModalClick_(Modal.FEEDBACK)}
-                onOpenSceneClick={this.onOpenSceneClick_}
-                onNewSceneClick={!challenge && this.onModalClick_(Modal.NEW_SCENE)}
-                onSaveSceneClick={scene && !challenge && scene.type === Async.Type.Saveable && isAuthor ? this.onSaveSceneClick_ : undefined}
-                onSettingsSceneClick={isAuthor && !challenge && this.onSettingsSceneClick_}
-                onRunClick={code[activeLanguage].length > 0 ? this.onRunClick_ : undefined}
-                onStopClick={this.onStopClick_}
-                simulatorState={simulatorState}
-                onSaveAsSceneClick={!challenge && this.onModalClick_(Modal.copyScene({ scene: Async.latestValue(scene) }))}
-                onDeleteSceneClick={isAuthor && !challenge && this.onModalClick_(Modal.deleteRecord({
-                  record: {
-                    type: Record.Type.Scene,
-                    id: sceneId,
-                    value: scene,
-                  }
-                }))}
-                tourRegistry={this.registry}
-                continueTour={this.onContinueTour_}
-              />
-            </TourTarget>
-            {impl}
-          </Container>
-        </TourTarget>
+        {tourRegistry ? tourContent_ : normalContent_}
         {showTour && (
           <GuidedTour
             continueTourFlag={this.state.continueTour}
             // ref={this.guidedTourRef}
             isOpen={showTour}
             steps={simulatorRootTourSteps}
-            registry={this.registry}
+            registry={tourRegistry}
             scrollContainer={this.scrollRef}
             onClose={this.onCloseTour_}
             onSkip={this.onSkipTour_}
             onBackClick={this.onBackClick_}
             onNextClick={this.onNextClick_}
-
-            theme={theme} />
+            theme={theme}
+          />
         )}
         {modal.type === Modal.Type.None && Async.isFailed(scene) && (
           <SceneErrorDialog
@@ -1077,10 +1364,7 @@ class Root extends React.Component<Props, State> {
           />
         )}
         {modal.type === Modal.Type.About && (
-          <AboutDialog
-            theme={theme}
-            onClose={this.onModalClose_}
-          />
+          <AboutDialog theme={theme} onClose={this.onModalClose_} />
         )}
         {modal.type === Modal.Type.Feedback && (
           <FeedbackDialog
@@ -1092,10 +1376,7 @@ class Root extends React.Component<Props, State> {
           />
         )}
         {modal.type === Modal.Type.FeedbackSuccess && (
-          <FeedbackSuccessDialog
-            theme={theme}
-            onClose={this.onModalClose_}
-          />
+          <FeedbackSuccessDialog theme={theme} onClose={this.onModalClose_} />
         )}
         {modal.type === Modal.Type.Exception && (
           <ExceptionDialog
@@ -1104,16 +1385,24 @@ class Root extends React.Component<Props, State> {
             onClose={this.onModalClose_}
           />
         )}
-        {modal.type === Modal.Type.OpenScene && (
-          <TourTarget registry={this.registry} targetKey={'open-scene-dialog'}>
+        {modal.type === Modal.Type.OpenScene &&
+          (tourRegistry ? (
+            <TourTarget registry={tourRegistry} targetKey={"open-scene-dialog"}>
+              <OpenSceneDialog
+                theme={theme}
+                onClose={this.onModalClose_}
+                tourRegistry={tourRegistry}
+                continueTour={this.onContinueTour_}
+              />
+            </TourTarget>
+          ) : (
             <OpenSceneDialog
               theme={theme}
               onClose={this.onModalClose_}
-              tourRegistry={this.registry}
+              tourRegistry={tourRegistry}
               continueTour={this.onContinueTour_}
             />
-          </TourTarget>
-        )}
+          ))}
         {modal.type === Modal.Type.NewScene && (
           <NewSceneDialog
             theme={theme}
@@ -1129,14 +1418,17 @@ class Root extends React.Component<Props, State> {
             onAccept={this.onNewSceneAccept_}
           />
         )}
-        {modal.type === Modal.Type.DeleteRecord && modal.record.type === Record.Type.Scene && (
-          <DeleteDialog
-            name={Record.latestName(modal.record)}
-            theme={theme}
-            onClose={this.onModalClose_}
-            onAccept={this.onDeleteRecordAccept_(Record.selector(modal.record))}
-          />
-        )}
+        {modal.type === Modal.Type.DeleteRecord &&
+          modal.record.type === Record.Type.Scene && (
+            <DeleteDialog
+              name={Record.latestName(modal.record)}
+              theme={theme}
+              onClose={this.onModalClose_}
+              onAccept={this.onDeleteRecordAccept_(
+                Record.selector(modal.record)
+              )}
+            />
+          )}
         {modal.type === Modal.Type.SettingsScene && (
           <SceneSettingsDialog
             scene={Async.latestValue(scene)}
@@ -1147,7 +1439,7 @@ class Root extends React.Component<Props, State> {
         )}
         {modal.type === Modal.Type.ResetCode && (
           <DeleteDialog
-            name={tr('your current work')}
+            name={tr("your current work")}
             theme={theme}
             onAccept={this.onResetCodeAccept_}
             onClose={this.onModalClose_}
@@ -1167,12 +1459,11 @@ class Root extends React.Component<Props, State> {
             onCloseCreateNewFileDialog={this.onFileCreate_}
             fileType={projectDetails.fileType}
           />
-
         )}
         {modal.type === Modal.Type.DeleteProject && (
           <DeleteProjectDialog
             theme={theme}
-            name={selectedProject ? selectedProject.projectName : ''}
+            name={selectedProject ? selectedProject.projectName : ""}
             onClose={this.onModalClose_}
             onDeleteProject={this.onDeleteProject_}
           />
@@ -1185,134 +1476,226 @@ class Root extends React.Component<Props, State> {
           robot={this.props.robots["demobot"]}
         />
       </>
-
     );
   }
 }
 
-const ConnectedRoot = connect((state: ReduxState, { params: { sceneId, challengeId } }: RootPublicProps) => {
-  const builder = new Builder(state);
+const ConnectedRoot = connect(
+  (
+    state: ReduxState,
+    { params: { sceneId, challengeId } }: RootPublicProps
+  ) => {
+    const builder = new Builder(state);
 
-  let sceneHasChallenge = true;
+    let sceneHasChallenge = true;
 
-  if (challengeId) {
-    const challenge = builder.challenge(challengeId);
-    challenge.scene();
-    challenge.completion();
-  } else {
-    builder.scene(sceneId);
-    sceneHasChallenge = sceneId in builder.state.challenges;
-  }
-
-  builder.dispatchLoads();
-
-  return {
-    scene: Dict.unique(builder.scenes),
-    challenge: Dict.unique(builder.challenges),
-    challengeCompletion: Dict.unique(builder.challengeCompletions),
-    sceneHasChallenge,
-    locale: state.i18n.locale,
-    robots: Dict.map(state.robots.robots, Async.latestValue),
-    projects: state.projects.entities,
-    selectedProject: state.projects.selectedProject,
-    settings: state.settings,
-    toursById: state.tours.byId,
-    toursLoaded: state.tours.loaded,
-    toursLoading: state.tours.loading,
-    toursError: state.tours.error,
-  };
-}, (dispatch, { params: { sceneId } }: RootPublicProps) => ({
-  onNodeAdd: (nodeId: string, node: Node) => dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
-  onNodeRemove: (nodeId: string) => dispatch(ScenesAction.removeNode({ sceneId, nodeId })),
-  onNodeChange: (nodeId: string, node: Node) => {
-    dispatch(ScenesAction.setNode({ sceneId, nodeId, node }));
-    const origin = node.origin;
-    const updateOrigin = true;
-    if (origin) {
-      dispatch(ScenesAction.setNodeOrigin({ sceneId, nodeId, origin, updateStarting: updateOrigin }));
+    if (challengeId) {
+      const challenge = builder.challenge(challengeId);
+      challenge.scene();
+      challenge.completion();
+    } else {
+      builder.scene(sceneId);
+      sceneHasChallenge = sceneId in builder.state.challenges;
     }
+
+    builder.dispatchLoads();
+
+    return {
+      scene: Dict.unique(builder.scenes),
+      challenge: Dict.unique(builder.challenges),
+      challengeCompletion: Dict.unique(builder.challengeCompletions),
+      sceneHasChallenge,
+      locale: state.i18n.locale,
+      robots: Dict.map(state.robots.robots, Async.latestValue),
+      projects: state.projects.entities,
+      selectedProject: state.projects.selectedProject,
+      settings: state.settings,
+      toursById: state.tours.byId,
+      toursLoaded: state.tours.loaded,
+      toursLoading: state.tours.loading,
+      toursError: state.tours.error,
+    };
   },
-  onObjectAdd: (nodeId: string, object: Node.Obj, geometry: Geometry) => dispatch(ScenesAction.addObject({ sceneId, nodeId, object, geometry })),
-  onGeometryAdd: (geometryId: string, geometry: Geometry) => dispatch(ScenesAction.addGeometry({ sceneId, geometryId, geometry })),
-  onGeometryChange: (geometryId: string, geometry: Geometry) => dispatch(ScenesAction.setGeometry({ sceneId, geometryId, geometry })),
-  onGeometryRemove: (geometryId: string) => dispatch(ScenesAction.removeGeometry({ sceneId, geometryId })),
-  onCameraChange: (camera: Camera) => dispatch(ScenesAction.setCamera({ sceneId, camera })),
-  onGravityChange: (gravity: Vector3wUnits) => dispatch(ScenesAction.setGravity({ sceneId, gravity })),
-  onSelectNodeId: (nodeId: string) => dispatch(ScenesAction.selectNode({ sceneId, nodeId })),
-  onSetNodeBatch: (setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>) =>
-    dispatch(ScenesAction.setNodeBatch({ sceneId, ...setNodeBatch })),
-  onResetScene: () => dispatch(ScenesAction.softResetScene({ sceneId })),
-  onCreateScene: (sceneId: string, scene: Scene) => {
-    dispatch(ScenesAction.createScene({ sceneId, scene }));
-  },
-  onChallengeCompletionCreate: (challengeId: string, challengeCompletion: ChallengeCompletion) => {
-    dispatch(ChallengeCompletionsAction.createChallengeCompletion({ challengeId, challengeCompletion }));
-  },
-  onChallengeCompletionSceneDiffChange: (challengeId: string, sceneDiff: OuterObjectPatch<Scene>) => {
-    dispatch(ChallengeCompletionsAction.setSceneDiff({ challengeId, sceneDiff }));
-  },
-  onChallengeCompletionEventStateRemove: (challengeId: string, eventId: string) => {
-    dispatch(ChallengeCompletionsAction.removeEventState({ challengeId, eventId }));
-  },
-  onChallengeCompletionEventStateChange: (challengeId: string, eventId: string, eventState: boolean) => {
-    dispatch(ChallengeCompletionsAction.setEventState({ challengeId, eventId, eventState }));
-  },
-  onChallengeCompletionEventStatesChange: (challengeId: string, eventStates: Dict<boolean>) => {
-    dispatch(ChallengeCompletionsAction.setEventStates({ challengeId, eventStates }));
-  },
-  onChallengeCompletionSuccessPredicateCompletionChange: (challengeId: string, success?: PredicateCompletion) => {
-    dispatch(ChallengeCompletionsAction.setSuccessPredicateCompletion({ challengeId, success }));
-  },
-  onChallengeCompletionFailurePredicateCompletionChange: (challengeId: string, failure?: PredicateCompletion) => {
-    dispatch(ChallengeCompletionsAction.setFailurePredicateCompletion({ challengeId, failure }));
-  },
-  onChallengeCompletionReset: (challengeId: string) => {
-    dispatch(ChallengeCompletionsAction.resetChallengeCompletion({ challengeId }));
-  },
-  onDeleteRecord: (selector: Selector) => {
-    dispatch(ScenesAction.removeScene({ sceneId: selector.id }));
-  },
-  onDocumentationClick: () => dispatch(DocumentationAction.TOGGLE),
-  onDocumentationPush: (location: DocumentationLocation) => dispatch(DocumentationAction.pushLocation({ location })),
-  onDocumentationSetLanguage: (language: 'c' | 'python') => dispatch(DocumentationAction.setLanguage({ language })),
-  onDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => dispatch(DocumentationAction.goToFuzzy({ query, language })),
-  onCommonDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => dispatch(DocumentationAction.goToFuzzyCommon({ query, language })),
-  onSaveScene: (sceneId: string) => dispatch(ScenesAction.saveScene({ sceneId })),
-  onSetScenePartial: (partialScene: Partial<Scene>) => dispatch(ScenesAction.setScenePartial({ sceneId, partialScene })),
-  unfailScene: (sceneId: string) => dispatch(ScenesAction.unfailScene({ sceneId })),
-  goToLogin: () => {
-    window.location.href = `/login?from=${window.location.pathname}`;
-  },
-  onScriptChange: (scriptId: string, script: Script) => {
-    dispatch(ScenesAction.setScript({ sceneId, scriptId, script }));
-  },
-  onScriptRemove: (scriptId: string) => {
-    dispatch(ScenesAction.removeScript({ sceneId, scriptId }));
-  },
-  onAiClick: () => dispatch(AiAction.TOGGLE),
-  onAskTutorClick: (params: SendMessageParams) => sendMessage(dispatch, params),
-  onAddProject: (project: Project) => {
-    dispatch(ProjectsAction.addProject({ project }));
-  },
-  onLoadProjects: () => {
-    dispatch(ProjectsAction.loadProjects({}));
-  },
-  onSetProjectCode: (project: Project, fileName: string, fileType: 'src' | 'include' | 'userData', fileContent: string) => {
-    dispatch(ProjectsAction.setCode({ project, fileName, fileType, fileContent }));
-  },
-  onAddFile: (project: Project, fileName: string, fileType: 'src' | 'include' | 'userData') => {
-    dispatch(ProjectsAction.addFile({ project, fileName, fileType }));
-  },
-  onSelectProject: (project: Project) => {
-    dispatch(ProjectsAction.selectProject({ project }));
-  },
-  onDeleteProject: (project: Project) => {
-    dispatch(ProjectsAction.deleteProject({ project }));
-  },
-  onChangeInterfaceMode: (interfaceMode: InterfaceMode) => {
-    dispatch(ProjectsAction.changeInterfaceMode({ interfaceMode }));
-  }
-}))(withNavigate(Root)) as React.ComponentType<RootPublicProps>;
+  (dispatch, { params: { sceneId } }: RootPublicProps) => ({
+    onNodeAdd: (nodeId: string, node: Node) =>
+      dispatch(ScenesAction.setNode({ sceneId, nodeId, node })),
+    onNodeRemove: (nodeId: string) =>
+      dispatch(ScenesAction.removeNode({ sceneId, nodeId })),
+    onNodeChange: (nodeId: string, node: Node) => {
+      dispatch(ScenesAction.setNode({ sceneId, nodeId, node }));
+      const origin = node.origin;
+      const updateOrigin = true;
+      if (origin) {
+        dispatch(
+          ScenesAction.setNodeOrigin({
+            sceneId,
+            nodeId,
+            origin,
+            updateStarting: updateOrigin,
+          })
+        );
+      }
+    },
+    onObjectAdd: (nodeId: string, object: Node.Obj, geometry: Geometry) =>
+      dispatch(ScenesAction.addObject({ sceneId, nodeId, object, geometry })),
+    onGeometryAdd: (geometryId: string, geometry: Geometry) =>
+      dispatch(ScenesAction.addGeometry({ sceneId, geometryId, geometry })),
+    onGeometryChange: (geometryId: string, geometry: Geometry) =>
+      dispatch(ScenesAction.setGeometry({ sceneId, geometryId, geometry })),
+    onGeometryRemove: (geometryId: string) =>
+      dispatch(ScenesAction.removeGeometry({ sceneId, geometryId })),
+    onCameraChange: (camera: Camera) =>
+      dispatch(ScenesAction.setCamera({ sceneId, camera })),
+    onGravityChange: (gravity: Vector3wUnits) =>
+      dispatch(ScenesAction.setGravity({ sceneId, gravity })),
+    onSelectNodeId: (nodeId: string) =>
+      dispatch(ScenesAction.selectNode({ sceneId, nodeId })),
+    onSetNodeBatch: (
+      setNodeBatch: Omit<ScenesAction.SetNodeBatch, "type" | "sceneId">
+    ) => dispatch(ScenesAction.setNodeBatch({ sceneId, ...setNodeBatch })),
+    onResetScene: () => dispatch(ScenesAction.softResetScene({ sceneId })),
+    onCreateScene: (sceneId: string, scene: Scene) => {
+      dispatch(ScenesAction.createScene({ sceneId, scene }));
+    },
+    onChallengeCompletionCreate: (
+      challengeId: string,
+      challengeCompletion: ChallengeCompletion
+    ) => {
+      dispatch(
+        ChallengeCompletionsAction.createChallengeCompletion({
+          challengeId,
+          challengeCompletion,
+        })
+      );
+    },
+    onChallengeCompletionSceneDiffChange: (
+      challengeId: string,
+      sceneDiff: OuterObjectPatch<Scene>
+    ) => {
+      dispatch(
+        ChallengeCompletionsAction.setSceneDiff({ challengeId, sceneDiff })
+      );
+    },
+    onChallengeCompletionEventStateRemove: (
+      challengeId: string,
+      eventId: string
+    ) => {
+      dispatch(
+        ChallengeCompletionsAction.removeEventState({ challengeId, eventId })
+      );
+    },
+    onChallengeCompletionEventStateChange: (
+      challengeId: string,
+      eventId: string,
+      eventState: boolean
+    ) => {
+      dispatch(
+        ChallengeCompletionsAction.setEventState({
+          challengeId,
+          eventId,
+          eventState,
+        })
+      );
+    },
+    onChallengeCompletionEventStatesChange: (
+      challengeId: string,
+      eventStates: Dict<boolean>
+    ) => {
+      dispatch(
+        ChallengeCompletionsAction.setEventStates({ challengeId, eventStates })
+      );
+    },
+    onChallengeCompletionSuccessPredicateCompletionChange: (
+      challengeId: string,
+      success?: PredicateCompletion
+    ) => {
+      dispatch(
+        ChallengeCompletionsAction.setSuccessPredicateCompletion({
+          challengeId,
+          success,
+        })
+      );
+    },
+    onChallengeCompletionFailurePredicateCompletionChange: (
+      challengeId: string,
+      failure?: PredicateCompletion
+    ) => {
+      dispatch(
+        ChallengeCompletionsAction.setFailurePredicateCompletion({
+          challengeId,
+          failure,
+        })
+      );
+    },
+    onChallengeCompletionReset: (challengeId: string) => {
+      dispatch(
+        ChallengeCompletionsAction.resetChallengeCompletion({ challengeId })
+      );
+    },
+    onDeleteRecord: (selector: Selector) => {
+      dispatch(ScenesAction.removeScene({ sceneId: selector.id }));
+    },
+    onDocumentationClick: () => dispatch(DocumentationAction.TOGGLE),
+    onDocumentationPush: (location: DocumentationLocation) =>
+      dispatch(DocumentationAction.pushLocation({ location })),
+    onDocumentationSetLanguage: (language: "c" | "python") =>
+      dispatch(DocumentationAction.setLanguage({ language })),
+    onDocumentationGoToFuzzy: (query: string, language: "c" | "python") =>
+      dispatch(DocumentationAction.goToFuzzy({ query, language })),
+    onCommonDocumentationGoToFuzzy: (query: string, language: "c" | "python") =>
+      dispatch(DocumentationAction.goToFuzzyCommon({ query, language })),
+    onSaveScene: (sceneId: string) =>
+      dispatch(ScenesAction.saveScene({ sceneId })),
+    onSetScenePartial: (partialScene: Partial<Scene>) =>
+      dispatch(ScenesAction.setScenePartial({ sceneId, partialScene })),
+    unfailScene: (sceneId: string) =>
+      dispatch(ScenesAction.unfailScene({ sceneId })),
+    goToLogin: () => {
+      window.location.href = `/login?from=${window.location.pathname}`;
+    },
+    onScriptChange: (scriptId: string, script: Script) => {
+      dispatch(ScenesAction.setScript({ sceneId, scriptId, script }));
+    },
+    onScriptRemove: (scriptId: string) => {
+      dispatch(ScenesAction.removeScript({ sceneId, scriptId }));
+    },
+    onAiClick: () => dispatch(AiAction.TOGGLE),
+    onAskTutorClick: (params: SendMessageParams) =>
+      sendMessage(dispatch, params),
+    onAddProject: (project: Project) => {
+      dispatch(ProjectsAction.addProject({ project }));
+    },
+    onLoadProjects: () => {
+      dispatch(ProjectsAction.loadProjects({}));
+    },
+    onSetProjectCode: (
+      project: Project,
+      fileName: string,
+      fileType: "src" | "include" | "userData",
+      fileContent: string
+    ) => {
+      dispatch(
+        ProjectsAction.setCode({ project, fileName, fileType, fileContent })
+      );
+    },
+    onAddFile: (
+      project: Project,
+      fileName: string,
+      fileType: "src" | "include" | "userData"
+    ) => {
+      dispatch(ProjectsAction.addFile({ project, fileName, fileType }));
+    },
+    onSelectProject: (project: Project) => {
+      dispatch(ProjectsAction.selectProject({ project }));
+    },
+    onDeleteProject: (project: Project) => {
+      dispatch(ProjectsAction.deleteProject({ project }));
+    },
+    onChangeInterfaceMode: (interfaceMode: InterfaceMode) => {
+      dispatch(ProjectsAction.changeInterfaceMode({ interfaceMode }));
+    },
+  })
+)(withNavigate(Root)) as React.ComponentType<RootPublicProps>;
 
 export default withParams<RootRouteParams>()(ConnectedRoot);
 

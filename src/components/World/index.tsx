@@ -1,51 +1,62 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { styled, withStyleDeep } from 'styletron-react';
-import { StyleProps } from '../../util/style';
-import { Theme, ThemeProps } from '../constants/theme';
-import Field from '../interface/Field';
-import ScrollArea from '../interface/ScrollArea';
-import Section from '../interface/Section';
-import { Angle, StyledText } from '../../util';
+import { styled, withStyleDeep } from "styletron-react";
+import { StyleProps } from "../../util/style";
+import { Theme, ThemeProps } from "../constants/theme";
+import Field from "../interface/Field";
+import ScrollArea from "../interface/ScrollArea";
+import Section from "../interface/Section";
+import { Angle, StyledText } from "../../util";
 
-import EditableList from '../EditableList';
-import Item from './Item';
-import AddNodeDialog, { AddNodeAcceptance } from './AddNodeDialog';
-import { FontAwesome } from '../FontAwesome';
-import NodeSettingsDialog, { NodeSettingsAcceptance } from './NodeSettingsDialog';
-import { connect } from 'react-redux';
+import EditableList from "../EditableList";
+import Item from "./Item";
+import AddNodeDialog, { AddNodeAcceptance } from "./AddNodeDialog";
+import { FontAwesome } from "../FontAwesome";
+import NodeSettingsDialog, {
+  NodeSettingsAcceptance,
+} from "./NodeSettingsDialog";
+import { connect } from "react-redux";
 
-import { State as ReduxState } from '../../state';
+import { State as ReduxState } from "../../state";
 
+import * as uuid from "uuid";
+import {
+  ReferenceFramewUnits,
+  RotationwUnits,
+  Vector3wUnits,
+} from "../../util/math/unitMath";
+import { RawVector3 } from "../../util/math/math";
+import Node from "../../state/State/Scene/Node";
+import Dict from "../../util/objectOps/Dict";
+import Geometry from "../../state/State/Scene/Geometry";
 
-import * as uuid from 'uuid';
-import { ReferenceFramewUnits, RotationwUnits, Vector3wUnits } from '../../util/math/unitMath';
-import { RawVector3 } from '../../util/math/math';
-import Node from '../../state/State/Scene/Node';
-import Dict from '../../util/objectOps/Dict';
-import Geometry from '../../state/State/Scene/Geometry';
+import { Button } from "../interface/Button";
+import { BarComponent } from "../interface/Widget";
+import {
+  faGlobeAmericas,
+  faPlus,
+  faSave,
+} from "@fortawesome/free-solid-svg-icons";
+import Scene, { AsyncScene } from "../../state/State/Scene";
+import Async from "../../state/State/Async";
+import LocalizedString from "../../util/LocalizedString";
+import Script from "../../state/State/Scene/Script";
+import AddScriptDialog, { AddScriptAcceptance } from "./AddScriptDialog";
+import ScriptSettingsDialog, {
+  ScriptSettingsAcceptance,
+} from "./ScriptSettingsDialog";
+import { Settings } from "../constants/Settings";
 
-import { Button } from '../interface/Button';
-import { BarComponent } from '../interface/Widget';
-import { faGlobeAmericas, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
-import Scene, { AsyncScene } from '../../state/State/Scene';
-import Async from '../../state/State/Async';
-import LocalizedString from '../../util/LocalizedString';
-import Script from '../../state/State/Scene/Script';
-import AddScriptDialog, { AddScriptAcceptance } from './AddScriptDialog';
-import ScriptSettingsDialog, { ScriptSettingsAcceptance } from './ScriptSettingsDialog';
-import { Settings } from '../constants/Settings';
-
-import tr from '@i18n';
-import { sprintf } from 'sprintf-js';
-import TourTarget from '../Tours/TourTarget';
-import { TourRegistry } from '../../tours/TourRegistry';
+import tr from "@i18n";
+import { sprintf } from "sprintf-js";
+import TourTarget from "../Tours/TourTarget";
+import { TourRegistry } from "../../tours/TourRegistry";
 
 namespace SceneState {
   export enum Type {
     Clean,
     Saveable,
-    Copyable
+    Copyable,
   }
 
   export interface Clean {
@@ -67,49 +78,68 @@ namespace SceneState {
   export const COPYABLE: Copyable = { type: Type.Copyable };
 }
 
-export type SceneState = SceneState.Clean | SceneState.Saveable | SceneState.Copyable;
+export type SceneState =
+  | SceneState.Clean
+  | SceneState.Saveable
+  | SceneState.Copyable;
 
-export const createWorldBarComponents = ({ theme, saveable, onSelectScene, onSaveScene, onCopyScene, locale }: {
-  theme: Theme,
-  saveable: boolean,
-  onSelectScene: () => void,
-  onSaveScene: () => void,
-  onCopyScene: () => void,
-  locale: LocalizedString.Language,
+export const createWorldBarComponents = ({
+  theme,
+  saveable,
+  onSelectScene,
+  onSaveScene,
+  onCopyScene,
+  locale,
+}: {
+  theme: Theme;
+  saveable: boolean;
+  onSelectScene: () => void;
+  onSaveScene: () => void;
+  onCopyScene: () => void;
+  locale: LocalizedString.Language;
 }) => {
   // eslint-disable-next-line @typescript-eslint/ban-types
   const worldBar: BarComponent<object>[] = [];
 
-  worldBar.push(BarComponent.create(Button, {
-    theme,
-    onClick: onSelectScene,
-    children:
-      <>
-        <FontAwesome icon={faGlobeAmericas} />
-        {' '} {LocalizedString.lookup(tr('Select Scene'), locale)}
-      </>,
-  }));
+  worldBar.push(
+    BarComponent.create(Button, {
+      theme,
+      onClick: onSelectScene,
+      children: (
+        <>
+          <FontAwesome icon={faGlobeAmericas} />{" "}
+          {LocalizedString.lookup(tr("Select Scene"), locale)}
+        </>
+      ),
+    })
+  );
 
-  worldBar.push(BarComponent.create(Button, {
-    theme,
-    onClick: onSaveScene,
-    disabled: !saveable,
-    children:
-      <>
-        <FontAwesome icon={faSave} />
-        {' '} {LocalizedString.lookup(tr('Save Scene'), locale)}
-      </>,
-  }));
+  worldBar.push(
+    BarComponent.create(Button, {
+      theme,
+      onClick: onSaveScene,
+      disabled: !saveable,
+      children: (
+        <>
+          <FontAwesome icon={faSave} />{" "}
+          {LocalizedString.lookup(tr("Save Scene"), locale)}
+        </>
+      ),
+    })
+  );
 
-  worldBar.push(BarComponent.create(Button, {
-    theme,
-    onClick: onCopyScene,
-    children:
-      <>
-        <FontAwesome icon={faPlus} />
-        {' '} {LocalizedString.lookup(tr('Copy Scene'), locale)}
-      </>,
-  }));
+  worldBar.push(
+    BarComponent.create(Button, {
+      theme,
+      onClick: onCopyScene,
+      children: (
+        <>
+          <FontAwesome icon={faPlus} />{" "}
+          {LocalizedString.lookup(tr("Copy Scene"), locale)}
+        </>
+      ),
+    })
+  );
 
   return worldBar;
 };
@@ -156,8 +186,8 @@ export interface WorldPublicProps extends StyleProps, ThemeProps {
   capabilities?: Capabilities;
   settings?: Settings;
   tourRegistry?: TourRegistry;
+  onContinueTour?: () => void;
 }
-
 
 interface WorldPrivateProps {
   locale: LocalizedString.Language;
@@ -169,7 +199,7 @@ namespace UiState {
     AddNode,
     NodeSettings,
     AddScript,
-    ScriptSettings
+    ScriptSettings,
   }
 
   export interface None {
@@ -189,7 +219,10 @@ namespace UiState {
     id: string;
   }
 
-  export const itemSettings = (id: string): NodeSettings => ({ type: Type.NodeSettings, id });
+  export const itemSettings = (id: string): NodeSettings => ({
+    type: Type.NodeSettings,
+    id,
+  });
 
   export interface AddScript {
     type: Type.AddScript;
@@ -202,16 +235,18 @@ namespace UiState {
     id: string;
   }
 
-  export const scriptSettings = (id: string): ScriptSettings => ({ type: Type.ScriptSettings, id });
+  export const scriptSettings = (id: string): ScriptSettings => ({
+    type: Type.ScriptSettings,
+    id,
+  });
 }
 
-type UiState = (
-  UiState.None |
-  UiState.AddNode |
-  UiState.NodeSettings |
-  UiState.AddScript |
-  UiState.ScriptSettings
-);
+type UiState =
+  | UiState.None
+  | UiState.AddNode
+  | UiState.NodeSettings
+  | UiState.AddScript
+  | UiState.ScriptSettings;
 
 interface WorldState {
   collapsed: { [section: string]: boolean };
@@ -221,34 +256,31 @@ interface WorldState {
 type Props = WorldPublicProps & WorldPrivateProps;
 type State = WorldState;
 
-const Container = styled('div', (props: ThemeProps) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  flex: '1 1',
+const Container = styled("div", (props: ThemeProps) => ({
+  display: "flex",
+  flexDirection: "column",
+  flex: "1 1",
   color: props.theme.color,
 }));
 
-const StyledSection = styled(Section, {
-});
+const StyledSection = styled(Section, {});
 
 const StyledListSection = withStyleDeep(StyledSection, {
   padding: 0,
-  overflow: 'hidden'
+  overflow: "hidden",
 });
 
-const StyledField = styled(Field, (props: ThemeProps) => ({
-
-}));
+const StyledField = styled(Field, (props: ThemeProps) => ({}));
 
 const SectionIcon = styled(FontAwesome, (props: ThemeProps) => ({
   marginLeft: `${props.theme.itemPadding}px`,
   paddingLeft: `${props.theme.itemPadding}px`,
   borderLeft: `1px solid ${props.theme.borderColor}`,
   opacity: 0.5,
-  ':hover': {
-    opacity: 1.0
+  ":hover": {
+    opacity: 1.0,
   },
-  transition: 'opacity 0.2s'
+  transition: "opacity 0.2s",
 }));
 
 class World extends React.PureComponent<Props, State> {
@@ -257,7 +289,7 @@ class World extends React.PureComponent<Props, State> {
 
     this.state = {
       collapsed: {},
-      modal: UiState.NONE
+      modal: UiState.NONE,
     };
   }
 
@@ -265,13 +297,13 @@ class World extends React.PureComponent<Props, State> {
     this.setState({
       collapsed: {
         ...this.state.collapsed,
-        [section]: collapsed
-      }
+        [section]: collapsed,
+      },
     });
   };
 
   private onAddNodeAccept_ = (acceptance: AddNodeAcceptance) => {
-    if (acceptance.node.type === 'object' && acceptance.geometry) {
+    if (acceptance.node.type === "object" && acceptance.geometry) {
       const object: Node.Obj = acceptance.node;
       this.setState({ modal: UiState.NONE }, () => {
         this.props.onObjectAdd(uuid.v4(), object, acceptance.geometry);
@@ -289,32 +321,38 @@ class World extends React.PureComponent<Props, State> {
     });
   };
 
-  private onNodeSettingsAccept_ = (id: string) => (acceptance: NodeSettingsAcceptance) => {
-    this.props.onNodeChange(id, acceptance);
-  };
+  private onNodeSettingsAccept_ =
+    (id: string) => (acceptance: NodeSettingsAcceptance) => {
+      this.props.onNodeChange(id, acceptance);
+    };
 
-  private onScriptSettingsAccept_ = (id: string) => (acceptance: ScriptSettingsAcceptance) => {
-    this.setState({
-      modal: UiState.NONE
-    }, () => {
-      this.props.onScriptChange(id, acceptance);
-    });
-  };
+  private onScriptSettingsAccept_ =
+    (id: string) => (acceptance: ScriptSettingsAcceptance) => {
+      this.setState(
+        {
+          modal: UiState.NONE,
+        },
+        () => {
+          this.props.onScriptChange(id, acceptance);
+        }
+      );
+    };
 
-  private onNodeOriginAccept_ = (id: string) => (origin: ReferenceFramewUnits) => {
-    const originalNode = Async.latestValue(this.props.scene).nodes[id];
-    this.props.onNodeChange(id, {
-      ...originalNode,
-      startingOrigin: {
-        ...originalNode.startingOrigin,
-        ...origin,
-      },
-      origin: {
-        ...originalNode.origin,
-        ...origin,
-      },
-    });
-  };
+  private onNodeOriginAccept_ =
+    (id: string) => (origin: ReferenceFramewUnits) => {
+      const originalNode = Async.latestValue(this.props.scene).nodes[id];
+      this.props.onNodeChange(id, {
+        ...originalNode,
+        startingOrigin: {
+          ...originalNode.startingOrigin,
+          ...origin,
+        },
+        origin: {
+          ...originalNode.origin,
+          ...origin,
+        },
+      });
+    };
 
   private onAddNodeClick_ = (event: React.SyntheticEvent<MouseEvent>) => {
     this.setState({ modal: UiState.ADD_NODE });
@@ -337,14 +375,20 @@ class World extends React.PureComponent<Props, State> {
     this.props.onNodeChange(id, {
       ...originalNode,
       origin: {
-        position: originalNode.startingOrigin?.position || Vector3wUnits.zero('centimeters'),
-        orientation: originalNode.startingOrigin?.orientation || RotationwUnits.EulerwUnits.identity(Angle.Type.Degrees),
+        position:
+          originalNode.startingOrigin?.position ||
+          Vector3wUnits.zero("centimeters"),
+        orientation:
+          originalNode.startingOrigin?.orientation ||
+          RotationwUnits.EulerwUnits.identity(Angle.Type.Degrees),
         scale: originalNode.startingOrigin?.scale || RawVector3.ONE,
       },
     });
   };
-  private onItemSettingsClick_ = (id: string) => () => this.setState({ modal: UiState.itemSettings(id) });
-  private onScriptSettingsClick_ = (id: string) => () => this.setState({ modal: UiState.scriptSettings(id) });
+  private onItemSettingsClick_ = (id: string) => () =>
+    this.setState({ modal: UiState.itemSettings(id) });
+  private onScriptSettingsClick_ = (id: string) => () =>
+    this.setState({ modal: UiState.scriptSettings(id) });
   private onModalClose_ = () => this.setState({ modal: UiState.NONE });
 
   private onNodeRemove_ = (index: number, id?: unknown) => {
@@ -355,12 +399,16 @@ class World extends React.PureComponent<Props, State> {
     const workingScene = Async.latestValue(scene);
 
     const node = workingScene.nodes[idStr];
-    if (node.type === 'object') {
+    if (node.type === "object") {
       if (node.geometryId !== undefined) {
         let unique = true;
         for (const nodeId in workingScene.nodes) {
           const otherNode = workingScene.nodes[nodeId];
-          if (nodeId !== idStr && otherNode.type === 'object' && node.geometryId === otherNode.geometryId) {
+          if (
+            nodeId !== idStr &&
+            otherNode.type === "object" &&
+            node.geometryId === otherNode.geometryId
+          ) {
             unique = false;
             break;
           }
@@ -392,15 +440,19 @@ class World extends React.PureComponent<Props, State> {
 
     // Make matA and matB visibility mutually exclusive
     // When one becomes visible, hide the other
-    if (visibility && (id === 'matA' || id === 'matB')) {
-      const otherMatId = id === 'matA' ? 'matB' : 'matA';
+    if (visibility && (id === "matA" || id === "matB")) {
+      const otherMatId = id === "matA" ? "matB" : "matA";
       const workingScene = Async.latestValue(this.props.scene);
       const otherMatNode = workingScene.nodes[otherMatId];
 
       if (otherMatNode && otherMatNode.visible) {
-        let otherOriginalNode = Async.previousValue(this.props.scene).nodes[otherMatId];
+        let otherOriginalNode = Async.previousValue(this.props.scene).nodes[
+          otherMatId
+        ];
         if (!otherOriginalNode) {
-          otherOriginalNode = Async.latestValue(this.props.scene).nodes[otherMatId];
+          otherOriginalNode = Async.latestValue(this.props.scene).nodes[
+            otherMatId
+          ];
         }
 
         this.props.onNodeChange(otherMatId, {
@@ -421,7 +473,8 @@ class World extends React.PureComponent<Props, State> {
       onGeometryAdd,
       onGeometryRemove,
       onGeometryChange,
-      locale
+      locale,
+      tourRegistry,
     } = props;
     const { collapsed, modal } = state;
 
@@ -438,106 +491,153 @@ class World extends React.PureComponent<Props, State> {
 
     const itemList: EditableList.Item[] = [];
 
-
     const workingScene = Async.latestValue(scene);
     for (const nodeId of Dict.keySet(workingScene.nodes)) {
       const node = workingScene.nodes[nodeId];
       const hasReset = workingScene.nodes[nodeId].startingOrigin !== undefined;
-      itemList.push(EditableList.Item.standard({
-        component: Item,
-        props: { name: LocalizedString.lookup(node.name, locale), theme },
-        onReset: hasReset && nodeReset ? this.onNodeResetClick_(nodeId) : undefined,
-        onSettings: node.editable && nodeSettings ? this.onItemSettingsClick_(nodeId) : undefined,
-        onVisibilityChange: nodeVisiblity ? this.onItemVisibilityChange_(nodeId) : undefined,
-        visible: node.visible,
-        tourRegistry: this.props.tourRegistry,
-      }, {
-        removable: node.editable && node.type !== 'robot',
-        userdata: nodeId,
-      }));
+      itemList.push(
+        EditableList.Item.standard(
+          {
+            component: Item,
+            props: { name: LocalizedString.lookup(node.name, locale), theme },
+            onReset:
+              hasReset && nodeReset
+                ? this.onNodeResetClick_(nodeId)
+                : undefined,
+            onSettings:
+              node.editable && nodeSettings
+                ? this.onItemSettingsClick_(nodeId)
+                : undefined,
+            onVisibilityChange: nodeVisiblity
+              ? this.onItemVisibilityChange_(nodeId)
+              : undefined,
+            visible: node.visible,
+            tourRegistry: this.props.tourRegistry,
+          },
+          {
+            removable: node.editable && node.type !== "robot",
+            userdata: nodeId,
+          }
+        )
+      );
     }
 
     const scriptList: EditableList.Item[] = [];
     for (const scriptId of Dict.keySet(workingScene.scripts || {})) {
       const script = workingScene.scripts[scriptId];
-      scriptList.push(EditableList.Item.standard({
-        component: Item,
-        props: {
-          name: script.name,
-          theme,
-          selected: workingScene.selectedScriptId === scriptId
-        },
-        onSettings: scriptSettings ? this.onScriptSettingsClick_(scriptId) : undefined,
-      }, {
-        removable: removeScript,
-        userdata: scriptId,
-      }));
+      scriptList.push(
+        EditableList.Item.standard(
+          {
+            component: Item,
+            props: {
+              name: script.name,
+              theme,
+              selected: workingScene.selectedScriptId === scriptId,
+            },
+            onSettings: scriptSettings
+              ? this.onScriptSettingsClick_(scriptId)
+              : undefined,
+          },
+          {
+            removable: removeScript,
+            userdata: scriptId,
+          }
+        )
+      );
     }
 
     const itemsName = StyledText.compose({
       items: [
         StyledText.text({
-          text: LocalizedString.lookup(Dict.map(tr('Item(s) (%d)'), (str: string) => sprintf(str, itemList.length)), locale)
-        })
-      ]
+          text: LocalizedString.lookup(
+            Dict.map(tr("Item(s) (%d)"), (str: string) =>
+              sprintf(str, itemList.length)
+            ),
+            locale
+          ),
+        }),
+      ],
     });
 
     if (addNode) {
-      itemsName.items.push(StyledText.component({
-        component: SectionIcon,
-        props: {
-          icon: faPlus,
-          theme,
-          onClick: this.onAddNodeClick_
-        }
-      }));
+      itemsName.items.push(
+        StyledText.component({
+          component: SectionIcon,
+          props: {
+            icon: faPlus,
+            theme,
+            onClick: this.onAddNodeClick_,
+          },
+        })
+      );
     }
 
     const scriptsName = StyledText.compose({
       items: [
         StyledText.text({
-          text: LocalizedString.lookup(Dict.map(tr('Script(s) (%d)'), (str: string) => sprintf(str, scriptList.length)), locale)
-        })
-      ]
+          text: LocalizedString.lookup(
+            Dict.map(tr("Script(s) (%d)"), (str: string) =>
+              sprintf(str, scriptList.length)
+            ),
+            locale
+          ),
+        }),
+      ],
     });
 
     if (addScript) {
-      scriptsName.items.push(StyledText.component({
-        component: SectionIcon,
-        props: {
-          icon: faPlus,
-          theme,
-          onClick: this.onAddScriptClick_
-        }
-      }));
+      scriptsName.items.push(
+        StyledText.component({
+          component: SectionIcon,
+          props: {
+            icon: faPlus,
+            theme,
+            onClick: this.onAddScriptClick_,
+          },
+        })
+      );
     }
+
+    const editableItemListWidget_ = (
+      <StyledListSection
+        name={itemsName}
+        theme={theme}
+        onCollapsedChange={this.onCollapsedChange_("items")}
+        collapsed={collapsed["items"]}
+        noBodyPadding
+      >
+        <EditableList
+          onItemRemove={removeNode ? this.onNodeRemove_ : undefined}
+          items={itemList}
+          theme={theme}
+          tourRegistry={this.props.tourRegistry}
+          onContinueTour={this.props.onContinueTour}
+        />
+      </StyledListSection>
+    );
 
     return (
       <>
-        <ScrollArea theme={theme} style={{ flex: '1 1' }}>
+        <ScrollArea theme={theme} style={{ flex: "1 1" }}>
           <Container theme={theme} style={style} className={className}>
-            <TourTarget registry={this.props.tourRegistry} targetKey='world-objects' style={style}>
-              <StyledListSection
-                name={itemsName}
-                theme={theme}
-                onCollapsedChange={this.onCollapsedChange_('items')}
-                collapsed={collapsed['items']}
-                noBodyPadding
+            {tourRegistry ? (
+              <TourTarget
+                registry={this.props.tourRegistry}
+                targetKey="world-objects"
+                style={style}
               >
-                <EditableList
-                  onItemRemove={removeNode ? this.onNodeRemove_ : undefined}
-                  items={itemList}
-                  theme={theme}
-                  tourRegistry={this.props.tourRegistry}
-                />
-              </StyledListSection>
-            </TourTarget>
+                {editableItemListWidget_}
+              </TourTarget>
+            ) : (
+              editableItemListWidget_
+            )}
+
             {props.settings?.showScripts && (
               <StyledListSection
                 name={scriptsName}
                 theme={theme}
-                onCollapsedChange={this.onCollapsedChange_('scripts')}
-                collapsed={collapsed['scripts']}
+                onCollapsedChange={this.onCollapsedChange_("scripts")}
+                collapsed={collapsed["scripts"]}
                 noBodyPadding
               >
                 <EditableList
@@ -564,25 +664,29 @@ class World extends React.PureComponent<Props, State> {
             onAccept={this.onAddScriptAccept_}
           />
         )}
-        {modal.type === UiState.Type.NodeSettings && <NodeSettingsDialog
-          onGeometryAdd={onGeometryAdd}
-          onGeometryRemove={onGeometryRemove}
-          onGeometryChange={onGeometryChange}
-          scene={workingScene}
-          id={modal.id}
-          node={workingScene.nodes[modal.id]}
-          theme={theme}
-          onClose={this.onModalClose_}
-          onChange={this.onNodeSettingsAccept_(modal.id)}
-          onOriginChange={this.onNodeOriginAccept_(modal.id)}
-        />}
-        {modal.type === UiState.Type.ScriptSettings && <ScriptSettingsDialog
-          id={modal.id}
-          script={workingScene.scripts[modal.id]}
-          theme={theme}
-          onClose={this.onModalClose_}
-          onAccept={this.onScriptSettingsAccept_(modal.id)}
-        />}
+        {modal.type === UiState.Type.NodeSettings && (
+          <NodeSettingsDialog
+            onGeometryAdd={onGeometryAdd}
+            onGeometryRemove={onGeometryRemove}
+            onGeometryChange={onGeometryChange}
+            scene={workingScene}
+            id={modal.id}
+            node={workingScene.nodes[modal.id]}
+            theme={theme}
+            onClose={this.onModalClose_}
+            onChange={this.onNodeSettingsAccept_(modal.id)}
+            onOriginChange={this.onNodeOriginAccept_(modal.id)}
+          />
+        )}
+        {modal.type === UiState.Type.ScriptSettings && (
+          <ScriptSettingsDialog
+            id={modal.id}
+            script={workingScene.scripts[modal.id]}
+            theme={theme}
+            onClose={this.onModalClose_}
+            onAccept={this.onScriptSettingsAccept_(modal.id)}
+          />
+        )}
       </>
     );
   }
