@@ -1,28 +1,28 @@
-import * as React from "react";
-import { connect } from "react-redux";
-import { styled } from "styletron-react";
-import { Message } from "ivygate/dist/src";
-import * as uuid from "uuid";
-import { OuterObjectPatch } from "symmetry";
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { styled } from 'styletron-react';
+import { Message } from 'ivygate/dist/src';
+import * as uuid from 'uuid';
+import { OuterObjectPatch } from 'symmetry';
 
-import { auth } from "../firebase/firebase";
-import { signOutOfApp } from "../firebase/modules/auth";
+import { auth } from '../firebase/firebase';
+import { signOutOfApp } from '../firebase/modules/auth';
 
-import WorkerInstance from "../programming/WorkerInstance";
-import compile from "../programming/compiler/compile";
-import ProgrammingLanguage from "../programming/compiler/ProgrammingLanguage";
+import WorkerInstance from '../programming/WorkerInstance';
+import compile from '../programming/compiler/compile';
+import ProgrammingLanguage from '../programming/compiler/ProgrammingLanguage';
 
-import SimMenu from "../components/Challenge/SimMenu";
-import { SimulatorState } from "../components/Challenge/SimulatorState";
-import ExceptionDialog from "../components/Challenge/ExceptionDialog";
+import SimMenu from '../components/Challenge/SimMenu';
+import { SimulatorState } from '../components/Challenge/SimulatorState';
+import ExceptionDialog from '../components/Challenge/ExceptionDialog';
 
-import { DEFAULT_SETTINGS, Settings } from "../components/constants/Settings";
-import { DARK, Theme } from "../components/constants/theme";
-import { DEFAULT_SCENE } from "../components/constants/defaultScene";
+import { DEFAULT_SETTINGS, Settings } from '../components/constants/Settings';
+import { DARK, Theme } from '../components/constants/theme';
+import { DEFAULT_SCENE } from '../components/constants/defaultScene';
 
-import SettingsDialog from "../components/Dialog/SettingsDialog";
-import AboutDialog from "../components/Dialog/AboutDialog";
-import SceneSettingsDialog from "../components/Dialog/SceneSettingsDialog";
+import SettingsDialog from '../components/Dialog/SettingsDialog';
+import AboutDialog from '../components/Dialog/AboutDialog';
+import SceneSettingsDialog from '../components/Dialog/SceneSettingsDialog';
 
 import {
   FeedbackDialog,
@@ -31,7 +31,7 @@ import {
   FeedbackSuccessDialog,
   sendFeedback,
   FeedbackResponse,
-} from "../components/Feedback";
+} from '../components/Feedback';
 import {
   Layout,
   LayoutProps,
@@ -39,81 +39,81 @@ import {
   OverlayLayout,
   OverlayLayoutRedux,
   SideLayoutRedux,
-} from "../components/Layout";
+} from '../components/Layout';
 import {
   SceneErrorDialog,
   OpenSceneDialog,
   NewSceneDialog,
   DeleteDialog,
   SaveAsSceneDialog,
-} from "../components/Dialog";
+} from '../components/Dialog';
 
-import Loading from "../components/Loading";
-import { Editor } from "../components/Editor";
+import Loading from '../components/Loading';
+import { Editor } from '../components/Editor';
 
-import { State as ReduxState } from "../state";
+import { State as ReduxState } from '../state';
 import {
   ScenesAction,
   ChallengeCompletionsAction,
   AiAction,
   ProjectsAction,
   deleteProject,
-} from "../state/reducer";
-import { DocumentationAction } from "ivygate/dist/src/state/reducer/documentation";
-import { sendMessage, SendMessageParams } from "../util/ai";
+} from '../state/reducer';
+import { DocumentationAction } from 'ivygate/dist/src/state/reducer/documentation';
+import { sendMessage, SendMessageParams } from '../util/ai';
 
-import Scene, { AsyncScene } from "../state/State/Scene";
-import Script from "../state/State/Scene/Script";
-import Node from "../state/State/Scene/Node";
-import Geometry from "../state/State/Scene/Geometry";
-import Camera from "../state/State/Scene/Camera";
+import Scene, { AsyncScene } from '../state/State/Scene';
+import Script from '../state/State/Scene/Script';
+import Node from '../state/State/Scene/Node';
+import Geometry from '../state/State/Scene/Geometry';
+import Camera from '../state/State/Scene/Camera';
 
-import Async from "../state/State/Async";
-import { AsyncChallenge } from "../state/State/Challenge";
+import Async from '../state/State/Async';
+import { AsyncChallenge } from '../state/State/Challenge';
 import ChallengeCompletion, {
   AsyncChallengeCompletion,
-} from "../state/State/ChallengeCompletion";
-import PredicateCompletion from "../state/State/ChallengeCompletion/PredicateCompletion";
+} from '../state/State/ChallengeCompletion';
+import PredicateCompletion from '../state/State/ChallengeCompletion/PredicateCompletion';
 
-import DocumentationLocation from "../state/State/Documentation/DocumentationLocation";
+import DocumentationLocation from '../state/State/Documentation/DocumentationLocation';
 
-import Record from "../db/Record";
-import Selector from "../db/Selector";
-import Builder from "../db/Builder";
-import Author from "../db/Author";
+import Record from '../db/Record';
+import Selector from '../db/Selector';
+import Builder from '../db/Builder';
+import Author from '../db/Author';
 
-import { StyledText } from "../util";
-import Dict from "../util/objectOps/Dict";
+import { StyledText } from '../util';
+import Dict from '../util/objectOps/Dict';
 import parseMessages, {
   hasErrors,
   hasWarnings,
   sort,
   toStyledText,
-} from "../util/parseMessages";
-import { Vector3wUnits } from "../util/math/unitMath";
-import LocalizedString from "../util/LocalizedString";
+} from '../util/parseMessages';
+import { Vector3wUnits } from '../util/math/unitMath';
+import LocalizedString from '../util/LocalizedString';
 
-import { Space } from "../simulator/Space";
-import { withNavigate, WithNavigateProps } from "../util/withNavigate";
-import { withParams } from "../util/withParams";
-import tr from "@i18n";
-import { Modal } from "./sharedRoot/Modal";
-import Robot from "../state/State/Robot";
-import AiWindow from "../components/Ai/AiWindow";
-import CreateProjectDialog from "../components/Dialog/CreateProjectDialog";
-import { InterfaceMode } from "../types/interfaceModes";
-import { AsyncProject, Project } from "../state/State/Project";
-import CreateNewFileDialog from "../components/Dialog/CreateNewFileDialog";
-import DeleteProjectDialog from "../components/Dialog/DeleteProjectDialog";
-import TourDoc, { getTourSteps, TourStep } from "../tours/Tours";
-import TourTarget from "../components/Tours/TourTarget";
-import { TourRegistry } from "../tours/TourRegistry";
-import { GuidedTour } from "../components/Tours/GuidedTour";
+import { Space } from '../simulator/Space';
+import { withNavigate, WithNavigateProps } from '../util/withNavigate';
+import { withParams } from '../util/withParams';
+import tr from '@i18n';
+import { Modal } from './sharedRoot/Modal';
+import Robot from '../state/State/Robot';
+import AiWindow from '../components/Ai/AiWindow';
+import CreateProjectDialog from '../components/Dialog/CreateProjectDialog';
+import { InterfaceMode } from '../types/interfaceModes';
+import { AsyncProject, Project } from '../state/State/Project';
+import CreateNewFileDialog from '../components/Dialog/CreateNewFileDialog';
+import DeleteProjectDialog from '../components/Dialog/DeleteProjectDialog';
+import TourDoc, { getTourSteps, TourStep } from '../tours/Tours';
+import TourTarget from '../components/Tours/TourTarget';
+import { TourRegistry } from '../tours/TourRegistry';
+import { GuidedTour } from '../components/Tours/GuidedTour';
 import {
   completeTour,
   fetchTourIfNeeded,
   retakeTour,
-} from "../state/reducer/tours";
+} from '../state/reducer/tours';
 
 export interface RootRouteParams {
   [key: string]: string | undefined;
@@ -150,17 +150,17 @@ interface RootPrivateProps {
   onGravityChange: (gravity: Vector3wUnits) => void;
   onSelectNodeId: (id: string) => void;
   onSetNodeBatch: (
-    setNodeBatch: Omit<ScenesAction.SetNodeBatch, "type" | "sceneId">
+    setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>,
   ) => void;
   onResetScene: () => void;
 
   onDocumentationClick: () => void;
   onDocumentationPush: (location: DocumentationLocation) => void;
-  onDocumentationSetLanguage: (language: "c" | "python") => void;
-  onDocumentationGoToFuzzy: (query: string, language: "c" | "python") => void;
+  onDocumentationSetLanguage: (language: 'c' | 'python') => void;
+  onDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') => void;
   onCommonDocumentationGoToFuzzy: (
     query: string,
-    language: "c" | "python"
+    language: 'c' | 'python',
   ) => void;
 
   onCreateScene: (id: string, scene: Scene) => void;
@@ -187,19 +187,19 @@ interface RootPrivateProps {
   onAddFile: (
     project: Project,
     fileName: string,
-    fileType: "src" | "include" | "userData"
+    fileType: 'src' | 'include' | 'userData',
   ) => void;
   onLoadProjects: () => void;
   onSetProjectCode: (
     project: Project,
     fileName: string,
-    fileType: "src" | "include" | "userData",
-    fileContent: string
+    fileType: 'src' | 'include' | 'userData',
+    fileContent: string,
   ) => void;
   onSelectProject: (project: Project) => void;
   onDeleteProject: (project: Project) => void;
   onChangeInterfaceMode: (
-    interfaceMode: InterfaceMode.SIMPLE | InterfaceMode.ADVANCED
+    interfaceMode: InterfaceMode.SIMPLE | InterfaceMode.ADVANCED,
   ) => void;
 }
 
@@ -230,7 +230,7 @@ interface RootState {
 
   projectDetails: {
     project: Project;
-    fileType: "src" | "include" | "userData";
+    fileType: 'src' | 'include' | 'userData';
     fileName: string;
   } | null;
 
@@ -238,6 +238,9 @@ interface RootState {
   simulatorRootTourSteps: TourStep[];
   currentTourStepIndex?: number;
   continueTour?: boolean;
+  jumpInTour?: boolean;
+
+  sceneSubMenu?: boolean;
 }
 
 type Props = RootPublicProps & RootPrivateProps & WithNavigateProps;
@@ -248,13 +251,13 @@ type State = RootState;
 interface ContainerProps {
   $windowInnerHeight: number;
 }
-const Container = styled("div", (props: ContainerProps) => ({
-  width: "100vw",
+const Container = styled('div', (props: ContainerProps) => ({
+  width: '100vw',
   height: `${props.$windowInnerHeight}px`, // fix for mobile, see https://chanind.github.io/javascript/2019/09/28/avoid-100vh-on-mobile-web.html
-  display: "flex",
-  flexDirection: "column",
-  overflow: "hidden",
-  position: "fixed",
+  display: 'flex',
+  flexDirection: 'column',
+  overflow: 'hidden',
+  position: 'fixed',
 }));
 
 const STDOUT_STYLE = (theme: Theme) => ({
@@ -262,7 +265,7 @@ const STDOUT_STYLE = (theme: Theme) => ({
 });
 
 const STDERR_STYLE = (theme: Theme) => ({
-  color: "red",
+  color: 'red',
 });
 
 class Root extends React.Component<Props, State> {
@@ -276,27 +279,27 @@ class Root extends React.Component<Props, State> {
 
     this.state = {
       layout: Layout.Side,
-      activeLanguage: "c",
+      activeLanguage: 'c',
       code: {
         c:
-          window.localStorage.getItem("code-c") ||
-          ProgrammingLanguage.DEFAULT_CODE["c"],
+          window.localStorage.getItem('code-c') ||
+          ProgrammingLanguage.DEFAULT_CODE['c'],
         cpp:
-          window.localStorage.getItem("code-cpp") ||
-          ProgrammingLanguage.DEFAULT_CODE["cpp"],
+          window.localStorage.getItem('code-cpp') ||
+          ProgrammingLanguage.DEFAULT_CODE['cpp'],
         python:
-          window.localStorage.getItem("code-python") ||
-          ProgrammingLanguage.DEFAULT_CODE["python"],
+          window.localStorage.getItem('code-python') ||
+          ProgrammingLanguage.DEFAULT_CODE['python'],
         graphical:
-          window.localStorage.getItem("code-graphical") ||
-          ProgrammingLanguage.DEFAULT_CODE["graphical"],
+          window.localStorage.getItem('code-graphical') ||
+          ProgrammingLanguage.DEFAULT_CODE['graphical'],
       },
       modal: Modal.NONE,
       simulatorState: SimulatorState.STOPPED,
       console: StyledText.text({
         text: LocalizedString.lookup(
-          tr("Welcome to the KIPR Simulator!\n"),
-          props.locale
+          tr('Welcome to the KIPR Simulator!\n'),
+          props.locale,
         ),
         style: STDOUT_STYLE(DARK),
       }),
@@ -306,7 +309,7 @@ class Root extends React.Component<Props, State> {
       feedback: DEFAULT_FEEDBACK,
       windowInnerHeight: window.innerHeight,
       miniEditor: true,
-      projectDetails: { project: null, fileType: "src", fileName: "" },
+      projectDetails: { project: null, fileType: 'src', fileName: '' },
       tourId: TourDoc.IDS.SIMULATOR,
       simulatorRootTourSteps: getTourSteps(TourDoc.IDS.SIMULATOR),
     };
@@ -333,14 +336,14 @@ class Root extends React.Component<Props, State> {
     space.onCameraChange = this.props.onCameraChange;
 
     this.scheduleUpdateConsole_();
-    window.addEventListener("resize", this.onWindowResize_);
+    window.addEventListener('resize', this.onWindowResize_);
     //this.props.onLoadProjects();
-    console.log("Root compDidMount props:", this.props);
+    console.log('Root compDidMount props:', this.props);
     await fetchTourIfNeeded(currentUser, TourDoc.IDS.SIMULATOR);
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize", this.onWindowResize_);
+    window.removeEventListener('resize', this.onWindowResize_);
     cancelAnimationFrame(this.updateConsoleHandle_);
 
     Space.getInstance().onSelectNodeId = undefined;
@@ -349,7 +352,7 @@ class Root extends React.Component<Props, State> {
 
   componentDidUpdate(
     prevProps: Readonly<Props>,
-    prevState: Readonly<RootState>
+    prevState: Readonly<RootState>,
   ): void {
     if (this.props.scene !== prevProps.scene) {
       Space.getInstance().scene =
@@ -373,12 +376,12 @@ class Root extends React.Component<Props, State> {
     if (this.state.simulatorState.type !== prevState.simulatorState.type) {
       Space.getInstance().sceneBinding.scriptManager.programStatus =
         this.state.simulatorState.type === SimulatorState.Type.Running
-          ? "running"
-          : "stopped";
+          ? 'running'
+          : 'stopped';
     }
 
     if (this.props.projects !== prevProps.projects) {
-      console.log("Projects prop changed:", this.props.projects);
+      console.log('Projects prop changed:', this.props.projects);
     }
   }
 
@@ -406,9 +409,9 @@ class Root extends React.Component<Props, State> {
       },
       () => {
         this.props.onDocumentationSetLanguage(
-          language === "python" ? "python" : "c"
+          language === 'python' ? 'python' : 'c',
         );
-      }
+      },
     );
   };
 
@@ -425,11 +428,11 @@ class Root extends React.Component<Props, State> {
         window.localStorage.setItem(`code-${activeLanguage}`, code);
         this.props.onSetProjectCode(
           projectDetails ? projectDetails.project : null,
-          projectDetails ? projectDetails.fileName : "",
-          projectDetails ? projectDetails.fileType : "src",
-          code
+          projectDetails ? projectDetails.fileName : '',
+          projectDetails ? projectDetails.fileType : 'src',
+          code,
         );
-      }
+      },
     );
   };
 
@@ -464,7 +467,7 @@ class Root extends React.Component<Props, State> {
             text,
             style: STDOUT_STYLE(this.state.theme),
           }),
-          300
+          300,
         ),
       });
     }
@@ -489,14 +492,14 @@ class Root extends React.Component<Props, State> {
     const activeCode = code[activeLanguage];
 
     switch (activeLanguage) {
-      case "c":
-      case "cpp": {
+      case 'c':
+      case 'cpp': {
         let nextConsole: StyledText = StyledText.extend(
           console,
           StyledText.text({
-            text: LocalizedString.lookup(tr("Compiling...\n"), locale),
+            text: LocalizedString.lookup(tr('Compiling...\n'), locale),
             style: STDOUT_STYLE(this.state.theme),
-          })
+          }),
         );
 
         this.setState(
@@ -520,10 +523,10 @@ class Root extends React.Component<Props, State> {
                       onClick:
                         message.ranges.length > 0
                           ? this.onErrorMessageClick_(
-                              message.ranges[0].start.line
-                            )
+                            message.ranges[0].start.line,
+                          )
                           : undefined,
-                    })
+                    }),
                   );
                 }
 
@@ -535,15 +538,15 @@ class Root extends React.Component<Props, State> {
                     StyledText.text({
                       text: haveWarnings
                         ? LocalizedString.lookup(
-                            tr("Compilation succeeded with warnings.\n"),
-                            locale
-                          )
+                          tr('Compilation succeeded with warnings.\n'),
+                          locale,
+                        )
                         : LocalizedString.lookup(
-                            tr("Compilation succeeded.\n"),
-                            locale
-                          ),
+                          tr('Compilation succeeded.\n'),
+                          locale,
+                        ),
                       style: STDOUT_STYLE(this.state.theme),
-                    })
+                    }),
                   );
 
                   WorkerInstance.start({
@@ -559,7 +562,7 @@ class Root extends React.Component<Props, State> {
                       StyledText.text({
                         text: `${compileResult.stderr}\n`,
                         style: STDERR_STYLE(this.state.theme),
-                      })
+                      }),
                     );
                   }
 
@@ -567,11 +570,11 @@ class Root extends React.Component<Props, State> {
                     nextConsole,
                     StyledText.text({
                       text: LocalizedString.lookup(
-                        tr("Compilation failed.\n"),
-                        locale
+                        tr('Compilation failed.\n'),
+                        locale,
                       ),
                       style: STDERR_STYLE(this.state.theme),
-                    })
+                    }),
                   );
                 }
 
@@ -589,11 +592,11 @@ class Root extends React.Component<Props, State> {
                   nextConsole,
                   StyledText.text({
                     text: LocalizedString.lookup(
-                      tr("Something went wrong during compilation.\n"),
-                      locale
+                      tr('Something went wrong during compilation.\n'),
+                      locale,
                     ),
                     style: STDERR_STYLE(this.state.theme),
-                  })
+                  }),
                 );
 
                 this.setState({
@@ -602,17 +605,17 @@ class Root extends React.Component<Props, State> {
                   console: nextConsole,
                 });
               });
-          }
+          },
         );
         break;
       }
-      case "python": {
+      case 'python': {
         const nextConsole = StyledText.extend(
           console,
           StyledText.text({
-            text: LocalizedString.lookup(tr("Loading Python...\n"), locale),
+            text: LocalizedString.lookup(tr('Loading Python...\n'), locale),
             style: STDOUT_STYLE(this.state.theme),
-          })
+          }),
         );
 
         this.setState(
@@ -622,24 +625,24 @@ class Root extends React.Component<Props, State> {
           },
           () => {
             WorkerInstance.start({
-              language: "python",
+              language: 'python',
               code: activeCode,
             });
-          }
+          },
         );
         break;
       }
-      case "graphical": {
+      case 'graphical': {
         this.setState(
           {
             simulatorState: SimulatorState.RUNNING,
           },
           () => {
             WorkerInstance.start({
-              language: "graphical",
+              language: 'graphical',
               code: activeCode,
             });
-          }
+          },
         );
         break;
       }
@@ -653,18 +656,18 @@ class Root extends React.Component<Props, State> {
   private onDownloadClick_ = () => {
     const { activeLanguage } = this.state;
 
-    const element = document.createElement("a");
+    const element = document.createElement('a');
     element.setAttribute(
-      "href",
+      'href',
       `data:text/plain;charset=utf-8,${encodeURIComponent(
-        this.state.code[activeLanguage]
-      )}`
+        this.state.code[activeLanguage],
+      )}`,
     );
     element.setAttribute(
-      "download",
-      `program.${ProgrammingLanguage.FILE_EXTENSION[activeLanguage]}`
+      'download',
+      `program.${ProgrammingLanguage.FILE_EXTENSION[activeLanguage]}`,
     );
-    element.style.display = "none";
+    element.style.display = 'none';
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
@@ -733,12 +736,12 @@ class Root extends React.Component<Props, State> {
       console: StyledText.toString(this.state.console),
       content: LocalizedString.lookup(
         tr("Please help me understand what's wrong."),
-        this.props.locale
+        this.props.locale,
       ),
       robot:
         this.props.robots[
-          Dict.unique(Scene.robots(Async.latestValue(this.props.scene)))
-            ?.robotId ?? "demobot"
+        Dict.unique(Scene.robots(Async.latestValue(this.props.scene)))
+          ?.robotId ?? 'demobot'
         ],
       locale: this.props.locale,
     });
@@ -751,7 +754,7 @@ class Root extends React.Component<Props, State> {
   };
 
   onDashboardClick = () => {
-    window.location.href = "/";
+    window.location.href = '/';
   };
 
   private onSettingsChange_ = (changedSettings: Partial<Settings>) => {
@@ -760,25 +763,25 @@ class Root extends React.Component<Props, State> {
       ...changedSettings,
     };
 
-    if ("simulationRealisticSensors" in changedSettings) {
+    if ('simulationRealisticSensors' in changedSettings) {
       Space.getInstance().realisticSensors =
         changedSettings.simulationRealisticSensors;
     }
 
-    if ("simulationSensorNoise" in changedSettings) {
+    if ('simulationSensorNoise' in changedSettings) {
       Space.getInstance().noisySensors = changedSettings.simulationSensorNoise;
     }
 
-    if ("interfaceMode" in changedSettings) {
-      console.log("Interface mode changed to:", changedSettings.interfaceMode);
+    if ('interfaceMode' in changedSettings) {
+      console.log('Interface mode changed to:', changedSettings.interfaceMode);
       localStorage.setItem(
-        "interfaceMode",
-        changedSettings.interfaceMode ? "Advanced" : "Simple"
+        'interfaceMode',
+        changedSettings.interfaceMode ? 'Advanced' : 'Simple',
       );
       this.props.onChangeInterfaceMode(
         changedSettings.interfaceMode
           ? InterfaceMode.ADVANCED
-          : InterfaceMode.SIMPLE
+          : InterfaceMode.SIMPLE,
       );
     }
 
@@ -812,7 +815,7 @@ class Root extends React.Component<Props, State> {
       },
       () => {
         this.onContinueTour_();
-      }
+      },
     );
   };
 
@@ -840,7 +843,7 @@ class Root extends React.Component<Props, State> {
         const newSceneId = uuid.v4();
         this.props.onCreateScene(newSceneId, nextScene);
         this.props.navigate(`/scene/${newSceneId}`);
-      }
+      },
     );
   };
 
@@ -853,7 +856,7 @@ class Root extends React.Component<Props, State> {
       () => {
         this.props.navigate(DEFAULT_SCENE);
         location.reload();
-      }
+      },
     );
   };
 
@@ -867,7 +870,7 @@ class Root extends React.Component<Props, State> {
           name: scene.name,
           description: scene.description,
         });
-      }
+      },
     );
   };
 
@@ -894,12 +897,12 @@ class Root extends React.Component<Props, State> {
   private onFileSelected_ = (
     selectedProject: Project,
     fileName: string,
-    fileType: "srcFiles" | "includeFiles" | "userDataFiles"
+    fileType: 'srcFiles' | 'includeFiles' | 'userDataFiles',
   ) => {
     const { props } = this;
     const { projects } = props;
     const filesDict = selectedProject[fileType];
-    const fileContent = filesDict?.[fileName]?.fileContent ?? "";
+    const fileContent = filesDict?.[fileName]?.fileContent ?? '';
     this.setState(
       {
         code: {
@@ -910,24 +913,24 @@ class Root extends React.Component<Props, State> {
         projectDetails: {
           project: selectedProject,
           fileType:
-            fileType === "srcFiles"
-              ? "src"
-              : fileType === "includeFiles"
-              ? "include"
-              : "userData",
+            fileType === 'srcFiles'
+              ? 'src'
+              : fileType === 'includeFiles'
+                ? 'include'
+                : 'userData',
           fileName: fileName,
         },
       },
       () => {
         console.log(
-          "Updated code state after file selection:",
-          this.state.code
+          'Updated code state after file selection:',
+          this.state.code,
         );
         window.localStorage.setItem(
           `code-${selectedProject.projectLanguage}`,
-          fileContent
+          fileContent,
         );
-      }
+      },
     );
   };
 
@@ -938,27 +941,27 @@ class Root extends React.Component<Props, State> {
       },
       () => {
         this.props.onSelectProject(selectedProject);
-      }
+      },
     );
   };
 
   private onNewFile_ = (selectedProject: Project, fileType: string) => {
-    let fileT: "src" | "include" | "userData";
+    let fileT: 'src' | 'include' | 'userData';
     switch (fileType) {
-      case "c":
-      case "cpp":
-      case "python":
-      case "graphical":
-        fileT = "src";
+      case 'c':
+      case 'cpp':
+      case 'python':
+      case 'graphical':
+        fileT = 'src';
         break;
-      case "h":
-        fileT = "include";
+      case 'h':
+        fileT = 'include';
         break;
-      case "txt":
-        fileT = "userData";
+      case 'txt':
+        fileT = 'userData';
         break;
       default:
-        console.error("Invalid file type for new file:", fileType);
+        console.error('Invalid file type for new file:', fileType);
         return;
     }
     this.setState({
@@ -966,7 +969,7 @@ class Root extends React.Component<Props, State> {
       projectDetails: {
         project: selectedProject,
         fileType: fileT,
-        fileName: "",
+        fileName: '',
       },
     });
   };
@@ -974,7 +977,7 @@ class Root extends React.Component<Props, State> {
   private onProjectCreate_ = (
     projectName: string,
     language: ProgrammingLanguage,
-    interfaceMode: InterfaceMode
+    interfaceMode: InterfaceMode,
   ) => {
     const project: Project = {
       projectName: projectName,
@@ -988,9 +991,9 @@ class Root extends React.Component<Props, State> {
       },
       includeFiles: {},
       userDataFiles: {},
-      type: "project",
+      type: 'project',
     };
-    console.log("onProjectCreate_: ", project);
+    console.log('onProjectCreate_: ', project);
     this.props.onAddProject(project);
 
     this.setState({
@@ -999,42 +1002,42 @@ class Root extends React.Component<Props, State> {
   };
 
   private onFileCreate_ = (fileName: string) => {
-    console.log("onFileCreate_ state: ", this.state);
+    console.log('onFileCreate_ state: ', this.state);
     let fileN = fileName;
     const { projectDetails, activeLanguage } = this.state;
     switch (projectDetails.fileType) {
-      case "src":
+      case 'src':
         switch (activeLanguage) {
-          case "c":
-            fileN += ".c";
+          case 'c':
+            fileN += '.c';
             break;
-          case "cpp":
-            fileN += ".cpp";
+          case 'cpp':
+            fileN += '.cpp';
             break;
-          case "python":
-            fileN += ".py";
+          case 'python':
+            fileN += '.py';
             break;
-          case "graphical":
-            fileN += ".graphical";
+          case 'graphical':
+            fileN += '.graphical';
             break;
           default:
             console.error(
-              "Invalid active language for new file creation:",
-              activeLanguage
+              'Invalid active language for new file creation:',
+              activeLanguage,
             );
             return;
         }
         break;
-      case "include":
-        fileN += ".h";
+      case 'include':
+        fileN += '.h';
         break;
-      case "userData":
-        fileN += ".txt";
+      case 'userData':
+        fileN += '.txt';
         break;
       default:
         console.error(
-          "Invalid file type for new file creation:",
-          projectDetails.fileType
+          'Invalid file type for new file creation:',
+          projectDetails.fileType,
         );
         return;
     }
@@ -1054,9 +1057,9 @@ class Root extends React.Component<Props, State> {
         this.props.onAddFile(
           projectDetails ? projectDetails.project : null,
           fileN,
-          projectDetails ? projectDetails.fileType : "src"
+          projectDetails ? projectDetails.fileType : 'src',
         );
-      }
+      },
     );
   };
 
@@ -1072,7 +1075,7 @@ class Root extends React.Component<Props, State> {
     void completeTour(
       this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT,
       currentUser,
-      this.state.tourId
+      this.state.tourId,
     );
   };
 
@@ -1082,19 +1085,27 @@ class Root extends React.Component<Props, State> {
       this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT,
       currentUser,
       this.state.tourId,
-      { dismissed: true }
+      { dismissed: true },
     );
   };
 
   private onNextClick_ = (stepIndex: number) => {
     this.setState({ currentTourStepIndex: stepIndex });
   };
-  private onBackClick_ = (stepIndex: number) => {};
+  private onBackClick_ = (stepIndex: number) => {
+    const { simulatorRootTourSteps } = this.state;
+    console.log("back clicked on simulatorRootTourSteps[stepIndex]:", simulatorRootTourSteps[stepIndex]);
+    if (simulatorRootTourSteps[stepIndex].targetKey === 'scene-options') {
+      this.setState({ modal: Modal.NONE, sceneSubMenu: true }, () => {
+        this.setState({ sceneSubMenu: false })
+      });
+    }
+  };
 
   private onContinueTour_ = () => {
     console.log(
-      "Continuing tour, current tour steps:",
-      this.state.simulatorRootTourSteps
+      'Continuing tour, current tour steps:',
+      this.state.simulatorRootTourSteps,
     );
     this.setState({ continueTour: true }, () => {
       this.setState({ continueTour: false });
@@ -1106,10 +1117,15 @@ class Root extends React.Component<Props, State> {
     void retakeTour(
       this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT,
       currentUser,
-      this.state.tourId
+      this.state.tourId,
     );
   };
 
+  private onJumpInTour_ = (jump: boolean) => {
+    this.setState({ jumpInTour: jump }, () => {
+      this.setState({ jumpInTour: false });
+    });
+  }
   render() {
     const { props, state } = this;
 
@@ -1191,10 +1207,10 @@ class Root extends React.Component<Props, State> {
       onObjectAdd: this.props.onObjectAdd,
       challengeState: challenge
         ? {
-            challenge,
-            challengeCompletion:
-              challengeCompletion || Async.unloaded({ brief: {} }),
-          }
+          challenge,
+          challengeCompletion:
+            challengeCompletion || Async.unloaded({ brief: {} }),
+        }
         : undefined,
       onDocumentationGoToFuzzy,
       onCommonDocumentationGoToFuzzy,
@@ -1208,13 +1224,12 @@ class Root extends React.Component<Props, State> {
     };
 
     const activeTour = tourId
-      ? toursById[tourId] ?? TourDoc.DEFAULT
+      ? (toursById[tourId] ?? TourDoc.DEFAULT)
       : TourDoc.DEFAULT;
     const activeTourLoaded = !!(tourId && toursLoaded[tourId]);
 
-    //const showTour = !!tourId && activeTourLoaded && !activeTour.completed;
-    //window.console.log("Root render showTour:", showTour, "activeTour:", activeTour);
-    const showTour = false;
+    const showTour = !!tourId && activeTourLoaded && !activeTour.completed;
+    //const showTour = false;
 
     if (showTour && !this.registry) {
       this.registry = new TourRegistry();
@@ -1240,6 +1255,7 @@ class Root extends React.Component<Props, State> {
           <SideLayoutRedux
             tourRegistry={tourRegistry}
             continueTour={this.onContinueTour_}
+            jumpInTour={this.state.jumpInTour}
             {...commonLayoutProps}
           />
         ) : (
@@ -1251,7 +1267,6 @@ class Root extends React.Component<Props, State> {
         return null;
       }
     }
-
     const latestScene = Async.latestValue(scene);
     const isAuthor =
       latestScene && latestScene.author.id === auth.currentUser.uid;
@@ -1291,7 +1306,7 @@ class Root extends React.Component<Props, State> {
         onSaveAsSceneClick={
           !challenge &&
           this.onModalClick_(
-            Modal.copyScene({ scene: Async.latestValue(scene) })
+            Modal.copyScene({ scene: Async.latestValue(scene) }),
           )
         }
         onDeleteSceneClick={
@@ -1304,19 +1319,21 @@ class Root extends React.Component<Props, State> {
                 id: sceneId,
                 value: scene,
               },
-            })
+            }),
           )
         }
+        onRetakeTourClick={this.onRetakeTour_}
         tourRegistry={tourRegistry}
         continueTour={this.onContinueTour_}
+        sceneSubMenuEnabled={this.state.sceneSubMenu}
       />
     );
     const tourContent_ = (
-      <TourTarget registry={tourRegistry} targetKey={"simulator-overview"}>
+      <TourTarget registry={tourRegistry} targetKey={'simulator-overview'}>
         <Container $windowInnerHeight={windowInnerHeight}>
           <TourTarget
             registry={tourRegistry}
-            targetKey={"simulator-main-menu-overview"}
+            targetKey={'simulator-main-menu-overview'}
           >
             {simMenu_}
           </TourTarget>
@@ -1346,6 +1363,7 @@ class Root extends React.Component<Props, State> {
             onSkip={this.onSkipTour_}
             onBackClick={this.onBackClick_}
             onNextClick={this.onNextClick_}
+            onJumpInTour={this.onJumpInTour_}
             theme={theme}
           />
         )}
@@ -1387,7 +1405,7 @@ class Root extends React.Component<Props, State> {
         )}
         {modal.type === Modal.Type.OpenScene &&
           (tourRegistry ? (
-            <TourTarget registry={tourRegistry} targetKey={"open-scene-dialog"}>
+            <TourTarget registry={tourRegistry} targetKey={'open-scene-dialog'}>
               <OpenSceneDialog
                 theme={theme}
                 onClose={this.onModalClose_}
@@ -1425,7 +1443,7 @@ class Root extends React.Component<Props, State> {
               theme={theme}
               onClose={this.onModalClose_}
               onAccept={this.onDeleteRecordAccept_(
-                Record.selector(modal.record)
+                Record.selector(modal.record),
               )}
             />
           )}
@@ -1439,7 +1457,7 @@ class Root extends React.Component<Props, State> {
         )}
         {modal.type === Modal.Type.ResetCode && (
           <DeleteDialog
-            name={tr("your current work")}
+            name={tr('your current work')}
             theme={theme}
             onAccept={this.onResetCodeAccept_}
             onClose={this.onModalClose_}
@@ -1463,7 +1481,7 @@ class Root extends React.Component<Props, State> {
         {modal.type === Modal.Type.DeleteProject && (
           <DeleteProjectDialog
             theme={theme}
-            name={selectedProject ? selectedProject.projectName : ""}
+            name={selectedProject ? selectedProject.projectName : ''}
             onClose={this.onModalClose_}
             onDeleteProject={this.onDeleteProject_}
           />
@@ -1473,7 +1491,7 @@ class Root extends React.Component<Props, State> {
           code={code[activeLanguage]}
           language={activeLanguage}
           console={StyledText.toString(console)}
-          robot={this.props.robots["demobot"]}
+          robot={this.props.robots['demobot']}
         />
       </>
     );
@@ -1483,7 +1501,7 @@ class Root extends React.Component<Props, State> {
 const ConnectedRoot = connect(
   (
     state: ReduxState,
-    { params: { sceneId, challengeId } }: RootPublicProps
+    { params: { sceneId, challengeId } }: RootPublicProps,
   ) => {
     const builder = new Builder(state);
 
@@ -1532,7 +1550,7 @@ const ConnectedRoot = connect(
             nodeId,
             origin,
             updateStarting: updateOrigin,
-          })
+          }),
         );
       }
     },
@@ -1551,7 +1569,7 @@ const ConnectedRoot = connect(
     onSelectNodeId: (nodeId: string) =>
       dispatch(ScenesAction.selectNode({ sceneId, nodeId })),
     onSetNodeBatch: (
-      setNodeBatch: Omit<ScenesAction.SetNodeBatch, "type" | "sceneId">
+      setNodeBatch: Omit<ScenesAction.SetNodeBatch, 'type' | 'sceneId'>,
     ) => dispatch(ScenesAction.setNodeBatch({ sceneId, ...setNodeBatch })),
     onResetScene: () => dispatch(ScenesAction.softResetScene({ sceneId })),
     onCreateScene: (sceneId: string, scene: Scene) => {
@@ -1559,77 +1577,77 @@ const ConnectedRoot = connect(
     },
     onChallengeCompletionCreate: (
       challengeId: string,
-      challengeCompletion: ChallengeCompletion
+      challengeCompletion: ChallengeCompletion,
     ) => {
       dispatch(
         ChallengeCompletionsAction.createChallengeCompletion({
           challengeId,
           challengeCompletion,
-        })
+        }),
       );
     },
     onChallengeCompletionSceneDiffChange: (
       challengeId: string,
-      sceneDiff: OuterObjectPatch<Scene>
+      sceneDiff: OuterObjectPatch<Scene>,
     ) => {
       dispatch(
-        ChallengeCompletionsAction.setSceneDiff({ challengeId, sceneDiff })
+        ChallengeCompletionsAction.setSceneDiff({ challengeId, sceneDiff }),
       );
     },
     onChallengeCompletionEventStateRemove: (
       challengeId: string,
-      eventId: string
+      eventId: string,
     ) => {
       dispatch(
-        ChallengeCompletionsAction.removeEventState({ challengeId, eventId })
+        ChallengeCompletionsAction.removeEventState({ challengeId, eventId }),
       );
     },
     onChallengeCompletionEventStateChange: (
       challengeId: string,
       eventId: string,
-      eventState: boolean
+      eventState: boolean,
     ) => {
       dispatch(
         ChallengeCompletionsAction.setEventState({
           challengeId,
           eventId,
           eventState,
-        })
+        }),
       );
     },
     onChallengeCompletionEventStatesChange: (
       challengeId: string,
-      eventStates: Dict<boolean>
+      eventStates: Dict<boolean>,
     ) => {
       dispatch(
-        ChallengeCompletionsAction.setEventStates({ challengeId, eventStates })
+        ChallengeCompletionsAction.setEventStates({ challengeId, eventStates }),
       );
     },
     onChallengeCompletionSuccessPredicateCompletionChange: (
       challengeId: string,
-      success?: PredicateCompletion
+      success?: PredicateCompletion,
     ) => {
       dispatch(
         ChallengeCompletionsAction.setSuccessPredicateCompletion({
           challengeId,
           success,
-        })
+        }),
       );
     },
     onChallengeCompletionFailurePredicateCompletionChange: (
       challengeId: string,
-      failure?: PredicateCompletion
+      failure?: PredicateCompletion,
     ) => {
       dispatch(
         ChallengeCompletionsAction.setFailurePredicateCompletion({
           challengeId,
           failure,
-        })
+        }),
       );
     },
     onChallengeCompletionReset: (challengeId: string) => {
       dispatch(
-        ChallengeCompletionsAction.resetChallengeCompletion({ challengeId })
+        ChallengeCompletionsAction.resetChallengeCompletion({ challengeId }),
       );
     },
     onDeleteRecord: (selector: Selector) => {
@@ -1638,11 +1656,11 @@ const ConnectedRoot = connect(
     onDocumentationClick: () => dispatch(DocumentationAction.TOGGLE),
     onDocumentationPush: (location: DocumentationLocation) =>
       dispatch(DocumentationAction.pushLocation({ location })),
-    onDocumentationSetLanguage: (language: "c" | "python") =>
+    onDocumentationSetLanguage: (language: 'c' | 'python') =>
       dispatch(DocumentationAction.setLanguage({ language })),
-    onDocumentationGoToFuzzy: (query: string, language: "c" | "python") =>
+    onDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') =>
       dispatch(DocumentationAction.goToFuzzy({ query, language })),
-    onCommonDocumentationGoToFuzzy: (query: string, language: "c" | "python") =>
+    onCommonDocumentationGoToFuzzy: (query: string, language: 'c' | 'python') =>
       dispatch(DocumentationAction.goToFuzzyCommon({ query, language })),
     onSaveScene: (sceneId: string) =>
       dispatch(ScenesAction.saveScene({ sceneId })),
@@ -1671,17 +1689,17 @@ const ConnectedRoot = connect(
     onSetProjectCode: (
       project: Project,
       fileName: string,
-      fileType: "src" | "include" | "userData",
-      fileContent: string
+      fileType: 'src' | 'include' | 'userData',
+      fileContent: string,
     ) => {
       dispatch(
-        ProjectsAction.setCode({ project, fileName, fileType, fileContent })
+        ProjectsAction.setCode({ project, fileName, fileType, fileContent }),
       );
     },
     onAddFile: (
       project: Project,
       fileName: string,
-      fileType: "src" | "include" | "userData"
+      fileType: 'src' | 'include' | 'userData',
     ) => {
       dispatch(ProjectsAction.addFile({ project, fileName, fileType }));
     },
@@ -1694,7 +1712,7 @@ const ConnectedRoot = connect(
     onChangeInterfaceMode: (interfaceMode: InterfaceMode) => {
       dispatch(ProjectsAction.changeInterfaceMode({ interfaceMode }));
     },
-  })
+  }),
 )(withNavigate(Root)) as React.ComponentType<RootPublicProps>;
 
 export default withParams<RootRouteParams>()(ConnectedRoot);
