@@ -54,6 +54,7 @@ const SIDEBAR_SIZE = sizeDict(SIDEBAR_SIZES);
 export interface SideLayoutProps extends LayoutProps {
   tourRegistry?: TourRegistry;
   continueTour?: () => void;
+  jumpInTour?: boolean;
 }
 
 interface ReduxSideLayoutProps {
@@ -144,17 +145,24 @@ export class SideLayout extends React.PureComponent<
       sidePanelSize: Size.Type.Miniature,
       activePanel: 0,
     };
-
-    // TODO: this isn't working yet. Needs more tinkering
-    // on an orientation change, trigger a rerender
-    // this is deprecated, but supported in safari iOS
-    // screen.orientation.onchange = () => {
-    //   console.log('orientation change')
-    //   this.render();
-    // };
-    // // this is not deprecated, but not supported in safari iOS
-    // window.addEventListener('orientationchange', () => { console.log('deprecated orientation change'); this.render(); });
   }
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.jumpInTour !== this.props.jumpInTour && this.props.jumpInTour) {
+      this.setState({ activePanel: 0 });
+    }
+
+  }
+
+  // TODO: this isn't working yet. Needs more tinkering
+  // on an orientation change, trigger a rerender
+  // this is deprecated, but supported in safari iOS
+  // screen.orientation.onchange = () => {
+  //   console.log('orientation change')
+  //   this.render();
+  // };
+  // // this is not deprecated, but not supported in safari iOS
+  // window.addEventListener('orientationchange', () => { console.log('deprecated orientation change'); this.render(); });
+
   private onSideBarSizeChange_ = (index: number) => {
     if (SIDEBAR_SIZES[index].type === Size.Type.Minimized) {
       // unset active tab if minimizing
@@ -527,17 +535,36 @@ export class SideLayout extends React.PureComponent<
       ? LocalizedString.lookup(latestScene.name, locale)
       : "";
 
+
     const simulator = (
       <SimulatorAreaContainer>
         {sceneName && (
           <SceneNameOverlay theme={theme}>{sceneName}</SceneNameOverlay>
         )}
-        <SimulatorArea
-          theme={theme}
-          key="simulator"
-          isSensorNoiseEnabled={settings.simulationSensorNoise}
-          isRealisticSensorsEnabled={settings.simulationRealisticSensors}
-        />
+        {this.props.tourRegistry ? (
+          <TourTarget
+            registry={this.props.tourRegistry}
+            targetKey={"simulator-area"}
+            style={{ display: "flex", flex: 1, minWidth: 0, minHeight: 0 }}
+          >
+            <SimulatorArea
+              theme={theme}
+              key="simulator"
+              isSensorNoiseEnabled={settings.simulationSensorNoise}
+              isRealisticSensorsEnabled={settings.simulationRealisticSensors}
+              tourRegistry={this.props.tourRegistry}
+              onContinueTour={this.props.continueTour}
+            />
+          </TourTarget>
+        ) : (
+          <SimulatorArea
+            theme={theme}
+            key="simulator"
+            isSensorNoiseEnabled={settings.simulationSensorNoise}
+            isRealisticSensorsEnabled={settings.simulationRealisticSensors}
+
+          />
+        )}
       </SimulatorAreaContainer>
     );
     const tabBar_ = (
@@ -566,6 +593,8 @@ export class SideLayout extends React.PureComponent<
         {tabBar_}
       </TourTarget>
     );
+
+
     return (
       <Container style={style} className={className}>
         <SidePanelContainer>

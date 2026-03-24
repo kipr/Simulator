@@ -151,7 +151,7 @@ export interface WidgetProps extends StyleProps, ThemeProps, ModeProps {
   onChromeMouseUp?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-interface WidgetState {}
+interface WidgetState { }
 
 type Props = WidgetProps;
 type State = WidgetState;
@@ -262,10 +262,8 @@ const sizeIcon = (size: Size): IconProp => {
       return faExpand;
   }
 };
-function hasTourRegistry(
-  props: object
-): props is { tourRegistry?: TourRegistry } {
-  return "tourRegistry" in props;
+function hasTourRegistry(props: object): props is { tourRegistry: TourRegistry } {
+  return "tourRegistry" in props && (props as any).tourRegistry !== undefined;
 }
 class Widget extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -318,28 +316,18 @@ class Widget extends React.PureComponent<Props, State> {
           </Title>
           {barComponents
             ? barComponents.map((barComponent, i) => {
-                const Component = barComponent.component;
-                const Props = barComponent.props;
-                // if (hasTourRegistry(Props)) {
-                //   return (
-                //     <TourTarget registry={Props.tourRegistry} targetKey={`${Component.name}-key-${i}`} key={i} style={{ padding: `${props.theme.itemPadding * 1}px` }} >
-                //       <Component {...barComponent.props} />
-                //     </TourTarget>
-                //   )
-                // }
-                // else {
-                //   return <Component key={i} {...barComponent.props} />
-                // }
-                if (hasTourRegistry(Props)) {
-                  return (
-                    // <TourTarget registry={Props.tourRegistry} targetKey={`${Component.name}-key-${i}`} key={i} style={{ padding: `${props.theme.itemPadding * 1}px` }} >
-                    <Component {...barComponent.props} />
-                    //</TourTarget>
-                  );
-                } else {
-                  return <Component key={i} {...barComponent.props} />;
-                }
-              })
+              const Component = barComponent.component;
+              const Props = barComponent.props;
+              if (hasTourRegistry(Props)) {
+                return (
+                  <TourTarget registry={Props.tourRegistry} targetKey={`${Component.name}-key-${i}`} key={i} style={{ padding: `${props.theme.itemPadding * 1}px` }} >
+                    <Component key={i}{...barComponent.props} />
+                  </TourTarget>
+                );
+              } else {
+                return <Component key={i} {...barComponent.props} />;
+              }
+            })
             : undefined}
           <Spacer />
           {(sizes || [])

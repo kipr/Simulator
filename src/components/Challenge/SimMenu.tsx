@@ -107,6 +107,9 @@ export interface MenuPublicProps extends StyleProps, ThemeProps {
 
   tourRegistry?: TourRegistry;
   continueTour?: () => void;
+  onRetakeTourClick?: () => void;
+
+  sceneSubMenuEnabled?: boolean;
 }
 
 interface MenuPrivateProps {
@@ -150,9 +153,9 @@ const Logo = styled("img", (props: ThemeProps & ClickProps) => ({
   ":hover":
     props.onClick && !props.disabled
       ? {
-          cursor: "pointer",
-          backgroundColor: `rgba(255, 255, 255, 0.1)`,
-        }
+        cursor: "pointer",
+        backgroundColor: `rgba(255, 255, 255, 0.1)`,
+      }
       : {},
   userSelect: "none",
   transition: "background-color 0.2s, opacity 0.2s",
@@ -174,9 +177,9 @@ const Item = styled("div", (props: ThemeProps & ClickProps) => ({
   ":hover":
     props.onClick && !props.disabled
       ? {
-          cursor: "pointer",
-          backgroundColor: `rgba(255, 255, 255, 0.1)`,
-        }
+        cursor: "pointer",
+        backgroundColor: `rgba(255, 255, 255, 0.1)`,
+      }
       : {},
   userSelect: "none",
   transition: "background-color 0.2s, opacity 0.2s",
@@ -187,8 +190,8 @@ const RunItem = withStyleDeep(Item, (props: ClickProps) => ({
   ":hover":
     props.onClick && !props.disabled
       ? {
-          backgroundColor: GREEN.hover,
-        }
+        backgroundColor: GREEN.hover,
+      }
       : {},
 }));
 
@@ -197,8 +200,8 @@ const StopItem = withStyleDeep(Item, (props: ClickProps) => ({
   ":hover":
     props.onClick && !props.disabled
       ? {
-          backgroundColor: RED.hover,
-        }
+        backgroundColor: RED.hover,
+      }
       : {},
 }));
 
@@ -215,6 +218,12 @@ class SimMenu extends React.PureComponent<Props, State> {
     };
   }
 
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<MenuState>, snapshot?: any): void {
+    if (prevProps.sceneSubMenuEnabled !== this.props.sceneSubMenuEnabled && this.props.sceneSubMenuEnabled) {
+      this.setState({ subMenu: SubMenu.SCENE_MENU });
+
+    }
+  }
   private onLayoutClick_ = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
@@ -319,6 +328,7 @@ class SimMenu extends React.PureComponent<Props, State> {
       onDeleteSceneClick,
       onAiClick,
       simulatorState,
+      onRetakeTourClick,
       locale,
     } = props;
 
@@ -377,9 +387,9 @@ class SimMenu extends React.PureComponent<Props, State> {
         title={
           onStartChallengeClick === undefined
             ? LocalizedString.lookup(
-                tr("The current scene does not have a challenge available"),
-                locale
-              )
+              tr("The current scene does not have a challenge available"),
+              locale
+            )
             : undefined
         }
         style={{ position: "relative" }}
@@ -420,27 +430,18 @@ class SimMenu extends React.PureComponent<Props, State> {
         <ItemIcon icon={faGlobeAmericas} />{" "}
         {LocalizedString.lookup(tr("Scene"), locale)}
         {subMenu.type === SubMenu.Type.SceneMenu ? (
-          <TourTarget
-            registry={this.props.tourRegistry}
-            targetKey={"scene-options"}
-            style={{
-              position: "absolute",
-              top: "100%",
-              left: 0,
-              right: 0,
-            }}
-          >
-            <SceneMenu
-              style={{ zIndex: 9 }}
-              theme={theme}
-              onSaveAsScene={onCopySceneClick}
-              onNewScene={onNewSceneClick}
-              onSaveScene={onSaveSceneClick}
-              onOpenScene={onOpenSceneClick}
-              onSettingsScene={onSettingsSceneClick}
-              onDeleteScene={onDeleteSceneClick}
-            />
-          </TourTarget>
+
+          <SceneMenu
+            style={{ zIndex: 9 }}
+            theme={theme}
+            onSaveAsScene={onCopySceneClick}
+            onNewScene={onNewSceneClick}
+            onSaveScene={onSaveSceneClick}
+            onOpenScene={onOpenSceneClick}
+            onSettingsScene={onSettingsSceneClick}
+            onDeleteScene={onDeleteSceneClick}
+          />
+
         ) : undefined}
       </Item>
     );
@@ -456,6 +457,7 @@ class SimMenu extends React.PureComponent<Props, State> {
         onSettingsClick={onSettingsClick}
         onAiClick={onAiClick}
         tourRegistry={this.props.tourRegistry}
+        onRetakeTourClick={onRetakeTourClick}
       />
     );
 
@@ -490,16 +492,7 @@ class SimMenu extends React.PureComponent<Props, State> {
               ) : undefined}
             </Item>
           ) : (
-            <Item
-              theme={theme}
-              onClick={this.onExtraClick_}
-              style={{ position: "relative" }}
-            >
-              <ItemIcon icon={faBars} style={{ padding: 0 }} />
-              {subMenu.type === SubMenu.Type.ExtraMenu
-                ? extraMenuWidget_
-                : undefined}
-            </Item>
+            extraMenuWidget_
           )
         ) : undefined}
       </Item>

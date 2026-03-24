@@ -32,10 +32,17 @@ export const createConsoleBarComponents = (
     onClick: onClearConsole,
     children:
       <>
-        <TourTarget registry={tourRegistry} targetKey={'console-clear-button'}>
-          <FontAwesome icon={faFile} />
-          {' '} {LocalizedString.lookup(tr('Clear'), locale)}
-        </TourTarget>
+        {tourRegistry ? (
+          <TourTarget registry={tourRegistry} targetKey={'console-clear-button'}>
+            <FontAwesome icon={faFile} />
+            {' '} {LocalizedString.lookup(tr('Clear'), locale)}
+          </TourTarget>) : (
+          <>
+            <FontAwesome icon={faFile} />
+            {' '} {LocalizedString.lookup(tr('Clear'), locale)}
+
+          </>
+        )}
       </>,
   }));
 
@@ -44,10 +51,15 @@ export const createConsoleBarComponents = (
     onClick: onAskTutor,
     children:
       <>
-        <TourTarget registry={tourRegistry} targetKey={'ask-tutor-button'}>
+        {tourRegistry ? (<TourTarget registry={tourRegistry} targetKey={'ask-tutor-button'}>
           <FontAwesome icon={faRobot} />
           {' '} {LocalizedString.lookup(tr('Ask Tutor'), locale)}
-        </TourTarget>
+        </TourTarget>) : (
+          <>
+            <FontAwesome icon={faRobot} />
+            {' '} {LocalizedString.lookup(tr('Ask Tutor'), locale)}
+          </>
+        )}
       </>,
   }));
 

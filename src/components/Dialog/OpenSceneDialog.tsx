@@ -109,7 +109,7 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
   }
 
   render() {
-    const { theme, onClose, scenes, locale } = this.props;
+    const { theme, onClose, scenes, locale, tourRegistry } = this.props;
     const { selectedSceneId } = this.state;
 
     const loadedScenesArray: [string, Scene][] = [];
@@ -119,31 +119,55 @@ class OpenSceneDialog extends React.PureComponent<Props, SelectSceneDialogState>
       loadedScenesArray.push([key, underlying]);
     });
 
-    return (
+    const sceneColumn_ = (
+      <div>{loadedScenesArray.map(s => this.createSceneName(s[0], s[1]))}</div>);
+
+    const infoColumn_ = (<InfoContainer theme={theme}>
+      {selectedSceneId === null
+        ? this.createNoSceneInfo()
+        : this.createSceneInfo(scenes[selectedSceneId])}
+    </InfoContainer>);
+
+    const dialogBar_ = (<DialogBar theme={theme} onAccept={this.onAccept}>
+      <FontAwesome icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}
+    </DialogBar>);
+
+    const tourContent_ = (
       <Dialog name={LocalizedString.lookup(tr('Open World'), locale)} theme={theme} onClose={onClose} tourRegistry={this.props.tourRegistry}>
         <TourTarget registry={this.props.tourRegistry} targetKey={'open-scene-dialog'} style={{ position: 'relative' }}>
           <Container theme={theme}>
-
             <SceneColumn theme={theme} data-tour-clamp>
               <TourTarget registry={this.props.tourRegistry} targetKey="open-scene-list">
-                <div>{loadedScenesArray.map(s => this.createSceneName(s[0], s[1]))}</div>
+                {sceneColumn_}
               </TourTarget>
             </SceneColumn>
             <InfoColumn>
               <TourTarget registry={this.props.tourRegistry} targetKey="open-scene-info">
-                <InfoContainer theme={theme}>
-                  {selectedSceneId === null
-                    ? this.createNoSceneInfo()
-                    : this.createSceneInfo(scenes[selectedSceneId])}
-                </InfoContainer>
+                {infoColumn_}
               </TourTarget>
             </InfoColumn>
           </Container>
-          <DialogBar theme={theme} onAccept={this.onAccept}>
-            <FontAwesome icon={faCheck} /> {LocalizedString.lookup(tr('Accept'), locale)}
-          </DialogBar>
+          {dialogBar_}
         </TourTarget>
-      </Dialog >
+      </Dialog>
+    );
+
+    const normalContent_ = (
+      <Dialog name={LocalizedString.lookup(tr('Open World'), locale)} theme={theme} onClose={onClose} >
+        <Container theme={theme}>
+          <SceneColumn theme={theme} data-tour-clamp>
+            {sceneColumn_}
+          </SceneColumn>
+          <InfoColumn>
+            {infoColumn_}
+          </InfoColumn>
+        </Container>
+        {dialogBar_}
+      </Dialog>
+    );
+
+    return (
+      <>{tourRegistry ? tourContent_ : normalContent_}</>
     );
   }
 

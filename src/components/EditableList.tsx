@@ -22,7 +22,7 @@ export interface EditableListProps<P> extends StyleProps, ThemeProps {
   onContinueTour?: () => void;
 }
 
-interface EditableListState {}
+interface EditableListState { }
 
 type Props = EditableListProps<EditableList.ItemProps>;
 type State = EditableListState;
@@ -40,7 +40,6 @@ const ItemWrapper = styled("div", {
 class EditableList extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
-    console.log("Editable List props: ", props);
     this.state = {};
   }
 
@@ -130,7 +129,6 @@ namespace EditableList {
   > {
     constructor(props: StandardItem.Props<P>) {
       super(props);
-      console.log("Standard Item props: ", props);
 
       this.state = {
         hover: false,
@@ -143,9 +141,6 @@ namespace EditableList {
         {
           hover: true,
         },
-        () => {
-          this.props.tourRegistry ? this.props.onContinueTour?.() : null;
-        }
       );
     };
 
@@ -175,8 +170,11 @@ namespace EditableList {
     };
 
     private onVisibilityChange_ = () => {
-      const { visible, onVisibilityChange } = this.props;
+      const { visible, onVisibilityChange, onContinueTour } = this.props;
       onVisibilityChange(!visible);
+      if (onContinueTour) {
+        onContinueTour();
+      }
     };
 
     render() {
@@ -193,11 +191,64 @@ namespace EditableList {
         props: componentProps,
       } = props;
       const { hover, initialTouch } = state;
-      console.log("standard item render props: ", props);
-      console.log("component props: ", componentProps);
-      console.log("componentProps name: ", componentProps.name);
+
       const tourCan1 = !!tourRegistry && componentProps.name === "Can 1";
-      const showOptions = tourCan1 || (hover && !initialTouch);
+      const showOptions = tourCan1;
+      const tourContent_ = (
+        <StandardItem.OptionsContainer>
+          <TourTarget
+            registry={this.props.tourRegistry}
+            targetKey={"can1-visibility"}
+            style={{
+              display: "flex",
+              flex: 1,
+              minWidth: 0,
+              minHeight: 0,
+            }}
+          >
+            <StandardItem.VisibilityIconContainer
+              onClick={this.onVisibilityChange_}
+            >
+              <StandardItem.OptionIcon
+                icon={visible ? faEye : faEyeSlash}
+              />
+            </StandardItem.VisibilityIconContainer>
+          </TourTarget>
+          <TourTarget registry={this.props.tourRegistry} targetKey={"can1-reset"} style={{
+            display: "flex",
+            flex: 1,
+            minWidth: 0,
+            minHeight: 0,
+          }}>
+            <StandardItem.ResetIconContainer
+              onClick={visible ? onReset : undefined}
+              $disabled={!visible}
+            >
+              <StandardItem.OptionIcon icon={faSync} />
+            </StandardItem.ResetIconContainer>
+          </TourTarget>
+          <TourTarget registry={this.props.tourRegistry} targetKey={"can1-settings"} style={{
+            display: "flex",
+            flex: 1,
+            minWidth: 0,
+            minHeight: 0,
+          }}>
+            <StandardItem.SettingsIconContainer onClick={onSettings}>
+              <StandardItem.OptionIcon icon={faCog} />
+            </StandardItem.SettingsIconContainer>
+          </TourTarget>
+          <TourTarget registry={this.props.tourRegistry} targetKey={"can1-remove"} style={{
+            display: "flex",
+            flex: 1,
+            minWidth: 0,
+            minHeight: 0,
+          }}>
+            <StandardItem.RemoveIconContainer onClick={onRemove}>
+              <StandardItem.OptionIcon icon={faTimes} />
+            </StandardItem.RemoveIconContainer>
+          </TourTarget>
+        </StandardItem.OptionsContainer>
+      );
       return (
         <StandardItem.Container
           onMouseEnter={this.onMouseEnter_}
@@ -207,72 +258,38 @@ namespace EditableList {
         >
           <Component style={{ flex: "1 1" }} {...componentProps} />
 
-          {showOptions ? (
+          {tourRegistry && showOptions ? (tourContent_) : ((hover && !initialTouch) ? (
             <StandardItem.OptionsContainer>
-              {onVisibilityChange && tourRegistry ? (
-                <TourTarget
-                  registry={this.props.tourRegistry}
-                  targetKey={"can1-visibility"}
-                  style={{
-                    display: "flex",
-                    flex: 1,
-                    minWidth: 0,
-                    minHeight: 0,
-                  }}
-                >
-                  <StandardItem.VisibilityIconContainer
-                    onClick={this.onVisibilityChange_}
-                    onMouseEnter={
-                      tourCan1 ? this.props.onContinueTour : undefined
-                    }
-                  >
-                    <StandardItem.OptionIcon
-                      icon={visible ? faEye : faEyeSlash}
-                    />
-                  </StandardItem.VisibilityIconContainer>
-                </TourTarget>
-              ) : (
-                <StandardItem.VisibilityIconContainer
-                  onClick={this.onVisibilityChange_}
-                  onMouseEnter={
-                    tourCan1 ? this.props.onContinueTour : undefined
-                  }
-                >
-                  <StandardItem.OptionIcon
-                    icon={visible ? faEye : faEyeSlash}
-                  />
+              {onVisibilityChange && (
+                <StandardItem.VisibilityIconContainer onClick={this.onVisibilityChange_}>
+                  <StandardItem.OptionIcon icon={visible ? faEye : faEyeSlash} />
                 </StandardItem.VisibilityIconContainer>
               )}
-
               {onReset && (
-                <StandardItem.ResetIconContainer
-                  onClick={visible ? onReset : undefined}
-                  $disabled={!visible}
-                >
+                <StandardItem.ResetIconContainer onClick={visible ? onReset : undefined} $disabled={!visible}>
                   <StandardItem.OptionIcon icon={faSync} />
                 </StandardItem.ResetIconContainer>
               )}
-
               {onSettings && (
                 <StandardItem.SettingsIconContainer onClick={onSettings}>
                   <StandardItem.OptionIcon icon={faCog} />
                 </StandardItem.SettingsIconContainer>
               )}
-
               {onRemove && (
                 <StandardItem.RemoveIconContainer onClick={onRemove}>
                   <StandardItem.OptionIcon icon={faTimes} />
                 </StandardItem.RemoveIconContainer>
               )}
+
             </StandardItem.OptionsContainer>
-          ) : undefined}
+          ) : undefined)}
         </StandardItem.Container>
       );
     }
   }
 
   export namespace StandardItem {
-    export interface ComponentProps extends StyleProps {}
+    export interface ComponentProps extends StyleProps { }
 
     export interface Props<P extends ComponentProps> extends ItemProps {
       component: React.ComponentType<P>;
@@ -333,8 +350,8 @@ namespace EditableList {
         backgroundColor: props.$disabled ? BROWN.disabled : BROWN.standard,
         ":hover": !props.$disabled
           ? {
-              backgroundColor: BROWN.hover,
-            }
+            backgroundColor: BROWN.hover,
+          }
           : {},
       })
     );
