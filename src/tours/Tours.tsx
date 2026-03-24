@@ -729,6 +729,7 @@ const SimLeftTabSteps: TourStep[] = [
     title: 'Overlay Tab Bar Robot Tab',
     content: 'This is the Robot tab, where you can see information about the robot such as its position and sensor readings.',
     placement: 'right',
+    noBackButton: true,
   },
   // Overlay Tab Bar Robot Starting Location Step
   {
@@ -809,10 +810,8 @@ const SimLeftTabSteps: TourStep[] = [
     id: 'can1',
     targetKey: 'can1',
     title: 'World Tab Can Object',
-    content: 'This is the can object, which is a common object used in challenges. Hover over this row to see object options.',
+    content: 'This is the can object, which is a common object used in challenges.',
     placement: 'right',
-    allowTargetInteraction: true,
-    noNextButton: true,
   },
   // World Can 1 Visibility Step
   {
@@ -821,6 +820,112 @@ const SimLeftTabSteps: TourStep[] = [
     title: 'World Tab Object Visibility Option',
     content: 'Click this option to toggle the visibility of the highlighted object in the simulator.',
     placement: 'right',
+  },
+  // World can 1 Object Reset Step
+  {
+    id: 'can1-reset',
+    targetKey: 'can1-reset',
+    title: 'World Tab Object Reset Option',
+    content: 'Click this option to reset the highlighted object to its default state in the simulator.',
+    placement: 'right',
+  },
+  // World Can 1 Object Settings Step
+  {
+    id: 'can1-settings',
+    targetKey: 'can1-settings',
+    title: 'World Tab Object Settings Option',
+    content: 'Click this option to see more settings for the highlighted object such as it\'s name and item type.',
+    placement: 'right',
+  },
+  // World Can 1 Object Remove Step
+  {
+    id: 'can1-remove',
+    targetKey: 'can1-remove',
+    title: 'World Tab Object Remove Option',
+    content: 'Click this option to remove the highlighted object from the simulator.',
+    placement: 'right',
+    noBackButton: true,
+  }
+];
+
+const SimMoveObjectSteps: TourStep[] = [
+  // Move Object Overview Step
+  {
+    id: 'move-object-overview',
+    targetKey: 'simulator-area',
+    title: 'Move Object Tool Overview',
+    content: 'Each object added to the Simulator can be moved using the x, y, z, and rotation controls. This can be useful for testing your code with different object placements.',
+    placement: 'right',
+    allowTargetInteraction: false,
+  },
+  // Add Object to World Step
+  {
+    id: 'move-object-select-world-tab',
+    targetKey: 'can1-visibility',
+    title: 'Add Can 1 to the World',
+    content: 'To move an object, first we need to add the object to the simulator using the visibility option.',
+    placement: 'right',
+
+    allowTargetInteraction: true,
+  },
+  // Select World Tab Step
+  {
+    id: 'move-object-select-world-tab',
+    targetKey: 'tab-World',
+    title: 'Select World Tab',
+    content: 'Select the "World" tab in the Overlay Tab Bar.',
+    placement: 'right',
+
+    allowTargetInteraction: true,
+    noNextButton: true,
+  },
+  // Select Object to Move Step
+  {
+    id: 'move-object-select-object',
+    targetKey: 'can1-visibility',
+    title: 'Select Object to Move',
+    content: 'Next, click the visibility option for the object you want to move. For this tutorial, we\'ll select the Can 1 object.',
+    placement: 'right',
+    noBackButton: true,
+    allowTargetInteraction: true,
+    noNextButton: true,
+  },
+  // See Object in Simulator Area Step 
+  {
+    id: 'move-object-see-object',
+    targetKey: 'simulator-area',
+    title: 'See Object in Simulator Area',
+    content: 'After turning on the visibility option, you can see the object in the simulator area.',
+    placement: 'right',
+    allowTargetInteraction: false,
+  },
+  // Click Object in Simulator Area Step
+  {
+    id: 'move-object-click-object',
+    targetKey: 'clicked-object',
+    title: 'Click Object in Simulator Area',
+    content: 'Click the object in the simulator area to open the move object tool.',
+    placement: 'left',
+    allowTargetInteraction: true,
+    noNextButton: true,
+  },
+  // Move Object Tool Overview Step
+  {
+    id: 'move-object-tool-overview',
+    targetKey: 'clicked-object',
+    title: 'Move Object Tool Overview',
+    content: 'This is the move object tool, where you can move the object by dragging the gizmo arrows.',
+    placement: 'right',
+    allowTargetInteraction: false,
+  },
+  // Move Object Tool Interaction Step
+  {
+    id: 'move-object-tool-interaction',
+    targetKey: 'clicked-object',
+    title: 'Move Object Tool Interaction',
+    content: 'The red arrow is the x-axis, the green arrow is the y-axis, and the blue arrow is the z-axis. Try dragging the arrows to move the object around in the simulator!',
+    placement: 'right',
+    allowTargetInteraction: true,
   }
 ];
 
@@ -845,6 +950,7 @@ const SimulatorTourSteps: TourStep[] = [
       'Editor and Console Tour': SimEditorConsoleSteps,
       'Main Menu Tour': SimMainMenuSteps,
       'Overlay Tab Bar Tour': SimLeftTabSteps,
+      'Move Object Tool Tour': SimMoveObjectSteps,
     }
   }
 
@@ -854,6 +960,7 @@ const SimulatorTourSteps: TourStep[] = [
 SimulatorTourSteps.push(...SimEditorConsoleSteps);
 SimulatorTourSteps.push(...SimMainMenuSteps);
 SimulatorTourSteps.push(...SimLeftTabSteps);
+SimulatorTourSteps.push(...SimMoveObjectSteps);
 
 const TourStepsById: Record<string, TourStep> = {};
 DashboardTourSteps.forEach(step => {
