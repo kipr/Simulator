@@ -182,14 +182,15 @@ export class MainMenu extends React.Component<Props, State> {
     const { className, style, locale, tourRegistry } = this.props;
     const { subMenu } = this.state;
     const theme = DARK;
+    const retakeTourItem_ = (<Item theme={theme} onClick={this.onRetakeTour_}><ItemIcon icon={faCircleInfo} /> {LocalizedString.lookup(tr('Retake Tour'), locale)}</Item>);
     return (
       <Container className={className} style={style} theme={theme}>
         <Logo theme={theme} src={theme.foreground === 'white' ? KIPR_LOGO_BLACK as string : KIPR_LOGO_WHITE as string} onClick={this.onDashboardClick_} />
         <Spacer style={{ borderRight: `1px solid ${theme.borderColor}` }} />
         {/* <Item theme={theme} onClick={this.onDashboardClick_}><ItemIcon icon='compass'/> Dashboard</Item> */}
-        <TourTarget style={style} registry={tourRegistry} targetKey={'retake-tour-button'}>
-          <Item theme={theme} onClick={this.onRetakeTour_}><ItemIcon icon={faCircleInfo} /> {LocalizedString.lookup(tr(`Retake Tour`), locale)}</Item>
-        </TourTarget>
+        {tourRegistry ? <TourTarget style={style} registry={tourRegistry} targetKey={'retake-tour-button'}>
+          {retakeTourItem_}
+        </TourTarget> : undefined}
         <Item theme={theme} onClick={this.onLogoutClick_}><ItemIcon icon={faSignOutAlt} /> {LocalizedString.lookup(tr('Logout'), locale)}</Item>
 
       </Container>

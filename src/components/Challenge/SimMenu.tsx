@@ -110,6 +110,8 @@ export interface MenuPublicProps extends StyleProps, ThemeProps {
   onRetakeTourClick?: () => void;
 
   sceneSubMenuEnabled?: boolean;
+  extraMenuEnabled?: boolean;
+  layoutPickerEnabled?: boolean;
 }
 
 interface MenuPrivateProps {
@@ -218,11 +220,27 @@ class SimMenu extends React.PureComponent<Props, State> {
     };
   }
 
-  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<MenuState>, snapshot?: any): void {
+  componentDidUpdate(prevProps: Readonly<Props>): void {
     if (prevProps.sceneSubMenuEnabled !== this.props.sceneSubMenuEnabled && this.props.sceneSubMenuEnabled) {
+      console.log("enabling scene submenu");
       this.setState({ subMenu: SubMenu.SCENE_MENU });
-
     }
+    if (prevProps.sceneSubMenuEnabled !== this.props.sceneSubMenuEnabled && this.props.sceneSubMenuEnabled === false) {
+      this.setState({ subMenu: SubMenu.NONE });
+    }
+    if (prevProps.extraMenuEnabled !== this.props.extraMenuEnabled && this.props.extraMenuEnabled) {
+      this.setState({ subMenu: SubMenu.EXTRA_MENU });
+    }
+    if (prevProps.extraMenuEnabled !== this.props.extraMenuEnabled && this.props.extraMenuEnabled === false) {
+      this.setState({ subMenu: SubMenu.NONE });
+    }
+    if (prevProps.layoutPickerEnabled !== this.props.layoutPickerEnabled && this.props.layoutPickerEnabled) {
+      this.setState({ subMenu: SubMenu.LAYOUT_PICKER });
+    }
+    if (prevProps.layoutPickerEnabled !== this.props.layoutPickerEnabled && this.props.layoutPickerEnabled === false) {
+      this.setState({ subMenu: SubMenu.NONE });
+    }
+
   }
   private onLayoutClick_ = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -337,26 +355,26 @@ class SimMenu extends React.PureComponent<Props, State> {
     const runOrStopItem: JSX.Element = SimulatorState.isRunning(
       simulatorState
     ) ? (
-      <StopItem theme={theme} onClick={onStopClick} disabled={false}>
-        <ItemIcon icon={faStop} />
-        {LocalizedString.lookup(
-          tr("Stop", "Terminate program execution"),
-          locale
-        )}
-      </StopItem>
-    ) : (
-      <RunItem
-        theme={theme}
-        onClick={
-          SimulatorState.isStopped(simulatorState) ? onRunClick : undefined
-        }
-        disabled={!onRunClick || !SimulatorState.isStopped(simulatorState)}
-        style={{ borderLeft: `1px solid ${theme.borderColor}` }}
-      >
-        <ItemIcon icon={faPlay} />
-        {LocalizedString.lookup(tr("Run", "Begin program execution"), locale)}
-      </RunItem>
-    );
+        <StopItem theme={theme} onClick={onStopClick} disabled={false}>
+          <ItemIcon icon={faStop} />
+          {LocalizedString.lookup(
+            tr("Stop", "Terminate program execution"),
+            locale
+          )}
+        </StopItem>
+      ) : (
+        <RunItem
+          theme={theme}
+          onClick={
+            SimulatorState.isStopped(simulatorState) ? onRunClick : undefined
+          }
+          disabled={!onRunClick || !SimulatorState.isStopped(simulatorState)}
+          style={{ borderLeft: `1px solid ${theme.borderColor}` }}
+        >
+          <ItemIcon icon={faPlay} />
+          {LocalizedString.lookup(tr("Run", "Begin program execution"), locale)}
+        </RunItem>
+      );
 
     // console.log("rendering submenu. Current submenu:", subMenu.type);
 
@@ -440,6 +458,7 @@ class SimMenu extends React.PureComponent<Props, State> {
             onOpenScene={onOpenSceneClick}
             onSettingsScene={onSettingsSceneClick}
             onDeleteScene={onDeleteSceneClick}
+            tourRegistry={this.props.tourRegistry}
           />
 
         ) : undefined}
@@ -461,6 +480,7 @@ class SimMenu extends React.PureComponent<Props, State> {
       />
     );
 
+
     const extraMenuItem_ = (
       <Item
         theme={theme}
@@ -470,27 +490,18 @@ class SimMenu extends React.PureComponent<Props, State> {
         <ItemIcon icon={faBars} style={{ padding: 0 }} />
         {subMenu.type === SubMenu.Type.ExtraMenu ? (
           this.props.tourRegistry ? (
-            <Item
-              theme={theme}
-              onClick={this.onExtraClick_}
-              style={{ position: "relative" }}
+            <TourTarget
+              registry={this.props.tourRegistry}
+              targetKey={"extra-menu-options"}
+              style={{
+                position: "absolute",
+                top: "100%",
+                left: 0,
+                right: 0,
+              }}
             >
-              <ItemIcon icon={faBars} style={{ padding: 0 }} />
-              {subMenu.type === SubMenu.Type.ExtraMenu ? (
-                <TourTarget
-                  registry={this.props.tourRegistry}
-                  targetKey={"extra-menu-options"}
-                  style={{
-                    position: "absolute",
-                    top: "100%",
-                    left: 0,
-                    right: 0,
-                  }}
-                >
-                  {extraMenuWidget_}
-                </TourTarget>
-              ) : undefined}
-            </Item>
+              {extraMenuWidget_}
+            </TourTarget>
           ) : (
             extraMenuWidget_
           )

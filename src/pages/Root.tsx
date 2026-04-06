@@ -241,6 +241,8 @@ interface RootState {
   jumpInTour?: boolean;
 
   sceneSubMenu?: boolean;
+  extraMenu?: boolean;
+  layoutPicker?: boolean;
 }
 
 type Props = RootPublicProps & RootPrivateProps & WithNavigateProps;
@@ -337,8 +339,8 @@ class Root extends React.Component<Props, State> {
 
     this.scheduleUpdateConsole_();
     window.addEventListener('resize', this.onWindowResize_);
-    //this.props.onLoadProjects();
-    console.log('Root compDidMount props:', this.props);
+    // this.props.onLoadProjects();
+
     await fetchTourIfNeeded(currentUser, TourDoc.IDS.SIMULATOR);
   }
 
@@ -359,20 +361,13 @@ class Root extends React.Component<Props, State> {
         Async.latestValue(this.props.scene) || Scene.EMPTY;
     }
 
-    if (this.props.onNodeAdd !== prevProps.onNodeAdd)
-      Space.getInstance().onNodeAdd = this.props.onNodeAdd;
-    if (this.props.onNodeRemove !== prevProps.onNodeRemove)
-      Space.getInstance().onNodeRemove = this.props.onNodeRemove;
-    if (this.props.onNodeChange !== prevProps.onNodeChange)
-      Space.getInstance().onNodeChange = this.props.onNodeChange;
-    if (this.props.onGeometryAdd !== prevProps.onGeometryAdd)
-      Space.getInstance().onGeometryAdd = this.props.onGeometryAdd;
-    if (this.props.onGeometryRemove !== prevProps.onGeometryRemove)
-      Space.getInstance().onGeometryRemove = this.props.onGeometryRemove;
-    if (this.props.onGravityChange !== prevProps.onGravityChange)
-      Space.getInstance().onGravityChange = this.props.onGravityChange;
-    if (this.props.onCameraChange !== prevProps.onCameraChange)
-      Space.getInstance().onCameraChange = this.props.onCameraChange;
+    if (this.props.onNodeAdd !== prevProps.onNodeAdd) Space.getInstance().onNodeAdd = this.props.onNodeAdd;
+    if (this.props.onNodeRemove !== prevProps.onNodeRemove) Space.getInstance().onNodeRemove = this.props.onNodeRemove;
+    if (this.props.onNodeChange !== prevProps.onNodeChange) Space.getInstance().onNodeChange = this.props.onNodeChange;
+    if (this.props.onGeometryAdd !== prevProps.onGeometryAdd) Space.getInstance().onGeometryAdd = this.props.onGeometryAdd;
+    if (this.props.onGeometryRemove !== prevProps.onGeometryRemove) Space.getInstance().onGeometryRemove = this.props.onGeometryRemove;
+    if (this.props.onGravityChange !== prevProps.onGravityChange) Space.getInstance().onGravityChange = this.props.onGravityChange;
+    if (this.props.onCameraChange !== prevProps.onCameraChange) Space.getInstance().onCameraChange = this.props.onCameraChange;
     if (this.state.simulatorState.type !== prevState.simulatorState.type) {
       Space.getInstance().sceneBinding.scriptManager.programStatus =
         this.state.simulatorState.type === SimulatorState.Type.Running
@@ -480,8 +475,7 @@ class Root extends React.Component<Props, State> {
     (this.updateConsoleHandle_ = requestAnimationFrame(this.updateConsole_));
 
   private onErrorMessageClick_ = (line: number) => () => {
-    if (this.editorRef.current)
-      this.editorRef.current.ivygate.revealLineInCenter(line);
+    if (this.editorRef.current) this.editorRef.current.ivygate.revealLineInCenter(line);
   };
 
   private onRunClick_ = () => {
@@ -740,8 +734,8 @@ class Root extends React.Component<Props, State> {
       ),
       robot:
         this.props.robots[
-        Dict.unique(Scene.robots(Async.latestValue(this.props.scene)))
-          ?.robotId ?? 'demobot'
+          Dict.unique(Scene.robots(Async.latestValue(this.props.scene)))
+            ?.robotId ?? 'demobot'
         ],
       locale: this.props.locale,
     });
@@ -773,7 +767,6 @@ class Root extends React.Component<Props, State> {
     }
 
     if ('interfaceMode' in changedSettings) {
-      console.log('Interface mode changed to:', changedSettings.interfaceMode);
       localStorage.setItem(
         'interfaceMode',
         changedSettings.interfaceMode ? 'Advanced' : 'Simple',
@@ -1090,23 +1083,48 @@ class Root extends React.Component<Props, State> {
   };
 
   private onNextClick_ = (stepIndex: number) => {
-    this.setState({ currentTourStepIndex: stepIndex });
+    this.setState({ currentTourStepIndex: stepIndex }, () => {
+
+      if (this.state.simulatorRootTourSteps[stepIndex].targetKey === 'simulator-left-tab-overview') {
+        this.setState({ extraMenu: false, }), () => {
+          this.setState({ extraMenu: undefined });
+        };
+      }
+    });
   };
   private onBackClick_ = (stepIndex: number) => {
     const { simulatorRootTourSteps } = this.state;
-    console.log("back clicked on simulatorRootTourSteps[stepIndex]:", simulatorRootTourSteps[stepIndex]);
-    if (simulatorRootTourSteps[stepIndex].targetKey === 'scene-options') {
+    if (simulatorRootTourSteps[stepIndex].targetKey === 'layout-button') {
+      this.setState({ layoutPicker: false }, () => {
+        this.setState({ layoutPicker: undefined });
+      });
+    }
+    if (simulatorRootTourSteps[stepIndex].targetKey === 'open-scene-option') {
       this.setState({ modal: Modal.NONE, sceneSubMenu: true }, () => {
-        this.setState({ sceneSubMenu: false })
+        this.setState({ sceneSubMenu: undefined });
+      });
+    }
+    if (simulatorRootTourSteps[stepIndex].targetKey === 'extra-menu-logout-button') {
+      this.setState({ modal: Modal.NONE, extraMenu: true }, () => {
+        this.setState({ extraMenu: undefined });
+      });
+    }
+    if (simulatorRootTourSteps[stepIndex].targetKey === 'extra-menu-button') {
+      this.setState({ modal: Modal.NONE, extraMenu: false }, () => {
+        this.setState({ extraMenu: undefined });
+      });
+    }
+    if (simulatorRootTourSteps[stepIndex].targetKey === 'Open World-dialog') {
+      this.setState({ modal: Modal.SELECT_SCENE });
+    }
+    if (simulatorRootTourSteps[stepIndex].targetKey === 'scene-button') {
+      this.setState({ sceneSubMenu: false }, () => {
+        this.setState({ sceneSubMenu: undefined });
       });
     }
   };
 
   private onContinueTour_ = () => {
-    console.log(
-      'Continuing tour, current tour steps:',
-      this.state.simulatorRootTourSteps,
-    );
     this.setState({ continueTour: true }, () => {
       this.setState({ continueTour: false });
     });
@@ -1125,7 +1143,7 @@ class Root extends React.Component<Props, State> {
     this.setState({ jumpInTour: jump }, () => {
       this.setState({ jumpInTour: false });
     });
-  }
+  };
   render() {
     const { props, state } = this;
 
@@ -1229,7 +1247,7 @@ class Root extends React.Component<Props, State> {
     const activeTourLoaded = !!(tourId && toursLoaded[tourId]);
 
     const showTour = !!tourId && activeTourLoaded && !activeTour.completed;
-    //const showTour = false;
+    // const showTour = true;
 
     if (showTour && !this.registry) {
       this.registry = new TourRegistry();
@@ -1326,6 +1344,8 @@ class Root extends React.Component<Props, State> {
         tourRegistry={tourRegistry}
         continueTour={this.onContinueTour_}
         sceneSubMenuEnabled={this.state.sceneSubMenu}
+        extraMenuEnabled={this.state.extraMenu}
+        layoutPickerEnabled={this.state.layoutPicker}
       />
     );
     const tourContent_ = (
@@ -1438,15 +1458,15 @@ class Root extends React.Component<Props, State> {
         )}
         {modal.type === Modal.Type.DeleteRecord &&
           modal.record.type === Record.Type.Scene && (
-            <DeleteDialog
-              name={Record.latestName(modal.record)}
-              theme={theme}
-              onClose={this.onModalClose_}
-              onAccept={this.onDeleteRecordAccept_(
-                Record.selector(modal.record),
-              )}
-            />
-          )}
+          <DeleteDialog
+            name={Record.latestName(modal.record)}
+            theme={theme}
+            onClose={this.onModalClose_}
+            onAccept={this.onDeleteRecordAccept_(
+              Record.selector(modal.record),
+            )}
+          />
+        )}
         {modal.type === Modal.Type.SettingsScene && (
           <SceneSettingsDialog
             scene={Async.latestValue(scene)}
