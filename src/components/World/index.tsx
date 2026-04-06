@@ -322,37 +322,37 @@ class World extends React.PureComponent<Props, State> {
   };
 
   private onNodeSettingsAccept_ =
-    (id: string) => (acceptance: NodeSettingsAcceptance) => {
-      this.props.onNodeChange(id, acceptance);
-    };
+  (id: string) => (acceptance: NodeSettingsAcceptance) => {
+    this.props.onNodeChange(id, acceptance);
+  };
 
   private onScriptSettingsAccept_ =
-    (id: string) => (acceptance: ScriptSettingsAcceptance) => {
-      this.setState(
-        {
-          modal: UiState.NONE,
-        },
-        () => {
-          this.props.onScriptChange(id, acceptance);
-        }
-      );
-    };
+  (id: string) => (acceptance: ScriptSettingsAcceptance) => {
+    this.setState(
+      {
+        modal: UiState.NONE,
+      },
+      () => {
+        this.props.onScriptChange(id, acceptance);
+      }
+    );
+  };
 
   private onNodeOriginAccept_ =
-    (id: string) => (origin: ReferenceFramewUnits) => {
-      const originalNode = Async.latestValue(this.props.scene).nodes[id];
-      this.props.onNodeChange(id, {
-        ...originalNode,
-        startingOrigin: {
-          ...originalNode.startingOrigin,
-          ...origin,
-        },
-        origin: {
-          ...originalNode.origin,
-          ...origin,
-        },
-      });
-    };
+  (id: string) => (origin: ReferenceFramewUnits) => {
+    const originalNode = Async.latestValue(this.props.scene).nodes[id];
+    this.props.onNodeChange(id, {
+      ...originalNode,
+      startingOrigin: {
+        ...originalNode.startingOrigin,
+        ...origin,
+      },
+      origin: {
+        ...originalNode.origin,
+        ...origin,
+      },
+    });
+  };
 
   private onAddNodeClick_ = (event: React.SyntheticEvent<MouseEvent>) => {
     this.setState({ modal: UiState.ADD_NODE });

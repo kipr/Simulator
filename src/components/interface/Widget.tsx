@@ -262,9 +262,9 @@ const sizeIcon = (size: Size): IconProp => {
       return faExpand;
   }
 };
-function hasTourRegistry(props: object): props is { tourRegistry: TourRegistry } {
-  return "tourRegistry" in props && (props as any).tourRegistry !== undefined;
-}
+// function hasTourRegistry(props: Record<string, unknown>): props is { tourRegistry: TourRegistry } {
+//   return "tourRegistry" in props && (props as any).tourRegistry !== undefined;
+// }
 class Widget extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -318,15 +318,17 @@ class Widget extends React.PureComponent<Props, State> {
             ? barComponents.map((barComponent, i) => {
               const Component = barComponent.component;
               const Props = barComponent.props;
-              if (hasTourRegistry(Props)) {
+              const propsTourRegistry = Props.tourRegistry as TourRegistry;
+
+              if (propsTourRegistry) {
                 return (
-                  <TourTarget registry={Props.tourRegistry} targetKey={`${Component.name}-key-${i}`} key={i} style={{ padding: `${props.theme.itemPadding * 1}px` }} >
+                  <TourTarget registry={propsTourRegistry} targetKey={`${Component.name}-key-${i}`} key={i} style={{ padding: `${props.theme.itemPadding * 1}px` }} >
                     <Component key={i}{...barComponent.props} />
                   </TourTarget>
                 );
-              } else {
-                return <Component key={i} {...barComponent.props} />;
               }
+              return <Component key={i} {...barComponent.props} />;
+
             })
             : undefined}
           <Spacer />

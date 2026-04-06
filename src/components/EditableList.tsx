@@ -124,8 +124,8 @@ namespace EditableList {
   }
 
   export class StandardItem<P extends StyleProps> extends React.PureComponent<
-    StandardItem.Props<P>,
-    StandardItem.State
+  StandardItem.Props<P>,
+  StandardItem.State
   > {
     constructor(props: StandardItem.Props<P>) {
       super(props);
