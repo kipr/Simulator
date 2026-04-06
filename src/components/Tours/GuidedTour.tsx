@@ -20,6 +20,8 @@ export interface GuidedTourProps extends ThemeProps, StyleProps {
   onFinish?: () => void;
   onSkip?: () => void;
 
+  onJumpInTour?: (jump: boolean) => void;
+
   onBackClick?: (stepIndex: number) => void;
   onNextClick?: (stepIndex: number) => void;
 
@@ -37,9 +39,11 @@ export interface GuidedTourProps extends ThemeProps, StyleProps {
 
 interface GuidedTourState {
   stepIndex: number;
+  subStepIndex: number;
   rect: Rect | null;
   selectedTourSection?: string;
   subSteps?: Dict<TourStep[]>;
+
 }
 
 type Props = GuidedTourProps;
@@ -177,6 +181,7 @@ export class GuidedTour extends React.PureComponent<Props, State> {
       rect: null,
       selectedTourSection: props.steps[1]?.subTourSteps ? Object.keys(props.steps[1].subTourSteps)[0] : undefined,
       subSteps: props.steps[1]?.subTourSteps,
+      subStepIndex: 0,
     };
 
 
@@ -206,7 +211,7 @@ export class GuidedTour extends React.PureComponent<Props, State> {
     if (prevProps.continueTourFlag !== this.props.continueTourFlag && this.props.continueTourFlag) {
       const nextStepIndex = this.state.stepIndex + 1;
       if (nextStepIndex < this.props.steps.length) {
-        this.setState({ stepIndex: nextStepIndex },
+        this.setState({ stepIndex: nextStepIndex, subStepIndex: this.state.subStepIndex + 1 },
           () => {
             this.measure(true);
             this.props.onNextClick(nextStepIndex);
@@ -526,7 +531,7 @@ export class GuidedTour extends React.PureComponent<Props, State> {
     if (!rect) return null;
 
     // Prefer an explicitly marked clamp container if present
-    const explicitClamp = target.closest("[data-tour-clamp]") as HTMLElement | null;
+    const explicitClamp = target.closest("[data-tour-clamp]");
     if (explicitClamp) {
       rect = this.intersectRects(rect, this.rectFromDomRect(explicitClamp.getBoundingClientRect()));
       return rect;
@@ -553,20 +558,156 @@ export class GuidedTour extends React.PureComponent<Props, State> {
     return rect;
   }
   private next = () => {
-    console.log("Next rect:", this.state.rect);
-    console.log("Next props:", this.props);
-    const last = this.props.steps.length - 1;
-    if (this.state.stepIndex >= last) {
-      this.finish();
-      return;
+    const { stepIndex, subSteps, selectedTourSection, subStepIndex } = this.state;
+
+    if (subSteps && selectedTourSection) {
+      const introStepsCount = 2;
+      const sectionNames = Object.keys(subSteps ?? {});
+      const sectionLengths = sectionNames.map(
+        (name) => subSteps?.[name]?.length ?? 0
+      );
+
+      const totalSteps =
+        introStepsCount + sectionLengths.reduce((sum, len) => sum + len, 0);
+
+      const last = totalSteps - 1;
+
+      if (stepIndex >= last) {
+        this.finish();
+        return;
+      }
+
+      const nextStepIndex = stepIndex + 1;
+      this.props.onNextClick?.(nextStepIndex);
+
+      let nextSelectedTourSection: string | null = selectedTourSection;
+      let nextSubStepIndex = subStepIndex;
+      let shouldJumpInTour = false;
+
+      if (nextStepIndex < introStepsCount) {
+        nextSubStepIndex = 0;
+      } else {
+        let runningIndex = introStepsCount;
+
+        for (let i = 0; i < sectionNames.length; i++) {
+          const sectionName = sectionNames[i];
+          const sectionLength = sectionLengths[i];
+          const sectionStart = runningIndex;
+          const sectionEnd = runningIndex + sectionLength - 1;
+
+          if (nextStepIndex >= sectionStart && nextStepIndex <= sectionEnd) {
+            const enteringNewSection = sectionName !== selectedTourSection;
+
+            nextSelectedTourSection = sectionName;
+            nextSubStepIndex = enteringNewSection
+              ? 0
+              : nextStepIndex - sectionStart;
+
+            shouldJumpInTour = enteringNewSection;
+            break;
+          }
+
+          runningIndex += sectionLength;
+        }
+      }
+
+      this.setState(
+        {
+          stepIndex: nextStepIndex,
+          selectedTourSection: nextSelectedTourSection,
+          subStepIndex: nextSubStepIndex,
+        },
+        () => {
+          if (shouldJumpInTour && nextSelectedTourSection) {
+            this.props.onJumpInTour?.(true);
+          }
+        }
+      );
+    } else {
+      const last = this.props.steps.length - 1;
+      if (this.state.stepIndex >= last) {
+        this.finish();
+        return;
+      }
+      this.props.onNextClick?.(this.state.stepIndex + 1);
+      this.setState((s) => ({ stepIndex: s.stepIndex + 1 }));
     }
-    this.props.onNextClick?.(this.state.stepIndex + 1);
-    this.setState((s) => ({ stepIndex: s.stepIndex + 1 }));
   };
 
+  // private back = () => {
+  //   console.log("back clicked, this.state.subStepIndex:", this.state.subStepIndex);
+  //   this.props.onBackClick?.(Math.max(0, this.state.stepIndex - 1));
+  //   this.setState((s) => ({ stepIndex: Math.max(0, s.stepIndex - 1), subStepIndex: Math.max(0, s.subStepIndex - 1) }));
+  // };
+
   private back = () => {
-    this.props.onBackClick?.(Math.max(0, this.state.stepIndex - 1));
-    this.setState((s) => ({ stepIndex: Math.max(0, s.stepIndex - 1) }));
+    const { stepIndex, subSteps, selectedTourSection, subStepIndex } = this.state;
+
+    if (subSteps && selectedTourSection) {
+      const introStepsCount = 2;
+      const sectionNames = Object.keys(subSteps ?? {});
+      const sectionLengths = sectionNames.map(
+        (name) => subSteps?.[name]?.length ?? 0
+      );
+
+      if (stepIndex <= 0) {
+        return;
+      }
+
+      const prevStepIndex = stepIndex - 1;
+      this.props.onBackClick?.(prevStepIndex);
+
+      let prevSelectedTourSection: string | null = selectedTourSection;
+      let prevSubStepIndex = subStepIndex;
+      let shouldJumpInTour = false;
+
+      if (prevStepIndex < introStepsCount) {
+        prevSubStepIndex = 0;
+      } else {
+        let runningIndex = introStepsCount;
+
+        for (let i = 0; i < sectionNames.length; i++) {
+          const sectionName = sectionNames[i];
+          const sectionLength = sectionLengths[i];
+          const sectionStart = runningIndex;
+          const sectionEnd = runningIndex + sectionLength - 1;
+
+          if (prevStepIndex >= sectionStart && prevStepIndex <= sectionEnd) {
+            const enteringNewSection = sectionName !== selectedTourSection;
+
+            prevSelectedTourSection = sectionName;
+            prevSubStepIndex = enteringNewSection
+              ? sectionLength - 1
+              : prevStepIndex - sectionStart;
+
+            shouldJumpInTour = enteringNewSection;
+            break;
+          }
+
+          runningIndex += sectionLength;
+        }
+      }
+
+      this.setState(
+        {
+          stepIndex: prevStepIndex,
+          selectedTourSection: prevSelectedTourSection,
+          subStepIndex: prevSubStepIndex,
+        },
+        () => {
+          if (shouldJumpInTour && prevSelectedTourSection) {
+            this.props.onJumpInTour?.(true);
+          }
+        }
+      );
+    } else {
+      if (this.state.stepIndex <= 0) {
+        return;
+      }
+
+      this.props.onBackClick?.(this.state.stepIndex - 1);
+      this.setState((s) => ({ stepIndex: s.stepIndex - 1 }));
+    }
   };
 
   private finish = () => {
@@ -591,7 +732,9 @@ export class GuidedTour extends React.PureComponent<Props, State> {
       );
 
       if (newStepIndex !== -1) {
-        this.setState({ stepIndex: newStepIndex, rect: null });
+        this.setState({ stepIndex: newStepIndex, subStepIndex: 0, rect: null }, () => {
+          this.props.onJumpInTour?.(true);
+        });
       }
     }
   };
@@ -601,10 +744,9 @@ export class GuidedTour extends React.PureComponent<Props, State> {
   };
   private onSelect_ = (index: number, option: ComboBox.Option) => {
     const { props } = this;
-    console.log("Selected tour section", option.data);
     this.setState({
       selectedTourSection: option.data as string,
-    })
+    });
   };
   render() {
     if (!this.props.isOpen || !this.portalEl) return null;
@@ -616,20 +758,13 @@ export class GuidedTour extends React.PureComponent<Props, State> {
 
     const rect = this.state.rect;
     const dimopacity = this.props.dimopacity ?? 0.65;
-    console.log("guidedtour steps:", this.props.steps);
-    console.log("subtourSteps:", step.subTourSteps);
     const allowTargetInteraction = step.allowTargetInteraction !== false;
-    console.log("allowTargetInteraction:", allowTargetInteraction);
     const keys = Object.keys(this.props.steps[0]?.subTourSteps ?? {});
-    console.log("subtour keys:", keys);
-
     const OPTIONS: ComboBox.Option[] =
       Object.keys(this.props.steps[1]?.subTourSteps ?? {}).map((key) => ({
         text: key,
         data: key,
       }));
-
-    console.log("options:", OPTIONS);
 
     const tooltipStyle =
       rect !== null ? toolTipPos(rect, step.placement ?? "auto") : { top: 24, left: 24, width: 360 };
@@ -843,10 +978,15 @@ export class GuidedTour extends React.PureComponent<Props, State> {
               gap: 10,
             }}
           >
-            <StepIndicatorContainer theme={theme}>
-              Step {this.state.stepIndex + 1} of {this.props.steps.length}
-            </StepIndicatorContainer>
-
+            {this.state.stepIndex >= 2 && subSteps ? (
+              <StepIndicatorContainer theme={theme}>
+                Step {this.state.subStepIndex + 1} of {subSteps?.[state.selectedTourSection ?? ""]?.length}
+              </StepIndicatorContainer>
+            ) : (
+              <StepIndicatorContainer theme={theme}>
+                Step {this.state.stepIndex + 1} of {this.props.steps.length}
+              </StepIndicatorContainer>
+            )}
             <ButtonNavContainer>
               {step.noBackButton ? null : (<button
                 onClick={this.back}
@@ -889,6 +1029,7 @@ export class GuidedTour extends React.PureComponent<Props, State> {
               mainWidth={'4em'}
               mainHeight={'1.5em'}
               mainFontSize={'0.9em'}
+              tourMenuId={"guided-tour-section-select"}
             />
             <button onClick={this.go} style={btnStyle(false, false)}>
               {"Go"}

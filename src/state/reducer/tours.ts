@@ -78,7 +78,6 @@ export async function completeTour(storedTour: TourDoc, uid: string, tourId: str
 }
 
 export async function retakeTour(storedTour: TourDoc, uid: string, tourId: string): Promise<void> {
-  console.log("retaking tour with id", tourId);
   const patchData: Partial<TourDoc> = { ...storedTour, completed: false, step: 0, updatedAt: new Date().toISOString() };
   await db.set(Selector.userTour(tourId), patchData, true);
   store.dispatch(ToursAction.tourPatch({ tourId, patch: patchData }));

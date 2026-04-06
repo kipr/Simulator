@@ -134,14 +134,14 @@ const DashboardTourSteps: TourStep[] = [
     content: "KIPR is a 501(c) 3 organization started to make the long-term educational benefits of robotics accessible to students.",
     placement: "bottom",
   },
-  // Retake Tour Step
-  {
-    id: "retake-tour",
-    targetKey: "retake-tour-button",
-    title: "Retake Tour",
-    content: "Click here to retake the tour at any time.",
-    placement: "bottom",
-  }
+  // // Retake Tour Step
+  // {
+  //   id: "retake-tour-button",
+  //   targetKey: "retake-tour-button",
+  //   title: "Retake Tour",
+  //   content: "Click here to retake the tour at any time.",
+  //   placement: "bottom",
+  // }
 ];
 
 const ClassroomTourSteps: TourStep[] = [
@@ -584,7 +584,7 @@ const SimMainMenuSteps: TourStep[] = [
   // Scene Options Info Step
   {
     id: 'scene-options-info',
-    targetKey: 'scene-options',
+    targetKey: 'open-scene-option',
     title: 'Scene Options Info',
     content: 'Currently, we\'re in the JBC Sandbox so some options are locked. Select "Open" to continue.',
     placement: 'left',
