@@ -50,7 +50,7 @@ class Dialog_ extends React.PureComponent<Props> {
     );
 
     const tourContent_ = (
-      <TourTarget registry={props.tourRegistry!} targetKey={`${name}-dialog`}>
+      <TourTarget registry={props.tourRegistry} targetKey={`${name}-dialog`}>
         <Container theme={theme}>
           <Widget
             theme={theme}

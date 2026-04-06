@@ -198,10 +198,8 @@ export class SimulatorArea extends React.Component<Props, SimulatorAreaState> {
   };
 
   private onObjectClick_ = (object: { id: string, pos: Vector3 }): void => {
-    console.log("clicked object: ", object.id, " at position ", object.pos);
     const screenPos = this.projectWorldToScreen_(object.pos);
     if (screenPos && object.id === 'can1') {
-      console.log("object screen position: ", screenPos);
       this.setState({ tourObject: { id: object.id, pos: screenPos } }, () => {
         this.props.onContinueTour?.();
       });
