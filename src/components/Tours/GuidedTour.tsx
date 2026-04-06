@@ -5,6 +5,9 @@ import { Rect, TourPlacement, TourStep } from "../../tours/Tours";
 import { DARK, ThemeProps } from "../constants/theme";
 import { StyleProps } from "../../util/style";
 import { styled } from "styletron-react";
+import ComboBox from "../interface/ComboBox";
+import ResizeableComboBox from "ivygate/dist/src/components/ResizeableComboBox";
+import Dict from "util/objectOps/Dict";
 
 
 export interface GuidedTourProps extends ThemeProps, StyleProps {
@@ -17,6 +20,8 @@ export interface GuidedTourProps extends ThemeProps, StyleProps {
   onFinish?: () => void;
   onSkip?: () => void;
 
+  onJumpInTour?: (jump: boolean) => void;
+
   onBackClick?: (stepIndex: number) => void;
   onNextClick?: (stepIndex: number) => void;
 
@@ -28,11 +33,17 @@ export interface GuidedTourProps extends ThemeProps, StyleProps {
   /** If true, clicking the dim area closes */
   closeOnBackdropClick?: boolean;
   scrollContainer?: HTMLElement | null;
+
+
 }
 
 interface GuidedTourState {
   stepIndex: number;
+  subStepIndex: number;
   rect: Rect | null;
+  selectedTourSection?: string;
+  subSteps?: Dict<TourStep[]>;
+
 }
 
 type Props = GuidedTourProps;
@@ -82,8 +93,10 @@ const ToolTip = styled('div', (props: ThemeProps & ToolTipProps) => {
     // position from toolTipPos
     top: `${pos.top}px`,
     left: `${pos.left}px`,
+    height: "auto",
     width: `${pos.width}px`,
-    height: `${pos.height}px`,
+    boxSizing: "border-box",
+
   };
 });
 
@@ -148,9 +161,17 @@ function toolTipPos(rect: Rect, placement: TourPlacement) {
     top: clamp(pos.top, 22, vh - h - 22),
     left: clamp(pos.left, 22, vw - w - 22),
     width: w,
-    height: h,
   };
 }
+
+const StyledComboBox = styled(ResizeableComboBox, (props: ThemeProps & { selectedType?: string }) => ({
+  padding: 0,
+  zIndex: 10000,
+  color: "#111",
+
+}));
+
+
 
 export class GuidedTour extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -158,6 +179,9 @@ export class GuidedTour extends React.PureComponent<Props, State> {
     this.state = {
       stepIndex: props.initialStepIndex ?? 0,
       rect: null,
+      selectedTourSection: props.steps[1]?.subTourSteps ? Object.keys(props.steps[1].subTourSteps)[0] : undefined,
+      subSteps: props.steps[1]?.subTourSteps,
+      subStepIndex: 0,
     };
 
 
@@ -167,6 +191,8 @@ export class GuidedTour extends React.PureComponent<Props, State> {
   private prevBodyOverflow: string | null = null;
   private targetClickCleanup: (() => void) | null = null;
   private scrollEl: HTMLElement | null = null;
+  private prevComboBoxRootZIndex: string | null = null;
+  private prevComboBoxRootPointerEvents: string | null = null;
 
   componentDidMount() {
     this.ensurePortal();
@@ -185,7 +211,7 @@ export class GuidedTour extends React.PureComponent<Props, State> {
     if (prevProps.continueTourFlag !== this.props.continueTourFlag && this.props.continueTourFlag) {
       const nextStepIndex = this.state.stepIndex + 1;
       if (nextStepIndex < this.props.steps.length) {
-        this.setState({ stepIndex: nextStepIndex },
+        this.setState({ stepIndex: nextStepIndex, subStepIndex: this.state.subStepIndex + 1 },
           () => {
             this.measure(true);
             this.props.onNextClick(nextStepIndex);
@@ -292,6 +318,15 @@ export class GuidedTour extends React.PureComponent<Props, State> {
       document.body.style.overflow = "hidden";
     }
 
+    const comboBoxRoot = document.getElementById("combo-box-root");
+    if (comboBoxRoot) {
+      this.prevComboBoxRootZIndex = comboBoxRoot.style.zIndex;
+      this.prevComboBoxRootPointerEvents = comboBoxRoot.style.pointerEvents;
+
+      comboBoxRoot.style.zIndex = "10050";
+      comboBoxRoot.style.pointerEvents = "none";
+    }
+
     this.measure(true);
     this.bindAdvanceOnTargetClick();
   }
@@ -305,6 +340,11 @@ export class GuidedTour extends React.PureComponent<Props, State> {
     if (this.props.lockScroll && this.prevBodyOverflow !== null) {
       document.body.style.overflow = this.prevBodyOverflow;
       this.prevBodyOverflow = null;
+    }
+    const comboBoxRoot = document.getElementById("combo-box-root");
+    if (comboBoxRoot) {
+      comboBoxRoot.style.zIndex = this.prevComboBoxRootZIndex ?? "";
+      comboBoxRoot.style.pointerEvents = this.prevComboBoxRootPointerEvents ?? "";
     }
     this.cancelMeasure();
   }
@@ -391,63 +431,283 @@ export class GuidedTour extends React.PureComponent<Props, State> {
   private measure(scrollIntoView: boolean) {
     this.cancelMeasure();
 
-    this.rafMeasure =
-      requestAnimationFrame(() => {
-        void (async () => {
-          const step = this.currentStep();
-          if (!step) {
-            this.setState({ rect: null });
-            return;
-          }
+    this.rafMeasure = requestAnimationFrame(() => {
+      void (async () => {
+        const step = this.currentStep();
+        if (!step) {
+          this.setState({ rect: null });
+          return;
+        }
 
-          const el = await this.waitForTarget(step.targetKey, 3000);
-          if (!el) {
-            this.setState({ rect: null });
-            return;
-          }
+        const el = await this.waitForTarget(step.targetKey, 3000);
+        if (!el) {
+          this.setState({ rect: null });
+          return;
+        }
 
-          if (scrollIntoView) {
-            try {
-              if (this.props.scrollContainer) {
-                this.centerInContainer(el, this.props.scrollContainer);
-              } else {
-                el.scrollIntoView({ block: "center", inline: "nearest" });
-              }
-            } catch {
-              // ignore
+        if (scrollIntoView) {
+          try {
+            if (this.props.scrollContainer) {
+              this.centerInContainer(el, this.props.scrollContainer);
+            } else {
+              el.scrollIntoView({ block: "center", inline: "nearest" });
             }
+          } catch {
+            // ignore
           }
+        }
 
-          const r = el.getBoundingClientRect();
-          const pad = step.padding ?? 10;
+        const pad = step.padding ?? 10;
+        const raw = el.getBoundingClientRect();
+        const clipped = this.getClippedRect(el, raw);
 
-          this.setState({
-            rect: {
-              top: r.top - pad,
-              left: r.left - pad,
-              width: r.width + pad * 2,
-              height: r.height + pad * 2,
-            },
-          });
+        if (!clipped || clipped.width <= 0 || clipped.height <= 0) {
+          this.setState({ rect: null });
+          return;
+        }
 
-          this.bindAdvanceOnTargetClick();
-        })();
-      });
+        this.setState({
+          rect: {
+            top: clipped.top - pad,
+            left: clipped.left - pad,
+            width: clipped.width + pad * 2,
+            height: clipped.height + pad * 2,
+          },
+        });
+
+        this.bindAdvanceOnTargetClick();
+      })();
+    });
   }
 
-  private next = () => {
-    const last = this.props.steps.length - 1;
-    if (this.state.stepIndex >= last) {
-      this.finish();
-      return;
+  private intersectRects(a: Rect, b: Rect): Rect | null {
+    const left = Math.max(a.left, b.left);
+    const top = Math.max(a.top, b.top);
+    const right = Math.min(a.left + a.width, b.left + b.width);
+    const bottom = Math.min(a.top + a.height, b.top + b.height);
+
+    const width = right - left;
+    const height = bottom - top;
+
+    if (width <= 0 || height <= 0) return null;
+
+    return { top, left, width, height };
+  }
+
+  private rectFromDomRect(r: DOMRect): Rect {
+    return {
+      top: r.top,
+      left: r.left,
+      width: r.width,
+      height: r.height,
+    };
+  }
+
+  private isClippingElement(el: HTMLElement): boolean {
+    const style = window.getComputedStyle(el);
+    const overflowY = style.overflowY;
+    const overflowX = style.overflowX;
+    const overflow = style.overflow;
+
+    const clips =
+      ["hidden", "auto", "scroll", "clip"].includes(overflow) ||
+      ["hidden", "auto", "scroll", "clip"].includes(overflowX) ||
+      ["hidden", "auto", "scroll", "clip"].includes(overflowY);
+
+    return clips;
+  }
+
+  private getClippedRect(target: HTMLElement, initial: DOMRect): Rect | null {
+    let rect: Rect | null = this.rectFromDomRect(initial);
+
+    // Always clamp to viewport
+    rect = this.intersectRects(rect, {
+      top: 0,
+      left: 0,
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+
+    if (!rect) return null;
+
+    // Prefer an explicitly marked clamp container if present
+    const explicitClamp = target.closest("[data-tour-clamp]");
+    if (explicitClamp) {
+      rect = this.intersectRects(rect, this.rectFromDomRect(explicitClamp.getBoundingClientRect()));
+      return rect;
     }
-    this.props.onNextClick?.(this.state.stepIndex + 1);
-    this.setState((s) => ({ stepIndex: s.stepIndex + 1 }));
+
+    // Otherwise intersect with all clipping ancestors
+    let node = target.parentElement;
+    while (node && node !== document.body) {
+      if (this.isClippingElement(node)) {
+        rect = this.intersectRects(rect, this.rectFromDomRect(node.getBoundingClientRect()));
+        if (!rect) return null;
+      }
+      node = node.parentElement;
+    }
+
+    // Also clamp to provided scroll container if present
+    if (this.props.scrollContainer) {
+      rect = this.intersectRects(
+        rect,
+        this.rectFromDomRect(this.props.scrollContainer.getBoundingClientRect())
+      );
+    }
+
+    return rect;
+  }
+  private next = () => {
+    const { stepIndex, subSteps, selectedTourSection, subStepIndex } = this.state;
+
+    if (subSteps && selectedTourSection) {
+      const introStepsCount = 2;
+      const sectionNames = Object.keys(subSteps ?? {});
+      const sectionLengths = sectionNames.map(
+        (name) => subSteps?.[name]?.length ?? 0
+      );
+
+      const totalSteps =
+        introStepsCount + sectionLengths.reduce((sum, len) => sum + len, 0);
+
+      const last = totalSteps - 1;
+
+      if (stepIndex >= last) {
+        this.finish();
+        return;
+      }
+
+      const nextStepIndex = stepIndex + 1;
+      this.props.onNextClick?.(nextStepIndex);
+
+      let nextSelectedTourSection: string | null = selectedTourSection;
+      let nextSubStepIndex = subStepIndex;
+      let shouldJumpInTour = false;
+
+      if (nextStepIndex < introStepsCount) {
+        nextSubStepIndex = 0;
+      } else {
+        let runningIndex = introStepsCount;
+
+        for (let i = 0; i < sectionNames.length; i++) {
+          const sectionName = sectionNames[i];
+          const sectionLength = sectionLengths[i];
+          const sectionStart = runningIndex;
+          const sectionEnd = runningIndex + sectionLength - 1;
+
+          if (nextStepIndex >= sectionStart && nextStepIndex <= sectionEnd) {
+            const enteringNewSection = sectionName !== selectedTourSection;
+
+            nextSelectedTourSection = sectionName;
+            nextSubStepIndex = enteringNewSection
+              ? 0
+              : nextStepIndex - sectionStart;
+
+            shouldJumpInTour = enteringNewSection;
+            break;
+          }
+
+          runningIndex += sectionLength;
+        }
+      }
+
+      this.setState(
+        {
+          stepIndex: nextStepIndex,
+          selectedTourSection: nextSelectedTourSection,
+          subStepIndex: nextSubStepIndex,
+        },
+        () => {
+          if (shouldJumpInTour && nextSelectedTourSection) {
+            this.props.onJumpInTour?.(true);
+          }
+        }
+      );
+    } else {
+      const last = this.props.steps.length - 1;
+      if (this.state.stepIndex >= last) {
+        this.finish();
+        return;
+      }
+      this.props.onNextClick?.(this.state.stepIndex + 1);
+      this.setState((s) => ({ stepIndex: s.stepIndex + 1 }));
+    }
   };
 
+  // private back = () => {
+  //   console.log("back clicked, this.state.subStepIndex:", this.state.subStepIndex);
+  //   this.props.onBackClick?.(Math.max(0, this.state.stepIndex - 1));
+  //   this.setState((s) => ({ stepIndex: Math.max(0, s.stepIndex - 1), subStepIndex: Math.max(0, s.subStepIndex - 1) }));
+  // };
+
   private back = () => {
-    this.props.onBackClick?.(Math.max(0, this.state.stepIndex - 1));
-    this.setState((s) => ({ stepIndex: Math.max(0, s.stepIndex - 1) }));
+    const { stepIndex, subSteps, selectedTourSection, subStepIndex } = this.state;
+
+    if (subSteps && selectedTourSection) {
+      const introStepsCount = 2;
+      const sectionNames = Object.keys(subSteps ?? {});
+      const sectionLengths = sectionNames.map(
+        (name) => subSteps?.[name]?.length ?? 0
+      );
+
+      if (stepIndex <= 0) {
+        return;
+      }
+
+      const prevStepIndex = stepIndex - 1;
+      this.props.onBackClick?.(prevStepIndex);
+
+      let prevSelectedTourSection: string | null = selectedTourSection;
+      let prevSubStepIndex = subStepIndex;
+      let shouldJumpInTour = false;
+
+      if (prevStepIndex < introStepsCount) {
+        prevSubStepIndex = 0;
+      } else {
+        let runningIndex = introStepsCount;
+
+        for (let i = 0; i < sectionNames.length; i++) {
+          const sectionName = sectionNames[i];
+          const sectionLength = sectionLengths[i];
+          const sectionStart = runningIndex;
+          const sectionEnd = runningIndex + sectionLength - 1;
+
+          if (prevStepIndex >= sectionStart && prevStepIndex <= sectionEnd) {
+            const enteringNewSection = sectionName !== selectedTourSection;
+
+            prevSelectedTourSection = sectionName;
+            prevSubStepIndex = enteringNewSection
+              ? sectionLength - 1
+              : prevStepIndex - sectionStart;
+
+            shouldJumpInTour = enteringNewSection;
+            break;
+          }
+
+          runningIndex += sectionLength;
+        }
+      }
+
+      this.setState(
+        {
+          stepIndex: prevStepIndex,
+          selectedTourSection: prevSelectedTourSection,
+          subStepIndex: prevSubStepIndex,
+        },
+        () => {
+          if (shouldJumpInTour && prevSelectedTourSection) {
+            this.props.onJumpInTour?.(true);
+          }
+        }
+      );
+    } else {
+      if (this.state.stepIndex <= 0) {
+        return;
+      }
+
+      this.props.onBackClick?.(this.state.stepIndex - 1);
+      this.setState((s) => ({ stepIndex: s.stepIndex - 1 }));
+    }
   };
 
   private finish = () => {
@@ -459,24 +719,62 @@ export class GuidedTour extends React.PureComponent<Props, State> {
     this.props.onSkip();
   };
 
+  private go = () => {
+    const { subSteps, selectedTourSection } = this.state;
+
+    const selectedSteps = subSteps?.[selectedTourSection ?? ""];
+
+    if (selectedSteps?.length) {
+      const firstStep = selectedSteps[0];
+
+      const newStepIndex = this.props.steps.findIndex(
+        (step) => step.id === firstStep.id
+      );
+
+      if (newStepIndex !== -1) {
+        this.setState({ stepIndex: newStepIndex, subStepIndex: 0, rect: null }, () => {
+          this.props.onJumpInTour?.(true);
+        });
+      }
+    }
+  };
+
   private onBackdropClick = () => {
     if (this.props.closeOnBackdropClick) this.skip();
   };
-
+  private onSelect_ = (index: number, option: ComboBox.Option) => {
+    const { props } = this;
+    this.setState({
+      selectedTourSection: option.data as string,
+    });
+  };
   render() {
     if (!this.props.isOpen || !this.portalEl) return null;
+    const { props, state } = this;
+    const { subSteps } = state;
     const theme = DARK;
     const step = this.currentStep();
     if (!step) return null;
 
     const rect = this.state.rect;
     const dimopacity = this.props.dimopacity ?? 0.65;
-
     const allowTargetInteraction = step.allowTargetInteraction !== false;
+    const keys = Object.keys(this.props.steps[0]?.subTourSteps ?? {});
+    const OPTIONS: ComboBox.Option[] =
+      Object.keys(this.props.steps[1]?.subTourSteps ?? {}).map((key) => ({
+        text: key,
+        data: key,
+      }));
 
     const tooltipStyle =
-      rect !== null ? toolTipPos(rect, step.placement ?? "auto") : { top: 24, left: 24, width: 360, height: 170 };
+      rect !== null ? toolTipPos(rect, step.placement ?? "auto") : { top: 24, left: 24, width: 360 };
+    const index = OPTIONS.findIndex(option => option.data === this.state.selectedTourSection);
 
+    const GAP = 2;
+    const top = Math.max(0, rect?.top - GAP);
+    const left = Math.max(0, rect?.left - GAP);
+    const right = (rect?.left ?? 0) + (rect?.width ?? 0) + GAP;
+    const bottom = (rect?.top ?? 0) + (rect?.height ?? 0) + GAP;
     const overlay = (
       <div
         style={{
@@ -489,7 +787,7 @@ export class GuidedTour extends React.PureComponent<Props, State> {
         aria-modal="true"
       >
         {/* Click-catcher areas around the target */}
-        {allowTargetInteraction && rect ? (
+        {/* {allowTargetInteraction && rect ? (
           <>
             <div
               onClick={this.onBackdropClick}
@@ -553,8 +851,83 @@ export class GuidedTour extends React.PureComponent<Props, State> {
               pointerEvents: "auto",
             }}
           />
-        )}
+        )} */}
+        {/* {!allowTargetInteraction && (
+          <div
+            onClick={this.onBackdropClick}
+            style={{
+              position: "fixed",
+              inset: 0,
+              background: "transparent",
+              pointerEvents: "auto",
+            }}
+          />
+        )} */}
+        {allowTargetInteraction && rect ? (
+          <>
+            <div
+              onClick={this.onBackdropClick}
+              style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: Math.max(0, top),
+                background: "transparent",
+                pointerEvents: "auto",
+              }}
+            />
 
+            <div
+              onClick={this.onBackdropClick}
+              style={{
+                position: "fixed",
+                top,
+                left: 0,
+                width: Math.max(0, left),
+                height: Math.max(0, bottom - top),
+                background: "transparent",
+                pointerEvents: "auto",
+              }}
+            />
+
+            <div
+              onClick={this.onBackdropClick}
+              style={{
+                position: "fixed",
+                top,
+                left: right,
+                right: 0,
+                height: Math.max(0, bottom - top),
+                background: "transparent",
+                pointerEvents: "auto",
+              }}
+            />
+
+            <div
+              onClick={this.onBackdropClick}
+              style={{
+                position: "fixed",
+                top: bottom,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: "transparent",
+                pointerEvents: "auto",
+              }}
+            />
+          </>
+        ) : (
+          <div
+            onClick={this.onBackdropClick}
+            style={{
+              position: "fixed",
+              inset: 0,
+              background: "transparent",
+              pointerEvents: "auto",
+            }}
+          />
+        )}
         <Spotlight theme={theme} rect={rect} dimopacity={dimopacity} />
 
         {allowTargetInteraction && rect !== null && (
@@ -605,10 +978,15 @@ export class GuidedTour extends React.PureComponent<Props, State> {
               gap: 10,
             }}
           >
-            <StepIndicatorContainer theme={theme}>
-              Step {this.state.stepIndex + 1} of {this.props.steps.length}
-            </StepIndicatorContainer>
-
+            {this.state.stepIndex >= 2 && subSteps ? (
+              <StepIndicatorContainer theme={theme}>
+                Step {this.state.subStepIndex + 1} of {subSteps?.[state.selectedTourSection ?? ""]?.length}
+              </StepIndicatorContainer>
+            ) : (
+              <StepIndicatorContainer theme={theme}>
+                Step {this.state.stepIndex + 1} of {this.props.steps.length}
+              </StepIndicatorContainer>
+            )}
             <ButtonNavContainer>
               {step.noBackButton ? null : (<button
                 onClick={this.back}
@@ -630,6 +1008,33 @@ export class GuidedTour extends React.PureComponent<Props, State> {
             </ButtonNavContainer>
 
           </div>
+          {subSteps ? (<div
+            style={{
+              marginTop: 10,
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            <StepIndicatorContainer theme={theme}>
+              Tour Sections:
+            </StepIndicatorContainer>
+            <StyledComboBox
+              minimal
+              options={OPTIONS}
+              onSelect={this.onSelect_}
+              index={index}
+              theme={theme}
+              mainWidth={'4em'}
+              mainHeight={'1.5em'}
+              mainFontSize={'0.9em'}
+              tourMenuId={"guided-tour-section-select"}
+            />
+            <button onClick={this.go} style={btnStyle(false, false)}>
+              {"Go"}
+            </button>
+          </div>) : null}
         </ToolTip>
       </div>
     );

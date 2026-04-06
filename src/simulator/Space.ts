@@ -65,6 +65,7 @@ export class Space {
   onCameraChange?: (camera: Camera) => void;
   onGravityChange?: (Vector3wUnits) => void;
   onChallengeSetEventValue?: (eventId: string, value: boolean) => void;
+  onObjectClick?: (object: { id: string, pos: Vector3 }) => void;
 
 
   private debounceUpdate_ = false;
@@ -177,6 +178,11 @@ export class Space {
     this.engine.resize();
   }
 
+  public tourClickObject(id: string): void {
+    const mesh = this.bScene_.getMeshById(id) || this.bScene_.getMeshByName(id);
+    if (!mesh) return;
+  }
+
 
   /**
    * Retrieves the screen position of an object in the scene.
@@ -266,8 +272,15 @@ export class Space {
     } else {
       this.onSelectNodeId?.(undefined);
     }
+    if (this.onObjectClick) {
+      this.onObjectClick({ id, pos: mesh.position });
+    }
   };
-
+  public setOnObjectClick = (
+    cb: ((object: { id: string; pos: Vector3 }) => void) | undefined
+  ): void => {
+    this.onObjectClick = cb;
+  };
 
   /**
  * Calculates significant changes in origin (position and orientation) of a node.
