@@ -558,7 +558,7 @@ const SimMainMenuSteps: TourStep[] = [
     id: 'layout-options',
     targetKey: 'layout-options',
     title: 'Layout Options',
-    content: 'These are the different layout options. Select one to change the layout of the simulator interface.',
+    content: 'These are the different layout options. You can select one to change the layout of the simulator interface, but for now, click the "Next" button.',
     placement: 'bottom',
     allowTargetInteraction: false
   },
@@ -577,7 +577,7 @@ const SimMainMenuSteps: TourStep[] = [
     id: 'scene-options',
     targetKey: 'scene-options',
     title: 'Scene Options',
-    content: 'These are the different scene options. Select one to change the scene in the simulator.',
+    content: 'These are the different scene settings options.',
     placement: 'bottom',
     allowTargetInteraction: false
   },
@@ -614,13 +614,13 @@ const SimMainMenuSteps: TourStep[] = [
     id: 'open-scene-info',
     targetKey: 'open-scene-info',
     title: 'Scene Open Continued',
-    content: 'This is the info page for the scene. Click "Accept" at the bottom to open the scene in the simulator.',
+    content: 'This is the info page for the scene. You can click "Accept" at the bottom to open the scene in the simulator.',
     placement: 'right',
   },
   // Close Scene Dialog Step
   {
     id: 'close-scene-dialog',
-    targetKey: 'Open World-dialog',
+    targetKey: 'close-scene-dialog',
     title: 'Scene Open Continued',
     content: 'For now, let\'s close the dialog to continue exploring the simulator interface.',
     placement: 'top',
@@ -736,7 +736,7 @@ const SimLeftTabSteps: TourStep[] = [
     id: 'robot-starting-location',
     targetKey: 'robot-starting-location',
     title: 'Robot Starting Location',
-    content: 'The robot starts at the origin point in the simulator, which is why the position readings are all 0. You can change the robot\'s starting location by entering different values for x, y, z, and rotation.',
+    content: 'The robot starts at the origin point in the simulator, which is why the position readings are all 0. You can change the robot\'s starting location by entering different values for x, y, z position and y rotation.',
     placement: 'right',
     allowTargetInteraction: false,
   },
