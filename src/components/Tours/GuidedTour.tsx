@@ -165,7 +165,6 @@ function toolTipPos(rect: Rect, placement: TourPlacement) {
 }
 
 const StyledComboBox = styled(ResizeableComboBox, (props: ThemeProps & { selectedType?: string }) => ({
-  padding: 0,
   zIndex: 10000,
   color: "#111",
 
@@ -1026,7 +1025,7 @@ export class GuidedTour extends React.PureComponent<Props, State> {
               onSelect={this.onSelect_}
               index={index}
               theme={theme}
-              mainWidth={'4em'}
+              mainWidth={'8.5em'}
               mainHeight={'1.5em'}
               mainFontSize={'0.9em'}
               tourMenuId={"guided-tour-section-select"}
