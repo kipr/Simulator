@@ -46,6 +46,7 @@ import {
   NewSceneDialog,
   DeleteDialog,
   SaveAsSceneDialog,
+  RetakeTourDialog
 } from '../components/Dialog';
 
 import Loading from '../components/Loading';
@@ -114,6 +115,7 @@ import {
   fetchTourIfNeeded,
   retakeTour,
 } from '../state/reducer/tours';
+
 
 export interface RootRouteParams {
   [key: string]: string | undefined;
@@ -734,8 +736,8 @@ class Root extends React.Component<Props, State> {
       ),
       robot:
         this.props.robots[
-          Dict.unique(Scene.robots(Async.latestValue(this.props.scene)))
-            ?.robotId ?? 'demobot'
+        Dict.unique(Scene.robots(Async.latestValue(this.props.scene)))
+          ?.robotId ?? 'demobot'
         ],
       locale: this.props.locale,
     });
@@ -1114,7 +1116,7 @@ class Root extends React.Component<Props, State> {
         this.setState({ extraMenu: undefined });
       });
     }
-    if (simulatorRootTourSteps[stepIndex].targetKey === 'Open World-dialog') {
+    if (simulatorRootTourSteps[stepIndex].targetKey === 'close-scene-dialog') {
       this.setState({ modal: Modal.SELECT_SCENE });
     }
     if (simulatorRootTourSteps[stepIndex].targetKey === 'scene-button') {
@@ -1131,17 +1133,24 @@ class Root extends React.Component<Props, State> {
   };
 
   private onRetakeTour_ = () => {
-    const currentUser = auth.currentUser.uid;
-    void retakeTour(
-      this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT,
-      currentUser,
-      this.state.tourId,
-    );
+    this.setState({ modal: Modal.RETAKE_TOUR })
+
+  };
+
+  private onRetakeTourAccept_ = () => {
+    this.setState({ modal: Modal.NONE }, () => {
+      const currentUser = auth.currentUser.uid;
+      void retakeTour(
+        this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT,
+        currentUser,
+        this.state.tourId,
+      );
+    });
   };
 
   private onJumpInTour_ = (jump: boolean) => {
     this.setState({ jumpInTour: jump }, () => {
-      this.setState({ jumpInTour: false });
+      this.setState({ jumpInTour: false, modal: Modal.NONE });
     });
   };
   render() {
@@ -1387,6 +1396,13 @@ class Root extends React.Component<Props, State> {
             theme={theme}
           />
         )}
+        {modal.type === Modal.Type.RetakeTour && (
+          <RetakeTourDialog
+            theme={theme}
+            onClose={this.onModalClose_}
+            onAccept={this.onRetakeTourAccept_}
+          />
+        )}
         {modal.type === Modal.Type.None && Async.isFailed(scene) && (
           <SceneErrorDialog
             error={scene.error}
@@ -1458,15 +1474,15 @@ class Root extends React.Component<Props, State> {
         )}
         {modal.type === Modal.Type.DeleteRecord &&
           modal.record.type === Record.Type.Scene && (
-          <DeleteDialog
-            name={Record.latestName(modal.record)}
-            theme={theme}
-            onClose={this.onModalClose_}
-            onAccept={this.onDeleteRecordAccept_(
-              Record.selector(modal.record),
-            )}
-          />
-        )}
+            <DeleteDialog
+              name={Record.latestName(modal.record)}
+              theme={theme}
+              onClose={this.onModalClose_}
+              onAccept={this.onDeleteRecordAccept_(
+                Record.selector(modal.record),
+              )}
+            />
+          )}
         {modal.type === Modal.Type.SettingsScene && (
           <SceneSettingsDialog
             scene={Async.latestValue(scene)}
