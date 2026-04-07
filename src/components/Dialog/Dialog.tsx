@@ -34,20 +34,6 @@ class Dialog_ extends React.PureComponent<Props> {
   render() {
     const { props } = this;
     const { className, style, children, theme, name } = props;
-    const container_ = (
-      <Container theme={theme}>
-        <Widget
-          theme={theme}
-          size={0}
-          sizes={[Size.MAXIMIZED, Size.MINIMIZED]}
-          onSizeChange={this.onSizeChange_}
-          mode={Mode.Floating}
-          name={name}
-        >
-          {children}
-        </Widget>
-      </Container>
-    );
 
     const tourContent_ = (
       <TourTarget registry={props.tourRegistry} targetKey={`${name}-dialog`}>
@@ -59,9 +45,11 @@ class Dialog_ extends React.PureComponent<Props> {
             onSizeChange={this.onSizeChange_}
             mode={Mode.Floating}
             name={name}
+            tourRegistry={props.tourRegistry}
           >
             {children}
           </Widget>
+
         </Container>
       </TourTarget>
     );
