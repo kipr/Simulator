@@ -4,9 +4,8 @@ import { ChallengeCompletionsAction, ChallengesAction, ClassroomsAction, ScenesA
 import { LimitedChallengeCompletionsAction } from '../state/reducer/limitedChallengeCompletions';
 import Async from '../state/State/Async';
 import { AsyncChallenge } from '../state/State/Challenge';
-import ChallengeCompletion from '../state/State/ChallengeCompletion';
 import { AsyncLimitedChallenge } from '../state/State/LimitedChallenge';
-import { AsyncChallengeCompletion } from '../state/State/ChallengeCompletion';
+import ChallengeCompletion, { AsyncChallengeCompletion } from '../state/State/ChallengeCompletion';
 import LimitedChallengeCompletion, { AsyncLimitedChallengeCompletion } from '../state/State/LimitedChallengeCompletion';
 import { AsyncScene } from '../state/State/Scene';
 import { AsyncClassroom } from 'state/State/Classroom';
