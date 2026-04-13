@@ -29,7 +29,7 @@ import Loading from '../components/Loading';
 import { Editor } from '../components/Editor';
 import { Capabilities } from '../components/World';
 
-import { State as ReduxState } from '../state';
+import store, { State as ReduxState } from '../state';
 import { ScenesAction, AiAction } from '../state/reducer';
 
 import { DocumentationAction } from 'ivygate/dist/src/state/reducer/documentation';
@@ -44,13 +44,12 @@ import Camera from '../state/State/Scene/Camera';
 
 import Async from '../state/State/Async';
 import LimitedChallenge, { AsyncLimitedChallenge, LimitedChallengeStatus } from '../state/State/LimitedChallenge';
-import LimitedChallengeCompletion, { AsyncLimitedChallengeCompletion } from '../state/State/LimitedChallengeCompletion';
+import { AsyncLimitedChallengeCompletion } from '../state/State/LimitedChallengeCompletion';
 import PredicateCompletion from '../state/State/ChallengeCompletion/PredicateCompletion';
 import Predicate from '../state/State/Challenge/Predicate';
 
 import DocumentationLocation from '../state/State/Documentation/DocumentationLocation';
 
-import DbError from '../db/Error';
 import Builder from '../db/Builder';
 
 import { StyledText } from '../util';
@@ -87,7 +86,6 @@ interface RootPrivateProps {
 
   robots: Dict<Robot>;
 
-  onChallengeCompletionCreate: (challengeCompletion: LimitedChallengeCompletion) => void;
   onChallengeCompletionSceneDiffChange: (sceneDiff: OuterObjectPatch<Scene>) => void;
   onChallengeCompletionEventStateRemove: (eventId: string) => void;
   onChallengeCompletionEventStateChange: (eventId: string, eventState: boolean) => void;
@@ -318,12 +316,12 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
   };
 
   private onSetEventValue_ = (eventId: string, value: boolean) => {
-    const { challenge, challengeCompletion } = this.props;
-
-    const latestChallenge = Async.latestValue(challenge);
+    const { challengeId } = this.props.params;
+    const state = store.getState();
+    const latestChallenge = Async.latestValue(state.limitedChallenges[challengeId]);
     if (!latestChallenge) return;
 
-    const latestChallengeCompletion = Async.latestValue(challengeCompletion);
+    const latestChallengeCompletion = Async.latestValue(state.limitedChallengeCompletions[challengeId]);
     if (!latestChallengeCompletion) return;
 
     const { success, failure } = latestChallenge;
@@ -417,20 +415,6 @@ class LimitedChallengeRoot extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>): void {
-    const { params: { challengeId }, challenge, challengeCompletion } = this.props;
-
-    if (challengeId && challenge && challengeCompletion && challengeCompletion.type === Async.Type.LoadFailed) {
-      const latestChallenge = Async.latestValue(challenge);
-      if (challengeCompletion.error.code === DbError.CODE_NOT_FOUND && latestChallenge) {
-        console.log('Limited challenge completion not found');
-        this.props.onChallengeCompletionCreate({
-          ...LimitedChallengeCompletion.EMPTY,
-          code: latestChallenge.code,
-          currentLanguage: latestChallenge.defaultLanguage,
-        });
-      }
-    }
-
     if (this.state.simulatorState.type !== prevState.simulatorState.type) {
       Space.getInstance().sceneBinding.scriptManager.programStatus = this.state.simulatorState.type === SimulatorState.Type.Running ? 'running' : 'stopped';
     }
@@ -1096,9 +1080,6 @@ const ConnectedLimitedChallengeRoot = connect((state: ReduxState, { params: { ch
     robots: Dict.map(state.robots.robots, Async.latestValue),
   };
 }, (dispatch, { params: { challengeId } }: RootPublicProps) => ({
-  onChallengeCompletionCreate: (challengeCompletion: LimitedChallengeCompletion) => {
-    dispatch(LimitedChallengeCompletionsAction.createLimitedChallengeCompletion({ challengeId, challengeCompletion }));
-  },
   onChallengeCompletionSceneDiffChange: (sceneDiff: OuterObjectPatch<Scene>) => {
     dispatch(LimitedChallengeCompletionsAction.setSceneDiff({ challengeId, sceneDiff }));
   },
