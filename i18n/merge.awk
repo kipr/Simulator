@@ -4,10 +4,31 @@
 # Inspect the resulting file to make sure everything lined up correctly, then
 # move it into the `po/` directory.
 
-/^msgstr ""$/ {
-    getline <tl
-    print "msgstr \"" $0 "\""
+function escape_po(line) {
+    gsub(/\r/, "", line)
+    gsub(/\\/, "\\\\", line)
+    gsub(/"/, "\\\"", line)
+    return line
+}
+
+# Skip old continuation lines after replacing a msgstr
+skip_msgstr_continuation && /^[[:space:]]*"/ {
     next
 }
 
-{ print $0 }
+# Once a non-continuation line appears, stop skipping
+skip_msgstr_continuation {
+    skip_msgstr_continuation = 0
+}
+
+/^[[:space:]]*msgstr[[:space:]]*"/ {
+    if ((getline line < tl) <= 0) {
+        print
+        next
+    }
+    printf "msgstr \"%s\"\n", escape_po(line)
+    skip_msgstr_continuation = 1
+    next
+}
+
+{ print }

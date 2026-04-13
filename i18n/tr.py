@@ -8,21 +8,28 @@ import sys
 out_lang = sys.argv[1]
 auth_key = sys.argv[2]
 
-# You probably need to change these
-in_path = "/home/tom/dox/work/simulator/Simulator/i18n/base.txt"
-out_path = f"/home/tom/dox/work/simulator/Simulator/i18n/{out_lang}.txt"
+in_path = "/home/erin/Desktop/Wombat_Libraries/Simulator/i18n/base.txt"
+out_path = f"/home/erin/Desktop/Wombat_Libraries/Simulator/i18n/{out_lang}.txt"
 
 deepl_client = deepl.DeepLClient(auth_key)
 
-with open(in_path, 'r') as f:
-    lines = [line.strip() for line in f.readlines()]
-    result = deepl_client.translate_text(
-        lines,
-        target_lang=out_lang,
-        source_lang="EN",
-        preserve_formatting=True,
-        formality="less"
-    )
-    with open(out_path, 'w') as dest:
-        for r in result:
-            dest.write(f"{r.text}\n")
+def po_escape(s: str) -> str:
+    return s.replace("\r", "").replace("\\", "\\\\").replace('"', '\\"')
+
+with open(in_path, "r", encoding="utf-8") as f:
+    lines = [line.rstrip("\n") for line in f.readlines()]
+
+kwargs = dict(
+    target_lang=out_lang,
+    source_lang="EN",
+    preserve_formatting=True,
+)
+
+if not out_lang.upper().startswith("ZH"):
+    kwargs["formality"] = "less"
+
+result = deepl_client.translate_text(lines, **kwargs)
+
+with open(out_path, "w", encoding="utf-8") as dest:
+    for r in result:
+        dest.write(po_escape(r.text) + "\n")

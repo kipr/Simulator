@@ -134,6 +134,7 @@ class FunctionParameter:
   name: str
   type: str
   description: str | None
+  description_key: str | None
 
 @dataclass
 class Function:
@@ -142,9 +143,12 @@ class Function:
   parameters: List[FunctionParameter]
   return_type: str
   return_description: str | None
+  return_description_key: str | None
   brief_description: str | None
+  brief_description_key: str | None
   detailed_description: str | None
-
+  detailed_description_key: str | None
+  
 @dataclass
 class Module:
   id: str
@@ -221,64 +225,134 @@ def parse_detaileddescription(node):
       parameter_descriptions[parameter_name] = parse_text(item)
   return parameter_descriptions
 
+# def parse_function(node):
+#   global functions
+
+#   id = node.get('id')
+#   name = node.find('name').text
+#   return_type = None
+#   return_type_raw = node.find('type')
+#   # Extract last reference from return type or use entire text
+#   if return_type_raw is not None:
+#     return_type = parse_text(return_type_raw)
+#     refs_gen = return_type_raw.findall('ref')
+#     refs = [ref for ref in refs_gen]
+#     if len(refs) > 0:
+#       return_type = parse_text(refs[-1])
+#     # Remove EXPORT_SYM
+#     return_type = return_type.replace('EXPORT_SYM ', '')
+
+#   parameters = []
+
+#   detaileddescription = node.find('detaileddescription')
+#   detailed_description = None
+#   parameter_items = {}
+#   if detaileddescription is not None:
+#     parameter_items = parse_detaileddescription(detaileddescription)
+#     detailed_description = parse_text(detaileddescription)
+
+#   for param in node.findall('param'):
+#     declname = param.find('declname')
+#     type = param.find('type')
+#     if declname is None or type is None: continue
+#     parameters.append(FunctionParameter(
+#       declname.text,
+#       parse_text(type),
+#       parameter_items.get(declname.text, None)
+#     ))
+
+#   # Extract return description from <simplesect kind="return"> in detaileddescription
+#   return_description = None
+#   if detaileddescription is not None:
+#     return_description = detaileddescription.find('simplesect')
+#     if return_description is not None:
+#       return_description = parse_text(return_description)
+#     else:
+#       return_description = None
+
+#   brief_description = node.find('briefdescription')
+
+#   functions.append(Function(
+#     id,
+#     name,
+#     parameters,
+#     return_type,
+#     return_description,
+#     parse_text(brief_description) if brief_description is not None else None,
+#     detailed_description
+#   ))
+
 def parse_function(node):
   global functions
 
   id = node.get('id')
   name = node.find('name').text
+
+  # ---- Return type ----
   return_type = None
   return_type_raw = node.find('type')
-  # Extract last reference from return type or use entire text
   if return_type_raw is not None:
     return_type = parse_text(return_type_raw)
-    refs_gen = return_type_raw.findall('ref')
-    refs = [ref for ref in refs_gen]
+    refs = list(return_type_raw.findall('ref'))
     if len(refs) > 0:
       return_type = parse_text(refs[-1])
-    # Remove EXPORT_SYM
     return_type = return_type.replace('EXPORT_SYM ', '')
 
+  # ---- Detailed description + parameter docs ----
   parameters = []
+  parameter_items = {}
+  detailed_description = None
 
   detaileddescription = node.find('detaileddescription')
-  detailed_description = None
-  parameter_items = {}
   if detaileddescription is not None:
     parameter_items = parse_detaileddescription(detaileddescription)
     detailed_description = parse_text(detaileddescription)
 
+  # ---- Parameters ----
   for param in node.findall('param'):
     declname = param.find('declname')
-    type = param.find('type')
-    if declname is None or type is None: continue
+    type_node = param.find('type')
+    if declname is None or type_node is None:
+      continue
+
+    desc = parameter_items.get(declname.text, None)
+    desc_key = f"func:{name}:param:{declname.text}:description" if desc else None
+
     parameters.append(FunctionParameter(
-      declname.text,
-      parse_text(type),
-      parameter_items.get(declname.text, None)
+      name=declname.text,
+      type=parse_text(type_node),
+      description=desc,
+      description_key=desc_key
     ))
 
-  # Extract return description from <simplesect kind="return"> in detaileddescription
+  # ---- Return description ----
   return_description = None
   if detaileddescription is not None:
-    return_description = detaileddescription.find('simplesect')
-    if return_description is not None:
-      return_description = parse_text(return_description)
-    else:
-      return_description = None
+    ret_node = detaileddescription.find('simplesect')
+    return_description = parse_text(ret_node) if ret_node is not None else None
 
-  brief_description = node.find('briefdescription')
+  # ---- Brief description ----
+  brief_node = node.find('briefdescription')
+  brief_text = parse_text(brief_node) if brief_node is not None else None
 
+  # ---- Keys ----
+  brief_key = f"func:{name}:brief" if brief_text else None
+  detailed_key = f"func:{name}:detailed" if detailed_description else None
+  return_key = f"func:{name}:return" if return_description else None
+
+  # ---- Append ----
   functions.append(Function(
-    id,
-    name,
-    parameters,
-    return_type,
-    return_description,
-    parse_text(brief_description) if brief_description is not None else None,
-    detailed_description
+    id=id,
+    name=name,
+    parameters=parameters,
+    return_type=return_type,
+    return_description=return_description,
+    return_description_key=return_key,
+    brief_description=brief_text,
+    brief_description_key=brief_key,
+    detailed_description=detailed_description,
+    detailed_description_key=detailed_key
   ))
-
-
 def parse_file(node):
   global files
 

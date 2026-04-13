@@ -7,22 +7,40 @@ import { DEFAULT_PO, PO_PATH } from './po';
 import { walkDir } from './util';
 
 const tsConfigPath = path.resolve(__dirname, '..', 'tsconfig.json');
-const tsConfig = typescript.readConfigFile(tsConfigPath, (path) => fs.readFileSync(path, 'utf8'));
 
-const compilerOptions = tsConfig.config.compilerOptions as typescript.CompilerOptions;
+const readResult = typescript.readConfigFile(tsConfigPath, (p) => fs.readFileSync(p, 'utf8'));
+if (readResult.error) {
+  const msg = typescript.flattenDiagnosticMessageText(readResult.error.messageText, '\n');
+  throw new Error(`Failed to read tsconfig: ${msg}`);
+}
 
-// TypeScript complains about moduleResolution being "node".
-// We don't need it, so we can just delete it.
-delete compilerOptions.moduleResolution;
+const parsed = typescript.parseJsonConfigFileContent(
+  readResult.config,
+  typescript.sys,
+  path.dirname(tsConfigPath),
+  /*existingOptions*/ undefined,
+  tsConfigPath
+);
 
-const rootNames = [];
+if (parsed.errors?.length) {
+  const msg = parsed.errors
+    .map(e => typescript.flattenDiagnosticMessageText(e.messageText, '\n'))
+    .join('\n');
+  throw new Error(`Failed to parse tsconfig:\n${msg}`);
+}
 
+const compilerOptions = parsed.options;
+
+// If you still want to drop moduleResolution for your script, do it here (but usually you don't need to)
+delete (compilerOptions as any).moduleResolution;
+
+const rootNames: string[] = [];
 walkDir(path.resolve(__dirname, '..', 'src'), file => {
   if (file.endsWith('.tsx') || file.endsWith('.ts')) rootNames.push(file);
 });
 
 const program = typescript.createProgram({
-  rootNames: rootNames,
+  rootNames,
   options: compilerOptions,
 });
 
@@ -35,7 +53,7 @@ interface Tr {
 
 const findTrs = (funcName: string, sourceFile: typescript.SourceFile, node: typescript.Node) => {
   let ret: Tr[] = [];
-  
+
   if (typescript.isCallExpression(node)) {
     const expression = node.expression;
     if (typescript.isIdentifier(expression)) {
@@ -52,7 +70,7 @@ const findTrs = (funcName: string, sourceFile: typescript.SourceFile, node: type
       }
     }
   }
-  
+
   const children = node.getChildren(sourceFile);
   for (const child of children) ret = [...ret, ...findTrs(funcName, sourceFile, child)];
   return ret;
@@ -81,7 +99,7 @@ for (const sourceFile of sourceFiles) {
     trDict[language] = po;
     for (const tr of trs) {
       const { enUs, description } = tr;
-    
+
       const context = description || '';
       if (!po.translations) po.translations = {};
       if (!po.translations[context]) po.translations[context] = {};
