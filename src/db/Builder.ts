@@ -4,11 +4,13 @@ import { ChallengeCompletionsAction, ChallengesAction, ClassroomsAction, ScenesA
 import { LimitedChallengeCompletionsAction } from '../state/reducer/limitedChallengeCompletions';
 import Async from '../state/State/Async';
 import { AsyncChallenge } from '../state/State/Challenge';
+import ChallengeCompletion from '../state/State/ChallengeCompletion';
 import { AsyncLimitedChallenge } from '../state/State/LimitedChallenge';
 import { AsyncChallengeCompletion } from '../state/State/ChallengeCompletion';
-import { AsyncLimitedChallengeCompletion } from '../state/State/LimitedChallengeCompletion';
+import LimitedChallengeCompletion, { AsyncLimitedChallengeCompletion } from '../state/State/LimitedChallengeCompletion';
 import { AsyncScene } from '../state/State/Scene';
 import { AsyncClassroom } from 'state/State/Classroom';
+import DbError from '../db/Error';
 
 export class ChallengeBuilder {
   private id_: string;
@@ -50,6 +52,14 @@ export class ChallengeCompletionBuilder {
 
     if (!challengeCompletion || challengeCompletion.type === Async.Type.Unloaded) {
       builder.loadChallengeCompletion_(id);
+    } else if (
+      challengeCompletion.type === Async.Type.LoadFailed &&
+      challengeCompletion.error.code === DbError.CODE_NOT_FOUND
+    ) {
+      builder.createChallengeCompletionIfMissing_(id);
+      if (!builder.challengeCompletions[id]) {
+        builder.addChallengeCompletion_(id, challengeCompletion);
+      }
     } else {
       builder.addChallengeCompletion_(id, challengeCompletion);
     }
@@ -108,6 +118,14 @@ export class LimitedChallengeCompletionBuilder {
 
     if (!challengeCompletion || challengeCompletion.type === Async.Type.Unloaded) {
       builder.loadLimitedChallengeCompletion_(id);
+    } else if (
+      challengeCompletion.type === Async.Type.LoadFailed &&
+      challengeCompletion.error.code === DbError.CODE_NOT_FOUND
+    ) {
+      builder.createLimitedChallengeCompletionIfMissing_(id);
+      if (!builder.limitedChallengeCompletions[id]) {
+        builder.addLimitedChallengeCompletion_(id, challengeCompletion);
+      }
     } else {
       builder.addLimitedChallengeCompletion_(id, challengeCompletion);
     }
@@ -219,6 +237,19 @@ class Builder {
     this.challengeCompletions_[id] = Async.unloaded({});
   }
 
+  createChallengeCompletionIfMissing_(id: string) {
+    const challenge = Async.latestValue(this.state.challenges[id]);
+    if (!challenge) return;
+
+    const challengeCompletion = {
+      ...ChallengeCompletion.EMPTY,
+      code: challenge.code,
+      currentLanguage: challenge.defaultLanguage,
+    };
+    this.challengeCompletions_[id] = Async.creating({ value: challengeCompletion });
+    store.dispatch(ChallengeCompletionsAction.createChallengeCompletion({ challengeId: id, challengeCompletion }));
+  }
+
   loadClassroom_(id: string) {
     this.classroomsToLoad_.add(id);
     this.classrooms_[id] = Async.unloaded({});
@@ -228,6 +259,19 @@ class Builder {
   loadLimitedChallengeCompletion_(id: string) {
     this.limitedChallengeCompletionsToLoad_.add(id);
     this.limitedChallengeCompletions_[id] = Async.unloaded({});
+  }
+
+  createLimitedChallengeCompletionIfMissing_(id: string) {
+    const challenge = Async.latestValue(this.state.limitedChallenges[id]);
+    if (!challenge) return;
+
+    const challengeCompletion = {
+      ...LimitedChallengeCompletion.EMPTY,
+      code: challenge.code,
+      currentLanguage: challenge.defaultLanguage,
+    };
+    this.limitedChallengeCompletions_[id] = Async.creating({ value: challengeCompletion });
+    store.dispatch(LimitedChallengeCompletionsAction.createLimitedChallengeCompletion({ challengeId: id, challengeCompletion }));
   }
 
   dispatchLoads() {
