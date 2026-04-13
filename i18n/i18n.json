@@ -11383,6 +11383,458 @@
       "pt-PT": "Caixa de areia da mesa de jogo Botball 2026 Fall",
       "zh-CN": "2026秋季機器人球賽沙盒",
       "zh-TW": "2026秋季机器人球赛沙盘"
+    },
+    "Tutor is thinking...": {
+      "de-DE": "Der Tutor denkt nach...",
+      "en-US": "Tutor is thinking...",
+      "es-ES": "El tutor está pensando...",
+      "es-MX": "El tutor está pensando...",
+      "ja-JP": "家庭教師は考えている...",
+      "pt-BR": "O tutor está pensando...",
+      "pt-PT": "O tutor está a pensar...",
+      "zh-CN": "导师正在思考...",
+      "zh-TW": "導師正在思考..."
+    },
+    "Please help me understand what's wrong.": {
+      "de-DE": "Bitte helfen Sie mir zu verstehen, was falsch ist.",
+      "en-US": "Please help me understand what's wrong.",
+      "es-ES": "Por favor, ayúdame a entender qué es lo que está mal.",
+      "es-MX": "Por favor, ayúdame a entender qué pasa.",
+      "ja-JP": "何が問題なのか、教えてください。",
+      "pt-BR": "Por favor, ajude-me a entender o que está errado.",
+      "pt-PT": "Por favor, ajude-me a entender o que está errado.",
+      "zh-CN": "请帮我弄清楚问题出在哪里。",
+      "zh-TW": "請幫我理解哪裡出了問題。"
+    },
+    "JBC Sandbox": {
+      "en-US": "JBC Sandbox"
+    },
+    "Junior Botball Challenge Sandbox. Starting Mat is A but B can also be shown instead. All cans 1-12 are available by default.": {
+      "en-US": "Junior Botball Challenge Sandbox. Starting Mat is A but B can also be shown instead. All cans 1-12 are available by default."
+    },
+    "2026 Botball Fall Game Table": {
+      "en-US": "2026 Botball Fall Game Table",
+      "es-ES": "Mesa del juego Botball Fall 2026"
+    },
+    "2026 Botball Spring Game Table": {
+      "en-US": "2026 Botball Spring Game Table",
+      "es-ES": "Mesa del juego Botball Spring 2026"
+    },
+    "Base Scene - 2026 Botball Game Table": {
+      "en-US": "Base Scene - 2026 Botball Game Table",
+      "es-ES": "Escena base - Mesa del juego Botball 2026"
+    },
+    "Sliding Door #1": {
+      "en-US": "Sliding Door #1",
+      "es-ES": "Puerta corredera n.º 1"
+    },
+    "Sliding Door #2": {
+      "en-US": "Sliding Door #2",
+      "es-ES": "Puerta corredera n.º 2"
+    },
+    "Low Blue Pom #%d": {
+      "en-US": "Low Blue Pom #%d",
+      "es-ES": "Bajo Azul Pom #%d"
+    },
+    "Low Orange Pom #%d": {
+      "en-US": "Low Orange Pom #%d",
+      "es-ES": "Naranja Bajo Pom #%d"
+    },
+    "High Blue Pom #%d": {
+      "en-US": "High Blue Pom #%d",
+      "es-ES": "Alto Azul Pom #%d"
+    },
+    "High Orange Pom #%d": {
+      "en-US": "High Orange Pom #%d",
+      "es-ES": "Naranja alto Pom #%d"
+    },
+    "Left Red Cube (2 inch)": {
+      "en-US": "Left Red Cube (2 inch)",
+      "es-ES": "Cubo rojo izquierdo (2 pulgadas)"
+    },
+    "Right Red Cube (2 inch)": {
+      "en-US": "Right Red Cube (2 inch)",
+      "es-ES": "Cubo rojo derecho (2 pulgadas)"
+    },
+    "Left Green Cube (2 inch)": {
+      "en-US": "Left Green Cube (2 inch)",
+      "es-ES": "Cubo verde izquierdo (2 pulgadas)"
+    },
+    "Right Green Cube (2 inch)": {
+      "en-US": "Right Green Cube (2 inch)",
+      "es-ES": "Cubo verde derecho (2 pulgadas)"
+    },
+    "Pallet #%d": {
+      "en-US": "Pallet #%d",
+      "es-ES": "Palé n.º %d"
+    },
+    "Lower Yellow Cube (2 inch)": {
+      "en-US": "Lower Yellow Cube (2 inch)",
+      "es-ES": "Cubo amarillo inferior (2 pulgadas)"
+    },
+    "Upper Yellow Cube (2 inch)": {
+      "en-US": "Upper Yellow Cube (2 inch)",
+      "es-ES": "Cubo amarillo superior (2 pulgadas)"
+    },
+    "Middle Left Brown Cube": {
+      "en-US": "Middle Left Brown Cube",
+      "es-ES": "Cubo marrón central izquierdo"
+    },
+    "Middle Right Brown Cube": {
+      "en-US": "Middle Right Brown Cube",
+      "es-ES": "Cubo marrón central derecho"
+    },
+    "Green Cube": {
+      "en-US": "Green Cube",
+      "es-ES": "Cubo verde"
+    },
+    "Red Cube": {
+      "en-US": "Red Cube",
+      "es-ES": "Cubo rojo"
+    },
+    "Near Stack %s Cube": {
+      "en-US": "Near Stack %s Cube",
+      "es-ES": "Cerca de la pila %s Cubo"
+    },
+    "Far Stack %s Cube": {
+      "en-US": "Far Stack %s Cube",
+      "es-ES": "Pila lejana %s Cubo"
+    },
+    "Dropper #1": {
+      "en-US": "Dropper #1",
+      "es-ES": "Cuentagotas n.º 1"
+    },
+    "Dropper #2": {
+      "en-US": "Dropper #2",
+      "es-ES": "Cuentagotas n.º 2"
+    },
+    "Drum (2in PVC)": {
+      "en-US": "Drum (2in PVC)",
+      "es-ES": "Tambor (PVC de 2 pulgadas)"
+    },
+    "Dropper Gate": {
+      "en-US": "Dropper Gate",
+      "es-ES": "Puerta con gotero"
+    },
+    "2026 Botball Game Table Sandbox": {
+      "en-US": "2026 Botball Game Table Sandbox",
+      "es-ES": "2026 Mesa de juego Botball Sandbox"
+    },
+    "2026 Botball game table sandbox. One robot and one side of the table are available. Barrels (2in PVC) drop every 7 seconds, starting 10 seconds after the scene is loaded.": {
+      "en-US": "2026 Botball game table sandbox. One robot and one side of the table are available. Barrels (2in PVC) drop every 7 seconds, starting 10 seconds after the scene is loaded."
+    },
+    "Speed Run: Ring Around the Can": {
+      "en-US": "Speed Run: Ring Around the Can",
+      "es-ES": "Carrera de velocidad: Rodea la lata"
+    },
+    "Complete the Ring Around the Can challenge as fast as possible! Limited time event.": {
+      "en-US": "Complete the Ring Around the Can challenge as fast as possible! Limited time event."
+    },
+    "Robot Reentered Start": {
+      "en-US": "Robot Reentered Start",
+      "es-ES": "El robot volvió a entrar en la salida."
+    },
+    "Robot Passed Left Side": {
+      "en-US": "Robot Passed Left Side",
+      "es-ES": "El robot pasó por el lado izquierdo."
+    },
+    "Speed Run: Tag, You're it!": {
+      "en-US": "Speed Run: Tag, You're it!",
+      "es-ES": "Carrera de velocidad: ¡Te toca!"
+    },
+    "Complete the Tag, You're it! challenge as fast as possible! Limited time event.": {
+      "en-US": "Complete the Tag, You're it! challenge as fast as possible! Limited time event."
+    },
+    "Classrooms": {
+      "en-US": "Classrooms",
+      "es-ES": "Aulas"
+    },
+    "See the current classrooms.": {
+      "en-US": "See the current classrooms.",
+      "es-ES": "Vea las aulas actuales."
+    },
+    "Limited Challenges": {
+      "en-US": "Limited Challenges",
+      "es-ES": "Desafíos limitados"
+    },
+    "Challenges with time limits and attempt restrictions.": {
+      "en-US": "Challenges with time limits and attempt restrictions.",
+      "es-ES": "Desafíos con límites de tiempo y restricciones de intentos."
+    },
+    "Loading leaderboard...": {
+      "en-US": "Loading leaderboard...",
+      "es-ES": "Cargando la tabla de clasificación..."
+    },
+    "Error loading leaderboard": {
+      "en-US": "Error loading leaderboard",
+      "es-ES": "Error al cargar la tabla de clasificación"
+    },
+    "Rank": {
+      "en-US": "Rank",
+      "es-ES": "Rango"
+    },
+    "Your position": {
+      "en-US": "Your position",
+      "es-ES": "Tu posición"
+    },
+    "participants": {
+      "en-US": "participants",
+      "es-ES": "participantes"
+    },
+    "Show Top Users": {
+      "en-US": "Show Top Users",
+      "es-ES": "Mostrar usuarios principales"
+    },
+    "Show Full Board": {
+      "en-US": "Show Full Board",
+      "es-ES": "Mostrar pensión completa"
+    },
+    "Your name on the leaderboard:": {
+      "en-US": "Your name on the leaderboard:",
+      "es-ES": "Tu nombre en la tabla de clasificación:"
+    },
+    "days": {
+      "en-US": "days",
+      "es-ES": "días"
+    },
+    "hrs": {
+      "en-US": "hrs",
+      "es-ES": "hrs"
+    },
+    "min": {
+      "en-US": "min",
+      "es-ES": "min"
+    },
+    "sec": {
+      "en-US": "sec",
+      "es-ES": "sec"
+    },
+    "Upcoming": {
+      "en-US": "Upcoming",
+      "es-ES": "Próximamente"
+    },
+    "Closed": {
+      "en-US": "Closed",
+      "es-ES": "Cerrado"
+    },
+    "Mystery Challenge": {
+      "en-US": "Mystery Challenge",
+      "es-ES": "Desafío misterioso"
+    },
+    "Check back when this challenge opens to see what awaits!": {
+      "en-US": "Check back when this challenge opens to see what awaits!",
+      "es-ES": "¡Vuelve cuando se abra este desafío para ver lo que te espera!"
+    },
+    "Opens in": {
+      "en-US": "Opens in",
+      "es-ES": "Se abre en"
+    },
+    "Closes in": {
+      "en-US": "Closes in",
+      "es-ES": "Se cierra en"
+    },
+    "Best Time": {
+      "en-US": "Best Time",
+      "es-ES": "Mejor momento"
+    },
+    "Complete these time-limited challenges as fast as possible! Your best time will be recorded.": {
+      "en-US": "Complete these time-limited challenges as fast as possible! Your best time will be recorded."
+    },
+    "No limited challenges available at this time.": {
+      "en-US": "No limited challenges available at this time.",
+      "es-ES": "No hay desafíos limitados disponibles en este momento."
+    },
+    "View Closed Challenges": {
+      "en-US": "View Closed Challenges",
+      "es-ES": "Ver desafíos cerrados"
+    },
+    "Back to Limited Challenges": {
+      "en-US": "Back to Limited Challenges",
+      "es-ES": "Volver a Desafíos limitados"
+    },
+    "Closed Challenges": {
+      "en-US": "Closed Challenges",
+      "es-ES": "Desafíos cerrados"
+    },
+    "View past limited challenges and their leaderboards.": {
+      "en-US": "View past limited challenges and their leaderboards.",
+      "es-ES": "Ver los desafíos limitados anteriores y sus tablas de clasificación."
+    },
+    "No closed challenges yet.": {
+      "en-US": "No closed challenges yet.",
+      "es-ES": "Aún no hay retos cerrados."
+    },
+    "Predefined Location": {
+      "en-US": "Predefined Location",
+      "es-ES": "Ubicación predefinida"
+    },
+    "None": {
+      "en-US": "None",
+      "es-ES": "Ninguno"
+    },
+    "Show Scripts": {
+      "en-US": "Show Scripts",
+      "es-ES": "Mostrar guiones"
+    },
+    "Show scripts in the World section": {
+      "en-US": "Show scripts in the World section",
+      "es-ES": "Mostrar guiones en la sección Mundo"
+    },
+    "Scene": {
+      "en-US": "Scene",
+      "es-ES": "Escena"
+    },
+    "Create New Project": {
+      "en-US": "Create New Project",
+      "es-ES": "Crear nuevo proyecto"
+    },
+    "Create New File": {
+      "en-US": "Create New File",
+      "es-ES": "Crear nuevo archivo"
+    },
+    "Are You Sure?": {
+      "en-US": "Are You Sure?",
+      "es-ES": "¿Estás seguro?"
+    },
+    "Loading Python...\n": {
+      "en-US": "Loading Python...\n",
+      "es-ES": "Cargando Python...\n"
+    },
+    "Success conditions met - verifying...\n": {
+      "en-US": "Success conditions met - verifying...\n",
+      "es-ES": "Condiciones de éxito cumplidas - verificando...\n"
+    },
+    "Completion invalidated - failure condition triggered\n": {
+      "en-US": "Completion invalidated - failure condition triggered\n",
+      "es-ES": "Finalización invalidada: condición de fallo activada\n"
+    },
+    "This challenge is closed and no longer accepting submissions.\n": {
+      "en-US": "This challenge is closed and no longer accepting submissions.\n",
+      "es-ES": "Este desafío está cerrado y ya no se aceptan inscripciones."
+    },
+    "This challenge has not opened yet.\n": {
+      "en-US": "This challenge has not opened yet.\n",
+      "es-ES": "Este desafío aún no se ha abierto."
+    },
+    "Challenge Closed": {
+      "en-US": "Challenge Closed",
+      "es-ES": "Desafío cerrado"
+    },
+    "This challenge is no longer accepting submissions.": {
+      "en-US": "This challenge is no longer accepting submissions.",
+      "es-ES": "Este desafío ya no acepta inscripciones."
+    },
+    "Your best time: ": {
+      "en-US": "Your best time: ",
+      "es-ES": "Tu mejor tiempo: "
+    },
+    "This challenge has not opened yet.": {
+      "en-US": "This challenge has not opened yet.",
+      "es-ES": "Este desafío aún no se ha abierto."
+    },
+    "This challenge is closed and no longer accepting submissions.": {
+      "en-US": "This challenge is closed and no longer accepting submissions.",
+      "es-ES": "Este desafío está cerrado y ya no se aceptan inscripciones."
+    },
+    "No completions yet. Be the first to complete this challenge!": {
+      "en-US": "No completions yet. Be the first to complete this challenge!",
+      "es-ES": "Aún no hay completaciones. ¡Sé el primero en completar este desafío!"
+    },
+    "Runtime": {
+      "en-US": "Runtime",
+      "es-ES": "Tiempo de ejecución"
+    },
+    "Completed": {
+      "en-US": "Completed",
+      "es-ES": "Completado"
+    },
+    "Back to Challenges": {
+      "en-US": "Back to Challenges",
+      "es-ES": "Volver a Desafíos"
+    },
+    "Enter Challenge": {
+      "en-US": "Enter Challenge",
+      "es-ES": "Entrar en el desafío"
+    },
+    "Show Around Me": {
+      "en-US": "Show Around Me",
+      "es-ES": "Mostrar cerca de mí"
+    },
+    "Sort by:": {
+      "en-US": "Sort by:",
+      "es-ES": "Ordenar por:"
+    },
+    "Fastest Runtime": {
+      "en-US": "Fastest Runtime",
+      "es-ES": "Tiempo de ejecución más rápido"
+    },
+    "First to Complete": {
+      "en-US": "First to Complete",
+      "es-ES": "El primero en completar"
+    },
+    "Student View": {
+      "en-US": "Student View",
+      "es-ES": "Opinión de los estudiantes"
+    },
+    "See the classroom you are in.": {
+      "en-US": "See the classroom you are in.",
+      "es-ES": "Mira el aula en la que estás."
+    },
+    "Teacher View": {
+      "en-US": "Teacher View",
+      "es-ES": "Vista del profesor"
+    },
+    "See and manage all the classrooms you own.": {
+      "en-US": "See and manage all the classrooms you own.",
+      "es-ES": "Vea y gestione todas las aulas que posee."
+    },
+    "My Badges": {
+      "en-US": "My Badges",
+      "es-ES": "Mis insignias"
+    },
+    "Create New Classroom": {
+      "en-US": "Create New Classroom",
+      "es-ES": "Crear nueva clase"
+    },
+    "Choose Class Leaderboard": {
+      "en-US": "Choose Class Leaderboard",
+      "es-ES": "Elegir clasificación de la clase"
+    },
+    "Join Classroom": {
+      "en-US": "Join Classroom",
+      "es-ES": "Únete al aula"
+    },
+    "Leave Classroom": {
+      "en-US": "Leave Classroom",
+      "es-ES": "Salir del aula"
+    },
+    "Default JBC Challenges": {
+      "en-US": "Default JBC Challenges",
+      "es-ES": "Desafíos predeterminados de JBC"
+    },
+    "User Already Exists": {
+      "en-US": "User Already Exists",
+      "es-ES": "El usuario ya existe"
+    },
+    "UH OH!": {
+      "en-US": "UH OH!",
+      "es-ES": "¡OH, NO!"
+    },
+    "This user already exists.": {
+      "en-US": "This user already exists.",
+      "es-ES": "Este usuario ya existe."
+    },
+    "No IvygateClassroomType": {
+      "en-US": "No IvygateClassroomType",
+      "es-ES": "Sin IvygateTipo de aula"
+    },
+    "Create New User": {
+      "en-US": "Create New User",
+      "es-ES": "Crear nuevo usuario"
+    },
+    "Back to File Explorer": {
+      "en-US": "Back to File Explorer",
+      "es-ES": "Volver al Explorador de archivos"
     }
   },
   "Volume (box) in the 3D scene": {

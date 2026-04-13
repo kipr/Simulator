@@ -23,7 +23,6 @@ const BURGER_ORIGIN: ReferenceFramewUnits = {
     y: Distance.centimeters(1),
     z: Distance.centimeters(115),
   },
-  scale: { x: 100, y: 100, z: 100 },
 };
 const DOG_ORIGIN: ReferenceFramewUnits = {
   position: {
@@ -31,7 +30,6 @@ const DOG_ORIGIN: ReferenceFramewUnits = {
     y: Distance.centimeters(1),
     z: Distance.centimeters(115),
   },
-  scale: { x: 100, y: 100, z: 100 },
 };
 const TACO_ORIGIN: ReferenceFramewUnits = {
   position: {
@@ -40,7 +38,6 @@ const TACO_ORIGIN: ReferenceFramewUnits = {
     z: Distance.centimeters(115),
   },
   orientation: RotationwUnits.eulerDegrees(-60, 90, 0),
-  scale: { x: 100, y: 100, z: 100 },
 };
 
 const TRAYS = {};
@@ -51,7 +48,6 @@ for (let i = 0; i < 3; i++) {
       y: Distance.centimeters(-4),
       z: Distance.centimeters(-29),
     },
-    scale: { x: 100, y: 100, z: 100 },
   };
   TRAYS[`tray${i}`] = {
     type: 'from-bb-template',
