@@ -87,7 +87,7 @@ export default ({
   const gradeLevelString = gradeLevelAbbreviations.join(', ');
 
   const latestAssignment = Async.latestValue(assignment);
-  
+
   const bodyTabs: TabBar.TabDescription[] = [{
     name: 'Educator Notes',
     icon: faChalkboardTeacher,
@@ -117,7 +117,7 @@ export default ({
           .map(sub => LocalizedString.lookup(Subject.toString(sub), locale)).join(', ')
         }</SubjectsContainer>
         <AddContainer>
-          <AddButton $on={!added} $theme={theme} onClick={e => {
+          <AddButton $on={!added} $theme={theme} onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation();
             e.preventDefault();
             onAddedChange(!added);

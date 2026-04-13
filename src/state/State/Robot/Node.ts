@@ -5,6 +5,7 @@ import { Angle, Distance, Mass } from '../../../util';
 import construct from '../../../util/redux/construct';
 import LocalizedString from '../../../util/LocalizedString';
 import Patch from '../../../util/redux/Patch';
+import { Quaternion } from '@babylonjs/core';
 
 namespace Node {
   export enum Type {
@@ -224,27 +225,57 @@ namespace Node {
 
   export interface HingeJoint {
     /**
-     * The axis of the parent
+     * An axis in the space of the parent which determines how distances/angles
+     * are measured for LINEAR_X/ANGULAR_X limits. Corresponds exactly to
+     * BabylonJS `PhysicsConstraintParameters` axisA.
+     * See <https://doc.babylonjs.com/typedoc/interfaces/BABYLON.PhysicsConstraintParameters>.
      */
     parentAxis: RawVector3;
 
     /**
-     * The axis of the child. If undefined, same as `parentAxis`.
+     * An axis in the space of the child which determines how distances/angles
+     * are measured for LINEAR_X/ANGULAR_X limits. Corresponds exactly to
+     * BabylonJS `PhysicsConstraintParameters` axisB. See
+     * <https://doc.babylonjs.com/typedoc/interfaces/BABYLON.PhysicsConstraintParameters>.
      */
-    childAxis?: RawVector3;
+    childAxis: RawVector3;
 
     /**
-     * The pivot point of the parent. If undefined, zero.
+    * An axis in the space of the parent which determines how distances/angles
+    * are measured for LINEAR_Y/ANGULAR_Y limits. Corresponds exactly to
+    * BabylonJS `PhysicsConstraintParameters` perpAxisA. See
+    * <https://doc.babylonjs.com/typedoc/interfaces/BABYLON.PhysicsConstraintParameters>.
+    */
+    parentPerpAxis: RawVector3;
+
+    /**
+    * An axis in the space of the child which determines how distances/angles
+    * are measured for LINEAR_Y/ANGULAR_Y limits. Corresponds exactly to
+    * BabylonJS `PhysicsConstraintParameters` perpAxisB. See
+    * <https://doc.babylonjs.com/typedoc/interfaces/BABYLON.PhysicsConstraintParameters>.
+    */
+    childPerpAxis: RawVector3;
+
+    /**
+     * Location of the constraint pivot in the space of parent. If undefined, zero.
      */
     parentPivot?: Vector3wUnits;
 
     /**
-     * The pivot point of the child. If undefined, zero.
+     * Location of the constraint pivot in the space of child. If undefined, zero.
      */
     childPivot?: Vector3wUnits;
 
     /**
-     * The starting twist of the child relative to the parent along the main axis.
+    * The child's rotation in the local space of the parent. Use to orient
+    * meshes to match the constraints so they don't snap into place after
+    * the scene is created. If undefined, no rotation.
+    */
+    childRotationQuaternion?: Quaternion;
+
+    /**
+     * The starting twist of the child relative to the parent along the main axis of rotation.
+     * Use to adjust the range of servos.
      * If undefined, zero.
      */
     childTwist?: Angle;
@@ -255,8 +286,11 @@ namespace Node {
       return {
         parentAxis: Patch.diff(a.parentAxis, b.parentAxis),
         childAxis: Patch.diff(a.childAxis, b.childAxis),
+        parentPerpAxis: Patch.diff(a.parentPerpAxis, b.parentPerpAxis),
+        childPerpAxis: Patch.diff(a.childPerpAxis, b.childPerpAxis),
         parentPivot: Patch.diff(a.parentPivot, b.parentPivot),
         childPivot: Patch.diff(a.childPivot, b.childPivot),
+        childRotationQuaternion: Patch.diff(a.childRotationQuaternion, b.childRotationQuaternion),
         childTwist: Patch.diff(a.childTwist, b.childTwist)
       };
     };

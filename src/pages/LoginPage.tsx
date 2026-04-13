@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DARK, ThemeProps } from '../components/constants/theme';
+import { DARK, GREEN, ThemeProps } from '../components/constants/theme';
 import { StyleProps } from '../util/style';
 import { styled } from 'styletron-react';
 import { auth, Providers } from '../firebase/firebase';
@@ -82,6 +82,21 @@ const StyledForm = styled(Form, (props: ThemeProps) => ({
   paddingRight: `${props.theme.itemPadding * 2}px`,
 }));
 
+const ResetInfoButton = styled('div', (props: ThemeProps & { disabled?: boolean }) => ({
+  flex: '1 1',
+  borderRadius: `${props.theme.itemPadding * 2}px`,
+  padding: `${props.theme.itemPadding * 2}px`,
+  backgroundColor: props.disabled ? GREEN.disabled : GREEN.standard,
+  ':hover': props.disabled ? {} : {
+    backgroundColor: GREEN.hover,
+  },
+  marginBottom: `${props.theme.itemPadding * 2}px`,
+  fontWeight: 400,
+  fontSize: '1.1em',
+  textAlign: 'center',
+  cursor: props.disabled ? 'auto' : 'pointer',
+}));
+
 const TABS: TabBar.TabDescription[] = [{
   name: 'Sign In',
   icon: faSignInAlt,
@@ -144,10 +159,10 @@ class LoginPage extends React.Component<Props, State> {
         console.log('onAuthStateChanged with user; getting user from db');
 
         const handleUnexpectedConsentError_ = (error: unknown) => {
-          if (typeof(error) !== 'undefined') {
+          if (typeof (error) !== 'undefined') {
             console.log('Unknown login failure:', error);
           }
-      
+
           this.setState({ loggedIn: false, initialAuthLoaded: true, authenticating: false, userConsent: undefined, logInFailedMessage: 'Something went wrong' });
         };
 
@@ -237,7 +252,7 @@ class LoginPage extends React.Component<Props, State> {
       authenticating: true,
       logInFailedMessage: null,
     });
-    
+
     let newUserCredential: UserCredential;
     try {
       newUserCredential = await createUserWithEmail(email, password);
@@ -372,7 +387,7 @@ class LoginPage extends React.Component<Props, State> {
 
       return;
     }
-    
+
     const userId = auth.currentUser.uid;
     const dob = this.state.userConsent.dateOfBirth;
 
@@ -413,6 +428,35 @@ class LoginPage extends React.Component<Props, State> {
         })
         .catch((error) => {
           console.error('Setting user consent failed', error);
+          this.setState({ authenticating: false });
+        });
+    });
+  };
+
+  private resetParentalConsentInfo_ = () => {
+    const userId = auth.currentUser.uid;
+
+    const userConsentPatch: Partial<UserConsent> = {
+      legalAcceptance: {
+        state: LegalAcceptance.State.NotStarted,
+        version: 1,
+        expiresAt: Date.now() + 1000 * 60 * 60 * 24 * 2,
+      },
+    };
+
+    this.setState({ authenticating: true }, () => {
+      db.set<Partial<UserConsent>>(Selector.user(userId), userConsentPatch, true)
+        .then(() => {
+          this.setState((prevState) => ({
+            authenticating: false,
+            userConsent: {
+              ...prevState.userConsent,
+              ...userConsentPatch,
+            },
+          }));
+        })
+        .catch((error) => {
+          console.error('Resetting parental consent info failed', error);
           this.setState({ authenticating: false });
         });
     });
@@ -491,6 +535,28 @@ class LoginPage extends React.Component<Props, State> {
                   marginBottom: '8px',
                 }
               })} />
+
+              <Text
+                text={StyledText.text({
+                  text: `The parent/guardian email used was:\n${userConsent.legalAcceptance.parentEmailAddress}\nIf this is incorrect, please click the button below to reset your parental/guardian consent information.`,
+                  style: {
+                    display: 'block',
+                    color: theme.color,
+                    marginLeft: '8px',
+                    marginRight: '8px',
+                    marginBottom: '8px',
+                  },
+                })}
+              />
+
+
+              <ResetInfoButton
+                theme={theme}
+                onClick={() => this.resetParentalConsentInfo_()}
+              >
+                Reset Parental/Guardian Consent Information
+              </ResetInfoButton>
+
             </Card>
           </Container>
         );

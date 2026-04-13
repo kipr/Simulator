@@ -15,6 +15,13 @@ import LocalizedString from '../../util/LocalizedString';
 import tr from '@i18n';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
+import {
+  Engine, Vector3, Quaternion, Matrix, HemisphericLight, Color3, AbstractMesh, Mesh,
+  TransformNode, PointerInfo, ShadowLight, PointLight, EventState, PointerEventTypes,
+  DracoCompression, HavokPlugin, Scene as babylonScene, Node as babylonNode, HighlightLayer
+} from "@babylonjs/core";
+import TourTarget from '../Tours/TourTarget';
+import { TourRegistry } from '../../tours/TourRegistry';
 
 namespace ModalDialog {
   export enum Type {
@@ -68,6 +75,8 @@ export interface SimulatorAreaPublicProps {
   theme: Theme;
   isSensorNoiseEnabled: boolean;
   isRealisticSensorsEnabled: boolean;
+  tourRegistry?: TourRegistry;
+  onContinueTour?: () => void;
 }
 
 interface SimulatorAreaPrivateProps {
@@ -80,6 +89,7 @@ interface SimulatorAreaState {
   loading: boolean;
   loadingMessage: string;
   modalDialog: ModalDialog;
+  tourObject: { id: string, pos: { x: number, y: number } } | null;
 }
 
 const Container = styled('div', {
@@ -102,10 +112,11 @@ export class SimulatorArea extends React.Component<Props, SimulatorAreaState> {
 
   constructor(props: Props) {
     super(props);
-    this.state = { 
+    this.state = {
       loading: true,
       loadingMessage: '',
-      modalDialog: ModalDialog.NONE
+      modalDialog: ModalDialog.NONE,
+      tourObject: null
     };
   }
 
@@ -132,7 +143,8 @@ export class SimulatorArea extends React.Component<Props, SimulatorAreaState> {
     // TODO: If simulator initialization fails, we should show the user an error
     Sim.Space.getInstance().ensureInitialized()
       .then(() => {
-        this.setState({ 
+        Sim.Space.getInstance().setOnObjectClick?.(this.onObjectClick_);
+        this.setState({
           loading: false,
           loadingMessage: '',
           modalDialog: ModalDialog.MotorsSwapped.shouldShow()
@@ -152,7 +164,7 @@ export class SimulatorArea extends React.Component<Props, SimulatorAreaState> {
       this.canvasRef_.style.height = `${size.y}px`;
       Sim.Space.getInstance().handleResize();
     }
-    
+
     this.lastWidth_ = size.x;
     this.lastHeight_ = size.y;
   };
@@ -185,11 +197,47 @@ export class SimulatorArea extends React.Component<Props, SimulatorAreaState> {
     }
   };
 
+  private onObjectClick_ = (object: { id: string, pos: Vector3 }): void => {
+    const screenPos = this.projectWorldToScreen_(object.pos);
+    if (screenPos && object.id === 'can1') {
+      this.setState({ tourObject: { id: object.id, pos: screenPos } }, () => {
+        this.props.onContinueTour?.();
+      });
+    }
+
+  };
+
   private onMotorsSwappedClose_ = (): void => {
     ModalDialog.MotorsSwapped.markShown(true);
     this.setState({ modalDialog: ModalDialog.NONE });
   };
 
+  private projectWorldToScreen_ = (pos: Vector3): { x: number; y: number } | null => {
+    if (!this.canvasRef_) return null;
+
+    const scene = Sim.Space.getInstance().sceneBinding.bScene;
+    const camera = scene?.activeCamera;
+
+    if (!scene || !camera) return null;
+
+    const canvas = this.canvasRef_;
+    const rect = canvas.getBoundingClientRect();
+
+    const projected = Vector3.Project(
+      pos,
+      Matrix.Identity(),
+      scene.getTransformMatrix(),
+      camera.viewport.toGlobal(
+        canvas.width,
+        canvas.height
+      )
+    );
+
+    return {
+      x: (projected.x / canvas.width) * rect.width,
+      y: (projected.y / canvas.height) * rect.height,
+    };
+  };
   render() {
     const { props, state } = this;
     const { theme, locale } = props;
@@ -197,18 +245,41 @@ export class SimulatorArea extends React.Component<Props, SimulatorAreaState> {
     if (loading) {
       return (
         <Container >
-          <Loading 
+          <Loading
             message={LocalizedString.lookup(tr('Initializing Simulator...'), locale)}
             errorMessage={loadingMessage}
           />
         </Container>
       );
-    } 
+    }
     return (
       <Container ref={this.bindContainerRef_}>
         <Canvas ref={this.bindCanvasRef_} />
         {modalDialog.type === ModalDialog.Type.MotorsSwapped && (
           <MotorsSwappedDialog theme={theme} onClose={this.onMotorsSwappedClose_} />
+        )}
+        {this.state.tourObject && this.props.tourRegistry && (
+          <TourTarget
+            registry={this.props.tourRegistry}
+            targetKey="clicked-object"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              pointerEvents: 'none',
+            }}
+          >
+            <div
+              style={{
+                position: 'absolute',
+                left: `${this.state.tourObject.pos.x}px`,
+                top: `${this.state.tourObject.pos.y}px`,
+                width: '17.5em',
+                height: '17.5em',
+                transform: 'translate(-50%, -50%)',
+                pointerEvents: 'none',
+              }}
+            />
+          </TourTarget>
         )}
       </Container>
     );
