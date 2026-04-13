@@ -106,10 +106,10 @@ import { InterfaceMode } from '../types/interfaceModes';
 import { AsyncProject, Project } from '../state/State/Project';
 import CreateNewFileDialog from '../components/Dialog/CreateNewFileDialog';
 import DeleteProjectDialog from '../components/Dialog/DeleteProjectDialog';
-import TourDoc, { getTourSteps, TourStep } from '../tours/Tours';
+import TourDoc, { getSimulatorTourSteps, getTourSteps, TourStep } from '../tours/Tours';
 import TourTarget from '../components/Tours/TourTarget';
 import { TourRegistry } from '../tours/TourRegistry';
-import { GuidedTour } from '../components/Tours/GuidedTour';
+import GuidedTour from '../components/Tours/GuidedTour';
 import {
   completeTour,
   fetchTourIfNeeded,
@@ -315,12 +315,13 @@ class Root extends React.Component<Props, State> {
       miniEditor: true,
       projectDetails: { project: null, fileType: 'src', fileName: '' },
       tourId: TourDoc.IDS.SIMULATOR,
-      simulatorRootTourSteps: getTourSteps(TourDoc.IDS.SIMULATOR),
+      simulatorRootTourSteps: getSimulatorTourSteps(props.locale),
     };
 
     this.editorRef = React.createRef();
     this.overlayLayoutRef = React.createRef();
     Space.getInstance().scene = Async.latestValue(props.scene) || Scene.EMPTY;
+    console.log("simulatorRootTourSteps:", this.state.simulatorRootTourSteps);
   }
 
   async componentDidMount() {
@@ -379,6 +380,9 @@ class Root extends React.Component<Props, State> {
 
     if (this.props.projects !== prevProps.projects) {
       console.log('Projects prop changed:', this.props.projects);
+    }
+    if (this.props.locale !== prevProps.locale) {
+      this.setState({ simulatorRootTourSteps: getSimulatorTourSteps(this.props.locale) });
     }
   }
 

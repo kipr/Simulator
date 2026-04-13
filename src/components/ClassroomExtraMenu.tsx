@@ -121,8 +121,8 @@ class ClassroomExtraMenu extends React.PureComponent<Props, State> {
     return (
       <TourTarget registry={this.props.tourRegistry} targetKey='classroom-extra-options-dropdown'>
         <Container theme={theme} style={style} className={className}>
-          <ItemLabel theme={theme}><ItemIcon icon={faUsersRectangle} /> {LocalizedString.lookup(tr(`Current Classroom: ${latestClassroom?.classroomId || 'None'}`), locale)}</ItemLabel>
-          <ItemLabel theme={theme}><ItemIcon icon={faPersonChalkboard} /> {LocalizedString.lookup(tr(`Classroom Teacher: ${latestClassroom?.teacherDisplayName || 'None'}`), locale)}</ItemLabel>
+          <ItemLabel theme={theme}><ItemIcon icon={faUsersRectangle} /> {LocalizedString.lookup(tr('Current Classroom: '), locale)} {latestClassroom?.classroomId || LocalizedString.lookup(tr('None'), locale)}</ItemLabel>
+          <ItemLabel theme={theme}><ItemIcon icon={faPersonChalkboard} /> {LocalizedString.lookup(tr('Classroom Teacher: '), locale)} {latestClassroom?.teacherDisplayName || LocalizedString.lookup(tr('None'), locale)}</ItemLabel>
           {latestClassroom
             ? (<TourTarget registry={this.props.tourRegistry} targetKey='leave-classroom'>
               <Item theme={theme} onClick={onLeaveClass}><ItemIcon icon={faPersonWalkingDashedLineArrowRight} /> {LocalizedString.lookup(tr(`Leave Classroom`), locale)}</Item>

@@ -16,7 +16,7 @@ import { DEFAULT_SCENE } from '../components/constants/defaultScene';
 import TourDoc, { getTourSteps, TourStep } from '../tours/Tours';
 import { fetchTourIfNeeded, completeTour, retakeTour } from '../state/reducer/tours';
 import { TourRegistry } from '../tours/TourRegistry';
-import { GuidedTour } from '../components/Tours/GuidedTour';
+import GuidedTour from '../components/Tours/GuidedTour';
 import TourTarget from '../components/Tours/TourTarget';
 
 export interface DashboardPublicProps extends ThemeProps, StyleProps {
@@ -100,7 +100,7 @@ class Dashboard extends React.PureComponent<Props> {
     const { props } = this;
     const { className, style, locale, tour } = props;
     const theme = DARK;
-    const dashboardTourSteps: TourStep[] = getTourSteps(TourDoc.IDS.DASHBOARD);
+    const dashboardTourSteps: TourStep[] = getTourSteps(TourDoc.IDS.DASHBOARD, locale);
     const showTour = props.tourLoaded && !tour.completed;
 
     return (

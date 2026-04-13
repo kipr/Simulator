@@ -12,7 +12,7 @@ import db from '../db';
 import { createRef } from 'react';
 import { LeaderboardEntry } from 'state/State/LimitedChallengeLeaderboard';
 
-const SELFIDENTIFIER = "My Scores!";
+let SELFIDENTIFIER: string;
 let currentUser: User;
 
 interface Challenge {
@@ -365,6 +365,7 @@ class Leaderboard extends React.Component<Props, State> {
     };
 
     void this.onLog();
+    SELFIDENTIFIER = LocalizedString.lookup(tr('My Scores!'), props.locale);
   }
 
   private myScoresRef = createRef<HTMLTableRowElement>();
@@ -852,11 +853,11 @@ class Leaderboard extends React.Component<Props, State> {
         <MainMenu theme={theme} />
         <div style={{ zIndex: 1, width: '100%', height: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
           <LeaderboardTitleContainer>
-            <h1>KIPR All Time Leaderboard</h1>
+            <h1>{LocalizedString.lookup(tr('KIPR All Time Leaderboard'), props.locale)}</h1>
 
             <ButtonContainer>
-              <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> Export My Scores!</Button>
-              <Button theme={DARK} onClick={this.scrollToMyScores}> Scroll to My Scores!</Button>
+              <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> {LocalizedString.lookup(tr('Export My Scores!'), props.locale)}</Button>
+              <Button theme={DARK} onClick={this.scrollToMyScores}> {LocalizedString.lookup(tr('Scroll to My Scores!'), props.locale)}</Button>
             </ButtonContainer>
 
           </LeaderboardTitleContainer>

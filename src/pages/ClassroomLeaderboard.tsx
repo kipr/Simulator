@@ -505,14 +505,14 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
   };
 
   private renderLeaderboardRow = (entry: User, rank: number, isCurrentUser: boolean, challengeArray: string[]) => {
-    const { theme } = this.props;
+    const { theme, locale } = this.props;
     const { challenges } = this.state;
     return (
       <TableRow key={`${entry.id}-${rank}`} theme={theme} $highlight={isCurrentUser}>
         <RankCell theme={theme} rank={rank}>#{rank}</RankCell>
         <TableCell theme={theme}>
           {entry.name}
-          {isCurrentUser && ' (You)'}
+          {isCurrentUser && ` (${LocalizedString.lookup(tr('You'), locale)})`}
         </TableCell>
         {challengeArray.map((id) => {
           const userScore = entry.scores.find(score => score.name['en-US'] === challenges[id].name['en-US']);
@@ -975,16 +975,16 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
         {view === 'studentView'
           ? < div style={{ width: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
             <ClassroomLeaderboardTitleContainer>
-              <h1>Classroom Leaderboard</h1>
+              <h1>{LocalizedString.lookup(tr("Classroom Leaderboard"), locale)}</h1>
               <ButtonContainer>
                 <TourTarget registry={this.props.tourRegistry} targetKey='export-button'>
-                  <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> Export My Scores!</Button>
+                  <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> {LocalizedString.lookup(tr("Export My Scores!"), locale)}</Button>
                 </TourTarget>
                 <TourTarget registry={this.props.tourRegistry} targetKey='scroll-to-my-scores-button'>
-                  <Button theme={DARK} onClick={this.scrollToMyScores}> Scroll to My Scores!</Button>
+                  <Button theme={DARK} onClick={this.scrollToMyScores}> {LocalizedString.lookup(tr("Scroll to My Scores!"), locale)}</Button>
                 </TourTarget>
                 <TourTarget registry={this.props.tourRegistry} targetKey='see-my-badges-button'>
-                  <Button theme={DARK} onClick={() => this.onSeeMyBadges()}> See My Badges! </Button>
+                  <Button theme={DARK} onClick={() => this.onSeeMyBadges()}> {LocalizedString.lookup(tr("See My Badges!"), locale)}</Button>
                 </TourTarget>
               </ButtonContainer>
 
@@ -1003,11 +1003,11 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
             <ClassroomLeaderboardContainer style={style} theme={theme}>
               < div style={{ width: '100%', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
                 <ClassroomLeaderboardTitleContainer>
-                  <h1>Classroom Leaderboard</h1>
+                  <h1>{LocalizedString.lookup(tr("Classroom Leaderboard"), locale)}</h1>
 
                   <ButtonContainer>
-                    <Button theme={DARK} onClick={() => this.exportClassroomScores()}> Export All General Scores</Button>
-                    <Button theme={DARK} onClick={() => this.exportDetailedClassroomScores()}> Export All Detailed Scores</Button>
+                    <Button theme={DARK} onClick={() => this.exportClassroomScores()}> {LocalizedString.lookup(tr("Export All General Scores"), locale)}</Button>
+                    <Button theme={DARK} onClick={() => this.exportDetailedClassroomScores()}> {LocalizedString.lookup(tr("Export All Detailed Scores"), locale)}</Button>
                   </ButtonContainer>
 
                 </ClassroomLeaderboardTitleContainer>
@@ -1032,10 +1032,10 @@ export default connect((state: ReduxState) => {
 
   });
 },
-(dispatch) => ({
-  onClearSelectedClassroom: () =>
-    dispatch(ClassroomsAction.clearSelectedClassroom({})),
-})
+  (dispatch) => ({
+    onClearSelectedClassroom: () =>
+      dispatch(ClassroomsAction.clearSelectedClassroom({})),
+  })
 
 
 )(CompWithRouter) as React.ComponentType<ClassroomLeaderboardPublicProps>;

@@ -14,8 +14,8 @@ import User from 'state/State/User';
 import TourTarget from '../components/Tours/TourTarget';
 import { TourRegistry } from '../tours/TourRegistry';
 import { completeTour, fetchTourIfNeeded, retakeTour } from '../state/reducer/tours';
-import TourDoc, { getTourSteps, TourStep } from '../tours/Tours';
-import { GuidedTour } from '../components/Tours/GuidedTour';
+import TourDoc, { getClassroomTourSteps, getTourSteps, TourStep } from '../tours/Tours';
+import GuidedTour from '../components/Tours/GuidedTour';
 
 export interface ClassroomsDashboardPublicProps extends ThemeProps, StyleProps {
 }
@@ -121,7 +121,7 @@ class ClassroomsDashboard extends React.PureComponent<Props, State> {
     const { className, style, locale } = props;
     const theme = DARK;
     const showTour = props.tourLoaded && !props.tour.completed;
-    const classroomTourSteps: TourStep[] = getTourSteps(TourDoc.IDS.CLASSROOM);
+    const classroomTourSteps: TourStep[] = getClassroomTourSteps(locale);
     return (
       <Container className={className} style={style} theme={theme}>
         <MainMenu theme={theme} tourRegistry={this.registry} onRetakeTour={this.onRetakeTour_} />

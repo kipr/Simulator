@@ -25,7 +25,8 @@ interface ClassroomLeaderboardsDialogPrivateProps {
 
 interface ClickProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  disabled?: boolean;
+  $disabled?: boolean;
+  $primary?: boolean;
 }
 
 interface ClassroomLeaderboardsDialogState {
@@ -77,30 +78,20 @@ const StyledComboBox = styled(ComboBox, {
   flex: '1 0',
 });
 
-const ConfirmButton = styled(Button, (props: ThemeProps & ClickProps) => ({
-  display: 'flex',
-  width: '7em',
-  height: '2em',
-  alignItems: 'center',
-  justifyContent: 'center',
-  justifyItems: 'center',
+const ConfirmButton = styled('button', (props: ThemeProps & ClickProps) => ({
+  padding: '12px 24px',
+  fontSize: '1em',
+  fontWeight: 'bold',
+  color: props.$disabled ? '#888' : '#fff',
   backgroundColor: props.theme.yesButtonColor.standard,
-  border: `1px solid ${props.theme.yesButtonColor.border}`,
-  ':hover':
-    props.onClick && !props.disabled
-      ? {
-        backgroundColor: props.theme.yesButtonColor.hover,
-      }
-      : {},
-  color: props.theme.yesButtonColor.textColor,
-  textShadow: props.theme.yesButtonColor.textShadow,
-  boxShadow: '2px 2px 4px rgba(0,0,0,0.9)',
-  ':active': props.onClick && !props.disabled
-    ? {
-      boxShadow: '1px 1px 2px rgba(0,0,0,0.7)',
-      transform: 'translateY(1px, 1px)',
-    }
-    : {},
+  border: 'none',
+  borderRadius: '4px',
+  cursor: props.$disabled ? 'not-allowed' : 'pointer',
+  transition: 'all 0.2s',
+  ':hover': props.$disabled ? {} : {
+    opacity: 0.9,
+    transform: 'translateY(-1px)',
+  },
 }));
 
 
@@ -162,7 +153,7 @@ export class ClassroomLeaderboardsDialog extends React.PureComponent<Props, Stat
         >
           <ChooseLeaderboardContainer theme={theme} style={style} className={className}>
             <ComboBoxContainer theme={theme} style={style} className={className}>
-              <ComboBoxLabel theme={theme}>Choose Classroom to See Leaderboard:</ComboBoxLabel>
+              <ComboBoxLabel theme={theme}>{LocalizedString.lookup(tr('Choose Classroom to See Leaderboard:'), locale)}</ComboBoxLabel>
               <StyledComboBox
                 theme={theme}
                 onSelect={this.onSelectClassroomLeaderboard_}
@@ -175,7 +166,7 @@ export class ClassroomLeaderboardsDialog extends React.PureComponent<Props, Stat
               theme={theme}
               onClick={this.onConfirmClick_}
             >
-              Confirm
+              {LocalizedString.lookup(tr('See Leaderboard'), locale)}
             </ConfirmButton>
 
 

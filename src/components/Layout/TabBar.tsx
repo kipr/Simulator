@@ -103,17 +103,16 @@ const TabBarContainer = styled(
 
 export class TabBar extends React.PureComponent<Props> {
   private onClick_ =
-  (index: number) => (event: React.MouseEvent<HTMLDivElement>) => {
-    event.stopPropagation();
-    event.preventDefault();
-    this.props.onIndexChange(index, event);
-  };
+    (index: number) => (event: React.MouseEvent<HTMLDivElement>) => {
+      event.stopPropagation();
+      event.preventDefault();
+      this.props.onIndexChange(index, event);
+    };
 
   render() {
     const { props } = this;
     const { tabs, index, theme, style, className, isVertical, tourRegistry } =
       props;
-
     return (
       <TabBarContainer
         theme={theme}

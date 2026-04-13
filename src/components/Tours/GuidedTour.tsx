@@ -1,16 +1,20 @@
 import React from "react";
 import { createPortal } from "react-dom";
 import { TourRegistry } from "../../tours/TourRegistry";
-import { Rect, TourPlacement, TourStep } from "../../tours/Tours";
+import { Rect, TOUR_SECTIONS_LABEL, TourPlacement, TourStep } from "../../tours/Tours";
 import { DARK, ThemeProps } from "../constants/theme";
 import { StyleProps } from "../../util/style";
 import { styled } from "styletron-react";
 import ComboBox from "../interface/ComboBox";
 import ResizeableComboBox from "ivygate/dist/src/components/ResizeableComboBox";
+
 import Dict from "util/objectOps/Dict";
+import { connect } from 'react-redux';
+import { State as ReduxState } from '../../state';
+import LocalizedString from '../../util/LocalizedString';
+import tr from '@i18n';
 
-
-export interface GuidedTourProps extends ThemeProps, StyleProps {
+export interface GuidedTourPublicProps extends ThemeProps, StyleProps {
   isOpen: boolean;
   steps: TourStep[];
   registry: TourRegistry;
@@ -35,6 +39,11 @@ export interface GuidedTourProps extends ThemeProps, StyleProps {
   scrollContainer?: HTMLElement | null;
 
 
+
+}
+
+interface GuidedTourPrivateProps {
+  locale: LocalizedString.Language;
 }
 
 interface GuidedTourState {
@@ -46,7 +55,7 @@ interface GuidedTourState {
 
 }
 
-type Props = GuidedTourProps;
+type Props = GuidedTourPublicProps & GuidedTourPrivateProps;
 type State = GuidedTourState;
 
 function clamp(n: number, min: number, max: number) {
@@ -75,30 +84,46 @@ type ToolTipProps = ThemeProps & {
   placement: TourPlacement;
 };
 
-const ToolTip = styled('div', (props: ThemeProps & ToolTipProps) => {
-  const pos = toolTipPos(props.rect, props.placement);
+// const ToolTip = styled('div', (props: ThemeProps & ToolTipProps) => {
+//   const pos = toolTipPos(props.rect, props.placement);
 
-  return {
-    position: "fixed",
-    background: "white",
-    color: "#111",
-    borderRadius: "16px",
+//   return {
+//     position: "fixed",
+//     background: "white",
+//     color: "#111",
+//     borderRadius: "16px",
 
-    boxShadow: "0 12px 40px rgba(0,0,0,0.28)",
-    padding: "16px",
-    zIndex: 10000,
-    fontFamily:
-      'system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif',
+//     boxShadow: "0 12px 40px rgba(0,0,0,0.28)",
+//     padding: "16px",
+//     zIndex: 10000,
+//     fontFamily:
+//       'system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif',
 
-    // position from toolTipPos
-    top: `${pos.top}px`,
-    left: `${pos.left}px`,
-    height: "auto",
-    width: `${pos.width}px`,
-    boxSizing: "border-box",
+//     // position from toolTipPos
+//     top: `${pos.top}px`,
+//     left: `${pos.left}px`,
+//     height: "auto",
+//     //width: `${pos.width}px`,
+//     width: "auto",
+//     boxSizing: "border-box",
 
-  };
+//   };
+// });
+
+const ToolTip = styled('div', {
+  position: "fixed",
+  background: "white",
+  color: "#111",
+  borderRadius: "16px",
+  boxShadow: "0 12px 40px rgba(0,0,0,0.28)",
+  padding: "16px",
+  zIndex: 10000,
+  boxSizing: "border-box",
+
+  width: "max-content",
+  maxWidth: "min(31em, calc(100vw - 44px))",
 });
+
 
 const PassthroughHole = styled('div', (props: ThemeProps & { rect: Rect }) => ({
   position: "fixed",
@@ -129,13 +154,19 @@ const TitleContainer = styled('div', (props: ThemeProps) => ({
   marginBottom: '6px',
 }));
 
-function toolTipPos(rect: Rect, placement: TourPlacement) {
+function toolTipPos(
+  rect: Rect,
+  placement: TourPlacement,
+  tooltipEl: HTMLElement
+) {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
 
-  const w = 360;
-  const h = 190;
   const gap = 14;
+  const margin = 22;
+
+  const w = tooltipEl.offsetWidth;
+  const h = tooltipEl.offsetHeight;
 
   const candidates = {
     bottom: { top: rect.top + rect.height + gap, left: rect.left },
@@ -150,29 +181,78 @@ function toolTipPos(rect: Rect, placement: TourPlacement) {
   else if (placement === "left") pos = candidates.left;
   else if (placement === "right") pos = candidates.right;
   else if (placement === "auto") {
-    // bottom -> top -> right -> left
-    if (candidates.bottom.top + h <= vh - 22) pos = candidates.bottom;
-    else if (candidates.top.top >= 22) pos = candidates.top;
-    else if (candidates.right.left + w <= vw - 22) pos = candidates.right;
+    if (candidates.bottom.top + h <= vh - margin) pos = candidates.bottom;
+    else if (candidates.top.top >= margin) pos = candidates.top;
+    else if (candidates.right.left + w <= vw - margin) pos = candidates.right;
     else pos = candidates.left;
   }
 
   return {
-    top: clamp(pos.top, 22, vh - h - 22),
-    left: clamp(pos.left, 22, vw - w - 22),
-    width: w,
+    top: clamp(pos.top, margin, vh - h - margin),
+    left: clamp(pos.left, margin, vw - w - margin),
   };
 }
+function TooltipWrapper({
+  rect,
+  placement,
+  children,
+  style,
+  onClick,
+}: {
+  rect: Rect | null;
+  placement: TourPlacement;
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
+}) {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [pos, setPos] = React.useState({ top: 24, left: 24 });
+  const [ready, setReady] = React.useState(false);
 
+  React.useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || !rect) {
+      setPos({ top: 24, left: 24 });
+      setReady(true);
+      return;
+    }
+
+    const next = toolTipPos(rect, placement, el);
+    setPos(next);
+    setReady(true);
+  }, [rect, placement, children]);
+
+  return (
+    <ToolTip
+      ref={ref}
+      onClick={onClick}
+      style={{
+        top: pos.top,
+        left: pos.left,
+        pointerEvents: "auto",
+        visibility: ready ? "visible" : "hidden",
+        ...style,
+      }}
+    >
+      {children}
+    </ToolTip>
+  );
+}
 const StyledComboBox = styled(ResizeableComboBox, (props: ThemeProps & { selectedType?: string }) => ({
   zIndex: 10000,
   color: "#111",
 
 }));
 
-
-
-export class GuidedTour extends React.PureComponent<Props, State> {
+export const getTourSections = (
+  locale: LocalizedString.Language
+): ComboBox.Option[] => {
+  return Object.entries(TOUR_SECTIONS_LABEL).map(([key, value]) => ({
+    text: LocalizedString.lookup(value, locale),
+    data: key,
+  }));
+};
+class GuidedTour extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -633,12 +713,6 @@ export class GuidedTour extends React.PureComponent<Props, State> {
     }
   };
 
-  // private back = () => {
-  //   console.log("back clicked, this.state.subStepIndex:", this.state.subStepIndex);
-  //   this.props.onBackClick?.(Math.max(0, this.state.stepIndex - 1));
-  //   this.setState((s) => ({ stepIndex: Math.max(0, s.stepIndex - 1), subStepIndex: Math.max(0, s.subStepIndex - 1) }));
-  // };
-
   private back = () => {
     const { stepIndex, subSteps, selectedTourSection, subStepIndex } = this.state;
 
@@ -743,6 +817,7 @@ export class GuidedTour extends React.PureComponent<Props, State> {
   };
   private onSelect_ = (index: number, option: ComboBox.Option) => {
     const { props } = this;
+    console.log("Selected tour section:", option.data);
     this.setState({
       selectedTourSection: option.data as string,
     });
@@ -751,22 +826,24 @@ export class GuidedTour extends React.PureComponent<Props, State> {
     if (!this.props.isOpen || !this.portalEl) return null;
     const { props, state } = this;
     const { subSteps } = state;
+    const { locale } = props;
     const theme = DARK;
     const step = this.currentStep();
     if (!step) return null;
 
+    console.log("Guided tour step: ", this.props.steps[this.state.stepIndex]);
     const rect = this.state.rect;
     const dimopacity = this.props.dimopacity ?? 0.65;
     const allowTargetInteraction = step.allowTargetInteraction !== false;
-    const keys = Object.keys(this.props.steps[0]?.subTourSteps ?? {});
+    const tourSections = getTourSections(locale);
     const OPTIONS: ComboBox.Option[] =
       Object.keys(this.props.steps[1]?.subTourSteps ?? {}).map((key) => ({
         text: key,
         data: key,
       }));
 
-    const tooltipStyle =
-      rect !== null ? toolTipPos(rect, step.placement ?? "auto") : { top: 24, left: 24, width: 360 };
+    // const tooltipStyle =
+    //   rect !== null ? toolTipPos(rect, step.placement ?? "auto") : { top: 24, left: 24, width: 360 };
     const index = OPTIONS.findIndex(option => option.data === this.state.selectedTourSection);
 
     const GAP = 2;
@@ -786,82 +863,7 @@ export class GuidedTour extends React.PureComponent<Props, State> {
         aria-modal="true"
       >
         {/* Click-catcher areas around the target */}
-        {/* {allowTargetInteraction && rect ? (
-          <>
-            <div
-              onClick={this.onBackdropClick}
-              style={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                right: 0,
-                height: rect.top,
-                background: "transparent",
-                pointerEvents: "auto",
-              }}
-            />
 
-            <div
-              onClick={this.onBackdropClick}
-              style={{
-                position: "fixed",
-                top: rect.top,
-                left: 0,
-                width: rect.left,
-                height: rect.height,
-                background: "transparent",
-                pointerEvents: "auto",
-              }}
-            />
-
-            <div
-              onClick={this.onBackdropClick}
-              style={{
-                position: "fixed",
-                top: rect.top,
-                left: rect.left + rect.width,
-                right: 0,
-                height: rect.height,
-                background: "transparent",
-                pointerEvents: "auto",
-              }}
-            />
-
-            <div
-              onClick={this.onBackdropClick}
-              style={{
-                position: "fixed",
-                top: rect.top + rect.height,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: "transparent",
-                pointerEvents: "auto",
-              }}
-            />
-          </>
-        ) : (
-          <div
-            onClick={this.onBackdropClick}
-            style={{
-              position: "fixed",
-              inset: 0,
-              background: "transparent",
-              pointerEvents: "auto",
-            }}
-          />
-        )} */}
-        {/* {!allowTargetInteraction && (
-          <div
-            onClick={this.onBackdropClick}
-            style={{
-              position: "fixed",
-              inset: 0,
-              background: "transparent",
-              pointerEvents: "auto",
-            }}
-          />
-        )} */}
         {allowTargetInteraction && rect ? (
           <>
             <div
@@ -933,15 +935,12 @@ export class GuidedTour extends React.PureComponent<Props, State> {
           <PassthroughHole rect={rect} theme={theme} />
         )}
 
-        <ToolTip
-          style={{
-            ...tooltipStyle,
-            pointerEvents: "auto",
-          }}
-          onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
-          theme={theme}
-          rect={{ ...tooltipStyle }}
-          placement={"auto"}
+        <TooltipWrapper
+          rect={rect}
+          placement={step.placement ?? "auto"}
+          style={{ pointerEvents: "auto" }}
+          onClick={(e) => e.stopPropagation()}
+
         >
           <div style={{ display: "flex", gap: 12, alignItems: "start" }}>
             <div style={{ flex: 1 }}>
@@ -979,11 +978,11 @@ export class GuidedTour extends React.PureComponent<Props, State> {
           >
             {this.state.stepIndex >= 2 && subSteps ? (
               <StepIndicatorContainer theme={theme}>
-                Step {this.state.subStepIndex + 1} of {subSteps?.[state.selectedTourSection ?? ""]?.length}
+                {LocalizedString.lookup(tr('Step'), locale)} {this.state.subStepIndex + 1} {LocalizedString.lookup(tr('of'), locale)} {subSteps?.[state.selectedTourSection ?? ""]?.length}
               </StepIndicatorContainer>
             ) : (
               <StepIndicatorContainer theme={theme}>
-                Step {this.state.stepIndex + 1} of {this.props.steps.length}
+                {LocalizedString.lookup(tr('Step'), locale)} {this.state.stepIndex + 1} {LocalizedString.lookup(tr('of'), locale)} {this.props.steps.length}
               </StepIndicatorContainer>
             )}
             <ButtonNavContainer>
@@ -992,17 +991,17 @@ export class GuidedTour extends React.PureComponent<Props, State> {
                 disabled={this.state.stepIndex === 0}
                 style={btnStyle(this.state.stepIndex === 0, false)}
               >
-                {step.backLabel ?? "Back"}
+                {step.backLabel ?? LocalizedString.lookup(tr('Back'), locale)}
               </button>)}
 
               {step.noNextButton ? null : (<button onClick={this.next} style={btnStyle(false, true)}>
                 {this.state.stepIndex === this.props.steps.length - 1
-                  ? step.doneLabel ?? "Done"
-                  : step.nextLabel ?? "Next"}
+                  ? step.doneLabel ?? LocalizedString.lookup(tr('Done'), locale)
+                  : step.nextLabel ?? LocalizedString.lookup(tr('Next'), locale)}
               </button>)}
 
               <button onClick={this.skip} style={btnStyle(false, false)}>
-                {step.skipLabel ?? "Skip"}
+                {step.skipLabel ?? LocalizedString.lookup(tr('Skip'), locale)}
               </button>
             </ButtonNavContainer>
 
@@ -1017,24 +1016,24 @@ export class GuidedTour extends React.PureComponent<Props, State> {
             }}
           >
             <StepIndicatorContainer theme={theme}>
-              Tour Sections:
+              {LocalizedString.lookup(tr('Tour Sections'), locale)}:
             </StepIndicatorContainer>
             <StyledComboBox
               minimal
-              options={OPTIONS}
+              options={tourSections}
               onSelect={this.onSelect_}
               index={index}
               theme={theme}
               mainWidth={'8.5em'}
-              mainHeight={'1.5em'}
+              mainHeight={'2em'}
               mainFontSize={'0.9em'}
               tourMenuId={"guided-tour-section-select"}
             />
             <button onClick={this.go} style={btnStyle(false, false)}>
-              {"Go"}
+              {LocalizedString.lookup(tr('Go'), locale)}
             </button>
           </div>) : null}
-        </ToolTip>
+        </TooltipWrapper>
       </div>
     );
 
@@ -1052,5 +1051,10 @@ function btnStyle(disabled: boolean, primary: boolean): React.CSSProperties {
     cursor: disabled ? "not-allowed" : "pointer",
     fontSize: 13,
     fontWeight: 700,
+    width: 'auto',
   };
 }
+
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale
+}))(GuidedTour) as React.ComponentType<GuidedTourPublicProps>;

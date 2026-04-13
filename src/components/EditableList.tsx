@@ -12,6 +12,12 @@ import { FontAwesome } from "./FontAwesome";
 import { BLUE, BROWN, GREEN, RED, ThemeProps } from "./constants/theme";
 import TourTarget from "./Tours/TourTarget";
 import { TourRegistry } from "../tours/TourRegistry";
+import LocalizedString from "../util/LocalizedString";
+import tr from '@i18n';
+import { State as ReduxState } from '../state';
+import { connect } from 'react-redux';
+
+
 
 export interface EditableListProps<P> extends StyleProps, ThemeProps {
   items: EditableList.Item<P>[];
@@ -22,9 +28,13 @@ export interface EditableListProps<P> extends StyleProps, ThemeProps {
   onContinueTour?: () => void;
 }
 
+interface EditableListPrivateProps {
+  locale: LocalizedString.Language;
+}
+
 interface EditableListState { }
 
-type Props = EditableListProps<EditableList.ItemProps>;
+type Props = EditableListProps<EditableList.ItemProps> & EditableListPrivateProps;
 type State = EditableListState;
 
 const Container = styled("div", {
@@ -69,6 +79,8 @@ class EditableList extends React.PureComponent<Props, State> {
                     ? this.props.onContinueTour
                     : undefined
                 }
+                locale={props.locale}
+                userData={item.userdata}
               />
             </div>
           );
@@ -92,10 +104,14 @@ class EditableList extends React.PureComponent<Props, State> {
 
 namespace EditableList {
   export interface ItemProps {
+    userData: unknown;
     onRemove?: () => void;
     onReorderStart?: () => void;
     onReorderEnd?: () => void;
     onContinueTour?: () => void;
+
+    locale?: LocalizedString.Language;
+
   }
 
   export type ItemRawProps<P extends ItemProps> = Omit<P, keyof ItemProps>;
@@ -124,8 +140,8 @@ namespace EditableList {
   }
 
   export class StandardItem<P extends StyleProps> extends React.PureComponent<
-  StandardItem.Props<P>,
-  StandardItem.State
+    StandardItem.Props<P>,
+    StandardItem.State
   > {
     constructor(props: StandardItem.Props<P>) {
       super(props);
@@ -190,10 +206,12 @@ namespace EditableList {
 
         props: componentProps,
       } = props;
-      const { hover, initialTouch } = state;
 
-      const tourCan1 = !!tourRegistry && componentProps.name === "Can 1";
+      const { hover, initialTouch } = state;
+      const tourCan1 = !!tourRegistry && props.userData === "can1";
+
       const showOptions = tourCan1;
+
       const tourContent_ = (
         <StandardItem.OptionsContainer>
           <TourTarget
@@ -293,12 +311,15 @@ namespace EditableList {
 
     export interface Props<P extends ComponentProps> extends ItemProps {
       component: React.ComponentType<P>;
+      locale: LocalizedString.Language;
       props: ComponentRawProps<P>;
+      userData: EditableList.ItemProps["userData"];
       visible?: boolean;
       onReset?: () => void;
       onSettings?: () => void;
       onVisibilityChange?: (visiblity: boolean) => void;
       tourRegistry?: TourRegistry;
+
       onContinueTour?: () => void;
     }
 
@@ -379,4 +400,6 @@ namespace EditableList {
   }
 }
 
-export default EditableList;
+export default connect((state: ReduxState) => ({
+  locale: state.i18n.locale,
+}))(EditableList) as React.ComponentType<EditableListProps<EditableList.ItemProps>>;
