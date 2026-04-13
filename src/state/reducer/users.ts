@@ -119,6 +119,7 @@ const loadOrEmpty = async (userId: string, current: AsyncUser | undefined) => {
   const brief = Async.brief(current);
   try {
     const value = await db.get<User>(Selector.user(userId));
+    console.log("loadOrEmpty loaded user:", value);
     store.dispatch(UsersAction.setUserInternal({
       user: Async.loaded({ brief, value }),
       userId,
@@ -240,6 +241,7 @@ export const reduceUsers = (state: Users = Users.EMPTY, action: UsersAction): Us
 
       void loadOrEmpty(userId, current);
 
+
       return {
         ...state,
         users: {
@@ -248,6 +250,7 @@ export const reduceUsers = (state: Users = Users.EMPTY, action: UsersAction): Us
             brief: Async.brief(current),
           }),
         },
+
       };
     }
     default: return state;

@@ -294,18 +294,20 @@ const runEventLoop = (): Promise<void> => new Promise((resolve, reject) => setTi
  * @param message - Message containing the code and other relevant details.
  */
 const startPython = async (message: Protocol.Worker.StartRequest) => {
-  ctx.postMessage({
-    type: 'start'
-  });
-
-  await runEventLoop();
-
+  // Note: The 'start' message is sent inside the python() function after
+  // the Python files are downloaded, so the UI shows a "compiling/loading"
+  // state during the download.
   await python({
     code: message.code,
     print,
     printErr,
     registers: sharedRegister_,
     createSerial: createSerial_,
+    onStart: () => {
+      ctx.postMessage({
+        type: 'start'
+      });
+    },
   });
   
 };

@@ -3,12 +3,14 @@ import { Theme, ThemeProps } from '../constants/theme';
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import { StyleProps } from '../../util/style';
+import { TourRegistry } from '../../tours/TourRegistry';
 
 export interface ButtonProps extends StyleProps, ThemeProps {
   children: React.ReactNode;
 
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   disabled?: boolean;
+  tourRegistry?: TourRegistry;
 }
 
 interface ButtonState {
