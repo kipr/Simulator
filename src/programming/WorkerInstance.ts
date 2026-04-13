@@ -52,6 +52,8 @@ class SharedVariablesStateMachine {
 class WorkerInstance implements AbstractRobot {
   // Event handler for when the robot stops.
   onStopped: () => void;
+  // Event handler for when the program actually starts running (after any loading/compilation).
+  onStarted: () => void;
 
   // Shared registers and console buffer.
   private sharedRegisters_ = new SharedRegisters();
@@ -191,6 +193,12 @@ class WorkerInstance implements AbstractRobot {
       }
       case 'stopped': {
         this.onStopped_();
+        break;
+      }
+      case 'start': {
+        if (this.onStarted) {
+          this.onStarted();
+        }
         break;
       }
     }

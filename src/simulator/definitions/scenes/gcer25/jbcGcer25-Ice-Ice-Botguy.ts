@@ -24,7 +24,6 @@ const POM_COLLIDER_SCRIPTS = {};
 for (const [i, pos] of canPositions.entries()) {
   const p = {
     position: pos,
-    scale: { x: 100, y: 100, z: 100 },
   };
   POM_COLLIDER_SCRIPTS[`pom_blue${i}_collision`] = Script.ecmaScript(`Pom ${i + 1} Collided`, `
 scene.addOnIntersectionListener('pom_blue${i}', (type, otherNodeId) => {
@@ -48,10 +47,9 @@ scene.addOnIntersectionListener('pom_blue${i}', (type, otherNodeId) => {
 const BOTGUY_ORIGIN = {
   position: {
     x: Distance.centimeters(22.7),
-    y: Distance.centimeters(-1.25),
+    y: Distance.centimeters(3),
     z: Distance.centimeters(-7),
   },
-  scale: { x: 50, y: 50, z: 50 },
 };
 
 export const Ice_Ice_Botguy: Scene = {

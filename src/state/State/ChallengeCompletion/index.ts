@@ -21,6 +21,7 @@ namespace ChallengeCompletion {
       c: '',
       cpp: '',
       python: '',
+      graphical: '',
     },
     currentLanguage: 'c',
     serializedSceneDiff: JSON.stringify({ t: 'o' }),
