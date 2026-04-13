@@ -182,9 +182,9 @@ namespace Node {
     /**
      * The name of the Geometry of this node.
      * The Geometry variable must be accessable to the Node somehow.
-     * See /src/simulator/definitions/scenes/tableBase.ts for an example of including it locally,
-     * or /src/simulator/definitions/nodes/2025gameTableTemplates.ts and
-     * /src/simulator/definitions/scenes/tableSandbox.ts for an example of using templates.
+     * See `/src/simulator/definitions/scenes/tableBase.ts` for an example of including it locally,
+     * or `/src/simulator/definitions/nodes/2025gameTableTemplates.ts` and
+     * `/src/simulator/definitions/scenes/tableSandbox.ts` for an example of using templates.
      */
     geometryId: string;
     /**

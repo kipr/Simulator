@@ -48,6 +48,12 @@ const Assist = styled('span', (theme: ThemeProps) => ({
   marginLeft: `${theme.theme.itemPadding / 2}px`,
 }));
 
+const ToolTip = styled('span', (theme: ThemeProps) => ({
+  opacity: 0.55,
+  fontSize: '0.8em',
+  marginLeft: `${theme.theme.itemPadding / 2}px`,
+}));
+
 const Finalize = styled('div', (props: ThemeProps & { disabled?: boolean }) => ({
   flex: '1 1',
   borderRadius: `${props.theme.itemPadding * 2}px`,
@@ -129,12 +135,13 @@ class Form extends React.PureComponent<Form.Props, Form.State> {
           value={item.id in values ? values[item.id].text : (item.defaultValue || '')}
           autoFocus={index === 0}
           onChange={this.onValueChange_(item)}
-          onKeyDown={(event) => {
+          onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
             if (event.key === 'Enter' && this.isFinalizeAllowed_()) {
               this.onFinalizeClick_();
             }
           }}
-        />
+        />,
+        <Label theme={theme} key={`label-${index}-input`}>{item.tooltip ? <ToolTip theme={theme}>{item.tooltip}</ToolTip> : undefined}</Label>,
       ];
     }).reduce((acc, item) => [...acc, ...item], []);
 
@@ -248,8 +255,8 @@ namespace Form {
   export const PASSWORD_VALIDATOR = (value: string) => Validators.validatePassword(value);
   export const DATE_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.Date);
   export const NON_EMPTY_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.Length, 1);
+  export const ONE_WORD_VALIDATOR = (value: string) => Validators.validate(value, Validators.Types.OneWord);
 
-  
   export const email = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
     id,
     text,
@@ -286,6 +293,76 @@ namespace Form {
     text,
     validType,
     tooltip,
+  });
+
+  export const classroomName = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
+    id,
+    text,
+    tooltip,
+    validator: NON_EMPTY_VALIDATOR,
+    finalizer: IDENTITY_FINALIZER,
+    assist,
+    assistText,
+  });
+
+  export const createClassInviteCode = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
+    id,
+    text,
+    disabled: true,
+    defaultValue: crypto.randomUUID().slice(0, 5),
+    tooltip,
+    validator: NON_EMPTY_VALIDATOR,
+    finalizer: IDENTITY_FINALIZER,
+    assist,
+    assistText,
+  });
+
+  export const joinClassInviteCode = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
+    id,
+    text,
+    tooltip,
+    validator: NON_EMPTY_VALIDATOR,
+    finalizer: IDENTITY_FINALIZER,
+    assist,
+    assistText,
+  });
+
+  export const username = (id: string, text: string): Item<string> => ({
+    id,
+    text,
+    finalizer: IDENTITY_FINALIZER
+  });
+
+
+  export const displayNameField = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
+    id,
+    text,
+    tooltip,
+    validator: ONE_WORD_VALIDATOR,
+    finalizer: IDENTITY_FINALIZER,
+    assist,
+    assistText,
+  });
+
+
+  export const leaveClass = (id: string, text: string, tooltip?: string, assist?: () => void, assistText?: string): Item<string> => ({
+    id,
+    text,
+    tooltip,
+    validator: NON_EMPTY_VALIDATOR,
+    finalizer: IDENTITY_FINALIZER,
+    assist,
+    assistText,
+  });
+  export const projectName = (id: string, text: string): Item<string> => ({
+    id,
+    text,
+    finalizer: IDENTITY_FINALIZER
+  });
+  export const fileName = (id: string, text: string): Item<string> => ({
+    id,
+    text,
+    finalizer: IDENTITY_FINALIZER
   });
 }
 
