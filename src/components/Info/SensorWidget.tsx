@@ -129,7 +129,7 @@ class SensorWidget extends React.PureComponent<Props, State> {
         if (mesh) {
           // Both wheels have the mesh ID 'Wheel_primitive0_merged', so use idx
           // to distinguish between them.
-          const idx = props.name === 'motor 0' ? 1 : 0;
+          const idx = props.name === 'motor 3' ? 1 : 0;
           ACTIVE_SPACE.highlight(mesh, idx);
         }
       }, 1000),

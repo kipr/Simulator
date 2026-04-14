@@ -32,7 +32,7 @@ const Container = styled('div', ({ $theme }: { $theme: Theme }) => ({
   padding: `${$theme.itemPadding * 2}px`,
 }));
 
-const Search = styled(Input, ({ theme }: ThemeProps) => ({
+const Search = withStyleDeep(Input, ({ theme }: ThemeProps) => ({
   width: '100%',
   marginBottom: `${theme.itemPadding * 2}px`,
 }));
@@ -54,7 +54,7 @@ const BriefAssignmentsView = ({
     const common = Async.latestCommon(assignment)!;
     const name = LocalizedString.lookup(common.name, locale);
     if (name.toLowerCase().includes(filter.toLowerCase())) return true;
-    
+
     const latestValue = Async.latestValue(assignment);
     if (!latestValue) return false;
 
@@ -72,7 +72,7 @@ const BriefAssignmentsView = ({
       <Search
         theme={theme}
         value={filter}
-        onChange={e => setFilter(e.currentTarget.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilter(e.currentTarget.value)}
         placeholder={LocalizedString.lookup(tr('Search'), locale)}
       />
       {filteredAssignments.map(([id, assignment]) => (

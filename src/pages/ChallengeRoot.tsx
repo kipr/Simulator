@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { styled } from 'styletron-react';
-import { Message } from 'ivygate';
+import { Message } from 'ivygate/dist/src';
 import { applyObjectPatch, createObjectPatch, ObjectPatch, OuterObjectPatch } from 'symmetry';
 
 import { signOutOfApp } from '../firebase/modules/auth';
@@ -22,7 +22,7 @@ import SettingsDialog from '../components/Dialog/SettingsDialog';
 import AboutDialog from '../components/Dialog/AboutDialog';
 
 import { DEFAULT_FEEDBACK, Feedback, FeedbackSuccessDialog, } from '../components/Feedback';
-import { Layout, LayoutProps, LayoutEditorTarget, OverlayLayout, OverlayLayoutRedux, SideLayoutRedux  } from '../components/Layout';
+import { Layout, LayoutProps, LayoutEditorTarget, OverlayLayout, OverlayLayoutRedux, SideLayoutRedux } from '../components/Layout';
 import { OpenSceneDialog, DeleteDialog } from '../components/Dialog';
 
 import Loading from '../components/Loading';
@@ -30,10 +30,11 @@ import { Editor } from '../components/Editor';
 import { Capabilities } from '../components/World';
 
 
-import { State as ReduxState } from '../state';
-import { DocumentationAction, ScenesAction, ChallengeCompletionsAction, AiAction } from '../state/reducer';
-import { sendMessage, SendMessageParams } from '../util/ai';
+import store, { State as ReduxState } from '../state';
+import { ScenesAction, ChallengeCompletionsAction, AiAction } from '../state/reducer';
 
+import { sendMessage, SendMessageParams } from '../util/ai';
+import { DocumentationAction } from 'ivygate/dist/src/state/reducer/documentation';
 import Scene, { AsyncScene } from '../state/State/Scene';
 import Script from '../state/State/Scene/Script';
 import Node from '../state/State/Scene/Node';
@@ -42,7 +43,7 @@ import Camera from '../state/State/Scene/Camera';
 
 import Async from '../state/State/Async';
 import { AsyncChallenge } from '../state/State/Challenge';
-import ChallengeCompletion, { AsyncChallengeCompletion } from '../state/State/ChallengeCompletion';
+import { AsyncChallengeCompletion } from '../state/State/ChallengeCompletion';
 import PredicateCompletion from '../state/State/ChallengeCompletion/PredicateCompletion';
 
 import DocumentationLocation from '../state/State/Documentation/DocumentationLocation';
@@ -50,8 +51,6 @@ import DocumentationLocation from '../state/State/Documentation/DocumentationLoc
 import Record from '../db/Record';
 import Selector from '../db/Selector';
 import Builder from '../db/Builder';
-import DbError from '../db/Error';
-
 import { StyledText } from '../util';
 import construct from '../util/redux/construct';
 import Dict from '../util/objectOps/Dict';
@@ -69,6 +68,7 @@ import Motor from '../programming/AbstractRobot/Motor';
 import { Modal } from './sharedRoot/Modal';
 import AiWindow from '../components/Ai/AiWindow';
 import Robot from '../state/State/Robot';
+import { Project } from 'state/State/Project';
 
 
 export interface ChallengeRootRouteParams {
@@ -87,7 +87,6 @@ interface RootPrivateProps {
 
   robots: Dict<Robot>;
 
-  onChallengeCompletionCreate: (challengeCompletion: ChallengeCompletion) => void;
   onChallengeCompletionSceneDiffChange: (sceneDiff: OuterObjectPatch<Scene>) => void;
   onChallengeCompletionEventStateRemove: (eventId: string) => void;
   onChallengeCompletionEventStateChange: (eventId: string, eventState: boolean) => void;
@@ -172,7 +171,7 @@ const WORLD_CAPABILITIES: Capabilities = {
 
 class Root extends React.Component<Props, State> {
   private editorRef: React.MutableRefObject<Editor>;
-  private overlayLayoutRef:  React.MutableRefObject<OverlayLayout>;
+  private overlayLayoutRef: React.MutableRefObject<OverlayLayout>;
 
   private workingChallengeScene_: Scene;
 
@@ -288,10 +287,10 @@ class Root extends React.Component<Props, State> {
     if (!challengeCompletion) return;
 
 
-    
+
     this.onStopClick_();
     this.workingChallengeScene = Async.latestValue(scene);
-    
+
     const latestChallenge = Async.latestValue(challenge);
     const latestChallengeCompletion = Async.latestValue(challengeCompletion);
     if (latestChallengeCompletion && latestChallenge) {
@@ -302,17 +301,17 @@ class Root extends React.Component<Props, State> {
         latestChallenge.failure ? PredicateCompletion.update(PredicateCompletion.EMPTY, latestChallenge.failure, eventStates) : undefined,
       );
     }
-    
+
     this.syncChallengeCompletion_();
   };
 
   private onSetEventValue_ = (eventId: string, value: boolean) => {
-    const { challenge, challengeCompletion } = this.props;
-    
-    const latestChallenge = Async.latestValue(challenge);
+    const { challengeId } = this.props.params;
+    const state = store.getState();
+    const latestChallenge = Async.latestValue(state.challenges[challengeId]);
     if (!latestChallenge) return;
 
-    const latestChallengeCompletion = Async.latestValue(challengeCompletion);
+    const latestChallengeCompletion = Async.latestValue(state.challengeCompletions[challengeId]);
     if (!latestChallengeCompletion) return;
 
     const { success, failure } = latestChallenge;
@@ -336,6 +335,7 @@ class Root extends React.Component<Props, State> {
 
   componentDidMount() {
     WorkerInstance.onStopped = this.onStopped_;
+    WorkerInstance.onStarted = this.onStarted_;
 
     const space = Space.getInstance();
     space.onSetNodeBatch = this.onSetNodeBatch_;
@@ -358,7 +358,12 @@ class Root extends React.Component<Props, State> {
   componentWillUnmount() {
     window.removeEventListener('resize', this.onWindowResize_);
     cancelAnimationFrame(this.updateConsoleHandle_);
-  
+
+    if (this.saveTimeout_ !== undefined) {
+      window.clearTimeout(this.saveTimeout_);
+      this.saveChallengeCompletion_();
+    }
+
     Space.getInstance().onSelectNodeId = undefined;
     Space.getInstance().onSetNodeBatch = undefined;
     Space.getInstance().onNodeAdd = undefined;
@@ -374,20 +379,6 @@ class Root extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>): void {
-    const { params: { challengeId }, challenge, challengeCompletion } = this.props;
-    
-    if (challengeId && challenge && challengeCompletion && challengeCompletion.type === Async.Type.LoadFailed) {
-      const latestChallenge = Async.latestValue(challenge);
-      if (challengeCompletion.error.code === DbError.CODE_NOT_FOUND && latestChallenge) {
-        console.log('Challenge completion not found');
-        this.props.onChallengeCompletionCreate({
-          ...ChallengeCompletion.EMPTY,
-          code: latestChallenge.code,
-          currentLanguage: latestChallenge.defaultLanguage,
-        });
-      }
-    }
-
     if (this.state.simulatorState.type !== prevState.simulatorState.type) {
       Space.getInstance().sceneBinding.scriptManager.programStatus = this.state.simulatorState.type === SimulatorState.Type.Running ? 'running' : 'stopped';
     }
@@ -395,7 +386,7 @@ class Root extends React.Component<Props, State> {
     if (this.props.params.challengeId !== prevProps.params.challengeId) {
       this.initedChallengeCompletionScene_ = false;
     }
-    
+
     if (this.props.scene !== prevProps.scene || this.props.challengeCompletion !== prevProps.challengeCompletion) {
       const latestScene = Async.latestValue(this.props.scene);
       const latestChallengeCompletion = Async.latestValue(this.props.challengeCompletion);
@@ -418,6 +409,7 @@ class Root extends React.Component<Props, State> {
   };
 
   private lastSaveChallengeCompletionTime_ = 0;
+  private saveTimeout_: number | undefined = undefined;
 
   private saveChallengeCompletion_ = () => {
     this.props.onChallengeCompletionSetRobotLinkOrigins(Space.getInstance().sceneBinding.currentRobotLinkOrigins);
@@ -427,7 +419,23 @@ class Root extends React.Component<Props, State> {
   };
 
   private scheduleSaveChallengeCompletion_ = () => {
-    if (Date.now() - this.lastSaveChallengeCompletionTime_ < 1000) return;
+    const now = Date.now();
+    const timeSinceLastSave = now - this.lastSaveChallengeCompletionTime_;
+
+    if (timeSinceLastSave < 1000) {
+      if (this.saveTimeout_ === undefined) {
+        this.saveTimeout_ = window.setTimeout(() => {
+          this.saveTimeout_ = undefined;
+          this.saveChallengeCompletion_();
+        }, 1000 - timeSinceLastSave);
+      }
+      return;
+    }
+
+    if (this.saveTimeout_ !== undefined) {
+      window.clearTimeout(this.saveTimeout_);
+      this.saveTimeout_ = undefined;
+    }
 
     this.saveChallengeCompletion_();
   };
@@ -474,8 +482,17 @@ class Root extends React.Component<Props, State> {
     });
   };
 
+  private onStarted_ = () => {
+    this.setState({
+      simulatorState: SimulatorState.RUNNING
+    });
+  };
+
   private onActiveLanguageChange_ = (language: ProgrammingLanguage) => {
     this.props.onChallengeCompletionSetCurrentLanguage(language);
+
+    // Clear compilation messages when switching languages to prevent stale error highlights
+    this.setState({ messages: [] });
 
     this.scheduleSaveChallengeCompletion_();
   };
@@ -523,7 +540,7 @@ class Root extends React.Component<Props, State> {
   private onModalClick_ = (modal: Modal) => () => this.setState({ modal });
 
   private onModalClose_ = () => this.setState({ modal: Modal.NONE });
-  
+
   private updateConsole_ = () => {
     const text = WorkerInstance.sharedConsole.popString();
     if (text.length > 0) {
@@ -534,7 +551,7 @@ class Root extends React.Component<Props, State> {
         }), 300)
       });
     }
-    
+
 
     this.scheduleUpdateConsole_();
   };
@@ -552,7 +569,8 @@ class Root extends React.Component<Props, State> {
     const { console, theme } = state;
 
     const language = this.currentLanguage;
-    const activeCode = this.code[language];
+    const storedCode = this.code[language];
+    const activeCode = storedCode !== undefined ? storedCode : ProgrammingLanguage.DEFAULT_CODE[language];
 
     switch (this.currentLanguage) {
       case 'c':
@@ -561,7 +579,7 @@ class Root extends React.Component<Props, State> {
           text: LocalizedString.lookup(tr('Compiling...\n'), locale),
           style: STDOUT_STYLE(this.state.theme)
         }));
-    
+
         this.setState({
           simulatorState: SimulatorState.COMPILING,
           console: nextConsole
@@ -571,7 +589,7 @@ class Root extends React.Component<Props, State> {
               nextConsole = this.state.console;
               const messages = sort(parseMessages(compileResult.stderr));
               const compileSucceeded = compileResult.result && compileResult.result.length > 0;
-    
+
               // Show all errors/warnings in console
               for (const message of messages) {
                 nextConsole = StyledText.extend(nextConsole, toStyledText(message, {
@@ -580,7 +598,7 @@ class Root extends React.Component<Props, State> {
                     : undefined
                 }));
               }
-    
+
               if (compileSucceeded) {
                 // Show success in console and start running the program
                 const haveWarnings = hasWarnings(messages);
@@ -590,7 +608,7 @@ class Root extends React.Component<Props, State> {
                     : LocalizedString.lookup(tr('Compilation succeeded\n'), locale),
                   style: STDOUT_STYLE(this.state.theme)
                 }));
-    
+
                 WorkerInstance.start({
                   language: language,
                   code: compileResult.result
@@ -604,13 +622,13 @@ class Root extends React.Component<Props, State> {
                     style: STDERR_STYLE(this.state.theme)
                   }));
                 }
-    
+
                 nextConsole = StyledText.extend(nextConsole, StyledText.text({
                   text: LocalizedString.lookup(tr('Compilation failed.\n'), locale),
                   style: STDERR_STYLE(this.state.theme)
                 }));
               }
-    
+
               this.setState({
                 simulatorState: compileSucceeded ? SimulatorState.RUNNING : SimulatorState.STOPPED,
                 messages,
@@ -623,7 +641,7 @@ class Root extends React.Component<Props, State> {
                 text: LocalizedString.lookup(tr('Something went wrong during compilation.\n'), locale),
                 style: STDERR_STYLE(this.state.theme)
               }));
-    
+
               this.setState({
                 simulatorState: SimulatorState.STOPPED,
                 messages: [],
@@ -634,8 +652,14 @@ class Root extends React.Component<Props, State> {
         break;
       }
       case 'python': {
+        const nextConsole = StyledText.extend(console, StyledText.text({
+          text: LocalizedString.lookup(tr('Loading Python...\n'), locale),
+          style: STDOUT_STYLE(this.state.theme)
+        }));
+
         this.setState({
-          simulatorState: SimulatorState.RUNNING,
+          simulatorState: SimulatorState.COMPILING,
+          console: nextConsole,
         }, () => {
           WorkerInstance.start({
             language: 'python',
@@ -644,9 +668,20 @@ class Root extends React.Component<Props, State> {
         });
         break;
       }
+      case 'graphical': {
+        this.setState({
+          simulatorState: SimulatorState.RUNNING,
+        }, () => {
+          WorkerInstance.start({
+            language: 'graphical',
+            code: activeCode
+          });
+        });
+        break;
+      }
     }
 
-    
+
   };
 
   private onStopClick_ = () => {
@@ -655,7 +690,8 @@ class Root extends React.Component<Props, State> {
 
   private onDownloadClick_ = () => {
     const language = this.currentLanguage;
-    const code = this.code[language];
+    const storedCode = this.code[language];
+    const code = storedCode !== undefined ? storedCode : ProgrammingLanguage.DEFAULT_CODE[language];
 
     const element = document.createElement('a');
     element.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(code)}`);
@@ -679,7 +715,7 @@ class Root extends React.Component<Props, State> {
   private onIndentCode_ = () => {
     if (this.editorRef.current) this.editorRef.current.ivygate.formatCode();
   };
-  
+
   onDocumentationClick = () => {
     window.open("https://www.kipr.org/doc/index.html");
   };
@@ -704,7 +740,7 @@ class Root extends React.Component<Props, State> {
     if ('simulationRealisticSensors' in changedSettings) {
       Space.getInstance().realisticSensors = changedSettings.simulationRealisticSensors;
     }
-    
+
     if ('simulationSensorNoise' in changedSettings) {
       Space.getInstance().noisySensors = changedSettings.simulationSensorNoise;
     }
@@ -751,7 +787,7 @@ class Root extends React.Component<Props, State> {
     const latestChallenge = Async.latestValue(challenge);
 
     const language = this.currentLanguage;
-    
+
     this.props.onChallengeCompletionSetCode(language, latestChallenge.code[language]);
     this.scheduleSaveChallengeCompletion_();
   };
@@ -766,9 +802,10 @@ class Root extends React.Component<Props, State> {
       ? Async.loaded({ value: this.workingChallengeScene_ })
       : this.props.scene;
 
+    const tutorCode = this.code[this.currentLanguage];
     this.props.onAskTutorClick({
       content: "Please help me understand what's wrong.",
-      code: this.code[this.currentLanguage],
+      code: tutorCode !== undefined ? tutorCode : ProgrammingLanguage.DEFAULT_CODE[this.currentLanguage],
       language: this.currentLanguage,
       console: StyledText.toString(this.state.console),
       robot: this.props.robots[Dict.unique(Scene.robots(Async.latestValue(workingScene)))?.robotId ?? "demobot"],
@@ -777,7 +814,7 @@ class Root extends React.Component<Props, State> {
 
   render() {
     const { props, state } = this;
-    
+
     const {
       params: { challengeId },
       scene,
@@ -805,9 +842,12 @@ class Root extends React.Component<Props, State> {
     }
 
     const language = this.currentLanguage;
-    const code = language ? this.code[language] : undefined;
+    // Get code for current language, falling back to default code if not defined
+    // (e.g., graphical may not be defined in challenges that only have C/C++/Python)
+    const storedCode = language ? this.code[language] : undefined;
+    const code = storedCode !== undefined ? storedCode : ProgrammingLanguage.DEFAULT_CODE[language];
 
-    if (!scene || scene.type === Async.Type.Unloaded || !language || !code) {
+    if (!scene || scene.type === Async.Type.Unloaded || !language || code === undefined) {
       return <Loading />;
     }
 
@@ -824,7 +864,7 @@ class Root extends React.Component<Props, State> {
 
     const theme = DARK;
 
-    
+
 
     const editorTarget: LayoutEditorTarget = {
       type: LayoutEditorTarget.Type.Robot,
@@ -865,13 +905,28 @@ class Root extends React.Component<Props, State> {
       onScriptRemove: this.onScriptRemove_,
       onObjectAdd: this.onObjectAdd_,
       onResetCode: this.onResetCode_,
-      
+
       challengeState: challenge ? {
         challenge,
         challengeCompletion: challengeCompletion || Async.unloaded({ brief: {} }),
       } : undefined,
       worldCapabilities: WORLD_CAPABILITIES,
       onDocumentationGoToFuzzy,
+      onProjectAdd: function (): void {
+        throw new Error('Function not implemented.');
+      },
+      onSimFileSelected: function (project: Project, fileName: string, fileType: string): void {
+        throw new Error('Function not implemented.');
+      },
+      onSimProjectSelected: function (project: Project): void {
+        throw new Error('Function not implemented.');
+      },
+      onAddNewSimFile: function (project: Project, fileType: string): void {
+        throw new Error('Function not implemented.');
+      },
+      onDeleteSimProject: function (project: Project): void {
+        throw new Error('Function not implemented.');
+      }
     };
 
     let impl: JSX.Element;
@@ -983,12 +1038,9 @@ const ConnectedChallengeRoot = connect((state: ReduxState, { params: { challenge
     challenge: Dict.unique(builder.challenges),
     challengeCompletion: Dict.unique(builder.challengeCompletions),
     locale: state.i18n.locale,
-    robots: Dict.map(state.robots.robots, Async.latestValue), 
+    robots: Dict.map(state.robots.robots, Async.latestValue),
   };
 }, (dispatch, { params: { challengeId } }: RootPublicProps) => ({
-  onChallengeCompletionCreate: (challengeCompletion: ChallengeCompletion) => {
-    dispatch(ChallengeCompletionsAction.createChallengeCompletion({ challengeId, challengeCompletion }));
-  },
   onChallengeCompletionSceneDiffChange: (sceneDiff: OuterObjectPatch<Scene>) => {
     dispatch(ChallengeCompletionsAction.setSceneDiff({ challengeId, sceneDiff }));
   },

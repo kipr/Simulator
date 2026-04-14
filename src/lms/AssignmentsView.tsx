@@ -53,7 +53,7 @@ const Container = styled('div', ({ $theme }: { $theme: Theme }) => ({
   padding: `${$theme.itemPadding * 2}px`,
 }));
 
-const Search = styled(Input, ({ theme }: ThemeProps) => ({
+const Search = withStyleDeep(Input, ({ theme }: ThemeProps) => ({
   width: '100%',
   marginBottom: `${theme.itemPadding * 2}px`,
 }));
@@ -120,11 +120,11 @@ type PillId = (
   PillId.GradeLevels
 );
 
-const StyledPillArea = styled(PillArea, ({ theme }: { theme: Theme }) => ({
-  marginBottom: `${theme.itemPadding * 2}px`,
-})) as StyletronComponent<Pick<PillAreaProps<PillId>, keyof PillAreaProps<PillId>> & {
-  theme: Theme;
-}>;
+// const StyledPillArea = styled(PillArea, ({ theme }: { theme: Theme }) => ({
+//   marginBottom: `${theme.itemPadding * 2}px`,
+// })) as StyletronComponent<Pick<PillAreaProps<PillId>, keyof PillAreaProps<PillId>> & {
+//   theme: Theme;
+// }>;
 
 const AssignmentsView = ({
   style,
@@ -191,7 +191,7 @@ const AssignmentsView = ({
     const common = Async.latestCommon(assignment)!;
     const name = LocalizedString.lookup(common.name, locale);
     if (name.toLowerCase().includes(filter.toLowerCase())) return true;
-    
+
     const latestValue = Async.latestValue(assignment);
     if (!latestValue) return false;
 
@@ -235,7 +235,7 @@ const AssignmentsView = ({
       ),
     });
   }
-  
+
   for (const standard of standardsSelected || new Set()) {
     pillItems.push({
       id: PillId.standard({ standard }),
