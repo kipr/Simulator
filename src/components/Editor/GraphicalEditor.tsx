@@ -62,7 +62,7 @@ class GraphicalEditor extends React.Component<Props, State> {
         Blockly.svgResize(this.workspace_);
       }
     }
-  
+
   }
 
   componentWillUnmount() {
@@ -72,14 +72,14 @@ class GraphicalEditor extends React.Component<Props, State> {
   private outerContainerRef_: HTMLDivElement | null = null;
   private bindOuterContainerRef_ = (ref: HTMLDivElement) => {
     if (this.outerContainerRef_) this.resizeListener_.unobserve(this.outerContainerRef_);
-    
+
 
     this.outerContainerRef_ = ref;
 
     if (this.outerContainerRef_) this.resizeListener_.observe(this.outerContainerRef_);
-    
+
   };
-  
+
   private containerRef_: HTMLDivElement | null = null;
   private bindContainerRef_ = (ref: HTMLDivElement) => {
     if (this.containerRef_) {
@@ -122,7 +122,6 @@ class GraphicalEditor extends React.Component<Props, State> {
       }
     });
 
-    console.log(this.props.code);
     if (this.props.code.length > 0) {
       try {
         Blockly.Xml.domToWorkspace(

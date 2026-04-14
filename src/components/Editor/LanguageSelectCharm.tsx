@@ -6,11 +6,13 @@ import { ThemeProps } from '../constants/theme';
 import { charmColor } from '../constants/charm-util';
 import ComboBox from '../interface/ComboBox';
 import ProgrammingLanguage from '../../programming/compiler/ProgrammingLanguage';
+import { TourRegistry } from '../../tours/TourRegistry';
 
 export interface LanguageSelectCharmProps extends StyleProps, ThemeProps {
   language: ProgrammingLanguage;
 
   onLanguageChange: (language: ProgrammingLanguage) => void;
+  tourRegistry?: TourRegistry;
 }
 
 type Props = LanguageSelectCharmProps;

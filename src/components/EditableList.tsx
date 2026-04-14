@@ -1,38 +1,45 @@
-import { faCog, faEye, faEyeSlash, faSync, faTimes } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCog,
+  faEye,
+  faEyeSlash,
+  faSync,
+  faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 import * as React from "react";
 import { styled, withStyleDeep } from "styletron-react";
 import { StyleProps } from "../util/style";
 import { FontAwesome } from "./FontAwesome";
 import { BLUE, BROWN, GREEN, RED, ThemeProps } from "./constants/theme";
+import TourTarget from "./Tours/TourTarget";
+import { TourRegistry } from "../tours/TourRegistry";
 
 export interface EditableListProps<P> extends StyleProps, ThemeProps {
   items: EditableList.Item<P>[];
 
   onItemRemove?: (index: number, userdata?: unknown) => void;
   onItemReorder?: (fromIndex: number, toIndex: number) => void;
+  tourRegistry?: TourRegistry;
+  onContinueTour?: () => void;
 }
 
-interface EditableListState {
-}
+interface EditableListState { }
 
 type Props = EditableListProps<EditableList.ItemProps>;
 type State = EditableListState;
 
-const Container = styled('div', {
-  width: '100%',
+const Container = styled("div", {
+  width: "100%",
 });
 
-const ItemWrapper = styled('div', {
-  display: 'flex',
-  flexDirection: 'row',
-  width: '100%',
-
+const ItemWrapper = styled("div", {
+  display: "flex",
+  flexDirection: "row",
+  width: "100%",
 });
 
 class EditableList extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
-  
     this.state = {};
   }
 
@@ -44,21 +51,41 @@ class EditableList extends React.PureComponent<Props, State> {
     const { props } = this;
     const { items, style, className, onItemRemove } = props;
 
-
-
     return (
       <Container style={style} className={className}>
         {items.map((item, index) => {
           const Component = item.component;
-          return (
-            <Component
-              {...item.props}
-              onRemove={item.removable ? this.onRemove_(index, item.userdata) : undefined}
+          const row = (
+            <div key={index} style={{ display: "flex", width: "100%" }}>
+              <Component
+                {...item.props}
+                onRemove={
+                  item.removable
+                    ? () => this.onRemove_(index, item.userdata)
+                    : undefined
+                }
+                onContinueTour={
+                  item.userdata === "can1"
+                    ? this.props.onContinueTour
+                    : undefined
+                }
+              />
+            </div>
+          );
+
+          return item.userdata === "can1" && this.props.tourRegistry ? (
+            <TourTarget
               key={index}
-            />
+              registry={this.props.tourRegistry}
+              targetKey="can1"
+            >
+              {row}
+            </TourTarget>
+          ) : (
+            row
           );
         })}
-      </Container >
+      </Container>
     );
   }
 }
@@ -68,6 +95,7 @@ namespace EditableList {
     onRemove?: () => void;
     onReorderStart?: () => void;
     onReorderEnd?: () => void;
+    onContinueTour?: () => void;
   }
 
   export type ItemRawProps<P extends ItemProps> = Omit<P, keyof ItemProps>;
@@ -81,7 +109,10 @@ namespace EditableList {
   }
 
   export namespace Item {
-    export const standard = <P extends StyleProps>(props: ItemRawProps<StandardItem.Props<P>>, options?: Omit<Item<StandardItem.Props<P>>, 'component' | 'props'>): Item<StandardItem.Props<P>> => {
+    export const standard = <P extends StyleProps>(
+      props: ItemRawProps<StandardItem.Props<P>>,
+      options?: Omit<Item<StandardItem.Props<P>>, "component" | "props">
+    ): Item<StandardItem.Props<P>> => {
       return {
         component: StandardItem,
         props,
@@ -91,8 +122,11 @@ namespace EditableList {
       };
     };
   }
-  
-  export class StandardItem<P extends StyleProps> extends React.PureComponent<StandardItem.Props<P>, StandardItem.State> {
+
+  export class StandardItem<P extends StyleProps> extends React.PureComponent<
+  StandardItem.Props<P>,
+  StandardItem.State
+  > {
     constructor(props: StandardItem.Props<P>) {
       super(props);
 
@@ -101,11 +135,13 @@ namespace EditableList {
         initialTouch: false,
       };
     }
-  
+
     private onMouseEnter_ = (e: React.MouseEvent<HTMLDivElement>) => {
-      this.setState({
-        hover: true,
-      });
+      this.setState(
+        {
+          hover: true,
+        },
+      );
     };
 
     private onMouseLeave_ = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -134,10 +170,12 @@ namespace EditableList {
     };
 
     private onVisibilityChange_ = () => {
-      const { visible, onVisibilityChange } = this.props;
+      const { visible, onVisibilityChange, onContinueTour } = this.props;
       onVisibilityChange(!visible);
+      if (onContinueTour) {
+        onContinueTour();
+      }
     };
-      
 
     render() {
       const { props, state } = this;
@@ -148,13 +186,79 @@ namespace EditableList {
         onReset,
         onVisibilityChange,
         visible,
-        props: componentProps
+        tourRegistry,
+
+        props: componentProps,
       } = props;
       const { hover, initialTouch } = state;
+
+      const tourCan1 = !!tourRegistry && componentProps.name === "Can 1";
+      const showOptions = tourCan1;
+      const tourContent_ = (
+        <StandardItem.OptionsContainer>
+          <TourTarget
+            registry={this.props.tourRegistry}
+            targetKey={"can1-visibility"}
+            style={{
+              display: "flex",
+              flex: 1,
+              minWidth: 0,
+              minHeight: 0,
+            }}
+          >
+            <StandardItem.VisibilityIconContainer
+              onClick={this.onVisibilityChange_}
+            >
+              <StandardItem.OptionIcon
+                icon={visible ? faEye : faEyeSlash}
+              />
+            </StandardItem.VisibilityIconContainer>
+          </TourTarget>
+          <TourTarget registry={this.props.tourRegistry} targetKey={"can1-reset"} style={{
+            display: "flex",
+            flex: 1,
+            minWidth: 0,
+            minHeight: 0,
+          }}>
+            <StandardItem.ResetIconContainer
+              onClick={visible ? onReset : undefined}
+              $disabled={!visible}
+            >
+              <StandardItem.OptionIcon icon={faSync} />
+            </StandardItem.ResetIconContainer>
+          </TourTarget>
+          <TourTarget registry={this.props.tourRegistry} targetKey={"can1-settings"} style={{
+            display: "flex",
+            flex: 1,
+            minWidth: 0,
+            minHeight: 0,
+          }}>
+            <StandardItem.SettingsIconContainer onClick={onSettings}>
+              <StandardItem.OptionIcon icon={faCog} />
+            </StandardItem.SettingsIconContainer>
+          </TourTarget>
+          <TourTarget registry={this.props.tourRegistry} targetKey={"can1-remove"} style={{
+            display: "flex",
+            flex: 1,
+            minWidth: 0,
+            minHeight: 0,
+          }}>
+            <StandardItem.RemoveIconContainer onClick={onRemove}>
+              <StandardItem.OptionIcon icon={faTimes} />
+            </StandardItem.RemoveIconContainer>
+          </TourTarget>
+        </StandardItem.OptionsContainer>
+      );
       return (
-        <StandardItem.Container onMouseEnter={this.onMouseEnter_} onMouseLeave={this.onMouseLeave_} onTouchEnd={this.onTouchEnd_} onClick={this.onClick_}>
-          <Component style={{ flex: '1 1' }} {...componentProps} />
-          {(hover && !initialTouch) ? (
+        <StandardItem.Container
+          onMouseEnter={this.onMouseEnter_}
+          onMouseLeave={this.onMouseLeave_}
+          onTouchEnd={this.onTouchEnd_}
+          onClick={this.onClick_}
+        >
+          <Component style={{ flex: "1 1" }} {...componentProps} />
+
+          {tourRegistry && showOptions ? (tourContent_) : ((hover && !initialTouch) ? (
             <StandardItem.OptionsContainer>
               {onVisibilityChange && (
                 <StandardItem.VisibilityIconContainer onClick={this.onVisibilityChange_}>
@@ -176,18 +280,17 @@ namespace EditableList {
                   <StandardItem.OptionIcon icon={faTimes} />
                 </StandardItem.RemoveIconContainer>
               )}
-              
+
             </StandardItem.OptionsContainer>
-          ) : undefined}
+          ) : undefined)}
         </StandardItem.Container>
       );
     }
   }
 
   export namespace StandardItem {
-    export interface ComponentProps extends StyleProps {
-    }
-    
+    export interface ComponentProps extends StyleProps { }
+
     export interface Props<P extends ComponentProps> extends ItemProps {
       component: React.ComponentType<P>;
       props: ComponentRawProps<P>;
@@ -195,6 +298,8 @@ namespace EditableList {
       onReset?: () => void;
       onSettings?: () => void;
       onVisibilityChange?: (visiblity: boolean) => void;
+      tourRegistry?: TourRegistry;
+      onContinueTour?: () => void;
     }
 
     export type ComponentRawProps<P extends ComponentProps> = P;
@@ -204,64 +309,72 @@ namespace EditableList {
       initialTouch: boolean;
     }
 
-    export const Container = styled('div', {
-      display: 'flex',
-      flexDirection: 'row',
-      width: '100%',
-      alignItems: 'stretch',
-      ':nth-child(even)': {
-        backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    export const Container = styled("div", {
+      display: "flex",
+      flexDirection: "row",
+      width: "100%",
+      alignItems: "stretch",
+      ":nth-child(even)": {
+        backgroundColor: "rgba(0, 0, 0, 0.1)",
       },
     });
 
-    export const OptionsContainer = styled('div', {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'stretch',
-      alignContent: 'center',
-      userSelect: 'none'
+    export const OptionsContainer = styled("div", {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "stretch",
+      alignContent: "center",
+      userSelect: "none",
     });
 
-    export const OptionIconContainer = styled('div', (props: { $disabled?: boolean }) => ({
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      cursor: props.$disabled ? 'auto' : 'pointer'
-    }));
+    export const OptionIconContainer = styled(
+      "div",
+      (props: { $disabled?: boolean }) => ({
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        cursor: props.$disabled ? "auto" : "pointer",
+      })
+    );
 
     export const OptionIcon = styled(FontAwesome, {
-      minWidth: '35px',
-      padding: '5px',
-      verticalAlign: 'middle',
-      textAlign: 'center'
+      minWidth: "35px",
+      padding: "5px",
+      verticalAlign: "middle",
+      textAlign: "center",
     });
 
-    export const ResetIconContainer = withStyleDeep(OptionIconContainer, (props: { $disabled?: boolean }) => ({
-      backgroundColor: props.$disabled ? BROWN.disabled : BROWN.standard,
-      ':hover': !props.$disabled ? {
-        backgroundColor: BROWN.hover
-      } : {},
-    }));
+    export const ResetIconContainer = withStyleDeep(
+      OptionIconContainer,
+      (props: { $disabled?: boolean }) => ({
+        backgroundColor: props.$disabled ? BROWN.disabled : BROWN.standard,
+        ":hover": !props.$disabled
+          ? {
+            backgroundColor: BROWN.hover,
+          }
+          : {},
+      })
+    );
 
     export const VisibilityIconContainer = withStyleDeep(OptionIconContainer, {
       backgroundColor: BLUE.standard,
-      ':hover': {
-        backgroundColor: BLUE.hover
-      }
+      ":hover": {
+        backgroundColor: BLUE.hover,
+      },
     });
 
     export const SettingsIconContainer = withStyleDeep(OptionIconContainer, {
       backgroundColor: GREEN.standard,
-      ':hover': {
-        backgroundColor: GREEN.hover
-      }
+      ":hover": {
+        backgroundColor: GREEN.hover,
+      },
     });
 
     export const RemoveIconContainer = withStyleDeep(OptionIconContainer, {
       backgroundColor: RED.standard,
-      ':hover': {
-        backgroundColor: RED.hover
-      }
+      ":hover": {
+        backgroundColor: RED.hover,
+      },
     });
   }
 }

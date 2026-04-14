@@ -169,7 +169,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
               <ChatMessage key={`${message.id}-${containerWidth}`} theme={theme} message={message} />
             ))}
             {loading && (
-              <LoadingIndicator theme={theme}>Tutor is thinking...</LoadingIndicator>
+              <LoadingIndicator theme={theme}>{LocalizedString.lookup(tr("Tutor is thinking..."), locale)}</LoadingIndicator>
             )}
           </>
         )}

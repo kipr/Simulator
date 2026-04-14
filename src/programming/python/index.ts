@@ -18,6 +18,8 @@ export interface PythonParams {
 
   registers: SharedRegisters;
   createSerial?: SerialU32;
+  // Callback fired after Python files are downloaded, before code execution.
+  onStart?: () => void;
 }
 
 let python: (params: PythonParams) => Promise<void>;
@@ -69,6 +71,12 @@ del sys
 ${params.code}
   `);
 
+        // Signal that all Python resources are loaded and execution is about to begin.
+        // This is called inside preRun (after all /cpython/ assets are downloaded)
+        // but before the Python interpreter starts running the user's code.
+        if (params.onStart) {
+          params.onStart();
+        }
       }],
       arguments: ['main.py'],
       ...params

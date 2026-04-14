@@ -22,19 +22,6 @@ export default {
       name: tr('Robot not in Start Box'),
       description: tr('Robot not in start box'),
     },
-    can2PickedUp: {
-      name: tr('Can 2 Picked Up'),
-      description: tr('Can 2 picked up'),
-    },
-    can9PickedUp: {
-      name: tr('Can 9 Picked Up'),
-      description: tr('Can 9 picked up'),
-    },
-    can10PickedUp: {
-      name: tr('Can 10 Picked Up'),
-      description: tr('Can 10 picked up'),
-    },
-
     can2Upright: {
       name: tr('Can 2 Upright'),
       description: tr('Can 2 upright'),
@@ -81,44 +68,36 @@ export default {
         type: Expr.Type.Once,
         argId: 'inStartBox',
       },
-      // Picked Up Events
-      can2PickedUp: {
+      // Intersects Events
+      can2Intersects: {
         type: Expr.Type.Event,
-        eventId: 'can2PickedUp',
+        eventId: 'can2Intersects',
       },
-      can2PickedUpOnce: {
-        type: Expr.Type.Once,
-        argId: 'can2PickedUp',
-      },
-      can2NotPickedUpOnce: {
-        type: Expr.Type.Not,
-        argId: 'can2PickedUpOnce',
-      },
-      can9PickedUp: {
+      can9Intersects: {
         type: Expr.Type.Event,
-        eventId: 'can9PickedUp',
+        eventId: 'can9Intersects',
       },
-      can9PickedUpOnce: {
-        type: Expr.Type.Once,
-        argId: 'can9PickedUp',
-      },
-      can9NotPickedUpOnce: {
-        type: Expr.Type.Not,
-        argId: 'can9PickedUpOnce',
-      },
-      can10PickedUp: {
+      can10Intersects: {
         type: Expr.Type.Event,
-        eventId: 'can10PickedUp',
-      },
-      can10PickedUpOnce: {
-        type: Expr.Type.Once,
-        argId: 'can10PickedUp',
-      },
-      can10NotPickedUpOnce: {
-        type: Expr.Type.Not,
-        argId: 'can10PickedUpOnce',
+        eventId: 'can10Intersects',
       },
 
+      // Final And Logic
+      cansIntersect: {
+        type: Expr.Type.And,
+        argIds: ['can2Intersects', 'can9Intersects', 'can10Intersects'],
+      },
+
+      // Success logic
+      completion: {
+        type: Expr.Type.And,
+        argIds: ['inStartBoxOnce', 'cansIntersect'],
+      },
+    },
+    rootId: 'completion',
+  },
+  failure: {
+    exprs: {
       // Upright Events
       can2Upright: {
         type: Expr.Type.Event,
@@ -145,49 +124,13 @@ export default {
         argId: 'can10Upright',
       },
 
-      // Intersects Events
-      can2Intersects: {
-        type: Expr.Type.Event,
-        eventId: 'can2Intersects',
-      },
-      can9Intersects: {
-        type: Expr.Type.Event,
-        eventId: 'can9Intersects',
-      },
-      can10Intersects: {
-        type: Expr.Type.Event,
-        eventId: 'can10Intersects',
-      },
-
-      // Upright and Intersects logic
-      can2UprightPickedUpIntersects: {
-        type: Expr.Type.And,
-        argIds: ['can2Upright', 'can2PickedUpOnce', 'can2Intersects'],
-      },
-      can9UprightPickedUpIntersects: {
-        type: Expr.Type.And,
-        argIds: ['can9Upright', 'can9PickedUpOnce', 'can9Intersects'],
-      },
-      can10UprightPickedUpIntersects: {
-        type: Expr.Type.And,
-        argIds: ['can10Upright', 'can10PickedUpOnce', 'can10Intersects'],
-      },
-
-      // Final And Logic
-      cansUprightAndIntersects: {
-        type: Expr.Type.And,
-        argIds: ['can2UprightPickedUpIntersects', 'can9UprightPickedUpIntersects', 'can10UprightPickedUpIntersects',],
-      },
-
-
-
-      // Success logic
-      completion: {
-        type: Expr.Type.And,
-        argIds: ['inStartBoxOnce', 'cansUprightAndIntersects'],
+      // Failure logic
+      failure: {
+        type: Expr.Type.Or,
+        argIds: ['can2NotUpright', 'can9NotUpright', 'can10NotUpright'],
       },
     },
-    rootId: 'completion',
+    rootId: 'failure',
   },
   successGoals: [
     { exprId: 'inStartBoxOnce', name: tr('Start in the Start Box') },
@@ -199,9 +142,6 @@ export default {
     { exprId: 'can2NotUpright', name: tr('Can 2 not upright') },
     { exprId: 'can9NotUpright', name: tr('Can 9 not upright') },
     { exprId: 'can10NotUpright', name: tr('Can 10 not upright') },
-    { exprId: 'can2NotPickedUpOnce', name: tr('Can 2 not picked up') },
-    { exprId: 'can9NotPickedUpOnce', name: tr('Can 9 not picked up') },
-    { exprId: 'can10NotPickedUpOnce', name: tr('Can 10 not picked up') },
   ],
   sceneId: 'jbc16',
 } as Challenge;
