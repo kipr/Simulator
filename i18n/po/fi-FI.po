@@ -3523,6 +3523,735 @@ msgstr ""
 msgid "Back to File Explorer"
 msgstr ""
 
+msgid "Retake Tour"
+msgstr ""
+
+msgid "New to the simulator? Take a tour to get familiar with the interface."
+msgstr ""
+
+msgid "Classroom Invite Code"
+msgstr ""
+
+msgid "Enter the invite code provided by your teacher to join a classroom"
+msgstr ""
+
+msgid "Display Name"
+msgstr ""
+
+msgid ""
+"The name that will be shown to your teacher and classmates. Be sure to only "
+"use your first name."
+msgstr ""
+
+msgid "Retaking the tour will change your current scene to the JBC Sandbox."
+msgstr ""
+
+msgid "Do you want to retake the tour?"
+msgstr ""
+
+msgid ""
+"This is the classroom dashboard page, where you can choose to see the "
+"classrooms you are a part of and the classrooms you own."
+msgstr ""
+
+msgid "Use this card to switch to the student view."
+msgstr ""
+
+msgid ""
+"Use this card to switch to the teacher view, where you can manage the "
+"classrooms you own."
+msgstr ""
+
+msgid ""
+"This is the teacher dashboard, where you can see and manage the classrooms "
+"you own."
+msgstr ""
+
+msgid "To create a classroom, select this drop down..."
+msgstr ""
+
+msgid "...then click this button to create a new classroom."
+msgstr ""
+
+msgid ""
+"This is the dialog box where you can enter the details for your new "
+"classroom."
+msgstr ""
+
+msgid ""
+"Share the Invite Code with your students! Don't worry, it'll be visible "
+"later on too. \n"
+" \n"
+" Fill out the rest of the info and click \"Create\" to create your "
+"classroom."
+msgstr ""
+
+msgid "After creating a classroom, you can see it listed on your dashboard."
+msgstr ""
+
+msgid "Click on your newly created classroom to see the users."
+msgstr ""
+
+msgid "Share the invite code with your students so they can join your classroom."
+msgstr ""
+
+msgid ""
+"This is the student dashboard, where you can see the classrooms you are a "
+"part of."
+msgstr ""
+
+msgid "To join a classroom, click this button to open the join classroom dialog."
+msgstr ""
+
+msgid ""
+"This is the dialog box where you can enter the invite code to join a "
+"classroom."
+msgstr ""
+
+msgid ""
+"After joining a classroom, you can see the class's leaderboard listed on "
+"your dashboard."
+msgstr ""
+
+msgid ""
+"This tab contains the default JBC challenges that all classrooms have "
+"access to and are the scenes always in the 3D-Simulator."
+msgstr ""
+
+msgid "Click this button to export your challenge scores as a PDF file."
+msgstr ""
+
+msgid "Click this button to scroll to your scores on the leaderboard."
+msgstr ""
+
+msgid ""
+"Click this button to see the badges you have earned from completing "
+"challenges."
+msgstr ""
+
+msgid ""
+"Select \"Limited Challenges\" to see any limited challenges your classroom "
+"has access to."
+msgstr ""
+
+msgid ""
+"This tab contains any limited challenges that your classroom has access to. "
+"Limited challenges are challenges that have time limits and attempt "
+"restrictions."
+msgstr ""
+
+msgid ""
+"Click this button to see extra options for the classroom such as leaving "
+"the classroom."
+msgstr ""
+
+msgid ""
+"This is the dropdown that show extra info and where you can select to leave "
+"the classroom."
+msgstr ""
+
+msgid ""
+"Select \"Leave Classroom\" to leave the classroom. If you leave a "
+"classroom, your challenge scores will be saved but you will no longer be "
+"able to see the classroom or its leaderboard unless you join again."
+msgstr ""
+
+msgid "This is the Editor tab where you can write, edit, and debug your code."
+msgstr ""
+
+msgid ""
+"The Editor tab contains 2 main sections: the code editor on top and the "
+"console on bottom."
+msgstr ""
+
+msgid "This is the code editor, where you can write and edit your code."
+msgstr ""
+
+msgid "Click this dropdown to select the programming language for your code."
+msgstr ""
+
+msgid "Click this button to auto-indent your code."
+msgstr ""
+
+msgid "Click this button to download your code as a file."
+msgstr ""
+
+msgid ""
+"Click this button to reset the code in the editor to the default code for "
+"the current language."
+msgstr ""
+
+msgid ""
+"This is the console, where you can see the output of your code and any "
+"error messages."
+msgstr ""
+
+msgid "Click this button to clear the console."
+msgstr ""
+
+msgid "Click this button to ask the KIPR Tutor for help with your code."
+msgstr ""
+
+msgid ""
+"This is the main menu, where you can access different pages and features of "
+"the simulator."
+msgstr ""
+
+msgid "Click the KIPR logo to return to the dashboard."
+msgstr ""
+
+msgid "Use this button to run or stop your code in the simulator."
+msgstr ""
+
+msgid "Click this button to reset the world in the simulator."
+msgstr ""
+
+msgid "After opening a challenge scene, click this button to start the challenge."
+msgstr ""
+
+msgid ""
+"Click this button to see options to change the layout of the simulator "
+"interface. Try it now!"
+msgstr ""
+
+msgid ""
+"These are the different layout options. You can select one to change the "
+"layout of the simulator interface, but for now, click the \"Next\" button."
+msgstr ""
+
+msgid ""
+"Click this button to see options to change the scene in the simulator. Try "
+"it now!"
+msgstr ""
+
+msgid "These are the different scene settings options."
+msgstr ""
+
+msgid ""
+"Currently, we're in the JBC Sandbox so some options are locked. Select "
+"\"Open\" to continue."
+msgstr ""
+
+msgid ""
+"This is the open scene option, which allows you to open different scenes in "
+"the simulator."
+msgstr ""
+
+msgid ""
+"This is the list of scenes that you can open. Select one to see more info "
+"and open it in the Simulator."
+msgstr ""
+
+msgid ""
+"This is the info page for the scene. You can click \"Accept\" at the bottom "
+"to open the scene in the simulator."
+msgstr ""
+
+msgid ""
+"For now, let's close the dialog to continue exploring the simulator "
+"interface."
+msgstr ""
+
+msgid ""
+"Click this button to see extra options such as the simulator settings and "
+"the option to report a bug."
+msgstr ""
+
+msgid "These are the extra options you can access from this menu."
+msgstr ""
+
+msgid "Click the documentation button to access the KIPR library."
+msgstr ""
+
+msgid ""
+"Click the ask tutor button to ask the KIPR Tutor for help with the "
+"simulator."
+msgstr ""
+
+msgid ""
+"Click the settings button to see options such as User Interface and Editor "
+"settings."
+msgstr ""
+
+msgid "Click the about button to see information about KIPR and the simulator."
+msgstr ""
+
+msgid ""
+"Click the feedback button to report a bug or send feedback about the "
+"Simulator to KIPR."
+msgstr ""
+
+msgid "Click the logout button to log out of your account."
+msgstr ""
+
+msgid ""
+"This is the Overlay Tab Bar, where you can access different tools and "
+"features to use while testing your code in the simulator."
+msgstr ""
+
+msgid ""
+"We've already introduced the Editor Tab, we'll now explore the other tabs "
+"available: Robot and World. Click the \"Robot\" tab to continue the tour!"
+msgstr ""
+
+msgid ""
+"This is the Robot tab, where you can see information about the robot such "
+"as its position and sensor readings."
+msgstr ""
+
+msgid ""
+"The robot starts at the origin point in the simulator, which is why the "
+"position readings are all 0. You can change the robot's starting location "
+"by entering different values for x, y, z position and y rotation."
+msgstr ""
+
+msgid ""
+"This is the servo section, where you can see the current positions of the "
+"robot's servos. You can also click get_servo_position() row to see a graph."
+msgstr ""
+
+msgid ""
+"This is the motor velocities section, where you can see the current "
+"velocities of the robot's motors. You can also click each motor row to see "
+"a graph."
+msgstr ""
+
+msgid ""
+"This is the motor positions section, where you can see the current "
+"positions of the robot's motors. You can also click each "
+"get_motor_position_counter() row to see a graph."
+msgstr ""
+
+msgid ""
+"This is the analog sensors section, where you can see the current readings "
+"of the robot's analog sensors. You can also click each analog() row to see "
+"a graph."
+msgstr ""
+
+msgid ""
+"This is the digital sensors section, where you can see the current readings "
+"of the robot's digital sensors. You can also click each digital() row to "
+"see a graph."
+msgstr ""
+
+msgid ""
+"This is the World tab, where you can see information about the world such "
+"as the positions of objects and the light level. Select the \"World\" tab "
+"to continue the tour!"
+msgstr ""
+
+msgid ""
+"This is the world's objects section where you can customize the JBC Sandbox "
+"to add/remove/edit objects in the 3D simulation."
+msgstr ""
+
+msgid "This is the can object, which is a common object used in challenges."
+msgstr ""
+
+msgid ""
+"Click this option to toggle the visibility of the highlighted object in the "
+"simulator."
+msgstr ""
+
+msgid ""
+"Click this option to reset the highlighted object to its default state in "
+"the simulator."
+msgstr ""
+
+msgid ""
+"Click this option to see more settings for the highlighted object such as "
+"it's name and item type."
+msgstr ""
+
+msgid "Click this option to remove the highlighted object from the simulator."
+msgstr ""
+
+msgid ""
+"Each object added to the Simulator can be moved using the x, y, z, and "
+"rotation controls. This can be useful for testing your code with different "
+"object placements."
+msgstr ""
+
+msgid ""
+"To move an object, first we need to add the object to the simulator using "
+"the visibility option."
+msgstr ""
+
+msgid "Select the \"World\" tab in the Overlay Tab Bar."
+msgstr ""
+
+msgid ""
+"Next, click the visibility option for the object you want to move. For this "
+"tutorial, we'll select the Can 1 object."
+msgstr ""
+
+msgid ""
+"After turning on the visibility option, you can see the object in the "
+"simulator area."
+msgstr ""
+
+msgid "Click the object in the simulator area to open the move object tool."
+msgstr ""
+
+msgid ""
+"This is the move object tool, where you can move the object by dragging the "
+"gizmo arrows."
+msgstr ""
+
+msgid ""
+"The red arrow is the x-axis, the green arrow is the y-axis, and the blue "
+"arrow is the z-axis. Try dragging the arrows to move the object around in "
+"the simulator!"
+msgstr ""
+
+msgid ""
+"Welcome to KIPR's 3D Simulator, where you can test your code in a virtual "
+"environment."
+msgstr ""
+
+msgid ""
+"Use this dropdown to select different tours of the simulator interface or "
+"just click Next to take the full tour!"
+msgstr ""
+
+msgid ""
+"This is the student view of the dashboard, where you can access your "
+"classrooms and see your progress."
+msgstr ""
+
+msgid "About KIPR"
+msgstr ""
+
+msgid "Classroom Dashboard"
+msgstr ""
+
+msgid "Teacher Dashboard"
+msgstr ""
+
+msgid "How To: Create a Classroom"
+msgstr ""
+
+msgid "How To: Create a Classroom Continued"
+msgstr ""
+
+msgid "Student Dashboard"
+msgstr ""
+
+msgid "How To: Join a Classroom"
+msgstr ""
+
+msgid "How To: Join a Classroom Continued"
+msgstr ""
+
+msgid "Default JBC Challenge Tab View"
+msgstr ""
+
+msgid "Exporting Your Challenge Scores"
+msgstr ""
+
+msgid "Scrolling to Your Scores"
+msgstr ""
+
+msgid "Viewing Your Badges"
+msgstr ""
+
+msgid "Limited Challenge Tab View"
+msgstr ""
+
+msgid "Limited Challenge Tab View Continued"
+msgstr ""
+
+msgid "Classroom Extra Options"
+msgstr ""
+
+msgid "Classroom Extra Options Continued"
+msgstr ""
+
+msgid "Leaving a Classroom"
+msgstr ""
+
+msgid "Editor Tab"
+msgstr ""
+
+msgid "Editor and Console Overview"
+msgstr ""
+
+msgid "Code Editor"
+msgstr ""
+
+msgid "Code Editor Language Dropdown"
+msgstr ""
+
+msgid "Code Editor Indent Button"
+msgstr ""
+
+msgid "Code Editor Download Button"
+msgstr ""
+
+msgid "Code Editor Reset Button"
+msgstr ""
+
+msgid "Console Clear Button"
+msgstr ""
+
+msgid "Ask Tutor Button"
+msgstr ""
+
+msgid "Main Menu Overview"
+msgstr ""
+
+msgid "Return to Dashboard Button"
+msgstr ""
+
+msgid "Run/Stop Button"
+msgstr ""
+
+msgid "Reset World Button"
+msgstr ""
+
+msgid "Start Challenge Button"
+msgstr ""
+
+msgid "Layout Button"
+msgstr ""
+
+msgid "Layout Options"
+msgstr ""
+
+msgid "Scene Button"
+msgstr ""
+
+msgid "Scene Options"
+msgstr ""
+
+msgid "Scene Options Info"
+msgstr ""
+
+msgid "Scene Open"
+msgstr ""
+
+msgid "Scene Open Continued"
+msgstr ""
+
+msgid "Extra Menu Button"
+msgstr ""
+
+msgid "Extra Menu Options"
+msgstr ""
+
+msgid "Documentation Button"
+msgstr ""
+
+msgid "Tutor Button"
+msgstr ""
+
+msgid "Settings Button"
+msgstr ""
+
+msgid "About Button"
+msgstr ""
+
+msgid "Feedback Button"
+msgstr ""
+
+msgid "Logout Button"
+msgstr ""
+
+msgid "Overlay Tab Bar Overview"
+msgstr ""
+
+msgid "Overlay Tab Bar Overview Continued"
+msgstr ""
+
+msgid "Overlay Tab Bar Robot Tab"
+msgstr ""
+
+msgid "Robot Starting Location"
+msgstr ""
+
+msgid "Robot Servos"
+msgstr ""
+
+msgid "Robot Motor Velocities"
+msgstr ""
+
+msgid "Robot Motor Positions"
+msgstr ""
+
+msgid "Robot Analog Sensors"
+msgstr ""
+
+msgid "Robot Digital Sensors"
+msgstr ""
+
+msgid "Overlay Tab Bar World Tab"
+msgstr ""
+
+msgid "World Tab Objects Section"
+msgstr ""
+
+msgid "World Tab Can Object"
+msgstr ""
+
+msgid "World Tab Object Visibility Option"
+msgstr ""
+
+msgid "World Tab Object Reset Option"
+msgstr ""
+
+msgid "World Tab Object Settings Option"
+msgstr ""
+
+msgid "World Tab Object Remove Option"
+msgstr ""
+
+msgid "Move Object Tool Overview"
+msgstr ""
+
+msgid "Add Can 1 to the World"
+msgstr ""
+
+msgid "Select World Tab"
+msgstr ""
+
+msgid "Select Object to Move"
+msgstr ""
+
+msgid "See Object in Simulator Area"
+msgstr ""
+
+msgid "Click Object in Simulator Area"
+msgstr ""
+
+msgid "Move Object Tool Interaction"
+msgstr ""
+
+msgid "3D Simulator Overview"
+msgstr ""
+
+msgid "Choose Your Tour"
+msgstr ""
+
+msgid "Step"
+msgstr ""
+
+msgid "of"
+msgstr ""
+
+msgid "Editor and Console Tour"
+msgstr ""
+
+msgid "Main Menu Tour"
+msgstr ""
+
+msgid "Overlay Tab Bar Tour"
+msgstr ""
+
+msgid "Move Object Tool Tour"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "Done"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "Skip"
+msgstr ""
+
+msgid "Tour Sections"
+msgstr ""
+
+msgid "Go"
+msgstr ""
+
+msgid "You are not enrolled in any classroom."
+msgstr ""
+
+msgid "Join Class"
+msgstr ""
+
+msgid "Classrooms - Student View"
+msgstr ""
+
+msgid "Current Classroom: "
+msgstr ""
+
+msgid "Classroom Teacher: "
+msgstr ""
+
+msgid "Current Classroom:"
+msgstr ""
+
+msgid "Classroom Teacher:"
+msgstr ""
+
+msgid "You"
+msgstr ""
+
+msgid "Classroom Leaderboard"
+msgstr ""
+
+msgid "Export My Scores!"
+msgstr ""
+
+msgid "Scroll to My Scores!"
+msgstr ""
+
+msgid "See My Badges!"
+msgstr ""
+
+msgid "Export All General Scores"
+msgstr ""
+
+msgid "Export All Detailed Scores"
+msgstr ""
+
+msgid "Reenter classroom name to confirm leaving classroom."
+msgstr ""
+
+msgid "Are you sure you want to leave: "
+msgstr ""
+
+msgid "My Scores!"
+msgstr ""
+
+msgid "KIPR All Time Leaderboard"
+msgstr ""
+
+msgid "Choose Classroom to See Leaderboard:"
+msgstr ""
+
+msgid "See Leaderboard"
+msgstr ""
+
+msgid "Classrooms - Teacher View"
+msgstr ""
+
+msgid "See Classroom Leaderboards"
+msgstr ""
+
+msgid "Can 1"
+msgstr ""
+
+msgid "Your Display Name"
+msgstr ""
+
+msgid "The teacher's name that will be shown to your students"
+msgstr ""
+
+msgid "Classroom Name"
+msgstr ""
+
+msgid "Invite Code"
+msgstr ""
+
+msgid "Code students can use to join the classroom"
+msgstr ""
+
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
 msgstr ""

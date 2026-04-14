@@ -771,7 +771,7 @@ class Leaderboard extends React.Component<Props, State> {
     );
   };
   private renderLeaderboardRow = (entry: User, rank: number, isCurrentUser: boolean, challengeArray: string[]) => {
-    const { theme } = this.props;
+    const { theme, locale } = this.props;
     const { challenges } = this.state;
     return (
       <TableRow key={`${entry.id}-${rank}`} theme={theme} $highlight={isCurrentUser} ref={entry.name === SELFIDENTIFIER ? this.myScoresRef : null}>
@@ -779,7 +779,7 @@ class Leaderboard extends React.Component<Props, State> {
         <StickyRankTd theme={theme} rank={rank} $highlight={isCurrentUser} >#{rank}</StickyRankTd>
         <StickyNameTd theme={theme} $highlight={isCurrentUser}>
           {entry.name}
-          {isCurrentUser && ' (You)'}
+          {isCurrentUser && ` (${LocalizedString.lookup(tr('You'), locale)})`}
         </StickyNameTd>
         {challengeArray.map((id) => {
           const userScore = entry.scores.find(score => score.name['en-US'] === challenges[id].name['en-US']);

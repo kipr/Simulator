@@ -25,7 +25,9 @@ kwargs = dict(
     preserve_formatting=True,
 )
 
-if not out_lang.upper().startswith("ZH"):
+SUPPORTED_FORMALITY = {"DE", "FR", "ES", "IT", "NL", "PL", "PT-PT", "PT-BR"}
+
+if out_lang.upper() in SUPPORTED_FORMALITY:
     kwargs["formality"] = "less"
 
 result = deepl_client.translate_text(lines, **kwargs)

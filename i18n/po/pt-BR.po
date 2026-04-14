@@ -1,5 +1,5 @@
 msgid ""
-msgstr "Content-Type: text/plain\n"
+msgstr ""
 
 msgid "Robot"
 msgstr "Robô"
@@ -10,9 +10,7 @@ msgstr "Cena básica - Superfície A"
 msgid ""
 "A base scene using Surface A. Intended to be augmented to create full JBC "
 "scenes"
-msgstr ""
-"Uma cena básica usando a Surface A. Pretende-se que você a aumente para "
-"criar cenas JBC completas"
+msgstr "Uma cena básica usando a Surface A. Pretende-se que você a aumente para criar cenas JBC completas"
 
 msgid "JBC Surface A"
 msgstr "JBC Surface A"
@@ -29,9 +27,7 @@ msgstr "Cena básica - Superfície B"
 msgid ""
 "A base scene using Surface B. Intended to be augmented to create full JBC "
 "scenes"
-msgstr ""
-"Uma cena básica usando a Surface B. Pretende-se que você a aumente para "
-"criar cenas JBC completas"
+msgstr "Uma cena básica usando a Surface B. Pretende-se que você a aumente para criar cenas JBC completas"
 
 msgid "JBC Surface B"
 msgstr "JBC Superfície B"
@@ -45,9 +41,7 @@ msgstr "Sandbox A da JBC"
 msgid ""
 "Junior Botball Challenge Sandbox on Mat A. All cans 1-12 are available by "
 "default."
-msgstr ""
-"Junior Botball Challenge Sandbox no tapete A. Todas as latas de 1 a 12 "
-"estão disponíveis por padrão."
+msgstr "Junior Botball Challenge Sandbox no tapete A. Todas as latas de 1 a 12 estão disponíveis por padrão."
 
 msgid "Paper Ream 1"
 msgstr "Resma de papel 1"
@@ -101,7 +95,7 @@ msgid "JBC 3B"
 msgstr "JBC 3B"
 
 msgid "Junior Botball Challenge 3B: Parallel Parking"
-msgstr "Desafio Junior Botball 3B: Estacionamento paralelo"
+msgstr "Desafio Junior Botball 3B: Estacionamento Paralelo"
 
 msgid "JBC 3C"
 msgstr "JBC 3C"
@@ -251,7 +245,7 @@ msgid "JBC 19"
 msgstr "JBC 19"
 
 msgid "Junior Botball Challenge 19: Mountain Rescue"
-msgstr "Desafio Junior Botball 19: Resgate na montanha"
+msgstr "Junior Botball Challenge 19: Resgate na montanha"
 
 msgid "Paper Ream"
 msgstr "Resma de papel"
@@ -266,7 +260,7 @@ msgid "JBC 21"
 msgstr "JBC 21"
 
 msgid "Junior Botball Challenge 21: Foot Tall"
-msgstr "Desafio 21 do Junior Botball: Foot Tall"
+msgstr "Desafio de Botball Júnior 21: Pé Alto"
 
 msgid "JBC 22"
 msgstr "JBC 22"
@@ -329,7 +323,7 @@ msgid "Can A upright on circle 2"
 msgstr "Você pode ficar em pé no círculo 2?"
 
 msgid "Can B Upright"
-msgstr "Lata B vertical"
+msgstr "Can B Upright"
 
 msgid "Can B upright on circle 9"
 msgstr "Você pode B na vertical no círculo 9"
@@ -364,9 +358,7 @@ msgstr "Sobre você"
 msgid ""
 "KIPR is a 501(c) 3 organization started to make the long-term educational "
 "benefits of robotics accessible to students."
-msgstr ""
-"A KIPR é uma organização 501(c) 3 criada para tornar acessíveis aos alunos "
-"os benefícios educacionais de longo prazo da robótica."
+msgstr "A KIPR é uma organização 501(c) 3 criada para tornar acessíveis aos alunos os benefícios educacionais de longo prazo da robótica."
 
 msgid "Quick Start"
 msgstr "Início rápido"
@@ -740,16 +732,12 @@ msgstr "Posições do motor"
 msgid ""
 "This process is taking longer than expected...\n"
 "If you have a poor internet connection, this can take some time"
-msgstr ""
-"Esse processo está demorando mais do que o esperado...\n"
-"Se você tiver uma conexão de Internet ruim, isso pode levar algum tempo"
+msgstr "Esse processo está demorando mais do que o esperado...\\\\nSe você tiver uma conexão de Internet ruim, isso pode levar algum tempo"
 
 msgid ""
 "The simulator may have failed to load.\n"
 "Please submit a feedback form to let us know!"
-msgstr ""
-"O simulador pode ter falhado ao carregar.\n"
-"Por favor, envie um formulário de feedback para nos informar!"
+msgstr "O simulador pode ter falhado ao carregar.\\\\nPor favor, envie um formulário de feedback para nos informar!"
 
 msgid "Initializing Simulator..."
 msgstr "Inicialização do simulador..."
@@ -835,9 +823,7 @@ msgstr "Sensores realistas"
 msgid ""
 "Controls whether sensors behave like real-world sensors instead of like "
 "ideal sensors. For example, real-world ET sensors are nonlinear"
-msgstr ""
-"Controla se os sensores se comportam como sensores do mundo real em vez de "
-"sensores ideais. Por exemplo, os sensores ET do mundo real são não lineares"
+msgstr "Controla se os sensores se comportam como sensores do mundo real em vez de sensores ideais. Por exemplo, os sensores ET do mundo real são não lineares"
 
 msgid "Autocomplete"
 msgstr "Autocompletar"
@@ -869,16 +855,12 @@ msgstr "Ficaremos felizes em ajudar você a começar!"
 msgid ""
 "Give a helpful description of a problem you're facing, or a feature you'd "
 "like to request"
-msgstr ""
-"Faça uma descrição útil de um problema que você está enfrentando ou de um "
-"recurso que gostaria de solicitar"
+msgstr "Faça uma descrição útil de um problema que você está enfrentando ou de um recurso que gostaria de solicitar"
 
 msgid ""
 "Thanks for using the KIPR Simulator! Find a bug? Have a feature request? "
 "Let us know!"
-msgstr ""
-"Obrigado por usar o Simulador KIPR! Você encontrou um erro? Você tem uma "
-"solicitação de recurso? Informe-nos!"
+msgstr "Obrigado por usar o Simulador KIPR! Você encontrou um erro? Você tem uma solicitação de recurso? Informe-nos!"
 
 msgid "How has your experience using the KIPR Simulator been?"
 msgstr "Como foi a experiência que você teve ao usar o simulador KIPR?"
@@ -968,25 +950,25 @@ msgid "Start"
 msgstr "Início"
 
 msgid "Welcome to the KIPR Simulator!\n"
-msgstr "Bem-vindo ao simulador KIPR!\n"
+msgstr "Bem-vindo ao simulador KIPR!\\\\n"
 
 msgid "Compiling...\n"
-msgstr "Compilando...\n"
+msgstr "Compilando...\\\\n"
 
 msgid "Compilation succeeded with warnings.\n"
-msgstr "A compilação foi bem-sucedida com avisos.\n"
+msgstr "A compilação foi bem-sucedida com avisos.\\\\n"
 
 msgid "Compilation succeeded.\n"
-msgstr "A compilação foi bem-sucedida.\n"
+msgstr "A compilação foi bem-sucedida.\\\\n"
 
 msgid "Compilation failed.\n"
-msgstr "Falha na compilação.\n"
+msgstr "Falha na compilação.\\\\n"
 
 msgid "Something went wrong during compilation.\n"
-msgstr "Algo deu errado durante a compilação.\n"
+msgstr "Algo deu errado durante a compilação.\\\\n"
 
 msgid "Compilation succeeded with warnings\n"
-msgstr "A compilação foi bem-sucedida com avisos\n"
+msgstr "A compilação foi bem-sucedida com avisos\\\\n"
 
 msgid "Compilation succeeded\n"
 msgstr "Compilação bem-sucedida"
@@ -1193,7 +1175,7 @@ msgid "Green Garage Marker 2"
 msgstr "Marcador de garagem verde 2"
 
 msgid "Junior Botball Challenge 4: Serpentine"
-msgstr "Desafio 4 do Junior Botball: Serpentina"
+msgstr "Desafio 4 de Botball Júnior: Serpentina"
 
 msgid "Junior Botball Challenge 5: Odd Numbers"
 msgstr "Desafio Junior Botball 5: Números ímpares"
@@ -1337,9 +1319,7 @@ msgid "Moon Sandbox"
 msgstr "Sandbox da Lua"
 
 msgid "Lunar sandbox. Currently supports 4 types of rocks. Demo Ready."
-msgstr ""
-"Caixa de areia lunar. Atualmente, você pode usar 4 tipos de rochas. Pronto "
-"para demonstração."
+msgstr "Caixa de areia lunar. Atualmente, você pode usar 4 tipos de rochas. Pronto para demonstração."
 
 msgid "Basalt Rock"
 msgstr "Rocha de basalto"
@@ -1366,7 +1346,7 @@ msgid "Container"
 msgstr "Contêineres"
 
 msgid "Space Bot Guy"
-msgstr "Garoto do bot espacial"
+msgstr "Garoto do robô espacial"
 
 msgid "Solar Panel"
 msgstr "Painel solar"
@@ -1399,9 +1379,7 @@ msgid "Base Scene - 2025 Botball Game Table"
 msgstr "Base Scene - Mesa de jogo Botball 2025"
 
 msgid "A base scene. Intended to be augmented to create the full game table"
-msgstr ""
-"Uma cena básica. Destina-se a ser ampliada para criar a mesa de jogo "
-"completa"
+msgstr "Uma cena básica. Destina-se a ser ampliada para criar a mesa de jogo completa"
 
 msgid "Fry floor"
 msgstr "Piso de fritura"
@@ -1569,7 +1547,7 @@ msgid "Space Base"
 msgstr "Base Espacial"
 
 msgid "Botball"
-msgstr "Botball"
+msgstr "Bola de futebol"
 
 msgid "JBC Pieces"
 msgstr "Peças JBC"
@@ -1584,36 +1562,24 @@ msgid ""
 "Basalt is an aphanitic (fine-grained) extrusive igneous rock formed from "
 "the rapid cooling of low-viscosity lava rich in magnesium and iron (mafic "
 "lava) exposed at or very near the surface of a rocky planet or moon."
-msgstr ""
-"O basalto é uma rocha ígnea extrusiva afanítica (de granulação fina) "
-"formada a partir do resfriamento rápido de lava de baixa viscosidade rica "
-"em magnésio e ferro (lava máfica) exposta na superfície ou muito perto da "
-"superfície de um planeta rochoso ou lua."
+msgstr "O basalto é uma rocha ígnea extrusiva afanítica (de granulação fina) formada a partir do resfriamento rápido de lava de baixa viscosidade rica em magnésio e ferro (lava máfica) exposta na superfície ou muito perto da superfície de um planeta rochoso ou lua."
 
 msgid ""
 "Anorthosite is a phaneritic, intrusive igneous rock characterized by its "
 "composition: mostly plagioclase feldspar (90–100%), with a minimal mafic "
 "component (0–10%)."
-msgstr ""
-"O anortosito é uma rocha ígnea intrusiva fanerítica caracterizada por sua "
-"composição: principalmente feldspato plagioclásio (90-100%), com um "
-"componente máfico mínimo (0-10%)."
+msgstr "O anortosito é uma rocha ígnea intrusiva fanerítica caracterizada por sua composição: principalmente feldspato plagioclásio (90-100%), com um componente máfico mínimo (0-10%)."
 
 msgid ""
 "Breccia is a rock composed of large angular broken fragments of minerals or "
 "rocks cemented together by a fine-grained matrix."
-msgstr ""
-"Brecha é uma rocha composta de grandes fragmentos angulares quebrados de "
-"minerais ou rochas cimentados por uma matriz de granulação fina."
+msgstr "Brecha é uma rocha composta de grandes fragmentos angulares quebrados de minerais ou rochas cimentados por uma matriz de granulação fina."
 
 msgid ""
 "Meteorite is a solid piece of debris from an object, such as a comet, "
 "asteroid, or meteoroid, that originates in outer space and survives its "
 "passage through the atmosphere to reach the surface of a planet or moon."
-msgstr ""
-"Meteorito é um pedaço sólido de detritos de um objeto, como um cometa, "
-"asteroide ou meteoroide, que se origina no espaço sideral e sobrevive à sua "
-"passagem pela atmosfera para atingir a superfície de um planeta ou lua."
+msgstr "Meteorito é um pedaço sólido de detritos de um objeto, como um cometa, asteroide ou meteoroide, que se origina no espaço sideral e sobrevive à sua passagem pela atmosfera para atingir a superfície de um planeta ou lua."
 
 msgid "Description of the object"
 msgstr "Descrição do objeto"
@@ -1670,7 +1636,7 @@ msgid "My Assignments"
 msgstr "Minhas tarefas"
 
 msgid "Graphical Variables"
-msgstr "Variáveis do Graphical"
+msgstr "Variáveis gráficas"
 
 msgid "A hamburger"
 msgstr "Um hambúrguer"
@@ -1724,10 +1690,7 @@ msgid ""
 "GCER 2025 special event. Your robot is randomly placed on one of the red "
 "circles. Find the black starting line and stop. Bonus points for returning "
 "to the original starting circle."
-msgstr ""
-"Evento especial do GCER 2025. Seu robô é colocado aleatoriamente em um dos "
-"círculos vermelhos. Você deve encontrar a linha de partida preta e parar. "
-"Pontos de bônus por retornar ao círculo inicial original."
+msgstr "Evento especial do GCER 2025. Seu robô é colocado aleatoriamente em um dos círculos vermelhos. Você deve encontrar a linha de partida preta e parar. Pontos de bônus por retornar ao círculo inicial original."
 
 msgid "GCER 2025: Sense the Can"
 msgstr "GCER 2025: Sense the Can"
@@ -1735,10 +1698,7 @@ msgstr "GCER 2025: Sense the Can"
 msgid ""
 "GCER 2025 special event. A can is placed randomly in circle 2, 4, 6, 9 or "
 "11. Find it and bring it back to the start box!"
-msgstr ""
-"Evento especial do GCER 2025. Uma lata é colocada aleatoriamente nos "
-"círculos 2, 4, 6, 9 ou 11. Encontre-a e traga-a de volta para a caixa "
-"inicial!"
+msgstr "Evento especial do GCER 2025. Uma lata é colocada aleatoriamente nos círculos 2, 4, 6, 9 ou 11. Encontre-a e traga-a de volta para a caixa inicial!"
 
 msgid "Blue pom #%d"
 msgstr "Pom azul #%d"
@@ -1749,9 +1709,7 @@ msgstr "GCER 2025: Botguy de gelo"
 msgid ""
 "GCER 2025 special event. Botguy is overheating! Collect the ice and dump it "
 "on Botguy to cool him off!"
-msgstr ""
-"Evento especial GCER 2025. O Botguy está superaquecendo! Colete o gelo e "
-"jogue-o no Botguy para esfriá-lo!"
+msgstr "Evento especial GCER 2025. O Botguy está superaquecendo! Colete o gelo e jogue-o no Botguy para esfriá-lo!"
 
 msgid "Cup #%d"
 msgstr "Copa #%d"
@@ -1762,17 +1720,13 @@ msgstr "GCER 2025: Para matar a sede"
 msgid ""
 "GCER 2025 special event. Don't let the summer heat get you down. Bring the "
 "cups back to the start box!"
-msgstr ""
-"Evento especial GCER 2025. Não deixe que o calor do verão derrube você. "
-"Traga as xícaras de volta para a caixa de partida!"
+msgstr "Evento especial GCER 2025. Não deixe que o calor do verão derrube você. Traga as xícaras de volta para a caixa de partida!"
 
 msgid "GCER 2025: Entree Express"
 msgstr "GCER 2025: Entree Express"
 
 msgid "GCER 2025 special event. Order up! Move the entrees to the trays."
-msgstr ""
-"Evento especial GCER 2025. Faça seu pedido! Mova as entradas para as "
-"bandejas."
+msgstr "Evento especial GCER 2025. Faça seu pedido! Mova as entradas para as bandejas."
 
 msgid "Warming station"
 msgstr "Estação de aquecimento"
@@ -1786,10 +1740,7 @@ msgstr "GCER 2025: Molho especial"
 msgid ""
 "GCER 2025 special event. Mix the ketchup (red), mustard (yellow), and hot "
 "sauce (orange) in the garages to create your own special blend!"
-msgstr ""
-"Evento especial do GCER 2025. Misture o ketchup (vermelho), a mostarda "
-"(amarelo) e o molho picante (laranja) nas garagens para criar sua própria "
-"mistura especial!"
+msgstr "Evento especial do GCER 2025. Misture o ketchup (vermelho), a mostarda (amarelo) e o molho picante (laranja) nas garagens para criar sua própria mistura especial!"
 
 msgid "Orange Garage"
 msgstr "Garagem laranja"
@@ -1806,9 +1757,7 @@ msgstr "GCER 2025: Números ímpares"
 msgid ""
 "GCER 2025 special event. Drive over the odd numbered circles in order, but "
 "make sure to avoid the evens!"
-msgstr ""
-"Evento especial do GCER 2025. Dirija sobre os círculos ímpares em ordem, "
-"mas evite os pares!"
+msgstr "Evento especial do GCER 2025. Dirija sobre os círculos ímpares em ordem, mas evite os pares!"
 
 msgid "GCER 2025: Bulldozer Mania"
 msgstr "GCER 2025: Bulldozer Mania"
@@ -1816,10 +1765,7 @@ msgstr "GCER 2025: Bulldozer Mania"
 msgid ""
 "GCER 2025 special event. Bring as many cans behind the starting line as you "
 "can. Make sure they stay upright!"
-msgstr ""
-"Evento especial do GCER 2025. Traga o máximo de latas que você puder para "
-"trás da linha de partida. Certifique-se de que elas fiquem na posição "
-"vertical!"
+msgstr "Evento especial do GCER 2025. Traga o máximo de latas que você puder para trás da linha de partida. Certifique-se de que elas fiquem na posição vertical!"
 
 msgid "GCER 2025: Mountain Rescue"
 msgstr "GCER 2025: Resgate em montanha"
@@ -2058,9 +2004,7 @@ msgstr "Tutor"
 msgid ""
 "Ask me questions about programming, get help with your code, or discuss "
 "robotics concepts."
-msgstr ""
-"Faça-me perguntas sobre programação, obtenha ajuda com seu código ou "
-"discuta conceitos de robótica."
+msgstr "Faça-me perguntas sobre programação, obtenha ajuda com seu código ou discuta conceitos de robótica."
 
 msgid "Ask tutor a question..."
 msgstr "Faça uma pergunta ao tutor..."
@@ -2489,7 +2433,7 @@ msgid "Fourth can upright in start box"
 msgstr "Quarta lata na vertical na caixa de partida"
 
 msgid "Fifth can upright in start box"
-msgstr "Quinta lata na vertical na caixa de partida"
+msgstr "Quinta lata na posição vertical na caixa de partida"
 
 msgid "JBC Challenge 9"
 msgstr "Desafio 9 da JBC"
@@ -2588,7 +2532,7 @@ msgid "JBC Challenge 15"
 msgstr "Desafio 15 da JBC"
 
 msgid "Can 11 Upright"
-msgstr "Lata 11 vertical"
+msgstr "Can 11 Upright"
 
 msgid "Can 11 upright"
 msgstr "Lata 11 na vertical"
@@ -2786,9 +2730,7 @@ msgid "Robot Walks the Line"
 msgstr "O robô anda na linha"
 
 msgid "Robot uses reflectance sensor to follow the black line until Finish Line "
-msgstr ""
-"O robô usa o sensor de refletância para seguir a linha preta até a linha de "
-"chegada"
+msgstr "O robô usa o sensor de refletância para seguir a linha preta até a linha de chegada"
 
 msgid "Line follow to the finish line"
 msgstr "Siga a linha até a linha de chegada"
@@ -2938,9 +2880,7 @@ msgid "JBC Challenge 17B"
 msgstr "Desafio JBC 17B"
 
 msgid "Robot uses reflectance sensor to follow the black line until the Blue line"
-msgstr ""
-"O robô usa o sensor de refletância para seguir a linha preta até a linha "
-"azul"
+msgstr "O robô usa o sensor de refletância para seguir a linha preta até a linha azul"
 
 msgid "Can 9 is upright"
 msgstr "A lata 9 está na vertical"
@@ -3039,7 +2979,7 @@ msgid "Robot Rentered Start 1"
 msgstr "Robô Rentered Start 1"
 
 msgid "Robot reentered starting box after going forwards"
-msgstr "O robô reentrou na caixa de partida depois de ir para a frente"
+msgstr "O robô entrou novamente na caixa de partida depois de ir para a frente"
 
 msgid "Robot Rentered Start 2"
 msgstr "Robô Rentered Início 2"
@@ -3180,37 +3120,37 @@ msgid "Wave the servo"
 msgstr "Agite o servo"
 
 msgid "2026 Fall Game Table"
-msgstr "Tabela do jogo do outono de 2026"
+msgstr "mesa de jogo do outono de 2026"
 
 msgid "Blue Pom #%d"
 msgstr "Pom azul #%d"
 
 msgid "Orange Pom #%d"
-msgstr "Pom laranja #%d"
+msgstr "Pom Pom Laranja #%d"
 
 msgid "Random Pom #%d"
 msgstr "Pom aleatório #%d"
 
 msgid "Raised Dock Pallet #1"
-msgstr "Palete elevada #1"
+msgstr "Palete de doca elevada nº 1"
 
 msgid "Raised Dock Pallet #2"
-msgstr "Palete elevada #2"
+msgstr "Palete de doca elevada nº 2"
 
 msgid "Storage Pallet #1"
-msgstr "Palete de armazenamento #1"
+msgstr "Palete de armazenamento nº 1"
 
 msgid "Storage Pallet #2"
-msgstr "Palete de armazenamento #2"
+msgstr "Palete de armazenamento nº 2"
 
 msgid "Left Stack Cube #%d"
-msgstr "Cubo empilhado à esquerda #%d"
+msgstr "Cubo de pilha esquerdo #%d"
 
 msgid "Right Stack Cube #%d"
-msgstr "Cubo empilhado à direita #%d"
+msgstr "Cubo da pilha direita #%d"
 
 msgid "Red Cube (4 inch)"
-msgstr "Cubo vermelho (4 polegadas)"
+msgstr "Red Cube (4 polegadas)"
 
 msgid "Brown Cube (4 inch)"
 msgstr "Cubo marrom (4 polegadas)"
@@ -3219,16 +3159,16 @@ msgid "Green Cube (4 inch)"
 msgstr "Cubo verde (4 polegadas)"
 
 msgid "Right Traffic Cone"
-msgstr "Cone de trânsito direito"
+msgstr "Cone de tráfego à direita"
 
 msgid "Left Traffic Cone"
-msgstr "Cone de trânsito esquerdo"
+msgstr "Cone de tráfego esquerdo"
 
 msgid "Left Basket"
-msgstr "Cesto esquerdo"
+msgstr "Cesta esquerda"
 
 msgid "Right Basket"
-msgstr "Cesto direito"
+msgstr "Cesta direita"
 
 msgid "Left PCV #%d"
 msgstr "PCV esquerdo #%d"
@@ -3237,351 +3177,1080 @@ msgid "Right PCV #%d"
 msgstr "PCV direito #%d"
 
 msgid "2026 Fall Botball game table sandbox"
-msgstr "Caixa de areia da mesa de jogo Botball 2026 Fall"
+msgstr "2026 Fall Botball mesa de jogo sandbox"
 
 msgid "JBC Sandbox"
-msgstr ""
+msgstr "Sandbox da JBC"
 
 msgid ""
 "Junior Botball Challenge Sandbox. Starting Mat is A but B can also be shown "
 "instead. All cans 1-12 are available by default."
-msgstr ""
+msgstr "Desafio Junior Botball Sandbox. O tapete inicial é o A, mas o B também pode ser mostrado. Todas as latas de 1 a 12 estão disponíveis por padrão."
 
 msgid "2026 Botball Fall Game Table"
-msgstr ""
+msgstr "mesa de jogo Botball Fall 2026"
 
 msgid "2026 Botball Spring Game Table"
-msgstr ""
+msgstr "mesa de jogo de primavera 2026 Botball"
 
 msgid "Base Scene - 2026 Botball Game Table"
-msgstr ""
+msgstr "Base Scene - Mesa de jogo Botball 2026"
 
 msgid "Sliding Door #1"
-msgstr ""
+msgstr "Porta deslizante nº 1"
 
 msgid "Sliding Door #2"
-msgstr ""
+msgstr "Porta deslizante nº 2"
 
 msgid "Low Blue Pom #%d"
-msgstr ""
+msgstr "Pom azul baixo #%d"
 
 msgid "Low Orange Pom #%d"
-msgstr ""
+msgstr "Pomada laranja baixa #%d"
 
 msgid "High Blue Pom #%d"
-msgstr ""
+msgstr "Pom azul alto #%d"
 
 msgid "High Orange Pom #%d"
-msgstr ""
+msgstr "Pom laranja alto #%d"
 
 msgid "Left Red Cube (2 inch)"
-msgstr ""
+msgstr "Cubo vermelho esquerdo (2 polegadas)"
 
 msgid "Right Red Cube (2 inch)"
-msgstr ""
+msgstr "Cubo vermelho direito (2 polegadas)"
 
 msgid "Left Green Cube (2 inch)"
-msgstr ""
+msgstr "Cubo verde esquerdo (2 polegadas)"
 
 msgid "Right Green Cube (2 inch)"
-msgstr ""
+msgstr "Cubo verde direito (2 polegadas)"
 
 msgid "Pallet #%d"
-msgstr ""
+msgstr "Palete #%d"
 
 msgid "Lower Yellow Cube (2 inch)"
-msgstr ""
+msgstr "Cubo amarelo inferior (2 polegadas)"
 
 msgid "Upper Yellow Cube (2 inch)"
-msgstr ""
+msgstr "Cubo amarelo superior (2 polegadas)"
 
 msgid "Middle Left Brown Cube"
-msgstr ""
+msgstr "Cubo marrom do meio à esquerda"
 
 msgid "Middle Right Brown Cube"
-msgstr ""
+msgstr "Cubo marrom à direita central"
 
 msgid "Green Cube"
-msgstr ""
+msgstr "Cubo verde"
 
 msgid "Red Cube"
-msgstr ""
+msgstr "Cubo vermelho"
 
 msgid "Near Stack %s Cube"
-msgstr ""
+msgstr "Próximo à pilha %s Cube"
 
 msgid "Far Stack %s Cube"
-msgstr ""
+msgstr "Pilha distante %s Cubo"
 
 msgid "Dropper #1"
-msgstr ""
+msgstr "Conta-gotas nº 1"
 
 msgid "Dropper #2"
-msgstr ""
+msgstr "Conta-gotas nº 2"
 
 msgid "Drum (2in PVC)"
-msgstr ""
+msgstr "Tambor (PVC de 2 pol.)"
 
 msgid "Dropper Gate"
-msgstr ""
+msgstr "Porta conta-gotas"
 
 msgid "2026 Botball Game Table Sandbox"
-msgstr ""
+msgstr "2026 Mesa de jogo Botball Sandbox"
 
 msgid ""
 "2026 Botball game table sandbox. One robot and one side of the table are "
 "available. Barrels (2in PVC) drop every 7 seconds, starting 10 seconds "
 "after the scene is loaded."
-msgstr ""
+msgstr "2026 Mesa de jogo Botball sandbox. Um robô e um lado da mesa estão disponíveis. Os barris (PVC de 2 pol.) caem a cada 7 segundos, começando 10 segundos depois que a cena é carregada."
 
 msgid "Speed Run: Ring Around the Can"
-msgstr ""
+msgstr "Speed Run: Ring Around the Can"
 
 msgid ""
 "Complete the Ring Around the Can challenge as fast as possible! Limited "
 "time event."
-msgstr ""
+msgstr "Complete o desafio Ring Around the Can o mais rápido possível! Evento por tempo limitado."
 
 msgid "Robot Reentered Start"
-msgstr ""
+msgstr "O robô entrou novamente no início"
 
 msgid "Robot Passed Left Side"
-msgstr ""
+msgstr "Robô passou pelo lado esquerdo"
 
 msgid "Speed Run: Tag, You're it!"
-msgstr ""
+msgstr "Speed Run: Tag, é você!"
 
 msgid ""
 "Complete the Tag, You're it! challenge as fast as possible! Limited time "
 "event."
-msgstr ""
+msgstr "Complete o desafio Tag, You're it! o mais rápido possível! Evento por tempo limitado."
 
 msgid "Classrooms"
-msgstr ""
+msgstr "Salas de aula"
 
 msgid "See the current classrooms."
-msgstr ""
+msgstr "Veja as salas de aula atuais."
 
 msgid "Limited Challenges"
-msgstr ""
+msgstr "Desafios limitados"
 
 msgid "Challenges with time limits and attempt restrictions."
-msgstr ""
+msgstr "Desafios com limites de tempo e restrições de tentativas."
 
 msgid "Loading leaderboard..."
-msgstr ""
+msgstr "Carregando a tabela de classificação..."
 
 msgid "Error loading leaderboard"
-msgstr ""
+msgstr "Erro ao carregar o placar de líderes"
 
 msgid "Rank"
-msgstr ""
+msgstr "Classificação"
 
 msgid "Your position"
-msgstr ""
+msgstr "Sua posição"
 
 msgid "participants"
-msgstr ""
+msgstr "participantes"
 
 msgid "Show Top Users"
-msgstr ""
+msgstr "Mostrar os principais usuários"
 
 msgid "Show Full Board"
-msgstr ""
+msgstr "Mostrar quadro completo"
 
 msgid "Your name on the leaderboard:"
-msgstr ""
+msgstr "Seu nome na tabela de classificação:"
 
 msgid "days"
-msgstr ""
+msgstr "dias"
 
 msgid "hrs"
-msgstr ""
+msgstr "horas"
 
 msgid "min"
-msgstr ""
+msgstr "mínimo"
 
 msgid "sec"
-msgstr ""
+msgstr "seg"
 
 msgid "Upcoming"
-msgstr ""
+msgstr "Próximos"
 
 msgid "Closed"
-msgstr ""
+msgstr "Fechado"
 
 msgid "Mystery Challenge"
-msgstr ""
+msgstr "Desafio do mistério"
 
 msgid "Check back when this challenge opens to see what awaits!"
-msgstr ""
+msgstr "Quando o desafio for lançado, você poderá ver o que o espera!"
 
 msgid "Opens in"
-msgstr ""
+msgstr "Abre em"
 
 msgid "Closes in"
-msgstr ""
+msgstr "Fecha em"
 
 msgid "Best Time"
-msgstr ""
+msgstr "Melhor horário"
 
 msgid ""
 "Complete these time-limited challenges as fast as possible! Your best time "
 "will be recorded."
-msgstr ""
+msgstr "Complete esses desafios com tempo limitado o mais rápido possível! Seu melhor tempo será registrado."
 
 msgid "No limited challenges available at this time."
-msgstr ""
+msgstr "No momento, não há desafios limitados disponíveis."
 
 msgid "View Closed Challenges"
-msgstr ""
+msgstr "Ver desafios encerrados"
 
 msgid "Back to Limited Challenges"
-msgstr ""
+msgstr "Voltar para Desafios limitados"
 
 msgid "Closed Challenges"
-msgstr ""
+msgstr "Desafios fechados"
 
 msgid "View past limited challenges and their leaderboards."
-msgstr ""
+msgstr "Veja os desafios limitados anteriores e suas tabelas de classificação."
 
 msgid "No closed challenges yet."
-msgstr ""
+msgstr "Ainda não há desafios encerrados."
 
 msgid "Predefined Location"
-msgstr ""
+msgstr "Localização predefinida"
 
 msgid "None"
-msgstr ""
+msgstr "Nenhum"
 
 msgid "Show Scripts"
-msgstr ""
+msgstr "Mostrar roteiros"
 
 msgid "Show scripts in the World section"
-msgstr ""
+msgstr "Mostrar scripts na seção World"
 
 msgid "Scene"
-msgstr ""
+msgstr "Cena"
 
 msgid "Tutor is thinking..."
 msgstr "O tutor está pensando..."
 
 msgid "Create New Project"
-msgstr ""
+msgstr "Criar novo projeto"
 
 msgid "Create New File"
-msgstr ""
+msgstr "Criar novo arquivo"
 
 msgid "Are You Sure?"
-msgstr ""
+msgstr "Você tem certeza?"
 
 msgid "Loading Python...\n"
-msgstr ""
+msgstr "Carregando Python...\\\\n"
 
 msgid "Please help me understand what's wrong."
 msgstr "Por favor, ajude-me a entender o que está errado."
 
 msgid "Success conditions met - verifying...\n"
-msgstr ""
+msgstr "Condições de sucesso atendidas - verificando...\\\\n"
 
 msgid "Completion invalidated - failure condition triggered\n"
-msgstr ""
+msgstr "Conclusão invalidada - condição de falha acionada"
 
 msgid "This challenge is closed and no longer accepting submissions.\n"
-msgstr ""
+msgstr "Este desafio está encerrado e não está mais aceitando envios"
 
 msgid "This challenge has not opened yet.\n"
-msgstr ""
+msgstr "Este desafio ainda não foi aberto"
 
 msgid "Challenge Closed"
-msgstr ""
+msgstr "Desafio encerrado"
 
 msgid "This challenge is no longer accepting submissions."
-msgstr ""
+msgstr "Este desafio não está mais aceitando envios."
 
 msgid "Your best time: "
-msgstr ""
+msgstr "Seu melhor tempo:"
 
 msgid "This challenge has not opened yet."
-msgstr ""
+msgstr "Esse desafio ainda não foi aberto."
 
 msgid "This challenge is closed and no longer accepting submissions."
-msgstr ""
+msgstr "Este desafio está encerrado e não está mais aceitando envios."
 
 msgid "No completions yet. Be the first to complete this challenge!"
-msgstr ""
+msgstr "Você ainda não completou nada. Seja o primeiro a concluir esse desafio!"
 
 msgid "Runtime"
-msgstr ""
+msgstr "Tempo de execução"
 
 msgid "Completed"
-msgstr ""
+msgstr "Concluído"
 
 msgid "Back to Challenges"
-msgstr ""
+msgstr "Voltar aos desafios"
 
 msgid "Enter Challenge"
-msgstr ""
+msgstr "Entrar no desafio"
 
 msgid "Show Around Me"
-msgstr ""
+msgstr "Show Around Me"
 
 msgid "Sort by:"
-msgstr ""
+msgstr "Classificar por:"
 
 msgid "Fastest Runtime"
-msgstr ""
+msgstr "Tempo de execução mais rápido"
 
 msgid "First to Complete"
-msgstr ""
+msgstr "Primeiro a concluir"
 
 msgid "Student View"
-msgstr ""
+msgstr "Visão do aluno"
 
 msgid "See the classroom you are in."
-msgstr ""
+msgstr "Veja a sala de aula em que você está."
 
 msgid "Teacher View"
-msgstr ""
+msgstr "Visão do professor"
 
 msgid "See and manage all the classrooms you own."
-msgstr ""
+msgstr "Veja e gerencie todas as salas de aula que você possui."
 
 msgid "My Badges"
-msgstr ""
+msgstr "Meus emblemas"
 
 msgid "Create New Classroom"
-msgstr ""
+msgstr "Criar nova sala de aula"
 
 msgid "Choose Class Leaderboard"
-msgstr ""
+msgstr "Escolha a tabela de classificação da classe"
 
 msgid "Join Classroom"
-msgstr ""
+msgstr "Participar da sala de aula"
 
 msgid "Leave Classroom"
-msgstr ""
+msgstr "Sair da sala de aula"
 
 msgid "Default JBC Challenges"
-msgstr ""
+msgstr "Desafios padrão da JBC"
 
 msgid "User Already Exists"
-msgstr ""
+msgstr "O usuário já existe"
 
 msgid "UH OH!"
-msgstr ""
+msgstr "UH OH!"
 
 msgid "This user already exists."
-msgstr ""
+msgstr "Este usuário já existe."
 
 msgid "No IvygateClassroomType"
-msgstr ""
+msgstr "Não IvygateClassroomType"
 
 msgid "Create New User"
-msgstr ""
+msgstr "Criar novo usuário"
 
 msgid "Back to File Explorer"
-msgstr ""
+msgstr "Voltar ao File Explorer"
+
+msgid "Retake Tour"
+msgstr "Turnê de retomada"
+
+msgid "New to the simulator? Take a tour to get familiar with the interface."
+msgstr "Você é novo no simulador? Faça um tour para que você se familiarize com a interface."
+
+msgid "Classroom Invite Code"
+msgstr "Código de convite para sala de aula"
+
+msgid "Enter the invite code provided by your teacher to join a classroom"
+msgstr "Digite o código de convite fornecido por seu professor para entrar em uma sala de aula"
+
+msgid "Display Name"
+msgstr "Nome de exibição"
+
+msgid ""
+"The name that will be shown to your teacher and classmates. Be sure to only "
+"use your first name."
+msgstr "O nome que você mostrará ao professor e aos colegas de classe. Certifique-se de usar apenas seu primeiro nome."
+
+msgid "Retaking the tour will change your current scene to the JBC Sandbox."
+msgstr "Ao refazer o passeio, você mudará o cenário atual para o Sandbox da JBC."
+
+msgid "Do you want to retake the tour?"
+msgstr "Você quer refazer o passeio?"
+
+msgid ""
+"This is the classroom dashboard page, where you can choose to see the "
+"classrooms you are a part of and the classrooms you own."
+msgstr "Esta é a página do painel da sala de aula, onde você pode optar por ver as salas de aula das quais faz parte e as salas de aula das quais é proprietário."
+
+msgid "Use this card to switch to the student view."
+msgstr "Use esse cartão para alternar para a visualização do aluno."
+
+msgid ""
+"Use this card to switch to the teacher view, where you can manage the "
+"classrooms you own."
+msgstr "Use esse cartão para alternar para a visualização do professor, onde você pode gerenciar as salas de aula que possui."
+
+msgid ""
+"This is the teacher dashboard, where you can see and manage the classrooms "
+"you own."
+msgstr "Este é o painel do professor, onde você pode ver e gerenciar as salas de aula que possui."
+
+msgid "To create a classroom, select this drop down..."
+msgstr "Para criar uma sala de aula, selecione esse menu suspenso..."
+
+msgid "...then click this button to create a new classroom."
+msgstr "...então clique neste botão para criar uma nova sala de aula."
+
+msgid ""
+"This is the dialog box where you can enter the details for your new "
+"classroom."
+msgstr "Esta é a caixa de diálogo em que você pode inserir os detalhes da sua nova sala de aula."
+
+msgid ""
+"Share the Invite Code with your students! Don't worry, it'll be visible "
+"later on too. \n"
+" \n"
+" Fill out the rest of the info and click \"Create\" to create your "
+"classroom."
+msgstr "Compartilhe o código de convite com seus alunos! Não se preocupe, ele também ficará visível mais tarde. \\\\n \\\\n Preencha o restante das informações e clique em \\\\classroom."
+
+msgid "After creating a classroom, you can see it listed on your dashboard."
+msgstr "Depois de criar uma sala de aula, você poderá vê-la listada em seu painel."
+
+msgid "Click on your newly created classroom to see the users."
+msgstr "Clique na sala de aula recém-criada para ver os usuários."
+
+msgid "Share the invite code with your students so they can join your classroom."
+msgstr "Compartilhe o código de convite com seus alunos para que eles possam participar da sua sala de aula."
+
+msgid ""
+"This is the student dashboard, where you can see the classrooms you are a "
+"part of."
+msgstr "Este é o painel do aluno, onde você pode ver as salas de aula das quais faz parte."
+
+msgid "To join a classroom, click this button to open the join classroom dialog."
+msgstr "Para ingressar em uma sala de aula, clique nesse botão para abrir a caixa de diálogo ingressar na sala de aula."
+
+msgid ""
+"This is the dialog box where you can enter the invite code to join a "
+"classroom."
+msgstr "Esta é a caixa de diálogo em que você pode inserir o código de convite para entrar em uma sala de aula."
+
+msgid ""
+"After joining a classroom, you can see the class's leaderboard listed on "
+"your dashboard."
+msgstr "Depois de entrar em uma sala de aula, você poderá ver a tabela de classificação da turma listada no seu painel."
+
+msgid ""
+"This tab contains the default JBC challenges that all classrooms have "
+"access to and are the scenes always in the 3D-Simulator."
+msgstr "Essa guia contém os desafios padrão da JBC aos quais todas as salas de aula têm acesso e que são as cenas sempre presentes no 3D-Simulator."
+
+msgid "Click this button to export your challenge scores as a PDF file."
+msgstr "Clique nesse botão para exportar as pontuações do desafio como um arquivo PDF."
+
+msgid "Click this button to scroll to your scores on the leaderboard."
+msgstr "Clique nesse botão para rolar até suas pontuações na tabela de classificação."
+
+msgid ""
+"Click this button to see the badges you have earned from completing "
+"challenges."
+msgstr "Clique nesse botão para ver os distintivos que você ganhou ao concluir os desafios."
+
+msgid ""
+"Select \"Limited Challenges\" to see any limited challenges your classroom "
+"has access to."
+msgstr "Selecione \\\\tem acesso a."
+
+msgid ""
+"This tab contains any limited challenges that your classroom has access to. "
+"Limited challenges are challenges that have time limits and attempt "
+"restrictions."
+msgstr "Essa guia contém todos os desafios limitados aos quais sua sala de aula tem acesso. Os desafios limitados são desafios que têm limites de tempo e restrições de tentativas."
+
+msgid ""
+"Click this button to see extra options for the classroom such as leaving "
+"the classroom."
+msgstr "Clique nesse botão para ver opções adicionais para a sala de aula, como sair da sala de aula."
+
+msgid ""
+"This is the dropdown that show extra info and where you can select to leave "
+"the classroom."
+msgstr "Esse é o menu suspenso que mostra informações adicionais e onde você pode selecionar para sair da sala de aula."
+
+msgid ""
+"Select \"Leave Classroom\" to leave the classroom. If you leave a "
+"classroom, your challenge scores will be saved but you will no longer be "
+"able to see the classroom or its leaderboard unless you join again."
+msgstr "Selecione \\\\classroom (sala de aula), suas pontuações de desafio serão salvas, mas você não poderá mais ver a sala de aula ou sua tabela de classificação, a menos que entre novamente."
+
+msgid "This is the Editor tab where you can write, edit, and debug your code."
+msgstr "Esta é a guia Editor, na qual você pode escrever, editar e depurar seu código."
+
+msgid ""
+"The Editor tab contains 2 main sections: the code editor on top and the "
+"console on bottom."
+msgstr "A guia Editor contém duas seções principais: o editor de código na parte superior e o console na parte inferior."
+
+msgid "This is the code editor, where you can write and edit your code."
+msgstr "Este é o editor de código, onde você pode escrever e editar seu código."
+
+msgid "Click this dropdown to select the programming language for your code."
+msgstr "Clique nesse menu suspenso para selecionar a linguagem de programação do seu código."
+
+msgid "Click this button to auto-indent your code."
+msgstr "Clique nesse botão para recuar automaticamente seu código."
+
+msgid "Click this button to download your code as a file."
+msgstr "Clique neste botão para fazer o download do seu código como um arquivo."
+
+msgid ""
+"Click this button to reset the code in the editor to the default code for "
+"the current language."
+msgstr "Clique nesse botão para redefinir o código no editor para o código padrão do idioma atual."
+
+msgid ""
+"This is the console, where you can see the output of your code and any "
+"error messages."
+msgstr "Esse é o console, onde você pode ver a saída do seu código e quaisquer mensagens de erro."
+
+msgid "Click this button to clear the console."
+msgstr "Clique nesse botão para limpar o console."
+
+msgid "Click this button to ask the KIPR Tutor for help with your code."
+msgstr "Clique neste botão para pedir ajuda ao tutor do KIPR com seu código."
+
+msgid ""
+"This is the main menu, where you can access different pages and features of "
+"the simulator."
+msgstr "Este é o menu principal, onde você pode acessar diferentes páginas e recursos do simulador."
+
+msgid "Click the KIPR logo to return to the dashboard."
+msgstr "Clique no logotipo do KIPR para retornar ao painel."
+
+msgid "Use this button to run or stop your code in the simulator."
+msgstr "Use esse botão para executar ou interromper seu código no simulador."
+
+msgid "Click this button to reset the world in the simulator."
+msgstr "Clique nesse botão para redefinir o mundo no simulador."
+
+msgid "After opening a challenge scene, click this button to start the challenge."
+msgstr "Depois de abrir uma cena de desafio, clique nesse botão para iniciar o desafio."
+
+msgid ""
+"Click this button to see options to change the layout of the simulator "
+"interface. Try it now!"
+msgstr "Clique neste botão para ver as opções para alterar o layout da interface do simulador. Experimente agora!"
+
+msgid ""
+"These are the different layout options. You can select one to change the "
+"layout of the simulator interface, but for now, click the \"Next\" button."
+msgstr "Estas são as diferentes opções de layout. Você pode selecionar uma delas para alterar o layout da interface do simulador, mas, por enquanto, clique no botão \\\\"
+
+msgid ""
+"Click this button to see options to change the scene in the simulator. Try "
+"it now!"
+msgstr "Clique neste botão para ver as opções para alterar a cena no simulador. Experimente agora!"
+
+msgid "These are the different scene settings options."
+msgstr "Estas são as diferentes opções de configuração de cena."
+
+msgid ""
+"Currently, we're in the JBC Sandbox so some options are locked. Select "
+"\"Open\" to continue."
+msgstr "No momento, estamos no JBC Sandbox, portanto, algumas opções estão bloqueadas. Selecione \\\\"
+
+msgid ""
+"This is the open scene option, which allows you to open different scenes in "
+"the simulator."
+msgstr "Essa é a opção de cena aberta, que permite que você abra diferentes cenas no simulador."
+
+msgid ""
+"This is the list of scenes that you can open. Select one to see more info "
+"and open it in the Simulator."
+msgstr "Esta é a lista de cenas que você pode abrir. Selecione uma delas para ver mais informações e abri-la no Simulador."
+
+msgid ""
+"This is the info page for the scene. You can click \"Accept\" at the bottom "
+"to open the scene in the simulator."
+msgstr "Esta é a página de informações da cena. Você pode clicar em \\\\para abrir a cena no simulador."
+
+msgid ""
+"For now, let's close the dialog to continue exploring the simulator "
+"interface."
+msgstr "Por enquanto, vamos fechar a caixa de diálogo para que você continue explorando a interface do simulador."
+
+msgid ""
+"Click this button to see extra options such as the simulator settings and "
+"the option to report a bug."
+msgstr "Clique nesse botão para ver opções adicionais, como as configurações do simulador e a opção de relatar um bug."
+
+msgid "These are the extra options you can access from this menu."
+msgstr "Essas são as opções extras que você pode acessar nesse menu."
+
+msgid "Click the documentation button to access the KIPR library."
+msgstr "Clique no botão de documentação para acessar a biblioteca KIPR."
+
+msgid ""
+"Click the ask tutor button to ask the KIPR Tutor for help with the "
+"simulator."
+msgstr "Clique no botão ask tutor para pedir ajuda ao tutor do KIPR com o simulador."
+
+msgid ""
+"Click the settings button to see options such as User Interface and Editor "
+"settings."
+msgstr "Clique no botão de configurações para ver opções como a interface do usuário e as configurações do editor."
+
+msgid "Click the about button to see information about KIPR and the simulator."
+msgstr "Clique no botão about para ver informações sobre o KIPR e o simulador."
+
+msgid ""
+"Click the feedback button to report a bug or send feedback about the "
+"Simulator to KIPR."
+msgstr "Clique no botão de feedback para relatar um bug ou enviar feedback sobre o Simulador para a KIPR."
+
+msgid "Click the logout button to log out of your account."
+msgstr "Clique no botão de logout para sair da sua conta."
+
+msgid ""
+"This is the Overlay Tab Bar, where you can access different tools and "
+"features to use while testing your code in the simulator."
+msgstr "Esta é a barra de guias de sobreposição, onde você pode acessar diferentes ferramentas e recursos para usar enquanto testa seu código no simulador."
+
+msgid ""
+"We've already introduced the Editor Tab, we'll now explore the other tabs "
+"available: Robot and World. Click the \"Robot\" tab to continue the tour!"
+msgstr "Já apresentamos a guia Editor e agora vamos explorar as outras guias disponíveis: Robô e Mundo. Clique na guia \\\\"
+
+msgid ""
+"This is the Robot tab, where you can see information about the robot such "
+"as its position and sensor readings."
+msgstr "Esta é a guia Robot (Robô), onde você pode ver informações sobre o robô, como a posição e as leituras do sensor."
+
+msgid ""
+"The robot starts at the origin point in the simulator, which is why the "
+"position readings are all 0. You can change the robot's starting location "
+"by entering different values for x, y, z position and y rotation."
+msgstr "O robô inicia no ponto de origem no simulador, razão pela qual as leituras de posição são todas 0. Você pode alterar a localização inicial do robô inserindo valores diferentes para a posição x, y, z e rotação y."
+
+msgid ""
+"This is the servo section, where you can see the current positions of the "
+"robot's servos. You can also click get_servo_position() row to see a graph."
+msgstr "Esta é a seção de servos, onde você pode ver as posições atuais dos servos do robô. Você também pode clicar na linha get_servo_position() para ver um gráfico."
+
+msgid ""
+"This is the motor velocities section, where you can see the current "
+"velocities of the robot's motors. You can also click each motor row to see "
+"a graph."
+msgstr "Esta é a seção de velocidades do motor, onde você pode ver as velocidades atuais dos motores do robô. Você também pode clicar em cada linha de motor para ver um gráfico."
+
+msgid ""
+"This is the motor positions section, where you can see the current "
+"positions of the robot's motors. You can also click each "
+"get_motor_position_counter() row to see a graph."
+msgstr "Esta é a seção de posições do motor, onde você pode ver as posições atuais dos motores do robô. Você também pode clicar em cada linha do get_motor_position_counter() para ver um gráfico."
+
+msgid ""
+"This is the analog sensors section, where you can see the current readings "
+"of the robot's analog sensors. You can also click each analog() row to see "
+"a graph."
+msgstr "Esta é a seção de sensores analógicos, onde você pode ver as leituras atuais dos sensores analógicos do robô. Você também pode clicar em cada linha analógica() para ver um gráfico."
+
+msgid ""
+"This is the digital sensors section, where you can see the current readings "
+"of the robot's digital sensors. You can also click each digital() row to "
+"see a graph."
+msgstr "Esta é a seção de sensores digitais, onde você pode ver as leituras atuais dos sensores digitais do robô. Você também pode clicar em cada linha digital() para ver um gráfico."
+
+msgid ""
+"This is the World tab, where you can see information about the world such "
+"as the positions of objects and the light level. Select the \"World\" tab "
+"to continue the tour!"
+msgstr "Essa é a guia World, onde você pode ver informações sobre o mundo, como as posições dos objetos e o nível de luz. Selecione o botão \\\\para continuar o passeio!"
+
+msgid ""
+"This is the world's objects section where you can customize the JBC Sandbox "
+"to add/remove/edit objects in the 3D simulation."
+msgstr "Esta é a seção de objetos do mundo, na qual você pode personalizar o JBC Sandbox para adicionar/remover/editar objetos na simulação 3D."
+
+msgid "This is the can object, which is a common object used in challenges."
+msgstr "Esse é o objeto can, que é um objeto comum usado em desafios."
+
+msgid ""
+"Click this option to toggle the visibility of the highlighted object in the "
+"simulator."
+msgstr "Clique nessa opção para alternar a visibilidade do objeto destacado no simulador."
+
+msgid ""
+"Click this option to reset the highlighted object to its default state in "
+"the simulator."
+msgstr "Clique nessa opção para redefinir o objeto destacado para seu estado padrão no simulador."
+
+msgid ""
+"Click this option to see more settings for the highlighted object such as "
+"it's name and item type."
+msgstr "Clique nessa opção para ver mais configurações do objeto destacado, como seu nome e tipo de item."
+
+msgid "Click this option to remove the highlighted object from the simulator."
+msgstr "Clique nessa opção para remover o objeto destacado do simulador."
+
+msgid ""
+"Each object added to the Simulator can be moved using the x, y, z, and "
+"rotation controls. This can be useful for testing your code with different "
+"object placements."
+msgstr "Cada objeto adicionado ao Simulador pode ser movido usando os controles x, y, z e de rotação. Isso pode ser útil para você testar seu código com diferentes posicionamentos de objetos."
+
+msgid ""
+"To move an object, first we need to add the object to the simulator using "
+"the visibility option."
+msgstr "Para mover um objeto, primeiro precisamos adicionar o objeto ao simulador usando a opção de visibilidade."
+
+msgid "Select the \"World\" tab in the Overlay Tab Bar."
+msgstr "Selecione o \\\\"
+
+msgid ""
+"Next, click the visibility option for the object you want to move. For this "
+"tutorial, we'll select the Can 1 object."
+msgstr "Em seguida, clique na opção de visibilidade do objeto que você deseja mover. Para este tutorial, selecionaremos o objeto Can 1."
+
+msgid ""
+"After turning on the visibility option, you can see the object in the "
+"simulator area."
+msgstr "Depois de ativar a opção de visibilidade, você poderá ver o objeto na área do simulador."
+
+msgid "Click the object in the simulator area to open the move object tool."
+msgstr "Clique no objeto na área do simulador para abrir a ferramenta mover objeto."
+
+msgid ""
+"This is the move object tool, where you can move the object by dragging the "
+"gizmo arrows."
+msgstr "Essa é a ferramenta mover objeto, na qual você pode mover o objeto arrastando as setas do gizmo."
+
+msgid ""
+"The red arrow is the x-axis, the green arrow is the y-axis, and the blue "
+"arrow is the z-axis. Try dragging the arrows to move the object around in "
+"the simulator!"
+msgstr "A seta vermelha é o eixo x, a seta verde é o eixo y e a seta azul é o eixo z. Tente arrastar as setas para mover o objeto no simulador!"
+
+msgid ""
+"Welcome to KIPR's 3D Simulator, where you can test your code in a virtual "
+"environment."
+msgstr "Bem-vindo ao Simulador 3D do KIPR, onde você pode testar seu código em um ambiente virtual."
+
+msgid ""
+"Use this dropdown to select different tours of the simulator interface or "
+"just click Next to take the full tour!"
+msgstr "Use esse menu suspenso para selecionar diferentes tours da interface do simulador ou clique em Next para fazer o tour completo!"
+
+msgid ""
+"This is the student view of the dashboard, where you can access your "
+"classrooms and see your progress."
+msgstr "Esta é a visualização do painel do aluno, onde você pode acessar suas salas de aula e ver seu progresso."
+
+msgid "About KIPR"
+msgstr "Sobre a KIPR"
+
+msgid "Classroom Dashboard"
+msgstr "Painel de controle da sala de aula"
+
+msgid "Teacher Dashboard"
+msgstr "Painel de controle do professor"
+
+msgid "How To: Create a Classroom"
+msgstr "Como criar uma sala de aula"
+
+msgid "How To: Create a Classroom Continued"
+msgstr "Como criar uma sala de aula contínua"
+
+msgid "Student Dashboard"
+msgstr "Painel de controle do aluno"
+
+msgid "How To: Join a Classroom"
+msgstr "Como participar de uma sala de aula"
+
+msgid "How To: Join a Classroom Continued"
+msgstr "Como participar de uma sala de aula contínua"
+
+msgid "Default JBC Challenge Tab View"
+msgstr "Visualização padrão da guia Desafio JBC"
+
+msgid "Exporting Your Challenge Scores"
+msgstr "Exportando as pontuações dos desafios"
+
+msgid "Scrolling to Your Scores"
+msgstr "Rolagem para suas pontuações"
+
+msgid "Viewing Your Badges"
+msgstr "Visualização de seus crachás"
+
+msgid "Limited Challenge Tab View"
+msgstr "Visualização da guia Desafio limitado"
+
+msgid "Limited Challenge Tab View Continued"
+msgstr "Visualização da guia Desafio limitado Continuação"
+
+msgid "Classroom Extra Options"
+msgstr "Opções extras de sala de aula"
+
+msgid "Classroom Extra Options Continued"
+msgstr "Opções extras de sala de aula Continuação"
+
+msgid "Leaving a Classroom"
+msgstr "Saindo de uma sala de aula"
+
+msgid "Editor Tab"
+msgstr "Guia Editor"
+
+msgid "Editor and Console Overview"
+msgstr "Visão geral do editor e do console"
+
+msgid "Code Editor"
+msgstr "Editor de código"
+
+msgid "Code Editor Language Dropdown"
+msgstr "Dropdown de idioma do editor de código"
+
+msgid "Code Editor Indent Button"
+msgstr "Botão de recuo do editor de código"
+
+msgid "Code Editor Download Button"
+msgstr "Botão de download do editor de código"
+
+msgid "Code Editor Reset Button"
+msgstr "Botão de reinicialização do editor de código"
+
+msgid "Console Clear Button"
+msgstr "Botão Limpar do console"
+
+msgid "Ask Tutor Button"
+msgstr "Botão Perguntar ao tutor"
+
+msgid "Main Menu Overview"
+msgstr "Visão geral do menu principal"
+
+msgid "Return to Dashboard Button"
+msgstr "Botão Voltar ao painel de controle"
+
+msgid "Run/Stop Button"
+msgstr "Botão Executar/Parar"
+
+msgid "Reset World Button"
+msgstr "Botão Redefinir mundo"
+
+msgid "Start Challenge Button"
+msgstr "Botão Iniciar desafio"
+
+msgid "Layout Button"
+msgstr "Botão de layout"
+
+msgid "Layout Options"
+msgstr "Opções de layout"
+
+msgid "Scene Button"
+msgstr "Botão de cena"
+
+msgid "Scene Options"
+msgstr "Opções de cena"
+
+msgid "Scene Options Info"
+msgstr "Informações sobre opções de cena"
+
+msgid "Scene Open"
+msgstr "Cena aberta"
+
+msgid "Scene Open Continued"
+msgstr "Cena aberta Continuação"
+
+msgid "Extra Menu Button"
+msgstr "Botão de menu extra"
+
+msgid "Extra Menu Options"
+msgstr "Opções extras de menu"
+
+msgid "Documentation Button"
+msgstr "Botão de documentação"
+
+msgid "Tutor Button"
+msgstr "Botão do tutor"
+
+msgid "Settings Button"
+msgstr "Botão de configurações"
+
+msgid "About Button"
+msgstr "Sobre o botão"
+
+msgid "Feedback Button"
+msgstr "Botão de feedback"
+
+msgid "Logout Button"
+msgstr "Botão de logout"
+
+msgid "Overlay Tab Bar Overview"
+msgstr "Visão geral da barra de guias de sobreposição"
+
+msgid "Overlay Tab Bar Overview Continued"
+msgstr "Visão geral da barra de guias de sobreposição Continuação"
+
+msgid "Overlay Tab Bar Robot Tab"
+msgstr "Barra de guias de sobreposição Guia Robô"
+
+msgid "Robot Starting Location"
+msgstr "Localização inicial do robô"
+
+msgid "Robot Servos"
+msgstr "Servos de robôs"
+
+msgid "Robot Motor Velocities"
+msgstr "Velocidades do motor do robô"
+
+msgid "Robot Motor Positions"
+msgstr "Posições do motor do robô"
+
+msgid "Robot Analog Sensors"
+msgstr "Sensores analógicos para robôs"
+
+msgid "Robot Digital Sensors"
+msgstr "Sensores digitais para robôs"
+
+msgid "Overlay Tab Bar World Tab"
+msgstr "Barra de guias de sobreposição Guia Mundo"
+
+msgid "World Tab Objects Section"
+msgstr "Seção Objetos da guia Mundo"
+
+msgid "World Tab Can Object"
+msgstr "A guia Mundo pode se opor"
+
+msgid "World Tab Object Visibility Option"
+msgstr "Opção de visibilidade de objeto da guia World"
+
+msgid "World Tab Object Reset Option"
+msgstr "Opção de redefinição de objeto da guia Mundo"
+
+msgid "World Tab Object Settings Option"
+msgstr "Opção de configurações de objeto da guia Mundo"
+
+msgid "World Tab Object Remove Option"
+msgstr "Opção de remoção de objeto da guia Mundo"
+
+msgid "Move Object Tool Overview"
+msgstr "Visão geral da ferramenta Mover objeto"
+
+msgid "Add Can 1 to the World"
+msgstr "Adicionar o Can 1 ao mundo"
+
+msgid "Select World Tab"
+msgstr "Selecione a guia Mundo"
+
+msgid "Select Object to Move"
+msgstr "Selecione o objeto a ser movido"
+
+msgid "See Object in Simulator Area"
+msgstr "Ver objeto na área do simulador"
+
+msgid "Click Object in Simulator Area"
+msgstr "Clique no objeto na área do simulador"
+
+msgid "Move Object Tool Interaction"
+msgstr "Interação da ferramenta Mover objeto"
+
+msgid "3D Simulator Overview"
+msgstr "visão geral do simulador 3D"
+
+msgid "Choose Your Tour"
+msgstr "Escolha seu tour"
+
+msgid "Step"
+msgstr "Etapa"
+
+msgid "of"
+msgstr "de"
+
+msgid "Editor and Console Tour"
+msgstr "Tour do editor e do console"
+
+msgid "Main Menu Tour"
+msgstr "Menu principal Tour"
+
+msgid "Overlay Tab Bar Tour"
+msgstr "Tour da barra de guias de sobreposição"
+
+msgid "Move Object Tool Tour"
+msgstr "Tour da ferramenta Mover objeto"
+
+msgid "Back"
+msgstr "Voltar"
+
+msgid "Done"
+msgstr "Feito"
+
+msgid "Next"
+msgstr "Próximo"
+
+msgid "Skip"
+msgstr "Pular"
+
+msgid "Tour Sections"
+msgstr "Seções do tour"
+
+msgid "Go"
+msgstr "Ir"
+
+msgid "You are not enrolled in any classroom."
+msgstr "Você não está matriculado em nenhuma sala de aula."
+
+msgid "Join Class"
+msgstr "Participar da aula"
+
+msgid "Classrooms - Student View"
+msgstr "Salas de aula - Visão do aluno"
+
+msgid "Current Classroom: "
+msgstr "Sala de aula atual:"
+
+msgid "Classroom Teacher: "
+msgstr "Professor de sala de aula:"
+
+msgid "Current Classroom:"
+msgstr "Sala de aula atual:"
+
+msgid "Classroom Teacher:"
+msgstr "Professor de sala de aula:"
+
+msgid "You"
+msgstr "Você"
+
+msgid "Classroom Leaderboard"
+msgstr "Tabela de classificação da sala de aula"
+
+msgid "Export My Scores!"
+msgstr "Exportar minhas pontuações!"
+
+msgid "Scroll to My Scores!"
+msgstr "Role até Minhas pontuações!"
+
+msgid "See My Badges!"
+msgstr "Veja meus distintivos!"
+
+msgid "Export All General Scores"
+msgstr "Exportar todas as pontuações gerais"
+
+msgid "Export All Detailed Scores"
+msgstr "Exportar todas as pontuações detalhadas"
+
+msgid "Reenter classroom name to confirm leaving classroom."
+msgstr "Digite novamente o nome da sala para confirmar a saída da sala."
+
+msgid "Are you sure you want to leave: "
+msgstr "Você tem certeza de que quer ir embora:"
+
+msgid "My Scores!"
+msgstr "Minhas pontuações!"
+
+msgid "KIPR All Time Leaderboard"
+msgstr "Tabela de classificação de todos os tempos do KIPR"
+
+msgid "Choose Classroom to See Leaderboard:"
+msgstr "Escolha a sala de aula para ver a tabela de classificação:"
+
+msgid "See Leaderboard"
+msgstr "Ver tabela de classificação"
+
+msgid "Classrooms - Teacher View"
+msgstr "Salas de aula - Visão do professor"
+
+msgid "See Classroom Leaderboards"
+msgstr "Veja as tabelas de classificação da sala de aula"
+
+msgid "Can 1"
+msgstr "Lata 1"
+
+msgid "Your Display Name"
+msgstr "Seu nome de exibição"
+
+msgid "The teacher's name that will be shown to your students"
+msgstr "O nome do professor que será mostrado aos seus alunos"
+
+msgid "Classroom Name"
+msgstr "Nome da sala de aula"
+
+msgid "Invite Code"
+msgstr "Código de convite"
+
+msgid "Code students can use to join the classroom"
+msgstr "Código que os alunos podem usar para entrar na sala de aula"
 
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
@@ -3693,7 +4362,7 @@ msgstr "12ª série"
 
 msgctxt "Student grade level"
 msgid "1st"
-msgstr "1º"
+msgstr "1ª"
 
 msgctxt "Student grade level"
 msgid "2nd"
@@ -3766,3 +4435,1486 @@ msgstr "YXZ"
 msgctxt "RotationwUnits order"
 msgid "ZYX"
 msgstr "ZYX"
+
+msgid ""
+msgstr ""
+
+msgid "The selected file is already included in the project."
+msgstr "O arquivo selecionado já está incluído no projeto."
+
+msgid "The selected file does not match the expected language ${currentLanguage}."
+msgstr "O arquivo selecionado não corresponde ao idioma esperado ${currentLanguage}."
+
+msgid "The selected file must have a .h extension."
+msgstr "O arquivo selecionado deve ter uma extensão .h."
+
+msgid "The selected file does not match the expected language."
+msgstr "O arquivo selecionado não corresponde ao idioma esperado."
+
+msgid "The selected file must have a .txt extension."
+msgstr "O arquivo selecionado deve ter uma extensão .txt."
+
+msgid "Some files have errors"
+msgstr "Alguns arquivos têm erros"
+
+msgid "Upload File"
+msgstr "Carregar arquivo"
+
+msgid "Selected File Upload Language: "
+msgstr "Idioma de upload de arquivo selecionado:"
+
+msgid "Select a file from your computer to upload"
+msgstr "Selecione um arquivo do seu computador para fazer upload"
+
+msgid "Upload Include File"
+msgstr "Carregar arquivo de inclusão"
+
+msgid "Upload Source File"
+msgstr "Carregar arquivo de origem"
+
+msgid "Upload User Data File"
+msgstr "Carregar arquivo de dados do usuário"
+
+msgid "No file selected"
+msgstr "Nenhum arquivo selecionado"
+
+msgid "Project with name already exists. Please choose a different name."
+msgstr "O projeto com esse nome já existe. Por favor, escolha um nome diferente."
+
+msgid "File uploaded does not match selected project language."
+msgstr "O arquivo carregado não corresponde ao idioma do projeto selecionado."
+
+msgid "Folder name does not match project name in config file."
+msgstr "O nome da pasta não corresponde ao nome do projeto no arquivo de configuração."
+"O nome da pasta não corresponde ao nome do projeto no arquivo de "
+"configuração."
+
+msgid ""
+"File detected as different language than project language. Please ensure "
+"all source files match the selected project language."
+msgstr "O arquivo foi detectado em um idioma diferente do idioma do projeto. Verifique se todos os arquivos de origem correspondem ao idioma do projeto selecionado."
+"O arquivo foi detectado em um idioma diferente do idioma do projeto. "
+"Verifique se todos os arquivos de origem correspondem ao idioma do projeto "
+"selecionado."
+
+msgid "Please remove all spaces in the name."
+msgstr "Remova todos os espaços do nome."
+
+msgid "Please remove all special characters in the name."
+msgstr "Remova todos os caracteres especiais do nome."
+
+msgid "File name exceeds maximum length of 50 characters."
+msgstr "O nome do arquivo excede o comprimento máximo de 50 caracteres."
+
+msgid "Select a Project from your computer to upload\n"
+msgstr "Selecione um projeto do seu computador para fazer upload"
+
+msgid "Be sure the heirarchy format follows:\n"
+msgstr "Certifique-se de que o formato da hierarquia seja o seguinte:\\\\n"
+
+msgid "Project Name"
+msgstr "Nome do projeto"
+
+msgid "include"
+msgstr "incluir"
+
+msgid "includeFile1.h (optional)"
+msgstr "includeFile1.h (opcional)"
+
+msgid "includeFile2.h (optional)"
+msgstr "includeFile2.h (opcional)"
+
+msgid "src"
+msgstr "src"
+
+msgid "NOTE: file extension must match project language"
+msgstr "OBSERVAÇÃO: a extensão do arquivo deve corresponder ao idioma do projeto"
+
+msgid "srcFile1.*"
+msgstr "srcFile1.*"
+
+msgid "srcFile2.*"
+msgstr "srcFile2.*"
+
+msgid "data"
+msgstr "dados"
+
+msgid "dataFile1.txt (optional)"
+msgstr "dataFile1.txt (opcional)"
+
+msgid "dataFile2.txt (optional)"
+msgstr "dataFile2.txt (opcional)"
+
+msgid "bin"
+msgstr "caixa"
+
+msgid "Select Project Language:"
+msgstr "Selecione o idioma do projeto:"
+
+msgid "Choose Folder"
+msgstr "Selecionar pasta"
+
+msgid "Config File"
+msgstr "Arquivo de configuração"
+
+msgid "No files selected."
+msgstr "Nenhum arquivo selecionado."
+
+msgid "Include Files"
+msgstr "Incluir arquivos"
+
+msgid "Source Files"
+msgstr "Arquivos de origem"
+
+msgid "User Data Files"
+msgstr "Arquivos de dados do usuário"
+
+msgid "Selected Project Folder: "
+msgstr "Pasta de projetos selecionados:"
+
+msgid "Selected Project Language: "
+msgstr "Idioma do projeto selecionado:"
+
+msgid "Choose a different project"
+msgstr "Escolha um projeto diferente"
+
+msgid "Upload Project"
+msgstr "Carregar projeto"
+
+msgid "The selected project already exists for this user."
+msgstr "O projeto selecionado já existe para esse usuário."
+
+msgid "Please choose a different project."
+msgstr "Escolha um projeto diferente."
+
+msgid "+"
+msgstr "+"
+
+msgid "Create Project"
+msgstr "Criar projeto"
+
+msgid "Create File"
+msgstr "Criar arquivo"
+
+msgid "Create Classroom"
+msgstr "Criar sala de aula"
+
+msgid "Create User"
+msgstr "Criar usuário"
+
+msgid "Upload User"
+msgstr "Carregar usuário"
+
+msgid ""
+"A user with that name already exists in this classroom. Please rename your "
+"folder and try again."
+msgstr "Já existe um usuário com esse nome nesta sala de aula. Renomeie sua pasta e tente novamente."
+"Já existe um usuário com esse nome nesta sala de aula. Renomeie sua pasta e "
+"tente novamente."
+
+msgid "Folder name does not match user name in config file."
+msgstr "O nome da pasta não corresponde ao nome do usuário no arquivo de configuração."
+"O nome da pasta não corresponde ao nome do usuário no arquivo de "
+"configuração."
+
+msgid "File detected with interface mode does not match project interface mode."
+msgstr "O arquivo detectado com o modo de interface não corresponde ao modo de interface do projeto."
+"O arquivo detectado com o modo de interface não corresponde ao modo de "
+"interface do projeto."
+
+msgid ""
+"File detected as different language than project language. Please ensure "
+"all source files match the project language."
+msgstr "O arquivo foi detectado em um idioma diferente do idioma do projeto. Certifique-se de que todos os arquivos de origem correspondam ao idioma do projeto."
+"O arquivo foi detectado em um idioma diferente do idioma do projeto. "
+"Verifique se todos os arquivos de origem correspondem ao idioma do projeto."
+
+msgid "Unknown file type, defaulting to plaintext."
+msgstr "Tipo de arquivo desconhecido, com padrão de texto simples."
+
+msgid "Project must contain a main file"
+msgstr "O projeto deve conter um arquivo principal"
+
+msgid "Select a User from your computer to upload\n"
+msgstr "Selecione um usuário do seu computador para fazer upload"
+
+msgid "User Name"
+msgstr "Nome de usuário"
+
+msgid "(At least 1 project must be in the User folder)"
+msgstr "(Pelo menos um projeto deve estar na pasta User)"
+
+msgid "Project Name 1"
+msgstr "Nome do projeto 1"
+
+msgid "Project Name 2"
+msgstr "Nome do projeto 2"
+
+msgid "Select User Interface Mode:"
+msgstr "Selecione o modo de interface do usuário:"
+
+msgid "Selected User Folder: "
+msgstr "Pasta de usuário selecionada:"
+
+msgid "Selected User Interface Mode: "
+msgstr "Modo de interface do usuário selecionado:"
+
+msgid "Choose a different User"
+msgstr "Escolha um usuário diferente"
+
+msgid "The selected user already exists in this classroom."
+msgstr "O usuário selecionado já existe nesta sala de aula."
+
+msgid "Please choose a different user."
+msgstr "Escolha um usuário diferente."
+
+msgid "Choose a different user"
+msgstr "Escolha um usuário diferente"
+
+msgid "Delete Classroom"
+msgstr "Excluir sala de aula"
+
+msgid "Rename Classroom"
+msgstr "Renomear sala de aula"
+
+msgid "Delete User"
+msgstr "Excluir usuário"
+
+msgid "Download User"
+msgstr "Baixar usuário"
+
+msgid "Rename User"
+msgstr "Renomear usuário"
+
+msgid "Remove User from Classroom"
+msgstr "Remover usuário da sala de aula"
+
+msgid "Move User to Classroom"
+msgstr "Mover o usuário para a sala de aula"
+
+msgid "Paste Project"
+msgstr "Projeto Paste"
+
+msgid "Delete Project"
+msgstr "Excluir projeto"
+
+msgid "Download Project"
+msgstr "Download do projeto"
+
+msgid "Rename Project"
+msgstr "Renomear projeto"
+
+msgid "Move Project"
+msgstr "Projeto Move"
+
+msgid "Copy Project"
+msgstr "Copiar projeto"
+
+msgid "Paste File"
+msgstr "Colar arquivo"
+
+msgid "Delete File"
+msgstr "Excluir arquivo"
+
+msgid "Download File"
+msgstr "Baixar arquivo"
+
+msgid "Rename File"
+msgstr "Renomear arquivo"
+
+msgid "Copy File"
+msgstr "Copiar arquivo"
+
+msgid "Users"
+msgstr "Usuários"
+
+msgid "Classroom Invitation Code:"
+msgstr "Código de convite para a sala de aula:"
+
+msgid "Projects"
+msgstr "Projetos"
+
+msgid "Explorer - Classrooms"
+msgstr "Explorer - Salas de aula"
+
+msgid "Explorer - Users"
+msgstr "Explorer - Usuários"
+
+msgid "Users without Classrooms"
+msgstr "Usuários sem salas de aula"
+
+msgid "Motor 0"
+msgstr "Motor 0"
+
+msgid "Motor 1"
+msgstr "Motor 1"
+
+msgid "Motor 2"
+msgstr "Motor 2"
+
+msgid "Motor 3"
+msgstr "Motor 3"
+
+msgid "Velocity"
+msgstr "Velocidade"
+
+msgid "Power"
+msgstr "Potência"
+
+msgid "Servo 0"
+msgstr "Servo 0"
+
+msgid "Servo 1"
+msgstr "Servo 1"
+
+msgid "Servo 2"
+msgstr "Servo 2"
+
+msgid "Servo 3"
+msgstr "Servo 3"
+
+msgid "analog(0)"
+msgstr "analógico(0)"
+
+msgid "analog(1)"
+msgstr "analógico(1)"
+
+msgid "analog(2)"
+msgstr "analógico(2)"
+
+msgid "analog(3)"
+msgstr "analógico(3)"
+
+msgid "analog(4)"
+msgstr "analógico(4)"
+
+msgid "analog(5)"
+msgstr "analógico(5)"
+
+msgid "digital(0)"
+msgstr "digital(0)"
+
+msgid "digital(1)"
+msgstr "digital(1)"
+
+msgid "digital(2)"
+msgstr "digital(2)"
+
+msgid "digital(3)"
+msgstr "digital(3)"
+
+msgid "digital(4)"
+msgstr "digital(4)"
+
+msgid "digital(5)"
+msgstr "digital(5)"
+
+msgid "digital(6)"
+msgstr "digital(6)"
+
+msgid "digital(7)"
+msgstr "digital(7)"
+
+msgid "digital(8)"
+msgstr "digital(8)"
+
+msgid "digital(9)"
+msgstr "digital(9)"
+
+msgid "accel_x()"
+msgstr "accel_x()"
+
+msgid "accel_y()"
+msgstr "accel_y()"
+
+msgid "accel_z()"
+msgstr "accel_z()"
+
+msgid "gyro_x()"
+msgstr "gyro_x()"
+
+msgid "gyro_y()"
+msgstr "gyro_y()"
+
+msgid "gyro_z()"
+msgstr "gyro_z()"
+
+msgid "magneto_x()"
+msgstr "magneto_x()"
+
+msgid "magneto_y()"
+msgstr "magneto_y()"
+
+msgid "magneto_z()"
+msgstr "magneto_z()"
+
+msgid "right_button()"
+msgstr "botão direito()"
+
+msgid "Reverse"
+msgstr "Inverter"
+
+msgid "Forward"
+msgstr "Avançar"
+
+msgid "Warning! Could damage servo in this range"
+msgstr "Aviso! Você pode danificar o servo nessa faixa"
+
+msgid "Motor Velocity Plot"
+msgstr "Gráfico de velocidade do motor"
+
+msgid "Motor Position Plot"
+msgstr "Gráfico de posição do motor"
+
+msgid "Servo Position Plot"
+msgstr "Gráfico de posição do servo"
+
+msgid "View:"
+msgstr "Ver:"
+
+msgid "Motor Port:"
+msgstr "Porta do motor:"
+
+msgid "Clear Motor Position"
+msgstr "Limpar a posição do motor"
+
+msgid "Stop All Motors"
+msgstr "Parar todos os motores"
+
+msgid "Stop Current Motor"
+msgstr "Motor de corrente de parada"
+
+msgid "Motor Velocities"
+msgstr "Velocidades do motor"
+
+msgid "Motor Positions"
+msgstr "Posições do motor"
+
+msgid "Servo Port:"
+msgstr "Porta do servo:"
+
+msgid "Enable All Servos"
+msgstr "Ativar todos os servos"
+
+msgid "Disable All Servos"
+msgstr "Desativar todos os servos"
+
+msgid "Disable Servo"
+msgstr "Desativar o servo"
+
+msgid "Enable Servo"
+msgstr "Ativar servo"
+
+msgid "Servo Positions"
+msgstr "Posições do servo"
+
+msgid "Analog Sensors"
+msgstr "Sensores analógicos"
+
+msgid "Digital Sensors"
+msgstr "Sensores digitais"
+
+msgid "Accelerometers"
+msgstr "Acelerômetros"
+
+msgid "Gyroscopes"
+msgstr "Giroscópios"
+
+msgid "Magnetometers"
+msgstr "Magnetômetros"
+
+msgid "Buttons"
+msgstr "Botões"
+
+msgid "Motors, Servos, and Sensors"
+msgstr "Motores, servos e sensores"
+
+msgid "Motor"
+msgstr "Motor"
+
+msgid "Servo"
+msgstr "Servo"
+
+msgid "Sensor"
+msgstr "Sensor"
+
+msgid "Modules"
+msgstr "Módulos"
+
+msgid "Functions"
+msgstr "Funções"
+
+msgid "Structures"
+msgstr "Estruturas"
+
+msgid "Enumerations"
+msgstr "Enumerações"
+
+msgid "Files"
+msgstr "Arquivos"
+
+msgid "Search..."
+msgstr "Pesquisar..."
+
+msgid "Detailed Description"
+msgstr "Descrição detalhada"
+
+msgid "Parameters"
+msgstr "Parâmetros"
+
+msgid "Return Value"
+msgstr "Valor de retorno"
+
+msgid "Fields"
+msgstr "Campos"
+
+msgid "Common Functions"
+msgstr "Funções comuns"
+
+msgid "Full Documentation"
+msgstr "Documentação completa"
+
+msgid "Challenge Progress"
+msgstr "Progresso do desafio"
+
+msgctxt "func:a_button:detailed"
+msgid "Gets the A button's state (pressed or not pressed.)"
+msgstr "Obtém o estado do botão A (pressionado ou não pressionado)"
+
+msgctxt "func:a_button_clicked:detailed"
+msgid "Gets the A button's state (pressed or not pressed.)"
+msgstr "Obtém o estado do botão A (pressionado ou não pressionado)"
+
+msgctxt "func:alloff:brief"
+msgid "Turns all motors off."
+msgstr "Desliga todos os motores."
+
+msgctxt "func:analog10:detailed"
+msgid "Gets the 10-bit analog value of a port."
+msgstr "Obtém o valor analógico de 10 bits de uma porta."
+
+msgctxt "func:analog10:param:port:description"
+msgid "A value between 0 and 5 specifying the sensor to read from."
+msgstr "Um valor entre 0 e 5 que especifica o sensor a ser lido."
+
+msgctxt "func:analog12:detailed"
+msgid "Gets the 12-bit analog value of a port."
+msgstr "Obtém o valor analógico de 12 bits de uma porta."
+
+msgctxt "func:analog12:param:port:description"
+msgid "A value between 0 and 5 specifying the sensor to read from."
+msgstr "Um valor entre 0 e 5 que especifica o sensor a ser lido."
+
+msgctxt "func:analog8:detailed"
+msgid "Gets the 8-bit analog value of a port."
+msgstr "Obtém o valor analógico de 8 bits de uma porta."
+
+msgctxt "func:analog8:param:port:description"
+msgid "A value between 0 and 5 specifying the sensor to read from."
+msgstr "Um valor entre 0 e 5 que especifica o sensor a ser lido."
+
+msgctxt "func:analog:detailed"
+msgid "Gets the 12-bit analog value of a port."
+msgstr "Obtém o valor analógico de 12 bits de uma porta."
+
+msgctxt "func:analog:param:port:description"
+msgid "A value between 0 and 5 specifying the sensor to read from."
+msgstr "Um valor entre 0 e 5 que especifica o sensor a ser lido."
+
+msgctxt "func:analog_et:detailed"
+msgid ""
+"Gets the 10-bit analog value of an ET sensor on the given port. "
+"Deprecateddefaulting to analog() on the Wallaby"
+msgstr "Obtém o valor analógico de 10 bits de um sensor ET na porta fornecida. Preterido: padrão para analog() no Wallaby"
+"Obtém o valor analógico de 10 bits de um sensor ET na porta fornecida. "
+"Preterido: padrão para analog() no Wallaby"
+
+msgctxt "func:analog_et:param:port:description"
+msgid "A value between 0 and 7 specifying the ET sensor to read from."
+msgstr "Um valor entre 0 e 7 que especifica o sensor de ET a ser lido."
+
+msgctxt "func:any_button:detailed"
+msgid "Determines whether or not any of the buttons are pressed."
+msgstr "Determina se algum dos botões está pressionado ou não."
+
+msgctxt "func:ao:brief"
+msgid "Turns all motors off."
+msgstr "Desliga todos os motores."
+
+msgctxt "func:b_button:detailed"
+msgid "Gets the B button's state (pressed or not pressed.)"
+msgstr "Obtém o estado do botão B (pressionado ou não pressionado)"
+
+msgctxt "func:b_button_clicked:detailed"
+msgid "Gets the A button's state (pressed or not pressed.)"
+msgstr "Obtém o estado do botão A (pressionado ou não pressionado)"
+
+msgctxt "func:baasbennaguui:brief"
+msgid "Moves a motor at a percent velocity."
+msgstr "Movimenta um motor em uma velocidade percentual."
+
+msgctxt "func:baasbennaguui:param:motor:description"
+msgid "The motor port."
+msgstr "A porta do motor."
+
+msgctxt "func:baasbennaguui:param:percent:description"
+msgid "The percent of the motors velocity, between -100 and 100."
+msgstr "A porcentagem da velocidade dos motores, entre -100 e 100."
+
+msgctxt "func:bk:brief"
+msgid "Moves the given motor backward at full power."
+msgstr "Move o motor fornecido para trás com potência total."
+
+msgctxt "func:bk:param:motor:description"
+msgid "the motor's port."
+msgstr "a porta do motor."
+
+msgctxt "func:black_button:detailed"
+msgid ""
+"Gets the black button's state (pressed or not pressed.) DeprecatedNot "
+"present on the Wallaby"
+msgstr "Obtém o estado do botão preto (pressionado ou não pressionado). PreteridoNão está presente no Wallaby"
+"Obtém o estado do botão preto (pressionado ou não pressionado). "
+"PreteridoNão está presente no Wallaby"
+
+msgctxt "func:block_motor_done:brief"
+msgid "Wait until the motor is at it's goal."
+msgstr "Espere até que o motor atinja seu objetivo."
+
+msgctxt "func:block_motor_done:param:motor:description"
+msgid "The motor port."
+msgstr "A porta do motor."
+
+msgctxt "func:bmd:brief"
+msgid "Wait until the motor is at it's goal."
+msgstr "Espere até que o motor atinja seu objetivo."
+
+msgctxt "func:bmd:param:motor:description"
+msgid "The motor port."
+msgstr "A porta do motor."
+
+msgctxt "func:c_button:detailed"
+msgid "Gets the C button's state (pressed or not pressed.)"
+msgstr "Obtém o estado do botão C (pressionado ou não pressionado)"
+
+msgctxt "func:c_button_clicked:detailed"
+msgid "Gets the B button's state (pressed or not pressed.)"
+msgstr "Obtém o estado do botão B (pressionado ou não pressionado)"
+
+msgctxt "func:clear_motor_position_counter:brief"
+msgid "Clears the motor position counter."
+msgstr "Limpa o contador de posição do motor."
+
+msgctxt "func:clear_motor_position_counter:param:motor:description"
+msgid "The motor port."
+msgstr "A porta do motor."
+
+msgctxt "func:cmpc:brief"
+msgid "Clears the motor position counter."
+msgstr "Limpa o contador de posição do motor."
+
+msgctxt "func:cmpc:param:motor:description"
+msgid "The motor port."
+msgstr "A porta do motor."
+
+msgctxt "func:console_clear:detailed"
+msgid "Clears the UI's console."
+msgstr "Limpa o console da interface do usuário."
+
+msgctxt "func:create_point2:brief"
+msgid "Create a point2 object."
+msgstr "Crie um objeto point2."
+
+msgctxt "func:create_point2:param:x:description"
+msgid "- the x value of the point"
+msgstr "- o valor x do ponto"
+
+msgctxt "func:create_point2:param:y:description"
+msgid "- the y value of the point"
+msgstr "- o valor y do ponto"
+
+msgctxt "func:create_point3:brief"
+msgid "Create a point3 object."
+msgstr "Crie um objeto point3."
+
+msgctxt "func:create_point3:param:x:description"
+msgid "- the x value of the point"
+msgstr "- o valor x do ponto"
+
+msgctxt "func:create_point3:param:y:description"
+msgid "- the y value of the point"
+msgstr "- o valor y do ponto"
+
+msgctxt "func:create_point3:param:z:description"
+msgid "- the z value of the point"
+msgstr "- o valor z do ponto"
+
+msgctxt "func:create_rectangle:brief"
+msgid "Create a rectangle object."
+msgstr "Crie um objeto retângulo."
+
+msgctxt "func:create_rectangle:param:height:description"
+msgid "- the height of the rectangle"
+msgstr "- a altura do retângulo"
+
+msgctxt "func:create_rectangle:param:ulx:description"
+msgid "- the x value of the rectangle's upper left"
+msgstr "- o valor x do canto superior esquerdo do retângulo"
+
+msgctxt "func:create_rectangle:param:uly:description"
+msgid "- the y value of the rectangle's upper left"
+msgstr "- o valor y do canto superior esquerdo do retângulo"
+
+msgctxt "func:create_rectangle:param:width:description"
+msgid "- the width of the rectangle"
+msgstr "- a largura do retângulo"
+
+msgctxt "func:disable_servo:brief"
+msgid "Disable a specific servo."
+msgstr "Desativar um servo específico."
+
+msgctxt "func:disable_servo:param:port:description"
+msgid "The port, between 0 and 3, to disable"
+msgstr "A porta, entre 0 e 3, a ser desativada"
+
+msgctxt "func:disable_servos:brief"
+msgid "Disable all four servo channels."
+msgstr "Desative todos os quatro canais de servo."
+
+msgctxt "func:enable_servo:brief"
+msgid "Enable a specific servo."
+msgstr "Ativar um servo específico."
+
+msgctxt "func:enable_servo:param:port:description"
+msgid "The port, between 0 and 3, to enable"
+msgstr "A porta, entre 0 e 3, a ser habilitada"
+
+msgctxt "func:enable_servos:brief"
+msgid "Enable all four servo channels."
+msgstr "Habilite todos os quatro canais de servo."
+
+msgctxt "func:extra_buttons_hide:detailed"
+msgid "Hides the X, Y, and Z buttons. This is the default."
+msgstr "Oculta os botões X, Y e Z. Esse é o padrão."
+
+msgctxt "func:extra_buttons_show:detailed"
+msgid "Shows the X, Y, and Z buttons."
+msgstr "Mostra os botões X, Y e Z."
+
+msgctxt "func:fd:brief"
+msgid "Moves the given motor forward at full power."
+msgstr "Move o motor fornecido para frente com potência total."
+
+msgctxt "func:fd:param:motor:description"
+msgid "the motor's port."
+msgstr "a porta do motor."
+
+msgctxt "func:freeze:brief"
+msgid "Active braking to stop a motor."
+msgstr "Frenagem ativa para parar um motor."
+
+msgctxt "func:freeze:param:motor:description"
+msgid "The motor port."
+msgstr "A porta do motor."
+
+msgctxt "func:get_analog_pullup:detailed"
+msgid ""
+"Gets the analog pullup status for one portt. Deprecatedno effect on the "
+"Wallaby"
+msgstr "Obtém o status do pullup analógico para uma porta. Depreciado - sem efeito no Wallaby"
+"Obtém o status do pullup analógico para uma porta. Depreciado - sem efeito "
+"no Wallaby"
+
+msgctxt "func:get_analog_pullup:param:port:description"
+msgid "A value between 0 and 7 specifying the analog sensor to read from."
+msgstr "Um valor entre 0 e 7 que especifica o sensor analógico a ser lido."
+
+msgctxt "func:get_digital_output:detailed"
+msgid "Gets the current digital mode"
+msgstr "Obtém o modo digital atual"
+
+msgctxt "func:get_digital_pullup:detailed"
+msgid ""
+"Gets the current digital pullup state Deprecatednot applicable on the "
+"Wallaby"
+msgstr "Obtém o estado atual do pullup digital Preterido-não aplicável no Wallaby"
+
+msgctxt "func:get_digital_value:detailed"
+msgid "Gets the current value of the digital port."
+msgstr "Obtém o valor atual da porta digital."
+
+msgctxt "func:get_extra_buttons_visible:detailed"
+msgid "Determines whether or not the X, Y, and Z buttons are visible."
+msgstr "Determina se os botões X, Y e Z estão visíveis ou não."
+
+msgctxt "func:get_motor_done:brief"
+msgid "Check if the motor has reached it's goal."
+msgstr "Verifique se o motor atingiu sua meta."
+
+msgctxt "func:get_motor_done:param:motor:description"
+msgid "The motor port."
+msgstr "A porta do motor."
+
+msgctxt "func:get_motor_position_counter:brief"
+msgid "Gets the current motor position."
+msgstr "Obtém a posição atual do motor."
+
+msgctxt "func:get_motor_position_counter:param:motor:description"
+msgid "The motor port."
+msgstr "A porta do motor."
+
+msgctxt "func:get_pid_gains:brief"
+msgid "Set the motor PID gains, represented as fractions."
+msgstr "Defina os ganhos do PID do motor, representados como frações."
+
+msgctxt "func:get_pid_gains:param:d:description"
+msgid "The D (derivative) gain numerator"
+msgstr "O numerador de ganho D (derivado)"
+
+msgctxt "func:get_pid_gains:param:dd:description"
+msgid "The D (derivative) gain denominator"
+msgstr "O denominador do ganho D (derivado)"
+
+msgctxt "func:get_pid_gains:param:i:description"
+msgid "The I (integral) gain numerator"
+msgstr "O numerador de ganho I (integral)"
+
+msgctxt "func:get_pid_gains:param:id:description"
+msgid "The I (integral) gain denominator"
+msgstr "O denominador de ganho I (integral)"
+
+msgctxt "func:get_pid_gains:param:motor:description"
+msgid "The motor port."
+msgstr "A porta do motor."
+
+msgctxt "func:get_pid_gains:param:p:description"
+msgid "The P (proportional) gain numerator"
+msgstr "O numerador de ganho P (proporcional)"
+
+msgctxt "func:get_pid_gains:param:pd:description"
+msgid "The P (proportional) gain denominator"
+msgstr "O denominador do ganho P (proporcional)"
+
+msgctxt "func:get_servo_enabled:brief"
+msgid "Check if a servo is enabled."
+msgstr "Verifique se um servo está ativado."
+
+msgctxt "func:get_servo_enabled:param:port:description"
+msgid "The port, between 0 and 3"
+msgstr "A porta, entre 0 e 3"
+
+msgctxt "func:get_servo_position:brief"
+msgid "Get the most recent commanded servo position."
+msgstr "Obtenha a posição do servo comandada mais recente."
+
+msgctxt "func:get_servo_position:param:port:description"
+msgid "The port of the servo"
+msgstr "A porta do servo"
+
+msgctxt "func:getpwm:brief"
+msgid "Get the current motor pwm command."
+msgstr "Obtenha o comando pwm atual do motor."
+
+msgctxt "func:getpwm:param:motor:description"
+msgid "The motor port."
+msgstr "A porta do motor."
+
+msgctxt "func:gmpc:brief"
+msgid "Gets the current motor position."
+msgstr "Obtém a posição atual do motor."
+
+msgctxt "func:gmpc:param:motor:description"
+msgid "The motor port."
+msgstr "A porta do motor."
+
+msgctxt "func:left_button:detailed"
+msgid "Gets the left button's state (pressed or not pressed.)"
+msgstr "Obtém o estado do botão esquerdo (pressionado ou não pressionado)"
+
+msgctxt "func:mav:brief"
+msgid "Set a goal velocity in ticks per second."
+msgstr "Defina uma meta de velocidade em ticks por segundo."
+
+msgctxt "func:mav:param:motor:description"
+msgid "The motor port."
+msgstr "A porta do motor."
+
+msgctxt "func:mav:param:velocity:description"
+msgid "The goal velocity in -1500 to 1500 ticks / second"
+msgstr "A velocidade da meta em -1500 a 1500 ticks / segundo"
+
+msgctxt "func:motor:brief"
+msgid "Moves a motor at a percent velocity."
+msgstr "Movimenta um motor em uma velocidade percentual."
+
+msgctxt "func:motor:param:motor:description"
+msgid "The motor port."
+msgstr "A porta do motor."
+
+msgctxt "func:motor:param:percent:description"
+msgid "The percent of the motors velocity, between -100 and 100."
+msgstr "A porcentagem da velocidade dos motores, entre -100 e 100."
+
+msgctxt "func:motor_power:brief"
+msgid "Moves a motor at a percent power."
+msgstr "Movimenta um motor com uma porcentagem de potência."
+
+msgctxt "func:motor_power:param:motor:description"
+msgid "the motor port."
+msgstr "a porta do motor."
+
+msgctxt "func:motor_power:param:percent:description"
+msgid "The power of the motor, between -100 and 100."
+msgstr "A potência do motor, entre -100 e 100."
+
+msgctxt "func:move_at_velocity:brief"
+msgid "Set a goal velocity in ticks per second."
+msgstr "Defina uma meta de velocidade em ticks por segundo."
+
+msgctxt "func:move_at_velocity:detailed"
+msgid ""
+"The range is -1500 to 1500, though motor position accuracy may be decreased "
+"outside of -1000 to 1000"
+msgstr "O intervalo é de -1500 a 1500, embora a precisão da posição do motor possa ser reduzida fora do intervalo de -1000 a 1000"
+"O intervalo é de -1500 a 1500, embora a precisão da posição do motor possa "
+"ser reduzida fora do intervalo de -1000 a 1000"
+
+msgctxt "func:move_at_velocity:param:motor:description"
+msgid "The motor port."
+msgstr "A porta do motor."
+
+msgctxt "func:move_at_velocity:param:velocity:description"
+msgid "The goal velocity in -1500 to 1500 ticks / second"
+msgstr "A velocidade da meta em -1500 a 1500 ticks / segundo"
+
+msgctxt "func:move_relative_position:brief"
+msgid ""
+"Set a goal position (in ticks) for the motor to move to, relative to the "
+"current position."
+msgstr "Defina uma posição de meta (em ticks) para a qual o motor deve se mover, em relação à posição atual."
+"Defina uma posição de meta (em ticks) para a qual o motor deve se mover, em "
+"relação à posição atual."
+
+msgctxt "func:move_relative_position:param:delta_pos:description"
+msgid "The position to move to (in ticks) given the current position"
+msgstr "A posição para a qual você deve se mover (em ticks), considerando a posição atual"
+"A posição para a qual você deve se mover (em ticks), considerando a posição "
+"atual"
+
+msgctxt "func:move_relative_position:param:motor:description"
+msgid "The motor port."
+msgstr "A porta do motor."
+
+msgctxt "func:move_relative_position:param:speed:description"
+msgid "The speed to move at, between -1500 and 1500 ticks / second"
+msgstr "A velocidade de movimentação, entre -1500 e 1500 ticks / segundo"
+
+msgctxt "func:move_to_position:brief"
+msgid "Set a goal position (in ticks) for the motor to move to."
+msgstr "Defina uma posição de meta (em ticks) para a qual o motor deve se mover."
+
+msgctxt "func:move_to_position:detailed"
+msgid ""
+"There are approximately 1500 ticks per motor revolution.This function is "
+"more accurate if speeds between -1000 and 1000 are used."
+msgstr "Essa função é mais precisa se você usar velocidades entre -1000 e 1000."
+
+msgctxt "func:move_to_position:param:goal_pos:description"
+msgid "The position to move to (in ticks)"
+msgstr "A posição para a qual você deve se mover (em ticks)"
+
+msgctxt "func:move_to_position:param:motor:description"
+msgid "The motor port."
+msgstr "A porta do motor."
+
+msgctxt "func:move_to_position:param:speed:description"
+msgid "The speed to move at, between -1500 and 1500 ticks / second"
+msgstr "A velocidade de movimentação, entre -1500 e 1500 ticks / segundo"
+
+msgctxt "func:mrp:brief"
+msgid ""
+"Set a goal position (in ticks) for the motor to move to, relative to the "
+"current position."
+msgstr "Defina uma posição de meta (em ticks) para a qual o motor deve se mover, em relação à posição atual."
+"Defina uma posição de meta (em ticks) para a qual o motor deve se mover, em "
+"relação à posição atual."
+
+msgctxt "func:mrp:param:delta_pos:description"
+msgid "The position to move to (in ticks) given the current position"
+msgstr "A posição para a qual você deve se mover (em ticks), considerando a posição atual"
+"A posição para a qual você deve se mover (em ticks), considerando a posição "
+"atual"
+
+msgctxt "func:mrp:param:motor:description"
+msgid "The motor port."
+msgstr "A porta do motor."
+
+msgctxt "func:mrp:param:speed:description"
+msgid "The speed to move at, between -1500 and 1500 ticks / second"
+msgstr "A velocidade de movimentação, entre -1500 e 1500 ticks / segundo"
+
+msgctxt "func:mtp:brief"
+msgid "Set a goal position (in ticks) for the motor to move to."
+msgstr "Defina uma posição de meta (em ticks) para a qual o motor deve se mover."
+
+msgctxt "func:mtp:param:goal_pos:description"
+msgid "The position to move to (in ticks)"
+msgstr "A posição para a qual você deve se mover (em ticks)"
+
+msgctxt "func:mtp:param:motor:description"
+msgid "The motor port."
+msgstr "A porta do motor."
+
+msgctxt "func:mtp:param:speed:description"
+msgid "The speed to move at, between -1500 and 1500 ticks / second"
+msgstr "A velocidade de movimentação, entre -1500 e 1500 ticks / segundo"
+
+msgctxt "func:off:brief"
+msgid "Turns the specified motor off."
+msgstr "Desliga o motor especificado."
+
+msgctxt "func:off:param:motor:description"
+msgid "the motor's port."
+msgstr "a porta do motor."
+
+msgctxt "func:push_button:detailed"
+msgid "Gets the ousg button's state (pressed or not pressed.)"
+msgstr "Obtém o estado do botão ousg (pressionado ou não pressionado)"
+
+msgctxt "func:right_button:detailed"
+msgid "Gets the right button's state (pressed or not pressed.)"
+msgstr "Obtém o estado do botão direito (pressionado ou não pressionado)"
+
+msgctxt "func:set_a_button_text:detailed"
+msgid "Updates the A button's text. Deprecatednot planned for the Wallaby"
+msgstr "Atualiza o texto do botão A. Depreciadonão planejado para o Wallaby"
+
+msgctxt "func:set_a_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "O texto a ser exibido. Limite de 16 caracteres."
+
+msgctxt "func:set_analog_pullup:detailed"
+msgid "Sets analog pullup status for one port. Deprecatedno effect on the Wallaby"
+msgstr "Define o status do pullup analógico para uma porta. Depreciado - sem efeito no Wallaby"
+"Define o status do pullup analógico para uma porta. Depreciado - sem efeito "
+"no Wallaby"
+
+msgctxt "func:set_analog_pullup:param:port:description"
+msgid "A value between 0 and 5 specifying the analog sensor to read from."
+msgstr "Um valor entre 0 e 5 que especifica o sensor analógico a ser lido."
+
+msgctxt "func:set_analog_pullup:param:pullup:description"
+msgid "A value of 0 (inactive) or 1 (active)."
+msgstr "Um valor de 0 (inativo) ou 1 (ativo)."
+
+msgctxt "func:set_b_button_text:detailed"
+msgid "Updates the B button's text. Deprecatednot planned for the Wallaby"
+msgstr "Atualiza o texto do botão B. Depreciadonão planejado para o Wallaby"
+
+msgctxt "func:set_b_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "O texto a ser exibido. Limite de 16 caracteres."
+
+msgctxt "func:set_c_button_text:detailed"
+msgid "Updates the C button's text. Deprecatednot planned for the Wallaby"
+msgstr "Atualiza o texto do botão C. Depreciadonão planejado para o Wallaby"
+
+msgctxt "func:set_c_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "O texto a ser exibido. Limite de 16 caracteres."
+
+msgctxt "func:set_digital_output:detailed"
+msgid "Sets the digital mode."
+msgstr "Define o modo digital."
+
+msgctxt "func:set_digital_output:param:out:description"
+msgid "1 for output mode, 0 for input mode."
+msgstr "1 para o modo de saída, 0 para o modo de entrada."
+
+msgctxt "func:set_digital_output:param:port:description"
+msgid "The port to modify."
+msgstr "A porta a ser modificada."
+
+msgctxt "func:set_digital_pullup:detailed"
+msgid ""
+"Sets the current digital pullup state Deprecatednot applicable on the "
+"Wallaby"
+msgstr "Define o estado atual do pullup digital Preterido-não aplicável no Wallaby"
+
+msgctxt "func:set_digital_pullup:param:port:description"
+msgid "The port to modify"
+msgstr "A porta a ser modificada"
+
+msgctxt "func:set_digital_pullup:param:pullup:description"
+msgid "The pullup state 1: active 0: inactive"
+msgstr "O estado de pullup 1: ativo 0: inativo"
+
+msgctxt "func:set_digital_value:detailed"
+msgid "Sets the value of the digital port in output mode."
+msgstr "Define o valor da porta digital no modo de saída."
+
+msgctxt "func:set_extra_buttons_visible:detailed"
+msgid "Sets whether or not the X, Y, and Z buttons are visible."
+msgstr "Define se os botões X, Y e Z estão visíveis ou não."
+
+msgctxt "func:set_pid_gains:brief"
+msgid "Set the motor PID gains, represented as fractions."
+msgstr "Defina os ganhos do PID do motor, representados como frações."
+
+msgctxt "func:set_pid_gains:param:d:description"
+msgid "The D (derivative) gain numerator"
+msgstr "O numerador de ganho D (derivado)"
+
+msgctxt "func:set_pid_gains:param:dd:description"
+msgid "The D (derivative) gain denominator"
+msgstr "O denominador do ganho D (derivado)"
+
+msgctxt "func:set_pid_gains:param:i:description"
+msgid "The I (integral) gain numerator"
+msgstr "O numerador de ganho I (integral)"
+
+msgctxt "func:set_pid_gains:param:id:description"
+msgid "The I (integral) gain denominator"
+msgstr "O denominador de ganho I (integral)"
+
+msgctxt "func:set_pid_gains:param:motor:description"
+msgid "The motor port."
+msgstr "A porta do motor."
+
+msgctxt "func:set_pid_gains:param:p:description"
+msgid "The P (proportional) gain numerator"
+msgstr "O numerador de ganho P (proporcional)"
+
+msgctxt "func:set_pid_gains:param:pd:description"
+msgid "The P (proportional) gain denominator"
+msgstr "O denominador do ganho P (proporcional)"
+
+msgctxt "func:set_servo_enabled:brief"
+msgid "Enable or disable a specific servo."
+msgstr "Ativar ou desativar um servo específico."
+
+msgctxt "func:set_servo_enabled:param:enabled:description"
+msgid "The new enable setting 0: disabled 1: enabled"
+msgstr "A nova configuração de ativação 0: desativada 1: ativada"
+
+msgctxt "func:set_servo_enabled:param:port:description"
+msgid "The port, between 0 and 3, to enable"
+msgstr "A porta, entre 0 e 3, a ser habilitada"
+
+msgctxt "func:set_servo_position:brief"
+msgid "Set a new servo goal position."
+msgstr "Defina uma nova posição de meta do servo."
+
+msgctxt "func:set_servo_position:param:port:description"
+msgid "The port of the servo"
+msgstr "A porta do servo"
+
+msgctxt "func:set_servo_position:param:position:description"
+msgid "The new servo position, between 0 and 2047"
+msgstr "A nova posição do servo, entre 0 e 2047"
+
+msgctxt "func:set_x_button_text:detailed"
+msgid "Updates the X button's text. Deprecatednot planned for the Wallaby"
+msgstr "Atualiza o texto do botão X. Depreciadonão planejado para o Wallaby"
+
+msgctxt "func:set_x_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "O texto a ser exibido. Limite de 16 caracteres."
+
+msgctxt "func:set_y_button_text:detailed"
+msgid "Updates the Y button's text. Deprecatednot planned for the Wallaby"
+msgstr "Atualiza o texto do botão Y. Preteridonão planejado para o Wallaby"
+
+msgctxt "func:set_y_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "O texto a ser exibido. Limite de 16 caracteres."
+
+msgctxt "func:set_z_button_text:detailed"
+msgid "Updates the Z button's text. Deprecatednot planned for the Wallaby"
+msgstr "Atualiza o texto do botão Z. Depreciadonão planejado para o Wallaby"
+
+msgctxt "func:set_z_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "O texto a ser exibido. Limite de 16 caracteres."
+
+msgctxt "func:setpwm:brief"
+msgid "Set the motor pwm (percent power) command."
+msgstr "Defina o comando pwm (porcentagem de potência) do motor."
+
+msgctxt "func:setpwm:param:motor:description"
+msgid "The motor port."
+msgstr "A porta do motor."
+
+msgctxt "func:setpwm:param:pwm:description"
+msgid "A new motor pwm command between 0 and 100"
+msgstr "Um novo comando de pwm do motor entre 0 e 100"
+
+msgctxt "func:shut_down_in:detailed"
+msgid "Register an event to stop the user program after s seconds"
+msgstr "Registre um evento para interromper o programa do usuário após s segundos"
+
+msgctxt "func:shut_down_in:param:s:description"
+msgid "The number of seconds to wait before the end of program"
+msgstr "O número de segundos a esperar antes do final do programa"
+
+msgctxt "func:side_button:detailed"
+msgid ""
+"Gets the side button's state (pressed or not pressed.) DeprecatedNot "
+"present on the Wallaby"
+msgstr "Obtém o estado do botão lateral (pressionado ou não pressionado). PreteridoNão está presente no Wallaby"
+"Obtém o estado do botão lateral (pressionado ou não pressionado). "
+"PreteridoNão está presente no Wallaby"
+
+msgctxt "func:side_button_clicked:detailed"
+msgid "Gets the Z button's state (pressed or not pressed.)"
+msgstr "Obtém o estado do botão Z (pressionado ou não pressionado)"
+
+msgctxt "func:wait_for_a_button:detailed"
+msgid "Waits (blocks) until the a button has been pressed."
+msgstr "Aguarda (bloqueia) até que um botão seja pressionado."
+
+msgctxt "func:wait_for_a_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the a button has been pressed and then subsequently "
+"released."
+msgstr "Aguarda (bloqueia) até que um botão tenha sido pressionado e, em seguida, liberado."
+"Aguarda (bloqueia) até que um botão tenha sido pressionado e, em seguida, "
+"liberado."
+
+msgctxt "func:wait_for_any_button:detailed"
+msgid "Waits (blocks) until any system button has been pressed."
+msgstr "Aguarda (bloqueia) até que qualquer botão do sistema tenha sido pressionado."
+
+msgctxt "func:wait_for_b_button:detailed"
+msgid "Waits (blocks) until the b button has been pressed."
+msgstr "Aguarda (bloqueia) até que o botão b seja pressionado."
+
+msgctxt "func:wait_for_b_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the b button has been pressed and then subsequently "
+"released."
+msgstr "Aguarda (bloqueia) até que o botão b tenha sido pressionado e, em seguida, liberado."
+"Aguarda (bloqueia) até que o botão b tenha sido pressionado e, em seguida, "
+"liberado."
+
+msgctxt "func:wait_for_c_button:detailed"
+msgid "Waits (blocks) until the c button has been pressed."
+msgstr "Aguarda (bloqueia) até que o botão c seja pressionado."
+
+msgctxt "func:wait_for_c_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the c button has been pressed and then subsequently "
+"released."
+msgstr "Aguarda (bloqueia) até que o botão c tenha sido pressionado e, em seguida, liberado."
+"Aguarda (bloqueia) até que o botão c tenha sido pressionado e, em seguida, "
+"liberado."
+
+msgctxt "func:wait_for_light:detailed"
+msgid ""
+"Initiate a calibration and wait for light sequence which is a normal early "
+"step in Botball programs"
+msgstr "Iniciar uma calibração e aguardar a sequência de luz, que é uma etapa inicial normal nos programas Botball"
+"Iniciar uma calibração e aguardar a sequência de luz, que é uma etapa "
+"inicial normal nos programas Botball"
+
+msgctxt "func:wait_for_light:param:light_port_:description"
+msgid "The analog port and light sensor to use."
+msgstr "A porta analógica e o sensor de luz a serem usados."
+
+msgctxt "func:wait_for_milliseconds:detailed"
+msgid "Waits (blocks) for the given number of milliseconds."
+msgstr "Aguarda (bloqueia) pelo número de milissegundos informado."
+
+msgctxt "func:wait_for_milliseconds:param:msecs:description"
+msgid "the number of milliseconds to sleep"
+msgstr "o número de milissegundos para dormir"
+
+msgctxt "func:wait_for_side_button:detailed"
+msgid "Waits (blocks) until the side button has been pressed."
+msgstr "Aguarda (bloqueia) até que o botão lateral seja pressionado."
+
+msgctxt "func:wait_for_side_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the side button has been pressed and then subsequently "
+"released."
+msgstr "Aguarda (bloqueia) até que o botão lateral tenha sido pressionado e, em seguida, liberado."
+"Aguarda (bloqueia) até que o botão lateral tenha sido pressionado e, em "
+"seguida, liberado."
+
+msgctxt "func:wait_for_touch:detailed"
+msgid ""
+"Waits (blocks) until the digital sensor on the given port has been "
+"activated."
+msgstr "Aguarda (bloqueia) até que o sensor digital na porta especificada seja ativado."
+"Aguarda (bloqueia) até que o sensor digital na porta especificada seja "
+"ativado."
+
+msgctxt "func:wait_for_touch:param:port:description"
+msgid "The port to wait for activation on"
+msgstr "A porta para aguardar a ativação em"
+
+msgctxt "func:wait_for_x_button:detailed"
+msgid "Waits (blocks) until the x button has been pressed."
+msgstr "Aguarda (bloqueia) até que o botão x seja pressionado."
+
+msgctxt "func:wait_for_x_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the x button has been pressed and then subsequently "
+"released."
+msgstr "Aguarda (bloqueia) até que o botão x seja pressionado e, em seguida, liberado."
+"Aguarda (bloqueia) até que o botão x tenha sido pressionado e, em seguida, "
+"liberado."
+
+msgctxt "func:wait_for_y_button:detailed"
+msgid "Waits (blocks) until the y button has been pressed."
+msgstr "Aguarda (bloqueia) até que o botão y seja pressionado."
+
+msgctxt "func:wait_for_y_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the y button has been pressed and then subsequently "
+"released."
+msgstr "Aguarda (bloqueia) até que o botão y tenha sido pressionado e, em seguida, liberado."
+"Aguarda (bloqueia) até que o botão y tenha sido pressionado e, em seguida, "
+"liberado."
+
+msgctxt "func:wait_for_z_button:detailed"
+msgid "Waits (blocks) until the z button has been pressed."
+msgstr "Aguarda (bloqueia) até que o botão z seja pressionado."
+
+msgctxt "func:wait_for_z_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the z button has been pressed and then subsequently "
+"released."
+msgstr "Aguarda (bloqueia) até que o botão z seja pressionado e, em seguida, liberado."
+"Aguarda (bloqueia) até que o botão z seja pressionado e, em seguida, "
+"liberado."
+
+msgctxt "func:x_button:detailed"
+msgid "Gets the C button's state (pressed or not pressed.)"
+msgstr "Obtém o estado do botão C (pressionado ou não pressionado)"
+
+msgctxt "func:x_button_clicked:detailed"
+msgid "Gets the C button's state (pressed or not pressed.)"
+msgstr "Obtém o estado do botão C (pressionado ou não pressionado)"
+
+msgctxt "func:y_button:detailed"
+msgid "Gets the Y button's state (pressed or not pressed.)"
+msgstr "Obtém o estado do botão Y (pressionado ou não pressionado)"
+
+msgctxt "func:y_button_clicked:detailed"
+msgid "Gets the X button's state (pressed or not pressed.)"
+msgstr "Obtém o estado do botão X (pressionado ou não pressionado)"
+
+msgctxt "func:z_button:detailed"
+msgid "Gets the Z button's state (pressed or not pressed.)"
+msgstr "Obtém o estado do botão Z (pressionado ou não pressionado)"
+
+msgctxt "func:z_button_clicked:detailed"
+msgid "Gets the Y button's state (pressed or not pressed.)"
+msgstr "Obtém o estado do botão Y (pressionado ou não pressionado)"
+
+msgctxt "struct:kipr::create::CreatePackets::_101:detailed"
+msgid "Create OI Packet 101"
+msgstr "Criar pacote OI 101"
+
+msgctxt "struct:kipr::create::CreatePackets::_1:detailed"
+msgid "Create OI Packet 1"
+msgstr "Criar o pacote 1 da OI"
+
+msgctxt "struct:kipr::create::CreatePackets::_2:detailed"
+msgid "Create OI Packet 2"
+msgstr "Criar pacote OI 2"
+
+msgctxt "struct:kipr::create::CreatePackets::_3:detailed"
+msgid "Create OI Packet 3"
+msgstr "Criar pacote OI 3"
+
+msgctxt "struct:kipr::create::CreatePackets::_4:detailed"
+msgid "Create OI Packet 4"
+msgstr "Criar pacote OI 4"
+
+msgctxt "struct:kipr::create::CreatePackets::_5:detailed"
+msgid "Create OI Packet 5"
+msgstr "Criar pacote OI 5"
+
+msgctxt "struct:kipr::create::CreateState:detailed"
+msgid "Locally stored state information"
+msgstr "Informações de estado armazenadas localmente"
+
+msgctxt "struct:mutex:brief"
+msgid "A mutex, or lock."
+msgstr "Um mutex ou bloqueio."
+
+msgctxt "struct:mutex:detailed"
+msgid ""
+"mutexes are used to prevent memory errors when two programs or threads need "
+"to access the same variable."
+msgstr "os mutexes são usados para evitar erros de memória quando dois programas ou threads precisam acessar a mesma variável."
+"os mutexes são usados para evitar erros de memória quando dois programas ou "
+"threads precisam acessar a mesma variável."
+
+msgctxt "struct:mutex:member:data:brief"
+msgid "a C++ Mutex object cast to a void*. Not intended to be accessed."
+msgstr "um objeto C++ Mutex convertido em um void*. Não se destina a ser acessado."
+
+msgctxt "struct:point2:brief"
+msgid "A 2D point; has x and y."
+msgstr "Um ponto 2D; tem x e y."
+
+msgctxt "struct:point2:member:x:brief"
+msgid "the x value of the point"
+msgstr "o valor x do ponto"
+
+msgctxt "struct:point2:member:y:brief"
+msgid "the y value of the point"
+msgstr "o valor y do ponto"
+
+msgctxt "struct:point3:brief"
+msgid "A 3D point; has x, y, and z."
+msgstr "Um ponto 3D; tem x, y e z."
+
+msgctxt "struct:point3:member:x:brief"
+msgid "the x value of the point"
+msgstr "o valor x do ponto"
+
+msgctxt "struct:point3:member:y:brief"
+msgid "the y value of the point"
+msgstr "o valor y do ponto"
+
+msgctxt "struct:point3:member:z:brief"
+msgid "the z value of the point"
+msgstr "o valor z do ponto"
+
+msgctxt "struct:rectangle:brief"
+msgid "A rectangle object."
+msgstr "Um objeto retângulo."
+
+msgctxt "struct:rectangle:member:height:brief"
+msgid "the height of the rectangle"
+msgstr "a altura do retângulo"
+
+msgctxt "struct:rectangle:member:ulx:brief"
+msgid "the x value of the rectangle's upper left"
+msgstr "o valor x do canto superior esquerdo do retângulo"
+
+msgctxt "struct:rectangle:member:uly:brief"
+msgid "the y value of the rectangle's upper left"
+msgstr "o valor y do canto superior esquerdo do retângulo"
+
+msgctxt "struct:rectangle:member:width:brief"
+msgid "the width of the rectangle"
+msgstr "a largura do retângulo"
+
+msgctxt "struct:thread:brief"
+msgid "A thread, or separate process."
+msgstr "Um thread ou processo separado."
+
+msgctxt "struct:thread:detailed"
+msgid ""
+"a thread runs a function \"in the background\" (while another function is "
+"executing)."
+msgstr "um thread executa uma função \\\\executando)."
+
+msgctxt "struct:thread:member:data:brief"
+msgid "a C++ Thread object cast to a void*. Not intended to be accessed."
+msgstr "um objeto C++ Thread convertido em um void*. Não se destina a ser acessado."
