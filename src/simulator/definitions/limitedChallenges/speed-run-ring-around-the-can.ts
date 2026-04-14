@@ -160,7 +160,6 @@ export default {
     },
   ],
   sceneId: "jbc2",
-  // Time window: Open from Jan 19, 2026 to Jan 22, 2026
-  openDate: '2026-01-19T00:00:00Z',
-  closeDate: '2026-01-19T23:59:59Z',
+  openDate: '2026-04-16T00:00:00Z',
+  closeDate: '2026-04-23T23:59:59Z',
 } as LimitedChallenge;

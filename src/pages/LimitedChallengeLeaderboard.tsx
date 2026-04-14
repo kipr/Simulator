@@ -115,20 +115,37 @@ const ChallengeDescription = styled('p', (props: ThemeProps) => ({
   maxWidth: '600px',
 }));
 
-const StatusBadge = styled('div', (props: ThemeProps & { status: LimitedChallengeStatus }) => ({
-  padding: '6px 16px',
-  fontSize: '0.85em',
-  fontWeight: 'bold',
-  textTransform: 'uppercase',
-  color: '#fff',
-  borderRadius: '4px',
-  marginBottom: '16px',
-  backgroundColor: props.status === 'open'
+const StatusBadge = styled('div', (props: ThemeProps & { status: LimitedChallengeStatus }) => {
+  const dotColor = props.status === 'open'
     ? '#4caf50'
     : props.status === 'upcoming'
       ? '#ff9800'
-      : '#9e9e9e',
-}));
+      : '#9e9e9e';
+  return {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '6px',
+    padding: '3px 10px',
+    marginBottom: '16px',
+    fontSize: '0.75em',
+    fontWeight: 600,
+    letterSpacing: '0.05em',
+    textTransform: 'uppercase' as const,
+    color: dotColor,
+    backgroundColor: 'transparent',
+    border: `1px solid ${dotColor}`,
+    borderRadius: '999px',
+    '::before': {
+      content: '""',
+      display: 'inline-block',
+      width: '6px',
+      height: '6px',
+      borderRadius: '50%',
+      backgroundColor: dotColor,
+      flexShrink: 0,
+    },
+  };
+});
 
 const ButtonContainer = styled('div', () => ({
   display: 'flex',
