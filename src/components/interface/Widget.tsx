@@ -226,10 +226,13 @@ const Title = styled(
 );
 
 const Content = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
   flex: 1,
   overflowY: 'auto',
   overflowX: 'hidden',
   minHeight: 0,
+  minWidth: 0,
 });
 
 const sizeIcon = (size: Size): IconProp => {
