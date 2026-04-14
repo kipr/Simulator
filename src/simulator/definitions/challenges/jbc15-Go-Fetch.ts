@@ -52,6 +52,7 @@ export default {
         type: Expr.Type.Event,
         eventId: "canInStartBox",
       },
+
       // Success Logic = Can 7 not upright, waited to chop, and began in start box
       completion: {
         type: Expr.Type.And,
@@ -74,9 +75,8 @@ export default {
         argId: "can11Upright",
       },
 
-      // Success Logic = Can 7 not upright, waited to chop, and began in start box
       failure: {
-        type: Expr.Type.And,
+        type: Expr.Type.Or,
         argIds: [
           "can11NotUpright",
         ],

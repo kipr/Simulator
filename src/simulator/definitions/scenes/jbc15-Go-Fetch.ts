@@ -1,14 +1,13 @@
+import tr from '@i18n';
 import Scene from '../../../state/State/Scene';
 import Script from '../../../state/State/Scene/Script';
-import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
-import tr from '@i18n';
-import { matAStartGeoms, matAStartNodes, setNodeVisible, notInStartBox, nodeUpright } from './jbcCommonComponents';
+import { createBaseSceneSurfaceA, createCanNode } from './jbcBase';
+import { matAStartGeoms, matAStartNodes, nodeUpright, notInStartBox, setNodeVisible } from './jbcCommonComponents';
 
 const baseScene = createBaseSceneSurfaceA();
 
 const enterStartBox = `
 ${setNodeVisible}
-
 scene.addOnIntersectionListener('can11', (type, otherNodeId) => {
   // console.log('Robot returned start box!', type, otherNodeId);
   if(scene.programStatus === 'running'){
@@ -20,9 +19,7 @@ scene.addOnIntersectionListener('can11', (type, otherNodeId) => {
 
 const uprightCan = `
 ${nodeUpright}
-
 scene.addOnRenderListener(() => {
-  console.log('Can 11 upright:', nodeUpright('can11'));
   scene.setChallengeEventValue('can11Upright', nodeUpright('can11'));
 });
 `;
