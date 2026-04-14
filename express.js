@@ -21,7 +21,7 @@ const createParentalConsentRouter = require('./parentalConsent');
 const createAiRouter = require('./ai');
 const createLimitedChallengeCompletionsRouter = require('./limitedChallengeCompletions');
 const createClassroomsRouter = require('./classrooms');
-
+const createGuidedTourRouter = require('./guidedTour');
 let config;
 try {
   config = getConfig();
@@ -121,7 +121,7 @@ app.use(
   '/api/parental-consent',
   createParentalConsentRouter(firebaseTokenManager, mailgunClient, config),
 );
-
+app.use('/api/tours', createGuidedTourRouter(firebaseTokenManager));
 // Classrooms router
 app.use('/api/classrooms', createClassroomsRouter(firebaseTokenManager));
 // Add AI router

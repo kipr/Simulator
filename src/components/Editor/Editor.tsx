@@ -22,6 +22,7 @@ import * as monaco from 'monaco-editor';
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';
 import GraphicalEditor from './GraphicalEditor';
+import { TourRegistry } from '../../tours/TourRegistry';
 
 export enum EditorActionState {
   None,
@@ -83,6 +84,7 @@ export namespace EditorBarTarget {
     onErrorClick: (event: React.MouseEvent<HTMLDivElement>) => void;
     mini?: boolean;
     onMiniClick?: () => void;
+    tourRegistry?: TourRegistry;
   }
 }
 
@@ -110,12 +112,14 @@ export const createEditorBarComponents = ({
         theme,
         language: target.language,
         onLanguageChange: target.onLanguageChange,
+        tourRegistry: target.tourRegistry
       }));
 
       if (target.language !== 'graphical') {
         editorBar.push(BarComponent.create(Button, {
           theme,
           onClick: target.onIndentCode,
+          tourRegistry: target.tourRegistry,
           children:
             <>
               <FontAwesome icon={faIndent} />
@@ -137,6 +141,7 @@ export const createEditorBarComponents = ({
       editorBar.push(BarComponent.create(Button, {
         theme,
         onClick: target.onDownloadCode,
+        tourRegistry: target.tourRegistry,
         children:
           <>
             <FontAwesome icon={faFileDownload} />
@@ -147,6 +152,7 @@ export const createEditorBarComponents = ({
       editorBar.push(BarComponent.create(Button, {
         theme,
         onClick: target.onResetCode,
+        tourRegistry: target.tourRegistry,
         children:
           <>
             <FontAwesome icon={faArrowsRotate} />
@@ -204,9 +210,26 @@ class Editor extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
   }
-
+  private ivygate_: Ivygate;
+  private bindIvygate_ = (ivygate: Ivygate) => {
+    if (this.ivygate_ === ivygate) return;
+    const old = this.ivygate_;
+    this.ivygate_ = ivygate;
+    if (this.ivygate_ && this.ivygate_.editor) {
+      this.setupCodeEditor_(this.ivygate_.editor);
+    } else {
+      this.disposeCodeEditor_(old.editor);
+    }
+  };
   private openDocumentation_ = () => {
-    const { word } = this.ivygate_.editor.getModel().getWordAtPosition(this.ivygate_.editor.getPosition());
+    const editor: monaco.editor.IStandaloneCodeEditor | null = this.ivygate_.editor;
+    if (!editor) return;
+
+    const model = editor.getModel();
+    const position = editor.getPosition();
+    if (!model || !position) return;
+
+    const word = model.getWordAtPosition(position)?.word;
     const language = DOCUMENTATION_LANGUAGE_MAPPING[this.props.language];
     if (!language) return;
     this.props.onDocumentationGoToFuzzy?.(word, language);
@@ -215,7 +238,14 @@ class Editor extends React.PureComponent<Props, State> {
 
   private openCommonDocumentation_ = () => {
     console.log("Opening common documentation from Editor");
-    const { word } = this.ivygate_.editor.getModel().getWordAtPosition(this.ivygate_.editor.getPosition());
+    const editor: monaco.editor.IStandaloneCodeEditor | null = this.ivygate_.editor;
+    if (!editor) return;
+
+    const model = editor.getModel();
+    const position = editor.getPosition();
+    if (!model || !position) return;
+
+    const word = model.getWordAtPosition(position)?.word;
     const language = DOCUMENTATION_LANGUAGE_MAPPING[this.props.language];
     if (!language) return;
     this.props.onCommonDocumentationGoToFuzzy?.(word, language);
@@ -249,17 +279,7 @@ class Editor extends React.PureComponent<Props, State> {
     if (this.openDocumentationAction_) this.openDocumentationAction_.dispose();
   };
 
-  private ivygate_: Ivygate;
-  private bindIvygate_ = (ivygate: Ivygate) => {
-    if (this.ivygate_ === ivygate) return;
-    const old = this.ivygate_;
-    this.ivygate_ = ivygate;
-    if (this.ivygate_ && this.ivygate_.editor) {
-      this.setupCodeEditor_(this.ivygate_.editor);
-    } else {
-      this.disposeCodeEditor_(old.editor);
-    }
-  };
+
 
   get ivygate() {
     return this.ivygate_;

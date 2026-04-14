@@ -19,6 +19,8 @@ import Async from '../state/State/Async';
 import MyBadgesDialog from '../components/Dialog/MyBadgesDialog';
 import { auth } from '../firebase/firebase';
 import { LeaderboardEntry, LeaderboardUserContext } from 'state/State/LimitedChallengeLeaderboard';
+import TourTarget from '../components/Tours/TourTarget';
+import { TourRegistry } from '../tours/TourRegistry';
 
 const SELFIDENTIFIER = "My Scores!";
 
@@ -56,6 +58,7 @@ export interface ClassroomLeaderboardPublicProps extends StyleProps, ThemeProps 
   view?: string;
   currentStudentDisplayName?: string;
   currentClassroom?: Classroom;
+  tourRegistry?: TourRegistry;
 }
 
 interface RouterProps {
@@ -974,9 +977,15 @@ class ClassroomLeaderboard extends React.Component<Props, State> {
             <ClassroomLeaderboardTitleContainer>
               <h1>Classroom Leaderboard</h1>
               <ButtonContainer>
-                <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> Export My Scores!</Button>
-                <Button theme={DARK} onClick={this.scrollToMyScores}> Scroll to My Scores!</Button>
-                <Button theme={DARK} onClick={() => this.onSeeMyBadges()}> See My Badges! </Button>
+                <TourTarget registry={this.props.tourRegistry} targetKey='export-button'>
+                  <Button theme={DARK} onClick={() => this.exportUserScores(currentUser)}> Export My Scores!</Button>
+                </TourTarget>
+                <TourTarget registry={this.props.tourRegistry} targetKey='scroll-to-my-scores-button'>
+                  <Button theme={DARK} onClick={this.scrollToMyScores}> Scroll to My Scores!</Button>
+                </TourTarget>
+                <TourTarget registry={this.props.tourRegistry} targetKey='see-my-badges-button'>
+                  <Button theme={DARK} onClick={() => this.onSeeMyBadges()}> See My Badges! </Button>
+                </TourTarget>
               </ButtonContainer>
 
             </ClassroomLeaderboardTitleContainer>

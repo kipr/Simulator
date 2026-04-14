@@ -1,23 +1,11 @@
 import Scene from '../../../state/State/Scene';
-import LocalizedString from '../../../util/LocalizedString';
 import Script from '../../../state/State/Scene/Script';
-import { createCanNode, createBaseSceneSurfaceA } from './jbcBase';
+import { createBaseSceneSurfaceA } from './jbcBase';
 import { Color } from '../../../state/State/Scene/Color';
 import { Distance } from '../../../util';
-import { Vector3wUnits } from 'util/math/unitMath';
-import Node from 'state/State/Scene/Node';
 import tr from '@i18n';
 
 const baseScene = createBaseSceneSurfaceA();
-
-const notInStartBox = `
-scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
-  // console.log('Robot not started in start box!', type, otherNodeId);
-  if(scene.programStatus === 'running'){
-    scene.setChallengeEventValue('notInStartBox', type === 'start');
-  }
-}, 'notStartBox');
-`;
 
 const leftStartBox = `
 scene.addOnIntersectionListener('robot', (type, otherNodeId) => {
@@ -67,45 +55,12 @@ scene.addOnRenderListener(() => {
 });
 `;
 
-// const goingBackwards = `
-// let degrees = [];
-// scene.addOnRenderListener(() => {
-//   const EULER_IDENTITY = RotationwUnits.EulerwUnits.identity();
-//   const xAngle = (nodeId) => 180 / Math.PI * Math.acos(Vector3wUnits.dot(Vector3wUnits.applyQuaternion(Vector3wUnits.X, RotationwUnits.toRawQuaternion(scene.nodes[nodeId].origin.orientation || EULER_IDENTITY)), Vector3wUnits.X));
-//   let angle = xAngle('robot');
-//   console.log(angle);
-//   if(angle >= 179 && angle <= 180){
-//     degrees[0] = 0;
-//     degrees[1] = 180;
-
-//   }
-//   if(angle <= 1 && (degrees[1] == 180)&& ((scene.nodes['robot'].state.motors[0].pwm > scene.nodes['robot'].state.motors[3].pwm) || scene.nodes['robot'].state.motors[3].direction === 2)){
-//     scene.setChallengeEventValue('counterClockwise360', true);
-//     degrees.pop();
-//     degrees.pop();
-//   }
-//   else if (angle <=1 && (degrees[1] == 180) && (scene.nodes['robot'].state.motors[3].pwm > scene.nodes['robot'].state.motors[0].pwm) && scene.nodes['robot'].state.motors[3].direction != 2 )
-//   {
-//     scene.setChallengeEventValue('clockwise360', true);
-//     degrees.pop();
-//     degrees.pop();
-//   }
-//   // console.log('0 PDM: ' + scene.nodes['robot'].state.motors[0].pwm);
-//   // console.log('3 PDM: ' + scene.nodes['robot'].state.motors[3].pwm);
-//   // console.log('0 direction: ' + scene.nodes['robot'].state.motors[0].direction);
-//   // console.log('3 direction: ' + scene.nodes['robot'].state.motors[3].direction);
-//   // console.log(degrees) ;
-// });
-// `;
-
 export const JBC_14: Scene = {
   ...baseScene,
   name: tr('JBC 14'),
   description: tr('Junior Botball Challenge 14: Dance Party'),
   scripts: {
-    notInStartBox: Script.ecmaScript('Robot not in Start Box', notInStartBox),
     dance: Script.ecmaScript('Dance Party', dance),
-    // goingBackwards: Script.ecmaScript('Going Backwards', goingBackwards),
     leftStartBox: Script.ecmaScript('Robot Reentered Start', leftStartBox),
   },
   geometry: {

@@ -12,3 +12,4 @@ export * from './projects';
 export * from './users';
 export * from './ai';
 export * from './settings';
+export * from './tours';
