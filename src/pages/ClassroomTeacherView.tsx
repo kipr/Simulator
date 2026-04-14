@@ -537,7 +537,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
     const showTour = props.tourLoaded && !props.tour.completed;
     return (
       <PageContainer style={style} theme={theme}>
-        <MainMenu theme={theme} onRetakeTour={this.onRetakeTour_} />
+        <MainMenu theme={theme} tourRegistry={this.registry} onRetakeTour={this.onRetakeTour_} />
         <TourTarget registry={this.registry} targetKey='teacher-dashboard' style={style}>
           <ClassroomsContainer style={style} theme={theme}>
             <ClassroomsTitleContainer style={style} theme={theme}>

@@ -22,6 +22,7 @@ import * as monaco from 'monaco-editor';
 import tr from '@i18n';
 import LocalizedString from '../../util/LocalizedString';
 import GraphicalEditor from './GraphicalEditor';
+import { TourRegistry } from '../../tours/TourRegistry';
 
 export enum EditorActionState {
   None,
@@ -83,6 +84,7 @@ export namespace EditorBarTarget {
     onErrorClick: (event: React.MouseEvent<HTMLDivElement>) => void;
     mini?: boolean;
     onMiniClick?: () => void;
+    tourRegistry?: TourRegistry;
   }
 }
 
@@ -110,12 +112,14 @@ export const createEditorBarComponents = ({
         theme,
         language: target.language,
         onLanguageChange: target.onLanguageChange,
+        tourRegistry: target.tourRegistry
       }));
 
       if (target.language !== 'graphical') {
         editorBar.push(BarComponent.create(Button, {
           theme,
           onClick: target.onIndentCode,
+          tourRegistry: target.tourRegistry,
           children:
             <>
               <FontAwesome icon={faIndent} />
@@ -137,6 +141,7 @@ export const createEditorBarComponents = ({
       editorBar.push(BarComponent.create(Button, {
         theme,
         onClick: target.onDownloadCode,
+        tourRegistry: target.tourRegistry,
         children:
           <>
             <FontAwesome icon={faFileDownload} />
@@ -147,6 +152,7 @@ export const createEditorBarComponents = ({
       editorBar.push(BarComponent.create(Button, {
         theme,
         onClick: target.onResetCode,
+        tourRegistry: target.tourRegistry,
         children:
           <>
             <FontAwesome icon={faArrowsRotate} />
@@ -216,7 +222,7 @@ class Editor extends React.PureComponent<Props, State> {
     }
   };
   private openDocumentation_ = () => {
-    const editor: monaco.editor.IStandaloneCodeEditor | null = this.ivygate_.editor ;
+    const editor: monaco.editor.IStandaloneCodeEditor | null = this.ivygate_.editor;
     if (!editor) return;
 
     const model = editor.getModel();
@@ -232,7 +238,7 @@ class Editor extends React.PureComponent<Props, State> {
 
   private openCommonDocumentation_ = () => {
     console.log("Opening common documentation from Editor");
-    const editor: monaco.editor.IStandaloneCodeEditor | null = this.ivygate_.editor ;
+    const editor: monaco.editor.IStandaloneCodeEditor | null = this.ivygate_.editor;
     if (!editor) return;
 
     const model = editor.getModel();
