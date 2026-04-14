@@ -1,0 +1,5867 @@
+msgid ""
+msgstr ""
+
+msgid "Robot"
+msgstr "Robot"
+
+msgid "Base Scene - Surface A"
+msgstr "Pangunahing eksena - Ibabaw A"
+
+msgid ""
+"A base scene using Surface A. Intended to be augmented to create full JBC "
+"scenes"
+msgstr "Isang pangunahing eksena gamit ang Surface A. Inilaan upang dagdagan upang makalikha ng buong JBC na mga eksena."
+
+msgid "JBC Surface A"
+msgstr "JBC Ibabaw A"
+
+msgid "Ground"
+msgstr "Lupa"
+
+msgid "Light"
+msgstr "Magaan"
+
+msgid "Base Scene - Surface B"
+msgstr "Pangunahing eksena - Ibabaw B"
+
+msgid ""
+"A base scene using Surface B. Intended to be augmented to create full JBC "
+"scenes"
+msgstr "Isang pangunahing eksena gamit ang Surface B. Inilaan upang dagdagan upang makalikha ng buong JBC na mga eksena."
+
+msgid "JBC Surface B"
+msgstr "JBC Ibabaw B"
+
+msgid "Can %s"
+msgstr "Maaari bang %s"
+
+msgid "JBC Sandbox A"
+msgstr "JBC Sandbox A"
+
+msgid ""
+"Junior Botball Challenge Sandbox on Mat A. All cans 1-12 are available by "
+"default."
+msgstr "Junior Botball Challenge Sandbox sa Mat A. Lahat ng lata 1–12 ay magagamit nang default."
+
+msgid "Paper Ream 1"
+msgstr "Papel Ream 1"
+
+msgid "Paper Ream 2"
+msgstr "Papel Ream 2"
+
+msgid "JBC Sandbox B"
+msgstr "JBC Sandbox B"
+
+msgid "Junior Botball Challenge Sandbox on Mat B."
+msgstr "Junior Botball Challenge Sandbox sa Mat B."
+
+msgid "JBC 1"
+msgstr "JBC Isa"
+
+msgid "Junior Botball Challenge 1: Tag, You're It!"
+msgstr "Junior Botball Challenge 1: Tag, Ikaw na!"
+
+msgid "JBC 2"
+msgstr "JBC 2"
+
+msgid "Junior Botball Challenge 2: Ring Around the Can"
+msgstr "Junior Botball Challenge 2: Palibutin ang Lata"
+
+msgid "JBC 2B"
+msgstr "JBC 2B"
+
+msgid "Junior Botball Challenge 2B: Ring Around the Can, Sr."
+msgstr "Junior Botball Challenge 2B: Palibutin ang lata, Sr."
+
+msgid "JBC 2C"
+msgstr "JBC 2C"
+
+msgid "Junior Botball Challenge 2C: Back It Up"
+msgstr "Junior Botball Challenge 2C: I-back up ito"
+
+msgid "JBC 2D"
+msgstr "JBC 2D"
+
+msgid "Junior Botball Challenge 2D: Ring Around the Can and Back It Up"
+msgstr "Junior Botball Challenge 2D: Palibutin ang lata at patunayan ito"
+
+msgid "JBC 3"
+msgstr "JBC Tatlo"
+
+msgid "Junior Botball Challenge 3: Precision Parking"
+msgstr "Junior Botball Challenge 3: Tumpak na Pagparada"
+
+msgid "JBC 3B"
+msgstr "JBC 3B"
+
+msgid "Junior Botball Challenge 3B: Parallel Parking"
+msgstr "Junior Botball Challenge 3B: Parallel Parking"
+
+msgid "JBC 3C"
+msgstr "JBC 3C"
+
+msgid "Junior Botball Challenge 3C: Quick Get Away!"
+msgstr "Junior Botball Challenge 3C: Mabilis na Pagtakas!"
+
+msgid "JBC 4"
+msgstr "JBC 4"
+
+msgid "Junior Botball Challenge 4: Figure Eight"
+msgstr "Junior Botball Challenge 4: Hugis Walong"
+
+msgid "JBC 4B"
+msgstr "JBC 4B"
+
+msgid "Junior Botball Challenge 4B: Barrel Racing"
+msgstr "Junior Botball Challenge 4B: Karera sa Bariles"
+
+msgid "JBC 5"
+msgstr "JBC 5"
+
+msgid "Junior Botball Challenge 5: Dance Party"
+msgstr "Junior Botball Challenge 5: Sayawan"
+
+msgid "JBC 5B"
+msgstr "JBC 5B"
+
+msgid "Junior Botball Challenge 5B: Line Dance"
+msgstr "Junior Botball Challenge 5B: Sayaw na Pila"
+
+msgid "JBC 5C"
+msgstr "JBC 5C"
+
+msgid "Junior Botball Challenge 5C: Synchronized Dancing"
+msgstr "Junior Botball Challenge 5C: Sabayang Sayaw"
+
+msgid "JBC 6"
+msgstr "JBC 6"
+
+msgid "Junior Botball Challenge 6: Load 'Em Up"
+msgstr "Junior Botball Challenge 6: Kargahin Mo Sila"
+
+msgid "JBC 6B"
+msgstr "JBC 6B"
+
+msgid "Junior Botball Challenge 6B: Pick 'Em Up"
+msgstr "Junior Botball Challenge 6B: Buhatin Mo Sila"
+
+msgid "JBC 6C"
+msgstr "JBC 6C"
+
+msgid "Junior Botball Challenge 6C: Empty the Garage"
+msgstr "Junior Botball Challenge 6C: Linisin ang garahe"
+
+msgid "Circle 2"
+msgstr "Bilog 2"
+
+msgid "Circle 9"
+msgstr "Siyam na Sirkulo"
+
+msgid "Circle 10"
+msgstr "Saklaw 10"
+
+msgid "Mat Surface"
+msgstr "Mga Ibabaw ng Banig"
+
+msgid "JBC 7"
+msgstr "JBC 7"
+
+msgid "Junior Botball Challenge 7: Bulldozer Mania"
+msgstr "Junior Botball Challenge 7: Baliw ng Bulldozer"
+
+msgid "JBC 7B"
+msgstr "JBC 7B"
+
+msgid "Junior Botball Challenge 7B: Cover Your Bases"
+msgstr "Junior Botball Challenge 7B: Sakupin ang Iyong mga Base"
+
+msgid "JBC 8"
+msgstr "JBC 8"
+
+msgid "Junior Botball Challenge 8: Serpentine"
+msgstr "Junior Botball Challenge 8: Serpentine"
+
+msgid "JBC 8B"
+msgstr "JBC 8B"
+
+msgid "Junior Botball Challenge 8B: Serpentine Jr."
+msgstr "Junior Botball Challenge 8B: Serpentine Jr."
+
+msgid "JBC 9"
+msgstr "JBC 9"
+
+msgid "Junior Botball Challenge 9: Add It Up"
+msgstr "Junior Botball Challenge 9: Idagdag Mo"
+
+msgid "JBC 9B"
+msgstr "JBC 9B"
+
+msgid "Junior Botball Challenge 9B: Balancing Act"
+msgstr "Junior Botball Challenge 9B: Gawaing Pagbabalanse"
+
+msgid "JBC 10"
+msgstr "JBC 10"
+
+msgid "Junior Botball Challenge 10: Solo Joust"
+msgstr "Junior Botball Challenge 10: Solo Joust"
+
+msgid "JBC 10B"
+msgstr "JBC 10B"
+
+msgid "Junior Botball Challenge 10: Solo Joust Jr."
+msgstr "Junior Botball Challenge 10: Solo Joust Jr."
+
+msgid "JBC 12"
+msgstr "JBC labing-dalawa"
+
+msgid "Junior Botball Challenge 12: Unload 'Em"
+msgstr "Junior Botball Challenge 12: I-unload sila"
+
+msgid "JBC 13"
+msgstr "JBC 13"
+
+msgid "Junior Botball Challenge 13: Clean the Mat"
+msgstr "Junior Botball Challenge 13: Linisin ang Banig"
+
+msgid "JBC 15B"
+msgstr "JBC 15B"
+
+msgid "Junior Botball Challenge 15B: Bump Bump"
+msgstr "Junior Botball Challenge 15B: Bangga Bangga"
+
+msgid "JBC 17"
+msgstr "JBC 17"
+
+msgid "Junior Botball Challenge 17: Walk the Line"
+msgstr "Junior Botball Challenge 17: Maglakad sa Linya"
+
+msgid "JBC 17B"
+msgstr "JBC 17B"
+
+msgid "Junior Botball Challenge 17: Walk the Line II"
+msgstr "Junior Botball Challenge 17: Maglakad sa Linya II"
+
+msgid "JBC 19"
+msgstr "JBC 19"
+
+msgid "Junior Botball Challenge 19: Mountain Rescue"
+msgstr "Junior Botball Challenge 19: Pagliligtas sa Bundok"
+
+msgid "Paper Ream"
+msgstr "Papel na reamer"
+
+msgid "JBC 20"
+msgstr "JBC 20"
+
+msgid "Junior Botball Challenge 20: Rescue the Cans"
+msgstr "Junior Botball Challenge 20: Iligtas ang mga lata"
+
+msgid "JBC 21"
+msgstr "JBC 21"
+
+msgid "Junior Botball Challenge 21: Foot Tall"
+msgstr "Junior Botball Challenge 21: Mataas ng Paa"
+
+msgid "JBC 22"
+msgstr "JBC 22"
+
+msgid "Junior Botball Challenge 22: Stackerz"
+msgstr "Junior Botball Challenge 22: Stackerz"
+
+msgid "Script Playground"
+msgstr "Palaruan ng Skrip"
+
+msgid "Script tests"
+msgstr "Mga pagsusulit sa iskrip"
+
+msgid "Demobot"
+msgstr "Demobot"
+
+msgid "JBC Challenge 6C"
+msgstr "JBC Hamon 6C"
+
+msgid "Can A Lifted"
+msgstr "Maaari bang isang lifted"
+
+msgid "Can A picked up"
+msgstr "Maaari bang kunin ni A?"
+
+msgid "Can B Lifted"
+msgstr "Maaari bang itaas ang B?"
+
+msgid "Can B picked up"
+msgstr "Maaari bang kunin si B?"
+
+msgid "Can C Lifted"
+msgstr "Maaari bang itaas ng C?"
+
+msgid "Can C picked up"
+msgstr "Na-pick up ni Can C"
+
+msgid "Can A Placed"
+msgstr "Maaari bang isang inilagay"
+
+msgid "Can A placed on circle 2"
+msgstr "Maaari bang ilagay ang A sa bilog 2"
+
+msgid "Can B Placed"
+msgstr "Maaari bang ilagay sa B?"
+
+msgid "Can A placed on circle 9"
+msgstr "Maaari bang mailagay ang A sa bilog 9"
+
+msgid "Can C Placed"
+msgstr "Maaari bang ilagay ang C?"
+
+msgid "Can A placed on circle 10"
+msgstr "Maaari bang ilagay ang A sa bilog 10"
+
+msgid "Can A Upright"
+msgstr "Maaari bang patayo"
+
+msgid "Can A upright on circle 2"
+msgstr "Maaari bang mag-A upright sa circle 2?"
+
+msgid "Can B Upright"
+msgstr "Maaari kang maging matuwid"
+
+msgid "Can B upright on circle 9"
+msgstr "Maaari bang nakatayo nang tuwid si B sa bilog 9?"
+
+msgid "Can C Upright"
+msgstr "Maaari kang makatayo nang tuwid"
+
+msgid "Can C upright on circle 10"
+msgstr "Maaari bang patayoin nang tuwid ang C sa bilog 10?"
+
+msgid "Loading..."
+msgstr "Naglo-load..."
+
+msgid "Logout"
+msgstr "Mag-logout"
+
+msgid "Tutorials"
+msgstr "Mga Tutorial"
+
+msgid "Learn how to get started with the simulator"
+msgstr "Alamin kung paano magsimula gamit ang simulator"
+
+msgid "3D Simulator"
+msgstr "3D Simulator"
+
+msgid "A simulator for the Botball demobot."
+msgstr "Isang simulator para sa Botball demobot."
+
+msgid "About"
+msgstr "Tungkol sa"
+
+msgid ""
+"KIPR is a 501(c) 3 organization started to make the long-term educational "
+"benefits of robotics accessible to students."
+msgstr "Ang KIPR ay isang 501(c)(3) na organisasyon na itinatag upang gawing abot-kamay sa mga estudyante ang pangmatagalang benepisyo ng edukasyon sa robotics."
+
+msgid "Quick Start"
+msgstr "Mabilis na Simula"
+
+msgid "Navigating in 3D"
+msgstr "Pag-navigate sa 3D"
+
+msgid "Learn the controls for navigating in 3D in the simulator"
+msgstr "Alamin ang mga kontrol para sa pag-navigate sa 3D sa simulator."
+
+msgid "Robot Section"
+msgstr "Seksyon ng Robot"
+
+msgid "How to use the robot section"
+msgstr "Paano gamitin ang seksyon ng robot"
+
+msgid "World Section"
+msgstr "Seksyon ng Mundo"
+
+msgid "Learn how to create and manipulate items and scene in the simulator"
+msgstr "Matutong lumikha at manipulahin ang mga bagay at eksena sa simulator."
+
+msgid "Indent"
+msgstr "Pasukan"
+
+msgid "Download"
+msgstr "I-download"
+
+msgid "Reset"
+msgstr "I-reset"
+
+msgid "Error(s)"
+msgstr "Mga error"
+
+msgid "Warning(s)"
+msgstr "Babala(s)"
+
+msgid "grams"
+msgstr "gramo"
+
+msgid "kilograms"
+msgstr "kilogramo"
+
+msgid "pounds"
+msgstr "mga libra"
+
+msgid "ounces"
+msgstr "mga onsa"
+
+msgid "meters"
+msgstr "métros"
+
+msgid "centimeters"
+msgstr "sentimetro"
+
+msgid "feet"
+msgstr "paa"
+
+msgid "inches"
+msgstr "pulgada"
+
+msgid "radians"
+msgstr "radyán"
+
+msgid "degrees"
+msgstr "mga digri"
+
+msgid "Can"
+msgstr "Maaari"
+
+msgid "Box"
+msgstr "kahon"
+
+msgid "Sphere"
+msgstr "Bolang"
+
+msgid "Cylinder"
+msgstr "Silindro"
+
+msgid "Cone"
+msgstr "Kono"
+
+msgid "Plane"
+msgstr "Eraser"
+
+msgid "File"
+msgstr "I-file"
+
+msgid "Euler"
+msgstr "Euler"
+
+msgid "Axis Angle"
+msgstr "Angulo ng Ehersisyo"
+
+msgid "Empty"
+msgstr "Walang laman"
+
+msgid "Standard Object"
+msgstr "Karaniwang Bagay"
+
+msgid "Custom Object"
+msgstr "Pasadyang Bagay"
+
+msgid "Point Light"
+msgstr "Punto ng Liwanag"
+
+msgid "Unset"
+msgstr "Hindi itinakda"
+
+msgid "Basic"
+msgstr "Pangunahing"
+
+msgid "Texture"
+msgstr "Textura"
+
+msgid "Value"
+msgstr "Halaga"
+
+msgid "General"
+msgstr "Pangkalahatan"
+
+msgid "Name"
+msgstr "Pangalan"
+
+msgid "Type"
+msgstr "Uri"
+
+msgid "Geometry"
+msgstr "HEOMETRIYA"
+
+msgid "Item"
+msgstr "Bagay"
+
+msgid "Box Options"
+msgstr "Mga pagpipilian sa kahon"
+
+msgid "Size X"
+msgstr "Sukat X"
+
+msgid "Size Y"
+msgstr "Sukat Y"
+
+msgid "Size Z"
+msgstr "Sukat Z"
+
+msgid "Sphere Options"
+msgstr "Mga Opsyon ng Sphere"
+
+msgid "Radius"
+msgstr "Saklaw"
+
+msgid "Cylinder Options"
+msgstr "Mga Opsyon ng Silindro"
+
+msgid "Height"
+msgstr "Taas"
+
+msgid "Plane Options"
+msgstr "Mga Opsyon ng Eroplano"
+
+msgid "File Options"
+msgstr "Mga pagpipilian ng file"
+
+msgid "URI"
+msgstr "URI"
+
+msgid "Material"
+msgstr "Materyal"
+
+msgid "Color Type"
+msgstr "Uri ng Kulay"
+
+msgid "Color Red"
+msgstr "Kulay Pula"
+
+msgid "Color Green"
+msgstr "Kulay Berde"
+
+msgid "Color Blue"
+msgstr "Kulay asul"
+
+msgid "Color Texture URI"
+msgstr "URI ng Tekstura ng Kulay"
+
+msgid "Albedo Type"
+msgstr "Uri ng Albedo"
+
+msgid "Albedo Red"
+msgstr "Albedo Pula"
+
+msgid "Albedo Green"
+msgstr "Albedo Berde"
+
+msgid "Albedo Blue"
+msgstr "Albedo asul"
+
+msgid "Albedo Texture URI"
+msgstr "URI ng Teksturang Albedo"
+
+msgid "Reflection Type"
+msgstr "Uri ng Pagninilay"
+
+msgid "Reflection Red"
+msgstr "Pula ng Pagninilay"
+
+msgid "Reflection Green"
+msgstr "Maitim na Berde"
+
+msgid "Reflection Blue"
+msgstr "Asul na Pagninilay"
+
+msgid "Reflection Texture URI"
+msgstr "URI ng Teksturang Refleksyon"
+
+msgid "Emissive Type"
+msgstr "Uri ng Emisyibo"
+
+msgid "Emissive Red"
+msgstr "Mapagpalabas na Pula"
+
+msgid "Emissive Green"
+msgstr "Maberdeng Naglalabas"
+
+msgid "Emissive Blue"
+msgstr "Mapagpalabas na asul"
+
+msgid "Emissive Texture URI"
+msgstr "URI ng Emissive Texture"
+
+msgid "Ambient Type"
+msgstr "Uri ng Paligid"
+
+msgid "Ambient Red"
+msgstr "Palibot na Pula"
+
+msgid "Ambient Green"
+msgstr "Malusog na Berde"
+
+msgid "Ambient Blue"
+msgstr "Ambient na Asul"
+
+msgid "Ambient Texture URI"
+msgstr "URI ng Teksturang Pang-paligid"
+
+msgid "Metalness Type"
+msgstr "Uri ng Metalness"
+
+msgid "Metalness"
+msgstr "Pagiging metal"
+
+msgid "Metalness Texture URI"
+msgstr "URI ng Tekstura ng Metalness"
+
+msgid "Position"
+msgstr "Posisyon"
+
+msgid "X"
+msgstr "X"
+
+msgid "Y"
+msgstr "O"
+
+msgid "Z"
+msgstr "Z"
+
+msgid "Orientation"
+msgstr "Oryentasyon"
+
+msgid "Order"
+msgstr "Mag-utos"
+
+msgid "Angle"
+msgstr "Angulo"
+
+msgid "Scale"
+msgstr "Sukatan"
+
+msgid "Physics"
+msgstr "Pisika"
+
+msgid "Mass"
+msgstr "Masa"
+
+msgid "Friction"
+msgstr "Pagtutulan"
+
+msgid "Unnamed Object"
+msgstr "Hindi pinangalanang bagay"
+
+msgid "Add Item"
+msgstr "Magdagdag ng Bagay"
+
+msgid "Accept"
+msgstr "Tanggapin"
+
+msgid "Settings"
+msgstr "Mga setting"
+
+msgid "Add Script"
+msgstr "Magdagdag ng script"
+
+msgid "Select Scene"
+msgstr "Piliin ang eksena"
+
+msgid "Save Scene"
+msgstr "I-save ang eksena"
+
+msgid "Copy Scene"
+msgstr "Kopya ng eksena"
+
+msgid "Item(s) (%d)"
+msgstr "Mga item (%d)"
+
+msgid "Script(s) (%d)"
+msgstr "Skrip(s) (%d)"
+
+msgid "Layouts"
+msgstr "Mga Ayos"
+
+msgid "Overlay"
+msgstr "Patong"
+
+msgid "Side"
+msgstr "Gilid"
+
+msgid "Options"
+msgstr "Mga pagpipilian"
+
+msgid "Show All"
+msgstr "Ipakita Lahat"
+
+msgid "Hide All"
+msgstr "Itago Lahat"
+
+msgid "Clear"
+msgstr "Malinaw"
+
+msgid "Rotation"
+msgstr "Pag-ikot"
+
+msgid "Start Location"
+msgstr "Lugar ng pagsisimula"
+
+msgid "Motor Velocity Plot"
+msgstr "Grafikong Bilis ng Motor"
+
+msgid "Motor Position Plot"
+msgstr "Grafikong Puwesto ng Motor"
+
+msgid "Analog Sensor Plot"
+msgstr "Grafiko ng Analog Sensor"
+
+msgid "Digital Sensor Plot"
+msgstr "Plota ng Digital na Sensor"
+
+msgid "Analog Sensors"
+msgstr "Analog na mga sensor"
+
+msgid "Digital Sensors"
+msgstr "Mga Digital na Sensor"
+
+msgid "Servos"
+msgstr "Mga servo"
+
+msgid "Motor Velocities"
+msgstr "Mga Bilis ng Motor"
+
+msgid "Motor Positions"
+msgstr "Mga Posisyon ng Motor"
+
+msgid ""
+"This process is taking longer than expected...\n"
+"If you have a poor internet connection, this can take some time"
+msgstr "Mas tumatagal kaysa inaasahan ang prosesong ito...\\\\nKung mahina ang iyong koneksyon sa internet, maaaring tumagal ito ng ilang sandali"
+
+msgid ""
+"The simulator may have failed to load.\n"
+"Please submit a feedback form to let us know!"
+msgstr "Maaaring nabigo ang simulator na mag-load. Mangyaring magsumite ng feedback form upang ipaalam sa amin!"
+
+msgid "Initializing Simulator..."
+msgstr "Pagsisimula ng Simulator..."
+
+msgid "all of"
+msgstr "lahat ng"
+
+msgid "one or more of"
+msgstr "isa o higit pa sa"
+
+msgid "exactly one of"
+msgstr "eksaktong isa sa"
+
+msgid "once"
+msgstr "minsan"
+
+msgid "not"
+msgstr "hindi"
+
+msgid "Success"
+msgstr "Tagumpay"
+
+msgid "Failure"
+msgstr "Pagkabigo"
+
+msgid "Editor"
+msgstr "Tagapamahala ng nilalaman"
+
+msgid "World"
+msgstr "Mundo"
+
+msgid "Script Editor"
+msgstr "Tagapag-edit ng Script"
+
+msgid "Console"
+msgstr "Konsola"
+
+msgid "Open"
+msgstr "Buksan"
+
+msgid "Save"
+msgstr "I-save"
+
+msgid "Save As"
+msgstr "I-save bilang"
+
+msgid "Delete"
+msgstr "Bura"
+
+msgid "Documentation"
+msgstr "Dokumentasyon"
+
+msgid "Feedback"
+msgstr "Mga puna"
+
+msgid "Reset World"
+msgstr "I-reset ang Mundo"
+
+msgid "Layout"
+msgstr "Ayos"
+
+msgid "User Interface"
+msgstr "Interface ng Gumagamit"
+
+msgid "Simulation"
+msgstr "Simulasyon"
+
+msgid "Locale"
+msgstr "Lokasyon"
+
+msgid "Switch languages"
+msgstr "Palitan ang wika"
+
+msgid "Sensor noise"
+msgstr "Ingay ng sensor"
+
+msgid "Controls whether sensor outputs are affected by random noise"
+msgstr "Kinokontrol kung naaapektuhan ang mga output ng sensor ng random na ingay."
+
+msgid "Realistic sensors"
+msgstr "Makatotohanang mga sensor"
+
+msgid ""
+"Controls whether sensors behave like real-world sensors instead of like "
+"ideal sensors. For example, real-world ET sensors are nonlinear"
+msgstr "Kinokontrol kung kikilos ang mga sensor tulad ng mga sensor sa totoong mundo sa halip na tulad ng mga ideal na sensor. Halimbawa, ang mga ET sensor sa totoong mundo ay hindi linyar."
+
+msgid "Autocomplete"
+msgstr "Awtomatikong kumpletuhin"
+
+msgid "Controls autocompletion of code, brackets, and quotes"
+msgstr "Kinokontrol ang awtomatikong pagkumpleto ng code, mga bracket, at mga quote."
+
+msgid "Version %s (%s)"
+msgstr "Bersyon %s (%s)"
+
+msgid "Copyright"
+msgstr "Karapatang-ari"
+
+msgid "This software is licensed under the terms of the"
+msgstr "Ang software na ito ay lisensyado sa ilalim ng mga tuntunin ng"
+
+msgid "Thank you to the following contributors and testers:"
+msgstr "Maraming salamat sa mga sumusunod na kontribyutor at tagasubok:"
+
+msgid "Want to help improve the simulator and get your name listed here?"
+msgstr "Gusto mo bang tumulong na pagandahin ang simulator at mailista ang iyong pangalan dito?"
+
+msgid "GitHub repository"
+msgstr "Repositoryo ng GitHub"
+
+msgid "We're happy to help you get started!"
+msgstr "Masaya kaming tulungan kang makapagsimula!"
+
+msgid ""
+"Give a helpful description of a problem you're facing, or a feature you'd "
+"like to request"
+msgstr "Magbigay ng kapaki-pakinabang na paglalarawan ng isang problemang kinahaharap mo, o ng isang tampok na nais mong hilingin."
+
+msgid ""
+"Thanks for using the KIPR Simulator! Find a bug? Have a feature request? "
+"Let us know!"
+msgstr "Salamat sa paggamit ng KIPR Simulator! May nakita kang bug? May hiling kang bagong tampok? Ipaalam sa amin!"
+
+msgid "How has your experience using the KIPR Simulator been?"
+msgstr "Paano ang naging karanasan mo sa paggamit ng KIPR Simulator?"
+
+msgid "Email (optional): "
+msgstr "Email (opsyonal): "
+
+msgid "Include anonymous usage data to help KIPR developers"
+msgstr "Isama ang anonymous na datos ng paggamit upang matulungan ang mga developer ng KIPR."
+
+msgid "Please try again,"
+msgstr "Mangyaring subukan muli."
+
+msgid "open an issue on our github page"
+msgstr "Magbukas ng isyu sa aming pahina sa GitHub."
+
+msgid ", or"
+msgstr ", o"
+
+msgid "email KIPR."
+msgstr "Mag-email sa KIPR."
+
+msgid "Submit"
+msgstr "Isumite"
+
+msgid "Feedback Success"
+msgstr "Tagumpay ng puna"
+
+msgid "Feedback successfully submitted!"
+msgstr "Matagumpay na naisumite ang puna!"
+
+msgid "Thank you for helping improve the KIPR Simulator!"
+msgstr "Salamat sa pagtulong na mapabuti ang KIPR Simulator!"
+
+msgid "Open World"
+msgstr "Bukas na Mundo"
+
+msgid "Unknown"
+msgstr "Hindi kilala"
+
+msgid "Description: "
+msgstr "Paglalarawan: "
+
+msgid "Author: "
+msgstr "May-akda: "
+
+msgid "Me"
+msgstr "Ako"
+
+msgid "Select a scene to see more details"
+msgstr "Pumili ng isang eksena para makita ang mas maraming detalye."
+
+msgid "Description"
+msgstr "Paglalarawan"
+
+msgid "New World"
+msgstr "Bagong Mundo"
+
+msgid "Create"
+msgstr "Lumikha"
+
+msgid "Delete %s?"
+msgstr "Bura ang %s?"
+
+msgid "Are you sure you want to delete %s?"
+msgstr "Sigurado ka bang gusto mong burahin ang %s?"
+
+msgid "Copy World"
+msgstr "Kopya ng Mundo"
+
+msgid "Error %d"
+msgstr "Maling %d"
+
+msgid "Closing this dialog will take you back to the last well-known state."
+msgstr "Ang pagsasara ng dialog na ito ay magbabalik sa iyo sa huling kilalang estado."
+
+msgid "If this error persists, please submit feedback."
+msgstr "Kung patuloy ang error na ito, mangyaring magbigay ng puna."
+
+msgid "World Settings"
+msgstr "Mga Setting ng Mundo"
+
+msgid "CHALLENGE"
+msgstr "Hamunin"
+
+msgid "Start"
+msgstr "Magsimula"
+
+msgid "Welcome to the KIPR Simulator!\n"
+msgstr "Maligayang pagdating sa KIPR Simulator!"
+
+msgid "Compiling...\n"
+msgstr "Nagko-compile...\\\\n"
+
+msgid "Compilation succeeded with warnings.\n"
+msgstr "Matagumpay ang kompilasyon na may mga babala."
+
+msgid "Compilation succeeded.\n"
+msgstr "Matagumpay ang kompilasyon."
+
+msgid "Compilation failed.\n"
+msgstr "Nabigo ang kompilasyon."
+
+msgid "Something went wrong during compilation.\n"
+msgstr "May nangyaring mali habang kinokompila."
+
+msgid "Compilation succeeded with warnings\n"
+msgstr "Matagumpay ang kompilasyon na may mga babala\\\\n"
+
+msgid "Compilation succeeded\n"
+msgstr "Matagumpay ang kompilasyon"
+
+msgid "Modules"
+msgstr "Mga Modulo"
+
+msgid "Functions"
+msgstr "Mga Pag-andar"
+
+msgid "Structures"
+msgstr "Mga estruktura"
+
+msgid "Enumerations"
+msgstr "Mga pagbibilang"
+
+msgid "Files"
+msgstr "Mga file"
+
+msgid "Search..."
+msgstr "Maghanap..."
+
+msgid "Detailed Description"
+msgstr "Detalyadong Paglalarawan"
+
+msgid "Parameters"
+msgstr "Mga Parameter"
+
+msgid "Return Value"
+msgstr "Halagang Ibabalik"
+
+msgid "Fields"
+msgstr "Mga larangan"
+
+msgid "Volume"
+msgstr "Tindi"
+
+msgid "RGB"
+msgstr "Red, Green, Blue"
+
+msgid "Challenge"
+msgstr "Hamunin"
+
+msgid "Stop"
+msgstr "Tumigil"
+
+msgid "Run"
+msgstr "Takbo"
+
+msgid "and External Contributors"
+msgstr "at mga panlabas na kontribyutor"
+
+msgid "Visit our"
+msgstr "Bisitahin ang aming"
+
+msgid "Science"
+msgstr "Agham"
+
+msgid "Technology"
+msgstr "Teknolohiya"
+
+msgid "Engineering"
+msgstr "Inhinyeriya"
+
+msgid "Arts"
+msgstr "Sining"
+
+msgid "Mathematics"
+msgstr "Matematika"
+
+msgid "Test Assignment"
+msgstr "Takdang Pagsusulit"
+
+msgid "This is a test assignment."
+msgstr "Ito ay isang pagsubok na takdang-aralin."
+
+msgid "Educator notes"
+msgstr "Mga tala ng tagapagturo"
+
+msgid "Student notes"
+msgstr "Mga tala ng mag-aaral"
+
+msgid "JBC Mat A"
+msgstr "JBC Mat A"
+
+msgid "JBC Mat B"
+msgstr "JBC Mat B"
+
+msgid "Circle %s"
+msgstr "Circle %s"
+
+msgid "JBC 0"
+msgstr "JBC 0"
+
+msgid "Junior Botball Challenge 0: Drive Straight"
+msgstr "Junior Botball Challenge 0: Magmaneho nang Tuwid"
+
+msgid "Not Start Box"
+msgstr "Hindi Magsimulang Kahon"
+
+msgid "Start Box"
+msgstr "Magsimula sa kahon"
+
+msgid "Line B"
+msgstr "Linya B"
+
+msgid "End Box"
+msgstr "Huling kahon"
+
+msgid "End of Mat"
+msgstr "Wakas ng banig"
+
+msgid "Right Side Can"
+msgstr "Kanan na lata"
+
+msgid "Top Side Can"
+msgstr "Can sa Itaas"
+
+msgid "Left Side Can"
+msgstr "Lata sa Kaliwang Gilid"
+
+msgid "Click Instruction Box"
+msgstr "I-click ang kahon ng tagubilin"
+
+msgid "Click Instruction 1 Box"
+msgstr "I-click ang Kahon ng Tagubilin 1"
+
+msgid "Click Instruction 2 Box"
+msgstr "I-click ang kahon ng Tagubilin 2"
+
+msgid "Chosen Garage Box"
+msgstr "Piniling Kahon ng Garahian"
+
+msgid "Green Garage Designator Box"
+msgstr "Green Garage Designator Box"
+
+msgid "Yellow Garage Designator Box"
+msgstr "Dilaw na Kahon ng Tagapag-disenyo ng Garahian"
+
+msgid "Blue Garage Designator Box"
+msgstr "Asul na Kahon ng Tagapag-disenyo ng Garahian"
+
+msgid "Green Garage"
+msgstr "Luntian na garahe"
+
+msgid "Green Garage node"
+msgstr "Node ng berdeng garahe"
+
+msgid "Yellow Garage node"
+msgstr "Dilaw na node ng garahe"
+
+msgid "Blue Garage node"
+msgstr "Node ng Blue Garage"
+
+msgid "Green Garage Right Boundary node"
+msgstr "Green Garage node sa kanang hangganan"
+
+msgid "Green Garage Left Boundary node"
+msgstr "Node ng Green Garage sa kaliwang hangganan"
+
+msgid "Green Garage Top Boundary node"
+msgstr "Berde na node ng hangganan sa tuktok ng garahe"
+
+msgid "Blue Garage"
+msgstr "Asul na garahe"
+
+msgid "Blue Garage Right Boundary node"
+msgstr "Asul na garahe na node sa kanang hangganan"
+
+msgid "Blue Garage Left Boundary node"
+msgstr "Node ng kaliwang hangganan ng Blue Garage"
+
+msgid "Blue Garage Top Boundary node"
+msgstr "Asul na node ng hangganan sa tuktok ng garahe"
+
+msgid "Yellow Garage"
+msgstr "Dilong Garahian"
+
+msgid "Yellow Garage Right Boundary node"
+msgstr "Dilaw na Garage Kanang Hangganan na node"
+
+msgid "Yellow Garage Left Boundary node"
+msgstr "Dilaw na garahe: node ng kaliwang hangganan"
+
+msgid "Yellow Garage Top Boundary node"
+msgstr "Dilaw na node ng hangganan sa tuktok ng garahe"
+
+msgid "Yellow Garage Marker 1"
+msgstr "Dilaw na Marker ng Garahian 1"
+
+msgid "Yellow Garage Marker 2"
+msgstr "Dilaw na Marker ng Garahian 2"
+
+msgid "Blue Garage Marker 1"
+msgstr "Asul na Marker ng Garahian 1"
+
+msgid "Blue Garage Marker 2"
+msgstr "Asul na Marker ng Garahian 2"
+
+msgid "Green Garage Marker 1"
+msgstr "Marker ng Berdeng Garahian 1"
+
+msgid "Green Garage Marker 2"
+msgstr "Marker 2 ng Berdeng Garahian"
+
+msgid "Junior Botball Challenge 4: Serpentine"
+msgstr "Junior Botball Hamon 4: Serpentine"
+
+msgid "Junior Botball Challenge 5: Odd Numbers"
+msgstr "Junior Botball Challenge 5: Mga Di-Pantay na Bilang"
+
+msgid "Junior Botball Challenge 6: Figure Eight"
+msgstr "Junior Botball Challenge 6: Hugis Walong"
+
+msgid "Between cans 4 and 9"
+msgstr "Sa pagitan ng mga lata 4 at 9"
+
+msgid "Top side of can 9"
+msgstr "Upper side of can 9"
+
+msgid "Junior Botball Challenge 7: Load 'Em Up"
+msgstr "Junior Botball Challenge 7: Kargahin Mo Sila"
+
+msgid "Junior Botball Challenge 8: Bulldozer Mania"
+msgstr "Junior Botball Challenge 8: Baliw sa Bulldozer"
+
+msgid "Junior Botball Challenge 9: Cover Your Bases"
+msgstr "Junior Botball Challenge 9: Sakupin ang Iyong mga Base"
+
+msgid "Junior Botball Challenge 10: Chopped"
+msgstr "Junior Botball Challenge 10: Pinutol"
+
+msgid "JBC 11"
+msgstr "JBC 11"
+
+msgid "Junior Botball Challenge 11: Making Waves"
+msgstr "Junior Botball Challenge 11: Paglikha ng Alon"
+
+msgid "Junior Botball Challenge 12: Add it Up"
+msgstr "Junior Botball Challenge 12: Idagdag Mo"
+
+msgid "Circle 1"
+msgstr "Bilog 1"
+
+msgid "JBC 14"
+msgstr "JBC 14"
+
+msgid "Junior Botball Challenge 14: Dance Party"
+msgstr "Junior Botball Challenge 14: Sayawan"
+
+msgid "JBC 15"
+msgstr "JBC 15"
+
+msgid "Junior Botball Challenge 15: Go Fetch"
+msgstr "Junior Botball Challenge 15: Kunin at Ibalik"
+
+msgid "JBC 16"
+msgstr "JBC 16"
+
+msgid "Junior Botball Challenge 16: Pick 'Em Up"
+msgstr "Junior Botball Challenge 16: Buhatin Mo Sila"
+
+msgid "Junior Botball Challenge 17: Mountain Rescue"
+msgstr "Junior Botball Challenge 17: Pagliligtas sa Bundok"
+
+msgid "JBC 18"
+msgstr "JBC 18"
+
+msgid "Junior Botball Challenge 18: Stackerz"
+msgstr "Junior Botball Challenge 18: Stackerz"
+
+msgid "Bottom of can5"
+msgstr "Ilalim ng lata5"
+
+msgid "Top of can7"
+msgstr "Tuktok ng lata7"
+
+msgid "Bottom of can7"
+msgstr "Ilalim ng lata7"
+
+msgid "Top of can5"
+msgstr "Tuktok ng lata5"
+
+msgid "Junior Botball Challenge 19: Bump"
+msgstr "Junior Botball Challenge 19: Bump"
+
+msgid "Junior Botball Challenge 20: A'mazing"
+msgstr "Junior Botball Challenge 20: Kamangha-mangha"
+
+msgid "Paper Ream 3"
+msgstr "Papel Ream 3"
+
+msgid "Paper Ream 4"
+msgstr "Papeles na Ream 4"
+
+msgid "Junior Botball Challenge 21: Proximity"
+msgstr "Junior Botball Challenge 21: Lapit"
+
+msgid "Ream Front Boundary"
+msgstr "I-ream ang harapang hangganan"
+
+msgid "Junior Botball Challenge 22: Search and Rescue"
+msgstr "Junior Botball Challenge 22: Paghahanap at Pagliligtas"
+
+msgid "JBC 23"
+msgstr "JBC 23"
+
+msgid "Junior Botball Challenge 23: Find the Black Line"
+msgstr "Junior Botball Challenge 23: Hanapin ang Itim na Linya"
+
+msgid "Circle"
+msgstr "Bilog"
+
+msgid "JBC 24"
+msgstr "JBC 24"
+
+msgid "Junior Botball Challenge 24: Walk the Line"
+msgstr "Junior Botball Challenge 24: Maglakad sa Linya"
+
+msgid "Finish Line"
+msgstr "Linya ng pagtatapos"
+
+msgid "Checkpoint 1"
+msgstr "Tuktok 1"
+
+msgid "Checkpoint 3"
+msgstr "Tsekpoynt 3"
+
+msgid "Checkpoint 2"
+msgstr "Tsekpoynt 2"
+
+msgid "Base Scene - Moon Surface"
+msgstr "Pangunahing Eksena - Ibabaw ng Buwan"
+
+msgid "A base scene. Intended to be augmented to create full Moon scenes"
+msgstr "Isang pangunahing eksena. Inilaan upang dagdagan upang makalikha ng mga eksena ng buong buwan."
+
+msgid "1.1.1 Ground"
+msgstr "1.1.1 Lupa"
+
+msgid "1.1.6-8 Start Area"
+msgstr "1.1.6-8 Lugar ng Pagsisimula"
+
+msgid "1.1.2-4 Sky"
+msgstr "1.1.2-4 Langit"
+
+msgid "Moon Sandbox"
+msgstr "Sandbox ng Buwan"
+
+msgid "Lunar sandbox. Currently supports 4 types of rocks. Demo Ready."
+msgstr "Lunar sandbox. Sa kasalukuyan ay sumusuporta sa apat na uri ng bato. Handa na para sa demo."
+
+msgid "Basalt Rock"
+msgstr "Batong Basalto"
+
+msgid "Anorthosite Rock"
+msgstr "Batong anorthosite"
+
+msgid "Breccia Rock"
+msgstr "Batong Breccia"
+
+msgid "Meteorite Rock"
+msgstr "Batong Meteorito"
+
+msgid "Life Science Pack"
+msgstr "Pakete ng Agham ng Buhay"
+
+msgid "Radiation Science Pack - High"
+msgstr "Radiation Science Pack - Mataas"
+
+msgid "Science Pad"
+msgstr "Pads ng Agham"
+
+msgid "Container"
+msgstr "Lulagyan"
+
+msgid "Space Bot Guy"
+msgstr "Taong Space Bot"
+
+msgid "Solar Panel"
+msgstr "Solar na panel"
+
+msgid "Walkway"
+msgstr "Daanan"
+
+msgid "Comms Tower"
+msgstr "Torre ng Komunikasyon"
+
+msgid "Human Living Habitat"
+msgstr "Pang-taong tirahan"
+
+msgid "Human Research Habitat"
+msgstr "Pang-pananaliksik na Tirahan ng Tao"
+
+msgid "Human Control/Comms Station Habitat"
+msgstr "Estasyong Kontrol/Komunikasyon ng Tao para sa Tirahan"
+
+msgid "Life Indicator Light"
+msgstr "Ilaw na Tagapagpahiwatig ng Buhay"
+
+msgid "No Life Indicator Light"
+msgstr "Walang Indikator na Ilaw ng Buhay"
+
+msgid "2025 Game Table"
+msgstr "2025 Lamesa ng Laro"
+
+msgid "Base Scene - 2025 Botball Game Table"
+msgstr "Pangunahing Tagpuan - 2025 Botball Game Table"
+
+msgid "A base scene. Intended to be augmented to create the full game table"
+msgstr "Isang pangunahing eksena. Inilaan upang dagdagan upang makalikha ng buong mesa ng laro."
+
+msgid "Fry floor"
+msgstr "Iprito ang sahig"
+
+msgid "Potato detector box"
+msgstr "Kahon na detektor ng patatas"
+
+msgid "Hamburger"
+msgstr "Hamburger"
+
+msgid "Hotdog"
+msgstr "Mainit na aso"
+
+msgid "Taco"
+msgstr "Taco"
+
+msgid "Pink Cup"
+msgstr "Pink na Kopang"
+
+msgid "Blue Cup"
+msgstr "Asul na Tasa"
+
+msgid "Green Cup"
+msgstr "Luntang Tasa"
+
+msgid "Blue pom back #${i}"
+msgstr "Asul na pom sa likod #${i}"
+
+msgid "Blue pom front #${i}"
+msgstr "Asul na pom sa harap #${i}"
+
+msgid "Bottle #${i}"
+msgstr "Botelya #${i}"
+
+msgid "Orange pom #${i}"
+msgstr "Kahel na pom #${i}"
+
+msgid "Red pom #${i}"
+msgstr "Pulang pom #${i}"
+
+msgid "Yellow pom #${i}"
+msgstr "Dilaw na pom #${i}"
+
+msgid "Random pom #${i}"
+msgstr "Pati na pom #${i}"
+
+msgid "Tomato"
+msgstr "Kamatis"
+
+msgid "Pickle"
+msgstr "atsara"
+
+msgid "Potato"
+msgstr "Kartofl"
+
+msgid "Fry #${i}"
+msgstr "Iprito #${i}"
+
+msgid "Tray #${i}"
+msgstr "Tray #${i}"
+
+msgid "Botguy"
+msgstr "Botguy"
+
+msgid "Blue drink #${i}"
+msgstr "Asul na inumin #${i}"
+
+msgid "Green drink #${i}"
+msgstr "Berde na inumin #${i}"
+
+msgid "Pink drink #${i}"
+msgstr "Pink na inumin #${i}"
+
+msgid "2025 Botball game table sandbox"
+msgstr "2025 Botball na mesa ng laro sandbox"
+
+msgid "IRobot Create"
+msgstr "IRobot Lumikha"
+
+msgid "Leaderboard"
+msgstr "Listaan ng mga nangunguna"
+
+msgid "See the current challenge leaderboard."
+msgstr "Tingnan ang kasalukuyang leaderboard ng hamon."
+
+msgid "The Challenge System"
+msgstr "Ang Sistema ng Hamon"
+
+msgid "Learn how to use the challenge system"
+msgstr "Matutong gamitin ang sistema ng hamon."
+
+msgid "MatB"
+msgstr "Materyal B"
+
+msgid "MatA"
+msgstr "MatA"
+
+msgid "Communication Tower"
+msgstr "Torre ng Komunikasyon"
+
+msgid "Hab"
+msgstr "Sanay"
+
+msgid "Radiation Science Pack"
+msgstr "Radiation Science Pack"
+
+msgid "Communication Tower 2"
+msgstr "Torre ng Komunikasyon 2"
+
+msgid "Hab 2"
+msgstr "Habakuk 2"
+
+msgid "BotGuy Astronaut"
+msgstr "BotGuy Astronauta"
+
+msgid "2025 Botball Game Table"
+msgstr "2025 Botball Lamesa ng Laro"
+
+msgid "Blue Drink"
+msgstr "Asul na Inumin"
+
+msgid "Green Drink"
+msgstr "Luntang Inumin"
+
+msgid "Pink Drink"
+msgstr "Rosas na Inumin"
+
+msgid "Blue Pom (Ice Cube)"
+msgstr "Asul na Pom (Blok ng Yelo)"
+
+msgid "Orange Pom (Hot Sauce)"
+msgstr "Kahel na Pom (Maanghang na Sarsa)"
+
+msgid "Red Pom (Ketchup)"
+msgstr "Pulang Pom (Ketchup)"
+
+msgid "Yellow Pom (Mustard)"
+msgstr "Dilaw na Pom (Mustasa)"
+
+msgid "French Fry"
+msgstr "Pranses na pritong patatas"
+
+msgid "Bottle"
+msgstr "Botelya"
+
+msgid "Tray"
+msgstr "Tinapay"
+
+msgid "Living Habitat"
+msgstr "Buhay na Tirahan"
+
+msgid "Research Habitat"
+msgstr "Pananaliksik na Tirahan"
+
+msgid "Controls Habitat"
+msgstr "Mga Kontrol ng Tirahan"
+
+msgid "Moon Rock Container"
+msgstr "Lagayan ng Batong Buwan"
+
+msgid "Radiation Science Pack - Low"
+msgstr "Radiation Science Pack - Mababa"
+
+msgid "Space Base"
+msgstr "Base sa Kalawakan"
+
+msgid "Botball"
+msgstr "Botbol"
+
+msgid "JBC Pieces"
+msgstr "Mga Piraso ng JBC"
+
+msgid "Moon Rock"
+msgstr "Batong Buwan"
+
+msgid "All"
+msgstr "Lahat"
+
+msgid ""
+"Basalt is an aphanitic (fine-grained) extrusive igneous rock formed from "
+"the rapid cooling of low-viscosity lava rich in magnesium and iron (mafic "
+"lava) exposed at or very near the surface of a rocky planet or moon."
+msgstr "Ang basalt ay isang aphanitik (pinong-butil) na ekstrusibong igneosong bato na nabuo mula sa mabilis na paglamig ng mababang lapot na lava na mayaman sa magnesium at bakal (mafik na lava) na nakalantad sa o napakalapit sa ibabaw ng isang batong planeta o buwan."
+
+msgid ""
+"Anorthosite is a phaneritic, intrusive igneous rock characterized by its "
+"composition: mostly plagioclase feldspar (90–100%), with a minimal mafic "
+"component (0–10%)."
+msgstr "Ang anorthosite ay isang phaneritikong intrusibong batong igneous na nailalarawan ng komposisyon nito: karamihan ay plagioclase feldspar (90–100%), na may kaunting mafic na sangkap (0–10%)."
+
+msgid ""
+"Breccia is a rock composed of large angular broken fragments of minerals or "
+"rocks cemented together by a fine-grained matrix."
+msgstr "Ang breccia ay isang batong binubuo ng malalaking matulis na piraso ng mga mineral o bato na pinagdikit ng isang pinong-butil na matriks."
+
+msgid ""
+"Meteorite is a solid piece of debris from an object, such as a comet, "
+"asteroid, or meteoroid, that originates in outer space and survives its "
+"passage through the atmosphere to reach the surface of a planet or moon."
+msgstr "Ang meteoryte ay isang solidong piraso ng debris mula sa isang bagay, gaya ng kometa, asteroid, o meteoroid, na nagmumula sa kalawakan at nakaliligtas sa pagdaan nito sa atmospera upang makarating sa ibabaw ng isang planeta o buwan."
+
+msgid "Description of the object"
+msgstr "Paglalarawan ng bagay"
+
+msgid "Surface Text"
+msgstr "Teksto sa Ibabaw"
+
+msgid "The current scene does not have a challenge available"
+msgstr "Ang kasalukuyang eksena ay walang magagamit na hamon."
+
+msgid "Start Challenge"
+msgstr "Simulan ang Hamon"
+
+msgid "your current work"
+msgstr "ang iyong kasalukuyang gawain"
+
+msgid "Failed to load challenge"
+msgstr "Hindi na-load ang hamon"
+
+msgid "Search"
+msgstr "Maghanap"
+
+msgid "Search Filters"
+msgstr "Mga Salain sa Paghahanap"
+
+msgid "Is standards aligned"
+msgstr "Aligned ba ang mga pamantayan?"
+
+msgid "Standards"
+msgstr "Mga Pamantayan"
+
+msgid "Subject"
+msgstr "Paksa"
+
+msgid "Grade Level"
+msgstr "Antas ng baitang"
+
+msgid "Grade Levels: %s"
+msgstr "Antas ng Grado: %s"
+
+msgid "Standard: %s"
+msgstr "Pamantayan: %s"
+
+msgid "Subject: %s"
+msgstr "Paksa: %s"
+
+msgid "U.S. Std."
+msgstr "U.S. Pamantayan"
+
+msgid "Curriculum"
+msgstr "Kurikulum"
+
+msgid "My Assignments"
+msgstr "Ang Aking Mga Takdang-Aralin"
+
+msgid "Graphical Variables"
+msgstr "Mga Grapikal na Baryabol"
+
+msgid "A hamburger"
+msgstr "Isang hamburger"
+
+msgid "Blue pom front #$(s)"
+msgstr "Asul na pom sa harap #$(s)"
+
+msgid "Blue pom front #$d"
+msgstr "Asul na pom sa harap #$d"
+
+msgid "Blue pom front #%d"
+msgstr "Asul na pom sa harap #%d"
+
+msgid "Blue pom back #%d"
+msgstr "Asul na pom sa likod #%d"
+
+msgid "Bottle #%d"
+msgstr "Botelya #%d"
+
+msgid "Orange pom #%d"
+msgstr "Kahel na pom #%d"
+
+msgid "Red pom #%d"
+msgstr "Pulang pom #%d"
+
+msgid "Yellow pom #%d"
+msgstr "Dilaw na pom #%d"
+
+msgid "Random pom #%d"
+msgstr "Random na pom #%d"
+
+msgid "Tray #%d"
+msgstr "Tray #%d"
+
+msgid "Blue drink #%d"
+msgstr "Asul na inumin #%d"
+
+msgid "Green drink #%d"
+msgstr "Berde na inumin #%d"
+
+msgid "Pink drink #%d"
+msgstr "Pink na inumin #%d"
+
+msgid "Fry #%d"
+msgstr "Iprito ang #%d"
+
+msgid "GCER 2025: Find the Black Line"
+msgstr "GCER 2025: Hanapin ang Itim na Linya"
+
+msgid ""
+"GCER 2025 special event. Your robot is randomly placed on one of the red "
+"circles. Find the black starting line and stop. Bonus points for returning "
+"to the original starting circle."
+msgstr "Espesyal na kaganapan ng GCER 2025. Ang iyong robot ay inilalagay nang random sa isa sa mga pulang bilog. Hanapin ang itim na linya ng panimulang at huminto. May dagdag na puntos para sa pagbabalik sa orihinal na bilog ng panimulang."
+
+msgid "GCER 2025: Sense the Can"
+msgstr "GCER 2025: Damhin ang lata"
+
+msgid ""
+"GCER 2025 special event. A can is placed randomly in circle 2, 4, 6, 9 or "
+"11. Find it and bring it back to the start box!"
+msgstr "Espesyal na kaganapan ng GCER 2025. May isang lata na inilalagay nang random sa bilog 2, 4, 6, 9, o 11. Hanapin ito at ibalik sa kahon ng panimula!"
+
+msgid "Blue pom #%d"
+msgstr "Asul na pom #%d"
+
+msgid "GCER 2025: Ice Ice Botguy"
+msgstr "GCER 2025: Yelo Yelo Botguy"
+
+msgid ""
+"GCER 2025 special event. Botguy is overheating! Collect the ice and dump it "
+"on Botguy to cool him off!"
+msgstr "Espesyal na kaganapan ng GCER 2025. Nasa sobrang init si Botguy! Kolektahin ang yelo at ibuhos ito kay Botguy para palamigin siya!"
+
+msgid "Cup #%d"
+msgstr "Kup #%d"
+
+msgid "GCER 2025: Thirst Quencher"
+msgstr "GCER 2025: Pangpalubag-uhaw"
+
+msgid ""
+"GCER 2025 special event. Don't let the summer heat get you down. Bring the "
+"cups back to the start box!"
+msgstr "Espesyal na kaganapan ng GCER 2025. Huwag mong hayaan na bumagsak ang iyong loob dahil sa init ng tag-init. Ibalik ang mga tasa sa kahon ng pagsisimula!"
+
+msgid "GCER 2025: Entree Express"
+msgstr "GCER 2025: Entree Express"
+
+msgid "GCER 2025 special event. Order up! Move the entrees to the trays."
+msgstr "Espesyal na kaganapan ng GCER 2025. Mag-utos! Ilipat ang mga pangunahing putahe sa mga tray."
+
+msgid "Warming station"
+msgstr "Estasyon ng pag-init"
+
+msgid "Pom #%d"
+msgstr "Pom #%d"
+
+msgid "GCER 2025: Special Sauce"
+msgstr "GCER 2025: Espesyal na Sarsa"
+
+msgid ""
+"GCER 2025 special event. Mix the ketchup (red), mustard (yellow), and hot "
+"sauce (orange) in the garages to create your own special blend!"
+msgstr "Espesyal na kaganapan ng GCER 2025. Haluin ang ketchup (pula), mustasa (dilaw), at hot sauce (kahel) sa mga garahe upang makalikha ng sarili mong espesyal na timpla!"
+
+msgid "Orange Garage"
+msgstr "Kahel na Garahian"
+
+msgid "GCER 2025: Cover Your Bases"
+msgstr "GCER 2025: Sakupin ang Iyong mga Batayan"
+
+msgid "GCER 2025 special edition. All circles are now open for business!"
+msgstr "GCER 2025 espesyal na edisyon. Bukas na para sa negosyo ang lahat ng mga bilog!"
+
+msgid "GCER 2025: Odd Numbers"
+msgstr "GCER 2025: Mga Di-Parehong Bilang"
+
+msgid ""
+"GCER 2025 special event. Drive over the odd numbered circles in order, but "
+"make sure to avoid the evens!"
+msgstr "Espesyal na kaganapan ng GCER 2025. Dumaan nang sunod-sunod sa mga bilog na may odd na numero, pero siguraduhing iwasan ang mga may even!"
+
+msgid "GCER 2025: Bulldozer Mania"
+msgstr "GCER 2025: Baliw sa Bulldozer"
+
+msgid ""
+"GCER 2025 special event. Bring as many cans behind the starting line as you "
+"can. Make sure they stay upright!"
+msgstr "Espesyal na kaganapan ng GCER 2025. Magdala ng maraming lata sa likod ng linya ng panimulang takbo hangga't kaya mo. Tiyaking nakatayo ang mga lata!"
+
+msgid "GCER 2025: Mountain Rescue"
+msgstr "GCER 2025: Pagliligtas sa Bundok"
+
+msgid "GCER 2025 special event. Now with three more cans to rescue!"
+msgstr "Espesyal na kaganapan ng GCER 2025. Ngayon, may tatlo pang lata na kailangang iligtas!"
+
+msgid "Robot Stops at Black Line"
+msgstr "Humihinto ang robot sa itim na linya."
+
+msgid "Robot stops at black line"
+msgstr "Humihinto ang robot sa itim na linya."
+
+msgid "Robot Over Circle"
+msgstr "Robot sa Ibabaw ng Bilog"
+
+msgid "Robot over selected circle"
+msgstr "Robot sa ibabaw ng napiling bilog"
+
+msgid "Robot not in Start Box"
+msgstr "Ang robot ay hindi nasa kahon ng panimulang linya."
+
+msgid "Robot not in start box"
+msgstr "Ang robot ay hindi nasa kahon ng panimulang."
+
+msgid "Can in Start Box"
+msgstr "Maaari sa Kahon ng Pagsisimula"
+
+msgid "Can in start box"
+msgstr "Maaari ba sa kahon ng pagsisimula"
+
+msgid "Can Random Upright"
+msgstr "Maaari bang Random Upright"
+
+msgid "Can Random upright"
+msgstr "Maaari bang random na nakatayo"
+
+msgid "Hamburger placed"
+msgstr "Nakapuwesto ang hamburger"
+
+msgid "Hamburger placed in tray"
+msgstr "Hamburger na inilagay sa tray"
+
+msgid "Hotdog placed"
+msgstr "Nakapuwesto si Hotdog"
+
+msgid "Hotdog placed in tray"
+msgstr "Hotdog na inilagay sa tray"
+
+msgid "Taco placed"
+msgstr "Inilagay ni Taco"
+
+msgid "Taco placed in tray"
+msgstr "Taco na inilagay sa tray"
+
+msgid "Can A upright in a circle"
+msgstr "Maaari bang maging patayo sa loob ng isang bilog?"
+
+msgid "Can B upright in a circle"
+msgstr "Maaari bang nakatayo nang tuwid si B sa loob ng isang bilog?"
+
+msgid "Can C upright in a circle"
+msgstr "Maaari bang tumayo nang tuwid ang C sa isang bilog?"
+
+msgid "Can D Upright"
+msgstr "Maaari bang patayoin ang D?"
+
+msgid "Can D upright in a circle"
+msgstr "Maaari bang tumayo nang tuwid ang D sa loob ng isang bilog?"
+
+msgid "Can E Upright"
+msgstr "Maaari bang patayoin ang E?"
+
+msgid "Can E upright in a circle"
+msgstr "Maaari bang tumayo nang tuwid ang E sa loob ng isang bilog?"
+
+msgid "Can F Upright"
+msgstr "Maaari bang F Upright"
+
+msgid "Can F upright in a circle"
+msgstr "Maaari bang itayo nang tuwid ang F sa loob ng isang bilog?"
+
+msgid "Can G Upright"
+msgstr "Maaari bang G Upright"
+
+msgid "Can G upright in a circle"
+msgstr "Maaari bang tumayo nang tuwid ang G sa loob ng isang bilog?"
+
+msgid "Base A Covered"
+msgstr "Base A ay natakpan"
+
+msgid "Base A covered by a can"
+msgstr "Base A na natakpan ng lata"
+
+msgid "Base B Covered"
+msgstr "Base B ay natakpan"
+
+msgid "Base B covered by a can"
+msgstr "Base B na natatakpan ng lata"
+
+msgid "Base C Covered"
+msgstr "Base C ay natakpan"
+
+msgid "Base C covered by a can"
+msgstr "Base C na natatakpan ng lata"
+
+msgid "Base D Covered"
+msgstr "Base D ay natakpan"
+
+msgid "Base D covered by a can"
+msgstr "Base D na natakpan ng lata"
+
+msgid "Base E Covered"
+msgstr "Base E ay natakpan"
+
+msgid "Base E covered by a can"
+msgstr "Base E na natatakpan ng lata"
+
+msgid "Base F Covered"
+msgstr "Base F na natakpan"
+
+msgid "Base F covered by a can"
+msgstr "Base F na natakpan ng lata"
+
+msgid "Base G Covered"
+msgstr "Base G ay natakpan"
+
+msgid "Base G covered by a can"
+msgstr "Base G na natakpan ng lata"
+
+msgid "Can 1 Upright"
+msgstr "Maaari bang isa ang patayong?"
+
+msgid "Can 1 is upright"
+msgstr "Ang Can 1 ay nakatayo."
+
+msgid "Can 2 Upright"
+msgstr "Can 2 Patayo"
+
+msgid "Can 2 is upright"
+msgstr "Ang Can 2 ay nakatayo."
+
+msgid "Can 3 Upright"
+msgstr "Can 3 Patayo"
+
+msgid "Can 3 is upright"
+msgstr "Ang Can 3 ay nakatayo."
+
+msgid "Can 4 Upright"
+msgstr "Maaari bang patayoin ang 4?"
+
+msgid "Can 4 is upright"
+msgstr "Ang lata 4 ay nakatayo"
+
+msgid "Can 5 Upright"
+msgstr "Can 5 Upright"
+
+msgid "Can 5 is upright"
+msgstr "Ang lata 5 ay nakatayo"
+
+msgid "Can 1 Intersects"
+msgstr "Maaari bang magsalubong ang 1 at Intersects"
+
+msgid "Can 1 rescued intersecting starting box"
+msgstr "Maaari bang iligtas ang intersecting starting box na nakalagay sa lata 1?"
+
+msgid "Can 2 Intersects"
+msgstr "Maaaring 2 na nagkakasalubong"
+
+msgid "Can 2 rescued intersecting starting box"
+msgstr "Maaari bang ilagay sa dalawang nakaligtas na nagkakasalubong na kahon ng panimulang linya?"
+
+msgid "Can 3 Intersects"
+msgstr "Maaaring mag-intersect ang tatlo"
+
+msgid "Can 3 rescued intersecting starting box"
+msgstr "Maaari bang iligtas ang 3 na nagkakasalubong na kahon ng panimulang start?"
+
+msgid "Can 4 Intersects"
+msgstr "Maaaring mag-intersect ang apat"
+
+msgid "Can 4 rescued intersecting starting box"
+msgstr "Maaari bang iligtas ang apat na nagkakasalubong na kahon ng panimulang start?"
+
+msgid "Can 5 Intersects"
+msgstr "Maaari bang mag-intersect ang 5?"
+
+msgid "Can 5 rescued intersecting starting box"
+msgstr "Maaari bang iligtas ang 5 na nagkakasalubong na kahon ng panimulang start?"
+
+msgid "Warming Station"
+msgstr "Estasyon ng Pag-init"
+
+msgid "Blue Cup JBC"
+msgstr "Asul na Tasa JBC"
+
+msgid "Green Cup JBC"
+msgstr "Green Cup JBC"
+
+msgid "Pink Cup JBC"
+msgstr "Pink Cup JBC"
+
+msgid "Ask Tutor"
+msgstr "Tanungin ang tutor"
+
+msgid "Arm"
+msgstr "Braso"
+
+msgid "Claw"
+msgstr "Kuko"
+
+msgid "Left wheel"
+msgstr "kaliwang gulong"
+
+msgid "Right wheel"
+msgstr "Kanan na gulong"
+
+msgid "Rangefinder"
+msgstr "Tagapagsukat ng distansya"
+
+msgid "Reflectance"
+msgstr "Pagsasalamin"
+
+msgid "Limit switch"
+msgstr "Limit switch"
+
+msgid "Left touch"
+msgstr "Kaliwang paghipo"
+
+msgid "Right touch"
+msgstr "Tamang haplos"
+
+msgid "Tutor"
+msgstr "Guro"
+
+msgid ""
+"Ask me questions about programming, get help with your code, or discuss "
+"robotics concepts."
+msgstr "Magtanong ka sa akin tungkol sa programming, humingi ng tulong sa iyong code, o talakayin ang mga konsepto sa robotics."
+
+msgid "Ask tutor a question..."
+msgstr "Magtanong sa tutor..."
+
+msgid "JBC Challenge 0"
+msgstr "JBC Hamon 0"
+
+msgid "In Start Box"
+msgstr "Sa kahon ng pagsisimula"
+
+msgid "Robot is in the start box"
+msgstr "Ang robot ay nasa kahon ng pagsisimula."
+
+msgid "Not In Start Box"
+msgstr "Hindi nasa kahon ng pagsisimula"
+
+msgid "Robot is not in the start box"
+msgstr "Ang robot ay hindi nasa kahon ng pagsisimula."
+
+msgid "Robot Touching Line B"
+msgstr "Robot na humihipo sa linya B"
+
+msgid "Robot is touching line B"
+msgstr "Dinidikit ng robot ang linya B."
+
+msgid "Robot Reached End"
+msgstr "Naabot ng robot ang dulo"
+
+msgid "Robot reached the end of the mat"
+msgstr "Naabot ng robot ang dulo ng banig."
+
+msgid "Robot Off Mat"
+msgstr "Robot Off na Banig"
+
+msgid "Robot left the mat"
+msgstr "Umalis ang robot sa banig."
+
+msgid "Start in the Start Box"
+msgstr "Magsimula sa kahon ng pagsisimula"
+
+msgid "Reach the end of the mat"
+msgstr "Marating ang dulo ng banig"
+
+msgid "Wheels do not touch line B"
+msgstr "Hindi tumatama ang mga gulong sa linya B."
+
+msgid "Do not drive off the mat"
+msgstr "Huwag magmaneho palabas ng banig."
+
+msgid "JBC Challenge 1"
+msgstr "JBC Hamon 1"
+
+msgid "Can 9 Touched"
+msgstr "Maaaring maabot ang 9 na nahawakan"
+
+msgid "Can A touched"
+msgstr "Maaari bang A na nahawakan"
+
+msgid "Can 9 Intersects"
+msgstr "Maaari bang magsalubong ang siyam?"
+
+msgid "Can 9 intersects circle 9"
+msgstr "Nagkakatagpo ba ang Can 9 at ang bilog 9?"
+
+msgid "Can 9 Upright"
+msgstr "Can 9 Upright"
+
+msgid "Can 9 upright on circle 9"
+msgstr "Maaari bang itayo nang tuwid ang siyam sa bilog na siyam?"
+
+msgid "Robot Rentered Start"
+msgstr "Robot na Nagsimula Magrenta"
+
+msgid "Robot reentered starting box"
+msgstr "Ang robot ay muling pumasok sa kahon ng pagsisimula."
+
+msgid "Touch Can 9"
+msgstr "Hawakan ang lata 9"
+
+msgid "Return to the Start Box"
+msgstr "Bumalik sa kahon ng simula"
+
+msgid "Can 9 not in circle 9"
+msgstr "Hindi maaaring nasa bilog 9"
+
+msgid "Can 9 not upright"
+msgstr "Hindi matutuwid ang 9"
+
+msgid "JBC Challenge 2"
+msgstr "JBC Hamon 2"
+
+msgid "Can 6 Intersects"
+msgstr "Maaaring magsalubong ang anim"
+
+msgid "Can 6 intersects circle 6"
+msgstr "Maaari bang magsalubong ang linya 6 at bilog 6?"
+
+msgid "Can 6 Upright"
+msgstr "Maaaring 6 na patayo"
+
+msgid "Can 6 upright on circle 6"
+msgstr "Maaari bang magtayo ng 6 na patayo sa bilog 6"
+
+msgid "Robot Passed Right Side"
+msgstr "Robot na dumaan sa kanang bahagi"
+
+msgid "Robot passed right side of can 6"
+msgstr "Dumaan ang robot sa kanang bahagi ng lata 6."
+
+msgid "Robot Passed Top Side"
+msgstr "Robot ay dumaan sa itaas na bahagi"
+
+msgid "Robot passed top side of can 6"
+msgstr "Dumaan ang robot sa itaas na bahagi ng lata 6."
+
+msgid "Robot Passed left Side"
+msgstr "Robot na lumampas sa kaliwang gilid"
+
+msgid "Robot passed left side of can 6"
+msgstr "Dumaan ang robot sa kaliwang bahagi ng lata 6."
+
+msgid "Pass the right side of can 6"
+msgstr "Ipasa ang kanang bahagi ng lata 6"
+
+msgid "Pass the top side of can 6"
+msgstr "Ipasa ang itaas na bahagi ng lata 6"
+
+msgid "Pass the left side of can 6"
+msgstr "Ipasa ang kaliwang bahagi ng lata 6"
+
+msgid "Can 6 not in circle 6"
+msgstr "Hindi maaaring nasa bilog 6"
+
+msgid "Can 6 not upright"
+msgstr "Hindi matutuwid ang lata 6"
+
+msgid "JBC Challenge 3"
+msgstr "JBC Hamon 3"
+
+msgid "Robot Touched Garage Lines"
+msgstr "Naabot ng Robot ang mga Linya ng Garahian"
+
+msgid "Robot touched garage boundaries"
+msgstr "Dinikit ng robot ang hangganan ng garahe."
+
+msgid "Robot Parked in One Garage"
+msgstr "Robot na nakaparada sa isang garahe"
+
+msgid "Robot parked in only one garage"
+msgstr "Ang robot ay nakaparada lamang sa isang garahe."
+
+msgid "Robot Parked in Different Garage"
+msgstr "Robot na nakaparada sa ibang garahe"
+
+msgid "Robot parked in a different garage"
+msgstr "Ang robot ay nakaparada sa ibang garahe."
+
+msgid "Robot Returned Start"
+msgstr "Pagbabalik ng Robot: Simulan"
+
+msgid "Robot returned to starting box"
+msgstr "Bumalik ang robot sa panimulang kahon."
+
+msgid "Park in one garage"
+msgstr "Magparada sa isang garahe."
+
+msgid "Park in a different garage"
+msgstr "Magparada sa ibang garahe."
+
+msgid "Do not touch garage boundaries"
+msgstr "Huwag hawakan ang mga hangganan ng garahe."
+
+msgid "JBC Challenge 4"
+msgstr "JBC Hamon 4"
+
+msgid "Circle Touched Out of Order"
+msgstr "Bihira ang pagkakasunod-sunod"
+
+msgid "Circle was touched out of order"
+msgstr "Naantig nang hindi nakaayos ang Circle"
+
+msgid "Robot Touched Circle 1"
+msgstr "Hinawakan ng robot ang bilog 1"
+
+msgid "Robot touched circle 1"
+msgstr "Dinikit ng robot ang bilog 1"
+
+msgid "Robot Touched Circle 2"
+msgstr "Robot na Hinawakan ang Bilog 2"
+
+msgid "Robot touched circle 2"
+msgstr "Dinikit ng robot ang bilog 2."
+
+msgid "Robot Touched Circle 3"
+msgstr "Robot na Hinawakan ang Bilog 3"
+
+msgid "Robot touched circle 3"
+msgstr "Dinikit ng robot ang bilog 3"
+
+msgid "Robot Touched Circle 4"
+msgstr "Hinawakan ng Robot ang Bilog 4"
+
+msgid "Robot touched circle 4"
+msgstr "Dinikit ng robot ang bilog 4"
+
+msgid "Robot Touched Circle 5"
+msgstr "Hinawakan ng Robot ang Bilog 5"
+
+msgid "Robot touched circle 5"
+msgstr "Dinikit ng robot ang bilog 5"
+
+msgid "Robot Touched Circle 6"
+msgstr "Hinawakan ng robot ang bilog 6"
+
+msgid "Robot touched circle 6"
+msgstr "Dinikit ng robot ang bilog 6."
+
+msgid "Robot Touched Circle 7"
+msgstr "Hinawakan ng robot ang bilog 7"
+
+msgid "Robot touched circle 7"
+msgstr "Dinikit ng robot ang bilog 7"
+
+msgid "Robot Touched Circle 8"
+msgstr "Robot na Hinawakan ang Bilog 8"
+
+msgid "Robot touched circle 8"
+msgstr "Dinikit ng robot ang bilog 8."
+
+msgid "Touch circle 1"
+msgstr "Haplusin ang bilog 1"
+
+msgid "Touch circle 2"
+msgstr "Haplusin ang bilog 2"
+
+msgid "Touch circle 3"
+msgstr "Haplusin ang bilog 3"
+
+msgid "Touch circle 4"
+msgstr "Haplusin ang bilog 4"
+
+msgid "Touch circle 5"
+msgstr "Haplusin ang bilog 5"
+
+msgid "Touch circle 6"
+msgstr "Pindutin ang bilog 6"
+
+msgid "Touch circle 7"
+msgstr "Pindutin ang bilog 7"
+
+msgid "Touch circle 8"
+msgstr "Haplusin ang bilog 8"
+
+msgid "Circle touched out of order"
+msgstr "Hindi wastong pagkakasunod-sunod ng mga na-touch na bilog"
+
+msgid "JBC Challenge 5"
+msgstr "JBC Hamon 5"
+
+msgid "Even Circle Touched"
+msgstr "Kahit ang bilog ay nahawakan"
+
+msgid "Even circle touched"
+msgstr "Kahit bilog ay nahawakan"
+
+msgid "Circle 1 Touched"
+msgstr "Circle 1 Naantig"
+
+msgid "Circle 1 was touched"
+msgstr "Naantig ang Bilog 1"
+
+msgid "Circle 3 Touched"
+msgstr "Binalot ng bilog 3"
+
+msgid "Circle 3 was touched"
+msgstr "Naabot ang Circle 3."
+
+msgid "Circle 5 Touched"
+msgstr "Ikinalimang bilog na naantig"
+
+msgid "Circle 5 was touched"
+msgstr "Naantig ang Circle 5."
+
+msgid "Circle 7 Touched"
+msgstr "Ikulong ang 7 na Naantig"
+
+msgid "Circle 7 was touched"
+msgstr "Naantig ang Circle 7."
+
+msgid "Circle 9 Touched"
+msgstr "Circle 9 Touched"
+
+msgid "Circle 9 was touched"
+msgstr "Naantig ang Circle 9."
+
+msgid "Circle 11 Touched"
+msgstr "Circle 11 Naantig"
+
+msgid "Circle 11 was touched"
+msgstr "Naantig ang Bilog 11."
+
+msgid "Touch circle 9"
+msgstr "Hawakan ang bilog 9"
+
+msgid "Touch circle 11"
+msgstr "Haplusin ang bilog 11"
+
+msgid "Touched an even circle"
+msgstr "Nahipo ang pantay na bilog"
+
+msgid "JBC Challenge 6"
+msgstr "JBC Hamon 6"
+
+msgid "Can 4 intersects circle 4"
+msgstr "Maaari bang makipagtawid ang Kanan 4 sa Bilog 4?"
+
+msgid "Can 4 upright on circle 4"
+msgstr "Maaari bang maglagay ng apat na patayo sa bilog 4?"
+
+msgid "Robot Figure Eight"
+msgstr "Robot na Hugis Walong"
+
+msgid "Robot did a figure eight around cans 4 and 9"
+msgstr "Gumawa ang robot ng hugis walong paligoy sa paligid ng mga lata 4 at 9."
+
+msgid "Complete a figure eight"
+msgstr "Kumumpleto ng hugis walo"
+
+msgid "Can 4 not upright in circle 4"
+msgstr "Hindi maaaring patayo ang 4 sa bilog 4"
+
+msgid "Can 9 not upright in circle 9"
+msgstr "Hindi maaaring nakatayo sa bilog 9 ang 9"
+
+msgid "Can 4 does not intersect circle 4"
+msgstr "Hindi nagkakasalubong ang Can 4 at ang bilog 4."
+
+msgid "Can 9 does not intersect circle 9"
+msgstr "Hindi nagkakatagpo ang Can 9 at ang bilog 9."
+
+msgid "JBC Challenge 7"
+msgstr "JBC Hamon 7"
+
+msgid "Can 2 upright"
+msgstr "Maaaring 2 patayo"
+
+msgid "Can 9 upright"
+msgstr "Maaaring 9 na patayo"
+
+msgid "Can 10 Upright"
+msgstr "Maaaring 10 patayo"
+
+msgid "Can 10 upright"
+msgstr "Maaaring 10 patayo"
+
+msgid "Can 2 Intersects Green Garage"
+msgstr "Maaari bang makipag-intersect ang 2 sa Green Garage?"
+
+msgid "Can 2 intersects Green Garage"
+msgstr "Maaari bang makipag-intersect ang 2 sa Green Garage?"
+
+msgid "Can 9 Intersects Blue Garage"
+msgstr "Maaari bang mag-intersect ang 9 at ang asul na garahe?"
+
+msgid "Can 9 intersects Blue Garage"
+msgstr "Ang Can 9 ay nagkakatagpo sa Blue Garage."
+
+msgid "Can 9 Intersects Purple Garage"
+msgstr "Maaari bang mag-intersect ang 9 at ang lilang garahe?"
+
+msgid "Can 9 intersects Purple Garage"
+msgstr "Ang Can 9 ay nagkakatagpo sa Purple Garage."
+
+msgid "Can 10 Intersects Yellow Garage"
+msgstr "Maaari bang 10 magkrus sa dilaw na garahe"
+
+msgid "Can 10 intersects Yellow Garage"
+msgstr "Maaari bang makipag-intersect ang 10 sa Dilaw na Garahian"
+
+msgid "Place can 2 in green garage"
+msgstr "Ilagay ang lata 2 sa berdeng garahe."
+
+msgid "Place can 9 in blue garage"
+msgstr "Ilagay ang lata 9 sa asul na garahe."
+
+msgid "Place can 10 in yellow garage"
+msgstr "Ilagay ang 10 lata sa dilaw na garahe."
+
+msgid "Can 2 not upright in green garage"
+msgstr "Hindi matuwid ang Can 2 sa berdeng garahe."
+
+msgid "Can 9 not upright in blue garage"
+msgstr "Hindi maaaring 9 na hindi nakatayo sa asul na garahe"
+
+msgid "Can 10 not upright in yellow garage"
+msgstr "Hindi ba maaaring 10 na hindi nakatayo sa dilaw na garahe"
+
+msgid "JBC Challenge 8"
+msgstr "JBC Hamon 8"
+
+msgid "Can A upright behind start line"
+msgstr "Maaari bang magsimula nang nakatayo sa likod ng linya ng pagsisimula?"
+
+msgid "Can B upright behind start line"
+msgstr "Maaari bang nakatayo nang tuwid si B sa likod ng linya ng pagsisimula?"
+
+msgid "Can C upright behind start line"
+msgstr "Maaaring tumayo nang tuwid si C sa likod ng linya ng pagsisimula."
+
+msgid "Can D upright behind start line"
+msgstr "Maaari bang magtayo ng D sa likod ng start line?"
+
+msgid "Can E upright behind start line"
+msgstr "Maaari bang itayo nang tuwid ang E sa likod ng linya ng pagsisimula?"
+
+msgid "First can upright in start box"
+msgstr "Una, maaaring patayo sa kahon ng pagsisimula."
+
+msgid "Second can upright in start box"
+msgstr "Pangalawa ay maaaring tumayo nang tuwid sa kahon ng pagsisimula"
+
+msgid "Third can upright in start box"
+msgstr "Pangatlo ay maaaring tumayo nang tuwid sa kahon ng pagsisimula"
+
+msgid "Fourth can upright in start box"
+msgstr "Ang ika-apat ay maaaring tumayo nang tuwid sa kahon ng pagsisimula"
+
+msgid "Fifth can upright in start box"
+msgstr "Ikalima ay nakatayo nang tuwid sa kahon ng pagsisimula"
+
+msgid "JBC Challenge 9"
+msgstr "JBC Hamon 9"
+
+msgid "Cover base A"
+msgstr "Takpan ang base A"
+
+msgid "Cover base B"
+msgstr "Takpan ang base B"
+
+msgid "Cover base C"
+msgstr "Takpan ang base C"
+
+msgid "Cover base D"
+msgstr "Takpan ang base D"
+
+msgid "Cover base E"
+msgstr "Takpan ang base E"
+
+msgid "Can A not upright"
+msgstr "Maaari bang hindi nakatayo ang A?"
+
+msgid "Can B not upright"
+msgstr "Hindi ba maaaring nakatayo si B?"
+
+msgid "Can C not upright"
+msgstr "Hindi makatayo si C"
+
+msgid "Can D not upright"
+msgstr "Hindi makatayo si D"
+
+msgid "Can E not upright"
+msgstr "Hindi ba kayang tumayo nang tuwid si E?"
+
+msgid "JBC Challenge 10"
+msgstr "JBC Hamon 10"
+
+msgid "Waited to Chop"
+msgstr "Nag-antay para tumaga"
+
+msgid "Robot waited to chop"
+msgstr "Nag-antay ang robot para maghiwa."
+
+msgid "Can 7 Upright"
+msgstr "Can 7 Upright"
+
+msgid "Can 7 upright"
+msgstr "Maaaring 7 patayo"
+
+msgid "Wait before chopping"
+msgstr "Maghintay bago tumadtad."
+
+msgid "Knock over can 7"
+msgstr "Pahigain ang lata 7"
+
+msgid "JBC Challenge 11"
+msgstr "JBC Hamon 11"
+
+msgid "Robot Waved"
+msgstr "Kumaway ang robot."
+
+msgid "Robot waved"
+msgstr "Kumaway ang robot."
+
+msgid "Circle 3 touched"
+msgstr "Tinapik ang Bilog 3"
+
+msgid "Circle 6 Touched"
+msgstr "Circle 6 Naantig"
+
+msgid "Circle 6 touched"
+msgstr "Circle 6 ay naantig"
+
+msgid "Circle 9 touched"
+msgstr "Circle 9 ay naantig"
+
+msgid "Circle 12 Touched"
+msgstr "Sirkulo 12 na Naabot"
+
+msgid "Circle 12 touched"
+msgstr "Napaglingkuran ang Bilog 12"
+
+msgid "Wave at circle 3"
+msgstr "Mag-wave sa bilog 3"
+
+msgid "Wave at circle 6"
+msgstr "Mag-wave sa bilog 6"
+
+msgid "Wave at circle 9"
+msgstr "Mag-wave sa bilog 9"
+
+msgid "Wave at circle 12"
+msgstr "Mag-wave sa bilog 12"
+
+msgid "JBC Challenge 15"
+msgstr "JBC Hamon 15"
+
+msgid "Can 11 Upright"
+msgstr "Maaaring 11 Patayo"
+
+msgid "Can 11 upright"
+msgstr "Maaari bang gawing 11 na patayo"
+
+msgid "Bring can to Start Box"
+msgstr "Dalhin ang lata sa Start Box."
+
+msgid "Keep can 11 not upright"
+msgstr "Panatilihin ang lata 11 na hindi nakatayo."
+
+msgid "JBC Challenge 16"
+msgstr "JBC Hamon 16"
+
+msgid "Can 2 Picked Up"
+msgstr "Dalawang na-pick up"
+
+msgid "Can 2 picked up"
+msgstr "Na-pick up ang Can 2"
+
+msgid "Can 9 Picked Up"
+msgstr "Maaari bang kunin ang 9?"
+
+msgid "Can 9 picked up"
+msgstr "Na-pick up ang Can 9"
+
+msgid "Can 10 Picked Up"
+msgstr "Maaaring kunin ang 10"
+
+msgid "Can 10 picked up"
+msgstr "Na-pick up ang Can 10"
+
+msgid "Can 2 not upright"
+msgstr "Hindi matutuwid ang Can 2"
+
+msgid "Can 10 not upright"
+msgstr "Hindi matatayo nang tuwid ang 10"
+
+msgid "Can 2 not picked up"
+msgstr "Hindi na na-pick up ang Can 2"
+
+msgid "Can 9 not picked up"
+msgstr "Hindi ma-pick up ang 9"
+
+msgid "Can 10 not picked up"
+msgstr "Hindi ma-pick up ang 10"
+
+msgid "JBC Challenge 17"
+msgstr "JBC Hamon 17"
+
+msgid "Rescue can 1 to start box"
+msgstr "Rescue can 1 para simulan ang kahon"
+
+msgid "Rescue can 2 to start box"
+msgstr "Rescue can 2 para simulan ang kahon"
+
+msgid "Rescue can 3 to start box"
+msgstr "Rescue can 3 para simulan ang kahon"
+
+msgid "Can 1 not upright"
+msgstr "Hindi matutuwid ang lata 1"
+
+msgid "Can 3 not upright"
+msgstr "Hindi matutuwid ang lata 3"
+
+msgid "JBC Challenge 18"
+msgstr "JBC Hamon 18"
+
+msgid "Robot Left Start"
+msgstr "Robot kaliwa simula"
+
+msgid "Robot left starting box"
+msgstr "Umalis na ang robot sa kahon ng panimulang takbo."
+
+msgid "One Can Stacked"
+msgstr "Isang lata ang nakasalansan"
+
+msgid "One can is stacked on another"
+msgstr "Isang lata ang nakapatong sa isa pa."
+
+msgid "Robot Touching Can"
+msgstr "Paghipo ng robot sa lata"
+
+msgid "Robot is touching a can"
+msgstr "Hinahawakan ng robot ang lata."
+
+msgid "Leave the Start Box"
+msgstr "Lumabas sa kahon ng pagsisimula"
+
+msgid "Stack one can on another"
+msgstr "Ipantong ang isang lata sa isa pa."
+
+msgid "Robot touching can"
+msgstr "Maaaring mahawakan ng robot"
+
+msgid "JBC Challenge 19"
+msgstr "JBC Hamon 19"
+
+msgid "Robot Forward Touch"
+msgstr "Pasulong na Pindutin ng Robot"
+
+msgid "Robot drove forward and touched ream of paper"
+msgstr "Umakyat ang robot pasulong at hinawakan ang gilid ng papel."
+
+msgid "Drive forward and touch the ream"
+msgstr "Magmaneho pasulong at hawakan ang ream."
+
+msgid "JBC Challenge 20"
+msgstr "JBC Hamon 20"
+
+msgid "Robot in start box"
+msgstr "Robot sa kahon ng pagsisimula"
+
+msgid "Ream 1 Touched"
+msgstr "Na-touch ang Ream 1"
+
+msgid "Robot touched ream 1"
+msgstr "Naabot ng robot ang ream 1."
+
+msgid "Ream 2 Touched"
+msgstr "Ream 2 na nahawakan"
+
+msgid "Robot touched ream 2"
+msgstr "Dinikit ng robot ang ream 2."
+
+msgid "Ream 3 Touched"
+msgstr "Ream 3 na nahawakan"
+
+msgid "Robot touched ream 3"
+msgstr "Dinikit ng robot ang ream 3."
+
+msgid "Ream 4 Touched"
+msgstr "Ream 4 na nahawakan"
+
+msgid "Robot touched ream 4"
+msgstr "Dinikit ng robot ang ream 4."
+
+msgid "Touch ream 1"
+msgstr "Touch ream 1"
+
+msgid "Touch ream 2"
+msgstr "Touch ream 2"
+
+msgid "Touch ream 3"
+msgstr "Touch ream 3"
+
+msgid "Touch ream 4"
+msgstr "Touch ream 4"
+
+msgid "JBC Challenge 21"
+msgstr "JBC Hamon 21"
+
+msgid "Stop at Ream"
+msgstr "Huminto sa Ream"
+
+msgid "Robot stops at ream"
+msgstr "Humihinto ang robot sa ream."
+
+msgid "Bump Ream"
+msgstr "Bum-ream"
+
+msgid "Robot bumps ream"
+msgstr "Robot na bumubunggo sa ream"
+
+msgid "Stop at the ream"
+msgstr "Huminto sa ream."
+
+msgid "Do not bump the ream"
+msgstr "Huwag banggain ang ream."
+
+msgid "JBC Challenge 22"
+msgstr "JBC Hamon 22"
+
+msgid "Can Upright"
+msgstr "Maaari bang patayo"
+
+msgid "Can is upright"
+msgstr "Maaari bang nakatayo ang lata?"
+
+msgid "Can not upright"
+msgstr "Hindi matutuwid"
+
+msgid "JBC Challenge 23"
+msgstr "JBC Hamon 23"
+
+msgid "Started over the circle"
+msgstr "Sinimulan muli sa ibabaw ng bilog"
+
+msgid "Stop at the black line"
+msgstr "Huminto sa itim na linya."
+
+msgid "JBC Challenge 24"
+msgstr "JBC Hamon 24"
+
+msgid "Robot Walks the Line"
+msgstr "Naglalakad ang Robot sa Linya"
+
+msgid "Robot uses reflectance sensor to follow the black line until Finish Line "
+msgstr "Gumagamit ang robot ng reflectance sensor upang sundan ang itim na linya hanggang sa linya ng pagtatapos. "
+
+msgid "Line follow to the finish line"
+msgstr "Sumunod sa linya hanggang sa linya ng pagtatapos."
+
+msgid "Robot started on Circle"
+msgstr "Nagsimula na ang robot sa Circle."
+
+msgid "Can Not Upright"
+msgstr "Hindi Matutulad"
+
+msgid "Place Hamburger in Tray"
+msgstr "Ilagay ang hamburger sa tray."
+
+msgid "Place Hotdog in Tray"
+msgstr "Ilagay ang hotdog sa tray."
+
+msgid "Place Taco in Tray"
+msgstr "Ilagay ang Taco sa tray"
+
+msgid "Can A Not Upright"
+msgstr "Maaari bang hindi nakatayo"
+
+msgid "Can B Not Upright"
+msgstr "Hindi Mo Kaya na Tumayo nang Tuwid"
+
+msgid "Can C Not Upright"
+msgstr "Hindi makatayo ang C-Can Not"
+
+msgid "Can D Not Upright"
+msgstr "Hindi makatayo si D"
+
+msgid "Can E Not Upright"
+msgstr "Hindi Mo Kaya, Hindi Mo Matutuluyan"
+
+msgid "Can F Not Upright"
+msgstr "Hindi ba kayang tumayo ng F? Hindi mo ba kayang tumayo ng F?"
+
+msgid "Can G Not Upright"
+msgstr "Hindi makatayo si G Not"
+
+msgid "Can 1 in the Start Box"
+msgstr "Maaari bang 1 sa kahon ng pagsisimula"
+
+msgid "Can 2 in the Start Box"
+msgstr "Dalawa sa kahon ng simula"
+
+msgid "Can 3 in the Start Box"
+msgstr "Maaaring tatlo sa kahon ng pagsisimula"
+
+msgid "Can 4 in the Start Box"
+msgstr "Apat sa kahon ng pagsisimula"
+
+msgid "Can 5 in the Start Box"
+msgstr "Limang tao sa kahon ng panimulang takbo"
+
+msgid "Can 1 Not Upright"
+msgstr "Hindi matutuwid"
+
+msgid "Can 2 Not Upright"
+msgstr "Hindi matutulad sa dalawa"
+
+msgid "Can 3 Not Upright"
+msgstr "Hindi matutuwid ng Can 3"
+
+msgid "Can 4 Not Upright"
+msgstr "Hindi matutuwid ng 4"
+
+msgid "Can 5 Not Upright"
+msgstr "Hindi matutuwid ng 5 lata"
+
+msgid "JBC Challenge 10B"
+msgstr "JBC Hamon 10B"
+
+msgid "JBC Challenge 12"
+msgstr "JBC Hamon 12"
+
+msgid "Can from green garage intersects circle 2"
+msgstr "Mula sa berdeng garahe na nakatagpo ng bilog 2"
+
+msgid "Can from blue garage intersects circle 9"
+msgstr "Mula sa asul na garahe, humahantong sa Sirkulo 9"
+
+msgid "Can 10 Intersects"
+msgstr "Maaari bang mag-intersect ang 10?"
+
+msgid "Can from yellow garage intersects circle 10"
+msgstr "Maaari mula sa dilaw na garahe na nakatagpo sa bilog 10"
+
+msgid "JBC Challenge 13"
+msgstr "JBC Hamon 13"
+
+msgid "Can 2 intersects chosen garage"
+msgstr "Maaari bang piliin ang dalawang interseksyon ng garage?"
+
+msgid "Can 5 intersects chosen garage"
+msgstr "Maaari bang piliin ang limang pinag-interseksyong garahe?"
+
+msgid "Can 8 Intersects"
+msgstr "Maaari bang mag-intersect ang 8?"
+
+msgid "Can 8 intersects chosen garage"
+msgstr "Maaari bang piliin ang walong pinag-intersectang garahe?"
+
+msgid "Can 10 intersects chosen garage"
+msgstr "Maaari bang piliin ang 10 na pinili na interseksyon ng garahe?"
+
+msgid "Can 11 Intersects"
+msgstr "Maaaring 11 na nagkakatagpo"
+
+msgid "Can 11 intersects chosen garage"
+msgstr "Maaari bang piliin ang 11 na pinag-i-intersect na garahe?"
+
+msgid "Can 2 upright in chosen garage"
+msgstr "Maaari bang maglagay ng 2 patayong yunit sa napiling garahe?"
+
+msgid "Can 5 upright in achosen garage"
+msgstr "Maaari bang maglagay ng limang patayong lata sa napiling garahe?"
+
+msgid "Can 8 Upright"
+msgstr "Maaaring 8 Patayo"
+
+msgid "Can 8 upright in chosen garage"
+msgstr "Maaari bang ilagay nang nakatayo ang walong sa napiling garahe?"
+
+msgid "Can 10 upright in chosen garage"
+msgstr "Maaari bang maglagay ng 10 patayo sa napiling garahe?"
+
+msgid "Can 11 upright in chosen garage"
+msgstr "Maaari bang magtayo ng 11 patayo sa napiling garahe?"
+
+msgid "JBC Challenge 15B"
+msgstr "JBC Hamon 15B"
+
+msgid "Robot Backward Touch"
+msgstr "Paghipo ng Robot Pabalik"
+
+msgid "Robot drove backward and touched ream of paper"
+msgstr "Umalikid ang robot at hinawakan ang buntot ng papel."
+
+msgid "Robot Forward Circle 2"
+msgstr "Robot Pasulong na Bilog 2"
+
+msgid "Robot drove forward to circle 2"
+msgstr "Umakyat ang robot pasulong papunta sa bilog 2."
+
+msgid "JBC Challenge 17B"
+msgstr "JBC Hamon 17B"
+
+msgid "Robot uses reflectance sensor to follow the black line until the Blue line"
+msgstr "Gumagamit ang robot ng reflectance sensor upang sundan ang itim na linya hanggang sa asul na linya."
+
+msgid "Can 9 is upright"
+msgstr "Ang Can 9 ay nakatayo."
+
+msgid "Can 10 is upright"
+msgstr "Ang Can 10 ay nakatayo."
+
+msgid "Can 12 Upright"
+msgstr "Maaaring 12 Patayo"
+
+msgid "Can 12 is upright"
+msgstr "Ang Can 12 ay nakatayo."
+
+msgid "Can 9 rescued intersecting paper ream"
+msgstr "Maaari bang iligtas ang 9 na nakasalubong na ream ng papel?"
+
+msgid "Can 2 rescued intersecting paper ream"
+msgstr "Maaari bang gawin ang 2 na nailigtas na nagkakrus na ream ng papel?"
+
+msgid "Can 10 rescued intersecting paper ream"
+msgstr "Maaari bang gawin ng 10 na nailigtas na nagkakrus na ream ng papel?"
+
+msgid "Can 12 Intersects"
+msgstr "Maaari bang mag-intersect ang 12?"
+
+msgid "Can 12 rescued intersecting paper ream"
+msgstr "Maaari bang gawing 12 na ream ng papel na pinagsama-sama ang mga nailigtas na piraso?"
+
+msgid "Can 9 Lifted"
+msgstr "Maaaring itaas ang siyam"
+
+msgid "Can 9 Lifted a Foot Tall"
+msgstr "Maaaring itaas ng 9 pulgada ang isang paa"
+
+msgid "JBC Challenge 2B"
+msgstr "JBC Hamon 2B"
+
+msgid "Can 10 Touched"
+msgstr "Maaaring 10 na nahawakan"
+
+msgid "Can 10 touched"
+msgstr "Maaaring hawakan ng 10"
+
+msgid "Can 11 Touched"
+msgstr "Maaari bang maantig ang 11?"
+
+msgid "Can 11 touched"
+msgstr "Maaaring hawakan ang 11"
+
+msgid "Can 12 Touched"
+msgstr "Maaaring 12 ang naantig"
+
+msgid "Can 12 touched"
+msgstr "Maaaring hawakan ng 12"
+
+msgid "Can 10 intersects circle 10"
+msgstr "Maaari bang makipagtawid ang 10 sa bilog 10?"
+
+msgid "Can 11 intersects circle 11"
+msgstr "Maaari bang magsalubong ang 11 at ang bilog 11?"
+
+msgid "Can 12 intersects circle 12"
+msgstr "Maaari bang makipag-intersect ang 12 sa bilog 12?"
+
+msgid "Can 10 upright on circle 10"
+msgstr "Maaari bang 10 patayo sa bilog 10"
+
+msgid "Can 11 upright on circle 11"
+msgstr "Maaari bang 11 na nakatayo sa bilog 11"
+
+msgid "Can 12 upright on circle 12"
+msgstr "Maaari bang 12 patayo sa bilog 12"
+
+msgid "Robot passed right side of can 12"
+msgstr "Dumaan ang robot sa kanang bahagi ng lata 12."
+
+msgid "Robot passed top side of can 11"
+msgstr "Dumaan ang robot sa itaas na bahagi ng lata 11."
+
+msgid "Robot passed left side of can 10"
+msgstr "Dumaan ang robot sa kaliwang bahagi ng lata 10."
+
+msgid "JBC Challenge 2C"
+msgstr "JBC Hamon 2C"
+
+msgid "Robot Driving Backwards"
+msgstr "Robot na nagmamaneho paatras"
+
+msgid "Robot is driving backwards"
+msgstr "Ang robot ay nagmamaneho nang paatras."
+
+msgid "JBC Challenge 2D"
+msgstr "JBC Hamon 2D"
+
+msgid "Robot Rentered Start 1"
+msgstr "Robot na Nagrenta: Simulan 1"
+
+msgid "Robot reentered starting box after going forwards"
+msgstr "Bumalik ang robot sa kahon ng panimulang pagtakbo matapos itong sumulong."
+
+msgid "Robot Rentered Start 2"
+msgstr "Robot na Nagrenta: Simula 2"
+
+msgid "Robot reentered starting box after going backwards"
+msgstr "Bumalik ang robot sa kahon ng panimulang takbo matapos itong umatras."
+
+msgid "Robot Driving Forwards"
+msgstr "Robot na nagmamaneho pasulong"
+
+msgid "Robot is driving forwards"
+msgstr "Ang robot ay nagmamaneho pasulong."
+
+msgid "JBC Challenge 4B"
+msgstr "JBC Hamon 4B"
+
+msgid "Can 5 intersects circle 5"
+msgstr "Nagkakatagpo ba ang Can 5 at ang Circle 5?"
+
+msgid "Can 8 intersects circle 8"
+msgstr "Maaari bang makipagtawid ang 8 sa bilog 8?"
+
+msgid "Can 5 upright on circle 5"
+msgstr "Maaari bang patayoin ang 5 sa bilog 5?"
+
+msgid "Can 8 upright on circle 8"
+msgstr "Maaari bang magtayo ng walong patayo sa bilog 8"
+
+msgid "Can 8 Clockwise"
+msgstr "Maaari bang 8 na paikot"
+
+msgid "Robot drove clockwise around can 8"
+msgstr "Nagmaneho ang robot sa kanang direksyon sa paligid ng lata 8."
+
+msgid "Can 5 Counter Clockwise"
+msgstr "Maaari bang gawin ang 5 counter clockwise?"
+
+msgid "Robot drove counter clockwise around can 5"
+msgstr "Nagmaneho ang robot nang pakanluran ng orasan sa paligid ng lata 5."
+
+msgid "Can 9 Counter Clockwise"
+msgstr "Maaari bang bilangin nang pabaliktad hanggang siyam?"
+
+msgid "Robot drove counter clockwise around can 9"
+msgstr "Nagmaneho ang robot paikot sa lata 9 sa direksyong kontra-orasan."
+
+msgid "JBC Challenge 8B"
+msgstr "JBC Hamon 8B"
+
+msgid "Robot Begins In start"
+msgstr "Sinimulan ng robot sa simula"
+
+msgid "Robot begins in starting box"
+msgstr "Nagsisimula ang robot sa kahon ng pagsisimula."
+
+msgid "Robot passed through circle 1"
+msgstr "Dumaan ang robot sa bilog 1"
+
+msgid "Robot passed through circle 2"
+msgstr "Nakapasa si Robot sa ikalawang bilog."
+
+msgid "Robot passed through circle 3"
+msgstr "Nakapasa si Robot sa ikatlong bilog."
+
+msgid "Robot passed through circle 4"
+msgstr "Dumaan ang Robot sa bilog 4."
+
+msgid "Robot passed through circle 5"
+msgstr "Dumaan ang robot sa bilog 5."
+
+msgid "Test"
+msgstr "Pagsusulit"
+
+msgid "A"
+msgstr "Isang"
+
+msgid "B"
+msgstr "B"
+
+msgid "Junior Botball Challenge 12: Add It Up"
+msgstr "Junior Botball Challenge 12: Idagdag Mo"
+
+msgid "Robot Touched a Circle "
+msgstr "Hinipo ng robot ang isang bilog. "
+
+msgid "Robot touched a circle"
+msgstr "Dinikit ng robot ang isang bilog."
+
+msgid "Touched Circles to add up to 20"
+msgstr "Pinindot na mga bilog para idagdag hanggang 20"
+
+msgid "JBC Challenge 14"
+msgstr "JBC Hamon 14"
+
+msgid "Robot 360 Clockwise"
+msgstr "Robot 360 Pakanluran"
+
+msgid "Robot turned 360 degrees clockwise"
+msgstr "Umikot ang robot ng 360 degrees pakaliwa."
+
+msgid "Robot 360 Counter Clockwise"
+msgstr "Robot 360 pa-kaliwa"
+
+msgid "Robot turned 360 degrees counter clockwise"
+msgstr "Umikot ang robot ng 360 degrees pabaliktad sa orasan."
+
+msgid "Robot Drove Forward"
+msgstr "Umiusad ang robot."
+
+msgid "Robot drove forward"
+msgstr "Umiusad ang robot pasulong."
+
+msgid "Robot Drove Backward"
+msgstr "Umalikod ang robot."
+
+msgid "Robot drove backward"
+msgstr "Nagmaneho nang paatras ang robot."
+
+msgid "Robot Wave Servo"
+msgstr "Alon ng Robot na Servo"
+
+msgid "Robot waved servo up and down at least once"
+msgstr "Iwinagayway ng robot ang servo pataas at pababa nang hindi bababa sa isang beses."
+
+msgid "Turn 360° clockwise"
+msgstr "Iikutin ng 360° sa direksyon ng orasan"
+
+msgid "Turn 360° counter clockwise"
+msgstr "Iikot nang 360° pabaliktad sa orasan"
+
+msgid "Drive forward"
+msgstr "Magmaneho pasulong"
+
+msgid "Drive backward"
+msgstr "Magmaneho paatras"
+
+msgid "Wave the servo"
+msgstr "Iwagayway ang servo"
+
+msgid "2026 Fall Game Table"
+msgstr "2026 Talahanayan ng Laro sa Taglagas"
+
+msgid "Blue Pom #%d"
+msgstr "Asul na Pom #%d"
+
+msgid "Orange Pom #%d"
+msgstr "Kahel na Pom #%d"
+
+msgid "Random Pom #%d"
+msgstr "Random na Pom #%d"
+
+msgid "Raised Dock Pallet #1"
+msgstr "Pallet ng nakataas na pantalan #1"
+
+msgid "Raised Dock Pallet #2"
+msgstr "Pallet ng nakataas na pantalan #2"
+
+msgid "Storage Pallet #1"
+msgstr "Pallet ng imbakan #1"
+
+msgid "Storage Pallet #2"
+msgstr "Pallet ng imbakan #2"
+
+msgid "Left Stack Cube #%d"
+msgstr "Kuwbiko ng Ipinagkakanlungan #%d"
+
+msgid "Right Stack Cube #%d"
+msgstr "Tamang Stack Cube #%d"
+
+msgid "Red Cube (4 inch)"
+msgstr "Pulang Kubiko (4 pulgada)"
+
+msgid "Brown Cube (4 inch)"
+msgstr "Kayumangging Kubiko (4 pulgada)"
+
+msgid "Green Cube (4 inch)"
+msgstr "Berde na Kubiko (4 pulgada)"
+
+msgid "Right Traffic Cone"
+msgstr "Tamang Kono ng Trapiko"
+
+msgid "Left Traffic Cone"
+msgstr "Kaliwang Kono ng Trapiko"
+
+msgid "Left Basket"
+msgstr "Kaliwang Basket"
+
+msgid "Right Basket"
+msgstr "Kanan na basket"
+
+msgid "Left PCV #%d"
+msgstr "Iwanan ang PCV #%d"
+
+msgid "Right PCV #%d"
+msgstr "Tama ang PCV #%d"
+
+msgid "2026 Fall Botball game table sandbox"
+msgstr "Sandbox ng mesa ng laro ng Botball sa Taglagas 2026"
+
+msgid "JBC Sandbox"
+msgstr "JBC Sandbox"
+
+msgid ""
+"Junior Botball Challenge Sandbox. Starting Mat is A but B can also be shown "
+"instead. All cans 1-12 are available by default."
+msgstr "Junior Botball Challenge Sandbox. Ang panimulang patlang ay A ngunit maaaring ipakita rin ang B. Lahat ng lata 1–12 ay magagamit nang default."
+
+msgid "2026 Botball Fall Game Table"
+msgstr "2026 Botball Fall Game Table"
+
+msgid "2026 Botball Spring Game Table"
+msgstr "2026 Botball Spring Game Table"
+
+msgid "Base Scene - 2026 Botball Game Table"
+msgstr "Pangunahing Tagpuan - 2026 Botball na Lamesa ng Laro"
+
+msgid "Sliding Door #1"
+msgstr "Pumapasong Pintuan #1"
+
+msgid "Sliding Door #2"
+msgstr "Pumapasong Pintuan #2"
+
+msgid "Low Blue Pom #%d"
+msgstr "Mababang Asul na Pom #%d"
+
+msgid "Low Orange Pom #%d"
+msgstr "Mababang Kahel na Pom #%d"
+
+msgid "High Blue Pom #%d"
+msgstr "Mataas na Asul na Pom #%d"
+
+msgid "High Orange Pom #%d"
+msgstr "Mataas na Kahel na Pom #%d"
+
+msgid "Left Red Cube (2 inch)"
+msgstr "Kaliwang Pulang Kubiko (2 pulgada)"
+
+msgid "Right Red Cube (2 inch)"
+msgstr "Kanan na pulang kubiko (2 pulgada)"
+
+msgid "Left Green Cube (2 inch)"
+msgstr "Kuwadradong Bloke na Berde sa Kaliwa (2 pulgada)"
+
+msgid "Right Green Cube (2 inch)"
+msgstr "Kanan na berdeng kubiko (2 pulgada)"
+
+msgid "Pallet #%d"
+msgstr "Pallet #%d"
+
+msgid "Lower Yellow Cube (2 inch)"
+msgstr "Mababang Dilaw na Kubiko (2 pulgada)"
+
+msgid "Upper Yellow Cube (2 inch)"
+msgstr "Mataas na Dilaw na Kubiko (2 pulgada)"
+
+msgid "Middle Left Brown Cube"
+msgstr "Kalagitnaan Kaliwa Kayumangging Kubiko"
+
+msgid "Middle Right Brown Cube"
+msgstr "Kalagitnaan sa kanan kayumangging kubiko"
+
+msgid "Green Cube"
+msgstr "Luntang Kubiko"
+
+msgid "Red Cube"
+msgstr "Pulang Kubiko"
+
+msgid "Near Stack %s Cube"
+msgstr "Malapit na Pila %s na Kubiko"
+
+msgid "Far Stack %s Cube"
+msgstr "Malayong Pila %s Kubiko"
+
+msgid "Dropper #1"
+msgstr "Patak #1"
+
+msgid "Dropper #2"
+msgstr "Patak #2"
+
+msgid "Drum (2in PVC)"
+msgstr "Bariles (2 pulgadang PVC)"
+
+msgid "Dropper Gate"
+msgstr "Pintuan ng patak"
+
+msgid "2026 Botball Game Table Sandbox"
+msgstr "2026 Botball Laro Lamesa na Balon-buhangin"
+
+msgid ""
+"2026 Botball game table sandbox. One robot and one side of the table are "
+"available. Barrels (2in PVC) drop every 7 seconds, starting 10 seconds "
+"after the scene is loaded."
+msgstr "2026 Botball game table sandbox. Isang robot at isang gilid ng mesa ang magagamit. Ang mga bariles (2-pulgadang PVC) ay bumabagsak tuwing 7 segundo, nagsisimula 10 segundo pagkatapos mai-load ang eksena."
+
+msgid "Speed Run: Ring Around the Can"
+msgstr "Mabilis na Takbo: Singsing sa Paligid ng Lata"
+
+msgid ""
+"Complete the Ring Around the Can challenge as fast as possible! Limited "
+"time event."
+msgstr "Tapusin ang hamon na \\\"Ring Around the Can\\\" nang pinakamabilis! Panandaliang kaganapan."
+
+msgid "Robot Reentered Start"
+msgstr "Muling pumasok ang robot sa simula"
+
+msgid "Robot Passed Left Side"
+msgstr "Robot na lumipas sa kaliwang bahagi"
+
+msgid "Speed Run: Tag, You're it!"
+msgstr "Mabilis na Takbo: Tag, Ikaw na!"
+
+msgid ""
+"Complete the Tag, You're it! challenge as fast as possible! Limited time "
+"event."
+msgstr "Tapusin ang hamon na \\\"Tag, You're It!\\\" nang pinakamabilis! Panandaliang kaganapan."
+
+msgid "Classrooms"
+msgstr "Mga silid-aralan"
+
+msgid "See the current classrooms."
+msgstr "Tingnan ang kasalukuyang mga silid-aralan."
+
+msgid "Limited Challenges"
+msgstr "Limitadong Hamon"
+
+msgid "Challenges with time limits and attempt restrictions."
+msgstr "Mga hamon sa mga limitasyon ng oras at paghihigpit sa bilang ng pagtatangka."
+
+msgid "Loading leaderboard..."
+msgstr "Ina-load ang leaderboard..."
+
+msgid "Error loading leaderboard"
+msgstr "Maling pag-load ng leaderboard"
+
+msgid "Rank"
+msgstr "Ranggo"
+
+msgid "Your position"
+msgstr "Ang iyong posisyon"
+
+msgid "participants"
+msgstr "mga kalahok"
+
+msgid "Show Top Users"
+msgstr "Ipakita ang mga nangungunang gumagamit"
+
+msgid "Show Full Board"
+msgstr "Ipakita ang buong lupon"
+
+msgid "Your name on the leaderboard:"
+msgstr "Ang iyong pangalan sa leaderboard:"
+
+msgid "days"
+msgstr "araw"
+
+msgid "hrs"
+msgstr "oras"
+
+msgid "min"
+msgstr "minuto"
+
+msgid "sec"
+msgstr "segundo"
+
+msgid "Upcoming"
+msgstr "Parating"
+
+msgid "Closed"
+msgstr "Sarado"
+
+msgid "Mystery Challenge"
+msgstr "Hamong Misteryo"
+
+msgid "Check back when this challenge opens to see what awaits!"
+msgstr "Bumalik ka kapag binuksan na ang hamon na ito para makita kung ano ang naghihintay!"
+
+msgid "Opens in"
+msgstr "Magbubukas sa"
+
+msgid "Closes in"
+msgstr "Papalapit"
+
+msgid "Best Time"
+msgstr "Pinakamagandang oras"
+
+msgid ""
+"Complete these time-limited challenges as fast as possible! Your best time "
+"will be recorded."
+msgstr "Tapusin ang mga hamong may limitasyong oras na ito nang pinakamabilis! Itatala ang iyong pinakamahusay na oras."
+
+msgid "No limited challenges available at this time."
+msgstr "Walang limitadong hamon na magagamit sa ngayon."
+
+msgid "View Closed Challenges"
+msgstr "Tingnan ang mga saradong hamon"
+
+msgid "Back to Limited Challenges"
+msgstr "Bumalik sa Mga Limitadong Hamon"
+
+msgid "Closed Challenges"
+msgstr "Sarado na ang mga hamon"
+
+msgid "View past limited challenges and their leaderboards."
+msgstr "Tingnan ang mga nakaraang limitadong hamon at ang kanilang mga leaderboard."
+
+msgid "No closed challenges yet."
+msgstr "Walang saradong hamon pa."
+
+msgid "Predefined Location"
+msgstr "Paunang itinakdang lokasyon"
+
+msgid "None"
+msgstr "Wala"
+
+msgid "Show Scripts"
+msgstr "Ipakita ang mga script"
+
+msgid "Show scripts in the World section"
+msgstr "Ipakita ang mga script sa seksyong Mundo"
+
+msgid "Scene"
+msgstr "Tagpo"
+
+msgid "Tutor is thinking..."
+msgstr "Naisip ng tutor..."
+
+msgid "Create New Project"
+msgstr "Gumawa ng bagong proyekto"
+
+msgid "Create New File"
+msgstr "Gumawa ng bagong file"
+
+msgid "Are You Sure?"
+msgstr "Sigurado ka ba?"
+
+msgid "Loading Python...\n"
+msgstr "Naglo-load ng Python..."
+
+msgid "Please help me understand what's wrong."
+msgstr "Pakiusap, tulungan mo akong maunawaan kung ano ang mali."
+
+msgid "Success conditions met - verifying...\n"
+msgstr "Natugunan ang mga kundisyon para sa tagumpay - sinusuri..."
+
+msgid "Completion invalidated - failure condition triggered\n"
+msgstr "Na-invalidate ang pagkumpleto - na-trigger ang kondisyon ng pagkabigo"
+
+msgid "This challenge is closed and no longer accepting submissions.\n"
+msgstr "Sarado na ang hamon na ito at hindi na tumatanggap ng mga pagsusumite."
+
+msgid "This challenge has not opened yet.\n"
+msgstr "Hindi pa nabubuksan ang hamon na ito."
+
+msgid "Challenge Closed"
+msgstr "Sarado na ang hamon"
+
+msgid "This challenge is no longer accepting submissions."
+msgstr "Hindi na tumatanggap ng mga pagsusumite ang hamon na ito."
+
+msgid "Your best time: "
+msgstr "Ang iyong pinakamahusay na oras: "
+
+msgid "This challenge has not opened yet."
+msgstr "Hindi pa nabubuksan ang hamon na ito."
+
+msgid "This challenge is closed and no longer accepting submissions."
+msgstr "Sarado na ang hamon na ito at hindi na tumatanggap ng mga pagsusumite."
+
+msgid "No completions yet. Be the first to complete this challenge!"
+msgstr "Walang nakumpleto pa. Maging unang makumpleto ang hamon na ito!"
+
+msgid "Runtime"
+msgstr "Panahon ng pagtakbo"
+
+msgid "Completed"
+msgstr "Natapos"
+
+msgid "Back to Challenges"
+msgstr "Bumalik sa mga Hamon"
+
+msgid "Enter Challenge"
+msgstr "Pumasok sa Hamon"
+
+msgid "Show Around Me"
+msgstr "Ipakita sa paligid ko"
+
+msgid "Sort by:"
+msgstr "I-ayos ayon sa:"
+
+msgid "Fastest Runtime"
+msgstr "Pinakamabilis na Runtime"
+
+msgid "First to Complete"
+msgstr "Una sa Pagkumpleto"
+
+msgid "Student View"
+msgstr "Panloob na pananaw ng mag-aaral"
+
+msgid "See the classroom you are in."
+msgstr "Tingnan ang silid-aralan na kinaroroonan mo."
+
+msgid "Teacher View"
+msgstr "Pagtingin ng Guro"
+
+msgid "See and manage all the classrooms you own."
+msgstr "Tingnan at pamahalaan ang lahat ng silid-aralan na pag-aari mo."
+
+msgid "My Badges"
+msgstr "Ang Aking Mga Badge"
+
+msgid "Create New Classroom"
+msgstr "Gumawa ng bagong silid-aralan"
+
+msgid "Choose Class Leaderboard"
+msgstr "Piliin ang Pamumuno ng Klase"
+
+msgid "Join Classroom"
+msgstr "Sumali sa silid-aralan"
+
+msgid "Leave Classroom"
+msgstr "Lumabas sa silid-aralan"
+
+msgid "Default JBC Challenges"
+msgstr "Mga Karaniwang Hamon sa JBC"
+
+msgid "User Already Exists"
+msgstr "Mayroon nang gumagamit"
+
+msgid "UH OH!"
+msgstr "Naku!"
+
+msgid "This user already exists."
+msgstr "Umiral na ang gumagamit na ito."
+
+msgid "No IvygateClassroomType"
+msgstr "Walang IvygateUri ng Silid-Aralan"
+
+msgid "Create New User"
+msgstr "Gumawa ng bagong gumagamit"
+
+msgid "Back to File Explorer"
+msgstr "Bumalik sa File Explorer"
+
+msgid "Retake Tour"
+msgstr "Muling Paglilibot"
+
+msgid "New to the simulator? Take a tour to get familiar with the interface."
+msgstr "Bagong gumagamit ng simulator? Mag-tour ka para mas maging pamilyar sa interface."
+
+msgid "Classroom Invite Code"
+msgstr "Kodigo ng paanyaya sa silid-aralan"
+
+msgid "Enter the invite code provided by your teacher to join a classroom"
+msgstr "Ipasok ang code ng paanyaya na ibinigay ng iyong guro upang makapasok sa silid-aralan."
+
+msgid "Display Name"
+msgstr "Pangalang Ipapakita"
+
+msgid ""
+"The name that will be shown to your teacher and classmates. Be sure to only "
+"use your first name."
+msgstr "Ang pangalang ipapakita sa iyong guro at mga kaklase. Tiyaking unang pangalan lamang ang gagamitin."
+
+msgid "Retaking the tour will change your current scene to the JBC Sandbox."
+msgstr "Ang muling pagsasagawa ng tour ay magbabago ng iyong kasalukuyang eksena sa JBC Sandbox."
+
+msgid "Do you want to retake the tour?"
+msgstr "Gusto mo bang ulitin ang paglilibot?"
+
+msgid ""
+"This is the classroom dashboard page, where you can choose to see the "
+"classrooms you are a part of and the classrooms you own."
+msgstr "Ito ang pahina ng dashboard ng silid-aralan, kung saan maaari mong piliin na makita ang mga silid-aralan na bahagi ka at ang mga silid-aralan na pag-aari mo."
+
+msgid "Use this card to switch to the student view."
+msgstr "Gamitin ang card na ito upang lumipat sa view ng estudyante."
+
+msgid ""
+"Use this card to switch to the teacher view, where you can manage the "
+"classrooms you own."
+msgstr "Gamitin ang card na ito para lumipat sa view ng guro, kung saan maaari mong pamahalaan ang mga silid-aralan na pag-aari mo."
+
+msgid ""
+"This is the teacher dashboard, where you can see and manage the classrooms "
+"you own."
+msgstr "Ito ang dashboard ng guro, kung saan mo makikita at mapamamahalaan ang mga silid-aralan na pag-aari mo."
+
+msgid "To create a classroom, select this drop down..."
+msgstr "Upang lumikha ng silid-aralan, piliin ang drop-down na ito..."
+
+msgid "...then click this button to create a new classroom."
+msgstr "...pagkatapos i-click ang pindutang ito upang lumikha ng bagong silid-aralan."
+
+msgid ""
+"This is the dialog box where you can enter the details for your new "
+"classroom."
+msgstr "Ito ang kahon ng dialogo kung saan maaari mong ilagay ang mga detalye para sa iyong bagong silid-aralan."
+
+msgid ""
+"Share the Invite Code with your students! Don't worry, it'll be visible "
+"later on too. \n"
+" \n"
+" Fill out the rest of the info and click \"Create\" to create your "
+"classroom."
+msgstr "Ibahagi ang Invite Code sa iyong mga estudyante! Huwag mag-alala, makikita rin ito mamaya. \\\\n \\\\n Punan ang natitirang impormasyon at i-click ang \\\\classroom."
+
+msgid "After creating a classroom, you can see it listed on your dashboard."
+msgstr "Pagkatapos mong lumikha ng silid-aralan, makikita mo ito sa iyong dashboard."
+
+msgid "Click on your newly created classroom to see the users."
+msgstr "I-click ang bagong likhang silid-aralan mo upang makita ang mga gumagamit."
+
+msgid "Share the invite code with your students so they can join your classroom."
+msgstr "Ibahagi ang code ng paanyaya sa iyong mga estudyante upang makasali sila sa iyong silid-aralan."
+
+msgid ""
+"This is the student dashboard, where you can see the classrooms you are a "
+"part of."
+msgstr "Ito ang dashboard ng estudyante, kung saan makikita mo ang mga silid-aralan na kabilang ka."
+
+msgid "To join a classroom, click this button to open the join classroom dialog."
+msgstr "Upang sumali sa silid-aralan, i-click ang pindutang ito upang buksan ang dialog ng pagsali sa silid-aralan."
+
+msgid ""
+"This is the dialog box where you can enter the invite code to join a "
+"classroom."
+msgstr "Ito ang kahon ng dialogo kung saan maaari mong ilagay ang code ng paanyaya para makapasok sa silid-aralan."
+
+msgid ""
+"After joining a classroom, you can see the class's leaderboard listed on "
+"your dashboard."
+msgstr "Pagkatapos mong sumali sa isang silid-aralan, makikita mo ang leaderboard ng klase sa iyong dashboard."
+
+msgid ""
+"This tab contains the default JBC challenges that all classrooms have "
+"access to and are the scenes always in the 3D-Simulator."
+msgstr "Ang tab na ito ay naglalaman ng mga default na hamon ng JBC na may access ang lahat ng silid-aralan at ito ang mga eksenang palaging nasa 3D-Simulator."
+
+msgid "Click this button to export your challenge scores as a PDF file."
+msgstr "I-click ang pindutang ito upang i-export ang iyong mga iskor sa hamon bilang PDF file."
+
+msgid "Click this button to scroll to your scores on the leaderboard."
+msgstr "I-click ang pindutang ito para mag-scroll sa iyong mga puntos sa leaderboard."
+
+msgid ""
+"Click this button to see the badges you have earned from completing "
+"challenges."
+msgstr "I-click ang pindutang ito upang makita ang mga badge na nakuha mo sa pagkumpleto ng mga hamon."
+
+msgid ""
+"Select \"Limited Challenges\" to see any limited challenges your classroom "
+"has access to."
+msgstr "Piliin ang may access sa."
+
+msgid ""
+"This tab contains any limited challenges that your classroom has access to. "
+"Limited challenges are challenges that have time limits and attempt "
+"restrictions."
+msgstr "Ang tab na ito ay naglalaman ng anumang limitadong hamon na may access ang iyong silid-aralan. Ang mga limitadong hamon ay mga hamon na may limitasyon sa oras at pagtatangka."
+
+msgid ""
+"Click this button to see extra options for the classroom such as leaving "
+"the classroom."
+msgstr "I-click ang pindutang ito upang makita ang karagdagang mga pagpipilian para sa silid-aralan, tulad ng pag-alis sa silid-aralan."
+
+msgid ""
+"This is the dropdown that show extra info and where you can select to leave "
+"the classroom."
+msgstr "Ito ang dropdown na nagpapakita ng karagdagang impormasyon at kung saan ka maaaring pumili para umalis sa silid-aralan."
+
+msgid ""
+"Select \"Leave Classroom\" to leave the classroom. If you leave a "
+"classroom, your challenge scores will be saved but you will no longer be "
+"able to see the classroom or its leaderboard unless you join again."
+msgstr "Pumili ng \\\\classroom, mai-save ang iyong mga puntos sa hamon ngunit hindi mo na makikita ang silid-aralan o ang leaderboard nito maliban kung muling sasali ka."
+
+msgid "This is the Editor tab where you can write, edit, and debug your code."
+msgstr "Ito ang tab ng Editor kung saan maaari mong isulat, i-edit, at i-debug ang iyong code."
+
+msgid ""
+"The Editor tab contains 2 main sections: the code editor on top and the "
+"console on bottom."
+msgstr "Ang tab na Editor ay naglalaman ng dalawang pangunahing seksyon: ang code editor sa itaas at ang console sa ibaba."
+
+msgid "This is the code editor, where you can write and edit your code."
+msgstr "Ito ang code editor, kung saan maaari mong isulat at i-edit ang iyong code."
+
+msgid "Click this dropdown to select the programming language for your code."
+msgstr "I-click ang dropdown na ito upang piliin ang wikang pang-programa para sa iyong code."
+
+msgid "Click this button to auto-indent your code."
+msgstr "I-click ang pindutang ito para awtomatikong mag-indent ng iyong code."
+
+msgid "Click this button to download your code as a file."
+msgstr "I-click ang pindutang ito upang i-download ang iyong code bilang isang file."
+
+msgid ""
+"Click this button to reset the code in the editor to the default code for "
+"the current language."
+msgstr "I-click ang pindutang ito upang i-reset ang code sa editor sa default na code para sa kasalukuyang wika."
+
+msgid ""
+"This is the console, where you can see the output of your code and any "
+"error messages."
+msgstr "Ito ang console, kung saan makikita mo ang output ng iyong code at anumang mensahe ng error."
+
+msgid "Click this button to clear the console."
+msgstr "I-click ang pindutang ito upang i-clear ang console."
+
+msgid "Click this button to ask the KIPR Tutor for help with your code."
+msgstr "I-click ang pindutang ito para humingi ng tulong sa KIPR Tutor para sa iyong code."
+
+msgid ""
+"This is the main menu, where you can access different pages and features of "
+"the simulator."
+msgstr "Ito ang pangunahing menu, kung saan maaari mong ma-access ang iba't ibang pahina at tampok ng simulator."
+
+msgid "Click the KIPR logo to return to the dashboard."
+msgstr "I-click ang logo ng KIPR upang bumalik sa dashboard."
+
+msgid "Use this button to run or stop your code in the simulator."
+msgstr "Gamitin ang pindutang ito upang patakbuhin o ihinto ang iyong code sa simulator."
+
+msgid "Click this button to reset the world in the simulator."
+msgstr "I-click ang pindutang ito upang i-reset ang mundo sa simulator."
+
+msgid "After opening a challenge scene, click this button to start the challenge."
+msgstr "Pagkatapos buksan ang eksena ng hamon, i-click ang pindutang ito upang simulan ang hamon."
+
+msgid ""
+"Click this button to see options to change the layout of the simulator "
+"interface. Try it now!"
+msgstr "I-click ang pindutang ito upang makita ang mga pagpipilian para baguhin ang layout ng interface ng simulator. Subukan mo na ngayon!"
+
+msgid ""
+"These are the different layout options. You can select one to change the "
+"layout of the simulator interface, but for now, click the \"Next\" button."
+msgstr "Ito ang iba't ibang mga pagpipilian sa layout. Maaari kang pumili ng isa upang baguhin ang layout ng interface ng simulator, ngunit sa ngayon, i-click ang \\\\"
+
+msgid ""
+"Click this button to see options to change the scene in the simulator. Try "
+"it now!"
+msgstr "I-click ang pindutang ito upang makita ang mga pagpipilian para baguhin ang eksena sa simulator. Subukan mo na ngayon!"
+
+msgid "These are the different scene settings options."
+msgstr "Ito ang iba't ibang mga pagpipilian sa pag-set ng eksena."
+
+msgid ""
+"Currently, we're in the JBC Sandbox so some options are locked. Select "
+"\"Open\" to continue."
+msgstr "Sa kasalukuyan, nasa JBC Sandbox kami kaya naka-lock ang ilang mga pagpipilian. Piliin \\\\"
+
+msgid ""
+"This is the open scene option, which allows you to open different scenes in "
+"the simulator."
+msgstr "Ito ang opsyon para buksan ang iba't ibang eksena sa simulator."
+
+msgid ""
+"This is the list of scenes that you can open. Select one to see more info "
+"and open it in the Simulator."
+msgstr "Ito ang listahan ng mga eksena na maaari mong buksan. Piliin ang isa upang makita ang karagdagang impormasyon at buksan ito sa Simulator."
+
+msgid ""
+"This is the info page for the scene. You can click \"Accept\" at the bottom "
+"to open the scene in the simulator."
+msgstr "Ito ang pahina ng impormasyon para sa eksena. Maaari mong i-click \\\\ upang buksan ang eksena sa simulator."
+
+msgid ""
+"For now, let's close the dialog to continue exploring the simulator "
+"interface."
+msgstr "Sa ngayon, isara muna natin ang dialog para ipagpatuloy ang paggalugad sa interface ng simulator."
+
+msgid ""
+"Click this button to see extra options such as the simulator settings and "
+"the option to report a bug."
+msgstr "I-click ang pindutang ito upang makita ang karagdagang mga pagpipilian tulad ng mga setting ng simulator at ang pagpipilian na mag-ulat ng bug."
+
+msgid "These are the extra options you can access from this menu."
+msgstr "Ito ang mga karagdagang pagpipilian na maaari mong ma-access mula sa menu na ito."
+
+msgid "Click the documentation button to access the KIPR library."
+msgstr "I-click ang button ng dokumentasyon upang ma-access ang KIPR library."
+
+msgid ""
+"Click the ask tutor button to ask the KIPR Tutor for help with the "
+"simulator."
+msgstr "I-click ang pindutang \\\"Ask Tutor\\\" para humingi ng tulong sa KIPR Tutor sa simulator."
+
+msgid ""
+"Click the settings button to see options such as User Interface and Editor "
+"settings."
+msgstr "I-click ang button ng mga setting upang makita ang mga pagpipilian tulad ng User Interface at mga setting ng Editor."
+
+msgid "Click the about button to see information about KIPR and the simulator."
+msgstr "I-click ang button na \\\"About\\\" upang makita ang impormasyon tungkol sa KIPR at sa simulator."
+
+msgid ""
+"Click the feedback button to report a bug or send feedback about the "
+"Simulator to KIPR."
+msgstr "I-click ang pindutan ng feedback upang iulat ang isang bug o magpadala ng feedback tungkol sa Simulator sa KIPR."
+
+msgid "Click the logout button to log out of your account."
+msgstr "I-click ang pindutang logout upang mag-log out sa iyong account."
+
+msgid ""
+"This is the Overlay Tab Bar, where you can access different tools and "
+"features to use while testing your code in the simulator."
+msgstr "Ito ang Overlay Tab Bar, kung saan maaari mong ma-access ang iba't ibang mga tool at tampok na magagamit habang sinusubok mo ang iyong code sa simulator."
+
+msgid ""
+"We've already introduced the Editor Tab, we'll now explore the other tabs "
+"available: Robot and World. Click the \"Robot\" tab to continue the tour!"
+msgstr "Naipakilala na namin ang Editor Tab, ngayon ay susuriin natin ang iba pang mga tab na magagamit: Robot at World. I-click ang \\\\"
+
+msgid ""
+"This is the Robot tab, where you can see information about the robot such "
+"as its position and sensor readings."
+msgstr "Ito ang Robot tab, kung saan makikita mo ang impormasyon tungkol sa robot tulad ng posisyon nito at mga babasahin ng sensor."
+
+msgid ""
+"The robot starts at the origin point in the simulator, which is why the "
+"position readings are all 0. You can change the robot's starting location "
+"by entering different values for x, y, z position and y rotation."
+msgstr "Nagsisimula ang robot sa orihinal na punto sa simulator, kaya lahat ng pagbasa ng posisyon ay 0. Maaari mong baguhin ang panimulang lokasyon ng robot sa pamamagitan ng pagpasok ng iba't ibang halaga para sa posisyon ng x, y, z at rotasyon ng y."
+
+msgid ""
+"This is the servo section, where you can see the current positions of the "
+"robot's servos. You can also click get_servo_position() row to see a graph."
+msgstr "Ito ang seksyon ng servo, kung saan makikita mo ang kasalukuyang mga posisyon ng mga servo ng robot. Maaari mo ring i-click ang hanay ng get_servo_position() upang makita ang grap."
+
+msgid ""
+"This is the motor velocities section, where you can see the current "
+"velocities of the robot's motors. You can also click each motor row to see "
+"a graph."
+msgstr "Ito ang seksyon ng bilis ng motor, kung saan makikita mo ang kasalukuyang bilis ng mga motor ng robot. Maaari mo ring i-click ang bawat hanay ng motor upang makita ang grap."
+
+msgid ""
+"This is the motor positions section, where you can see the current "
+"positions of the robot's motors. You can also click each "
+"get_motor_position_counter() row to see a graph."
+msgstr "Ito ang seksyon ng mga posisyon ng motor, kung saan makikita mo ang kasalukuyang mga posisyon ng mga motor ng robot. Maaari mo ring i-click ang bawat hanay ng get_motor_position_counter() upang makita ang isang grap."
+
+msgid ""
+"This is the analog sensors section, where you can see the current readings "
+"of the robot's analog sensors. You can also click each analog() row to see "
+"a graph."
+msgstr "Ito ang seksyon ng mga analog sensor, kung saan makikita mo ang kasalukuyang mga pagbasa ng mga analog sensor ng robot. Maaari mo ring i-click ang bawat hanay ng analog() upang makita ang isang grap."
+
+msgid ""
+"This is the digital sensors section, where you can see the current readings "
+"of the robot's digital sensors. You can also click each digital() row to "
+"see a graph."
+msgstr "Ito ang seksyon ng mga digital na sensor, kung saan makikita mo ang kasalukuyang mga pagbasa ng mga digital na sensor ng robot. Maaari mo ring i-click ang bawat hanay ng digital() upang makita ang isang grap."
+
+msgid ""
+"This is the World tab, where you can see information about the world such "
+"as the positions of objects and the light level. Select the \"World\" tab "
+"to continue the tour!"
+msgstr "Ito ang tab na Mundo, kung saan makikita mo ang impormasyon tungkol sa mundo tulad ng mga posisyon ng mga bagay at ang antas ng liwanag. Piliin ang \\\\ upang ipagpatuloy ang paglilibot!"
+
+msgid ""
+"This is the world's objects section where you can customize the JBC Sandbox "
+"to add/remove/edit objects in the 3D simulation."
+msgstr "Ito ang seksyon ng mga bagay sa mundo kung saan maaari mong i-customize ang JBC Sandbox upang magdagdag, magtanggal, o mag-edit ng mga bagay sa 3D na simulasyon."
+
+msgid "This is the can object, which is a common object used in challenges."
+msgstr "Ito ang can object, na isang karaniwang bagay na ginagamit sa mga hamon."
+
+msgid ""
+"Click this option to toggle the visibility of the highlighted object in the "
+"simulator."
+msgstr "I-click ang opsyong ito upang i-toggle ang pagiging nakikita ng naka-highlight na bagay sa simulator."
+
+msgid ""
+"Click this option to reset the highlighted object to its default state in "
+"the simulator."
+msgstr "I-click ang opsyon na ito upang i-reset ang naka-highlight na bagay sa default nitong estado sa simulator."
+
+msgid ""
+"Click this option to see more settings for the highlighted object such as "
+"it's name and item type."
+msgstr "I-click ang opsyong ito upang makita ang iba pang mga setting para sa napiling bagay, tulad ng pangalan at uri ng item."
+
+msgid "Click this option to remove the highlighted object from the simulator."
+msgstr "I-click ang opsyon na ito upang alisin ang naka-highlight na bagay mula sa simulator."
+
+msgid ""
+"Each object added to the Simulator can be moved using the x, y, z, and "
+"rotation controls. This can be useful for testing your code with different "
+"object placements."
+msgstr "Bawat bagay na idinadagdag sa Simulator ay maaaring ilipat gamit ang mga kontrol sa x, y, z, at pag-ikot. Maaari itong maging kapaki-pakinabang para subukan ang iyong code sa iba't ibang posisyon ng mga bagay."
+
+msgid ""
+"To move an object, first we need to add the object to the simulator using "
+"the visibility option."
+msgstr "Upang ilipat ang isang bagay, una kailangan nating idagdag ang bagay sa simulator gamit ang opsyon sa visibility."
+
+msgid "Select the \"World\" tab in the Overlay Tab Bar."
+msgstr "Piliin ang \\\\"
+
+msgid ""
+"Next, click the visibility option for the object you want to move. For this "
+"tutorial, we'll select the Can 1 object."
+msgstr "Susunod, i-click ang opsyon sa visibility para sa bagay na nais mong ilipat. Para sa tutorial na ito, pipiliin natin ang bagay na Can 1."
+
+msgid ""
+"After turning on the visibility option, you can see the object in the "
+"simulator area."
+msgstr "Pagkatapos mong buksan ang opsyon sa visibility, makikita mo ang bagay sa lugar ng simulator."
+
+msgid "Click the object in the simulator area to open the move object tool."
+msgstr "I-click ang bagay sa lugar ng simulator upang buksan ang kasangkapan sa paggalaw ng bagay."
+
+msgid ""
+"This is the move object tool, where you can move the object by dragging the "
+"gizmo arrows."
+msgstr "Ito ang kasangkapan para ilipat ang object, kung saan maaari mong ilipat ang object sa pamamagitan ng paghila ng mga gizmo arrow."
+
+msgid ""
+"The red arrow is the x-axis, the green arrow is the y-axis, and the blue "
+"arrow is the z-axis. Try dragging the arrows to move the object around in "
+"the simulator!"
+msgstr "Ang pulang pana ay ang x-axis, ang berdeng pana ay ang y-axis, at ang asul na pana ay ang z-axis. Subukang hilahin ang mga pana upang igalaw ang bagay sa simulator!"
+
+msgid ""
+"Welcome to KIPR's 3D Simulator, where you can test your code in a virtual "
+"environment."
+msgstr "Maligayang pagdating sa 3D Simulator ng KIPR, kung saan maaari mong subukan ang iyong code sa isang virtual na kapaligiran."
+
+msgid ""
+"Use this dropdown to select different tours of the simulator interface or "
+"just click Next to take the full tour!"
+msgstr "Gamitin ang dropdown na ito upang pumili ng iba't ibang paglilibot sa interface ng simulator, o i-click lamang ang Susunod para sa buong paglilibot!"
+
+msgid ""
+"This is the student view of the dashboard, where you can access your "
+"classrooms and see your progress."
+msgstr "Ito ang tanaw ng estudyante sa dashboard, kung saan maaari mong ma-access ang iyong mga silid-aralan at makita ang iyong progreso."
+
+msgid "About KIPR"
+msgstr "Tungkol sa KIPR"
+
+msgid "Classroom Dashboard"
+msgstr "Dashboard ng Silid-Aralan"
+
+msgid "Teacher Dashboard"
+msgstr "Dashboard ng Guro"
+
+msgid "How To: Create a Classroom"
+msgstr "Paano: Lumikha ng silid-aralan"
+
+msgid "How To: Create a Classroom Continued"
+msgstr "Paano: Lumikha ng Silid-Aralan (Patuloy)"
+
+msgid "Student Dashboard"
+msgstr "Dashboard ng Mag-aaral"
+
+msgid "How To: Join a Classroom"
+msgstr "Paano: Sumali sa isang silid-aralan"
+
+msgid "How To: Join a Classroom Continued"
+msgstr "Paano: Sumali sa Silid-Aralan (Patuloy)"
+
+msgid "Default JBC Challenge Tab View"
+msgstr "Default na tanawin ng tab ng hamon ng JBC"
+
+msgid "Exporting Your Challenge Scores"
+msgstr "Pag-e-export ng Iyong Mga Iskor sa Hamon"
+
+msgid "Scrolling to Your Scores"
+msgstr "Pag-scroll sa Iyong Mga Marka"
+
+msgid "Viewing Your Badges"
+msgstr "Pagtingin sa Iyong Mga Badge"
+
+msgid "Limited Challenge Tab View"
+msgstr "Limitadong Tab View ng Hamon"
+
+msgid "Limited Challenge Tab View Continued"
+msgstr "Nagpapatuloy na Limitadong Tab View ng Hamon"
+
+msgid "Classroom Extra Options"
+msgstr "Karagdagang Mga Pagpipilian sa Silid-Aralan"
+
+msgid "Classroom Extra Options Continued"
+msgstr "Karagdagang Mga Opsyon sa Silid-Aralan Magpatuloy"
+
+msgid "Leaving a Classroom"
+msgstr "Pag-alis sa Silid-Aralan"
+
+msgid "Editor Tab"
+msgstr "Tab ng Editor"
+
+msgid "Editor and Console Overview"
+msgstr "Pangkalahatang-ideya ng Editor at Console"
+
+msgid "Code Editor"
+msgstr "Tagapag-edit ng Kodigo"
+
+msgid "Code Editor Language Dropdown"
+msgstr "Mga pagpipilian ng wika para sa editor ng code"
+
+msgid "Code Editor Indent Button"
+msgstr "Pindutan ng pag-indent ng editor ng code"
+
+msgid "Code Editor Download Button"
+msgstr "Pindutan ng Pag-download ng Editor ng Kodigo"
+
+msgid "Code Editor Reset Button"
+msgstr "Pindutan ng Pag-reset ng Editor ng Kodigo"
+
+msgid "Console Clear Button"
+msgstr "Pindutan ng Pag-clear ng Console"
+
+msgid "Ask Tutor Button"
+msgstr "Pindutan ng Tutor"
+
+msgid "Main Menu Overview"
+msgstr "Pangkalahatang-ideya ng Pangunahing Menu"
+
+msgid "Return to Dashboard Button"
+msgstr "Bumalik sa pindutan ng dashboard"
+
+msgid "Run/Stop Button"
+msgstr "Pindutan ng Pagsimula/Paghinto"
+
+msgid "Reset World Button"
+msgstr "I-reset ang Pindutan ng Mundo"
+
+msgid "Start Challenge Button"
+msgstr "Simulan ang hamon na pindutan"
+
+msgid "Layout Button"
+msgstr "Pindutan ng layout"
+
+msgid "Layout Options"
+msgstr "Mga pagpipilian sa layout"
+
+msgid "Scene Button"
+msgstr "Pindutan ng Eksena"
+
+msgid "Scene Options"
+msgstr "Mga Opsyon ng Eksena"
+
+msgid "Scene Options Info"
+msgstr "Impormasyon ng Mga Opsyon ng Eksena"
+
+msgid "Scene Open"
+msgstr "Bukas ang eksena"
+
+msgid "Scene Open Continued"
+msgstr "Patuloy na eksena bukas"
+
+msgid "Extra Menu Button"
+msgstr "Karagdagang pindutan ng menu"
+
+msgid "Extra Menu Options"
+msgstr "Karagdagang mga pagpipilian sa menu"
+
+msgid "Documentation Button"
+msgstr "Pindutan ng Dokumentasyon"
+
+msgid "Tutor Button"
+msgstr "Pindutan ng Guro"
+
+msgid "Settings Button"
+msgstr "Pindutan ng Mga Setting"
+
+msgid "About Button"
+msgstr "Tungkol sa pindutan"
+
+msgid "Feedback Button"
+msgstr "Pindutan ng puna"
+
+msgid "Logout Button"
+msgstr "Buton ng Pag-logout"
+
+msgid "Overlay Tab Bar Overview"
+msgstr "Pangkalahatang-ideya ng Overlay Tab Bar"
+
+msgid "Overlay Tab Bar Overview Continued"
+msgstr "Pangkalahatang-ideya ng Overlay Tab Bar: Nagpapatuloy"
+
+msgid "Overlay Tab Bar Robot Tab"
+msgstr "Ipataong Tab Bar Robot Tab"
+
+msgid "Robot Starting Location"
+msgstr "Lokasyon ng Pagsisimula ng Robot"
+
+msgid "Robot Servos"
+msgstr "Mga servo ng robot"
+
+msgid "Robot Motor Velocities"
+msgstr "Mga Bilis ng Motor ng Robot"
+
+msgid "Robot Motor Positions"
+msgstr "Mga Posisyon ng Motor ng Robot"
+
+msgid "Robot Analog Sensors"
+msgstr "Analog na Sensor ng Robot"
+
+msgid "Robot Digital Sensors"
+msgstr "Mga Robot na Digital na Sensor"
+
+msgid "Overlay Tab Bar World Tab"
+msgstr "Ipataong Tab Bar sa Mundo"
+
+msgid "World Tab Objects Section"
+msgstr "Seksyon ng Mga Bagay ng Tab sa Mundo"
+
+msgid "World Tab Can Object"
+msgstr "Pangmundong Bagay na Tab na Lata"
+
+msgid "World Tab Object Visibility Option"
+msgstr "Pang-mundong opsyon sa kakayahang makita ng tab na bagay"
+
+msgid "World Tab Object Reset Option"
+msgstr "Pangmundong opsyon ng pag-reset ng tab na bagay"
+
+msgid "World Tab Object Settings Option"
+msgstr "Mga Setting ng Obheto ng Tab sa Mundo"
+
+msgid "World Tab Object Remove Option"
+msgstr "Paglilipat ng Mundo: Alisin ang Obheto ng Opsyon"
+
+msgid "Move Object Tool Overview"
+msgstr "Pangkalahatang-ideya ng Kasangkapan sa Paggalaw ng Obheto"
+
+msgid "Add Can 1 to the World"
+msgstr "Idagdag ang Can 1 sa Mundo"
+
+msgid "Select World Tab"
+msgstr "Piliin ang Tab na Mundo"
+
+msgid "Select Object to Move"
+msgstr "Piliin ang bagay na ililipat"
+
+msgid "See Object in Simulator Area"
+msgstr "Tingnan ang bagay sa lugar ng simulator"
+
+msgid "Click Object in Simulator Area"
+msgstr "I-click ang Object sa Simulator Area."
+
+msgid "Move Object Tool Interaction"
+msgstr "Pakikipag-ugnayan ng Kasangkapan sa Paggalaw ng Obheto"
+
+msgid "3D Simulator Overview"
+msgstr "Pangkalahatang-ideya ng 3D Simulator"
+
+msgid "Choose Your Tour"
+msgstr "Pumili ng Iyong Tour"
+
+msgid "Step"
+msgstr "Hakbang"
+
+msgid "of"
+msgstr "ng"
+
+msgid "Editor and Console Tour"
+msgstr "Editor at Paglilibot sa Console"
+
+msgid "Main Menu Tour"
+msgstr "Pangunahing Menu: Paglilibot"
+
+msgid "Overlay Tab Bar Tour"
+msgstr "Paglilibot sa Tab Bar na Patong"
+
+msgid "Move Object Tool Tour"
+msgstr "Paglilibot sa Kasangkapan sa Paggalaw ng Obheto"
+
+msgid "Back"
+msgstr "Bumalik"
+
+msgid "Done"
+msgstr "Tapos na"
+
+msgid "Next"
+msgstr "Susunod"
+
+msgid "Skip"
+msgstr "Laktawan"
+
+msgid "Tour Sections"
+msgstr "Mga Bahagi ng Paglilibot"
+
+msgid "Go"
+msgstr "Pumunta"
+
+msgid "You are not enrolled in any classroom."
+msgstr "Hindi ka naka-enroll sa anumang silid-aralan."
+
+msgid "Join Class"
+msgstr "Sumali sa Klase"
+
+msgid "Classrooms - Student View"
+msgstr "Mga Silid-aralan - Paningin ng Mag-aaral"
+
+msgid "Current Classroom: "
+msgstr "Kasalukuyang Silid-Aralan: "
+
+msgid "Classroom Teacher: "
+msgstr "Guro sa silid-aralan: "
+
+msgid "Current Classroom:"
+msgstr "Kasalukuyang Silid-Aralan:"
+
+msgid "Classroom Teacher:"
+msgstr "Guro sa silid-aralan:"
+
+msgid "You"
+msgstr "Ikaw"
+
+msgid "Classroom Leaderboard"
+msgstr "Pang-abalang Pabalat ng Silid-Aralan"
+
+msgid "Export My Scores!"
+msgstr "I-export ang Aking Mga Marka!"
+
+msgid "Scroll to My Scores!"
+msgstr "Mag-scroll sa Aking Mga Marka!"
+
+msgid "See My Badges!"
+msgstr "Tingnan ang aking mga badge!"
+
+msgid "Export All General Scores"
+msgstr "I-export ang lahat ng pangkalahatang iskor"
+
+msgid "Export All Detailed Scores"
+msgstr "I-export ang lahat ng detalyadong iskor"
+
+msgid "Reenter classroom name to confirm leaving classroom."
+msgstr "Ipasok muli ang pangalan ng silid-aralan upang kumpirmahin ang pag-alis sa silid-aralan."
+
+msgid "Are you sure you want to leave: "
+msgstr "Sigurado ka bang gusto mong umalis: "
+
+msgid "My Scores!"
+msgstr "Ang Aking Mga Marka!"
+
+msgid "KIPR All Time Leaderboard"
+msgstr "KIPR Lahat ng Panahon na Leaderboard"
+
+msgid "Choose Classroom to See Leaderboard:"
+msgstr "Pumili ng Silid-Aralan upang Makita ang Leaderboard:"
+
+msgid "See Leaderboard"
+msgstr "Tingnan ang leaderboard"
+
+msgid "Classrooms - Teacher View"
+msgstr "Mga Silid-aralan - Pananaw ng Guro"
+
+msgid "See Classroom Leaderboards"
+msgstr "Tingnan ang mga leaderboard sa silid-aralan"
+
+msgid "Can 1"
+msgstr "Maaari 1"
+
+msgid "Your Display Name"
+msgstr "Ang Iyong Pangalan sa Display"
+
+msgid "The teacher's name that will be shown to your students"
+msgstr "Ang pangalan ng guro na ipapakita sa iyong mga estudyante"
+
+msgid "Classroom Name"
+msgstr "Pangalan ng Silid-Aralan"
+
+msgid "Invite Code"
+msgstr "Kodigo ng paanyaya"
+
+msgid "Code students can use to join the classroom"
+msgstr "Kodigo na maaaring gamitin ng mga estudyante para makapasok sa silid-aralan"
+
+msgctxt "Volume (box) in the 3D scene"
+msgid "Volume"
+msgstr "Tindi"
+
+msgctxt "Red, Green, Blue"
+msgid "RGB"
+msgstr "Red, Green, Blue"
+
+msgctxt "Computer text command line (e.g., DOS)"
+msgid "Console"
+msgstr "Konsola"
+
+msgctxt "A predefined task for the user to complete"
+msgid "Challenge"
+msgstr "Hamunin"
+
+msgctxt "Terminate program execution"
+msgid "Stop"
+msgstr "Tumigil"
+
+msgctxt "Begin program execution"
+msgid "Run"
+msgstr "Takbo"
+
+msgctxt "Part of copyright notice, after KIPR is listed"
+msgid "and External Contributors"
+msgstr "at mga panlabas na kontribyutor"
+
+msgctxt "URL link to github repository follows"
+msgid "Visit our"
+msgstr "Bisitahin ang aming"
+
+msgctxt "Rotation order"
+msgid "XYZ"
+msgstr "XYZ"
+
+msgctxt "Rotation order"
+msgid "YZX"
+msgstr "YZX"
+
+msgctxt "Rotation order"
+msgid "ZXY"
+msgstr "ZXY"
+
+msgctxt "Rotation order"
+msgid "XZY"
+msgstr "XYZ"
+
+msgctxt "Rotation order"
+msgid "YXZ"
+msgstr "YXZ"
+
+msgctxt "Rotation order"
+msgid "ZYX"
+msgstr "Ziks"
+
+msgctxt "Student grade level"
+msgid "Kindergarten"
+msgstr "Kindergarten"
+
+msgctxt "Student grade level"
+msgid "1st grade"
+msgstr "Unang baitang"
+
+msgctxt "Student grade level"
+msgid "2nd grade"
+msgstr "Ikalawang baitang"
+
+msgctxt "Student grade level"
+msgid "3rd grade"
+msgstr "Ikatlong baitang"
+
+msgctxt "Student grade level"
+msgid "4th grade"
+msgstr "Ika-apat na baitang"
+
+msgctxt "Student grade level"
+msgid "5th grade"
+msgstr "Ikalimang baitang"
+
+msgctxt "Student grade level"
+msgid "6th grade"
+msgstr "Ika-anim na baitang"
+
+msgctxt "Student grade level"
+msgid "7th grade"
+msgstr "Ika-pitong baitang"
+
+msgctxt "Student grade level"
+msgid "8th grade"
+msgstr "Ika-walong baitang"
+
+msgctxt "Student grade level"
+msgid "9th grade"
+msgstr "Ikasiyam na baitang"
+
+msgctxt "Student grade level"
+msgid "10th grade"
+msgstr "Ika-sampung baitang"
+
+msgctxt "Student grade level"
+msgid "11th grade"
+msgstr "Ika-labing-isang baitang"
+
+msgctxt "Student grade level"
+msgid "12th grade"
+msgstr "Ika-labindalawang baitang"
+
+msgctxt "Student grade level"
+msgid "1st"
+msgstr "una"
+
+msgctxt "Student grade level"
+msgid "2nd"
+msgstr "Ikalawa"
+
+msgctxt "Student grade level"
+msgid "3rd"
+msgstr "Ikatlo"
+
+msgctxt "Student grade level"
+msgid "4th"
+msgstr "Ika-apat"
+
+msgctxt "Student grade level"
+msgid "5th"
+msgstr "Ikalima"
+
+msgctxt "Student grade level"
+msgid "6th"
+msgstr "Ika-anim"
+
+msgctxt "Student grade level"
+msgid "7th"
+msgstr "Pito"
+
+msgctxt "Student grade level"
+msgid "8th"
+msgstr "walo"
+
+msgctxt "Student grade level"
+msgid "9th"
+msgstr "Siyam na"
+
+msgctxt "Student grade level"
+msgid "10th"
+msgstr "Ika-sampu"
+
+msgctxt "Student grade level"
+msgid "11th"
+msgstr "labing-isa"
+
+msgctxt "Student grade level"
+msgid "12th"
+msgstr "Labing-dalawa"
+
+msgctxt "Student grade level; Kingergarten"
+msgid "K"
+msgstr "K"
+
+msgctxt "RotationwUnits order"
+msgid "XYZ"
+msgstr "XYZ"
+
+msgctxt "RotationwUnits order"
+msgid "YZX"
+msgstr "YZX"
+
+msgctxt "RotationwUnits order"
+msgid "ZXY"
+msgstr "ZXY"
+
+msgctxt "RotationwUnits order"
+msgid "XZY"
+msgstr "XYZ"
+
+msgctxt "RotationwUnits order"
+msgid "YXZ"
+msgstr "YXZ"
+
+msgctxt "RotationwUnits order"
+msgid "ZYX"
+msgstr "Ziks"
+
+msgid ""
+msgstr ""
+
+msgid "The selected file is already included in the project."
+msgstr "Ang napiling file ay kasama na sa proyekto."
+
+msgid "The selected file does not match the expected language ${currentLanguage}."
+msgstr "Ang napiling file ay hindi tumutugma sa inaasahang wika ${currentLanguage}."
+
+msgid "The selected file must have a .h extension."
+msgstr "Ang napiling file ay dapat may extension na .h."
+
+msgid "The selected file does not match the expected language."
+msgstr "Ang napiling file ay hindi tumutugma sa inaasahang wika."
+
+msgid "The selected file must have a .txt extension."
+msgstr "Ang napiling file ay dapat may .txt na extension."
+
+msgid "Some files have errors"
+msgstr "May ilang mga file na may mga error."
+
+msgid "Upload File"
+msgstr "I-upload ang file"
+
+msgid "Selected File Upload Language: "
+msgstr "Piniling wika para sa pag-upload ng file: "
+
+msgid "Select a file from your computer to upload"
+msgstr "Piliin ang isang file mula sa iyong kompyuter upang i-upload."
+
+msgid "Upload Include File"
+msgstr "I-upload ang Kasamang File"
+
+msgid "Upload Source File"
+msgstr "I-upload ang pinagkukuhang file"
+
+msgid "Upload User Data File"
+msgstr "Mag-upload ng file ng datos ng gumagamit"
+
+msgid "No file selected"
+msgstr "Walang file ang napili"
+
+msgid "Project with name already exists. Please choose a different name."
+msgstr "Mayroon nang umiiral na proyekto na may ganitong pangalan. Piliin mangyaring ibang pangalan."
+
+msgid "File uploaded does not match selected project language."
+msgstr "Ang wika ng naka-upload na file ay hindi tumutugma sa napiling wika ng proyekto."
+
+msgid "Folder name does not match project name in config file."
+msgstr "Hindi tumutugma ang pangalan ng folder sa pangalan ng proyekto sa config file."
+
+msgid ""
+"File detected as different language than project language. Please ensure "
+"all source files match the selected project language."
+msgstr "Na-detect na ang file ay sa ibang wika kaysa sa wika ng proyekto. Pakitiyak na lahat ng source file ay tumutugma sa napiling wika ng proyekto."
+
+msgid "Please remove all spaces in the name."
+msgstr "Pakialisin ang lahat ng puwang sa pangalan."
+
+msgid "Please remove all special characters in the name."
+msgstr "Pakialisin ang lahat ng espesyal na karakter sa pangalan."
+
+msgid "File name exceeds maximum length of 50 characters."
+msgstr "Ang pangalan ng file ay lumalampas sa pinakamataas na haba na 50 karakter."
+
+msgid "Select a Project from your computer to upload\n"
+msgstr "Piliin ang isang proyekto mula sa iyong kompyuter upang mai-upload."
+
+msgid "Be sure the heirarchy format follows:\n"
+msgstr "Tiyaking sinusunod ng format ng hirarkiya ang:\\\\n"
+
+msgid "Project Name"
+msgstr "Pangalan ng Proyekto"
+
+msgid "include"
+msgstr "isama"
+
+msgid "includeFile1.h (optional)"
+msgstr "Kasama ang File1.h (opsyonal)"
+
+msgid "includeFile2.h (optional)"
+msgstr "Kasama ang File2.h (opsyonal)"
+
+msgid "src"
+msgstr "Pinagmulan"
+
+msgid "NOTE: file extension must match project language"
+msgstr "TANDAAN: Dapat tumugma ang extension ng file sa wika ng proyekto."
+
+msgid "srcFile1.*"
+msgstr "srcFile1.*"
+
+msgid "srcFile2.*"
+msgstr "srcFile2.*"
+
+msgid "data"
+msgstr "datos"
+
+msgid "dataFile1.txt (optional)"
+msgstr "dataFile1.txt (opsyonal)"
+
+msgid "dataFile2.txt (optional)"
+msgstr "dataFile2.txt (opsyonal)"
+
+msgid "bin"
+msgstr "basurahan"
+
+msgid "Select Project Language:"
+msgstr "Piliin ang wika ng proyekto:"
+
+msgid "Choose Folder"
+msgstr "Piliin ang Folder"
+
+msgid "Config File"
+msgstr "Konpig na file"
+
+msgid "No files selected."
+msgstr "Walang mga file ang napili."
+
+msgid "Include Files"
+msgstr "Isama ang mga file"
+
+msgid "Source Files"
+msgstr "Mga Pinagkunan na File"
+
+msgid "User Data Files"
+msgstr "Mga File ng Datos ng Gumagamit"
+
+msgid "Selected Project Folder: "
+msgstr "Piniling Folder ng Proyekto: "
+
+msgid "Selected Project Language: "
+msgstr "Piniling wika ng proyekto: "
+
+msgid "Choose a different project"
+msgstr "Pumili ng ibang proyekto"
+
+msgid "Upload Project"
+msgstr "I-upload ang Proyekto"
+
+msgid "The selected project already exists for this user."
+msgstr "Umiral na ang napiling proyekto para sa gumagamit na ito."
+
+msgid "Please choose a different project."
+msgstr "Piliin ang ibang proyekto."
+
+msgid "+"
+msgstr "+"
+
+msgid "Create Project"
+msgstr "Gumawa ng Proyekto"
+
+msgid "Create File"
+msgstr "Gumawa ng File"
+
+msgid "Create Classroom"
+msgstr "Gumawa ng Silid-Aralan"
+
+msgid "Create User"
+msgstr "Gumawa ng User"
+
+msgid "Upload User"
+msgstr "Mag-upload ng Gumagamit"
+
+msgid ""
+"A user with that name already exists in this classroom. Please rename your "
+"folder and try again."
+msgstr "Mayroon nang gumagamit na may ganoong pangalan sa silid-aralan na ito. Mangyaring pangalanan muli ang iyong folder at subukan muli."
+
+msgid "Folder name does not match user name in config file."
+msgstr "Hindi tumutugma ang pangalan ng folder sa pangalan ng gumagamit sa config file."
+
+msgid "File detected with interface mode does not match project interface mode."
+msgstr "Natukoy na ang file ay may interface mode na hindi tumutugma sa interface mode ng proyekto."
+
+msgid ""
+"File detected as different language than project language. Please ensure "
+"all source files match the project language."
+msgstr "Na-detect na ang file ay sa ibang wika kaysa sa wika ng proyekto. Paki-siguraduhin na lahat ng source file ay tumutugma sa wika ng proyekto."
+
+msgid "Unknown file type, defaulting to plaintext."
+msgstr "Hindi kilalang uri ng file, itinakda bilang simpleng teksto."
+
+msgid "Project must contain a main file"
+msgstr "Dapat may pangunahing file ang proyekto."
+
+msgid "Select a User from your computer to upload\n"
+msgstr "Piliin ang isang gumagamit mula sa iyong kompyuter upang i-upload\\\\n"
+
+msgid "User Name"
+msgstr "Pangalan ng Gumagamit"
+
+msgid "(At least 1 project must be in the User folder)"
+msgstr "(Dapat may hindi bababa sa isang proyekto sa folder ng User)"
+
+msgid "Project Name 1"
+msgstr "Pangalan ng Proyekto 1"
+
+msgid "Project Name 2"
+msgstr "Pangalan ng Proyekto 2"
+
+msgid "Select User Interface Mode:"
+msgstr "Piliin ang mode ng interface ng gumagamit:"
+
+msgid "Selected User Folder: "
+msgstr "Piniling Folder ng Gumagamit: "
+
+msgid "Selected User Interface Mode: "
+msgstr "Piniling Mode ng User Interface: "
+
+msgid "Choose a different User"
+msgstr "Pumili ng ibang gumagamit."
+
+msgid "The selected user already exists in this classroom."
+msgstr "Ang napiling gumagamit ay umiiral na sa silid-aralang ito."
+
+msgid "Please choose a different user."
+msgstr "Pakiusap, pumili ng ibang gumagamit."
+
+msgid "Choose a different user"
+msgstr "Pumili ng ibang gumagamit"
+
+msgid "Delete Classroom"
+msgstr "Bura ang Silid-Aralan"
+
+msgid "Rename Classroom"
+msgstr "Baguhin ang pangalan ng silid-aralan"
+
+msgid "Delete User"
+msgstr "Bura ang Gumagamit"
+
+msgid "Download User"
+msgstr "Mag-download ng User"
+
+msgid "Rename User"
+msgstr "Baguhin ang Pangalan ng Gumagamit"
+
+msgid "Remove User from Classroom"
+msgstr "Alisin ang Gumagamit sa Silid-Aralan"
+
+msgid "Move User to Classroom"
+msgstr "Ilipat ang Gumagamit sa Silid-Aralan"
+
+msgid "Paste Project"
+msgstr "Ipaliit ang Proyekto"
+
+msgid "Delete Project"
+msgstr "Bura ang Proyekto"
+
+msgid "Download Project"
+msgstr "I-download ang proyekto"
+
+msgid "Rename Project"
+msgstr "I-rename ang proyekto"
+
+msgid "Move Project"
+msgstr "Ilipat ang Proyekto"
+
+msgid "Copy Project"
+msgstr "Kopyahin ang Proyekto"
+
+msgid "Paste File"
+msgstr "Ipamili ang File"
+
+msgid "Delete File"
+msgstr "Bura ang File"
+
+msgid "Download File"
+msgstr "I-download ang file"
+
+msgid "Rename File"
+msgstr "Baguhin ang Pangalan ng File"
+
+msgid "Copy File"
+msgstr "Kopyahin ang File"
+
+msgid "Users"
+msgstr "Mga gumagamit"
+
+msgid "Classroom Invitation Code:"
+msgstr "Kodigo ng paanyaya sa silid-aralan:"
+
+msgid "Projects"
+msgstr "Mga Proyekto"
+
+msgid "Explorer - Classrooms"
+msgstr "Eksplorador - Mga Silid-aralan"
+
+msgid "Explorer - Users"
+msgstr "Eksplorador - Mga Gumagamit"
+
+msgid "Users without Classrooms"
+msgstr "Mga gumagamit na walang mga silid-aralan"
+
+msgid "Motor 0"
+msgstr "Motor 0"
+
+msgid "Motor 1"
+msgstr "Motor 1"
+
+msgid "Motor 2"
+msgstr "Motor 2"
+
+msgid "Motor 3"
+msgstr "Motor 3"
+
+msgid "Velocity"
+msgstr "Bilisan"
+
+msgid "Power"
+msgstr "Kapangyarihan"
+
+msgid "Servo 0"
+msgstr "Servo 0"
+
+msgid "Servo 1"
+msgstr "Servo 1"
+
+msgid "Servo 2"
+msgstr "Servo 2"
+
+msgid "Servo 3"
+msgstr "Servo 3"
+
+msgid "analog(0)"
+msgstr "analog(0)"
+
+msgid "analog(1)"
+msgstr "analogo(1)"
+
+msgid "analog(2)"
+msgstr "analogo(2)"
+
+msgid "analog(3)"
+msgstr "analogo(3)"
+
+msgid "analog(4)"
+msgstr "analogo(4)"
+
+msgid "analog(5)"
+msgstr "analogo(5)"
+
+msgid "digital(0)"
+msgstr "digital(0)"
+
+msgid "digital(1)"
+msgstr "digital(1)"
+
+msgid "digital(2)"
+msgstr "digital(2)"
+
+msgid "digital(3)"
+msgstr "digital(3)"
+
+msgid "digital(4)"
+msgstr "digital(4)"
+
+msgid "digital(5)"
+msgstr "digital(5)"
+
+msgid "digital(6)"
+msgstr "digital(6)"
+
+msgid "digital(7)"
+msgstr "digital(7)"
+
+msgid "digital(8)"
+msgstr "digital(8)"
+
+msgid "digital(9)"
+msgstr "digital(9)"
+
+msgid "accel_x()"
+msgstr "bilis_x()"
+
+msgid "accel_y()"
+msgstr "pabilis_y()"
+
+msgid "accel_z()"
+msgstr "accel_z()"
+
+msgid "gyro_x()"
+msgstr "ayro_x()"
+
+msgid "gyro_y()"
+msgstr "y ng gyro"
+
+msgid "gyro_z()"
+msgstr "giroskopo_z()"
+
+msgid "magneto_x()"
+msgstr "magneto_x()"
+
+msgid "magneto_y()"
+msgstr "magneto_y()"
+
+msgid "magneto_z()"
+msgstr "magneto_z()"
+
+msgid "right_button()"
+msgstr "kanang_pindutan()"
+
+msgid "Reverse"
+msgstr "Baliktarin"
+
+msgid "Forward"
+msgstr "Pasulong"
+
+msgid "Warning! Could damage servo in this range"
+msgstr "Babala! Maaaring masira ang servo sa saklaw na ito."
+
+msgid "Motor Velocity Plot"
+msgstr "Grafikong Bilis ng Motor"
+
+msgid "Motor Position Plot"
+msgstr "Grafikong Puwesto ng Motor"
+
+msgid "Servo Position Plot"
+msgstr "Grafiko ng Posisyon ng Servo"
+
+msgid "View:"
+msgstr "Tingnan:"
+
+msgid "Motor Port:"
+msgstr "Dock ng Motor:"
+
+msgid "Clear Motor Position"
+msgstr "I-clear ang posisyon ng motor"
+
+msgid "Stop All Motors"
+msgstr "Patigilin ang lahat ng mga motor"
+
+msgid "Stop Current Motor"
+msgstr "Patigilin ang kasalukuyang motor"
+
+msgid "Motor Velocities"
+msgstr "Mga Bilis ng Motor"
+
+msgid "Motor Positions"
+msgstr "Mga Posisyon ng Motor"
+
+msgid "Servo Port:"
+msgstr "Port ng servo:"
+
+msgid "Enable All Servos"
+msgstr "I-enable ang lahat ng servo"
+
+msgid "Disable All Servos"
+msgstr "I-disable ang lahat ng servo"
+
+msgid "Disable Servo"
+msgstr "I-disable ang servo"
+
+msgid "Enable Servo"
+msgstr "I-aktiba ang servo"
+
+msgid "Servo Positions"
+msgstr "Mga Posisyon ng Servo"
+
+msgid "Analog Sensors"
+msgstr "Analog na mga sensor"
+
+msgid "Digital Sensors"
+msgstr "Mga Digital na Sensor"
+
+msgid "Accelerometers"
+msgstr "Mga accelerometro"
+
+msgid "Gyroscopes"
+msgstr "Mga gyroskopo"
+
+msgid "Magnetometers"
+msgstr "Mga magnetometro"
+
+msgid "Buttons"
+msgstr "Mga pindutan"
+
+msgid "Motors, Servos, and Sensors"
+msgstr "Mga Motor, Servo, at Sensor"
+
+msgid "Motor"
+msgstr "Makina"
+
+msgid "Servo"
+msgstr "Servo"
+
+msgid "Sensor"
+msgstr "Sensor"
+
+msgid "Modules"
+msgstr "Mga Modulo"
+
+msgid "Functions"
+msgstr "Mga Pag-andar"
+
+msgid "Structures"
+msgstr "Mga estruktura"
+
+msgid "Enumerations"
+msgstr "Mga pagbibilang"
+
+msgid "Files"
+msgstr "Mga file"
+
+msgid "Search..."
+msgstr "Maghanap..."
+
+msgid "Detailed Description"
+msgstr "Detalyadong Paglalarawan"
+
+msgid "Parameters"
+msgstr "Mga Parameter"
+
+msgid "Return Value"
+msgstr "Halagang Ibabalik"
+
+msgid "Fields"
+msgstr "Mga larangan"
+
+msgid "Common Functions"
+msgstr "Karaniwang Mga Pag-andar"
+
+msgid "Full Documentation"
+msgstr "Kumpletong Dokumentasyon"
+
+msgid "Challenge Progress"
+msgstr "Pag-usad ng Hamon"
+
+msgctxt "func:a_button:detailed"
+msgid "Gets the A button's state (pressed or not pressed.)"
+msgstr "Kino-kuma ang estado ng pindutang A (nakapindot o hindi nakapindot)."
+
+msgctxt "func:a_button_clicked:detailed"
+msgid "Gets the A button's state (pressed or not pressed.)"
+msgstr "Kino-kuma ang estado ng pindutang A (nakapindot o hindi nakapindot)."
+
+msgctxt "func:alloff:brief"
+msgid "Turns all motors off."
+msgstr "Pinapatay ang lahat ng mga motor."
+
+msgctxt "func:analog10:detailed"
+msgid "Gets the 10-bit analog value of a port."
+msgstr "Kino-kuma ang 10-bit na analog na halaga ng isang port."
+
+msgctxt "func:analog10:param:port:description"
+msgid "A value between 0 and 5 specifying the sensor to read from."
+msgstr "Isang halaga mula 0 hanggang 5 na naglalarawan kung aling sensor ang babasahin."
+
+msgctxt "func:analog12:detailed"
+msgid "Gets the 12-bit analog value of a port."
+msgstr "Kino-kuma ang 12-bit na analog na halaga ng isang port."
+
+msgctxt "func:analog12:param:port:description"
+msgid "A value between 0 and 5 specifying the sensor to read from."
+msgstr "Isang halaga mula 0 hanggang 5 na naglalahad kung aling sensor ang babasahin."
+
+msgctxt "func:analog8:detailed"
+msgid "Gets the 8-bit analog value of a port."
+msgstr "Kino-kuma ang 8-bit na analog na halaga ng isang port."
+
+msgctxt "func:analog8:param:port:description"
+msgid "A value between 0 and 5 specifying the sensor to read from."
+msgstr "Isang halaga mula 0 hanggang 5 na naglalarawan kung aling sensor ang babasahin."
+
+msgctxt "func:analog:detailed"
+msgid "Gets the 12-bit analog value of a port."
+msgstr "Kino-kuma ang 12-bit na halagang analog ng isang port."
+
+msgctxt "func:analog:param:port:description"
+msgid "A value between 0 and 5 specifying the sensor to read from."
+msgstr "Isang halaga mula 0 hanggang 5 na naglalahad kung aling sensor ang babasahin."
+
+msgctxt "func:analog_et:detailed"
+msgid ""
+"Gets the 10-bit analog value of an ET sensor on the given port. "
+"Deprecateddefaulting to analog() on the Wallaby"
+msgstr "Kino-kuma ang 10-bit na analog na halaga ng ET sensor sa ibinigay na port. Hindi na ginagamit; awtomatikong nagde-default sa analog() sa Wallaby."
+
+msgctxt "func:analog_et:param:port:description"
+msgid "A value between 0 and 7 specifying the ET sensor to read from."
+msgstr "Isang halaga sa pagitan ng 0 at 7 na naglalahad kung aling ET sensor ang babasahin."
+
+msgctxt "func:any_button:detailed"
+msgid "Determines whether or not any of the buttons are pressed."
+msgstr "Tinutukoy kung may napindot na mga pindutan o wala."
+
+msgctxt "func:ao:brief"
+msgid "Turns all motors off."
+msgstr "Pinapatay ang lahat ng mga motor."
+
+msgctxt "func:b_button:detailed"
+msgid "Gets the B button's state (pressed or not pressed.)"
+msgstr "Kino-kuma ang estado ng B button (nakapindot o hindi nakapindot)."
+
+msgctxt "func:b_button_clicked:detailed"
+msgid "Gets the A button's state (pressed or not pressed.)"
+msgstr "Kino-kuma ang estado ng pindutang A (nakapindot o hindi nakapindot)."
+
+msgctxt "func:baasbennaguui:brief"
+msgid "Moves a motor at a percent velocity."
+msgstr "Ginagalaw ang isang motor sa porsyentong bilis."
+
+msgctxt "func:baasbennaguui:param:motor:description"
+msgid "The motor port."
+msgstr "Ang daungan ng motor."
+
+msgctxt "func:baasbennaguui:param:percent:description"
+msgid "The percent of the motors velocity, between -100 and 100."
+msgstr "Ang porsyento ng bilis ng motor, mula -100 hanggang 100."
+
+msgctxt "func:bk:brief"
+msgid "Moves the given motor backward at full power."
+msgstr "Ginagalaw ang ibinigay na motor paatras sa buong lakas."
+
+msgctxt "func:bk:param:motor:description"
+msgid "the motor's port."
+msgstr "ang daungan ng makina"
+
+msgctxt "func:black_button:detailed"
+msgid ""
+"Gets the black button's state (pressed or not pressed.) DeprecatedNot "
+"present on the Wallaby"
+msgstr "Kino-kuma ang estado ng itim na pindutan (nakapindot o hindi nakapindot). Hindi na ginagamit. Hindi available sa Wallaby."
+
+msgctxt "func:block_motor_done:brief"
+msgid "Wait until the motor is at it's goal."
+msgstr "Maghintay hanggang maabot ng motor ang layunin nito."
+
+msgctxt "func:block_motor_done:param:motor:description"
+msgid "The motor port."
+msgstr "Ang daungan ng motor."
+
+msgctxt "func:bmd:brief"
+msgid "Wait until the motor is at it's goal."
+msgstr "Maghintay hanggang maabot ng motor ang layunin nito."
+
+msgctxt "func:bmd:param:motor:description"
+msgid "The motor port."
+msgstr "Ang daungan ng motor."
+
+msgctxt "func:c_button:detailed"
+msgid "Gets the C button's state (pressed or not pressed.)"
+msgstr "Kino-kuma ang estado ng pindutang C (nakapindot o hindi nakapindot)."
+
+msgctxt "func:c_button_clicked:detailed"
+msgid "Gets the B button's state (pressed or not pressed.)"
+msgstr "Kino-kuma ang estado ng B button (nakapindot o hindi nakapindot)."
+
+msgctxt "func:clear_motor_position_counter:brief"
+msgid "Clears the motor position counter."
+msgstr "Pinapawi ang counter ng posisyon ng motor."
+
+msgctxt "func:clear_motor_position_counter:param:motor:description"
+msgid "The motor port."
+msgstr "Ang daungan ng motor."
+
+msgctxt "func:cmpc:brief"
+msgid "Clears the motor position counter."
+msgstr "Pinapawi ang tagabibilang ng posisyon ng motor."
+
+msgctxt "func:cmpc:param:motor:description"
+msgid "The motor port."
+msgstr "Ang daungan ng motor."
+
+msgctxt "func:console_clear:detailed"
+msgid "Clears the UI's console."
+msgstr "Pinapawi ang console ng UI."
+
+msgctxt "func:create_point2:brief"
+msgid "Create a point2 object."
+msgstr "Gumawa ng isang point2 na object."
+
+msgctxt "func:create_point2:param:x:description"
+msgid "- the x value of the point"
+msgstr "- ang x na halaga ng punto"
+
+msgctxt "func:create_point2:param:y:description"
+msgid "- the y value of the point"
+msgstr "- ang halagang y ng punto"
+
+msgctxt "func:create_point3:brief"
+msgid "Create a point3 object."
+msgstr "Gumawa ng isang point3 na object."
+
+msgctxt "func:create_point3:param:x:description"
+msgid "- the x value of the point"
+msgstr "- ang x na halaga ng punto"
+
+msgctxt "func:create_point3:param:y:description"
+msgid "- the y value of the point"
+msgstr "- ang halagang y ng punto"
+
+msgctxt "func:create_point3:param:z:description"
+msgid "- the z value of the point"
+msgstr "- ang halaga ng z ng punto"
+
+msgctxt "func:create_rectangle:brief"
+msgid "Create a rectangle object."
+msgstr "Gumawa ng isang hugis-paralelo na bagay."
+
+msgctxt "func:create_rectangle:param:height:description"
+msgid "- the height of the rectangle"
+msgstr "- ang taas ng parihaba"
+
+msgctxt "func:create_rectangle:param:ulx:description"
+msgid "- the x value of the rectangle's upper left"
+msgstr "- ang x na halaga ng itaas na kaliwang sulok ng parihaba"
+
+msgctxt "func:create_rectangle:param:uly:description"
+msgid "- the y value of the rectangle's upper left"
+msgstr "- ang halagang y ng itaas na kaliwang sulok ng parihaba"
+
+msgctxt "func:create_rectangle:param:width:description"
+msgid "- the width of the rectangle"
+msgstr "- ang lapad ng parihaba"
+
+msgctxt "func:disable_servo:brief"
+msgid "Disable a specific servo."
+msgstr "I-disable ang isang partikular na servo."
+
+msgctxt "func:disable_servo:param:port:description"
+msgid "The port, between 0 and 3, to disable"
+msgstr "Ang port, sa pagitan ng 0 at 3, upang huwag paganahin"
+
+msgctxt "func:disable_servos:brief"
+msgid "Disable all four servo channels."
+msgstr "I-disable ang lahat ng apat na servo channel."
+
+msgctxt "func:enable_servo:brief"
+msgid "Enable a specific servo."
+msgstr "I-aktiba ang isang partikular na servo."
+
+msgctxt "func:enable_servo:param:port:description"
+msgid "The port, between 0 and 3, to enable"
+msgstr "Ang port, sa pagitan ng 0 at 3, upang paganahin"
+
+msgctxt "func:enable_servos:brief"
+msgid "Enable all four servo channels."
+msgstr "I-aktiba ang lahat ng apat na servo channel."
+
+msgctxt "func:extra_buttons_hide:detailed"
+msgid "Hides the X, Y, and Z buttons. This is the default."
+msgstr "Itinatago ang mga pindutang X, Y, at Z. Ito ang default."
+
+msgctxt "func:extra_buttons_show:detailed"
+msgid "Shows the X, Y, and Z buttons."
+msgstr "Ipinapakita ang mga pindutang X, Y, at Z."
+
+msgctxt "func:fd:brief"
+msgid "Moves the given motor forward at full power."
+msgstr "Ipinapagalaw ang ibinigay na motor pasulong sa buong lakas."
+
+msgctxt "func:fd:param:motor:description"
+msgid "the motor's port."
+msgstr "ang daungan ng makina"
+
+msgctxt "func:freeze:brief"
+msgid "Active braking to stop a motor."
+msgstr "Aktibong pagpreno upang ihinto ang isang motor."
+
+msgctxt "func:freeze:param:motor:description"
+msgid "The motor port."
+msgstr "Ang daungan ng motor."
+
+msgctxt "func:get_analog_pullup:detailed"
+msgid ""
+"Gets the analog pullup status for one portt. Deprecatedno effect on the "
+"Wallaby"
+msgstr "Kino-kuma ang analog pullup status para sa isang portt. Hindi na ginagamit; walang epekto sa Wallaby."
+
+msgctxt "func:get_analog_pullup:param:port:description"
+msgid "A value between 0 and 7 specifying the analog sensor to read from."
+msgstr "Isang halaga mula 0 hanggang 7 na naglalahad kung aling analog sensor ang babasahin."
+
+msgctxt "func:get_digital_output:detailed"
+msgid "Gets the current digital mode"
+msgstr "Kunin ang kasalukuyang digital na mode"
+
+msgctxt "func:get_digital_pullup:detailed"
+msgid ""
+"Gets the current digital pullup state Deprecatednot applicable on the "
+"Wallaby"
+msgstr "Kino-kuma ang kasalukuyang estado ng digital pullup. Hindi na ginagamit; hindi naaangkop sa Wallaby."
+
+msgctxt "func:get_digital_value:detailed"
+msgid "Gets the current value of the digital port."
+msgstr "Kunin ang kasalukuyang halaga ng digital na port."
+
+msgctxt "func:get_extra_buttons_visible:detailed"
+msgid "Determines whether or not the X, Y, and Z buttons are visible."
+msgstr "Tinatukoy kung nakikita o hindi ang mga pindutang X, Y, at Z."
+
+msgctxt "func:get_motor_done:brief"
+msgid "Check if the motor has reached it's goal."
+msgstr "Suriin kung naabot na ng motor ang layunin nito."
+
+msgctxt "func:get_motor_done:param:motor:description"
+msgid "The motor port."
+msgstr "Ang daungan ng motor."
+
+msgctxt "func:get_motor_position_counter:brief"
+msgid "Gets the current motor position."
+msgstr "Kunin ang kasalukuyang posisyon ng motor."
+
+msgctxt "func:get_motor_position_counter:param:motor:description"
+msgid "The motor port."
+msgstr "Ang daungan ng motor."
+
+msgctxt "func:get_pid_gains:brief"
+msgid "Set the motor PID gains, represented as fractions."
+msgstr "Itakda ang mga PID gain ng motor, na ipinapakita bilang mga bahagi."
+
+msgctxt "func:get_pid_gains:param:d:description"
+msgid "The D (derivative) gain numerator"
+msgstr "Ang numerador ng D (deribatibo) na kita"
+
+msgctxt "func:get_pid_gains:param:dd:description"
+msgid "The D (derivative) gain denominator"
+msgstr "Ang denominador ng D (deribatibo) na kita"
+
+msgctxt "func:get_pid_gains:param:i:description"
+msgid "The I (integral) gain numerator"
+msgstr "Ang numerador ng I (integral) na tubo"
+
+msgctxt "func:get_pid_gains:param:id:description"
+msgid "The I (integral) gain denominator"
+msgstr "Ang denominator ng I (integral) na tubo"
+
+msgctxt "func:get_pid_gains:param:motor:description"
+msgid "The motor port."
+msgstr "Ang daungan ng motor."
+
+msgctxt "func:get_pid_gains:param:p:description"
+msgid "The P (proportional) gain numerator"
+msgstr "Ang numerador ng P (proporsyonal) na kinita"
+
+msgctxt "func:get_pid_gains:param:pd:description"
+msgid "The P (proportional) gain denominator"
+msgstr "Ang denominador ng P (proporsyonal) na panalo"
+
+msgctxt "func:get_servo_enabled:brief"
+msgid "Check if a servo is enabled."
+msgstr "Suriin kung naka-enable ang servo."
+
+msgctxt "func:get_servo_enabled:param:port:description"
+msgid "The port, between 0 and 3"
+msgstr "Ang pantalan, sa pagitan ng 0 at 3"
+
+msgctxt "func:get_servo_position:brief"
+msgid "Get the most recent commanded servo position."
+msgstr "Kunin ang pinakabagong posisyon ng servo na iniutos."
+
+msgctxt "func:get_servo_position:param:port:description"
+msgid "The port of the servo"
+msgstr "Ang puerto ng servo"
+
+msgctxt "func:getpwm:brief"
+msgid "Get the current motor pwm command."
+msgstr "Kunin ang kasalukuyang PWM command ng motor."
+
+msgctxt "func:getpwm:param:motor:description"
+msgid "The motor port."
+msgstr "Ang daungan ng motor."
+
+msgctxt "func:gmpc:brief"
+msgid "Gets the current motor position."
+msgstr "Kunin ang kasalukuyang posisyon ng motor."
+
+msgctxt "func:gmpc:param:motor:description"
+msgid "The motor port."
+msgstr "Ang daungan ng motor."
+
+msgctxt "func:left_button:detailed"
+msgid "Gets the left button's state (pressed or not pressed.)"
+msgstr "Kino-kuma ang estado ng kaliwang pindutan (nakapindot o hindi nakapindot)."
+
+msgctxt "func:mav:brief"
+msgid "Set a goal velocity in ticks per second."
+msgstr "Itakda ang layunin na bilis sa mga tik kada segundo."
+
+msgctxt "func:mav:param:motor:description"
+msgid "The motor port."
+msgstr "Ang daungan ng motor."
+
+msgctxt "func:mav:param:velocity:description"
+msgid "The goal velocity in -1500 to 1500 ticks / second"
+msgstr "Ang layunin na bilis ay mula -1500 hanggang 1500 na tik / segundo"
+
+msgctxt "func:motor:brief"
+msgid "Moves a motor at a percent velocity."
+msgstr "Ginagalaw ang isang motor sa porsyentong bilis."
+
+msgctxt "func:motor:param:motor:description"
+msgid "The motor port."
+msgstr "Ang daungan ng motor."
+
+msgctxt "func:motor:param:percent:description"
+msgid "The percent of the motors velocity, between -100 and 100."
+msgstr "Ang porsyento ng bilis ng motor, mula -100 hanggang 100."
+
+msgctxt "func:motor_power:brief"
+msgid "Moves a motor at a percent power."
+msgstr "Ginagalaw ang isang motor sa isang porsyentong lakas."
+
+msgctxt "func:motor_power:param:motor:description"
+msgid "the motor port."
+msgstr "ang daungan ng makina"
+
+msgctxt "func:motor_power:param:percent:description"
+msgid "The power of the motor, between -100 and 100."
+msgstr "Ang lakas ng motor, sa pagitan ng -100 at 100."
+
+msgctxt "func:move_at_velocity:brief"
+msgid "Set a goal velocity in ticks per second."
+msgstr "Itakda ang layunin na bilis sa mga tik kada segundo."
+
+msgctxt "func:move_at_velocity:detailed"
+msgid ""
+"The range is -1500 to 1500, though motor position accuracy may be decreased "
+"outside of -1000 to 1000"
+msgstr "Ang saklaw ay -1500 hanggang 1500, ngunit maaaring bumaba ang katumpakan ng posisyon ng motor kapag nasa labas ng -1000 hanggang 1000."
+
+msgctxt "func:move_at_velocity:param:motor:description"
+msgid "The motor port."
+msgstr "Ang daungan ng motor."
+
+msgctxt "func:move_at_velocity:param:velocity:description"
+msgid "The goal velocity in -1500 to 1500 ticks / second"
+msgstr "Ang layunin na bilis ay mula -1500 hanggang 1500 na tik / segundo"
+
+msgctxt "func:move_relative_position:brief"
+msgid ""
+"Set a goal position (in ticks) for the motor to move to, relative to the "
+"current position."
+msgstr "Itakda ang posisyong layunin (sa mga tik) na pupuntahan ng motor, batay sa kasalukuyang posisyon."
+
+msgctxt "func:move_relative_position:param:delta_pos:description"
+msgid "The position to move to (in ticks) given the current position"
+msgstr "Ang posisyon na lilipat (sa mga tick) batay sa kasalukuyang posisyon"
+
+msgctxt "func:move_relative_position:param:motor:description"
+msgid "The motor port."
+msgstr "Ang daungan ng motor."
+
+msgctxt "func:move_relative_position:param:speed:description"
+msgid "The speed to move at, between -1500 and 1500 ticks / second"
+msgstr "Ang bilis ng paggalaw, sa pagitan ng -1500 at 1500 na tik / segundo"
+
+msgctxt "func:move_to_position:brief"
+msgid "Set a goal position (in ticks) for the motor to move to."
+msgstr "Itakda ang posisyong layunin (sa mga tik) na pupuntahan ng motor."
+
+msgctxt "func:move_to_position:detailed"
+msgid ""
+"There are approximately 1500 ticks per motor revolution.This function is "
+"more accurate if speeds between -1000 and 1000 are used."
+msgstr "Mayroong humigit-kumulang 1500 ticks bawat rebolusyon ng motor. Mas tumpak ang pagganap na ito kung gagamitin ang mga bilis sa pagitan ng -1000 at 1000."
+
+msgctxt "func:move_to_position:param:goal_pos:description"
+msgid "The position to move to (in ticks)"
+msgstr "Ang posisyon na lilipat (sa mga tik)"
+
+msgctxt "func:move_to_position:param:motor:description"
+msgid "The motor port."
+msgstr "Ang daungan ng motor."
+
+msgctxt "func:move_to_position:param:speed:description"
+msgid "The speed to move at, between -1500 and 1500 ticks / second"
+msgstr "Ang bilis ng paggalaw, sa pagitan ng -1500 at 1500 na tik / segundo"
+
+msgctxt "func:mrp:brief"
+msgid ""
+"Set a goal position (in ticks) for the motor to move to, relative to the "
+"current position."
+msgstr "Itakda ang posisyong layunin (sa mga tik) para ilipat ng motor, batay sa kasalukuyang posisyon."
+
+msgctxt "func:mrp:param:delta_pos:description"
+msgid "The position to move to (in ticks) given the current position"
+msgstr "Ang posisyong lilipat (sa mga tick) batay sa kasalukuyang posisyon"
+
+msgctxt "func:mrp:param:motor:description"
+msgid "The motor port."
+msgstr "Ang daungan ng motor."
+
+msgctxt "func:mrp:param:speed:description"
+msgid "The speed to move at, between -1500 and 1500 ticks / second"
+msgstr "Ang bilis ng paggalaw, sa pagitan ng -1500 at 1500 na tik / segundo"
+
+msgctxt "func:mtp:brief"
+msgid "Set a goal position (in ticks) for the motor to move to."
+msgstr "Itakda ang posisyong layunin (sa mga tik) na pupuntahan ng motor."
+
+msgctxt "func:mtp:param:goal_pos:description"
+msgid "The position to move to (in ticks)"
+msgstr "Ang posisyon na lilipat (sa mga tik)"
+
+msgctxt "func:mtp:param:motor:description"
+msgid "The motor port."
+msgstr "Ang daungan ng motor."
+
+msgctxt "func:mtp:param:speed:description"
+msgid "The speed to move at, between -1500 and 1500 ticks / second"
+msgstr "Ang bilis ng paggalaw, sa pagitan ng -1500 at 1500 na tik / segundo"
+
+msgctxt "func:off:brief"
+msgid "Turns the specified motor off."
+msgstr "Pinapatay ang tinukoy na motor."
+
+msgctxt "func:off:param:motor:description"
+msgid "the motor's port."
+msgstr "ang daungan ng makina"
+
+msgctxt "func:push_button:detailed"
+msgid "Gets the ousg button's state (pressed or not pressed.)"
+msgstr "Kino-kuma ang estado ng ousg button (nakapindot o hindi nakapindot)."
+
+msgctxt "func:right_button:detailed"
+msgid "Gets the right button's state (pressed or not pressed.)"
+msgstr "Kunin ang estado ng tamang pindutan (nakapindot o hindi nakapindot)."
+
+msgctxt "func:set_a_button_text:detailed"
+msgid "Updates the A button's text. Deprecatednot planned for the Wallaby"
+msgstr "Ina-update ang teksto ng pindutang A. Lipas na; hindi nakaplano para sa Wallaby."
+
+msgctxt "func:set_a_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "Ang teksto na ipapakita. Limitasyon: 16 na karakter."
+
+msgctxt "func:set_analog_pullup:detailed"
+msgid "Sets analog pullup status for one port. Deprecatedno effect on the Wallaby"
+msgstr "Itinatakda ang analog pullup na estado para sa isang port. Hindi na ginagamit; walang epekto sa Wallaby."
+
+msgctxt "func:set_analog_pullup:param:port:description"
+msgid "A value between 0 and 5 specifying the analog sensor to read from."
+msgstr "Isang halaga mula 0 hanggang 5 na naglalahad kung aling analog sensor ang babasahin."
+
+msgctxt "func:set_analog_pullup:param:pullup:description"
+msgid "A value of 0 (inactive) or 1 (active)."
+msgstr "Halagang 0 (hindi aktibo) o 1 (aktibo)."
+
+msgctxt "func:set_b_button_text:detailed"
+msgid "Updates the B button's text. Deprecatednot planned for the Wallaby"
+msgstr "Ina-update ang teksto ng pindutang B. Lipas na; hindi nakaplano para sa Wallaby."
+
+msgctxt "func:set_b_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "Ang teksto na ipapakita. Limitasyon: 16 na karakter."
+
+msgctxt "func:set_c_button_text:detailed"
+msgid "Updates the C button's text. Deprecatednot planned for the Wallaby"
+msgstr "Ina-update ang teksto ng pindutang C. Lipas na; hindi nakaplano para sa Wallaby."
+
+msgctxt "func:set_c_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "Ang teksto na ipapakita. Limitasyon: 16 na karakter."
+
+msgctxt "func:set_digital_output:detailed"
+msgid "Sets the digital mode."
+msgstr "Itinatakda ang digital na mode."
+
+msgctxt "func:set_digital_output:param:out:description"
+msgid "1 for output mode, 0 for input mode."
+msgstr "1 para sa output mode, 0 para sa input mode."
+
+msgctxt "func:set_digital_output:param:port:description"
+msgid "The port to modify."
+msgstr "Ang daungan na babaguhin."
+
+msgctxt "func:set_digital_pullup:detailed"
+msgid ""
+"Sets the current digital pullup state Deprecatednot applicable on the "
+"Wallaby"
+msgstr "Itinatakda ang kasalukuyang estado ng digital pullup. Hindi na ginagamit; hindi naaangkop sa Wallaby."
+
+msgctxt "func:set_digital_pullup:param:port:description"
+msgid "The port to modify"
+msgstr "Ang daungan na babaguhin"
+
+msgctxt "func:set_digital_pullup:param:pullup:description"
+msgid "The pullup state 1: active 0: inactive"
+msgstr "Ang estado ng pullup 1: aktibo 0: hindi aktibo"
+
+msgctxt "func:set_digital_value:detailed"
+msgid "Sets the value of the digital port in output mode."
+msgstr "Itinatakda ang halaga ng digital na port sa output mode."
+
+msgctxt "func:set_extra_buttons_visible:detailed"
+msgid "Sets whether or not the X, Y, and Z buttons are visible."
+msgstr "Itinatakda kung nakikita o hindi ang mga pindutang X, Y, at Z."
+
+msgctxt "func:set_pid_gains:brief"
+msgid "Set the motor PID gains, represented as fractions."
+msgstr "Itakda ang mga PID gain ng motor, na ipinapakita bilang mga bahagi."
+
+msgctxt "func:set_pid_gains:param:d:description"
+msgid "The D (derivative) gain numerator"
+msgstr "Ang numerador ng D (deribatibo) na kita"
+
+msgctxt "func:set_pid_gains:param:dd:description"
+msgid "The D (derivative) gain denominator"
+msgstr "Ang denominador ng D (deribatibo) na kita"
+
+msgctxt "func:set_pid_gains:param:i:description"
+msgid "The I (integral) gain numerator"
+msgstr "Ang numerador ng I (integral) na tubo"
+
+msgctxt "func:set_pid_gains:param:id:description"
+msgid "The I (integral) gain denominator"
+msgstr "Ang denominator ng I (integral) na tubo"
+
+msgctxt "func:set_pid_gains:param:motor:description"
+msgid "The motor port."
+msgstr "Ang daungan ng motor."
+
+msgctxt "func:set_pid_gains:param:p:description"
+msgid "The P (proportional) gain numerator"
+msgstr "Ang numerador ng P (proporsyonal) na kinita"
+
+msgctxt "func:set_pid_gains:param:pd:description"
+msgid "The P (proportional) gain denominator"
+msgstr "Ang denominador ng P (proporsyonal) na panalo"
+
+msgctxt "func:set_servo_enabled:brief"
+msgid "Enable or disable a specific servo."
+msgstr "I-enable o i-disable ang isang partikular na servo."
+
+msgctxt "func:set_servo_enabled:param:enabled:description"
+msgid "The new enable setting 0: disabled 1: enabled"
+msgstr "Ang bagong setting para paganahin: 0: hindi pinagana 1: pinagana"
+
+msgctxt "func:set_servo_enabled:param:port:description"
+msgid "The port, between 0 and 3, to enable"
+msgstr "Ang port, sa pagitan ng 0 at 3, upang paganahin"
+
+msgctxt "func:set_servo_position:brief"
+msgid "Set a new servo goal position."
+msgstr "Itakda ang bagong posisyon ng layunin ng servo."
+
+msgctxt "func:set_servo_position:param:port:description"
+msgid "The port of the servo"
+msgstr "Ang port ng servo"
+
+msgctxt "func:set_servo_position:param:position:description"
+msgid "The new servo position, between 0 and 2047"
+msgstr "Ang bagong posisyon ng servo, sa pagitan ng 0 at 2047"
+
+msgctxt "func:set_x_button_text:detailed"
+msgid "Updates the X button's text. Deprecatednot planned for the Wallaby"
+msgstr "Ina-update ang teksto ng X na pindutan. Lipas na; hindi nakaplano para sa Wallaby."
+
+msgctxt "func:set_x_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "Ang teksto na ipapakita. Limitasyon: 16 na karakter."
+
+msgctxt "func:set_y_button_text:detailed"
+msgid "Updates the Y button's text. Deprecatednot planned for the Wallaby"
+msgstr "Ina-update ang teksto ng pindutang Y. Lipas na; hindi nakaplano para sa Wallaby."
+
+msgctxt "func:set_y_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "Ang teksto na ipapakita. Limitasyon: 16 na karakter."
+
+msgctxt "func:set_z_button_text:detailed"
+msgid "Updates the Z button's text. Deprecatednot planned for the Wallaby"
+msgstr "Ina-update ang teksto ng pindutang Z. Lipas na; hindi ito nakaplano para sa Wallaby."
+
+msgctxt "func:set_z_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "Ang teksto na ipapakita. Limitasyon: 16 na karakter."
+
+msgctxt "func:setpwm:brief"
+msgid "Set the motor pwm (percent power) command."
+msgstr "Itakda ang motor PWM (porsyento ng kapangyarihan) na utos."
+
+msgctxt "func:setpwm:param:motor:description"
+msgid "The motor port."
+msgstr "Ang daungan ng motor."
+
+msgctxt "func:setpwm:param:pwm:description"
+msgid "A new motor pwm command between 0 and 100"
+msgstr "Isang bagong motor PWM na utos sa pagitan ng 0 at 100"
+
+msgctxt "func:shut_down_in:detailed"
+msgid "Register an event to stop the user program after s seconds"
+msgstr "Magrehistro ng kaganapan upang ihinto ang programang gumagamit pagkatapos ng s segundo."
+
+msgctxt "func:shut_down_in:param:s:description"
+msgid "The number of seconds to wait before the end of program"
+msgstr "Ang bilang ng mga segundo na dapat hintayin bago matapos ang programa"
+
+msgctxt "func:side_button:detailed"
+msgid ""
+"Gets the side button's state (pressed or not pressed.) DeprecatedNot "
+"present on the Wallaby"
+msgstr "Kino-kuma ang estado ng side button (nakapindot o hindi nakapindot). Hindi na ginagamit. Hindi available sa Wallaby."
+
+msgctxt "func:side_button_clicked:detailed"
+msgid "Gets the Z button's state (pressed or not pressed.)"
+msgstr "Kino-kuma ang estado ng pindutang Z (nakapindot o hindi nakapindot)."
+
+msgctxt "func:wait_for_a_button:detailed"
+msgid "Waits (blocks) until the a button has been pressed."
+msgstr "Naghihintay (nagba-block) hanggang mapindot ang pindutang A."
+
+msgctxt "func:wait_for_a_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the a button has been pressed and then subsequently "
+"released."
+msgstr "Nag-aantay (nagba-block) hanggang pindutin ang pindutang A at pagkatapos ay pakawalan ito."
+
+msgctxt "func:wait_for_any_button:detailed"
+msgid "Waits (blocks) until any system button has been pressed."
+msgstr "Naghihintay (nagba-block) hanggang pindutin ang anumang pindutan ng sistema."
+
+msgctxt "func:wait_for_b_button:detailed"
+msgid "Waits (blocks) until the b button has been pressed."
+msgstr "Naghihintay (nagba-block) hanggang mapindot ang pindutang B."
+
+msgctxt "func:wait_for_b_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the b button has been pressed and then subsequently "
+"released."
+msgstr "Naghihintay (nagba-block) hanggang pindutin ang b button at pagkatapos ay pakawalan ito."
+
+msgctxt "func:wait_for_c_button:detailed"
+msgid "Waits (blocks) until the c button has been pressed."
+msgstr "Naghihintay (nagba-block) hanggang mapindot ang pindutang C."
+
+msgctxt "func:wait_for_c_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the c button has been pressed and then subsequently "
+"released."
+msgstr "Naghihintay (nagba-block) hanggang pindutin ang pindutang C at pagkatapos ay pakawalan ito."
+
+msgctxt "func:wait_for_light:detailed"
+msgid ""
+"Initiate a calibration and wait for light sequence which is a normal early "
+"step in Botball programs"
+msgstr "Simulan ang kalibrasyon at hintayin ang pagkakasunod-sunod ng mga ilaw, na karaniwang unang hakbang sa mga programang Botball."
+
+msgctxt "func:wait_for_light:param:light_port_:description"
+msgid "The analog port and light sensor to use."
+msgstr "Ang analog port at sensor ng liwanag na gagamitin."
+
+msgctxt "func:wait_for_milliseconds:detailed"
+msgid "Waits (blocks) for the given number of milliseconds."
+msgstr "Nag-aantay (nagbo-block) ng ibinigay na bilang ng milisekundo."
+
+msgctxt "func:wait_for_milliseconds:param:msecs:description"
+msgid "the number of milliseconds to sleep"
+msgstr "ang bilang ng millisecond ng pagtulog"
+
+msgctxt "func:wait_for_side_button:detailed"
+msgid "Waits (blocks) until the side button has been pressed."
+msgstr "Naghihintay (nagba-block) hanggang mapindot ang side button."
+
+msgctxt "func:wait_for_side_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the side button has been pressed and then subsequently "
+"released."
+msgstr "Naghihintay (nagba-block) hanggang mapindot ang side button at pagkatapos ay mabi-bitawan ito."
+
+msgctxt "func:wait_for_touch:detailed"
+msgid ""
+"Waits (blocks) until the digital sensor on the given port has been "
+"activated."
+msgstr "Nag-aantay (nagba-block) hanggang sa ma-aktiba ang digital sensor sa ibinigay na port."
+
+msgctxt "func:wait_for_touch:param:port:description"
+msgid "The port to wait for activation on"
+msgstr "Ang daungan na hihintayin para sa pag-aktibo"
+
+msgctxt "func:wait_for_x_button:detailed"
+msgid "Waits (blocks) until the x button has been pressed."
+msgstr "Naghihintay (nagba-block) hanggang mapindot ang x na pindutan."
+
+msgctxt "func:wait_for_x_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the x button has been pressed and then subsequently "
+"released."
+msgstr "Naghihintay (nagba-block) hanggang pindutin ang x na pindutan at pagkatapos ay pakawalan ito."
+
+msgctxt "func:wait_for_y_button:detailed"
+msgid "Waits (blocks) until the y button has been pressed."
+msgstr "Naghihintay (nagba-block) hanggang mai-press ang pindutang Y."
+
+msgctxt "func:wait_for_y_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the y button has been pressed and then subsequently "
+"released."
+msgstr "Naghihintay (nagba-block) hanggang pindutin ang pindutang Y at pagkatapos ay pakawalan ito."
+
+msgctxt "func:wait_for_z_button:detailed"
+msgid "Waits (blocks) until the z button has been pressed."
+msgstr "Naghihintay (nagba-block) hanggang mapindot ang pindutang Z."
+
+msgctxt "func:wait_for_z_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the z button has been pressed and then subsequently "
+"released."
+msgstr "Naghihintay (nagba-block) hanggang mapindot ang pindutang Z at pagkatapos ay mabi-bitawan ito."
+
+msgctxt "func:x_button:detailed"
+msgid "Gets the C button's state (pressed or not pressed.)"
+msgstr "Kino-kuma ang estado ng pindutang C (nakapindot o hindi nakapindot)."
+
+msgctxt "func:x_button_clicked:detailed"
+msgid "Gets the C button's state (pressed or not pressed.)"
+msgstr "Kino-kuma ang estado ng pindutang C (nakapindot o hindi nakapindot)."
+
+msgctxt "func:y_button:detailed"
+msgid "Gets the Y button's state (pressed or not pressed.)"
+msgstr "Kino-kuma ang estado ng Y button (nakapindot o hindi nakapindot)."
+
+msgctxt "func:y_button_clicked:detailed"
+msgid "Gets the X button's state (pressed or not pressed.)"
+msgstr "Kino-kuma ang estado ng X na pindutan (nakapindot o hindi nakapindot)."
+
+msgctxt "func:z_button:detailed"
+msgid "Gets the Z button's state (pressed or not pressed.)"
+msgstr "Kino-kuma ang estado ng pindutang Z (nakapindot o hindi nakapindot)."
+
+msgctxt "func:z_button_clicked:detailed"
+msgid "Gets the Y button's state (pressed or not pressed.)"
+msgstr "Kino-kuma ang estado ng Y button (nakapindot o hindi nakapindot)."
+
+msgctxt "struct:kipr::create::CreatePackets::_101:detailed"
+msgid "Create OI Packet 101"
+msgstr "Gumawa ng OI Packet 101"
+
+msgctxt "struct:kipr::create::CreatePackets::_1:detailed"
+msgid "Create OI Packet 1"
+msgstr "Gumawa ng OI Packet 1"
+
+msgctxt "struct:kipr::create::CreatePackets::_2:detailed"
+msgid "Create OI Packet 2"
+msgstr "Gumawa ng OI Packet 2"
+
+msgctxt "struct:kipr::create::CreatePackets::_3:detailed"
+msgid "Create OI Packet 3"
+msgstr "Gumawa ng OI Packet 3"
+
+msgctxt "struct:kipr::create::CreatePackets::_4:detailed"
+msgid "Create OI Packet 4"
+msgstr "Gumawa ng OI Packet 4"
+
+msgctxt "struct:kipr::create::CreatePackets::_5:detailed"
+msgid "Create OI Packet 5"
+msgstr "Gumawa ng OI Packet 5"
+
+msgctxt "struct:kipr::create::CreateState:detailed"
+msgid "Locally stored state information"
+msgstr "Impormasyong estado na naka-imbak nang lokal"
+
+msgctxt "struct:mutex:brief"
+msgid "A mutex, or lock."
+msgstr "Isang mutex, o lock."
+
+msgctxt "struct:mutex:detailed"
+msgid ""
+"mutexes are used to prevent memory errors when two programs or threads need "
+"to access the same variable."
+msgstr "Ginagamit ang mga mutex upang maiwasan ang mga error sa memorya kapag dalawang programa o thread ang kailangang ma-access ang parehong variable."
+
+msgctxt "struct:mutex:member:data:brief"
+msgid "a C++ Mutex object cast to a void*. Not intended to be accessed."
+msgstr "isang C++ Mutex object na in-cast sa void*. Hindi ito nilalayong ma-access."
+
+msgctxt "struct:point2:brief"
+msgid "A 2D point; has x and y."
+msgstr "Isang 2D na punto; may x at y."
+
+msgctxt "struct:point2:member:x:brief"
+msgid "the x value of the point"
+msgstr "Ang x na halaga ng punto."
+
+msgctxt "struct:point2:member:y:brief"
+msgid "the y value of the point"
+msgstr "ang halagang y ng punto"
+
+msgctxt "struct:point3:brief"
+msgid "A 3D point; has x, y, and z."
+msgstr "Isang 3D na punto; may x, y, at z."
+
+msgctxt "struct:point3:member:x:brief"
+msgid "the x value of the point"
+msgstr "Ang x na halaga ng punto."
+
+msgctxt "struct:point3:member:y:brief"
+msgid "the y value of the point"
+msgstr "ang halagang y ng punto"
+
+msgctxt "struct:point3:member:z:brief"
+msgid "the z value of the point"
+msgstr "Ang halagang z ng punto"
+
+msgctxt "struct:rectangle:brief"
+msgid "A rectangle object."
+msgstr "Isang hugis-paralelong bagay."
+
+msgctxt "struct:rectangle:member:height:brief"
+msgid "the height of the rectangle"
+msgstr "Ang taas ng parihaba"
+
+msgctxt "struct:rectangle:member:ulx:brief"
+msgid "the x value of the rectangle's upper left"
+msgstr "Ang x na halaga ng itaas na kaliwang sulok ng parihaba."
+
+msgctxt "struct:rectangle:member:uly:brief"
+msgid "the y value of the rectangle's upper left"
+msgstr "Ang halagang y ng itaas na kaliwang sulok ng parihaba."
+
+msgctxt "struct:rectangle:member:width:brief"
+msgid "the width of the rectangle"
+msgstr "Ang lapad ng parihaba"
+
+msgctxt "struct:thread:brief"
+msgid "A thread, or separate process."
+msgstr "Isang thread, o hiwalay na proseso."
+
+msgctxt "struct:thread:detailed"
+msgid ""
+"a thread runs a function \"in the background\" (while another function is "
+"executing)."
+msgstr "Isang thread ang tumatakbo sa isang function (na nagpapatupad)."
+
+msgctxt "struct:thread:member:data:brief"
+msgid "a C++ Thread object cast to a void*. Not intended to be accessed."
+msgstr "isang C++ Thread object na na-cast sa void*. Hindi ito nilalayong ma-access."
