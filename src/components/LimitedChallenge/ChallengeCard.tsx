@@ -39,18 +39,39 @@ const Container = styled('div', (props: ThemeProps & { status: LimitedChallengeS
   },
 }));
 
-const StatusBadge = styled('div', (props: ThemeProps & { status: LimitedChallengeStatus }) => ({
-  padding: '4px 12px',
-  fontSize: '0.75em',
-  fontWeight: 'bold',
-  textTransform: 'uppercase',
-  color: '#fff',
-  backgroundColor: props.status === 'open'
+const StatusBadge = styled('div', (props: ThemeProps & { status: LimitedChallengeStatus }) => {
+  const dotColor = props.status === 'open'
     ? '#4caf50'
     : props.status === 'upcoming'
       ? '#ff9800'
-      : '#9e9e9e',
-}));
+      : '#9e9e9e';
+  return {
+    display: 'inline-flex',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    gap: '6px',
+    padding: '3px 10px',
+    margin: `${props.theme.itemPadding * 2}px`,
+    marginBottom: '0',
+    fontSize: '0.7em',
+    fontWeight: 600,
+    letterSpacing: '0.05em',
+    textTransform: 'uppercase' as const,
+    color: dotColor,
+    backgroundColor: 'transparent',
+    border: `1px solid ${dotColor}`,
+    borderRadius: '999px',
+    '::before': {
+      content: '""',
+      display: 'inline-block',
+      width: '6px',
+      height: '6px',
+      borderRadius: '50%',
+      backgroundColor: dotColor,
+      flexShrink: 0,
+    },
+  };
+});
 
 const Content = styled('div', (props: ThemeProps) => ({
   padding: `${props.theme.itemPadding * 2}px`,
@@ -192,10 +213,10 @@ class ChallengeCard extends React.Component<ChallengeCardProps, ChallengeCardSta
 
     return (
       <Container theme={theme} status={status} onClick={this.handleClick}>
-        <StatusBadge theme={theme} status={status}>
-          {this.getStatusText()}
-        </StatusBadge>
         <Content theme={theme}>
+          <StatusBadge theme={theme} status={status}>
+            {this.getStatusText()}
+          </StatusBadge>
           <Title theme={theme}>{name}</Title>
           <Description theme={theme}>{description}</Description>
 
