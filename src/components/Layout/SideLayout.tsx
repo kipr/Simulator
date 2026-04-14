@@ -205,6 +205,7 @@ State
     this.props.onNodeChange(robotId, {
       ...robots[robotId],
       origin,
+      startingOrigin: origin
     });
   };
 
