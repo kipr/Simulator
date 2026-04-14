@@ -8,7 +8,10 @@ import ScrollArea from "../interface/ScrollArea";
 import Section from "../interface/Section";
 import { Angle, StyledText } from "../../util";
 
-import EditableList from "../EditableList";
+import EditableList, {
+  createStandardEditableListItem,
+  type EditableListItemDefinition,
+} from "../EditableList";
 import Item from "./Item";
 import AddNodeDialog, { AddNodeAcceptance } from "./AddNodeDialog";
 import { FontAwesome } from "../FontAwesome";
@@ -489,14 +492,14 @@ class World extends React.PureComponent<Props, State> {
     const nodeVisiblity = capabilities.nodeVisibility ?? true;
     const scriptSettings = capabilities.scriptSettings ?? true;
 
-    const itemList: EditableList.Item[] = [];
+    const itemList: EditableListItemDefinition[] = [];
 
     const workingScene = Async.latestValue(scene);
     for (const nodeId of Dict.keySet(workingScene.nodes)) {
       const node = workingScene.nodes[nodeId];
       const hasReset = workingScene.nodes[nodeId].startingOrigin !== undefined;
       itemList.push(
-        EditableList.Item.standard(
+        createStandardEditableListItem(
           {
             component: Item,
             props: { name: LocalizedString.lookup(node.name, locale), theme },
@@ -522,11 +525,11 @@ class World extends React.PureComponent<Props, State> {
       );
     }
 
-    const scriptList: EditableList.Item[] = [];
+    const scriptList: EditableListItemDefinition[] = [];
     for (const scriptId of Dict.keySet(workingScene.scripts || {})) {
       const script = workingScene.scripts[scriptId];
       scriptList.push(
-        EditableList.Item.standard(
+        createStandardEditableListItem(
           {
             component: Item,
             props: {

@@ -140,8 +140,8 @@ namespace EditableList {
   }
 
   export class StandardItem<P extends StyleProps> extends React.PureComponent<
-    StandardItem.Props<P>,
-    StandardItem.State
+  StandardItem.Props<P>,
+  StandardItem.State
   > {
     constructor(props: StandardItem.Props<P>) {
       super(props);
@@ -400,6 +400,20 @@ namespace EditableList {
   }
 }
 
-export default connect((state: ReduxState) => ({
+type ConnectedEditableListComponent = React.ComponentType<EditableListProps<EditableList.ItemProps>> & {
+  Item: typeof EditableList.Item;
+  StandardItem: typeof EditableList.StandardItem;
+};
+
+const ConnectedEditableList = connect((state: ReduxState) => ({
   locale: state.i18n.locale,
-}))(EditableList) as React.ComponentType<EditableListProps<EditableList.ItemProps>>;
+}))(EditableList) as ConnectedEditableListComponent;
+
+ConnectedEditableList.Item = EditableList.Item;
+ConnectedEditableList.StandardItem = EditableList.StandardItem;
+
+export type EditableListItemDefinition<P = EditableList.ItemProps> = EditableList.Item<P>;
+export type EditableListStandardItemComponentProps = EditableList.StandardItem.ComponentProps;
+export const createStandardEditableListItem = EditableList.Item.standard;
+
+export default ConnectedEditableList;

@@ -191,7 +191,7 @@ const Chrome = styled(
   "div",
   (
     props: ThemeProps &
-      ModeProps & { $onChromeMouseDown?: boolean; $onChromeMouseUp?: boolean }
+    ModeProps & { $onChromeMouseDown?: boolean; $onChromeMouseUp?: boolean }
   ) => ({
     width: "100%",
     display: "flex",
@@ -283,15 +283,15 @@ class Widget extends React.PureComponent<Props, State> {
   }
 
   private onSizeChange_ =
-    (index: number) => (event: React.MouseEvent<SVGSVGElement>) => {
-      const { onSizeChange } = this.props;
+  (index: number) => (event: React.MouseEvent<SVGSVGElement>) => {
+    const { onSizeChange } = this.props;
 
-      if (!onSizeChange) return;
+    if (!onSizeChange) return;
 
-      event.stopPropagation();
-      event.preventDefault();
-      onSizeChange(index);
-    };
+    event.stopPropagation();
+    event.preventDefault();
+    onSizeChange(index);
+  };
 
   render() {
     const { props } = this;
@@ -348,8 +348,8 @@ class Widget extends React.PureComponent<Props, State> {
           <Spacer />
           {(sizes || [])
             .map((self, i) => (
-              this.props.tourRegistry && self === Size.MINIMIZED ?
-                < TourTarget registry={props.tourRegistry} targetKey={'close-scene-dialog'} key={i} style={{ padding: `${props.theme.itemPadding * 1}px` }} >
+              this.props.tourRegistry && self === Size.MINIMIZED
+                ? < TourTarget registry={props.tourRegistry} targetKey={'close-scene-dialog'} key={i} style={{ padding: `${props.theme.itemPadding * 1}px` }} >
                   <Icon
                     key={`size-${i}`}
                     icon={sizeIcon(self)}
