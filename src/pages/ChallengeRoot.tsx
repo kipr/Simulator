@@ -30,7 +30,7 @@ import { Editor } from '../components/Editor';
 import { Capabilities } from '../components/World';
 
 
-import { State as ReduxState } from '../state';
+import store, { State as ReduxState } from '../state';
 import { ScenesAction, ChallengeCompletionsAction, AiAction } from '../state/reducer';
 
 import { sendMessage, SendMessageParams } from '../util/ai';
@@ -43,7 +43,7 @@ import Camera from '../state/State/Scene/Camera';
 
 import Async from '../state/State/Async';
 import { AsyncChallenge } from '../state/State/Challenge';
-import ChallengeCompletion, { AsyncChallengeCompletion } from '../state/State/ChallengeCompletion';
+import { AsyncChallengeCompletion } from '../state/State/ChallengeCompletion';
 import PredicateCompletion from '../state/State/ChallengeCompletion/PredicateCompletion';
 
 import DocumentationLocation from '../state/State/Documentation/DocumentationLocation';
@@ -51,8 +51,6 @@ import DocumentationLocation from '../state/State/Documentation/DocumentationLoc
 import Record from '../db/Record';
 import Selector from '../db/Selector';
 import Builder from '../db/Builder';
-import DbError from '../db/Error';
-
 import { StyledText } from '../util';
 import construct from '../util/redux/construct';
 import Dict from '../util/objectOps/Dict';
@@ -89,7 +87,6 @@ interface RootPrivateProps {
 
   robots: Dict<Robot>;
 
-  onChallengeCompletionCreate: (challengeCompletion: ChallengeCompletion) => void;
   onChallengeCompletionSceneDiffChange: (sceneDiff: OuterObjectPatch<Scene>) => void;
   onChallengeCompletionEventStateRemove: (eventId: string) => void;
   onChallengeCompletionEventStateChange: (eventId: string, eventState: boolean) => void;
@@ -309,12 +306,12 @@ class Root extends React.Component<Props, State> {
   };
 
   private onSetEventValue_ = (eventId: string, value: boolean) => {
-    const { challenge, challengeCompletion } = this.props;
-
-    const latestChallenge = Async.latestValue(challenge);
+    const { challengeId } = this.props.params;
+    const state = store.getState();
+    const latestChallenge = Async.latestValue(state.challenges[challengeId]);
     if (!latestChallenge) return;
 
-    const latestChallengeCompletion = Async.latestValue(challengeCompletion);
+    const latestChallengeCompletion = Async.latestValue(state.challengeCompletions[challengeId]);
     if (!latestChallengeCompletion) return;
 
     const { success, failure } = latestChallenge;
@@ -377,20 +374,6 @@ class Root extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<RootState>): void {
-    const { params: { challengeId }, challenge, challengeCompletion } = this.props;
-
-    if (challengeId && challenge && challengeCompletion && challengeCompletion.type === Async.Type.LoadFailed) {
-      const latestChallenge = Async.latestValue(challenge);
-      if (challengeCompletion.error.code === DbError.CODE_NOT_FOUND && latestChallenge) {
-        console.log('Challenge completion not found');
-        this.props.onChallengeCompletionCreate({
-          ...ChallengeCompletion.EMPTY,
-          code: latestChallenge.code,
-          currentLanguage: latestChallenge.defaultLanguage,
-        });
-      }
-    }
-
     if (this.state.simulatorState.type !== prevState.simulatorState.type) {
       Space.getInstance().sceneBinding.scriptManager.programStatus = this.state.simulatorState.type === SimulatorState.Type.Running ? 'running' : 'stopped';
     }
@@ -1036,9 +1019,6 @@ const ConnectedChallengeRoot = connect((state: ReduxState, { params: { challenge
     robots: Dict.map(state.robots.robots, Async.latestValue),
   };
 }, (dispatch, { params: { challengeId } }: RootPublicProps) => ({
-  onChallengeCompletionCreate: (challengeCompletion: ChallengeCompletion) => {
-    dispatch(ChallengeCompletionsAction.createChallengeCompletion({ challengeId, challengeCompletion }));
-  },
   onChallengeCompletionSceneDiffChange: (sceneDiff: OuterObjectPatch<Scene>) => {
     dispatch(ChallengeCompletionsAction.setSceneDiff({ challengeId, sceneDiff }));
   },

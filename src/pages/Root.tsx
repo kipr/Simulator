@@ -860,17 +860,15 @@ class Root extends React.Component<Props, State> {
   };
 
   private onSettingsSceneAccept_ = (scene: Scene) => {
-    this.setState(
-      {
-        modal: Modal.NONE,
-      },
-      () => {
-        this.props.onSetScenePartial({
-          name: scene.name,
-          description: scene.description,
-        });
-      },
-    );
+    this.setState({
+      modal: Modal.NONE,
+    }, () => {
+      this.props.onSetScenePartial({
+        name: scene.name,
+        description: scene.description,
+      });
+      this.props.onSaveScene(this.props.params.sceneId);
+    });
   };
 
   private onSceneErrorResolved_ = () => {
