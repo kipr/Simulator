@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from 'styletron-react';
+import { styled, withStyleDeep } from 'styletron-react';
 import Dict from '../../util/objectOps/Dict';
 import Documentation from '../../state/State/Documentation';
 import DocumentationLocation from '../../state/State/Documentation/DocumentationLocation';
@@ -40,7 +40,7 @@ const Container = styled('div', {
   width: '100%',
 });
 
-const StyledInput = styled(Input, ({ theme }: ThemeProps) => ({
+const StyledInput = withStyleDeep(Input, ({ theme }: ThemeProps) => ({
   borderLeft: 'none',
   borderRight: 'none',
   borderTop: 'none',

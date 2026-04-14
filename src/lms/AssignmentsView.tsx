@@ -53,7 +53,7 @@ const Container = styled('div', ({ $theme }: { $theme: Theme }) => ({
   padding: `${$theme.itemPadding * 2}px`,
 }));
 
-const Search = styled(Input, ({ theme }: ThemeProps) => ({
+const Search = withStyleDeep(Input, ({ theme }: ThemeProps) => ({
   width: '100%',
   marginBottom: `${theme.itemPadding * 2}px`,
 }));
