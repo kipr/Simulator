@@ -9,15 +9,19 @@ import { auth } from './firebase/firebase';
 import Dashboard from './pages/Dashboard';
 import Tutorials from './pages/Tutorials';
 import Leaderboard from './pages/Leaderboard';
+import LimitedChallenges from './pages/LimitedChallenges';
+import ClosedChallenges from './pages/ClosedChallenges';
+import LimitedChallengeRoot from './pages/LimitedChallengeRoot';
+import LimitedChallengeLeaderboard from './pages/LimitedChallengeLeaderboard';
 
 import Loading from './components/Loading';
 import Root from './pages/Root';
 import ChallengeRoot from './pages/ChallengeRoot';
-import DocumentationWindow from './components/documentation/DocumentationWindow';
+import { DocumentationWindow } from 'ivygate/dist/src';
 import AiWindow from './components/Ai/AiWindow';
 import { DARK } from './components/constants/theme';
 import CurriculumPage from './lms/CurriculumPage';
-import { UsersAction, I18nAction } from './state/reducer';
+import { UsersAction, I18nAction, ProjectsAction, SettingsAction } from './state/reducer';
 import db from './db';
 import Selector from './db/Selector';
 import DbError from './db/Error';
@@ -25,15 +29,27 @@ import UserConsent from './consent/UserConsent';
 import LegalAcceptance from './consent/LegalAcceptance';
 
 import LocalizedString from './util/LocalizedString';
+import ClassroomsDashboard from './pages/ClassroomsDashboard';
+import ClassroomLeaderboard from './pages/ClassroomLeaderboard';
+import ClassroomTeacherView from './pages/ClassroomTeacherView';
+import ClassroomStudentView from './pages/ClassroomStudentView';
+import { InterfaceMode } from './types/interfaceModes';
+import { Settings } from 'components/constants/Settings';
+import User, { AsyncUser } from 'state/State/User';
+import Dict from 'util/objectOps/Dict';
+import { Users } from 'state/State';
 export interface AppPublicProps {
 
 }
 
 interface AppPrivateProps {
+  users: Users;
   login: () => void;
   setMe: (me: string) => void;
   loadUser: (uid: string) => void;
   setLocale: (locale: LocalizedString.Language) => void;
+  setInterfaceMode: (interfaceMode: InterfaceMode) => void;
+  setSettings: (settings: Partial<Settings>) => void;
 }
 
 interface AppState {
@@ -86,6 +102,14 @@ class App extends React.Component<Props, State> {
      * translated, if you wish to integrate your translations, you need to
      * LOCALE_OPTIONS in SettingsDialog.ts.
      */
+
+    const storedSettings = localStorage.getItem('bbSettings');
+    console.log("App componentDidMount called with bbSettings:", localStorage.getItem('bbSettings'));
+    if (storedSettings) {
+
+      const parsedSettings: Partial<Settings> = JSON.parse(storedSettings) as Partial<Settings>;
+      this.props.setSettings(parsedSettings);
+    }
     const lang: LocalizedString.Language = LocalizedString.validate(localStorage.getItem('bblocale'));
     if (lang) {
       this.props.setLocale(lang);
@@ -125,12 +149,17 @@ class App extends React.Component<Props, State> {
       }
     }
 
+    const interfaceMode = localStorage.getItem('interfaceMode');
+    if (interfaceMode) {
+      console.log("Read interfaceMode from localstorage:", interfaceMode);
+      this.props.setInterfaceMode(interfaceMode === 'Advanced' ? InterfaceMode.ADVANCED : InterfaceMode.SIMPLE);
+    }
+
     this.onAuthStateChangedSubscription_ = auth.onAuthStateChanged(user => {
       if (user) {
         console.log('User detected.');
         this.props.loadUser(user.uid);
         this.props.setMe(user.uid);
-
         // Ensure user has obtained consent before continuing
         db.get<UserConsent>(Selector.user(user.uid))
           .then(userConsent => {
@@ -152,10 +181,35 @@ class App extends React.Component<Props, State> {
             // TODO: show user an error
             console.error('Failed to read user consent from DB');
           });
+
+        // db.get<Tours>(Selector.tours(user.uid))
+        //   .then(tours => {
+        //     console.log('Tours info:', tours);
+        //   })
+        //   .catch(error => {
+        //     if (DbError.is(error) && error.code === DbError.CODE_NOT_FOUND) {
+        //       console.log('Tours info does not exist');
+        //     } else {
+        //       console.error('Failed to read tours info from DB', error);
+        //     }
+        //   });
       } else {
         this.props.login();
       }
     });
+  }
+
+  componentDidUpdate(prevProps: Props, prevState: State) {
+
+    const uid = auth.currentUser?.uid;
+    if (!uid) return;
+
+    const prev = prevProps.users.users?.[uid];
+    const next = this.props.users.users?.[uid];
+
+    if (prev !== next && next?.type === 5) {
+      console.log("User state changed:", next);
+    }
   }
 
   componentWillUnmount(): void {
@@ -176,12 +230,21 @@ class App extends React.Component<Props, State> {
           <Route path="/" element={<Dashboard theme={DARK} />} />
           <Route path="/tutorials" element={<Tutorials theme={DARK} />} />
           <Route path="/leaderboard" element={<Leaderboard theme={DARK} />} />
+          <Route path="/limited-challenges" element={<LimitedChallenges theme={DARK} />} />
+          <Route path="/closed-challenges" element={<ClosedChallenges theme={DARK} />} />
+          <Route path="/limited-challenge/:challengeId/leaderboard" element={<LimitedChallengeLeaderboard theme={DARK} />} />
+          <Route path="/limited-challenge/:challengeId" element={<LimitedChallengeRoot />} />
           <Route path="/scene/:sceneId" element={<Root />} />
           <Route path="/challenge/:challengeId" element={<ChallengeRoot />} />
           <Route path="/curriculum" element={<CurriculumPage />} />
+          <Route path="/classrooms" element={<ClassroomsDashboard theme={DARK} />} />
+          <Route path="/classrooms/:classroomId" element={<ClassroomLeaderboard theme={DARK} />} />
+          <Route path="/classrooms/:teacherId/teacherView" element={<ClassroomTeacherView theme={DARK} />} />
+          <Route path="/classrooms/:studentId/studentView/" element={<ClassroomStudentView theme={DARK} />} />
+          <Route path="/classrooms/:studentId/studentView/:classroomId" element={<ClassroomStudentView theme={DARK} />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-        <DocumentationWindow theme={DARK} />
+        <DocumentationWindow theme={DARK} documentationType={'default'} />
       </>
     );
   }
@@ -214,7 +277,7 @@ class App extends React.Component<Props, State> {
  */
 export default connect((state: ReduxState) => {
   return {
-
+    users: state.users,
   };
 }, dispatch => ({
   login: () => {
@@ -224,4 +287,7 @@ export default connect((state: ReduxState) => {
   setMe: (me: string) => dispatch(UsersAction.setMe({ me })),
   loadUser: (uid: string) => dispatch(UsersAction.loadOrEmptyUser({ userId: uid })),
   setLocale: (locale: LocalizedString.Language) => dispatch(I18nAction.setLocale({ locale })),
+  setInterfaceMode: (interfaceMode: InterfaceMode) => dispatch(ProjectsAction.changeInterfaceMode({ interfaceMode })),
+  setSettings: (settings: Partial<Settings>) => dispatch(SettingsAction.updateSettings({ settings })),
+
 }))(App) as React.ComponentType<AppPublicProps>;

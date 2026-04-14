@@ -10,6 +10,8 @@ import LocalizedString from '../../util/LocalizedString';
 import { connect } from 'react-redux';
 import { State as ReduxState } from '../../state';
 import tr from '@i18n';
+import TourTarget from '../Tours/TourTarget';
+import { TourRegistry } from '../../tours/TourRegistry';
 
 export interface SceneMenuPublicProps extends StyleProps, ThemeProps {
   onSaveScene?: (event: React.MouseEvent) => void;
@@ -18,6 +20,7 @@ export interface SceneMenuPublicProps extends StyleProps, ThemeProps {
   onOpenScene?: (event: React.MouseEvent) => void;
   onSettingsScene?: (event: React.MouseEvent) => void;
   onDeleteScene?: (event: React.MouseEvent) => void;
+  tourRegistry?: TourRegistry;
 }
 
 interface SceneMenuPrivateProps {
@@ -25,7 +28,7 @@ interface SceneMenuPrivateProps {
 }
 
 interface SceneMenuState {
-  
+
 }
 
 type Props = SceneMenuPublicProps & SceneMenuPrivateProps;
@@ -38,7 +41,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   right: '-1px',
   backgroundColor: props.theme.backgroundColor,
   color: props.theme.color,
-  
+  zIndex: 9999,
   display: 'flex',
   flexDirection: 'column',
   borderBottomLeftRadius: `${props.theme.borderRadius}px`,
@@ -89,32 +92,60 @@ class SceneMenu extends React.PureComponent<Props, State> {
   }
 
 
+
   render() {
     const { props } = this;
     const { theme, onSaveAsScene, onNewScene, onSaveScene, onOpenScene, onSettingsScene, onDeleteScene, locale } = props;
-    return (
+
+    const settings_ = (<Item theme={theme} disabled={!onSettingsScene} onClick={onSettingsScene ? onSettingsScene : () => { console.log("empty"); }}>
+      <ItemIcon icon={faCogs} />
+      {LocalizedString.lookup(tr('Settings'), locale)}
+    </Item>);
+
+    const open_ = (<Item theme={theme} disabled={!onOpenScene} onClick={onOpenScene ? onOpenScene : () => { console.log("empty"); }}>
+      <ItemIcon icon={faFolderOpen} />
+      {LocalizedString.lookup(tr('Open'), locale)}
+    </Item>);
+
+    const save_ = (<Item theme={theme} disabled={!onSaveScene} onClick={onSaveScene ? onSaveScene : () => { console.log("empty"); }}>
+      <ItemIcon icon={faSave} />
+      {LocalizedString.lookup(tr('Save'), locale)}
+    </Item>);
+
+    const saveAs_ = (<Item theme={theme} disabled={!onSaveAsScene} onClick={onSaveAsScene ? onSaveAsScene : () => { console.log("empty"); }}>
+      <ItemIcon icon={faCopy} />
+      {LocalizedString.lookup(tr('Save As'), locale)}
+    </Item>);
+
+    const delete_ = (<Item theme={theme} disabled={!onDeleteScene} onClick={onDeleteScene ? onDeleteScene : () => { console.log("empty"); }}>
+      <ItemIcon icon={faTrash} />
+      {LocalizedString.lookup(tr('Delete'), locale)}
+    </Item>);
+
+    const normalContent_ = (
       <Container theme={theme}>
-        <Item theme={theme} disabled={!onSettingsScene} onClick={onSettingsScene ? onSettingsScene : () => {console.log("empty");}}>
-          <ItemIcon icon={faCogs} /> 
-          {LocalizedString.lookup(tr('Settings'), locale)}
-        </Item>
-        <Item theme={theme} disabled={!onOpenScene} onClick={onOpenScene ? onOpenScene : () => {console.log("empty");}}>
-          <ItemIcon icon={faFolderOpen} /> 
-          {LocalizedString.lookup(tr('Open'), locale)}
-        </Item>
-        <Item theme={theme} disabled={!onSaveScene} onClick={onSaveScene ? onSaveScene : () => {console.log("empty");}}>
-          <ItemIcon icon={faSave} /> 
-          {LocalizedString.lookup(tr('Save'), locale)}
-        </Item>
-        <Item theme={theme} disabled={!onSaveAsScene} onClick={onSaveAsScene ? onSaveAsScene : () => {console.log("empty");}}>
-          <ItemIcon icon={faCopy} /> 
-          {LocalizedString.lookup(tr('Save As'), locale)}
-        </Item>
-        <Item theme={theme} disabled={!onDeleteScene} onClick={onDeleteScene ? onDeleteScene : () => {console.log("empty");}}>
-          <ItemIcon icon={faTrash} /> 
-          {LocalizedString.lookup(tr('Delete'), locale)}
-        </Item>
-      </Container>
+        {settings_}
+        {open_}
+        {save_}
+        {saveAs_}
+        {delete_}
+      </Container>);
+
+    const tourContent_ = (
+
+      <TourTarget registry={this.props.tourRegistry} targetKey={'scene-options'} style={{ display: "flex", height: "100%" }}>
+        <Container theme={theme}>
+          {settings_}
+          <TourTarget registry={this.props.tourRegistry} targetKey={'open-scene-option'} style={{ display: "flex", height: "100%" }}>
+            {open_}
+          </TourTarget>
+          {save_}
+          {saveAs_}
+          {delete_}
+        </Container>
+      </TourTarget>);
+    return (
+      <>{this.props.tourRegistry ? tourContent_ : normalContent_}</>
     );
   }
 }
