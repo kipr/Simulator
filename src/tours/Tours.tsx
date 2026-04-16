@@ -693,7 +693,7 @@ export function getSimEditorConsoleTourSteps(locale: LocalizedString.Language): 
     // Editor Tab Step
     {
       id: 'tab-editor',
-      targetKey: 'tab-Editor',
+      targetKey: `tab-${LocalizedString.lookup(tr('Editor'), locale)}`,
       title: LocalizedString.lookup(tr('Editor Tab'), locale),
       content: LocalizedString.lookup(tr('This is the Editor tab where you can write, edit, and debug your code.'), locale),
       placement: 'bottom',
@@ -1298,7 +1298,7 @@ export const getSimLeftTabTourSteps = (locale: LocalizedString.Language): TourSt
     // Overlay Tab Bar Overview Continued Step
     {
       id: 'simulator-left-tab-overview-continued',
-      targetKey: 'tab-Robot',
+      targetKey: `tab-${LocalizedString.lookup(tr('Robot'), locale)}`,
       title: LocalizedString.lookup(tr('Overlay Tab Bar Overview Continued'), locale),
       content: LocalizedString.lookup(tr('We\'ve already introduced the Editor Tab, we\'ll now explore the other tabs available: Robot and World. Click the "Robot" tab to continue the tour!'), locale),
       placement: 'right',
