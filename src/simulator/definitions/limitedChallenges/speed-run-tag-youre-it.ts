@@ -133,5 +133,5 @@ export default {
   ],
   sceneId: 'jbc1',
   openDate: '2026-01-25T00:00:00Z',
-  closeDate: '2026-01-31T23:59:59Z',
+  closeDate: '2026-03-18T23:59:59Z',
 } as LimitedChallenge;

@@ -406,7 +406,7 @@ export type EditableListStandardItemComponentProps = EditableList.StandardItem.C
 
 const ConnectedEditableList = connect((state: ReduxState) => ({
   locale: state.i18n.locale,
-}))(EditableList);
+}))(EditableList) as React.ComponentType<EditableListProps<EditableList.ItemProps>>;
 
 export default Object.assign(ConnectedEditableList, {
   Item: EditableList.Item,

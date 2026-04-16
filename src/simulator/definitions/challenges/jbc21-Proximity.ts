@@ -89,7 +89,7 @@ export default {
     { exprId: 'stopAtReam', name: tr('Stop at the ream') },
   ],
   failureGoals: [
-    { exprId: 'touchedReamOnce', name: tr('Do not bump the ream') },
+    { exprId: 'touchedReamOnce', name: tr('Touch the ream') },
   ],
   sceneId: 'jbc21',
 } as Challenge;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from 'styletron-react';
+import { withStyleDeep } from 'styletron-react';
 
 import FileDocumentation from '../../state/State/Documentation/FileDocumentation';
 import { StyleProps } from '../../util/style';
@@ -14,7 +14,7 @@ export interface FileBriefProps extends StyleProps, ThemeProps {
 
 type Props = FileBriefProps;
 
-const StyledFileName = styled(FileName, ({ theme }: ThemeProps) => ({
+const StyledFileName = withStyleDeep(FileName, ({ theme }: ThemeProps) => ({
   display: 'block',
   marginBottom: `${theme.itemPadding}px`,
   ':last-child': {
