@@ -149,6 +149,7 @@ class ClassroomsDashboard extends React.PureComponent<Props, State> {
                 onClick={() => this.props.navigate(`/classrooms/${userId}/teacherView`)}
               />
             </TourTarget>
+
           </CardContainer>
         </TourTarget>
         {showTour && (
