@@ -1032,10 +1032,10 @@ export default connect((state: ReduxState) => {
 
   });
 },
-  (dispatch) => ({
-    onClearSelectedClassroom: () =>
-      dispatch(ClassroomsAction.clearSelectedClassroom({})),
-  })
+(dispatch) => ({
+  onClearSelectedClassroom: () =>
+    dispatch(ClassroomsAction.clearSelectedClassroom({})),
+})
 
 
 )(CompWithRouter) as React.ComponentType<ClassroomLeaderboardPublicProps>;

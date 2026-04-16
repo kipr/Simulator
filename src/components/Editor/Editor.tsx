@@ -222,7 +222,7 @@ class Editor extends React.PureComponent<Props, State> {
     }
   };
   private openDocumentation_ = () => {
-    const editor: monaco.editor.IStandaloneCodeEditor | null = this.ivygate_.editor;
+    const editor: monaco.editor.IStandaloneCodeEditor | null = this.ivygate_.editor as monaco.editor.IStandaloneCodeEditor | null;
     if (!editor) return;
 
     const model = editor.getModel();
@@ -238,7 +238,7 @@ class Editor extends React.PureComponent<Props, State> {
 
   private openCommonDocumentation_ = () => {
     console.log("Opening common documentation from Editor");
-    const editor: monaco.editor.IStandaloneCodeEditor | null = this.ivygate_.editor;
+    const editor: monaco.editor.IStandaloneCodeEditor | null = this.ivygate_.editor as monaco.editor.IStandaloneCodeEditor | null;
     if (!editor) return;
 
     const model = editor.getModel();

@@ -2,7 +2,7 @@ import Dict from "util/objectOps/Dict";
 import LocalizedString from '../util/LocalizedString';
 import tr from '@i18n';
 import { get } from "immer/dist/internal";
-//import Language from '../util/LocalizedString/Language';
+// import Language from '../util/LocalizedString/Language';
 interface TourDoc {
   completed: boolean;
   step?: number;       // resume point
@@ -541,7 +541,7 @@ export function getStudentViewTourSteps(locale: LocalizedString.Language): TourS
     }
 
   ];
-};
+}
 const StudentViewTourSteps: TourStep[] = [
   // Student Dashboard Step
   {
@@ -781,7 +781,7 @@ export function getSimEditorConsoleTourSteps(locale: LocalizedString.Language): 
       allowTargetInteraction: false,
     }
   ];
-};
+}
 const SimEditorConsoleSteps: TourStep[] = [
   // Editor Tab Step
   {
@@ -1078,7 +1078,7 @@ export function getSimMainMenuTourSteps(locale: LocalizedString.Language): TourS
       placement: 'left',
       allowTargetInteraction: false,
     },];
-};
+}
 
 const SimMainMenuSteps: TourStep[] = [
   // Main Menu Overview Step
@@ -1866,7 +1866,7 @@ export const TOUR_SECTIONS_LABEL: Record<string, LocalizedString> = {
   ["Main Menu Tour"]: tr('Main Menu Tour'),
   ["Overlay Tab Bar Tour"]: tr('Overlay Tab Bar Tour'),
   ["Move Object Tool Tour"]: tr('Move Object Tool Tour'),
-}
+};
 
 export function getTourSteps(tourId: string, locale?: LocalizedString.Language): TourStep[] {
   switch (tourId) {

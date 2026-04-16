@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { styled } from 'styletron-react';
-
-import EditableList from '../EditableList';
+import { type EditableListStandardItemComponentProps } from '../EditableList';
 import { ThemeProps } from '../constants/theme';
+import { StyleProps } from '../../util/style';
 
-export interface ItemProps extends EditableList.StandardItem.ComponentProps, ThemeProps {
+export interface ItemProps extends EditableListStandardItemComponentProps, ThemeProps {
   name: string;
 
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
