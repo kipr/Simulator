@@ -149,6 +149,7 @@ export interface WidgetProps extends StyleProps, ThemeProps, ModeProps {
 
   onChromeMouseDown?: (event: React.MouseEvent<HTMLDivElement>) => void;
   onChromeMouseUp?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  tourRegistry?: TourRegistry;
 }
 
 interface WidgetState { }
@@ -309,6 +310,8 @@ class Widget extends React.PureComponent<Props, State> {
       onChromeMouseDown,
       onChromeMouseUp,
     } = props;
+
+
     return (
       <Container style={style} className={className} theme={theme} mode={mode}>
         <Chrome
@@ -345,12 +348,21 @@ class Widget extends React.PureComponent<Props, State> {
           <Spacer />
           {(sizes || [])
             .map((self, i) => (
-              <Icon
-                key={`size-${i}`}
-                icon={sizeIcon(self)}
-                disabled={size === i}
-                onClick={this.onSizeChange_(i)}
-              />
+              this.props.tourRegistry && self === Size.MINIMIZED
+                ? < TourTarget registry={props.tourRegistry} targetKey={'close-scene-dialog'} key={i} style={{ padding: `${props.theme.itemPadding * 1}px` }} >
+                  <Icon
+                    key={`size-${i}`}
+                    icon={sizeIcon(self)}
+                    disabled={size === i}
+                    onClick={this.onSizeChange_(i)}
+                  />
+                </TourTarget> : <Icon
+                  key={`size-${i}`}
+                  icon={sizeIcon(self)}
+                  disabled={size === i}
+                  onClick={this.onSizeChange_(i)}
+                />
+
             ))
             .filter((self, i) => !hideActiveSize || i !== size)}
         </Chrome>

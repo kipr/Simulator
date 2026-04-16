@@ -128,9 +128,9 @@ export class CreateClassroomDialog extends React.PureComponent<Props, State> {
 
 
     const CREATECLASSROOM_FORM_ITEMS: Form.Item[] = [
-      Form.displayNameField('displayName', 'Your Display Name', 'The teacher\'s name that will be shown to your students'),
-      Form.classroomName('classroomName', 'Classroom Name'),
-      Form.createClassInviteCode('inviteCode', 'Invite Code', 'Code students can use to join the classroom'),
+      Form.displayNameField('displayName', LocalizedString.lookup(tr('Your Display Name'), locale), LocalizedString.lookup(tr('The teacher\'s name that will be shown to your students'), locale)),
+      Form.classroomName('classroomName', LocalizedString.lookup(tr('Classroom Name'), locale)),
+      Form.createClassInviteCode('inviteCode', LocalizedString.lookup(tr('Invite Code'), locale), LocalizedString.lookup(tr('Code students can use to join the classroom'), locale)),
 
     ];
 
@@ -156,7 +156,7 @@ export class CreateClassroomDialog extends React.PureComponent<Props, State> {
               theme={theme}
               onFinalize={this.onFinalize_}
               items={CREATECLASSROOM_FORM_ITEMS}
-              finalizeText="Create"
+              finalizeText={LocalizedString.lookup(tr("Create"), locale)}
               finalizeDisabled={false}
             />
           </Container>

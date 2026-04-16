@@ -1023,6 +1023,339 @@ Turn 360° counter clockwise
 Drive forward
 Drive backward
 Wave the servo
+2026 Fall Game Table
+Blue Pom #%d
+Orange Pom #%d
+Random Pom #%d
+Raised Dock Pallet #1
+Raised Dock Pallet #2
+Storage Pallet #1
+Storage Pallet #2
+Left Stack Cube #%d
+Right Stack Cube #%d
+Red Cube (4 inch)
+Brown Cube (4 inch)
+Green Cube (4 inch)
+Right Traffic Cone
+Left Traffic Cone
+Left Basket
+Right Basket
+Left PCV #%d
+Right PCV #%d
+2026 Fall Botball game table sandbox
+JBC Sandbox
+Junior Botball Challenge Sandbox. Starting Mat is A but B can also be shown instead. All cans 1-12 are available by default.
+2026 Botball Fall Game Table
+2026 Botball Spring Game Table
+Base Scene - 2026 Botball Game Table
+Sliding Door #1
+Sliding Door #2
+Low Blue Pom #%d
+Low Orange Pom #%d
+High Blue Pom #%d
+High Orange Pom #%d
+Left Red Cube (2 inch)
+Right Red Cube (2 inch)
+Left Green Cube (2 inch)
+Right Green Cube (2 inch)
+Pallet #%d
+Lower Yellow Cube (2 inch)
+Upper Yellow Cube (2 inch)
+Middle Left Brown Cube
+Middle Right Brown Cube
+Green Cube
+Red Cube
+Near Stack %s Cube
+Far Stack %s Cube
+Dropper #1
+Dropper #2
+Drum (2in PVC)
+Dropper Gate
+2026 Botball Game Table Sandbox
+2026 Botball game table sandbox. One robot and one side of the table are available. Barrels (2in PVC) drop every 7 seconds, starting 10 seconds after the scene is loaded.
+Speed Run: Ring Around the Can
+Complete the Ring Around the Can challenge as fast as possible! Limited time event.
+Robot Reentered Start
+Robot Passed Left Side
+Speed Run: Tag, You're it!
+Complete the Tag, You're it! challenge as fast as possible! Limited time event.
+Classrooms
+See the current classrooms.
+Limited Challenges
+Challenges with time limits and attempt restrictions.
+Loading leaderboard...
+Error loading leaderboard
+Rank
+Your position
+participants
+Show Top Users
+Show Full Board
+Your name on the leaderboard:
+days
+hrs
+min
+sec
+Upcoming
+Closed
+Mystery Challenge
+Check back when this challenge opens to see what awaits!
+Opens in
+Closes in
+Best Time
+Complete these time-limited challenges as fast as possible! Your best time will be recorded.
+No limited challenges available at this time.
+View Closed Challenges
+Back to Limited Challenges
+Closed Challenges
+View past limited challenges and their leaderboards.
+No closed challenges yet.
+Predefined Location
+None
+Show Scripts
+Show scripts in the World section
+Scene
+Tutor is thinking...
+Create New Project
+Create New File
+Are You Sure?
+Loading Python...\n
+Please help me understand what's wrong.
+Success conditions met - verifying...\n
+Completion invalidated - failure condition triggered\n
+This challenge is closed and no longer accepting submissions.\n
+This challenge has not opened yet.\n
+Challenge Closed
+This challenge is no longer accepting submissions.
+Your best time: 
+This challenge has not opened yet.
+This challenge is closed and no longer accepting submissions.
+No completions yet. Be the first to complete this challenge!
+Runtime
+Completed
+Back to Challenges
+Enter Challenge
+Show Around Me
+Sort by:
+Fastest Runtime
+First to Complete
+Student View
+See the classroom you are in.
+Teacher View
+See and manage all the classrooms you own.
+My Badges
+Create New Classroom
+Choose Class Leaderboard
+Join Classroom
+Leave Classroom
+Default JBC Challenges
+User Already Exists
+UH OH!
+This user already exists.
+No IvygateClassroomType
+Create New User
+Back to File Explorer
+Retake Tour
+New to the simulator? Take a tour to get familiar with the interface.
+Classroom Invite Code
+Enter the invite code provided by your teacher to join a classroom
+Display Name
+The name that will be shown to your teacher and classmates. Be sure to only use your first name.
+Retaking the tour will change your current scene to the JBC Sandbox.
+Do you want to retake the tour?
+This is the classroom dashboard page, where you can choose to see the classrooms you are a part of and the classrooms you own.
+Use this card to switch to the student view.
+Use this card to switch to the teacher view, where you can manage the classrooms you own.
+This is the teacher dashboard, where you can see and manage the classrooms you own.
+To create a classroom, select this drop down...
+...then click this button to create a new classroom.
+This is the dialog box where you can enter the details for your new classroom.
+Share the Invite Code with your students! Don't worry, it'll be visible later on too. \n \n Fill out the rest of the info and click \classroom.
+After creating a classroom, you can see it listed on your dashboard.
+Click on your newly created classroom to see the users.
+Share the invite code with your students so they can join your classroom.
+This is the student dashboard, where you can see the classrooms you are a part of.
+To join a classroom, click this button to open the join classroom dialog.
+This is the dialog box where you can enter the invite code to join a classroom.
+After joining a classroom, you can see the class's leaderboard listed on your dashboard.
+This tab contains the default JBC challenges that all classrooms have access to and are the scenes always in the 3D-Simulator.
+Click this button to export your challenge scores as a PDF file.
+Click this button to scroll to your scores on the leaderboard.
+Click this button to see the badges you have earned from completing challenges.
+Select \has access to.
+This tab contains any limited challenges that your classroom has access to. Limited challenges are challenges that have time limits and attempt restrictions.
+Click this button to see extra options for the classroom such as leaving the classroom.
+This is the dropdown that show extra info and where you can select to leave the classroom.
+Select \classroom, your challenge scores will be saved but you will no longer be able to see the classroom or its leaderboard unless you join again.
+This is the Editor tab where you can write, edit, and debug your code.
+The Editor tab contains 2 main sections: the code editor on top and the console on bottom.
+This is the code editor, where you can write and edit your code.
+Click this dropdown to select the programming language for your code.
+Click this button to auto-indent your code.
+Click this button to download your code as a file.
+Click this button to reset the code in the editor to the default code for the current language.
+This is the console, where you can see the output of your code and any error messages.
+Click this button to clear the console.
+Click this button to ask the KIPR Tutor for help with your code.
+This is the main menu, where you can access different pages and features of the simulator.
+Click the KIPR logo to return to the dashboard.
+Use this button to run or stop your code in the simulator.
+Click this button to reset the world in the simulator.
+After opening a challenge scene, click this button to start the challenge.
+Click this button to see options to change the layout of the simulator interface. Try it now!
+These are the different layout options. You can select one to change the layout of the simulator interface, but for now, click the \
+Click this button to see options to change the scene in the simulator. Try it now!
+These are the different scene settings options.
+Currently, we're in the JBC Sandbox so some options are locked. Select \
+This is the open scene option, which allows you to open different scenes in the simulator.
+This is the list of scenes that you can open. Select one to see more info and open it in the Simulator.
+This is the info page for the scene. You can click \to open the scene in the simulator.
+For now, let's close the dialog to continue exploring the simulator interface.
+Click this button to see extra options such as the simulator settings and the option to report a bug.
+These are the extra options you can access from this menu.
+Click the documentation button to access the KIPR library.
+Click the ask tutor button to ask the KIPR Tutor for help with the simulator.
+Click the settings button to see options such as User Interface and Editor settings.
+Click the about button to see information about KIPR and the simulator.
+Click the feedback button to report a bug or send feedback about the Simulator to KIPR.
+Click the logout button to log out of your account.
+This is the Overlay Tab Bar, where you can access different tools and features to use while testing your code in the simulator.
+We've already introduced the Editor Tab, we'll now explore the other tabs available: Robot and World. Click the \
+This is the Robot tab, where you can see information about the robot such as its position and sensor readings.
+The robot starts at the origin point in the simulator, which is why the position readings are all 0. You can change the robot's starting location by entering different values for x, y, z position and y rotation.
+This is the servo section, where you can see the current positions of the robot's servos. You can also click get_servo_position() row to see a graph.
+This is the motor velocities section, where you can see the current velocities of the robot's motors. You can also click each motor row to see a graph.
+This is the motor positions section, where you can see the current positions of the robot's motors. You can also click each get_motor_position_counter() row to see a graph.
+This is the analog sensors section, where you can see the current readings of the robot's analog sensors. You can also click each analog() row to see a graph.
+This is the digital sensors section, where you can see the current readings of the robot's digital sensors. You can also click each digital() row to see a graph.
+This is the World tab, where you can see information about the world such as the positions of objects and the light level. Select the \to continue the tour!
+This is the world's objects section where you can customize the JBC Sandbox to add/remove/edit objects in the 3D simulation.
+This is the can object, which is a common object used in challenges.
+Click this option to toggle the visibility of the highlighted object in the simulator.
+Click this option to reset the highlighted object to its default state in the simulator.
+Click this option to see more settings for the highlighted object such as it's name and item type.
+Click this option to remove the highlighted object from the simulator.
+Each object added to the Simulator can be moved using the x, y, z, and rotation controls. This can be useful for testing your code with different object placements.
+To move an object, first we need to add the object to the simulator using the visibility option.
+Select the \
+Next, click the visibility option for the object you want to move. For this tutorial, we'll select the Can 1 object.
+After turning on the visibility option, you can see the object in the simulator area.
+Click the object in the simulator area to open the move object tool.
+This is the move object tool, where you can move the object by dragging the gizmo arrows.
+The red arrow is the x-axis, the green arrow is the y-axis, and the blue arrow is the z-axis. Try dragging the arrows to move the object around in the simulator!
+Welcome to KIPR's 3D Simulator, where you can test your code in a virtual environment.
+Use this dropdown to select different tours of the simulator interface or just click Next to take the full tour!
+This is the student view of the dashboard, where you can access your classrooms and see your progress.
+About KIPR
+Classroom Dashboard
+Teacher Dashboard
+How To: Create a Classroom
+How To: Create a Classroom Continued
+Student Dashboard
+How To: Join a Classroom
+How To: Join a Classroom Continued
+Default JBC Challenge Tab View
+Exporting Your Challenge Scores
+Scrolling to Your Scores
+Viewing Your Badges
+Limited Challenge Tab View
+Limited Challenge Tab View Continued
+Classroom Extra Options
+Classroom Extra Options Continued
+Leaving a Classroom
+Editor Tab
+Editor and Console Overview
+Code Editor
+Code Editor Language Dropdown
+Code Editor Indent Button
+Code Editor Download Button
+Code Editor Reset Button
+Console Clear Button
+Ask Tutor Button
+Main Menu Overview
+Return to Dashboard Button
+Run/Stop Button
+Reset World Button
+Start Challenge Button
+Layout Button
+Layout Options
+Scene Button
+Scene Options
+Scene Options Info
+Scene Open
+Scene Open Continued
+Extra Menu Button
+Extra Menu Options
+Documentation Button
+Tutor Button
+Settings Button
+About Button
+Feedback Button
+Logout Button
+Overlay Tab Bar Overview
+Overlay Tab Bar Overview Continued
+Overlay Tab Bar Robot Tab
+Robot Starting Location
+Robot Servos
+Robot Motor Velocities
+Robot Motor Positions
+Robot Analog Sensors
+Robot Digital Sensors
+Overlay Tab Bar World Tab
+World Tab Objects Section
+World Tab Can Object
+World Tab Object Visibility Option
+World Tab Object Reset Option
+World Tab Object Settings Option
+World Tab Object Remove Option
+Move Object Tool Overview
+Add Can 1 to the World
+Select World Tab
+Select Object to Move
+See Object in Simulator Area
+Click Object in Simulator Area
+Move Object Tool Interaction
+3D Simulator Overview
+Choose Your Tour
+Step
+of
+Editor and Console Tour
+Main Menu Tour
+Overlay Tab Bar Tour
+Move Object Tool Tour
+Back
+Done
+Next
+Skip
+Tour Sections
+Go
+You are not enrolled in any classroom.
+Join Class
+Classrooms - Student View
+Current Classroom: 
+Classroom Teacher: 
+Current Classroom:
+Classroom Teacher:
+You
+Classroom Leaderboard
+Export My Scores!
+Scroll to My Scores!
+See My Badges!
+Export All General Scores
+Export All Detailed Scores
+Reenter classroom name to confirm leaving classroom.
+Are you sure you want to leave: 
+My Scores!
+KIPR All Time Leaderboard
+Choose Classroom to See Leaderboard:
+See Leaderboard
+Classrooms - Teacher View
+See Classroom Leaderboards
+Can 1
+Your Display Name
+The teacher's name that will be shown to your students
+Classroom Name
+Invite Code
+Code students can use to join the classroom
 Volume
 RGB
 Console
@@ -1069,5 +1402,4 @@ ZXY
 XZY
 YXZ
 ZYX
-Please help me understand what's wrong.
-Tutor is thinking...
+Challenge Progress

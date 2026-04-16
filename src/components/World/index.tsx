@@ -8,7 +8,7 @@ import ScrollArea from "../interface/ScrollArea";
 import Section from "../interface/Section";
 import { Angle, StyledText } from "../../util";
 
-import EditableList from "../EditableList";
+import EditableList, { EditableListItem } from "../EditableList";
 import Item from "./Item";
 import AddNodeDialog, { AddNodeAcceptance } from "./AddNodeDialog";
 import { FontAwesome } from "../FontAwesome";
@@ -489,7 +489,7 @@ class World extends React.PureComponent<Props, State> {
     const nodeVisiblity = capabilities.nodeVisibility ?? true;
     const scriptSettings = capabilities.scriptSettings ?? true;
 
-    const itemList: EditableList.Item[] = [];
+    const itemList: EditableListItem[] = [];
 
     const workingScene = Async.latestValue(scene);
     for (const nodeId of Dict.keySet(workingScene.nodes)) {
@@ -522,7 +522,7 @@ class World extends React.PureComponent<Props, State> {
       );
     }
 
-    const scriptList: EditableList.Item[] = [];
+    const scriptList: EditableListItem[] = [];
     for (const scriptId of Dict.keySet(workingScene.scripts || {})) {
       const script = workingScene.scripts[scriptId];
       scriptList.push(

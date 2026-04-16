@@ -46,6 +46,7 @@ import {
   NewSceneDialog,
   DeleteDialog,
   SaveAsSceneDialog,
+  RetakeTourDialog
 } from '../components/Dialog';
 
 import Loading from '../components/Loading';
@@ -105,15 +106,16 @@ import { InterfaceMode } from '../types/interfaceModes';
 import { AsyncProject, Project } from '../state/State/Project';
 import CreateNewFileDialog from '../components/Dialog/CreateNewFileDialog';
 import DeleteProjectDialog from '../components/Dialog/DeleteProjectDialog';
-import TourDoc, { getTourSteps, TourStep } from '../tours/Tours';
+import TourDoc, { getSimulatorTourSteps, getTourSteps, TourStep } from '../tours/Tours';
 import TourTarget from '../components/Tours/TourTarget';
 import { TourRegistry } from '../tours/TourRegistry';
-import { GuidedTour } from '../components/Tours/GuidedTour';
+import GuidedTour from '../components/Tours/GuidedTour';
 import {
   completeTour,
   fetchTourIfNeeded,
   retakeTour,
 } from '../state/reducer/tours';
+
 
 export interface RootRouteParams {
   [key: string]: string | undefined;
@@ -313,12 +315,13 @@ class Root extends React.Component<Props, State> {
       miniEditor: true,
       projectDetails: { project: null, fileType: 'src', fileName: '' },
       tourId: TourDoc.IDS.SIMULATOR,
-      simulatorRootTourSteps: getTourSteps(TourDoc.IDS.SIMULATOR),
+      simulatorRootTourSteps: getSimulatorTourSteps(props.locale),
     };
 
     this.editorRef = React.createRef();
     this.overlayLayoutRef = React.createRef();
     Space.getInstance().scene = Async.latestValue(props.scene) || Scene.EMPTY;
+    console.log("simulatorRootTourSteps:", this.state.simulatorRootTourSteps);
   }
 
   async componentDidMount() {
@@ -377,6 +380,9 @@ class Root extends React.Component<Props, State> {
 
     if (this.props.projects !== prevProps.projects) {
       console.log('Projects prop changed:', this.props.projects);
+    }
+    if (this.props.locale !== prevProps.locale) {
+      this.setState({ simulatorRootTourSteps: getSimulatorTourSteps(this.props.locale) });
     }
   }
 
@@ -1112,7 +1118,7 @@ class Root extends React.Component<Props, State> {
         this.setState({ extraMenu: undefined });
       });
     }
-    if (simulatorRootTourSteps[stepIndex].targetKey === 'Open World-dialog') {
+    if (simulatorRootTourSteps[stepIndex].targetKey === 'close-scene-dialog') {
       this.setState({ modal: Modal.SELECT_SCENE });
     }
     if (simulatorRootTourSteps[stepIndex].targetKey === 'scene-button') {
@@ -1129,17 +1135,24 @@ class Root extends React.Component<Props, State> {
   };
 
   private onRetakeTour_ = () => {
-    const currentUser = auth.currentUser.uid;
-    void retakeTour(
-      this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT,
-      currentUser,
-      this.state.tourId,
-    );
+    this.setState({ modal: Modal.RETAKE_TOUR });
+
+  };
+
+  private onRetakeTourAccept_ = () => {
+    this.setState({ modal: Modal.NONE }, () => {
+      const currentUser = auth.currentUser.uid;
+      void retakeTour(
+        this.props.toursById[this.state.tourId] ?? TourDoc.DEFAULT,
+        currentUser,
+        this.state.tourId,
+      );
+    });
   };
 
   private onJumpInTour_ = (jump: boolean) => {
     this.setState({ jumpInTour: jump }, () => {
-      this.setState({ jumpInTour: false });
+      this.setState({ jumpInTour: false, modal: Modal.NONE });
     });
   };
   render() {
@@ -1383,6 +1396,13 @@ class Root extends React.Component<Props, State> {
             onNextClick={this.onNextClick_}
             onJumpInTour={this.onJumpInTour_}
             theme={theme}
+          />
+        )}
+        {modal.type === Modal.Type.RetakeTour && (
+          <RetakeTourDialog
+            theme={theme}
+            onClose={this.onModalClose_}
+            onAccept={this.onRetakeTourAccept_}
           />
         )}
         {modal.type === Modal.Type.None && Async.isFailed(scene) && (

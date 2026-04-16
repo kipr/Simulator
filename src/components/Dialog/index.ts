@@ -8,3 +8,4 @@ export * from './NewSceneDialog';
 export { default as NewSceneDialog } from './NewSceneDialog';
 export * from './DeleteDialog';
 export { default as DeleteDialog } from './DeleteDialog';
+export { default as RetakeTourDialog } from './RetakeTourDialog';

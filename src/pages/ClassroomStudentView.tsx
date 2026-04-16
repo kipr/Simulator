@@ -22,8 +22,9 @@ import ClassroomExtraMenu from '../components/ClassroomExtraMenu';
 import TourDoc, { getTourSteps, TourStep } from '../tours/Tours';
 import TourTarget from '../components/Tours/TourTarget';
 import { TourRegistry } from '../tours/TourRegistry';
-import { GuidedTour } from '../components/Tours/GuidedTour';
+import GuidedTour from '../components/Tours/GuidedTour';
 import { completeTour, fetchTourIfNeeded, retakeTour } from '../state/reducer/tours';
+import tr from '@i18n';
 
 namespace SubMenu {
   export enum Type {
@@ -271,7 +272,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
         isStudentInClassroom: isInClassroom.inClassroom,
         currentClassroom: isInClassroom.classroom,
         currentStudentDisplayName: isInClassroom.classroom.studentIds[currentUserId].displayName,
-        studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM),
+        studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM, this.props.locale),
         tourId: TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM,
       }, () => {
         this.props.onJoinClassroom(isInClassroom.classroom);
@@ -281,7 +282,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
       if (uid) {
         await fetchTourIfNeeded(this.props.uid, TourDoc.IDS.STUDENT_VIEW);
       }
-      this.setState({ studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW), tourId: TourDoc.IDS.STUDENT_VIEW });
+      this.setState({ studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW, this.props.locale), tourId: TourDoc.IDS.STUDENT_VIEW });
     }
 
   }
@@ -292,9 +293,18 @@ class ClassroomStudentView extends React.Component<Props, State> {
       if (this.state.currentClassroom) {
         const currentUser = auth.currentUser.uid;
         this.props.navigate(`/classrooms/${currentUser}/studentView/${this.state.currentClassroom.classroomId}`);
-        this.setState({ studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM), tourId: TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM });
+        this.setState({ studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM, this.props.locale), tourId: TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM });
       } else {
-        this.setState({ studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW), tourId: TourDoc.IDS.STUDENT_VIEW });
+        this.setState({ studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW, this.props.locale), tourId: TourDoc.IDS.STUDENT_VIEW });
+      }
+    }
+    if (prevProps.locale !== this.props.locale) {
+      if (this.state.currentClassroom) {
+        const currentUser = auth.currentUser.uid;
+        this.props.navigate(`/classrooms/${currentUser}/studentView/${this.state.currentClassroom.classroomId}`);
+        this.setState({ studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM, this.props.locale), tourId: TourDoc.IDS.STUDENT_VIEW_IN_CLASSROOM });
+      } else {
+        this.setState({ studentViewTourSteps: getTourSteps(TourDoc.IDS.STUDENT_VIEW, this.props.locale), tourId: TourDoc.IDS.STUDENT_VIEW });
       }
     }
   }
@@ -371,11 +381,11 @@ class ClassroomStudentView extends React.Component<Props, State> {
 
         ) : (
           <ClassroomInfoContainer theme={theme}>
-            <p>You are not enrolled in any classroom.</p>
+            <p>{LocalizedString.lookup(tr("You are not enrolled in any classroom."), locale)}</p>
 
             <TourTarget registry={this.registry} targetKey='join-classroom-button' style={{ marginLeft: '1em' }}>
               <Button style={{ marginLeft: '1em' }} theme={DARK} onClick={this.onJoinClassroomDialog_}>
-                Join Class
+                {LocalizedString.lookup(tr("Join Class"), locale)}
               </Button>
             </TourTarget>
           </ClassroomInfoContainer>
@@ -488,7 +498,7 @@ class ClassroomStudentView extends React.Component<Props, State> {
         <TourTarget registry={this.registry} targetKey='student-dashboard' style={style}>
           <ClassroomsContainer style={style} theme={theme}>
             <ClassroomsClassroomInfoContainer style={style} theme={theme}>
-              <h1>Classrooms - Student View</h1>
+              <h1>{LocalizedString.lookup(tr("Classrooms - Student View"), locale)}</h1>
               <ClassroomHeaderContainer style={style} theme={theme}>
                 {this.renderMyClassroom()}
                 {showLeaveClassroomDialog && (
@@ -521,7 +531,6 @@ class ClassroomStudentView extends React.Component<Props, State> {
         {showTour && (
           <GuidedTour
             continueTourFlag={this.state.continueTour}
-            // ref={this.guidedTourRef}
             isOpen={showTour}
             steps={studentViewTourSteps}
             registry={this.registry}

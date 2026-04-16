@@ -19,7 +19,8 @@ export namespace Modal {
     DeleteProject,
     ResetCode,
     NewProject,
-    NewFile
+    NewFile,
+    RetakeTour
   }
 
   export interface Settings {
@@ -115,6 +116,12 @@ export namespace Modal {
   }
 
   export const DELETE_PROJECT: DeleteProject = { type: Type.DeleteProject };
+
+  export interface RetakeTour {
+    type: Type.RetakeTour;
+  }
+
+  export const RETAKE_TOUR: RetakeTour = { type: Type.RetakeTour };
 }
 
 export type Modal = (
@@ -132,5 +139,6 @@ export type Modal = (
   Modal.SettingsScene |
   Modal.ResetCode |
   Modal.NewProject |
-  Modal.NewFile
+  Modal.NewFile |
+  Modal.RetakeTour
 );

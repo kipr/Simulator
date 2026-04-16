@@ -71,6 +71,8 @@ namespace LocalizedString {
   export const FA_IR = 'fa-IR';
   // Urdu
   export const UR_PK = 'ur-PK';
+  // Tagalog
+  export const TL_PH = 'tl-PH';
 
   export type Language = (
     typeof EN_US | typeof EN_UK |
@@ -104,7 +106,8 @@ namespace LocalizedString {
     typeof ID_ID |
     typeof MS_MY |
     typeof FA_IR |
-    typeof UR_PK
+    typeof UR_PK |
+    typeof TL_PH
   );
 
   export const FALLBACKS: { [locale in Language]: Language[] } = {
@@ -143,14 +146,15 @@ namespace LocalizedString {
     [ID_ID]: [EN_US],
     [MS_MY]: [EN_US],
     [FA_IR]: [EN_US],
-    [UR_PK]: [EN_US]
+    [UR_PK]: [EN_US],
+    [TL_PH]: [EN_US],
   };
 
   // Trick to validate type at runtime
   const langs = [EN_US, EN_UK, ZH_CN, ZH_TW, JA_JP, KO_KR, HI_IN, ES_ES,
     ES_MX, FR_FR, DE_DE, IT_IT, PT_BR, PT_PT, RU_RU, AR_SA, TR_TR, PL_PL,
     NL_NL, SV_SE, DA_DK, NO_NO, FI_FI, HU_HU, CS_CZ, SK_SK, RO_RO, BG_BG,
-    EL_GR, HE_IL, TH_TH, VI_VN, ID_ID, MS_MY, FA_IR, UR_PK];
+    EL_GR, HE_IL, TH_TH, VI_VN, ID_ID, MS_MY, FA_IR, UR_PK, TL_PH];
 
   /**
    * Check if the given locale is valid.
@@ -219,6 +223,7 @@ namespace LocalizedString {
     LocalizedString.VI_VN,
     LocalizedString.ZH_CN,
     LocalizedString.ZH_TW,
+    LocalizedString.TL_PH,
   ];
 
   export const NATIVE_LOCALE_NAMES: { [locale in Language]: string } = {
@@ -258,6 +263,7 @@ namespace LocalizedString {
     [LocalizedString.VI_VN]: 'Tiếng Việt',
     [LocalizedString.ZH_CN]: '简体中文',
     [LocalizedString.ZH_TW]: '繁體中文',
+    [LocalizedString.TL_PH]: 'Filipino',
   };
 }
 

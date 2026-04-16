@@ -144,6 +144,9 @@ class App extends React.Component<Props, State> {
         case 'de':
           this.props.setLocale('de-DE');
           break;
+        case 'tl-PH':
+          this.props.setLocale('tl-PH');
+          break;
         default:
           this.props.setLocale('en-US');
       }

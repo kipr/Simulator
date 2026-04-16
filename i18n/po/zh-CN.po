@@ -1,16 +1,16 @@
 msgid ""
-msgstr "Content-Type: text/plain\n"
+msgstr ""
 
 msgid "Robot"
 msgstr "机器人"
 
 msgid "Base Scene - Surface A"
-msgstr "基础场景 - A 表面"
+msgstr "基地场景 - 地面 A"
 
 msgid ""
 "A base scene using Surface A. Intended to be augmented to create full JBC "
 "scenes"
-msgstr "使用曲面 A 的基础场景。旨在进行增强，以创建完整的 JBC 场景"
+msgstr "使用 A 表面的基础场景。意图通过增强来创建完整的 JBC 场景"
 
 msgid "JBC Surface A"
 msgstr "JBC A 表面"
@@ -22,12 +22,12 @@ msgid "Light"
 msgstr "灯光"
 
 msgid "Base Scene - Surface B"
-msgstr "基础场景 - 表面 B"
+msgstr "基地场景 - 地面 B"
 
 msgid ""
 "A base scene using Surface B. Intended to be augmented to create full JBC "
 "scenes"
-msgstr "使用曲面 B 的基础场景，用于创建完整的 JBC 场景。"
+msgstr "使用 Surface B 的基础场景。"
 
 msgid "JBC Surface B"
 msgstr "JBC 表面 B"
@@ -41,7 +41,7 @@ msgstr "JBC 沙盘 A"
 msgid ""
 "Junior Botball Challenge Sandbox on Mat A. All cans 1-12 are available by "
 "default."
-msgstr "A 地垫上的青少年机器人球挑战赛沙盘。默认情况下，1-12 号罐均可用。"
+msgstr "A 号垫子上的青少年机器人球挑战沙盘默认提供所有 1-12 号罐。"
 
 msgid "Paper Ream 1"
 msgstr "纸卷 1"
@@ -53,7 +53,7 @@ msgid "JBC Sandbox B"
 msgstr "JBC 沙盘 B"
 
 msgid "Junior Botball Challenge Sandbox on Mat B."
-msgstr "垫子 B 上的青少年机器人球挑战赛沙盘。"
+msgstr "B 号垫子上的青少年机器人球挑战沙盘。"
 
 msgid "JBC 1"
 msgstr "JBC 1"
@@ -65,31 +65,31 @@ msgid "JBC 2"
 msgstr "JBC 2"
 
 msgid "Junior Botball Challenge 2: Ring Around the Can"
-msgstr "青少年机器人球挑战赛 2：绕罐一周"
+msgstr "青少年机器人足球挑战赛 2：绕罐一周"
 
 msgid "JBC 2B"
 msgstr "JBC 2B"
 
 msgid "Junior Botball Challenge 2B: Ring Around the Can, Sr."
-msgstr "青少年机器人球挑战赛 2B：环形罐，Sr."
+msgstr "青少年机器人足球挑战赛 2B：环罐赛，Sr."
 
 msgid "JBC 2C"
 msgstr "JBC 2C"
 
 msgid "Junior Botball Challenge 2C: Back It Up"
-msgstr "青少年机器人球挑战赛 2C：后退"
+msgstr "青少年机器人足球挑战赛 2C：后退"
 
 msgid "JBC 2D"
 msgstr "JBC 2D"
 
 msgid "Junior Botball Challenge 2D: Ring Around the Can and Back It Up"
-msgstr "青少年机器人球挑战赛 2D：绕罐和后退"
+msgstr "青少年机器人足球挑战赛 2D：环罐和倒车"
 
 msgid "JBC 3"
 msgstr "JBC 3"
 
 msgid "Junior Botball Challenge 3: Precision Parking"
-msgstr "青少年机器人足球挑战赛 3：精确停车"
+msgstr "青少年机器人足球挑战赛 3：精确泊车"
 
 msgid "JBC 3B"
 msgstr "JBC 3B"
@@ -101,7 +101,7 @@ msgid "JBC 3C"
 msgstr "JBC 3C"
 
 msgid "Junior Botball Challenge 3C: Quick Get Away!"
-msgstr "青少年机器人足球挑战赛 3C：快速离开"
+msgstr "青少年机器人足球挑战赛 3C：快速逃离"
 
 msgid "JBC 4"
 msgstr "JBC 4"
@@ -113,37 +113,37 @@ msgid "JBC 4B"
 msgstr "JBC 4B"
 
 msgid "Junior Botball Challenge 4B: Barrel Racing"
-msgstr "青少年机器人球挑战赛 4B：绕桶赛"
+msgstr "青少年机器人足球挑战赛 4B：滚桶赛"
 
 msgid "JBC 5"
 msgstr "JBC 5"
 
 msgid "Junior Botball Challenge 5: Dance Party"
-msgstr "青少年机器人球挑战赛 5：舞会"
+msgstr "青少年机器人足球挑战赛 5：舞蹈派对"
 
 msgid "JBC 5B"
 msgstr "JBC 5B"
 
 msgid "Junior Botball Challenge 5B: Line Dance"
-msgstr "青少年机器人球挑战赛 5B：排舞"
+msgstr "青少年机器人足球挑战赛 5B：排舞"
 
 msgid "JBC 5C"
 msgstr "JBC 5C"
 
 msgid "Junior Botball Challenge 5C: Synchronized Dancing"
-msgstr "青少年机器人足球挑战赛 5C：同步舞蹈"
+msgstr "青少年机器人球挑战赛 5C：同步舞蹈"
 
 msgid "JBC 6"
 msgstr "JBC 6"
 
 msgid "Junior Botball Challenge 6: Load 'Em Up"
-msgstr "青少年机器人球挑战赛 6：装弹"
+msgstr "青少年机器人足球挑战赛 6：装弹"
 
 msgid "JBC 6B"
 msgstr "JBC 6B"
 
 msgid "Junior Botball Challenge 6B: Pick 'Em Up"
-msgstr "青少年机器人球挑战赛 6B：拾起他们"
+msgstr "青少年机器人足球挑战赛 6B：拾起他们"
 
 msgid "JBC 6C"
 msgstr "JBC 6C"
@@ -152,13 +152,13 @@ msgid "Junior Botball Challenge 6C: Empty the Garage"
 msgstr "青少年机器人足球挑战赛 6C：清空车库"
 
 msgid "Circle 2"
-msgstr "第 2 圈"
+msgstr "圆圈 2"
 
 msgid "Circle 9"
 msgstr "第 9 圈"
 
 msgid "Circle 10"
-msgstr "第 10 圈"
+msgstr "圆圈 10"
 
 msgid "Mat Surface"
 msgstr "垫子表面"
@@ -179,25 +179,25 @@ msgid "JBC 8"
 msgstr "JBC 8"
 
 msgid "Junior Botball Challenge 8: Serpentine"
-msgstr "青少年机器人球挑战赛 8：蛇形"
+msgstr "青少年机器人足球挑战赛 8：蛇形"
 
 msgid "JBC 8B"
 msgstr "JBC 8B"
 
 msgid "Junior Botball Challenge 8B: Serpentine Jr."
-msgstr "青少年机器人足球挑战赛 8B：小蛇形球"
+msgstr "青少年机器人足球挑战赛 8B：小蛇形球（Serpentine Jr."
 
 msgid "JBC 9"
 msgstr "JBC 9"
 
 msgid "Junior Botball Challenge 9: Add It Up"
-msgstr "青少年机器人球挑战赛 9：加起来"
+msgstr "青少年机器人足球挑战赛 9：加起来"
 
 msgid "JBC 9B"
 msgstr "JBC 9B"
 
 msgid "Junior Botball Challenge 9B: Balancing Act"
-msgstr "青少年机器人球挑战赛 9B：平衡术"
+msgstr "青少年机器人足球挑战赛 9B：平衡术"
 
 msgid "JBC 10"
 msgstr "JBC 10"
@@ -209,7 +209,7 @@ msgid "JBC 10B"
 msgstr "JBC 10B"
 
 msgid "Junior Botball Challenge 10: Solo Joust Jr."
-msgstr "青少年机器人足球挑战赛 10：Jr.Solo Joust."
+msgstr "青少年机器人足球挑战赛 10：Solo Joust Jr."
 
 msgid "JBC 12"
 msgstr "JBC 12"
@@ -221,7 +221,7 @@ msgid "JBC 13"
 msgstr "JBC 13"
 
 msgid "Junior Botball Challenge 13: Clean the Mat"
-msgstr "青少年机器人球挑战赛 13：清洁垫子"
+msgstr "青少年机器人足球挑战赛 13：清洁垫子"
 
 msgid "JBC 15B"
 msgstr "JBC 15B"
@@ -254,7 +254,7 @@ msgid "JBC 20"
 msgstr "JBC 20"
 
 msgid "Junior Botball Challenge 20: Rescue the Cans"
-msgstr "青少年机器人足球挑战赛 20：救援易拉罐"
+msgstr "青少年机器人足球挑战赛 20：拯救罐子"
 
 msgid "JBC 21"
 msgstr "JBC 21"
@@ -266,7 +266,7 @@ msgid "JBC 22"
 msgstr "JBC 22"
 
 msgid "Junior Botball Challenge 22: Stackerz"
-msgstr "青少年机器人足球挑战赛 22：堆垛机"
+msgstr "青少年机器人足球挑战赛 22：Stackerz"
 
 msgid "Script Playground"
 msgstr "脚本游乐场"
@@ -275,64 +275,64 @@ msgid "Script tests"
 msgstr "脚本测试"
 
 msgid "Demobot"
-msgstr "机器人"
+msgstr "德莫博特"
 
 msgid "JBC Challenge 6C"
-msgstr "JBC 挑战赛 6C"
+msgstr "JBC 6C 挑战赛"
 
 msgid "Can A Lifted"
-msgstr "能否举起A"
+msgstr "升降机能否"
 
 msgid "Can A picked up"
-msgstr "能否拾起 A"
+msgstr "A 能否捡到"
 
 msgid "Can B Lifted"
-msgstr "B 能否举起"
+msgstr "B 电梯"
 
 msgid "Can B picked up"
-msgstr "B 罐被拾起"
+msgstr "B 可以拾取"
 
 msgid "Can C Lifted"
-msgstr "举起罐子 C"
+msgstr "罐 C 升起"
 
 msgid "Can C picked up"
-msgstr "C 罐被拾起"
+msgstr "可以捡到 C"
 
 msgid "Can A Placed"
-msgstr "罐 A 放置"
+msgstr "能否放置"
 
 msgid "Can A placed on circle 2"
-msgstr "罐 A 放置在圆圈 2 上"
+msgstr "能否将 A 放在圆圈 2 上"
 
 msgid "Can B Placed"
-msgstr "B 放罐"
+msgstr "可以 B 放置"
 
 msgid "Can A placed on circle 9"
-msgstr "罐体 A 放置在圆圈 9 上"
+msgstr "能否将 A 放在圆圈 9 上"
 
 msgid "Can C Placed"
 msgstr "可以 C 放置"
 
 msgid "Can A placed on circle 10"
-msgstr "可以将 A 放在圆圈 10 上"
+msgstr "能否将 A 放在圆圈 10 上"
 
 msgid "Can A Upright"
-msgstr "罐体 A 直立"
+msgstr "直立式罐头"
 
 msgid "Can A upright on circle 2"
-msgstr "罐 A 直立放置在圆圈 2 上"
+msgstr "A 能否直立在圆圈 2 上"
 
 msgid "Can B Upright"
-msgstr "可以 B 直立"
+msgstr "罐头 B 直立式"
 
 msgid "Can B upright on circle 9"
-msgstr "B 可以直立在圆 9 上"
+msgstr "B 可以直立在圆圈 9 上"
 
 msgid "Can C Upright"
-msgstr "可以 C 直立"
+msgstr "罐头 C 直立式"
 
 msgid "Can C upright on circle 10"
-msgstr "C 可以在圆 10 上直立"
+msgstr "C 可以直立在圆圈 10 上"
 
 msgid "Loading..."
 msgstr "正在加载..."
@@ -347,13 +347,13 @@ msgid "Learn how to get started with the simulator"
 msgstr "了解如何开始使用模拟器"
 
 msgid "3D Simulator"
-msgstr "三维模拟器"
+msgstr "3D 模拟器"
 
 msgid "A simulator for the Botball demobot."
 msgstr "Botball 演示机器人的模拟器。"
 
 msgid "About"
-msgstr "关于 KIPR"
+msgstr "关于"
 
 msgid ""
 "KIPR is a 501(c) 3 organization started to make the long-term educational "
@@ -364,7 +364,7 @@ msgid "Quick Start"
 msgstr "快速入门"
 
 msgid "Navigating in 3D"
-msgstr "三维导航"
+msgstr "3D 导航"
 
 msgid "Learn the controls for navigating in 3D in the simulator"
 msgstr "学习在模拟器中进行 3D 导航的控制方法"
@@ -379,7 +379,7 @@ msgid "World Section"
 msgstr "世界部分"
 
 msgid "Learn how to create and manipulate items and scene in the simulator"
-msgstr "学习如何在模拟器中创建和操作物品和场景"
+msgstr "学习如何在模拟器中创建和操作项目和场景"
 
 msgid "Indent"
 msgstr "缩进"
@@ -397,25 +397,25 @@ msgid "Warning(s)"
 msgstr "警告"
 
 msgid "grams"
-msgstr "克"
+msgstr "克数"
 
 msgid "kilograms"
 msgstr "公斤"
 
 msgid "pounds"
-msgstr "磅"
+msgstr "英镑"
 
 msgid "ounces"
 msgstr "盎司"
 
 msgid "meters"
-msgstr "米"
+msgstr "仪表"
 
 msgid "centimeters"
 msgstr "厘米"
 
 msgid "feet"
-msgstr "英尺"
+msgstr "脚下"
 
 msgid "inches"
 msgstr "英寸"
@@ -424,25 +424,25 @@ msgid "radians"
 msgstr "弧度"
 
 msgid "degrees"
-msgstr "度"
+msgstr "学位"
 
 msgid "Can"
-msgstr "罐"
+msgstr "可以"
 
 msgid "Box"
-msgstr "盒"
+msgstr "盒子"
 
 msgid "Sphere"
 msgstr "球体"
 
 msgid "Cylinder"
-msgstr "圆柱体"
+msgstr "气缸"
 
 msgid "Cone"
-msgstr "锥体"
+msgstr "锥形"
 
 msgid "Plane"
-msgstr "平面"
+msgstr "飞机"
 
 msgid "File"
 msgstr "文件"
@@ -451,13 +451,13 @@ msgid "Euler"
 msgstr "欧拉"
 
 msgid "Axis Angle"
-msgstr "轴角"
+msgstr "轴角度"
 
 msgid "Empty"
 msgstr "空"
 
 msgid "Standard Object"
-msgstr "标准对象"
+msgstr "标准物件"
 
 msgid "Custom Object"
 msgstr "自定义对象"
@@ -475,10 +475,10 @@ msgid "Texture"
 msgstr "纹理"
 
 msgid "Value"
-msgstr "数值"
+msgstr "价值"
 
 msgid "General"
-msgstr "常规"
+msgstr "一般情况"
 
 msgid "Name"
 msgstr "名称"
@@ -487,13 +487,13 @@ msgid "Type"
 msgstr "类型"
 
 msgid "Geometry"
-msgstr "几何图形"
+msgstr "几何学"
 
 msgid "Item"
 msgstr "项目"
 
 msgid "Box Options"
-msgstr "箱体选项"
+msgstr "包装盒选项"
 
 msgid "Size X"
 msgstr "尺寸 X"
@@ -505,13 +505,13 @@ msgid "Size Z"
 msgstr "尺寸 Z"
 
 msgid "Sphere Options"
-msgstr "球形选项"
+msgstr "球体选项"
 
 msgid "Radius"
 msgstr "半径"
 
 msgid "Cylinder Options"
-msgstr "圆柱体选项"
+msgstr "气缸选项"
 
 msgid "Height"
 msgstr "高度"
@@ -523,7 +523,7 @@ msgid "File Options"
 msgstr "文件选项"
 
 msgid "URI"
-msgstr "URI"
+msgstr "通用资源识别号"
 
 msgid "Material"
 msgstr "材料"
@@ -532,10 +532,10 @@ msgid "Color Type"
 msgstr "颜色类型"
 
 msgid "Color Red"
-msgstr "颜色 红色"
+msgstr "红色"
 
 msgid "Color Green"
-msgstr "颜色 绿色"
+msgstr "绿色"
 
 msgid "Color Blue"
 msgstr "蓝色"
@@ -547,13 +547,13 @@ msgid "Albedo Type"
 msgstr "反照率类型"
 
 msgid "Albedo Red"
-msgstr "反照率红色"
+msgstr "反照率红"
 
 msgid "Albedo Green"
-msgstr "反照率 绿色"
+msgstr "反照率绿"
 
 msgid "Albedo Blue"
-msgstr "反照率蓝色"
+msgstr "反照率蓝"
 
 msgid "Albedo Texture URI"
 msgstr "反照率纹理 URI"
@@ -562,7 +562,7 @@ msgid "Reflection Type"
 msgstr "反射类型"
 
 msgid "Reflection Red"
-msgstr "红色反射"
+msgstr "反射红"
 
 msgid "Reflection Green"
 msgstr "反射绿"
@@ -574,13 +574,13 @@ msgid "Reflection Texture URI"
 msgstr "反射纹理 URI"
 
 msgid "Emissive Type"
-msgstr "发射类型"
+msgstr "发射型"
 
 msgid "Emissive Red"
 msgstr "发射红"
 
 msgid "Emissive Green"
-msgstr "发射绿"
+msgstr "发射型绿色"
 
 msgid "Emissive Blue"
 msgstr "发射蓝"
@@ -607,13 +607,13 @@ msgid "Metalness Type"
 msgstr "金属度类型"
 
 msgid "Metalness"
-msgstr "金属感"
+msgstr "金属质感"
 
 msgid "Metalness Texture URI"
-msgstr "金属度纹理 URI"
+msgstr "金属质感 URI"
 
 msgid "Position"
-msgstr "位置"
+msgstr "职位"
 
 msgid "X"
 msgstr "X"
@@ -625,19 +625,19 @@ msgid "Z"
 msgstr "Z"
 
 msgid "Orientation"
-msgstr "方向"
+msgstr "定向"
 
 msgid "Order"
-msgstr "顺序"
+msgstr "订购"
 
 msgid "Angle"
 msgstr "角度"
 
 msgid "Scale"
-msgstr "刻度"
+msgstr "规模"
 
 msgid "Physics"
-msgstr "物理"
+msgstr "物理学"
 
 msgid "Mass"
 msgstr "质量"
@@ -646,7 +646,7 @@ msgid "Friction"
 msgstr "摩擦力"
 
 msgid "Unnamed Object"
-msgstr "无名物体"
+msgstr "未命名对象"
 
 msgid "Add Item"
 msgstr "添加项目"
@@ -679,7 +679,7 @@ msgid "Layouts"
 msgstr "布局"
 
 msgid "Overlay"
-msgstr "叠加"
+msgstr "覆盖层"
 
 msgid "Side"
 msgstr "侧面"
@@ -688,31 +688,31 @@ msgid "Options"
 msgstr "选项"
 
 msgid "Show All"
-msgstr "全部显示"
+msgstr "显示全部"
 
 msgid "Hide All"
-msgstr "全部隐藏"
+msgstr "隐藏全部"
 
 msgid "Clear"
-msgstr "清除"
+msgstr "清晰"
 
 msgid "Rotation"
 msgstr "旋转"
 
 msgid "Start Location"
-msgstr "起始位置"
+msgstr "开始地点"
 
 msgid "Motor Velocity Plot"
-msgstr "电机速度图"
+msgstr "电机速度曲线图"
 
 msgid "Motor Position Plot"
 msgstr "电机位置图"
 
 msgid "Analog Sensor Plot"
-msgstr "模拟传感器曲线图"
+msgstr "模拟传感器绘图"
 
 msgid "Digital Sensor Plot"
-msgstr "数字传感器曲线图"
+msgstr "数字传感器绘图"
 
 msgid "Analog Sensors"
 msgstr "模拟传感器"
@@ -721,7 +721,7 @@ msgid "Digital Sensors"
 msgstr "数字传感器"
 
 msgid "Servos"
-msgstr "伺服"
+msgstr "伺服系统"
 
 msgid "Motor Velocities"
 msgstr "电机速度"
@@ -732,12 +732,12 @@ msgstr "电机位置"
 msgid ""
 "This process is taking longer than expected...\n"
 "If you have a poor internet connection, this can take some time"
-msgstr "This process is taking longer than expected...（如果您的网络连接不佳，可能需要一些时间"
+msgstr "This process is taking longer than expected...（如果您的网络连接不畅，可能需要一些时间"
 
 msgid ""
 "The simulator may have failed to load.\n"
 "Please submit a feedback form to let us know!"
-msgstr "模拟器可能加载失败，请提交反馈表告知我们！"
+msgstr "模拟器可能无法加载。请提交反馈表告知我们！"
 
 msgid "Initializing Simulator..."
 msgstr "初始化模拟器..."
@@ -749,7 +749,7 @@ msgid "one or more of"
 msgstr "一个或多个"
 
 msgid "exactly one of"
-msgstr "一个"
+msgstr "正好是"
 
 msgid "once"
 msgstr "一次"
@@ -764,7 +764,7 @@ msgid "Failure"
 msgstr "失败"
 
 msgid "Editor"
-msgstr "编辑器"
+msgstr "编辑"
 
 msgid "World"
 msgstr "世界"
@@ -776,10 +776,10 @@ msgid "Console"
 msgstr "控制台"
 
 msgid "Open"
-msgstr "打开"
+msgstr "开放"
 
 msgid "Save"
-msgstr "保存"
+msgstr "节省"
 
 msgid "Save As"
 msgstr "另存为"
@@ -788,10 +788,10 @@ msgid "Delete"
 msgstr "删除"
 
 msgid "Documentation"
-msgstr "文档"
+msgstr "文件"
 
 msgid "Feedback"
-msgstr "反馈"
+msgstr "反馈意见"
 
 msgid "Reset World"
 msgstr "重置世界"
@@ -818,7 +818,7 @@ msgid "Controls whether sensor outputs are affected by random noise"
 msgstr "控制传感器输出是否受随机噪声影响"
 
 msgid "Realistic sensors"
-msgstr "现实传感器"
+msgstr "逼真的传感器"
 
 msgid ""
 "Controls whether sensors behave like real-world sensors instead of like "
@@ -838,24 +838,24 @@ msgid "Copyright"
 msgstr "版权"
 
 msgid "This software is licensed under the terms of the"
-msgstr "本软件根据《美国版权法》的条款授权使用。"
+msgstr "本软件的许可条款为"
 
 msgid "Thank you to the following contributors and testers:"
 msgstr "感谢以下贡献者和测试者："
 
 msgid "Want to help improve the simulator and get your name listed here?"
-msgstr "想帮助改进模拟器并在此列出您的名字吗？"
+msgstr "想要帮助改进模拟器，并在此列出您的名字吗？"
 
 msgid "GitHub repository"
 msgstr "GitHub 存储库"
 
 msgid "We're happy to help you get started!"
-msgstr "我们很乐意帮助您开始工作！"
+msgstr "我们很高兴为您提供帮助！"
 
 msgid ""
 "Give a helpful description of a problem you're facing, or a feature you'd "
 "like to request"
-msgstr "请描述您遇到的问题，或您想申请的功能。"
+msgstr "对您遇到的问题或您希望申请的功能进行有用的描述"
 
 msgid ""
 "Thanks for using the KIPR Simulator! Find a bug? Have a feature request? "
@@ -872,10 +872,10 @@ msgid "Include anonymous usage data to help KIPR developers"
 msgstr "包括匿名使用数据，以帮助 KIPR 开发人员"
 
 msgid "Please try again,"
-msgstr "请再试一次、"
+msgstr "请重试、"
 
 msgid "open an issue on our github page"
-msgstr "在我们的 github 页面上打开一个问题"
+msgstr "在我们的 Github 页面上打开一个问题"
 
 msgid ", or"
 msgstr "或"
@@ -887,7 +887,7 @@ msgid "Submit"
 msgstr "提交"
 
 msgid "Feedback Success"
-msgstr "反馈成功"
+msgstr "成功反馈"
 
 msgid "Feedback successfully submitted!"
 msgstr "反馈已成功提交！"
@@ -902,10 +902,10 @@ msgid "Unknown"
 msgstr "未知"
 
 msgid "Description: "
-msgstr "描述："
+msgstr "说明"
 
 msgid "Author: "
-msgstr "Author："
+msgstr "作者："
 
 msgid "Me"
 msgstr "我"
@@ -914,7 +914,7 @@ msgid "Select a scene to see more details"
 msgstr "选择场景查看更多详情"
 
 msgid "Description"
-msgstr "描述"
+msgstr "说明"
 
 msgid "New World"
 msgstr "新世界"
@@ -935,10 +935,10 @@ msgid "Error %d"
 msgstr "错误 %d"
 
 msgid "Closing this dialog will take you back to the last well-known state."
-msgstr "关闭此对话框后，您将返回到上次众所周知的状态。"
+msgstr "关闭此对话框后，您将返回到上一个众所周知的状态。"
 
 msgid "If this error persists, please submit feedback."
-msgstr "如果该错误仍然存在，请提交反馈。"
+msgstr "如果错误仍然存在，请提交反馈。"
 
 msgid "World Settings"
 msgstr "世界设置"
@@ -950,25 +950,25 @@ msgid "Start"
 msgstr "开始"
 
 msgid "Welcome to the KIPR Simulator!\n"
-msgstr "欢迎使用 KIPR 模拟器！ \n"
+msgstr "欢迎来到 KIPR 模拟器"
 
 msgid "Compiling...\n"
-msgstr "编译...\n"
+msgstr "编译...\\\\n"
 
 msgid "Compilation succeeded with warnings.\n"
-msgstr "编译成功，有警告。"
+msgstr "编译成功，但有警告。"
 
 msgid "Compilation succeeded.\n"
-msgstr "编译成功"
+msgstr "编译成功。"
 
 msgid "Compilation failed.\n"
-msgstr "编译失败"
+msgstr "编译失败.\\\\n"
 
 msgid "Something went wrong during compilation.\n"
 msgstr "编译过程中出了问题。"
 
 msgid "Compilation succeeded with warnings\n"
-msgstr "编译成功有警告"
+msgstr "编译成功"
 
 msgid "Compilation succeeded\n"
 msgstr "编译成功"
@@ -977,7 +977,7 @@ msgid "Modules"
 msgstr "模块"
 
 msgid "Functions"
-msgstr "函数"
+msgstr "功能"
 
 msgid "Structures"
 msgstr "结构"
@@ -1004,7 +1004,7 @@ msgid "Fields"
 msgstr "字段"
 
 msgid "Volume"
-msgstr "体积"
+msgstr "卷数"
 
 msgid "RGB"
 msgstr "RGB"
@@ -1019,7 +1019,7 @@ msgid "Run"
 msgstr "运行"
 
 msgid "and External Contributors"
-msgstr "和外部贡献者"
+msgstr "和外部捐助者"
 
 msgid "Visit our"
 msgstr "访问我们的"
@@ -1043,10 +1043,10 @@ msgid "Test Assignment"
 msgstr "测试作业"
 
 msgid "This is a test assignment."
-msgstr "这是一份测试作业。"
+msgstr "这是一项测试任务。"
 
 msgid "Educator notes"
-msgstr "教师说明"
+msgstr "教育工作者说明"
 
 msgid "Student notes"
 msgstr "学生笔记"
@@ -1064,52 +1064,52 @@ msgid "JBC 0"
 msgstr "JBC 0"
 
 msgid "Junior Botball Challenge 0: Drive Straight"
-msgstr "青少年机器人足球挑战赛 0：直道行驶"
+msgstr "青少年机器人足球挑战赛 0：直线行驶"
 
 msgid "Not Start Box"
-msgstr "非起点框"
+msgstr "非启动框"
 
 msgid "Start Box"
-msgstr "起点框"
+msgstr "启动盒"
 
 msgid "Line B"
-msgstr "B 线"
+msgstr "线路 B"
 
 msgid "End Box"
-msgstr "终点框"
+msgstr "端盒"
 
 msgid "End of Mat"
-msgstr "垫子尽头"
+msgstr "垫末"
 
 msgid "Right Side Can"
 msgstr "右侧罐"
 
 msgid "Top Side Can"
-msgstr "上侧罐"
+msgstr "顶侧罐"
 
 msgid "Left Side Can"
 msgstr "左侧罐"
 
 msgid "Click Instruction Box"
-msgstr "点击说明盒"
+msgstr "点击说明框"
 
 msgid "Click Instruction 1 Box"
 msgstr "点击说明 1 框"
 
 msgid "Click Instruction 2 Box"
-msgstr "点击说明 2 盒"
+msgstr "单击说明 2 框"
 
 msgid "Chosen Garage Box"
-msgstr "所选车库方框"
+msgstr "选择车库箱"
 
 msgid "Green Garage Designator Box"
-msgstr "绿色车库代号框"
+msgstr "绿色车库指示箱"
 
 msgid "Yellow Garage Designator Box"
-msgstr "黄色车库代号框"
+msgstr "黄色车库代号箱"
 
 msgid "Blue Garage Designator Box"
-msgstr "蓝色车库代号框"
+msgstr "蓝色车库指定箱"
 
 msgid "Green Garage"
 msgstr "绿色车库"
@@ -1124,13 +1124,13 @@ msgid "Blue Garage node"
 msgstr "蓝色车库节点"
 
 msgid "Green Garage Right Boundary node"
-msgstr "绿色车库右边界节点"
+msgstr "绿色车库右侧边界节点"
 
 msgid "Green Garage Left Boundary node"
-msgstr "绿色车库左边界节点"
+msgstr "绿色车库左侧边界节点"
 
 msgid "Green Garage Top Boundary node"
-msgstr "绿色车库顶部边界节点"
+msgstr "绿色车库顶边界节点"
 
 msgid "Blue Garage"
 msgstr "蓝色车库"
@@ -1142,7 +1142,7 @@ msgid "Blue Garage Left Boundary node"
 msgstr "蓝色车库左边界节点"
 
 msgid "Blue Garage Top Boundary node"
-msgstr "蓝色车库顶部边界节点"
+msgstr "蓝色车库顶边界节点"
 
 msgid "Yellow Garage"
 msgstr "黄色车库"
@@ -1151,10 +1151,10 @@ msgid "Yellow Garage Right Boundary node"
 msgstr "黄色车库右边界节点"
 
 msgid "Yellow Garage Left Boundary node"
-msgstr "黄色车库左边界节点"
+msgstr "黄色车库左侧边界节点"
 
 msgid "Yellow Garage Top Boundary node"
-msgstr "黄色车库顶部边界节点"
+msgstr "黄色车库顶边界节点"
 
 msgid "Yellow Garage Marker 1"
 msgstr "黄色车库标记 1"
@@ -1172,43 +1172,43 @@ msgid "Green Garage Marker 1"
 msgstr "绿色车库标记 1"
 
 msgid "Green Garage Marker 2"
-msgstr "绿色车库标记 2"
+msgstr "绿色车库 2 号标记"
 
 msgid "Junior Botball Challenge 4: Serpentine"
-msgstr "青少年机器人球挑战赛 4：蛇形线"
+msgstr "青少年机器人足球挑战赛 4：蛇形线"
 
 msgid "Junior Botball Challenge 5: Odd Numbers"
-msgstr "青少年机器人球挑战赛 5：奇数"
+msgstr "青少年机器人足球挑战赛 5：奇数"
 
 msgid "Junior Botball Challenge 6: Figure Eight"
 msgstr "青少年机器人足球挑战赛 6：八字形"
 
 msgid "Between cans 4 and 9"
-msgstr "4 号罐和 9 号罐之间"
+msgstr "第 4 罐和第 9 罐之间"
 
 msgid "Top side of can 9"
-msgstr "9 号罐的顶部"
+msgstr "罐顶 9"
 
 msgid "Junior Botball Challenge 7: Load 'Em Up"
-msgstr "青少年机器人球挑战 7：装填"
+msgstr "青少年机器人足球挑战赛 7：装弹"
 
 msgid "Junior Botball Challenge 8: Bulldozer Mania"
-msgstr "青少年机器人球挑战赛 8：推土机狂热"
+msgstr "青少年机器人足球挑战赛 8：推土机狂热"
 
 msgid "Junior Botball Challenge 9: Cover Your Bases"
 msgstr "青少年机器人足球挑战赛 9：掩护你的基地"
 
 msgid "Junior Botball Challenge 10: Chopped"
-msgstr "青少年机器人球挑战赛 10：劈斩"
+msgstr "青少年机器人足球挑战赛 10：劈斩"
 
 msgid "JBC 11"
 msgstr "JBC 11"
 
 msgid "Junior Botball Challenge 11: Making Waves"
-msgstr "青少年机器人球挑战赛 11：掀起波澜"
+msgstr "青少年机器人足球挑战赛 11：掀起波澜"
 
 msgid "Junior Botball Challenge 12: Add it Up"
-msgstr "青少年机器人球挑战赛 12：加起来"
+msgstr "青少年机器人足球挑战赛 12：加起来"
 
 msgid "Circle 1"
 msgstr "圆圈 1"
@@ -1229,7 +1229,7 @@ msgid "JBC 16"
 msgstr "JBC 16"
 
 msgid "Junior Botball Challenge 16: Pick 'Em Up"
-msgstr "青少年机器人足球挑战赛 16：捡球"
+msgstr "青少年机器人足球挑战赛 16：\\\"挑 \\\"起来"
 
 msgid "Junior Botball Challenge 17: Mountain Rescue"
 msgstr "青少年机器人足球挑战赛 17：山地救援"
@@ -1238,25 +1238,25 @@ msgid "JBC 18"
 msgstr "JBC 18"
 
 msgid "Junior Botball Challenge 18: Stackerz"
-msgstr "青少年机器人足球挑战赛 18：堆垛机"
+msgstr "青少年机器人足球挑战赛 18：Stackerz"
 
 msgid "Bottom of can5"
 msgstr "罐底5"
 
 msgid "Top of can7"
-msgstr "7号罐顶部"
+msgstr "罐顶7"
 
 msgid "Bottom of can7"
-msgstr "7号罐底部"
+msgstr "罐底7"
 
 msgid "Top of can5"
 msgstr "罐顶5"
 
 msgid "Junior Botball Challenge 19: Bump"
-msgstr "青少年机器人球挑战赛 19：颠簸"
+msgstr "青少年机器人足球挑战赛 19：颠簸"
 
 msgid "Junior Botball Challenge 20: A'mazing"
-msgstr "青少年机器人球挑战赛 20：A'mazing"
+msgstr "青少年机器人足球挑战赛 20：A'mazing"
 
 msgid "Paper Ream 3"
 msgstr "纸卷 3"
@@ -1265,13 +1265,13 @@ msgid "Paper Ream 4"
 msgstr "纸卷 4"
 
 msgid "Junior Botball Challenge 21: Proximity"
-msgstr "青少年机器人球挑战赛 21：接近"
+msgstr "青少年机器人足球挑战赛 21：接近"
 
 msgid "Ream Front Boundary"
-msgstr "纸卷前边界"
+msgstr "雷姆前边界"
 
 msgid "Junior Botball Challenge 22: Search and Rescue"
-msgstr "青少年机器人球挑战赛 22：搜救"
+msgstr "青少年机器人足球挑战赛 22：搜救"
 
 msgid "JBC 23"
 msgstr "JBC 23"
@@ -1286,7 +1286,7 @@ msgid "JBC 24"
 msgstr "JBC 24"
 
 msgid "Junior Botball Challenge 24: Walk the Line"
-msgstr "青少年机器人足球挑战赛 24：走线"
+msgstr "青少年机器人足球挑战赛 24：走直线"
 
 msgid "Finish Line"
 msgstr "终点线"
@@ -1304,13 +1304,13 @@ msgid "Base Scene - Moon Surface"
 msgstr "基地场景 - 月球表面"
 
 msgid "A base scene. Intended to be augmented to create full Moon scenes"
-msgstr "基础场景。可通过增强来创建全月球场景"
+msgstr "基础场景。用于创建满月场景的增强版"
 
 msgid "1.1.1 Ground"
 msgstr "1.1.1 地面"
 
 msgid "1.1.6-8 Start Area"
-msgstr "1.1.6-8 起始区域"
+msgstr "1.1.6-8 启动区"
 
 msgid "1.1.2-4 Sky"
 msgstr "1.1.2-4 天空"
@@ -1325,7 +1325,7 @@ msgid "Basalt Rock"
 msgstr "玄武岩"
 
 msgid "Anorthosite Rock"
-msgstr "正长岩"
+msgstr "岩石"
 
 msgid "Breccia Rock"
 msgstr "角砾岩"
@@ -1343,22 +1343,22 @@ msgid "Science Pad"
 msgstr "科学垫"
 
 msgid "Container"
-msgstr "容器"
+msgstr "集装箱"
 
 msgid "Space Bot Guy"
-msgstr "太空机器人"
+msgstr "太空机器人家伙"
 
 msgid "Solar Panel"
 msgstr "太阳能电池板"
 
 msgid "Walkway"
-msgstr "走道"
+msgstr "人行道"
 
 msgid "Comms Tower"
-msgstr "通讯塔"
+msgstr "通信塔"
 
 msgid "Human Living Habitat"
-msgstr "人类居住区"
+msgstr "人类生活栖息地"
 
 msgid "Human Research Habitat"
 msgstr "人类研究栖息地"
@@ -1367,7 +1367,7 @@ msgid "Human Control/Comms Station Habitat"
 msgstr "人类控制/通信站栖息地"
 
 msgid "Life Indicator Light"
-msgstr "生命指示灯"
+msgstr "寿命指示灯"
 
 msgid "No Life Indicator Light"
 msgstr "无生命指示灯"
@@ -1379,16 +1379,16 @@ msgid "Base Scene - 2025 Botball Game Table"
 msgstr "基地场景 - 2025 机器人球游戏桌"
 
 msgid "A base scene. Intended to be augmented to create the full game table"
-msgstr "基础场景。可通过增强功能创建完整的游戏桌"
+msgstr "基础场景。旨在通过增强来创建完整的游戏桌"
 
 msgid "Fry floor"
 msgstr "油炸地板"
 
 msgid "Potato detector box"
-msgstr "土豆探测器箱"
+msgstr "土豆探测盒"
 
 msgid "Hamburger"
-msgstr "汉堡包"
+msgstr "汉堡"
 
 msgid "Hotdog"
 msgstr "热狗"
@@ -1406,13 +1406,13 @@ msgid "Green Cup"
 msgstr "绿杯"
 
 msgid "Blue pom back #${i}"
-msgstr "蓝色绒球背面 #${i｝"
+msgstr "蓝色绒球背 #${i｝"
 
 msgid "Blue pom front #${i}"
 msgstr "蓝色绒球前 #${i｝"
 
 msgid "Bottle #${i}"
-msgstr "瓶子 #${i｝"
+msgstr "瓶 #${i}"
 
 msgid "Orange pom #${i}"
 msgstr "橙色绒球 #${i｝"
@@ -1424,7 +1424,7 @@ msgid "Yellow pom #${i}"
 msgstr "黄色绒球 #${i｝"
 
 msgid "Random pom #${i}"
-msgstr "随机绒球 #${i｝"
+msgstr "随机 pom #${i}"
 
 msgid "Tomato"
 msgstr "番茄"
@@ -1433,16 +1433,16 @@ msgid "Pickle"
 msgstr "泡菜"
 
 msgid "Potato"
-msgstr "土豆"
+msgstr "马铃薯"
 
 msgid "Fry #${i}"
-msgstr "油炸 #${i｝"
+msgstr "炸 #${i}"
 
 msgid "Tray #${i}"
 msgstr "托盘 #${i｝"
 
 msgid "Botguy"
-msgstr "饮料"
+msgstr "Botguy"
 
 msgid "Blue drink #${i}"
 msgstr "蓝色饮料 #${i｝"
@@ -1451,25 +1451,25 @@ msgid "Green drink #${i}"
 msgstr "绿色饮料 #${i｝"
 
 msgid "Pink drink #${i}"
-msgstr "粉色饮料 #${i｝"
+msgstr "粉红色饮料 #${i｝"
 
 msgid "2025 Botball game table sandbox"
 msgstr "2025 机器人球游戏桌沙盘"
 
 msgid "IRobot Create"
-msgstr "IR 机器人创建"
+msgstr "IRobot 创建"
 
 msgid "Leaderboard"
 msgstr "排行榜"
 
 msgid "See the current challenge leaderboard."
-msgstr "查看当前挑战赛排行榜。"
+msgstr "查看当前的挑战排行榜。"
 
 msgid "The Challenge System"
 msgstr "挑战系统"
 
 msgid "Learn how to use the challenge system"
-msgstr "了解如何使用挑战系统"
+msgstr "学习如何使用挑战系统"
 
 msgid "MatB"
 msgstr "MatB"
@@ -1481,16 +1481,16 @@ msgid "Communication Tower"
 msgstr "通讯塔"
 
 msgid "Hab"
-msgstr "舱"
+msgstr "巴布"
 
 msgid "Radiation Science Pack"
 msgstr "辐射科学包"
 
 msgid "Communication Tower 2"
-msgstr "通讯塔 2"
+msgstr "2 号通讯塔"
 
 msgid "Hab 2"
-msgstr "太空舱 2"
+msgstr "Hab 2"
 
 msgid "BotGuy Astronaut"
 msgstr "机器人宇航员"
@@ -1505,25 +1505,25 @@ msgid "Green Drink"
 msgstr "绿色饮料"
 
 msgid "Pink Drink"
-msgstr "粉色饮料"
+msgstr "粉红饮料"
 
 msgid "Blue Pom (Ice Cube)"
-msgstr "蓝色 Pom（冰块）"
+msgstr "蓝色庞姆（冰块）"
 
 msgid "Orange Pom (Hot Sauce)"
-msgstr "橙色绒球（辣酱）"
+msgstr "橙色 Pom（辣酱）"
 
 msgid "Red Pom (Ketchup)"
 msgstr "红番茄酱"
 
 msgid "Yellow Pom (Mustard)"
-msgstr "黄色丸子（芥末）"
+msgstr "Yellow Pom（芥末）"
 
 msgid "French Fry"
-msgstr "薯条"
+msgstr "炸薯条"
 
 msgid "Bottle"
-msgstr "瓶装"
+msgstr "瓶子"
 
 msgid "Tray"
 msgstr "托盘"
@@ -1535,13 +1535,13 @@ msgid "Research Habitat"
 msgstr "研究栖息地"
 
 msgid "Controls Habitat"
-msgstr "控制栖息地"
+msgstr "控制生境"
 
 msgid "Moon Rock Container"
 msgstr "月岩容器"
 
 msgid "Radiation Science Pack - Low"
-msgstr "低辐射科学包"
+msgstr "辐射科学包 - 低"
 
 msgid "Space Base"
 msgstr "太空基地"
@@ -1550,51 +1550,51 @@ msgid "Botball"
 msgstr "机器人球"
 
 msgid "JBC Pieces"
-msgstr "JBC 零件"
+msgstr "JBC 碎片"
 
 msgid "Moon Rock"
-msgstr "月岩"
+msgstr "月亮岩"
 
 msgid "All"
-msgstr "全部内容"
+msgstr "全部"
 
 msgid ""
 "Basalt is an aphanitic (fine-grained) extrusive igneous rock formed from "
 "the rapid cooling of low-viscosity lava rich in magnesium and iron (mafic "
 "lava) exposed at or very near the surface of a rocky planet or moon."
-msgstr "玄武岩是一种闪长岩（细粒），是富含镁和铁的低粘度熔岩（黑云母熔岩）在岩石行星或月球表面或非常接近岩石行星或月球表面的地方快速冷却后形成的外生火成岩。"
+msgstr "玄武岩是一种闪长岩（细粒），是富含镁和铁的低粘度熔岩（岩浆岩）在岩石行星或月球表面或非常靠近岩石行星或月球表面的地方快速冷却后形成的喷出火成岩。"
 
 msgid ""
 "Anorthosite is a phaneritic, intrusive igneous rock characterized by its "
 "composition: mostly plagioclase feldspar (90–100%), with a minimal mafic "
 "component (0–10%)."
-msgstr "正长岩是一种辉长岩，侵入性火成岩，其成分特点是：大部分为斜长石（90-100%），只有极少的黑云母成分（0-10%）。"
+msgstr "阳起石是一种辉长岩、侵入性火成岩，其成分特点是：大部分为斜长石（90%-100%），只有极少量的黑云母成分（0%-10%）。"
 
 msgid ""
 "Breccia is a rock composed of large angular broken fragments of minerals or "
 "rocks cemented together by a fine-grained matrix."
-msgstr "碎屑岩是由矿物或岩石的大块角状碎屑组成的岩石，由细粒基质胶结在一起。"
+msgstr "角砾岩是由矿物或岩石的大块角状碎屑组成的岩石，由细粒基质胶结在一起。"
 
 msgid ""
 "Meteorite is a solid piece of debris from an object, such as a comet, "
 "asteroid, or meteoroid, that originates in outer space and survives its "
 "passage through the atmosphere to reach the surface of a planet or moon."
-msgstr "陨石是来自天体（如彗星、小行星或流星体）的固体碎片，它源自外太空，穿过大气层后到达行星或月球表面。"
+msgstr "陨石是天体（如彗星、小行星或流星体）的固体碎片，源自外太空，穿过大气层后到达行星或月球表面。"
 
 msgid "Description of the object"
-msgstr "天体描述"
+msgstr "对象描述"
 
 msgid "Surface Text"
 msgstr "表面文字"
 
 msgid "The current scene does not have a challenge available"
-msgstr "当前场景没有可用的挑战"
+msgstr "目前的场景没有可用的挑战"
 
 msgid "Start Challenge"
 msgstr "开始挑战"
 
 msgid "your current work"
-msgstr "您当前的工作"
+msgstr "您目前的工作"
 
 msgid "Failed to load challenge"
 msgstr "加载挑战失败"
@@ -1606,52 +1606,52 @@ msgid "Search Filters"
 msgstr "搜索过滤器"
 
 msgid "Is standards aligned"
-msgstr "是否符合标准"
+msgstr "是否与标准一致"
 
 msgid "Standards"
 msgstr "标准"
 
 msgid "Subject"
-msgstr "科目"
+msgstr "主题"
 
 msgid "Grade Level"
 msgstr "年级"
 
 msgid "Grade Levels: %s"
-msgstr "年级：%s"
+msgstr "年级： %s"
 
 msgid "Standard: %s"
-msgstr "标准： %s"
+msgstr "标准：%s"
 
 msgid "Subject: %s"
-msgstr "科目：%s"
+msgstr "主题：%s"
 
 msgid "U.S. Std."
 msgstr "美国标准"
 
 msgid "Curriculum"
-msgstr "课程"
+msgstr "课程设置"
 
 msgid "My Assignments"
 msgstr "我的作业"
 
 msgid "Graphical Variables"
-msgstr "圖形變數"
+msgstr "图形变量"
 
 msgid "A hamburger"
-msgstr "汉堡包"
+msgstr "一个汉堡包"
 
 msgid "Blue pom front #$(s)"
-msgstr "蓝色绒球 #$(s)"
+msgstr "蓝色绒球前 #$(s)"
 
 msgid "Blue pom front #$d"
-msgstr "蓝色绒球 #$d"
+msgstr "蓝色绒球前 #$d"
 
 msgid "Blue pom front #%d"
 msgstr "蓝色绒球前 #%d"
 
 msgid "Blue pom back #%d"
-msgstr "蓝色绒球背面 #%d"
+msgstr "蓝色绒球背 #%d"
 
 msgid "Bottle #%d"
 msgstr "瓶子 #%d"
@@ -1666,7 +1666,7 @@ msgid "Yellow pom #%d"
 msgstr "黄色绒球 #%d"
 
 msgid "Random pom #%d"
-msgstr "随机绒球 #%d"
+msgstr "随机 pom #%d"
 
 msgid "Tray #%d"
 msgstr "托盘 #%d"
@@ -1678,7 +1678,7 @@ msgid "Green drink #%d"
 msgstr "绿色饮料 #%d"
 
 msgid "Pink drink #%d"
-msgstr "粉色饮料 #%d"
+msgstr "粉红色饮料 #%d"
 
 msgid "Fry #%d"
 msgstr "油炸 #%d"
@@ -1690,7 +1690,7 @@ msgid ""
 "GCER 2025 special event. Your robot is randomly placed on one of the red "
 "circles. Find the black starting line and stop. Bonus points for returning "
 "to the original starting circle."
-msgstr "GCER 2025 特别活动。您的机器人被随机放置在其中一个红圈上。找到黑色起点线并停止。返回原起始圆圈可获得奖励积分。"
+msgstr "GCER 2025 特别活动。您的机器人会被随机放置在其中一个红色圆圈上。找到黑色起点线并停止。返回原起始圆圈可获得奖励积分。"
 
 msgid "GCER 2025: Sense the Can"
 msgstr "GCER 2025：感知罐子"
@@ -1698,32 +1698,32 @@ msgstr "GCER 2025：感知罐子"
 msgid ""
 "GCER 2025 special event. A can is placed randomly in circle 2, 4, 6, 9 or "
 "11. Find it and bring it back to the start box!"
-msgstr "GCER 2025 特别活动。在 2、4、6、9 或 11 号圈中随机放置一个易拉罐。找到它并将其带回起始箱！"
+msgstr "GCER 2025 特别活动。一个易拉罐被随机放置在 2、4、6、9 或 11 圈。找到它并将其带回起始箱！"
 
 msgid "Blue pom #%d"
 msgstr "蓝色绒球 #%d"
 
 msgid "GCER 2025: Ice Ice Botguy"
-msgstr "GCER 2025：冰冰机器人"
+msgstr "GCER 2025：冰冰宝宝"
 
 msgid ""
 "GCER 2025 special event. Botguy is overheating! Collect the ice and dump it "
 "on Botguy to cool him off!"
-msgstr "GCER 2025 特别活动。机器人正在过热！收集冰块并倒在机器人身上，为他降温！"
+msgstr "GCER 2025 特别活动。机器人老兄过热了！收集冰块，倒在机器人身上为他降温！"
 
 msgid "Cup #%d"
 msgstr "杯 #%d"
 
 msgid "GCER 2025: Thirst Quencher"
-msgstr "GCER 2025：解渴杯"
+msgstr "GCER 2025：解渴器"
 
 msgid ""
 "GCER 2025 special event. Don't let the summer heat get you down. Bring the "
 "cups back to the start box!"
-msgstr "GCER 2025 特别活动。别让炎炎夏日把你击倒。把杯子带回起点箱！"
+msgstr "GCER 2025 特别活动。别让炎炎夏日击倒你。把杯子带回起点箱！"
 
 msgid "GCER 2025: Entree Express"
-msgstr "GCER 2025：快餐"
+msgstr "GCER 2025：入口快餐"
 
 msgid "GCER 2025 special event. Order up! Move the entrees to the trays."
 msgstr "GCER 2025 特别活动。点菜！将主菜移到托盘上。"
@@ -1735,21 +1735,21 @@ msgid "Pom #%d"
 msgstr "Pom #%d"
 
 msgid "GCER 2025: Special Sauce"
-msgstr "GCER 2025特制酱汁"
+msgstr "GCER 2025：特制酱汁"
 
 msgid ""
 "GCER 2025 special event. Mix the ketchup (red), mustard (yellow), and hot "
 "sauce (orange) in the garages to create your own special blend!"
-msgstr "GCER 2025 特别活动。在车库中混合番茄酱（红色）、芥末酱（黄色）和辣酱（橙色），调制出属于自己的特制酱料！"
+msgstr "GCER 2025 特别活动。在车库中混合番茄酱（红色）、芥末酱（黄色）和辣酱（橙色），调制出属于自己的特殊配方！"
 
 msgid "Orange Garage"
 msgstr "橙色车库"
 
 msgid "GCER 2025: Cover Your Bases"
-msgstr "GCER 2025：掩护你的基地"
+msgstr "GCER 2025：覆盖你的基础"
 
 msgid "GCER 2025 special edition. All circles are now open for business!"
-msgstr "GCER 2025 特别版。所有圈子现在都已开始营业！"
+msgstr "GCER 2025 特别版。所有圈子现已开始营业！"
 
 msgid "GCER 2025: Odd Numbers"
 msgstr "GCER 2025：奇数"
@@ -1765,49 +1765,49 @@ msgstr "GCER 2025：推土机狂热"
 msgid ""
 "GCER 2025 special event. Bring as many cans behind the starting line as you "
 "can. Make sure they stay upright!"
-msgstr "GCER 2025 特别活动。将尽可能多的易拉罐带到起点线后。确保它们保持直立！"
+msgstr "GCER 2025 特别活动。尽可能多地将易拉罐带到起跑线后。确保它们保持直立！"
 
 msgid "GCER 2025: Mountain Rescue"
 msgstr "GCER 2025：山地救援"
 
 msgid "GCER 2025 special event. Now with three more cans to rescue!"
-msgstr "GCER 2025 特别活动。现在还有三个易拉罐需要救援！"
+msgstr "GCER 2025 特别活动。现在还有三个罐子要抢救！"
 
 msgid "Robot Stops at Black Line"
-msgstr "机器人停在黑线上"
+msgstr "机器人停在黑线处"
 
 msgid "Robot stops at black line"
-msgstr "机器人停在黑线上"
+msgstr "机器人停在黑线处"
 
 msgid "Robot Over Circle"
 msgstr "机器人越过圆圈"
 
 msgid "Robot over selected circle"
-msgstr "机器人越过选定的圆圈"
+msgstr "选定圆上的机器人"
 
 msgid "Robot not in Start Box"
-msgstr "机器人不在起始框内"
+msgstr "机器人不在启动框中"
 
 msgid "Robot not in start box"
-msgstr "机器人不在起始框内"
+msgstr "机器人不在启动箱内"
 
 msgid "Can in Start Box"
-msgstr "罐在起始框内"
+msgstr "启动盒中的罐头"
 
 msgid "Can in start box"
-msgstr "罐在起始框内"
+msgstr "启动箱中的罐头"
 
 msgid "Can Random Upright"
-msgstr "罐体随机直立"
+msgstr "随机直立罐"
 
 msgid "Can Random upright"
-msgstr "罐头随机直立"
+msgstr "随机直立"
 
 msgid "Hamburger placed"
-msgstr "汉堡已放置"
+msgstr "汉堡店"
 
 msgid "Hamburger placed in tray"
-msgstr "汉堡放入托盘"
+msgstr "汉堡放在托盘里"
 
 msgid "Hotdog placed"
 msgstr "放置热狗"
@@ -1816,145 +1816,145 @@ msgid "Hotdog placed in tray"
 msgstr "热狗放入托盘"
 
 msgid "Taco placed"
-msgstr "玉米卷"
+msgstr "放置的玉米卷"
 
 msgid "Taco placed in tray"
 msgstr "玉米卷放入托盘"
 
 msgid "Can A upright in a circle"
-msgstr "A 罐直立成圆形"
+msgstr "A 能否在圆圈内直立"
 
 msgid "Can B upright in a circle"
-msgstr "B 罐直立成圆形"
+msgstr "能在圆圈内直立"
 
 msgid "Can C upright in a circle"
-msgstr "C 罐直立成圆形"
+msgstr "C 可以直立画圈"
 
 msgid "Can D Upright"
-msgstr "罐头 D 直立"
+msgstr "罐头 D 直立式"
 
 msgid "Can D upright in a circle"
-msgstr "D 罐直立成圆形"
+msgstr "能在圆圈内直立"
 
 msgid "Can E Upright"
-msgstr "可以 E 直立"
+msgstr "罐头 E 直立式"
 
 msgid "Can E upright in a circle"
-msgstr "可以 E 直立画圆"
+msgstr "能在圆圈内直立"
 
 msgid "Can F Upright"
-msgstr "F 可以直立"
+msgstr "F 型直立罐"
 
 msgid "Can F upright in a circle"
-msgstr "可以 F 直立画圆"
+msgstr "能在圆圈内直立"
 
 msgid "Can G Upright"
-msgstr "可以 G 直立式"
+msgstr "罐头 G 直立式"
 
 msgid "Can G upright in a circle"
-msgstr "G 罐直立成圆形"
+msgstr "可绕圆圈直立"
 
 msgid "Base A Covered"
-msgstr "底座 A 有盖"
+msgstr "基地 A 覆盖范围"
 
 msgid "Base A covered by a can"
-msgstr "底座 A 被罐头盖住"
+msgstr "用罐子盖住基地 A"
 
 msgid "Base B Covered"
-msgstr "底座 B 有盖"
+msgstr "基地 B 覆盖范围"
 
 msgid "Base B covered by a can"
-msgstr "罐头盖住的底座 B"
+msgstr "用罐子盖住基地 B"
 
 msgid "Base C Covered"
-msgstr "底座 C 覆盖"
+msgstr "基地 C 覆盖范围"
 
 msgid "Base C covered by a can"
-msgstr "基地 C 被罐子覆盖"
+msgstr "易拉罐覆盖的基地 C"
 
 msgid "Base D Covered"
-msgstr "基地 D 已覆盖"
+msgstr "基地 D 覆盖范围"
 
 msgid "Base D covered by a can"
-msgstr "基地 D 被罐子覆盖"
+msgstr "用罐子盖住的基地 D"
 
 msgid "Base E Covered"
-msgstr "基底 E 已覆盖"
+msgstr "基地 E 覆盖范围"
 
 msgid "Base E covered by a can"
-msgstr "基地 E 被罐子覆盖"
+msgstr "用罐子盖住的底座 E"
 
 msgid "Base F Covered"
-msgstr "基底 F 已覆盖"
+msgstr "基地 F 覆盖范围"
 
 msgid "Base F covered by a can"
-msgstr "底层 F 由罐体覆盖"
+msgstr "罐体覆盖的底座 F"
 
 msgid "Base G Covered"
-msgstr "基底 G 已覆盖"
+msgstr "基地 G 覆盖范围"
 
 msgid "Base G covered by a can"
-msgstr "底座 G 由罐体覆盖"
+msgstr "由罐体覆盖的底座 G"
 
 msgid "Can 1 Upright"
-msgstr "罐 1 直立"
+msgstr "罐 1 直立式"
 
 msgid "Can 1 is upright"
 msgstr "罐 1 直立"
 
 msgid "Can 2 Upright"
-msgstr "罐 2 直立"
+msgstr "罐头 2 直立式"
 
 msgid "Can 2 is upright"
 msgstr "罐 2 直立"
 
 msgid "Can 3 Upright"
-msgstr "罐 3 直立"
+msgstr "罐 3 直立式"
 
 msgid "Can 3 is upright"
 msgstr "罐 3 直立"
 
 msgid "Can 4 Upright"
-msgstr "罐体 4 直立型"
+msgstr "罐头 4 直立式"
 
 msgid "Can 4 is upright"
 msgstr "4 号罐直立"
 
 msgid "Can 5 Upright"
-msgstr "罐 5 直立型"
+msgstr "罐 5 直立式"
 
 msgid "Can 5 is upright"
 msgstr "罐 5 直立"
 
 msgid "Can 1 Intersects"
-msgstr "罐 1 相交"
+msgstr "Can 1 相交"
 
 msgid "Can 1 rescued intersecting starting box"
-msgstr "1 号罐获救后与起始箱相交"
+msgstr "可以 1 次解救相交的起始箱"
 
 msgid "Can 2 Intersects"
-msgstr "罐 2 相交"
+msgstr "Can 2 相交"
 
 msgid "Can 2 rescued intersecting starting box"
-msgstr "第 2 个获救的罐子与起始箱相交"
+msgstr "能否 2 次解救相交的起始箱"
 
 msgid "Can 3 Intersects"
-msgstr "罐 3 相交"
+msgstr "Can 3 相交"
 
 msgid "Can 3 rescued intersecting starting box"
-msgstr "第 3 个获救的起始箱相交"
+msgstr "能 3 次解救相交的起始箱"
 
 msgid "Can 4 Intersects"
-msgstr "可以 4 个相交"
+msgstr "Can 4 相交"
 
 msgid "Can 4 rescued intersecting starting box"
-msgstr "可以 4 个获救的起始箱相交"
+msgstr "可 4 次解救相交的起始箱"
 
 msgid "Can 5 Intersects"
-msgstr "可以 5 个相交"
+msgstr "Can 5 相交"
 
 msgid "Can 5 rescued intersecting starting box"
-msgstr "第 5 个获救者与起点箱相交"
+msgstr "可 5 次解救相交的起始箱"
 
 msgid "Warming Station"
 msgstr "保温站"
@@ -1963,13 +1963,13 @@ msgid "Blue Cup JBC"
 msgstr "蓝杯 JBC"
 
 msgid "Green Cup JBC"
-msgstr "绿色杯 JBC"
+msgstr "绿杯 JBC"
 
 msgid "Pink Cup JBC"
 msgstr "粉红杯 JBC"
 
 msgid "Ask Tutor"
-msgstr "询问导师"
+msgstr "询问辅导员"
 
 msgid "Arm"
 msgstr "手臂"
@@ -1987,7 +1987,7 @@ msgid "Rangefinder"
 msgstr "测距仪"
 
 msgid "Reflectance"
-msgstr "反射器"
+msgstr "反射率"
 
 msgid "Limit switch"
 msgstr "限位开关"
@@ -1996,7 +1996,7 @@ msgid "Left touch"
 msgstr "左触摸"
 
 msgid "Right touch"
-msgstr "右触摸"
+msgstr "正确触摸"
 
 msgid "Tutor"
 msgstr "辅导员"
@@ -2004,232 +2004,232 @@ msgstr "辅导员"
 msgid ""
 "Ask me questions about programming, get help with your code, or discuss "
 "robotics concepts."
-msgstr "向我咨询有关编程的问题，获取代码帮助，或讨论机器人概念。"
+msgstr "向我咨询有关编程的问题，获得代码方面的帮助，或讨论机器人概念。"
 
 msgid "Ask tutor a question..."
-msgstr "向辅导员提问..."
+msgstr "向导师提问..."
 
 msgid "JBC Challenge 0"
-msgstr "JBC 挑战 0"
+msgstr "JBC 挑战赛 0"
 
 msgid "In Start Box"
-msgstr "在起始框内"
+msgstr "在启动框中"
 
 msgid "Robot is in the start box"
-msgstr "机器人在起始框内"
+msgstr "机器人在启动框内"
 
 msgid "Not In Start Box"
-msgstr "不在起始框内"
+msgstr "不在启动框中"
 
 msgid "Robot is not in the start box"
-msgstr "机器人不在起始框内"
+msgstr "机器人不在启动框内"
 
 msgid "Robot Touching Line B"
-msgstr "机器人触及 B 线"
+msgstr "机器人触碰 B 线"
 
 msgid "Robot is touching line B"
-msgstr "机器人正在触碰 B 线"
+msgstr "机器人正触及 B 线"
 
 msgid "Robot Reached End"
 msgstr "机器人到达终点"
 
 msgid "Robot reached the end of the mat"
-msgstr "机器人到达终点"
+msgstr "机器人到达了垫子的尽头"
 
 msgid "Robot Off Mat"
-msgstr "机器人离开垫子"
+msgstr "机器人关闭垫"
 
 msgid "Robot left the mat"
-msgstr "机器人离开垫子"
+msgstr "机器人离开了垫子"
 
 msgid "Start in the Start Box"
-msgstr "从起始框开始"
+msgstr "从 \\\"开始框 \\\"开始"
 
 msgid "Reach the end of the mat"
-msgstr "到达终点"
+msgstr "到达垫子尽头"
 
 msgid "Wheels do not touch line B"
-msgstr "车轮未触及 B 线"
+msgstr "车轮不接触 B 线"
 
 msgid "Do not drive off the mat"
-msgstr "不要驶离垫子"
+msgstr "请勿驶离垫子"
 
 msgid "JBC Challenge 1"
-msgstr "JBC 挑战 1"
+msgstr "联合边境委员会挑战 1"
 
 msgid "Can 9 Touched"
-msgstr "Can 9 碰触"
+msgstr "Can 9 Touched"
 
 msgid "Can A touched"
-msgstr "A 罐触及"
+msgstr "A 能否触动"
 
 msgid "Can 9 Intersects"
-msgstr "Can 9 相交"
+msgstr "9 号罐相交"
 
 msgid "Can 9 intersects circle 9"
-msgstr "9号罐与9号圆相交"
+msgstr "Can 9 与圆 9 相交"
 
 msgid "Can 9 Upright"
-msgstr "Can 9 直立"
+msgstr "Can 9 直立式"
 
 msgid "Can 9 upright on circle 9"
-msgstr "Can 9 直立在圆 9 上"
+msgstr "圆圈 9 上的 9 个直立罐"
 
 msgid "Robot Rentered Start"
-msgstr "机器人重回起点"
+msgstr "机器人重定向启动"
 
 msgid "Robot reentered starting box"
-msgstr "机器人重新进入起始框"
+msgstr "机器人重新进入起始箱"
 
 msgid "Touch Can 9"
-msgstr "触摸 9 号罐"
+msgstr "触摸罐 9"
 
 msgid "Return to the Start Box"
 msgstr "返回起始框"
 
 msgid "Can 9 not in circle 9"
-msgstr "Can 9 不在 9 号圆圈内"
+msgstr "9 号罐不在 9 号圈内"
 
 msgid "Can 9 not upright"
-msgstr "9 号罐不直立"
+msgstr "9 号罐不能直立"
 
 msgid "JBC Challenge 2"
-msgstr "JBC 挑战 2"
+msgstr "联合边境委员会挑战 2"
 
 msgid "Can 6 Intersects"
 msgstr "Can 6 相交"
 
 msgid "Can 6 intersects circle 6"
-msgstr "6号罐与6号圆相交"
+msgstr "Can 6 与圆 6 相交"
 
 msgid "Can 6 Upright"
-msgstr "Can 6 直立"
+msgstr "罐头 6 直立式"
 
 msgid "Can 6 upright on circle 6"
-msgstr "Can 6 在圆 6 上直立"
+msgstr "圆形 6 上的 6 个直立罐"
 
 msgid "Robot Passed Right Side"
-msgstr "机器人通过右侧"
+msgstr "机器人右侧通过"
 
 msgid "Robot passed right side of can 6"
 msgstr "机器人通过 6 号罐右侧"
 
 msgid "Robot Passed Top Side"
-msgstr "机器人通过顶部"
+msgstr "机器人顶部通过"
 
 msgid "Robot passed top side of can 6"
-msgstr "机器人通过 6 号罐上侧"
+msgstr "机器人通过罐顶 6"
 
 msgid "Robot Passed left Side"
-msgstr "机器人通过左侧"
+msgstr "机器人从左侧通过"
 
 msgid "Robot passed left side of can 6"
-msgstr "机器人通过 6 号罐的左侧"
+msgstr "机器人通过 6 号罐左侧"
 
 msgid "Pass the right side of can 6"
 msgstr "通过 6 号罐右侧"
 
 msgid "Pass the top side of can 6"
-msgstr "通过 6 号罐上侧"
+msgstr "通过 6 号罐的上侧"
 
 msgid "Pass the left side of can 6"
 msgstr "通过 6 号罐左侧"
 
 msgid "Can 6 not in circle 6"
-msgstr "易拉罐 6 不在圆圈 6 中"
+msgstr "6 号罐不在第 6 圈内"
 
 msgid "Can 6 not upright"
-msgstr "易拉罐 6 未竖直"
+msgstr "6 号罐不能直立"
 
 msgid "JBC Challenge 3"
-msgstr "JBC 挑战 3"
+msgstr "联合边境委员会挑战 3"
 
 msgid "Robot Touched Garage Lines"
-msgstr "机器人触及车库界线"
+msgstr "机器人触摸车库线"
 
 msgid "Robot touched garage boundaries"
 msgstr "机器人触及车库边界"
 
 msgid "Robot Parked in One Garage"
-msgstr "机器人停在一个车库"
+msgstr "停在一个车库里的机器人"
 
 msgid "Robot parked in only one garage"
 msgstr "机器人只停在一个车库"
 
 msgid "Robot Parked in Different Garage"
-msgstr "机器人停在不同车库"
+msgstr "停在不同车库的机器人"
 
 msgid "Robot parked in a different garage"
-msgstr "机器人停在不同车库"
+msgstr "停在不同车库的机器人"
 
 msgid "Robot Returned Start"
-msgstr "机器人返回起始位置"
+msgstr "机器人返回起点"
 
 msgid "Robot returned to starting box"
-msgstr "机器人返回启动箱"
+msgstr "机器人返回起始箱"
 
 msgid "Park in one garage"
-msgstr "停放在一个车库"
+msgstr "在一个车库停车"
 
 msgid "Park in a different garage"
-msgstr "停入不同车库"
+msgstr "在不同的车库停车"
 
 msgid "Do not touch garage boundaries"
-msgstr "不要触碰车库边界"
+msgstr "请勿触碰车库边界"
 
 msgid "JBC Challenge 4"
-msgstr "JBC 挑战 4"
+msgstr "联合边境委员会挑战赛 4"
 
 msgid "Circle Touched Out of Order"
-msgstr "圆圈被无序触碰"
+msgstr "圆圈触碰失灵"
 
 msgid "Circle was touched out of order"
-msgstr "圆圈被无序触碰"
+msgstr "圆圈被碰坏"
 
 msgid "Robot Touched Circle 1"
-msgstr "机器人触碰圆圈 1"
+msgstr "机器人触摸圆圈 1"
 
 msgid "Robot touched circle 1"
 msgstr "机器人触碰圆圈 1"
 
 msgid "Robot Touched Circle 2"
-msgstr "机器人触碰圆圈 2"
+msgstr "机器人触摸圆圈 2"
 
 msgid "Robot touched circle 2"
-msgstr "机器人触碰了圆 2"
+msgstr "机器人触碰圆圈 2"
 
 msgid "Robot Touched Circle 3"
-msgstr "机器人触碰了圆圈 3"
-
-msgid "Robot touched circle 3"
 msgstr "机器人触摸圆圈 3"
 
+msgid "Robot touched circle 3"
+msgstr "机器人触碰圆圈 3"
+
 msgid "Robot Touched Circle 4"
-msgstr "触碰圆圈 4 的机器人"
+msgstr "机器人触摸圆环 4"
 
 msgid "Robot touched circle 4"
-msgstr "机器人触摸了第 4 个圆"
+msgstr "机器人触碰圆圈 4"
 
 msgid "Robot Touched Circle 5"
-msgstr "机器人触碰的圆 5"
+msgstr "机器人触摸圆圈 5"
 
 msgid "Robot touched circle 5"
-msgstr "机器人触摸圆 5"
+msgstr "机器人触碰圆圈 5"
 
 msgid "Robot Touched Circle 6"
-msgstr "机器人触碰的圆 6"
+msgstr "机器人触摸圆圈 6"
 
 msgid "Robot touched circle 6"
-msgstr "机器人触摸圆 6"
+msgstr "机器人触碰圆圈 6"
 
 msgid "Robot Touched Circle 7"
-msgstr "机器人触碰的圆 7"
+msgstr "机器人触摸圆环 7"
 
 msgid "Robot touched circle 7"
-msgstr "机器人触摸圆 7"
+msgstr "机器人触碰圆圈 7"
 
 msgid "Robot Touched Circle 8"
-msgstr "机器人触碰的圆 8"
+msgstr "机器人触摸圆环 8"
 
 msgid "Robot touched circle 8"
 msgstr "机器人触碰圆圈 8"
@@ -2241,16 +2241,16 @@ msgid "Touch circle 2"
 msgstr "触摸圈 2"
 
 msgid "Touch circle 3"
-msgstr "触摸圈 3"
+msgstr "触摸圆圈 3"
 
 msgid "Touch circle 4"
-msgstr "触摸圈 4"
+msgstr "触摸圆圈 4"
 
 msgid "Touch circle 5"
 msgstr "触摸圈 5"
 
 msgid "Touch circle 6"
-msgstr "触摸圈 6"
+msgstr "触摸圆圈 6"
 
 msgid "Touch circle 7"
 msgstr "触摸圈 7"
@@ -2259,130 +2259,130 @@ msgid "Touch circle 8"
 msgstr "触摸圈 8"
 
 msgid "Circle touched out of order"
-msgstr "触摸的圆圈不按顺序"
+msgstr "Circle touched out of order"
 
 msgid "JBC Challenge 5"
-msgstr "JBC 挑战 5"
+msgstr "联合边境委员会挑战 5"
 
 msgid "Even Circle Touched"
-msgstr "触摸偶数圆"
+msgstr "连环触动"
 
 msgid "Even circle touched"
-msgstr "触摸偶数圈"
+msgstr "甚至圆圈也被触动"
 
 msgid "Circle 1 Touched"
-msgstr "圆圈 1 被触碰"
+msgstr "圆圈 1 已触碰"
 
 msgid "Circle 1 was touched"
-msgstr "圆圈 1 被触及"
+msgstr "圈 1 被触动"
 
 msgid "Circle 3 Touched"
-msgstr "圆圈 3 被触碰"
+msgstr "圆圈 3 触摸"
 
 msgid "Circle 3 was touched"
-msgstr "圆圈 3 被触及"
+msgstr "圈 3 被触动"
 
 msgid "Circle 5 Touched"
-msgstr "圆 5 已被触碰"
+msgstr "圈 5 感动"
 
 msgid "Circle 5 was touched"
-msgstr "圆圈 5 被触摸"
+msgstr "圈 5 被触动"
 
 msgid "Circle 7 Touched"
-msgstr "圈 7 已触摸"
+msgstr "第 7 个圆圈"
 
 msgid "Circle 7 was touched"
-msgstr "圆 7 已被触碰"
+msgstr "圈 7 被触动"
 
 msgid "Circle 9 Touched"
-msgstr "圈 9 已触摸"
+msgstr "第 9 圈 感动"
 
 msgid "Circle 9 was touched"
-msgstr "圆圈 9 被触摸"
+msgstr "圈 9 被触动"
 
 msgid "Circle 11 Touched"
-msgstr "圆 11 已被触碰"
+msgstr "圆环 11 触摸"
 
 msgid "Circle 11 was touched"
-msgstr "圈 11 被触摸"
+msgstr "圈 11 被触动"
 
 msgid "Touch circle 9"
 msgstr "触摸圆圈 9"
 
 msgid "Touch circle 11"
-msgstr "触摸圆 11"
+msgstr "触摸圈 11"
 
 msgid "Touched an even circle"
-msgstr "触摸一个偶数圆"
+msgstr "触及一个均匀的圆"
 
 msgid "JBC Challenge 6"
-msgstr "JBC 挑战 6"
+msgstr "联合边境委员会挑战 6"
 
 msgid "Can 4 intersects circle 4"
-msgstr "4 与圆 4 相交"
+msgstr "Can 4 与圆 4 相交"
 
 msgid "Can 4 upright on circle 4"
-msgstr "Can 4 在圆 4 上直立"
+msgstr "第 4 圈上的 4 个直立罐"
 
 msgid "Robot Figure Eight"
-msgstr "机器人八字形"
+msgstr "机器人数字八"
 
 msgid "Robot did a figure eight around cans 4 and 9"
-msgstr "机器人围绕 4 号罐和 9 号罐做 \"八 \"字形运动"
+msgstr "机器人在 4 号和 9 号罐周围做了一个 \\\"八 \\\"字形的动作"
 
 msgid "Complete a figure eight"
-msgstr "完成一个八字形"
+msgstr "完成八字形"
 
 msgid "Can 4 not upright in circle 4"
-msgstr "4 号罐没有直立在圆 4 上"
+msgstr "第 4 个圆圈中的第 4 个不能直立"
 
 msgid "Can 9 not upright in circle 9"
-msgstr "易拉罐 9 没有直立在圆 9 中"
+msgstr "圈 9 不能直立"
 
 msgid "Can 4 does not intersect circle 4"
-msgstr "易拉罐 4 与圆 4 不相交"
+msgstr "坎 4 与圆 4 不相交"
 
 msgid "Can 9 does not intersect circle 9"
-msgstr "易拉罐 9 与圆圈 9 不相交"
+msgstr "坎 9 与圆 9 不相交"
 
 msgid "JBC Challenge 7"
-msgstr "JBC 挑战 7"
+msgstr "联合边境委员会挑战 7"
 
 msgid "Can 2 upright"
-msgstr "2 能否直立"
+msgstr "罐 2 直立式"
 
 msgid "Can 9 upright"
-msgstr "9 可以直立"
+msgstr "9 号罐直立式"
 
 msgid "Can 10 Upright"
-msgstr "可以 10 直立"
+msgstr "罐头 10 直立式"
 
 msgid "Can 10 upright"
-msgstr "10 号罐直立"
+msgstr "罐 10 直立式"
 
 msgid "Can 2 Intersects Green Garage"
-msgstr "2 号罐与绿色车库相交"
+msgstr "Can 2 与绿色车库相交"
 
 msgid "Can 2 intersects Green Garage"
-msgstr "第 2 个罐体与绿色车库相交"
+msgstr "Can 2 与绿色车库相交"
 
 msgid "Can 9 Intersects Blue Garage"
-msgstr "CAN 9 与蓝色车库相交"
+msgstr "Can 9 与蓝色车库相交"
 
 msgid "Can 9 intersects Blue Garage"
-msgstr "CAN 9 与蓝色车库相交"
+msgstr "Can 9 与蓝色车库相交"
 
 msgid "Can 9 Intersects Purple Garage"
-msgstr "CAN 9 与紫色车库相交"
+msgstr "Can 9 与紫色车库相交"
 
 msgid "Can 9 intersects Purple Garage"
-msgstr "CAN 9 与紫色车库相交"
+msgstr "Can 9 与紫色车库相交"
 
 msgid "Can 10 Intersects Yellow Garage"
-msgstr "CAN 10 与黄色车库相交"
+msgstr "Can 10 与黄色车库相交"
 
 msgid "Can 10 intersects Yellow Garage"
-msgstr "10 号罐与黄色车库相交"
+msgstr "Can 10 与黄色车库相交"
 
 msgid "Place can 2 in green garage"
 msgstr "将 2 号罐放入绿色车库"
@@ -2391,73 +2391,73 @@ msgid "Place can 9 in blue garage"
 msgstr "将 9 号罐放入蓝色车库"
 
 msgid "Place can 10 in yellow garage"
-msgstr "将 10 号罐放入黄色车库"
+msgstr "在黄色车库放置 10 号罐"
 
 msgid "Can 2 not upright in green garage"
-msgstr "2 号罐在绿色车库不直立"
+msgstr "2 号罐不能直立在绿色车库中"
 
 msgid "Can 9 not upright in blue garage"
-msgstr "9 号罐在蓝色车库不直立"
+msgstr "蓝色车库中不直立的 9 号罐"
 
 msgid "Can 10 not upright in yellow garage"
-msgstr "10 号罐在黄色车库不直立"
+msgstr "黄色车库中不直立的 10 号罐"
 
 msgid "JBC Challenge 8"
-msgstr "JBC 挑战赛 8"
+msgstr "联合边境委员会挑战赛 8"
 
 msgid "Can A upright behind start line"
-msgstr "A 罐在起点线后直立"
+msgstr "A 可以直立在起跑线后"
 
 msgid "Can B upright behind start line"
-msgstr "B 能否在起跑线后直立"
+msgstr "B 可以直立在起跑线后"
 
 msgid "Can C upright behind start line"
-msgstr "C 可以在起跑线后直立"
+msgstr "C 可以直立在起跑线后"
 
 msgid "Can D upright behind start line"
-msgstr "D 可以在起跑线后直立"
+msgstr "D 可以直立在起跑线后"
 
 msgid "Can E upright behind start line"
-msgstr "E罐在起跑线后直立"
+msgstr "E 可以直立在起跑线后"
 
 msgid "First can upright in start box"
-msgstr "第一罐在起跑框内直立"
+msgstr "第一个罐头直立在启动箱中"
 
 msgid "Second can upright in start box"
-msgstr "第二个罐在起跑框内直立"
+msgstr "第二罐直立在启动箱中"
 
 msgid "Third can upright in start box"
-msgstr "第三罐在起跑框内直立"
+msgstr "第三罐直立在启动箱中"
 
 msgid "Fourth can upright in start box"
-msgstr "第四罐在起跑框内直立"
+msgstr "第四个罐头盒直立"
 
 msgid "Fifth can upright in start box"
-msgstr "第五罐在起始箱内直立"
+msgstr "第五罐直立式启动箱"
 
 msgid "JBC Challenge 9"
-msgstr "JBC 挑战 9"
+msgstr "联合边境委员会挑战 9"
 
 msgid "Cover base A"
-msgstr "覆盖底座 A"
+msgstr "盖板底座 A"
 
 msgid "Cover base B"
-msgstr "覆盖底座 B"
+msgstr "盖板底座 B"
 
 msgid "Cover base C"
-msgstr "盖上底座 C"
+msgstr "盖板底座 C"
 
 msgid "Cover base D"
-msgstr "盖上底座 D"
+msgstr "盖板底座 D"
 
 msgid "Cover base E"
-msgstr "盖底座 E"
+msgstr "盖板底座 E"
 
 msgid "Can A not upright"
-msgstr "罐 A 不直立"
+msgstr "A 不能直立"
 
 msgid "Can B not upright"
-msgstr "B 罐不直立"
+msgstr "B 不能直立"
 
 msgid "Can C not upright"
 msgstr "C 不能直立"
@@ -2472,25 +2472,25 @@ msgid "JBC Challenge 10"
 msgstr "JBC 挑战 10"
 
 msgid "Waited to Chop"
-msgstr "等待劈砍"
+msgstr "等待砍伐"
 
 msgid "Robot waited to chop"
-msgstr "机器人等待砍下"
+msgstr "机器人等待砍伐"
 
 msgid "Can 7 Upright"
-msgstr "罐 7 直立"
+msgstr "Can 7 直立式"
 
 msgid "Can 7 upright"
-msgstr "Can 7 直立"
+msgstr "罐 7 直立式"
 
 msgid "Wait before chopping"
-msgstr "等待后再砍"
+msgstr "等待后再切碎"
 
 msgid "Knock over can 7"
-msgstr "撞倒 7 号罐"
+msgstr "打翻罐头 7"
 
 msgid "JBC Challenge 11"
-msgstr "JBC 挑战 11"
+msgstr "联合边境委员会挑战赛 11"
 
 msgid "Robot Waved"
 msgstr "机器人挥手"
@@ -2499,43 +2499,43 @@ msgid "Robot waved"
 msgstr "机器人挥手"
 
 msgid "Circle 3 touched"
-msgstr "圆圈 3 已触碰"
+msgstr "圈 3 感动"
 
 msgid "Circle 6 Touched"
-msgstr "圆圈 6 已触碰"
+msgstr "圆形 6 触摸"
 
 msgid "Circle 6 touched"
-msgstr "圆圈 6 已触及"
+msgstr "圈 6 感动"
 
 msgid "Circle 9 touched"
-msgstr "圆 9 已触及"
+msgstr "圈 9 感动"
 
 msgid "Circle 12 Touched"
-msgstr "圆 12 已触及"
+msgstr "第 12 个圆圈"
 
 msgid "Circle 12 touched"
-msgstr "圆 12 已触及"
+msgstr "圈 12 感动"
 
 msgid "Wave at circle 3"
-msgstr "在圆圈 3 处挥动"
+msgstr "在圆圈 3 处挥手"
 
 msgid "Wave at circle 6"
-msgstr "在圆圈 6 上挥动"
+msgstr "在圆圈 6 上挥手"
 
 msgid "Wave at circle 9"
-msgstr "在圆圈 9 上挥动"
+msgstr "在第 9 圈挥手"
 
 msgid "Wave at circle 12"
-msgstr "在圆圈 12 上挥动"
+msgstr "在 12 圆圈处挥手"
 
 msgid "JBC Challenge 15"
-msgstr "JBC 挑战 15"
+msgstr "联合边境委员会挑战赛 15"
 
 msgid "Can 11 Upright"
-msgstr "直立罐 11"
+msgstr "罐头 11 直立式"
 
 msgid "Can 11 upright"
-msgstr "11号罐直立"
+msgstr "罐头 11 直立式"
 
 msgid "Bring can to Start Box"
 msgstr "将罐子带到起始箱"
@@ -2544,199 +2544,199 @@ msgid "Keep can 11 not upright"
 msgstr "保持 11 号罐不直立"
 
 msgid "JBC Challenge 16"
-msgstr "JBC 挑战 16"
+msgstr "JBC 挑战赛 16"
 
 msgid "Can 2 Picked Up"
-msgstr "拾起2号罐"
+msgstr "罐头 2 拾取"
 
 msgid "Can 2 picked up"
-msgstr "捡起 2 号罐"
+msgstr "可 2 拾取"
 
 msgid "Can 9 Picked Up"
-msgstr "捡起易拉罐 9"
+msgstr "可 9 拾取"
 
 msgid "Can 9 picked up"
-msgstr "拾起 9 号罐"
+msgstr "可 9 拾取"
 
 msgid "Can 10 Picked Up"
-msgstr "10 号罐被拾起"
+msgstr "罐头 10 拾取"
 
 msgid "Can 10 picked up"
-msgstr "10 号罐被拾起"
+msgstr "可以 10 次拾取"
 
 msgid "Can 2 not upright"
-msgstr "罐 2 不能竖立"
+msgstr "2 号罐不能直立"
 
 msgid "Can 10 not upright"
-msgstr "10 号罐未竖直"
+msgstr "10 号罐不能直立"
 
 msgid "Can 2 not picked up"
-msgstr "第 2 罐未捡起"
+msgstr "2 号罐没有被拾起"
 
 msgid "Can 9 not picked up"
-msgstr "第 9 罐未捡起"
+msgstr "第 9 罐未拾取"
 
 msgid "Can 10 not picked up"
-msgstr "10 号罐未捡起"
+msgstr "10 号罐不能拾取"
 
 msgid "JBC Challenge 17"
-msgstr "JBC 挑战 17"
+msgstr "联合边境委员会挑战赛 17"
 
 msgid "Rescue can 1 to start box"
-msgstr "救援1号罐到起始箱"
+msgstr "救援罐 1 转到启动箱"
 
 msgid "Rescue can 2 to start box"
-msgstr "救援易拉罐 2 到起始箱"
+msgstr "救援罐 2 启动箱"
 
 msgid "Rescue can 3 to start box"
-msgstr "救援易拉罐 3 到起始箱"
+msgstr "救援罐 3 至启动箱"
 
 msgid "Can 1 not upright"
-msgstr "1 号罐不直立"
+msgstr "1 号罐不能直立"
 
 msgid "Can 3 not upright"
-msgstr "易拉罐 3 不能直立"
+msgstr "3 号罐不能直立"
 
 msgid "JBC Challenge 18"
-msgstr "JBC 挑战赛 18"
+msgstr "联合边境委员会第 18 届挑战赛"
 
 msgid "Robot Left Start"
-msgstr "机器人左侧起点"
-
-msgid "Robot left starting box"
 msgstr "机器人左侧启动"
 
+msgid "Robot left starting box"
+msgstr "机器人左侧起始箱"
+
 msgid "One Can Stacked"
-msgstr "一个罐子叠放"
+msgstr "堆叠一罐"
 
 msgid "One can is stacked on another"
-msgstr "一个罐子叠放在另一个罐子上"
+msgstr "一个罐子叠在另一个罐子上"
 
 msgid "Robot Touching Can"
-msgstr "机器人触碰罐子"
+msgstr "触摸罐的机器人"
 
 msgid "Robot is touching a can"
-msgstr "机器人正在触摸一个罐子"
+msgstr "机器人正在触摸罐头"
 
 msgid "Leave the Start Box"
-msgstr "离开起始箱"
+msgstr "离开起始框"
 
 msgid "Stack one can on another"
-msgstr "将一个罐子堆叠在另一个罐子上"
+msgstr "将一个罐子堆放在另一个罐子上"
 
 msgid "Robot touching can"
-msgstr "机器人触碰易拉罐"
+msgstr "机器人触摸可以"
 
 msgid "JBC Challenge 19"
-msgstr "JBC 挑战 19"
+msgstr "联合边境委员会挑战 19"
 
 msgid "Robot Forward Touch"
-msgstr "机器人向前触碰"
+msgstr "机器人向前触摸"
 
 msgid "Robot drove forward and touched ream of paper"
-msgstr "机器人向前行驶并触及一卷纸"
+msgstr "机器人向前行驶，接触到一卷纸"
 
 msgid "Drive forward and touch the ream"
-msgstr "向前行驶并触摸纸卷"
+msgstr "向前推进并接触铰刀"
 
 msgid "JBC Challenge 20"
 msgstr "JBC 挑战 20"
 
 msgid "Robot in start box"
-msgstr "机器人在启动箱中"
+msgstr "启动箱中的机器人"
 
 msgid "Ream 1 Touched"
-msgstr "触碰卷 1"
+msgstr "第 1 卷"
 
 msgid "Robot touched ream 1"
-msgstr "机器人触碰卷 1"
+msgstr "机器人触碰卷筒 1"
 
 msgid "Ream 2 Touched"
-msgstr "触碰卷 2"
+msgstr "Ream 2 Touched"
 
 msgid "Robot touched ream 2"
-msgstr "机器人触碰卷 2"
+msgstr "机器人触碰卷轴 2"
 
 msgid "Ream 3 Touched"
-msgstr "触碰卷 3"
+msgstr "Ream 3 Touched"
 
 msgid "Robot touched ream 3"
-msgstr "机器人触碰了卷 3"
+msgstr "机器人触碰卷轴 3"
 
 msgid "Ream 4 Touched"
-msgstr "触碰卷 4"
+msgstr "Ream 4 Touched"
 
 msgid "Robot touched ream 4"
-msgstr "机器人触碰卷 4"
+msgstr "机器人触碰卷轴 4"
 
 msgid "Touch ream 1"
-msgstr "触摸卷 1"
+msgstr "触摸卷纸 1"
 
 msgid "Touch ream 2"
-msgstr "触碰卷 2"
+msgstr "触摸卷纸 2"
 
 msgid "Touch ream 3"
-msgstr "触碰卷 3"
+msgstr "触摸卷纸 3"
 
 msgid "Touch ream 4"
-msgstr "触摸卷料 4"
+msgstr "触摸卷纸 4"
 
 msgid "JBC Challenge 21"
-msgstr "JBC 挑战 21"
+msgstr "JBC 挑战赛 21"
 
 msgid "Stop at Ream"
-msgstr "停在卷料处"
+msgstr "停靠里姆"
 
 msgid "Robot stops at ream"
-msgstr "机器人停在卷料处"
+msgstr "机器人停在绞肉机前"
 
 msgid "Bump Ream"
-msgstr "撞击卷料"
+msgstr "Bump Ream"
 
 msgid "Robot bumps ream"
-msgstr "机器人撞击卷料"
+msgstr "机器人撞击铰刀"
 
 msgid "Stop at the ream"
-msgstr "停在卷边上"
+msgstr "停在卷筒纸上"
 
 msgid "Do not bump the ream"
-msgstr "不碰撞卷料"
+msgstr "不要碰撞铰刀"
 
 msgid "JBC Challenge 22"
 msgstr "JBC 挑战 22"
 
 msgid "Can Upright"
-msgstr "罐头直立"
+msgstr "直立罐"
 
 msgid "Can is upright"
-msgstr "罐子直立"
+msgstr "罐子是直立的"
 
 msgid "Can not upright"
-msgstr "罐不直立"
+msgstr "不能直立"
 
 msgid "JBC Challenge 23"
-msgstr "JBC 挑战 23"
+msgstr "JBC 挑战赛 23"
 
 msgid "Started over the circle"
 msgstr "从圆圈上方开始"
 
 msgid "Stop at the black line"
-msgstr "停在黑线上"
+msgstr "停在黑线处"
 
 msgid "JBC Challenge 24"
-msgstr "JBC 挑战 24"
+msgstr "JBC 挑战赛 24"
 
 msgid "Robot Walks the Line"
 msgstr "机器人走线"
 
 msgid "Robot uses reflectance sensor to follow the black line until Finish Line "
-msgstr "机器人使用反射传感器沿着黑线走，直到终点线"
+msgstr "机器人使用反射传感器跟踪黑线，直至终点线"
 
 msgid "Line follow to the finish line"
-msgstr "沿着黑线走到终点"
+msgstr "跟随队伍到达终点"
 
 msgid "Robot started on Circle"
-msgstr "机器人从圆圈开始"
+msgstr "机器人在 Circle 上启动"
 
 msgid "Can Not Upright"
 msgstr "不能直立"
@@ -2751,40 +2751,40 @@ msgid "Place Taco in Tray"
 msgstr "将玉米卷放入托盘"
 
 msgid "Can A Not Upright"
-msgstr "罐头 A 不能直立"
+msgstr "不能直立"
 
 msgid "Can B Not Upright"
-msgstr "罐头 B 不直立"
+msgstr "B 罐不能直立"
 
 msgid "Can C Not Upright"
-msgstr "罐头 C 非直立式"
+msgstr "罐 C 不直立"
 
 msgid "Can D Not Upright"
 msgstr "罐头 D 不直立"
 
 msgid "Can E Not Upright"
-msgstr "罐 E 不直立"
+msgstr "罐头 E 不直立"
 
 msgid "Can F Not Upright"
-msgstr "罐体 F 非直立式"
+msgstr "罐头 F 不直立"
 
 msgid "Can G Not Upright"
-msgstr "罐体 G 非直立式"
+msgstr "罐头 G 不直立"
 
 msgid "Can 1 in the Start Box"
-msgstr "罐 1 在起始箱中"
+msgstr "起始箱中的 1 号罐"
 
 msgid "Can 2 in the Start Box"
-msgstr "罐 2 在起始箱中"
+msgstr "起始箱中的 2 号罐"
 
 msgid "Can 3 in the Start Box"
-msgstr "罐 3 在起始箱中"
+msgstr "起始箱中的 3 号罐"
 
 msgid "Can 4 in the Start Box"
-msgstr "罐 4 位于起始箱中"
+msgstr "起始箱中的 4 号罐"
 
 msgid "Can 5 in the Start Box"
-msgstr "罐 5 位于起始箱中"
+msgstr "起始箱中的 5 号罐"
 
 msgid "Can 1 Not Upright"
 msgstr "罐 1 不能直立"
@@ -2796,196 +2796,196 @@ msgid "Can 3 Not Upright"
 msgstr "罐 3 不能直立"
 
 msgid "Can 4 Not Upright"
-msgstr "罐 4 不能直立"
+msgstr "Can 4 不直立"
 
 msgid "Can 5 Not Upright"
-msgstr "罐 5 不能直立"
+msgstr "Can 5 不直立"
 
 msgid "JBC Challenge 10B"
 msgstr "JBC 挑战赛 10B"
 
 msgid "JBC Challenge 12"
-msgstr "JBC 挑战 12"
+msgstr "联合边境委员会第 12 项挑战"
 
 msgid "Can from green garage intersects circle 2"
-msgstr "来自绿色车库的罐子与圆圈 2 相交"
+msgstr "来自绿色车库的 Can 与 2 号圆环相交"
 
 msgid "Can from blue garage intersects circle 9"
-msgstr "蓝色车库的罐子与圆圈 9 相交"
+msgstr "蓝色车库的罐子与 9 号圆环相交"
 
 msgid "Can 10 Intersects"
-msgstr "易拉罐 10 相交"
+msgstr "Can 10 相交"
 
 msgid "Can from yellow garage intersects circle 10"
-msgstr "黄色车库的罐子与圆圈10相交"
+msgstr "来自黄色车库的 Can 与 Circle 10 相交"
 
 msgid "JBC Challenge 13"
-msgstr "JBC 挑战 13"
+msgstr "联合边境委员会挑战赛 13"
 
 msgid "Can 2 intersects chosen garage"
-msgstr "罐 2 与所选车库相交"
+msgstr "能否选择 2 个交叉点的车库"
 
 msgid "Can 5 intersects chosen garage"
-msgstr "Can 5 与所选车库相交"
+msgstr "能否选择 5 个交叉点的车库"
 
 msgid "Can 8 Intersects"
-msgstr "8个相交"
+msgstr "Can 8 相交"
 
 msgid "Can 8 intersects chosen garage"
-msgstr "Can 8 与所选车库相交"
+msgstr "能否选择 8 个交叉点的车库"
 
 msgid "Can 10 intersects chosen garage"
-msgstr "与所选车库相交 10 次"
+msgstr "能否选择 10 个交叉点的车库"
 
 msgid "Can 11 Intersects"
-msgstr "可以 11 相交"
+msgstr "坎 11 相交"
 
 msgid "Can 11 intersects chosen garage"
-msgstr "11 号罐与所选车库相交"
+msgstr "11 与所选车库相交"
 
 msgid "Can 2 upright in chosen garage"
-msgstr "可以 2 垂直于所选车库"
+msgstr "2 个直立式车库"
 
 msgid "Can 5 upright in achosen garage"
-msgstr "第 5 个直立筒在所选车库中"
+msgstr "5 个直立式车库"
 
 msgid "Can 8 Upright"
-msgstr "可以 8 个直立"
+msgstr "罐头 8 直立式"
 
 msgid "Can 8 upright in chosen garage"
-msgstr "可在所选车库中直立 8 个"
+msgstr "可在选定的车库中竖立 8 个"
 
 msgid "Can 10 upright in chosen garage"
-msgstr "10 号罐在所选车库中直立"
+msgstr "可在选定的车库中竖立 10"
 
 msgid "Can 11 upright in chosen garage"
-msgstr "11号罐在所选车库直立"
+msgstr "可在选定的车库中竖立 11 个"
 
 msgid "JBC Challenge 15B"
-msgstr "JBC 挑战赛 15B"
+msgstr "联合边境委员会挑战赛 15B"
 
 msgid "Robot Backward Touch"
-msgstr "机器人向后触纸"
+msgstr "机器人向后触摸"
 
 msgid "Robot drove backward and touched ream of paper"
-msgstr "机器人向后行驶并触碰一卷纸"
+msgstr "机器人向后退，碰到了一卷纸"
 
 msgid "Robot Forward Circle 2"
-msgstr "机器人向前绕圈2"
+msgstr "机器人前行圈 2"
 
 msgid "Robot drove forward to circle 2"
-msgstr "机器人向前开到圆圈2"
+msgstr "机器人驶向第 2 圈"
 
 msgid "JBC Challenge 17B"
 msgstr "JBC 挑战赛 17B"
 
 msgid "Robot uses reflectance sensor to follow the black line until the Blue line"
-msgstr "机器人使用反射传感器跟随黑线直到蓝线"
+msgstr "机器人使用反射传感器跟踪黑线，直到蓝线出现。"
 
 msgid "Can 9 is upright"
 msgstr "9 号罐直立"
 
 msgid "Can 10 is upright"
-msgstr "10 号罐直立"
+msgstr "罐 10 直立"
 
 msgid "Can 12 Upright"
-msgstr "罐 12 直立"
+msgstr "12 号直立罐"
 
 msgid "Can 12 is upright"
-msgstr "Can 12 直立"
+msgstr "12 号罐直立"
 
 msgid "Can 9 rescued intersecting paper ream"
-msgstr "Can 9 抢救出相交的纸卷"
+msgstr "可 9 抢救相交纸卷"
 
 msgid "Can 2 rescued intersecting paper ream"
-msgstr "2 号罐抢救出相交的卷筒纸"
+msgstr "可 2 次抢救相交纸卷"
 
 msgid "Can 10 rescued intersecting paper ream"
-msgstr "10 号罐抢救出相交的卷筒纸"
+msgstr "可 10 次抢救相交纸卷"
 
 msgid "Can 12 Intersects"
-msgstr "Can 12 相交"
+msgstr "12 号罐相交"
 
 msgid "Can 12 rescued intersecting paper ream"
-msgstr "12 号罐抢救出相交的卷筒纸"
+msgstr "可抢救 12 卷相交纸"
 
 msgid "Can 9 Lifted"
-msgstr "罐 9 升起"
+msgstr "可 9 提升"
 
 msgid "Can 9 Lifted a Foot Tall"
-msgstr "Can 9 升起一英尺高"
+msgstr "9 号罐可以举起一英尺高"
 
 msgid "JBC Challenge 2B"
-msgstr "JBC 挑战 2B"
+msgstr "JBC 2B 挑战赛"
 
 msgid "Can 10 Touched"
-msgstr "能 10 触摸"
+msgstr "Can 10 Touched"
 
 msgid "Can 10 touched"
-msgstr "罐 10 触摸"
+msgstr "可以 10 次触摸"
 
 msgid "Can 11 Touched"
-msgstr "可以 11 碰触"
+msgstr "Can 11 Touched"
 
 msgid "Can 11 touched"
-msgstr "可以 11 碰触"
+msgstr "可以 11 感动"
 
 msgid "Can 12 Touched"
-msgstr "可以 12 触碰"
+msgstr "可以 12 次触摸"
 
 msgid "Can 12 touched"
-msgstr "可以 12 触碰"
+msgstr "可以 12 感动"
 
 msgid "Can 10 intersects circle 10"
-msgstr "可以 10 与圆圈 10 相交"
+msgstr "10 与圆 10 相交"
 
 msgid "Can 11 intersects circle 11"
-msgstr "可以 11 与圆 11 相交"
+msgstr "11 与圆 11 相交"
 
 msgid "Can 12 intersects circle 12"
-msgstr "可以 12 相交于圆 12"
+msgstr "Can 12 与圆 12 相交"
 
 msgid "Can 10 upright on circle 10"
-msgstr "10 可以直立在圆 10 上"
+msgstr "圆圈 10 上可以直立"
 
 msgid "Can 11 upright on circle 11"
-msgstr "11 可以直立在圆 11 上"
+msgstr "圆圈 11 上的 11 个直立罐"
 
 msgid "Can 12 upright on circle 12"
-msgstr "罐 12 在圆 12 上直立"
+msgstr "圆圈 12 上的 12 个直立罐"
 
 msgid "Robot passed right side of can 12"
-msgstr "机器人通过 12 号罐右侧"
+msgstr "机器人通过罐体右侧 12"
 
 msgid "Robot passed top side of can 11"
-msgstr "机器人通过 11 号罐上侧"
+msgstr "机器人通过罐顶 11"
 
 msgid "Robot passed left side of can 10"
 msgstr "机器人通过 10 号罐左侧"
 
 msgid "JBC Challenge 2C"
-msgstr "JBC 挑战赛 2C"
+msgstr "JBC 2C 挑战赛"
 
 msgid "Robot Driving Backwards"
-msgstr "机器人向后行驶"
+msgstr "逆向行驶的机器人"
 
 msgid "Robot is driving backwards"
-msgstr "机器人向后行驶"
+msgstr "机器人在倒退"
 
 msgid "JBC Challenge 2D"
-msgstr "JBC 挑战赛 2D"
+msgstr "JBC 挑战 2D"
 
 msgid "Robot Rentered Start 1"
-msgstr "机器人重回起点 1"
+msgstr "机器人重置开始 1"
 
 msgid "Robot reentered starting box after going forwards"
-msgstr "机器人向前行驶后重新进入起点框"
+msgstr "机器人前进后重新进入起始框"
 
 msgid "Robot Rentered Start 2"
-msgstr "机器人更改起点 2"
+msgstr "机器人变身开始 2"
 
 msgid "Robot reentered starting box after going backwards"
-msgstr "机器人后退后重新进入起始框"
+msgstr "机器人倒退后重新进入起始框"
 
 msgid "Robot Driving Forwards"
 msgstr "机器人向前行驶"
@@ -2994,61 +2994,61 @@ msgid "Robot is driving forwards"
 msgstr "机器人向前行驶"
 
 msgid "JBC Challenge 4B"
-msgstr "JBC 挑战赛 4B"
+msgstr "联合边境委员会挑战赛 4B"
 
 msgid "Can 5 intersects circle 5"
-msgstr "Can 5 与圆圈 5 相交"
+msgstr "Can 5 与圆 5 相交"
 
 msgid "Can 8 intersects circle 8"
-msgstr "8号罐与8号圆相交"
+msgstr "Can 8 与圆 8 相交"
 
 msgid "Can 5 upright on circle 5"
-msgstr "5 可以直立在圆 5 上"
+msgstr "圆圈 5 上的 5 个直立罐"
 
 msgid "Can 8 upright on circle 8"
-msgstr "8 能在圆 8 上直立"
+msgstr "第 8 个圆圈上的第 8 个直立罐"
 
 msgid "Can 8 Clockwise"
-msgstr "8号罐顺时针"
+msgstr "罐 8 顺时针方向"
 
 msgid "Robot drove clockwise around can 8"
-msgstr "机器人绕 8 号罐顺时针行驶"
+msgstr "机器人顺时针绕 8 号罐行驶"
 
 msgid "Can 5 Counter Clockwise"
 msgstr "罐 5 逆时针"
 
 msgid "Robot drove counter clockwise around can 5"
-msgstr "机器人绕 5 号罐逆时针行驶"
+msgstr "机器人逆时针绕 5 号罐行驶"
 
 msgid "Can 9 Counter Clockwise"
-msgstr "9 号罐 逆时针"
+msgstr "罐头 9 逆时针"
 
 msgid "Robot drove counter clockwise around can 9"
-msgstr "机器人绕 9 号罐逆时针行驶"
+msgstr "机器人逆时针绕 9 号罐行驶"
 
 msgid "JBC Challenge 8B"
-msgstr "JBC 挑战赛 8B"
+msgstr "联合边境委员会挑战赛 8B"
 
 msgid "Robot Begins In start"
-msgstr "机器人从起点开始"
+msgstr "机器人开始启动"
 
 msgid "Robot begins in starting box"
-msgstr "机器人从起点箱开始"
+msgstr "机器人从起始箱开始"
 
 msgid "Robot passed through circle 1"
 msgstr "机器人通过圆圈 1"
 
 msgid "Robot passed through circle 2"
-msgstr "机器人通过圆圈 2"
+msgstr "机器人通过第 2 圈"
 
 msgid "Robot passed through circle 3"
-msgstr "机器人通过圆圈 3"
+msgstr "机器人通过第 3 圈"
 
 msgid "Robot passed through circle 4"
-msgstr "机器人通过圆圈 4"
+msgstr "机器人通过第 4 圈"
 
 msgid "Robot passed through circle 5"
-msgstr "机器人通过圆圈 5"
+msgstr "机器人通过第 5 圈"
 
 msgid "Test"
 msgstr "测试"
@@ -3060,28 +3060,28 @@ msgid "B"
 msgstr "B"
 
 msgid "Junior Botball Challenge 12: Add It Up"
-msgstr "青少年机器人球挑战赛 12：加起来"
+msgstr "青少年机器人足球挑战赛 12：加起来"
 
 msgid "Robot Touched a Circle "
-msgstr "机器人碰到圆圈"
+msgstr "机器人触摸圆圈"
 
 msgid "Robot touched a circle"
 msgstr "机器人触摸圆圈"
 
 msgid "Touched Circles to add up to 20"
-msgstr "触摸圆圈，加起来等于 20"
+msgstr "触摸圆圈加起来达 20 个"
 
 msgid "JBC Challenge 14"
-msgstr "JBC 挑战赛 14"
+msgstr "联合边境委员会第 14 届挑战赛"
 
 msgid "Robot 360 Clockwise"
-msgstr "机器人顺时针旋转 360 度"
+msgstr "机器人 360 顺时针"
 
 msgid "Robot turned 360 degrees clockwise"
 msgstr "机器人顺时针旋转 360 度"
 
 msgid "Robot 360 Counter Clockwise"
-msgstr "机器人 360 逆时针旋转"
+msgstr "机器人 360 逆时针"
 
 msgid "Robot turned 360 degrees counter clockwise"
 msgstr "机器人逆时针旋转 360 度"
@@ -3093,16 +3093,16 @@ msgid "Robot drove forward"
 msgstr "机器人向前行驶"
 
 msgid "Robot Drove Backward"
-msgstr "机器人向后退"
+msgstr "机器人逆向行驶"
 
 msgid "Robot drove backward"
 msgstr "机器人向后退"
 
 msgid "Robot Wave Servo"
-msgstr "机器人挥动伺服器"
+msgstr "机器人波形伺服器"
 
 msgid "Robot waved servo up and down at least once"
-msgstr "机器人上下挥动伺服器至少一次"
+msgstr "机器人至少上下摆动伺服器一次"
 
 msgid "Turn 360° clockwise"
 msgstr "顺时针旋转 360"
@@ -3111,421 +3111,1150 @@ msgid "Turn 360° counter clockwise"
 msgstr "逆时针旋转 360"
 
 msgid "Drive forward"
-msgstr "前进"
+msgstr "向前行驶"
 
 msgid "Drive backward"
-msgstr "后退"
+msgstr "向后行驶"
 
 msgid "Wave the servo"
 msgstr "挥动伺服器"
 
 msgid "2026 Fall Game Table"
-msgstr "2026年秋季比賽桌面配置"
+msgstr "2026 年秋季游戏桌"
 
 msgid "Blue Pom #%d"
-msgstr "藍色球體 #%d"
+msgstr "Blue Pom #%d"
 
 msgid "Orange Pom #%d"
-msgstr "橙色球體 #%d"
+msgstr "橙色绒球 #%d"
 
 msgid "Random Pom #%d"
-msgstr "隨機球體 #%d"
+msgstr "随机 Pom #%d"
 
 msgid "Raised Dock Pallet #1"
-msgstr "高架貨棧板 #1"
+msgstr "高架码头托盘 #1"
 
 msgid "Raised Dock Pallet #2"
-msgstr "高架貨棧板 #2"
+msgstr "高架码头托盘 #2"
 
 msgid "Storage Pallet #1"
-msgstr "儲物棧板 #1"
+msgstr "存储托盘 #1"
 
 msgid "Storage Pallet #2"
-msgstr "儲物棧板 #2"
+msgstr "2 号存储托盘"
 
 msgid "Left Stack Cube #%d"
-msgstr "左側堆疊方塊 #%d"
+msgstr "左堆栈立方体 #%d"
 
 msgid "Right Stack Cube #%d"
-msgstr "右側堆疊方塊 #%d"
+msgstr "右堆栈立方体 #%d"
 
 msgid "Red Cube (4 inch)"
-msgstr "紅色方塊（4英吋）"
+msgstr "红色方块（4 英寸）"
 
 msgid "Brown Cube (4 inch)"
-msgstr "棕色方塊（4英吋）"
+msgstr "棕色立方体（4 英寸）"
 
 msgid "Green Cube (4 inch)"
-msgstr "綠色方塊（4英吋）"
+msgstr "绿色方块（4 英寸）"
 
 msgid "Right Traffic Cone"
-msgstr "右側交通錐"
+msgstr "右侧交通锥"
 
 msgid "Left Traffic Cone"
-msgstr "左側交通錐"
+msgstr "左侧交通锥"
 
 msgid "Left Basket"
-msgstr "左側籃筐"
+msgstr "左侧篮筐"
 
 msgid "Right Basket"
-msgstr "右側籃筐"
+msgstr "右篮"
 
 msgid "Left PCV #%d"
-msgstr "左側PVC #%d"
+msgstr "左 PCV #%d"
 
 msgid "Right PCV #%d"
-msgstr "右側PVC #%d"
+msgstr "右 PCV #%d"
 
 msgid "2026 Fall Botball game table sandbox"
-msgstr "2026秋季機器人球賽沙盒"
+msgstr "2026 年秋季机器人球游戏桌沙盘"
 
 msgid "JBC Sandbox"
-msgstr ""
+msgstr "JBC 沙盒"
 
 msgid ""
 "Junior Botball Challenge Sandbox. Starting Mat is A but B can also be shown "
 "instead. All cans 1-12 are available by default."
-msgstr ""
+msgstr "青少年机器人足球挑战沙盘。起始垫为 A，但也可以显示 B。默认提供所有 1-12 号罐。"
 
 msgid "2026 Botball Fall Game Table"
-msgstr ""
+msgstr "2026 机器人球秋季游戏桌"
 
 msgid "2026 Botball Spring Game Table"
-msgstr ""
+msgstr "2026 年机器人足球春季比赛表"
 
 msgid "Base Scene - 2026 Botball Game Table"
-msgstr ""
+msgstr "基地场景 - 2026 机器人球游戏桌"
 
 msgid "Sliding Door #1"
-msgstr ""
+msgstr "推拉门 #1"
 
 msgid "Sliding Door #2"
-msgstr ""
+msgstr "推拉门 #2"
 
 msgid "Low Blue Pom #%d"
-msgstr ""
+msgstr "Low Blue Pom #%d"
 
 msgid "Low Orange Pom #%d"
-msgstr ""
+msgstr "低橙色 Pom #%d"
 
 msgid "High Blue Pom #%d"
-msgstr ""
+msgstr "高蓝蓬 #%d"
 
 msgid "High Orange Pom #%d"
-msgstr ""
+msgstr "高橙色绒球 #%d"
 
 msgid "Left Red Cube (2 inch)"
-msgstr ""
+msgstr "左红色方块（2 英寸）"
 
 msgid "Right Red Cube (2 inch)"
-msgstr ""
+msgstr "右红色方块（2 英寸）"
 
 msgid "Left Green Cube (2 inch)"
-msgstr ""
+msgstr "左绿色方块（2 英寸）"
 
 msgid "Right Green Cube (2 inch)"
-msgstr ""
+msgstr "右绿色方块（2 英寸）"
 
 msgid "Pallet #%d"
-msgstr ""
+msgstr "托盘 #%d"
 
 msgid "Lower Yellow Cube (2 inch)"
-msgstr ""
+msgstr "下部黄色方块（2 英寸）"
 
 msgid "Upper Yellow Cube (2 inch)"
-msgstr ""
+msgstr "上黄色方块（2 英寸）"
 
 msgid "Middle Left Brown Cube"
-msgstr ""
+msgstr "左中部棕色立方体"
 
 msgid "Middle Right Brown Cube"
-msgstr ""
+msgstr "右中棕色立方体"
 
 msgid "Green Cube"
-msgstr ""
+msgstr "绿色立方体"
 
 msgid "Red Cube"
-msgstr ""
+msgstr "红色立方体"
 
 msgid "Near Stack %s Cube"
-msgstr ""
+msgstr "接近堆栈 %s 立方体"
 
 msgid "Far Stack %s Cube"
-msgstr ""
+msgstr "远堆栈 %s 立方体"
 
 msgid "Dropper #1"
-msgstr ""
+msgstr "1 号滴管"
 
 msgid "Dropper #2"
-msgstr ""
+msgstr "2 号滴管"
 
 msgid "Drum (2in PVC)"
-msgstr ""
+msgstr "鼓（2 英寸 PVC）"
 
 msgid "Dropper Gate"
-msgstr ""
+msgstr "集电门"
 
 msgid "2026 Botball Game Table Sandbox"
-msgstr ""
+msgstr "2026 机器人球游戏桌沙盘"
 
 msgid ""
 "2026 Botball game table sandbox. One robot and one side of the table are "
 "available. Barrels (2in PVC) drop every 7 seconds, starting 10 seconds "
 "after the scene is loaded."
-msgstr ""
+msgstr "2026 机器人球游戏桌沙盘。可使用一个机器人和桌子的一侧。桶（2 英寸 PVC）每 7 秒掉落一次，从场景加载后 10 秒开始。"
 
 msgid "Speed Run: Ring Around the Can"
-msgstr ""
+msgstr "极速奔跑环罐跑"
 
 msgid ""
 "Complete the Ring Around the Can challenge as fast as possible! Limited "
 "time event."
-msgstr ""
+msgstr "以最快速度完成 \\\"环罐挑战\\\"！限时活动。"
 
 msgid "Robot Reentered Start"
-msgstr ""
+msgstr "机器人重新进入起点"
 
 msgid "Robot Passed Left Side"
-msgstr ""
+msgstr "机器人左侧通过"
 
 msgid "Speed Run: Tag, You're it!"
-msgstr ""
+msgstr "极速奔跑Tag, You're it！"
 
 msgid ""
 "Complete the Tag, You're it! challenge as fast as possible! Limited time "
 "event."
-msgstr ""
+msgstr "以最快速度完成 \\\"标签，就是你！\\\"挑战！限时活动。"
 
 msgid "Classrooms"
-msgstr ""
+msgstr "教室"
 
 msgid "See the current classrooms."
-msgstr ""
+msgstr "查看当前教室。"
 
 msgid "Limited Challenges"
-msgstr ""
+msgstr "有限的挑战"
 
 msgid "Challenges with time limits and attempt restrictions."
-msgstr ""
+msgstr "有时间限制和尝试限制的挑战。"
 
 msgid "Loading leaderboard..."
-msgstr ""
+msgstr "正在加载排行榜..."
 
 msgid "Error loading leaderboard"
-msgstr ""
+msgstr "加载排行榜出错"
 
 msgid "Rank"
-msgstr ""
+msgstr "等级"
 
 msgid "Your position"
-msgstr ""
+msgstr "您的位置"
 
 msgid "participants"
-msgstr ""
+msgstr "与会者"
 
 msgid "Show Top Users"
-msgstr ""
+msgstr "显示顶级用户"
 
 msgid "Show Full Board"
-msgstr ""
+msgstr "显示整个董事会"
 
 msgid "Your name on the leaderboard:"
-msgstr ""
+msgstr "你在排行榜上的名字"
 
 msgid "days"
-msgstr ""
+msgstr "天数"
 
 msgid "hrs"
-msgstr ""
+msgstr "rs"
 
 msgid "min"
-msgstr ""
+msgstr "分钟"
 
 msgid "sec"
-msgstr ""
+msgstr "秒钟"
 
 msgid "Upcoming"
-msgstr ""
+msgstr "即将推出"
 
 msgid "Closed"
-msgstr ""
+msgstr "关闭"
 
 msgid "Mystery Challenge"
-msgstr ""
+msgstr "神秘挑战"
 
 msgid "Check back when this challenge opens to see what awaits!"
-msgstr ""
+msgstr "挑战赛开始后，请回来看看有什么在等着您！"
 
 msgid "Opens in"
-msgstr ""
+msgstr "在"
 
 msgid "Closes in"
-msgstr ""
+msgstr "关闭"
 
 msgid "Best Time"
-msgstr ""
+msgstr "最佳时间"
 
 msgid ""
 "Complete these time-limited challenges as fast as possible! Your best time "
 "will be recorded."
-msgstr ""
+msgstr "以最快速度完成这些限时挑战！您的最佳时间将被记录下来。"
 
 msgid "No limited challenges available at this time."
-msgstr ""
+msgstr "目前没有有限的挑战。"
 
 msgid "View Closed Challenges"
-msgstr ""
+msgstr "查看已结束的挑战"
 
 msgid "Back to Limited Challenges"
-msgstr ""
+msgstr "返回有限挑战"
 
 msgid "Closed Challenges"
-msgstr ""
+msgstr "封闭式挑战"
 
 msgid "View past limited challenges and their leaderboards."
-msgstr ""
+msgstr "查看过去的有限挑战及其排行榜。"
 
 msgid "No closed challenges yet."
-msgstr ""
+msgstr "还没有结束的挑战。"
 
 msgid "Predefined Location"
-msgstr ""
+msgstr "预定义位置"
 
 msgid "None"
-msgstr ""
+msgstr "无"
 
 msgid "Show Scripts"
-msgstr ""
+msgstr "显示脚本"
 
 msgid "Show scripts in the World section"
-msgstr ""
+msgstr "在 \\\"世界 \\\"部分显示脚本"
 
 msgid "Scene"
-msgstr ""
+msgstr "场景"
 
 msgid "Tutor is thinking..."
-msgstr "导师正在思考..."
+msgstr "导师在想..."
 
 msgid "Create New Project"
-msgstr ""
+msgstr "创建新项目"
 
 msgid "Create New File"
-msgstr ""
+msgstr "创建新文件"
 
 msgid "Are You Sure?"
-msgstr ""
+msgstr "你确定吗？"
 
 msgid "Loading Python...\n"
-msgstr ""
+msgstr "加载 Python...\\\\n"
 
 msgid "Please help me understand what's wrong."
-msgstr "请帮我弄清楚问题出在哪里。"
+msgstr "请帮助我了解问题所在。"
 
 msgid "Success conditions met - verifying...\n"
-msgstr ""
+msgstr "满足成功条件 - 验证...\\\\n"
 
 msgid "Completion invalidated - failure condition triggered\n"
-msgstr ""
+msgstr "完成失效 - 触发失败条件/n"
 
 msgid "This challenge is closed and no longer accepting submissions.\n"
-msgstr ""
+msgstr "这项挑战已经结束，不再接受提交。"
 
 msgid "This challenge has not opened yet.\n"
-msgstr ""
+msgstr "这项挑战尚未开启。"
 
 msgid "Challenge Closed"
-msgstr ""
+msgstr "挑战结束"
 
 msgid "This challenge is no longer accepting submissions."
-msgstr ""
+msgstr "本挑战赛不再接受参赛作品。"
 
 msgid "Your best time: "
-msgstr ""
+msgstr "你的最佳时间"
 
 msgid "This challenge has not opened yet."
-msgstr ""
+msgstr "这项挑战尚未开始。"
 
 msgid "This challenge is closed and no longer accepting submissions."
-msgstr ""
+msgstr "本挑战赛已结束，不再接受参赛作品。"
 
 msgid "No completions yet. Be the first to complete this challenge!"
-msgstr ""
+msgstr "尚未完成。成为第一个完成这项挑战的人！"
 
 msgid "Runtime"
-msgstr ""
+msgstr "运行时间"
 
 msgid "Completed"
-msgstr ""
+msgstr "已完成"
 
 msgid "Back to Challenges"
-msgstr ""
+msgstr "返回挑战"
 
 msgid "Enter Challenge"
-msgstr ""
+msgstr "进入挑战"
 
 msgid "Show Around Me"
-msgstr ""
+msgstr "在我身边展示"
 
 msgid "Sort by:"
-msgstr ""
+msgstr "排序方式"
 
 msgid "Fastest Runtime"
-msgstr ""
+msgstr "最快运行时间"
 
 msgid "First to Complete"
-msgstr ""
+msgstr "第一个完成"
 
 msgid "Student View"
-msgstr ""
+msgstr "学生视角"
 
 msgid "See the classroom you are in."
-msgstr ""
+msgstr "看看你所在的教室。"
 
 msgid "Teacher View"
-msgstr ""
+msgstr "教师观点"
 
 msgid "See and manage all the classrooms you own."
-msgstr ""
+msgstr "查看并管理您拥有的所有教室。"
 
 msgid "My Badges"
-msgstr ""
+msgstr "我的徽章"
 
 msgid "Create New Classroom"
-msgstr ""
+msgstr "创建新教室"
 
 msgid "Choose Class Leaderboard"
-msgstr ""
+msgstr "选择班级排行榜"
 
 msgid "Join Classroom"
-msgstr ""
+msgstr "加入课堂"
 
 msgid "Leave Classroom"
-msgstr ""
+msgstr "离开教室"
 
 msgid "Default JBC Challenges"
-msgstr ""
+msgstr "默认的联合边境委员会挑战"
 
 msgid "User Already Exists"
-msgstr ""
+msgstr "用户已存在"
 
 msgid "UH OH!"
-msgstr ""
+msgstr "UH OH！"
 
 msgid "This user already exists."
-msgstr ""
+msgstr "该用户已存在。"
 
 msgid "No IvygateClassroomType"
-msgstr ""
+msgstr "无 IvygateClassroomType"
 
 msgid "Create New User"
-msgstr ""
+msgstr "创建新用户"
 
 msgid "Back to File Explorer"
-msgstr ""
+msgstr "返回文件资源管理器"
+
+msgid "Retake Tour"
+msgstr "重拍之旅"
+
+msgid "New to the simulator? Take a tour to get familiar with the interface."
+msgstr "模拟器新手？参观一下，熟悉一下界面。"
+
+msgid "Classroom Invite Code"
+msgstr "课堂邀请代码"
+
+msgid "Enter the invite code provided by your teacher to join a classroom"
+msgstr "输入老师提供的邀请码加入教室"
+
+msgid "Display Name"
+msgstr "显示名称"
+
+msgid ""
+"The name that will be shown to your teacher and classmates. Be sure to only "
+"use your first name."
+msgstr "将显示给老师和同学的姓名。请务必只使用您的名字。"
+
+msgid "Retaking the tour will change your current scene to the JBC Sandbox."
+msgstr "重新开始游览会将当前场景更改为 JBC 沙盒。"
+
+msgid "Do you want to retake the tour?"
+msgstr "您想重游吗？"
+
+msgid ""
+"This is the classroom dashboard page, where you can choose to see the "
+"classrooms you are a part of and the classrooms you own."
+msgstr "这是教室仪表板页面，您可以选择查看您参与的教室和您拥有的教室。"
+
+msgid "Use this card to switch to the student view."
+msgstr "使用此卡切换到学生视图。"
+
+msgid ""
+"Use this card to switch to the teacher view, where you can manage the "
+"classrooms you own."
+msgstr "使用此卡切换到教师视图，您可以在此管理自己拥有的教室。"
+
+msgid ""
+"This is the teacher dashboard, where you can see and manage the classrooms "
+"you own."
+msgstr "这是教师控制面板，您可以在这里查看和管理自己拥有的教室。"
+
+msgid "To create a classroom, select this drop down..."
+msgstr "要创建教室，请选择下拉菜单..."
+
+msgid "...then click this button to create a new classroom."
+msgstr "...然后单击此按钮创建新教室。"
+
+msgid ""
+"This is the dialog box where you can enter the details for your new "
+"classroom."
+msgstr "在此对话框中，您可以输入新教室的详细信息。"
+
+msgid ""
+"Share the Invite Code with your students! Don't worry, it'll be visible "
+"later on too. \n"
+" \n"
+" Fill out the rest of the info and click \"Create\" to create your "
+"classroom."
+msgstr "与学生分享邀请码！别担心，稍后也会显示出来。\\\\填写其余信息并点击教室。"
+
+msgid "After creating a classroom, you can see it listed on your dashboard."
+msgstr "创建教室后，您可以在仪表板上看到教室列表。"
+
+msgid "Click on your newly created classroom to see the users."
+msgstr "点击新创建的教室查看用户。"
+
+msgid "Share the invite code with your students so they can join your classroom."
+msgstr "与学生分享邀请码，让他们加入您的课堂。"
+
+msgid ""
+"This is the student dashboard, where you can see the classrooms you are a "
+"part of."
+msgstr "这是学生仪表板，您可以在这里看到自己所在的教室。"
+
+msgid "To join a classroom, click this button to open the join classroom dialog."
+msgstr "要加入教室，请单击此按钮打开 \\\"加入教室 \\\"对话框。"
+
+msgid ""
+"This is the dialog box where you can enter the invite code to join a "
+"classroom."
+msgstr "在此对话框中，您可以输入邀请代码加入教室。"
+
+msgid ""
+"After joining a classroom, you can see the class's leaderboard listed on "
+"your dashboard."
+msgstr "加入教室后，您可以在仪表板上看到该教室的排行榜。"
+
+msgid ""
+"This tab contains the default JBC challenges that all classrooms have "
+"access to and are the scenes always in the 3D-Simulator."
+msgstr "该选项卡包含所有教室都能访问的默认 JBC 挑战，也是 3D 模拟器中始终存在的场景。"
+
+msgid "Click this button to export your challenge scores as a PDF file."
+msgstr "单击此按钮可将挑战成绩导出为 PDF 文件。"
+
+msgid "Click this button to scroll to your scores on the leaderboard."
+msgstr "点击此按钮，滚动查看您在排行榜上的分数。"
+
+msgid ""
+"Click this button to see the badges you have earned from completing "
+"challenges."
+msgstr "点击此按钮可查看您通过完成挑战获得的徽章。"
+
+msgid ""
+"Select \"Limited Challenges\" to see any limited challenges your classroom "
+"has access to."
+msgstr "选择 访问。"
+
+msgid ""
+"This tab contains any limited challenges that your classroom has access to. "
+"Limited challenges are challenges that have time limits and attempt "
+"restrictions."
+msgstr "此选项卡包含您的教室可以访问的任何有限挑战。有限挑战是指有时间限制和尝试限制的挑战。"
+
+msgid ""
+"Click this button to see extra options for the classroom such as leaving "
+"the classroom."
+msgstr "点击该按钮可查看教室的其他选项，如离开教室。"
+
+msgid ""
+"This is the dropdown that show extra info and where you can select to leave "
+"the classroom."
+msgstr "这是显示额外信息的下拉菜单，在这里您可以选择离开教室。"
+
+msgid ""
+"Select \"Leave Classroom\" to leave the classroom. If you leave a "
+"classroom, your challenge scores will be saved but you will no longer be "
+"able to see the classroom or its leaderboard unless you join again."
+msgstr "选择 \\\\classroom，您的挑战得分将被保存，但您将无法再看到教室或其排行榜，除非您再次加入。"
+
+msgid "This is the Editor tab where you can write, edit, and debug your code."
+msgstr "这是编辑器选项卡，您可以在这里编写、编辑和调试代码。"
+
+msgid ""
+"The Editor tab contains 2 main sections: the code editor on top and the "
+"console on bottom."
+msgstr "编辑器 \\\"选项卡包含两个主要部分：顶部的代码编辑器和底部的控制台。"
+
+msgid "This is the code editor, where you can write and edit your code."
+msgstr "这是代码编辑器，您可以在这里编写和编辑代码。"
+
+msgid "Click this dropdown to select the programming language for your code."
+msgstr "单击此下拉菜单，为您的代码选择编程语言。"
+
+msgid "Click this button to auto-indent your code."
+msgstr "单击此按钮可自动缩进代码。"
+
+msgid "Click this button to download your code as a file."
+msgstr "单击此按钮可将代码下载为文件。"
+
+msgid ""
+"Click this button to reset the code in the editor to the default code for "
+"the current language."
+msgstr "单击此按钮可将编辑器中的代码重置为当前语言的默认代码。"
+
+msgid ""
+"This is the console, where you can see the output of your code and any "
+"error messages."
+msgstr "这是控制台，在这里可以看到代码的输出和任何错误信息。"
+
+msgid "Click this button to clear the console."
+msgstr "单击此按钮清除控制台。"
+
+msgid "Click this button to ask the KIPR Tutor for help with your code."
+msgstr "点击此按钮，向 KIPR 讲师寻求代码帮助。"
+
+msgid ""
+"This is the main menu, where you can access different pages and features of "
+"the simulator."
+msgstr "这是主菜单，您可以在此访问模拟器的不同页面和功能。"
+
+msgid "Click the KIPR logo to return to the dashboard."
+msgstr "单击 KIPR 徽标返回仪表板。"
+
+msgid "Use this button to run or stop your code in the simulator."
+msgstr "使用此按钮可在模拟器中运行或停止代码。"
+
+msgid "Click this button to reset the world in the simulator."
+msgstr "点击此按钮重置模拟器中的世界。"
+
+msgid "After opening a challenge scene, click this button to start the challenge."
+msgstr "打开挑战场景后，单击此按钮开始挑战。"
+
+msgid ""
+"Click this button to see options to change the layout of the simulator "
+"interface. Try it now!"
+msgstr "单击此按钮可查看更改模拟器界面布局的选项。现在就试试吧"
+
+msgid ""
+"These are the different layout options. You can select one to change the "
+"layout of the simulator interface, but for now, click the \"Next\" button."
+msgstr "这些是不同的布局选项。你可以选择其中一个来更改模拟器界面的布局，但现在先点击"
+
+msgid ""
+"Click this button to see options to change the scene in the simulator. Try "
+"it now!"
+msgstr "单击此按钮可查看更改模拟器场景的选项。现在就试试！"
+
+msgid "These are the different scene settings options."
+msgstr "这些是不同的场景设置选项。"
+
+msgid ""
+"Currently, we're in the JBC Sandbox so some options are locked. Select "
+"\"Open\" to continue."
+msgstr "目前，我们在 JBC 沙盒中，因此某些选项被锁定。选择"
+
+msgid ""
+"This is the open scene option, which allows you to open different scenes in "
+"the simulator."
+msgstr "这是 \\\"打开场景 \\\"选项，可以在模拟器中打开不同的场景。"
+
+msgid ""
+"This is the list of scenes that you can open. Select one to see more info "
+"and open it in the Simulator."
+msgstr "这是可以打开的场景列表。选择一个场景查看更多信息，并在模拟器中打开它。"
+
+msgid ""
+"This is the info page for the scene. You can click \"Accept\" at the bottom "
+"to open the scene in the simulator."
+msgstr "这是场景的信息页面。您可以点击 （）在模拟器中打开场景。"
+
+msgid ""
+"For now, let's close the dialog to continue exploring the simulator "
+"interface."
+msgstr "现在，让我们关闭对话框，继续探索模拟器界面。"
+
+msgid ""
+"Click this button to see extra options such as the simulator settings and "
+"the option to report a bug."
+msgstr "点击该按钮可查看其他选项，如模拟器设置和报告错误选项。"
+
+msgid "These are the extra options you can access from this menu."
+msgstr "这些是您可以从该菜单访问的额外选项。"
+
+msgid "Click the documentation button to access the KIPR library."
+msgstr "单击文档按钮访问 KIPR 库。"
+
+msgid ""
+"Click the ask tutor button to ask the KIPR Tutor for help with the "
+"simulator."
+msgstr "点击 \\\"询问辅导员 \\\"按钮，向 KIPR 辅导员寻求模拟器帮助。"
+
+msgid ""
+"Click the settings button to see options such as User Interface and Editor "
+"settings."
+msgstr "点击设置按钮，查看用户界面和编辑器设置等选项。"
+
+msgid "Click the about button to see information about KIPR and the simulator."
+msgstr "点击 \\\"关于 \\\"按钮，查看有关 KIPR 和模拟器的信息。"
+
+msgid ""
+"Click the feedback button to report a bug or send feedback about the "
+"Simulator to KIPR."
+msgstr "点击反馈按钮向 KIPR 报告错误或发送有关模拟器的反馈。"
+
+msgid "Click the logout button to log out of your account."
+msgstr "单击注销按钮注销账户。"
+
+msgid ""
+"This is the Overlay Tab Bar, where you can access different tools and "
+"features to use while testing your code in the simulator."
+msgstr "这是 \\\"覆盖选项卡栏\\\"，在模拟器中测试代码时，您可以在此访问不同的工具和功能。"
+
+msgid ""
+"We've already introduced the Editor Tab, we'll now explore the other tabs "
+"available: Robot and World. Click the \"Robot\" tab to continue the tour!"
+msgstr "我们已经介绍了 \\\"编辑器 \\\"选项卡，现在我们将探索其他可用的选项卡：机器人和世界。点击"
+
+msgid ""
+"This is the Robot tab, where you can see information about the robot such "
+"as its position and sensor readings."
+msgstr "这是 \\\"机器人 \\\"选项卡，您可以在此查看机器人的相关信息，如位置和传感器读数。"
+
+msgid ""
+"The robot starts at the origin point in the simulator, which is why the "
+"position readings are all 0. You can change the robot's starting location "
+"by entering different values for x, y, z position and y rotation."
+msgstr "机器人从模拟器的原点开始运行，因此位置读数均为 0。您可以通过输入不同的 x、y、z 位置值和 y 旋转值来更改机器人的起始位置。"
+
+msgid ""
+"This is the servo section, where you can see the current positions of the "
+"robot's servos. You can also click get_servo_position() row to see a graph."
+msgstr "这里是舵机部分，您可以看到机器人舵机的当前位置。您还可以点击 get_servo_position() 行查看图表。"
+
+msgid ""
+"This is the motor velocities section, where you can see the current "
+"velocities of the robot's motors. You can also click each motor row to see "
+"a graph."
+msgstr "这是电机速度部分，您可以在此查看机器人电机的当前速度。您还可以点击每行电机查看图表。"
+
+msgid ""
+"This is the motor positions section, where you can see the current "
+"positions of the robot's motors. You can also click each "
+"get_motor_position_counter() row to see a graph."
+msgstr "这是电机位置部分，您可以在此查看机器人电机的当前位置。您还可以点击每行 get_motor_position_counter()，查看图表。"
+
+msgid ""
+"This is the analog sensors section, where you can see the current readings "
+"of the robot's analog sensors. You can also click each analog() row to see "
+"a graph."
+msgstr "这是模拟传感器部分，您可以在此查看机器人模拟传感器的当前读数。您还可以点击每行 analog() 查看图表。"
+
+msgid ""
+"This is the digital sensors section, where you can see the current readings "
+"of the robot's digital sensors. You can also click each digital() row to "
+"see a graph."
+msgstr "这是数字传感器部分，您可以在此查看机器人数字传感器的当前读数。您还可以点击每行 digital() 查看图表。"
+
+msgid ""
+"This is the World tab, where you can see information about the world such "
+"as the positions of objects and the light level. Select the \"World\" tab "
+"to continue the tour!"
+msgstr "这是 \\\"世界 \\\"选项卡，您可以在这里查看有关世界的信息，例如物体的位置和光照度。选择 继续浏览！"
+
+msgid ""
+"This is the world's objects section where you can customize the JBC Sandbox "
+"to add/remove/edit objects in the 3D simulation."
+msgstr "这是世界对象部分，您可以在此自定义 JBC 沙盒，添加/删除/编辑 3D 模拟中的对象。"
+
+msgid "This is the can object, which is a common object used in challenges."
+msgstr "这是罐子对象，是挑战中常用的对象。"
+
+msgid ""
+"Click this option to toggle the visibility of the highlighted object in the "
+"simulator."
+msgstr "单击该选项可切换突出显示对象在模拟器中的可见性。"
+
+msgid ""
+"Click this option to reset the highlighted object to its default state in "
+"the simulator."
+msgstr "单击该选项可将突出显示的对象重置为模拟器中的默认状态。"
+
+msgid ""
+"Click this option to see more settings for the highlighted object such as "
+"it's name and item type."
+msgstr "单击该选项可查看高亮显示对象的更多设置，如名称和项目类型。"
+
+msgid "Click this option to remove the highlighted object from the simulator."
+msgstr "单击该选项可从模拟器中删除高亮显示的对象。"
+
+msgid ""
+"Each object added to the Simulator can be moved using the x, y, z, and "
+"rotation controls. This can be useful for testing your code with different "
+"object placements."
+msgstr "添加到模拟器中的每个对象都可以使用 x、y、z 和旋转控制来移动。这对使用不同的对象位置测试代码非常有用。"
+
+msgid ""
+"To move an object, first we need to add the object to the simulator using "
+"the visibility option."
+msgstr "要移动对象，首先需要使用可见性选项将对象添加到模拟器中。"
+
+msgid "Select the \"World\" tab in the Overlay Tab Bar."
+msgstr "选择"
+
+msgid ""
+"Next, click the visibility option for the object you want to move. For this "
+"tutorial, we'll select the Can 1 object."
+msgstr "接下来，单击要移动对象的可见性选项。在本教程中，我们将选择 Can 1 对象。"
+
+msgid ""
+"After turning on the visibility option, you can see the object in the "
+"simulator area."
+msgstr "打开可见性选项后，就可以在模拟器区域看到物体了。"
+
+msgid "Click the object in the simulator area to open the move object tool."
+msgstr "单击模拟器区域中的对象，打开移动对象工具。"
+
+msgid ""
+"This is the move object tool, where you can move the object by dragging the "
+"gizmo arrows."
+msgstr "这是移动对象工具，您可以通过拖动小箭头来移动对象。"
+
+msgid ""
+"The red arrow is the x-axis, the green arrow is the y-axis, and the blue "
+"arrow is the z-axis. Try dragging the arrows to move the object around in "
+"the simulator!"
+msgstr "红色箭头为 x 轴，绿色箭头为 y 轴，蓝色箭头为 z 轴。尝试拖动箭头在模拟器中移动物体！"
+
+msgid ""
+"Welcome to KIPR's 3D Simulator, where you can test your code in a virtual "
+"environment."
+msgstr "欢迎使用 KIPR 的 3D 模拟器，在虚拟环境中测试您的代码。"
+
+msgid ""
+"Use this dropdown to select different tours of the simulator interface or "
+"just click Next to take the full tour!"
+msgstr "使用该下拉菜单可选择模拟器界面的不同导览，或直接单击 \\\"下一步 \\\"进行完整导览！"
+
+msgid ""
+"This is the student view of the dashboard, where you can access your "
+"classrooms and see your progress."
+msgstr "这是仪表板的学生视图，您可以在此访问您的教室并查看您的学习进度。"
+
+msgid "About KIPR"
+msgstr "关于 KIPR"
+
+msgid "Classroom Dashboard"
+msgstr "教室仪表板"
+
+msgid "Teacher Dashboard"
+msgstr "教师仪表板"
+
+msgid "How To: Create a Classroom"
+msgstr "如何：创建教室"
+
+msgid "How To: Create a Classroom Continued"
+msgstr "如何：创建教室 继续"
+
+msgid "Student Dashboard"
+msgstr "学生仪表板"
+
+msgid "How To: Join a Classroom"
+msgstr "如何：加入课堂"
+
+msgid "How To: Join a Classroom Continued"
+msgstr "如何：继续加入课堂"
+
+msgid "Default JBC Challenge Tab View"
+msgstr "默认的 JBC 挑战选项卡视图"
+
+msgid "Exporting Your Challenge Scores"
+msgstr "导出挑战得分"
+
+msgid "Scrolling to Your Scores"
+msgstr "滚动到您的分数"
+
+msgid "Viewing Your Badges"
+msgstr "查看徽章"
+
+msgid "Limited Challenge Tab View"
+msgstr "有限挑战选项卡视图"
+
+msgid "Limited Challenge Tab View Continued"
+msgstr "有限挑战选项卡视图 续"
+
+msgid "Classroom Extra Options"
+msgstr "教室额外选项"
+
+msgid "Classroom Extra Options Continued"
+msgstr "教室额外选项续"
+
+msgid "Leaving a Classroom"
+msgstr "离开教室"
+
+msgid "Editor Tab"
+msgstr "编辑器选项卡"
+
+msgid "Editor and Console Overview"
+msgstr "编辑器和控制台概述"
+
+msgid "Code Editor"
+msgstr "代码编辑器"
+
+msgid "Code Editor Language Dropdown"
+msgstr "代码编辑器语言下拉菜单"
+
+msgid "Code Editor Indent Button"
+msgstr "代码编辑器缩进按钮"
+
+msgid "Code Editor Download Button"
+msgstr "代码编辑器下载按钮"
+
+msgid "Code Editor Reset Button"
+msgstr "代码编辑器重置按钮"
+
+msgid "Console Clear Button"
+msgstr "控制台清除按钮"
+
+msgid "Ask Tutor Button"
+msgstr "询问辅导员按钮"
+
+msgid "Main Menu Overview"
+msgstr "主菜单概览"
+
+msgid "Return to Dashboard Button"
+msgstr "返回仪表板按钮"
+
+msgid "Run/Stop Button"
+msgstr "运行/停止按钮"
+
+msgid "Reset World Button"
+msgstr "重置世界按钮"
+
+msgid "Start Challenge Button"
+msgstr "开始挑战按钮"
+
+msgid "Layout Button"
+msgstr "布局按钮"
+
+msgid "Layout Options"
+msgstr "布局选项"
+
+msgid "Scene Button"
+msgstr "场景按钮"
+
+msgid "Scene Options"
+msgstr "场景选项"
+
+msgid "Scene Options Info"
+msgstr "场景选项信息"
+
+msgid "Scene Open"
+msgstr "场景打开"
+
+msgid "Scene Open Continued"
+msgstr "场景开放 续"
+
+msgid "Extra Menu Button"
+msgstr "额外菜单按钮"
+
+msgid "Extra Menu Options"
+msgstr "额外菜单选项"
+
+msgid "Documentation Button"
+msgstr "文件按钮"
+
+msgid "Tutor Button"
+msgstr "辅导员按钮"
+
+msgid "Settings Button"
+msgstr "设置按钮"
+
+msgid "About Button"
+msgstr "关于纽扣"
+
+msgid "Feedback Button"
+msgstr "反馈按钮"
+
+msgid "Logout Button"
+msgstr "注销按钮"
+
+msgid "Overlay Tab Bar Overview"
+msgstr "叠加选项卡栏概述"
+
+msgid "Overlay Tab Bar Overview Continued"
+msgstr "叠加选项卡栏概览 续"
+
+msgid "Overlay Tab Bar Robot Tab"
+msgstr "叠加选项卡栏 机器人选项卡"
+
+msgid "Robot Starting Location"
+msgstr "机器人起始位置"
+
+msgid "Robot Servos"
+msgstr "机器人伺服器"
+
+msgid "Robot Motor Velocities"
+msgstr "机器人电机速度"
+
+msgid "Robot Motor Positions"
+msgstr "机器人电机位置"
+
+msgid "Robot Analog Sensors"
+msgstr "机器人模拟传感器"
+
+msgid "Robot Digital Sensors"
+msgstr "机器人数字传感器"
+
+msgid "Overlay Tab Bar World Tab"
+msgstr "叠加选项卡栏 世界选项卡"
+
+msgid "World Tab Objects Section"
+msgstr "世界选项卡对象部分"
+
+msgid "World Tab Can Object"
+msgstr "世界标签可以反对"
+
+msgid "World Tab Object Visibility Option"
+msgstr "世界选项卡对象可见性选项"
+
+msgid "World Tab Object Reset Option"
+msgstr "世界选项卡对象重置选项"
+
+msgid "World Tab Object Settings Option"
+msgstr "世界选项卡对象设置选项"
+
+msgid "World Tab Object Remove Option"
+msgstr "世界选项卡对象移除选项"
+
+msgid "Move Object Tool Overview"
+msgstr "移动对象工具概述"
+
+msgid "Add Can 1 to the World"
+msgstr "为世界增添 1 号罐头"
+
+msgid "Select World Tab"
+msgstr "选择世界选项卡"
+
+msgid "Select Object to Move"
+msgstr "选择要移动的对象"
+
+msgid "See Object in Simulator Area"
+msgstr "查看模拟器区域中的物体"
+
+msgid "Click Object in Simulator Area"
+msgstr "单击模拟器区域中的对象"
+
+msgid "Move Object Tool Interaction"
+msgstr "移动对象工具交互"
+
+msgid "3D Simulator Overview"
+msgstr "3D 模拟器概述"
+
+msgid "Choose Your Tour"
+msgstr "选择您的行程"
+
+msgid "Step"
+msgstr "步骤"
+
+msgid "of"
+msgstr "的"
+
+msgid "Editor and Console Tour"
+msgstr "编辑器和控制台导览"
+
+msgid "Main Menu Tour"
+msgstr "主菜单游览"
+
+msgid "Overlay Tab Bar Tour"
+msgstr "叠加选项卡栏导览"
+
+msgid "Move Object Tool Tour"
+msgstr "移动对象工具导览"
+
+msgid "Back"
+msgstr "返回"
+
+msgid "Done"
+msgstr "已完成"
+
+msgid "Next"
+msgstr "下一页"
+
+msgid "Skip"
+msgstr "跳过"
+
+msgid "Tour Sections"
+msgstr "旅游线路"
+
+msgid "Go"
+msgstr "转到"
+
+msgid "You are not enrolled in any classroom."
+msgstr "您没有注册任何课堂。"
+
+msgid "Join Class"
+msgstr "参加课程"
+
+msgid "Classrooms - Student View"
+msgstr "教室 - 学生视角"
+
+msgid "Current Classroom: "
+msgstr "当前教室："
+
+msgid "Classroom Teacher: "
+msgstr "班主任："
+
+msgid "Current Classroom:"
+msgstr "当前教室："
+
+msgid "Classroom Teacher:"
+msgstr "班主任："
+
+msgid "You"
+msgstr "你"
+
+msgid "Classroom Leaderboard"
+msgstr "教室排行榜"
+
+msgid "Export My Scores!"
+msgstr "导出我的分数"
+
+msgid "Scroll to My Scores!"
+msgstr "滚动到我的分数！"
+
+msgid "See My Badges!"
+msgstr "查看我的徽章！"
+
+msgid "Export All General Scores"
+msgstr "导出所有通用分数"
+
+msgid "Export All Detailed Scores"
+msgstr "导出所有详细分数"
+
+msgid "Reenter classroom name to confirm leaving classroom."
+msgstr "重新输入教室名称，确认离开教室。"
+
+msgid "Are you sure you want to leave: "
+msgstr "你确定要走吗？"
+
+msgid "My Scores!"
+msgstr "我的分数"
+
+msgid "KIPR All Time Leaderboard"
+msgstr "KIPR 历史排行榜"
+
+msgid "Choose Classroom to See Leaderboard:"
+msgstr "选择教室查看排行榜："
+
+msgid "See Leaderboard"
+msgstr "查看排行榜"
+
+msgid "Classrooms - Teacher View"
+msgstr "教室 - 教师视图"
+
+msgid "See Classroom Leaderboards"
+msgstr "查看教室排行榜"
+
+msgid "Can 1"
+msgstr "罐 1"
+
+msgid "Your Display Name"
+msgstr "您的显示名称"
+
+msgid "The teacher's name that will be shown to your students"
+msgstr "将显示给学生的教师姓名"
+
+msgid "Classroom Name"
+msgstr "教室名称"
+
+msgid "Invite Code"
+msgstr "邀请码"
+
+msgid "Code students can use to join the classroom"
+msgstr "学生可使用代码加入课堂"
 
 msgctxt "Volume (box) in the 3D scene"
 msgid "Volume"
-msgstr "音量"
+msgstr "卷数"
 
 msgctxt "Red, Green, Blue"
 msgid "RGB"
@@ -3549,7 +4278,7 @@ msgstr "运行"
 
 msgctxt "Part of copyright notice, after KIPR is listed"
 msgid "and External Contributors"
-msgstr "和外部贡献者"
+msgstr "和外部捐助者"
 
 msgctxt "URL link to github repository follows"
 msgid "Visit our"
@@ -3633,35 +4362,35 @@ msgstr "十二年级"
 
 msgctxt "Student grade level"
 msgid "1st"
-msgstr "一年级"
+msgstr "第 1"
 
 msgctxt "Student grade level"
 msgid "2nd"
-msgstr "二年级"
+msgstr "第 2"
 
 msgctxt "Student grade level"
 msgid "3rd"
-msgstr "三年级"
+msgstr "第 3 次"
 
 msgctxt "Student grade level"
 msgid "4th"
-msgstr "四年级"
+msgstr "第四届"
 
 msgctxt "Student grade level"
 msgid "5th"
-msgstr "五年级"
+msgstr "第 5 次"
 
 msgctxt "Student grade level"
 msgid "6th"
-msgstr "第 6 次"
+msgstr "第六届"
 
 msgctxt "Student grade level"
 msgid "7th"
-msgstr "第 7 次"
+msgstr "第七届"
 
 msgctxt "Student grade level"
 msgid "8th"
-msgstr "第 8 次"
+msgstr "第八届"
 
 msgctxt "Student grade level"
 msgid "9th"
@@ -3706,3 +4435,1433 @@ msgstr "YXZ"
 msgctxt "RotationwUnits order"
 msgid "ZYX"
 msgstr "ZYX"
+
+msgid ""
+msgstr ""
+
+msgid "The selected file is already included in the project."
+msgstr "所选文件已包含在项目中。"
+
+msgid "The selected file does not match the expected language ${currentLanguage}."
+msgstr "所选文件与预期语言 ${currentLanguage} 不匹配。"
+
+msgid "The selected file must have a .h extension."
+msgstr "所选文件的扩展名必须是 .h。"
+
+msgid "The selected file does not match the expected language."
+msgstr "所选文件与预期语言不符。"
+
+msgid "The selected file must have a .txt extension."
+msgstr "所选文件的扩展名必须是 .txt。"
+
+msgid "Some files have errors"
+msgstr "某些文件有错误"
+
+msgid "Upload File"
+msgstr "上传文件"
+
+msgid "Selected File Upload Language: "
+msgstr "所选文件上传语言："
+
+msgid "Select a file from your computer to upload"
+msgstr "从电脑中选择要上传的文件"
+
+msgid "Upload Include File"
+msgstr "上传包含文件"
+
+msgid "Upload Source File"
+msgstr "上传源文件"
+
+msgid "Upload User Data File"
+msgstr "上传用户数据文件"
+
+msgid "No file selected"
+msgstr "未选择文件"
+
+msgid "Project with name already exists. Please choose a different name."
+msgstr "项目名称已存在。请选择其他名称。"
+
+msgid "File uploaded does not match selected project language."
+msgstr "上传的文件与所选项目语言不匹配。"
+
+msgid "Folder name does not match project name in config file."
+msgstr "文件夹名称与配置文件中的项目名称不匹配。"
+
+msgid ""
+"File detected as different language than project language. Please ensure "
+"all source files match the selected project language."
+msgstr "检测到文件语言与项目语言不同。请确保所有源文件与所选项目语言一致。"
+
+msgid "Please remove all spaces in the name."
+msgstr "请删除姓名中的所有空格。"
+
+msgid "Please remove all special characters in the name."
+msgstr "请删除姓名中的所有特殊字符。"
+
+msgid "File name exceeds maximum length of 50 characters."
+msgstr "文件名超过 50 个字符的最大长度。"
+
+msgid "Select a Project from your computer to upload\n"
+msgstr "从电脑中选择一个项目上传"
+
+msgid "Be sure the heirarchy format follows:\n"
+msgstr "请务必按照以下格式编写： \\\\n"
+
+msgid "Project Name"
+msgstr "项目名称"
+
+msgid "include"
+msgstr "包括"
+
+msgid "includeFile1.h (optional)"
+msgstr "includeFile1.h （可选）"
+
+msgid "includeFile2.h (optional)"
+msgstr "includeFile2.h （可选）"
+
+msgid "src"
+msgstr "来源"
+
+msgid "NOTE: file extension must match project language"
+msgstr "注意：文件扩展名必须与项目语言匹配"
+
+msgid "srcFile1.*"
+msgstr "srcFile1.*"
+
+msgid "srcFile2.*"
+msgstr "srcFile2.*"
+
+msgid "data"
+msgstr "数据"
+
+msgid "dataFile1.txt (optional)"
+msgstr "dataFile1.txt（可选）"
+
+msgid "dataFile2.txt (optional)"
+msgstr "dataFile2.txt（可选）"
+
+msgid "bin"
+msgstr "箱柜"
+
+msgid "Select Project Language:"
+msgstr "选择项目语言："
+
+msgid "Choose Folder"
+msgstr "选择文件夹"
+
+msgid "Config File"
+msgstr "配置文件"
+
+msgid "No files selected."
+msgstr "未选择文件。"
+
+msgid "Include Files"
+msgstr "包含文件"
+
+msgid "Source Files"
+msgstr "源文件"
+
+msgid "User Data Files"
+msgstr "用户数据文件"
+
+msgid "Selected Project Folder: "
+msgstr "选定项目文件夹："
+
+msgid "Selected Project Language: "
+msgstr "选定的项目语言："
+
+msgid "Choose a different project"
+msgstr "选择不同的项目"
+
+msgid "Upload Project"
+msgstr "上传项目"
+
+msgid "The selected project already exists for this user."
+msgstr "该用户已存在所选项目。"
+
+msgid "Please choose a different project."
+msgstr "请选择其他项目。"
+
+msgid "+"
+msgstr "+"
+
+msgid "Create Project"
+msgstr "创建项目"
+
+msgid "Create File"
+msgstr "创建文件"
+
+msgid "Create Classroom"
+msgstr "创建教室"
+
+msgid "Create User"
+msgstr "创建用户"
+
+msgid "Upload User"
+msgstr "上传用户"
+
+msgid ""
+"A user with that name already exists in this classroom. Please rename your "
+"folder and try again."
+msgstr "该教室中已经存在使用该名称的用户。请重命名您的文件夹并重试。"
+
+msgid "Folder name does not match user name in config file."
+msgstr "文件夹名称与配置文件中的用户名不匹配。"
+
+msgid "File detected with interface mode does not match project interface mode."
+msgstr "检测到的文件界面模式与项目界面模式不匹配。"
+
+msgid ""
+"File detected as different language than project language. Please ensure "
+"all source files match the project language."
+msgstr "检测到文件语言与项目语言不同。请确保所有源文件与项目语言一致。"
+
+msgid "Unknown file type, defaulting to plaintext."
+msgstr "未知文件类型，默认为纯文本。"
+
+msgid "Project must contain a main file"
+msgstr "项目必须包含一个主文件"
+
+msgid "Select a User from your computer to upload\n"
+msgstr "从电脑中选择一个用户上传"
+
+msgid "User Name"
+msgstr "用户名"
+
+msgid "(At least 1 project must be in the User folder)"
+msgstr "(用户文件夹中必须至少有一个项目）"
+
+msgid "Project Name 1"
+msgstr "项目名称 1"
+
+msgid "Project Name 2"
+msgstr "项目名称 2"
+
+msgid "Select User Interface Mode:"
+msgstr "选择用户界面模式："
+
+msgid "Selected User Folder: "
+msgstr "选定的用户文件夹："
+
+msgid "Selected User Interface Mode: "
+msgstr "选定的用户界面模式："
+
+msgid "Choose a different User"
+msgstr "选择不同的用户"
+
+msgid "The selected user already exists in this classroom."
+msgstr "所选用户已存在于该教室中。"
+
+msgid "Please choose a different user."
+msgstr "请选择其他用户。"
+
+msgid "Choose a different user"
+msgstr "选择不同的用户"
+
+msgid "Delete Classroom"
+msgstr "删除教室"
+
+msgid "Rename Classroom"
+msgstr "重新命名教室"
+
+msgid "Delete User"
+msgstr "删除用户"
+
+msgid "Download User"
+msgstr "下载用户"
+
+msgid "Rename User"
+msgstr "重命名用户"
+
+msgid "Remove User from Classroom"
+msgstr "从教室删除用户"
+
+msgid "Move User to Classroom"
+msgstr "将用户移至教室"
+
+msgid "Paste Project"
+msgstr "粘贴项目"
+
+msgid "Delete Project"
+msgstr "删除项目"
+
+msgid "Download Project"
+msgstr "下载项目"
+
+msgid "Rename Project"
+msgstr "重新命名项目"
+
+msgid "Move Project"
+msgstr "移动项目"
+
+msgid "Copy Project"
+msgstr "复制项目"
+
+msgid "Paste File"
+msgstr "粘贴文件"
+
+msgid "Delete File"
+msgstr "删除文件"
+
+msgid "Download File"
+msgstr "下载文件"
+
+msgid "Rename File"
+msgstr "重命名文件"
+
+msgid "Copy File"
+msgstr "复制文件"
+
+msgid "Users"
+msgstr "用户"
+
+msgid "Classroom Invitation Code:"
+msgstr "教室邀请码："
+
+msgid "Projects"
+msgstr "项目"
+
+msgid "Explorer - Classrooms"
+msgstr "探索者 - 教室"
+
+msgid "Explorer - Users"
+msgstr "资源管理器 - 用户"
+
+msgid "Users without Classrooms"
+msgstr "无教室用户"
+
+msgid "Motor 0"
+msgstr "电机 0"
+
+msgid "Motor 1"
+msgstr "电机 1"
+
+msgid "Motor 2"
+msgstr "电机 2"
+
+msgid "Motor 3"
+msgstr "电机 3"
+
+msgid "Velocity"
+msgstr "速度"
+
+msgid "Power"
+msgstr "电源"
+
+msgid "Servo 0"
+msgstr "伺服 0"
+
+msgid "Servo 1"
+msgstr "伺服 1"
+
+msgid "Servo 2"
+msgstr "伺服器 2"
+
+msgid "Servo 3"
+msgstr "伺服 3"
+
+msgid "analog(0)"
+msgstr "模拟(0)"
+
+msgid "analog(1)"
+msgstr "模拟(1)"
+
+msgid "analog(2)"
+msgstr "模拟(2)"
+
+msgid "analog(3)"
+msgstr "模拟(3)"
+
+msgid "analog(4)"
+msgstr "模拟(4)"
+
+msgid "analog(5)"
+msgstr "模拟(5)"
+
+msgid "digital(0)"
+msgstr "数字(0)"
+
+msgid "digital(1)"
+msgstr "数字(1)"
+
+msgid "digital(2)"
+msgstr "数字(2)"
+
+msgid "digital(3)"
+msgstr "数字(3)"
+
+msgid "digital(4)"
+msgstr "数字(4)"
+
+msgid "digital(5)"
+msgstr "数字(5)"
+
+msgid "digital(6)"
+msgstr "数字(6)"
+
+msgid "digital(7)"
+msgstr "数字(7)"
+
+msgid "digital(8)"
+msgstr "数字(8)"
+
+msgid "digital(9)"
+msgstr "数字(9)"
+
+msgid "accel_x()"
+msgstr "accel_x()"
+
+msgid "accel_y()"
+msgstr "accel_y()"
+
+msgid "accel_z()"
+msgstr "accel_z()"
+
+msgid "gyro_x()"
+msgstr "gyro_x()"
+
+msgid "gyro_y()"
+msgstr "gyro_y()"
+
+msgid "gyro_z()"
+msgstr "gyro_z()"
+
+msgid "magneto_x()"
+msgstr "magneto_x()"
+
+msgid "magneto_y()"
+msgstr "magneto_y()"
+
+msgid "magneto_z()"
+msgstr "magneto_z()"
+
+msgid "right_button()"
+msgstr "right_button()"
+
+msgid "Reverse"
+msgstr "反向"
+
+msgid "Forward"
+msgstr "转发"
+
+msgid "Warning! Could damage servo in this range"
+msgstr "警告！在此范围内可能会损坏伺服器"
+
+msgid "Motor Velocity Plot"
+msgstr "电机速度曲线图"
+
+msgid "Motor Position Plot"
+msgstr "电机位置图"
+
+msgid "Servo Position Plot"
+msgstr "伺服位置图"
+
+msgid "View:"
+msgstr "查看："
+
+msgid "Motor Port:"
+msgstr "电机端口："
+
+msgid "Clear Motor Position"
+msgstr "清除电机位置"
+
+msgid "Stop All Motors"
+msgstr "停止所有电机"
+
+msgid "Stop Current Motor"
+msgstr "停止电流 电机"
+
+msgid "Motor Velocities"
+msgstr "电机速度"
+
+msgid "Motor Positions"
+msgstr "电机位置"
+
+msgid "Servo Port:"
+msgstr "伺服端口："
+
+msgid "Enable All Servos"
+msgstr "启用所有伺服器"
+
+msgid "Disable All Servos"
+msgstr "禁用所有伺服系统"
+
+msgid "Disable Servo"
+msgstr "禁用伺服"
+
+msgid "Enable Servo"
+msgstr "启用伺服功能"
+
+msgid "Servo Positions"
+msgstr "伺服位置"
+
+msgid "Analog Sensors"
+msgstr "模拟传感器"
+
+msgid "Digital Sensors"
+msgstr "数字传感器"
+
+msgid "Accelerometers"
+msgstr "加速度计"
+
+msgid "Gyroscopes"
+msgstr "陀螺仪"
+
+msgid "Magnetometers"
+msgstr "磁力计"
+
+msgid "Buttons"
+msgstr "按钮"
+
+msgid "Motors, Servos, and Sensors"
+msgstr "电机、伺服和传感器"
+
+msgid "Motor"
+msgstr "电机"
+
+msgid "Servo"
+msgstr "伺服"
+
+msgid "Sensor"
+msgstr "传感器"
+
+msgid "Modules"
+msgstr "模块"
+
+msgid "Functions"
+msgstr "功能"
+
+msgid "Structures"
+msgstr "结构"
+
+msgid "Enumerations"
+msgstr "枚举"
+
+msgid "Files"
+msgstr "文件"
+
+msgid "Search..."
+msgstr "搜索..."
+
+msgid "Detailed Description"
+msgstr "详细说明"
+
+msgid "Parameters"
+msgstr "参数"
+
+msgid "Return Value"
+msgstr "返回值"
+
+msgid "Fields"
+msgstr "字段"
+
+msgid "Common Functions"
+msgstr "常用功能"
+
+msgid "Full Documentation"
+msgstr "完整文档"
+
+msgid "Challenge Progress"
+msgstr "挑战进展"
+
+msgctxt "func:a_button:detailed"
+msgid "Gets the A button's state (pressed or not pressed.)"
+msgstr "获取 A 按钮的状态（按下或未按下）。"
+
+msgctxt "func:a_button_clicked:detailed"
+msgid "Gets the A button's state (pressed or not pressed.)"
+msgstr "获取 A 按钮的状态（按下或未按下）。"
+
+msgctxt "func:alloff:brief"
+msgid "Turns all motors off."
+msgstr "关闭所有电机。"
+
+msgctxt "func:analog10:detailed"
+msgid "Gets the 10-bit analog value of a port."
+msgstr "获取端口的 10 位模拟值。"
+
+msgctxt "func:analog10:param:port:description"
+msgid "A value between 0 and 5 specifying the sensor to read from."
+msgstr "一个介于 0 和 5 之间的值，指定要读取的传感器。"
+
+msgctxt "func:analog12:detailed"
+msgid "Gets the 12-bit analog value of a port."
+msgstr "获取端口的 12 位模拟值。"
+
+msgctxt "func:analog12:param:port:description"
+msgid "A value between 0 and 5 specifying the sensor to read from."
+msgstr "一个介于 0 和 5 之间的值，指定要读取的传感器。"
+
+msgctxt "func:analog8:detailed"
+msgid "Gets the 8-bit analog value of a port."
+msgstr "获取端口的 8 位模拟值。"
+
+msgctxt "func:analog8:param:port:description"
+msgid "A value between 0 and 5 specifying the sensor to read from."
+msgstr "一个介于 0 和 5 之间的值，指定要读取的传感器。"
+
+msgctxt "func:analog:detailed"
+msgid "Gets the 12-bit analog value of a port."
+msgstr "获取端口的 12 位模拟值。"
+
+msgctxt "func:analog:param:port:description"
+msgid "A value between 0 and 5 specifying the sensor to read from."
+msgstr "一个介于 0 和 5 之间的值，指定要读取的传感器。"
+
+msgctxt "func:analog_et:detailed"
+msgid ""
+"Gets the 10-bit analog value of an ET sensor on the given port. "
+"Deprecateddefaulting to analog() on the Wallaby"
+msgstr "获取给定端口上 ET 传感器的 10 位模拟值。已弃用，在 Wallaby 上默认为 analog()"
+
+msgctxt "func:analog_et:param:port:description"
+msgid "A value between 0 and 7 specifying the ET sensor to read from."
+msgstr "一个介于 0 和 7 之间的值，指定要读取的蒸散发传感器。"
+
+msgctxt "func:any_button:detailed"
+msgid "Determines whether or not any of the buttons are pressed."
+msgstr "确定是否按下任何按钮。"
+
+msgctxt "func:ao:brief"
+msgid "Turns all motors off."
+msgstr "关闭所有电机。"
+
+msgctxt "func:b_button:detailed"
+msgid "Gets the B button's state (pressed or not pressed.)"
+msgstr "获取 B 按钮的状态（按下或未按下）。"
+
+msgctxt "func:b_button_clicked:detailed"
+msgid "Gets the A button's state (pressed or not pressed.)"
+msgstr "获取 A 按钮的状态（按下或未按下）。"
+
+msgctxt "func:baasbennaguui:brief"
+msgid "Moves a motor at a percent velocity."
+msgstr "以一定的速度移动电机。"
+
+msgctxt "func:baasbennaguui:param:motor:description"
+msgid "The motor port."
+msgstr "电机端口。"
+
+msgctxt "func:baasbennaguui:param:percent:description"
+msgid "The percent of the motors velocity, between -100 and 100."
+msgstr "电机速度的百分比，介于 -100 和 100 之间。"
+
+msgctxt "func:bk:brief"
+msgid "Moves the given motor backward at full power."
+msgstr "以全速向后移动给定的电机。"
+
+msgctxt "func:bk:param:motor:description"
+msgid "the motor's port."
+msgstr "电机端口。"
+
+msgctxt "func:black_button:detailed"
+msgid ""
+"Gets the black button's state (pressed or not pressed.) DeprecatedNot "
+"present on the Wallaby"
+msgstr "获取黑色按钮的状态（按下或未按下）。"
+
+msgctxt "func:block_motor_done:brief"
+msgid "Wait until the motor is at it's goal."
+msgstr "等待电机达到目标。"
+
+msgctxt "func:block_motor_done:param:motor:description"
+msgid "The motor port."
+msgstr "电机端口。"
+
+msgctxt "func:bmd:brief"
+msgid "Wait until the motor is at it's goal."
+msgstr "等待电机达到目标。"
+
+msgctxt "func:bmd:param:motor:description"
+msgid "The motor port."
+msgstr "电机端口。"
+
+msgctxt "func:c_button:detailed"
+msgid "Gets the C button's state (pressed or not pressed.)"
+msgstr "获取 C 按钮的状态（按下或未按下）。"
+
+msgctxt "func:c_button_clicked:detailed"
+msgid "Gets the B button's state (pressed or not pressed.)"
+msgstr "获取 B 按钮的状态（按下或未按下）。"
+
+msgctxt "func:clear_motor_position_counter:brief"
+msgid "Clears the motor position counter."
+msgstr "清除电机位置计数器。"
+
+msgctxt "func:clear_motor_position_counter:param:motor:description"
+msgid "The motor port."
+msgstr "电机端口。"
+
+msgctxt "func:cmpc:brief"
+msgid "Clears the motor position counter."
+msgstr "清除电机位置计数器。"
+
+msgctxt "func:cmpc:param:motor:description"
+msgid "The motor port."
+msgstr "电机端口。"
+
+msgctxt "func:console_clear:detailed"
+msgid "Clears the UI's console."
+msgstr "清除用户界面的控制台。"
+
+msgctxt "func:create_point2:brief"
+msgid "Create a point2 object."
+msgstr "创建 point2 对象。"
+
+msgctxt "func:create_point2:param:x:description"
+msgid "- the x value of the point"
+msgstr "- 点的 x 值"
+
+msgctxt "func:create_point2:param:y:description"
+msgid "- the y value of the point"
+msgstr "- 点的 y 值"
+
+msgctxt "func:create_point3:brief"
+msgid "Create a point3 object."
+msgstr "创建 point3 对象。"
+
+msgctxt "func:create_point3:param:x:description"
+msgid "- the x value of the point"
+msgstr "- 点的 x 值"
+
+msgctxt "func:create_point3:param:y:description"
+msgid "- the y value of the point"
+msgstr "- 点的 y 值"
+
+msgctxt "func:create_point3:param:z:description"
+msgid "- the z value of the point"
+msgstr "- 点的 Z 值"
+
+msgctxt "func:create_rectangle:brief"
+msgid "Create a rectangle object."
+msgstr "创建一个矩形对象。"
+
+msgctxt "func:create_rectangle:param:height:description"
+msgid "- the height of the rectangle"
+msgstr "- 矩形的高度"
+
+msgctxt "func:create_rectangle:param:ulx:description"
+msgid "- the x value of the rectangle's upper left"
+msgstr "- 矩形左上角的 x 值"
+
+msgctxt "func:create_rectangle:param:uly:description"
+msgid "- the y value of the rectangle's upper left"
+msgstr "- 矩形左上角的 y 值"
+
+msgctxt "func:create_rectangle:param:width:description"
+msgid "- the width of the rectangle"
+msgstr "- 矩形的宽度"
+
+msgctxt "func:disable_servo:brief"
+msgid "Disable a specific servo."
+msgstr "禁用特定伺服。"
+
+msgctxt "func:disable_servo:param:port:description"
+msgid "The port, between 0 and 3, to disable"
+msgstr "要禁用的端口，介于 0 和 3 之间"
+
+msgctxt "func:disable_servos:brief"
+msgid "Disable all four servo channels."
+msgstr "禁用所有四个伺服通道。"
+
+msgctxt "func:enable_servo:brief"
+msgid "Enable a specific servo."
+msgstr "启用特定伺服。"
+
+msgctxt "func:enable_servo:param:port:description"
+msgid "The port, between 0 and 3, to enable"
+msgstr "要启用的端口，介于 0 和 3 之间"
+
+msgctxt "func:enable_servos:brief"
+msgid "Enable all four servo channels."
+msgstr "启用所有四个伺服通道。"
+
+msgctxt "func:extra_buttons_hide:detailed"
+msgid "Hides the X, Y, and Z buttons. This is the default."
+msgstr "隐藏 X、Y 和 Z 按钮。这是默认设置。"
+
+msgctxt "func:extra_buttons_show:detailed"
+msgid "Shows the X, Y, and Z buttons."
+msgstr "显示 X、Y 和 Z 按钮。"
+
+msgctxt "func:fd:brief"
+msgid "Moves the given motor forward at full power."
+msgstr "全功率驱动给定电机前进。"
+
+msgctxt "func:fd:param:motor:description"
+msgid "the motor's port."
+msgstr "电机端口。"
+
+msgctxt "func:freeze:brief"
+msgid "Active braking to stop a motor."
+msgstr "主动制动以停止电机。"
+
+msgctxt "func:freeze:param:motor:description"
+msgid "The motor port."
+msgstr "电机端口。"
+
+msgctxt "func:get_analog_pullup:detailed"
+msgid ""
+"Gets the analog pullup status for one portt. Deprecatedno effect on the "
+"Wallaby"
+msgstr "获取一个端口的模拟上拉状态。已废弃，对 Wallaby 没有影响"
+
+msgctxt "func:get_analog_pullup:param:port:description"
+msgid "A value between 0 and 7 specifying the analog sensor to read from."
+msgstr "一个介于 0 和 7 之间的值，指定要读取的模拟传感器。"
+
+msgctxt "func:get_digital_output:detailed"
+msgid "Gets the current digital mode"
+msgstr "获取当前数字模式"
+
+msgctxt "func:get_digital_pullup:detailed"
+msgid ""
+"Gets the current digital pullup state Deprecatednot applicable on the "
+"Wallaby"
+msgstr "获取当前数字上拉状态 过时不适用于 Wallaby"
+
+msgctxt "func:get_digital_value:detailed"
+msgid "Gets the current value of the digital port."
+msgstr "获取数字端口的当前值。"
+
+msgctxt "func:get_extra_buttons_visible:detailed"
+msgid "Determines whether or not the X, Y, and Z buttons are visible."
+msgstr "确定 X、Y 和 Z 按钮是否可见。"
+
+msgctxt "func:get_motor_done:brief"
+msgid "Check if the motor has reached it's goal."
+msgstr "检查电机是否达到目标。"
+
+msgctxt "func:get_motor_done:param:motor:description"
+msgid "The motor port."
+msgstr "电机端口。"
+
+msgctxt "func:get_motor_position_counter:brief"
+msgid "Gets the current motor position."
+msgstr "获取当前电机位置。"
+
+msgctxt "func:get_motor_position_counter:param:motor:description"
+msgid "The motor port."
+msgstr "电机端口。"
+
+msgctxt "func:get_pid_gains:brief"
+msgid "Set the motor PID gains, represented as fractions."
+msgstr "设置电机 PID 增益，以分数表示。"
+
+msgctxt "func:get_pid_gains:param:d:description"
+msgid "The D (derivative) gain numerator"
+msgstr "D（导数）增益分子"
+
+msgctxt "func:get_pid_gains:param:dd:description"
+msgid "The D (derivative) gain denominator"
+msgstr "D（导数）增益分母"
+
+msgctxt "func:get_pid_gains:param:i:description"
+msgid "The I (integral) gain numerator"
+msgstr "I（积分）增益分子"
+
+msgctxt "func:get_pid_gains:param:id:description"
+msgid "The I (integral) gain denominator"
+msgstr "I（积分）增益分母"
+
+msgctxt "func:get_pid_gains:param:motor:description"
+msgid "The motor port."
+msgstr "电机端口。"
+
+msgctxt "func:get_pid_gains:param:p:description"
+msgid "The P (proportional) gain numerator"
+msgstr "P（比例）增益分子"
+
+msgctxt "func:get_pid_gains:param:pd:description"
+msgid "The P (proportional) gain denominator"
+msgstr "P（比例）增益分母"
+
+msgctxt "func:get_servo_enabled:brief"
+msgid "Check if a servo is enabled."
+msgstr "检查伺服是否启用。"
+
+msgctxt "func:get_servo_enabled:param:port:description"
+msgid "The port, between 0 and 3"
+msgstr "端口，介于 0 和 3 之间"
+
+msgctxt "func:get_servo_position:brief"
+msgid "Get the most recent commanded servo position."
+msgstr "获取最新的伺服位置指令。"
+
+msgctxt "func:get_servo_position:param:port:description"
+msgid "The port of the servo"
+msgstr "伺服端口"
+
+msgctxt "func:getpwm:brief"
+msgid "Get the current motor pwm command."
+msgstr "获取当前电机 pwm 命令。"
+
+msgctxt "func:getpwm:param:motor:description"
+msgid "The motor port."
+msgstr "电机端口。"
+
+msgctxt "func:gmpc:brief"
+msgid "Gets the current motor position."
+msgstr "获取当前电机位置。"
+
+msgctxt "func:gmpc:param:motor:description"
+msgid "The motor port."
+msgstr "电机端口。"
+
+msgctxt "func:left_button:detailed"
+msgid "Gets the left button's state (pressed or not pressed.)"
+msgstr "获取左侧按钮的状态（按下或未按下）。"
+
+msgctxt "func:mav:brief"
+msgid "Set a goal velocity in ticks per second."
+msgstr "设置目标速度，单位为滴答/秒。"
+
+msgctxt "func:mav:param:motor:description"
+msgid "The motor port."
+msgstr "电机端口。"
+
+msgctxt "func:mav:param:velocity:description"
+msgid "The goal velocity in -1500 to 1500 ticks / second"
+msgstr "目标速度为 -1500 至 1500 点/秒"
+
+msgctxt "func:motor:brief"
+msgid "Moves a motor at a percent velocity."
+msgstr "以百分比速度移动电机。"
+
+msgctxt "func:motor:param:motor:description"
+msgid "The motor port."
+msgstr "电机端口。"
+
+msgctxt "func:motor:param:percent:description"
+msgid "The percent of the motors velocity, between -100 and 100."
+msgstr "电机速度的百分比，介于 -100 和 100 之间。"
+
+msgctxt "func:motor_power:brief"
+msgid "Moves a motor at a percent power."
+msgstr "以百分比功率驱动电机。"
+
+msgctxt "func:motor_power:param:motor:description"
+msgid "the motor port."
+msgstr "电机端口。"
+
+msgctxt "func:motor_power:param:percent:description"
+msgid "The power of the motor, between -100 and 100."
+msgstr "电机功率，在 -100 和 100 之间。"
+
+msgctxt "func:move_at_velocity:brief"
+msgid "Set a goal velocity in ticks per second."
+msgstr "设置目标速度，单位为滴答/秒。"
+
+msgctxt "func:move_at_velocity:detailed"
+msgid ""
+"The range is -1500 to 1500, though motor position accuracy may be decreased "
+"outside of -1000 to 1000"
+msgstr "范围为 -1500 至 1500，但在 -1000 至 1000 范围之外，电机位置精度可能会降低。"
+
+msgctxt "func:move_at_velocity:param:motor:description"
+msgid "The motor port."
+msgstr "电机端口。"
+
+msgctxt "func:move_at_velocity:param:velocity:description"
+msgid "The goal velocity in -1500 to 1500 ticks / second"
+msgstr "目标速度为 -1500 至 1500 点/秒"
+
+msgctxt "func:move_relative_position:brief"
+msgid ""
+"Set a goal position (in ticks) for the motor to move to, relative to the "
+"current position."
+msgstr "设置电机相对于当前位置要移动到的目标位置（以 ticks 为单位）。"
+
+msgctxt "func:move_relative_position:param:delta_pos:description"
+msgid "The position to move to (in ticks) given the current position"
+msgstr "根据当前位置移动到的位置（以刻度为单位"
+
+msgctxt "func:move_relative_position:param:motor:description"
+msgid "The motor port."
+msgstr "电机端口。"
+
+msgctxt "func:move_relative_position:param:speed:description"
+msgid "The speed to move at, between -1500 and 1500 ticks / second"
+msgstr "移动速度，介于 -1500 至 1500 ticks / 秒之间"
+
+msgctxt "func:move_to_position:brief"
+msgid "Set a goal position (in ticks) for the motor to move to."
+msgstr "设置电机要移动到的目标位置（以 ticks 为单位）。"
+
+msgctxt "func:move_to_position:detailed"
+msgid ""
+"There are approximately 1500 ticks per motor revolution.This function is "
+"more accurate if speeds between -1000 and 1000 are used."
+msgstr "电机每转一圈大约有 1500 个刻度，如果速度在 -1000 和 1000 之间，该功能会更加精确。"
+
+msgctxt "func:move_to_position:param:goal_pos:description"
+msgid "The position to move to (in ticks)"
+msgstr "要移动到的位置（以 ticks 为单位）"
+
+msgctxt "func:move_to_position:param:motor:description"
+msgid "The motor port."
+msgstr "电机端口。"
+
+msgctxt "func:move_to_position:param:speed:description"
+msgid "The speed to move at, between -1500 and 1500 ticks / second"
+msgstr "移动速度，介于 -1500 至 1500 ticks / 秒之间"
+
+msgctxt "func:mrp:brief"
+msgid ""
+"Set a goal position (in ticks) for the motor to move to, relative to the "
+"current position."
+msgstr "设置电机相对于当前位置要移动到的目标位置（以 ticks 为单位）。"
+
+msgctxt "func:mrp:param:delta_pos:description"
+msgid "The position to move to (in ticks) given the current position"
+msgstr "根据当前位置移动到的位置（以刻度为单位"
+
+msgctxt "func:mrp:param:motor:description"
+msgid "The motor port."
+msgstr "电机端口。"
+
+msgctxt "func:mrp:param:speed:description"
+msgid "The speed to move at, between -1500 and 1500 ticks / second"
+msgstr "移动速度，介于 -1500 至 1500 ticks / 秒之间"
+
+msgctxt "func:mtp:brief"
+msgid "Set a goal position (in ticks) for the motor to move to."
+msgstr "设置电机要移动到的目标位置（以 ticks 为单位）。"
+
+msgctxt "func:mtp:param:goal_pos:description"
+msgid "The position to move to (in ticks)"
+msgstr "要移动到的位置（以 ticks 为单位）"
+
+msgctxt "func:mtp:param:motor:description"
+msgid "The motor port."
+msgstr "电机端口。"
+
+msgctxt "func:mtp:param:speed:description"
+msgid "The speed to move at, between -1500 and 1500 ticks / second"
+msgstr "移动速度，介于 -1500 至 1500 ticks / 秒之间"
+
+msgctxt "func:off:brief"
+msgid "Turns the specified motor off."
+msgstr "关闭指定的电机。"
+
+msgctxt "func:off:param:motor:description"
+msgid "the motor's port."
+msgstr "电机端口。"
+
+msgctxt "func:push_button:detailed"
+msgid "Gets the ousg button's state (pressed or not pressed.)"
+msgstr "获取 ousg 按钮的状态（按下或未按下）。"
+
+msgctxt "func:right_button:detailed"
+msgid "Gets the right button's state (pressed or not pressed.)"
+msgstr "获取右键的状态（按下或未按下）。"
+
+msgctxt "func:set_a_button_text:detailed"
+msgid "Updates the A button's text. Deprecatednot planned for the Wallaby"
+msgstr "更新 A 按钮的文本。已废弃未计划用于 Wallaby"
+
+msgctxt "func:set_a_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "要显示的文本。最多 16 个字符。"
+
+msgctxt "func:set_analog_pullup:detailed"
+msgid "Sets analog pullup status for one port. Deprecatedno effect on the Wallaby"
+msgstr "设置一个端口的模拟上拉状态。已废弃，对 Wallaby 没有影响"
+
+msgctxt "func:set_analog_pullup:param:port:description"
+msgid "A value between 0 and 5 specifying the analog sensor to read from."
+msgstr "一个介于 0 和 5 之间的值，指定要读取的模拟传感器。"
+
+msgctxt "func:set_analog_pullup:param:pullup:description"
+msgid "A value of 0 (inactive) or 1 (active)."
+msgstr "数值为 0（非活动）或 1（活动）。"
+
+msgctxt "func:set_b_button_text:detailed"
+msgid "Updates the B button's text. Deprecatednot planned for the Wallaby"
+msgstr "更新 B 按钮的文字。已废弃未计划用于 Wallaby"
+
+msgctxt "func:set_b_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "要显示的文本。最多 16 个字符。"
+
+msgctxt "func:set_c_button_text:detailed"
+msgid "Updates the C button's text. Deprecatednot planned for the Wallaby"
+msgstr "更新 C 按钮的文本。已废弃未计划用于 Wallaby"
+
+msgctxt "func:set_c_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "要显示的文本。最多 16 个字符。"
+
+msgctxt "func:set_digital_output:detailed"
+msgid "Sets the digital mode."
+msgstr "设置数字模式。"
+
+msgctxt "func:set_digital_output:param:out:description"
+msgid "1 for output mode, 0 for input mode."
+msgstr "1 表示输出模式，0 表示输入模式。"
+
+msgctxt "func:set_digital_output:param:port:description"
+msgid "The port to modify."
+msgstr "要修改的端口。"
+
+msgctxt "func:set_digital_pullup:detailed"
+msgid ""
+"Sets the current digital pullup state Deprecatednot applicable on the "
+"Wallaby"
+msgstr "设置当前数字上拉状态 过时不适用于 Wallaby"
+
+msgctxt "func:set_digital_pullup:param:port:description"
+msgid "The port to modify"
+msgstr "要修改的端口"
+
+msgctxt "func:set_digital_pullup:param:pullup:description"
+msgid "The pullup state 1: active 0: inactive"
+msgstr "上拉状态 1：激活 0：不激活"
+
+msgctxt "func:set_digital_value:detailed"
+msgid "Sets the value of the digital port in output mode."
+msgstr "在输出模式下设置数字端口的值。"
+
+msgctxt "func:set_extra_buttons_visible:detailed"
+msgid "Sets whether or not the X, Y, and Z buttons are visible."
+msgstr "设置 X、Y 和 Z 按钮是否可见。"
+
+msgctxt "func:set_pid_gains:brief"
+msgid "Set the motor PID gains, represented as fractions."
+msgstr "设置电机 PID 增益，以分数表示。"
+
+msgctxt "func:set_pid_gains:param:d:description"
+msgid "The D (derivative) gain numerator"
+msgstr "D（导数）增益分子"
+
+msgctxt "func:set_pid_gains:param:dd:description"
+msgid "The D (derivative) gain denominator"
+msgstr "D（导数）增益分母"
+
+msgctxt "func:set_pid_gains:param:i:description"
+msgid "The I (integral) gain numerator"
+msgstr "I（积分）增益分子"
+
+msgctxt "func:set_pid_gains:param:id:description"
+msgid "The I (integral) gain denominator"
+msgstr "I（积分）增益分母"
+
+msgctxt "func:set_pid_gains:param:motor:description"
+msgid "The motor port."
+msgstr "电机端口。"
+
+msgctxt "func:set_pid_gains:param:p:description"
+msgid "The P (proportional) gain numerator"
+msgstr "P（比例）增益分子"
+
+msgctxt "func:set_pid_gains:param:pd:description"
+msgid "The P (proportional) gain denominator"
+msgstr "P（比例）增益分母"
+
+msgctxt "func:set_servo_enabled:brief"
+msgid "Enable or disable a specific servo."
+msgstr "启用或禁用特定伺服。"
+
+msgctxt "func:set_servo_enabled:param:enabled:description"
+msgid "The new enable setting 0: disabled 1: enabled"
+msgstr "新的启用设置 0：禁用 1：启用"
+
+msgctxt "func:set_servo_enabled:param:port:description"
+msgid "The port, between 0 and 3, to enable"
+msgstr "要启用的端口，介于 0 和 3 之间"
+
+msgctxt "func:set_servo_position:brief"
+msgid "Set a new servo goal position."
+msgstr "设置新的伺服目标位置。"
+
+msgctxt "func:set_servo_position:param:port:description"
+msgid "The port of the servo"
+msgstr "伺服端口"
+
+msgctxt "func:set_servo_position:param:position:description"
+msgid "The new servo position, between 0 and 2047"
+msgstr "新的伺服位置，介于 0 和 2047 之间"
+
+msgctxt "func:set_x_button_text:detailed"
+msgid "Updates the X button's text. Deprecatednot planned for the Wallaby"
+msgstr "更新 X 按钮的文本。已废弃未计划用于 Wallaby"
+
+msgctxt "func:set_x_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "要显示的文本。最多 16 个字符。"
+
+msgctxt "func:set_y_button_text:detailed"
+msgid "Updates the Y button's text. Deprecatednot planned for the Wallaby"
+msgstr "更新 Y 按钮的文字。已弃用未计划用于 Wallaby"
+
+msgctxt "func:set_y_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "要显示的文本。最多 16 个字符。"
+
+msgctxt "func:set_z_button_text:detailed"
+msgid "Updates the Z button's text. Deprecatednot planned for the Wallaby"
+msgstr "更新 Z 按钮的文字。已废弃未计划用于 Wallaby"
+
+msgctxt "func:set_z_button_text:param:text:description"
+msgid "The text to display. Limit of 16 characters."
+msgstr "要显示的文本。最多 16 个字符。"
+
+msgctxt "func:setpwm:brief"
+msgid "Set the motor pwm (percent power) command."
+msgstr "设置电机 pwm（百分比功率）指令。"
+
+msgctxt "func:setpwm:param:motor:description"
+msgid "The motor port."
+msgstr "电机端口。"
+
+msgctxt "func:setpwm:param:pwm:description"
+msgid "A new motor pwm command between 0 and 100"
+msgstr "一个介于 0 和 100 之间的新电机 pwm 命令"
+
+msgctxt "func:shut_down_in:detailed"
+msgid "Register an event to stop the user program after s seconds"
+msgstr "注册一个事件，以便在 s 秒后停止用户程序"
+
+msgctxt "func:shut_down_in:param:s:description"
+msgid "The number of seconds to wait before the end of program"
+msgstr "程序结束前的等待秒数"
+
+msgctxt "func:side_button:detailed"
+msgid ""
+"Gets the side button's state (pressed or not pressed.) DeprecatedNot "
+"present on the Wallaby"
+msgstr "获取侧边按钮的状态（按下或未按下）。"
+
+msgctxt "func:side_button_clicked:detailed"
+msgid "Gets the Z button's state (pressed or not pressed.)"
+msgstr "获取 Z 按钮的状态（按下或未按下）。"
+
+msgctxt "func:wait_for_a_button:detailed"
+msgid "Waits (blocks) until the a button has been pressed."
+msgstr "等待（阻塞），直到按下一个按钮。"
+
+msgctxt "func:wait_for_a_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the a button has been pressed and then subsequently "
+"released."
+msgstr "等待（阻塞），直到按下按钮并随后松开。"
+
+msgctxt "func:wait_for_any_button:detailed"
+msgid "Waits (blocks) until any system button has been pressed."
+msgstr "等待（阻止）直到任何系统按钮被按下。"
+
+msgctxt "func:wait_for_b_button:detailed"
+msgid "Waits (blocks) until the b button has been pressed."
+msgstr "等待（阻止）直到按下 b 按钮。"
+
+msgctxt "func:wait_for_b_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the b button has been pressed and then subsequently "
+"released."
+msgstr "等待（阻止）按下 b 按钮，然后松开。"
+
+msgctxt "func:wait_for_c_button:detailed"
+msgid "Waits (blocks) until the c button has been pressed."
+msgstr "等待（阻止）直到按下 c 按钮。"
+
+msgctxt "func:wait_for_c_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the c button has been pressed and then subsequently "
+"released."
+msgstr "等待（阻塞）直到按下 c 按钮，然后松开。"
+
+msgctxt "func:wait_for_light:detailed"
+msgid ""
+"Initiate a calibration and wait for light sequence which is a normal early "
+"step in Botball programs"
+msgstr "启动校准并等待光照序列，这是 Botball 程序的正常早期步骤"
+
+msgctxt "func:wait_for_light:param:light_port_:description"
+msgid "The analog port and light sensor to use."
+msgstr "使用模拟端口和光线传感器。"
+
+msgctxt "func:wait_for_milliseconds:detailed"
+msgid "Waits (blocks) for the given number of milliseconds."
+msgstr "等待（阻塞）给定的毫秒数。"
+
+msgctxt "func:wait_for_milliseconds:param:msecs:description"
+msgid "the number of milliseconds to sleep"
+msgstr "睡眠毫秒数"
+
+msgctxt "func:wait_for_side_button:detailed"
+msgid "Waits (blocks) until the side button has been pressed."
+msgstr "等待（阻止）直到按下侧边按钮。"
+
+msgctxt "func:wait_for_side_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the side button has been pressed and then subsequently "
+"released."
+msgstr "等待（阻止）按下侧边按钮，然后松开。"
+
+msgctxt "func:wait_for_touch:detailed"
+msgid ""
+"Waits (blocks) until the digital sensor on the given port has been "
+"activated."
+msgstr "等待（阻塞），直到给定端口上的数字传感器被激活。"
+
+msgctxt "func:wait_for_touch:param:port:description"
+msgid "The port to wait for activation on"
+msgstr "等待激活的端口"
+
+msgctxt "func:wait_for_x_button:detailed"
+msgid "Waits (blocks) until the x button has been pressed."
+msgstr "等待（阻止）直到按下 x 按钮。"
+
+msgctxt "func:wait_for_x_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the x button has been pressed and then subsequently "
+"released."
+msgstr "等待（阻止）按下 x 按钮，然后松开。"
+
+msgctxt "func:wait_for_y_button:detailed"
+msgid "Waits (blocks) until the y button has been pressed."
+msgstr "等待（阻止）直到按下 y 按钮。"
+
+msgctxt "func:wait_for_y_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the y button has been pressed and then subsequently "
+"released."
+msgstr "等待（阻止）按下 y 按钮，然后松开。"
+
+msgctxt "func:wait_for_z_button:detailed"
+msgid "Waits (blocks) until the z button has been pressed."
+msgstr "等待（阻止）直到按下 z 按钮。"
+
+msgctxt "func:wait_for_z_button_clicked:detailed"
+msgid ""
+"Waits (blocks) until the z button has been pressed and then subsequently "
+"released."
+msgstr "等待（阻止）按下 z 按钮，然后松开。"
+
+msgctxt "func:x_button:detailed"
+msgid "Gets the C button's state (pressed or not pressed.)"
+msgstr "获取 C 按钮的状态（按下或未按下）。"
+
+msgctxt "func:x_button_clicked:detailed"
+msgid "Gets the C button's state (pressed or not pressed.)"
+msgstr "获取 C 按钮的状态（按下或未按下）。"
+
+msgctxt "func:y_button:detailed"
+msgid "Gets the Y button's state (pressed or not pressed.)"
+msgstr "获取 Y 按钮的状态（按下或未按下）。"
+
+msgctxt "func:y_button_clicked:detailed"
+msgid "Gets the X button's state (pressed or not pressed.)"
+msgstr "获取 X 按钮的状态（按下或未按下）。"
+
+msgctxt "func:z_button:detailed"
+msgid "Gets the Z button's state (pressed or not pressed.)"
+msgstr "获取 Z 按钮的状态（按下或未按下）。"
+
+msgctxt "func:z_button_clicked:detailed"
+msgid "Gets the Y button's state (pressed or not pressed.)"
+msgstr "获取 Y 按钮的状态（按下或未按下）。"
+
+msgctxt "struct:kipr::create::CreatePackets::_101:detailed"
+msgid "Create OI Packet 101"
+msgstr "创建 OI 数据包 101"
+
+msgctxt "struct:kipr::create::CreatePackets::_1:detailed"
+msgid "Create OI Packet 1"
+msgstr "创建 OI 数据包 1"
+
+msgctxt "struct:kipr::create::CreatePackets::_2:detailed"
+msgid "Create OI Packet 2"
+msgstr "创建 OI 数据包 2"
+
+msgctxt "struct:kipr::create::CreatePackets::_3:detailed"
+msgid "Create OI Packet 3"
+msgstr "创建 OI 数据包 3"
+
+msgctxt "struct:kipr::create::CreatePackets::_4:detailed"
+msgid "Create OI Packet 4"
+msgstr "创建 OI 数据包 4"
+
+msgctxt "struct:kipr::create::CreatePackets::_5:detailed"
+msgid "Create OI Packet 5"
+msgstr "创建 OI 数据包 5"
+
+msgctxt "struct:kipr::create::CreateState:detailed"
+msgid "Locally stored state information"
+msgstr "本地存储的状态信息"
+
+msgctxt "struct:mutex:brief"
+msgid "A mutex, or lock."
+msgstr "互斥或锁。"
+
+msgctxt "struct:mutex:detailed"
+msgid ""
+"mutexes are used to prevent memory errors when two programs or threads need "
+"to access the same variable."
+msgstr "当两个程序或线程需要访问同一个变量时，互斥用来防止内存出错。"
+
+msgctxt "struct:mutex:member:data:brief"
+msgid "a C++ Mutex object cast to a void*. Not intended to be accessed."
+msgstr "一个 C++ Mutex 对象被转换为 void*。不用于访问。"
+
+msgctxt "struct:point2:brief"
+msgid "A 2D point; has x and y."
+msgstr "二维点；有 x 和 y。"
+
+msgctxt "struct:point2:member:x:brief"
+msgid "the x value of the point"
+msgstr "点的 x 值"
+
+msgctxt "struct:point2:member:y:brief"
+msgid "the y value of the point"
+msgstr "点的 y 值"
+
+msgctxt "struct:point3:brief"
+msgid "A 3D point; has x, y, and z."
+msgstr "三维点；具有 x、y 和 z。"
+
+msgctxt "struct:point3:member:x:brief"
+msgid "the x value of the point"
+msgstr "点的 x 值"
+
+msgctxt "struct:point3:member:y:brief"
+msgid "the y value of the point"
+msgstr "点的 y 值"
+
+msgctxt "struct:point3:member:z:brief"
+msgid "the z value of the point"
+msgstr "点的 Z 值"
+
+msgctxt "struct:rectangle:brief"
+msgid "A rectangle object."
+msgstr "一个矩形对象。"
+
+msgctxt "struct:rectangle:member:height:brief"
+msgid "the height of the rectangle"
+msgstr "矩形的高度"
+
+msgctxt "struct:rectangle:member:ulx:brief"
+msgid "the x value of the rectangle's upper left"
+msgstr "矩形左上角的 x 值"
+
+msgctxt "struct:rectangle:member:uly:brief"
+msgid "the y value of the rectangle's upper left"
+msgstr "矩形左上角的 y 值"
+
+msgctxt "struct:rectangle:member:width:brief"
+msgid "the width of the rectangle"
+msgstr "矩形的宽度"
+
+msgctxt "struct:thread:brief"
+msgid "A thread, or separate process."
+msgstr "线程或独立进程。"
+
+msgctxt "struct:thread:detailed"
+msgid ""
+"a thread runs a function \"in the background\" (while another function is "
+"executing)."
+msgstr "线程运行一个函数（executing）。"
+
+msgctxt "struct:thread:member:data:brief"
+msgid "a C++ Thread object cast to a void*. Not intended to be accessed."
+msgstr "一个 C++ 线程对象被转换为 void*。不用于访问。"

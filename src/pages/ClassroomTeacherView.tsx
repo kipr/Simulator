@@ -30,8 +30,8 @@ import { Challenges, ChallengeCompletions } from '../state/State';
 import { Project } from 'state/State/Project';
 import TourTarget from '../components/Tours/TourTarget';
 import { TourRegistry } from '../tours/TourRegistry';
-import { GuidedTour } from '../components/Tours/GuidedTour';
-import TourDoc, { getTourSteps, TourStep } from '../tours/Tours';
+import GuidedTour from '../components/Tours/GuidedTour';
+import TourDoc, { getTeacherViewTourSteps, getTourSteps, TourStep } from '../tours/Tours';
 import { completeTour, fetchTourIfNeeded, retakeTour } from '../state/reducer/tours';
 
 export interface ClassroomTeacherViewRootRouteParams {
@@ -190,15 +190,15 @@ export const IVYGATE_LANGUAGE_MAPPING: Dict<string> = {
   'cpp': 'customCpp',
   'plaintext': 'plaintext',
 };
-const teacherViewTourSteps: TourStep[] = getTourSteps(TourDoc.IDS.TEACHER_VIEW);
-
+let teacherViewTourSteps: TourStep[];
+let registry: TourRegistry;
 class ClassroomTeacherView extends React.Component<Props, State> {
   private challengeCache: Record<string, Dict<ChallengeCompletion>> = {};
   private unsubscribeChallenges: (() => void) | null = null;
 
-  private registry = new TourRegistry();
+
   private scrollRef: HTMLDivElement | null = null;
-  private guidedTourRef: React.MutableRefObject<GuidedTour>;
+
   constructor(props: Props) {
     super(props);
 
@@ -215,8 +215,10 @@ class ClassroomTeacherView extends React.Component<Props, State> {
       leaderboardClassroom: null
     };
 
-    this.guidedTourRef = React.createRef();
+    teacherViewTourSteps = getTeacherViewTourSteps(props.locale);
+
   }
+  registry = new TourRegistry();
 
   async componentDidMount() {
     this.props.onListOwnedClassrooms();
@@ -229,6 +231,9 @@ class ClassroomTeacherView extends React.Component<Props, State> {
   componentDidUpdate(prevProps: Props, prevState: State) {
     if (prevProps.classroomList !== this.props.classroomList) {
       this.getIvygateClassrooms();
+    }
+    if (this.props.locale !== prevProps.locale) {
+      teacherViewTourSteps = getTeacherViewTourSteps(this.props.locale);
     }
   }
 
@@ -456,7 +461,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
             onDeleteUser={this.onDeleteUser_}
             theme={DARK}
             style={style}
-            locale={'en-US'}
+            locale={locale}
             ivygateLanguageMapping={IVYGATE_LANGUAGE_MAPPING}
             activeTourStepId={teacherViewTourSteps[this.state.currentTourStepIndex || 0]?.id}
             tour={{
@@ -541,10 +546,10 @@ class ClassroomTeacherView extends React.Component<Props, State> {
         <TourTarget registry={this.registry} targetKey='teacher-dashboard' style={style}>
           <ClassroomsContainer style={style} theme={theme}>
             <ClassroomsTitleContainer style={style} theme={theme}>
-              <h1>Classrooms - Teacher View</h1>
+              <h1>{LocalizedString.lookup(tr('Classrooms - Teacher View'), props.locale)}</h1>
               {this.props.classroomList && Object.keys(this.props.classroomList).length > 0 && (
                 <Button theme={theme} onClick={this.onSeeLeaderboards}>
-                  See Classroom Leaderboards
+                  {LocalizedString.lookup(tr('See Classroom Leaderboards'), props.locale)}
                 </Button>)}
               <ClassroomHeaderContainer style={style} theme={theme}>
                 {this.renderManageClassrooms()}
@@ -567,7 +572,6 @@ class ClassroomTeacherView extends React.Component<Props, State> {
         {showTour && (
           <GuidedTour
             continueTourFlag={this.state.continueTour}
-            ref={this.guidedTourRef}
             isOpen={showTour}
             steps={teacherViewTourSteps}
             registry={this.registry}

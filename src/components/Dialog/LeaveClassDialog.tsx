@@ -41,6 +41,11 @@ const Container = styled('div', (props: ThemeProps) => ({
   height: 'auto'
 }));
 
+const ClassroomName = styled('span', (props: ThemeProps) => ({
+  fontWeight: 'bold',
+  color: props.theme.color,
+  textDecoration: 'underline',
+}));
 const StyledForm = styled(Form, (props: ThemeProps) => ({
   paddingLeft: `${props.theme.itemPadding * 2}px`,
   paddingRight: `${props.theme.itemPadding * 2}px`,
@@ -72,7 +77,7 @@ export class LeaveClassDialog extends React.PureComponent<Props, State> {
     const { props } = this;
     const { style, className, theme, onClose, locale, currentClassroom } = props;
     const LEAVECLASSROOM_FORM_ITEMS: Form.Item[] = [
-      Form.leaveClass('leaveClassName', 'Leave Classroom', 'Reenter classroom name to confirm leaving classroom.'),
+      Form.leaveClass('leaveClassName', LocalizedString.lookup(tr('Leave Classroom'), locale), LocalizedString.lookup(tr('Reenter classroom name to confirm leaving classroom.'), locale)),
     ];
 
     return (
@@ -82,12 +87,15 @@ export class LeaveClassDialog extends React.PureComponent<Props, State> {
         onClose={onClose}
       >
         <Container theme={theme} style={style} className={className}>
-          {LocalizedString.lookup(tr(`Are you sure you want to leave ${currentClassroom.classroomId}?`), locale)}
+
+          <div style={{ display: 'flex', flexDirection: 'row', gap: '0.25em', alignItems: 'center' }}>
+            {LocalizedString.lookup(tr('Are you sure you want to leave: '), locale)}<ClassroomName theme={theme}>{currentClassroom.classroomId}</ClassroomName>?
+          </div>
           <StyledForm
             theme={theme}
             onFinalize={this.onFinalize_}
             items={LEAVECLASSROOM_FORM_ITEMS}
-            finalizeText="Leave Classroom"
+            finalizeText={LocalizedString.lookup(tr('Leave Classroom'), locale)}
             finalizeDisabled={false}
           />
         </Container>
