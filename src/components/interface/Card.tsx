@@ -14,6 +14,9 @@ export interface CardProps extends StyleProps, ThemeProps {
   hoverBackgroundSize?: string;
   selected?: boolean;
   onClick: (event: React.MouseEvent) => void;
+  customheight?: string;
+  customwidth?: string;
+  custommargin?: string;
 }
 
 interface CardState { }
@@ -27,13 +30,16 @@ const Container = styled('div', (props: ThemeProps & {
   backgroundposition: string;
   backgroundsize: string;
   hoverbackgroundsize: string;
+  customwidth: string;
+  customheight: string;
+  custommargin: string;
 }) => ({
   width: '100%',
   height: '100%',
-  minWidth: '320px',
-  maxWidth: '350px',
-  minHeight: '320px',
-  maxHeight: '350px',
+  minWidth: props.customwidth ? props.customwidth : '320px',
+  maxWidth: props.customwidth ? props.customwidth : '350px',
+  minHeight: props.customheight ? props.customheight : '320px',
+  maxHeight: props.customheight ? props.customheight : '350px',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -41,7 +47,7 @@ const Container = styled('div', (props: ThemeProps & {
   backdropFilter: 'blur(16px)',
   paddingTop: `${props.theme.itemPadding * 2}px`,
   paddingBottom: '0px',
-  margin: '20px 20px 0px 20px',
+  margin: props.custommargin ? props.custommargin : '20px 20px 0px 20px',
   backgroundColor: props.backgroundcolor ? props.backgroundcolor : props.theme.backgroundColor,
   borderRadius: `${props.theme.itemPadding * 4}px`,
   border: `1px solid ${props.theme.borderColor}`,
@@ -119,7 +125,10 @@ export class Card extends React.Component<Props, State> {
         backgroundposition={backgroundPosition}
         backgroundsize={backgroundSize}
         hoverbackgroundsize={hoverBackgroundSize}
+        customwidth={this.props.customwidth}
+        customheight={this.props.customheight}
         onClick={onClick}
+        custommargin={this.props.custommargin}
       >
         <Gradient theme={theme} />
         <Header theme={theme}>{title}</Header>
