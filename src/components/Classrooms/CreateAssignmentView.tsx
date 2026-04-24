@@ -20,9 +20,14 @@ import TextArea from '../interface/TextArea';
 
 import { Challenges } from '../../state/State';
 import ScrollArea from '../interface/ScrollArea';
+import ResizeableComboBox from '../interface/ResizeableComboBox';
+import Assignment from 'state/State/Assignment';
+import Challenge from '../../state/State/Challenge';
+import { set } from 'immer/dist/internal';
 
 export interface CreateAssignmentViewPublicProps extends ThemeProps, StyleProps {
   onClose: () => void;
+  onAssignComplete?: (students: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>, assignment: ClassroomAssignment) => void;
   classroom: AsyncClassroom;
 }
 
@@ -68,9 +73,9 @@ const AssignmentInputContainer = styled('div', (props: ThemeProps) => ({
   padding: '1em',
   margin: '8px',
   gap: '1.4em',
-  backgroundColor: 'lightgreen',
-  width: '100%',
-  height: '70vh'
+
+  width: '60%',
+  height: '85vh'
 }));
 
 const AssignmentInfoContainer = styled('div', (props: ThemeProps) => ({
@@ -82,9 +87,8 @@ const AssignmentInfoContainer = styled('div', (props: ThemeProps) => ({
   borderRadius: `${props.theme.itemPadding * 2}px`,
   padding: '1em',
   margin: '8px',
-  backgroundColor: 'lightgreen',
   gap: '1.4em',
-  //width: '100%',
+  width: '40%',
 
 }));
 
@@ -135,6 +139,29 @@ const StyledCheckbox = styled(Input, (props: ThemeProps) => ({
   width: 'auto'
 }));
 
+const StyledResizeableComboBox = styled(ResizeableComboBox, (props: ThemeProps) => ({
+  //flex: '1 0',
+  //padding: '3px',
+  color: props.theme.color
+
+}));
+
+const DateTimeInput = styled(Input, (props: ThemeProps) => ({
+  width: '100%',
+  colorScheme: 'dark',
+
+  cursor: 'pointer',
+  // '&::-webkit-calendar-picker-indicator': {
+  //   display: 'none',
+  //   WebkitAppearance: 'none',
+  // },
+
+  // '&::-webkit-inner-spin-button': {
+  //   display: 'none',
+  // },
+}));
+
+
 const StyledScrollArea = styled(ScrollArea, ({ theme }: ThemeProps) => ({
   flex: 1,
 }));
@@ -147,55 +174,107 @@ const CheckboxRow = styled('div', (props: ThemeProps) => ({
   alignItems: 'center',
 }));
 
+const TableBody = styled('tbody', (props: ThemeProps) => ({
+  outline: `2px solid ${props.theme.borderColor}`,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '0.5em',
+  padding: '0.5em',
+}));
+
+const TableRow = styled('tr', (props: ThemeProps) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+}));
+
+const TableCell = styled('td', (props: ThemeProps) => ({
+  fontSize: '0.8em',
+  display: 'flex',
+  color: props.theme.color,
+  justifyContent: 'flex-end'
+}));
+
 
 const CreateAssignmentView = ({
   theme,
   locale,
   onClose,
   classroom,
-  challenges
+  challenges,
+  onAssignComplete
 }: Props) => {
-  console.log("CreateAssignmentView rendered with classroom: ", classroom);
-  console.log("CreateAssignmentView prop challenges: ", challenges);
+
   const loadedClassroom = Async.latestValue(classroom);
   const [assignToMenuVisible, setAssignToMenuVisible] = useState(false);
   const [selectedStudents, setSelectedStudents] = useState<Dict<{ id: string, displayName: string }>>({});
   const [enableAssign, setEnableAssign] = useState(false);
   const [assignmentInfo, setAssignmentInfo] = useState<Partial<ClassroomAssignment>>({ points: 100, dueDate: "No Due Date" });
-  console.log("CreateAssignmentView selectedStudents: ", selectedStudents);
+  const [isCreatingTopic, setIsCreatingTopic] = React.useState(false);
+  const [newTopic, setNewTopic] = React.useState("");
+  const [topicIndex, setTopicIndex] = React.useState(0);
+  const [topics, setTopics] = useState<ResizeableComboBox.Option[]>([{ text: LocalizedString.lookup(tr('No Topic'), locale), data: 'No Topic' },
+  { text: LocalizedString.lookup(tr('Create Topic'), locale), data: 'Create Topic' },]);
+  const [assignedPointsSet, setAssignedPointsSet] = useState<Dict<{ challenge: Challenge, points: number | '' }>>({});
 
-  // useEffect(() => {
-  //   console.log("CreateAssignmentView assignmentInfo changed: ", assignmentInfo);
-  // }, [])
+
   function handleAssign() {
-    assignmentInfo.dueDate ? console.log("Assignment due date: ", assignmentInfo.dueDate) : console.log("No due date set");
     console.log("Assigning with info: ", assignmentInfo);
+    onAssignComplete && onAssignComplete(selectedStudents, assignmentInfo as ClassroomAssignment);
   };
+
+  useEffect(() => {
+    console.log("useEffect topics: ", topics);
+  }, [topics]);
+
+  useEffect(() => {
+    const finalPointValue = Object.values(assignedPointsSet).reduce((total, { points }) => {
+      return total + (typeof points === 'number' ? points : 0);
+    }, 0);
+
+    console.log("finalPointValue: ", finalPointValue);
+    setAssignmentInfo({
+      ...assignmentInfo, points: finalPointValue,
+      challenges: Object.values(assignedPointsSet).reduce((acc, { challenge, points }) => {
+        acc[challenge.name[locale]] = { challenge, points };
+        return acc;
+      }, {} as Dict<{ challenge: Challenge, points: number | '' }>)
+    });
+  }, [assignedPointsSet]);
 
   function renderChallengeCheckboxes() {
 
-    Object.values(challenges || {}).map(challenge => {
-      console.log("Rendering checkbox for challenge: ", Async.latestValue(challenge).description[locale]);
-
-    })
-    // <div style={{ fontSize: '1.5em', display: 'flex', flexDirection: 'column', gap: '1em', alignItems: 'flex-start', margin: '1em' }}>
-    //   {
-    //     Object.values(challenges || {}).map(challenge => (
-
-    //       <CheckboxRow theme={theme} key={LocalizedString.lookup(Async.latestValue(challenge).name, locale)}>
-    //         <StyledCheckbox theme={theme} type="checkbox" id={`assign-to-${LocalizedString.lookup(Async.latestValue(challenge).name, locale)}`} name={`assign-to-${LocalizedString.lookup(Async.latestValue(challenge).name, locale)}`} value={LocalizedString.lookup(Async.latestValue(challenge).name, locale)} onChange={() => console.log("Toggled challenge: ", LocalizedString.lookup(Async.latestValue(challenge).name, locale))} />
-    //         <label htmlFor={`assign-to-${LocalizedString.lookup(Async.latestValue(challenge).name, locale)}`}>{LocalizedString.lookup(Async.latestValue(challenge).name, locale)}</label>
-    //       </CheckboxRow>
-    //     ))
-    //   }
-    // </div>
     return (
       <div style={{ fontSize: '1.5em', display: 'flex', flexDirection: 'column', gap: '1em', alignItems: 'flex-start', margin: '1em' }}>
         {
           Object.values(challenges || {}).map(challenge => (
 
             <CheckboxRow theme={theme} key={`${Async.latestValue(challenge).name[locale]}-key`}>
-              <StyledCheckbox theme={theme} type="checkbox" id={`assign-to-${LocalizedString.lookup(Async.latestValue(challenge).description, locale)}`} name={`assign-to-${LocalizedString.lookup(Async.latestValue(challenge).name, locale)}`} value={LocalizedString.lookup(Async.latestValue(challenge).name, locale)} onChange={() => console.log("Toggled challenge: ", LocalizedString.lookup(Async.latestValue(challenge).name, locale))} />
+              <StyledCheckbox theme={theme} type="checkbox" id={`assign-to-${LocalizedString.lookup(Async.latestValue(challenge).description, locale)}`}
+                name={`assign-to-${LocalizedString.lookup(Async.latestValue(challenge).name, locale)}`}
+                value={LocalizedString.lookup(Async.latestValue(challenge).name, locale)}
+                onChange={() => {
+                  const currentChallenge = Async.latestValue(challenge);
+                  const existingChallenges = assignmentInfo.challenges || {};
+
+                  const alreadyExists = Object.values(existingChallenges).some(
+                    ({ challenge }) => challenge.name[locale] === currentChallenge.name[locale]
+                  );
+
+                  const key = currentChallenge.name[locale];
+
+                  setAssignedPointsSet(prev => {
+                    const next = { ...prev };
+                    if (alreadyExists) {
+                      delete next[key];
+                    } else {
+                      next[key] = { challenge: currentChallenge, points: 0 };
+                    }
+                    return next;
+
+                  });
+                }} />
+
               <label htmlFor={`assign-to-${LocalizedString.lookup(Async.latestValue(challenge).description, locale)}`}>{LocalizedString.lookup(Async.latestValue(challenge).description, locale)}</label>
             </CheckboxRow>
           ))
@@ -270,46 +349,154 @@ const CreateAssignmentView = ({
                 : `${Object.keys(selectedStudents).length} ${LocalizedString.lookup(tr('Students'), locale)}`}
             </Button>
           </AssignmentInfoRow>
-          <AssignmentInfoRow theme={theme}>
-            <label>
-              {LocalizedString.lookup(tr('Points'), locale)}
-              <AssignmentInfoContent theme={theme}>
-                <Input
-                  style={{ width: '50%' }}
-                  type="number"
-                  inputMode="numeric"
-                  value={assignmentInfo.points}
-                  onChange={(e) => {
-                    const value = e.target.value;
-
-                    setAssignmentInfo({
-                      ...assignmentInfo,
-                      points: value === '' ? '' : parseInt(value, 10),
-                    });
-                  }}
-                  onBlur={() => {
-                    setAssignmentInfo({
-                      ...assignmentInfo,
-                      points: assignmentInfo.points === '' ? 0 : assignmentInfo.points,
-                    });
-                  }}
-                  theme={theme}
-                />
-              </AssignmentInfoContent>
-            </label>
-          </AssignmentInfoRow>
 
           <AssignmentInfoRow theme={theme}>
             <label>
-              {LocalizedString.lookup(tr('Due Date'), locale)}
-              <AssignmentInfoContent theme={theme}>
-                <Input type="datetime-local" theme={theme} onChange={(e) => {
-                  setAssignmentInfo({ ...assignmentInfo, dueDate: (e.target as HTMLInputElement).value });
-                }} />
-              </AssignmentInfoContent>
+              {LocalizedString.lookup(tr('Topic'), locale)}
+
             </label>
+            <AssignmentInfoContent theme={theme}>
+              <StyledResizeableComboBox
+                options={topics}
+                index={topicIndex}
+                onSelect={(optionIndex) => {
+                  console.log("Selected topic: ", topics[optionIndex]);
+                  if (topics[optionIndex].data === "Create Topic") {
+                    setIsCreatingTopic(true);
+                    setNewTopic("");
+                    return;
+                  }
+                  else {
+                    setIsCreatingTopic(false);
+                    setTopicIndex(optionIndex);
+
+                  }
+
+                  setAssignmentInfo({
+                    ...assignmentInfo,
+                    topic: topics[optionIndex].data as string,
+                  });
+                }}
+                mainWidth={'4em'}
+                mainHeight={'1.5em'}
+                mainFontSize={'0.9em'}
+                theme={theme}
+                customMainContent={
+                  isCreatingTopic ? (
+                    <input
+                      autoFocus
+                      value={newTopic}
+                      onClick={(e) => e.stopPropagation()}
+                      onChange={(e) => setNewTopic(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && newTopic.trim()) {
+                          const topic = newTopic.trim();
+
+                          const newTopics = [...topics];
+                          const insertIndex = newTopics.length - 1;
+
+                          newTopics.splice(insertIndex, 0, {
+                            text: topic,
+                            data: topic,
+                          });
+
+                          setTopics(newTopics);
+                          setAssignmentInfo({ ...assignmentInfo, topic });
+                          setTopicIndex(insertIndex);
+                          setIsCreatingTopic(false);
+                        }
+
+                        if (e.key === "Escape") {
+                          setIsCreatingTopic(false);
+                        }
+                      }}
+                    />
+                  ) : undefined
+                }
+              />
+            </AssignmentInfoContent>
+          </AssignmentInfoRow>
+          <AssignmentInfoRow theme={theme}>
+
+            {LocalizedString.lookup(tr('Points'), locale)}
+            <AssignmentInfoContent theme={theme}>
+              <Input
+                style={{ width: '50%', cursor: 'default' }}
+                type="number"
+                inputMode="numeric"
+                readOnly={true}
+                value={assignmentInfo.points}
+                onChange={(e) => {
+                  const value = e.target.value;
+
+                  setAssignmentInfo({
+                    ...assignmentInfo,
+                    points: value === '' ? '' : parseInt(value, 10),
+                  });
+                }}
+
+                theme={theme}
+              />
+            </AssignmentInfoContent>
+            {Object.keys(assignedPointsSet).length > 0 && (
+
+              <AssignmentInfoContent theme={theme} style={{ marginTop: '0.2em', width: '97%' }}>
+                <StyledScrollArea style={{ height: '18em' }} theme={theme}>
+                  <table>
+                    <TableBody theme={theme}>
+
+                      {Object.values(assignedPointsSet)?.map(({ challenge, points }, index) => (
+                        <TableRow theme={theme} key={`${challenge.name[locale]}-points-row`}>
+                          <TableCell theme={theme} style={{ maxWidth: '70%', fontSize: '0.8em', color: theme.color }}>
+                            {LocalizedString.lookup(challenge.description, locale)}
+                          </TableCell>
+                          <TableCell style={{ width: '20%' }} theme={theme}>
+                            <Input
+                              type="number" min={0} inputMode="numeric" theme={theme} value={points} onChange={(e) => {
+                                const value = e.target.value;
+                                setAssignedPointsSet(prev => ({
+                                  ...prev,
+                                  [challenge.name[locale]]: {
+                                    challenge,
+                                    points: value === '' ? 0 : parseInt(value, 10),
+                                  }
+                                }));
+                              }}
+                            />
+                          </TableCell>
+                        </TableRow>
+                      ))}
+
+
+                    </TableBody>
+                  </table>
+                </StyledScrollArea>
+              </AssignmentInfoContent>
+
+            )}
 
           </AssignmentInfoRow>
+
+          <AssignmentInfoRow theme={theme}>
+
+            {LocalizedString.lookup(tr('Due Date'), locale)}
+            <AssignmentInfoContent theme={theme}>
+              <DateTimeInput
+                type="datetime-local"
+                theme={theme}
+                onChange={(e) => {
+                  setAssignmentInfo({
+                    ...assignmentInfo,
+                    dueDate: (e.target as HTMLInputElement).value,
+                  });
+                }}
+              />
+            </AssignmentInfoContent>
+
+
+          </AssignmentInfoRow>
+
+
         </AssignmentInfoContainer>
 
       </div>

@@ -11,7 +11,7 @@ import { IvygateFileExplorer } from 'ivygate/dist/src';
 import store, { State as ReduxState } from '../state';
 import tr from '@i18n';
 import { withNavigate, WithNavigateProps } from '../util/withNavigate';
-import { AsyncClassroom, Classroom } from '../state/State/Classroom';
+import { AsyncClassroom, Classroom, ClassroomAssignment } from '../state/State/Classroom';
 import { CreateClassroomDialog } from '../components/Dialog/CreateClassroomDialog';
 import Dict from '../util/objectOps/Dict';
 import { ClassroomsAction, listChallengesByStudentId, deleteClassroom } from 'state/reducer/classrooms';
@@ -628,6 +628,10 @@ class ClassroomTeacherView extends React.Component<Props, State> {
     console.log("handleAssignmentAction called with classroom: ", currentSelectedClassroom, " and action: ", action);
     this.setState({ createAssignmentVisible: true });
   };
+
+  private onAssignComplete_ = (students: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>, assignment: ClassroomAssignment) => {
+    console.log("Assignment complete with students: ", students, " and assignment: ", assignment);
+  };
   render() {
     const { props, state } = this;
     const { style, locale } = props;
@@ -644,6 +648,7 @@ class ClassroomTeacherView extends React.Component<Props, State> {
                 onClose={() => this.setState({ createAssignmentVisible: false })}
                 theme={theme}
                 classroom={state.currentSelectedClassroom}
+                onAssignComplete={this.onAssignComplete_}
 
               />
             </ClassroomsContainer>) : (
