@@ -66,6 +66,9 @@ const StyledTabBar = styled(TabBar, ({ theme }: ThemeProps) => ({
   backgroundColor: theme.backgroundColor,
   ':last-child': {
     marginRight: `${theme.itemPadding * 2}px`,
+  },
+  ':first-child': {
+    marginLeft: `${theme.itemPadding * 2}px`,
   }
 
 }));
