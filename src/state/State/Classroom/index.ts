@@ -2,17 +2,18 @@ import LocalizedString from "../../../util/LocalizedString";
 import Async from '../Async';
 import tr from '@i18n';
 import Dict from '../../../util/objectOps/Dict';
+import Challenge from "../Challenge";
 
 export interface Classroom {
   classroomId: string; // classroom ID
   code: string; // invitation code
-  studentIds: Dict<{ id: string, displayName: string }>;  // IDs of students in the classroom
+  studentIds: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>;  // IDs of students in the classroom
   teacherId: string;  // ID of the teacher
   teacherDisplayName: string; // Display name of the teacher
   type: 'classroom';
   docId?: string; // document ID in the database
   classroomAssignments?: Dict<ClassroomAssignment>; // assignments in the classroom, keyed by assignment ID
-
+  topics?: string[]; // optional mapping of topic name to list of assignment IDs
 }
 
 export interface ClassroomAssignment {
@@ -22,7 +23,8 @@ export interface ClassroomAssignment {
   points?: number | ''; // points can be a number or an empty string if not set
   dueDate?: string; // ISO string
   docId?: string; // assignment document ID in the database
-  challenges?: string[]; // list of challenge IDs included in the assignment
+  challenges?: Dict<{ challenge: Challenge, points: number | '' }>; // list of challenge IDs included in the assignment
+  topic?: string; // topic of the assignment
 }
 
 export namespace Classroom {
