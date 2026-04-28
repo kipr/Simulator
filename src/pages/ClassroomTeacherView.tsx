@@ -85,6 +85,7 @@ export interface ClassroomTeacherViewPublicProps extends StyleProps, ThemeProps 
   onListChallengesByStudentId: (studentId: string) => void;
   onShowClassroomLeaderboard: (classroom: AsyncClassroom) => void;
   onRemoveStudentFromClassroom: (studentId: string, currentClassroom: Classroom) => void;
+  onGetAssignments: (classroomDocId: string) => void;
 }
 
 interface ClassroomTeacherViewPrivateProps {
@@ -117,6 +118,8 @@ interface ClassroomTeacherViewState {
   continueTour?: boolean;
   currentSelectedClassroom?: AsyncClassroom | null;
   createAssignmentVisible?: boolean;
+  teacherTabIndex?: number;
+  assignmentToEdit?: ClassroomAssignment | null;
 }
 
 interface ClickProps {
@@ -289,6 +292,11 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps: Props, prevState: State) {
     console.log("componentDidUpdate called with props: ", this.props, " and state: ", this.state);
+    console.log("previous props: ", prevProps, " previous state: ", prevState);
+
+    if (prevProps.selectedClassroom !== this.props.selectedClassroom && this.props.selectedClassroom) {
+      this.setState({ currentSelectedClassroom: this.props.selectedClassroom || null });
+    }
     if (prevProps.classroomList !== this.props.classroomList) {
       this.getIvygateClassrooms();
     }
@@ -600,7 +608,6 @@ class ClassroomTeacherView extends React.Component<Props, State> {
     console.log("existingClassroomCards: ", classroomList);
     console.log("Object.entries(classroomList): ", Object.entries(classroomList));
     return Object.entries(classroomList).map(([id, asyncClassroom]) => {
-      console.log("Checking classroom: ", id, asyncClassroom);
       if (asyncClassroom.type === Async.Type.Loaded && classroomList !== null) {
         const classroom = asyncClassroom.value;
         return (
@@ -624,18 +631,32 @@ class ClassroomTeacherView extends React.Component<Props, State> {
 
   };
 
-  private handleAssignemntAction = (currentSelectedClassroom: AsyncClassroom | null, action: 'edit' | 'delete') => {
+  private handleAssignemntAction = (currentSelectedClassroom: AsyncClassroom | null, action: 'edit' | 'create', assignmentToEdit?: ClassroomAssignment) => {
     console.log("handleAssignmentAction called with classroom: ", currentSelectedClassroom, " and action: ", action);
-    this.setState({ createAssignmentVisible: true });
+    console.log("assignmentToEdit: ", assignmentToEdit);
+    if (assignmentToEdit && action === 'edit') {
+      this.setState({ createAssignmentVisible: true, assignmentToEdit: assignmentToEdit });
+    }
+    else if (action === 'create') {
+      this.setState({ createAssignmentVisible: true, assignmentToEdit: undefined });
+    }
   };
 
   private onAssignComplete_ = (students: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>, assignment: ClassroomAssignment) => {
     console.log("Assignment complete with students: ", students, " and assignment: ", assignment);
+    this.setState({ teacherTabIndex: 1 });
+
   };
+
+  private onEditComplete_ = (students: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>, assignment: ClassroomAssignment) => {
+    console.log("Edit complete with students: ", students, " and assignment: ", assignment);
+    this.setState({ teacherTabIndex: 1 });
+  };
+
   render() {
     const { props, state } = this;
     const { style, locale } = props;
-    const { showAreYouSureDialog, deleteObject, showCreateClassroomDialog, createAssignmentVisible } = state;
+    const { assignmentToEdit, showAreYouSureDialog, deleteObject, showCreateClassroomDialog, createAssignmentVisible } = state;
     const theme = DARK;
     const showTour = props.tourLoaded && !props.tour.completed;
     return (
@@ -645,31 +666,33 @@ class ClassroomTeacherView extends React.Component<Props, State> {
           {createAssignmentVisible ? (
             <ClassroomsContainer style={style} theme={theme}>
               <CreateAssignmentView
-                onClose={() => this.setState({ createAssignmentVisible: false })}
+                onClose={() => this.setState({ createAssignmentVisible: false, teacherTabIndex: 1 })}
                 theme={theme}
                 classroom={state.currentSelectedClassroom}
                 onAssignComplete={this.onAssignComplete_}
+                onEditComplete={this.onEditComplete_}
+                originalAssignment={assignmentToEdit}
 
               />
             </ClassroomsContainer>) : (
             <ClassroomsContainer style={style} theme={theme}>
-              <StickyButtonWrap>
-                <Button
-                  theme={theme}
-                  onClick={() => this.setState({ showCreateClassroomDialog: true })}
-                >
-                  Add New Classroom
-                </Button>
-              </StickyButtonWrap>
               <ClassroomCardScrollContainer>
 
                 <ClassroomsCardContainer style={style} theme={theme}>
-
+                  <Card
+                    onClick={() => this.setState({ showCreateClassroomDialog: true })}
+                    title={LocalizedString.lookup(tr('Create New Classroom'), locale)}
+                    theme={theme}
+                    customheight='150px'
+                    customwidth='200px'
+                    backgroundPosition={'center top'}
+                    custommargin='10px'
+                  />
                   {this.exisitingClassroomCards()}
 
                 </ClassroomsCardContainer>
               </ClassroomCardScrollContainer>
-              <TeacherTabs theme={theme} currentSelectedClassroom={this.state.currentSelectedClassroom} onAssignmentAction={this.handleAssignemntAction} />
+              <TeacherTabs theme={theme} tabIndex={this.state.teacherTabIndex ?? 0} currentSelectedClassroom={this.state.currentSelectedClassroom} onAssignmentAction={this.handleAssignemntAction} />
 
 
               {showAreYouSureDialog && (
@@ -722,6 +745,7 @@ export default connect(
     locale: state.i18n.locale,
     uid: state.users.me,
     classroomList: state.classrooms.entities,
+    selectedClassroom: state.classrooms.selectedClassroom,
     challenges: state.challenges,
     challengeCompletions: state.challengeCompletions,
     tour: state.tours.byId[TourDoc.IDS.TEACHER_VIEW] ?? TourDoc.DEFAULT,
@@ -731,6 +755,8 @@ export default connect(
 
   }),
   (dispatch) => ({
+    onGetAssignments: (classroomDocId: string) =>
+      dispatch(ClassroomsAction.getAssignments({ classroomDocId })),
     onCreateClassroom: (classroom: Classroom) =>
       dispatch(ClassroomsAction.createClassroom({ classroom })),
     onListOwnedClassrooms: () =>
