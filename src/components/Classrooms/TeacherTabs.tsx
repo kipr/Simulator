@@ -11,13 +11,14 @@ import { State } from '../../state';
 import { connect } from 'react-redux';
 import { FontAwesome } from '../FontAwesome';
 import PeopleView from './PeopleView';
-import { AsyncClassroom, Classroom } from '../../state/State/Classroom';
+import { AsyncClassroom, Classroom, ClassroomAssignment } from '../../state/State/Classroom';
 import { current } from 'immer';
 import AssignmentsView from './AssignmentsView';
 
 export interface TeacherTabsPublicProps extends ThemeProps, StyleProps {
   currentSelectedClassroom: AsyncClassroom | null;
-  onAssignmentAction: (currentSelectedClassroom: AsyncClassroom | null, action: 'edit' | 'delete') => void;
+  onAssignmentAction: (currentSelectedClassroom: AsyncClassroom, action: 'edit' | 'create', assingmentToEdit?: ClassroomAssignment) => void;
+  tabIndex?: number;
 }
 
 export interface TeacherTabsPrivateProps extends ThemeProps {
@@ -84,10 +85,12 @@ const TeacherTabs = ({
   locale,
   currentSelectedClassroom,
   onAssignmentAction,
+  tabIndex: tabIndexProp,
 }: Props) => {
-  const [tabIndex, setTabIndex] = React.useState(0);
+  const [tabIndex, setTabIndex] = React.useState(tabIndexProp ?? 0);
   const [peopleContextMenu, setPeopleContextMenu] = React.useState({ visible: false, x: 0, y: 0 });
-
+  const [assignmentsContextMenu, setAssignmentsContextMenu] = React.useState({ visible: false, x: 0, y: 0 });
+  const containerRef = React.useRef<HTMLDivElement>(null);
   const tabs: TabBar.TabDescription[] = [
     {
       name: LocalizedString.lookup(tr('Home'), locale),
@@ -108,7 +111,12 @@ const TeacherTabs = ({
   ];
 
   return (
-    <Container $theme={theme} onClick={() => { setPeopleContextMenu({ ...peopleContextMenu, visible: false }); console.log("container click"); }}>
+    <Container $theme={theme} ref={containerRef}
+      onClick={() => {
+        tabIndex === 2 && setPeopleContextMenu({ ...peopleContextMenu, visible: false });
+        tabIndex === 1 && setAssignmentsContextMenu({ ...assignmentsContextMenu, visible: false });
+        console.log("container click");
+      }}>
       <TopBar $theme={theme}>
         <StyledTabBar
           tabs={tabs}
@@ -121,8 +129,15 @@ const TeacherTabs = ({
       {currentSelectedClassroom ? (
         <Body>
           {tabIndex === 0 && <div>Home</div>}
-          {tabIndex === 1 && <AssignmentsView theme={theme} currentSelectedClassroom={currentSelectedClassroom} onAssignmentAction={onAssignmentAction} />}
-          {tabIndex === 2 && <PeopleView theme={theme} currentSelectedClassroom={currentSelectedClassroom} contextMenuVisible={peopleContextMenu.visible} setContextMenuVisible={setPeopleContextMenu} />}
+          {tabIndex === 1 &&
+            <AssignmentsView containerRef={containerRef} theme={theme} currentSelectedClassroom={currentSelectedClassroom}
+              onAssignmentAction={onAssignmentAction}
+              contextMenuVisible={assignmentsContextMenu.visible}
+              setContextMenuVisible={setAssignmentsContextMenu} />}
+          {tabIndex === 2 &&
+            <PeopleView theme={theme} currentSelectedClassroom={currentSelectedClassroom}
+              contextMenuVisible={peopleContextMenu.visible}
+              setContextMenuVisible={setPeopleContextMenu} />}
           {tabIndex === 3 && <div>Grades</div>}
         </Body>
       ) : (
