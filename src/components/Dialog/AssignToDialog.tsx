@@ -21,6 +21,7 @@ export interface AssignToDialogPublicProps extends StyleProps, ThemeProps {
   onClose: () => void;
   classroom: AsyncClassroom;
   selectedStudents: (students: Dict<{ id: string, displayName: string }>) => void;
+  alreadyAssignedStudents?: Dict<{ id: string, displayName: string }>;
 }
 
 export interface AssignToDialogPrivateProps extends ThemeProps {
@@ -78,9 +79,10 @@ const AssignTo = ({
   classroom,
   theme,
   locale,
-  selectedStudents
+  selectedStudents,
+  alreadyAssignedStudents
 }: Props) => {
-  const [selectedIds, setSelectedIds] = React.useState<Dict<{ id: string, displayName: string }>>({});
+  const [selectedIds, setSelectedIds] = React.useState<Dict<{ id: string, displayName: string }>>(alreadyAssignedStudents || {});
   const loadedClassroom = Async.latestValue(classroom);
   const allSelected =
     loadedClassroom &&
@@ -88,6 +90,7 @@ const AssignTo = ({
 
   const students = loadedClassroom?.studentIds || {};
   console.log("AssignToDialog loadedClassroom: ", loadedClassroom);
+  console.log("AssignToDialog alreadyAssignedStudents: ", alreadyAssignedStudents);
   //const allSelected = Object.keys(students).length > 0 && Object.keys(selectedIds).length === Object.keys(students).length;
 
   const toggleAll = () => {
