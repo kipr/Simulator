@@ -1,5 +1,5 @@
 import store from '..';
-import { AsyncClassroom, ClassroomBrief, Classroom } from '../State/Classroom';
+import { AsyncClassroom, ClassroomBrief, Classroom, ClassroomAssignment } from '../State/Classroom';
 import Async from '../State/Async';
 import Dict from '../../util/objectOps/Dict';
 import Selector from '../../db/Selector';
@@ -118,6 +118,30 @@ export namespace ClassroomsAction {
 
   export const clearSelectedClassroom = construct<ClearSelectedClassroom>('classrooms/clear-selected-classroom');
 
+  export interface SetAssignment {
+    type: 'classrooms/set-assignment';
+    classroom: Classroom;
+    assignment: ClassroomAssignment;
+    studentIds: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>;
+  }
+
+  export const setAssignment = construct<SetAssignment>('classrooms/set-assignment');
+
+  export interface GetAssignments {
+    type: 'classrooms/get-assignments';
+    classroomDocId: string;
+
+  }
+
+  export const getAssignments = construct<GetAssignments>('classrooms/get-assignments');
+
+  export interface AddClassroomTopic {
+    type: 'classrooms/add-classroom-topic';
+    classroomDocId: string;
+    topic: string;
+  }
+
+  export const addClassroomTopic = construct<AddClassroomTopic>('classrooms/add-classroom-topic');
 }
 
 export type ClassroomsAction =
@@ -135,7 +159,10 @@ export type ClassroomsAction =
   | ClassroomsAction.SetClassroomInternal
   | ClassroomsAction.DeleteClassroom
   | ClassroomsAction.JoinClassroom
-  | ClassroomsAction.ListChallengesByStudentId;
+  | ClassroomsAction.ListChallengesByStudentId
+  | ClassroomsAction.SetAssignment
+  | ClassroomsAction.GetAssignments
+  | ClassroomsAction.AddClassroomTopic;
 
 const load = async (
   classroomId: string,
@@ -241,11 +268,13 @@ export const deleteClassroom = async (classroomId: string, next: Async.Deleting<
 const listOwned = async () => {
   try {
     const result = await db.list<Classroom>('classrooms');
+    console.log("Raw classrooms result from DB: ", result);
 
     const classrooms: Dict<AsyncClassroom> = {};
     Object.entries(result).forEach(([id, classroom]) => {
       classrooms[id] = Async.loaded({ brief: {}, value: classroom });
     });
+    console.log("Owned classrooms: ", classrooms);
     store.dispatch(ClassroomsAction.setClassrooms({ classrooms }));
 
   } catch (error) {
@@ -444,6 +473,89 @@ export const findClassroomByInviteCode = async (inviteCode: string): Promise<Cla
   }
 };
 
+export const setAssignment = async (
+  classroom: Classroom,
+  assignment: ClassroomAssignment,
+  studentIds: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>
+) => {
+  try {
+    const docId = classroom.docId;
+    if (!docId) throw new Error('Classroom docId is required to set assignment');
+
+    const updatedStudentIds = Object.fromEntries(
+      Object.values(studentIds).map(student => {
+        if (!classroom.studentIds[student.id]) {
+          throw new Error(`Student with ID ${student.id} is not in the classroom`);
+        }
+
+        return [
+          student.id,
+          {
+            ...student,
+            assignments: {
+              ...student.assignments,
+              [assignment.title]: assignment,
+            },
+          },
+        ];
+      })
+    );
+
+    const updatedTopics = {
+      ...classroom.topics,
+      [assignment.topic || 'No Subject']: [
+        ...(classroom.topics?.[assignment.topic || 'No Subject'] || []),
+        assignment.title,
+      ],
+    };
+    console.log("Updated studentIds with new assignment: ", updatedStudentIds);
+    console.log("Updated topics with new assignment: ", updatedTopics);
+
+    const updatedClassroom = {
+      ...classroom,
+      classroomAssignments: {
+        ...classroom.classroomAssignments,
+        [assignment.title]: assignment,
+      },
+      studentIds: updatedStudentIds,
+      topics: updatedTopics,
+    };
+
+    await db.set(
+      { collection: 'classrooms', id: docId },
+      updatedClassroom,
+      true
+    );
+
+    store.dispatch(
+      ClassroomsAction.setClassroom({
+        classroomId: docId,
+        classroom: Async.loaded({
+          brief: {},
+          value: updatedClassroom
+        })
+      })
+    );
+
+    console.log("Successfully set assignment and updated store with classroom: ", updatedClassroom);
+  } catch (error) {
+    console.error('Error setting assignment:', error);
+  }
+};
+
+export const getAssignments = async (classroomDocId: string) => {
+  try {
+    const result = await db.get<Record<string, ClassroomAssignment>>(
+      Selector.classroom(classroomDocId)
+    );
+    console.log("getAssignments raw assignments result from DB: ", result);
+    return result || {};
+  } catch (error) {
+    console.error('Error getting assignments:', error);
+    return {};
+  }
+};
+
 export interface ClassroomsState {
   entities: Dict<AsyncClassroom>;
   selectedClassroom: AsyncClassroom | null;
@@ -456,6 +568,60 @@ export const reduceClassrooms = (
   action: ClassroomsAction
 ): ClassroomsState => {
   switch (action.type) {
+
+    case 'classrooms/add-classroom-topic': {
+      const { classroomDocId, topic } = action;
+      console.log("Adding topic to classroom. Doc ID: ", classroomDocId, " Topic: ", topic);
+      return state;
+    }
+    case 'classrooms/set-assignment': {
+      const { classroom, assignment, studentIds } = action;
+      const docId = classroom.docId;
+
+      if (!docId) return state;
+
+      const updatedStudentIds = Object.fromEntries(
+        Object.values(studentIds).map(student => [
+          student.id,
+          {
+            ...student,
+            assignments: {
+              ...student.assignments,
+              [assignment.title]: assignment,
+            },
+          },
+        ])
+      );
+
+      const updatedClassroom = {
+        ...classroom,
+        classroomAssignments: {
+          ...classroom.classroomAssignments,
+          [assignment.title]: assignment,
+        },
+        studentIds: updatedStudentIds,
+      };
+
+      void setAssignment(updatedClassroom, assignment, updatedStudentIds);
+
+      const asyncUpdatedClassroom = Async.loaded({
+        brief: {},
+        value: updatedClassroom,
+      });
+
+      return {
+        ...state,
+        entities: {
+          ...state.entities,
+          [docId]: asyncUpdatedClassroom,
+        },
+        selectedClassroom: asyncUpdatedClassroom,
+      };
+    }
+    case 'classrooms/get-assignments': {
+      void getAssignments(action.classroomDocId);
+      return state;
+    }
     case 'classrooms/load-classroom': {
       void load(action.classroomId, state.entities[action.classroomId]);
       return {
