@@ -146,32 +146,26 @@ const PeopleView = ({
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5em', fontSize: '1.5em', alignItems: 'flex-start', width: '80%' }}>
         {students ? (
           Object.values(students).map((student: { displayName: string, id: string }, index) => (
-            <div key={index} style={{ display: 'flex', flexDirection: 'row', gap: '1em', justifyContent: 'center', alignItems: 'center' }}>
-              <Icon icon={faUser} />
-              {student.displayName}
-            </div>
+            <StudentRow key={student.id} theme={theme} onClick={() => console.log("student row clicked!")}>
+              <div style={{ alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
+                <Icon icon={faUser} />
+                {student.displayName}
+              </div>
+              <Icon style={{ height: '1em', padding: '0 0.5em' }} icon={faEllipsisVertical} onClick={(e) => {
+                e.stopPropagation();
+                console.log("e.clientX, e.clientY", e.clientX, e.clientY);
+                setContextMenuVisible({ visible: true, x: e.clientX, y: e.clientY });
+                setContextMenu({ visible: true, x: e.clientX, y: e.clientY });
+              }} />
+            </StudentRow>
           ))
 
 
         ) : (
           <div>No students in this classroom.</div>
         )}
-        <StudentRow theme={theme} onClick={() => console.log("student row clicked!")}>
-          <div style={{ alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
-            <Icon icon={faUser} />
-            Student Test 1
-          </div>
-          <Icon style={{ height: '1em', padding: '0 0.5em' }} icon={faEllipsisVertical} onClick={(e) => {
-            e.stopPropagation();
-            console.log("e.clientX, e.clientY", e.clientX, e.clientY);
-            setContextMenuVisible({ visible: true, x: e.clientX, y: e.clientY });
-            setContextMenu({ visible: true, x: e.clientX, y: e.clientY });
-          }} />
-        </StudentRow>
-        {/* <StudentRow theme={theme}>
-          <Icon icon={faUser} />
-          Student Test 2
-        </StudentRow> */}
+
+
       </div>
     )
   }
