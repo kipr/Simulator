@@ -23,8 +23,17 @@ export interface ClassroomAssignment {
   points?: number | ''; // points can be a number or an empty string if not set
   dueDate?: string; // ISO string
   docId?: string; // assignment document ID in the database
-  challenges?: Dict<{ challenge: Challenge, points: number | '' }>; // list of challenge IDs included in the assignment
+  challenges?: Dict<{ challenge: ClassroomAssignmentChallenge, points: number | '' }>; // list of challenge IDs included in the assignment
   topic?: string; // topic of the assignment
+  createdAt?: string; // ISO string of when the assignment was created
+  editedAt?: string; // ISO string of when the assignment was last edited
+  assignedTo?: Dict<{ id: string, displayName: string }>; // mapping of student ID to boolean indicating whether the assignment is assigned to that student
+}
+
+export interface ClassroomAssignmentChallenge {
+  sceneId: string;
+  name: string;
+  description: string;
 }
 
 export namespace Classroom {
