@@ -16,6 +16,8 @@ export interface DialogProps extends ThemeProps, StyleProps {
 
   onClose: () => void;
   tourRegistry?: TourRegistry;
+  /** With tourRegistry, register this key instead of `${name}-dialog` so tour steps stay stable across locales. */
+  tourTargetKey?: string;
 }
 
 type Props = DialogProps;
@@ -37,9 +39,10 @@ class Dialog_ extends React.PureComponent<Props> {
   render() {
     const { props } = this;
     const { className, style, children, theme, name } = props;
+    const dialogTourKey = props.tourTargetKey ?? `${name}-dialog`;
 
     const tourContent_ = (
-      <TourTarget registry={props.tourRegistry} targetKey={`${name}-dialog`}>
+      <TourTarget registry={props.tourRegistry} targetKey={dialogTourKey}>
         <Container theme={theme}>
           <Widget
             theme={theme}
