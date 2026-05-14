@@ -1356,6 +1356,321 @@ The teacher's name that will be shown to your students
 Classroom Name
 Invite Code
 Code students can use to join the classroom
+Challenge Progress
+The selected file is already included in the project.
+The selected file does not match the expected language ${currentLanguage}.
+The selected file must have a .h extension.
+The selected file does not match the expected language.
+The selected file must have a .txt extension.
+Some files have errors
+Upload File
+Selected File Upload Language: 
+Select a file from your computer to upload
+Upload Include File
+Upload Source File
+Upload User Data File
+No file selected
+Project with name already exists. Please choose a different name.
+File uploaded does not match selected project language.
+Folder name does not match project name in config file.
+File detected as different language than project language. Please ensure all source files match the selected project language.
+Please remove all spaces in the name.
+Please remove all special characters in the name.
+File name exceeds maximum length of 50 characters.
+Select a Project from your computer to upload\n
+Be sure the heirarchy format follows:\n
+Project Name
+include
+includeFile1.h (optional)
+includeFile2.h (optional)
+src
+NOTE: file extension must match project language
+srcFile1.*
+srcFile2.*
+data
+dataFile1.txt (optional)
+dataFile2.txt (optional)
+bin
+Select Project Language:
+Choose Folder
+Config File
+No files selected.
+Include Files
+Source Files
+User Data Files
+Selected Project Folder: 
+Selected Project Language: 
+Choose a different project
+Upload Project
+The selected project already exists for this user.
+Please choose a different project.
++
+Create Project
+Create File
+Create Classroom
+Create User
+Upload User
+A user with that name already exists in this classroom. Please rename your folder and try again.
+Folder name does not match user name in config file.
+File detected with interface mode does not match project interface mode.
+File detected as different language than project language. Please ensure all source files match the project language.
+Unknown file type, defaulting to plaintext.
+Project must contain a main file
+Select a User from your computer to upload\n
+User Name
+(At least 1 project must be in the User folder)
+Project Name 1
+Project Name 2
+Select User Interface Mode:
+Selected User Folder: 
+Selected User Interface Mode: 
+Choose a different User
+The selected user already exists in this classroom.
+Please choose a different user.
+Choose a different user
+Delete Classroom
+Rename Classroom
+Delete User
+Download User
+Rename User
+Remove User from Classroom
+Move User to Classroom
+Paste Project
+Delete Project
+Download Project
+Rename Project
+Move Project
+Copy Project
+Paste File
+Delete File
+Download File
+Rename File
+Copy File
+Users
+Classroom Invitation Code:
+Projects
+Explorer - Classrooms
+Explorer - Users
+Users without Classrooms
+Motor 0
+Motor 1
+Motor 2
+Motor 3
+Velocity
+Power
+Servo 0
+Servo 1
+Servo 2
+Servo 3
+analog(0)
+analog(1)
+analog(2)
+analog(3)
+analog(4)
+analog(5)
+digital(0)
+digital(1)
+digital(2)
+digital(3)
+digital(4)
+digital(5)
+digital(6)
+digital(7)
+digital(8)
+digital(9)
+accel_x()
+accel_y()
+accel_z()
+gyro_x()
+gyro_y()
+gyro_z()
+magneto_x()
+magneto_y()
+magneto_z()
+right_button()
+Reverse
+Forward
+Warning! Could damage servo in this range
+Servo Position Plot
+View:
+Motor Port:
+Clear Motor Position
+Stop All Motors
+Stop Current Motor
+Servo Port:
+Enable All Servos
+Disable All Servos
+Disable Servo
+Enable Servo
+Servo Positions
+Accelerometers
+Gyroscopes
+Magnetometers
+Buttons
+Motors, Servos, and Sensors
+Motor
+Servo
+Sensor
+Common Functions
+Full Documentation
+Use the classroom cards along the top to create a class or open one you already teach. After you pick a class, use the Home, Assignments, People, Grades, and Leaderboard tabs for day-to-day work.
+Classroom cards
+This scrollable row holds every class you own. The first card creates a new classroom; each card after that opens that class into the workspace below when you click it.
+Click the Create New Classroom card to open the setup dialog and continue the tour.
+After you tap Create, your new class shows up as another card in this row next to Create New Classroom.
+Click your classroom's card in this row to load it. The roster and tabs below update for that class—open People when you want to review enrollments.
+Home tab
+See class information, copy the invite code for students, and quick classroom context.
+Assignments tab
+Open **Assignments** to manage this class’s work. The list below groups posts by topic; use the row menu on each assignment to edit or delete. Press Next to spotlight that list, then you will walk through creating a new assignment.
+Assignments workspace
+This panel is where posted assignments appear. When the class is new it may be empty—**Create Assignment** (top right) opens the editor; the tour goes through title, challenges, roster, due date, and publishing next.
+Create an assignment
+Tap **Create Assignment** to open the editor. You will name the work, pick simulator challenges, choose who receives it, set topic and due date, then publish with Assign.
+Assignment details
+Enter a required title and optional description, then tick the JBC challenges students must complete. Points roll up on the right as you add scenes.
+Class, roster, and topic
+Confirm **For Class**, open **Assign to** in the next steps to pick who receives this post, and choose a **Topic** bucket. After the roster dialog you will return here to adjust per-challenge points and the due date before publishing.
+Open Assign to
+Tap **Assign to** to open the roster dialog. Use **All Students** or individual checkboxes, then **Done** to save— the tour highlights those controls next.
+Choose who receives this assignment
+This dialog lists the class roster for this post. Toggle **All Students** or pick individuals—you need at least one student before you can publish. Tap **Done** to save your picks and advance the tour. **Next** moves on without applying changes you only made here.
+Points and due date
+The total updates automatically from the challenges you checked on the left. Expand the table to set **points per challenge** if you need different weights, then pick a **Due date** for the class. When you are satisfied, continue to **Assign** to publish (or Next to skip publishing while finishing the tour).
+Publish the assignment
+Tap **Assign** to save the assignment to the class. Use the X on the left to close without saving, or press Next to leave the tour on this screen without publishing.
+Find it in the list
+Published work lands in the Assignments tab under its topic. The highlighted row is the one you just added—open the row menu (**⋯**) to edit or delete, or tap the row to expand details.
+People tab
+Review who is enrolled, open student details, and remove a student from the class when needed.
+Grades tab
+Open the gradebook: filter assignments by due or posted dates, filter which students and challenges appear, use Export filters next to Export CSV for scoped downloads, and open See Details to adjust per-challenge scores or overrides.
+Leaderboard tab
+Switch between Default JBC Challenges and Limited Challenges to see how the class is performing on simulator scenes and timed challenges.
+This is your student classroom hub. Join a class with the button below; once you are inside a class, the guided tour walks through each top tab and the assignment details window.
+Tap Join Class, enter the invite code from your teacher, choose a display name, and you will land in that classroom with full access to assignments and leaderboards.
+Type the classroom invite code, add the name your teacher should see, then press Join to finish enrolling.
+From the Leaderboard tab you explore class challenge boards. Inside, switch between Default JBC Challenges (always-on simulator scenes) and Limited Challenges (timed or attempt-limited events).
+This board lists the standard Botball challenges everyone can practice. Compare your progress with classmates, export a PDF summary, jump to your row, or review badges you have earned.
+Download a PDF snapshot of how you are doing on the visible challenges—great for sharing progress at home or with a mentor.
+Long leaderboard? Use this control to scroll straight to your entry so you can see placement and points at a glance.
+Open the badge gallery to celebrate milestones you unlocked by finishing challenges successfully.
+Select Limited Challenges to open any special contests your teacher enabled—watch the countdowns and attempt limits shown there.
+Each card explains the rules for that limited run. Stay inside the allowed window so your submissions count toward the class leaderboard.
+Use the menu icon for shortcuts such as leaving the classroom or jumping to other tools.
+This panel surfaces helpful links and the Leave Classroom action when you need to step out while keeping your past scores saved.
+Choose Leave Classroom only when you are done with the class. Your completed work stays on record, but you will need a fresh invite to rejoin later.
+Enter a classroom name.
+A classroom with that name already exists.
+Choose a different name than the current one.
+Could not rename this classroom (missing record).
+Could not save. Try again.
+Something went wrong.
+Rename classroom
+Classroom name
+Cancel
+Saving…
+Yes
+No
+Teachers
+Students
+Assigned To
+Not started
+Not completed
+Completed at
+On time
+Late
+No deadline
+Go to Challenge
+No challenges added to this assignment.
+Close
+Assignment Details
+See Assigned Challenges
+Challenges completed
+Edit
+Create Assignment
+You have no assignments in this class yet.
+Assignments you publish will appear in the lists below, grouped by topic.
+Classroom Code
+Override
+Submission Details
+Default
+Filter by due or posted date
+From
+To
+Clear date filter
+Export filters
+Hold Ctrl or Cmd while clicking to select. Leave unselected to include all students.
+Challenges
+Shown for assignments in the date range. Leave unselected to include all challenges.
+Clear student and challenge filters
+Export CSV
+No assignment columns match the current date and challenge filters.
+Student Name
+Home
+Assignments
+People
+Grades
+Select a classroom to view details
+Assign To
+All Students
+No Subject
+Create Subject
+Untitled assignment
+Edit Assignment
+Save Changes
+Assign
+Assignment Title*
+*Required
+Assignment Description
+Optional
+Choose JBC Challenges to Assign
+For Class
+Assign to
+Topic
+Points
+Due Date
+Delete classroom
+Assigned Challenges
+Can 7 Chopped
+Can 7 chopped
+Can 11 not upright
+Can 1 Rescued
+Can 1 rescued
+Can 2 Rescued
+Can 2 rescued
+Can 3 Rescued
+Can 3 rescued
+Touch the ream
+Can A not upright in a circle
+Can B not upright in a circle
+Can C not upright in a circle
+Can D not upright in a circle
+Can E not upright in a circle
+Proximity of can5
+Proximity of can7
+Not Set
+Posted
+No Due Date
+See Assigned Students
+Due
+New Assignment Posted
+Created at
+No assignments yet
+Upcoming Assignment
+No upcoming assignments
+Title
+Final Score
+Not Completed
+See Details
+See Classroom Cards
+Published work lands in the Assignments tab under its topic. The highlighted row is the one you just added. Press Next, then you will open that row to see details and reach your challenges.
+Select your new assignment
+Click the highlighted assignment row once. That selects it and opens the details panel below the row so you can open **See Assigned Challenges** next.
+See assigned challenges
+In the details panel, tap **See Assigned Challenges** to open the list of simulator scenes for this post. You will use **Go to Challenge** there to jump into a scene.
+Open a challenge from here
+Each row lists one assigned scene. Use **Go to Challenge** to open that simulator challenge in a new flow—handy for previewing what students will see. Close the dialog when you are done, then continue the tour.
 Volume
 RGB
 Console
@@ -1402,4 +1717,218 @@ ZXY
 XZY
 YXZ
 ZYX
-Challenge Progress
+Gets the A button's state (pressed or not pressed.)
+Gets the A button's state (pressed or not pressed.)
+Turns all motors off.
+Gets the 10-bit analog value of a port.
+A value between 0 and 5 specifying the sensor to read from.
+Gets the 12-bit analog value of a port.
+A value between 0 and 5 specifying the sensor to read from.
+Gets the 8-bit analog value of a port.
+A value between 0 and 5 specifying the sensor to read from.
+Gets the 12-bit analog value of a port.
+A value between 0 and 5 specifying the sensor to read from.
+Gets the 10-bit analog value of an ET sensor on the given port. Deprecateddefaulting to analog() on the Wallaby
+A value between 0 and 7 specifying the ET sensor to read from.
+Determines whether or not any of the buttons are pressed.
+Turns all motors off.
+Gets the B button's state (pressed or not pressed.)
+Gets the A button's state (pressed or not pressed.)
+Moves a motor at a percent velocity.
+The motor port.
+The percent of the motors velocity, between -100 and 100.
+Moves the given motor backward at full power.
+the motor's port.
+Gets the black button's state (pressed or not pressed.) DeprecatedNot present on the Wallaby
+Wait until the motor is at it's goal.
+The motor port.
+Wait until the motor is at it's goal.
+The motor port.
+Gets the C button's state (pressed or not pressed.)
+Gets the B button's state (pressed or not pressed.)
+Clears the motor position counter.
+The motor port.
+Clears the motor position counter.
+The motor port.
+Clears the UI's console.
+Create a point2 object.
+- the x value of the point
+- the y value of the point
+Create a point3 object.
+- the x value of the point
+- the y value of the point
+- the z value of the point
+Create a rectangle object.
+- the height of the rectangle
+- the x value of the rectangle's upper left
+- the y value of the rectangle's upper left
+- the width of the rectangle
+Disable a specific servo.
+The port, between 0 and 3, to disable
+Disable all four servo channels.
+Enable a specific servo.
+The port, between 0 and 3, to enable
+Enable all four servo channels.
+Hides the X, Y, and Z buttons. This is the default.
+Shows the X, Y, and Z buttons.
+Moves the given motor forward at full power.
+the motor's port.
+Active braking to stop a motor.
+The motor port.
+Gets the analog pullup status for one portt. Deprecatedno effect on the Wallaby
+A value between 0 and 7 specifying the analog sensor to read from.
+Gets the current digital mode
+Gets the current digital pullup state Deprecatednot applicable on the Wallaby
+Gets the current value of the digital port.
+Determines whether or not the X, Y, and Z buttons are visible.
+Check if the motor has reached it's goal.
+The motor port.
+Gets the current motor position.
+The motor port.
+Set the motor PID gains, represented as fractions.
+The D (derivative) gain numerator
+The D (derivative) gain denominator
+The I (integral) gain numerator
+The I (integral) gain denominator
+The motor port.
+The P (proportional) gain numerator
+The P (proportional) gain denominator
+Check if a servo is enabled.
+The port, between 0 and 3
+Get the most recent commanded servo position.
+The port of the servo
+Get the current motor pwm command.
+The motor port.
+Gets the current motor position.
+The motor port.
+Gets the left button's state (pressed or not pressed.)
+Set a goal velocity in ticks per second.
+The motor port.
+The goal velocity in -1500 to 1500 ticks / second
+Moves a motor at a percent velocity.
+The motor port.
+The percent of the motors velocity, between -100 and 100.
+Moves a motor at a percent power.
+the motor port.
+The power of the motor, between -100 and 100.
+Set a goal velocity in ticks per second.
+The range is -1500 to 1500, though motor position accuracy may be decreased outside of -1000 to 1000
+The motor port.
+The goal velocity in -1500 to 1500 ticks / second
+Set a goal position (in ticks) for the motor to move to, relative to the current position.
+The position to move to (in ticks) given the current position
+The motor port.
+The speed to move at, between -1500 and 1500 ticks / second
+Set a goal position (in ticks) for the motor to move to.
+There are approximately 1500 ticks per motor revolution.This function is more accurate if speeds between -1000 and 1000 are used.
+The position to move to (in ticks)
+The motor port.
+The speed to move at, between -1500 and 1500 ticks / second
+Set a goal position (in ticks) for the motor to move to, relative to the current position.
+The position to move to (in ticks) given the current position
+The motor port.
+The speed to move at, between -1500 and 1500 ticks / second
+Set a goal position (in ticks) for the motor to move to.
+The position to move to (in ticks)
+The motor port.
+The speed to move at, between -1500 and 1500 ticks / second
+Turns the specified motor off.
+the motor's port.
+Gets the ousg button's state (pressed or not pressed.)
+Gets the right button's state (pressed or not pressed.)
+Updates the A button's text. Deprecatednot planned for the Wallaby
+The text to display. Limit of 16 characters.
+Sets analog pullup status for one port. Deprecatedno effect on the Wallaby
+A value between 0 and 5 specifying the analog sensor to read from.
+A value of 0 (inactive) or 1 (active).
+Updates the B button's text. Deprecatednot planned for the Wallaby
+The text to display. Limit of 16 characters.
+Updates the C button's text. Deprecatednot planned for the Wallaby
+The text to display. Limit of 16 characters.
+Sets the digital mode.
+1 for output mode, 0 for input mode.
+The port to modify.
+Sets the current digital pullup state Deprecatednot applicable on the Wallaby
+The port to modify
+The pullup state 1: active 0: inactive
+Sets the value of the digital port in output mode.
+Sets whether or not the X, Y, and Z buttons are visible.
+Set the motor PID gains, represented as fractions.
+The D (derivative) gain numerator
+The D (derivative) gain denominator
+The I (integral) gain numerator
+The I (integral) gain denominator
+The motor port.
+The P (proportional) gain numerator
+The P (proportional) gain denominator
+Enable or disable a specific servo.
+The new enable setting 0: disabled 1: enabled
+The port, between 0 and 3, to enable
+Set a new servo goal position.
+The port of the servo
+The new servo position, between 0 and 2047
+Updates the X button's text. Deprecatednot planned for the Wallaby
+The text to display. Limit of 16 characters.
+Updates the Y button's text. Deprecatednot planned for the Wallaby
+The text to display. Limit of 16 characters.
+Updates the Z button's text. Deprecatednot planned for the Wallaby
+The text to display. Limit of 16 characters.
+Set the motor pwm (percent power) command.
+The motor port.
+A new motor pwm command between 0 and 100
+Register an event to stop the user program after s seconds
+The number of seconds to wait before the end of program
+Gets the side button's state (pressed or not pressed.) DeprecatedNot present on the Wallaby
+Gets the Z button's state (pressed or not pressed.)
+Waits (blocks) until the a button has been pressed.
+Waits (blocks) until the a button has been pressed and then subsequently released.
+Waits (blocks) until any system button has been pressed.
+Waits (blocks) until the b button has been pressed.
+Waits (blocks) until the b button has been pressed and then subsequently released.
+Waits (blocks) until the c button has been pressed.
+Waits (blocks) until the c button has been pressed and then subsequently released.
+Initiate a calibration and wait for light sequence which is a normal early step in Botball programs
+The analog port and light sensor to use.
+Waits (blocks) for the given number of milliseconds.
+the number of milliseconds to sleep
+Waits (blocks) until the side button has been pressed.
+Waits (blocks) until the side button has been pressed and then subsequently released.
+Waits (blocks) until the digital sensor on the given port has been activated.
+The port to wait for activation on
+Waits (blocks) until the x button has been pressed.
+Waits (blocks) until the x button has been pressed and then subsequently released.
+Waits (blocks) until the y button has been pressed.
+Waits (blocks) until the y button has been pressed and then subsequently released.
+Waits (blocks) until the z button has been pressed.
+Waits (blocks) until the z button has been pressed and then subsequently released.
+Gets the C button's state (pressed or not pressed.)
+Gets the C button's state (pressed or not pressed.)
+Gets the Y button's state (pressed or not pressed.)
+Gets the X button's state (pressed or not pressed.)
+Gets the Z button's state (pressed or not pressed.)
+Gets the Y button's state (pressed or not pressed.)
+Create OI Packet 101
+Create OI Packet 1
+Create OI Packet 2
+Create OI Packet 3
+Create OI Packet 4
+Create OI Packet 5
+Locally stored state information
+A mutex, or lock.
+mutexes are used to prevent memory errors when two programs or threads need to access the same variable.
+a C++ Mutex object cast to a void*. Not intended to be accessed.
+A 2D point; has x and y.
+the x value of the point
+the y value of the point
+A 3D point; has x, y, and z.
+the x value of the point
+the y value of the point
+the z value of the point
+A rectangle object.
+the height of the rectangle
+the x value of the rectangle's upper left
+the y value of the rectangle's upper left
+the width of the rectangle
+A thread, or separate process.
+a thread runs a function \executing).
+a C++ Thread object cast to a void*. Not intended to be accessed.
