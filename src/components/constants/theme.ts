@@ -104,7 +104,7 @@ export interface Theme {
   unselectedBackground: string;
   contextMenuBackground: string;
   boxShadow: string;
-
+  selectedClassBackground: string;
   runButtonColor: ButtonColor;
   yesButtonColor: ButtonColor;
   noButtonColor: ButtonColor;
@@ -166,6 +166,7 @@ export const COMMON: Theme = {
   runButtonColor: undefined,
   contextMenuBackground: undefined,
   boxShadow: undefined,
+  selectedClassBackground: undefined,
   borderRadius: 10,
   widget: {
     padding: 10
@@ -219,6 +220,7 @@ export const LIGHT: Theme = {
   boxShadow: '0px 10px 13px -6px rgba(255, 105, 180, 0.1), 0px 1px 31px 0px rgba(135, 206, 250, 0.08), 0px 8px 38px 7px rgba(144, 238, 144, 0.1)',
 
   unselectedBackground: '#f4ebec',
+  selectedClassBackground: '#ffd1dc',
   fileContainerBackground: '#f4ecec',
   leftBarContainerBackground: '#f4ecec',
   homeStartContainerBackground: '#f4ebec',
@@ -280,7 +282,7 @@ export const DARK: Theme = {
   mobileEditorBarBackground: "#1e1e1e",
   editorBackground: '#212121',
   contextMenuBackground: '#212121',
-
+  selectedClassBackground: '#b5b5b5',
   fileContainerBackground: '#343436',
   leftBarContainerBackground: '#212121',
   homeStartContainerBackground: '#333333',
