@@ -1,6 +1,8 @@
 import Dict from "util/objectOps/Dict";
 import LocalizedString from '../util/LocalizedString';
 import tr from '@i18n';
+import { Classroom } from '../state/State/Classroom';
+import { classroomHasAssignmentsVisibleToStudent } from '../util/studentAssignmentVisibility';
 import { get } from "immer/dist/internal";
 // import Language from '../util/LocalizedString/Language';
 interface TourDoc {
@@ -64,8 +66,8 @@ export type TourStep = {
   placement?: TourPlacement;
   padding?: number;
 
-  /** If true, clicking the highlighted target advances (instead of Next button) */
-  advanceOnTargetClick?: boolean;
+  /** If set with advanceOnTargetClick, listen for clicks on this target instead of targetKey (spotlight still uses targetKey). */
+  advanceClickTargetKey?: string;
 
   /** If false, overlay blocks interaction with the target (default true lets clicks pass through the hole) */
   allowTargetInteraction?: boolean;
@@ -89,7 +91,10 @@ export type TourStep = {
 const t = (text: string, locale: LocalizedString.Language) =>
   LocalizedString.lookup(tr(text), locale);
 
-
+/** Matches `TabBar` / `TourTarget` keys: `tab-${tab.name}` where `name` is localized. */
+function classroomTabTargetKey(labelMsg: string, locale: LocalizedString.Language): string {
+  return `tab-${t(labelMsg, locale)}`;
+}
 
 export function getDashboardTourSteps(locale: LocalizedString.Language): TourStep[] {
   return [
@@ -225,35 +230,43 @@ const ClassroomTourSteps: TourStep[] = [
   }
 ];
 
-export function getTeacherViewTourSteps(locale: LocalizedString.Language): TourStep[] {
-  return [
+export function getTeacherViewTourSteps(
+  locale: LocalizedString.Language,
+  options?: { omitAssignmentsTabStep?: boolean }
+): TourStep[] {
+  const steps: TourStep[] = [
     // Teacher Dashboard Step
     {
       id: 'teacher-dashboard',
       targetKey: 'teacher-dashboard',
       title: LocalizedString.lookup(tr('Teacher Dashboard'), locale),
-      content: LocalizedString.lookup(tr('This is the teacher dashboard, where you can see and manage the classrooms you own.'), locale),
+      content: LocalizedString.lookup(
+        tr('Use the classroom cards along the top to create a class or open one you already teach. After you pick a class, use the Home, Assignments, People, Grades, and Leaderboard tabs for day-to-day work.'),
+        locale
+      ),
       placement: 'top',
       allowTargetInteraction: true
     },
-    // Select "+" Drop Down Step
     {
-      id: 'create-classroom',
-      targetKey: 'create-classroom-dropdown',
-      title: LocalizedString.lookup(tr('How To: Create a Classroom'), locale),
-      content: LocalizedString.lookup(tr('To create a classroom, select this drop down...'), locale),
-      placement: 'bottom',
-      noNextButton: true,
-      advanceOnTargetClick: true,
-    },
-    // Select "Create Classroom" Button Step
-    {
-      id: 'create-classroom-dropdown-menu',
-      targetKey: "create-classroom-dropdown-menu",
-      title: LocalizedString.lookup(tr('How To: Create a Classroom Continued'), locale),
-      content: LocalizedString.lookup(tr('...then click this button to create a new classroom.'), locale),
+      id: 'teacher-classroom-cards-strip',
+      targetKey: 'teacher-classroom-cards-strip',
+      title: LocalizedString.lookup(tr('Classroom cards'), locale),
+      content: LocalizedString.lookup(
+        tr('This scrollable row holds every class you own. The first card creates a new classroom; each card after that opens that class into the workspace below when you click it.'),
+        locale
+      ),
       placement: 'bottom',
       allowTargetInteraction: true,
+    },
+    {
+      id: 'teacher-create-classroom-card',
+      targetKey: 'teacher-create-classroom-card',
+      title: LocalizedString.lookup(tr('How To: Create a Classroom'), locale),
+      content: LocalizedString.lookup(
+        tr('Click the Create New Classroom card to open the setup dialog and continue the tour.'),
+        locale
+      ),
+      placement: 'bottom',
       noNextButton: true,
       advanceOnTargetClick: true,
     },
@@ -267,134 +280,265 @@ export function getTeacherViewTourSteps(locale: LocalizedString.Language): TourS
       allowTargetInteraction: false,
       noNextButton: false,
     },
-    // Point Out Invite Code Step
+    // Point Out Invite Code Step (spotlight stays on the create-classroom dialog)
     {
       id: 'create-classroom-invite-code',
-      targetKey: 'create-classroom-invite-code',
+      targetKey: 'create-classroom-dialog',
       title: LocalizedString.lookup(tr('How To: Create a Classroom Continued'), locale),
       content: LocalizedString.lookup(tr('Share the Invite Code with your students! Don\'t worry, it\'ll be visible later on too. \n \n Fill out the rest of the info and click "Create" to create your classroom.'), locale),
       placement: 'right',
       allowTargetInteraction: true,
       noNextButton: true,
     },
-    // See Created Classroom Step
     {
       id: 'see-created-classroom',
-      targetKey: 'see-created-classroom',
+      targetKey: 'teacher-newest-classroom-card',
       title: LocalizedString.lookup(tr('How To: Create a Classroom Continued'), locale),
-      content: LocalizedString.lookup(tr('After creating a classroom, you can see it listed on your dashboard.'), locale),
-      placement: 'top',
+      content: LocalizedString.lookup(
+        tr('After you tap Create, your new class shows up as another card in this row next to Create New Classroom.'),
+        locale
+      ),
+      placement: 'left',
       noNextButton: false,
       noBackButton: true,
       allowTargetInteraction: false,
     },
-    // See Classroom Users Step
     {
       id: 'classroom-users',
-      targetKey: 'classroom-users',
+      targetKey: 'teacher-newest-classroom-card',
       title: LocalizedString.lookup(tr('How To: Create a Classroom Continued'), locale),
-      content: LocalizedString.lookup(tr('Click on your newly created classroom to see the users.'), locale),
-      placement: 'top',
+      content: LocalizedString.lookup(
+        tr('Click your classroom\'s card in this row to load it. The roster and tabs below update for that class—open People when you want to review enrollments.'),
+        locale
+      ),
+      placement: 'left',
       allowTargetInteraction: true,
       noNextButton: true,
       advanceOnTargetClick: true,
     },
-    // See Invite Code Step
     {
-      id: 'invite-code',
-      targetKey: 'invite-code',
-      title: LocalizedString.lookup(tr('How To: Create a Classroom Continued'), locale),
-      content: LocalizedString.lookup(tr('Share the invite code with your students so they can join your classroom.'), locale),
+      id: 'teacher-tab-home',
+      targetKey: classroomTabTargetKey('Home', locale),
+      title: LocalizedString.lookup(tr('Home tab'), locale),
+      content: LocalizedString.lookup(
+        tr('See class information, copy the invite code for students, and quick classroom context.'),
+        locale
+      ),
+      placement: 'bottom',
+      allowTargetInteraction: true,
+    },
+    {
+      id: 'teacher-tab-assignments',
+      targetKey: classroomTabTargetKey('Assignments', locale),
+      title: LocalizedString.lookup(tr('Assignments tab'), locale),
+      content: LocalizedString.lookup(
+        tr('Open **Assignments** to manage this class’s work. The list below groups posts by topic; use the row menu on each assignment to edit or delete. Press Next to spotlight that list, then you will walk through creating a new assignment.'),
+        locale
+      ),
+      placement: 'bottom',
+      allowTargetInteraction: true,
+    },
+    {
+      id: 'teacher-assignments-workspace',
+      targetKey: 'teacher-assignments-workspace',
+      title: LocalizedString.lookup(tr('Assignments workspace'), locale),
+      content: LocalizedString.lookup(
+        tr('This panel is where posted assignments appear. When the class is new it may be empty—**Create Assignment** (top right) opens the editor; the tour goes through title, challenges, roster, due date, and publishing next.'),
+        locale
+      ),
       placement: 'top',
-      allowTargetInteraction: false,
-      noNextButton: false,
-    }
+      allowTargetInteraction: true,
+    },
+    {
+      id: 'teacher-create-assignment-open',
+      targetKey: 'teacher-create-assignment-button',
+      title: LocalizedString.lookup(tr('Create an assignment'), locale),
+      content: LocalizedString.lookup(
+        tr('Tap **Create Assignment** to open the editor. You will name the work, pick simulator challenges, choose who receives it, set topic and due date, then publish with Assign.'),
+        locale
+      ),
+      placement: 'bottom',
+      allowTargetInteraction: true,
+      noNextButton: true,
+      advanceOnTargetClick: true,
+    },
+    {
+      id: 'teacher-create-assignment-form',
+      targetKey: 'teacher-create-assignment-form',
+      title: LocalizedString.lookup(tr('Assignment details'), locale),
+      content: LocalizedString.lookup(
+        tr('Enter a required title and optional description, then tick the JBC challenges students must complete. Points roll up on the right as you add scenes.'),
+        locale
+      ),
+      placement: 'right',
+      allowTargetInteraction: true,
+    },
+    {
+      id: 'teacher-create-assignment-roster',
+      targetKey: 'teacher-create-assignment-roster',
+      title: LocalizedString.lookup(tr('Class, roster, and topic'), locale),
+      content: LocalizedString.lookup(
+        tr('Confirm **For Class**, open **Assign to** in the next steps to pick who receives this post, and choose a **Topic** bucket. After the roster dialog you will return here to adjust per-challenge points and the due date before publishing.'),
+        locale
+      ),
+      placement: 'left',
+      allowTargetInteraction: true,
+    },
+    {
+      id: 'teacher-create-assignment-assign-to-open',
+      targetKey: 'teacher-create-assignment-assign-to-button',
+      title: LocalizedString.lookup(tr('Open Assign to'), locale),
+      content: LocalizedString.lookup(
+        tr('Tap **Assign to** to open the roster dialog. Use **All Students** or individual checkboxes, then **Done** to save— the tour highlights those controls next.'),
+        locale
+      ),
+      placement: 'left',
+      allowTargetInteraction: true,
+      noNextButton: true,
+      advanceOnTargetClick: true,
+    },
+    {
+      id: 'teacher-create-assignment-assign-to-dialog',
+      targetKey: 'teacher-create-assignment-assign-to-dialog',
+      title: LocalizedString.lookup(tr('Choose who receives this assignment'), locale),
+      content: LocalizedString.lookup(
+        tr('This dialog lists the class roster for this post. Toggle **All Students** or pick individuals—you need at least one student before you can publish. Tap **Done** to save your picks and advance the tour. **Next** moves on without applying changes you only made here.'),
+        locale
+      ),
+      placement: 'auto',
+      allowTargetInteraction: true,
+      advanceOnTargetClick: true,
+      advanceClickTargetKey: 'teacher-create-assignment-assign-to-done',
+    },
+    {
+      id: 'teacher-create-assignment-points-due',
+      targetKey: 'teacher-create-assignment-points-due',
+      title: LocalizedString.lookup(tr('Points and due date'), locale),
+      content: LocalizedString.lookup(
+        tr('The total updates automatically from the challenges you checked on the left. Expand the table to set **points per challenge** if you need different weights, then pick a **Due date** for the class. When you are satisfied, continue to **Assign** to publish (or Next to skip publishing while finishing the tour).'),
+        locale
+      ),
+      placement: 'left',
+      allowTargetInteraction: true,
+    },
+    {
+      id: 'teacher-create-assignment-assign',
+      targetKey: 'teacher-create-assignment-assign',
+      title: LocalizedString.lookup(tr('Publish the assignment'), locale),
+      content: LocalizedString.lookup(
+        tr('Tap **Assign** to save the assignment to the class. Use the X on the left to close without saving, or press Next to leave the tour on this screen without publishing.'),
+        locale
+      ),
+      placement: 'bottom',
+      allowTargetInteraction: true,
+    },
+    {
+      id: 'teacher-assignment-in-class-list',
+      targetKey: 'teacher-assignment-in-class-list',
+      title: LocalizedString.lookup(tr('Find it in the list'), locale),
+      content: LocalizedString.lookup(
+        tr('Published work lands in the Assignments tab under its topic. The highlighted row is the one you just added. Press Next, then you will open that row to see details and reach your challenges.'),
+        locale
+      ),
+      placement: 'auto',
+      allowTargetInteraction: true,
+    },
+    {
+      id: 'teacher-assignment-select-row',
+      targetKey: 'teacher-assignment-in-class-list',
+      title: LocalizedString.lookup(tr('Select your new assignment'), locale),
+      content: LocalizedString.lookup(
+        tr('Click the highlighted assignment row once. That selects it and opens the details panel below the row so you can open **See Assigned Challenges** next.'),
+        locale
+      ),
+      placement: 'auto',
+      allowTargetInteraction: true,
+      noNextButton: true,
+      advanceOnTargetClick: true,
+    },
+    {
+      id: 'teacher-assignment-see-assigned-challenges',
+      targetKey: 'teacher-assignment-see-assigned-challenges',
+      title: LocalizedString.lookup(tr('See assigned challenges'), locale),
+      content: LocalizedString.lookup(
+        tr('In the details panel, tap **See Assigned Challenges** to open the list of simulator scenes for this post. You will use **Go to Challenge** there to jump into a scene.'),
+        locale
+      ),
+      placement: 'auto',
+      allowTargetInteraction: true,
+      noNextButton: true,
+      advanceOnTargetClick: true,
+    },
+    {
+      id: 'teacher-assignment-go-to-challenge',
+      targetKey: 'assignment-details-go-challenge-first',
+      title: LocalizedString.lookup(tr('Open a challenge from here'), locale),
+      content: LocalizedString.lookup(
+        tr('Each row lists one assigned scene. Use **Go to Challenge** to open that simulator challenge in a new flow—handy for previewing what students will see. Close the dialog when you are done, then continue the tour.'),
+        locale
+      ),
+      placement: 'auto',
+      allowTargetInteraction: true,
+    },
+    {
+      id: 'teacher-tab-people',
+      targetKey: classroomTabTargetKey('People', locale),
+      title: LocalizedString.lookup(tr('People tab'), locale),
+      content: LocalizedString.lookup(
+        tr('Review who is enrolled, open student details, and remove a student from the class when needed.'),
+        locale
+      ),
+      placement: 'bottom',
+      allowTargetInteraction: true,
+    },
+    {
+      id: 'teacher-tab-grades',
+      targetKey: classroomTabTargetKey('Grades', locale),
+      title: LocalizedString.lookup(tr('Grades tab'), locale),
+      content: LocalizedString.lookup(
+        tr('Open the gradebook: filter assignments by due or posted dates, filter which students and challenges appear, use Export filters next to Export CSV for scoped downloads, and open See Details to adjust per-challenge scores or overrides.'),
+        locale
+      ),
+      placement: 'bottom',
+      allowTargetInteraction: true,
+    },
+    {
+      id: 'teacher-tab-leaderboard',
+      targetKey: classroomTabTargetKey('Leaderboard', locale),
+      title: LocalizedString.lookup(tr('Leaderboard tab'), locale),
+      content: LocalizedString.lookup(
+        tr('Switch between Default JBC Challenges and Limited Challenges to see how the class is performing on simulator scenes and timed challenges.'),
+        locale
+      ),
+      placement: 'bottom',
+      allowTargetInteraction: true,
+    },
   ];
-}
-const TeacherViewTourSteps: TourStep[] = [
-  // Teacher Dashboard Step
-  {
-    id: 'teacher-dashboard',
-    targetKey: 'teacher-dashboard',
-    title: 'Teacher Dashboard',
-    content: 'This is the teacher dashboard, where you can see and manage the classrooms you own.',
-    placement: 'top',
-    allowTargetInteraction: true
-  },
-  // Select "+" Drop Down Step
-  {
-    id: 'create-classroom',
-    targetKey: 'create-classroom-dropdown',
-    title: 'How To: Create a Classroom',
-    content: 'To create a classroom, select this drop down...',
-    placement: 'bottom',
-    noNextButton: true,
-    advanceOnTargetClick: true,
-  },
-  // Select "Create Classroom" Button Step
-  {
-    id: 'create-classroom-dropdown-menu',
-    targetKey: "create-classroom-dropdown-menu",
-    title: 'How To: Create a Classroom Continued',
-    content: '...then click this button to create a new classroom.',
-    placement: 'bottom',
-    allowTargetInteraction: true,
-    noNextButton: true,
-    advanceOnTargetClick: true,
-  },
-  // Create Classroom Dialog Step
-  {
-    id: 'create-classroom-dialog',
-    targetKey: 'create-classroom-dialog',
-    title: 'How To: Create a Classroom Continued',
-    content: 'This is the dialog box where you can enter the details for your new classroom.',
-    placement: 'top',
-    allowTargetInteraction: false,
-    noNextButton: false,
-  },
-  // Point Out Invite Code Step
-  {
-    id: 'create-classroom-invite-code',
-    targetKey: 'create-classroom-invite-code',
-    title: 'How To: Create a Classroom Continued',
-    content: 'Share the Invite Code with your students! Don\'t worry, it\'ll be visible later on too. \n \n Fill out the rest of the info and click "Create" to create your classroom.',
-    placement: 'right',
-    allowTargetInteraction: true,
-    noNextButton: true,
-  },
-  // See Created Classroom Step
-  {
-    id: 'see-created-classroom',
-    targetKey: 'see-created-classroom',
-    title: 'How To: Create a Classroom Continued',
-    content: 'After creating a classroom, you can see it listed on your dashboard.',
-    placement: 'top',
-    noNextButton: false,
-    noBackButton: true,
-    allowTargetInteraction: false,
-  },
-  // See Classroom Users Step
-  {
-    id: 'classroom-users',
-    targetKey: 'classroom-users',
-    title: 'How To: Create a Classroom Continued',
-    content: 'Click on your newly created classroom to see the users.',
-    placement: 'top',
-    allowTargetInteraction: true,
-    noNextButton: true,
-    advanceOnTargetClick: true,
-  },
-  // See Invite Code Step
-  {
-    id: 'invite-code',
-    targetKey: 'invite-code',
-    title: 'How To: Create a Classroom Continued',
-    content: 'Share the invite code with your students so they can join your classroom.',
-    placement: 'top',
-    allowTargetInteraction: false,
-    noNextButton: false,
+  if (options?.omitAssignmentsTabStep) {
+    const omitAssignmentTourIds = new Set<string>([
+      'teacher-tab-assignments',
+      'teacher-assignments-workspace',
+      'teacher-assignment-in-class-list',
+      'teacher-assignment-select-row',
+      'teacher-assignment-see-assigned-challenges',
+      'teacher-assignment-go-to-challenge',
+    ]);
+    return steps.filter(
+      s =>
+        !omitAssignmentTourIds.has(s.id) &&
+        !s.id.startsWith('teacher-create-assignment-')
+    );
   }
-];
+  return steps;
+}
+
+/** Teacher tour for a loaded classroom (assignments segment always included so new classes can learn Create Assignment). */
+export function getTeacherViewTourStepsForClassroom(
+  locale: LocalizedString.Language,
+  _classroom: Classroom | undefined | null
+): TourStep[] {
+  return getTeacherViewTourSteps(locale);
+}
 
 export function getStudentViewTourSteps(locale: LocalizedString.Language): TourStep[] {
   return [
@@ -403,7 +547,10 @@ export function getStudentViewTourSteps(locale: LocalizedString.Language): TourS
       id: 'student-dashboard',
       targetKey: 'student-dashboard',
       title: LocalizedString.lookup(tr('Student Dashboard'), locale),
-      content: LocalizedString.lookup(tr('This is the student dashboard, where you can see the classrooms you are a part of.'), locale),
+      content: LocalizedString.lookup(
+        tr('This is your student classroom hub. Join a class with the button below; once you are inside a class, the guided tour walks through each top tab and the assignment details window.'),
+        locale
+      ),
       placement: 'top',
       allowTargetInteraction: false
     },
@@ -412,7 +559,10 @@ export function getStudentViewTourSteps(locale: LocalizedString.Language): TourS
       id: 'join-classroom',
       targetKey: 'join-classroom-button',
       title: LocalizedString.lookup(tr('How To: Join a Classroom'), locale),
-      content: LocalizedString.lookup(tr('To join a classroom, click this button to open the join classroom dialog.'), locale),
+      content: LocalizedString.lookup(
+        tr('Tap Join Class, enter the invite code from your teacher, choose a display name, and you will land in that classroom with full access to assignments and leaderboards.'),
+        locale
+      ),
       placement: 'bottom',
       noNextButton: true,
       advanceOnTargetClick: true,
@@ -422,7 +572,10 @@ export function getStudentViewTourSteps(locale: LocalizedString.Language): TourS
       id: 'join-classroom-dialog',
       targetKey: 'join-classroom-dialog',
       title: LocalizedString.lookup(tr('How To: Join a Classroom Continued'), locale),
-      content: LocalizedString.lookup(tr('This is the dialog box where you can enter the invite code to join a classroom.'), locale),
+      content: LocalizedString.lookup(
+        tr('Type the classroom invite code, add the name your teacher should see, then press Join to finish enrolling.'),
+        locale
+      ),
       placement: 'top',
       allowTargetInteraction: true,
       noNextButton: true,
@@ -432,7 +585,10 @@ export function getStudentViewTourSteps(locale: LocalizedString.Language): TourS
       id: 'challenge-tab-view',
       targetKey: 'challenge-tab-view',
       title: LocalizedString.lookup(tr('How To: Join a Classroom Continued'), locale),
-      content: LocalizedString.lookup(tr('After joining a classroom, you can see the class\'s leaderboard listed on your dashboard.'), locale),
+      content: LocalizedString.lookup(
+        tr('From the Leaderboard tab you explore class challenge boards. Inside, switch between Default JBC Challenges (always-on simulator scenes) and Limited Challenges (timed or attempt-limited events).'),
+        locale
+      ),
       placement: 'bottom',
       noNextButton: false,
       noBackButton: true,
@@ -443,7 +599,10 @@ export function getStudentViewTourSteps(locale: LocalizedString.Language): TourS
       id: 'default-jbc-challenges-leaderboard-tab',
       targetKey: 'default-jbc-challenges-leaderboard-tab',
       title: LocalizedString.lookup(tr('Default JBC Challenge Tab View'), locale),
-      content: LocalizedString.lookup(tr('This tab contains the default JBC challenges that all classrooms have access to and are the scenes always in the 3D-Simulator.'), locale),
+      content: LocalizedString.lookup(
+        tr('This board lists the standard Botball challenges everyone can practice. Compare your progress with classmates, export a PDF summary, jump to your row, or review badges you have earned.'),
+        locale
+      ),
       placement: 'top',
       allowTargetInteraction: false,
       noNextButton: false,
@@ -454,7 +613,10 @@ export function getStudentViewTourSteps(locale: LocalizedString.Language): TourS
       id: 'export-button',
       targetKey: 'export-button',
       title: LocalizedString.lookup(tr('Exporting Your Challenge Scores'), locale),
-      content: LocalizedString.lookup(tr('Click this button to export your challenge scores as a PDF file.'), locale),
+      content: LocalizedString.lookup(
+        tr('Download a PDF snapshot of how you are doing on the visible challenges—great for sharing progress at home or with a mentor.'),
+        locale
+      ),
       placement: 'left',
       allowTargetInteraction: false,
       noNextButton: false,
@@ -465,7 +627,10 @@ export function getStudentViewTourSteps(locale: LocalizedString.Language): TourS
       id: 'scroll-to-my-scores-button',
       targetKey: 'scroll-to-my-scores-button',
       title: LocalizedString.lookup(tr('Scrolling to Your Scores'), locale),
-      content: LocalizedString.lookup(tr('Click this button to scroll to your scores on the leaderboard.'), locale),
+      content: LocalizedString.lookup(
+        tr('Long leaderboard? Use this control to scroll straight to your entry so you can see placement and points at a glance.'),
+        locale
+      ),
       placement: 'left',
       allowTargetInteraction: false,
       noNextButton: false,
@@ -476,7 +641,10 @@ export function getStudentViewTourSteps(locale: LocalizedString.Language): TourS
       id: 'see-my-badges-button',
       targetKey: 'see-my-badges-button',
       title: LocalizedString.lookup(tr('Viewing Your Badges'), locale),
-      content: LocalizedString.lookup(tr('Click this button to see the badges you have earned from completing challenges.'), locale),
+      content: LocalizedString.lookup(
+        tr('Open the badge gallery to celebrate milestones you unlocked by finishing challenges successfully.'),
+        locale
+      ),
       placement: 'right',
       allowTargetInteraction: false,
       noNextButton: false,
@@ -487,7 +655,10 @@ export function getStudentViewTourSteps(locale: LocalizedString.Language): TourS
       id: 'challenge-tab-view-limited-challenges-click',
       targetKey: 'challenge-tab-view-limited-challenges-click',
       title: LocalizedString.lookup(tr('Limited Challenge Tab View'), locale),
-      content: LocalizedString.lookup(tr('Select "Limited Challenges" to see any limited challenges your classroom has access to.'), locale),
+      content: LocalizedString.lookup(
+        tr('Select Limited Challenges to open any special contests your teacher enabled—watch the countdowns and attempt limits shown there.'),
+        locale
+      ),
       placement: 'right',
       allowTargetInteraction: true,
       noNextButton: true,
@@ -499,7 +670,10 @@ export function getStudentViewTourSteps(locale: LocalizedString.Language): TourS
       id: 'challenge-tab-view-limited-challenges',
       targetKey: 'challenge-tab-view-limited-challenges',
       title: LocalizedString.lookup(tr('Limited Challenge Tab View Continued'), locale),
-      content: LocalizedString.lookup(tr('This tab contains any limited challenges that your classroom has access to. Limited challenges are challenges that have time limits and attempt restrictions.'), locale),
+      content: LocalizedString.lookup(
+        tr('Each card explains the rules for that limited run. Stay inside the allowed window so your submissions count toward the class leaderboard.'),
+        locale
+      ),
       placement: 'right',
       allowTargetInteraction: false,
       noNextButton: false,
@@ -510,7 +684,10 @@ export function getStudentViewTourSteps(locale: LocalizedString.Language): TourS
       id: 'classroom-extra-options-click',
       targetKey: 'classroom-extra-options-click',
       title: LocalizedString.lookup(tr('Classroom Extra Options'), locale),
-      content: LocalizedString.lookup(tr('Click this button to see extra options for the classroom such as leaving the classroom.'), locale),
+      content: LocalizedString.lookup(
+        tr('Use the menu icon for shortcuts such as leaving the classroom or jumping to other tools.'),
+        locale
+      ),
       placement: 'left',
       allowTargetInteraction: true,
       noNextButton: true,
@@ -522,7 +699,10 @@ export function getStudentViewTourSteps(locale: LocalizedString.Language): TourS
       id: 'classroom-extra-options-dropdown',
       targetKey: 'classroom-extra-options-dropdown',
       title: LocalizedString.lookup(tr('Classroom Extra Options Continued'), locale),
-      content: LocalizedString.lookup(tr('This is the dropdown that show extra info and where you can select to leave the classroom.'), locale),
+      content: LocalizedString.lookup(
+        tr('This panel surfaces helpful links and the Leave Classroom action when you need to step out while keeping your past scores saved.'),
+        locale
+      ),
       placement: 'left',
       allowTargetInteraction: false,
       noNextButton: false,
@@ -533,7 +713,10 @@ export function getStudentViewTourSteps(locale: LocalizedString.Language): TourS
       id: 'leave-classroom',
       targetKey: 'leave-classroom',
       title: LocalizedString.lookup(tr('Leaving a Classroom'), locale),
-      content: LocalizedString.lookup(tr('Select "Leave Classroom" to leave the classroom. If you leave a classroom, your challenge scores will be saved but you will no longer be able to see the classroom or its leaderboard unless you join again.'), locale),
+      content: LocalizedString.lookup(
+        tr('Choose Leave Classroom only when you are done with the class. Your completed work stays on record, but you will need a fresh invite to rejoin later.'),
+        locale
+      ),
       placement: 'left',
       allowTargetInteraction: false,
       noNextButton: false,
@@ -1820,28 +2003,215 @@ export const getSimulatorTourSteps = (locale: LocalizedString.Language): TourSte
 //   TourStepsById[step.id] = step;
 // });
 
-const StudentViewInClassroomTourStep: TourStep[] =
-  StudentViewTourSteps.filter(
-    step =>
-      step.id !== 'join-classroom-dialog' &&
-      step.id !== 'join-classroom'
-  );
+function getStudentAssignmentDetailsTourSteps(locale: LocalizedString.Language): TourStep[] {
+  return [
+    {
+      id: 'student-assignments-panel',
+      targetKey: 'student-assignments-panel',
+      title: t('Assignments list', locale),
+      content: t(
+        'Every row is work your teacher assigned to you. Scan due dates (or posted dates), expand a row for the description, and use the challenge counter to see how many linked simulator scenes you have finished.',
+        locale
+      ),
+      placement: 'bottom',
+      allowTargetInteraction: true,
+    },
+    {
+      id: 'student-assignment-first-row',
+      targetKey: 'student-assignment-first-row',
+      title: t('Expand an assignment', locale),
+      content: t(
+        'Tap the highlighted assignment row to expand its summary. If you do not have any assignments yet, this spotlight shows the empty list area until your teacher publishes something new.',
+        locale
+      ),
+      placement: 'bottom',
+      allowTargetInteraction: true,
+      noNextButton: true,
+      advanceOnTargetClick: true,
+    },
+    {
+      id: 'student-assignment-open-details-prompt',
+      targetKey: 'student-assignment-open-details-blurb',
+      title: t('Open assignment details', locale),
+      content: t(
+        'The expanded assignment card is highlighted. Tap **See Assigned Challenges** to open the full assignment details window (title, description, every challenge, and your progress). If you prefer, tap Next and the tour will open that window for you automatically.',
+        locale
+      ),
+      placement: 'bottom',
+      allowTargetInteraction: true,
+    },
+    {
+      id: 'assignment-details-overview',
+      targetKey: 'assignment-details-dialog-root',
+      title: t('Assignment details window', locale),
+      content: t(
+        'This dialog is the authoritative view of the assignment: it mirrors what your teacher configured, shows every linked challenge, and (for students) pulls live completion data from the class gradebook.',
+        locale
+      ),
+      placement: 'auto',
+      allowTargetInteraction: true,
+    },
+    {
+      id: 'assignment-details-title-block',
+      targetKey: 'assignment-details-title-block',
+      title: t('Title and instructions', locale),
+      content: t(
+        'The heading is the assignment name and the paragraph underneath repeats the long-form instructions so you always know the expectations without hunting through chat threads.',
+        locale
+      ),
+      placement: 'auto',
+      allowTargetInteraction: true,
+    },
+    {
+      id: 'assignment-details-first-challenge',
+      targetKey: 'assignment-details-first-challenge-row',
+      title: t('Challenge rows', locale),
+      content: t(
+        'Each row names a simulator scene, shows how many points it is worth, and repeats the scene description. On the right you will see your status: completed, not completed, or not started, plus timestamps and on-time versus late badges when a due date exists.',
+        locale
+      ),
+      placement: 'auto',
+      allowTargetInteraction: true,
+    },
+    {
+      id: 'assignment-details-go-challenge',
+      targetKey: 'assignment-details-go-challenge-first',
+      title: t('Jump into the simulator', locale),
+      content: t(
+        'Use **Go to Challenge** to jump straight into that scene in the 3D simulator. Your progress saves back to this classroom automatically after a successful run.',
+        locale
+      ),
+      placement: 'left',
+      allowTargetInteraction: true,
+    },
+    {
+      id: 'assignment-details-close',
+      targetKey: 'assignment-details-close-bar',
+      title: t('Close when you are done', locale),
+      content: t(
+        'Tap **Close** to return to the Assignments tab. You can reopen these details any time from the same row.',
+        locale
+      ),
+      placement: 'top',
+      allowTargetInteraction: true,
+    },
+  ];
+}
 
-export const getStudentViewInClassroomTourSteps = (locale: LocalizedString.Language): TourStep[] => {
-  return StudentViewTourSteps.filter(
-    step =>
-      step.id !== 'join-classroom-dialog' &&
-      step.id !== 'join-classroom'
-  ).map(step => {
-    if (step.id === 'student-view-overview') {
-      return {
-        ...step,
-        content: LocalizedString.lookup(tr('This is the student view of the dashboard, where you can access your classrooms and see your progress.'), locale),
-      };
+function getStudentClassroomTabsBeforeLeaderboard(
+  locale: LocalizedString.Language,
+  includeAssignmentWalkthrough: boolean
+): TourStep[] {
+  const assignmentsTabStep: TourStep = includeAssignmentWalkthrough
+    ? {
+      id: 'student-tab-assignments',
+      targetKey: classroomTabTargetKey('Assignments', locale),
+      title: t('Assignments tab', locale),
+      content: t(
+        'Switch here for the full assignment roster grouped by topic. Tap this tab now so the tour can highlight the list and the first assignment row in the next steps. Expand rows, read descriptions, and open the assignment details dialog when you are ready.',
+        locale
+      ),
+      placement: 'bottom',
+      allowTargetInteraction: true,
+      noNextButton: true,
+      advanceOnTargetClick: true,
     }
-    return step;
-  });
+    : {
+      id: 'student-tab-assignments',
+      targetKey: classroomTabTargetKey('Assignments', locale),
+      title: t('Assignments tab', locale),
+      content: t(
+        'Switch here for the full assignment roster grouped by topic. You do not have any assignments yet, so after you open this tab the tour skips the expand-row and assignment-details steps until your teacher assigns work.',
+        locale
+      ),
+      placement: 'bottom',
+      allowTargetInteraction: true,
+      noNextButton: true,
+      advanceOnTargetClick: true,
+    };
+
+  return [
+    {
+      id: 'student-tab-home',
+      targetKey: classroomTabTargetKey('Home', locale),
+      title: t('Home tab', locale),
+      content: t(
+        'Home is your classroom bulletin board: newest assignments, upcoming due dates, and quick access to anything your teacher just posted. Tap it whenever you want the high-level snapshot before diving into tabs below.',
+        locale
+      ),
+      placement: 'bottom',
+      allowTargetInteraction: true,
+    },
+    assignmentsTabStep,
+    ...(includeAssignmentWalkthrough ? getStudentAssignmentDetailsTourSteps(locale) : []),
+    {
+      id: 'student-tab-people',
+      targetKey: classroomTabTargetKey('People', locale),
+      title: t('People tab', locale),
+      content: t(
+        'People lists every classmate and teacher so you know who to partner with, who grades your work, and how to spot new enrollments after invites go out.',
+        locale
+      ),
+      placement: 'bottom',
+      allowTargetInteraction: true,
+    },
+  ];
+}
+
+function getStudentLeaderboardTourTabStep(locale: LocalizedString.Language): TourStep {
+  return {
+    id: 'student-tab-leaderboard',
+    targetKey: classroomTabTargetKey('Leaderboard', locale),
+    title: t('Leaderboard tab', locale),
+    content: t(
+      'The Leaderboard tab loads the class challenge workspace. Click it now so the tour can highlight default boards, PDF export, scroll-to-me, badges, and limited-time contests in the next steps.',
+      locale
+    ),
+    placement: 'bottom',
+    allowTargetInteraction: true,
+    noNextButton: true,
+    advanceOnTargetClick: true,
+  };
+}
+
+export const getStudentViewInClassroomTourSteps = (
+  locale: LocalizedString.Language,
+  includeAssignmentWalkthrough = true
+): TourStep[] => {
+  const filtered = getStudentViewTourSteps(locale).filter(
+    step => step.id !== 'join-classroom-dialog' && step.id !== 'join-classroom'
+  );
+  const chIdx = filtered.findIndex(s => s.id === 'challenge-tab-view');
+  if (chIdx === -1) {
+    return [
+      ...filtered,
+      ...getStudentClassroomTabsBeforeLeaderboard(locale, includeAssignmentWalkthrough),
+      getStudentLeaderboardTourTabStep(locale),
+    ];
+  }
+  const dashIdx = filtered.findIndex(s => s.id === 'student-dashboard');
+  const head = filtered.slice(0, chIdx);
+  const tail = filtered.slice(chIdx);
+  const preDash = head.slice(0, dashIdx + 1);
+  const betweenDashAndChallenge = head.slice(dashIdx + 1);
+  return [
+    ...preDash,
+    ...getStudentClassroomTabsBeforeLeaderboard(locale, includeAssignmentWalkthrough),
+    getStudentLeaderboardTourTabStep(locale),
+    ...betweenDashAndChallenge,
+    ...tail,
+  ];
 };
+
+/** In-classroom student tour with assignment list / details substeps only when the student has assigned work. */
+export function getStudentViewInClassroomTourStepsForStudent(
+  locale: LocalizedString.Language,
+  classroom: Classroom | undefined,
+  userId: string
+): TourStep[] {
+  const include = classroomHasAssignmentsVisibleToStudent(classroom, userId);
+  return getStudentViewInClassroomTourSteps(locale, include);
+}
 // export function getTourSteps(tourId: string): TourStep[] {
 //   switch (tourId) {
 //     case TourDoc.IDS.DASHBOARD:
