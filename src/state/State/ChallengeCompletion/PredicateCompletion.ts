@@ -10,6 +10,10 @@ namespace PredicateCompletion {
     exprStates: {},
   };
 
+  /** True when the failure predicate root (expr id `failure`) is satisfied. Matches challenge definitions and gradebook "failed" checks. */
+  export const isFailureRootSatisfied = (failure?: PredicateCompletion): boolean =>
+    failure?.exprStates?.failure === true;
+
   export const update = (
     predicateCompletion: PredicateCompletion,
     predicate: Predicate,

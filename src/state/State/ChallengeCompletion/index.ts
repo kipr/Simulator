@@ -13,6 +13,11 @@ interface ChallengeCompletion {
   eventStates: Dict<boolean>;
   success?: PredicateCompletion;
   failure?: PredicateCompletion;
+
+  /**
+   * ISO 8601 when success was first satisfied (local reducer stamp; persisted with completion save).
+   */
+  completedAt?: string;
 }
 
 namespace ChallengeCompletion {
