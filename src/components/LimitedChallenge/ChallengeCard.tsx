@@ -239,6 +239,17 @@ class ChallengeCard extends React.Component<ChallengeCardProps, ChallengeCardSta
             )}
           </TimerContainer>
 
+          {completion?.bestCompletionTime && (
+            <CompletionInfo theme={theme}>
+              <CompletionLabel theme={theme}>
+                {LocalizedString.lookup(tr('Completed at'), locale)}
+              </CompletionLabel>
+              <CompletionValue theme={theme} style={{ fontSize: '0.95em' }}>
+                {new Date(completion.bestCompletionTime).toLocaleString(locale)}
+              </CompletionValue>
+            </CompletionInfo>
+          )}
+
           {completion?.bestRuntimeMs !== undefined && (
             <CompletionInfo theme={theme}>
               <CompletionLabel theme={theme}>
