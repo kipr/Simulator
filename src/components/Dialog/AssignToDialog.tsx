@@ -1,4 +1,4 @@
-import { AsyncClassroom } from "../../state/State/Classroom";
+import { AsyncClassroom, ClassroomAssignment } from "../../state/State/Classroom";
 import * as React from 'react';
 import { styled } from 'styletron-react';
 import Async from '../../state/State/Async';
@@ -15,13 +15,16 @@ import Dict from '../../util/objectOps/Dict';
 import { sprintf } from 'sprintf-js';
 import { StyleProps } from "../../util/style";
 import Input from "../interface/Input";
+import TourTarget from "../Tours/TourTarget";
+import { TourRegistry } from "../../tours/TourRegistry";
 
 
 export interface AssignToDialogPublicProps extends StyleProps, ThemeProps {
   onClose: () => void;
   classroom: AsyncClassroom;
-  selectedStudents: (students: Dict<{ id: string, displayName: string }>) => void;
-  alreadyAssignedStudents?: Dict<{ id: string, displayName: string }>;
+  selectedStudents: (students: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>) => void;
+  alreadyAssignedStudents?: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>;
+  tourRegistry?: TourRegistry;
 }
 
 export interface AssignToDialogPrivateProps extends ThemeProps {
@@ -80,18 +83,33 @@ const AssignTo = ({
   theme,
   locale,
   selectedStudents,
-  alreadyAssignedStudents
+  alreadyAssignedStudents,
+  tourRegistry
 }: Props) => {
-  const [selectedIds, setSelectedIds] = React.useState<Dict<{ id: string, displayName: string }>>(alreadyAssignedStudents || {});
   const loadedClassroom = Async.latestValue(classroom);
+
+  const students = loadedClassroom?.studentIds || {};
+  const foundStudents: Dict<{
+    id: string;
+    displayName: string;
+    assignments?: Dict<ClassroomAssignment>;
+  }> = Object.fromEntries(
+    Object.entries(students)
+      .filter(([id]) => Boolean(alreadyAssignedStudents?.[id]))
+      .map(([id, student]) => [
+        id,
+        {
+          id,
+          displayName: student.displayName,
+          assignments: student.assignments,
+        },
+      ])
+  );
+
+  const [selectedIds, setSelectedIds] = React.useState<Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>>(foundStudents || {});
   const allSelected =
     loadedClassroom &&
     Object.keys(selectedIds).length === Object.keys(loadedClassroom.studentIds || {}).length;
-
-  const students = loadedClassroom?.studentIds || {};
-  console.log("AssignToDialog loadedClassroom: ", loadedClassroom);
-  console.log("AssignToDialog alreadyAssignedStudents: ", alreadyAssignedStudents);
-  //const allSelected = Object.keys(students).length > 0 && Object.keys(selectedIds).length === Object.keys(students).length;
 
   const toggleAll = () => {
     if (allSelected) {
@@ -103,19 +121,30 @@ const AssignTo = ({
 
   const toggleStudent = (studentId: string) => {
     setSelectedIds(prev =>
-      prev.hasOwnProperty(studentId)
+      (Object.prototype.hasOwnProperty.call(prev, studentId)
         ? Object.fromEntries(
           Object.entries(prev).filter(([id]) => id !== studentId)
         )
-        : { ...prev, [studentId]: loadedClassroom.studentIds[studentId] }
+        : { ...prev, [studentId]: loadedClassroom.studentIds[studentId] as { id: string; displayName: string; assignments?: Dict<ClassroomAssignment> } })
     );
   };
+
+  const assignToStudentRows = React.useMemo(() => {
+    const ids = loadedClassroom?.studentIds;
+    if (!ids) return [] as { id: string; displayName: string }[];
+    return Object.keys(ids).map((id) => {
+      const s = ids[id];
+      return { id, displayName: s.displayName };
+    });
+  }, [loadedClassroom?.studentIds]);
 
   return (
     <Dialog
       theme={theme}
       name={LocalizedString.lookup(tr('Assign To'), locale)}
       onClose={onClose}
+      tourRegistry={tourRegistry}
+      tourTargetKey={tourRegistry ? 'teacher-create-assignment-assign-to-dialog' : undefined}
     >
       <Container theme={theme}>
         <div style={{ fontSize: '1.5em', display: 'flex', flexDirection: 'column', gap: '1em', alignItems: 'flex-start', margin: '1em' }}>
@@ -124,34 +153,45 @@ const AssignTo = ({
             <label htmlFor={`assign-to-all`}>{LocalizedString.lookup(tr('All Students'), locale)}</label>
           </CheckboxRow>
           {
-            Object.values(loadedClassroom?.studentIds || {}).map(student => (
-              <CheckboxRow theme={theme} key={student.id}>
-                <StyledCheckbox theme={theme} type="checkbox" id={`assign-to-${student.id}`} name={`assign-to-${student.id}`} value={student.id} checked={selectedIds.hasOwnProperty(student.id)} onChange={() => toggleStudent(student.id)} />
-                <label htmlFor={`assign-to-${student.id}`}>{student.displayName}</label>
+            assignToStudentRows.map(({ id, displayName }) => (
+              <CheckboxRow theme={theme} key={id}>
+                <StyledCheckbox theme={theme} type="checkbox" id={`assign-to-${id}`} name={`assign-to-${id}`} value={id} checked={selectedIds[id] !== undefined} onChange={() => toggleStudent(id)} />
+                <label htmlFor={`assign-to-${id}`}>{displayName}</label>
               </CheckboxRow>
             ))
           }
         </div>
 
         <ButtonContainer theme={theme}>
-          <Finalize
-            theme={theme}
-            onClick={() => { console.log("Selected student IDs: ", selectedIds); selectedStudents(selectedIds); onClose(); }}
-          >
-            {LocalizedString.lookup(tr('Done'), locale)}
-          </Finalize>
+          {tourRegistry ? (
+            <TourTarget registry={tourRegistry} targetKey="teacher-create-assignment-assign-to-done" style={{ display: 'contents' }}>
+              <Finalize
+                theme={theme}
+                onClick={() => { selectedStudents(selectedIds); onClose(); }}
+              >
+                {LocalizedString.lookup(tr('Done'), locale)}
+              </Finalize>
+            </TourTarget>
+          ) : (
+            <Finalize
+              theme={theme}
+              onClick={() => { selectedStudents(selectedIds); onClose(); }}
+            >
+              {LocalizedString.lookup(tr('Done'), locale)}
+            </Finalize>
+          )}
         </ButtonContainer>
       </Container>
 
     </Dialog>
-  )
-}
+  );
+};
 
 export default connect((state: State) => {
   return {
     locale: state.i18n.locale,
     classroomList: state.classrooms.entities,
-  }
+  };
 }, (dispatch, ownProps) => ({
 
 }))(AssignTo) as React.ComponentType<AssignToDialogPublicProps>; 
