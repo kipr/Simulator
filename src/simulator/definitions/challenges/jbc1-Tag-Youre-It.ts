@@ -6,7 +6,8 @@ import tr from '@i18n';
 
 export default {
   name: tr('JBC Challenge 1'),
-  description: tr(`Junior Botball Challenge 1: Tag, You're it!`),
+  // Must match scene jbc1-Tag-Youre-It and i18n msgid so assignment UI picks up translations.
+  description: tr('Junior Botball Challenge 1: Tag, You\'re It!'),
   author: {
     type: Author.Type.Organization,
     id: 'kipr'
