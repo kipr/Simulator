@@ -390,6 +390,7 @@ class Leaderboard extends React.Component<Props, State> {
 
   private onLog = async () => {
     const res = await db.list('challenge_completion');
+    console.log("Raw leaderboard data: ", res);
     const groupData = res.groupData;
     const userData = res.userData;
 
