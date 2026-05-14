@@ -49,7 +49,6 @@ const SeeAssignedToDialog = ({
   locale,
   assignment
 }: Props) => {
-  console.log("SeeAssignedToDialog assignment: ", assignment);
   return (
     <Dialog onClose={onClose} theme={theme} name={LocalizedString.lookup(tr("Assigned To"), locale)} >
       <Container theme={theme}>
@@ -63,12 +62,12 @@ const SeeAssignedToDialog = ({
       </Container>
     </Dialog>
   );
-}
+};
 
 export default connect((state: State) => {
   return {
     locale: state.i18n.locale,
-  }
+  };
 }, (dispatch, ownProps) => ({
 
 }))(SeeAssignedToDialog) as React.ComponentType<SeeAssignedToDialogPublicProps>; 
