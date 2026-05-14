@@ -7,7 +7,6 @@ import { styled } from 'styletron-react';
 import { TabBar } from '../Layout/TabBar';
 import tr from '@i18n';
 import { faFileLines, faXmark, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
-import { State } from '../../state';
 import { connect } from 'react-redux';
 import { FontAwesome } from '../FontAwesome';
 import { AsyncClassroom, Classroom, ClassroomAssignment, ClassroomAssignmentChallenge } from '../../state/State/Classroom';
@@ -22,6 +21,8 @@ import { Challenges } from '../../state/State';
 import ScrollArea from '../interface/ScrollArea';
 import ResizeableComboBox from '../interface/ResizeableComboBox';
 import { ClassroomsAction } from 'state/reducer/classrooms';
+import TourTarget from '../Tours/TourTarget';
+import { TourRegistry } from '../../tours/TourRegistry';
 
 
 export interface CreateAssignmentViewPublicProps extends ThemeProps, StyleProps {
@@ -31,13 +32,16 @@ export interface CreateAssignmentViewPublicProps extends ThemeProps, StyleProps 
   onEditComplete?: (students: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>, assignment: ClassroomAssignment) => void;
   classroom: AsyncClassroom;
   originalAssignment?: ClassroomAssignment;
+  tourRegistry?: TourRegistry;
+  /** Current guided-tour step id (teacher create-assignment segment opens Assign To when needed). */
+  activeTourStepId?: string;
 }
 
 export interface CreateAssignmentViewPrivateProps extends ThemeProps {
   locale: LocalizedString.Language;
   challenges: Challenges;
   onCreateAssignment?: (classroom: Classroom, assignment: ClassroomAssignment, students: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>) => void;
-  onEditAssignment?: (classroom: Classroom, assignment: ClassroomAssignment, students: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>) => void;
+  onEditAssignment?: (classroom: Classroom, docId: string, assignment: ClassroomAssignment) => void;
 }
 interface ClickProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -51,8 +55,8 @@ const Container = styled('div', (props: ThemeProps) => ({
   flexDirection: 'column',
   color: props.theme.color,
   backgroundColor: props.theme.backgroundColor,
-  //zIndex: 100,
-  //minHeight: '100vh',
+  // zIndex: 100,
+  // minHeight: '100vh',
 }));
 
 const TopRibbon = styled('div', (props: ThemeProps) => ({
@@ -96,6 +100,14 @@ const AssignmentInfoContainer = styled('div', (props: ThemeProps) => ({
 
 }));
 
+const PointsDueTourBlock = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '1.4em',
+  width: '100%',
+  alignItems: 'stretch',
+});
+
 const AssignmentInfoRow = styled('div', (props: ThemeProps) => ({
   gap: '0.5em',
   fontWeight: 500,
@@ -125,7 +137,7 @@ const Button = styled('div', (props: ThemeProps & ClickProps) => ({
   ':last-child': {
     borderBottom: 'none'
   },
-  //opacity: props.disabled ? '0.5' : '1.0',
+  // opacity: props.disabled ? '0.5' : '1.0',
   fontWeight: 400,
   ":hover":
     props.onClick && !props.disabled
@@ -144,8 +156,8 @@ const StyledCheckbox = styled(Input, (props: ThemeProps) => ({
 }));
 
 const StyledResizeableComboBox = styled(ResizeableComboBox, (props: ThemeProps) => ({
-  //flex: '1 0',
-  //padding: '3px',
+  // flex: '1 0',
+  // padding: '3px',
   color: props.theme.color
 
 }));
@@ -203,12 +215,12 @@ const CreateAssignmentView = ({
   onCreateAssignment,
   originalAssignment,
   onEditComplete,
-  onEditAssignment
+  onEditAssignment,
+  tourRegistry,
+  activeTourStepId
 }: Props) => {
 
   const loadedClassroom = Async.latestValue(classroom);
-  console.log("Loaded classroom in CreateAssignmentView: ", loadedClassroom);
-  console.log("Original Assignment in CreateAssignmentView: ", originalAssignment);
   const [assignToMenuVisible, setAssignToMenuVisible] = useState(false);
   const [selectedStudents, setSelectedStudents] = useState<Dict<{ id: string, displayName: string }>>(originalAssignment?.assignedTo || {});
   const [enableAssign, setEnableAssign] = useState(false);
@@ -225,37 +237,31 @@ const CreateAssignmentView = ({
     });
   const [isCreatingTopic, setIsCreatingTopic] = React.useState(false);
   const [newTopic, setNewTopic] = React.useState("");
-  const [topics, setTopics] = useState<ResizeableComboBox.Option[]>([loadedClassroom.topics
-    ? Object.keys(loadedClassroom.topics).map(topic => topic === 'No Subject'
+  const [topics, setTopics] = useState<ResizeableComboBox.Option[]>([Object.keys(loadedClassroom?.topics ?? {}).length > 0
+    ? Object.keys(loadedClassroom.topics).map(topic => (topic === 'No Subject'
       ? { text: LocalizedString.lookup(tr('No Subject'), locale), data: 'No Subject' }
-      : { text: topic, data: topic }).concat({ text: LocalizedString.lookup(tr('Create Subject'), locale), data: 'Create Subject' })
+      : { text: topic, data: topic }))
+      .concat({ text: LocalizedString.lookup(tr('Create Subject'), locale), data: 'Create Subject' })
     : [{ text: LocalizedString.lookup(tr('No Subject'), locale), data: 'No Subject' }, { text: LocalizedString.lookup(tr('Create Subject'), locale), data: 'Create Subject' }]].flat());
-  console.log("Topics for CreateAssignmentView: ", topics);
   const [assignedPointsSet, setAssignedPointsSet] = useState<Dict<{ challenge: ClassroomAssignmentChallenge, points: number | '' }>>({});
   const [topicIndex, setTopicIndex] = React.useState(originalAssignment?.topic ? Object.keys(loadedClassroom?.topics || {}).indexOf(originalAssignment.topic) : topics.findIndex(
     topic => topic.data === 'No Subject'
   ));
   const [originalAssignmentInfo, setOriginalAssignmentInfo] = useState<Partial<ClassroomAssignment>>(originalAssignment);
 
-
-  console.log("CreateAssignmentView originalAssignmentInfo: ", originalAssignmentInfo);
-  console.log("CreateAssignmentView topicIndex: ", topicIndex);
-
-  function handleAssign(info: ClassroomAssignment) {
-    console.log("Assigning with info: ", info);
-    onAssignComplete?.(selectedStudents, info);
-    onCreateAssignment(loadedClassroom, info, selectedStudents);
+  function handleAssign(info: ClassroomAssignment, studentsOverride?: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>) {
+    const students = studentsOverride ?? selectedStudents;
+    onAssignComplete?.(students, info);
+    onCreateAssignment(loadedClassroom, info, students);
     onClose();
-  };
+  }
   function handleEdit(info: ClassroomAssignment) {
-    console.log("Editing with info: ", info);
     onEditComplete?.(selectedStudents, info);
-    onEditAssignment(loadedClassroom, info, selectedStudents);
+    onEditAssignment(loadedClassroom, originalAssignment?.docId || '', info);
     onClose();
   }
   useEffect(() => {
     if (!originalAssignment) return;
-    console.log("Setting assignmentInfo based on originalAssignment: ", originalAssignment);
     setAssignedPointsSet(originalAssignment.challenges ?? {});
   }, [originalAssignment]);
 
@@ -264,11 +270,13 @@ const CreateAssignmentView = ({
       return total + (typeof points === 'number' ? points : 0);
     }, 0);
 
-    console.log("finalPointValue: ", finalPointValue);
-    console.log("assignedPointsSet: ", assignedPointsSet);
+    const sortedChallenges = Object.values(assignedPointsSet)
+      .sort((a, b) => a.challenge.sceneId.localeCompare(b.challenge.sceneId));
+
     setAssignmentInfo({
-      ...assignmentInfo, points: finalPointValue,
-      challenges: Object.values(assignedPointsSet).reduce((acc, { challenge, points }) => {
+      ...assignmentInfo,
+      points: finalPointValue,
+      challenges: sortedChallenges.reduce((acc, { challenge, points }) => {
         acc[challenge.sceneId] = { challenge, points };
         return acc;
       }, {} as Dict<{ challenge: ClassroomAssignmentChallenge, points: number | '' }>)
@@ -276,9 +284,7 @@ const CreateAssignmentView = ({
   }, [assignedPointsSet]);
 
 
-
   useEffect(() => {
-    console.log("useEffect selectedStudents: ", selectedStudents);
     if (selectedStudents) {
       setAssignmentInfo(prev => ({
         ...prev,
@@ -288,8 +294,21 @@ const CreateAssignmentView = ({
   }, [selectedStudents]);
 
 
+  useEffect(() => {
+    if (!activeTourStepId) return;
+    const keepAssignToOpen = new Set([
+      'teacher-create-assignment-assign-to-dialog',
+    ]);
+    if (keepAssignToOpen.has(activeTourStepId)) {
+      setAssignToMenuVisible(true);
+      return;
+    }
+    if (activeTourStepId.startsWith('teacher-create-assignment-')) {
+      setAssignToMenuVisible(false);
+    }
+  }, [activeTourStepId]);
+
   function renderChallengeCheckboxes() {
-    console.log("renderChallengeCheckboxes challenges: ", assignmentInfo.challenges);
     return (
       <div style={{ fontSize: '1.5em', display: 'flex', flexDirection: 'column', gap: '1em', alignItems: 'flex-start', margin: '1em' }}>
         {
@@ -305,18 +324,16 @@ const CreateAssignmentView = ({
                   const existingChallenges = assignmentInfo.challenges || {};
 
                   const alreadyExists = Object.values(existingChallenges).some(
-                    ({ challenge }) => challenge.name[locale] === currentChallenge.name[locale]
+                    ({ challenge }) => challenge.sceneId === currentChallenge.sceneId
                   );
 
                   const key = currentChallenge.sceneId;
-                  console.log("checkbox key: ", key);
 
                   setAssignedPointsSet(prev => {
                     const next = { ...prev };
                     if (alreadyExists) {
                       delete next[key];
                     } else {
-                      console.log("key: ", key);
                       next[key] = { challenge: { sceneId: currentChallenge.sceneId, name: currentChallenge.name[locale], description: currentChallenge.description[locale] }, points: 0 };
                     }
                     return next;
@@ -328,7 +345,7 @@ const CreateAssignmentView = ({
             </CheckboxRow>
           ))
         }
-      </div>)
+      </div>);
   }
 
   function editTopic() {
@@ -348,6 +365,62 @@ const CreateAssignmentView = ({
     setIsCreatingTopic(false);
   }
 
+  const wrapCreateAssignmentFormTarget = (inner: React.ReactNode) =>
+    (tourRegistry ? (
+      <TourTarget registry={tourRegistry} targetKey="teacher-create-assignment-form" style={{ display: 'contents' }}>
+        {inner}
+      </TourTarget>
+    ) : (
+      inner
+    ));
+
+  const wrapCreateAssignmentRosterTarget = (inner: React.ReactNode) =>
+    (tourRegistry ? (
+      <TourTarget registry={tourRegistry} targetKey="teacher-create-assignment-roster" style={{ display: 'contents' }}>
+        {inner}
+      </TourTarget>
+    ) : (
+      inner
+    ));
+
+  const assignButtonTourActive =
+    !originalAssignment && activeTourStepId === 'teacher-create-assignment-assign';
+
+  function resolveStudentsForAssign(): Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }> {
+    if (Object.keys(selectedStudents).length > 0) {
+      return selectedStudents;
+    }
+    return loadedClassroom?.studentIds ?? {};
+  }
+
+  function runCreateAssign() {
+    const students = resolveStudentsForAssign();
+    const titleTrim = (assignmentInfo.title ?? '').trim();
+    const title =
+      titleTrim || LocalizedString.lookup(tr('Untitled assignment'), locale);
+    const assignedTo = Object.fromEntries(
+      Object.entries(students).map(([id, student]) => [
+        id,
+        { id: student.id, displayName: student.displayName },
+      ])
+    );
+    const updatedAssignmentInfo = {
+      ...assignmentInfo,
+      title,
+      assignedTo,
+      createdAt: new Date().toISOString(),
+    } as ClassroomAssignment;
+    setAssignmentInfo(updatedAssignmentInfo);
+    handleAssign(updatedAssignmentInfo, students);
+  }
+
+  const createAssignDisabled = originalAssignment
+    ? !(Object.keys(selectedStudents).length > 0)
+    : !(
+      assignButtonTourActive ||
+        (enableAssign && Object.keys(selectedStudents).length > 0)
+    );
+
   return (
     <Container theme={theme}>
       <TopRibbon theme={theme}>
@@ -359,247 +432,364 @@ const CreateAssignmentView = ({
           </div>
 
         </div>
-        <Button theme={theme} disabled={originalAssignment ? Object.keys(selectedStudents).length > 0 ? false : true : !(enableAssign && Object.keys(selectedStudents).length > 0)}
-          onClick={() => {
-            originalAssignment
-              ? (() => {
-                console.log("Editing assignment with info: ", assignmentInfo);
-                const editedAssignment = {
-                  ...assignmentInfo,
-                  editedAt: new Date().toISOString(),
-                } as ClassroomAssignment;
-                onEditComplete?.(selectedStudents, editedAssignment);
-                handleEdit(editedAssignment);
-                console.log("Edited assignment: ", editedAssignment);
-              })()
-              : (enableAssign && Object.keys(selectedStudents).length > 0 ? (() => {
-                const updatedAssignmentInfo = {
-                  ...assignmentInfo,
-                  createdAt: new Date().toISOString(),
-                } as ClassroomAssignment;
-
-                setAssignmentInfo(updatedAssignmentInfo);
-                handleAssign(updatedAssignmentInfo);
-              })() : null)
-          }}>
-          {originalAssignment ? LocalizedString.lookup(tr('Save Changes'), locale) : LocalizedString.lookup(tr('Assign'), locale)}
-        </Button>
+        {tourRegistry ? (
+          <TourTarget registry={tourRegistry} targetKey="teacher-create-assignment-assign" style={{ display: 'contents' }}>
+            <Button theme={theme} disabled={createAssignDisabled}
+              onClick={() => {
+                originalAssignment
+                  ? (() => {
+                    const editedAssignment = {
+                      ...assignmentInfo,
+                      editedAt: new Date().toISOString(),
+                    } as ClassroomAssignment;
+                    onEditComplete?.(selectedStudents, editedAssignment);
+                    handleEdit(editedAssignment);
+                  })()
+                  : (enableAssign && Object.keys(selectedStudents).length > 0) || assignButtonTourActive
+                    ? runCreateAssign()
+                    : null;
+              }}>
+              {originalAssignment ? LocalizedString.lookup(tr('Save Changes'), locale) : LocalizedString.lookup(tr('Assign'), locale)}
+            </Button>
+          </TourTarget>
+        ) : (
+          <Button theme={theme} disabled={createAssignDisabled}
+            onClick={() => {
+              originalAssignment
+                ? (() => {
+                  const editedAssignment = {
+                    ...assignmentInfo,
+                    editedAt: new Date().toISOString(),
+                  } as ClassroomAssignment;
+                  onEditComplete?.(selectedStudents, editedAssignment);
+                  handleEdit(editedAssignment);
+                })()
+                : (enableAssign && Object.keys(selectedStudents).length > 0) || assignButtonTourActive
+                  ? runCreateAssign()
+                  : null;
+            }}>
+            {originalAssignment ? LocalizedString.lookup(tr('Save Changes'), locale) : LocalizedString.lookup(tr('Assign'), locale)}
+          </Button>
+        )}
       </TopRibbon>
       <div style={{ padding: '8px', display: 'flex', flexDirection: 'row', gap: '8px', flex: 1, justifyContent: 'space-evenly' }}>
 
 
-        <AssignmentInputContainer theme={theme}>
-          <AssignmentInfoRow theme={theme}>
-            <label htmlFor="assignmentTitle" style={{ fontSize: '1.5em', fontWeight: 500 }}>
-              {LocalizedString.lookup(tr('Assignment Title*'), locale)}
+        {wrapCreateAssignmentFormTarget(
+          <AssignmentInputContainer theme={theme}>
+            <AssignmentInfoRow theme={theme}>
+              <label htmlFor="assignmentTitle" style={{ fontSize: '1.5em', fontWeight: 500 }}>
+                {LocalizedString.lookup(tr('Assignment Title*'), locale)}
 
-            </label>
-            <AssignmentInfoContent theme={theme}>
-              <Input
-                id="assignmentTitle"
-                value={assignmentInfo?.title ?? ''}
-                onInput={(e) => {
-                  const val = (e.target as HTMLInputElement).value;
-                  setEnableAssign(val.trim().length > 0);
-                  setAssignmentInfo(prev => ({ ...prev!, title: val }));
-                }}
-                required={true}
-                placeholder={LocalizedString.lookup(tr('*Required'), locale)}
-                theme={theme}
-              />
-            </AssignmentInfoContent>
+              </label>
+              <AssignmentInfoContent theme={theme}>
+                <Input
+                  id="assignmentTitle"
+                  value={assignmentInfo?.title ?? ''}
+                  onInput={(e: React.FormEvent<HTMLInputElement>) => {
+                    const val = e.currentTarget.value;
+                    setEnableAssign(val.trim().length > 0);
+                    setAssignmentInfo(prev => ({ ...prev, title: val }));
+                  }}
+                  required={true}
+                  placeholder={LocalizedString.lookup(tr('*Required'), locale)}
+                  theme={theme}
+                />
+              </AssignmentInfoContent>
 
-          </AssignmentInfoRow>
+            </AssignmentInfoRow>
 
-          <AssignmentInfoRow theme={theme}>
-            <label htmlFor="assignmentDescription" style={{ fontSize: '1.5em', fontWeight: 500 }}>
-              {LocalizedString.lookup(tr('Assignment Description'), locale)}
-            </label>
-            <AssignmentInfoContent theme={theme}>
-              <TextArea cols={50} defaultValue={assignmentInfo.description} onBlur={(e) => {
-                setAssignmentInfo({ ...assignmentInfo, description: (e.target as HTMLTextAreaElement).value });
-              }} id="assignmentDescription" rows={4} placeholder={LocalizedString.lookup(tr('Optional'), locale)} theme={theme} />
-            </AssignmentInfoContent>
-          </AssignmentInfoRow>
+            <AssignmentInfoRow theme={theme}>
+              <label htmlFor="assignmentDescription" style={{ fontSize: '1.5em', fontWeight: 500 }}>
+                {LocalizedString.lookup(tr('Assignment Description'), locale)}
+              </label>
+              <AssignmentInfoContent theme={theme}>
+                <TextArea cols={50} defaultValue={assignmentInfo.description} onBlur={(e: React.FocusEvent<HTMLTextAreaElement>) => {
+                  setAssignmentInfo({ ...assignmentInfo, description: e.currentTarget.value });
+                }} id="assignmentDescription" rows={4} placeholder={LocalizedString.lookup(tr('Optional'), locale)} theme={theme} />
+              </AssignmentInfoContent>
+            </AssignmentInfoRow>
 
-          <AssignmentInfoRow theme={theme} style={{ height: '100%', flex: 1 }}>
-            <label htmlFor="assignmentChallenges" style={{ fontSize: '1.5em', fontWeight: 500 }}>
-              {LocalizedString.lookup(tr('Choose JBC Challenges to Assign'), locale)}
-            </label>
-            <StyledScrollArea theme={theme}>
-              {renderChallengeCheckboxes()}
-            </StyledScrollArea>
-          </AssignmentInfoRow>
-        </AssignmentInputContainer>
+            <AssignmentInfoRow theme={theme} style={{ height: '100%', flex: 1 }}>
+              <label htmlFor="assignmentChallenges" style={{ fontSize: '1.5em', fontWeight: 500 }}>
+                {LocalizedString.lookup(tr('Choose JBC Challenges to Assign'), locale)}
+              </label>
+              <StyledScrollArea theme={theme}>
+                {renderChallengeCheckboxes()}
+              </StyledScrollArea>
+            </AssignmentInfoRow>
+          </AssignmentInputContainer>
+        )}
 
 
-        <AssignmentInfoContainer theme={theme}>
-          <AssignmentInfoRow theme={theme}>
-            {LocalizedString.lookup(tr('For Class'), locale)}
-            <AssignmentInfoContent theme={theme}>
-              {`${loadedClassroom?.classroomId || 'Loading...'}`}
-            </AssignmentInfoContent>
-          </AssignmentInfoRow>
-          <AssignmentInfoRow theme={theme}>
-            {LocalizedString.lookup(tr('Assign to'), locale)}
-            <Button
-              style={{ marginLeft: '1.4em' }} theme={theme} onClick={() => setAssignToMenuVisible(true)}>
-              {Object.keys(selectedStudents).length === Object.keys(loadedClassroom?.studentIds || {}).length
-                ? LocalizedString.lookup(tr('All Students'), locale)
-                : `${Object.keys(selectedStudents).length} ${LocalizedString.lookup(tr('Students'), locale)}`}
-            </Button>
-          </AssignmentInfoRow>
+        {wrapCreateAssignmentRosterTarget(
+          <AssignmentInfoContainer theme={theme}>
+            <AssignmentInfoRow theme={theme}>
+              {LocalizedString.lookup(tr('For Class'), locale)}
+              <AssignmentInfoContent theme={theme}>
+                {`${loadedClassroom?.classroomId || 'Loading...'}`}
+              </AssignmentInfoContent>
+            </AssignmentInfoRow>
+            <AssignmentInfoRow theme={theme}>
+              {LocalizedString.lookup(tr('Assign to'), locale)}
+              {tourRegistry ? (
+                <TourTarget registry={tourRegistry} targetKey="teacher-create-assignment-assign-to-button" style={{ display: 'contents' }}>
+                  <Button
+                    style={{ marginLeft: '1.4em' }} theme={theme} onClick={() => setAssignToMenuVisible(true)}>
+                    {Object.keys(selectedStudents).length === Object.keys(loadedClassroom?.studentIds || {}).length
+                      ? LocalizedString.lookup(tr('All Students'), locale)
+                      : `${Object.keys(selectedStudents).length} ${LocalizedString.lookup(tr('Students'), locale)}`}
+                  </Button>
+                </TourTarget>
+              ) : (
+                <Button
+                  style={{ marginLeft: '1.4em' }} theme={theme} onClick={() => setAssignToMenuVisible(true)}>
+                  {Object.keys(selectedStudents).length === Object.keys(loadedClassroom?.studentIds || {}).length
+                    ? LocalizedString.lookup(tr('All Students'), locale)
+                    : `${Object.keys(selectedStudents).length} ${LocalizedString.lookup(tr('Students'), locale)}`}
+                </Button>
+              )}
+            </AssignmentInfoRow>
 
-          <AssignmentInfoRow theme={theme}>
-            <label>
-              {LocalizedString.lookup(tr('Topic'), locale)}
+            <AssignmentInfoRow theme={theme}>
+              <label>
+                {LocalizedString.lookup(tr('Topic'), locale)}
 
-            </label>
-            <AssignmentInfoContent theme={theme}>
-              <StyledResizeableComboBox
-                options={topics}
-                index={topicIndex}
-                onSelect={(optionIndex) => {
-                  console.log("Selected topic: ", topics[optionIndex]);
-                  if (topics[optionIndex].data === "Create Subject") {
-                    setIsCreatingTopic(true);
-                    setNewTopic("");
-                    return;
-                  }
-                  else {
+              </label>
+              <AssignmentInfoContent theme={theme}>
+                <StyledResizeableComboBox
+                  options={topics}
+                  index={topicIndex}
+                  onSelect={(optionIndex: number, option: ResizeableComboBox.Option) => {
+                    if (option.data === "Create Subject") {
+                      setIsCreatingTopic(true);
+                      setNewTopic("");
+                      return;
+                    }
+                  
                     setIsCreatingTopic(false);
                     setTopicIndex(optionIndex);
 
+                  
+
+                    setAssignmentInfo({
+                      ...assignmentInfo,
+                      topic: option.data as string,
+                    });
+                  }}
+                  mainWidth={'4em'}
+                  mainHeight={'1.5em'}
+                  mainFontSize={'0.9em'}
+                  theme={theme}
+                  customMainContent={
+                    isCreatingTopic ? (
+                      <input
+                        autoFocus
+                        value={newTopic}
+                        onClick={(e) => e.stopPropagation()}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewTopic(e.target.value)}
+                        onBlur={() => { editTopic(); }}
+                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                          if (e.key === "Enter" && newTopic.trim()) {
+                            editTopic();
+                          }
+
+                          if (e.key === "Escape") {
+                            setIsCreatingTopic(false);
+                          }
+                        }}
+                      />
+                    ) : undefined
                   }
+                />
+              </AssignmentInfoContent>
+            </AssignmentInfoRow>
+            {tourRegistry ? (
+              <TourTarget registry={tourRegistry} targetKey="teacher-create-assignment-points-due" style={{ display: 'contents' }}>
+                <PointsDueTourBlock>
+                  <AssignmentInfoRow theme={theme}>
 
-                  setAssignmentInfo({
-                    ...assignmentInfo,
-                    topic: topics[optionIndex].data as string,
-                  });
-                }}
-                mainWidth={'4em'}
-                mainHeight={'1.5em'}
-                mainFontSize={'0.9em'}
-                theme={theme}
-                customMainContent={
-                  isCreatingTopic ? (
-                    <input
-                      autoFocus
-                      value={newTopic}
-                      onClick={(e) => e.stopPropagation()}
-                      onChange={(e) => setNewTopic(e.target.value)}
-                      onBlur={() => { editTopic(); }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && newTopic.trim()) {
-                          editTopic();
-                        }
+                    {LocalizedString.lookup(tr('Points'), locale)}
+                    <AssignmentInfoContent theme={theme}>
+                      <Input
+                        style={{ width: '50%', cursor: 'default' }}
+                        type="number"
+                        inputMode="numeric"
+                        readOnly={true}
+                        value={assignmentInfo.points}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          const value = e.target.value;
 
-                        if (e.key === "Escape") {
-                          setIsCreatingTopic(false);
-                        }
+                          setAssignmentInfo({
+                            ...assignmentInfo,
+                            points: value === '' ? '' : parseInt(value, 10),
+                          });
+                        }}
+
+                        theme={theme}
+                      />
+                    </AssignmentInfoContent>
+                    {Object.keys(assignedPointsSet).length > 0 && (
+
+                      <AssignmentInfoContent theme={theme} style={{ marginTop: '0.2em', width: '97%' }}>
+                        <StyledScrollArea style={{ height: '18em' }} theme={theme}>
+                          <table>
+                            <TableBody theme={theme}>
+
+                              {Object.values(assignedPointsSet)?.map(({ challenge, points }, index) => (
+                                <TableRow theme={theme} key={`${challenge.sceneId}-points-row`}>
+                                  <TableCell theme={theme} style={{ maxWidth: '70%', fontSize: '0.8em', color: theme.color }}>
+                                    {LocalizedString.lookup(tr(challenge.description), locale)}
+                                  </TableCell>
+                                  <TableCell style={{ width: '20%' }} theme={theme}>
+                                    <Input
+                                      type="number" min={0} inputMode="numeric" theme={theme} value={points} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        const value = e.target.value;
+                                        setAssignedPointsSet(prev => ({
+                                          ...prev,
+                                          [challenge.sceneId]: {
+                                            challenge,
+                                            points: value === '' ? 0 : parseInt(value, 10),
+                                          }
+                                        }));
+                                      }}
+                                    />
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+
+
+                            </TableBody>
+                          </table>
+                        </StyledScrollArea>
+                      </AssignmentInfoContent>
+
+                    )}
+
+                  </AssignmentInfoRow>
+
+                  <AssignmentInfoRow theme={theme}>
+
+                    {LocalizedString.lookup(tr('Due Date'), locale)}
+                    <AssignmentInfoContent theme={theme}>
+                      <DateTimeInput
+                        type="datetime-local"
+                        theme={theme}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          setAssignmentInfo({
+                            ...assignmentInfo,
+                            dueDate: e.currentTarget.value,
+                          });
+                        }}
+                      />
+                    </AssignmentInfoContent>
+
+
+                  </AssignmentInfoRow>
+                </PointsDueTourBlock>
+              </TourTarget>
+            ) : (
+              <>
+                <AssignmentInfoRow theme={theme}>
+
+                  {LocalizedString.lookup(tr('Points'), locale)}
+                  <AssignmentInfoContent theme={theme}>
+                    <Input
+                      style={{ width: '50%', cursor: 'default' }}
+                      type="number"
+                      inputMode="numeric"
+                      readOnly={true}
+                      value={assignmentInfo.points}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        const value = e.target.value;
+
+                        setAssignmentInfo({
+                          ...assignmentInfo,
+                          points: value === '' ? '' : parseInt(value, 10),
+                        });
+                      }}
+
+                      theme={theme}
+                    />
+                  </AssignmentInfoContent>
+                  {Object.keys(assignedPointsSet).length > 0 && (
+
+                    <AssignmentInfoContent theme={theme} style={{ marginTop: '0.2em', width: '97%' }}>
+                      <StyledScrollArea style={{ height: '18em' }} theme={theme}>
+                        <table>
+                          <TableBody theme={theme}>
+
+                            {Object.values(assignedPointsSet)?.map(({ challenge, points }, index) => (
+                              <TableRow theme={theme} key={`${challenge.sceneId}-points-row`}>
+                                <TableCell theme={theme} style={{ maxWidth: '70%', fontSize: '0.8em', color: theme.color }}>
+                                  {LocalizedString.lookup(tr(challenge.description), locale)}
+                                </TableCell>
+                                <TableCell style={{ width: '20%' }} theme={theme}>
+                                  <Input
+                                    type="number" min={0} inputMode="numeric" theme={theme} value={points} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                      const value = e.target.value;
+                                      setAssignedPointsSet(prev => ({
+                                        ...prev,
+                                        [challenge.sceneId]: {
+                                          challenge,
+                                          points: value === '' ? 0 : parseInt(value, 10),
+                                        }
+                                      }));
+                                    }}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            ))}
+
+
+                          </TableBody>
+                        </table>
+                      </StyledScrollArea>
+                    </AssignmentInfoContent>
+
+                  )}
+
+                </AssignmentInfoRow>
+
+                <AssignmentInfoRow theme={theme}>
+
+                  {LocalizedString.lookup(tr('Due Date'), locale)}
+                  <AssignmentInfoContent theme={theme}>
+                    <DateTimeInput
+                      type="datetime-local"
+                      theme={theme}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setAssignmentInfo({
+                          ...assignmentInfo,
+                          dueDate: e.currentTarget.value,
+                        });
                       }}
                     />
-                  ) : undefined
-                }
-              />
-            </AssignmentInfoContent>
-          </AssignmentInfoRow>
-          <AssignmentInfoRow theme={theme}>
-
-            {LocalizedString.lookup(tr('Points'), locale)}
-            <AssignmentInfoContent theme={theme}>
-              <Input
-                style={{ width: '50%', cursor: 'default' }}
-                type="number"
-                inputMode="numeric"
-                readOnly={true}
-                value={assignmentInfo.points}
-                onChange={(e) => {
-                  const value = e.target.value;
-
-                  setAssignmentInfo({
-                    ...assignmentInfo,
-                    points: value === '' ? '' : parseInt(value, 10),
-                  });
-                }}
-
-                theme={theme}
-              />
-            </AssignmentInfoContent>
-            {Object.keys(assignedPointsSet).length > 0 && (
-
-              <AssignmentInfoContent theme={theme} style={{ marginTop: '0.2em', width: '97%' }}>
-                <StyledScrollArea style={{ height: '18em' }} theme={theme}>
-                  <table>
-                    <TableBody theme={theme}>
-
-                      {Object.values(assignedPointsSet)?.map(({ challenge, points }, index) => (
-                        <TableRow theme={theme} key={`${challenge.sceneId}-points-row`}>
-                          <TableCell theme={theme} style={{ maxWidth: '70%', fontSize: '0.8em', color: theme.color }}>
-                            {LocalizedString.lookup(tr(challenge.description), locale)}
-                          </TableCell>
-                          <TableCell style={{ width: '20%' }} theme={theme}>
-                            <Input
-                              type="number" min={0} inputMode="numeric" theme={theme} value={points} onChange={(e) => {
-                                const value = e.target.value;
-                                setAssignedPointsSet(prev => ({
-                                  ...prev,
-                                  [challenge.sceneId]: {
-                                    challenge,
-                                    points: value === '' ? 0 : parseInt(value, 10),
-                                  }
-                                }));
-                              }}
-                            />
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                  </AssignmentInfoContent>
 
 
-                    </TableBody>
-                  </table>
-                </StyledScrollArea>
-              </AssignmentInfoContent>
-
+                </AssignmentInfoRow>
+              </>
             )}
 
-          </AssignmentInfoRow>
 
-          <AssignmentInfoRow theme={theme}>
-
-            {LocalizedString.lookup(tr('Due Date'), locale)}
-            <AssignmentInfoContent theme={theme}>
-              <DateTimeInput
-                type="datetime-local"
-                theme={theme}
-                onChange={(e) => {
-                  setAssignmentInfo({
-                    ...assignmentInfo,
-                    dueDate: (e.target as HTMLInputElement).value,
-                  });
-                }}
-              />
-            </AssignmentInfoContent>
-
-
-          </AssignmentInfoRow>
-
-
-        </AssignmentInfoContainer>
+          </AssignmentInfoContainer>
+        )}
 
       </div>
 
       {
         assignToMenuVisible && (
           <AssignToDialog theme={theme} onClose={() => setAssignToMenuVisible(false)} classroom={classroom}
-            selectedStudents={(students) => { console.log("Selected students: ", students); setSelectedStudents(students); }}
-            alreadyAssignedStudents={originalAssignment?.assignedTo as Dict<{ id: string, displayName: string }> | undefined}
+            selectedStudents={(students) => { setSelectedStudents(students); }}
+            alreadyAssignedStudents={originalAssignment?.assignedTo as Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }> | undefined}
+            tourRegistry={tourRegistry}
           />
         )
       }
     </Container >
   );
-}
+};
 
 export default connect((state: ReduxState) => {
   return {
@@ -607,14 +797,12 @@ export default connect((state: ReduxState) => {
     classroomList: state.classrooms.entities,
     challenges: state.challenges,
 
-  }
+  };
 }, (dispatch, ownProps) => ({
   onCreateAssignment: (classroom: Classroom, assignment: ClassroomAssignment, studentIds: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>) => {
-    console.log("Dispatching create assignment with info: ", assignment, studentIds);
     dispatch(ClassroomsAction.setAssignment({ classroom, assignment, studentIds }));
   },
-  onEditAssignment: (classroom: Classroom, assignment: ClassroomAssignment, studentIds: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>) => {
-    console.log("Dispatching edit assignment with info: ", assignment, studentIds);
-    dispatch(ClassroomsAction.setAssignment({ classroom, assignment, studentIds }));
+  onEditAssignment: (classroom: Classroom, docId: string, assignment: ClassroomAssignment) => {
+    dispatch(ClassroomsAction.editAssignment({ classroom, assignmentDocId: docId, assignment }));
   }
 }))(CreateAssignmentView) as React.ComponentType<CreateAssignmentViewPublicProps>; 
