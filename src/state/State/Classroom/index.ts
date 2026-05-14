@@ -1,8 +1,6 @@
-import LocalizedString from "../../../util/LocalizedString";
+
 import Async from '../Async';
-import tr from '@i18n';
 import Dict from '../../../util/objectOps/Dict';
-import Challenge from "../Challenge";
 
 export interface Classroom {
   classroomId: string; // classroom ID
@@ -13,7 +11,10 @@ export interface Classroom {
   type: 'classroom';
   docId?: string; // document ID in the database
   classroomAssignments?: Dict<ClassroomAssignment>; // assignments in the classroom, keyed by assignment ID
-  topics?: string[]; // optional mapping of topic name to list of assignment IDs
+  topics?: Dict<string[]>; // topic name → assignment titles in that topic (derived from classroomAssignments when saving)
+  /** Teacher per-student per-challenge point overrides: studentId → assignmentKey (docId or title) → sceneId → points */
+  challengePointsOverrides?: Dict<Dict<Dict<number>>>;
+
 }
 
 export interface ClassroomAssignment {
@@ -27,9 +28,9 @@ export interface ClassroomAssignment {
   topic?: string; // topic of the assignment
   createdAt?: string; // ISO string of when the assignment was created
   editedAt?: string; // ISO string of when the assignment was last edited
-  assignedTo?: Dict<{ id: string, displayName: string }>; // mapping of student ID to boolean indicating whether the assignment is assigned to that student
+  assignedTo?: Dict<{ id: string, displayName: string, assignments?: Dict<ClassroomAssignment> }>; // mapping of student ID to boolean indicating whether the assignment is assigned to that student
 }
-
+//
 export interface ClassroomAssignmentChallenge {
   sceneId: string;
   name: string;
