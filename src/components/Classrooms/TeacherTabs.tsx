@@ -6,19 +6,26 @@ import * as React from 'react';
 import { styled } from 'styletron-react';
 import { TabBar } from '..//Layout/TabBar';
 import tr from '@i18n';
-import { faHome, faSchool, faPeopleGroup, faFileCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faSchool, faPeopleGroup, faFileCircleCheck, faListOl } from '@fortawesome/free-solid-svg-icons';
 import { State } from '../../state';
 import { connect } from 'react-redux';
 import { FontAwesome } from '../FontAwesome';
 import PeopleView from './PeopleView';
 import { AsyncClassroom, Classroom, ClassroomAssignment } from '../../state/State/Classroom';
-import { current } from 'immer';
+import { TourRegistry } from '../../tours/TourRegistry';
 import AssignmentsView from './AssignmentsView';
+import HomeView from './HomeView';
+import GradesView from './GradesView';
+import ChallengeTabView from './ChallengeTabView';
+
 
 export interface TeacherTabsPublicProps extends ThemeProps, StyleProps {
   currentSelectedClassroom: AsyncClassroom | null;
   onAssignmentAction: (currentSelectedClassroom: AsyncClassroom, action: 'edit' | 'create', assingmentToEdit?: ClassroomAssignment) => void;
   tabIndex?: number;
+  tourRegistry?: TourRegistry;
+  activeTourStepId?: string;
+  tourHighlightAssignmentTitle?: string;
 }
 
 export interface TeacherTabsPrivateProps extends ThemeProps {
@@ -33,8 +40,7 @@ const Container = styled('div', ({ $theme }: { $theme: Theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   color: $theme.color,
-  //backgroundColor: $theme.backgroundColor,
-  backgroundColor: 'lightblue'
+  backgroundColor: $theme.backgroundColor,
   // minHeight: '100vh',
 }));
 
@@ -86,10 +92,17 @@ const TeacherTabs = ({
   currentSelectedClassroom,
   onAssignmentAction,
   tabIndex: tabIndexProp,
+  tourRegistry,
+  activeTourStepId,
+  tourHighlightAssignmentTitle,
 }: Props) => {
   const [tabIndex, setTabIndex] = React.useState(tabIndexProp ?? 0);
+  React.useEffect(() => {
+    setTabIndex(tabIndexProp ?? 0);
+  }, [tabIndexProp]);
   const [peopleContextMenu, setPeopleContextMenu] = React.useState({ visible: false, x: 0, y: 0 });
   const [assignmentsContextMenu, setAssignmentsContextMenu] = React.useState({ visible: false, x: 0, y: 0 });
+  const [gradesContextMenu, setGradesContextMenu] = React.useState({ visible: false, x: 0, y: 0 });
   const containerRef = React.useRef<HTMLDivElement>(null);
   const tabs: TabBar.TabDescription[] = [
     {
@@ -107,15 +120,25 @@ const TeacherTabs = ({
     {
       name: LocalizedString.lookup(tr('Grades'), locale),
       icon: faFileCircleCheck
+    },
+    {
+      name: LocalizedString.lookup(tr('Leaderboard'), locale),
+      icon: faListOl
     }
   ];
+
+  function setContextMenuVisible({ visible, x, y }: { visible: boolean, x: number, y: number }) {
+    if (tabIndex === 3) {
+      setGradesContextMenu({ visible, x, y });
+    }
+  }
 
   return (
     <Container $theme={theme} ref={containerRef}
       onClick={() => {
         tabIndex === 2 && setPeopleContextMenu({ ...peopleContextMenu, visible: false });
         tabIndex === 1 && setAssignmentsContextMenu({ ...assignmentsContextMenu, visible: false });
-        console.log("container click");
+        tabIndex === 3 && setGradesContextMenu({ ...gradesContextMenu, visible: false });
       }}>
       <TopBar $theme={theme}>
         <StyledTabBar
@@ -123,22 +146,35 @@ const TeacherTabs = ({
           index={tabIndex}
           onIndexChange={setTabIndex}
           theme={theme}
+          tourRegistry={tourRegistry}
         />
 
       </TopBar>
       {currentSelectedClassroom ? (
         <Body>
-          {tabIndex === 0 && <div>Home</div>}
+          {tabIndex === 0 && <HomeView theme={theme} config={'Teacher'} currentClassroom={currentSelectedClassroom} />}
           {tabIndex === 1 &&
-            <AssignmentsView containerRef={containerRef} theme={theme} currentSelectedClassroom={currentSelectedClassroom}
+            <AssignmentsView containerRef={containerRef} config={'Teacher'} theme={theme} currentSelectedClassroom={currentSelectedClassroom}
               onAssignmentAction={onAssignmentAction}
               contextMenuVisible={assignmentsContextMenu.visible}
-              setContextMenuVisible={setAssignmentsContextMenu} />}
+              setContextMenuVisible={setAssignmentsContextMenu}
+              tourRegistry={tourRegistry}
+              activeTourStepId={activeTourStepId}
+              tourHighlightAssignmentTitle={tourHighlightAssignmentTitle}
+            />
+          }
           {tabIndex === 2 &&
-            <PeopleView theme={theme} currentSelectedClassroom={currentSelectedClassroom}
+            <PeopleView theme={theme} config={'Teacher'} currentSelectedClassroom={currentSelectedClassroom}
               contextMenuVisible={peopleContextMenu.visible}
               setContextMenuVisible={setPeopleContextMenu} />}
-          {tabIndex === 3 && <div>Grades</div>}
+          {tabIndex === 3 &&
+            <GradesView theme={theme} currentSelectedClassroom={currentSelectedClassroom}
+              contextMenuVisible={gradesContextMenu.visible}
+              setContextMenuVisible={setContextMenuVisible}
+              onAssignmentAction={onAssignmentAction} />}
+          {tabIndex === 4 &&
+            <ChallengeTabView theme={theme} view="teacherView" currentSelectedClassroom={currentSelectedClassroom} tourRegistry={tourRegistry} />
+          }
         </Body>
       ) : (
         <Body style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -146,13 +182,13 @@ const TeacherTabs = ({
         </Body>
       )}
     </Container>
-  )
-}
+  );
+};
 
 export default connect((state: State) => {
   return {
     locale: state.i18n.locale,
-  }
+  };
 }, (dispatch, ownProps) => ({
 
 }))(TeacherTabs) as React.ComponentType<TeacherTabsPublicProps>;
