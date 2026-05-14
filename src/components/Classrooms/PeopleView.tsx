@@ -10,22 +10,27 @@ import { faPersonChalkboard, faUser, faEllipsisVertical } from '@fortawesome/fre
 import { State } from '../../state';
 import { connect } from 'react-redux';
 import { FontAwesome } from '../FontAwesome';
-import { AsyncClassroom } from '../../state/State/Classroom';
+import { AsyncClassroom, Classroom } from '../../state/State/Classroom';
 import Dict from '../../util/objectOps/Dict';
 import { current } from 'immer';
 import { get } from 'immer/dist/internal';
 import { useState } from 'react';
 import Async from 'state/State/Async';
+import { ClassroomsAction } from '../../state/reducer';
+import RemoveUserFromClassroomDialog from '../Dialog/RemoveUserFromClassroomDialog';
+import { useTeacherViewOverlayEffect } from './TeacherViewOverlayContext';
 
 export interface PeopleViewPublicProps extends ThemeProps, StyleProps {
   currentSelectedClassroom: AsyncClassroom | null;
   contextMenuVisible: boolean;
   setContextMenuVisible: React.Dispatch<React.SetStateAction<{ visible: boolean; x: number; y: number }>>;
+  config?: 'Student' | 'Teacher';
 }
 
 export interface PeopleViewPrivateProps extends ThemeProps {
   locale: LocalizedString.Language;
   classroomList: Dict<AsyncClassroom>;
+  onRemoveStudentFromClassroom: (studentId: string, currentClassroom: AsyncClassroom) => void;
 }
 
 type Props = PeopleViewPublicProps & PeopleViewPrivateProps;
@@ -36,7 +41,7 @@ const Container = styled('div', (props: ThemeProps) => ({
   flexDirection: 'column',
   color: props.theme.color,
   backgroundColor: props.theme.backgroundColor,
-  //minHeight: '100vh',
+  // minHeight: '100vh',
 }));
 
 const TeacherStudentContainer = styled('div', {
@@ -45,7 +50,6 @@ const TeacherStudentContainer = styled('div', {
   '@screen and (max-width: 800px)': {
     flexDirection: 'column',
   },
-  // backgroundColor: 'pink',
   margin: '8px',
 });
 
@@ -53,22 +57,20 @@ const TeacherContainer = styled('div', {
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
-  borderColor: 'lightblue',
   alignItems: 'center',
   padding: '8px',
-  borderWidth: '4px',
-  borderStyle: 'solid',
+  // borderWidth: '4px',
+  // borderStyle: 'solid',
 });
 
 const StudentContainer = styled('div', {
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
-  borderColor: 'lightgreen',
-  borderWidth: '4px',
+  // borderWidth: '4px',
   alignItems: 'center',
   padding: '8px',
-  borderStyle: 'solid',
+  // borderStyle: 'solid',
 });
 const Icon = styled(FontAwesome, {
   paddingRight: "5px",
@@ -119,12 +121,17 @@ const PeopleView = ({
   classroomList,
   currentSelectedClassroom,
   contextMenuVisible,
-  setContextMenuVisible
+  setContextMenuVisible,
+  onRemoveStudentFromClassroom,
+  config
 }: Props) => {
-  console.log("people view contextMenuVisible: ", contextMenuVisible)
-  console.log("people view classroom list", classroomList)
+
   const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0 });
-  console.log("contextMenu state: ", contextMenu);
+  const [selectedStudent, setSelectedStudent] = useState<{ id: string, displayName: string } | null>(null);
+  const [removeUserDialogVisible, setRemoveUserDialogVisible] = useState(false);
+
+  useTeacherViewOverlayEffect(config === 'Teacher' && removeUserDialogVisible);
+
   function getTeachers(currentSelectedClassroom: AsyncClassroom | null) {
     const teachers = Async.latestValue(currentSelectedClassroom)?.teacherDisplayName;
     return (
@@ -137,26 +144,26 @@ const PeopleView = ({
 
   function getStudents(currentSelectedClassroom: AsyncClassroom | null) {
 
-    const students = Async.latestValue(currentSelectedClassroom)?.studentIds;
-    console.log("getStudents: ", students);
-    for (const student of Object.values(students || {})) {
-      console.log("student", student);
-    }
+    const loadedClassroom = Async.latestValue(currentSelectedClassroom);
+    const stateClassroom = classroomList[loadedClassroom?.docId || ''];
+    const students = Async.latestValue(stateClassroom)?.studentIds;
+
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5em', fontSize: '1.5em', alignItems: 'flex-start', width: '80%' }}>
         {students ? (
           Object.values(students).map((student: { displayName: string, id: string }, index) => (
-            <StudentRow key={student.id} theme={theme} onClick={() => console.log("student row clicked!")}>
+            <StudentRow key={student.id} theme={theme}>
               <div style={{ alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
                 <Icon icon={faUser} />
                 {student.displayName}
               </div>
-              <Icon style={{ height: '1em', padding: '0 0.5em' }} icon={faEllipsisVertical} onClick={(e) => {
-                e.stopPropagation();
-                console.log("e.clientX, e.clientY", e.clientX, e.clientY);
-                setContextMenuVisible({ visible: true, x: e.clientX, y: e.clientY });
-                setContextMenu({ visible: true, x: e.clientX, y: e.clientY });
-              }} />
+              {config === 'Teacher' && (
+                <Icon style={{ height: '1em', padding: '0 0.5em' }} icon={faEllipsisVertical} onClick={(e: React.MouseEvent) => {
+                  e.stopPropagation();
+                  setSelectedStudent(student);
+                  setContextMenuVisible({ visible: true, x: e.clientX, y: e.clientY });
+                  setContextMenu({ visible: true, x: e.clientX, y: e.clientY });
+                }} />)}
             </StudentRow>
           ))
 
@@ -167,11 +174,10 @@ const PeopleView = ({
 
 
       </div>
-    )
+    );
   }
 
   function renderContextMenu(x: number, y: number) {
-    console.log("rendering context menu at", x, y);
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
 
@@ -182,12 +188,12 @@ const PeopleView = ({
     const adjustedY = Math.min(y, viewportHeight - (menuHeight + 50));
 
     return (
-      <ContextMenu x={adjustedX} y={adjustedY} theme={theme} onClick={() => console.log("context menu clicked")}>
+      <ContextMenu x={adjustedX} y={adjustedY} theme={theme} >
         <ContextMenuItem theme={theme}>
           <li
             style={{ padding: "5px 10px" }}
             onClick={() => {
-              console.log("remove user from classroom");
+              setRemoveUserDialogVisible(true);
               setContextMenuVisible({ visible: false, x: adjustedX, y: adjustedY });
             }}
           >
@@ -195,7 +201,7 @@ const PeopleView = ({
           </li>
         </ContextMenuItem>
       </ContextMenu>
-    )
+    );
   }
   return (
     <Container theme={theme} onClick={() => setContextMenu({ ...contextMenu, visible: false })}>
@@ -214,15 +220,29 @@ const PeopleView = ({
         </StudentContainer>
       </TeacherStudentContainer>
       {contextMenuVisible && renderContextMenu(contextMenu.x, contextMenu.y)}
+      {removeUserDialogVisible &&
+        <RemoveUserFromClassroomDialog
+          theme={theme} locale={locale}
+          onClose={() => setRemoveUserDialogVisible(false)}
+          onAcceptRemove={() => {
+            onRemoveStudentFromClassroom(selectedStudent?.id || "", currentSelectedClassroom);
+            setRemoveUserDialogVisible(false);
+          }}
+          toRemoveUser={selectedStudent?.displayName || ""}
+          classroom={Async.latestValue(currentSelectedClassroom) }
+
+        />}
     </Container>
-  )
-}
+  );
+};
 
 export default connect((state: State) => {
   return {
     locale: state.i18n.locale,
     classroomList: state.classrooms.entities,
-  }
+  };
 }, (dispatch, ownProps) => ({
-
+  onRemoveStudentFromClassroom: (studentId: string, currentClassroom: AsyncClassroom) => {
+    dispatch(ClassroomsAction.removeStudentFromClassroom({ studentId, currentClassroom }));
+  }
 }))(PeopleView) as React.ComponentType<PeopleViewPublicProps>; 
