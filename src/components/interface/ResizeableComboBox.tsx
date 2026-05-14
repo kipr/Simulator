@@ -4,7 +4,7 @@ import { styled } from "styletron-react";
 import { Rectangle } from "../../util/math/math";
 import { StyleProps } from "../../util/style";
 import { AnyText } from "../../util/StyledText";
-//import { Color } from '../../../../../state/State/Scene/Color';
+// import { Color } from '../../../../../state/State/Scene/Color';
 import { Color } from "../../state/State/Scene/Color";
 import { FontAwesome } from "../../components/FontAwesome";
 import { Text } from "./Text";
@@ -95,12 +95,11 @@ class ResizeableComboBox extends React.PureComponent<ResizeableComboBox.Props, R
       focus: false
     };
   }
-  componentDidUpdate(prevProps: Readonly<ResizeableComboBox.Props>, prevState: Readonly<ResizeableComboBox.State>, snapshot?: any): void {
+  componentDidUpdate(prevProps: Readonly<ResizeableComboBox.Props>, prevState: Readonly<ResizeableComboBox.State>, snapshot?: unknown): void {
     if (prevProps.tourstepid !== this.props.tourstepid && this.props.tourstepid) {
-      if (this.props.tourstepid === "create-classroom-dropdown-menu") {
+      if (this.props.tourstepid === 'teacher-create-classroom-card') {
         this.setState({ focus: true });
-      }
-      else {
+      } else {
         this.setState({ focus: false });
       }
     }
@@ -234,8 +233,8 @@ class ResizeableComboBox extends React.PureComponent<ResizeableComboBox.Props, R
                   </OptionContainer>
                 ))}
               </DropDown>
-            )) :
-              (
+            ))
+              : (
                 <DropDown theme={theme} style={dropDownStyle} data-tour={tourMenuId}>
                   {options.map((option, i) => (
                     <OptionContainer
@@ -256,7 +255,7 @@ class ResizeableComboBox extends React.PureComponent<ResizeableComboBox.Props, R
               )
           )
           : null
-          , COMBO_BOX_ROOT)}
+        , COMBO_BOX_ROOT)}
 
       </Container>
     );

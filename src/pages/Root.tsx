@@ -740,8 +740,8 @@ class Root extends React.Component<Props, State> {
       ),
       robot:
         this.props.robots[
-        Dict.unique(Scene.robots(Async.latestValue(this.props.scene)))
-          ?.robotId ?? 'demobot'
+          Dict.unique(Scene.robots(Async.latestValue(this.props.scene)))
+            ?.robotId ?? 'demobot'
         ],
       locale: this.props.locale,
     });
@@ -1476,15 +1476,15 @@ class Root extends React.Component<Props, State> {
         )}
         {modal.type === Modal.Type.DeleteRecord &&
           modal.record.type === Record.Type.Scene && (
-            <DeleteDialog
-              name={Record.latestName(modal.record)}
-              theme={theme}
-              onClose={this.onModalClose_}
-              onAccept={this.onDeleteRecordAccept_(
-                Record.selector(modal.record),
-              )}
-            />
-          )}
+          <DeleteDialog
+            name={Record.latestName(modal.record)}
+            theme={theme}
+            onClose={this.onModalClose_}
+            onAccept={this.onDeleteRecordAccept_(
+              Record.selector(modal.record),
+            )}
+          />
+        )}
         {modal.type === Modal.Type.SettingsScene && (
           <SceneSettingsDialog
             scene={Async.latestValue(scene)}
